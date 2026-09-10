@@ -67,6 +67,20 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-10T16:48:28Z (MEM ROUND 338 -- THE GOVERNING PLAN IS BEING EXECUTED BY FIVE SEATS AND THE
+  FILES NOW SHOW THAT. STEP 2 IS RUNNING: the decision-endpoint control, DECLARED BEFORE ANY
+  DRAW at b72e329, status DECLARED-NOT-RUN, naming its plan by path AND commit. Its own
+  fields carry what the programme used to argue about afterwards -- why it is NOT the
+  asymmetry null (rule 7 wants the DECISION metric; A was arguably a proxy), that its
+  independent units are FOUR DAYS AND THREE IN PRIMARY not eight cells (the two arms share a
+  BITWISE IDENTICAL baseline), that the verdict is TWO arm-level pooled tests HOLM-corrected
+  and nothing else, that the statistic is a SUM because CASH ADDS, that the mixed cases are
+  named in advance, and that the floor is FAIL-CLOSED at 200. I VERIFIED THE RUNNING
+  WORKER'S CGROUP MYSELF at /proc/1252859 and its child: research.slice, 200 per cent CPU
+  matching N=2, 9 GiB cap, 2.937 GiB in use. The waiver moved to OBSERVED_AND_NOT_REFUTED --
+  REV's limit recorded VERBATIM and NOT upgraded, and the string is in NO artifact yet. BE
+  caught a name TWO artifacts answer to BEFORE it produced a number. Tonight's shape:
+  ELEVEN protections configured but not applied or living in prose. tip a52baec)
   2026-09-10T16:41:45Z (MEM ROUND 337 -- THE USER HAS COMMITTED A GOVERNING PLAN AT 09ced57 AND IT
   SUPERSEDES EVERY 'CURRENT' BLOCK IN THESE FILES. The pre-declared asymmetry null's PRIMARY
   pool (09-04/05/06) returned DE_LEVERING_NOT_EXCLUDED: CONDVALUE A=0.09361 p=0.02595 vs a
@@ -98,21 +112,6 @@ updated: >-
   instrument built to prevent it (seventh instance); DA 192's three-valued fix is ALREADY
   IN THE TREE. The 25-draw number is REFUSED-BELOW-FLOOR, never a preview -- and it sits
   INSIDE its own 25-draw interval at 83.4 per cent. tip afcccf8)
-  2026-09-10T08:07:45Z (MEM ROUND 335 -- R-889 and R-890 swept, and both change what may be SAID.
-  R-889's four independent legs (rule 38 applied BY DESIGN) say CORRECT: YES, RELIABLE AS
-  AN EDGE: NO -- 11/12 figures reproduce exactly, 16 books' trades close to 1.3e-9, replay
-  digests 4/4, settlement Chainlink 1,110/1,110, but the arm LOSES IN THE MEDIAN WINDOW and
-  I recomputed the power: NO day's mean reaches two SE and the LARGEST is about ONE
-  (1.016 / 0.596 / 0.436 / 0.097), while 4/4 against a coin is p = 0.0625. QUOTE REV'S
-  SENTENCE, which replaces the coordinator's own 'beats baseline 4/4': 'a direction worth a
-  declared null on untouched days, not a measured edge.' R-890 gives the MECHANISM --
-  TAIL-CLIPPING: the baseline earns BROADLY (positive in ~60 percent of windows) so the LEVEL
-  is broad and only the INCREMENT is concentrated; the arms recover 28-65 percent of the loss
-  pool and give most of it back where no clipping was needed, and 09-06's decomposition
-  closes onto the +5,318.6380 arm delta I already held. 09-05's negative is the SAME
-  trade-off tipped over, not an anomaly. The 40-window mask is NOT a silent drop (287-40=247,
-  invariant COMPUTED in code) and BE refuted the bias worry outright. Coverage 0.7419 is over
-  GENERATIONS, not windows. tip 87fc599)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -284,6 +283,27 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 338 addendum, 2026-09-10T16:49:59Z ---
+  AND_A_PROC_PATH_IS_EPHEMERAL_SO_THE_EVIDENCE_IS_IN_THE_SAID_FIELD_NOT_THE_PATH: "A caveat on my own two cgroup flags. Their artifact is /proc/1252859/cgroup, which CEASES TO EXIST when the run ends -- so a later reader who tries to re-verify at that path will find nothing and must not read the absence as a refutation. The evidence is carried in the said: fields, which record the resolved cgroup string, both pids and the live limits as read. A live-process observation is verifiable only at the moment it is taken; recording it means recording the reading, not the address."
+  # --- MEM round 338, the plan is being executed, not recorded ---
+  THE_GOVERNING_PLAN_IS_NOW_BEING_EXECUTED_BY_FIVE_SEATS_IN_PARALLEL: "09ced57 stopped being a document to record and became the work being done. The state files now show step 1 and step 2 in flight rather than last night's picture: DE runs step 2 and owns the matching-variable naming and the mask fields, REV reviews step 2's declaration EARLY, DA binds the duplicated rule-6 floor to one authority, BE sweeps for guards that exist and are never invoked. Position-cap, fair-price, feature and hyperparameter work remain DEFERRED until step 2 passes."
+  STEP_TWO_IS_RUNNING_AND_ITS_DECLARATION_WAS_COMMITTED_BEFORE_ANY_DRAW: "b72e329, 'DE 212: the decision-endpoint control, DECLARED BEFORE ANY DRAW (plan v2 step 2)', 73 lines. The file exists at live/pm_research/declarations/de_settlement_control_declaration_v1.json, declared_by DE 212, status DECLARED-NOT-RUN, naming its governing plan by path AND commit. Rule 12's form again: the declaration is a commit that precedes the draws, not a claim made about them afterwards."
+  AND_THE_DECLARATION_SAYS_IN_ITS_OWN_FIELD_WHY_IT_IS_NOT_THE_ASYMMETRY_NULL: "Quoted from the artifact: 'the asymmetry null tested A = ret_pos - ret_neg, a TAIL-SHAPE statistic. Rule 7 requires the comparison to be on the DECISION metric, not a proxy. A was arguably a proxy; this tests the endpoint itself -- R-801 settlement P&L.' The distinction the coordinator asked me to record is not a gloss I am adding: it is a field in the declaration, written before any draw, by the seat that ran the test it is distinguishing itself from."
+  THE_DECLARATION_STATES_ITS_OWN_INDEPENDENT_UNITS_AS_FOUR_DAYS_NOT_EIGHT_CELLS: "what_this_cannot_establish is a field, and it says: FOUR days, THREE in the PRIMARY, not eight cells -- because the two arms within a day share the day, the book, the reference path and a BITWISE IDENTICAL baseline, so they are two policies read off ONE realisation. It also fixes that rule 8 forbids an interval below five complete days and the PRIMARY has three, and that these are CONSUMED days so a pass is development evidence and NEVER validation. A declaration that names what it cannot establish, before it establishes anything."
+  THE_VERDICT_IS_TWO_ARM_LEVEL_POOLED_TESTS_AND_NOTHING_ELSE: "combination_rule, one sentence, declared_before_any_draw True: the VERDICT is decided by TWO arm-level pooled tests and by nothing else; per-cell outcomes are DESCRIPTIVE and are never counted into a verdict. The family is 2 verdict-bearing tests, CONDVALUE_X_SKEW and HAZARD_OVER_SKEWED_REF, HOLM-corrected at alpha 0.05. Multiplicity is fixed at declaration time, which is the only time it can honestly be fixed."
+  AND_THE_STATISTIC_IS_A_SUM_BECAUSE_CASH_ADDS_WHICH_IS_A_SEAT_REFUSING_THE_PREVIOUS_TESTS_SHAPE: "D_arm is the SUM of that arm's per-day D over the PRIMARY pool, in cents, and the field says why: the endpoint is CASH and cash ADDS -- adding that v3's asymmetry statistic was scale-free, so a mass-weighted mean 'was right there'. The nulls are pooled by DRAW INDEX rather than by combining per-day p-values, because combining p-values would assume the days are exchangeable units of a common test. A seat naming the wrong-but-available choice it declined is the strongest form of a pre-declaration."
+  THE_MIXED_CASES_ARE_ENUMERATED_IN_ADVANCE_AND_THE_REASON_IS_STATED: "step_4_the_mixed_cases_explicitly, with its own why_enumerated: 'a rule that handles only the clean cases is a rule invented after the fact for the messy one.' Both arms passing with the same sign is SETTLEMENT_SKILL_SUPPORTED_ON_THE_DEVELOPMENT_SET; exactly one arm passing is SUPPORTED_FOR_THAT_ARM_ONLY and explicitly NOT a programme-level pass. The awkward outcome has a name before anyone knows which outcome is awkward."
+  THE_ESTIMATOR_IS_CALLED_AND_NOT_RE_IMPLEMENTED: estimand.valued_by names de_multiday_gate1_runner.settlement_legs_by_slug -- 'the SAME estimator the day artifacts use, called and not re-implemented' -- and estimand.NOT rules out the 5-second markout, the mean of anything, and any tail-shape statistic. Calling the estimator rather than rebuilding it removes the reimplementation-divergence class that this programme has paid for before, and the NOT field forecloses the substitutions a later reader might make in good faith.
+  THE_FLOOR_IS_FAIL_CLOSED_AND_THE_DRAWS_ARE_CHECKPOINTED: "500 draws, floor 200, and floor_is says FAIL-CLOSED: a run completing fewer than 200 draws REFUSES rather than reporting, and the floor is never a draw count chosen to fit a maintenance window. draws_are_checkpointed_per_draw is True. That is rule 39 and rule 6 both discharged in the artifact rather than in prose -- the refusal is the behaviour, not a promise about it."
+  09_03_IS_FIXED_AS_COMPANION_ONLY_IN_THE_DECLARATION_ITSELF_WITH_ITS_FOUR_MARKS: "Not left to memory: the population block states 09-03 is COMPANION_ONLY, fixed HERE before any draw, may NEVER be promoted, and carries its four marks -- coverage 0.7419, 247 of 288 windows, a 40-window recorded mask, and an UNADJUDICABLE settlement window. Note it records BOTH 247-of-288 AND coverage 0.7419 side by side without conflating them, which is the distinction I filed at round 335. The declaration does not repeat my check; it simply does not make the mistake."
+  I_VERIFIED_THE_RUNNING_WORKERS_CGROUP_MYSELF_AT_THE_PROCESS: "Rule 40 says the placement is VERIFIED by reading /proc/<pid>/cgroup, so I read it rather than accepting the report. deSettle212.service is active and running, MainPID 1252859 with child 1252861, and BOTH resolve to /user.slice/user-1001.slice/user@1001.service/research.slice/deSettle212.service. research.slice: YES on both. This is the first heavy unit in the programme whose placement I confirmed at the process rather than from a launcher's intent."
+  AND_THE_LIVE_LIMITS_RESOLVE_TO_200_PER_CENT_CPU_AND_A_9_GIB_CAP_AT_2_94_GIB_IN_USE: "Measured at the unit during the sweep: Slice=research.slice, CPUQuotaPerSecUSec=2s which is 200 per cent and matches N=2, MemoryMax=9663676416 (9 GiB), MemoryHigh=infinity, MemoryCurrent=3153530880 (2.937 GiB). The hardcoded 100 per cent CPU limiter I recorded rounds ago is no longer what this unit runs under. These are a SNAPSHOT of a live job and must be read as such -- the peak is not the current, and the run is not finished."
+  THE_WAIVER_MOVED_TO_OBSERVED_AND_NOT_REFUTED_AND_REVS_LIMIT_IS_RECORDED_VERBATIM: "REV 164 ran the dynamic trace on a COMPLETE REAL BUILD with DA 186's placement fix and a WORKING falsifier, and got ZERO RAISES. REV's own limit, quoted and not upgraded: 'it did not refute the waiver... that is strictly better than where it stood. It is NOT closure, and I will not write closure into a field.' Absence means NOT TOUCHED ON THIS RUN. It never means unreachable. R-885's finding stands -- reachable_modules under-approximates -- so a quiet trace is one observation, which is exactly the observation R-885 said was missing and not more."
+  AND_THE_NEW_STATUS_STRING_IS_NOT_YET_IN_ANY_ARTIFACT: I searched the tree for OBSERVED_AND_NOT_REFUTED across py, json and md and it appears NOWHERE. So the upgrade currently lives in a report and in these files, not in a field. That is consistent with REV declining to write closure into a field, but a reader resolving the waiver at its artifact today still meets the older status. Recorded so the gap is visible rather than assumed closed -- the same shape I filed at round 335 when the withdrawn phrasing was filed and its replacement was not.
+  NO_REBUILD_IS_REQUIRED_FOR_STEP_ONE_AND_THE_CONDITIONAL_MATTERS_MORE_THAN_THE_ANSWER: "BE 157: no rebuild is required. The conditional is the useful half -- if a check forces a build for its own reason, THAT BUILD IS the optimization test and the comparison runs in seconds. So the answer is not 'we avoided a rebuild' but 'a rebuild, if one becomes necessary, is already carrying a second job'. That converts a cost into an instrument instead of trading one against the other."
+  THE_MATCHING_VARIABLE_IS_AMBIGUOUS_IN_THE_ARTIFACTS_AND_IT_WAS_CAUGHT_BEFORE_IT_BECAME_A_FINDING: "The books hold TWO generation counts -- fr.reference and the published rows figure -- differing by 9 on 09-03 and 2 on 09-04 and agreeing on 09-05/06, and the plan's phrase answers to BOTH. The ambiguity is real in code: be_score_coverage.py:264 emits n_distinct_reference_generations while the book path carries bk['fr']['reference'] (de_multiday_gate1_runner.py:6689, :9436). Routed to DE 213 WHILE DRAWS ARE EARLY. Same shape as n_gap_bearing_windows and TERMINAL_MARK_ENDED_IN_GAP -- a name two artifacts answer to -- and this is the first time the programme caught one BEFORE it produced a number."
+  09_03S_FORTY_MASKED_WINDOWS_STILL_DO_NOT_REACH_DES_ARTIFACT_WHICH_STEP_TWO_REQUIRES: "The mask is established at the book layer and correct there -- I verified its computed invariant at round 335 -- and it still does not travel to where DE's artifact is read. Step 2's own publication clause requires coverage and exclusion counts to be published WITH the result, so this is no longer a disclosure preference: it is a precondition of a step-2 artifact being complete. Recorded as OPEN and owned by DE."
+  THE_SHAPE_OF_TONIGHT_IS_CONFIGURED_IS_NOT_APPLIED_AND_APPLIED_IS_NOT_VERIFIED: Rule 40's sentence, landed at SEAT_PROTOCOL.md:596 and attributed to R-893. Tonight produced THREE protections that were configured but not applied -- a guard run_day never calls, a memory cap not applied to the process, a field asserting a property the code never evaluates -- plus EIGHT instances of a limit living in prose rather than in a predicate. Eleven in one night, in a programme that has been hunting exactly this class for weeks. The lesson is not that the seats were careless; it is that configuration is where correctness goes to look finished.
   # --- MEM round 337, the USER's governing plan at 09ced57 ---
   THE_USER_HAS_COMMITTED_A_GOVERNING_PLAN_AND_IT_SUPERSEDES_THE_CURRENT_BLOCKS: "09ced57, 'P003: update validation plan after armed-model null', committed by the USER at 2026-09-10 16:36:25 +0000, 93 insertions across two files: 62 lines into the plan and 31 into this programme's HANDOFF.md. From this round the plan is the GOVERNING document and every 'current' block in the state files is subordinate to it. Nothing in my files may state a next step that the plan does not sanction."
   AND_THE_USER_WROTE_INTO_MY_FILE_SO_I_PREPENDED_AND_PRESERVED_THEIR_BLOCK_VERBATIM: "31 of those lines went into workspace/HANDOFF.md, of which I am otherwise sole writer. I did not merge, summarise or relocate them: my round block is PREPENDED and the USER's block stands untouched below it, signed as it was committed. A governing block written by the principal is not a seat's draft to tidy. If any future round needs to change it, that is a USER edit, not a MEM one."
@@ -27414,6 +27434,122 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 338 addendum, 2026-09-10T16:49:59Z ---
+  AND_A_PROC_PATH_IS_EPHEMERAL_SO_THE_EVIDENCE_IS_IN_THE_SAID_FIELD_NOT_THE_PATH:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-10T16:49:59Z
+    said: >-
+      the artifact path for the two cgroup flags is a /proc entry whose lifetime is the process's; the resolved strings and pids are recorded in those flags' said: fields so the observation survives the process.
+  # --- MEM round 338, 2026-09-10T16:48:28Z ---
+  THE_GOVERNING_PLAN_IS_NOW_BEING_EXECUTED_BY_FIVE_SEATS_IN_PARALLEL:
+    prov: RELAYED
+    from: coordinator MEM 338
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      the seat assignments are the coordinator's; the plan and its deferral clause I verified last round at 09ced57.
+  STEP_TWO_IS_RUNNING_AND_ITS_DECLARATION_WAS_COMMITTED_BEFORE_ANY_DRAW:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      commit b72e329 read at its subject and diffstat; the JSON loaded and its status, declared_by and governing_plan fields read.
+  AND_THE_DECLARATION_SAYS_IN_ITS_OWN_FIELD_WHY_IT_IS_NOT_THE_ASYMMETRY_NULL:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      the why_this_is_not_the_asymmetry_null field read verbatim from the JSON.
+  THE_DECLARATION_STATES_ITS_OWN_INDEPENDENT_UNITS_AS_FOUR_DAYS_NOT_EIGHT_CELLS:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      the four sub-fields of what_this_cannot_establish read verbatim: effective_independent_units, no_interval, validation, the_matching_bias.
+  THE_VERDICT_IS_TWO_ARM_LEVEL_POOLED_TESTS_AND_NOTHING_ELSE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      combination_rule.one_sentence and step_3_the_family read from the JSON: 2 tests, HOLM, alpha 0.05.
+  AND_THE_STATISTIC_IS_A_SUM_BECAUSE_CASH_ADDS_WHICH_IS_A_SEAT_REFUSING_THE_PREVIOUS_TESTS_SHAPE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      step_1_pool_within_an_arm and step_2_the_null read verbatim, including why_a_SUM_and_not_a_weighted_mean and why_pool_the_DRAWS_and_not_the_p_values.
+  THE_MIXED_CASES_ARE_ENUMERATED_IN_ADVANCE_AND_THE_REASON_IS_STATED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      step_4_the_mixed_cases_explicitly read from the JSON with its why_enumerated and its two named outcomes.
+  THE_ESTIMATOR_IS_CALLED_AND_NOT_RE_IMPLEMENTED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      the estimand block read verbatim: per_cell, valued_by and NOT.
+  THE_FLOOR_IS_FAIL_CLOSED_AND_THE_DRAWS_ARE_CHECKPOINTED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      control.n_draws, control.floor, control.floor_is and control.draws_are_checkpointed_per_draw read from the JSON.
+  09_03_IS_FIXED_AS_COMPANION_ONLY_IN_THE_DECLARATION_ITSELF_WITH_ITS_FOUR_MARKS:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      the population block read verbatim, including 09_03_is_companion_only_and_may_never_be_promoted and all_four_days_are_CONSUMED.
+  I_VERIFIED_THE_RUNNING_WORKERS_CGROUP_MYSELF_AT_THE_PROCESS:
+    prov: CHECKED
+    artifact: /proc/1252859/cgroup
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      cgroup read for the main pid and its child; both contain research.slice under the deSettle212.service leaf. systemctl reports ActiveState=active, SubState=running.
+  AND_THE_LIVE_LIMITS_RESOLVE_TO_200_PER_CENT_CPU_AND_A_9_GIB_CAP_AT_2_94_GIB_IN_USE:
+    prov: CHECKED
+    artifact: /proc/1252859/cgroup
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      systemctl --user show deSettle212.service for Slice, CPUQuotaPerSecUSec, MemoryMax, MemoryHigh and MemoryCurrent, read while the unit was running.
+  THE_WAIVER_MOVED_TO_OBSERVED_AND_NOT_REFUTED_AND_REVS_LIMIT_IS_RECORDED_VERBATIM:
+    prov: RELAYED
+    from: REV 164 via coordinator MEM 338
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      REV's sentence quoted as dispatched and deliberately not strengthened.
+  AND_THE_NEW_STATUS_STRING_IS_NOT_YET_IN_ANY_ARTIFACT:
+    prov: CHECKED
+    artifact: live/pm_research
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      grep for OBSERVED_AND_NOT_REFUTED and its lowercase form across py/json/md outside .git returns no matches.
+  NO_REBUILD_IS_REQUIRED_FOR_STEP_ONE_AND_THE_CONDITIONAL_MATTERS_MORE_THAN_THE_ANSWER:
+    prov: RELAYED
+    from: BE 157 via coordinator MEM 338
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      BE's finding and its conditional as dispatched; I did not re-derive the build requirement.
+  THE_MATCHING_VARIABLE_IS_AMBIGUOUS_IN_THE_ARTIFACTS_AND_IT_WAS_CAUGHT_BEFORE_IT_BECAME_A_FINDING:
+    prov: CHECKED
+    artifact: live/pm_research/be_score_coverage.py
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      both producers located: n_distinct_reference_generations at be_score_coverage.py:264, and the book's fr/reference unwrapping at de_multiday_gate1_runner.py:6689 and :9436. The per-day differences are BE's measurement, not mine.
+  09_03S_FORTY_MASKED_WINDOWS_STILL_DO_NOT_REACH_DES_ARTIFACT_WHICH_STEP_TWO_REQUIRES:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      the published_together_not_as_separate_artifacts field lists the baseline, EVERY random-control distribution, coverage/exclusion counts and settlement finality as one publication.
+  THE_SHAPE_OF_TONIGHT_IS_CONFIGURED_IS_NOT_APPLIED_AND_APPLIED_IS_NOT_VERIFIED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-10T16:48:28Z
+    said: >-
+      rule 40 read at SEAT_PROTOCOL.md:582 with its closing sentence and R-893 attribution at :596.
   # --- MEM round 337, 2026-09-10T16:41:45Z ---
   THE_USER_HAS_COMMITTED_A_GOVERNING_PLAN_AND_IT_SUPERSEDES_THE_CURRENT_BLOCKS:
     prov: CHECKED

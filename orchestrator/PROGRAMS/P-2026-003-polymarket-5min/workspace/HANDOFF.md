@@ -1,3 +1,129 @@
+# READ FIRST — round 338 (MEM, 2026-09-10T16:49:10Z, tip `a52baec`)
+
+# 🏗 THE PLAN IS BEING EXECUTED, NOT RECORDED — five seats, in parallel
+
+| seat | owns |
+|---|---|
+| DE | step 2 run + naming the matching variable + forwarding the mask fields |
+| REV | reviewing step 2's declaration **early** — can step 3 actually trigger? |
+| DA | binding the duplicated rule-6 floor to **one** authority |
+| BE | sweeping for guards that exist, work, and are **never invoked in production** |
+
+**Deferred until step 2 passes:** position-cap, fair-price, feature and
+hyperparameter work.
+
+# 🎯 STEP 2 IS RUNNING — THE DECISION-ENDPOINT CONTROL
+
+`b72e329` — *DE 212: the decision-endpoint control, DECLARED BEFORE ANY DRAW*.
+`live/pm_research/declarations/de_settlement_control_declaration_v1.json`,
+`status: DECLARED-NOT-RUN`, naming its governing plan **by path AND commit.**
+
+**Its own fields carry what this programme used to argue about afterwards:**
+
+- **Why it is not the asymmetry null** — *"A = ret_pos − ret_neg, a TAIL-SHAPE
+  statistic. Rule 7 requires the comparison to be on the DECISION metric, not a
+  proxy. A was arguably a proxy; this tests the endpoint itself."* **Written by
+  the seat distinguishing itself from its own previous test.**
+- **What it cannot establish** — *"FOUR days, THREE in the PRIMARY — not eight
+  cells"*, because the two arms within a day share the day, the book, the
+  reference path and a **bitwise identical baseline**: *two policies read off ONE
+  realisation.* Plus: no interval below five complete days; **consumed days, so a
+  pass is development evidence and never validation.**
+- **The verdict rule** — *"decided by TWO arm-level pooled tests and by nothing
+  else; per-cell outcomes are DESCRIPTIVE"*. HOLM over 2, α = 0.05.
+  **Multiplicity fixed at declaration time, the only time it can honestly be fixed.**
+- **A SUM, not a weighted mean** — *"the endpoint is CASH and cash ADDS"*, noting
+  that v3's scale-free statistic meant a mass-weighted mean *"was right there"*.
+  Nulls pooled by **draw index**, not by combining p-values. ***A seat naming the
+  wrong-but-available choice it declined is the strongest form of pre-declaration.***
+- **The mixed cases, enumerated in advance** — *"a rule that handles only the
+  clean cases is a rule invented after the fact for the messy one."* One arm
+  passing is `SUPPORTED_FOR_THAT_ARM_ONLY`, explicitly **not** a programme pass.
+- **The estimator is called, not re-implemented** —
+  `settlement_legs_by_slug`, *"the SAME estimator the day artifacts use"*; the
+  `NOT` field forecloses the 5-second markout and any tail-shape substitute.
+- **Floor FAIL-CLOSED at 200**, checkpointed per draw — *"never a draw count
+  chosen to fit a maintenance window."*
+- **09-03 fixed as COMPANION_ONLY in the declaration itself**, with its four
+  marks. *It records both `247 of 288 windows` and `coverage 0.7419` side by
+  side without conflating them — the distinction I filed at round 335. It does
+  not repeat my check; it simply does not make the mistake.*
+
+# 🔎 I VERIFIED THE RUNNING WORKER'S CGROUP MYSELF
+
+Rule 40 says verify by reading `/proc/<pid>/cgroup`, **so I read it.**
+
+```
+1252859 → …/research.slice/deSettle212.service   research.slice: YES
+1252861 → …/research.slice/deSettle212.service   research.slice: YES
+```
+
+Live at the sweep: **CPUQuotaPerSecUSec = 2s (200 %, matching N=2)**,
+MemoryMax **9 GiB**, MemoryCurrent **2.937 GiB**, MemoryHigh infinity. *The
+hardcoded 100 % limiter I recorded rounds ago is not what this unit runs under.*
+**Snapshot of a live job — the peak is not the current, and the run is not done.**
+
+**First heavy unit in this programme whose placement I confirmed at the process
+rather than from a launcher's intent.**
+
+# 🟨 THE WAIVER: `UNSUPPORTED` → `OBSERVED_AND_NOT_REFUTED`
+
+REV 164 ran the dynamic trace on a **complete real build**, with DA 186's
+placement fix and **a working falsifier**: **zero raises.** REV's own limit,
+verbatim and **not upgraded**:
+
+> *"it did not refute the waiver… that is strictly better than where it stood.
+> It is NOT closure, and I will not write closure into a field."*
+
+**Absence means NOT TOUCHED ON THIS RUN. It never means unreachable.** R-885
+stands — `reachable_modules` under-approximates — so a quiet trace is *the one
+observation R-885 said was missing*, and not more.
+
+**AND THE STRING IS IN NO ARTIFACT YET.** `OBSERVED_AND_NOT_REFUTED` appears
+nowhere in `.py`, `.json` or `.md`. The upgrade lives in a report and in these
+files. Consistent with REV declining to write it — **but a reader resolving the
+waiver at its artifact today still meets the older status.** *Same shape as
+round 335's withdrawn phrasing that was filed while its replacement was not.*
+
+# 🧱 BE 157 — NO REBUILD REQUIRED, AND THE CONDITIONAL IS THE USEFUL HALF
+
+If a check forces a build for its own reason, **that build IS the optimization
+test** and the comparison runs in seconds. *Not "we avoided a rebuild" but "a
+rebuild, if one becomes necessary, is already carrying a second job."*
+
+## ⚠️ THE MATCHING VARIABLE IS AMBIGUOUS IN THE ARTIFACTS
+
+The books hold **two** generation counts — `fr.reference` and the published rows
+figure — **differing by 9 on 09-03 and 2 on 09-04, agreeing on 09-05/06** — and
+the plan's phrase answers to **both**. Real in code:
+`be_score_coverage.py:264` emits `n_distinct_reference_generations`; the book
+path carries `bk['fr']['reference']` (`de_multiday_gate1_runner.py:6689`, `:9436`).
+
+**Routed to DE 213 while draws are early.** Same shape as
+`n_gap_bearing_windows` and `TERMINAL_MARK_ENDED_IN_GAP` — a name two artifacts
+answer to — **and the first time this programme caught one BEFORE it produced a
+number.**
+
+## 🔓 OPEN — 09-03's 40 masked windows still do not reach DE's artifact
+
+Established and correct at the book layer (**I verified its computed invariant
+at round 335**), and still not travelling. **Step 2's own publication clause
+requires coverage and exclusion counts published WITH the result** — so this is
+no longer a disclosure preference, it is **a precondition of a complete step-2
+artifact.** Owned by DE.
+
+# 🧭 THE SHAPE OF TONIGHT — **"Configured is not applied; applied is not verified"**
+
+Rule 40, at `SEAT_PROTOCOL.md:596`, attributed to R-893. Tonight produced
+**three protections configured but not applied** — a guard `run_day` never
+calls, a memory cap not applied to the process, a field asserting a property the
+code never evaluates — **plus eight instances of a limit living in prose rather
+than in a predicate. Eleven in one night**, in a programme that has been hunting
+exactly this class for weeks.
+
+***The lesson is not that the seats were careless. It is that configuration is
+where correctness goes to look finished.***
+
 # READ FIRST — round 337 (MEM, 2026-09-10T16:42:22Z, tip `b72e329`)
 
 # 📜 THE USER HAS COMMITTED A GOVERNING PLAN — `09ced57` SUPERSEDES EVERY "CURRENT" BLOCK

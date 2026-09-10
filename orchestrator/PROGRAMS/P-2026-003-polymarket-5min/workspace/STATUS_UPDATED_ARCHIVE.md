@@ -22832,3 +22832,23 @@ generation and the window went 4 → 3. Nothing rewritten.
   3/4, and CONDVALUE crosses zero on 09-05, the day latency costs most. Rules 36-38
   were already in these files from rounds 332-333 and are NOT refiled. tip 0da40bb)
 ```
+
+## Batch 320 (rotated by MEM round 338, 2026-09-10T16:48:28Z)
+
+```
+  2026-09-10T08:07:45Z (MEM ROUND 335 -- R-889 and R-890 swept, and both change what may be SAID.
+  R-889's four independent legs (rule 38 applied BY DESIGN) say CORRECT: YES, RELIABLE AS
+  AN EDGE: NO -- 11/12 figures reproduce exactly, 16 books' trades close to 1.3e-9, replay
+  digests 4/4, settlement Chainlink 1,110/1,110, but the arm LOSES IN THE MEDIAN WINDOW and
+  I recomputed the power: NO day's mean reaches two SE and the LARGEST is about ONE
+  (1.016 / 0.596 / 0.436 / 0.097), while 4/4 against a coin is p = 0.0625. QUOTE REV'S
+  SENTENCE, which replaces the coordinator's own 'beats baseline 4/4': 'a direction worth a
+  declared null on untouched days, not a measured edge.' R-890 gives the MECHANISM --
+  TAIL-CLIPPING: the baseline earns BROADLY (positive in ~60 percent of windows) so the LEVEL
+  is broad and only the INCREMENT is concentrated; the arms recover 28-65 percent of the loss
+  pool and give most of it back where no clipping was needed, and 09-06's decomposition
+  closes onto the +5,318.6380 arm delta I already held. 09-05's negative is the SAME
+  trade-off tipped over, not an anomaly. The 40-window mask is NOT a silent drop (287-40=247,
+  invariant COMPUTED in code) and BE refuted the bias worry outright. Coverage 0.7419 is over
+  GENERATIONS, not windows. tip 87fc599)
+```
