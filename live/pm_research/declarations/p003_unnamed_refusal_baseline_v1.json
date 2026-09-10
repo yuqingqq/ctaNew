@@ -121,6 +121,78 @@
   "the_cause": "DA 201's POSITIONAL discriminator. Each of the five is a bare `REFUSED: <prose>` message whose only UPPER_SNAKE constant is one of the 13 the discriminator rejected (CAUSAL_FROZEN_FROM_TRAIN, DEVELOPMENT_READ_DAYS, FULL_SUPPLIED_COMPLEMENT, INCUMBENT_REWEIGHTED_ONLY), interpolated INSIDE the message as a value rather than leading it.",
   "THE_STATEMENT_STRONGER_THAN_A_TIGHTENING": "these five refusals were ALWAYS UNNAMED. The old rule CREDITED THEM WITH A TOKEN BORROWED from a config constant that happens to appear in the same message. The +5 is a CORRECTION of a mis-credit, not a regression and not merely a consequence of a stricter rule -- the baseline is 5 higher because the previous count was 5 too low.",
   "direction_of_the_error_it_fixed": "the old rule UNDER-counted unnamed refusals, i.e. it erred toward a CLEAN surface. That is the same direction as the other four undercounts of the day and it is the dangerous one.",
-  "what_would_make_this_number_wrong_again": "a NEW constant whose value is UPPER_SNAKE being interpolated at the FRONT of a bare REFUSED message would be credited as a refusal token and drop the count. The discriminator's 13 rejections are enumerated in DA 201's commit so that class stays reviewable."
+  "what_would_make_this_number_wrong_again": "a NEW constant whose value is UPPER_SNAKE being interpolated at the FRONT of a bare REFUSED message would be credited as a refusal token and drop the count. The discriminator's 13 rejections are enumerated in DA 201's commit so that class stays reviewable.",
+  "A_DEFECT_IN_THIS_RECORD_ITSELF_FOUND_BY_REV": {
+   "what_was_wrong": "this block enumerated the rejected constants in VALUE space while the source carries them in NAME space, so a reader grepping for CAUSAL_FROZEN_FROM_TRAIN finds the assignment and NOT the raise site, which interpolates CAUSAL_MODE. The list was internally consistent and read as unmatched against the source.",
+   "the_class": "rule 16 -- name versus value is the exact defect both seats hit today, and it turned up inside the record written to document it",
+   "the_fix": "both spaces are carried below, DERIVED from the source rather than typed, for ALL THIRTEEN rather than the three REV read",
+   "AND_THE_REASON_NEITHER_SPACE_ALONE_IS_ENOUGH": "several values carry TWO DIFFERENT NAMES in different modules -- CAUSAL_FROZEN_FROM_TRAIN is CAUSAL_MODE in be_fragment_diagnostic and THRESHOLD_PRIMARY in phase2_declaration; INCUMBENT_REWEIGHTED_ONLY is BASELINE in phase2_increment_null and INCUMBENT_ARM in phase2_iter011_run. A value-space list is not greppable to the raise site and a name-space list is AMBIGUOUS ACROSS MODULES. THE IDENTITY IS THE TRIPLE (module, name, value), not any one of them."
+  },
+  "the_13_rejected_constants_in_BOTH_spaces": {
+   "CAUSAL_FROZEN_FROM_TRAIN": [
+    "be_fragment_diagnostic.py:CAUSAL_MODE",
+    "phase2_declaration.py:THRESHOLD_PRIMARY"
+   ],
+   "DEVELOPMENT_READ_DAYS": [
+    "de_ratification_check.py:SCOPE_DAYS_DEVELOPMENT_READ"
+   ],
+   "FORWARD_RACE_DAYS": [
+    "de_ratification_check.py:SCOPE_DAYS_RACE"
+   ],
+   "FULL_SUPPLIED_COMPLEMENT": [
+    "de_ratification_check.py:POP_FULL"
+   ],
+   "INCUMBENT_REWEIGHTED_ONLY": [
+    "phase2_increment_null.py:BASELINE",
+    "phase2_iter011_run.py:INCUMBENT_ARM"
+   ],
+   "MECHANICS_BOTH_SPLITS": [
+    "de_phase4_diag_runner.py:RULED_SPLIT_SET"
+   ],
+   "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN": [
+    "de_decision_ledger.py:NULL_NOT_DRAWN_STATUS",
+    "de_multiday_gate1_runner.py:NULL_NOT_DRAWN_STATUS"
+   ],
+   "P003_ACTION_ECONOMIC_LEDGER_V1": [
+    "de_action_bundle_control.py:LEDGER_PROTOCOL",
+    "de_action_economic_ledger.py:PROTOCOL"
+   ],
+   "P003_CANONICAL_ACTION_POPULATION_V1": [
+    "de_canonical_action_population.py:PROTOCOL",
+    "de_v2_acting_matched_control.py:ACTION_PROTOCOL"
+   ],
+   "P003_DE_EARLY_READ_DAY_V1": [
+    "da_early_read_verify.py:EARLY_PROTOCOL"
+   ],
+   "PRESENT": [
+    "landing_check.py:PRESENT"
+   ],
+   "RETROSPECTIVE_TOPK": [
+    "be_fragment_diagnostic.py:RETRO_MODE"
+   ],
+   "VERIFIED_AGREE": [
+    "da_early_read_verify.py:WINNER_STATUS_REQUIRED"
+   ]
+  },
+  "the_five_sites_with_the_NAME_each_interpolates": {
+   "be_fragment_diagnostic.py:1983": [
+    "CAUSAL_MODE -> CAUSAL_FROZEN_FROM_TRAIN",
+    "RETRO_MODE -> RETROSPECTIVE_TOPK"
+   ],
+   "de_ratification_check.py:1159": [
+    "SCOPE_DAYS_DEVELOPMENT_READ -> DEVELOPMENT_READ_DAYS",
+    "SCOPE_DAYS_RACE -> FORWARD_RACE_DAYS"
+   ],
+   "de_ratification_check.py:1209": [
+    "POP_FULL -> FULL_SUPPLIED_COMPLEMENT"
+   ],
+   "phase2_iter011_run.py:948": [
+    "INCUMBENT_ARM -> INCUMBENT_REWEIGHTED_ONLY"
+   ],
+   "phase2_iter011_run.py:1086": [
+    "INCUMBENT_ARM -> INCUMBENT_REWEIGHTED_ONLY"
+   ]
+  },
+  "every_value_resolved_to_a_module_level_name": true
  }
 }
