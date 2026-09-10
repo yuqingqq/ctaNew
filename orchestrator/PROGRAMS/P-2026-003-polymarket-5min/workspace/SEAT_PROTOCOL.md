@@ -560,3 +560,21 @@ except where marked USER-ONLY.
     field, the same query or the same helper, you have correlation and not
     confirmation — the same class as reading an exact reproduction as proof.
     (coordinator, R-883)
+
+39. **Do not schedule around maintenance windows — make the run survive them.**
+    (USER ruling, 2026-09-10: *"We don't have to set up the fixed time to run
+    tasks, just need to proceed the tasks when there is no jobs running."*)
+    `pm-evaluation-pipeline` fires every six hours and holds ~10 GB for about an
+    hour; the coordinator spent a night planning around 03:50/09:50/15:50/21:50
+    and still lost an 852 MB build to it. **The fix is not better timing, it is
+    CHECKPOINTING.** A heavy run that persists each unit of work as it completes
+    turns a window from a run-killer into a one-unit cost, and the box is then
+    used whenever it is free rather than held idle waiting for a slot.
+    **And it removes a worse temptation: with windows bounding the run, a 500-draw
+    null gets trimmed to 200 to fit — which is the under-sampled null rule 6
+    exists to prevent. DA's phrasing is the standard: "split across windows or use
+    the declared floor and record it; NEVER TRIM TO FIT."**
+    **A resume path must be DRIVEN before it is relied on** — kill the run
+    yourself mid-flight and prove it resumes without double-counting or gapping a
+    unit. A resume path that has never been exercised is not a resume path.
+    (R-891)
