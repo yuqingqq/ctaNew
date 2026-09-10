@@ -594,3 +594,21 @@ except where marked USER-ONLY.
     that sits off the path it guards (`verify_run_inputs`, called only from the
     selftest) and a field that asserts a property the code never evaluates.
     **Configured is not applied; applied is not verified.** (R-893)
+
+41. **An instrument's ERROR RATE is not the thing to manage — its ERROR DIRECTION
+    is.** (DA 205, 2026-09-10.) *"A noisy instrument that errs LOUD is cheap; its
+    mistakes are self-limiting. A quiet instrument that errs CLEAN is expensive;
+    its mistakes compound."* **Every failure found on 2026-09-10 was a quiet
+    instrument erring clean:** a guard `run_day` never called; a field printing
+    `True` on a condition it never evaluated; a grep that silently truncated and
+    reported 13 where there were 18; a patch that matched nothing, changed nothing
+    and printed success; a memory cap configured and not applied; a docstring
+    naming the wrong enforcement site. **Not one of them announced itself.**
+    So when a checker over-reports — flags things that turn out fine — that is
+    **the correct design, not a defect to apologise for.** A false alarm costs a
+    look. A false all-clear costs a retraction, and this programme has paid that
+    twice. **State an over-reporting limit as a FEATURE of the direction chosen,
+    never as a caveat**; DA stopped writing the refusal-exercise check's
+    "the error inflates rather than deflates" as an apology for exactly this
+    reason. **And when choosing between two instruments, prefer the one that fails
+    noisily even if it fails more often.** (R-897)
