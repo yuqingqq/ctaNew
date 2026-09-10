@@ -1102,7 +1102,9 @@ def selftest(quiet: bool = False) -> int:
         fired = False
     except ValueError:
         fired = True
-    ok(fired, "holm(): REFUSES a family smaller than the number of tests")
+    ok(fired, "holm(): REFUSES HOLM_FAMILY_SMALLER_THAN_THE_TESTS -- the "
+       "TOKEN is named here, not only the behaviour driven, because "
+       "p003_refusal_coverage uses NAMING as its proxy for driving")
     arm = [("s1", "BUY_UP", 3), ("s1", "SELL_UP", 3), ("s2", "BUY_UP", 9)]
     ok(match_draw(arm, list(arm))["status"] == "MATCHED",
        "match_draw(): an exactly matched draw passes")
