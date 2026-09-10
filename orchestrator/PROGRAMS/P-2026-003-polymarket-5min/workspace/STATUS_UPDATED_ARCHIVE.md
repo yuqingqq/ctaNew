@@ -22873,3 +22873,23 @@ generation and the window went 4 → 3. Nothing rewritten.
   IN THE TREE. The 25-draw number is REFUSED-BELOW-FLOOR, never a preview -- and it sits
   INSIDE its own 25-draw interval at 83.4 per cent. tip afcccf8)
 ```
+
+## Batch 322 (rotated by MEM round 340, 2026-09-10T17:03:10Z)
+
+```
+  2026-09-10T16:41:45Z (MEM ROUND 337 -- THE USER HAS COMMITTED A GOVERNING PLAN AT 09ced57 AND IT
+  SUPERSEDES EVERY 'CURRENT' BLOCK IN THESE FILES. The pre-declared asymmetry null's PRIMARY
+  pool (09-04/05/06) returned DE_LEVERING_NOT_EXCLUDED: CONDVALUE A=0.09361 p=0.02595 vs a
+  fixed 0.025 bar, HAZARD A=0.06178 p=0.06387 vs 0.05 -- both p-values reproduce EXACTLY
+  under the conservative (k+1)/(n+1) estimator, from 12 and 31 of 500. CONDVALUE missed by
+  EXACTLY ONE DRAW; HAZARD missed by SEVEN, and the two must not be blurred. The all-four
+  companion passes ONLY by adding 09-03, which was excluded before the draw and CANNOT be
+  promoted after seeing that it changes the verdict -- the reason the declaration was worth
+  writing. Random cancellation matched on distinct reference-generation count, side and UTC
+  hour explains most of the observed tail clipping. SIX GATED STEPS govern the next work;
+  step 1 adopts BOTH open items this seat filed at round 336 (verify_run_inputs off its
+  path, the duplicated rule-6 floor); step 2 is the DECISION metric the asymmetry statistic
+  was arguably a proxy for, and NOTHING BEYOND STEP 2 MAY BE STARTED. 09-07 is
+  ENDPOINT-SPECIFICALLY clean, not clean -- its 5-s diagnostic already has 1,000 draws --
+  and it is a day the programme KEPT, not one it forgot to spend. tip b72e329)
+```

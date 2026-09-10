@@ -67,6 +67,23 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-10T17:03:10Z (MEM ROUND 340 -- THE SWEEPS COUNTED THE CLASS AND PLAN STEP 1 CHANGED SIZE.
+  REV 166: AT LEAST 53 verdict-bearing guards have only ever been seen returning ONE value,
+  23 of the 34 refusals in the two modules producing tonight's numbers -- 'Step 1 is not
+  four items.' With REV's refusal to overstate recorded verbatim: ONE measured DEAD
+  (LEGS_DO_NOT_CLOSE), the rest UNESTABLISHED, and the distinction settleable only one
+  guard at a time by DRIVING it. The 53 travels with its limit -- a TEXTUAL predicate that
+  INFLATES, six of fifty-three hand-checked. BE: 101 guards off the production path, 20
+  with NO call site. I DROVE verify_run_inputs AND IT REFUSES TODAY -- BE_CASCADE_DIFFERS,
+  2 of 10 cascade modules, de_head_scoring.py declared 53a406a0 vs actual 31c36838: a live,
+  cheap, CURRENTLY-FAILING check nothing calls. I also implemented the proposed standing
+  check as a DIFFERENT operation: 54 refusal tokens, 49 never named in a test -- an UPPER
+  BOUND from a text predicate exactly like REV's, and it flags the guard failing right now.
+  09-07 is genuinely reserved, gated by LIVE code at run_day 9131/9133 -- but 'the computer
+  is on the path, the refuser is not', and the day is protected by admissible_days being
+  None in params v29: THE ABSENCE OF A VALUE, silently reversible. ACTIONABLE SUBSET:
+  TWELVE freeze-bearing guards, not 53, plus a ~30-line STANDING CHECK -- and if only one
+  survives to the next session it should be the check. tip b6e90e5)
   2026-09-10T16:54:32Z (MEM ROUND 339 -- TONIGHT'S REAL DISCOVERY, RECORDED AS A CLASS WITH A COUNT:
   A PROTECTION THAT IS CONFIGURED, DOCUMENTED, AGREED OR DECLARED, AND NOT IN FORCE. SEVEN
   instances -- a working guard run_day never calls, a two-hour null outside research.slice
@@ -98,21 +115,6 @@ updated: >-
   REV's limit recorded VERBATIM and NOT upgraded, and the string is in NO artifact yet. BE
   caught a name TWO artifacts answer to BEFORE it produced a number. Tonight's shape:
   ELEVEN protections configured but not applied or living in prose. tip a52baec)
-  2026-09-10T16:41:45Z (MEM ROUND 337 -- THE USER HAS COMMITTED A GOVERNING PLAN AT 09ced57 AND IT
-  SUPERSEDES EVERY 'CURRENT' BLOCK IN THESE FILES. The pre-declared asymmetry null's PRIMARY
-  pool (09-04/05/06) returned DE_LEVERING_NOT_EXCLUDED: CONDVALUE A=0.09361 p=0.02595 vs a
-  fixed 0.025 bar, HAZARD A=0.06178 p=0.06387 vs 0.05 -- both p-values reproduce EXACTLY
-  under the conservative (k+1)/(n+1) estimator, from 12 and 31 of 500. CONDVALUE missed by
-  EXACTLY ONE DRAW; HAZARD missed by SEVEN, and the two must not be blurred. The all-four
-  companion passes ONLY by adding 09-03, which was excluded before the draw and CANNOT be
-  promoted after seeing that it changes the verdict -- the reason the declaration was worth
-  writing. Random cancellation matched on distinct reference-generation count, side and UTC
-  hour explains most of the observed tail clipping. SIX GATED STEPS govern the next work;
-  step 1 adopts BOTH open items this seat filed at round 336 (verify_run_inputs off its
-  path, the duplicated rule-6 floor); step 2 is the DECISION metric the asymmetry statistic
-  was arguably a proxy for, and NOTHING BEYOND STEP 2 MAY BE STARTED. 09-07 is
-  ENDPOINT-SPECIFICALLY clean, not clean -- its 5-s diagnostic already has 1,000 draws --
-  and it is a day the programme KEPT, not one it forgot to spend. tip b72e329)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -284,6 +286,24 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 340, the sweeps counted the class and step 1 changed size ---
+  STEP_ONE_IS_NOT_FOUR_ITEMS_AND_REVS_SENTENCE_IS_THE_ONE_TO_QUOTE: "REV 166 counted the class: AT LEAST 53 verdict-bearing guards have only ever been observed returning ONE of their values, by a deliberately conservative predicate, with 23 of the 34 refusals concentrated in de_multiday_gate1_runner and de_point_estimate_day -- the two modules producing tonight's numbers. REV's sentence, verbatim: 'Step 1 is not four items.' That is the plan amendment in five words and it is what the USER needs before the freeze."
+  AND_REVS_REFUSAL_TO_OVERSTATE_IS_WHAT_MAKES_THE_NUMBER_USABLE: "Recorded verbatim because a bare 53 would be worse than useless: 'these are NOT 53 known-broken guards. LEGS_DO_NOT_CLOSE was measured UNREACHABLE, so at least one is genuinely dead; the rest are UNESTABLISHED in the same specific sense the waiver was -- they can return a verdict and only one of its values has ever been observed. The distinction between DEAD and UNESTABLISHED is the whole finding, and it can only be settled one guard at a time by driving it.' One measured dead, fifty-two unestablished, and the difference is not knowable in bulk."
+  AND_THE_53_TRAVELS_WITH_ITS_LIMIT_OR_IT_DOES_NOT_TRAVEL: "REV's predicate is TEXTUAL and INFLATES rather than deflates, and REV hand-checked SIX of the fifty-three. So 53 is an UPPER BOUND produced by a text-matching instrument, with an 11 per cent hand-audit. Under rule 36 that limit is a required field on the number, not a footnote: any document quoting 53 quotes the predicate's direction and the six. A number from a text predicate is exactly the kind this programme has been burned by, and REV said so first."
+  BE_COUNTED_101_GUARDS_OFF_THE_PRODUCTION_PATH_AND_20_WITH_NO_CALL_SITE_AT_ALL: "BE 158/159. Concentration: de_multiday_gate1_runner.py 9, da_null_design.py 9, be_forward_metric.py 6, de_multiday_design_declaration.py 5, with the orphans led by ev_replay_seam.py. Two seats counted the same class by different operations and both returned numbers in the dozens-to-hundreds, which is the answer to the question round 339 posed: the set is LARGE. Step 1 as written is a sample of it, not an enumeration."
+  I_DROVE_VERIFY_RUN_INPUTS_AND_IT_REFUSES_TODAY: "The sharpest fact in the batch and I confirmed it by EXECUTION, not by reading. Calling verify_run_inputs against params v29 raises RunnerRefused: 'REFUSED BE_CASCADE_DIFFERS: 2 of 10 cited cascade modules do not match their declared pair', naming live/pm_research/de_head_scoring.py with declared sha256 53a406a0... against actual 31c36838.... So this is a LIVE, CHEAP (BE measures 1.2 ms and 0.91 MB on a day run) and CURRENTLY-FAILING check that nothing on the day path calls. The class is not theoretical: one of its members is failing right now and no one hears it."
+  AND_WIRING_IT_NEEDS_BOTH_THE_CALL_SITE_AND_THE_PARAMS_CRANK: "BE's note, and it matters because a half-fix here is worse than none: the call site near line 9026 AND the params crank are both required -- 'neither alone works'. Wiring the call without cranking the params turns a silent inert guard into a day run that refuses on a difference nobody has adjudicated; cranking without wiring changes nothing. Recorded so the next session does not do half of it and record the half as done."
+  AND_THE_NON_DEFECT_MUST_BE_RECORDED_BEFORE_SOMEONE_TIDIES_IT_AWAY: "The scalar score_lgbm_condvalue looks like an orphan and is not one: it survives as the EXACT-EQUALITY REFERENCE for the USER's batched version. Deleting it as dead code would silently remove the falsifier that proves batching is score-neutral. An orphan census that does not carry its exceptions is a deletion list, and this is the exception. Recorded here because the census will outlive the conversation in which the exception was explained."
+  MY_OWN_COUNT_OF_A_RELATED_QUANTITY_IS_54_TOKENS_WITH_49_NEVER_NAMED_IN_A_TEST: "I implemented the proposed standing check myself, as a DIFFERENT operation from REV's: regex for the token REFUSED <NAME> across live/pm_research, plus an AST pass for those names appearing inside any function whose name matches selftest, test, falsify or _ok. Result: 54 distinct refusal names in 72 occurrences; 5 appear inside such a function; 49 do NOT. Concentration by distinct names: de_multiday_gate1_runner.py 32 and de_point_estimate_day.py 8, so 40 of 54 sit in the two modules producing tonight's numbers. This is NOT agreement with REV's 53 -- different operation, different denominator, different unit -- and under rule 38 the value is that it is a different instrument finding the same SHAPE."
+  AND_MY_INSTRUMENT_INFLATES_IN_EXACTLY_THE_WAY_REVS_DOES_SO_49_IS_AN_UPPER_BOUND: "My coverage detector recognises a refusal as tested only when the literal name appears inside a function whose NAME matches my pattern. A selftest that catches RunnerRefused and checks a substring, or references the name through a constant, is invisible to me -- and a coverage figure of 5 out of 54 is low enough that I should suspect my detector before I suspect the code. So 49 is an UPPER BOUND on untested refusals, from a text predicate, exactly like REV's 53. I record the number with the limit attached rather than not recording it: the class's whole lesson is that an unstated limit is how a count becomes a false clean."
+  AND_THE_PROPOSED_STANDING_CHECK_WOULD_HAVE_CAUGHT_THE_ONE_THAT_IS_FAILING_NOW: "BE_CASCADE_DIFFERS is in my uncovered set of 49 -- and it is the refusal I drove into raising this round. So the ~30-line standing check is not a hypothetical: run today it flags the live failing guard, and run at the commit that introduced each name it would have flagged all of them then. My uncovered list also contains HOLM_FAMILY_SMALLER_THAN_THE_TESTS and the POINT_ESTIMATE_* guards, which are on the twelve-item freeze-bearing subset -- two independent routes arriving at the same actionable names."
+  DAS_DIRECTION_NOTE_IS_THE_KEEPER_ONE_MECHANISM_PRODUCED_A_FALSE_POSITIVE_AND_A_FALSE_CLEAN: "The rule-6 floor went 2 -> 13 -> 18 and the undercount was DA's OWN GREP SILENTLY TRUNCATING. DA's note: the identity trap produced a FALSE POSITIVE last round -- 'the day is spent' about an unspent day -- and this produced a FALSE CLEAN -- 'thirteen, all bound' about eighteen. Same mechanism, both directions, and THE FALSE CLEAN IS THE DANGEROUS ONE: a false positive gets argued down by the next seat, while a false clean gets adopted and stops being examined. Carrier census landed at aee5f9f."
+  09_07_IS_GENUINELY_RESERVED_AND_IT_WAS_ESTABLISHED_RATHER_THAN_ASSUMED: "BE 159 did not take it on trust: a day run WAS performed on 2026-09-08 and WAS gated by LIVE production code. I read the site -- run_day calls settlement_admissibility(day, params, fixture=fixture) at 9131 and branches on _adm801['admissible'] at 9133, under a comment stating that rule 11 decides whether the day may be valued at all and that the verdict is RECORDED either way. The gate is real and it is on the path."
+  BUT_THE_COMPUTER_IS_ON_THE_PATH_AND_THE_REFUSER_IS_NOT: "BE's distinction, and it is the class again in its subtlest form: the function whose docstring calls itself 'the entry that DECIDES' is OFF-PATH. The gate held -- but the named refuser it advertises would NOT have fired. So 09-07 was protected by a different mechanism than the one the code says protects it, and a reader auditing the protection by reading the self-described decider would have audited something inert."
+  AND_09_07_IS_PROTECTED_BY_THE_ABSENCE_OF_A_VALUE_WHICH_IS_SILENTLY_REVERSIBLE: "I read it in the params: settlement_endpoint.admissible_days is None in de_multiday_gate1_params_v29.json. So the day is reserved because a field is UNSET, not because anything asserts it is reserved. Anyone setting that field for an unrelated reason silently un-protects the programme's only reserved endpoint day, and nothing would say so. This is the highest-consequence member of tonight's class: the protection is real, it works, and it is one edit away from vanishing without a message."
+  STEP_TWO_IS_CLEAN_TO_REPORT_AND_THE_CLEANLINESS_WAS_ESTABLISHED_NOT_ASSUMED: "Three separate findings, all negative in the useful direction: no path direct or transitive from any colliding MIN_DRAWS into the run -- step 2 reads none of the seven, carries its own FLOOR = 200, takes n_draws as a REQUIRED keyword and calls only build_pool_from_rows, draw_one and flags_for; none of the nine off-path guards in the runner would change what step 2 reports; and the aggregator's falsifier is GREEN at 84b249e with the FAILURE VERDICT REACHABLE AND FIRING. That last one is REV 165's class answered for this instrument specifically: this verdict function has been seen returning both values."
+  THE_ACTIONABLE_SUBSET_IS_TWELVE_FREEZE_BEARING_GUARDS_NOT_FIFTY_THREE: "The plan amendment: drive the TWELVE guards a freeze depends on -- verify_book_against_builder_receipt, the eight POINT_ESTIMATE_* driver and prior guards, p003_rule6_floor.DIVERGED, HOLM_FAMILY_SMALLER_THAN_THE_TESTS, and the settlement-control floor. Twelve is a week's work; fifty-three is a quarter's, and most of the fifty-three cannot block a freeze. Selecting by what the FREEZE depends on rather than by what the census found is the difference between a plan and a backlog."
+  AND_THE_LIST_IS_A_SNAPSHOT_WHILE_THE_STANDING_CHECK_IS_A_FLOOR: The ~30-line standing check -- every REFUSED <NAME> token must appear in at least one test function -- is the durable half. The twelve-item list decays the moment someone adds a thirteenth guard; the check does not, and it would have caught all 34 AT THE COMMIT THAT INTRODUCED THEM rather than tonight. Record both, but if only one survives into the next session, it should be the check. A list tells you what is wrong today; a predicate tells you when it goes wrong next.
   # --- MEM round 339, the class: configured, and not in force ---
   THE_CLASS_IS_A_PROTECTION_CONFIGURED_DOCUMENTED_AGREED_OR_DECLARED_AND_NOT_IN_FORCE: "Recorded as ONE class with a count, not seven notes. Its members tonight: a WORKING cascade guard run_day never calls; a two-hour null that ran in run-u32934.scope instead of research.slice so the 14 GB cap, MemorySwapMax=0 and the oomd arming were ALL INERT; a hardcoded theta_was_not_refitted_here that would print True on a refitted day; a fallback refusal advertised as refusing and COSMETIC; a floor whose carriers were miscounted twice; six declaration predicates testing SPELLING not CONTENT inside the module written to prevent that; and a verdict function that has NEVER produced a FAILURE verdict. SEVEN, and the class is what matters, not the members."
   AND_EVERY_INSTANCE_WAS_FOUND_BY_ACCIDENT_WHILE_CHECKING_SOMETHING_ELSE: That is the diagnostic property and the reason the class is dangerous. Not one of the seven was found by a check aimed at it; each surfaced while a seat was looking at something adjacent. A protection that is configured but not in force is INVISIBLE to every instrument that reads the configuration -- which is most of them -- and visible only to one that reads the behaviour. So the discovery rate says nothing about the prevalence, and the set's SIZE is unknown rather than small.
@@ -27447,6 +27467,109 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 340, 2026-09-10T17:03:10Z ---
+  STEP_ONE_IS_NOT_FOUR_ITEMS_AND_REVS_SENTENCE_IS_THE_ONE_TO_QUOTE:
+    prov: RELAYED
+    from: REV 166 via coordinator MEM 340
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      the 53, the 34 and the concentration are REV's measurement; my own independent count of a related quantity is filed separately below and is NOT offered as agreement.
+  AND_REVS_REFUSAL_TO_OVERSTATE_IS_WHAT_MAKES_THE_NUMBER_USABLE:
+    prov: RELAYED
+    from: REV 166 via coordinator MEM 340
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      REV's own framing quoted and deliberately not compressed; the DEAD/UNESTABLISHED distinction is the load-bearing part.
+  AND_THE_53_TRAVELS_WITH_ITS_LIMIT_OR_IT_DOES_NOT_TRAVEL:
+    prov: RELAYED
+    from: REV 166 via coordinator MEM 340
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      the textual nature of the predicate, its inflating direction and the six hand-checks are REV's own disclosure.
+  BE_COUNTED_101_GUARDS_OFF_THE_PRODUCTION_PATH_AND_20_WITH_NO_CALL_SITE_AT_ALL:
+    prov: RELAYED
+    from: BE 158/159 via coordinator MEM 340
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      the 101, the 20 and the per-file concentration are BE's census; I verified one member of it by execution below.
+  I_DROVE_VERIFY_RUN_INPUTS_AND_IT_REFUSES_TODAY:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      verify_run_inputs imported and called with the v29 params; it raised RunnerRefused with the BE_CASCADE_DIFFERS name, the 2-of-10 count and both digests.
+  AND_WIRING_IT_NEEDS_BOTH_THE_CALL_SITE_AND_THE_PARAMS_CRANK:
+    prov: RELAYED
+    from: BE 158/159 via coordinator MEM 340
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      BE's 'neither alone works' quoted; the refusal I drove is what makes the ordering consequential.
+  AND_THE_NON_DEFECT_MUST_BE_RECORDED_BEFORE_SOMEONE_TIDIES_IT_AWAY:
+    prov: RELAYED
+    from: BE 159 via coordinator MEM 340
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      BE's identification of the scalar's role as the exact-equality reference; recorded as a standing exception to the orphan list.
+  MY_OWN_COUNT_OF_A_RELATED_QUANTITY_IS_54_TOKENS_WITH_49_NEVER_NAMED_IN_A_TEST:
+    prov: CHECKED
+    artifact: live/pm_research
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      the regex and AST passes run over the package's .py files; counts, coverage and per-file concentration recorded as produced.
+  AND_MY_INSTRUMENT_INFLATES_IN_EXACTLY_THE_WAY_REVS_DOES_SO_49_IS_AN_UPPER_BOUND:
+    prov: CHECKED
+    artifact: live/pm_research
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      the coverage rule stated as implemented; the 5-of-54 result read as evidence about the detector as much as about the code.
+  AND_THE_PROPOSED_STANDING_CHECK_WOULD_HAVE_CAUGHT_THE_ONE_THAT_IS_FAILING_NOW:
+    prov: CHECKED
+    artifact: live/pm_research
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      BE_CASCADE_DIFFERS, HOLM_FAMILY_SMALLER_THAN_THE_TESTS and four POINT_ESTIMATE_* names all present in the uncovered set produced by my pass.
+  DAS_DIRECTION_NOTE_IS_THE_KEEPER_ONE_MECHANISM_PRODUCED_A_FALSE_POSITIVE_AND_A_FALSE_CLEAN:
+    prov: RELAYED
+    from: DA 195/196 via coordinator MEM 340
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      DA's two-directional note as dispatched; the 2 -> 13 -> 18 sequence I confirmed last round by driving reconcile() to 18 carriers.
+  09_07_IS_GENUINELY_RESERVED_AND_IT_WAS_ESTABLISHED_RATHER_THAN_ASSUMED:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      lines 9126-9136 read: the rule-11 comment, the settlement_admissibility call at 9131 and the admissible branch at 9133.
+  BUT_THE_COMPUTER_IS_ON_THE_PATH_AND_THE_REFUSER_IS_NOT:
+    prov: RELAYED
+    from: BE 159 via coordinator MEM 340
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      BE's distinction quoted; what I verified is that the on-path gate at 9131/9133 exists and is live.
+  AND_09_07_IS_PROTECTED_BY_THE_ABSENCE_OF_A_VALUE_WHICH_IS_SILENTLY_REVERSIBLE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v29.json
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      the params file loaded; settlement_endpoint is present and its admissible_days key resolves to None.
+  STEP_TWO_IS_CLEAN_TO_REPORT_AND_THE_CLEANLINESS_WAS_ESTABLISHED_NOT_ASSUMED:
+    prov: RELAYED
+    from: coordinator MEM 340
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      the three independence findings and the green falsifier as dispatched; the run's own progress I measured separately at the unit.
+  THE_ACTIONABLE_SUBSET_IS_TWELVE_FREEZE_BEARING_GUARDS_NOT_FIFTY_THREE:
+    prov: RELAYED
+    from: coordinator MEM 340
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      the twelve named guards as dispatched; four POINT_ESTIMATE_* names and HOLM_FAMILY_SMALLER_THAN_THE_TESTS also appear in my own uncovered set, independently.
+  AND_THE_LIST_IS_A_SNAPSHOT_WHILE_THE_STANDING_CHECK_IS_A_FLOOR:
+    prov: RELAYED
+    from: coordinator MEM 340
+    as_of: 2026-09-10T17:03:10Z
+    said: >-
+      the check's specification and its retrospective coverage claim as dispatched; I implemented an independent version of it this round and it flags the currently-failing guard.
   # --- MEM round 339, 2026-09-10T16:54:32Z ---
   THE_CLASS_IS_A_PROTECTION_CONFIGURED_DOCUMENTED_AGREED_OR_DECLARED_AND_NOT_IN_FORCE:
     prov: RELAYED

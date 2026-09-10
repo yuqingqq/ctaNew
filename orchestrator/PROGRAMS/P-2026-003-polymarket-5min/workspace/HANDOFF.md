@@ -1,3 +1,142 @@
+# READ FIRST — round 340 (MEM, 2026-09-10T17:03:53Z, tip `b6e90e5`)
+# ⭐ THIS IS THE ROUND TO READ FIRST IN A NEW SESSION
+
+# 📐 THE SWEEPS COUNTED THE CLASS — AND PLAN STEP 1 CHANGED SIZE
+
+> **REV 166: *"Step 1 is not four items."***
+
+| sweep | count |
+|---|---|
+| REV — verdict functions seen returning only ONE value | **≥ 53**, with **23 of 34 refusals** in the two modules producing tonight's numbers |
+| BE — guards off the production path | **101**, of which **20 have no call site anywhere** |
+| DA — carriers of one declared constant | **2 → 13 → 18** |
+
+**REV's refusal to overstate, verbatim — a bare 53 would be worse than useless:**
+
+> *"these are NOT 53 known-broken guards. `LEGS_DO_NOT_CLOSE` was measured
+> UNREACHABLE, so at least one is genuinely dead; the rest are UNESTABLISHED in
+> the same specific sense the waiver was… The distinction between DEAD and
+> UNESTABLISHED is the whole finding, and it can only be settled one guard at a
+> time by driving it."*
+
+**And the limit travels with the number or the number does not travel:** REV's
+predicate is **textual and INFLATES**, and REV hand-checked **six of fifty-three.**
+
+# 🔥 I DROVE `verify_run_inputs` — **IT REFUSES TODAY**
+
+```
+RunnerRefused: REFUSED BE_CASCADE_DIFFERS: 2 of 10 cited cascade modules
+do not match their declared pair
+  live/pm_research/de_head_scoring.py
+  declared 53a406a0ae2a11ff…   actual 31c368384770351f…
+```
+
+**A live, cheap (1.2 ms / 0.91 MB per day run) and CURRENTLY-FAILING check that
+nothing on the day path calls.** *The class is not theoretical: one of its
+members is failing right now and no one hears it.*
+
+**Wiring needs BOTH the call site (~9026) AND the params crank — *"neither alone
+works."*** Wiring without cranking turns a silent inert guard into a day run
+refusing on an unadjudicated difference; cranking without wiring changes nothing.
+**Do not do half and record the half as done.**
+
+**⚠️ NON-DEFECT, recorded before someone tidies it away:** the scalar
+`score_lgbm_condvalue` looks like an orphan and is not — it is the
+**exact-equality reference** for the USER's batched version. **Deleting it would
+silently remove the falsifier proving batching is score-neutral.** *An orphan
+census without its exceptions is a deletion list.*
+
+# 🧪 I IMPLEMENTED THE PROPOSED STANDING CHECK — AS A **DIFFERENT** OPERATION
+
+Regex for `REFUSED <NAME>` across `live/pm_research`, plus an AST pass for those
+names inside any function named like a test/selftest/falsifier:
+
+- **54** distinct refusal names (72 occurrences)
+- **5** appear inside such a function — **49 do not**
+- **40 of 54** sit in `de_multiday_gate1_runner.py` (32) and
+  `de_point_estimate_day.py` (8)
+
+**This is NOT agreement with REV's 53** — different operation, denominator and
+unit. **Under rule 38 its value is that a different instrument found the same
+shape.**
+
+**And my instrument inflates exactly as REV's does.** A selftest that catches
+`RunnerRefused` and checks a substring is invisible to me; **5 of 54 is low
+enough that I should suspect my detector before the code.** **So 49 is an upper
+bound from a text predicate — recorded with the limit attached, because the
+class's whole lesson is that an unstated limit is how a count becomes a false clean.**
+
+**✅ It flags the one that is failing now.** `BE_CASCADE_DIFFERS` is in my
+uncovered 49 — the guard I just drove into raising. So does
+`HOLM_FAMILY_SMALLER_THAN_THE_TESTS` and four `POINT_ESTIMATE_*` names, **which
+are on the twelve-item freeze-bearing subset: two independent routes to the same
+actionable names.**
+
+# 🧭 DA'S DIRECTION NOTE — ONE MECHANISM, BOTH DIRECTIONS
+
+The identity trap gave a **false positive** last round (*"the day is spent"* about
+an unspent day) and a **false clean** this one (*"thirteen, all bound"* about
+eighteen). **The false clean is the dangerous one: a false positive gets argued
+down by the next seat; a false clean gets adopted and stops being examined.**
+Census at `aee5f9f`.
+
+# 📅 09-07 IS GENUINELY RESERVED — ESTABLISHED, NOT ASSUMED
+
+A day run **was** performed on 2026-09-08 and **was** gated by live production
+code. I read the site: `run_day` calls `settlement_admissibility(...)` at
+**9131** and branches on `_adm801["admissible"]` at **9133**, under a comment
+stating rule 11 decides whether the day may be valued at all **and that the
+verdict is recorded either way.**
+
+**But BE's distinction is the class in its subtlest form: *"The computer is on
+the path. The refuser is not."*** The function whose docstring calls itself *"the
+entry that DECIDES"* is off-path. **The gate held — the named refuser it
+advertises would not have fired.** *A reader auditing the protection by reading
+the self-described decider would have audited something inert.*
+
+## 🚨 AND THE PROTECTION IS **THE ABSENCE OF A VALUE**
+
+`settlement_endpoint.admissible_days` is **`None`** in
+`de_multiday_gate1_params_v29.json` — **I read it.** The day is reserved because
+a field is **unset**, not because anything asserts it is reserved. **Anyone
+setting that field for an unrelated reason silently un-protects the programme's
+only reserved endpoint day, and nothing would say so.**
+
+**Highest-consequence member of tonight's class: the protection is real, it
+works, and it is one edit away from vanishing without a message.**
+
+# ✅ STEP 2 IS CLEAN TO REPORT — AND THE CLEANLINESS WAS ESTABLISHED
+
+- **No path, direct or transitive, from any colliding `MIN_DRAWS` into the run** —
+  step 2 reads none of the seven, carries its own `FLOOR = 200`, takes
+  `n_draws` as a **required keyword**, and calls only `build_pool_from_rows`,
+  `draw_one`, `flags_for`.
+- **None of the nine off-path guards in the runner** would change what step 2 reports.
+- **The aggregator's falsifier is GREEN at `84b249e` — failure verdict REACHABLE
+  AND FIRING.** *REV 165's class, answered for this instrument specifically: this
+  verdict function has been seen returning both values.*
+
+Draws ~454/4000, landing ~18:50Z.
+
+# 🎯 THE PLAN AMENDMENT — TWELVE, NOT FIFTY-THREE
+
+**Drive the twelve freeze-bearing guards:** `verify_book_against_builder_receipt`,
+the eight `POINT_ESTIMATE_*` driver/prior guards, `p003_rule6_floor.DIVERGED`,
+`HOLM_FAMILY_SMALLER_THAN_THE_TESTS`, the settlement-control floor.
+
+**Twelve is a week; fifty-three is a quarter, and most of the fifty-three cannot
+block a freeze.** *Selecting by what the freeze depends on, rather than by what
+the census found, is the difference between a plan and a backlog.*
+
+## AND THE DURABLE HALF IS THE CHECK, NOT THE LIST
+
+**~30 lines: every `REFUSED <NAME>` token must appear in at least one test
+function.** The twelve-item list decays the moment someone adds a thirteenth
+guard. **The check would have caught all 34 at the commit that introduced them.**
+
+***If only one thing survives into the next session, it should be the check. A
+list tells you what is wrong today; a predicate tells you when it goes wrong next.***
+
 # READ FIRST — round 339 (MEM, 2026-09-10T16:55:10Z, tip `84b249e`)
 
 # 🔴 TONIGHT'S REAL DISCOVERY, AS ONE CLASS WITH A COUNT
