@@ -741,3 +741,38 @@ DA's and MEM's commits, ahead 2 / behind 2, landed this way). Seat refresh is ON
 Read each seat's context from its pane status line (`tmux capture-pane … | grep -o '[0-9]*% context used'`),
 never from the seat's own estimate (MEM said 14% at 99%). Reset at 80%; three seats reached 98–100%
 on 2026-09-06 before anyone read the line.
+
+## §7i — STANDING AUTHORITY AND THE PRE-AUTHORISED BRANCHES (2026-09-10T17:03Z)
+
+**The USER delegated the recommended options to the coordinator: _"Go ahead, use the
+recommended options, don't have to ask me to decide."_** What follows is decided, not
+pending, so no seat waits on a ruling when step 2's draws land (~18:50Z).
+
+**IF STEP 2 RETURNS `NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM`** — plan step 3 fires.
+Report the failure as the FIRST line, publish the four elements together, and STOP.
+No freeze, no forward test, no redesign in the same breath. QR_SKEW_ONLY remains the
+reference. A redesign uses consumed data only and starts a NEW freeze and a NEW
+validation clock — a fresh decision, not a continuation. **This outcome protects five
+validation days and is not a disappointment.**
+
+**IF EITHER ARM BEATS MATCHED RANDOM — THE FREEZE WAITS ON REV'S TWELVE GUARDS.**
+Plan step 4 commits builder, scorer, thresholds, settlement convention, null
+construction and decision rule. REV 166 established ≥53 verdict-bearing guards seen
+returning only one of their values, **23 of the 34 refusals inside
+`de_multiday_gate1_runner` and `de_point_estimate_day`** — the two modules producing
+the numbers — of which **twelve bear on what the freeze commits**.
+**A FREEZE RESTING ON GUARDS NOBODY HAS SEEN FIRE IS A FREEZE RESTING ON NOTHING**,
+and freezing is the one step that cannot be taken back. Hours of delay, not days.
+
+**ALSO AUTHORISED, NO FURTHER PERMISSION NEEDED:** wiring `verify_run_inputs` (BOTH
+the call site ~9026 and the params crank — neither alone works; it costs 1.2 ms and
+**refuses today**); making 09-07's reservation NAME THE DAY rather than resting on
+`settlement_endpoint.admissible_days` being unset (**protected by the absence of a
+value is silently reversible**); the triage of how many of the 101 off-path guards
+protect an ALREADY-VIOLATED condition; and DA building the standing check — **every
+`REFUSED <NAME>` token must appear in at least one test function**, ~30 lines, with
+its own falsifier. **The list is a snapshot; the check is a floor.**
+
+**THE TELL:** if the standing check itself cannot be made to fail, STOP — that is the
+ninth instance of tonight's class, inside the tool built to end it.
+
