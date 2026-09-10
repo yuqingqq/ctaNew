@@ -271,7 +271,8 @@ def selftest(quiet: bool = False) -> int:
         except FloorDiverged as e:
             fired = True
             msg = str(e)
-        _ok(fired and code0["path"] in msg and "199" in msg,
+        _ok(fired and code0["path"] in msg and "199" in msg
+        and DIVERGED in msg,
             f"KNOWN-BAD (code): {code0['path']}:{code0['name']} drifted to 199 "
             f"-> REFUSES and NAMES the carrier")
         # restore, then (b) a DECLARATION carrier drifts to 201
@@ -358,8 +359,36 @@ def selftest(quiet: bool = False) -> int:
         fired4 = False
     except FloorDiverged:
         fired4 = True
-    _ok(fired4, "KNOWN-BAD: an authority declaring a floor of 0 REFUSES -- "
-                "nothing may derive from an unusable floor")
+    _ok(fired4, f"KNOWN-BAD: an authority declaring a floor of 0 REFUSES "
+                f"{NOT_A_NUMBER} -- nothing may derive from an unusable floor")
+
+    # ---- DA 200 / REV 167: MY KNOWN-BAD WAS TOO EASY AND THAT IS THE LESSON.
+    # `0` was caught by the OLD predicate (`n < 1`) purely by luck of the
+    # value I chose. REV drove `THE_NUMBER = 150` -- BELOW rule 6's 200 and
+    # ABOVE 1 -- and it was RETURNED, not refused. A known-bad must probe the
+    # BOUNDARY of the property, not merely be obviously invalid.
+    import tempfile as _t2
+    for bad_n, want in ((150, BELOW_THE_RULE), (199, BELOW_THE_RULE),
+                        (0, NOT_A_NUMBER), ("200", NOT_A_NUMBER)):
+        aa = dict(d)
+        aa["THE_NUMBER"] = bad_n
+        with _t2.NamedTemporaryFile("w", suffix=".json", delete=False) as fh:
+            json.dump(aa, fh)
+            bp2 = fh.name
+        try:
+            floor(bp2)
+            got = None
+        except FloorDiverged as e:
+            got = str(e)
+        _ok(got is not None and want in got,
+            f"KNOWN-BAD AT THE BOUNDARY: THE_NUMBER={bad_n!r} REFUSES {want} "
+            f"-- REV 167 drove 150 through the old predicate and it PASSED, "
+            f"because that check tested the value was A number and never THE "
+            f"number")
+    _ok(RULE_6_ABSOLUTE_MINIMUM == 200,
+        f"and the bound a floor may never be lowered THROUGH is CLAUDE.md "
+        f"rule 6's own {RULE_6_ABSOLUTE_MINIMUM}, held separately from "
+        f"THE_NUMBER so a RAISED floor still satisfies it")
 
     if not quiet:
         print(f"[p003_rule6_floor] {_N['n'] - _N['bad']}/{_N['n']} checks, "

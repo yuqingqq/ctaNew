@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
-"""EVERY `REFUSED <NAME>` MUST BE NAMED IN A TEST. A STANDING FLOOR.
+"""SUPERSEDED by `p003_refusal_exercise_check.py` (DA 200, REV 168's spec).
+
+KEPT AS PROVENANCE, NOT AS AN INSTRUMENT. Its numbers are cited in Q-DA-402
+and Q-DA-403 and must remain resolvable, but it had two defects the successor
+exists to close and it should not be used to gate anything:
+
+  * IT SAW ONE IDIOM. Inline `REFUSED <NAME>` literals only; blind to
+    `NAME = "SOME_REFUSAL"` referenced in a `raise`. MEASURED: its population
+    was 59; the successor's is 168, split 86 inline / 82 named-constant.
+  * IT SILENTLY EXCLUDED THE UNNAMED ONES on the grounds that they were
+    "sentences, not tokens". MEASURED: 1,103 such sites, 106 in
+    `de_multiday_gate1_runner.py` alone. A dropped population reads as a
+    clean one.
+
+Use `p003_refusal_exercise_check` instead.
+
+EVERY `REFUSED <NAME>` MUST BE NAMED IN A TEST. A STANDING FLOOR.
 
 REV specified it and the coordinator authorised it (DA 198). Rule 15 already
 requires that every checker ship a falsifier; REV's sweep measured what its
