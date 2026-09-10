@@ -491,6 +491,21 @@ except where marked USER-ONLY.
     spent. If a fix genuinely cannot be demonstrated on a consumed day, ASK THE
     USER before the day is touched, never after. (R-873)
 
+    **34a. AMENDMENT — WRITING DOES NOT CONSUME A DAY; READING DOES (USER ruling,
+    2026-09-10).** `pm-evaluation-pipeline.timer` auto-processes one day every six
+    hours and has already written Tier-2 artifacts for **09-08**, a protected day.
+    That does NOT consume it. Rule 11's hazard is **selection on seen data**, and
+    the pipeline fits nothing, picks no threshold, computes no interval and
+    authorizes nothing — it writes `maker_edge_per_share = q_up * (price_up −
+    outcome_up)` mechanically. **A day is consumed when a PERSON OR SEAT LOOKS at
+    it.** So the timer keeps running and the artifacts accumulate UNREAD.
+    **The prohibition therefore extends to the OUTPUTS: do not read, summarise,
+    plot, aggregate or quote `data/pm_5min/tier2/**/day=2026-09-08/` or any later
+    day.** Their existence is not permission. If you need to know whether such a
+    day QUALIFIES, read completeness/coverage/quality metadata only — DA 182
+    demonstrated that boundary in practice. **The eye is the thing that spends the
+    day, so guard the eye.**
+
 35. **A limit that lives only in a declaration does not bind the result.** If a
     document states a constraint on how its output may be read — "this cannot
     validate", "matched only on X", "this set is superseded" — the OUTPUT must
