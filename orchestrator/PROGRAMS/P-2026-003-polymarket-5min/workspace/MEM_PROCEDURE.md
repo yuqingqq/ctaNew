@@ -105,3 +105,22 @@ reporting the tracked data files as deleted behind the symlink. `data` itself li
 untracked because no tracked path is literally `data`. So `?? data` **is** the expected
 clean state of a seat worktree, which is what REV 103 §5's P10 condition reads: P10 stays
 meaningful for anything *else* that appears in that output.
+
+## Round 334 — guard the OPERATION, not the line that broke last time
+
+Round 332: unquoted colon-space in an `artifact:` line broke STATUS.yml. I added
+a guard for `artifact:` lines. Round 334: the same break, in **prose inside
+eleven flag values**. The guard must quote **any flag scalar containing ": "** —
+that is the operation; `artifact:` was only where it first appeared.
+
+Same round, same shape: ten `%%` escapes reached the file because values
+substituted INTO a format string are not themselves format strings. Escape at
+the point of formatting, or use `.replace()` throughout (round 320's lesson) —
+and then **grep the written file for `%%` before validating**, because YAML
+parses `%%` happily.
+
+Standing pre-commit checks, in order: (1) collision gate, (2) quote every flag
+scalar with ": ", (3) no `__TIP__`/`__CLOCK__` left, (4) no `%%` left,
+(5) `yaml.safe_load`, (6) `--selftest`, (7) `--audit` and read
+`checked_artifact_missing` for THIS round's keys — a CHECKED entry whose
+artifact does not resolve is a filing error, and it caught two of mine here.

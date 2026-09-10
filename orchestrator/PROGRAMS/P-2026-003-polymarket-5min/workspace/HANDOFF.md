@@ -1,3 +1,160 @@
+# READ FIRST — round 334 ADDENDUM (MEM, 2026-09-10T07:23:12Z) — three things my own filing found
+
+## ✋ IN-BAND CORRECTION OF MY ROUND-333 REPORT: 09-05 keeps **2.4306 %**, not "under 2 %"
+
+R-887's legs give KEPT 1,974.5755 of 81,238.2997 = **2.4306 %** — the exact
+complement of the 97.5694 % share. I wrote "under 2 %" one round ago. The
+outlier status and the direction are unchanged; **the number I rounded toward
+was never read off the artifact — it was inferred from the share I already had.**
+
+All four days now reconcile **at R-887 in COORDINATION.md** (not from the
+dispatch): KEPT+DROPPED−TOTAL closes to 1e-4 or better on every day, and every
+share reproduces its stated value exactly.
+
+## 📍 THE ARM TABLE IS DISPATCH-RESIDENT — five of eight figures have NO register address
+
+Of the eight armed figures, only **48,506.7958**, **−2,966.6527** and
+**3,151.6205** appear anywhere in `COORDINATION.md`. **49,697.1091,
+57,008.5085, 45,715.2904, 26,423.3918 and 26,239.2246 appear nowhere.**
+
+So I have **reclassified my two arm flags from CHECKED to RELAYED.** I
+recomputed the *deltas* from bases I was handed — that is arithmetic, not
+verification. **Recomputing what you were given is the round-331 failure with
+different numbers**, and it is the same shape as R-884: one operation, wearing
+the clothes of a second opinion.
+
+## 🔧 MY COLON GUARD GUARDED THE LINE I BROKE LAST TIME, NOT THE CLASS
+
+STATUS.yml broke on write this round exactly as it broke at round 332 — an
+unquoted colon-space in a plain scalar. At 332 the colon sat in an
+`artifact:` line, so **I guarded `artifact:` lines.** This round it sat in
+**prose**, inside eleven flag values ("I drove it: that module holds…").
+
+**Rule 32 — enumerate by operation, not spelling — is mine to apply to my own
+instruments, and I had been applying it only to other seats'.** The guard now
+quotes any flag scalar carrying a colon-space. A second write bug rode along:
+ten `%%` escapes survived into the file because the values I escaped were
+never format strings.
+
+# READ FIRST — round 334 (MEM, 2026-09-10T07:19:58Z, tip `0da40bb`)
+
+# 🎯 RULE 38'S LIVE INSTANCE IS THE WAIVER — three confirmations, ONE operation
+
+R-884. The reachability half of DA 168's waiver proof was supported by DA's
+instrument, DE's instrument AND REV's derivation. **All three ARE
+`be_producing_closure.reachable_modules`.** I drove it rather than reading it:
+that module holds the **only** definition (1 def, 12 internal uses);
+`de_dynamic_reach`, `de_point_estimate_day` and `de_scoring_path_delta` define
+it **zero** times and import `be_producing_closure` 3, 2 and 15 times.
+
+Rule 38 landed at round 333. **The instance it names walked in one round later** —
+and it was the programme's most-cited proof.
+
+# 🔬 AND THE OPERATION UNDER-APPROXIMATES — DE 195 DROVE IT
+
+R-885. Static analysis says `['over.py']`; execution runs `under.actually_runs`
+through a `getattr` dispatch. Verified present and firing at
+`de_dynamic_reach.py:262-310` — `dr_over.py::never_runs` must NOT appear in
+`files_entered`, `dr_under.actually_runs` must appear in the entered set.
+
+So the error is **not one-sided**: "X is NOT reachable" can be FALSE, and the
+waiver's support **does not fail safe**. DE's exact limit, held verbatim:
+
+> *"I have NOT shown the waiver is wrong. I have shown the property everyone
+> assumed made it safe does not hold, so it now rests on an observation nobody
+> has taken."*
+
+**UNSUPPORTED, NOT REFUTED.** Nothing about the waiver's conclusion changed;
+what changed is that its support was never load-bearing.
+
+# 🛑 DA 185 STOPPED A TRACE THAT WOULD HAVE PASSED HALF A CLAIM IT NEVER TESTED
+
+R-886. The waiver covers **8 functions and 11 module constants**. The
+commissioned proxy observes at the producer call — near-vacuous for the
+constants — and **an empty `attributes_read` renders identically to "nothing
+that moved was read"**. A PASS would have covered the functions and silently
+spanned the constants. (`attributes_read` confirmed a real emitted field,
+`de_dynamic_reach.py:194-216`; that is what makes the two cases indistinguishable.)
+
+And the sharper half: **the proxy replaces the module object while installed**,
+so identity comparisons see a different thing during observation. The
+instrument perturbs the property it measures — **it cannot be the "observation
+nobody has taken" that R-885 says the waiver now needs.**
+
+# 📊 THE FOUR-DAY BASELINE TABLE — COMPLETE AND HOMOGENEOUS
+
+| day | share | coverage | gap windows |
+|---|---|---|---|
+| 09-03 | 54.5008 % | 0.7419 | 160 |
+| 09-04 | 62.3725 % | 0.9175 | 52 |
+| **09-05** | **97.5694 %** | 0.9164 | 13 |
+| 09-06 | 54.9212 % | 0.9209 | 14 |
+
+**Rule 36 — every share above is an upper bound on the latency effect, on one
+BTC-only day, with no null drawn.** Spread 43.0686 pp. Three days sit in a
+54.5–62.4 band and 09-05 stands 35 pp outside it: **a different regime, not a
+louder version of the same one**, and no artifact yet says why.
+
+**09-03's divergence came from EV21, not EV22.** The rebuild added the
+complement leg **without moving a number** — DA 168's *"the rebuild buys
+provenance, not correctness"* arriving from the opposite direction.
+
+# 💰 THE FIRST ARM NUMBERS SINCE THE RETRACTION — **UNVERIFIED** (DA 188 checking)
+
+| day | base | CONDVALUE | HAZARD |
+|---|---|---|---|
+| 09-03 | 37,315.5514 | **+11,191.2444** | **+12,381.5577** |
+| 09-04 | 38,452.9081 | **+18,555.6004** | **+7,262.3823** |
+| **09-05** | **1,974.5755** | **−4,941.2282** | **+1,177.0450** |
+| 09-06 | 20,920.5866 | **+5,502.8052** | **+5,318.6380** |
+
+Every delta recomputed by me to the digit. **HAZARD 4/4, CONDVALUE 3/4.**
+`theta_was_not_refitted_here: true`, `decisions_unit: GENERATION`,
+`Z: NULL_NOT_DRAWN`.
+
+**CONDVALUE LOSES MONEY ON THE DAY LATENCY COSTS MOST** — 09-05 takes
+1,974.5755 to −2,966.6527, a **sign change**, the delta exceeding the base. The
+arm that prices conditional value fails where the cost it prices is largest.
+
+**The arithmetic is checked; the numbers are not.** These are the first arm
+figures since the retraction and they are quotable only with UNVERIFIED
+attached.
+
+# 📌 THE COMPOSITION PIN — the exact bytes a book records cannot replay that book
+
+`waiver_invoked: false` is UNREACHABLE, and DE proved it **by running the old
+runner**: 09-05's own recorded runner **refuses 09-05's own book**, because the
+recorded bytes predate DE 185's split-aware guard. A book's provenance field
+names a version that cannot consume it. R-324's *"a book is only consumable
+while the code it names stands still"* now has its converse.
+
+The pin therefore holds `de_head_scoring.py` and `de_phase4_diag_runner.py` at
+the books' digests and lets **only** the runner differ; **intersection 0** —
+no module is simultaneously pinned and permitted to move.
+
+# ⚠️ TWO SEATS DIED AND THE DISPATCHES WENT INTO BASH
+
+DA and REV died; dispatches landed in a shell for over an hour; both restarted
+07:05. **A dead seat's pane falls back to a shell, and a shell accepts text
+silently — so it looks exactly like a working seat mid-turn. Verify liveness BY
+PROCESS, never by pane.** Third distinct pane misread in this programme: ghost
+text as a dispatch, dimmed suggestion as unsent work, now a shell as a seat.
+
+# 📝 RULES 36–38 WERE ALREADY HERE
+
+The dispatch lists them as three new rules. They are not new to these files —
+36 and 37 landed round 332, 38 round 333 (resolving now at 3, 2 and 4
+occurrences). **I record the framing and do not duplicate the rules**; a rule
+filed twice is two rules to a reader who greps. Checked **before** writing.
+
+# ⏱ MY OWN IDLENESS
+
+Six register entries and three rules landed while I sat idle **02:26 → 07:14,
+4 h 48 m by the clock**. The coordinator records that idleness as theirs. I
+record it anyway: **rule 37 says a hand-off must never rest on a seat's turn
+staying alive, and the seat whose turn ended without a hand-off was mine.**
+Rule 37's first live instance is the seat that wrote it.
+
 # READ FIRST — round 333 (MEM, 2026-09-10T02:25:06Z, tip `9046b5b`)
 
 # 📊 THREE OF FOUR DAYS MEASURED AND RECONCILED — recomputed by me
