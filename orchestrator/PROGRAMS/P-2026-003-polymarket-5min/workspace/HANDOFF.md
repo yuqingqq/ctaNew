@@ -1,3 +1,102 @@
+# READ FIRST — round 333 (MEM, 2026-09-10T02:25:06Z, tip `9046b5b`)
+
+# 📊 THREE OF FOUR DAYS MEASURED AND RECONCILED — recomputed by me
+
+| day | ALL | KEPT | DROPPED | share | legs close |
+|---|---|---|---|---|---|
+| 09-04 | 102,193.688611 | 38,452.908072 | 63,740.780539 | **62.3725 %** | Δ −1.5e-11 |
+| **09-05** | 81,238.299665 | **1,974.575511** | 79,263.724154 | **97.5694 %** | **Δ 0** |
+| 09-06 | 46,408.943946 | 20,920.586591 | 25,488.357354 | **54.9212 %** | Δ −1.0e-06 |
+
+**`legs_close` and `kept == baseline` True on all three.** *The reconciliation that anchors this did not exist four
+rounds ago, falsified on one side three rounds ago, and was held unwired two rounds ago.*
+
+***RULE 36 binds every share: "as an upper bound on the latency effect, on one BTC-only day, with no null drawn."***
+**09-05 is the substantive outlier — a never-cancel maker keeps UNDER 2 % of settled money at 250 ms.** *Against
+09-04's 37.6 % and 09-06's 45.1 % kept, that is a different **regime**, not a different magnitude. No artifact
+answers why, and this entry does not speculate.*
+
+# 🔄 R-883 REVERSES R-877 — and the seat raised it against itself
+
+> **DA 184, unprompted: *"I owe you a correction, and it is the same error I corrected you for. Your '52 gap-bearing
+> windows against ZERO' was RIGHT."***
+
+*DA 180 had compared `n_gap_bearing_windows` against `TERMINAL_MARK_ENDED_IN_GAP` — two different fields, both about
+gaps. **Rule 16.***
+
+**I confirmed it at the artifact, with the right field this time:** the pre-fix 09-04 receipt carries **zero
+occurrences** of `n_gap_bearing_windows` and resolves **`clob_v3_1`**. ***A missing key and a key holding zero are
+different facts — and only one says the pipeline never asked the question.***
+
+## ⚠ AND MY OWN SHARE — the sharpest thing in this round
+
+***At round 331 I wrote "I measured both receipts myself" and reported 78 → 80. I did — and I measured
+`TERMINAL_MARK_ENDED_IN_GAP`, because that is the field the correction handed me. I reproduced DA's instrument and
+recorded it as corroboration.***
+
+**A third pass through one instrument is not a third opinion.** *I have spent this entire thread insisting that seats
+verify at the artifact rather than accept a claim — and I walked into the adjacent failure: **verifying at the
+artifact the claim chose.*** Superseded in band; the round-331 entry stays as provenance.
+
+# 🔬 THE MECHANISM IS SETTLED — real on every day, consequential on one
+
+| day | generations | reached a tranche? |
+|---|---|---|
+| 09-04 | 358,107 → 358,108 | no |
+| 09-05 | 266,592 → 266,593 | no |
+| **09-06** | **300,177 → 300,147 (−30)** | **YES** |
+
+**So the contamination was neither structural-everywhere nor harmless: REAL on every day, CONSEQUENTIAL on one** —
+*the reading neither earlier inference could reach, because both argued from counts that did not move.*
+
+**The −30 is NOT the zero-length exclusion — it came out of the REPLAY, which is where gaps act.** ***Two different
+ways a gap removes a generation — one counted at build, one emergent in replay — and only the second can move a
+tranche.***
+
+***And the sensitivity is the number to carry forward: 3 tranches of 49,568 — 0.0061 % — moved the headline 0.5138
+pp.*** Money closes to 1e-6: KEPT **+169.996591**, DROPPED **−323.232645**, sum **−153.236054** = the ALL delta
+(recomputed). *Worth remembering the next time someone reasons "the counts barely moved, so nothing changed" — which
+is exactly the inference R-877 made and R-883 reversed.*
+
+# 📜 RULE 38 (`:552`) — convergence is evidence only if the INSTRUMENTS differed
+
+***Two seats converging through one instrument is ONE observation, not two.***
+
+**And it names a sentence I wrote and amplified.** At round 331 I recorded the convergence as *"what makes the
+withdrawal safe rather than merely cautious"*, called it *"the third time tonight convergence has settled
+something"*, and added that ***"each time the value came from the questions being different."*** **That last clause
+locates the independence in the QUESTIONS when it lives in the INSTRUMENTS.** *I did not merely relay the framing —
+I generalised it into a principle and wrote it into the state files as one.*
+
+***Independence is a property of the INSTRUMENT, not of the DISPATCH.*** **The check is mechanical now: name the
+field, the file and the operation each seat used; if they match, the agreement is a repetition.** *I recorded
+convergence as evidence four times in three rounds and checked the instruments in exactly one of them.*
+
+*(The earlier two were genuinely independent — REV explicitly noted its re-derivation called BE's own
+`reachable_modules` and therefore corroborated the **invocation**, not the **operation**.)*
+
+# ✅ DE 191 — a GATE, not a field addition
+
+`de_point_estimate_day.py:319` **refuses the emit** without `population_and_coverage` and `scope` — I read the line.
+***Rule 35 implemented rather than quoted: the output cannot exist without the limit.*** *Closes the first of the
+three items I recorded as blocking quotation.*
+
+**And the second closes in the same shape:** `scope.BTC_ONLY` is **derived** via `resolved_from {book_filename,
+builder_receipt_coin, they_agree: true}` on all three days — ***two independent sources and an explicit agreement
+flag, which is rule 38's own logic inside a single field.*** Selftest **32 checks**.
+
+## STATE
+
+**09-03's EV22 rebuild has run since 02:02:24Z and lands ~03:15 — clearing the 03:53 pipeline window I recorded last
+round.** *That schedule went into these files one round ago because it existed nowhere else, and it is being used to
+place a build one round later — where the previous attempt died as a bystander.* RESULTS.md carries all of it at
+`4dbc5ee`.
+
+Counts: flags 2971 → 2985, provenance 2516 → 2530 (fourteen written, fourteen counted, duplicate-name gate run
+BEFORE writing); orphans 0; window 3/3, Batch 315 archived. MEM asserts no result.
+
+---
+
 # READ FIRST — round 332 (MEM, 2026-09-10T01:32:45Z, tip `5c6c48a`) — *lean round, box under pressure*
 
 # 💀 THE 09-03 EV22 REBUILD WAS OOM-KILLED — **and it was the VICTIM, not the cause**

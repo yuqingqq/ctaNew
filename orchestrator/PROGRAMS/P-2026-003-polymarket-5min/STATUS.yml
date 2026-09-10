@@ -67,6 +67,51 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-10T02:25:06Z (MEM ROUND 333 -- ***THREE OF FOUR DAYS MEASURED AND RECONCILED, A CORRECTION REVERSED, AND A RULE
+  THAT NAMES A SENTENCE I WROTE.*** **I RECOMPUTED ALL THREE RATHER THAN COPYING THEM: 09-04 KEPT + DROPPED =
+  102,193.688611 AGAINST ALL 102,193.688611 (delta -1.5e-11); 09-05 = 81,238.299665 EXACTLY, DELTA ZERO; 09-06 =
+  46,408.943945 AGAINST 46,408.943946 (delta -1.0e-06) -- SHARES 62.3725 %, 97.5694 % AND 54.9212 % TO THE DIGIT,
+  `legs_close` AND `kept == baseline` TRUE ON ALL THREE.** ***RULE 36 BINDS EVERY ONE: "AS AN UPPER BOUND ON THE
+  LATENCY EFFECT, ON ONE BTC-ONLY DAY, WITH NO NULL DRAWN" -- AND 09-05 IS THE SUBSTANTIVE OUTLIER, A NEVER-CANCEL
+  MAKER KEEPING UNDER 2 % OF SETTLED MONEY AT 250 ms***, *which against 09-04's 37.6 % and 09-06's 45.1 % kept is a
+  different regime and not a different magnitude; no artifact answers why, and this entry does not speculate.*
+  ***R-883 SUPERSEDES R-877 AND REVERSES A CORRECTION: DA 184, UNPROMPTED -- "I OWE YOU A CORRECTION, AND IT IS THE
+  SAME ERROR I CORRECTED YOU FOR. YOUR '52 GAP-BEARING WINDOWS AGAINST ZERO' WAS RIGHT" -- DA 180 HAVING COMPARED
+  `n_gap_bearing_windows` AGAINST `TERMINAL_MARK_ENDED_IN_GAP`, TWO DIFFERENT FIELDS BOTH ABOUT GAPS, RULE 16.***
+  **I confirmed it at the artifact with the right field this time: THE PRE-FIX 09-04 RECEIPT CARRIES ZERO
+  OCCURRENCES OF `n_gap_bearing_windows` AND RESOLVES `clob_v3_1`** -- ***A MISSING KEY AND A KEY HOLDING ZERO ARE
+  DIFFERENT FACTS, AND ONLY ONE SAYS THE PIPELINE NEVER ASKED THE QUESTION.*** ***AND MY OWN SHARE IS THE SHARPEST
+  THING HERE: AT ROUND 331 I WROTE "I MEASURED BOTH RECEIPTS MYSELF" AND REPORTED 78 -> 80. I DID -- AND I MEASURED
+  `TERMINAL_MARK_ENDED_IN_GAP`, BECAUSE THAT IS THE FIELD THE CORRECTION HANDED ME. I REPRODUCED DA'S INSTRUMENT AND
+  RECORDED IT AS CORROBORATION. A THIRD PASS THROUGH ONE INSTRUMENT IS NOT A THIRD OPINION*** -- *I have spent this
+  thread insisting seats verify at the artifact rather than accept a claim, and walked into the adjacent failure:
+  verifying at the artifact THE CLAIM CHOSE.* ***THE MECHANISM IS SETTLED: THE ERA FIX IS REAL AND REACHES THE MONEY
+  ON ONE DAY OF THREE. ALL THREE BOOKS DIFFER AT THE GENERATION LEVEL (358,107->358,108; 266,592->266,593;
+  300,177->300,147, WHICH I CHECKED AS -30) AND ONLY 09-06's REACHED A TRANCHE*** -- **so the contamination was
+  neither structural-everywhere nor harmless: REAL ON EVERY DAY AND CONSEQUENTIAL ON ONE**, *the reading neither
+  earlier inference could reach because both were arguing from counts that did not move.* **The -30 IS NOT THE
+  ZERO-LENGTH EXCLUSION -- IT CAME OUT OF THE REPLAY, WHICH IS WHERE GAPS ACT: two different ways a gap removes a
+  generation, one counted at build and one emergent in replay, and only the second can move a tranche.** ***AND THE
+  SENSITIVITY IS THE NUMBER TO CARRY: 3 TRANCHES OF 49,568 -- 0.0061 % -- MOVED THE HEADLINE 0.5138 pp, WITH THE
+  MONEY CLOSING TO 1e-6 AT KEPT +169.996591 AND DROPPED -323.232645 SUMMING TO -153.236054, WHICH I RECOMPUTED.***
+  ***SEAT_PROTOCOL RULE 38 (`:552`): CONVERGENCE IS EVIDENCE ONLY IF THE INSTRUMENTS DIFFERED. TWO SEATS CONVERGING
+  THROUGH ONE INSTRUMENT IS ONE OBSERVATION, NOT TWO -- AND IT NAMES A SENTENCE I WROTE AND AMPLIFIED: AT ROUND 331
+  I RECORDED THE CONVERGENCE AS "WHAT MAKES THE WITHDRAWAL SAFE RATHER THAN MERELY CAUTIOUS" AND ADDED THAT "EACH
+  TIME THE VALUE CAME FROM THE QUESTIONS BEING DIFFERENT", WHICH LOCATES THE INDEPENDENCE IN THE QUESTIONS WHEN IT
+  LIVES IN THE INSTRUMENTS. I DID NOT MERELY RELAY THAT FRAMING -- I GENERALISED IT INTO A PRINCIPLE AND WROTE IT
+  INTO THE STATE FILES AS ONE.*** **INDEPENDENCE IS A PROPERTY OF THE INSTRUMENT, NOT OF THE DISPATCH** -- *so the
+  check is mechanical now: name the field, the file and the operation each seat used, and if they match, the
+  agreement is a repetition;* ***I RECORDED CONVERGENCE AS EVIDENCE FOUR TIMES IN THREE ROUNDS AND CHECKED THE
+  INSTRUMENTS IN EXACTLY ONE.*** **DE 191's FIX IS A GATE, NOT A FIELD ADDITION -- `de_point_estimate_day.py:319`
+  REFUSES THE EMIT WITHOUT `population_and_coverage` AND `scope`, WHICH I READ AT THE LINE -- RULE 35 IMPLEMENTED
+  RATHER THAN QUOTED: THE OUTPUT CANNOT EXIST WITHOUT THE LIMIT**, closing the first of the three items I recorded
+  as blocking quotation; **and the second closes in the same shape, `scope.BTC_ONLY` DERIVED VIA `resolved_from
+  {book_filename, builder_receipt_coin, they_agree: true}` ON ALL THREE DAYS -- TWO INDEPENDENT SOURCES AND AN
+  EXPLICIT AGREEMENT FLAG, WHICH IS RULE 38's OWN LOGIC INSIDE A SINGLE FIELD.** Selftest 32 checks. **09-03's EV22
+  rebuild has run since 02:02:24Z and lands ~03:15, CLEARING THE 03:53 PIPELINE WINDOW I RECORDED LAST ROUND** --
+  *a constraint written into these files one round ago because it existed nowhere else, and used to place a build
+  one round later, where the previous attempt died as a bystander.* Flags 2971 -> 2985, prov 2516 -> 2530; window
+  3/3, Batch 315 archived. MEM asserts no result.)
   2026-09-10T01:32:45Z (MEM ROUND 332 -- ***THE 09-03 EV22 REBUILD WAS OOM-KILLED AND IT WAS THE VICTIM, NOT THE CAUSE.***
   **`p003ev220903a`: `systemd-oomd killed 3 process(es) in this unit`, `status=9/KILL`, result `oom-kill`, 2 min 55 s
   CPU -- AND A PEAK OF 852.0 MB** -- ***A PROCESS HOLDING 852 MB KILLED FOR PRESSURE IT DID NOT CREATE***, having
@@ -164,52 +209,6 @@ updated: >-
   YET QUOTABLE IS A COHERENT STATE.** 09-06 is building, the last of the four corrected books; RESULTS.md carries the
   number and its withdrawal in the SAME block at `8857ac8`. Flags 2943 -> 2957, prov 2488 -> 2502; window 3/3, Batch
   313 archived. MEM asserts no result.)
-  2026-09-09T17:55:27Z (MEM ROUND 330 -- ***TWO NEW STANDING RULES, THE CONCURRENCY CORRECTED TO TWO, THE 09-04 GUARD FIXED
-  AND VERIFIED, AND 09-05 BUILT CLEAN -- LANDED BEFORE THE 09-04 RETRY'S RESULT ARRIVES.*** ***RULE 34 (`:482`):
-  DAYS FROM 2026-09-08 ONWARD ARE PROTECTED -- NO PROBE, DIAGNOSTIC, SMOKE TEST OR QUICK LOOK -- AND IT BINDS ME
-  TOO***: every day the programme holds is ALREADY SPENT (09-03..09-06 the latency days, 09-07 a sealed run with 500
-  drawn nulls REV 115 re-derived), **so the untouched set starts at 09-08 and reaches five around 2026-09-13**; *I
-  have hashed books, driven predicates and parsed receipts all night and every one was on a consumed day -- from
-  here that is a thing I check BEFORE touching a file.* **And the rule's constructive half: EXERCISE CORRECTED
-  PIPELINES ON CONSUMED DAYS, FREE TO RE-RUN PRECISELY BECAUSE THEY ARE SPENT** -- ***A DAY THAT CAN NO LONGER
-  VALIDATE ANYTHING HAS EXACTLY ONE REMAINING USE AND IT IS A GOOD ONE: IT COSTS NOTHING TO BREAK.*** ***RULE 35
-  (`:494`): A LIMIT THAT LIVES ONLY IN A DECLARATION DOES NOT BIND THE RESULT -- THE OUTPUT CARRIES IT AS A REQUIRED
-  FIELD AND THE GUARD TESTS THE PROPERTY, NEVER THE TEXT*** -- *the rule this file has been arguing toward for four
-  rounds* -- **AND REV HAS NOW FOUND THAT SHAPE FIVE TIMES: `MEMBERSHIP_LIMIT`, `matched_on`, THE SUPERSEDED SET,
-  THE NULL'S CANNOT-VALIDATE CLAUSE, AND THE NO-SPLIT `split_book: False` BOOLEAN** -- *the fifth being the sharpest,
-  since a BOOLEAN is the shortest possible declaration and still does not bind unless something tests it.* **R-873:
-  VALIDATION HAS A DATE, ~2026-09-13, AND IT IS A CONSTRAINT NOT A PLAN -- `days_complete_now` (which I located at
-  `:1403`) RETURNS 5 AND ALL FIVE ARE CONSUMED**, *so the programme already has rule 8's five days and none can be
-  used for what five days are FOR.* ***R-874: THE NULL'S FIVE-DAY GUARD WAS `"5" in <prose>`, SO "WE HAVE 5 LLAMAS"
-  PASSED IT*** -- rule 35's worked example found the day the rule was written, **the fourth relative of the family
-  this file has recorded** -- ***AND DA FOUND A TEXT-MATCH DEFECT OF ITS OWN INSIDE THE FALSIFIERS IT WAS WRITING
-  FOR A TEXT-MATCH DEFECT, WHICH IS THE BEST EVIDENCE RULE 35 IS A CLASS: THE SEAT MOST PRIMED TO AVOID IT, IN THE
-  FILE MOST ABOUT IT, COMMITTED IT ANYWAY -- SO THE REMEDY CANNOT BE ATTENTION.*** ***R-875: THE OPERATING
-  CONCURRENCY IS N=2, NOT 3, AND I CHECKED THE ARITHMETIC THAT KILLS THREE: CEILINGS 9.000/4.500/3.000 GiB FOR
-  N=1/2/3, MEASURED DRAW 2.621 GiB, SO THREE LEAVES 0.379 GiB OF HEADROOM AND THE CANCELS `_sets` ALONE ARE
-  ESTIMATED AT 0.476 GiB -- WHICH EXCEEDS IT.*** *Last round I recorded N=3 from `floor(9 / 2.621)`, and the flaw was
-  mine as much as anyone's: a floor division answers "how many fit" and says nothing about what else the process is
-  about to allocate.* ***AND THE REASONING TO PRESERVE IS BETTER THAN THE NUMBER: N=2 WAS ADOPTED BEFORE THE
-  CONFIRMING MEASUREMENT ON PURPOSE, BECAUSE THE USER'S CONSTRAINT IS ASYMMETRIC -- WRONG TOWARD 2 COSTS
-  WALL-CLOCK, WRONG TOWARD 3 COSTS THE BOX DEATH `research.slice` WAS CREATED AFTER. "A MEASUREMENT JUSTIFIES THE
-  RISKY CHOICE, NEVER THE SAFE ONE."*** **And the coordinator records its own correction history unsmoothed -- a
-  "200 % slice cap" that does not exist, then N=3, and it is N=2** -- *three statements and two corrections on one
-  quantity in three rounds, and a number that has moved twice should be read as still capable of moving.* ***THE
-  09-04 GUARD IS FIXED AND VERIFIED: DE 185 AT `:11339`, WHOSE LINE I READ -- "A SPLIT BOOK IS NOT AN AMBIGUOUS ONE"
-  -- AND REV 150 DROVE FIVE REFUSALS INDIVIDUALLY AND CONFIRMS IT PARTITIONS RATHER THAN WIDENS: A RECEIPT WITH TWO
-  DECLARED VALUES STILL REFUSES, NO FALSE ACCEPT, AND `--waive-scoring-path` CANNOT LET A PLACEMENT-LATENCY FAILURE
-  THROUGH*** -- *the verification that matters is not "the split book now passes" but "the corrupt book still
-  fails".* ***AND REV SINGLED OUT THE DESIGN: `_L = _dvals[0]` FROM A SET ASSERTED TO HOLD EXACTLY ONE ELEMENT, THE
-  LEG-SELECTION API DECLINED DELIBERATELY -- "STRONGER THAN THE CALLER MUST NAME A LEG". A GUARD THAT CANNOT PICK
-  BEATS ONE THAT PICKS CORRECTLY.*** ***AND MY OWN ATTEMPT TO REPRODUCE REV'S "ZERO OCCURRENCES IN THE FUNCTION
-  BODY" FAILED AND I SAY SO RATHER THAN PUBLISHING THE NUMBER: MY BOUNDARY HEURISTIC LANDED ON AN ENCLOSING REGION
-  OF 3,011 LINES AND COUNTED 6 AND 8 -- OF A SCOPE REV NEVER CLAIMED ANYTHING ABOUT. I MEASURED A DIFFERENT THING;
-  THE THIRD TIME TONIGHT MY OWN INSTRUMENT HAS BEEN THE ERROR.*** **09-05 BUILT CLEAN -- rc 0 at 17:50:10Z, 48
-  units, peak 6.40 GB -- AND I HASHED THE BOOK MYSELF AT 295,157,948 BYTES, sha256 opening `2df450c5a3081caa`, WITH
-  `era "clob_v4_1"` FROM THE DAY, 13 GAP-BEARING WINDOWS AND THE SPLIT PRESENT; 09-06 IS ARMED BEHIND THE RETRY.**
-  ***AND THE 09-04 RETRY IS RUNNING NOW: IF IT LANDS IT IS A POINT ESTIMATE, NO NULL, BTC-ONLY, ON A BOOK OVER 52
-  GAP-BEARING WINDOWS WHERE THE RETRACTED FIGURE HAD ZERO -- SO NOT A REVISION BUT A DIFFERENT MEASUREMENT.*** Flags
-  2929 -> 2943, prov 2474 -> 2488; window 3/3, Batch 312 archived. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -381,6 +380,21 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 333, three days measured; R-883 reverses R-877; rule 38 ---
+  THREE_OF_FOUR_DAYS_ARE_MEASURED_AND_RECONCILED_AND_I_RECOMPUTED_ALL_THREE: LEGS-CLOSE-TO-1e-6
+  NEVER_A_SHARE_WITHOUT_ITS_CLAUSE_AND_09_05_IS_THE_OUTLIER: UNDER-2-PERCENT-KEPT
+  R_883_REVERSES_R_877_AND_THE_SEAT_RAISED_IT_AGAINST_ITSELF: THE-52-AGAINST-ZERO-WAS-RIGHT
+  THE_PRE_FIX_RECEIPT_HAS_NO_SUCH_KEY_AT_ALL_AND_I_CONFIRMED_IT: ZERO-OCCURRENCES-AND-clob_v3_1
+  AND_MY_OWN_ROUND_331_MEASUREMENT_WAS_THE_SAME_INSTRUMENT_NOT_A_THIRD_OPINION: I-MEASURED-WHAT-I-WAS-TOLD-TO
+  THE_ERA_FIX_IS_REAL_AND_REACHES_THE_MONEY_ON_ONE_DAY_OF_THREE: ALL-THREE-DIFFER-AT-GENERATION-LEVEL
+  THE_MINUS_THIRTY_CAME_OUT_OF_THE_REPLAY_WHICH_IS_WHERE_GAPS_ACT: NOT-THE-ZERO-LENGTH-EXCLUSION
+  THREE_TRANCHES_IN_FIFTY_THOUSAND_MOVED_THE_HEADLINE_HALF_A_POINT: 0-0061-PERCENT-TO-0-5138-pp
+  RULE_38_CONVERGENCE_IS_EVIDENCE_ONLY_IF_THE_INSTRUMENTS_DIFFERED: ONE-OBSERVATION-NOT-TWO
+  AND_IT_NAMES_A_SENTENCE_I_WROTE_AND_AMPLIFIED: SAFE-RATHER-THAN-MERELY-CAUTIOUS
+  INDEPENDENCE_IS_A_PROPERTY_OF_THE_INSTRUMENT_NOT_OF_THE_DISPATCH: THE-TRANSFERABLE-HALF
+  DE_191_IS_A_GATE_NOT_A_FIELD_ADDITION: THE-EMIT-REFUSES
+  AND_BTC_ONLY_IS_DERIVED_AND_CROSS_CHECKED_RATHER_THAN_ASSERTED: they_agree-TRUE-ON-ALL-THREE
+  THE_09_03_EV22_REBUILD_CLEARS_THE_PIPELINE_WINDOW: LANDS-BEFORE-03-53
   # --- MEM round 332, the EV22 rebuild was OOM-killed as a bystander; N is a function ---
   THE_EV22_REBUILD_WAS_OOM_KILLED_AND_IT_WAS_THE_VICTIM_NOT_THE_CAUSE: 852-MB-PEAK
   THE_ERA_RESOLVED_CORRECTLY_BEFORE_IT_DIED: DOING-THE-RIGHT-THING-WHEN-KILLED
@@ -27426,6 +27440,165 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 333, 2026-09-10T02:25:06Z ---
+  THREE_OF_FOUR_DAYS_ARE_MEASURED_AND_RECONCILED_AND_I_RECOMPUTED_ALL_THREE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T02:25:06Z
+    said: >-
+      ***THREE OF FOUR DAYS ARE MEASURED AND RECONCILED, AND I RECOMPUTED ALL THREE RATHER THAN COPYING THEM: 09-04
+      KEPT + DROPPED = 102,193.688611 AGAINST ALL 102,193.688611 (delta -1.5e-11); 09-05 = 81,238.299665 EXACTLY,
+      DELTA ZERO; 09-06 = 46,408.943945 AGAINST 46,408.943946 (delta -1.0e-06).*** **Shares 62.3725 %, 97.5694 % and
+      54.9212 % to the digit, with `legs_close: True` and `kept == baseline` True on all three.** *Three days'
+      arithmetic closing independently is the strongest internal evidence this programme has produced* -- **and the
+      reconciliation that anchors it did not exist four rounds ago, falsified on one side three rounds ago, and was
+      held unwired two rounds ago.**
+  NEVER_A_SHARE_WITHOUT_ITS_CLAUSE_AND_09_05_IS_THE_OUTLIER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T02:25:06Z
+    said: >-
+      ***RULE 36, AND THIS FILE WILL NOT RECORD A SHARE WITHOUT IT: EACH IS "AS AN UPPER BOUND ON THE LATENCY
+      EFFECT, ON ONE BTC-ONLY DAY, WITH NO NULL DRAWN".*** **And 09-05 is the substantive outlier: KEPT 1,974.575511
+      of 81,238.299665 -- A NEVER-CANCEL MAKER KEEPS UNDER 2 % OF SETTLED MONEY AT 250 ms.** *Against 09-04's 37.6 %
+      kept and 09-06's 45.1 %, that is not a different magnitude but a different regime* -- ***AND THE FIRST THING
+      A READER WILL WANT IS WHY ONE DAY DIFFERS SO SHARPLY, WHICH NO ARTIFACT ANSWERS YET AND WHICH THIS ENTRY DOES
+      NOT SPECULATE ABOUT.***
+  R_883_REVERSES_R_877_AND_THE_SEAT_RAISED_IT_AGAINST_ITSELF:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T02:25:06Z
+    said: >-
+      ***R-883 SUPERSEDES R-877 AND IT REVERSES A CORRECTION: DA 184, UNPROMPTED -- "I OWE YOU A CORRECTION, AND IT
+      IS THE SAME ERROR I CORRECTED YOU FOR. YOUR '52 GAP-BEARING WINDOWS AGAINST ZERO' WAS RIGHT."*** **DA 180 had
+      compared `n_gap_bearing_windows` against `TERMINAL_MARK_ENDED_IN_GAP` -- two different fields, both about
+      gaps: rule 16.** ***A SEAT THAT CORRECTED THE COORDINATOR, THEN FOUND ITS OWN CORRECTION WRONG BY THE SAME
+      MECHANISM, AND RAISED IT AGAINST ITSELF UNPROMPTED.*** *That is the fifth withdrawal by an author in two days
+      -- BE's derived eight, REV's REVIEW 110 item (4), DA's own acceptance criterion, the coordinator's inference,
+      and now DA's correction of it* -- **and it is the only one that reversed a reversal.**
+  THE_PRE_FIX_RECEIPT_HAS_NO_SUCH_KEY_AT_ALL_AND_I_CONFIRMED_IT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260904_btc__L250ms.json
+    as_of: 2026-09-10T02:25:06Z
+    said: >-
+      **AND I CONFIRMED THE REVERSAL AT THE ARTIFACT, WITH THE RIGHT FIELD THIS TIME: THE PRE-FIX 09-04 RECEIPT
+      CARRIES *ZERO* OCCURRENCES OF `n_gap_bearing_windows` AND RESOLVES `"era": "clob_v3_1"`; THE EV21 RECEIPT
+      CARRIES THE KEY AND RESOLVES `"clob_v4_1"`.** ***SO "52 AGAINST ZERO" WAS NEVER A COMPARISON OF TWO COUNTS --
+      THE PRE-FIX BOOK HAS NO SUCH FIELD AT ALL, WHICH IS A STRONGER STATEMENT THAN ZERO AND THE ONE THE ORIGINAL
+      CLAIM MEANT.*** *A missing key and a key holding zero are different facts, and only one of them says the
+      pipeline never asked the question.*
+  AND_MY_OWN_ROUND_331_MEASUREMENT_WAS_THE_SAME_INSTRUMENT_NOT_A_THIRD_OPINION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    as_of: 2026-09-10T02:25:06Z
+    said: >-
+      ***AND MY OWN SHARE, WHICH IS THE SHARPEST THING IN THIS ROUND: AT ROUND 331 I WROTE "I MEASURED BOTH RECEIPTS
+      MYSELF" AND REPORTED 78 -> 80. I DID MEASURE THEM -- AND I MEASURED `TERMINAL_MARK_ENDED_IN_GAP`, BECAUSE THAT
+      IS THE FIELD THE CORRECTION HANDED ME.*** **I reproduced DA's instrument and recorded the result as
+      corroboration.** ***A THIRD PASS THROUGH ONE INSTRUMENT IS NOT A THIRD OPINION.*** *I have spent this entire
+      thread insisting that seats verify at the artifact rather than accept a claim -- and the failure mode I walked
+      into is the adjacent one: verifying at the artifact THE CLAIM CHOSE.* **Superseded in band; the round-331
+      entry stays as provenance.**
+  THE_ERA_FIX_IS_REAL_AND_REACHES_THE_MONEY_ON_ONE_DAY_OF_THREE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T02:25:06Z
+    said: >-
+      ***THE MECHANISM IS NOW SETTLED, AND IT IS THE ANSWER BOTH EARLIER ROUNDS WERE REACHING FOR: THE ERA FIX IS
+      REAL AND IT REACHES THE MONEY ON ONE DAY OF THREE.*** **All three books differ at the GENERATION level --
+      09-04 358,107 -> 358,108, 09-05 266,592 -> 266,593, 09-06 300,177 -> 300,147 (I checked: -30) -- AND ONLY
+      09-06's DIFFERENCE REACHED A TRANCHE.** *So the contamination was neither structural-everywhere nor harmless:
+      it was REAL ON EVERY DAY AND CONSEQUENTIAL ON ONE* -- ***WHICH IS EXACTLY THE READING NEITHER "REPRODUCTION
+      PROVES IT WAS HARMLESS" NOR "REPRODUCTION PROVES IT WAS STRUCTURAL" COULD REACH, BECAUSE BOTH WERE INFERRING
+      FROM COUNTS THAT DID NOT MOVE.***
+  THE_MINUS_THIRTY_CAME_OUT_OF_THE_REPLAY_WHICH_IS_WHERE_GAPS_ACT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T02:25:06Z
+    said: >-
+      **And the provenance of the -30 is the part that makes it a mechanism rather than a coincidence: IT IS NOT THE
+      ZERO-LENGTH EXCLUSION -- IT CAME OUT OF THE REPLAY, WHICH IS WHERE GAPS ACT.** *The nine zero-length
+      generations excluded on 09-03 were a build-time prune with a counted status; this is thirty generations that
+      never formed, because the replay met a gap that the pre-fix path did not know about.* ***TWO DIFFERENT WAYS A
+      GAP REMOVES A GENERATION, ONE COUNTED AT BUILD AND ONE EMERGENT IN REPLAY, AND ONLY THE SECOND CAN MOVE A
+      TRANCHE.***
+  THREE_TRANCHES_IN_FIFTY_THOUSAND_MOVED_THE_HEADLINE_HALF_A_POINT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T02:25:06Z
+    said: >-
+      ***AND THE SENSITIVITY IS THE NUMBER TO CARRY FORWARD: 3 TRANCHES OF 49,568 -- 0.0061 %, WHICH I CHECKED --
+      MOVED THE HEADLINE 0.5138 pp.*** **The money closes to 1e-6: KEPT +169.996591, DROPPED -323.232645, SUM
+      -153.236054, EXACTLY THE ALL DELTA (I recomputed it).** *A six-thousandth of a percent of the tranches moving
+      half a percentage point of the headline is a ratio worth remembering the next time someone reasons "the counts
+      barely moved, so nothing changed"* -- ***WHICH IS PRECISELY THE INFERENCE R-877 MADE AND R-883 REVERSED.***
+  RULE_38_CONVERGENCE_IS_EVIDENCE_ONLY_IF_THE_INSTRUMENTS_DIFFERED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-10T02:25:06Z
+    said: >-
+      ***SEAT_PROTOCOL RULE 38, AT `:552`: CONVERGENCE IS EVIDENCE ONLY IF THE INSTRUMENTS DIFFERED.*** **Two seats
+      given different QUESTIONS, both comparing the SAME two fields, could only ever agree -- and both were wrong.**
+      ***TWO SEATS CONVERGING THROUGH ONE INSTRUMENT IS ONE OBSERVATION, NOT TWO.*** *This programme has leaned on
+      convergence three times in two days: the flake premise refuted by DA and REV, the reachable set derived twice,
+      and this. **The first two were genuinely independent -- REV explicitly noted that its re-derivation called BE's
+      own `reachable_modules` and therefore corroborated the INVOCATION, not the OPERATION.** The third was not, and
+      nobody noticed until the answer turned out wrong.*
+  AND_IT_NAMES_A_SENTENCE_I_WROTE_AND_AMPLIFIED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    as_of: 2026-09-10T02:25:06Z
+    said: >-
+      ***AND THE RULE NAMES A SENTENCE I WROTE AND AMPLIFIED. AT ROUND 331 I RECORDED THE CONVERGENCE AS "WHAT MAKES
+      THE WITHDRAWAL SAFE RATHER THAN MERELY CAUTIOUS", CALLED IT "THE THIRD TIME TONIGHT CONVERGENCE HAS SETTLED
+      SOMETHING", AND ADDED THAT "EACH TIME THE VALUE CAME FROM THE QUESTIONS BEING DIFFERENT."*** **That last clause
+      is exactly the error rule 38 corrects: I located the independence in the QUESTIONS when it lives in the
+      INSTRUMENTS.** *I did not merely relay the coordinator's framing -- I generalised it into a principle and
+      wrote it into the state files as one.* ***THE SENTENCE READ WELL AND WAS WRONG, AND IT IS SUPERSEDED HERE
+      RATHER THAN QUIETLY DROPPED.***
+  INDEPENDENCE_IS_A_PROPERTY_OF_THE_INSTRUMENT_NOT_OF_THE_DISPATCH:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-10T02:25:06Z
+    said: >-
+      ***THE TRANSFERABLE HALF, AND THE FORM I WILL APPLY FROM HERE: INDEPENDENCE IS A PROPERTY OF THE INSTRUMENT,
+      NOT OF THE DISPATCH.*** **A coordinator can hand two seats different questions and still get one observation,
+      because what determines independence is what each seat MEASURED, not what each was ASKED.** *So the check
+      before treating agreement as evidence is now mechanical: name the field, the file and the operation each seat
+      used, and if they match, the agreement is a repetition.* ***I RECORDED CONVERGENCE AS EVIDENCE FOUR TIMES IN
+      THREE ROUNDS AND CHECKED THE INSTRUMENTS IN EXACTLY ONE OF THEM.***
+  DE_191_IS_A_GATE_NOT_A_FIELD_ADDITION:
+    prov: CHECKED
+    artifact: live/pm_research/de_point_estimate_day.py
+    as_of: 2026-09-10T02:25:06Z
+    said: >-
+      **DE 191's FIX IS A GATE, NOT A FIELD ADDITION: `de_point_estimate_day.py:319` REFUSES THE EMIT WITHOUT
+      `population_and_coverage` AND `scope`** -- I read the line: **`_missing_req = [k for k in
+      ("population_and_coverage", "scope")`.** ***THAT IS RULE 35 IMPLEMENTED RATHER THAN QUOTED: THE LIMIT DOES NOT
+      "LIVE IN" THE OUTPUT BY CONVENTION, THE OUTPUT CANNOT EXIST WITHOUT IT.*** *Two rounds ago I recorded
+      coverage-absent-from-the-result as one of three items blocking quotation; the remedy is not that someone
+      remembered to add the field but that the emit refuses.* **Selftest 32 checks.**
+  AND_BTC_ONLY_IS_DERIVED_AND_CROSS_CHECKED_RATHER_THAN_ASSERTED:
+    prov: CHECKED
+    artifact: live/pm_research/de_point_estimate_day.py
+    as_of: 2026-09-10T02:25:06Z
+    said: >-
+      **And the second blocking item is closed in the same shape: `scope.BTC_ONLY` IS DERIVED VIA `resolved_from
+      {book_filename, builder_receipt_coin, they_agree: true}` ON ALL THREE DAYS.** ***NOT A CONSTANT SOMEBODY TYPED
+      -- TWO INDEPENDENT SOURCES AND AN EXPLICIT AGREEMENT FLAG, WHICH IS RULE 38's OWN LOGIC APPLIED INSIDE A
+      SINGLE FIELD.*** *The filename and the receipt's coin are genuinely different instruments reading the same
+      fact, and `they_agree` is the field that says so* -- **so the scope a reader resolves is cross-checked at the
+      moment it is written.**
+  THE_09_03_EV22_REBUILD_CLEARS_THE_PIPELINE_WINDOW:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T02:25:06Z
+    said: >-
+      **09-03's EV22 rebuild has been running since 02:02:24Z and lands ~03:15 -- WHICH CLEARS THE 03:53 PIPELINE
+      WINDOW I RECORDED LAST ROUND.** *That schedule went into these files at round 332 precisely because it was
+      written nowhere else, and it is being used to place a build one round later.* ***A CONSTRAINT RECORDED IN THE
+      STATE FILES AND THEN ACTED ON IS THE SHORTEST ROUND TRIP THIS SEAT HAS SEEN*** -- **and the previous EV22
+      attempt died as a bystander inside exactly that window.** RESULTS.md carries all of it at `4dbc5ee`.
   # --- MEM round 332, 2026-09-10T01:32:45Z ---
   THE_EV22_REBUILD_WAS_OOM_KILLED_AND_IT_WAS_THE_VICTIM_NOT_THE_CAUSE:
     prov: CHECKED

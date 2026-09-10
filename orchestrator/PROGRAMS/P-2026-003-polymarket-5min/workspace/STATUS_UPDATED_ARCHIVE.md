@@ -22607,3 +22607,54 @@ generation and the window went 4 → 3. Nothing rewritten.
   ONE DAY'S, WHICH IS BETTER KNOWN WITH TWO BUILDS IN FLIGHT THAN AFTER FOUR.*** Flags 2915 -> 2929, prov 2460 ->
   2474; window 3/3, Batch 311 archived. MEM asserts no result.)
 ```
+
+## Batch 315 — archived 2026-09-10T02:25:06Z (1 entry, rolling-window overflow)
+
+```
+  2026-09-09T17:55:27Z (MEM ROUND 330 -- ***TWO NEW STANDING RULES, THE CONCURRENCY CORRECTED TO TWO, THE 09-04 GUARD FIXED
+  AND VERIFIED, AND 09-05 BUILT CLEAN -- LANDED BEFORE THE 09-04 RETRY'S RESULT ARRIVES.*** ***RULE 34 (`:482`):
+  DAYS FROM 2026-09-08 ONWARD ARE PROTECTED -- NO PROBE, DIAGNOSTIC, SMOKE TEST OR QUICK LOOK -- AND IT BINDS ME
+  TOO***: every day the programme holds is ALREADY SPENT (09-03..09-06 the latency days, 09-07 a sealed run with 500
+  drawn nulls REV 115 re-derived), **so the untouched set starts at 09-08 and reaches five around 2026-09-13**; *I
+  have hashed books, driven predicates and parsed receipts all night and every one was on a consumed day -- from
+  here that is a thing I check BEFORE touching a file.* **And the rule's constructive half: EXERCISE CORRECTED
+  PIPELINES ON CONSUMED DAYS, FREE TO RE-RUN PRECISELY BECAUSE THEY ARE SPENT** -- ***A DAY THAT CAN NO LONGER
+  VALIDATE ANYTHING HAS EXACTLY ONE REMAINING USE AND IT IS A GOOD ONE: IT COSTS NOTHING TO BREAK.*** ***RULE 35
+  (`:494`): A LIMIT THAT LIVES ONLY IN A DECLARATION DOES NOT BIND THE RESULT -- THE OUTPUT CARRIES IT AS A REQUIRED
+  FIELD AND THE GUARD TESTS THE PROPERTY, NEVER THE TEXT*** -- *the rule this file has been arguing toward for four
+  rounds* -- **AND REV HAS NOW FOUND THAT SHAPE FIVE TIMES: `MEMBERSHIP_LIMIT`, `matched_on`, THE SUPERSEDED SET,
+  THE NULL'S CANNOT-VALIDATE CLAUSE, AND THE NO-SPLIT `split_book: False` BOOLEAN** -- *the fifth being the sharpest,
+  since a BOOLEAN is the shortest possible declaration and still does not bind unless something tests it.* **R-873:
+  VALIDATION HAS A DATE, ~2026-09-13, AND IT IS A CONSTRAINT NOT A PLAN -- `days_complete_now` (which I located at
+  `:1403`) RETURNS 5 AND ALL FIVE ARE CONSUMED**, *so the programme already has rule 8's five days and none can be
+  used for what five days are FOR.* ***R-874: THE NULL'S FIVE-DAY GUARD WAS `"5" in <prose>`, SO "WE HAVE 5 LLAMAS"
+  PASSED IT*** -- rule 35's worked example found the day the rule was written, **the fourth relative of the family
+  this file has recorded** -- ***AND DA FOUND A TEXT-MATCH DEFECT OF ITS OWN INSIDE THE FALSIFIERS IT WAS WRITING
+  FOR A TEXT-MATCH DEFECT, WHICH IS THE BEST EVIDENCE RULE 35 IS A CLASS: THE SEAT MOST PRIMED TO AVOID IT, IN THE
+  FILE MOST ABOUT IT, COMMITTED IT ANYWAY -- SO THE REMEDY CANNOT BE ATTENTION.*** ***R-875: THE OPERATING
+  CONCURRENCY IS N=2, NOT 3, AND I CHECKED THE ARITHMETIC THAT KILLS THREE: CEILINGS 9.000/4.500/3.000 GiB FOR
+  N=1/2/3, MEASURED DRAW 2.621 GiB, SO THREE LEAVES 0.379 GiB OF HEADROOM AND THE CANCELS `_sets` ALONE ARE
+  ESTIMATED AT 0.476 GiB -- WHICH EXCEEDS IT.*** *Last round I recorded N=3 from `floor(9 / 2.621)`, and the flaw was
+  mine as much as anyone's: a floor division answers "how many fit" and says nothing about what else the process is
+  about to allocate.* ***AND THE REASONING TO PRESERVE IS BETTER THAN THE NUMBER: N=2 WAS ADOPTED BEFORE THE
+  CONFIRMING MEASUREMENT ON PURPOSE, BECAUSE THE USER'S CONSTRAINT IS ASYMMETRIC -- WRONG TOWARD 2 COSTS
+  WALL-CLOCK, WRONG TOWARD 3 COSTS THE BOX DEATH `research.slice` WAS CREATED AFTER. "A MEASUREMENT JUSTIFIES THE
+  RISKY CHOICE, NEVER THE SAFE ONE."*** **And the coordinator records its own correction history unsmoothed -- a
+  "200 % slice cap" that does not exist, then N=3, and it is N=2** -- *three statements and two corrections on one
+  quantity in three rounds, and a number that has moved twice should be read as still capable of moving.* ***THE
+  09-04 GUARD IS FIXED AND VERIFIED: DE 185 AT `:11339`, WHOSE LINE I READ -- "A SPLIT BOOK IS NOT AN AMBIGUOUS ONE"
+  -- AND REV 150 DROVE FIVE REFUSALS INDIVIDUALLY AND CONFIRMS IT PARTITIONS RATHER THAN WIDENS: A RECEIPT WITH TWO
+  DECLARED VALUES STILL REFUSES, NO FALSE ACCEPT, AND `--waive-scoring-path` CANNOT LET A PLACEMENT-LATENCY FAILURE
+  THROUGH*** -- *the verification that matters is not "the split book now passes" but "the corrupt book still
+  fails".* ***AND REV SINGLED OUT THE DESIGN: `_L = _dvals[0]` FROM A SET ASSERTED TO HOLD EXACTLY ONE ELEMENT, THE
+  LEG-SELECTION API DECLINED DELIBERATELY -- "STRONGER THAN THE CALLER MUST NAME A LEG". A GUARD THAT CANNOT PICK
+  BEATS ONE THAT PICKS CORRECTLY.*** ***AND MY OWN ATTEMPT TO REPRODUCE REV'S "ZERO OCCURRENCES IN THE FUNCTION
+  BODY" FAILED AND I SAY SO RATHER THAN PUBLISHING THE NUMBER: MY BOUNDARY HEURISTIC LANDED ON AN ENCLOSING REGION
+  OF 3,011 LINES AND COUNTED 6 AND 8 -- OF A SCOPE REV NEVER CLAIMED ANYTHING ABOUT. I MEASURED A DIFFERENT THING;
+  THE THIRD TIME TONIGHT MY OWN INSTRUMENT HAS BEEN THE ERROR.*** **09-05 BUILT CLEAN -- rc 0 at 17:50:10Z, 48
+  units, peak 6.40 GB -- AND I HASHED THE BOOK MYSELF AT 295,157,948 BYTES, sha256 opening `2df450c5a3081caa`, WITH
+  `era "clob_v4_1"` FROM THE DAY, 13 GAP-BEARING WINDOWS AND THE SPLIT PRESENT; 09-06 IS ARMED BEHIND THE RETRY.**
+  ***AND THE 09-04 RETRY IS RUNNING NOW: IF IT LANDS IT IS A POINT ESTIMATE, NO NULL, BTC-ONLY, ON A BOOK OVER 52
+  GAP-BEARING WINDOWS WHERE THE RETRACTED FIGURE HAD ZERO -- SO NOT A REVISION BUT A DIFFERENT MEASUREMENT.*** Flags
+  2929 -> 2943, prov 2474 -> 2488; window 3/3, Batch 312 archived. MEM asserts no result.)
+```
