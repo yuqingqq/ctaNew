@@ -1,0 +1,850 @@
+{
+ "protocol": "BE_OFFPATH_GUARDS_V1",
+ "produced_by": "live/pm_research/be_offpath_guards.py",
+ "as_of_utc": "2026-09-10T16:56:14Z",
+ "tree": "/home/yuqing/ctaNew-wt-be/live/pm_research",
+ "n_modules_scanned": 284,
+ "counts": {
+  "PARAM_DISABLED": 1,
+  "TEST_ONLY": 80,
+  "ORPHAN": 20,
+  "TOTAL": 101
+ },
+ "WHAT_THE_COUNT_IS_NOT": "a defect count. A hit means the guard cannot fire on the production path AS THE CALL GRAPH SEES IT; whether that is a defect is the owning seat's judgement. Two confirmed NON-defects are recorded in not_defects below.",
+ "not_defects": [
+  {
+   "guard": "score_lgbm_condvalue",
+   "module": "de_head_scoring.py",
+   "why": "d09f25c replaced it with score_lgbm_condvalue_batch; the scalar survives DELIBERATELY as the EXACT-EQUALITY REFERENCE the falsifier scores against to prove batching is score-neutral. Deleting it removes the proof that the optimization changes nothing."
+  },
+  {
+   "guard": "placement_latency_of",
+   "module": "be_daybook_build.py",
+   "why": "a helper for the 184-check battery; test-only by design."
+  }
+ ],
+ "confirmed_by_hand": [
+  {
+   "guard": "verify_run_inputs",
+   "module": "de_multiday_gate1_runner.py",
+   "note": "plan step 1 item 1; see WIRING_VERIFY_RUN_INPUTS"
+  },
+  {
+   "guard": "may_run_day",
+   "module": "de_multiday_gate1_runner.py",
+   "note": "R-572(B)(2) day-admissibility gate, CITED BY NAME in params v29"
+  },
+  {
+   "guard": "may_read_aggregate",
+   "module": "de_multiday_gate1_runner.py",
+   "note": "rule-11 gate on reading the aggregate early"
+  },
+  {
+   "guard": "write_cache_code_closure",
+   "module": "de_multiday_gate1_runner.py",
+   "note": "cache provenance"
+  },
+  {
+   "guard": "assert_settlement_day_admissible",
+   "module": "de_multiday_gate1_runner.py",
+   "note": "the RAISING rule-11 entry. The COMPUTING twin (settlement_admissibility) IS on the path at run_day:9131 and is what actually gated 09-07 -- see the module docstring."
+  }
+ ],
+ "concentration_TEST_ONLY": {
+  "de_multiday_gate1_runner.py": 9,
+  "da_null_design.py": 9,
+  "be_forward_metric.py": 6,
+  "de_multiday_design_declaration.py": 5,
+  "be_forward_day.py": 3,
+  "ev_gates.py": 3,
+  "da_de_fix_cases.py": 3,
+  "harmful_forward_scorer.py": 2
+ },
+ "concentration_ORPHAN": {
+  "ev_replay_seam.py": 9,
+  "de_admissible_windows.py": 3,
+  "warning_window.py": 2,
+  "tier1_pipeline.py": 1,
+  "de_phase4_diag_runner.py": 1,
+  "harmful_rows_loader.py": 1,
+  "phase2_arms.py": 1,
+  "adverse_feature_rows.py": 1
+ },
+ "PARAM_DISABLED": [
+  {
+   "guard": "verify_be_module",
+   "defined": "de_multiday_gate1_runner.py:845",
+   "param": "actual_sha",
+   "n_production_callers": 2,
+   "n_that_DISABLE_the_branch": 1,
+   "disabled_at": [
+    "de_multiday_gate1_runner.py:import_be_cascade:1170"
+   ],
+   "callers": [
+    "de_multiday_gate1_runner.py:import_be_cascade:1170",
+    "de_multiday_gate1_runner.py:verify_run_inputs:974"
+   ]
+  }
+ ],
+ "TEST_ONLY": [
+  {
+   "guard": "_broken_zscale_ddof1",
+   "defined": "harmful_fast_compute.py:785",
+   "n_test_calls": 1,
+   "test_callers": [
+    "harmful_fast_compute.py:selftest"
+   ]
+  },
+  {
+   "guard": "_expect",
+   "defined": "da_feeds_polygon.py:375, flow_grid_terminal.py:447, flow_intensity.py:1153, policy_comparison.py:560",
+   "n_test_calls": 18,
+   "test_callers": [
+    "da_feeds_polygon.py:selftest",
+    "ev_gates.py:selftest",
+    "flow_grid_terminal.py:selftest",
+    "flow_intensity.py:selftest"
+   ]
+  },
+  {
+   "guard": "_expect_raises",
+   "defined": "da_state.py:878",
+   "n_test_calls": 6,
+   "test_callers": [
+    "da_state.py:selftest"
+   ]
+  },
+  {
+   "guard": "_gate_admissions",
+   "defined": "de_phase4_diag_runner.py:9948",
+   "n_test_calls": 1,
+   "test_callers": [
+    "de_phase4_diag_runner.py:selftest"
+   ]
+  },
+  {
+   "guard": "_resolve_git_common_dir",
+   "defined": "be_forward_day.py:2901",
+   "n_test_calls": 3,
+   "test_callers": [
+    "be_forward_day.py:selftest"
+   ]
+  },
+  {
+   "guard": "_selftest_blackout_mask",
+   "defined": "harmful_forward_scorer.py:769",
+   "n_test_calls": 1,
+   "test_callers": [
+    "harmful_forward_scorer.py:selftest"
+   ]
+  },
+  {
+   "guard": "_selftest_launch_invariance",
+   "defined": "harmful_forward_scorer.py:727",
+   "n_test_calls": 1,
+   "test_callers": [
+    "harmful_forward_scorer.py:selftest"
+   ]
+  },
+  {
+   "guard": "agreement_with_contract",
+   "defined": "be_trajectory_export.py:256",
+   "n_test_calls": 1,
+   "test_callers": [
+    "be_trajectory_export.py:selftest"
+   ]
+  },
+  {
+   "guard": "assert_action_keys",
+   "defined": "be_forward_metric.py:160",
+   "n_test_calls": 6,
+   "test_callers": [
+    "be_forward_day.py:selftest",
+    "be_forward_metric.py:selftest"
+   ]
+  },
+  {
+   "guard": "assert_alignment",
+   "defined": "be_forward_metric.py:194",
+   "n_test_calls": 2,
+   "test_callers": [
+    "be_forward_metric.py:selftest"
+   ]
+  },
+  {
+   "guard": "assert_bar_directional",
+   "defined": "ev_gates.py:182",
+   "n_test_calls": 2,
+   "test_callers": [
+    "ev_gates.py:selftest"
+   ]
+  },
+  {
+   "guard": "assert_claim",
+   "defined": "de_supersession_diff.py:221",
+   "n_test_calls": 2,
+   "test_callers": [
+    "de_supersession_diff.py:selftest"
+   ]
+  },
+  {
+   "guard": "assert_directional",
+   "defined": "ev_gates.py:106",
+   "n_test_calls": 3,
+   "test_callers": [
+    "ev_gates.py:selftest"
+   ]
+  },
+  {
+   "guard": "assert_frozen_constants",
+   "defined": "phase2_iter011_run.py:5674",
+   "n_test_calls": 2,
+   "test_callers": [
+    "phase2_iter011_run.py:selftest"
+   ]
+  },
+  {
+   "guard": "assert_no_exit_code_collision",
+   "defined": "de_multiday_gate1_runner.py:8110",
+   "n_test_calls": 1,
+   "test_callers": [
+    "de_multiday_gate1_runner.py:selftest"
+   ]
+  },
+  {
+   "guard": "assert_no_fill_conditioned_features",
+   "defined": "phase2_iter011.py:300",
+   "n_test_calls": 6,
+   "test_callers": [
+    "phase2_iter011.py:selftest"
+   ]
+  },
+  {
+   "guard": "assert_poolable",
+   "defined": "flow_intensity.py:545",
+   "n_test_calls": 3,
+   "test_callers": [
+    "flow_intensity.py:selftest"
+   ]
+  },
+  {
+   "guard": "assert_settlement_day_admissible",
+   "defined": "de_multiday_gate1_runner.py:5907",
+   "n_test_calls": 2,
+   "test_callers": [
+    "de_multiday_gate1_runner.py:selftest"
+   ]
+  },
+  {
+   "guard": "assert_standalone_identity",
+   "defined": "phase2_iter011_run.py:5803",
+   "n_test_calls": 2,
+   "test_callers": [
+    "phase2_iter011_run.py:selftest"
+   ]
+  },
+  {
+   "guard": "assert_vectors_well_formed",
+   "defined": "phase2_iter011.py:1326",
+   "n_test_calls": 2,
+   "test_callers": [
+    "phase2_iter011.py:selftest"
+   ]
+  },
+  {
+   "guard": "assert_withdrawal_admissible",
+   "defined": "da_race_withdrawals.py:236",
+   "n_test_calls": 6,
+   "test_callers": [
+    "da_race_withdrawals.py:selftest"
+   ]
+  },
+  {
+   "guard": "case_1_matching_unit_declared_and_enforced",
+   "defined": "da_hazard_null_cases.py:76",
+   "n_test_calls": 7,
+   "test_callers": [
+    "da_hazard_null_cases.py:selftest"
+   ]
+  },
+  {
+   "guard": "case_2_decision_count",
+   "defined": "da_de_fix_cases.py:87",
+   "n_test_calls": 6,
+   "test_callers": [
+    "da_de_fix_cases.py:selftest"
+   ]
+  },
+  {
+   "guard": "case_2_rule_6_declared_before_the_result",
+   "defined": "da_hazard_null_cases.py:170",
+   "n_test_calls": 9,
+   "test_callers": [
+    "da_hazard_null_cases.py:selftest"
+   ]
+  },
+  {
+   "guard": "case_3_cancel_per_reference_generation",
+   "defined": "da_de_fix_cases.py:120",
+   "n_test_calls": 6,
+   "test_callers": [
+    "da_de_fix_cases.py:selftest"
+   ]
+  },
+  {
+   "guard": "case_4b_params_protocol_matches_version",
+   "defined": "da_de_fix_cases.py:255",
+   "n_test_calls": 4,
+   "test_callers": [
+    "da_de_fix_cases.py:selftest"
+   ]
+  },
+  {
+   "guard": "check_split_matches_rows",
+   "defined": "harmful_candidate_manifest.py:127",
+   "n_test_calls": 3,
+   "test_callers": [
+    "harmful_candidate_manifest.py:selftest"
+   ]
+  },
+  {
+   "guard": "codomain_census",
+   "defined": "da_arm_replay_verify.py:849",
+   "n_test_calls": 9,
+   "test_callers": [
+    "da_arm_replay_verify.py:selftest"
+   ]
+  },
+  {
+   "guard": "da_day_matched_volume",
+   "defined": "da_race_read_verify.py:288",
+   "n_test_calls": 5,
+   "test_callers": [
+    "da_race_read_verify.py:selftest"
+   ]
+  },
+  {
+   "guard": "data_root_resolution_audit",
+   "defined": "pm_tape_density.py:372",
+   "n_test_calls": 6,
+   "test_callers": [
+    "pm_tape_density.py:selftest"
+   ]
+  },
+  {
+   "guard": "design_permitted_additions",
+   "defined": "de_multiday_design_declaration.py:4346",
+   "n_test_calls": 12,
+   "test_callers": [
+    "de_multiday_design_declaration.py:selftest"
+   ]
+  },
+  {
+   "guard": "detect_idealisation",
+   "defined": "ev_gates.py:233",
+   "n_test_calls": 5,
+   "test_callers": [
+    "ev_gates.py:selftest"
+   ]
+  },
+  {
+   "guard": "emission_state",
+   "defined": "de_multiday_design_declaration.py:4309",
+   "n_test_calls": 6,
+   "test_callers": [
+    "de_multiday_design_declaration.py:selftest"
+   ]
+  },
+  {
+   "guard": "evaluate_arm",
+   "defined": "be_forward_metric.py:664",
+   "n_test_calls": 2,
+   "test_callers": [
+    "be_forward_metric.py:selftest"
+   ]
+  },
+  {
+   "guard": "exclusions",
+   "defined": "be_forward_metric.py:1101",
+   "n_test_calls": 3,
+   "test_callers": [
+    "be_forward_metric.py:selftest",
+    "be_read_declaration.py:selftest"
+   ]
+  },
+  {
+   "guard": "export_trajectory_b2",
+   "defined": "be_trajectory_export.py:149",
+   "n_test_calls": 4,
+   "test_callers": [
+    "be_trajectory_export.py:selftest"
+   ]
+  },
+  {
+   "guard": "file_vacate_obligation",
+   "defined": "flow_intensity.py:634",
+   "n_test_calls": 2,
+   "test_callers": [
+    "flow_intensity.py:selftest"
+   ]
+  },
+  {
+   "guard": "frozen_contract_gate",
+   "defined": "be_forward_day.py:761",
+   "n_test_calls": 1,
+   "test_callers": [
+    "be_forward_day.py:selftest"
+   ]
+  },
+  {
+   "guard": "item_1_permutation",
+   "defined": "da_null_design.py:61",
+   "n_test_calls": 6,
+   "test_callers": [
+    "da_null_design.py:selftest"
+   ]
+  },
+  {
+   "guard": "item_2_matching",
+   "defined": "da_null_design.py:86",
+   "n_test_calls": 5,
+   "test_callers": [
+    "da_null_design.py:selftest"
+   ]
+  },
+  {
+   "guard": "item_3_minimum_sample",
+   "defined": "da_null_design.py:114",
+   "n_test_calls": 4,
+   "test_callers": [
+    "da_null_design.py:selftest"
+   ]
+  },
+  {
+   "guard": "item_4_estimand",
+   "defined": "da_null_design.py:156",
+   "n_test_calls": 4,
+   "test_callers": [
+    "da_null_design.py:selftest"
+   ]
+  },
+  {
+   "guard": "item_5_latency",
+   "defined": "da_null_design.py:180",
+   "n_test_calls": 4,
+   "test_callers": [
+    "da_null_design.py:selftest"
+   ]
+  },
+  {
+   "guard": "item_6_exclusions",
+   "defined": "da_null_design.py:196",
+   "n_test_calls": 2,
+   "test_callers": [
+    "da_null_design.py:selftest"
+   ]
+  },
+  {
+   "guard": "item_8_multiplicity",
+   "defined": "da_null_design.py:244",
+   "n_test_calls": 6,
+   "test_callers": [
+    "da_null_design.py:selftest"
+   ]
+  },
+  {
+   "guard": "known_bad_verdict",
+   "defined": "de_multiday_gate1_runner.py:4215",
+   "n_test_calls": 5,
+   "test_callers": [
+    "de_multiday_gate1_runner.py:selftest",
+    "de_multiday_gate1_runner.py:selftest._day_path_checks"
+   ]
+  },
+  {
+   "guard": "may_read_aggregate",
+   "defined": "de_multiday_gate1_runner.py:2789",
+   "n_test_calls": 11,
+   "test_callers": [
+    "de_multiday_gate1_runner.py:selftest"
+   ]
+  },
+  {
+   "guard": "may_run_day",
+   "defined": "de_multiday_gate1_runner.py:1811",
+   "n_test_calls": 7,
+   "test_callers": [
+    "de_multiday_gate1_runner.py:selftest"
+   ]
+  },
+  {
+   "guard": "mutation_audit",
+   "defined": "be_forward_day.py:2969",
+   "n_test_calls": 7,
+   "test_callers": [
+    "be_forward_day.py:selftest",
+    "de_admissible_windows.py:selftest",
+    "de_ratification_check.py:selftest"
+   ]
+  },
+  {
+   "guard": "patch_target",
+   "defined": "de_admissible_windows.py:494",
+   "n_test_calls": 4,
+   "test_callers": [
+    "de_admissible_windows.py:selftest"
+   ]
+  },
+  {
+   "guard": "phantom_failure_census",
+   "defined": "da_arm_replay_verify.py:1071",
+   "n_test_calls": 6,
+   "test_callers": [
+    "da_arm_replay_verify.py:selftest"
+   ]
+  },
+  {
+   "guard": "placement_latency_of",
+   "defined": "be_daybook_build.py:4372",
+   "n_test_calls": 3,
+   "test_callers": [
+    "be_daybook_build.py:selftest"
+   ]
+  },
+  {
+   "guard": "pooled_increment",
+   "defined": "be_forward_metric.py:1081",
+   "n_test_calls": 2,
+   "test_callers": [
+    "be_forward_metric.py:selftest"
+   ]
+  },
+  {
+   "guard": "read_control_set",
+   "defined": "de_matched_cancel_control.py:300",
+   "n_test_calls": 3,
+   "test_callers": [
+    "de_matched_cancel_control.py:selftest"
+   ]
+  },
+  {
+   "guard": "read_ledger",
+   "defined": "de_decision_ledger.py:375",
+   "n_test_calls": 19,
+   "test_callers": [
+    "de_decision_ledger.py:selftest"
+   ]
+  },
+  {
+   "guard": "recompute",
+   "defined": "de_decision_ledger.py:476",
+   "n_test_calls": 12,
+   "test_callers": [
+    "de_decision_ledger.py:selftest"
+   ]
+  },
+  {
+   "guard": "record_ambient_verdict",
+   "defined": "de_multiday_gate1_runner.py:4093",
+   "n_test_calls": 4,
+   "test_callers": [
+    "de_multiday_gate1_runner.py:selftest",
+    "de_multiday_gate1_runner.py:selftest._day_path_checks"
+   ]
+  },
+  {
+   "guard": "refuse_if_not_random",
+   "defined": "de_matched_random_control.py:120",
+   "n_test_calls": 4,
+   "test_callers": [
+    "de_matched_random_control.py:selftest"
+   ]
+  },
+  {
+   "guard": "require_arm_identity",
+   "defined": "be_forward_metric.py:548",
+   "n_test_calls": 5,
+   "test_callers": [
+    "be_forward_metric.py:selftest"
+   ]
+  },
+  {
+   "guard": "require_declared_count",
+   "defined": "be_forward_family.py:274",
+   "n_test_calls": 6,
+   "test_callers": [
+    "be_forward_family.py:selftest"
+   ]
+  },
+  {
+   "guard": "require_endpoint",
+   "defined": "da_day_status.py:42",
+   "n_test_calls": 4,
+   "test_callers": [
+    "da_day_status.py:selftest"
+   ]
+  },
+  {
+   "guard": "require_validation_limit",
+   "defined": "da_null_design.py:334",
+   "n_test_calls": 7,
+   "test_callers": [
+    "da_null_design.py:selftest"
+   ]
+  },
+  {
+   "guard": "require_verified",
+   "defined": "de_ratification_check.py:261",
+   "n_test_calls": 9,
+   "test_callers": [
+    "be_forward_day.py:selftest",
+    "de_ratification_check.py:selftest"
+   ]
+  },
+  {
+   "guard": "require_verified_for_development_read",
+   "defined": "de_ratification_check.py:307",
+   "n_test_calls": 2,
+   "test_callers": [
+    "de_ratification_check.py:selftest"
+   ]
+  },
+  {
+   "guard": "score_lgbm_condvalue",
+   "defined": "de_head_scoring.py:252",
+   "n_test_calls": 2,
+   "test_callers": [
+    "de_head_scoring.py:selftest"
+   ]
+  },
+  {
+   "guard": "seed_from_convention",
+   "defined": "de_multiday_design_declaration.py:517",
+   "n_test_calls": 3,
+   "test_callers": [
+    "de_multiday_design_declaration.py:selftest",
+    "de_multiday_gate1_runner.py:selftest._day_path_checks"
+   ]
+  },
+  {
+   "guard": "stamp_validation_limit",
+   "defined": "da_null_design.py:370",
+   "n_test_calls": 1,
+   "test_callers": [
+    "da_null_design.py:selftest"
+   ]
+  },
+  {
+   "guard": "supersede_result",
+   "defined": "be_race_reader.py:945",
+   "n_test_calls": 2,
+   "test_callers": [
+    "be_race_reader.py:selftest"
+   ]
+  },
+  {
+   "guard": "tail_excluded",
+   "defined": "be_value_ceiling.py:74",
+   "n_test_calls": 2,
+   "test_callers": [
+    "be_value_ceiling.py:selftest"
+   ]
+  },
+  {
+   "guard": "test_statistic_from",
+   "defined": "de_multiday_gate1_runner.py:6428",
+   "n_test_calls": 2,
+   "test_callers": [
+    "de_multiday_gate1_runner.py:selftest"
+   ]
+  },
+  {
+   "guard": "v2_mask_windows",
+   "defined": "da_blackout_mask.py:176",
+   "n_test_calls": 1,
+   "test_callers": [
+    "da_blackout_mask.py:selftest"
+   ]
+  },
+  {
+   "guard": "verify_binding",
+   "defined": "rule_policy_v1.py:946",
+   "n_test_calls": 2,
+   "test_callers": [
+    "rule_policy_v1.py:selftest"
+   ]
+  },
+  {
+   "guard": "verify_declaration",
+   "defined": "be_forward_family.py:247",
+   "n_test_calls": 1,
+   "test_callers": [
+    "be_forward_family.py:selftest"
+   ]
+  },
+  {
+   "guard": "verify_declaration_chain",
+   "defined": "de_multiday_design_declaration.py:674",
+   "n_test_calls": 2,
+   "test_callers": [
+    "de_multiday_design_declaration.py:selftest"
+   ]
+  },
+  {
+   "guard": "verify_full",
+   "defined": "da_book_verify.py:1428",
+   "n_test_calls": 3,
+   "test_callers": [
+    "da_book_verify.py:selftest",
+    "da_book_verify.py:selftest._cov_flags"
+   ]
+  },
+  {
+   "guard": "verify_params_pin",
+   "defined": "de_multiday_design_declaration.py:538",
+   "n_test_calls": 3,
+   "test_callers": [
+    "de_multiday_design_declaration.py:selftest"
+   ]
+  },
+  {
+   "guard": "verify_pinned_feeds",
+   "defined": "da_race_read_verify.py:404",
+   "n_test_calls": 2,
+   "test_callers": [
+    "da_race_read_verify.py:selftest"
+   ]
+  },
+  {
+   "guard": "verify_run_inputs",
+   "defined": "de_multiday_gate1_runner.py:972",
+   "n_test_calls": 1,
+   "test_callers": [
+    "de_multiday_gate1_runner.py:selftest"
+   ]
+  },
+  {
+   "guard": "walk_termination_census",
+   "defined": "da_race_withdrawals.py:819",
+   "n_test_calls": 5,
+   "test_callers": [
+    "da_race_withdrawals.py:selftest"
+   ]
+  },
+  {
+   "guard": "write_cache_code_closure",
+   "defined": "de_multiday_gate1_runner.py:7124",
+   "n_test_calls": 2,
+   "test_callers": [
+    "de_multiday_gate1_runner.py:selftest"
+   ]
+  }
+ ],
+ "ORPHAN": [
+  {
+   "guard": "_b_counts_match_lists",
+   "defined": "ev_replay_seam.py:441",
+   "n_calls": 0
+  },
+  {
+   "guard": "_b_governed_implies_mask_consumed",
+   "defined": "ev_replay_seam.py:421",
+   "n_calls": 0
+  },
+  {
+   "guard": "_b_mask_identity_hash_matches",
+   "defined": "ev_replay_seam.py:475",
+   "n_calls": 0
+  },
+  {
+   "guard": "_b_ratification_declared",
+   "defined": "ev_replay_seam.py:392",
+   "n_calls": 0
+  },
+  {
+   "guard": "_b_ratification_shape",
+   "defined": "ev_replay_seam.py:401",
+   "n_calls": 0
+  },
+  {
+   "guard": "_b_record_keys",
+   "defined": "ev_replay_seam.py:460",
+   "n_calls": 0
+  },
+  {
+   "guard": "_b_slug_matches_record",
+   "defined": "ev_replay_seam.py:507",
+   "n_calls": 0
+  },
+  {
+   "guard": "_b_supply_envelope",
+   "defined": "ev_replay_seam.py:410",
+   "n_calls": 0
+  },
+  {
+   "guard": "_b_total_matches_lists",
+   "defined": "ev_replay_seam.py:431",
+   "n_calls": 0
+  },
+  {
+   "guard": "_g_coin_present_in_mask",
+   "defined": "de_admissible_windows.py:678",
+   "n_calls": 0
+  },
+  {
+   "guard": "_g_mask_required",
+   "defined": "de_admissible_windows.py:667",
+   "n_calls": 0
+  },
+  {
+   "guard": "_g_masked_subset_of_present",
+   "defined": "de_admissible_windows.py:690",
+   "n_calls": 0
+  },
+  {
+   "guard": "_r129_selftest",
+   "defined": "warning_window.py:907",
+   "n_calls": 0
+  },
+  {
+   "guard": "_shard_order",
+   "defined": "tier1_pipeline.py:659",
+   "n_calls": 0
+  },
+  {
+   "guard": "assemble_gen_scores",
+   "defined": "de_phase4_diag_runner.py:9068",
+   "n_calls": 0
+  },
+  {
+   "guard": "check_target_latency",
+   "defined": "harmful_rows_loader.py:172",
+   "n_calls": 0
+  },
+  {
+   "guard": "freeze_from_receipt",
+   "defined": "warning_window.py:952",
+   "n_calls": 0
+  },
+  {
+   "guard": "load_tape_index",
+   "defined": "phase2_arms.py:386",
+   "n_calls": 0
+  },
+  {
+   "guard": "paired_rows",
+   "defined": "adverse_feature_rows.py:826",
+   "n_calls": 0
+  },
+  {
+   "guard": "run_one_day_arm",
+   "defined": "de_settlement_control_run.py:55",
+   "n_calls": 0
+  }
+ ],
+ "limits": [
+  "resolution is BY NAME, so the sweep is conservative: it cannot invent an orphan, it can miss one",
+  "a call through a value or getattr is invisible (the same limit be_producing_closure.KNOWN_DYNAMIC_SITES records)",
+  "only live/pm_research is scanned"
+ ]
+}
