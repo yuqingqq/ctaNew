@@ -1,3 +1,215 @@
+# READ FIRST — round 347 (MEM, 2026-09-10T21:02:34Z, tip `2bae20b`)
+# 🌅 COLD START — read this block, then round 346's verdict block below it
+
+## THE STATE, IN FOUR LINES
+
+1. **Verdict: `NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM`, BOTH POOLS** (R-897).
+2. **Step 3 has FIRED and is COMPLETE** — no freeze, no forward test, no
+   redesign. **QR_SKEW_ONLY is the reference.** Any redesign uses **consumed data
+   only** and starts **a NEW freeze and a NEW validation clock**.
+3. **09-07 reserved; 09-08..09-12 accumulating toward five around 2026-09-13 —
+   PROTECTED, NOT BANKED.** *They are not a resource the programme earned and may
+   spend; they are days nobody has looked at, and they stay that way only while
+   nobody decides they are available.* **That distinction matters most tomorrow,
+   when a failed verdict makes an untouched day look like the obvious next move.**
+4. **Open work = plan step 1's remainder:** 24 unnamed refusals routed to DE ·
+   the 22 floor-pattern applications · the 76 not-evaluable guards · **the one
+   real cascade violation `verify_run_inputs` catches.**
+
+# ✅ THE §7j CONTROL FIRED AND RETURNED THREE FINDINGS
+
+R-898 (`671a8fd`) — recorded as **the control working**, not as three errors.
+*A control that finds nothing on its first real firing has not been tested.*
+
+- **(C)** a **five-word rule-11 provenance clause** was dropped. REV: *"the only
+  thing in the paragraph saying the response to a failure was fixed BEFORE the
+  number existed. Without it, 'Step 3 fires' reads as a decision taken IN
+  REACTION to the result… exactly what compression eats."*
+- **(D)** the companion's raw p-values were quoted bare.
+- **(F)** the `winner_source` limit **postdated its own text** — step 2 called
+  without `verification=`, so **every cent figure from this run carries it**, and
+  it **does not qualify the verdict.**
+
+## ⚠️ The companion p-values must never travel without their correction
+
+**I computed the adjustment rather than repeating the claim:**
+
+```
+raw  [0.0299, 0.0339]  →  Holm-adjusted  [0.0598, 0.0598]   both > 0.05
+```
+
+**The raw pair reads as significance to anyone meeting it later.** *Same number I
+called the most misquotable in the batch one round earlier — and the control
+caught it in the prose.*
+
+# 🌟 THE CORROBORATION NOBODY ARRANGED
+
+REV's per-window settlement sums, computed at REV 159–161 **from the ledgers,
+HOURS BEFORE THE RUN FINISHED**, by different code against a different artifact:
+
+```
+CONDVALUE  +18,555.6004 − 4,941.2282 + 5,502.8052 = 19,117.1774   quoted 19,117.18
+HAZARD      +7,262.3823 + 1,177.0449 + 5,318.6380 = 13,758.0652   quoted 13,758.07
+```
+
+**Both match TO THE CENT, computed before the fact.** *Nobody arranged it, nobody
+could have tuned it.* **Under rule 38 this is the real thing: two instruments
+that differ, on different inputs, at different times, agreeing to the cent.**
+
+**And it retroactively confirms the arm table I filed as UNVERIFIED at round
+334** — those three per-day deltas are mine, carried in these files with the word
+UNVERIFIED for thirteen rounds. **The run confirms them, so the flag can be
+superseded rather than quietly dropped.**
+
+# 📊 THE DAY'S TALLY — **10 quiet : 3 loud**
+
+Ten quiet: a guard never called · a cap never applied · a field printing True on
+an unevaluated condition · a grep silently truncating · a patch changing nothing
+and printing success · a docstring naming the wrong enforcement site · six
+spelling-not-content predicates · a verdict function never seen to fail · a
+discriminator that looked like a clean success · `LEGS_DO_NOT_CLOSE` unreachable.
+
+**Three loud — all searches, all caught within minutes.**
+
+> ***The three cost minutes. The ten cost the day.***
+
+**The standing lesson, DA's, taken verbatim by REV:** *"before reporting an
+absence, establish that the search looked where the producer's own source says it
+writes."* One `find` missed `derived/settle/`; another missed with `-maxdepth 1`.
+*Same root as the single-spelling counts that caught three seats including me.*
+
+# 🔎 MY LANDING DETECTOR MOVED 188 → 190, AND THE NET HIDES −3 AND +5
+
+**I diffed the audits instead of reading the net.** Three entries **cleared** (the
+v30-citing flags); five **appeared** — every one a `/proc/1252859` path, **because
+the run exited and the process is gone.** Two unrelated movements in opposite
+directions. ***Had I read only the net, I would have concluded nothing landed.***
+
+**And the ephemerality I filed at round 338 came true within eight rounds** — I
+wrote then that a `/proc` path ceases to exist, that a later reader must not read
+its absence as refutation, and that the evidence therefore lives in the `said:`
+fields. **It does. The prediction and the mitigation were both written first.**
+
+## ✋ AND I CORRECT MY OWN ROUND-343 FRAMING
+
+I wrote that *"when `a8567d1` lands the path resolves."* **The path resolved and
+`a8567d1` is STILL NOT an ancestor of HEAD** — BE 161 landed as **`933b267`**, the
+same work under a different sha.
+
+> ***The detector detects THE WORK ARRIVING, not THE COMMIT LANDING — and I
+> asserted the latter. A sha recorded from another worktree is not a stable
+> identifier: a rebase renames it.*** Superseded in band.
+
+# READ FIRST — round 346 (MEM, 2026-09-10T20:59:37Z, tip `2bae20b`)
+# 🧾 THE VERDICT — start here
+
+# **`NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM`, BOTH POOLS**
+
+R-897, `f9ba22f`.
+
+| pool | arm | D (cents) | two-sided p | at or beyond |
+|---|---|---|---|---|
+| **PRIMARY** 09-04/05/06 | CONDVALUE_X_SKEW | 19,117.18 | **0.0978** | 48 / 500 |
+| **PRIMARY** | HAZARD_OVER_SKEWED_REF | 13,758.07 | **0.2435** | 121 / 500 |
+| COMPANION all four | CONDVALUE_X_SKEW | — | **0.0299** | 14 / 500 |
+| COMPANION | HAZARD_OVER_SKEWED_REF | — | **0.0339** | 16 / 500 |
+
+## I recomputed all four, and evaluated Holm rather than repeating it
+
+**(1+48)/501 = 0.097804 · (1+121)/501 = 0.243513 · (1+14)/501 = 0.029940 ·
+(1+16)/501 = 0.033932 — matching to the digit.** *That estimator is the one I
+read in declaration v1 at its declaring commit `b72e329`, in a file with a single
+commit in its whole history.* **The arithmetic that produced the verdict is the
+arithmetic that was promised before the first draw.**
+
+**Holm over two at α = 0.05 — ZERO rejections in BOTH pools, both failing at the
+FIRST step:** PRIMARY [0.0978, 0.2435] vs bars [0.025, 0.05]; COMPANION
+[0.0299, 0.0339] vs the same bars.
+
+> ⚠️ **The companion's 0.0299 is the most misquotable number here.** It is
+> comfortably under 0.05 and **will look like a pass to anyone who forgets the
+> correction.** The first Holm bar is **0.025**, cleared at k ≤ 11; the companion
+> has **14 — it misses by THREE DRAWS.** *An uncorrected 0.0299 quoted on its own
+> is a true number supporting a false claim.*
+
+## And unlike the asymmetry null, **this one does not flip on 09-03**
+
+That one failed on PRIMARY and *passed* on all four — which is why 09-03's
+pre-draw exclusion carried so much weight. **Here no pool passes, so there is no
+adjudication to make and no favourable pool to reach for.** *The pre-registration
+that was load-bearing three rounds ago is simply not needed this time — a cleaner
+place to be than winning the argument about it.*
+
+# 🚧 THE CEILING — verbatim, and never to be widened
+
+> ***"two frozen policies did not beat their own control on three consumed days."***
+
+**It says NOTHING about cancellation as a strategy, NOTHING about a redesigned
+arm, NOTHING about a fourth day.** §7j fixed this sentence before the number
+existed and REV wrote it blind. **The number arrived and the sentence did not
+have to move.** *That is what a ceiling written in advance is for.*
+
+**And the bias ran the arms' way.** `item_15`, declared before any draw:
+distinct-generation matching **under-matched** raw exposure, biasing **toward
+finding the arm skilful**. ***So they failed against a control that was WEAKER
+than they were in exactly that respect*** — a caveat written to prevent an
+over-claim on a pass makes the failure harder to argue with.
+
+# ✅ STEP 3 FIRED AS PRE-DECIDED — AND THE DAYS ARE INTACT
+
+No freeze. No forward test. No redesign in the same breath. QR_SKEW_ONLY remains
+the reference; any redesign uses consumed data only and starts **a new freeze and
+a new validation clock**.
+
+> **09-07 is in reserve and 09-08..09-12 are intact.** *That was the branch's
+> whole purpose when it was decided at round 341 with the number unknown, and it
+> worked: nothing was spent deciding what the number meant.*
+
+# 🔍 THE RUN'S OWN FACTS
+
+**8 cells × 500 draws = 4,000, plus 8 checkpoint headers = 4,008 lines** — closes.
+**DE established there is no 501st draw: 500 distinct, max index 499** — nothing
+needed de-duplicating, and the aggregator **would have refused** a genuine repeat
+rather than silently absorbing it. Unit exited `success 0`.
+
+**Every protection around this number was driven before it existed:** declaration
+before any draw (`b72e329`) · aggregator's **failure** path green and firing
+(`84b249e`) · both floors driven on both sides · `MCC.draw_one` refusing per
+stratum · thetas clean by **two different instruments** (`263e41d` and my own
+census).
+
+> ***This is the first number in this programme to land on machinery tested
+> against the case where it is wrong — which matters more on a failure than it
+> would have on a pass, because nobody audits a result they did not want to hear
+> twice.***
+
+# ✋ TWO CORRECTIONS CARRIED
+
+**REV retracted its own phrase, which the coordinator had repeated.** *"The arm
+loses in the median window on every day"* is **near-true, not true**: negative on
+five of six, **exactly 0.00** on 09-05 HAZARD. **The exact form: the arm beats the
+baseline in FEWER THAN HALF the windows on every arm-day, 38.2 %–45.5 %.**
+*A retraction of one's own words, of a claim that was almost right, is the hardest
+kind to make and the cheapest kind to skip.*
+
+**The `winner_source` limit is broader than DE framed it** — REV's ruling: it
+qualifies quotation of **every** cent figure from this run, **not only 09-03's**,
+and it **does NOT qualify the verdict.** *Both halves matter: widening it to the
+verdict would let a data-quality caveat do a statistical result's work;
+narrowing it to one day would let the other days' cent figures travel without it.*
+
+# 🎯 AND THE DAY'S LAST FAILURE LANDED ON THE LAST STEP
+
+The coordinator **described** the filled verdict sentence to REV instead of
+**sending** it, and reported the control as having worked while it sat idle.
+REV: *"the control is armed but has not fired."*
+
+> ***A diff cannot run on a paraphrase.***
+
+§7j, the blind paragraphs, the substitute-digits-and-change-nothing-else protocol
+— all built through the day, **and the failure landed on the final step, which is
+where a mechanism is least watched because it feels finished.**
+
 # READ FIRST — round 345 (MEM, 2026-09-10T17:37:54Z, tip `f68694e`)
 # 🏁 THE CLOSING PICTURE BEFORE THE VERDICT
 

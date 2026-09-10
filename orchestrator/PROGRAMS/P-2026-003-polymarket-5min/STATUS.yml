@@ -67,6 +67,40 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-10T21:02:01Z (MEM ROUND 347 -- THE DAY'S FINAL SWEEP. THE 7J CONTROL FIRED AT ITS FIRST REAL
+  OPPORTUNITY AND RETURNED THREE FINDINGS (R-898, 671a8fd) -- a dropped rule-11 provenance
+  clause, bare companion p-values, and a limit that postdated its text. RECORDED AS THE
+  CONTROL WORKING. I computed the companion's Holm-adjusted values rather than repeating
+  them: 0.0299 and 0.0339 BOTH BECOME 0.0598, so the raw pair reads as significance and
+  MUST NEVER TRAVEL WITHOUT ITS CORRECTION. THE CORROBORATION NOBODY ARRANGED IS THE
+  STRONGEST THING IN THE DAY: REV's ledger sums, computed HOURS BEFORE THE RUN FINISHED by
+  different code on a different artifact, equal the verdict's D to the cent -- and I
+  reproduced them from the per-day deltas I FILED AS UNVERIFIED AT ROUND 334, which the run
+  has now confirmed. TALLY: TEN QUIET FAILURES AGAINST THREE LOUD ONES, the three caught in
+  minutes and the ten costing the day. MY LANDING DETECTOR MOVED 188->190 AND THE NET HIDES
+  -3 AND +5: three cleared, five appeared because THE RUN EXITED and /proc is gone --
+  exactly the ephemerality I filed at round 338. AND I CORRECT MY OWN ROUND-343 FRAMING: the
+  work landed as 933b267, a8567d1 is STILL not an ancestor, so the detector detects THE WORK
+  ARRIVING, NOT THE COMMIT LANDING. COLD START: verdict NO_SETTLEMENT_SKILL_OVER_MATCHED
+  _RANDOM both pools; STEP 3 FIRED AND COMPLETE; open work is the step-1 remainder; 09-07
+  and 09-08..09-12 are PROTECTED, NOT BANKED. tip 2bae20b)
+  2026-09-10T20:59:02Z (MEM ROUND 346 -- THE VERDICT. R-897 at f9ba22f:
+  NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM IN BOTH POOLS. PRIMARY 09-04/05/06 CONDVALUE
+  D = 19,117.18 c p = 0.0978 (48/500), HAZARD D = 13,758.07 c p = 0.2435 (121/500);
+  COMPANION all four p = 0.0299 (14/500) and 0.0339 (16/500) -- ALSO FAILS. I RECOMPUTED
+  ALL FOUR under the estimator pre-registered at b72e329 and they match TO THE DIGIT, and I
+  EVALUATED HOLM rather than repeating it: ZERO REJECTIONS IN BOTH POOLS, both failing at
+  the FIRST step. The companion's 0.0299 misses its Holm bar of 0.025 BY THREE DRAWS and is
+  the most misquotable number here. UNLIKE THE ASYMMETRY NULL THIS ONE DOES NOT FLIP ON
+  09-03 -- no pool passes, so there is no adjudication to make. THE CEILING, VERBATIM AND
+  NEVER TO BE WIDENED: 'two frozen policies did not beat their own control on three consumed
+  days' -- nothing about cancellation as a strategy, a redesigned arm, or a fourth day. AND
+  THE BIAS RAN THE ARMS' WAY: distinct-generation matching UNDER-matched exposure, so they
+  failed against a WEAKER control. STEP 3 FIRED AS PRE-DECIDED: no freeze, no forward test,
+  no redesign; 09-07 IN RESERVE AND 09-08..09-12 INTACT. REV retracted its OWN phrase (the
+  exact form: the arm beats the baseline in FEWER THAN HALF the windows on every arm-day,
+  38.2-45.5 per cent). And the day's LAST failure landed at the FINAL STEP of the mechanism
+  built to prevent it: a sentence DESCRIBED instead of SENT. tip 671a8fd)
   2026-09-10T17:37:20Z (MEM ROUND 345 -- THE CLOSING PICTURE BEFORE THE VERDICT. THE FREEZE IS CLEAR ON
   THE TREE'S CONDITION: BE's triage of the 101 gives 11 excluded, 13 dormant-and-passing, 76
   NOT EVALUABLE AS STANDING CONDITIONS, and 4 raises resolving to ONE distinct real
@@ -84,38 +118,6 @@ updated: >-
   because an open descriptor is not a held lock. REV's blind paragraphs (0147ff2) ARE on
   this branch; BE's a8567d1 and a35c889 are NOT, and the landing detector still reads 188.
   EVERY PROTECTION AROUND STEP 2 WAS DRIVEN RATHER THAN ASSUMED. tip 2c1fa8b)
-  2026-09-10T17:30:21Z (MEM ROUND 344 -- THE LAST BLOCKING ITEM CLOSED AND THE COORDINATOR IS NOW UNDER
-  A WRITTEN CONTROL. The thetas are clean and re-verified live (263e41d, Q-DA-405) -- the one
-  answer that could have UNMADE the four-day table, the asymmetry null and step 2 together;
-  and because DA's instrument differs from the census I ran at rounds 342-343, this time the
-  agreement IS corroboration. SECTION 7J is landed (REV 169, f67165e, runbook 782), written
-  with ZERO CELLS VISIBLE, and it is a CONTROL ON THE COORDINATOR that must outlive this
-  session. REV's diagnosis, verbatim: 'Both were TRUE OBSERVATIONS CARRIED ONE STEP FURTHER
-  THAN THE EVIDENCE WENT... a number is at its most quotable in the minute it lands' -- and
-  naming it carelessness would make it HARDER to catch. Two ceilings fixed in advance, each
-  carrying its own negation. THE P IS TWO-SIDED AND I VERIFIED IT WAS PRE-REGISTERED: both
-  p_two_sided and why_two_sided are in declaration v1 AT ITS DECLARING COMMIT b72e329, the
-  file has ONE commit in its whole history, so NOBODY CAN CLAIM THE SIDEDNESS WAS CHOSEN
-  AFTER THE RESULT. THE TENTH INSTANCE was INDISTINGUISHABLE FROM AN IMPROVEMENT -- DA's
-  discriminator cut 168->153, hit its named targets, silently dropped others, and DA nearly
-  reported it as a clean success; caught ONLY because ANOTHER SEAT'S TEST forced enumeration.
-  Population 156, 28 never exercised, ratchet HELD 16/16. Step 2 lands ~19:25Z. tip 8b4e41c)
-  2026-09-10T17:21:37Z (MEM ROUND 343 -- THE RUNNING EXPERIMENT'S GUARDS ARE DRIVEN AND THREE COUNTS
-  MOVED UP. SETTLEMENT_NULL_TOO_SMALL driven at 150, 199, 0 and the STRING '200' -- the
-  BOUNDARY and TYPE-CONFUSION cases are the two a lazy test misses and the two that would
-  pass an under-sampled null WHILE PRINTING A PASS. AND THE SUBTLEST THING TONIGHT: the
-  other floor enforcement lives in draw_many, which step 2 DELIBERATELY DOES NOT CALL so
-  each draw can be checkpointed -- THE PROTECTION WAS RELOCATED, NOT ABSENT, and the design
-  that saved 1,600 draws mid-flight is the one that bypassed the check. BE's ordering:
-  count, identity, GENERATOR -- and the generator outranks, because a correct count of
-  wrong draws passes the count guard. THREE COUNTS GREW UNDER SCRUTINY (floor 2->13->18,
-  unnamed refusals 24->30, off-path 101 with 70 in the running closure) and EVERY ONE
-  CARRIES A LIMIT ITS OWN SEAT STATED IN THE DIRECTION THAT WEAKENS IT -- that conjunction
-  is the finding. THE THETA QUESTION IS ANSWERED: re-run fresh at this tip, 43 carriers
-  each and NO non-exact rendering in ANY .py or .json -- multiple carriers YES, agree
-  EXACTLY YES. 09-07 is protected by a NAME now (reserved_days ['2026-09-07']) and NOT by
-  admissible_days, which is STILL None -- and a8567d1 is COMMITTED BUT NOT LANDED on this
-  branch, with a waiter armed on the lock. tip f67165e)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -287,6 +289,33 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 347, the day's final sweep ---
+  THE_7J_CONTROL_FIRED_AND_FOUND_THREE_THINGS_IN_THE_SENT_PROSE: "R-898 at 671a8fd, and it is recorded as THE CONTROL WORKING, not as three coordinator errors. (C) a five-word rule-11 provenance clause was dropped -- REV: 'the only thing in the paragraph saying the response to a failure was fixed BEFORE the number existed. Without it, Step 3 fires reads as a decision taken IN REACTION to the result... exactly what compression eats.' (D) the companion raw p-values were quoted bare. (F) the winner_source limit postdated the text. A control that finds nothing on its first real firing has not been tested; this one fired at the first opportunity and returned three."
+  AND_THE_COMPANION_P_VALUES_MUST_NEVER_TRAVEL_WITHOUT_THEIR_CORRECTION: "0.0299 and 0.0339 are both BELOW 0.05 and only Holm fails them. I computed the adjusted values rather than repeating the claim: Holm-adjusted, BOTH BECOME 0.0598, and both exceed 0.05. So the raw pair read as significance to anyone meeting them later and the corrected pair reads as what it is. IF THE COMPANION IS MENTIONED, ITS CORRECTION MUST TRAVEL WITH IT. This is the same number I flagged at round 346 as the most misquotable in the batch, and the control caught it in the prose one round later."
+  AND_THE_WINNER_SOURCE_LIMIT_ATTACHES_TO_EVERY_CENT_FIGURE_BECAUSE_STEP_2_CALLED_WITHOUT_VERIFICATION: "The limit postdated the text it was supposed to qualify: step 2 called WITHOUT verification=, so EVERY cent figure from this run carries it -- not only 09-03's. It does NOT qualify the verdict. Recorded with both halves for the third time in two rounds, because each half alone misstates it: widening it to the verdict lets a data-quality caveat do a statistical result's work, and narrowing it to one day lets the other days' cent figures travel bare."
+  THE_CORROBORATION_NOBODY_ARRANGED_IS_THE_STRONGEST_THING_IN_THE_DAY: "REV's per-window settlement sums were computed at REV 159-161 FROM THE LEDGERS, HOURS BEFORE THE RUN FINISHED, by different code against a different artifact -- and they equal the verdict's D values TO THE CENT. Nobody arranged it, nobody could have tuned it, and it was computed BEFORE THE FACT. Under rule 38 this is the real thing: two instruments that differ, on different inputs, at different times, agreeing to the cent."
+  AND_IT_ALSO_RETROACTIVELY_CONFIRMS_THE_ARM_TABLE_I_FILED_AS_UNVERIFIED_AT_ROUND_334: The three per-day deltas I summed to reproduce those D values are the ones I recorded at MEM 334 and marked UNVERIFIED, with DA 188 then checking them. They sum to the verdict's own numbers to the cent. So the arm table that has sat in these files carrying the word UNVERIFIED for thirteen rounds is confirmed by the run itself -- and the flag that said so can be superseded rather than quietly dropped.
+  THE_DAYS_TALLY_IS_TEN_QUIET_FAILURES_AGAINST_THREE_LOUD_ONES: "Ten quiet: a guard never called, a cap never applied, a field printing True on an unevaluated condition, a grep silently truncating, a patch changing nothing and printing success, a docstring naming the wrong enforcement site, six spelling-not-content predicates, a verdict function never seen to fail, a discriminator that looked like a clean success, and LEGS_DO_NOT_CLOSE unreachable. Three loud -- all searches, mine or DA's, ALL CAUGHT WITHIN MINUTES. Ten to three, and the three cost minutes while the ten cost the day."
+  AND_THE_STANDING_LESSON_IS_TO_ESTABLISH_WHERE_THE_PRODUCER_SAYS_IT_WRITES: "DA's, taken verbatim by REV: 'before reporting an absence, establish that the search looked where the producer's own source says it writes.' The coordinator's find missed derived/settle/; DA's missed with -maxdepth 1. Two searches, two different ways of not looking in the right place, and both produced a confident absence. It is the same root as the single-spelling counts that caught three seats including me: an enumeration is only as good as its knowledge of where the thing lives."
+  MY_LANDING_DETECTOR_MOVED_188_TO_190_AND_THAT_NET_NUMBER_HIDES_MINUS_THREE_AND_PLUS_FIVE: I diffed the two audits instead of reading the net. THREE entries CLEARED -- the v30-citing flags -- and FIVE APPEARED, every one of them a /proc/1252859 path, because THE RUN EXITED AND THE PROCESS IS GONE. Net +2, composed of two unrelated movements in opposite directions. Had I read only the net I would have concluded nothing landed. A single-number detector needs its diff, which is the same lesson as every count this week.
+  AND_THE_EPHEMERALITY_I_FLAGGED_AT_ROUND_338_CAME_TRUE_WITHIN_EIGHT_ROUNDS: "At round 338 I filed that a /proc path CEASES TO EXIST when the run ends, that a later reader must not read the absence as a refutation, and that the evidence therefore lives in the said: fields rather than the address. The run ended, /proc/1252859 is gone, and five of my flags now cite a path that resolves to nothing -- exactly as recorded, with their measurements intact in their own provenance. The prediction and the mitigation were both written before the thing happened."
+  AND_I_MUST_CORRECT_MY_OWN_ROUND_343_FRAMING_THE_DETECTOR_DETECTS_THE_WORK_NOT_THE_COMMIT: "I wrote at round 343 that when a8567d1 LANDS the path resolves and the count returns. The path HAS resolved -- params v30 and be_reserved_days.py are both present -- and a8567d1 IS STILL NOT AN ANCESTOR OF HEAD. BE 161 landed as 933b267, the same work under a different sha. So the detector detects THE WORK ARRIVING, not THE COMMIT LANDING, and I asserted the latter. A sha recorded from another worktree is not a stable identifier: a rebase renames it. Superseded in band."
+  THE_COLD_START_IS_THE_VERDICT_PLUS_STEP_THREE_COMPLETE_PLUS_THE_STEP_ONE_REMAINDER: "For a coordinator starting cold tomorrow. The verdict is NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM in BOTH pools. STEP 3 HAS FIRED AND IS COMPLETE: no freeze, no forward test, no redesign, QR_SKEW_ONLY the reference. Any redesign uses consumed data only and starts a NEW freeze and a NEW validation clock. The open work is the plan's step 1 remainder: 24 unnamed refusals routed to DE, the 22 floor-pattern applications, the 76 not-evaluable guards, and the ONE real cascade violation verify_run_inputs catches."
+  AND_THE_RESERVED_DAYS_ARE_PROTECTED_NOT_BANKED_WHICH_IS_THE_PHRASE_TO_KEEP: "09-07 is reserved and 09-08..09-12 are accumulating toward five around 2026-09-13. PROTECTED, NOT BANKED: they are not a resource the programme has earned and may spend, they are days that have not been looked at, and they stay that way only while nobody decides they are available. The distinction matters most tomorrow, when a failed verdict makes an untouched day look like the obvious next move."
+  # --- MEM round 346, THE VERDICT ---
+  THE_VERDICT_IS_NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM_IN_BOTH_POOLS: "R-897 at f9ba22f. PRIMARY 09-04/05/06: CONDVALUE_X_SKEW D = 19,117.18 c, two-sided p = 0.0978, 48 of 500 at or beyond; HAZARD_OVER_SKEWED_REF D = 13,758.07 c, p = 0.2435, 121 of 500. COMPANION all four days: p = 0.0299 (14 of 500) and 0.0339 (16 of 500) -- ALSO FAILS. Holm over TWO at alpha 0.05. The p is TWO-SIDED because the direction followed the point estimates, which was fixed in the declaration before any draw."
+  AND_ALL_FOUR_P_VALUES_REPRODUCE_EXACTLY_UNDER_THE_PRE_REGISTERED_ESTIMATOR: "I recomputed every one rather than accepting them: (1+48)/501 = 0.097804, (1+121)/501 = 0.243513, (1+14)/501 = 0.029940, (1+16)/501 = 0.033932 -- matching 0.0978, 0.2435, 0.0299 and 0.0339 to the digit. That estimator is the one I read in declaration v1 AT ITS DECLARING COMMIT b72e329 at round 344, in a file with a single commit in its whole history. The arithmetic that produced the verdict is the arithmetic that was promised before the first draw."
+  AND_HOLM_GIVES_ZERO_REJECTIONS_IN_BOTH_POOLS_COMPUTED_NOT_ASSERTED: "Rule 10: I evaluated the correction rather than repeating its conclusion. PRIMARY sorted [0.0978, 0.2435] against bars [0.025, 0.05] -- the first fails, so the procedure stops with ZERO rejections. COMPANION sorted [0.0299, 0.0339] against the same bars -- the first ALSO fails at 0.0299 against 0.025, zero rejections. Neither pool rejects anything, and neither does so at the first step."
+  AND_THE_COMPANIONS_SMALLER_P_MISSES_ITS_HOLM_BAR_BY_THREE_DRAWS_WHICH_IS_THE_MOST_MISQUOTABLE_NUMBER_HERE: "0.0299 is comfortably under 0.05 and will look like a pass to anyone who forgets the correction. It is not: the first Holm bar over two tests is 0.025, which is cleared at k <= 11, and the companion has 14 -- IT MISSES BY THREE DRAWS. Recorded because this is the exact shape of the asymmetry null's one-draw miss, and because an uncorrected 0.0299 quoted on its own would be a true number supporting a false claim."
+  THE_CONTRAST_WITH_THE_ASYMMETRY_NULL_IS_THAT_THIS_ONE_DOES_NOT_FLIP_ON_09_03: "The asymmetry null FLIPPED on whether 09-03 was included -- its PRIMARY failed and its all-four companion passed, which is why 09-03's pre-draw exclusion mattered so much. THIS one does not flip: NO POOL PASSES. So there is no adjudication to make and no favourable pool to reach for. The pre-registration that was load-bearing three rounds ago is, this time, simply not needed -- and that is a cleaner place to be than winning the argument about it."
+  THE_CEILING_IS_TWO_FROZEN_POLICIES_DID_NOT_BEAT_THEIR_OWN_CONTROL_ON_THREE_CONSUMED_DAYS: Verbatim, and it must never be widened. It says NOTHING about cancellation as a strategy, NOTHING about a redesigned arm, and NOTHING about a fourth day. Section 7j fixed this sentence before the number existed and REV wrote it blind; the number arrived and the sentence did not have to move. That is what a ceiling written in advance is for.
+  AND_THE_BIAS_RAN_THE_ARMS_WAY_SO_THEY_FAILED_AGAINST_A_WEAKER_CONTROL: "item_15, declared before any draw and recorded verbatim at round 336: distinct-generation matching UNDER-matches raw exposure, and the bias runs TOWARD FINDING THE ARM SKILFUL. So the arms failed against a control that was WEAKER than they were in exactly that respect. A caveat written to protect against an over-claim on a pass turns out, on a failure, to make the failure harder to argue with -- which is what an honestly directional caveat does in both branches."
+  STEP_THREE_FIRED_AS_PRE_DECIDED_AND_THE_RESERVED_DAYS_ARE_INTACT: "No freeze, no forward test, no redesign in the same breath. QR_SKEW_ONLY remains the reference; any redesign uses consumed data only and starts a NEW freeze and a NEW validation clock. 09-07 IS IN RESERVE AND 09-08..09-12 ARE INTACT. That was the branch's whole purpose when it was decided at round 341 with the number unknown, and it worked: nothing was spent deciding what the number meant."
+  THE_RUNS_OWN_FACTS_CLOSE_AND_I_CHECKED_THE_LINE_ARITHMETIC: "8 cells x 500 draws = 4,000, plus 8 checkpoint headers = 4,008 lines, which is what the file holds. DE established there is no 501st draw: 500 distinct, max index 499 -- so nothing needed de-duplicating, and the aggregator would have REFUSED a genuine repeat rather than silently absorbing it. The unit exited success 0."
+  AND_EVERY_PROTECTION_AROUND_THIS_NUMBER_WAS_DRIVEN_BEFORE_IT_EXISTED: The declaration committed before any draw (b72e329); the aggregator's FAILURE path green and firing (84b249e); both floors driven on both sides; MCC.draw_one refusing per stratum; the thetas clean and re-verified by two different instruments (263e41d and my own census). The number that arrived is the first in this programme to land on machinery that had been tested against the case where it is wrong -- which matters more on a failure than it would have on a pass, because nobody audits a result they did not want to hear twice.
+  REV_RETRACTED_ITS_OWN_PHRASE_AND_THE_EXACT_FORM_IS_NARROWER: "'The arm loses in the median window on every day' is NEAR-TRUE, not exactly true: negative on five of six, and EXACTLY 0.00 on 09-05 HAZARD. The exact form is that the arm beats the baseline in FEWER THAN HALF the windows on every arm-day, 38.2 to 45.5 per cent. REV retracted a phrase REV wrote and the coordinator had repeated. A retraction of one's own words, of a claim that was almost right, is the hardest kind to make and the cheapest kind to skip."
+  AND_THE_WINNER_SOURCE_LIMIT_IS_BROADER_THAN_DE_FRAMED_IT: "REV's ruling: it qualifies quotation of EVERY cent figure from this run, not only 09-03's -- and it does NOT qualify the verdict. Two halves and both matter. Widening it to the verdict would have let a data-quality caveat do the work of a statistical result; narrowing it to one day would have let the other days' cent figures travel without it. The limit is bigger than one day and smaller than the conclusion."
+  THE_COORDINATORS_LAST_FAILURE_OF_THE_DAY_HAPPENED_AT_THE_FINAL_STEP_OF_THE_MECHANISM_BUILT_TO_PREVENT_IT: "They DESCRIBED the filled verdict sentence to REV instead of SENDING it, and reported the control as having worked while it sat idle. REV's words: 'the control is armed but has not fired.' A DIFF CANNOT RUN ON A PARAPHRASE. Section 7j, the blind paragraphs, the substitute-digits-and-change-nothing-else protocol -- all of it built through the day, and the failure landed on the last step, which is where a mechanism is least watched because it feels finished."
   # --- MEM round 345, the closing picture before the verdict ---
   THE_FREEZE_IS_CLEAR_ON_THE_TREES_CONDITION_AND_THE_REPO_CARRIES_NO_PILE_OF_SILENT_FAILURES: "R-896 at 8b4e41c. BE's triage of the 101 off-path guards: 11 EXCLUDED (entry points, harness wrappers, a certified-retired guard -- not really guards), 13 DORMANT AND PASSING, 76 NOT EVALUABLE AS STANDING CONDITIONS, and 4 raises resolving to ONE DISTINCT REAL VIOLATION -- the cascade drift verify_run_inputs already found and that I drove into raising at round 340. A freeze against this tree would NOT be committing over hidden breakage. That is the question round 340 said the triage existed to answer, and the answer is the good one."
   AND_THE_TRIAGE_ARITHMETIC_CLOSES_ONLY_UNDER_ONE_READING_SO_I_RECORD_THE_READING: "11 + 13 + 76 = 100, which leaves exactly ONE of the 101 for the violated bucket. The FOUR are RAISE EVENTS, not a fourth disjoint category -- four raises resolving to one distinct violation. A reader who adds 4 to 100 gets 104 and concludes the census does not close. Recorded because this is the same shape as coverage 0.7419 against 247 of 288: two numbers in one sentence, counted in different units, where only one of them partitions the set."
@@ -27542,6 +27571,158 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 347, 2026-09-10T21:02:01Z ---
+  THE_7J_CONTROL_FIRED_AND_FOUND_THREE_THINGS_IN_THE_SENT_PROSE:
+    prov: RELAYED
+    from: REV via coordinator MEM 347 (R-898)
+    as_of: 2026-09-10T21:02:01Z
+    said: >-
+      the three findings and REV's quoted reasoning as dispatched; the arithmetic they sit beside I verified independently at round 346 and again below.
+  AND_THE_COMPANION_P_VALUES_MUST_NEVER_TRAVEL_WITHOUT_THEIR_CORRECTION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T21:02:01Z
+    said: >-
+      Holm step-down adjustment computed over the two companion p-values: max((m-i)*p) running, giving 0.0598 for both; both compared against 0.05.
+  AND_THE_WINNER_SOURCE_LIMIT_ATTACHES_TO_EVERY_CENT_FIGURE_BECAUSE_STEP_2_CALLED_WITHOUT_VERIFICATION:
+    prov: RELAYED
+    from: REV via coordinator MEM 347
+    as_of: 2026-09-10T21:02:01Z
+    said: >-
+      REV's ruling and the missing verification= argument as dispatched.
+  THE_CORROBORATION_NOBODY_ARRANGED_IS_THE_STRONGEST_THING_IN_THE_DAY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T21:02:01Z
+    said: >-
+      recomputed by me from the per-day arm deltas I filed at round 334: 18,555.6004 - 4,941.2282 + 5,502.8052 = 19,117.1774 against a quoted 19,117.18, and 7,262.3823 + 1,177.0449 + 5,318.6380 = 13,758.0652 against 13,758.07.
+  AND_IT_ALSO_RETROACTIVELY_CONFIRMS_THE_ARM_TABLE_I_FILED_AS_UNVERIFIED_AT_ROUND_334:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T21:02:01Z
+    said: >-
+      the round-334 per-day deltas summed and compared with the verdict's D values; the round-334 flags carry those figures with their UNVERIFIED marking in their own provenance.
+  THE_DAYS_TALLY_IS_TEN_QUIET_FAILURES_AGAINST_THREE_LOUD_ONES:
+    prov: RELAYED
+    from: coordinator MEM 347
+    as_of: 2026-09-10T21:02:01Z
+    said: >-
+      the ten and the three as dispatched; six of the ten are recorded in my own files with independent verification at rounds 336 through 345.
+  AND_THE_STANDING_LESSON_IS_TO_ESTABLISH_WHERE_THE_PRODUCER_SAYS_IT_WRITES:
+    prov: RELAYED
+    from: DA via coordinator MEM 347
+    as_of: 2026-09-10T21:02:01Z
+    said: >-
+      the lesson quoted verbatim and both instances as dispatched; my own single-spelling instance is recorded at rounds 336 and 339.
+  MY_LANDING_DETECTOR_MOVED_188_TO_190_AND_THAT_NET_NUMBER_HIDES_MINUS_THREE_AND_PLUS_FIVE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T21:02:01Z
+    said: >-
+      the round-345 and round-346 audit JSONs differenced by flag name: three cleared, five newly missing, all five carrying the /proc artifact path.
+  AND_THE_EPHEMERALITY_I_FLAGGED_AT_ROUND_338_CAME_TRUE_WITHIN_EIGHT_ROUNDS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T21:02:01Z
+    said: >-
+      /proc/1252859 confirmed absent; the five affected flags identified by name in the audit diff; the round-338 caveat flag records the mitigation.
+  AND_I_MUST_CORRECT_MY_OWN_ROUND_343_FRAMING_THE_DETECTOR_DETECTS_THE_WORK_NOT_THE_COMMIT:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v30.json
+    as_of: 2026-09-10T21:02:01Z
+    said: >-
+      git log for the v30 path names 933b267 as the commit that added it; git merge-base --is-ancestor a8567d1 HEAD still returns false while both files are present in the tree.
+  THE_COLD_START_IS_THE_VERDICT_PLUS_STEP_THREE_COMPLETE_PLUS_THE_STEP_ONE_REMAINDER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T21:02:01Z
+    said: >-
+      the verdict verified at round 346 with all four p-values recomputed and Holm evaluated; the step-3 branch verified against runbook section 7i at round 341; the step-1 remainder as dispatched.
+  AND_THE_RESERVED_DAYS_ARE_PROTECTED_NOT_BANKED_WHICH_IS_THE_PHRASE_TO_KEEP:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T21:02:01Z
+    said: >-
+      the reservation mechanism verified at round 343 -- reserved_days naming 09-07 positively rather than resting on an unset field -- and the validation date recorded at round 330.
+  # --- MEM round 346, 2026-09-10T20:59:02Z ---
+  THE_VERDICT_IS_NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM_IN_BOTH_POOLS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T20:59:02Z
+    said: >-
+      commit f9ba22f read at its subject; all four counts and p-values recomputed independently below.
+  AND_ALL_FOUR_P_VALUES_REPRODUCE_EXACTLY_UNDER_THE_PRE_REGISTERED_ESTIMATOR:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T20:59:02Z
+    said: >-
+      each p recomputed as (1+k)/(1+500) from its stated count and compared with the reported value.
+  AND_HOLM_GIVES_ZERO_REJECTIONS_IN_BOTH_POOLS_COMPUTED_NOT_ASSERTED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T20:59:02Z
+    said: >-
+      Holm-Bonferroni over two tests evaluated in code for both pools against alpha 0.05.
+  AND_THE_COMPANIONS_SMALLER_P_MISSES_ITS_HOLM_BAR_BY_THREE_DRAWS_WHICH_IS_THE_MOST_MISQUOTABLE_NUMBER_HERE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T20:59:02Z
+    said: >-
+      the largest count clearing (1+k)/501 <= 0.025 solved as 11 and differenced against the observed 14.
+  THE_CONTRAST_WITH_THE_ASYMMETRY_NULL_IS_THAT_THIS_ONE_DOES_NOT_FLIP_ON_09_03:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T20:59:02Z
+    said: >-
+      the asymmetry null's split outcome is recorded in my files at round 337; this verdict's four p-values all fail, verified above.
+  THE_CEILING_IS_TWO_FROZEN_POLICIES_DID_NOT_BEAT_THEIR_OWN_CONTROL_ON_THREE_CONSUMED_DAYS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T20:59:02Z
+    said: >-
+      the failure ceiling read in runbook section 7j at round 344, before the verdict, and compared with the verdict as landed.
+  AND_THE_BIAS_RAN_THE_ARMS_WAY_SO_THEY_FAILED_AGAINST_A_WEAKER_CONTROL:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T20:59:02Z
+    said: >-
+      the what_this_cannot_establish.the_matching_bias field read at round 338 and its direction re-read here against the failing result.
+  STEP_THREE_FIRED_AS_PRE_DECIDED_AND_THE_RESERVED_DAYS_ARE_INTACT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T20:59:02Z
+    said: >-
+      the failure branch as pre-decided in runbook section 7i, verified at round 341, compared with what was actually done.
+  THE_RUNS_OWN_FACTS_CLOSE_AND_I_CHECKED_THE_LINE_ARITHMETIC:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T20:59:02Z
+    said: >-
+      8*500+8 computed as 4008 against the stated line count; the distinctness and max-index findings are DE's and are attributed.
+  AND_EVERY_PROTECTION_AROUND_THIS_NUMBER_WAS_DRIVEN_BEFORE_IT_EXISTED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T20:59:02Z
+    said: >-
+      each protection is recorded in my files with its own provenance at rounds 338 through 345; this flag asserts the conjunction and names where each is verifiable.
+  REV_RETRACTED_ITS_OWN_PHRASE_AND_THE_EXACT_FORM_IS_NARROWER:
+    prov: RELAYED
+    from: REV via coordinator MEM 346
+    as_of: 2026-09-10T20:59:02Z
+    said: >-
+      the retraction, the five-of-six count, the exact 0.00 and the 38.2-45.5 per cent range as dispatched; recorded at round 335 in its earlier form and superseded here in band.
+  AND_THE_WINNER_SOURCE_LIMIT_IS_BROADER_THAN_DE_FRAMED_IT:
+    prov: RELAYED
+    from: REV via coordinator MEM 346
+    as_of: 2026-09-10T20:59:02Z
+    said: >-
+      REV's ruling as dispatched, with both halves recorded because either alone misstates it.
+  THE_COORDINATORS_LAST_FAILURE_OF_THE_DAY_HAPPENED_AT_THE_FINAL_STEP_OF_THE_MECHANISM_BUILT_TO_PREVENT_IT:
+    prov: RELAYED
+    from: coordinator MEM 346 carrying REV
+    as_of: 2026-09-10T20:59:02Z
+    said: >-
+      the coordinator's own account and REV's quoted sentence; recorded as the day's closing instance of the class the day was spent cataloguing.
   # --- MEM round 345, 2026-09-10T17:37:20Z ---
   THE_FREEZE_IS_CLEAR_ON_THE_TREES_CONDITION_AND_THE_REPO_CARRIES_NO_PILE_OF_SILENT_FAILURES:
     prov: RELAYED

@@ -23000,3 +23000,45 @@ generation and the window went 4 → 3. Nothing rewritten.
   BEFORE it reaches the USER: a pass will invite 'the model works' and a failure 'the model
   is dead', and neither is supportable on three consumed days. tip 88f8132)
 ```
+
+## Batch 328 (rotated by MEM round 346, 2026-09-10T20:59:02Z)
+
+```
+  2026-09-10T17:21:37Z (MEM ROUND 343 -- THE RUNNING EXPERIMENT'S GUARDS ARE DRIVEN AND THREE COUNTS
+  MOVED UP. SETTLEMENT_NULL_TOO_SMALL driven at 150, 199, 0 and the STRING '200' -- the
+  BOUNDARY and TYPE-CONFUSION cases are the two a lazy test misses and the two that would
+  pass an under-sampled null WHILE PRINTING A PASS. AND THE SUBTLEST THING TONIGHT: the
+  other floor enforcement lives in draw_many, which step 2 DELIBERATELY DOES NOT CALL so
+  each draw can be checkpointed -- THE PROTECTION WAS RELOCATED, NOT ABSENT, and the design
+  that saved 1,600 draws mid-flight is the one that bypassed the check. BE's ordering:
+  count, identity, GENERATOR -- and the generator outranks, because a correct count of
+  wrong draws passes the count guard. THREE COUNTS GREW UNDER SCRUTINY (floor 2->13->18,
+  unnamed refusals 24->30, off-path 101 with 70 in the running closure) and EVERY ONE
+  CARRIES A LIMIT ITS OWN SEAT STATED IN THE DIRECTION THAT WEAKENS IT -- that conjunction
+  is the finding. THE THETA QUESTION IS ANSWERED: re-run fresh at this tip, 43 carriers
+  each and NO non-exact rendering in ANY .py or .json -- multiple carriers YES, agree
+  EXACTLY YES. 09-07 is protected by a NAME now (reserved_days ['2026-09-07']) and NOT by
+  admissible_days, which is STILL None -- and a8567d1 is COMMITTED BUT NOT LANDED on this
+  branch, with a waiter armed on the lock. tip f67165e)
+```
+
+## Batch 329 (rotated by MEM round 347, 2026-09-10T21:02:01Z)
+
+```
+  2026-09-10T17:30:21Z (MEM ROUND 344 -- THE LAST BLOCKING ITEM CLOSED AND THE COORDINATOR IS NOW UNDER
+  A WRITTEN CONTROL. The thetas are clean and re-verified live (263e41d, Q-DA-405) -- the one
+  answer that could have UNMADE the four-day table, the asymmetry null and step 2 together;
+  and because DA's instrument differs from the census I ran at rounds 342-343, this time the
+  agreement IS corroboration. SECTION 7J is landed (REV 169, f67165e, runbook 782), written
+  with ZERO CELLS VISIBLE, and it is a CONTROL ON THE COORDINATOR that must outlive this
+  session. REV's diagnosis, verbatim: 'Both were TRUE OBSERVATIONS CARRIED ONE STEP FURTHER
+  THAN THE EVIDENCE WENT... a number is at its most quotable in the minute it lands' -- and
+  naming it carelessness would make it HARDER to catch. Two ceilings fixed in advance, each
+  carrying its own negation. THE P IS TWO-SIDED AND I VERIFIED IT WAS PRE-REGISTERED: both
+  p_two_sided and why_two_sided are in declaration v1 AT ITS DECLARING COMMIT b72e329, the
+  file has ONE commit in its whole history, so NOBODY CAN CLAIM THE SIDEDNESS WAS CHOSEN
+  AFTER THE RESULT. THE TENTH INSTANCE was INDISTINGUISHABLE FROM AN IMPROVEMENT -- DA's
+  discriminator cut 168->153, hit its named targets, silently dropped others, and DA nearly
+  reported it as a clean success; caught ONLY because ANOTHER SEAT'S TEST forced enumeration.
+  Population 156, 28 never exercised, ratchet HELD 16/16. Step 2 lands ~19:25Z. tip 8b4e41c)
+```
