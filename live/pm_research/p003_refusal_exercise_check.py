@@ -69,6 +69,62 @@ LIMIT = ("TEXTUAL PREDICATE. A cell that drives a refusal WITHOUT NAMING it "
 _LEAD_OK = re.compile(r"^\s*(REFUSED)?\s*-{0,2}\s*$")
 
 
+def _name_resolved_at_runtime(raise_node, consts) -> bool:
+    """Does this raise interpolate a NON-LITERAL in the leading slot?
+
+    IDIOM (3). If the module declares refusal-name constants at all AND the
+    message's first interpolated slot is an expression rather than a name or
+    a literal, the refusal is very likely named from data. The checker cannot
+    resolve it and must not pretend either way."""
+    if not consts:
+        return False
+    for arg in _message_exprs(raise_node):
+        if not isinstance(arg, ast.JoinedStr):
+            continue
+        seen = ""
+        for part in arg.values:
+            if isinstance(part, ast.Constant) and isinstance(part.value, str):
+                seen += part.value
+                if not _LEAD_OK.match(seen):
+                    break
+                continue
+            if isinstance(part, ast.FormattedValue):
+                v = part.value
+                # DA 208b: an ATTRIBUTE (`R.SOME_REFUSAL`) is a CROSS-MODULE
+                # CONSTANT and is RESOLVABLE -- "I did not look" is not the
+                # same claim as "I cannot tell", and only the second earns
+                # this bucket. A SUBSCRIPT or a CALL is genuinely computed
+                # from data and is undecidable textually.
+                if _LEAD_OK.match(seen) and isinstance(
+                        v, (ast.Subscript, ast.Call)):
+                    return True
+            break
+    return False
+
+
+def _cross_module_constant(raise_node, all_consts):
+    """A leading `MODULE.SOME_REFUSAL` resolved against every module's
+    constants -- idiom (1) extended across the import boundary."""
+    out = []
+    for arg in _message_exprs(raise_node):
+        if not isinstance(arg, ast.JoinedStr):
+            continue
+        seen = ""
+        for part in arg.values:
+            if isinstance(part, ast.Constant) and isinstance(part.value, str):
+                seen += part.value
+                if not _LEAD_OK.match(seen):
+                    break
+                continue
+            if isinstance(part, ast.FormattedValue):
+                v = part.value
+                if _LEAD_OK.match(seen) and isinstance(v, ast.Attribute) \
+                        and v.attr in all_consts:
+                    out.append(all_consts[v.attr])
+            break
+    return out
+
+
 def _leading_constants(raise_node, consts):
     """Module constants that LEAD the raise's message expression."""
     out = []
@@ -159,7 +215,16 @@ def scan(roots=DEFAULT_ROOTS) -> dict:
     for r in roots:
         files += sorted(p for p in Path(r).rglob("*.py") if p.is_file())
 
-    per_file, unparsable = {}, []
+    per_file, unparsable, runtime_named = {}, [], []
+    # DA 208b: every module's refusal constants, so a leading
+    # `OTHERMODULE.SOME_REFUSAL` resolves instead of being called undecidable.
+    all_consts = {}
+    for p in files:
+        try:
+            all_consts.update(_module_refusal_constants(ast.parse(p.read_text()),
+                                                        p.read_text()))
+        except Exception:
+            pass
     population = {}          # token -> {files, idioms}
     unnamed = []             # (file, line, excerpt)
     const_names = {}         # token -> set of constant identifiers
@@ -172,7 +237,7 @@ def scan(roots=DEFAULT_ROOTS) -> dict:
             unparsable.append({"file": str(p), "error": type(e).__name__})
             continue
         consts = _module_refusal_constants(tree, src)
-        n_raise = n_tok = n_unnamed = 0
+        n_raise = n_tok = n_unnamed = n_runtime = 0
         for node in ast.walk(tree):
             if not isinstance(node, ast.Raise):
                 continue
@@ -182,6 +247,8 @@ def scan(roots=DEFAULT_ROOTS) -> dict:
             for cname in _leading_constants(node, consts):        # idiom (1)
                 toks.add(consts[cname])
                 const_names.setdefault(consts[cname], set()).add(cname)
+            for val in _cross_module_constant(node, all_consts):  # idiom (1b)
+                toks.add(val)
             if toks:
                 n_tok += len(toks)
                 for t in toks:
@@ -189,6 +256,20 @@ def scan(roots=DEFAULT_ROOTS) -> dict:
                     e["files"].add(p.name)
                     e["idioms"].add("inline" if t in INLINE.findall(seg)
                                     else "named_constant")
+            elif "REFUSED" in seg and _name_resolved_at_runtime(node, consts):
+                # DA 208, IDIOM (3): the refusal NAME is computed at run time.
+                # `be_reserved_days.py:141` -- raise R(f"REFUSED
+                # {v['refusal_name']}: {v['why']}") -- is NAMED, dynamically,
+                # from a dict whose values are this module's own declared
+                # refusal constants. A TEXTUAL predicate cannot read it and
+                # MUST NOT call it unnamed: that is a false alarm, and it fired
+                # on BE 161 within a minute of the ratchet going live.
+                # It gets its OWN bucket rather than being forced into either
+                # of the other two, because the checker genuinely CANNOT TELL.
+                n_runtime += 1
+                runtime_named.append({"file": p.name,
+                                      "line": getattr(node, "lineno", None),
+                                      "excerpt": " ".join(seg.split())[:110]})
             elif "REFUSED" in seg:
                 n_unnamed += 1
                 unnamed.append({"file": p.name,
@@ -197,6 +278,7 @@ def scan(roots=DEFAULT_ROOTS) -> dict:
         per_file[p.name] = {"n_raise_sites": n_raise,
                             "n_named_refusals": n_tok,
                             "n_unnamed_refusals": n_unnamed,
+                            "n_runtime_named_refusals": n_runtime,
                             "status": (NO_REFUSALS if n_raise == 0
                                        else "EXAMINED")}
 
@@ -233,6 +315,16 @@ def scan(roots=DEFAULT_ROOTS) -> dict:
                             for t in never],
         "REFUSAL_HAS_NO_NAME": {"n": len(unnamed), "sites": unnamed[:40],
                                 "n_shown": min(40, len(unnamed))},
+        "REFUSAL_NAME_RESOLVED_AT_RUNTIME": {
+            "n": len(runtime_named), "sites": runtime_named[:20],
+            "what_it_is": ("the refusal NAME is computed at run time from "
+                           "data, so a TEXTUAL predicate cannot read it. NOT "
+                           "unnamed and NOT verifiably named -- the checker "
+                           "cannot tell, and says so rather than guessing."),
+            "why_it_has_its_own_bucket": ("forcing it into `unnamed` is a "
+                                          "FALSE ALARM; forcing it into "
+                                          "`named` is a false clean. Neither "
+                                          "is honest, so it is neither.")},
         "n_exerciser_functions": exerciser_fns,
         "files_with_no_refusals": sorted(
             f for f, v in per_file.items() if v["status"] == NO_REFUSALS),
@@ -460,6 +552,32 @@ def selftest(quiet: bool = False) -> int:
             and r7["verdict"] == "UNPARSABLE_FILES_PRESENT",
             "PARTIAL INPUT: an unparsable file makes the verdict UNKNOWN and "
             "is NAMED -- a failed parse is never read as coverage")
+
+    # ---- IDIOM (3) AND (1b), DA 208. Driven, because the ratchet's FIRST
+    # ---- LIVE FIRING was a FALSE ALARM on one of them.
+    with tempfile.TemporaryDirectory() as td:
+        tmp = Path(td)
+        (tmp / "rt.py").write_text(
+            'SOME_REFUSAL = "FIXTURE_RUNTIME_TOKEN"\n'
+            'def go(v):\n'
+            '    raise ValueError(f"REFUSED {v[\'refusal_name\']}: {v[\'why\']}")\n')
+        r_rt = scan((tmp,))
+        _ok(r_rt["REFUSAL_NAME_RESOLVED_AT_RUNTIME"]["n"] == 1
+            and r_rt["REFUSAL_HAS_NO_NAME"]["n"] == 0,
+            "IDIOM (3): a refusal NAMED FROM DATA lands in its OWN bucket -- "
+            "NOT unnamed (a false alarm) and NOT named (a false clean). The "
+            "checker cannot tell and says so.")
+        (tmp / "other.py").write_text('FAR_REFUSAL = "FIXTURE_CROSS_TOKEN"\n')
+        (tmp / "xm.py").write_text(
+            'import other as O\n'
+            'def go():\n'
+            '    raise ValueError(f"REFUSED {O.FAR_REFUSAL}: no")\n')
+        r_xm = scan((tmp,))
+        _ok("FIXTURE_CROSS_TOKEN" in {u["token"] for u in r_xm["never_exercised"]}
+            and r_xm["REFUSAL_NAME_RESOLVED_AT_RUNTIME"]["n"] == 1,
+            "IDIOM (1b): a CROSS-MODULE constant RESOLVES to a named refusal "
+            "-- 'I did not look' is not the same claim as 'I cannot tell', "
+            "and only the second earns the runtime bucket")
 
     # ---- THE RATCHET, driven both ways (REV 168 second round)
     with tempfile.TemporaryDirectory() as td:

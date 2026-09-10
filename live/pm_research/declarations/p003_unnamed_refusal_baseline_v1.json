@@ -5,7 +5,7 @@
  "how_to_lower_it": "give the refusal a NAME, re-run `--write-baseline`, and commit the lower number with the change that earned it",
  "never_raise_it": "a baseline raised to accommodate new unnamed refusals is the ratchet disarmed. If a rise is deliberate it is a USER/coordinator decision and belongs in the register, not in a quiet regeneration.",
  "DECLARED_LIMIT": "TEXTUAL PREDICATE. A cell that drives a refusal WITHOUT NAMING it reads as never-exercised, so THE ERROR INFLATES RATHER THAN DEFLATES. This is a FLOOR on what has been SEEN to be driven, never an exact defect count.",
- "total": 1108,
+ "total": 1106,
  "per_file": {
   "be_adverse_forward_eval.py": 2,
   "be_cancel_axis_null.py": 9,
@@ -78,9 +78,8 @@
   "de_early_read.py": 1,
   "de_matched_random_control.py": 1,
   "de_multiday_design_declaration.py": 16,
-  "de_multiday_gate1_runner.py": 106,
+  "de_multiday_gate1_runner.py": 105,
   "de_phase4_diag_runner.py": 16,
-  "de_point_estimate_day.py": 1,
   "de_ratification_check.py": 38,
   "de_receipt_correction.py": 12,
   "de_section81_cache_upgrade.py": 7,
@@ -107,92 +106,18 @@
   "pm_tape_density.py": 3,
   "v5_deploy_gates.py": 3
  },
- "WHY_THIS_NUMBER_AND_NOT_1103": {
-  "asked_by": "REV, 2026-09-10 -- 'a ratchet baseline is load-bearing by construction, so it should carry its own reason on the artifact'",
-  "the_move": "1,103 -> 1,108 across the SAME 99 files, +5",
-  "MEASURED_NOT_INFERRED": "the two rules were run side by side over the same tree and the sites were DIFFERENCED: exactly 5 sites BECAME unnamed and 0 stopped being unnamed",
-  "the_five_sites": [
-   "be_fragment_diagnostic.py:1983",
-   "de_ratification_check.py:1159",
-   "de_ratification_check.py:1209",
-   "phase2_iter011_run.py:948",
-   "phase2_iter011_run.py:1086"
+ "WHY_1106_AND_NOT_1108": {
+  "asked_by": "nobody -- the RATCHET asked, by firing (DA 208)",
+  "the_trigger": "BE 161 landed be_reserved_days.py at 933b267 and the ratchet REFUSED UNNAMED_REFUSAL_COUNT_ROSE, be_reserved_days.py 0->1. FIRST LIVE FIRING, on new code, unprompted, hours after it was built.",
+  "AND_IT_WAS_A_FALSE_ALARM": "be_reserved_days.py:141 raises with the refusal name interpolated from a dict at run time. The refusal IS named -- from data -- out of that module's own declared refusal constants. A TEXTUAL predicate cannot read it and MUST NOT call it unnamed.",
+  "the_fix": "IDIOM (3) gets its OWN bucket, REFUSAL_NAME_RESOLVED_AT_RUNTIME: not unnamed (a false alarm) and not named (a false clean), because the checker genuinely cannot tell.",
+  "a_second_distinction_found_while_fixing_it": "the first cut also swept up a CROSS-MODULE constant reference, which is RESOLVABLE. 'I did not look' is not the same claim as 'I cannot tell'. Idiom (1b) now resolves attributes against every module's constants, and only SUBSCRIPTS and CALLS earn the runtime bucket.",
+  "the_two_genuine_runtime_sites": [
+   "be_reserved_days.py:141",
+   "de_multiday_gate1_runner.py:5919"
   ],
-  "the_cause": "DA 201's POSITIONAL discriminator. Each of the five is a bare `REFUSED: <prose>` message whose only UPPER_SNAKE constant is one of the 13 the discriminator rejected (CAUSAL_FROZEN_FROM_TRAIN, DEVELOPMENT_READ_DAYS, FULL_SUPPLIED_COMPLEMENT, INCUMBENT_REWEIGHTED_ONLY), interpolated INSIDE the message as a value rather than leading it.",
-  "THE_STATEMENT_STRONGER_THAN_A_TIGHTENING": "these five refusals were ALWAYS UNNAMED. The old rule CREDITED THEM WITH A TOKEN BORROWED from a config constant that happens to appear in the same message. The +5 is a CORRECTION of a mis-credit, not a regression and not merely a consequence of a stricter rule -- the baseline is 5 higher because the previous count was 5 too low.",
-  "direction_of_the_error_it_fixed": "the old rule UNDER-counted unnamed refusals, i.e. it erred toward a CLEAN surface. That is the same direction as the other four undercounts of the day and it is the dangerous one.",
-  "what_would_make_this_number_wrong_again": "a NEW constant whose value is UPPER_SNAKE being interpolated at the FRONT of a bare REFUSED message would be credited as a refusal token and drop the count. The discriminator's 13 rejections are enumerated in DA 201's commit so that class stays reviewable.",
-  "A_DEFECT_IN_THIS_RECORD_ITSELF_FOUND_BY_REV": {
-   "what_was_wrong": "this block enumerated the rejected constants in VALUE space while the source carries them in NAME space, so a reader grepping for CAUSAL_FROZEN_FROM_TRAIN finds the assignment and NOT the raise site, which interpolates CAUSAL_MODE. The list was internally consistent and read as unmatched against the source.",
-   "the_class": "rule 16 -- name versus value is the exact defect both seats hit today, and it turned up inside the record written to document it",
-   "the_fix": "both spaces are carried below, DERIVED from the source rather than typed, for ALL THIRTEEN rather than the three REV read",
-   "AND_THE_REASON_NEITHER_SPACE_ALONE_IS_ENOUGH": "several values carry TWO DIFFERENT NAMES in different modules -- CAUSAL_FROZEN_FROM_TRAIN is CAUSAL_MODE in be_fragment_diagnostic and THRESHOLD_PRIMARY in phase2_declaration; INCUMBENT_REWEIGHTED_ONLY is BASELINE in phase2_increment_null and INCUMBENT_ARM in phase2_iter011_run. A value-space list is not greppable to the raise site and a name-space list is AMBIGUOUS ACROSS MODULES. THE IDENTITY IS THE TRIPLE (module, name, value), not any one of them."
-  },
-  "the_13_rejected_constants_in_BOTH_spaces": {
-   "CAUSAL_FROZEN_FROM_TRAIN": [
-    "be_fragment_diagnostic.py:CAUSAL_MODE",
-    "phase2_declaration.py:THRESHOLD_PRIMARY"
-   ],
-   "DEVELOPMENT_READ_DAYS": [
-    "de_ratification_check.py:SCOPE_DAYS_DEVELOPMENT_READ"
-   ],
-   "FORWARD_RACE_DAYS": [
-    "de_ratification_check.py:SCOPE_DAYS_RACE"
-   ],
-   "FULL_SUPPLIED_COMPLEMENT": [
-    "de_ratification_check.py:POP_FULL"
-   ],
-   "INCUMBENT_REWEIGHTED_ONLY": [
-    "phase2_increment_null.py:BASELINE",
-    "phase2_iter011_run.py:INCUMBENT_ARM"
-   ],
-   "MECHANICS_BOTH_SPLITS": [
-    "de_phase4_diag_runner.py:RULED_SPLIT_SET"
-   ],
-   "NULL_NOT_DRAWN_POINT_ESTIMATE_RUN": [
-    "de_decision_ledger.py:NULL_NOT_DRAWN_STATUS",
-    "de_multiday_gate1_runner.py:NULL_NOT_DRAWN_STATUS"
-   ],
-   "P003_ACTION_ECONOMIC_LEDGER_V1": [
-    "de_action_bundle_control.py:LEDGER_PROTOCOL",
-    "de_action_economic_ledger.py:PROTOCOL"
-   ],
-   "P003_CANONICAL_ACTION_POPULATION_V1": [
-    "de_canonical_action_population.py:PROTOCOL",
-    "de_v2_acting_matched_control.py:ACTION_PROTOCOL"
-   ],
-   "P003_DE_EARLY_READ_DAY_V1": [
-    "da_early_read_verify.py:EARLY_PROTOCOL"
-   ],
-   "PRESENT": [
-    "landing_check.py:PRESENT"
-   ],
-   "RETROSPECTIVE_TOPK": [
-    "be_fragment_diagnostic.py:RETRO_MODE"
-   ],
-   "VERIFIED_AGREE": [
-    "da_early_read_verify.py:WINNER_STATUS_REQUIRED"
-   ]
-  },
-  "the_five_sites_with_the_NAME_each_interpolates": {
-   "be_fragment_diagnostic.py:1983": [
-    "CAUSAL_MODE -> CAUSAL_FROZEN_FROM_TRAIN",
-    "RETRO_MODE -> RETROSPECTIVE_TOPK"
-   ],
-   "de_ratification_check.py:1159": [
-    "SCOPE_DAYS_DEVELOPMENT_READ -> DEVELOPMENT_READ_DAYS",
-    "SCOPE_DAYS_RACE -> FORWARD_RACE_DAYS"
-   ],
-   "de_ratification_check.py:1209": [
-    "POP_FULL -> FULL_SUPPLIED_COMPLEMENT"
-   ],
-   "phase2_iter011_run.py:948": [
-    "INCUMBENT_ARM -> INCUMBENT_REWEIGHTED_ONLY"
-   ],
-   "phase2_iter011_run.py:1086": [
-    "INCUMBENT_ARM -> INCUMBENT_REWEIGHTED_ONLY"
-   ]
-  },
-  "every_value_resolved_to_a_module_level_name": true
+  "net_effect": "unnamed 1108 -> 1106 (two sites reclassified); POPULATION 156 -> 158 (cross-module resolution recovered two named refusals)",
+  "direction": "the ratchet erred LOUD on its first firing and cost about ninety seconds. That is the cheap direction, and the one this instrument was deliberately built to err in.",
+  "the_baseline_was_NOT_raised_to_accommodate_it": true
  }
 }
