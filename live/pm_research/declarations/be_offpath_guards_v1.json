@@ -890,5 +890,65 @@
    "5 definitions of shape (label, exc, fn) are `refuses(...)` test-harness helpers -- guard-shaped by the detector, test infrastructure by design"
   ],
   "verdict": "the 101 is HOUSEKEEPING, not a live liability: one violated standing invariant, already known, already specced in WIRING_VERIFY_RUN_INPUTS."
+ },
+ "ABC_TRIAGE": {
+  "as_of_utc": "2026-09-10T17:28:56Z",
+  "question": "of the off-path guards: (a) how many are not really guards, (b) how many are dormant on a SATISFIED condition, (c) how many WOULD REFUSE TODAY?",
+  "n_definitions": 105,
+  "a_EXCLUDED": {
+   "n": 11,
+   "why": "the count that matters is over REAL guards, not over everything the detector matched. Each exclusion cuts against the headline number.",
+   "breakdown": {
+    "refuses(...) test-harness wrappers": 5,
+    "named in a shell/systemd launcher -- externally invoked": 2,
+    "externally-invoked ENTRY POINT, running right now (run_one_day_arm)": 1,
+    "184-check battery helper (placement_latency_of)": 1,
+    "deliberately RETIRED under DE38-C1, with an on-path certificate asserting it stays retired (refuse_if_not_random)": 1,
+    "batch exact-equality reference kept on purpose (score_lgbm_condvalue)": 1
+   }
+  },
+  "real_guards": 94,
+  "b_DORMANT_ON_A_SATISFIED_CONDITION": {
+   "evaluated_and_passed": 13,
+   "not_evaluable_as_STANDING_conditions": 76,
+   "why_not_evaluable": "they require a book, a day, a ctx or a row. Their condition is a property of a RUN's inputs, not of the repo, so it cannot be 'currently violated' outside a run.",
+   "unresolved": [
+    {
+     "guard": "mutation_audit",
+     "module": "be_forward_day.py",
+     "status": "did not complete in 400 s; unevaluated, not assumed passing"
+    }
+   ]
+  },
+  "c_WOULD_REFUSE_TODAY": {
+   "n_raising": 4,
+   "n_DISTINCT_REAL_VIOLATIONS": 1,
+   "the_one": {
+    "condition": "be_cascade pin drift",
+    "refusal": "BE_CASCADE_DIFFERS",
+    "detail": "2 of 10 cited cascade modules differ against params v29 (de_head_scoring.py, de_phase4_diag_runner.py)",
+    "surfaced_by": [
+     "verify_run_inputs",
+     "verify_be_module"
+    ],
+    "note": "one condition, two guards -- verify_run_inputs calls verify_be_module"
+   },
+   "raising_BY_DESIGN_not_a_violation": [
+    {
+     "guard": "v2_mask_windows",
+     "why": "the v2 absolute-floor mask is DRAFT and not user-frozen; refusing is the seam working as declared"
+    },
+    {
+     "guard": "verify_pinned_feeds",
+     "why": "refuses to open a pinned feed to check itself, because that would spend the read the gate exists to schedule"
+    }
+   ]
+  },
+  "VERDICT": "(c) is ONE, and it was already known and already specced. The 101 is a CLEANUP BACKLOG, not a repo carrying hidden failures. Plan step 1 stands as written.",
+  "a_SIXTH_SHAPE_FOUND_WHILE_DRIVING": {
+   "what": "de_matched_cancel_control.draw_many enforces rule 6's minimum -- its docstring says 'Rule 6's minimum is enforced HERE' -- but the running step-2 loop calls draw_one directly (de_settlement_control_run.py:100) and never calls draw_many.",
+   "is_it_in_c": "NO. The condition is SATISFIED (n_draws=500 against MIN_DRAWS=200), so nothing is being lost today. It is the verify_be_module SHAPE -- a working guard whose live caller takes the route that skips it -- recorded so it is not found by accident later.",
+   "driven": "draw_one REFUSES on over-demand and on an absent stratum (MATCHED_CONTROL_STRATUM_SMALLER_THAN_DEMAND, never clamped); draw_many REFUSES at 199 against 200. Both fire."
+  }
  }
 }
