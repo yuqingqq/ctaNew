@@ -1,5 +1,67 @@
 # Harmful-fill recovery plan v2 — control first, cascade before promotion
 
+**Current result and governing next plan (2026-09-10; supersedes every older
+"current" block below without deleting its provenance):** the corrected
+settlement-P&L arithmetic for 2026-09-03..06 is reproducible, but the armed
+models have not established skill.  The pre-declared asymmetry null's PRIMARY
+pool (09-04/05/06) returned `DE_LEVERING_NOT_EXCLUDED`: CONDVALUE
+`A=0.09361, p=0.02595` against its fixed `0.025` bar, and HAZARD
+`A=0.06178, p=0.06387` against `0.05`.  The all-four-day companion passes, but
+09-03 was excluded from PRIMARY before the draws and cannot be promoted after
+seeing that it changes the verdict.  Random cancellation matched on distinct
+reference-generation count, side and UTC hour therefore explains most of the
+observed tail clipping.  More draws on the same days are not the remedy; the
+missing independent unit is the UTC day.
+
+**09-07 status:** DA 194 establishes that no fitted component or threshold saw
+09-07: all fitted inputs come from 2026-08-24/25.  It also establishes that
+09-07 is not clean in the broad sense: its 5-second diagnostic was computed
+with 1,000 null draws, while its settlement endpoint was deliberately not
+computed.  The conservative plan does not use 09-07 as PRIMARY validation.
+An endpoint-specific companion use requires an explicit user ruling and may
+never replace the primary population.
+
+**The next work is gated in this order:**
+
+1. **Harden without opening protected days.** Wire `verify_run_inputs` into the
+   real day path; bind the duplicated rule-6 floor to one authority; verify the
+   launched worker's cgroup; and close the armed scoring-path waiver with a
+   dynamic trace on an already-consumed day.  Rebuild only consumed daybooks
+   where one of these checks genuinely requires it.
+2. **Run the missing decision-endpoint control on consumed data.** On PRIMARY
+   09-04/05/06, with 09-03 companion-only, compare each arm's R-801 settlement
+   P&L against 500 random cancellation policies matched simultaneously on
+   distinct reference-generation count, side and UTC hour.  Minimum 200 is a
+   fail-closed floor, never a draw count selected to fit a maintenance window.
+   Publish the zero-model-cancel baseline, every random-control distribution,
+   coverage/exclusion counts and settlement finality together.
+3. **Stop cheaply if the screen fails.** If neither arm beats matched random on
+   settlement P&L under the pre-declared two-arm multiplicity correction, do
+   not spend untouched days on these frozen arms.  QR_SKEW_ONLY remains the
+   reference.  Any redesign uses consumed data only and targets the measured
+   defect: preserve profitable windows while clipping the loss tail.  A
+   redesigned arm starts a new freeze and a new validation clock.
+4. **Freeze only a survivor.** Commit the complete builder, scorer, thresholds,
+   settlement convention, `L_place=250 ms`, cancel latency, protection mode,
+   repost model, null construction, multiplicity and decision rule.  Record
+   every candidate tried.  No parameter or module is tuned after this commit.
+5. **Validate on calendar days, not more draws.** PRIMARY is the first five
+   complete, era-admissible UTC days whose starts occur after the final freeze
+   commit.  A failed-quality day remains a named status and the next
+   chronological untouched day is added without inspecting outcomes.  No
+   interval is quoted below five complete days.
+6. **Require both comparisons.** An arm advances only if its settlement-P&L
+   delta is positive against zero-model-cancel at the UTC-day cluster level
+   and it beats the generation/side/hour-matched random-cancel control after
+   the pre-declared two-arm correction.  Report `REFERENCE_FILLS` as the fixed
+   primary replay assumption and `NO_FILLS_UNTIL_NEXT_GENERATION` as a labelled
+   robustness leg; a sign reversal blocks promotion rather than inviting a
+   post-result choice.
+
+Until step 2 passes, position-cap, fair-price, feature and hyperparameter work
+remain deferred.  Those modules answer a different strategy question and must
+not be used to rescue the current arms after their result is visible.
+
 **Current policy correction (2026-09-09, direct USER instruction; supersedes the result interpretation immediately below):** the day replay compared hazard `p_fill` with thresholds frozen on `p_fill * predicted_conditional_value`. Params v20 and design v28 now bind both score and threshold to the expected-cancel-value contract without refitting models or thresholds (`1d309bc`). Therefore every existing 250 ms cancellation-arm point estimate for 09-03..09-07 is **retracted as evidence for the intended policy**; its bytes remain an immutable result of the accidental probability-only policy, and no value is relabelled. The exact affected artifact pairs and attempted corrected launch are recorded in `declarations/p003_expected_value_policy_correction_v1.json`. Corrected outputs use revision `EV20` and cannot overwrite the old daybooks (`1c5ae6c`). The first replay was not started because this sandbox cannot connect to the required user-systemd bus; no corrected economic number exists yet. Any corrected replay of these consumed days is exploratory, and validation still requires a prospectively declared later untouched population.
 
 **Superseded status update (2026-09-08T13:18:37Z, direct USER instruction; retained in band):** NO CLEAN GATE-1 VERDICT. The latest 09-03..09-06 receipts are settlement-P&L point estimates at explicit 250 ms placement latency; they have no replay null, Z, p or day-cluster interval, and 09-03/09-06 each have settlement boundaries outside capture. Directionally, CONDVALUE beats never-cancel on 1/4 design days and HAZARD on 2/4, with four-day raw deltas -25,954.48 / -9,311.59 cents. This does not clear the frozen stopping rule. QR_SKEW_ONLY remains the incumbent; neither cancellation arm is promoted or retuned. The superseding receipts still need independent DA verification, and the append-only register needs a correction to R-832's erroneous CONDVALUE 2/2 win/loss prose.

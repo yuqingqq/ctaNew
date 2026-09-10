@@ -1,3 +1,34 @@
+# READ FIRST — current plan update (Codex, 2026-09-10)
+
+# THE P&L IS REPRODUCIBLE; THE ARMED EDGE IS NOT ESTABLISHED
+
+The latest decision is R-894's PRIMARY result, not the favourable companion:
+`DE_LEVERING_NOT_EXCLUDED`.  On 09-04/05/06, CONDVALUE returned
+`A=0.09361, p=0.02595` against the pre-declared `0.025` bar; HAZARD returned
+`A=0.06178, p=0.06387` against `0.05`.  Random cancellation matched on distinct
+reference-generation count, side and UTC hour explains most of the tail
+clipping.  The all-four-day companion passes only after adding 09-03, which was
+excluded from PRIMARY before the draw and cannot replace it after the result.
+
+DA 194 closes the fit-contamination question in one direction: no fitted
+component saw 09-07.  It also corrects the record in the other direction:
+09-07's 5-second diagnostic already has 1,000 null draws, although its R-801
+settlement endpoint was never computed.  The conservative PRIMARY plan excludes
+09-07; endpoint-specific companion use requires an explicit user ruling.
+
+**Governing order:** (1) close the real-run cascade guard, duplicate rule-6
+floor, cgroup verification and scoring-path waiver on consumed data; (2) run
+the still-missing settlement-P&L matched-random control on PRIMARY 09-04/05/06,
+with 09-03 companion-only; (3) stop the current armed line if that consumed-day
+screen fails; (4) otherwise freeze the entire pipeline and assumptions in one
+commit; (5) validate on the first five complete admissible UTC days beginning
+after that freeze, with no retuning; and (6) require both positive day-cluster
+P&L versus zero-model-cancel and a multiplicity-corrected win versus matched
+random cancellation.  More draws on the same days cannot replace more days.
+
+The detailed gate and stopping rule are now at
+`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md`.
+
 # READ FIRST — round 336 (MEM, 2026-09-10T10:33:42Z, tip `afcccf8`)
 
 # 🎲 THE DECISIVE EXPERIMENT IS DECLARED AND RUNNING
