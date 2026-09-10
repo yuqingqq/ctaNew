@@ -517,3 +517,19 @@ except where marked USER-ONLY.
     the qualifier that sits beside its inputs, in the same sentence, every time it
     is written. "62.37 %" alone is a different claim from "62.37 % as an upper
     bound on one BTC-only day with no null drawn." (REV 151, R-878)
+
+37. **A hand-off must never rest on a seat's turn staying alive.** "Launch when
+    X finishes" is not a hand-off if the seat's turn ends before X finishes — the
+    instruction simply evaporates and the resource sits idle. **This cost the
+    programme three times in one day: fourteen minutes after the 09-04 retry (BE
+    told to launch 09-06 "when the retry finishes", turn ended first), roughly six
+    hours after 09-06 (nothing armed at all), and an inverted queue when BE and DE
+    were dispatched in the SAME round with BE told to wait for DE — BE launched
+    immediately and a 74-minute build went in front of two 4-minute runs.**
+    **The rule: a trigger belongs to the coordinator or to a Monitor, never to a
+    seat's good intentions. Do not dispatch two seats that contend for the same
+    resource in one round.** If a seat must wait on a resource, it polls in a loop
+    that keeps its turn alive, or it does lock-free work and the coordinator hands
+    the resource over. The coordinator absorbs the collision when it happens —
+    killing a long-running unit to restore an order costs more than the delay.
+    (coordinator, R-879)
