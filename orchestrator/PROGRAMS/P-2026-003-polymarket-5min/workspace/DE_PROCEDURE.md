@@ -775,3 +775,29 @@ drift bound 2.859 USD against margin 1.154 USD) is not disclosed by the
 per-cell results.** The fix belongs in the AGGREGATOR's publication block,
 in `wt-de2`, never in the running worktree. Until it lands, say so when
 quoting any 09-03 companion figure.
+
+### 14.7 THE POST-VERDICT BRANCH IS DECIDED IN ADVANCE — do not wait for anyone
+
+Authorised by the coordinator on the USER's delegation (DE 218), **before**
+the draws landed. Whichever fires, execute it; neither is a fresh decision.
+
+**IF `NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM` — plan step 3 fires, and it
+fires CHEAPLY.** Report the failure as the FIRST LINE. Publish the four
+elements together. **Then STOP**: no freeze, no forward test, no redesign.
+Do **not** spend untouched days on these frozen arms; `QR_SKEW_ONLY`
+remains the reference. A redesign uses CONSUMED data only and starts a NEW
+freeze and a NEW validation clock — a fresh decision, not a continuation of
+this one. **This outcome protects five validation days and is not a
+disappointment.**
+
+**IF EITHER ARM BEATS MATCHED RANDOM — REPORT THE PASS, PUBLISH EVERYTHING,
+AND DO NOT FREEZE.** Plan step 4 commits builder, scorer, thresholds,
+settlement convention, null construction and decision rule, and **freezing
+is the one step that cannot be taken back**. REV 166 established that **at
+least 53 verdict-bearing guards have only ever been seen returning one
+value — 23 of the 34 refusals sit in `de_multiday_gate1_runner` and
+`de_point_estimate_day`, the two modules producing these numbers, and
+TWELVE bear directly on what the freeze commits.** REV is driving them.
+**A freeze resting on guards nobody has seen fire is a freeze resting on
+nothing.** The freeze waits on REV's twelve — hours, not days, and it buys
+the difference between a freeze and a freeze that means something.
