@@ -67,6 +67,23 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-10T16:54:32Z (MEM ROUND 339 -- TONIGHT'S REAL DISCOVERY, RECORDED AS A CLASS WITH A COUNT:
+  A PROTECTION THAT IS CONFIGURED, DOCUMENTED, AGREED OR DECLARED, AND NOT IN FORCE. SEVEN
+  instances -- a working guard run_day never calls, a two-hour null outside research.slice
+  so its 14 GB cap and oomd arming were INERT, a hardcoded field that would print True on a
+  refitted day, a refusal that was COSMETIC, a floor miscounted twice, six declaration
+  predicates testing SPELLING inside the module written to prevent that, and a verdict
+  function that has NEVER returned FAILURE. EVERY ONE was found BY ACCIDENT while checking
+  something else, so the set's SIZE is unknown rather than small. THE COUNTER-EXAMPLE IS
+  RECORDED TOO: the coordinator's checkpointing false positive, where an open-fd PROXY was
+  read for the PROPERTY -- an instrument you cannot see fire is not thereby broken. AND I AM
+  IN THIS CLASS: my round-336 'two unbound copies' searched ONE SPELLING; the authority
+  module names four code spellings and its reconciler, which I RAN, enumerates EIGHTEEN
+  carriers, all agreeing. The floor is now BOUND (step 1 item DONE, as a predicate) -- and
+  its own docstring says THIRTEEN while its operation returns 18, the class in its mildest
+  form. Three sweeps now measure the SIZE of these sets; that number, not their members,
+  decides whether step 1 is four items or a different piece of work, and the USER should
+  have it BEFORE the freeze. DE 213 landed v2 as a NEW FILE (rule 13). tip 84b249e)
   2026-09-10T16:48:28Z (MEM ROUND 338 -- THE GOVERNING PLAN IS BEING EXECUTED BY FIVE SEATS AND THE
   FILES NOW SHOW THAT. STEP 2 IS RUNNING: the decision-endpoint control, DECLARED BEFORE ANY
   DRAW at b72e329, status DECLARED-NOT-RUN, naming its plan by path AND commit. Its own
@@ -96,22 +113,6 @@ updated: >-
   was arguably a proxy for, and NOTHING BEYOND STEP 2 MAY BE STARTED. 09-07 is
   ENDPOINT-SPECIFICALLY clean, not clean -- its 5-s diagnostic already has 1,000 draws --
   and it is a day the programme KEPT, not one it forgot to spend. tip b72e329)
-  2026-09-10T10:33:05Z (MEM ROUND 336 -- THE DECISIVE EXPERIMENT IS DECLARED AND RUNNING. R-891's
-  asymmetry null asks whether the arms' tail-clipping is SKILL or DE-LEVERING: the LEFT
-  tail shrinks 21-36 (HAZARD) / 58-62 (CONDVALUE) per cent and the RIGHT TAIL SHRINKS BY A
-  SIMILAR AMOUNT, which needs no skill. Declared BEFORE any draw at e7d5d3f + v2 dea8c42,
-  filed c07e03a, DECLARED-NOT-RUN, RULE_6_FLOOR = 200, A = ret_pos - ret_neg, matched
-  SIMULTANEOUSLY on count, side and hour; population 09-03..09-06 ALL CONSUMED, so it costs
-  ZERO validation days. R-892 rules the matching unit the REFERENCE GENERATION, distinct
-  count, on two PRE-EXISTING grounds -- and item_15 states the bias DIRECTION: distinct
-  matching under-matches exposure and runs TOWARD FINDING THE ARM SKILFUL, so the advantage
-  is an UPPER BOUND. Rule 39: checkpoint through maintenance, NEVER TRIM TO FIT. TWO
-  CORRECTIONS CARRIED: 'invariant'/'EXACTLY ZERO' are struck, and verify_run_inputs is
-  called from EXACTLY ONE site -- inside def selftest -- which I drove by AST: a working
-  guard off the path it guards, UNFIXED. REV 162 found rule 35's shape inside the
-  instrument built to prevent it (seventh instance); DA 192's three-valued fix is ALREADY
-  IN THE TREE. The 25-draw number is REFUSED-BELOW-FLOOR, never a preview -- and it sits
-  INSIDE its own 25-draw interval at 83.4 per cent. tip afcccf8)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -283,6 +284,18 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 339, the class: configured, and not in force ---
+  THE_CLASS_IS_A_PROTECTION_CONFIGURED_DOCUMENTED_AGREED_OR_DECLARED_AND_NOT_IN_FORCE: "Recorded as ONE class with a count, not seven notes. Its members tonight: a WORKING cascade guard run_day never calls; a two-hour null that ran in run-u32934.scope instead of research.slice so the 14 GB cap, MemorySwapMax=0 and the oomd arming were ALL INERT; a hardcoded theta_was_not_refitted_here that would print True on a refitted day; a fallback refusal advertised as refusing and COSMETIC; a floor whose carriers were miscounted twice; six declaration predicates testing SPELLING not CONTENT inside the module written to prevent that; and a verdict function that has NEVER produced a FAILURE verdict. SEVEN, and the class is what matters, not the members."
+  AND_EVERY_INSTANCE_WAS_FOUND_BY_ACCIDENT_WHILE_CHECKING_SOMETHING_ELSE: That is the diagnostic property and the reason the class is dangerous. Not one of the seven was found by a check aimed at it; each surfaced while a seat was looking at something adjacent. A protection that is configured but not in force is INVISIBLE to every instrument that reads the configuration -- which is most of them -- and visible only to one that reads the behaviour. So the discovery rate says nothing about the prevalence, and the set's SIZE is unknown rather than small.
+  THE_COORDINATORS_OWN_FALSE_POSITIVE_BELONGS_IN_THE_CLASS_AS_ITS_COUNTER_EXAMPLE: "They reported step 2 was NOT checkpointing, from /proc/<pid>/fd showing no open output handle. DE refuted it WITH EVIDENCE: it IS checkpointing, fsync'd per draw, files growing 57 -> 92 -> 94. The workers hold no handle BECAUSE each draw is opened, written, fsync'd and CLOSED -- which is STRONGER persistence, not weaker. A PROXY (an open fd) was read for the PROPERTY (draws landing on disk). The class cuts both ways: an instrument you cannot see fire is not thereby broken, and a hunt for inert protections will manufacture them if the test is a proxy."
+  AND_MY_ROUND_336_TWO_UNBOUND_COPIES_WAS_THE_SAME_ERROR_AND_I_AM_IN_THIS_CLASS_TOO: "At round 336 I filed the rule-6 floor as TWO unbound copies, having searched ONE spelling -- RULE_6_FLOOR followed by an integer. The authority module now says it was never a duplication: THIRTEEN places under FOUR code spellings (MIN_DRAWS, MIN_DRAWS_011, RULE_6_FLOOR, MIN_PERMUTATIONS) plus TWO declaration spellings, and its own docstring names my error: 'A search for any one spelling finds a SUBSET -- SEAT_PROTOCOL rule 32.' I enumerated by spelling in the round after I recorded rule 32 as the lesson for other seats' instruments. DA's grep truncated; mine was narrow. Same class, different mechanism."
+  THE_FLOOR_IS_NOW_BOUND_TO_ONE_AUTHORITY_AND_I_DROVE_THE_RECONCILER: "p003_rule6_floor.py, landed by DA 195 at b16979f, and it does exactly two things: FLOOR is READ from a declaration and never typed in the module, and reconcile() reads every enumerated carrier and RAISES on divergence. I ran it: authority declarations/p003_rule6_floor_v1.json, floor 200, n_carriers 18, n_agreeing 18, diverged [], unreadable []. Plan step 1's floor item is DONE, and it is done as a predicate rather than as a promise."
+  AND_THE_CARRIERS_ARE_READ_BY_AST_AND_BES_ARE_RECONCILED_RATHER_THAN_EDITED: "Two design choices worth keeping. The code carriers are read by AST rather than by regex over text -- 'structural rather than a regex over text' -- which is the fix for the very failure that produced the undercount. And BE's carriers are RECONCILED, not edited: converting them to derive is BE's act, and a drifting BE copy is now LOUD instead of silent. A cross-seat instrument that makes another seat's divergence audible without reaching into their files is the shape this programme has been trying to find for weeks."
+  THE_MODULES_PROSE_SAYS_THIRTEEN_AND_ITS_OPERATION_ENUMERATES_EIGHTEEN: Found by driving it. The docstring says THIRTEEN places; reconcile() reports n_carriers 18. The docstring was written at DA 195 and five more carriers were found at DA 196, so the PROSE is stale and the OPERATION is current. Nothing is wrong with the guard -- all 18 agree and none diverge -- but a limit stated in prose has fallen behind the predicate beside it, inside the module built to end exactly that. It is the class in its mildest possible form and it should be corrected in the docstring, not in the count.
+  THE_THREE_SWEEPS_ARE_MEASURING_THE_SIZE_OF_THE_SET_NOT_ITS_MEMBERS: BE sweeps for guards that exist, work and never fire in production; DA for declared constants with multiple carriers that could silently disagree; REV for verdict functions only ever seen returning PASS. The point is the SIZE. If these sets are small, plan step 1 is the four named items and the freeze is close. If they are large, step 1 is a different piece of work and the freeze is not close. That number decides the shape of the next week and the USER should have it BEFORE the freeze, not discover it after.
+  AND_THE_FLOOR_SWEEP_ALREADY_SHOWS_WHY_A_COUNT_NEEDS_ITS_OPERATION_NAMED: "I tried to count the floor's carriers myself with five different operations over live/pm_research and this programme's workspace. The named constant appears 25 times in 7 files; 'floor: 200' as a key twice; a minimum-sample literal 22 times in 20 files; 200 adjacent to draw/null/floor/permutation 293 times in 82 files; the prose '200 permutations or draws' 64 times in 28 files. The authoritative answer is 18, and it is 18 because the OPERATION is 'carries or enforces the minimum-draw floor' rather than any of those patterns. A count without its operation is not a count. This is why the sweeps must each publish theirs."
+  DE_213_NAMED_THE_MATCHED_COUNT_BY_FIELD_PATH_AND_LANDED_IT_AS_A_NEW_FILE: "a52baec, 'DE 213: the matched count is named by FIELD PATH, not by phrase (BE 157)', 132 lines -- and it is de_settlement_control_declaration_v2.json, a NEW FILE rather than an edit to v1. That is rule 13's form: corrections supersede in band as vN+1 and the frozen artifact is never edited, so v1 stands as provenance. The ambiguity BE found -- two generation counts differing by 9 on 09-03 and 2 on 09-04 -- is closed by naming a PATH, which no second artifact can also answer to."
+  STEP_TWO_IS_HEALTHY_AND_I_MEASURED_THE_UNIT_AGAIN_MYSELF: "About 127 of 500 on two cells, checkpointed, in-slice, landing around 18:50Z. Measured by me at this sweep: deSettle212.service ActiveState=active, SubState=running, MemoryCurrent 3192762368 bytes = 2.973 GiB, against the 9 GiB unit cap. The progress figure is DE's; the unit's liveness and footprint are mine, read at the unit while it ran. Nothing about the run's RESULT is recorded here and nothing may be quoted from it -- the declaration's status is still DECLARED-NOT-RUN until it lands."
   # --- MEM round 338 addendum, 2026-09-10T16:49:59Z ---
   AND_A_PROC_PATH_IS_EPHEMERAL_SO_THE_EVIDENCE_IS_IN_THE_SAID_FIELD_NOT_THE_PATH: "A caveat on my own two cgroup flags. Their artifact is /proc/1252859/cgroup, which CEASES TO EXIST when the run ends -- so a later reader who tries to re-verify at that path will find nothing and must not read the absence as a refutation. The evidence is carried in the said: fields, which record the resolved cgroup string, both pids and the live limits as read. A live-process observation is verifiable only at the moment it is taken; recording it means recording the reading, not the address."
   # --- MEM round 338, the plan is being executed, not recorded ---
@@ -27434,6 +27447,73 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 339, 2026-09-10T16:54:32Z ---
+  THE_CLASS_IS_A_PROTECTION_CONFIGURED_DOCUMENTED_AGREED_OR_DECLARED_AND_NOT_IN_FORCE:
+    prov: RELAYED
+    from: coordinator MEM 339
+    as_of: 2026-09-10T16:54:32Z
+    said: >-
+      the seven instances as dispatched; instance 1 I drove myself at round 336 and instance 5 I contributed to, both recorded separately below.
+  AND_EVERY_INSTANCE_WAS_FOUND_BY_ACCIDENT_WHILE_CHECKING_SOMETHING_ELSE:
+    prov: RELAYED
+    from: coordinator MEM 339
+    as_of: 2026-09-10T16:54:32Z
+    said: >-
+      the by-accident provenance of each instance is the coordinator's account of how they surfaced; the inference about discovery rate is stated as an inference.
+  THE_COORDINATORS_OWN_FALSE_POSITIVE_BELONGS_IN_THE_CLASS_AS_ITS_COUNTER_EXAMPLE:
+    prov: RELAYED
+    from: coordinator MEM 339 carrying DE
+    as_of: 2026-09-10T16:54:32Z
+    said: >-
+      the refutation and its evidence -- fsync per draw, files at 57, 92, 94 -- are DE's; recorded because the counter-example is what keeps the class from becoming a licence to suspect anything quiet.
+  AND_MY_ROUND_336_TWO_UNBOUND_COPIES_WAS_THE_SAME_ERROR_AND_I_AM_IN_THIS_CLASS_TOO:
+    prov: CHECKED
+    artifact: live/pm_research/p003_rule6_floor.py
+    as_of: 2026-09-10T16:54:32Z
+    said: >-
+      the module docstring read verbatim; my round-336 flag says two, and the operation below enumerates eighteen.
+  THE_FLOOR_IS_NOW_BOUND_TO_ONE_AUTHORITY_AND_I_DROVE_THE_RECONCILER:
+    prov: CHECKED
+    artifact: live/pm_research/p003_rule6_floor.py
+    as_of: 2026-09-10T16:54:32Z
+    said: >-
+      reconcile() imported and called; its returned dict read for authority, floor, n_carriers, n_agreeing, diverged and unreadable.
+  AND_THE_CARRIERS_ARE_READ_BY_AST_AND_BES_ARE_RECONCILED_RATHER_THAN_EDITED:
+    prov: CHECKED
+    artifact: live/pm_research/p003_rule6_floor.py
+    as_of: 2026-09-10T16:54:32Z
+    said: >-
+      both choices stated in the module docstring and consistent with reconcile()'s behaviour as driven.
+  THE_MODULES_PROSE_SAYS_THIRTEEN_AND_ITS_OPERATION_ENUMERATES_EIGHTEEN:
+    prov: CHECKED
+    artifact: live/pm_research/p003_rule6_floor.py
+    as_of: 2026-09-10T16:54:32Z
+    said: >-
+      the docstring's 'THIRTEEN places' compared against reconcile()'s returned n_carriers of 18; diverged is empty, so the guard is sound and only the prose is behind.
+  THE_THREE_SWEEPS_ARE_MEASURING_THE_SIZE_OF_THE_SET_NOT_ITS_MEMBERS:
+    prov: RELAYED
+    from: coordinator MEM 339
+    as_of: 2026-09-10T16:54:32Z
+    said: >-
+      the three sweeps and their owners as dispatched; the framing that size rather than membership is the decision-relevant quantity is recorded as the coordinator's and it is correct.
+  AND_THE_FLOOR_SWEEP_ALREADY_SHOWS_WHY_A_COUNT_NEEDS_ITS_OPERATION_NAMED:
+    prov: CHECKED
+    artifact: live/pm_research/p003_rule6_floor.py
+    as_of: 2026-09-10T16:54:32Z
+    said: >-
+      five patterns run over .py/.json/.md under live/pm_research and the programme workspace, with their occurrence and file counts recorded; compared against reconcile()'s enumerated 18.
+  DE_213_NAMED_THE_MATCHED_COUNT_BY_FIELD_PATH_AND_LANDED_IT_AS_A_NEW_FILE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v2.json
+    as_of: 2026-09-10T16:54:32Z
+    said: >-
+      commit a52baec read at its subject and diffstat: one file added, 132 insertions, v2 alongside v1 rather than replacing it.
+  STEP_TWO_IS_HEALTHY_AND_I_MEASURED_THE_UNIT_AGAIN_MYSELF:
+    prov: CHECKED
+    artifact: /proc/1252859/cgroup
+    as_of: 2026-09-10T16:54:32Z
+    said: >-
+      systemctl --user show for ActiveState, SubState and MemoryCurrent read during the sweep; the 127/500 progress is DE's report and is marked as such.
   # --- MEM round 338 addendum, 2026-09-10T16:49:59Z ---
   AND_A_PROC_PATH_IS_EPHEMERAL_SO_THE_EVIDENCE_IS_IN_THE_SAID_FIELD_NOT_THE_PATH:
     prov: CHECKED

@@ -1,3 +1,118 @@
+# READ FIRST — round 339 (MEM, 2026-09-10T16:55:10Z, tip `84b249e`)
+
+# 🔴 TONIGHT'S REAL DISCOVERY, AS ONE CLASS WITH A COUNT
+
+## **A PROTECTION THAT IS CONFIGURED, DOCUMENTED, AGREED OR DECLARED — AND NOT IN FORCE.**
+
+**Seven instances:**
+
+| # | instance |
+|---|---|
+| 1 | `verify_run_inputs` — a **working** cascade guard `run_day` never calls; only caller is the selftest |
+| 2 | the asymmetry null ran two hours in `run-u32934.scope`, **not** `research.slice` — the 14 GB cap, `MemorySwapMax=0` and the oomd arming **all INERT**; `MemoryCurrent` read 0.0 GB while the worker peaked at 3.30 GiB |
+| 3 | `theta_was_not_refitted_here` — a **hardcoded `True`** that would print True on a refitted day |
+| 4 | DE 204's fallback refusal — advertised as refusing, **cosmetic** |
+| 5 | the rule-6 floor — **miscounted twice**, and one undercount was a grep **silently truncating** |
+| 6 | six declaration predicates testing **spelling, not content** — inside the module written to prevent that; the operation found **eleven of eleven** |
+| 7 | REV 165 — **a verdict function that has never produced a FAILURE verdict**; step 3's protective branch sits behind an instrument only ever seen passing |
+
+**EVERY ONE WAS FOUND BY ACCIDENT while checking something else.** That is the
+diagnostic property: **this class is invisible to every instrument that reads
+the configuration — which is most of them — and visible only to one that reads
+the behaviour.** So the discovery rate says nothing about prevalence: **the set's
+size is unknown, not small.**
+
+# ⚖️ THE COUNTER-EXAMPLE, RECORDED SO THE CLASS STAYS HONEST
+
+The coordinator reported step 2 was **not** checkpointing, from `/proc/<pid>/fd`
+showing no open output handle. **DE refuted it with evidence: it IS checkpointing
+— fsync'd per draw, files growing 57 → 92 → 94.** The workers hold no handle
+**because each draw is opened, written, fsync'd and CLOSED — stronger
+persistence, not weaker.**
+
+**A PROXY (an open fd) was read for the PROPERTY (draws landing on disk).**
+***An instrument you cannot see fire is not thereby broken — and a hunt for inert
+protections will manufacture them if the test is a proxy.***
+
+# 🪞 AND I AM IN THIS CLASS TOO
+
+**At round 336 I filed the rule-6 floor as "two unbound copies." I had searched
+ONE spelling.** The authority module says it was never a duplication: **thirteen
+places under FOUR code spellings** (`MIN_DRAWS`, `MIN_DRAWS_011`,
+`RULE_6_FLOOR`, `MIN_PERMUTATIONS`) plus two declaration spellings — and its
+docstring names my error outright:
+
+> *"A search for any one spelling finds a SUBSET — SEAT_PROTOCOL rule 32."*
+
+**I enumerated by spelling in the round after I recorded rule 32 as the lesson
+for other seats' instruments.** DA's grep truncated; mine was narrow. Same
+class, different mechanism.
+
+# ✅ THE FLOOR IS BOUND — STEP 1'S ITEM IS DONE, AND DONE AS A PREDICATE
+
+`p003_rule6_floor.py` (DA 195, `b16979f`) does exactly two things: **`FLOOR` is
+READ from a declaration and never typed**, and **`reconcile()` reads every
+enumerated carrier and RAISES on divergence.**
+
+**I ran it:**
+
+```
+authority  declarations/p003_rule6_floor_v1.json
+floor 200 | n_carriers 18 | n_agreeing 18 | diverged [] | unreadable []
+```
+
+Two design choices worth keeping: **carriers are read by AST, not regex** —
+*"structural rather than a regex over text"*, the fix for the very failure that
+produced the undercount — and **BE's carriers are RECONCILED, not edited**, so a
+drifting BE copy is now **loud instead of silent**. *A cross-seat instrument that
+makes another seat's divergence audible without reaching into their files is the
+shape this programme has been looking for.*
+
+## 🪶 …and its own prose says THIRTEEN while its operation returns EIGHTEEN
+
+The docstring was written at DA 195; five more carriers surfaced at DA 196.
+**The guard is sound — all 18 agree, none diverge — but a limit stated in prose
+has fallen behind the predicate beside it, inside the module built to end
+exactly that.** The class in its mildest possible form. **Correct the docstring,
+not the count.**
+
+# 📐 AND A COUNT WITHOUT ITS OPERATION IS NOT A COUNT
+
+I tried counting the floor's carriers five ways over `live/pm_research` and this
+workspace: the named constant **25** times in 7 files; `floor: 200` as a key
+**2**; a minimum-sample literal **22** in 20 files; 200 adjacent to
+draw/null/floor/permutation **293** in 82 files; the prose "200 permutations or
+draws" **64** in 28 files.
+
+**The authoritative answer is 18 — and it is 18 because the operation is
+"carries or enforces the minimum-draw floor," not any of those patterns.
+Each sweep must publish its operation with its number.**
+
+# 📊 THE THREE SWEEPS ARE MEASURING **SIZE**, NOT MEMBERSHIP
+
+**BE** — guards that exist, work, never fire in production.
+**DA** — declared constants with multiple carriers that could silently disagree.
+**REV** — verdict functions only ever seen returning PASS.
+
+**If these sets are small, plan step 1 is the four named items and the freeze is
+close. If they are large, step 1 is a different piece of work and the freeze is
+not close.** That number decides the shape of the next week, **and the USER
+should have it BEFORE the freeze, not discover it after.**
+
+# 🧾 ALSO LANDED
+
+**DE 213** (`a52baec`) — *the matched count is named by FIELD PATH, not by
+phrase*. 132 lines, and it is `..._declaration_v2.json`, **a NEW file, not an
+edit to v1** — rule 13's form, v1 standing as provenance. BE 157's ambiguity
+(two counts differing by 9 on 09-03, 2 on 09-04) is closed by naming **a path,
+which no second artifact can also answer to.**
+
+**Step 2 is healthy** — ~127/500 on two cells (DE's figure), checkpointed,
+in-slice, landing ~18:50Z. **Measured by me at the unit:** `active`/`running`,
+MemoryCurrent **2.973 GiB** against the 9 GiB cap. **Nothing about the run's
+RESULT is recorded and nothing may be quoted — the declaration's status is still
+`DECLARED-NOT-RUN` until it lands.**
+
 # READ FIRST — round 338 (MEM, 2026-09-10T16:49:10Z, tip `a52baec`)
 
 # 🏗 THE PLAN IS BEING EXECUTED, NOT RECORDED — five seats, in parallel

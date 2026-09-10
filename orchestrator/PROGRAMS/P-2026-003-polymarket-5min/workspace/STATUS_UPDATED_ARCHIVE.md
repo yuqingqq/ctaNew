@@ -22852,3 +22852,24 @@ generation and the window went 4 → 3. Nothing rewritten.
   invariant COMPUTED in code) and BE refuted the bias worry outright. Coverage 0.7419 is over
   GENERATIONS, not windows. tip 87fc599)
 ```
+
+## Batch 321 (rotated by MEM round 339, 2026-09-10T16:54:32Z)
+
+```
+  2026-09-10T10:33:05Z (MEM ROUND 336 -- THE DECISIVE EXPERIMENT IS DECLARED AND RUNNING. R-891's
+  asymmetry null asks whether the arms' tail-clipping is SKILL or DE-LEVERING: the LEFT
+  tail shrinks 21-36 (HAZARD) / 58-62 (CONDVALUE) per cent and the RIGHT TAIL SHRINKS BY A
+  SIMILAR AMOUNT, which needs no skill. Declared BEFORE any draw at e7d5d3f + v2 dea8c42,
+  filed c07e03a, DECLARED-NOT-RUN, RULE_6_FLOOR = 200, A = ret_pos - ret_neg, matched
+  SIMULTANEOUSLY on count, side and hour; population 09-03..09-06 ALL CONSUMED, so it costs
+  ZERO validation days. R-892 rules the matching unit the REFERENCE GENERATION, distinct
+  count, on two PRE-EXISTING grounds -- and item_15 states the bias DIRECTION: distinct
+  matching under-matches exposure and runs TOWARD FINDING THE ARM SKILFUL, so the advantage
+  is an UPPER BOUND. Rule 39: checkpoint through maintenance, NEVER TRIM TO FIT. TWO
+  CORRECTIONS CARRIED: 'invariant'/'EXACTLY ZERO' are struck, and verify_run_inputs is
+  called from EXACTLY ONE site -- inside def selftest -- which I drove by AST: a working
+  guard off the path it guards, UNFIXED. REV 162 found rule 35's shape inside the
+  instrument built to prevent it (seventh instance); DA 192's three-valued fix is ALREADY
+  IN THE TREE. The 25-draw number is REFUSED-BELOW-FLOOR, never a preview -- and it sits
+  INSIDE its own 25-draw interval at 83.4 per cent. tip afcccf8)
+```
