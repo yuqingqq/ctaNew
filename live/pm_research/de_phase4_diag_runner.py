@@ -9102,6 +9102,8 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
     n_tape_rows = 0
     n_cache_clears = 0
     cache_clear_s = 0.0
+    feature_pass_s = 0.0
+    score_s_by_head = {head: 0.0 for head in heads}
     try:
         for part in passes:
             t0 = time.time()
@@ -9128,8 +9130,10 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
                     n_cache_clears += 1
                     cache_clear_s += time.time() - _t
                 t_c = time.time()
+                _feature_t0 = time.time()
                 blocks = PA._feature_pass(chunk_path, "phase4_diag",
                                           TAPE=tp["TAPE"])
+                feature_pass_s += time.time() - _feature_t0
                 _split_of_all.update(tp["split_of"] or {})
                 _check_assembled_widths(blocks, pre)
                 for coin in coins:
@@ -9141,12 +9145,17 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
                     kept_total[coin] += len(b["kept"])
                     if not b["kept"]:
                         continue
+                    chunk_reference = {
+                        slug: refs[coin][slug] for slug in slugs
+                        if slug in refs[coin]}
                     for head in heads:
                         # DE 155 (4): this chunk does NOT get to count the
                         # day's uncovered generations -- see below.
+                        _score_t0 = time.time()
                         sc, st, sb = generation_scores(
-                            b, refs[coin], coin=coin, head=head,
+                            b, chunk_reference, coin=coin, head=head,
                             split_of=tp["split_of"], count_missing=False)
+                        score_s_by_head[head] += time.time() - _score_t0
                         # (the union is accumulated once per chunk below)
                         # ---- DE 155 (6): A MERGE THAT COMBINES ---------
                         # `.update()` let a later chunk OVERWRITE a key an
@@ -9230,6 +9239,10 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
                         "bn_cache_cleared": clear_bn_cache,
                         "n_bn_cache_clears": n_cache_clears,
                         "bn_cache_clear_s": round(cache_clear_s, 3),
+                        "feature_pass_s": round(feature_pass_s, 3),
+                        "score_s_by_head": {
+                            head: round(seconds, 3)
+                            for head, seconds in score_s_by_head.items()},
                         "n_tape_rows": n_tape_rows,
                         "n_chunks": n_chunks,
                         "chunk_windows": chunk_windows,
@@ -9325,16 +9338,24 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
             f"{len(fn)}, ST {len(st)}, kept {len(kept)}): they are parallel "
             f"lists and zipping them at unequal length pairs one row's "
             f"features with another row's identity")
+    if head == "incumbent_linear_d":
+        row_scores = (
+            HS.score_incumbent_condvalue(
+                inc, HS.compose_head_inputs(
+                    pm[index], fn[index], st[index], norms=norms,
+                    incumbent_width=inc["_n_features"],
+                    lgbm_width=wl)[head])
+            for index in range(len(kept)))
+    else:
+        vectors = [HS.compose_head_inputs(
+            pm[index], fn[index], st[index], norms=norms,
+            incumbent_width=inc["_n_features"], lgbm_width=wl)[head]
+            for index in range(len(kept))]
+        row_scores = HS.score_lgbm_condvalue_batch(
+            booster, value_booster, wl, vectors)
     by_gen: dict = {}
     spl_gen: dict = {}
-    for i, r in enumerate(kept):
-        v = HS.compose_head_inputs(
-            pm[i], fn[i], st[i], norms=norms,
-            incumbent_width=inc["_n_features"], lgbm_width=wl)[head]
-        sc = (HS.score_incumbent_condvalue(inc, v)
-              if head == "incumbent_linear_d"
-              else HS.score_lgbm_condvalue(
-                  booster, value_booster, wl, v))
+    for r, sc in zip(kept, row_scores):
         # ---- DE 158 (3), REV 107: A NON-FINITE SCORE FROM FINITE INPUTS
         # The feature side refuses before the clamp, but non-finiteness
         # does NOT require a non-finite feature: REV drove

@@ -49,7 +49,7 @@ import math
 import sys
 from pathlib import Path
 
-EXPECTED_CHECKS = 40
+EXPECTED_CHECKS = 42
 
 #: The thresholds persisted by ``phase2_arms.freeze_thresholds`` are
 #: quantiles of ``p_fill * conditional_value``.  This is therefore the only
@@ -242,6 +242,46 @@ def score_lgbm_condvalue(hazard, value, width: int,
             f"the LGBM value head refused the row it was handed ({exc})") \
             from exc
     return p_fill * conditional_value
+
+
+def score_lgbm_condvalue_batch(hazard, value, width: int,
+                               raw_rows) -> list[float]:
+    """Frozen LGBM expected-value scores for one feature chunk.
+
+    LightGBM has substantial fixed overhead at the Python prediction
+    boundary. Calling it once per row paid that overhead twice -- once for
+    hazard and once for value -- for every row in a daybook. The model sees
+    the same row matrix here; only the number of Python/library crossings
+    changes.
+    """
+    rows = [raw if isinstance(raw, list) else list(raw) for raw in raw_rows]
+    bad = [(index, len(raw)) for index, raw in enumerate(rows)
+           if len(raw) != width]
+    if bad:
+        index, got = bad[0]
+        raise HeadRefused(
+            f"row {index} has {got} features but the LGBM hazard and value "
+            f"heads were fitted on {width}")
+    if not rows:
+        return []
+    try:
+        p_fill = hazard.predict(rows)
+    except Exception as exc:                       # pragma: no cover
+        raise HeadRefused(
+            f"the LGBM hazard head refused a {len(rows)}-row batch ({exc}); "
+            f"every row matched width {width}") from exc
+    try:
+        conditional_value = value.predict(rows)
+    except Exception as exc:                       # pragma: no cover
+        raise HeadRefused(
+            f"the LGBM value head refused a {len(rows)}-row batch ({exc}); "
+            f"every row matched width {width}") from exc
+    if len(p_fill) != len(rows) or len(conditional_value) != len(rows):
+        raise HeadRefused(
+            f"the LGBM heads returned {len(p_fill)} hazard and "
+            f"{len(conditional_value)} value scores for {len(rows)} rows")
+    return [float(probability) * float(value_score)
+            for probability, value_score in zip(p_fill, conditional_value)]
 
 
 def score_contract(head: str) -> dict:
@@ -629,6 +669,21 @@ def selftest() -> int:
        f"THE LGBM POLICY SCORE IS EXPECTED VALUE: p_fill {q:.6f} x "
        f"conditional value {_lv:.6f} = {_lev:.6f}, matching the statistic "
        f"whose training maxima produced the frozen threshold")
+    _batch_rows = [[0.0] * width, [0.5] * width,
+                   [float(i % 7) / 10.0 for i in range(width)]]
+    _batch_scores = score_lgbm_condvalue_batch(
+        _hb, _vb, width, _batch_rows)
+    _scalar_scores = [score_lgbm_condvalue(_hb, _vb, width, row)
+                      for row in _batch_rows]
+    ok(_batch_scores == _scalar_scores,
+       f"BATCHED LGBM SCORING IS EXACTLY THE SCALAR SCORING on "
+       f"{len(_batch_rows)} driven rows: {_batch_scores}. The optimization "
+       f"changes Python/library call count, not model inputs or outputs")
+    refuses(lambda: score_lgbm_condvalue_batch(
+                _hb, _vb, width, [_batch_rows[0][:-1]]),
+            "KNOWN-BAD: a short row REFUSES at the batch boundary rather "
+            "than making the whole chunk a differently-shaped prediction",
+            needle="were fitted on")
     for _bad in (1, 105, 107):
         refuses(lambda w=_bad: score_lgbm(booster, width, [0.0] * w),
                 f"KNOWN-BAD: a {_bad}-feature row REFUSES against the "
