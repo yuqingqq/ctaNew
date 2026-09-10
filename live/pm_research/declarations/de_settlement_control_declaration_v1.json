@@ -1,0 +1,73 @@
+{
+  "declaration": "SETTLEMENT_PL_MATCHED_RANDOM_CONTROL",
+  "version": 1,
+  "status": "DECLARED-NOT-RUN",
+  "declared_by": "DE 212",
+  "governing_plan": {
+    "path": "live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md",
+    "commit": "09ced57",
+    "step": "2 -- the missing decision-endpoint control"
+  },
+  "why_this_is_not_the_asymmetry_null": "the asymmetry null tested A = ret_pos - ret_neg, a TAIL-SHAPE statistic. Rule 7 requires the comparison to be on the DECISION metric, not a proxy. A was arguably a proxy; this tests the endpoint itself -- R-801 settlement P&L.",
+  "estimand": {
+    "per_cell": "D = settle(arm) - settle(zero_model_cancel_baseline), in CENTS, under R-801 (trades cash flow + residual x settlement)",
+    "valued_by": "de_multiday_gate1_runner.settlement_legs_by_slug -- the SAME estimator the day artifacts use, called and not re-implemented",
+    "NOT": "the 5-second markout, the mean of anything, or any tail-shape statistic"
+  },
+  "population": {
+    "PRIMARY": ["2026-09-04", "2026-09-05", "2026-09-06"],
+    "COMPANION_ONLY": ["2026-09-03"],
+    "09_03_is_companion_only_and_may_never_be_promoted": "fixed HERE, before any draw. It was excluded from PRIMARY in the asymmetry run before those draws and cannot be promoted after it was seen to change that verdict. Its four marks stand: coverage 0.7419, 247 of 288 windows, a 40-window recorded mask, and an UNADJUDICABLE settlement window (drift bound 2.859 USD exceeds margin 1.154 USD).",
+    "all_four_days_are_CONSUMED": "rule 11. A pass here is DEVELOPMENT evidence and NEVER validation."
+  },
+  "control": {
+    "form": "random cancellation policy",
+    "matched_SIMULTANEOUSLY_on": ["distinct_reference_generation_count", "side", "utc_hour"],
+    "matching_unit_ruling": "USER, R-892 / DE 209 -- DISTINCT REFERENCE GENERATIONS, not raw cancel actions",
+    "n_draws": 500,
+    "floor": 200,
+    "floor_is": "FAIL-CLOSED. A run completing fewer than 200 draws REFUSES rather than reporting; the floor is never a draw count chosen to fit a maintenance window.",
+    "draws_are_checkpointed_per_draw": true
+  },
+  "combination_rule": {
+    "declared_before_any_draw": true,
+    "one_sentence": "the VERDICT is decided by TWO arm-level pooled tests and by nothing else; per-cell outcomes are DESCRIPTIVE and are never counted into a verdict.",
+    "step_1_pool_within_an_arm": {
+      "statistic": "D_arm = the SUM of that arm's per-day D over the PRIMARY pool, in cents",
+      "why_a_SUM_and_not_a_weighted_mean": "the endpoint is CASH and cash ADDS. v3's asymmetry statistic was scale-free, so a mass-weighted mean was right there; a mean here would answer 'the average day' which is not the decision quantity. The sum is what a maker would have earned or lost across the pool.",
+      "no_weights_to_choose": "summing removes the weight choice entirely, so no drawn policy can move its own weight and no weighting can be revisited after the numbers exist."
+    },
+    "step_2_the_null": {
+      "construction": "for draw index i in 0..499, take day d's i-th MATCHED draw for every day in the pool and SUM its per-day D, giving one pooled null value per index",
+      "why_pool_the_DRAWS_and_not_the_p_values": "combining per-day p-values would assume the days are exchangeable units of a common test; pooling the draws keeps the day structure, which is the same construction v3 used",
+      "p_two_sided": "(1 + #{|D_null| >= |D_arm|}) / (1 + n_draws)",
+      "why_two_sided": "the declared direction is post-hoc relative to the point estimates already seen, so every arm-level and cell-level number is two-sided",
+      "n_draws": 500
+    },
+    "step_3_the_family": {
+      "verdict_bearing_tests": 2,
+      "which": ["CONDVALUE_X_SKEW arm-level pooled", "HAZARD_OVER_SKEWED_REF arm-level pooled"],
+      "correction": "HOLM over the 2 arm-level tests",
+      "alpha": 0.05
+    },
+    "step_4_the_mixed_cases_explicitly": {
+      "why_enumerated": "a rule that handles only the clean cases is a rule invented after the fact for the messy one",
+      "both_arms_pass_same_sign": "SETTLEMENT_SKILL_SUPPORTED_ON_THE_DEVELOPMENT_SET",
+      "exactly_one_arm_passes": "SUPPORTED_FOR_THAT_ARM_ONLY -- NOT a programme-level pass. The arms are two candidates in a race; one clearing its own control is not the programme clearing it.",
+      "neither_arm_passes": "NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM -- and this triggers the plan's STEP 3: do not spend untouched days on these frozen arms.",
+      "both_pass_with_OPPOSITE_signs": "NOT_ONE_MECHANISM -- this OVERRIDES any pass; two opposite significant effects are not one mechanism."
+    }
+  },
+  "published_together_not_as_separate_artifacts": [
+    "the zero-model-cancel baseline settled total per day",
+    "EVERY random-control distribution (all 500 per cell, in the checkpoints, summarised in the verdict)",
+    "coverage and exclusion counts per day",
+    "settlement finality per day"
+  ],
+  "what_this_cannot_establish": {
+    "effective_independent_units": "FOUR days, THREE in the PRIMARY -- not eight cells. The two arms within a day share the day, the book, the reference path and a BITWISE IDENTICAL baseline, so they are two policies read off ONE realisation.",
+    "no_interval": "rule 8 forbids an interval below five complete days; the PRIMARY has three",
+    "validation": "these are CONSUMED days. A pass is development evidence and never validation.",
+    "the_matching_bias": "distinct-generation matching UNDER-matches raw exposure (max 23 cancels on one reference generation). THE BIAS RUNS TOWARD FINDING THE ARM SKILFUL, so any arm advantage is an UPPER BOUND on the part that is not exposure."
+  }
+}
