@@ -85,7 +85,7 @@ from pathlib import Path
 #: against 209 sites (REV 98 §A2 -- the earlier wording claimed it was
 #: "not a typed one", which would let a reader conclude nothing needs
 #: editing when a check is added: the opposite of the design).
-EXPECTED_CHECKS = 233
+EXPECTED_CHECKS = 234
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -6651,6 +6651,12 @@ def selftest() -> int:
                f"slug, so a cut mid-window would change WHAT the pass "
                f"does and not merely when -- this is the predicate behind "
                f"'chunking changes memory and nothing else'")
+        _truncated = _d5 / "truncated.json"
+        _truncated.write_text('{"rows":[{"slug":"w0"}')
+        refuses(lambda: list(_stream_fragment_rows(_truncated)),
+                "KNOWN-BAD: a truncated fragment REFUSES rather than "
+                "turning the rows before EOF into a shorter population",
+                needle="TRUNCATED")
     _asrc = _ast.get_source_segment(
         Path(__file__).read_text(),
         [nd for nd in _ast.walk(_ast.parse(Path(__file__).read_text()))
@@ -8306,6 +8312,50 @@ def _write_rows(dst: Path, rows: list) -> dict:
             "n_rows": len(rows)}
 
 
+def _stream_fragment_rows(path: Path):
+    """Yield a top-level ``rows`` array without repeatedly copying it.
+
+    ``phase2_arms._stream_tape_rows`` slices the unread buffer after every
+    row. With a 4 MiB read buffer that copies most of the buffer thousands of
+    times per chunk. This reader advances an offset and compacts only when it
+    needs more bytes. It is used only to partition the fragment; the fit's
+    own ``_feature_pass`` still reads and scores every emitted chunk.
+    """
+    decoder = json.JSONDecoder()
+    with Path(path).open("r") as handle:
+        head = handle.read(1 << 16)
+        try:
+            offset = head.index("[", head.index('"rows"')) + 1
+        except ValueError as exc:
+            raise DiagRefused(
+                f"REFUSED: {Path(path).name} has no top-level rows array") \
+                from exc
+        buffer = head
+        while True:
+            while offset < len(buffer) and buffer[offset].isspace():
+                offset += 1
+            while offset < len(buffer) and buffer[offset] == ",":
+                offset += 1
+                while offset < len(buffer) and buffer[offset].isspace():
+                    offset += 1
+            if offset < len(buffer) and buffer[offset] == "]":
+                return
+            try:
+                row, end = decoder.raw_decode(buffer, offset)
+            except ValueError:
+                chunk = handle.read(1 << 22)
+                if not chunk:
+                    raise DiagRefused(
+                        f"REFUSED: {Path(path).name} ended without the "
+                        f"closing ']' of its rows array. The fragment is "
+                        f"TRUNCATED; a short population is not a result")
+                buffer = buffer[offset:] + chunk
+                offset = 0
+                continue
+            yield row
+            offset = end
+
+
 def fragment_slice(dst: Path, *, n_windows: int, source: Path | None = None,
                    only_slugs=None, row_cap: int = 400_000) -> dict:
     """The first `n_windows` WINDOWS of the fragment, whole.
@@ -8325,7 +8375,7 @@ def fragment_slice(dst: Path, *, n_windows: int, source: Path | None = None,
     keep: list = []
     slugs: list = []
     scanned = 0
-    for r in PA._stream_tape_rows(src):
+    for r in _stream_fragment_rows(src):
         scanned += 1
         sl = r["slug"]
         if want is not None and sl not in want:
@@ -9275,7 +9325,7 @@ def _fragment_chunks(dst_dir: Path, *, chunk_windows: int,
     buf: list = []
     slugs: list = []
     i = 0
-    for r in PA._stream_tape_rows(src):
+    for r in _stream_fragment_rows(src):
         if keys is not None and (r["slug"], r["side"], r["gen"],
                                  r["t_start"]) not in keys:
             continue                 # belongs to another split's pass

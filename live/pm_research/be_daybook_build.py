@@ -4602,9 +4602,16 @@ def main(argv=None) -> int:
               if "--placement-latency-ms" in argv else None)
         _revision = (argv[argv.index("--artifact-revision") + 1]
                      if "--artifact-revision" in argv else None)
+        _chunk_windows = (int(argv[argv.index("--chunk-windows") + 1])
+                          if "--chunk-windows" in argv else CHUNK_WINDOWS)
+        if _chunk_windows <= 0:
+            raise BookRefused(
+                f"REFUSED: --chunk-windows must be positive, got "
+                f"{_chunk_windows}")
         _bp, dst = artifact_paths(day, COIN, _L, _revision)
         assert_artifacts_absent(_bp, dst)
-        out = build(day, placement_latency_ms=_L,
+        out = build(day, chunk_windows=_chunk_windows,
+                    placement_latency_ms=_L,
                     artifact_revision=_revision, out_path=_bp)
         dst.write_text(json.dumps(out, indent=1, sort_keys=True, default=str))
         print(json.dumps({"receipt": str(dst),
@@ -4615,7 +4622,8 @@ def main(argv=None) -> int:
                           "peak_rss_gb": out["resources"]["peak_rss_gb"]}))
         return 0
     print("usage: be_daybook_build.py --selftest | --day <YYYYMMDD> "
-          "[--placement-latency-ms <L>] [--artifact-revision <REV>] | "
+          "[--placement-latency-ms <L>] [--artifact-revision <REV>] "
+          "[--chunk-windows <N>] | "
           "--supersede-receipt <YYYYMMDD>")
     return 2
 
