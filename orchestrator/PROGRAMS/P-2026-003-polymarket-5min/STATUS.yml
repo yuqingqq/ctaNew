@@ -67,6 +67,21 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-10T16:41:45Z (MEM ROUND 337 -- THE USER HAS COMMITTED A GOVERNING PLAN AT 09ced57 AND IT
+  SUPERSEDES EVERY 'CURRENT' BLOCK IN THESE FILES. The pre-declared asymmetry null's PRIMARY
+  pool (09-04/05/06) returned DE_LEVERING_NOT_EXCLUDED: CONDVALUE A=0.09361 p=0.02595 vs a
+  fixed 0.025 bar, HAZARD A=0.06178 p=0.06387 vs 0.05 -- both p-values reproduce EXACTLY
+  under the conservative (k+1)/(n+1) estimator, from 12 and 31 of 500. CONDVALUE missed by
+  EXACTLY ONE DRAW; HAZARD missed by SEVEN, and the two must not be blurred. The all-four
+  companion passes ONLY by adding 09-03, which was excluded before the draw and CANNOT be
+  promoted after seeing that it changes the verdict -- the reason the declaration was worth
+  writing. Random cancellation matched on distinct reference-generation count, side and UTC
+  hour explains most of the observed tail clipping. SIX GATED STEPS govern the next work;
+  step 1 adopts BOTH open items this seat filed at round 336 (verify_run_inputs off its
+  path, the duplicated rule-6 floor); step 2 is the DECISION metric the asymmetry statistic
+  was arguably a proxy for, and NOTHING BEYOND STEP 2 MAY BE STARTED. 09-07 is
+  ENDPOINT-SPECIFICALLY clean, not clean -- its 5-s diagnostic already has 1,000 draws --
+  and it is a day the programme KEPT, not one it forgot to spend. tip b72e329)
   2026-09-10T10:33:05Z (MEM ROUND 336 -- THE DECISIVE EXPERIMENT IS DECLARED AND RUNNING. R-891's
   asymmetry null asks whether the arms' tail-clipping is SKILL or DE-LEVERING: the LEFT
   tail shrinks 21-36 (HAZARD) / 58-62 (CONDVALUE) per cent and the RIGHT TAIL SHRINKS BY A
@@ -98,18 +113,6 @@ updated: >-
   trade-off tipped over, not an anomaly. The 40-window mask is NOT a silent drop (287-40=247,
   invariant COMPUTED in code) and BE refuted the bias worry outright. Coverage 0.7419 is over
   GENERATIONS, not windows. tip 87fc599)
-  2026-09-10T07:19:21Z (MEM ROUND 334 -- R-884..887 and the composition pin swept. RULE 38'S LIVE
-  INSTANCE IS THE WAIVER: DA's instrument, DE's instrument and REV's derivation all
-  ARE be_producing_closure.reachable_modules -- one definition, three callers, driven
-  by me. DE 195 then drove the DIRECTION: reachable_modules UNDER-approximates through
-  getattr dispatch, so the support is not conservative and the waiver is UNSUPPORTED,
-  NOT REFUTED. DA 185 stopped a commissioned trace that would have passed the 8
-  functions while spanning the 11 constants, and the proxy changes module identity
-  while installed. FOUR-DAY BASELINE COMPLETE (54.5008 / 62.3725 / 97.5694 / 54.9212 %,
-  each an upper bound on the latency effect, one BTC-only day, no null drawn). FIRST
-  ARM NUMBERS SINCE THE RETRACTION, UNVERIFIED, DA 188 checking: HAZARD 4/4, CONDVALUE
-  3/4, and CONDVALUE crosses zero on 09-05, the day latency costs most. Rules 36-38
-  were already in these files from rounds 332-333 and are NOT refiled. tip 0da40bb)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -281,6 +284,23 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 337, the USER's governing plan at 09ced57 ---
+  THE_USER_HAS_COMMITTED_A_GOVERNING_PLAN_AND_IT_SUPERSEDES_THE_CURRENT_BLOCKS: "09ced57, 'P003: update validation plan after armed-model null', committed by the USER at 2026-09-10 16:36:25 +0000, 93 insertions across two files: 62 lines into the plan and 31 into this programme's HANDOFF.md. From this round the plan is the GOVERNING document and every 'current' block in the state files is subordinate to it. Nothing in my files may state a next step that the plan does not sanction."
+  AND_THE_USER_WROTE_INTO_MY_FILE_SO_I_PREPENDED_AND_PRESERVED_THEIR_BLOCK_VERBATIM: "31 of those lines went into workspace/HANDOFF.md, of which I am otherwise sole writer. I did not merge, summarise or relocate them: my round block is PREPENDED and the USER's block stands untouched below it, signed as it was committed. A governing block written by the principal is not a seat's draft to tidy. If any future round needs to change it, that is a USER edit, not a MEM one."
+  THE_PRE_DECLARED_NULLS_PRIMARY_POOL_RETURNED_DE_LEVERING_NOT_EXCLUDED: "R-894. On PRIMARY 09-04/05/06: CONDVALUE A=0.09361, p=0.02595 against a fixed 0.025 bar; HAZARD A=0.06178, p=0.06387 against 0.05. Both fail. The plan's own sentence is the finding: random cancellation matched on distinct reference-generation count, side and UTC hour explains most of the observed tail clipping. The mechanism R-890 identified is now measured against a control and is mostly not skill."
+  AND_BOTH_P_VALUES_REPRODUCE_EXACTLY_UNDER_THE_CONSERVATIVE_ESTIMATOR: I recomputed them rather than accepting them. With 12 of 500 matched-or-beating CONDVALUE, (12+1)/(500+1) = 0.025948, printed 0.02595. With 31 of 500 for HAZARD, (31+1)/501 = 0.063872, printed 0.06387. Both reproduce to the digit and both use the +1 correction, which is the conservative form -- the estimator can only make a result look WORSE than the naive 12/500 = 0.024, which would have passed. The arithmetic was not chosen to flatter.
+  THE_ONE_DRAW_IN_FIVE_HUNDRED_IS_TRUE_OF_CONDVALUE_ALONE_AND_HAZARD_MISSED_BY_SEVEN: "A precision the sentence invites a reader to spread across both arms. Solving (k+1)/501 <= bar: CONDVALUE passes at k <= 11 and had 12, so it missed by EXACTLY ONE DRAW. HAZARD passes at k <= 24 and had 31, so it missed by SEVEN. One arm was a hair away and the other was not close, and a reader who carries 'missed by one draw' onto HAZARD will over-rate it. Recorded so that cannot happen from these files."
+  09_03_WAS_EXCLUDED_BEFORE_THE_DRAWS_AND_CANNOT_BE_PROMOTED_AFTER_SEEING_IT_CHANGES_THE_VERDICT: "The all-four-day companion PASSES. It passes only by adding 09-03, which was excluded from PRIMARY BEFORE the draw. It cannot replace PRIMARY after the result. This is the reason the declaration was worth writing: without it there would be a defensible-sounding argument for the favourable pool, made after seeing which pool is favourable. The pre-declaration converts that argument into an inadmissible one, and the programme gets to be disappointed honestly."
+  THE_SIX_GATED_STEPS_ARE_THE_GOVERNING_NEXT_WORK_IN_ORDER: 1 harden without opening protected days -- wire verify_run_inputs into the real day path, bind the duplicated rule-6 floor to ONE authority, verify the launched worker's cgroup, close the armed scoring-path waiver with a dynamic trace on a consumed day, rebuilding only where a check genuinely requires it. 2 run the missing decision-endpoint control on consumed data. 3 stop cheaply if the screen fails. 4 freeze only a survivor, recording every candidate tried. 5 validate on CALENDAR DAYS, not more draws. 6 require both comparisons. Steps 1 and 2 are the only ones live; nothing beyond step 2 may be started.
+  AND_THE_PLAN_ADOPTS_TWO_FINDINGS_THIS_SEAT_FILED_IN_THE_LAST_TWO_ROUNDS: Step 1 names 'wire verify_run_inputs into the real day path' and 'bind the duplicated rule-6 floor to one authority'. Those are the two open items I drove and filed at round 336 -- the guard called only from def selftest, and the two unbound copies of RULE_6_FLOOR = 200. They now have an owner and a position in the order, which is what an open item is for. I record this as the state of those two items, not as credit.
+  STEP_TWO_IS_THE_DECISION_METRIC_AND_THE_ASYMMETRY_STATISTIC_WAS_ARGUABLY_A_PROXY: The still-missing control compares each arm's R-801 SETTLEMENT P&L against 500 matched random policies, PRIMARY 09-04/05/06 with 09-03 companion-only. This is the DECISION metric under rule 7, where the asymmetry statistic A was arguably a proxy. So the failed null does not close the line by itself -- it failed on a statistic that is not the one the decision is made on, and the plan requires the decision metric to be run before anything is concluded or spent.
+  AND_STEP_TWO_WRITES_RULE_39_AND_A_DISCLOSURE_REQUIREMENT_INTO_THE_PLAN_ITSELF: "Two clauses the dispatch compressed and which must not be lost. First: 'Minimum 200 is a fail-closed floor, never a draw count selected to fit a maintenance window' -- rule 39 promoted from protocol into the governing plan. Second, a publication requirement: the zero-model-cancel baseline, EVERY random-control distribution, coverage/exclusion counts and settlement finality must be published TOGETHER. A result that arrives without its distributions is not a step-2 result."
+  STEP_THREE_NAMES_THE_MEASURED_DEFECT_AND_IT_IS_R_890S_MECHANISM: "If neither arm beats matched random, do NOT spend untouched days on these frozen arms; QR_SKEW_ONLY remains the reference; any redesign uses consumed data only and starts a NEW freeze and a NEW validation clock. And the redesign target is named in the plan: 'preserve profitable windows while clipping the loss tail.' That is R-890's tail-clipping finding written into the plan as the thing to fix -- the mechanism did not merely explain the result, it set the next design brief."
+  STEP_SIX_HOLDS_TWO_SEPARATE_PAIRS_AND_THEY_MUST_NOT_BE_CONFLATED: "The BOTH COMPARISONS are: settlement-P&L delta positive against zero-model-cancel AT THE UTC-DAY CLUSTER LEVEL, and a win over the generation/side/hour-matched random control AFTER the pre-declared two-arm correction. The REFERENCE_FILLS / NO_FILLS_UNTIL_NEXT_GENERATION pair is a DIFFERENT clause -- the replay ASSUMPTION, primary and labelled robustness leg, where a sign reversal BLOCKS promotion rather than inviting a post-result choice. Two pairs, two jobs. Reading the replay pair as the two comparisons would let an arm advance on a gate it never passed."
+  09_07_IS_ENDPOINT_SPECIFICALLY_CLEAN_WHICH_IS_NARROWER_THAN_CLEAN: "Carried against the coordinator, who told the USER '09-07 is clean' and records the correction themselves. The plan is more precise: NO fitted component or threshold ever saw it -- all fitted inputs come from 2026-08-24/25 -- BUT its 5-second diagnostic was ALREADY COMPUTED WITH 1,000 NULL DRAWS, while its R-801 settlement endpoint was deliberately never computed. So it is clean FOR THE SETTLEMENT ENDPOINT ONLY: usable for an endpoint-specific companion with an explicit USER ruling, and NEVER as PRIMARY validation."
+  AND_09_07_IS_A_DAY_THE_PROGRAMME_KEPT_NOT_ONE_IT_FORGOT_TO_SPEND: "It was DESIGNATED the settlement endpoint's validation day in advance and the rule-11 guard has held it shut since. That distinction decides how it may be used: a forgotten day is a windfall a tired programme talks itself into spending, whereas a kept day has a purpose already assigned to it. Recording it as kept is what stops step 5 quietly borrowing it."
+  MORE_DRAWS_ON_THE_SAME_DAYS_CANNOT_REPLACE_MORE_DAYS: The USER's own sentence, and the shortest statement of what step 5 is for. PRIMARY validation is the first five complete, era-admissible UTC days whose starts occur AFTER the final freeze commit; a failed-quality day remains a NAMED STATUS and the next chronological untouched day is added WITHOUT INSPECTING OUTCOMES; no interval is quoted below five complete days. Draws buy precision about the days you already have. They buy nothing about the days you do not.
+  POSITION_CAP_AND_FAIR_PRICE_AND_FEATURE_AND_HYPERPARAMETER_WORK_ARE_DEFERRED_UNTIL_STEP_TWO_PASSES: "The plan's own closing clause: those modules answer a DIFFERENT strategy question. So no seat may open them as adjacent improvement while the armed line is unresolved -- not because they are worthless, but because work on a different question cannot rescue this one and would consume the attention step 2 needs. Deferred is a status with a release condition, and the condition is step 2 passing."
   # --- MEM round 336, the decisive experiment is declared and running ---
   THE_ASYMMETRY_NULL_IS_DECLARED_AND_RUNNING_AND_IT_SETTLES_THE_WHOLE_CANCELLATION_LINE: "R-891, the decisive experiment. It asks whether the arms' tail-clipping is SKILL or DE-LEVERING: the LEFT tail shrinks 21-36 per cent under HAZARD and 58-62 per cent under CONDVALUE, but the RIGHT tail shrinks by a similar amount -- which is what de-levering looks like and requires no skill at all. Estimand A = ret_pos - ret_neg, control matched SIMULTANEOUSLY on count, side and hour (rule 7, all three at once rather than one at a time)."
   AND_THE_DECLARATION_IS_REAL_AT_ALL_THREE_COMMITS_I_CHECKED: "e7d5d3f reads 'DA 191: the asymmetry null, DECLARED BEFORE ANY DRAW (rule 6)'; dea8c42 reads 'DE 209: the matching unit is RULED, and the null fires on a REAL cell'; c07e03a is the Q-DA-396 filing naming e7d5d3f. RULE_6_FLOOR = 200 exists in code, and da_asymmetry_null.py:13 states in its own header that nothing there draws and STATUS is DECLARED-NOT-RUN. Rule 12's form is satisfied: the declaration is a commit, not a sentence."
@@ -27394,6 +27414,103 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 337, 2026-09-10T16:41:45Z ---
+  THE_USER_HAS_COMMITTED_A_GOVERNING_PLAN_AND_IT_SUPERSEDES_THE_CURRENT_BLOCKS:
+    prov: CHECKED
+    artifact: live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      commit 09ced57 read at its message, author, date and diffstat; both touched paths confirmed.
+  AND_THE_USER_WROTE_INTO_MY_FILE_SO_I_PREPENDED_AND_PRESERVED_THEIR_BLOCK_VERBATIM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      the 31 added lines read from the commit diff and confirmed present in the file after my write.
+  THE_PRE_DECLARED_NULLS_PRIMARY_POOL_RETURNED_DE_LEVERING_NOT_EXCLUDED:
+    prov: CHECKED
+    artifact: live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      the four figures and the verdict read in the USER's own committed text; the p-values recomputed independently below.
+  AND_BOTH_P_VALUES_REPRODUCE_EXACTLY_UNDER_THE_CONSERVATIVE_ESTIMATOR:
+    prov: CHECKED
+    artifact: live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      (k+1)/(n+1) computed for k=12 and k=31 at n=500 and compared with the two printed p-values.
+  THE_ONE_DRAW_IN_FIVE_HUNDRED_IS_TRUE_OF_CONDVALUE_ALONE_AND_HAZARD_MISSED_BY_SEVEN:
+    prov: CHECKED
+    artifact: live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      the largest passing k solved for each bar at n=500 and differenced against the observed counts.
+  09_03_WAS_EXCLUDED_BEFORE_THE_DRAWS_AND_CANNOT_BE_PROMOTED_AFTER_SEEING_IT_CHANGES_THE_VERDICT:
+    prov: CHECKED
+    artifact: live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      the exclusion and the companion's dependence on 09-03 read in the USER's committed text.
+  THE_SIX_GATED_STEPS_ARE_THE_GOVERNING_NEXT_WORK_IN_ORDER:
+    prov: CHECKED
+    artifact: live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      the six steps read verbatim at lines 26-60 of the plan.
+  AND_THE_PLAN_ADOPTS_TWO_FINDINGS_THIS_SEAT_FILED_IN_THE_LAST_TWO_ROUNDS:
+    prov: CHECKED
+    artifact: live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      step 1's four clauses read at plan lines 26-30 and matched against the two items filed in Q-MEM-316.
+  STEP_TWO_IS_THE_DECISION_METRIC_AND_THE_ASYMMETRY_STATISTIC_WAS_ARGUABLY_A_PROXY:
+    prov: CHECKED
+    artifact: live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      step 2 read at plan lines 31-37, including its PRIMARY/companion split.
+  AND_STEP_TWO_WRITES_RULE_39_AND_A_DISCLOSURE_REQUIREMENT_INTO_THE_PLAN_ITSELF:
+    prov: CHECKED
+    artifact: live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      both clauses read verbatim at plan lines 34-37.
+  STEP_THREE_NAMES_THE_MEASURED_DEFECT_AND_IT_IS_R_890S_MECHANISM:
+    prov: CHECKED
+    artifact: live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      step 3 read at plan lines 38-43 including the named redesign target.
+  STEP_SIX_HOLDS_TWO_SEPARATE_PAIRS_AND_THEY_MUST_NOT_BE_CONFLATED:
+    prov: CHECKED
+    artifact: live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      step 6 read verbatim at plan lines 53-60; the comparison pair and the replay-assumption pair are separate sentences with separate roles.
+  09_07_IS_ENDPOINT_SPECIFICALLY_CLEAN_WHICH_IS_NARROWER_THAN_CLEAN:
+    prov: CHECKED
+    artifact: live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      DA 194's two-directional finding as recorded in the USER's committed HANDOFF text: no fitted component saw 09-07; its 5-second diagnostic has 1,000 null draws; its settlement endpoint was never computed.
+  AND_09_07_IS_A_DAY_THE_PROGRAMME_KEPT_NOT_ONE_IT_FORGOT_TO_SPEND:
+    prov: RELAYED
+    from: coordinator MEM 337
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      the designation and the guard's history are the coordinator's account; what I verified is the plan's exclusion of 09-07 from PRIMARY.
+  MORE_DRAWS_ON_THE_SAME_DAYS_CANNOT_REPLACE_MORE_DAYS:
+    prov: CHECKED
+    artifact: live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      step 5 read at plan lines 48-52 and the USER's sentence read in the committed HANDOFF text.
+  POSITION_CAP_AND_FAIR_PRICE_AND_FEATURE_AND_HYPERPARAMETER_WORK_ARE_DEFERRED_UNTIL_STEP_TWO_PASSES:
+    prov: CHECKED
+    artifact: live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md
+    as_of: 2026-09-10T16:41:45Z
+    said: >-
+      the deferral clause read at the end of the six-step block, plan lines 62-64.
   # --- MEM round 336, 2026-09-10T10:33:05Z ---
   THE_ASYMMETRY_NULL_IS_DECLARED_AND_RUNNING_AND_IT_SETTLES_THE_WHOLE_CANCELLATION_LINE:
     prov: RELAYED

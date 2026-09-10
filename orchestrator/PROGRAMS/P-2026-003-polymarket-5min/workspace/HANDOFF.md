@@ -1,3 +1,116 @@
+# READ FIRST — round 337 (MEM, 2026-09-10T16:42:22Z, tip `b72e329`)
+
+# 📜 THE USER HAS COMMITTED A GOVERNING PLAN — `09ced57` SUPERSEDES EVERY "CURRENT" BLOCK
+
+*P003: update validation plan after armed-model null*, 2026-09-10 16:36:25 UTC,
+93 insertions across two files. **The plan at
+`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN_V2.md` is now the
+governing document; everything in these state files is subordinate to it.**
+
+**31 of those lines went into this HANDOFF.md, of which I am otherwise sole
+writer. I have PREPENDED and left the USER's block untouched below, exactly as
+committed.** A governing block written by the principal is not a seat's draft to
+tidy.
+
+# 🎲 THE PRE-DECLARED NULL'S PRIMARY POOL: **`DE_LEVERING_NOT_EXCLUDED`**
+
+| arm | A | p | bar | of 500 | verdict |
+|---|---|---|---|---|---|
+| CONDVALUE | 0.09361 | **0.02595** | 0.025 | 12 matched or beat | **FAIL** |
+| HAZARD | 0.06178 | **0.06387** | 0.05 | 31 beat | **FAIL** |
+
+> *"Random cancellation matched on distinct reference-generation count, side and
+> UTC hour therefore explains most of the observed tail clipping."*
+
+**Both p-values reproduce EXACTLY** — I recomputed rather than accepted:
+(12+1)/(500+1) = 0.025948 and (31+1)/501 = 0.063872. **Both use the +1
+correction, which can only make a result look worse** — the naive 12/500 = 0.024
+would have passed. **The arithmetic was not chosen to flatter.**
+
+## ⚠️ "Missed by one draw" is true of CONDVALUE ALONE
+
+Solving (k+1)/501 ≤ bar: **CONDVALUE passes at k ≤ 11 and had 12 — missed by
+exactly ONE. HAZARD passes at k ≤ 24 and had 31 — missed by SEVEN.** One arm was
+a hair away; the other was not close. **A reader who carries "missed by one draw"
+onto HAZARD will over-rate it, and cannot do so from these files.**
+
+## 🔒 AND 09-03 CANNOT BE PROMOTED
+
+The all-four-day companion **passes** — **only by adding 09-03, which was
+excluded from PRIMARY before the draw.** It cannot replace PRIMARY after the
+result.
+
+**This is the reason the declaration was worth writing.** Without it there would
+be a defensible-sounding argument for the favourable pool, made after seeing
+which pool is favourable. **The pre-declaration makes that argument
+inadmissible — and the programme gets to be disappointed honestly.**
+
+# 🪜 THE SIX GATED STEPS — THE GOVERNING NEXT WORK
+
+1. **Harden without opening protected days** — wire `verify_run_inputs` into the
+   real day path; **bind the duplicated rule-6 floor to ONE authority**; verify
+   the launched worker's cgroup; close the armed scoring-path waiver with a
+   dynamic trace on a consumed day. Rebuild only where a check requires it.
+2. **Run the missing decision-endpoint control on consumed data** — each arm's
+   R-801 settlement P&L vs 500 matched random policies; PRIMARY 09-04/05/06,
+   09-03 companion-only.
+3. **Stop cheaply if the screen fails.**
+4. **Freeze only a survivor**, recording every candidate tried.
+5. **Validate on CALENDAR DAYS, not more draws.**
+6. **Require both comparisons.**
+
+**Steps 1 and 2 are the only ones live. Nothing beyond step 2 may be started.**
+
+**Step 1 adopts both open items I filed at round 336** — the guard called only
+from `def selftest`, and the two unbound copies of `RULE_6_FLOOR`. They now have
+an owner and a position in the order.
+
+**Step 2 is the DECISION metric** under rule 7, **where the asymmetry statistic
+was arguably a proxy** — so the failed null does not close the line by itself.
+Two clauses the summary compresses and which must not be lost: *"Minimum 200 is
+a fail-closed floor, never a draw count selected to fit a maintenance window"*
+(**rule 39 promoted into the plan**), and the requirement to publish the
+zero-model-cancel baseline, **every** random-control distribution,
+coverage/exclusion counts and settlement finality **together**.
+
+**Step 3 names the redesign target: *"preserve profitable windows while clipping
+the loss tail."*** That is R-890's mechanism written in as the design brief — it
+did not merely explain the result, it set the next question.
+
+## 🧷 STEP 6 HOLDS **TWO SEPARATE PAIRS** — DO NOT CONFLATE THEM
+
+- **The both-comparisons pair:** settlement-P&L delta positive vs
+  zero-model-cancel **at the UTC-day cluster level**, *and* a win over the
+  matched random control **after the two-arm correction**.
+- **The replay-assumption pair:** `REFERENCE_FILLS` primary,
+  `NO_FILLS_UNTIL_NEXT_GENERATION` a labelled robustness leg where **a sign
+  reversal blocks promotion** rather than inviting a post-result choice.
+
+**Two pairs, two jobs. Reading the replay pair as the two comparisons would let
+an arm advance on a gate it never passed.**
+
+# 📅 09-07 IS **ENDPOINT-SPECIFICALLY** CLEAN, WHICH IS NARROWER THAN CLEAN
+
+The coordinator told the USER "09-07 is clean" and records the correction
+themselves. **No fitted component or threshold ever saw it** — all fitted inputs
+come from 2026-08-24/25 — **but its 5-second diagnostic was already computed with
+1,000 null draws**, while its R-801 settlement endpoint was deliberately never
+computed. **Usable only for a settlement-endpoint companion with an explicit
+USER ruling; never as PRIMARY validation.**
+
+**And it is a day the programme KEPT, not one it forgot to spend** — designated
+in advance, held shut by the rule-11 guard since. *A forgotten day is a windfall
+a tired programme talks itself into spending; a kept day already has a purpose.*
+
+> **"More draws on the same days cannot replace more days."** — the USER
+
+# ⏸ DEFERRED UNTIL STEP 2 PASSES
+
+Position-cap, fair-price, feature and hyperparameter work — **they answer a
+different strategy question.** No seat may open them as adjacent improvement
+while the armed line is unresolved. **Deferred is a status with a release
+condition, and the condition is step 2 passing.**
+
 # READ FIRST — current plan update (Codex, 2026-09-10)
 
 # THE P&L IS REPRODUCIBLE; THE ARMED EDGE IS NOT ESTABLISHED

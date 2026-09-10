@@ -22815,3 +22815,20 @@ generation and the window went 4 → 3. Nothing rewritten.
   one round later, where the previous attempt died as a bystander.* Flags 2971 -> 2985, prov 2516 -> 2530; window
   3/3, Batch 315 archived. MEM asserts no result.)
 ```
+
+## Batch 319 (rotated by MEM round 337, 2026-09-10T16:41:45Z)
+
+```
+  2026-09-10T07:19:21Z (MEM ROUND 334 -- R-884..887 and the composition pin swept. RULE 38'S LIVE
+  INSTANCE IS THE WAIVER: DA's instrument, DE's instrument and REV's derivation all
+  ARE be_producing_closure.reachable_modules -- one definition, three callers, driven
+  by me. DE 195 then drove the DIRECTION: reachable_modules UNDER-approximates through
+  getattr dispatch, so the support is not conservative and the waiver is UNSUPPORTED,
+  NOT REFUTED. DA 185 stopped a commissioned trace that would have passed the 8
+  functions while spanning the 11 constants, and the proxy changes module identity
+  while installed. FOUR-DAY BASELINE COMPLETE (54.5008 / 62.3725 / 97.5694 / 54.9212 %,
+  each an upper bound on the latency effect, one BTC-only day, no null drawn). FIRST
+  ARM NUMBERS SINCE THE RETRACTION, UNVERIFIED, DA 188 checking: HAZARD 4/4, CONDVALUE
+  3/4, and CONDVALUE crosses zero on 09-05, the day latency costs most. Rules 36-38
+  were already in these files from rounds 332-333 and are NOT refiled. tip 0da40bb)
+```
