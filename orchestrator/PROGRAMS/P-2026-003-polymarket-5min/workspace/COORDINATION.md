@@ -24105,6 +24105,21 @@ EARLY READ -- day 2026-09-04 -- EXPLORATORY, G 4, point estimates, NO INTERVAL, 
 **09-03 NOW CARRIES FOUR MARKS: lowest coverage (0.7419), the only EV22 build, the only unadjudicable settlement window, and 40 silently missing windows. Individually tolerable with disclosure; together, a live question about whether it belongs in the four-day table at all — to be answered BEFORE anyone quotes a four-day result.**
 **IN FLIGHT: REV 160 decomposing the BASELINE per window at the user's request — does cancelling ADD concentration or merely inherit it from an already tail-driven baseline? If the baseline is also 1–2 window driven, the DAY is the wrong unit for everything measured tonight.**
 
+### R-890 — 2026-09-10T07:53Z — coordinator — **THE MECHANISM IS IDENTIFIED: CANCELLING IS TAIL-CLIPPING. The baseline earns BROADLY; only the INCREMENT is concentrated. This is the most useful finding of the session and it changes what a forward test should measure.**
+**THE USER ASKED HOW THE BASELINE'S P&L IS DISTRIBUTED. REV 160 decomposed it the same way it decomposed the edge, so the two are directly comparable.**
+**THE BASELINE EARNS BROADLY — it is NOT tail-driven: positive in ~60 % of five-minute windows, MEDIAN WINDOW +340 c, and it needs ~15 % of the day's windows for half its positive mass.** That is a healthy distribution.
+**CANCELLING ADDS NOTHING BROAD: the increment LOSES in the median window, takes about HALF as many windows to make its mass, and is NEGATIVELY CORRELATED −0.46 to −0.83 with the baseline window by window.**
+**THE MECHANISM, and it explains every previously puzzling number at once — the arms RECOVER 28–65 % of the baseline's LOSS POOL while giving most of it back elsewhere:**
+| day / arm | baseline loss pool | neg windows | edge in those | % pool recovered | edge in baseline's POSITIVE windows | net |
+|---|---|---|---|---|---|---|
+| 09-06 HAZARD | −168,945 | 117 | +66,838 | **39.6 %** | −61,519 | **+5,319** |
+| 09-06 CONDVALUE | −168,945 | 117 | +98,771 | **58.5 %** | −93,268 | **+5,503** |
+| 09-05 CONDVALUE | — | — | — | **50.1 %** | **−98,635** | **−4,941** |
+**REV's sentence: *"Cancelling does not add a new concentrated source of profit — IT CLIPS THE BASELINE'S LEFT TAIL, AND PAYS FOR IT IN THE WINDOWS THAT DID NOT NEED CLIPPING."*** That is why the edge's win rate is under half while its total is positive: **in most windows there is nothing to clip and cancelling costs a little; the return comes from the minority of windows where the never-cancel maker is being RUN OVER.**
+**AND 09-05 CONDVALUE'S NEGATIVE IS NOW EXPLAINED RATHER THAN ANOMALOUS: it recovered 50.1 % of the loss pool and gave back −98,635 — MORE than it recovered. Not a different failure mode; THE SAME TRADE-OFF TIPPING OVER.** That is a far better thing to know than "one arm was negative on one day".
+**WHAT IT DOES NOT DO: rescue the headline. The edge is still decided by 1–5 windows of ~288, still has NO DECLARED NULL, G=4, three complete UTC days. WHAT IT DOES DO: make the effect INTERPRETABLE RATHER THAN ARBITRARY. A tail-clipping mechanism with a CONSISTENT SIGN ACROSS EIGHT ARM-DAYS is a far better thing to take to a declared null than an unexplained 4-of-4. AND IT REMOVES ONE WORRY OUTRIGHT: the enterprise is NOT a tail phenomenon end to end — the LEVEL is broad, only the INCREMENT is concentrated, so the day is not the wrong unit for everything, only for the increment.**
+**CONSEQUENCE FOR THE FREEZE (rule 12), and this is the actionable part: the candidate can now be frozen WITH A MECHANISM STATED, and the forward test on untouched days can test THE MECHANISM — does it clip the left tail, at what recovery rate, at what cost in the windows that did not need clipping — rather than merely the SIGN of a day-sum. A mechanism has far more testable content than "beats baseline", and it can fail in informative ways. THE FREEZE DEADLINE IS UNCHANGED: it must happen BEFORE 2026-09-13, while the validation days do not yet exist.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
