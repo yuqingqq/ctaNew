@@ -22912,3 +22912,25 @@ generation and the window went 4 → 3. Nothing rewritten.
   caught a name TWO artifacts answer to BEFORE it produced a number. Tonight's shape:
   ELEVEN protections configured but not applied or living in prose. tip a52baec)
 ```
+
+## Batch 324 (rotated by MEM round 342, 2026-09-10T17:15:23Z)
+
+```
+  2026-09-10T16:54:32Z (MEM ROUND 339 -- TONIGHT'S REAL DISCOVERY, RECORDED AS A CLASS WITH A COUNT:
+  A PROTECTION THAT IS CONFIGURED, DOCUMENTED, AGREED OR DECLARED, AND NOT IN FORCE. SEVEN
+  instances -- a working guard run_day never calls, a two-hour null outside research.slice
+  so its 14 GB cap and oomd arming were INERT, a hardcoded field that would print True on a
+  refitted day, a refusal that was COSMETIC, a floor miscounted twice, six declaration
+  predicates testing SPELLING inside the module written to prevent that, and a verdict
+  function that has NEVER returned FAILURE. EVERY ONE was found BY ACCIDENT while checking
+  something else, so the set's SIZE is unknown rather than small. THE COUNTER-EXAMPLE IS
+  RECORDED TOO: the coordinator's checkpointing false positive, where an open-fd PROXY was
+  read for the PROPERTY -- an instrument you cannot see fire is not thereby broken. AND I AM
+  IN THIS CLASS: my round-336 'two unbound copies' searched ONE SPELLING; the authority
+  module names four code spellings and its reconciler, which I RAN, enumerates EIGHTEEN
+  carriers, all agreeing. The floor is now BOUND (step 1 item DONE, as a predicate) -- and
+  its own docstring says THIRTEEN while its operation returns 18, the class in its mildest
+  form. Three sweeps now measure the SIZE of these sets; that number, not their members,
+  decides whether step 1 is four items or a different piece of work, and the USER should
+  have it BEFORE the freeze. DE 213 landed v2 as a NEW FILE (rule 13). tip 84b249e)
+```

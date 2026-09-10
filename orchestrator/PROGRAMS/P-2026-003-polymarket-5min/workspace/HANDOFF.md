@@ -1,3 +1,113 @@
+# READ FIRST — round 342 (MEM, 2026-09-10T17:15:59Z, tip `88f8132`)
+
+# 🔓 THE FREEZE CONDITION IS CLOSED
+
+REV 167/168 — fourteen branches across the twelve freeze-bearing guards:
+**TEN fire cleanly · ONE fired for the wrong purpose and is FIXED
+(`p003_rule6_floor.DIVERGED`) · ONE honestly recorded as UNREACHED.**
+
+> *"the twelve are settled, so a pass is no longer blocked on this item."*
+
+**What that means:** plan step 4 commits builder, scorer, thresholds, settlement
+convention, null construction and decision rule — **and the guards protecting
+each have now been SEEN TO REFUSE, which two hours ago none of them had.**
+
+**The three categories stay distinct: fires / fires-wrongly / unreached.**
+*"Could not reach" is a STATUS about the attempt; "dead" is a CLAIM about the
+code and needs a measurement — only `LEGS_DO_NOT_CLOSE` earned it.* **A closure
+that collapses the three reads as "twelve verified," which is not what was
+measured.**
+
+# 🪤 THE STANDING CHECK EARNED ITSELF TWICE IN ITS FIRST HOUR
+
+**24 refusals with no test naming them** — `de_point_estimate_day.py` 8, the
+runner 7, `de_scoring_path_delta.py` 6.
+
+**AND IT CAUGHT DA'S OWN PATCH SILENTLY DOING NOTHING WHILE PRINTING SUCCESS.**
+`HOLM_FAMILY_SMALLER_THAN_THE_TESTS` was driven-but-unnamed; the fix targeted
+`_ok(` where the helper is `ok(` — **matched nothing, changed nothing, reported
+success. One command after DA filed the eighth instance of that class.**
+**Ninth instance, inside the fix for the eighth.**
+
+> ***A patch that reports success without changing anything is the same object as
+> a guard that cannot fire: an instrument whose output is decoupled from the
+> world it claims to describe.***
+
+**Remedy, generalised:** the patcher now **asserts its target EXISTS before
+writing** and **asserts the result IS IN the written text.** *Worth extending
+beyond DA — every seat here edits files programmatically and none of the others
+assert either.*
+
+**Its declared limit ships on every output: naming is a PROXY for driving.** It
+**over-reports** (driven-but-unnamed gets flagged) and **under-reports**
+(named-but-undriven passes). **NOBODY MAY READ 24 AS A DEFECT COUNT.** *Twice
+now this programme has read a proxy as the property — an open fd for draws
+landing, an asymmetry statistic for the decision metric. The third time it is
+declared in the artifact before anyone can.*
+
+# ✅ THE LIVE ITEM IS RESOLVED — I RAN IT MYSELF
+
+The dispatch lists `SETTLEMENT_NULL_TOO_SMALL` as **live and unresolved** — the
+exact under-sampling failure rule 6 exists to prevent, with step 2 drawing behind
+it. **It is resolved.** I ran `da_refusal_drives.py`:
+
+```
+bar: 500 | refused_at: [0, 1, 199, 200, 499] | passes_at: 500
+```
+
+**The protection is not decoration.** It fires at five short counts and passes
+only at the declared draw count. *This is the round's most decision-relevant
+state change, and it happened after the dispatch was written.*
+
+## ⚠️ Its bar is **500**, which is NOT the rule-6 floor of **200**
+
+**Two numbers, two jobs.** 200 is the rule-6 statistical floor — the fail-closed
+minimum below which nothing may report. **500 is this guard's bar, equal to the
+declared draw count**, which is why it refuses at 200 and 499 as well as 0.
+**A reader who takes "floor 200" as the threshold will read a correct refusal at
+200 as a bug.** *Same shape as coverage 0.7419 against 247-of-288.*
+
+# 🔢 I CENSUSED THE THETAS — **41 AND 43 CARRIERS, ALL EXACT**
+
+Owed on tonight's deadline, so I measured it independently rather than waiting.
+`0.32450609461933483` is carried by **41** files, `0.43525926488298716` by
+**43**, across modules and every params version — **every carrier of both holds
+the exact spelling.** Every armed figure tonight rests on whichever copy the code
+read, **and on this evidence every copy is the same one.** *A second reading, not
+DA's answer.*
+
+## 🎣 …and the one divergent rendering is a **deliberate known-bad fixture**
+
+My census found a second rendering, `0.3245060946193349`, and **the two are
+genuinely different doubles** — `0x1.4c4b535ef88cdp-2` vs `…cep-2`, one ULP
+apart. **It would have been easy and wrong to file that as a divergence.**
+
+Reading the context stopped it: it appears **only in `COORDINATION.md`**, and it
+is there because it **IS the falsifier's known-bad input** — *"KNOWN-BAD: a ONE-ULP
+mutation raises `RunnerRefused`."* **No code carrier holds it.**
+
+***A census tuned to find divergence found a difference that exists on purpose.***
+Round 339's counter-example, arriving a third time and this time in my own hands.
+The rule that saved it is **rule 16 — know what KIND of document you are
+reading.** *A one-ULP difference in a register row and one in a params file are
+not the same finding.*
+
+# 🎙 THE COORDINATOR PUT A CONTROL ON THEMSELVES, AND IT IS REV
+
+**REV reviews the sentence describing the verdict BEFORE it reaches the USER.**
+The reason is specific: **twice today the coordinator stated more than the
+evidence carried** — 09-07 called "consumed" when it was not, and tail-shrinking
+described as skill when de-levering was not excluded. **One caught by the USER,
+one by a seat — two catches by people who should not have had to.**
+
+> **A pass will invite "the model works" and a failure "the model is dead", and
+> neither is supportable by a matched-random comparison on THREE CONSUMED DAYS.**
+
+The declaration already says so in its own field: four days, three in PRIMARY,
+no interval below five complete days, **and a pass is development evidence and
+NEVER validation.** *So the sentence is constrained before the number exists —
+by the declaration and by REV, both written while nobody knew which way it lands.*
+
 # READ FIRST — round 341 (MEM, 2026-09-10T17:09:18Z, tip `2501d4c`)
 
 # 🔀 THE POST-VERDICT BRANCHES ARE DECIDED **BEFORE** THE DRAWS LAND

@@ -67,6 +67,23 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-10T17:15:23Z (MEM ROUND 342 -- THE FREEZE CONDITION IS CLOSED AND THE STANDING CHECK CAUGHT
+  ITS NINTH INSTANCE INSIDE ITS OWN FIX. REV 167/168: fourteen branches over the twelve
+  freeze-bearing guards, TEN clean, ONE fixed, ONE honestly unreached -- so a pass is no
+  longer blocked, and the guards protecting step 4's commitments have now been SEEN TO
+  REFUSE, which two hours ago none had. The three categories stay DISTINCT; only
+  LEGS_DO_NOT_CLOSE earned 'dead'. The standing check runs and found 24 refusals no test
+  names -- AND CAUGHT DA'S OWN PATCH MATCHING NOTHING, CHANGING NOTHING AND PRINTING
+  SUCCESS, one command after DA filed the eighth instance. Remedy generalised: a patch must
+  assert its target EXISTS and its result LANDED. Its limit ships on every output -- naming
+  is a PROXY for driving, over- AND under-reporting -- so NOBODY MAY READ 24 AS A DEFECT
+  COUNT. I RAN da_refusal_drives.py MYSELF: SETTLEMENT_NULL_TOO_SMALL, listed as live and
+  unresolved, is RESOLVED -- bar 500, refused at 0/1/199/200/499, passes at 500; and its
+  bar of 500 is NOT the rule-6 floor of 200. I also censused the thetas: 41 and 43 carriers,
+  ALL EXACT -- and the one divergent rendering is a DELIBERATE one-ULP KNOWN-BAD FIXTURE in
+  the register, which I nearly filed as a divergence. REV now reviews the verdict sentence
+  BEFORE it reaches the USER: a pass will invite 'the model works' and a failure 'the model
+  is dead', and neither is supportable on three consumed days. tip 88f8132)
   2026-09-10T17:08:40Z (MEM ROUND 341 -- THE POST-VERDICT BRANCHES ARE DECIDED BEFORE THE DRAWS LAND.
   The USER delegated the recommended options (runbook 7i, 6cc8346) and BOTH step-2 branches
   are pre-decided so no seat waits at ~18:50Z. FAILURE: step 3 fires CHEAPLY -- failure as
@@ -101,23 +118,6 @@ updated: >-
   None in params v29: THE ABSENCE OF A VALUE, silently reversible. ACTIONABLE SUBSET:
   TWELVE freeze-bearing guards, not 53, plus a ~30-line STANDING CHECK -- and if only one
   survives to the next session it should be the check. tip b6e90e5)
-  2026-09-10T16:54:32Z (MEM ROUND 339 -- TONIGHT'S REAL DISCOVERY, RECORDED AS A CLASS WITH A COUNT:
-  A PROTECTION THAT IS CONFIGURED, DOCUMENTED, AGREED OR DECLARED, AND NOT IN FORCE. SEVEN
-  instances -- a working guard run_day never calls, a two-hour null outside research.slice
-  so its 14 GB cap and oomd arming were INERT, a hardcoded field that would print True on a
-  refitted day, a refusal that was COSMETIC, a floor miscounted twice, six declaration
-  predicates testing SPELLING inside the module written to prevent that, and a verdict
-  function that has NEVER returned FAILURE. EVERY ONE was found BY ACCIDENT while checking
-  something else, so the set's SIZE is unknown rather than small. THE COUNTER-EXAMPLE IS
-  RECORDED TOO: the coordinator's checkpointing false positive, where an open-fd PROXY was
-  read for the PROPERTY -- an instrument you cannot see fire is not thereby broken. AND I AM
-  IN THIS CLASS: my round-336 'two unbound copies' searched ONE SPELLING; the authority
-  module names four code spellings and its reconciler, which I RAN, enumerates EIGHTEEN
-  carriers, all agreeing. The floor is now BOUND (step 1 item DONE, as a predicate) -- and
-  its own docstring says THIRTEEN while its operation returns 18, the class in its mildest
-  form. Three sweeps now measure the SIZE of these sets; that number, not their members,
-  decides whether step 1 is four items or a different piece of work, and the USER should
-  have it BEFORE the freeze. DE 213 landed v2 as a NEW FILE (rule 13). tip 84b249e)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -289,6 +289,20 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 342, the freeze condition closed and the ninth instance ---
+  THE_FREEZE_CONDITION_IS_CLOSED_AND_THE_GUARDS_HAVE_NOW_BEEN_SEEN_TO_REFUSE: "REV 167/168: fourteen branches across the twelve freeze-bearing guards -- TEN FIRE CLEANLY, ONE FIRED FOR THE WRONG PURPOSE AND IS FIXED (p003_rule6_floor.DIVERGED), ONE HONESTLY RECORDED AS UNREACHED rather than declared dead. REV: 'the twelve are settled, so a pass is no longer blocked on this item.' What it MEANS: plan step 4 commits builder, scorer, thresholds, settlement convention, null construction and decision rule, and the guards protecting each have now been SEEN TO REFUSE -- which two hours ago NONE of them had."
+  AND_THE_THREE_CATEGORIES_STAY_DISTINCT_BECAUSE_ONLY_ONE_GUARD_EARNED_THE_WORD_DEAD: Fires / fires-wrongly / unreached, kept apart. 'Could not reach' is a STATUS about the attempt; 'dead' is a CLAIM about the code and needs a measurement, and across everything counted this week only LEGS_DO_NOT_CLOSE earned it. A closure that collapses the three reads as 'twelve verified' and is not what was measured. Recorded a second time because this is the sentence most likely to be compressed by whoever quotes the closure.
+  THE_STANDING_CHECK_EXISTS_AND_FOUND_24_REFUSALS_WITH_NO_TEST_NAMING_THEM: "DA 198/199. Clustering: de_point_estimate_day.py 8, the runner 7, de_scoring_path_delta.py 6. The instrument that was a specification at round 341 is a running check one round later, and its first output is a number about the repository rather than about itself. My own independent implementation at round 340 returned 49 uncovered of 54 tokens by a broader operation -- different denominators, and the two are NOT to be compared as if they measured the same set."
+  AND_IT_CAUGHT_DAS_OWN_PATCH_SILENTLY_DOING_NOTHING_WHILE_PRINTING_SUCCESS: The ninth instance of the class, INSIDE THE FIX FOR THE EIGHTH, one command after DA filed the eighth. HOLM_FAMILY_SMALLER_THAN_THE_TESTS was driven-but-unnamed; the fix targeted _ok( where the helper is ok(; it matched nothing, changed nothing, and reported success. A patch that reports success without changing anything is the same object as a guard that cannot fire -- both are instruments whose output is decoupled from the world they claim to describe.
+  AND_THE_REMEDY_GENERALISES_A_PATCH_MUST_ASSERT_ITS_TARGET_EXISTS_AND_ITS_RESULT_LANDED: "The patcher now asserts its target EXISTS before writing and asserts the result IS IN the written text. Two assertions, and they close the whole shape: the first refuses a no-op edit at the point it would silently succeed, the second refuses a write that did not take. Worth generalising beyond DA's patcher, because every seat in this programme edits files programmatically and none of the others assert either. Recorded as a standing remedy, not as an incident note."
+  THE_CHECKS_DECLARED_LIMIT_IS_THAT_NAMING_IS_A_PROXY_FOR_DRIVING: "It ships on every output: naming OVER-reports (a refusal that is driven but not named by literal string is flagged) and UNDER-reports (a refusal named in a test that never drives it passes). A proxy declared as one, in the direction that matters for a floor. NOBODY MAY READ 24 AS A DEFECT COUNT. This programme has twice had a proxy read as the property -- an open fd for draws landing, an asymmetry statistic for the decision metric -- and the third time it is declared in the artifact before anyone can."
+  THE_GUARD_PROTECTING_STEP_TWOS_DRAW_COUNT_IS_NOW_DRIVEN_AND_I_RAN_IT_MYSELF: "The dispatch lists SETTLEMENT_NULL_TOO_SMALL as LIVE AND UNRESOLVED -- the exact under-sampling failure rule 6 exists to prevent, among the 24, with step 2 drawing behind it. It is RESOLVED, and I confirmed it by running da_refusal_drives.py rather than reading it: bar 500, refused_at [0, 1, 199, 200, 499], passes_at 500. The protection is not decoration; it fires at five short counts and passes only at the declared draw count. This is the round's most decision-relevant state change and it happened after the dispatch was written."
+  AND_ITS_BAR_IS_500_WHICH_IS_NOT_THE_RULE_6_FLOOR_OF_200: "Two numbers with two jobs and they must not be conflated. 200 is the rule-6 statistical floor -- the absolute minimum below which nothing may report, fail-closed. 500 is THIS GUARD's bar, equal to the declared draw count, which is why it refuses at 200 and 499 as well as at 0. A reader who takes 'floor 200' as the guard's threshold will read a correct refusal at 200 as a bug. Recorded in the same shape as coverage 0.7419 against 247 of 288: same neighbourhood, different denominators."
+  I_CENSUSED_THE_THETA_CARRIERS_AND_FOUND_41_AND_43_ALL_EXACT: "Owed on tonight's deadline, so I measured it independently of DA rather than waiting: theta 0.32450609461933483 is carried by 41 files and theta 0.43525926488298716 by 43, across modules and every params version, and EVERY carrier of both holds the EXACT spelling. Every armed figure tonight rests on whichever copy the code read, and on this evidence every copy is the same one. This is a different instrument from DA's and is offered as a second reading, not as DA's answer."
+  AND_THE_ONE_DIVERGENT_RENDERING_IS_A_DELIBERATE_KNOWN_BAD_FIXTURE_NOT_A_DEFECT: "My census found a SECOND rendering of theta-1, 0.3245060946193349, and the two are genuinely different doubles -- 0x1.4c4b535ef88cdp-2 against 0x1.4c4b535ef88cep-2, one ULP apart. It would have been easy and wrong to file that as a divergence. Reading the context stopped it: it appears only in COORDINATION.md, and it is there because it IS the falsifier's known-bad input -- 'KNOWN-BAD: a ONE-ULP mutation raises RunnerRefused'. No code carrier holds it. The instrument found a FIXTURE and the difference between that and a defect is one step of reading."
+  AND_THAT_NEAR_MISS_IS_THE_COUNTER_EXAMPLE_ARRIVING_A_THIRD_TIME: "Round 339 recorded that a hunt for inert protections will manufacture them if the test is a proxy, using the coordinator's checkpointing false positive. This is the same shape in my own hands: a census tuned to find divergence found a difference that exists ON PURPOSE. The rule that saved it is rule 16 -- verify at the artifact a claim names, and know what KIND of document you are reading. A one-ULP difference in a register row and a one-ULP difference in a params file are not the same finding."
+  THE_COORDINATOR_PUT_A_CONTROL_ON_THEMSELVES_AND_IT_IS_REV: "Standing instruction, recorded because it constrains the seat that summarises: REV reviews the sentence describing the verdict BEFORE it reaches the USER. The reason is stated and is specific -- twice today the coordinator stated more than the evidence carried: 09-07 called 'consumed' when it was not, and tail-shrinking described as skill when de-levering was not excluded. One was caught by the USER and one by a seat, which is two catches by people who should not have had to."
+  AND_A_PASS_WILL_INVITE_THE_MODEL_WORKS_AND_A_FAILURE_THE_MODEL_IS_DEAD: Neither is supportable by a matched-random comparison on THREE CONSUMED DAYS. The declaration already says so in its own field -- effective independent units are four days and three in the PRIMARY, not eight cells, and a pass is development evidence and NEVER validation. So the sentence that goes to the USER is constrained BEFORE the number exists, by the declaration and by REV, and both constraints were written while nobody knew which way it would land.
   # --- MEM round 341, the branches are decided before the draws land ---
   THE_USER_DELEGATED_THE_RECOMMENDED_OPTIONS_AND_BOTH_STEP_TWO_BRANCHES_ARE_PRE_DECIDED: "Runbook 7i, landed at 6cc8346, 35 lines: 'Go ahead, use the recommended options, don't have to ask me to decide.' Both branches of step 2 are decided BEFORE the draws land so that no seat waits at ~18:50Z. This belongs in the state files and not only in the runbook, because a cleared coordinator reading the state files would otherwise re-litigate a decision the USER has already delegated -- and re-litigating it in the minutes after a result arrives is exactly when the decision would be worst."
   FAILURE_FIRES_STEP_THREE_CHEAPLY_AND_THE_FAILURE_IS_THE_FIRST_LINE: "If the screen fails: report the failure as the FIRST line, publish the four elements, and STOP. No freeze, no forward test, and no redesign in the same breath -- a redesign proposed alongside a failure reads as a rescue and gets evaluated as one. QR_SKEW_ONLY remains the reference; any redesign uses consumed data only and starts a NEW freeze and a NEW validation clock. Recorded with the coordinator's framing because it is the correct one: this PROTECTS FIVE VALIDATION DAYS and is NOT a disappointment."
@@ -27486,6 +27500,85 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 342, 2026-09-10T17:15:23Z ---
+  THE_FREEZE_CONDITION_IS_CLOSED_AND_THE_GUARDS_HAVE_NOW_BEEN_SEEN_TO_REFUSE:
+    prov: RELAYED
+    from: REV 167/168 via coordinator MEM 342
+    as_of: 2026-09-10T17:15:23Z
+    said: >-
+      the fourteen branches and the closure as dispatched; the DIVERGED mechanism I examined myself at round 341 and the fix is recorded here as landed, not re-derived.
+  AND_THE_THREE_CATEGORIES_STAY_DISTINCT_BECAUSE_ONLY_ONE_GUARD_EARNED_THE_WORD_DEAD:
+    prov: RELAYED
+    from: REV 167/168 via coordinator MEM 342
+    as_of: 2026-09-10T17:15:23Z
+    said: >-
+      the category definitions as dispatched, consistent with REV 166/167 recorded at rounds 340 and 341.
+  THE_STANDING_CHECK_EXISTS_AND_FOUND_24_REFUSALS_WITH_NO_TEST_NAMING_THEM:
+    prov: RELAYED
+    from: DA 198/199 via coordinator MEM 342
+    as_of: 2026-09-10T17:15:23Z
+    said: >-
+      DA's 24 and its clustering as dispatched; my own round-340 count is named alongside only to keep the two operations from being conflated.
+  AND_IT_CAUGHT_DAS_OWN_PATCH_SILENTLY_DOING_NOTHING_WHILE_PRINTING_SUCCESS:
+    prov: RELAYED
+    from: DA 199 via coordinator MEM 342
+    as_of: 2026-09-10T17:15:23Z
+    said: >-
+      the sequence, the _ok(/ok( mismatch and the false success as dispatched.
+  AND_THE_REMEDY_GENERALISES_A_PATCH_MUST_ASSERT_ITS_TARGET_EXISTS_AND_ITS_RESULT_LANDED:
+    prov: RELAYED
+    from: DA 199 via coordinator MEM 342
+    as_of: 2026-09-10T17:15:23Z
+    said: >-
+      the two assertions as dispatched; the generalisation to other seats' write paths is recorded as a recommendation and is mine.
+  THE_CHECKS_DECLARED_LIMIT_IS_THAT_NAMING_IS_A_PROXY_FOR_DRIVING:
+    prov: RELAYED
+    from: DA via coordinator MEM 342
+    as_of: 2026-09-10T17:15:23Z
+    said: >-
+      the two-directional limit as dispatched; the two prior proxy-for-property incidents are this programme's own record at rounds 339 and 338.
+  THE_GUARD_PROTECTING_STEP_TWOS_DRAW_COUNT_IS_NOW_DRIVEN_AND_I_RAN_IT_MYSELF:
+    prov: CHECKED
+    artifact: live/pm_research/da_refusal_drives.py
+    as_of: 2026-09-10T17:15:23Z
+    said: >-
+      da_refusal_drives.py executed; its JSON verdict read: bar 500, refused_at [0,1,199,200,499], passes_at 500.
+  AND_ITS_BAR_IS_500_WHICH_IS_NOT_THE_RULE_6_FLOOR_OF_200:
+    prov: CHECKED
+    artifact: live/pm_research/da_refusal_drives.py
+    as_of: 2026-09-10T17:15:23Z
+    said: >-
+      the bar field read as 500 from the drive's own output, against the floor of 200 recorded in the step-2 declaration at round 338.
+  I_CENSUSED_THE_THETA_CARRIERS_AND_FOUND_41_AND_43_ALL_EXACT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T17:15:23Z
+    said: >-
+      a literal-and-rounded-rendering census over .py/.json/.md/.yml/.jsonl under live/pm_research and this programme's workspace; 41 and 43 carrying files, all exact.
+  AND_THE_ONE_DIVERGENT_RENDERING_IS_A_DELIBERATE_KNOWN_BAD_FIXTURE_NOT_A_DEFECT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T17:15:23Z
+    said: >-
+      the two renderings hex-compared as doubles; the divergent one located only in COORDINATION.md and its surrounding text read, which labels it KNOWN-BAD and states it raises RunnerRefused.
+  AND_THAT_NEAR_MISS_IS_THE_COUNTER_EXAMPLE_ARRIVING_A_THIRD_TIME:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T17:15:23Z
+    said: >-
+      my own census output compared against the surrounding text of the occurrence; recorded as a near-miss of mine rather than as a finding.
+  THE_COORDINATOR_PUT_A_CONTROL_ON_THEMSELVES_AND_IT_IS_REV:
+    prov: RELAYED
+    from: coordinator MEM 342
+    as_of: 2026-09-10T17:15:23Z
+    said: >-
+      the standing instruction and both prior overstatements as the coordinator's own account; the 09-07 correction and the de-levering verdict are recorded in my files at rounds 337 and 340.
+  AND_A_PASS_WILL_INVITE_THE_MODEL_WORKS_AND_A_FAILURE_THE_MODEL_IS_DEAD:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T17:15:23Z
+    said: >-
+      the what_this_cannot_establish block read at round 338: four days, three in PRIMARY, no interval below five complete days, consumed days so a pass is development evidence and never validation.
   # --- MEM round 341, 2026-09-10T17:08:40Z ---
   THE_USER_DELEGATED_THE_RECOMMENDED_OPTIONS_AND_BOTH_STEP_TWO_BRANCHES_ARE_PRE_DECIDED:
     prov: CHECKED
