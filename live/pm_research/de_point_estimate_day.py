@@ -937,6 +937,14 @@ def selftest(quiet: bool = False) -> int:
             "placement_latency": {"L_place_ms": 250.0},
             "day_run": {"placement_latency": {"L_place_ms": 250.0}},
             "supersedes": prior,
+            # DE 191: a WRITEABLE payload now carries its population and
+            # its scope. This fixture gained them rather than the guard
+            # losing its reach -- a required field that a fixture may omit
+            # is not required.
+            "population_and_coverage": {"n_generations": 1,
+                                        "TRANCHE_KEPT": 1,
+                                        "coverage": {"coverage": 1.0}},
+            "scope": {"coin": "btc", "BTC_ONLY": True},
         }
         wrote = write_artifact(emitted, good)
         ok(wrote["sha256"] == _sha(emitted),
