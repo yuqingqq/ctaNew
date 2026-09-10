@@ -1,0 +1,48 @@
+{
+  "declaration": "ASYMMETRY_NULL",
+  "version": 2,
+  "status": "DECLARED-NOT-RUN",
+  "supersedes": {
+    "version": 1,
+    "path": "live/pm_research/declarations/da_asymmetry_null_declaration_v1.json",
+    "rule": "13 -- corrections supersede IN BAND; v1 is NOT edited and stays as provenance",
+    "what_v1_still_governs": "everything not restated here. v2 adds ONE clause and changes nothing else"
+  },
+  "v1_author": "DA 191 (e7d5d3f)",
+  "v2_amended_by": "DE 208, at the coordinator's instruction, on REV 162's finding",
+  "why_v2_exists": "REV 162: the primary statistic's SIGN MODE was undeclared, and `asymmetry()` offers two. After the draws land, choosing between them would be a choice made on seen data -- rule 11, the rule that voided this programme's last set of results. So it is fixed BEFORE any draw completed.",
+  "amendment": {
+    "item_12_sign_mode": {
+      "PRIMARY": "BASELINE_SIGN",
+      "DIAGNOSTIC_REPORTED_BESIDE_IT": "OWN_SIGN",
+      "chosen_at_utc": "2026-09-10T09:57Z",
+      "chosen_before_any_draw_completed": true,
+      "n_draws_completed_at_choice": 0,
+      "reasoning_references_no_outcome": true,
+      "the_deciding_reason_is_about_the_NULL_not_the_ARM": "Under OWN_SIGN every draw partitions its OWN book by its own per-window sign, so each draw's A is computed on a DIFFERENT partition from every other draw's and from the observed. A null whose statistic is computed on a different partition per draw is not a null OF THE SAME STATISTIC, and no number of draws repairs that. Under BASELINE_SIGN the observed and all draws are scored on THE SAME windows.",
+      "the_second_reason": "BASELINE_SIGN is the only one of the two under which a policy cannot improve its score by MOVING a window between buckets. A window the baseline scored negative that the arm nudges barely positive would, under OWN_SIGN, both add to ret_pos and remove from ret_neg -- rewarding re-labelling rather than avoidance.",
+      "this_reason_pre_existed": "v1's own docstring states the property before any draw: 'BASELINE_SIGN -- the partition fixed by the baseline, so the arm cannot move windows between the buckets it is scored on.' v2 adopts a reason that already existed rather than inventing one.",
+      "if_it_had_been_arbitrary": "it would have been picked by a rule stated in advance and said to be arbitrary. It is not arbitrary: the first reason above is decisive on its own."
+    },
+    "item_13_what_must_not_be_claimed": {
+      "STRUCK": ["A is invariant to de-levering", "de-levering scores EXACTLY ZERO"],
+      "why": "REV 162: the matched control shrinks BOTH tails BY CONSTRUCTION, so it removes the FIRST-ORDER de-levering effect and not all of it. The exact-zero result holds only on an exactly-symmetric fixture.",
+      "the_true_statement": "matching on cancel count, side and hour removes the first-order de-levering effect, so what A measures is the part of the tail asymmetry that a same-sized random cancellation policy does not reproduce."
+    }
+  },
+  "open_and_blocking": {
+    "matching_unit": "UNRULED. `de_matched_cancel_control.demand_from_arm` REFUSES MATCHED_CONTROL_PREMISE_ONE_CANCEL_PER_GENERATION_FALSE on all four day-arm cells (up to 23 cancels on one reference generation). Cancels or reference generations is the USER's ruling (DE 166 (3), R-865(c)); no draw is taken until it lands.",
+    "measured": {
+      "20260903_CONDVALUE_X_SKEW": {"cancels": 25628, "reference_generations": 19523, "max_on_one": 12},
+      "20260903_HAZARD_OVER_SKEWED_REF": {"cancels": 16557, "reference_generations": 14893, "max_on_one": 7},
+      "20260904_CONDVALUE_X_SKEW": {"cancels": 43868, "reference_generations": 31087, "max_on_one": 23},
+      "20260904_HAZARD_OVER_SKEWED_REF": {"cancels": 31226, "reference_generations": 27713, "max_on_one": 11},
+      "20260906_HAZARD_OVER_SKEWED_REF": {"cancels": 21401, "reference_generations": 18638, "max_on_one": 12}
+    }
+  },
+  "deferred_v3_item": {
+    "from": "REV 162",
+    "what": "SIX of v1's item predicates test SPELLING, NOT CONTENT. The selftest emits 30/30, 11/11 items HOLD, which reads as verifying the declaration's content and actually verifies its wording -- a v2 that WEAKENED any of those six clauses would pass unchanged.",
+    "status": "FILED, NOT FIXED. It is DA's module and not a blocker for the draws; recorded here so it is not lost."
+  }
+}

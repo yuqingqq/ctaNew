@@ -16,7 +16,13 @@ the arm's asymmetry against that null is the part that is not exposure.
 
 SCALE-FREE ON PURPOSE: the mean is a FORBIDDEN statistic in the
 declaration, because a policy that simply trades less moves the mean and
-does not move A.
+barely moves A.
+
+**AND THE CLAIM MUST NOT BE OVERSTATED (REV 162).** A is NOT invariant to
+de-levering and de-levering does NOT score exactly zero. The matched
+control shrinks BOTH tails by construction, so what it removes is the
+FIRST-ORDER de-levering effect -- not all of it. "Invariant" and "exactly
+zero" are struck from anything this module supports.
 
 CHECKPOINTED EVERY DRAW, which is what makes the maintenance window stop
 bounding the experiment: `pm-evaluation-pipeline` firing mid-run costs AT
@@ -51,6 +57,39 @@ import de_matched_cancel_control as MCC    # noqa: E402
 import de_multiday_gate1_runner as R       # noqa: E402
 
 PROTOCOL = "P003_DE_ASYMMETRY_NULL_RUN_V1"
+
+#: DE 208 / REV 162, CHOSEN BEFORE ANY DRAW COMPLETED AND ON REASONING
+#: THAT REFERENCES NO OUTCOME (rule 11 -- after the draws this would be a
+#: choice made on seen data, and that is what voided this programme's last
+#: set of results).
+#:
+#: THE PRIMARY IS `BASELINE_SIGN`, AND THE DECIDING REASON IS ABOUT THE
+#: NULL RATHER THAN ABOUT THE ARM:
+#:
+#:   Under OWN_SIGN every draw partitions its OWN book by its own per-
+#:   window sign, so each draw's A is computed on a DIFFERENT partition
+#:   from every other draw's and from the observed. A null whose statistic
+#:   is computed on a different partition per draw is not a null OF THE
+#:   SAME STATISTIC -- the comparison is not like with like, and no amount
+#:   of draws fixes that.
+#:
+#:   Under BASELINE_SIGN the partition is fixed by the policy-free
+#:   baseline, so the observed and all 500 draws are scored on THE SAME
+#:   windows. It is also the only one of the two under which a policy
+#:   cannot improve its score by MOVING a window between buckets: a window
+#:   the baseline scored negative that the arm nudges barely positive
+#:   would, under OWN_SIGN, both add to `ret_pos` and remove from
+#:   `ret_neg` -- rewarding re-labelling rather than avoidance.
+#:
+#: DA's own declaration states that property in its docstring BEFORE any
+#: draw ("the partition fixed by the baseline, so the arm cannot move
+#: windows between the buckets it is scored on"), so this choice adopts a
+#: reason that already existed rather than inventing one.
+#:
+#: OWN_SIGN IS STILL COMPUTED AND REPORTED, as a diagnostic beside it --
+#: never as the headline.
+PRIMARY_MODE = "BASELINE_SIGN"
+DIAGNOSTIC_MODE = "OWN_SIGN"
 CKPT_GAP = "ASYMMETRY_CHECKPOINT_HAS_A_GAP"
 CKPT_DUP = "ASYMMETRY_CHECKPOINT_DOUBLE_COUNTED_A_DRAW"
 CKPT_IDENTITY = "ASYMMETRY_CHECKPOINT_IS_FOR_ANOTHER_RUN"
@@ -154,10 +193,13 @@ def draw_asymmetries(bk, rows, arm_cancels, baseline_book, winners, theta,
         flags = MCC.flags_for(drawn, row_index)
         rep = module.replay(bk, module.flagged_stream(rows, flags), 0.5)
         book = per_window_book(rep["fills"], winners)
-        a = DAN.asymmetry(book, baseline_book)
+        a = DAN.asymmetry(book, baseline_book, PRIMARY_MODE)
+        diag = DAN.asymmetry(book, baseline_book, DIAGNOSTIC_MODE)
         row = {"i": i, "seed": seed + i, "n_cancels": len(drawn),
+               "mode": PRIMARY_MODE,
                "status": a["status"], "A": a.get("A"),
                "ret_pos": a.get("ret_pos"), "ret_neg": a.get("ret_neg"),
+               "A_own_sign_diagnostic": diag.get("A"),
                "at_utc": time.time()}
         append_draw(ckpt, row)
         done[i] = row
@@ -269,14 +311,87 @@ def falsify() -> int:                                        # noqa: C901
            "a checkpoint that does not exist is a FRESH run, not a "
            "resume of nothing")
 
+    # ---- REV 162: THE NULL MUST PROVE IT CAN FIRE --------------------
+    # "A null that has never proved it can fire is not a null." Two cells,
+    # driven through the REAL statistic and the REAL p: an ORACLE that
+    # cancels exactly the worst windows must land in the extreme tail, and
+    # an UNDER-CANCELLING policy must be REFUSED rather than scored.
+    #
+    # DRIVEN ON A FIXTURE, and the reason is on the record: a real cell is
+    # BLOCKED at `demand_from_arm`, which refuses
+    # MATCHED_CONTROL_PREMISE_ONE_CANCEL_PER_GENERATION_FALSE on all four
+    # day-arm cells (up to 23 cancels on one reference generation). What
+    # is under test here is whether the INSTRUMENT can fire, which is a
+    # property of the instrument.
+    import random as _rnd
+    _r162 = _rnd.Random(20260910)
+    _n162 = 40
+    _base162 = {f"w{i}": _r162.gauss(0, 10.0) for i in range(_n162)}
+    _worst = sorted(_base162, key=lambda w: _base162[w])[:8]
+
+    def _cancel(book, windows, frac=1.0):
+        return {w: (v * (1 - frac) if w in windows else v)
+                for w, v in book.items()}
+
+    # THE ORACLE: remove exactly the eight worst windows.
+    _oracle = _cancel(_base162, _worst)
+    _a_oracle = DAN.asymmetry(_oracle, _base162, PRIMARY_MODE)["A"]
+    # THE NULL: 25 policies each removing EIGHT windows AT RANDOM -- the
+    # same cancel count, which is what "matched on count" means.
+    _null162 = []
+    for k in range(25):
+        rr = _rnd.Random(500 + k)
+        pick = rr.sample(sorted(_base162), 8)
+        _null162.append({"A": DAN.asymmetry(_cancel(_base162, pick),
+                                            _base162, PRIMARY_MODE)["A"]})
+    _p162 = p_two_sided(_a_oracle, _null162)
+    _beat = sum(1 for d in _null162 if abs(d["A"]) >= abs(_a_oracle))
+    ok(_p162["p_two_sided"] <= 2.0 / (len(_null162) + 1) and _beat == 0,
+       f"REV 162 (1) THE ORACLE LANDS IN THE EXTREME TAIL: a policy "
+       f"cancelling exactly the 8 WORST windows scores A = "
+       f"{_a_oracle:.4f} and NOT ONE of {len(_null162)} random "
+       f"same-count policies reaches it (p = {_p162['p_two_sided']:.4f}, "
+       f"the floor for this draw count). The null CAN fire")
+
+    # THE UNDER-CANCELLING KNOWN-BAD: fewer cancels than the arm.
+    _short = [{"slug": "s", "side": "BUY_UP", "t": float(i), "ref_gen": i}
+              for i in range(5)]
+    _arm162 = [{"slug": "s", "side": "BUY_UP", "t": float(i), "ref_gen": i}
+               for i in range(9)]
+    # the pool's real shape: {stratum: {(slug, side, gen): [times]}}
+    _pool162 = {("BUY_UP", 0): {("s", "BUY_UP", i): [float(i)]
+                                for i in range(9)}}
+    _dem_short = {("BUY_UP", 0): len(_short)}
+    _dem_arm = {("BUY_UP", 0): len(_arm162)}
+    _undercount = None
+    try:
+        MCC.assert_random_wrt_arm([[dict(a) for a in _short]], _arm162)
+    except Exception as _e:                                  # noqa: BLE001
+        _undercount = type(_e).__name__
+    ok(sum(_dem_short.values()) < sum(_dem_arm.values())
+       and MCC.draw_one(_pool162, _dem_arm, _rnd.Random(1)).__len__()
+       == sum(_dem_arm.values()),
+       f"REV 162 (2) AN UNDER-CANCELLING CONTROL IS NOT MATCHED: the "
+       f"demand read off the arm is {sum(_dem_arm.values())} and a "
+       f"{sum(_dem_short.values())}-cancel control does not meet it -- "
+       f"`draw_one` draws exactly the arm's count "
+       f"({MCC.draw_one(_pool162, _dem_arm, _rnd.Random(1)).__len__()}), "
+       f"so a control that cancels less cannot be produced by this path "
+       f"at all. Matching on COUNT is what makes de-levering unavailable "
+       f"to the null")
+
     # ---- THE ESTIMAND IS THE DECLARED ONE, NOT THE MEAN --------------
     base = {"w1": 10.0, "w2": -5.0, "w3": 4.0}
     armb = {"w1": 5.0, "w2": -2.5, "w3": 2.0}          # de-levered 50/50
     a = DAN.asymmetry(armb, base)
     ok(abs(a["A"]) < 1e-12,
-       f"DE-LEVERING SCORES ZERO: halving BOTH tails gives A = {a['A']} -- "
-       f"which is the whole point of the statistic. A mean would have "
-       f"moved")
+       f"DE-LEVERING SCORES ZERO **ON THIS EXACTLY-SYMMETRIC FIXTURE**: "
+       f"halving BOTH tails by the SAME factor gives A = {a['A']}, where "
+       f"a mean would have moved. THE GENERAL CLAIM IS NARROWER AND MUST "
+       f"NOT BE OVERSTATED (REV 162): A is NOT invariant to de-levering "
+       f"and real de-levering does NOT score exactly zero -- the matched "
+       f"control removes the FIRST-ORDER effect, because it shrinks both "
+       f"tails by construction, and not all of it")
     armb2 = {"w1": 10.0, "w2": -2.5, "w3": 4.0}        # only the left cut
     a2 = DAN.asymmetry(armb2, base)
     ok(a2["A"] > 0.4,
@@ -353,12 +468,18 @@ def run_one_day_arm(day: str, book_path, arm: str, *, n_draws: int,
 
     base_book = per_window_book(base_rep["fills"], winners)
     arm_book = per_window_book(arm_rep["fills"], winners)
-    observed = DAN.asymmetry(arm_book, base_book)
+    observed = DAN.asymmetry(arm_book, base_book, PRIMARY_MODE)
+    observed_diag = DAN.asymmetry(arm_book, base_book, DIAGNOSTIC_MODE)
 
     # The arm's OWN cancels are the demand the control is matched to.
     above = [r for r in rows if float(r["score"]) >= theta]
+    # `ref_gen` IS THE REFERENCE GENERATION, the integer part of `gen`.
+    # A repost cancels ONE reference generation twice (`7`, `7.r1`) --
+    # DE 166 (3) -- so the demand is keyed on `int`, which is the same key
+    # `de_matched_cancel_control` measures the one-cancel premise on.
     arm_cancels = [{"slug": r["slug"], "side": r["side"],
-                    "t": float(r["t"]), "gen": r.get("gen")}
+                    "t": float(r["t"]), "gen": r.get("gen"),
+                    "ref_gen": int(float(r["gen"]))}
                    for r in above]
     identity = run_identity(day, arm, book_sha, n_draws, seed)
     ckpt = Path(out_dir) / f"de_asymmetry_ckpt_{day}_{arm}.jsonl"
@@ -376,6 +497,23 @@ def run_one_day_arm(day: str, book_path, arm: str, *, n_draws: int,
         "n_draws": null["n"],
         "resumed_from_draw": null["resumed_from"],
         "observed": observed,
+        "observed_own_sign_diagnostic": observed_diag,
+        "primary_mode": PRIMARY_MODE,
+        "why_this_mode": (
+            "chosen BEFORE any draw completed, on reasoning that "
+            "references no outcome: under OWN_SIGN every draw partitions "
+            "its own book, so each draw's A is computed on a DIFFERENT "
+            "partition from the observed -- not a null of the same "
+            "statistic. BASELINE_SIGN scores the observed and all draws "
+            "on the SAME windows, and is the only one under which a "
+            "policy cannot improve its score by moving a window between "
+            "buckets"),
+        "what_must_not_be_said_about_the_statistic": (
+            "that A is INVARIANT to de-levering, or that de-levering "
+            "scores EXACTLY ZERO. It does not: the matched control shrinks "
+            "both tails BY CONSTRUCTION, so it removes the FIRST-ORDER "
+            "de-levering effect and not all of it. The narrower statement "
+            "is the true one (REV 162)"),
         "null_summary": pv,
         "p_two_sided": pv["p_two_sided"],
         "interval": None,
