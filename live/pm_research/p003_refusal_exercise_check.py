@@ -47,6 +47,97 @@ LIMIT = ("TEXTUAL PREDICATE. A cell that drives a refusal WITHOUT NAMING it "
          "an exact defect count.")
 
 
+#: DA 201 / REV 168. THE DISCRIMINATOR IS POSITION, NOT PRESENCE.
+#: REV proposed separating a refusal token from a protocol constant by whether
+#: it appears "in the message". MEASURED, THAT DOES NOT SEPARATE THEM: at
+#: `da_early_read_verify.py:411` the message is
+#:     f"NOT_AN_EARLY_READ_ARTIFACT: {name} carries protocol "
+#:     f"{doc.get('protocol')!r}, not {EARLY_PROTOCOL!r}."
+#: -- the refusal token is an inline literal AND `EARLY_PROTOCOL` is also in
+#: the message, interpolated as a VALUE.
+#:
+#: What separates them is WHERE: a refusal token LEADS the message (optionally
+#: behind a bare `REFUSED` prefix); a protocol constant is interpolated
+#: somewhere inside it. `f"action protocol must be {ACTION_PROTOCOL!r}"`
+#: (`de_v2_acting_matched_control.py:138`) starts with lowercase prose, so its
+#: constant is not a refusal name.
+#:
+#: THIS IS NOT THE REGEX TIGHTENED UNTIL THE COUNT LOOKED RIGHT -- the failure
+#: this tool exists to prevent. It is a structural predicate, and the tokens
+#: it removes are ENUMERATED in the falsifier so the change is reviewable
+#: rather than merely smaller.
+_LEAD_OK = re.compile(r"^\s*(REFUSED)?\s*-{0,2}\s*$")
+
+
+def _leading_constants(raise_node, consts):
+    """Module constants that LEAD the raise's message expression."""
+    out = []
+    for arg in _message_exprs(raise_node):
+        if isinstance(arg, ast.Name) and arg.id in consts:
+            out.append(arg.id)                     # raise X(SOME_REFUSAL)
+            continue
+        if not isinstance(arg, ast.JoinedStr):
+            continue
+        seen_text = ""
+        for part in arg.values:
+            if isinstance(part, ast.Constant) and isinstance(part.value, str):
+                seen_text += part.value
+                if not _LEAD_OK.match(seen_text):
+                    break                          # real prose came first
+                continue
+            if isinstance(part, ast.FormattedValue):
+                v = part.value
+                if isinstance(v, ast.Name) and v.id in consts \
+                        and _LEAD_OK.match(seen_text):
+                    out.append(v.id)
+                break                              # only the FIRST slot counts
+            break
+    return out
+
+
+def _message_exprs(raise_node):
+    """The expressions that become the exception's message."""
+    exc = raise_node.exc
+    if exc is None:
+        return []
+    if isinstance(exc, ast.Call):
+        args = list(exc.args)
+    else:
+        args = [exc]
+    out = []
+    for a in args:
+        # an implicitly concatenated f-string is a BinOp/JoinedStr chain
+        if isinstance(a, ast.JoinedStr):
+            out.append(a)
+        elif isinstance(a, ast.Name):
+            out.append(a)
+        elif isinstance(a, ast.BinOp):
+            # DA 201: THIS WAS NOT RECURSIVE AND IT SILENTLY DROPPED REAL
+            # TOKENS. `f"REFUSED {X}: ..." + tail + f" | {LIMIT}"` parses
+            # left-associative, so `a.left` is itself a BinOp and the
+            # JoinedStr holding the token sits one level deeper. TWO real
+            # refusals vanished from the population -- including this
+            # module's own REFUSAL_NEVER_EXERCISED -- and the COUNT alone
+            # would have looked like a clean improvement. Caught only by
+            # enumerating WHICH tokens moved.
+            out += _flatten_binop(a)
+    return out
+
+
+def _flatten_binop(node):
+    out = []
+    stack = [node]
+    while stack:
+        cur = stack.pop()
+        if isinstance(cur, ast.BinOp):
+            stack += [cur.left, cur.right]
+        elif isinstance(cur, (ast.JoinedStr, ast.Name)):
+            out.append(cur)
+        elif isinstance(cur, ast.IfExp):
+            stack += [cur.body, cur.orelse]
+    return out
+
+
 def is_exerciser(name: str) -> bool:
     return bool(EXERCISER.search(name or ""))
 
@@ -88,10 +179,9 @@ def scan(roots=DEFAULT_ROOTS) -> dict:
             seg = ast.get_source_segment(src, node) or ""
             n_raise += 1
             toks = set(INLINE.findall(seg))                       # idiom (2)
-            for sub in ast.walk(node):                            # idiom (1)
-                if isinstance(sub, ast.Name) and sub.id in consts:
-                    toks.add(consts[sub.id])
-                    const_names.setdefault(consts[sub.id], set()).add(sub.id)
+            for cname in _leading_constants(node, consts):        # idiom (1)
+                toks.add(consts[cname])
+                const_names.setdefault(consts[cname], set()).add(cname)
             if toks:
                 n_tok += len(toks)
                 for t in toks:
@@ -188,6 +278,82 @@ def assert_floor(roots=DEFAULT_ROOTS, strict: bool = True) -> dict:
             f"site(s) say REFUSED and carry NO TOKEN, so they cannot be "
             f"exercised by name. POPULATION={r['POPULATION']}. {LIMIT}")
     return r
+
+
+
+# ------------------------------------------------------- THE RATCHET
+#
+# REV 168, second round: `--named-only` will become the default invocation,
+# and then the 1,100-odd unnamed refusals go quiet by a different door. The
+# fix for that shape is a RATCHET -- the existing ones are grandfathered, a
+# NEW one is blocked at the commit that adds it, and the number can only move
+# DOWN. A gate that is green today, cannot be routed around, and makes the
+# class shrink monotonically instead of sitting permanently amber.
+#
+# PER FILE, not just the total: a single total lets a new unnamed refusal in
+# file A hide behind a deletion in file B, and hiding inside an aggregate is
+# the shape this programme keeps paying for.
+
+BASELINE = HERE / "declarations" / "p003_unnamed_refusal_baseline_v1.json"
+RATCHET_ROSE = "UNNAMED_REFUSAL_COUNT_ROSE"
+
+
+def write_baseline(roots=DEFAULT_ROOTS, path=None) -> dict:
+    r = scan(roots)
+    doc = {"protocol": "P003_UNNAMED_REFUSAL_BASELINE_V1",
+           "what_this_is": ("a RATCHET, not a target. Existing unnamed "
+                            "refusals are grandfathered; a NEW one fails at "
+                            "the commit that adds it; the number may only "
+                            "move DOWN."),
+           "why_per_file": ("a single total lets a new unnamed refusal in one "
+                            "file hide behind a deletion in another"),
+           "how_to_lower_it": ("give the refusal a NAME, re-run "
+                               "`--write-baseline`, and commit the lower "
+                               "number with the change that earned it"),
+           "never_raise_it": ("a baseline raised to accommodate new unnamed "
+                              "refusals is the ratchet disarmed. If a rise is "
+                              "deliberate it is a USER/coordinator decision "
+                              "and belongs in the register, not in a quiet "
+                              "regeneration."),
+           "DECLARED_LIMIT": LIMIT,
+           "total": r["REFUSAL_HAS_NO_NAME"]["n"],
+           "per_file": {f: v["n_unnamed_refusals"]
+                        for f, v in sorted(r["per_file"].items())
+                        if v["n_unnamed_refusals"]}}
+    Path(path or BASELINE).write_text(json.dumps(doc, indent=1) + "\n")
+    return doc
+
+
+def assert_ratchet(roots=DEFAULT_ROOTS, baseline=None) -> dict:
+    """REFUSES if the unnamed-refusal count ROSE in ANY file."""
+    bpath = Path(baseline or BASELINE)
+    if not bpath.is_file():
+        raise AssertionError(
+            f"REFUSED {RATCHET_ROSE}: no baseline at {bpath}. An absent "
+            f"baseline is not a pass -- write one with --write-baseline.")
+    base = json.loads(bpath.read_text())
+    r = scan(roots)
+    now = {f: v["n_unnamed_refusals"] for f, v in r["per_file"].items()
+           if v["n_unnamed_refusals"]}
+    rose = {f: (base["per_file"].get(f, 0), n) for f, n in now.items()
+            if n > base["per_file"].get(f, 0)}
+    if rose:
+        detail = "; ".join(f"{f} {was}->{is_}" for f, (was, is_) in
+                           sorted(rose.items())[:8])
+        raise AssertionError(
+            f"REFUSED {RATCHET_ROSE}: unnamed refusals ROSE in "
+            f"{len(rose)} file(s): {detail}"
+            + (" ..." if len(rose) > 8 else "")
+            + f" | baseline total {base['total']}, now "
+            f"{r['REFUSAL_HAS_NO_NAME']['n']} | {LIMIT}")
+    fell = sum(base["per_file"].get(f, 0) - now.get(f, 0)
+               for f in base["per_file"])
+    return {"verdict": "RATCHET_HELD",
+            "baseline_total": base["total"],
+            "now_total": r["REFUSAL_HAS_NO_NAME"]["n"],
+            "net_reduction_since_baseline": fell,
+            "n_files_at_or_below_baseline": len(now),
+            "POPULATION": r["POPULATION"], "DECLARED_LIMIT": LIMIT}
 
 
 # ------------------------------------------------------------- falsifier
@@ -295,6 +461,61 @@ def selftest(quiet: bool = False) -> int:
             "PARTIAL INPUT: an unparsable file makes the verdict UNKNOWN and "
             "is NAMED -- a failed parse is never read as coverage")
 
+    # ---- THE RATCHET, driven both ways (REV 168 second round)
+    with tempfile.TemporaryDirectory() as td:
+        tmp = Path(td)
+        (tmp / "r_one.py").write_text(
+            'def go(d):\n    raise ValueError(f"REFUSED DAY {d}: one")\n')
+        bfile = tmp / "baseline.json"
+        b = write_baseline((tmp,), bfile)
+        _ok(b["total"] == 1 and b["per_file"]["r_one.py"] == 1,
+            f"RATCHET baseline records the count PER FILE ({b['per_file']})")
+        _ok(assert_ratchet((tmp,), bfile)["verdict"] == "RATCHET_HELD",
+            "RATCHET positive control: unchanged surface HOLDS")
+        # a NEW unnamed refusal in the SAME file -> must refuse
+        (tmp / "r_one.py").write_text(
+            'def go(d):\n    raise ValueError(f"REFUSED DAY {d}: one")\n'
+            'def go2(d):\n    raise ValueError(f"REFUSED DAY {d}: two")\n')
+        try:
+            assert_ratchet((tmp,), bfile)
+            fired_r = False
+            msg_r = ""
+        except AssertionError as e:
+            fired_r, msg_r = True, str(e)
+        _ok(fired_r and RATCHET_ROSE in msg_r and "1->2" in msg_r,
+            "RATCHET known-bad: a NEW unnamed refusal REFUSES and names the "
+            "file and the rise")
+        # a new unnamed refusal in a DIFFERENT file, offset by a deletion in
+        # the first -- the total is unchanged and the ratchet must STILL fire
+        (tmp / "r_one.py").write_text('def go():\n    return 1\n')
+        (tmp / "r_two.py").write_text(
+            'def go(d):\n    raise ValueError(f"REFUSED DAY {d}: elsewhere")\n')
+        try:
+            assert_ratchet((tmp,), bfile)
+            fired_h = False
+            msg_h = ""
+        except AssertionError as e:
+            fired_h, msg_h = True, str(e)
+        _ok(fired_h and "r_two.py 0->1" in msg_h,
+            "RATCHET, THE CASE A TOTAL WOULD MISS: one file drops to 0 while "
+            "another gains one, TOTAL UNCHANGED -- and it still REFUSES, "
+            "because hiding inside an aggregate is the shape being prevented")
+        # and it may move DOWN freely
+        (tmp / "r_two.py").unlink()
+        got = assert_ratchet((tmp,), bfile)
+        _ok(got["verdict"] == "RATCHET_HELD"
+            and got["net_reduction_since_baseline"] == 1,
+            f"RATCHET: the number may move DOWN freely "
+            f"(net reduction {got['net_reduction_since_baseline']})")
+        # an ABSENT baseline is not a pass
+        bfile.unlink()
+        try:
+            assert_ratchet((tmp,), bfile)
+            fired_a = False
+        except AssertionError as e:
+            fired_a = RATCHET_ROSE in str(e)
+        _ok(fired_a, "RATCHET: an ABSENT baseline REFUSES -- it is not a pass")
+
     real = scan()
     _ok(real["DECLARED_LIMIT"] == LIMIT,
         "the declared limit ships ON THE OUTPUT, every output, not only the "
@@ -318,7 +539,17 @@ def selftest(quiet: bool = False) -> int:
 if __name__ == "__main__":
     if "--selftest" in sys.argv:
         sys.exit(selftest())
-    if "--assert" in sys.argv:
+    if "--write-baseline" in sys.argv:
+        b = write_baseline()
+        print("baseline written: total=%d across %d files"
+              % (b["total"], len(b["per_file"])))
+    elif "--ratchet" in sys.argv:
+        try:
+            print(json.dumps(assert_ratchet(), indent=1))
+        except AssertionError as e:
+            print(e)
+            sys.exit(1)
+    elif "--assert" in sys.argv:
         try:
             r = assert_floor(strict="--named-only" not in sys.argv)
             print("EXERCISE_FLOOR_HELD  POPULATION=%d" % r["POPULATION"])
