@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-10T17:21:37Z (MEM ROUND 343 -- THE RUNNING EXPERIMENT'S GUARDS ARE DRIVEN AND THREE COUNTS
+  MOVED UP. SETTLEMENT_NULL_TOO_SMALL driven at 150, 199, 0 and the STRING '200' -- the
+  BOUNDARY and TYPE-CONFUSION cases are the two a lazy test misses and the two that would
+  pass an under-sampled null WHILE PRINTING A PASS. AND THE SUBTLEST THING TONIGHT: the
+  other floor enforcement lives in draw_many, which step 2 DELIBERATELY DOES NOT CALL so
+  each draw can be checkpointed -- THE PROTECTION WAS RELOCATED, NOT ABSENT, and the design
+  that saved 1,600 draws mid-flight is the one that bypassed the check. BE's ordering:
+  count, identity, GENERATOR -- and the generator outranks, because a correct count of
+  wrong draws passes the count guard. THREE COUNTS GREW UNDER SCRUTINY (floor 2->13->18,
+  unnamed refusals 24->30, off-path 101 with 70 in the running closure) and EVERY ONE
+  CARRIES A LIMIT ITS OWN SEAT STATED IN THE DIRECTION THAT WEAKENS IT -- that conjunction
+  is the finding. THE THETA QUESTION IS ANSWERED: re-run fresh at this tip, 43 carriers
+  each and NO non-exact rendering in ANY .py or .json -- multiple carriers YES, agree
+  EXACTLY YES. 09-07 is protected by a NAME now (reserved_days ['2026-09-07']) and NOT by
+  admissible_days, which is STILL None -- and a8567d1 is COMMITTED BUT NOT LANDED on this
+  branch, with a waiter armed on the lock. tip f67165e)
   2026-09-10T17:15:23Z (MEM ROUND 342 -- THE FREEZE CONDITION IS CLOSED AND THE STANDING CHECK CAUGHT
   ITS NINTH INSTANCE INSIDE ITS OWN FIX. REV 167/168: fourteen branches over the twelve
   freeze-bearing guards, TEN clean, ONE fixed, ONE honestly unreached -- so a pass is no
@@ -101,23 +117,6 @@ updated: >-
   raise is NOT opt-in (default True), which I checked rather than assumed. The standing
   check's CONTROL is the load-bearing half: an unmatched spelling must surface as
   REFUSAL_HAS_NO_NAME, never a clean zero. tip fa7557e)
-  2026-09-10T17:03:10Z (MEM ROUND 340 -- THE SWEEPS COUNTED THE CLASS AND PLAN STEP 1 CHANGED SIZE.
-  REV 166: AT LEAST 53 verdict-bearing guards have only ever been seen returning ONE value,
-  23 of the 34 refusals in the two modules producing tonight's numbers -- 'Step 1 is not
-  four items.' With REV's refusal to overstate recorded verbatim: ONE measured DEAD
-  (LEGS_DO_NOT_CLOSE), the rest UNESTABLISHED, and the distinction settleable only one
-  guard at a time by DRIVING it. The 53 travels with its limit -- a TEXTUAL predicate that
-  INFLATES, six of fifty-three hand-checked. BE: 101 guards off the production path, 20
-  with NO call site. I DROVE verify_run_inputs AND IT REFUSES TODAY -- BE_CASCADE_DIFFERS,
-  2 of 10 cascade modules, de_head_scoring.py declared 53a406a0 vs actual 31c36838: a live,
-  cheap, CURRENTLY-FAILING check nothing calls. I also implemented the proposed standing
-  check as a DIFFERENT operation: 54 refusal tokens, 49 never named in a test -- an UPPER
-  BOUND from a text predicate exactly like REV's, and it flags the guard failing right now.
-  09-07 is genuinely reserved, gated by LIVE code at run_day 9131/9133 -- but 'the computer
-  is on the path, the refuser is not', and the day is protected by admissible_days being
-  None in params v29: THE ABSENCE OF A VALUE, silently reversible. ACTIONABLE SUBSET:
-  TWELVE freeze-bearing guards, not 53, plus a ~30-line STANDING CHECK -- and if only one
-  survives to the next session it should be the check. tip b6e90e5)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -289,6 +288,23 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 343 addendum, 2026-09-10T17:22:59Z ---
+  AND_THE_AUDIT_FLAGS_THOSE_THREE_ARTIFACTS_AS_MISSING_WHICH_IS_THE_FINDING_CONFIRMING_ITSELF: "Three of this round's flags cite live/pm_research/declarations/de_multiday_gate1_params_v30.json and the provenance audit reports it MISSING, taking missing-artifact from 185 to 188. That is CORRECT and it is the finding restating itself: the file does not exist in this working tree because a8567d1 is committed in wt-be and is NOT an ancestor of HEAD. I read it with git show against the commit object, which is why the flags are CHECKED and not RELAYED. The three entries are left pointing at the in-commit path deliberately -- when a8567d1 lands on this branch the path resolves and the audit count returns to 185 BY ITSELF, which makes the audit a landing detector rather than a complaint. If it does not return to 185, the merge did not happen."
+  # --- MEM round 343, the running experiment's guards driven; three counts moved up ---
+  STEP_TWOS_UNDER_SAMPLING_PROTECTION_IS_NOW_SEEN_TO_FIRE_ON_FOUR_FAULTS: "DA 199 drove SETTLEMENT_NULL_TOO_SMALL at 150, 199, 0 and the STRING '200' -- each fault with its OWN name. The two that matter are the two a lazy test misses: the BOUNDARY case, 199 against a floor of 200, and the TYPE-CONFUSION case, a string where a number is expected. Both are exactly the shapes that would let an under-sampled null through WHILE PRINTING A PASS, which is the failure rule 6 exists to prevent and the failure this guard sits in front of while step 2 draws."
+  AND_THE_PROTECTION_WAS_RELOCATED_NOT_ABSENT_WHICH_IS_THE_SUBTLEST_THING_TONIGHT: BE established that the OTHER floor enforcement lives in draw_many -- and step 2 DELIBERATELY DOES NOT CALL IT, because it drives its own loop so every draw can be checkpointed. So the guard was never missing; it was somewhere else. The checkpointing design that let the asymmetry run be stopped and parallelised mid-flight without losing 1,600 draws is the SAME design that bypassed draw_many's floor check. A real tradeoff, taken for good reasons, that nobody had noticed -- and the relocated guard has now been shown to work.
+  BES_GUARD_ORDERING_IS_COUNT_THEN_IDENTITY_THEN_GENERATOR_AND_THE_GENERATOR_OUTRANKS: "Worked out by BE itself and correct: SETTLEMENT_NULL_TOO_SMALL protects HOW MANY controls there are; refuse_if_not_random protects WHAT THEY ARE; MCC.draw_one is WHERE THEY COME FROM. A guard on the generator outranks a guard on the count, because a correct count of wrong draws passes the count guard. Evidence at each level: the count guard is off THIS path, the identity guard is DELIBERATELY RETIRED WITH A CERTIFICATE, and draw_one refuses STRATUM_TOO_SMALL when a stratum owes more than it has."
+  AND_BE_READS_THE_RUNNING_CLOSURE_AS_NEEDING_NOTHING_FURTHER_DRIVEN_BEFORE_THE_RUN_EXITS: "BE's own reading, recorded as a reading and not as a proof: nothing else in the running closure needs driving before the run exits. It follows from the ordering above -- the generator-level guard fires, the count-level guard fires, and the identity-level one is retired on purpose with a certificate rather than silently. Recorded so that if something in the closure later turns out to matter, this is the sentence that was relied on and the seat that wrote it."
+  THREE_COUNTS_MOVED_UP_UNDER_SCRUTINY_AND_THE_PATTERN_IS_THE_FINDING: "The rule-6 floor went 2 -> 13 -> 18. The unnamed refusals went 24 -> 30 (DE 24: runner 13, point_estimate_day 8, settlement_control_aggregate 2, v2_acting_matched_control 1; BE 5; DA 1). BE's off-path set is 101 with 70 IN THE RUNNING CLOSURE. Every one GREW when looked at harder, and every one carries a limit stated by the seat that produced it IN THE DIRECTION THAT WEAKENS ITS OWN FINDING. That conjunction is the finding: counts that only move up, from instruments whose owners disclose their inflation, is what a genuine census looks like mid-flight."
+  AND_A_COUNT_CAN_GROW_FOR_A_SECOND_REASON_THAT_IS_NOT_THE_PATTERN: "My own theta carrier count moved from 41 to 43 files in about two hours. That is NOT the pattern: it grew because the REPOSITORY grew, not because I looked harder. Two different causes produce the same arrow, and only one of them says anything about the instrument. A census taken during active development must date-stamp its denominator or its next reading looks like a discovery. Recorded so my own number is not read as a fourth instance of the pattern above."
+  THE_THETA_QUESTION_IS_ANSWERED_AND_I_RE_RAN_IT_FRESH_AT_THIS_TIP: "It is listed as STILL OWED AND BLOCKING. I answered it at round 342 and re-ran it at this round's tip rather than quoting myself: theta 0.32450609461933483 and theta 0.43525926488298716 are each carried by 43 files, and there is NO non-exact rendering in ANY .py or .json -- no file the code can read holds a different value. The one-ULP variant occurs 3 times and every occurrence is in .md, where it is the falsifier's known-bad input. MULTIPLE CARRIERS: YES. DO THEY AGREE: YES, EXACTLY, IN EVERY FILE THE CODE CAN READ."
+  AND_MY_ANSWER_DOES_NOT_DISCHARGE_DAS_IT_WOULD_CORROBORATE_IT: "If DA's independent answer is still wanted it should still be produced. Mine is a text census over file contents; DA's would be built from whatever operation DA chooses, and under rule 38 two answers are worth having only because the instruments differ. What my answer does establish is that the question is NOT UNANSWERED and nothing is blocked on it: the armed figures rest on carriers that agree exactly, on the evidence available at this tip."
+  09_07_IS_NOW_PROTECTED_BY_A_NAME_AND_THE_MECHANISM_IS_NOT_WHAT_THE_SUMMARY_SUGGESTS: "a8567d1, 'BE 161: 09-07 is protected by its NAME now'. I read v30 out of the commit and the mechanism is a NEW FIELD: reserved_days: ['2026-09-07'] with a reserved_days_reason giving the justification. admissible_days REMAINS None in v30. So the day is protected by a POSITIVE ASSERTION that names it, and the absence of a value is NO LONGER LOAD-BEARING -- which is the fix. A reader told only that it 'names the day' would reasonably expect admissible_days to list 09-07, and it does not."
+  AND_IT_IS_COMMITTED_BUT_NOT_LANDED_ON_THIS_BRANCH: "a8567d1 is NOT an ancestor of HEAD -- git merge-base --is-ancestor says no. It is staged in wt-be with a WAITER ARMED ON THE LOCK so verify_run_inputs lands the moment the run exits, which is rule 37 applied unprompted. So the state is COMMITTED-NOT-LANDED: anyone reading this working tree today still sees v29 and no be_reserved_days.py. My round-341 flag said this closes when the day is NAMED IN THE ARTIFACT; the artifact exists, on another branch, and that is a different status from closed."
+  AND_ITS_FALSIFIER_INCLUDES_THE_COORDINATORS_OWN_CASE: "The module carries an 8/8 falsifier and case 7 is 'The unrelated-day case still refuses for the RIGHT reason' -- setting admissible_days for an unrelated day must not open 09-07. Its header states the hazard it was built against in its own words: REVERSIBLE the moment anyone sets admissible_days for an unrelated purpose. That is the defect I filed at round 340 written into the fix as its test case, which is the strongest form a fix can take: the report becomes the falsifier."
+  DA_CLOSED_ONLY_ITS_OWN_AND_ROUTED_THE_REST_WITHOUT_TOUCHING_ANOTHER_SEATS_MODULE: "Three unnamed refusals of DA's own were closed; the rest were ROUTED. That is the seat boundary held under exactly the pressure that breaks it -- a seat with a working fix and a list of other seats' defects, hours before a verdict. The same shape as the rule-6 authority reconciling BE's carriers rather than editing them: make the other seat's problem VISIBLE and let them own it."
+  AND_THE_SUPERSEDED_CHECKER_IS_KEPT_AS_PROVENANCE_WITH_BOTH_DEFECTS_NAMED: "It is not deleted, because Q-DA-402 and Q-DA-403 cite its numbers, and a citation that resolves to nothing is worse than one that resolves to a superseded artifact carrying its own defects by name. Rule 13's form applied to an instrument rather than to a result: the old one stays as provenance, the new one supersedes in band, and the reader can see which numbers came from which."
+  REV_IS_WRITING_BOTH_VERDICT_SENTENCES_BEFORE_THE_NUMBER_EXISTS: "Pass and failure, as templates, against its seven overstatement tests, so the coordinator FILLS IN NUMBERS rather than composing under the pull of a result. This is the round-342 control made operational: reviewing a sentence written under that pull is harder than supplying the sentence first. Both templates are written while nobody knows which one will be used, which is the only moment either can be written honestly."
   # --- MEM round 342, the freeze condition closed and the ninth instance ---
   THE_FREEZE_CONDITION_IS_CLOSED_AND_THE_GUARDS_HAVE_NOW_BEEN_SEEN_TO_REFUSE: "REV 167/168: fourteen branches across the twelve freeze-bearing guards -- TEN FIRE CLEANLY, ONE FIRED FOR THE WRONG PURPOSE AND IS FIXED (p003_rule6_floor.DIVERGED), ONE HONESTLY RECORDED AS UNREACHED rather than declared dead. REV: 'the twelve are settled, so a pass is no longer blocked on this item.' What it MEANS: plan step 4 commits builder, scorer, thresholds, settlement convention, null construction and decision rule, and the guards protecting each have now been SEEN TO REFUSE -- which two hours ago NONE of them had."
   AND_THE_THREE_CATEGORIES_STAY_DISTINCT_BECAUSE_ONLY_ONE_GUARD_EARNED_THE_WORD_DEAD: Fires / fires-wrongly / unreached, kept apart. 'Could not reach' is a STATUS about the attempt; 'dead' is a CLAIM about the code and needs a measurement, and across everything counted this week only LEGS_DO_NOT_CLOSE earned it. A closure that collapses the three reads as 'twelve verified' and is not what was measured. Recorded a second time because this is the sentence most likely to be compressed by whoever quotes the closure.
@@ -27500,6 +27516,98 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 343 addendum, 2026-09-10T17:22:59Z ---
+  AND_THE_AUDIT_FLAGS_THOSE_THREE_ARTIFACTS_AS_MISSING_WHICH_IS_THE_FINDING_CONFIRMING_ITSELF:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-10T17:22:59Z
+    said: >-
+      missing-artifact moved 185 -> 188 with exactly the three v30-citing flags named by the audit; git merge-base --is-ancestor a8567d1 HEAD returns false, so the path is genuinely absent here and present in the commit I read.
+  # --- MEM round 343, 2026-09-10T17:21:37Z ---
+  STEP_TWOS_UNDER_SAMPLING_PROTECTION_IS_NOW_SEEN_TO_FIRE_ON_FOUR_FAULTS:
+    prov: RELAYED
+    from: DA 199 via coordinator MEM 343
+    as_of: 2026-09-10T17:21:37Z
+    said: >-
+      the four driven faults as dispatched; I ran the drive myself at round 342 and read bar 500 with refusals at 0, 1, 199, 200 and 499.
+  AND_THE_PROTECTION_WAS_RELOCATED_NOT_ABSENT_WHICH_IS_THE_SUBTLEST_THING_TONIGHT:
+    prov: RELAYED
+    from: BE via coordinator MEM 343
+    as_of: 2026-09-10T17:21:37Z
+    said: >-
+      the location of the other enforcement and step 2's deliberate bypass as dispatched; recorded as a tradeoff rather than as a defect, which is what it is.
+  BES_GUARD_ORDERING_IS_COUNT_THEN_IDENTITY_THEN_GENERATOR_AND_THE_GENERATOR_OUTRANKS:
+    prov: RELAYED
+    from: BE via coordinator MEM 343
+    as_of: 2026-09-10T17:21:37Z
+    said: >-
+      the three-level ordering and the evidence at each level as dispatched; the retirement is recorded as certificated rather than as an absence.
+  AND_BE_READS_THE_RUNNING_CLOSURE_AS_NEEDING_NOTHING_FURTHER_DRIVEN_BEFORE_THE_RUN_EXITS:
+    prov: RELAYED
+    from: BE via coordinator MEM 343
+    as_of: 2026-09-10T17:21:37Z
+    said: >-
+      BE's conclusion as dispatched, attributed and marked as a reading.
+  THREE_COUNTS_MOVED_UP_UNDER_SCRUTINY_AND_THE_PATTERN_IS_THE_FINDING:
+    prov: RELAYED
+    from: coordinator MEM 343
+    as_of: 2026-09-10T17:21:37Z
+    said: >-
+      the three sequences and their sub-counts as dispatched; the 2 -> 18 floor sequence I confirmed myself by driving reconcile() at round 339.
+  AND_A_COUNT_CAN_GROW_FOR_A_SECOND_REASON_THAT_IS_NOT_THE_PATTERN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T17:21:37Z
+    said: >-
+      the same census re-run at this round's tip returning 43 carrying files for each theta, against 41 and 43 at round 342.
+  THE_THETA_QUESTION_IS_ANSWERED_AND_I_RE_RAN_IT_FRESH_AT_THIS_TIP:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T17:21:37Z
+    said: >-
+      the census re-run over .py/.json/.md/.yml/.jsonl under live/pm_research and the programme workspace, splitting renderings by file suffix so the readable carriers are counted separately from the prose.
+  AND_MY_ANSWER_DOES_NOT_DISCHARGE_DAS_IT_WOULD_CORROBORATE_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T17:21:37Z
+    said: >-
+      my operation stated explicitly so a second seat can choose a different one; the blocking status is addressed on my evidence and marked as mine.
+  09_07_IS_NOW_PROTECTED_BY_A_NAME_AND_THE_MECHANISM_IS_NOT_WHAT_THE_SUMMARY_SUGGESTS:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v30.json
+    as_of: 2026-09-10T17:21:37Z
+    said: >-
+      params v30 read via git show a8567d1: its settlement_endpoint carries reserved_days ['2026-09-07'] and reserved_days_reason, while admissible_days is still None.
+  AND_IT_IS_COMMITTED_BUT_NOT_LANDED_ON_THIS_BRANCH:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v30.json
+    as_of: 2026-09-10T17:21:37Z
+    said: >-
+      git merge-base --is-ancestor a8567d1 HEAD returns false; the three added paths read from the commit's diffstat: be_reserved_days.py, the cascade-repoint evidence declaration and params v30.
+  AND_ITS_FALSIFIER_INCLUDES_THE_COORDINATORS_OWN_CASE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v30.json
+    as_of: 2026-09-10T17:21:37Z
+    said: >-
+      be_reserved_days.py read via git show a8567d1: the header hazard note and the case-7 comment located at lines 9 and 205.
+  DA_CLOSED_ONLY_ITS_OWN_AND_ROUTED_THE_REST_WITHOUT_TOUCHING_ANOTHER_SEATS_MODULE:
+    prov: RELAYED
+    from: DA via coordinator MEM 343
+    as_of: 2026-09-10T17:21:37Z
+    said: >-
+      the split between closed and routed as dispatched.
+  AND_THE_SUPERSEDED_CHECKER_IS_KEPT_AS_PROVENANCE_WITH_BOTH_DEFECTS_NAMED:
+    prov: RELAYED
+    from: DA via coordinator MEM 343
+    as_of: 2026-09-10T17:21:37Z
+    said: >-
+      the retention and its reason as dispatched, including the two citing filings.
+  REV_IS_WRITING_BOTH_VERDICT_SENTENCES_BEFORE_THE_NUMBER_EXISTS:
+    prov: RELAYED
+    from: REV via coordinator MEM 343
+    as_of: 2026-09-10T17:21:37Z
+    said: >-
+      the two templates and the seven tests as dispatched; the standing control they implement is recorded at round 342.
   # --- MEM round 342, 2026-09-10T17:15:23Z ---
   THE_FREEZE_CONDITION_IS_CLOSED_AND_THE_GUARDS_HAVE_NOW_BEEN_SEEN_TO_REFUSE:
     prov: RELAYED

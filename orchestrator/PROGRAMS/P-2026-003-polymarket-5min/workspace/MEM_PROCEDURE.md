@@ -124,3 +124,17 @@ scalar with ": ", (3) no `__TIP__`/`__CLOCK__` left, (4) no `%%` left,
 (5) `yaml.safe_load`, (6) `--selftest`, (7) `--audit` and read
 `checked_artifact_missing` for THIS round's keys — a CHECKED entry whose
 artifact does not resolve is a filing error, and it caught two of mine here.
+
+## Round 343 — a missing artifact can be the finding, not a filing error
+
+Three flags cited a params file that does not exist in this tree, because the
+commit carrying it is staged in another worktree and is not an ancestor of HEAD.
+I read it with `git show <sha>:<path>`, so the flags are legitimately CHECKED.
+
+**Do not repoint such an artifact to something that happens to resolve.** Leave
+it at the in-commit path and record why: when the commit lands, the path
+resolves and `missing-artifact` returns to its baseline **on its own**. That
+turns the audit into a landing detector. If the count does not come back, the
+merge did not happen.
+
+Baseline to watch: **185**. This round it is **188**.

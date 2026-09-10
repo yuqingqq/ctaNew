@@ -22934,3 +22934,25 @@ generation and the window went 4 → 3. Nothing rewritten.
   decides whether step 1 is four items or a different piece of work, and the USER should
   have it BEFORE the freeze. DE 213 landed v2 as a NEW FILE (rule 13). tip 84b249e)
 ```
+
+## Batch 325 (rotated by MEM round 343, 2026-09-10T17:21:37Z)
+
+```
+  2026-09-10T17:03:10Z (MEM ROUND 340 -- THE SWEEPS COUNTED THE CLASS AND PLAN STEP 1 CHANGED SIZE.
+  REV 166: AT LEAST 53 verdict-bearing guards have only ever been seen returning ONE value,
+  23 of the 34 refusals in the two modules producing tonight's numbers -- 'Step 1 is not
+  four items.' With REV's refusal to overstate recorded verbatim: ONE measured DEAD
+  (LEGS_DO_NOT_CLOSE), the rest UNESTABLISHED, and the distinction settleable only one
+  guard at a time by DRIVING it. The 53 travels with its limit -- a TEXTUAL predicate that
+  INFLATES, six of fifty-three hand-checked. BE: 101 guards off the production path, 20
+  with NO call site. I DROVE verify_run_inputs AND IT REFUSES TODAY -- BE_CASCADE_DIFFERS,
+  2 of 10 cascade modules, de_head_scoring.py declared 53a406a0 vs actual 31c36838: a live,
+  cheap, CURRENTLY-FAILING check nothing calls. I also implemented the proposed standing
+  check as a DIFFERENT operation: 54 refusal tokens, 49 never named in a test -- an UPPER
+  BOUND from a text predicate exactly like REV's, and it flags the guard failing right now.
+  09-07 is genuinely reserved, gated by LIVE code at run_day 9131/9133 -- but 'the computer
+  is on the path, the refuser is not', and the day is protected by admissible_days being
+  None in params v29: THE ABSENCE OF A VALUE, silently reversible. ACTIONABLE SUBSET:
+  TWELVE freeze-bearing guards, not 53, plus a ~30-line STANDING CHECK -- and if only one
+  survives to the next session it should be the check. tip b6e90e5)
+```

@@ -1,3 +1,136 @@
+# READ FIRST — round 343 (MEM, 2026-09-10T17:22:14Z, tip `f67165e`)
+
+# 🛡 STEP 2's UNDER-SAMPLING PROTECTION IS SEEN TO FIRE
+
+`SETTLEMENT_NULL_TOO_SMALL` driven at **150, 199, 0 and the STRING `"200"`** —
+each fault with its own name. **The two that matter are the two a lazy test
+misses:** the **boundary** case (199 against a floor of 200) and the
+**type-confusion** case (a string where a number is expected). ***Both are
+exactly the shapes that would let an under-sampled null through WHILE PRINTING A
+PASS*** — the failure rule 6 exists to prevent, in front of a run that is drawing
+right now.
+
+## 🔍 AND THE SUBTLEST THING TONIGHT: **RELOCATED, NOT ABSENT**
+
+The other floor enforcement lives in `draw_many` — **and step 2 deliberately does
+not call it**, because it drives its own loop so every draw can be checkpointed.
+
+> **The checkpointing design that let the asymmetry run be stopped and
+> parallelised mid-flight without losing 1,600 draws is the SAME design that
+> bypassed `draw_many`'s floor check.**
+
+*A real tradeoff, taken for good reasons, that nobody had noticed — and the
+relocated guard has now been shown to work.* **Not a defect. Worth knowing.**
+
+# 🪜 BE's GUARD ORDERING — AND THE GENERATOR OUTRANKS
+
+| level | guard | protects |
+|---|---|---|
+| count | `SETTLEMENT_NULL_TOO_SMALL` | **how many** controls there are |
+| identity | `refuse_if_not_random` | **what they are** |
+| generator | `MCC.draw_one` | **where they come from** |
+
+***A guard on the generator outranks a guard on the count, because a correct
+count of wrong draws passes the count guard.*** Evidence at each level: the count
+guard is off this path, the identity guard is **deliberately retired with a
+certificate**, and `draw_one` refuses `STRATUM_TOO_SMALL`. **BE's reading —
+recorded as a reading — is that nothing else in the running closure needs driving
+before the run exits.**
+
+# 📈 THREE COUNTS MOVED UP, AND THE **CONJUNCTION** IS THE FINDING
+
+| census | movement |
+|---|---|
+| rule-6 floor carriers | **2 → 13 → 18** |
+| unnamed refusals | **24 → 30** (DE 24 · BE 5 · DA 1) |
+| off-path guards | **101**, with **70 in the running closure** |
+
+**Every one grew when looked at harder — and every one carries a limit stated by
+the seat that produced it, in the direction that WEAKENS its own finding.**
+***Counts that only move up, from instruments whose owners disclose their
+inflation, is what a genuine census looks like mid-flight.***
+
+## ⚠️ …and a count can grow for a second reason that is NOT the pattern
+
+**My theta carrier count moved 41 → 43 in two hours — because the REPOSITORY
+grew, not because I looked harder.** Two causes, same arrow, and only one says
+anything about the instrument. *A census taken during active development must
+date-stamp its denominator or its next reading looks like a discovery.*
+
+# ✅ THE THETA QUESTION IS **ANSWERED** — re-run fresh at this tip
+
+It is listed as still owed and blocking. **I answered it at round 342 and re-ran
+it rather than quoting myself:**
+
+- `0.32450609461933483` — **43 carrying files**
+- `0.43525926488298716` — **43 carrying files**
+- **NO non-exact rendering in ANY `.py` or `.json`** — *no file the code can read
+  holds a different value.* The one-ULP variant occurs 3 times, **all in `.md`**,
+  where it is the falsifier's known-bad input.
+
+> **Multiple carriers: YES. Do they agree: YES, EXACTLY, in every file the code
+> can read.**
+
+**My answer does not discharge DA's — it would corroborate it.** *Mine is a text
+census over file contents; under rule 38 two answers are worth having only
+because the instruments differ.* **But the question is not unanswered, and
+nothing is blocked on it.**
+
+# 📛 09-07 IS PROTECTED BY A NAME — **and the mechanism is not what the summary suggests**
+
+`a8567d1` — *BE 161: 09-07 is protected by its NAME now.* **I read params v30 out
+of the commit:**
+
+```
+reserved_days         ['2026-09-07']
+reserved_days_reason  {…designated this endpoint's validation day IN ADVANCE…}
+admissible_days       None          ← still
+```
+
+**The day is protected by a POSITIVE ASSERTION that names it, and the absence of
+a value is no longer load-bearing — that is the fix.** *A reader told only that
+it "names the day" would reasonably expect `admissible_days` to list 09-07. It
+does not.*
+
+**Its falsifier includes the coordinator's own case** — case 7: *"The
+unrelated-day case still refuses for the RIGHT reason."* The header states the
+hazard in its own words: *REVERSIBLE the moment anyone sets `admissible_days` for
+an unrelated purpose.* ***The defect I filed at round 340 is written into the fix
+as its test case — the strongest form a fix can take: the report becomes the
+falsifier.***
+
+## 🚧 BUT IT IS **COMMITTED, NOT LANDED**
+
+`git merge-base --is-ancestor a8567d1 HEAD` → **false.** It is staged in `wt-be`
+**with a waiter armed on the lock** so `verify_run_inputs` lands the moment the
+run exits — **rule 37 applied unprompted.**
+
+**Anyone reading this working tree today still sees v29 and no
+`be_reserved_days.py`.** My round-341 flag said this closes *when the day is
+named in the artifact*; **the artifact exists, on another branch. That is a
+different status from closed.**
+
+# 🧱 SEAT BOUNDARIES HELD UNDER THE PRESSURE THAT BREAKS THEM
+
+**DA closed only its own three unnamed refusals and ROUTED the rest** — a seat
+with a working fix and a list of other seats' defects, hours before a verdict.
+*Same shape as the rule-6 authority reconciling BE's carriers rather than editing
+them: make the other seat's problem visible and let them own it.*
+
+**The superseded checker is kept as provenance with both defects named**, because
+Q-DA-402/403 cite its numbers — *a citation resolving to nothing is worse than
+one resolving to a superseded artifact that carries its defects by name.*
+
+# 🎙 REV IS WRITING BOTH VERDICT SENTENCES **BEFORE THE NUMBER EXISTS**
+
+Pass and failure, as templates, against its seven overstatement tests, **so the
+coordinator fills in numbers rather than composing under the pull of a result.**
+*Reviewing a sentence written under that pull is harder than supplying the
+sentence first — and both templates are written while nobody knows which will be
+used, the only moment either can be written honestly.*
+
+Draws ~915/4000, landing ~18:50Z.
+
 # READ FIRST — round 342 (MEM, 2026-09-10T17:15:59Z, tip `88f8132`)
 
 # 🔓 THE FREEZE CONDITION IS CLOSED
