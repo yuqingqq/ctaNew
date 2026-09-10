@@ -446,7 +446,56 @@ def arm_provenance_caveat(result: dict, reconciliation: dict) -> dict:
     waived = verdict.get("status") == R.WAIVED_SCORING_PATH
     arms = [a.get("arm") for a in
             (result.get("per_day_sealed_artifacts") or [])]
+    # ---- DE 202: THE WAIVER'S SCOPE, MEASURED AND ENUMERATED ---------
+    # A bare "waiver invoked" reads as the blanket thing REV 152 found --
+    # three confirmations through one operation. THIS one has a measured
+    # scope, so the scope travels: which module differs, what of it is on
+    # the scoring path, and the INTERSECTION with what changed. All READ
+    # from the run's own evidence, never typed here.
+    _w = (verdict.get("scoring_path_waiver") or {})
+    _ev = (_w.get("evidence") or {}).get("modules") or {}
+    _inter = {m: ((b.get("INTERSECTION") or {}).get("defs", [])
+                  + (b.get("INTERSECTION") or {}).get("module_level_names",
+                                                      []))
+              for m, b in _ev.items()}
+    _n_inter = sum(len(v) for v in _inter.values())
+    scoping = {
+        "waiver_invoked": bool(waived),
+        "what_differs_from_the_books_recorded_bytes": sorted(_ev),
+        "on_the_scoring_path_in_those_modules": {
+            m: ((b.get("on_the_path") or {}).get("defs", [])
+                + (b.get("on_the_path") or {}).get(
+                    "module_level_names_read_by_them", []))
+            for m, b in _ev.items()},
+        "INTERSECTION_with_what_changed": _inter,
+        "n_intersection": _n_inter,
+        "the_difference_does_not_touch_what_produced_the_scores": (
+            _n_inter == 0),
+        "why_the_waiver_is_UNAVOIDABLE_here": (
+            "THE EXACT BYTES A BOOK RECORDS CANNOT REPLAY THAT BOOK. "
+            "Measured, not reasoned: 09-05's receipt records runner "
+            "`c9f36a743bec` (a49dd34), and that runner REFUSES 09-05's "
+            "OWN receipt with SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS "
+            "-- it predates DE 185's split-aware guard. The runner must be "
+            "CURRENT to replay a split-carrying book at all, so it must "
+            "DIFFER, so the waiver is invoked. Pinning it fully would also "
+            "drop DE 189's complement-leg naming and DE 190's mode-gated "
+            "status, and for 09-04 the reconciliation handover entirely. "
+            "This is an IMPOSSIBILITY, not a shortfall -- a later reader "
+            "asking 'why not just pin it' has the answer here"),
+        "what_IS_pinned_by_identity": (
+            "the two SCORING modules. `de_head_scoring.py` and "
+            "`de_phase4_diag_runner.py` are at the digests EVERY book "
+            "records, so the code that produced the cached scores is the "
+            "code that replayed them -- by identity, not by argument"),
+        "how_this_differs_from_a_blanket_waiver": (
+            "REV 152's finding was a waiver resting on three confirmations "
+            "that all resolve to ONE operation. This one's SCOPE is "
+            "measured and enumerated above, and the enumeration is read "
+            "from the run's own evidence"),
+    }
     return {
+        **scoping,
         "applies_to": "EVERY ARM FIGURE IN THIS ARTIFACT",
         "arms": arms,
         "scoring_provenance": ("WAIVED -- the book-code predicate REFUSED "
