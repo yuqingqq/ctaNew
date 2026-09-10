@@ -821,42 +821,79 @@ That is the failure mode; a number is at its most quotable in the minute it land
 7. **Saying the provenance is closed.** The scoring-path waiver is
    **OBSERVED_AND_NOT_REFUTED**, never closed. Guards SEEN TO REFUSE is not VERIFIED CORRECT.
 
-### The two templates — fill the numbers, move no word that matters
+### The two sentences — REV 170/171, written blind. Substitute digits; change nothing else.
 
-**PASS:**
+**These are the CONTROL, not a draft for editing.** The frame was written without knowing
+which way the verdict falls, which is the whole of its value: a standard chosen after the
+result is a standard chosen to fit it, and prose is no different. Placeholders are `«…»`.
+**Anything changed outside a placeholder must be shown to REV before sending.**
 
-> On the PRIMARY pool of three consumed UTC days (2026-09-04/05/06), each arm's R-801
-> settlement P&L — trades cash flow plus residual valued at settlement, by the same
-> estimator the day artifacts use — was compared against **N** random cancellation policies
-> matched simultaneously on distinct reference-generation count, side and UTC hour.
-> CONDVALUE_X_SKEW scored **D = … c, two-sided p = …**; HAZARD_OVER_SKEWED_REF **D = … c,
-> p = …**; after Holm over the **two** verdict-bearing arm-level tests at α = 0.05 the
-> verdict is **…**. **The matching under-matches raw exposure, so any arm advantage here is
-> an upper bound on the part that is not exposure.** The effective independent units are
-> three days, not eight cells: the two arms on a day share the book, the reference path and
-> a bitwise identical baseline. 09-03 is companion-only and was not promoted. **This is
-> development evidence on days already seen — not validation**; rule 8 forbids an interval
-> below five complete days, so no interval is quoted. **What this does not change:** the day
-> totals are still decided by one or two windows out of ~288, the arm still loses in the
-> median window on every day, and the effect is still a small residue of two large opposing
-> legs. The scoring-path provenance is **OBSERVED_AND_NOT_REFUTED**, not closed.
+**THE SHAPE NUMBERS BELOW ARE THE PRIMARY POOL'S OWN, RE-MEASURED FOR THIS PURPOSE**
+(09-04/05/06, six arm-days). They are NOT the four-day figures: quoting the four-day
+`net/gross` range in a PRIMARY sentence would import 09-03, the day that may never be
+promoted — test (5) firing on the templates themselves.
 
-**FAILURE:**
+| measured on PRIMARY | value |
+|---|---|
+| windows to reach the day total | **1 to 4** of 288 |
+| arm beats baseline in | **38.2 %–45.5 %** of windows — under half on all six arm-days |
+| median window | negative on 5 of 6 arm-days, **exactly 0.00** on the sixth (09-05 HAZARD) |
+| net / gross | **−0.022 to 0.078** |
 
-> On the PRIMARY pool of three consumed UTC days (2026-09-04/05/06), neither arm's R-801
-> settlement P&L beat a random canceller matched on distinct reference-generation count,
-> side and UTC hour, after Holm over the **two** verdict-bearing tests at α = 0.05
-> (CONDVALUE **D = … c, p = …**; HAZARD **D = … c, p = …**, against **N** draws).
-> **Matched random cancellation explains the observed advantage on the development set**,
-> and this is the branch the plan pre-decided: step 3 fires, no untouched day is spent on
-> these frozen arms, QR_SKEW_ONLY remains the reference, and any redesign starts a new
-> freeze and a new validation clock. **The ceiling on this claim is exact: two frozen
-> policies did not beat their own control on three consumed days.** It says nothing about
-> cancellation as a strategy, nothing about a redesigned arm, and nothing about a fourth
-> day. The matching under-matched raw exposure — a bias TOWARD the arm — so the arms
-> failed against a control that was, in that respect, weaker than they were. The shape
-> measurements stand unchanged, and the scoring-path provenance remains
-> **OBSERVED_AND_NOT_REFUTED**.
+#### PASS
+
+> On the PRIMARY pool of **three consumed UTC days — 2026-09-04, 09-05 and 09-06** — each
+> arm's **R-801 settled P&L** (trades cash flow plus residual valued at settlement, computed
+> by the same estimator the day artifacts use, not re-implemented) was compared against
+> **«N»** random cancellation policies matched simultaneously on distinct
+> reference-generation count, side and UTC hour. CONDVALUE_X_SKEW scored **D = «…» c,
+> two-sided p = «…»**; HAZARD_OVER_SKEWED_REF **D = «…» c, two-sided p = «…»**. The p is
+> two-sided because the direction was chosen after the point estimates were already seen.
+> After **Holm over the TWO verdict-bearing arm-level tests** — not eight cells — at
+> α = 0.05, the verdict is **«…»**. **Distinct-generation matching under-matches raw
+> exposure, so any arm advantage here is an UPPER BOUND on the part that is not exposure.**
+> The effective independent units are **days, not cells**: the population is four days of
+> which three are complete, the PRIMARY pool is those three, and the two arms within a day
+> share the book, the reference path and a bitwise identical baseline. **09-03 is
+> companion-only and was not promoted.** Rule 8 forbids an interval below five complete
+> days, so none is quoted. **This is development evidence on days already seen — not
+> validation, and not a forward result.** What it does not change: on the PRIMARY pool the
+> day total is reached by the top **one to four** windows of 288, the arm beats the baseline
+> in **38.2 %–45.5 %** of windows on every arm-day, and the result is a small residue of two
+> large opposing legs (net/gross **−0.022 to 0.078**). **A pass says matched random
+> cancellation does not explain the advantage; it does not say the effect is broad or
+> robust.** The scoring-path provenance is **OBSERVED_AND_NOT_REFUTED**, not closed.
+
+#### FAILURE
+
+> On the PRIMARY pool of **three consumed UTC days — 2026-09-04, 09-05 and 09-06** — neither
+> arm's **R-801 settled P&L** beat a random canceller matched simultaneously on distinct
+> reference-generation count, side and UTC hour, after **Holm over the TWO verdict-bearing
+> arm-level tests** at α = 0.05 (CONDVALUE_X_SKEW **D = «…» c, two-sided p = «…»**;
+> HAZARD_OVER_SKEWED_REF **D = «…» c, two-sided p = «…»**, against **«N»** draws; two-sided
+> because the direction followed the point estimates). **Matched random cancellation
+> explains the observed advantage on the development set.** This is the branch the plan
+> pre-decided: **step 3 fires** — no untouched day is spent on these frozen arms,
+> QR_SKEW_ONLY remains the reference, and any redesign starts a new freeze and a new
+> validation clock. **The ceiling on this claim is exact: two frozen policies did not beat
+> their own control on three consumed days.** It says nothing about cancellation as a
+> strategy, nothing about a redesigned arm, and nothing about a fourth day. **The matching
+> under-matched raw exposure — a bias TOWARD the arm — so the arms failed against a control
+> that was, in that respect, weaker than they were.** The effective independent units are
+> three PRIMARY days of a four-day population with three complete, against a bar of five;
+> **09-03 is companion-only and was not promoted**, and no interval is quoted. The shape
+> measurements stand unchanged: day totals reached by the top one to four windows of 288,
+> the arm beating the baseline in 38.2 %–45.5 % of windows, net/gross −0.022 to 0.078. The
+> scoring-path provenance remains **OBSERVED_AND_NOT_REFUTED**.
+
+#### One phrase to retire before it hardens
+
+*"The arm loses in the median window on every day"* is **near-true and not exactly true**:
+on PRIMARY the median window is negative on five of six arm-days and **exactly 0.00** on the
+sixth (09-05 HAZARD). The exactly-true form is the win-rate one — **the arm beats the
+baseline in fewer than half the windows on every arm-day (38.2 %–45.5 %)** — and that is
+what the sentences above carry. This is the same one-step-further shape §7j exists to
+catch, found in REV's own earlier phrasing.
 
 ### Two slots that must be filled before either template is sent
 
