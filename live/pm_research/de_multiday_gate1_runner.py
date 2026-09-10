@@ -52,7 +52,7 @@ import de_multiday_design_declaration as DESIGN  # noqa: E402
 
 
 PROTOCOL = "P003_DE_MULTIDAY_GATE1_RUNNER_V2"
-EXPECTED_CHECKS = 424
+EXPECTED_CHECKS = 426
 #: params **v2** (R-572(B)(2)): `run_not_before_utc` split into
 #: THE DECLARED EXPERIMENT PARAMETER FILE. It is a LITERAL on purpose and
 #: stays one: "always the newest" would let a parameter file appear and
@@ -4712,7 +4712,67 @@ def verify_book_against_builder_receipt(day: str, book_path: Path,
             "digest_source": "BE's builder receipt, not a DE constant"}
 
 
-def day_decision_population(module, bk: dict, arm: str, spec: dict) -> dict:
+def _theta_drift_for(arm: str, theta: float, stream, above,
+                     decisions: int) -> dict:
+    """WHERE THE FROZEN THETA SITS IN **THIS DAY'S** SCORE DISTRIBUTION.
+
+    DA 188: this re-emitted a MODULE CONSTANT every day, so on 09-04 the
+    artifact printed `decisions: 27713` beside `theta_drift.decisions_now:
+    14893` -- two contradictory decision counts in adjacent fields, in the
+    block a reader consults to check rule 11. No money moved; the field
+    was simply not about the day it appeared in.
+
+    The `now` half is COMPUTED from this day's own stream. The
+    `when_chosen` half stays as the historical measurement it is, and it
+    now CARRIES THE DAY IT WAS MEASURED ON, because that was the other
+    half of the defect: a literal with no as-of beside a live number.
+
+    IT REFUSES rather than emit a disagreement: if the decisions computed
+    here differ from the count the caller is about to publish, the two
+    fields would contradict each other again, and a stale number beside a
+    live one is worse than no number."""
+    n = len(stream)
+    n_above = len(above)
+    tail_pct = round(100.0 * n_above / n, 6) if n else None
+    pct_now = round(100.0 * (n - n_above) / n, 4) if n else None
+    if decisions is not None and n_above and decisions > n_above:
+        raise RunnerRefused(
+            f"REFUSED {THETA_DRIFT_STALE} for {arm}: the decision count "
+            f"about to be published is {decisions} and only {n_above} "
+            f"scored rows are at or above theta {theta}. These fields sit "
+            f"beside each other in the rule-11 block and cannot disagree.")
+    hist = THETA_DRIFT.get(arm) or {}
+    return {
+        "theta": theta,
+        "computed_for_this_day": True,
+        "percentile_now": pct_now,
+        "tail_mass_now_pct": tail_pct,
+        "n_scored_rows": n,
+        "n_rows_at_or_above_theta": n_above,
+        "decisions_now": decisions,
+        "decisions_now_is": ("this day's own de-duplicated generation "
+                             "count -- the same number as `decisions` "
+                             "above, recomputed here rather than carried"),
+        "when_chosen": {
+            "measured_on_day": "2026-09-03",
+            "measured_by": THETA_DRIFT.get("measured_by"),
+            "percentile": hist.get("percentile_when_chosen"),
+            "tail_mass_pct": hist.get("tail_mass_when_chosen_pct"),
+            "decisions": hist.get("decisions_when_chosen"),
+            "WHY_IT_CARRIES_A_DAY": (
+                "DA 188: these are a HISTORICAL measurement and were "
+                "re-emitted every day with no as-of, so they read as "
+                "facts about whatever day they appeared in"),
+        },
+        "theta_refitted": False,
+        "why_not": THETA_DRIFT.get("why_not"),
+        "ruling": THETA_DRIFT.get("ruling"),
+    }
+
+
+def day_decision_population(module, bk: dict, arm: str, spec: dict,
+                            params: dict | None = None,
+                            theta_pins: dict | None = None) -> dict:
     """The arm's decision population at its PINNED theta, from `asm`.
 
     Through BE's own `arm_stream` -- which applies the head scorer to the
@@ -4763,7 +4823,8 @@ def day_decision_population(module, bk: dict, arm: str, spec: dict) -> dict:
             # where a reader meets the decision count, so nobody reads
             # 14,893 decisions as a CHOICE rather than a CONSEQUENCE.
             # A price that is not stated is not paid.
-            "theta_drift": THETA_DRIFT.get(arm, THETA_DRIFT["_unknown_arm"]),
+            "theta_drift": _theta_drift_for(arm, theta, stream, above,
+                                            len(_gens)),
             "n_scored_rows": len(stream),
             "decisions": len(_gens),
             "by_side": dict(sorted(by_side.items())),
@@ -4787,7 +4848,8 @@ def day_decision_population(module, bk: dict, arm: str, spec: dict) -> dict:
             "definition": "above-threshold GENERATIONS at the arm's FIXED "
                           "theta -- the set a cancel decision is drawn "
                           "from, de-duplicated to one entry per generation",
-            "theta_was_not_refitted_here": True}
+            **theta_not_refitted(arm, theta, params or {},
+                                 theta_pins)}
 
 
 VALUATION_UNIT = "cents"
@@ -6153,6 +6215,63 @@ STATISTIC_BLOCKS = ("economic_settlement", "economic")
 #: policy under cover of a bug fix (rule 14). But the same number now
 #: selects a different part of the distribution, and a decision count read
 #: without that is read as a choice somebody made.
+THETA_REFIT_DETECTED = "THETA_WAS_REFITTED_FOR_THIS_DAY"
+THETA_DRIFT_STALE = "THETA_DRIFT_DISAGREES_WITH_THIS_DAY"
+
+
+def theta_not_refitted(arm: str, theta: float, params: dict,
+                       pins: dict | None = None) -> dict:
+    """DID THIS DAY RUN ON THE PINNED THETA? COMPUTED, NEVER TYPED.
+
+    DA 188: this was a hardcoded `True` -- in the ONE field that exists to
+    prove rule 11 was honoured, so it would have printed `True` on a
+    REFITTED day. The property held (DA established it three ways, margins
+    3.5e-07..2.2e-05), but a field that cannot say False is not evidence.
+
+    `pins` IS `verify_pinned_thetas`'s OWN RESULT, taken at S0. It is not
+    re-read here for two reasons: a second read of the same authority is a
+    second observation of nothing (rule 38), and the pin source lives
+    under `data/`, which a FIXTURE run may not open at all -- so a fixture
+    gets a NAMED STATUS rather than a boolean it has no standing to
+    assert. Absence of the pins is never a pass."""
+    if not pins:
+        return {
+            "theta_was_not_refitted_here": "NOT_COMPUTED_NO_PIN_VERIFICATION",
+            "computed": False,
+            "theta_used_by_this_day": float(theta),
+            "why": ("no `verify_pinned_thetas` result was supplied. That "
+                    "check runs at S0 on a REAL day and reads the pin "
+                    "source under `data/`, which a FIXTURE run may not "
+                    "open. A fixture has no standing to assert this "
+                    "property, so it says so instead of asserting True"),
+        }
+    cell = (pins.get("per_arm") or {}).get(arm) or {}
+    pinned = cell.get("read")
+    declared = cell.get("declared")
+    used = float(theta)
+    same = (pinned is not None and float(pinned) == used
+            and declared is not None and float(declared) == used
+            and bool(cell.get("matches")))
+    return {
+        "theta_was_not_refitted_here": bool(same),
+        "computed": True,
+        "theta_used_by_this_day": used,
+        "theta_in_the_pin_source": pinned,
+        "theta_declared_in_params": declared,
+        "pin_source": pins.get("source"),
+        "json_path": cell.get("json_path"),
+        "compared": ("the theta THIS DAY USED against the pin source AND "
+                     "against the params declaration -- all three must be "
+                     "the same value"),
+        "read_from": ("`verify_pinned_thetas`'s own S0 result, not a "
+                      "second read of the same artifact"),
+        "why_this_is_not_a_constant": (
+            "DA 188: it was a hardcoded True in the one field that exists "
+            "to prove rule 11 was honoured, so it would have printed True "
+            "on a refitted day"),
+    }
+
+
 THETA_DRIFT = {
     "HAZARD_OVER_SKEWED_REF": {
         "theta": 0.43525926488298716,
@@ -8795,11 +8914,14 @@ def run_day(day: str, book_path, *, params: dict, module=None,
                 "day may proceed on it is a POLICY question and is not "
                 "decided here.")
     book_sha = bookcite["sha256"]
+    _theta_pins = None
     _plat_pre = None
     mod, cite = import_be_cascade(params, module=module)
     if not fixture:
         verify_pinned_models(params)
-        verify_pinned_thetas(params)
+        # DE 203: KEPT, not discarded. The rule-11 field is computed from
+        # THIS result rather than from a second read of the same artifact.
+        _theta_pins = verify_pinned_thetas(params)
         # THE DESIGN IS DIGESTED HERE, AT S0 (REV 75 S1.1) -- the
         # earliest point a REAL day may read `data/`, and far before the
         # emit. It was recorded AT THE EMIT, so its "at load" and "at
@@ -8872,7 +8994,8 @@ def run_day(day: str, book_path, *, params: dict, module=None,
     _mark("S1_load")
 
     # ---- S2: the decision population, per arm, from `asm`. -------------
-    pops = {arm: day_decision_population(mod, bk, arm, spec)
+    pops = {arm: day_decision_population(mod, bk, arm, spec, params,
+                                        _theta_pins)
             for arm, spec in sorted(params["arms"].items())}
     # BE's declared per-day precondition: both heads must score the SAME
     # generation set, or the shared draw pool is a real choice the builder
@@ -11448,6 +11571,69 @@ def selftest(*, quiet: bool = False, offline: bool = False) -> int:
        f"predates the causal repair")
 
 
+
+    # ---- DE 203 / DA 188: THE RULE-11 BLOCK IS COMPUTED, NOT TYPED ---
+    # Two defects in the one block a reader consults to check that nothing
+    # was refitted. Both were fields that COULD NOT SAY THE WRONG THING --
+    # which is the same as saying they could not say anything.
+    import math as _m203
+    if offline:
+        offline_skip("DE 203 the theta predicate against the real pin")
+    else:
+        _p203 = load_params()
+        _pins203 = verify_pinned_thetas(_p203)
+        _ok203 = {a: theta_not_refitted(a, sp["theta"], _p203, _pins203)
+                  for a, sp in sorted(_p203["arms"].items())}
+        _arm203 = "HAZARD_OVER_SKEWED_REF"
+        _t203 = _p203["arms"][_arm203]["theta"]
+        # KNOWN-BAD 1: a theta refitted by ONE ULP -- the smallest change
+        # that exists -- must flip the boolean to False.
+        _refit = theta_not_refitted(_arm203,
+                                    _m203.nextafter(_t203, _m203.inf),
+                                    _p203, _pins203)
+        # KNOWN-BAD 2: NO pin verification must NOT read as True.
+        _nopin = theta_not_refitted(_arm203, _t203, _p203, None)
+        ok(all(v["theta_was_not_refitted_here"] is True
+               for v in _ok203.values())
+           and all(v["computed"] for v in _ok203.values())
+           and _refit["theta_was_not_refitted_here"] is False
+           and _nopin["theta_was_not_refitted_here"]
+               == "NOT_COMPUTED_NO_PIN_VERIFICATION"
+           and _nopin["computed"] is False,
+           f"DE 203 (1) `theta_was_not_refitted_here` IS A PREDICATE NOW: "
+           f"True on the real pin for both arms "
+           f"({[v['theta_used_by_this_day'] for v in _ok203.values()]}), "
+           f"FALSE on a theta refitted by ONE ULP -- the smallest change "
+           f"that exists -- and a run with NO pin verification gets "
+           f"`{_nopin['theta_was_not_refitted_here']}` rather than True. "
+           f"It was a hardcoded True in the one field that exists to "
+           f"prove rule 11 was honoured, so it would have printed True on "
+           f"a refitted day. It reads `verify_pinned_thetas`'s OWN S0 "
+           f"result, not a second read of the same artifact")
+
+    # (2) THE DRIFT BLOCK IS THIS DAY'S, AND IT REFUSES A CONTRADICTION.
+    _stream203 = [{"score": 0.9}, {"score": 0.9}, {"score": 0.1}]
+    _above203 = [r for r in _stream203 if r["score"] >= 0.5]
+    _d203 = _theta_drift_for("ARM", 0.5, _stream203, _above203, 2)
+    _stale203 = None
+    try:
+        _theta_drift_for("ARM", 0.5, _stream203, _above203, 14893)
+    except RunnerRefused as _e:
+        _stale203 = THETA_DRIFT_STALE in str(_e)
+    ok(_d203["decisions_now"] == 2
+       and _d203["computed_for_this_day"] is True
+       and _d203["n_rows_at_or_above_theta"] == 2
+       and _d203["when_chosen"]["measured_on_day"] == "2026-09-03"
+       and _stale203 is True,
+       f"DE 203 (2) `theta_drift` IS THIS DAY'S: `decisions_now` is "
+       f"recomputed from this day's own stream ({_d203['decisions_now']}) "
+       f"instead of re-emitting a module constant -- which is how 09-04's "
+       f"artifact printed `decisions: 27713` beside "
+       f"`theta_drift.decisions_now: 14893`. The historical half now "
+       f"CARRIES THE DAY IT WAS MEASURED ON "
+       f"({_d203['when_chosen']['measured_on_day']}), and a decision "
+       f"count that CONTRADICTS the rows above theta REFUSES "
+       f"`{THETA_DRIFT_STALE}` rather than emitting both numbers")
 
     # ---- DE 185: A SPLIT BOOK IS NOT AN AMBIGUOUS ONE ----------------
     # The guard refused the 09-04 EV21 book after a 4 min 25 s run. Its
