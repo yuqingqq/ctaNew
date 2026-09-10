@@ -1,7 +1,7 @@
 {
   "declaration": "ASYMMETRY_NULL",
   "version": 2,
-  "status": "DECLARED-NOT-RUN",
+  "status": "DECLARED-NOT-RUN (matching unit RULED; draws may proceed)",
   "supersedes": {
     "version": 1,
     "path": "live/pm_research/declarations/da_asymmetry_null_declaration_v1.json",
@@ -25,19 +25,59 @@
       "if_it_had_been_arbitrary": "it would have been picked by a rule stated in advance and said to be arbitrary. It is not arbitrary: the first reason above is decisive on its own."
     },
     "item_13_what_must_not_be_claimed": {
-      "STRUCK": ["A is invariant to de-levering", "de-levering scores EXACTLY ZERO"],
+      "STRUCK": [
+        "A is invariant to de-levering",
+        "de-levering scores EXACTLY ZERO"
+      ],
       "why": "REV 162: the matched control shrinks BOTH tails BY CONSTRUCTION, so it removes the FIRST-ORDER de-levering effect and not all of it. The exact-zero result holds only on an exactly-symmetric fixture.",
       "the_true_statement": "matching on cancel count, side and hour removes the first-order de-levering effect, so what A measures is the part of the tail asymmetry that a same-sized random cancellation policy does not reproduce."
+    },
+    "item_14_matching_unit": {
+      "RULED": "DISTINCT_REFERENCE_GENERATIONS",
+      "ruled_by": "USER, relayed at DE 209",
+      "ruled_at_utc": "2026-09-10T10:00Z",
+      "ruled_before_any_draw": true,
+      "n_draws_completed_at_ruling": 0,
+      "ground_1_rule_2": "CLAUDE.md rule 2: 'Rows are actions. One row per cancellable generation. If several rows can share one outcome, the evaluator must DE-DUPLICATE TO ACTIONS or the result is inflated (measured: 1.99 rows/fill, MAX 23).' The blocking measurement found up to 23 cancels on ONE reference generation (09-04 CONDVALUE) -- the same 23. This is the shape rule 2 was written for.",
+      "ground_2_R870": "The USER already ruled that a draw resamples THE CANCELLABLE GENERATION. The unit the null RESAMPLES and the unit the control MATCHES ON must agree, or the control is matched on a different object than the test resamples.",
+      "both_grounds_pre_existed": true,
+      "what_it_replaces": "the cancel-count demand, which `de_matched_cancel_control.demand_from_arm` REFUSES on this data by design -- it counts cancels while `draw_one` samples distinct generations, which is exactly the mismatch that guard exists to catch."
+    },
+    "item_15_disclosed_cost_of_the_ruling": {
+      "what": "matching on DISTINCT generations UNDER-MATCHES raw exposure wherever the arm cancelled one generation repeatedly. A control given N generations may remove LESS exposure than an arm that cancelled 23 times on one of them.",
+      "direction_of_the_bias": "TOWARD FINDING THE ARM SKILFUL. The control is the weaker de-leverer, so the arm's measured advantage over it is an UPPER BOUND on the part that is not exposure.",
+      "status": "KNOWN, RULED AND DISCLOSED -- a cost of the ruling, not a defect found afterwards",
+      "why_a_field_and_not_prose": "rule 35: a limitation that lives only in a report does not travel with the number"
     }
   },
   "open_and_blocking": {
     "matching_unit": "UNRULED. `de_matched_cancel_control.demand_from_arm` REFUSES MATCHED_CONTROL_PREMISE_ONE_CANCEL_PER_GENERATION_FALSE on all four day-arm cells (up to 23 cancels on one reference generation). Cancels or reference generations is the USER's ruling (DE 166 (3), R-865(c)); no draw is taken until it lands.",
     "measured": {
-      "20260903_CONDVALUE_X_SKEW": {"cancels": 25628, "reference_generations": 19523, "max_on_one": 12},
-      "20260903_HAZARD_OVER_SKEWED_REF": {"cancels": 16557, "reference_generations": 14893, "max_on_one": 7},
-      "20260904_CONDVALUE_X_SKEW": {"cancels": 43868, "reference_generations": 31087, "max_on_one": 23},
-      "20260904_HAZARD_OVER_SKEWED_REF": {"cancels": 31226, "reference_generations": 27713, "max_on_one": 11},
-      "20260906_HAZARD_OVER_SKEWED_REF": {"cancels": 21401, "reference_generations": 18638, "max_on_one": 12}
+      "20260903_CONDVALUE_X_SKEW": {
+        "cancels": 25628,
+        "reference_generations": 19523,
+        "max_on_one": 12
+      },
+      "20260903_HAZARD_OVER_SKEWED_REF": {
+        "cancels": 16557,
+        "reference_generations": 14893,
+        "max_on_one": 7
+      },
+      "20260904_CONDVALUE_X_SKEW": {
+        "cancels": 43868,
+        "reference_generations": 31087,
+        "max_on_one": 23
+      },
+      "20260904_HAZARD_OVER_SKEWED_REF": {
+        "cancels": 31226,
+        "reference_generations": 27713,
+        "max_on_one": 11
+      },
+      "20260906_HAZARD_OVER_SKEWED_REF": {
+        "cancels": 21401,
+        "reference_generations": 18638,
+        "max_on_one": 12
+      }
     }
   },
   "deferred_v3_item": {

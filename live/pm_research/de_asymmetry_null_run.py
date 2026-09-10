@@ -118,6 +118,45 @@ def run_identity(day: str, arm: str, book_sha: str, n_draws: int,
     ).hexdigest()
 
 
+def demand_distinct_reference_generations(arm_cancels) -> dict:
+    """THE RULED DEMAND: DISTINCT REFERENCE GENERATIONS PER STRATUM.
+
+    USER RULING (DE 209): the control matches on the DISTINCT COUNT of
+    reference generations cancelled, not on raw cancel actions. Two
+    pre-existing grounds:
+
+      RULE 2 -- "Rows are actions. One row per cancellable generation. If
+      several rows can share one outcome, the evaluator must DE-DUPLICATE
+      TO ACTIONS or the result is inflated (measured: 1.99 rows/fill, MAX
+      23)." The measurement that blocked this run found up to 23 cancels
+      on ONE reference generation (09-04 CONDVALUE) -- the same 23.
+
+      R-870 -- a draw resamples THE CANCELLABLE GENERATION. The unit the
+      null RESAMPLES and the unit the control MATCHES ON must agree, or
+      the control is matched on a different object than the test
+      resamples.
+
+    `de_matched_cancel_control.demand_from_arm` REFUSES here by design,
+    because it counts cancels while `draw_one` samples distinct
+    generations -- the mismatch it was built to catch. This builds the
+    demand the ruling names, in the shape `draw_one` consumes, and does
+    not touch that module.
+
+    THE COST IS REAL AND IS DISCLOSED, not smoothed: matching on distinct
+    generations UNDER-MATCHES raw exposure wherever the arm cancelled one
+    generation repeatedly. A control given N generations may remove LESS
+    exposure than an arm that cancelled 23 times on one of them, so the
+    control is, in that respect, a WEAKER de-leverer than the arm -- which
+    biases the comparison TOWARD finding the arm skilful. Stated in the
+    result, and in the declaration, as a field."""
+    per: dict = {}
+    for c in arm_cancels:
+        st = (c["side"], MCC.hour_of(c["slug"]))
+        per.setdefault(st, set()).add(
+            (c["slug"], c["side"], int(c["ref_gen"])))
+    return {st: len(v) for st, v in per.items()}
+
+
 def read_checkpoint(path: Path, identity: str) -> dict:
     """Completed draws, verified to be THIS run's, gapless and unique.
 
@@ -176,7 +215,10 @@ def draw_asymmetries(bk, rows, arm_cancels, baseline_book, winners, theta,
                      identity: str, module, on_draw=None) -> dict:
     """`n_draws` matched-random draws, each persisted as it completes."""
     pool = MCC.build_pool_from_rows(rows)
-    demand = MCC.demand_from_arm(arm_cancels)
+    # THE RULED UNIT (DE 209). `MCC.demand_from_arm` counts CANCELS and
+    # refuses on this data by design; the ruling is DISTINCT REFERENCE
+    # GENERATIONS, which is also what `draw_one` samples.
+    demand = demand_distinct_reference_generations(arm_cancels)
     row_index = {(r["slug"], r["side"], float(r["t"])): i
                  for i, r in enumerate(rows)}
     state = read_checkpoint(ckpt, identity)
@@ -406,6 +448,27 @@ def falsify() -> int:                                        # noqa: C901
         DAN.require_result_fields({"validation_limit": "x",
                                    "p_two_sided": 0.1,
                                    "matched_on": list(DAN.MATCH_KEYS),
+        "matching_unit": "DISTINCT_REFERENCE_GENERATIONS",
+        "matching_unit_ruling": (
+            "USER, DE 209. Grounds: CLAUDE.md rule 2 (de-duplicate to "
+            "actions or the result is inflated -- measured max 23 cancels "
+            "on one reference generation) and R-870 (a draw resamples THE "
+            "CANCELLABLE GENERATION, so the unit matched on must equal the "
+            "unit resampled)"),
+        "disclosed_limitation_of_the_ruling": {
+            "what": ("matching on DISTINCT generations UNDER-MATCHES raw "
+                     "exposure wherever the arm cancelled one generation "
+                     "repeatedly: a control given N generations may remove "
+                     "LESS exposure than an arm that cancelled 23 times on "
+                     "one of them"),
+            "direction_of_the_bias": ("TOWARD FINDING THE ARM SKILFUL. The "
+                                      "control is the weaker de-leverer, "
+                                      "so the arm's advantage over it is "
+                                      "an UPPER bound on the part that is "
+                                      "not exposure"),
+            "it_is_ruled_and_disclosed": ("a known cost of the ruling, "
+                                          "not a defect discovered later"),
+        },
                                    "n_draws": 500, "statistic": "A"})
         _bound = True
     except Exception:                                        # noqa: BLE001
@@ -415,6 +478,27 @@ def falsify() -> int:                                        # noqa: C901
         DAN.require_result_fields({"validation_limit": "x",
                                    "p_two_sided": 0.1,
                                    "matched_on": list(DAN.MATCH_KEYS),
+        "matching_unit": "DISTINCT_REFERENCE_GENERATIONS",
+        "matching_unit_ruling": (
+            "USER, DE 209. Grounds: CLAUDE.md rule 2 (de-duplicate to "
+            "actions or the result is inflated -- measured max 23 cancels "
+            "on one reference generation) and R-870 (a draw resamples THE "
+            "CANCELLABLE GENERATION, so the unit matched on must equal the "
+            "unit resampled)"),
+        "disclosed_limitation_of_the_ruling": {
+            "what": ("matching on DISTINCT generations UNDER-MATCHES raw "
+                     "exposure wherever the arm cancelled one generation "
+                     "repeatedly: a control given N generations may remove "
+                     "LESS exposure than an arm that cancelled 23 times on "
+                     "one of them"),
+            "direction_of_the_bias": ("TOWARD FINDING THE ARM SKILFUL. The "
+                                      "control is the weaker de-leverer, "
+                                      "so the arm's advantage over it is "
+                                      "an UPPER bound on the part that is "
+                                      "not exposure"),
+            "it_is_ruled_and_disclosed": ("a known cost of the ruling, "
+                                          "not a defect discovered later"),
+        },
                                    "n_draws": 500, "statistic": "mean"})
     except Exception:                                        # noqa: BLE001
         _mean_refused = True
@@ -494,6 +578,27 @@ def run_one_day_arm(day: str, book_path, arm: str, *, n_draws: int,
         "book": str(book_path), "book_sha256": book_sha,
         "statistic": "A = ret_pos - ret_neg",
         "matched_on": list(DAN.MATCH_KEYS),
+        "matching_unit": "DISTINCT_REFERENCE_GENERATIONS",
+        "matching_unit_ruling": (
+            "USER, DE 209. Grounds: CLAUDE.md rule 2 (de-duplicate to "
+            "actions or the result is inflated -- measured max 23 cancels "
+            "on one reference generation) and R-870 (a draw resamples THE "
+            "CANCELLABLE GENERATION, so the unit matched on must equal the "
+            "unit resampled)"),
+        "disclosed_limitation_of_the_ruling": {
+            "what": ("matching on DISTINCT generations UNDER-MATCHES raw "
+                     "exposure wherever the arm cancelled one generation "
+                     "repeatedly: a control given N generations may remove "
+                     "LESS exposure than an arm that cancelled 23 times on "
+                     "one of them"),
+            "direction_of_the_bias": ("TOWARD FINDING THE ARM SKILFUL. The "
+                                      "control is the weaker de-leverer, "
+                                      "so the arm's advantage over it is "
+                                      "an UPPER bound on the part that is "
+                                      "not exposure"),
+            "it_is_ruled_and_disclosed": ("a known cost of the ruling, "
+                                          "not a defect discovered later"),
+        },
         "n_draws": null["n"],
         "resumed_from_draw": null["resumed_from"],
         "observed": observed,
