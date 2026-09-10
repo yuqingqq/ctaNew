@@ -1,3 +1,111 @@
+# READ FIRST — round 332 (MEM, 2026-09-10T01:32:45Z, tip `5c6c48a`) — *lean round, box under pressure*
+
+# 💀 THE 09-03 EV22 REBUILD WAS OOM-KILLED — **and it was the VICTIM, not the cause**
+
+`p003ev220903a`: **`systemd-oomd killed 3 process(es) in this unit`**, `status=9/KILL`, result `oom-kill`, 2 min 55 s
+CPU — ***and a peak of 852.0 MB.*** *No plausible reading makes an 852 MB peak the cause of exhaustion on a 30 GB
+box.*
+
+**It had already reached `{"stage": "selected", "slugs": 247, "era": "clob_v4_1"}`** — ***the era resolved correctly
+from the day, so the rebuild was doing the right thing when it died.*** *247 and `clob_v4_1` are exactly what I
+verified on the successful EV21 build at round 314. **Nothing was wrong; it was interrupted.***
+
+## 🕐 THE CONSUMER IS A TIMER NOBODY HAD ACCOUNTED FOR — schedule read off the running unit
+
+| | |
+|---|---|
+| timer | **`OnCalendar=*-*-* 03,09,15,21:50:00 UTC`** · **`Persistent=true`** |
+| last / next | Wed **21:50:55Z** / Thu **03:53:38Z** |
+| service | `evaluation_pipeline --catch-up --since 2026-08-20 --max-days 1 --scheduled`, **9.98 GB** from 00:26:50 |
+
+***Recorded because it constrains every heavy run from now on and is not written down anywhere else.*** *At my read
+the window is **144 minutes** wide; a 74-minute build started now finishes **02:44Z**.*
+
+## ⚠ THE CONFIGURATION INCOHERENCE — confirmed at the running units, left untouched
+
+| | |
+|---|---|
+| `pm-evaluation-pipeline.service` | **`MemoryMax` = 16 GiB**, **`MemoryHigh = infinity`** |
+| `research.slice` | **`MemoryMax` = 14 GiB** |
+
+**It can never take 16, so the SLICE cap bites and kills a BYSTANDER.** ***A unit whose cap exceeds its slice's
+cannot throttle itself; it can only get something else killed*** — *and `MemoryHigh=infinity` removes the one
+mechanism that would have made it slow down instead.*
+
+# 🔁 THE CONCURRENCY FINDING — corrected a THIRD time, and this time the **meaning** changes
+
+**N=2 was `floor(9 GiB / 2.621 GiB)` — and that 9 GiB assumed the slice was EMPTY.**
+
+***The correct statement is not "N=2". It is "N depends on what else is in the slice" — and even N=1 dies in that
+window, which is what just happened to an 852 MB build.*** *With the pipeline resident there is ~1.6 GB of headroom;
+one worker needs 2.621 GB.*
+
+*First correction: a cap that did not exist. Second: 3 → 2, because a floor division ignored what else the process
+allocates.* ***This one says the denominator was never a constant — a number corrected twice for its VALUE and once
+for its FORM. My files carried a constant three times; they now carry the function.***
+
+***And the observation worth keeping longest: the user's "don't 8x if it will cause OOM" was aimed at the right
+hazard from a direction none of us were looking — the danger was never the null's own workers. A constraint can be
+correct and its stated mechanism wrong, and obeying it still saves you.***
+
+# ⚠ MY OWN OPEN QUESTION IS ANSWERED — against me
+
+**I filed at rounds 328 and 329 that I could not locate `MemoryHigh` anywhere.** ***It exists — on the slice,
+`MemoryHigh = 12884901888` (exactly 12 GiB), with `MemoryMax = 15032385536` (exactly 14 GiB).*** **So the sizing
+rule's figures were the slice's RUNTIME values all along; my "they look like per-unit figures" was wrong, and my
+3-or-5 alternative arithmetic is disposed of.**
+
+***The mechanism is my own most-repeated lesson: I looked in the FILE when the artifact was the RUNNING UNIT.***
+`cat` shows `MemoryMax=60%` and no `MemoryHigh`; `systemctl show` resolves both. *A config file and a running unit
+are different documents that disagree by design.* **I spent two rounds filing a discrepancy one command would have
+closed — the fourth time in two days my own instrument was the error.**
+
+## Live correction to the dispatch's premise — measured, not assumed
+
+| | dispatch | **my reading at 2026-09-10T01:32:45Z** |
+|---|---|---|
+| free RAM | 3 GB | **11 GB free, 24 GB available** |
+| `research.slice` current | 10.36 GB | **2.28 GB** |
+| **swap** | fully consumed | ***still 3/3 used, ZERO free*** |
+
+*The box has recovered on RAM and still has no swap escape.* **I kept the round lean anyway** — *a lean round costs
+nothing, and this is a number that can change between reading it and acting on it.*
+
+## ALSO
+
+- **All four corrected books exist** — 09-06 rc 0, era from the day, **14 gap-bearing windows**, split at **300,147
+  generations**, peak 7.61 GB.
+- **DE 190 closed REV 147**: the reconciliation status is **a function of the MODE, not a literal** — ***the item I
+  recorded last round as urgent because the null is next.***
+- **RULE 37 (`:521`) — a hand-off must never rest on a seat's turn staying alive.** The coordinator's own, **failed
+  three times in one day** (14 min after the retry, ~6 h after 09-06, and an inverted queue contending for one
+  lock). *Same evidence pattern rule 35 got from DA. And the programme's answer to the shape is already written
+  everywhere else: **put it in the artifact, not in a head.***
+- **The validation clock is COMPUTED, not assumed** (DA 182): one day per day, 09-08 and 09-09 passing, collectors
+  healthy, **five untouched complete days arrive 2026-09-13**. ***`days_complete_now` returning 5 today is a
+  DEFINITIONAL LAG, not a failure*** — *two quantities with the same name and the same value, three days apart in
+  meaning.*
+- ***DA caught two silent-instrument errors in its own checking*** — searching the gap file for **date strings** when
+  it is keyed by `recv_ns`, then for `lost_s`/`gap_s`/`duration_s`. **Either would have returned zero, and zero reads
+  as "no gaps."** *The family this programme has spent two days mapping — and DA catching its own twice, before
+  publishing, is what the mapping was for.*
+
+Counts: flags 2957 → 2971, provenance 2502 → 2516 (fourteen written, fourteen counted, duplicate-name gate run
+BEFORE writing); orphans 0; window 3/3, Batch 314 archived. MEM asserts no result.
+
+### ⚠ And my own slip this round — caught before the commit
+
+**My first write of this round's `STATUS.yml` did not parse: `mapping values are not allowed here` at line 27453.**
+The cause was mine — **I put `systemd --user: pm-evaluation-pipeline.timer` and `systemd --user: research.slice`
+into `artifact:` fields, and an unquoted colon-space breaks a YAML scalar.** *Five entries, two distinct values.*
+
+***Same family as the `%`-format slip I recorded at round 320: a value carrying a character the format treats
+specially, in a template I wrote.*** **The ordering rule saved it again** — the YAML check runs before the commit,
+so the cost was one edit rather than an unparseable state file on the branch. **Fixed by quoting; flags 2971, prov
+2516, parse clean.**
+
+---
+
 # READ FIRST — round 331 (MEM, 2026-09-09T18:28:52Z, tip `c4947d5`)
 
 # 🎯 THE FIRST POST-RETRACTION RESULT — and ⚠ **the withdrawal of its reading**
