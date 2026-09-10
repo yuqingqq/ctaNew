@@ -327,7 +327,8 @@ def write_artifact(path: Path, payload: dict) -> dict:
             f"tape; a fallback that is invisible in the number makes the "
             f"figure unreadable without doing that again.")
     _missing_req = [k for k in ("population_and_coverage", "scope",
-                                "arm_provenance_caveat")
+                                "arm_provenance_caveat",
+                                "what_this_number_does_not_include")
                     if not payload.get(k)]
     if _missing_req:
         raise R.RunnerRefused(
@@ -539,6 +540,111 @@ def arm_provenance_caveat(result: dict, reconciliation: dict) -> dict:
             "the waiver was verified. Neither is true: one checks a half "
             "that cannot move, and the other is an override on evidence "
             "whose support is singular"),
+    }
+
+
+OMISSIONS_ABSENT = "POINT_ESTIMATE_OMISSIONS_BLOCK_ABSENT"
+MASK_UNDISCLOSED = "POINT_ESTIMATE_MASK_NOT_DISCLOSED"
+
+
+def what_this_number_does_not_include(population: dict, fallback: dict,
+                                      receipt: dict) -> dict:
+    """ONE BLOCK FOR EVERY WAY THIS DAY'S FIGURE IS NOT THE WHOLE DAY.
+
+    THREE DISCLOSURE DEFECTS ON 09-03 IN ONE NIGHT SHARED ONE FORM: a fact
+    TRUE AND RECORDED UPSTREAM and INVISIBLE where the number is read --
+    the coverage shortfall (DA 180), the settlement-source fallback
+    (DA 189), and now the blackout mask (BE 156). Adding a field per
+    discovery would have kept finding a fourth, so they converge here.
+
+    THE MASK IS THE CLEAREST CASE and it is why this exists: the book
+    receipt records `n_present 287, n_masked 40, n_supplied 247` with a
+    frozen detector and an identity hash -- rule 4 SATISFIED AT THE BOOK
+    LAYER -- and the point estimate carried `n_supplied` ALONE. A reader
+    saw a 247-window day and could not tell that 40 were removed. Nothing
+    was hidden; the number simply travelled without its provenance.
+
+    IT REFUSES RATHER THAN REPORT AN EMPTY OMISSIONS LIST when a condition
+    holds and its evidence is missing. An omissions block that cannot say
+    'something is missing' is the same defect one layer further along --
+    which is exactly how each of these three was found."""
+    out, omitted = {}, []
+    sel = (receipt or {}).get("selection") or {}
+    mask = sel.get("mask") or {}
+    n_masked = mask.get("n_masked")
+    if n_masked is None:
+        raise R.RunnerRefused(
+            f"REFUSED {MASK_UNDISCLOSED}: the builder receipt carries no "
+            f"`selection.mask.n_masked`, so this artifact cannot state "
+            f"whether any window was removed from the day it reports. "
+            f"Absence of the mask block is not evidence of no mask.")
+    if n_masked:
+        for k in ("n_present", "n_supplied", "mask_artifact",
+                  "mask_identity_hash"):
+            if mask.get(k) in (None, ""):
+                raise R.RunnerRefused(
+                    f"REFUSED {MASK_UNDISCLOSED}: {n_masked} window(s) "
+                    f"were masked and the receipt's mask block is missing "
+                    f"`{k}`. A mask without its identity cannot be "
+                    f"re-resolved by a reader, so the removal would be "
+                    f"undisclosed in effect.")
+        out["windows_masked"] = {
+            "n_present": mask["n_present"],
+            "n_masked": n_masked,
+            "n_supplied": mask["n_supplied"],
+            "arithmetic_closes": (mask["n_present"] - n_masked
+                                  == mask["n_supplied"]),
+            "mask_artifact": mask["mask_artifact"],
+            "mask_identity_hash": mask["mask_identity_hash"],
+            "detector": (mask.get("detector")
+                         or "da_content_liveness_rule (frozen v1, USER "
+                            "R-386)"),
+            "what_a_reader_must_take_from_this": (
+                f"this day's figure is over {mask['n_supplied']} windows, "
+                f"NOT {mask['n_present']}. {n_masked} were removed by a "
+                f"RECORDED mask before the book was built -- not a silent "
+                f"drop, and not part of the number"),
+        }
+        omitted.append("windows_masked")
+    cov = (population or {}).get("coverage") or {}
+    if cov.get("coverage") is not None and cov["coverage"] < 1.0:
+        out["generations_uncovered"] = {
+            "coverage": cov["coverage"],
+            "n_uncovered": cov.get("n_uncovered"),
+            "n_reference_generations": cov.get("n_reference_generations"),
+            "what_a_reader_must_take_from_this": (
+                f"{cov.get('n_uncovered')} of "
+                f"{cov.get('n_reference_generations')} reference "
+                f"generations had no scored key, so the figure is over "
+                f"{cov['coverage']:.4f} of the day's generations"),
+        }
+        omitted.append("generations_uncovered")
+    if (fallback or {}).get("any_fallback"):
+        out["settlement_source_fallback"] = {
+            "n_windows": fallback.get("n_windows"),
+            "windows": sorted((fallback.get("windows") or {})),
+            "what_the_day_would_be_under_the_other_choice": fallback.get(
+                "what_the_day_would_be_under_the_other_choice"),
+            "what_a_reader_must_take_from_this": (
+                "at least one window could not be settled from our "
+                "capture and was valued AT THE VENUE. The figure under "
+                "the ruled Chainlink convention is given beside it; "
+                "neither is the corrected one"),
+        }
+        omitted.append("settlement_source_fallback")
+    return {
+        "nothing_omitted": not omitted,
+        "omissions": omitted,
+        **out,
+        "what_this_block_is": (
+            "every way this day's figure is not the whole day, in ONE "
+            "place. Three defects of this shape were found on 09-03 in "
+            "one night, each true and recorded upstream and invisible "
+            "where the number is read"),
+        "it_refuses_rather_than_report_nothing": (
+            "if a condition holds and its evidence is missing, this "
+            "REFUSES -- an omissions block that cannot say something is "
+            "missing is the same defect one layer further along"),
     }
 
 
@@ -936,6 +1042,11 @@ def run(day: str, book: Path, output_dir: Path, *,
     population = population_and_coverage(reconciliation, _receipt_doc,
                                          _receipt_path)
     scope = scope_declaration(book, _receipt_doc)
+    omissions = what_this_number_does_not_include(
+        population,
+        (result.get("settlement_source_fallback")
+         or reconciliation.get("settlement_source_fallback")),
+        _receipt_doc)
     placement = result.get("placement_latency") or {}
     value_ms = placement.get("L_place_ms")
     if value_ms is None:
@@ -965,6 +1076,7 @@ def run(day: str, book: Path, output_dir: Path, *,
         "placement_latency": placement,
         "placement_latency_reconciliation": reconciliation,
         "population_and_coverage": population,
+        "what_this_number_does_not_include": omissions,
         "scope": scope,
         "arm_provenance_caveat": arm_provenance_caveat(
             result, reconciliation),
@@ -1018,7 +1130,7 @@ def run(day: str, book: Path, output_dir: Path, *,
 #: cells rather than a count of them, so a cell could be deleted and the
 #: line would still say four (rule 10, and R-251's silently-shrinking
 #: suite). Every cell below increments; the total is checked at the end.
-EXPECTED_CHECKS = 33
+EXPECTED_CHECKS = 34
 
 
 def selftest(quiet: bool = False) -> int:
@@ -1072,6 +1184,9 @@ def selftest(quiet: bool = False) -> int:
                                         "coverage": {"coverage": 1.0}},
             "scope": {"coin": "btc", "BTC_ONLY": True},
             "arm_provenance_caveat": {"applies_to": "fixture"},
+            # DE 205: a required field a fixture may omit is not required.
+            "what_this_number_does_not_include": {"nothing_omitted": True,
+                                                  "omissions": []},
         }
         wrote = write_artifact(emitted, good)
         ok(wrote["sha256"] == _sha(emitted),
@@ -1470,6 +1585,68 @@ def selftest(quiet: bool = False) -> int:
         _result181(_partial186, _W181, _kept181)),
         "DROPPED_TRANCHES_ON_ONLY_SOME_GENERATIONS",
         "DE 186 KNOWN-BAD: a PARTIAL split is not a split")
+
+    # ---- DE 205 / BE 156: ONE BLOCK FOR EVERY OMISSION ---------------
+    # Driven on the REAL 09-03 receipt, which is the masked one (40 of
+    # 287), and on the REAL 09-04 receipt, which is not (0 of 288).
+    _r03 = Path(DR.resolve()["data_root"]) / (
+        "pm_5min/derived/be_daybook_receipt_20260903_btc__L250ms__EV22.json")
+    _r04 = Path(DR.resolve()["data_root"]) / (
+        "pm_5min/derived/be_daybook_receipt_20260904_btc__L250ms__EV21.json")
+    if not (_r03.is_file() and _r04.is_file()):
+        ok(False, "DE 205 a real receipt is missing")
+    else:
+        _d03, _d04 = (json.loads(_r03.read_text()),
+                      json.loads(_r04.read_text()))
+        _pop205 = {"coverage": {"coverage": 0.7418631, "n_uncovered": 80833,
+                                "n_reference_generations": 313140}}
+        _fb205 = {"any_fallback": True, "n_windows": 1,
+                  "windows": {"btc-updown-5m-1788469500": {}},
+                  "what_the_day_would_be_under_the_other_choice": {
+                      "zero_cancel_baseline": {"difference_cents": 2675.85}}}
+        _o03 = what_this_number_does_not_include(_pop205, _fb205, _d03)
+        _o04 = what_this_number_does_not_include(
+            {"coverage": {"coverage": 1.0}}, {"any_fallback": False}, _d04)
+        # KNOWN-BAD 1: a receipt with NO mask block at all must REFUSE --
+        # absence of the block is not evidence of no mask.
+        _nomask = json.loads(json.dumps(_d03))
+        _nomask["selection"].pop("mask")
+        _k1 = None
+        try:
+            what_this_number_does_not_include(_pop205, _fb205, _nomask)
+        except R.RunnerRefused as _e:
+            _k1 = MASK_UNDISCLOSED in str(_e)
+        # KNOWN-BAD 2: masked, but the mask's IDENTITY is missing -- a
+        # removal a reader cannot re-resolve is undisclosed in effect.
+        _noid = json.loads(json.dumps(_d03))
+        _noid["selection"]["mask"]["mask_identity_hash"] = ""
+        _k2 = None
+        try:
+            what_this_number_does_not_include(_pop205, _fb205, _noid)
+        except R.RunnerRefused as _e:
+            _k2 = MASK_UNDISCLOSED in str(_e)
+        _w = _o03["windows_masked"]
+        ok(_o03["nothing_omitted"] is False
+           and sorted(_o03["omissions"]) == ["generations_uncovered",
+                                             "settlement_source_fallback",
+                                             "windows_masked"]
+           and _w["n_present"] == 287 and _w["n_masked"] == 40
+           and _w["n_supplied"] == 247 and _w["arithmetic_closes"] is True
+           and _w["mask_identity_hash"].startswith("7d82f393")
+           and _o04["nothing_omitted"] is True and _o04["omissions"] == []
+           and _k1 is True and _k2 is True,
+           f"DE 205 ONE BLOCK FOR EVERY OMISSION, DRIVEN ON THE REAL "
+           f"RECEIPTS: 09-03 reports all THREE -- "
+           f"{sorted(_o03['omissions'])} -- with the mask carried forward "
+           f"as {_w['n_present']} present, {_w['n_masked']} masked, "
+           f"{_w['n_supplied']} supplied (arithmetic closes) and its "
+           f"identity hash, so a reader can no longer see a 247-window "
+           f"day without knowing 40 were removed. 09-04, which is masked "
+           f"ZERO, reports `nothing_omitted` -- so the block "
+           f"DISCRIMINATES rather than always firing. A receipt with NO "
+           f"mask block REFUSES, and so does one whose mask has no "
+           f"IDENTITY: a removal a reader cannot re-resolve is "
+           f"undisclosed in effect")
 
     # ---- DE 191 / DA 180: THE TWO QUOTATION GAPS -------------------
     # Both were found on a LANDED artifact, so both are driven against a
