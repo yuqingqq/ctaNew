@@ -1,0 +1,191 @@
+{
+ "protocol": "P003_DA_ASYMMETRY_NULL_V3",
+ "version": 3,
+ "STATUS": "AMENDMENT-DECLARED-WITH-ZERO-CELLS-COMPLETE",
+ "declared_by": "DA 193",
+ "declared_at_utc": "2026-09-10T10:35:57Z",
+ "amends": {
+  "file": "declarations/da_asymmetry_null_declaration_v2.json",
+  "and_through_it": "declarations/da_asymmetry_null_declaration_v1.json",
+  "v1_and_v2_are_UNEDITED": true,
+  "rule": "rule 13 -- corrections supersede IN BAND; a frozen artifact is never edited. v1 and v2 stand as provenance.",
+  "same_standing_as": "DE's sign-mode amendment at 3a50f92 -- made, like this one, before the thing it governs existed.",
+  "what_v3_adds": "the COMBINATION RULE across cells, the multiplicity ACTUALLY controlled, the unit and what is not independent, and 09-03's separability in the verdict. It changes nothing else.",
+  "what_v1_and_v2_still_govern": "everything not restated here"
+ },
+ "why_this_exists": "REV 163: the run produces EIGHT CELLS and there was NO DECLARED COMBINATION RULE. If that rule is not written before the numbers exist, whatever pattern appears will be read through a rule invented to fit it -- rule 11, the rule that voided this programme's last set of results.",
+ "AMENDMENT_PROVENANCE": {
+  "why_this_block_is_first": "an amendment that records the state of the data when it was written is worth something; one that does not is worth nothing (REV 163).",
+  "established_at_utc": "2026-09-10T10:35:57Z",
+  "cells_complete": 0,
+  "cell_result_files_on_disk": 0,
+  "how_the_zero_was_established": "a filename search for a cell-result artifact under data/pm_5min/derived returned NOTHING. The count is of FILES, not of content.",
+  "cells_in_progress": 1,
+  "the_one_checkpoint": {
+   "path": "data/pm_5min/derived/asym/de_asymmetry_ckpt_2026-09-03_CONDVALUE_X_SKEW.jsonl",
+   "bytes": 34040,
+   "lines": 146,
+   "sha256": "88715bf23ec18364c89242eb0b58580b3fb77c379015a71e61a19777520deda0",
+   "what_the_line_count_IS_NOT": "a draw count. Whether every line is a draw was NOT established, because establishing it would require reading the file. The coordinator counted 91 draws minutes earlier by the same discipline; the file grows.",
+   "the_cell": "2026-09-03 / CONDVALUE_X_SKEW"
+  },
+  "NO_DRAW_VALUE_WAS_READ": true,
+  "the_only_operations_performed_on_the_run_outputs": [
+   "ls",
+   "wc -l",
+   "find by filename",
+   "sha256sum"
+  ],
+  "why_that_matters": "if a draw value had been read, the combination rule would be a choice made on seen data and this amendment would be VOID. The digest above pins the state without opening it.",
+  "the_standing_this_gives": "the combination rule operates on COMPLETED CELLS. Not one exists. No p has been computed for any cell, so nothing about the pattern ACROSS cells -- which is the only thing this amendment governs -- could have been seen by anybody.",
+  "two_observations_minutes_apart": {
+   "why": "one observation shows a state; two show that the state HELD while this file was being written",
+   "obs_1": {
+    "utc": "2026-09-10T10:33:17Z",
+    "checkpoint_lines": 102,
+    "cell_result_files": 0,
+    "sha256": "49ab74bdc185c7bdecf849ff12bdab75b9efab8b6dd142efe4238707d0133a5e"
+   },
+   "obs_2": {
+    "utc": "2026-09-10T10:35:57Z",
+    "checkpoint_lines": 146,
+    "cell_result_files": 0,
+    "sha256": "88715bf23ec18364c89242eb0b58580b3fb77c379015a71e61a19777520deda0"
+   },
+   "what_it_shows": "the checkpoint GREW (102 -> 146 lines) while CELL RESULTS STAYED AT ZERO across both observations. The run is live and not one cell has completed."
+  }
+ },
+ "THE_UNIT_AND_WHAT_IS_NOT_INDEPENDENT": {
+  "cluster_unit": "the UTC day (rule 8)",
+  "G_days": 4,
+  "G_complete_days": 3,
+  "rule_8_bar": 5,
+  "n_cells": 8,
+  "EIGHT_CELLS_ARE_NOT_EIGHT_OBSERVATIONS": true,
+  "why": "the two arms within a day share THE SAME DAY, THE SAME BOOK, THE SAME REFERENCE PATH and THE SAME BASELINE -- DA 188 established the baseline is BITWISE IDENTICAL between the two arm blocks of every day. Two arms on one day are two policies read off one realisation of the world, not two draws from it.",
+  "effective_independent_units": 4,
+  "effective_independent_units_complete": 3,
+  "consequence_for_the_null": "the pooled null preserves the day structure BY CONSTRUCTION: each pooled null value takes ONE matched draw from EACH day and combines them with the same weights as the observed statistic. It never treats the 8 cells as 8 exchangeable units.",
+  "refusal_if_violated": "CELLS_COUNTED_AS_INDEPENDENT",
+  "on_absence": "a result quoting n = 8 as a sample size, or an interval computed on 8 units, REFUSES",
+  "no_interval_at_any_level": "rule 8 -- G is 4 (3 complete) against a bar of 5. POINT ESTIMATES AND PERMUTATION p-VALUES ONLY, at cell level and at arm level alike."
+ },
+ "THE_COMBINATION_RULE": {
+  "declared_before_any_cell_completed": true,
+  "one_sentence": "the VERDICT is decided by TWO arm-level pooled tests and by nothing else; per-cell outcomes are DESCRIPTIVE and are never counted into a verdict.",
+  "step_1_pool_within_an_arm": {
+   "statistic": "A_arm = the MASS-WEIGHTED mean of that arm's per-day A",
+   "weights": "w_d = |baseline positive tail mass on day d| + |baseline negative tail mass on day d|, from the same books the per-day A is computed on",
+   "why_mass_weighted": "a day carrying ten times the tail mass is ten times as much evidence about tail behaviour; an unweighted mean would let the thinnest day vote equally, and 09-03 is the thinnest.",
+   "weights_are_fixed_by_the_BASELINE": "so no drawn policy can move its own weight",
+   "sign_mode": "BASELINE_SIGN -- the PRIMARY fixed by v2. The OWN_SIGN pooled statistic is a DIAGNOSTIC reported beside it and may never be substituted."
+  },
+  "step_2_the_null_for_the_pooled_statistic": {
+   "construction": "for draw index i in 1..500, take day d's i-th MATCHED draw for every day in the pool, compute that draw's per-day A, and combine with the SAME weights w_d. That yields 500 pooled null values per arm.",
+   "why_this_and_not_combining_p_values": "combining per-day p-values would assume the days are exchangeable units of a common test; pooling the DRAWS keeps the day structure and keeps the estimand identical at both levels.",
+   "p_one_sided": "(1 + #{A_null >= A_arm}) / (1 + n_draws)",
+   "p_two_sided_is_REQUIRED": "on every arm-level and every cell-level number, per v1's direction clause -- the declared direction is post-hoc relative to the point estimates",
+   "n_draws": 500
+  },
+  "step_3_the_family": {
+   "verdict_bearing_tests": 2,
+   "which": [
+    "CONDVALUE_X_SKEW arm-level pooled",
+    "HAZARD_OVER_SKEWED_REF arm-level pooled"
+   ],
+   "correction": "HOLM over the 2 arm-level tests",
+   "alpha": 0.05
+  },
+  "step_4_THE_MIXED_CASES_EXPLICITLY": {
+   "why_enumerated": "REV 163: a rule that handles only the clean cases is a rule invented after the fact for the messy one.",
+   "both_arms_pass_same_sign": "CANCELLATION_ASYMMETRY_SUPPORTED_ON_THE_DEVELOPMENT_SET",
+   "exactly_one_arm_passes": "SUPPORTED_FOR_THAT_ARM_ONLY -- and this is NOT a programme-level pass. The arms are two candidates in a race; one candidate clearing its own control is one candidate, and the multiplicity is already charged.",
+   "neither_arm_passes": "DE_LEVERING_NOT_EXCLUDED -- the observed asymmetry is what a random cancellation policy of the same size, side mix and hour mix produces.",
+   "both_arms_pass_with_OPPOSITE_SIGNS": "NOT_ONE_MECHANISM (v1 SINK_4). This OVERRIDES any pass: two opposite significant effects are not one tail-clipping mechanism.",
+   "a_pooled_pass_carried_by_a_minority_of_days": {
+    "predicate": "the arm passes at arm level AND at least 2 of its 4 per-day A values are <= 0",
+    "status": "POOLED_PASS_DRIVEN_BY_A_MINORITY_OF_DAYS",
+    "rule": "this status TRAVELS ON THE VERDICT. It does not overturn the pass and it is never omitted -- it is the answer to 'six clear and two do not'."
+   },
+   "THE_ANSWER_TO_THE_QUESTION_AS_ASKED": "'HAZARD passes on 3 of 4 and CONDVALUE on 2' IS NOT A VERDICT INPUT AT ALL. Counting cells is exactly the invented-after-the-fact rule this amendment exists to prevent. The verdict comes from the two pooled tests; the 3-of-4 and 2-of-4 are reported as description, and if a pooled pass has >= 2 non-positive days it carries the minority status above."
+  },
+  "step_5_forbidden": [
+   "counting how many cells 'passed' and reading a verdict off the count",
+   "promoting a per-cell p to a verdict",
+   "reporting an arm-level verdict without its two-sided p",
+   "choosing between the 3-day and 4-day pools after seeing either",
+   "pooling the OWN_SIGN diagnostic and reporting it as the verdict statistic"
+  ]
+ },
+ "THE_MULTIPLICITY_ACTUALLY_CONTROLLED": {
+  "controlled_family_size": 2,
+  "what_is_controlled": "the TWO arm-level pooled tests, Holm at alpha 0.05",
+  "the_eight_per_cell_p_values_are": "DESCRIPTIVE ONLY. They are reported, they are NOT corrected, and they carry no verdict.",
+  "why_this_supersedes_v1": "v1 declared 'HOLM over the 8 cells' for CELL CLAIMS, which implied cell claims were verdict-bearing. THIS AMENDMENT REMOVES CELL CLAIMS ENTIRELY, so the correction that governed them has nothing left to govern. What is controlled now MATCHES what will be reported as a verdict, which is what v1 did not guarantee.",
+  "refusal": "CELL_LEVEL_VERDICT_REPORTED",
+  "on_absence": "a result attaching a pass/fail to any individual cell REFUSES",
+  "multiplicity_recorded_at": "declaration time, with ZERO cells complete",
+  "the_family_may_not_be_re_opened": "adding an arm, a day, a pool or a variant after any cell completes re-opens the family and voids the correction"
+ },
+ "IS_09_03_SEPARABLE_IN_THE_VERDICT": {
+  "answer": "YES -- 09-03 IS EXCLUDED FROM THE PRIMARY VERDICT AND REPORTED BESIDE IT.",
+  "primary_pool": [
+   "2026-09-04",
+   "2026-09-05",
+   "2026-09-06"
+  ],
+  "required_companion_pool": [
+   "2026-09-03",
+   "2026-09-04",
+   "2026-09-05",
+   "2026-09-06"
+  ],
+  "both_are_always_emitted": true,
+  "why_excluded_from_the_primary": [
+   "THIS NULL MATCHES ON HOUR, and 09-03's open question is whether its 40-window hole is CONCENTRATED IN THE ADVERSE HOURS (REV 159, BE 156). An hour-matched control on a day whose hour composition is itself in question is the one mark that bites THIS test specifically.",
+   "coverage 0.7418630644440187 -- 80,833 of 313,140 reference generations uncovered, against ~0.92 on the other three",
+   "246 windows valued against 247 ADMITTED -- a one-window discrepancy unexplained at declaration time",
+   "the unadjudicable settlement window btc-updown-5m-1788469500, where the measured drift bound 2.859 USD EXCEEDS the margin 1.154 USD",
+   "BE established 09-03 is comparable ON COVERAGE GROUNDS. That is a statement about coverage. It is NOT a statement that the day is comparable for a null verdict, and the two were in danger of being read as one."
+  ],
+  "THE_EXCLUSION_WORKS_AGAINST_THE_DECLARED_DIRECTION_AND_THAT_IS_WHY_IT_IS_SAFE": {
+   "fact": "09-03's recorded A values (v1, observed_at_declaration_time) are +0.1233 (CONDVALUE) and +0.1077 (HAZARD) -- among the LARGEST POSITIVE cells in the table.",
+   "consequence": "removing 09-03 REMOVES TWO OF THE STRONGEST CELLS IN THE DIRECTION THIS TEST IS DECLARED TO LOOK FOR. The exclusion is therefore CONSERVATIVE and cannot be a flattering choice.",
+   "stated_because": "the exclusion IS a choice made with the per-day point estimates already seen (they are in v1). Its direction is what makes it admissible, and that has to be said rather than assumed."
+  },
+  "if_the_two_pools_disagree_in_verdict": {
+   "status": "09_03_CHANGES_THE_VERDICT",
+   "rule": "NEITHER pool is promoted. The disagreement is itself the finding and is reported as one.",
+   "forbidden": "quoting whichever pool gives the better verdict"
+  },
+  "09_03_marks_travel_with_every_09_03_figure": true
+ },
+ "what_a_pass_does_NOT_establish": {
+  "inherited_from_v1_unchanged": true,
+  "REQUIRED_VALUE": "THIS NULL CANNOT VALIDATE. It runs entirely on CONSUMED days whose point estimates, tails and mechanism have all been read, and its DIRECTION was chosen after those point estimates were seen. A clean result is DEVELOPMENT evidence that de-levering is excluded on the days already seen. It is NOT validation, NOT a forward result, and NOT a basis for a freeze claim beyond 'the mechanism survived its own control on the development set'.",
+  "and_now_also": "the verdict rests on FOUR independent day-units (THREE in the primary pool), not on eight cells."
+ },
+ "inherits_from_v1_unchanged": [
+  "the estimand A = ret_pos - ret_neg and both partitions",
+  "the direction clause and its honesty clause",
+  "n_draws 500 per arm-day, rule-6 floor 200",
+  "the matching (cancel count / side / hour, simultaneous and exact) as amended by the USER ruling on the reference-generation distinct count",
+  "the five sinkers",
+  "the falsifiers",
+  "the per-draw reduction budget"
+ ],
+ "INHERITED_FROM_v2_AND_LOAD_BEARING_HERE": {
+  "PRIMARY_SIGN_MODE": "BASELINE_SIGN",
+  "DIAGNOSTIC_SIGN_MODE": "OWN_SIGN",
+  "source": "v2 item_12_sign_mode, DE 208, chosen 2026-09-10T09:57Z with 0 draws completed",
+  "why_it_is_load_bearing_here": "the pooled arm-level statistic THIS amendment defines is computed on the PRIMARY sign mode. Naming it here removes the last place a reader could pool the diagnostic instead.",
+  "the_pooled_diagnostic": "the OWN_SIGN pooled statistic is emitted BESIDE the primary, never in place of it, and never chosen between after the fact",
+  "matching_unit": "the REFERENCE GENERATION, DISTINCT COUNT (USER ruling, R-892), with v2's disclosed limitation that distinct-generation matching UNDER-matches raw exposure where a generation was cancelled repeatedly (max 23 on one)"
+ },
+ "v2s_deferred_v3_item_is_CLOSED": {
+  "what_v2_deferred": "REV 162: six of v1's item predicates test SPELLING, not CONTENT",
+  "closed_at": "11a1630 (DA 192), filed Q-DA-397",
+  "and_the_count_was_wrong_in_the_safe_direction": "enumerated by the operation rather than by inspection it was ELEVEN OF ELEVEN, not six. 66 properties now driven; 19 weakened-v2 clauses are permanent falsifiers, each of which must make its item FAIL.",
+  "not_a_blocker_for_the_draws": true
+ }
+}

@@ -21,6 +21,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 DECL = HERE / "declarations" / "da_asymmetry_null_declaration_v1.json"
+DECL_V3 = HERE / "declarations" / "da_asymmetry_null_declaration_v3.json"
 PARAMS = HERE / "declarations" / "de_multiday_gate1_params_v29.json"
 
 HOLDS = "HOLDS"
@@ -656,6 +657,306 @@ def require_result_fields(result: dict) -> dict:
     return {"status": "RESULT_FIELDS_PRESENT", "checked": len(MATCH_KEYS) + 5}
 
 
+# ==================================================================
+# DA 193 -- DECLARATION v3: THE COMBINATION RULE AND ITS PREDICATES
+# ==================================================================
+# REV 163: the run produces EIGHT CELLS and there was no declared rule
+# turning eight outcomes into ONE verdict. Written with ZERO CELLS
+# COMPLETE. Every predicate below tests a PROPERTY (DA 192's lesson) and
+# every one has a WEAKENED-v3 falsifier in WEAKENED_V3.
+
+ARM_OUTCOME_SPACE = ("both_arms_pass_same_sign", "exactly_one_arm_passes",
+                     "neither_arm_passes", "both_arms_pass_with_OPPOSITE_SIGNS")
+
+
+def load_v3(path=None) -> dict:
+    return json.loads(Path(path or DECL_V3).read_text())
+
+
+def item_12_combination_rule(d3: dict, d1: dict | None = None) -> dict:
+    c = d3.get("THE_COMBINATION_RULE") or {}
+    mixed = c.get("step_4_THE_MIXED_CASES_EXPLICITLY") or {}
+    s1 = c.get("step_1_pool_within_an_arm") or {}
+    s2 = c.get("step_2_the_null_for_the_pooled_statistic") or {}
+    s3 = c.get("step_3_the_family") or {}
+    inh = d3.get("INHERITED_FROM_v2_AND_LOAD_BEARING_HERE") or {}
+    minority = mixed.get("a_pooled_pass_carried_by_a_minority_of_days") or {}
+    props = {
+        "the_two_arm_outcome_space_is_COVERED": all(
+            k in mixed and str(mixed[k]).strip() for k in ARM_OUTCOME_SPACE),
+        "the_opposite_sign_case_OVERRIDES_a_pass": "OVERRIDE" in str(
+            mixed.get("both_arms_pass_with_OPPOSITE_SIGNS", "")).upper(),
+        "the_one_arm_case_is_NOT_a_programme_pass": "NOT a programme-level pass"
+            in str(mixed.get("exactly_one_arm_passes", "")),
+        "the_minority_days_predicate_is_DECIDABLE":
+            decidable(minority.get("predicate"))["decidable"],
+        "the_minority_days_status_TRAVELS_unconditionally":
+            unconditional(minority.get("rule"))["unconditional"],
+        "cell_counting_is_explicitly_NOT_a_verdict_input": bool(
+            mixed.get("THE_ANSWER_TO_THE_QUESTION_AS_ASKED")),
+        "the_weights_are_fixed_by_the_BASELINE": "BASELINE" in str(
+            s1.get("weights_are_fixed_by_the_BASELINE", "")).upper() or bool(
+            s1.get("weights_are_fixed_by_the_BASELINE")),
+        "the_pooled_sign_mode_EQUALS_v2s_PRIMARY": (
+            str(s1.get("sign_mode", "")).split()[0]
+            == inh.get("PRIMARY_SIGN_MODE")),
+        # DA 193: this was a substring test on the construction sentence --
+        # the exact class DA 192 removed, written into its own fix. It is
+        # now COMPUTED: pooling one draw per day gives ONE pooled null value
+        # per DRAW INDEX, so the pooled null's size equals the PER-CELL draw
+        # count. Treating the cells as exchangeable would give n_cells x that.
+        "COMPUTED_the_pooled_null_is_sized_per_DRAW_INDEX_not_per_CELL": (
+            isinstance(s2.get("n_draws"), int)
+            and s2["n_draws"] == ((d1 or load()).get("minimum_sample") or {}
+                                  ).get("n_draws")
+            and s2["n_draws"] != (
+                s2["n_draws"] * len((d3.get(
+                    "IS_09_03_SEPARABLE_IN_THE_VERDICT") or {}
+                ).get("required_companion_pool") or [1]))),
+        "the_verdict_bearing_count_EQUALS_the_listed_tests": (
+            s3.get("verdict_bearing_tests") == len(s3.get("which") or [])),
+        "every_forbidden_entry_is_unconditional": bool(
+            c.get("step_5_forbidden")) and all(
+            unconditional(x)["unconditional"] for x in c.get("step_5_forbidden")),
+        "declared_before_any_cell_completed":
+            c.get("declared_before_any_cell_completed") is True,
+    }
+    return _verdict(props, [], item="combination_rule",
+                    outcome_space_covered=[k for k in ARM_OUTCOME_SPACE
+                                           if k in mixed])
+
+
+def item_13_multiplicity_controlled(d3: dict) -> dict:
+    m = d3.get("THE_MULTIPLICITY_ACTUALLY_CONTROLLED") or {}
+    c = (d3.get("THE_COMBINATION_RULE") or {}).get("step_3_the_family") or {}
+    try:
+        holm({"CONDVALUE_X_SKEW": 0.01, "HAZARD_OVER_SKEWED_REF": 0.04},
+             m.get("controlled_family_size") or 0)
+        drove = True
+    except Exception:
+        drove = False
+    props = {
+        "the_controlled_family_EQUALS_the_verdict_bearing_tests": (
+            m.get("controlled_family_size") == c.get("verdict_bearing_tests")),
+        "the_controlled_family_EQUALS_the_number_of_arms": (
+            m.get("controlled_family_size") == len(c.get("which") or [])),
+        "per_cell_p_values_are_declared_DESCRIPTIVE": "DESCRIPTIVE" in str(
+            m.get("the_eight_per_cell_p_values_are", "")).upper(),
+        "a_cell_level_verdict_is_REFUSED_BY_NAME":
+            m.get("refusal") == "CELL_LEVEL_VERDICT_REPORTED",
+        "the_family_closure_is_unconditional": unconditional(
+            m.get("the_family_may_not_be_re_opened"))["unconditional"],
+        "EXECUTED_holm_runs_over_the_declared_family": drove,
+        "recorded_with_zero_cells_complete": "ZERO cells complete" in str(
+            m.get("multiplicity_recorded_at", "")),
+    }
+    return _verdict(props, [], item="multiplicity_controlled",
+                    controlled_family_size=m.get("controlled_family_size"))
+
+
+def item_14_unit_independence(d3: dict, verify_baseline=True) -> dict:
+    u = d3.get("THE_UNIT_AND_WHAT_IS_NOT_INDEPENDENT") or {}
+    unchecked = []
+    props = {
+        "eight_cells_are_declared_NOT_eight_observations":
+            u.get("EIGHT_CELLS_ARE_NOT_EIGHT_OBSERVATIONS") is True,
+        "COMPUTED_effective_units_are_FEWER_than_the_cells": (
+            isinstance(u.get("effective_independent_units"), int)
+            and isinstance(u.get("n_cells"), int)
+            and u["effective_independent_units"] < u["n_cells"]),
+        "COMPUTED_effective_units_EQUAL_the_day_count": (
+            u.get("effective_independent_units") == u.get("G_days")),
+        "COMPUTED_G_is_below_rule_8s_bar": (
+            isinstance(u.get("G_days"), int)
+            and u["G_days"] < u.get("rule_8_bar", 5)),
+        "counting_cells_as_independent_is_REFUSED_BY_NAME":
+            u.get("refusal_if_violated") == "CELLS_COUNTED_AS_INDEPENDENT",
+        "no_interval_clause_is_unconditional":
+            unconditional(u.get("no_interval_at_any_level"))["unconditional"],
+    }
+    if verify_baseline:
+        v = _verify_baseline_shared()
+        if v is None:
+            unchecked.append("the shared-baseline claim could not be verified "
+                             "-- no ledger reachable on this host")
+        else:
+            props["VERIFIED_the_two_arms_share_a_BITWISE_IDENTICAL_baseline"] = v
+    return _verdict(props, unchecked, item="unit_independence",
+                    n_cells=u.get("n_cells"),
+                    effective_independent_units=u.get(
+                        "effective_independent_units"))
+
+
+def _verify_baseline_shared():
+    """EXECUTED: is the two arms' baseline really the same object?
+
+    v3 rests on it -- if the arms did not share a baseline they would be
+    closer to independent and the unit claim would be too strong. Verified
+    at the ledger, not taken from DA 188's memory (rule 16)."""
+    import gzip
+    import collections
+    der = Path("/home/yuqing/ctaNew/data/pm_5min/derived")
+    led = sorted(der.glob("p003_de_decision_ledger_20260904__*.jsonl.gz"))
+    if not led:
+        return None
+    per = collections.defaultdict(dict)
+    with gzip.open(led[-1], "rt") as fh:
+        for ln in fh:
+            r = json.loads(ln)
+            if r.get("row") == "SETTLEMENT_SLUG" and r.get("book") == "BASELINE":
+                per[r["arm"]][r["slug"]] = r["total_cents"]
+    arms = sorted(per)
+    return len(arms) == 2 and per[arms[0]] == per[arms[1]]
+
+
+def item_15_09_03_separable(d3: dict, d1: dict | None = None) -> dict:
+    s = d3.get("IS_09_03_SEPARABLE_IN_THE_VERDICT") or {}
+    cons = s.get("THE_EXCLUSION_WORKS_AGAINST_THE_DECLARED_DIRECTION_AND_THAT_IS_WHY_IT_IS_SAFE") or {}
+    dis = s.get("if_the_two_pools_disagree_in_verdict") or {}
+    prim = s.get("primary_pool") or []
+    comp = s.get("required_companion_pool") or []
+    unchecked = []
+    props = {
+        "09_03_is_ABSENT_from_the_primary_pool": "2026-09-03" not in prim,
+        "the_companion_pool_CONTAINS_09_03": "2026-09-03" in comp,
+        "the_companion_is_a_SUPERSET_of_the_primary": set(prim) < set(comp),
+        "both_pools_are_always_emitted": s.get("both_are_always_emitted") is True,
+        "a_disagreement_promotes_NEITHER_pool":
+            "NEITHER" in str(dis.get("rule", "")).upper(),
+        "the_disagreement_has_a_NAME":
+            dis.get("status") == "09_03_CHANGES_THE_VERDICT",
+        "cherry_picking_the_better_pool_is_forbidden_unconditionally":
+            unconditional(dis.get("forbidden"))["unconditional"],
+        "at_least_four_reasons_are_given": len(s.get("why_excluded_from_the_primary") or []) >= 4,
+    }
+    # THE CONSERVATIVE CLAIM, COMPUTED from v1's recorded cells rather than asserted.
+    d1 = d1 if d1 is not None else load()
+    cells = (d1.get("observed_at_declaration_time") or {}).get("cells") or {}
+    vals = {k: (v.get("B_baseline_sign") or {}).get("A") for k, v in cells.items()}
+    vals = {k: v for k, v in vals.items() if isinstance(v, (int, float))}
+    if len(vals) >= 8:
+        n03 = [v for k, v in vals.items() if k.startswith("2026-09-03")]
+        rest = [v for k, v in vals.items() if not k.startswith("2026-09-03")]
+        med_rest = sorted(rest)[len(rest) // 2]
+        props["COMPUTED_excluding_09_03_removes_cells_ABOVE_the_median_of_the_rest"] = (
+            len(n03) == 2 and all(x > med_rest for x in n03))
+    else:
+        unchecked.append("the conservative-direction claim could not be "
+                         "computed -- v1's observed cells are absent")
+    return _verdict(props, unchecked, item="09_03_separable",
+                    primary_pool=prim,
+                    conservative_claim_computed_from="v1 observed_at_declaration_time")
+
+
+def item_16_amendment_provenance(d3: dict) -> dict:
+    a = d3.get("AMENDMENT_PROVENANCE") or {}
+    two = a.get("two_observations_minutes_apart") or {}
+    o1, o2 = two.get("obs_1") or {}, two.get("obs_2") or {}
+    # EXECUTED NOW: is it still true that no cell result exists?
+    der = Path("/home/yuqing/ctaNew/data/pm_5min/derived")
+    now_results = [x.name for x in der.glob("*asym*")
+                   if x.is_file() and "ckpt" not in x.name]
+    props = {
+        "zero_cells_complete_is_RECORDED": a.get("cells_complete") == 0,
+        "no_draw_value_was_read": a.get("NO_DRAW_VALUE_WAS_READ") is True,
+        "the_operations_performed_are_ENUMERATED_and_value_free": (
+            bool(a.get("the_only_operations_performed_on_the_run_outputs"))
+            and all(op in ("ls", "wc -l", "find by filename", "sha256sum")
+                    for op in a["the_only_operations_performed_on_the_run_outputs"])),
+        "TWO_observations_are_recorded": bool(o1) and bool(o2),
+        "COMPUTED_the_second_observation_is_LATER": (
+            str(o2.get("utc", "")) > str(o1.get("utc", ""))),
+        "COMPUTED_the_checkpoint_GREW_between_them": (
+            isinstance(o1.get("checkpoint_lines"), int)
+            and isinstance(o2.get("checkpoint_lines"), int)
+            and o2["checkpoint_lines"] > o1["checkpoint_lines"]),
+        "COMPUTED_cell_results_stayed_at_zero_across_both": (
+            o1.get("cell_result_files") == 0 and o2.get("cell_result_files") == 0),
+        "the_line_count_is_NOT_claimed_to_be_a_draw_count": bool(
+            (a.get("the_one_checkpoint") or {}).get("what_the_line_count_IS_NOT")),
+        "EXECUTED_no_cell_result_exists_right_now": len(now_results) == 0,
+    }
+    return _verdict(props, [], item="amendment_provenance",
+                    cells_complete=a.get("cells_complete"),
+                    cell_results_on_disk_now=len(now_results))
+
+
+ITEMS_V3 = (item_12_combination_rule, item_13_multiplicity_controlled,
+            item_14_unit_independence, item_15_09_03_separable,
+            item_16_amendment_provenance)
+
+
+def evaluate_v3(d3: dict | None = None) -> dict:
+    d3 = d3 if d3 is not None else load_v3()
+    out = [f(d3) for f in ITEMS_V3]
+    unchecked = [c for r in out for c in (r.get("unchecked_clauses") or [])]
+    return {"protocol": d3.get("protocol"), "status": d3.get("STATUS"),
+            "items": out, "n_items": len(out),
+            "n_property_checks_driven": sum(
+                r.get("n_properties_driven", 0) for r in out),
+            "n_items_FAILING": sum(1 for r in out if r["verdict"] == FAILS),
+            "unchecked_clauses": unchecked,
+            "no_item_fails": all(r["verdict"] != FAILS for r in out)}
+
+
+#: WEAKENED v3 clauses. Each MUST make its item FAIL (DA 192's battery shape).
+WEAKENED_V3 = [
+ ("item_12_combination_rule", "a mixed case is dropped from the outcome space",
+  ["THE_COMBINATION_RULE", "step_4_THE_MIXED_CASES_EXPLICITLY",
+   "both_arms_pass_with_OPPOSITE_SIGNS"], ""),
+ ("item_12_combination_rule", "opposite signs stop overriding a pass",
+  ["THE_COMBINATION_RULE", "step_4_THE_MIXED_CASES_EXPLICITLY",
+   "both_arms_pass_with_OPPOSITE_SIGNS"],
+  "NOT_ONE_MECHANISM is reported alongside the pass"),
+ ("item_12_combination_rule", "one arm passing becomes a programme pass",
+  ["THE_COMBINATION_RULE", "step_4_THE_MIXED_CASES_EXPLICITLY",
+   "exactly_one_arm_passes"],
+  "SUPPORTED -- one arm clearing its control supports the line"),
+ ("item_12_combination_rule", "the minority-days status stops travelling",
+  ["THE_COMBINATION_RULE", "step_4_THE_MIXED_CASES_EXPLICITLY",
+   "a_pooled_pass_carried_by_a_minority_of_days", "rule"],
+  "this status travels on the verdict unless the pooled margin is comfortable"),
+ ("item_12_combination_rule", "the pooled statistic switches to the diagnostic",
+  ["THE_COMBINATION_RULE", "step_1_pool_within_an_arm", "sign_mode"],
+  "OWN_SIGN -- either mode may be pooled"),
+ ("item_12_combination_rule", "the pooled null is sized by CELL, not by draw index",
+  ["THE_COMBINATION_RULE", "step_2_the_null_for_the_pooled_statistic", "n_draws"], 2000),
+ ("item_13_multiplicity_controlled", "the controlled family stops matching the tests",
+  ["THE_MULTIPLICITY_ACTUALLY_CONTROLLED", "controlled_family_size"], 8),
+ ("item_13_multiplicity_controlled", "cell p-values become verdict-bearing",
+  ["THE_MULTIPLICITY_ACTUALLY_CONTROLLED", "the_eight_per_cell_p_values_are"],
+  "reported per cell with a pass or fail beside each"),
+ ("item_13_multiplicity_controlled", "the family may be re-opened",
+  ["THE_MULTIPLICITY_ACTUALLY_CONTROLLED", "the_family_may_not_be_re_opened"],
+  "the family is fixed, unless a further day is ruled in"),
+ ("item_14_unit_independence", "eight cells become eight observations",
+  ["THE_UNIT_AND_WHAT_IS_NOT_INDEPENDENT", "effective_independent_units"], 8),
+ ("item_14_unit_independence", "the no-interval clause gains an escape",
+  ["THE_UNIT_AND_WHAT_IS_NOT_INDEPENDENT", "no_interval_at_any_level"],
+  "point estimates and p-values only, except where the operator needs a band"),
+ ("item_15_09_03_separable", "09-03 is pooled into the primary",
+  ["IS_09_03_SEPARABLE_IN_THE_VERDICT", "primary_pool"],
+  ["2026-09-03", "2026-09-04", "2026-09-05", "2026-09-06"]),
+ ("item_15_09_03_separable", "a disagreement promotes a pool",
+  ["IS_09_03_SEPARABLE_IN_THE_VERDICT", "if_the_two_pools_disagree_in_verdict",
+   "rule"], "the 4-day pool is promoted, being the larger sample"),
+ ("item_15_09_03_separable", "cherry-picking the better pool gains an escape",
+  ["IS_09_03_SEPARABLE_IN_THE_VERDICT", "if_the_two_pools_disagree_in_verdict",
+   "forbidden"],
+  "quoting whichever pool gives the better verdict, unless the other is thin"),
+ ("item_16_amendment_provenance", "the amendment claims a completed cell",
+  ["AMENDMENT_PROVENANCE", "cells_complete"], 1),
+ ("item_16_amendment_provenance", "a draw value was read",
+  ["AMENDMENT_PROVENANCE", "NO_DRAW_VALUE_WAS_READ"], False),
+ ("item_16_amendment_provenance", "a value-reading operation is admitted",
+  ["AMENDMENT_PROVENANCE", "the_only_operations_performed_on_the_run_outputs"],
+  ["ls", "wc -l", "head -1"]),
+ ("item_16_amendment_provenance", "the two observations run backwards",
+  ["AMENDMENT_PROVENANCE", "two_observations_minutes_apart", "obs_2", "utc"],
+  "2026-09-10T09:00:00Z"),
+]
+
+
 # ------------------------------------------------------------- selftest
 #
 # DA 192: the falsifiers below are WEAKENED v2 CLAUSES -- semantically
@@ -869,6 +1170,20 @@ def selftest(quiet: bool = False) -> int:
            f"WEAKENED v2 -- {item}: {what} -> {v} (must be {FAILS}). A "
            f"softened clause that keeps the vocabulary MUST NOT pass.")
 
+    # ---- 4b. DECLARATION v3 (DA 193): the combination rule.
+    D3 = load_v3()
+    FN3 = {f.__name__: f for f in ITEMS_V3}
+    r3 = evaluate_v3(D3)
+    ok(r3["n_items_FAILING"] == 0,
+       f"v3 fails no property ({r3['n_property_checks_driven']} driven across "
+       f"{r3['n_items']} items); unchecked: {r3['unchecked_clauses']}")
+    ok(item_16_amendment_provenance(D3)["cells_complete"] == 0,
+       "v3 records ZERO CELLS COMPLETE -- the amendment's whole standing")
+    for item, what, path, val in WEAKENED_V3:
+        v = FN3[item](_break(D3, path, val))["verdict"]
+        ok(v == FAILS,
+           f"WEAKENED v3 -- {item}: {what} -> {v} (must be {FAILS})")
+
     # ---- 5. and the real declaration still stands on its own properties.
     res = evaluate(D)
     ok(res["n_items_FAILING"] == 0,
@@ -883,7 +1198,7 @@ def selftest(quiet: bool = False) -> int:
         print(f"[da_asymmetry_null] {_N['n'] - _N['bad']}/{_N['n']} checks, "
               f"{_N['bad']} failures | "
               f"{res['n_property_checks_driven']} properties driven, "
-              f"{len(WEAKENED_V2)} weakened-v2 clauses each REFUSED, "
+              f"{len(WEAKENED_V2)}+{len(WEAKENED_V3)} weakened clauses each REFUSED, "
               f"{len(res['unchecked_clauses'])} clause(s) NAMED AS UNCHECKED")
     return 1 if _N["bad"] else 0
 
