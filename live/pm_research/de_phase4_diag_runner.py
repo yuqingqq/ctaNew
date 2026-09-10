@@ -85,7 +85,7 @@ from pathlib import Path
 #: against 209 sites (REV 98 §A2 -- the earlier wording claimed it was
 #: "not a typed one", which would let a reader conclude nothing needs
 #: editing when a check is added: the opposite of the design).
-EXPECTED_CHECKS = 234
+EXPECTED_CHECKS = 238
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -4718,7 +4718,37 @@ def selftest() -> int:
     _rows = [{"slug": "s1", "side": HSP.SIDES[0], "gen": 0, "t_start": 100.0},
              {"slug": "s1", "side": HSP.SIDES[0], "gen": 0, "t_start": 103.0},
              {"slug": "s1", "side": HSP.SIDES[0], "gen": 1, "t_start": 400.0}]
-    _gs, _gst, _gsp = generation_scores(_blk(_rows), _fixref, coin="btc",
+    _blocks = _blk(_rows)
+    _composed = HS.compose_head_inputs_batch(
+        _blocks["PM"], _blocks["FN"], _blocks["ST"], norms=_norms,
+        incumbent_width=_incm["_n_features"], lgbm_width=106)
+    _shared_equal = []
+    for _head in HEADS_RUN:
+        _plain = generation_scores(_blocks, _fixref, coin="btc", head=_head)
+        _shared = generation_scores(_blocks, _fixref, coin="btc", head=_head,
+                                    composed=_composed)
+        _shared_equal.append(_plain == _shared)
+    ok(all(_shared_equal),
+       "chunk-shared composition returns EXACTLY the standalone score, "
+       "status and split maps for both heads")
+    refuses(lambda: generation_scores(
+                _blk(_rows), _fixref, coin="btc",
+                head="incumbent_linear_d", composed=_composed),
+            "KNOWN-BAD: a prepared matrix from different feature-block "
+            "objects REFUSES even when every value and length agrees",
+            needle="different feature blocks")
+    _short_composed = HS.compose_head_inputs_batch(
+        _blocks["PM"], _blocks["FN"], _blocks["ST"], norms=_norms,
+        incumbent_width=_incm["_n_features"], lgbm_width=106)
+    _short_composed.vectors["incumbent_linear_d"] = \
+        _short_composed.vectors["incumbent_linear_d"][:-1]
+    refuses(lambda: generation_scores(
+                _blocks, _fixref, coin="btc", head="incumbent_linear_d",
+                composed=_short_composed),
+            "KNOWN-BAD: a precomposed block shorter than the kept identity "
+            "block REFUSES before scores can pair with different rows",
+            needle="precomposed")
+    _gs, _gst, _gsp = generation_scores(_blocks, _fixref, coin="btc",
                                         head="incumbent_linear_d")
     _each = [HS.score_incumbent_condvalue(_incm, HS.compose_head_inputs(
         _blk(_rows)["PM"][i], _blk(_rows)["FN"][i], _blk(_rows)["ST"][i],
@@ -6627,6 +6657,14 @@ def selftest() -> int:
                    "status": "OK", "n": w * 100 + g}
                   for w in range(7) for g in range(1 + w % 3)]
         _write_rows(_frag, _synth)
+        _chunk_gen = _fragment_chunks(_d5, chunk_windows=2, source=_frag)
+        _first_chunk, _ = next(_chunk_gen)
+        _chunk_locals = _chunk_gen.gi_frame.f_locals
+        ok(_chunk_locals.get("buf") == [] and "ready_rows" not in _chunk_locals,
+           "a yielded chunk no longer retains its decoded row buffer while "
+           "the fit reader materialises the same rows from disk")
+        _chunk_gen.close()
+        _first_chunk.unlink()
         for _cw in (1, 2, 3, 7, 99):
             _got, _seen = [], []
             for _cp, _sl in _fragment_chunks(_d5, chunk_windows=_cw,
@@ -9153,6 +9191,7 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
     n_cache_clears = 0
     cache_clear_s = 0.0
     feature_pass_s = 0.0
+    compose_s = 0.0
     score_s_by_head = {head: 0.0 for head in heads}
     try:
         for part in passes:
@@ -9198,13 +9237,23 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
                     chunk_reference = {
                         slug: refs[coin][slug] for slug in slugs
                         if slug in refs[coin]}
+                    _norms = HS.load_lgbm_normalisers(coin)
+                    _inc = HS.load_incumbent(coin)
+                    _, _, _wl = HS.load_lgbm_condvalue(coin)
+                    _compose_t0 = time.time()
+                    composed = HS.compose_head_inputs_batch(
+                        b["PM"], b["FN"], b["ST"], norms=_norms,
+                        incumbent_width=_inc["_n_features"],
+                        lgbm_width=_wl)
+                    compose_s += time.time() - _compose_t0
                     for head in heads:
                         # DE 155 (4): this chunk does NOT get to count the
                         # day's uncovered generations -- see below.
                         _score_t0 = time.time()
                         sc, st, sb = generation_scores(
                             b, chunk_reference, coin=coin, head=head,
-                            split_of=tp["split_of"], count_missing=False)
+                            split_of=tp["split_of"], count_missing=False,
+                            composed=composed)
                         score_s_by_head[head] += time.time() - _score_t0
                         # (the union is accumulated once per chunk below)
                         # ---- DE 155 (6): A MERGE THAT COMBINES ---------
@@ -9240,6 +9289,7 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
                                 else "MIXED")
                         _seen_gens[(coin, head)].update(
                             (k[0], k[1], v["gen"]) for k, v in sc.items())
+                    del composed
                 del blocks
                 chunk_path.unlink(missing_ok=True)
                 if log:
@@ -9290,6 +9340,7 @@ def assemble_streaming(refs: dict, *, splits, coins=COINS,
                         "n_bn_cache_clears": n_cache_clears,
                         "bn_cache_clear_s": round(cache_clear_s, 3),
                         "feature_pass_s": round(feature_pass_s, 3),
+                        "compose_s": round(compose_s, 3),
                         "score_s_by_head": {
                             head: round(seconds, 3)
                             for head, seconds in score_s_by_head.items()},
@@ -9334,21 +9385,27 @@ def _fragment_chunks(dst_dir: Path, *, chunk_windows: int,
             if len(slugs) >= chunk_windows:
                 i += 1
                 dst = Path(dst_dir) / f"chunk_{i:04d}.json"
-                _write_rows(dst, buf)
-                yield dst, list(slugs)
+                ready_rows, ready_slugs = buf, list(slugs)
                 buf, slugs = [], []
+                _write_rows(dst, ready_rows)
+                del ready_rows
+                yield dst, ready_slugs
             slugs.append(sl)
         buf.append(r)
     if buf:
         i += 1
         dst = Path(dst_dir) / f"chunk_{i:04d}.json"
-        _write_rows(dst, buf)
-        yield dst, list(slugs)
+        ready_rows, ready_slugs = buf, list(slugs)
+        buf, slugs = [], []
+        _write_rows(dst, ready_rows)
+        del ready_rows
+        yield dst, ready_slugs
 
 
 def generation_scores(blocks: dict, reference: dict, *, coin: str,
                       head: str, split_of: dict | None = None,
-                      count_missing: bool = True) -> tuple:
+                      count_missing: bool = True,
+                      composed: HS.ComposedHeadInputBatch | None = None) -> tuple:
     """(slug, side, t0) -> one score per GENERATION, the exclusions, and
     THE SPLIT EACH GENERATION'S ROWS CAME FROM.
 
@@ -9388,19 +9445,33 @@ def generation_scores(blocks: dict, reference: dict, *, coin: str,
             f"{len(fn)}, ST {len(st)}, kept {len(kept)}): they are parallel "
             f"lists and zipping them at unequal length pairs one row's "
             f"features with another row's identity")
+    if composed is None:
+        composed = HS.compose_head_inputs_batch(
+            pm, fn, st, norms=norms, incumbent_width=inc["_n_features"],
+            lgbm_width=wl)
+    if (not isinstance(composed, HS.ComposedHeadInputBatch)
+            or not composed.is_bound_to(
+                pm, fn, st, norms=norms,
+                incumbent_width=inc["_n_features"], lgbm_width=wl)):
+        # SITE: gen#composed_source
+        raise DiagRefused(
+            "the precomposed vectors were produced from different feature "
+            "blocks or fitted transforms; equal lengths cannot establish "
+            "that a cached vector belongs to this row")
+    vectors_by_head = composed.vectors
+    if head not in vectors_by_head or len(vectors_by_head[head]) != len(kept):
+        # SITE: gen#composed
+        raise DiagRefused(
+            f"the precomposed {head!r} block has "
+            f"{len(vectors_by_head.get(head, []))} vectors for "
+            f"{len(kept)} kept "
+            f"rows; scoring would pair a row with another row's vector")
+    vectors = vectors_by_head[head]
     if head == "incumbent_linear_d":
         row_scores = (
-            HS.score_incumbent_condvalue(
-                inc, HS.compose_head_inputs(
-                    pm[index], fn[index], st[index], norms=norms,
-                    incumbent_width=inc["_n_features"],
-                    lgbm_width=wl)[head])
-            for index in range(len(kept)))
+            HS.score_incumbent_condvalue(inc, vector)
+            for vector in vectors)
     else:
-        vectors = [HS.compose_head_inputs(
-            pm[index], fn[index], st[index], norms=norms,
-            incumbent_width=inc["_n_features"], lgbm_width=wl)[head]
-            for index in range(len(kept))]
         row_scores = HS.score_lgbm_condvalue_batch(
             booster, value_booster, wl, vectors)
     by_gen: dict = {}

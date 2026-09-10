@@ -49,7 +49,7 @@ import math
 import sys
 from pathlib import Path
 
-EXPECTED_CHECKS = 42
+EXPECTED_CHECKS = 44
 
 #: The thresholds persisted by ``phase2_arms.freeze_thresholds`` are
 #: quantiles of ``p_fill * conditional_value``.  This is therefore the only
@@ -71,6 +71,29 @@ PINNED_CODE = ("harmful_state_features.py", "harmful_hazard_model.py")
 
 class HeadRefused(RuntimeError):
     """The head refuses rather than returning a number from a wrong shape."""
+
+
+class ComposedHeadInputBatch:
+    """Both head matrices, bound to the feature blocks that produced them."""
+
+    __slots__ = ("vectors", "_sources", "_norms", "_incumbent_width",
+                 "_lgbm_width")
+
+    def __init__(self, vectors, sources, norms, incumbent_width, lgbm_width):
+        self.vectors = vectors
+        self._sources = sources
+        self._norms = norms
+        self._incumbent_width = incumbent_width
+        self._lgbm_width = lgbm_width
+
+    def is_bound_to(self, pm_rows, fn_rows, st_rows, *, norms,
+                    incumbent_width, lgbm_width):
+        return (self._sources[0] is pm_rows
+                and self._sources[1] is fn_rows
+                and self._sources[2] is st_rows
+                and self._norms is norms
+                and self._incumbent_width == incumbent_width
+                and self._lgbm_width == lgbm_width)
 
 
 def _sha16(b: bytes) -> str:
@@ -478,6 +501,26 @@ def compose_head_inputs(pm, fn, st, *, norms, incumbent_width, lgbm_width):
     return _out
 
 
+def compose_head_inputs_batch(pm_rows, fn_rows, st_rows, *, norms,
+                              incumbent_width, lgbm_width):
+    """Compose both fitted head vectors once for each parallel feature row."""
+    if not (len(pm_rows) == len(fn_rows) == len(st_rows)):
+        raise HeadRefused(
+            f"feature blocks are not parallel: PM {len(pm_rows)}, fine "
+            f"{len(fn_rows)}, state {len(st_rows)}")
+    out = {"incumbent_linear_d": [],
+           "q1_arrival_composed_lgbm": []}
+    for index in range(len(pm_rows)):
+        composed = compose_head_inputs(
+            pm_rows[index], fn_rows[index], st_rows[index], norms=norms,
+            incumbent_width=incumbent_width, lgbm_width=lgbm_width)
+        for head in out:
+            out[head].append(composed[head])
+    return ComposedHeadInputBatch(
+        out, (pm_rows, fn_rows, st_rows), norms,
+        incumbent_width, lgbm_width)
+
+
 def thresholds(coin: str, head: str, *, fits: Path | None = None,
                verify: bool = True) -> dict:
     """The head's budget -> threshold map, from the fit that carries it.
@@ -778,6 +821,19 @@ def selftest() -> int:
        f"incumbent (which z-scales inside `score_incumbent`) and {_wl} for "
        f"the booster, intercept first, every remaining column equal to "
        f"`(raw - mu)/sd` from {_nb['source']} to 1e-12")
+    _batch = compose_head_inputs_batch(
+        [_pm, _pm], [_fn, _fn], [_st, _st], norms=_nb,
+        incumbent_width=_iw, lgbm_width=_wl)
+    ok(_batch.vectors == {head: [vector, vector]
+                          for head, vector in _cmp.items()},
+       "batch composition is EXACTLY two copies of the scalar composition "
+       "for both heads, so sharing it changes only duplicate work")
+    refuses(lambda: compose_head_inputs_batch(
+                [_pm, _pm], [_fn], [_st, _st], norms=_nb,
+                incumbent_width=_iw, lgbm_width=_wl),
+            "KNOWN-BAD: unequal batch blocks REFUSE before row identities "
+            "can be paired with another row's feature vector",
+            needle="not parallel")
     _unscaled = [1.0] + _rawb
     _ndiff = sum(1 for k in range(_nr)
                  if abs(_unscaled[k + 1]
