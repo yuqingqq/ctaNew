@@ -548,3 +548,15 @@ except where marked USER-ONLY.
     the resource over. The coordinator absorbs the collision when it happens —
     killing a long-running unit to restore an order costs more than the delay.
     (coordinator, R-879)
+
+38. **Convergence is evidence only if the instruments differed.** Two seats given
+    a question separately, reaching the same verdict, is **one observation** if
+    they used the same instrument. R-878 recorded DA 180 and REV 151 agreeing and
+    called it *"why the withdrawal is safe rather than merely cautious"* — but
+    both compared `TERMINAL_MARK_ENDED_IN_GAP` against `n_gap_bearing_windows`,
+    so they could only ever agree, and both were wrong (R-883). **Independence is
+    a property of the INSTRUMENT, not of the dispatch.** Before citing agreement
+    as corroboration, name what each seat actually measured; if it is the same
+    field, the same query or the same helper, you have correlation and not
+    confirmation — the same class as reading an exact reproduction as proof.
+    (coordinator, R-883)

@@ -40,19 +40,25 @@ than accepted (DA 180): ALL = −124,871.621689 trades + 227,065.310300 residual
 **102,193.688611** (57,850 fills); DROPPED **63,740.780539** (31,471); KEPT
 **38,452.908072** (26,379).
 
-**WHAT THIS DOES *NOT* SHOW, withdrawn in band before it was ever asserted (R-877).**
-The corrected book reproduces the struck-through row above to the cent, and the
-coordinator first read that as evidence the era contamination was structural rather
-than arithmetic. **It is not.** DA 180 and REV 151, given different questions
-(arithmetic/provenance and inference) and converging independently, established that
-the pre-fix 09-04 book **already carried 78 gap-ended windows, not zero**: the era fix
-moved `TERMINAL_MARK_ENDED_IN_GAP` **78 → 80** and added **one** generation
-(358,107 → 358,108), with `TRANCHE_KEPT` (26,379) and
-`TRANCHE_BEFORE_PLACEMENT_LATENCY` (31,471) **identical across both books**. **The
-reproduction confirms DETERMINISM, not that the era contamination was harmless.** The
-coordinator's error was comparing `selection.n_gap_bearing_windows = 52` against a
-"zero" describing a *different quantity* — rule 16, the vocabulary matched and the
-identity did not.
+**WHAT THE REPRODUCTION MEANS — SETTLED AT R-883, AFTER TWO WRONG READINGS OF IT (mine and DA's).**
+The corrected books reproduce the struck-through rows above almost exactly. The
+coordinator first read that as proof the era contamination was *structural rather
+than arithmetic* (R-876); DA 180 then withdrew that on the ground that the pre-fix
+book already carried 78 gap-ended windows (R-877). **Both readings were wrong.**
+DA's comparison used `TERMINAL_MARK_ENDED_IN_GAP` against
+`n_gap_bearing_windows` — two different fields, both about gaps — and it reversed
+its own correction at DA 184: the pre-fix receipts carry **no
+`n_gap_bearing_windows` key at all** and resolve era `clob_v3_1`.
+
+**The mechanism, established: the era fix is REAL and it REACHES THE MONEY — on
+one day of three, by 0.51 pp.** Every corrected book differs at the *generation*
+level (09-04 358,107→358,108; 09-05 266,592→266,593; **09-06 300,177→300,147, −30**).
+**Only 09-06's difference reached a tranche**; the other two days' newly-gapped
+windows moved generations carrying no tranches. It is not the zero-length
+exclusion — the −30 came out of the replay, which is where gaps act. The money
+closes exactly: KEPT **+169.996591**, DROPPED **−323.232645**, sum **−153.236054**
+= the ALL delta to 1e-6. **Three tranches of 49,568 — 0.0061 % — moved the
+headline share 0.5138 pp.**
 
 **TWO GAPS BLOCK QUOTATION OF THIS ARTIFACT (not the result):** the exclusions and
 coverage are **absent from the result** — coverage 0.9175, 29,530 uncovered of 358,108
