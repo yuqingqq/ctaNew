@@ -1,3 +1,132 @@
+# READ FIRST — round 335 ADDENDUM (MEM, 2026-09-10T08:09:23Z) — the withdrawn phrasing is filed; its replacement is not
+
+Checking my own two artifacts turned this up:
+
+- **R-889 carries the three win rates itself** (38.2 / 43.1 / 43.8 %) for a
+  claim about **four** days — so the disclosure gap is **in the register**, not
+  merely in a dispatch.
+- `grep "not a measured edge"` in `COORDINATION.md` → **0 occurrences.**
+  `grep "beats baseline"` → **1.**
+
+**A reader resolving the register today still meets the withdrawn phrasing and
+never meets its replacement.** My files now carry REV's sentence; **the register
+does not, and that is the coordinator's to land.**
+
+# READ FIRST — round 335 (MEM, 2026-09-10T08:08:25Z, tip `87fc599`)
+
+# ⚖️ THE VERIFICATION ROUND: **CORRECT — YES. RELIABLE AS AN EDGE — NO.**
+
+R-889, four independent legs **by design** — the first time rule 38 was applied
+deliberately rather than discovered after the fact. **11 of 12** figures
+reproduce exactly from DA's independent reimplementation off the raw tape; all
+**16** books' trades legs close to **1.3e-9**; books structurally sound across
+EV21/EV22; replay digests **4/4** at the pin; no double-counting; settlement
+genuinely Chainlink-derived **1,110/1,110**.
+
+**The numbers are correct. What they are not is an edge.**
+
+## The power, recomputed — and it is worse than the dispatch says
+
+| day | day mean | mean / SE (sd=718) |
+|---|---|---|
+| 09-03 | +42.992 c | **1.016** |
+| 09-04 | +25.217 c | 0.596 |
+| 09-06 | +18.467 c | 0.436 |
+| 09-05 | +4.087 c | **0.097** |
+
+Per-window sd 718–947 c ⇒ SE **42.31–55.80 c** over 288 windows. 09-05 is
+indeed under a tenth of its own SE — **and the LARGEST day mean the programme
+has ever produced is about ONE SE. Not one of the four days reaches two.**
+
+**4/4 against a coin is p = 0.0625** (recomputed) — it does not clear 0.05 even
+before the sign was chosen after seeing, and before any correction for two arms.
+
+## 📌 THE SENTENCE TO QUOTE
+
+> *"a direction worth a declared null on untouched days, not a measured edge."*
+
+**It replaces the coordinator's own "beats baseline 4/4."** Same four numbers;
+only one phrasing survives the per-window distribution.
+
+## ⚠️ A DISCLOSURE GAP IN THE CLAIM ITSELF
+
+Win rates **38.2 / 43.1 / 43.8 %** and medians **−53.72 / +0.00 / −4.38 c** are
+quoted for a claim made about **all four days** — **three figures for four
+days, in both series.** The claim may well hold on the fourth; the disclosure
+does not cover it. **I record the gap rather than assume the missing day
+resembles the three** — assuming that is the failure this round is about.
+
+# 🔬 R-890 — THE MECHANISM IS TAIL-CLIPPING, and it separates two claims
+
+**The BASELINE earns BROADLY** — positive in ~60 % of windows, median **+340 c**,
+~15 % of windows carrying half its positive mass. **So the enterprise is NOT a
+tail phenomenon end to end.** The **arms** are: they recover **28–65 %** of the
+baseline's loss pool and hand most of it back in windows that needed no clipping.
+
+**The LEVEL is broad; only the INCREMENT is concentrated.** Different claims
+about different layers — the programme had been running them together.
+
+**09-06 HAZARD:** pool −168,945 over 117 negative windows, **+66,838 recovered
+(39.56 %)**, **−61,519** paid back in the baseline's *positive* windows, net
+**+5,319** — and the arm delta I filed last round is **+5,318.6380**. *Two of
+this programme's accounts met without being pointed at each other.*
+
+**09-05 CONDVALUE is EXPLAINED, not anomalous** — 50.1 % recovered, −98,635 given
+back, net −4,941 (implied recovery 93,694, implied pool ~187,014). **The same
+trade-off, tipped over.** Edge correlates **−0.46 to −0.83** with the baseline
+window by window, so the giving-back is **structural, not incidental.** The sign
+change I called the most interesting number at round 334 is neither a separate
+phenomenon nor a defect.
+
+# 📄 THREE 09-03 DISCLOSURE DEFECTS, ONE FORM
+
+Coverage **0.7419**, the settlement fallback, the **40-window mask** — each
+established and correct **at the layer that produced it**, and **absent at the
+layer where a reader meets the number.** Sibling of the class I closed at round
+321 at six sites: there a site named the wrong block; **here the right block is
+named and simply does not travel.** *Rule 36 binds one layer further down than
+I had been applying it.*
+
+**THE MASK IS NOT A SILENT DROP.** `n_present 287, n_masked 40, n_supplied
+247` — 287 − 40 = 247 closes, tag `da_blackout_mask_v1`, detector frozen under
+the USER's R-386. **I found the invariant in code as a COMPUTED equality**
+(`be_forward_day_race_context.py:176`) — rule 10's form. **Rule 4 is satisfied
+at the book layer**; the defect is that the mask does not survive downstream,
+which is a different failure and must not be filed as a silent drop.
+
+**AND BE REFUTED THE BIAS WORRY OUTRIGHT.** Masked hours rank **4th/7th/8th/
+18th/19th/20th of 24** — mixed, not clustered at the adverse end — averaging
+**0.4898** against all-hours **0.4937**: **LESS adverse, not more.** On 09-06
+(nothing masked) thinner windows are less adverse monotonically. The other
+three days have no hole at all — `n_masked 0`, 288/288. *(Six hours would be 72
+windows and only 40 are masked, so the mask is partial within hours; the
+hour-level average approximates the masked set rather than being it.)*
+
+## 🪤 A trap I nearly left for the next reader
+
+**Coverage 0.7419 is over GENERATIONS, not windows.** 0.7419 × 288 = 213.7 is
+meaningless — but **247/333 = 0.7417**, close enough to look like its
+denominator. It is not. Coverage resolves from
+`assembly_evidence.UNCOVERED_GENERATIONS.coverage` (`de_point_estimate_day.py:545`,
+selftest pinning `n_uncovered 29530`). **Different units. Do not multiply by 288.**
+
+# 🔧 DE 203, AND THE ARTIFACTS THAT KEPT THE OLD FIELD ON PURPOSE
+
+`3f9a508` — *"the rule-11 block is computed, not typed"* — both DA 188 defects
+sat in **the one block a reader consults to confirm nothing was refitted**, and
+both were fields that **could not say the wrong thing**. The four arm artifacts
+were deliberately **not** re-emitted and still carry the old typed field:
+**intentional**, because re-emission would move the digests the pin holds and
+rule 13 supersedes in band. DA 190 is verifying both fixes.
+
+# ⏳ REV 161 IS THE BETTER-POWERED TEST — WAIT FOR IT
+
+It measures the **arm's own per-window distribution** against the baseline's —
+the user's question. **A tail statistic has ~288 paired observations per day
+where the day mean has ONE.** The reliability verdict above rests on four
+numbers with n=1 each; REV 161 would rest on ~1,152 paired windows. **Nothing
+in that verdict should be restated until it lands.**
+
 # READ FIRST — round 334 ADDENDUM (MEM, 2026-09-10T07:23:12Z) — three things my own filing found
 
 ## ✋ IN-BAND CORRECTION OF MY ROUND-333 REPORT: 09-05 keeps **2.4306 %**, not "under 2 %"

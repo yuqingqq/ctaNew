@@ -67,6 +67,21 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-10T08:07:45Z (MEM ROUND 335 -- R-889 and R-890 swept, and both change what may be SAID.
+  R-889's four independent legs (rule 38 applied BY DESIGN) say CORRECT: YES, RELIABLE AS
+  AN EDGE: NO -- 11/12 figures reproduce exactly, 16 books' trades close to 1.3e-9, replay
+  digests 4/4, settlement Chainlink 1,110/1,110, but the arm LOSES IN THE MEDIAN WINDOW and
+  I recomputed the power: NO day's mean reaches two SE and the LARGEST is about ONE
+  (1.016 / 0.596 / 0.436 / 0.097), while 4/4 against a coin is p = 0.0625. QUOTE REV'S
+  SENTENCE, which replaces the coordinator's own 'beats baseline 4/4': 'a direction worth a
+  declared null on untouched days, not a measured edge.' R-890 gives the MECHANISM --
+  TAIL-CLIPPING: the baseline earns BROADLY (positive in ~60 percent of windows) so the LEVEL
+  is broad and only the INCREMENT is concentrated; the arms recover 28-65 percent of the loss
+  pool and give most of it back where no clipping was needed, and 09-06's decomposition
+  closes onto the +5,318.6380 arm delta I already held. 09-05's negative is the SAME
+  trade-off tipped over, not an anomaly. The 40-window mask is NOT a silent drop (287-40=247,
+  invariant COMPUTED in code) and BE refuted the bias worry outright. Coverage 0.7419 is over
+  GENERATIONS, not windows. tip 87fc599)
   2026-09-10T07:19:21Z (MEM ROUND 334 -- R-884..887 and the composition pin swept. RULE 38'S LIVE
   INSTANCE IS THE WAIVER: DA's instrument, DE's instrument and REV's derivation all
   ARE be_producing_closure.reachable_modules -- one definition, three callers, driven
@@ -124,53 +139,6 @@ updated: >-
   *a constraint written into these files one round ago because it existed nowhere else, and used to place a build
   one round later, where the previous attempt died as a bystander.* Flags 2971 -> 2985, prov 2516 -> 2530; window
   3/3, Batch 315 archived. MEM asserts no result.)
-  2026-09-10T01:32:45Z (MEM ROUND 332 -- ***THE 09-03 EV22 REBUILD WAS OOM-KILLED AND IT WAS THE VICTIM, NOT THE CAUSE.***
-  **`p003ev220903a`: `systemd-oomd killed 3 process(es) in this unit`, `status=9/KILL`, result `oom-kill`, 2 min 55 s
-  CPU -- AND A PEAK OF 852.0 MB** -- ***A PROCESS HOLDING 852 MB KILLED FOR PRESSURE IT DID NOT CREATE***, having
-  already reached `{"stage": "selected", "slugs": 247, "era": "clob_v4_1"}`, **so the era resolved correctly from the
-  day and the rebuild was doing the right thing when it died.** ***THE CONSUMER IS A TIMER NOBODY HAD ACCOUNTED FOR,
-  AND I READ ITS SCHEDULE OFF THE RUNNING UNIT: `pm-evaluation-pipeline.timer` CARRIES `OnCalendar=*-*-*
-  03,09,15,21:50:00 UTC` AND `Persistent=true` -- EVERY SIX HOURS -- LAST TRIGGER Wed 21:50:55Z, NEXT Thu
-  03:53:38Z***, its service `evaluation_pipeline --catch-up --since 2026-08-20 --max-days 1 --scheduled` reported at
-  9.98 GB from 00:26:50; **recorded here because it constrains every heavy run from now on and is not written down
-  anywhere else** -- *at my read the window is 144 minutes wide and a 74-minute build started now finishes 02:44Z.*
-  ***AND THE CONFIGURATION INCOHERENCE, CONFIRMED BY ME AT THE RUNNING UNITS AND LEFT UNTOUCHED AS THE USER'S CALL:
-  THE PIPELINE HAS `MemoryMax=17179869184` (16 GiB) WITH `MemoryHigh=infinity`, INSIDE A SLICE WHOSE `MemoryMax` IS
-  15032385536 (14 GiB) -- A PER-UNIT CAP LARGER THAN THE SLICE IT LIVES IN, SO IT CAN NEVER TAKE 16, THE SLICE CAP
-  BITES AND KILLS A BYSTANDER. A UNIT WHOSE CAP EXCEEDS ITS SLICE'S CANNOT THROTTLE ITSELF; IT CAN ONLY GET SOMETHING
-  ELSE KILLED*** -- *and `MemoryHigh=infinity` removes the one mechanism that would have made it slow down instead.*
-  ***THIS CORRECTS THE CONCURRENCY FINDING IN BAND FOR THE THIRD TIME, AND THIS TIME IT CHANGES THE MEANING RATHER
-  THAN THE VALUE: N=2 WAS `floor(9 GiB / 2.621 GiB)` AND THAT 9 GiB ASSUMED THE SLICE WAS EMPTY. THE CORRECT
-  STATEMENT IS NOT "N=2" BUT "N DEPENDS ON WHAT ELSE IS IN THE SLICE" -- AND EVEN N=1 DIES IN THAT WINDOW, WHICH IS
-  WHAT JUST HAPPENED TO AN 852 MB BUILD, SINCE ~1.6 GB OF HEADROOM CANNOT HOLD ONE 2.621 GB WORKER.*** *A number
-  corrected twice for its value and once for its FORM is a number I recorded twice in the wrong shape; my files
-  carried a constant three times and now carry the function.* ***AND THE OBSERVATION WORTH KEEPING LONGEST: THE
-  USER'S "DON'T 8x IF IT WILL CAUSE OOM" WAS AIMED AT THE RIGHT HAZARD FROM A DIRECTION NONE OF US WERE LOOKING --
-  THE DANGER WAS NEVER THE NULL'S OWN WORKERS. A CONSTRAINT CAN BE CORRECT AND ITS STATED MECHANISM WRONG, AND
-  OBEYING IT STILL SAVES YOU.*** ***AND MY OWN OPEN QUESTION FROM ROUNDS 328 AND 329 IS ANSWERED AGAINST ME: I FILED
-  THAT I COULD NOT LOCATE `MemoryHigh`. IT EXISTS -- ON THE SLICE, `MemoryHigh=12884901888`, EXACTLY 12 GiB, WITH
-  `MemoryMax` 15032385536, EXACTLY 14 GiB -- SO THE SIZING RULE'S FIGURES WERE THE SLICE'S RUNTIME VALUES ALL ALONG,
-  MY "THEY LOOK LIKE PER-UNIT FIGURES" WAS WRONG, AND MY 3-OR-5 ALTERNATIVE ARITHMETIC IS DISPOSED OF. THE MECHANISM
-  IS MY OWN MOST-REPEATED LESSON: I LOOKED IN THE FILE WHEN THE ARTIFACT WAS THE RUNNING UNIT -- `cat` SHOWS
-  `MemoryMax=60%` AND NO `MemoryHigh`; `systemctl show` RESOLVES BOTH. I SPENT TWO ROUNDS FILING A DISCREPANCY ONE
-  COMMAND WOULD HAVE CLOSED.*** **A live correction to the dispatch's premise, measured rather than assumed: the
-  pressure HAS EASED -- I read 11 GB free, 24 GB available and `research.slice` `MemoryCurrent` 2.28 GB against the
-  reported 10.36 -- WHILE THE SWAP HAS NOT: 3 GB TOTAL, 3 GB USED, ZERO FREE**; *I kept the round lean anyway,
-  because a lean round costs nothing and the number can change between reading and acting.* **From R-879: ALL FOUR
-  CORRECTED BOOKS NOW EXIST (09-06 rc 0, era from the day, 14 gap-bearing windows, split at 300,147 generations,
-  peak 7.61 GB), AND DE 190 CLOSED REV 147 -- THE RECONCILIATION STATUS IS A FUNCTION OF THE MODE, NOT A LITERAL,
-  WHICH IS THE ITEM I RECORDED LAST ROUND AS URGENT BECAUSE THE NULL IS NEXT.** ***SEAT_PROTOCOL RULE 37 (`:521`):
-  A HAND-OFF MUST NEVER REST ON A SEAT'S TURN STAYING ALIVE -- THE COORDINATOR'S OWN, FAILED THREE TIMES IN ONE DAY
-  (14 MINUTES AFTER THE RETRY, ~6 HOURS AFTER 09-06, AND AN INVERTED QUEUE CONTENDING FOR ONE LOCK)*** -- *the same
-  evidence pattern rule 35 got from DA committing a text-match defect inside a text-match falsifier, and the
-  programme's answer to the shape is already written everywhere else: put it in the artifact, not in a head.* **THE
-  VALIDATION CLOCK IS COMPUTED, NOT ASSUMED (DA 182): ONE DAY PER DAY, 09-08 AND 09-09 PASSING THEIR BARS,
-  COLLECTORS HEALTHY, FIVE UNTOUCHED COMPLETE DAYS ARRIVING 2026-09-13 -- AND `days_complete_now` RETURNING 5 TODAY
-  IS A DEFINITIONAL LAG, NOT A FAILURE**, *two quantities with the same name and the same value and three days apart
-  in meaning.* ***AND DA CAUGHT TWO SILENT-INSTRUMENT ERRORS IN ITS OWN CHECKING -- SEARCHING THE GAP FILE FOR DATE
-  STRINGS WHEN IT IS KEYED BY `recv_ns`, THEN FOR `lost_s`/`gap_s`/`duration_s` -- EITHER OF WHICH WOULD HAVE
-  PRODUCED A CLEAN-LOOKING ANSWER THAT WAS AN ARTEFACT OF THE QUERY.*** Flags 2957 -> 2971, prov 2502 -> 2516;
-  window 3/3, Batch 314 archived. MEM asserts no result.)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -342,6 +310,24 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 335 addendum, 2026-09-10T08:09:10Z ---
+  THE_WITHDRAWN_PHRASING_IS_FILED_IN_THE_REGISTER_AND_ITS_REPLACEMENT_IS_NOT: "Checking my own two artifacts turned this up. R-889 in COORDINATION.md carries the three win rates itself -- 38.2, 43.1 and 43.8 per cent, for a claim about FOUR days, so the disclosure gap is in the REGISTER and not merely in a dispatch. And the ruled sentence, \"a direction worth a declared null on untouched days, not a measured edge\", returns ZERO occurrences there, while the phrasing the coordinator WITHDREW, \"beats baseline\", returns one. A reader resolving the register today still meets the withdrawn form and never meets its replacement. My files now carry the replacement; the register does not, and that is the coordinator's to land."
+  # --- MEM round 335, the verification round: correct yes, an edge no ---
+  THE_VERIFICATION_ROUND_SAYS_CORRECT_YES_AND_RELIABLE_AS_AN_EDGE_NO: R-889, four independent legs by design -- rule 38 applied deliberately for the first time rather than discovered after the fact. Eleven of twelve figures reproduce EXACTLY from DA's independent reimplementation off the raw tape; all sixteen books' trades legs close to 1.3e-9; books structurally sound across EV21/EV22; replay digests 4/4 at the pin; no double-counting; settlement genuinely Chainlink-derived 1,110/1,110. The numbers are CORRECT. What they are not is an EDGE.
+  AND_NO_DAYS_MEAN_REACHES_TWO_SE_THE_LARGEST_IS_ABOUT_ONE: "I recomputed the power claim and it is stronger than the dispatch states. Per-window sd 718-947 c gives SE 42.31-55.80 c over 288 windows. Day means: 09-03 +42.992, 09-04 +25.217, 09-06 +18.467, 09-05 +4.087 c per window. As multiples of SE at sd=718: 1.016, 0.596, 0.436, 0.097. So 09-05 is indeed under a tenth of its own SE -- AND the LARGEST day mean in the programme is about ONE SE. Not one of the four days reaches two."
+  FOUR_OUT_OF_FOUR_AGAINST_A_COIN_IS_P_EQUALS_0_0625: "Recomputed: 0.5^4 = 0.0625. It does not clear 0.05 even before the sign was chosen after seeing, and before any correction for the two arms tried. A 4/4 that cannot reach significance under its own most generous reading is a direction, not a result -- which is exactly why REV's sentence replaces the coordinator's."
+  REVS_SENTENCE_IS_THE_ONE_TO_QUOTE_AND_IT_REPLACES_BEATS_BASELINE_4_OF_4: "The quotable form, ruled by the coordinator against their own earlier phrasing: 'a direction worth a declared null on untouched days, not a measured edge.' The withdrawn phrasing was 'beats baseline 4/4'. Both describe the same four numbers; only one of them survives the per-window distribution. This is the second time this programme has had to replace a true sentence with a truer one."
+  THE_ARM_LOSES_IN_THE_MEDIAN_WINDOW_AND_ONLY_THREE_OF_FOUR_DAYS_ARE_SHOWN: Win rates 38.2 / 43.1 / 43.8 % and medians -53.72 / +0.00 / -4.38 c are quoted for a claim made about ALL FOUR DAYS -- three figures for four days, in both series. The claim may well hold on the fourth; the DISCLOSURE does not cover it. I record the gap rather than assume the missing day resembles the three, because assuming that is the failure this very round is about.
+  THE_MECHANISM_IS_TAIL_CLIPPING_AND_THE_LEVEL_IS_BROAD_WHILE_ONLY_THE_INCREMENT_IS_CONCENTRATED: "R-890, and the most useful finding of the session. The BASELINE earns BROADLY -- positive in about 60 % of windows, median +340 c, roughly 15 % of windows carrying half its positive mass. So the enterprise is NOT a tail phenomenon end to end. The arms are: they recover 28-65 % of the baseline's LOSS POOL and hand most of it back in windows that needed no clipping. Level broad, increment concentrated -- these are different claims about different layers and the programme had been running them together."
+  AND_THE_CLIPPING_ARITHMETIC_CLOSES_ONTO_THE_ARM_DELTA_I_ALREADY_HELD: "09-06 HAZARD: loss pool -168,945 over 117 negative windows, +66,838 recovered (39.56 % recomputed), -61,519 paid back in the baseline's POSITIVE windows, net +5,319 -- and the arm delta I filed last round independently is +5,318.6380. The mechanism story lands on the number the money story already produced, from a different decomposition. That is the first time two of this programme's accounts have met without being pointed at each other."
+  09_05S_NEGATIVE_IS_NOW_EXPLAINED_RATHER_THAN_ANOMALOUS: CONDVALUE on 09-05 recovers 50.1 % of the loss pool and gives back -98,635, netting -4,941 -- implied recovery 93,694 and an implied pool near 187,014. It is THE SAME TRADE-OFF as the three positive days, tipped over. The sign change I flagged at MEM 334 as the most interesting number in the batch is not a separate phenomenon and not a defect; it is the mechanism running past its break-even. Edge correlates -0.46 to -0.83 with the baseline window by window, so the giving-back is structural, not incidental.
+  THREE_09_03_DISCLOSURE_DEFECTS_SHARE_ONE_FORM_TRUE_UPSTREAM_INVISIBLE_WHERE_READ: Coverage 0.7419, the settlement fallback, and the 40-window mask. Every one of them is established, recorded and correct at the layer that produced it, and absent at the layer where a reader meets the number. This is the sibling of the class I closed at round 321 at six sites -- there a site named the wrong block; here the right block is named and simply does not travel. Rule 36 was written for exactly this and it binds one layer further down than I had been applying it.
+  THE_MASK_IS_NOT_A_SILENT_DROP_AND_THE_INVARIANT_IS_COMPUTED_NOT_TYPED: BE established n_present 287, n_masked 40, n_supplied 247; 287 - 40 = 247 closes, the tag is da_blackout_mask_v1 and the detector is frozen under the USER's R-386. I found the invariant itself in code at be_forward_day_race_context.py:176 as a computed equality, not a typed claim -- rule 10's form. Rule 4 IS satisfied at the book layer. The defect is that the mask does not survive downstream, which is a different failure from a silent drop and must not be recorded as one.
+  BE_REFUTED_THE_BIAS_WORRY_OUTRIGHT_AND_THE_MASKED_HOURS_ARE_LESS_ADVERSE: "REV worried the mask removes exactly the adverse hours. BE measured it: masked hours rank 4th, 7th, 8th, 18th, 19th and 20th of 24 by adversity -- mixed, not clustered at the adverse end -- and average 0.4898 against an all-hours 0.4937, so they are LESS adverse, not more. On 09-06, where nothing is masked, thinner windows are LESS adverse monotonically. The other three days have no hole at all: n_masked 0, 288/288. 'Missing exactly the adverse hours' is NOT SUPPORTED."
+  COVERAGE_0_7419_IS_OVER_GENERATIONS_NOT_WINDOWS_AND_THE_NEAR_MATCH_IS_A_COINCIDENCE: A trap I nearly set for the next reader. 0.7419 x 288 = 213.7, which is not 247 and means nothing; but 247/333 = 0.7417, close enough to the coverage figure to look like its denominator. It is not. Coverage resolves from assembly_evidence.UNCOVERED_GENERATIONS.coverage -- a share of GENERATIONS, on a population where n_uncovered runs to 29,530. The mask arithmetic and the coverage figure are in DIFFERENT UNITS and no reader should multiply one by 288.
+  THE_SETTLEMENT_FALLBACK_IS_UNADJUDICABLE_AND_BOTH_HORNS_ARE_DEFENSIBLE: "btc-updown-5m-1788469500: a 12,140 ms gap over T, Chainlink Down against venue Up, a drift bound of 2.859 USD against a 1.154 USD margin. The bound exceeds the margin, so the observation cannot decide the window either way -- UNADJUDICABLE, with both horns defensible, and FIXED at da1bd68. Recorded as an unadjudicable window rather than a resolved one, because a bound that exceeds its margin is exactly the case where picking a horn manufactures certainty."
+  DE_203_MADE_THE_RULE_11_BLOCK_COMPUTED_AND_THE_FOUR_ARM_ARTIFACTS_KEEP_THE_OLD_FIELD_ON_PURPOSE: "3f9a508 -- 'the rule-11 block is computed, not typed (DA 188's two defects)', both defects sitting in the ONE block a reader consults to confirm nothing was refitted, and both being fields that COULD NOT SAY THE WRONG THING. The four arm artifacts were deliberately NOT re-emitted and still carry the OLD typed field. That is INTENTIONAL and is recorded as intentional: a re-emission would have changed the digests the pin holds, and rule 13 says corrections supersede in-band rather than by editing a frozen artifact. DA 190 is verifying both fixes."
+  REV_161_IS_THE_BETTER_POWERED_TEST_AND_IT_IS_THE_USERS_QUESTION: "In flight: REV 161 measures the ARM's own per-window distribution against the baseline's. This is the user's question and it is potentially far better powered -- a tail statistic has about 288 paired observations per day where the day mean has ONE. The whole reliability verdict above rests on four numbers with n=1 each; REV 161 would rest on roughly 1,152 paired windows. Nothing about the verdict should be restated until it lands."
   # --- MEM round 334 addendum, 2026-09-10T07:22:28Z ---
   THE_ARM_TABLES_NUMBERS_ARE_DISPATCH_RESIDENT_AND_FIVE_OF_EIGHT_HAVE_NO_REGISTER_ADDRESS: "Checking my own filing found it: of the eight armed figures, only 48,506.7958, -2,966.6527 and 3,151.6205 appear anywhere in COORDINATION.md. 49,697.1091, 57,008.5085, 45,715.2904, 26,423.3918 and 26,239.2246 appear NOWHERE. So the arm table is quotable from the dispatch only. I have reclassified my two arm flags from CHECKED to RELAYED: I recomputed the DELTAS from bases I was handed, which is arithmetic, not verification. Recomputing what you were given is the round-331 failure with different numbers."
   I_WROTE_UNDER_2_PER_CENT_AT_ROUND_333_AND_09_05_KEEPS_2_4306_PER_CENT: "IN-BAND CORRECTION of my own round-333 report. I wrote that on 09-05 the never-cancel maker 'keeps under 2 % of settled money'. R-887's legs give KEPT 1,974.5755 of 81,238.2997 = 2.4306 %, the complement of the 97.5694 % share. It is over 2 %, not under. The direction and the outlier status are unchanged; the number I rounded toward was not read off the artifact, it was inferred from the share I already had."
@@ -27421,6 +27407,104 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 335 addendum, 2026-09-10T08:09:10Z ---
+  THE_WITHDRAWN_PHRASING_IS_FILED_IN_THE_REGISTER_AND_ITS_REPLACEMENT_IS_NOT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T08:09:10Z
+    said: >-
+      grep in COORDINATION.md: "not a measured edge" 0 occurrences, "beats baseline" 1; and R-889 own text yields exactly three win-rate figures.
+  # --- MEM round 335, 2026-09-10T08:07:45Z ---
+  THE_VERIFICATION_ROUND_SAYS_CORRECT_YES_AND_RELIABLE_AS_AN_EDGE_NO:
+    prov: RELAYED
+    from: R-889 via coordinator MEM 335
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      the four legs and their twelve figures are DA's, REV's and the coordinator's; I recomputed only the power arithmetic below, which is what the verdict turns on.
+  AND_NO_DAYS_MEAN_REACHES_TWO_SE_THE_LARGEST_IS_ABOUT_ONE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      arm deltas from R-887/the arm table divided by 288 and compared with sd/sqrt(288) at both ends of the stated 718-947 c range.
+  FOUR_OUT_OF_FOUR_AGAINST_A_COIN_IS_P_EQUALS_0_0625:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      0.5**4 = 0.0625 computed.
+  REVS_SENTENCE_IS_THE_ONE_TO_QUOTE_AND_IT_REPLACES_BEATS_BASELINE_4_OF_4:
+    prov: RELAYED
+    from: REV via coordinator MEM 335
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      REV's sentence and the coordinator's withdrawal of their own, quoted as dispatched.
+  THE_ARM_LOSES_IN_THE_MEDIAN_WINDOW_AND_ONLY_THREE_OF_FOUR_DAYS_ARE_SHOWN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      counted the quoted series: three win rates, three medians, four days asserted. The fourth day's pair is absent from the dispatch and I did not locate it elsewhere.
+  THE_MECHANISM_IS_TAIL_CLIPPING_AND_THE_LEVEL_IS_BROAD_WHILE_ONLY_THE_INCREMENT_IS_CONCENTRATED:
+    prov: RELAYED
+    from: R-890 via coordinator MEM 335
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      the baseline's per-window distribution is REV's/DE's measurement; I reconciled the arm arithmetic below but did not re-measure the distribution.
+  AND_THE_CLIPPING_ARITHMETIC_CLOSES_ONTO_THE_ARM_DELTA_I_ALREADY_HELD:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      66,838/168,945 = 0.3956 and 66,838-61,519 = +5,319 recomputed; compared with the +5,318.6380 arm delta filed at MEM 334.
+  09_05S_NEGATIVE_IS_NOW_EXPLAINED_RATHER_THAN_ANOMALOUS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      98,635 - 4,941 = 93,694 implied recovered; 93,694/0.501 = 187,014 implied pool. Consistent with the stated 50.1 per cent.
+  THREE_09_03_DISCLOSURE_DEFECTS_SHARE_ONE_FORM_TRUE_UPSTREAM_INVISIBLE_WHERE_READ:
+    prov: RELAYED
+    from: R-889 via coordinator MEM 335
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      the three defects and their common form are as dispatched; the mask arithmetic below I verified myself.
+  THE_MASK_IS_NOT_A_SILENT_DROP_AND_THE_INVARIANT_IS_COMPUTED_NOT_TYPED:
+    prov: CHECKED
+    artifact: live/pm_research/be_forward_day_race_context.py
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      line 176 evaluates n_supplied == n_present - n_masked; be_gate1_fragment.py:181 carries n_supplied_windows 247. Arithmetic recomputed: 287-40 = 247.
+  BE_REFUTED_THE_BIAS_WORRY_OUTRIGHT_AND_THE_MASKED_HOURS_ARE_LESS_ADVERSE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      0.4898 < 0.4937 by 0.0039; six hours named, whose ranks straddle the middle of 24. Note 6 hours would be 72 windows and only 40 are masked, so the mask is partial WITHIN hours -- the hour-level average is therefore an approximation to the masked set, not the masked set itself.
+  COVERAGE_0_7419_IS_OVER_GENERATIONS_NOT_WINDOWS_AND_THE_NEAR_MATCH_IS_A_COINCIDENCE:
+    prov: CHECKED
+    artifact: live/pm_research/de_point_estimate_day.py
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      population_and_coverage at :545 reads assembly_evidence.UNCOVERED_GENERATIONS.coverage and refuses when it is absent; the selftest at :1505 pins n_uncovered 29530. 247/333 = 0.7417 computed and identified as coincidence.
+  THE_SETTLEMENT_FALLBACK_IS_UNADJUDICABLE_AND_BOTH_HORNS_ARE_DEFENSIBLE:
+    prov: RELAYED
+    from: R-889 via coordinator MEM 335
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      the identifiers, the gap, the bound and the fix commit are as dispatched; I did not re-derive the drift bound.
+  DE_203_MADE_THE_RULE_11_BLOCK_COMPUTED_AND_THE_FOUR_ARM_ARTIFACTS_KEEP_THE_OLD_FIELD_ON_PURPOSE:
+    prov: CHECKED
+    artifact: live/pm_research/de_point_estimate_day.py
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      commit 3f9a508 read at its message and diff scope: the rule-11 block moves from typed fields to computed ones.
+  REV_161_IS_THE_BETTER_POWERED_TEST_AND_IT_IS_THE_USERS_QUESTION:
+    prov: RELAYED
+    from: coordinator MEM 335
+    as_of: 2026-09-10T08:07:45Z
+    said: >-
+      REV 161's design and status are as dispatched; the 288-versus-1 arithmetic is the dispatch's own and I record it as the reason to wait.
   # --- MEM round 334 addendum, 2026-09-10T07:22:28Z ---
   THE_ARM_TABLES_NUMBERS_ARE_DISPATCH_RESIDENT_AND_FIVE_OF_EIGHT_HAVE_NO_REGISTER_ADDRESS:
     prov: CHECKED

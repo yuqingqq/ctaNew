@@ -22713,3 +22713,55 @@ generation and the window went 4 → 3. Nothing rewritten.
   number and its withdrawal in the SAME block at `8857ac8`. Flags 2943 -> 2957, prov 2488 -> 2502; window 3/3, Batch
   313 archived. MEM asserts no result.)
 ```
+
+## Batch 317 (rotated by MEM round 335, 2026-09-10T08:07:45Z)
+
+```
+  2026-09-10T01:32:45Z (MEM ROUND 332 -- ***THE 09-03 EV22 REBUILD WAS OOM-KILLED AND IT WAS THE VICTIM, NOT THE CAUSE.***
+  **`p003ev220903a`: `systemd-oomd killed 3 process(es) in this unit`, `status=9/KILL`, result `oom-kill`, 2 min 55 s
+  CPU -- AND A PEAK OF 852.0 MB** -- ***A PROCESS HOLDING 852 MB KILLED FOR PRESSURE IT DID NOT CREATE***, having
+  already reached `{"stage": "selected", "slugs": 247, "era": "clob_v4_1"}`, **so the era resolved correctly from the
+  day and the rebuild was doing the right thing when it died.** ***THE CONSUMER IS A TIMER NOBODY HAD ACCOUNTED FOR,
+  AND I READ ITS SCHEDULE OFF THE RUNNING UNIT: `pm-evaluation-pipeline.timer` CARRIES `OnCalendar=*-*-*
+  03,09,15,21:50:00 UTC` AND `Persistent=true` -- EVERY SIX HOURS -- LAST TRIGGER Wed 21:50:55Z, NEXT Thu
+  03:53:38Z***, its service `evaluation_pipeline --catch-up --since 2026-08-20 --max-days 1 --scheduled` reported at
+  9.98 GB from 00:26:50; **recorded here because it constrains every heavy run from now on and is not written down
+  anywhere else** -- *at my read the window is 144 minutes wide and a 74-minute build started now finishes 02:44Z.*
+  ***AND THE CONFIGURATION INCOHERENCE, CONFIRMED BY ME AT THE RUNNING UNITS AND LEFT UNTOUCHED AS THE USER'S CALL:
+  THE PIPELINE HAS `MemoryMax=17179869184` (16 GiB) WITH `MemoryHigh=infinity`, INSIDE A SLICE WHOSE `MemoryMax` IS
+  15032385536 (14 GiB) -- A PER-UNIT CAP LARGER THAN THE SLICE IT LIVES IN, SO IT CAN NEVER TAKE 16, THE SLICE CAP
+  BITES AND KILLS A BYSTANDER. A UNIT WHOSE CAP EXCEEDS ITS SLICE'S CANNOT THROTTLE ITSELF; IT CAN ONLY GET SOMETHING
+  ELSE KILLED*** -- *and `MemoryHigh=infinity` removes the one mechanism that would have made it slow down instead.*
+  ***THIS CORRECTS THE CONCURRENCY FINDING IN BAND FOR THE THIRD TIME, AND THIS TIME IT CHANGES THE MEANING RATHER
+  THAN THE VALUE: N=2 WAS `floor(9 GiB / 2.621 GiB)` AND THAT 9 GiB ASSUMED THE SLICE WAS EMPTY. THE CORRECT
+  STATEMENT IS NOT "N=2" BUT "N DEPENDS ON WHAT ELSE IS IN THE SLICE" -- AND EVEN N=1 DIES IN THAT WINDOW, WHICH IS
+  WHAT JUST HAPPENED TO AN 852 MB BUILD, SINCE ~1.6 GB OF HEADROOM CANNOT HOLD ONE 2.621 GB WORKER.*** *A number
+  corrected twice for its value and once for its FORM is a number I recorded twice in the wrong shape; my files
+  carried a constant three times and now carry the function.* ***AND THE OBSERVATION WORTH KEEPING LONGEST: THE
+  USER'S "DON'T 8x IF IT WILL CAUSE OOM" WAS AIMED AT THE RIGHT HAZARD FROM A DIRECTION NONE OF US WERE LOOKING --
+  THE DANGER WAS NEVER THE NULL'S OWN WORKERS. A CONSTRAINT CAN BE CORRECT AND ITS STATED MECHANISM WRONG, AND
+  OBEYING IT STILL SAVES YOU.*** ***AND MY OWN OPEN QUESTION FROM ROUNDS 328 AND 329 IS ANSWERED AGAINST ME: I FILED
+  THAT I COULD NOT LOCATE `MemoryHigh`. IT EXISTS -- ON THE SLICE, `MemoryHigh=12884901888`, EXACTLY 12 GiB, WITH
+  `MemoryMax` 15032385536, EXACTLY 14 GiB -- SO THE SIZING RULE'S FIGURES WERE THE SLICE'S RUNTIME VALUES ALL ALONG,
+  MY "THEY LOOK LIKE PER-UNIT FIGURES" WAS WRONG, AND MY 3-OR-5 ALTERNATIVE ARITHMETIC IS DISPOSED OF. THE MECHANISM
+  IS MY OWN MOST-REPEATED LESSON: I LOOKED IN THE FILE WHEN THE ARTIFACT WAS THE RUNNING UNIT -- `cat` SHOWS
+  `MemoryMax=60%` AND NO `MemoryHigh`; `systemctl show` RESOLVES BOTH. I SPENT TWO ROUNDS FILING A DISCREPANCY ONE
+  COMMAND WOULD HAVE CLOSED.*** **A live correction to the dispatch's premise, measured rather than assumed: the
+  pressure HAS EASED -- I read 11 GB free, 24 GB available and `research.slice` `MemoryCurrent` 2.28 GB against the
+  reported 10.36 -- WHILE THE SWAP HAS NOT: 3 GB TOTAL, 3 GB USED, ZERO FREE**; *I kept the round lean anyway,
+  because a lean round costs nothing and the number can change between reading and acting.* **From R-879: ALL FOUR
+  CORRECTED BOOKS NOW EXIST (09-06 rc 0, era from the day, 14 gap-bearing windows, split at 300,147 generations,
+  peak 7.61 GB), AND DE 190 CLOSED REV 147 -- THE RECONCILIATION STATUS IS A FUNCTION OF THE MODE, NOT A LITERAL,
+  WHICH IS THE ITEM I RECORDED LAST ROUND AS URGENT BECAUSE THE NULL IS NEXT.** ***SEAT_PROTOCOL RULE 37 (`:521`):
+  A HAND-OFF MUST NEVER REST ON A SEAT'S TURN STAYING ALIVE -- THE COORDINATOR'S OWN, FAILED THREE TIMES IN ONE DAY
+  (14 MINUTES AFTER THE RETRY, ~6 HOURS AFTER 09-06, AND AN INVERTED QUEUE CONTENDING FOR ONE LOCK)*** -- *the same
+  evidence pattern rule 35 got from DA committing a text-match defect inside a text-match falsifier, and the
+  programme's answer to the shape is already written everywhere else: put it in the artifact, not in a head.* **THE
+  VALIDATION CLOCK IS COMPUTED, NOT ASSUMED (DA 182): ONE DAY PER DAY, 09-08 AND 09-09 PASSING THEIR BARS,
+  COLLECTORS HEALTHY, FIVE UNTOUCHED COMPLETE DAYS ARRIVING 2026-09-13 -- AND `days_complete_now` RETURNING 5 TODAY
+  IS A DEFINITIONAL LAG, NOT A FAILURE**, *two quantities with the same name and the same value and three days apart
+  in meaning.* ***AND DA CAUGHT TWO SILENT-INSTRUMENT ERRORS IN ITS OWN CHECKING -- SEARCHING THE GAP FILE FOR DATE
+  STRINGS WHEN IT IS KEYED BY `recv_ns`, THEN FOR `lost_s`/`gap_s`/`duration_s` -- EITHER OF WHICH WOULD HAVE
+  PRODUCED A CLEAN-LOOKING ANSWER THAT WAS AN ARTEFACT OF THE QUERY.*** Flags 2957 -> 2971, prov 2502 -> 2516;
+  window 3/3, Batch 314 archived. MEM asserts no result.)
+```
