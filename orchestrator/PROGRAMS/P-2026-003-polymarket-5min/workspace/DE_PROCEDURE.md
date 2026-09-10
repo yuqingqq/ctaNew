@@ -560,3 +560,110 @@ are read by no module but `de_decision_ledger.py`.
   the computed verdict beside it has now happened twice.
 * **Say what is NOT established.** Every report should carry its own limits: what
   was measured, what was inferred, and what nobody has checked.
+
+---
+
+## 13. WHAT 2026-09-09/10 COST, AND THE SIX THINGS THAT WOULD HAVE SAVED IT
+
+Written by DE 179–193, the seat that ran the first two corrected point
+estimates. Every item below is something that went wrong ONCE and will go
+wrong again for the next seat if it is not here.
+
+### 13.1 `RemainAfterExit=yes` MAKES `is-active` A LIE
+A transient unit with `RemainAfterExit=yes` stays **`ActiveState=active`
+after it EXITS SUCCESSFULLY** (`SubState=exited`). So
+
+    until ! systemctl --user is-active --quiet $U; do sleep 5; done
+
+**never terminates on a successful run.** It cost me a peak-RSS sampler that
+spun instead of sampling — the 09-04 peak is `null` in its record for that
+reason — and it made me report a finished run as "past ten minutes, checking
+whether it hung" when it had already succeeded. **Wait on SubState:**
+
+    until [ "$(systemctl --user show $U -p SubState --value)" != "running" ]; do sleep 2; done
+
+A FAILED unit goes `ActiveState=failed`, which is why this trap only bites on
+the runs that worked.
+
+### 13.2 A RUN RECORD MUST NAME ONLY ARTIFACTS NEWER THAN ITSELF
+The record took `ls -t <pattern> | head -1`. On a run that exited **75** and
+never started, that named an artifact from **2026-09-08** — a record claiming
+an artifact its own run did not produce. Use `find -newer <the record>`, and
+write the LAUNCH row first so it is the timestamp to compare against. The two
+bad rows were corrected IN BAND (a `CORRECTION` row), never edited.
+
+### 13.3 THE SCORING-PATH WAIVER: WHAT IT IS AND HOW TO USE IT
+Books go stale the moment `de_multiday_gate1_runner.py` moves, because that
+module is in every book receipt's REFUSABLE set — reached at **exactly one
+attribute, `ruled_day_set`, which reads `PARAMS_REL`**. Since DE 179 the
+refusal carries its own evidence and a waiver exists (USER ruling, DE 180):
+
+    --waive-scoring-path        # on de_multiday_gate1_runner.py AND on
+                                # de_point_estimate_day.py
+
+**ASKING IS NOT GRANTING.** `de_scoring_path_delta.waiver_available` decides on
+five computed conditions. **Measure it BEFORE you launch** (~4 s, no lock):
+build the `differ` list from the receipt's REFUSABLE set against disk, call
+`delta(...)`, and check `INTERSECTION == 0` and every `byte_identity_on_the_path`
+`identical`. If the intersection is NOT empty the answer is a REBUILD, not a
+flag.
+
+### 13.4 `de_land.sh` REFUSES WHEN *YOU* MOVED THE PATH — AND THE TIP MOVES UNDER YOU
+Exit 4 ("these paths moved in the shared tree since <base>") fires when you
+landed from the same worktree earlier in the round. §9 already says refresh
+and rebuild rather than force. **What §9 did not say:** after refreshing,
+**re-verify your base at the NEW tip**, because it can move again between two
+of your own commands — mine moved `67d4eab → 9d7c6c0` mid-sequence. Diff your
+saved file against the tip's version of each path and confirm the only delta
+is yours before copying anything in. Exit 6 (STRANDED) means committed, not
+pushed: **report it, never rebase here.**
+
+### 13.5 NEVER EDIT SOURCE BY INDEX SLICE
+`s[:start] + new + s[end:]` between two comment anchors **deleted five working
+falsifier cells** because the region held more than I meant. CLAUDE.md already
+forbids it; this is the DE instance. The battery's **check-count assertion is
+what caught it** (21 against 25) — which is the reason a battery asserts its
+own size instead of running whatever it finds. Anchor to exact strings and
+`assert old in s` before writing.
+
+### 13.6 A HEAVY RUN CAN BE OOM-KILLED AS A BYSTANDER AT 852 MB
+BE's 09-03 rebuild died `Result=oom-kill` while its own unit peaked at
+**852 MB against an 11.87 GB `MemoryMax`**. It was **`systemd-oomd`**, acting on
+**`research.slice` pressure** (`ManagedOOMMemoryPressure=kill`, limit 3.44 GB;
+slice `MemoryHigh` 12.88 GB / `Max` 15.03 GB; `memory.events` already showed
+`oom_kill 15`). The slice holds **GBs of page cache** from 300 MB pickles with
+nothing running. **So a unit cap does not protect you and a small footprint does
+not either.** Before launching a heavy run, check the SLICE, not just the unit —
+and know the scheduled consumer:
+
+**`pm-evaluation-pipeline.service` — `OnCalendar=*-*-* 03,09,15,21:50 UTC`,
+holds ~10 GB for about an hour, `MemoryMax=16 GiB` inside a 14 GB slice.**
+A cap larger than its own slice cannot throttle itself; it can only get a
+bystander killed. **Do not have a heavy run in flight across :50 on those
+hours.**
+
+### 13.7 THE POINT-ESTIMATE LAUNCH FORM THAT WORKS
+Kept here so the next seat does not rebuild it. One day per unit, `flock` the
+DIRECT parent of `python3`, a LAUNCH row before and an EXIT row after, peak
+sampled in-line against SubState (13.1), and the artifact resolved by
+`-newer` (13.2). The working script lived at
+`scratchpad/de179/run_day.sh`; its shape is: LAUNCH row → `systemd-run
+--unit=<TAG> --slice=research.slice -p MemoryMax=8G -p RemainAfterExit=yes
+-p StandardOutput=append:<log> --working-directory=<FROZEN WT> -- flock -n -E 75
+<lock> python3 live/pm_research/de_point_estimate_day.py <DAY> <BOOK>
+--output-dir <derived> --waive-scoring-path` → sample → EXIT row → stop +
+reset-failed so the unit name is free.
+
+### 13.8 STANDING CONSTRAINTS A NEW DE MUST NOT DISCOVER THE HARD WAY
+* **Rule 34a (USER, `abd4b07`): WRITING DOES NOT CONSUME A DAY, READING DOES.**
+  The Tier-2 timer writes `data/pm_5min/tier2/**/day=2026-09-08/` and later on
+  its own schedule. **Their existence is not permission.** Do not read,
+  summarise, aggregate or quote them. Build and score **09-03..09-07 only**.
+* **Rule 37: the coordinator holds the lock trigger.** When told to stand by,
+  do not poll and do not eat `Exit 75`s — a tight retry loop is contention.
+  (DE 184 asked for a retry to be ARMED; DE 192 withdrew that. Read the
+  latest dispatch, not the habit.)
+* **09-03's EV21 book has NO complement leg** — 23,765 tranches were counted
+  and DISCARDED at build time — so its reconciliation reports
+  `RECONCILIATION_UNAVAILABLE_BOOK_CARRIES_NO_SPLIT` and the latency question
+  stays unanswered for that day until it is rebuilt with the split.
