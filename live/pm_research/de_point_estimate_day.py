@@ -316,6 +316,17 @@ def write_artifact(path: Path, payload: dict) -> dict:
         raise R.RunnerRefused(
             f"REFUSED POINT_ESTIMATE_OUTPUT_EXISTS: {path} already exists; "
             "a result artifact is never overwritten.")
+    _missing_req = [k for k in ("population_and_coverage", "scope")
+                    if not payload.get(k)]
+    if _missing_req:
+        raise R.RunnerRefused(
+            f"REFUSED {REQUIRED_QUOTATION_FIELDS_ABSENT}: {_missing_req}. "
+            f"DA 180 found both gaps on a LANDED artifact: the exclusions "
+            f"and coverage were resolvable only from the book receipt -- a "
+            f"different document -- and the coin was not resolvable at "
+            f"all without R-869 in hand. A result that cannot state its "
+            f"own population and scope is not quotable, so it is not "
+            f"written (rule 35).")
     payload["private_key_sweep"] = assert_no_private_keys(payload)
     payload["placement_latency_consistency"] = (
         R.assert_one_placement_latency(payload))
@@ -399,6 +410,146 @@ def _finite_scalars(node, path="$"):
     elif isinstance(node, float) and not isinstance(node, bool):
         out.append((path, node))
     return out
+
+
+COVERAGE_UNRESOLVABLE = "POINT_ESTIMATE_COVERAGE_NOT_RESOLVABLE"
+POPULATION_DISAGREES = "POINT_ESTIMATE_POPULATION_DISAGREES_WITH_THE_BOOK"
+SCOPE_UNRESOLVABLE = "POINT_ESTIMATE_SCOPE_NOT_RESOLVABLE"
+REQUIRED_QUOTATION_FIELDS_ABSENT = "POINT_ESTIMATE_NOT_QUOTABLE_FIELDS_ABSENT"
+
+
+def population_and_coverage(reconciliation: dict, receipt: dict,
+                            receipt_path: Path) -> dict:
+    """THE COUNTS AND THE COVERAGE, ON THE RESULT -- rule 4 where the
+    number is.
+
+    DA 180: `UNCOVERED`, `TRANCHE_KEPT`,
+    `TRANCHE_BEFORE_PLACEMENT_LATENCY` and `BINANCE_GAP_EXCLUDED` occur
+    ZERO times in a point-estimate artifact, and coverage 0.9175 with
+    29,530 uncovered lives only in the BOOK RECEIPT -- A DIFFERENT
+    DOCUMENT. A reader holding the result cannot state the population the
+    number was computed over.
+
+    THE COUNTS COME FROM THE RECONCILIATION THIS RUN PERFORMED, not from
+    the receipt: `KEPT.n_fills` and `DROPPED.n_fills` are counted over
+    the same tranches whose value is quoted beside them, so a count and
+    its money cannot drift apart. The COVERAGE cannot be computed here --
+    it is a property of the book's ASSEMBLY, which this driver never
+    loads -- so it is READ, with its source path and digest, AND
+    CROSS-CHECKED against the generation count the reconciliation itself
+    walked. A disagreement REFUSES: two documents that disagree about the
+    population cannot jointly describe one number."""
+    ev = (receipt or {}).get("assembly_evidence") or {}
+    unc = ev.get("UNCOVERED_GENERATIONS") or {}
+    if not unc or unc.get("coverage") is None:
+        raise R.RunnerRefused(
+            f"REFUSED {COVERAGE_UNRESOLVABLE}: the builder receipt at "
+            f"{receipt_path} carries no "
+            f"`assembly_evidence.UNCOVERED_GENERATIONS.coverage`, so the "
+            f"population this number was computed over cannot be stated "
+            f"on the result. A figure whose coverage no reader can "
+            f"resolve is not quotable (rule 4).")
+    gens = reconciliation.get("n_generations")
+    n_ref = unc.get("n_reference_generations")
+    if gens is not None and n_ref != gens:
+        raise R.RunnerRefused(
+            f"REFUSED {POPULATION_DISAGREES}: the book receipt says its "
+            f"reference holds {n_ref} generations and the reconciliation "
+            f"walked {gens}. The two documents disagree about the "
+            f"population, so neither the counts nor the coverage may be "
+            f"stated beside this number.")
+    kept = ((reconciliation.get("KEPT") or {}).get("n_fills"))
+    dropped = ((reconciliation.get("DROPPED") or {}).get("n_fills"))
+    sel = (receipt or {}).get("selection") or {}
+    st = ((receipt or {}).get("reference") or {}).get("statuses") or {}
+    pl = (receipt or {}).get("placement_latency") or {}
+    out = {
+        "counts_are_from": ("the reconciliation THIS RUN performed -- the "
+                            "same tranches whose value is quoted"),
+        "n_generations": gens,
+        "TRANCHE_KEPT": kept,
+        "TRANCHE_BEFORE_PLACEMENT_LATENCY": (
+            dropped if dropped is not None else pl.get("n_tranches_dropped")),
+        "TRANCHE_BEFORE_PLACEMENT_LATENCY_source": (
+            "counted by the reconciliation" if dropped is not None else
+            "READ from the receipt's `n_tranches_dropped` -- this book "
+            "DISCARDED them at build time, so this run could not count "
+            "them (see the complement-leg status)"),
+        "coverage": {
+            "coverage": unc.get("coverage"),
+            "n_uncovered": unc.get("count"),
+            "n_reference_generations": n_ref,
+            "read_from": str(receipt_path),
+            "read_from_sha256": _sha(receipt_path),
+            "computed_here": False,
+            "why_not": ("coverage is a property of the book's ASSEMBLY, "
+                        "which this driver never loads"),
+            "cross_check": ("the receipt's `n_reference_generations` "
+                            "equals the generation count the "
+                            "reconciliation walked"),
+            "cross_check_holds": (gens is not None and n_ref == gens),
+            "cross_check_was_possible": gens is not None},
+        "era": sel.get("era"),
+        "n_gap_bearing_windows": sel.get("n_gap_bearing_windows"),
+        "BINANCE_GAP_EXCLUDED": st.get("BINANCE_GAP_EXCLUDED"),
+        "BINANCE_GAP_EXCLUDED_STATUS": st.get("BINANCE_GAP_EXCLUDED_STATUS"),
+        "TERMINAL_MARK_ENDED_IN_GAP": st.get("TERMINAL_MARK_ENDED_IN_GAP"),
+        "ADMITTED": st.get("ADMITTED"),
+    }
+    out["how_to_quote_this"] = (
+        f"every figure in this artifact is over {kept} kept tranches on "
+        f"{gens} generations at coverage {unc.get('coverage')}, with "
+        f"{unc.get('count')} generations uncovered. The coverage is the "
+        f"share of reference generations a scored key was found for -- "
+        f"NOT one minus a failure rate. `BINANCE_GAP_EXCLUDED: "
+        f"{st.get('BINANCE_GAP_EXCLUDED')}` carries its own status "
+        f"({st.get('BINANCE_GAP_EXCLUDED_STATUS')}) and is not a "
+        f"measurement of zero gaps.")
+    return out
+
+
+def scope_declaration(book_path, receipt: dict) -> dict:
+    """WHAT THIS NUMBER IS ABOUT -- resolvable without R-869 in hand.
+
+    DA 180: `BTC_ONLY` and `btc_only` are absent from the artifact and
+    `coin` appears twice, neither as a scope declaration -- so a reader
+    must already know that no eth Gate-1 tape exists to avoid
+    over-reading the figure as a market-wide one. The coin is DERIVED
+    from the artifacts (the book's own filename and the receipt's own
+    coin field, which must agree) rather than typed, and a disagreement
+    or an unresolvable coin REFUSES."""
+    name = Path(book_path).name
+    from_name = [c for c in ("btc", "eth") if f"_{c}_" in name
+                 or name.startswith(f"{c}_")]
+    from_receipt = (receipt or {}).get("coin")
+    if from_receipt is None:
+        sel = (receipt or {}).get("selection") or {}
+        from_receipt = sel.get("coin")
+    coins = sorted({*from_name, *([from_receipt] if from_receipt else [])})
+    if len(coins) != 1:
+        raise R.RunnerRefused(
+            f"REFUSED {SCOPE_UNRESOLVABLE}: the book filename implies "
+            f"{from_name} and the receipt says {from_receipt!r}, giving "
+            f"{coins}. A result must name the population it is about; a "
+            f"figure whose coin a reader has to infer is one a reader can "
+            f"over-read as market-wide.")
+    coin = coins[0]
+    return {
+        "coin": coin,
+        "BTC_ONLY": coin == "btc",
+        "coins_this_result_covers": [coin],
+        "resolved_from": {"book_filename": from_name,
+                          "builder_receipt_coin": from_receipt,
+                          "they_agree": True},
+        "why_only_one_coin": (
+            "R-869: NO eth Gate-1 tape exists for ANY day, so no arm-day "
+            "for another coin can be computed. This is a property of the "
+            "DATA, not a choice made in this run"),
+        "what_must_not_be_said": (
+            "that this is a market-wide or multi-coin result, or that the "
+            "effect generalises to another instrument. One coin, and the "
+            "reason the others are absent is that they have no tape"),
+    }
 
 
 def reconcile_placement_latency(result: dict) -> dict:
@@ -649,6 +800,18 @@ def run(day: str, book: Path, output_dir: Path, *,
     # baseline is not a result with a caveat; it is a number nobody should
     # read.
     reconciliation = reconcile_placement_latency(result)
+    # ---- DA 180's TWO QUOTATION GAPS, CLOSED ON THE RESULT -----------
+    # (1) the counts and the coverage the number was computed over, and
+    # (2) the coin it is about. Both were resolvable only by opening a
+    # DIFFERENT document (the book receipt) or by already knowing R-869.
+    # Rule 35: a limit that lives only in a declaration does not bind the
+    # result, so they are REQUIRED FIELDS here and the emit refuses
+    # without them.
+    _receipt_path = Path(result["reference_book"]["builder_receipt"])
+    _receipt_doc = json.loads(_receipt_path.read_text())
+    population = population_and_coverage(reconciliation, _receipt_doc,
+                                         _receipt_path)
+    scope = scope_declaration(book, _receipt_doc)
     placement = result.get("placement_latency") or {}
     value_ms = placement.get("L_place_ms")
     if value_ms is None:
@@ -677,6 +840,8 @@ def run(day: str, book: Path, output_dir: Path, *,
         "result_contract": result_contract,
         "placement_latency": placement,
         "placement_latency_reconciliation": reconciliation,
+        "population_and_coverage": population,
+        "scope": scope,
         # THE ASK IS AT THE TOP OF THE ARTIFACT, not only nested inside
         # `day_run.book_scoring_code`. A reader deciding how much to trust
         # this number must meet the fact that a firing check was overridden
@@ -727,7 +892,7 @@ def run(day: str, book: Path, output_dir: Path, *,
 #: cells rather than a count of them, so a cell could be deleted and the
 #: line would still say four (rule 10, and R-251's silently-shrinking
 #: suite). Every cell below increments; the total is checked at the end.
-EXPECTED_CHECKS = 29
+EXPECTED_CHECKS = 32
 
 
 def selftest(quiet: bool = False) -> int:
@@ -1170,6 +1335,88 @@ def selftest(quiet: bool = False) -> int:
         _result181(_partial186, _W181, _kept181)),
         "DROPPED_TRANCHES_ON_ONLY_SOME_GENERATIONS",
         "DE 186 KNOWN-BAD: a PARTIAL split is not a split")
+
+    # ---- DE 191 / DA 180: THE TWO QUOTATION GAPS -------------------
+    # Both were found on a LANDED artifact, so both are driven against a
+    # REAL receipt where one exists, and the known-bads are the two ways
+    # each can be wrong.
+    _rcpt191 = Path(DR.resolve()["data_root"]) / (
+        "pm_5min/derived/be_daybook_receipt_20260904_btc__L250ms__EV21.json")
+    if not _rcpt191.is_file():
+        ok(False, "DE 191 the 09-04 EV21 receipt is missing")
+        ok(False, "DE 191 (scope) the 09-04 EV21 receipt is missing")
+    else:
+        _doc191 = json.loads(_rcpt191.read_text())
+        _rec191 = {"n_generations": 358108,
+                   "KEPT": {"n_fills": 26379},
+                   "DROPPED": {"n_fills": 31471}}
+        _pop191 = population_and_coverage(_rec191, _doc191, _rcpt191)
+        _nocov = json.loads(json.dumps(_doc191))
+        _nocov.pop("assembly_evidence", None)
+        _wrongpop = json.loads(json.dumps(_doc191))
+        _wrongpop["assembly_evidence"]["UNCOVERED_GENERATIONS"][
+            "n_reference_generations"] = 358107
+        _c1 = _c2 = None
+        try:
+            population_and_coverage(_rec191, _nocov, _rcpt191)
+        except R.RunnerRefused as _e:
+            _c1 = str(_e).split(":")[0].replace("REFUSED ", "")
+        try:
+            population_and_coverage(_rec191, _wrongpop, _rcpt191)
+        except R.RunnerRefused as _e:
+            _c2 = str(_e).split(":")[0].replace("REFUSED ", "")
+        ok(_pop191["TRANCHE_KEPT"] == 26379
+           and _pop191["TRANCHE_BEFORE_PLACEMENT_LATENCY"] == 31471
+           and _pop191["coverage"]["n_uncovered"] == 29530
+           and abs(_pop191["coverage"]["coverage"] - 0.9175388430305941) < 1e-12
+           and _pop191["coverage"]["cross_check_holds"] is True
+           and _pop191["BINANCE_GAP_EXCLUDED_STATUS"] ==
+               "NOT_APPLIED_ON_THE_DAY_PATH"
+           and _pop191["n_gap_bearing_windows"] == 52
+           and _c1 == COVERAGE_UNRESOLVABLE
+           and _c2 == POPULATION_DISAGREES,
+           f"DE 191 (1) THE POPULATION TRAVELS WITH THE NUMBER: on the "
+           f"REAL 09-04 receipt the result now carries TRANCHE_KEPT "
+           f"{_pop191['TRANCHE_KEPT']}, TRANCHE_BEFORE_PLACEMENT_LATENCY "
+           f"{_pop191['TRANCHE_BEFORE_PLACEMENT_LATENCY']}, coverage "
+           f"{_pop191['coverage']['coverage']:.7f} with "
+           f"{_pop191['coverage']['n_uncovered']} uncovered, and "
+           f"BINANCE_GAP_EXCLUDED WITH ITS STATUS -- all of which lived "
+           f"only in the book receipt, a different document. A receipt "
+           f"with no coverage refuses `{_c1}`; and A RECEIPT WHOSE "
+           f"POPULATION DISAGREES WITH THE RECONCILIATION BY ONE "
+           f"GENERATION refuses `{_c2}`, which is the cell that makes the "
+           f"coverage a cross-check rather than a restatement")
+        _bk191 = Path(DR.resolve()["data_root"]) / (
+            "pm_5min/derived/be_daybook_20260904_btc__L250ms__EV21.pkl")
+        _sc191 = scope_declaration(_bk191, _doc191)
+        _c3 = None
+        try:
+            scope_declaration(
+                Path("/x/be_daybook_20260904_eth__L250ms__EV21.pkl"),
+                {"coin": "btc"})
+        except R.RunnerRefused as _e:
+            _c3 = str(_e).split(":")[0].replace("REFUSED ", "")
+        ok(_sc191["coin"] == "btc" and _sc191["BTC_ONLY"] is True
+           and _sc191["coins_this_result_covers"] == ["btc"]
+           and "R-869" in _sc191["why_only_one_coin"]
+           and "market-wide" in _sc191["what_must_not_be_said"]
+           and _c3 == SCOPE_UNRESOLVABLE,
+           f"DE 191 (2) THE SCOPE IS RESOLVABLE FROM THE ARTIFACT: "
+           f"`BTC_ONLY: True` with the coin DERIVED from the book "
+           f"filename and the receipt agreeing, R-869's reason on it (no "
+           f"eth Gate-1 tape exists for ANY day -- a property of the "
+           f"DATA), and `what_must_not_be_said` naming the over-read. A "
+           f"book and receipt naming DIFFERENT coins refuses `{_c3}` "
+           f"rather than picking one")
+
+    # AND THE EMIT REFUSES WITHOUT THEM -- a required field is one whose
+    # absence stops the bytes, not one a writer is asked to remember.
+    _refuses(lambda: write_artifact(
+        Path(tempfile.mkdtemp()) / "x.json",
+        {"protocol": PROTOCOL, "placement_latency": {"L_place_ms": 250.0}}),
+        REQUIRED_QUOTATION_FIELDS_ABSENT,
+        "DE 191 KNOWN-BAD: a payload missing the population and the scope")
 
     # ---- DE 182: THE WAIVER ASK, AND THE DEFAULT THAT MUST BE NO ------
     import de_scoring_path_delta as _SPD182
