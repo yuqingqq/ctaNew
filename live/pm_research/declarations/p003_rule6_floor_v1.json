@@ -56,6 +56,36 @@
     "name": "MIN_PERMUTATIONS",
     "owner": "DA",
     "binding": "DERIVED"
+   },
+   {
+    "path": "live/pm_research/de_action_bundle_control.py",
+    "name": "MIN_DRAWS",
+    "owner": "DE",
+    "binding": "LITERAL"
+   },
+   {
+    "path": "live/pm_research/de_matched_cancel_control.py",
+    "name": "MIN_DRAWS",
+    "owner": "DE",
+    "binding": "LITERAL"
+   },
+   {
+    "path": "live/pm_research/de_section81_tail_null.py",
+    "name": "MIN_DRAWS",
+    "owner": "DE",
+    "binding": "LITERAL"
+   },
+   {
+    "path": "live/pm_research/de_v2_acting_matched_control.py",
+    "name": "MIN_DRAWS",
+    "owner": "DE",
+    "binding": "LITERAL"
+   },
+   {
+    "path": "live/pm_research/de_v2_sequential_quota_control.py",
+    "name": "MIN_DRAWS",
+    "owner": "DE",
+    "binding": "LITERAL"
    }
   ],
   "declarations": [
@@ -104,14 +134,28 @@
    "min_draws_enforced",
    "rule_6_floor"
   ],
-  "n_carriers": 13,
+  "n_carriers": 18,
   "field_paths_are_DOTTED": "four of the six live NESTED. The first reconcile() run reported them CARRIER_UNREADABLE rather than agreeing -- which is the instrument doing its job on its own carrier list.",
   "binding_kinds": {
    "DERIVED": "the name is IMPORTED from p003_rule6_floor. It cannot drift, because there is nothing to drift. Verified by AST: the assignment must NOT be a literal and must name the authority module.",
    "LITERAL": "the value is typed and RECONCILED against the authority. It CAN drift, and reconcile() makes that LOUD instead of silent.",
    "why_both_exist": "DA converted the four carriers it owns to DERIVED. BE's three code carriers and the six declaration carriers are RECONCILED, not edited -- converting them is their owners' act (rule 13, seat ownership). A declaration field is a RECORD and is expected to stay literal; a code constant is not.",
    "owed": "BE's be_cancel_axis_null.MIN_DRAWS, be_ceiling_null.MIN_DRAWS and phase2_iter011.MIN_DRAWS_011 remain LITERAL. They are reconciled every run; converting them to DERIVED removes the last three code copies."
-  }
+  },
+  "collisions": [
+   {
+    "path": "live/pm_research/de_multiday_design_declaration.py",
+    "name": "MIN_DRAWS",
+    "value": 500,
+    "owner": "DE",
+    "kind": "NAME_COLLISION_NOT_A_DIVERGENCE",
+    "what_it_actually_is": "the DRAW COUNT (500), not the rule-6 FLOOR (200)",
+    "why_it_is_a_hazard_anyway": "at :845 it refuses `k < MIN_DRAWS` with the message 'below the declared minimum ... (rule 6)'. EIGHT other modules use the identical identifier MIN_DRAWS, cite the SAME rule, and enforce 200. Nothing on either side says which quantity it holds.",
+    "the_asymmetric_danger": "harmonising DOWN to 200 silently weakens this module's guard; harmonising UP to 500 breaks the floor semantics in eight others. A future 'let us make these agree' is a coin flip with a wrong side.",
+    "routed_to": "DE -- rename, not revalue. DA does not edit DE's modules.",
+    "not_counted_as_a_divergence": true
+   }
+  ]
  },
  "cross_seat_note": "DA owns four code carriers and two declaration carriers. The BE ones are NOT edited by this act (rule 13 and seat ownership); they are RECONCILED, so a BE copy that drifts becomes LOUD instead of silent. Converting them to derive is BE's to do.",
  "on_divergence": {
@@ -123,5 +167,15 @@
   "positive_control": "reconcile() over the real tree returns AGREED with n_carriers == 13",
   "known_bad": "a fixture copy of a carrier whose value is 199 (or 201) must make reconcile() RAISE RULE6_FLOOR_DIVERGED and NAME that carrier",
   "partial_input": "a carrier path that does not exist, or whose constant is absent, is CARRIER_UNREADABLE -- a named status, never treated as agreement"
+ },
+ "MY_FIRST_ENUMERATION_WAS_INCOMPLETE_AND_HERE_IS_WHY": {
+  "claimed": 13,
+  "actual": 18,
+  "missed": 5,
+  "plus_one_name_collision": true,
+  "the_mechanism_was_NOT_a_spelling_failure": "the grep pattern was right and found them all. I piped it through `head -20`, the output stopped mid-list, AND I READ THE CAP AS THE SET.",
+  "why_that_is_worth_recording": "the previous three instances of this class were SPELLING failures -- one search term for a set with several. This one is a DISPLAY TRUNCATION, and it is more insidious because the instrument was correct and gave no sign of being cut off.",
+  "the_remedy": "an enumeration that feeds a declared set is counted with `wc -l`, never read off a `head`.",
+  "found_by": "DA 196's carrier census, which swept by AST over all 281 modules instead of by grep"
  }
 }
