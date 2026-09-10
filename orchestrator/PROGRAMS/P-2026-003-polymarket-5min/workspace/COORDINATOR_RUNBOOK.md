@@ -895,13 +895,49 @@ baseline in fewer than half the windows on every arm-day (38.2 %–45.5 %)** —
 what the sentences above carry. This is the same one-step-further shape §7j exists to
 catch, found in REV's own earlier phrasing.
 
-### Two slots that must be filled before either template is sent
+### Both slots are CLOSED (REV 172, 2026-09-10T17:39Z) — the sentences have no open items
 
-- **The control generator.** If `MCC.draw_one` cannot refuse a malformed draw, the verdict
-  compares the arm against N UNVALIDATED objects and the sentence must say so. (REV 165 READ
-  its `STRATUM_TOO_SMALL` refusal in source and credited it as refusing-not-clamping; **it
-  did not DRIVE it.** BE is driving it. Until that lands the status is READ, NOT DRIVEN.)
-- **The null's own floor.** `SETTLEMENT_NULL_TOO_SMALL` — DA 199 drove it (`74f3e65`). The
-  caller-side floor was driven at REV 167 (5 and 199 refuse, 200 passes) with the standing
-  qualification that it guards the PARAMETER, not the OUTCOME: a run killed mid-loop never
-  reaches it, and under-sampling by interruption is caught by the gap/dup refusals instead.
+**The control generator: DRIVEN AND HOLDING.** BE drove `MCC.draw_one`. The 500 controls
+per cell are validated **at the point of creation, per stratum**, and the refusal
+(`STRATUM_TOO_SMALL`) **never clamps** — *"a clamp silently answers an easier question than
+the one the treated arm poses."* So the verdict does NOT compare each arm against
+unvalidated objects, and neither sentence needs a clause saying it might.
+
+**The null's own floor: DRIVEN on both sides.** DA 199 drove `SETTLEMENT_NULL_TOO_SMALL`
+(`74f3e65`); REV 167 drove the caller-side floor (5 and 199 refuse, 200 passes), with the
+standing qualification that it guards the **parameter**, not the **outcome** — a run killed
+mid-loop never reaches it, and under-sampling by interruption is caught by the gap/dup
+refusals instead.
+
+#### The correction that came with the closure — recorded, not smoothed
+
+REV flagged `MCC.draw_one` as READ, NOT DRIVEN. **BE 164 had already driven it** — that
+transcript was subprocess output, i.e. execution. **The criticism was unfounded and the
+re-run cost one unit and one sentence.**
+
+Two statements, both true, and the record needs both:
+
+* **At system level this is rule 41 pointed inward and it is the DESIGN WORKING.** A noisy
+  check on ourselves fired on a FALSE POSITIVE. That is the cheap direction and it is
+  self-limiting: a false alarm carries its own prompt to check. Had the error run the other
+  way, the verdict would have shipped claiming a driven guard that had only ever been read,
+  and nothing in the workflow would have surfaced it.
+* **At REV's level the specific error was an inference, and naming it is the point.** REV's
+  evidence supported *"I have not driven it"*; REV wrote *"the status of that refusal is
+  READ, NOT DRIVEN"*, which is a claim about the world. **That is §7j's own failure mode — a
+  true observation carried one step further than the evidence went — committed inside the
+  artefact written to catch it.** Accepting the generous framing without naming the
+  inference would be the same move a second time.
+
+#### BE's real finding, which survives the exchange and is the sixth shape on the record
+
+`de_matched_cancel_control.draw_many`'s docstring says **"Rule 6's minimum is enforced
+HERE."** It is TRUE of that function — `if n_draws < MIN_DRAWS: raise` — and **FALSE AS
+DOCUMENTATION OF THE LIVE PATH.** Verified independently: both live runners loop on
+`MCC.draw_one` (`de_settlement_control_run.py:100`, `de_asymmetry_null_run.py:234`) and
+**never call `draw_many`**; only `de_multiday_gate1_runner.py:7365` does. The property still
+holds on the live path — by a DIFFERENT guard, `de_settlement_control_run.FLOOR` at :112 —
+so the floor is enforced and the documentation names the wrong enforcer. **A reader
+checking whether rule 6 binds the running loop would read that docstring and stop.**
+Satisfied today; false as documentation; and `MIN_DRAWS = 200` is a fourth literal carrier
+of the rule-6 floor, already enumerated on DA's carrier list and bound by `reconcile()`.
