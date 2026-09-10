@@ -1,0 +1,76 @@
+{
+ "protocol": "BE_CASCADE_REPOINT_EVIDENCE_V1",
+ "version": 1,
+ "produced_by": "BE 161",
+ "produced_at_utc": "2026-09-10T17:08:59Z",
+ "purpose": "the evidence a be_cascade repoint OWES. The refusal text says the citation must be re-pointed DELIBERATELY 'with the draw-path and constant axes measured (see `be_module_repoint`)'. This is that measurement.",
+ "A_NOTE_ON_THAT_POINTER": "`be_module_repoint` is NOT a module or a function -- it is a FIELD in the params files (v7..v21, v29). A reader following the refusal's advice looks for code and finds none. The procedure it names is the field's own shape: BOTH_PIN_SITES_SWEPT, a statement that no estimand/bar/threshold/arm/horizon/day set differs, changed_by, and modules_moved.",
+ "measured_against": "de_multiday_gate1_params_v29.json be_cascade.modules",
+ "n_cascade_modules": 10,
+ "n_moved": 2,
+ "modules_moved": [
+  {
+   "path": "live/pm_research/de_head_scoring.py",
+   "before": "53a406a0ae2a11ff7f4d17e4d65c6266d6fe53cce41fb4f8d7f14286a8adec28",
+   "after_prefix": "31c368384770351f"
+  },
+  {
+   "path": "live/pm_research/de_phase4_diag_runner.py",
+   "before_prefix": "cb97b94dbd3fc6ca",
+   "after_prefix": "9e2a0977d8dfc3be"
+  }
+ ],
+ "instrument": "de_scoring_path_delta.delta, driven on the two moved modules",
+ "MEASURED": {
+  "de_head_scoring.py": {
+   "status": "A_CHANGE_IS_ON_THE_SCORING_PATH",
+   "intersection_is_empty": false,
+   "changed_defs_on_the_path": [
+    "compose_head_inputs_batch",
+    "score_lgbm_condvalue_batch"
+   ],
+   "other_top_level_differs": false,
+   "n_units_on_the_path": 15,
+   "all_units_byte_identical": false
+  },
+  "de_phase4_diag_runner.py": {
+   "status": "A_CHANGE_IS_ON_THE_SCORING_PATH",
+   "intersection_is_empty": false,
+   "changed_defs_on_the_path": [
+    "_fragment_chunks",
+    "_stream_fragment_rows",
+    "assemble_streaming",
+    "generation_scores"
+   ],
+   "other_top_level_differs": false,
+   "n_units_on_the_path": 28,
+   "all_units_byte_identical": false
+  }
+ },
+ "walk_agrees_with_be_producing_closure": true,
+ "waiver_available_today": false,
+ "THE_FINDING": "this is NOT a repoint of repaired code. BOTH moved modules carry `A_CHANGE_IS_ON_THE_SCORING_PATH`, the intersections are NOT empty, and the changed definitions are the scoring functions themselves -- compose_head_inputs_batch and score_lgbm_condvalue_batch in de_head_scoring, and _fragment_chunks / _stream_fragment_rows / assemble_streaming in de_phase4_diag_runner. So the v29 field's own sentence, THIS_IS_A_REPOINT_OF_REPAIRED_CODE_NOT_A_DESIGN_CHANGE, CANNOT be asserted truthfully for this repoint on the evidence available.",
+ "TWO_BLOCKERS_BEFORE_IT_MAY_BE_ADOPTED": [
+  {
+   "blocker": "STEP_2_IS_DRAWING_AGAINST_THE_CURRENT_PINS",
+   "why": "DE holds the heavy lock for plan step 2 and its draws run through the cascade as pinned in v29. Repointing mid-step-2 puts the draws and any later run through DIFFERENT code, which is the exact failure the pin exists to prevent: 'a null run through a DIFFERENT cascade is not a control'.",
+   "clears_when": "step 2's draws are complete"
+  },
+  {
+   "blocker": "EQUIVALENCE_IS_FIXTURE_ONLY",
+   "why": "the claim that the optimized cascade computes the same scores rests on de_head_scoring's 44/44 exact-equality selftest -- a FIXTURE. A fixture proves the arithmetic; only a day proves the pipeline. No real book has ever been built with these bytes.",
+   "clears_when": "one day is built at the optimized tip and be_book_identity_compare is run against its EV21 predecessor",
+   "note": "this is the deferred book-identity test from BE 154, and the repoint is now a REASON OF ITS OWN for that build -- the coordinator's BE 158 conditional: if a check forces a build for its own reason, that build IS the optimization test."
+  }
+ ],
+ "what_a_v31_MUST_carry_when_it_lands": {
+  "be_cascade.modules": "the two digests repointed",
+  "be_module_repoint": {
+   "BOTH_PIN_SITES_SWEPT": "must be TRUE and MEASURED -- note neither moved module is in fit_manifest.json's fit_code_files, so that second pin site is unaffected; record that rather than assume it",
+   "THIS_IS_A_REPOINT_OF_...": "must NOT be copied from v29; the honest form names the scoring-path change and cites the book-identity result",
+   "modules_moved": "before/after per module",
+   "equivalence_evidence": "the be_book_identity_compare result on a real day"
+  }
+ },
+ "decides_nothing": "reports the measurement (rule 14). Adoption is DE's and the coordinator's."
+}
