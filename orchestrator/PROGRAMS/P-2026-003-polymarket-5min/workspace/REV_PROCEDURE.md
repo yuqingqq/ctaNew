@@ -246,6 +246,15 @@ ledger* — and REVIEW 129 then showed the predicate still typed a list.
   say **"that is a ruling, not a patch"** and hand it up with the measurement it should be
   ruled on.
 - **No new ground when the user has ruled fix-first.** R-860.
+- **NEVER READ A PROTECTED DAY'S ARTIFACTS — rule 34a (USER ruling, `abd4b07`).** *Writing does
+  not consume a day; READING does.* `pm-evaluation-pipeline.timer` auto-processes one day every
+  six hours and has already written Tier-2 artifacts for **2026-09-08** and will write later
+  ones. That does not consume those days — the pipeline fits nothing, picks no threshold and
+  computes no interval — **but the outputs are off limits: do not read, summarise, plot,
+  aggregate or quote `data/pm_5min/tier2/**/day=2026-09-08/` or any later day. Their existence
+  is not permission.** This seat is the one most likely to trip it, because verifying a claim
+  usually means reaching for the freshest artifact available — **and from 09-08 on, the
+  freshest artifact is the one we may not look at.**
 - **No result assertions.** REV verifies; DA recomputes; DE and BE produce.
 
 ---
