@@ -1,0 +1,407 @@
+{
+ "protocol": "P003_DA_ASYMMETRY_NULL_V1",
+ "version": 1,
+ "STATUS": "DECLARED-NOT-RUN",
+ "declared_by": "DA 191",
+ "declared_at_utc": "2026-09-10T09:18:35Z",
+ "declared_before_any_draw": true,
+ "ruling": "USER, relayed by the coordinator at DA 191: run the asymmetry null. Rule 6 binds: the design AND the minimum sample are declared here, in the repo, with a commit ref, BEFORE any draw.",
+ "the_question_this_settles": {
+  "observation": "the arms' LEFT tail shrinks (21-36 % HAZARD, 58-62 % CONDVALUE on the coordinator's figures) BUT THE RIGHT TAIL SHRINKS BY A SIMILAR AMOUNT.",
+  "the_rival_explanation": "DE-LEVERING. Cancelling reduces exposure; less exposure shrinks BOTH tails; that requires no skill whatsoever.",
+  "what_separates_them": "a RANDOM cancellation policy that cancels the SAME NUMBER of generations, on the SAME SIDES, in the SAME HOURS. Any tail shrinkage it also produces is exposure, not skill.",
+  "why_the_match_must_be_on_cancel_count": "a control that cancels LESS would trivially retain fatter tails, and the comparison would measure exposure rather than selection. Cancel-count matching is what nulls de-levering; it is not one of three equal conveniences.",
+  "why_hour_matters": "adversity varies by hour and BE ranked all 24. Cancels clustering in structurally benign or adverse hours would masquerade as skill.",
+  "why_side_matters": "the two sides do not have the same adverse-selection profile; an unmatched side mix is a different policy, not a control."
+ },
+ "estimand": {
+  "name": "A = ret_pos - ret_neg",
+  "what_it_is": "the SCALE-FREE TAIL-RETENTION ASYMMETRY. `ret` is RETENTION: the fraction of the baseline's tail mass the arm still carries.",
+  "NOT_the_mean": "the day MEAN is the underpowered quantity that produced 4-of-4 = p 1/16 = 0.0625 and clears nothing. It is NOT the tested statistic here and may not be substituted for it.",
+  "unit_of_the_window": "the SLUG (one 5-minute market). ~288 paired windows per day, 246 on 2026-09-03.",
+  "per_window_value": "SETTLEMENT_SLUG.total_cents == trades_leg_cents + residual_leg_cents, R-801's ruled P&L for that slug. Recomputable from FILL rows (DA 188/189 reproduced it on all sixteen books; trades legs to 1.3e-9).",
+  "PRIMARY_definition": {
+   "id": "OWN_SIGN",
+   "ret_pos": "sum over windows of max(arm(w), 0)  /  sum over windows of max(baseline(w), 0)",
+   "ret_neg": "sum over windows of min(arm(w), 0)  /  sum over windows of min(baseline(w), 0)",
+   "both_ratios_are_positive": "the negative ratio is a quotient of two negative sums",
+   "A": "ret_pos - ret_neg"
+  },
+  "REQUIRED_COMPANION_definition": {
+   "id": "BASELINE_SIGN",
+   "why": "the partition is fixed by the BASELINE so the arm cannot move windows between the buckets it is scored on",
+   "ret_pos": "sum over {w : baseline(w) > 0} of arm(w)  /  sum over the same windows of baseline(w)",
+   "ret_neg": "sum over {w : baseline(w) < 0} of arm(w)  /  sum over the same windows of baseline(w)",
+   "status": "ALWAYS EMITTED BESIDE THE PRIMARY. It is NOT a fallback and may NOT be substituted for the primary after seeing either. Declaring both now is what stops a post-hoc choice between them."
+  },
+  "why_this_nulls_de_levering": "under PURE de-levering arm(w) = k * baseline(w) for some 0 < k < 1, so ret_pos = ret_neg = k and A = 0 EXACTLY, under both definitions. A > 0 is precisely 'the left tail was clipped harder than the right', which is the skill claim.",
+  "zero_denominator": {
+   "status_name": "TAIL_MASS_DENOMINATOR_ZERO",
+   "rule": "a day or bucket whose baseline tail mass is 0 yields a STATUS, never a 0, never a silent drop (rule 4)"
+  }
+ },
+ "direction": {
+  "declared_direction": "ret_pos > ret_neg, i.e. A > 0",
+  "test_is": "ONE-SIDED, right tail of the null distribution",
+  "HONESTY_CLAUSE_THIS_DECLARATION_WILL_NOT_SOFTEN": "THE DIRECTION WAS CHOSEN AFTER THE POINT ESTIMATES WERE SEEN. The eight observed A values were computed before this file was written and are recorded in `observed_at_declaration_time` below. What is genuinely unseen is the NULL -- no draw has ever been taken. So this is a pre-declared NULL with a POST-HOC DIRECTION, and a one-sided p whose side was picked after the data is not free.",
+  "consequence": "the TWO-SIDED p is a REQUIRED COMPANION on every cell and every arm-level claim. It is not optional and not a footnote.",
+  "refusal_if_absent": "P_TWO_SIDED_ABSENT"
+ },
+ "observed_at_declaration_time": {
+  "why_recorded": "so nobody can later claim the direction or the definition was blind, and so a re-run that moves these numbers is visible as a change rather than absorbed",
+  "source": "the four sealed point-estimate ledgers of 2026-09-10T05:2x-05:37Z, SETTLEMENT_SLUG rows, recomputed by DA",
+  "cells": {
+   "2026-09-03|CONDVALUE_X_SKEW": {
+    "A_own_sign": {
+     "ret_pos": 0.827140595999054,
+     "ret_neg": 0.7038773189897485,
+     "A": 0.1232632770093055
+    },
+    "B_baseline_sign": {
+     "ret_pos": 0.7035724598920591,
+     "ret_neg": 0.5480916422950485,
+     "A": 0.1554808175970106
+    },
+    "n_windows": 246
+   },
+   "2026-09-03|HAZARD_OVER_SKEWED_REF": {
+    "A_own_sign": {
+     "ret_pos": 0.9187219052398882,
+     "ret_neg": 0.811019521803078,
+     "A": 0.10770238343681016
+    },
+    "B_baseline_sign": {
+     "ret_pos": 0.8480767393830348,
+     "ret_neg": 0.7219552588389607,
+     "A": 0.12612148054407413
+    },
+    "n_windows": 246
+   },
+   "2026-09-04|CONDVALUE_X_SKEW": {
+    "A_own_sign": {
+     "ret_pos": 0.6505506513660038,
+     "ret_neg": 0.4661905369792068,
+     "A": 0.18436011438679695
+    },
+    "B_baseline_sign": {
+     "ret_pos": 0.5550741639746314,
+     "ret_neg": 0.3495578144834173,
+     "A": 0.2055163494912141
+    },
+    "n_windows": 288
+   },
+   "2026-09-04|HAZARD_OVER_SKEWED_REF": {
+    "A_own_sign": {
+     "ret_pos": 0.762331083423193,
+     "ret_neg": 0.6678173693440221,
+     "A": 0.09451371407917086
+    },
+    "B_baseline_sign": {
+     "ret_pos": 0.723824090234967,
+     "ret_neg": 0.6207777727545535,
+     "A": 0.10304631748041349
+    },
+    "n_windows": 288
+   },
+   "2026-09-05|CONDVALUE_X_SKEW": {
+    "A_own_sign": {
+     "ret_pos": 0.6148403822479757,
+     "ret_neg": 0.6371938582710338,
+     "A": -0.02235347602305815
+    },
+    "B_baseline_sign": {
+     "ret_pos": 0.4781245046746915,
+     "ret_neg": 0.49903457434802123,
+     "A": -0.020910069673329756
+    },
+    "n_windows": 288
+   },
+   "2026-09-05|HAZARD_OVER_SKEWED_REF": {
+    "A_own_sign": {
+     "ret_pos": 0.7245425756239848,
+     "ret_neg": 0.7153409240569998,
+     "A": 0.009201651566985047
+    },
+    "B_baseline_sign": {
+     "ret_pos": 0.6404839518916199,
+     "ret_neg": 0.6303948338986545,
+     "A": 0.010089117992965413
+    },
+    "n_windows": 288
+   },
+   "2026-09-06|CONDVALUE_X_SKEW": {
+    "A_own_sign": {
+     "ret_pos": 0.6073865717549367,
+     "ret_neg": 0.5261973466378834,
+     "A": 0.08118922511705329
+    },
+    "B_baseline_sign": {
+     "ret_pos": 0.5087667153588568,
+     "ret_neg": 0.4153653145233635,
+     "A": 0.09340140083549325
+    },
+    "n_windows": 288
+   },
+   "2026-09-06|HAZARD_OVER_SKEWED_REF": {
+    "A_own_sign": {
+     "ret_pos": 0.7440243084887105,
+     "ret_neg": 0.6808451456070119,
+     "A": 0.06317916288169856
+    },
+    "B_baseline_sign": {
+     "ret_pos": 0.6759858388952248,
+     "ret_neg": 0.6043814178895204,
+     "A": 0.07160442100570441
+    },
+    "n_windows": 288
+   }
+  },
+  "read_it_plainly": "7 of 8 cells are positive; 2026-09-05 CONDVALUE_X_SKEW is NEGATIVE (-0.0224 primary) and 2026-09-05 HAZARD_OVER_SKEWED_REF is +0.0092, which is indistinguishable from zero by inspection. The test is therefore capable of failing on its own point estimates before any null is drawn."
+ },
+ "minimum_sample": {
+  "n_draws": 500,
+  "rule_6_floor": 200,
+  "source_of_the_bar": "de_multiday_gate1_params_v29.json min_draws_per_arm_day = 500, a PRE-DECLARED artifact -- never the receipt's own claim",
+  "per": "ARM-DAY CELL. 500 draws in each of the 8 cells.",
+  "short_count": "REFUSES, never reports",
+  "refusal_name": "NULL_UNDER_SAMPLED",
+  "why_a_floor_at_all": "rule 6 -- an under-sampled CORRECT null flatters exactly as much as a wrong one, and a null max is an extreme order statistic"
+ },
+ "multiplicity": {
+  "recorded_at": "declaration time, before any draw (rule 12)",
+  "n_cells": 8,
+  "cells_are": "2 arms x 4 days",
+  "n_arms": 2,
+  "arms": [
+   "CONDVALUE_X_SKEW",
+   "HAZARD_OVER_SKEWED_REF"
+  ],
+  "days": [
+   "2026-09-03",
+   "2026-09-04",
+   "2026-09-05",
+   "2026-09-06"
+  ],
+  "correction_for_cell_claims": "HOLM over the 8 cells",
+  "correction_for_arm_level_claims": "HOLM over the 2 arms",
+  "alpha": 0.05,
+  "no_other_family_may_be_declared_later": "the family is fixed here. Adding a day, an arm or a variant after seeing a p-value re-opens the family and voids the correction."
+ },
+ "matching": {
+  "matched_on": [
+   "cancel_count",
+   "side",
+   "hour"
+  ],
+  "simultaneously": true,
+  "rule": "rule 7 -- matched on the DECISION variable, and compared on the DECISION metric",
+  "resampled": "WHICH cancellable generations the arm cancels",
+  "resampled_key": [
+   "slug",
+   "side",
+   "gen"
+  ],
+  "held_fixed": [
+   "the reference path (the neutral no-cancel book)",
+   "the book digest",
+   "the arm's theta (frozen, never re-fitted -- DE 203's predicate must read True)",
+   "the day",
+   "the NUMBER of generations cancelled",
+   "the side composition of the cancelled set",
+   "the UTC-hour composition of the cancelled set",
+   "the settlement map (winners), including the 09-03 venue fallback"
+  ],
+  "enforcement": {
+   "cancel_count": "EXACT. |drawn| == |arm cancels|. A draw that cannot reach the count is REFUSED, never truncated.",
+   "side": "EXACT per side.",
+   "hour": "EXACT per UTC hour. Where an hour holds fewer eligible generations than the arm cancelled in it, REFUSE with MATCH_INFEASIBLE_HOUR and report the per-hour deficit; NEVER silently rebalance into another hour."
+  },
+  "unmatchable_cell": {
+   "status_name": "MATCH_INFEASIBLE",
+   "rule": "rule 4 -- exclusions are STATUSES, never silent drops. An unmatchable cell is REPORTED with its deficit and its count and is EXCLUDED FROM THE FAMILY EXPLICITLY, and the multiplicity is restated with the exclusion visible.",
+   "forbidden": "relaxing a match to make a cell run. A relaxed match is a DIFFERENT null and must be declared as one, in advance, in this file's successor."
+  }
+ },
+ "what_would_sink_it": {
+  "why_this_section_exists": "a criterion with no failing outcome is not a criterion. These are named BEFORE the draw so no result can be reinterpreted into a pass.",
+  "SINK_1_PRIMARY": {
+   "predicate": "Holm-corrected one-sided p > 0.05 on the ARM-LEVEL statistic for an arm",
+   "verdict_if_true": "DE_LEVERING_NOT_EXCLUDED",
+   "means": "the observed asymmetry is what a random cancellation policy of the same size, side mix and hour mix produces. The cancellation line is NOT established for that arm."
+  },
+  "SINK_2": {
+   "predicate": "observed A <= 0 in a cell",
+   "verdict_if_true": "CELL_SHOWS_NO_ASYMMETRY",
+   "already_true_at_declaration_time_for": "2026-09-05 CONDVALUE_X_SKEW (A = -0.0224)",
+   "means": "the right tail gave up at least as much as the left recovered -- the de-levering signature, not the skill signature"
+  },
+  "SINK_3": {
+   "predicate": "|A_obs - median(A_null)| < 0.25 * sd(A_null) in a cell",
+   "verdict_if_true": "ARM_SITS_IN_THE_NULL_BULK",
+   "means": "the arm is indistinguishable from a matched random canceller regardless of the p-value's sign"
+  },
+  "SINK_4": {
+   "predicate": "the two arms' arm-level verdicts disagree in SIGN while both are Holm-significant",
+   "verdict_if_true": "NOT_ONE_MECHANISM",
+   "means": "two opposite 'significant' effects are not one tail-clipping mechanism; the finding would be about the arms, not about cancelling"
+  },
+  "SINK_5": {
+   "predicate": "the ORACLE positive control does NOT land in the extreme right tail",
+   "verdict_if_true": "NULL_HAS_NO_POWER",
+   "means": "the instrument cannot detect asymmetry it is handed, so its zeros mean nothing and NO verdict may be read from this run at all (rule 15)"
+  }
+ },
+ "falsifiers": {
+  "rule": "rule 15 -- every checker ships a falsifier. A null that has never proved it can fire is not a null.",
+  "positive_control_the_null_MUST_flag": {
+   "name": "ORACLE_WORST_WINDOWS",
+   "construction": "an arm that cancels exactly the generations in the windows with the WORST realised baseline settled value, matched to the same cancel count, side and hour composition as the real arm",
+   "must": "land in the EXTREME RIGHT TAIL -- one-sided p <= 1/(n_draws+1) at n=500, i.e. it must beat every draw, or at minimum sit above the 99th percentile",
+   "if_it_does_not": "SINK_5 fires and the run reports NULL_HAS_NO_POWER instead of a verdict"
+  },
+  "known_bad_the_null_MUST_refuse": [
+   {
+    "name": "UNDER_CANCELLING_CONTROL",
+    "construction": "a control drawing FEWER cancels than the arm",
+    "must": "REFUSE. It would trivially retain fatter tails; accepting it would measure exposure and call it skill. This is the specific defect the whole design exists to prevent."
+   },
+   {
+    "name": "UNMATCHED_SIDE_OR_HOUR",
+    "construction": "a draw whose per-side or per-hour counts differ from the arm's",
+    "must": "REFUSE by name with the deficit reported"
+   },
+   {
+    "name": "MATCHED_ON_ABSENT_OR_VAGUE",
+    "construction": "a run whose `matched_on` is absent, None, empty, or names a variable its inputs do not implement",
+    "must": "REFUSE -- REV 149's class: a limit that lives only in prose does not bind the result"
+   },
+   {
+    "name": "SHORT_DRAW_COUNT",
+    "construction": "a cell completing with fewer than 200 draws",
+    "must": "REFUSE with NULL_UNDER_SAMPLED, never report a p"
+   },
+   {
+    "name": "MEAN_SUBSTITUTED_FOR_THE_ASYMMETRY",
+    "construction": "a result whose tested statistic is the day mean rather than A",
+    "must": "REFUSE -- the mean is the underpowered quantity this test exists to replace"
+   }
+  ]
+ },
+ "population": {
+  "days": [
+   "2026-09-03",
+   "2026-09-04",
+   "2026-09-05",
+   "2026-09-06"
+  ],
+  "all_four_are_CONSUMED": true,
+  "costs_no_validation_day": true,
+  "protected_from_utc_date": "2026-09-08",
+  "rule_34a": "nothing under data/pm_5min/tier2/**/day=2026-09-08/ or later may be read, aggregated, plotted or quoted by this run",
+  "2026-09-03_carries_its_marks_and_stays_SEPARABLE": {
+   "requirement": "every 09-03 figure travels with these, and the run MUST emit the 3-day result (09-04..09-06) BESIDE the 4-day result so a reader can see 09-03's contribution rather than infer it",
+   "marks": [
+    {
+     "mark": "coverage",
+     "value": 0.7418630644440187,
+     "detail": "80,833 of 313,140 reference generations uncovered -- a quarter of the day, against ~0.92 elsewhere"
+    },
+    {
+     "mark": "window_count",
+     "value": "246 valued / 247 ADMITTED",
+     "detail": "population_and_coverage.ADMITTED is 247 while chainlink n_slugs_verified and the ledger's distinct SETTLEMENT_SLUG count are both 246. A ONE-WINDOW DISCREPANCY, unexplained at declaration time, and it must be emitted as a STATUS not resolved silently."
+    },
+    {
+     "mark": "silently_missing_windows",
+     "value": 40,
+     "detail": "REV 159 / BE 156: 40 windows missing upstream of the book, and REV's open question is whether the hole is CONCENTRATED IN THE ADVERSE HOURS -- if it is, 09-03 is BIASED and not merely thin, which bears directly on an HOUR-MATCHED null"
+    },
+    {
+     "mark": "unadjudicable_settlement_window",
+     "value": "btc-updown-5m-1788469500",
+     "detail": "a 12,140 ms GLOBAL_SOCKET_SILENCE gap covers the T boundary; Chainlink reads Down, the venue resolved Up; valued at the VENUE. Worth 2,675.85 c on the baseline, 7.17 % of it. The null holds this settlement FIXED across all draws, so it cannot move the p-value -- but it moves the LEVELS."
+    },
+    {
+     "mark": "only_EV22_build",
+     "value": "be_daybook_20260903_btc__L250ms__EV22.pkl",
+     "detail": "the only day rebuilt under EV22; BE 155 found the coverage is a gradient not a step, so it belongs on coverage grounds"
+    }
+   ]
+  }
+ },
+ "what_a_pass_does_NOT_establish": {
+  "rule": "rule 11 -- choosing after seeing voids the test; seen days are consumed",
+  "REQUIRED_FIELD_ON_EVERY_RESULT": "validation_limit",
+  "REQUIRED_VALUE": "THIS NULL CANNOT VALIDATE. It runs entirely on CONSUMED days (2026-09-03..2026-09-06) whose point estimates, tails and mechanism have all been read, and its DIRECTION was chosen after those point estimates were seen. A clean result is DEVELOPMENT evidence that de-levering is excluded as the explanation on the days already seen. It is NOT validation of the cancellation line, NOT a forward result, and NOT a basis for a freeze claim beyond 'the mechanism survived its own control on the development set'.",
+  "no_interval_is_claimable": {
+   "rule": "rule 8 -- intervals only on the correct cluster unit, which is the UTC day",
+   "G": 4,
+   "G_complete": 3,
+   "bar": 5,
+   "consequence": "POINT ESTIMATES AND P-VALUES ONLY. No confidence interval, no standard error on any day-clustered quantity, and the run must say so in a field.",
+   "refusal_name": "INTERVAL_CLAIMED_BELOW_G5"
+  },
+  "on_absence": "REFUSE TO EMIT. A result that cannot state its own limit must not be published -- a reader resolves FIELDS, and nobody reads the design document beside the number (rule 35).",
+  "refusal_name": "RESULT_DOES_NOT_STATE_ITS_VALIDATION_LIMIT"
+ },
+ "per_draw_reduction": {
+  "why_declared": "memory is the binding constraint (2.621 GiB/worker measured, N=2, and even N=1 was OOM-killed once by a scheduled job). The existing cancel-axis null keeps ONE FLOAT per draw under v27's R11 budget; this statistic must not break that.",
+  "keep_per_draw": [
+   "sum_max_arm_pos",
+   "sum_min_arm_neg",
+   "sum_arm_over_baseline_positive_windows",
+   "sum_arm_over_baseline_negative_windows"
+  ],
+  "n_floats_per_draw": 4,
+  "transient_per_draw": "a per-slug total map (<= 288 floats), reduced to the 4 accumulators and DISCARDED",
+  "FORBIDDEN": [
+   "retaining per-draw fills",
+   "retaining the per-draw 288-vector",
+   "retaining per-draw ledgers"
+  ],
+  "baseline_denominators": "computed ONCE per day and held fixed across all draws"
+ },
+ "run_constraints_for_DE": {
+  "concurrency": 2,
+  "concurrency_source": "R-875 / DA 172 -- 2.621 GiB per worker is a LOWER bound and footprints ADD; N=1 was OOM-killed at 852 MB by pm-evaluation-pipeline holding ~10 GB",
+  "must_run_at": "the ARMS PIN (de-arms-pin), where de_head_scoring.py and de_phase4_diag_runner.py are at params v29's cascade digests",
+  "why_the_pin_is_not_enforced_on_the_day_path": "DA 190 / Q-DA-395: import_be_cascade supplies actual_sha and takes the entry-point-only branch, so the ten-module cascade check is reached ONLY from the selftest. A tip run would NOT refuse. The pin must therefore be established BY THE OPERATOR, not relied on from a guard.",
+  "pipeline_windows_utc": [
+   "03:50",
+   "09:50",
+   "15:50",
+   "21:50"
+  ],
+  "holds_for": "about one hour, ~10 GB"
+ },
+ "wall_clock": {
+  "status": "NOT ESTABLISHED -- and this is a SCHEDULING BLOCKER, not a footnote",
+  "read_estimate_s_per_draw": 9.47,
+  "read_estimate_source": "de_multiday_gate1_runner.py:6275 -- 'S4 is 99.2 % of a run (9,467 s of 9,546 s measured on 09-03)', over 500 draws x 2 arms. READ, not measured by DA.",
+  "DA_own_observation_disagrees": "DA 172 saw one draw run >= 225 s without completing -- about 24x the read estimate. The two are NOT reconciled and this declaration does not reconcile them.",
+  "implied_at_500_draws": {
+   "per_arm_day_s": 4734,
+   "eight_cells_s": 37868,
+   "eight_cells_h": 10.5,
+   "at_N2_h": 5.3
+  },
+  "implied_at_the_rule_6_floor_200": {
+   "per_arm_day_s": 1894,
+   "eight_cells_s": 15152,
+   "eight_cells_h": 4.2,
+   "at_N2_h": 2.1
+  },
+  "under_DA_172s_observation": "24x the above -- days, not hours. Unbounded until measured.",
+  "DOES_IT_FIT_BEFORE_09_54_37Z": false,
+  "why_not": "declared at ~09:15Z, leaving under 40 minutes. The most optimistic single arm-day at the rule-6 floor is ~32 minutes, and starting a >30-minute unit under 40 minutes before the window that OOM-killed an 852 MB build is exactly what R-881 forbids. NO CELL MAY BE STARTED BEFORE 09:54:37Z.",
+  "earliest_sane_start": "after the 09:50 window clears, ~10:55Z, into the ~5 clear hours before 15:50Z",
+  "what_fits_in_that_window": "at the read estimate and N=2, roughly the full 8 cells at 500 draws (5.3 h) is MARGINAL against a 5-hour window; 8 cells at the rule-6 floor of 200 (2.1 h) fits with room. THE DRAW COUNT MUST NOT BE CHOSEN TO FIT THE WINDOW -- if 500 does not fit, the run is SPLIT ACROSS WINDOWS or the floor of 200 is used and RECORDED AS THE DECLARED FLOOR, never trimmed below it.",
+  "first_action_recommended_to_DE": "TIME ONE CELL AT 20 DRAWS AND EXTRAPOLATE before committing to the family. The 24x disagreement above means the schedule is a guess until somebody measures it."
+ },
+ "supersedes": null,
+ "relationship_to_da_null_design_v1": {
+  "shares": "the permutation unit (CANCELLABLE_GENERATION, USER R-870), the matching (cancel count / side / hour, exact), the day set, the multiplicity of arms and the validation limit",
+  "differs_in": "THE ESTIMAND. da_null_design_v1 tests net value and rho; this file tests the SCALE-FREE TAIL ASYMMETRY A = ret_pos - ret_neg, which is the only one of the three that can distinguish tail-clipping from de-levering.",
+  "not_a_replacement": "both stand. A result under either must name which declaration it ran under."
+ }
+}
