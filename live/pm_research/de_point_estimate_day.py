@@ -316,7 +316,8 @@ def write_artifact(path: Path, payload: dict) -> dict:
         raise R.RunnerRefused(
             f"REFUSED POINT_ESTIMATE_OUTPUT_EXISTS: {path} already exists; "
             "a result artifact is never overwritten.")
-    _missing_req = [k for k in ("population_and_coverage", "scope")
+    _missing_req = [k for k in ("population_and_coverage", "scope",
+                                "arm_provenance_caveat")
                     if not payload.get(k)]
     if _missing_req:
         raise R.RunnerRefused(
@@ -416,6 +417,70 @@ COVERAGE_UNRESOLVABLE = "POINT_ESTIMATE_COVERAGE_NOT_RESOLVABLE"
 POPULATION_DISAGREES = "POINT_ESTIMATE_POPULATION_DISAGREES_WITH_THE_BOOK"
 SCOPE_UNRESOLVABLE = "POINT_ESTIMATE_SCOPE_NOT_RESOLVABLE"
 REQUIRED_QUOTATION_FIELDS_ABSENT = "POINT_ESTIMATE_NOT_QUOTABLE_FIELDS_ABSENT"
+
+
+ARM_CAVEAT_ABSENT = "POINT_ESTIMATE_ARM_PROVENANCE_CAVEAT_ABSENT"
+
+
+def arm_provenance_caveat(result: dict, reconciliation: dict) -> dict:
+    """WHY THE ARM NUMBERS CARRY A WEAKER PROVENANCE THAN THE BASELINE.
+
+    REV 156. The scoring-path waiver's provenance claim is UNSUPPORTED --
+    not refuted: the reachability half rested on THREE confirmations that
+    all resolve to ONE operation (`be_producing_closure.reachable_modules`,
+    rule 38), and DE 195 MEASURED that operation erring in BOTH directions
+    on a controlled fixture, so "X was not reached" is not a conservative
+    claim.
+
+    AND THE RECONCILIATION DOES NOT COVER THE GAP, WHICH IS THE POINT.
+    `kept_equals_the_baseline` holds to ~1e-11 -- but the KEPT side IS the
+    ZERO-CANCEL BASELINE, and the baseline **makes no decisions**. No
+    scoring code can move it. So the half that reconciles is exactly the
+    half that could not have moved, and the ARM totals -- which depend on
+    which generations were cancelled, i.e. on the scores -- are the half
+    that could. They sit on the side the waiver governs.
+
+    This is a FIELD and not a sentence in a report because a caveat that
+    lives outside the artifact does not travel with the number (rule 35)."""
+    verdict = (result.get("book_scoring_code") or {})
+    waived = verdict.get("status") == R.WAIVED_SCORING_PATH
+    arms = [a.get("arm") for a in
+            (result.get("per_day_sealed_artifacts") or [])]
+    return {
+        "applies_to": "EVERY ARM FIGURE IN THIS ARTIFACT",
+        "arms": arms,
+        "scoring_provenance": ("WAIVED -- the book-code predicate REFUSED "
+                               "this book and the refusal was overridden "
+                               "on computed evidence"
+                               if waived else
+                               verdict.get("status")),
+        "the_waiver_claim_is": "UNSUPPORTED, NOT REFUTED",
+        "why_unsupported": (
+            "its reachability half rested on three confirmations that all "
+            "resolve to ONE operation (be_producing_closure."
+            "reachable_modules, rule 38), and DE 195 measured that "
+            "operation erring in BOTH directions on a controlled fixture "
+            "-- so `X was not reached` is not a conservative claim"),
+        "what_the_reconciliation_does_NOT_cover": (
+            "the KEPT side reconciles to the ledger baseline to ~1e-11, "
+            "and that is EXACTLY THE HALF THAT COULD NOT HAVE MOVED: the "
+            "zero-cancel baseline MAKES NO DECISIONS, so no scoring code "
+            "can touch it. The ARM totals depend on which generations "
+            "were cancelled, hence on the scores, and are the half that "
+            "could move"),
+        "kept_equals_the_baseline": reconciliation.get(
+            "kept_equals_the_baseline"),
+        "what_would_close_it": (
+            "a DYNAMIC trace of the real scoring entry points recording "
+            "which attributes of the moved module are ACTUALLY touched "
+            "(de_dynamic_reach; the instrument exists and is falsified, "
+            "and has NOT yet been run on a book build)"),
+        "what_must_not_be_said": (
+            "that the reconciliation validates the arm numbers, or that "
+            "the waiver was verified. Neither is true: one checks a half "
+            "that cannot move, and the other is an override on evidence "
+            "whose support is singular"),
+    }
 
 
 def population_and_coverage(reconciliation: dict, receipt: dict,
@@ -842,6 +907,8 @@ def run(day: str, book: Path, output_dir: Path, *,
         "placement_latency_reconciliation": reconciliation,
         "population_and_coverage": population,
         "scope": scope,
+        "arm_provenance_caveat": arm_provenance_caveat(
+            result, reconciliation),
         # THE ASK IS AT THE TOP OF THE ARTIFACT, not only nested inside
         # `day_run.book_scoring_code`. A reader deciding how much to trust
         # this number must meet the fact that a firing check was overridden
@@ -892,7 +959,7 @@ def run(day: str, book: Path, output_dir: Path, *,
 #: cells rather than a count of them, so a cell could be deleted and the
 #: line would still say four (rule 10, and R-251's silently-shrinking
 #: suite). Every cell below increments; the total is checked at the end.
-EXPECTED_CHECKS = 32
+EXPECTED_CHECKS = 33
 
 
 def selftest(quiet: bool = False) -> int:
@@ -945,6 +1012,7 @@ def selftest(quiet: bool = False) -> int:
                                         "TRANCHE_KEPT": 1,
                                         "coverage": {"coverage": 1.0}},
             "scope": {"coin": "btc", "BTC_ONLY": True},
+            "arm_provenance_caveat": {"applies_to": "fixture"},
         }
         wrote = write_artifact(emitted, good)
         ok(wrote["sha256"] == _sha(emitted),
@@ -1417,6 +1485,31 @@ def selftest(quiet: bool = False) -> int:
            f"DATA), and `what_must_not_be_said` naming the over-read. A "
            f"book and receipt naming DIFFERENT coins refuses `{_c3}` "
            f"rather than picking one")
+
+    # ---- DE 197 / REV 156: THE ARM CAVEAT IS A FIELD, NOT A SENTENCE --
+    _cav = arm_provenance_caveat(
+        {"book_scoring_code": {"status": R.WAIVED_SCORING_PATH},
+         "per_day_sealed_artifacts": [{"arm": "A"}, {"arm": "B"}]},
+        {"kept_equals_the_baseline": True})
+    _cav_nw = arm_provenance_caveat(
+        {"book_scoring_code": {"status": "BOOK_SCORING_CODE_MATCHES"},
+         "per_day_sealed_artifacts": [{"arm": "A"}]},
+        {"kept_equals_the_baseline": True})
+    ok(_cav["the_waiver_claim_is"] == "UNSUPPORTED, NOT REFUTED"
+       and _cav["arms"] == ["A", "B"]
+       and _cav["scoring_provenance"].startswith("WAIVED")
+       and "MAKES NO DECISIONS" in _cav["what_the_reconciliation_does_NOT_cover"]
+       and "does NOT validate" not in _cav["what_must_not_be_said"]
+       and "validates the arm numbers" in _cav["what_must_not_be_said"]
+       and _cav_nw["scoring_provenance"] == "BOOK_SCORING_CODE_MATCHES",
+       f"DE 197 THE ARM PROVENANCE CAVEAT IS A FIELD ON THE ARTIFACT: it "
+       f"says the waiver is `{_cav['the_waiver_claim_is']}`, names the "
+       f"arms it applies to, and states the thing a reader would "
+       f"otherwise conclude wrongly -- that the reconciliation's 1e-11 "
+       f"agreement validates the arm numbers. It does not: the KEPT side "
+       f"IS the zero-cancel baseline, which MAKES NO DECISIONS, so it is "
+       f"the half that could not have moved. And it READS the run's own "
+       f"scoring status rather than assuming a waiver")
 
     # AND THE EMIT REFUSES WITHOUT THEM -- a required field is one whose
     # absence stops the bytes, not one a writer is asked to remember.
