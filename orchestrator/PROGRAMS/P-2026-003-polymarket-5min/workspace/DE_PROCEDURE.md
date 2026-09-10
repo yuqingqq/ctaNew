@@ -667,3 +667,111 @@ reset-failed so the unit name is free.
   and DISCARDED at build time — so its reconciliation reports
   `RECONCILIATION_UNAVAILABLE_BOOK_CARRIES_NO_SPLIT` and the latency question
   stays unanswered for that day until it is rebuilt with the split.
+
+---
+
+## 14. THE STEP-2 VERDICT HANDOFF — executable cold by a cleared seat
+
+Written by DE 217 at 97 % context, while `deSettle212` was still drawing.
+**The run does not need me. The VERDICT needs this section**, because the
+numbers alone do not say what they mean.
+
+### 14.1 THE ONE LINE THAT MUST SURVIVE
+
+> **"If it comes back `NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM`, that is
+> the FIRST LINE of the report, not a caveat at the end."**
+
+That outcome is not a disappointment to be softened. It is plan v2 step 3
+firing, and step 3 is **the branch that protects the validation set**: it
+stops us spending untouched days on these frozen arms. Report it first,
+plainly, and without hedging.
+
+### 14.2 WHAT TO RUN
+
+```
+cd /home/yuqing/ctaNew-wt-arms/live/pm_research      # the ARMS PIN
+PM_DATA_ROOT=/home/yuqing/ctaNew \
+  /home/yuqing/pricer-sol/venv/bin/python3 de_settlement_control_aggregate.py
+```
+It reads `data/pm_5min/derived/settle/` (results + checkpoints) and
+`data/pm_5min/derived/` (book receipts). It REFUSES rather than reports on
+a bad input; every refusal below is a real answer, not an obstacle.
+
+### 14.3 THE PROVENANCE THAT MAKES THE VERDICT FINAL RATHER THAN PROVISIONAL
+
+| fact | ref |
+|---|---|
+| declaration, **committed BEFORE any draw** (rule 6) | `b72e329` — `de_settlement_control_declaration_v1.json` |
+| matched count named **BY FIELD PATH**, not phrase | `a52baec` — v2 |
+| aggregator + **GREEN falsifier** | `84b249e` |
+| the arms pin the run executes from | `~/ctaNew-wt-arms`, `adbebf9` |
+
+**The falsifier is the part that matters most**: the failure verdict is
+**reachable and fires** on a synthetic set where neither arm beats matched
+random, both-win passes, mixed resolves by the declared rule, and Holm is
+driven step-down on `p=0.026` against `0.025` — the exact shape the
+asymmetry PRIMARY produced. *A verdict function that has never produced a
+failure verdict is the same class of instrument as a null that has never
+fired* (REV 165).
+
+### 14.4 THE FIVE THINGS THAT TRAVEL WITH THE NUMBER, ALWAYS
+
+1. **PRIMARY is 09-04/05/06. 09-03 is COMPANION-ONLY and is NEVER
+   PROMOTED** — fixed before the draws, because it was already excluded
+   before the asymmetry draws and cannot be promoted after being seen to
+   change a verdict. `aggregate` REFUSES
+   `SETTLEMENT_CONTROL_COMPANION_DAY_PROMOTED_TO_PRIMARY` if it ever
+   appears in PRIMARY.
+2. **Each cell contributes EXACTLY its declared 500** — the emit refuses
+   `..._CELL_N_DIFFERS_FROM_THE_DECLARED_N` on anything else. The floor is
+   a minimum, not a licence to report a different n than declared.
+3. **The four publication elements TOGETHER** (plan step 2's own clause):
+   the zero-model-cancel baseline, every control distribution, coverage
+   and exclusion counts **including 09-03's `n_present` 287 / `n_masked`
+   40 / `mask_identity_hash` `7d82f393…`**, and settlement finality.
+   Absence REFUSES.
+4. **EFFECTIVE INDEPENDENT UNITS ARE FOUR (three complete), NOT EIGHT.**
+   The two arms within a day share the day, the book, the reference path
+   and a **bitwise identical** baseline — two policies read off ONE
+   realisation. Rule 8 forbids an interval below five complete days.
+5. **THE MATCHING BIAS RUNS TOWARD FINDING THE ARM SKILFUL.**
+   Distinct-generation matching UNDER-matches raw exposure (max 23 cancels
+   on one reference generation), so the control is the weaker de-leverer
+   and **any arm advantage is an UPPER BOUND** on the part that is not
+   exposure. And per REV 162: **never** say "invariant to de-levering" or
+   "exactly zero" — the control removes the FIRST-ORDER effect only.
+
+Also: these are **CONSUMED days (rule 11)**, so a pass is DEVELOPMENT
+evidence and **never** validation.
+
+### 14.5 TWO CLEARANCES ALREADY ESTABLISHED — do not re-litigate them
+
+* **The `MIN_DRAWS` collision cannot have touched this run.** Seven modules
+  define `MIN_DRAWS = 200`; step 2 reads NONE of them. It has its own local
+  `FLOOR = 200`, takes `n_draws` as a REQUIRED keyword (500, passed
+  explicitly), and calls only `build_pool_from_rows`, `draw_one` and
+  `flags_for` — none of which reference it. `draw_many` does, and step 2
+  does not call it, **because it drives its own loop to checkpoint every
+  draw**. Neither the draw count, the floor, nor the refusal threshold
+  comes from a colliding symbol.
+* **None of the nine off-path guards in `de_multiday_gate1_runner.py` would
+  change what step 2 reports**, and the reason is structural: **step 2 never
+  calls `run_day`**. Its whole runner surface is four calls —
+  `load_params`, `import_be_cascade`, `winner_source`,
+  `settlement_legs_by_slug`. It uses the runner as a LIBRARY. And
+  `verify_run_inputs` **PASSES at the arms pin** (driven: `cited_not_copied`
+  true, models and thetas verified): its refusal is a property of the TIP,
+  where two cascade modules differ against v29 — the same two the pin
+  restores.
+
+### 14.6 THE ONE GAP I DID NOT CLOSE — hand it on
+
+Step 2 calls `R.winner_source(required_slugs=slugs)` **without**
+`verification=`, so the Chainlink cross-check does not run inside step 2 and
+**DE 204's settlement-source fallback disclosure is not computed per cell.**
+No number moves — the venue winners are the same object the day artifacts
+valued — but **09-03's unadjudicable window (`btc-updown-5m-1788469500`,
+drift bound 2.859 USD against margin 1.154 USD) is not disclosed by the
+per-cell results.** The fix belongs in the AGGREGATOR's publication block,
+in `wt-de2`, never in the running worktree. Until it lands, say so when
+quoting any 09-03 companion figure.
