@@ -67,6 +67,23 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-10T17:08:40Z (MEM ROUND 341 -- THE POST-VERDICT BRANCHES ARE DECIDED BEFORE THE DRAWS LAND.
+  The USER delegated the recommended options (runbook 7i, 6cc8346) and BOTH step-2 branches
+  are pre-decided so no seat waits at ~18:50Z. FAILURE: step 3 fires CHEAPLY -- failure as
+  the FIRST line, publish the four elements, STOP; no freeze, no forward test, no redesign
+  in the same breath; QR_SKEW_ONLY remains the reference. It PROTECTS FIVE VALIDATION DAYS
+  and is NOT a disappointment. PASS: THE FREEZE WAITS ON REV'S TWELVE -- a freeze resting on
+  guards nobody has seen fire is a freeze resting on nothing, and freezing cannot be taken
+  back. REV 167 drove the twelve: FOURTEEN branches, TEN firing cleanly, ONE firing but not
+  for the purpose its name claims, ONE unreached and CORRECTLY NOT declared dead --
+  'could not reach' is a STATUS, 'dead' is a CLAIM, and only LEGS_DO_NOT_CLOSE has earned
+  it. REV's ratio caveat is recorded VERBATIM against its own number. I examined the
+  DIVERGED guard myself: ONE refusal name serves THREE conditions -- a bad authority value,
+  carriers disagreeing, and carriers merely UNREADABLE -- while its own verdict field
+  distinguishes the last two. THE STRUCTURE KNOWS THE DIFFERENCE AND THE NAME DOES NOT; its
+  raise is NOT opt-in (default True), which I checked rather than assumed. The standing
+  check's CONTROL is the load-bearing half: an unmatched spelling must surface as
+  REFUSAL_HAS_NO_NAME, never a clean zero. tip fa7557e)
   2026-09-10T17:03:10Z (MEM ROUND 340 -- THE SWEEPS COUNTED THE CLASS AND PLAN STEP 1 CHANGED SIZE.
   REV 166: AT LEAST 53 verdict-bearing guards have only ever been seen returning ONE value,
   23 of the 34 refusals in the two modules producing tonight's numbers -- 'Step 1 is not
@@ -101,20 +118,6 @@ updated: >-
   form. Three sweeps now measure the SIZE of these sets; that number, not their members,
   decides whether step 1 is four items or a different piece of work, and the USER should
   have it BEFORE the freeze. DE 213 landed v2 as a NEW FILE (rule 13). tip 84b249e)
-  2026-09-10T16:48:28Z (MEM ROUND 338 -- THE GOVERNING PLAN IS BEING EXECUTED BY FIVE SEATS AND THE
-  FILES NOW SHOW THAT. STEP 2 IS RUNNING: the decision-endpoint control, DECLARED BEFORE ANY
-  DRAW at b72e329, status DECLARED-NOT-RUN, naming its plan by path AND commit. Its own
-  fields carry what the programme used to argue about afterwards -- why it is NOT the
-  asymmetry null (rule 7 wants the DECISION metric; A was arguably a proxy), that its
-  independent units are FOUR DAYS AND THREE IN PRIMARY not eight cells (the two arms share a
-  BITWISE IDENTICAL baseline), that the verdict is TWO arm-level pooled tests HOLM-corrected
-  and nothing else, that the statistic is a SUM because CASH ADDS, that the mixed cases are
-  named in advance, and that the floor is FAIL-CLOSED at 200. I VERIFIED THE RUNNING
-  WORKER'S CGROUP MYSELF at /proc/1252859 and its child: research.slice, 200 per cent CPU
-  matching N=2, 9 GiB cap, 2.937 GiB in use. The waiver moved to OBSERVED_AND_NOT_REFUTED --
-  REV's limit recorded VERBATIM and NOT upgraded, and the string is in NO artifact yet. BE
-  caught a name TWO artifacts answer to BEFORE it produced a number. Tonight's shape:
-  ELEVEN protections configured but not applied or living in prose. tip a52baec)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -286,6 +289,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 341, the branches are decided before the draws land ---
+  THE_USER_DELEGATED_THE_RECOMMENDED_OPTIONS_AND_BOTH_STEP_TWO_BRANCHES_ARE_PRE_DECIDED: "Runbook 7i, landed at 6cc8346, 35 lines: 'Go ahead, use the recommended options, don't have to ask me to decide.' Both branches of step 2 are decided BEFORE the draws land so that no seat waits at ~18:50Z. This belongs in the state files and not only in the runbook, because a cleared coordinator reading the state files would otherwise re-litigate a decision the USER has already delegated -- and re-litigating it in the minutes after a result arrives is exactly when the decision would be worst."
+  FAILURE_FIRES_STEP_THREE_CHEAPLY_AND_THE_FAILURE_IS_THE_FIRST_LINE: "If the screen fails: report the failure as the FIRST line, publish the four elements, and STOP. No freeze, no forward test, and no redesign in the same breath -- a redesign proposed alongside a failure reads as a rescue and gets evaluated as one. QR_SKEW_ONLY remains the reference; any redesign uses consumed data only and starts a NEW freeze and a NEW validation clock. Recorded with the coordinator's framing because it is the correct one: this PROTECTS FIVE VALIDATION DAYS and is NOT a disappointment."
+  AND_ON_A_PASS_THE_FREEZE_WAITS_ON_THE_TWELVE_GUARDS: "The pass branch does NOT trigger a freeze. A freeze resting on guards nobody has seen fire is a freeze resting on nothing, and freezing cannot be taken back -- rule 12 makes the freeze a commit, and a commit made on unverified protections is a commit of the unverified protections too. So a pass moves the queue to REV's twelve, not to the freeze. The pre-decision matters most here: this is the branch where enthusiasm would otherwise supply the answer."
+  REV_167_DROVE_THE_TWELVE_AND_THE_RESULT_IS_FOURTEEN_BRANCHES_IN_THREE_CATEGORIES: "Fourteen branches across twelve guards: TEN FIRE CLEANLY; ONE FIRES BUT NOT FOR THE PURPOSE ITS NAME CLAIMS (p003_rule6_floor.DIVERGED); ONE COULD NOT BE REACHED and was CORRECTLY NOT DECLARED DEAD. The three categories are recorded separately and must stay separate, because collapsing them produces either a falsely clean 'twelve checked' or a falsely alarming 'two broken', and neither is what was measured."
+  COULD_NOT_REACH_IS_A_STATUS_AND_DEAD_IS_A_CLAIM_AND_ONLY_ONE_GUARD_HAS_EARNED_THE_CLAIM: The distinction that keeps the census honest. An unreached branch is a fact about the attempt; a dead branch is a fact about the code, and it requires a measurement. Across everything counted this week only LEGS_DO_NOT_CLOSE has been MEASURED unreachable and therefore earns the word dead. Every other unreached guard is UNESTABLISHED, and a future reader who converts unreached into dead will have manufactured a defect out of an absence of evidence.
+  REVS_RATIO_CAVEAT_IS_RECORDED_VERBATIM_AS_A_GUARD_AGAINST_ITS_OWN_NUMBER: "Quoted exactly: 'the ratio found so far (roughly one defective in twelve) is the only basis anyone has for guessing what the rest hold, which is a weak basis and should be said as one.' Extrapolating one-in-twelve across the thirty-nine unexamined guards yields a tidy number and NO information. Recorded with the coordinator's own note that this binds them as much as anyone -- the temptation to publish an estimated total is strongest in the seat that has to summarise."
+  I_EXAMINED_THE_DIVERGED_GUARD_MYSELF_AND_ONE_REFUSAL_NAME_SERVES_THREE_CONDITIONS: "My own reading of the two raise sites, offered as a mechanism consistent with REV's category rather than as a claim to have found REV's instance. The name RULE6_FLOOR_DIVERGED is raised for THREE different conditions: floor() raises it when the authority's own THE_NUMBER is not a usable integer; reconcile() raises it when carriers DISAGREE; and reconcile() raises the SAME name when carriers are merely UNREADABLE, since its guard is 'bad or unreadable'. Its own structured verdict field distinguishes those last two -- DIVERGED if bad else UNREADABLE. THE STRUCTURE KNOWS THE DIFFERENCE AND THE NAME DOES NOT."
+  AND_THE_GUARD_IS_NOT_OPT_IN_WHICH_IS_WORTH_SAYING_BECAUSE_IT_WOULD_BE_EASY_TO_ASSUME: "reconcile's signature is raise_on_divergence: bool = True, so the refusing behaviour is the DEFAULT and its two in-repo callers at be_forward_recon.py:724 and :757 take it. A parameter that can switch a guard off is the shape of tonight's class, so I checked the default rather than assuming it -- and here the default is the safe one. Recording the clean result by name, because a check that only ever reports problems teaches readers to discount it."
+  THE_STANDING_CHECK_IS_SPECIFIED_AND_ITS_CONTROL_IS_THE_PART_THAT_MATTERS: "REV specifies, DA implements, about 30 lines: every REFUSED <NAME> token must appear in at least one test function. The control is the load-bearing half -- a fixture whose refusal is spelled in a form the regex does NOT match must surface as REFUSAL_HAS_NO_NAME, and NOT as a clean zero. A silent regex mismatch once reported a clean surface in this programme, so the checker must PROVE it cannot repeat that. This is rule 15 applied to the instrument that enforces rule 15."
+  AND_ITS_LIMIT_SHIPS_ON_EVERY_OUTPUT_BECAUSE_THE_PREDICATE_IS_TEXTUAL: "The declared limit travels with every result the checker prints: the predicate is TEXTUAL and INFLATES rather than deflates. For a FLOOR that is the safe direction -- an inflating count over-reports work to do and never under-reports it, which is the opposite of the false-clean failure DA named last round. Rule 36's form: the caveat is carried out of the artifact by the artifact, not attached by whoever quotes it."
+  THE_LIST_IS_A_SNAPSHOT_AND_THE_CHECK_MAKES_RULE_15_ENFORCEABLE_INSTEAD_OF_ASPIRATIONAL: "The twelve-item list is a snapshot of 2026-09-10 and decays with the next commit. The check is a FLOOR: it would have caught all 34 at the commit that introduced them, and it converts rule 15 -- every checker ships a falsifier -- from a thing seats are asked to remember into a thing the repository enforces. That is the durable output of this whole week, and it is worth more than any single guard on the list."
+  BE_IS_WIRING_THE_REFUSING_GUARD_AND_BOTH_HALVES_ARE_AUTHORISED: "Authorised and in flight, no further permission needed: BE wires verify_run_inputs at BOTH the call site near 9026 AND the params crank -- neither alone works. It costs 1.2 ms and it REFUSES TODAY, which I confirmed by execution at round 340: REFUSED BE_CASCADE_DIFFERS, 2 of 10 cascade modules, de_head_scoring.py declared against actual. So the wiring is not adding a guard, it is connecting a working alarm to a room where someone is standing."
+  AND_09_07S_RESERVATION_WILL_NAME_THE_DAY_WHICH_CLOSES_WHAT_I_FILED_LAST_ROUND: "BE is also making 09-07's reservation NAME THE DAY rather than resting on settlement_endpoint.admissible_days being unset. That is the direct fix to the highest-consequence item I filed at round 340: I read admissible_days as None in params v29 and recorded that the programme's only reserved endpoint day was protected by THE ABSENCE OF A VALUE, silently reversible by anyone setting that field for an unrelated reason. A protection that names its subject cannot be undone by an unrelated edit. Recorded as IN FLIGHT, not as closed -- it closes when the day is named in the artifact."
+  AND_THE_101_ARE_BEING_TRIAGED_FOR_GUARDS_PROTECTING_AN_ALREADY_VIOLATED_CONDITION: "The third BE item, and the one with the sharpest question behind it: how many of the 101 off-path guards protect a condition that is ALREADY VIOLATED. verify_run_inputs was one such -- inert AND failing -- and the triage asks how many others are. That count, not the 101, is the one that says whether the repository is merely under-instrumented or currently wrong. DA finishes the theta-carrier answer before 18:50Z and then builds the standing check."
+  STEP_TWO_IS_AT_ABOUT_594_OF_4000_AND_CLEAN_ON_ALL_THREE_BLOCKING_QUESTIONS: "Landing around 18:50Z. Clean on all three: no path from any colliding MIN_DRAWS into the run, none of the nine off-path guards in the runner would change what it reports, and the aggregator's falsifier is green with the failure verdict reachable and firing. Nothing about the RESULT is recorded here and nothing may be quoted from it; the declaration's status stands at DECLARED-NOT-RUN until it lands, and the branch it lands into is already decided."
   # --- MEM round 340, the sweeps counted the class and step 1 changed size ---
   STEP_ONE_IS_NOT_FOUR_ITEMS_AND_REVS_SENTENCE_IS_THE_ONE_TO_QUOTE: "REV 166 counted the class: AT LEAST 53 verdict-bearing guards have only ever been observed returning ONE of their values, by a deliberately conservative predicate, with 23 of the 34 refusals concentrated in de_multiday_gate1_runner and de_point_estimate_day -- the two modules producing tonight's numbers. REV's sentence, verbatim: 'Step 1 is not four items.' That is the plan amendment in five words and it is what the USER needs before the freeze."
   AND_REVS_REFUSAL_TO_OVERSTATE_IS_WHAT_MAKES_THE_NUMBER_USABLE: "Recorded verbatim because a bare 53 would be worse than useless: 'these are NOT 53 known-broken guards. LEGS_DO_NOT_CLOSE was measured UNREACHABLE, so at least one is genuinely dead; the rest are UNESTABLISHED in the same specific sense the waiver was -- they can return a verdict and only one of its values has ever been observed. The distinction between DEAD and UNESTABLISHED is the whole finding, and it can only be settled one guard at a time by driving it.' One measured dead, fifty-two unestablished, and the difference is not knowable in bulk."
@@ -27467,6 +27486,97 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 341, 2026-09-10T17:08:40Z ---
+  THE_USER_DELEGATED_THE_RECOMMENDED_OPTIONS_AND_BOTH_STEP_TWO_BRANCHES_ARE_PRE_DECIDED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      commit 6cc8346 read at its subject and diffstat; section 7i located at line 745 of the runbook with the USER's sentence quoted at 747-748.
+  FAILURE_FIRES_STEP_THREE_CHEAPLY_AND_THE_FAILURE_IS_THE_FIRST_LINE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      the failure branch read in runbook section 7i, including the ordering requirement and the redesign conditions.
+  AND_ON_A_PASS_THE_FREEZE_WAITS_ON_THE_TWELVE_GUARDS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      the pass branch read in runbook section 7i: the freeze is conditional on the twelve guards being driven.
+  REV_167_DROVE_THE_TWELVE_AND_THE_RESULT_IS_FOURTEEN_BRANCHES_IN_THREE_CATEGORIES:
+    prov: RELAYED
+    from: REV 167 via coordinator MEM 341
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      the fourteen branches and their three-way split are REV's; the DIVERGED mechanism I examined myself and file below as my own reading.
+  COULD_NOT_REACH_IS_A_STATUS_AND_DEAD_IS_A_CLAIM_AND_ONLY_ONE_GUARD_HAS_EARNED_THE_CLAIM:
+    prov: RELAYED
+    from: REV 167 via coordinator MEM 341
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      REV's category definitions as dispatched, consistent with REV 166's DEAD-versus-UNESTABLISHED framing recorded at round 340.
+  REVS_RATIO_CAVEAT_IS_RECORDED_VERBATIM_AS_A_GUARD_AGAINST_ITS_OWN_NUMBER:
+    prov: RELAYED
+    from: REV 167 via coordinator MEM 341
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      REV's caveat quoted verbatim and not compressed; the extrapolation is named as inadmissible rather than merely discouraged.
+  I_EXAMINED_THE_DIVERGED_GUARD_MYSELF_AND_ONE_REFUSAL_NAME_SERVES_THREE_CONDITIONS:
+    prov: CHECKED
+    artifact: live/pm_research/p003_rule6_floor.py
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      the raise at floor() lines 53-57, and reconcile()'s raise guarded by 'if raise_on_divergence and (bad or unreadable)' at 177-183, against its verdict expression at 175-176.
+  AND_THE_GUARD_IS_NOT_OPT_IN_WHICH_IS_WORTH_SAYING_BECAUSE_IT_WOULD_BE_EASY_TO_ASSUME:
+    prov: CHECKED
+    artifact: live/pm_research/p003_rule6_floor.py
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      the signature read at line 140-141; the two default-argument callers located in be_forward_recon.py. Note a DIFFERENT function also named reconcile exists in be_placement_latency_reconcile.py with an unrelated signature -- the two must not be conflated.
+  THE_STANDING_CHECK_IS_SPECIFIED_AND_ITS_CONTROL_IS_THE_PART_THAT_MATTERS:
+    prov: RELAYED
+    from: REV via coordinator MEM 341
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      the specification and its control as dispatched; I implemented an independent version of the same predicate at round 340 and reported its own inflating limit then.
+  AND_ITS_LIMIT_SHIPS_ON_EVERY_OUTPUT_BECAUSE_THE_PREDICATE_IS_TEXTUAL:
+    prov: RELAYED
+    from: REV via coordinator MEM 341
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      the limit and its direction as dispatched; the same direction I found in my own implementation of the predicate at round 340.
+  THE_LIST_IS_A_SNAPSHOT_AND_THE_CHECK_MAKES_RULE_15_ENFORCEABLE_INSTEAD_OF_ASPIRATIONAL:
+    prov: RELAYED
+    from: coordinator MEM 341
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      the snapshot-versus-floor framing as dispatched; recorded as the round's most transferable item.
+  BE_IS_WIRING_THE_REFUSING_GUARD_AND_BOTH_HALVES_ARE_AUTHORISED:
+    prov: RELAYED
+    from: coordinator MEM 341
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      the authorisation and the two required halves as dispatched; the refusal itself I drove myself last round and the digests are in that round's provenance.
+  AND_09_07S_RESERVATION_WILL_NAME_THE_DAY_WHICH_CLOSES_WHAT_I_FILED_LAST_ROUND:
+    prov: RELAYED
+    from: coordinator MEM 341
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      the authorised change as dispatched; the defect it fixes I verified myself at round 340 by reading the params file.
+  AND_THE_101_ARE_BEING_TRIAGED_FOR_GUARDS_PROTECTING_AN_ALREADY_VIOLATED_CONDITION:
+    prov: RELAYED
+    from: coordinator MEM 341
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      the triage and DA's ordering as dispatched; the observation that verify_run_inputs is both inert and failing is my own from round 340.
+  STEP_TWO_IS_AT_ABOUT_594_OF_4000_AND_CLEAN_ON_ALL_THREE_BLOCKING_QUESTIONS:
+    prov: RELAYED
+    from: coordinator MEM 341
+    as_of: 2026-09-10T17:08:40Z
+    said: >-
+      the progress figure and the three clearances as dispatched; the unit's liveness I measured myself at rounds 338 and 339.
   # --- MEM round 340, 2026-09-10T17:03:10Z ---
   STEP_ONE_IS_NOT_FOUR_ITEMS_AND_REVS_SENTENCE_IS_THE_ONE_TO_QUOTE:
     prov: RELAYED

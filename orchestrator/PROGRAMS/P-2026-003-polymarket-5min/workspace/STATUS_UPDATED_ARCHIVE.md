@@ -22893,3 +22893,22 @@ generation and the window went 4 → 3. Nothing rewritten.
   ENDPOINT-SPECIFICALLY clean, not clean -- its 5-s diagnostic already has 1,000 draws --
   and it is a day the programme KEPT, not one it forgot to spend. tip b72e329)
 ```
+
+## Batch 323 (rotated by MEM round 341, 2026-09-10T17:08:40Z)
+
+```
+  2026-09-10T16:48:28Z (MEM ROUND 338 -- THE GOVERNING PLAN IS BEING EXECUTED BY FIVE SEATS AND THE
+  FILES NOW SHOW THAT. STEP 2 IS RUNNING: the decision-endpoint control, DECLARED BEFORE ANY
+  DRAW at b72e329, status DECLARED-NOT-RUN, naming its plan by path AND commit. Its own
+  fields carry what the programme used to argue about afterwards -- why it is NOT the
+  asymmetry null (rule 7 wants the DECISION metric; A was arguably a proxy), that its
+  independent units are FOUR DAYS AND THREE IN PRIMARY not eight cells (the two arms share a
+  BITWISE IDENTICAL baseline), that the verdict is TWO arm-level pooled tests HOLM-corrected
+  and nothing else, that the statistic is a SUM because CASH ADDS, that the mixed cases are
+  named in advance, and that the floor is FAIL-CLOSED at 200. I VERIFIED THE RUNNING
+  WORKER'S CGROUP MYSELF at /proc/1252859 and its child: research.slice, 200 per cent CPU
+  matching N=2, 9 GiB cap, 2.937 GiB in use. The waiver moved to OBSERVED_AND_NOT_REFUTED --
+  REV's limit recorded VERBATIM and NOT upgraded, and the string is in NO artifact yet. BE
+  caught a name TWO artifacts answer to BEFORE it produced a number. Tonight's shape:
+  ELEVEN protections configured but not applied or living in prose. tip a52baec)
+```

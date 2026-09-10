@@ -1,3 +1,129 @@
+# READ FIRST — round 341 (MEM, 2026-09-10T17:09:18Z, tip `2501d4c`)
+
+# 🔀 THE POST-VERDICT BRANCHES ARE DECIDED **BEFORE** THE DRAWS LAND
+
+Runbook **§7i** (`6cc8346`, 35 lines): the USER delegated the recommended
+options — *"Go ahead, use the recommended options, don't have to ask me to
+decide."* **Both step-2 branches are pre-decided so no seat waits at ~18:50Z.**
+
+*This belongs in the state files, not only the runbook: a cleared coordinator
+would otherwise re-litigate a delegated decision — in the minutes after a result
+arrives, which is exactly when the decision would be worst.*
+
+## ❌ FAILURE → step 3 fires **cheaply**
+
+**Report the failure as the FIRST line. Publish the four elements. STOP.**
+No freeze, no forward test, **no redesign in the same breath** — *a redesign
+proposed alongside a failure reads as a rescue and gets evaluated as one.*
+QR_SKEW_ONLY remains the reference; any redesign uses **consumed data only** and
+starts a **new freeze and a new validation clock.**
+
+> **This PROTECTS FIVE VALIDATION DAYS and is NOT a disappointment.**
+
+## ✅ PASS → **THE FREEZE WAITS ON REV'S TWELVE**
+
+A pass does **not** trigger a freeze. ***A freeze resting on guards nobody has
+seen fire is a freeze resting on nothing, and freezing cannot be taken back.***
+Rule 12 makes the freeze a commit — and a commit made on unverified protections
+commits the unverified protections too. *The pre-decision matters most here:
+this is the branch where enthusiasm would otherwise supply the answer.*
+
+# 🔬 REV 167 DROVE THE TWELVE — **14 branches, three categories, kept separate**
+
+| category | count |
+|---|---|
+| fire cleanly | **10** |
+| **fires, but not for the purpose its name claims** | **1** (`p003_rule6_floor.DIVERGED`) |
+| **could not be reached — and correctly NOT declared dead** | **1** |
+
+**Collapsing these produces either a falsely clean "twelve checked" or a falsely
+alarming "two broken", and neither is what was measured.**
+
+> ***"Could not reach" is a STATUS. "Dead" is a CLAIM.*** Only
+> `LEGS_DO_NOT_CLOSE` has been **measured** unreachable and earns the word.
+> Every other unreached guard is **UNESTABLISHED** — a reader who converts
+> unreached into dead manufactures a defect out of absent evidence.
+
+**REV's ratio caveat, verbatim, as a guard against REV's own number:**
+
+> *"the ratio found so far (roughly one defective in twelve) is the only basis
+> anyone has for guessing what the rest hold, which is a weak basis and should be
+> said as one."*
+
+**Extrapolating one-in-twelve across the thirty-nine unexamined guards gives a
+tidy number and NO information — and that binds the coordinator most, because
+the temptation to publish an estimated total is strongest in the seat that has
+to summarise.**
+
+# 🔎 I EXAMINED THE `DIVERGED` GUARD MYSELF
+
+*Offered as a mechanism consistent with REV's category, not as a claim to have
+found REV's instance.* **One refusal name serves THREE conditions:**
+
+1. `floor()` raises `RULE6_FLOOR_DIVERGED` when **the authority's own
+   `THE_NUMBER` is not a usable integer** — not divergence at all.
+2. `reconcile()` raises it when carriers **disagree** — the real thing.
+3. `reconcile()` raises **the same name** when carriers are merely
+   **UNREADABLE** — its guard is `if raise_on_divergence and (bad or unreadable)`.
+
+And its own `verdict` field distinguishes exactly those last two:
+`DIVERGED if bad else UNREADABLE`.
+
+> ***The structure knows the difference. The name does not.***
+
+**And the guard is NOT opt-in** — `raise_on_divergence: bool = True`, with both
+in-repo callers taking the default. *A parameter that can switch a guard off is
+the shape of tonight's class, so I checked the default rather than assuming it —
+and here it is the safe one.* **Recording the clean result by name, because a
+check that only ever reports problems teaches readers to discount it.**
+
+*(Note: a **different** function also named `reconcile` lives in
+`be_placement_latency_reconcile.py` with an unrelated signature. Do not conflate.)*
+
+# 🧰 THE STANDING CHECK — **THE CONTROL IS THE LOAD-BEARING HALF**
+
+REV specifies, DA implements, ~30 lines: every `REFUSED <NAME>` token must
+appear in at least one test function.
+
+> **A fixture whose refusal is spelled in a form the regex does NOT match must
+> surface as `REFUSAL_HAS_NO_NAME` — NOT a clean zero.** A silent regex mismatch
+> once reported a clean surface in this programme; **the checker must PROVE it
+> cannot repeat that.**
+
+**This is rule 15 applied to the instrument that enforces rule 15.**
+
+Its **declared limit ships on every output**: the predicate is **textual and
+INFLATES rather than deflates**. *For a floor that is the safe direction — an
+inflating count over-reports work to do and never under-reports it, the opposite
+of the false-clean failure DA named.* (Rule 36's form: the artifact carries its
+own caveat out.)
+
+**The list is a snapshot of 2026-09-10 and decays with the next commit. The
+check is a floor** — it would have caught all 34 at the commit that introduced
+them, and **it converts rule 15 from something seats are asked to remember into
+something the repository enforces. That is the durable output of the week.**
+
+# ✅ AUTHORISED AND IN FLIGHT — no further permission needed
+
+- **BE wires `verify_run_inputs`** — **both** the call site (~9026) **and** the
+  params crank; *neither alone works.* Costs 1.2 ms and **refuses today**
+  (I confirmed by execution at round 340: `BE_CASCADE_DIFFERS`, 2 of 10).
+  ***The wiring is not adding a guard — it is connecting a working alarm to a
+  room where someone is standing.***
+- **BE makes 09-07's reservation NAME THE DAY** — **this closes what I filed
+  last round**: I read `admissible_days = None` in params v29 and recorded that
+  the only reserved endpoint day was protected by **the absence of a value**.
+  *A protection that names its subject cannot be undone by an unrelated edit.*
+  **IN FLIGHT, not closed — it closes when the day is named in the artifact.**
+- **BE triages how many of the 101 protect an ALREADY-VIOLATED condition.**
+  `verify_run_inputs` was one — inert **and** failing. ***That count, not the
+  101, says whether the repository is under-instrumented or currently wrong.***
+- **DA** finishes the theta-carrier answer before 18:50Z, then builds the check.
+
+**Step 2 at ~594/4000**, landing ~18:50Z, clean on all three blocking questions.
+**Nothing about the result is recorded and nothing may be quoted — status stands
+at `DECLARED-NOT-RUN`, and the branch it lands into is already decided.**
+
 # READ FIRST — round 340 (MEM, 2026-09-10T17:03:53Z, tip `b6e90e5`)
 # ⭐ THIS IS THE ROUND TO READ FIRST IN A NEW SESSION
 
