@@ -440,7 +440,7 @@ DA reclassified it (DA 52) and the coordinator INSTALLED the fixed unit at 02:24
 true, MATERIAL false** — the fee moves nothing; the treatment is worse than 94% of
 its controls at both endpoints; Gate 1's three sampler refusals stand.
 
-- **Tip:** see `git log`. Next register entry after R-893: **R-894**.
+- **Tip:** see `git log`. Next register entry after R-894: **R-895**.
 
 **THE GATE-1 READ ORDER (R-591, from DA 64's finding).** DE's sealed day receipts strip every economic field (D_E0, Z, p, null mean/sd, draws summary) until the seal opens at the ruled `read_not_before` 2026-09-09T00:06Z (G = 6). Before that, DA's verifier (`live/pm_research/da_gate1_day_verdict.py`) can verify population, statuses, seed and provenance only, and says so (`IS_A_VERIFICATION_OF_THE_ECONOMICS: false`). At the read: (1) DA's verifier on each OPENED day receipt against the day book, EXACT comparison, before any number is quoted; (2) the runner's own read; (3) the reviewer's filing; (4) the coordinator reports the direction. A verdict quoted before step 1 is unverified by construction. Four limits (REV 45 §4): the verifier never verifies D_E_MINUS_R (not on DE's surface), the book's construction (only its bytes), an error in the declaration itself (two implementations of a wrong spec agree — R-235's known limit), or a sealed receipt's economics. Its real-day path is NOT BUILT as of R-594 (DA 67).
 
