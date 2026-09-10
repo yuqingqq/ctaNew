@@ -22956,3 +22956,25 @@ generation and the window went 4 → 3. Nothing rewritten.
   TWELVE freeze-bearing guards, not 53, plus a ~30-line STANDING CHECK -- and if only one
   survives to the next session it should be the check. tip b6e90e5)
 ```
+
+## Batch 326 (rotated by MEM round 344, 2026-09-10T17:30:21Z)
+
+```
+  2026-09-10T17:08:40Z (MEM ROUND 341 -- THE POST-VERDICT BRANCHES ARE DECIDED BEFORE THE DRAWS LAND.
+  The USER delegated the recommended options (runbook 7i, 6cc8346) and BOTH step-2 branches
+  are pre-decided so no seat waits at ~18:50Z. FAILURE: step 3 fires CHEAPLY -- failure as
+  the FIRST line, publish the four elements, STOP; no freeze, no forward test, no redesign
+  in the same breath; QR_SKEW_ONLY remains the reference. It PROTECTS FIVE VALIDATION DAYS
+  and is NOT a disappointment. PASS: THE FREEZE WAITS ON REV'S TWELVE -- a freeze resting on
+  guards nobody has seen fire is a freeze resting on nothing, and freezing cannot be taken
+  back. REV 167 drove the twelve: FOURTEEN branches, TEN firing cleanly, ONE firing but not
+  for the purpose its name claims, ONE unreached and CORRECTLY NOT declared dead --
+  'could not reach' is a STATUS, 'dead' is a CLAIM, and only LEGS_DO_NOT_CLOSE has earned
+  it. REV's ratio caveat is recorded VERBATIM against its own number. I examined the
+  DIVERGED guard myself: ONE refusal name serves THREE conditions -- a bad authority value,
+  carriers disagreeing, and carriers merely UNREADABLE -- while its own verdict field
+  distinguishes the last two. THE STRUCTURE KNOWS THE DIFFERENCE AND THE NAME DOES NOT; its
+  raise is NOT opt-in (default True), which I checked rather than assumed. The standing
+  check's CONTROL is the load-bearing half: an unmatched spelling must surface as
+  REFUSAL_HAS_NO_NAME, never a clean zero. tip fa7557e)
+```

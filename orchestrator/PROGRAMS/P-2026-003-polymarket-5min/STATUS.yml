@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-10T17:30:21Z (MEM ROUND 344 -- THE LAST BLOCKING ITEM CLOSED AND THE COORDINATOR IS NOW UNDER
+  A WRITTEN CONTROL. The thetas are clean and re-verified live (263e41d, Q-DA-405) -- the one
+  answer that could have UNMADE the four-day table, the asymmetry null and step 2 together;
+  and because DA's instrument differs from the census I ran at rounds 342-343, this time the
+  agreement IS corroboration. SECTION 7J is landed (REV 169, f67165e, runbook 782), written
+  with ZERO CELLS VISIBLE, and it is a CONTROL ON THE COORDINATOR that must outlive this
+  session. REV's diagnosis, verbatim: 'Both were TRUE OBSERVATIONS CARRIED ONE STEP FURTHER
+  THAN THE EVIDENCE WENT... a number is at its most quotable in the minute it lands' -- and
+  naming it carelessness would make it HARDER to catch. Two ceilings fixed in advance, each
+  carrying its own negation. THE P IS TWO-SIDED AND I VERIFIED IT WAS PRE-REGISTERED: both
+  p_two_sided and why_two_sided are in declaration v1 AT ITS DECLARING COMMIT b72e329, the
+  file has ONE commit in its whole history, so NOBODY CAN CLAIM THE SIDEDNESS WAS CHOSEN
+  AFTER THE RESULT. THE TENTH INSTANCE was INDISTINGUISHABLE FROM AN IMPROVEMENT -- DA's
+  discriminator cut 168->153, hit its named targets, silently dropped others, and DA nearly
+  reported it as a clean success; caught ONLY because ANOTHER SEAT'S TEST forced enumeration.
+  Population 156, 28 never exercised, ratchet HELD 16/16. Step 2 lands ~19:25Z. tip 8b4e41c)
   2026-09-10T17:21:37Z (MEM ROUND 343 -- THE RUNNING EXPERIMENT'S GUARDS ARE DRIVEN AND THREE COUNTS
   MOVED UP. SETTLEMENT_NULL_TOO_SMALL driven at 150, 199, 0 and the STRING '200' -- the
   BOUNDARY and TYPE-CONFUSION cases are the two a lazy test misses and the two that would
@@ -100,23 +116,6 @@ updated: >-
   the register, which I nearly filed as a divergence. REV now reviews the verdict sentence
   BEFORE it reaches the USER: a pass will invite 'the model works' and a failure 'the model
   is dead', and neither is supportable on three consumed days. tip 88f8132)
-  2026-09-10T17:08:40Z (MEM ROUND 341 -- THE POST-VERDICT BRANCHES ARE DECIDED BEFORE THE DRAWS LAND.
-  The USER delegated the recommended options (runbook 7i, 6cc8346) and BOTH step-2 branches
-  are pre-decided so no seat waits at ~18:50Z. FAILURE: step 3 fires CHEAPLY -- failure as
-  the FIRST line, publish the four elements, STOP; no freeze, no forward test, no redesign
-  in the same breath; QR_SKEW_ONLY remains the reference. It PROTECTS FIVE VALIDATION DAYS
-  and is NOT a disappointment. PASS: THE FREEZE WAITS ON REV'S TWELVE -- a freeze resting on
-  guards nobody has seen fire is a freeze resting on nothing, and freezing cannot be taken
-  back. REV 167 drove the twelve: FOURTEEN branches, TEN firing cleanly, ONE firing but not
-  for the purpose its name claims, ONE unreached and CORRECTLY NOT declared dead --
-  'could not reach' is a STATUS, 'dead' is a CLAIM, and only LEGS_DO_NOT_CLOSE has earned
-  it. REV's ratio caveat is recorded VERBATIM against its own number. I examined the
-  DIVERGED guard myself: ONE refusal name serves THREE conditions -- a bad authority value,
-  carriers disagreeing, and carriers merely UNREADABLE -- while its own verdict field
-  distinguishes the last two. THE STRUCTURE KNOWS THE DIFFERENCE AND THE NAME DOES NOT; its
-  raise is NOT opt-in (default True), which I checked rather than assumed. The standing
-  check's CONTROL is the load-bearing half: an unmatched spelling must surface as
-  REFUSAL_HAS_NO_NAME, never a clean zero. tip fa7557e)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -288,6 +287,20 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 344, the last blocking item closed and 7j binds the coordinator ---
+  THE_THETAS_ARE_CLEAN_AND_THAT_WAS_THE_LAST_BLOCKING_ITEM_BEFORE_THE_VERDICT: "263e41d, 'DA 200/201 (Q-DA-405): thetas clean, re-verified live'. Every armed figure this programme produced tonight rests on those two values and they are consistent across their carriers. It is the one answer that could have UNMADE the four-day table, the asymmetry null and step 2 together, and it came back clean -- so all three are firmer than they were this morning, on a check that was designed to be able to break them."
+  AND_THIS_TIME_THE_AGREEMENT_IS_REAL_CORROBORATION_BECAUSE_THE_INSTRUMENTS_DIFFERED: I answered the same question independently at rounds 342 and 343, by a text census over file contents split by suffix, and got 43 carriers each with NO non-exact rendering in any .py or .json. DA answered it live by re-verification. Under rule 38 that is genuine corroboration and not a repetition -- which I say explicitly because I have spent six rounds refusing to call agreement corroboration when it came through one operation. Two different instruments, same answer, and the answer is clean.
+  SECTION_7J_IS_A_CONTROL_ON_THE_COORDINATOR_AND_IT_MUST_OUTLIVE_THIS_SESSION: "REV 169 at f67165e, landed in the runbook at line 782: WHAT MAY BE SAID ABOUT STEP 2's NUMBER, written 2026-09-10T17:13Z with ZERO CELLS OF THE VERDICT VISIBLE. It is not guidance and not a review checklist; it is a written constraint on the seat that will hold the number first. Recorded in the state files rather than left in the runbook alone, because a cleared coordinator reads these files and would otherwise inherit the freedom that section removes."
+  AND_REVS_DIAGNOSIS_OF_THE_TWO_ERRORS_IS_THE_MOST_USEFUL_SENTENCE_PRODUCED_TODAY: "Verbatim: 'Both were TRUE OBSERVATIONS CARRIED ONE STEP FURTHER THAN THE EVIDENCE WENT. That is the failure mode; a number is at its most quotable in the minute it lands.' Not carelessness -- a real measurement extended by one inference that felt continuous with it. And the second half is the operational part: NAMING IT AS CARELESSNESS WOULD MAKE IT HARDER TO CATCH, because nobody watches for carelessness in themselves at the moment they are being careful."
+  THE_TWO_CEILINGS_ARE_FIXED_IN_ADVANCE_AND_BOTH_NAME_WHAT_THEY_DO_NOT_SUPPORT: "A PASS supports: on three consumed days, each arm's settled P&L beat a cancel-count/side/hour-matched random canceller after Holm over two. It does NOT support that anything is validated. A FAILURE supports: matched random cancellation explains the advantage on the development set; step 3 fires and no untouched day is spent. It does NOT support that the model is dead or that cancellation does not work. Each ceiling carries its own negation, which is what stops the sentence drifting upward while staying technically true."
+  THE_P_IS_TWO_SIDED_AND_I_VERIFIED_IT_WAS_PRE_REGISTERED_NOT_ADJUSTED_AFTER: "The direction was chosen after the point estimates were seen, so the p must be two-sided -- rule 11 operating inside the REPORTING rather than inside the design. And it is stronger than a catch: I read declaration v1 AT ITS DECLARING COMMIT b72e329 and both p_two_sided and why_two_sided are already there, with the estimator written out as (1 + #{|D_null| >= |D_arm|}) / (1 + n_draws), absolute values on both sides. The file has ONE commit in its entire history, so it has not been touched since. NOBODY CAN CLAIM THE SIDEDNESS WAS CHOSEN AFTER THE RESULT."
+  AND_SECTION_7J_CARRIES_THE_PRE_REGISTERED_RULE_INTO_WHAT_MAY_BE_SAID: "The declaration fixed the STATISTIC as two-sided; section 7j fixes the SENTENCE as two-sided, at lines 850-851: 'The p is two-sided because the direction was chosen after the point estimates were already seen.' Those are two different layers and both were needed -- a correctly two-sided number can still be described in a one-sided sentence by someone quoting it in a hurry. Design and reporting now agree, and both were written before the number existed."
+  REV_IS_WRITING_BOTH_VERDICT_PARAGRAPHS_BLIND_AND_THE_REASONING_IS_THE_POINT: "Pass and failure, in full, with numeric placeholders, so the coordinator SUBSTITUTES DIGITS AND CHANGES NOTHING ELSE, and REV verifies nothing else changed. REV's reasoning, recorded because it generalises: if the coordinator drafts and REV edits, the FRAME is the coordinator's and REV is trimming it; if REV drafts without knowing which way it falls, the frame is written in ignorance of the outcome. THAT IS THE DIFFERENCE BETWEEN A REVIEW AND A CONTROL -- and it is section 7j's own logic, that a standard chosen after the result is chosen to fit it, applied to prose."
+  THE_TENTH_INSTANCE_WAS_INDISTINGUISHABLE_FROM_AN_IMPROVEMENT: "DA's first discriminator implementation cut the population 168 -> 153, removed exactly the two protocol constants it was supposed to remove, and silently dropped others. DA's own words: it 'looked like a clean success and I nearly reported it as one'. That is the sharpest form this class has taken -- the previous nine looked like nothing happening, and this one looked like something GOOD happening. A guard that does not fire is quiet; a change that over-removes while hitting its named targets is APPLAUDED."
+  AND_IT_WAS_CAUGHT_ONLY_BECAUSE_ANOTHER_SEATS_TEST_FORCED_ENUMERATION: "DA caught it ONLY because REV's test for the change forced it to enumerate which tokens moved and READ THEM. DA's own review of DA's own work would not have caught it, and DA says so. This is the strongest argument the programme has produced for the cross-seat structure: not that a second seat is smarter, but that a second seat's TEST asks a question the first seat had no reason to ask, at a moment when the first seat had every reason not to. Final state: population 156, 28 never exercised (DE 22, BE 5, DA 1), ratchet HELD 16/16."
+  AND_REV_CORRECTED_ITS_OWN_29_IN_BAND_FROM_A_SINGLE_SPELLING_GREP: "REV's 29 came from grep -c 'REFUSED DAY' -- ONE SPELLING -- and REV corrected it in band. That is the third seat this week to get a wrong count from a single-spelling enumeration: DA on the rule-6 floor, ME at round 336 when I filed two unbound copies of a constant that had eighteen carriers, and now REV. Three seats, three instruments, one mechanism. Rule 32 exists precisely for this and being the seat that recorded rule 32 did not stop me being its second instance."
+  STEP_TWO_LANDS_AT_ABOUT_19_25Z_AND_THE_SLIP_COMES_WITH_ITS_MECHANISM: "Revised from ~18:50Z: about 1,060 of 4,000, two cells complete, unit active in research.slice and checkpointed. The reason is stated -- settlement valuation costs more per draw than a tail ratio -- and a schedule slip that names its mechanism is worth more than one that does not, because it can be checked and it predicts the next estimate. Nothing about the result is recorded here; the status remains DECLARED-NOT-RUN and both branches are already decided."
+  BE_IS_COUNTING_HOW_MANY_OF_THE_101_WOULD_REFUSE_IF_CALLED_TODAY: "This is the number that decides whether a freeze would be committed over a tree carrying SILENT FAILURES. An off-path guard that would pass is under-instrumentation; an off-path guard that would REFUSE is a live defect nobody can hear. At least one is already known to be the second kind: I drove verify_run_inputs at round 340 and it raised BE_CASCADE_DIFFERS against params v29. Whatever BE's count is, it is at least one, and one is enough to make the question load-bearing for step 4."
   # --- MEM round 343 addendum, 2026-09-10T17:22:59Z ---
   AND_THE_AUDIT_FLAGS_THOSE_THREE_ARTIFACTS_AS_MISSING_WHICH_IS_THE_FINDING_CONFIRMING_ITSELF: "Three of this round's flags cite live/pm_research/declarations/de_multiday_gate1_params_v30.json and the provenance audit reports it MISSING, taking missing-artifact from 185 to 188. That is CORRECT and it is the finding restating itself: the file does not exist in this working tree because a8567d1 is committed in wt-be and is NOT an ancestor of HEAD. I read it with git show against the commit object, which is why the flags are CHECKED and not RELAYED. The three entries are left pointing at the in-commit path deliberately -- when a8567d1 lands on this branch the path resolves and the audit count returns to 185 BY ITSELF, which makes the audit a landing detector rather than a complaint. If it does not return to 185, the merge did not happen."
   # --- MEM round 343, the running experiment's guards driven; three counts moved up ---
@@ -27516,6 +27529,85 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 344, 2026-09-10T17:30:21Z ---
+  THE_THETAS_ARE_CLEAN_AND_THAT_WAS_THE_LAST_BLOCKING_ITEM_BEFORE_THE_VERDICT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T17:30:21Z
+    said: >-
+      commit 263e41d read at its subject and date; the filing lands one register row.
+  AND_THIS_TIME_THE_AGREEMENT_IS_REAL_CORROBORATION_BECAUSE_THE_INSTRUMENTS_DIFFERED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-10T17:30:21Z
+    said: >-
+      my own census recorded at rounds 342 and 343 with its operation stated; DA's re-verification recorded at 263e41d. The two operations are named and differ.
+  SECTION_7J_IS_A_CONTROL_ON_THE_COORDINATOR_AND_IT_MUST_OUTLIVE_THIS_SESSION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-10T17:30:21Z
+    said: >-
+      section 7j located at COORDINATOR_RUNBOOK.md:782 with its authorship, timestamp and zero-cells note; commit f67165e read at its subject.
+  AND_REVS_DIAGNOSIS_OF_THE_TWO_ERRORS_IS_THE_MOST_USEFUL_SENTENCE_PRODUCED_TODAY:
+    prov: RELAYED
+    from: REV 169 via coordinator MEM 344
+    as_of: 2026-09-10T17:30:21Z
+    said: >-
+      REV's diagnosis quoted verbatim and not compressed; the two errors it diagnoses are recorded in my files at rounds 337 and 340.
+  THE_TWO_CEILINGS_ARE_FIXED_IN_ADVANCE_AND_BOTH_NAME_WHAT_THEY_DO_NOT_SUPPORT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-10T17:30:21Z
+    said: >-
+      both ceiling sentences read in section 7j at runbook lines 850-872, including their explicit negations.
+  THE_P_IS_TWO_SIDED_AND_I_VERIFIED_IT_WAS_PRE_REGISTERED_NOT_ADJUSTED_AFTER:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_settlement_control_declaration_v1.json
+    as_of: 2026-09-10T17:30:21Z
+    said: >-
+      git show b72e329 of the v1 declaration: p_two_sided and why_two_sided present under combination_rule.step_2_the_null, with the estimator and its post-hoc-direction justification; git log for that path returns exactly one commit.
+  AND_SECTION_7J_CARRIES_THE_PRE_REGISTERED_RULE_INTO_WHAT_MAY_BE_SAID:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    as_of: 2026-09-10T17:30:21Z
+    said: >-
+      runbook lines 850-851 and 872 read; compared against the declaration's own p_two_sided field verified above.
+  REV_IS_WRITING_BOTH_VERDICT_PARAGRAPHS_BLIND_AND_THE_REASONING_IS_THE_POINT:
+    prov: RELAYED
+    from: REV via coordinator MEM 344
+    as_of: 2026-09-10T17:30:21Z
+    said: >-
+      REV's reasoning as dispatched; the mechanism it implements is recorded at rounds 342 and 343.
+  THE_TENTH_INSTANCE_WAS_INDISTINGUISHABLE_FROM_AN_IMPROVEMENT:
+    prov: RELAYED
+    from: DA via coordinator MEM 344
+    as_of: 2026-09-10T17:30:21Z
+    said: >-
+      the 168 -> 153 movement, the two protocol constants and DA's own quoted reaction as dispatched.
+  AND_IT_WAS_CAUGHT_ONLY_BECAUSE_ANOTHER_SEATS_TEST_FORCED_ENUMERATION:
+    prov: RELAYED
+    from: DA via coordinator MEM 344
+    as_of: 2026-09-10T17:30:21Z
+    said: >-
+      the enumeration requirement, DA's admission and the final counts as dispatched.
+  AND_REV_CORRECTED_ITS_OWN_29_IN_BAND_FROM_A_SINGLE_SPELLING_GREP:
+    prov: RELAYED
+    from: REV via coordinator MEM 344
+    as_of: 2026-09-10T17:30:21Z
+    said: >-
+      REV's correction and its cause as dispatched; my own instance is recorded at rounds 336 and 339 and DA's at 339.
+  STEP_TWO_LANDS_AT_ABOUT_19_25Z_AND_THE_SLIP_COMES_WITH_ITS_MECHANISM:
+    prov: RELAYED
+    from: coordinator MEM 344
+    as_of: 2026-09-10T17:30:21Z
+    said: >-
+      the revised estimate, the cell count and the mechanism as dispatched; the unit's placement and liveness I verified myself at rounds 338 and 339.
+  BE_IS_COUNTING_HOW_MANY_OF_THE_101_WOULD_REFUSE_IF_CALLED_TODAY:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-10T17:30:21Z
+    said: >-
+      the triage as dispatched; the one known member I established by execution at round 340, with both digests recorded in that round's provenance.
   # --- MEM round 343 addendum, 2026-09-10T17:22:59Z ---
   AND_THE_AUDIT_FLAGS_THOSE_THREE_ARTIFACTS_AS_MISSING_WHICH_IS_THE_FINDING_CONFIRMING_ITSELF:
     prov: CHECKED

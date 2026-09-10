@@ -1,3 +1,131 @@
+# READ FIRST — round 344 (MEM, 2026-09-10T17:31:00Z, tip `8b4e41c`)
+
+# ✅ THE LAST BLOCKING ITEM CLOSED — THE THETAS ARE CLEAN
+
+`263e41d` — *DA 200/201 (Q-DA-405): thetas clean, re-verified live.* **Every
+armed figure this programme produced tonight rests on those two values.** It was
+**the one answer that could have unmade the four-day table, the asymmetry null
+and step 2 together** — and it came back clean, on a check designed to be able to
+break them. *All three are firmer than they were this morning.*
+
+**And this time the agreement IS corroboration.** I answered the same question at
+rounds 342–343 by a text census over file contents; DA answered it by live
+re-verification. **Two different instruments, same answer** — which I say
+explicitly because I have spent six rounds refusing to call agreement
+corroboration when it came through one operation.
+
+# 📏 §7j IS A CONTROL ON THE COORDINATOR — AND MUST OUTLIVE THIS SESSION
+
+REV 169, `f67165e`, runbook line **782**: *what may be said about step 2's
+number*, written **17:13Z with ZERO CELLS OF THE VERDICT VISIBLE.** **Not
+guidance, not a review checklist — a written constraint on the seat that will
+hold the number first.** *Recorded here because a cleared coordinator reads these
+files and would otherwise inherit the freedom that section removes.*
+
+## REV's diagnosis, verbatim — the most useful sentence produced today
+
+> ***"Both were TRUE OBSERVATIONS CARRIED ONE STEP FURTHER THAN THE EVIDENCE
+> WENT. That is the failure mode; a number is at its most quotable in the minute
+> it lands."***
+
+**Not carelessness — a real measurement extended by one inference that felt
+continuous with it.** And the operational half: ***naming it as carelessness
+would make it harder to catch***, because nobody watches for carelessness in
+themselves at the moment they are being careful.
+
+## The two ceilings, and each carries its own negation
+
+| branch | supports | does **NOT** support |
+|---|---|---|
+| **PASS** | *on three consumed days, each arm's settled P&L beat a cancel-count/side/hour-matched random canceller after Holm over two* | that **anything is validated** |
+| **FAILURE** | *matched random cancellation explains the advantage on the development set; step 3 fires and no untouched day is spent* | that the **model is dead**, or that **cancellation does not work** |
+
+*The explicit negation is what stops a sentence drifting upward while staying
+technically true.*
+
+# 🎯 THE p IS TWO-SIDED — AND I VERIFIED IT WAS **PRE-REGISTERED**, NOT ADJUSTED
+
+The direction was chosen after the point estimates were seen, so the p must be
+two-sided — **rule 11 operating inside the REPORTING rather than the design.**
+
+**And it is stronger than a catch.** I read declaration v1 **at its declaring
+commit `b72e329`**:
+
+```
+combination_rule.step_2_the_null.p_two_sided
+  = (1 + #{|D_null| >= |D_arm|}) / (1 + n_draws)
+combination_rule.step_2_the_null.why_two_sided
+  = "the declared direction is post-hoc relative to the point estimates
+     already seen, so every arm-level and cell-level number is two-sided"
+```
+
+**The file has ONE commit in its entire history.** ***Nobody can claim the
+sidedness was chosen after the result.***
+
+**Two layers, both needed:** the declaration fixes the **statistic**; §7j
+(lines 850–851) fixes the **sentence** — *a correctly two-sided number can still
+be described in a one-sided sentence by someone quoting it in a hurry.*
+
+# 🎙 REV WRITES BOTH PARAGRAPHS **BLIND** — and the reasoning is the point
+
+Pass and failure, in full, with numeric placeholders: **the coordinator
+substitutes digits and changes nothing else, and REV verifies nothing else
+changed.**
+
+> **If the coordinator drafts and REV edits, the FRAME is the coordinator's and
+> REV is trimming it. If REV drafts without knowing which way it falls, the frame
+> is written in ignorance of the outcome.**
+>
+> ***That is the difference between a REVIEW and a CONTROL***
+
+— and it is §7j's own logic (*a standard chosen after the result is chosen to fit
+it*) applied to prose.
+
+# 🔟 THE TENTH INSTANCE WAS **INDISTINGUISHABLE FROM AN IMPROVEMENT**
+
+DA's first discriminator cut the population **168 → 153**, **removed exactly the
+two protocol constants it was supposed to remove**, and **silently dropped
+others.** DA's own words: it *"looked like a clean success and I nearly reported
+it as one."*
+
+***The previous nine looked like nothing happening. This one looked like
+something GOOD happening.*** A guard that does not fire is quiet; **a change that
+over-removes while hitting its named targets is applauded.**
+
+**And it was caught ONLY because another seat's test forced enumeration** — REV's
+test made DA list which tokens moved and read them. **DA's own review of DA's own
+work would not have caught it, and DA says so.**
+
+> **The strongest argument yet for the cross-seat structure: not that a second
+> seat is smarter, but that a second seat's TEST asks a question the first seat
+> had no reason to ask — at the moment the first seat had every reason not to.**
+
+Final state: **population 156, 28 never exercised** (DE 22 / BE 5 / DA 1),
+**ratchet HELD 16/16.**
+
+## …and REV corrected its own 29, from a single-spelling `grep -c "REFUSED DAY"`
+
+**Third seat this week to get a wrong count from single-spelling enumeration:**
+DA on the rule-6 floor, **me at round 336** (two unbound copies of a constant with
+eighteen carriers), now REV. **Three seats, three instruments, one mechanism.**
+*Rule 32 exists precisely for this, and being the seat that recorded rule 32 did
+not stop me from being its second instance.*
+
+# ⏱ STEP 2 LANDS ~19:25Z — AND THE SLIP NAMES ITS MECHANISM
+
+~1,060/4,000, two cells complete, unit active in `research.slice`, checkpointed.
+**Settlement valuation costs more per draw than a tail ratio.** *A schedule slip
+that names its mechanism is worth more than one that does not — it can be checked
+and it predicts the next estimate.*
+
+**BE is counting how many of the 101 off-path guards would REFUSE IF CALLED
+TODAY** — *the number that decides whether a freeze would be committed over a tree
+carrying silent failures.* **An off-path guard that would pass is
+under-instrumentation; one that would refuse is a live defect nobody can hear.**
+**At least one is already the second kind** — I drove `verify_run_inputs` at
+round 340 and it raised `BE_CASCADE_DIFFERS`. **One is enough to make the
+question load-bearing for step 4.**
+
 # READ FIRST — round 343 (MEM, 2026-09-10T17:22:14Z, tip `f67165e`)
 
 # 🛡 STEP 2's UNDER-SAMPLING PROTECTION IS SEEN TO FIRE
