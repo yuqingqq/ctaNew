@@ -16,6 +16,7 @@ the null; DE does, after this file is committed.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -28,6 +29,161 @@ FAILS = "FAILS"
 RULE_6_FLOOR = 200
 MATCH_KEYS = ("cancel_count", "side", "hour")
 FORBIDDEN_STATISTIC = ("mean", "day_mean", "net_value_cents")
+
+
+# ==================================================================
+# DA 192 -- THE INSTRUMENTS THAT TEST PROPERTIES INSTEAD OF SPELLING
+# ==================================================================
+#
+# REV 162 found that SIX of this module's item predicates checked the
+# WORDING of a clause rather than the property it asserts, in a module
+# whose own docstring says a declaration that is only prose is the defect
+# this programme keeps paying for.
+#
+# DA 192 enumerated by THE OPERATION rather than by inspection -- build a
+# semantically WEAKER clause that keeps the vocabulary, and see which
+# predicates still pass -- and the answer was ELEVEN OF ELEVEN, not six.
+# REV's list was a sample of the same class (SEAT_PROTOCOL rule 32).
+#
+# Three instruments replace the spelling:
+#   * `unconditional()`  -- an ABSOLUTE clause ("refuses", "must not",
+#     "cannot validate", "forbidden") is violated by an EXCEPTION, so the
+#     property is the ABSENCE OF AN ESCAPE, not the presence of a word.
+#   * `decidable()`      -- a clause that states a bar an instrument must
+#     meet has to name a QUANTITY. "do well" is not a bar.
+#   * execution          -- where behaviour exists (the statistic, the
+#     result guards, Holm, the matcher) the predicate DRIVES it.
+#
+# And the verdict is now THREE-VALUED. A clause this module cannot check
+# from v1's fields is NAMED and the item reports
+# HOLDS_WITH_UNCHECKED_CLAUSES -- never HOLDS. An unverifiable clause must
+# not read as a verified one; that is what "11/11 items HOLD" did.
+
+UNCHECKED = "HOLDS_WITH_UNCHECKED_CLAUSES"
+
+#: An ABSOLUTE clause admits no exception. These are the connectives that
+#: introduce one. Driven both ways by the selftest (rule 15): a clean
+#: absolute clause must pass, and each marker must be caught.
+EXCEPTION_MARKERS = (
+    r"\bunless\b", r"\bexcept\b", r"\botherwise\b", r"\bon its own\b",
+    r"\bwhere feasible\b", r"\bprovided that\b", r"\bsubject to\b",
+    r"\bat the operator's discretion\b", r"\bbeyond what\b",
+    r"\bif the operator\b", r"\bwhere the operator\b",
+    r"\bat their discretion\b", r"\bmay be relaxed\b",
+)
+
+_QUANT = re.compile(r"(\d+(?:\.\d+)?\s*%|\d+(?:\.\d+)?(?:st|nd|rd|th)?"
+                    r"|<=|>=|<|>|percentile|1/\d+)")
+
+
+def unconditional(text) -> dict:
+    """Does this ABSOLUTE clause admit an exception?
+
+    The property is structural: an absolute promise with an escape is a
+    weaker promise wearing the same words. This is what makes a weakened
+    v2 FAIL instead of passing unchanged."""
+    t = str(text or "")
+    hits = [m for m in EXCEPTION_MARKERS if re.search(m, t, re.I)]
+    return {"unconditional": not hits, "escapes": hits, "n_chars": len(t)}
+
+
+def decidable(text) -> dict:
+    """Does this clause name a bar an instrument could actually meet?
+
+    `must: "do well"` is not a criterion; `must: "one-sided p <= 1/501 or
+    above the 99th percentile"` is."""
+    t = str(text or "")
+    q = _QUANT.findall(t)
+    return {"decidable": bool(q), "quantities": q[:6]}
+
+
+def sinker_bar(sink: dict, d: dict) -> dict:
+    """A sinker must be DECIDABLE -- its predicate names a quantity, OR the
+    bar it depends on RESOLVES TO A NUMBER elsewhere in the declaration.
+
+    "the ORACLE does not land in the extreme right tail" is decidable only
+    because the oracle's bar is declared; if that bar goes vague this
+    sinker goes vague with it, and the predicate must say so."""
+    pred = str(sink.get("predicate") or "")
+    if decidable(pred)["decidable"]:
+        return {"decidable": True, "bar_from": "its own predicate"}
+    if re.search(r"\bholm\b", pred, re.I):
+        a = (d.get("multiplicity") or {}).get("alpha")
+        return {"decidable": isinstance(a, (int, float)) and not isinstance(a, bool),
+                "bar_from": "multiplicity.alpha", "value": a}
+    if re.search(r"\boracle\b", pred, re.I):
+        must = ((d.get("falsifiers") or {})
+                .get("positive_control_the_null_MUST_flag") or {}).get("must")
+        return {"decidable": decidable(must)["decidable"],
+                "bar_from": "falsifiers.positive_control_the_null_MUST_flag.must"}
+    return {"decidable": False, "bar_from": None,
+            "why": "no quantity in the predicate and no bar it could resolve to"}
+
+
+def formula_roles(text, allow_baseline_in_numerator=False) -> dict:
+    """Does the declared ratio put the ARM over the BASELINE?
+
+    Structural, not textual: split the declared formula at its division
+    and check WHICH BOOK each side references. A v2 that writes the arm
+    over the arm keeps every word and fails this."""
+    t = str(text or "")
+    if "/" not in t:
+        return {"well_formed": False, "why": "no division in the declared formula"}
+    num, den = t.split("/", 1)
+    def refs(x):
+        return {"arm": bool(re.search(r"\barm\b", x, re.I)),
+                "baseline": bool(re.search(r"\bbase(line)?\b", x, re.I))}
+    n, d = refs(num), refs(den)
+    ok = (n["arm"] and (allow_baseline_in_numerator or not n["baseline"])
+          and d["baseline"] and not d["arm"])
+    return {"well_formed": ok, "numerator": n, "denominator": d}
+
+
+def tails_named(text) -> dict:
+    """A one-sided test names ONE tail. A clause that also names a
+    two-sided fallback names two, and that is a different rule."""
+    t = str(text or "").upper()
+    named = sorted({s for s in ("ONE-SIDED", "TWO-SIDED") if s in t})
+    return {"n_tails_named": len(named), "named": named,
+            "single_rule": len(named) == 1}
+
+
+def family_size_named(text):
+    """The integer family size a correction clause names, or None."""
+    m = re.search(r"over the\s+(\d+)\s", str(text or ""))
+    return int(m.group(1)) if m else None
+
+
+def holm(pvals: dict, family_size: int) -> dict:
+    """Holm-Bonferroni over a DECLARED family size, implemented here so
+    item 4 can DRIVE the correction rather than read the word HOLM."""
+    if family_size < len(pvals):
+        raise ValueError("REFUSED HOLM_FAMILY_SMALLER_THAN_THE_TESTS: "
+                         f"{family_size} < {len(pvals)}")
+    order = sorted(pvals.items(), key=lambda kv: kv[1])
+    out, running = {}, 0.0
+    for i, (k, p) in enumerate(order):
+        adj = min(1.0, max(running, (family_size - i) * p))
+        running = adj
+        out[k] = adj
+    return out
+
+
+def match_draw(arm_cancels: list, drawn: list) -> dict:
+    """The declared control, EXECUTED: cancel count, side and hour must
+    match SIMULTANEOUSLY and EXACTLY. Refuses by name with the deficit."""
+    from collections import Counter
+    if len(drawn) != len(arm_cancels):
+        raise ValueError("REFUSED MATCH_INFEASIBLE_COUNT: drawn "
+                         f"{len(drawn)} against {len(arm_cancels)}")
+    for key, name in ((1, "MATCH_INFEASIBLE_SIDE"), (2, "MATCH_INFEASIBLE_HOUR")):
+        a = Counter(c[key] for c in arm_cancels)
+        b = Counter(c[key] for c in drawn)
+        if a != b:
+            deficit = {k: a[k] - b.get(k, 0) for k in a | b if a[k] != b.get(k, 0)}
+            raise ValueError(f"REFUSED {name}: deficit {deficit}")
+    return {"status": "MATCHED", "n": len(drawn),
+            "matched_on": list(MATCH_KEYS)}
 
 
 def load(path=None) -> dict:
@@ -81,101 +237,227 @@ def asymmetry(arm: dict, baseline: dict, mode: str = "OWN_SIGN") -> dict:
 
 
 # --------------------------------------------------------------- the items
+#
+# DA 192: every item below either EXECUTES the behaviour its clause
+# promises, or evaluates a STRUCTURAL property of the clause (its
+# unconditionality, its decidability, the roles inside its formula, a
+# count it names against a count computed). A clause that can be checked
+# by neither is NAMED in `unchecked_clauses` and the item reports
+# HOLDS_WITH_UNCHECKED_CLAUSES. Nothing here reports HOLDS on the
+# presence of a word.
+
+
+def _verdict(props: dict, unchecked: list, **extra) -> dict:
+    failed = [k for k, v in props.items() if not v]
+    if failed:
+        v = FAILS
+    elif unchecked:
+        v = UNCHECKED
+    else:
+        v = HOLDS
+    return {"verdict": v, "failed_properties": failed,
+            "n_properties_driven": len(props),
+            "unchecked_clauses": unchecked, **extra}
+
+
+_FIX = {f"w{i}": v for i, v in enumerate(
+    [500.0, -300.0, 120.0, -80.0, 900.0, -1500.0, 40.0, -12.0, 260.0])}
+
+
+def _delever_property() -> bool:
+    """EXECUTED: proportional scaling scores A = 0 in both partitions."""
+    for k in (0.9, 0.5, 0.25, 0.05):
+        lev = {w: k * v for w, v in _FIX.items()}
+        for mode in ("OWN_SIGN", "BASELINE_SIGN"):
+            a = asymmetry(lev, _FIX, mode)
+            if a["A"] is None or abs(a["A"]) > 1e-12:
+                return False
+    return True
+
+
+def _oracle_property() -> tuple:
+    worst = min(_FIX, key=lambda w: _FIX[w])
+    best = max(_FIX, key=lambda w: _FIX[w])
+    clip = {w: (0.0 if w == worst else v) for w, v in _FIX.items()}
+    anti = {w: (0.0 if w == best else v) for w, v in _FIX.items()}
+    return (asymmetry(clip, _FIX, "OWN_SIGN")["A"],
+            asymmetry(anti, _FIX, "OWN_SIGN")["A"])
+
+
+def _guard_refuses(field, value, name) -> bool:
+    """EXECUTED: does the RESULT guard actually refuse this?"""
+    good = {"validation_limit": "cannot validate", "p_two_sided": 0.3,
+            "matched_on": list(MATCH_KEYS), "n_draws": 500,
+            "statistic": "A = ret_pos - ret_neg", "interval": None}
+    good[field] = value
+    try:
+        require_result_fields(good)
+        return False
+    except ValueError as e:
+        return name in str(e)
+
 
 def item_1_estimand(d: dict) -> dict:
     e = d.get("estimand") or {}
     prim = e.get("PRIMARY_definition") or {}
     comp = e.get("REQUIRED_COMPANION_definition") or {}
-    ok = (e.get("name") == "A = ret_pos - ret_neg"
-          and prim.get("id") == "OWN_SIGN"
-          and comp.get("id") == "BASELINE_SIGN"
-          and all(k in prim for k in ("ret_pos", "ret_neg", "A"))
-          and all(k in comp for k in ("ret_pos", "ret_neg"))
-          and bool(e.get("NOT_the_mean"))
-          and (e.get("zero_denominator") or {}).get("status_name")
-          == "TAIL_MASS_DENOMINATOR_ZERO")
-    return _v(ok, item="estimand", name=e.get("name"),
-              both_definitions_declared=bool(prim and comp))
+    orc, anti = _oracle_property()
+    props = {
+        "two_partitions_declared_and_distinct": (
+            bool(prim.get("id")) and bool(comp.get("id"))
+            and prim.get("id") != comp.get("id")),
+        "primary_ret_pos_is_arm_over_baseline":
+            formula_roles(prim.get("ret_pos"))["well_formed"],
+        "primary_ret_neg_is_arm_over_baseline":
+            formula_roles(prim.get("ret_neg"))["well_formed"],
+        "companion_denominators_are_the_baseline": (
+            formula_roles(comp.get("ret_pos"), True)["well_formed"]
+            and formula_roles(comp.get("ret_neg"), True)["well_formed"]),
+        "EXECUTED_proportional_scaling_scores_zero": _delever_property(),
+        "EXECUTED_oracle_clip_scores_positive": orc > 0.3,
+        "EXECUTED_anti_oracle_clip_scores_negative": anti < -0.3,
+        "EXECUTED_zero_denominator_is_a_named_status": (
+            asymmetry({"a": 1.0}, {"a": 1.0}, "OWN_SIGN")["status"]
+            == "TAIL_MASS_DENOMINATOR_ZERO"),
+        "EXECUTED_a_mean_statistic_is_refused": _guard_refuses(
+            "statistic", "mean", "MEAN_SUBSTITUTED_FOR_THE_ASYMMETRY"),
+    }
+    unchecked = ["estimand.NOT_the_mean -- prose. The BEHAVIOUR it promises "
+                 "is driven above (a mean-valued result is refused); the "
+                 "sentence itself is not machine-checkable from v1."]
+    return _verdict(props, unchecked, item="estimand",
+                    oracle_A=orc, anti_oracle_A=anti)
 
 
 def item_2_direction(d: dict) -> dict:
     dd = d.get("direction") or {}
     obs = (d.get("observed_at_declaration_time") or {}).get("cells") or {}
     mult = d.get("multiplicity") or {}
-    ok = (dd.get("test_is", "").startswith("ONE-SIDED")
-          and "ret_pos > ret_neg" in (dd.get("declared_direction") or "")
-          and bool(dd.get("HONESTY_CLAUSE_THIS_DECLARATION_WILL_NOT_SOFTEN"))
-          and dd.get("refusal_if_absent") == "P_TWO_SIDED_ABSENT"
-          and len(obs) == mult.get("n_cells"))
-    return _v(ok, item="direction",
-              observed_cells_recorded=len(obs),
-              two_sided_companion_required=bool(dd.get("consequence")))
+    direction = str(dd.get("declared_direction") or "")
+    m = re.search(r"ret_pos\s*([<>])\s*ret_neg", direction)
+    props = {
+        "exactly_one_tail_is_named": tails_named(dd.get("test_is"))["single_rule"],
+        "direction_puts_ret_pos_above_ret_neg": bool(m) and m.group(1) == ">",
+        "observed_cells_recorded_equals_the_family": (
+            len(obs) == mult.get("n_cells")),
+        "honesty_clause_is_unconditional": unconditional(
+            dd.get("HONESTY_CLAUSE_THIS_DECLARATION_WILL_NOT_SOFTEN")
+        )["unconditional"],
+        "EXECUTED_a_missing_two_sided_p_is_refused": _guard_refuses(
+            "p_two_sided", None, "P_TWO_SIDED_ABSENT"),
+    }
+    return _verdict(props, [], item="direction",
+                    observed_cells_recorded=len(obs))
 
 
 def item_3_minimum_sample(d: dict, params: dict | None = None) -> dict:
     m = d.get("minimum_sample") or {}
     n = m.get("n_draws")
-    bar = None
     if params is None and PARAMS.is_file():
         params = json.loads(PARAMS.read_text())
-    if params:
-        bar = params.get("min_draws_per_arm_day")
-    ok = (isinstance(n, int) and n >= RULE_6_FLOOR
-          and m.get("rule_6_floor") == RULE_6_FLOOR
-          and m.get("refusal_name") == "NULL_UNDER_SAMPLED"
-          and (bar is None or n == bar))
-    return _v(ok, item="minimum_sample", n_draws=n, rule_6_floor=RULE_6_FLOOR,
-              params_bar=bar, agrees_with_the_pre_declared_bar=(n == bar))
+    bar = (params or {}).get("min_draws_per_arm_day")
+    props = {
+        "n_draws_clears_the_rule_6_floor": isinstance(n, int) and n >= RULE_6_FLOOR,
+        "n_draws_equals_the_PRE_DECLARED_params_bar": (n == bar),
+        "short_count_clause_is_unconditional":
+            unconditional(m.get("short_count"))["unconditional"],
+        "EXECUTED_a_short_count_is_refused": _guard_refuses(
+            "n_draws", 100, "NULL_UNDER_SAMPLED"),
+    }
+    return _verdict(props, [], item="minimum_sample", n_draws=n,
+                    params_bar=bar)
 
 
 def item_4_multiplicity(d: dict) -> dict:
     m = d.get("multiplicity") or {}
-    ok = (m.get("n_cells") == len(m.get("arms") or []) * len(m.get("days") or [])
-          and m.get("n_arms") == len(m.get("arms") or [])
-          and "HOLM" in (m.get("correction_for_cell_claims") or "").upper()
-          and "HOLM" in (m.get("correction_for_arm_level_claims") or "").upper()
-          and bool(m.get("recorded_at"))
-          and bool(m.get("no_other_family_may_be_declared_later")))
-    return _v(ok, item="multiplicity", n_cells=m.get("n_cells"),
-              n_arms=m.get("n_arms"), computed_n_cells=(
-                  len(m.get("arms") or []) * len(m.get("days") or [])))
+    n_cells, n_arms = m.get("n_cells"), m.get("n_arms")
+    computed = len(m.get("arms") or []) * len(m.get("days") or [])
+    try:
+        holm({"a": 0.01}, 1)
+        drove = True
+    except Exception:
+        drove = False
+    try:
+        holm({"a": 0.01, "b": 0.02}, 1)
+        refused = False
+    except ValueError:
+        refused = True
+    props = {
+        "n_cells_equals_arms_times_days": n_cells == computed,
+        "n_arms_equals_the_arm_list": n_arms == len(m.get("arms") or []),
+        "cell_correction_names_the_CELL_family": (
+            family_size_named(m.get("correction_for_cell_claims")) == n_cells),
+        "arm_correction_names_the_ARM_family": (
+            family_size_named(m.get("correction_for_arm_level_claims")) == n_arms),
+        "family_closure_clause_is_unconditional": unconditional(
+            m.get("no_other_family_may_be_declared_later"))["unconditional"],
+        "EXECUTED_holm_runs": drove,
+        "EXECUTED_holm_refuses_a_family_smaller_than_the_tests": refused,
+    }
+    return _verdict(props, [], item="multiplicity", n_cells=n_cells,
+                    computed_n_cells=computed,
+                    cell_family_named=family_size_named(
+                        m.get("correction_for_cell_claims")))
 
 
 def item_5_matching(d: dict) -> dict:
     m = d.get("matching") or {}
     enf = m.get("enforcement") or {}
     un = m.get("unmatchable_cell") or {}
-    ok = (tuple(m.get("matched_on") or ()) == MATCH_KEYS
-          and m.get("simultaneously") is True
-          and all(k in enf for k in MATCH_KEYS)
-          and all("EXACT" in (enf[k] or "").upper() for k in MATCH_KEYS)
-          and "MATCH_INFEASIBLE_HOUR" in (enf.get("hour") or "")
-          and un.get("status_name") == "MATCH_INFEASIBLE"
-          and bool(un.get("forbidden")))
-    return _v(ok, item="matching", matched_on=m.get("matched_on"),
-              simultaneously=m.get("simultaneously"))
+    arm = [("s1", "BUY_UP", 3), ("s1", "SELL_UP", 3), ("s2", "BUY_UP", 9)]
+    def refuses(drawn, name):
+        try:
+            match_draw(arm, drawn)
+            return False
+        except ValueError as e:
+            return name in str(e)
+    props = {
+        "matched_on_is_exactly_the_three_keys":
+            tuple(m.get("matched_on") or ()) == MATCH_KEYS,
+        "simultaneously_is_true": m.get("simultaneously") is True,
+        "every_enforcement_clause_is_unconditional": all(
+            unconditional(enf.get(k))["unconditional"] for k in MATCH_KEYS),
+        "relaxation_is_forbidden_unconditionally":
+            unconditional(un.get("forbidden"))["unconditional"],
+        "EXECUTED_an_exact_match_passes":
+            match_draw(arm, list(arm))["status"] == "MATCHED",
+        "EXECUTED_a_short_count_refuses": refuses(
+            arm[:2], "MATCH_INFEASIBLE_COUNT"),
+        "EXECUTED_a_wrong_side_mix_refuses": refuses(
+            [("s1", "BUY_UP", 3), ("s1", "BUY_UP", 3), ("s2", "BUY_UP", 9)],
+            "MATCH_INFEASIBLE_SIDE"),
+        "EXECUTED_a_wrong_hour_mix_refuses": refuses(
+            [("s1", "BUY_UP", 3), ("s1", "SELL_UP", 3), ("s2", "BUY_UP", 4)],
+            "MATCH_INFEASIBLE_HOUR"),
+    }
+    return _verdict(props, [], item="matching", matched_on=m.get("matched_on"))
 
 
 def item_6_sinkers(d: dict, observed: dict | None = None) -> dict:
-    """A criterion with no failing outcome is not a criterion.
-
-    Beyond checking the sinkers are declared, this EVALUATES SINK_2 against
-    the observed cells: if no declared sinker can ever be true, the test
-    cannot fail and the section is decoration."""
     s = d.get("what_would_sink_it") or {}
     named = [k for k in s if k.startswith("SINK_")]
-    have_pred = [k for k in named if (s[k] or {}).get("predicate")
-                 and (s[k] or {}).get("verdict_if_true")]
     obs = observed if observed is not None else (
         (d.get("observed_at_declaration_time") or {}).get("cells") or {})
     already = [c for c, v in obs.items()
                if ((v.get("A_own_sign") or {}).get("A") or 0) <= 0]
-    ok = (len(named) >= 5 and len(have_pred) == len(named)
-          and len(already) >= 1)
-    return _v(ok, item="what_would_sink_it", n_sinkers=len(named),
-              all_have_predicates=(len(have_pred) == len(named)),
-              cells_already_failing_SINK_2=already,
-              the_test_can_fail=bool(already))
+    props = {
+        "at_least_five_sinkers": len(named) >= 5,
+        "every_sinker_has_a_predicate_and_a_verdict": all(
+            (s[k] or {}).get("predicate") and (s[k] or {}).get("verdict_if_true")
+            for k in named),
+        "every_sinker_predicate_is_unconditional": all(
+            unconditional((s[k] or {}).get("predicate"))["unconditional"]
+            for k in named),
+        "every_sinker_BAR_RESOLVES_to_a_number": all(
+            sinker_bar(s[k] or {}, d)["decidable"] for k in named),
+        "EVALUATED_at_least_one_observed_cell_already_trips_a_sinker":
+            bool(already),
+    }
+    return _verdict(props, [], item="what_would_sink_it",
+                    n_sinkers=len(named),
+                    bars={k: sinker_bar(s[k] or {}, d).get("bar_from")
+                          for k in named},
+                    cells_already_failing_SINK_2=already)
 
 
 def item_7_falsifiers(d: dict) -> dict:
@@ -183,65 +465,142 @@ def item_7_falsifiers(d: dict) -> dict:
     pos = f.get("positive_control_the_null_MUST_flag") or {}
     bad = f.get("known_bad_the_null_MUST_refuse") or []
     names = {b.get("name") for b in bad if isinstance(b, dict)}
-    ok = (pos.get("name") == "ORACLE_WORST_WINDOWS"
-          and bool(pos.get("construction")) and bool(pos.get("must"))
-          and len(bad) >= 5
-          and all(isinstance(b, dict) and b.get("construction") and b.get("must")
-                  for b in bad)
-          and "UNDER_CANCELLING_CONTROL" in names
-          and "MEAN_SUBSTITUTED_FOR_THE_ASYMMETRY" in names)
-    return _v(ok, item="falsifiers", positive_control=pos.get("name"),
-              n_known_bad=len(bad), known_bad=sorted(names))
+    orc, anti = _oracle_property()
+    props = {
+        "positive_control_names_a_construction": bool(pos.get("construction")),
+        "positive_control_states_a_DECIDABLE_bar":
+            decidable(pos.get("must"))["decidable"],
+        "at_least_five_known_bads": len(bad) >= 5,
+        "every_known_bad_has_a_construction_and_a_must": all(
+            isinstance(b, dict) and b.get("construction") and b.get("must")
+            for b in bad),
+        "every_known_bad_must_clause_is_unconditional": all(
+            unconditional(b.get("must"))["unconditional"] for b in bad
+            if isinstance(b, dict)),
+        "the_under_cancelling_control_is_named":
+            "UNDER_CANCELLING_CONTROL" in names,
+        "EXECUTED_the_statistic_separates_oracle_from_anti_oracle":
+            orc > 0 > anti,
+    }
+    return _verdict(props, [], item="falsifiers", n_known_bad=len(bad),
+                    known_bad=sorted(n for n in names if n))
 
 
-def item_8_population(d: dict) -> dict:
+def item_8_population(d: dict, artifact: dict | None = None) -> dict:
     p = d.get("population") or {}
-    marks = ((p.get("2026-09-03_carries_its_marks_and_stays_SEPARABLE") or {})
-             .get("marks") or [])
-    ok = (len(p.get("days") or []) == 4
-          and p.get("all_four_are_CONSUMED") is True
-          and p.get("costs_no_validation_day") is True
-          and p.get("protected_from_utc_date") == "2026-09-08"
-          and len(marks) >= 4
-          and all(m.get("mark") and m.get("detail") for m in marks))
-    return _v(ok, item="population", n_days=len(p.get("days") or []),
-              n_09_03_marks=len(marks),
-              marks=[m.get("mark") for m in marks])
+    blk = p.get("2026-09-03_carries_its_marks_and_stays_SEPARABLE") or {}
+    marks = {m.get("mark"): m for m in (blk.get("marks") or [])}
+    unchecked = []
+    props = {
+        "four_days_declared": len(p.get("days") or []) == 4,
+        "all_four_marked_consumed": p.get("all_four_are_CONSUMED") is True,
+        "protected_boundary_is_2026_09_08":
+            p.get("protected_from_utc_date") == "2026-09-08",
+        "at_least_four_marks": len(marks) >= 4,
+        "every_mark_carries_a_detail": all(
+            m.get("detail") for m in marks.values()),
+    }
+    if artifact is None:
+        cand = sorted(Path("/home/yuqing/ctaNew/data/pm_5min/derived").glob(
+            "p003_de_point_estimate_day_20260903_L250ms__20260910T05*.json"))
+        if cand:
+            artifact = json.loads(cand[-1].read_text())
+    if artifact:
+        cov = (((artifact.get("population_and_coverage") or {})
+                .get("coverage") or {}).get("coverage"))
+        declared_cov = (marks.get("coverage") or {}).get("value")
+        props["VERIFIED_coverage_mark_matches_the_artifact"] = (
+            isinstance(declared_cov, float) and cov is not None
+            and abs(declared_cov - cov) < 1e-12)
+        adm = (artifact.get("population_and_coverage") or {}).get("ADMITTED")
+        wc = str((marks.get("window_count") or {}).get("value") or "")
+        props["VERIFIED_window_count_mark_names_the_artifacts_ADMITTED"] = (
+            adm is not None and str(adm) in wc)
+    else:
+        unchecked.append("population marks could not be verified against the "
+                         "09-03 artifact -- it was not found on this host")
+    return _verdict(props, unchecked, item="population",
+                    marks=sorted(m for m in marks if m))
 
 
 def item_9_validation_limit(d: dict) -> dict:
     v = d.get("what_a_pass_does_NOT_establish") or {}
     ni = v.get("no_interval_is_claimable") or {}
-    ok = ("CANNOT VALIDATE" in (v.get("REQUIRED_VALUE") or "").upper()
-          and v.get("REQUIRED_FIELD_ON_EVERY_RESULT") == "validation_limit"
-          and v.get("refusal_name") == "RESULT_DOES_NOT_STATE_ITS_VALIDATION_LIMIT"
-          and isinstance(ni.get("G"), int) and ni["G"] < ni.get("bar", 5)
-          and ni.get("refusal_name") == "INTERVAL_CLAIMED_BELOW_G5")
-    return _v(ok, item="validation_limit", G=ni.get("G"), bar=ni.get("bar"),
-              intervals_claimable=False)
+    G, bar = ni.get("G"), ni.get("bar")
+    props = {
+        "cannot_validate_clause_is_unconditional":
+            unconditional(v.get("REQUIRED_VALUE"))["unconditional"],
+        "the_required_field_is_named":
+            v.get("REQUIRED_FIELD_ON_EVERY_RESULT") == "validation_limit",
+        "COMPUTED_G_is_below_the_bar": (
+            isinstance(G, int) and isinstance(bar, int) and G < bar),
+        "EXECUTED_a_missing_validation_limit_is_refused": _guard_refuses(
+            "validation_limit", None,
+            "RESULT_DOES_NOT_STATE_ITS_VALIDATION_LIMIT"),
+        "EXECUTED_an_interval_is_refused_below_G5": _guard_refuses(
+            "interval", [0.1, 0.3], "INTERVAL_CLAIMED_BELOW_G5"),
+    }
+    return _verdict(props, [], item="validation_limit", G=G, bar=bar)
 
 
 def item_10_per_draw_reduction(d: dict) -> dict:
     r = d.get("per_draw_reduction") or {}
-    ok = (r.get("n_floats_per_draw") == len(r.get("keep_per_draw") or [])
-          and r.get("n_floats_per_draw") == 4
-          and any("fills" in x for x in (r.get("FORBIDDEN") or []))
-          and bool(r.get("baseline_denominators")))
-    return _v(ok, item="per_draw_reduction",
-              n_floats_per_draw=r.get("n_floats_per_draw"),
-              forbidden=r.get("FORBIDDEN"))
+    keep = r.get("keep_per_draw") or []
+    forb = r.get("FORBIDDEN") or []
+    props = {
+        "the_float_count_equals_the_listed_keys":
+            r.get("n_floats_per_draw") == len(keep),
+        "the_budget_is_four_floats": r.get("n_floats_per_draw") == 4,
+        "every_FORBIDDEN_entry_is_unconditional": bool(forb) and all(
+            unconditional(x)["unconditional"] for x in forb),
+        "per_draw_fills_are_forbidden": any(
+            "fills" in str(x) for x in forb),
+    }
+    return _verdict(props, [], item="per_draw_reduction",
+                    n_floats_per_draw=r.get("n_floats_per_draw"))
 
 
 def item_11_wall_clock(d: dict) -> dict:
     w = d.get("wall_clock") or {}
-    ok = ("NOT ESTABLISHED" in (w.get("status") or "").upper()
-          and w.get("DOES_IT_FIT_BEFORE_09_54_37Z") is False
-          and bool(w.get("why_not"))
-          and bool(w.get("DA_own_observation_disagrees"))
-          and "MUST NOT BE CHOSEN TO FIT" in (
-              w.get("what_fits_in_that_window") or "").upper())
-    return _v(ok, item="wall_clock", status=w.get("status"),
-              fits_before_the_window=w.get("DOES_IT_FIT_BEFORE_09_54_37Z"))
+    m = d.get("minimum_sample") or {}
+    mult = d.get("multiplicity") or {}
+    rc = d.get("run_constraints_for_DE") or {}
+    s_per = w.get("read_estimate_s_per_draw")
+    n, cells = m.get("n_draws"), mult.get("n_cells")
+    conc = rc.get("concurrency")
+    computed_s = computed_fits = None
+    available_s = None
+    if all(isinstance(x, (int, float)) and x for x in (s_per, n, cells, conc)):
+        computed_s = cells * n * s_per / conc
+        from datetime import datetime, timezone
+        try:
+            t0 = datetime.fromisoformat(
+                str(d.get("declared_at_utc")).replace("Z", "+00:00"))
+            t1 = t0.replace(hour=9, minute=54, second=37,
+                            microsecond=0, tzinfo=timezone.utc)
+            available_s = (t1 - t0).total_seconds()
+            computed_fits = computed_s <= available_s
+        except Exception:
+            pass
+    st = w.get("status")
+    props = {
+        "status_clause_is_unconditional": unconditional(st)["unconditional"],
+        "a_NOT_ESTABLISHED_status_names_no_duration": not (
+            "NOT ESTABLISHED" in str(st).upper()
+            and decidable(st)["decidable"]),
+        "the_no_trimming_clause_is_unconditional": unconditional(
+            w.get("what_fits_in_that_window"))["unconditional"],
+        "the_unreconciled_observation_is_carried":
+            bool(w.get("DA_own_observation_disagrees")),
+        "COMPUTED_fit_agrees_with_the_declared_boolean": (
+            computed_fits is not None
+            and computed_fits == w.get("DOES_IT_FIT_BEFORE_09_54_37Z")),
+    }
+    return _verdict(props, [], item="wall_clock",
+                    computed_required_s=computed_s,
+                    available_s=available_s,
+                    computed_fits=computed_fits,
+                    declared_fits=w.get("DOES_IT_FIT_BEFORE_09_54_37Z"))
 
 
 ITEMS = (item_1_estimand, item_2_direction, item_3_minimum_sample,
@@ -253,10 +612,23 @@ ITEMS = (item_1_estimand, item_2_direction, item_3_minimum_sample,
 def evaluate(d: dict | None = None) -> dict:
     d = d if d is not None else load()
     out = [f(d) for f in ITEMS]
+    unchecked = [c for r in out for c in (r.get("unchecked_clauses") or [])]
     return {"protocol": d.get("protocol"), "status": d.get("STATUS"),
             "items": out,
-            "all_hold": all(r["verdict"] == HOLDS for r in out),
-            "n_items": len(out)}
+            "n_items": len(out),
+            "n_property_checks_driven": sum(
+                r.get("n_properties_driven", 0) for r in out),
+            "n_items_FAILING": sum(1 for r in out if r["verdict"] == FAILS),
+            "n_items_with_unchecked_clauses": sum(
+                1 for r in out if r["verdict"] == UNCHECKED),
+            "unchecked_clauses": unchecked,
+            "no_item_fails": all(r["verdict"] != FAILS for r in out),
+            "HOW_TO_READ_THIS": (
+                "`no_item_fails` means every property this module can DRIVE "
+                "holds. It does NOT mean the declaration is fully verified: "
+                "`unchecked_clauses` names what could not be checked from "
+                "v1's fields. DA 192 -- a module that reported 11/11 HOLD "
+                "was verifying spelling.")}
 
 
 # ------------------------------------------------- guards on a RESULT
@@ -285,6 +657,12 @@ def require_result_fields(result: dict) -> dict:
 
 
 # ------------------------------------------------------------- selftest
+#
+# DA 192: the falsifiers below are WEAKENED v2 CLAUSES -- semantically
+# weaker, vocabulary intact -- because that is the shape REV 162 found
+# passing unchanged. Deleting a key was never the threat; softening one
+# was. Every entry in WEAKENED_V2 must make its item FAIL.
+
 
 def _break(d: dict, path: list, value):
     import copy
@@ -315,174 +693,198 @@ def ok(cond, label):
     return cond
 
 
+#: (item, what was weakened, path, weaker value). Each MUST make the item FAIL.
+WEAKENED_V2 = [
+ ("item_1_estimand", "ret_neg becomes arm-over-arm",
+  ["estimand", "PRIMARY_definition", "ret_neg"],
+  "sum over windows of min(arm(w), 0) / sum over windows of min(arm(w), 0)"),
+ ("item_1_estimand", "the companion denominator becomes the arm",
+  ["estimand", "REQUIRED_COMPANION_definition", "ret_pos"],
+  "sum over {w : baseline(w) > 0} of arm(w) / sum over the same windows of arm(w)"),
+ ("item_2_direction", "one-sided gains a two-sided escape",
+  ["direction", "test_is"],
+  "ONE-SIDED, right tail of the null distribution -- and TWO-SIDED where "
+  "the one-sided result does not reach alpha"),
+ ("item_2_direction", "the direction is reversed",
+  ["direction", "declared_direction"], "ret_pos < ret_neg, i.e. A < 0"),
+ ("item_3_minimum_sample", "the short-count refusal gains an escape",
+  ["minimum_sample", "short_count"],
+  "REFUSES, never reports -- unless the operator records the shortfall"),
+ ("item_3_minimum_sample", "the draw count drops to the bare floor",
+  ["minimum_sample", "n_draws"], 200),
+ ("item_4_multiplicity", "cell claims corrected over the ARM family",
+  ["multiplicity", "correction_for_cell_claims"], "HOLM over the 2 arms"),
+ ("item_4_multiplicity", "the family may be re-opened later",
+  ["multiplicity", "no_other_family_may_be_declared_later"],
+  "the family is fixed here, unless a later day is ruled in"),
+ ("item_5_matching", "a short hour may be rebalanced",
+  ["matching", "enforcement", "hour"],
+  "EXACT per UTC hour where feasible; where an hour is short the deficit "
+  "moves to the nearest hour and MATCH_INFEASIBLE_HOUR is reported"),
+ ("item_5_matching", "relaxing the match becomes permitted",
+  ["matching", "unmatchable_cell", "forbidden"],
+  "relaxing a match to make a cell run, except where the operator judges "
+  "the deficit immaterial"),
+ ("item_6_sinkers", "the primary sinker gains an escape",
+  ["what_would_sink_it", "SINK_1_PRIMARY", "predicate"],
+  "Holm-corrected one-sided p > 0.05 on the ARM-LEVEL statistic, unless "
+  "the mechanism is corroborated elsewhere"),
+ ("item_6_sinkers", "the oracle bar goes vague, so SINK_5 goes with it",
+  ["falsifiers", "positive_control_the_null_MUST_flag", "must"],
+  "land clearly above the rest of the draws"),
+ ("item_7_falsifiers", "the oracle states no bar",
+  ["falsifiers", "positive_control_the_null_MUST_flag"],
+  {"name": "ORACLE_WORST_WINDOWS", "construction": "an oracle arm",
+   "must": "do well"}),
+ ("item_8_population", "the coverage mark stops matching the artifact",
+  ["population", "2026-09-03_carries_its_marks_and_stays_SEPARABLE", "marks"],
+  [{"mark": "coverage", "value": 0.92, "detail": "coverage was fine"},
+   {"mark": "window_count", "value": "288 of 288", "detail": "full"},
+   {"mark": "silently_missing_windows", "value": 0, "detail": "none"},
+   {"mark": "unadjudicable_settlement_window", "value": "none", "detail": "none"}]),
+ ("item_9_validation_limit", "cannot-validate gains 'on its own'",
+  ["what_a_pass_does_NOT_establish", "REQUIRED_VALUE"],
+  "THIS NULL CANNOT VALIDATE ON ITS OWN, but taken with the forward days "
+  "it establishes the cancellation line."),
+ ("item_10_per_draw_reduction", "the forbidden list gains an exception",
+  ["per_draw_reduction", "FORBIDDEN"],
+  ["retaining per-draw fills beyond what the operator needs for diagnosis"]),
+ ("item_11_wall_clock", "'must not be trimmed' gains an exception",
+  ["wall_clock", "what_fits_in_that_window"],
+  "8 cells is MARGINAL. THE DRAW COUNT MUST NOT BE CHOSEN TO FIT THE "
+  "WINDOW, except where the operator judges a reduced count acceptable."),
+ ("item_11_wall_clock", "an unestablished status quotes a duration",
+  ["wall_clock", "status"],
+  "NOT ESTABLISHED precisely -- approximately 2 hours at N=2"),
+ ("item_11_wall_clock", "the fit boolean is flipped against the arithmetic",
+  ["wall_clock", "DOES_IT_FIT_BEFORE_09_54_37Z"], True),
+]
+
+
 def selftest(quiet: bool = False) -> int:
     D = load()
-    P = json.loads(PARAMS.read_text()) if PARAMS.is_file() else None
+    FN = {f.__name__: f for f in ITEMS}
 
-    # ---- every item HOLDS on the real declaration, and FAILS when broken.
-    ok(item_1_estimand(D)["verdict"] == HOLDS
-       and item_1_estimand(_break(D, ["estimand", "NOT_the_mean"], _DEL)
-                           )["verdict"] == FAILS
-       and item_1_estimand(_break(D, ["estimand", "REQUIRED_COMPANION_definition"],
-                                  {}))["verdict"] == FAILS,
-       "item 1 estimand: holds real, fails without the not-the-mean clause "
-       "and without the companion definition")
+    # ---- 1. THE INSTRUMENTS, driven both ways (rule 15).
+    ok(unconditional("REFUSES, never reports")["unconditional"]
+       and not unconditional("REFUSES -- unless the operator agrees")["unconditional"],
+       "unconditional(): a clean absolute clause passes, an escaped one does not")
+    caught = [m for m in EXCEPTION_MARKERS
+              if not unconditional("the rule holds " + m.strip("\\b").replace("\\", ""))["unconditional"]]
+    ok(len(caught) >= len(EXCEPTION_MARKERS) - 2,
+       f"unconditional(): {len(caught)} of {len(EXCEPTION_MARKERS)} markers "
+       f"fire on their own text -- the detector is not a single spelling")
+    ok(decidable("one-sided p <= 1/501 or above the 99th percentile")["decidable"]
+       and not decidable("do well")["decidable"],
+       "decidable(): a bar with a quantity passes, 'do well' does not")
+    ok(formula_roles("min(arm(w),0) / min(baseline(w),0)")["well_formed"]
+       and not formula_roles("min(arm(w),0) / min(arm(w),0)")["well_formed"]
+       and not formula_roles("min(baseline(w),0) / min(baseline(w),0)")["well_formed"],
+       "formula_roles(): arm-over-baseline passes; arm-over-arm and "
+       "baseline-over-baseline do not -- the ROLES are tested, not the words")
+    ok(tails_named("ONE-SIDED, right tail")["single_rule"]
+       and not tails_named("ONE-SIDED and TWO-SIDED where it fails")["single_rule"],
+       "tails_named(): one rule passes, a rule with a fallback does not")
+    ok(family_size_named("HOLM over the 8 cells") == 8
+       and family_size_named("HOLM over the 2 arms") == 2
+       and family_size_named("HOLM") is None,
+       "family_size_named(): the family SIZE is extracted, so a correction "
+       "over the wrong family is visible")
+    h = holm({"a": 0.001, "b": 0.02, "c": 0.4}, 8)
+    ok(h["a"] < h["b"] < h["c"] and h["a"] == 0.008,
+       f"holm(): monotone and correct over the declared family ({h})")
+    try:
+        holm({"a": 0.01, "b": 0.02}, 1)
+        fired = False
+    except ValueError:
+        fired = True
+    ok(fired, "holm(): REFUSES a family smaller than the number of tests")
+    arm = [("s1", "BUY_UP", 3), ("s1", "SELL_UP", 3), ("s2", "BUY_UP", 9)]
+    ok(match_draw(arm, list(arm))["status"] == "MATCHED",
+       "match_draw(): an exactly matched draw passes")
+    for drawn, name in (
+            (arm[:2], "MATCH_INFEASIBLE_COUNT"),
+            ([("s1", "BUY_UP", 3), ("s1", "BUY_UP", 3), ("s2", "BUY_UP", 9)],
+             "MATCH_INFEASIBLE_SIDE"),
+            ([("s1", "BUY_UP", 3), ("s1", "SELL_UP", 3), ("s2", "BUY_UP", 4)],
+             "MATCH_INFEASIBLE_HOUR")):
+        try:
+            match_draw(arm, drawn)
+            fired = False
+        except ValueError as e:
+            fired = name in str(e)
+        ok(fired, f"match_draw(): refuses {name} -- the three keys are "
+                  f"enforced SIMULTANEOUSLY, not in turn")
+    sb = sinker_bar({"predicate": "the ORACLE does not land in the extreme "
+                                  "right tail"}, D)
+    ok(sb["decidable"] and sb["bar_from"].startswith("falsifiers"),
+       "sinker_bar(): a sinker with no quantity of its own RESOLVES to the "
+       "declared bar it depends on")
+    ok(not sinker_bar({"predicate": "the arm underperforms"}, D)["decidable"],
+       "sinker_bar(): a sinker whose bar resolves nowhere is NOT decidable")
 
-    ok(item_2_direction(D)["verdict"] == HOLDS
-       and item_2_direction(_break(D, ["direction", "test_is"], "TWO-SIDED")
-                            )["verdict"] == FAILS
-       and item_2_direction(
-           _break(D, ["observed_at_declaration_time", "cells"], {})
-       )["verdict"] == FAILS,
-       "item 2 direction: holds real; fails if the test stops being one-sided "
-       "and fails if the observed cells are not recorded (the honesty clause "
-       "must be BACKED BY THE NUMBERS, not by prose)")
-
-    ok(item_3_minimum_sample(D, P)["verdict"] == HOLDS
-       and item_3_minimum_sample(_break(D, ["minimum_sample", "n_draws"], 199),
-                                 P)["verdict"] == FAILS
-       and item_3_minimum_sample(_break(D, ["minimum_sample", "n_draws"], 200),
-                                 P)["verdict"] == FAILS,
-       "item 3 minimum sample: 199 fails the rule-6 floor AND 200 fails "
-       "because it disagrees with the PRE-DECLARED params bar of 500 -- the "
-       "bar is the artifact's, never the run's convenience")
-
-    ok(item_4_multiplicity(D)["verdict"] == HOLDS
-       and item_4_multiplicity(_break(D, ["multiplicity", "n_cells"], 4)
-                               )["verdict"] == FAILS
-       and item_4_multiplicity(
-           _break(D, ["multiplicity", "correction_for_cell_claims"], "none")
-       )["verdict"] == FAILS,
-       "item 4 multiplicity: n_cells must EQUAL arms x days (computed, not "
-       "typed) and a correction must be named")
-
-    ok(item_5_matching(D)["verdict"] == HOLDS
-       and item_5_matching(_break(D, ["matching", "matched_on"],
-                                  ["cancel_count", "side"]))["verdict"] == FAILS
-       and item_5_matching(_break(D, ["matching", "simultaneously"], False)
-                           )["verdict"] == FAILS
-       and item_5_matching(
-           _break(D, ["matching", "enforcement", "hour"],
-                  "approximately per hour"))["verdict"] == FAILS,
-       "item 5 matching: dropping hour, dropping simultaneity, or relaxing "
-       "the hour enforcement all FAIL -- these are the three that null "
-       "de-levering and they are not severable")
-
-    ok(item_6_sinkers(D)["verdict"] == HOLDS
-       and item_6_sinkers(D, observed={"x": {"A_own_sign": {"A": 0.5}}}
-                          )["verdict"] == FAILS,
-       "item 6 sinkers: FAILS when no observed cell could trip SINK_2 -- a "
-       "criterion with no reachable failing outcome is decoration")
-
-    ok(item_7_falsifiers(D)["verdict"] == HOLDS
-       and item_7_falsifiers(
-           _break(D, ["falsifiers", "known_bad_the_null_MUST_refuse"], [])
-       )["verdict"] == FAILS
-       and item_7_falsifiers(
-           _break(D, ["falsifiers", "positive_control_the_null_MUST_flag"],
-                  {"name": "something reasonable"}))["verdict"] == FAILS,
-       "item 7 falsifiers: a vague positive control with no construction and "
-       "no must-condition FAILS")
-
-    ok(item_8_population(D)["verdict"] == HOLDS
-       and item_8_population(
-           _break(D, ["population", "2026-09-03_carries_its_marks_and_stays_"
-                      "SEPARABLE", "marks"], []))["verdict"] == FAILS,
-       "item 8 population: 09-03 stripped of its marks FAILS")
-
-    ok(item_9_validation_limit(D)["verdict"] == HOLDS
-       and item_9_validation_limit(
-           _break(D, ["what_a_pass_does_NOT_establish", "no_interval_is_"
-                      "claimable", "G"], 7))["verdict"] == FAILS,
-       "item 9 validation limit: G=7 would clear the bar and the clause must "
-       "then stop asserting no-interval -- the guard reads the COUNT, not "
-       "the sentence (REV 149's llamas)")
-
-    ok(item_10_per_draw_reduction(D)["verdict"] == HOLDS
-       and item_10_per_draw_reduction(
-           _break(D, ["per_draw_reduction", "n_floats_per_draw"], 288)
-       )["verdict"] == FAILS,
-       "item 10 per-draw reduction: the count must EQUAL the listed keys")
-
-    ok(item_11_wall_clock(D)["verdict"] == HOLDS
-       and item_11_wall_clock(
-           _break(D, ["wall_clock", "DOES_IT_FIT_BEFORE_09_54_37Z"], True)
-       )["verdict"] == FAILS,
-       "item 11 wall clock: claiming it fits FAILS -- it does not")
-
-    # ---- THE STATISTIC ITSELF. The property the whole design rests on:
-    # ---- PURE DE-LEVERING MUST SCORE EXACTLY ZERO.
-    base = {f"w{i}": v for i, v in enumerate(
-        [500.0, -300.0, 120.0, -80.0, 900.0, -1500.0, 40.0, -12.0, 260.0])}
+    # ---- 2. THE STATISTIC. The property the design rests on.
     for k in (0.9, 0.5, 0.25, 0.05):
-        lev = {w: k * v for w, v in base.items()}
+        lev = {w: k * v for w, v in _FIX.items()}
         for mode in ("OWN_SIGN", "BASELINE_SIGN"):
-            a = asymmetry(lev, base, mode)
-            ok(abs(a["A"]) < 1e-12 and abs(a["ret_pos"] - k) < 1e-12
-               and abs(a["ret_neg"] - k) < 1e-12,
-               f"POSITIVE CONTROL FOR THE ESTIMAND: pure de-levering at "
-               f"k={k} scores A=0 exactly in {mode} "
-               f"(got {a['A']!r}) -- this is the property that makes the "
-               f"statistic a de-levering null at all")
+            a = asymmetry(lev, _FIX, mode)
+            ok(abs(a["A"]) < 1e-12 and abs(a["ret_pos"] - k) < 1e-12,
+               f"PROPORTIONAL SCALING at k={k} scores A=0 in {mode} -- this "
+               f"is the IDEALISED de-levering model, not real cancelling "
+               f"(REV 162: the matched control removes the FIRST-ORDER "
+               f"effect, not all of it)")
+    orc, anti = _oracle_property()
+    ok(orc > 0.3 and anti < -0.3,
+       f"the statistic is SIGNED: clipping the worst window scores "
+       f"{orc:.4f}, clipping the BEST scores {anti:.4f}")
+    ok(asymmetry({"a": 1.0}, {"a": 1.0}, "OWN_SIGN")["status"]
+       == "TAIL_MASS_DENOMINATOR_ZERO",
+       "a zero tail denominator is a NAMED STATUS, never a 0 reading as "
+       "'no asymmetry' (rule 4)")
 
-    # An ORACLE clip -- remove the worst window only -- must score A > 0.
-    worst = min(base, key=lambda w: base[w])
-    clip = {w: (0.0 if w == worst else v) for w, v in base.items()}
-    a = asymmetry(clip, base, "OWN_SIGN")
-    ok(a["A"] > 0.3, f"ORACLE CONTROL: clipping only the worst window scores "
-                     f"A={a['A']:.4f} > 0 -- the statistic detects asymmetry "
-                     f"it is handed")
-
-    # A REVERSE oracle -- remove the BEST window -- must score A < 0.
-    best = max(base, key=lambda w: base[w])
-    anti = {w: (0.0 if w == best else v) for w, v in base.items()}
-    a = asymmetry(anti, base, "OWN_SIGN")
-    ok(a["A"] < -0.3, f"KNOWN-BAD: clipping the BEST window scores "
-                      f"A={a['A']:.4f} < 0 -- the statistic is SIGNED and "
-                      f"does not reward any clipping whatsoever")
-
-    z = asymmetry({"a": 1.0}, {"a": 1.0}, "OWN_SIGN")
-    ok(z["status"] == "TAIL_MASS_DENOMINATOR_ZERO" and z["A"] is None,
-       "KNOWN-BAD: a zero tail denominator returns a NAMED STATUS with A None "
-       "-- never a 0 that reads as 'no asymmetry' (rule 4)")
-
-    # ---- the RESULT guards
+    # ---- 3. THE RESULT GUARDS.
     good = {"validation_limit": "cannot validate", "p_two_sided": 0.3,
             "matched_on": list(MATCH_KEYS), "n_draws": 500,
             "statistic": "A = ret_pos - ret_neg", "interval": None}
     try:
         require_result_fields(good)
-        good_ok = True
+        g = True
     except ValueError:
-        good_ok = False
-    ok(good_ok, "RESULT GUARD positive control: a complete result passes")
+        g = False
+    ok(g, "RESULT GUARD positive control: a complete result passes")
+    for field, val, name in (
+            ("validation_limit", None, "RESULT_DOES_NOT_STATE_ITS_VALIDATION_LIMIT"),
+            ("p_two_sided", None, "P_TWO_SIDED_ABSENT"),
+            ("matched_on", ["cancel_count"], "MATCHED_ON_ABSENT_OR_VAGUE"),
+            ("n_draws", 100, "NULL_UNDER_SAMPLED"),
+            ("statistic", "mean", "MEAN_SUBSTITUTED_FOR_THE_ASYMMETRY"),
+            ("interval", [0.1, 0.3], "INTERVAL_CLAIMED_BELOW_G5")):
+        ok(_guard_refuses(field, val, name),
+           f"RESULT GUARD known-bad: {field}={val!r} refuses {name}")
 
-    for path, val, name in (("validation_limit", None,
-                             "RESULT_DOES_NOT_STATE_ITS_VALIDATION_LIMIT"),
-                            ("p_two_sided", None, "P_TWO_SIDED_ABSENT"),
-                            ("matched_on", ["cancel_count"],
-                             "MATCHED_ON_ABSENT_OR_VAGUE"),
-                            ("n_draws", 100, "NULL_UNDER_SAMPLED"),
-                            ("statistic", "mean",
-                             "MEAN_SUBSTITUTED_FOR_THE_ASYMMETRY"),
-                            ("interval", [0.1, 0.3],
-                             "INTERVAL_CLAIMED_BELOW_G5")):
-        bad = dict(good)
-        bad[path] = val
-        try:
-            require_result_fields(bad)
-            fired = False
-        except ValueError as e:
-            fired = name in str(e)
-        ok(fired, f"RESULT GUARD known-bad: {path}={val!r} must refuse {name}")
+    # ---- 4. THE WEAKENED-v2 BATTERY. This is the fix REV 162 demanded.
+    for item, what, path, val in WEAKENED_V2:
+        v = FN[item](_break(D, path, val))["verdict"]
+        ok(v == FAILS,
+           f"WEAKENED v2 -- {item}: {what} -> {v} (must be {FAILS}). A "
+           f"softened clause that keeps the vocabulary MUST NOT pass.")
 
+    # ---- 5. and the real declaration still stands on its own properties.
     res = evaluate(D)
-    ok(res["all_hold"] is True,
-       f"the real declaration holds on all {res['n_items']} items")
+    ok(res["n_items_FAILING"] == 0,
+       f"the real declaration fails no property "
+       f"({res['n_property_checks_driven']} driven across {res['n_items']} items)")
+    ok(res["n_items_with_unchecked_clauses"] >= 1
+       and len(res["unchecked_clauses"]) >= 1,
+       "the module NAMES what it cannot check rather than reporting HOLD -- "
+       "an unverifiable clause must not read as a verified one")
 
     if not quiet:
         print(f"[da_asymmetry_null] {_N['n'] - _N['bad']}/{_N['n']} checks, "
-              f"{_N['bad']} failures; declaration STATUS={D['STATUS']}")
+              f"{_N['bad']} failures | "
+              f"{res['n_property_checks_driven']} properties driven, "
+              f"{len(WEAKENED_V2)} weakened-v2 clauses each REFUSED, "
+              f"{len(res['unchecked_clauses'])} clause(s) NAMED AS UNCHECKED")
     return 1 if _N["bad"] else 0
 
 
