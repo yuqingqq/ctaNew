@@ -1,0 +1,65 @@
+{
+ "declaration": "DA_FAIR_VALUE_PROGRESS_LEDGER",
+ "version": 1,
+ "as_of_utc": "2026-09-11T19:18:23Z",
+ "against": "fair_value_plan.md v1.2 \u00a711, the eight-step implementation order",
+ "THE_RULE_THIS_MAKES_CHECKABLE": "'No fair-value score is evidence before step 6.' Recorded as a ledger so it is checkable rather than remembered.",
+ "STEPS": {
+  "1_freeze_the_settlement_label_status_reader": {
+   "status": "COMPLETE",
+   "artifact": "live/pm_research/da_fair_value_gate1_labels.py",
+   "blob_on_de_freeze_chain_v2": "1f85a165946696e3",
+   "declaration": "da_fair_value_gate1_declaration_v4.json",
+   "decl_blob": "d97171636718b4f4",
+   "plus": "da_fair_value_step0_declaration_v1.json (this round) and da_settlement_residual_v1.json",
+   "build_gates_of_section_5": {
+    "(1) declaration naming the rule, its reproduction rate and the RESIDUAL CHARACTERISED": "SATISFIED -- 0.99912, 41 residual rows, ZERO unexplained",
+    "(2) reconcile or defend the stale CLAUDE.md settlement line": "NOT DONE -- CLAUDE.md still says the statistic is 'contested and no form is asserted', which is stale against R-253/Q-DA-146",
+    "(3) timestamped sigma producer with falsifiers": "SEE STEP 2 -- not landed",
+    "(4) source-correct FairPrice producer": "SEE STEP 3 -- partially landed by DE",
+    "(5) end-to-end seam proving the quoter CONSUMES the value": "NOT STARTED"
+   }
+  },
+  "2_build_and_falsify_the_30_minute_sigma_producer": {
+   "status": "*** NOT LANDED ON ANY REF ***",
+   "artifact": "live/pm_research/be_sigma_30m.py (517 lines, carries one `falsify`)",
+   "where_it_exists": "ONLY /home/yuqing/ctaNew -- the SHARED tree",
+   "on_origin_mm_research": null,
+   "on_origin_de_freeze_chain_v2": null,
+   "on_origin_be_build_runner": null,
+   "*** THE HAZARD ***": "it lives ONLY in the tree DA declared NON-EXECUTING one hour earlier (da_shared_tree_non_executing_v1.json). A sigma produced from it would be INADMISSIBLE by that declaration, and it is on no ref, so no executing tree can even import it.",
+   "blocks": "step 3's source-correct producer needs a sigma; \u00a74.2 requires sigma, sigma_as_of and sigma_lookback_s"
+  },
+  "3_wrap_C1_C2_in_typed_FairPrice_records": {
+   "status": "PARTIAL (DE)",
+   "artifact": "live/pm_research/de_fair_price_wrapper.py",
+   "commit": "5b657b3 (Q-DE-353)",
+   "blob": "5d8150e87792a230",
+   "caveat": "depends on step 2, which is not landed"
+  },
+  "4_canonical_actions_and_the_paired_scorer": {
+   "status": "NOT STARTED"
+  },
+  "5_wire_fair_value_into_the_quoter_and_prove_Identity_parity": {
+   "status": "NOT STARTED"
+  },
+  "6_freeze_the_full_pipeline_and_both_candidate_identities": {
+   "status": "NOT STARTED",
+   "NOTE": "no fair-value score is evidence before THIS step"
+  },
+  "7_run_ten_day_predictive_validation": {
+   "status": "NOT STARTED"
+  },
+  "8_economic_clock_for_predictive_winners_only": {
+   "status": "NOT STARTED"
+  }
+ },
+ "SUMMARY": {
+  "complete": 1,
+  "partial": 1,
+  "not_landed": 1,
+  "not_started": 5,
+  "steps_before_a_score_is_evidence": "6",
+  "so": "NO fair-value score is evidence today, and the ledger says so by structure rather than by assertion"
+ }
+}
