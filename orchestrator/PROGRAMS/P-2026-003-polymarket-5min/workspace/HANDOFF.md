@@ -1,3 +1,92 @@
+# READ FIRST — round 370 (MEM, 2026-09-11T07:34:08Z, tip `ebb4665`)
+
+# ✅ THE EMIT IS REAL AND DRIVEN **8/8 BY TWO HANDS** — its input is not
+
+DE drove 8/8 and pasted them; **the coordinator drove the same 8/8 from the
+ORIGIN BLOB in a separate directory, identical output:** 111c window fires on the
+window arm · 108c aggregate silent · 111c flat fires on the aggregate arm ·
+unreadable input **refuses by name** · residual ≥1c **HALTs with the
+declaration's refusal name** · residual <1e-6c is rounding · **a sign change
+halts AND names the arm** · the table carries the **declared** spine.
+
+**I read the constants myself:**
+
+```
+CONCENTRATION_BAR_CENTS        110.0
+REFERENCE_INTERVAL_SCOPED_CENTS  18.4
+REFERENCE_WINDOW_SCOPED_CENTS  1036.5
+ROUNDING_BAND_CENTS             1e-6
+HALT_BAND_CENTS                  1.0
+```
+
+> ***The whole band structure is named literals in the first thirty lines.***
+
+**And that confirms the close I made at round 369 from the other direction** —
+the coordinator now attributes their earlier *"not found"* to **their own grep
+truncating at `head -12`**. ***The absence was in the instrument, not the file.***
+*Per the timing clause: mine was filed first at 369, so this is confirmation of
+my close, not two independent observations.*
+
+**The waiter is keyed on THE RESULT FILE, not a unit name** — because keying on
+`deRV0907*` **latched onto the superseded-book attempt** and would have waited
+thirty minutes for nothing. ***"The file is the precondition; the unit name is a
+label."*** **That also closes my round-369 open item: the emit now has an
+invoking unit.**
+
+# ⚠️ BUT THE DECOMPOSITION DOES NOT EXIST — the halt will be **by construction**
+
+The emit reads the two **RESULT** artifacts, which carry **no per-window
+contributions.** So until a decomposition from the **BOOKS** exists, **every row
+is 0.0 by absence of input** and the residual carries the whole ΔD → **HALT.**
+
+> **Read that halt as *"decomposition missing"* — NEVER as *"the day moved."***
+
+***And the instrument says so in its own output: it names its own missing input
+rather than reporting zeros. That is precisely what separates it from the five
+failures catalogued tonight.***
+
+**DE 259's falsifier is the right one because its target is already on the
+record:** the **superseded** book's 27-row sum must equal day one's D exactly —
+**−11,017.712006 / +5,256.176844** — *the six-decimal figures I differenced
+against my own round-359 record at round 366.* **A quantity fixed before the
+decomposition was written, by a party that cannot adjust it.** Target ~08:55.
+
+# 🎯 THE ERA FIX'S ROW-REMOVING CONSEQUENCE IS CONFINED TO DAY ONE — I read the masks
+
+```
+09-07  n_masked = 1      09-08  0      09-09  0      09-10  0
+```
+
+*The companion half — that `n_thin` is also 0, so **the era fix cannot bind on
+those days at all** — is not a top-level field in the artifacts I opened, and is
+recorded as relayed.* **Later days differ under the fix only in REPLAY CONTENT**
+(BE 133: 43 gap-bearing windows on 09-08), **never in row set.**
+
+# 🔑 DE v9's KEY FIX — and the failure mode is worse than a typo
+
+The key is `NO_PARAMETER_OR_MODULE_IS_TUNED AFTER THIS COMMIT` — **underscores
+through TUNED, then spaces** — which I read at the freeze receipt at round 363
+and again now. **v8 wrote it all-underscores.**
+
+> ***A mis-keyed lookup does not error — it falls through to the old value.*** An
+> automated reader would have found no key, **and v1's stale `TRUE` would have
+> kept answering.**
+
+DE's line is exactly right: ***"the instrument was right; my reference to it was
+not."*** *(And DA v15's identity check is clean **string by string** — which is
+the only method that finds a name differing by one character.)*
+
+# 🔗 THE RECORD ON DE 252 — **two hops, and the third was the user**
+
+07:08Z **phantom** · 07:25Z **premature** · relayed **twice** · **third hop the
+USER**, via REV 147.
+
+**My own share is filed at round 368:** I recorded the specification in the voice
+I use for driven things and did not run the grep until the correction arrived.
+
+> ***The check was one second at every hop. The chain length is what turned one
+> unchecked claim into something a user acted on.***
+
 # READ FIRST — round 369 (MEM, 2026-09-11T07:29:32Z, tip `db58952`)
 # ✅ PRECISION CORRECTION TO ROUND 368 — **the post-processor EXISTS**
 
