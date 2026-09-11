@@ -174,6 +174,91 @@ def exact_sign_p(increments, sided: int = 2) -> dict:
                 "never given the candidate's sign"}
 
 
+def ladder(g: int = G_REQUIRED, sided: int = 2) -> list:
+    """THE RUNGS, COMPUTED: the attainable two-sided p for each count of
+    non-positive days. At G=10 it is 0.001953 / 0.021484 / 0.109375 --
+    and the third is already above the Holm step-one threshold, so the
+    ladder has TWO passing rungs and no more.
+    """
+    rows = []
+    thr = ALPHA / M_FAMILY
+    for n_bad in range(0, g + 1):
+        p = exact_sign_p([1.0] * (g - n_bad) + [-1.0] * n_bad,
+                         sided=sided)
+        # A TWO-SIDED p IS SMALL AT BOTH ENDS. Ten negative days also
+        # attain 0.001953, and a direction-blind rung counted that as
+        # "clears" -- four passing rungs instead of two, the ladder
+        # flattering the candidate with evidence against it. The rung
+        # requires the p AND the direction.
+        favourable = (g - n_bad) > n_bad
+        rows.append({"n_non_positive_days": n_bad,
+                     "attainable_p": p.get("p"),
+                     "direction_favours_the_candidate": favourable,
+                     "clears_holm_step_one": (p.get("p") is not None
+                                              and p["p"] <= thr
+                                              and favourable),
+                     "holm_step_one_threshold": thr})
+    return rows
+
+
+def futility(increments_so_far, *, g_declared: int = G_REQUIRED,
+             sided: int = 2) -> dict:
+    """IS THE TEST ALREADY DEAD? Computed EVERY DAY, in advance.
+
+    The cancellation lane discovered its futility AFTER the fact: that
+    test had exactly ONE passing configuration, 7 of 7, with no rung
+    between 0.015625 and 0.125, and both arms were already unrecoverable
+    when it was ruled at day two. §8's ladder is better and still thin --
+    TWO passing rungs -- so the day a SECOND non-positive portfolio day
+    appears, the candidate is finished. Saying that in advance is free,
+    and it is only honest before the fact.
+
+    Futility stopping cannot inflate anything: it can only ever reduce
+    the chance of declaring success.
+    """
+    seen = list(increments_so_far)
+    n_bad = sum(1 for x in seen if x <= 0.0)
+    remaining = g_declared - len(seen)
+    if remaining < 0:
+        raise PredictiveRefused(
+            f"REFUSED: {len(seen)} days scored against a declared "
+            f"G={g_declared}; the population moved and the ladder with it.")
+    # THE BEST CASE FROM HERE: every remaining day positive.
+    best = exact_sign_p([1.0] * (g_declared - n_bad) + [-1.0] * n_bad,
+                        sided=sided)
+    thr = ALPHA / M_FAMILY
+    p = best.get("p")
+    # DIRECTION COUNTS HERE TOO: a two-sided p earned by a majority of
+    # NEGATIVE days is not a pass the candidate can reach.
+    favourable = (g_declared - n_bad) > n_bad
+    dead = p is None or p > thr or not favourable
+    return {"days_scored": len(seen), "days_remaining": remaining,
+            "g_declared": g_declared,
+            "n_non_positive_days": n_bad,
+            "non_positive_days_are_counted_not_dropped": True,
+            "best_attainable_p_if_every_remaining_day_is_positive": p,
+            "holm_step_one_threshold": thr,
+            "FUTILE": bool(dead),
+            "cause": ("KILLED_BY_NON_POSITIVE_DAYS" if dead and n_bad
+                      else "TEST_IMPOSSIBLE_AT_THIS_G" if dead
+                      else "ALIVE"),
+            "STOP_ADVICE": ("STOP_FOR_FUTILITY" if dead else "CONTINUE"),
+            "ladder": ladder(g_declared, sided),
+            "n_passing_rungs": sum(1 for r in ladder(g_declared, sided)
+                                   if r["clears_holm_step_one"]),
+            "why": (f"{n_bad} of {g_declared} day(s) already non-positive; "
+                    f"even a perfect run on the {remaining} remaining "
+                    f"day(s) attains at best p="
+                    f"{'none' if p is None else format(p, '.6f')} against "
+                    f"{thr}" if dead else
+                    f"{n_bad} non-positive so far; a perfect remainder "
+                    f"still attains p={format(p, '.6f')} <= {thr}"),
+            "stopping_is_free": "futility stopping only ever reduces the "
+                                "chance of declaring success; it cannot "
+                                "inflate a positive result",
+            "computed_not_printed": True}
+
+
 def holm(pvalues: dict, alpha: float = ALPHA) -> dict:
     """Holm across the family, m = the number of candidates tested."""
     usable = {k: v for k, v in pvalues.items() if isinstance(v, float)}
@@ -236,6 +321,7 @@ def verdict(name: str, *, increments, holm_row: dict, coverage: dict,
     c3 = bool(coverage.get("passes"))
     c4 = bool(predicates) and all(bool(v) for v in predicates.values())
     return {"candidate": name,
+            "futility": futility(increments),
             "conditions": {
                 "1_holm_corrected_p_below_alpha": c1,
                 "2_mean_and_median_increment_positive": c2,
@@ -372,6 +458,50 @@ def falsify() -> int:
        thin["status"] == INSUFFICIENT and thin["p"] is None
        and thin["required"] == MIN_NONZERO,
        f"{thin['n_nonzero']} nonzero, needs {MIN_NONZERO}")
+
+    # --- the futility rung, emitted IN ADVANCE -------------------------
+    lad = ladder()
+    ck("the G=10 ladder is 0.001953 / 0.021484 / 0.109375, computed",
+       [r["attainable_p"] for r in lad[:3]]
+       == [0.001953125, 0.021484375, 0.109375],
+       ", ".join(f"{r['attainable_p']:.6f}" for r in lad[:3]))
+    ck("  and it has exactly TWO passing rungs -- thin, and said so "
+       "before any day is valued",
+       sum(1 for r in lad if r["clears_holm_step_one"]) == 2,
+       "0 or 1 non-positive days can still pass; 2 cannot")
+    ck("  and a two-sided p earned by NEGATIVE days does NOT count as a "
+       "rung -- direction, not just size",
+       lad[10]["attainable_p"] == 0.001953125
+       and not lad[10]["clears_holm_step_one"]
+       and not lad[10]["direction_favours_the_candidate"],
+       "ten negative days attain 0.001953 and clear nothing")
+    alive0 = futility([0.1])
+    alive1 = futility([0.1, -0.1])
+    dead2 = futility([0.1, -0.1, -0.2])
+    ck("futility is computed EVERY DAY, before the fact",
+       alive0["STOP_ADVICE"] == "CONTINUE"
+       and alive0["best_attainable_p_if_every_remaining_day_is_positive"]
+       == 0.001953125,
+       f"day 1: best attainable "
+       f"{alive0['best_attainable_p_if_every_remaining_day_is_positive']}")
+    ck("  one non-positive day still leaves the test ALIVE at 0.021484",
+       not alive1["FUTILE"] and alive1["STOP_ADVICE"] == "CONTINUE"
+       and alive1["best_attainable_p_if_every_remaining_day_is_positive"]
+       == 0.021484375,
+       f"1 bad -> {alive1['cause']}")
+    ck("  and the SECOND non-positive day ends it, by computation",
+       dead2["FUTILE"] and dead2["STOP_ADVICE"] == "STOP_FOR_FUTILITY"
+       and dead2["cause"] == "KILLED_BY_NON_POSITIVE_DAYS"
+       and dead2["days_remaining"] == 7,
+       f"2 bad at day 3, {dead2['days_remaining']} remaining, best "
+       f"{dead2['best_attainable_p_if_every_remaining_day_is_positive']}")
+    ck("  and STOP_ADVICE is a COMPUTED value beside the statistic, never "
+       "a printed string",
+       dead2["computed_not_printed"] and "futility" in
+       verdict("C1", increments=[0.1, -0.1, -0.2],
+               holm_row={"rejects_null": False}, coverage={"passes": True},
+               predicates={"p": True}),
+       "verdict() carries the futility block")
 
     # --- Holm across the family ---------------------------------------
     h = holm({"C1": 0.001953125, "C2": 0.02})

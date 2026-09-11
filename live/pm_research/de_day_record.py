@@ -756,6 +756,19 @@ def build(day: str, cells_dir: Path, n_declared: int = 7,
     # SELECTED BY THE COMPUTED CAUSE, never typed here.
     emit["futility"] = {a: EV.futility(per_day_by_arm[a], n_declared)
                         for a in arms}
+    # A FUTILITY BLOCK IS NOT POINT-IN-TIME (DE 377). 09-09's record names
+    # 09-10 among HAZARD's non-positive days -- legitimate for a late
+    # re-emit against a running statistic, and it MISDATES the block
+    # unless it says which day's information it reflects.
+    emit["futility_as_of_day"] = max(
+        [d for m in per_day_by_arm.values() for d in m] or [day])
+    emit["futility_as_of_note"] = (
+        f"this block reflects every day scored up to and including "
+        f"{emit['futility_as_of_day']}, which may be LATER than this "
+        f"record's own day ({day}) when the record is a re-emit against a "
+        f"running statistic")
+    emit["futility_days_counted"] = {
+        a: sorted(m) for a, m in per_day_by_arm.items()}
     emit["ANY_ARM_ALREADY_DEAD"] = any(
         emit["futility"][a]["FUTILE"] for a in arms)
     emit["EVERY_ARM_ALREADY_DEAD"] = all(
