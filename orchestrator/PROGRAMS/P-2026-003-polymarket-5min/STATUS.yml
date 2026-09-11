@@ -67,6 +67,21 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T07:17:04Z (MEM ROUND 367 -- RULE 46 LANDED AND I DROVE IT: systemctl show --value returns
+  SYSTEMD'S ORDER, NOT YOURS. Asking SubState, LoadState, Result returns success, loaded,
+  dead -- RESULT, LOADSTATE, SUBSTATE -- so THE FIRST VALUE BACK IS THE LAST ONE ASKED FOR;
+  and asking ActiveState then Result returns 'success inactive', so a positional read TAKES
+  THE EXIT RESULT AS THE ACTIVE STATE. Two instances in one night, one false success and one
+  false failure. AND THE REASON IT HAPPENED TWICE IS THE LINE TO KEEP: the first was in a
+  seat's own notes AT 04:00 and did not reach another seat's script at 07:10 -- FILING IS
+  NOT RETENTION; A RULE IN THE PROTOCOL REACHES THE NEXT SCRIPT, A NOTE IN A PANE DOES NOT.
+  That is DA 221 WITH A REMEDY ATTACHED. My own usage was safe in both forms, which I
+  CHECKED rather than assumed -- and incidental before round 351, deliberate only after.
+  THE USER'S CONDITION IS MET and the amendment stands unconditionally; the robustness leg
+  NEITHER BLOCKS HAZARD NOR RESCUES CONDVALUE. REVIEW 186 wrote the re-valuation's READING
+  RULES WITH ZERO CELLS VISIBLE, including a sign-change rule that DELIBERATELY DISBELIEVES
+  A RESULT THAT WOULD HELP THE ARM. The eight stranded REV filings are on origin via rule
+  45. tip 6f2d431)
   2026-09-11T07:13:00Z (MEM ROUND 366 -- THE FALSIFIER PASSED AND THE USER'S AMENDMENT STANDS
   UNCONDITIONALLY. observed_D_MOVED FALSE on both arms, V2 GENUINELY LOADED this time:
   CONDVALUE V1 = V2 = -11,017.712006c, HAZARD +5,256.176844c, baseline delta 0.0 -- and I
@@ -97,20 +112,6 @@ updated: >-
   routed question asks WHY a recorded gap is dropped, because a minimum-duration threshold
   would drop ALL short gaps. SET (ii) IS EMPTY BY MEASUREMENT: the rebuilt mask returned
   exactly the values DA typed before it ran. tip a78af1a)
-  2026-09-11T07:02:26Z (MEM ROUND 364 -- THE 288th WINDOW IS NAMED AND THE TRIPWIRE NARROWS TO ONE
-  MECHANISM. I verified every part at the artifact: n_gap_bearing 27, era clob_v4_1,
-  includes_1788807300 FALSE, missing_interior_window [1788807300] at 18:55:00Z -- and I
-  converted the epoch and closed the slot arithmetic myself: first to last at 300s gives
-  EXACTLY 288 SLOTS, 287 supplied, and THE ONE MISSING INTERIOR SLOT IS THE MASKED WINDOW.
-  So DA's 288 and BE's 287 were never in conflict: ONE DENOMINATOR, TWO CORRECT NUMBERS,
-  DIFFERING BY EXACTLY THAT WINDOW. AND THE SEATS AGREE ON ITS IDENTITY, NOT MERELY ITS
-  COUNT -- agreement on WHICH ONE is not producible by coincidence the way agreement on HOW
-  MANY is. THE MASK-FLIP MECHANISM IS EMPTY FOR BTC 09-07, since an unsupplied window
-  contributes zero rows under either era and stays a blackout under the fix, SO THE ONLY
-  DELTA-D SOURCE IS THE 27'S REPLAY-CONTENT CHANGE IN RETAINED ROWS -- a narrowing of the
-  expected effect, not a relaxation of the check. DA 231's rebuild must return n_masked = 1
-  and exactly that window, TYPED BEFORE IT RUNS. Ruling: 287 on the tripwire table, 288 as
-  the coverage denominator, the masked window AS A STATUS. tip 7ce92b9)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -282,6 +283,18 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 367, rule 46 and the reading rules ---
+  RULE_46_IS_LANDED_AND_I_DROVE_IT_RATHER_THAN_TRANSCRIBING_IT: "systemctl show -p A -p B --value returns properties in SYSTEMD'S ORDER, not the requested one. I asked for SubState, LoadState, Result and got back success, loaded, dead -- which is RESULT, LOADSTATE, SUBSTATE, so THE FIRST VALUE RETURNED IS THE LAST ONE ASKED FOR. A second drive: asking ActiveState then Result returns 'success inactive', so a positional pair read TAKES THE EXIT RESULT AS THE ACTIVE STATE. Landed at SEAT_PROTOCOL.md:708 with both drives in the rule text."
+  AND_THE_DISCRIMINATORS_ARE_NAMED_BECAUSE_THE_DEFAULTS_LIE_QUIETLY: "Result=success and ExecMainStatus=0 are STALE DEFAULTS on a nonexistent or running unit -- which is how a build monitor reported THREE SUCCESSFUL BUILDS FOR UNITS NEVER CREATED. The discriminators are LoadState=loaded, a REAL ExecMainStartTimestamp, and SubState. And the second instance is the inverse: a book waiter read ActiveState as the exit code, TOOK THE FAILURE BRANCH, and did not launch for four minutes ON A FREE LOCK. One field misread in each direction -- a false success and a false failure."
+  AND_MY_OWN_USAGE_WAS_SAFE_IN_BOTH_FORMS_WHICH_I_CHECKED_RATHER_THAN_ASSUMED: "I have read unit state at rounds 338, 339, 345, 349, 351, 353 and 358. Two forms, both safe: at 338, 339 and 345 I used -p ActiveState -p SubState -p Result WITHOUT --value, so the output was Key=value lines that I printed whole; from 351 onward I used ONE PROPERTY PER CALL with --value, which is exactly what rule 46 now prescribes. NOT A BOAST -- the safe form was incidental at 338 and deliberate only from 351, when the LoadState discharge made me split the calls. The rule makes it mandatory rather than lucky."
+  AND_THE_REASON_IT_HAPPENED_TWICE_IS_THE_SHARPEST_LINE_IN_THE_DISPATCH: "The first instance was written into the coordinator's own notes AT 04:00 and DID NOT REACH BE'S SCRIPT three hours later. FILING IS NOT RETENTION. A RULE IN THE PROTOCOL REACHES THE NEXT SCRIPT; A NOTE IN A PANE DOES NOT. That is DA 221's finding -- a filed result does not reach the seat's own next claim -- WITH A REMEDY ATTACHED: the difference between a note and a protocol rule is REACH, and reach is why promotion to the protocol is a different act from recording."
+  THE_USERS_RULING_CONDITION_IS_MET_AND_THE_AMENDMENT_STANDS: "deFMP0907f40 at 07:09:43Z with V2 loaded: observed_D_MOVED FALSE, primary D identical TO THE CENT on both arms, baseline delta 0.0. The freeze amendment to da00220 stands UNCONDITIONALLY. And the robustness leg's first-ever values -- CONDVALUE -13,459.5c, HAZARD +5,598.9c, sign_reversal FALSE on both -- NEITHER BLOCK HAZARD NOR RESCUE CONDVALUE, which is the cleanest thing a robustness leg can do: it changes no verdict and it removes an excuse."
+  REVIEW_186_WROTE_THE_RE_VALUATIONS_READING_RULES_BEFORE_THE_BOOK_EXISTED: "10a769c, file on disk 07:12Z, ZERO CELLS VISIBLE. Scoping boundaries -- tens of cents implies the interval scope, thousands implies the window scope. Aggregate-versus-single-window firing. Residual bands: under 1e-6c is rounding, 1e-6 to 1c is reported, AND 1c OR MORE HALTS, because a contribution in no row means a change OUTSIDE THE 27, which makes BOTH reference levels invalid and RETIRES RULES 1 TO 3 UNTIL IT IS LOCATED. And it licenses nothing about the arms."
+  AND_ITS_SIGN_CHANGE_RULE_DELIBERATELY_DISBELIEVES_A_RESULT_THAT_WOULD_HELP_THE_ARM: "A SIGN CHANGE ON THE REBUILD IS A FINDING ABOUT THE REBUILD: the new D is NOT ADOPTED and day one becomes UNRESOLVED, NOT POSITIVE. Escape requires ALL FOUR of residual under 1c, no ratio outlier, books identical outside the 27, and closures differing only by the era fix. REV's own phrase is the one to keep -- 'this rule deliberately disbelieves a result that would help the arm' -- and it is written by the seat that would benefit from believing it, before the number exists."
+  AND_THE_EIGHT_STRANDED_REV_FILINGS_ARE_PUSHED_TO_ORIGIN_VIA_RULE_45: "178 through 184 plus 142, landed from wt-rev by cherry-pick onto an origin-cut branch. That is the second seat to use rule 45's path this morning, and it clears the backlog I recorded one round ago as stranded on a DIRTY TREE rather than on the divergence. My own rows for rounds 358 onward remain unlanded by the same wall and now have a demonstrated route."
+  DES_WAITER_IS_A_DURABLE_UNIT_AND_THE_BOOKS_WAITER_WAS_NOT: "DE's V2 waiter READS THE REVISION FROM BE'S RECEIPT rather than assuming it, waits for the receipt, offers for the lock UNBOUNDEDLY, and writes to a fresh fwd_v2/ SO V2 NEVER INHERITS A V1 CHECKPOINT. Against that: THE 09-07 BOOK'S OWN WAITER EXISTED ONLY INSIDE A TURN AND NEVER BECAME A PROCESS -- rule 37 again, and the contrast in one round between a hand-off that outlives its author and one that does not."
+  AND_A_ZOMBIE_WAITER_HOLDS_NO_LOCK_WHICH_IS_WHY_IT_IS_ONLY_A_TIDY_UP: "deFMP0907wait3 is a zombie -- its RAN detection failed -- and DE is stopping it. Recorded with the property that makes it harmless: IT HOLDS NO LOCK. A failed waiter that held the lock would be an outage; one that does not is a process to reap. The distinction is worth stating because 'zombie unit' reads as an incident and this one is housekeeping."
+  DA_V12_CARRIES_THE_CONDITION_AS_A_MEASURED_FIELD_RATHER_THAN_A_SENTENCE: "Condition MET as A MEASURED FIELD; the leg values AS FIELDS; the gap-seconds column PRE-COMMITTED; 27 rows BY DRIVE; set (ii) EMPTY BY MEASUREMENT; the census restated on wall-clock attribution with GAP_RECORDED_NOT_SEEN_BY_REPLAY; and the flow_intensity fix deferred past 09-13. Every one of those is a thing that could have been a claim in prose and is instead a field or a drive -- which is the whole of what this week has been about."
   # --- MEM round 366, the condition is met ---
   THE_FALSIFIER_PASSED_AND_THE_USERS_AMENDMENT_NOW_STANDS_UNCONDITIONALLY: "deFMP0907f40 at 07:09:43Z, rc=0, WITH V2 GENUINELY LOADED -- which is the part that failed last time and reported success. observed_D_MOVED FALSE on both arms: CONDVALUE primary V1 = V2 = -11,017.712006c, HAZARD +5,256.176844c, baseline delta 0.0. DA 225's prediction that REFERENCE_FILLS is a PASS-THROUGH held EXACTLY. So the freeze amendment to da00220 for the valuation path IS DISCHARGED OF ITS CONDITION AND STANDS."
   AND_THE_FIGURES_MATCH_WHAT_I_HAVE_CARRIED_SINCE_ROUND_359_TO_WITHIN_ROUNDING: "I differenced them rather than eyeballing: the falsifier's -11,017.712006c against the -11,017.7c I recorded at round 359 agrees to 0.0120c, and +5,256.176844c against +5,256.2c agrees to 0.0232c. Both differences are the rounding in my own earlier record and nothing else. So the number the amendment now rests on is the SAME NUMBER day one produced, to the micro-cent, and not a near-miss that happens to round the same way."
@@ -27814,6 +27827,73 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 367, 2026-09-11T07:17:04Z ---
+  RULE_46_IS_LANDED_AND_I_DROVE_IT_RATHER_THAN_TRANSCRIBING_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T07:17:04Z
+    said: >-
+      two systemctl --user show calls run against a real loaded unit with and without --value; the returned order compared with the requested order in both.
+  AND_THE_DISCRIMINATORS_ARE_NAMED_BECAUSE_THE_DEFAULTS_LIE_QUIETLY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T07:17:04Z
+    said: >-
+      the rule's two instances as dispatched and written into the rule; the dead/success default behaviour I established independently at round 351 by querying an invented unit name.
+  AND_MY_OWN_USAGE_WAS_SAFE_IN_BOTH_FORMS_WHICH_I_CHECKED_RATHER_THAN_ASSUMED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T07:17:04Z
+    said: >-
+      my own commands from those rounds re-examined for the positional-read pattern; neither form takes values by position from a multi-property --value call.
+  AND_THE_REASON_IT_HAPPENED_TWICE_IS_THE_SHARPEST_LINE_IN_THE_DISPATCH:
+    prov: RELAYED
+    from: coordinator MEM 367
+    as_of: 2026-09-11T07:17:04Z
+    said: >-
+      the timing of the note and the second instance as dispatched; DA 221's finding is recorded in my files at round 357.
+  THE_USERS_RULING_CONDITION_IS_MET_AND_THE_AMENDMENT_STANDS:
+    prov: RELAYED
+    from: coordinator MEM 367
+    as_of: 2026-09-11T07:17:04Z
+    said: >-
+      the falsifier's fields and the leg values as dispatched; I differenced the primary figures against my round-359 record at round 366 and found agreement to 0.012c and 0.023c.
+  REVIEW_186_WROTE_THE_RE_VALUATIONS_READING_RULES_BEFORE_THE_BOOK_EXISTED:
+    prov: RELAYED
+    from: REVIEW 186 via coordinator MEM 367
+    as_of: 2026-09-11T07:17:04Z
+    said: >-
+      the scoping, firing and residual clauses as dispatched; the file's on-disk time precedes the book.
+  AND_ITS_SIGN_CHANGE_RULE_DELIBERATELY_DISBELIEVES_A_RESULT_THAT_WOULD_HELP_THE_ARM:
+    prov: RELAYED
+    from: REVIEW 186 via coordinator MEM 367
+    as_of: 2026-09-11T07:17:04Z
+    said: >-
+      the sign-change clause, its four escape conditions and REV's quoted sentence as dispatched.
+  AND_THE_EIGHT_STRANDED_REV_FILINGS_ARE_PUSHED_TO_ORIGIN_VIA_RULE_45:
+    prov: RELAYED
+    from: coordinator MEM 367
+    as_of: 2026-09-11T07:17:04Z
+    said: >-
+      the eight filings and their landing route as dispatched; their stranded status and its cause are recorded in my round-366 flags.
+  DES_WAITER_IS_A_DURABLE_UNIT_AND_THE_BOOKS_WAITER_WAS_NOT:
+    prov: RELAYED
+    from: DE and BE 140 via coordinator MEM 367
+    as_of: 2026-09-11T07:17:04Z
+    said: >-
+      the waiter's four properties and the book waiter's absence as dispatched; rule 37 is in SEAT_PROTOCOL from round 332.
+  AND_A_ZOMBIE_WAITER_HOLDS_NO_LOCK_WHICH_IS_WHY_IT_IS_ONLY_A_TIDY_UP:
+    prov: RELAYED
+    from: DE via coordinator MEM 367
+    as_of: 2026-09-11T07:17:04Z
+    said: >-
+      the zombie's cause and its lock-free status as dispatched.
+  DA_V12_CARRIES_THE_CONDITION_AS_A_MEASURED_FIELD_RATHER_THAN_A_SENTENCE:
+    prov: RELAYED
+    from: DA via coordinator MEM 367
+    as_of: 2026-09-11T07:17:04Z
+    said: >-
+      the seven v12 items as dispatched; each corresponds to a finding recorded in my files at rounds 363 to 366.
   # --- MEM round 366, 2026-09-11T07:13:00Z ---
   THE_FALSIFIER_PASSED_AND_THE_USERS_AMENDMENT_NOW_STANDS_UNCONDITIONALLY:
     prov: RELAYED

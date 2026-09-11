@@ -23492,3 +23492,22 @@ generation and the window went 4 → 3. Nothing rewritten.
   corroboration. The freeze's tuning field is A DECLARED BOOL NO CODE READS, and its checker
   EXISTS UNWIRED. tip 929e5b2)
 ```
+
+## Batch 349 (rotated by MEM round 367, 2026-09-11T07:17:04Z)
+
+```
+  2026-09-11T07:02:26Z (MEM ROUND 364 -- THE 288th WINDOW IS NAMED AND THE TRIPWIRE NARROWS TO ONE
+  MECHANISM. I verified every part at the artifact: n_gap_bearing 27, era clob_v4_1,
+  includes_1788807300 FALSE, missing_interior_window [1788807300] at 18:55:00Z -- and I
+  converted the epoch and closed the slot arithmetic myself: first to last at 300s gives
+  EXACTLY 288 SLOTS, 287 supplied, and THE ONE MISSING INTERIOR SLOT IS THE MASKED WINDOW.
+  So DA's 288 and BE's 287 were never in conflict: ONE DENOMINATOR, TWO CORRECT NUMBERS,
+  DIFFERING BY EXACTLY THAT WINDOW. AND THE SEATS AGREE ON ITS IDENTITY, NOT MERELY ITS
+  COUNT -- agreement on WHICH ONE is not producible by coincidence the way agreement on HOW
+  MANY is. THE MASK-FLIP MECHANISM IS EMPTY FOR BTC 09-07, since an unsupplied window
+  contributes zero rows under either era and stays a blackout under the fix, SO THE ONLY
+  DELTA-D SOURCE IS THE 27'S REPLAY-CONTENT CHANGE IN RETAINED ROWS -- a narrowing of the
+  expected effect, not a relaxation of the check. DA 231's rebuild must return n_masked = 1
+  and exactly that window, TYPED BEFORE IT RUNS. Ruling: 287 on the tripwire table, 288 as
+  the coverage denominator, the masked window AS A STATUS. tip 7ce92b9)
+```
