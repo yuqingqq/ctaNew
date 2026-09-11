@@ -385,6 +385,7 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r387_landing_refused_a_fifth_time_at_129_over_173: "HELD BEHIND_AND_NOT_FF again. The series is 112/131, 117/139, 121/159, 125/169, 129/173 across rounds 382-387: local has gained 17 commits and origin 42 in about three and a half hours, on the same two other-seat files. SIX MEM rows are now written and unlanded, Q-MEM-338 (round 358) through Q-MEM-343. I did not merge, stash or rebase (rules 21, 45). The backlog grows by one row per round and no landing path exists that does not touch another seat's uncommitted work."
   r387_the_09_07_reproduction_is_EXACT_not_merely_to_the_cent: "R-909 requires day one's D to reproduce to the cent from the freeze-built book. It reproduces EXACTLY: -14645.078818000005 against -14645.078818000005, delta 0.0000000000 cents, and arm_settled_total_cents -19082.8184176 and 27073 cancels are identical too. This is across a DIFFERENT book (887a97eb vs the landed one), a DIFFERENT seed (88265706 vs 4124458766) and a DIFFERENT oracle (46290 records vs 46145); p moves as expected with the seed, 0.16966067864271456 against 0.18163672654690619. CONDVALUE ONLY -- the HAZARD arm was still drawing when I read it, so the link is established for one arm and pending for the other, and I do not report it as both."
   r387_the_oracle_grew_145_records_and_D_DID_NOT_MOVE: "At round 385 I flagged that the consistency-link reproduction would read an oracle about a hundred records larger than the one falsifier (a) passed against, and said plainly that whether any added record falls in 09-07's own slugs was not something I measured. It is now answered empirically rather than by argument: the reproduction read 46290 records against (a)'s 46145 -- 145 more -- and D did not move by a cent. The question I could not settle by reasoning was settled by the run."
   r387_day_two_both_arms_read_from_the_files: "CONDVALUE_X_SKEW: D -49303.579891000016 c, p 0.07584830339321358, 500 draws, 28246 cancels, settled total +36923.3203834, seed 1357784335. HAZARD_OVER_SKEWED_REF: D -23977.998804000017 c, p 1.0, 500 draws, 29512 cancels, settled total +62248.9014704, seed 154326921. Both carry book_receipt.admitted_by DESCENDANT and both name book sha 05144b6fce62e2cc -- the freeze-built 09-08 book I hashed myself at round 385. Both D are negative. Oracle 455b4132ec1f994c, 46276 records, read once for the pair."
@@ -28128,6 +28129,10 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r387_landing_refused_a_fifth_time_at_129_over_173:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    said: "ran the script --dry with the six ids and read LOCK HELD then HELD BEHIND_AND_NOT_FF; git rev-list --left-right --count gave 129 173 against 125 169 ninety minutes earlier."
   r387_the_09_07_reproduction_is_EXACT_not_merely_to_the_cent:
     prov: CHECKED
     artifact: data/pm_5min/derived/fwd_a_0907_rebuild/de_settle_result_20260907_CONDVALUE_X_SKEW.json
