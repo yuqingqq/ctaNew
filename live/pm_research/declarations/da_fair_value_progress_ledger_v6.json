@@ -1,0 +1,55 @@
+{
+ "protocol": "P003_DA_FAIR_VALUE_PROGRESS_LEDGER_V6",
+ "supersedes": "da_fair_value_progress_ledger_v5.json",
+ "declared_at": "2026-09-11T20:24:34Z",
+ "seat": "DA",
+ "dispatch": "DA 279; REV 203's two findings, both verified by driving before any change",
+ "THE_LESSON_WORTH_A_LINE": "A LEDGER ROW CAN BE WRONG IN BOTH DIRECTIONS, AND BOTH HAPPENED AT ONCE. My ledger read 5/6 and REV's read 5/6 on DIFFERENT rows, and both of mine were wrong. A property list that omits a property makes a gate look satisfied for exactly the reason it is not.",
+ "CORRECTION_1_A_FALSE_NEGATIVE_FROM_MY_OWN_FIXTURE": {
+  "row": "gate 4",
+  "read": "CELLS_GREEN_BUT_PROPERTY_UNCOVERED",
+  "truth": "the properties were intact; the PROBE was broken",
+  "cause": "the probe passed a BARE LIST as the canonical population. REVIEW 202's provenance rule correctly refuses one, because a population with no provenance cannot be told from one fabricated around the rows under test.",
+  "measured_before_the_fix": "every gate-4 property cell returned REFUSED CANONICAL_POPULATION_HAS_NO_PROVENANCE",
+  "measured_after": "one clean row -> OK n_actions=1 folded=1; two sides -> OK n_actions=1 folded=2; duplicate key -> REFUSED FORECAST_ACTION_DUPLICATE_KEY; claimed-on-path vs population -> REFUSED FLAG_CONTRADICTS; off-population -> counted as ACTION_NOT_IN_THE_CANONICAL_POPULATION",
+  "the_gate_was_right_to_refuse_my_probe": true,
+  "this_is_the_third_of_its_shape": "after the cwd bug (every count 0) and the guessed step-4 paths (NO_FILES_ON_ANY_EXECUTING_REF while two files sat on both refs). A false negative manufactured by the instrument reads exactly like a finding."
+ },
+ "CORRECTION_2_A_FALSE_POSITIVE_FROM_AN_INCOMPLETE_PROPERTY_LIST": {
+  "row": "gate 6",
+  "read": "SATISFIED on 8 of 8 declared properties",
+  "truth": "UNSATISFIED -- the ninth property was never written down",
+  "the_missing_property": "both arms replay on the same ACTION POPULATION",
+  "cause": "identical in shape to the price_path hole REVIEW 201 found: an input that lives OUTSIDE ReplayInputs is an input the comparison cannot see. run_arm(actions, value_of, inputs) takes the action list as an ARGUMENT, so compare_arms never sees it.",
+  "measured": "two arms replaying 6 actions and 3 actions are reported inputs_identical=true with an IDENTICAL inputs_digest, baseline n_quotes=6 and challenger n_quotes=3, no refusal. A challenger that drops half the population passes the seam.",
+  "reverts_to_satisfied_when": "`action_keys_sha256` becomes required (no default) or is COMPUTED inside run_arm from the actions it was handed, so the protection does not depend on a caller opting into it. That is what made the price_path fix structural.",
+  "status_now": "CELLS_GREEN_BUT_PROPERTY_UNCOVERED, 10 of 12, computed",
+  "AND_THE_GATE_MOVED_WHILE_I_WROTE_THIS": "Q-DE-370 landed at 486867e between my commit and my push, making the action list a FIELD of ReplayInputs. Re-driven at the new parent rather than left standing: the row is STILL unsatisfied, but for a NARROWER and more precise reason than my first property name implied, so the property was split into four.",
+  "what_DE_built_and_it_WORKS": {
+   "declared digest, populations differ": "REFUSED REPLAY_ARMS_DO_NOT_SHARE_THEIR_INPUTS",
+   "a LIED action digest": "REFUSED REPLAY_ACTIONS_ARE_NOT_THE_DECLARED_POPULATION"
+  },
+  "WHAT_REMAINS": "the guard is OPT-IN where the tape guard is MANDATORY. `action_keys_sha256` defaults to \"\" and the check reads `if inputs.action_keys_sha256`, so a caller that omits the field is never checked at all. `price_path` has NO default and cannot be omitted. Driven: two arms on 6 and 3 actions with the field omitted compare inputs_identical=true, no refusal, quotes 6 vs 3.",
+  "the_two_failing_predicates": [
+   "i_differing_action_populations_refuse_BY_DEFAULT",
+   "l_the_action_population_is_REQUIRED_like_price_path"
+  ]
+ },
+ "WHAT_THIS_CHANGES_ABOUT_READING_THE_LEDGER": "a green row is only as strong as the property list it was scored against, and that list is MY enumeration rather than the plan's. `properties.n_declared` is carried for exactly that reason: it is a claim about how many properties I wrote down, never a claim that they are all of them. A reader comparing two seats' counts must compare the LISTS, not the numbers -- which is how REV found this and how the §11-versus-§5 keying error was found one dispatch earlier.",
+ "THE_INSTRUMENT": {
+  "path": "live/pm_research/da_fair_value_ledger.py",
+  "content_sha256_16": "bb2d726561b4e05f",
+  "cells": 26,
+  "measured_now": "gates_satisfied 5/6 at 486867e; gate 6 is the single unsatisfied row, 10 of 12 properties",
+  "no_labelled_score_permitted": "TRUE again (5 < 6), having been FALSE while gate 6 read satisfied on an incomplete list"
+ },
+ "UNCHANGED_FROM_V5": [
+  "keyed on §5's SIX BUILD GATES, with the §11 step as a separate column and the divergence at 6 stated",
+  "every status COMPUTED at verification time: presence by count at a fetched ref, behaviour DRIVEN in a worktree cut at that ref, properties driven against the same bytes",
+  "no_labelled_score_permitted = (gates_satisfied < 6), DA 277's predicate, kept exactly",
+  "score_is_evidence_permitted additionally requires §11 step 6's full-pipeline freeze, which does not exist on either executing ref (measured: 0)"
+ ],
+ "STEP_6_FREEZE_DRAFT": "DA 278's draft remains UNLANDED and is not affected by this correction. It reads six of six from REV only, never from this ledger, and its own `ready_to_land` requires an empty gap list AND that return; it currently carries 15 blocking gaps.",
+ "rule_10": "every number and boolean above was computed or driven at the artifact before being written here; this file declares the RULE and the corrections, never a row status.",
+ "A_THIRD_THING_THIS_ROUND_TAUGHT": "a row can be wrong in both directions AND the ground can move under the row while it is being written. The defence is the same in all three cases: re-drive at the ref before the claim lands, and never let a commit message describe bytes that no longer exist."
+}

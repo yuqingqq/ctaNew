@@ -33,6 +33,30 @@ and 6, and only the REF drive caught it". Fifteen minutes. A ledger that
 remembers verdicts would have reported six green gates against bytes that no
 longer existed.
 
+A LEDGER ROW CAN BE WRONG IN BOTH DIRECTIONS, AND BOTH HAPPENED AT ONCE.
+Measured 2026-09-11T20:19Z, this ledger read 5/6 and REV's read 5/6 -- on
+DIFFERENT rows, and both of mine were wrong:
+
+  * GATE 4 read UNSATISFIED because MY FIXTURE was broken. It passed a bare
+    list as the canonical population, which REVIEW 202's provenance rule
+    correctly refuses, so every property cell returned
+    CANONICAL_POPULATION_HAS_NO_PROVENANCE. The properties were intact. A
+    false NEGATIVE manufactured by the instrument -- the third of this shape
+    I have made, after the cwd bug and the wrong-path attribution.
+
+  * GATE 6 read SATISFIED because MY PROPERTY LIST HAD NO ENTRY for the
+    shared action population. Eight declared properties, all green, and the
+    ninth was never written down. A property list that omits a property makes
+    a gate look satisfied for EXACTLY the reason it is not: `run_arm` takes
+    `actions` outside `ReplayInputs`, so two arms replaying 6 and 3 actions
+    are reported `inputs_identical: True` with an identical `inputs_digest`.
+    A challenger that drops half the population passes the seam.
+
+So the property list is itself an artifact that can be incomplete, and a green
+row is only as strong as the list it was scored against. `properties` carries
+`n_declared` for that reason: the count is a claim about MY enumeration, not
+about the plan's.
+
 AND CELLS PASSING IS NOT PROPERTIES COVERED. REV measured gate 4 at 16/16
 cells with four of §5's six properties enforced, and gate 6 at 11/11 cells
 proving the arms DECLARED the same inputs rather than RAN on them -- a flat
@@ -131,7 +155,16 @@ sys.path.insert(0, PM)
 import de_fair_value_actions as A
 NS = 1788980100000000000; W = 1788980100
 SLUG = "btc-updown-5m-%d" % W; GEN = "7"
-POP = [(SLUG, GEN)]
+# REVIEW 202: a population with no provenance cannot be told from one
+# fabricated around the rows under test, so a BARE LIST is refused. This probe
+# passed one, and every cell came back CANONICAL_POPULATION_HAS_NO_PROVENANCE
+# -- so the row read CELLS_GREEN_BUT_PROPERTY_UNCOVERED when the properties
+# were intact and the FIXTURE was broken. A probe must be fixed like any other
+# instrument; the gate was right to refuse it.
+POP = {"rows": [(SLUG, GEN)],
+       "provenance": {"population": "da_fair_value_ledger gate-4 property probe",
+                      "as_of": "computed at run time by the ledger",
+                      "source_identity": "DA synthetic fixture, not a real population"}}
 def row(**kw):
     d = dict(coin="btc", slug=SLUG, generation_id=GEN, decision_recv_ns=NS,
              quote_side="BID", up_probability_consumed=0.5, window_start=W)
@@ -173,9 +206,15 @@ rows = [{"coin": "btc", "slug": "btc-updown-5m-%d" % (W + 300 * i),
          "generation_id": str(i), "decision_recv_ns": NS + i, "quote_side": "BID",
          "up_probability_consumed": 0.5, "window_start": W + 300 * i,
          "on_identity_reference_path": True} for i in range(6)]
-POP = [(r["slug"], r["generation_id"]) for r in rows]
-acts = sorted(A.build_actions(rows, canonical_population=POP)["actions"],
-              key=lambda a: a.decision_recv_ns)
+def popof(rr):
+    return {"rows": [(r["slug"], r["generation_id"]) for r in rr],
+            "provenance": {"population": "da_fair_value_ledger gate-6 probe",
+                           "as_of": "computed at run time by the ledger",
+                           "source_identity": "DA synthetic fixture"}}
+def actsof(rr):
+    return sorted(A.build_actions(rr, canonical_population=popof(rr))["actions"],
+                  key=lambda a: a.decision_recv_ns)
+acts = actsof(rows)
 REAL = (0.52, 0.48, 0.55, 0.45, 0.50, 0.60)
 FLAT = tuple([0.99] * 6)          # REV's flat tape, rebuilt from the finding
 def mk(tape, hs=0.01, **kw):
@@ -214,6 +253,40 @@ b, c = arm(REAL, 0.50), arm(REAL, 0.58)
 P["g_order_paths_remain_free_to_differ"] = (b["path"].digest() != c["path"].digest())
 # AND THE TAPE MUST NOT BE REACHABLE AROUND ReplayInputs (the structural half).
 import inspect
+# THE SHARED POPULATION. REV 203 found this one, and it is the SAME SHAPE as
+# the price_path hole: an input that lives OUTSIDE ReplayInputs is an input the
+# comparison cannot see. A challenger that replays HALF the actions is reported
+# as sharing its inputs, with an identical inputs_digest. Driven here: 6 actions
+# against 3.
+# Q-DE-370 made the action list a FIELD, and the mechanism WORKS WHEN USED.
+# The gap that remains is that it is OPT-IN where the tape guard is mandatory:
+# `action_keys_sha256` defaults to "" and the check is `if
+# inputs.action_keys_sha256`, so a caller that omits it is never checked --
+# while `price_path` has NO default and cannot be omitted at all. Three
+# separate predicates, so the row names the ACTUAL defect rather than implying
+# the mechanism is missing.
+import dataclasses as _dc
+def _mkd(dig=None):
+    kw = dict(non_fair_value_params={"max_inventory": 5},
+              initial_state={"inventory": 0.0, "clock": 0},
+              price_path=REAL, half_spread=0.01)
+    if dig is not None:
+        kw["action_keys_sha256"] = dig
+    return R.ReplayInputs(**kw)
+_full, _half = acts, actsof(rows[:3])
+P["i_differing_action_populations_refuse_BY_DEFAULT"] = (
+    "ARMS_DO_NOT_SHARE" in run(lambda: R.compare_arms(
+        R.run_arm(_full, vo(0.50), _mkd()), R.run_arm(_half, vo(0.58), _mkd()))))
+P["j_the_declared_digest_guard_WORKS_when_used"] = (
+    "ARMS_DO_NOT_SHARE" in run(lambda: R.compare_arms(
+        R.run_arm(_full, vo(0.50), _mkd(R.action_keys_digest(_full))),
+        R.run_arm(_half, vo(0.58), _mkd(R.action_keys_digest(_half))))))
+P["k_a_LIED_action_digest_refuses"] = (
+    "ACTIONS_ARE_NOT_THE_DECLARED_POPULATION" in run(lambda: R.run_arm(
+        _half, vo(0.58), _mkd(R.action_keys_digest(_full)))))
+P["l_the_action_population_is_REQUIRED_like_price_path"] = (
+    R.ReplayInputs.__dataclass_fields__["action_keys_sha256"].default
+    is _dc.MISSING)
 P["h_tape_is_not_an_argument_to_run_arm"] = (
     "price_path" not in inspect.signature(R.run_arm).parameters
     and "price_path" in R.ReplayInputs.__dataclass_fields__)
@@ -269,9 +342,15 @@ rows = [{"coin": "btc", "slug": "btc-updown-5m-%d" % (W + 300 * i),
          "generation_id": str(i), "decision_recv_ns": NS + i, "quote_side": "BID",
          "up_probability_consumed": 0.5, "window_start": W + 300 * i,
          "on_identity_reference_path": True} for i in range(4)]
-POP = [(r["slug"], r["generation_id"]) for r in rows]
-acts = sorted(A.build_actions(rows, canonical_population=POP)["actions"],
-              key=lambda a: a.decision_recv_ns)
+def popof(rr):
+    return {"rows": [(r["slug"], r["generation_id"]) for r in rr],
+            "provenance": {"population": "da_fair_value_ledger gate-6 probe",
+                           "as_of": "computed at run time by the ledger",
+                           "source_identity": "DA synthetic fixture"}}
+def actsof(rr):
+    return sorted(A.build_actions(rr, canonical_population=popof(rr))["actions"],
+                  key=lambda a: a.decision_recv_ns)
+acts = actsof(rows)
 def seam(v, label, fell=False):
     return S.run_seam(acts, lambda a: (v, label, fell), half_spread=0.01)
 P = {}
