@@ -1,3 +1,91 @@
+# READ FIRST — COLD START (MEM 392, 2026-09-11T16:14:42Z, tip `3acc367`)
+
+*The forward test is finished. This block is written to be sufficient with no
+conversation. Read it, then stop.*
+
+# 1 · THE OUTCOME
+
+> ## Both arms **FUTILE** at **G = 2 of 7** · `STOP_ADVICE = STOP_FOR_FUTILITY` (computed)
+> ## **NOT_ESTABLISHED_AT_THIS_POWER — never NO_EFFECT**
+
+| arm | 09-07 | 09-08 | non-pos | best attainable p | |
+|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | −14,645.078818 | −49,303.579891 | **2** | 2·29/128 = **0.453125** | FUTILE |
+| `HAZARD_OVER_SKEWED_REF` | **+4,925.363903** | −23,977.998804 | **1** | 2·8/128 = **0.125** | FUTILE |
+
+Threshold **0.025** · floor 2·1/128 = **0.015625** (7-of-7 only) · tolerance **0** ·
+unanimity · Holm **m=2**. ***The cap comes from days already seen — days 3–7
+cannot move it.***
+
+**And the sharper, design-level statement:** floor **× 2 = 0.03125 < 0.05**
+(would have passed) · **× 69 = 1.078125 > 1** · **1/69 = 0.014492754 < floor**.
+***No outcome of this test could have cleared a correction over the 69-candidate
+screen that produced the arms.*** **About the design, not the arms.**
+
+# 2 · THE ARTIFACTS, BY PATH
+
+```
+FINAL RECORD    fwd_v2/p003_de_forward_value_20260908_v2.json          16:03:05Z
+  superseded    fwd_v2/p003_de_forward_value_20260908.json   KEPT, unedited (rule 13)
+                supersedes.sha256 51decc84c8b368d8…  = v1's bytes   [I hashed it]
+
+(a) REPRODUCTION fwd_v2/p003_de_reproduction_at_the_freeze_20260907.json  16:05:59Z
+                 IS_A_DAY_RESULT: false · BOTH arms exact vs day one · DESCENDANT
+
+CELLS  day one   fwd_v2/de_settle_result_20260907_<arm>.json
+       day two   fwd_rehearsal_0908/de_settle_result_20260908_<arm>.json   ⚠ "rehearsal" = a FULL 500-draw run
+       (a) repro fwd_a_0907_rebuild/de_settle_result_20260907_<arm>.json
+
+BOOKS  09-08 freeze-built  sha 05144b6fce62e2cc      09-07 freeze-built  sha 887a97eb41e9f83c
+```
+
+⚠️ **Three traps for a reader or an instrument:**
+1. **The cells are in three directories** and `load_cell` takes **one root**.
+2. **Day two's real result is in a directory named `rehearsal`.**
+3. **Two mis-named reproduction records sit inside the day-result glob** —
+   `p003_de_forward_value_20260907_reproduction_at_the_freeze{,_v2}.json`.
+   **KEPT as declared residue, `NOT_A_DAY_RESULT`**, named by path *and sha* in
+   `da_record_schema_declaration_v3.json` (**all three digests verified against
+   disk this round**). ***They carry protocol `P003_DE_DAY_RECORD_V1` — and so
+   does a real day record — so the protocol CANNOT separate them.*** Only the
+   presence of a **`reproduction` block** does. Filtering on it and taking days
+   by identity gives exactly **{09-07, 09-08}, n = 2**.
+   **Rule from here: a reproduction record is named `p003_de_reproduction_*`,
+   never `p003_de_forward_value_*`** — *because a filter is a thing that can be
+   forgotten and a name is not.*
+
+# 3 · THE FREEZE LINEAGE
+
+```
+valuation pin = A RULE: descendant of FREEZE_COMMIT b34ed9f + frozen module digests
+supersession   f309602 → c853e2d → 92e4b7c → 21678a1 → eb923d3 → 3dbb107 → 5efb8f0
+freeze commit  8afbd1a → d095c5a → 6d22d78 → bacb4e3 → b34ed9f
+declarations   code-freeze v10 lineage · population freeze v17 · record schema v3
+               arm-freeze amendments to v23 · licensing + outcome (DA 262) — three refs
+comparator     a455191d6bceec7e = the certificate's producer, unmoved
+```
+
+**Verified by hashing, not reading:** three rebuilds at three commits gave
+**322,723 of 322,732 content leaves equal**, the nine differences all
+wall-clock/telemetry. **Day one reproduces EXACTLY on BOTH arms** — full float
+equality across a different book, seed and oracle.
+
+# 4 · HELD · OPEN · QUEUE
+
+- ⛔ **The 09-09 real build is HELD.**
+- 🙋 **The user's two decisions:** (i) whether days **09-09..09-13** are built and
+  valued **descriptively** — *not required by the design*, population stays
+  protected, books build from archives at any time; (ii) whether to **open the
+  post-population queue**.
+- 📋 **Queue: twelve items (R-913) + three (REVIEW 190).** Nothing in it runs
+  inside the population.
+- 🔓 **Lock free, nothing armed.**
+- 🌿 **The tree is forked from origin (144/184)** — a fast-forward is
+  **impossible**, so `land_register_row` is structurally closed. **Q-MEM-338…346
+  are written and unlanded, including the rows carrying this outcome**, and
+  R-912's ordered rule-45 push of BE's `223f352`/`73d5655` is blocked by the same
+  thing. ***Read this working tree, not `origin/mm-research`.***
+
 # READ FIRST — round close, 2026-09-11 (MEM 390+391, 2026-09-11T16:10:08Z, tip `bb69677`)
 
 # 🧊 COLD START — **the forward test is finished. Read this first, then stop.**
