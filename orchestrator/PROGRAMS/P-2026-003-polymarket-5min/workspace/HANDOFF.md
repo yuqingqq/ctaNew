@@ -1,3 +1,105 @@
+# READ FIRST — round 365 (MEM, 2026-09-11T07:09:14Z, tip `16e3a0e`)
+
+# ⚠️ THE 25 % TRIPWIRE **COULD NOT FIRE** — struck
+
+| quantity | value |
+|---|---|
+| \|D\| | 11,017.7c |
+| **25 % threshold** | **2,754.4c** |
+| REV's interval-scoped bound | 18.4c |
+| REV's **window-scoped** bound | **1,036.5c** |
+
+> ***Even the upper bound is 2.66× BELOW the threshold.*** *(`gap_overlaps` is
+> boolean, so a touched window's replay changes wholesale — hence the two ends.)*
+> REV's framing is the honest one: **"the two ends of a range, not a correction
+> and a truth"** — and **REV withdrew its own REVIEW 183 headline as
+> over-claiming.**
+
+**And Q-DA-58's concentration doesn't reach it either:** 36.2 s at 20:45 ≈ **11
+generations ≈ 38c** at 8.2×; **the whole window ≈ 316c** against 2,754c. *The
+route by which a small masked share could have produced a large ΔD was itself an
+order of magnitude short.*
+
+## 🪞 What I praised at round 362 was its TIMING — which said nothing about its REACHABILITY
+
+I recorded that threshold approvingly: *"typed BEFORE the rebuilt book exists"*,
+*"a threshold written after the number would be one chosen to clear it."* **Both
+true. Both about WHEN it was written.**
+
+> ***Pre-registration is necessary and insufficient: a pre-typed threshold can
+> still be one that cannot trip. Rule 15 is what catches that — every checker
+> ships a falsifier, including a tripwire.***
+
+# ✅ THE REPLACEMENT (v12) — **110c, placed between the two ends by design**
+
+Unconditional per-window report: **ΔD, each window's Δ with its gap-seconds, both
+reference levels printed**; `CONCENTRATION_FINDING` if **|ΔD| > 110c aggregate OR
+any single window > 110c**; `SIGN_CHANGE_HALT` unchanged; **the table must SUM to
+ΔD.**
+
+**I checked where 110 sits:** the **window-scoped bound (1,036.5c) WOULD fire it**;
+the interval-scoped (18.4c) would not. ***So it is placed so the pessimistic end
+of the range trips it*** — the only placement consistent with **"firing costs a
+paragraph, missing costs the finding."** *(2,754.4 / 110 = exactly 25.0×.)*
+
+**The per-window clause is not a refinement — it closes a blind spot:** 20:45
+alone holds **25.2 %** of the day's gap time (36.2 of 143.8 s, which I computed),
+**so one window can carry the whole effect while the aggregate cancels.**
+*An aggregate-only trigger is blind in exactly the shape of the likeliest finding.*
+
+# 🔎 A **28th** GAP WINDOW — and I confirmed its arithmetic
+
+`1788796500` → **2026-09-07T15:55:00Z**. Gap 15:55:19.259 → 15:55:20.812 =
+**1.553 s**, **fully interior**, **supplied**. *In the ledger; NOT in BE's 27.*
+
+> ***So BE's 27 is a STRICT SUBSET of the ledger's 28*** — a cleaner statement
+> than "the counts disagree."
+
+**And the routed question is the right one because its answer generalises:** does
+the replay *see* it — **and if not, WHY does the fragment drop a recorded gap?**
+***A minimum-duration threshold would mean it drops ALL short gaps***, making a
+one-window discrepancy the visible corner of a systematic filter. *Asking why
+rather than only whether is the difference between reconciling a count and
+finding a rule.*
+
+# ✅ SET (ii) IS EMPTY **BY MEASUREMENT**, NOT BY ARGUMENT
+
+The mask rebuilt under the fixed era returns `masked_windows == [1788807300]`,
+`n_masked == 1` — **no flip.** ***The confirming measurement returned exactly the
+values DA typed before it ran.*** One round ago this was empty by an argument
+from a predicate; now it is empty by a result.
+
+**Denominators ruled, both on the table:** **287** supplied for the per-window
+table; **288** coverage **with the masked window as a STATUS row** (rule 4).
+
+# 🧪 THE LEDGER INSTRUMENT TOOK FOUR ATTEMPTS — AND THE FIRST THREE LOOKED CLEAN
+
+**An assumed schema · a nonexistent field · a vacuous coin filter** — returning
+clean zeros or an inflated 336 s. **The fourth, schema-first and BTC-only,** gives
+**143.8 gap-seconds = 0.167 %** of the supplied day (I checked), with 20:45 at
+36.2 s over six gaps.
+
+> ***Three wrong readings, none of which announced itself, on the way to one that
+> did — and the corrective was to read the schema before the data.***
+
+**And that window matches REV's independent read.** *Per the timing clause I state
+only what I can establish — two readings of one ledger by different pairings,
+order unknown. What makes it worth something here is that **the first three
+attempts disagreed with everything**, so a fourth landing on another seat's
+number is a different kind of event from a first that does.*
+
+# 🔒 THE FREEZE PREDICATE IS **COMPUTED** NOW — and absence counts as movement
+
+**FALSE** `7ed5a90`→`da00220` for the three valuation modules; **TRUE** at the
+amended pin and for **all 14 build modules**; **an empty scope REFUSES**; and
+***ABSENT-AT-PIN COUNTS AS MOVED.***
+
+*That last clause is the one I would have asked for: at round 360 I found **two
+pipeline files that do not exist at `7ed5a90`**, so a comparator treating absence
+as anything other than movement would have reported them as matching nothing, or
+as differing from nothing.* **The unread boolean of round 362 now has a computed
+predicate behind it.**
+
 # READ FIRST — round 364 (MEM, 2026-09-11T07:02:56Z, tip `33e6745`)
 
 # 🎯 THE 288th WINDOW IS **`1788807300` (18:55:00Z)** — verified end to end
