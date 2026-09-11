@@ -504,3 +504,215 @@ if __name__ == "__main__":
     if "--selftest" in sys.argv:
         sys.exit(selftest())
     print(json.dumps(evaluate(), indent=1, default=str))
+
+
+# ==================================================================
+# DECLARATION v2 (DA 211) -- the USER's ruling, folded in before any
+# day is touched. v1 is UNEDITED (rule 13).
+# ==================================================================
+
+DECL_V2 = HERE / "declarations" / "da_forward_test_declaration_v2.json"
+
+
+def load_v2(path=None) -> dict:
+    return json.loads(Path(path or DECL_V2).read_text())
+
+
+def item_v2_population(d: dict) -> dict:
+    p = d.get("POPULATION") or {}
+    w = p.get("THE_POST_FREEZE_CLAUSE_IS_WITHDRAWN") or {}
+    m = w.get("MEASURED") or {}
+    fq = p.get("a_failed_quality_day") or {}
+    after = set(m.get("days_starting_strictly_after_the_freeze") or [])
+    before = set(m.get("days_starting_BEFORE_the_freeze") or [])
+    props = {
+        "COMPUTED_N_equals_the_day_list": p.get("N") == len(p.get("DAYS") or []),
+        "N_is_six": p.get("N") == 6,
+        "the_post_freeze_clause_is_WITHDRAWN":
+            w.get("under_this_ruling_that_is_FALSE") is True,
+        "COMPUTED_the_before_and_after_sets_PARTITION_the_population":
+            (after | before) == set(p.get("DAYS") or []) and not (after & before),
+        "COMPUTED_five_of_six_predate_the_freeze": len(before) == 5 and len(after) == 1,
+        "NO_SUBSTITUTION_on_a_failed_day": "NO SUBSTITUTION" in str(
+            fq.get("and_then", "")).upper(),
+        "a_quality_decision_that_saw_an_outcome_REFUSES":
+            fq.get("refusal_if_violated") == "QUALITY_DECISION_SAW_AN_OUTCOME",
+        "a_file_count_is_declared_a_FLOOR": (p.get("MEASURED_CALENDAR") or {}).get(
+            "A_FILE_COUNT_IS_A_COVERAGE_FLOOR_NOT_A_QUALITY_PASS") is True,
+    }
+    return _verdict(props, [], item="v2_population", N=p.get("N"))
+
+
+def item_v2_governing_limit(d: dict) -> dict:
+    g = d.get("THE_GOVERNING_LIMIT_OF_THIS_WHOLE_TEST") or {}
+    r = g.get("THE_RESIDUAL_REV_STATES_IS_PERMANENTLY_UNCLOSABLE") or {}
+    props = {
+        "the_five_of_six_fact_is_the_GOVERNING_limit":
+            g.get("FIVE_OF_SIX_DAYS_PREDATE_THE_FREEZE") is True,
+        "the_lost_structural_guarantee_is_stated":
+            "STRUCTURAL GUARANTEE IS GONE" in str(g.get("consequence", "")).upper(),
+        "what_the_protection_rests_on_is_ENUMERATED":
+            len(g.get("what_the_protection_now_rests_on") or []) >= 3,
+        "the_residual_is_named_PERMANENTLY_UNCLOSABLE":
+            r.get("status") == "PERMANENTLY_UNCLOSABLE",
+        "it_is_stated_that_NO_FUTURE_WORK_CLOSES_IT":
+            "no future work closes it" in str(
+                r.get("it_is_not_a_gap_to_be_closed_later", "")).lower(),
+        "ATTESTED_not_GUARANTEED_is_the_declared_wording":
+            "ATTESTED" in str(r.get("how_it_must_be_reported", "")).upper(),
+        "the_residual_clause_is_unconditional":
+            unconditional(r.get("what"))["unconditional"],
+    }
+    return _verdict(props, [], item="v2_governing_limit")
+
+
+def item_v2_09_07_in_primary(d: dict) -> dict:
+    c = d.get("THE_09_07_PROBLEM_NOW_INSIDE_THE_PRIMARY") or {}
+    s = c.get("REQUIRED_SENSITIVITY_LEG") or {}
+    props = {
+        "the_merge_is_acknowledged": c.get("THE_RULING_MERGES_IT") is True,
+        "the_primary_is_declared_to_contain_a_SEEN_day":
+            c.get("so_the_primary_population_contains_a_day_whose_DIAGNOSTIC_WAS_SEEN") is True,
+        "the_two_endpoints_carry_DIFFERENT_statuses":
+            (c.get("clean_on_the_ESTIMAND") or {}).get("status")
+            != (c.get("consumed_on_the_DIAGNOSTIC") or {}).get("status"),
+        "the_NON_INDEPENDENCE_is_stated":
+            "CORRELATED" in str(c.get("AND_THE_TWO_ARE_NOT_INDEPENDENT", "")).upper(),
+        "the_inclusion_was_on_STATUS_not_OUTCOME":
+            "STATUS, not its RESULT" in str(
+                c.get("what_was_known_when_the_day_was_ruled_in", "")),
+        "a_sensitivity_leg_is_REQUIRED": bool(s.get("what")),
+        "THE_POWER_TRAP_IS_CLOSED_IN_ADVANCE":
+            "NOT** EVIDENCE" in str(s.get("AND_THE_TRAP_THIS_CLOSES_IN_ADVANCE", ""))
+            or "NOT EVIDENCE" in str(s.get("AND_THE_TRAP_THIS_CLOSES_IN_ADVANCE", "")).upper(),
+        "only_a_SIGN_difference_counts_as_evidence":
+            "SIGN DIFFERENCE" in str(s.get("AND_THE_TRAP_THIS_CLOSES_IN_ADVANCE", "")).upper(),
+        "a_sign_difference_BLOCKS_promotion":
+            "BLOCKED" in str(s.get("rule_if_the_signs_differ", "")).upper(),
+    }
+    return _verdict(props, [], item="v2_09_07_in_primary")
+
+
+def item_v2_power_arm_by_arm(d: dict) -> dict:
+    pw = d.get("PRE_REGISTERED_EXPECTATION_ARM_BY_ARM") or {}
+    obs = pw.get("observed_z_at_3_days") or {}
+    bars = pw.get("holm_bars") or {}
+    cv = pw.get("CONDVALUE_X_SKEW") or {}
+    hz = pw.get("HAZARD_OVER_SKEWED_REF") or {}
+    belongs = pw.get("DOES_09_07_BELONG_IN_A_sqrt_N_SCALING") or {}
+    b1, b2 = bars.get("step_1_smaller_p_needs_z"), bars.get("step_2_larger_p_needs_z")
+    zc6 = project(obs.get("CONDVALUE_X_SKEW", 0), 3, 6)
+    zh6 = project(obs.get("HAZARD_OVER_SKEWED_REF", 0), 3, 6)
+    props = {
+        "RECOMPUTED_CONDVALUE_projection": abs(cv.get("projected_z_at_N6", 0) - zc6) < 0.01,
+        "RECOMPUTED_HAZARD_projection": abs(hz.get("projected_z_at_N6", 0) - zh6) < 0.01,
+        "RECOMPUTED_CONDVALUE_clears_at_N6": zc6 >= b1,
+        "RECOMPUTED_HAZARD_does_NOT_clear_at_N6": zh6 < b2,
+        "RECOMPUTED_CONDVALUE_power": abs(
+            cv.get("POWER_AT_ITS_OWN_POINT_ESTIMATE", 0)
+            - (1 - _N.cdf(b1 - zc6))) < 0.005,
+        "RECOMPUTED_HAZARD_power": abs(
+            hz.get("POWER_AT_ITS_OWN_POINT_ESTIMATE", 0)
+            - (1 - _N.cdf(b2 - zh6))) < 0.005,
+        "COMPUTED_even_the_clearing_arm_is_under_60_percent_power":
+            cv.get("POWER_AT_ITS_OWN_POINT_ESTIMATE", 1) < 0.60,
+        "HAZARD_is_declared_UNDERPOWERED_BY_CONSTRUCTION":
+            "UNDERPOWERED BY CONSTRUCTION" in str(
+                hz.get("THE_SENTENCE_THAT_CAN_ONLY_BE_WRITTEN_NOW", "")).upper(),
+        "HAZARDs_failure_is_declared_NOT_evidence_of_no_effect":
+            "NOT EVIDENCE OF NO EFFECT" in str(
+                hz.get("THE_SENTENCE_THAT_CAN_ONLY_BE_WRITTEN_NOW", "")
+            ).upper().replace("**", ""),
+        "HAZARD_has_a_REPORTING_NAME_that_is_not_NO_EFFECT":
+            hz.get("how_HAZARD_must_be_reported_if_it_fails")
+            == "NOT_TESTED_AT_ADEQUATE_POWER",
+        "the_09_07_scaling_question_is_ANSWERED_BOTH_WAYS":
+            "YES" in str(belongs.get("ANSWER", "")).upper()
+            and "NO" in str(belongs.get("ANSWER", "")).upper(),
+        "the_upper_bound_caveat_cites_the_SIGN_FLIP":
+            "SIGN FLIP" in str(pw.get("THIS_IS_AN_UPPER_BOUND_ON_POWER", "")).upper(),
+    }
+    return _verdict(props, [], item="v2_power_arm_by_arm",
+                    recomputed={"CONDVALUE_z6": round(zc6, 4),
+                                "HAZARD_z6": round(zh6, 4)})
+
+
+ITEMS_V2 = (item_v2_population, item_v2_governing_limit,
+            item_v2_09_07_in_primary, item_v2_power_arm_by_arm)
+
+
+def evaluate_v2(d: dict | None = None) -> dict:
+    d = d if d is not None else load_v2()
+    out = [f(d) for f in ITEMS_V2]
+    return {"protocol": d.get("protocol"), "status": d.get("STATUS"),
+            "items": out, "n_items": len(out),
+            "n_property_checks_driven": sum(
+                r.get("n_properties_driven", 0) for r in out),
+            "n_items_FAILING": sum(1 for r in out if r["verdict"] == FAILS),
+            "no_item_fails": all(r["verdict"] != FAILS for r in out)}
+
+
+WEAKENED_V2 = [
+ ("item_v2_population", "N stops matching the day list",
+  ["POPULATION", "N"], 5),
+ ("item_v2_population", "a failed day may be substituted after all",
+  ["POPULATION", "a_failed_quality_day", "and_then"],
+  "the next chronological untouched day is added in its place"),
+ ("item_v2_population", "the post-freeze clause is quietly reinstated",
+  ["POPULATION", "THE_POST_FREEZE_CLAUSE_IS_WITHDRAWN",
+   "under_this_ruling_that_is_FALSE"], False),
+ ("item_v2_governing_limit", "the unclosable residual becomes closable",
+  ["THE_GOVERNING_LIMIT_OF_THIS_WHOLE_TEST",
+   "THE_RESIDUAL_REV_STATES_IS_PERMANENTLY_UNCLOSABLE",
+   "it_is_not_a_gap_to_be_closed_later"],
+  "a future census could establish it"),
+ ("item_v2_governing_limit", "the residual clause gains an escape",
+  ["THE_GOVERNING_LIMIT_OF_THIS_WHOLE_TEST",
+   "THE_RESIDUAL_REV_STATES_IS_PERMANENTLY_UNCLOSABLE", "what"],
+  "a seat that read a day and wrote nothing consumed it invisibly, unless the "
+  "seat reports having done so"),
+ ("item_v2_09_07_in_primary", "the sensitivity leg stops being required",
+  ["THE_09_07_PROBLEM_NOW_INSIDE_THE_PRIMARY", "REQUIRED_SENSITIVITY_LEG",
+   "what"], ""),
+ ("item_v2_09_07_in_primary", "a five-day fail becomes evidence 09-07 carried it",
+  ["THE_09_07_PROBLEM_NOW_INSIDE_THE_PRIMARY", "REQUIRED_SENSITIVITY_LEG",
+   "AND_THE_TRAP_THIS_CLOSES_IN_ADVANCE"],
+  "a six-day pass beside a five-day fail shows 09-07 carried the answer"),
+ ("item_v2_power_arm_by_arm", "HAZARD's failure becomes evidence of no effect",
+  ["PRE_REGISTERED_EXPECTATION_ARM_BY_ARM", "HAZARD_OVER_SKEWED_REF",
+   "THE_SENTENCE_THAT_CAN_ONLY_BE_WRITTEN_NOW"],
+  "HAZARD is expected to fail and its failure is evidence of no effect"),
+ ("item_v2_power_arm_by_arm", "HAZARD gets reported as NO_EFFECT",
+  ["PRE_REGISTERED_EXPECTATION_ARM_BY_ARM", "HAZARD_OVER_SKEWED_REF",
+   "how_HAZARD_must_be_reported_if_it_fails"], "NO_EFFECT"),
+ ("item_v2_power_arm_by_arm", "the power figure is fudged upward",
+  ["PRE_REGISTERED_EXPECTATION_ARM_BY_ARM", "CONDVALUE_X_SKEW",
+   "POWER_AT_ITS_OWN_POINT_ESTIMATE"], 0.85),
+]
+
+
+def selftest_v2(quiet: bool = False) -> int:
+    D2 = load_v2()
+    FN = {f.__name__: f for f in ITEMS_V2}
+    r = evaluate_v2(D2)
+    _ok(r["n_items_FAILING"] == 0,
+        f"v2 fails no property ({r['n_property_checks_driven']} driven); "
+        f"failures {[i['item'] for i in r['items'] if i['verdict']==FAILS]}")
+    obs = D2["PRE_REGISTERED_EXPECTATION_ARM_BY_ARM"]["observed_z_at_3_days"]
+    zc6 = project(obs["CONDVALUE_X_SKEW"], 3, 6)
+    zh6 = project(obs["HAZARD_OVER_SKEWED_REF"], 3, 6)
+    _ok(zc6 >= z_from_p2(0.025) and zh6 < z_from_p2(0.05),
+        f"RECOMPUTED at N=6: CONDVALUE z={zc6:.4f} CLEARS its bar, HAZARD "
+        f"z={zh6:.4f} does NOT -- declared arm by arm before the data")
+    _ok((1 - _N.cdf(z_from_p2(0.025) - zc6)) < 0.60,
+        f"RECOMPUTED: even the arm expected to CLEAR has power "
+        f"{1 - _N.cdf(z_from_p2(0.025) - zc6):.3f} -- a coin flip")
+    for item, what, path, val in WEAKENED_V2:
+        v = FN[item](_break(D2, path, val))["verdict"]
+        _ok(v == FAILS, f"WEAKENED v2 -- {item}: {what} -> {v} (must be {FAILS})")
+    if not quiet:
+        print(f"[da_forward_test v2] {_C['n'] - _C['bad']}/{_C['n']} checks, "
+              f"{_C['bad']} failures | {r['n_property_checks_driven']} properties "
+              f"driven, {len(WEAKENED_V2)} weakened clauses REFUSED | N=6, "
+              f"5 of 6 PREDATE the freeze, HAZARD underpowered by construction")
+    return 1 if _C["bad"] else 0

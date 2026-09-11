@@ -1,0 +1,174 @@
+{
+ "protocol": "P003_DA_FORWARD_TEST_V2",
+ "version": 2,
+ "STATUS": "AMENDED-BEFORE-ANY-DAY-IS-TOUCHED",
+ "declared_by": "DA 211",
+ "declared_at_utc": "2026-09-11T02:22:15Z",
+ "supersedes": {
+  "file": "declarations/da_forward_test_declaration_v1.json",
+  "protocol": "P003_DA_FORWARD_TEST_V1",
+  "commit": "9a09d5b",
+  "v1_is_UNEDITED": true,
+  "rule": "rule 13 -- corrections supersede IN BAND; a frozen artifact is never edited. v1 stands as provenance.",
+  "what_v2_changes": [
+   "the population (USER ruling N=6)",
+   "09-07 moves from COMPANION into the PRIMARY",
+   "the post-freeze clause, which this ruling makes FALSE",
+   "the power expectation, recomputed arm by arm"
+  ],
+  "what_v1_still_governs": "everything not restated here"
+ },
+ "authorised_by": "USER RULING relayed by the coordinator: N = 6, population 2026-09-07..2026-09-12, one look, no interim analysis, no extension. The user weighed DA 209/210's arithmetic and took the CONDVALUE-only version KNOWINGLY.",
+ "POPULATION": {
+  "N": 6,
+  "DAYS": [
+   "2026-09-07",
+   "2026-09-08",
+   "2026-09-09",
+   "2026-09-10",
+   "2026-09-11",
+   "2026-09-12"
+  ],
+  "fixed_by": "USER RULING, not by a rule this declaration applies",
+  "last_day_completes": "2026-09-13T00:00:00Z",
+  "THE_POST_FREEZE_CLAUSE_IS_WITHDRAWN": {
+   "v1_said": "the first five COMPLETE, ERA-ADMISSIBLE, PRISTINE UTC DAYS whose 00:00:00Z START occurs STRICTLY AFTER the freeze commit",
+   "under_this_ruling_that_is_FALSE": true,
+   "MEASURED": {
+    "freeze_commit": "b5f311a",
+    "freeze_author_timestamp": "2026-09-11T02:08:34+00:00",
+    "days_starting_strictly_after_the_freeze": [
+     "2026-09-12"
+    ],
+    "days_starting_BEFORE_the_freeze": [
+     "2026-09-07",
+     "2026-09-08",
+     "2026-09-09",
+     "2026-09-10",
+     "2026-09-11"
+    ],
+    "so": "FIVE OF THE SIX PREDATE THE FREEZE. ONE DOES NOT."
+   },
+   "and_it_is_not_restated_anywhere_in_v2": true,
+   "why_this_matters_more_than_a_wording_fix": "v1's text asserted a structural guarantee this population does not have. Leaving it in would have been a false claim in the governing document."
+  },
+  "a_failed_quality_day": {
+   "is": "a NAMED STATUS, never a silent drop (rule 4)",
+   "status_name": "DAY_EXCLUDED_ON_QUALITY",
+   "and_then": "the population is REPORTED SHORT at N-1 and the result carries the reduced N. NO SUBSTITUTION -- the USER fixed these six days by name, and swapping one in would be a population this declaration does not have authority over.",
+   "the_predicate_that_makes_this_safe": "the quality decision reads coverage/gap/completeness metadata and NOTHING from the book, the replay or any P&L",
+   "refusal_if_violated": "QUALITY_DECISION_SAW_AN_OUTCOME"
+  },
+  "MEASURED_CALENDAR": {
+   "measured_at_utc": "2026-09-11T02:22:15Z",
+   "method": "file count under data/pm_5min/raw/<day> against 288 windows x 7 symbols = 2016",
+   "counts": {
+    "2026-09-07": "2016/2016",
+    "2026-09-08": "2016/2016",
+    "2026-09-09": "2016/2016",
+    "2026-09-10": "2016/2016",
+    "2026-09-11": "196/2016 at 02:12Z, completes 2026-09-12T00:00Z",
+    "2026-09-12": "not started"
+   },
+   "A_FILE_COUNT_IS_A_COVERAGE_FLOOR_NOT_A_QUALITY_PASS": true,
+   "if_REV_123_contradicts_this": "REV's measurement at the artifacts WINS."
+  }
+ },
+ "THE_GOVERNING_LIMIT_OF_THIS_WHOLE_TEST": {
+  "why_it_is_the_governing_one": "it bounds every result this test can produce, so it is not a caveat on one day",
+  "FIVE_OF_SIX_DAYS_PREDATE_THE_FREEZE": true,
+  "consequence": "THE STRUCTURAL GUARANTEE IS GONE for 2026-09-07..2026-09-11. A post-freeze population is untouchable BY CONSTRUCTION -- the data did not exist when the parameters were fixed. This population is not that.",
+  "what_the_protection_now_rests_on": [
+   "REV 123's verification of untouchedness AT THE ARTIFACTS",
+   "DA 194 / Q-DA-398: no fitted component or threshold ever saw any of these days -- every fitted input comes from 2026-08-24/25, finished 2026-08-28T05:52:14Z, all six model digests matching params v29",
+   "the freeze itself, b5f311a, which fixes the object under test from this moment"
+  ],
+  "THE_RESIDUAL_REV_STATES_IS_PERMANENTLY_UNCLOSABLE": {
+   "what": "a seat that READ a day's artifact and WROTE NOTHING consumed that day INVISIBLY. No filesystem, no git history and no census can establish that this did not happen.",
+   "status": "PERMANENTLY_UNCLOSABLE",
+   "it_is_not_a_gap_to_be_closed_later": "no future work closes it. It is a property of the population, and it is why a post-freeze population is worth waiting for and this one is not equivalent to it.",
+   "how_it_must_be_reported": "carried on the result, in these words, every time. A pass here is a pass on a population whose untouchedness is ATTESTED, not GUARANTEED."
+  }
+ },
+ "THE_09_07_PROBLEM_NOW_INSIDE_THE_PRIMARY": {
+  "v1_had_it_as_a_labelled_companion_never_merged": true,
+  "THE_RULING_MERGES_IT": true,
+  "so_the_primary_population_contains_a_day_whose_DIAGNOSTIC_WAS_SEEN": true,
+  "clean_on_the_ESTIMAND": {
+   "endpoint": "R-801 settlement P&L",
+   "status": "NEVER COMPUTED",
+   "evidence": "NULL_DRAW count 0; no arm_total_cents anywhere; the receipt records NOT_VALUED_DAY_NOT_ADMISSIBLE -- the estimator was NOT ASKED"
+  },
+  "consumed_on_the_DIAGNOSTIC": {
+   "endpoint": "the 5-second markout D(E0)",
+   "status": "COMPUTED AND SEEN",
+   "evidence": "1,000 persisted draws (500 per arm), and REVIEW 115 RE-DERIVED its null_mean, null_sd and Z from those draws on both arms with zero difference"
+  },
+  "AND_THE_TWO_ARE_NOT_INDEPENDENT": "same day, same fills, same generations. The markout is CORRELATED with the settlement P&L, so 'never valued on the estimand' IS NOT 'unseen'.",
+  "what_was_known_when_the_day_was_ruled_in": "its STATUS, not its RESULT. No arm-level 09-07 figure has ever been quoted (DA 194 searched the register and found the 413 '09-07' hits are TIMESTAMPS). The inclusion decision was not made on an outcome.",
+  "REQUIRED_SENSITIVITY_LEG": {
+   "what": "the result is reported WITH and WITHOUT 09-07, always",
+   "the_ruling_fixes_the_PRIMARY_it_does_not_forbid_a_declared_sensitivity_leg": true,
+   "primary": "all six days",
+   "sensitivity": "the five days 09-08..09-12",
+   "AND_THE_TRAP_THIS_CLOSES_IN_ADVANCE": "the five-day leg is UNDERPOWERED RELATIVE TO THE PRIMARY BY CONSTRUCTION -- CONDVALUE projects to z 2.14 at N=5 against 2.2414 and does NOT clear, while at N=6 it projects to 2.34 and does. SO A SIX-DAY PASS BESIDE A FIVE-DAY FAIL IS THE EXPECTED PATTERN AND IS **NOT** EVIDENCE THAT 09-07 CARRIES THE ANSWER. Only a SIGN DIFFERENCE between the two legs is such evidence.",
+   "status_if_the_signs_differ": "THE_09_07_DAY_CHANGES_THE_SIGN",
+   "rule_if_the_signs_differ": "promotion is BLOCKED and it is a finding about 09-07"
+  }
+ },
+ "PRE_REGISTERED_EXPECTATION_ARM_BY_ARM": {
+  "why_arm_by_arm": "a single 'expected inconclusive' hides that the two arms are in completely different positions, and the difference decides what a null means for each",
+  "method": "z from the step-2 two-sided p on the 3-day PRIMARY pool, scaled sqrt(N/3), against Holm's sequential bars",
+  "observed_z_at_3_days": {
+   "CONDVALUE_X_SKEW": 1.6556,
+   "HAZARD_OVER_SKEWED_REF": 1.1663
+  },
+  "holm_bars": {
+   "step_1_smaller_p_needs_z": 2.2414,
+   "step_2_larger_p_needs_z": 1.96
+  },
+  "CONDVALUE_X_SKEW": {
+   "projected_z_at_N6": 2.3414,
+   "expectation": "EXPECTED TO CLEAR -- but by a margin of +0.1000 in z, which is razor thin",
+   "POWER_AT_ITS_OWN_POINT_ESTIMATE": 0.54,
+   "read_that_number": "EVEN THE ARM EXPECTED TO CLEAR IS A COIN FLIP. 54 % power means that if its development effect is exactly the true effect, this test fails to detect it almost half the time."
+  },
+  "HAZARD_OVER_SKEWED_REF": {
+   "projected_z_at_N6": 1.6493,
+   "expectation": "EXPECTED TO FAIL",
+   "margin": -0.3106,
+   "POWER_AT_ITS_OWN_POINT_ESTIMATE": 0.378,
+   "days_it_would_need": 9,
+   "THE_SENTENCE_THAT_CAN_ONLY_BE_WRITTEN_NOW": "HAZARD_OVER_SKEWED_REF IS UNDERPOWERED BY CONSTRUCTION AT N=6. ITS NON-CLEARANCE IS **NOT EVIDENCE OF NO EFFECT** -- IT IS A TEST THAT COULD NOT HAVE FOUND ONE. Reporting HAZARD's failure as a negative result would be a manufactured null.",
+   "how_HAZARD_must_be_reported_if_it_fails": "NOT_TESTED_AT_ADEQUATE_POWER",
+   "and_the_name_it_may_NEVER_carry": "NO_EFFECT",
+   "why_the_status_is_a_bare_token": "a consumer RESOLVES a status field; a sentence in the status slot is read by a human and skipped by a reader. DA 211: my own predicate caught this by strict equality, which is the right strictness for a status."
+  },
+  "DOES_09_07_BELONG_IN_A_sqrt_N_SCALING": {
+   "question_raised_by": "the coordinator, DA 211",
+   "ANSWER": "YES for the ARITHMETIC, NO for the GUARANTEE, and the two must not be conflated.",
+   "for_the_arithmetic": "09-07 is a genuine independent UTC day of market data whose settlement endpoint was never computed, so it contributes a full day of independent information to the estimand and sqrt(6/3) is the right factor.",
+   "for_the_guarantee": "what 09-07 does NOT contribute is the same inferential standing as the other five, because a CORRELATED statistic on the SAME FILLS was seen. That is a validity limit, not an information deficit, and it attaches to the result rather than to the power number.",
+   "the_thing_that_would_have_made_it_an_information_problem": "selection -- if the day had been ruled in on the basis of its outcome. It was not: what was known at the ruling was its STATUS."
+  },
+  "THIS_IS_AN_UPPER_BOUND_ON_POWER": "sqrt-N scaling assumes a CONSISTENT per-day effect. 2026-09-05 CONDVALUE was -4,941.23 c, A SIGN FLIP, so the per-day effect is demonstrably not consistent and TRUE POWER IS LOWER THAN 0.540 AND 0.378."
+ },
+ "THE_MULTIPLICITY_IS_STILL_WRONG": {
+  "what_DE_froze": 2,
+  "what_is_being_enumerated": "BE is enumerating the true candidate count from the build record",
+  "whatever_BE_returns": "the family is TWO ARMS ON A SECOND ATTEMPT AFTER A FAILED SCREEN, and HOLM OVER 2 DOES NOT PRICE THAT",
+  "step_2_verdict": "NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM on both pools",
+  "the_companion_pool_trap": "its p-values 0.0299 and 0.0339 are BELOW 0.05 and BOTH FAIL HOLM, because the smaller must clear 0.025. A reader meeting those numbers will think it nearly passed. It did -- on UNCORRECTED p, which is not the declared test.",
+  "this_is_a_limit_on_interpretation_not_a_correction_applied_silently": true,
+  "if_BE_returns_a_count_greater_than_2": "the correction in force is DE's frozen 2, and the discrepancy is REPORTED as a limit -- changing the correction after the freeze would be changing the test."
+ },
+ "carried_unchanged_from_v1": [
+  "BOTH_COMPARISONS_ARE_REQUIRED (the conjunction, and the refusal on one)",
+  "REPLAY_ASSUMPTION (REFERENCE_FILLS primary; sign reversal BLOCKS promotion)",
+  "THE_COMBINATION_RULE (pooling, weights fixed by the baseline, mixed cases)",
+  "THE_UNIT (the UTC day; cells are not units)",
+  "STOPPING_RULE -- ONE LOOK, no interim analysis, NO EXTENSION. An inconclusive result EXHAUSTS these arms.",
+  "what_a_pass_does_NOT_establish"
+ ],
+ "THE_STOPPING_RULE_IS_UNCHANGED_AND_NOW_BINDS_HARDER": "N=6 is the USER's ruling and it is the last N. An inconclusive result at six days does NOT license a seventh, eighth or ninth -- and HAZARD needing nine is recorded ABOVE, before the data, precisely so that its predictable failure cannot later be used to argue for them."
+}
