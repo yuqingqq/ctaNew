@@ -658,3 +658,45 @@ the catch-up range, where the closed-artifact rule does apply — all four carry
 `day_closed_calendar=True` and are skipped. Only *today's* closed day is
 unconditionally re-verdicted. The distinction is the whole reason this note
 exists.
+
+
+## Every declaration lands on BOTH paths, in the same round (DA 256)
+
+`origin/mm-research` is the authority path; **`origin/de-freeze-chain-v2` is the
+branch the chains actually run from** (`wt-deval`). DE 296's ruled-inputs cell
+resolves `da_population_freeze_v5.json` **by path and sha** — no tree-dependence,
+which is the right design — so a declaration that exists only on the authority
+path makes the cell report **ABSENT and assert nothing**.
+
+**So: land on both, in the same round, or the chain cannot see it.**
+
+```
+# from a worktree cut at the chain branch, DECLARATIONS ONLY -- never code
+git worktree add -q --detach $W origin/de-freeze-chain-v2
+cd $W && git checkout -q -b da-decls-onto-chain
+git show origin/mm-research:live/pm_research/declarations/<file> \
+  > live/pm_research/declarations/<file>
+git add live/pm_research/declarations/
+git diff --cached --name-only | grep -vc '^live/pm_research/declarations/'   # MUST be 0
+git commit && git push origin HEAD:de-freeze-chain-v2
+```
+
+**Verify, and verify the right thing:** presence is not enough, because the cell
+keys on **sha**.
+
+```
+git ls-tree --name-only origin/de-freeze-chain-v2 live/pm_research/declarations/
+# and then, per file:
+git show origin/mm-research:.../<f>        | sha256sum
+git show origin/de-freeze-chain-v2:.../<f> | sha256sum   # MUST be identical
+```
+
+**Land the whole supersession chain, not just the head.** Rule 13 keeps
+superseded versions as provenance, and a `supersedes` link that dangles on the
+branch a reader is standing on is not provenance. At DA 256 this was 23 files
+rather than the 2 the head needed — one commit, and the branch became a complete
+authority instead of a pair of orphans.
+
+**Do not run DE's matrix from `wt-deval` to confirm.** That needs a
+`git pull --ff-only` in DE's tree, which is DE's to do. Verify at
+`origin/de-freeze-chain-v2` with `ls-tree` plus the sha comparison, and report.
