@@ -61,6 +61,14 @@ CONSUMED_DIFFER = "REPLAY_ARMS_CONSUMED_DIFFERENT_INPUTS"
 #: inputs. The action key-set digest is a FIELD now, and run_arm refuses
 #: actions that are not the declared population.
 ACTIONS_NOT_DECLARED = "REPLAY_ACTIONS_ARE_NOT_THE_DECLARED_POPULATION"
+#: REVIEW 204, the FIFTH instance and it was inside the fix for the
+#: fourth: the field carried the default `""`, which BOTH arms carry, so
+#: two genuinely different action populations compared EQUAL whenever the
+#: caller forgot to populate it. A guard that works only if someone
+#: remembers is the class this programme keeps paying for. The field now
+#: takes NO safe default -- omission is a TypeError at construction -- and
+#: a value that is not a digest REFUSES rather than comparing.
+UNDECLARED_POPULATION = "REPLAY_ACTION_POPULATION_IS_UNDECLARED"
 DECLARED_NOT_COMPUTED = "REPLAY_DECLARED_SNAPSHOT_IS_NOT_WHAT_WAS_CONSUMED"
 PATH_PINNED = "REPLAY_OUTCOME_PATH_IS_PINNED"
 NO_ARMS = "REPLAY_HAS_FEWER_THAN_TWO_ARMS"
@@ -84,8 +92,10 @@ class ReplayInputs:
     price_path: tuple
     half_spread: float
     #: THE ACTION POPULATION, BY KEY-SET DIGEST. A field, so `consumed()`
-    #: digests it and `compare_arms` compares it with no edit to either.
-    action_keys_sha256: str = ""
+    #: digests it and `compare_arms` compares it with no edit to either --
+    #: and REQUIRED, with NO DEFAULT, so omitting it is a TypeError at
+    #: construction rather than two arms quietly agreeing on "".
+    action_keys_sha256: str
     #: OPTIONAL, and CHECKED against the computed digest when present. A
     #: caller may say which snapshot it believes it is replaying; it may
     #: not decide the answer.
@@ -129,6 +139,17 @@ class ReplayInputs:
             self.consumed(), sort_keys=True, default=str).encode()).hexdigest()
 
     def __post_init__(self) -> None:
+        if (not isinstance(self.action_keys_sha256, str)
+                or len(self.action_keys_sha256) != 64
+                or any(c not in "0123456789abcdef"
+                       for c in self.action_keys_sha256.lower())):
+            raise ReplayRefused(
+                f"REFUSED {UNDECLARED_POPULATION}: "
+                f"action_keys_sha256={self.action_keys_sha256!r} is not a "
+                f"64-hex digest. An empty or sentinel value is one BOTH "
+                f"arms can carry, and two arms that share a placeholder "
+                f"compare as sharing a population they never declared "
+                f"(REVIEW 204).")
         if (self.declared_snapshot_sha256
                 and self.declared_snapshot_sha256 != self.digest()):
             raise ReplayRefused(
@@ -497,6 +518,40 @@ def falsify() -> int:
        "refuses before it replays anything",
        ACTIONS_NOT_DECLARED in swap_msg,
        swap_msg[:64] or "REPLAYED AN UNDECLARED POPULATION")
+    # REVIEW 204's two cells: the guard must not depend on anyone
+    # remembering to populate the field.
+    import dataclasses as _dc2
+    try:
+        ReplayInputs(non_fair_value_params={"max_inventory": 5},
+                     initial_state={"inventory": 0.0, "clock": 0},
+                     price_path=tuple(prices), half_spread=0.01)
+        omitted = ""
+    except TypeError as exc:
+        omitted = f"TypeError: {exc}"
+    except ReplayRefused as exc:
+        omitted = str(exc)
+    ck("i_differing_action_populations_refuse_BY_DEFAULT: OMITTING the "
+       "field is impossible -- construction fails",
+       "action_keys_sha256" in omitted,
+       omitted[:70] or "CONSTRUCTED WITHOUT AN ACTION POPULATION")
+    # EVERY PLACEHOLDER TWO ARMS COULD SHARE, driven -- a clever
+    # unreadable expression here was my first attempt and it tested
+    # nothing legible, which is its own failure in a cell.
+    placeholders, admitted = ("", "none", "0" * 63, "x" * 64), []
+    for ph in placeholders:
+        try:
+            ReplayInputs(non_fair_value_params={"max_inventory": 5},
+                         initial_state={"inventory": 0.0, "clock": 0},
+                         price_path=tuple(prices), half_spread=0.01,
+                         action_keys_sha256=ph)
+            admitted.append(ph)
+        except ReplayRefused as exc:
+            if UNDECLARED_POPULATION not in str(exc):
+                admitted.append(f"{ph!r} refused by the WRONG name")
+    ck("  and every PLACEHOLDER both arms could share REFUSES by name",
+       not admitted,
+       f"{len(placeholders)} placeholders, all refused "
+       f"{UNDECLARED_POPULATION}" if not admitted else str(admitted))
     ck("  while the action digest is covered by the SAME introspection, "
        "not a new list",
        "action_keys_sha256" in ReplayInputs.digested_field_names(),

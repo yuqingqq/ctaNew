@@ -38,6 +38,15 @@ NO_CELL = "MAPPED_CELL_DOES_NOT_EXIST"
 RED_CELL = "MAPPED_CELL_DID_NOT_PASS"
 ENUMERATED = "UNIVERSAL_PROPERTY_ENUMERATED_COVER"
 NO_FALSIFIER = "GATE_MODULE_HAS_NO_FALSIFIER"
+#: REVIEW 204's recorded limitation: `universal` and `coverage` are
+#: AUTHOR-SET, so the narrowness check fires on a label -- relabelling the
+#: genuine universal line `universal: False` made its refusal disappear
+#: while the map still resolved. Not fully removable (some declaration of
+#: what a property quantifies over is unavoidable), so it is MITIGATED the
+#: way REV suggests: a property whose TEXT quantifies over an open set
+#: must be marked universal, checked mechanically against the text.
+MISLABELLED = "QUANTIFIED_PROPERTY_NOT_MARKED_UNIVERSAL"
+QUANTIFIERS = ("every", " any ", "all ", "each ")
 
 #: gate -> module, then one entry per DECLARED property.
 #: `universal` marks a property quantified over an open set ("every other
@@ -136,10 +145,10 @@ MAP = {
             {"property": "EVERY OTHER non-fair-value input is shared",
              "cell": "a NEW field is digested with NO edit to any list",
              "coverage": "derived", "universal": True},
-            {"property": "the action population is an input like any other",
+            {"property": "the action population is a shared input",
              "cell": "two arms on DIFFERENT ACTION POPULATIONS are REFUSED",
              "coverage": "enumerated"},
-            {"property": "each leg keeps its OWN resulting order path",
+            {"property": "both legs keep their own resulting order paths",
              "cell": "while the legs remain FREE to produce different "
                      "order paths", "coverage": "enumerated"},
             {"property": "a pinned outcome path is refused",
@@ -203,6 +212,15 @@ def resolve(mapping=None, tree: Path = HERE) -> dict:
             if not all(cells[h] for h in hits):
                 problems.append(f"{RED_CELL}: {gate} / {prop!r} -> {want!r}")
                 continue
+            text = f" {str(prop).lower()} "
+            if (any(q in text for q in QUANTIFIERS)
+                    and not entry.get("universal")):
+                problems.append(
+                    f"{MISLABELLED}: {gate} / {prop!r} quantifies over an "
+                    f"open set in its own text and is not marked "
+                    f"universal. The label is author-set, so the TEXT is "
+                    f"checked against it (REVIEW 204).")
+                continue
             if entry.get("universal") and entry.get("coverage") != "derived":
                 problems.append(
                     f"{ENUMERATED}: {gate} / {prop!r} is quantified over "
@@ -261,6 +279,17 @@ def falsify() -> int:
        one({"property": "every other input",
             "cell": "a NEW field is digested with NO edit to any list",
             "coverage": "derived", "universal": True}) == "")
+    ck("a property whose TEXT quantifies but is NOT marked universal "
+       "refuses -- the label cannot be quietly downgraded",
+       MISLABELLED in one({"property": "every other non-fair-value input "
+                                       "is shared",
+                           "cell": "a differing initial_state REFUSES",
+                           "coverage": "enumerated", "universal": False}),
+       "relabelling universal:False no longer hides it")
+    ck("  and a property with no quantifier is unaffected",
+       one({"property": "a pinned outcome path is refused",
+            "cell": "a replay that PINS the outcome path is REFUSED",
+            "coverage": "enumerated"}) == "")
     ck("a module with no falsifier refuses rather than covering nothing",
        NO_FALSIFIER in one({"property": "p", "cell": "x",
                             "coverage": "enumerated"},
