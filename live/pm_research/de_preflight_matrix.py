@@ -174,61 +174,67 @@ def day_exclusions(doc: dict) -> dict:
 
 
 def census_identity(day: str, derived=DERIVED) -> dict:
-    """THE CLOSED IDENTITY, against BE 152's per-window census.
+    """THE CLOSED IDENTITY, against BE 154's census contract v2.
 
-        expected = SUM(tape_generations) over the SUPPLIED windows
-        observed = SUM(book_generations) over the same windows
-        tolerance = 0 -- a sum of integers has no rounding to declare
+        book_generations == reference_generations, PER WINDOW, EXACT.
 
-    AND THE COMPOSITION CHECK: a window whose book_generations differ from
-    its tape_generations refuses BY THAT WINDOW'S NAME, so a shift at
+    Tolerance is 0 and that is not a choice: both terms come from the SAME
+    constructor over the SAME tape, so any difference is a defect, not a
+    rounding. A window that differs refuses BY ITS t0, so a shift at
     constant total cannot pass.
 
-    ONE LIMIT, STATED: the contract carries no PER-WINDOW exclusion counts,
-    and the five declared exclusions are DAY-level in today's receipts
-    (/asm/coverage_by_head/<head>/exclusions/). So a per-window inequality
-    is reported with the day's exclusion totals BESIDE it, and a window
-    whose difference an exclusion could explain is still named -- a silent
-    allowance sized to a number nobody published would be the fitted
-    constant this gate exists to avoid.
+    `observed_generations` is a DIAGNOSTIC COLUMN, never a gate: it is the
+    per-window count of generations carrying a tape row, and BE 153 closed
+    the open question by showing the day-level gap against
+    `reference_generations` is exactly the generations with no tape row --
+    zero duplicates. Gating on it would re-litigate a settled difference of
+    population as if it were an error.
+
+    A v1 census -- one without `reference_generations` -- is INPUT_ABSENT,
+    NOT a pass. The consumer must not read a v1 file as a clean v2 result:
+    absence of the term the identity needs is absence of the check.
     """
     compact = day.replace("-", "")
     census = Path(derived) / CENSUS_REL.format(day=compact)
     if not census.is_file():
-        return {"status": f"INPUT_ABSENT:window_census",
+        return {"status": "INPUT_ABSENT:window_census",
                 "expected_path": str(census),
-                "note": "BE 152's stage has not produced it yet; a WAIT, "
-                        "never a refusal"}
+                "note": "BE's stage has not produced it yet; a WAIT"}
     doc = json.loads(census.read_text())
     rows = doc.get("windows") or doc.get("rows") or []
+    version = doc.get("contract_version")
     if not rows:
         return {"status": "WOULD_REFUSE:WINDOW_CENSUS_HAS_NO_ROWS"}
-    tape = sum(int(r.get("tape_generations") or 0) for r in rows)
+    if version != 2 or any("reference_generations" not in r for r in rows):
+        return {"status": "INPUT_ABSENT:window_census_v2",
+                "contract_version": version,
+                "why": "a v1 census carries no reference_generations, so "
+                       "the identity has no left-hand side. Absence of the "
+                       "term is absence of the check, never a pass."}
+    ref = sum(int(r["reference_generations"]) for r in rows)
     book = sum(int(r.get("book_generations") or 0) for r in rows)
+    obs = sum(int(r.get("observed_generations") or 0) for r in rows)
     mismatched = [r for r in rows
-                  if int(r.get("tape_generations") or 0)
+                  if int(r["reference_generations"])
                   != int(r.get("book_generations") or 0)]
-    receipt = (Path(derived) /
-               f"be_daybook_receipt_{compact}_btc__L250ms__FWD1.json")
-    excl = (day_exclusions(json.loads(receipt.read_text()))
-            if receipt.is_file() else {})
-    out = {"identity": "expected = SUM(tape_generations) over supplied "
-                       "windows; tolerance 0 (integers)",
-           "n_windows": len(rows), "expected": tape, "observed": book,
-           "difference": book - tape, "tolerance": CENSUS_ROUNDING,
-           "declared_exclusions_day_level": excl,
-           "exclusions_are_counted_at":
-               "/asm/coverage_by_head/<head>/exclusions/ in the book receipt",
-           "per_window_exclusions_in_the_contract": False}
+    out = {"contract_version": version, "n_windows": len(rows),
+           "identity": "book_generations == reference_generations per "
+                       "window, EXACT (same constructor, same tape)",
+           "reference_generations_total": ref,
+           "book_generations_total": book,
+           "difference": book - ref, "tolerance": 0,
+           "observed_generations_total_DIAGNOSTIC": obs,
+           "observed_is_a_diagnostic_not_a_gate": True,
+           "generations_with_no_tape_row_DIAGNOSTIC": ref - obs,
+           "BE_153": "the day-level reference/observed gap is exactly the "
+                     "generations with no tape row; zero duplicates"}
     if mismatched:
-        names = [str(r.get("t0")) for r in mismatched[:6]]
         return {**out,
                 "status": "WOULD_REFUSE:BOOK_WINDOW_COMPOSITION_DIFFERS_"
-                          "FROM_THE_TAPE",
+                          "FROM_THE_REFERENCE",
                 "n_mismatched_windows": len(mismatched),
-                "first_mismatched_window_t0": names}
-    if book != tape:
-        return {**out, "status": "WOULD_REFUSE:WINDOW_CENSUS_TOTALS_DIFFER"}
+                "first_mismatched_window_t0":
+                    [str(r.get("t0")) for r in mismatched[:6]]}
     return {**out, "status": "PASS"}
 
 
@@ -607,32 +613,57 @@ def falsify() -> int:
     with _tf.TemporaryDirectory() as td:
         d = Path(td)
         compact = "20260909"
-        rows = [{"t0": 1788900000 + i * 300, "tape_generations": 1200,
-                 "book_generations": 1200, "gap_seconds": 0.0}
-                for i in range(288)]
+        rows = [{"t0": 1788900000 + i * 300, "reference_generations": 1200,
+                 "observed_generations": 1150, "book_generations": 1200,
+                 "gap_seconds": 0.0} for i in range(288)]
         cpath = d / f"be_book_window_census_{compact}.json"
-        cpath.write_text(json.dumps({"windows": rows}))
+        cpath.write_text(json.dumps({"contract_version": 2,
+                                     "windows": rows}))
         r = census_identity("2026-09-09", d)
         ck("census identity PASSES when every window matches",
-           r["status"] == "PASS" and r["expected"] == r["observed"] == 345600)
+           r["status"] == "PASS"
+           and r["reference_generations_total"]
+           == r["book_generations_total"] == 345600)
         ck("  and the tolerance is 0 -- a sum of integers has no rounding",
            r["tolerance"] == 0)
         bad = [dict(x) for x in rows]
         bad[7]["book_generations"] = int(1200 * 0.8)
-        cpath.write_text(json.dumps({"windows": bad}))
+        cpath.write_text(json.dumps({"contract_version": 2, "windows": bad}))
         r2 = census_identity("2026-09-09", d)
         ck("20% of ONE window removed -> REFUSES by that window's name",
            r2["status"] == "WOULD_REFUSE:BOOK_WINDOW_COMPOSITION_DIFFERS_"
-                           "FROM_THE_TAPE"
+                           "FROM_THE_REFERENCE"
            and r2["first_mismatched_window_t0"] == [str(rows[7]["t0"])])
         shift = [dict(x) for x in rows]
         shift[3]["book_generations"] = 1100
         shift[4]["book_generations"] = 1300
-        cpath.write_text(json.dumps({"windows": shift}))
+        cpath.write_text(json.dumps({"contract_version": 2,
+                                     "windows": shift}))
         r3 = census_identity("2026-09-09", d)
         ck("a SHIFT at constant total still refuses (the band could not)",
            r3["status"].startswith("WOULD_REFUSE")
-           and r3["expected"] == r3["observed"])
+           and r3["reference_generations_total"]
+           == r3["book_generations_total"])
+        # ONE window's REFERENCE count altered by 1 must refuse by name
+        off = [dict(x) for x in rows]
+        off[11]["reference_generations"] = 1201
+        cpath.write_text(json.dumps({"contract_version": 2, "windows": off}))
+        r4 = census_identity("2026-09-09", d)
+        ck("ONE window's reference count off by 1 -> REFUSES by that window",
+           r4["status"].startswith("WOULD_REFUSE")
+           and r4["first_mismatched_window_t0"] == [str(rows[11]["t0"])])
+        # a v1 census is ABSENT, not a pass
+        v1 = [{k: v for k, v in x.items() if k != "reference_generations"}
+              for x in rows]
+        cpath.write_text(json.dumps({"windows": v1}))
+        ck("a v1 census is INPUT_ABSENT, never a pass",
+           census_identity("2026-09-09", d)["status"]
+           == "INPUT_ABSENT:window_census_v2")
+        # observed_generations must NOT gate
+        dia = [dict(x, observed_generations=0) for x in rows]
+        cpath.write_text(json.dumps({"contract_version": 2, "windows": dia}))
+        ck("observed_generations is a DIAGNOSTIC -- zero of them still PASSES",
+           census_identity("2026-09-09", d)["status"] == "PASS")
         cpath.unlink()
         ck("an absent census is INPUT_ABSENT (wait), never a refusal",
            census_identity("2026-09-09", d)["status"]
