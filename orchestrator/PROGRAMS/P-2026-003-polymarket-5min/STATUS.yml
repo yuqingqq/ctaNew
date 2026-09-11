@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T23:26:21Z (MEM ROUND 399 -- I RAN THE DECIDING EXPERIMENT INSTEAD OF DEFENDING MY CLAIM. At the
+  SAME head I measured at 398, f31dff0, but in a worktree CUT AT IT -- the ledger's own
+  declared method -- the result is IDENTICAL: 5 of 6, gate 4 CELLS_GREEN_BUT_PROPERTY_
+  UNCOVERED at 1 of 7, gates 5 and 6 SATISFIED with their probes throwing IndexError. So
+  the caveat I filed at 398 is REFUTED BY EXPERIMENT: it was a correct measurement of
+  f31dff0, not an artefact of wt-de2. AND AT THE CURRENT HEAD db0f284 IT IS 6 OF 6 WITH
+  EVERY GATE PROBED -- 7/7, 9/9, 7/7, 7/7, 6/6, 11/11, no IndexError anywhere. SO THE
+  DISAGREEMENT RESOLVES AS *WHEN*, NOT *WHAT*, and I DO NOT SETTLE IT: REV is adjudicating
+  and the state files carry neither version as settled. I contribute an experiment that
+  separates what from when, and I say nothing about R-926's head because I did not measure
+  it. THE WORSE HALF STANDS WHATEVER REV RULES: at 398 I READ the worktree-cut-at-the-ref
+  clause, QUOTED it in a flag, and ran from wt-de2 anyway -- recording the correct method
+  in the same round I departed from it, which a reader cannot catch because the flag and
+  the method agree on the page. DAY FOUR: CONDVALUE +1741.2562020000187 p 0.802, HAZARD
+  -6575.4878589999935 p 0.433 -- HAZARD's SECOND non-positive day, so its cap MOVES 0.125
+  -> 0.453125, the first cap movement since the verdict was fixed. NOTHING about the
+  verdict moved. The step-6 freeze computes NOT EFFECTIVE on two ECONOMIC-ONLY gaps, and
+  the two predicates now read False and False -- build barrier down, no score is evidence.
+  Tip 707cd3f.)
   2026-09-11T20:08:15Z (MEM ROUND 398 -- I RAN THE LEDGER INSTEAD OF READING THE REPORT, AND THE FAILING GATE
   IS 4, NOT 6. Measured twice from wt-de2 against origin/de-freeze-chain-v2 at head
   f31dff0, identical: gates_satisfied 5 of 6 -- the COUNT matches -- but the gate that
@@ -105,6 +124,7 @@ updated: >-
   opened at 383 and extended at 385: what I could only record as a hazard now fires. And
   the 204 is 102 plus 102, a sum over two refs that share the history; the per-ref figures
   are 206 / 102 / 102 at 19:14Z. Tip 3a34a38.)
+previous_updates: >-
   2026-09-11T18:48:18Z (MEM ROUND 396 -- THE 69 STATED PRECISELY, AND THE HUNT FOUND NO FILE TO NAME.
   THE FORM TO QUOTE: lane 2's minimum attainable p times 69 is 0.134765625, which ALSO
   exceeds 0.05, so NEITHER DESIGN SURVIVES A 69-FOLD SCREEN. What lane 2 buys is that THE
@@ -125,7 +145,6 @@ updated: >-
   resolved the call graph mechanically. Same conclusions, no shared step. DE 358 takes
   the forked 09-07 chain as work, with a total chain, an explicit book_lineage and a cell
   that refuses SUPERSESSION_CHAIN_FORKED. Tip d165fa9.)
-previous_updates: >-
   2026-09-11T18:44:43Z (MEM ROUND 395 -- 09-07 HAS TWO GUARD-CARRYING RECORDS OF DIFFERENT BOOKS, AND DAY
   THREE IS POSITIVE ON BOTH ARMS WITHOUT CHANGING ANYTHING. The dispatch names 09-07 v2;
   a v3 exists 76 s later, and they are not versions of one thing -- v2 is the FREEZE-BUILT
@@ -566,6 +585,14 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r399_THE_DECIDING_EXPERIMENT_my_398_reading_was_NOT_an_environment_artefact: "I ran the ledger at the SAME head I measured at round 398, f31dff0, but this time in a worktree CUT AT THAT HEAD -- the method the ledger's own declaration states. The result is IDENTICAL to what I reported: gates_satisfied 5 of 6, gate 4 CELLS_GREEN_BUT_PROPERTY_UNCOVERED at 1 of 7, gates 5 and 6 SATISFIED with properties NOT PROBED and the reason 'IndexError: list index out of range'. So the caveat I filed at 398 -- that the IndexError might be an artefact of running from wt-de2 -- is REFUTED BY EXPERIMENT. It was a correct measurement of f31dff0."
+  r399_AND_AT_THE_CURRENT_HEAD_IT_IS_SIX_OF_SIX_WITH_EVERY_GATE_PROBED: "Same instrument, same method, current head db0f284: gates_satisfied 6 of 6, and EVERY gate probed True -- gate 1 7/7, gate 2 9/9, gate 3 7/7, gate 4 7/7, gate 5 6/6, gate 6 11/11. No IndexError anywhere. At f31dff0 gates 1 and 2 were explicitly NOT probed by design and 5 and 6 crashed; at db0f284 all four are probed and pass. That is a substantial change between the heads, consistent with the introspection fix the register describes as in flight."
+  r399_SO_THE_DISAGREEMENT_RESOLVES_AS_WHEN_NOT_WHAT_and_I_DO_NOT_SETTLE_IT: "Two measurements, two heads, both reproducible: f31dff0 gives 5 of 6 with gate 4 uncovered, db0f284 gives 6 of 6 with everything probed. So my round-398 claim and REVIEW 202/206 need not disagree about the CODE at all -- they may be describing different heads three hours apart. I record that as the shape of the disagreement and NOT as its resolution: REV is adjudicating at the code and the state files carry neither version as settled until REV rules. What I contribute is an experiment that separates what from when, not an opinion. I have NOT measured the head R-926 describes, so I say nothing about whether gate 6 alone failed there."
+  r399_I_VIOLATED_A_METHOD_I_HAD_QUOTED_IN_THE_SAME_ROUND: "This one stands whatever REV rules, and it is the worse half. The ledger's THE_INSTRUMENT block says behaviour is measured by the gate's own falsifier DRIVEN IN A WORKTREE CUT AT THAT REF. At round 398 I READ that block, QUOTED it in a flag, and then ran the instrument from wt-de2 anyway -- and only noticed while writing the caveat. The measurement happened to be right; the discipline was not. Recording the correct method in the same round in which I depart from it is a failure a reader cannot catch, because the flag and the method agree on the page."
+  r399_HAZARDs_CAP_MOVED_FOR_THE_FIRST_TIME_SINCE_THE_VERDICT_WAS_FIXED: "Day four, 2026-09-10: HAZARD_OVER_SKEWED_REF D -6575.4878589999935 with p 0.43313373253493015 -- its SECOND non-positive day, joining 09-08. Its futility cap therefore moves from 0.125 to 0.453125, and I recomputed both: one non-positive caps at 6 of 7 giving 2*8/128 = 0.125, two caps at 5 of 7 giving 2*29/128 = 0.453125. Both arms now sit at 0.453125. Stated because a reader watching per-day results will see a cap change and may wonder whether something about the verdict moved. NOTHING DID -- the verdict was fixed at day two; what moved is the best attainable had the test still been running, and it moved in the direction that makes futility stronger."
+  r399_DAY_FOUR_BOTH_ARMS_FROM_THE_CELLS: "CONDVALUE_X_SKEW D +1741.2562020000187, p 0.8023952095808383, 26,066 cancels; HAZARD_OVER_SKEWED_REF D -6575.4878589999935, p 0.43313373253493015, 25,051 cancels. Both admitted_by DESCENDANT. Both FUTILE, G_so_far 4, STOP_ADVICE STOP_FOR_FUTILITY. Three records exist for 09-10 -- v1, v2 and v3 -- and I read the futility from v3, the newest."
+  r399_THE_STEP_6_FREEZE_EXISTS_AND_COMPUTES_NOT_EFFECTIVE: "da_step6_full_pipeline_freeze_v1.json is on the chain ref and in wt-de2, and ABSENT from the shared tree -- the non-executing condition again. freeze_is_effective computes FALSE, and it names why: chain_link_not_implemented:pnl, because the last link of section 7's chain has no implementation and nothing computes P&L; and fee_rule, because no fee appears anywhere in the frozen chain, so a P&L computed from it would be gross. market_facts records maker_fee_rule None with status MAKER_FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_ARTIFACTS and established.maker_fee_rule False. Both remaining gaps are ECONOMIC-ONLY; the predictive half is not blocked by either."
+  r399_THE_TWO_PREDICATES_ARE_DOING_EXACTLY_WHAT_THEY_WERE_SEPARATED_FOR: "At the current head the live ledger returns no_labelled_score_permitted FALSE -- the section 5 build barrier is down at 6 of 6 -- and score_is_evidence_permitted FALSE, because section 11's step-6 full-pipeline freeze exists and computes NOT EFFECTIVE. That is the precise case the declaration split them for: one boolean reading as blanket permission is how a build gate becomes a licence, and here the build gates are green while no score is evidence. The distinction stopped being theoretical the moment the sixth gate went green."
   r398_I_RAN_THE_LEDGER_AND_THE_FAILING_GATE_IS_4_NOT_6: "Measured twice from wt-de2 against origin/de-freeze-chain-v2 at head f31dff0, at 20:06Z and 20:07Z, identical both times. gates_satisfied 5 of 6 -- the COUNT matches the dispatch. The IDENTITY does not: the gate that fails is GATE 4, status CELLS_GREEN_BUT_PROPERTY_UNCOVERED with 1 of 7 properties true and six not-true (one_row_per_decision_not_per_quote, key_is_four_part, same_value_both_sides, duplicate_key_refuses, claimed_path_flag_checked, off_population_row_is_a_status). GATE 6 reads SATISFIED. Filed as measured, with the ref and head and time, not as a contradiction of the entry: the refs move fast and R-926 may describe a different head, or gate 6's introspection fix may have landed between."
   r398_AND_TWO_GATES_READ_SATISFIED_WITH_THEIR_PROPERTY_PROBE_CRASHED: "Gate 5 and gate 6 both carry properties.probed false with reason 'IndexError: list index out of range' -- the probe threw and the exception text is recorded -- and BOTH read status SATISFIED. That is CELLS_PASSING_IS_NOT_PROPERTIES_COVERED in its sharpest form: not merely cells green while properties go unmeasured, but a gate reading SATISFIED while the instrument that would measure its properties raised. The recording is honest -- it says probed false and gives the exception rather than reporting coverage -- and the status did not consume that fact. IMPORTANT CAVEAT I state rather than hide: I ran from wt-de2, and the ledger's own declared method is to drive in a worktree CUT AT THE REF, so the IndexError may be an artefact of my invocation environment. That is the next thing to check and I have not checked it."
   r398_NO_LABELLED_SCORE_IS_READABLE_AND_I_VERIFIED_BOTH_MECHANISMS: "Two independent mechanisms, both checked. BY CONSTRUCTION: score_actions(actions, identity_at, challenger_at, outcomes, *, eps=EPSILON) takes outcomes as the FOURTH POSITIONAL parameter with NO DEFAULT, so no caller can score without supplying one, and its docstring says it outright -- 'Nothing here loads an outcome: step 6 owns that, and this file must be landable before any labelled score exists.' BY PREDICATE: the live ledger returns no_labelled_score_permitted True and score_is_evidence_permitted False, and the declaration keeps them as TWO predicates, because clearing the build gates lowers the section 5 barrier while section 11's sentence stays binding -- one boolean reading as blanket permission is how a build gate becomes a licence."
@@ -28394,6 +28421,38 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r399_THE_DECIDING_EXPERIMENT_my_398_reading_was_NOT_an_environment_artefact:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_value_ledger.py
+    said: "git worktree add --detach at f31dff0 into the scratchpad and ran da_fair_value_ledger.py there; every gate row and the totals match my round-398 output line for line."
+  r399_AND_AT_THE_CURRENT_HEAD_IT_IS_SIX_OF_SIX_WITH_EVERY_GATE_PROBED:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_value_ledger.py
+    said: "git worktree add --detach at origin/de-freeze-chain-v2 (db0f284) and ran the same entry point: 6 of 6 with probed True on every row and the per-gate property counts above."
+  r399_SO_THE_DISAGREEMENT_RESOLVES_AS_WHEN_NOT_WHAT_and_I_DO_NOT_SETTLE_IT:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_value_ledger.py
+    said: "the two worktree runs above, at f31dff0 and db0f284, each reproducible from the commit id; R-926 was written before f31dff0 existed and I did not cut a worktree at its head."
+  r399_I_VIOLATED_A_METHOD_I_HAD_QUOTED_IN_THE_SAME_ROUND:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/declarations/da_fair_value_progress_ledger_v5.json
+    said: "my round-398 flag r398_THE_LEDGER_STATES_WHAT_IT_DOES_NOT_CLAIM quotes THE_INSTRUMENT's three-measurement method including the worktree-cut-at-the-ref clause; the run I reported was from /home/yuqing/ctaNew-wt-de2."
+  r399_HAZARDs_CAP_MOVED_FOR_THE_FIRST_TIME_SINCE_THE_VERDICT_WAS_FIXED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260910_v3.json
+    said: "read both 09-10 cells and the v3 day record's futility blocks: HAZARD n_negative 2 with negative_or_zero_days ['2026-09-08','2026-09-10'] and best_attainable_p 0.453125; recomputed both caps with math.comb."
+  r399_DAY_FOUR_BOTH_ARMS_FROM_THE_CELLS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260910_v3.json
+    said: "loaded both 09-10 result cells for D, p, cancels and admitted_by, and the v3 record for the futility blocks, the tally and the stop advice."
+  r399_THE_STEP_6_FREEZE_EXISTS_AND_COMPUTES_NOT_EFFECTIVE:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/declarations/da_step6_full_pipeline_freeze_v1.json
+    said: "read freeze_is_effective, the two why_not_effective entries with their sections and satisfied flags, WHAT_freeze_is_effective_MEANS, and the market_facts block from the declaration at the chain ref."
+  r399_THE_TWO_PREDICATES_ARE_DOING_EXACTLY_WHAT_THEY_WERE_SEPARATED_FOR:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_value_ledger.py
+    said: "the db0f284 worktree run returned both booleans; the step-6 freeze's freeze_is_effective False is the reason the second one stays False with the first now False too."
   r398_I_RAN_THE_LEDGER_AND_THE_FAILING_GATE_IS_4_NOT_6:
     prov: CHECKED
     artifact: git:origin/de-freeze-chain-v2:live/pm_research/declarations/da_fair_value_progress_ledger_v5.json
