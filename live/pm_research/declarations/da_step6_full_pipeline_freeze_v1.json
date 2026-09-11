@@ -27,95 +27,18 @@
    "line_recorded": true
   },
   {
-   "requirement": "initial_inventory",
-   "section": "\u00a77",
-   "satisfied": false,
-   "why": "inventory enters replay only as a caller-supplied `initial_state`; no frozen starting value exists to replay from",
-   "line_recorded": true
-  },
-  {
-   "requirement": "latency:placement_latency_ms_not_bound_in_any_frozen_chain_file",
-   "section": "\u00a77",
-   "satisfied": false,
-   "why": "placement_latency_ms = 250 is declared here but is not BOUND in any file the freeze covers; it lives in the cancellation lane's daybook builder and appears in this lane only as the string 'L250ms' in a receipt filename",
-   "line_recorded": true
-  },
-  {
-   "requirement": "quote_mapping_property:DOWN_uses_1_minus_p",
-   "section": "\u00a77",
-   "satisfied": false,
-   "why": "quote_from takes no side or outcome, so there is no DOWN quote to map",
-   "line_recorded": true
-  },
-  {
-   "requirement": "quote_mapping_property:ask_rounds_UP_to_the_legal_tick",
-   "section": "\u00a77",
-   "satisfied": false,
-   "why": "ask uses symmetric round(x, 12), not an upward round to a legal tick",
-   "line_recorded": true
-  },
-  {
-   "requirement": "quote_mapping_property:bid_rounds_DOWN_to_the_legal_tick",
-   "section": "\u00a77",
-   "satisfied": false,
-   "why": "bid uses symmetric round(x, 12), not a downward round to a legal tick",
-   "line_recorded": true
-  },
-  {
-   "requirement": "quote_mapping_property:crossing_quote_emits_PLACE_WITHHELD_MARKETABLE_CROSS",
-   "section": "\u00a77",
-   "satisfied": false,
-   "why": "MARKETABLE_CROSS appears in ZERO .py files in the lane; the event \u00a77 requires does not exist to be emitted",
-   "line_recorded": true
-  },
-  {
-   "requirement": "quote_mapping_property:never_silently_clamped",
-   "section": "\u00a77",
-   "satisfied": false,
-   "why": "with no withhold path there is nothing to prefer over clamping",
-   "line_recorded": true
-  },
-  {
-   "requirement": "quote_mapping_property:no_zero_latency_privilege_for_candidate_induced_change",
-   "section": "\u00a77",
-   "satisfied": false,
-   "why": "the seam carries no latency at all, so it cannot deny a privilege it never models",
-   "line_recorded": true
-  },
-  {
-   "requirement": "quote_mapping_property:prices_bounded_to_the_legal_binary_range",
-   "section": "\u00a77",
-   "satisfied": false,
-   "why": "unbounded: at p=0.999 the ask is 1.009 and at p=0.001 the bid is -0.009, both outside the legal binary range",
-   "line_recorded": true
-  },
-  {
-   "requirement": "quote_parameters",
-   "section": "\u00a77",
-   "satisfied": false,
-   "why": "the seam satisfies 1 of \u00a77's 8 quote-mapping clauses; see `fields.quote_parameters` for the seven driven failures",
-   "line_recorded": true
-  },
-  {
    "requirement": "source_manifests",
    "section": "\u00a77",
    "satisfied": false,
    "why": "no manifest enumerates the immutable inputs, so the frozen chain begins at a link nothing identifies",
-   "line_recorded": true
-  },
-  {
-   "requirement": "tick_rounding",
-   "section": "\u00a77",
-   "satisfied": false,
-   "why": "no fair-value module declares a legal tick, so 'rounds to the tick' has no tick to round to",
    "line_recorded": true
   }
  ],
  "WHAT_freeze_is_effective_MEANS": "TRUE only when every \u00a77 field resolves and every chain link has an implementation. It is FALSE here. The declaration exists so that \u00a711 step 6 has an artifact and so that what is missing is written down at a ref rather than carried in conversation; it does not assert that the pipeline is frozen.",
  "executing_refs": {
   "heads": {
-   "origin/de-freeze-chain-v2": "8882434f9edcb2b5e346d7f90f05cf8fc6bc0213",
-   "origin/be-build-runner": "8882434f9edcb2b5e346d7f90f05cf8fc6bc0213"
+   "origin/de-freeze-chain-v2": "486eb1fcd4f0ceca413ba640a7f20914213a9b8b",
+   "origin/be-build-runner": "486eb1fcd4f0ceca413ba640a7f20914213a9b8b"
   },
   "heads_equal": true,
   "commits_each_has_that_the_other_does_not": {
@@ -127,8 +50,32 @@
   "modules_that_differ": [],
   "the_rule": "a gate is satisfied by the BLOB on both refs, not by the heads matching; two shas with identical modules blocks nothing"
  },
+ "market_facts": {
+  "present": true,
+  "path": "live/pm_research/declarations/da_market_facts_v1.json",
+  "sha256": "6f17d9956ddb7d431fdf433cd6209f6caa3d92313b0a30db981787235a95d34d",
+  "established": {
+   "legal_tick": true,
+   "maker_fee_rule": false,
+   "initial_inventory": true
+  },
+  "unestablished": [
+   "maker_fee_rule"
+  ],
+  "legal_tick": 0.01,
+  "legal_tick_caveat": "every market record declares 0.01, uniformly across all coins and both months. The BOOK does not match it exactly: 342 of 4171076 resting levels (0.0082%) sit at 0.001 granularity, in 8 of 24 sampled windows -- and those windows declare 0.01 too. So the tick is the right ROUNDING grid and is NOT a guarantee that no finer price rests on the book.",
+  "initial_inventory": 0.0,
+  "maker_fee_rule": null,
+  "maker_fee_status": "MAKER_FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_ARTIFACTS",
+  "maker_fee_why_not": [
+   "markets.jsonl carries NO fee field -- the market artifact does not state a fee at all",
+   "rewards_registry.jsonl is collected as a COUNT (recv_ns, n) and carries no fee rule, so the registry cannot supply one either",
+   "the on-chain audit measures what the chain RECORDS, and its own `role` says REPORTED, NOT ENFORCED -- it promotes nothing and clears no gate. A measurement of charges is not a market or account rule",
+   "and the measurement is NOT uniformly zero: 10 of 1056 maker legs WERE charged, all at price 0.99, so 'maker fills are free' is false as stated even as a description"
+  ]
+ },
  "declared_at_ref": "origin/de-freeze-chain-v2",
- "ref_head": "8882434f9edcb2b5e346d7f90f05cf8fc6bc0213",
+ "ref_head": "486eb1fcd4f0ceca413ba640a7f20914213a9b8b",
  "chain_in_order": [
   {
    "link": "immutable_inputs",
@@ -188,7 +135,7 @@
    ],
    "sha256": {
     "live/pm_research/de_fair_price_wrapper.py": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0",
-    "live/pm_research/de_fair_value_policy_seam.py": "2d12ce30c58f4a207dfbfacb3fc897112fc07edfd7798aecae1b917215456e0c"
+    "live/pm_research/de_fair_value_policy_seam.py": "36944198cd925bea4c33948683f9f2f373b87ebc553436a6d5b78f80021421c7"
    },
    "implemented": true
   },
@@ -208,7 +155,7 @@
     "live/pm_research/de_fair_value_policy_seam.py"
    ],
    "sha256": {
-    "live/pm_research/de_fair_value_policy_seam.py": "2d12ce30c58f4a207dfbfacb3fc897112fc07edfd7798aecae1b917215456e0c"
+    "live/pm_research/de_fair_value_policy_seam.py": "36944198cd925bea4c33948683f9f2f373b87ebc553436a6d5b78f80021421c7"
    },
    "implemented": true
   },
@@ -218,7 +165,7 @@
     "live/pm_research/de_fair_value_replay_seam.py"
    ],
    "sha256": {
-    "live/pm_research/de_fair_value_replay_seam.py": "bda46d20bfc856b62a9039f5f912f17f703aeaf7e423e808d77a627c48bcb5fb"
+    "live/pm_research/de_fair_value_replay_seam.py": "aec3b27d2d92cc3bac8b5aabfe8824a40c8b84a74b47f260e25a2bc746895078"
    },
    "implemented": true
   },
@@ -237,14 +184,14 @@
    "live/pm_research/be_sigma_30m.py": "8d7a2448937e0fd3bc720ba64fa423fde5e615ad9c1f6b77cff2d4ec159a90c7",
    "live/pm_research/da_fair_price_identity.py": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
    "live/pm_research/de_fair_price_wrapper.py": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0",
-   "live/pm_research/de_fair_value_policy_seam.py": "2d12ce30c58f4a207dfbfacb3fc897112fc07edfd7798aecae1b917215456e0c",
-   "live/pm_research/de_fair_value_replay_seam.py": "bda46d20bfc856b62a9039f5f912f17f703aeaf7e423e808d77a627c48bcb5fb"
+   "live/pm_research/de_fair_value_policy_seam.py": "36944198cd925bea4c33948683f9f2f373b87ebc553436a6d5b78f80021421c7",
+   "live/pm_research/de_fair_value_replay_seam.py": "aec3b27d2d92cc3bac8b5aabfe8824a40c8b84a74b47f260e25a2bc746895078"
   },
   "commit_ref": {
    "ref": "origin/de-freeze-chain-v2",
-   "head": "8882434f9edcb2b5e346d7f90f05cf8fc6bc0213",
+   "head": "486eb1fcd4f0ceca413ba640a7f20914213a9b8b",
    "mirror": "origin/be-build-runner",
-   "mirror_head": "8882434f9edcb2b5e346d7f90f05cf8fc6bc0213"
+   "mirror_head": "486eb1fcd4f0ceca413ba640a7f20914213a9b8b"
   },
   "candidate_count": {
    "n": 2,
@@ -254,17 +201,17 @@
     "pm_microprice": {
      "estimator": "pm_microprice",
      "model_version": null,
-     "builder_path": "/tmp/da_step6_fe15gr4n/live/pm_research/da_fair_price_identity.py",
+     "builder_path": "/tmp/da_step6_lbpk3d8x/live/pm_research/da_fair_price_identity.py",
      "builder_sha256": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
-     "wrapper_path": "/tmp/da_step6_fe15gr4n/live/pm_research/de_fair_price_wrapper.py",
+     "wrapper_path": "/tmp/da_step6_lbpk3d8x/live/pm_research/de_fair_price_wrapper.py",
      "wrapper_sha256": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0"
     },
     "bn_bookticker_mid": {
      "estimator": "bn_bookticker_mid",
      "model_version": "s60_probability_v1",
-     "builder_path": "/tmp/da_step6_fe15gr4n/live/pm_research/da_fair_price_identity.py",
+     "builder_path": "/tmp/da_step6_lbpk3d8x/live/pm_research/da_fair_price_identity.py",
      "builder_sha256": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
-     "wrapper_path": "/tmp/da_step6_fe15gr4n/live/pm_research/de_fair_price_wrapper.py",
+     "wrapper_path": "/tmp/da_step6_lbpk3d8x/live/pm_research/de_fair_price_wrapper.py",
      "wrapper_sha256": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0"
     }
    },
@@ -315,8 +262,19 @@
    ]
   },
   "source_manifests": "MISSING",
-  "initial_inventory": "MISSING",
-  "tick_rounding": "MISSING",
+  "initial_inventory": {
+   "value": 0.0,
+   "units": "signed shares of the UP token, per market",
+   "established_by": "live/pm_research/declarations/da_market_facts_v1.json",
+   "sha256": "6f17d9956ddb7d431fdf433cd6209f6caa3d92313b0a30db981787235a95d34d"
+  },
+  "tick_rounding": {
+   "legal_tick": 0.01,
+   "rule": "bid rounds DOWN, ask rounds UP, to the legal tick",
+   "established_by": "live/pm_research/declarations/da_market_facts_v1.json",
+   "sha256": "6f17d9956ddb7d431fdf433cd6209f6caa3d92313b0a30db981787235a95d34d",
+   "CAVEAT": "every market record declares 0.01, uniformly across all coins and both months. The BOOK does not match it exactly: 342 of 4171076 resting levels (0.0082%) sit at 0.001 granularity, in 8 of 24 sampled windows -- and those windows declare 0.01 too. So the tick is the right ROUNDING grid and is NOT a guarantee that no finer price rests on the book."
+  },
   "latency": {
    "placement_latency_ms": 250,
    "applies_to": "every new generation in BOTH legs",
@@ -326,13 +284,77 @@
    "IS_NOT": "a measured live end-to-end latency. The receipt must never describe this parameter as empirical.",
    "no_challenger_receives_an_instantaneous_first_placement": true,
    "required_count_field": "n_fills_removed_before_generation_start_plus_250ms",
-   "bound_in_a_frozen_chain_file": [],
-   "present_in_the_chain": false,
+   "bound_in_a_frozen_chain_file": [
+    "live/pm_research/de_fair_value_policy_seam.py",
+    "live/pm_research/de_fair_value_policy_seam.py"
+   ],
+   "present_in_the_chain": true,
    "harmful_flow_cancellation": "DISABLED",
    "quote_replacement": "ordinary replacement follows one shared, separately declared lifecycle in both legs"
   },
   "fee_rule": "MISSING",
-  "quote_parameters": "MISSING",
+  "fee_rule_finding": {
+   "status": "MAKER_FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_ARTIFACTS",
+   "why_not_established": [
+    "markets.jsonl carries NO fee field -- the market artifact does not state a fee at all",
+    "rewards_registry.jsonl is collected as a COUNT (recv_ns, n) and carries no fee rule, so the registry cannot supply one either",
+    "the on-chain audit measures what the chain RECORDS, and its own `role` says REPORTED, NOT ENFORCED -- it promotes nothing and clears no gate. A measurement of charges is not a market or account rule",
+    "and the measurement is NOT uniformly zero: 10 of 1056 maker legs WERE charged, all at price 0.99, so 'maker fills are free' is false as stated even as a description"
+   ],
+   "established_by": "live/pm_research/declarations/da_market_facts_v1.json",
+   "sha256": "6f17d9956ddb7d431fdf433cd6209f6caa3d92313b0a30db981787235a95d34d"
+  },
+  "quote_parameters": {
+   "driven_against": "live/pm_research/de_fair_value_policy_seam.py",
+   "sha256": "36944198cd925bea4c33948683f9f2f373b87ebc553436a6d5b78f80021421c7",
+   "quote_from_signature": [
+    "value",
+    "slug",
+    "generation_id",
+    "half_spread",
+    "priced_by",
+    "fell_back",
+    "side",
+    "tick",
+    "best_bid",
+    "best_ask",
+    "decision_ms",
+    "latency_ms",
+    "decl_dir"
+   ],
+   "measured": {
+    "UP_0.5237": {
+     "bid": 0.52,
+     "ask": 0.53
+    },
+    "DOWN_p_side": 0.47629999999999995,
+    "ask_at_p_0.999": 1.0,
+    "bid_at_p_0.001": 0.0,
+    "crossing": {
+     "withheld": true,
+     "reason": "MARKETABLE_CROSS"
+    },
+    "latency_ms": 250.0,
+    "effective_minus_decision_ms": 250.0,
+    "tick_read_by_the_seam": 0.01
+   },
+   "properties": {
+    "UP_uses_p": true,
+    "DOWN_uses_1_minus_p": true,
+    "bid_rounds_DOWN_to_the_legal_tick": true,
+    "ask_rounds_UP_to_the_legal_tick": true,
+    "prices_bounded_to_the_legal_binary_range": true,
+    "the_bound_applied_is_RECORDED_not_silent": true,
+    "crossing_quote_emits_PLACE_WITHHELD_MARKETABLE_CROSS": true,
+    "no_zero_latency_privilege_for_candidate_induced_change": true,
+    "the_tick_is_DECLARED_not_invented": true
+   },
+   "n_satisfied": 9,
+   "n_declared": 9,
+   "unsatisfied": [],
+   "THE_TICK_IS_DECLARED_AND_READ": "tick=0.01, read by the seam from DA's landed declaration (`da_market_facts_v1.json`). The seam REFUSES LEGAL_TICK_IS_NOT_DECLARED rather than inventing one, which is why this probe could not run until the tick was established."
+  },
+  "quote_parameters_probe_error": null,
   "null_predicate": {
    "primary_null": "median_g(delta_LL_g) = 0",
    "statistic": "LL_g(estimator) = mean natural-log loss over canonical forecast actions; delta_LL_g(c) = LL_g(Identity) - LL_g(c)",
@@ -405,36 +427,25 @@
   "candidate_count",
   "commit_ref",
   "epsilon",
+  "initial_inventory",
   "latency",
   "null_predicate",
+  "quote_parameters",
   "status_grammar",
-  "success_predicate"
+  "success_predicate",
+  "tick_rounding"
  ],
  "fields_missing": [
   "fee_rule",
-  "initial_inventory",
-  "quote_parameters",
-  "source_manifests",
-  "tick_rounding"
+  "source_manifests"
  ],
  "blocking_gaps": [
   "chain_link_not_implemented:immutable_inputs",
   "chain_link_not_implemented:pnl",
   "fee_rule",
-  "initial_inventory",
-  "latency:placement_latency_ms_not_bound_in_any_frozen_chain_file",
-  "quote_mapping_property:DOWN_uses_1_minus_p",
-  "quote_mapping_property:ask_rounds_UP_to_the_legal_tick",
-  "quote_mapping_property:bid_rounds_DOWN_to_the_legal_tick",
-  "quote_mapping_property:crossing_quote_emits_PLACE_WITHHELD_MARKETABLE_CROSS",
-  "quote_mapping_property:never_silently_clamped",
-  "quote_mapping_property:no_zero_latency_privilege_for_candidate_induced_change",
-  "quote_mapping_property:prices_bounded_to_the_legal_binary_range",
-  "quote_parameters",
-  "source_manifests",
-  "tick_rounding"
+  "source_manifests"
  ],
- "n_blocking_gaps": 15,
+ "n_blocking_gaps": 4,
  "rev203_six_of_six": false,
  "ready_to_land": false,
  "WHY_NOT_LANDED": "DA 278: draft only until REV 203 returns six of six. `ready_to_land` requires BOTH an empty gap list and that return, and this file cannot measure the second, so it defaults False and must be passed in.",
