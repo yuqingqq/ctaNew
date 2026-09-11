@@ -540,7 +540,28 @@ def per_book_guard(book: dict, delta_max_certified: dict, *, k=K_FORWARD,
         ok = m_min > edge
         rows[arm] = {"m_min": m_min, "delta_max_certified": dmc,
                      "K": k, "edge_K_x_delta": edge, "passes": ok,
-                     "n_generations": len(A)}
+                     "n_generations": len(A),
+                     # BE 133, DRIVEN. A certified delta_max of ZERO makes
+                     # `m_min > K * 0` true for every book except one sitting
+                     # EXACTLY at theta -- measured: at K=1000 this guard
+                     # PASSES a book whose m_min is ONE ULP (5.551e-17) from
+                     # theta, and `n_exactly_at_theta` was 0 on all five days
+                     # measured (09-03..09-07, both arms). So the pass is
+                     # arithmetic, not evidence. It is not WRONG -- a zero
+                     # perturbation cannot flip anything -- but the bound was
+                     # measured on ONE day, and a day whose data exercises a
+                     # different path could carry a nonzero delta this guard
+                     # would still wave through. A control that cannot fail
+                     # must never be mistaken for a control that passed
+                     # (rule 16), so it says so in a field rather than in a
+                     # covering note nobody resolves (rule 35).
+                     "binding": dmc > 0,
+                     "WHY_NOT_BINDING": (
+                         None if dmc > 0 else
+                         "the certified delta_max is 0.0, so edge = K x 0 = 0 "
+                         "and every book with any positive margin passes. "
+                         "This pass is ARITHMETIC, not evidence about this "
+                         "day.")}
         if not ok:
             bad.append(arm)
     if bad:
@@ -549,9 +570,17 @@ def per_book_guard(book: dict, delta_max_certified: dict, *, k=K_FORWARD,
             f"within K={k} x the certified delta_max, so a decision here is "
             f"not protected by the consumed-day certification. Details: "
             f"{ {a: rows[a] for a in bad} }")
+    non_binding = sorted(a for a, r in rows.items() if not r["binding"])
     return {"protocol": "BE_PER_BOOK_M_MIN_GUARD_V1",
             "identity": identity_of(book), "per_arm": rows,
-            "K_declared_in_advance": k, "passes": True}
+            "K_declared_in_advance": k, "passes": True,
+            "arms_where_this_guard_is_NOT_BINDING": non_binding,
+            "GUARD_IS_BINDING_ON_EVERY_ARM": not non_binding,
+            "HOW_A_PASS_MUST_BE_SAID": (
+                "a pass on an arm listed in arms_where_this_guard_is_NOT_"
+                "BINDING licenses nothing: it reports that a bound of zero "
+                "cannot be crossed, not that this day was checked against a "
+                "measured perturbation.")}
 
 
 def _q(xs) -> dict:
@@ -809,6 +838,33 @@ def falsify() -> int:                                        # noqa: C901
          refuses(lambda: per_book_guard(book(tight, onear), dmc), GUARD_TOO_CLOSE))
     note("per-book guard REFUSES an absent DELTA_MAX_CERTIFIED",
          refuses(lambda: per_book_guard(book(base, obase), {}), NO_THETA))
+
+    # BE 133: A ZERO CERTIFIED BOUND MAKES THIS GUARD NON-BINDING, AND THE
+    # OUTPUT SAYS SO. The 09-03 certification came back BIT_IDENTICAL -- a
+    # measured delta_max of exactly 0.0 on both arms -- so this is the live
+    # configuration, not a hypothetical. Driven in both directions: the same
+    # one-ulp book that a zero bound waves through is REFUSED by any positive
+    # bound, which is what proves the pass is arithmetic.
+    ulp = math.nextafter(theta, math.inf)
+    oulp = math.nextafter(otheta, math.inf)
+    one_ulp = {("s1", "BUY_UP", 1): ulp, ("s1", "BUY_UP", 2): theta - 1.0}
+    o_one_ulp = {("s1", "BUY_UP", 1): oulp, ("s1", "BUY_UP", 2): otheta - 1.0}
+    gz = per_book_guard(book(one_ulp, o_one_ulp), {a: 0.0 for a in AH}, k=1000)
+    note("a ZERO certified bound PASSES a book one ulp from theta at K=1000",
+         gz["passes"] is True and gz["per_arm"][arm]["m_min"] > 0)
+    note("and the output DECLARES that guard non-binding, per arm and overall",
+         gz["per_arm"][arm]["binding"] is False
+         and gz["GUARD_IS_BINDING_ON_EVERY_ARM"] is False
+         and arm in gz["arms_where_this_guard_is_NOT_BINDING"]
+         and gz["per_arm"][arm]["WHY_NOT_BINDING"] is not None)
+    note("the SAME book is REFUSED by any positive bound -- so the zero pass "
+         "is arithmetic, not evidence",
+         refuses(lambda: per_book_guard(book(one_ulp, o_one_ulp),
+                                        {a: 1e-12 for a in AH}, k=1000),
+                 GUARD_TOO_CLOSE))
+    note("a positive bound is reported as BINDING",
+         per_book_guard(book(base, obase), {a: 1e-12 for a in AH})[
+             "GUARD_IS_BINDING_ON_EVERY_ARM"] is True)
     nan_bounds = dict(dmc)
     nan_bounds[arm] = float("nan")
     note("per-book guard REFUSES a NaN DELTA_MAX_CERTIFIED",
