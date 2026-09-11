@@ -641,3 +641,86 @@ reach).
 * **Land the register row with `--row`**: write the row to a file, then
   `scripts/land_register_row.sh --row <rowfile> '<id>' <msgfile>`; dry-run
   first. Never hand-edit `COORDINATION.md`.
+
+---
+
+## 8. BE 128–132 (2026-09-11, the night the seat died and came back cold)
+
+Five things cost time or nearly cost a result. All five are checkable.
+
+### 8a. THE SCORED POPULATION IS NOT THE REFERENCE POPULATION
+
+Every real book scores about **74 %** of its reference generations. From the
+four 09-03 receipts, both heads, the producers' own numbers:
+
+| book | covered | reference | `GENERATION_NOT_SCORED` |
+|---|---|---|---|
+| EV20 | 232,309 | 313,149 | 80,840 |
+| EV21 | 232,307 | 313,140 | 80,833 |
+| EV22 | 232,307 | 313,140 | 80,833 |
+| NEUTCHK | 232,307 | 313,140 | 80,833 |
+
+`gen_max` enumerates the **covered** set; `n_generations_in_book` returns the
+**reference** set. My comparator compared the two and refused unless they were
+equal, so **it would have refused the certification it was built for**, on the
+first arm, every time. Found from the receipts with no book loaded and no lock
+held, which is the only reason it cost nothing.
+
+**So: before any instrument over a book asserts a count, name which of the two
+populations it is counting.** They differ by 80,833 on a normal day. And a
+shortfall between them is the ASSEMBLY's, recorded by the producer — it is a
+status to report (rule 4), never a refusal and never absorbed.
+
+### 8b. A FIXTURE THAT GIVES THE BOOK FULL COVERAGE CANNOT FIND 8a
+
+All 18 cells built references exactly as long as the scored set — a property
+no real book has. The cell that should have caught it built a 99-wide
+reference against 3 scored generations, asserted a REFUSAL, and **passed**:
+rule 16's fourth instance, a falsifier that enshrines the defect as spec, and
+it was mine. **Every fixture in this seat's suites now carries a PARTIALLY
+scored reference in at least one cell**, because that is the real shape.
+
+### 8c. READ AN EXPECTATION OFF THE FIELD THE INSTRUMENT ACTUALLY ENUMERATES
+
+The EV20/EV21 drive expected the refusal to name **9** — the difference in
+`reference.generations`. The comparator enumerates scored generations, so the
+number is **2** (`n_covered` 232,309 vs 232,307). The drive would have failed a
+correct comparator, and I would have learned it only after loading two 307 MB
+books under the lock. The expectation is now derived from
+`asm.coverage_by_head[head].n_covered` and the refusal's own counts are parsed
+out of its message, so the cell can still disagree with the instrument.
+
+### 8d. DE TAKES THE LOCK THE INSTANT A BUILD RELEASES IT
+
+`p003neut0903` released at 04:04:10Z; `deFV0907b` (the 09-07 valuation, 500
+draws) held it by 04:14Z, and my drive refused with **75** ten times. That is
+the wrapper working, not a failure. Two consequences:
+
+* **Arm the poll in a HARNESS-TRACKED background task, never in a foreground
+  call and never as an intention.** A foreground `--poll` dies with the turn
+  (rule 37); `BE_POLL_CEILING=200 be_heavy_run.sh --poll …` run in the
+  background retries every 60 s and wakes the seat when it takes the lock.
+* **Do the lock-free half first.** Receipts, declarations and instrument
+  repair need no lock; 8a, 8b and 8c were all settled while the box was busy.
+
+### 8e. `wt_refresh.sh` TAKES A REF, AND A STRANDED COMMIT IS STILL RUNNABLE
+
+`wt_refresh.sh <worktree> [ref]` defaults to `origin/mm-research`. When my
+commits were stranded (push refused non-fast-forward, and the shared tree
+dirty with four of DE's files, so rule 21 says LEAVE and REPORT), the run
+still had to execute my bytes: `bash scripts/wt_refresh.sh
+/home/yuqing/ctaNew-wt-be <my local sha>` detaches the worktree at the
+stranded commit and keeps the ledger symlink and the skip-worktree sweep.
+**Never a bare `checkout --detach` (R-625), and never a rebase or pull in the
+shared tree — that stays the coordinator's.**
+
+### 8f. ANOTHER SEAT MAY BE EDITING MY OWN FILE, UNCOMMITTED
+
+Twice in forty minutes `be_score_neutrality.py` carried work in the shared
+tree that I had not written (`write_certification`, `comparison_receipts`, a
+producer digest, `reference_generation_keys`, a NaN guard on the per-book
+bound). A pathspec commit cannot separate it from mine. **So: `git diff` the
+file before committing it, and if it carries someone else's work, LAND IT AND
+SAY SO IN THE MESSAGE** — naming what is not mine and that I have not reviewed
+it. Leaving it uncommitted is worse: R-857 lost four of DA's files exactly
+that way, and an uncommitted edit is recoverable from nothing.
