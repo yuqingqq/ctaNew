@@ -1,0 +1,199 @@
+{
+ "protocol": "P003_DA_FORWARD_TEST_V9",
+ "version": 9,
+ "STATUS": "DAY ONE SUPERSEDED ON TWO GROUNDS; VALUATION PROTOCOL V2 RULED FOR ALL SEVEN DAYS",
+ "declared_by": "DA 226/227/228/229 consolidated",
+ "declared_at_utc": "2026-09-11T06:46:51Z",
+ "supersedes": {
+  "file": "declarations/da_forward_test_declaration_v8.json",
+  "commit": "0afdf8c",
+  "v1_through_v8_are_UNEDITED": true,
+  "note_on_numbering": "THREE dispatches said 'land it in v8'. v8 ALREADY LANDED AND PUSHED (0afdf8c, cited by register row 3c54675), so editing it would break rule 13. THIS FILE IS THE 'v8' ALL THREE DISPATCHES MEAN. What the instruction was protecting is TIMING, not a number -- and the timing property is VERIFIED BELOW: no rebuilt book exists yet.",
+  "scope": "DA 226 rulings + DA 227 tripwire/REV items + DA 228's two reversals. No bar, population, threshold or theta changes."
+ },
+ "RULING_1_VALUATION_PROTOCOL_V2_FOR_ALL_SEVEN_DAYS": {
+  "day_one_is_RE_VALUED": true,
+  "superseded_on_TWO_INDEPENDENT_GROUNDS": [
+   "the era rebuild (BE 133: `fi.ERA` a day-independent literal; 27 of 09-07's 287 windows gap-bearing under the fix)",
+   "the MISSING DECLARED LEG -- V1 computes no NO_FILLS_UNTIL_NEXT_GENERATION, and the guard refuses it by name"
+  ],
+  "either_alone_would_supersede_the_day": true,
+  "what_V2_is_NOT": "a different primary. REFERENCE_FILLS is a pass-through to the identical call V1 makes (v8, DA 225)."
+ },
+ "RULING_2_TWO_PINS_STATED_SEPARATELY": {
+  "BUILD_PIN": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c -- UNCHANGED",
+  "VALUATION_PIN": "da00220",
+  "VERIFIED_BY_ME_NOT_ACCEPTED": {
+   "7ed5a90_is_an_ancestor_of_da00220": true,
+   "build_side_modules_byte_identical_across_the_two": {
+    "be_daybook_build.py": "2d31a80b5ae5c2c6",
+    "be_cancel_axis_null.py": "21f460b1c9d58d37",
+    "be_era_for_day.py": "6b5afd71ad0a54f4",
+    "be_gate1_fragment.py": "d87c820872ec3267",
+    "harmful_stateful_policy.py": "65b9fe29aca85a01",
+    "de_head_scoring.py": "31c368384770351f",
+    "de_phase4_diag_runner.py": "9e2a0977d8dfc3be"
+   },
+   "all_seven_IDENTICAL": true
+  },
+  "WHY_TWO_PINS_IS_NOT_A_PIPELINE_SPLIT": "a split would mean the two halves disagree about the object under test. They do not: every build-side module is BYTE-IDENTICAL at both pins, and the valuation pin is a DESCENDANT of the build pin. V2 changes only what the declaration already required -- it adds the robustness leg and binds the seed. THE BOOK, THE SCORER, THE POLICY AND THE THETAS ARE THE SAME BYTES.",
+  "and_the_8_of_10_cascade_limit_is_UNCHANGED_by_this": "de_head_scoring and de_phase4_diag_runner are identical at both pins, so the pipeline_provenance_limit from v4 carries forward verbatim. Moving the valuation pin does not touch it either way.",
+  "valuation_pin_status": "RULED",
+  "ruled_by": "USER",
+  "freeze_amended_in_band_by": "DE",
+  "reason_on_the_record": "the declaration required the NO_FILLS_UNTIL_NEXT_GENERATION leg since v2 (ee1e85d) and V1 never computed it -- the amendment CLOSES A GAP THE FREEZE ITSELF CONTAINED",
+  "THE_CONDITIONAL_THAT_KEEPS_THIS_RULING_FALSIFIABLE": {
+   "field": "primary_D_must_match_V1_to_the_cent",
+   "result": "PENDING -- DE's falsifier",
+   "why_it_must_match": "REFERENCE_FILLS returns module.replay(book, scores, theta) unchanged -- the same call, same arguments",
+   "the_comparison_must_be_on_the_SAME_BOOK": "the pre-rebuild FWD1 book 0815cad74f53f118, not the era-rebuilt one. V2-on-new-book against V1-on-old-book confounds the protocol with the era fix and tests neither.",
+   "ON_ANY_MOVEMENT": "THE RULING IS VOID AND RETURNS TO THE USER -- a movement cannot have come from the fill model",
+   "on_absence": "REFUSE",
+   "refusal_name": "PROTOCOL_V2_ADOPTED_WITHOUT_ITS_PRIMARY_D_FALSIFIER"
+  },
+  "BRANCHES_CONSIDERED_AND_NOT_TAKEN": {
+   "revert_to_V1_for_all_seven_and_RELAX_the_leg_in_band": {
+    "status": "CONSIDERED AND NOT TAKEN",
+    "THE_ANTI_CONSERVATIVE_NOTE": "this reads as the cautious option -- 'touch nothing frozen' -- and it is the opposite. It WITHDRAWS a declared robustness leg AFTER day one was seen, which weakens the test with data in hand, and it would require deleting RESULT_DOES_NOT_CARRY_THE_DECLARED_ROBUSTNESS_LEG from the guard. Leaving the freeze untouched would have cost more integrity than amending it."
+   },
+   "hold_until_the_fork_is_resolved": {
+    "status": "CONSIDERED AND NOT TAKEN",
+    "cost": "six unbuilt population days wait on a merge question that does not touch the object under test"
+   }
+  },
+  "why_this_was_never_a_seat_decision": "REV 136 \u00a70: da00220 violates the freeze's NO_PARAMETER_OR_MODULE_IS_TUNED_AFTER_THIS_COMMIT=True at the bytes for de_settlement_control_run.py, so adopting V2 is a FREEZE AMENDMENT under rules 12/13. A seat costing the branches is correct; a seat CHOOSING one is not. The USER chose."
+ },
+ "RULING_3_THE_SEED_AND_WHY_THE_V1_NULL_IS_PROVENANCE_NOT_A_COMPARATOR": {
+  "V1_seed": "20260907 -- THE DAY, as an integer, with per-draw rng = Random(seed + i)",
+  "V2_seed": "seed_for(book_sha, arm) = int(sha256(f'{book_sha}|{arm}|P003_GATE1_MULTIDAY')[:8], 16)",
+  "V2_values_at_the_day_one_book": {
+   "CONDVALUE_X_SKEW": 4162987544,
+   "HAZARD_OVER_SKEWED_REF": 2512598222
+  },
+  "SO_THE_RE_VALUED_NULL_IS_A_DIFFERENT_VALID_DRAW_OF_THE_SAME_ESTIMAND": true,
+  "the_V1_null_is_NOT_a_comparator": "comparing the re-valued null to V1's would be comparing two draws, not measuring a change. Only the PRIMARY D is comparable across protocols, and only because it is the same call.",
+  "AND_A_FACT_I_MEASURED_THAT_NOBODY_HAD_STATED": {
+   "BOTH_ARMS_SHARED_V1_SEED_20260907": "verified in both checkpoint HEADERS on disk",
+   "means": "CONDVALUE and HAZARD drew their day-one nulls from the SAME RNG STREAM, Random(20260907 + i). Each arm's own p remains valid -- the null is still a legitimate distribution for that arm -- BUT THE TWO ARMS' NULLS ARE COUPLED, not independent.",
+   "why_it_matters": "anything treating the two arms as independent cells inherits that coupling, which is the same concern `effective_independent_units` exists for. V2 removes it: the seed is ARM-SPECIFIC.",
+   "this_is_a_third_substantive_thing_V2_fixes": "beyond the leg and the book-binding, and it was not in the ruling as sent"
+  }
+ },
+ "RULING_4_DEs_MEASUREMENT_IS_THE_FALSIFIER_OF_RULING_1": {
+  "the_test": "V2's PRIMARY D on 09-07, computed on the SAME book, must equal V1's TO THE CENT",
+  "why_it_must": "REFERENCE_FILLS returns module.replay(book, scores, theta) unchanged -- the same call, same arguments",
+  "if_it_matches": "ruling 1 stands and V2 is adopted for all seven days",
+  "IF_IT_MOVES_AT_ALL": "THE RULING IS VOID AND GOES TO THE USER. A movement cannot have come from the fill model, so it would mean something else in da00220's +1827/-314 changed the primary path -- which is a finding, not a tuning.",
+  "the_comparison_must_be_on_the_SAME_BOOK": "against the pre-rebuild FWD1 book 0815cad74f53f118, not the era-rebuilt one. Comparing V2-on-new-book to V1-on-old-book confounds the protocol with the era fix and tests neither.",
+  "on_absence": "REFUSE",
+  "refusal_name": "PROTOCOL_V2_ADOPTED_WITHOUT_ITS_PRIMARY_D_FALSIFIER"
+ },
+ "THE_RULE_11_TIMELINE_AS_TWO_FIELDS_BECAUSE_ONLY_ONE_HALF_DISCHARGES_IT": {
+  "HALF_THAT_DISCHARGES_RULE_11": {
+   "the_fixs_RULE_predates_the_data": "BE 113 `8df760d` @ 2026-09-09T08:05:57Z",
+   "FWD1_book_built": "2026-09-11T03:33:25Z (43h27m later)",
+   "day_one_valued": "CONDVALUE 04:41:56Z, HAZARD 05:21:21Z (44h36m later)",
+   "so": "the correction's rule AND its direction were fixed long before any forward datum existed; nothing was chosen after seeing"
+  },
+  "HALF_THAT_IS_DISCLOSED_NOT_CLAIMED_AWAY": {
+   "the_KNOWLEDGE_that_the_literal_survived_POSTDATES_day_one": "BE 133 @ 2026-09-11T05:46:46Z",
+   "which_is_AFTER": "~25 minutes after HAZARD was valued, ~65 after CONDVALUE",
+   "stated_plainly": "THE FIX'S RULE PREDATES THE DATA; THE KNOWLEDGE THAT IT HAD NOT TAKEN EFFECT DOES NOT. Only the first discharges rule 11. The second is a post-hoc discovery and is recorded as one."
+  },
+  "what_would_have_made_it_a_rule_11_breach": "choosing WHETHER to rebuild after seeing which way the rebuild moves D -- foreclosed by ruling it before the rebuild runs"
+ },
+ "everything_else_in_v8_v7_stands_verbatim": true,
+ "population_unchanged": "N=7, 09-07..09-13",
+ "RULING_5_THE_PRE_DECLARED_TRIPWIRE_ON_THE_09_07_RE_VALUATION": {
+  "TYPED_BEFORE_THE_REBUILT_BOOK_EXISTS_AND_I_VERIFIED_THAT": "at declaration time the ONLY 09-07 forward book on disk is be_daybook_20260907_btc__L250ms__FWD1.pkl, mtime 2026-09-11T03:33:25Z, digest 0815cad74f53f118 -- the PRE-rebuild book. No rebuilt book exists.",
+  "WHAT_MUST_BE_REPORTED": [
+   "DELTA_D = (V2 on the rebuilt book) minus (day one's D), per arm",
+   "the PER-WINDOW P&L of EVERY excluded gap-bearing window, not a count and not a total"
+  ],
+  "THE_THRESHOLD_TYPED_NOW": "abs(DELTA_D) > 0.25 * abs(D_day_one), evaluated PER ARM",
+  "D_day_one_per_arm_FIXED_HERE_SO_THE_DENOMINATOR_CANNOT_MOVE": {
+   "CONDVALUE_X_SKEW": -11017.712006000005,
+   "HAZARD_OVER_SKEWED_REF": 5256.176844000004,
+   "so_the_bars_are": {
+    "CONDVALUE_X_SKEW": 2754.428001500001,
+    "HAZARD_OVER_SKEWED_REF": 1314.044211000001
+   }
+  },
+  "IF_THE_BAR_IS_CROSSED": "that concentration is a FINDING, NOT A NEW D. The population's gap treatment is the story and it goes to the user; the rebuilt number is not quoted as the day's value.",
+  "REVs_BASIS": "77% of drift measured in the worst 10% of fills (Q-DA-58), so a handful of windows can move D far more than their count suggests",
+  "DIRECTION_IS_NOT_BOUNDED_AND_I_CORRECT_THE_EARLIER_FRAMING": "'survivable with disclosure' assumed the rebuild could only hurt the arm. REV 136: BOTH legs recompute on the same reduced rows, and the masked windows could hold the arm's BEST cancels or its WORST -- SO D CAN MOVE UP. What is bounded is MAGNITUDE, and only because the bar is typed before the book exists.",
+  "A_DISCREPANCY_I_AM_NOT_RESOLVING_BUT_WILL_NOT_LET_PASS": {
+   "DA_227_via_BE_133": "27 of 09-07's 287 windows are GAP-BEARING under the fix",
+   "DA_228_via_REV_136": "12 MASKED windows against 2,016 coin-windows = 0.6% (4.2% if all BTC)",
+   "TWO_NUMBERS_FOR_WHAT_READS_AS_ONE_SET_AND_TWO_DIFFERENT_DENOMINATORS": "27/287 vs 12/2016",
+   "why_it_matters": "the tripwire's per-window report must enumerate a SET, and the set's size is currently stated two ways by two seats. 27 and 12 may be different quantities -- gap-bearing vs actually-masked -- but nothing on record says so. RESOLVE BEFORE THE REBUILD, or the per-window table cannot be checked for completeness.",
+   "I_have_measured_NEITHER": true
+  }
+ },
+ "RULING_6_UNIFORM_SCOPE_DECLARED_BEFORE_THE_REBUILD": {
+  "THE_DOOR_DISCLOSED_VERBATIM": "the era fix's RULE predates day one by 44h36m -- but 'the decision to APPLY it to 09-07 was made after seeing -11,018. That's the door. The defence is UNIFORMITY.'",
+  "SO_UNIFORMITY_IS_DECLARED_NOW_NOT_ARGUED_LATER": {
+   "ALL_SEVEN_POPULATION_DAYS_UNDER_THE_FIX": "09-08..09-13 are built fresh under it; 09-07 is rebuilt under it",
+   "NO_DAY_IS_RE_TOUCHED_SELECTIVELY": true,
+   "CONSUMED_DAYS_09_03_TO_09_06_ARE_NOT_REBUILT": "they are not population, and re-touching them re-touches step-2 evidence"
+  },
+  "THE_CONSEQUENCE_STATED_RATHER_THAN_LEFT_TO_BE_FOUND": "the certification day 09-03 is BUGGY-ERA ON BOTH SIDES. That is still a VALID same-bytes comparison -- both sides ran the same era code -- but its OCCUPANCY IS NOT REPRESENTATIVE of fixed-era forward days. BE 132's occupancy instrument is the bridge, and the certification must not be read as evidence about forward-day occupancy.",
+  "on_absence": "REFUSE",
+  "refusal_name": "ERA_FIX_APPLIED_TO_A_SUBSET_OF_THE_POPULATION"
+ },
+ "RULING_7_DAY_ONES_STANDING_IS_PROBABLY_CLEAN_AND_THAT_IS_A_LIMIT_NOT_A_VERDICT": {
+  "the_limit": "the RUNNER's own digest is not in the day-one artifact -- the recorded `be_module` (21f460b1c9d58d37) is BE's cascade entry point, a DIFFERENT module -- and the runner file was rewritten twice after 04:04Z",
+  "so": "day one's producing code cannot be established FROM the artifact; it is inferred from the computing-module provenance block",
+  "closable_only_by": [
+   "DE adding the runner digest AND its import closure (rule 22) to every future result",
+   "whatever REV can reconstruct for day one specifically"
+  ],
+  "and_this_is_the_same_class_as_the_whole_night": "a field that names something adjacent to what a reader will assume it names",
+  "on_absence": "REFUSE",
+  "refusal_name": "RESULT_DOES_NOT_CARRY_ITS_OWN_PRODUCING_CODE_DIGEST"
+ },
+ "WHAT_I_MEASURED_MYSELF_ON_REVS_TWO_ITEMS": {
+  "PIPELINE_MOVED_ANSWERS_DEs_OPEN_QUESTION_AND_THE_ANSWER_IS_BOTH": {
+   "site": "de_forward_value_day.py:39 PIPELINE_MOVED = 'FORWARD_COMPUTING_MODULES_NOT_AT_FROZEN_PIPELINE'; raised at :102",
+   "it_compares_BOTH": [
+    "worktree_head_matches_pipeline_commit -- a TREE LABEL",
+    "every_computing_module_matches_the_pipeline_commit -- MODULE DIGESTS"
+   ],
+   "it_refuses_if_EITHER_fails": true,
+   "SO_IT_WOULD_FIRE_ON_A_VALUATION_RUN_FROM_da00220": "because the label half fails, whatever the digests say",
+   "AND_A_DEFECT_IN_ITS_MESSAGE_THAT_I_FOUND_WHILE_THERE": "the message prints `differing modules are {moved}` where `moved` lists ONLY digest mismatches. A run whose HEAD differs but whose modules are all identical refuses with `differing modules are []` -- a refusal that names an empty cause. That is the label-vs-bytes confusion I have been chasing all night, inside the guard meant to catch it.",
+   "why_REV_could_not_drive_it": "not established by me; I read and did not drive it, and I say so"
+  },
+  "THE_UNNAMED_REFUSALS_ARE_EIGHT_NOT_ONE": {
+   "REV_said": "the arm-freeze-absent path is the only unnamed refusal in the V2 modules",
+   "I_enumerated_BY_THE_OPERATION": "a literal `REFUSED:` with no ALLCAPS token following, across all five V2 modules",
+   "FOUND": 8,
+   "where": {
+    "de_settlement_control_run.py": [
+     306
+    ],
+    "be_score_neutrality.py": [
+     99,
+     105,
+     113,
+     119,
+     124,
+     130,
+     580
+    ]
+   },
+   "NOT_counted_and_why": "`de_settlement_control_aggregate.py:89,93` and `run.py:283` interpolate a NAME variable (`{refusal}`, `{R.LAZY_ONLY_EXEMPTION}`) -- named at runtime, the idiom the refusal-coverage check already recognises; and `be_score_neutrality.py:312` is prose in a docstring.",
+   "the_shape_repeating": "REV said one, the operation found eight -- the third time tonight (Q-DA-397 six->eleven, Q-DA-417 one->five)"
+  },
+  "NAMED_NOT_DRIVEN_LISTED_AS_SUCH_NOT_AS_PASSING": {
+   "REV_drove": "13 of 13 of the user's refusals by name (two first-pass failures were REV's own fixtures)",
+   "NOT_driven": [
+    "PIPELINE_MOVED",
+    "BAD_EXISTING",
+    "OUTPUT_EXISTS (de_forward_value_day)",
+    "plus five requiring a book fixture"
+   ],
+   "status": "NAMED, NOT DRIVEN -- these do not count toward coverage and must not be reported as passing"
+  }
+ }
+}
