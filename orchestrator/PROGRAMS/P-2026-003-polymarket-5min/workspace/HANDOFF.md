@@ -1,3 +1,137 @@
+# READ FIRST — round 348 (MEM, 2026-09-11T02:25:35Z, tip `897d1f9`)
+# ❄️ A FREEZE AND A FORWARD TEST LANDED — **nothing is touched, the run waits**
+
+> **USER DECISION: THE FORWARD TEST RUNS**, overriding plan step 3, on two arms
+> that **failed their development screen.** The freeze says it in its own first
+> field, unsoftened:
+>
+> ***"THESE TWO ARMS FAILED THEIR DEVELOPMENT SCREEN AND ARE BEING
+> FORWARD-TESTED ANYWAY, BY USER DECISION."***
+
+Step 2 returned `NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM`, CONDVALUE p = 0.0978,
+HAZARD p = 0.2435. **Recorded as a decision, not as a finding.**
+
+**Five commits, refs taken from the objects, all ancestors of HEAD:**
+`b5f311a` THE FREEZE · `9c41d22` (names its own commit) · `9a09d5b` the forward
+test declared before any untouched day · `acdd689` the filing · `3fc91e7` DE 222,
+the freeze amended **in band**. Freeze timestamp **2026-09-11T02:08:15Z**, repo
+head at freeze `22eee4c9`.
+
+# ⚖️ THE RULING — and the artifacts **do not yet carry it**
+
+**THE RULING (the authority):** **N = 6, population 09-07..09-12, last day
+completes 2026-09-13T00:00Z. ONE LOOK. No interim analysis. No extension —
+an inconclusive result EXHAUSTS these arms**, because extending after seeing is
+optional stopping.
+
+**WHAT IS ACTUALLY ON DISK RIGHT NOW — measured, not assumed:**
+
+| | ruling | landed artifact |
+|---|---|---|
+| N | **6** | `POPULATION.N = 5`, `N_is_5_and_there_is_ONE_LOOK: true` |
+| 09-07 | **in the PRIMARY** | *a pre-declared, labelled **COMPANION**, reported alongside and **never merged*** |
+| primary window | 09-07..09-12 → **2026-09-13** | v2 amendment: **09-12 onward → 2026-09-17T00:00Z** |
+
+**DA is amending now. Until that lands, the RULING is the authority and the
+artifacts are behind it.** *A cold reader resolving `de_arm_freeze_v2_amendment.json`
+as current will get the wrong window.*
+
+## 🕐 The clock arithmetic — I computed it
+
+The freeze's rule: days whose **starts** occur after `b5f311a` at **02:08:15Z**,
+and *"any day starting before it is NOT admissible for this freeze, whatever the
+params day-set says."*
+
+```
+09-07  00:00Z  BEFORE     09-10  00:00Z  BEFORE
+09-08  00:00Z  BEFORE     09-11  00:00Z  BEFORE
+09-09  00:00Z  BEFORE     09-12  00:00Z  AFTER  ← the only one
+```
+
+**DE 222 caught the same contradiction inside DA's own declaration** — identical
+rule in both artifacts, and a resolution to 09-08..09-12 that the rule forbids.
+
+## 💰 And the ruling knowingly buys four calendar days with the guarantee
+
+DE priced the trade **before the ruling existed**: *"starts after the freeze"* is
+a **structural** guarantee — it makes consumption **impossible**, because the day
+did not exist when the freeze was written. *"Verified untouched"* is **evidence**,
+and **REV 123 named a residual its evidence cannot close: a traceless read leaves
+nothing behind.** DE costed the correction at **five days later** and judged it
+**worth paying.**
+
+**The USER ruled the other way. The ruling stands — and what it costs is the
+structural guarantee.** *Recorded here rather than left to be rediscovered.*
+
+# 🚩 THE FOUR LIMITS — a state file that records a freeze without recording what it gave up is not state
+
+**(1) MULTIPLICITY IS NOT 2 — and the freeze withdraws its own number.**
+v1 said `n = 2`; v2: **"WITHDRAWN AS NOT THE HONEST COUNT — PENDING BE 113's
+ENUMERATION"**, because *"a programme that rebuilt its books through
+EV20/EV21/EV22 and refitted thresholds did not put two candidates in front of
+this decision. **2 is the survivors, not the race.**"* BE 113's figure is **69
+(range 45–75), a LOWER BOUND** — unpersisted candidates are invisible to a sweep
+of `derived/`.
+
+> The freeze itself: ***"THIS IS THE FIELD MOST LIKELY TO DECIDE WHETHER A LATER
+> PASS MEANS ANYTHING."*** And if BE and DE disagree: **record both counts and
+> the rule each used — do not pick the smaller, because the smaller number is the
+> one that flatters.**
+
+**(2) FIVE OF SIX DAYS PREDATE THE FREEZE** → protection is **evidence, not
+structure**, with a residual REV calls **permanently unclosable**. *"Verified
+untouched" is not "could not have been touched."*
+
+**(3) 09-07 IS ENDPOINT-SPLIT AND THE RULING MOVES IT INTO THE PRIMARY.**
+Settlement R-801 **never computed** (null-draws 0, no `arm_total_cents`, receipt
+`NOT_VALUED_DAY_NOT_ADMISSIBLE` — *the estimator was not asked*); the 5-second
+markout **computed and seen**, 1,000 draws, re-derived by REVIEW 115 with zero
+difference. **And the two are NOT independent — same day, same fills, same
+generations — so "never valued on the estimand" is NOT the same as "unseen."**
+*That is exactly why the artifact made it a companion.*
+
+**(4) N = 6 CLEARS CONDVALUE ONLY.** From the declaration's pre-registered
+projection: observed z 1.6556 / 1.1663; Holm bars **2.2414** then 1.96; at N=6
+**CONDVALUE → 2.34 (clears), HAZARD → 1.65 (misses)**; `days_to_clear` =
+**6 for CONDVALUE, 9 for HAZARD**. ***HAZARD's failure will NOT be evidence of no
+effect — it is underpowered by construction.***
+
+**And the declaration corrects its own author and discounts its own number:**
+*"the dispatch said 'eight would clear'… TRUE FOR ONE ARM AND FALSE FOR THE
+OTHER"*; and **`THIS_IS_AN_UPPER_BOUND_ON_POWER`** — √N assumes a consistent
+per-day effect, and **09-05 CONDVALUE was −4,941.23 c, a sign flip**, so **true
+power is lower than these numbers.**
+
+# ❓ OPEN — BE's identity finding, which can VOID the framing rather than qualify it
+
+**CONDVALUE's scoring composition moved THREE TIMES** across params v1–19 / v20 /
+v21–30 — **same arm name, three different objects.**
+
+> **If the frozen arm is not the object the screen ran on, this is a FIRST look
+> at an UNSCREENED arm, not a second look at a screened one** — and every
+> sentence about "arms that failed their screen" changes meaning.
+
+BE is checking the mapping. **Recorded as OPEN.**
+
+# 🔒 THE SECOND-ATTEMPT CLAUSE IS ENFORCED BY REFUSAL, NOT BY PROSE
+
+`forward_limits` is a **required field**; on absence the emitter **refuses** with
+`RESULT_DOES_NOT_STATE_ITS_FORWARD_LIMITS`. Its required value: *a pass is a pass
+**on a second attempt**, on one coin, at one placement latency, under one primary
+fill assumption.* And the Holm family of 2 **does not account for the second
+attempt** — that is recorded separately and must travel.
+
+# ⏳ THE OPERATIVE DEADLINE IS AN ACTION, NOT A DATE
+
+`STATUS: DECLARED-BEFORE-ANY-UNTOUCHED-DAY-IS-TOUCHED` ·
+`nothing_has_been_run_against_09-08_or_later: true` · the amendment is
+`amendable_because` **NOTHING HAS BEEN TOUCHED**, and after the first validation
+day is opened **neither N nor the population is amendable.**
+
+> **The window to fix N, the population and the multiplicity is OPEN NOW and
+> CLOSES the moment the first day is opened.** *That is the deadline for DA's
+> amendment and BE 113's count — a deadline of action, not of calendar.*
+
 # READ FIRST — round 347 (MEM, 2026-09-10T21:02:34Z, tip `2bae20b`)
 # 🌅 COLD START — read this block, then round 346's verdict block below it
 

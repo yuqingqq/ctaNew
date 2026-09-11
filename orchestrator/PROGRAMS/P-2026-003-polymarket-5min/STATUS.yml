@@ -67,6 +67,26 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T02:24:17Z (MEM ROUND 348 -- A FREEZE AND A FORWARD TEST LANDED. USER DECISION: THE FORWARD
+  TEST RUNS, overriding plan step 3, on TWO ARMS THAT FAILED THEIR SCREEN (the freeze's own
+  first field says so). Five commits verified as ancestors: b5f311a THE FREEZE, 9c41d22,
+  9a09d5b the forward test declared before any untouched day, acdd689 the filing, 3fc91e7
+  the freeze amended IN BAND. RULING: N = 6, 09-07..09-12, last day completing
+  2026-09-13T00:00Z, ONE LOOK, NO EXTENSION -- an inconclusive result EXHAUSTS these arms.
+  BUT THE LANDED ARTIFACTS DO NOT YET CARRY IT, and a cold reader must not resolve them as
+  current: the forward declaration holds N = 5 with 09-07 as a LABELLED COMPANION never
+  merged, and the v2 amendment resolves PRIMARY to 09-12 onward completing 2026-09-17. I
+  computed the clock: of the six ruled days ONLY 09-12 starts after the freeze at
+  02:08:15Z. THE RULING KNOWINGLY BUYS FOUR CALENDAR DAYS WITH THE STRUCTURAL GUARANTEE --
+  DE priced that trade and judged it worth paying the other way. FOUR LIMITS: multiplicity
+  is NOT 2 and the freeze WITHDRAWS ITS OWN NUMBER pending BE 113 (69, range 45-75, a LOWER
+  BOUND) -- the freeze calls it THE FIELD MOST LIKELY TO DECIDE WHETHER A LATER PASS MEANS
+  ANYTHING; five of six days predate the freeze so protection is EVIDENCE not STRUCTURE,
+  with a residual REV calls PERMANENTLY UNCLOSABLE; 09-07 is endpoint-split and its two
+  endpoints are NOT INDEPENDENT; and N=6 clears CONDVALUE ONLY, on a projection the
+  declaration itself calls AN UPPER BOUND. OPEN: BE's identity finding -- CONDVALUE's
+  composition moved THREE TIMES, so this may be a FIRST look at an UNSCREENED arm.
+  NOTHING IS TOUCHED; the amendment window closes when the first day is opened. tip ee1e85d)
   2026-09-10T21:02:01Z (MEM ROUND 347 -- THE DAY'S FINAL SWEEP. THE 7J CONTROL FIRED AT ITS FIRST REAL
   OPPORTUNITY AND RETURNED THREE FINDINGS (R-898, 671a8fd) -- a dropped rule-11 provenance
   clause, bare companion p-values, and a limit that postdated its text. RECORDED AS THE
@@ -101,23 +121,6 @@ updated: >-
   exact form: the arm beats the baseline in FEWER THAN HALF the windows on every arm-day,
   38.2-45.5 per cent). And the day's LAST failure landed at the FINAL STEP of the mechanism
   built to prevent it: a sentence DESCRIBED instead of SENT. tip 671a8fd)
-  2026-09-10T17:37:20Z (MEM ROUND 345 -- THE CLOSING PICTURE BEFORE THE VERDICT. THE FREEZE IS CLEAR ON
-  THE TREE'S CONDITION: BE's triage of the 101 gives 11 excluded, 13 dormant-and-passing, 76
-  NOT EVALUABLE AS STANDING CONDITIONS, and 4 raises resolving to ONE distinct real
-  violation -- the cascade drift I drove into raising at round 340. THE REPO IS NOT CARRYING
-  A PILE OF SILENT FAILURES. The arithmetic closes only under one reading (11+13+76 = 100,
-  plus ONE violated; the 4 are RAISE EVENTS, not a fourth bucket) and I record the reading.
-  A THIRD STATUS IS NAMED FOR THE FIRST TIME -- neither passing nor violated, because the
-  condition cannot be evaluated without running something -- and BE's follow-up is sharper
-  than the question asked: for 52 of them the cheap check ASKS ABOUT A FIXTURE, NOT ABOUT
-  THE TREE, so step 1's remainder is A CHOICE ABOUT WHICH QUESTION TO BUY, not a duration.
-  A SIXTH SHAPE: draw_many's docstring says rule 6's minimum is enforced HERE and the
-  running loop skips that route -- true about the function, misleading about the system,
-  RECORDED RATHER THAN SILENTLY FIXED. I measured the unit at the close (active, in
-  research.slice, 2.419 GiB, one live worker) and did NOT assert who holds the flock,
-  because an open descriptor is not a held lock. REV's blind paragraphs (0147ff2) ARE on
-  this branch; BE's a8567d1 and a35c889 are NOT, and the landing detector still reads 188.
-  EVERY PROTECTION AROUND STEP 2 WAS DRIVEN RATHER THAN ASSUMED. tip 2c1fa8b)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -289,6 +292,22 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 348, the freeze and the forward test ---
+  THE_USER_RULED_THE_FORWARD_TEST_RUNS_ON_ARMS_THAT_FAILED_THEIR_SCREEN: "Overriding plan step 3, which had fired and completed. The freeze's own first field says it without softening: 'THESE TWO ARMS FAILED THEIR DEVELOPMENT SCREEN AND ARE BEING FORWARD-TESTED ANYWAY, BY USER DECISION.' Step 2 returned NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM on both pools, CONDVALUE p = 0.0978 and HAZARD p = 0.2435 on the PRIMARY. The decision is the USER's and it is recorded as a decision, not as a finding."
+  THE_FIVE_COMMITS_ARE_ALL_ON_THE_BRANCH_AND_I_TOOK_THE_REFS_FROM_THE_OBJECTS: b5f311a DE 220 THE FREEZE (161 lines, de_arm_freeze_v1.json); 9c41d22 DE 220 2/2 the freeze names its own commit; 9a09d5b DA 209/210 the FORWARD TEST declared before any untouched day (da_forward_test.py 506 lines + its declaration 280 lines); acdd689 the Q-DA-413 filing; 3fc91e7 DE 222 the freeze amended IN BAND. All five verified as ancestors of HEAD. Freeze author timestamp 2026-09-11T02:08:15Z, repo head at freeze 22eee4c9.
+  THE_RULING_IS_N_EQUALS_6_ON_09_07_TO_09_12_ONE_LOOK_AND_NO_EXTENSION: Population 09-07..09-12, last day completing 2026-09-13T00:00Z, ONE LOOK, no interim analysis, no extension. An inconclusive result EXHAUSTS these arms, because extending after seeing is optional stopping. This is the USER's ruling and it is the authority. Everything below records what the landed artifacts currently say against it, because they do not yet say the same thing.
+  AND_THE_LANDED_ARTIFACTS_DO_NOT_YET_CARRY_THE_RULING_WHICH_IS_THE_THING_A_COLD_READER_MUST_NOT_RESOLVE_WRONGLY: Measured, not assumed. The forward-test declaration on disk holds N = 5, STOPPING_RULE.N_is_5_and_there_is_ONE_LOOK true, and 09-07 as A PRE-DECLARED, LABELLED COMPANION reported alongside and NEVER MERGED. The freeze amendment v2 (DE 222, landed 02:17) resolves PRIMARY to 09-12 onward completing 2026-09-17T00:00Z. The ruling says N = 6, 09-07 IN the primary, completing 2026-09-13. DA is amending now. UNTIL THAT LANDS, THE RULING IS THE AUTHORITY AND THE ARTIFACTS ARE BEHIND IT.
+  THE_CLOCK_ARITHMETIC_IS_WHY_THE_TWO_DIVERGE_AND_ONLY_ONE_OF_THE_SIX_RULED_DAYS_STARTS_AFTER_THE_FREEZE: I computed it against the freeze's own rule. The freeze receipt says PRIMARY is the days whose STARTS occur after b5f311a at 2026-09-11T02:08:15Z, and 'Any day starting before it is NOT admissible for this freeze, whatever the params day-set says.' Of the six ruled days, 09-07, 09-08, 09-09, 09-10 and 09-11 all start at 00:00Z BEFORE that instant; ONLY 09-12 starts after. DE 222 caught the same thing in DA's own declaration -- the rule was identical in both artifacts and DA's RESOLUTION to 09-08..09-12 contradicted it.
+  AND_THE_RULING_KNOWINGLY_BUYS_FOUR_CALENDAR_DAYS_WITH_THE_STRUCTURAL_GUARANTEE: "DE 222 wrote the trade out before the ruling existed: 'starts after the freeze' is a STRUCTURAL guarantee that makes consumption IMPOSSIBLE because the day did not exist when the freeze was written, whereas 'verified untouched' is EVIDENCE -- and REV 123 named a residual its evidence cannot close, a traceless read leaving nothing behind. DE priced the correction at completing 2026-09-17 instead of 2026-09-13, FIVE DAYS LATER, and judged it WORTH PAYING. The USER ruled the other way. The ruling stands; what it costs is the structural guarantee, and that is recorded here rather than left to be rediscovered."
+  LIMIT_ONE_THE_MULTIPLICITY_IS_NOT_TWO_AND_THE_FREEZE_ITSELF_WITHDRAWS_ITS_OWN_NUMBER: "v1 recorded CANDIDATES_IN_THE_FORWARD_RACE_AT_FREEZE_TIME.n = 2. The v2 amendment WITHDRAWS it: 'WITHDRAWN AS NOT THE HONEST COUNT -- PENDING BE 113's ENUMERATION', with the reason stated plainly -- 2 counts the ARMS STANDING TODAY, while rule 12 asks for the candidates IN THE RACE, and 'a programme that rebuilt its books through EV20/EV21/EV22 and refitted thresholds did not put two candidates in front of this decision. 2 is the survivors, not the race.' The coordinator reports BE 113's figure as 69, range 45-75, a LOWER BOUND because unpersisted candidates are invisible to a sweep of derived/."
+  AND_THE_FREEZE_NAMES_THIS_AS_THE_FIELD_MOST_LIKELY_TO_DECIDE_WHETHER_A_LATER_PASS_MEANS_ANYTHING: "Its own words: 'the forward test's correction is over a family far larger than 2, and a five-day pass at alpha 0.05 over two tests would not survive it. THIS IS THE FIELD MOST LIKELY TO DECIDE WHETHER A LATER PASS MEANS ANYTHING.' DE also records a lower bound from the artifacts on disk -- 5 book revisions x 2 arms = 10 naive -- and states the rule it will apply when BE lands, plus the instruction if the two disagree: RECORD BOTH COUNTS AND THE RULE EACH USED, DO NOT PICK THE SMALLER, because the smaller number is the one that flatters."
+  LIMIT_TWO_FIVE_OF_THE_SIX_DAYS_PREDATE_THE_FREEZE_SO_PROTECTION_RESTS_ON_EVIDENCE_NOT_STRUCTURE: Only 09-12 starts after the freeze, which I computed above. So for the other five the guarantee that made consumption impossible is gone and protection rests on REV 123's verification PLUS a residual REV calls PERMANENTLY UNCLOSABLE -- a traceless read leaves no evidence that it happened. A cold reader must not read 'verified untouched' as equivalent to 'could not have been touched'. They are different kinds of claim and only one of them is closed.
+  LIMIT_THREE_09_07_IS_ENDPOINT_SPLIT_AND_THE_RULING_MOVES_IT_INTO_THE_PRIMARY: "The forward declaration is precise about it: settlement R-801 NEVER COMPUTED (null-draw count 0, no arm_total_cents anywhere, receipt status NOT_VALUED_DAY_NOT_ADMISSIBLE -- the estimator was NOT ASKED), while the 5-second markout D(E0) was computed with 1,000 persisted draws and REVIEW 115 re-derived its null_mean, null_sd and Z on both arms with ZERO difference. Clean on the estimand, CONSUMED on the diagnostic. And the declaration adds the part that matters: THE TWO ARE NOT INDEPENDENT -- same day, same fills, same generations -- so 'never valued on the estimand' is NOT the same as 'unseen'. That is why the artifact made it a companion, and the ruling puts it in the primary."
+  LIMIT_FOUR_N_EQUALS_6_CLEARS_CONDVALUE_ONLY_AND_HAZARD_IS_UNDERPOWERED_BY_CONSTRUCTION: "From the declaration's own pre-registered projection: observed z at 3 days 1.6556 and 1.1663; Holm bars 2.2414 for the smaller p and 1.96 for the larger; at N=6 CONDVALUE projects to 2.34 and CLEARS, HAZARD projects to 1.65 and MISSES. Its days_to_clear field puts CONDVALUE's step 1 at SIX days and HAZARD at NINE. So HAZARD's failure will NOT be evidence of no effect -- it is underpowered by construction, and N=6 is the number at which exactly one arm becomes testable."
+  AND_THE_DECLARATION_CORRECTS_THE_COORDINATORS_OWN_DISPATCH_AND_CALLS_ITS_OWN_POWER_AN_UPPER_BOUND: "Two fields written against its own author's interest. First: 'the dispatch said eight would clear. MEASURED FROM THE ARTIFACT'S OWN p-VALUES THAT IS TRUE FOR ONE ARM AND FALSE FOR THE OTHER' -- CONDVALUE clears at six, HAZARD needs nine. Second: THIS_IS_AN_UPPER_BOUND_ON_POWER, because sqrt-N scaling assumes a CONSISTENT per-day effect and 2026-09-05 CONDVALUE was -4,941.23 c, A SIGN FLIP, so TRUE POWER IS LOWER THAN THESE NUMBERS. The N=6 that clears CONDVALUE on paper is therefore an optimistic bound, not a forecast."
+  BES_IDENTITY_FINDING_IS_OPEN_AND_IT_CAN_STILL_VOID_THE_FRAMING: CONDVALUE's scoring composition moved THREE TIMES across params v1-19, v20 and v21-30 -- same arm name, three different objects. If the frozen arm is not the object the screen ran on, this is a FIRST look at an UNSCREENED arm, not a second look at a screened one, and every sentence about 'arms that failed their screen' changes meaning. BE is checking the mapping now. Recorded as OPEN, because it is the one question that can reclassify the whole test rather than qualify it.
+  AND_THE_SECOND_ATTEMPT_CLAUSE_MUST_TRAVEL_WITH_EVERY_RESULT_BY_REFUSAL: "The declaration makes it enforceable rather than hoped for: what_a_pass_does_NOT_establish is a REQUIRED FIELD named forward_limits, and on absence the emitter REFUSES with RESULT_DOES_NOT_STATE_ITS_FORWARD_LIMITS. Its required value says a pass is a pass ON A SECOND ATTEMPT, on one coin, at one placement latency, under one primary fill assumption. And THE_MULTIPLICITY_ACTUALLY_CONTROLLED states that the Holm family of 2 does NOT account for this being a second attempt on the same two arms. Rule 36's form, discharged by a refusal instead of by prose."
+  NOTHING_IS_TOUCHED_AND_THE_RUN_WAITS_FOR_THE_LAST_DAY_TO_COMPLETE: STATUS is DECLARED-BEFORE-ANY-UNTOUCHED-DAY-IS-TOUCHED; the freeze records nothing_has_been_run_against_09-08_or_later as true; the amendment is amendable_because NOTHING HAS BEEN TOUCHED and says that after the first validation day is opened neither field is amendable. So the window for amending N, the population and the multiplicity is OPEN NOW and CLOSES the moment the first day is opened. That is the operative deadline for DA's amendment and for BE 113's count, and it is a deadline of ACTION, not of calendar.
   # --- MEM round 347, the day's final sweep ---
   THE_7J_CONTROL_FIRED_AND_FOUND_THREE_THINGS_IN_THE_SENT_PROSE: "R-898 at 671a8fd, and it is recorded as THE CONTROL WORKING, not as three coordinator errors. (C) a five-word rule-11 provenance clause was dropped -- REV: 'the only thing in the paragraph saying the response to a failure was fixed BEFORE the number existed. Without it, Step 3 fires reads as a decision taken IN REACTION to the result... exactly what compression eats.' (D) the companion raw p-values were quoted bare. (F) the winner_source limit postdated the text. A control that finds nothing on its first real firing has not been tested; this one fired at the first opportunity and returned three."
   AND_THE_COMPANION_P_VALUES_MUST_NEVER_TRAVEL_WITHOUT_THEIR_CORRECTION: "0.0299 and 0.0339 are both BELOW 0.05 and only Holm fails them. I computed the adjusted values rather than repeating the claim: Holm-adjusted, BOTH BECOME 0.0598, and both exceed 0.05. So the raw pair read as significance to anyone meeting them later and the corrected pair reads as what it is. IF THE COMPANION IS MENTIONED, ITS CORRECTION MUST TRAVEL WITH IT. This is the same number I flagged at round 346 as the most misquotable in the batch, and the control caught it in the prose one round later."
@@ -27571,6 +27590,97 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 348, 2026-09-11T02:24:17Z ---
+  THE_USER_RULED_THE_FORWARD_TEST_RUNS_ON_ARMS_THAT_FAILED_THEIR_SCREEN:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_arm_freeze_v1.json
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      THE_ONE_THING_A_LATER_READER_MUST_SEE_FIRST.HEADLINE read verbatim from the freeze receipt, with its PRIMARY_09_04_05_06 block carrying both p-values and both FAIL results.
+  THE_FIVE_COMMITS_ARE_ALL_ON_THE_BRANCH_AND_I_TOOK_THE_REFS_FROM_THE_OBJECTS:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_arm_freeze_v1.json
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      each commit read at its object for subject and date and tested with git merge-base --is-ancestor against HEAD; the diffstats give the artifact paths and sizes.
+  THE_RULING_IS_N_EQUALS_6_ON_09_07_TO_09_12_ONE_LOOK_AND_NO_EXTENSION:
+    prov: RELAYED
+    from: USER ruling via coordinator MEM 348
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      the ruling as dispatched; its divergence from the landed declarations is measured and recorded separately below rather than reconciled silently.
+  AND_THE_LANDED_ARTIFACTS_DO_NOT_YET_CARRY_THE_RULING_WHICH_IS_THE_THING_A_COLD_READER_MUST_NOT_RESOLVE_WRONGLY:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_forward_test_declaration_v1.json
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      POPULATION.N read as 5; STOPPING_RULE.N_is_5_and_there_is_ONE_LOOK read as true; THE_09_07_COMPANION.its_role read as a pre-declared labelled companion; the amendment's AMENDMENT_2 resolution read as 09-12 first qualifying day completing 2026-09-17T00:00Z.
+  THE_CLOCK_ARITHMETIC_IS_WHY_THE_TWO_DIVERGE_AND_ONLY_ONE_OF_THE_SIX_RULED_DAYS_STARTS_AFTER_THE_FREEZE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_arm_freeze_v2_amendment.json
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      each ruled day's 00:00:00Z start compared with the freeze author timestamp 2026-09-11T02:08:15Z; AMENDMENT_2_ADMISSIBILITY_RESOLVED read, which names DA's resolution rather than the rule as the error and resolves the first qualifying day to 2026-09-12.
+  AND_THE_RULING_KNOWINGLY_BUYS_FOUR_CALENDAR_DAYS_WITH_THE_STRUCTURAL_GUARANTEE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_arm_freeze_v2_amendment.json
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      AMENDMENT_2's WHY_THE_STRUCTURAL_RULE_AND_NOT_VERIFIED_UNTOUCHED and cost_of_the_correction fields read verbatim, including DE's own judgement that the cost was worth paying.
+  LIMIT_ONE_THE_MULTIPLICITY_IS_NOT_TWO_AND_THE_FREEZE_ITSELF_WITHDRAWS_ITS_OWN_NUMBER:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_arm_freeze_v2_amendment.json
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      AMENDMENT_1_MULTIPLICITY_WITHDRAWN read verbatim including v1_said 2, the STATUS, and why_2_is_wrong; the 69 and its range are the coordinator's relay of BE 113 and are marked as such.
+  AND_THE_FREEZE_NAMES_THIS_AS_THE_FIELD_MOST_LIKELY_TO_DECIDE_WHETHER_A_LATER_PASS_MEANS_ANYTHING:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_arm_freeze_v2_amendment.json
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      consequence_if_the_count_is_large, my_own_lower_bound_from_the_artifacts_on_disk and if_BE_and_I_DISAGREE read verbatim from the amendment.
+  LIMIT_TWO_FIVE_OF_THE_SIX_DAYS_PREDATE_THE_FREEZE_SO_PROTECTION_RESTS_ON_EVIDENCE_NOT_STRUCTURE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_arm_freeze_v2_amendment.json
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      the structural-versus-evidence distinction and REV 123's unclosable residual read from AMENDMENT_2; the day-by-day clock comparison computed by me.
+  LIMIT_THREE_09_07_IS_ENDPOINT_SPLIT_AND_THE_RULING_MOVES_IT_INTO_THE_PRIMARY:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_forward_test_declaration_v1.json
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      THE_09_07_COMPANION's clean_on_the_ESTIMAND, consumed_on_the_DIAGNOSTIC and AND_THE_TWO_ARE_NOT_INDEPENDENT fields read verbatim.
+  LIMIT_FOUR_N_EQUALS_6_CLEARS_CONDVALUE_ONLY_AND_HAZARD_IS_UNDERPOWERED_BY_CONSTRUCTION:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_forward_test_declaration_v1.json
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      PRE_REGISTERED_POWER_EXPECTATION read in full: observed_z_at_3_days, holm_bars, projection at N=5/6/9 and days_to_clear.
+  AND_THE_DECLARATION_CORRECTS_THE_COORDINATORS_OWN_DISPATCH_AND_CALLS_ITS_OWN_POWER_AN_UPPER_BOUND:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_forward_test_declaration_v1.json
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      AND_A_CORRECTION_TO_THE_DISPATCH, days_to_clear and THIS_IS_AN_UPPER_BOUND_ON_POWER read verbatim; the -4,941.23 c sign flip is the 09-05 CONDVALUE delta carried in these files since round 334.
+  BES_IDENTITY_FINDING_IS_OPEN_AND_IT_CAN_STILL_VOID_THE_FRAMING:
+    prov: RELAYED
+    from: BE via coordinator MEM 348
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      BE's finding as dispatched and marked OPEN pending the mapping check; the consequence is stated as conditional because the mapping is not yet established.
+  AND_THE_SECOND_ATTEMPT_CLAUSE_MUST_TRAVEL_WITH_EVERY_RESULT_BY_REFUSAL:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_forward_test_declaration_v1.json
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      what_a_pass_does_NOT_establish with its REQUIRED_FIELD, on_absence and refusal_name; THE_MULTIPLICITY_ACTUALLY_CONTROLLED's AND_THE_SECOND_ATTEMPT_IS_NOT_IN_THIS_NUMBER field.
+  NOTHING_IS_TOUCHED_AND_THE_RUN_WAITS_FOR_THE_LAST_DAY_TO_COMPLETE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_arm_freeze_v2_amendment.json
+    as_of: 2026-09-11T02:24:17Z
+    said: >-
+      STATUS read from the forward declaration; nothing_has_been_run_against_09-08_or_later read from the freeze; amendable_because read from the amendment's supersedes block.
   # --- MEM round 347, 2026-09-10T21:02:01Z ---
   THE_7J_CONTROL_FIRED_AND_FOUND_THREE_THINGS_IN_THE_SENT_PROSE:
     prov: RELAYED

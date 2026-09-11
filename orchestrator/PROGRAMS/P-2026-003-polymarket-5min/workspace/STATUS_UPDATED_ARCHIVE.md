@@ -23042,3 +23042,25 @@ generation and the window went 4 → 3. Nothing rewritten.
   reported it as a clean success; caught ONLY because ANOTHER SEAT'S TEST forced enumeration.
   Population 156, 28 never exercised, ratchet HELD 16/16. Step 2 lands ~19:25Z. tip 8b4e41c)
 ```
+
+## Batch 330 (rotated by MEM round 348, 2026-09-11T02:24:17Z)
+
+```
+  2026-09-10T17:37:20Z (MEM ROUND 345 -- THE CLOSING PICTURE BEFORE THE VERDICT. THE FREEZE IS CLEAR ON
+  THE TREE'S CONDITION: BE's triage of the 101 gives 11 excluded, 13 dormant-and-passing, 76
+  NOT EVALUABLE AS STANDING CONDITIONS, and 4 raises resolving to ONE distinct real
+  violation -- the cascade drift I drove into raising at round 340. THE REPO IS NOT CARRYING
+  A PILE OF SILENT FAILURES. The arithmetic closes only under one reading (11+13+76 = 100,
+  plus ONE violated; the 4 are RAISE EVENTS, not a fourth bucket) and I record the reading.
+  A THIRD STATUS IS NAMED FOR THE FIRST TIME -- neither passing nor violated, because the
+  condition cannot be evaluated without running something -- and BE's follow-up is sharper
+  than the question asked: for 52 of them the cheap check ASKS ABOUT A FIXTURE, NOT ABOUT
+  THE TREE, so step 1's remainder is A CHOICE ABOUT WHICH QUESTION TO BUY, not a duration.
+  A SIXTH SHAPE: draw_many's docstring says rule 6's minimum is enforced HERE and the
+  running loop skips that route -- true about the function, misleading about the system,
+  RECORDED RATHER THAN SILENTLY FIXED. I measured the unit at the close (active, in
+  research.slice, 2.419 GiB, one live worker) and did NOT assert who holds the flock,
+  because an open descriptor is not a held lock. REV's blind paragraphs (0147ff2) ARE on
+  this branch; BE's a8567d1 and a35c889 are NOT, and the landing detector still reads 188.
+  EVERY PROTECTION AROUND STEP 2 WAS DRIVEN RATHER THAN ASSUMED. tip 2c1fa8b)
+```
