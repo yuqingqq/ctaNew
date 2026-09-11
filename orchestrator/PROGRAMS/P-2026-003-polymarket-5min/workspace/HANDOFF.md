@@ -1,3 +1,166 @@
+# READ FIRST — round 382 (MEM, 2026-09-11T12:36:25Z, tip `6a9557c`)
+
+# 🧊 PART A — **DA, IF YOUR CONTEXT WAS JUST CLEARED, START HERE**
+
+*Written because DA's context is near compaction. Everything below is on disk;
+none of it needs the conversation.*
+
+**Your seat.** DA reads what other seats produce and **RECOMPUTES it
+independently**. A number you print has been re-derived by a second
+implementation, **or it is labelled as read**. You interpret nothing and assert
+no result.
+
+**Cold start, in order:**
+1. `workspace/DA_PROCEDURE.md` — **your own file, 42 KB, you maintain it.** Both
+   drive modes, the `PM_DATA_ROOT=/home/yuqing/ctaNew` requirement (without it
+   `da_gate1_day_verdict` and `da_process_budget_audit` go red **by design**).
+2. `workspace/COORDINATION.md` — **the register is the authority.** Newest entry
+   is **R-905**. Read it, then the four before it.
+3. `workspace/SEAT_PROTOCOL.md` — rules 1–47. You are not the writer of
+   `STATUS.yml` or `HANDOFF.md`; **MEM is.** File into `COORDINATION.md`.
+
+**What you filed most recently, and where it landed** (resolved ref by ref):
+
+| filing | what | refs |
+|---|---|---|
+| **DA 260** | guard register v1 + its computed gate | `mm-research`, `rev-g7` |
+| **DA 262** | forward-test **v26** (`BUILD_PIN` / `BUILD_PINNED_DIGESTS`) + population freeze **v7** | `origin/mm-research`, `origin/be-build-runner`, `origin/de-freeze-chain-v2` |
+| **DA 263** | params **v33** (11 days, `expected_G` 11) + arm-freeze amendment **v12** | the same three |
+
+> ⚠️ **One DA 262 copy, `c5e96a7`, is contained by NO ref — stranded.** Reported,
+> not rebased (rule 21). The content reached the three refs by other commits.
+
+**The four numbers that are the forward test.** *Day one (09-07), V2, read from
+`data/pm_5min/derived/fwd_v2/` this round:*
+
+| arm | observed_D (cents) | p (two-sided) | settled total | generations cancelled |
+|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | **−14645.078818000005** | **0.18163672654690619** | −19082.8184176 | 27073 |
+| `HAZARD_OVER_SKEWED_REF` | **+4925.363903000005** | **0.7285429141716567** | 487.6243034000096 | 23570 |
+
+`n_draws = 500` both arms. **Day two (09-08) is STARTED AND INCOMPLETE**, not
+unstarted: `de_settle_ckpt_2026-09-08_CONDVALUE_X_SKEW.jsonl` holds **68 draws**,
+last written **10:52/10:59Z**. *Observed; I do not diagnose why it stopped.*
+
+**Hazards live right now:**
+- ⛔ **`/home/yuqing/ctaNew-wt-fwd` MUST NOT BE REFRESHED** — `be169ident0908.service`
+  is running out of it (see Part B).
+- 🌿 **`PENDING_ORIGIN_MAIN` now reaches the CODE**, not just declarations:
+  `c853e2d` is on `origin/de-freeze-chain-v2` and `origin/be-build-runner`
+  **only**. Reading `de_multiday_gate1_runner.py` on `mm-research` gives you the
+  **pre-fix** body.
+- 📄 **`params_v31.json` is absent from the shared tree** (v30/v32/v33 present).
+- 🔢 Your **open** items: **DA 240** (join the AST enumeration to the register's
+  rows — it cannot refuse an *unregistered* site), the **31 unexercised** rows,
+  and the **22 build-path sites the freeze does not pin at all**
+  (`be_daybook_build.py`, `be_era_for_day.py`, `be_gate1_fragment.py`).
+
+---
+
+# PART B — WHAT ROUND 382 FOUND
+
+# 🔓 THE LOCK IS **NOT** IDLE — a falsifier took it at **12:22:58Z**
+
+R-905 records it idle since 11:52Z **by design**. *That was true when written at
+12:19Z and is now superseded by events, not wrong.*
+
+```
+be169ident0908.service   loaded / active / running   since 12:22:58Z
+  flock -n -E 75 data/.heavy_run.lock
+    be_rebuild_identity.py --build 20260908  <-  OWED FALSIFIER (b)
+  tree: /home/yuqing/ctaNew-wt-fwd  @ dbb11e4
+  MEASURED: 2.443 GiB resident | MemoryMax 11.05 GiB | CPUQuotaPerSecUSec 1s = ONE CORE
+```
+
+> I did not read a status line for this. **`fuser` on the lock gave two pids;
+> `/proc/<pid>/cgroup` gave the unit; `systemctl --user show` with `LoadState`
+> gave loaded/active/running.** *The lock was the instrument, not the report.*
+
+# 🧩 THE SUPERSESSION LEFT **TWO RULED SETS IN ONE MODULE**
+
+**Driven, not read.** At `c853e2d`, in `de_multiday_gate1_runner.py`:
+
+| function | resolves to | days | `expected_G` |
+|---|---|---|---|
+| `ruled_day_set()` *(fixed)* | freeze chain head → **`params_v33`** | **11** | **11** |
+| `load_params()` *(untouched)* | `PARAMS_REL` literal → **`params_v29`** | **6** | **6** |
+
+***The fix closed the LOCK's view of the ruled set and left the LOADER's
+pinned.*** `PARAMS_REL` survives on **29 lines**.
+
+> **And the loader is the site that records provenance:** `load_params()` bare
+> calls `record_input_digest("params", PARAMS_REL)`. ***So a run would lock on
+> v33 and file its params input digest for v29.*** *Named for DE and DA; I do
+> not adjudicate it.*
+
+**Downstream, already visible:** the R-555 positive control at `:10495` asserts
+`live["G"] == 6` against a **hardcoded six-day list**. *It is green only while
+the loader stays on v29* — **a literal that must track a moving thing, and the
+moving thing has started moving.**
+
+# ✅ THE GUARD REGISTER IS SOUND — 🔴 AND ITS EXAMPLE IS NOT
+
+I recounted from the rows rather than reading the header, and **every count
+equals the register's own declared field**:
+
+```
+167 sites · 105 distinct refusals · 136 exercised · 31 NOT
+     BUILD_BUILDER   2 of  22        VALUATION  29 of 145
+```
+
+**Driven three ways:** the real register **REFUSES** naming sites · an
+all-exercised copy **ADMITS** · an **empty** register **REFUSES** rather than
+passing vacuously. *Positive control and known-bad both present — rule 15 met.*
+
+**But the instance beside it names nothing.** DA 260's commit message
+illustrates the 31 with `SETTLEMENT_CONTROL_HAS_NO_SCORE_NEUTRALITY_CERTIFICATE`
+— **a spelling carried by no row** — and says it fired in production at
+09:09:23Z. The register's two real names are `..._CERTIFICATION` (3 rows,
+**unexercised**) and `..._NOT_CERTIFIED` (3 rows, **exercised TRUE**).
+
+> I swept the derived artifacts for every `REFUSED …CERTIF…` form: **3 hits, all
+> `NOT_CERTIFIED`, zero `HAS_NO_` forms.** ***The one that actually fired is the
+> one marked exercised.*** **The count stands and the artifact is right; the
+> sentence beside it is not** — rule 10's shape, in a commit message rather than
+> a table.
+
+**A second, smaller edge:** `guard_gate(lanes=["valuation"])` refuses with the
+**same code** a genuine unexercised row raises, because the declared lanes are
+upper-case. *Fail-safe in direction, conflated in cause* — **which is exactly
+the property DE 309 just fixed elsewhere.**
+
+# 🧪 THE THREE OWED FALSIFIERS ARE AT **THREE DIFFERENT STAGES**
+
+*Classified so none inherits another's voice (the round-368 rule):*
+
+| # | falsifier | stage | evidence |
+|---|---|---|---|
+| **(a)** | POINT_ESTIMATE 09-07, both arms to the cent | 🔴 **OWED, NOT STARTED** | newest 09-07 point estimate is dated **09-08T12:28:11Z**; nothing written after the supersession at 12:11:27Z |
+| **(b)** | 09-08 rebuild bit-identical by sha | 🟡 **DRIVEN, IN FLIGHT** | unit running; output dir created 12:21:58Z, still empty |
+| **(c)** | the growing-ledger fixture | ⚪ **SPECIFIED ONLY** | **no file under `live/pm_research` names it** |
+
+> ***Three falsifiers owed in one sentence of an R-entry are three different
+> objects,*** and the only one a reader can act on today is the one that exists.
+
+# 📌 SMALLER THINGS, EACH DRIVEN
+
+- **v33 is 11/11 on three refs**, resolved one ref at a time (`794e718` /
+  `dbb11e4` / `2068d4a`). The chain walks **9 links** to reach it.
+- **No receipt carries a params digest.** `verify_book_receipt` compares day,
+  book sha256, book path and `builder_commit`; `_builder_commit_admissible`
+  reads `BUILD_PIN` + `BUILD_PINNED_DIGESTS` and falls back to an **exact** pin
+  when either is absent. ***DE's named cross-version gap is real, and it is the
+  same reason days one and two are unaffected.***
+- **`unshare -Urm` → `write failed /proc/self/uid_map: Operation not permitted`.**
+  Confirmed by running it, not by citing it.
+- **DE 309 fixed a label-read, in a different file from the one REVIEW 168
+  named.** The landed fix (`b310915`) is in `de_preflight_matrix.py`: it replaces
+  `text.split("REFUSED ", 1)` with **identity against a harvested set of declared
+  names** — *rule 42 applied to refusals.* `chain_day.sh` itself lives at
+  `live/pm_research/launchers/chain_day.sh` and **is not on `mm-research` at
+  all**, so the file REVIEW 168 named is neither the file that was fixed nor a
+  file on this branch.
+
 # READ FIRST — round 381 (MEM, 2026-09-11T12:06:53Z, tip `e3d8e25`)
 
 # 🔍 I DIFFED params v31 → v32 — **nothing pinned moves**
