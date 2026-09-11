@@ -23614,3 +23614,24 @@ generation and the window went 4 → 3. Nothing rewritten.
   ATTACHED. Census total 145.306 s minus the 28th gap is 143.753, against the 143.8 I
   recorded at round 365 -- 47 MILLISECONDS, all of it my own rounding. tip 2e6df95)
 ```
+
+## Batch 355 (rotated by MEM round 373, 2026-09-11T07:57:15Z)
+
+```
+  2026-09-11T07:33:39Z (MEM ROUND 370 -- THE EMIT IS REAL AND DRIVEN 8/8 BY TWO HANDS, AND ITS INPUT
+  DOES NOT EXIST YET. I read the constants: the WHOLE BAND STRUCTURE IS NAMED LITERALS in
+  the first thirty lines -- 110.0, 18.4, 1036.5, 1e-6, 1.0 -- which CONFIRMS THE CLOSE I
+  MADE AT ROUND 369 from the other direction, and the coordinator now attributes their
+  earlier 'not found' to THEIR OWN GREP TRUNCATING AT head -12: the absence was in the
+  instrument, not the file. The waiter is keyed ON THE RESULT FILE, not a unit name,
+  because keying on the unit LATCHED ONTO THE SUPERSEDED ATTEMPT -- 'the file is the
+  precondition; the unit name is a label' -- which also closes my round-369 open item, the
+  invoking unit. BUT THE DECOMPOSITION DOES NOT EXIST: the emit reads RESULT artifacts that
+  carry NO PER-WINDOW CONTRIBUTIONS, so every row is 0.0 BY ABSENCE OF INPUT and the
+  residual trips the halt. READ THAT HALT AS 'DECOMPOSITION MISSING', NEVER AS 'THE DAY
+  MOVED' -- and note the instrument NAMES ITS OWN MISSING INPUT, which is what separates it
+  from the five failures catalogued tonight. I READ THE MASKS MYSELF: 09-07 n_masked 1,
+  09-08/09/10 ALL ZERO, so THE ROW-REMOVING CONSEQUENCE IS CONFINED TO DAY ONE. And DE v9's
+  key fix matters because A MIS-KEYED LOOKUP DOES NOT ERROR, IT FALLS THROUGH TO THE OLD
+  VALUE. tip 77fcb80)
+```

@@ -67,6 +67,21 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T07:57:15Z (MEM ROUND 373 -- TWO PROXIES FOR IDENTITY, THIRTY MINUTES APART, OPPOSITE IN
+  EFFECT AND IDENTICAL IN CAUSE. At 07:15 a waiter PICKED THE SUPERSEDED COPY BY MTIME --
+  wrong file accepted. At 07:45 deRV0907wait3 REJECTED THE REBUILT COPY BY PATH -- right
+  file refused, because BE superseded IN PLACE and the new book took THE SAME CANONICAL
+  PATH, so the skip test matched forever and the journal never reached 'rebuilt book
+  detected'. THE DURABLE FORM IS THE SHA256, never path, never mtime. FOUR MINUTES
+  FIFTY-EIGHT SECONDS LOST ON A LOCK THAT WAS FREE -- and the cost of this class is never
+  the failure, it is THE INTERVAL IN WHICH NOTHING HAPPENS AND NOTHING SAYS SO. THE DIRECT
+  LAUNCH THEN REFUSED IN TEN SECONDS AND WAS RIGHT TO: I hashed the demanded producer
+  digest and 8500ce41fc80 IS THE COMPARATOR AT da00220, while the certificate on disk came
+  from BE's rebuild at e31fc59 (2f65dd0e029c). TWO VALID INSTRUMENTS, V2 PINNED TO THE
+  EARLIER. And across the three commits that matter the comparator is ABSENT AT THE PIN,
+  THEN ONE THING, THEN ANOTHER -- completing the picture I started at round 360. THE
+  RULING TURNS THE COLLISION INTO A THIRD CORROBORATION, because BIT_IDENTICAL passes
+  every tolerance. tip 2981ef8)
   2026-09-11T07:42:55Z (MEM ROUND 372 -- THE POST-POPULATION QUEUE AND RULE 47. The queue is recorded
   as ONE item with FOUR owners, all landing together after 09-13's book, each with its
   falsifier -- and DA 220's reason for pairing the wiring is the keeper: 'the call site
@@ -98,22 +113,6 @@ updated: >-
   THE DISPATCH'S TWO IDENTIFIERS DO NOT NAME THE SAME WINDOW -- recorded without asserting
   which is right. A SECOND LOCK RACE: two autonomous chains, one lock, NO ARBITER -- the
   durable-waiter fix for rule 37 produced waiters that COMPETE. tip 92e0985)
-  2026-09-11T07:33:39Z (MEM ROUND 370 -- THE EMIT IS REAL AND DRIVEN 8/8 BY TWO HANDS, AND ITS INPUT
-  DOES NOT EXIST YET. I read the constants: the WHOLE BAND STRUCTURE IS NAMED LITERALS in
-  the first thirty lines -- 110.0, 18.4, 1036.5, 1e-6, 1.0 -- which CONFIRMS THE CLOSE I
-  MADE AT ROUND 369 from the other direction, and the coordinator now attributes their
-  earlier 'not found' to THEIR OWN GREP TRUNCATING AT head -12: the absence was in the
-  instrument, not the file. The waiter is keyed ON THE RESULT FILE, not a unit name,
-  because keying on the unit LATCHED ONTO THE SUPERSEDED ATTEMPT -- 'the file is the
-  precondition; the unit name is a label' -- which also closes my round-369 open item, the
-  invoking unit. BUT THE DECOMPOSITION DOES NOT EXIST: the emit reads RESULT artifacts that
-  carry NO PER-WINDOW CONTRIBUTIONS, so every row is 0.0 BY ABSENCE OF INPUT and the
-  residual trips the halt. READ THAT HALT AS 'DECOMPOSITION MISSING', NEVER AS 'THE DAY
-  MOVED' -- and note the instrument NAMES ITS OWN MISSING INPUT, which is what separates it
-  from the five failures catalogued tonight. I READ THE MASKS MYSELF: 09-07 n_masked 1,
-  09-08/09/10 ALL ZERO, so THE ROW-REMOVING CONSEQUENCE IS CONFINED TO DAY ONE. And DE v9's
-  key fix matters because A MIS-KEYED LOOKUP DOES NOT ERROR, IT FALLS THROUGH TO THE OLD
-  VALUE. tip 77fcb80)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -285,6 +284,16 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 373, two proxies for identity ---
+  THE_TWO_WAITER_BUGS_ARE_MIRROR_IMAGES_OF_ONE_CLASS_AND_THAT_IS_THE_FINDING: "At 07:15 a waiter PICKED THE SUPERSEDED COPY BY MTIME -- the wrong file accepted. At 07:45 deRV0907wait3 REJECTED THE REBUILT COPY BY PATH -- the right file refused, because BE superseded IN PLACE, renaming the old file aside and writing the new book at THE SAME CANONICAL PATH, so `[ \"$b\" = \"$OLD\" ] && continue` matched forever and its journal never reached 'rebuilt book detected'. TWO FAILURES IN THIRTY MINUTES, OPPOSITE IN EFFECT, IDENTICAL IN CAUSE: BOTH USED A PROXY FOR IDENTITY. The durable form is the book's sha256, or inode plus size -- NEVER PATH EQUALITY, NEVER MTIME."
+  AND_FIVE_MINUTES_WERE_LOST_ON_A_LOCK_THAT_WAS_FREE: "I differenced the window: 07:48:07 to 07:53:05 is FOUR MINUTES FIFTY-EIGHT SECONDS with the lock FREE and a waiter armed for it since 07:15:39. DE bypassed with a direct launch. Worth recording precisely because the cost of this class is not the failure itself -- the waiter never errored and never reported -- it is THE INTERVAL IN WHICH NOTHING HAPPENS AND NOTHING SAYS SO, which is the same signature as every silent instrument catalogued tonight."
+  THE_DIRECT_LAUNCH_REFUSED_IN_TEN_SECONDS_AND_IT_WAS_RIGHT_TO: "deRV0907v1 raised SETTLEMENT_CONTROL_SCORE_NEUTRALITY_NOT_CERTIFIED naming producer digest 8500ce41f. I HASHED IT: 8500ce41fc80 IS be_score_neutrality.py AT da00220, the user's commit. So V2 TRUSTS ONLY CERTIFICATES PRODUCED BY THE COMPARATOR IT SHIPS WITH, and the certificate on disk -- BIT_IDENTICAL, zero flips -- came from BE's LATER rebuild to REV 173's bar, which I also hashed: e31fc59 gives 2f65dd0e029c. TWO VALID INSTRUMENTS, TWO DIGESTS, AND V2 PINNED TO THE EARLIER ONE."
+  AND_THE_COMPARATOR_HAS_THREE_STATES_ACROSS_THREE_COMMITS_WHICH_COMPLETES_A_PICTURE_I_STARTED_AT_ROUND_360: "At 7ed5a90 the file IS ABSENT -- which I established at round 360 when I found two pipeline files that do not exist at the pin. At da00220 it is 8500ce41fc80. At e31fc59 it is 2f65dd0e029c. So across the three commits that matter the comparator is ABSENT, THEN ONE THING, THEN ANOTHER, and the refusal is the seam between the last two. A reader who knows only that 'the comparator was rebuilt' cannot see why a certificate would be rejected; the three states make it obvious."
+  AND_IT_IS_THE_USERS_HARDENING_WORKING_AS_DESIGNED_COLLIDING_WITH_A_BETTER_INSTRUMENT: "Not a defect on either side. The user's commit hardened V2 to accept only certificates from its own comparator, which is exactly the provenance discipline this programme has spent the night demanding; BE then rebuilt the comparator to REV 173's stricter bar, which is exactly the correction this programme demanded of BE. A SEAM BETWEEN THE USER'S COMMIT AND A SEAT'S REBUILD -- and the two things that collided are both the right thing to have done."
+  AND_THE_RULING_TURNS_THE_COLLISION_INTO_A_THIRD_CORROBORATION: "Re-run the certification FROM wt-deval with the da00220 comparator on THE SAME TWO 09-03 BOOKS, 364f733d and 91c9293f, then relaunch. NO PIN MOVES. The reason it is safe is stated and is the right one: BIT_IDENTICAL PASSES EVERY TOLERANCE, so a comparator with a looser bar cannot fail what a stricter one passed -- AND IT IS A THIRD COMPARATOR CORROBORATING THE VERDICT. A blockage converted into evidence, which is the best available outcome and not the obvious one."
+  THE_09_08_FRAGMENT_LANDED_AND_ITS_GAP_WINDOWS_ARE_PUBLISHED_FOR_CROSS_CHECK: "rc=0 with provenance wt-fwd and 7ed5a9015f75, and be137_gap_windows_20260908.json is published -- the same artifact shape I read for 09-07 at round 364, so REV cross-checking it against the ledger has a like-for-like comparison rather than a new format to interpret. BE 133 counted 43 gap-bearing windows on 09-08 against 09-07's 27, and the cross-check is what turns that count into a verified one."
+  AND_DE_263_LANDED_THE_TWO_HALT_NAMES_AND_THE_SIGN_CONVENTION: "Emit sha 389ccdc79f4b, unit deEMIT0907d running ON LANDED BYTES and verified at the wrapper. So the single-name ambiguity I recorded one round ago is closed -- 'decomposition missing' and 'change outside the 27' now raise separately -- and residual_sign_convention ships AS A FIELD, which is what stops a reader deriving the inversion I checked algebraically last round and getting it backwards."
+  AND_TWO_ITEMS_JOIN_THE_POST_POPULATION_QUEUE: "The WAITER'S IDENTITY RULE -- sha256 or inode plus size, never path, never mtime -- and THE CERTIFICATE CARRYING ITS PRODUCER DIGEST AS A FIELD. The second is the general form of today's refusal: had the certificate declared which comparator made it, the collision would have been visible at the certificate rather than discovered at a launch ten seconds in. Both are recorded in these state files against the register row I could not land at round 372."
   # --- MEM round 372, the queue row and rule 47 ---
   THE_POST_POPULATION_QUEUE_IS_RECORDED_HERE_AS_ONE_ITEM_WITH_ITS_FOUR_OWNERS: "All landing together after 09-13's book, about 2026-09-14, in ONE COMMIT, each with its falsifier. (a) BE: flow_intensity.gaps_by_slug DROPS BOUNDARY-SPANNING GAPS ENTIRELY, plus the replay-invisible-gap defect at bc1ed86 on two of five consumed days IN BOTH DIRECTIONS. (b) DE: the 24-30 unnamed refusals renamed and driven, the arm-freeze-absent path's BARE 'REFUSED:' named, PIPELINE_MOVED driven on a PERTURBED builder_commit, and the empty |D|-to-zero field given a driven non-empty case. (c) BE AND DE TOGETHER: verify_run_inputs wired AND the params cranked AS A PAIR. (d) COORDINATOR: a LOCK ARBITER."
   AND_DA_220S_REASON_FOR_PAIRING_C_IS_THE_ONE_TO_KEEP: "'The call site alone refuses every day; the params alone leave the cascade unchecked.' So the two halves are not a task and its follow-up -- EACH HALF ALONE IS WORSE THAN NEITHER. That is why it is one queue item with two owners rather than two items, and it is the same shape I recorded at round 353 when BE said neither the call site nor the params crank works alone. A pair that must land together is a different object from two things that should."
@@ -27881,6 +27890,61 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 373, 2026-09-11T07:57:15Z ---
+  THE_TWO_WAITER_BUGS_ARE_MIRROR_IMAGES_OF_ONE_CLASS_AND_THAT_IS_THE_FINDING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:57:15Z
+    said: >-
+      the two mechanisms as dispatched, set against each other: mtime accepted a wrong file and path refused a right one, and neither is the property.
+  AND_FIVE_MINUTES_WERE_LOST_ON_A_LOCK_THAT_WAS_FREE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:57:15Z
+    said: >-
+      07:53:05 minus 07:48:07 computed as 4 minutes 58 seconds; the arming time as dispatched.
+  THE_DIRECT_LAUNCH_REFUSED_IN_TEN_SECONDS_AND_IT_WAS_RIGHT_TO:
+    prov: CHECKED
+    artifact: live/pm_research/be_score_neutrality.py
+    as_of: 2026-09-11T07:57:15Z
+    said: >-
+      be_score_neutrality.py hashed at da00220 giving 8500ce41fc80, which matches the demanded producer digest, and at e31fc59 giving 2f65dd0e029c.
+  AND_THE_COMPARATOR_HAS_THREE_STATES_ACROSS_THREE_COMMITS_WHICH_COMPLETES_A_PICTURE_I_STARTED_AT_ROUND_360:
+    prov: CHECKED
+    artifact: live/pm_research/be_score_neutrality.py
+    as_of: 2026-09-11T07:57:15Z
+    said: >-
+      git show of the path at all three commits: non-existent at 7ed5a90, and the two distinct digests above.
+  AND_IT_IS_THE_USERS_HARDENING_WORKING_AS_DESIGNED_COLLIDING_WITH_A_BETTER_INSTRUMENT:
+    prov: RELAYED
+    from: coordinator MEM 373
+    as_of: 2026-09-11T07:57:15Z
+    said: >-
+      the characterisation as dispatched; the two instruments' validity is established by the digests above and by the REV 173 rebuild recorded in my round-356 flags.
+  AND_THE_RULING_TURNS_THE_COLLISION_INTO_A_THIRD_CORROBORATION:
+    prov: RELAYED
+    from: DE 266 via coordinator MEM 373
+    as_of: 2026-09-11T07:57:15Z
+    said: >-
+      the two book digests, the no-pin-moves condition and the tolerance argument as dispatched.
+  THE_09_08_FRAGMENT_LANDED_AND_ITS_GAP_WINDOWS_ARE_PUBLISHED_FOR_CROSS_CHECK:
+    prov: RELAYED
+    from: BE via coordinator MEM 373
+    as_of: 2026-09-11T07:57:15Z
+    said: >-
+      the fragment's provenance and the artifact's publication as dispatched; the 09-07 counterpart I read directly at round 364.
+  AND_DE_263_LANDED_THE_TWO_HALT_NAMES_AND_THE_SIGN_CONVENTION:
+    prov: RELAYED
+    from: DE 263 via coordinator MEM 373
+    as_of: 2026-09-11T07:57:15Z
+    said: >-
+      the emit digest and the unit as dispatched; the sign inversion I verified algebraically at round 372 and the shared-name finding is recorded there.
+  AND_TWO_ITEMS_JOIN_THE_POST_POPULATION_QUEUE:
+    prov: RELAYED
+    from: coordinator MEM 373
+    as_of: 2026-09-11T07:57:15Z
+    said: >-
+      the two additions as dispatched; the queue row and its unlanded status are recorded in my round-372 flags.
   # --- MEM round 372, 2026-09-11T07:42:55Z ---
   THE_POST_POPULATION_QUEUE_IS_RECORDED_HERE_AS_ONE_ITEM_WITH_ITS_FOUR_OWNERS:
     prov: RELAYED
