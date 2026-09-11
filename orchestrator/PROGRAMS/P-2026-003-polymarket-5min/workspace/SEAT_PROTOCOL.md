@@ -704,3 +704,22 @@ except where marked USER-ONLY.
     diverged, cherry-pick them onto a branch from `origin/mm-research` and push
     that; never rebase the shared branch to make your own push fast-forward.**
     A merge is safe where a rebase is not: it rewrites no commit. (DA 224)
+
+46. **`systemctl show -p A -p B --value` returns properties in SYSTEMD'S order,
+    not the order you asked for. NEVER READ THEM POSITIONALLY.** (2026-09-11,
+    two seats in one night.) Driven: asking for `SubState`, `LoadState`,
+    `Result` returns `success`, `loaded`, `dead` — i.e. **Result, LoadState,
+    SubState**, so the first value back is the LAST one requested. Asking
+    `ActiveState`, `Result` returns `success inactive`: a positional pair read
+    takes the exit result as the active state.
+    **Use ONE PROPERTY PER CALL, or drop `--value` and parse `Key=value`.**
+    Instance 1: a build monitor reported THREE SUCCESSFUL BUILDS for units never
+    created — `Result=success` and `ExecMainStatus=0` are stale defaults on a
+    nonexistent or running unit; **the discriminators are `LoadState=loaded`,
+    a real `ExecMainStartTimestamp`, and `SubState`.** Instance 2: a book waiter
+    read `ActiveState` as the exit code, took the failure branch, and did not
+    launch for four minutes on a free lock.
+    **AND THE REASON IT HAPPENED TWICE: the first instance was written into a
+    seat's own notes within the hour and did not reach the next seat's script.
+    FILING IS NOT RETENTION. A rule in the protocol reaches the next script; a
+    note in a pane does not.** (R-900)
