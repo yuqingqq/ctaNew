@@ -178,3 +178,23 @@ Third instrument of mine to fail by satisfying a word: colons (332), a
 single-spelling count (336), a rotation delimiter (349), and now this. **The fix
 is never "be more careful with the old field" — it is to add the field that can
 say no.**
+
+## Round 353 — COMMIT BEFORE VALIDATING, not after
+
+My round-353 STATUS.yml write was **destroyed while uncommitted**. I wrote it at
+~03:15, ran the selftest and audit at ~03:17, and the audit reported the
+*round-352* counts: another seat's tooling had restored STATUS.yml from git in
+that window, and `git status` showed the file CLEAN — the edit was simply gone.
+Recovered by re-running the write script, which is why the script is written to
+be re-runnable from a clean file.
+
+**New ordering, and it is rule 31's ("commit as soon as it parses") applied to
+my own sequence:**
+
+1. write STATUS.yml → `yaml.safe_load` → **`git add` + commit IMMEDIATELY**
+2. *then* HANDOFF, procedure, archive
+3. *then* selftest / audit / register row, amending the commit if a repair is needed
+
+**Never leave a state-file edit uncommitted across another command.** This is a
+shared tree with several seats' tooling running in it; an uncommitted edit is not
+state, it is a gamble.
