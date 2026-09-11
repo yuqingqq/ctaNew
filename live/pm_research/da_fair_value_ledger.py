@@ -198,7 +198,7 @@ print(json.dumps({"properties": P}))
 '''
 
 PROBE_GATE_6 = r'''
-import json, sys
+import json, sys, inspect, dataclasses as _dc
 sys.path.insert(0, PM)
 import de_fair_value_actions as A, de_fair_value_replay_seam as R
 NS = 1788980100000000000; W = 1788980100
@@ -215,25 +215,29 @@ def actsof(rr):
     return sorted(A.build_actions(rr, canonical_population=popof(rr))["actions"],
                   key=lambda a: a.decision_recv_ns)
 acts = actsof(rows)
+half = actsof(rows[:3])
 REAL = (0.52, 0.48, 0.55, 0.45, 0.50, 0.60)
 FLAT = tuple([0.99] * 6)          # REV's flat tape, rebuilt from the finding
-def mk(tape, hs=0.01, **kw):
+# `action_keys_sha256` IS REQUIRED (Q-DE-371). Every ReplayInputs below supplies
+# it. The previous probe omitted it, died with a TypeError BEFORE printing, and
+# the harness recorded `probed: false` -- which the status branch then read as
+# SATISFIED. That is why this probe now builds inputs through ONE helper.
+def mk(tape, acts_for, hs=0.01, st=0.0, **kw):
     return R.ReplayInputs(non_fair_value_params={"max_inventory": 5},
-                          initial_state={"inventory": 0.0, "clock": 0},
-                          price_path=tape, half_spread=hs, **kw)
+                          initial_state={"inventory": st, "clock": 0},
+                          price_path=tape, half_spread=hs,
+                          action_keys_sha256=R.action_keys_digest(acts_for), **kw)
 def vo(v): return lambda a: (v, "probe", False)
-def arm(tape, v, hs=0.01, st=0.0):
-    return R.run_arm(acts, vo(v), R.ReplayInputs(
-        non_fair_value_params={"max_inventory": 5},
-        initial_state={"inventory": st, "clock": 0},
-        price_path=tape, half_spread=hs))
+def arm(tape, v, acts_for=None, hs=0.01, st=0.0):
+    acts_for = acts if acts_for is None else acts_for
+    return R.run_arm(acts_for, vo(v), mk(tape, acts_for, hs, st))
 def run(fn):
     try:
         r = fn(); return "OK " + str(r)[:40]
     except R.ReplayRefused as e:
         return "REFUSED " + str(e).split(":")[0].replace("REFUSED ", "")
     except Exception as e:
-        return "ERROR " + type(e).__name__ + " " + str(e)[:60]
+        return "ERROR " + type(e).__name__ + " " + str(e)[:70]
 P = {}
 P["a_flat_tape_challenger_is_refused_by_name"] = (
     "ARMS_DO_NOT_SHARE" in run(lambda: R.compare_arms(arm(REAL, 0.50), arm(FLAT, 0.58))))
@@ -244,52 +248,24 @@ P["c_differing_half_spread_refuses"] = (
 P["d_differing_initial_state_refuses"] = (
     "ARMS_DO_NOT_SHARE" in run(lambda: R.compare_arms(arm(REAL, 0.50), arm(REAL, 0.50, st=3.0))))
 P["e_a_lied_declared_snapshot_digest_refuses"] = (
-    "DECLARED_SNAPSHOT" in run(lambda: mk(REAL, declared_snapshot_sha256="0" * 64)))
+    "DECLARED_SNAPSHOT" in run(lambda: mk(REAL, acts, declared_snapshot_sha256="0" * 64)))
 P["f_a_true_declared_snapshot_digest_is_accepted"] = (
-    run(lambda: mk(REAL, declared_snapshot_sha256=mk(REAL).digest())).startswith("OK"))
-# THE OTHER HALF OF THE GATE: the paths must stay FREE, or a guard that
-# refuses everything would score six of six above.
+    run(lambda: mk(REAL, acts,
+                   declared_snapshot_sha256=mk(REAL, acts).digest())).startswith("OK"))
 b, c = arm(REAL, 0.50), arm(REAL, 0.58)
 P["g_order_paths_remain_free_to_differ"] = (b["path"].digest() != c["path"].digest())
-# AND THE TAPE MUST NOT BE REACHABLE AROUND ReplayInputs (the structural half).
-import inspect
-# THE SHARED POPULATION. REV 203 found this one, and it is the SAME SHAPE as
-# the price_path hole: an input that lives OUTSIDE ReplayInputs is an input the
-# comparison cannot see. A challenger that replays HALF the actions is reported
-# as sharing its inputs, with an identical inputs_digest. Driven here: 6 actions
-# against 3.
-# Q-DE-370 made the action list a FIELD, and the mechanism WORKS WHEN USED.
-# The gap that remains is that it is OPT-IN where the tape guard is mandatory:
-# `action_keys_sha256` defaults to "" and the check is `if
-# inputs.action_keys_sha256`, so a caller that omits it is never checked --
-# while `price_path` has NO default and cannot be omitted at all. Three
-# separate predicates, so the row names the ACTUAL defect rather than implying
-# the mechanism is missing.
-import dataclasses as _dc
-def _mkd(dig=None):
-    kw = dict(non_fair_value_params={"max_inventory": 5},
-              initial_state={"inventory": 0.0, "clock": 0},
-              price_path=REAL, half_spread=0.01)
-    if dig is not None:
-        kw["action_keys_sha256"] = dig
-    return R.ReplayInputs(**kw)
-_full, _half = acts, actsof(rows[:3])
-P["i_differing_action_populations_refuse_BY_DEFAULT"] = (
-    "ARMS_DO_NOT_SHARE" in run(lambda: R.compare_arms(
-        R.run_arm(_full, vo(0.50), _mkd()), R.run_arm(_half, vo(0.58), _mkd()))))
-P["j_the_declared_digest_guard_WORKS_when_used"] = (
-    "ARMS_DO_NOT_SHARE" in run(lambda: R.compare_arms(
-        R.run_arm(_full, vo(0.50), _mkd(R.action_keys_digest(_full))),
-        R.run_arm(_half, vo(0.58), _mkd(R.action_keys_digest(_half))))))
-P["k_a_LIED_action_digest_refuses"] = (
-    "ACTIONS_ARE_NOT_THE_DECLARED_POPULATION" in run(lambda: R.run_arm(
-        _half, vo(0.58), _mkd(R.action_keys_digest(_full)))))
-P["l_the_action_population_is_REQUIRED_like_price_path"] = (
-    R.ReplayInputs.__dataclass_fields__["action_keys_sha256"].default
-    is _dc.MISSING)
 P["h_tape_is_not_an_argument_to_run_arm"] = (
     "price_path" not in inspect.signature(R.run_arm).parameters
     and "price_path" in R.ReplayInputs.__dataclass_fields__)
+# THE SHARED ACTION POPULATION (REV 203, closed structurally by Q-DE-371).
+P["i_differing_action_populations_refuse"] = (
+    "ARMS_DO_NOT_SHARE" in run(lambda: R.compare_arms(
+        arm(REAL, 0.50), arm(REAL, 0.58, acts_for=half))))
+P["j_a_LIED_action_digest_refuses"] = (
+    "ACTIONS_ARE_NOT_THE_DECLARED_POPULATION" in run(
+        lambda: R.run_arm(half, vo(0.58), mk(REAL, acts))))
+P["k_the_action_population_is_REQUIRED_like_price_path"] = (
+    R.ReplayInputs.__dataclass_fields__["action_keys_sha256"].default is _dc.MISSING)
 print(json.dumps({"properties": P}))
 '''
 
@@ -378,16 +354,106 @@ P["f_a_used_candidate_is_counted_separately"] = (
 print(json.dumps({"properties": P}))
 '''
 
-PROBES = {3: PROBE_GATE_3, 4: PROBE_GATE_4, 5: PROBE_GATE_5, 6: PROBE_GATE_6}
+
+PROBE_GATE_1 = r'''
+import json, sys
+sys.path.insert(0, PM)
+import da_fair_value_gate1_labels as G
+P = {}
+def cls(x0, xT, up, **kw):
+    sym, series, market, win = G._fixture(x0, xT, up)
+    return G.classify_window(slug="p", market=market,
+                             winners=kw.pop("winners", win),
+                             streams={(sym, G.WINDOW_S): series}, **kw)
+# §5 item 1, driven. THE OFFICIAL JOIN IS NOT OPTIONAL.
+r = cls(100.0, 101.0, True, winners=None)
+P["a_no_official_row_means_NO_OFFICIAL_and_no_label"] = (
+    r["status"] == G.NO_OFFICIAL and not r.get("label"))
+r = cls(100.0, 101.0, True)
+P["b_an_exact_endpoint_label_admits_with_a_label"] = (
+    r["status"] == G.LABEL_ADMISSIBLE and r["label"] == "UP")
+r = cls(101.0, 100.0, False)
+P["c_the_DOWN_direction_admits_too"] = (
+    r["status"] == G.LABEL_ADMISSIBLE and r["label"] == "DOWN")
+# AN INVERTED SETTLEMENT MAPPING IS DETECTED AS DISAGREEMENT, NOT ABSENCE.
+r = cls(100.0, 101.0, False)
+P["d_an_inverted_mapping_is_DETECTED_as_disagreement"] = (r["status"] == G.DISAGREE)
+# MARGIN-AWARE: a margin below the feed's resolution is its OWN status.
+r = cls(100.0, 100.0 + 1e-9, True)
+P["e_a_margin_below_resolution_is_its_own_status"] = (
+    r["status"] == G.MARGIN_UNRESOLVABLE)
+# EXACTLY ONE STATUS ADMITS A LABEL, and the map is total over the grammar.
+P["f_exactly_one_status_admits_a_label"] = (len(G.ADMITTING) == 1)
+P["g_the_consumer_map_is_TOTAL_over_the_status_grammar"] = (
+    all(st in G.STATUS_MAP for st in G.STATUSES)
+    and all(v in G.CONSUMER_STATUSES for v in G.STATUS_MAP.values()))
+print(json.dumps({"properties": P}))
+'''
+
+PROBE_GATE_2 = r'''
+import json, sys
+sys.path.insert(0, PM)
+import be_sigma_30m as S
+NOW = S.ERA_FLOOR_NS + 10 * 3600 * S.NS
+def st(ticks, t=NOW):
+    return S.sigma_30m(ticks, t)["status"]
+P = {}
+# §5 item 2's seven named falsifiers, each driven to ITS OWN status.
+full = S._synth(NOW, 2e-5)
+ok = S.sigma_30m(full, NOW)
+P["a_scale_a_2e-5_path_measures_2e-5"] = (
+    ok["status"] == "OK" and abs(ok["sigma_per_sqrt_s"] - 2e-5) < 2e-7)
+dbl = S.sigma_30m(S._synth(NOW, 4e-5), NOW)
+P["b_scale_DOUBLING_the_path_doubles_the_estimate"] = (
+    dbl["status"] == "OK"
+    and abs(dbl["sigma_per_sqrt_s"] / ok["sigma_per_sqrt_s"] - 2.0) < 1e-6)
+P["i_NO_ANNUALISATION_the_estimate_is_per_sqrt_second"] = (
+    ok.get("units") == "per_sqrt_s" or not ok.get("annualised"))
+P["c_minimum_count_too_few_returns_REFUSES"] = (
+    st(S._synth(NOW, 2e-5, first_index=S.WINDOW_S - 2)) == S.INSUFFICIENT_RETURNS)
+P["d_a_source_GAP_over_the_limit_REFUSES"] = (
+    st(S._synth(NOW, 2e-5, skip=tuple(range(100, 900)))) == S.SOURCE_GAP_OVER_LIMIT)
+P["e_ZERO_volatility_is_its_own_status"] = (
+    st(S._synth(NOW, 0.0)) == S.ZERO_VOLATILITY)
+P["f_a_STALE_input_is_its_own_status"] = (
+    st(S._synth(NOW, 2e-5, last_index=S.WINDOW_S - 600)) == S.STALE_INPUT)
+P["g_PRE_ERA_is_refused_by_name"] = (
+    st(S._synth(S.ERA_FLOOR_NS - 3600 * S.NS, 2e-5), S.ERA_FLOOR_NS - 3600 * S.NS)
+    == S.PRE_ERA)
+# FUTURE KNOWLEDGE. The property the PLAN requires is that no post-decision
+# row reaches the estimate. This module satisfies it by EXCLUDING such rows and
+# COUNTING them, not by refusing the record -- `FUTURE_KNOWLEDGE_IN_SOURCE` is a
+# structural backstop on an already-filtered series. My first version of this
+# cell asserted the REFUSAL, which is my guess at the mechanism rather than the
+# plan's requirement, and it failed against correct code.
+_fut = S.sigma_30m(S._synth(NOW, 2e-5, extra_offsets_ns=(5 * S.NS,)), NOW)
+_wild = list(S._synth(NOW, 2e-5)) + [(NOW + k * S.NS, 1e6) for k in (1, 2, 3)]
+_wr = S.sigma_30m(_wild, NOW)
+P["h_post_decision_rows_change_NOTHING_and_are_COUNTED"] = (
+    abs(_fut["sigma_per_sqrt_s"] - ok["sigma_per_sqrt_s"]) < 1e-18
+    and _fut["n_rows_after_decision"] == 1
+    and abs(_wr["sigma_per_sqrt_s"] - ok["sigma_per_sqrt_s"]) < 1e-18
+    and _wr["n_rows_after_decision"] == 3)
+print(json.dumps({"properties": P}))
+'''
+
+PROBES = {1: PROBE_GATE_1, 2: PROBE_GATE_2, 3: PROBE_GATE_3, 4: PROBE_GATE_4, 5: PROBE_GATE_5, 6: PROBE_GATE_6}
 #: Gates 1 and 2 carry no second DA instrument, and the ledger says so rather
 #: than leaving an empty dict that reads as coverage. Gate 1 IS DA's own
 #: module, so DA's cells are the FIRST instrument there, not a second one;
 #: gate 2's 27 cells are BE's, re-driven here against the ref's bytes.
-NO_DA_PROBE = {
-    1: "gate 1 is DA's own module -- DA's cells are its first instrument, and a "
-       "second instrument for it would have to come from another seat",
-    2: "no DA property probe written; BE's 27 cells are driven here against the "
-       "ref's bytes, which tests the LANDING, not the property set",
+#: EVERY GATE IS PROBED. There is no longer an exemption, because an exemption
+#: and a CRASH were indistinguishable in the output: both produced
+#: `probed: false`, and the status branch read that as SATISFIED.
+#:
+#: GATE 1'S PROBE IS SAME-SEAT and is recorded as such. It is a COVERAGE check
+#: over the properties §5 item 1 states, not an independent instrument -- DA
+#: wrote the module and the probe. It establishes `probed`, never independence.
+NO_DA_PROBE = {}
+SAME_SEAT_PROBE = {
+    1: ("DA wrote both the module and this probe. It measures COVERAGE of §5 "
+        "item 1's stated properties; it is not a second instrument, and "
+        "agreement between it and gate 1's own cells is not convergence."),
 }
 
 FAIR_VALUE_FILE_RE = r"(fair|sigma|forecast|seam|canonical)"
@@ -403,10 +469,30 @@ def _root() -> str:
     landed minutes earlier. It passed its falsifier because every cell was a
     NEGATIVE control, and a bug returning 0 for everything satisfies all of
     them. The positive control in `falsify()` is what catches it.
+
+    THE FALLBACK WAS THE SECOND HALF OF THE BUG. `git rev-parse` without a
+    directory is CWD-DEPENDENT, and returning "." when it fails meant that
+    driving this file from anywhere outside the repo made every `git -C .`
+    call fail silently and every count come back 0 -- the exact input that
+    makes a row read UNKNOWN or, before DA 280, default-SATISFIED. DE
+    reproduced it from /tmp with a minimal environment (REVIEW 205's dependent
+    sweep) and the landed-path control fired, as it was written to.
+
+    So: resolve from THIS MODULE'S OWN LOCATION first, then the cwd, and
+    REFUSE if neither is a repository. A path this file cannot verify is not a
+    path it may guess at.
     """
-    r = subprocess.run(["git", "rev-parse", "--show-toplevel"],
-                       capture_output=True, text=True)
-    return r.stdout.strip() or "."
+    here = Path(__file__).resolve().parent
+    for base in (here, Path.cwd()):
+        r = subprocess.run(["git", "-C", str(base), "rev-parse", "--show-toplevel"],
+                           capture_output=True, text=True)
+        if r.returncode == 0 and r.stdout.strip():
+            return r.stdout.strip()
+    raise RuntimeError(
+        "REFUSED NO_REPOSITORY_RESOLVABLE: every count in this ledger comes "
+        "from a git ref, and neither this module's directory nor the cwd is "
+        "inside a repository. Returning '.' here is what made a landed path "
+        "count 0 from outside the repo.")
 
 
 def _git(*args, text=True):
@@ -554,6 +640,69 @@ def step11_step6_freeze(refs=EXECUTING_REFS) -> dict:
                              "FULL-PIPELINE freeze plus both candidate "
                              "identities, which the seam does not establish")}
 
+
+UNPROBED = "PROPERTIES_NOT_PROBED"
+
+
+def row_status(present_on, beh, props) -> str:
+    """THE STATUS DECISION, as one testable function.
+
+    IT USED TO END IN `else: status = "SATISFIED"`, AND THAT DEFAULT WAS THE
+    WHOLE DEFECT. A probe that crashed before printing produced
+    `probed: false`, which matched no earlier branch and fell through to the
+    default -- so an UNPROBED gate read SATISFIED and counted toward
+    `gates_satisfied`. Measured 2026-09-11T20:43Z at the live ref: THREE rows
+    read SATISFIED with `probed: false`, and the ledger printed 6/6 while gate
+    6's probe was dying with a TypeError. REV proved the same branch would have
+    printed 6/6 the round before, when gate 6 genuinely failed.
+
+    AN UNPROBED GATE MUST NEVER READ SATISFIED. `SATISFIED` is now reachable
+    only through an explicit `probed is True`, and every other case has a name.
+    """
+    if not present_on:
+        return "NOT_ON_ANY_EXECUTING_REF"
+    if sorted(present_on) != sorted(REQUIRED_REFS):
+        return "ON_ONE_EXECUTING_REF_ONLY"
+    if beh.get("verdict") != "DRIVEN_GREEN":
+        return "LANDED_BUT_" + str(beh.get("verdict"))
+    if props.get("probed") is not True:
+        return UNPROBED
+    if not props.get("all_covered"):
+        return "CELLS_GREEN_BUT_PROPERTY_UNCOVERED"
+    return "SATISFIED"
+
+
+def executing_refs_divergence() -> dict:
+    """THE TWO EXECUTING REFS ARE NOT ALWAYS ONE SHA, AND THAT IS FINE.
+
+    Recorded so a reader meeting two shas is not surprised: the refs can carry
+    one commit each that the other does not, while every lane module is
+    byte-identical across both. What matters for a gate is the BLOB, not the
+    head, and the blob equality is computed here rather than assumed.
+    """
+    heads = {r: _git("rev-parse", r).stdout.strip() for r in EXECUTING_REFS}
+    paths = sorted({p for _, _, ps, _, _ in GATES for p in ps}
+                   | {"live/pm_research/da_fair_value_ledger.py"})
+    blobs = {p: {r: _blob_sha16(r, p) for r in EXECUTING_REFS} for p in paths}
+    identical = {p: len(set(v.values())) == 1 for p, v in blobs.items()}
+    a, b = EXECUTING_REFS
+    ahead = {
+        a: len([x for x in _git("log", "--format=%h", f"{b}..{a}").stdout.split() if x]),
+        b: len([x for x in _git("log", "--format=%h", f"{a}..{b}").stdout.split() if x]),
+    }
+    return {
+        "heads": heads,
+        "heads_equal": len(set(heads.values())) == 1,
+        "commits_each_ref_has_that_the_other_does_not": ahead,
+        "n_lane_modules_compared": len(paths),
+        "all_lane_modules_byte_identical_across_both_refs": all(identical.values()),
+        "modules_that_differ": sorted(k for k, v in identical.items() if not v),
+        "reading": ("a gate is satisfied by the BLOB on both refs, not by the "
+                    "heads matching. Two shas with identical modules is a "
+                    "normal state and blocks nothing."),
+    }
+
+
 def build(fetch: bool = True, drive: bool = True, ref: str = EXECUTING_REFS[0]) -> dict:
     if fetch:
         subprocess.run(["git", "-C", _root(), "fetch", "--quiet", "origin"], check=False)
@@ -578,17 +727,11 @@ def build(fetch: bool = True, drive: bool = True, ref: str = EXECUTING_REFS[0]) 
         # THE STATUS, COMPUTED. Presence, then behaviour, then properties --
         # and a gate with a green falsifier but an uncovered declared property
         # is NOT satisfied, because that is exactly what REV found twice.
-        if not present_on:
-            status = "NOT_ON_ANY_EXECUTING_REF"
-        elif sorted(present_on) != sorted(REQUIRED_REFS):
-            status = "ON_ONE_EXECUTING_REF_ONLY"
-        elif beh.get("verdict") != "DRIVEN_GREEN":
-            status = "LANDED_BUT_" + str(beh.get("verdict"))
-        elif props.get("probed") and not props.get("all_covered"):
-            status = "CELLS_GREEN_BUT_PROPERTY_UNCOVERED"
-        else:
-            status = "SATISFIED"
-        if status == "SATISFIED":
+        status = row_status(present_on, beh, props)
+        # A ROW COUNTS ONLY IF IT WAS PROBED. Stated twice on purpose: once in
+        # `row_status`, and once here, so a future edit to either cannot
+        # quietly restore a default-satisfied path.
+        if status == "SATISFIED" and props.get("probed") is True:
             satisfied += 1
         rows.append({
             "gate": gate, "plan": f"{PLAN} §5 item {gate}", "title": title,
@@ -604,6 +747,10 @@ def build(fetch: bool = True, drive: bool = True, ref: str = EXECUTING_REFS[0]) 
             "counts_per_ref": per_ref,
             "blob_sha256_16_at_ref": blobs,
             "cells": beh, "properties": props,
+            "probed": props.get("probed") is True,
+            "same_seat_probe": SAME_SEAT_PROBE.get(gate),
+            "counts_toward_gates_satisfied": (
+                status == "SATISFIED" and props.get("probed") is True),
             "status": status,
         })
     step6 = step11_step6_freeze()
@@ -616,6 +763,11 @@ def build(fetch: bool = True, drive: bool = True, ref: str = EXECUTING_REFS[0]) 
         "measured_at_ref": ref, "ref_head": head,
         "gates": rows,
         "gates_satisfied": satisfied,
+        "gates_probed": sum(1 for r in rows if r["properties"].get("probed") is True),
+        "gates_satisfied_counts_only_probed_rows": True,
+        "unprobed_gates": [r["gate"] for r in rows
+                           if r["properties"].get("probed") is not True],
+        "executing_refs": executing_refs_divergence(),
         "n_gates": N_GATES,
         # DA 277's predicate, EXACTLY AS SPECIFIED -- the §5 build-gate barrier.
         "no_labelled_score_permitted": satisfied < N_GATES,
@@ -760,7 +912,49 @@ def falsify() -> int:
        all(" in src" not in src and "open(PM" not in src for src in PROBES.values()),
        f"{len(PROBES)} probes")
     ck("every property probe IMPORTS and DRIVES its module",
-       all("import de_" in src for src in PROBES.values()))
+       all(any(f"import {pre}" in src for pre in ("de_", "da_", "be_"))
+           for src in PROBES.values()),
+       f"{len(PROBES)} probes")
+    ck("the repo root is resolved from THIS MODULE, not the cwd (DE/REVIEW 205)",
+       _root() == subprocess.run(
+           ["git", "-C", str(Path(__file__).resolve().parent), "rev-parse",
+            "--show-toplevel"], capture_output=True, text=True).stdout.strip(),
+       _root())
+    # ---- AN UNPROBED GATE MUST NEVER READ SATISFIED (DA 280) --------------
+    _green = {"verdict": "DRIVEN_GREEN"}
+    _both = list(REQUIRED_REFS)
+    ck("NEGATIVE CONTROL: a probe that CRASHED reads PROPERTIES_NOT_PROBED",
+       row_status(_both, _green,
+                  {"probed": False, "reason": "IndexError: list index out of range"})
+       == UNPROBED)
+    ck("...and REV's exact case -- everything else green, probe absent -- is NOT satisfied",
+       row_status(_both, _green, {"probed": False}) != "SATISFIED",
+       row_status(_both, _green, {"probed": False}))
+    ck("POSITIVE CONTROL: a probed, fully covered row still reaches SATISFIED",
+       row_status(_both, _green, {"probed": True, "all_covered": True}) == "SATISFIED")
+    ck("a probed row with an uncovered property is named, not satisfied",
+       row_status(_both, _green, {"probed": True, "all_covered": False})
+       == "CELLS_GREEN_BUT_PROPERTY_UNCOVERED")
+    ck("`probed: true` is required EXACTLY -- a truthy non-True cannot pass",
+       row_status(_both, _green, {"probed": 1, "all_covered": True}) == UNPROBED)
+    ck("gates_satisfied counts ONLY rows with probed: true",
+       led["gates_satisfied"] ==
+       sum(1 for r in led["gates"] if r["status"] == "SATISFIED"
+           and r["properties"].get("probed") is True)
+       and led["gates_satisfied_counts_only_probed_rows"],
+       f"satisfied={led['gates_satisfied']} probed={led['gates_probed']}")
+    ck("EVERY gate is probed -- there is no exemption left to hide a crash in",
+       led["gates_probed"] == N_GATES, f"unprobed: {led['unprobed_gates']}")
+    ck("a same-seat probe is DECLARED as such, not passed off as independent",
+       all(r["same_seat_probe"] for r in led["gates"] if r["gate"] in SAME_SEAT_PROBE))
+    # ---- the two executing refs -------------------------------------------
+    ck("the two executing refs are compared by BLOB, not by head",
+       isinstance(led["executing_refs"]["all_lane_modules_byte_identical_across_both_refs"], bool),
+       f"heads_equal={led['executing_refs']['heads_equal']} "
+       f"modules_identical={led['executing_refs']['all_lane_modules_byte_identical_across_both_refs']}")
+    ck("...and any module that DIFFERS across the refs is named",
+       isinstance(led["executing_refs"]["modules_that_differ"], list),
+       led["executing_refs"]["modules_that_differ"] or "none differ")
     ck("every row names the BLOB its verdict was earned against",
        all(all(v for v in r_["blob_sha256_16_at_ref"].values()) for r_ in led["gates"]))
     print(f"\n  {'LEDGER CELLS PASS' if not bad else str(bad) + ' FAILED'}")

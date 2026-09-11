@@ -1,0 +1,108 @@
+{
+ "protocol": "P003_DA_FAIR_VALUE_PROGRESS_LEDGER_V7",
+ "supersedes": "da_fair_value_progress_ledger_v6.json",
+ "declared_at": "2026-09-11T20:49:42Z",
+ "seat": "DA",
+ "dispatch": "DA 280; REV 203's diagnosis, executed not read",
+ "THE_DEFECT": "MY LEDGER PRINTED 6/6 FOR THE WRONG REASON. The status branch ended in `else: status = \"SATISFIED\"`, so any row that matched no earlier branch READ AS SATISFIED AND COUNTED. A probe that crashed produced `probed: false`, which matched nothing, and fell through to that default.",
+ "EXECUTED_NOT_READ": {
+  "the_probe_dies": "PROBE_GATE_6 built ReplayInputs without the now-required `action_keys_sha256` -> TypeError: ReplayInputs.__init__() missing 1 required positional argument",
+  "and_it_dies_outside_its_own_run_guard": "so nothing is printed at all",
+  "the_harness_indexes_empty_output": "IndexError: list index out of range, from r.stdout.strip().splitlines()[-1]",
+  "the_row_records": "{'probed': False, 'reason': 'IndexError: list index out of range'}",
+  "and_the_default_does_the_rest": "status = SATISFIED, satisfied += 1",
+  "measured_live_before_the_fix": "gates_satisfied 6/6 with THREE rows probed=false -- gates 1, 2 and 6 -- and no_labelled_score_permitted FALSE on the strength of it"
+ },
+ "REVS_SHARPEST_POINT_AND_IT_IS_CORRECT": "the same branch would have printed 6/6 the round before, when gate 6 GENUINELY failed. A ledger with a default-satisfied branch is not a second instrument, it is an echo. Verified here by driving `row_status` directly with a crashed-probe input.",
+ "THE_FIX": {
+  "1_the_probe_runs": "every ReplayInputs in PROBE_GATE_6 is built through one helper that supplies `action_keys_sha256`",
+  "2_unprobed_is_its_own_status": "PROPERTIES_NOT_PROBED. SATISFIED is now reachable ONLY through an explicit `props['probed'] is True`; there is no default branch left",
+  "3_the_predicate": "gates_satisfied counts only rows with probed: true -- stated in `row_status` AND again at the counting site, so an edit to either cannot quietly restore the default",
+  "4_every_gate_is_probed": "the NO_DA_PROBE exemption is GONE. An exemption and a crash were indistinguishable in the output: both produced probed: false. Probes were written for gates 1 and 2, so `probed` means the same thing on every row",
+  "5_negative_control": "row_status(present, DRIVEN_GREEN, {'probed': False, 'reason': 'IndexError...'}) == PROPERTIES_NOT_PROBED -- REV's exact case, reproduced as a cell, plus a cell proving a truthy non-True (1) cannot pass"
+ },
+ "GATE_1s_PROBE_IS_SAME_SEAT_AND_SAYS_SO": "DA wrote both the module and its probe. It establishes COVERAGE of §5 item 1's stated properties; it is not a second instrument, and agreement between it and gate 1's own cells is not convergence (rule 38). Carried on the row as `same_seat_probe`.",
+ "A_FIXTURE_ERROR_FOUND_WHILE_FIXING_THIS": "my new gate-2 probe asserted that a post-decision row is REFUSED as FUTURE_KNOWLEDGE_IN_SOURCE. It is not: be_sigma_30m EXCLUDES such rows and COUNTS them in `n_rows_after_decision`, which is what §5 actually requires -- no future knowledge in the estimate. The refusal is a structural backstop on an already-filtered series. I wrote the property from my expectation of the MECHANISM rather than from the plan's REQUIREMENT, and it failed against correct code. Fourth fixture error of this shape this session.",
+ "DE_REVIEW_205_FINDING_CREDITED_AND_FIXED": {
+  "reported_by": "DE (ctanew-3b), via de_dependents_sweep.py",
+  "the_finding": "`_root()` ran `git rev-parse --show-toplevel` with NO directory, so it was CWD-DEPENDENT, and returned '.' on failure. Driven from /tmp the repo could not be resolved, every count came back 0, and the landed-path control fired",
+  "why_it_matters_here": "0 landed paths is exactly the input that made rows read UNKNOWN or, before this dispatch, default-SATISFIED",
+  "the_fix": "resolve from THIS MODULE's own location first, then the cwd, and REFUSE NO_REPOSITORY_RESOLVABLE if neither is a repository. A path this file cannot verify is not one it may guess at",
+  "verified": "DE's exact command re-run from /tmp with a minimal environment: the landed-path control now PASSES with counts 1 and 1",
+  "one_correction_to_the_report": "DE reported 'exit code 0 in BOTH cases'. Measured: in the broken state the falsifier exited 1 with real FAIL cells; after the fix it exits 0 with none. The apparent FAIL lines in the fixed run are a grep artifact -- two PASS labels contain the literal text '[PASS]/[FAIL] lines', the name of the cell-counting method, so `grep -c '[FAIL]'` matches them. I reproduced that false positive myself before spotting it"
+ },
+ "THE_TWO_EXECUTING_REFS": {
+  "why_recorded": "REV reported the refs diverged by one BE commit each -- chain 1764deb, runner d559c88, same title, two shas -- while all lane modules were byte-identical. Recorded so a reader meeting two shas is not surprised",
+  "measured_now": {
+   "heads": {
+    "de-freeze-chain-v2": "ab17913a6a10c1854f5b1bcb7c87881e6a7b0e93",
+    "be-build-runner": "ab17913a6a10c1854f5b1bcb7c87881e6a7b0e93"
+   },
+   "heads_equal": true,
+   "commits_each_has_that_the_other_does_not": {
+    "de-freeze-chain-v2": 0,
+    "be-build-runner": 0
+   },
+   "n_lane_modules_compared": 8,
+   "all_byte_identical_across_both": true,
+   "modules_that_differ": []
+  },
+  "the_rule": "a gate is satisfied by the BLOB on both refs, not by the heads matching. Two shas with identical modules is a normal state and blocks nothing. Computed every run, never assumed"
+ },
+ "THE_ROWS_NOW": {
+  "1": {
+   "status": "SATISFIED",
+   "probed": true,
+   "counts": true,
+   "cells": "50/50",
+   "properties": "7/7"
+  },
+  "2": {
+   "status": "SATISFIED",
+   "probed": true,
+   "counts": true,
+   "cells": "27/27",
+   "properties": "9/9"
+  },
+  "3": {
+   "status": "SATISFIED",
+   "probed": true,
+   "counts": true,
+   "cells": "29/29",
+   "properties": "7/7"
+  },
+  "4": {
+   "status": "SATISFIED",
+   "probed": true,
+   "counts": true,
+   "cells": "22/22",
+   "properties": "7/7"
+  },
+  "5": {
+   "status": "SATISFIED",
+   "probed": true,
+   "counts": true,
+   "cells": "9/9",
+   "properties": "6/6"
+  },
+  "6": {
+   "status": "SATISFIED",
+   "probed": true,
+   "counts": true,
+   "cells": "25/25",
+   "properties": "11/11"
+  }
+ },
+ "gates_satisfied": 6,
+ "gates_probed": 6,
+ "no_labelled_score_permitted": false,
+ "score_is_evidence_permitted": false,
+ "AND_THIS_6_OF_6_IS_NOT_THE_EARLIER_ONE": "the earlier 6/6 counted three rows that were never probed. This one counts six rows that each drove their module's falsifier from the ref's bytes AND passed a DA property probe against the same bytes. The number is the same; what stands behind it is not.",
+ "STEP_6_FREEZE_STILL_BLOCKED_BY_ITS_OWN_GAPS": "DA 278's draft remains UNLANDED and carries 15 blocking gaps of its own -- P&L and the immutable-input manifest have no implementation, and the quote mapping satisfies 1 of §7's 8 clauses. Six of six on the BUILD gates does not close those.",
+ "THE_INSTRUMENT": {
+  "path": "live/pm_research/da_fair_value_ledger.py",
+  "content_sha256_16": "5fb8da4651b63686",
+  "cells": 37
+ },
+ "rule_10": "every number and boolean above was computed or driven before being written here."
+}
