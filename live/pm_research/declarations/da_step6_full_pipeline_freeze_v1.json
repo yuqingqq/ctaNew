@@ -4,14 +4,14 @@
  "DRAFT": false,
  "LANDED_BY": "DA 281",
  "freeze_is_effective": false,
+ "enumeration": {
+  "n_chain_links": 10,
+  "n_required_fields": 14,
+  "n_quote_clauses": 9,
+  "intact": true
+ },
+ "enumeration_intact": true,
  "why_not_effective": [
-  {
-   "requirement": "chain_link_not_implemented:immutable_inputs",
-   "section": "\u00a77",
-   "satisfied": false,
-   "why": "the first link of \u00a77's chain has no implementation and no manifest",
-   "line_recorded": true
-  },
   {
    "requirement": "chain_link_not_implemented:pnl",
    "section": "\u00a77",
@@ -25,27 +25,20 @@
    "satisfied": false,
    "why": "no fee appears anywhere in the frozen chain, so a P&L computed from it would be gross by construction",
    "line_recorded": true
-  },
-  {
-   "requirement": "source_manifests",
-   "section": "\u00a77",
-   "satisfied": false,
-   "why": "no manifest enumerates the immutable inputs, so the frozen chain begins at a link nothing identifies",
-   "line_recorded": true
   }
  ],
  "WHAT_freeze_is_effective_MEANS": "TRUE only when every \u00a77 field resolves and every chain link has an implementation. It is FALSE here. The declaration exists so that \u00a711 step 6 has an artifact and so that what is missing is written down at a ref rather than carried in conversation; it does not assert that the pipeline is frozen.",
  "executing_refs": {
   "heads": {
-   "origin/de-freeze-chain-v2": "486eb1fcd4f0ceca413ba640a7f20914213a9b8b",
-   "origin/be-build-runner": "486eb1fcd4f0ceca413ba640a7f20914213a9b8b"
+   "origin/de-freeze-chain-v2": "d62f4f90cd772c84d3bc1db796d63e4201a2f8ec",
+   "origin/be-build-runner": "d62f4f90cd772c84d3bc1db796d63e4201a2f8ec"
   },
   "heads_equal": true,
   "commits_each_has_that_the_other_does_not": {
    "origin/de-freeze-chain-v2": 0,
    "origin/be-build-runner": 0
   },
-  "n_lane_modules_compared": 8,
+  "n_lane_modules_compared": 9,
   "all_lane_modules_byte_identical": true,
   "modules_that_differ": [],
   "the_rule": "a gate is satisfied by the BLOB on both refs, not by the heads matching; two shas with identical modules blocks nothing"
@@ -74,14 +67,38 @@
    "and the measurement is NOT uniformly zero: 10 of 1056 maker legs WERE charged, all at price 0.99, so 'maker fills are free' is false as stated even as a description"
   ]
  },
+ "input_manifest": {
+  "present": true,
+  "path": "live/pm_research/declarations/da_immutable_inputs_manifest_v1.json",
+  "sha256": "b02ed6801963a33a297bbbc2b07aa4be1af6eb20c4ef18c8272b05f429dce1be",
+  "n_inputs": 7,
+  "days_sealed": [
+   "20260909",
+   "20260910",
+   "20260911"
+  ],
+  "every_predictive_link_has_a_sealed_input": true,
+  "all_enumerated_inputs_present_and_sealed": true,
+  "predictive_links_not_covered": [],
+  "satisfies_section_7": true,
+  "seal_kinds": [
+   "CONTENT",
+   "PREFIX"
+  ],
+  "WHAT_A_SEAL_DOES_NOT_CLAIM": "it pins the BYTES the chain read. It does not certify they are correct, complete, or free of collector gaps -- gap statuses are a separate predicate and stay one. A seal answers 'is this the same input?', never 'is this a good input?'"
+ },
  "declared_at_ref": "origin/de-freeze-chain-v2",
- "ref_head": "486eb1fcd4f0ceca413ba640a7f20914213a9b8b",
+ "ref_head": "d62f4f90cd772c84d3bc1db796d63e4201a2f8ec",
  "chain_in_order": [
   {
    "link": "immutable_inputs",
-   "paths": [],
-   "sha256": {},
-   "implemented": false
+   "paths": [
+    "live/pm_research/da_immutable_inputs_manifest.py"
+   ],
+   "sha256": {
+    "live/pm_research/da_immutable_inputs_manifest.py": "6e8124607ec67f543e51c1fbd47ae89118f4c091dadc887d9315d55f5d225a54"
+   },
+   "implemented": true
   },
   {
    "link": "labels_statuses",
@@ -178,6 +195,7 @@
  ],
  "fields": {
   "all_file_hashes": {
+   "live/pm_research/da_immutable_inputs_manifest.py": "6e8124607ec67f543e51c1fbd47ae89118f4c091dadc887d9315d55f5d225a54",
    "live/pm_research/da_fair_value_gate1_labels.py": "73dca3620474a3363fb50694a59df5c6b81460bd14f55a234e7f7d30780515b3",
    "live/pm_research/de_canonical_action_population.py": "76e204a6788218aec19c0ed6951bd5a25b34ff29f51f2fb89e2a886b652967e6",
    "live/pm_research/de_fair_value_actions.py": "a1affe64504758a7a6a290fe2a21396c01edb21d429e5de420be2be9f2510ba8",
@@ -189,9 +207,9 @@
   },
   "commit_ref": {
    "ref": "origin/de-freeze-chain-v2",
-   "head": "486eb1fcd4f0ceca413ba640a7f20914213a9b8b",
+   "head": "d62f4f90cd772c84d3bc1db796d63e4201a2f8ec",
    "mirror": "origin/be-build-runner",
-   "mirror_head": "486eb1fcd4f0ceca413ba640a7f20914213a9b8b"
+   "mirror_head": "d62f4f90cd772c84d3bc1db796d63e4201a2f8ec"
   },
   "candidate_count": {
    "n": 2,
@@ -201,17 +219,17 @@
     "pm_microprice": {
      "estimator": "pm_microprice",
      "model_version": null,
-     "builder_path": "/tmp/da_step6_lbpk3d8x/live/pm_research/da_fair_price_identity.py",
+     "builder_path": "/tmp/da_step6_vt9hgz6o/live/pm_research/da_fair_price_identity.py",
      "builder_sha256": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
-     "wrapper_path": "/tmp/da_step6_lbpk3d8x/live/pm_research/de_fair_price_wrapper.py",
+     "wrapper_path": "/tmp/da_step6_vt9hgz6o/live/pm_research/de_fair_price_wrapper.py",
      "wrapper_sha256": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0"
     },
     "bn_bookticker_mid": {
      "estimator": "bn_bookticker_mid",
      "model_version": "s60_probability_v1",
-     "builder_path": "/tmp/da_step6_lbpk3d8x/live/pm_research/da_fair_price_identity.py",
+     "builder_path": "/tmp/da_step6_vt9hgz6o/live/pm_research/da_fair_price_identity.py",
      "builder_sha256": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
-     "wrapper_path": "/tmp/da_step6_lbpk3d8x/live/pm_research/de_fair_price_wrapper.py",
+     "wrapper_path": "/tmp/da_step6_vt9hgz6o/live/pm_research/de_fair_price_wrapper.py",
      "wrapper_sha256": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0"
     }
    },
@@ -261,7 +279,46 @@
     "PROTOCOL"
    ]
   },
-  "source_manifests": "MISSING",
+  "source_manifests": {
+   "present": true,
+   "path": "live/pm_research/declarations/da_immutable_inputs_manifest_v1.json",
+   "sha256": "b02ed6801963a33a297bbbc2b07aa4be1af6eb20c4ef18c8272b05f429dce1be",
+   "n_inputs": 7,
+   "days_sealed": [
+    "20260909",
+    "20260910",
+    "20260911"
+   ],
+   "every_predictive_link_has_a_sealed_input": true,
+   "all_enumerated_inputs_present_and_sealed": true,
+   "predictive_links_not_covered": [],
+   "satisfies_section_7": true,
+   "seal_kinds": [
+    "CONTENT",
+    "PREFIX"
+   ],
+   "WHAT_A_SEAL_DOES_NOT_CLAIM": "it pins the BYTES the chain read. It does not certify they are correct, complete, or free of collector gaps -- gap statuses are a separate predicate and stay one. A seal answers 'is this the same input?', never 'is this a good input?'"
+  },
+  "source_manifests_probe": {
+   "present": true,
+   "path": "live/pm_research/declarations/da_immutable_inputs_manifest_v1.json",
+   "sha256": "b02ed6801963a33a297bbbc2b07aa4be1af6eb20c4ef18c8272b05f429dce1be",
+   "n_inputs": 7,
+   "days_sealed": [
+    "20260909",
+    "20260910",
+    "20260911"
+   ],
+   "every_predictive_link_has_a_sealed_input": true,
+   "all_enumerated_inputs_present_and_sealed": true,
+   "predictive_links_not_covered": [],
+   "satisfies_section_7": true,
+   "seal_kinds": [
+    "CONTENT",
+    "PREFIX"
+   ],
+   "WHAT_A_SEAL_DOES_NOT_CLAIM": "it pins the BYTES the chain read. It does not certify they are correct, complete, or free of collector gaps -- gap statuses are a separate predicate and stay one. A seal answers 'is this the same input?', never 'is this a good input?'"
+  },
   "initial_inventory": {
    "value": 0.0,
    "units": "signed shares of the UP token, per market",
@@ -431,21 +488,19 @@
   "latency",
   "null_predicate",
   "quote_parameters",
+  "source_manifests",
   "status_grammar",
   "success_predicate",
   "tick_rounding"
  ],
  "fields_missing": [
-  "fee_rule",
-  "source_manifests"
+  "fee_rule"
  ],
  "blocking_gaps": [
-  "chain_link_not_implemented:immutable_inputs",
   "chain_link_not_implemented:pnl",
-  "fee_rule",
-  "source_manifests"
+  "fee_rule"
  ],
- "n_blocking_gaps": 4,
+ "n_blocking_gaps": 2,
  "rev203_six_of_six": false,
  "ready_to_land": false,
  "WHY_NOT_LANDED": "DA 278: draft only until REV 203 returns six of six. `ready_to_land` requires BOTH an empty gap list and that return, and this file cannot measure the second, so it defaults False and must be passed in.",
