@@ -67,6 +67,21 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T11:22:33Z (MEM ROUND 380 -- THE TRIPWIRE REPORTED AND EVERY FIELD MATCHES WHAT I COMPUTED
+  LAST ROUND. CONCENTRATION_FINDING TRUE ON BOTH ARMS; DELTA_D -3627.3668120000057 and
+  -330.8129409999947, the same values I differenced myself at round 379 TO THE LAST DIGIT;
+  SIGN_CHANGE_HALT false and halted_arms empty. AND THE RESIDUAL PROVES THE WHOLE MOVE
+  HAPPENED INSIDE THE 27 DECLARED WINDOWS: 5.9e-12 and -4.8e-12 cents, about 169,000 and
+  209,000 TIMES BELOW EVEN THE ROUNDING BAND, so NOTHING MOVED OUTSIDE THE SPINE -- the
+  positive result rule 4's halt exists to detect the absence of, now MEASURED. AND THE
+  PER-WINDOW CLAUSE EARNED ITSELF ON THE FIRST REAL RUN: HAZARD's worst single window is
+  1,280.750c against an aggregate of 330.813, which I divided -- 3.87 TIMES ITS NET, so
+  OFFSETTING MOVES, exactly the case it was added for at round 365. Aggregate-only would
+  still have fired, so its value here is not the FIRING but THE MAGNITUDE: the net
+  understates the largest single movement by nearly four times. The oracle snapshot was
+  found OFF ON THE REAL LAUNCH PATH and fixed as a wrapper opt-in DRIVEN THROUGH THE PATH --
+  configured-but-not-applied again, and driving it through the path is what proves the
+  setting ARRIVES rather than merely exists. tip 0fa367f)
   2026-09-11T11:05:34Z (MEM ROUND 379 -- DAY ONE IS VALUED UNDER V2 ON THE REBUILT BOOK AND I READ THE
   NUMBERS AT THE ARTIFACTS: CONDVALUE -14,645.078818c at p 0.181637, HAZARD +4,925.363903c
   at p 0.728543, with FUTILE and ALIVE both COMPUTED and the tail values 0.125 and 0.015625
@@ -97,21 +112,6 @@ updated: >-
   BY ActiveState AND Result ALONE, and the discriminator -- rc=75 means DID NO WORK -- is
   the one I recorded from the coordinator's own watcher fix ONE ROUND EARLIER.
   tip 85824fd)
-  2026-09-11T08:56:01Z (MEM ROUND 377 -- MY ROUND-376 WARNING IS CONFIRMED AGAINST THE ACTUAL PIN. The
-  comparator at dcec80a still hashes a455191d6bceec7e, and I INVENTORIED EVERY CERTIFICATE
-  ON DISK: one records producer 8500ce41 and the other c5c1fc0a. NEITHER MATCHES THE
-  COMPARATOR GO5 WILL RUN, so deRV0907go5 WILL REFUSE NOT_CERTIFIED exactly as go4 would
-  have, unless a THIRD certification is run with the a455191d comparator first. And the
-  inventory is the useful part: the two certificates are the work of the two instruments
-  whose agreement I called rule-38 corroboration at round 374, AND BOTH ARE NOW STALE
-  AGAINST A THIRD -- the self-referential digest check compounding, with a stock of two and
-  zero valid. THE PIN dcec80a IS ON origin/de-freeze-chain-v2 AND NOT ON origin/mm-research,
-  which I checked both ways: THE REGISTER'S AUTHORITY LAGS A VALID LANDING. I also correct
-  my own first reading -- the one 'dirty' entry in wt-deval is '?? data', UNTRACKED, so the
-  tracked tree is clean and the dispatch is right. The driver difference is cleared by TWO
-  GENUINELY DIFFERENT INSTRUMENTS, a syntax tree and a dependency graph, on ONE property.
-  And I verified the v10 amendment's pinned digest myself: sha256(params_v31) is
-  dd58223c6e3654a2 and the amendment contains it. tip 1994587)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -283,6 +283,15 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 380, the tripwire reported ---
+  THE_TRIPWIRE_REPORTED_AND_EVERY_FIELD_MATCHES_WHAT_I_COMPUTED_LAST_ROUND: "I read p003_de_revaluation_emit_20260907.json directly. CONCENTRATION_FINDING TRUE ON BOTH ARMS. DELTA_D_cents -3627.3668120000057 and -330.8129409999947 -- THE SAME VALUES I DIFFERENCED MYSELF AT ROUND 379, to the last digit. SIGN_CHANGE_HALT false, halted_arms empty, HALT false on both, refusal_name_if_halt None, and what_a_halt_here_means reading 'within band'. reference_levels_cents carries 18.4 and 1036.5 as declared."
+  AND_THE_RESIDUAL_PROVES_THE_WHOLE_MOVE_HAPPENED_INSIDE_THE_27_DECLARED_WINDOWS: "residual_cents is 5.9117e-12 on CONDVALUE and -4.7748e-12 on HAZARD. I compared them to the declared bands: BOTH ARE ABOUT 169,000 AND 209,000 TIMES BELOW EVEN THE 1e-6 ROUNDING BAND, and eleven orders below the 1c HALT. So THE ENTIRE DELTA-D IS ACCOUNTED FOR INSIDE THE 27 DECLARED WINDOWS AND NOTHING MOVED OUTSIDE THE SPINE. That is the positive result rule 4's halt exists to detect the absence of -- and it is now MEASURED rather than assumed."
+  AND_THE_PER_WINDOW_CLAUSE_EARNED_ITSELF_ON_THE_FIRST_REAL_RUN: "worst_window_abs_delta_D is 1,960.399c on CONDVALUE against an aggregate of 3,627.367 -- 54 per cent in ONE window -- and 1,280.750c on HAZARD AGAINST AN AGGREGATE OF ONLY 330.813. I divided them: HAZARD'S WORST SINGLE WINDOW IS 3.87 TIMES ITS NET. That is OFFSETTING MOVES, exactly the case the per-window clause was added for at round 365. Aggregate-only would still have fired at 330.8 against 110 -- so its value here is not the FIRING but the MAGNITUDE: the net understates the largest single movement by nearly four times."
+  AND_THE_SIGN_CONVENTION_SHIPS_AS_A_FIELD_WHICH_IS_THE_FIX_I_VERIFIED_ALGEBRAICALLY: "The emit carries residual_sign_convention in its own output: residual equals the sum of declared rows minus DELTA_D, which is the NEGATED sum over windows outside the declared spine, with the worked example that a +50c change outside shows as -50. That is the inversion I derived algebraically at round 372 and DE landed as a field at round 373 -- and it is now in the artifact a reader will actually meet, rather than in a derivation they would have to perform."
+  THE_ORACLE_SNAPSHOT_WAS_OFF_ON_THE_REAL_LAUNCH_PATH_WHICH_IS_THE_CLASS_AGAIN: "Found OFF on the REAL LAUNCH PATH and fixed as a WRAPPER OPT-IN, DRIVEN THROUGH THE PATH, at commit 621930a. That is configured-but-not-applied for the Nth time tonight, and the two halves of the repair are both necessary: an opt-in at the wrapper makes the setting reach the launch, and driving it THROUGH THE PATH is what proves the setting arrives rather than merely existing. A mechanism verified anywhere other than the path that uses it is the defect this programme has spent the day finding."
+  AND_THE_GROWING_INPUT_UNION_IS_FROZEN_PER_RUN: "Recorded because it is the quiet half of the same problem. An input set that grows while a run reads it makes two reads of one run disagree, and no digest taken at the start survives to the end. Freezing the union PER RUN is what makes a run's inputs a fixed object that can be named -- which every provenance check in this programme assumes and none of them could previously guarantee."
+  THE_LOCK_QUEUE_ON_DISK_WITH_BOTH_DISCRIMINATORS_APPLIED: "Three pids hold the lock file: 2419338, 2419339 and 2427663. be148tape0909 and be147frag0909 both read LoadState NOT-FOUND -- TRANSIENT UNITS THAT HAVE GONE, which LoadState catches and Result would have called success. deRV0908w1 is loaded and failed WITH rc=75, which is OFFERING. And deRV0907w1 is loaded and failed WITH rc=1, WHICH IS STILL A REAL FAILURE AND NOT AN OFFER -- unchanged from last round and worth not losing, since a genuine failure sitting quietly among pollers is exactly what the rc discriminator exists to separate."
+  AND_THE_0908_0909_0910_CHAINS_ARE_RE_ARMED_WAITING_ON_BES_CENSUS_V2: "With 09-09's tape on the lock since 11:14Z. Recorded as the queue state rather than as progress: three chains armed and blocked on one seat's artifact is the configuration rule 47 was written about, and it is being managed by declared order rather than by racing. The difference from this morning is that the order is now stated in advance instead of discovered at the lock."
   # --- MEM round 379, day one under V2 on the rebuilt book ---
   DAY_ONE_IS_VALUED_UNDER_V2_ON_THE_REBUILT_BOOK_AND_I_READ_THE_NUMBERS_AT_THE_ARTIFACTS: "From data/pm_5min/derived/fwd_v2/: CONDVALUE_X_SKEW observed_D = -14,645.078818c at p_two_sided 0.181637; HAZARD_OVER_SKEWED_REF +4,925.363903c at p 0.728543. The forward-value artifact carries FUTILE true for one arm and false for the other, with best_attainable_p 0.125 and 0.015625 and tolerance_negative_days -1 and 0 -- which are exactly the G=7 tail values I enumerated at round 350 and the two states the coordinator reports: CONDVALUE FUTILE, HAZARD ALIVE, both COMPUTED rather than asserted."
   AND_THE_ERA_REBUILD_MOVED_D_BY_MORE_THAN_EVERY_DECLARED_BOUND_INCLUDING_THE_ONE_WE_STRUCK: "I differenced V2-on-rebuilt against day one's V1 figures: CONDVALUE -3,627.366812c and HAZARD -330.812941c. Against the bars: CONDVALUE is 33.0x the 110c CONCENTRATION_FINDING bar, 197x REV's interval-scoped 18.4c, 3.5x REV'S WINDOW-SCOPED 1,036.5c -- THE PESSIMISTIC END OF THE RANGE -- and 1.3x THE 25 PER CENT BAR THAT WAS STRUCK AS UNREACHABLE. HAZARD is 3.0x the 110c bar and under the window-scoped bound. THE TRIPWIRE WILL FIRE, AND IT SHOULD."
@@ -27941,6 +27950,55 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 380, 2026-09-11T11:22:33Z ---
+  THE_TRIPWIRE_REPORTED_AND_EVERY_FIELD_MATCHES_WHAT_I_COMPUTED_LAST_ROUND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_revaluation_emit_20260907.json
+    as_of: 2026-09-11T11:22:33Z
+    said: >-
+      the emit artifact loaded and its fields read; the two DELTA_D values match the differences I computed at round 379 from the per-arm results against day one's V1 figures.
+  AND_THE_RESIDUAL_PROVES_THE_WHOLE_MOVE_HAPPENED_INSIDE_THE_27_DECLARED_WINDOWS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_revaluation_emit_20260907.json
+    as_of: 2026-09-11T11:22:33Z
+    said: >-
+      both residuals divided by the 1e-6 rounding band and the 1c halt band; the residual is the negated sum over windows outside the declared spine, per the convention field the emit ships.
+  AND_THE_PER_WINDOW_CLAUSE_EARNED_ITSELF_ON_THE_FIRST_REAL_RUN:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_revaluation_emit_20260907.json
+    as_of: 2026-09-11T11:22:33Z
+    said: >-
+      the two worst-window values divided by their aggregates: 0.54 and 3.87; the per-window clause and its offsetting-moves rationale are recorded in my round-365 flags.
+  AND_THE_SIGN_CONVENTION_SHIPS_AS_A_FIELD_WHICH_IS_THE_FIX_I_VERIFIED_ALGEBRAICALLY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_revaluation_emit_20260907.json
+    as_of: 2026-09-11T11:22:33Z
+    said: >-
+      the residual_sign_convention string read from both arms' blocks in the emit output; the algebra is recorded in my round-372 flags.
+  THE_ORACLE_SNAPSHOT_WAS_OFF_ON_THE_REAL_LAUNCH_PATH_WHICH_IS_THE_CLASS_AGAIN:
+    prov: RELAYED
+    from: DE via coordinator MEM 380
+    as_of: 2026-09-11T11:22:33Z
+    said: >-
+      the finding, the wrapper opt-in and the through-path drive as dispatched; the class is recorded across my rounds 339 to 358.
+  AND_THE_GROWING_INPUT_UNION_IS_FROZEN_PER_RUN:
+    prov: RELAYED
+    from: DE via coordinator MEM 380
+    as_of: 2026-09-11T11:22:33Z
+    said: >-
+      the per-run freeze as dispatched; recorded with the property it establishes rather than as a configuration change.
+  THE_LOCK_QUEUE_ON_DISK_WITH_BOTH_DISCRIMINATORS_APPLIED:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-measurement-pipeline.timer
+    as_of: 2026-09-11T11:22:33Z
+    said: >-
+      fuser on the lock file listing three pids; systemctl --user show per unit with LoadState first and ExecMainStatus read for each.
+  AND_THE_0908_0909_0910_CHAINS_ARE_RE_ARMED_WAITING_ON_BES_CENSUS_V2:
+    prov: RELAYED
+    from: coordinator MEM 380
+    as_of: 2026-09-11T11:22:33Z
+    said: >-
+      the three re-armed chains and the tape's hold as dispatched; the lock's occupancy is confirmed by the reading above.
   # --- MEM round 379, 2026-09-11T11:05:34Z ---
   DAY_ONE_IS_VALUED_UNDER_V2_ON_THE_REBUILT_BOOK_AND_I_READ_THE_NUMBERS_AT_THE_ARTIFACTS:
     prov: CHECKED

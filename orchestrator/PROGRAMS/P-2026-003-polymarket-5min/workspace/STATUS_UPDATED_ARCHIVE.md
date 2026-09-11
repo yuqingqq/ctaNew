@@ -23758,3 +23758,23 @@ generation and the window went 4 → 3. Nothing rewritten.
   gate's defect is REPAIRED. And the DRIVER differs too, confirmed by my own hashing.
   tip ae50330)
 ```
+
+## Batch 362 (rotated by MEM round 380, 2026-09-11T11:22:33Z)
+
+```
+  2026-09-11T08:56:01Z (MEM ROUND 377 -- MY ROUND-376 WARNING IS CONFIRMED AGAINST THE ACTUAL PIN. The
+  comparator at dcec80a still hashes a455191d6bceec7e, and I INVENTORIED EVERY CERTIFICATE
+  ON DISK: one records producer 8500ce41 and the other c5c1fc0a. NEITHER MATCHES THE
+  COMPARATOR GO5 WILL RUN, so deRV0907go5 WILL REFUSE NOT_CERTIFIED exactly as go4 would
+  have, unless a THIRD certification is run with the a455191d comparator first. And the
+  inventory is the useful part: the two certificates are the work of the two instruments
+  whose agreement I called rule-38 corroboration at round 374, AND BOTH ARE NOW STALE
+  AGAINST A THIRD -- the self-referential digest check compounding, with a stock of two and
+  zero valid. THE PIN dcec80a IS ON origin/de-freeze-chain-v2 AND NOT ON origin/mm-research,
+  which I checked both ways: THE REGISTER'S AUTHORITY LAGS A VALID LANDING. I also correct
+  my own first reading -- the one 'dirty' entry in wt-deval is '?? data', UNTRACKED, so the
+  tracked tree is clean and the dispatch is right. The driver difference is cleared by TWO
+  GENUINELY DIFFERENT INSTRUMENTS, a syntax tree and a dependency graph, on ONE property.
+  And I verified the v10 amendment's pinned digest myself: sha256(params_v31) is
+  dd58223c6e3654a2 and the amendment contains it. tip 1994587)
+```
