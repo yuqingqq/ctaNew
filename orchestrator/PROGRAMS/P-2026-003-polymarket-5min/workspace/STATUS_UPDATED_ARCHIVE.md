@@ -23530,3 +23530,24 @@ generation and the window went 4 → 3. Nothing rewritten.
   would drop ALL short gaps. SET (ii) IS EMPTY BY MEASUREMENT: the rebuilt mask returned
   exactly the values DA typed before it ran. tip a78af1a)
 ```
+
+## Batch 351 (rotated by MEM round 369, 2026-09-11T07:29:06Z)
+
+```
+  2026-09-11T07:13:00Z (MEM ROUND 366 -- THE FALSIFIER PASSED AND THE USER'S AMENDMENT STANDS
+  UNCONDITIONALLY. observed_D_MOVED FALSE on both arms, V2 GENUINELY LOADED this time:
+  CONDVALUE V1 = V2 = -11,017.712006c, HAZARD +5,256.176844c, baseline delta 0.0 -- and I
+  differenced those against my round-359 record, agreeing to 0.0120c and 0.0232c, which is
+  MY OWN ROUNDING AND NOTHING ELSE. THE ROBUSTNESS LEG EXISTS FOR THE FIRST TIME:
+  CONDVALUE -13,459.5c (worse, same sign), HAZARD +5,598.9c (better, same sign),
+  sign_reversal FALSE on both -- so it does NOT block HAZARD and it CONFIRMS CONDVALUE'S
+  NEGATIVE DAY UNDER BOTH FILL ASSUMPTIONS. AND BOTH LEGS RECONCILE TO THE BASELINE I HAVE
+  HELD FOR SEVEN ROUNDS: arm_total minus D gives -4,437.8 on EACH arm against the -4,437.7
+  I recorded at round 359 -- two new quantities closing onto an old one. I ALSO CAUGHT MY
+  OWN COMPARATOR calling HAZARD's leg 'worse' on an absolute-value test: |D| is right for
+  EXTREMITY and wrong for BETTER-OR-WORSE when the sign is favourable -- the round-359
+  confusion, in my own output, caught before it reached a file. The tripwire table is 27
+  rows BY DRIVE, with the 28th carrying the status GAP_RECORDED_NOT_SEEN_BY_REPLAY. SEVEN
+  REV FILINGS ARE STRANDED on a DIRTY TREE -- the same blockage holding my rows, from the
+  other side. tip 25078e7)
+```

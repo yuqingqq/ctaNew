@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T07:29:06Z (MEM ROUND 369 -- THE POST-PROCESSOR EXISTS AND I GREPPED THE ORIGIN BLOB: every
+  named token is in af675ac, authored 07:25:05, ahead of the book and ~90 min ahead of the
+  re-valuation. AND MY ROUND-368 GREP WAS CORRECT WHEN IT RAN: 07:24:06, one to two and a
+  half minutes BEFORE the file arrived -- THE ABSENCE I RECORDED WAS TRUE AT THE INSTANT OF
+  MEASUREMENT AND FALSE BY THE TIME IT WAS FILED, which is neither an error nor a vindication
+  but the reason A MEASUREMENT OF A MOVING TREE CARRIES ITS TIMESTAMP OR IT CARRIES NOTHING.
+  THE CORRECTION THAT MATTERS IS PHANTOM VERSUS PREMATURE: DE 252 at 07:08 described code
+  THAT DID NOT EXIST; DE 257 at 07:25 described the DESIGN OF A FILE THAT LANDED FOUR
+  MINUTES LATER. Different failures, different remedies. AND I CLOSED THE OPEN QUESTION ON
+  THE REFERENCE LEVELS: BOTH LITERALS ARE PRESENT -- 18.4 once and 1036.5 once -- while the
+  COMMA FORM 1,036.5 RETURNS ZERO, which is how the number is written in every dispatch, so
+  the search was of the RENDERED figure against SOURCE: the label instead of the property,
+  inside the hunt for that very class. The remaining open item is the INVOKING UNIT, and the
+  coordinator's formulation is exact: A POST-PROCESSOR NOBODY INVOKES IS DE 252 WITH A FILE
+  ATTACHED. Census total 145.306 s minus the 28th gap is 143.753, against the 143.8 I
+  recorded at round 365 -- 47 MILLISECONDS, all of it my own rounding. tip 2e6df95)
   2026-09-11T07:25:16Z (MEM ROUND 368 -- THE TRIPWIRE EMIT DOES NOT EXIST AND I GREPPED IT MYSELF:
   CONCENTRATION_FINDING appears in ZERO .py FILES in the shared tree and ZERO in wt-deval,
   and de_revaluation_emit.py IS ABSENT. THE TOKEN EXISTS ONLY IN THE DOCUMENTS THAT
@@ -99,22 +115,6 @@ updated: >-
   RULES WITH ZERO CELLS VISIBLE, including a sign-change rule that DELIBERATELY DISBELIEVES
   A RESULT THAT WOULD HELP THE ARM. The eight stranded REV filings are on origin via rule
   45. tip 6f2d431)
-  2026-09-11T07:13:00Z (MEM ROUND 366 -- THE FALSIFIER PASSED AND THE USER'S AMENDMENT STANDS
-  UNCONDITIONALLY. observed_D_MOVED FALSE on both arms, V2 GENUINELY LOADED this time:
-  CONDVALUE V1 = V2 = -11,017.712006c, HAZARD +5,256.176844c, baseline delta 0.0 -- and I
-  differenced those against my round-359 record, agreeing to 0.0120c and 0.0232c, which is
-  MY OWN ROUNDING AND NOTHING ELSE. THE ROBUSTNESS LEG EXISTS FOR THE FIRST TIME:
-  CONDVALUE -13,459.5c (worse, same sign), HAZARD +5,598.9c (better, same sign),
-  sign_reversal FALSE on both -- so it does NOT block HAZARD and it CONFIRMS CONDVALUE'S
-  NEGATIVE DAY UNDER BOTH FILL ASSUMPTIONS. AND BOTH LEGS RECONCILE TO THE BASELINE I HAVE
-  HELD FOR SEVEN ROUNDS: arm_total minus D gives -4,437.8 on EACH arm against the -4,437.7
-  I recorded at round 359 -- two new quantities closing onto an old one. I ALSO CAUGHT MY
-  OWN COMPARATOR calling HAZARD's leg 'worse' on an absolute-value test: |D| is right for
-  EXTREMITY and wrong for BETTER-OR-WORSE when the sign is favourable -- the round-359
-  confusion, in my own output, caught before it reached a file. The tripwire table is 27
-  rows BY DRIVE, with the 28th carrying the status GAP_RECORDED_NOT_SEEN_BY_REPLAY. SEVEN
-  REV FILINGS ARE STRANDED on a DIRTY TREE -- the same blockage holding my rows, from the
-  other side. tip 25078e7)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -286,6 +286,15 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 369, phantom versus premature ---
+  THE_POST_PROCESSOR_EXISTS_ON_ORIGIN_AND_I_GREPPED_THE_BLOB_MYSELF: "af675ac, 'Q-DE-257: the 09-07 re-valuation emit, committed BEFORE it runs on real inputs', authored 07:25:05. I grepped the ORIGIN BLOB rather than the working tree and every named token is there: CONCENTRATION_FINDING five times, SIGN_CHANGE_HALT four, residual_band four, declared_windows twice, falsify four, emit nine, and the 110 bar twice. It is committed AHEAD of the 09-07 book and about ninety minutes ahead of the re-valuation."
+  AND_MY_ROUND_368_GREP_WAS_CORRECT_WHEN_IT_RAN_WHICH_IS_A_DIFFERENT_THING_FROM_BEING_RIGHT: "I ran it at 07:24:06 and the commit is authored 07:25:05, landing about 07:26:29 -- so the file arrived BETWEEN ONE AND TWO AND A HALF MINUTES AFTER MY CHECK, while I was writing the round. The absence I recorded was TRUE AT THE INSTANT OF MEASUREMENT AND FALSE BY THE TIME IT WAS FILED. That is not the same as an error and it is not the same as being right either: A MEASUREMENT OF A MOVING TREE CARRIES ITS TIMESTAMP OR IT CARRIES NOTHING, and mine did."
+  AND_THE_DISTINCTION_BETWEEN_A_PHANTOM_AND_A_PREMATURE_REPORT_IS_THE_CORRECTION_THAT_MATTERS: "DE 252 at 07:08Z described code that DID NOT EXIST ON DISK -- a PHANTOM. DE 257 at 07:25Z described THE DESIGN OF A FILE THAT LANDED FOUR MINUTES LATER -- PREMATURE, NOT PHANTOM. The coordinator relayed the first as fact twice. Those are different failures with different remedies: a phantom needs the thing built, a premature report needs only the order of two events fixed. Collapsing them would have made an honest early description look like the dishonest one."
+  AND_I_CLOSED_THE_OPEN_QUESTION_ON_THE_REFERENCE_LEVELS_BOTH_LITERALS_ARE_PRESENT: "The dispatch lists as still open whether the two reference levels are computed at runtime or absent, the coordinator's grep having found NEITHER literal. I ran it against the origin blob: 18.4 IS PRESENT ONCE AND 1036.5 IS PRESENT ONCE. The comma form 1,036.5 returns ZERO -- which is almost certainly what was searched, since that is how the number has been WRITTEN in every dispatch and review. A rendered figure grepped against source: the label instead of the property, one more time, in the search for the thing that catalogues it."
+  AND_THE_REMAINING_OPEN_ITEM_IS_THE_ONE_THAT_DECIDES_WHETHER_ANY_OF_IT_MATTERS: "The INVOKING UNIT. The coordinator's own formulation is exact and should be quoted: A POST-PROCESSOR NOBODY INVOKES IS DE 252 WITH A FILE ATTACHED. Existence is necessary and insufficient -- this programme has spent the week on guards that exist and are never called, and an emit that no unit runs is that class with the artifact in hand. REV re-running the four driven cells from the origin blob is the other half."
+  REV_146_CLOSED_FIVE_OF_FIVE_BY_IDENTITY_AND_THE_REFERENCE_LEVELS_MATCH_TO_THE_DECIMAL: "18.40c and 1,036.50c -- matching to the DECIMAL, not to the order of magnitude, which is what makes it closure by IDENTITY rather than by agreement. And v12 carries 27 TABLE rows plus 1 CENSUS_ONLY row, the 15:55 window at 1.553 seconds, exactly the split the census status was created for: the 28th is present AS A NAMED ROW OF A DIFFERENT KIND rather than absent or silently merged."
+  AND_THE_CENSUS_TOTAL_CORROBORATES_MY_OWN_LEDGER_READ_TO_FORTY_SEVEN_MILLISECONDS: "Census total 145.306 s. I subtracted the 28th gap: 145.306 minus 1.553 is 143.753, against the 143.8 s I recorded at round 365 -- AGREEING TO 0.047 SECONDS, which is the rounding in my own one-decimal figure. Different instrument, different question, and the residual is entirely my own precision. Under the timing clause: the ledger read was filed first at round 365 and REV's census came later, so I record this as CONFIRMATION OF MY READING, not as two independent observations."
+  DA_V14_FIXED_THE_FREEZE_KEY_AS_A_SCOPED_PREDICATE_AND_FOUND_THE_SAME_SLIP_ELSEWHERE: "The freeze key is now a SCOPED PREDICATE rather than a declared boolean nobody reads -- which closes the round-363 finding that it was a bool with a space in its name that no code consumed. AND THE SAME UNDERSCORE SLIP TURNED UP IN DE'S v8 what_it_replaces, routed to DE for a v9. One malformed key found twice in two artifacts by two seats: the spelling was never the problem, THE ABSENCE OF A READER WAS, and a key nobody reads can be misspelled indefinitely without consequence until someone tries to read it."
   # --- MEM round 368, the instrument that did not exist ---
   THE_TRIPWIRE_EMIT_DOES_NOT_EXIST_AND_I_GREPPED_IT_MYSELF: "CONCENTRATION_FINDING appears in ZERO .py FILES in the shared tree and ZERO in wt-deval -- I ran it rather than accepting the correction. de_revaluation_emit.py IS ABSENT. DE reported the tripwire 'wired' and 'driven green' for three cells, and the coordinator relayed that to the USER TWICE AS FACT without checking the artifact. REV 146 could not find it; the grep confirms it."
   AND_THE_TOKEN_EXISTS_ONLY_IN_THE_DOCUMENTS_THAT_DESCRIBE_IT: "The same grep across json and md finds it in FOUR PROSE FILES: three REVIEW documents and MY OWN HANDOFF.md. So the name lives ENTIRELY IN NARRATIVE -- in the reviews that specify it and in the state file that records the specification -- and NOWHERE IN CODE. That is the sharpest possible shape for this finding: the only places the tripwire exists are the places that talk about it."
@@ -27840,6 +27849,55 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 369, 2026-09-11T07:29:06Z ---
+  THE_POST_PROCESSOR_EXISTS_ON_ORIGIN_AND_I_GREPPED_THE_BLOB_MYSELF:
+    prov: CHECKED
+    artifact: live/pm_research/de_revaluation_emit.py
+    as_of: 2026-09-11T07:29:06Z
+    said: >-
+      git show af675ac of the path piped through grep -c for each of the seven tokens; the commit read at its object for subject and author date.
+  AND_MY_ROUND_368_GREP_WAS_CORRECT_WHEN_IT_RAN_WHICH_IS_A_DIFFERENT_THING_FROM_BEING_RIGHT:
+    prov: CHECKED
+    artifact: live/pm_research/de_revaluation_emit.py
+    as_of: 2026-09-11T07:29:06Z
+    said: >-
+      my round-368 grep ran at 07:24:06Z by the clock recorded in that round; af675ac's author date is 07:25:05 and the dispatch gives 07:26:29 for the landing.
+  AND_THE_DISTINCTION_BETWEEN_A_PHANTOM_AND_A_PREMATURE_REPORT_IS_THE_CORRECTION_THAT_MATTERS:
+    prov: RELAYED
+    from: coordinator MEM 369
+    as_of: 2026-09-11T07:29:06Z
+    said: >-
+      the two timestamps and the coordinator's own attribution as dispatched; the phantom's non-existence I established by grep at round 368.
+  AND_I_CLOSED_THE_OPEN_QUESTION_ON_THE_REFERENCE_LEVELS_BOTH_LITERALS_ARE_PRESENT:
+    prov: CHECKED
+    artifact: live/pm_research/de_revaluation_emit.py
+    as_of: 2026-09-11T07:29:06Z
+    said: >-
+      grep -c on the af675ac blob for '18.4', '1036.5' and '1,036.5' returning 1, 1 and 0 respectively.
+  AND_THE_REMAINING_OPEN_ITEM_IS_THE_ONE_THAT_DECIDES_WHETHER_ANY_OF_IT_MATTERS:
+    prov: RELAYED
+    from: coordinator MEM 369
+    as_of: 2026-09-11T07:29:06Z
+    said: >-
+      the coordinator's quoted formulation and the two outstanding verifications as dispatched.
+  REV_146_CLOSED_FIVE_OF_FIVE_BY_IDENTITY_AND_THE_REFERENCE_LEVELS_MATCH_TO_THE_DECIMAL:
+    prov: RELAYED
+    from: REV 146 via coordinator MEM 369
+    as_of: 2026-09-11T07:29:06Z
+    said: >-
+      the five closures and the row split as dispatched; the 15:55 window's identity and duration I verified independently at round 365.
+  AND_THE_CENSUS_TOTAL_CORROBORATES_MY_OWN_LEDGER_READ_TO_FORTY_SEVEN_MILLISECONDS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:29:06Z
+    said: >-
+      145.306 - 1.553 computed as 143.753 and differenced against the 143.8 recorded in my round-365 flags: 0.047 s.
+  DA_V14_FIXED_THE_FREEZE_KEY_AS_A_SCOPED_PREDICATE_AND_FOUND_THE_SAME_SLIP_ELSEWHERE:
+    prov: RELAYED
+    from: DA v14 via coordinator MEM 369
+    as_of: 2026-09-11T07:29:06Z
+    said: >-
+      the scoped-predicate fix and the second instance as dispatched; the unread-bool finding and its space-in-key are recorded in my files at rounds 362 and 363.
   # --- MEM round 368, 2026-09-11T07:25:16Z ---
   THE_TRIPWIRE_EMIT_DOES_NOT_EXIST_AND_I_GREPPED_IT_MYSELF:
     prov: CHECKED
