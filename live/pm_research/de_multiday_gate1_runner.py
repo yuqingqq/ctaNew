@@ -1248,9 +1248,24 @@ def ruled_day_set() -> list:
 
     Deliberately not a parameter: this is the one fact the fixture/real lock
     turns on, and a lock whose input the caller supplies is not a lock."""
-    return list(json.loads(
-        (Path(__file__).resolve().parents[2] / PARAMS_REL).read_text()
-    ).get("days", []))
+    # PARAMS_REL is a FILENAME LITERAL pinned to v29, so this set never
+    # saw v31 or v32 and the diag runner's imported set stayed at the old
+    # days. Resolve the FREEZE CHAIN's head instead -- v1 then every
+    # amendment in version order, last params pin wins -- IMPORTING the
+    # resolver be_score_neutrality.py already has rather than copying it,
+    # because a second implementation of the ruled set is the defect this
+    # module's own docstring says the programme has closed twice.
+    import be_score_neutrality as _BEN
+    decl = Path(__file__).resolve().parent / "declarations"
+    try:
+        pin = _BEN.resolve_frozen_params_pin(decl)["pin"]
+        name = Path(str(pin.get("path") or "")).name
+        path = decl / name if name else None
+    except Exception:                               # noqa: BLE001
+        path = None
+    if path is None or not path.is_file():
+        path = Path(__file__).resolve().parents[2] / PARAMS_REL
+    return list(json.loads(path.read_text()).get("days", []))
 
 
 def assert_fixture_day_lock(day: str, fixture: bool, *,

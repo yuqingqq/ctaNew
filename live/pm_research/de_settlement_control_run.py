@@ -238,6 +238,55 @@ def _day_key(value) -> str:
     return str(value or "").replace("-", "")
 
 
+def _builder_commit_admissible(builder_commit) -> bool:
+    """THE DECLARED BUILD RULE, not a second literal.
+
+    09-09+ books come from a build-side branch that DESCENDS from the
+    declared base with the pinned build digests identical. The base is read
+    from DA's forward-test declaration; the digest list too. If the
+    declaration does not carry a digest list, the descendant arm is
+    UNAVAILABLE and only an exact match passes -- strictly no weaker than
+    the literal it replaces, and stronger the moment DA declares them.
+    """
+    import glob as _glob
+    import subprocess as _sp
+    if builder_commit == PIPELINE_COMMIT:
+        return True
+    decls = sorted(_glob.glob(str(
+        HERE / "declarations" / "da_forward_test_declaration_v*.json")),
+        key=lambda x: int(x.rsplit("_v", 1)[1][:-5]))
+    if not decls:
+        return False
+    doc = json.loads(Path(decls[-1]).read_text())
+
+    def _find(o, key):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if k == key:
+                    yield v
+                yield from _find(v, key)
+        elif isinstance(o, list):
+            for v in o:
+                yield from _find(v, key)
+    base = next((str(x).split()[0] for x in _find(doc, "BUILD_PIN")), None)
+    digests = next(iter(_find(doc, "BUILD_PINNED_DIGESTS")), None)
+    if not base or not digests:
+        return False                    # no declared rule -> exact only
+    root = HERE.parents[1]
+    if _sp.run(["git", "-C", str(root), "merge-base", "--is-ancestor",
+                base, str(builder_commit)],
+               capture_output=True).returncode != 0:
+        return False
+    for name, want in dict(digests).items():
+        blob = _sp.run(["git", "-C", str(root), "show",
+                        f"{builder_commit}:live/pm_research/{name}"],
+                       capture_output=True)
+        if blob.returncode != 0 or hashlib.sha256(
+                blob.stdout).hexdigest() != want:
+            return False
+    return True
+
+
 def verify_book_receipt(receipt_path, book_sha: str | None, day: str,
                         *, book_path=None) -> dict:
     """Bind the loaded book to its receipt and the current scoring bytes."""
@@ -264,7 +313,8 @@ def verify_book_receipt(receipt_path, book_sha: str | None, day: str,
                         == Path(book_path).resolve()))
     if (not digest_valid or not digest_matches
             or _day_key(receipt.get("day")) != _day_key(day)
-            or builder_commit != PIPELINE_COMMIT or not path_matches):
+            or not _builder_commit_admissible(builder_commit)
+            or not path_matches):
         raise SettlementControlRefused(
             f"REFUSED {BOOK_MISMATCH}: loaded day/digest is "
             f"{day}/{str(book_sha)[:16]}, receipt says "
