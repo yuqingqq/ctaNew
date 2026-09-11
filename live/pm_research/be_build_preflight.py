@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import datetime
 import hashlib
+import importlib
 import json
 import os
 import shutil
@@ -57,6 +58,73 @@ WINDOW_S = 300
 DAY_S = 86400
 MARKOUT_S = 5.0          # harmful_exposure_rows: a fill at the close is
                          # valued at +5 s, i.e. 5 s into D+1
+
+
+WRONG_TREE = "PREFLIGHT_IMPORTED_FROM_ANOTHER_TREE"
+# The modules whose ANSWERS this preflight reports. They must come from the
+# tree under test.
+TREE_MODULES = ("flow_intensity", "be_era_for_day", "be_gate1_fragment")
+
+
+class PreflightRefused(RuntimeError):
+    """The preflight cannot be trusted, so no verdict is reported."""
+
+
+def import_from_tree(tree: str = WT_FWD, *, purge: bool = True) -> dict:
+    """Import the day-check modules FROM THE TREE UNDER TEST, and PROVE it.
+
+    REVIEW 158's seam: this module lives in the SHARED tree, so
+    `sys.path.insert(Path(__file__).parent)` made every day check -- era,
+    population, slug inputs -- run SHARED-TREE code while the tree checks
+    asserted wt-fwd's HEAD and digests. The preflight could certify wt-fwd
+    using code from a different tree, which is the same class as verifying a
+    claim against a proxy rather than the artifact it names.
+
+    Two halves, because path order alone is not a control: the tree's paths go
+    FIRST, any already-imported copy from another tree is PURGED from
+    sys.modules (an import returns the cached module and would silently
+    ignore the path change), and then every imported module's resolved
+    `__file__` is checked to lie under the tree. The check is what refuses;
+    the path order is only what makes it pass."""
+    root = str(Path(tree).resolve())
+    pkg = str(Path(root) / "live" / "pm_research")
+    me = str(Path(__file__).resolve())
+    if purge:
+        for name, mod in list(sys.modules.items()):
+            if name == "__main__":
+                continue
+            f = getattr(mod, "__file__", None)
+            if not f:
+                continue
+            rf = str(Path(f).resolve())
+            if rf == me:
+                continue
+            if "/live/pm_research/" in rf and not rf.startswith(root + "/"):
+                del sys.modules[name]
+    for entry in (root, pkg):          # pkg ends up first
+        while entry in sys.path:
+            sys.path.remove(entry)
+        sys.path.insert(0, entry)
+    mods, bad = {}, []
+    for name in TREE_MODULES:
+        try:
+            mods[name] = importlib.import_module(name)
+        except Exception as exc:
+            raise PreflightRefused(
+                f"REFUSED {WRONG_TREE}: {name} is not importable from {root} "
+                f"({type(exc).__name__}: {exc})") from None
+    for name, mod in mods.items():
+        f = getattr(mod, "__file__", None)
+        rf = str(Path(f).resolve()) if f else None
+        if not rf or not rf.startswith(root + "/"):
+            bad.append(f"{name} <- {rf}")
+    if bad:
+        raise PreflightRefused(
+            f"REFUSED {WRONG_TREE}: the tree under test is {root}, but "
+            f"{len(bad)} module(s) were imported from elsewhere: "
+            f"{'; '.join(bad)}. A preflight that certifies one tree using "
+            f"another tree's code certifies nothing.")
+    return mods
 
 
 def _now() -> float:
@@ -120,10 +188,14 @@ def check_disk() -> tuple[str, str, str, dict]:
              "total_gib": round(u.total / 1024**3, 2)})
 
 
-def check_day(day: str, stage: str | None = None) -> list[tuple[str, str, str]]:
-    import flow_intensity as fi
-    import be_era_for_day as EFD
-    import be_gate1_fragment as FR
+def check_day(day: str, stage: str | None = None,
+              mods: dict | None = None) -> list[tuple[str, str, str]]:
+    # REVIEW 158: the day checks run the TREE UNDER TEST's code, never the
+    # shared tree's. `import_from_tree` refuses if that is not what happened.
+    m = mods if mods is not None else import_from_tree(
+        os.environ.get("BE_WORKTREE") or WT_FWD)
+    fi, EFD, FR = (m["flow_intensity"], m["be_era_for_day"],
+                   m["be_gate1_fragment"])
 
     rows = []
     d0, d1 = _day_bounds(day)
@@ -269,6 +341,32 @@ def falsify() -> int:
         note("and the same day at the FRAGMENT stage has no input check to fail",
              not any("INPUT_MISSING" in st
                      for _, _, st in check_day("20260909", stage="fragment")))
+        # REVIEW 158: with the SHARED tree first on sys.path and its modules
+        # already cached, the preflight must REFUSE BY NAME rather than
+        # certify wt-fwd using another tree's code.
+        shared = "/home/yuqing/ctaNew"
+        sys.path.insert(0, shared + "/live/pm_research")
+        sys.path.insert(0, shared)
+        for _n in TREE_MODULES:
+            sys.modules.pop(_n, None)
+        _saved = dict(sys.modules)
+        import importlib as _il
+        for _n in TREE_MODULES:                 # cache them FROM THE SHARED TREE
+            sys.modules[_n] = _il.import_module(_n)
+        from_shared = all(
+            str(Path(sys.modules[_n].__file__).resolve()).startswith(shared + "/live")
+            for _n in TREE_MODULES)
+        note("the known-bad is real: the shared tree's modules ARE cached",
+             from_shared)
+        try:
+            import_from_tree(WT_FWD, purge=False)
+            note("with the SHARED tree first on sys.path it REFUSES by name", False)
+        except PreflightRefused as exc:
+            note("with the SHARED tree first on sys.path it REFUSES by name",
+                 WRONG_TREE in str(exc))
+        note("and with purging ON it ADMITS, importing from wt-fwd",
+             all(str(Path(m.__file__).resolve()).startswith(WT_FWD + "/")
+                 for m in import_from_tree(WT_FWD).values()))
     finally:
         if real is None:
             os.environ.pop("BE_WORKTREE", None)
@@ -296,8 +394,21 @@ def main(argv=None) -> int:
     rows = list(check_tree())
     dday, dcheck, dstatus, dnums = check_disk()
     rows.append((dday, dcheck, dstatus))
+    tree = os.environ.get("BE_WORKTREE") or WT_FWD
+    try:
+        mods = import_from_tree(tree)
+        rows.append(("-", "day checks imported from the tree under test",
+                     "PASS"))
+    except PreflightRefused as exc:
+        rows.append(("-", "day checks imported from the tree under test",
+                     str(exc).split(":", 1)[0].replace("REFUSED ",
+                                                       "WOULD_FAIL:")))
+        print(exc)
+        for day, c, st in rows:
+            print(f"{day:<10}{c:<52}{st}")
+        return 1
     for d in days:
-        rows.extend(check_day(d, stage))
+        rows.extend(check_day(d, stage, mods))
     w = max(len(c) for _, c, _ in rows) + 2
     print(f"{'day':<10}{'check':<{w}}status")
     print("-" * (10 + w + 40))
