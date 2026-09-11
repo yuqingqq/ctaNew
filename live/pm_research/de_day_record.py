@@ -144,15 +144,61 @@ def day_records(day: str, derived: Path = DERIVED) -> list:
     return out
 
 
+UNKNOWN = "UNKNOWN"
+
+
+def freeze_commit(decl_dir: Path = None) -> str | None:
+    """The declared FREEZE_COMMIT -- the only commit a lineage label may
+    be decided against. NOT the build pin: REVIEW 233 measured four landed
+    receipts carrying the build pin 7ed5a90, day one's LANDED book among
+    them, so `_admitting_arm` returns EXACT for a pre-freeze book."""
+    d = Path(decl_dir) if decl_dir else HERE / "declarations"
+    try:
+        import de_multiday_gate1_runner as _R
+        pin = (_R.resolve_declaration_pins(d) or {}).get(
+            "code_freeze_declaration")
+        f = d / Path(str(pin["path"])).name
+        return str(json.loads(f.read_text())["FREEZE_COMMIT"]).split()[0]
+    except Exception:                                       # noqa: BLE001
+        return None
+
+
+def lineage_key(doc: dict) -> str | None:
+    """THE GROUPING KEY IS THE BOOK DIGEST. Nothing derived, nothing
+    inferred: two records of one book are one lineage, whatever any other
+    field says."""
+    return doc.get("book_sha256") or (
+        (doc.get("book_lineage") or {}).get("this_book_sha256"))
+
+
+def lineage_label(doc: dict, decl_dir: Path = None) -> str:
+    """landed | freeze_built | UNKNOWN -- from the BUILDER COMMIT against
+    the FREEZE commit, never from `admitted_by`.
+
+    REVIEW 233, both failures measured on disk: `EXACT` means the record's
+    builder equals the BUILD PIN, which day one's landed book also carries,
+    so EXACT does not mean freeze-built; and a null `admitted_by` means the
+    field did not exist when the record was made, not that the book fails
+    the arms -- re-valuing the same book today would flip its lineage with
+    no change to the book. So `admitted_by` is recorded and never read.
+    """
+    fc = freeze_commit(decl_dir)
+    builders = set()
+    for c in (doc.get("cells") or {}).values():
+        b = (c.get("book_receipt") or {}).get("builder_commit")
+        if b:
+            builders.add(str(b))
+    if not builders or not fc:
+        return UNKNOWN
+    return FREEZE_BUILT if builders == {fc} else LANDED
+
+
 def lineage_of_record(doc: dict) -> str:
-    """A record's lineage, from the record itself."""
+    """A record's lineage LABEL, from the record itself."""
     bl = doc.get("book_lineage") or {}
-    if bl.get("this_record"):
+    if bl.get("this_record") in (LANDED, FREEZE_BUILT, UNKNOWN):
         return str(bl["this_record"])
-    adm = doc.get("admitted_by")
-    adm1 = (next((v for v in adm.values() if v), None)
-            if isinstance(adm, dict) else adm)
-    return FREEZE_BUILT if adm1 else LANDED
+    return lineage_label(doc)
 
 
 def walk_supersession(day: str, derived: Path = DERIVED) -> dict:
@@ -190,31 +236,104 @@ def walk_supersession(day: str, derived: Path = DERIVED) -> dict:
     # does not reach is not a fork; it must instead be LINKED from the
     # newest record, and that is a different name.
     by_lineage: dict = {}
+    parents: dict = {}
     for f in files:
-        by_lineage.setdefault(
-            lineage_of_record(json.loads(f.read_text())), []).append(f)
-    mine = lineage_of_record(json.loads(newest.read_text()))
+        doc = json.loads(f.read_text())
+        by_lineage.setdefault(lineage_key(doc) or UNKNOWN, []).append(f)
+        sup = (doc.get("supersedes") or {}).get("path")
+        if sup:
+            parents.setdefault(lineage_key(doc) or UNKNOWN, {}).setdefault(
+                Path(sup).name, []).append(f.name)
+    newest_doc0 = json.loads(newest.read_text())
+    mine = lineage_key(newest_doc0) or UNKNOWN
     unreachable = [f.name for f in by_lineage.get(mine, [])
                    if str(f) not in seen]
+    # REVIEW 233's precise condition: a fork is TWO RECORDS OF ONE LINEAGE
+    # NAMING THE SAME PARENT. Two lineages sharing a root is the normal
+    # case here -- `_v3` (landed) and `_v2` (freeze-built) both supersede
+    # the same v1 -- and a detector without this scoping would have
+    # refused this family on its first run.
+    same_parent = {par: kids
+                   for kids_by_par in
+                   [parents.get(mine, {})]
+                   for par, kids in kids_by_par.items() if len(kids) > 1}
+    # A HISTORICAL FORK CANNOT BE UNDONE -- the records are landed and rule
+    # 13 forbids editing them. 09-08's v2 and v3 both name the base
+    # because both predate the newest-prior fix. So a fork that does NOT
+    # involve the newest record is REPORTED and must be disclosed by the
+    # newest record; only a fork the newest record is part of REFUSES,
+    # because that one is being created now and can still be avoided.
+    new_fork = {par: kids for par, kids in same_parent.items()
+                if newest.name in kids}
+    historical_forks = {par: kids for par, kids in same_parent.items()
+                        if newest.name not in kids}
     newest_doc = json.loads(newest.read_text())
-    linked = {Path(str(x.get("path"))).name
-              for x in ((newest_doc.get("book_lineage") or {})
-                        .get("other_books_for_this_day") or [])}
+    bl0 = newest_doc.get("book_lineage") or {}
+    linked = set()
+    for key in ("other_books_for_this_day", "other_records_for_this_day",
+                "residue_records_for_this_day"):
+        for x in (bl0.get(key) or []):
+            if x.get("path"):
+                linked.add(Path(str(x["path"])).name)
     linked |= {Path(str(x.get("path"))).name
                for x in (newest_doc.get("also_supersedes") or [])}
+    # A LINK REACHES A CHAIN, NOT ONE FILE: following a linked record's own
+    # `supersedes` is how the reproduction pair becomes reachable from the
+    # newest day record. REVIEW 233 walked it and reached 5 of 7.
+    frontier = list(linked)
+    while frontier:
+        nm = frontier.pop()
+        f = newest.with_name(nm)
+        if not f.is_file():
+            continue
+        doc = json.loads(f.read_text())
+        nxt = (doc.get("supersedes") or {}).get("path")
+        if nxt and Path(nxt).name not in linked:
+            linked.add(Path(nxt).name)
+            frontier.append(Path(nxt).name)
     other_lineages = {k: [f.name for f in v]
                       for k, v in by_lineage.items() if k != mine}
     unlinked = sorted(n for names in other_lineages.values()
-                      for n in names if n not in linked)
+                      for n in names if n not in linked and n not in seen)
+    # EVERY RECORD FOR THE DAY, not only the day-named ones: the two
+    # reproduction records live in the same directory under the day's
+    # naming family, which is the only signal a cold reader has.
+    # KIN IS RECORD-SHAPED, not merely day-named: a window decomposition
+    # and a revaluation emit are artifacts ABOUT the day, not records OF
+    # it, and sweeping them in would make the reachable count meaningless.
+    # The test is the shape a day record has -- `cells` plus a `day`.
+    kin = []
+    for f in sorted((Path(derived) / "fwd_v2").glob(
+            f"p003_de_*{day.replace('-', '')}*.json")):
+        if f.name in {x.name for x in files}:
+            continue
+        try:
+            doc = json.loads(f.read_text())
+        except Exception:                                   # noqa: BLE001
+            continue
+        if isinstance(doc.get("cells"), dict) and doc.get("day") == day:
+            kin.append(f.name)
+    unreachable_kin = [n for n in kin if n not in linked and n not in seen]
     return {"day": day, "newest": newest.name, "walk": walk,
             "n_records": len(files), "unreachable": unreachable,
+            "two_records_naming_one_parent": same_parent,
+            "kin_records": kin, "unreachable_kin": unreachable_kin,
+            "reachable_from_the_newest": sorted(
+                {Path(x).name for x in seen} | linked),
+            "records_for_this_day": sorted(
+                {f.name for f in files} | set(kin)),
             "lineage_of_newest": mine,
             "lineages": {k: [f.name for f in v]
                          for k, v in by_lineage.items()},
             "other_lineages_linked_from_the_newest": not unlinked,
             "unlinked_other_lineage": unlinked,
-            "total": not unreachable,
-            "refusal": (f"REFUSED {CHAIN_FORKED}: walking `supersedes` "
+            "total": not unreachable and not new_fork,
+            "new_fork": new_fork, "historical_forks": historical_forks,
+            "all_records_reachable": not unreachable and not unreachable_kin,
+            "refusal": ((f"REFUSED {CHAIN_FORKED}: within one lineage "
+                         f"{sorted(new_fork.values())} name the same "
+                         f"parent {sorted(new_fork)}") if new_fork else
+                        f"REFUSED {CHAIN_FORKED}: walking `supersedes` "
                         f"from {newest.name} never reaches {unreachable} "
                         f"within the {mine} lineage"
                         if unreachable else
@@ -231,7 +350,7 @@ def assert_chain_total(day: str, derived: Path = DERIVED) -> dict:
 
 
 def book_lineage(day: str, this_book: str | None, this_admitted,
-                 derived: Path = DERIVED) -> dict:
+                 derived: Path = DERIVED, builder_commits=None) -> dict:
     """WHICH BOOK THIS RECORD IS ABOUT, and which record is the day's result.
 
     Two records for one day may legitimately describe DIFFERENT books: the
@@ -244,30 +363,69 @@ def book_lineage(day: str, this_book: str | None, this_admitted,
         # A PRE-FREEZE BOOK ADMITS UNDER NO ARM: `admitted_by` is None
         # because the freeze's build rule did not exist when it was built.
         return LANDED if not admitted else FREEZE_BUILT
-    others = []
-    for f in day_records(day, derived):
+    others, residue = [], []
+    all_files = list(day_records(day, derived))
+    for f in sorted((Path(derived) / "fwd_v2").glob(
+            f"p003_de_*{day.replace('-', '')}*.json")):
+        if f in all_files:
+            continue
+        try:
+            doc = json.loads(f.read_text())
+        except Exception:                                   # noqa: BLE001
+            continue
+        if isinstance(doc.get("cells"), dict) and doc.get("day") == day:
+            all_files.append(f)
+    for f in all_files:
         doc = json.loads(f.read_text())
         b = doc.get("book_sha256")
         adm = (doc.get("admitted_by") or {})
         adm1 = next((v for v in adm.values() if v), None) if isinstance(
             adm, dict) else adm
-        if b and b != this_book:
-            others.append({"path": str(f), "sha256": _sha(f),
-                           "book_sha256": b, "lineage": lineage_of(adm1),
-                           "admitted_by": adm1})
-    mine = lineage_of(this_admitted)
+        if not b or b == this_book:
+            continue
+        # EVERY RECORD OF THE OTHER BOOK, not one of them. REVIEW 233:
+        # three records share 887a97eb… and the field named exactly one.
+        row = {"path": str(f), "sha256": _sha(f), "book_sha256": b,
+               "lineage": lineage_label(doc, None),
+               "admitted_by": adm1 if adm1 else UNKNOWN,
+               "admitted_by_is_not_evidence":
+                   "recorded, never read: a null means the field did not "
+                   "exist when the record was made (REVIEW 233)"}
+        if doc.get("reproduction") or "reproduction" in f.name:
+            row["residue_declaration"] = (
+                "R-915 / da_record_schema_declaration_v3 "
+                "RESIDUE_TWO_MIS_NAMED_REPRODUCTION_RECORDS")
+            residue.append(row)
+        else:
+            others.append(row)
+    mine = lineage_label(
+        {"cells": {a: {"book_receipt": {"builder_commit": bc}}
+                   for a, bc in (builder_commits or {}).items()}}, None) \
+        if builder_commits else UNKNOWN
     days_result = None
-    if mine == LANDED:
+    # ONE LINEAGE -> THIS RECORD IS THE DAY'S RESULT, whatever its label:
+    # 09-08 and 09-09 were valued from freeze-built books and have no
+    # landed book at all, so "the landed record is the day's result" would
+    # leave those days with NO result. Two lineages -> R-908/R-910 decides.
+    if not others:
+        days_result = "THIS RECORD"
+    elif mine == LANDED:
         days_result = "THIS RECORD"
     else:
         days_result = next((o["path"] for o in others
                             if o["lineage"] == LANDED), None)
     return {
         "this_record": mine, "this_book_sha256": this_book,
-        "decided_by": "book_receipt.admitted_by -- a pre-freeze book "
-                      "admits under no arm, a freeze-built one under "
-                      "EXACT or DESCENDANT",
+        "decided_by": (
+            "THE BOOK DIGEST identifies the lineage; the LABEL comes from "
+            "the receipt's builder_commit against the declared "
+            f"FREEZE_COMMIT ({str(freeze_commit()) [:12]}). NOT from "
+            "`admitted_by`: EXACT means the BUILD PIN, which day one's "
+            "LANDED book also carries, and a null means the field did not "
+            "exist when the record was made (REVIEW 233, measured)"),
+        "other_records_for_this_day": others,
         "other_books_for_this_day": others,
+        "residue_records_for_this_day": residue,
         "the_days_result": days_result,
         "why": "R-908/R-910: the landed-book record stands as produced "
                "under its prior pin; the freeze-built record is the "
@@ -602,6 +760,7 @@ def build(day: str, cells_dir: Path, n_declared: int = 7,
         "n_draws": first["n_draws"], "seed_cli": 0,
         "stage0": stage0,
         "settlement_source": disclosure,
+        "IS_A_DAY_RESULT": None,   # set from the lineage block below
         "book_lineage": book_lineage(
             day, first.get("book_sha256"),
             next(((c.get("book_receipt") or {}).get("admitted_by")
@@ -609,7 +768,9 @@ def build(day: str, cells_dir: Path, n_declared: int = 7,
                                      book_receipt=cells[a]["result"][
                                          "book_receipt"])
                              for a in arms}).values()), None),
-            derived),
+            derived,
+            builder_commits={a: (cells[a]["result"]["book_receipt"] or {})
+                             .get("builder_commit") for a in arms}),
         "book_sha256_field": first.get("book_sha256"),
         "winner_source_sha256_field": (
             (first.get("winner_source") or {}).get("sha256")),
@@ -833,7 +994,11 @@ def falsify() -> int:
         fv = Path(td) / "fwd_v2"
         fv.mkdir(parents=True)
         def rec2(name, sup=None, lineage=LANDED, also=()):
-            d = {"day": "2026-09-29", "book_sha256": "c" * 64, "cells": {},
+            # THE BOOK IS THE LINEAGE (REVIEW 233), so the fixture gives
+            # each lineage its own digest instead of labelling one.
+            d = {"day": "2026-09-29", "cells": {},
+                 "book_sha256": ("c" * 64 if lineage == LANDED
+                                 else "d" * 64),
                  "book_lineage": {"this_record": lineage}}
             if sup:
                 d["supersedes"] = {"path": str(fv / sup),
@@ -859,7 +1024,9 @@ def falsify() -> int:
         fv = Path(td2) / "fwd_v2"
         fv.mkdir(parents=True)
         def rec3(name, sup=None, lineage=LANDED):
-            d = {"day": "2026-09-29", "book_sha256": "c" * 64, "cells": {},
+            d = {"day": "2026-09-29", "cells": {},
+                 "book_sha256": ("c" * 64 if lineage == LANDED
+                                 else "d" * 64),
                  "book_lineage": {"this_record": lineage}}
             if sup:
                 d["supersedes"] = {"path": str(fv / sup),
@@ -870,11 +1037,63 @@ def falsify() -> int:
         rec3("p003_de_forward_value_20260929_v3.json",
              "p003_de_forward_value_20260929_v2.json", LANDED)
         unlinked = walk_supersession("2026-09-29", Path(td2))
+    # REVIEW 233's precise fork: TWO RECORDS OF ONE LINEAGE NAMING ONE
+    # PARENT. The shape is already on disk -- v3 (landed) and v2
+    # (freeze-built) both supersede the same v1 -- and a detector without
+    # lineage scoping refuses this family on its first run.
+    with tempfile.TemporaryDirectory() as td3:
+        fv3 = Path(td3) / "fwd_v2"
+        fv3.mkdir(parents=True)
+        def rec4(name, sup=None, book="a" * 64):
+            d = {"day": "2026-09-28", "book_sha256": book, "cells": {}}
+            if sup:
+                d["supersedes"] = {"path": str(fv3 / sup),
+                                   "sha256": _sha(fv3 / sup)}
+            (fv3 / name).write_text(json.dumps(d))
+        rec4("p003_de_forward_value_20260928.json")
+        rec4("p003_de_forward_value_20260928_v2.json",
+             "p003_de_forward_value_20260928.json", book="b" * 64)
+        rec4("p003_de_forward_value_20260928_v3.json",
+             "p003_de_forward_value_20260928.json")
+        shared_root = walk_supersession("2026-09-28", Path(td3))
+        rec4("p003_de_forward_value_20260928_v4.json",
+             "p003_de_forward_value_20260928.json")
+        real_fork = walk_supersession("2026-09-28", Path(td3))
+    ck("two lineages sharing ONE ROOT is not a fork (the shape on disk)",
+       not shared_root["two_records_naming_one_parent"],
+       f"lineages {len(shared_root['lineages'])}, "
+       f"root shared by both")
+    ck("two records of ONE lineage naming one parent IS a fork, by name",
+       bool(real_fork["two_records_naming_one_parent"])
+       and CHAIN_FORKED in (real_fork["refusal"] or "")
+       and "_v4.json" in str(real_fork["two_records_naming_one_parent"]),
+       str(real_fork["two_records_naming_one_parent"]))
+    ck("the production refusal EXISTS in live/ under that name",
+       CHAIN_FORKED == "SUPERSESSION_CHAIN_FORKED"
+       and CHAIN_FORKED in Path(__file__).read_text(),
+       f"{CHAIN_FORKED} in {Path(__file__).name}")
+    ck("`admitted_by` is RECORDED and never read as lineage evidence",
+       lineage_label({"cells": {"A": {"book_receipt": {
+           "builder_commit": freeze_commit()}}}}) == FREEZE_BUILT
+       and lineage_label({"cells": {"A": {"book_receipt": {
+           "builder_commit": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c"}}}})
+       == LANDED
+       and lineage_label({"cells": {"A": {"book_receipt": {}}}}) == UNKNOWN,
+       "freeze commit -> freeze_built; BUILD PIN -> landed; absent -> UNKNOWN")
+    _w7 = walk_supersession("2026-09-07")
+    ck("every record for 09-07 is reachable from the newest",
+       not _w7["unreachable_kin"] and not _w7["unreachable"]
+       and len(_w7["reachable_from_the_newest"])
+       == len(_w7["records_for_this_day"]),
+       f"{len(_w7['reachable_from_the_newest'])} of "
+       f"{len(_w7['records_for_this_day'])}")
+
     ck("a SECOND LINEAGE is not a fork -- the walk stays total",
        two_lineages["total"]
-       and set(two_lineages["lineages"]) == {LANDED, FREEZE_BUILT}
+       and len(two_lineages["lineages"]) == 2
        and two_lineages["other_lineages_linked_from_the_newest"],
-       str({k: len(v) for k, v in two_lineages["lineages"].items()}))
+       f"{len(two_lineages['lineages'])} lineages, keyed by BOOK DIGEST "
+       f"({', '.join(str(k)[:6] for k in two_lineages['lineages'])})")
     ck("a fork WITHIN one lineage still refuses, naming the file",
        not forked_in_lineage["total"]
        and forked_in_lineage["unreachable"]
@@ -1141,9 +1360,16 @@ def next_version_path(out: Path) -> tuple:
     return (out.with_name(f"{stem}_v{n}{out.suffix}"),
             {"path": str(newest), "sha256": _sha(newest),
              "kept_as": "provenance, unedited (rule 13)",
-             "chain_is_total": "this names the NEWEST prior record, so a "
-                               "reader walking `supersedes` backwards "
-                               "reaches every record for this day"})
+             "chain_is_total_WITHIN_THIS_LINEAGE": (
+                 "this names the NEWEST prior record OF THIS BOOK, so a "
+                 "reader walking `supersedes` backwards reaches every "
+                 "record OF THIS LINEAGE. Records of the day's OTHER book "
+                 "and the declared residue are reached through "
+                 "`book_lineage.other_records_for_this_day` and "
+                 "`.residue_records_for_this_day` -- REVIEW 233 measured "
+                 "the old sentence as true of the lineage and FALSE of "
+                 "the day, which is the claim the design exists to stop "
+                 "making")})
 
 
 def main(argv=None) -> int:
@@ -1193,6 +1419,18 @@ def main(argv=None) -> int:
                         "here so the walk from the newest record is TOTAL "
                         "without editing a landed artifact"}
                 for f in extra]
+    # IS_A_DAY_RESULT IS THE LINEAGE BLOCK'S ANSWER, not a second opinion.
+    rec["IS_A_DAY_RESULT"] = (
+        rec["book_lineage"]["the_days_result"] == "THIS RECORD"
+        if not a.reproduction_of else False)
+    hist = walk_supersession(a.day, DERIVED).get("historical_forks") or {}
+    if hist:
+        rec["book_lineage"]["historical_forks_in_this_lineage"] = {
+            "pairs": hist,
+            "why": "records that predate the newest-prior rule name the "
+                   "same parent; they are landed and rule 13 forbids "
+                   "editing them, so the fork is DISCLOSED here and every "
+                   "record stays reachable through `also_supersedes`"}
     out.write_text(json.dumps(rec, indent=1, default=str))
     print(json.dumps({"wrote": str(out), "sha256": _sha(out)[:16]}))
     for line in rec["emit"]["per_day_lines"]:
