@@ -67,6 +67,30 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T12:34:09Z (MEM ROUND 382 -- THE LOCK IS NOT IDLE: A FALSIFIER TOOK IT AT 12:22:58Z, AND THE
+  SUPERSESSION LEFT TWO RULED SETS IN ONE MODULE. Driven, not read: at c853e2d
+  ruled_day_set() resolves the freeze chain to params_v33 -- 11 days, expected_G 11 --
+  while load_params() in the SAME file still defaults to the PARAMS_REL literal and
+  returns v29's 6. The fix closed the LOCK's view of the ruled set and left the
+  LOADER's pinned, and the loader is the site that records the run's params input
+  digest, so a run would lock on v33 and file provenance for v29. PARAMS_REL survives
+  on 29 lines. The supersession is on origin/de-freeze-chain-v2 and
+  origin/be-build-runner only -- PENDING_ORIGIN_MAIN now reaches the CODE, not just
+  round 381's declarations. THE GUARD REGISTER IS SOUND AND ITS EXAMPLE IS NOT: I
+  recounted 167 sites / 105 refusals / 136 exercised / 31 not, each equal to its own
+  declared field, and drove the gate three ways (real REFUSES, all-exercised ADMITS,
+  empty REFUSES) -- but DA 260's commit message illustrates the 31 with a refusal
+  spelled in NO row, and the refusal that actually fired at 09:09:23Z is marked
+  exercised. The count stands; the sentence beside it does not. THE THREE OWED
+  FALSIFIERS ARE AT THREE STAGES, and I refuse to let them share a voice: (a) the
+  09-07 point estimate is OWED AND NOT STARTED (newest 09-07 artifact predates the
+  supersession by three days); (b) the 09-08 rebuild identity is DRIVEN AND IN
+  FLIGHT under be169ident0908.service, 2.443 GiB, one core, out of wt-fwd, which must
+  not be refreshed; (c) the growing-ledger fixture is SPECIFIED ONLY, named nowhere
+  in the code. v33 is 11/11 on three refs, resolved one ref at a time. No receipt
+  carries a params digest, so DE's cross-version gap is real. And the R-555 positive
+  control still asserts a literal G == 6 -- green only while the loader stays on v29.
+  Tip 4194e85.)
   2026-09-11T12:06:27Z (MEM ROUND 381 -- I DIFFED v31 TO v32 AND NOTHING PINNED MOVES: 37 changed
   leaves, and the ONLY pinned-class change is SUPERSEDES.sha256, THE POINTER TO THE
   SUPERSEDED DOCUMENT -- no theta, no min_draws, no alpha, no cascade, no be_module. The
@@ -96,6 +120,7 @@ updated: >-
   found OFF ON THE REAL LAUNCH PATH and fixed as a wrapper opt-in DRIVEN THROUGH THE PATH --
   configured-but-not-applied again, and driving it through the path is what proves the
   setting ARRIVES rather than merely exists. tip 0fa367f)
+previous_updates: >-
   2026-09-11T11:05:34Z (MEM ROUND 379 -- DAY ONE IS VALUED UNDER V2 ON THE REBUILT BOOK AND I READ THE
   NUMBERS AT THE ARTIFACTS: CONDVALUE -14,645.078818c at p 0.181637, HAZARD +4,925.363903c
   at p 0.728543, with FUTILE and ALIVE both COMPUTED and the tail values 0.125 and 0.015625
@@ -111,7 +136,6 @@ updated: >-
   UNRESOLVED does not trip, and both arms moved in the UNFAVOURABLE direction -- the one
   that requires no defence. EVERY GATE NOW RUNS BEFORE THE LOCK, which turns a refusal from
   AN HOUR INTO A SECOND. tip b0341ae)
-previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
   WORK IS AUTHORISED BY THIS FILE. The collectors continued running at the
@@ -282,6 +306,18 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r382_ruled_set_and_loader_now_disagree_inside_one_module: "DRIVEN, not read: at c853e2d, ruled_day_set() resolves the freeze chain (9 links) to params_v33 = 11 days, expected_G 11; load_params() in the SAME module still defaults to the PARAMS_REL literal = params_v29 = 6 days, expected_G 6. Two answers to the ruled-day question in one file. The fix's own comment says a second implementation of the ruled set is the defect the programme has closed twice."
+  r382_the_provenance_digest_is_recorded_from_the_literal: "PARAMS_REL is still named on 29 lines after the fix, and the one that matters is load_params()'s bare call: record_input_digest('params', PARAMS_REL). So a run whose DAY LOCK resolves to v33 records its params INPUT DIGEST as v29's. The lock and the provenance line would name different files. Named for DE/DA, not adjudicated here."
+  r382_the_supersession_is_not_on_mm_research: "c853e2d is contained by origin/de-freeze-chain-v2 and origin/be-build-runner ONLY. The shared tree's copy of ruled_day_set() is still the pre-fix body reading PARAMS_REL. Round 381 found PENDING_ORIGIN_MAIN reaching the DECLARATIONS; it now reaches the CODE."
+  r382_guard_register_counts_are_exact_and_its_falsifier_is_complete: "I recomputed from the rows rather than reading the header: 167 sites, 105 distinct refusals, 136 exercised, 31 NOT exercised (BUILD_BUILDER 2 of 22, VALUATION 29 of 145) -- every one equals the register's own declared field. Driven three ways: the real register REFUSES naming sites, an ALL-EXERCISED copy ADMITS, an EMPTY register REFUSES rather than passing vacuously. Positive control and known-bad both present, so rule 15 is satisfied."
+  r382_the_registers_illustrative_instance_names_no_row: "DA 260's commit message says the 31 include SETTLEMENT_CONTROL_HAS_NO_SCORE_NEUTRALITY_CERTIFICATE, which FIRED IN PRODUCTION at 09:09:23Z. No row carries that spelling. The register's names are ..._CERTIFICATION (3 rows, exercised False) and ..._NOT_CERTIFIED (3 rows, exercised TRUE) -- and R-891's account of 09:09:23Z names NOT_CERTIFIED, the exercised one. The COUNT stands and the artifact is right; the sentence beside it is not. Rule 10's shape, in a commit message rather than a table."
+  r382_a_mistyped_lane_is_indistinguishable_from_a_real_gap: "guard_gate(lanes=['valuation']) refuses with GUARD_ROW_NOT_EXERCISED_BEFORE_A_REAL_RUN -- the same code a genuine unexercised row raises -- because the declared lanes are VALUATION and BUILD_BUILDER in upper case. Fail-safe in direction, conflated in cause: a caller cannot tell a lane-name miss from an unexercised site by the refusal name, which is the property DE 309 just fixed elsewhere."
+  r382_the_lock_is_not_idle_a_falsifier_took_it_at_122258Z: "R-905 records the lock idle since 11:52Z by design; that was true when written at 12:19Z and is superseded. be169ident0908.service has held data/.heavy_run.lock since 12:22:58Z running be_rebuild_identity.py --build 20260908 out of /home/yuqing/ctaNew-wt-fwd (dbb11e4) -- owed falsifier (b), the 09-08 bit-identical rebuild. Measured on the live unit: 2.443 GiB resident, MemoryMax 11.05 GiB, CPUQuotaPerSecUSec 1s = 100 per cent of one core. wt-fwd MUST NOT be refreshed while it runs."
+  r382_the_three_owed_falsifiers_are_at_three_different_stages: "Classified by the round-368 rule so none inherits another's voice. (a) POINT_ESTIMATE 09-07 to the cent: OWED AND NOT STARTED -- the only 09-07 point-estimate on disk is dated 09-08T12:28:11Z, and nothing was written after the supersession at 12:11:27Z. (b) the 09-08 rebuild identity: DRIVEN, in flight now, output directory created 12:21:58Z and still empty. (c) the growing-ledger fixture: SPECIFIED ONLY -- no file under live/pm_research names it."
+  r382_v33_is_eleven_and_eleven_on_three_refs: "params_v33 declares 11 days, 2026-09-03 through 2026-09-13, with expected_G 11 -- the co-varying pair v32 broke. Landed on three refs and I resolved each separately: origin/mm-research 794e718, origin/be-build-runner dbb11e4, origin/de-freeze-chain-v2 2068d4a. The freeze chain walks 9 links to reach it. v31 is still absent from the shared tree, so the chain is resolvable here only because v33 is not."
+  r382_no_receipt_carries_a_params_digest: "Read at source rather than inferred: verify_book_receipt compares day, book sha256, book path and builder_commit, and _builder_commit_admissible reads BUILD_PIN and BUILD_PINNED_DIGESTS from the declaration, falling back to an exact pin when either is absent. Nothing in the receipt names the parameter file, so no cross-version check exists and DE's named gap is real -- day one and day two are unaffected for that same reason."
+  r382_the_R555_positive_control_asserts_a_literal_six: "de_multiday_gate1_runner.py:10495 asserts live['G'] == 6 against a hardcoded six-day list. It is green today only because load_params() bare still resolves v29. The moment the loader follows ruled_day_set() onto the chain head, that positive control refuses -- a literal that must track a moving thing, and the moving thing is now moving."
+  r382_DE_309_fixes_a_label_read_but_not_in_the_file_REVIEW_168_named: "REVIEW 168 named chain_day.sh's _refuse() splitting stdout on 'REFUSED '. The landed fix b310915 is in de_preflight_matrix.py: it replaces text.split('REFUSED ',1) with identity against a harvested set of declared UPPER_SNAKE names -- rule 42 (check the property, never the label) applied to refusals. chain_day.sh itself lives at live/pm_research/launchers/chain_day.sh and is carried only by origin/be-build-runner and a local da-decls-onto-chain; it is absent from mm-research, so the file REVIEW 168 named is not the file that was fixed and is not on this branch."
   # --- MEM round 381, enumerate then rehearse ---
   I_DIFFED_V31_TO_V32_AND_NOTHING_PINNED_MOVES: "Thirty-seven changed leaves, and THE ONLY PINNED-CLASS CHANGE IS SUPERSEDES.sha256 -- the POINTER TO THE SUPERSEDED DOCUMENT, not a pin on anything the run consumes. NO THETA, NO min_draws, NO alpha, NO be_cascade, NO be_module moved. The substantive change is A SINGLE HUNK ON days, adding 2026-09-09 through 09-13 with every_existing TRUE, so nothing was removed. And the artifact says so itself: WHY_THIS_SUPERSEDES_V31.NO_PIN_MOVES reads 'the build pin stays 7ed5a9…'."
   AND_THE_SUPERSESSION_POINTER_MOVES_TO_A_DIGEST_I_COMPUTED_MYSELF_AT_ROUND_377: "SUPERSEDES.sha256 goes from 066b52f2, which was v29's, to dd58223c6e3654a2 -- AND dd58223c6e3654a2 IS THE SHA256 OF params_v31.json THAT I HASHED AT ROUND 377 when I verified the v10 amendment's pin. So the chain closes at a value already on the record: v32 names v31 by content, and the content is what I measured four rounds ago. A supersession pointer verified against an independently computed digest is the form rule 13 needs to be checkable rather than declarative."
@@ -27958,6 +27994,54 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r382_ruled_set_and_loader_now_disagree_inside_one_module:
+    checked: "imported be_score_neutrality from c853e2d, called resolve_frozen_params_pin(declarations) -> de_multiday_gate1_params_v33.json; read days from it and from v29; n=11 vs n=6, IDENTICAL SETS False"
+    artifact: live/pm_research/de_multiday_gate1_runner.py:1246 and :752 at c853e2d
+    by: MEM 382
+  r382_the_provenance_digest_is_recorded_from_the_literal:
+    checked: "counted PARAMS_REL lines in the post-fix blob (29); read load_params at :752-756 from the same blob"
+    artifact: live/pm_research/de_multiday_gate1_runner.py:70 (PARAMS_REL = ...params_v29.json), :754-756
+    by: MEM 382
+  r382_the_supersession_is_not_on_mm_research:
+    checked: "git branch -a --contains c853e2d -> two remote refs, no mm-research; sed on the shared tree's de_multiday_gate1_runner.py:1246 shows the old body"
+    artifact: git branch -a --contains c853e2d
+    by: MEM 382
+  r382_guard_register_counts_are_exact_and_its_falsifier_is_complete:
+    checked: "loaded declarations/da_guard_register_v1.json, counted rows myself, then called guard_gate() on the real register, on an all-True copy and on {rows: []}"
+    artifact: live/pm_research/da_population_freeze_verify.py::guard_gate + declarations/da_guard_register_v1.json
+    by: MEM 382
+  r382_the_registers_illustrative_instance_names_no_row:
+    checked: "filtered the rows for NEUTRALITY/CERTIFICATE (8 hits), printed exercised_before_real_run per row; grepped COORDINATION.md for 09:09:23 and read the surrounding clause; then swept data/pm_5min/derived/ for every REFUSED ...CERTIF... form -- 3 hits, all SETTLEMENT_CONTROL_SCORE_NEUTRALITY_NOT_CERTIFIED, zero of any HAS_NO_ form, so the artifacts corroborate the register and not the commit message"
+    artifact: declarations/da_guard_register_v1.json rows + COORDINATION.md 09:09:23Z clause
+    by: MEM 382
+  r382_a_mistyped_lane_is_indistinguishable_from_a_real_gap:
+    checked: "called guard_gate(lanes=['valuation']) and read the refusal text; listed the declared lane values from the rows"
+    artifact: live/pm_research/da_population_freeze_verify.py::guard_gate
+    by: MEM 382
+  r382_the_lock_is_not_idle_a_falsifier_took_it_at_122258Z:
+    checked: "fuser on data/.heavy_run.lock -> pids 2542754/2542755; ps and /proc/<pid>/cgroup -> be169ident0908.service; systemctl --user show with LoadState -> loaded/active/running"
+    artifact: systemctl --user show be169ident0908.service; /proc/2542754/cgroup
+    by: MEM 382
+  r382_the_three_owed_falsifiers_are_at_three_different_stages:
+    checked: "ls on the derived dir filtered to point_estimate_day_20260907; find -newermt 2026-09-11 12:11:27 over the point-estimate family (empty); grep -rl for growing.ledger under live/pm_research (empty); ls on derived/rebuild_identity"
+    artifact: data/pm_5min/derived/ + data/pm_5min/derived/rebuild_identity/ + live/pm_research/
+    by: MEM 382
+  r382_v33_is_eleven_and_eleven_on_three_refs:
+    checked: "git branch -a --contains on each DA 263 commit; loaded v33 from origin/be-build-runner and counted days and expected_G; resolve_frozen_params_pin reported chain length 9"
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v33.json
+    by: MEM 382
+  r382_no_receipt_carries_a_params_digest:
+    checked: "read verify_book_receipt and _builder_commit_admissible from de_settlement_control_run.py at c853e2d"
+    artifact: live/pm_research/de_settlement_control_run.py::verify_book_receipt at c853e2d
+    by: MEM 382
+  r382_the_R555_positive_control_asserts_a_literal_six:
+    checked: "read the cell at :10493-10501 and the load_params default at :752-756; confirmed the six days it names are v29's"
+    artifact: live/pm_research/de_multiday_gate1_runner.py:10495
+    by: MEM 382
+  r382_DE_309_fixes_a_label_read_but_not_in_the_file_REVIEW_168_named:
+    checked: "git show b310915 diff; git cat-file -e for the launchers path across refs"
+    artifact: live/pm_research/de_preflight_matrix.py at b310915; live/pm_research/launchers/chain_day.sh on origin/be-build-runner
+    by: MEM 382
   # --- MEM round 381, 2026-09-11T12:06:27Z ---
   I_DIFFED_V31_TO_V32_AND_NOTHING_PINNED_MOVES:
     prov: CHECKED
