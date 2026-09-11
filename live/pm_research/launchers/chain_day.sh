@@ -169,6 +169,31 @@ while :; do
       verify /home/yuqing/ctaNew "$day" "$ASOF" || {
         echo "$(date -u +%H:%M:%SZ) as-of re-verification REFUSED"; exit 8; }
     echo "$(date -u +%H:%M:%SZ) as-of re-verified: the day's raw slice did not move"
+
+    # STAGE 3, DECLARED BEFORE THE RUN AND AUTOMATIC (DE 351): the
+    # driver's final `progress_emit` REFUSES
+    # FORWARD_EVALUATOR_NO_VERIFIED_WINNER_RECEIPT_FOR_A_DAY
+    # (de_forward_evaluator.py:345, reached from :679) because the day has
+    # no `p003_de_point_estimate_day_*` receipt -- and producing one
+    # refuses inside FROZEN code at
+    # de_multiday_gate1_runner.py:9152 (BOOK_SCORING_UNNAMED_BEYOND_THE
+    # _LAZY_SET, the runner's copy of the predicate DE 336 ruled for V2
+    # only). So the day's procedure is CELLS -> COMBINE OVER CELLS WITH
+    # THE FIXED READER -> EMIT, exactly as day two, and the chain does it
+    # itself. A foreseen refusal does not get to fire at the end of a
+    # 77-minute run and wait for a human.
+    cv="$D/fwd_v2/de_settle_result_${compact}_CONDVALUE_X_SKEW.json"
+    hz="$D/fwd_v2/de_settle_result_${compact}_HAZARD_OVER_SKEWED_REF.json"
+    if [ -f "$cv" ] && [ -f "$hz" ]; then
+      echo "$(date -u +%H:%M:%SZ) both cells present; assembling the day record"
+      /home/yuqing/pricer-sol/venv/bin/python3 \
+        /home/yuqing/ctaNew-wt-deval/live/pm_research/de_day_record.py \
+        --day "$day" --cells "$D/fwd_v2" \
+        --log "$D/de_chain_${compact}.log" || {
+          echo "$(date -u +%H:%M:%SZ) REFUSED DAY_RECORD_NOT_ASSEMBLED"; exit 9; }
+      exit 0
+    fi
+    echo "$(date -u +%H:%M:%SZ) REFUSED DAY_CELLS_ABSENT_AFTER_THE_RUN: rc=$rc"
     exit "$rc"
   fi
   echo "$(date -u +%H:%M:%SZ) $u: lock held, re-offering in 20s"; sleep 20

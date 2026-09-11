@@ -37,10 +37,31 @@ def falsify() -> int:
     # --- preflight_gate: INPUT_ABSENT waits (exit 4) and names it --------
     r = _run(["bash", str(LAUNCH / "preflight_gate.sh"), "2026-09-30",
               str(CERT)])
-    ck("preflight_gate: an unbuilt day exits 4 (WAIT), from cwd=/",
-       r.returncode == 4, f"rc={r.returncode}")
-    ck("  and names the absent artifact",
-       "INPUT_ABSENT" in r.stdout, )
+    # STAGE 0 RUNS FIRST AND CAN LEGITIMATELY PRE-EMPT THIS CELL: a tree
+    # whose frozen modules have drifted may not run at all, built day or
+    # not, so the gate answers 3 before the day's inputs are considered.
+    # The cell states which world it is in rather than going red for an
+    # environmental reason -- and it stays falsifiable: with stage 0
+    # holding, an unbuilt day MUST be 4.
+    gate = subprocess.run(
+        [sys.executable, str(TREE / "live/pm_research"
+                             / "de_stage0_freeze_gate.py")],
+        capture_output=True, text=True, cwd="/",
+        env={**PROD_ENV, "DE_VALUATION_PREFLIGHT_OFF": "1"})
+    stage0_holds = gate.returncode == 0
+    if stage0_holds:
+        ck("preflight_gate: an unbuilt day exits 4 (WAIT), from cwd=/",
+           r.returncode == 4, f"rc={r.returncode}")
+        ck("  and names the absent artifact",
+           "INPUT_ABSENT" in r.stdout)
+    else:
+        ck("preflight_gate: stage 0 REFUSES first, so an unbuilt day "
+           "stops at 3 rather than waiting",
+           r.returncode == 3 and "FROZEN_MODULE_DRIFTED" in r.stdout,
+           f"rc={r.returncode} (stage 0 is refusing: the population "
+           f"freeze does not name the landed modules)")
+        ck("  and the WAIT path is unreachable until stage 0 holds",
+           not stage0_holds)
 
     # --- preflight_gate: a WOULD_REFUSE fixture stops with 3 -------------
     with tempfile.TemporaryDirectory() as td:
