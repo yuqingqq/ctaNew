@@ -67,6 +67,26 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T14:12:02Z (MEM ROUND 385 -- THE 09-07 REFUSAL NAMES ruled_day_set BY ITS OWN DELTA, AND THE
+  THREAD CLOSES. The refusal blocking the reproduction prints its own SCORING-PATH DELTA:
+  INTERSECTION ['ruled_day_set'] -- the function whose split I drove at 382 and whose
+  six-versus-eleven consequence I found in the receipts at 384. I did not argue the
+  connection; the instrument printed it. AND THE SHARED TREE IS 47 COMMITS BEHIND ON THE
+  VALUATION CODE: DA's own v8 measures the runner at 7efea16 as 157413f6562cf5bd, which
+  is exactly what I measured on mm-research -- so round 383's comparator finding now
+  extends to the runner. THE FREEZE-BUILT BOOK IS REAL: 05144b6fce62e2cc by my own hash,
+  390,041,103 B, builder b34ed9f, recording the runner digest 2aa22662 that equals both
+  refs. AND THREE REBUILDS AT THREE COMMITS GAVE THE SAME NINE LEAVES -- 322,723 content
+  leaves equal every time, DATA_DIFFERENCES empty every time: one content-identical
+  rebuild is a result, three is a property of the builder. BUT THE REBUILD DOES NOT CLEAR
+  THE SECOND REFUSAL: be_score_neutrality.py is absent from ALL THREE closures, so that
+  one is about what the BUILDER records and needs DE 336's reportable path, not a
+  rebuild. Two refusals, one root, TWO remedies. The rehearsal log names ONE unnamed
+  member under a DIFFERENT refusal name than the entry's three -- filed to reconcile. The
+  oracle grew 46,145 -> 46,249 -> 46,253 across three runs, four records in one minute,
+  both snapshots is_final_for_quotation false. And I nearly filed a FALSE ABSENCE from a
+  guessed filename: da_code_freeze_vN vs da_code_freeze_DECLARATION_vN, all nine present
+  on all three refs. Tip 566ea87.)
   2026-09-11T13:40:03Z (MEM ROUND 384 -- (b) IS GREEN ON A PER-LEAF PREDICATE, AND THE LANDED BOOK CARRIES
   A SIX-DAY RULED SET. BE 176: 322732 leaves, 322723 equal, EXACTLY NINE differing and
   all nine in the declared 50-name set (7 wall_clock, 2 resource_telemetry);
@@ -108,6 +128,7 @@ updated: >-
   v31. Which corrects me: at 381 I filed v31 as living only in wt-deval; it lives in
   FIVE worktrees. Family verified linear, seven commits in 43m31s; freeze v13 pins three
   identities identical on three refs. Tip 49840dc.)
+previous_updates: >-
   2026-09-11T12:34:09Z (MEM ROUND 382 -- THE LOCK IS NOT IDLE: A FALSIFIER TOOK IT AT 12:22:58Z, AND THE
   SUPERSESSION LEFT TWO RULED SETS IN ONE MODULE. Driven, not read: at c853e2d
   ruled_day_set() resolves the freeze chain to params_v33 -- 11 days, expected_G 11 --
@@ -132,7 +153,6 @@ updated: >-
   carries a params digest, so DE's cross-version gap is real. And the R-555 positive
   control still asserts a literal G == 6 -- green only while the loader stays on v29.
   Tip 4194e85.)
-previous_updates: >-
   2026-09-11T12:06:27Z (MEM ROUND 381 -- I DIFFED v31 TO v32 AND NOTHING PINNED MOVES: 37 changed
   leaves, and the ONLY pinned-class change is SUPERSEDES.sha256, THE POINTER TO THE
   SUPERSEDED DOCUMENT -- no theta, no min_draws, no alpha, no cascade, no be_module. The
@@ -347,6 +367,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r385_the_09_07_refusal_NAMES_ruled_day_set_BY_ITS_OWN_DELTA: "The thread closes on itself. The refusal that stopped the 09-07 reproduction is BOOK_BUILT_BY_DIFFERENT_SCORING_CODE, declared 157413f6562cf5bd against actual 2aa226623522814, and the instrument prints its own SCORING-PATH DELTA: on the path ['ruled_day_set']+['PARAMS_REL'], changed 6 defs / 2 names, INTERSECTION ['ruled_day_set']. That is the function whose split I drove at round 382 and whose six-versus-eleven consequence I found in the receipts at round 384, now named by the production refusal itself. I did not have to argue the connection; the instrument printed it."
+  r385_the_SHARED_TREE_is_47_commits_behind_on_the_VALUATION_CODE: "DA's own code-freeze v8 measures de_multiday_gate1_runner.py at 7efea16 as 157413f6562cf5bd and at the freeze as acf911db48d445dd, calling 7efea16 47 commits behind. I had independently measured the SHARED TREE's runner as 157413f6562cf5bd -- the same bytes. So mm-research carries the 7efea16-era valuation code, which is also what the landed 09-07 and 09-08 books record as their builder. This extends round 383's finding from the comparator to the runner: the tree every seat reads by default is 47 commits behind the freeze on BOTH."
+  r385_the_freeze_built_09_08_book_verified_by_my_own_hash: "be183ident0908 produced 390,041,103 B at sha 05144b6fce62e2cc, which I hashed myself rather than reading from the receipt. Its receipt records builder_commit b34ed9fdd1e32fe2, ruled_day_set of ELEVEN days, an import closure of 51 modules, and the runner digest 2aa226623522814316 -- which equals what I measured at BOTH origin refs. The freeze-built book records the freeze's own bytes, which is the whole point of rebuilding it."
+  r385_THREE_rebuilds_at_THREE_commits_gave_the_SAME_NINE_leaves: "BE 176 (rebuild at 2b27cc1) and BE 183 (rebuild at b34ed9f) each report 322732 leaves, 322723 equal, nine differing, DATA_DIFFERENCES empty, verdict CONTENT_IDENTICAL_EXCEPT_ALLOWED -- and the nine keys are the SAME nine both times, seven wall_clock and two resource_telemetry. With the dbb11e4 rebuild that is three builds at three commits agreeing on every one of 322,723 content leaves. A single content-identical rebuild is a result; three at three commits is a property of the builder."
+  r385_the_rebuild_does_NOT_clear_the_second_refusal: "be_score_neutrality.py is ABSENT from the import closure of ALL THREE 09-08 receipts -- landed, 2b27cc1 and the freeze-built b34ed9f -- each of which records 51 modules. So the BOOK_SCORING_UNNAMED refusal is a property of what the BUILDER records, not of the book's age, and building at the freeze does not fix it. R-908 calls these two refusals one root; they are, but they take TWO DIFFERENT REMEDIES -- the rebuild for the scoring-code one, DE 336's reportable path for this one. Worth separating before the rebuild is read as clearing both."
+  r385_the_rehearsal_log_names_ONE_member_and_a_DIFFERENT_refusal: "R-908 records THREE lazily-imported members outside the ruled exemption under the name BOOK_SCORING_CODE_MATCHES_WITH_UNNAMED_MEMBERS. The 14:03:13Z rehearsal log records ONE -- 'receipt omits [be_score_neutrality.py], outside the ruled lazy-import set [harmful_hazard_model.py, phase2_state_schema_freeze.py]' -- under the name BOOK_SCORING_UNNAMED_BEYOND_THE_LAZY_SET. Both the count and the refusal name differ from the entry. The log may predate DE 336's landing, so this is filed as a discrepancy to reconcile and not as a correction to the entry."
+  r385_the_oracle_GREW_between_two_runs_one_minute_apart: "The read-once winner source is read once PER RUN, and the runs read different oracles: falsifier (a) passed at 46,145 records; the 09-07 point estimate at 14:02:09Z read 46,249 (sha 5dcd2c7f); the 09-08 rehearsal at 14:03:03Z read 46,253 (sha 357aa6be). Roughly a hundred records in the hour and four in the minute between those two runs, and both snapshots carry is_final_for_quotation false. Since R-908 makes (a)'s to-the-cent reproduction from the freeze-built book the consistency link, that reproduction will read an oracle about 104 records larger than the one (a) passed against. Flagged as a question for DE, not a verdict: whether any of the added records fall in 09-07's own slugs is not something I measured."
+  r385_the_gap_ledger_is_now_plus_16615_against_the_landed_book: "Fourth measurement in the series: landed 6,732,586, rebuild-1 6,736,435, rebuild-2 6,746,766, rebuild-3 6,749,201. So +3,849 then +10,331 then +2,435, totalling +16,615 since the landed book. Each number was right when written and none of them is right now, which is the point: the ledger is an input that grows while the identity work runs."
+  r385_the_membership_limit_is_declared_INSIDE_the_refusal: "The 09-07 refusal prints its own limit rather than leaving it to a reviewer: THIS PREDICATE CANNOT DETECT A RECEIPT THAT UNDER-RECORDS ITS OWN IMPORT CLOSURE -- reachability is monotone in the closure, so a smaller recording yields a smaller derived set and the re-derivation agrees with it, there is no contradiction to detect. It then names what IS detected and where the honesty is guarded instead (rule 22's import-closure capture on the producing side). An instrument that states the class of thing it cannot see, in the refusal text, is the opposite of the failure this programme keeps finding."
+  r385_a_GUESSED_FILENAME_nearly_produced_a_FALSE_ABSENCE_of_mine: "I tested for da_code_freeze_v5..v9.json across three refs and got nine absences, and was one step from filing that DA's code-freeze declarations are not on any ref. The convention is da_code_freeze_DECLARATION_vN.json, and v1 through v9 are present on ALL THREE refs. I caught it by listing what exists instead of testing what I expected -- round 336's lesson, which cost me a wrong filing then. The same pattern bit a second time in the same round: a regex of v([5-9]|1[0-9]) made the arm-freeze amendments look like they stopped at v19 when they run to v21 on all three refs."
+  r385_the_freeze_declarations_are_internally_consistent: "Checked name against content after last round's receipt-filename trap: da_code_freeze_declaration_v7/v8/v9 carry version 7/8/9 matching their filenames, each SUPERSEDES the file one below by name, and all three record FREEZE_COMMIT b34ed9fdd1e3. v8 also carries an explicit LIMITS block saying what DA did NOT verify -- that the frozen code is CORRECT, because a freeze pins identity, not quality."
+  r385_the_external_stage_0_gate_exists_as_a_file: "DE 334's ruling -- close the self-vouching residual from OUTSIDE by running DA's verifier at stage 0 -- has a file: de_stage0_freeze_gate.py on origin/de-freeze-chain-v2, and da_population_freeze_verify.py is referenced from it. PRESENT in code; I have not driven it, so not DRIVEN, and I do not report it as though I had."
+  r385_be185ident0907_is_running_from_wt_fwd: "be185ident0907.service, ExecMainStartTimestamp 14:07:45Z, flock -n -E 75 on data/.heavy_run.lock, be_rebuild_identity.py out of the wt-fwd tree, 33 s elapsed when I read it. This is the 09-07 freeze-built rebuild R-908 needs for refusal (a)'s reproduction, due about 14:31Z. wt-fwd MUST NOT be refreshed while it runs."
   r384_the_landing_gap_widened_again_121_over_159: "Third consecutive round refused: HELD BEHIND_AND_NOT_FF at 13:41:50Z. The divergence has gone 112/131 (round 382) -> 117/139 (383) -> 121/159 (384) in about an hour, so origin gained 28 commits while local gained 9 and neither side can fast-forward. Q-MEM-338 (round 358), Q-MEM-339, Q-MEM-340 and Q-MEM-341 are written and UNLANDED. I did not merge, stash or rebase -- rules 21 and 45. Recorded as a trend rather than a repeat because the backlog is now four rows and the gap is growing faster than my rounds."
   r384_falsifier_b_is_GREEN_and_the_predicate_is_PER_LEAF: "BE 176 (BE_BOOK_CONTENT_DIFF_V2): 322732 leaves, 322723 equal, so EXACTLY NINE differ -- and all nine are in the declared allowed set (seven wall_clock, two resource_telemetry). DATA_DIFFERENCES is EMPTY; verdict CONTENT_IDENTICAL_EXCEPT_ALLOWED. The set is 50 names in three classes (provenance 24, wall_clock 9, resource_telemetry 17) and the artifact's own HOW_THE_VERDICT_IS_COMPUTED says every leaf is classified BY ITS OWN NAME and no key is allowed wholesale."
   r384_rows_indexed_was_CHECKED_and_it_passed: "At round 383 I named the wholesale-exemption gap: the five differing keys lived inside asm.assembly and none was in the allowed set. BE closed it PER LEAF. rows_indexed now appears as its own leaf at both stages with equal=True and class None -- not in the allowed set, therefore DATA by the declared rule, and EQUAL. The artifact says so in its own words: asm.assembly.stages carries rows_indexed, which is data, beside wall_s and peak_rss_mb_highwater, which are not."
@@ -28065,6 +28098,58 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r385_the_09_07_refusal_NAMES_ruled_day_set_BY_ITS_OWN_DELTA:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/de_a_0907_pe.log
+    said: "read the traceback and refusal text verbatim from the log at 14:02:25Z; the delta line names the intersection as ruled_day_set and the declared/actual digests as 157413f6562cf5bd / 2aa226623522814."
+  r385_the_SHARED_TREE_is_47_commits_behind_on_the_VALUATION_CODE:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    said: "sha256sum on the shared tree's runner gave 157413f6562cf5bd; both origin refs gave 2aa2266235228143; DA's v8 BLOCKER block gives at_7efea16 157413f6562cf5bd and at_freeze acf911db48d445dd with 'the_other_four: byte-identical across the 47 commits'."
+  r385_the_freeze_built_09_08_book_verified_by_my_own_hash:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/rebuild_identity/be_daybook_receipt_20260908_btc__L250ms__FWD1.rebuild.json
+    said: "sha256sum on the 390 MB pkl gave 05144b6fce62e2cc; read builder_commit, ruled_day_set length, import_closure size and the recorded runner digest from the receipt; compared the last against git show <ref>:runner | sha256sum for both refs."
+  r385_THREE_rebuilds_at_THREE_commits_gave_the_SAME_NINE_leaves:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be183_book_content_diff_20260908.json
+    said: "read n_leaves, n_equal, verdict, DATA_DIFFERENCES and the nine allowed_differences from be183's diff and compared the key list against be176's, which I had read at round 384; identical."
+  r385_the_rebuild_does_NOT_clear_the_second_refusal:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/rebuild_identity/be_daybook_receipt_20260908_btc__L250ms__FWD1.rebuild.json
+    said: "loaded producing_code.import_closure.modules from all three 09-08 receipts: 51 names each, be_score_neutrality.py in none of them."
+  r385_the_rehearsal_log_names_ONE_member_and_a_DIFFERENT_refusal:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/de_rehearsal_0908.log
+    said: "read the traceback tail verbatim: the refusal name, the single omitted member and the two-name lazy set; the log's own last line is 14:03:13Z valuation rc=1."
+  r385_the_oracle_GREW_between_two_runs_one_minute_apart:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_a_pe_0907/winner_source_20260907.json
+    said: "read both winner_source artifacts: n_records 46249 and 46253, n_slugs 46224 and 46228, distinct sha256, both is_final_for_quotation false; the 46145 comes from the falsifier-(a) artifact I read at round 383."
+  r385_the_gap_ledger_is_now_plus_16615_against_the_landed_book:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/rebuild_identity
+    said: "read selection.era_resolution.ledger.bytes from the landed receipt and all three rebuild receipts and differenced them in order."
+  r385_the_membership_limit_is_declared_INSIDE_the_refusal:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/de_a_0907_pe.log
+    said: "read the MEMBERSHIP_LIMIT paragraph verbatim from the refusal text in the log."
+  r385_a_GUESSED_FILENAME_nearly_produced_a_FALSE_ABSENCE_of_mine:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    said: "git ls-tree -r --name-only on each ref filtered for code_freeze listed da_code_freeze_declaration_v1..v9 on all three; a separate listing of de_arm_freeze amendments, sorted numerically, gave 21 as the highest on each ref."
+  r385_the_freeze_declarations_are_internally_consistent:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_code_freeze_declaration_v8.json
+    said: "read version, SUPERSEDES and FREEZE_COMMIT from all three declarations at origin/de-freeze-chain-v2 and compared each against its own filename; read the LIMITS block."
+  r385_the_external_stage_0_gate_exists_as_a_file:
+    prov: CHECKED
+    artifact: live/pm_research/da_population_freeze_verify.py
+    said: "git grep -l da_population_freeze_verify on origin/de-freeze-chain-v2 returned de_stage0_freeze_gate.py alongside the module itself and two declarations."
+  r385_be185ident0907_is_running_from_wt_fwd:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    said: "fuser gave pids 2749915/2749916; /proc/2749915/cgroup gave be185ident0907.service; ps gave the start time 14:07:45 and the command line including the wt tree."
   r384_the_landing_gap_widened_again_121_over_159:
     prov: CHECKED
     artifact: scripts/land_register_row.sh
