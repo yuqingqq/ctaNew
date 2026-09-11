@@ -67,6 +67,21 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T06:28:34Z (MEM ROUND 360 -- THE CERTIFICATION IS BIT_IDENTICAL AND MY DAY-ONE FRAMING WAS
+  WRONG IN BOTH DIRECTIONS. 232,307 generations per arm, delta_max 0.0, ZERO FLIPS -- so the
+  'scoring bytes the screen never ran on' limit I have carried since round 353 COLLAPSES,
+  and per_book_guard becomes NON-BINDING, driven both ways, with the narrower hazard stated:
+  the bound was measured on ONE DAY. DAY ONE CORRECTED: the statistic is |D| about ZERO, not
+  the null mean -- CONDVALUE is at the 0.0th PERCENTILE, BELOW ALL 500 DRAWS, STRONGER than
+  I recorded, while HAZARD is at the 36.4th and 'underperformed random' WAS OVERSTATED FOR
+  IT. One understated, one overstated, by one mistaken statistic. AND I RETRACT 'reproducing
+  step 2's verdict out of sample': step 2 ran on 09-04/05/06 UNDER THE RETRACTED POLICY.
+  ERA SPLIT: fi.ERA was a DAY-INDEPENDENT LITERAL so every September window got an EMPTY GAP
+  LIST; under the fix 27/287 and 43/288 are gap-bearing against ZERO under the bug. Ruling:
+  REBUILD 09-07, because the alternatives leave gap treatment INHOMOGENEOUS or PROPAGATE A
+  FIXED DEFECT. A USER COMMIT LANDED ON THE VALUATION PATH AFTER THE PIN, and I verified the
+  sharp part: TWO OF ITS FILES HASH THE EMPTY STRING AT THE PIN BECAUSE THEY DO NOT EXIST
+  THERE -- 'differing digest' is the LABEL, 'did not exist' is the PROPERTY. tip 13a3d54)
   2026-09-11T05:56:23Z (MEM ROUND 359 -- DAY ONE IS VALUED AND BOTH ARMS UNDERPERFORMED MATCHED RANDOM.
   CONDVALUE observed_D -11,017.7c p 0.3174; HAZARD +5,256.2c p 0.6587; BOTH NULL MEANS NEAR
   +7,900c, so random cancellation earned ~7,900c on a day neither arm had ever seen --
@@ -100,24 +115,6 @@ updated: >-
   EVERY heavy unit, valuations and analysis too, asserts its tree's HEAD against the
   declared commit and REFUSES -- and reads the run record's worktree/tip, NEVER ExecStart.
   NOTHING RAN FROM A WRONG TREE; NO ARTIFACT IS CONTAMINATED. tip 8828194)
-  2026-09-11T03:53:44Z (MEM ROUND 357 -- THE FIRST FORWARD BOOK EXISTS AND THE ROUND'S BEST FINDING IS
-  ABOUT THE REGISTER. be_daybook_20260907_btc__L250ms__FWD1.pkl, 339 MiB, which I located
-  and stat'd, all three digests matching 7ed5a90 -- and NOTHING IS VALUED. The optimised
-  ruling is vindicated: 21.7 min against a 61.77-min mean, 2.85x with a 2.05-3.42x RANGE,
-  and build speed HAS STOPPED BEING THE CONSTRAINT -- the test is CALENDAR-BOUND at
-  2026-09-14T00:00Z. (My arithmetic puts the programme at ~3.2 h, not the ~2.5 stated;
-  the conclusion is unaffected and I record my own number beside it.) THE FINDING THAT
-  OUTRANKS THE TECHNICAL WORK, DA 221: five agents re-derived a result the register already
-  held -- I confirmed 0da40bb is R-888 from 09-10 07:17 -- and DA proposed the corrective
-  principle then found IT HAD FILED THAT PRINCIPLE 24 HOURS EARLIER. THE REGISTER'S PROBLEM
-  ISN'T RETRIEVAL: A FILED RESULT DOESN'T REACH THE SEAT'S OWN NEXT CLAIM, INCLUDING WHEN
-  THE SEAT IS THE AUTHOR -- because FILING DISCHARGES THE FEELING OF HAVING HANDLED IT. A
-  standing defect of the method, not an incident. RULE 38 NEEDS A TIMING CLAUSE, and I AM
-  AN INSTANCE TWICE AND POSSIBLY THREE TIMES -- rounds 344, 352 and 354 all needed a
-  sentence about when each leg was filed, and I wrote none. REV 175 found the EXACT INVERSE
-  of the five missing producers: a guard's SUBJECT with no ENFORCEMENT, so REV's
-  NOT_ESTABLISHED_AT_THIS_POWER sentence survives BY DE'S CARE, NOT BY CONSTRUCTION.
-  tip 3a7756a)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -289,6 +286,20 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 360, bit-identical, corrected, split ---
+  THE_CERTIFICATION_CAME_BACK_BIT_IDENTICAL_ON_BOTH_ARMS: "be_score_neutrality_20260903__EV22_vs_NEUTCHK.json, SUPPORTED_ON_THIS_DAY: 232,307 generations per arm, delta_max 0.0, ZERO FLIPS, m_min 1.156e-05 and 1.650e-05. So the limit I have carried since round 353 -- that the forward test runs on SCORING BYTES THE SCREEN NEVER RAN ON -- COLLAPSES. The bytes differ and the decisions do not, measured rather than argued, on the day the comparison was declared against."
+  AND_THE_CONSEQUENCE_IS_HANDLED_AS_FIELDS_NOT_AS_A_CLAIM: "With a zero bound the per_book_guard is NON-BINDING, because K times zero is zero -- and that is DRIVEN BOTH WAYS rather than asserted. The narrower hazard stands and is stated: THE BOUND WAS MEASURED ON ONE DAY. A guard that becomes vacuous under a particular measurement is exactly the case that reads as a pass, and naming its vacuity in a field is what stops it being read as coverage."
+  DAY_ONES_STATISTIC_IS_ABSOLUTE_D_ABOUT_ZERO_NOT_THE_NULL_MEAN_AND_MY_FRAMING_WAS_WRONG_IN_BOTH_DIRECTIONS: "REV 178 and DA 223. CONDVALUE sits at the 0.0th PERCENTILE, BELOW ALL 500 DRAWS -- STRONGER than I recorded -- and a negative day is about 11 per cent likely under this 89-per-cent-positive null, so it is genuinely extreme. HAZARD sits at the 36.4th PERCENTILE, so 'underperformed random' WAS OVERSTATED FOR IT. I recorded both arms as underperforming at round 359. One was understated and one overstated, by the same mistaken statistic."
+  AND_I_RETRACT_REPRODUCING_STEP_TWOS_VERDICT_OUT_OF_SAMPLE: "I recorded that phrase at round 359, marked RELAYED with the coordinator's own field-name caveat attached. It is withdrawn at source: STEP 2 RAN ON 09-04/05/06 UNDER THE RETRACTED POLICY at 03dbc1e, so day one is not a reproduction of it. The caveat I attached was about field names and would not have caught this -- the error was in what the comparison WAS, not in which fields were read."
+  AND_FUTILITY_IS_DRIVEN_BUT_WHAT_IT_ENDS_MUST_BE_STATED_NARROWLY: "FUTILE: True, KILLED_BY_NEGATIVE_DAYS, with attainable_minimum_p(G=1) = 1.0. What it ends is CONJUNCT (a) FOR CONDVALUE -- futility OF THE TEST, NEVER NO_EFFECT. That distinction is the whole of REV's pre-written failure sentence arriving in practice, and it arrived on day one rather than at the end, which is when a narrow wording is hardest to hold and most necessary."
+  THE_ERA_LITERAL_WAS_DAY_INDEPENDENT_AND_EVERY_SEPTEMBER_WINDOW_GOT_AN_EMPTY_GAP_LIST: "BE 133: fi.ERA was a day-independent literal clob_v3_1, so every September window received an EMPTY GAP LIST. Fixed at BE 113, BEFORE any forward valuation. Measured under the fix: 27 of 287 of 09-07's windows and 43 of 288 of 09-08's are GAP-BEARING, against ZERO under the bug. A literal that must track a moving thing, in the field that decides which windows are admissible -- the same class this programme has now found in a floor, a docstring, a delimiter and an era."
+  AND_THE_RULING_IS_REBUILD_09_07_CONSISTENT_WITH_DAY_ONE_SUPERSEDED_IN_BAND: "Option (a). The reasons are recorded because they are the useful part: (b) LEAVES GAP TREATMENT INHOMOGENEOUS ACROSS THE POPULATION, which rules 4 and 5 forbid, and (c) PROPAGATES A FIXED DEFECT. So the cost of a rebuild is paid to keep one treatment across seven days rather than to save a day's compute. REV is checking THE CORRECTION'S DIRECTION BEFORE IT RUNS -- which is the control-first ordering, applied to a fix rather than to a measurement."
+  A_USER_COMMIT_LANDED_ON_THE_VALUATION_PATH_AFTER_THE_PIN_AND_I_VERIFIED_ITS_SHAPE: "da00220, authored 2026-09-11 04:47:29 -- AFTER the 03:07 pin -- rewriting five valuation files: PROTOCOL V1 to V2, a PIPELINE_COMMIT literal, nine new refusals. I read the commit and listed the files. Day one's three computing modules at 651a7b53 are pin-identical, which I hashed at round 359 and which stands."
+  AND_THE_TWO_DIFFERING_FILES_HASH_THE_EMPTY_STRING_AT_THE_PIN_BECAUSE_THEY_DID_NOT_EXIST: "I checked this rather than accepting it, and it extends what I found at round 359. sha256 of the empty string is e3b0c44298fc1c14. AT 7ed5a90, be_score_neutrality.py AND de_forward_value_day.py DO NOT EXIST -- so any digest comparison against the pin hashes nothing for them and reports a MISMATCH. TWO OF THE PIPELINE'S FILES POSTDATE THE COMMIT THE WHOLE PIPELINE IS PINNED TO, and a comparator that does not distinguish ABSENT from DIFFERENT reports the wrong one. Rule 42 exactly: 'differing digest' is the label, 'did not exist' is the property."
+  AND_DAYS_TWO_TO_SEVEN_MAY_NOT_SILENTLY_RUN_V2_WHILE_DAY_ONE_RAN_V1: "DE is measuring V2's D-neutrality on 09-07: BIT-IDENTICAL means adopt for all seven; ANY MOVEMENT goes to the USER. That is the right shape -- the question is not whether V2 is better but whether the seven days are one experiment, and a protocol change mid-population is a homogeneity defect of the same kind as the era split ruled on above. Two instances in one round of the same principle: the population must be treated ONE WAY."
+  THE_STATE_TAPES_DO_NOT_EXIST_AND_THE_REAL_PER_DAY_COST_IS_ABOUT_TWO_HOURS: "None of 09-08 through 09-13 exist; they are built BY HAND with NO AUTOMATION at roughly 17 minutes each, so the real per-day cost is tape plus book plus valuation, ABOUT TWO HOURS. The D+1 dependency is about five seconds and the end date holds at roughly 09-14. A per-day cost stated as the valuation alone would have understated the remaining programme by more than half."
+  AND_NEITHER_A_VALUATION_NOR_A_TAPE_COEXISTS_WITH_A_CATCH_UP_LANE_SO_SEQUENCE_FIRST_NEVER_MASK: "Valuation peak 3.41 GiB and tape 5.78 GiB, against a 12 GiB catch-up lane and a 14 GiB cap -- I computed the valuation case at round 359 as 15.41 GiB, exceeding by 1.41, and the tape case is worse still. DE's instruction is the operative half: SEQUENCE THE LANES FIRST, NEVER MASK THEM. Masking hides a collision that swap cannot absorb, since MemorySwapMax is zero, so a masked lane is a deferred kill rather than an avoided one."
+  DAS_REBASE_NEAR_MISS_CONFIRMS_THE_COUNT_I_AM_LOOKING_AT: "git rebase upstream in a four-seat tree REPLAYS EVERY UNPUSHED COMMIT PRESENT -- THIRTEEN, not DA's -- and DA aborted with nothing lost, resolving to use the land script only. I record it because the number matches what I am holding: my own tree reads 13 ahead, and those thirteen are THE SHARED POOL, NOT ONE SEAT'S. DA and I independently arrived at the same figure from opposite ends, which is why I declined to rebase at round 358 and again here."
   # --- MEM round 359, day one is valued ---
   DAY_ONE_OF_THE_FORWARD_TEST_IS_VALUED_AND_BOTH_ARMS_UNDERPERFORMED_MATCHED_RANDOM: "Book 0815cad74f53f118, 500 draws each, matching unit DISTINCT_REFERENCE_GENERATIONS, zero-model-cancel baseline -4,437.7c. CONDVALUE_X_SKEW observed_D -11,017.7c, p_two_sided 0.3174, null mean +7,888.2c, 26,264 generations cancelled. HAZARD_OVER_SKEWED_REF observed_D +5,256.2c, p_two_sided 0.6587, null mean +7,940.5c, 23,078 generations cancelled. BOTH NULL MEANS SIT NEAR +7,900c, so random cancellation earned about 7,900c on 09-07 while CONDVALUE returned -11,018c and HAZARD +5,256c."
   AND_BOTH_P_VALUES_REPRODUCE_THE_PRE_REGISTERED_ESTIMATOR_EXACTLY: "I inverted them rather than accepting them. Under the declared (1+k)/(1+n) with n=500, p = 0.3174 implies k = 158.02 and p = 0.6587 implies k = 329.01 -- BOTH INTEGERS to within two hundredths. So the numbers were produced by the estimator that was pre-registered at b72e329 and verified unmodified at round 344, not by some other formula that happens to land nearby."
@@ -27736,6 +27747,85 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 360, 2026-09-11T06:28:34Z ---
+  THE_CERTIFICATION_CAME_BACK_BIT_IDENTICAL_ON_BOTH_ARMS:
+    prov: RELAYED
+    from: BE 133 via coordinator MEM 360
+    as_of: 2026-09-11T06:28:34Z
+    said: >-
+      the certification figures as dispatched; the limit they retire is the one recorded in my files from round 353 and repeated at 354.
+  AND_THE_CONSEQUENCE_IS_HANDLED_AS_FIELDS_NOT_AS_A_CLAIM:
+    prov: RELAYED
+    from: BE 133 via coordinator MEM 360
+    as_of: 2026-09-11T06:28:34Z
+    said: >-
+      the non-binding consequence and its two-way drive as dispatched; the per_book_guard's refusal conditions I read at the artifact at round 356.
+  DAY_ONES_STATISTIC_IS_ABSOLUTE_D_ABOUT_ZERO_NOT_THE_NULL_MEAN_AND_MY_FRAMING_WAS_WRONG_IN_BOTH_DIRECTIONS:
+    prov: RELAYED
+    from: REV 178 and DA 223 via coordinator MEM 360
+    as_of: 2026-09-11T06:28:34Z
+    said: >-
+      the two percentiles and the 11-per-cent figure as dispatched; my round-359 flag recorded both arms as underperforming and is superseded in band.
+  AND_I_RETRACT_REPRODUCING_STEP_TWOS_VERDICT_OUT_OF_SAMPLE:
+    prov: RELAYED
+    from: coordinator MEM 360
+    as_of: 2026-09-11T06:28:34Z
+    said: >-
+      the retraction and the retracted-policy commit as dispatched; my round-359 flag carrying the phrase stays as provenance and is superseded here.
+  AND_FUTILITY_IS_DRIVEN_BUT_WHAT_IT_ENDS_MUST_BE_STATED_NARROWLY:
+    prov: RELAYED
+    from: DE via coordinator MEM 360
+    as_of: 2026-09-11T06:28:34Z
+    said: >-
+      the driven futility fields as dispatched; the never-NO_EFFECT wording is REV's, recorded in my files from round 356.
+  THE_ERA_LITERAL_WAS_DAY_INDEPENDENT_AND_EVERY_SEPTEMBER_WINDOW_GOT_AN_EMPTY_GAP_LIST:
+    prov: RELAYED
+    from: BE 133 via coordinator MEM 360
+    as_of: 2026-09-11T06:28:34Z
+    said: >-
+      the defect, its fix and the two measured counts as dispatched.
+  AND_THE_RULING_IS_REBUILD_09_07_CONSISTENT_WITH_DAY_ONE_SUPERSEDED_IN_BAND:
+    prov: RELAYED
+    from: coordinator MEM 360
+    as_of: 2026-09-11T06:28:34Z
+    said: >-
+      the ruling and its two rejected alternatives as dispatched, with the rule-4 and rule-5 grounds named.
+  A_USER_COMMIT_LANDED_ON_THE_VALUATION_PATH_AFTER_THE_PIN_AND_I_VERIFIED_ITS_SHAPE:
+    prov: CHECKED
+    artifact: live/pm_research/de_forward_value_day.py
+    as_of: 2026-09-11T06:28:34Z
+    said: >-
+      da00220 read at its object for author, timestamp and the five touched paths under live/pm_research.
+  AND_THE_TWO_DIFFERING_FILES_HASH_THE_EMPTY_STRING_AT_THE_PIN_BECAUSE_THEY_DID_NOT_EXIST:
+    prov: CHECKED
+    artifact: live/pm_research/de_forward_value_day.py
+    as_of: 2026-09-11T06:28:34Z
+    said: >-
+      git show of each of da00220's five files at 7ed5a90: three present with their digests, two returning non-zero because the path does not exist at that commit.
+  AND_DAYS_TWO_TO_SEVEN_MAY_NOT_SILENTLY_RUN_V2_WHILE_DAY_ONE_RAN_V1:
+    prov: RELAYED
+    from: coordinator MEM 360
+    as_of: 2026-09-11T06:28:34Z
+    said: >-
+      the measurement plan and its two branches as dispatched; the homogeneity parallel with the era ruling is mine.
+  THE_STATE_TAPES_DO_NOT_EXIST_AND_THE_REAL_PER_DAY_COST_IS_ABOUT_TWO_HOURS:
+    prov: RELAYED
+    from: coordinator MEM 360
+    as_of: 2026-09-11T06:28:34Z
+    said: >-
+      the tape timings, the absence of automation and the D+1 figure as dispatched.
+  AND_NEITHER_A_VALUATION_NOR_A_TAPE_COEXISTS_WITH_A_CATCH_UP_LANE_SO_SEQUENCE_FIRST_NEVER_MASK:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T06:28:34Z
+    said: >-
+      3.41 + 12 and 5.78 + 12 computed against the 14 GiB MemoryMax read from the slice at round 332, where MemorySwapMax=0 was confirmed.
+  DAS_REBASE_NEAR_MISS_CONFIRMS_THE_COUNT_I_AM_LOOKING_AT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T06:28:34Z
+    said: >-
+      git rev-list --count origin/mm-research..HEAD read as 13 at this sweep, matching DA's count; the commits are authored across seats, not by one.
   # --- MEM round 359, 2026-09-11T05:56:23Z ---
   DAY_ONE_OF_THE_FORWARD_TEST_IS_VALUED_AND_BOTH_ARMS_UNDERPERFORMED_MATCHED_RANDOM:
     prov: RELAYED

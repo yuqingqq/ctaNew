@@ -23343,3 +23343,26 @@ generation and the window went 4 → 3. Nothing rewritten.
   REFUSALS HAVE BEEN BETTER THAN THEIR PRODUCTIONS, and my own record fits exactly: SIX
   ERRORS, ALL ASSERTIONS; FOUR BEST CALLS, ALL WITHHOLDINGS. tip 4e76ce5)
 ```
+
+## Batch 342 (rotated by MEM round 360, 2026-09-11T06:28:34Z)
+
+```
+  2026-09-11T03:53:44Z (MEM ROUND 357 -- THE FIRST FORWARD BOOK EXISTS AND THE ROUND'S BEST FINDING IS
+  ABOUT THE REGISTER. be_daybook_20260907_btc__L250ms__FWD1.pkl, 339 MiB, which I located
+  and stat'd, all three digests matching 7ed5a90 -- and NOTHING IS VALUED. The optimised
+  ruling is vindicated: 21.7 min against a 61.77-min mean, 2.85x with a 2.05-3.42x RANGE,
+  and build speed HAS STOPPED BEING THE CONSTRAINT -- the test is CALENDAR-BOUND at
+  2026-09-14T00:00Z. (My arithmetic puts the programme at ~3.2 h, not the ~2.5 stated;
+  the conclusion is unaffected and I record my own number beside it.) THE FINDING THAT
+  OUTRANKS THE TECHNICAL WORK, DA 221: five agents re-derived a result the register already
+  held -- I confirmed 0da40bb is R-888 from 09-10 07:17 -- and DA proposed the corrective
+  principle then found IT HAD FILED THAT PRINCIPLE 24 HOURS EARLIER. THE REGISTER'S PROBLEM
+  ISN'T RETRIEVAL: A FILED RESULT DOESN'T REACH THE SEAT'S OWN NEXT CLAIM, INCLUDING WHEN
+  THE SEAT IS THE AUTHOR -- because FILING DISCHARGES THE FEELING OF HAVING HANDLED IT. A
+  standing defect of the method, not an incident. RULE 38 NEEDS A TIMING CLAUSE, and I AM
+  AN INSTANCE TWICE AND POSSIBLY THREE TIMES -- rounds 344, 352 and 354 all needed a
+  sentence about when each leg was filed, and I wrote none. REV 175 found the EXACT INVERSE
+  of the five missing producers: a guard's SUBJECT with no ENFORCEMENT, so REV's
+  NOT_ESTABLISHED_AT_THIS_POWER sentence survives BY DE'S CARE, NOT BY CONSTRUCTION.
+  tip 3a7756a)
+```
