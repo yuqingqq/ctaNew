@@ -14,12 +14,18 @@ from pathlib import Path
 
 #: v2 is the UNION of DA's list and DE's generator output. v1 stays on disk as
 #: provenance (rule 13) and is NOT the freeze in force.
-DECL = Path(__file__).resolve().parent / "declarations" / "da_population_freeze_v2.json"
+DECL = Path(__file__).resolve().parent / "declarations" / "da_population_freeze_v3.json"
 ROOTS = {"main": Path("/home/yuqing/ctaNew"),
          "wt-fwd": Path("/home/yuqing/ctaNew-wt-fwd"),
          "wt-deval": Path("/home/yuqing/ctaNew-wt-deval")}
 
 DRIFT = "POPULATION_FREEZE_FILE_DRIFTED"
+#: R-900(7): two classes, two consequences. A PIPELINE byte moving means the
+#: OBJECT UNDER TEST moved -- refuse. An INSTRUMENT byte moving means the thing
+#: MEASURING it improved -- report and pass, until the instrument freeze is
+#: called. v2 refused on an instrument landing within minutes, correctly on its
+#: own terms, and that was the defect.
+INSTRUMENT_DRIFT = "INSTRUMENT_DRIFTED"
 ABSENT = "POPULATION_FREEZE_FILE_ABSENT"
 NO_DECL = "POPULATION_FREEZE_DECLARATION_ABSENT"
 
@@ -40,15 +46,18 @@ def verify(decl_path: Path = DECL, roots=None) -> dict:
     if not decl_path.is_file():
         raise FreezeRefused(f"REFUSED {NO_DECL}: {decl_path}")
     d = json.loads(decl_path.read_text())
-    drifted, absent, ok = [], [], 0
+    drifted, absent, ok, instr = [], [], 0, []
     for e in d["files"]:
         p = roots[e["root"]] / e["path"]
         got = _sha(p)
+        row = {"path": e["path"], "root": e["root"],
+               "declared": e["sha256"][:16],
+               "on_disk": (got or "")[:16], "CLASS": e.get("CLASS", "PIPELINE")}
         if got is None:
-            absent.append(e["path"])
+            (instr if row["CLASS"] == "INSTRUMENT" else absent).append(
+                row if row["CLASS"] == "INSTRUMENT" else e["path"])
         elif got != e["sha256"]:
-            drifted.append({"path": e["path"], "root": e["root"],
-                            "declared": e["sha256"][:16], "on_disk": got[:16]})
+            (instr if row["CLASS"] == "INSTRUMENT" else drifted).append(row)
         else:
             ok += 1
     if absent:
@@ -60,7 +69,12 @@ def verify(decl_path: Path = DECL, roots=None) -> dict:
             f"REFUSED {DRIFT}: {len(drifted)} of {len(d['files'])} declared file(s) "
             f"changed on disk -- {names}. First: {drifted[0]}")
     return {"status": "POPULATION_FREEZE_HOLDS", "n_files": len(d["files"]),
-            "n_verified": ok, "declared_at_utc": d["declared_at_utc"]}
+            "n_verified": ok, "declared_at_utc": d["declared_at_utc"],
+            "n_PIPELINE": sum(1 for e in d["files"] if e.get("CLASS") != "INSTRUMENT"),
+            "n_INSTRUMENT": sum(1 for e in d["files"] if e.get("CLASS") == "INSTRUMENT"),
+            "INSTRUMENT_DRIFTED": [f"{INSTRUMENT_DRIFT}:{r['path']}"
+                                   f" {r['declared']}->{r['on_disk'] or 'ABSENT'}"
+                                   for r in instr]}
 
 
 def falsify() -> int:
@@ -96,18 +110,47 @@ def falsify() -> int:
             tgt = sroots[e["root"]] / e["path"]
             orig = tgt.read_bytes()
             tgt.write_bytes(orig + b" ")          # exactly one byte
+            # THE EXPECTATION IS A FUNCTION OF THE CLASS, NOT THE ROLE. This loop
+            # predated R-900(7)'s split and asserted that EVERY role refuses; it
+            # then failed on LAUNCHER and INSTRUMENT_FILE -- correctly, because
+            # those are INSTRUMENT and must report instead. A falsifier whose
+            # expectations go stale is the defect it exists to catch.
+            is_instr = e.get("CLASS") == "INSTRUMENT"
             try:
-                verify(DECL, sroots)
-                ck(f"ONE BYTE in a {e['role']} file REFUSES", False)
+                r = verify(DECL, sroots)
+                named = any(e["path"] in x for x in r["INSTRUMENT_DRIFTED"])
+                ck(f"ONE BYTE in a {e['role']} file ({e.get('CLASS')}) "
+                   f"REPORTS and passes ({Path(e['path']).name})", is_instr and named)
             except FreezeRefused as ex:
-                ck(f"ONE BYTE in a {e['role']} file REFUSES by name ({Path(e['path']).name})",
-                   DRIFT in str(ex) and e["path"] in str(ex))
+                ck(f"ONE BYTE in a {e['role']} file ({e.get('CLASS')}) "
+                   f"REFUSES by name ({Path(e['path']).name})",
+                   (not is_instr) and DRIFT in str(ex) and e["path"] in str(ex))
             tgt.write_bytes(orig)
             ck(f"  and RESTORING those bytes verifies again ({e['role']})",
                verify(DECL, sroots)["status"] == "POPULATION_FREEZE_HOLDS")
 
+        # ---- R-900(7): BOTH BRANCHES, explicitly ----
+        pipe = next(e for e in d["files"] if e.get("CLASS") != "INSTRUMENT")
+        inst = next(e for e in d["files"] if e.get("CLASS") == "INSTRUMENT")
+        for e, expect_refuse in ((pipe, True), (inst, False)):
+            tgt = sroots[e["root"]] / e["path"]
+            orig = tgt.read_bytes()
+            tgt.write_bytes(orig + b" ")
+            cls = e.get("CLASS", "PIPELINE")
+            try:
+                r = verify(DECL, sroots)
+                named = any(e["path"] in x for x in r["INSTRUMENT_DRIFTED"])
+                ck(f"an {cls} byte REPORTS and PASSES, naming it "
+                   f"({Path(e['path']).name})", (not expect_refuse) and named)
+            except FreezeRefused as ex:
+                ck(f"a {cls} byte REFUSES by filename ({Path(e['path']).name})",
+                   expect_refuse and DRIFT in str(ex) and e["path"] in str(ex))
+            tgt.write_bytes(orig)
+        ck("  and both restorations verify clean",
+           verify(DECL, sroots)["status"] == "POPULATION_FREEZE_HOLDS")
+
         # a DELETED file refuses under a different name
-        e = d["files"][0]
+        e = next(x for x in d["files"] if x.get("CLASS") != "INSTRUMENT")
         tgt = sroots[e["root"]] / e["path"]
         orig = tgt.read_bytes(); tgt.unlink()
         try:
