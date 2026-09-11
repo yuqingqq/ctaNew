@@ -67,6 +67,21 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T09:54:55Z (MEM ROUND 378 -- MY ROUND-376 PREDICTION LANDED: the run refused NOT_CERTIFIED
+  at 09:09:23Z and was re-certified at 09:33:48Z, about twenty minutes after I called it
+  from reading de_settlement_control_run.py:194 and hashing two files. THE CERTIFICATE
+  STOCK IS NOW THREE WITH EXACTLY ONE VALID -- c5c1fc0a, 8500ce41 and the new a455191d in
+  the __68e7d23 certificate, which I confirmed MATCHES THE COMPARATOR ON DISK. Every
+  retirement was caused by editing the file that validates them. THE PIN IS 68e7d23, ON
+  de-freeze-chain-v2 AND STILL NOT ON mm-research, so PENDING_ORIGIN_MAIN is not a
+  transient but THE STANDING CONDITION. LOCK QUEUE AS IT STANDS ON DISK: deRV0907w1 HOLDS
+  IT (pids 2298230/2298231), deEMIT0907d is armed and waiting ON THE RESULT FILE, and
+  be147frag0909 reads FAILED -- AND I NEARLY FILED IT AS DEAD. It is rc=75 with
+  start==exit at the same second and the cycle repeating: FLOCK OFFERING. The dispatch is
+  right and my first reading was wrong. A POLLING UNIT IS INDISTINGUISHABLE FROM A DEAD ONE
+  BY ActiveState AND Result ALONE, and the discriminator -- rc=75 means DID NO WORK -- is
+  the one I recorded from the coordinator's own watcher fix ONE ROUND EARLIER.
+  tip 85824fd)
   2026-09-11T08:56:01Z (MEM ROUND 377 -- MY ROUND-376 WARNING IS CONFIRMED AGAINST THE ACTUAL PIN. The
   comparator at dcec80a still hashes a455191d6bceec7e, and I INVENTORIED EVERY CERTIFICATE
   ON DISK: one records producer 8500ce41 and the other c5c1fc0a. NEITHER MATCHES THE
@@ -97,22 +112,6 @@ updated: >-
   params v31 -- so the six amendments I listed last round are now REACHABLE and the fourth
   gate's defect is REPAIRED. And the DRIVER differs too, confirmed by my own hashing.
   tip ae50330)
-  2026-09-11T08:45:21Z (MEM ROUND 375 -- A FREEZE THAT COULD NOT BE SUPERSEDED. The third refusal,
-  SETTLEMENT_CONTROL_PARAMS_ARE_NOT_THE_FROZEN_PARAMS, traces to a LITERAL I read at
-  be_score_neutrality.py:85 -- FREEZE_REL = 'de_arm_freeze_v1.json' -- with frozen_params()
-  reading THE BASE FREEZE ONLY. AND I LISTED SIX AMENDMENTS, v2 THROUGH v7, THAT THE
-  LITERAL CANNOT SEE: the freeze was superseded IN BAND six times and NOT ONE SUPERSESSION
-  REACHED THE CONSUMER. So V2 demanded params v29 by digest while its cascade check
-  demanded params naming 7ed5a90's bytes -- MUTUALLY EXCLUSIVE, NO WAIVER PATH. FIFTH
-  LITERAL-THAT-MUST-TRACK-A-MOVING-THING in my own records, and THE FIRST INSIDE A FREEZE
-  REFERENCE, which is where a stale literal does the most damage because the freeze is what
-  everything else is checked against. THE USER RULED to fix the RESOLVER rather than re-pin
-  the build -- easy because the books are certified BIT-IDENTICAL, so the options differ
-  ONLY IN TIME, and a choice between provably identical objects should be decided on what
-  structure it leaves behind. AND THE FOURTH GATE IS NOW NAMED -- the params digest -- which
-  closes the count I recorded at round 374 without inventing it; it differs in kind from
-  the first three, which found STALE RECORDS, because THIS ONE FOUND A BROKEN MECHANISM.
-  tip 74ad19b)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -284,6 +283,15 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 378, the prediction landed; a poller reads as dead ---
+  MY_ROUND_376_PREDICTION_LANDED_AND_THE_REFUSAL_HAPPENED_AT_09_09_23Z: "I wrote at round 376 that the run would refuse NOT_CERTIFIED because the resolver fix had moved the comparator's bytes away from every certificate's recorded producer, and confirmed it against the actual pin at round 377. DE 272 records THE REFUSAL AT 09:09:23Z AND A RE-CERTIFICATION AT 09:33:48Z. The prediction was made from reading de_settlement_control_run.py:194 and hashing two files, about twenty minutes before the run hit it."
+  AND_THE_CERTIFICATE_STOCK_IS_NOW_THREE_WITH_EXACTLY_ONE_VALID: "I re-ran the inventory: c5c1fc0ae126a3f7 from BE's rebuild, 8500ce41fc800e9a from the user's hardened comparator, and NOW a455191d6bceec7e in be_score_neutrality_20260903__EV22_vs_NEUTCHK__68e7d23.json -- WHICH MATCHES THE COMPARATOR ON DISK. So the stock went two-and-none-valid to three-and-one-valid, and every retirement was caused by editing the file that validates them. V2 PINS EXACTLY ONE PRODUCER-DIGEST ARTIFACT, which is the right design and also the reason the stock grows by one at every repair."
+  THE_VALUATION_PIN_IS_68E7D23_AND_IT_IS_STILL_NOT_ON_MM_RESEARCH: "wt-deval is at 68e7d23. I checked both refs: it is ON origin/de-freeze-chain-v2 and NOT ON origin/mm-research. So the pin has moved twice since dcec80a and the register's canonical branch has contained none of them -- the PENDING_ORIGIN_MAIN state I recorded at round 377 is not a transient, it is the standing condition until the user resolves the fork. A cold reader resolves the pin BY REF, not by the register."
+  THE_LOCK_QUEUE_AS_IT_STANDS_ON_DISK_IS_THE_VALUATION_HOLDING_AND_TWO_UNITS_ALIVE: "I read the lock and the units rather than the dispatch. The lock file is held by pids 2298230 (flock) and 2298231 (python3). deRV0907w1 is LoadState=loaded, ACTIVE, RUNNING -- it holds the lock. deEMIT0907d is loaded, ACTIVE, RUNNING -- the emit waiter, armed and waiting on the result file rather than on a unit name. And be147frag0909 is loaded but reports ACTIVE=FAILED, SUB=FAILED."
+  AND_I_NEARLY_FILED_A_POLLING_UNIT_AS_A_DEAD_ONE_BEFORE_CHECKING_ITS_EXIT_CODE: "be147frag0909 reads FAILED, and the dispatch says it is POLLING THE LOCK. I looked instead of choosing: Result=exit-code, ExecMainStatus=75, and ExecMainStartTimestamp equal to ExecMainExitTimestamp AT THE SAME SECOND, with the journal showing Started, exited 75/TEMPFAIL, Failed REPEATING. THAT IS flock -n -E 75 OFFERING: it starts, finds the lock held, exits 75, and starts again. THE DISPATCH IS RIGHT AND MY FIRST READING WAS WRONG."
+  AND_THE_DISCRIMINATOR_IS_ONE_I_HAD_ALREADY_WRITTEN_DOWN_ONE_ROUND_EARLIER: "A POLLING UNIT IS INDISTINGUISHABLE FROM A DEAD ONE BY ActiveState AND Result ALONE -- both read failed and exit-code. The discriminators are rc=75 SPECIFICALLY, which means the run DID NO WORK, and ExecMainStartTimestamp ADVANCING. That is exactly the correction the coordinator made to their own watcher at round 376, which I recorded, and I walked into the same trap ONE ROUND LATER. Rule 46's family gains a member: LoadState separates existing from absent, and RC=75 SEPARATES WAITING FROM DEAD."
+  THE_09_08_BOOK_LANDED_AND_THE_09_07_V2_VALUATION_IS_RUNNING: "09-08's book at 09:33:03Z, 390,041,103 bytes, rc=0, about 23 minutes -- against 09-07's rebuilt 358,259,004, so a LARGER DAY BY ABOUT 31.8 MB, which I differenced. The 09-07 V2 valuation has been running since about 09:34Z as deRV0907w1 and is expected out near 10:51Z. 09-09's fragment offers for the lock behind it and 09-08's valuation is being armed."
+  AND_THE_FREEZE_CHAIN_HOLE_WAS_CLOSED_BEFORE_GO5_RATHER_THAN_AFTER: "R-899 disposes REVIEW 155: the hole closed at 68e7d23 BEFORE go5, DECLARATIONS-ONLY, with F2 and the line-650 falsifier ruled POST-POPULATION. Closing a chain defect before the run that would have exposed it, and deferring the two items that would have moved code during a population, is the ordering this programme arrived at the hard way -- and the declarations-only scope is what makes it safe to do mid-population at all."
   # --- MEM round 377, two certificates and neither valid ---
   MY_ROUND_376_WARNING_IS_CONFIRMED_AGAINST_THE_ACTUAL_PIN_GO5_WILL_USE: "The comparator at dcec80a hashes a455191d6bceec7e -- UNCHANGED from 7efea16, since only the driver moved. AND I INVENTORIED EVERY CERTIFICATE ON DISK: be_score_neutrality_20260903__EV22_vs_NEUTCHK__da00220.json records producer 8500ce41fc800e9a, and the earlier be_score_neutrality_20260903__EV22_vs_NEUTCHK.json records c5c1fc0ae126a3f7. NEITHER MATCHES THE COMPARATOR GO5 WILL RUN. So deRV0907go5 will refuse NOT_CERTIFIED exactly as go4 would have, UNLESS A THIRD CERTIFICATION IS RUN WITH THE a455191d COMPARATOR FIRST."
   AND_THE_INVENTORY_IS_THE_USEFUL_PART_BECAUSE_TWO_CERTIFICATES_EXIST_AND_BOTH_ARE_STALE: "One was made by the user's hardened comparator and one by BE's rebuild to REV 173's bar -- the two instruments whose agreement I recorded as rule-38 corroboration at round 374. BOTH ARE NOW STALE AGAINST A THIRD COMPARATOR that neither produced. That is the self-referential digest check compounding: each repair to the comparator retires the entire certificate stock, and the stock now has two entries and zero valid ones."
@@ -27924,6 +27932,55 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 378, 2026-09-11T09:54:55Z ---
+  MY_ROUND_376_PREDICTION_LANDED_AND_THE_REFUSAL_HAPPENED_AT_09_09_23Z:
+    prov: CHECKED
+    artifact: live/pm_research/be_score_neutrality.py
+    as_of: 2026-09-11T09:54:55Z
+    said: >-
+      the refusal and re-certification times as filed by DE 272; my prediction and its basis are recorded in my round-376 and round-377 flags.
+  AND_THE_CERTIFICATE_STOCK_IS_NOW_THREE_WITH_EXACTLY_ONE_VALID:
+    prov: CHECKED
+    artifact: live/pm_research/be_score_neutrality.py
+    as_of: 2026-09-11T09:54:55Z
+    said: >-
+      every be_score_neutrality_*.json in data/pm_5min/derived read for producer.sha256 and compared against the comparator hashed on disk in wt-deval: three certificates, one match.
+  THE_VALUATION_PIN_IS_68E7D23_AND_IT_IS_STILL_NOT_ON_MM_RESEARCH:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T09:54:55Z
+    said: >-
+      git -C wt-deval rev-parse giving 68e7d23; merge-base --is-ancestor false against origin/mm-research and true against origin/de-freeze-chain-v2.
+  THE_LOCK_QUEUE_AS_IT_STANDS_ON_DISK_IS_THE_VALUATION_HOLDING_AND_TWO_UNITS_ALIVE:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-measurement-pipeline.timer
+    as_of: 2026-09-11T09:54:55Z
+    said: >-
+      fuser -v on data/.heavy_run.lock listing the two holding pids; systemctl --user show with LoadState read first for each of the three units.
+  AND_I_NEARLY_FILED_A_POLLING_UNIT_AS_A_DEAD_ONE_BEFORE_CHECKING_ITS_EXIT_CODE:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-measurement-pipeline.timer
+    as_of: 2026-09-11T09:54:55Z
+    said: >-
+      systemctl --user show for Result, ExecMainStatus and both ExecMain timestamps; journalctl showing the Started-exited-Failed cycle twice in the last six lines.
+  AND_THE_DISCRIMINATOR_IS_ONE_I_HAD_ALREADY_WRITTEN_DOWN_ONE_ROUND_EARLIER:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-measurement-pipeline.timer
+    as_of: 2026-09-11T09:54:55Z
+    said: >-
+      the round-376 flag records the watcher's correction to exit-code logic ignoring rc=75; this round's readings show the same signature on a live poller.
+  THE_09_08_BOOK_LANDED_AND_THE_09_07_V2_VALUATION_IS_RUNNING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T09:54:55Z
+    said: >-
+      390,041,103 minus 358,259,004 computed as 31,782,099 bytes; the book's rc and duration as filed, and the running unit confirmed active above.
+  AND_THE_FREEZE_CHAIN_HOLE_WAS_CLOSED_BEFORE_GO5_RATHER_THAN_AFTER:
+    prov: RELAYED
+    from: R-899 via coordinator MEM 378
+    as_of: 2026-09-11T09:54:55Z
+    said: >-
+      the disposition, its scope and the two deferrals as filed.
   # --- MEM round 377, 2026-09-11T08:56:01Z ---
   MY_ROUND_376_WARNING_IS_CONFIRMED_AGAINST_THE_ACTUAL_PIN_GO5_WILL_USE:
     prov: CHECKED

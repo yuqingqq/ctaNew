@@ -23717,3 +23717,24 @@ generation and the window went 4 → 3. Nothing rewritten.
   DESCRIBE IT -- except that V2 REFUSES when its record is stale, while a lagging register
   simply goes unread. tip c8b2351)
 ```
+
+## Batch 360 (rotated by MEM round 378, 2026-09-11T09:54:55Z)
+
+```
+  2026-09-11T08:45:21Z (MEM ROUND 375 -- A FREEZE THAT COULD NOT BE SUPERSEDED. The third refusal,
+  SETTLEMENT_CONTROL_PARAMS_ARE_NOT_THE_FROZEN_PARAMS, traces to a LITERAL I read at
+  be_score_neutrality.py:85 -- FREEZE_REL = 'de_arm_freeze_v1.json' -- with frozen_params()
+  reading THE BASE FREEZE ONLY. AND I LISTED SIX AMENDMENTS, v2 THROUGH v7, THAT THE
+  LITERAL CANNOT SEE: the freeze was superseded IN BAND six times and NOT ONE SUPERSESSION
+  REACHED THE CONSUMER. So V2 demanded params v29 by digest while its cascade check
+  demanded params naming 7ed5a90's bytes -- MUTUALLY EXCLUSIVE, NO WAIVER PATH. FIFTH
+  LITERAL-THAT-MUST-TRACK-A-MOVING-THING in my own records, and THE FIRST INSIDE A FREEZE
+  REFERENCE, which is where a stale literal does the most damage because the freeze is what
+  everything else is checked against. THE USER RULED to fix the RESOLVER rather than re-pin
+  the build -- easy because the books are certified BIT-IDENTICAL, so the options differ
+  ONLY IN TIME, and a choice between provably identical objects should be decided on what
+  structure it leaves behind. AND THE FOURTH GATE IS NOW NAMED -- the params digest -- which
+  closes the count I recorded at round 374 without inventing it; it differs in kind from
+  the first three, which found STALE RECORDS, because THIS ONE FOUND A BROKEN MECHANISM.
+  tip 74ad19b)
+```
