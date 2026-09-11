@@ -2,7 +2,7 @@
   "protocol": "P003_DE_ARM_FREEZE_V1",
   "frozen_at_utc": "2026-09-11T02:08:15.084779+00:00",
   "frozen_by": "DE 220, on the USER's decision to run the forward test",
-  "freeze_commit_ref": "SET_BY_THE_COMMIT_THAT_CARRIES_THIS_FILE",
+  "freeze_commit_ref": "b5f311a2fd46fb545b27d958bb1bdf5e764f7434",
   "repo_head_at_freeze": "22eee4c9e0a8110d7303596a7672820ddb7e3567",
   "THE_ONE_THING_A_LATER_READER_MUST_SEE_FIRST": {
     "HEADLINE": "THESE TWO ARMS FAILED THEIR DEVELOPMENT SCREEN AND ARE BEING FORWARD-TESTED ANYWAY, BY USER DECISION.",
@@ -157,5 +157,6 @@
     "CAUTION_params_days_already_lists_2026-09-08": "the ruled day set in params v29 now includes 09-08. That is NOT a licence to use it: admissibility for the forward test is 'starts after the freeze commit', and this receipt is the clock.",
     "nothing_has_been_run_against_09-08_or_later": true,
     "no_interval_below_five_complete_days": "rule 8"
-  }
+  },
+  "the_clock_starts_here": "PRIMARY validation = the first FIVE complete, era-admissible UTC days whose STARTS occur after b5f311a (2026-09-11T02:08Z). Any day starting before it is NOT admissible for this freeze, whatever the params day-set says."
 }
