@@ -1,0 +1,671 @@
+{
+ "protocol": "P003_DA_POPULATION_FREEZE_V2",
+ "version": 2,
+ "declared_by": "DA 250",
+ "declared_at_utc": "2026-09-11T10:28:00Z",
+ "THE_RULE": "NONE of the files listed here may change before 09-13's book is VALUED. Not policy alone -- the verifier recomputes every digest FROM DISK and REFUSES BY FILENAME on drift.",
+ "WORKTREE_TIPS": {
+  "wt-fwd": {
+   "head": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+   "role": "BUILD",
+   "clean_at_declaration": true
+  },
+  "wt-deval": {
+   "head": "d3901f993b03315a63198150b36410271603a2f4",
+   "role": "VALUATION",
+   "clean_at_declaration": true,
+   "delta_from_68e7d23": "NEW_FILES_ONLY",
+   "the_two_new_files": [
+    "live/pm_research/de_population_freeze_list.py",
+    "live/pm_research/de_preflight_matrix.py"
+   ],
+   "VERIFIED_BY_MY_VERIFIER_NOT_BY_THE_DISPATCH": "git diff --name-status 68e7d23 d3901f9 gives A and A -- both ADDED, 305 insertions, ZERO deletions -- and da_population_freeze_verify.py re-run against the NEW tip returned POPULATION_FREEZE_HOLDS 32/32, so no pinned or valuation-path digest moved.",
+   "origin_ref": "origin/de-freeze-chain-v2 ONLY"
+  }
+ },
+ "n_files": 52,
+ "files": [
+  {
+   "root": "main",
+   "path": "data/pm_5min/derived/be137_gap_windows_20260907.json",
+   "role": "ARTIFACT",
+   "sha256": "eebf4f330fcd8b79977272c5d8eb024b55f5556843544cb9cc4a0d7ec2233b96",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "main",
+   "path": "data/pm_5min/derived/be137_gap_windows_20260908.json",
+   "role": "ARTIFACT",
+   "sha256": "97a583386f7242af1a4636c2cc282884132239a61aae0d242004337cec0a5410",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "main",
+   "path": "data/pm_5min/derived/be_score_neutrality_20260903__EV22_vs_NEUTCHK__68e7d23.json",
+   "role": "CERTIFICATE",
+   "sha256": "cceda9855ca6b14c21a4311dfbfd98e8d69e7bf74be160edc392a4f476c876a9",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "main",
+   "path": "data/pm_5min/derived/da_blackout_mask_20260907.json",
+   "role": "MASK",
+   "sha256": "fca5177f252e7431c97d644a06ab4cc5008c6a24fa7f564121cf61e4349d2b6d",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "main",
+   "path": "data/pm_5min/derived/da_blackout_mask_20260908.json",
+   "role": "MASK",
+   "sha256": "f36263aee063f9d79d4e7bee981266bfd7ba5f5c00fa9f0764e4627abbcc4857",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "main",
+   "path": "data/pm_5min/derived/da_blackout_mask_20260909.json",
+   "role": "MASK",
+   "sha256": "acb92468a9b973d456ede4b69b74fb7a2906413ec7107c479072ee568542463e",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "main",
+   "path": "data/pm_5min/derived/da_blackout_mask_20260910.json",
+   "role": "MASK",
+   "sha256": "7a4e2b062289a6155b7eb0b8d4319dae885eca4c257687e3c69ee940fc5e4ea6",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/be_score_neutrality.py",
+   "role": "VALUATION_PATH",
+   "sha256": "a455191d6bceec7e20af182243cedfa70373fb29a4d8323b3416f3617ef6c0e9",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/da_asymmetry_null.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "e5651c29e82a2a75424e716c2b908b0f80e8cebedf63d162948093078e48cae0",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/da_root.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "0c0e604bc50693ae66c35d24febae59ceff8b5b5957a089ab97083ba0e3be1f9",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_asymmetry_null_run.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "09581cbfc94e1f2d52f36de5cfd272ff68631e7ee7ff00095e3ee6a68dc58a9e",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_data_root.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "eaffa4f949c7adb81333526a5536785d3d86d675bbd160f934c790a4a91b8619",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_forward_evaluator.py",
+   "role": "VALUATION_PATH",
+   "sha256": "6290bb25909817dcb479732a257621d66f338f24e1133192a0ebb892d10322c7",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_forward_value_day.py",
+   "role": "VALUATION_PATH",
+   "sha256": "c397537121a29b444a07270837f40315fb0646fb46a79be328e894f1db7c5c36",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_matched_cancel_control.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "dbb37c65f5651ac75b627f074610a3ed34828a054551343286206ae5db0331e8",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_multiday_design_declaration.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "b1005d7f6c5ddabbdc9ca4f5e2ed5d310ada0c3e83753e866a65f3a2eaf73edc",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_multiday_gate1_runner.py",
+   "role": "VALUATION_PATH",
+   "sha256": "157413f6562cf5bd06d84b29ddb7748a2cd96e8d978cc3f28e3552232be831b6",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_population_freeze_list.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "248156e4d92b2971652c9ed23842fe8951aecd26298cde28c5c0db96d452b2b8",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_preflight_matrix.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "57a441ecc9fa401a6d987228c09cad790e18cd8eef80e16ed4b88398d1b1fc96",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_settlement_control_aggregate.py",
+   "role": "VALUATION_PATH",
+   "sha256": "ce8e4806a48df8c298e6e59372e41b97d21376ab4d268bd8d7cf4bd1c66355ff",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_settlement_control_run.py",
+   "role": "VALUATION_PATH",
+   "sha256": "faeae22f347e2032e89a0786d62646e811dcaf0cad7e407d07c03fb7472eebd7",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/da_forward_test_declaration_v1.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "00cc0d15808f6f98b97b90070014413b15e6c6afbd2efcb3f35ae32cf999ac53",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/da_forward_test_declaration_v2.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "cffdb53f2d08d2b2be51e5b27e012131d575903db9745d3448c19b0b22e2d852",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/da_forward_test_declaration_v3.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "22dab26acfe78b20c07aa159e60d15ac104701aed812d1174ffa74dfa31b31ed",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/da_forward_test_declaration_v4.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "193bca3d6fb93b0be24fa09f87631d6e0828f91c41ae23f209c60476073f1e0c",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/da_forward_test_declaration_v5.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "49096049ad09d216247b6a35a1f586f8dd81ecef01d6fc2073b7e6f281ca0ee9",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/da_forward_test_declaration_v6.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "d2467e6717ba04d8301853c91cee8126c48e0e442a4b383d904d47ede56a5b1d",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v1.json",
+   "role": "DECLARATION",
+   "sha256": "a4749bc77b6eb3590b880bd8bc58c1e8b8099c35864b448130fbedeac839f1e8",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v10_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "f13c2755a0f9520ba689c199de0a08e950673684c03ef64ff480f7448e20349b",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v2_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "84fbe30927aada09acad652d75bd34e671c1a3dbb54aa81853f4accb379fa4f3",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v3_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "0fe428134dd31c632df04e41f1876cb4a0e9cd25cddc5ffb67d41a484fbc2219",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v4_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "422beed28d7fbe9eef33d2817862600c08e8b7cbbd8e35696e89aeaedde1ac9d",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v5_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "191f176e1bcc3baa198a1b38d149746bb16a32cdb0b6b98c842285f2c24aaaee",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v6_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "ef4b49dae2af7a0b10b3bd2d13067d20228b7f38b9858b79ba11c6a428fb0f76",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v7_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "3d100bad67cfbdf7049a8be0480b3a45ca8d85e8cd396bd1343121bdce5f9b19",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v8_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "f803e22827a8b1efc0e7395dde1bcf426880053578e43a3964adf9776d25f275",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v9_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "1efd6e83ff42f1b748b98e40a946d08d8086f5f9e9c4e112856248593716b317",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_multiday_gate1_params_v31.json",
+   "role": "DECLARATION",
+   "sha256": "dd58223c6e3654a20389843eb27027af9053b87cf3f921e6c26454068f9f8995",
+   "named_by": [
+    "DA",
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_settlement_control_declaration_v1.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "810680f10e88cf388dc19780e56d79f54f3184207985bd0f8f6e2495f40d97da",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_settlement_control_declaration_v2.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "e55cf55cfdd8ed61040342dbb7c87995a971b00e882217b3affc201f5b8ddbc6",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/p003_rule6_floor.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "090d09a43e1dece164d3374135bd22f89f16aa6f1e6b1b7ab10753ae1ba21dbb",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/pm_tape_density.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912",
+   "named_by": [
+    "DE"
+   ]
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/be_cancel_axis_null.py",
+   "role": "BUILD_PATH",
+   "sha256": "21f460b1c9d58d37638ff1b5197bec411f8df9dd87e0eb26a2f1e37f7d92c249",
+   "named_by": [
+    "DA"
+   ]
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/be_data_root.py",
+   "role": "BUILD_PATH",
+   "sha256": "c82451a61758f2b1990a11fef06d4fea8e1ef94f70e80c1aaf43d87e4cc5c6bd",
+   "named_by": [
+    "DA"
+   ]
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/de_head_scoring.py",
+   "role": "BUILD_PATH",
+   "sha256": "31c368384770351fdbe5408a0321ee7af89e2eb25fd0d36378f03c9d7b3f03af",
+   "named_by": [
+    "DA"
+   ]
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/de_matched_random_control.py",
+   "role": "BUILD_PATH",
+   "sha256": "f77aaf2bd2f21988fbd9d8b3900d8d5c7f5624618453efbc795e2a3b26eb17fc",
+   "named_by": [
+    "DA"
+   ]
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/de_phase4_diag_runner.py",
+   "role": "BUILD_PATH",
+   "sha256": "9e2a0977d8dfc3be1c90ac87817d732e4ca19b6752f3439dd5e505d771d5a47d",
+   "named_by": [
+    "DA"
+   ]
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/de_rho_estimator.py",
+   "role": "BUILD_PATH",
+   "sha256": "048b8e077c3d37e8d67b9fbc1ed132a28d7a8ea5c1a66a114c2e53db3bd11387",
+   "named_by": [
+    "DA"
+   ]
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/de_score_stream.py",
+   "role": "BUILD_PATH",
+   "sha256": "21ff2fd126624c2f13cb6b95c7d0618f4c58cb844019c6762b076498884c1342",
+   "named_by": [
+    "DA"
+   ]
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/harmful_stateful_policy.py",
+   "role": "BUILD_PATH",
+   "sha256": "65b9fe29aca85a01c0a663e5788b2612daf0c8cd5767d8842fa1706a03246c42",
+   "named_by": [
+    "DA"
+   ]
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/phase4_generation_tables.py",
+   "role": "BUILD_PATH",
+   "sha256": "22ac4efe2014ac952e8813257dd0a4758b26515617a4ac9b1c015fb54b15f680",
+   "named_by": [
+    "DA"
+   ]
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/pm_tape_density.py",
+   "role": "BUILD_PATH",
+   "sha256": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912",
+   "named_by": [
+    "DA"
+   ]
+  }
+ ],
+ "A_GAP_I_FOUND_WHILE_BUILDING_THIS_AND_IT_IS_NOT_SMALL": {
+  "WHAT": "the two instruments that PRODUCE the 27-row table are ABSENT FROM EVERY WORKING TREE and from the valuation pin",
+  "de_revaluation_emit.py": {
+   "main": "ABSENT",
+   "wt-fwd": "ABSENT",
+   "wt-deval": "ABSENT",
+   "at_68e7d23": "ABSENT",
+   "on_origin_mm_research": "87cd5651cc284462"
+  },
+  "de_window_decomposition.py": {
+   "main": "ABSENT",
+   "wt-fwd": "ABSENT",
+   "wt-deval": "ABSENT",
+   "at_68e7d23": "ABSENT",
+   "on_origin_mm_research": "f00db67d2ef4b421"
+  },
+  "why": "wt-deval sits on de-freeze-chain-v2, which forked from da00220 and never received them",
+  "CONSEQUENCE": "the re-valuation table CANNOT be produced from wt-deval or from the valuation pin. It must run from a tree holding origin/mm-research -- which is a THIRD code identity in a two-pin declaration.",
+  "AND_ONE_OF_THEM_HAS_MOVED_SINCE_I_VERIFIED_IT": "v15's string-by-string identity check was against de_revaluation_emit.py at af675ac = d3ddf0870bc30084. On origin/mm-research it is now 87cd5651cc284462. MY v15 CHECK IS STALE and must be re-run against the bytes that will actually emit the table.",
+  "de_window_decomposition_is_unchanged": "f00db67d2ef4b421 on origin == what I verified at 7a575ba8",
+  "so_they_are_NOT_in_this_freeze": "a freeze cannot pin a file that is not on disk; they are named here as an OPEN GAP"
+ },
+ "THE_INPUT_I_DO_NOT_HAVE": {
+  "de_population_freeze_list.json": "NOT ON DISK anywhere at declaration time",
+  "IT_IS_NOT_DEs_LIST": "if DE's names a file mine does not, MINE IS INCOMPLETE -- the verifier takes the UNION when it lands"
+ },
+ "MASKS_STILL_TO_COME": {
+  "20260911": "closes 2026-09-12T00:00Z",
+  "20260912": "closes 2026-09-13T00:00Z",
+  "20260913": "closes 2026-09-14T00:00Z",
+  "rule": "produced the moment each day closes, then ADDED to this freeze"
+ },
+ "verifier": "live/pm_research/da_population_freeze_verify.py",
+ "falsifier": "a one-byte change to ANY listed file must make the verifier refuse, NAMING that file",
+ "WHAT_RUNS_ON_A_SCHEDULE_BEFORE_2026_09_14T00_00Z": {
+  "method": "systemctl --user list-timers --all, systemctl list-timers --all, crontab -l -- enumerated, not recalled",
+  "THE_ONLY_SCHEDULED_JOB_THAT_CAN_WRITE_A_LISTED_FILE": {
+   "unit": "da-midnight-verify.timer -> da_midnight_verify.sh (MINE)",
+   "fires": "daily 00:06Z",
+   "writes": "da_dayverdict_<d>.json AND da_blackout_mask_<d>.json into data/pm_5min/derived",
+   "CAN_IT_REWRITE_MY_FOUR_FROZEN_MASKS": "NO -- and I checked rather than assumed",
+   "the_rule_it_uses": "days_needing_verdict: a day is re-verdicted only if it has NO artifact or its artifact was written while the day was still OPEN",
+   "measured": {
+    "20260907": "verdict EXISTS, day_closed=True -> NOT re-verdicted",
+    "20260908": "verdict EXISTS, day_closed=True -> NOT re-verdicted",
+    "20260909": "verdict EXISTS, day_closed=True -> NOT re-verdicted",
+    "20260910": "verdict EXISTS, day_closed=True -> NOT re-verdicted",
+    "20260911": "verdict EXISTS but day_closed=FALSE -> WILL be re-verdicted, and its mask does not exist yet",
+    "20260912": "no verdict -> will be verdicted",
+    "20260913": "no verdict -> will be verdicted"
+   },
+   "days_in_range_written_while_open": [
+    "20260911"
+   ],
+   "SO_THE_TIMER_PRODUCES_THE_MASKS_I_OWE": {
+    "20260911": "2026-09-12T00:06Z",
+    "20260912": "2026-09-13T00:06Z",
+    "20260913": "2026-09-14T00:06Z"
+   },
+   "AND_THE_ONE_THAT_IS_LATE": "09-13's mask arrives 2026-09-14T00:06Z -- SIX MINUTES AFTER the 2026-09-14T00:00Z boundary. If 09-13 must be valued before that boundary, THE TIMER IS TOO LATE and I produce that mask by hand the moment 09-13 closes. This is exactly the 'no valuation ever waits on a mask' case."
+  },
+  "THE_ONE_THAT_CAN_TOUCH_A_RUN": {
+   "unit": "pm-research-guard.timer",
+   "fires": "EVERY MINUTE",
+   "what_it_does": "SIGTERM then SIGKILL any process at >= 8 GB RSS that is OUTSIDE research.slice",
+   "can_it_touch_a_listed_file": "NO",
+   "can_it_touch_a_mask": "NO",
+   "CAN_IT_TOUCH_THE_LOCK": "YES, INDIRECTLY -- it can kill a valuation mid-run and strand or release the lock. Condition-gated: only outside research.slice AND only at >= 8 GB. A valuation launched INSIDE the slice is not exposed; one launched bare is."
+  },
+  "THE_PIPELINES_CANNOT_REACH_THE_FROZEN_CODE_AND_HERE_IS_WHY_STRUCTURALLY": {
+   "units": [
+    "pm-measurement-pipeline.timer (hourly, --max-days 1, lane measurement)",
+    "pm-evaluation-pipeline.timer (next 2026-09-11T15:53:34Z, Tier-2, --max-days 1)",
+    "pm-lane-health.timer (15 min, health check)"
+   ],
+   "why_they_cannot_touch_a_LISTED_FILE": "every frozen CODE and DECLARATION file lives in wt-fwd or wt-deval. These units run from /home/yuqing/ctaNew, the MAIN tree, and cannot write into another worktree by path.",
+   "why_they_cannot_touch_a_MASK": "only da_blackout_mask.py writes masks, and only da_midnight_verify.sh invokes it",
+   "can_they_touch_the_lock": "YES -- they are batch units and may contend for research.slice; that is contention, not drift"
+  },
+  "OS_HOUSEKEEPING_TIMERS_ASSESSED_NOT_DISMISSED": {
+   "listed": [
+    "logrotate",
+    "dpkg-db-backup",
+    "apt-daily",
+    "apt-daily-upgrade",
+    "man-db",
+    "sysstat-collect/summary",
+    "fwupd-refresh",
+    "motd-news",
+    "update-notifier-*",
+    "e2scrub_all",
+    "fstrim",
+    "launchpadlib-cache-clean"
+   ],
+   "none_writes_under": "data/pm_5min or live/pm_research",
+   "THE_ONE_WORTH_NAMING": {
+    "unit": "systemd-tmpfiles-clean.timer",
+    "fires": "2026-09-12T04:54:58Z",
+    "why_it_matters": "it cleans /tmp, and there ARE git worktrees under /tmp in this repo's worktree list, plus my scratchpad. It cannot touch a FROZEN file -- none is under /tmp -- but it can break a /tmp worktree mid-use."
+   }
+  },
+  "CRON": {
+   "entries": 3,
+   "assessed": [
+    "monthly_retrain.sh -- 1st of month 02:00, writes live/state/convexity_twobook, a DIFFERENT programme; next fire 2026-10-01, OUTSIDE the window",
+    "two okxSolver reactorVolumeScan jobs at 06:30/06:35 daily -- a different repo entirely"
+   ],
+   "can_any_touch_a_listed_file_a_mask_or_the_lock": "NO"
+  }
+ },
+ "supersedes": {
+  "file": "declarations/da_population_freeze_v1.json",
+  "rule": "13 -- v1 unedited",
+  "scope": "the list becomes the UNION of DA's 32 and DE's 44; the wt-deval tip advances to d3901f9."
+ },
+ "THE_UNION": {
+  "n_total": 52,
+  "named_by_BOTH": 22,
+  "DA_only": 10,
+  "DE_only": 20,
+  "DE_list_regenerated_not_copied": "run from wt-deval at d3901f9; DE's on-disk copy predated its final edit",
+  "HOW_I_RESOLVED_DEs_KEYS": "DE's 44 keys are PREFIXED, not bare basenames: `data/X` is an artifact under data/pm_5min/derived, `post/X` is a POST-PROCESSOR, and an unprefixed name is a module in live/pm_research. Resolving them as bare basenames left 9 'unresolved' -- the prefix IS the role, and reading it as a name would have lost that.",
+  "DIGEST_DISAGREEMENTS": "NONE -- every file named by both agrees, and every DE entry matches disk",
+  "NAMED_BY_DE_BUT_NOT_ON_DISK": [
+   {
+    "de_key": "post/de_revaluation_emit.py",
+    "resolved_to": "wt-deval:live/pm_research/de_revaluation_emit.py",
+    "status": "NOT ON DISK"
+   },
+   {
+    "de_key": "post/de_window_decomposition.py",
+    "resolved_to": "wt-deval:live/pm_research/de_window_decomposition.py",
+    "status": "NOT ON DISK"
+   }
+  ]
+ },
+ "THE_TWO_POST_PROCESSORS_ARE_CORROBORATED_AS_MISSING_BY_DEs_OWN_LIST": {
+  "what_I_found_at_v1": "de_revaluation_emit.py and de_window_decomposition.py absent from every worktree and from the valuation pin",
+  "what_DEs_LIST_SAYS": "it names them under the `post/` prefix, and they still do not resolve on disk",
+  "so_two_seats_name_them_and_neither_tree_holds_them": true,
+  "rule_38": "different instruments -- my worktree sweep and DE's import-closure generator -- same absence"
+ },
+ "THE_CHAIN_LAUNCHERS_ARE_NOT_IN_THE_REPO_AND_THEREFORE_NOT_IN_THIS_FREEZE": {
+  "which": [
+   "chain_day.sh",
+   "preflight_gate.sh",
+   "the emit waiters"
+  ],
+  "where_they_live_now": "DE's scratchpad, NOT the repository",
+  "consequence": "a freeze cannot pin a file that is not in the tree; the launchers that SEQUENCE the chain are unpinned and a change to one would not trip this verifier",
+  "status": "DE is moving them into the repo; v-next names their repo paths when they land"
+ }
+}

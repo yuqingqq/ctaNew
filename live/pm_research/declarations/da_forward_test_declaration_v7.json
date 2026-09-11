@@ -1,0 +1,102 @@
+{
+ "protocol": "P003_DA_FORWARD_TEST_V7",
+ "version": 7,
+ "STATUS": "DAY-ONE VALUED AND SUPERSEDED IN BAND; SIX DAYS UNVALUED",
+ "declared_by": "DA 224",
+ "declared_at_utc": "2026-09-11T06:30:11Z",
+ "supersedes": {
+  "file": "declarations/da_forward_test_declaration_v6.json",
+  "commit": "ece9d27",
+  "v1_through_v6_are_UNEDITED": true,
+  "scope": "day-one reading corrections, and TWO coordinator rulings. No bar, population, threshold or theta changes."
+ },
+ "HOW_DAY_ONE_MAY_AND_MAY_NOT_BE_READ": {
+  "the_artifacts": "data/pm_5min/derived/fwd/de_settle_result_20260907_{ARM}.json, book 0815cad74f53f118",
+  "FIELD_IDENTITY_ESTABLISHED_BY_ARITHMETIC_NOT_BY_NAME": "arm_settled_total_cents - zero_model_cancel_baseline_total_cents == observed_D_cents, BIT-FOR-BIT, both arms",
+  "ONE_BOOK_ONE_BASELINE_CONFIRMED": "identical book_sha256; baseline -4437.739599599995 equal as float, in repr AND in .hex(), across both results AND both checkpoint HEADERS -- an independent carrier written by the run",
+  "CORRECTION_1_FUTILITY_IS_DRIVEN_NOT_REASONED": {
+   "CONDVALUE": "futility({'2026-09-07': -11017.712}, 7) -> KILLED_BY_NEGATIVE_DAYS, FUTILE True, best attainable p 0.125 > 0.025",
+   "HAZARD": "ALIVE, 0 negative days, best attainable 0.015625",
+   "use_the_evaluators_own_wording": "'the test COULD have passed at this G; the arm's own negative day(s) ended it. THIS IS ABOUT THE ARMS.' -- which is what separates it from the G=6 case, where the calendar would have ended it"
+  },
+  "CORRECTION_2_WHAT_p_two_sided_ACTUALLY_COUNTS": {
+   "formula": "#{|D_null| >= |D_obs|}, the only one of five candidates reproducing BOTH reported counts (158, 329) exactly",
+   "THE_ABSOLUTE_VALUE_IS_TAKEN_ABOUT_ZERO_AND_THE_NULL_IS_CENTRED_AT_+7888": true,
+   "CONDVALUE_lower_tail": "0 of 500 draws at or below the arm's D -- all 158 come from the far POSITIVE tail",
+   "SO_p_0_3174_MAY_NOT_BE_REPORTED_AS_THIS_MAGNITUDE_IS_UNREMARKABLE": true,
+   "THE_TRUE_DAY_ONE_SENTENCE": "NOT ONE OF 500 RANDOM-CANCELLATION DRAWS DID AS BADLY.",
+   "REV_178_adds": "a negative day has ~11% probability under this 89%-positive null, so below-all-500 is genuinely extreme"
+  },
+  "CORRECTION_3_BOTH_UNDERPERFORMED_IS_HALF_TRUE": {
+   "CONDVALUE": "0 of 500 at or below -- stronger than 'underperformed'",
+   "HAZARD": "182 of 500 at or below = the ~36th percentile of its OWN null: below the mean, SQUARELY INSIDE the distribution",
+   "RULING": "'both arms underperformed matched random cancellation' MUST NOT travel. It is a finding for CONDVALUE and NOISE for HAZARD.",
+   "and_the_quantities_must_not_be_conflated": "-11,018c and +5,256c are the DIFFERENCES D; the arms RETURNED -15,455.5c and +818.4c"
+  },
+  "CORRECTION_4_THERE_IS_NO_SINGLE_RANDOM_CANCEL_EXPECTATION": {
+   "CONDVALUE": 3450.469,
+   "HAZARD": 3502.7324,
+   "why": "each arm's null is matched on its OWN distinct-reference-generation count (26,264 vs 23,078 cancelled)",
+   "say": "about +3,450 to +3,503 depending on the arm, never a single figure"
+  },
+  "CORRECTION_5_THE_NUMBER_EASIEST_TO_DROP": {
+   "attainable_minimum_p_at_the_G_achieved_so_far": 1.0,
+   "means": "AT G=1 ONE DAY ATTAINS NOTHING AT ALL. The declared-G figure (0.015625) describes the TEST; this describes TODAY."
+  },
+  "CORRECTION_6_DROP_REPRODUCING_STEP_2s_VERDICT": {
+   "why": "step 2 ran on 09-04/05/06 under the RETRACTED pre-correction policy (03dbc1e) -- DIFFERENT POPULATION AND DIFFERENT RULE. Day one is not a reproduction of it and the phrase must not be used.",
+   "source": "REV 178"
+  }
+ },
+ "RULING_1_THE_ERA_SPLIT_OPTION_a": {
+  "ruling": "09-07 is REBUILT under the fixed era; day one's valuation is SUPERSEDED IN BAND by the consistent rebuild",
+  "the_defect": "BE 133: `fi.ERA` was a DAY-INDEPENDENT LITERAL `clob_v3_1`, handing every September window an empty gap list. Under the fix, 27 of 09-07's 287 windows are gap-bearing. THIS IS BE'S MEASUREMENT, RECORDED AS BE'S.",
+  "THE_RULE_11_EVIDENCE_IS_A_TIMELINE_AND_I_READ_EVERY_TIME_FROM_THE_ARTIFACTS": {
+   "fix_committed_BE_113": "8df760d @ 2026-09-09T08:05:57Z (and BE 114 fb3bf44 @ 08:23:41Z touched the same literal)",
+   "FWD1_book_built": "2026-09-11T03:33:25Z  -- 43h27m AFTER the fix",
+   "day_one_valued": "CONDVALUE 04:41:56Z, HAZARD 05:21:21Z -- 44h36m AFTER the fix",
+   "so_the_correction_is_not_chosen_after_seeing": "its RULE was committed nearly two days before any forward datum existed, and its DIRECTION is not selected from the result"
+  },
+  "AND_THE_HALF_THAT_IS_POST_HOC_AND_MUST_BE_DISCLOSED_NOT_BURIED": {
+   "BE_133_DISCOVERED_the_surviving_literal_at": "2026-09-11T05:46:46Z / 05:50:25Z / 06:03:39Z",
+   "which_is_AFTER_day_one_was_valued": "by ~25 minutes for HAZARD and ~65 minutes for CONDVALUE",
+   "THE_DISTINCTION_THE_ARTIFACT_CARRIES": "THE FIX'S RULE PREDATES THE DATA BY ~44 HOURS; THE KNOWLEDGE THAT IT HAD NOT TAKEN EFFECT POSTDATES THE FIRST VALUATION. Those are different facts and only the first discharges rule 11. The second is disclosed, not claimed away.",
+   "what_would_make_it_rule_11": "choosing WHETHER to rebuild after seeing which way the rebuild moves D. That choice is foreclosed here by ruling it before the rebuild runs."
+  },
+  "THE_DIRECTION_IS_DISCLOSED_NOT_ASSUMED": {
+   "we_do_not_know": "whether the consistent rebuild moves CONDVALUE's D up or down, or HAZARD's",
+   "commitment": "the rebuilt D is reported WHICHEVER WAY IT MOVES, beside the superseded figure, both visible",
+   "on_absence": "REFUSE",
+   "refusal_name": "SUPERSEDED_DAY_REPORTED_WITHOUT_ITS_SUPERSEDED_VALUE"
+  },
+  "what_day_one_still_establishes_after_supersession": "NOTHING NUMERIC. The superseded figures are provenance, not evidence. The futility verdict must be RE-DRIVEN on the rebuilt D -- a negative day one is not carried over on the strength of the old book."
+ },
+ "RULING_2_PROTOCOL_V1_TO_V2": {
+  "status": "PENDING MEASUREMENT",
+  "what_moved": "the USER's `da00220` @ 2026-09-11T04:47:29Z rewrote the valuation path AFTER the pipeline pin: 5 modules, +1827/-314",
+  "DAY_ONE_RAN_V1_AND_THIS_IS_ESTABLISHED_BY_DIGEST_NOT_BY_TIMING": {
+   "evidence": "the value file's computing_module_provenance records EVERY module identical to 7ed5a90",
+   "V1_digests": {
+    "de_forward_evaluator.py": "7c137ddc2d8869b5",
+    "de_settlement_control_run.py": "4ba1177fff3a3bbd",
+    "de_settlement_control_aggregate.py": "2da90644848ca531"
+   },
+   "V2_digests_at_da00220": {
+    "de_forward_evaluator.py": "6290bb25909817dc",
+    "de_settlement_control_run.py": "faeae22f347e2032",
+    "de_settlement_control_aggregate.py": "ce8e4806a48df8c2"
+   },
+   "AND_THE_REASON_THE_DIGEST_MATTERS_MORE_THAN_THE_CLOCK_HERE": "HAZARD's result was WRITTEN at 05:21:21Z -- THIRTY-FOUR MINUTES AFTER da00220 was committed -- and is still V1 by digest. A timing argument would have got this wrong in both directions; the digest settles it."
+  },
+  "THE_RULE_DECLARED_NOW_BEFORE_THE_MEASUREMENT_EXISTS": {
+   "if_V2_is_BIT_IDENTICAL_in_D_on_09-07": "V2 is adopted for ALL SEVEN days",
+   "if_D_MOVES_AT_ALL": "USER DECISION -- no seat chooses the version after seeing which D it produces",
+   "who_measures": "DE",
+   "why_declared_now": "because declaring it after the comparison is the rule-11 shape this whole test exists to avoid"
+  },
+  "on_absence": "REFUSE",
+  "refusal_name": "RESULT_DOES_NOT_NAME_ITS_VALUATION_PROTOCOL_VERSION"
+ },
+ "everything_else_in_v6_v5_v4_v3_stands_verbatim": true,
+ "population_unchanged": "N=7, 09-07..09-13; no bar, threshold or theta moves in this amendment"
+}
