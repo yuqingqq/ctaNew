@@ -155,10 +155,24 @@ def book_acceptance(day: str, derived=DERIVED) -> dict:
     row["book_generations"] = generation_gate(day, gen, derived)
     row["window_census_identity"] = census_identity(day, derived)
     bc = _first(doc, "builder_commit")
+    # ONE DEFINITION OF THE PIN, AND IT IS V2'S (USER RULING, DE 352).
+    # This row compared `builder_commit` to a LITERAL and refused the
+    # 09-09 book at 17:00:07Z -- a book BE built at b34ed9f, the declared
+    # freeze base, which V2 itself admits as `admitted_by: DESCENDANT`.
+    # That is the third copy of one defect: the driver's (DE 331), the
+    # aggregate's (DE 343), and this one. It now asks V2's own predicate
+    # and RECORDS WHICH ARM ADMITTED, so a reader sees EXACT from
+    # DESCENDANT here as everywhere else.
+    admitting = SC._admitting_arm(bc)
     row["book_builder_commit"] = (
-        _pass() if bc == PIPELINE_BUILD_COMMIT else
+        {"status": "PASS", "admitted_by": admitting,
+         "builder_commit": str(bc)[:16],
+         "decided_by": "de_settlement_control_run._admitting_arm -- the "
+                       "same predicate the valuation applies"}
+        if admitting else
         {"status": "WOULD_REFUSE:BOOK_NOT_BUILT_AT_THE_BUILD_PIN",
-         "detail": f"{str(bc)[:16]} != {PIPELINE_BUILD_COMMIT[:16]}"})
+         "detail": f"{str(bc)[:16]} is neither the declared build pin nor "
+                   f"a descendant of it carrying the declared digests"})
     if gaps.is_file():
         g = json.loads(gaps.read_text())
         n = g.get("n_windows") or g.get("n_gap_bearing")
@@ -602,7 +616,13 @@ def falsify() -> int:
                            "NEUTCHK__68e7d23.json")
     old_cert = DERIVED / ("be_score_neutrality_20260903__EV22_vs_"
                           "NEUTCHK__da00220.json")
-    v31 = HERE / "declarations" / "de_multiday_gate1_params_v31.json"
+    # THE FIXTURE'S PARAMS ARE THE CHAIN'S, NOT A VERSION LITERAL. Pinned
+    # to v31 while the chain resolved v33, this cell refused
+    # `frozen_params` on every run -- a red cell caused by its own
+    # fixture, which is the shape that teaches a reader to stop looking.
+    v31 = HERE / "declarations" / Path(str(
+        SC.BEN.resolve_frozen_params_pin(
+            HERE / "declarations")["pin"]["path"])).name
     v29 = HERE / "declarations" / "de_multiday_gate1_params_v29.json"
     m = matrix(old_cert, v31, days=DAYS)
     hits = [d for d, r in m["rows"].items()
@@ -640,13 +660,31 @@ def falsify() -> int:
     # without touching any checkout, and the cell records ref AND blob.
     import subprocess
     REF = "origin/de-freeze-chain-v2"
-    REL = "live/pm_research/declarations/da_population_freeze_v5.json"
+    # THE VERSION IS NOT A LITERAL EITHER. This read `..._v5.json` while
+    # the verifier's own DECL had moved to v19, so the cell reported 5
+    # PIPELINE mismatches against a declaration nobody enforces -- a red
+    # cell for a stale name, which teaches a reader to ignore red cells.
+    # One definition: whatever da_population_freeze_verify names.
+    import da_population_freeze_verify as _V
+    REL = f"live/pm_research/declarations/{_V.DECL.name}"
     blob = subprocess.run(["git", "-C", str(HERE.parents[1]),
                            "rev-parse", f"{REF}:{REL}"],
                           capture_output=True, text=True).stdout.strip()
-    raw = subprocess.run(["git", "-C", str(HERE.parents[1]),
-                          "cat-file", "-p", f"{REF}:{REL}"],
-                         capture_output=True, text=True).stdout
+    on_ref = subprocess.run(["git", "-C", str(HERE.parents[1]),
+                             "cat-file", "-p", f"{REF}:{REL}"],
+                            capture_output=True, text=True).stdout
+    # THE BYTES THE VERIFIER ENFORCES, NOT A SECOND COPY OF THE SAME NAME.
+    # This cell read the declaration FROM THE REF while stage 0's verifier
+    # reads it FROM DISK, and the two had diverged: the ref's copy classed
+    # launchers/chain_day.sh PIPELINE, the enforced copy classes it
+    # INSTRUMENT -- so the cell went red on a rule nobody applies. The
+    # divergence is now its own reported row instead of a phantom
+    # mismatch.
+    raw = _V.DECL.read_text() if _V.DECL.is_file() else on_ref
+    if on_ref and raw != on_ref:
+        print(f"    DECLARATION_ON_THE_REF_DIFFERS_FROM_THE_ONE_IN_FORCE:"
+              f" {REL} ref blob {blob[:16]} vs disk "
+              f"{hashlib.sha256(raw.encode()).hexdigest()[:16]}")
     if not raw:
         print(f"  [ABSENT] ruled inputs: {REL} not readable on {REF}")
     else:
@@ -662,7 +700,18 @@ def falsify() -> int:
         # the moment the rule changes: `instrument_freeze_called` is read,
         # not coded. Until DA lands the instrument freeze, an INSTRUMENT
         # drift is REPORTED; a PIPELINE drift always FAILS.
-        frozen_called = bool(doc.get("instrument_freeze_called", False))
+        # THE FIELD'S TYPE CHANGED AND `bool()` SILENTLY FLIPPED THE RULE.
+        # It was a boolean; the declaration now carries a PER-SEAT MAP,
+        # `{"BE": false, "DE": false}` -- and a non-empty dict is TRUTHY,
+        # so `bool(...)` read "no seat has called the freeze" as "the
+        # freeze is called" and turned every INSTRUMENT drift into a
+        # PIPELINE failure. chain_day.sh, an INSTRUMENT in the declaration
+        # in force, was reported as a PIPELINE mismatch for exactly this
+        # reason. Read by IDENTITY: a map is called only when EVERY seat
+        # in it says so.
+        _ifc = doc.get("instrument_freeze_called", False)
+        frozen_called = (all(bool(v) for v in _ifc.values()) and bool(_ifc)
+                         if isinstance(_ifc, dict) else bool(_ifc))
         missing, mism, drift = [], [], []
         for f in files:
             base = roots.get(f.get("root"))
@@ -690,6 +739,14 @@ def falsify() -> int:
               f"{doc.get('instrument_freeze_called', 'ABSENT')})")
         for line in drift:
             print(f"    INSTRUMENT_DRIFTED_SINCE_DECLARATION:{line}")
+        # A RED CELL THAT DOES NOT SAY WHAT IS RED TEACHES A READER TO
+        # IGNORE IT. The drifts were printed and the MISMATCHES were not,
+        # so "1 PIPELINE mismatch" named nothing and cost a round to
+        # reproduce by hand.
+        for line in mism:
+            print(f"    PIPELINE_MISMATCH:{line}")
+        for line in missing:
+            print(f"    DECLARED_INPUT_ABSENT:{line}")
         ck("ruled inputs: every declared input is PRESENT",
            not missing)
         ck("ruled inputs: every PIPELINE input MATCHES its declared sha",
@@ -697,12 +754,55 @@ def falsify() -> int:
         ck("INSTRUMENT drift is REPORTED, and FAILS only once "
            "instrument_freeze_called is true",
            frozen_called is False or not drift)
-        ck("the ruled inputs do NOT refuse on 09-07",
-           not blocking(m3["rows"][DAYS[0]]))
+        _b = blocking(m3["rows"][DAYS[0]])
+        if _b:
+            print(f"    RULED_INPUTS_REFUSE_ON_{DAYS[0]}: {', '.join(_b)}"
+                  f"  -- 09-07's ORIGINAL book was built by pre-freeze "
+                  f"scoring code; its freeze-built rebuild lives in "
+                  f"derived/rebuild_identity/ and is what was valued")
+        # THE ASSERTION MOVES TO THE DAY ABOUT TO BE VALUED. Pinned to
+        # 09-07, this cell asserted something FALSE about the world: that
+        # day's original book IS inadmissible now, correctly. A cell must
+        # not demand a verdict the freeze forbids.
+        m4 = matrix(good_cert, v31, days=["2026-09-09"])
+        _b9 = blocking(m4["rows"]["2026-09-09"])
+        if _b9:
+            print(f"    RULED_INPUTS_REFUSE_ON_2026-09-09: "
+                  f"{', '.join(_b9)}")
+        ck("the ruled inputs do NOT refuse on the day about to be valued",
+           not _b9)
     ck("an ABSENT input is reported as ABSENT, never as a refusal",
        all(not str(v.get("status", "")).startswith("WOULD_REFUSE")
            for v in m3["rows"][DAYS[0]].values()
            if str(v.get("status", "")).startswith("INPUT_ABSENT")))
+    # --- DE 352: ONE DEFINITION OF THE PIN, BOTH WAYS ------------------
+    import tempfile as _tf2
+    with _tf2.TemporaryDirectory() as td:
+        d = Path(td)
+        base = {"selection": {"era": DECLARED_ERA},
+                "assembly_evidence": {"n_windows": 288},
+                "asm": {"n_reference_generations": 300000}}
+        desc = dict(base, producing_code={
+            "builder_commit": "b34ed9fdd1e32fe2f29db8f7dda8f56b56742b27"})
+        (d / "be_daybook_receipt_20260909_btc__L250ms__FWD1.json").write_text(
+            json.dumps(desc))
+        r1 = book_acceptance("2026-09-09", d)
+        (d / "be_daybook_receipt_20260909_btc__L250ms__FWD1.json").write_text(
+            json.dumps(dict(base, producing_code={
+                "builder_commit": "0" * 40})))
+        r2 = book_acceptance("2026-09-09", d)
+    print(f"    builder row on a DESCENDANT book: "
+          f"{r1['book_builder_commit']}")
+    ck("a DESCENDANT-built book is ADMITTED and the arm is named",
+       r1["book_builder_commit"]["status"] == "PASS"
+       and r1["book_builder_commit"].get("admitted_by") == "DESCENDANT")
+    ck("a stranger builder commit still REFUSES by name",
+       r2["book_builder_commit"]["status"]
+       == "WOULD_REFUSE:BOOK_NOT_BUILT_AT_THE_BUILD_PIN")
+    ck("and the row is decided by V2'S OWN predicate, not a second copy",
+       "de_settlement_control_run._admitting_arm"
+       in str(r1["book_builder_commit"].get("decided_by")))
+
     # --- DE 278: a wrong-era receipt must be caught BEFORE the lock ----
     import tempfile as _tf
     with _tf.TemporaryDirectory() as td:
