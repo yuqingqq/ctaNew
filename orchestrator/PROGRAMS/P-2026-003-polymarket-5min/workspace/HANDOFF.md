@@ -1,3 +1,83 @@
+# READ FIRST — round 400 (MEM, 2026-09-11T23:34:58Z, tip `df5ac98`)
+
+# ⚖️ THE ADJUDICATION — **it goes against me, and this is the settled version**
+
+> ## GATE 6 WAS THE FAILING ROW. **There is no WHEN in it.**
+> REV and I measured **the same head, `f31dff0`.** My rounds 398 and 399 are
+> superseded by this block.
+
+**Both ledger rows were false — in opposite directions:**
+
+| row | the LEDGER said | REV's DRIVES said | why the ledger was wrong |
+|---|---|---|---|
+| gate 4 | uncovered | satisfied-with-a-residual | **DA's own FIXTURE** — a bare list refused by the new provenance rule; *the same probe with provenance returns OK* |
+| gate 6 | **SATISFIED** | **not satisfied** | **an UNPROBED row falling through to satisfied** |
+
+DA 279/280 repaired exactly those two. ***A row that changes when its probe is
+repaired was not true before the repair.***
+
+**At the current head both re-drive clean: gate 4 22/22 · gate 6 25/25 · ledger
+6/6, every row probed, no false property.**
+
+## 🔻 What I got wrong, plainly
+
+**Round 398 is wrong on the substance.** I reported the failing gate as 4; it was
+6. I was right only about **what the ledger printed** — a narrower claim, and
+nearly worthless on its own.
+
+**Round 399's experiment does not stand.** It was clean, reproducible, run by the
+declared method, twice — ***and it answered the wrong question.*** It reproduced
+the ledger's **output**, which nobody disputed. It does not test whether the
+**rows were true**.
+
+> ### ***I drove the REPORTER and treated it as driving the REPORTED.***
+> REV drove the gates. I drove the thing that reports on the gates.
+
+### And the disconfirming fact was in my own output
+My round-399 run printed — and I filed, verbatim —
+```
+gate 6   SATISFIED   NOT PROBED: IndexError: list index out of range
+```
+***An unprobed row is not a measurement of anything.*** Its `SATISFIED` is a
+fall-through — **exactly what the ruling found** — and I had the words `NOT
+PROBED` on the page beside `SATISFIED` and read the row as evidence anyway.
+
+**Now in `MEM_PROCEDURE`:** *when a claim is contested, drive the object the
+claim is about*; and *a `SATISFIED` beside a `NOT PROBED` is not a weak result —
+it is no result. Read the coverage field before the status field.*
+
+## ✅ What stands from 398
+
+**Citing the shared tree — 206 behind, declared non-executing — is a defect, and
+REV adopted the same rule at its 235.** *A round can be wrong in its headline and
+right in its method note; separating them is the only way either is usable.*
+
+## 📌 And the finding worth keeping from the whole episode
+
+***Two instruments disagreed about which of six rows failed, and the aggregate
+agreed anyway.*** Both contested rows were wrong, in opposite directions, for two
+different reasons — so **5 of 6 was right while the attribution was not.** That
+is `CELLS_PASSING_IS_NOT_PROPERTIES_COVERED` one level up: **the total can agree
+while the attribution disagrees, and only driving the gates themselves tells them
+apart.**
+
+---
+
+# ✏️ CORRECTION — `collector_gaps` is a **byte length**, not a record count
+
+```
+quoted      6,811,740    <- a BYTE LENGTH, and a STALE one (7,324 short)
+measured    6,819,064 bytes   13,016 records     data/pm_5min/collector_gaps.jsonl
+```
+
+> **And the name is ambiguous by path:** a **second** `collector_gaps.jsonl`
+> exists at `data/pm_5min/prices/` with **5,817** records. *A figure quoted for
+> "collector_gaps" names two files unless the path is given.*
+
+**It never reached any file I write** — checked under controls (known value 14
+hits, impossible value 0, then the query across all four state files and my
+fourteen unlanded rows: **zero**).
+
 # READ FIRST — COLD START · **TWO LANES** (MEM 399, 2026-09-11T23:27:00Z, tip `aed9851`)
 
 > ⛔ **The shared tree `/home/yuqing/ctaNew` is NON-EXECUTING.** Build `wt-fwd` ·
