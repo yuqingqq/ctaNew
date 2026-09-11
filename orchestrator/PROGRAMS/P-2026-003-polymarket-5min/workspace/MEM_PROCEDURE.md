@@ -263,3 +263,52 @@ filing it**, and record which of these it is:
 - `DRIVEN` — token found *and* a drive/falsifier reported with it
 
 **Never let a SPECIFIED item inherit the voice of a DRIVEN one.**
+
+---
+
+## Round 382 — **run `--audit` before the round ends, not as the report's last line**
+
+Round 353 put the commit immediately after the parse, and that stands: *in a
+shared tree an uncommitted edit is not state, it is a gamble.* Round 359 added
+*check `$?` before committing.* **Both were satisfied this round and both were
+insufficient.** The write parsed, the commit landed, and **all twelve of my new
+provenance entries were `MALFORMED`** — I had invented `checked:`/`artifact:`/
+`by:` where the instrument enforces:
+
+```yaml
+  <flag_key>:
+    prov: CHECKED          # or RELAYED
+    artifact: <path or git:<ref>:<path>>
+    said: "what the artifact said -- NOT a bare confirmation"
+```
+```yaml
+  <flag_key>:
+    prov: RELAYED
+    from: <the row or entry it came from>
+```
+
+A `said:` that normalises to "verified", "checked", "confirmed", "correct",
+"as stated" is **refused by name**: it *"would read identically had the check
+not happened."*
+
+**Required from now on:** after the parse-and-commit, run
+`mem_flag_provenance.py --audit` **in the same tool call block**, read the
+class counts, and land the repair as a numbered follow-up commit (`1b`, `1c`)
+**before writing HANDOFF**. *The class counts are part of the write, not part
+of the report.*
+
+### And the refusal that was not cosmetic
+
+The audit also reported one entry as **`CHECKED, but its artifact is not on
+disk`**. It was right: I had cited `live/pm_research/de_preflight_matrix.py` as
+a path, and that file **is absent from `mm-research`** — it exists only on
+`origin/be-build-runner` and `origin/de-freeze-chain-v2`.
+
+> ***The schema violation was mine; the absent-artifact refusal was a finding.***
+> It located a second instance of the very thing this round's headline names —
+> `PENDING_ORIGIN_MAIN` reaching the code — **that I had not noticed while
+> writing the flag about it.**
+
+**So: cite off-disk evidence as `git:<ref>:<path>` deliberately, and when the
+audit says a path is absent, ask whether the absence is the finding** before
+reaching for the `git:` form. Here it was. (Amended 2026-09-11T12:39:51Z.)
