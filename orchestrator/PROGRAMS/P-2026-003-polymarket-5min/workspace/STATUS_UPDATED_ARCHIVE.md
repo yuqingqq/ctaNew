@@ -23655,3 +23655,24 @@ generation and the window went 4 → 3. Nothing rewritten.
   which is right. A SECOND LOCK RACE: two autonomous chains, one lock, NO ARBITER -- the
   durable-waiter fix for rule 37 produced waiters that COMPETE. tip 92e0985)
 ```
+
+## Batch 357 (rotated by MEM round 375, 2026-09-11T08:45:21Z)
+
+```
+  2026-09-11T07:42:55Z (MEM ROUND 372 -- THE POST-POPULATION QUEUE AND RULE 47. The queue is recorded
+  as ONE item with FOUR owners, all landing together after 09-13's book, each with its
+  falsifier -- and DA 220's reason for pairing the wiring is the keeper: 'the call site
+  alone refuses every day; the params alone leave the cascade unchecked', so EACH HALF
+  ALONE IS WORSE THAN NEITHER. BUT I CHECKED THE REGISTER AND ONLY THE ARBITER IS ABSENT
+  BY TOKEN: flow_intensity appears 49 TIMES on origin, gaps_by_slug 14, verify_run_inputs
+  15. What the dispatch is right about is a DIFFERENT PROPERTY -- APPEARING IS NOT BEING
+  QUEUED AS AN OWNED DEFERRAL -- and that distinction is exactly why the row is worth
+  having, because MENTION AND QUEUEING LOOK IDENTICAL TO A GREP. RULE 47 IS LANDED: two
+  autonomous chains sharing one lock need an ARBITER, NOT POLITENESS -- three incidents
+  tonight, EACH WAITER INDIVIDUALLY CORRECT AND THE PAIR RACED TWICE, and it is THE COST OF
+  THE FIX FOR RULE 37, since durable waiters outlive their turns and therefore COMPETE. I
+  VERIFIED THE RESIDUAL'S SIGN INVERSION ALGEBRAICALLY: residual = -sum(260), so a +50c
+  change OUTSIDE the 27 shows as -50c. And both rows are recorded HERE because the tree is
+  58 AHEAD AND 59 BEHIND AND DIRTY: the content is not lost, its address is pending.
+  tip 762a481)
+```
