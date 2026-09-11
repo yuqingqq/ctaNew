@@ -606,3 +606,55 @@ loud-or-silent test answered by measurement.
   corrected in band at Q-DA-343; DA 128's repetition of DE's `inventory_leg` claim
   corrected in band; DA 132's silent control reported in DA's own report before any of its
   numbers).
+
+
+## The 09-13 mask, by hand at 2026-09-14T00:00Z (DA 251)
+
+**Why by hand at all.** `da-midnight-verify.timer` fires at **00:06Z**, so it
+produces 09-13's mask at **2026-09-14T00:06Z** — six minutes *after* the
+2026-09-14T00:00Z boundary. If 09-13 must be valued before that boundary, the
+timer is too late and no valuation may wait on a mask.
+
+**The command**, run the moment 09-13 closes (2026-09-14T00:00:00Z), from
+`/home/yuqing/ctaNew/live/pm_research`:
+
+```
+/home/yuqing/pricer-sol/venv/bin/python3 da_blackout_mask.py --day 20260913 --write
+sha256sum /home/yuqing/ctaNew/data/pm_5min/derived/da_blackout_mask_20260913.json
+```
+
+Record that digest. It is the thing the 00:06Z check compares against.
+
+**THE CHECK IS NOT "THE TIMER LEAVES IT ALONE" — I DROVE THAT AND IT IS FALSE.**
+`da_forward_day_verify.days_needing_verdict` returns
+`base = [(closed_token, "closed_today"), (opened_token, "open_today")]`
+*unconditionally*: the "already has a closed artifact → skip" rule governs only
+the **catch-up range behind the floor**, never today's closed day. Driven in
+all three states — no verdict, a CLOSED verdict, an OPEN-written verdict —
+`20260913` is in the list **every time**. So on 2026-09-14 the timer **will**
+re-verdict 09-13 and **will** rewrite the mask.
+
+**The check that actually protects the artifact** is therefore a digest
+comparison, not an expectation of a skip:
+
+```
+# after the 00:06Z run
+sha256sum /home/yuqing/ctaNew/data/pm_5min/derived/da_blackout_mask_20260913.json
+```
+
+It **must equal the digest recorded at 00:00Z**. The mask is a deterministic
+function of the raw tape and the gap ledger, so a re-run on a closed day
+reproduces it byte-for-byte; an unchanged digest means the rewrite changed
+nothing and the freeze is undisturbed. **A digest that moved is a finding** —
+it means an input changed between 00:00Z and 00:06Z, which on a closed day
+should be impossible.
+
+`da_population_freeze_verify.py` is the mechanical form of that check: the mask
+is a listed file, so a rewrite with different bytes refuses
+`POPULATION_FREEZE_FILE_DRIFTED` **naming it**, and an identical rewrite passes.
+
+**Why this is safe for 09-07..09-10.** Those days are *behind* the floor, in
+the catch-up range, where the closed-artifact rule does apply — all four carry
+`day_closed_calendar=True` and are skipped. Only *today's* closed day is
+unconditionally re-verdicted. The distinction is the whole reason this note
+exists.
