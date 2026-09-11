@@ -1,0 +1,86 @@
+{
+ "declaration": "DA_THE_SHARED_TREE_IS_NON_EXECUTING",
+ "version": 1,
+ "as_of_utc": "2026-09-11T19:10:01Z",
+ "authority": "DA 272; hazard found by DE, verified independently by DA",
+ "THE_RULE": "`/home/yuqing/ctaNew` -- the SHARED tree, the user's working fork -- is NON-EXECUTING FOR BOTH LANES. A result produced from it is INADMISSIBLE REGARDLESS OF ITS CONTENT: not because the numbers would be wrong, but because nothing about them would be attributable to the frozen code.",
+ "THE_EXECUTING_TREES": {
+  "build": "/home/yuqing/ctaNew-wt-fwd",
+  "valuation": "/home/yuqing/ctaNew-wt-deval",
+  "emit_post_processors": "/home/yuqing/ctaNew-wt-de2 (freeze v4 root `wt-de2`)",
+  "anything_else": "INADMISSIBLE"
+ },
+ "THE_SHARED_TREE_MEASURED": {
+  "behind_origin_mm_research": 205,
+  "behind_origin_de_freeze_chain_v2": 100,
+  "STALE_FROZEN_CLOSURE_MODULES": {
+   "de_forward_value_day.py": {
+    "in_the_shared_tree": "2bb2e71b8d465d35",
+    "declared_by_code_freeze_v11": "2966cc357ac2a6e2",
+    "stale_against": "da_code_freeze_declaration_v11.json, base b34ed9f"
+   },
+   "de_multiday_gate1_runner.py": {
+    "in_the_shared_tree": "157413f6562cf5bd",
+    "declared_by_code_freeze_v11": "2aa2266235228143",
+    "stale_against": "da_code_freeze_declaration_v11.json, base b34ed9f"
+   },
+   "de_settlement_control_aggregate.py": {
+    "in_the_shared_tree": "ce8e4806a48df8c2",
+    "declared_by_code_freeze_v11": "6c97e644f75700a5",
+    "stale_against": "da_code_freeze_declaration_v11.json, base b34ed9f"
+   },
+   "de_settlement_control_run.py": {
+    "in_the_shared_tree": "faeae22f347e2032",
+    "declared_by_code_freeze_v11": "2a8fb829c452cbd3",
+    "stale_against": "da_code_freeze_declaration_v11.json, base b34ed9f"
+   }
+  },
+  "n_stale": 4,
+  "*** THE DISPATCH NAMED THREE; I MEASURE FOUR, AND NOT THE SAME THREE ***": {
+   "de_forward_evaluator.py": "NOT STALE. The dispatch reports 7c137ddc against the declared 6290bb25. Measured now it is 6290bb25909817dc in ALL FOUR TREES -- shared, wt-fwd, wt-deval and wt-de2 -- exactly the declared digest. Either it was synced since DE measured, or a different path was read. Recorded rather than repeated.",
+   "correctly_named_by_the_dispatch": [
+    "de_settlement_control_aggregate.py"
+   ],
+   "stale_and_NOT_named_by_the_dispatch": [
+    "de_forward_value_day.py",
+    "de_multiday_gate1_runner.py",
+    "de_settlement_control_run.py"
+   ],
+   "de_revaluation_emit.py": "ABSENT from the shared tree entirely (present on wt-de2)"
+  }
+ },
+ "NOTHING_IS_RUNNING_STALE_RIGHT_NOW_AND_HERE_IS_THE_PROOF": {
+  "the_running_09_10_build": {
+   "pid": 3146203,
+   "cwd": "/home/yuqing/ctaNew-wt-fwd",
+   "module_it_resolves": "/home/yuqing/ctaNew-wt-fwd/live/pm_research/be_daybook_build.py",
+   "its_digest": "2d31a80b5ae5c2c6 -- the BUILD_PINNED digest"
+  },
+  "WHY_THE_LAUNCHER_PATH_IS_NOT_THE_ANSWER": "its argv carries `/home/yuqing/ctaNew/live/pm_research/be_heavy_run.sh` and a RELATIVE `live/pm_research/be_daybook_build.py`. The launcher path says SHARED TREE and the cwd says otherwise. THE CWD IS RIGHT AND THE LAUNCHER PATH IS DECORATION -- which is exactly why the check reads the payload and not its command line.",
+  "and_it_is_configuration_not_a_guarantee": "which is why the rule below has teeth"
+ },
+ "THE_STAGE_0_ROW_THAT_GIVES_IT_TEETH": {
+  "module": "live/pm_research/da_population_freeze_verify.py",
+  "entry": "assert_executing_tree(module=None, cwd=None, lane=None)",
+  "refusal": "EXECUTED_FROM_AN_UNDECLARED_TREE:<path>",
+  "READS_THE_PAYLOAD_NOT_THE_ENVIRONMENT": "the resolved `__file__` of a module the payload ACTUALLY IMPORTED, else the process's own cwd. NEVER an environment variable: an env var says what someone INTENDED; `__file__` and cwd say what it WILL IMPORT.",
+  "FALSIFIERS_BOTH_WAYS": {
+   "each declared tree": "PASSES and names its lane (build / valuation / emit)",
+   "the SHARED tree": "REFUSES by name, saying it is NON-EXECUTING",
+   "an unrelated tree": "REFUSES by name",
+   "the RIGHT tree for the WRONG lane": "REFUSES -- a lane check, not just a path check",
+   "a module's resolved __file__": "read, and reported as `read_from: module.__file__`",
+   "an env var claiming the shared tree": "CANNOT change the answer -- driven"
+  },
+  "cells": 8,
+  "all_pass": true
+ },
+ "NOT_PUSHED_TO_ORIGIN_MM_RESEARCH": {
+  "instruction": "DA 272 -- it is the user's fork and only the user decides whether it is brought into line",
+  "observed": "nothing was pushed there this round",
+  "consequence": "the register (`COORDINATION.md`) lives on that ref, so THIS ROUND HAS NO REGISTER ROW. The row is owed and will be filed once the user rules on the fork. Stated so the gap in the register is visible rather than silent."
+ },
+ "LIMITS": {
+  "this_declares_admissibility_not_correctness": "a result from a declared tree is admissible; whether it is right is a separate question."
+ }
+}

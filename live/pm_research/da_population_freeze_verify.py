@@ -241,6 +241,113 @@ def guard_gate(lanes=None, decl: Path = GUARD_DECL, src_for=None) -> dict:
             "POPULATION_derived_now": len(enumerated)}
 
 
+
+# ---- THE EXECUTING TREE (DA 272) ---------------------------------------
+#
+# THE SHARED TREE IS NON-EXECUTING FOR BOTH LANES. `/home/yuqing/ctaNew` is
+# the user's working fork; measured 2026-09-11T19:08Z it is 205 commits behind
+# origin/mm-research and 100 behind the chain, and it carries PRE-FREEZE copies
+# of FOUR frozen closure modules. A result produced from it is INADMISSIBLE
+# REGARDLESS OF ITS CONTENT -- not because the numbers would be wrong, but
+# because nothing about them would be attributable to the frozen code.
+#
+# THE CHECK READS THE PAYLOAD, NOT ITS ENVIRONMENT. An env var says what
+# someone INTENDED; the resolved `__file__` of a module the payload actually
+# imported, and the process's own cwd, say what it WILL IMPORT. The running
+# 09-10 build is the case in point: its argv carries
+# `/home/yuqing/ctaNew/live/pm_research/be_heavy_run.sh` and a RELATIVE
+# `live/pm_research/be_daybook_build.py`, so the launcher path says "shared
+# tree" and the cwd (/home/yuqing/ctaNew-wt-fwd) says otherwise. The cwd is
+# right and the launcher path is decoration.
+EXECUTING_TREES = {
+    "build": Path("/home/yuqing/ctaNew-wt-fwd"),
+    "valuation": Path("/home/yuqing/ctaNew-wt-deval"),
+    "emit": Path("/home/yuqing/ctaNew-wt-de2"),
+}
+NON_EXECUTING_TREE = Path("/home/yuqing/ctaNew")
+UNDECLARED_TREE = "EXECUTED_FROM_AN_UNDECLARED_TREE"
+
+
+def executing_tree_of(module=None, cwd=None) -> Path:
+    """The tree a payload WILL import from -- from the artifact, not the env."""
+    if module is not None:
+        f = getattr(module, "__file__", None)
+        if f:
+            return Path(f).resolve().parents[2]
+    return Path(cwd if cwd is not None else Path.cwd()).resolve()
+
+
+def assert_executing_tree(module=None, cwd=None, lane=None) -> dict:
+    """REFUSE a run from any tree the freeze does not declare as executing."""
+    tree = executing_tree_of(module, cwd)
+    declared = {k: v.resolve() for k, v in EXECUTING_TREES.items()}
+    lanes = [k for k, v in declared.items() if v == tree]
+    if not lanes:
+        why = ("it is the SHARED tree, which is NON-EXECUTING for both lanes"
+               if tree == NON_EXECUTING_TREE.resolve()
+               else "it is not a declared executing tree")
+        raise FreezeRefused(
+            f"REFUSED {UNDECLARED_TREE}:{tree} -- {why}. Declared: "
+            f"{ {k: str(v) for k, v in declared.items()} }. A result produced "
+            f"from an undeclared tree is INADMISSIBLE regardless of its "
+            f"content.")
+    if lane is not None and lane not in lanes:
+        raise FreezeRefused(
+            f"REFUSED {UNDECLARED_TREE}:{tree} -- it is the {lanes[0]!r} tree "
+            f"and this payload declared lane {lane!r}.")
+    return {"tree": str(tree), "lane": lanes[0], "declared_executing": True,
+            "read_from": "module.__file__" if module is not None else "cwd",
+            "NOT_read_from": "any environment variable"}
+
+
+def falsify_executing_tree() -> int:
+    bad = 0
+
+    def ck(label, cond, shown=""):
+        nonlocal bad
+        print(f"  [{'PASS' if cond else 'FAIL'}] {label}" + (f" -> {shown}" if shown else ""))
+        if not cond:
+            bad += 1
+
+    for lane, t in EXECUTING_TREES.items():
+        if not t.exists():
+            continue
+        r = assert_executing_tree(cwd=t)
+        ck(f"a DECLARED executing tree passes and names its lane ({lane})",
+           r["lane"] == lane and r["declared_executing"], r["tree"])
+    try:
+        assert_executing_tree(cwd=NON_EXECUTING_TREE)
+        ck("the SHARED tree REFUSES", False, "admitted")
+    except FreezeRefused as exc:
+        ck("the SHARED tree REFUSES by name, saying it is NON-EXECUTING",
+           UNDECLARED_TREE in str(exc) and "NON-EXECUTING" in str(exc))
+    try:
+        assert_executing_tree(cwd="/tmp")
+        ck("an unrelated tree REFUSES", False)
+    except FreezeRefused as exc:
+        ck("an unrelated tree REFUSES by name", UNDECLARED_TREE in str(exc))
+    try:
+        assert_executing_tree(cwd=EXECUTING_TREES["build"], lane="valuation")
+        ck("the RIGHT tree for the WRONG lane REFUSES", False)
+    except FreezeRefused as exc:
+        ck("the RIGHT tree for the WRONG lane REFUSES", UNDECLARED_TREE in str(exc))
+    import types
+    m = types.SimpleNamespace(
+        __file__=str(EXECUTING_TREES["valuation"] / "live/pm_research/x.py"))
+    r = assert_executing_tree(module=m)
+    ck("it reads a MODULE'S RESOLVED __file__, not an env var",
+       r["lane"] == "valuation" and r["read_from"] == "module.__file__",
+       r["NOT_read_from"])
+    import os
+    os.environ["PM_TREE"] = str(NON_EXECUTING_TREE)
+    r2 = assert_executing_tree(cwd=EXECUTING_TREES["valuation"])
+    ck("...and an env var claiming the shared tree cannot change the answer",
+       r2["lane"] == "valuation")
+    os.environ.pop("PM_TREE", None)
+    print(f"\n  {'EXECUTING-TREE CELLS PASS' if not bad else str(bad) + ' FAILED'}")
+    return bad
+
+
 def falsify() -> int:
     checks, fails = [], 0
 
