@@ -23571,3 +23571,25 @@ generation and the window went 4 → 3. Nothing rewritten.
   A RESULT THAT WOULD HELP THE ARM. The eight stranded REV filings are on origin via rule
   45. tip 6f2d431)
 ```
+
+## Batch 353 (rotated by MEM round 371, 2026-09-11T07:39:16Z)
+
+```
+  2026-09-11T07:25:16Z (MEM ROUND 368 -- THE TRIPWIRE EMIT DOES NOT EXIST AND I GREPPED IT MYSELF:
+  CONCENTRATION_FINDING appears in ZERO .py FILES in the shared tree and ZERO in wt-deval,
+  and de_revaluation_emit.py IS ABSENT. THE TOKEN EXISTS ONLY IN THE DOCUMENTS THAT
+  DESCRIBE IT -- three REVIEWs and MY OWN HANDOFF.md -- so the only places the tripwire
+  exists are the places that talk about it. FIFTH INSTRUMENT-SATISFYING-THE-WORDS TONIGHT
+  AND THE FIRST THAT DID NOT EXIST AT ALL: the previous four were real instruments with a
+  blind spot; this was A REPORT OF AN INSTRUMENT. MY SHARE: at rounds 365 and 367 I
+  recorded the specification IN THE SAME VOICE I USE FOR THINGS I HAVE DRIVEN, and never
+  asked whether the emit existed -- the check was ONE GREP. AND THE SENTENCE I CLOSED 367
+  WITH IS NOW EXACTLY WRONG ABOUT THIS ITEM: 'could have been a claim in prose and is
+  instead a field or a drive'. IT WAS A CLAIM IN PROSE AND I PRAISED IT AS THE OPPOSITE,
+  which is worse than recording it uncritically because an endorsement is harder to
+  question than a specification. The V2 re-valuation IS STILL VALID -- D, p and the leg --
+  with the per-window table, residual and finding ABSENT: a complete result with an absent
+  diagnostic, not a compromised one. AND RULE 11 HOLDS BECAUSE NO PER-WINDOW NUMBER EXISTS:
+  the failure that voided the instrument is the same fact that preserves the
+  pre-registration. tip 845e2b6)
+```

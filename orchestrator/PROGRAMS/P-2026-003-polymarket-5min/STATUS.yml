@@ -67,6 +67,21 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T07:39:16Z (MEM ROUND 371 -- THE REBUILT BOOK LANDED with the three digests I hashed myself
+  at rounds 353-354, era clob_v4_1, old book superseded WITH ITS ORIGINAL MTIME. I
+  differenced the sizes: THE BOOK GREW 2.01 MB while THE FRAGMENT HAD SHRUNK 232 KB --
+  OPPOSITE DIRECTIONS, one attributed to replay content in the 27, THE OTHER STILL
+  UNEXPLAINED since round 363. THE DECOMPOSITION SUMS TO D TO THE CENT ON BOTH ARMS at the
+  exact six-decimal figures already on the record, and because it attributes over ALL 287
+  windows while the emit selects 27, THE RESIDUAL IS EXACTLY THE OTHER 260 -- which turns a
+  halt from a generic failure into A POSITIVE STATEMENT ABOUT WHERE THE CHANGE IS. REVIEW
+  189 FOUND AN EMIT THAT PRINTED A TRUE ROW COUNT WHILE EMITTING 28 ROWS, and the fixture
+  COULD NOT CATCH IT because it had no census row -- the falsifier-without-the-case-that-
+  matters class, inside this morning's instrument for that class. AND I CONVERTED THE TWO
+  EPOCHS: 1788806100 IS 18:35:00Z while the census window is 1788796500 AT 15:55:00Z, SO
+  THE DISPATCH'S TWO IDENTIFIERS DO NOT NAME THE SAME WINDOW -- recorded without asserting
+  which is right. A SECOND LOCK RACE: two autonomous chains, one lock, NO ARBITER -- the
+  durable-waiter fix for rule 37 produced waiters that COMPETE. tip 92e0985)
   2026-09-11T07:33:39Z (MEM ROUND 370 -- THE EMIT IS REAL AND DRIVEN 8/8 BY TWO HANDS, AND ITS INPUT
   DOES NOT EXIST YET. I read the constants: the WHOLE BAND STRUCTURE IS NAMED LITERALS in
   the first thirty lines -- 110.0, 18.4, 1036.5, 1e-6, 1.0 -- which CONFIRMS THE CLOSE I
@@ -99,23 +114,6 @@ updated: >-
   coordinator's formulation is exact: A POST-PROCESSOR NOBODY INVOKES IS DE 252 WITH A FILE
   ATTACHED. Census total 145.306 s minus the 28th gap is 143.753, against the 143.8 I
   recorded at round 365 -- 47 MILLISECONDS, all of it my own rounding. tip 2e6df95)
-  2026-09-11T07:25:16Z (MEM ROUND 368 -- THE TRIPWIRE EMIT DOES NOT EXIST AND I GREPPED IT MYSELF:
-  CONCENTRATION_FINDING appears in ZERO .py FILES in the shared tree and ZERO in wt-deval,
-  and de_revaluation_emit.py IS ABSENT. THE TOKEN EXISTS ONLY IN THE DOCUMENTS THAT
-  DESCRIBE IT -- three REVIEWs and MY OWN HANDOFF.md -- so the only places the tripwire
-  exists are the places that talk about it. FIFTH INSTRUMENT-SATISFYING-THE-WORDS TONIGHT
-  AND THE FIRST THAT DID NOT EXIST AT ALL: the previous four were real instruments with a
-  blind spot; this was A REPORT OF AN INSTRUMENT. MY SHARE: at rounds 365 and 367 I
-  recorded the specification IN THE SAME VOICE I USE FOR THINGS I HAVE DRIVEN, and never
-  asked whether the emit existed -- the check was ONE GREP. AND THE SENTENCE I CLOSED 367
-  WITH IS NOW EXACTLY WRONG ABOUT THIS ITEM: 'could have been a claim in prose and is
-  instead a field or a drive'. IT WAS A CLAIM IN PROSE AND I PRAISED IT AS THE OPPOSITE,
-  which is worse than recording it uncritically because an endorsement is harder to
-  question than a specification. The V2 re-valuation IS STILL VALID -- D, p and the leg --
-  with the per-window table, residual and finding ABSENT: a complete result with an absent
-  diagnostic, not a compromised one. AND RULE 11 HOLDS BECAUSE NO PER-WINDOW NUMBER EXISTS:
-  the failure that voided the instrument is the same fact that preserves the
-  pre-registration. tip 845e2b6)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -287,6 +285,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 371, the book, the decomposition, the lock race ---
+  THE_REBUILT_BOOK_LANDED_WITH_THE_THREE_DIGESTS_I_HAVE_BEEN_TRACKING: "be140book0907 rc=0 at 07:35:17Z, 358,259,004 bytes, producing_code.builder_commit 7ed5a9015f75, with be_daybook_build.py 2d31a80b5ae5c2c6, de_head_scoring.py 31c368384770351f and de_phase4_diag_runner.py 9e2a0977d8dfc3be -- THE SAME THREE DIGESTS I HASHED INDEPENDENTLY AT ROUNDS 353 AND 354 and have carried since. Era clob_v4_1. The old book is superseded at a timestamped path WITH ITS ORIGINAL MTIME PRESERVED, which is what makes the supersession auditable rather than merely tidy."
+  AND_THE_BOOK_GREW_BY_2_01_MB_WHILE_THE_FRAGMENT_HAD_SHRUNK_BY_232_KB: "I differenced both. BOOK: 358,259,004 minus 356,248,843 is +2,010,161 bytes, 2.01 MB or 1.92 MiB -- attributed to changed replay content in the 27 gap-bearing windows. FRAGMENT, from round 363: 660,075,638 minus 660,307,943 is -232,305 bytes -- and THAT ONE IS STILL UNEXPLAINED. OPPOSITE DIRECTIONS, and I record them together with their different statuses: one attributed, one open. A reader meeting only the book's growth would assume the fragment's shrinkage had been explained by the same mechanism."
+  THE_DECOMPOSITION_IS_REAL_AND_SUMS_TO_D_TO_THE_CENT_ON_BOTH_ARMS: "de_window_decomposition.py at 7a575ba8 on origin. The superseded-book drive, verbatim: CONDVALUE D = -11,017.712006c, windows 287, rows_sum_to_D TRUE; HAZARD +5,256.176844c, windows 287, rows_sum_to_D TRUE; peak 3.052 GiB in 21.4 seconds. THOSE ARE THE EXACT SIX-DECIMAL FIGURES I DIFFERENCED AGAINST MY OWN ROUND-359 RECORD AT ROUND 366, so the falsifier's target was a number already on the record and the decomposition hit it on both arms."
+  AND_THE_RESIDUAL_IS_THE_OTHER_260_WINDOWS_WHICH_GIVES_RULE_4_A_MEANING_IT_DID_NOT_HAVE: "It attributes over ALL 287 SUPPLIED windows and the emit selects the 27 DECLARED ones, so the residual is exactly the remaining 260 -- I subtracted them. Under the era fix those 260 must move by about zero, and if the residual reaches 1c REVIEW 186's rule 4 HALTS it as 'a change outside the 27'. That turns a halt from a generic failure into a POSITIVE STATEMENT ABOUT WHERE THE CHANGE IS, which is a different and more useful thing for a reader to receive."
+  REVIEW_189_FOUND_AN_EMIT_THAT_PRINTED_A_TRUE_ROW_COUNT_WHILE_EMITTING_28_ROWS: "declared_windows() read v12's list WITH NO ROLE FILTER, so a CENSUS_ONLY row entered the table -- AND THE EMIT'S OWN ROW_COUNT_IS_27 CHECK PRINTED TRUE. A guard reporting the count it was written to enforce, while the artifact beside it carried a different one. AND THE FIXTURE COULD NOT CATCH IT: 27 windows and no census row, so the only input that could expose the bug was the one the fixture lacked. That is the falsifier-without-the-case-that-matters class, in the instrument built this morning to catch that class."
+  AND_THE_EPOCH_NAMED_FOR_THE_FILTERED_ROW_IS_NOT_THE_CENSUS_WINDOW_I_VERIFIED: "The dispatch says the unfiltered 28 included 1788806100 and that the row which entered was the CENSUS_ONLY 15:55 one. I CONVERTED BOTH: 1788806100 IS 18:35:00Z, and the census-only window is 1788796500 AT 15:55:00Z, which I verified at round 365 with its 1.553-second gap. THOSE ARE TWO DIFFERENT WINDOWS. Either the row the filter removes is 18:35 rather than 15:55, or one of the two identifiers is a slip. I do not assert which -- I record that they do not name the same thing."
+  AND_THE_THREE_EMIT_FIXES_ARE_DRIVEN_15_OF_15_WITH_DE_CATCHING_ITS_OWN_ASSERTED_DEFECT: "At ef1ad8e4: the ROLE FILTER (unfiltered 28 to filtered 27), d2 == 0.0 mapped to SIGN_CHANGE_HALT, and a PER-DAY SPINE proven by a 43-window fixture giving 43 rows with a one-short input REFUSING. AND DE CAUGHT ITS OWN CENSUS CELL THAT HAD 'ASSERTED THE DEFECT AWAY' -- a test written so that the thing it was meant to detect could not appear in it. That is the fixture's blind spot found by its author, one commit after REV found the bug it hid."
+  A_LOCK_RACE_BETWEEN_TWO_AUTONOMOUS_CHAINS_IS_THE_SECOND_TODAY_AND_THERE_IS_STILL_NO_ARBITER: "BE's be140frag0908 took the lock at about 07:35:30Z THE INSTANT THE BOOK FREED IT, ahead of deRV0907wait3 which had been armed since 07:15:39Z -- so the waiter that had been patient for twenty minutes lost to a chain that arrived at the right moment. Same shape as DE's probe against BE's tape at 06:48. TWO AUTONOMOUS CHAINS, ONE LOCK, NO ARBITER: the durable-waiter discipline that fixed rule 37 produced a new problem, because waiters that outlive their turns now COMPETE."
+  AND_THE_RULING_ORDERS_BY_WHAT_IS_WAITING_ON_THE_RESULT_RATHER_THAN_BY_WHO_ARRIVED_FIRST: "After the fragment, BE YIELDS; day one's V2 re-valuation runs next at about 77 minutes; 09-08's tape follows. The reason is stated and is the right kind: DAY ONE'S V2 IS THE POPULATION'S FIRST DATUM and REVIEW 186, DA's v16 and the user's per-day picture ALL WAIT ON IT, while THE CALENDAR IS NOT BINDING. Ordering by downstream dependency rather than by arrival is what an arbiter would do, supplied by hand because there is not one. Expected 07:47 to 09:05, with the emit immediately after."
+  AND_DA_V15_CONFIRMS_THE_CONFINEMENT_WITH_THE_HALF_I_COULD_NOT_READ: "Identity intact string-by-string, and 09-08, 09-09 and 09-10 have n_masked = 0 AND n_thin = 0. At round 370 I read the masks myself and confirmed n_masked 0 on those three days, but recorded that n_thin WAS NOT A FIELD I COULD SEE and marked it relayed. DA now supplies it, so the confinement is complete: the era fix's row-removing consequence touches 09-07 ONLY, and per-day gap-window artifacts for 09-08 onward come from BE 141 as each fragment lands."
   # --- MEM round 370, the emit is real, its input is not ---
   THE_EMIT_IS_DRIVEN_8_OF_8_BY_TWO_HANDS_AND_ITS_BANDS_ARE_LITERALS_AT_THE_TOP_OF_THE_FILE: "DE drove 8/8 and pasted them; the coordinator drove the same 8/8 FROM THE ORIGIN BLOB IN A SEPARATE DIRECTORY with identical output -- 111c window fires on the window arm, 108c aggregate silent, 111c flat fires on the aggregate arm, unreadable input REFUSES BY NAME, residual at or above 1c HALTS with the declaration's refusal name, residual below 1e-6c is rounding, a sign change halts AND NAMES THE ARM, and the table carries the DECLARED spine. I read the constants myself: CONCENTRATION_BAR_CENTS 110.0, REFERENCE_INTERVAL_SCOPED_CENTS 18.4, REFERENCE_WINDOW_SCOPED_CENTS 1036.5, ROUNDING_BAND_CENTS 1e-6, HALT_BAND_CENTS 1.0 -- THE WHOLE BAND STRUCTURE IS NAMED LITERALS IN THE FIRST THIRTY LINES."
   AND_THAT_CONFIRMS_THE_CLOSE_I_MADE_LAST_ROUND_FROM_THE_OTHER_DIRECTION: "At round 369 I closed the open question by grepping the blob and finding 18.4 once and 1036.5 once, with the comma form returning zero. The coordinator now reports the same two values as literals at lines 26-27 AND ATTRIBUTES THEIR EARLIER 'NOT FOUND' TO THEIR OWN GREP TRUNCATING AT head -12. So the absence was in the instrument, not the file -- which is the finding I filed, arrived at independently. Under the timing clause: MINE WAS FILED FIRST at round 369, so this is confirmation of my close rather than two independent observations."
@@ -27860,6 +27869,67 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 371, 2026-09-11T07:39:16Z ---
+  THE_REBUILT_BOOK_LANDED_WITH_THE_THREE_DIGESTS_I_HAVE_BEEN_TRACKING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:39:16Z
+    said: >-
+      the three module digests match the values I hashed at 7ed5a90 at rounds 353 and 354; the book's identifiers as dispatched.
+  AND_THE_BOOK_GREW_BY_2_01_MB_WHILE_THE_FRAGMENT_HAD_SHRUNK_BY_232_KB:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:39:16Z
+    said: >-
+      both differences computed; the fragment's unexplained status is recorded in my round-363 flags and has not been superseded.
+  THE_DECOMPOSITION_IS_REAL_AND_SUMS_TO_D_TO_THE_CENT_ON_BOTH_ARMS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:39:16Z
+    said: >-
+      the two D values match the figures recorded in my round-366 flags to the decimal; rows_sum_to_D reported true for each arm.
+  AND_THE_RESIDUAL_IS_THE_OTHER_260_WINDOWS_WHICH_GIVES_RULE_4_A_MEANING_IT_DID_NOT_HAVE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:39:16Z
+    said: >-
+      287 minus 27 computed as 260; the rule-4 halt condition is recorded in my round-367 flags from REVIEW 186.
+  REVIEW_189_FOUND_AN_EMIT_THAT_PRINTED_A_TRUE_ROW_COUNT_WHILE_EMITTING_28_ROWS:
+    prov: RELAYED
+    from: REVIEW 189 / REV 148 via coordinator MEM 371
+    as_of: 2026-09-11T07:39:16Z
+    said: >-
+      the missing role filter, the true-printing count check and the fixture's blind spot as dispatched.
+  AND_THE_EPOCH_NAMED_FOR_THE_FILTERED_ROW_IS_NOT_THE_CENSUS_WINDOW_I_VERIFIED:
+    prov: CHECKED
+    artifact: live/pm_research/de_revaluation_emit.py
+    as_of: 2026-09-11T07:39:16Z
+    said: >-
+      1788806100 and 1788796500 converted with datetime.fromtimestamp to 18:35:00Z and 15:55:00Z respectively; the latter is the census window whose duration I verified at round 365.
+  AND_THE_THREE_EMIT_FIXES_ARE_DRIVEN_15_OF_15_WITH_DE_CATCHING_ITS_OWN_ASSERTED_DEFECT:
+    prov: RELAYED
+    from: DE via coordinator MEM 371
+    as_of: 2026-09-11T07:39:16Z
+    said: >-
+      the three fixes, the 15/15 drive and DE's self-catch as dispatched.
+  A_LOCK_RACE_BETWEEN_TWO_AUTONOMOUS_CHAINS_IS_THE_SECOND_TODAY_AND_THERE_IS_STILL_NO_ARBITER:
+    prov: RELAYED
+    from: coordinator MEM 371
+    as_of: 2026-09-11T07:39:16Z
+    said: >-
+      the two timestamps and the earlier 06:48 instance as dispatched.
+  AND_THE_RULING_ORDERS_BY_WHAT_IS_WAITING_ON_THE_RESULT_RATHER_THAN_BY_WHO_ARRIVED_FIRST:
+    prov: RELAYED
+    from: coordinator MEM 371
+    as_of: 2026-09-11T07:39:16Z
+    said: >-
+      the ruling, its stated reason and the expected window as dispatched.
+  AND_DA_V15_CONFIRMS_THE_CONFINEMENT_WITH_THE_HALF_I_COULD_NOT_READ:
+    prov: RELAYED
+    from: DA v15 via coordinator MEM 371
+    as_of: 2026-09-11T07:39:16Z
+    said: >-
+      the n_thin values as dispatched; the n_masked half I verified directly at round 370 by opening the four mask artifacts.
   # --- MEM round 370, 2026-09-11T07:33:39Z ---
   THE_EMIT_IS_DRIVEN_8_OF_8_BY_TWO_HANDS_AND_ITS_BANDS_ARE_LITERALS_AT_THE_TOP_OF_THE_FILE:
     prov: CHECKED
