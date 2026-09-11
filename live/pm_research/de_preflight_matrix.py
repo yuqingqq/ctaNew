@@ -529,6 +529,7 @@ def falsify() -> int:
     # instrument's verdict moving with its location, one step over from
     # the cwd dependence. A tree lacking a declared input is INPUT_ABSENT,
     # never a pass.
+    m3 = matrix(good_cert, v31, days=DAYS[:1])
     decl = None
     for cand in (Path(DERIVED) / "da_population_freeze_v5.json",
                  HERE / "declarations" / "da_population_freeze_v5.json"):
@@ -545,7 +546,6 @@ def falsify() -> int:
                    if not Path(str(v.get("path"))).is_file()]
         ck("ruled inputs: every declared input is present in THIS tree",
            not missing)
-        m3 = matrix(good_cert, v31, days=DAYS[:1])
         ck("the ruled inputs do NOT refuse on 09-07",
            not blocking(m3["rows"][DAYS[0]]))
     ck("an ABSENT input is reported as ABSENT, never as a refusal",
