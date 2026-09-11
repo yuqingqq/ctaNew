@@ -242,6 +242,17 @@ def blocking(row: dict) -> list:
             if str(v.get("status", "")).startswith("WOULD_REFUSE")]
 
 
+def absent(row: dict) -> list:
+    """Inputs not yet on disk. NOT a refusal -- a schedule fact.
+
+    A launcher must tell these apart: an unbuilt book means WAIT, a stale
+    record means STOP. Collapsing them either burns a lock slot on a book
+    that does not exist, or halts a population that was only early.
+    """
+    return [g for g, v in row.items()
+            if str(v.get("status", "")).startswith("INPUT_ABSENT")]
+
+
 UNRESOLVED = "PREFLIGHT_MATRIX_ROOT_DOES_NOT_RESOLVE"
 
 
@@ -298,7 +309,16 @@ def main(argv=None) -> int:
     print("\nWOULD_REFUSE by day:", bad or "NONE")
     (derived / "p003_de_preflight_matrix.json").write_text(
         json.dumps(m, indent=1, default=str))
-    return 3 if (a.gate and bad) else 0
+    miss = {d: absent(r) for d, r in m["rows"].items() if absent(r)}
+    if miss:
+        print("INPUT_ABSENT by day:", miss)
+    if not a.gate:
+        return 0
+    if bad:
+        return 3          # a stale or wrong record -> STOP
+    if miss:
+        return 4          # not built yet -> WAIT and re-check
+    return 0
 
 
 def falsify() -> int:
