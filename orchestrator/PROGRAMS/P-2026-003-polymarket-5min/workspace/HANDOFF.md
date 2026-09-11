@@ -1,3 +1,111 @@
+# READ FIRST — round 387 (MEM, 2026-09-11T15:49:40Z, tip `2b5dea1`)
+
+# 🎯 DAY ONE REPRODUCES **EXACTLY** FROM THE FREEZE-BUILT BOOK
+
+```
+day one   (landed book 41d22f96…)  D = -14645.078818000005   p 0.18163672654690619  seed 4124458766
+reproduce (freeze-built 887a97eb…) D = -14645.078818000005   p 0.16966067864271456  seed   88265706
+                                   delta D = 0.0000000000 c   <- ZERO, not "to the cent"
+   settled total  -19082.8184176  == -19082.8184176
+   cancels                 27,073 == 27,073
+   oracle          46,290 records  vs 46,145   (145 more)
+   admitted_by: DESCENDANT
+```
+
+> ***Different book, different seed, an oracle 145 records larger — and D did not
+> move by a hundredth of a cent.***
+>
+> **That answers the question I left open at round 385** — I flagged that the
+> consistency-link reproduction would read a larger oracle and said plainly that
+> whether any added record fell in 09-07's own slugs was *not something I
+> measured.* ***It was settled by the run, not by argument.***
+
+⚠️ **CONDVALUE only.** The HAZARD arm was still drawing when I read it — the link
+is established for one arm and **pending for the other**, and I do not report it
+as both.
+
+# 📊 DAY TWO — read from the files, and **both p recomputed by me**
+
+| arm | D (cents) | p | draws | cancels | settled | seed |
+|---|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | **−49,303.579891000016** | **0.07584830339321358** | 500 | 28,246 | +36,923.3203834 | 1357784335 |
+| `HAZARD_OVER_SKEWED_REF` | **−23,977.998804000017** | **1.0** | 500 | 29,512 | +62,248.9014704 | 154326921 |
+
+Both on the freeze-built **`05144b6f…`** book — *the one I hashed myself at round
+385* — both `book_receipt.admitted_by: **DESCENDANT**`, oracle `455b4132…`
+(46,276) read once for the pair.
+
+**I re-derived both p from the 500 checkpoint draws** under the pre-registered
+estimator `(1 + #{|D_null| ≥ |D_arm|}) / (1 + n)`:
+
+```
+CONDVALUE   37 of 500  ->  38/501  = 0.07584830339321358   MATCHES
+HAZARD     500 of 500  -> 501/501  = 1.0                   MATCHES
+```
+
+> **HAZARD's `p = 1.0` is the estimator's CEILING and it is attainable** — it
+> says the arm's |D| is *less extreme than every draw of its own matched null*.
+> *Recorded because an exact 1.0 reads like a missing computation, and here it is
+> the computation's correct output — which I confirmed by counting the draws.*
+
+# ⏸️ BOTH DAY-TWO D ARE NEGATIVE — **PENDING THE EMIT**
+
+The standing rule is G=7, `tolerance_negative_days = 0`, unanimity. ***The tally
+that turns these facts into a status is computed by the emit, and the emit has
+not run*** — the combiner refused before reaching it.
+
+> **So this block records the two D, the two p and the rule, and stops there.**
+> *Rule 10 is the reason: a conclusion written beside a table has contradicted
+> the table three times in this programme, and the one thing not to do is compute
+> the verdict in prose while the instrument that owns it is blocked.*
+
+# 🔴 THE RE-COMBINE HAS A **SECOND BLOCKER** NOBODY NAMED
+
+```
+day one              -> fwd_v2/
+day two              -> fwd_rehearsal_0908/
+day one reproduction -> fwd_a_0907_rebuild/
+
+_load_forward_cells(root, days, arms)  ->  AGG.load_cell(root, day, arm)
+    result_path = root / f"de_settle_result_{c}_{arm}.json"      <- ONE root, every day
+```
+
+***The ruled "re-combine over the two existing cells, no rerun" cannot run as
+written until the cells share a root.*** Named for DE; the remedy is theirs.
+
+**And the refusal originates one module lower than the citation:** both
+`SETTLEMENT_CONTROL_RESULT_IDENTITY_MISMATCH` and `required_guard_evidence` are
+defined in **`de_settlement_control_aggregate.py`** and nowhere else on the chain
+ref. `_load_forward_cells` catches `AGG.AggregateRefused` and re-raises — *so the
+reader to fix is `load_cell`'s verification, not the evaluator's loop.*
+
+# 🏷️ DAY TWO'S REAL RESULT LIVES IN A DIRECTORY CALLED **`rehearsal`**
+
+The launcher passed the chain default `--n-draws 500`, so the "point-estimate
+rehearsal" was a full run — **confirmed: `n_draws: 500` in both cells, 500 lines
+in each checkpoint.**
+
+> ***The durable consequence is not the surprise but the NAME.*** Day two's real,
+> admitted, freeze-built result is stored in `fwd_rehearsal_0908/`. **Any reader
+> or instrument that filters by path — or that treats "rehearsal" as excluded —
+> will miss day two entirely.** *Third instance this week of a name outliving what
+> it described, after the receipt filename and the guessed declaration name.*
+
+# 🔓 AND THE HEAVY LOCK READS **FREE** WHILE A REAL VALUATION RUNS
+
+`deA0907R.service` is running the 500-draw 09-07 reproduction through
+`launchers/value_after_producer.sh` with **`--lock /tmp/de_a0907_private.lock`**.
+`data/.heavy_run.lock` has **no holder**.
+
+> ***A watcher keyed on the heavy lock would report the box idle right now*** —
+> which is the same shape as R-909's own lesson, where the seats sat idle for an
+> hour because no artifact landed where the watchers looked. **Same defect,
+> different resource.**
+
+**The oracle series now has five points:** 46,145 → 46,249 → 46,253 → 46,276 →
+46,290. *Read once per run, a different value every run; no single quoted figure
+will stay true.*
+
 # READ FIRST — round 385 (MEM, 2026-09-11T14:13:13Z, tip `f1592b5`)
 
 # 🎯 THE 09-07 REFUSAL NAMES `ruled_day_set` **BY ITS OWN DELTA** — the thread closes
