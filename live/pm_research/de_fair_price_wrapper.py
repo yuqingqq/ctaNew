@@ -60,6 +60,14 @@ ESTIMATOR_REFUSED = "ESTIMATOR_REFUSED"
 ADMISSIBILITY_DIVERGED = "C1_ADMISSIBILITY_DIVERGED_FROM_IDENTITY"
 TIMESTAMPS_COLLAPSED = "SOURCE_AND_LOCAL_KNOWLEDGE_COLLAPSED"
 OUTCOME_MISMATCH = "TOKEN_OR_OUTCOME_IDENTITY_MISMATCH"
+#: REVIEW 192: the estimand has TWO REGIMES and a wrapper must not assume
+#: one. Before T-60 the realized past is IRRELEVANT and `partial` must be
+#: None; from T-60 onward it is REQUIRED and must be complete. A record
+#: whose partial contradicts its own decision time is refused HERE, by
+#: name, rather than left to the producer's generic answer.
+REGIME_CONTRADICTED = "PARTIAL_CONTRADICTS_THE_DECISION_TIME_REGIME"
+PRE_WINDOW = "pre-window"
+TERMINAL = "terminal"
 
 
 class WrapperRefused(ValueError):
@@ -150,6 +158,7 @@ class Candidate:
     cause: str
     inputs: dict                      # name -> both clocks, per hop
     decision_local_time: float | None
+    regime: str | None = None         # pre-window | terminal | None (C1)
 
     @property
     def admissible(self) -> bool:
@@ -158,7 +167,7 @@ class Candidate:
     def as_dict(self) -> dict:
         return {"protocol": PROTOCOL, "price": asdict(self.price),
                 "identity": self.identity.as_dict(), "cause": self.cause,
-                "inputs": self.inputs,
+                "inputs": self.inputs, "regime": self.regime,
                 "decision_local_time": self.decision_local_time}
 
 
@@ -235,6 +244,8 @@ def c2_bn_bookticker(coin: str, window_start: int, outcome: str, *,
     `value=None` and a typed status; the Identity fallback belongs to
     `policy_value`, which counts it.
     """
+    w_start = T - FP.S60_WINDOW_S
+    regime = PRE_WINDOW if t <= w_start else TERMINAL
     hops = _hops(reference=reference, spot=spot, sigma=sigma)
 
     def bad(status: str, cause: str, detail: str) -> Candidate:
@@ -255,7 +266,8 @@ def c2_bn_bookticker(coin: str, window_start: int, outcome: str, *,
                 freshness_s=_fresh, status=status,
                 estimator=FP.BN_BOOKTICKER, detail=f"{cause}: {detail}"),
             identity=identity_of(FP.BN_BOOKTICKER), cause=cause,
-            inputs=hops, decision_local_time=decision_local_time)
+            inputs=hops, decision_local_time=decision_local_time,
+            regime=regime)
 
     if outcome not in FP.OUTCOMES:
         raise WrapperRefused(
@@ -273,6 +285,24 @@ def c2_bn_bookticker(coin: str, window_start: int, outcome: str, *,
         return bad(FP.NOT_READY, PRE_ERA_EVENT,
                    f"recv_ns {decision_recv_ns} is below the declared "
                    f"sub-second era floor {ERA_FLOOR_RECV_NS}")
+    # THE REGIME IS CARRIED, NOT ASSUMED (REVIEW 192). Both directions
+    # refuse: a realized partial supplied before the averaging window has
+    # begun would let a past that cannot matter move the answer, and a
+    # missing one after it would forecast an interval that is already
+    # half observed.
+    if regime == PRE_WINDOW and partial is not None:
+        return bad(FP.NOT_READY, REGIME_CONTRADICTED,
+                   f"t={t} is at or before T-60={w_start}, so the averaging "
+                   f"window has not begun and `partial` must be None; one "
+                   f"was supplied covering "
+                   f"[{getattr(partial, 'lo', None)}, "
+                   f"{getattr(partial, 'hi', None)}]")
+    if regime == TERMINAL and (partial is None
+                               or partial.status != FP.TWAP_OK):
+        return bad(FP.NOT_READY, REGIME_CONTRADICTED,
+                   f"t={t} is inside [T-60, T]={w_start}..{T}, so the "
+                   f"realized part is required and must be complete; got "
+                   f"{None if partial is None else partial.status}")
     if reference.local_receipt > decision_local_time:
         return bad(FP.NOT_READY, REFERENCE_NOT_YET_RECEIVED,
                    f"X60(t0) was received locally at "
@@ -307,9 +337,15 @@ def c2_bn_bookticker(coin: str, window_start: int, outcome: str, *,
         freshness_s=decision_local_time - spot.source_as_of,
         status=FP.OK, estimator=FP.BN_BOOKTICKER,
         detail=f"regime={res.get('regime')} model={MODEL_VERSION}")
+    if res.get("regime") not in (None, regime):
+        raise WrapperRefused(
+            f"REFUSED {REGIME_CONTRADICTED}: the wrapper read the decision "
+            f"time as {regime!r} and the estimator reports "
+            f"{res.get('regime')!r}. Two opinions about which regime a "
+            f"record is in is how one of them silently wins.")
     return Candidate(price=price, identity=identity_of(FP.BN_BOOKTICKER),
                      cause=OK, inputs=hops,
-                     decision_local_time=decision_local_time)
+                     decision_local_time=decision_local_time, regime=regime)
 
 
 def down_from_up(up: Candidate) -> Candidate:
@@ -500,6 +536,53 @@ def falsify() -> int:
     ck("a PRE-ERA event is refused by cause, per event",
        c2_pre.cause == PRE_ERA_EVENT and c2_pre.price.value is None,
        c2_pre.cause)
+
+    # --- REVIEW 192: BOTH REGIMES, BOTH DIRECTIONS ---------------------
+    ck("the point-in-time record carries its regime explicitly",
+       c2.regime == PRE_WINDOW and "regime=pre-window" in c2.price.detail,
+       f"{c2.regime} (t=1000.0, T-60=1240.0)")
+    fake_partial = FP.PartialTwap(
+        lo=1240.0, hi=1260.0, integral=60100.0 * 20.0, covered_s=20.0,
+        span_s=20.0, status=FP.TWAP_OK, n_used=20, n_future_knowledge=0,
+        n_pre_era=0, n_missing_stamp=0, n_out_of_window=0, max_hold_s=1.0,
+        source=FP.BN_BOOKTICKER)
+    c2_early_partial = c2_bn_bookticker(
+        "btc", W, "UP", decision_local_time=1000.5,
+        decision_recv_ns=ERA_FLOOR_RECV_NS + 1, reference=ref, spot=spot,
+        sigma=sig, partial=fake_partial, t=1000.0, T=1300.0,
+        sigma_lookback_s=1800.0)
+    ck("a partial supplied BEFORE T-60 refuses by name",
+       c2_early_partial.cause == REGIME_CONTRADICTED
+       and c2_early_partial.price.value is None
+       and c2_early_partial.regime == PRE_WINDOW,
+       c2_early_partial.cause)
+    spot_t = Stamped(value=60100.0, source_as_of=1260.0,
+                     local_receipt=1260.1, source=FP.BN_BOOKTICKER)
+    sig_t = Stamped(value=0.0004, source_as_of=1259.0, local_receipt=1259.5,
+                    source="binance_1s_rv")
+    c2_terminal = c2_bn_bookticker(
+        "btc", W, "UP", decision_local_time=1260.5,
+        decision_recv_ns=ERA_FLOOR_RECV_NS + 1, reference=ref, spot=spot_t,
+        sigma=sig_t, partial=fake_partial, t=1260.0, T=1300.0,
+        sigma_lookback_s=1800.0)
+    ck("inside the terminal window a COMPLETE partial passes",
+       c2_terminal.admissible and c2_terminal.regime == TERMINAL
+       and "regime=terminal" in c2_terminal.price.detail,
+       f"p_UP {c2_terminal.price.value} regime {c2_terminal.regime}")
+    c2_no_partial = c2_bn_bookticker(
+        "btc", W, "UP", decision_local_time=1260.5,
+        decision_recv_ns=ERA_FLOOR_RECV_NS + 1, reference=ref, spot=spot_t,
+        sigma=sig_t, partial=None, t=1260.0, T=1300.0,
+        sigma_lookback_s=1800.0)
+    ck("a MISSING partial after T-60 refuses by the same name",
+       c2_no_partial.cause == REGIME_CONTRADICTED
+       and c2_no_partial.price.value is None
+       and c2_no_partial.regime == TERMINAL,
+       c2_no_partial.cause)
+    ck("the two regimes are DIFFERENT answers, so the guard is not moot",
+       c2_terminal.price.value != c2.price.value,
+       f"pre-window {c2.price.value:.6f} vs terminal "
+       f"{c2_terminal.price.value:.6f}")
 
     down = down_from_up(c2)
     comp = FP.complement_check(c2.price, down.price)
