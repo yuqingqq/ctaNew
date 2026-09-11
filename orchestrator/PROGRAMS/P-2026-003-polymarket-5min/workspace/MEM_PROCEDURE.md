@@ -241,3 +241,25 @@ and it rewrote thousands of lines I had no business touching.
   re-run the write.** Do not patch a broken file in place.
 - **Check `$?` after the write before committing.** The broken file was committed
   because the shell ran on past a Python traceback.
+
+## Round 368 — a specification is not an implementation; grep before you file
+
+I recorded the v12 tripwire (`CONCENTRATION_FINDING`, thresholds, firing
+conditions) at rounds 365 and 367 **in the same voice I use for things I have
+driven**, and never asked whether the emit existed. It did not: **zero `.py`
+files, in the shared tree and in `wt-deval`.** The token lived only in three
+REVIEWs and in my own HANDOFF.
+
+Worse, I closed round 367 praising the batch for being "a field or a drive
+rather than a claim in prose" — **about an item that was a claim in prose.**
+*An endorsement is harder for the next reader to question than a specification.*
+
+**Required from now on:** when a dispatch describes an instrument by NAME —
+a refusal token, a check, an emit — **grep for that token in `.py` before
+filing it**, and record which of these it is:
+
+- `SPECIFIED` — named in a declaration or review, no code found
+- `PRESENT` — token found in code
+- `DRIVEN` — token found *and* a drive/falsifier reported with it
+
+**Never let a SPECIFIED item inherit the voice of a DRIVEN one.**
