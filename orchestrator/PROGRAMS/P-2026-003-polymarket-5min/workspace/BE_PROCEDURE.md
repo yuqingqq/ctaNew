@@ -833,3 +833,73 @@ my two reads. It had not. **On this box HEAD moves under you constantly**:
 re-read both sides in the SAME command before concluding anything about what
 happened to a file, and grep the CONTENT MARKER rather than comparing digests
 you gathered a minute apart.
+
+---
+
+## 10. THE DEFERRED FIX QUEUE — do not lose these when the test ends
+
+Written at BE 139 because the forward test pins the build path and several
+real defects are therefore **knowingly** left in place until the last forward
+book (09-13) exists. **When contexts turn over, this list is what survives.**
+Each lands *after* that book, beside DE's refusal renames and the guard/params
+pair.
+
+### 10a. `flow_intensity.gaps_by_slug` DROPS BOUNDARY-SPANNING GAPS ENTIRELY
+
+A gap row is attributed to a slug by the collector's `window_start` field, not
+by the gap's own wall clock. `gaps_by_slug` clamps the offsets to
+`[0, WINDOW_S]` and keeps only `g1 > g0`, so a gap whose instant falls outside
+its stamped window produces an empty interval, is **dropped, and is never
+re-attributed to the window that contains it**. It lands in neither window and
+is counted nowhere — rule 4, an exclusion that is not a counted status.
+
+**It runs in BOTH directions**, measured across the five consumed days
+(`be_gap_census_wallclock.json`):
+
+| day | rows | replay windows | wall-clock windows | not seen |
+|---|---|---|---|---|
+| 09-03 | 376 | 160 | 160 | 0 |
+| 09-04 | 80 | 52 | **53** | **1** |
+| 09-05 | 19 | 13 | 13 | 0 |
+| 09-06 | 14 | 14 | 14 | 0 |
+| 09-07 | 35 | 27 | **28** | **2** |
+
+* 09-07, stamped 14:40, raw `(303.476, 311.176)` — **after** that window ends,
+  lands in 14:45.
+* 09-07, stamped 15:50, raw `(319.259, 320.812)` — lands in 15:55. *This is
+  the "28th gap-bearing window" DA and the coordinator found independently.*
+* 09-04, stamped 22:30, raw `(-198.702, -197.404)` — **negative**, the gap
+  happened *before* its stamped window began; lands in 22:25.
+
+**The fix** is to re-attribute by wall clock (or to split a straddling gap
+across both windows) inside `gaps_by_slug`. It changes what the replay sees,
+so it invalidates every book built before it and **must not be applied
+mid-test**. Ruled deferred by the coordinator at BE 139; the census artifact
+carries the status `GAP_RECORDED_NOT_SEEN_BY_REPLAY` in the meantime.
+
+### 10b. `be_gate1_fragment` OVERWRITES ITS OWN RECEIPT
+
+See §9c. `be_gate1_state_tape` was fixed for exactly this and versions to
+`.v<N>.json`; the fragment builder still does a plain `write_text` at a fixed
+path, and the file is untracked so git cannot recover it either. Rebuilding
+09-07 destroyed its fragment receipt. **Fix: version it the way the tape
+builder does.** Until then, copy the receipt aside before any rebuild.
+
+### 10c. `RULED_DAYS` IS A DECLARATION NOTHING ENFORCES
+
+See §9e. Either enforce it in `build()` or delete it — a limit that lives only
+in a declaration does not bind the result (rule 35), and right now it reads as
+a gate to anyone who greps for one.
+
+### 10d. THE `--poll` UNIT-NAME ERROR — landed, listed so it is not re-fixed
+
+Already fixed (§8, the grouped redirect). Listed here only so nobody spends a
+round rediscovering it.
+
+**A WARNING FROM THIS ROUND.** `systemctl show -p A -p B -p C --value` returns
+the properties in **systemd's** order, not the order you asked for. A
+positional `read` over that output assigned `ActiveState` to my exit-status
+variable, my book-waiter took the failure branch on a **successful** tape, and
+the book did not launch. **Parse `Key=Value` by NAME** (`systemctl show "$U"
+-p "$P" | sed "s/^$P=//"`), never positionally — and remember `LoadState=
+not-found` makes every other field a DEFAULT, not a reading (R-648).
