@@ -38,3 +38,28 @@ H=$(git -C "$WT" rev-parse HEAD)
 [ -e "$OUT" ] && { echo "REFUSED OUTPUT_EXISTS: $OUT"; exit 4; }
 echo "preflight clean -- offering for the lock: $UNIT ($STAGE $DAY)"
 bash /home/yuqing/ctaNew/live/pm_research/be_heavy_run.sh --poll "$UNIT" "$MOD" $ARGS
+rc=$?
+
+# ---- THE STAGE AFTER EVERY BOOK: the per-window generation census (BE 152).
+# `--poll` returns when the LOCK IS TAKEN, not when the build finishes, so the
+# census must wait for the UNIT -- a seat's own driver once `systemctl stop`ped
+# a live build 15 s in by confusing the two. Only the book stage waits; frag
+# and tape return as before.
+if [ "$STAGE" = "book" ] && [ "$rc" -eq 0 ]; then
+  _f() { systemctl --user show "$1" -p "$2" | sed "s/^$2=//"; }
+  for _i in $(seq 1 400); do
+    [ "$(_f "$UNIT" SubState)" != "running" ] && break
+    sleep 20
+  done
+  if [ "$(_f "$UNIT" LoadState)" = "loaded" ] && [ "$(_f "$UNIT" ExecMainStatus)" = "0" ]; then
+    echo "--- book landed; per-window generation census for $DAY ---"
+    # NOT under the heavy lock: measured 3.89 GiB leaf against a 14.00 GiB
+    # slice, so it coexists with a valuation under the 12 GB rule. It runs
+    # INSIDE research.slice so it stays accounted and capped.
+    systemctl --user reset-failed "census${DAY}" >/dev/null 2>&1
+    systemd-run --user --unit="census${DAY}" --slice=research.slice       -p MemoryMax=6G -p CPUQuota=100% -p RemainAfterExit=yes       -p WorkingDirectory=/home/yuqing/ctaNew       --setenv=PM_DATA_ROOT=/home/yuqing/ctaNew       -p StandardOutput=append:/home/yuqing/ctaNew/data/pm_5min/derived/be152census.log       -- /home/yuqing/pricer-sol/venv/bin/python3          live/pm_research/be_book_window_census.py "$DAY" >/dev/null 2>&1
+  else
+    echo "book unit did not exit 0 -- census NOT run (a census of a failed build certifies nothing)"
+  fi
+fi
+exit $rc
