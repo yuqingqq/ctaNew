@@ -1,3 +1,86 @@
+# READ FIRST — round 363 (MEM, 2026-09-11T06:58:59Z, tip `9f9bc3d`)
+
+# ✋ CORRECTION 1 — **the 232 KB delta has NO established cause**
+
+**The 27 gap intervals exclude NO rows on the day path.** I read it:
+`BINANCE_GAP_EXCLUDED_STATUS = "NOT_APPLIED_ON_THE_DAY_PATH"`
+(`be_daybook_build.py:660`, carried at `:662` and `:1219`). **They change what the
+replay SEES in retained windows.** Row removal comes only from the blackout
+**MASK**, whose BTC share is **one window** (`1788807300`).
+
+> **So the 232,305-byte difference is UNEXPLAINED, pending DA/BE.**
+
+*My round-362 flag attributed no cause — I checked my own text rather than assume
+it: it carries the two byte counts, the difference, both unit readings and the
+provenance, and the string "exclud" does not appear.* **That is not a credit to
+me — I recorded a measurement without an explanation, which is only the right
+shape by default. The substantive update is that the cause is now EXPLICITLY
+unexplained, which says more than silence.**
+
+# ✋ CORRECTION 2 — **the 27 and the 12 are DISJOINT BY DEFINITION**
+
+The definition is in code: `da_content_liveness_rule.py` builds its blackout set
+as windows that are **thin** (`b < med * thin_frac`) **AND**
+`not TD.gap_overlaps(...)`.
+
+> ***Blackout ≡ thin AND NOT gap-overlapped — so the two sets cannot intersect,
+> by construction.***
+
+**REV's 12 was 7 coins over 2,016 windows; BE's 27 is BTC over 287.** *Neither is
+wrong, and they are **not two estimates of one quantity**.* **REV's magnitude
+bound was on the wrong set and is being re-derived.**
+
+**The tripwire becomes v10 with two separately enumerated sets:** 27 gap-bearing
+windows (**replay change, rows retained**) and mask flips (**row-count change,
+≤1 expected for BTC**). *Two mechanisms, two counts, two units — a single combined
+number would be a quantity with no referent.* **Same shape as coverage 0.7419 vs
+247-of-288, and as the 4-raises-vs-1-violation partition.**
+
+# ⚖️ RULING — **the MASK must be rebuilt too, not just the book**
+
+Rule 14, routed by DA 230. **The mask's classification depends on the gap
+ledger** — and ***under the buggy era every thin window was VACUOUSLY a
+blackout***, because an empty gap list makes the negated-overlap term trivially
+true for everything thin. *That follows directly from the predicate above.*
+
+**Uniform scope therefore reaches the mask for all seven days.** DA 231 is
+rebuilding 09-07's mask **now, outcome-blind** under the DA 215 allowlist,
+**before the book.**
+
+# ✅ DAY ONE IS **CLEAN — ESTABLISHED**, superseding "probably clean"
+
+REVIEW 137/179: launch record `deFV0907b` **04:04:30Z** · wt-be reflog HEAD
+**`651a7b5`** · **runner blob `4ba1177f` = the pin** · `da00220` **not an
+ancestor**. Residual stated, not hidden: **a dirty working file at import is not
+excluded.**
+
+*The upgrade came from **the reflog and the blob**, not from an author date —
+which is exactly what REV said an author date could not do.*
+
+## 🔗 And that blob is a value I hashed myself — with the filing order stated
+
+At round 360, checking which of the user commit's five files existed at the pin,
+**I hashed `de_settlement_control_run.py` at `7ed5a90` and recorded
+`4ba1177fff3a3bbd`.** REV's runner blob is `4ba1177f`. **The same value.**
+
+> **Under the timing clause I landed at round 357 I state the order rather than
+> claim convergence: MINE WAS FILED FIRST, at round 360, and REV's finding came
+> later — so this is my measurement CONFIRMING REV's, not two independent
+> observations. I do not present it as corroboration.**
+
+# 🕳 AND THE FREEZE'S CENTRAL PROMISE HAD BOTH HALVES OF THE CLASS IN ONE CLAUSE
+
+`NO_PARAMETER_OR_MODULE_IS_TUNED` — with the **space in its key** I recorded last
+round — is **a declared boolean that no code reads.** And the checker that would
+enforce the property, `FORWARD_COMPUTING_MODULES_NOT_AT_FROZEN_PIPELINE`,
+**exists in `de_forward_value_day.py` UNWIRED** (I read its definition at `:39`
+and its raise at `:102` last round).
+
+> ***A field nobody reads, and a guard nobody calls — the two halves this
+> programme has spent the week cataloguing, in a single clause of the freeze.***
+
+DE is wiring it at import.
+
 # READ FIRST — round 362 (MEM, 2026-09-11T06:53:37Z, tip `ad4d552`)
 
 # ⚖️ THE FREEZE IS AMENDED TO `da00220` FOR THE VALUATION PATH — **user ruling**
