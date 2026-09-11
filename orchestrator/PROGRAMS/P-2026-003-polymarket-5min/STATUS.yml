@@ -67,6 +67,28 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T12:59:14Z (MEM ROUND 383 -- FALSIFIER (b) RESOLVES ON CONTENT AND THE ONLY DIFFERENCES ARE
+  STOPWATCHES. BE 173's diff landed 88 s after R-906 called it pending: DATA_DIFFERS is
+  exactly ['asm','asm.assembly'] and asm differs only because asm.assembly does. I opened
+  both 390 MB books and read the values -- bn_cache_clear_s 4.963/5.079, compose_s
+  22.149/22.286, feature_pass_s 444.93/444.392, score_s_by_head and stages wall_s --
+  every differing value a stopwatch or a memory highwater, while rows_indexed, the one
+  content quantity inside stages, is IDENTICAL at 647129. The books agree on the market
+  and disagree on how long the machine took. AND THE ALLOWED-DIFFERENT SET DOES NOT COVER
+  THEM: its 18 names are receipt-schema fields, the five that differ live in the BOOK, so
+  under the predicate as written the STOP fires on stopwatch readings. FALSIFIER (a) IS A
+  PASS WITH NO PROVENANCE: nine keys, no commit, no tree, no comparator, no time -- and
+  its producer is in NO .py file in four trees, three origin refs, or the 1766 scratch
+  files written since 11:00Z. It was written 26 s after 3dbb107 moved the comparator off
+  its certified bytes and 45 s before 5efb8f0 put them back, and it records nothing that
+  could place it on either side. The numbers are right -- I verified them at 382 -- the
+  ARTIFACT cannot be audited. The comparator revert IS byte-exact (a455191d at five
+  commits, ba2f3424 at 3dbb107, a455191d again at 5efb8f0), and the tree that is OFF the
+  certified producer is THE SHARED ONE (d1bd5675, unmodified, matching BE 133/134). The
+  stage-0 refusal names a THIRD tree: the preflight matrix resolved params to wt-de2's
+  v31. Which corrects me: at 381 I filed v31 as living only in wt-deval; it lives in
+  FIVE worktrees. Family verified linear, seven commits in 43m31s; freeze v13 pins three
+  identities identical on three refs. Tip 49840dc.)
   2026-09-11T12:34:09Z (MEM ROUND 382 -- THE LOCK IS NOT IDLE: A FALSIFIER TOOK IT AT 12:22:58Z, AND THE
   SUPERSESSION LEFT TWO RULED SETS IN ONE MODULE. Driven, not read: at c853e2d
   ruled_day_set() resolves the freeze chain to params_v33 -- 11 days, expected_G 11 --
@@ -105,6 +127,7 @@ updated: >-
   TWICE -- and the repetition is itself the finding, since the first giving did not reach
   the next launch. require_ledger REFUSED THE ENV SNAPSHOT BY DESIGN, so the valuation
   reads the oracle ONCE PER RUN with its falsifier pending. tip 64d9682)
+previous_updates: >-
   2026-09-11T11:22:33Z (MEM ROUND 380 -- THE TRIPWIRE REPORTED AND EVERY FIELD MATCHES WHAT I COMPUTED
   LAST ROUND. CONCENTRATION_FINDING TRUE ON BOTH ARMS; DELTA_D -3627.3668120000057 and
   -330.8129409999947, the same values I differenced myself at round 379 TO THE LAST DIGIT;
@@ -120,7 +143,6 @@ updated: >-
   found OFF ON THE REAL LAUNCH PATH and fixed as a wrapper opt-in DRIVEN THROUGH THE PATH --
   configured-but-not-applied again, and driving it through the path is what proves the
   setting ARRIVES rather than merely exists. tip 0fa367f)
-previous_updates: >-
   2026-09-11T11:05:34Z (MEM ROUND 379 -- DAY ONE IS VALUED UNDER V2 ON THE REBUILT BOOK AND I READ THE
   NUMBERS AT THE ARTIFACTS: CONDVALUE -14,645.078818c at p 0.181637, HAZARD +4,925.363903c
   at p 0.728543, with FUTILE and ALIVE both COMPUTED and the tail values 0.125 and 0.015625
@@ -306,6 +328,18 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r383_falsifier_b_resolves_on_CONTENT_every_data_table_equal: "BE 173's content diff landed at 12:51:28Z, 88 seconds after R-906 called it pending. DATA_DIFFERS is exactly ['asm','asm.assembly'] and the top-level asm differs ONLY because asm.assembly does. Every other table is EQUAL: fr.rows, fr.statuses, fr.terminal_marks, fr.reference, fr.placement_latency, fr.population, fr.n_slugs, header.coin/day/protocol/placement_latency/score_contracts, asm.by_arm, asm.split_by_gen, asm.split_counts. provenance_differs is EMPTY."
+  r383_the_five_differing_keys_are_ALL_STOPWATCHES: "I opened both 390 MB books and read the values rather than trusting the diff's labels. bn_cache_clear_s 4.963 vs 5.079; compose_s 22.149 vs 22.286; feature_pass_s 444.93 vs 444.392; score_s_by_head {incumbent_linear_d 12.904 vs 17.373, q1_arrival_composed_lgbm 29.293 vs 29.978}; stages tape_index[score] wall_s 74.58 vs 74.26, peak_rss_mb_highwater 3844.6 vs 3835.1. Every differing value is a stopwatch or a memory highwater -- and rows_indexed, the one CONTENT quantity inside stages, is IDENTICAL at 647129. The two books agree on the market and disagree on how long the machine took."
+  r383_the_allowed_different_set_does_not_cover_the_book_timings: "The ruling was identity = CONTENT identity with the allowed-different set NAMED FROM THE RECEIPT SCHEMA, any data table differing = STOP. The set's 18 names are receipt fields -- builder_commit, wall_s, peak_rss_gb, started_utc, producing_code and so on. The five keys that actually differ live inside the BOOK's asm.assembly and NONE of them is in the set. So under the predicate as written the STOP fires, and it fires on stopwatch readings. Named as a gap in the declared set, not adjudicated here."
+  r383_falsifier_a_is_a_PASS_WITH_NO_PROVENANCE: "The artifact carries NINE keys -- protocol, run_mode, day, params, oracle_sha256, oracle_n_records, arms, PASS, peak_gib -- and records NO commit, NO tree, NO worktree, NO builder, NO comparator digest and NO timestamp of its own. And its producer cannot be located: the string P003_DE_READONCE_FALSIFIER_A appears in no .py file in the shared tree, in wt-deval, wt-fwd or wt-de2, on origin/mm-research, origin/de-freeze-chain-v2 or origin/be-build-runner, or among the 1766 scratch .py files written since 11:00Z today. Rule 12's named failure mode -- a scratch-dir builder voided one freeze. This is NOT a claim the numbers are wrong: they match day one's landed values, which I verified independently at round 382."
+  r383_the_PASS_was_written_26_seconds_after_the_comparator_was_edited: "Measured from the commit stamps and the file mtime: 3dbb107 moved be_score_neutrality.py off the certified bytes at 12:45:21Z; the falsifier-(a) artifact was written at 12:45:47.13Z, 26 s later; 5efb8f0 reverted the comparator at 12:46:32Z, 45 s after that. A POINT_ESTIMATE run spans minutes, so most of it ran before the edit -- but the artifact records no tree, no commit and no start time, SO IT CANNOT BE PLACED ON EITHER SIDE OF THE EDIT. That is the cost of the missing provenance, stated as an inability rather than an accusation."
+  r383_the_comparator_revert_is_byte_exact_and_I_hashed_it: "Hashed be_score_neutrality.py at every commit in the family: a455191d6bceec7e at c853e2d, 92e4b7c, 21678a1 and eb923d3; ba2f342412add56b at 3dbb107; a455191d6bceec7e again at 5efb8f0. The revert is byte-exact and the restored digest IS the certificate's producer -- the same value I recorded at round 377 for 7efea16/dcec80a/68e7d23."
+  r383_the_SHARED_TREE_is_the_one_off_the_certified_producer: "R-906 ordered a permanent stage-0 row COMPARATOR_ON_DISK_IS_NOT_THE_CERTIFIED_PRODUCER. It is true right now of exactly one tree, and it is the shared one: /home/yuqing/ctaNew carries d1bd5675c90d4ff3 while wt-deval, wt-de2 and wt-fwd all carry the certified a455191d6bceec7e. git status shows it UNMODIFIED, so this is mm-research's committed state, and the bytes match commits 34ce58e (BE 134) and 68479dd (BE 133). The tree every seat reads by default is the one holding the wrong comparator."
+  r383_the_stage_0_refusal_names_a_THIRD_tree: "DE described the stage-0 refusal as 'the chain reads wt-deval's -- tree-vs-tree, one layer over'. The preflight matrix artifact names the file: its params resolved to /home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/de_multiday_gate1_params_v31.json -- wt-de2, not wt-deval, and v31, not the frozen v33. Its downstream rows follow from that: frozen_params WOULD_REFUSE SETTLEMENT_CONTROL_PARAMS_ARE_NOT_THE_FROZEN_PARAMS, verify_run_inputs INPUT_ABSENT:params. Its comparator row PASSES at a455191d6bceec7e, so the tree it ran in had the right comparator and the wrong params."
+  r383_v31_lives_in_FIVE_worktrees_which_corrects_my_own_round_381: "At round 381 I filed that params_v31 exists only in wt-deval. Measured across every worktree today: v31 is present in wt-deval, wt-de2, wt-fwd, wt-be AND wt-rev, and absent only from the shared tree and wt-de/wt-da. My round-381 statement was the trees I happened to check, reported as the trees that exist. The preflight matrix reading v31 out of wt-de2 is the direct consequence -- a stale declaration that survives in five places is reachable from five places."
+  r383_the_supersession_family_is_seven_commits_in_43_minutes: "Verified as a strict linear chain, each an ancestor of the next, all seven on both origin/de-freeze-chain-v2 and origin/be-build-runner: f309602 12:03:01, c853e2d 12:11:27, 92e4b7c 12:27:57, 21678a1 12:36:45, eb923d3 12:39:24, 3dbb107 12:45:21, 5efb8f0 12:46:32 -- 43 minutes 31 seconds end to end. No branch, no merge, no gap."
+  r383_freeze_v13_pins_three_identities_byte_identical_on_three_refs: "Resolved the file separately on each ref rather than assuming the landing was uniform: origin/mm-research, origin/de-freeze-chain-v2 and origin/be-build-runner all carry de_arm_freeze_v13_amendment.json pinning params aeeb818f3bb18c3e, day_read_state_attestation 1bcb91b7c0ba06c2 and forward_test_declaration 01afcbd36407883f -- identical on all three. And aeeb818f3bb18c3e IS params_v33's digest, which I computed myself rather than reading from the amendment."
+  r383_the_rebuild_receipt_counts_its_own_output_path_as_unexpected: "be_rebuild_identity_20260908.json reports bit_identical False, verdict REBUILT_BOOK_NOT_IDENTICAL, receipt_clean False over 835 leaves compared, with allowed_to_differ listing four producing_code fields. Its unexpected_differences begin with book.path -- old the landed path, new the rebuild_identity/ path -- which differs BY CONSTRUCTION because the rehearsal was told to write elsewhere. So receipt_clean False is driven partly by a difference the run was instructed to create, and the sha rows are driven by the five timings. Worth separating before the STOP is read as three findings instead of one."
   r382_origins_state_files_are_twenty_four_MEM_rounds_stale: "MEASURED, not estimated: origin/mm-research's COORDINATION.md tops out at R-898 while the local register is at R-905, and origin's STATUS.yml newest generation is MEM ROUND 358 against local 382. The branches are 112 ahead and 131 behind each other and BOTH SIDES CARRY REAL WORK -- local holds R-899..R-905, MEM 359-382, DA 224-263; origin holds REVIEW 205-210, DE 305-315, DA 241/Q-DA-453. Anyone cold-starting from origin/mm-research reads round 358's state. This is the branch the register calls the authority."
   r382_the_landing_is_blocked_by_two_other_seats_uncommitted_files: "land_register_row.sh --row exited HELD BEHIND_AND_NOT_FF. The script guards the REGISTER file for dirtiness, but its fast-forward can be blocked by a dirty file anywhere in the tree, and here it is: live/pm_research/da_population_freeze_verify.py and workspace/BE_PROCEDURE.md are BOTH modified-uncommitted AND both differ between HEAD and origin/mm-research, so a merge would have to touch them. I did not merge, did not stash and did not rebase -- rules 21 and 45. Q-MEM-338 (round 358) and Q-MEM-339 (this round) are written and UNLANDED, and only those two survive as artifacts; the rows I had recorded as pending for rounds 359-362 and 372 have no file on disk and I am not claiming them."
   r382_I_re_read_at_the_head_and_the_finding_survived_a_harder_guard: "origin/de-freeze-chain-v2 and origin/be-build-runner had BOTH moved to eb923d3 (12:39:24Z) while I was sweeping, two commits past the c853e2d I drove. I re-drove rather than report from the older ref. The split survives, and DE 313 has since made it SHARPER not softer: ruled_day_set() no longer falls back to PARAMS_REL at all -- it raises RULED_SET_UNRESOLVED, its own comment saying a fallback reported a ruled set the freeze does not name -- while load_params() still reads v29 silently. A new ruled_day_set_read_from() reports the file actually read, computed. So one side of the pair refuses when it cannot resolve and the other never tries."
@@ -27998,6 +28032,54 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r383_falsifier_b_resolves_on_CONTENT_every_data_table_equal:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be173_book_content_diff_20260908.json
+    said: "read the artifact: 20 rows, DATA_DIFFERS ['asm','asm.assembly'], provenance_differs []; allowed_different_set carries 18 receipt-schema names."
+  r383_the_five_differing_keys_are_ALL_STOPWATCHES:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260908_btc__L250ms__FWD1.pkl
+    said: "pickle.load on the landed book and on rebuild_identity/...rebuild.pkl, then printed asm.assembly.score_s_by_head and asm.assembly.stages side by side for both."
+  r383_the_allowed_different_set_does_not_cover_the_book_timings:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be173_asm_assembly_diff_20260908.json
+    said: "compared the diff's differing_keys [bn_cache_clear_s, compose_s, feature_pass_s, score_s_by_head, stages] against the content diff's allowed_different_set: zero overlap."
+  r383_falsifier_a_is_a_PASS_WITH_NO_PROVENANCE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_readonce_falsifier_a_20260907_rehearsal.json
+    said: "enumerated the artifact's keys in python; grep -rl for the protocol string across four working trees, three origin refs and every scratch .py newer than 11:00Z (1766 files) returned nothing."
+  r383_the_PASS_was_written_26_seconds_after_the_comparator_was_edited:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_readonce_falsifier_a_20260907_rehearsal.json
+    said: "git log -1 --format=%ci on 3dbb107 and 5efb8f0; find -printf %TH:%TM:%TSZ on the artifact gave 12:45:47.1369637430Z; the artifact has no time field of its own."
+  r383_the_comparator_revert_is_byte_exact_and_I_hashed_it:
+    prov: CHECKED
+    artifact: live/pm_research/be_score_neutrality.py
+    said: "git show <commit>:<path> | sha256sum for six commits; compared against my own round-377 record of the certificate producer's digest."
+  r383_the_SHARED_TREE_is_the_one_off_the_certified_producer:
+    prov: CHECKED
+    artifact: live/pm_research/be_score_neutrality.py
+    said: "sha256sum on the file in four trees; git status --short on the path (clean); replayed the last 20 commits touching it and found the on-disk bytes at 34ce58e and 68479dd."
+  r383_the_stage_0_refusal_names_a_THIRD_tree:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_de_preflight_matrix.json
+    said: "read the artifact's params field and its 2026-09-08 rows; the params path is an absolute path into wt-de2 naming v31."
+  r383_v31_lives_in_FIVE_worktrees_which_corrects_my_own_round_381:
+    prov: CHECKED
+    artifact: live/pm_research/declarations
+    said: "tested for de_multiday_gate1_params_v31.json in eight worktrees by path; present in wt-deval, wt-de2, wt-fwd, wt-be, wt-rev; absent in ctaNew, wt-de, wt-da."
+  r383_the_supersession_family_is_seven_commits_in_43_minutes:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    said: "git merge-base --is-ancestor pairwise across the seven; git branch -a --contains on each; git log -1 --format=%ci for the stamps."
+  r383_freeze_v13_pins_three_identities_byte_identical_on_three_refs:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_arm_freeze_v13_amendment.json
+    said: "git show <ref>:<path> for three refs and walked the JSON for 64-hex values; separately hashed params_v33.json from origin/be-build-runner and got aeeb818f3bb18c3e."
+  r383_the_rebuild_receipt_counts_its_own_output_path_as_unexpected:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_rebuild_identity_20260908.json
+    said: "read the receipt block: n_leaves_compared 835, allowed_to_differ four producing_code paths, unexpected_differences beginning book.path then book.readback_sha256 then book.sha256."
   r382_origins_state_files_are_twenty_four_MEM_rounds_stale:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
