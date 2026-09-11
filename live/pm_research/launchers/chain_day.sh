@@ -65,6 +65,10 @@ SNAP_SHA=$(sha256sum "$SNAP/data/pm_5min/resolutions.jsonl" | cut -d" " -f1)
 SNAP_N=$(wc -l < "$SNAP/data/pm_5min/resolutions.jsonl")
 echo "$(date -u +%H:%M:%SZ) oracle frozen: $SNAP sha ${SNAP_SHA:0:16} records $SNAP_N"
 echo "$(date -u +%H:%M:%SZ) frozen inputs:$FROZEN"
+# NOT PM_DATA_ROOT: be_heavy_run.sh passes --setenv=PM_DATA_ROOT to every
+# unit and would overwrite it. BE_SNAPSHOT_ROOT is the wrapper's opt-in.
+export BE_SNAPSHOT_ROOT="$SNAP"
+export DE_EXPECT_SNAPSHOT_ROOT="$SNAP"
 export PM_DATA_ROOT="$SNAP"
 export BE_WORKTREE="$TREE" DE_VALUATION_EXPECTED_TREE="$TREE"
 cd "$TREE/live/pm_research" || exit 2
@@ -123,6 +127,17 @@ out.mkdir(parents=True, exist_ok=True)
     json.dumps(rec, indent=1))
 print("  launch provenance:", rec["launcher_sha256"][:16], head[:12])
 PYL
+
+# DRIVE THE REAL PATH before offering: a probe THROUGH the wrapper, on its
+# own lock, refuses VALUATION_DID_NOT_SEE_SNAPSHOT_ROOT in seconds if the
+# payload would read the live files.
+BE_HEAVY_LOCK=/tmp/de_snap_${compact}.lock bash be_heavy_run.sh \
+  "deSNAP${compact}" de_snapshot_probe.py >/dev/null 2>&1
+while :; do sub=$(systemctl --user show "deSNAP${compact}" -p SubState --value 2>/dev/null)
+  case "$sub" in exited|dead|failed|"") break ;; esac; sleep 3; done
+prc=$(systemctl --user show "deSNAP${compact}" -p ExecMainStatus --value 2>/dev/null)
+[ "$prc" = "0" ] || { echo "REFUSED VALUATION_DID_NOT_SEE_SNAPSHOT_ROOT (probe rc=$prc)"; exit 7; }
+echo "$(date -u +%H:%M:%SZ) snapshot proven on the REAL path (probe rc=0)"
 
 REC=/home/yuqing/ctaNew/data/pm_5min/derived/fwd_v2/p003_de_chain_launch_${compact}.json
 [ -f "$REC" ] || { echo "REFUSED CHAIN_LAUNCH_RECORD_NOT_WRITTEN: no provenance, no offer"; exit 6; }

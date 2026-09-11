@@ -454,6 +454,13 @@ if [ "${1:-}" = "--poll" ]; then
   exit 1
 fi
 
+# OPT-IN SNAPSHOT ROOT. The wrapper passes --setenv=PM_DATA_ROOT to every
+# unit, which SILENTLY OVERWROTE a caller's own export -- a chain that
+# exported PM_DATA_ROOT to a frozen snapshot still had its payload launched
+# against the LIVE repo. Callers now opt in with BE_SNAPSHOT_ROOT; unset,
+# the behaviour is exactly as before, so BE's builds are unaffected.
+echo "PM_DATA_ROOT for this unit: ${BE_SNAPSHOT_ROOT:-$REPO}" \
+     "($([ -n "${BE_SNAPSHOT_ROOT:-}" ] && echo SNAPSHOT || echo live-repo))" >&2
 UNIT="${1:?usage: be_heavy_run.sh <unit> <module.py> [args...]}"; shift
 MOD="${1:?usage: be_heavy_run.sh <unit> <module.py> [args...]}"; shift
 SELF="$(readlink -f "$0")"
@@ -516,7 +523,8 @@ exec systemd-run --user --unit="$UNIT" --slice=research.slice \
   -p StandardOutput=append:"$OUTF" \
   --setenv=BE_RECORD="$REC" \
   --setenv=BE_REFUSAL_FILE="${BE_REFUSAL_FILE:-$REPO/data/pm_5min/derived/be_heavy_run_refusal_${UNIT}.txt}" \
-  --setenv=PM_DATA_ROOT="$REPO" \
+  --setenv=PM_DATA_ROOT="${BE_SNAPSHOT_ROOT:-$REPO}" \
+  --setenv=DE_EXPECT_SNAPSHOT_ROOT="${DE_EXPECT_SNAPSHOT_ROOT:-}" \
   --setenv=BE_HEAVY_LOCK="$LOCK" \
   --working-directory="$WT" \
   -- "$SELF" --inner --lock "$LOCK" "$PY" "$TARGET" "$@"
