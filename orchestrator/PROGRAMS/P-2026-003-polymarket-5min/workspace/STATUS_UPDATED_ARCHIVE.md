@@ -23231,3 +23231,25 @@ generation and the window went 4 → 3. Nothing rewritten.
   declared refusal with NO PRODUCER -- is a NOTE UNDER RULE 15, not a rule 45, because it
   is the same relation read from the other end. tip b217d6b)
 ```
+
+## Batch 338 (rotated by MEM round 356, 2026-09-11T03:36:08Z)
+
+```
+  2026-09-11T03:17:38Z (MEM ROUND 353 -- THE BUILD COMMIT MOVED FOR THE WHOLE PIPELINE. USER RULING:
+  build AND valuation, evaluator, null harness, scorer and day-run path ALL from 7ed5a90 --
+  the arms-pin carve-out is GONE, no adbebf9, no 941e688. I verified the ancestry and
+  HASHED all three declared digests: they match EXACTLY. AND 7ed5a90 IS MY OWN ROUND-352
+  COMMIT, chosen for its ANCESTRY not its content, so a reader opening it finds protocol
+  rules and no code -- recorded because it reads as a defect and is not. THE LIMIT, which
+  must sit ON THE ARTIFACT: the forward test runs on SCORING BYTES THE SCREEN NEVER RAN ON
+  -- consumed books built with 73a22121f67b, the forward pipeline with 2d31a80b5ae5, both
+  hashed by me -- while NO parameter, threshold, theta, latency, protection, repost, null
+  or decision rule changed. 'THE FREEZE MOVED' MUST NOT READ AS 'THE ARMS MOVED.' A BUILD
+  FAILED AT 21 MINUTES FROM THE WRONG TREE: be_rule22 caught the head MOVING under it and
+  saved a book that would have looked valid with the wrong provenance -- but NOTHING CAUGHT
+  STARTING FROM THE WRONG HEAD, and that guard does not exist yet. 09-07 STANDS: the
+  unsealed numbers are for the RETRACTED policy, the traceless residual is equally true of
+  09-08..09-11, and the screen failed BOTH arms -- population 09-07..09-13, N=7. PROMOTE
+  REV'S RULE: a post-hoc choice is FATAL WHEN ANTI-CONSERVATIVE, SURVIVABLE WITH DISCLOSURE
+  WHEN CONSERVATIVE. And the real exposure is the 69, not 09-07. tip 0178ea4)
+```
