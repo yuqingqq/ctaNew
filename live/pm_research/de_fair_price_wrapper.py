@@ -59,6 +59,11 @@ INPUT_MALFORMED = "INPUT_MALFORMED"
 ESTIMATOR_REFUSED = "ESTIMATOR_REFUSED"
 ADMISSIBILITY_DIVERGED = "C1_ADMISSIBILITY_DIVERGED_FROM_IDENTITY"
 TIMESTAMPS_COLLAPSED = "SOURCE_AND_LOCAL_KNOWLEDGE_COLLAPSED"
+#: THE INVERTED CASE IS A DIFFERENT FAULT AND GETS ITS OWN NAME. REVIEW
+#: 199: the collapsed name could only fire on `local < source`, so the
+#: one case it is named for -- `local == source` -- passed. A name that
+#: cannot fire on its own case is rule 15's defect.
+KNOWLEDGE_PREDATES_EVENT = "LOCAL_KNOWLEDGE_PREDATES_ITS_SOURCE_EVENT"
 OUTCOME_MISMATCH = "TOKEN_OR_OUTCOME_IDENTITY_MISMATCH"
 #: REVIEW 192: the estimand has TWO REGIMES and a wrapper must not assume
 #: one. Before T-60 the realized past is IRRELEVANT and `partial` must be
@@ -90,6 +95,11 @@ class Stamped:
     source_as_of: float | None        # when the SOURCE says it happened
     local_receipt: float | None       # when THIS process learned it
     source: str                       # which feed said so
+    #: EQUALITY IS A DECLARATION, NEVER AN ACCIDENT. A caller whose feed
+    #: genuinely stamps both clocks identically says so here; a caller who
+    #: passed one clock twice does not, and is refused. The distinction is
+    #: the whole of §5 gate 3's surviving clause.
+    equal_clocks_declared: bool = False
 
     def __post_init__(self) -> None:
         if not self.source:
@@ -105,11 +115,22 @@ class Stamped:
         if (self.source_as_of is not None and self.local_receipt is not None
                 and self.local_receipt < self.source_as_of):
             raise WrapperRefused(
-                f"REFUSED {TIMESTAMPS_COLLAPSED}: local receipt "
+                f"REFUSED {KNOWLEDGE_PREDATES_EVENT}: local receipt "
                 f"{self.local_receipt} precedes the source event "
                 f"{self.source_as_of} on {self.source}. Knowledge cannot "
                 f"predate the event it is about; a pair in this order is a "
-                f"collapsed or swapped clock, not a fast feed.")
+                f"swapped clock, not a fast feed.")
+        if (self.source_as_of is not None and self.local_receipt is not None
+                and self.local_receipt == self.source_as_of
+                and not self.equal_clocks_declared):
+            raise WrapperRefused(
+                f"REFUSED {TIMESTAMPS_COLLAPSED}: {self.source} carries "
+                f"the SAME number for the source event and the local "
+                f"receipt ({self.source_as_of}). That is indistinguishable "
+                f"from having one clock and using it twice, which §3 names "
+                f"as the blocker this type exists to make impossible. A "
+                f"feed that genuinely stamps both identically must say so "
+                f"with `equal_clocks_declared=True`, which is recorded.")
 
     @property
     def transport_s(self) -> float | None:
@@ -611,14 +632,60 @@ def falsify() -> int:
     ck("complementing a DOWN record refuses -- one side is the source",
        wrong_side)
 
-    try:
-        Stamped(value=1.0, source_as_of=1000.0, local_receipt=999.0,
-                source="x")
-        collapsed = False
-    except WrapperRefused:
-        collapsed = True
-    ck("knowledge that PREDATES its own event refuses at the hop",
-       collapsed)
+    # --- REVIEW 199: THE CLAUSE THE GATE EXISTS FOR ---------------------
+    # The collapsed name could only fire on `local < source`, so the one
+    # case it is NAMED for -- `local == source` -- passed. Driven all four
+    # ways now, because a name that cannot fire on its own case is rule
+    # 15's defect and the two faults are not the same fault.
+    def stamped(src, loc, **kw):
+        try:
+            Stamped(value=1.0, source_as_of=src, local_receipt=loc,
+                    source="x", **kw)
+            return ""
+        except WrapperRefused as exc:
+            return str(exc)
+    collapsed = stamped(1000.0, 1000.0)
+    inverted = stamped(1000.0, 999.0)
+    declared = stamped(1000.0, 1000.0, equal_clocks_declared=True)
+    ordinary = stamped(1000.0, 1000.2)
+    ck("a COLLAPSED pair (source == local) REFUSES -- the case the name "
+       "is for",
+       TIMESTAMPS_COLLAPSED in collapsed,
+       collapsed[:58] or "ADMITTED ONE CLOCK USED TWICE")
+    ck("an INVERTED pair refuses under its OWN name, not the collapsed one",
+       KNOWLEDGE_PREDATES_EVENT in inverted
+       and TIMESTAMPS_COLLAPSED not in inverted,
+       inverted[:58] or "ADMITTED KNOWLEDGE BEFORE ITS EVENT")
+    ck("  and equality is admissible only when DECLARED, never by accident",
+       declared == "" and ordinary == "",
+       "equal_clocks_declared=True admits; an ordinary pair admits")
+
+    # --- REVIEW 199: the three single-use causes, each now driven --------
+    _ref = Stamped(60000.0, 900.0, 905.0, FP.CHAINLINK_REF_SOURCE)
+    _spot = Stamped(60100.0, 1000.0, 1000.1, FP.BN_BOOKTICKER)
+    _sig = Stamped(0.0004, 999.0, 999.5, "binance_1s_rv")
+    malformed = c2_bn_bookticker(
+        "btc", W, "UP", decision_local_time=1000.5,
+        decision_recv_ns=ERA_FLOOR_RECV_NS + 1, reference=_ref,
+        spot=Stamped(float("nan"), 1000.0, 1000.1, FP.BN_BOOKTICKER),
+        sigma=_sig, partial=None, t=1000.0, T=1300.0,
+        sigma_lookback_s=1800.0)
+    ck("a MALFORMED input is refused by its own cause, not folded into "
+       "'missing'",
+       malformed.cause == INPUT_MALFORMED
+       and malformed.price.status == FP.NON_FINITE_SIDE,
+       f"{malformed.cause}/{malformed.price.status}")
+    refused = c2_bn_bookticker(
+        "btc", W, "UP", decision_local_time=1000.5,
+        decision_recv_ns=ERA_FLOOR_RECV_NS + 1, reference=_ref,
+        spot=Stamped(60100.0, 1000.0, 1000.1, "some_other_feed"),
+        sigma=_sig, partial=None, t=1000.0, T=1300.0,
+        sigma_lookback_s=1800.0)
+    ck("the ESTIMATOR's own refusal is carried as ESTIMATOR_REFUSED with "
+       "its text",
+       refused.cause == ESTIMATOR_REFUSED
+       and "is not" in refused.price.detail,
+       refused.price.detail[:72])
 
     counter = FallbackCounter()
     used = policy_value(c2, ident, counter)
