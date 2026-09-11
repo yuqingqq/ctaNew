@@ -28270,7 +28270,7 @@ flag_provenance:
     said: "read G_so_far = len(days_scored) at :653 and the duplicate guard at :651-652; the running_tally fields are assembled from it at :668-671."
   r393_I_CHECKED_THE_G_so_far_LITERAL_BEFORE_FILING_IT_AS_A_HAZARD:
     prov: CHECKED
-    artifact: live/pm_research/de_revaluation_emit.py
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/de_revaluation_emit.py
     said: "read the cell at :509-519: the two-day map is a literal argument to emit_single_book_day, so the assertion is on the fixture and not on whatever days exist on disk."
   r393_each_descriptive_day_needs_its_own_point_estimate_receipt:
     prov: CHECKED
