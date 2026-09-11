@@ -259,6 +259,94 @@ def emit(day_one_D: dict, revalued_D: dict, per_window_by_arm: dict,
     return out
 
 
+SUPERSEDED_GLOB = "be_daybook_{day}_btc__L250ms__*superseded*.pkl"
+NOT_APPLICABLE = "NOT_APPLICABLE_SINGLE_BOOK_NO_SUPERSEDED_PAIR"
+
+
+def superseded_pair_for(day: str, derived=None) -> dict:
+    """Is there a PAIR to difference? A PREDICATE ON THE PAIR'S PRESENCE.
+
+    The delta-D decomposition is a DAY-ONE instrument only by accident of
+    history: 09-07 is the day that got rebuilt. What actually decides it is
+    whether a SUPERSEDED book sits beside the live one. If a later day ever
+    gets rebuilt, the pair exists and the decomposition runs -- so the test
+    is the glob, never the date.
+    """
+    derived = Path(derived or "/home/yuqing/ctaNew/data/pm_5min/derived")
+    compact = day.replace("-", "")
+    pattern = SUPERSEDED_GLOB.format(day=compact)
+    old = sorted(derived.glob(pattern))
+    live = derived / f"be_daybook_{compact}_btc__L250ms__FWD1.pkl"
+    have = bool(old) and live.is_file()
+    return {"day": day, "glob_searched": str(derived / pattern),
+            "n_superseded_found": len(old),
+            "superseded": [str(x) for x in old],
+            "live_book": str(live) if live.is_file() else None,
+            "PAIR_EXISTS": have,
+            "TRIPWIRE_STATUS": ("DELTA_D_DECOMPOSITION_RUNS" if have
+                                else NOT_APPLICABLE),
+            "why": ("a superseded book sits beside the live one, so the "
+                    "change between them is measurable"
+                    if have else
+                    "one book and no superseded pair: there is no DELTA_D "
+                    "to decompose. An empty table here is NOT a finding -- "
+                    "it is the instrument asked a question it cannot "
+                    "answer, so it reports NOT_APPLICABLE and never HALTs.")}
+
+
+def unconditional_window_table(day: str, derived=None,
+                               declaration=None) -> list:
+    """THE DAY'S GAP WINDOWS WITH THEIR SECONDS -- no pair required.
+
+    This part is about the day's TAPE, not about a pair of books, and it is
+    what lets a reader see where the day's gaps sit even when no delta-D
+    exists."""
+    spine = spine_for_day(day, declaration=declaration, derived=derived)
+    return [{"window_start": w.get("window_start"), "utc": w.get("utc"),
+             "gap_seconds": w.get("gap_seconds"),
+             "n_gap_intervals": w.get("n_gap_intervals"),
+             "share_of_day_gap_time": w.get("share_of_day_gap_time")}
+            for w in spine]
+
+
+def running_tally(per_day_D: dict, n_declared: int, sided: int = 2) -> dict:
+    """The day-cluster position so far -- COMPUTED, never typed (rule 10)."""
+    import de_forward_evaluator as EV
+    G = len(per_day_D)
+    thr = EV.ALPHA / EV.M_FAMILY
+    return {"G_so_far": G, "G_declared": n_declared,
+            "days_remaining": n_declared - G,
+            "negative_or_zero_days": [d for d, v in per_day_D.items()
+                                      if v <= 0],
+            "attainable_minimum_p_at_G_declared":
+                EV.day_sign_p(n_declared, n_declared, sided),
+            "tolerance_negative_days_at_G_declared":
+                EV.tolerance(n_declared, thr, sided),
+            "computed_not_typed": True}
+
+
+def emit_single_book_day(day: str, per_arm_D: dict, all_days_D: dict,
+                         n_declared: int, derived=None,
+                         declaration=None) -> dict:
+    """The emit for a day with ONE book: (a) through (d) of DE 274."""
+    pair = superseded_pair_for(day, derived)
+    if pair["PAIR_EXISTS"]:
+        raise RevaluationEmitRefused(
+            f"REFUSED {NO_TABLE}: {day} HAS a superseded pair, so the "
+            f"delta-D decomposition applies and this single-book emit "
+            f"would silently skip it.")
+    return {"protocol": PROTOCOL, "day": day,
+            "per_window_table_unconditional":
+                unconditional_window_table(day, derived, declaration),
+            "TRIPWIRE_STATUS": pair["TRIPWIRE_STATUS"],
+            "tripwire_pair_search": pair,
+            "per_arm_D_cents": per_arm_D,
+            "running_tally": running_tally(all_days_D, n_declared),
+            "reference_levels_cents": {
+                "interval_scoped": REFERENCE_INTERVAL_SCOPED_CENTS,
+                "window_scoped": REFERENCE_WINDOW_SCOPED_CENTS}}
+
+
 def falsify() -> int:
     cells = ok = 0
 
@@ -359,6 +447,58 @@ def falsify() -> int:
         ck("a table one row SHORT of its spine REFUSES", False)
     except RevaluationEmitRefused as e:
         ck("a table one row SHORT of its spine REFUSES", ROW_COUNT in str(e))
+    # --- DE 274: the pair PREDICATE, not the date ----------------------
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as td:
+        d = Path(td)
+        (d / "be_daybook_20260908_btc__L250ms__FWD1.pkl").touch()
+        (d / "be137_gap_windows_20260908.json").write_text(json.dumps(
+            {"gap_bearing_window_starts": [1788900000 + i * 300
+                                           for i in range(43)]}))
+        absent = superseded_pair_for("2026-09-08", d)
+        ck("09-08 shape: NO superseded pair -> NOT_APPLICABLE, not a HALT",
+           absent["TRIPWIRE_STATUS"] == NOT_APPLICABLE
+           and absent["PAIR_EXISTS"] is False)
+        ck("  and it records the glob it searched",
+           "superseded" in absent["glob_searched"])
+        e = emit_single_book_day("2026-09-08", {"A": 5.0},
+                                 {"2026-09-07": -11017.71,
+                                  "2026-09-08": 5.0}, 7, derived=d)
+        ck("  the emit carries the UNCONDITIONAL window table anyway",
+           len(e["per_window_table_unconditional"]) == 43)
+        ck("  and a running tally computed at G=2 of 7, tolerance 0",
+           e["running_tally"]["G_so_far"] == 2
+           and e["running_tally"]["days_remaining"] == 5
+           and e["running_tally"]["tolerance_negative_days_at_G_declared"]
+           == 0)
+        # STRUCTURAL, not a substring: the first version of this cell
+        # matched the word HALT inside my own explanatory prose and failed
+        # a correct emit. The property is "no HALT field is set", not "the
+        # letters do not appear".
+        def _halts(o):
+            if isinstance(o, dict):
+                if o.get("HALT") is True:
+                    return True
+                return any(_halts(v) for v in o.values())
+            if isinstance(o, list):
+                return any(_halts(v) for v in o)
+            return False
+        ck("  and never HALTs (no HALT field set anywhere)", not _halts(e))
+        # a FAKE superseded book makes the pair exist -> decomposition runs
+        (d / "be_daybook_20260908_btc__L250ms__FWD1.superseded_X.pkl").touch()
+        present = superseded_pair_for("2026-09-08", d)
+        ck("a superseded book APPEARS -> the decomposition runs",
+           present["PAIR_EXISTS"]
+           and present["TRIPWIRE_STATUS"] == "DELTA_D_DECOMPOSITION_RUNS")
+        try:
+            emit_single_book_day("2026-09-08", {"A": 5.0}, {"d": 1.0}, 7,
+                                 derived=d)
+            ck("  and the single-book emit REFUSES rather than skipping it",
+               False)
+        except RevaluationEmitRefused:
+            ck("  and the single-book emit REFUSES rather than skipping it",
+               True)
+
     print(f"\n{ok}/{cells} cells pass")
     return 0 if ok == cells else 1
 
