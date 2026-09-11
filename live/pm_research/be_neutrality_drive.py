@@ -50,8 +50,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from live.pm_research.be_score_neutrality import (  # noqa: E402
-    NeutralityRefused, KEYS_DIFFER, _entries, arm_heads, certify, gen_max,
-    load, n_generations_in_book,
+    NOT_COMPARABLE, NeutralityRefused, KEYS_DIFFER, _entries, arm_heads,
+    certify, gen_max, load, n_generations_in_book,
 )
 
 DERIVED = Path("data/pm_5min/derived")
@@ -145,12 +145,23 @@ def main() -> int:
         refusal = str(exc)
     note("cell A: certify REFUSES two books the pipeline made differ",
          refusal is not None)
-    note("cell A: it refuses under KEYS_DIFFER, not some other name",
-         refusal is not None and KEYS_DIFFER in refusal, refusal)
+    # DRIVEN AND CORRECTED (BE 133). I expected KEYS_DIFFER -- the per-arm
+    # comparison of SCORED generations. The comparator refuses EARLIER, under
+    # NOT_COMPARABLE, because the two books' REFERENCE generation identities
+    # differ: 9 only in EV20. That guard is STRICTER and it is right -- two
+    # books whose references differ are not the same experiment, and comparing
+    # their scored subsets would compare different populations. So KEYS_DIFFER
+    # is UNREACHABLE for this pair, and the count the refusal names is the
+    # REFERENCE delta (9), not the covered delta (2) my earlier form expected.
+    note("cell A: it refuses under NOT_COMPARABLE -- the reference guard, "
+         "which fires before the per-arm one",
+         refusal is not None and NOT_COMPARABLE in refusal, refusal)
+    note("cell A: KEYS_DIFFER is unreachable for this pair, and that is the "
+         "stricter guard working, not a gap",
+         refusal is not None and KEYS_DIFFER not in refusal)
     # The refusal's OWN numbers, parsed, against the RECEIPTS' covered delta.
     # The expectation is derived from the producers' `n_covered`, never typed.
-    m = re.search(r"has (\d+) generation\(s\) only in old and (\d+) only in new",
-                  refusal or "")
+    m = re.search(r"(\d+) only in old and (\d+) only in new", refusal or "")
     n_only_old = int(m.group(1)) if m else None
     n_only_new = int(m.group(2)) if m else None
     head0 = arms_for_expectation[sorted(arms_for_expectation)[0]]["head"]
@@ -158,10 +169,12 @@ def main() -> int:
                      - receipt_covered(NEW_REV, head0))
     note("cell A: the refusal states its own counts in a readable form",
          m is not None, refusal)
-    note("cell A: those counts NET to the COVERED delta in the receipts",
-         m is not None and (n_only_old - n_only_new) == covered_delta,
+    reference_delta = g_old_receipt - g_new_receipt
+    note("cell A: those counts NET to the REFERENCE delta in the receipts",
+         m is not None and (n_only_old - n_only_new) == reference_delta,
          f"only_old={n_only_old} only_new={n_only_new} "
-         f"receipts covered delta={covered_delta}")
+         f"receipts reference delta={reference_delta} "
+         f"(covered delta is {covered_delta} and is NOT what this guard names)")
     result["cell_A_refusal"] = refusal
     result["cell_A_counts"] = {
         "n_only_old": n_only_old, "n_only_new": n_only_new,

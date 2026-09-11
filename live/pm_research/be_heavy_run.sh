@@ -374,7 +374,12 @@ if [ "${1:-}" = "--poll" ]; then
     # the next reading would be the PREVIOUS attempt's, unchanged.
     systemctl --user reset-failed "$PUNIT.service" >/dev/null 2>&1
     REC="$REPO/data/pm_5min/derived/be_heavy_run_record_${PUNIT}.jsonl"
-    MARK=$(wc -l < "$REC" 2>/dev/null || echo 0)
+    # `2>/dev/null` binds to `wc`, but the `< "$REC"` redirection is
+    # performed by the SHELL, so a missing record printed "No such file
+    # or directory" on stderr for every FIRST launch of a new unit name
+    # -- a clean launch that reads as broken. MARK was always correctly
+    # 0. Grouped so the group's redirect catches the shell's own error.
+    MARK=$( { wc -l < "$REC"; } 2>/dev/null || echo 0)
     "$SELFP" "$PUNIT" "$@" >/dev/null 2>&1
     # SETTLE ON THE RECORD, NOT ON ActiveState. Measured 15:03:14Z on the
     # real lock: the poll read `active/running` and called it LOCK TAKEN in
