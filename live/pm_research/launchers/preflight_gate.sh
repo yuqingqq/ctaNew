@@ -5,6 +5,7 @@
 # a DIFFERENT file. Two chains were mid-flight with offsets landing inside
 # a word. This lives in its own file so only FUTURE launches pick it up.
 set -u
+cd /home/yuqing/ctaNew-wt-deval || exit 2   # DECL is tree-relative
 day="${1:?usage: preflight_gate.sh <YYYY-MM-DD> <certificate>}"
 cert="${2:?}"
 /home/yuqing/pricer-sol/venv/bin/python3 \

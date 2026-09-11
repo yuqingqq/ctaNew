@@ -296,6 +296,16 @@ def main(argv=None) -> int:
               f"inputs that were never resolved reads exactly like a "
               f"matrix of real refusals.", file=sys.stderr)
         return 2
+    # DECL inside the PINNED comparator is a RELATIVE path, so
+    # frozen_params resolves it against the CURRENT WORKING DIRECTORY.
+    # Launched from systemd (cwd=/) the matrix reported
+    # PARAMS_ARE_NOT_THE_FROZEN_PARAMS -- a refusal that does not exist --
+    # while the same command from the tree passed. Same class as DE 276:
+    # a plausible verdict produced by an invocation that could not resolve
+    # its inputs. The matrix now anchors itself.
+    import os
+    os.chdir(tree)
+    print(f"  chdir            {tree.resolve()}  (DECL is tree-relative)")
     days = ([d if "-" in d else f"{d[:4]}-{d[4:6]}-{d[6:]}"
              for d in a.days] if a.days else DAYS)
     m = matrix(cert, params, days=days, derived=derived)
