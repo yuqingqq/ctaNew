@@ -20,7 +20,9 @@ Usage:  de_day_record.py --day 2026-09-08 --cells <dir> [--out <path>]
 from __future__ import annotations
 import argparse
 import hashlib
+import hashlib
 import json
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -40,6 +42,15 @@ NO_STAGE0 = "STAGE0_VERDICT_ABSENT"
 #: source was never verified -- and my assembler stepped past that guard by
 #: emitting the record without the disclosure at all. A record now carries
 #: either the verification or this status; it cannot carry neither.
+#: THE ASSEMBLER MUST BE THE LANDED ASSEMBLER. The chain executes this
+#: file from wt-deval, and wt-deval lagged the ref by four hours -- so
+#: every chain-assembled record carried an OLD assembler's output and both
+#: 09-09 and 09-10 landed with NO `settlement_source` at all. DE 355's
+#: guarantee ("it must be impossible for a record to exist without either
+#: the verification or the status") was true of the MODULE and false of
+#: the SYSTEM, because a stale tree makes a module's guarantees local to
+#: itself.
+STALE_ASSEMBLER = "DAY_RECORD_ASSEMBLER_IS_NOT_THE_LANDED_BYTES"
 NO_VERIFIED_WINNER_RECEIPT = "NO_VERIFIED_WINNER_RECEIPT"
 NO_DISCLOSURE = "SETTLEMENT_SOURCE_DISCLOSURE_ABSENT"
 #: DE 357 / DA 269 (USER ruling): the receipt is DAY-SLICE-ADDRESSED. The
@@ -127,6 +138,36 @@ def stage0_evidence(day: str, derived: Path = DERIVED,
         f"REFUSED {NO_STAGE0}: no structured verdict and no log line for "
         f"{day}. A gate whose verdict is recorded nowhere is "
         f"indistinguishable from a gate that never ran.")
+
+
+def assert_assembler_is_landed(ref: str = "origin/de-freeze-chain-v2",
+                               path: Path = None) -> dict:
+    """THIS FILE'S BYTES, AGAINST THE BYTES ON THE REF.
+
+    Not a version, not a commit: the digest of the file about to write a
+    record, compared with the digest of the same path on the ref. A run
+    from a tree that lagged the ref is how two records reached disk
+    without the disclosure that was supposed to be impossible to omit.
+    """
+    me = Path(path or __file__).resolve()
+    rel = f"live/pm_research/{me.name}"
+    mine = hashlib.sha256(me.read_bytes()).hexdigest()
+    r = subprocess.run(["git", "-C", str(me.parents[2]), "show",
+                        f"{ref}:{rel}"], capture_output=True)
+    if r.returncode != 0:
+        raise SystemExit(
+            f"REFUSED {STALE_ASSEMBLER}: {rel} is not readable on {ref}, "
+            f"so there is nothing to compare these bytes with.")
+    theirs = hashlib.sha256(r.stdout).hexdigest()
+    if mine != theirs:
+        raise SystemExit(
+            f"REFUSED {STALE_ASSEMBLER}: the assembler running from "
+            f"{me.parents[2]} digests to {mine[:16]} and {ref} carries "
+            f"{theirs[:16]}. A record written by a stale assembler omits "
+            f"whatever the landed one adds -- 09-09 and 09-10 reached "
+            f"disk with no `settlement_source` for exactly this reason.")
+    return {"assembler": str(me), "sha256": mine[:16], "ref": ref,
+            "is_the_landed_bytes": True}
 
 
 def day_records(day: str, derived: Path = DERIVED) -> list:
@@ -1173,6 +1214,28 @@ def falsify() -> int:
        ", ".join(f"{_d}:{walk_supersession(_d)['total']}"
                  for _d in ("2026-09-07", "2026-09-08", "2026-09-09")))
 
+    # --- THE ASSEMBLER'S OWN BYTES, BOTH WAYS -------------------------
+    with tempfile.TemporaryDirectory() as td:
+        stale = Path(td) / "de_day_record.py"
+        stale.write_text(Path(__file__).read_text() + "\n# one byte more\n")
+        try:
+            assert_assembler_is_landed(path=stale)
+            stale_msg = ""
+        except SystemExit as exc:
+            stale_msg = str(exc)
+    ck("an assembler whose bytes are NOT the landed ones REFUSES",
+       STALE_ASSEMBLER in stale_msg,
+       stale_msg[:64] or "WROTE A RECORD FROM STALE BYTES")
+    try:
+        landed_now = assert_assembler_is_landed()
+        landed_msg = ""
+    except SystemExit as exc:
+        landed_now, landed_msg = None, str(exc)
+    ck("  and the assembler in THIS tree is the landed one, or says which "
+       "it is",
+       landed_now is not None or STALE_ASSEMBLER in landed_msg,
+       (landed_now or {}).get("sha256") or landed_msg[:64])
+
     # --- DE 357: THE DAY SLICE IS THE KEY, BOTH DIRECTIONS ------------
     import calendar as _cal
     with tempfile.TemporaryDirectory() as td:
@@ -1408,6 +1471,7 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     if a.falsify:
         return falsify()
+    landed = assert_assembler_is_landed()
     rec = build(a.day, Path(a.cells), a.n_declared,
                 log=Path(a.log) if a.log else None,
                 reproduction_of=(Path(a.reproduction_of)
@@ -1441,6 +1505,7 @@ def main(argv=None) -> int:
                         "without editing a landed artifact"}
                 for f in extra]
     # IS_A_DAY_RESULT IS THE LINEAGE BLOCK'S ANSWER, not a second opinion.
+    rec["assembler"] = landed
     rec["IS_A_DAY_RESULT"] = (
         rec["book_lineage"]["the_days_result"] == "THIS RECORD"
         if not a.reproduction_of else False)
