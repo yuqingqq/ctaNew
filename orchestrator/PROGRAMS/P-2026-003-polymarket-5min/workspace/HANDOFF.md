@@ -1,3 +1,92 @@
+# READ FIRST — round 366 (MEM, 2026-09-11T07:13:29Z, tip `1a5feaf`)
+
+# ✅ THE FALSIFIER PASSED — **the user's amendment stands unconditionally**
+
+`deFMP0907f40`, 07:09:43Z, rc=0, **with V2 genuinely loaded** — *the part that
+failed last time and reported success.*
+
+```
+observed_D_MOVED   False      both arms
+CONDVALUE  V1 = V2 = −11,017.712006c
+HAZARD     V1 = V2 =  +5,256.176844c
+baseline delta 0.0
+```
+
+**DA 225's prediction that `REFERENCE_FILLS` is a pass-through held exactly.**
+
+**And I differenced those against my own round-359 record: they agree to
+0.0120c and 0.0232c** — ***which is my own rounding and nothing else.*** *So the
+number the amendment rests on is the same number day one produced, to the
+micro-cent — not a near-miss that happens to round the same way.*
+
+# 🆕 THE ROBUSTNESS LEG EXISTS FOR THE FIRST TIME
+
+| arm | leg D | arm total | vs primary | sign |
+|---|---|---|---|---|
+| CONDVALUE | **−13,459.5c** | −17,897.3c | **worse** | same |
+| HAZARD | **+5,598.9c** | +1,161.1c | **better** | same |
+
+**`sign_reversal: False` on both.** *So it does **not** block HAZARD's promotion,
+and it **confirms CONDVALUE's negative day under both fill assumptions*** — the
+stronger of the two things it could have done.
+
+## 🔗 And both legs reconcile to the baseline I have held for seven rounds
+
+`arm_total − D` gives **−4,437.8** on **each** arm, against the
+**−4,437.7c** zero-model-cancel baseline I recorded at round 359 — **0.1c of
+rounding.**
+
+> ***That is not a restatement of the same number. Two new quantities closed onto
+> an old one.***
+
+## 🪞 And I caught my own comparator before it reached a file
+
+My first pass compared the legs **by magnitude** and called HAZARD's +5,598.9
+*"worse"* than +5,256.2. **For an arm whose favourable direction is positive,
+that is backwards.**
+
+> ***|D| is the right statistic for EXTREMITY and the wrong one for
+> BETTER-OR-WORSE when the sign is favourable*** — the same confusion that
+> produced the day-one framing error at round 359, **in my own output, caught
+> this time before it was written down.**
+
+# 🧪 THE TRIPWIRE TABLE IS 27 ROWS **BY DRIVE**
+
+15:55's rows are **byte-identical across eras** while **two gap-seen controls
+differ** (14:45 + one more). ***The instrument was shown to fire where it should
+before being trusted where it is silent*** — the two-sided form. The 28th window
+— the 1.553 s one I converted last round — goes to the census with the status
+**`GAP_RECORDED_NOT_SEEN_BY_REPLAY`**: *a named status, not a dropped row.*
+
+**And a rule-4 finding was escalated by the seat that found it:** **two recorded
+gaps on 09-07 are invisible to the replay and were counted NOWHERE.** BE
+escalated rather than absorbing it; the census is restated on wall-clock
+attribution **as a separate artifact**; and the `flow_intensity` fix is **deferred
+until after 09-13's book** — *a deferral whose reason is the pin, not convenience.*
+
+# 🚧 SEVEN REV FILINGS ARE STRANDED — **same blockage as mine, from the other side**
+
+REVIEWs 178–184 (`0c1f136`, `066c800`, `dfe3ef5`, `215e3b9`, `61daa82`,
+`33e6745`, `8310428`) plus 142 — **none in origin**, because **the shared tree
+was dirty at every attempt** (`BE_PROCEDURE.md`, BE's in-progress BE 139 edit).
+
+> ***Not a divergence problem but a CLEANLINESS problem — and the lander refuses
+> on both.*** *That is the same wall that has held my rows since round 358, seen
+> from REV's side.*
+
+**183 and 184 must land together**, because **184 withdraws 183's headline.**
+*Landing 183 alone publishes an over-claim its author has already retracted;
+landing 184 alone publishes a withdrawal of something absent from the record.*
+**Rule 13's in-band supersession requires the superseded thing to be there.**
+
+# 📼 TAPE LANDED, AND THE READING RULES ARE BEING WRITTEN BLIND
+
+1,081,029,833 B, rc=0, peak 7.62 GB, receipt `.v2.json`. **REV 143 is writing the
+re-valuation's reading rules with zero cells visible** — scoping boundaries,
+aggregate-vs-window firing, sign-change reading, residual size, the ceiling
+sentences. ***Third time this programme has written what may be said before the
+number exists — and the first time for a re-valuation rather than a verdict.***
+
 # READ FIRST — round 365 (MEM, 2026-09-11T07:09:14Z, tip `16e3a0e`)
 
 # ⚠️ THE 25 % TRIPWIRE **COULD NOT FIRE** — struck
