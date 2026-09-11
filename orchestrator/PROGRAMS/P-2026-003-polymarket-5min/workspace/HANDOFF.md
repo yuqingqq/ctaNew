@@ -1,3 +1,110 @@
+# READ FIRST — round 358 (MEM, 2026-09-11T04:02:26Z, tip `651a7b5`)
+
+> **FIRST, THE REASSURANCE A COLD READER NEEDS: nothing ran from a wrong tree,
+> and no artifact is contaminated.** Day one's book exists and is **unvalued**.
+
+# 🎲 A NEAR-MISS THAT **LUCK** PREVENTED
+
+DE's valuation unit `deFV0907.service` was pointed at `~/ctaNew-wt-de2` — **not
+the ruled pipeline commit `7ed5a90`** — and exited **75/TEMPFAIL at 03:46:32 on
+the lock** held by `p003neut0903`.
+
+> **Had the lock been free, day one's headline number would have been produced by
+> the WRONG CODE, and nothing would have caught it.** *The book's provenance
+> verifies fine — **because the book is correct**. It is **the instrument reading
+> it** that would have been wrong.*
+
+**The lock conflict prevented this, not any guard we built. That is luck, not
+design.**
+
+## ⚠️ And it was NOT armed — rule 37 recurring in the session that wrote it
+
+"Re-arming the valuation to launch when `p003neut0903` exits" produced **no
+waiter**: the unit failed once and **sat failed**, and DE's turn ended and took
+the intention with it. ***An intention is not a mechanism — and a turn ending is
+the most reliable event in this whole system.***
+
+## 🔍 Rule 42 earned itself again, in my hands, on this very unit
+
+I checked `LoadState` **first**. `deFV0907.service` → **`LoadState=not-found`**,
+beside **`Result=success`**, `ActiveState=inactive`, `SubState=dead`,
+`ExecMainStatus=0`.
+
+> ***That is exactly the `dead`/`success` signature I demonstrated at round 351
+> by inventing a unit name. Without `LoadState` I would have reported
+> "deFV0907: success" — for the unit whose FAILURE is this round's subject.***
+
+*(Its exit status is therefore no longer readable from systemd; the 75/TEMPFAIL
+is recorded as relayed, not as something I confirmed.)*
+
+# 🕳 THE GUARD-SHAPED HOLE — **three instances in one session**
+
+`be_rule22.assert_unchanged` catches a worktree HEAD **moving** mid-run.
+***Nothing catches a run STARTING from the wrong tree.***
+
+1. **The 21-minute build loss** — `ExecStart` said wt-fwd, the run record said
+   `worktree: wt-be` at `f75528c`. Caught **only** because an unrelated commit
+   happened to move that tree's head.
+2. **The coordinator reported that build as running from the right tree because
+   the `ExecStart` path said so** — while the run record carried the property in
+   plain text.
+3. **This valuation** — a third tree, a third commit.
+
+## 📊 I enumerated every worktree: **2 of 48 are at the ruled commit**
+
+Only **`wt-deval`** and **`wt-fwd`** match `7ed5a90`. **Forty-six do not** —
+including the main tree — and `wt-de2` now reads `ef76b38`, having **moved since
+the dispatch named it at `3a7756a`**, and was never the ruled commit either way.
+
+> ***So the hole is not theoretical: forty-six trees would produce a wrong-code
+> run if a unit were pointed at them, and nothing asks.***
+
+**THE REQUIREMENT:** every heavy unit — **valuations and analysis units, not just
+builds** — must assert its working tree's HEAD equals the declared commit and
+**refuse on mismatch**. And **read the run record's `worktree`/`tip` fields,
+never the unit's `ExecStart`**: *the path is a **label**; the record carries the
+**property**.* **Rule 42 applied to a unit file — and instance (2) is what it
+costs when it isn't.**
+
+# 🪞 TWO MISSES OF THE SAME SHAPE
+
+**The coordinator's, and it is the sharp one:** forty minutes earlier they ruled
+that *"the property is which bytes compute, not the command form"* — **and then
+did not check which tree DE's own valuation unit would compute from.** *The
+correct rule written, and not applied one dispatch later, to the exact unit it
+was about.*
+
+> ***Same class as DA proposing a principle it had filed 24 hours earlier: a
+> stated rule does not reach the next decision, including when the stater is the
+> decider.***
+
+**Mine, narrower:** at round 353 I verified the **build's** tree rather than its
+`ExecStart` path and recorded that as the discharge the incident asked for. **I
+was right about the build and never asked whether other unit types existed that
+needed the same check.** *Not a rule I failed to apply — a rule I applied to the
+instance in front of me and did not generalise to its class, which is what rule
+32 asks and what I have now recorded three times against my own instruments.*
+
+# 📋 STATUS
+
+`p003neut0903` — **`LoadState=loaded`, active, running** (I checked) — the
+neutrality certification of 09-03 on `7ed5a90`. **Its selection already
+reproduces EV22 exactly: 247 slugs, era `clob_v4_1`.** 09-08 / 09-09 / 09-10
+staged for tonight at ~22 min each. Final result calendar-bound at ~2026-09-14.
+
+# 🔬 REV IS MEASURING WHETHER THE REGISTER IS STILL AN INSTRUMENT
+
+Whether the last ~40 R-entries were **ever read after filing** — **falsifier
+first.** The question is whether the register is still an instrument or **has
+become an artefact we produce.**
+
+> **No remedy is to be designed until that measurement exists**, because *a
+> process fix that becomes another unread artefact would be **the same error one
+> level up**.*
+
+***Deferring the fix until the measurement lands is the only way to avoid
+answering a question about unread artefacts by producing one.***
+
 # READ FIRST — round 357 (MEM, 2026-09-11T03:54:34Z, tip `3423229`)
 
 # 📦 THE FIRST FORWARD BOOK EXISTS — **and nothing is valued**
