@@ -67,6 +67,24 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T03:23:28Z (MEM ROUND 354 -- 09-07 IS CLOSED AND THE PIPELINE'S LIMIT IS MEASURED. REVIEW
+  171 (f4b5bd8): 09-07 STANDS IN THE PRIMARY, population FINAL at 09-07..09-13, N=7 -- the
+  coordinator's drop recommendation wrong, the USER's challenge right. REVIEW 172 goes past
+  the ordering that was asked for: both frozen thresholds sit in 288df3f at
+  2026-08-27T15:44:25Z, ELEVEN DAYS AND EIGHT HOURS before the pin source, seven
+  independent productions, three bit-for-bit -- and REV FILED THE TRAVERSAL'S PARTIALITY AS
+  A CAVEAT with the direction that saves it: a partial traversal can only MISS older
+  commits, never invent one, so 08-27 is a sound LOWER BOUND. THE LIMIT IS NOW MEASURED AND
+  I HASHED IT MYSELF: of params v29's TEN pinned .py modules, EXACTLY TWO differ at
+  7ed5a90 -- de_head_scoring and de_phase4_diag_runner, THE TWO SCORING MODULES. 941e688
+  and adbebf9 were both 10/10, so 7ed5a90 is the FIRST candidate that is not; the book-code
+  predicate refuses BY NAME on every forward book and that waiver is UNSUPPORTED, NOT
+  REFUTED. Thetas, min_draws 500, m 2, alpha 0.05 all VERIFIED UNCHANGED. RESIDUE CLOSED,
+  and the defect behind run c is a root computed as parents[2] WITH NO RESOLVER -- I found
+  the builder's own docstring recording it and THREE MODULES BYPASSING be_data_root. NEW
+  GAP: at which commit did DE's evaluator rehearsal run? Same class as the build failure,
+  ONE LAYER UP -- we required books to come from the declared commit and never asked it of
+  THE INSTRUMENT THAT READS THEM. tip 1f00438)
   2026-09-11T03:17:38Z (MEM ROUND 353 -- THE BUILD COMMIT MOVED FOR THE WHOLE PIPELINE. USER RULING:
   build AND valuation, evaluator, null harness, scorer and day-run path ALL from 7ed5a90 --
   the arms-pin carve-out is GONE, no adbebf9, no 941e688. I verified the ancestry and
@@ -99,24 +117,6 @@ updated: >-
   the finding is RETROSPECTIVE so killing the timers saves nothing. The inverse defect -- a
   declared refusal with NO PRODUCER -- is a NOTE UNDER RULE 15, not a rule 45, because it
   is the same relation read from the other end. tip b217d6b)
-  2026-09-11T02:57:43Z (MEM ROUND 351 -- THE TIMER LANES ARE CLEARED AND A FAILURE MODE IS NAMED AS A
-  PATTERN. Measurement and evaluation closures contain ZERO arm, policy, book or scoring
-  modules; da-midnight-verify DRIVEN on 09-03 read raw tape, ledgers, density and the
-  register across 32,416 opens with ZERO books and ZERO score artifacts -- AND THE
-  FALSIFIER FIRES (09-03 shows 11 arm-outcome families), so the zeros are a measurement.
-  Per day the arm-outcome column is 5 on 09-07 and ZERO on every other population day. A
-  CLAIM IS WITHDRAWN: '09-07 never valued, no arm_total_cents anywhere' is true AS A FIELD
-  NAME while arm_total_minus_baseline_total and both arms' trades_cash_flow_cents sit
-  UNSEALED in the same artifact -- and MY FILES CARRIED IT at rounds 338, 348 and 349,
-  superseded in band. THE PATTERN, FOUR SEATS AND ONE MODE: AN INSTRUMENT SATISFYING THE
-  WORDS RATHER THAN THE PROPERTY. AND THE FIFTH IS MINE, PROVED BY EXECUTION: systemctl
-  show returns Result=success for a unit name I INVENTED; LoadState is the property-bearing
-  field, and my readings at rounds 338/339/345/349 were correct from an instrument that
-  COULD NOT HAVE TOLD ME OTHERWISE. THE POPULATION IS OPEN AGAIN and the USER is probably
-  right -- THE DATA IS NEVER THE CONTAMINATED THING; THE DESIGN IS. REV 128 settles it by
-  TIMESTAMP ORDERING. DE: at G=4 the floor is 0.125, so the development data could never
-  have passed conjunct (a) -- HAZARD RAN 4-FOR-4 POSITIVE AND STILL COULD NOT -- but step
-  2's verdict rested on the matched-random instrument and STANDS. tip 9d21981)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -288,6 +288,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 354, 09-07 closed, the limit measured, a new gap ---
+  09_07_STANDS_IN_THE_PRIMARY_AND_THE_POPULATION_IS_FINAL_AT_SEVEN: "REVIEW 171, landed f4b5bd8 at 03:15:08. The coordinator's drop recommendation was wrong and the USER's challenge was right. Population FINAL: 09-07..09-13, N=7. I recorded the coordinator's lean toward dropping at round 351 alongside the user's challenge and wrote that the user was probably right; round 353 settled it on REV 128's three arguments and this closes it."
+  AND_REVIEW_172_STRENGTHENS_IT_PAST_THE_TIMESTAMP_ORDERING_THAT_WAS_ASKED_FOR: Both frozen thresholds appear in 288df3f at 2026-08-27T15:44:25Z -- which I read at the object -- ELEVEN DAYS AND EIGHT HOURS before the freeze's pin source, not the two days originally dated. Seven independent productions of the same two floats, three verified bit-for-bit and one recorded identical to 8.3e-17. The question asked was ORDERING; what came back was ordering with eleven days of margin, which is a different quality of answer.
+  AND_REV_FILED_THE_TRAVERSALS_PARTIALITY_AS_A_CAVEAT_WITH_THE_DIRECTION_THAT_SAVES_IT: "'packfile cannot be mapped' three times, so COUNTS ARE NOT QUOTABLE -- filed rather than buried. And the direction is what rescues the conclusion: A PARTIAL TRAVERSAL CAN ONLY MISS OLDER COMMITS, NEVER INVENT ONE, so 2026-08-27 is a sound LOWER BOUND on how early the thresholds existed. That is rule 41 exactly -- the error DIRECTION, not the error rate -- and it is the difference between a caveat that voids a finding and one that bounds it."
+  THE_PIPELINES_LIMIT_IS_MEASURED_NOW_AND_I_HASHED_IT_MYSELF: "DA 218 / v4 at 1efc71d. I did not accept the count: I extracted every pinned .py module from params v29 -- there are TEN -- hashed each at 7ed5a9015f75 and compared. EXACTLY TWO DIFFER: de_head_scoring.py and de_phase4_diag_runner.py, moved by d09f25c and a339734. The other eight match. AND THE TWO THAT DIFFER ARE EXACTLY THE TWO SCORING MODULES, which is the whole point -- this is not two arbitrary modules of ten, it is the pair the screen's scores came out of."
+  AND_941E688_AND_ADBEBF9_WERE_BOTH_10_OF_10_SO_7ED5A90_IS_THE_FIRST_CANDIDATE_THAT_IS_NOT: "That is the sentence that makes the limit legible. The two earlier candidates satisfied the pin completely; the ruled one does not, and it does not by exactly the two modules that produce scores. So the consequence is mechanical: THE BOOK-CODE PREDICATE REFUSES BY NAME ON EVERY FORWARD BOOK, and under R-885 that waiver is UNSUPPORTED, NOT REFUTED -- the same status, in the same words, that the scoring-path waiver has carried since round 341."
+  AND_DA_SHIPPED_A_REFUSAL_FOR_IT_WHILE_THE_ARMS_ARE_VERIFIED_UNCHANGED: "RESULT_DOES_NOT_STATE_ITS_PIPELINE_PROVENANCE_LIMIT -- so a result that fails to carry the limit REFUSES rather than shipping bare, which is rule 36 discharged by behaviour instead of by prose. And verified UNCHANGED across the move: both thetas, min_draws 500, m 2, alpha 0.05. 'THE FREEZE MOVED' MUST NOT READ AS 'THE ARMS MOVED' -- recorded for the second round running, because this is the sentence most likely to be compressed into the wrong one."
+  THE_09_07_RESIDUE_IS_CLOSED_AND_THE_DEFECT_BEHIND_ONE_ABORTED_RUN_IS_A_ROOT_COMPUTED_WITHOUT_A_RESOLVER: "No residue from the three aborted runs -- the refusals were READ FAILURES BEFORE ANY WRITE, which is the ordering that makes 'no residue' checkable rather than hopeful. DE found the defect behind run c: a module computing its root as parents[2] WITH NO RESOLVER. I located the sites: be_daybook_build.py's own real_data_reachable docstring at :1895 RECORDS the limit in those words, and adverse_feature_rows.py:30, adverse_feature_rows_fast.py:33 and da_accrual_report.py:556 each compute parents[2] directly while be_data_root.py exists precisely to resolve it. THE RESOLVER EXISTS AND THREE MODULES BYPASS IT."
+  AND_A_DOCUMENTED_LIMIT_THAT_NO_GUARD_ENFORCES_IS_ONE_SYMLINK_FROM_A_SILENT_WRONG_ROOT_READ: "The builder's docstring says what goes wrong from a worktree and nothing tests it. That is the configured-but-not-applied class in its documentation form: the knowledge exists, in the right file, next to the code, and cannot fire. And the failure mode is the expensive direction -- a wrong root does not raise, it READS THE WRONG FILES AND SUCCEEDS. Filed as an open item with its sites named so the fix is a lookup rather than a search."
+  A_NEW_GAP_IS_OPEN_AT_WHICH_COMMIT_DID_DES_EVALUATOR_REHEARSAL_RUN: "It established G-from-the-data, futility-on-day-one and a 28-cell falsifier. If it ran on an OLDER TREE, those are properties of a DIFFERENT EVALUATOR THAT HAPPENS TO SHARE A FILENAME. The USER ruled build AND valuation onto 7ed5a90. Routed to DA. SAME CLASS AS THE BUILD FAILURE, ONE LAYER UP: the programme established that BOOKS must come from the declared commit and nobody asked it of THE INSTRUMENT THAT READS THEM."
+  DES_FORMULATION_GOES_INTO_RULE_42_VERBATIM_AND_IT_IS_THE_HALF_THAT_WAS_MISSING: "'a broken check produces silence, and silence is indistinguishable from good news unless something proves the instrument can speak. That's why THE CONTROL HAS TO RUN FIRST rather than as confirmation afterwards -- by then you've already believed the zero.' Rule 42 as I landed it says to construct the does-not-exist case and run it; DE's sentence says WHEN. Running the control afterwards makes it a confirmation of a belief already formed, which is a different act with the same commands. Consequence in force: BE runs the EV20/EV21 falsifier BEFORE the neutrality comparison."
+  REV_IS_DECLARING_THE_CERTIFICATIONS_BAR_BEFORE_BES_NUMBERS_EXIST: "Four questions, all of which must be answered before any number is seen: whether ZERO FLIPS ON ONE DAY can support a TWO-MODULE waiver; whether BOTH ARMS AND BOTH THRESHOLDS are needed; whether a MARGIN statistic is required rather than a flip count; and what a PARTIAL READ means. The third is the one that would otherwise be discovered too late -- a flip count of zero says nothing about how close anything came to flipping, and margin is the statistic that does."
+  AND_DES_RENAMES_ARE_QUEUED_BEHIND_THE_ENTIRE_POPULATION: "The single-commit ruling means NOTHING TOUCHING BUILD OR VALUATION LANDS BEFORE 2026-09-14. That is a consequence of the ruling rather than a separate decision, and it is worth recording in those terms: the price of one commit for the whole pipeline is that the pipeline is frozen for three days, and renames -- which are the safest imaginable change -- are frozen with it. A rule that admits no safe exception is the only kind that cannot be argued into one."
   # --- MEM round 353, the build commit moved for the whole pipeline ---
   THE_WHOLE_FORWARD_PIPELINE_NOW_RUNS_FROM_7ED5A90_AND_THE_ARMS_PIN_CARVE_OUT_IS_GONE: "USER ruling: build AND valuation, evaluator, null harness, scorer and day-run path all from 7ed5a9015f75. No adbebf9 exception, no 941e688. I verified the ancestry rather than accepting it: d09f25c, e6a214f and a339734 are all ancestors of 7ed5a90, and the three declared digests hash EXACTLY as stated -- be_daybook_build.py 2d31a80b5ae5c2c6, de_phase4_diag_runner.py 9e2a0977d8dfc3be, de_head_scoring.py 31c368384770351f. The pin refs I recorded at round 350 are superseded in band."
   AND_THE_BUILD_COMMIT_IS_MY_OWN_STATE_FILE_COMMIT_WHICH_A_COLD_READER_MUST_NOT_MISREAD: "7ed5a90 is 'MEM 352: three lessons promoted to SEAT_PROTOCOL rules 42-44' -- my commit from the previous round. It was chosen for its ANCESTRY, not its content, and its own content is documentation. A reader told the pipeline runs from 7ed5a90 and then opening that commit will find protocol rules and no code. That is not a defect and it is exactly the kind of thing that reads as one at 3am, so it is recorded here rather than left to be discovered."
@@ -27656,6 +27669,79 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 354, 2026-09-11T03:23:28Z ---
+  09_07_STANDS_IN_THE_PRIMARY_AND_THE_POPULATION_IS_FINAL_AT_SEVEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:23:28Z
+    said: >-
+      commit f4b5bd8 read at its object: 'REVIEW 171: 09-07 STANDS IN THE PRIMARY -- the verdict, the rule, and the 69', 2026-09-11 03:15:08.
+  AND_REVIEW_172_STRENGTHENS_IT_PAST_THE_TIMESTAMP_ORDERING_THAT_WAS_ASKED_FOR:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:23:28Z
+    said: >-
+      288df3f read at its object for date and subject; the eleven-day interval computed from that timestamp, landing the claimed pin-source anchor at 2026-09-07T23:44:25Z against the originally dated 2026-08-29.
+  AND_REV_FILED_THE_TRAVERSALS_PARTIALITY_AS_A_CAVEAT_WITH_THE_DIRECTION_THAT_SAVES_IT:
+    prov: RELAYED
+    from: REVIEW 172 via coordinator MEM 354
+    as_of: 2026-09-11T03:23:28Z
+    said: >-
+      REV's caveat and its direction argument as dispatched; recorded because a reader meeting 'counts are not quotable' without the direction would discard the finding.
+  THE_PIPELINES_LIMIT_IS_MEASURED_NOW_AND_I_HASHED_IT_MYSELF:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v29.json
+    as_of: 2026-09-11T03:23:28Z
+    said: >-
+      the ten pinned .py paths and their sha256 values read out of params v29; each file hashed at 7ed5a90 with sha256 and compared; 8 match, 2 differ, and the two are the scoring modules.
+  AND_941E688_AND_ADBEBF9_WERE_BOTH_10_OF_10_SO_7ED5A90_IS_THE_FIRST_CANDIDATE_THAT_IS_NOT:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v29.json
+    as_of: 2026-09-11T03:23:28Z
+    said: >-
+      the 2-of-10 result established above; the 10/10 status of the two earlier candidates as dispatched; R-885's UNSUPPORTED-NOT-REFUTED formulation is recorded in my files from round 340.
+  AND_DA_SHIPPED_A_REFUSAL_FOR_IT_WHILE_THE_ARMS_ARE_VERIFIED_UNCHANGED:
+    prov: RELAYED
+    from: DA 218 via coordinator MEM 354
+    as_of: 2026-09-11T03:23:28Z
+    said: >-
+      the new refusal name and the four unchanged quantities as dispatched; the thetas I censused independently at rounds 342 and 343 and found 43 carriers each, all exact.
+  THE_09_07_RESIDUE_IS_CLOSED_AND_THE_DEFECT_BEHIND_ONE_ABORTED_RUN_IS_A_ROOT_COMPUTED_WITHOUT_A_RESOLVER:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-11T03:23:28Z
+    said: >-
+      grep for parents[2] across live/pm_research returning the three computing sites plus the builder's own docstring at :1895 and :1907; be_data_root.py read for its resolve/repo_root/data_root API and its header recording the problem it was built to fix.
+  AND_A_DOCUMENTED_LIMIT_THAT_NO_GUARD_ENFORCES_IS_ONE_SYMLINK_FROM_A_SILENT_WRONG_ROOT_READ:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-11T03:23:28Z
+    said: >-
+      the docstring at be_daybook_build.py:1891-1907 read; no enforcing guard located for the property it describes.
+  A_NEW_GAP_IS_OPEN_AT_WHICH_COMMIT_DID_DES_EVALUATOR_REHEARSAL_RUN:
+    prov: RELAYED
+    from: coordinator MEM 354
+    as_of: 2026-09-11T03:23:28Z
+    said: >-
+      the gap and its routing as dispatched; the build-failure instance it generalises is recorded at round 353 with both refs and timestamps confirmed.
+  DES_FORMULATION_GOES_INTO_RULE_42_VERBATIM_AND_IT_IS_THE_HALF_THAT_WAS_MISSING:
+    prov: RELAYED
+    from: DE via coordinator MEM 354
+    as_of: 2026-09-11T03:23:28Z
+    said: >-
+      DE's formulation quoted verbatim for promotion into rule 42's text, which I landed at round 352 without the ordering clause.
+  REV_IS_DECLARING_THE_CERTIFICATIONS_BAR_BEFORE_BES_NUMBERS_EXIST:
+    prov: RELAYED
+    from: REV via coordinator MEM 354
+    as_of: 2026-09-11T03:23:28Z
+    said: >-
+      the four bar questions as dispatched; the decision-not-digits bar they refine is recorded at round 353.
+  AND_DES_RENAMES_ARE_QUEUED_BEHIND_THE_ENTIRE_POPULATION:
+    prov: RELAYED
+    from: coordinator MEM 354
+    as_of: 2026-09-11T03:23:28Z
+    said: >-
+      the queue and its date as dispatched; the single-commit ruling is recorded at round 353 with its ancestry and digests verified.
   # --- MEM round 353, 2026-09-11T03:17:38Z ---
   THE_WHOLE_FORWARD_PIPELINE_NOW_RUNS_FROM_7ED5A90_AND_THE_ARMS_PIN_CARVE_OUT_IS_GONE:
     prov: CHECKED

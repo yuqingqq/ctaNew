@@ -23188,3 +23188,26 @@ generation and the window went 4 → 3. Nothing rewritten.
   are two p-values; 69 is SELECTION multiplicity, correcting the prior not the denominator.
   tip 5c91ac5)
 ```
+
+## Batch 336 (rotated by MEM round 354, 2026-09-11T03:23:28Z)
+
+```
+  2026-09-11T02:57:43Z (MEM ROUND 351 -- THE TIMER LANES ARE CLEARED AND A FAILURE MODE IS NAMED AS A
+  PATTERN. Measurement and evaluation closures contain ZERO arm, policy, book or scoring
+  modules; da-midnight-verify DRIVEN on 09-03 read raw tape, ledgers, density and the
+  register across 32,416 opens with ZERO books and ZERO score artifacts -- AND THE
+  FALSIFIER FIRES (09-03 shows 11 arm-outcome families), so the zeros are a measurement.
+  Per day the arm-outcome column is 5 on 09-07 and ZERO on every other population day. A
+  CLAIM IS WITHDRAWN: '09-07 never valued, no arm_total_cents anywhere' is true AS A FIELD
+  NAME while arm_total_minus_baseline_total and both arms' trades_cash_flow_cents sit
+  UNSEALED in the same artifact -- and MY FILES CARRIED IT at rounds 338, 348 and 349,
+  superseded in band. THE PATTERN, FOUR SEATS AND ONE MODE: AN INSTRUMENT SATISFYING THE
+  WORDS RATHER THAN THE PROPERTY. AND THE FIFTH IS MINE, PROVED BY EXECUTION: systemctl
+  show returns Result=success for a unit name I INVENTED; LoadState is the property-bearing
+  field, and my readings at rounds 338/339/345/349 were correct from an instrument that
+  COULD NOT HAVE TOLD ME OTHERWISE. THE POPULATION IS OPEN AGAIN and the USER is probably
+  right -- THE DATA IS NEVER THE CONTAMINATED THING; THE DESIGN IS. REV 128 settles it by
+  TIMESTAMP ORDERING. DE: at G=4 the floor is 0.125, so the development data could never
+  have passed conjunct (a) -- HAZARD RAN 4-FOR-4 POSITIVE AND STILL COULD NOT -- but step
+  2's verdict rested on the matched-random instrument and STANDS. tip 9d21981)
+```
