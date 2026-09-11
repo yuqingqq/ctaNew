@@ -1,3 +1,3612 @@
+# READ FIRST — round 400 (MEM, 2026-09-11T23:34:58Z, tip `df5ac98`)
+
+# ⚖️ THE ADJUDICATION — **it goes against me, and this is the settled version**
+
+> ## GATE 6 WAS THE FAILING ROW. **There is no WHEN in it.**
+> REV and I measured **the same head, `f31dff0`.** My rounds 398 and 399 are
+> superseded by this block.
+
+**Both ledger rows were false — in opposite directions:**
+
+| row | the LEDGER said | REV's DRIVES said | why the ledger was wrong |
+|---|---|---|---|
+| gate 4 | uncovered | satisfied-with-a-residual | **DA's own FIXTURE** — a bare list refused by the new provenance rule; *the same probe with provenance returns OK* |
+| gate 6 | **SATISFIED** | **not satisfied** | **an UNPROBED row falling through to satisfied** |
+
+DA 279/280 repaired exactly those two. ***A row that changes when its probe is
+repaired was not true before the repair.***
+
+**At the current head both re-drive clean: gate 4 22/22 · gate 6 25/25 · ledger
+6/6, every row probed, no false property.**
+
+## 🔻 What I got wrong, plainly
+
+**Round 398 is wrong on the substance.** I reported the failing gate as 4; it was
+6. I was right only about **what the ledger printed** — a narrower claim, and
+nearly worthless on its own.
+
+**Round 399's experiment does not stand.** It was clean, reproducible, run by the
+declared method, twice — ***and it answered the wrong question.*** It reproduced
+the ledger's **output**, which nobody disputed. It does not test whether the
+**rows were true**.
+
+> ### ***I drove the REPORTER and treated it as driving the REPORTED.***
+> REV drove the gates. I drove the thing that reports on the gates.
+
+### And the disconfirming fact was in my own output
+My round-399 run printed — and I filed, verbatim —
+```
+gate 6   SATISFIED   NOT PROBED: IndexError: list index out of range
+```
+***An unprobed row is not a measurement of anything.*** Its `SATISFIED` is a
+fall-through — **exactly what the ruling found** — and I had the words `NOT
+PROBED` on the page beside `SATISFIED` and read the row as evidence anyway.
+
+**Now in `MEM_PROCEDURE`:** *when a claim is contested, drive the object the
+claim is about*; and *a `SATISFIED` beside a `NOT PROBED` is not a weak result —
+it is no result. Read the coverage field before the status field.*
+
+## ✅ What stands from 398
+
+**Citing the shared tree — 206 behind, declared non-executing — is a defect, and
+REV adopted the same rule at its 235.** *A round can be wrong in its headline and
+right in its method note; separating them is the only way either is usable.*
+
+## 📌 And the finding worth keeping from the whole episode
+
+***Two instruments disagreed about which of six rows failed, and the aggregate
+agreed anyway.*** Both contested rows were wrong, in opposite directions, for two
+different reasons — so **5 of 6 was right while the attribution was not.** That
+is `CELLS_PASSING_IS_NOT_PROPERTIES_COVERED` one level up: **the total can agree
+while the attribution disagrees, and only driving the gates themselves tells them
+apart.**
+
+---
+
+# ✏️ CORRECTION — `collector_gaps` is a **byte length**, not a record count
+
+```
+quoted      6,811,740    <- a BYTE LENGTH, and a STALE one (7,324 short)
+measured    6,819,064 bytes   13,016 records     data/pm_5min/collector_gaps.jsonl
+```
+
+> **And the name is ambiguous by path:** a **second** `collector_gaps.jsonl`
+> exists at `data/pm_5min/prices/` with **5,817** records. *A figure quoted for
+> "collector_gaps" names two files unless the path is given.*
+
+**It never reached any file I write** — checked under controls (known value 14
+hits, impossible value 0, then the query across all four state files and my
+fourteen unlanded rows: **zero**).
+
+# READ FIRST — COLD START · **TWO LANES** (MEM 399, 2026-09-11T23:27:00Z, tip `aed9851`)
+
+> ⛔ **The shared tree `/home/yuqing/ctaNew` is NON-EXECUTING.** Build `wt-fwd` ·
+> valuation `wt-deval` · emit post-processors `wt-de2` · **anything else
+> inadmissible.** *Most fair-value files below exist **only** on the chain refs.*
+
+# ⚖️ AN OPEN DISAGREEMENT — **recorded, NOT settled**
+
+My round-398 reading (gate 4 failing) **contradicts REVIEW 202/206**.
+**REV is adjudicating at the code. Neither version is written here as settled.**
+
+**What I contribute is an experiment, not an opinion.** Two runs of DA's ledger,
+each in a worktree **cut at the ref** — *the method the ledger's own declaration
+states*:
+
+| head | result |
+|---|---|
+| **`f31dff0`** *(the head I measured at 398)* | **5 of 6** · gate 4 `CELLS_GREEN_BUT_PROPERTY_UNCOVERED` **1/7** · gates 5 & 6 SATISFIED, probes throwing **`IndexError`** |
+| **`db0f284`** *(current)* | **6 of 6** · **every gate probed** — 7/7, 9/9, 7/7, 7/7, 6/6, 11/11 · no IndexError |
+
+> ***So the disagreement may be about WHEN, not WHAT*** — three hours and many
+> commits apart. **My 398 caveat (that the IndexError might be a `wt-de2`
+> artefact) is REFUTED BY EXPERIMENT: it was a correct measurement of
+> `f31dff0`.** ***I did not measure R-926's head, so I say nothing about it.***
+
+### 🪞 And the worse half stands whatever REV rules
+At 398 I **read** the *worktree-cut-at-the-ref* clause, **quoted it in a flag**,
+and **ran from `wt-de2` anyway** — noticing only while writing the caveat.
+***Recording the correct method in the same round I departed from it is a
+failure a reader cannot catch, because the flag and the method agree on the
+page.***
+
+---
+
+# LANE 1 · CANCELLATION — verdict **FIXED** · day four in
+
+| arm | 09-07 | 09-08 | 09-09 | **09-10** | non-pos | **cap** |
+|---|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | −14,645.08 | −49,303.58 | +10,295.84 | **+1,741.26** | 2 | 0.453125 |
+| `HAZARD_OVER_SKEWED_REF` | +4,925.36 | −23,978.00 | +10,836.31 | **−6,575.49** | **2** | **0.453125** |
+
+`G_so_far 4` · `STOP_FOR_FUTILITY` · both **FUTILE**.
+
+> ### 🔔 HAZARD's cap MOVED — the first movement since the verdict was fixed.
+> Its second non-positive day takes it from **6-of-7 → 0.125** to **5-of-7 →
+> 0.453125** *(I recomputed both)*. ***Nothing about the verdict moved.*** The
+> verdict was fixed at day two; what moved is the best attainable **had the test
+> still been running** — and it moved **toward** futility, not away.
+
+# LANE 2 · FAIR VALUE — build gates green, **no score is evidence**
+
+**Step-6 freeze** `da_step6_full_pipeline_freeze_v1.json` exists on the chain ref
+and in `wt-de2` — **absent from the shared tree** — and computes
+**`freeze_is_effective: False`**, naming why:
+
+```
+§7 chain_link_not_implemented:pnl  — the last link has no implementation; nothing computes P&L
+§7 fee_rule                        — no fee appears anywhere in the frozen chain, so a P&L
+                                     computed from it would be gross
+market_facts.maker_fee_status = MAKER_FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_ARTIFACTS
+```
+
+***Both remaining gaps are ECONOMIC-ONLY.*** The predictive half is blocked by
+neither; the immutable-inputs manifest closed that blocker.
+
+> ### The two predicates are now doing exactly what they were separated for:
+> **`no_labelled_score_permitted: False`** — the §5 build barrier is down at 6/6 —
+> **and `score_is_evidence_permitted: False`**, because §11's step-6 freeze is
+> **NOT EFFECTIVE**. ***One boolean reading as blanket permission is how a build
+> gate becomes a licence; here the gates are green and no score is evidence.***
+> *The distinction stopped being theoretical the moment the sixth gate went
+> green.*
+
+**Standing class, named by REV three times:**
+***`CELLS_PASSING_IS_NOT_PROPERTIES_COVERED`*** — before a gate reads SATISFIED,
+each declared property maps to the cell covering it; **cells and
+`properties_covered` are separate fields.** *The false 6/6 that preceded the
+confirmed one counted **three unprobed rows**.*
+
+# READ FIRST — COLD START · **TWO LANES** (MEM 397, 2026-09-11T19:17:35Z, tip `96a1f16`)
+
+> # ⛔ THE SHARED TREE IS **NON-EXECUTING**
+> `/home/yuqing/ctaNew` is **non-executing for both lanes**, and a result
+> produced from it is ***INADMISSIBLE REGARDLESS OF ITS CONTENT***.
+> **Executing trees:** build `wt-fwd` · valuation `wt-deval` · emit
+> post-processors `wt-de2` · ***anything else inadmissible.***
+> It has teeth: a stage-0 row calling `assert_executing_tree` that refuses
+> **`EXECUTED_FROM_AN_UNDECLARED_TREE:<path>`**, reading the payload not the
+> environment.
+>
+> *This closes the thread I opened at round 383 — the shared tree's comparator
+> was not the certified producer — and extended at 385, its runner 47 commits
+> behind. **What I could only record as a hazard now fires.***
+>
+> **Behind, per ref (mine, 19:14Z):** `origin/mm-research` **206** ·
+> `de-freeze-chain-v2` **102** · `be-build-runner` **102**; union of the two
+> build refs **103**. ***The "204" is 102 + 102 — a sum over two refs that share
+> that history.*** DA's declaration carries 205/100 as-of 19:10:01Z; the four
+> minutes are the difference. **Bringing the user's fork into line is the USER's
+> call and was explicitly not taken.**
+
+---
+
+# LANE 1 · CANCELLATION — verdict **FIXED**, descriptive days running
+
+| arm | 09-07 | 09-08 | 09-09 | non-pos | cap |
+|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | −14,645.08 | −49,303.58 | **+10,295.84** | **2** | **0.453125** |
+| `HAZARD_OVER_SKEWED_REF` | +4,925.36 | −23,978.00 | **+10,836.31** | **1** | **0.125** |
+
+Both **FUTILE** · `STOP_FOR_FUTILITY` · **NOT_ESTABLISHED_AT_THIS_POWER**.
+***Read `emit.futility`, never the tally.*** 09-10's build is running from
+`wt-fwd`.
+
+# LANE 2 · FAIR VALUE — **step 0 and step 2 done**
+
+**✅ STEP 0 passes its pre-registered gate — I did the division myself:**
+```
+46,550 / 46,591 = 0.999120     gate 0.990    PASS
+41 disagreements — ALL boundary quality, ZERO unexplained
+§10 kill criterion NOT triggered
+```
+**DA corrected its own first split:** the seven "ties" are ***one feed outage at
+one window*** — **precedence deciding attribution, not data disagreeing.**
+
+**✅ STEP 2 — three independent hands, sharing no step:** REVIEW 194 read it
+**field by field against §4 C2** · **I executed** its falsifier against real
+bookTicker files (**27 cells, 0 failed, rc 0**) · the module's **own 27 two-way
+cells**, each calling the production entry point. *A contract reading cannot
+catch a constant return; an execution cannot catch a contract misreading.*
+
+**Plan frozen, nothing scored.** Closed family of two vs `Identity`, **m = 2**,
+six build gates before any labelled score. *(Freeze pointer still names
+`0575444` while the plan on disk is `876e435`.)*
+
+---
+
+# 🪞 THE RULE OF THE ROUND — and I turned it on myself first
+
+> ### When ABSENCE is the finding, run the search in a form whose failure is visible.
+
+Promoted from REV after two coordinator errors that are **the same shape**:
+accepting a design by **reading its printed fields** rather than testing its
+predicate or grepping that the named refusal exists (R-921), and **grepping the
+stale shared tree** and reporting a landed refusal absent (R-922).
+
+**I re-ran round 396's absence report under controls:**
+
+```
+(a) positive control  — a token I planted    -> 12 hits   the search CAN speak
+(b) known-bad         — an impossible token  ->  0 hits   it isn't matching everything
+(c) the real query    — only then
+```
+
+> **The conclusion stands** — nothing asserts it. ***But the controlled run
+> surfaced three candidates my round-396 run had swallowed***, and I read all
+> three at the line: a task description, my own correction, and a **negative**
+> claim.
+>
+> ### ***My conclusion survived and my method did not.***
+> A bare grep with no control would have returned the same answer from a wrong
+> path or a malformed regex. *Round 379's shape with the sign reversed: there a
+> correct strike followed from wrong bounds; here a correct absence followed from
+> an unproven search.*
+>
+> **And the second defect was SCOPE** — my exclusion was **line-scoped** while
+> the correction markers live in the **flag key** and elsewhere in the sentence.
+> ***A filter that removes candidates before a human sees them must be scoped to
+> the same unit as the thing it filters on.*** Both are now in `MEM_PROCEDURE`.
+
+# READ FIRST — round 396 (MEM, 2026-09-11T18:48:58Z, tip `6b8170a`)
+
+# 🔢 THE 69, STATED PRECISELY — **the form to quote**
+
+```
+lane 2 floor 0.001953125 × 69 = 0.134765625   > 0.05
+lane 1 floor 0.015625000 × 69 = 1.078125      > 1
+```
+
+> ### **NEITHER design survives a 69-fold screen.**
+> What lane 2 buys is that ***the 69 DOES NOT APPLY to it***: §4 declares a
+> **CLOSED FAMILY OF EXACTLY TWO**, fixed before any scoring, **m = 2 forever
+> even if one candidate dies**. ***A structural property of the declaration —
+> not immunity to the arithmetic.***
+
+**My round-394 framing was right and incomplete.** I wrote *"a much better floor,
+not immunity"* — which compares the two designs' arithmetic **without saying the
+69 is not lane 2's multiplicity at all**. A reader could take it to mean lane 2
+faces the same screen with better odds; ***that is the opposite of the case.***
+Recorded as **superseding** my sentence, not beside it.
+
+# 🔎 THE HUNT: **there is no file to name**
+
+Swept the programme directory, `live/pm_research/` and `docs/` for the fold
+phrasing, the candidate phrasing, the product `0.134765625`, and the assertive
+verbs *can / could / would / will* + *pass / clear / survive* within 40
+characters of 69.
+
+> **Three hits carry the claim — and all three are inside MY OWN corrections**
+> (`STATUS.yml:102`, `STATUS.yml:522`, `HANDOFF.md:176`), each quoting the wrong
+> claim **in order to strike it**. **No declaration, review, register entry or
+> emitted artifact asserts it.** *Every other 69 reference — REVIEW 171/174/186,
+> two arm-freeze amendments — makes the negative claim.*
+
+**And the hunt has its own hazard, worth naming.** ***A grep-based checker will
+flag my corrections, because a correction must quote the thing it corrects.***
+The struck claim and the asserted claim are **the same string**; only the
+surrounding clause separates them. *That is the residue problem in prose rather
+than filenames, and the same resolution applies: the discriminator must be
+structural — here the words "I corrected my own first reading" immediately
+before it — never the presence of the token.*
+
+# 🤝 FILED AS THE **SECOND HAND** ON REVIEW 194 — *the instruments genuinely differed*
+
+| | REVIEW 194 | MEM 395 |
+|---|---|---|
+| **sigma producer** | read `be_sigma_30m.py` **field by field against §4 C2** | **EXECUTED** the falsifier to completion — `{"n": 27, "failed": 0}`, rc 0, against real bookTicker files |
+| **the replaced reason** | argued from the **shape of the predicate** (endpoint-coverage/max-gap vs four admissibility clauses) | **resolved the call graph mechanically** — five call sites walked back to their enclosing `def`; four in `selftest`, one in `local_continuity` |
+
+> ***One instrument read the spec against the source; the other ran the code
+> against real data. One reasoned about design; the other resolved a call graph.
+> Same conclusions, no shared step, no shared input*** — which is the only thing
+> that makes agreement worth anything.
+
+# 🔗 DE 358 — the forked 09-07 chain is now WORK
+
+The fork I measured at 395 is dispatched: DE re-emits 09-07 with a **total
+chain**, an explicit **`book_lineage`**, and a cell that **refuses
+`SUPERSESSION_CHAIN_FORKED`**.
+
+> *Right shape twice over:* **the remedy is a total order rather than a patched
+> pointer**, so the walk from the newest record reaches every predecessor; and
+> **the guard is a cell that can FIRE**, not a note saying the chain should be
+> total. ***Both records stay on disk unedited — which is what made the fork
+> visible and diagnosable in the first place.***
+
+# READ FIRST — COLD START · **TWO LANES** (MEM 395, 2026-09-11T18:45:28Z, tip `437b1d4`)
+
+> # ⚠️ **Lane 2's activity is NOT the cancellation test reopening.**
+> Lane 1's verdict is **fixed and unrevisable**. The lanes share a programme, a
+> tape and a lock — ***and nothing else.***
+
+---
+
+# LANE 1 · CANCELLATION — **VERDICT FIXED · descriptive days running**
+
+| arm | 09-07 | 09-08 | 09-09 | non-pos | cap | |
+|---|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | −14,645.078818 | −49,303.579891 | **+10,295.840462** | **2** | **0.453125** | FUTILE |
+| `HAZARD_OVER_SKEWED_REF` | +4,925.363903 | −23,977.998804 | **+10,836.306348** | **1** | **0.125** | FUTILE |
+
+`G_so_far 3` · `STOP_ADVICE = STOP_FOR_FUTILITY` · **NOT_ESTABLISHED_AT_THIS_POWER**.
+
+> ### 🔴 Day three is positive on BOTH arms and changes nothing.
+> ***The cap is a function of the days already non-positive.*** A positive day
+> does not restore a negative one — which is why futility stopping is free.
+> **Second round running I have had to write this sentence.**
+
+**09-10's tape is on the lock, book next.** Standing prediction: when all seven
+land the tally reads **`G_so_far 7 · days_remaining 0`** — ***read
+`emit.futility`, never the tally.***
+
+## 🔍 09-07 NOW HAS **TWO** GUARD-CARRYING RECORDS — OF **DIFFERENT BOOKS**
+
+```
+v2  18:36:20Z   book 887a97eb41e9f83c  = the FREEZE-BUILT reproduction book   admitted_by DESCENDANT
+v3  18:37:36Z   book e25471905983e95a  = the LANDED book (358,259,004 B)      admitted_by None
+                └─ v3.supersedes points at v1 — NOT v2
+```
+
+*Coherent: the landed book is **pre-freeze**, so no descendant admission exists
+for it.* **But a reader taking "the newest 09-07 record" gets the landed,
+non-admitted book**, and ***following `supersedes` backwards from v3 never
+reaches the freeze-built one.*** Named for DE; it may be deliberate, since the
+two describe different books rather than successive versions of one.
+
+**The `settlement_source: NO_VERIFIED_WINNER_RECEIPT` guard is in FOUR records,
+not three** — 09-07 v2 *and* v3, 09-08 v3, 09-09 v2 — i.e. everything re-emitted
+after 18:36Z. *The guard DE's stage-3 assembler had been emitting past now
+reaches everywhere it should.*
+
+---
+
+# LANE 2 · FAIR VALUE — **step 2 LANDED AND VERIFIED**
+
+**✅ Step 2 — the sigma producer.** `be_sigma_30m.py`, pushed **`f9a5bc7`**.
+**I drove it myself: `{"falsifier": "be_sigma_30m", "n": 27, "failed": 0}`, rc 0.**
+Cells include: **no fallback argument** · a consumed-day BTCUSDT window admitted
+**through the production entry point** off real bookTicker files (σ
+4.628298353273501e-05, n 1800) · local knowledge does not reach the decision
+(lag 4,281,563 ns) · a dense window yields **all 1,800 of 1,800** returns · and
+***the same window an hour earlier gives a different number — the reader is
+reading, not returning a constant.*** **That last cell is the anti-constant
+control, the thing a producer can most easily fake.**
+
+**Step 1** in flight — a **day-slice-addressed receipt serving BOTH lanes**.
+**Step 3** wrappers in flight with the **two-regime correction** (before `T−60`
+the realized past is irrelevant and `partial` must be None; from `T−60` it is
+required).
+
+**Still true:** plan frozen, **nothing scored**, closed family of two against
+`Identity`, **m = 2 forever**, six build gates and seven two-way falsifiers
+before any labelled score. **The freeze pointer still names `0575444` while the
+plan on disk is `876e435`.**
+
+---
+
+# 🪞 TWO COORDINATOR ERRORS, CORRECTED IN BAND — each names a class
+
+**R-919 — dispatched on a review finding before verifying it.** REV reported the
+sigma producer as pre-existing prior art; BE's build was stopped mid-flight. BE
+pushed back with a field-by-field table, and the module turned out to be **BE's
+own**, `be_sigma_30m.py:268` at `8fe2a2e`, **landed minutes before the audit read
+the tree and untracked while REV read it.**
+
+> ***REV audited the work it was auditing.*** **REV 193's rule: an inventory of
+> "what already exists" must EXCLUDE work landed in the same session — check
+> authorship and commit date before calling anything prior art.** *MEM sweeps
+> inventories constantly; the same trap is open to me, and an untracked file
+> carries no commit date at all until someone looks for it.*
+
+**R-920 — a ruling right in conclusion, wrong in its stated reason**, which REV
+checked and replaced. The principle, stated plainly: ***a note whose stated
+reason a reader can check and disprove poisons the rest of the note.***
+
+> **I checked the REPLACEMENT**, because a corrected note is exactly where a
+> second wrong reason would hide. `max_gap_ns` **is** a parameter default;
+> `de_v2_local_selector.py` is **not** in `da_population_freeze_v19`. There are
+> **five** call sites, not one — **but four are inside `selftest`**, and the sole
+> **production** site passes `max_gap_ns=int(HER.BN_MAX_GAP_S * 1e9)`.
+> ***The claim holds. I file no correction.***
+
+---
+
+🌿 **Forked from origin (160/192); fast-forward impossible. Q-MEM-338…349
+unlanded. Read this working tree, not `origin/mm-research`.**
+
+# READ FIRST — COLD START · **TWO LANES** (MEM 394, 2026-09-11T18:31:14Z, tip `b524a59`)
+
+> # ⚠️ THE ONE THING NOT TO CONCLUDE
+> **Lane 2's activity is NOT the cancellation test reopening.**
+> Lane 1's verdict is **fixed and unrevisable**. The lanes share a programme, a
+> tape and a lock — ***and nothing else.***
+
+---
+
+# LANE 1 · CANCELLATION — **VERDICT FIXED. Descriptive days only.**
+
+> ## Both arms **FUTILE** at day two · `STOP_ADVICE = STOP_FOR_FUTILITY`
+> ## **NOT_ESTABLISHED_AT_THIS_POWER — never NO_EFFECT**
+
+| arm | 09-07 | 09-08 | **09-09** | non-pos | best attainable p |
+|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | −14,645.078818 | −49,303.579891 | **+10,295.840462** | **2** | **0.453125** |
+| `HAZARD_OVER_SKEWED_REF` | +4,925.363903 | −23,977.998804 | *(not yet on disk)* | **1** | **0.125** |
+
+**09-09 CONDVALUE is the arm's FIRST POSITIVE DAY** — p 0.3852295409181637, 500
+draws, 25,902 cancels, `admitted_by DESCENDANT`, book `a72caaa08968dd93`.
+
+> ### 🔴 It changes nothing, and I computed that rather than asserting it.
+> With **two days already non-positive**, the best attainable is still **5 of 7
+> → 2·29/128 = 0.453125**. ***A positive day does not restore a negative one —
+> the cap is set by the days already non-positive. That is precisely why futility
+> stopping is free.***
+
+**Remaining days 09-10..09-13 are DESCRIPTIVE ONLY.** And the standing
+prediction: when all seven land, `running_tally` will read **`G_so_far 7 ·
+days_remaining 0`** — ***read `emit.futility`, not the tally.***
+
+---
+
+# LANE 2 · FAIR VALUE — **plan frozen · NOTHING fitted · NOTHING scored**
+
+**Design, as frozen:** BTC+ETH together, primary unit the combined portfolio UTC
+day · a **CLOSED family of exactly two** challengers — C1 `pm_microprice`, C2
+`bn_bookticker_mid` bound to `s60_probability_v1` + builder digest — against
+**`Identity`**, with **m = 2 forever even if one candidate dies** · **six build
+gates and seven two-way falsifiers before any labelled score** · primary loss
+natural-log loss, `delta_LL_g = LL_g(Identity) − LL_g(c)` · 14 calendar days
+requiring **10 evaluable**, exact two-sided paired day sign test over 2¹⁰ =
+**1,024** assignments · ≥8 nonzero increments or `INSUFFICIENT_EVIDENCE` ·
+economic validation only for predictive winners, on a **new** ten-day clock.
+***`Identity` remains the mandatory baseline and fallback.***
+
+## 🚨 THE FREEZE POINTER IS ONE COMMIT BEHIND THE PLAN
+
+```
+R-917 freezes   0575444  18:06:45Z   357 lines   sha 474528472854cf21
+user hardened   876e435  18:19:19Z   424 lines   sha 1606fe8d19124d0f   <- ON DISK
+R-917 written   18:21:55Z  — after the hardening, still naming 0575444
+```
+
+**Every parameter R-917 quotes is ABSENT from the frozen commit** — `m = 2` (0
+vs 4), `10 evaluable`, `2^10`, `0.001953125`, `s60_probability_v1`,
+`pm_microprice`, `bn_bookticker_mid`, `placement_latency_ms 250`,
+`INSUFFICIENT_EVIDENCE` — *all present only on disk.*
+
+> ***The prose is right and the hash names a document that contains none of those
+> terms.*** Seats implement from disk, so **no seat is misled** — but a pointer is
+> what an automated reader resolves. **Rule 12 asks a freeze to be a hash AND a
+> ref; here they disagree.** *The register should name `876e435`.*
+
+## 🔢 The floor, and an honest comparison
+
+```
+lane 2 floor  2/1024 = 0.001953125     lane 1 floor  2/128 = 0.015625   (8× larger)
+  × m=2       0.003906250              × m=2         0.031250000
+  headroom to 0.05:   12.8×                          1.6×
+  × 69-screen 0.134765625  > 0.05                    1.078125  > 1
+```
+
+> **THE FORM TO QUOTE (MEM 396, superseding my round-394 wording):** lane 2's
+> floor × 69 = **0.134765625, which also exceeds 0.05** — ***NEITHER design
+> survives a 69-fold screen.*** What lane 2 buys is that **the 69 DOES NOT APPLY
+> to it**: §4 declares a **closed family of exactly two**, fixed before any
+> scoring, m = 2 forever even if one dies. ***A structural property of the
+> declaration — not immunity to the arithmetic.***
+>
+> *(My round-394 sentence "a much better floor, not immunity" compared floors
+> without saying the 69 is not lane 2's multiplicity at all; a reader could take
+> it to mean lane 2 faces the same screen with better odds, which is the opposite
+> of the case.)*
+>
+> And R-917's parenthetical is loose: **cancellation's m=2 was attainable too**
+> (0.03125 < 0.05 — I filed that at round 389). What it could not satisfy was
+> **the screen**, and lane 2 inherits that problem unless its own screen is
+> declared.
+
+## ✅ And the plan corrects the coordinator's draft — the rarer direction
+
+`crypto_prices_twap_sixty` is the **rolling 60 s statistic**, *not* the raw
+Chainlink aggregate path; `crypto_prices` is a **Binance spot mirror**, not the
+settlement source. ***So there is no model-free realized integral inside the
+terminal minute***, and the draft's "H1 model-free fair value" was the known-bad
+rolling-TWAP-as-raw-path construction the plan now refuses. Any Binance integral
+there is a **declared cross-venue proxy**, and a probability needs a declared
+model and volatility input. *Rule 9's shape, applied before any fitting.*
+
+**Dispatched, all off the heavy lock** so the descriptive valuations are not
+starved: DA step 1 the settlement-label/status reader · BE step 2 the 30-minute
+sigma producer · DE step 3 the typed C1/C2 wrappers · REV audits the plan's own
+claims against the code independently.
+
+**Unamended and still binding:** the ownership fence in
+`LANE2_FAIR_PRICE_SUCCESSOR_INTERFACE.md`; `SIGMA_ROUTE_A{,_V2}_PROTOCOL.md`,
+whose last result stays **PRICING HOLD**.
+
+---
+
+# STANDING
+
+🌿 **The tree is forked from origin (151/187); a fast-forward is impossible.**
+**Q-MEM-338…348 are unlanded**, including the rows carrying lane 1's outcome.
+***Read this working tree, not `origin/mm-research`.***
+
+# READ FIRST — COLD START (MEM 393, 2026-09-11T16:39:53Z, tip `1277a14`)
+
+# 🧭 PHASE CHANGE — **the user ruled: continue descriptively**
+
+> ### The forward test's VERDICT IS FIXED AT DAY TWO and cannot be revised.
+> ### Days 09-09..09-13 are being built and valued for **PER-DAY PERFORMANCE ONLY**.
+
+***Descriptive days are not a continuation of the test. They are five more
+observations of arms whose test already stopped.*** DA 264's declaration says it
+in its own words: *"it is NOT additional evidence toward the forward test."*
+
+# ⚠️ READ THE FUTILITY BLOCK, NOT THE TALLY — **a prediction filed before the days land**
+
+`G_so_far = len(days_scored)` (`de_forward_evaluator.py:653`). When the five
+descriptive days land, **seven records will match the day glob**, so
+`running_tally` will read:
+
+```
+G_so_far 7 · G_declared 7 · days_remaining 0     <- LOOKS like a completed test
+```
+
+> **The verdict is safe** — futility is a function of the negative days *already
+> seen*, and those do not go away. ***But the field that distinguishes a stopped
+> test from a completed one will be the FUTILITY BLOCK, not the tally.***
+> **Anyone reading the day-seven record must read `emit.futility` first.**
+
+# 1 · THE OUTCOME (unchanged)
+
+| arm | 09-07 | 09-08 | non-pos | best attainable p | |
+|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | −14,645.078818 | −49,303.579891 | **2** | **0.453125** | FUTILE |
+| `HAZARD_OVER_SKEWED_REF` | **+4,925.363903** | −23,977.998804 | **1** | **0.125** | FUTILE |
+
+`STOP_ADVICE = STOP_FOR_FUTILITY` · threshold 0.025 · floor **0.015625** (7-of-7
+only) · tolerance 0 · Holm m=2.
+**NOT_ESTABLISHED_AT_THIS_POWER — never NO_EFFECT.**
+*And, computed: floor × 69 = **1.078125 > 1** — the design could never have
+cleared a correction over the screen that produced the arms.*
+
+# 2 · THE SCHEDULE ON THE LOCK
+
+```
+09-09 book  (~23 min)  ->  09-09 valuation (~77 min)
+09-10 fragment -> tape -> book (~55 min)  ->  09-10 valuation
+09-11 only after it closes 2026-09-12T00:00Z ; then 09-12, 09-13
+09-13's mask hand-made at the boundary (DA)
+```
+
+**09-09 onward need NO rebuild** — they build at the frozen lineage from the
+start. *That is why the schedule is this short: 09-07 and 09-08 each cost ~23 min
+of lock time on a freeze-built rebuild first.* Measurement/evaluation pipelines
+**wait on the heavy lock** (BE 149), so no separate arbiter is needed.
+
+**At this dispatch: lock FREE, nothing running.**
+
+# 3 · METHOD — unchanged, and every clause was bought by a failure today
+
+dry-run before every stage · the licensed code-frozen valuation path, no closure
+module moves · freeze-built books only · **oracle read ONCE per run** ·
+**stage-0 verdict run-scoped** (not `/tmp` — R-910) · **re-emits vN+1, never in
+place** (R-910) · **reproduction/rehearsal records named outside the day glob**
+(R-915).
+
+> ⚠️ **Each descriptive day needs its own point-estimate receipt**, or its
+> `progress_emit` comes back as a refusal string rather than a table —
+> `NO_RECEIPT`, *"a cent figure whose winner source was never verified must say
+> so."* **Day two already showed this.**
+
+# 4 · THE ARTIFACTS AND THE READER TRAPS
+
+```
+FINAL RECORD   fwd_v2/p003_de_forward_value_20260908_v2.json   (v1 kept, unedited)
+(a) REPRO      fwd_v2/p003_de_reproduction_at_the_freeze_20260907.json
+               IS_A_DAY_RESULT false · BOTH arms exact vs day one
+CELLS          fwd_v2/ · fwd_rehearsal_0908/ · fwd_a_0907_rebuild/
+```
+
+1. **Cells in three directories**, `load_cell` takes **one root**.
+2. **Day two's real result sits in a directory named `rehearsal`.**
+3. **Two mis-named reproduction records are inside the day glob** — KEPT as
+   declared residue, `NOT_A_DAY_RESULT`, named by path *and sha*. ***They carry
+   the same protocol string as a real day record***, so only the presence of a
+   `reproduction` block separates them.
+4. 🌿 **The tree is forked from origin (148/186); a fast-forward is impossible.**
+   **Q-MEM-338…347 are unlanded**, including the rows carrying the outcome.
+   ***Read this working tree, not `origin/mm-research`.***
+
+# READ FIRST — COLD START (MEM 392, 2026-09-11T16:14:42Z, tip `3acc367`)
+
+*The forward test is finished. This block is written to be sufficient with no
+conversation. Read it, then stop.*
+
+# 1 · THE OUTCOME
+
+> ## Both arms **FUTILE** at **G = 2 of 7** · `STOP_ADVICE = STOP_FOR_FUTILITY` (computed)
+> ## **NOT_ESTABLISHED_AT_THIS_POWER — never NO_EFFECT**
+
+| arm | 09-07 | 09-08 | non-pos | best attainable p | |
+|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | −14,645.078818 | −49,303.579891 | **2** | 2·29/128 = **0.453125** | FUTILE |
+| `HAZARD_OVER_SKEWED_REF` | **+4,925.363903** | −23,977.998804 | **1** | 2·8/128 = **0.125** | FUTILE |
+
+Threshold **0.025** · floor 2·1/128 = **0.015625** (7-of-7 only) · tolerance **0** ·
+unanimity · Holm **m=2**. ***The cap comes from days already seen — days 3–7
+cannot move it.***
+
+**And the sharper, design-level statement:** floor **× 2 = 0.03125 < 0.05**
+(would have passed) · **× 69 = 1.078125 > 1** · **1/69 = 0.014492754 < floor**.
+***No outcome of this test could have cleared a correction over the 69-candidate
+screen that produced the arms.*** **About the design, not the arms.**
+
+# 2 · THE ARTIFACTS, BY PATH
+
+```
+FINAL RECORD    fwd_v2/p003_de_forward_value_20260908_v2.json          16:03:05Z
+  superseded    fwd_v2/p003_de_forward_value_20260908.json   KEPT, unedited (rule 13)
+                supersedes.sha256 51decc84c8b368d8…  = v1's bytes   [I hashed it]
+
+(a) REPRODUCTION fwd_v2/p003_de_reproduction_at_the_freeze_20260907.json  16:05:59Z
+                 IS_A_DAY_RESULT: false · BOTH arms exact vs day one · DESCENDANT
+
+CELLS  day one   fwd_v2/de_settle_result_20260907_<arm>.json
+       day two   fwd_rehearsal_0908/de_settle_result_20260908_<arm>.json   ⚠ "rehearsal" = a FULL 500-draw run
+       (a) repro fwd_a_0907_rebuild/de_settle_result_20260907_<arm>.json
+
+BOOKS  09-08 freeze-built  sha 05144b6fce62e2cc      09-07 freeze-built  sha 887a97eb41e9f83c
+```
+
+⚠️ **Three traps for a reader or an instrument:**
+1. **The cells are in three directories** and `load_cell` takes **one root**.
+2. **Day two's real result is in a directory named `rehearsal`.**
+3. **Two mis-named reproduction records sit inside the day-result glob** —
+   `p003_de_forward_value_20260907_reproduction_at_the_freeze{,_v2}.json`.
+   **KEPT as declared residue, `NOT_A_DAY_RESULT`**, named by path *and sha* in
+   `da_record_schema_declaration_v3.json` (**all three digests verified against
+   disk this round**). ***They carry protocol `P003_DE_DAY_RECORD_V1` — and so
+   does a real day record — so the protocol CANNOT separate them.*** Only the
+   presence of a **`reproduction` block** does. Filtering on it and taking days
+   by identity gives exactly **{09-07, 09-08}, n = 2**.
+   **Rule from here: a reproduction record is named `p003_de_reproduction_*`,
+   never `p003_de_forward_value_*`** — *because a filter is a thing that can be
+   forgotten and a name is not.*
+
+# 3 · THE FREEZE LINEAGE
+
+```
+valuation pin = A RULE: descendant of FREEZE_COMMIT b34ed9f + frozen module digests
+supersession   f309602 → c853e2d → 92e4b7c → 21678a1 → eb923d3 → 3dbb107 → 5efb8f0
+freeze commit  8afbd1a → d095c5a → 6d22d78 → bacb4e3 → b34ed9f
+declarations   code-freeze v10 lineage · population freeze v17 · record schema v3
+               arm-freeze amendments to v23 · licensing + outcome (DA 262) — three refs
+comparator     a455191d6bceec7e = the certificate's producer, unmoved
+```
+
+**Verified by hashing, not reading:** three rebuilds at three commits gave
+**322,723 of 322,732 content leaves equal**, the nine differences all
+wall-clock/telemetry. **Day one reproduces EXACTLY on BOTH arms** — full float
+equality across a different book, seed and oracle.
+
+# 4 · HELD · OPEN · QUEUE
+
+- ⛔ **The 09-09 real build is HELD.**
+- 🙋 **The user's two decisions:** (i) whether days **09-09..09-13** are built and
+  valued **descriptively** — *not required by the design*, population stays
+  protected, books build from archives at any time; (ii) whether to **open the
+  post-population queue**.
+- 📋 **Queue: twelve items (R-913) + three (REVIEW 190).** Nothing in it runs
+  inside the population.
+- 🔓 **Lock free, nothing armed.**
+- 🌿 **The tree is forked from origin (144/184)** — a fast-forward is
+  **impossible**, so `land_register_row` is structurally closed. **Q-MEM-338…346
+  are written and unlanded, including the rows carrying this outcome**, and
+  R-912's ordered rule-45 push of BE's `223f352`/`73d5655` is blocked by the same
+  thing. ***Read this working tree, not `origin/mm-research`.***
+
+# READ FIRST — round close, 2026-09-11 (MEM 390+391, 2026-09-11T16:10:08Z, tip `bb69677`)
+
+# 🧊 COLD START — **the forward test is finished. Read this first, then stop.**
+
+## 1 · THE OUTCOME
+
+> ### Both arms **FUTILE** at **G = 2 of 7**. `STOP_FOR_FUTILITY`.
+> ### **NOT_ESTABLISHED_AT_THIS_POWER — never NO_EFFECT.**
+
+| arm | day one (09-07) | day two (09-08) | non-pos | best attainable p | verdict |
+|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | −14,645.078818 | −49,303.579891 | **2** | 2·29/128 = **0.453125** | FUTILE |
+| `HAZARD_OVER_SKEWED_REF` | **+4,925.363903** | −23,977.998804 | **1** | 2·8/128 = **0.125** | FUTILE |
+
+Threshold 0.025 · floor 2·1/128 = **0.015625** at 7-of-7 · tolerance 0 · unanimity.
+***The cap comes from the days already seen — days 3–7 cannot move it.***
+
+**And the sharper statement:** floor **× 2 = 0.03125 < 0.05** (Holm as declared —
+would have passed); **× 69 = 1.078125 > 1**; **1/69 = 0.014492754 < floor**.
+***No outcome of this test could have cleared a correction over the 69-candidate
+screen that produced the arms.*** A statement about the **design**, not the arms.
+
+## 2 · THE ARTIFACTS, BY PATH
+
+```
+FINAL RECORD   data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908_v2.json
+  superseded   …/p003_de_forward_value_20260908.json   KEPT, unedited (rule 13)
+               supersedes.sha256 51decc84c8b368d8…  = v1's actual bytes (I hashed it)
+
+CELLS  day one  data/pm_5min/derived/fwd_v2/de_settle_result_20260907_<arm>.json
+       day two  data/pm_5min/derived/fwd_rehearsal_0908/de_settle_result_20260908_<arm>.json   ⚠ "rehearsal" is a FULL run
+       (a) repro data/pm_5min/derived/fwd_a_0907_rebuild/de_settle_result_20260907_<arm>.json
+
+BOOKS  09-08 freeze-built  …/rebuild_identity/…FWD1.rebuild.pkl   sha 05144b6fce62e2cc
+       09-07 freeze-built  …/rebuild_identity/…20260907…           sha 887a97eb41e9f83c
+```
+
+> ⚠️ **The cells live in THREE directories** and `load_cell` takes **one root** —
+> anything that re-combines must reconcile that first.
+
+## 3 · THE FREEZE LINEAGE
+
+```
+valuation pin = RULE: descendant of FREEZE_COMMIT b34ed9f + frozen module digests
+supersession  f309602 → c853e2d → 92e4b7c → 21678a1 → eb923d3 → 3dbb107 → 5efb8f0
+freeze commit 8afbd1a → d095c5a → 6d22d78 → bacb4e3 → b34ed9f
+declarations  code-freeze v10 lineage · population freeze v17 · record schema v2
+              arm-freeze amendments to v23 · licensing + outcome by DA 262 (three refs)
+comparator    a455191d6bceec7e  = the certificate's producer, unmoved
+```
+
+**Verified this session, by hashing rather than reading:** three rebuilds at
+three commits gave **322,723 of 322,732 content leaves equal**, the nine
+differences all `wall_clock`/`resource_telemetry`. Day one reproduces from the
+freeze-built book **EXACTLY** — delta 0.0000000000c, across a different book,
+seed and oracle.
+
+## 4 · WHAT IS HELD, AND WHAT IS OPEN
+
+- ⛔ **The 09-09 real build is HELD.** Days 09-09..09-13 are **not required by
+  the design**; whether they are valued **descriptively** is the **user's call**.
+  The population stays protected — books build from archives at any time.
+- 📋 **The post-population queue: twelve items (R-913) + three (REVIEW 190).**
+  *Opens on the user's word; nothing in it runs inside the population.*
+- 🔓 **Lock free, nothing armed** — read with `fuser` on `data/.heavy_run.lock`,
+  *the same reader that has said HELD three times today.*
+
+---
+
+# WHAT ROUND 390+391 ADDED
+
+## 🔢 I computed the v1→v2 diff myself — **174 changed leaves, not 2**
+
+```
+532 leaves -> 536.   CHANGED 174 = 172 window-table + 2 (at_utc, STOP_ADVICE)
+   172 = 43 rows × exactly 4 fields, EVERY ONE None -> a real value
+ADDED 4  (STOP_ADVICE_why, supersedes.path/.sha256/.kept_as)    REMOVED 0
+VERDICT-BEARING LEAVES MOVED: 0
+```
+
+> **Zero** — no D, no p, no futility, no tally, no cells, no `admitted_by`, no
+> book sha, no winner source. ***That is the claim that matters, and it is now
+> safe by computation rather than by assertion.***
+>
+> So R-914's *"nothing else moved"* is **true where it matters and short by 172
+> as enumerated** — and its own other clause, *"the second residual closed with
+> real values"*, is exactly those 172 leaves. **Both clauses right; they do not
+> agree with each other.**
+
+## ✅ And the supersession is **rule 13 in checkable form**
+
+`supersedes.sha256` **recomputed by me from v1's bytes — matches**;
+`kept_as: "provenance, unedited (rule 13)"`; **both files on disk.** ***One hour
+after the previous emit corrected itself by overwriting in place with no
+recoverable predecessor.*** Same family, same day, opposite discipline.
+
+**Of my two round-388 residuals: `STOP_ADVICE` is CLOSED; `running_tally` is
+NOT** — still one arm's list in a per-day slot. *On two days a leak and a correct
+union stay observationally identical.*
+
+## 🔧 I drove BE's new guard — **8/8, both directions**
+
+Admits the live tree **and says why, computed** · refuses off-lineage
+(`PIN_NOT_ANCESTOR`) · refuses a descendant whose pinned bytes moved
+(`PINNED_DIGEST_MOVED`, naming the file) · refuses a non-git path. **And one cell
+annotates itself honestly** — *"the digest cell's commit really IS an ancestor,
+so the cell tests (2), not (1)."* The `PIN` literal remains at
+`launch_stage2.sh:122` and that is now **correct**: it is a **base passed to a
+rule**, not an equality. wt-fwd is **exactly 112 commits** past it (counted).
+
+## 🪞 AND I CORRECT MYSELF — six rounds of too-narrow framing
+
+I filed the landing six times as blocked by *"the same two other-seat files."*
+**Measured properly:**
+
+```
+68 paths block it:   1 modified tracked  +  67 untracked-but-tracked-on-origin
+                     (44 declarations, 18 REVIEWs, 5 modules)
+     5 of 5 sampled are BYTE-IDENTICAL to origin's copies
+AND: with 140 local-only commits a fast-forward is IMPOSSIBLE however clean the tree is
+```
+
+> ***So the landing path is structurally closed, not transiently blocked, and the
+> divergence is bookkeeping rather than content for those paths.*** My earlier
+> framing named a true obstacle and implied a smaller one than exists.
+>
+> **This is no longer a MEM-seat matter:** R-912 orders a rule-45 push for BE's
+> `223f352` and `73d5655`, and **neither is on origin.** ***The register's own
+> entry orders an action the branch state does not permit*** — and **Q-MEM-338
+> through Q-MEM-345, including the row carrying the forward test's outcome,
+> stand on the same side of the same fork.**
+
+# READ FIRST — rounds 388 + 389 (MEM, 2026-09-11T16:03:23Z, tip `5690a08`)
+
+# ⏹️ THE FORWARD TEST IS OVER. **Both arms futile at G = 2 of 7.**
+
+## The outcome is arithmetic — I re-derived it rather than reading it
+
+Two-sided sign test over **2⁷ = 128** patterns, `tolerance_negative_days = 0`:
+
+| arm | non-positive days | best attainable | = | filed | > 0.025 |
+|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | **2** → at best 5 of 7 | 2·29/128 | **0.453125** | 0.453125 ✓ | **FUTILE** |
+| `HAZARD_OVER_SKEWED_REF` | **1** → at best 6 of 7 | 2·8/128 | **0.125** | 0.125 ✓ | **FUTILE** |
+| declared floor | 7 of 7 | 2·1/128 | **0.015625** | 0.015625 ✓ | — |
+
+Cause `KILLED_BY_NEGATIVE_DAYS` both arms. ***The cap comes from the days
+ALREADY SEEN, so days 3–7 cannot move it*** — the outcome is a consequence of
+arithmetic on a design committed before the first draw, **not a decision anyone
+took.**
+
+> ### The sentence is **NOT_ESTABLISHED_AT_THIS_POWER — never NO_EFFECT.**
+> *At a floor reachable only at 7-of-7, this design could not have licensed
+> absence.* REVIEW 174's asymmetry stands beside it; Holm **m=2 unchanged**.
+
+# 🔬 AND THE SHARPER STATEMENT: **the design could never have survived its own screen**
+
+```
+floor 0.015625  ×  1  = 0.015625   < 0.05     uncorrected
+                ×  2  = 0.031250   < 0.05     Holm m=2 as declared  -> WOULD have passed
+                × 69  = 1.078125   > 1        the candidates actually screened
+        1/69 = 0.014492754   <   floor 0.015625
+```
+
+***No outcome of this test, however perfect, could have cleared a Bonferroni
+correction over the 69-candidate screen that produced the arms.*** A pass would
+have needed a larger G, or a screen-independent justification for m=2 — and
+neither was available when the design was fixed. **Computable before any day was
+valued; the fail sentence is the weaker of two true statements.**
+
+> ⚠️ **It is a statement about the DESIGN, not the arms.** Nothing here bears on
+> whether an effect exists. *The sharper statement is the easier one to
+> over-read, so both halves are on the record.*
+
+# ✅ WHAT I VERIFIED FIELD BY FIELD
+
+- **Licensing:** `admitted_by: DESCENDANT` both arms · the **three** unnamed
+  scoring members (`be_score_neutrality.py`, `harmful_hazard_model.py`,
+  `phase2_state_schema_freeze.py`) with **all six rows `recorded == on_disk` by
+  my own string comparison** · `cohort_agreement` empty · stage 0
+  **`POPULATION_FREEZE_HOLDS`, 67/67, 52 PIPELINE / 15 INSTRUMENT,
+  `INSTRUMENT_DRIFTED: []`**.
+- **DE 346's per-arm fix took, checked from outside:** HAZARD's 09-07 reads
+  **+4,925.363903000005** in the map *and the same in its own cell* — a value the
+  old shared map could not have produced.
+- **The record carries a refusal inside itself:** `emit.progress_emit` is
+  `UNAVAILABLE`, *"a cent figure whose winner source was never verified must say
+  so."* **Rule 10 appearing inside the terminal artifact rather than beside it.**
+
+# 🔴 THREE THINGS TO CARRY FORWARD
+
+1. **`running_tally` still presents one arm's negative-day list in a per-day
+   slot** — the shape DE 346 just fixed one level below. On two days a leak and a
+   correct union are **observationally identical**; ***a third day would separate
+   them.*** For DE to confirm.
+2. **The licence rests on a report in `/tmp`** — `stage0_freeze_20260908.json`,
+   661 B, exists now, **untracked and outside every artifact tree**. Future
+   launches write it run-scoped; until one does, *a licence granted today is
+   evidenced by a file no policy keeps.*
+3. **The emit was overwritten in place** (15:52:37Z → 15:54:50Z) and the earlier
+   record **is not recoverable**. The cells are the provenance — *they are; I
+   recomputed both p from their checkpoints* — and re-emits are **vN+1** from
+   here. **DE 347's `STOP_ADVICE` fix lands that way**, in band.
+
+# 🔍 AND I CHECKED BE 189's FAILURE MODE AGAINST MY OWN READS
+
+BE found its own lock instrument reading a path **nothing references**, which
+`flock` *created on first probe* — so it could only ever say FREE and **had never
+proved it could fire.**
+
+> **I did not assume it missed me.** My reads used `fuser` on
+> **`data/.heavy_run.lock`** — the path BE confirms every heavy run takes — and
+> that reader has **said HELD three times with the pids resolved through
+> `/proc/<pid>/cgroup` to `be169ident0908`, `be183ident0908`, `be185ident0907`,
+> and FREE once.** ***It has demonstrated both states on the real path.***
+> BE's stray file was created **15:51:15Z, after** my round-387 report, and is
+> removed. **So round 387's finding stands.**
+
+**Also recorded, not edited:** `de_valuation_launch.sh:29` carries BE 188's shape
+and is **live-red on every tree** (4 of 6 digests differing **by design**), and
+**inert** — the valuation units bypass it. *A guard red everywhere and consulted
+nowhere is the same class as a guard that can never fire, from the other side.*
+
+# 📋 THE POST-POPULATION QUEUE IS OPEN
+
+`BE_PROCEDURE §10` · the MEM 372 row · the role-swap for the self-vouching module
+· `de_asymmetry_null_run:550` · the **G=7 machine check against `--n-declared`**
+· the `--n-declared` field · the runner's once-per-run oracle read in the null
+module.
+
+> **The 09-09 build stays HELD.** Days 09-09..09-13 are **not required by the
+> design** — whether they are valued *descriptively* is the **user's call**, and
+> the population stays protected either way: books build from archives at any
+> time, so nothing is lost by waiting.
+
+# READ FIRST — round 387 (MEM, 2026-09-11T15:49:40Z, tip `2b5dea1`)
+
+# 🎯 DAY ONE REPRODUCES **EXACTLY** FROM THE FREEZE-BUILT BOOK
+
+```
+day one   (landed book 41d22f96…)  D = -14645.078818000005   p 0.18163672654690619  seed 4124458766
+reproduce (freeze-built 887a97eb…) D = -14645.078818000005   p 0.16966067864271456  seed   88265706
+                                   delta D = 0.0000000000 c   <- ZERO, not "to the cent"
+   settled total  -19082.8184176  == -19082.8184176
+   cancels                 27,073 == 27,073
+   oracle          46,290 records  vs 46,145   (145 more)
+   admitted_by: DESCENDANT
+```
+
+> ***Different book, different seed, an oracle 145 records larger — and D did not
+> move by a hundredth of a cent.***
+>
+> **That answers the question I left open at round 385** — I flagged that the
+> consistency-link reproduction would read a larger oracle and said plainly that
+> whether any added record fell in 09-07's own slugs was *not something I
+> measured.* ***It was settled by the run, not by argument.***
+
+⚠️ **CONDVALUE only.** The HAZARD arm was still drawing when I read it — the link
+is established for one arm and **pending for the other**, and I do not report it
+as both.
+
+# 📊 DAY TWO — read from the files, and **both p recomputed by me**
+
+| arm | D (cents) | p | draws | cancels | settled | seed |
+|---|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | **−49,303.579891000016** | **0.07584830339321358** | 500 | 28,246 | +36,923.3203834 | 1357784335 |
+| `HAZARD_OVER_SKEWED_REF` | **−23,977.998804000017** | **1.0** | 500 | 29,512 | +62,248.9014704 | 154326921 |
+
+Both on the freeze-built **`05144b6f…`** book — *the one I hashed myself at round
+385* — both `book_receipt.admitted_by: **DESCENDANT**`, oracle `455b4132…`
+(46,276) read once for the pair.
+
+**I re-derived both p from the 500 checkpoint draws** under the pre-registered
+estimator `(1 + #{|D_null| ≥ |D_arm|}) / (1 + n)`:
+
+```
+CONDVALUE   37 of 500  ->  38/501  = 0.07584830339321358   MATCHES
+HAZARD     500 of 500  -> 501/501  = 1.0                   MATCHES
+```
+
+> **HAZARD's `p = 1.0` is the estimator's CEILING and it is attainable** — it
+> says the arm's |D| is *less extreme than every draw of its own matched null*.
+> *Recorded because an exact 1.0 reads like a missing computation, and here it is
+> the computation's correct output — which I confirmed by counting the draws.*
+
+# ⏸️ BOTH DAY-TWO D ARE NEGATIVE — **PENDING THE EMIT**
+
+The standing rule is G=7, `tolerance_negative_days = 0`, unanimity. ***The tally
+that turns these facts into a status is computed by the emit, and the emit has
+not run*** — the combiner refused before reaching it.
+
+> **So this block records the two D, the two p and the rule, and stops there.**
+> *Rule 10 is the reason: a conclusion written beside a table has contradicted
+> the table three times in this programme, and the one thing not to do is compute
+> the verdict in prose while the instrument that owns it is blocked.*
+
+# 🔴 THE RE-COMBINE HAS A **SECOND BLOCKER** NOBODY NAMED
+
+```
+day one              -> fwd_v2/
+day two              -> fwd_rehearsal_0908/
+day one reproduction -> fwd_a_0907_rebuild/
+
+_load_forward_cells(root, days, arms)  ->  AGG.load_cell(root, day, arm)
+    result_path = root / f"de_settle_result_{c}_{arm}.json"      <- ONE root, every day
+```
+
+***The ruled "re-combine over the two existing cells, no rerun" cannot run as
+written until the cells share a root.*** Named for DE; the remedy is theirs.
+
+**And the refusal originates one module lower than the citation:** both
+`SETTLEMENT_CONTROL_RESULT_IDENTITY_MISMATCH` and `required_guard_evidence` are
+defined in **`de_settlement_control_aggregate.py`** and nowhere else on the chain
+ref. `_load_forward_cells` catches `AGG.AggregateRefused` and re-raises — *so the
+reader to fix is `load_cell`'s verification, not the evaluator's loop.*
+
+# 🏷️ DAY TWO'S REAL RESULT LIVES IN A DIRECTORY CALLED **`rehearsal`**
+
+The launcher passed the chain default `--n-draws 500`, so the "point-estimate
+rehearsal" was a full run — **confirmed: `n_draws: 500` in both cells, 500 lines
+in each checkpoint.**
+
+> ***The durable consequence is not the surprise but the NAME.*** Day two's real,
+> admitted, freeze-built result is stored in `fwd_rehearsal_0908/`. **Any reader
+> or instrument that filters by path — or that treats "rehearsal" as excluded —
+> will miss day two entirely.** *Third instance this week of a name outliving what
+> it described, after the receipt filename and the guessed declaration name.*
+
+# 🔓 AND THE HEAVY LOCK READS **FREE** WHILE A REAL VALUATION RUNS
+
+`deA0907R.service` is running the 500-draw 09-07 reproduction through
+`launchers/value_after_producer.sh` with **`--lock /tmp/de_a0907_private.lock`**.
+`data/.heavy_run.lock` has **no holder**.
+
+> ***A watcher keyed on the heavy lock would report the box idle right now*** —
+> which is the same shape as R-909's own lesson, where the seats sat idle for an
+> hour because no artifact landed where the watchers looked. **Same defect,
+> different resource.**
+
+**The oracle series now has five points:** 46,145 → 46,249 → 46,253 → 46,276 →
+46,290. *Read once per run, a different value every run; no single quoted figure
+will stay true.*
+
+# READ FIRST — round 385 (MEM, 2026-09-11T14:13:13Z, tip `f1592b5`)
+
+# 🎯 THE 09-07 REFUSAL NAMES `ruled_day_set` **BY ITS OWN DELTA** — the thread closes
+
+```
+REFUSED BOOK_BUILT_BY_DIFFERENT_SCORING_CODE  (09-07, 14:02:25Z)
+  declared 157413f6562cf5bd   actual 2aa226623522814
+  [SCORING-PATH DELTA] on the path ['ruled_day_set']+['PARAMS_REL'];
+                       changed 6 def(s) / 2 name(s);  INTERSECTION ['ruled_day_set']
+```
+
+***That is the function whose split I drove at round 382, and whose
+six-versus-eleven consequence I found in the receipts at round 384.***
+**I did not have to argue the connection — the instrument printed it.**
+
+> And it prints its own limit rather than leaving it to a reviewer:
+> **`[MEMBERSHIP_LIMIT] THIS PREDICATE CANNOT DETECT A RECEIPT THAT UNDER-RECORDS
+> ITS OWN IMPORT CLOSURE`** — reachability is monotone in the closure, so a
+> smaller recording yields a smaller derived set and the re-derivation agrees.
+> It then names what *is* detected, and where the honesty is guarded instead.
+> ***An instrument that states the class of thing it cannot see, inside the
+> refusal text, is the opposite of the failure this programme keeps finding.***
+
+# 🌳 AND THE SHARED TREE IS **47 COMMITS BEHIND** ON THE VALUATION CODE
+
+DA's own code-freeze v8 measures `de_multiday_gate1_runner.py` **at `7efea16` as
+`157413f6562cf5bd`** and at the freeze as `acf911db48d445dd`. **I had
+independently measured the shared tree's runner as `157413f6562cf5bd` — the same
+bytes.**
+
+> **Round 383 found the shared tree's *comparator* off the certified producer.
+> It is the *runner* too.** `mm-research` carries the 7efea16-era valuation code
+> — which is also what the landed 09-07 and 09-08 books record as their builder.
+> *That is why those books refuse at the frozen tree, and it is the same root as
+> R-908's ruling.*
+
+# ✅ THE FREEZE-BUILT BOOK IS REAL, AND THE BUILDER IS **REPRODUCIBLE**
+
+`be183ident0908` → **`05144b6fce62e2cc`**, 390,041,103 B *(hashed by me, not read
+from the receipt)*, `builder_commit b34ed9fdd1e32fe2`, ruled set **11**, closure
+**51 modules**, recorded runner digest **`2aa226623522814316` — equal to what I
+measured at both origin refs.**
+
+| rebuild | commit | leaves | equal | differing | DATA |
+|---|---|---|---|---|---|
+| BE 176 | `2b27cc1` | 322,732 | 322,723 | **9** | **0** |
+| BE 183 | `b34ed9f` | 322,732 | 322,723 | **9** | **0** |
+
+**The same nine keys both times** — 7 `wall_clock`, 2 `resource_telemetry`. With
+the `dbb11e4` build that is **three builds at three commits agreeing on every one
+of 322,723 content leaves.**
+
+> ***One content-identical rebuild is a result. Three at three commits is a
+> property of the builder.***
+
+# 🔴 BUT THE REBUILD DOES **NOT** CLEAR THE SECOND REFUSAL
+
+`be_score_neutrality.py` is **absent from the import closure of ALL THREE 09-08
+receipts** — landed, `2b27cc1`, and the freeze-built `b34ed9f` — 51 modules each.
+
+> ***So that refusal is about what the BUILDER RECORDS, not about the book's
+> age, and building at the freeze does not fix it.*** R-908 calls the two
+> refusals one root — they are — **but they take two different remedies**: the
+> rebuild for the scoring-code one, **DE 336's reportable path for this one**.
+> *Worth separating before the rebuild is read as clearing both.*
+
+**And the rehearsal log disagrees with the entry on both count and name:**
+R-908 records **three** lazily-imported members under
+`BOOK_SCORING_CODE_MATCHES_WITH_UNNAMED_MEMBERS`; the 14:03:13Z log records
+**one** — `be_score_neutrality.py`, against a two-name lazy set — under
+`BOOK_SCORING_UNNAMED_BEYOND_THE_LAZY_SET`. *The log may predate DE 336's
+landing; filed to reconcile, not as a correction.*
+
+# ⏳ THE ORACLE GREW BETWEEN TWO RUNS **ONE MINUTE APART**
+
+```
+falsifier (a)            46,145 records
+09-07 point est 14:02:09  46,249   sha 5dcd2c7f   is_final_for_quotation: false
+09-08 rehearsal 14:03:03  46,253   sha 357aa6be   is_final_for_quotation: false
+```
+
+Read **once per run** — *and different runs read different oracles.* Since R-908
+makes (a)'s to-the-cent reproduction from the freeze-built book **the consistency
+link**, that reproduction will read an oracle **~104 records larger** than the
+one (a) passed against. ***A question for DE, not a verdict*** — whether any
+added record falls in 09-07's own slugs is not something I measured.
+
+**Same shape, fourth measurement:** the gap ledger is now **+16,615** against the
+landed book (6,732,586 → 6,736,435 → 6,746,766 → **6,749,201**). *Each number was
+right when written and none is right now.*
+
+# 🪞 AND I NEARLY FILED A FALSE ABSENCE — FROM A GUESSED FILENAME
+
+I tested for `da_code_freeze_v5..v9.json` across three refs, got **nine
+absences**, and was one step from filing that DA's code-freeze declarations were
+on no ref. **The convention is `da_code_freeze_DECLARATION_vN.json`, and v1–v9
+are present on all three.** *Round 336's lesson, which cost me a wrong filing
+then — caught this time by listing what exists instead of testing what I
+expected.*
+
+> **The same pattern bit twice in one round:** a regex of `v([5-9]|1[0-9])` made
+> the arm-freeze amendments look as if they stopped at v19. **They run to v21 on
+> all three refs.**
+
+# 📌 STANDING
+
+- **🔒 `be185ident0907` running since 14:07:45Z** from `wt-fwd` — the 09-07
+  freeze-built rebuild, due ~14:31Z. ***`wt-fwd` must not be refreshed.***
+- **Held:** the 09-09 real build; the 09-08 real run. **Licensing** = (6) on the
+  rebuilt 09-08 with `admitted_by: DESCENDANT` read from the record.
+- Freeze declarations are **internally consistent** — `v7/v8/v9` carry versions
+  matching their filenames, each `SUPERSEDES` the one below, all record
+  `FREEZE_COMMIT b34ed9f`. v8 states its own limit: *"a freeze pins identity, not
+  quality."*
+- `de_stage0_freeze_gate.py` exists on the chain ref and references
+  `da_population_freeze_verify` — **PRESENT in code; I have not driven it.**
+
+# READ FIRST — round 384 (MEM, 2026-09-11T13:40:59Z, tip `43d2642`)
+
+# ✅ (a), (b), (c) — **the three falsifiers are at three different evidentiary standards**
+
+| | claim | what I could verify on disk |
+|---|---|---|
+| **(a)** | PASSED at v33, both arms to the cent | **artifact exists, producer does not** — nine keys, no commit/tree/comparator/time; the protocol string is in no `.py` anywhere (round 383) |
+| **(b)** | PASSED on content identity | ✅ **artifact AND producer exist, and I re-derived the counts myself** |
+| **(c)** | PASSED — same snapshot both arms, missing slug refuses | 🔴 **no artifact found** — searched every `.json` under `data/` since 12:00 for four distinct tokens; **SPECIFIED, not DRIVEN** |
+
+*Named this way because they are not equally supported, and one sentence listing
+them together makes them look as if they are.*
+
+# 🎯 (b) IS GREEN, AND THE PREDICATE IS **PER LEAF**
+
+```
+BE_BOOK_CONTENT_DIFF_V2   n_leaves 322,732   n_equal 322,723   ->  9 differ
+  ALL NINE in the declared set:  7 wall_clock + 2 resource_telemetry
+  DATA_DIFFERENCES = []          verdict CONTENT_IDENTICAL_EXCEPT_ALLOWED
+  declared set: 50 names / 3 classes (provenance 24, wall_clock 9, telemetry 17)
+```
+
+> **The wholesale-exemption gap I named at round 383 is closed.** `rows_indexed`
+> now stands as **its own leaf**, unclassified — therefore **DATA** by the
+> declared rule — and **EQUAL**. The artifact says it in its own words: *"no key
+> is allowed wholesale — `asm.assembly.stages` carries `rows_indexed`, which is
+> data, beside `wall_s` and `peak_rss_mb_highwater`, which are not."*
+
+# 🔍 THE FINDING IS IN THE RECEIPTS — **the landed book carries a SIX-day ruled set**
+
+| receipt | builder | `ruled_day_set` | `ledger.bytes` |
+|---|---|---|---|
+| **landed** 09:33 | `7ed5a9015f75` | **6** — 09-03…09-08 *(v29)* | 6,732,586 |
+| rebuild-1 12:47 | `dbb11e4fd286` | **11** — 09-03…09-13 *(v33)* | 6,736,435 **(+3,849)** |
+| rebuild-2 13:22 | `2b27cc1974eb` | **11** | 6,746,766 **(+10,331)** |
+
+***That is the round-382 `load_params`-reads-v29 split, now visible in a
+production artifact rather than in source.*** And it makes **(b) stronger than
+it reads**: the content identity compares a book built under the **old** ruled
+set against one built under the **new**, which is exactly what the instrument's
+own `WHAT_THIS_PROVES` claims — *the re-pin admitted a day and changed nothing
+else about 09-08.*
+
+**And the ledger delta is `+14,180` against the landed book now, not `+3,849`** —
+that was the **first** rebuild's number, correct when measured. *The tape grows
+while we measure it; rule 8's own warning.*
+
+# 🔴 THE PER-LEAF RULE WENT TO THE BOOK AND **NOT THE RECEIPT**
+
+`be_rebuild_identity` still judges **835 receipt leaves against FOUR names** and
+reports **59 unexpected differences**. I classified those 59 against **BE 176's
+own 50-name set**:
+
+```
+provenance 42 · resource_telemetry 8 · wall_clock 4  ->  54 allowed
+DATA (5):  resources.assembly_inputs.ruled_day_set          <- the six-vs-eleven above
+           selection.era_resolution.ledger.bytes            <- the +14,180 above
+           resources.index_released.freed_fraction_of_index_peak
+           resources.index_released.required_freed_gb
+           resources.stages
+```
+
+*Two are already accounted for. The other three are resource fields whose **leaf
+names** the 50-name set does not carry — the same gap as round 383, one level
+up.*
+
+**And two verdicts on one pair of books read opposite, 24 seconds apart:**
+`be_rebuild_identity_20260908.json` → **`REBUILT_BOOK_NOT_IDENTICAL`** ·
+`be176_book_content_diff_20260908.json` → **`CONTENT_IDENTICAL_EXCEPT_ALLOWED`**.
+Both correct under their own definition; the ruling adopted the second.
+***But the file a search for "identity" finds first says NOT IDENTICAL.***
+
+# 🧱 THE FREEZE PATH — linear, published, **and the book is not**
+
+```
+8afbd1a 12:59:47 -> d095c5a 13:11:05 -> 6d22d78 13:26:41 -> bacb4e3 13:28:05
+  verified pairwise; all four on BOTH origin refs; 28m18s across four moves
+```
+
+> 🚨 **But the book the licensing bar will run end-to-end on was built at
+> `2b27cc1` — a commit `git branch -a --contains` returns NOTHING for.** It is
+> "DA 246: BOOK IDENTITY declared as CONTENT identity", 12:57:27Z, **on no
+> branch and predating every freeze commit above**, surviving only as a
+> reachable object. ***Rule 12 asks for a hash AND a commit ref; this has the
+> hash.***
+>
+> And its receipt was **renamed** to `…rebuild.6d22d78.json` while its
+> `producing_code.builder_commit` reads **`2b27cc1974eb…`**. *The suffix may mean
+> "compared against freeze `6d22d78`" — but a filename carrying one commit
+> beside a receipt recording another is a label a reader will resolve wrongly.*
+
+# ⛔ HELD, RUNNING, AND WHAT MOVES NEXT
+
+- **🔒 `be183ident0908.service` has held the heavy lock since 13:37:48Z** — the
+  **third** identity rebuild, from `wt-fwd` (`b34ed9f`), ~23 min. ***`wt-fwd`
+  must not be refreshed while it runs.***
+- **Held:** the **09-09 real build** and the **09-08 500-draw run**. Licensing
+  bar unchanged (REVIEW 171/175).
+- **`admitted_by` is PRESENT in code** (`be_forward_day.py`,
+  `da_nonhead_census.py`, `be_receipt_c1_supersede.py`) **and in no record yet** —
+  the preflight matrix is stale at 12:48:37Z. *That is the state the licensing
+  bar is about to change, not a defect.*
+- `da_book_identity_declaration_v1.json` is on **all three refs**.
+
+# READ FIRST — round 383 (MEM, 2026-09-11T13:00:22Z, tip `fdea3b7`)
+
+# 🧊 PART A — **DE, IF YOUR CONTEXT WAS JUST CLEARED, START HERE**
+
+*You were at 97%. Everything below is on disk and was measured this round.*
+
+## The supersession family — **seven commits, one linear chain, 43m31s**
+
+Each is an ancestor of the next; **all seven on `origin/de-freeze-chain-v2` AND
+`origin/be-build-runner`**:
+
+```
+f309602 12:03:01   oracle read ONCE before the first arm
+c853e2d 12:11:27   ruled_day_set resolves the chain head; build rule declared
+92e4b7c 12:27:57   per-slug refusal restored; declaration by identity
+21678a1 12:36:45   dead descendant arm wired; DECLARATION_IDENTITY_UNPINNED real
+eb923d3 12:39:24   hunk D — untouched-days guard reads DA's attestation by identity
+3dbb107 12:45:21   ⚠️ comparator EDITED  (a455191d -> ba2f3424)
+5efb8f0 12:46:32   ✅ comparator REVERTED BYTE-EXACT (-> a455191d)
+```
+
+> **I hashed all six myself.** The restored `a455191d6bceec7e` **is** the
+> certificate's producer — the same value on record since round 377.
+
+**Freeze v13** pins **three** identities, **byte-identical on three refs**
+(`origin/mm-research`, `de-freeze-chain-v2`, `be-build-runner`):
+`params aeeb818f3bb18c3e` *(which I independently confirmed is `params_v33`'s
+own digest)* · `day_read_state_attestation 1bcb91b7c0ba06c2` ·
+`forward_test_declaration 01afcbd36407883f`.
+
+## ✅ (a) GREEN — but read the caveat before you rely on it
+
+`p003_de_readonce_falsifier_a_20260907_rehearsal.json`, written **12:45:47Z**:
+`PASS: true`, params **v33**, oracle **46,145** records, peak 3.071 GiB.
+**CONDVALUE −14645.078818000005 · HAZARD +4925.363903000005 — both to the cent.**
+
+> 🔴 **The artifact carries NINE keys and ZERO provenance** — no commit, no
+> tree, no worktree, no builder, no comparator digest, **no time of its own**.
+> And its producer is **in no `.py` file**: not in the shared tree, `wt-deval`,
+> `wt-fwd` or `wt-de2`; not on the three origin refs; not among the **1,766**
+> scratch `.py` files written since 11:00Z. ***Rule 12's named failure mode.***
+>
+> ⏱️ **It was written 26 s after `3dbb107` took the comparator off its certified
+> bytes, and 45 s before `5efb8f0` put them back.** A POINT_ESTIMATE run spans
+> minutes so most of it ran earlier — **but the artifact records nothing that
+> could place it on either side of that edit.**
+>
+> **The numbers are right** *(they match day one, which I verified independently
+> at round 382)*. ***It is the artifact that cannot be audited, not the result.***
+
+## ✅ (b) RESOLVED ON CONTENT — **it landed 88 s after R-906 called it pending**
+
+`be169ident0908` finished **12:47:55Z, Result=success**. Sizes identical to the
+byte (**390,041,103**); sha **differs** — landed `41d22f96…`, rebuilt
+`017c5612…` *(I hashed both)*.
+
+**BE 173's content diff** (`be173_book_content_diff_20260908.json`, 12:51:28Z):
+
+```
+DATA_DIFFERS      = ["asm", "asm.assembly"]      <- asm ONLY because asm.assembly
+provenance_differs = []
+EQUAL: fr.rows · fr.statuses · fr.terminal_marks · fr.reference ·
+       fr.placement_latency · fr.population · fr.n_slugs ·
+       header.coin/day/protocol/placement_latency/score_contracts ·
+       asm.by_arm · asm.split_by_gen · asm.split_counts
+```
+
+**I opened both books and read the five differing values rather than trusting
+the labels:**
+
+| key | landed | rebuilt |
+|---|---|---|
+| `bn_cache_clear_s` | 4.963 | 5.079 |
+| `compose_s` | 22.149 | 22.286 |
+| `feature_pass_s` | 444.93 | 444.392 |
+| `score_s_by_head` | 12.904 / 29.293 | 17.373 / 29.978 |
+| `stages` `wall_s` | 74.58 | 74.26 |
+| **`stages` `rows_indexed`** | **647129** | **647129 — EQUAL** |
+
+> ***Every differing value is a stopwatch or a memory highwater. The books agree
+> on the market and disagree on how long the machine took.***
+
+**🔴 But the allowed-different set does not cover them.** Its **18 names are
+receipt-schema fields** (`builder_commit`, `wall_s`, `peak_rss_gb`,
+`started_utc`, `producing_code`…). The five that actually differ live inside the
+**book's** `asm.assembly`, and **zero of them are in the set**. ***Under the
+predicate as written, the STOP fires — on stopwatch readings.*** Named as a gap
+in the declared set; **yours to rule, not mine.**
+
+**And separate the receipt's three signals before reading them as three
+findings:** `receipt_clean: False` over 835 leaves is driven partly by
+`book.path` — *which differs by construction, because the rehearsal was told to
+write to `rebuild_identity/`.*
+
+## 🔴 (6) NOT RUN — and the stage-0 refusal names a **third** tree
+
+You described it as *"the chain reads wt-deval's — tree-vs-tree, one layer
+over."* **The artifact names the file:**
+
+```
+p003_de_preflight_matrix.json
+  params -> /home/yuqing/ctaNew-wt-de2/.../de_multiday_gate1_params_v31.json
+```
+
+***wt-de2, not wt-deval. v31, not the frozen v33.*** Its downstream rows follow:
+`frozen_params: WOULD_REFUSE SETTLEMENT_CONTROL_PARAMS_ARE_NOT_THE_FROZEN_PARAMS`
+· `verify_run_inputs: INPUT_ABSENT:params`. Its comparator row **PASSES** at
+`a455191d6bceec7e` — **the tree it ran in had the right comparator and the wrong
+params.**
+
+> **Which corrects me:** at round 381 I filed that `v31` lives only in
+> `wt-deval`. Measured today, **it lives in five worktrees** — `wt-deval`,
+> `wt-de2`, `wt-fwd`, `wt-be`, `wt-rev` — and is absent only from the shared
+> tree, `wt-de` and `wt-da`. ***A stale declaration surviving in five places is
+> reachable from five places.***
+
+## ⛔ THE LICENSING BAR AND THE TWO HELD RUNS
+
+**Held until licensed:** the **09-09 real build** (BE 172) and the **09-08
+500-draw run**. REVIEW 171's bar, routed DE 317, REV 172 armed on `5efb8f0`:
+the end-to-end on the `dbb11e4` book **plus four cells on the production path
+with `admitted_by` named** (descendant+matching admits · exact admits ·
+non-descendant refuses · one digest changed refuses · sha moved refuses), the
+walker's cells including a two-amendment conflict, comparator byte-identical.
+
+## 🚨 HAZARDS — read these before you touch anything
+
+- **`COMPARATOR_ON_DISK_IS_NOT_THE_CERTIFIED_PRODUCER` is true of exactly one
+  tree, and it is THE SHARED ONE.** `/home/yuqing/ctaNew` carries
+  **`d1bd5675c90d4ff3`**, `git status` clean, matching commits `34ce58e`/`68479dd`
+  (BE 133/134). `wt-deval`, `wt-de2`, `wt-fwd` all carry the certified
+  `a455191d6bceec7e`. ***The tree every seat reads by default holds the wrong
+  comparator.***
+- **Do not cold-start from `origin/mm-research`** — its register tops out at
+  **R-898** and its `STATUS.yml` at **MEM ROUND 358**; local is **R-906 /
+  round 383**. Both sides carry real work. **Read this working tree.**
+- `wt-deval` and `wt-de2` are both at **`2fff936`** as of 12:57Z.
+
+---
+
+# PART B — WHAT ELSE ROUND 383 ESTABLISHED
+
+- **The family is linear and unbranched** — no merge, no gap, each commit an
+  ancestor of the next, verified pairwise rather than assumed from the listing.
+- **`be169ident0908` exited `success` at 12:47:55Z** after 24m57s; the lock it
+  held since 12:22:58Z is now free.
+- **Falsifier (c), the growing-ledger fixture, is still SPECIFIED ONLY** —
+  unchanged from round 382, named in no file.
+
+# READ FIRST — round 382 (MEM, 2026-09-11T12:36:25Z, tip `6a9557c`)
+
+# 🧊 PART A — **DA, IF YOUR CONTEXT WAS JUST CLEARED, START HERE**
+
+*Written because DA's context is near compaction. Everything below is on disk;
+none of it needs the conversation.*
+
+**Your seat.** DA reads what other seats produce and **RECOMPUTES it
+independently**. A number you print has been re-derived by a second
+implementation, **or it is labelled as read**. You interpret nothing and assert
+no result.
+
+**Cold start, in order:**
+1. `workspace/DA_PROCEDURE.md` — **your own file, 42 KB, you maintain it.** Both
+   drive modes, the `PM_DATA_ROOT=/home/yuqing/ctaNew` requirement (without it
+   `da_gate1_day_verdict` and `da_process_budget_audit` go red **by design**).
+2. `workspace/COORDINATION.md` — **the register is the authority.** Newest entry
+   is **R-905**. Read it, then the four before it.
+3. `workspace/SEAT_PROTOCOL.md` — rules 1–47. You are not the writer of
+   `STATUS.yml` or `HANDOFF.md`; **MEM is.** File into `COORDINATION.md`.
+
+**What you filed most recently, and where it landed** (resolved ref by ref):
+
+| filing | what | refs |
+|---|---|---|
+| **DA 260** | guard register v1 + its computed gate | `mm-research`, `rev-g7` |
+| **DA 262** | forward-test **v26** (`BUILD_PIN` / `BUILD_PINNED_DIGESTS`) + population freeze **v7** | `origin/mm-research`, `origin/be-build-runner`, `origin/de-freeze-chain-v2` |
+| **DA 263** | params **v33** (11 days, `expected_G` 11) + arm-freeze amendment **v12** | the same three |
+
+> ⚠️ **One DA 262 copy, `c5e96a7`, is contained by NO ref — stranded.** Reported,
+> not rebased (rule 21). The content reached the three refs by other commits.
+
+**The four numbers that are the forward test.** *Day one (09-07), V2, read from
+`data/pm_5min/derived/fwd_v2/` this round:*
+
+| arm | observed_D (cents) | p (two-sided) | settled total | generations cancelled |
+|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | **−14645.078818000005** | **0.18163672654690619** | −19082.8184176 | 27073 |
+| `HAZARD_OVER_SKEWED_REF` | **+4925.363903000005** | **0.7285429141716567** | 487.6243034000096 | 23570 |
+
+`n_draws = 500` both arms. **Day two (09-08) is STARTED AND INCOMPLETE**, not
+unstarted: `de_settle_ckpt_2026-09-08_CONDVALUE_X_SKEW.jsonl` holds **68 draws**,
+last written **10:52/10:59Z**. *Observed; I do not diagnose why it stopped.*
+
+**Hazards live right now:**
+- 🚨 **DO NOT COLD-START FROM `origin/mm-research`.** Measured this round:
+  origin's register tops out at **R-898** and its `STATUS.yml` newest generation is
+  **MEM ROUND 358**. Local is at **R-905 / round 382**. The branches are **112 ahead,
+  131 behind**, and ***both sides carry real work***. **Read this working tree.**
+- ⛔ **`/home/yuqing/ctaNew-wt-fwd` MUST NOT BE REFRESHED** — `be169ident0908.service`
+  is running out of it (see Part B).
+- 🌿 **`PENDING_ORIGIN_MAIN` now reaches the CODE**, not just declarations:
+  `c853e2d` is on `origin/de-freeze-chain-v2` and `origin/be-build-runner`
+  **only**. Reading `de_multiday_gate1_runner.py` on `mm-research` gives you the
+  **pre-fix** body.
+- 📄 **`params_v31.json` is absent from the shared tree** (v30/v32/v33 present).
+- 🔢 Your **open** items: **DA 240** (join the AST enumeration to the register's
+  rows — it cannot refuse an *unregistered* site), the **31 unexercised** rows,
+  and the **22 build-path sites the freeze does not pin at all**
+  (`be_daybook_build.py`, `be_era_for_day.py`, `be_gate1_fragment.py`).
+
+---
+
+# PART B — WHAT ROUND 382 FOUND
+
+# 🔓 THE LOCK IS **NOT** IDLE — a falsifier took it at **12:22:58Z**
+
+R-905 records it idle since 11:52Z **by design**. *That was true when written at
+12:19Z and is now superseded by events, not wrong.*
+
+```
+be169ident0908.service   loaded / active / running   since 12:22:58Z
+  flock -n -E 75 data/.heavy_run.lock
+    be_rebuild_identity.py --build 20260908  <-  OWED FALSIFIER (b)
+  tree: /home/yuqing/ctaNew-wt-fwd  @ dbb11e4
+  MEASURED: 2.443 GiB resident | MemoryMax 11.05 GiB | CPUQuotaPerSecUSec 1s = ONE CORE
+```
+
+> I did not read a status line for this. **`fuser` on the lock gave two pids;
+> `/proc/<pid>/cgroup` gave the unit; `systemctl --user show` with `LoadState`
+> gave loaded/active/running.** *The lock was the instrument, not the report.*
+
+# 🧩 THE SUPERSESSION LEFT **TWO RULED SETS IN ONE MODULE**
+
+**Driven, not read.** At `c853e2d`, in `de_multiday_gate1_runner.py`:
+
+| function | resolves to | days | `expected_G` |
+|---|---|---|---|
+| `ruled_day_set()` *(fixed)* | freeze chain head → **`params_v33`** | **11** | **11** |
+| `load_params()` *(untouched)* | `PARAMS_REL` literal → **`params_v29`** | **6** | **6** |
+
+***The fix closed the LOCK's view of the ruled set and left the LOADER's
+pinned.*** `PARAMS_REL` survives on **29 lines**.
+
+> **And the loader is the site that records provenance:** `load_params()` bare
+> calls `record_input_digest("params", PARAMS_REL)`. ***So a run would lock on
+> v33 and file its params input digest for v29.*** *Named for DE and DA; I do
+> not adjudicate it.*
+
+**Downstream, already visible:** the R-555 positive control at `:10495` asserts
+`live["G"] == 6` against a **hardcoded six-day list**. *It is green only while
+the loader stays on v29* — **a literal that must track a moving thing, and the
+moving thing has started moving.**
+
+# ✅ THE GUARD REGISTER IS SOUND — 🔴 AND ITS EXAMPLE IS NOT
+
+I recounted from the rows rather than reading the header, and **every count
+equals the register's own declared field**:
+
+```
+167 sites · 105 distinct refusals · 136 exercised · 31 NOT
+     BUILD_BUILDER   2 of  22        VALUATION  29 of 145
+```
+
+**Driven three ways:** the real register **REFUSES** naming sites · an
+all-exercised copy **ADMITS** · an **empty** register **REFUSES** rather than
+passing vacuously. *Positive control and known-bad both present — rule 15 met.*
+
+**But the instance beside it names nothing.** DA 260's commit message
+illustrates the 31 with `SETTLEMENT_CONTROL_HAS_NO_SCORE_NEUTRALITY_CERTIFICATE`
+— **a spelling carried by no row** — and says it fired in production at
+09:09:23Z. The register's two real names are `..._CERTIFICATION` (3 rows,
+**unexercised**) and `..._NOT_CERTIFIED` (3 rows, **exercised TRUE**).
+
+> I swept the derived artifacts for every `REFUSED …CERTIF…` form: **3 hits, all
+> `NOT_CERTIFIED`, zero `HAS_NO_` forms.** ***The one that actually fired is the
+> one marked exercised.*** **The count stands and the artifact is right; the
+> sentence beside it is not** — rule 10's shape, in a commit message rather than
+> a table.
+
+**A second, smaller edge:** `guard_gate(lanes=["valuation"])` refuses with the
+**same code** a genuine unexercised row raises, because the declared lanes are
+upper-case. *Fail-safe in direction, conflated in cause* — **which is exactly
+the property DE 309 just fixed elsewhere.**
+
+# 🧪 THE THREE OWED FALSIFIERS ARE AT **THREE DIFFERENT STAGES**
+
+*Classified so none inherits another's voice (the round-368 rule):*
+
+| # | falsifier | stage | evidence |
+|---|---|---|---|
+| **(a)** | POINT_ESTIMATE 09-07, both arms to the cent | 🔴 **OWED, NOT STARTED** | newest 09-07 point estimate is dated **09-08T12:28:11Z**; nothing written after the supersession at 12:11:27Z |
+| **(b)** | 09-08 rebuild bit-identical by sha | 🟡 **DRIVEN, IN FLIGHT** | unit running; output dir created 12:21:58Z, still empty |
+| **(c)** | the growing-ledger fixture | ⚪ **SPECIFIED ONLY** | **no file under `live/pm_research` names it** |
+
+> ***Three falsifiers owed in one sentence of an R-entry are three different
+> objects,*** and the only one a reader can act on today is the one that exists.
+
+# 📌 SMALLER THINGS, EACH DRIVEN
+
+- **v33 is 11/11 on three refs**, resolved one ref at a time (`794e718` /
+  `dbb11e4` / `2068d4a`). The chain walks **9 links** to reach it.
+- **No receipt carries a params digest.** `verify_book_receipt` compares day,
+  book sha256, book path and `builder_commit`; `_builder_commit_admissible`
+  reads `BUILD_PIN` + `BUILD_PINNED_DIGESTS` and falls back to an **exact** pin
+  when either is absent. ***DE's named cross-version gap is real, and it is the
+  same reason days one and two are unaffected.***
+- **`unshare -Urm` → `write failed /proc/self/uid_map: Operation not permitted`.**
+  Confirmed by running it, not by citing it.
+- **DE 309 fixed a label-read, in a different file from the one REVIEW 168
+  named.** The landed fix (`b310915`) is in `de_preflight_matrix.py`: it replaces
+  `text.split("REFUSED ", 1)` with **identity against a harvested set of declared
+  names** — *rule 42 applied to refusals.* `chain_day.sh` itself lives at
+  `live/pm_research/launchers/chain_day.sh` and **is not on `mm-research` at
+  all**, so the file REVIEW 168 named is neither the file that was fixed nor a
+  file on this branch.
+
+# READ FIRST — round 381 (MEM, 2026-09-11T12:06:53Z, tip `e3d8e25`)
+
+# 🔍 I DIFFED params v31 → v32 — **nothing pinned moves**
+
+**37 changed leaves**, and **the only pinned-class change is `SUPERSEDES.sha256`** —
+*the pointer to the superseded document, not a pin on anything the run consumes.*
+
+```
+NO theta · NO min_draws · NO alpha · NO be_cascade · NO be_module
+the substantive change:  ONE ADDITIVE HUNK on `days`
+                         + 09-09 … 09-13,  every_existing: True
+WHY_THIS_SUPERSEDES_V31.NO_PIN_MOVES = "the build pin stays 7ed5a9…"
+```
+
+## 🔗 And the pointer moves to a digest I computed myself
+
+`SUPERSEDES.sha256`: `066b52f2…` (v29's) → **`dd58223c6e3654a2`** — ***which is
+the sha256 of `params_v31.json` that I hashed at round 377*** while verifying the
+v10 amendment's pin.
+
+> ***The chain closes on a value already on the record: v32 names v31 by content,
+> and the content is what I measured four rounds ago.*** **A supersession pointer
+> verified against an independently computed digest is what makes rule 13
+> checkable rather than declarative.**
+
+## 🌿 And v31 exists ONLY in `wt-deval`
+
+I looked in both trees: **v31 is only on the side branch; v32 is in both.**
+
+> ***`PENDING_ORIGIN_MAIN` now reaches the DECLARATIONS, not just the commits: a
+> reader working from `mm-research` alone cannot resolve v32's supersession
+> target.*** Worth naming before someone tries to validate the chain from there.
+
+# ✅ DAY-ONE RESULTS UNCHANGED — tested by exact equality, not by eye
+
+`−14645.078818000005` and `+4925.363903000005`, compared for **exact equality**
+against round 379.
+
+> *A round whose headline is a method change is exactly the round in which a
+> quietly moved number would pass — and "unchanged" asserted without a comparison
+> is the weakest sentence in any state file.*
+
+# 🧭 THE METHOD IS NOW **ENUMERATE GUARDS, THEN REHEARSE** — before any real run
+
+**A user directive, given twice.**
+
+*That is the generalisation of everything this day produced: five refusals
+discovered at the lock · a snapshot found off on the real path · a waiter that
+stalled on a free lock · a tripwire that did not exist.* ***Every one was a guard
+whose behaviour was known only when it fired. Enumerating and rehearsing moves
+the discovery before the run.***
+
+> **And that the directive had to be given TWICE is itself the finding — the
+> first giving did not reach the next launch.** *Which is DA 221's shape again:
+> a stated rule does not reach the next decision.*
+
+# ⚖️ `require_ledger` REFUSED THE ENV SNAPSHOT — **by design**
+
+So the valuation **reads the oracle once per run**, falsifier **pending**.
+
+> ***A guard refusing a mechanism built to satisfy it is the sharpest kind of
+> design feedback:*** the snapshot was an attempt to make the oracle
+> reproducible, and the ledger requirement said **an environment-carried snapshot
+> is not the same object as a read.**
+
+*Recorded with the falsifier marked PENDING, because "once per run" is a claim
+about behaviour, and behaviour is what a falsifier is for.*
+
+# 🔒 BOTH CHAINS NOW WAIT ON A **REHEARSAL**, NOT A LOCK
+
+09-08's real valuation waits on **its point-estimate rehearsal**; 09-09's book
+waits on **v32 + a dry-run**.
+
+> ***The new method visible in the queue: what blocks the chains is no longer
+> contention but PREPARATION.*** **A day spent on locks bought a method in which
+> the waiting happens before the resource is held rather than while it is.**
+
+**And census v3 identity is exact** — *after the coin-versus-slug mismatch BE's
+own control caught at 160 against 165, an exact identity is what closes that
+thread, and it means the field names crossed **string by string**.*
+
+# READ FIRST — round 380 (MEM, 2026-09-11T11:23:01Z, tip `63e7b05`)
+
+# 📐 THE TRIPWIRE REPORTED — every field matches what I computed last round
+
+Read from `p003_de_revaluation_emit_20260907.json`:
+
+```
+CONCENTRATION_FINDING      True   True          (both arms)
+DELTA_D_cents              −3627.3668120000057   −330.8129409999947
+SIGN_CHANGE_HALT           False       halted_arms  []
+HALT                       False   False      "within band"
+reference_levels_cents     {interval 18.4, window 1036.5}
+```
+
+***The two ΔD values are the differences I computed myself at round 379 — to the
+last digit.***
+
+## ✅ And the residual proves the whole move happened INSIDE the 27 declared windows
+
+```
+residual_cents   +5.9117e-12   −4.7748e-12
+```
+
+**About 169,000× and 209,000× below even the 1e-6 rounding band** — eleven orders
+below the 1c halt.
+
+> ***The entire ΔD is accounted for inside the declared spine. Nothing moved
+> outside it.*** **That is the positive result rule 4's halt exists to detect the
+> absence of — and it is now measured rather than assumed.**
+
+## 🎯 The per-window clause earned itself on the first real run
+
+| arm | aggregate ΔD | worst single window | ratio |
+|---|---|---|---|
+| CONDVALUE | 3,627.37c | 1,960.40c | 0.54× |
+| **HAZARD** | **330.81c** | **1,280.75c** | **3.87×** |
+
+> ***HAZARD's worst single window is nearly four times its NET — offsetting
+> moves, the exact case the clause was added for at round 365.***
+
+**Aggregate-only would still have fired** (330.8 > 110) — ***so its value here is
+not the firing but the MAGNITUDE: the net understates the largest single movement
+by almost 4×.*** *A reader given only 331c would have the wrong picture of a day
+in which one window moved 1,281c.*
+
+**And `residual_sign_convention` ships in the artifact itself**, with the worked
++50c → −50c example — *the inversion I derived algebraically at round 372, now in
+the output a reader actually meets rather than a derivation they must perform.*
+
+# 🔁 THE ORACLE SNAPSHOT WAS **OFF ON THE REAL LAUNCH PATH**
+
+Fixed as a **wrapper opt-in**, **driven through the path**, at `621930a`.
+***Configured-but-not-applied again*** — and both halves matter: the opt-in makes
+the setting reach the launch, and **driving it through the path is what proves
+the setting ARRIVES rather than merely exists.**
+
+> **A mechanism verified anywhere other than the path that uses it is the defect
+> this programme has spent the day finding.**
+
+**And the growing-input union is frozen per run** — *the quiet half of the same
+problem: an input set that grows while a run reads it makes two reads of one run
+disagree, and no digest taken at the start survives to the end. Freezing it per
+run is what makes a run's inputs **a fixed object that can be named** — which
+every provenance check here assumes and none could previously guarantee.*
+
+# 🔒 LOCK QUEUE ON DISK — both discriminators applied
+
+```
+lock held by     pids 2419338 / 2419339 / 2427663
+be148tape0909    LoadState=NOT-FOUND    ← transient, gone (Result would say "success")
+be147frag0909    LoadState=NOT-FOUND    ← transient, gone
+deRV0908w1       failed, rc=75          ← OFFERING
+deRV0907w1       failed, rc=1           ← STILL A REAL FAILURE, not an offer
+```
+
+***`deRV0907w1`'s rc=1 is unchanged from last round and worth not losing: a
+genuine failure sitting quietly among pollers is exactly what the rc
+discriminator exists to separate.***
+
+**09-08/09/10 chains re-armed, waiting on BE's census v2; 09-09's tape on the
+lock since 11:14Z.** *Three chains armed and blocked on one seat's artifact is
+the configuration rule 47 was written about — **and the difference from this
+morning is that the order is now declared in advance instead of discovered at
+the lock.***
+
+# READ FIRST — round 379 (MEM, 2026-09-11T11:06:01Z, tip `0c32fbf`)
+
+# 📊 DAY ONE IS VALUED UNDER V2 ON THE REBUILT BOOK — read at the artifacts
+
+| arm | observed D | p (two-sided) | state |
+|---|---|---|---|
+| CONDVALUE_X_SKEW | **−14,645.078818c** | 0.181637 | **FUTILE** (computed) |
+| HAZARD_OVER_SKEWED_REF | **+4,925.363903c** | 0.728543 | **ALIVE** |
+
+*`best_attainable_p` 0.125 and 0.015625, `tolerance_negative_days` −1 and 0 —
+**exactly the G=7 tail values I enumerated at round 350.***
+
+# 🚨 AND THE ERA REBUILD MOVED D PAST **EVERY** DECLARED BOUND
+
+**ΔD (V2-on-rebuilt vs day-one V1):**
+
+```
+CONDVALUE   −3,627.366812c    HAZARD   −330.812941c
+```
+
+| bound | CONDVALUE | HAZARD |
+|---|---|---|
+| `CONCENTRATION_FINDING` **110c** | **33.0×** | **3.0×** |
+| REV interval-scoped 18.4c | 197× | 18× |
+| REV **window-scoped** 1,036.5c | **3.5×** | 0.3× |
+| the **struck** 25 % bar, 2,754.4c | **1.3×** | 0.1× |
+
+> ***The tripwire will fire, and it should.***
+
+**And the move is the ERA REBUILD's** — because the V1→V2 change was **falsified
+as D-neutral on the same book** at round 366 (`observed_D_MOVED: False`, primary
+D identical to the cent). *The book is the only other input that changed, and it
+changed only by the era fix.* **Worth stating, because a reader meeting a 3,627c
+swing beside a protocol version bump will reach for the version first.**
+
+## ✋ So the 25 % bar was NOT unreachable — **the bounds that struck it were too tight**
+
+At round 365 I recorded it struck because **both** of REV's bounds fell below it,
+and wrote that *even the upper bound was 2.66× below.* **The observed move
+exceeds that bar.**
+
+> ***The strike followed correctly from the bounds. The bounds were wrong: the
+> physics argument that capped a whole-window replay change near a thousand cents
+> understated it by three and a half times. The reasoning was sound and its input
+> was not.***
+
+**No sign change** — CONDVALUE stays negative, HAZARD stays positive — so
+REVIEW 186's `SIGN_CHANGE_HALT` does **not** trip and day one does not become
+UNRESOLVED. ***Both arms moved in the unfavourable direction, which is the
+direction that requires no defence.***
+
+# 🔐 EVERY GATE NOW RUNS **BEFORE** THE LOCK
+
+Matrix · build preflight · acceptance rows · freeze v4 · pipeline lock ·
+arm-ahead chains · producer-keyed waiters.
+
+> ***That is the answer to the five refusals and the 56 idle minutes: each was a
+> gate firing AFTER a chain had queued, so a stale record cost a lock cycle.
+> Moving the gates ahead of the lock turns a refusal from an hour into a
+> second*** — the first structural change tonight aimed at **cost** rather than
+> correctness.
+
+# 🔒 THE LOCK QUEUE ON DISK — using both discriminators I recorded
+
+```
+lock held by     pids 2397772 / 2397773
+be147frag0909    loaded · ACTIVE · running · rc=0    ← HOLDS the lock
+deRV0908w1       loaded · failed · rc=75             ← OFFERING, not dead
+deRV0907w1       loaded · failed · rc=1              ← a REAL failure, not an offer
+deEMIT0907d      LoadState=NOT-FOUND                 ← transient unit, gone
+```
+
+***`rc=75` separates waiting from dead — the discriminator I learned from my own
+near-miss one round ago — and `LoadState` catches the absent unit that `Result`
+would have called `success`.***
+
+**09-08's valuation stopped at six minutes and was re-armed on a snapshot**, with
+the oracle-snapshot ruling **pending DE 289**. *A valuation stopped six minutes in
+and re-armed against a snapshot is a different object from one that ran through,
+and that difference must survive into whatever it produces — which is what the
+pending ruling is for.* **09-09's fragment has held the lock since 11:00Z.**
+
+# READ FIRST — round 378 (MEM, 2026-09-11T09:55:21Z, tip `e807675`)
+
+# ✅ THE ROUND-376 PREDICTION LANDED
+
+**Refusal `NOT_CERTIFIED` at 09:09:23Z · re-certified 09:33:48Z.** *Called about
+twenty minutes earlier from reading `de_settlement_control_run.py:194` and
+hashing two files.*
+
+## 📜 The certificate stock is now THREE, with exactly ONE valid
+
+```
+c5c1fc0ae126a3f7   BE's rebuild                 stale
+8500ce41fc800e9a   the user's hardened copy     stale
+a455191d6bceec7e   __68e7d23.json               ← MATCHES THE COMPARATOR ON DISK
+```
+
+> ***Every retirement was caused by editing the file that validates them.***
+> V2 pins **exactly one** producer-digest artifact — the right design, **and the
+> reason the stock grows by one at every repair.**
+
+# 🌿 THE PIN IS `68e7d23` — and still NOT on `mm-research`
+
+I checked both refs: **on `origin/de-freeze-chain-v2`, not on
+`origin/mm-research`.** ***The pin has moved twice since `dcec80a` and the
+canonical branch has contained none of them*** — so `PENDING_ORIGIN_MAIN` is **not
+a transient but the standing condition** until the fork resolves. **A cold reader
+resolves the pin by ref, not by the register.**
+
+# 🔒 THE LOCK QUEUE, READ FROM DISK
+
+```
+lock held by      pid 2298230 (flock) + 2298231 (python3)
+deRV0907w1        loaded · ACTIVE · RUNNING     ← holds the lock
+deEMIT0907d       loaded · ACTIVE · RUNNING     ← armed, waiting on the RESULT FILE
+be147frag0909     loaded · FAILED · FAILED      ← offering (see below)
+```
+
+## 🪞 And I nearly filed a POLLING unit as a DEAD one
+
+`be147frag0909` reads **failed**; the dispatch says **polling.** *I looked
+instead of choosing:* `Result=exit-code`, **`ExecMainStatus=75`**,
+**`ExecMainStartTimestamp == ExecMainExitTimestamp`, same second**, and the
+journal showing **Started → exited 75/TEMPFAIL → Failed, repeating.**
+
+> ***That is `flock -n -E 75` offering. The dispatch is right and my first
+> reading was wrong.***
+
+**A polling unit is indistinguishable from a dead one by `ActiveState` and
+`Result` alone** — both say failed, both say exit-code. **The discriminators are
+`rc=75` specifically (it *did no work*) and `ExecMainStartTimestamp` advancing.**
+
+> ***And that is exactly the correction the coordinator made to their own watcher
+> at round 376 — which I recorded, and then walked into one round later.***
+> **Rule 46's family gains a member: `LoadState` separates EXISTING from ABSENT;
+> `rc=75` separates WAITING from DEAD.**
+
+# 📗 BUILD STATE
+
+**09-08's book landed 09:33:03Z** — 390,041,103 B, rc=0, ~23 min — **31.8 MB
+larger than 09-07's rebuilt 358,259,004** (I differenced them). **09-07's V2
+valuation running since ~09:34Z**, out near 10:51Z. 09-09's fragment offers
+behind it; 09-08's valuation is being armed.
+
+**And R-899 closed the freeze-chain hole at `68e7d23` BEFORE go5,
+declarations-only**, with F2 and the line-650 falsifier ruled **post-population.**
+***Closing a chain defect before the run that would expose it, and deferring the
+two items that would move code during a population, is the ordering this
+programme arrived at the hard way — and declarations-only scope is what makes it
+safe mid-population at all.***
+
+# READ FIRST — round 377 (MEM, 2026-09-11T08:56:30Z, tip `f5f39f5`)
+# 🚨 MY ROUND-376 WARNING, CONFIRMED AGAINST THE PIN GO5 WILL ACTUALLY USE
+
+```
+comparator @ dcec80a                       a455191d6bceec7e
+cert …__da00220.json   producer            8500ce41fc800e9a   ✗
+cert …EV22_vs_NEUTCHK.json  producer       c5c1fc0ae126a3f7   ✗
+```
+
+**The comparator is unchanged from `7efea16` — only the driver moved.** And
+**I inventoried every certificate on disk: there are two, and NEITHER matches.**
+
+> ***`deRV0907go5` will refuse `NOT_CERTIFIED` exactly as go4 would have, unless
+> a THIRD certification is run with the `a455191d` comparator first.***
+
+## 📉 And the inventory is the useful part
+
+The two certificates are the work of **the two instruments whose agreement I
+called rule-38 corroboration at round 374** — the user's hardened comparator and
+BE's rebuild to REV 173's bar. ***Both are now stale against a third that
+produced neither.***
+
+> **The self-referential digest check compounding: each repair to the comparator
+> retires the entire certificate stock. The stock is now two entries and zero
+> valid ones.**
+
+# 🌿 THE PIN IS ON A SIDE REF — I checked both ways
+
+```
+dcec80a  ON  origin/de-freeze-chain-v2
+dcec80a  NOT ON  origin/mm-research
+```
+
+**Rule 45's landing branch working as designed** — *and it means **the register's
+authority lags a valid landing**: the commit is real, published and resolvable by
+ref, while the branch the register treats as canonical cannot contain it until
+the user resolves the fork.* **`PENDING_ORIGIN_MAIN` in DA's v19 is the right way
+to carry a state that is neither landed nor lost.**
+
+## ✋ And I correct my own first reading of the tree
+
+My first pass counted **one dirty file** and would have contradicted the
+dispatch's *"clean"*. **The entry is `?? data` — untracked.** *So the tracked tree
+is clean and the dispatch is right.* ***Counting `git status` lines without
+reading their status character is the same shape as every proxy-for-property
+error in these files*** — caught before writing it down.
+
+# ✅ THE DRIVER DIFFERENCE IS CLEARED BY TWO GENUINELY DIFFERENT INSTRUMENTS
+
+**DA 244, by AST:** zero arithmetic on any quantity — the only BinOps are **path
+joins** and `time.time() − started`; `score`, `_D`, `p_two`, `draw`, `cents`
+appear **only as field names copied into a record.**
+**REV 154, by import closure:** the driver is a **caller** of the computing
+modules, **not a member of their closure.**
+
+> *"Computes nothing that reaches a number."* — ***a syntax tree and a dependency
+> graph, on one property. Rule-38 corroboration of the kind that earns the name.***
+> **No STOP.**
+
+**And DA 246 re-runs the AST against `dcec80a`'s COMMITTED bytes** — *which is the
+half that matters: a clearance obtained on a working copy and applied to a commit
+is a clearance of something else.* **The same gap that produced the wrong-tree
+build at round 353.**
+
+# 🔧 A SAFETY WATCHER WOULD HAVE STOPPED GO5 FOR THE WRONG REASON
+
+It required the pin on `origin/mm-research` — **a condition rule 45's landing
+path cannot satisfy.** Corrected to *"any origin ref contains HEAD"* + clean tree.
+
+> ***A safety check calibrated against a superseded workflow is not conservative
+> — it is a check of the wrong property, and it would have cost a cycle while
+> looking prudent.***
+
+# ✅ AND I VERIFIED THE v10 AMENDMENT'S PINNED DIGEST MYSELF
+
+`sha256(de_multiday_gate1_params_v31.json)` on disk = **`dd58223c6e3654a2`**, and
+the amendment **contains that exact 64-character digest.** *So the pin chain
+closes at the artifact: the amendment names a params file **by content**, and the
+content on disk is what it names — **the property the freeze-fork repair exists
+to make checkable**, verified rather than assumed.*
+
+# READ FIRST — round 376 (MEM, 2026-09-11T08:51:56Z, tip `58009f0`)
+# 🚨 THE FIX FOR REFUSAL THREE RE-OPENS REFUSAL TWO — established at the code
+
+`de_settlement_control_run.py:194`:
+
+```python
+expected_producer_sha = _sha(HERE / "be_score_neutrality.py")
+```
+
+**Computed AT RUN TIME, from the file on disk.** And the resolver fix **changed
+that file**:
+
+```
+comparator on disk (wt-deval)   a455191d6bceec7e
+comparator @ da00220            8500ce41fc800e9a
+certificate records producer    8500ce41fc800e9a   ← MISMATCH
+```
+
+> ***`deRV0907go4`, offering for the lock right now, will refuse
+> `SETTLEMENT_CONTROL_SCORE_NEUTRALITY_NOT_CERTIFIED` the moment it gets it —
+> for the same reason as refusal two, re-opened by the fix for refusal three.***
+
+**The certification must be re-run with the NEW comparator before the valuation
+can proceed.**
+
+## 🔁 And the mechanism is a NEW SHAPE tonight: a self-referential digest check
+
+The certificate must be produced by the comparator that validates it — **and the
+validator identifies that comparator by hashing ITSELF on disk.**
+
+> ***So any edit to the comparator invalidates every certificate it has ever
+> produced, including one made minutes earlier for exactly this purpose.***
+
+**Not a stale record. Not a missing guard. A check whose SUBJECT and AUTHORITY
+are the same mutable file.** *The structural remedy is for the certificate to be
+validated against **a pinned digest**, not a live one.*
+
+# ✅ THE RULING IS LANDED — verified at `wt-deval` by me, not relayed
+
+**HEAD `7efea16`.** The resolver is real: `FREEZE_AMENDMENT_GLOB` (l.87),
+`_amendment_version()` (l.95), and a **sorted glob over every
+`de_arm_freeze_v*_amendment.json`** (l.118) so the **last params pin wins**.
+`de_arm_freeze_v10_amendment.json` **pins params v31** and references
+`7ed5a9015f75`. `PIPELINE_COMMIT` stays `7ed5a90` — *it guards the BOOK.*
+
+> ***The six amendments I listed last round — v2 through v7 — are now reachable
+> by the consumer that could not see them. The fourth gate's defect is REPAIRED,
+> not merely named.***
+
+# ⚠️ A SECOND FILE DIFFERS — confirmed by my own hashing
+
+```
+de_forward_value_day.py   wt-deval 243cf4628214dd95   da00220 2bb2e71b8d465d35   DIFFERS
+```
+
+**The DRIVER**, carrying DE's origin-side pre-flight guard (Q-DE-240/242) that
+the local-fork `da00220` predates. **DA 244 (source) and REV 154 (import
+closure) are verifying it computes nothing that reaches a number — if it does,
+that is an unruled pin move and the run stops.** ***Declaring a second difference
+the ruling did not name, rather than letting it ride, is the right call and the
+expensive one.***
+
+# ⏱ THE IDLE LOCK — **56.3 min**, accounting closes to 73 %
+
+07:48:07 → 08:44:25. **~17 min blocked on the user · ~24 min on ONE slow
+coordinator tool call · ~15 min for the three-refusal cycle.** Not
+calendar-binding. *An accounting that names its largest single item as **a tool
+call** rather than a decision is the kind that can be acted on.*
+
+**Standing fix:** *a lock no chain holds for >5 min while any chain is waiting is
+itself an event.* ***Right shape, because tonight's two contention failures were
+opposite — a lock taken by the wrong chain, and a lock held by nobody — and only
+a rule treating IDLENESS as a reportable state covers both. Silence is the common
+factor.***
+
+# 👻 A WATCHER READ AN OLD REFUSAL AS CURRENT
+
+The watcher grepped `REFUSED [A-Z_]+` from a stdout log **appended across
+attempts, because the unit name is reused**, and reported the **third** attempt's
+`PARAMS_NOT_FROZEN` as the fourth's refusal — *when the actual fourth line was
+the lock refusal, `rc=75`, which **did no work**.* Replaced with exit-code logic.
+
+> ***Same class as the ghost text and the `Result=success` trap: a reused name
+> makes an old line look current. Third distinct instance tonight.***
+
+# READ FIRST — round 375 (MEM, 2026-09-11T08:45:45Z, tip `d8b5f07`)
+
+# 🔒 A FREEZE THAT COULD NOT BE SUPERSEDED
+
+The third refusal — `SETTLEMENT_CONTROL_PARAMS_ARE_NOT_THE_FROZEN_PARAMS` —
+traces to a **literal I read at `be_score_neutrality.py:85`**:
+
+```
+FREEZE_REL = "de_arm_freeze_v1.json"
+```
+
+`frozen_params()` reads **the base freeze only**, so amendments never pinned
+params. V2 demanded params **v29 by digest** while its cascade check demanded
+params naming **`7ed5a90`'s bytes** — ***mutually exclusive under the 03:07
+ruling, with no waiver path.***
+
+## 📂 And I listed SIX amendments the literal cannot see
+
+`de_arm_freeze_v2` … `v7` — **all amendments**, beside the v1 base the literal
+names.
+
+> ***The freeze was superseded IN BAND six times, and not one supersession
+> reached the consumer.*** That is the concrete form of *"a freeze that cannot be
+> superseded in band was never rule-13 compliant"* — **and sharper than the
+> sentence: here the rule-13 supersessions existed, correctly written, going
+> nowhere.**
+
+## 🔢 Fifth literal-that-must-track-a-moving-thing in my own records
+
+| # | instance | round |
+|---|---|---|
+| 1 | the rule-6 floor — 18 carriers, 4 spellings | 336 / 339 |
+| 2 | `real_data_reachable` docstring — `parents[2]`, no resolver | 354 |
+| 3 | **my own rotation delimiter** — an ISO date in prose split a generation | 349 |
+| 4 | `fi.ERA` — a day-independent literal emptied every gap list | 360 |
+| 5 | **`FREEZE_REL`** — pinned to v1 while six amendments exist | **now** |
+
+> ***The first inside a FREEZE reference — which is where a stale literal does
+> the most damage, because the freeze is what everything else is checked
+> against.***
+
+# ⚖️ THE USER RULED: fix the RESOLVER, don't re-pin the build
+
+08:01Z, on a question blocked ~17 minutes. **The books are certified
+bit-identical, so the two candidates differ ONLY IN TIME.**
+
+> ***When two options produce provably identical objects, the choice is not about
+> the result at all — it should be decided on which leaves the better structure
+> behind.***
+
+**DE 269:** resolver + `de_arm_freeze_v10_amendment` pinning params **v31** + a
+new commit — **the valuation pin advances in band while `PIPELINE_COMMIT`, the
+BOOK guard, stays at `7ed5a90`.** *Two pins with two jobs, moved independently —
+only possible because someone distinguished them. Had they been one field, the
+repair would have required re-pinning the books, which is the option the user
+declined.*
+
+**And BE runs 09-08's tape in the gap rather than idling the lock.** *The previous
+two contentions were a lock **taken** by the wrong chain; this was a lock **held
+by nobody** while work existed — **the opposite failure from the same absence of
+an arbiter**, which is rule 47's argument arriving from the other side.*
+
+# 4️⃣ THE FOURTH GATE IS NOW NAMED — closing a count I did not invent
+
+At round 374 the dispatch said **four** and named **three**; **I recorded the
+count as given and did not invent the fourth.** It is **the params digest**.
+
+So: **the pin literal · the certificate's producer · the cascade · the params
+digest** — each correct, each a record lagging a ruling.
+
+> ***But the fourth differs in kind: the first three exposed STALE RECORDS; this
+> one exposed A DEFECT IN THE FREEZE'S OWN SUPERSESSION PATH. A gate that finds a
+> broken mechanism rather than a stale value is worth more than the other three
+> together.***
+
+# READ FIRST — round 374 (MEM, 2026-09-11T08:00:38Z, tip `0f5b188`)
+
+# ✅ TWO COMPARATORS, ONE VERDICT — `NOT_CERTIFIED` cleared
+
+`…__da00220.json`: **BIT_IDENTICAL** both arms, **0 flips**,
+`producer.sha256 = 8500ce41fc80` — ***which I hashed myself last round and
+confirmed is the comparator at `da00220`*** — `SUPPORTED_ON_THIS_DAY`.
+
+> **Rule-38 corroboration, and genuinely so: the instruments differ** — one is
+> the user's hardened copy, the other BE's rebuild to REV 173's stricter bar.
+
+# 🚧 THE RELAUNCH REFUSED AT THE NEXT GATE — **on exactly the mismatch I drove at round 340**
+
+`BE_CASCADE_DIFFERS`, 07:56:30, rc=1. **I read params v29:**
+
+```
+v29 names   de_head_scoring.py        53a406a0ae2a11ff
+v29 names   de_phase4_diag_runner.py  cb97b94dbd3fc6ca
+```
+
+**At round 340 I ran `verify_run_inputs` myself** and it raised
+`REFUSED BE_CASCADE_DIFFERS: 2 of 10 … de_head_scoring.py declared 53a406a0…
+actual 31c36838…`
+
+> ***The guard I found "off the path it guards" twenty-four rounds ago is now ON
+> the path — and refusing on precisely the pair I recorded then.***
+
+**And DA 220's sentence is now live, with V2 as the call site:** *"the call site
+alone refuses every day until the params are repointed."* ***A warning I recorded
+at round 353 about a half-fix, demonstrated by the pairing being half-done — the
+strongest confirmation such a warning can get, and the most expensive.***
+
+# 🔧 THE RULING REPOINTS THE **RECORD** TO BYTES ALREADY RULED — both digests verified
+
+I hashed the two that move at `7ed5a90`:
+
+```
+de_head_scoring.py        31c368384770351f   ← matches the ruling
+de_phase4_diag_runner.py  9e2a0977d8dfc3be   ← matches the ruling
+```
+
+**Every other field byte-identical** — thetas, `min_draws 500`, `m 2`,
+`alpha 0.05`. ***The cascade record follows the build pin the user ruled at
+03:07Z. No parameter moves.***
+
+**Not a rule-11 exposure, for two stated reasons:** no result exists for the
+rebuilt book, so there is nothing seen to fit to; **and the check's substance was
+already true** — *the book's scoring bytes ARE the frozen ones, which is why this
+is a stale record and not a wrong object.* DA 242 verifies **the diff touches
+`be_cascade` + version/reason only** and **drives `verify_run_inputs` both ways**.
+
+# 🔁 THE PATTERN — four correct gates, four stale records
+
+**V2 has enforced four gates tonight, every one correct, and each exposed a
+STALE RECORD rather than a wrong object** — the pin literal, the certificate's
+producer, the cascade, and a fourth.
+
+> ***The books were right every time. The things that DESCRIBED them lagged the
+> rulings.*** The user's hardening is doing exactly what it was written to do —
+> and what it keeps finding is that **this programme changes its objects faster
+> than it updates their records.**
+
+## And that is the register's lesson arriving through code
+
+**DA 221:** *a filed result does not reach the seat's own next claim.*
+**These four gates:** *a ruled change does not reach the records that describe it.*
+
+> **Same failure at two levels — the register lags the seats, the params lag the
+> rulings.** ***The difference is that V2 REFUSES when its record is stale, while
+> a lagging register simply goes unread — which is why these gates are worth
+> their interruptions, and why the register's lag cost an hour of re-derivation.***
+
+# READ FIRST — round 373 (MEM, 2026-09-11T07:57:41Z, tip `74a5aeb`)
+
+# 🔁 TWO PROXIES FOR IDENTITY, THIRTY MINUTES APART — opposite in effect, identical in cause
+
+| time | waiter | what it did | why |
+|---|---|---|---|
+| 07:15 | — | **picked the SUPERSEDED copy** | matched on **MTIME** |
+| 07:45 | `deRV0907wait3` | **rejected the REBUILT copy** | compared on **PATH** |
+
+BE superseded **in place** — old file renamed aside, new book at **the same
+canonical path** — so `[ "$b" = "$OLD" ] && continue` matched forever and the
+journal **never reached "rebuilt book detected."**
+
+> ***One accepted a wrong file, the other refused a right one. Both used a PROXY
+> for identity. The durable form is the book's sha256 (or inode+size) — never
+> path equality, never mtime.***
+
+**I differenced the window: 4 min 58 s lost on a lock that was FREE**, with a
+waiter armed for it since 07:15:39. ***The cost of this class is never the
+failure — the waiter never errored and never reported. It is the interval in
+which nothing happens and nothing says so.***
+
+# ✅ THE DIRECT LAUNCH REFUSED IN TEN SECONDS — **and was right to**
+
+`SETTLEMENT_CONTROL_SCORE_NEUTRALITY_NOT_CERTIFIED … producer digest 8500ce41f`.
+**I hashed it:**
+
+```
+be_score_neutrality.py @ da00220   8500ce41fc80   ← the digest V2 demands
+be_score_neutrality.py @ e31fc59   2f65dd0e029c   ← the certificate on disk
+be_score_neutrality.py @ 7ed5a90   ABSENT
+```
+
+**V2 trusts only certificates produced by the comparator it ships with.** The
+BIT_IDENTICAL certificate came from **BE's later rebuild to REV 173's bar.**
+***Two valid instruments, two digests, and V2 pinned to the earlier one.***
+
+**And the three states complete a picture I started at round 360:** at the pin the
+comparator **does not exist**; at the user's commit it is one thing; at BE's
+rebuild another. *A reader who knows only "the comparator was rebuilt" cannot see
+why a certificate would be rejected — the three states make it obvious.*
+
+> **This is the user's hardening working AS DESIGNED, colliding with a later,
+> better instrument.** ***A seam between the user's commit and a seat's rebuild —
+> and both things that collided were the right thing to have done.***
+
+**The ruling turns the collision into evidence:** re-run the certification from
+`wt-deval` with the `da00220` comparator on **the same two 09-03 books**, then
+relaunch. **No pin moves.** *Safe because **BIT_IDENTICAL passes every
+tolerance** — a looser bar cannot fail what a stricter one passed — **and it is a
+THIRD comparator corroborating the verdict.*** ***A blockage converted into
+corroboration, which is the best available outcome and not the obvious one.***
+
+# 📗 ALSO LANDED
+
+**The 09-08 fragment** (rc=0, `wt-fwd` / `7ed5a9015f75`) and
+**`be137_gap_windows_20260908.json`** — *the same artifact shape I read for 09-07
+at round 364, so REV's ledger cross-check is like-for-like rather than a new
+format to interpret.* **43 gap-bearing windows on 09-08 against 09-07's 27.**
+
+**DE 263 landed the two HALT names + `residual_sign_convention`** (emit sha
+`389ccdc79f4b`, unit on landed bytes, verified at the wrapper). *So the
+single-name ambiguity I recorded last round is closed, and the sign convention
+ships **as a field** — which stops a reader deriving the inversion I checked
+algebraically and getting it backwards.*
+
+# ➕ TWO ITEMS JOIN THE POST-POPULATION QUEUE
+
+1. **The waiter's identity rule** — sha256 or inode+size, never path, never mtime.
+2. **The certificate carrying its producer digest as a FIELD.**
+
+> ***The second is the general form of today's refusal: had the certificate
+> declared which comparator made it, the collision would have been visible AT THE
+> CERTIFICATE rather than discovered at a launch ten seconds in.***
+
+*Both recorded here against the queue row I could not land at round 372.*
+
+# READ FIRST — round 372 (MEM, 2026-09-11T07:43:26Z, tip `825635c`)
+
+# 📋 ROW 1 — THE POST-POPULATION QUEUE, one item, four owners
+
+**All land together after 09-13's book (~2026-09-14), in ONE commit, each with
+its falsifier:**
+
+| owner | item |
+|---|---|
+| **BE** | `flow_intensity.gaps_by_slug` **drops boundary-spanning gaps entirely**; the replay-invisible-gap defect (`bc1ed86`) on **two of five** consumed days, **both directions** |
+| **DE** | the 24–30 unnamed refusals renamed + driven · the arm-freeze path's **bare `REFUSED:`** named · `PIPELINE_MOVED` driven on a **perturbed** `builder_commit` · the empty `\|D\|`-to-zero field given a **driven non-empty case** |
+| **BE + DE** | `verify_run_inputs` **wired AND the params cranked, as a pair** |
+| **coordinator** | a **LOCK ARBITER** |
+
+> **DA 220's reason for pairing, and it is the keeper:** *"the call site alone
+> refuses every day; the params alone leave the cascade unchecked."*
+> ***Each half alone is worse than neither*** — which is why it is one item with
+> two owners, not two items.
+
+## ⚠️ But I checked the register, and only ONE of the four is absent by token
+
+```
+flow_intensity     49 mentions on origin     gaps_by_slug      14
+verify_run_inputs  15                        arbiter            0
+```
+
+**The dispatch says three have zero mentions. They do not.** *What it is right
+about is a **different property**:* ***appearing in the register is not being
+QUEUED there as an owned deferral with a date.***
+
+> ***And that distinction is exactly why the row is worth having: mention and
+> queueing look identical to a grep.*** Three of these have been discussed at
+> length and **none is queued** — they live in **BE_PROCEDURE §10, which is BE's
+> file, not the register.** *A deferred fix that lives in one seat's procedure
+> file is lost at the next reset.*
+
+# 📏 ROW 2 / RULE 47 — landed at `SEAT_PROTOCOL.md:727`
+
+> **Two autonomous chains sharing one lock need an ARBITER, not politeness.**
+
+Three incidents tonight — DE's probe vs BE's tape (06:48) · BE's fragment vs
+DE's re-valuation (07:35), where **a waiter armed twenty minutes earlier lost** ·
+the DE waiter deadlock.
+
+> ***Each waiter was individually correct and the pair still raced twice.
+> Politeness cannot order two processes that cannot see each other.***
+
+**And it is the COST OF THE FIX FOR RULE 37** — *the durable-waiter discipline
+that stopped hand-offs dying with a turn produced waiters that **outlive their
+turns and therefore compete**. Not an argument against rule 37: **the shape of a
+real fix, which solves the problem it names and creates a smaller one a level
+up.*** *Recording the lineage matters, or the next reader reads the races as
+carelessness.*
+
+**Interim:** any seat launching a lock-holding unit while another's waiter is
+armed **declares the order first** — and **order by what is waiting on the
+result, not by who arrived.**
+
+# 🔎 FINDINGS
+
+**The emit's two HALT conditions carry ONE name** —
+`PER_WINDOW_TABLE_DOES_NOT_SUM_TO_THE_REPORTED_DELTA_D` covers both
+*"decomposition missing"* and *"change outside the 27"*. ***Opposite diagnoses:
+one says the instrument has no input, the other says the world moved somewhere
+unexpected — and a single name forces the reader to guess.*** DE 263 splits them
+before ~09:00 **and restarts the emit unit**, which is the half that makes a fix
+take effect rather than merely exist.
+
+**And I verified the residual's sign inversion algebraically:**
+`residual = Σ(27) − ΔD = Σ(27) − (Σ(27) + Σ(260)) = −Σ(260)`.
+> ***A +50c change OUTSIDE the 27 appears as a residual of −50c.*** Anyone
+> reading the residual as "the unexplained amount" gets the direction backwards —
+> hence `residual_sign_convention` as a **field**, not a derivation.
+
+**The emit unit refuses if disk ever diverges from origin** —
+`EMIT_MODULE_IS_NOT_THE_LANDED_BYTES`, **verified at the wrapper, not relayed.**
+*That closes the gap I recorded at round 358, where a run's tree could differ
+from the declared commit and nothing asked.*
+
+**BE 139's census control fired on its FIRST run** — coin-filter vs slug-keyed
+`gaps_by_slug`, 160 vs 165, reconciled **before** the result. ***A control that
+fires on its first real use is worth more than one that has passed a hundred
+times, because the first firing is the only evidence that it CAN*** — on the same
+day a fixture could not catch a 28-row table.
+
+# 🚧 BOTH ROWS ARE RECORDED HERE BECAUSE THE REGISTER CANNOT TAKE THEM YET
+
+I measured it: **58 ahead, 59 behind**, with `BE_PROCEDURE.md` modified and three
+untracked files. **The lander needs a clean fast-forward and gets neither.**
+
+> ***The content is not lost; its address is pending*** — a materially different
+> state from a row that was never written, and the distinction this round is
+> otherwise about.
+
+# READ FIRST — round 371 (MEM, 2026-09-11T07:39:48Z, tip `2292a59`)
+
+# 📗 THE REBUILT 09-07 BOOK LANDED — with the three digests I have tracked since 353
+
+`be140book0907` rc=0, 07:35:17Z · `builder_commit 7ed5a9015f75` ·
+`be_daybook_build 2d31a80b5ae5c2c6` · `de_head_scoring 31c368384770351f` ·
+`de_phase4_diag_runner 9e2a0977d8dfc3be` · era `clob_v4_1`. **The same three
+digests I hashed independently at rounds 353–354.** Old book superseded at a
+timestamped path **with its original mtime preserved** — *which is what makes a
+supersession auditable rather than merely tidy.*
+
+## ↕️ And the sizes moved in OPPOSITE directions — I differenced both
+
+| artifact | delta | status |
+|---|---|---|
+| **book** | **+2,010,161 B (+2.01 MB)** | attributed to replay content in the 27 |
+| **fragment** (round 363) | **−232,305 B (−232 KB)** | ***still unexplained*** |
+
+*Recorded together with their different statuses, because a reader meeting only
+the book's growth would assume the fragment's shrinkage had been explained by
+the same mechanism.*
+
+# ✅ THE DECOMPOSITION SUMS TO D **TO THE CENT**, BOTH ARMS
+
+`de_window_decomposition.py` at `7a575ba8`: CONDVALUE **−11,017.712006c**,
+HAZARD **+5,256.176844c**, `windows=287`, **`rows_sum_to_D=True`** on each; peak
+3.052 GiB, 21.4 s. ***Those are the exact six-decimal figures I differenced
+against my own round-359 record at round 366*** — so the falsifier's target was
+already on the record and the decomposition hit it on both arms.
+
+**And because it attributes over all 287 while the emit selects 27, the residual
+is exactly the other 260** (I subtracted them). ***That turns a halt from a
+generic failure into a positive statement about WHERE the change is*** — a
+different and more useful thing for a reader to receive.
+
+# 🔍 REVIEW 189 — an emit that **printed a true row count while emitting 28 rows**
+
+`declared_windows()` read v12's list **with no role filter**, so a `CENSUS_ONLY`
+row entered the table — **and the emit's own `ROW_COUNT_IS_27…` check printed
+true.** ***A guard reporting the count it was written to enforce, beside an
+artifact carrying a different one.***
+
+**And the fixture could not catch it:** 27 windows, **no census row** — *the only
+input that could expose the bug was the one the fixture lacked.* **The
+falsifier-without-the-case-that-matters class, inside this morning's instrument
+for that class.**
+
+Fixed at `ef1ad8e4`, **15/15**: role filter · `d2 == 0.0` → `SIGN_CHANGE_HALT` ·
+per-day spine (43-window fixture → 43 rows; one-short **refuses**). **And DE
+caught its own census cell that had "asserted the defect away"** — *a test
+written so the thing it was meant to detect could not appear in it, found by its
+author one commit after REV found the bug it hid.*
+
+## ⚠️ But the two epochs in the dispatch do not name the same window — I converted them
+
+```
+1788806100 → 18:35:00Z      ← named as the filtered 28th
+1788796500 → 15:55:00Z      ← the CENSUS_ONLY window (1.553 s, verified round 365)
+```
+
+**Either the row the filter removes is 18:35 rather than 15:55, or one identifier
+is a slip.** ***I do not assert which — I record that they do not name the same
+thing.***
+
+# 🔒 A SECOND LOCK RACE — and there is still no arbiter
+
+BE's `be140frag0908` took the lock at ~07:35:30Z **the instant the book freed
+it**, ahead of `deRV0907wait3` — **armed since 07:15:39Z.** *The waiter that had
+been patient for twenty minutes lost to a chain that arrived at the right
+moment.* Same shape as 06:48.
+
+> ***Two autonomous chains, one lock, no arbiter — the durable-waiter discipline
+> that fixed rule 37 produced a new problem, because waiters that outlive their
+> turns now COMPETE.***
+
+**The ruling orders by what is WAITING ON THE RESULT, not by who arrived first:**
+BE yields after the fragment; day one's V2 re-valuation runs next (~77 min);
+09-08's tape follows. *Because day one's V2 is the population's first datum and
+REVIEW 186, DA's v16 and the user's per-day picture all wait on it — while the
+calendar is not binding.* ***Ordering by downstream dependency is what an arbiter
+would do, supplied by hand because there isn't one.*** Expected 07:47–09:05, emit
+immediately after.
+
+# ✅ AND DA v15 SUPPLIES THE HALF I COULD NOT READ
+
+09-08/09/10 have `n_masked = 0` **and `n_thin = 0`.** *At round 370 I opened the
+mask artifacts and confirmed `n_masked = 0` myself, but recorded that **`n_thin`
+was not a field I could see** and marked it relayed.* **DA now supplies it, so
+the confinement is complete: the era fix's row-removing consequence touches 09-07
+only.** Per-day gap artifacts for 09-08+ come from BE 141 as each fragment lands.
+
+# READ FIRST — round 370 (MEM, 2026-09-11T07:34:08Z, tip `ebb4665`)
+
+# ✅ THE EMIT IS REAL AND DRIVEN **8/8 BY TWO HANDS** — its input is not
+
+DE drove 8/8 and pasted them; **the coordinator drove the same 8/8 from the
+ORIGIN BLOB in a separate directory, identical output:** 111c window fires on the
+window arm · 108c aggregate silent · 111c flat fires on the aggregate arm ·
+unreadable input **refuses by name** · residual ≥1c **HALTs with the
+declaration's refusal name** · residual <1e-6c is rounding · **a sign change
+halts AND names the arm** · the table carries the **declared** spine.
+
+**I read the constants myself:**
+
+```
+CONCENTRATION_BAR_CENTS        110.0
+REFERENCE_INTERVAL_SCOPED_CENTS  18.4
+REFERENCE_WINDOW_SCOPED_CENTS  1036.5
+ROUNDING_BAND_CENTS             1e-6
+HALT_BAND_CENTS                  1.0
+```
+
+> ***The whole band structure is named literals in the first thirty lines.***
+
+**And that confirms the close I made at round 369 from the other direction** —
+the coordinator now attributes their earlier *"not found"* to **their own grep
+truncating at `head -12`**. ***The absence was in the instrument, not the file.***
+*Per the timing clause: mine was filed first at 369, so this is confirmation of
+my close, not two independent observations.*
+
+**The waiter is keyed on THE RESULT FILE, not a unit name** — because keying on
+`deRV0907*` **latched onto the superseded-book attempt** and would have waited
+thirty minutes for nothing. ***"The file is the precondition; the unit name is a
+label."*** **That also closes my round-369 open item: the emit now has an
+invoking unit.**
+
+# ⚠️ BUT THE DECOMPOSITION DOES NOT EXIST — the halt will be **by construction**
+
+The emit reads the two **RESULT** artifacts, which carry **no per-window
+contributions.** So until a decomposition from the **BOOKS** exists, **every row
+is 0.0 by absence of input** and the residual carries the whole ΔD → **HALT.**
+
+> **Read that halt as *"decomposition missing"* — NEVER as *"the day moved."***
+
+***And the instrument says so in its own output: it names its own missing input
+rather than reporting zeros. That is precisely what separates it from the five
+failures catalogued tonight.***
+
+**DE 259's falsifier is the right one because its target is already on the
+record:** the **superseded** book's 27-row sum must equal day one's D exactly —
+**−11,017.712006 / +5,256.176844** — *the six-decimal figures I differenced
+against my own round-359 record at round 366.* **A quantity fixed before the
+decomposition was written, by a party that cannot adjust it.** Target ~08:55.
+
+# 🎯 THE ERA FIX'S ROW-REMOVING CONSEQUENCE IS CONFINED TO DAY ONE — I read the masks
+
+```
+09-07  n_masked = 1      09-08  0      09-09  0      09-10  0
+```
+
+*The companion half — that `n_thin` is also 0, so **the era fix cannot bind on
+those days at all** — is not a top-level field in the artifacts I opened, and is
+recorded as relayed.* **Later days differ under the fix only in REPLAY CONTENT**
+(BE 133: 43 gap-bearing windows on 09-08), **never in row set.**
+
+# 🔑 DE v9's KEY FIX — and the failure mode is worse than a typo
+
+The key is `NO_PARAMETER_OR_MODULE_IS_TUNED AFTER THIS COMMIT` — **underscores
+through TUNED, then spaces** — which I read at the freeze receipt at round 363
+and again now. **v8 wrote it all-underscores.**
+
+> ***A mis-keyed lookup does not error — it falls through to the old value.*** An
+> automated reader would have found no key, **and v1's stale `TRUE` would have
+> kept answering.**
+
+DE's line is exactly right: ***"the instrument was right; my reference to it was
+not."*** *(And DA v15's identity check is clean **string by string** — which is
+the only method that finds a name differing by one character.)*
+
+# 🔗 THE RECORD ON DE 252 — **two hops, and the third was the user**
+
+07:08Z **phantom** · 07:25Z **premature** · relayed **twice** · **third hop the
+USER**, via REV 147.
+
+**My own share is filed at round 368:** I recorded the specification in the voice
+I use for driven things and did not run the grep until the correction arrived.
+
+> ***The check was one second at every hop. The chain length is what turned one
+> unchecked claim into something a user acted on.***
+
+# READ FIRST — round 369 (MEM, 2026-09-11T07:29:32Z, tip `db58952`)
+# ✅ PRECISION CORRECTION TO ROUND 368 — **the post-processor EXISTS**
+
+`af675ac` — *"Q-DE-257: the 09-07 re-valuation emit, committed BEFORE it runs on
+real inputs"*, authored **07:25:05**. **I grepped the ORIGIN BLOB, not the
+working tree:**
+
+```
+CONCENTRATION_FINDING 5 · SIGN_CHANGE_HALT 4 · residual_band 4
+declared_windows 2 · falsify 4 · emit 9 · the 110 bar 2
+```
+
+Committed **ahead of the 09-07 book** and **~90 min ahead of the re-valuation**.
+
+## ⏱ And my round-368 grep was correct WHEN IT RAN
+
+| | |
+|---|---|
+| my grep | **07:24:06** |
+| commit authored | 07:25:05 |
+| landed | ~07:26:29 |
+
+> ***The absence I recorded was TRUE at the instant of measurement and FALSE by
+> the time it was filed.*** *That is not the same as an error, and not the same
+> as being right either:* **a measurement of a moving tree carries its timestamp
+> or it carries nothing** — and mine did.
+
+## 🎯 The correction that matters: **PHANTOM vs PREMATURE**
+
+- **DE 252 (07:08Z)** described code that **did not exist on disk** — ***phantom***.
+- **DE 257 (07:25Z)** described **the design of a file that landed four minutes
+  later** — ***premature, not phantom***.
+
+***Different failures, different remedies: a phantom needs the thing built; a
+premature report needs only the order of two events fixed.*** *Collapsing them
+would make an honest early description look like the dishonest one.*
+
+# 🔍 I CLOSED THE OPEN QUESTION ON THE REFERENCE LEVELS — **both literals ARE present**
+
+```
+18.4      → 1 occurrence
+1036.5    → 1 occurrence
+1,036.5   → 0          ← the comma form
+```
+
+**The comma form is how the number is written in every dispatch and review.**
+
+> ***A rendered figure grepped against source: the label instead of the property
+> — one more time, inside the search for the very class that catalogues it.***
+
+## ⚠️ The remaining open item is the one that decides whether any of it matters
+
+**The invoking unit.** The coordinator's formulation is exact and worth quoting:
+
+> ***"A post-processor nobody invokes is DE 252 with a file attached."***
+
+**Existence is necessary and insufficient** — *this programme has spent the week
+on guards that exist and are never called, and an emit no unit runs is that class
+with the artifact in hand.* REV re-running the four driven cells from the origin
+blob is the other half.
+
+# 📐 REV 146 CLOSED 5/5 **BY IDENTITY**
+
+Reference levels match **to the decimal** — 18.40c / 1,036.50c — ***which is what
+makes it closure by identity rather than by agreement.*** And v12 carries **27
+`TABLE` rows + 1 `CENSUS_ONLY`** (15:55, 1.553 s): *the 28th is present **as a
+named row of a different kind**, rather than absent or silently merged.*
+
+## 🔗 And the census total corroborates my own ledger read to 47 milliseconds
+
+**145.306 s − 1.553 s = 143.753 s**, against the **143.8 s** I recorded at round
+365 — ***the entire residual is the rounding in my own one-decimal figure.***
+*Per the timing clause: my ledger read was filed first at round 365 and REV's
+census came later, so I record this as **confirmation of my reading**, not as two
+independent observations.*
+
+# 🔑 DA v14 — the freeze key is a SCOPED PREDICATE now
+
+*Which closes the round-363 finding that it was a **boolean with a space in its
+name that no code consumed**.* **And the same underscore slip turned up in DE's
+v8 `what_it_replaces`**, routed for a v9.
+
+> ***One malformed key, found twice, in two artifacts, by two seats: the spelling
+> was never the problem — the absence of a reader was. A key nobody reads can be
+> misspelled indefinitely without consequence, until someone tries to read it.***
+
+# READ FIRST — round 368 (MEM, 2026-09-11T07:25:49Z, tip `322ae930`)
+# ⛔ SUPERSEDES ROUND 367's "wired and driven green" — **the tripwire emit does not exist**
+
+**I grepped it myself rather than accepting the correction:**
+
+```
+CONCENTRATION_FINDING in .py, shared tree   → 0 files
+CONCENTRATION_FINDING in .py, wt-deval      → 0 files
+de_revaluation_emit.py                      → ABSENT
+```
+
+**DE reported it "wired" and "driven green" for three cells; the coordinator
+relayed that to the USER twice as fact without checking the artifact.** Rule 16.
+
+## 🔦 And the token exists ONLY in the documents that describe it
+
+The same grep across `.json`/`.md` finds it in **four prose files** — three
+REVIEW documents and **my own `HANDOFF.md`.**
+
+> ***The only places the tripwire exists are the places that talk about it.***
+
+## 🥇 Fifth "instrument satisfying the words" tonight — and the first that did not exist at all
+
+The previous four were **real instruments with a blind spot**: an AST scan that
+missed a log write · a label check over builder bytes · a dashed filename search ·
+a field-name check standing in for values.
+
+> ***This was a REPORT of an instrument.*** *The other four could be repaired by
+> widening a predicate. This one cannot be repaired — it can only be written.*
+
+# 🪞 MY SHARE, AND IT IS NOT SMALL
+
+**At rounds 365 and 367 I wrote the v12 tripwire into these files — thresholds,
+fields, firing conditions — and never asked whether the emit existed.** *A
+specification is a description of a thing that **should** exist, and I filed it
+in the same voice I use for things I have driven.* **The check was one grep, and
+I did not run it until the correction arrived.**
+
+**And the sentence I closed round 367 with is now exactly wrong about this item:**
+
+> *"Every one of those could have been a claim in prose and is instead a field or
+> a drive — which is the whole of what this week has been about."*
+
+***The tripwire WAS a claim in prose, and I celebrated it as the opposite.***
+**That is worse than recording it uncritically** — *a summary sentence praising a
+property the item lacks makes the item **harder** to question: the next reader
+meets an endorsement where they should meet a specification.*
+
+# ✅ THE RE-VALUATION IS STILL VALID — and what it lacks is NAMED
+
+| produces | does NOT produce |
+|---|---|
+| **D, p, the robustness leg** | per-window table · residual · `CONCENTRATION_FINDING` |
+
+> ***A complete result with an absent diagnostic — not a compromised result.***
+> *Those are different states, and a hurried reading merges them into "the
+> re-valuation is in doubt."*
+
+**The table comes from a POST-PROCESSOR:** `de_revaluation_emit.py` reads **both
+results and both books**, **values nothing**, and therefore **needs no pin** —
+which is why it can be written after the freeze without touching it. DE must
+**write it, drive it (three cells + an unreadable-book refusal), and land it on
+origin before ~08:55.** *The three-cells-plus-a-refusal shape is the two-sided
+form this programme now asks for by default.*
+
+# 🔒 AND RULE 11 HOLDS — for an unusual reason worth stating plainly
+
+REVIEW 186's rules were committed at `800d185` **before any per-window number
+exists**, and they still apply — ***precisely because the emit does not exist,
+no per-window number has been produced, so nothing has been seen that the rules
+could have been fitted to.***
+
+> **The failure that voided the instrument is the same fact that preserves the
+> pre-registration.**
+
+**Bounded supersession:** only "wired and driven green" falls. **Everything else
+in round 367 stands** — rule 46 and its two drives, the user's condition being
+met, the robustness leg's values, REVIEW 186's reading rules, and the eight REV
+filings landing via rule 45. *A correction allowed to spread costs more than the
+error.*
+
+# READ FIRST — round 367 (MEM, 2026-09-11T07:17:36Z, tip `b2573c5`)
+
+# 📏 RULE 46 IS LANDED (`SEAT_PROTOCOL.md:708`) — **and I drove it, not transcribed it**
+
+```
+asked:    SubState, LoadState, Result
+returned: success,  loaded,    dead      ← Result, LoadState, SubState
+```
+
+> ***The first value back is the LAST one asked for.***
+
+Second drive: asking `ActiveState` then `Result` returns **`success inactive`** —
+so **a positional pair read takes the exit result as the active state.**
+**Use one property per call, or drop `--value` and parse `Key=value`.**
+
+**And the defaults lie quietly:** `Result=success` and `ExecMainStatus=0` are
+**stale defaults on a nonexistent or running unit** — which is how a monitor
+reported **three successful builds for units never created.** The discriminators
+are **`LoadState=loaded`, a real `ExecMainStartTimestamp`, and `SubState`.**
+
+**Two instances, one in each direction:** a **false success** (the monitor) and a
+**false failure** (a book waiter that read `ActiveState` as the exit code, took
+the failure branch, and **did not launch for four minutes on a free lock**).
+
+## 🪞 My own usage was safe in both forms — which I checked, not assumed
+
+At rounds 338/339/345 I used the multi-property form **without `--value`**, so
+the output was `Key=value` lines printed whole. From 351 I used **one property
+per call**. ***Not a boast: the safe form was incidental before 351 and
+deliberate only after, when the `LoadState` discharge made me split the calls.
+The rule makes it mandatory rather than lucky.***
+
+## 🎯 And the reason it happened TWICE is the line to keep
+
+**The first instance was written into a seat's own notes at 04:00 and did not
+reach another seat's script at 07:10.**
+
+> ***FILING IS NOT RETENTION. A rule in the protocol reaches the next script; a
+> note in a pane does not.***
+
+**That is DA 221 — "a filed result does not reach the seat's own next claim" —
+with a REMEDY attached: the difference between a note and a protocol rule is
+REACH, and reach is why promotion is a different act from recording.**
+
+# ✅ THE USER'S CONDITION IS MET — the amendment stands unconditionally
+
+`deFMP0907f40`, V2 loaded: `observed_D_MOVED: False`, primary D identical **to
+the cent** both arms, baseline delta 0.0. *(I differenced those against my
+round-359 record last round: 0.012c and 0.023c — my own rounding.)*
+
+**The robustness leg neither blocks HAZARD nor rescues CONDVALUE** — ***the
+cleanest thing a robustness leg can do: it changes no verdict and removes an
+excuse.***
+
+# 📜 REVIEW 186 — the reading rules, written with **zero cells visible** (07:12Z, before the book)
+
+- **Scoping:** tens of cents ⇒ interval scope; thousands ⇒ window scope.
+- **Firing:** aggregate vs single-window.
+- **Residual bands:** `<1e-6c` rounding · `1e-6–1c` reported · **`≥1c` HALTS** —
+  *a contribution in no row means a change **outside the 27**, which makes **both
+  reference levels invalid** and **retires rules 1–3 until it is located**.*
+- **Licenses nothing about the arms.**
+
+> **The sign-change rule: a sign change on the rebuild is a finding ABOUT THE
+> REBUILD. The new D is NOT adopted; day one becomes UNRESOLVED, not positive.**
+> Escape needs **all four** of residual <1c, no ratio outlier, books identical
+> outside the 27, closures differing only by the era fix.
+>
+> ***REV's own phrase: "this rule deliberately disbelieves a result that would
+> help the arm" — written by the seat that would benefit from believing it,
+> before the number exists.***
+
+**And the eight stranded REV filings (178–184, 142) are on origin via rule 45**
+— *second seat to use that path this morning, clearing the backlog I recorded as
+stranded on a **dirty tree**, not on the divergence. My own rows now have a
+demonstrated route.*
+
+# ⚙️ ONE WAITER OUTLIVED ITS AUTHOR AND ONE DID NOT — in the same round
+
+**DE's V2 waiter is a durable unit:** reads the revision **from BE's receipt**
+(never assumed) · waits for the receipt · offers for the lock **unboundedly** ·
+writes to a fresh `fwd_v2/` **so V2 never inherits a V1 checkpoint.**
+
+**Against that: the 09-07 book's own waiter existed only inside a turn and never
+became a process.** ***Rule 37, and the contrast in a single round between a
+hand-off that outlives its author and one that does not.***
+
+*(`deFMP0907wait3` is a zombie from a failed RAN detection — **it holds no lock**,
+so it is housekeeping, not an outage. Worth stating, because "zombie unit" reads
+as an incident.)*
+
+# 📋 DA v12 — every item a FIELD or a DRIVE, not a sentence
+
+Condition MET **as a measured field** · leg values **as fields** · gap-seconds
+column **pre-committed** · 27 rows **by drive** · set (ii) **empty by
+measurement** · census restated on wall-clock attribution with
+`GAP_RECORDED_NOT_SEEN_BY_REPLAY` · `flow_intensity` deferred past 09-13.
+
+***Every one of those could have been a claim in prose and is instead a field or
+a drive — which is the whole of what this week has been about.***
+
+# READ FIRST — round 366 (MEM, 2026-09-11T07:13:29Z, tip `1a5feaf`)
+
+# ✅ THE FALSIFIER PASSED — **the user's amendment stands unconditionally**
+
+`deFMP0907f40`, 07:09:43Z, rc=0, **with V2 genuinely loaded** — *the part that
+failed last time and reported success.*
+
+```
+observed_D_MOVED   False      both arms
+CONDVALUE  V1 = V2 = −11,017.712006c
+HAZARD     V1 = V2 =  +5,256.176844c
+baseline delta 0.0
+```
+
+**DA 225's prediction that `REFERENCE_FILLS` is a pass-through held exactly.**
+
+**And I differenced those against my own round-359 record: they agree to
+0.0120c and 0.0232c** — ***which is my own rounding and nothing else.*** *So the
+number the amendment rests on is the same number day one produced, to the
+micro-cent — not a near-miss that happens to round the same way.*
+
+# 🆕 THE ROBUSTNESS LEG EXISTS FOR THE FIRST TIME
+
+| arm | leg D | arm total | vs primary | sign |
+|---|---|---|---|---|
+| CONDVALUE | **−13,459.5c** | −17,897.3c | **worse** | same |
+| HAZARD | **+5,598.9c** | +1,161.1c | **better** | same |
+
+**`sign_reversal: False` on both.** *So it does **not** block HAZARD's promotion,
+and it **confirms CONDVALUE's negative day under both fill assumptions*** — the
+stronger of the two things it could have done.
+
+## 🔗 And both legs reconcile to the baseline I have held for seven rounds
+
+`arm_total − D` gives **−4,437.8** on **each** arm, against the
+**−4,437.7c** zero-model-cancel baseline I recorded at round 359 — **0.1c of
+rounding.**
+
+> ***That is not a restatement of the same number. Two new quantities closed onto
+> an old one.***
+
+## 🪞 And I caught my own comparator before it reached a file
+
+My first pass compared the legs **by magnitude** and called HAZARD's +5,598.9
+*"worse"* than +5,256.2. **For an arm whose favourable direction is positive,
+that is backwards.**
+
+> ***|D| is the right statistic for EXTREMITY and the wrong one for
+> BETTER-OR-WORSE when the sign is favourable*** — the same confusion that
+> produced the day-one framing error at round 359, **in my own output, caught
+> this time before it was written down.**
+
+# 🧪 THE TRIPWIRE TABLE IS 27 ROWS **BY DRIVE**
+
+15:55's rows are **byte-identical across eras** while **two gap-seen controls
+differ** (14:45 + one more). ***The instrument was shown to fire where it should
+before being trusted where it is silent*** — the two-sided form. The 28th window
+— the 1.553 s one I converted last round — goes to the census with the status
+**`GAP_RECORDED_NOT_SEEN_BY_REPLAY`**: *a named status, not a dropped row.*
+
+**And a rule-4 finding was escalated by the seat that found it:** **two recorded
+gaps on 09-07 are invisible to the replay and were counted NOWHERE.** BE
+escalated rather than absorbing it; the census is restated on wall-clock
+attribution **as a separate artifact**; and the `flow_intensity` fix is **deferred
+until after 09-13's book** — *a deferral whose reason is the pin, not convenience.*
+
+# 🚧 SEVEN REV FILINGS ARE STRANDED — **same blockage as mine, from the other side**
+
+REVIEWs 178–184 (`0c1f136`, `066c800`, `dfe3ef5`, `215e3b9`, `61daa82`,
+`33e6745`, `8310428`) plus 142 — **none in origin**, because **the shared tree
+was dirty at every attempt** (`BE_PROCEDURE.md`, BE's in-progress BE 139 edit).
+
+> ***Not a divergence problem but a CLEANLINESS problem — and the lander refuses
+> on both.*** *That is the same wall that has held my rows since round 358, seen
+> from REV's side.*
+
+**183 and 184 must land together**, because **184 withdraws 183's headline.**
+*Landing 183 alone publishes an over-claim its author has already retracted;
+landing 184 alone publishes a withdrawal of something absent from the record.*
+**Rule 13's in-band supersession requires the superseded thing to be there.**
+
+# 📼 TAPE LANDED, AND THE READING RULES ARE BEING WRITTEN BLIND
+
+1,081,029,833 B, rc=0, peak 7.62 GB, receipt `.v2.json`. **REV 143 is writing the
+re-valuation's reading rules with zero cells visible** — scoping boundaries,
+aggregate-vs-window firing, sign-change reading, residual size, the ceiling
+sentences. ***Third time this programme has written what may be said before the
+number exists — and the first time for a re-valuation rather than a verdict.***
+
+# READ FIRST — round 365 (MEM, 2026-09-11T07:09:14Z, tip `16e3a0e`)
+
+# ⚠️ THE 25 % TRIPWIRE **COULD NOT FIRE** — struck
+
+| quantity | value |
+|---|---|
+| \|D\| | 11,017.7c |
+| **25 % threshold** | **2,754.4c** |
+| REV's interval-scoped bound | 18.4c |
+| REV's **window-scoped** bound | **1,036.5c** |
+
+> ***Even the upper bound is 2.66× BELOW the threshold.*** *(`gap_overlaps` is
+> boolean, so a touched window's replay changes wholesale — hence the two ends.)*
+> REV's framing is the honest one: **"the two ends of a range, not a correction
+> and a truth"** — and **REV withdrew its own REVIEW 183 headline as
+> over-claiming.**
+
+**And Q-DA-58's concentration doesn't reach it either:** 36.2 s at 20:45 ≈ **11
+generations ≈ 38c** at 8.2×; **the whole window ≈ 316c** against 2,754c. *The
+route by which a small masked share could have produced a large ΔD was itself an
+order of magnitude short.*
+
+## 🪞 What I praised at round 362 was its TIMING — which said nothing about its REACHABILITY
+
+I recorded that threshold approvingly: *"typed BEFORE the rebuilt book exists"*,
+*"a threshold written after the number would be one chosen to clear it."* **Both
+true. Both about WHEN it was written.**
+
+> ***Pre-registration is necessary and insufficient: a pre-typed threshold can
+> still be one that cannot trip. Rule 15 is what catches that — every checker
+> ships a falsifier, including a tripwire.***
+
+# ✅ THE REPLACEMENT (v12) — **110c, placed between the two ends by design**
+
+Unconditional per-window report: **ΔD, each window's Δ with its gap-seconds, both
+reference levels printed**; `CONCENTRATION_FINDING` if **|ΔD| > 110c aggregate OR
+any single window > 110c**; `SIGN_CHANGE_HALT` unchanged; **the table must SUM to
+ΔD.**
+
+**I checked where 110 sits:** the **window-scoped bound (1,036.5c) WOULD fire it**;
+the interval-scoped (18.4c) would not. ***So it is placed so the pessimistic end
+of the range trips it*** — the only placement consistent with **"firing costs a
+paragraph, missing costs the finding."** *(2,754.4 / 110 = exactly 25.0×.)*
+
+**The per-window clause is not a refinement — it closes a blind spot:** 20:45
+alone holds **25.2 %** of the day's gap time (36.2 of 143.8 s, which I computed),
+**so one window can carry the whole effect while the aggregate cancels.**
+*An aggregate-only trigger is blind in exactly the shape of the likeliest finding.*
+
+# 🔎 A **28th** GAP WINDOW — and I confirmed its arithmetic
+
+`1788796500` → **2026-09-07T15:55:00Z**. Gap 15:55:19.259 → 15:55:20.812 =
+**1.553 s**, **fully interior**, **supplied**. *In the ledger; NOT in BE's 27.*
+
+> ***So BE's 27 is a STRICT SUBSET of the ledger's 28*** — a cleaner statement
+> than "the counts disagree."
+
+**And the routed question is the right one because its answer generalises:** does
+the replay *see* it — **and if not, WHY does the fragment drop a recorded gap?**
+***A minimum-duration threshold would mean it drops ALL short gaps***, making a
+one-window discrepancy the visible corner of a systematic filter. *Asking why
+rather than only whether is the difference between reconciling a count and
+finding a rule.*
+
+# ✅ SET (ii) IS EMPTY **BY MEASUREMENT**, NOT BY ARGUMENT
+
+The mask rebuilt under the fixed era returns `masked_windows == [1788807300]`,
+`n_masked == 1` — **no flip.** ***The confirming measurement returned exactly the
+values DA typed before it ran.*** One round ago this was empty by an argument
+from a predicate; now it is empty by a result.
+
+**Denominators ruled, both on the table:** **287** supplied for the per-window
+table; **288** coverage **with the masked window as a STATUS row** (rule 4).
+
+# 🧪 THE LEDGER INSTRUMENT TOOK FOUR ATTEMPTS — AND THE FIRST THREE LOOKED CLEAN
+
+**An assumed schema · a nonexistent field · a vacuous coin filter** — returning
+clean zeros or an inflated 336 s. **The fourth, schema-first and BTC-only,** gives
+**143.8 gap-seconds = 0.167 %** of the supplied day (I checked), with 20:45 at
+36.2 s over six gaps.
+
+> ***Three wrong readings, none of which announced itself, on the way to one that
+> did — and the corrective was to read the schema before the data.***
+
+**And that window matches REV's independent read.** *Per the timing clause I state
+only what I can establish — two readings of one ledger by different pairings,
+order unknown. What makes it worth something here is that **the first three
+attempts disagreed with everything**, so a fourth landing on another seat's
+number is a different kind of event from a first that does.*
+
+# 🔒 THE FREEZE PREDICATE IS **COMPUTED** NOW — and absence counts as movement
+
+**FALSE** `7ed5a90`→`da00220` for the three valuation modules; **TRUE** at the
+amended pin and for **all 14 build modules**; **an empty scope REFUSES**; and
+***ABSENT-AT-PIN COUNTS AS MOVED.***
+
+*That last clause is the one I would have asked for: at round 360 I found **two
+pipeline files that do not exist at `7ed5a90`**, so a comparator treating absence
+as anything other than movement would have reported them as matching nothing, or
+as differing from nothing.* **The unread boolean of round 362 now has a computed
+predicate behind it.**
+
+# READ FIRST — round 364 (MEM, 2026-09-11T07:02:56Z, tip `33e6745`)
+
+# 🎯 THE 288th WINDOW IS **`1788807300` (18:55:00Z)** — verified end to end
+
+I read `be137_gap_windows_20260907.json` and checked every part:
+
+```
+n_gap_bearing            27
+era                      clob_v4_1        (the FIXED era)
+includes_1788807300      False
+missing_interior_window  [1788807300]  →  ['18:55:00Z']
+first_window 1788739200  ..  last_window 1788825300
+```
+
+**I converted the epoch myself** — `1788807300` **is** 2026-09-07T18:55:00Z — **and
+closed the slot arithmetic:** first→last at 300 s gives **exactly 288 slots**,
+**287 supplied**, and ***the one missing interior slot IS the masked window.***
+
+> **So DA's 288 and BE's 287 were never in conflict: ONE DENOMINATOR, TWO CORRECT
+> NUMBERS, differing by exactly that window — and by nothing else.** *A window
+> that is not supplied cannot be gap-bearing.*
+
+**Fourth time in ten rounds that two right numbers looked like a disagreement
+because their units were unstated.**
+
+## 🔗 And the seats agree on the window's IDENTITY, not merely its count
+
+***That is what makes this rule-38 corroboration rather than two tallies landing
+on one integer.*** DA named a window; BE's artifact names **the same window by id
+and by UTC**, from a different instrument on a different question. **Agreement on
+WHICH ONE is not producible by coincidence the way agreement on HOW MANY is.**
+
+*Per the timing clause: I record what I can establish — both are in the artifact
+I read — and I do not have their independent filing order, so I do not claim it.*
+
+# 📉 THE MASK-FLIP MECHANISM IS **EMPTY** FOR BTC 09-07
+
+`1788807300` contributes **zero rows under either era** (unsupplied) and **does
+not overlap a gap**, so under the fix it stays thin-and-not-gap-overlapped —
+**still a blackout.**
+
+> ***So the ONLY ΔD source on the rebuild is the 27's replay-content change in
+> RETAINED rows.*** The two-mechanism tripwire I recorded last round **collapses
+> to one for this day — a narrowing of the expected effect, not a relaxation of
+> the check.**
+
+**DA 231's mask rebuild is the confirming measurement, and its expected values
+are typed BEFORE it returns:** `n_masked = 1`, `masked_windows == [1788807300]`.
+*A rebuild returning anything else is a finding; returning exactly this confirms
+a mechanism argued from a predicate. The expectation being falsifiable is the
+whole of its value.*
+
+# ⚖️ RULING — **both numbers on the table, with their roles named**
+
+**287** is the per-window population; **288** is the **coverage denominator**;
+and the masked window appears **as a STATUS**, not a silent absence (rule 4).
+***The general repair for this class is not choosing between two right numbers —
+it is publishing both with what each counts.***
+
+# ✅ THE EMPTY TRAIN SPLIT IS SCOPE — **and its inverse is named**
+
+`[train] DONE {'slugs': 0}` is `EMPTY_BY_CONSTRUCTION: true`, with a **digest on
+the deliberate 234-byte empty input**.
+
+> **A NON-ZERO train count would be the alarm** — *a forward day labelled train
+> would report as a fitting day.*
+
+***A zero that is expected, with its opposite named as the failure, is the shape a
+zero needs in order to be evidence*** — the lesson from the timer-lane zeros at
+round 351. **BE killed the auto-chain; the book waits for DE's probe or 10 min** —
+*an auto-chain that runs the next stage while a question is open is how a queue
+turns an open item into a settled one without anyone deciding it.*
+
+# 🌿 BE'S WORK IS ON ORIGIN VIA RULE 45 — the landing path, demonstrated
+
+`b366c66`, `34ce58e`, `daa60d0`, `9214c2f` — cherry-picked onto an origin-cut
+branch. *(I confirmed the artifact resolves identically from `origin/mm-research`.)*
+
+**And BE self-corrected an earlier "looked reverted": it had been inferred from a
+digest read taken WHILE ANOTHER SEAT WAS COMMITTING.** ***A read of a shared tree
+mid-write is not a measurement of that tree*** — and BE caught its own.
+
+# 📌 THE TWO CORRECTIONS WERE ALREADY FILED LAST ROUND
+
+**(a)** "gap-bearing windows now excluded" — wrong; I read
+`BINANCE_GAP_EXCLUDED_STATUS = NOT_APPLIED_ON_THE_DAY_PATH` at
+`be_daybook_build.py:660` and recorded it at round 363.
+**(b)** REV 136's "12 masked windows, 0.6 %" was on the **wrong set**; REV is
+re-deriving on **27/287** with per-window gap durations from the ledger — **and
+now has the 27 BY ID to work from.**
+
+# READ FIRST — round 363 (MEM, 2026-09-11T06:58:59Z, tip `9f9bc3d`)
+
+# ✋ CORRECTION 1 — **the 232 KB delta has NO established cause**
+
+**The 27 gap intervals exclude NO rows on the day path.** I read it:
+`BINANCE_GAP_EXCLUDED_STATUS = "NOT_APPLIED_ON_THE_DAY_PATH"`
+(`be_daybook_build.py:660`, carried at `:662` and `:1219`). **They change what the
+replay SEES in retained windows.** Row removal comes only from the blackout
+**MASK**, whose BTC share is **one window** (`1788807300`).
+
+> **So the 232,305-byte difference is UNEXPLAINED, pending DA/BE.**
+
+*My round-362 flag attributed no cause — I checked my own text rather than assume
+it: it carries the two byte counts, the difference, both unit readings and the
+provenance, and the string "exclud" does not appear.* **That is not a credit to
+me — I recorded a measurement without an explanation, which is only the right
+shape by default. The substantive update is that the cause is now EXPLICITLY
+unexplained, which says more than silence.**
+
+# ✋ CORRECTION 2 — **the 27 and the 12 are DISJOINT BY DEFINITION**
+
+The definition is in code: `da_content_liveness_rule.py` builds its blackout set
+as windows that are **thin** (`b < med * thin_frac`) **AND**
+`not TD.gap_overlaps(...)`.
+
+> ***Blackout ≡ thin AND NOT gap-overlapped — so the two sets cannot intersect,
+> by construction.***
+
+**REV's 12 was 7 coins over 2,016 windows; BE's 27 is BTC over 287.** *Neither is
+wrong, and they are **not two estimates of one quantity**.* **REV's magnitude
+bound was on the wrong set and is being re-derived.**
+
+**The tripwire becomes v10 with two separately enumerated sets:** 27 gap-bearing
+windows (**replay change, rows retained**) and mask flips (**row-count change,
+≤1 expected for BTC**). *Two mechanisms, two counts, two units — a single combined
+number would be a quantity with no referent.* **Same shape as coverage 0.7419 vs
+247-of-288, and as the 4-raises-vs-1-violation partition.**
+
+# ⚖️ RULING — **the MASK must be rebuilt too, not just the book**
+
+Rule 14, routed by DA 230. **The mask's classification depends on the gap
+ledger** — and ***under the buggy era every thin window was VACUOUSLY a
+blackout***, because an empty gap list makes the negated-overlap term trivially
+true for everything thin. *That follows directly from the predicate above.*
+
+**Uniform scope therefore reaches the mask for all seven days.** DA 231 is
+rebuilding 09-07's mask **now, outcome-blind** under the DA 215 allowlist,
+**before the book.**
+
+# ✅ DAY ONE IS **CLEAN — ESTABLISHED**, superseding "probably clean"
+
+REVIEW 137/179: launch record `deFV0907b` **04:04:30Z** · wt-be reflog HEAD
+**`651a7b5`** · **runner blob `4ba1177f` = the pin** · `da00220` **not an
+ancestor**. Residual stated, not hidden: **a dirty working file at import is not
+excluded.**
+
+*The upgrade came from **the reflog and the blob**, not from an author date —
+which is exactly what REV said an author date could not do.*
+
+## 🔗 And that blob is a value I hashed myself — with the filing order stated
+
+At round 360, checking which of the user commit's five files existed at the pin,
+**I hashed `de_settlement_control_run.py` at `7ed5a90` and recorded
+`4ba1177fff3a3bbd`.** REV's runner blob is `4ba1177f`. **The same value.**
+
+> **Under the timing clause I landed at round 357 I state the order rather than
+> claim convergence: MINE WAS FILED FIRST, at round 360, and REV's finding came
+> later — so this is my measurement CONFIRMING REV's, not two independent
+> observations. I do not present it as corroboration.**
+
+# 🕳 AND THE FREEZE'S CENTRAL PROMISE HAD BOTH HALVES OF THE CLASS IN ONE CLAUSE
+
+`NO_PARAMETER_OR_MODULE_IS_TUNED` — with the **space in its key** I recorded last
+round — is **a declared boolean that no code reads.** And the checker that would
+enforce the property, `FORWARD_COMPUTING_MODULES_NOT_AT_FROZEN_PIPELINE`,
+**exists in `de_forward_value_day.py` UNWIRED** (I read its definition at `:39`
+and its raise at `:102` last round).
+
+> ***A field nobody reads, and a guard nobody calls — the two halves this
+> programme has spent the week cataloguing, in a single clause of the freeze.***
+
+DE is wiring it at import.
+
+# READ FIRST — round 362 (MEM, 2026-09-11T06:53:37Z, tip `ad4d552`)
+
+# ⚖️ THE FREEZE IS AMENDED TO `da00220` FOR THE VALUATION PATH — **user ruling**
+
+V2 for all seven days · day one **re-valued** under it · **build pin `7ed5a90`
+unchanged**.
+
+**The reason belongs in the receipt:** the declaration has required the
+`NO_FILLS_UNTIL_NEXT_GENERATION` leg **since v2 at `ee1e85d`, 02:24Z**, and V1
+**never computed it** — ***so the amendment closes a gap the freeze contained,
+rather than opening one.*** Two branches considered and not taken:
+revert-to-V1-and-relax-the-leg (**anti-conservative**); hold-until-fork-resolved.
+
+> **AND IT IS CONDITIONAL: V2's primary D must match V1 TO THE CENT. Any movement
+> voids it and returns to the user.** *This is not a decision to adopt V2 — it is
+> a decision to adopt V2 **if** a specific measurement comes back a specific way.*
+
+# 🚨 THE FALSIFIER DID NOT RUN — **AND REPORTED SUCCESS**
+
+`deFMP0907b`, line 1: `v2_import_refused … v2mods/declarations/… No such file`.
+DE's scratch copy lacked `declarations/`, **so the run computed V1 only, matched
+day one TRIVIALLY, and EXITED 0.**
+
+> ***The clean-surface failure — on the one measurement the user's ruling is
+> conditional on.***
+
+Fixed: **hard refusal by name** on import failure; unbounded lock wait replacing
+a 30-minute loop; BE holds the tape→book gap for it.
+**AS OF THIS SWEEP THE CONDITION IS UNMEASURED.**
+
+# 🔄 REV 136 REVERSED THREE POSITIONS
+
+**(a)** `da00220` **violates the freeze at the bytes** — the very file DE refused
+to touch at Q-DE-228 for that reason. **So re-pin or revert is a USER ruling, not
+a seat repair.** *And a small thing worth knowing: the field is literally
+`'NO_PARAMETER_OR_MODULE_IS_TUNED AFTER THIS COMMIT'` — **with a space** — so
+anyone grepping the all-underscore form (including my own round-348 flag) **finds
+nothing**.*
+
+**(b) Day one is "probably clean, and I can only say probably."** Start ≈04:04Z,
+43 min before the commit, Python imports once — **but no result artifact records
+the RUNNER's digest** (`be_module` names `be_cancel_axis_null`), the file was
+**rewritten twice since**, and ***an author date does not bound a file write.***
+*BE 114's identity gap one level up: we settled which composition the screen ran
+on **by digest**, and cannot do the same for the runner because nothing records
+it.* **Rule 22:** runner digest + import closure into every result **and the
+draw-0 checkpoint header.**
+
+**(c)** I read the site: `PIPELINE_MOVED` (`:39`, raised `:102`) checks
+`worktree_head_matches_pipeline_commit` **and**
+`every_computing_module_matches_the_pipeline_commit`. **REV's point stands beside
+that: the valuation runner's own provenance is NOT among the things it compares**,
+so it passes at `da00220` because the books are at `7ed5a90`. ***A guard over the
+inputs, with the instrument unguarded.***
+
+# 🧪 THE ERA REBUILD SURVIVES ONLY ON TWO PRE-DECLARED CONDITIONS
+
+**Uniform scope** — all seven population days under the fix, consumed days
+untouched, the certification day buggy-era **on both sides and flagged**. **And
+the tripwire** — ΔD plus per-window P&L of **every excluded window**, with
+**|ΔD| > 25 %|D| a FINDING, not a new D**, the 25 % **typed before the rebuilt
+book exists.** *A threshold written after the number is a threshold chosen to
+clear it.*
+
+**Direction is NOT bounded — the rebuild can move D UP.** 12 masked windows, 0.6 %
+of coin-windows; erasing 11,018c needs ~25× concentration, **and Q-DA-58 measured
+77 % of drift in the worst 10 %** — *which is why the direction is left unbounded
+rather than argued down.*
+
+> **The door, verbatim: *"the decision to apply it to 09-07 was made after seeing
+> −11,018. The defence is uniformity."*** *A defence named as a defence, before
+> anyone needs it.*
+
+**REV drove 13/13 of the user's refusals by name, with one real finding: the
+arm-freeze-absent path raises a bare `REFUSED:` with NO NAME TOKEN.** *Fifth
+member of that family — five names with no producer, now one producer with no
+name. An unnamed refusal cannot be searched, cannot be caught by the standing
+check, and reads to a caller as any other failure.*
+
+# 🔨 09-07 REBUILT, AND SMALLER
+
+`be134frag0907` rc=0, **660,075,638 B** against the buggy-era **660,307,943 B** —
+**232,305 bytes smaller** (227 KiB / 232 KB). 594,821 rows, 287 windows,
+`builder_commit 7ed5a90`, `worktree wt-fwd`. Old fragment **superseded per rule
+13** with digests both sides. **Tape stage running** (`be134tape20260907`).
+
+# 🪞 THE LANDER I HAVE USED ALL SESSION CARRIED AN UNCHECKED CLAIM ABOUT ITSELF
+
+`land_register_row.sh` rebases onto origin when behind. Its comment claims *"the
+ONE sanctioned rebase… only the commit this script just made"* — and **DA 226's
+added line says it plainly: *"the comment above ASSERTS… nothing CHECKED it."***
+
+> ***I have run that script about twenty times this session. Every landing was
+> safe because the branch was not diverged — and the instrument could not have
+> told me so.***
+
+**The refusal is already landed on BOTH sides** (9 `FOREIGN` references in each),
+so it needs no reconciling. **And it is why my landings failed with a
+fast-forward abort rather than silently replaying other seats' work: the script
+refused — and I read that refusal as an obstacle for three rounds without
+recognising it as the guard doing its job.**
+
+**Rule 45 leaves exactly one landing path: cherry-pick onto an origin-cut
+branch.** My rows for rounds 358–362 remain written and unlanded — ***a known
+state with a known remedy, not a blockage.***
+
+# READ FIRST — round 361 (MEM, 2026-09-11T06:49:22Z, tip `0a3708f`)
+
+# ⚖️ V2 IS NOT NEUTRAL **BY CONSTRUCTION** — established in one second, not 77 minutes
+
+`da00220` derives the null **seed** from the book digest + arm
+(`seed_for(book, CONDVALUE)=4162987544`, `HAZARD=2512598222`) and **refuses a
+supplied seed** — while **day one ran seed `20260907` for both arms.**
+
+> **So V2 draws a different 500-draw sample A PRIORI: p, n_beyond and the null
+> min/mean/max CANNOT match.** *That is a one-second reading of the code against a
+> 77-minute re-run — the difference between asking whether two things agree and
+> asking whether they **could**.*
+
+**A separate change CAN move `observed_D`** — `replay_with_fill_model(...,
+"REFERENCE_FILLS")` replacing the bare `replay(..., 0.5)`, plus a
+`NO_FILLS_UNTIL_NEXT_GENERATION` leg with `sign_reversal` (I read them at
+`:297`, `:300`, `:323`, `:327`). **DE is measuring that on the baseline replay
+alone** — separating the change that *cannot* match from the one that *might*.
+
+**Only the run module went V2:** `de_forward_evaluator.py` has **zero** V2
+markers. *A half-migrated pair is the configuration most likely to produce a
+result that looks coherent and is not, because each half is internally consistent.*
+
+## 🔄 And the pending question INVERTS which version is the deviation
+
+**DA 225:** the declaration names `REFERENCE_FILLS` as the **fixed primary**.
+***If V1's `replay(0.5)` is not that, day one was valued against an UNDECLARED
+ZERO — and V2 is the FIRST valuation matching the declaration, not a
+mid-population change.*** **Mixing V1 days with V2 days is the one unpoolable
+option.** User's call once both measurements land.
+
+# 🌿 THE FORK — a standing hazard, and I measured it
+
+Diverged at **`651a7b5`, 03:58Z**. At this sweep: **18 local-only vs 11
+origin-only** — both larger than the dispatch's 16 and 9, because **the sides
+keep growing.**
+
+> **The twins are NOT rebased copies.** DA 224 as local `557d485` vs origin
+> `d9a2c14` differ by **18 files, 486 insertions, 3,400 deletions** — I diffed
+> them. ***Two commits with one subject and different content is the fork's
+> signature, and the reason no automatic reconciliation is safe.***
+
+**Every seat worktree is off the local side** — `wt-da`/`wt-fwd`/`wt-deval` on
+ORIGIN, `wt-be`/`wt-de` on their own heads, **none containing `da00220`** — and
+**`wt-fwd` and `wt-deval` are both at `7ed5a90`, which at 03:07 predates the
+03:58 fork.** ***The fork is a hazard for PUSHING, not for what has been
+computed.***
+
+**Nobody rebases, merges or force-pushes across it.** DA nearly rewrote thirteen
+commits and filed **rule 45** — `SEAT_PROTOCOL.md:695`, *"`git rebase <upstream>`
+is not a private operation in a shared tree."* **It is the user's tree.**
+
+## ✋ And I correct my own round-359 attribution
+
+I reported that *"origin's BE 133, `7538c3d`, is intact."* **`7538c3d` is a
+DIFFERENT COMMIT** — *"BE 133/134: one book carries both valuations"*, authored
+**2026-09-09 15:06:39**, two days earlier, not descended from the fork point.
+***I found it by taking the first commit whose subject began with "BE 133."***
+
+> **Rule 42 in my own hands for the third time: I matched a LABEL and reported it
+> as the PROPERTY.**
+
+**The conclusion survives — for a better reason than the one I gave.** The commit
+I amended, `68479dd`, **is local-only and has never been published.** *Nothing
+wrong has been pushed because it sits on the user's local side of the fork and
+has never left it — not because an origin copy stands correct.* ***A right
+conclusion reached through a wrong identity is still worth correcting, because
+the next person to use my reasoning would not be so lucky.***
+
+# 🔨 THE 09-07 REBUILD IS RUNNING, AND THE SUPERSESSION WAS DONE BY THE BOOK
+
+`be134frag0907`, started 06:36:54, stage `population`, 287 windows, **fixed era.**
+The buggy fragment was **superseded, not deleted** (rule 13): renamed to
+`…superseded_20260911T063523Z.json`, 660 MB, **digests recorded on both sides**,
+`pinned_names()` verified untripped, canonical path freed.
+
+**And the new `launch_stage.sh` refuses on pin mismatch, dirty tree,
+builder-digest mismatch or existing output, with `BE_WORKTREE` exported** — *the
+wrong-tree hole I read at `be_heavy_run.sh:37` last round, closed at the launcher.*
+
+# 🕳 DE'S |D| FIELD **EMITTED EMPTY** ON THE FIRST REAL RESULT
+
+Computed by hand instead: **11,017.71c / 5,256.18c.**
+
+> ***REV 175's warning made concrete: a required field present BY CARE, NOT BY
+> CONSTRUCTION — failing on the first occasion that mattered.*** I recorded that
+> warning at round 357 in exactly those terms, four rounds before the field
+> emitted empty.
+
+DE is fixing it with a **driven non-empty case** — the only repair that
+distinguishes *present* from *populated*.
+
+**Also on record:** DE's emit matches DA's independent drive — `FUTILE=True`,
+`KILLED_BY_NEGATIVE_DAYS`, `killed_by=['2026-09-07']`, `best_attainable_p=0.125`;
+HAZARD `ALIVE, 0.015625`; tolerance at G achieved **= −1**. *Under rule 38's
+timing clause — which I landed at round 357 — **I record the agreement without
+calling it corroboration**, because I do not have their filing order.* **And
+0.125 / 0.015625 are exactly the 6-of-7 and 7-of-7 values I enumerated at round 350.**
+
+# READ FIRST — round 360 (MEM, 2026-09-11T06:29:08Z, tip `0b63915`)
+
+# ✅ THE CERTIFICATION IS **BIT_IDENTICAL** — a limit I carried for seven rounds COLLAPSES
+
+232,307 generations per arm · **delta_max 0.0** · **zero flips** · m_min
+1.156e-05 / 1.650e-05 · `SUPPORTED_ON_THIS_DAY`.
+
+> **"The forward test runs on scoring bytes the development screen never ran on"
+> — which I have recorded since round 353 — is retired.** The bytes differ and
+> **the decisions do not**, measured rather than argued.
+
+**Handled as fields, not as a claim:** with a zero bound `per_book_guard` is
+**NON-BINDING** (K × 0 = 0), **driven both ways** — and the narrower hazard is
+stated: **the bound was measured on ONE DAY.** *A guard that goes vacuous under a
+particular measurement reads exactly like a pass; naming the vacuity in a field
+is what stops it being read as coverage.*
+
+# ✋ DAY ONE CORRECTED — **and my framing was wrong in BOTH directions**
+
+The statistic is **|D| about ZERO**, not the null mean.
+
+| arm | percentile | what I said at round 359 |
+|---|---|---|
+| CONDVALUE | **0.0th — below all 500 draws** | **understated** — it is *stronger* |
+| HAZARD | **36.4th** | **overstated** — "underperformed random" is wrong for it |
+
+*A negative day is ~11 % likely under this 89-%-positive null, so CONDVALUE's is
+genuinely extreme.* ***One arm understated and one overstated, by the same
+mistaken statistic.***
+
+**And I retract "reproducing step 2's verdict out of sample."** *Step 2 ran on
+09-04/05/06 **under the retracted policy** (`03dbc1e`), so day one is not a
+reproduction of it.* **The caveat I attached was about field names and would not
+have caught this — the error was in what the comparison WAS, not in which fields
+were read.**
+
+**Futility is driven** — `FUTILE: True, KILLED_BY_NEGATIVE_DAYS`,
+`attainable_minimum_p(G=1) = 1.0`. **What it ends is conjunct (a) for CONDVALUE:
+futility OF THE TEST, never NO_EFFECT.** *REV's pre-written failure wording
+arriving on day one — which is when a narrow phrase is hardest to hold.*
+
+# 🕰 THE ERA SPLIT — a day-independent literal emptied every September gap list
+
+`fi.ERA` was the literal `clob_v3_1`, so **every September window received an
+EMPTY gap list.** Fixed at BE 113 **before any forward valuation.** Measured
+under the fix: **27/287** of 09-07's windows and **43/288** of 09-08's are
+gap-bearing — **against ZERO under the bug.**
+
+*A literal that must track a moving thing, in the field deciding which windows
+are admissible. This programme has now found that class in **a floor, a
+docstring, a delimiter, and an era.***
+
+**RULING — rebuild 09-07, day one superseded in band.** The reasons are the
+useful part: **(b) leaves gap treatment INHOMOGENEOUS across the population**
+(rules 4/5), **(c) propagates a fixed defect.** *The rebuild's cost is paid to
+keep one treatment across seven days.* **REV is checking the correction's
+direction before it runs** — control-first, applied to a fix rather than a
+measurement.
+
+# 🔧 A USER COMMIT LANDED ON THE VALUATION PATH **AFTER** THE PIN
+
+`da00220`, **04:47:29** — after the 03:07 pin — rewriting five valuation files:
+PROTOCOL V1→V2, a `PIPELINE_COMMIT` literal, nine new refusals. **Day one's three
+computing modules at `651a7b53` are pin-identical** (I hashed them at round 359).
+
+## 🔍 And I checked the sharp part — it extends my round-359 finding
+
+`sha256("") = e3b0c44298fc1c14`. **At `7ed5a90`, BOTH `be_score_neutrality.py`
+AND `de_forward_value_day.py` DO NOT EXIST** — so a digest comparison against the
+pin hashes **nothing** for them and reports a **mismatch**.
+
+> ***Two of the pipeline's files postdate the commit the whole pipeline is pinned
+> to — and a comparator that does not distinguish ABSENT from DIFFERENT reports
+> the wrong one. Rule 42 exactly: "differing digest" is the LABEL; "did not
+> exist" is the PROPERTY.***
+
+**Days 2–7 may not silently run V2 while day one ran V1.** DE is measuring V2's
+D-neutrality on 09-07 — **bit-identical → adopt for all seven; any movement →
+the user.** *The question is not whether V2 is better but whether the seven days
+are one experiment* — **the same homogeneity principle as the era ruling, twice
+in one round.**
+
+# ⏱ THE REAL PER-DAY COST IS ~2 HOURS, NOT A VALUATION
+
+**None of 09-08..09-13 exist.** Tapes are built **by hand, no automation**, ~17
+min each — so **tape → book → valuation ≈ 2 h per day.** D+1 dependency is ~5 s;
+end date holds ~09-14. *A per-day cost stated as the valuation alone would have
+understated the remaining programme by more than half.*
+
+**Neither a valuation (3.41 GiB) nor a tape (5.78 GiB) coexists with a 12 GiB
+catch-up lane** against a 14 GiB cap. **DE: sequence the lanes FIRST, never mask
+them.** *`MemorySwapMax` is zero, so a masked lane is a **deferred kill**, not an
+avoided one.*
+
+# 🔁 DA'S REBASE NEAR-MISS CONFIRMS THE NUMBER I AM HOLDING
+
+`git rebase <upstream>` in a four-seat tree **replays every unpushed commit
+present — thirteen, not DA's.** Aborted, nothing lost, land script only.
+
+**My own tree reads 13 ahead, and those thirteen are the SHARED POOL, not one
+seat's.** *DA and I arrived at the same figure from opposite ends — which is why
+I declined to rebase at round 358 and decline again here.*
+
+# READ FIRST — round 359 (MEM, 2026-09-11T06:00:23Z, tip `ac5d3b8`)
+
+# 📉 DAY ONE IS VALUED — **both arms underperformed matched random cancellation**
+
+Book `0815cad74f53f118…`, 500 draws each, unit `DISTINCT_REFERENCE_GENERATIONS`,
+zero-model-cancel baseline **−4,437.7c**.
+
+| arm | observed D | p (two-sided) | null mean | gens cancelled |
+|---|---|---|---|---|
+| CONDVALUE_X_SKEW | **−11,017.7c** | 0.3174 | **+7,888.2c** | 26,264 |
+| HAZARD_OVER_SKEWED_REF | +5,256.2c | 0.6587 | **+7,940.5c** | 23,078 |
+
+> **THE HEADLINE IS THE NULL, NOT EITHER ARM.** Random cancellation earned
+> **~7,900c** on 09-07 while CONDVALUE returned **−11,018c** and HAZARD
+> **+5,256c**. ***Both arms underperformed matched random cancellation on a day
+> neither had ever seen — step 2's `NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM`,
+> reproducing OUT OF SAMPLE.***
+
+*(The coordinator flags their own field-name risk — twice misread tonight — so
+this reading is theirs pending DE's formal fields.)*
+
+**I inverted both p-values:** under the pre-registered `(1+k)/501` they imply
+**k = 158.02** and **k = 329.01** — **both integers.** *The numbers came from the
+estimator committed at `b72e329` before any draw, not from something nearby.*
+
+**CONDVALUE is negative and at G=7 tolerance is ZERO** — pending DE's formal
+verdict, **that arm cannot reach unanimity and is finished.** *The tolerance that
+was arithmetic for nine rounds became concrete on day one — which is exactly when
+futility was declared free.*
+
+# 🕳 THE FOURTH WRONG-TREE INSTANCE — **the first where a guard we built was DEFEATED, not absent**
+
+`be_heavy_run.sh:37` — `WT="${BE_WORKTREE:-/home/yuqing/ctaNew-wt-be}"` — **cds
+there, discarding the tree DE's launcher selected.** The valuation ran from
+`wt-be` at `651a7b53`, not `wt-deval` at `7ed5a90`.
+
+> **The only trace was the ABSENCE of `PREFLIGHT_RESOLVED_TREE` in the record —
+> INDISTINGUISHABLE FROM A PASSING CHECK.**
+
+## ✅ The numbers survive — **I hashed seven modules at both commits**
+
+`de_head_scoring` · `de_phase4_diag_runner` · `be_daybook_build` ·
+`de_forward_evaluator` · `de_matched_random_control` · `harmful_stateful_policy` ·
+`de_score_stream` — **all byte-identical at `651a7b53` and `7ed5a90`. None differ.**
+
+## ⚠️ But the valuation DRIVER is absent at the ruled commit
+
+**`de_forward_value_day.py` does not exist at `7ed5a90`.** It was added at
+`3a7756a` — *"a committed valuation driver — because there was none"* — which
+**postdates** the ruling. **So the one-commit rule is true of the COMPUTING
+MODULES and cannot be true of THE DRIVER THAT CALLS THEM.** *Recorded as an
+observation, not an accusation — what the ruling protects is which bytes compute
+— but a reader told "the whole pipeline runs from `7ed5a90`" should know the
+driver is not in it.*
+
+> **DE's phrase goes in the receipt beside the result: *"by luck again, not by
+> design."*** Day one's validity rests on **a coincidence of byte-identity**, not
+> on the control meant to establish it. *The seven matching digests are what makes
+> the number usable; they are not what was supposed to make it usable.*
+
+# 🛡 **A GUARD THAT CAN BE SILENTLY BYPASSED IS WORSE THAN NO GUARD**
+
+***It yields the CONFIDENCE of a check with none of the COVERAGE, and every
+downstream reader inherits that confidence.*** With no guard at all, nobody would
+have believed the tree was verified. **Absence is a known unknown; a bypassed
+check is a FALSE KNOWN.**
+
+Fix authorised: `de_valuation_launch.sh` exports `BE_WORKTREE`; the preflight
+refuses on mismatch **and refuses when `PREFLIGHT_RESOLVED_TREE` is ABSENT** —
+*the second condition is the one that closes the trace gap.*
+
+# 💥 THE 09-12 COLLISION IS MEASURED — **a KILL, not a slowdown**
+
+Valuation peak **3.41 GiB**, ~77 min for both arms. **3.41 + 12 = 15.41 GiB
+against a 14 GiB cap — exceeds by 1.41.** **A valuation cannot coexist with a
+pipeline catch-up run.** Swap is disabled (verified round 332), so the collision
+**kills**. From 09-12 the lanes wake — they cannot process day D until D+1 closes
+— so 09-11/12/13's valuations must be **sequenced against them, not scheduled
+near them.**
+
+*Had this not been measured tonight it would have surfaced as an **OOM
+mid-valuation on the 13th** — the last day of the population, with the calendar
+bound at 09-14 and no room to re-run.*
+
+# 📚 THE REGISTER FIRED AT **38 %** READ-AFTER-FILING — **a lower bound**
+
+Consultation is visible only where it left a written trace. REV: *"Both,
+unevenly — about two fifths instrument, three fifths unverified cost."*
+
+> **`R-885` and `R-888` were LIVE in the register before we re-derived them
+> tonight. The information WAS findable and nobody looked. That kills the
+> better-indexing theory.**
+
+Benefit concentrates in a **minority** of entries and in **the author's own
+re-reading**; cost is paid on **all** of them.
+
 # READ FIRST — round 358 (MEM, 2026-09-11T04:02:26Z, tip `651a7b5`)
 
 > **FIRST, THE REASSURANCE A COLD READER NEEDS: nothing ran from a wrong tree,
