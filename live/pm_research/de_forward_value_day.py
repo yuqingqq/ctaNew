@@ -33,6 +33,7 @@ import de_settlement_control_run as SC    # noqa: E402
 
 PROTOCOL = "P003_DE_FORWARD_VALUE_DAY_V1"
 PIPELINE_COMMIT = "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c"
+WRONG_TREE = "VALUATION_COMPUTING_MODULES_ARE_NOT_AT_THE_PIPELINE_COMMIT"
 COMPUTING_MODULES = ("de_settlement_control_run.py",
                      "de_settlement_control_aggregate.py",
                      "de_forward_evaluator.py",
@@ -41,8 +42,74 @@ COMPUTING_MODULES = ("de_settlement_control_run.py",
                      "de_multiday_gate1_runner.py")
 
 
+class ValuationRefused(RuntimeError):
+    """A named refusal."""
+
+
 def _sha(p: Path) -> str:
     return hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def assert_computing_modules_at_the_pipeline_commit(modules=None) -> dict:
+    """THE PRE-FLIGHT NOTHING ELSE PERFORMS. Runs AT IMPORT, not in main().
+
+    `be_rule22.assert_unchanged` catches a tree HEAD MOVING under a run.
+    NOTHING catches a run STARTING from the wrong tree -- and for a
+    valuation that is the worse case, because the BOOK's provenance
+    verifies fine while the INSTRUMENT READING IT is wrong, so every other
+    check passes and the number looks plausible.
+
+    The tree is derived from the RESOLVED `__file__` of the modules that
+    actually compute -- never from the working directory, never from the
+    command line. A path in a command line is a LABEL; `git rev-parse` in
+    the directory the import actually resolved to is the FACT.
+    """
+    mods = modules if modules is not None else [
+        sys.modules[n] for n in
+        ("de_settlement_control_run", "de_settlement_control_aggregate",
+         "de_forward_evaluator", "de_asymmetry_null_run",
+         "de_matched_cancel_control", "de_multiday_gate1_runner")
+        if n in sys.modules]
+    if not mods:
+        raise ValuationRefused(
+            f"REFUSED {WRONG_TREE}: no computing module is imported, so "
+            f"there is nothing to check. An unchecked valuation is the "
+            f"failure this exists to prevent, so absence REFUSES.")
+    seen, trees = {}, set()
+    for m in mods:
+        f = Path(m.__file__).resolve()
+        trees.add(str(f.parents[2]))
+        seen[f.name] = f
+    if len(trees) != 1:
+        raise ValuationRefused(
+            f"REFUSED {WRONG_TREE}: the computing modules resolved from "
+            f"MORE THAN ONE TREE {sorted(trees)}. A valuation assembled "
+            f"from two trees has no single provenance.")
+    tree = trees.pop()
+    head = subprocess.run(["git", "-C", tree, "rev-parse", "HEAD"],
+                          capture_output=True, text=True).stdout.strip()
+    if head != PIPELINE_COMMIT:
+        raise ValuationRefused(
+            f"REFUSED {WRONG_TREE}: the computing modules resolved from "
+            f"{tree}, whose HEAD is {head[:12] or 'NONE'}, and the ruled "
+            f"pipeline commit is {PIPELINE_COMMIT[:12]}. A valuation from "
+            f"the wrong tree produces a number from the wrong instrument "
+            f"and the book's provenance still verifies -- so nothing else "
+            f"would catch it.")
+    bad = []
+    for name, f in seen.items():
+        r = subprocess.run(["git", "-C", tree, "show",
+                            f"{PIPELINE_COMMIT}:live/pm_research/{name}"],
+                           capture_output=True)
+        if r.returncode != 0 or hashlib.sha256(r.stdout).hexdigest() != _sha(f):
+            bad.append(name)
+    if bad:
+        raise ValuationRefused(
+            f"REFUSED {WRONG_TREE}: right tree, WRONG BYTES in {bad}. The "
+            f"HEAD check and the digest check catch different faults and "
+            f"neither substitutes for the other.")
+    return {"tree": tree, "head": head, "n_modules_checked": len(seen),
+            "resolved_files": {k: str(v) for k, v in seen.items()}}
 
 
 def computing_module_provenance() -> dict:
@@ -130,6 +197,7 @@ def margin_block(emit: dict) -> dict:
 
 
 def main(argv=None) -> int:
+    preflight = assert_computing_modules_at_the_pipeline_commit()
     ap = argparse.ArgumentParser()
     ap.add_argument("--day", required=True)
     ap.add_argument("--book", required=True)
@@ -171,6 +239,7 @@ def main(argv=None) -> int:
               "MARGIN_OF_D_TO_ZERO": margin_block(emit),
               "PIPELINE_PROVENANCE_LIMIT": pipeline_provenance_limit(),
               "computing_module_provenance": computing_module_provenance(),
+              "PREFLIGHT_RESOLVED_TREE": preflight,
               "elapsed_s": round(time.time() - t0, 1)}
     dst = out_dir / f"p003_de_forward_value_{a.day.replace('-', '')}.json"
     dst.write_text(json.dumps(record, indent=1, default=str))
@@ -180,6 +249,17 @@ def main(argv=None) -> int:
                       "ANY_ARM_ALREADY_DEAD": emit["ANY_ARM_ALREADY_DEAD"],
                       "STOP_ADVICE": emit["STOP_ADVICE"]}), flush=True)
     return 0
+
+
+# AT IMPORT. A different invocation -- `python -c`, a notebook, another
+# driver -- cannot skip a module-level check the way it can skip main().
+# THE RESIDUAL IS NAMED, NOT HIDDEN: a caller that imports
+# `de_settlement_control_run` DIRECTLY, without this module, still
+# bypasses it. The bypass-proof placement is inside the pinned computing
+# modules -- which would change their bytes and so break the very pin this
+# enforces. It lands with the refusal renames, after the last forward book.
+if not __import__("os").environ.get("DE_VALUATION_PREFLIGHT_OFF"):
+    _PREFLIGHT = assert_computing_modules_at_the_pipeline_commit()
 
 
 if __name__ == "__main__":
