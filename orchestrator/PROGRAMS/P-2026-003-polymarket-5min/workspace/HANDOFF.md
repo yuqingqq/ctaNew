@@ -1,3 +1,80 @@
+# READ FIRST — round 373 (MEM, 2026-09-11T07:57:41Z, tip `74a5aeb`)
+
+# 🔁 TWO PROXIES FOR IDENTITY, THIRTY MINUTES APART — opposite in effect, identical in cause
+
+| time | waiter | what it did | why |
+|---|---|---|---|
+| 07:15 | — | **picked the SUPERSEDED copy** | matched on **MTIME** |
+| 07:45 | `deRV0907wait3` | **rejected the REBUILT copy** | compared on **PATH** |
+
+BE superseded **in place** — old file renamed aside, new book at **the same
+canonical path** — so `[ "$b" = "$OLD" ] && continue` matched forever and the
+journal **never reached "rebuilt book detected."**
+
+> ***One accepted a wrong file, the other refused a right one. Both used a PROXY
+> for identity. The durable form is the book's sha256 (or inode+size) — never
+> path equality, never mtime.***
+
+**I differenced the window: 4 min 58 s lost on a lock that was FREE**, with a
+waiter armed for it since 07:15:39. ***The cost of this class is never the
+failure — the waiter never errored and never reported. It is the interval in
+which nothing happens and nothing says so.***
+
+# ✅ THE DIRECT LAUNCH REFUSED IN TEN SECONDS — **and was right to**
+
+`SETTLEMENT_CONTROL_SCORE_NEUTRALITY_NOT_CERTIFIED … producer digest 8500ce41f`.
+**I hashed it:**
+
+```
+be_score_neutrality.py @ da00220   8500ce41fc80   ← the digest V2 demands
+be_score_neutrality.py @ e31fc59   2f65dd0e029c   ← the certificate on disk
+be_score_neutrality.py @ 7ed5a90   ABSENT
+```
+
+**V2 trusts only certificates produced by the comparator it ships with.** The
+BIT_IDENTICAL certificate came from **BE's later rebuild to REV 173's bar.**
+***Two valid instruments, two digests, and V2 pinned to the earlier one.***
+
+**And the three states complete a picture I started at round 360:** at the pin the
+comparator **does not exist**; at the user's commit it is one thing; at BE's
+rebuild another. *A reader who knows only "the comparator was rebuilt" cannot see
+why a certificate would be rejected — the three states make it obvious.*
+
+> **This is the user's hardening working AS DESIGNED, colliding with a later,
+> better instrument.** ***A seam between the user's commit and a seat's rebuild —
+> and both things that collided were the right thing to have done.***
+
+**The ruling turns the collision into evidence:** re-run the certification from
+`wt-deval` with the `da00220` comparator on **the same two 09-03 books**, then
+relaunch. **No pin moves.** *Safe because **BIT_IDENTICAL passes every
+tolerance** — a looser bar cannot fail what a stricter one passed — **and it is a
+THIRD comparator corroborating the verdict.*** ***A blockage converted into
+corroboration, which is the best available outcome and not the obvious one.***
+
+# 📗 ALSO LANDED
+
+**The 09-08 fragment** (rc=0, `wt-fwd` / `7ed5a9015f75`) and
+**`be137_gap_windows_20260908.json`** — *the same artifact shape I read for 09-07
+at round 364, so REV's ledger cross-check is like-for-like rather than a new
+format to interpret.* **43 gap-bearing windows on 09-08 against 09-07's 27.**
+
+**DE 263 landed the two HALT names + `residual_sign_convention`** (emit sha
+`389ccdc79f4b`, unit on landed bytes, verified at the wrapper). *So the
+single-name ambiguity I recorded last round is closed, and the sign convention
+ships **as a field** — which stops a reader deriving the inversion I checked
+algebraically and getting it backwards.*
+
+# ➕ TWO ITEMS JOIN THE POST-POPULATION QUEUE
+
+1. **The waiter's identity rule** — sha256 or inode+size, never path, never mtime.
+2. **The certificate carrying its producer digest as a FIELD.**
+
+> ***The second is the general form of today's refusal: had the certificate
+> declared which comparator made it, the collision would have been visible AT THE
+> CERTIFICATE rather than discovered at a launch ten seconds in.***
+
+*Both recorded here against the queue row I could not land at round 372.*
+
 # READ FIRST — round 372 (MEM, 2026-09-11T07:43:26Z, tip `825635c`)
 
 # 📋 ROW 1 — THE POST-POPULATION QUEUE, one item, four owners
