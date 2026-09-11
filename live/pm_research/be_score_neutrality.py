@@ -51,13 +51,16 @@ on the path. A green certification does not retire the per-book guard.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import hashlib
 import math
+import os
 import pickle
 import statistics
 import sys
 from pathlib import Path
+from time import time_ns
 
 #: REPORTING threshold only. Above it, summation order is not the
 #: explanation and the difference needs explaining even with zero flips.
@@ -76,9 +79,12 @@ EMPTY_SCORES = "SCORE_MAP_IS_EMPTY_IDENTICAL_IS_NOT_A_RESULT"
 PARTIAL = "PARTIAL_GENERATION_READ_IS_A_REFUSAL_NOT_A_WEAKER_PASS"
 NO_HEAD = "ARM_HAS_NO_DECLARED_HEAD"
 GUARD_TOO_CLOSE = "BOOK_M_MIN_WITHIN_K_TIMES_DELTA_MAX_CERTIFIED"
+INVALID_SCORE = "SCORE_NEUTRALITY_SCORE_IS_NOT_A_FINITE_NUMBER"
 
 DECL = "live/pm_research/declarations"
 FREEZE_REL = "de_arm_freeze_v1.json"
+CERTIFICATION_OLD_COMMIT = "941e68899bcf2aaa46d4b1127b1258977a964d8e"
+CERTIFICATION_NEW_COMMIT = "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c"
 
 
 class NeutralityRefused(RuntimeError):
@@ -92,8 +98,9 @@ def frozen_params(decl_dir=DECL) -> tuple[dict, Path, dict]:
         raise NeutralityRefused(
             f"REFUSED: the arm freeze is absent: {freeze_path}")
     try:
-        freeze = json.loads(freeze_path.read_text())
-    except (OSError, json.JSONDecodeError) as exc:
+        freeze_source = freeze_path.read_bytes()
+        freeze = json.loads(freeze_source)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise NeutralityRefused(
             f"REFUSED: the arm freeze is unreadable: "
             f"{type(exc).__name__}: {exc}") from None
@@ -105,12 +112,13 @@ def frozen_params(decl_dir=DECL) -> tuple[dict, Path, dict]:
         raise NeutralityRefused(
             f"REFUSED: the frozen params declaration is absent: {params_path}")
     try:
-        params = json.loads(params_path.read_text())
-    except (OSError, json.JSONDecodeError) as exc:
+        params_source = params_path.read_bytes()
+        params = json.loads(params_source)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise NeutralityRefused(
             f"REFUSED: the frozen params declaration is unreadable: "
             f"{type(exc).__name__}: {exc}") from None
-    digest = hashlib.sha256(params_path.read_bytes()).hexdigest()
+    digest = hashlib.sha256(params_source).hexdigest()
     if digest != pair.get("sha256"):
         raise NeutralityRefused(
             f"REFUSED: the frozen params digest moved: declared "
@@ -155,7 +163,8 @@ def load(path) -> dict:
     if not p.is_file():
         raise NeutralityRefused(f"REFUSED {UNREADABLE}: {p} is not a file")
     try:
-        obj = pickle.loads(p.read_bytes())
+        source = p.read_bytes()
+        obj = pickle.loads(source)
     except Exception as exc:
         raise NeutralityRefused(
             f"REFUSED {UNREADABLE}: {p} did not unpickle "
@@ -164,6 +173,11 @@ def load(path) -> dict:
         raise NeutralityRefused(
             f"REFUSED {UNREADABLE}: {p} unpickled to {type(obj).__name__} "
             f"without the book shape (header+asm)")
+    obj["_score_neutrality_source"] = {
+        "path": str(p.resolve()),
+        "sha256": hashlib.sha256(source).hexdigest(),
+        "digest_is_of_the_unpickled_buffer": True,
+    }
     return obj
 
 
@@ -172,6 +186,51 @@ def identity_of(book: dict) -> dict:
     pl = h.get("placement_latency") or {}
     return {"day": h.get("day"), "coin": h.get("coin"),
             "placement_latency_ms": pl.get("placement_latency_ms")}
+
+
+def verify_comparison_receipts(old: dict, new: dict, old_receipt,
+                               new_receipt) -> dict:
+    """Bind both compared books to the exact builds the ruling names."""
+    out = {}
+    expected = {"old": CERTIFICATION_OLD_COMMIT,
+                "new": CERTIFICATION_NEW_COMMIT}
+    books = {"old": old, "new": new}
+    receipts = {"old": Path(old_receipt), "new": Path(new_receipt)}
+    source_digests = {
+        side: ((book.get("_score_neutrality_source") or {}).get("sha256"))
+        for side, book in books.items()}
+    if (not all(source_digests.values())
+            or source_digests["old"] == source_digests["new"]):
+        raise NeutralityRefused(
+            f"REFUSED {NOT_COMPARABLE}: the comparison requires two "
+            f"different, source-digested book files, got {source_digests}.")
+    for side, path in receipts.items():
+        try:
+            receipt_source = path.read_bytes()
+            receipt = json.loads(receipt_source)
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise NeutralityRefused(
+                f"REFUSED {NOT_COMPARABLE}: unreadable {side} receipt "
+                f"{path}: {type(exc).__name__}: {exc}") from None
+        book_sha = (receipt.get("book") or {}).get("sha256")
+        builder = (receipt.get("producing_code") or {}).get("builder_commit")
+        receipt_identity = {
+            "day": receipt.get("day"), "coin": receipt.get("coin"),
+            "placement_latency_ms": (receipt.get("placement_latency") or {})
+                .get("placement_latency_ms")}
+        if (book_sha != source_digests[side]
+                or builder != expected[side]
+                or receipt_identity != identity_of(books[side])):
+            raise NeutralityRefused(
+                f"REFUSED {NOT_COMPARABLE}: {side} receipt says book "
+                f"{book_sha}, builder {builder}, identity {receipt_identity}; "
+                f"expected source {source_digests[side]}, builder "
+                f"{expected[side]}, identity {identity_of(books[side])}.")
+        out[side] = {"path": str(path),
+                     "sha256": hashlib.sha256(receipt_source).hexdigest(),
+                     "book_sha256": book_sha, "builder_commit": builder,
+                     "identity": receipt_identity}
+    return out
 
 
 def _entries(book: dict, head: str):
@@ -197,28 +256,102 @@ def gen_max(book: dict, head: str) -> dict:
     """{(slug, side, gen): max stored score} -- E: from STORED values."""
     out: dict = {}
     for k, v in _entries(book, head).items():
+        if not isinstance(v, dict) or v.get("gen") is None:
+            raise NeutralityRefused(
+                f"REFUSED {INVALID_SCORE}: head {head!r} has a score row "
+                f"without a generation identity at key {k!r}.")
         g = (k[0], k[1], v.get("gen"))
         s = v.get("score")
         if s is None:
             continue
+        if (not isinstance(s, (int, float)) or isinstance(s, bool)
+                or not math.isfinite(float(s))):
+            raise NeutralityRefused(
+                f"REFUSED {INVALID_SCORE}: head {head!r}, generation {g!r} "
+                f"has score {s!r}.")
         out[g] = s if g not in out else max(out[g], s)
     return out
 
 
-def n_generations_in_book(book: dict) -> int:
-    """D's denominator, from the book's own reference, not from the scores."""
+def reference_generation_keys(book: dict) -> set:
+    """Exact generation identities in the neutral reference path."""
     ref = ((book.get("fr") or {}).get("reference")
            if "fr" in book else book.get("ref")) or {}
-    return sum(len(v) for sides in ref.values() for v in sides.values())
+    keys = set()
+    for slug, sides in ref.items():
+        if not isinstance(sides, dict):
+            raise NeutralityRefused(
+                f"REFUSED {PARTIAL}: reference {slug!r} has no side map.")
+        for side, generations in sides.items():
+            for generation in generations or ():
+                if (not isinstance(generation, dict)
+                        or generation.get("gen") is None):
+                    raise NeutralityRefused(
+                        f"REFUSED {PARTIAL}: reference {slug}/{side} contains "
+                        f"a generation without a `gen` identity.")
+                key = (slug, side, generation["gen"])
+                if key in keys:
+                    raise NeutralityRefused(
+                        f"REFUSED {PARTIAL}: reference generation {key!r} "
+                        f"appears more than once.")
+                keys.add(key)
+    return keys
 
 
-def certify(old: dict, new: dict, *, decl_dir=DECL) -> dict:
+def n_generations_in_book(book: dict) -> int:
+    """D's denominator, from exact reference identities."""
+    return len(reference_generation_keys(book))
+
+
+def gen_census(book: dict, head: str) -> dict:
+    """What the comparator CAN compare and what it DROPS -- from the entries.
+
+    BE 130. D's first form compared the number of SCORED generations against
+    the number of REFERENCE generations, which are two different populations:
+    on 09-03 the producers' own receipts record 232,307 covered of 313,140
+    reference generations for BOTH heads, so `len(A) != in_book` REFUSED
+    every real book and the certification could never have returned a
+    verdict. Found from the receipts before the comparison ran.
+
+    The guard REVIEW 173 asked for is that the COMPARATOR must not drop what
+    it could have compared -- "the generations a comparator drops are
+    plausibly the pathological ones". The assembly's coverage shortfall is a
+    PRODUCER-recorded exclusion (GENERATION_NOT_SCORED, 80,833 on 09-03) and
+    belongs in the output as a counted status (CLAUDE.md rule 4), never as a
+    refusal and never silently absorbed. Two halves, two denominators."""
+    ents = _entries(book, head)
+    all_gens, scored_gens, n_null = set(), set(), 0
+    for k, v in ents.items():
+        g = (k[0], k[1], v.get("gen"))
+        all_gens.add(g)
+        if v.get("score") is None:
+            n_null += 1
+        else:
+            scored_gens.add(g)
+    return {
+        "n_rows": len(ents),
+        "n_rows_with_a_null_score": n_null,
+        "n_generations_among_rows": len(all_gens),
+        "n_generations_with_a_score": len(scored_gens),
+        "n_generations_lost_to_null_scores": len(all_gens - scored_gens),
+    }
+
+
+def certify(old: dict, new: dict, *, decl_dir=DECL,
+            comparison_receipts=None) -> dict:
     """A–E for every declared arm. Refuses rather than weakening."""
     ida, idb = identity_of(old), identity_of(new)
     if ida != idb:
         raise NeutralityRefused(f"REFUSED {NOT_COMPARABLE}: {ida} vs {idb}")
     arms = arm_heads(decl_dir)
-    in_book = n_generations_in_book(old)
+    old_reference = reference_generation_keys(old)
+    new_reference = reference_generation_keys(new)
+    if old_reference != new_reference:
+        raise NeutralityRefused(
+            f"REFUSED {NOT_COMPARABLE}: reference generation identities "
+            f"differ: {len(old_reference - new_reference)} only in old and "
+            f"{len(new_reference - old_reference)} only in new.")
+    in_book = len(old_reference)
     per_arm = {}
     flips_total = 0
     for arm, spec in sorted(arms.items()):
@@ -261,13 +394,32 @@ def certify(old: dict, new: dict, *, decl_dir=DECL) -> dict:
             strength = "WEAK_DAY_NEVER_PUT_THE_QUESTION"
         else:
             strength = "NO_FLIP_ARITHMETICALLY_IMPOSSIBLE"
-        # ---- D: reconciliation; a shortfall REFUSES
-        if len(A) != in_book:
+        # ---- D: reconciliation against the RIGHT denominator (BE 130).
+        # A COMPARATOR drop REFUSES. The ASSEMBLY's coverage shortfall is a
+        # producer-recorded status and is reported, not refused -- they are
+        # different populations and the first form conflated them.
+        census = gen_census(old, head)
+        if census["n_generations_lost_to_null_scores"]:
+            raise NeutralityRefused(
+                f"REFUSED {PARTIAL}: arm {arm} -- "
+                f"{census['n_generations_lost_to_null_scores']} generation(s) "
+                f"have rows in the book and NO usable score on any of them, so "
+                f"this comparator dropped them. The generations a comparator "
+                f"drops are plausibly the pathological ones, so a partial read "
+                f"is biased toward clean.")
+        if len(A) != census["n_generations_with_a_score"]:
             raise NeutralityRefused(
                 f"REFUSED {PARTIAL}: arm {arm} compared {len(A)} generation(s) "
-                f"against {in_book} in the book. The generations a comparator "
-                f"drops are plausibly the pathological ones, so a partial "
-                f"read is biased toward clean.")
+                f"against {census['n_generations_with_a_score']} carrying a "
+                f"score in the book -- the comparator lost "
+                f"{census['n_generations_with_a_score'] - len(A)}.")
+        outside_reference = set(A) - old_reference
+        if outside_reference:
+            raise NeutralityRefused(
+                f"REFUSED {PARTIAL}: arm {arm} has "
+                f"{len(outside_reference)} scored generation(s) absent from "
+                f"the reference, examples {sorted(outside_reference)[:3]}.")
+        not_scored = old_reference - set(A)
         per_arm[arm] = {
             "head": head, "theta": theta,
             "A_n_flips": len(flips), "A_flip_examples": flips[:5],
@@ -278,8 +430,20 @@ def certify(old: dict, new: dict, *, decl_dir=DECL) -> dict:
             "C_n_exactly_at_theta": exactly_at,
             "C_n_generations": len(A),
             "D_n_generations_compared": len(A),
-            "D_n_generations_in_book": in_book,
-            "D_reconciles": len(A) == in_book,
+            "D_n_generations_with_a_score": census["n_generations_with_a_score"],
+            "D_n_reference_generations_in_book": in_book,
+            "D_n_reference_generations_NOT_SCORED_BY_THE_ASSEMBLY":
+                len(not_scored),
+            "D_fraction_of_the_reference_certified": (
+                (len(A) / in_book) if in_book else None),
+            "D_rows": census["n_rows"],
+            "D_n_rows_with_a_null_score": census["n_rows_with_a_null_score"],
+            "D_reconciles": len(A) == census["n_generations_with_a_score"],
+            "D_WHOSE_SHORTFALL": (
+                "the ASSEMBLY's, not this comparator's: a reference generation "
+                "no scored key names (GENERATION_NOT_SCORED) carries no score "
+                "for any threshold to compare, so it cannot flip. Counted "
+                "here as a status (rule 4), never absorbed."),
             "delta_quantiles": (_q([d for d in deltas if d]) if any(deltas)
                                 else None),
             "strength": strength,
@@ -299,6 +463,30 @@ def certify(old: dict, new: dict, *, decl_dir=DECL) -> dict:
                "criterion; the pass criterion is A+C",
         "REL_BAR_reporting_only": REL_BAR,
         "per_arm": per_arm,
+        "POPULATION_THIS_CERTIFIES": {
+            "unit": "reference generations CARRYING A SCORE for the arm's head",
+            "n_certified": {a: r["D_n_generations_compared"]
+                            for a, r in per_arm.items()},
+            "n_reference_generations": {
+                a: r["D_n_reference_generations_in_book"]
+                for a, r in per_arm.items()},
+            "n_not_scored_by_the_assembly": {
+                a: r["D_n_reference_generations_NOT_SCORED_BY_THE_ASSEMBLY"]
+                for a, r in per_arm.items()},
+            "THE_LIMIT": (
+                "decision-equivalence is certified over the SCORED population "
+                "only. An unscored generation has no score for theta to "
+                "compare and cannot flip, so it is outside the claim rather "
+                "than evidence for it. A REQUIRED FIELD because a limit that "
+                "lives in prose gets summarised away (rule 35)."),
+        },
+        "compared_books": {
+            "old": old.get("_score_neutrality_source"),
+            "new": new.get("_score_neutrality_source")},
+        "comparison_receipts": comparison_receipts,
+        "producer": {
+            "path": str(Path(__file__).resolve()),
+            "sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest()},
         "n_flips_overall": flips_total,
         # COMPUTED, never typed. And never a rate.
         "verdict": verdict,
@@ -363,6 +551,27 @@ def _q(xs) -> dict:
             "max": xs[-1], "mean": statistics.fmean(xs)}
 
 
+def write_certification(path: Path, result: dict) -> None:
+    """Write one complete certificate and never replace an earlier one."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(
+        f".{path.name}.{os.getpid()}.{time_ns()}.tmp")
+    try:
+        with temporary.open("x") as handle:
+            handle.write(json.dumps(result, indent=1, default=str) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        try:
+            os.link(temporary, path)
+        except FileExistsError:
+            raise NeutralityRefused(
+                f"REFUSED: certification already exists at {path}; it "
+                f"cannot be overwritten.") from None
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
 def falsify() -> int:                                        # noqa: C901
     checks = []
 
@@ -394,7 +603,12 @@ def falsify() -> int:                                        # noqa: C901
         def entries(g):
             return {(s, sd, float(i) / 100): {"score": v, "gen": gg, "t0": i}
                     for i, ((s, sd, gg), v) in enumerate(g.items())}
-        ref = {"s1": {"BUY_UP": [None] * len(gens)}}
+        reference_keys = sorted({(slug, side, generation)
+                                 for slug, side, generation in gens})
+        ref = {}
+        for slug, side, generation in reference_keys:
+            ref.setdefault(slug, {}).setdefault(side, []).append(
+                {"gen": generation})
         return {"header": {"day": day, "coin": "btc",
                            "placement_latency": {"placement_latency_ms": latency}},
                 "fr": {"reference": ref},
@@ -445,12 +659,59 @@ def falsify() -> int:                                        # noqa: C901
     note("a generation exactly at theta is counted",
          r["per_arm"][arm]["C_n_exactly_at_theta"] == 1)
 
-    # 5. D: a partial read REFUSES rather than passing weakly.
-    short = {k: v for k, v in list(base.items())[:2]}
-    b_old = book(base, obase)
-    b_old["fr"]["reference"] = {"s1": {"BUY_UP": [None] * 99}}
-    note("a partial generation read REFUSES",
-         refuses(lambda: certify(b_old, b_old), PARTIAL))
+    # 5. D -- BE 130. THE CELL THAT USED TO LIVE HERE ENSHRINED THE DEFECT
+    #    AS SPEC. It built a reference of 99 against 3 scored generations,
+    #    asserted a REFUSAL, and passed -- which is exactly the shape of every
+    #    real book (232,307 scored of 313,140 reference on 09-03, from the
+    #    producers' own receipts) and would have refused the certification.
+    #    The two halves are now separated and BOTH are driven, because rule 16
+    #    wants a control that fires on the bad case AND admits the good one.
+    #
+    # 5a. THE ADMIT HALF (the regression this repair exists for): a reference
+    #     wider than the scored set is the NORMAL case and must be certified,
+    #     with the shortfall counted as a status rather than absorbed.
+    wide = book(base, obase)
+    wide["fr"]["reference"] = {
+        "s1": {"BUY_UP": [{"gen": generation}
+                            for generation in range(1, 100)]}}
+    r = certify(wide, wide)
+    note("an assembly that scored only PART of the reference is CERTIFIED",
+         r["verdict"] == "SUPPORTED_ON_THIS_DAY")
+    note("and the unscored reference generations are COUNTED, not absorbed",
+         r["per_arm"][arm]["D_n_generations_compared"] == 3
+         and r["per_arm"][arm]["D_n_reference_generations_in_book"] == 99
+         and r["per_arm"][arm][
+             "D_n_reference_generations_NOT_SCORED_BY_THE_ASSEMBLY"] == 96
+         and r["per_arm"][arm]["D_reconciles"] is True)
+    note("the OUTPUT carries the population limit as a required field",
+         r["POPULATION_THIS_CERTIFIES"]["n_not_scored_by_the_assembly"][arm]
+         == 96)
+
+    # 5b. THE REFUSE HALF: a generation whose every row carries a NULL score
+    #     is one THIS COMPARATOR drops, and that still refuses.
+    dropped = dict(base); dropped[("s1", "BUY_UP", 3)] = None
+    note("a generation the COMPARATOR drops (no usable score) REFUSES",
+         refuses(lambda: certify(book(dropped, obase), book(dropped, obase)),
+                 PARTIAL))
+
+    # 5c. A scored key naming a generation the reference does not have.
+    narrow = book(base, obase)
+    narrow["fr"]["reference"] = {
+        "s1": {"BUY_UP": [{"gen": 1}, {"gen": 2}]}}
+    note("more scored generations than the reference holds REFUSES",
+         refuses(lambda: certify(narrow, narrow), PARTIAL))
+
+    changed_reference = book(base, obase)
+    changed_reference["fr"]["reference"]["s1"]["BUY_UP"][-1]["gen"] = 99
+    note("books with different reference identities REFUSE",
+         refuses(lambda: certify(book(base, obase), changed_reference),
+                 NOT_COMPARABLE))
+
+    non_finite = dict(base)
+    non_finite[("s1", "BUY_UP", 1)] = float("nan")
+    note("a non-finite stored score REFUSES",
+         refuses(lambda: certify(book(non_finite, obase),
+                                 book(non_finite, obase)), INVALID_SCORE))
 
     # 6. KNOWN-BAD inputs still refuse by name.
     # THE NIGHT'S DOMINANT FAILURE MODE, pointed at this instrument: seven
@@ -481,6 +742,52 @@ def falsify() -> int:                                        # noqa: C901
                  NOT_COMPARABLE))
     note("two empty score maps REFUSE",
          refuses(lambda: certify(book({}, {}), book({}, {})), EMPTY_SCORES))
+    with tempfile.TemporaryDirectory() as td:
+        old_path = Path(td) / "old.pkl"
+        new_path = Path(td) / "new.pkl"
+        old_path.write_bytes(pickle.dumps(book(base, obase)))
+        moved = dict(base)
+        moved[("s1", "BUY_UP", 1)] += 1e-9
+        new_path.write_bytes(pickle.dumps(book(moved, obase)))
+        old_loaded, new_loaded = load(old_path), load(new_path)
+
+        def receipt(path, loaded, commit):
+            path.write_text(json.dumps({
+                "day": identity_of(loaded)["day"],
+                "coin": identity_of(loaded)["coin"],
+                "placement_latency": {
+                    "placement_latency_ms":
+                        identity_of(loaded)["placement_latency_ms"]},
+                "book": {"sha256": loaded[
+                    "_score_neutrality_source"]["sha256"]},
+                "producing_code": {"builder_commit": commit}}))
+
+        old_receipt = Path(td) / "old_receipt.json"
+        new_receipt = Path(td) / "new_receipt.json"
+        receipt(old_receipt, old_loaded, CERTIFICATION_OLD_COMMIT)
+        receipt(new_receipt, new_loaded, CERTIFICATION_NEW_COMMIT)
+        evidence = verify_comparison_receipts(
+            old_loaded, new_loaded, old_receipt, new_receipt)
+        sourced = certify(old_loaded, new_loaded,
+                          comparison_receipts=evidence)
+        note("a certification carries both source-book digests and its producer",
+             all(len(sourced["compared_books"][side]["sha256"]) == 64
+                 for side in ("old", "new"))
+             and sourced["producer"]["sha256"]
+             == hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+        certificate = Path(td) / "certificate.json"
+        write_certification(certificate, sourced)
+        note("a complete certification is written once",
+             json.loads(certificate.read_text())["verdict"]
+             == "SUPPORTED_ON_THIS_DAY")
+        note("an existing certification cannot be overwritten",
+             refuses(lambda: write_certification(certificate, sourced),
+                     "already exists"))
+        receipt(new_receipt, new_loaded, CERTIFICATION_OLD_COMMIT)
+        note("a new book attributed to the old build REFUSES",
+             refuses(lambda: verify_comparison_receipts(
+                 old_loaded, new_loaded, old_receipt, new_receipt),
+                 NOT_COMPARABLE))
 
     # 7. THE PER-BOOK GUARD -- it must refuse a book that sits too close.
     dmc = {a: 1e-12 for a in AH}
@@ -506,19 +813,33 @@ def falsify() -> int:                                        # noqa: C901
 
 
 def main(argv=None) -> int:
-    argv = list(sys.argv[1:] if argv is None else argv)
-    if "--selftest" in argv:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("old_book", nargs="?")
+    parser.add_argument("new_book", nargs="?")
+    parser.add_argument("--old-receipt")
+    parser.add_argument("--new-receipt")
+    parser.add_argument("--output")
+    parser.add_argument("--selftest", action="store_true")
+    args = parser.parse_args(argv)
+    if args.selftest:
         return falsify()
-    if len(argv) < 2:
-        print("usage: be_score_neutrality.py <old_book.pkl> <new_book.pkl> "
-              "| --selftest")
-        return 2
+    required = {"old_book": args.old_book, "new_book": args.new_book,
+                "old_receipt": args.old_receipt,
+                "new_receipt": args.new_receipt, "output": args.output}
+    missing = [name for name, value in required.items() if value is None]
+    if missing:
+        parser.error("a certification requires " + ", ".join(missing))
     try:
-        out = certify(load(argv[0]), load(argv[1]))
+        old, new = load(args.old_book), load(args.new_book)
+        receipts = verify_comparison_receipts(
+            old, new, args.old_receipt, args.new_receipt)
+        out = certify(old, new, comparison_receipts=receipts)
+        write_certification(Path(args.output), out)
     except NeutralityRefused as e:
         print(json.dumps({"refused": str(e)}, indent=1))
         return 3
-    print(json.dumps(out, indent=1, default=str))
+    print(json.dumps({"written": args.output,
+                      "verdict": out["verdict"]}, indent=1))
     return 0 if out["verdict"] == "SUPPORTED_ON_THIS_DAY" else 1
 
 
