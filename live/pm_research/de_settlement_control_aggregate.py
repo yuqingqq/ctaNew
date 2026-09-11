@@ -218,9 +218,15 @@ def _verify_forward_cell(result: dict, checkpoint: dict, *, day: str,
         "path": str(Path(SC.__file__).resolve()),
         "sha256": _sha256(Path(SC.__file__).read_bytes()),
     }
-    if result.get("producer") != expected_producer:
+    # THE PRODUCER'S IDENTITY IS ITS BYTES, NOT ITS PATH. Four worktrees
+    # hold this module at the same commit; a cell produced from wt-deval
+    # and read from wt-de2 carried the SAME sha256 and a different path,
+    # and the equality on the whole dict refused it. A path is a label.
+    read_producer = result.get("producer") or {}
+    if read_producer.get("sha256") != expected_producer["sha256"]:
         wrong_result["producer"] = {
-            "read": result.get("producer"), "expected": expected_producer}
+            "read": read_producer, "expected": expected_producer,
+            "compared": "sha256 -- the path is recorded, not compared"}
     if result.get("checkpoint_sha256") != checkpoint["source"]["sha256"]:
         wrong_result["checkpoint_sha256"] = {
             "read": result.get("checkpoint_sha256"),
@@ -233,8 +239,16 @@ def _verify_forward_cell(result: dict, checkpoint: dict, *, day: str,
     score_bounds = result.get("score_delta_max_certified") or {}
     margin_guard = result.get("forward_book_margin_guard") or {}
     evidence_errors = []
+    # THE WRITER MOVED AND THE READER DID NOT (USER RULING, DE 343). The
+    # clause that fired is measured: only `builder_commit != <literal>`.
+    # The evidence is exactly where this reader looks; what changed is the
+    # BOOK -- built at a DESCENDANT of the build pin, which V2 admits as
+    # `admitted_by: DESCENDANT` (DE 331) and this literal refused. A
+    # freeze-built book was valued correctly and then could not be read
+    # back by the consumer of its own numbers.
+    admitting_arm = SC._admitting_arm(receipt.get("builder_commit"))
     if (receipt.get("book_sha256") != book_sha
-            or receipt.get("builder_commit") != SC.PIPELINE_COMMIT
+            or not admitting_arm
             or not isinstance(receipt.get("book_scoring_code"), dict)
             or not isinstance(receipt.get("sha256"), str)
             or len(receipt["sha256"]) != 64):
@@ -389,6 +403,11 @@ def load_cell(root: Path, day: str, arm: str, *,
         checkpoint_path=checkpoint_path) if strict_forward else
         {"status": "LEGACY_AGGREGATE_N_ONLY"})
     return {"day": day, "arm": arm, "result": res,
+            # WHICH ARM ADMITTED THE BOOK TRAVELS WITH THE CELL: a reader
+            # holding the loaded cell can tell an EXACT build from a
+            # DESCENDANT one without reopening the receipt.
+            "book_admitted_by": ((res.get("book_receipt") or {})
+                                 .get("admitted_by")),
             "D": res["observed_D_cents"],
             "baseline_total_cents":
                 res["zero_model_cancel_baseline_total_cents"],

@@ -253,6 +253,88 @@ def falsify() -> int:
            f"{str(prov.get('pipeline_commit'))[:12]} all="
            f"{prov.get('every_computing_module_matches_the_pipeline_commit')}")
 
+    # --- CELL 17: THE READER OF THE CELLS (USER RULING, DE 343) --------
+    # A freeze-built book was valued correctly, `admitted_by: DESCENDANT`,
+    # and then could not be read back by the consumer of its own numbers:
+    # the identity check compared `builder_commit` to a LITERAL. Measured
+    # clause by clause -- only that one fired; the evidence was exactly
+    # where the reader looks.
+    import de_settlement_control_aggregate as AGG                # noqa: E402
+    import shutil                                                # noqa: E402
+    REH = Path("/home/yuqing/ctaNew/data/pm_5min/derived/fwd_rehearsal_0908")
+    real = REH / "de_settle_result_20260908_CONDVALUE_X_SKEW.json"
+    if real.is_file():
+        loaded = AGG.load_cell(REH, "2026-09-08", "CONDVALUE_X_SKEW",
+                               strict_forward=True)
+        ck("a cell written by the CURRENT V2 loads, DESCENDANT and all",
+           loaded["book_admitted_by"] == "DESCENDANT"
+           and loaded["D"] == loaded["result"]["observed_D_cents"],
+           f"D={loaded['D']:+.6f} admitted_by={loaded['book_admitted_by']}")
+        with tempfile.TemporaryDirectory() as td:
+            t = Path(td)
+            for f in REH.glob("*CONDVALUE_X_SKEW*"):
+                shutil.copy2(f, t / f.name)
+            # THE CELL NAMES ITS OWN CHECKPOINT BY PATH, and a copy moves
+            # it -- so each fixture re-points that field, or every arm
+            # below would fail on the copy rather than on its property.
+            ckpt = str(t / "de_settle_ckpt_2026-09-08_CONDVALUE_X_SKEW.jsonl")
+
+            def fixture(**over):
+                doc = json.loads(real.read_text())
+                doc["checkpoint"] = ckpt
+                doc.update(over)
+                (t / real.name).write_text(json.dumps(doc))
+
+            d = json.loads(real.read_text())
+            fixture(book_receipt={})
+            try:
+                AGG.load_cell(t, "2026-09-08", "CONDVALUE_X_SKEW",
+                              strict_forward=True)
+                gone = ""
+            except Exception as exc:                             # noqa: BLE001
+                gone = str(exc)
+            br = dict(json.loads(real.read_text())["book_receipt"],
+                      builder_commit="0" * 40)
+            fixture(book_receipt=br)
+            try:
+                AGG.load_cell(t, "2026-09-08", "CONDVALUE_X_SKEW",
+                              strict_forward=True)
+                stranger = ""
+            except Exception as exc:                             # noqa: BLE001
+                stranger = str(exc)
+            fixture(producer=dict(json.loads(real.read_text())["producer"],
+                                  path="/somewhere/else.py"))
+            try:
+                AGG.load_cell(t, "2026-09-08", "CONDVALUE_X_SKEW",
+                              strict_forward=True)
+                moved_path = ""
+            except Exception as exc:                             # noqa: BLE001
+                moved_path = str(exc)
+            fixture(producer=dict(json.loads(real.read_text())["producer"],
+                                  sha256="9" * 64))
+            try:
+                AGG.load_cell(t, "2026-09-08", "CONDVALUE_X_SKEW",
+                              strict_forward=True)
+                moved_bytes = ""
+            except Exception as exc:                             # noqa: BLE001
+                moved_bytes = str(exc)
+        ck("a cell with the receipt evidence ABSENT refuses by name",
+           "book_receipt" in gone and "IDENTITY_MISMATCH" in gone,
+           gone[-60:] or "ADMITTED A CELL WITH NO RECEIPT EVIDENCE")
+        ck("a cell whose builder is a STRANGER refuses by name",
+           "book_receipt" in stranger, stranger[-58:] or "ADMITTED A STRANGER")
+        ck("the producer is compared BY BYTES: a different PATH still loads",
+           moved_path == "", moved_path[-58:] or "the path is a label")
+        ck("and a different producer DIGEST refuses",
+           "producer" in moved_bytes, moved_bytes[-58:] or "ADMITTED MOVED BYTES")
+    else:
+        for name in ("a cell written by the CURRENT V2 loads",
+                     "a cell with the receipt evidence ABSENT refuses",
+                     "a cell whose builder is a STRANGER refuses",
+                     "the producer is compared BY BYTES",
+                     "and a different producer DIGEST refuses"):
+            ck(name, False, "NO REAL CELL PRESENT TO DRIVE")
+
     # --- CELL 16: UNNAMED SCORING-SET MEMBERS (USER RULING, DE 336) ----
     # Static reachability OVER-APPROXIMATES the run: a lazily imported
     # module on an untaken branch is in the set and legitimately absent
