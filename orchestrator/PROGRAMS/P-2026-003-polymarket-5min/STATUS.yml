@@ -27995,53 +27995,53 @@ focus: >
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
   r382_ruled_set_and_loader_now_disagree_inside_one_module:
-    checked: "imported be_score_neutrality from c853e2d, called resolve_frozen_params_pin(declarations) -> de_multiday_gate1_params_v33.json; read days from it and from v29; n=11 vs n=6, IDENTICAL SETS False"
-    artifact: live/pm_research/de_multiday_gate1_runner.py:1246 and :752 at c853e2d
-    by: MEM 382
+    prov: CHECKED
+    artifact: git:c853e2d:live/pm_research/de_multiday_gate1_runner.py
+    said: "ruled_day_set() at :1246 imports be_score_neutrality and resolves the freeze chain; load_params() at :752 still reads `p = root / PARAMS_REL` when path is None. I called the resolver myself: it returned de_multiday_gate1_params_v33.json over a 9-link chain, days n=11 expected_G 11, against v29's n=6 expected_G 6, IDENTICAL SETS False."
   r382_the_provenance_digest_is_recorded_from_the_literal:
-    checked: "counted PARAMS_REL lines in the post-fix blob (29); read load_params at :752-756 from the same blob"
-    artifact: live/pm_research/de_multiday_gate1_runner.py:70 (PARAMS_REL = ...params_v29.json), :754-756
-    by: MEM 382
+    prov: CHECKED
+    artifact: git:c853e2d:live/pm_research/de_multiday_gate1_runner.py
+    said: "PARAMS_REL = 'live/pm_research/declarations/de_multiday_gate1_params_v29.json' at :70, named on 29 lines of the post-fix blob; load_params() at :754-756 calls record_input_digest('params', PARAMS_REL) on the bare path only."
   r382_the_supersession_is_not_on_mm_research:
-    checked: "git branch -a --contains c853e2d -> two remote refs, no mm-research; sed on the shared tree's de_multiday_gate1_runner.py:1246 shows the old body"
-    artifact: git branch -a --contains c853e2d
-    by: MEM 382
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    said: "git branch -a --contains c853e2d returns origin/de-freeze-chain-v2 and origin/be-build-runner and nothing else; the shared tree's copy at :1246 is still the pre-fix body returning json.loads((parents[2] / PARAMS_REL).read_text())."
   r382_guard_register_counts_are_exact_and_its_falsifier_is_complete:
-    checked: "loaded declarations/da_guard_register_v1.json, counted rows myself, then called guard_gate() on the real register, on an all-True copy and on {rows: []}"
-    artifact: live/pm_research/da_population_freeze_verify.py::guard_gate + declarations/da_guard_register_v1.json
-    by: MEM 382
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_guard_register_v1.json
+    said: "I counted the rows myself: 167 sites, 105 distinct refusals, 136 exercised, 31 not (BUILD_BUILDER 2 of 22, VALUATION 29 of 145) -- equal to the file's own n_sites / n_distinct_refusals / n_exercised / n_NOT_exercised. guard_gate() on the real register raised GUARD_ROW_NOT_EXERCISED_BEFORE_A_REAL_RUN naming be_daybook_build.py:1357; on an all-True copy it returned; on {rows: []} it refused as the aggregate-only trap."
   r382_the_registers_illustrative_instance_names_no_row:
-    checked: "filtered the rows for NEUTRALITY/CERTIFICATE (8 hits), printed exercised_before_real_run per row; grepped COORDINATION.md for 09:09:23 and read the surrounding clause; then swept data/pm_5min/derived/ for every REFUSED ...CERTIF... form -- 3 hits, all SETTLEMENT_CONTROL_SCORE_NEUTRALITY_NOT_CERTIFIED, zero of any HAS_NO_ form, so the artifacts corroborate the register and not the commit message"
-    artifact: declarations/da_guard_register_v1.json rows + COORDINATION.md 09:09:23Z clause
-    by: MEM 382
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_guard_register_v1.json
+    said: "eight rows carry NEUTRALITY or CERTIFICATE: SETTLEMENT_CONTROL_HAS_NO_SCORE_NEUTRALITY_CERTIFICATION x3 exercised False, SETTLEMENT_CONTROL_SCORE_NEUTRALITY_NOT_CERTIFIED x3 exercised True, SCORE_NEUTRALITY_SCORE_IS_NOT_A_FINITE_NUMBER x2 exercised True. No row spells ..._CERTIFICATE. Sweeping data/pm_5min/derived/ for REFUSED forms gave 3 hits, all NOT_CERTIFIED, zero HAS_NO_ forms."
   r382_a_mistyped_lane_is_indistinguishable_from_a_real_gap:
-    checked: "called guard_gate(lanes=['valuation']) and read the refusal text; listed the declared lane values from the rows"
-    artifact: live/pm_research/da_population_freeze_verify.py::guard_gate
-    by: MEM 382
+    prov: CHECKED
+    artifact: live/pm_research/da_population_freeze_verify.py
+    said: "guard_gate(lanes=['valuation']) raised 'REFUSED GUARD_ROW_NOT_EXERCISED_BEFORE_A_REAL_RUN: no rows for lane(s) [valuation] -- an empty lane cannot exonerate a run' -- the same refusal name an unexercised row raises. The declared lane values in the rows are VALUATION and BUILD_BUILDER."
   r382_the_lock_is_not_idle_a_falsifier_took_it_at_122258Z:
-    checked: "fuser on data/.heavy_run.lock -> pids 2542754/2542755; ps and /proc/<pid>/cgroup -> be169ident0908.service; systemctl --user show with LoadState -> loaded/active/running"
-    artifact: systemctl --user show be169ident0908.service; /proc/2542754/cgroup
-    by: MEM 382
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    said: "fuser on the lock returned pids 2542754 and 2542755; ps showed flock -n -E 75 wrapping be_rebuild_identity.py --build 20260908 out of /home/yuqing/ctaNew-wt-fwd; /proc/2542754/cgroup ended in research.slice/be169ident0908.service; systemctl --user show returned LoadState=loaded ActiveState=active SubState=running, ExecMainStartTimestamp 12:22:58 UTC, MemoryCurrent 2622726144, MemoryMax 11869652313, CPUQuotaPerSecUSec 1s."
   r382_the_three_owed_falsifiers_are_at_three_different_stages:
-    checked: "ls on the derived dir filtered to point_estimate_day_20260907; find -newermt 2026-09-11 12:11:27 over the point-estimate family (empty); grep -rl for growing.ledger under live/pm_research (empty); ls on derived/rebuild_identity"
-    artifact: data/pm_5min/derived/ + data/pm_5min/derived/rebuild_identity/ + live/pm_research/
-    by: MEM 382
+    prov: CHECKED
+    artifact: data/pm_5min/derived/rebuild_identity
+    said: "the rebuild_identity directory was created 12:21:58Z and was still empty at 12:32Z while its unit ran; the newest p003_de_point_estimate_day_20260907 file is dated 09-08T12:28:11Z and find -newermt '2026-09-11 12:11:27' over the point-estimate family returned nothing; grep -rl for growing.ledger under live/pm_research returned no file."
   r382_v33_is_eleven_and_eleven_on_three_refs:
-    checked: "git branch -a --contains on each DA 263 commit; loaded v33 from origin/be-build-runner and counted days and expected_G; resolve_frozen_params_pin reported chain length 9"
-    artifact: live/pm_research/declarations/de_multiday_gate1_params_v33.json
-    by: MEM 382
+    prov: CHECKED
+    artifact: git:origin/be-build-runner:live/pm_research/declarations/de_multiday_gate1_params_v33.json
+    said: "days n=11 running 2026-09-03 to 2026-09-13 with expected_G 11; git branch -a --contains resolved 794e718 to origin/mm-research, dbb11e4 to origin/be-build-runner and 2068d4a to origin/de-freeze-chain-v2; resolve_frozen_params_pin reported a chain of 9."
   r382_no_receipt_carries_a_params_digest:
-    checked: "read verify_book_receipt and _builder_commit_admissible from de_settlement_control_run.py at c853e2d"
-    artifact: live/pm_research/de_settlement_control_run.py::verify_book_receipt at c853e2d
-    by: MEM 382
+    prov: CHECKED
+    artifact: git:c853e2d:live/pm_research/de_settlement_control_run.py
+    said: "verify_book_receipt compares _day_key(receipt['day']) against day, the receipt's book.sha256 against book_sha, book.path against book_path and producing_code.builder_commit through _builder_commit_admissible; that helper reads BUILD_PIN and BUILD_PINNED_DIGESTS out of the declaration and returns False -- exact pin only -- when either is missing. No field names the parameter file."
   r382_the_R555_positive_control_asserts_a_literal_six:
-    checked: "read the cell at :10493-10501 and the load_params default at :752-756; confirmed the six days it names are v29's"
-    artifact: live/pm_research/de_multiday_gate1_runner.py:10495
-    by: MEM 382
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    said: "the cell at :10494-10501 reads ok(live['G'] == 6 and live['G'] == live['expected_G'] and live['days'] == [2026-09-03 .. 2026-09-08]) where live = load_params() with no argument, which resolves PARAMS_REL to v29."
   r382_DE_309_fixes_a_label_read_but_not_in_the_file_REVIEW_168_named:
-    checked: "git show b310915 diff; git cat-file -e for the launchers path across refs"
-    artifact: live/pm_research/de_preflight_matrix.py at b310915; live/pm_research/launchers/chain_day.sh on origin/be-build-runner
-    by: MEM 382
+    prov: CHECKED
+    artifact: live/pm_research/de_preflight_matrix.py
+    said: "b310915 removes `name = text.split('REFUSED ', 1)[1].split(':', 1)[0].strip()` and adds _declared_refusal_names() plus `hit = sorted((n for n in _declared_refusal_names() if n in text)`; git cat-file -e showed live/pm_research/launchers/chain_day.sh present on origin/be-build-runner and the local da-decls-onto-chain, absent from mm-research and origin/de-freeze-chain-v2."
   # --- MEM round 381, 2026-09-11T12:06:27Z ---
   I_DIFFED_V31_TO_V32_AND_NOTHING_PINNED_MOVES:
     prov: CHECKED
