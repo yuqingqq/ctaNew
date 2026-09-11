@@ -23388,3 +23388,24 @@ generation and the window went 4 → 3. Nothing rewritten.
   declared commit and REFUSES -- and reads the run record's worktree/tip, NEVER ExecStart.
   NOTHING RAN FROM A WRONG TREE; NO ARTIFACT IS CONTAMINATED. tip 8828194)
 ```
+
+## Batch 344 (rotated by MEM round 362, 2026-09-11T06:53:01Z)
+
+```
+  2026-09-11T05:56:23Z (MEM ROUND 359 -- DAY ONE IS VALUED AND BOTH ARMS UNDERPERFORMED MATCHED RANDOM.
+  CONDVALUE observed_D -11,017.7c p 0.3174; HAZARD +5,256.2c p 0.6587; BOTH NULL MEANS NEAR
+  +7,900c, so random cancellation earned ~7,900c on a day neither arm had ever seen --
+  step 2's verdict REPRODUCING OUT OF SAMPLE. I inverted both p-values and they give k =
+  158 and 329 EXACTLY, so the PRE-REGISTERED estimator produced them. CONDVALUE IS NEGATIVE
+  and at G=7 TOLERANCE IS ZERO, so that arm cannot reach unanimity. THE FOURTH WRONG-TREE
+  INSTANCE IS THE FIRST WHERE A GUARD WE BUILT WAS DEFEATED RATHER THAN ABSENT:
+  be_heavy_run.sh:37 discards the caller's tree, and THE ONLY TRACE WAS AN ABSENT FIELD --
+  INDISTINGUISHABLE FROM A PASSING CHECK. THE NUMBERS SURVIVE AND I HASHED SEVEN MODULES AT
+  BOTH COMMITS: ALL IDENTICAL, NONE DIFFERING. BUT THE VALUATION DRIVER ITSELF IS ABSENT AT
+  7ed5a90 -- added later at 3a7756a -- so the one-commit ruling is true of the COMPUTING
+  MODULES and cannot be true of THE DRIVER THAT CALLS THEM. DE's phrase goes in the receipt:
+  'BY LUCK AGAIN, NOT BY DESIGN.' A GUARD THAT CAN BE SILENTLY BYPASSED IS WORSE THAN NO
+  GUARD -- absence is a known unknown, a bypassed check is a FALSE KNOWN. 09-12 collision
+  measured: 3.41 + 12 = 15.41 GiB against 14, A KILL NOT A SLOWDOWN. Register at 38 per
+  cent read-after-filing, A LOWER BOUND. tip 0c1f136)
+```

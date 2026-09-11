@@ -67,6 +67,23 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T06:53:01Z (MEM ROUND 362 -- THE FREEZE IS AMENDED TO da00220 FOR THE VALUATION PATH BY USER
+  RULING: V2 for all seven days, day one RE-VALUED, build pin UNCHANGED -- and it CLOSES A
+  GAP THE FREEZE CONTAINED, since the declaration has required the NO_FILLS leg since 02:24Z
+  and V1 never computed it. BUT IT IS CONDITIONAL ON A FALSIFIER THAT HAS NOT RUN. THE
+  FALSIFIER DID NOT RUN AND REPORTED SUCCESS: deFMP0907b's scratch copy lacked
+  declarations/, so it computed V1 ONLY, matched day one TRIVIALLY, AND EXITED 0 -- the
+  clean-surface failure, on the ONE measurement the ruling depends on. AS OF THIS SWEEP THE
+  CONDITION IS UNMEASURED. REV 136 reversed three coordinator positions; day one is
+  'PROBABLY clean, and I can only say probably', because NO ARTIFACT RECORDS THE RUNNER'S
+  DIGEST and AN AUTHOR DATE DOES NOT BOUND A FILE WRITE. PIPELINE_MOVED guards the
+  COMPUTING MODULES -- I read it at :39 and :102 -- while THE RUNNER ITSELF HAS NO GUARD.
+  The era rebuild survives only on UNIFORM SCOPE plus a TRIPWIRE typed BEFORE the book
+  exists, with the direction UNBOUNDED and the door named verbatim: 'the decision to apply
+  it to 09-07 was made after seeing -11,018. The defence is uniformity.' AND THE LANDER I
+  HAVE RUN ABOUT TWENTY TIMES THIS SESSION CONTAINED AN UNCHECKED CLAIM ABOUT ITS OWN
+  SCOPE -- every landing was safe because the branch was not diverged, and the instrument
+  could not have told me so. tip dfe3ef5)
   2026-09-11T06:46:35Z (MEM ROUND 361 -- V2 IS NOT NEUTRAL BY CONSTRUCTION AND THE FORK IS A STANDING
   HAZARD. The user's da00220 derives the null SEED from the book digest plus the arm and
   REFUSES a supplied seed, while day one ran seed 20260907 for both arms -- so V2 DRAWS A
@@ -98,22 +115,6 @@ updated: >-
   FIXED DEFECT. A USER COMMIT LANDED ON THE VALUATION PATH AFTER THE PIN, and I verified the
   sharp part: TWO OF ITS FILES HASH THE EMPTY STRING AT THE PIN BECAUSE THEY DO NOT EXIST
   THERE -- 'differing digest' is the LABEL, 'did not exist' is the PROPERTY. tip 13a3d54)
-  2026-09-11T05:56:23Z (MEM ROUND 359 -- DAY ONE IS VALUED AND BOTH ARMS UNDERPERFORMED MATCHED RANDOM.
-  CONDVALUE observed_D -11,017.7c p 0.3174; HAZARD +5,256.2c p 0.6587; BOTH NULL MEANS NEAR
-  +7,900c, so random cancellation earned ~7,900c on a day neither arm had ever seen --
-  step 2's verdict REPRODUCING OUT OF SAMPLE. I inverted both p-values and they give k =
-  158 and 329 EXACTLY, so the PRE-REGISTERED estimator produced them. CONDVALUE IS NEGATIVE
-  and at G=7 TOLERANCE IS ZERO, so that arm cannot reach unanimity. THE FOURTH WRONG-TREE
-  INSTANCE IS THE FIRST WHERE A GUARD WE BUILT WAS DEFEATED RATHER THAN ABSENT:
-  be_heavy_run.sh:37 discards the caller's tree, and THE ONLY TRACE WAS AN ABSENT FIELD --
-  INDISTINGUISHABLE FROM A PASSING CHECK. THE NUMBERS SURVIVE AND I HASHED SEVEN MODULES AT
-  BOTH COMMITS: ALL IDENTICAL, NONE DIFFERING. BUT THE VALUATION DRIVER ITSELF IS ABSENT AT
-  7ed5a90 -- added later at 3a7756a -- so the one-commit ruling is true of the COMPUTING
-  MODULES and cannot be true of THE DRIVER THAT CALLS THEM. DE's phrase goes in the receipt:
-  'BY LUCK AGAIN, NOT BY DESIGN.' A GUARD THAT CAN BE SILENTLY BYPASSED IS WORSE THAN NO
-  GUARD -- absence is a known unknown, a bypassed check is a FALSE KNOWN. 09-12 collision
-  measured: 3.41 + 12 = 15.41 GiB against 14, A KILL NOT A SLOWDOWN. Register at 38 per
-  cent read-after-filing, A LOWER BOUND. tip 0c1f136)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -285,6 +286,20 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 362, the freeze amended, three reversals, a falsifier that did not run ---
+  THE_FREEZE_IS_AMENDED_TO_DA00220_FOR_THE_VALUATION_PATH_BY_USER_RULING: "V2 for all seven days, day one RE-VALUED under it, build pin 7ed5a90 UNCHANGED. The reason belongs in the receipt: the declaration has required the NO_FILLS_UNTIL_NEXT_GENERATION leg since v2 at ee1e85d, 02:24Z, and V1 NEVER COMPUTED IT -- so the amendment CLOSES A GAP THE FREEZE CONTAINED rather than opening one. Two branches considered and not taken: revert-to-V1-and-relax-the-leg, which is anti-conservative; and hold-until-fork-resolved."
+  AND_IT_IS_CONDITIONAL_ON_A_FALSIFIER_THAT_HAS_NOT_RUN: "V2's primary D must match V1 TO THE CENT; ANY MOVEMENT VOIDS THE AMENDMENT AND RETURNS TO THE USER. So the ruling is not a decision to adopt V2 -- it is a decision to adopt V2 IF a specific measurement comes back a specific way, and as of this sweep THAT MEASUREMENT DOES NOT EXIST. Recorded in that form because a conditional ruling quoted without its condition becomes an unconditional one within about two hops."
+  DA00220_VIOLATES_THE_FREEZE_AT_THE_BYTES_AND_THE_FIELD_NAME_CANNOT_BE_GREPPED_AS_QUOTED: "REV 136(a): da00220 violates the freeze's no-tuning clause at the bytes -- the file DE REFUSED TO TOUCH at Q-DE-228 for exactly that reason. So re-pin or revert IS A USER RULING, NOT A SEAT REPAIR, and the coordinator's DE 247 valuation-pin ruling was suspended and replaced by the user's. AND A SMALL THING WORTH RECORDING: the field is literally 'NO_PARAMETER_OR_MODULE_IS_TUNED AFTER THIS COMMIT' -- WITH A SPACE, not the all-underscore form the dispatch and my own round-348 flag render. Anyone grepping the underscore form finds nothing."
+  DAY_ONE_IS_PROBABLY_CLEAN_AND_REV_WILL_ONLY_SAY_PROBABLY: "Start about 04:04Z, forty-three minutes before the commit, and Python imports once. But NO RESULT ARTIFACT RECORDS THE RUNNER'S DIGEST -- be_module names be_cancel_axis_null, not the runner -- the file was REWRITTEN TWICE SINCE, and AN AUTHOR DATE DOES NOT BOUND A FILE WRITE. That is BE 114's identity gap one level up: we settled which composition the screen ran on by digest, and cannot do the same for the runner because nothing records it. Rule 22: runner digest plus import closure into EVERY result and into the draw-0 checkpoint HEADER."
+  AND_PIPELINE_MOVED_GUARDS_THE_COMPUTING_MODULES_WHILE_THE_RUNNER_ITSELF_HAS_NO_GUARD: "I read the site. PIPELINE_MOVED is FORWARD_COMPUTING_MODULES_NOT_AT_FROZEN_PIPELINE at de_forward_value_day.py:39, raised at :102 when worktree_head_matches_pipeline_commit is false OR every_computing_module_matches_the_pipeline_commit is false. So it does check the worktree head and the computing modules -- and REV's point stands beside that: THE VALUATION RUNNER'S OWN PROVENANCE IS NOT AMONG THE THINGS IT COMPARES, so it passes at da00220 because the books are at 7ed5a90. A guard over the inputs, with the instrument unguarded."
+  THE_ERA_REBUILD_IS_SURVIVABLE_ONLY_WITH_TWO_PRE_DECLARED_CONDITIONS: "UNIFORM SCOPE, declared: all seven population days under the fix, consumed days untouched, the certification day buggy-era ON BOTH SIDES AND FLAGGED. And the TRIPWIRE: delta-D plus the per-window P&L of EVERY EXCLUDED WINDOW, with |delta-D| > 25 per cent of |D| being A FINDING, NOT A NEW D -- and the 25 per cent TYPED BEFORE THE REBUILT BOOK EXISTS. A threshold written after the number would be a threshold chosen to clear it."
+  AND_THE_DIRECTION_IS_NOT_BOUNDED_SO_THE_REBUILD_CAN_MOVE_D_UP: "Twelve masked windows, 0.6 per cent of coin-windows; erasing 11,018c would need about 25-fold concentration, and Q-DA-58 measured 77 per cent of drift in the worst 10 per cent. So concentration of that order is not absurd, which is precisely why the direction is left UNBOUNDED rather than argued down. AND THE DOOR IS STATED VERBATIM: 'the decision to apply it to 09-07 was made after seeing -11,018. The defence is uniformity.' A defence named as a defence, before anyone needs it."
+  AND_REV_DROVE_THIRTEEN_OF_THIRTEEN_REFUSALS_BY_NAME_AND_FOUND_ONE_REAL_DEFECT: "The arm-freeze-absent path raises a BARE 'REFUSED:' WITH NO NAME TOKEN. That is the fifth member of the named-refusal family this programme has found -- five declared names with no producer, one producer with no name -- and it is the inverse defect landing in the same week as the original. A refusal without a name cannot be searched for, cannot be tested by the standing check, and reads to a caller as any other failure."
+  THE_FALSIFIER_DID_NOT_RUN_AND_REPORTED_SUCCESS_ON_THE_ONE_MEASUREMENT_THE_RULING_DEPENDS_ON: "deFMP0907b line 1: v2_import_refused, v2mods/declarations/ No such file -- DE's scratch copy lacked declarations/, SO THE RUN COMPUTED V1 ONLY, matched day one TRIVIALLY, AND EXITED 0. The clean-surface failure, on the exact measurement the user's ruling is conditional on. Fixed with a HARD REFUSAL BY NAME on import failure and an unbounded lock wait replacing a 30-minute loop; BE holds the tape-to-book gap for it. AS OF THIS SWEEP THE CONDITION IS UNMEASURED."
+  THE_09_07_FRAGMENT_IS_REBUILT_UNDER_THE_FIXED_ERA_AND_IT_IS_SMALLER: "be134frag0907 rc=0, 660,075,638 bytes against the buggy-era 660,307,943 -- I differenced them: 232,305 bytes smaller, which is 227 KiB or 232 KB depending on the unit, and the dispatch's 232 KB is the decimal reading. 594,821 rows over 287 windows, builder_commit 7ed5a90, worktree wt-fwd. The old fragment was superseded per rule 13 with digests recorded on both sides. Tape stage running as be134tape20260907 from 06:48:26 with the same provenance."
+  THE_LANDER_I_HAVE_USED_ALL_SESSION_CONTAINED_AN_UNCHECKED_CLAIM_ABOUT_ITS_OWN_SCOPE: "DA found that land_register_row.sh rebases onto origin when the branch is behind, and from the diverged local branch that would replay all seventeen. I read the script: its comment claims 'the ONE sanctioned rebase... only the commit this script just made', and DA 226's added line says it plainly -- 'the comment above ASSERTS only the commit this script just made; nothing CHECKED it'. I HAVE RUN THAT SCRIPT ABOUT TWENTY TIMES THIS SESSION. Every landing was safe because the branch was not diverged, and THE INSTRUMENT COULD NOT HAVE TOLD ME SO."
+  AND_THE_REFUSAL_IS_ALREADY_LANDED_ON_BOTH_SIDES_OF_THE_FORK: "The dispatch says the refusal is being added; I checked and it is present, with nine FOREIGN references in BOTH the local copy and origin's copy -- so it is not fork-divergent and does not need reconciling. That is also why my landings failed with a fast-forward abort rather than silently replaying other seats' work: THE SCRIPT REFUSED, and I read the refusal as an obstacle for three rounds without recognising it as the guard doing its job."
+  AND_RULE_45_LEAVES_EXACTLY_ONE_LANDING_PATH: "Cherry-pick onto an origin-cut branch. Not rebase, not merge, not force-push. My register rows for rounds 358 through 362 remain written and unlanded, and that is now a known state with a known remedy rather than a blockage: they land when someone cuts from origin and cherry-picks the MEM commits, which touches no other seat's work because a cherry-pick names what it moves."
   # --- MEM round 361, V2 is not neutral, and the fork ---
   V2_IS_NOT_NEUTRAL_BY_CONSTRUCTION_AND_IT_TOOK_ONE_SECOND_TO_ESTABLISH: "DE 244. The user's da00220 derives the null SEED from the book digest plus the arm -- seed_for(book, CONDVALUE) = 4162987544, HAZARD = 2512598222 -- and REFUSES a supplied seed, while day one ran seed 20260907 for BOTH arms. So V2 DRAWS A DIFFERENT 500-DRAW SAMPLE A PRIORI: p, n_beyond and the null min, mean and max CANNOT MATCH. That is a one-second reading of the code against a 77-minute re-run, and it is the difference between asking whether two things agree and asking whether they COULD."
   AND_A_SEPARATE_CHANGE_CAN_MOVE_OBSERVED_D_WHICH_IS_BEING_MEASURED_ALONE: "V2 also replaces the bare mod.replay(..., 0.5) baseline with replay_with_fill_model(..., 'REFERENCE_FILLS') and adds a NO_FILLS_UNTIL_NEXT_GENERATION leg with sign_reversal. I read those at de_settlement_control_run.py: replay_with_fill_model at :297 branching on REFERENCE_FILLS at :300, the robustness label at :323 and primary_label REFERENCE_FILLS at :327. THAT CAN MOVE observed_D, so DE is measuring it ON THE BASELINE REPLAY ALONE -- separating the change that cannot match from the change that might."
@@ -27759,6 +27774,85 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 362, 2026-09-11T06:53:01Z ---
+  THE_FREEZE_IS_AMENDED_TO_DA00220_FOR_THE_VALUATION_PATH_BY_USER_RULING:
+    prov: RELAYED
+    from: USER via coordinator MEM 362
+    as_of: 2026-09-11T06:53:01Z
+    said: >-
+      the ruling and its stated reason as dispatched; ee1e85d is the v2 declaration whose landing I verified at round 349.
+  AND_IT_IS_CONDITIONAL_ON_A_FALSIFIER_THAT_HAS_NOT_RUN:
+    prov: RELAYED
+    from: USER via coordinator MEM 362
+    as_of: 2026-09-11T06:53:01Z
+    said: >-
+      the condition as dispatched; the falsifier's failure to run is recorded below.
+  DA00220_VIOLATES_THE_FREEZE_AT_THE_BYTES_AND_THE_FIELD_NAME_CANNOT_BE_GREPPED_AS_QUOTED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_arm_freeze_v1.json
+    as_of: 2026-09-11T06:53:01Z
+    said: >-
+      the freeze receipt loaded and its keys enumerated: the tuning clause resolves as 'NO_PARAMETER_OR_MODULE_IS_TUNED AFTER THIS COMMIT' = True, with a space between TUNED and AFTER.
+  DAY_ONE_IS_PROBABLY_CLEAN_AND_REV_WILL_ONLY_SAY_PROBABLY:
+    prov: RELAYED
+    from: REV 136 via coordinator MEM 362
+    as_of: 2026-09-11T06:53:01Z
+    said: >-
+      REV's three grounds and the remedy as dispatched; BE 114's digest-settled identity finding is recorded in my files at round 349.
+  AND_PIPELINE_MOVED_GUARDS_THE_COMPUTING_MODULES_WHILE_THE_RUNNER_ITSELF_HAS_NO_GUARD:
+    prov: CHECKED
+    artifact: live/pm_research/de_forward_value_day.py
+    as_of: 2026-09-11T06:53:01Z
+    said: >-
+      de_forward_value_day.py read at :39 for the refusal name and :95-106 for the two-part condition and the raise; the module list compared is provenance['modules'], which does not include the runner.
+  THE_ERA_REBUILD_IS_SURVIVABLE_ONLY_WITH_TWO_PRE_DECLARED_CONDITIONS:
+    prov: RELAYED
+    from: REV 136 check 1 via coordinator MEM 362
+    as_of: 2026-09-11T06:53:01Z
+    said: >-
+      both conditions and the pre-typed 25 per cent as dispatched.
+  AND_THE_DIRECTION_IS_NOT_BOUNDED_SO_THE_REBUILD_CAN_MOVE_D_UP:
+    prov: RELAYED
+    from: REV 136 via coordinator MEM 362
+    as_of: 2026-09-11T06:53:01Z
+    said: >-
+      the window counts, the concentration arithmetic and REV's quoted sentence as dispatched.
+  AND_REV_DROVE_THIRTEEN_OF_THIRTEEN_REFUSALS_BY_NAME_AND_FOUND_ONE_REAL_DEFECT:
+    prov: RELAYED
+    from: REV 136 via coordinator MEM 362
+    as_of: 2026-09-11T06:53:01Z
+    said: >-
+      the 13/13 drive and the single finding as dispatched; the standing check that would miss an unnamed refusal is the one I implemented independently at round 340.
+  THE_FALSIFIER_DID_NOT_RUN_AND_REPORTED_SUCCESS_ON_THE_ONE_MEASUREMENT_THE_RULING_DEPENDS_ON:
+    prov: RELAYED
+    from: DE via coordinator MEM 362
+    as_of: 2026-09-11T06:53:01Z
+    said: >-
+      the import failure, the trivial match and the exit code as dispatched; the unmeasured status is recorded as of this sweep's clock.
+  THE_09_07_FRAGMENT_IS_REBUILT_UNDER_THE_FIXED_ERA_AND_IT_IS_SMALLER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T06:53:01Z
+    said: >-
+      660,307,943 minus 660,075,638 computed as 232,305 bytes and converted both ways; the run's identifiers as dispatched.
+  THE_LANDER_I_HAVE_USED_ALL_SESSION_CONTAINED_AN_UNCHECKED_CLAIM_ABOUT_ITS_OWN_SCOPE:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    as_of: 2026-09-11T06:53:01Z
+    said: >-
+      scripts/land_register_row.sh read around lines 75-90: the behind-check, the asserting comment, and DA 226's refuse-by-name note above the FOREIGN computation.
+  AND_THE_REFUSAL_IS_ALREADY_LANDED_ON_BOTH_SIDES_OF_THE_FORK:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    as_of: 2026-09-11T06:53:01Z
+    said: >-
+      grep -c FOREIGN returns 9 in the working copy and 9 in git show origin/mm-research:scripts/land_register_row.sh.
+  AND_RULE_45_LEAVES_EXACTLY_ONE_LANDING_PATH:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T06:53:01Z
+    said: >-
+      rule 45 read at SEAT_PROTOCOL.md:695 at round 361; the fork's shape and the five unlanded rows are recorded at rounds 358 to 361.
   # --- MEM round 361, 2026-09-11T06:46:35Z ---
   V2_IS_NOT_NEUTRAL_BY_CONSTRUCTION_AND_IT_TOOK_ONE_SECOND_TO_ESTABLISH:
     prov: RELAYED
