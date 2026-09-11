@@ -1,0 +1,539 @@
+{
+ "protocol": "P003_DE_UNNAMED_REFUSAL_CENSUS_V1",
+ "module": "de_multiday_gate1_runner.py",
+ "n_unnamed": 105,
+ "classes": {
+  "RUN_IDENTITY_CHANGED_UNDER_THE_RUN": {
+   "n": 6,
+   "sites": [
+    {
+     "line": 628,
+     "excerpt": "raise RunnerRefused( f\"REFUSED at {where}: A MODULE OF THIS RUN'S IMPORT CLOSURE \" f\"CHANGED UNDER IT -- \" f\"{[d['module'] for d in idy['closure_drift"
+    },
+    {
+     "line": 637,
+     "excerpt": "raise RunnerRefused( f\"REFUSED at {where}: THE WORKTREE'S HEAD MOVED UNDER THIS RUN \" f\"-- {str(idy['head_at_import'].get('head'))[:12]} -> \" f\"{str(i"
+    },
+    {
+     "line": 644,
+     "excerpt": "raise RunnerRefused( f\"REFUSED at {where}: THE WORKTREE WAS DIRTY AT IMPORT \" f\"({idy['head_at_import'].get('dirty_paths_beyond_the' '_shared_data_lin"
+    },
+    {
+     "line": 653,
+     "excerpt": "raise RunnerRefused( f\"REFUSED at {where}: THE SOURCE CHANGED UNDER THIS RUN. This \" f\"process is executing \" f\"{str(LAUNCH_SOURCE_SHA256)[:16]} (read"
+    },
+    {
+     "line": 727,
+     "excerpt": "raise RunnerRefused( f\"REFUSED at {where}: a declared input's digest pair carries a \" f\"NULL HALF -- {null_half}. A `{{path, sha256: null}}` is not \" "
+    },
+    {
+     "line": 734,
+     "excerpt": "raise RunnerRefused( f\"REFUSED at {where}: a DECLARED INPUT changed under this run \" f\"-- {moved}. Rule 22 refuses when a module of the closure \" f\"mo"
+    }
+   ]
+  },
+  "PINNED_DIGEST_MISMATCH": {
+   "n": 5,
+   "sites": [
+    {
+     "line": 4652,
+     "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day}: no builder receipt beside {book_path.name}. \" f\"Tried, in order: {[str(c) for c in cands]}. BE's builder wri"
+    },
+    {
+     "line": 936,
+     "excerpt": "raise RunnerRefused( f\"REFUSED RUN: {len(bad)} pinned model file(s) do not match \" f\"their declared digest: {bad[:3]}. A moved model means the \" f\"obj"
+    },
+    {
+     "line": 988,
+     "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day}: reference-book digest mismatch -- declared \" f\"{declared_book_sha[:16]}, found {actual_book_sha[:16]}. A day"
+    },
+    {
+     "line": 4680,
+     "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day}: no builder receipt at {receipt_path}. The \" f\"book's digest is BE's published claim; without it there is \" f"
+    },
+    {
+     "line": 4701,
+     "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day}: reference-book digest mismatch -- BE's \" f\"receipt declares {declared[:16]}, the bytes on disk are \" f\"{actu"
+    }
+   ]
+  },
+  "PRODUCING_CODE_NOT_THE_PINNED": {
+   "n": 5,
+   "sites": [
+    {
+     "line": 1160,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: the imported cascade has no readable __file__ \" f\"({loaded!s}); a module whose source cannot be read cannot be \" f\"dig"
+    },
+    {
+     "line": 1165,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: the import loaded {loaded.resolve()} but the \" f\"declaration cites {declared.resolve()}. A module of the right \" f\"NAM"
+    },
+    {
+     "line": 17528,
+     "excerpt": "raise RunnerRefused( \"REFUSED: a REAL day run whose producing code is not the bytes \" \"HEAD holds. Commit the runner first; the artifact must be able "
+    },
+    {
+     "line": 885,
+     "excerpt": "raise RunnerRefused(f\"REFUSED: BE's module is absent at {src}\")"
+    },
+    {
+     "line": 1349,
+     "excerpt": "raise RunnerRefused( \"REFUSED: a book digest is required to bind draw \" \"provenance; without it the seed cannot be recomputed.\")"
+    }
+   ]
+  },
+  "DAY_NOT_IN_THE_RULED_SET": {
+   "n": 6,
+   "sites": [
+    {
+     "line": 807,
+     "excerpt": "raise RunnerRefused( \"REFUSED: the ruled day set is EMPTY. G is derived from it and \" \"there is nothing to derive. The USER's answer to design v3's \" "
+    },
+    {
+     "line": 813,
+     "excerpt": "raise RunnerRefused(f\"REFUSED: duplicate days in the ruled set\")"
+    },
+    {
+     "line": 822,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: the ruled set has {d['G']} days against the declared \" f\"expected_G {exp}. R-555 fixes G at {exp}; a set that shrank \""
+    },
+    {
+     "line": 1831,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: {day} is not in the ruled day set {_ruled}. The \" f\"ruled set is the population (R-555) and it is read from the \" f\"CO"
+    },
+    {
+     "line": 836,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: the ruled set contains days whose \" f\"previously_opened_for is not {req!r}: {bad}. R-555 is \" f\"untouched days only.\")"
+    },
+    {
+     "line": 17406,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: {day} is not in the ruled day set \" f\"{params['days']}.\")"
+    }
+   ]
+  },
+  "DAY_NOT_CLOSED_OR_INCOMPLETE": {
+   "n": 3,
+   "sites": [
+    {
+     "line": 1841,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: {day} is not a CLOSED calendar day. R-555 evaluates \" f\"day-quality on complete days only; an in-progress verdict is \""
+    },
+    {
+     "line": 1846,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: {day} does not pass the four ledger conjuncts and \" f\"day-quality.\")"
+    },
+    {
+     "line": 2818,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: {n_days_complete} of {_need} days are complete. \" f\"The read unseals every day at once or not at all (R5).\")"
+    }
+   ]
+  },
+  "LAUNCH_FORM_NOT_THE_DECLARED": {
+   "n": 9,
+   "sites": [
+    {
+     "line": 7956,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: no launch-form declaration under {d}.\")"
+    },
+    {
+     "line": 7965,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: {len(bad)} launch-form declaration(s) under {d} \" f\"cannot be read ({[b['file'] for b in bad]}). The head is \" f\"the v"
+    },
+    {
+     "line": 8002,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: {len(heads)} launch-form declarations are \" f\"superseded by nothing ({sorted(heads)}); the chain must \" f\"resolve to O"
+    },
+    {
+     "line": 8070,
+     "excerpt": "raise RunnerRefused(f\"REFUSED: no producer exit map under {d}.\")"
+    },
+    {
+     "line": 8097,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: this producer's declared exit map claims {rc}, \" f\"which is the LAUNCH LAYER'S lock-conflict code. A producer \" f\"exit"
+    },
+    {
+     "line": 8120,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: this runner declares exit code {rc}, which is the \" f\"DECLARED lock-conflict code. A held lock and a runner \" f\"refusa"
+    },
+    {
+     "line": 8219,
+     "excerpt": "raise RunnerRefused( \"REFUSED: this launch command is not the declared form \" f\"({LAUNCH_FORM}) -- it \" + \"; and it \".join(problems) + \".\")"
+    },
+    {
+     "line": 8569,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: the heavy-run lock file {lock_path} does not exist, \" f\"so nothing can be said about who holds it. This is a NAMED \" f"
+    },
+    {
+     "line": 8025,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: the launch-form chain head \" f\"({ch['head_path']}) carries no {k!r}.\")"
+    }
+   ]
+  },
+  "FIXTURE_REAL_CONFUSION": {
+   "n": 4,
+   "sites": [
+    {
+     "line": 1269,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: a FIXTURE {what} was claimed for {day}, which IS in \" f\"the ruled day set {ruled}. A fixture run on a ruled day is \" f"
+    },
+    {
+     "line": 1276,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: a REAL {what} was claimed for {day}, which is NOT \" f\"in the ruled day set {ruled}. The ruled set is the \" f\"populatio"
+    },
+    {
+     "line": 1311,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: fixture mode on {day} with no supplied draws. The \" f\"fixture path does not call BE's cascade -- generating would \" f\""
+    },
+    {
+     "line": 10159,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: unknown synthetic head policy {bad}; declared \" f\"policies are {SYNTHETIC_HEAD_POLICIES}\")"
+    }
+   ]
+  },
+  "SEALED_LAYOUT_VIOLATION": {
+   "n": 5,
+   "sites": [
+    {
+     "line": 1544,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: the sealed/unsealed layout is ASYMMETRIC: {problems}. \" f\"A consumer keying on one of these names gets None in one \" f"
+    },
+    {
+     "line": 1764,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: a refusal REASON carries the VALUE of a sealed \" f\"quantity -- {[h['sealed_name'] for h in hits]}. \" f\"`_strip_economi"
+    },
+    {
+     "line": 1797,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: economic fields leaked into a SEALED artifact at \" f\"{found[:4]} with {n_days_complete} of {g} days complete. The \" f\""
+    },
+    {
+     "line": 2976,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: the output name {name} is stamped {stamp} while the \" f\"artifact was written at {as_of} -- {delta:+.0f}s. A stamp \" f\""
+    },
+    {
+     "line": 2970,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: the output name {name} carries `{stamp}`, which is \" f\"not a UTC stamp.\")"
+    }
+   ]
+  },
+  "PARAMETER_FILE_CONTRACT": {
+   "n": 8,
+   "sites": [
+    {
+     "line": 758,
+     "excerpt": "raise RunnerRefused(f\"REFUSED: no parameter file at {p}\")"
+    },
+    {
+     "line": 805,
+     "excerpt": "raise RunnerRefused(\"REFUSED: `days` must be a list\")"
+    },
+    {
+     "line": 1836,
+     "excerpt": "raise RunnerRefused( \"REFUSED: the parameter file does not carry \" \"`day_runs_allowed_for_closed_qualifying_days: true`; without \" \"the ruling in the "
+    },
+    {
+     "line": 2551,
+     "excerpt": "raise RunnerRefused( \"REFUSED: the parameter file carries no \" \"`read_gate.the_bar_is_a_CONJUNCTION` as a list of objects \" \"with ids. R-604 item 8: D"
+    },
+    {
+     "line": 2741,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: the declared conjunct ids and this runner's \" f\"evaluators do not correspond. Declared with no evaluator: \" f\"{unbound"
+    },
+    {
+     "line": 2810,
+     "excerpt": "raise RunnerRefused( \"REFUSED: the parameter file does not carry \" \"`read_requires_all_ruled_days_sealed: true`; without the \" \"ruling in the file the"
+    },
+    {
+     "line": 17386,
+     "excerpt": "raise RunnerRefused( \"REFUSED: --output is required for a day run. On the day path \" \"it names the DIRECTORY the receipt is written into; the \" \"runne"
+    },
+    {
+     "line": 17404,
+     "excerpt": "raise RunnerRefused(\"REFUSED: --day requires --book\")"
+    }
+   ]
+  },
+  "DRAW_PROVENANCE_NOT_BOUND": {
+   "n": 5,
+   "sites": [
+    {
+     "line": 1028,
+     "excerpt": "raise RunnerRefused( \"REFUSED: draws arrived with no provenance block. A verified \" \"module that never touches the numbers verifies nothing.\")"
+    },
+    {
+     "line": 1059,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: draw provenance does not bind to the verified \" f\"cascade for {arm} on this book: {bad}. Draws produced by a \" f\"diffe"
+    },
+    {
+     "line": 1336,
+     "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day} / {arm}: {elapsed_s:.0f}s exceeds the \" f\"declared deadline {params['per_day_deadline_s']}s. The \" f\"500-draw"
+    },
+    {
+     "line": 7404,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: the null exceeded the declared deadline \" f\"{deadline_s}s at draw {d + 1} of {n_draws}. The day \" f\"refuses -- never f"
+    },
+    {
+     "line": 7436,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: DE's valued draw loop does not reproduce BE's \" f\"`draw_null` at the same seed -- BE {theirs}, DE {mine}. \" f\"A privat"
+    }
+   ]
+  },
+  "VERDICT_RECORDING_CONTRACT": {
+   "n": 5,
+   "sites": [
+    {
+     "line": 2832,
+     "excerpt": "raise RunnerRefused( \"REFUSED: the read predicate does not hold. Failing conjuncts, \" \"by name: \" + \"; \".join(f\"{c['conjunct']} -> {c['detail']}\" for "
+    },
+    {
+     "line": 4007,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: the stage table carries {len(marked)} stages marked \" f\"{DAY_STAGE_PEAK_MARKER!r} ({marked}); exactly one must. The \" "
+    },
+    {
+     "line": 4107,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: {ambient!r} is not one of the ambients a verdict \" f\"may rest on {list(AMBIENT_KINDS)} (DA's REV 68 \u00a71.2 census). \" f\""
+    },
+    {
+     "line": 4114,
+     "excerpt": "raise RunnerRefused( \"REFUSED: `record_ambient_verdict` was handed something that \" \"is not a `known_bad_verdict` result. An ambient cell's third \" \"s"
+    },
+    {
+     "line": 4232,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: known_bad_verdict cannot read {quantity!r} itself \" f\"and was given no measurement. A control whose quantity \" f\"nobod"
+    }
+   ]
+  },
+  "STAGE_CONTRACT_VIOLATION": {
+   "n": 13,
+   "sites": [
+    {
+     "line": 2105,
+     "excerpt": "raise RunnerRefused( f\"REFUSED before any work: --output {o} is an existing FILE. On \" f\"the day path --output names the DIRECTORY the receipt is \" f\""
+    },
+    {
+     "line": 2111,
+     "excerpt": "raise RunnerRefused( f\"REFUSED before any work: --output {o.name} looks like a \" f\"FILENAME (suffix {o.suffix!r}). On the day path --output \" f\"names "
+    },
+    {
+     "line": 2141,
+     "excerpt": "raise RunnerRefused( f\"REFUSED before any work: day {day} already has \" f\"{res['n_matches']} artifact(s) under the sealed layout \" f\"({res['status']})"
+    },
+    {
+     "line": 3071,
+     "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day} BEFORE ANY STAGE: this process's parent \" f\"command line is unreadable ({par.get('why')}), so the `-E` \" f\"ha"
+    },
+    {
+     "line": 3077,
+     "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day} BEFORE ANY STAGE: this process's parent \" f\"executable is {par.get('exe')!r} (argv[0] says \" f\"{(argv[:1] or "
+    },
+    {
+     "line": 3085,
+     "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day} BEFORE ANY STAGE: the parent flock carries \" f\"no `-E {rc}` ({' '.join(argv[:6])}). Without it a HELD LOCK \" "
+    },
+    {
+     "line": 3091,
+     "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day} BEFORE ANY STAGE: the parent flock does \" f\"not name the declared lock {lock}.\")"
+    },
+    {
+     "line": 3157,
+     "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day} BEFORE ANY STAGE: a FIXTURE under a \" f\"`.scope` ({leaf}) is admitted only for a DECLARED fixture \" f\"name, a"
+    },
+    {
+     "line": 17540,
+     "excerpt": "raise RunnerRefused( \"REFUSED at the emit: the in-run battery did not run. It is \" \"handed to `run_day` as `before_work` and must have completed \" \"BE"
+    },
+    {
+     "line": 17693,
+     "excerpt": "raise RunnerRefused( f\"REFUSED at the emit: {out_path.name} already exists. The \" f\"stamp is second-resolution and the pre-work guard found no \" f\"sea"
+    },
+    {
+     "line": 17726,
+     "excerpt": "raise RunnerRefused( f\"REFUSED after writing: the receipt READ BACK FROM DISK \" f\"carries sealed names as KEYS -- {_post[:6]}. The rule is \" f\"`{CENSU"
+    },
+    {
+     "line": 3145,
+     "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day} BEFORE ANY STAGE: the declared launch \" f\"form is a transient SERVICE and this process's cgroup \" f\"leaf is {"
+    },
+    {
+     "line": 8891,
+     "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day} AT STAGE {name}: this run has GREWN \" f\"{_g:.0f} MB over its baseline, past the declared budget \" f\"{budget:."
+    }
+   ]
+  },
+  "EMPTY_DECISION_POPULATION": {
+   "n": 1,
+   "sites": [
+    {
+     "line": 7321,
+     "excerpt": "raise RunnerRefused( \"REFUSED: 0 decisions is not a policy -- it is the baseline.\")"
+    }
+   ]
+  },
+  "RESIDENCY_NOT_OBSERVED": {
+   "n": 1,
+   "sites": [
+    {
+     "line": 10331,
+     "excerpt": "raise RunnerRefused( f\"REFUSED: the residency instrument did not observe the day \" f\"book being read ({_bp}). An instrument that missed the one \" f\"re"
+    }
+   ]
+  },
+  "STANDING_HOOK_REFUSAL": {
+   "n": 1,
+   "sites": [
+    {
+     "line": 14430,
+     "excerpt": "raise RunnerRefused( \"REFUSED: a before_work hook that refuses -- standing in for \" \"the battery that refused the 09-03 smoke\")"
+    }
+   ]
+  }
+ },
+ "unclassified": [
+  {
+   "line": 953,
+   "excerpt": "raise RunnerRefused(f\"REFUSED RUN: theta pin source absent: {art}\")"
+  },
+  {
+   "line": 965,
+   "excerpt": "raise RunnerRefused( f\"REFUSED RUN: theta mismatch against the pin source: {bad}. A \" f\"refitted theta makes every day's object different.\")"
+  },
+  {
+   "line": 1202,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day} / {arm}: the cascade loaded a book whose \" f\"own digest is {str(loaded_sha)[:16]} while the declared day \" f\""
+  },
+  {
+   "line": 1219,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day} / {arm}: asked BE's cascade for {n_draws} \" f\"draws and received {len(draws)}.\")"
+  },
+  {
+   "line": 1343,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day} / {arm}: {len(null_draws)} draws is below \" f\"the declared minimum {params['min_draws_per_arm_day']}.\")"
+  },
+  {
+   "line": 4546,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day}: the peak stage is not computable, so the \" f\"memory plan's central claim cannot be checked at all.\")"
+  },
+  {
+   "line": 4550,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day}: the memory plan declares \" f\"{pred['declared_peak_stage']} as the peak and the measured \" f\"peak is {pred['m"
+  },
+  {
+   "line": 4688,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day}: BE's receipt at {receipt_path} carries no \" f\"book digest under `book.sha256`, `sha256` or `book_sha256`.\")"
+  },
+  {
+   "line": 4693,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day}: BE's receipt is for day {rec_day!r}. \" f\"A book verified against another day's receipt is a book \" f\"nobody "
+  },
+  {
+   "line": 4698,
+   "excerpt": "raise RunnerRefused(f\"REFUSED DAY {day}: no book at {book_path}\")"
+  },
+  {
+   "line": 4786,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY / {arm}: the book's `asm.by_arm` has no entry for \" f\"{key!r}. Both pinned heads must be scored on the day book \" f"
+  },
+  {
+   "line": 8066,
+   "excerpt": "raise RunnerRefused( f\"REFUSED: {[b['file'] for b in bad]} in the exit-map family \" f\"cannot be read; an unresolvable set has no head.\")"
+  },
+  {
+   "line": 8089,
+   "excerpt": "raise RunnerRefused( f\"REFUSED: the exit-map family resolves to {len(heads)} heads \" f\"({sorted(heads)}); it must resolve to one.\")"
+  },
+  {
+   "line": 8627,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day}: this run was HEAVY by measurement \" f\"({wall_s:.1f}s wall, {peak_rss_mb / 1024.0:.2f} GiB peak, \" f\"against "
+  },
+  {
+   "line": 8667,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day}: a REAL day is heavy by construction (BE \" f\"projects ~2.3 h for both arms) and this process does not hold \" "
+  },
+  {
+   "line": 9096,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day}: the cascade loaded a book whose own digest \" f\"is {str(bk.get('source_sha256'))[:16]} while the verified \" f"
+  },
+  {
+   "line": 9114,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day}: the two heads do not score the same \" f\"generation set ({[len(k) for k in ks]}), so the shared draw \" f\"pool"
+  },
+  {
+   "line": 9806,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day}: this run GREW {growth:.0f} MB (process \" f\"peak {peak:.0f} MB over a {_base if _base else 0:.0f} MB \" f\"base"
+  },
+  {
+   "line": 994,
+   "excerpt": "raise RunnerRefused( f\"REFUSED RUN: {arm} theta is {actual_thetas.get(arm)} \" f\"against the pinned {spec['theta']}. A refitted theta \" f\"makes every d"
+  },
+  {
+   "line": 1304,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day} / {arm}: draws were SUPPLIED on a ruled \" f\"day. R-572(B)(1) rules the runner generates them in \" f\"process a"
+  },
+  {
+   "line": 7980,
+   "excerpt": "raise RunnerRefused( f\"REFUSED: {f.name} carries no supersession PAIR \" f\"{{path, sha256}}. The chain head is resolved through \" f\"the links; a versio"
+  },
+  {
+   "line": 7987,
+   "excerpt": "raise RunnerRefused( f\"REFUSED: {f.name} supersedes {sup['path']}, absent -- a \" f\"claim about a file nobody can check.\")"
+  },
+  {
+   "line": 7992,
+   "excerpt": "raise RunnerRefused( f\"REFUSED: {f.name} supersedes {sup['path']} at \" f\"{sup['sha256'][:16]} and that file hashes to \" f\"{got[:16]}.\")"
+  },
+  {
+   "line": 8079,
+   "excerpt": "raise RunnerRefused( f\"REFUSED: {f.name} supersedes {sup['path']}, absent.\")"
+  },
+  {
+   "line": 8083,
+   "excerpt": "raise RunnerRefused( f\"REFUSED: {f.name}'s supersession pair does not hold \" f\"({str(sup.get('sha256'))[:16]} vs {got[:16]}).\")"
+  },
+  {
+   "line": 9294,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day} / {arm}: the cancel-record replay \" f\"issued {_arm_full['counters'].get('cancels_issued')} \" f\"cancels and BE"
+  },
+  {
+   "line": 1001,
+   "excerpt": "raise RunnerRefused( f\"REFUSED RUN: {arm} model {name} digest is {got} \" f\"against the pinned {dig}.\")"
+  },
+  {
+   "line": 9408,
+   "excerpt": "raise RunnerRefused( f\"REFUSED DAY {day} / {arm}: the null reports \" f\"`matched_on={prov['matched_on']!r}` where the ruled \" f\"unit is CANCELS (R-837("
+  }
+ ],
+ "THE_POPULATION_IS_NOT_24_TO_30_AND_THAT_FIGURE_IS_A_DIFFERENT_BUCKET": {
+  "what_the_dispatch_said": "24-30 unnamed refusals, DE 24 (runner 13, point_estimate_day 8, settlement_control_aggregate 2, v2_acting_matched_control 1)",
+  "what_the_programmes_OWN_instrument_says": "p003_refusal_exercise_check.scan(): de_multiday_gate1_runner.py carries 105 UNNAMED refusals; de_point_estimate_day.py 0; de_settlement_control_aggregate.py 0; de_v2_acting_matched_control.py 0",
+  "THE_RESOLUTION": "the 24->30 figure is the NEVER-EXERCISED bucket -- refusals that HAVE a name and have never been seen to fire -- which STATUS.yml labels 'unnamed refusals'. They are two different defects and the record merged them.",
+  "why_it_matters": "they need opposite fixes. A never-exercised refusal needs a cell that DRIVES it; an unnamed refusal needs a NAME. Working the wrong list closes neither.",
+  "the_direction_is_the_familiar_one": "the merged label UNDERSTATED the unnamed population by ~4x, the same direction as every other miscount tonight -- toward a clean surface.",
+  "DE_unnamed_total": 105,
+  "DE_modules_with_zero_unnamed": [
+   "de_point_estimate_day.py",
+   "de_settlement_control_aggregate.py",
+   "de_v2_acting_matched_control.py",
+   "de_settlement_control_run.py",
+   "de_asymmetry_null_run.py",
+   "de_matched_cancel_control.py",
+   "de_forward_evaluator.py"
+  ]
+ },
+ "WHY_THEY_HAVE_NO_NAME_AND_IT_IS_ONE_CAUSE_NOT_105": {
+  "the_idiom": "these refusals LEAD WITH THE SUBJECT, not the property: `REFUSED DAY {day}: ...`, `REFUSED at {where}: ...`, `REFUSED RUN: ...`, `REFUSED DAY {day} / {arm}: ...`",
+  "why_that_makes_them_unnamed": "a name-matching reader takes the LEADING token as the refusal name. `DAY` interpolates to a date, `at` is lowercase prose, `RUN` is a generic noun -- so the site reads as nameless even though the message is often perfectly clear to a human.",
+  "the_consequence_measured": "a cell that drives one of these cannot assert it by name, an automated reader cannot resolve it, and it is INVISIBLE to a name-matching sweep -- REV hit exactly this and said so.",
+  "so_the_fix_is_mechanical_not_interpretive": "prepend a property token and keep the subject as context: `REFUSED DAY_NOT_IN_THE_RULED_SET: day {day} ...`. The prose does not change; the leading token does."
+ },
+ "WHY_I_HAVE_NOT_LANDED_THE_NAMES_AND_WHEN_I_CAN": {
+  "the_blocker": "all 105 are in de_multiday_gate1_runner.py, which is (a) PINNED in the freeze's PIPELINE_AT_THE_FREEZE_COMMIT and (b) on every book's PRODUCING CLOSURE.",
+  "what_editing_it_now_would_do": [
+   "move a digest the freeze records",
+   "stale EVERY book already built -- each would report BOOK_BUILT_BY_DIFFERENT_SCORING_CODE against the new bytes",
+   "and 09-07 is building from wt-arms right now, with 09-08..09-13 to follow"
+  ],
+  "so_a_name_is_POSSIBLE_but_landing_it_is_not_YET": "this is not the 'a name is impossible' branch. The names are written above and each is mechanical. What is impossible is landing them without invalidating the forward run.",
+  "WHEN": "after the last forward book is built. Then the rename lands as ONE commit, and every renamed site is DRIVEN FIRING UNDER ITS NEW NAME before the commit is reported -- a rename never seen to fire is a relabelling, not a fix.",
+  "what_I_will_NOT_do": "rename them quietly during the run and let the book-code predicate discover it."
+ },
+ "THE_STANDARD_I_AM_HELD_TO_AND_ACCEPT": "REV found QUALITY_DECISION_SAW_AN_OUTCOME declared with NO PRODUCER -- a name with no guard. Mine are the inverse: guards with no name. Both break the same property, that a reader can map a refusal to the thing it protects. Where I give a refusal a name I will drive it firing under that name."
+}
