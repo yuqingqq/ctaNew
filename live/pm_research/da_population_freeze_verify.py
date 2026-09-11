@@ -9,12 +9,12 @@ file and requires the refusal to NAME that file. A verifier that has never
 been seen to fire is not a control.
 """
 from __future__ import annotations
-import argparse, hashlib, json, os, shutil, subprocess, sys, tempfile
+import argparse, ast, hashlib, json, os, re, shutil, subprocess, sys, tempfile
 from pathlib import Path
 
 #: v2 is the UNION of DA's list and DE's generator output. v1 stays on disk as
 #: provenance (rule 13) and is NOT the freeze in force.
-DECL = Path(__file__).resolve().parent / "declarations" / "da_population_freeze_v6.json"
+DECL = Path(__file__).resolve().parent / "declarations" / "da_population_freeze_v7.json"
 ROOTS = {"main": Path("/home/yuqing/ctaNew"),
          "wt-fwd": Path("/home/yuqing/ctaNew-wt-fwd"),
          "wt-deval": Path("/home/yuqing/ctaNew-wt-deval"),
@@ -42,7 +42,14 @@ ASSERT_MISMATCH = "EMIT_ASSERTION_DIGEST_MISMATCH"
 #: it can hit is exercised. COMPUTED, never prose -- the register lists the
 #: sites and this counts them.
 GUARD_GATE = "GUARD_ROW_NOT_EXERCISED_BEFORE_A_REAL_RUN"
-GUARD_DECL = Path(__file__).resolve().parent / "declarations" / "da_guard_register_v1.json"
+GUARD_DECL = Path(__file__).resolve().parent / "declarations" / "da_guard_register_v2.json"
+#: REVIEW 168's gap: the register could not refuse an UNREGISTERED site. The
+#: AST enumerator saw a new `raise ...Refused` and the register stayed at 167,
+#: because NOTHING JOINED CODE TO ROWS -- a list of guards is not a guard over
+#: the list. v2 re-enumerates AT VERIFY TIME and compares.
+GUARD_INCOMPLETE = "GUARD_REGISTER_INCOMPLETE"
+GUARD_STALE = "GUARD_REGISTER_STALE"
+_REFUSAL_NAME = re.compile(r"REFUSED\s*-{0,2}\s*\{?([A-Z][A-Z0-9_]{3,})")
 
 
 class FreezeRefused(RuntimeError):
@@ -114,7 +121,47 @@ def verify(decl_path: Path = DECL, roots=None) -> dict:
                                    for r in instr]}
 
 
-def guard_gate(lanes=None, decl: Path = GUARD_DECL) -> dict:
+def enumerate_sites(rows, src_for) -> set:
+    """Every `raise` carrying a REFUSED <NAME>, re-derived from the SOURCE.
+
+    THE JOIN REVIEW 168 FOUND MISSING. The register lists sites; this reads the
+    code the register claims to cover and returns what is actually there, so
+    the two can be compared instead of trusted."""
+    out = set()
+    for path in sorted({r["file"] for r in rows}):
+        src = src_for(path)
+        if src is None:
+            continue
+        try:
+            tree = ast.parse(src)
+        except SyntaxError:
+            continue
+        consts = {}
+        for n in ast.walk(tree):
+            if (isinstance(n, ast.Assign) and isinstance(n.value, ast.Constant)
+                    and isinstance(n.value.value, str)):
+                for t in n.targets:
+                    if isinstance(t, ast.Name):
+                        consts[t.id] = n.value.value
+        for n in ast.walk(tree):
+            if not isinstance(n, ast.Raise):
+                continue
+            m = _REFUSAL_NAME.search(ast.unparse(n))
+            if not m:
+                continue
+            tok = m.group(1)
+            out.add((path, n.lineno, consts.get(tok, tok)))
+    return out
+
+
+def _src_from_ref(path, ref_of):
+    r = ref_of(path)
+    o = subprocess.run(["git", "-C", str(ROOTS["main"]), "show", f"{r}:{path}"],
+                       capture_output=True, text=True)
+    return o.stdout if o.returncode == 0 else None
+
+
+def guard_gate(lanes=None, decl: Path = GUARD_DECL, src_for=None) -> dict:
     """REFUSE a real run while any row it can hit is unexercised (DA 260)."""
     if not decl.is_file():
         raise FreezeRefused(f"REFUSED {GUARD_GATE}: no guard register at {decl}")
@@ -125,6 +172,24 @@ def guard_gate(lanes=None, decl: Path = GUARD_DECL) -> dict:
         raise FreezeRefused(
             f"REFUSED {GUARD_GATE}: no rows for lane(s) {lanes} -- an empty "
             f"lane cannot exonerate a run (the aggregate-only trap)")
+    # ---- REVIEW 168: the register must be COMPLETE before it can gate ----
+    ref_of = {r["file"]: r["ref"] for r in rows}
+    getsrc = src_for or (lambda p: _src_from_ref(p, lambda x: ref_of[x]))
+    enumerated = enumerate_sites(rows, getsrc)
+    declared = {(r["file"], r["line"], r["refusal"]) for r in rows}
+    missing = sorted(enumerated - declared)
+    gone = sorted(declared - enumerated)
+    if missing:
+        first = missing[0]
+        raise FreezeRefused(
+            f"REFUSED {GUARD_INCOMPLETE}:{Path(first[0]).name}:{first[1]}:{first[2]} "
+            f"-- {len(missing)} enumerated refusal site(s) have NO ROW. A "
+            f"register that cannot see a new guard cannot gate a run on it.")
+    if gone:
+        first = gone[0]
+        raise FreezeRefused(
+            f"REFUSED {GUARD_STALE}:{Path(first[0]).name}:{first[1]}:{first[2]} "
+            f"-- {len(gone)} row(s) name a site that no longer exists.")
     bad = [r for r in rows if not r.get("exercised_before_real_run")]
     if bad:
         names = ", ".join(f"{r['site']}:{r['refusal']}" for r in bad[:4])
@@ -133,7 +198,10 @@ def guard_gate(lanes=None, decl: Path = GUARD_DECL) -> dict:
             f"lane(s) {lanes or 'ALL'} are NOT exercised -- {names}. A real run "
             f"is allowed only when every row it can hit has been driven.")
     return {"status": "EVERY_GUARD_ROW_ON_THESE_LANES_IS_EXERCISED",
-            "lanes": lanes or "ALL", "n_rows": len(rows)}
+            "lanes": lanes or "ALL", "n_rows": len(rows),
+            #: DERIVED AT VERIFY TIME, NEVER RECORDED -- the v1 register carried
+            #: POPULATION 217 and it was stale by measurement the same day.
+            "POPULATION_derived_now": len(enumerated)}
 
 
 def falsify() -> int:
@@ -223,6 +291,45 @@ def falsify() -> int:
                "EMIT_ASSERTION_DIGEST_MISMATCH" in str(ex) and tgt2["path"] in str(ex))
         ck("  and the UNMODIFIED declaration still verifies",
            verify(DECL, sroots)["status"] == "POPULATION_FREEZE_HOLDS")
+
+        # ---- REVIEW 168: an UNREGISTERED site must refuse BY NAME ----
+        gdoc = json.loads(GUARD_DECL.read_text())
+        grows = gdoc["rows"]
+        real = {}
+        for _p in sorted({r["file"] for r in grows}):
+            real[_p] = _src_from_ref(_p, lambda x: {r["file"]: r["ref"]
+                                                    for r in grows}[x])
+        tgt = grows[0]["file"]
+
+        def planted(path):
+            """REV's scratch copy: one NEW raise, in memory, nothing on disk."""
+            src0 = real.get(path)
+            if path != tgt or src0 is None:
+                return src0
+            return src0 + (
+                '\n\ndef _rev168_planted():\n'
+                '    raise RuntimeError("REFUSED REV168_PLANTED_SITE: a site '
+                'no row names")\n')
+        try:
+            guard_gate(None, GUARD_DECL, src_for=planted)
+            ck("an UNREGISTERED site REFUSES", False)
+        except FreezeRefused as ex:
+            ck("an UNREGISTERED site REFUSES GUARD_REGISTER_INCOMPLETE by name",
+               GUARD_INCOMPLETE in str(ex) and "REV168_PLANTED_SITE" in str(ex))
+
+        def deleted(path):
+            """The other direction: a row whose site is gone."""
+            src0 = real.get(path)
+            if path != tgt or src0 is None:
+                return src0
+            return "\n".join(
+                ln for ln in src0.split("\n") if "REFUSED" not in ln)
+        try:
+            guard_gate(None, GUARD_DECL, src_for=deleted)
+            ck("a VANISHED site REFUSES", False)
+        except FreezeRefused as ex:
+            ck("a VANISHED site REFUSES GUARD_REGISTER_STALE by name",
+               GUARD_STALE in str(ex))
 
         # ---- DA 260: the guard gate, both directions ----
         try:
