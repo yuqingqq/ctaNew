@@ -205,16 +205,99 @@ def resolve_books(root: Path, days, revision: str, coin: str = "btc") -> dict:
 
 
 # ------------------------------------------------------------- reporting --
-def per_day_line(cell: dict, pool: dict) -> str:
-    """The line the user reads, one per (day, arm)."""
-    return (f"DONE {cell['day']} {cell['arm']} "
+def standing_warning(G: int, sided: int = SIDED) -> str:
+    """Said UNPROMPTED on every emit, so it is never something someone had
+    to remember. At G=7 tolerance is 0: the FIRST negative day ends an arm."""
+    tol = tolerance(G, ALPHA / M_FAMILY, sided)
+    if tol < 0:
+        return (f"| G={G} A PASS IS NOT ATTAINABLE AT THIS G "
+                f"(min p={day_sign_p(G, G, sided):.4f} > "
+                f"{ALPHA / M_FAMILY:.3f}) -- THIS MEASURES THE CALENDAR")
+    if tol == 0:
+        return (f"| G={G} tol=0 UNANIMITY REQUIRED -- the first negative "
+                f"day ends that arm")
+    return f"| G={G} tol={tol} negative day(s) survivable"
+
+
+def per_day_line(cell: dict, pool: dict, G: int = None,
+                 sided: int = SIDED) -> str:
+    """The line the user reads, one per (day, arm), carrying the warning."""
+    head = (f"DONE {cell['day']} {cell['arm']} "
             f"D={cell['D']:+.2f} p={pool['p_two_sided']:.6f} "
             f"n={cell['n']} base={cell['baseline_total_cents']:+.2f} "
             f"arm={cell['arm_total_cents']:+.2f}")
+    return head if G is None else f"{head} {standing_warning(G, sided)}"
+
+
+# --------------------------------------------- settlement-source finality --
+NO_RECEIPT = "FORWARD_EVALUATOR_NO_VERIFIED_WINNER_RECEIPT_FOR_A_DAY"
+
+
+def settlement_source_disclosure(days, derived: Path,
+                                 revision: str = "L250ms") -> dict:
+    """R-810's finality, carried on every published cent figure.
+
+    Step 2 called `winner_source` WITHOUT `verification=`, so every cent it
+    published is `VENUE_RECORD_NOT_VERIFIED_AGAINST_CHAINLINK` and
+    `is_final_for_quotation` is False. This reads the per-day verification
+    the day pipeline already computed and carries it.
+
+    WHY A DAY-LEVEL READ IS SUFFICIENT FOR A CELL-LEVEL CLAIM: a cell's
+    fills name a SUBSET of the day's slugs. If no slug on the day
+    disagrees, no subset of them disagrees. The dominance runs one way and
+    only one way -- it licenses `DISAGREE = 0`, never a finality claim for
+    a day carrying unreachable slugs.
+    """
+    import glob as _glob
+    out, all_final = {}, True
+    for d in days:
+        c = d.replace("-", "")
+        fs = sorted(_glob.glob(str(Path(derived) /
+                    f"p003_de_point_estimate_day_{c}_{revision}__*.json")))
+        if not fs:
+            raise EvaluatorRefused(
+                f"REFUSED {NO_RECEIPT}: {d} has no point-estimate receipt "
+                f"under {derived}. A cent figure whose winner source was "
+                f"never verified must say so, and saying so requires the "
+                f"receipt that did the verifying.")
+        rec = json.loads(Path(fs[-1]).read_text())
+
+        def _walk(o, pre=""):
+            if isinstance(o, dict):
+                for k, v in o.items():
+                    yield from _walk(v, pre + "/" + k)
+            elif isinstance(o, list):
+                for i, v in enumerate(o):
+                    yield from _walk(v, pre + f"[{i}]")
+            else:
+                yield pre, o
+        counts = {k.rsplit("/", 1)[1]: v for k, v in _walk(rec)
+                  if "/chainlink_verification/counts/" in k}
+        final = counts.get("DISAGREE", 1) == 0 and all(
+            v == 0 for k, v in counts.items()
+            if k not in ("VERIFIED_AGREE", "DISAGREE"))
+        all_final &= final
+        out[d] = {"counts": counts, "receipt": Path(fs[-1]).name,
+                  "no_slug_disagrees": counts.get("DISAGREE", None) == 0,
+                  "is_final_for_quotation": final,
+                  "why_not_final": (None if final else
+                                    "slugs the Chainlink stream cannot "
+                                    "reach keep finality gated")}
+    return {
+        "per_day": out,
+        "every_day_final_for_quotation": all_final,
+        "THE_LIMIT_THESE_NUMBERS_CARRY": (
+            "step 2 called `winner_source` without `verification=`, so its "
+            "published cents are labelled VENUE_RECORD_NOT_VERIFIED_"
+            "AGAINST_CHAINLINK. The check has since been read from the day "
+            "receipts and NO SLUG DISAGREES on any day, so NO CENT FIGURE "
+            "CHANGES -- what was missing was the label, not the money."),
+    }
 
 
 def evaluate(root: Path, days, *, n_expected: int = None,
-             arms=ARMS, sided: int = SIDED) -> dict:
+             arms=ARMS, sided: int = SIDED, derived: Path = None,
+             revision: str = "L250ms") -> dict:
     """The whole path. `days` REQUIRED; G comes from it, not a constant."""
     days = list(days)
     if not days:
@@ -232,7 +315,7 @@ def evaluate(root: Path, days, *, n_expected: int = None,
     for a in arms:
         for d in days:
             one = AGG.pooled(cells, (d,), a)
-            lines.append(per_day_line(cells[(d, a)], one))
+            lines.append(per_day_line(cells[(d, a)], one, G, sided))
         pool = AGG.pooled(cells, days, a)
         pools.append(pool)
         per_arm[a] = {
@@ -250,7 +333,70 @@ def evaluate(root: Path, days, *, n_expected: int = None,
             "ANY_ARM_ALREADY_FUTILE":
                 any(per_arm[a]["futility"]["FUTILE"] for a in arms),
             "futile_arms": [a for a in arms
-                            if per_arm[a]["futility"]["FUTILE"]]}
+                            if per_arm[a]["futility"]["FUTILE"]],
+            "standing_warning": standing_warning(G, sided),
+            "settlement_source": (
+                settlement_source_disclosure(days, derived, revision)
+                if derived is not None else
+                {"NOT_COMPUTED": "pass derived= to carry R-810 finality"})}
+
+
+def progress_emit(root: Path, days_scored, *, n_declared: int,
+                  arms=ARMS, sided: int = SIDED, derived: Path = None,
+                  revision: str = "L250ms") -> dict:
+    """WHAT IS EMITTED AFTER EVERY DAY, UNPROMPTED. All four travel together.
+
+    Nothing here is remembered at the moment it matters: the per-day line,
+    the futility verdict WITH the day that killed it and its cause, the
+    attainable minimum p AT THE G ACHIEVED SO FAR, and the tolerance at
+    that G. At the ruled G=7 the tolerance is 0, so this says on DAY ONE
+    that the first negative day ends an arm -- not on day seven.
+    """
+    days_scored = list(days_scored)
+    if not days_scored:
+        raise EvaluatorRefused(f"REFUSED {NO_DAYS}: nothing scored yet.")
+    if len(set(days_scored)) != len(days_scored):
+        raise EvaluatorRefused(f"REFUSED {DUP_DAY}: {days_scored}")
+    G_so_far = len(days_scored)
+    cells = {(d, a): AGG.load_cell(Path(root), d, a)
+             for d in days_scored for a in arms}
+    lines, per_arm = [], {}
+    for a in arms:
+        for d in days_scored:
+            lines.append(per_day_line(cells[(d, a)],
+                                      AGG.pooled(cells, (d,), a),
+                                      n_declared, sided))
+        pool = AGG.pooled(cells, days_scored, a)
+        per_arm[a] = {"pooled_so_far": pool,
+                      "futility": futility(pool["per_day_D_cents"],
+                                           n_declared, sided)}
+    n = min(p["pooled_so_far"]["n_draws"] for p in per_arm.values())
+    out = {
+        "protocol": PROTOCOL, "emit": "AFTER_EVERY_DAY",
+        "days_scored": days_scored, "G_so_far": G_so_far,
+        "G_declared": n_declared, "days_remaining": n_declared - G_so_far,
+        "per_day_lines": lines,
+        "floor_at_the_G_ACHIEVED_SO_FAR": floor_block(G_so_far, n, sided),
+        "floor_at_the_G_DECLARED": floor_block(n_declared, n, sided),
+        "futility": {a: per_arm[a]["futility"] for a in arms},
+        "ANY_ARM_ALREADY_DEAD": any(per_arm[a]["futility"]["FUTILE"]
+                                    for a in arms),
+        "standing_warning": standing_warning(n_declared, sided),
+    }
+    if derived is not None:
+        out["settlement_source"] = settlement_source_disclosure(
+            days_scored, derived, revision)
+    dead = [a for a in arms if per_arm[a]["futility"]["FUTILE"]]
+    out["STOP_ADVICE"] = (
+        "NOT FUTILE -- continue" if not dead else
+        "FUTILE for " + ", ".join(
+            f"{a} ({per_arm[a]['futility']['cause']}"
+            + (f", killed by {per_arm[a]['futility']['negative_or_zero_days']}"
+               if per_arm[a]["futility"]["negative_or_zero_days"] else "")
+            + ")" for a in dead)
+        + ". Stopping now is FREE: it can only reduce the chance of "
+          "declaring success, never inflate one.")
+    return out
 
 
 # ------------------------------------------------------------- falsifier --
@@ -318,6 +464,85 @@ def falsify() -> int:                                        # noqa: C901
     ck("the draw component does not move with G",
        attainable_min_p(4, 500)["draw_permutation_component"]
        == attainable_min_p(7, 500)["draw_permutation_component"] == 1 / 501)
+
+    # --- STANDING WARNING: said unprompted, and correct at each G --------
+    ck("G=7 emit warns UNANIMITY REQUIRED", "UNANIMITY REQUIRED"
+       in standing_warning(7))
+    ck("G=4 emit warns the pass is NOT ATTAINABLE",
+       "NOT ATTAINABLE AT THIS G" in standing_warning(4)
+       and "MEASURES THE CALENDAR" in standing_warning(4))
+    ck("G=10 emit reports a survivable day", "tol=1" in standing_warning(10))
+    ck("every per-day line carries the warning when G is given",
+       standing_warning(7) in per_day_line(
+           {"day": "d", "arm": "a", "D": 1.0, "n": 500,
+            "baseline_total_cents": 0.0, "arm_total_cents": 1.0},
+           {"p_two_sided": 0.5}, 7))
+
+    # --- FINALITY: refuses a day it cannot evidence ----------------------
+    with tempfile.TemporaryDirectory() as td:
+        try:
+            settlement_source_disclosure(["2026-09-04"], Path(td))
+            ck("finality REFUSES a day with no receipt", False)
+        except EvaluatorRefused as e:
+            ck("finality REFUSES a day with no receipt", NO_RECEIPT in str(e))
+
+    # --- G FROM THE DATA: driven on a 6-day AND an 8-day fixture ---------
+    def _fixture(td, days, D_by_day):
+        root = Path(td)
+        for d in days:
+            c = d.replace("-", "")
+            for arm in ARMS:
+                (root / f"de_settle_result_{c}_{arm}.json").write_text(
+                    json.dumps({"observed_D_cents": D_by_day[d],
+                                "zero_model_cancel_baseline_total_cents": 0.0,
+                                "arm_settled_total_cents": D_by_day[d]}))
+                with (root / f"de_settle_ckpt_{d}_{arm}.jsonl").open("w") as f:
+                    f.write(json.dumps({"kind": "HEADER",
+                                        "n_draws": 500}) + "\n")
+                    for i in range(500):
+                        f.write(json.dumps({"i": i, "D": 0.0}) + "\n")
+        return root
+
+    with tempfile.TemporaryDirectory() as td:
+        d6 = [f"2026-09-{7 + i:02d}" for i in range(6)]
+        r6 = evaluate(_fixture(td, d6, {d: +1.0 for d in d6}), d6)
+        ck("a 6-day fixture yields G=6 FROM THE DATA", r6["G"] == 6)
+        ck("  and its floor is the G=6 floor, not a constant",
+           abs(r6["FLOOR_BLOCK_CARRIED_ON_EVERY_RESULT"]
+               ["attainable_minimum_p"]["day_sign_component"]
+               - 2 / 64) < 1e-12)
+        ck("  and a G=6 pass is NOT attainable two-sided",
+           not r6["FLOOR_BLOCK_CARRIED_ON_EVERY_RESULT"]
+           ["a_pass_was_possible_at_this_G"])
+    with tempfile.TemporaryDirectory() as td:
+        d8 = [f"2026-09-{7 + i:02d}" for i in range(8)]
+        r8 = evaluate(_fixture(td, d8, {d: +1.0 for d in d8}), d8)
+        ck("an 8-day fixture yields G=8 FROM THE DATA", r8["G"] == 8)
+        ck("  and its floor is the G=8 floor", abs(
+            r8["FLOOR_BLOCK_CARRIED_ON_EVERY_RESULT"]
+            ["attainable_minimum_p"]["day_sign_component"] - 2 / 256) < 1e-12)
+        ck("  and a G=8 pass IS attainable",
+           r8["FLOOR_BLOCK_CARRIED_ON_EVERY_RESULT"]
+           ["a_pass_was_possible_at_this_G"])
+        ck("  the two fixtures give DIFFERENT floors, so G is not pinned",
+           r6["FLOOR_BLOCK_CARRIED_ON_EVERY_RESULT"]["attainable_minimum_p"]
+           ["day_sign_component"] != r8["FLOOR_BLOCK_CARRIED_ON_EVERY_RESULT"]
+           ["attainable_minimum_p"]["day_sign_component"])
+        # and the per-day emit, on day 1 of 8, must already warn
+        p1 = progress_emit(Path(td), d8[:1], n_declared=8)
+        ck("progress_emit works on DAY ONE", p1["G_so_far"] == 1
+           and p1["days_remaining"] == 7)
+        ck("  and carries the floor at the G ACHIEVED and at the G DECLARED",
+           "floor_at_the_G_ACHIEVED_SO_FAR" in p1
+           and "floor_at_the_G_DECLARED" in p1)
+        ck("  and says STOP_ADVICE unprompted", "STOP_ADVICE" in p1)
+        d8bad = dict({d: +1.0 for d in d8}, **{d8[0]: -5.0})
+        with tempfile.TemporaryDirectory() as td2:
+            p2 = progress_emit(_fixture(td2, d8, d8bad), d8[:1], n_declared=8)
+            ck("  a negative DAY ONE is called dead immediately",
+               p2["ANY_ARM_ALREADY_DEAD"] and "FUTILE for " in p2["STOP_ADVICE"])
+            ck("  and the STOP_ADVICE names the day that killed it",
+               d8[0] in p2["STOP_ADVICE"])
 
     # --- HOLM: m = 2, and the step-down thresholds -----------------------
     h = AGG.holm([0.02, 0.03])
