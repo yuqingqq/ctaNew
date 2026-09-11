@@ -40,12 +40,46 @@ def _pass():
     return {"status": "PASS"}
 
 
+def _declared_refusal_names() -> set:
+    """Every refusal NAME the guard modules declare, as constants.
+
+    REVIEW 168: reading the name by splitting stdout on the literal
+    "REFUSED " misreads any refusal in another form, and any message whose
+    PROSE contains that token. The names are declared -- UPPER_SNAKE string
+    constants in the modules that raise them -- so resolve by IDENTITY
+    against that set instead of parsing free text.
+    """
+    names = set()
+    # Also harvest names that are declared INLINE in a raise -- the repo's
+    # other idiom. This is identity against a harvested SET, not a split of
+    # the message: a name matches only if some module actually declares it.
+    import re as _re
+    for mod in (SC, R, BEN):
+        try:
+            src = Path(mod.__file__).read_text()
+        except Exception:                          # noqa: BLE001
+            continue
+        names.update(_re.findall(r"REFUSED ([A-Z][A-Z0-9_]{3,})", src))
+    for mod in (SC, R, BEN):
+        for k, v in vars(mod).items():
+            if (k.isupper() and isinstance(v, str) and len(v) > 3
+                    and v.replace("_", "").isalnum() and v.isupper()):
+                names.add(v)
+    return names
+
+
 def _refuse(exc):
     text = str(exc)
-    name = "UNNAMED"
-    if "REFUSED " in text:
-        name = text.split("REFUSED ", 1)[1].split(":", 1)[0].strip()
-    return {"status": f"WOULD_REFUSE:{name}", "detail": text[:220]}
+    hit = sorted((n for n in _declared_refusal_names() if n in text),
+                 key=len, reverse=True)
+    if hit:
+        return {"status": f"WOULD_REFUSE:{hit[0]}", "detail": text[:220],
+                "name_resolved_by": "DECLARED_CONSTANT"}
+    return {"status": "WOULD_REFUSE:UNNAMED_REFUSAL", "detail": text[:220],
+            "name_resolved_by": "NO_DECLARED_NAME_MATCHED",
+            "why_this_matters": ("the refusal carries no name this reader "
+                                 "can resolve; it is reported as unnamed "
+                                 "rather than guessed from prose")}
 
 
 def _absent(which):
