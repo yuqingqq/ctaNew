@@ -120,7 +120,7 @@ and then **grep the written file for `%%` before validating**, because YAML
 parses `%%` happily.
 
 Standing pre-commit checks, in order: (1) collision gate, (2) quote every flag
-scalar with ": ", (3) no `__TIP__`/`__CLOCK__` left, (4) no `%%` left,
+scalar with ": ", (3) no `__TIP__`/`2026-09-11T23:35:50Z` left, (4) no `%%` left,
 (5) `yaml.safe_load`, (6) `--selftest`, (7) `--audit` and read
 `checked_artifact_missing` for THIS round's keys — a CHECKED entry whose
 artifact does not resolve is a filing error, and it caught two of mine here.
@@ -414,13 +414,27 @@ when the report has been shown to track X.
 
 My round-399 output printed, for gate 6:
 
-
+    gate 6   SATISFIED   NOT PROBED: IndexError: list index out of range
 
 I recorded those words **verbatim** and still treated the row as evidence about
-gate 6. ***An unprobed row is not a measurement of anything*** — its 
+gate 6. ***An unprobed row is not a measurement of anything*** — its SATISFIED
 is a fall-through, which is exactly what the ruling found.
 
 > **So: when an instrument reports a status AND reports that it could not
 > measure, the second fact voids the first.** Read the coverage field before the
-> status field, every time. A  beside a  is not a weak
-> result — it is **no result**. (Amended 2026-09-11T23:34:58Z.)
+> status field, every time. **A SATISFIED beside a NOT PROBED is not a weak
+> result — it is no result.**
+
+### And this amendment ate its own words on the first attempt
+
+I appended it with an **unquoted** heredoc so `${CLOCK}` would interpolate.
+Backticks are command substitution in an unquoted heredoc, so the fenced code
+block and the inline spans were **executed and replaced by their empty output** —
+the section landed saying *"its  is a fall-through"* and *"A  beside a  is not a
+weak result."* **An amendment about reading the coverage field lost its own key
+terms to its own shell.**
+
+> The only reason I caught it: bash printed `SATISFIED: command not found`.
+> ***The failure was visible*** — round 397's rule paying out in my favour for
+> once. **Quote every heredoc that carries prose; substitute the clock with
+> `sed` afterwards.** (Amended 2026-09-11T23:35:50Z.)
