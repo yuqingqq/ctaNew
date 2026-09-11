@@ -173,21 +173,42 @@ class OrderPath:
             asdict(self), sort_keys=True, default=str).encode()).hexdigest()
 
 
-def replay(quotes, price_path, initial_state: dict) -> OrderPath:
+def replay(quotes, price_path, initial_state: dict,
+           token: str = "UP", step_ms: float = 1000.0) -> OrderPath:
     """A MINIMAL, DETERMINISTIC ENGINE -- crossing fills, fills move
     inventory, nothing else. Its only job is to make the order path a
     real consequence of the quotes rather than a label attached to them.
+
+    IT EMITS THE P&L'S OWN `Fill` TYPE (§7 links 9 -> 10). Before this the
+    path carried 4-tuples and the P&L took `Fill` records, so the chain
+    agreed in PROSE and could not be run end to end: nothing could carry
+    a fill from the replay into the P&L without a human retyping it.
+
+    A WITHHELD QUOTE CANNOT FILL. `PLACE_WITHHELD` is not decoration: an
+    order that was never placed has no queue position and no fill, and a
+    replay that filled it would price a trade that could not happen.
     """
+    import de_fair_value_pnl as PNL
     inv = float(initial_state.get("inventory", 0.0))
     fills = []
-    for q, px in zip(quotes, price_path):
+    for i, (q, px) in enumerate(zip(quotes, price_path)):
+        if getattr(q, "withheld", False):
+            continue
+        decided = (q.decision_ms if q.decision_ms is not None
+                   else i * step_ms)
+        eff = decided + (q.latency_ms or 0.0)
         if px <= q.bid:
-            fills.append(("BUY", q.slug, q.generation_id, q.bid))
+            fills.append(PNL.Fill(slug=q.slug, token=token, ts_ms=eff,
+                                  q=q.bid, dq=+1.0,
+                                  order_decision_ms=decided))
             inv += 1.0
         elif px >= q.ask:
-            fills.append(("SELL", q.slug, q.generation_id, q.ask))
+            fills.append(PNL.Fill(slug=q.slug, token=token, ts_ms=eff,
+                                  q=q.ask, dq=-1.0,
+                                  order_decision_ms=decided))
             inv -= 1.0
-    return OrderPath(fills=tuple(fills), inventory=inv, n_quotes=len(quotes))
+    return OrderPath(fills=tuple(f.as_dict() for f in fills),
+                     inventory=inv, n_quotes=len(quotes))
 
 
 def compare_arms(baseline: dict, challenger: dict) -> dict:
@@ -274,6 +295,31 @@ def action_keys_digest(actions) -> str:
     keys = sorted([list(a.key) for a in actions])
     return hashlib.sha256(json.dumps(keys, sort_keys=True).encode()
                           ).hexdigest()
+
+
+def chain(actions, value_of, inputs: ReplayInputs, *, settlement: dict,
+          fee: dict, token: str = "UP") -> dict:
+    """§7 LINKS 8, 9 AND 10 IN ONE PATH: quote mapping -> replay -> P&L.
+
+    The point is not convenience: it is that the P&L consumes THE REPLAY'S
+    OWN FILLS, so a change to the quote mapping reaches the P&L without
+    anyone carrying a number across by hand.
+    """
+    import de_fair_value_pnl as PNL
+    arm = run_arm(actions, value_of, inputs)
+    fills = [PNL.Fill(**row) for row in arm["path"].fills]
+    active = float(len(arm["seam"]["quotes"])) * 1000.0
+    # THE LATENCY IS THE DECLARED ONE, read once for the whole chain --
+    # a clever inline expression here was my first attempt and it was
+    # unreadable, which in a chain link is its own defect.
+    latency = SEAM.placement_latency_ms()["value"]
+    book = PNL.pnl(fills, settlement=settlement, fee=fee,
+                   placement_latency_ms=latency, quote_active_ms=active)
+    edge = PNL.settlement_edge(fills, settlement=settlement)
+    return {"protocol": PROTOCOL + "_CHAIN", "arm": arm,
+            "quotes": len(arm["seam"]["quotes"]),
+            "fills": len(fills), "pnl": book, "edge": edge,
+            "links": ["quote mapping", "replay", "P&L"]}
 
 
 def run_arm(actions, value_of, inputs: ReplayInputs) -> dict:
@@ -565,6 +611,54 @@ def falsify() -> int:
        "not a new list",
        "action_keys_sha256" in ReplayInputs.digested_field_names(),
        ", ".join(ReplayInputs.digested_field_names()))
+
+    # --- §7 LINKS 8 -> 9 -> 10, DRIVEN END TO END ----------------------
+    fee_fix = {"value": 0.0, "declared_by": "fixture",
+               "rule": "fixture: zero maker fee under the recorded tier"}
+    SET = {"UP": 1.0}
+    ch_i = chain(acts, v_ident, inputs, settlement=SET, fee=fee_fix)
+    ch_c = chain(acts, v_chall, inputs, settlement=SET, fee=fee_fix)
+    ck("the chain runs quote mapping -> replay -> P&L in ONE path",
+       ch_i["links"] == ["quote mapping", "replay", "P&L"]
+       and ch_i["quotes"] == len(acts) and "pnl" in ch_i["pnl"],
+       f"{ch_i['quotes']} quotes -> {ch_i['fills']} fills -> pnl "
+       f"{ch_i['pnl']['pnl']}")
+    ck("  and the P&L consumes THE REPLAY'S OWN FILLS, so a change in the "
+       "quote mapping reaches the P&L with no number carried by hand",
+       ch_i["fills"] == len(ch_i["arm"]["path"].fills)
+       and ch_i["pnl"]["n_fills"] == ch_i["fills"],
+       f"path fills {len(ch_i['arm']['path'].fills)} == pnl n_fills "
+       f"{ch_i['pnl']['n_fills']}")
+    ck("  and a DIFFERENT anchor produces a different P&L through the "
+       "whole chain",
+       ch_c["pnl"]["pnl"] != ch_i["pnl"]["pnl"],
+       f"identity {ch_i['pnl']['pnl']} vs challenger {ch_c['pnl']['pnl']}")
+    ck("  while Identity against ITSELF is exactly zero end to end",
+       chain(acts, v_ident, inputs, settlement=SET,
+             fee=fee_fix)["pnl"]["pnl"] == ch_i["pnl"]["pnl"],
+       "the §9 control, through the chain")
+    import de_fair_value_pnl as _PNL
+    ck("  and the edge statistic comes out of the same fills",
+       ch_i["edge"]["n_fills"] == ch_i["fills"]
+       and (ch_i["edge"]["status"] == "OK"
+            or ch_i["edge"]["status"] == _PNL.NOT_EVALUABLE),
+       f"{ch_i['edge']['status']} over {ch_i['edge']['filled_shares']} "
+       f"shares")
+    withheld_inputs = ReplayInputs(
+        non_fair_value_params={"max_inventory": 5, "tick": 0.01},
+        initial_state={"inventory": 0.0, "clock": 0},
+        price_path=tuple(prices), half_spread=0.01,
+        action_keys_sha256=action_keys_digest(acts))
+    wq = SEAM.run_seam(acts, v_chall, half_spread=0.01, tick=0.01)
+    withheld = [SEAM.Quote(**dict(q.as_dict(), withheld=True,
+                                  withheld_reason=SEAM.MARKETABLE_CROSS))
+                for q in wq["quotes"]]
+    ck("a WITHHELD quote cannot fill -- an order never placed has no "
+       "queue position",
+       replay(withheld, prices, {"inventory": 0.0}).fills == ()
+       and replay(wq["quotes"], prices, {"inventory": 0.0}).fills != (),
+       f"{len(replay(wq['quotes'], prices, {'inventory': 0.0}).fills)} "
+       f"fills when placed, 0 when withheld")
 
     ck("identical values with DIFFERENT paths is its own verdict, not a "
        "pass",

@@ -43,6 +43,11 @@ import de_fair_value_policy_seam as SEAM          # noqa: E402
 
 PROTOCOL = "P003_DE_FAIR_VALUE_PNL_V1"
 FEE_NOT_DECLARED = "MAKER_FEE_IS_NOT_DECLARED"
+#: §9: "A zero fee is used only if the receipt identifies the supporting
+#: market/account rule." A NUMBER WITHOUT A RULE IS NOT A DECLARED FEE --
+#: and zero is the value most likely to be supplied by omission, so the
+#: rule is required for every value, not only for zero.
+FEE_RULE_NOT_DECLARED = "FEE_RULE_NOT_DECLARED"
 NO_SETTLEMENT = "TOKEN_HAS_NO_OFFICIAL_SETTLEMENT"
 EARLY_FILL = "FILL_BEFORE_ITS_ORDER_WAS_EFFECTIVE"
 NOT_EVALUABLE = "NOT_EVALUABLE_FOR_EDGE"
@@ -87,7 +92,32 @@ def declared_fee(decl_dir=None) -> dict:
             f"and MAKER_FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_"
             f"ARTIFACTS, so there is nothing to read -- and a gross P&L "
             f"presented as net is what this refusal prevents.") from None
-    return got
+    rule = _fee_rule(decl_dir, got["declared_by"])
+    if not rule:
+        raise PnLRefused(
+            f"REFUSED {FEE_RULE_NOT_DECLARED}: {got['declared_by']} "
+            f"declares a fee of {got['value']} and names no supporting "
+            f"market/account RULE. §9 permits a zero fee only when the "
+            f"receipt identifies that rule -- and zero is precisely the "
+            f"value that arrives by omission, so a number without a rule "
+            f"is not a declared fee.")
+    return dict(got, rule=rule)
+
+
+def _fee_rule(decl_dir, filename: str):
+    """The RULE text beside the fee, in the declaration that supplied it."""
+    d = Path(decl_dir) if decl_dir else HERE / "declarations"
+    f = d / filename
+    if not f.is_file():
+        return None
+    try:
+        doc = json.loads(f.read_text())
+    except Exception:                                       # noqa: BLE001
+        return None
+    names = {"maker_fee_rule", "fee_rule", "receipt", "supporting_rule",
+             "market_account_rule"}
+    found = SEAM._walk_for(doc, names)
+    return found if isinstance(found, str) and found.strip() else None
 
 
 def pnl(fills, *, settlement: dict, fee: dict,
@@ -134,7 +164,9 @@ def pnl(fills, *, settlement: dict, fee: dict,
             "n_fills": n_fills, "filled_shares": round(filled_shares, 12),
             "quote_active_ms": quote_active_ms,
             "ending_inventory": {k: round(v, 12) for k, v in inv.items()},
-            "fee": fee, "placement_latency_ms": placement_latency_ms,
+            "fee": fee,
+            "fee_rule_recorded": fee.get("rule"),
+            "placement_latency_ms": placement_latency_ms,
             "legs_are_separate_because":
                 "a cash leg that looks good beside a settlement leg that "
                 "does not is a position carried into a loss"}
@@ -230,11 +262,28 @@ def falsify() -> int:
         D = Path(td)
         (D / "fee.json").write_text(json.dumps(
             {"market": {"maker_fee": 0.0},
-             "receipt": "fixture rule: zero maker fee on these markets"}))
+             "maker_fee_rule": "fixture: PM maker orders pay no fee under "
+                               "the account tier recorded in the receipt"}))
         fee = declared_fee(D)
-        ck("the fee is READ from a declaration, and the record names it",
-           fee["value"] == 0.0 and fee["declared_by"] == "fee.json",
-           json.dumps(fee))
+        ck("a declaration carrying a RULE proceeds, and the rule is "
+           "RECORDED in the output",
+           fee["value"] == 0.0 and fee["declared_by"] == "fee.json"
+           and fee["rule"].startswith("fixture: PM maker orders"),
+           fee["rule"][:52])
+        (D / "no_rule.json").write_text(json.dumps({"maker_fee": 0.0}))
+        import shutil as _sh
+        _only = Path(str(D) + "_onlyvalue")
+        _only.mkdir(exist_ok=True)
+        (_only / "no_rule.json").write_text(json.dumps({"maker_fee": 0.0}))
+        try:
+            declared_fee(_only)
+            norule = ""
+        except PnLRefused as exc:
+            norule = str(exc)
+        ck("  and a fee NUMBER with NO supporting rule REFUSES -- zero is "
+           "the value that arrives by omission",
+           FEE_RULE_NOT_DECLARED in norule,
+           norule[:58] or "ACCEPTED A NUMBER WITH NO RULE")
     with tempfile.TemporaryDirectory() as td2:
         try:
             declared_fee(Path(td2))
