@@ -31,6 +31,13 @@ HALT_BAND_CENTS = 1.0
 NO_TABLE = "REVALUATION_EMIT_HAS_NO_PER_WINDOW_TABLE"
 ROW_COUNT = "PER_WINDOW_TABLE_ROW_COUNT_DOES_NOT_MATCH_THE_DECLARED_SPINE"
 BAD_SUM = "PER_WINDOW_TABLE_DOES_NOT_SUM_TO_THE_REPORTED_DELTA_D"
+NO_DECOMP = "PER_WINDOW_TABLE_EMPTY_NO_DECOMPOSITION"
+OUTSIDE = "PER_WINDOW_RESIDUAL_IS_A_CHANGE_OUTSIDE_THE_DECLARED_WINDOWS"
+RESIDUAL_SIGN_CONVENTION = (
+    "residual = SUM(declared rows) - DELTA_D = -(sum over the windows "
+    "OUTSIDE the declared spine). A +50c change in an undeclared window "
+    "therefore appears as residual_cents: -50. It is NOT 50c missing from "
+    "the table.")
 UNREADABLE = "REVALUATION_EMIT_CANNOT_READ_A_REQUIRED_INPUT"
 
 
@@ -162,8 +169,19 @@ def concentration_finding(delta_D: float, rows: list) -> dict:
                                     "story and it goes to the user")}
 
 
-def residual_band(residual: float) -> dict:
-    """<1e-6c rounding, 1e-6..1c report, >=1c HALT with the refusal name."""
+def residual_band(residual: float, rows=None, delta_D=None) -> dict:
+    """<1e-6c rounding, 1e-6..1c report, >=1c HALT -- WITH THE RIGHT NAME.
+
+    REVIEW 150: two HALTs with opposite readings were raising one name.
+      - every declared row 0.0 and residual == DELTA_D  -> the instrument
+        is INCOMPLETE. Rules 1-3 have not run; this is not the tripwire
+        firing.
+      - a populated table and |residual| >= 1c -> the era fix moved a
+        window OUTSIDE the declared spine. Rules 1-3 are retired until it
+        is located.
+    A reader must tell these apart BY NAME, because the second is a
+    finding about the data and the first is a finding about us.
+    """
     a = abs(residual)
     if a < ROUNDING_BAND_CENTS:
         band, halt = "ROUNDING", False
@@ -171,9 +189,28 @@ def residual_band(residual: float) -> dict:
         band, halt = "REPORT", False
     else:
         band, halt = "HALT", True
-    return {"residual_cents": residual, "band": band,
-            "HALT": halt,
-            "refusal_name_if_halt": BAD_SUM,
+    empty = bool(rows) and all(r.get("delta_D_cents", 0.0) == 0.0
+                               for r in rows)
+    residual_is_all_of_delta = (delta_D is not None
+                                and abs(residual + delta_D)
+                                < ROUNDING_BAND_CENTS)
+    if halt and empty and residual_is_all_of_delta:
+        name, reading = NO_DECOMP, (
+            "THE INSTRUMENT IS INCOMPLETE, not the day. Every declared row "
+            "is 0.0 and the residual is the whole of DELTA_D, so no "
+            "decomposition stands behind the table. Rules 1-3 have not run.")
+    elif halt:
+        name, reading = OUTSIDE, (
+            "A CHANGE OUTSIDE THE DECLARED SPINE. The table is populated "
+            "and cents remain unaccounted, so the era fix moved a window "
+            "that carried no gap. Rules 1-3 are retired until it is located.")
+    else:
+        name, reading = None, "within band"
+    return {"residual_cents": residual, "band": band, "HALT": halt,
+            "refusal_name_if_halt": name,
+            "what_a_halt_here_means": reading,
+            "table_is_all_zero": empty,
+            "residual_sign_convention": RESIDUAL_SIGN_CONVENTION,
             "bands": {"rounding_below_cents": ROUNDING_BAND_CENTS,
                       "halt_at_or_above_cents": HALT_BAND_CENTS}}
 
@@ -201,7 +238,7 @@ def emit(day_one_D: dict, revalued_D: dict, per_window_by_arm: dict,
                 "share_of_day_gap_time": w.get("share_of_day_gap_time"),
                 "delta_D_cents": float(contrib.get(start, 0.0))})
         summed = sum(r["delta_D_cents"] for r in rows)
-        res = residual_band(summed - DELTA_D)
+        res = residual_band(summed - DELTA_D, rows, DELTA_D)
         # A D that lands EXACTLY on zero is neither positive nor
         # negative, and `(d1 > 0) != (d2 > 0)` lets it through. Zero is a
         # sign change from either side: the day's direction has gone.
@@ -257,9 +294,25 @@ def falsify() -> int:
     except RevaluationEmitRefused as e:
         ck("an unreadable input REFUSES by name, no table",
            UNREADABLE in str(e))
-    ck("a residual >= 1c is a HALT carrying the declaration's refusal name",
-       residual_band(1.5)["HALT"] and residual_band(1.5)
-       ["refusal_name_if_halt"] == BAD_SUM)
+    # --- REVIEW 150: the two HALTs must be told apart BY NAME ----------
+    zero_rows = [{"window_start": s_, "delta_D_cents": 0.0} for s_ in starts]
+    rz = emit({"A": -100.0}, {"A": -60.0}, {"A": {}}, W)["arms"]["A"]
+    ck("an ALL-ZERO table halts as PER_WINDOW_TABLE_EMPTY_NO_DECOMPOSITION",
+       rz["HALT"] and rz["refusal_name_if_halt"] == NO_DECOMP
+       and rz["table_is_all_zero"])
+    # a populated table plus 50c in an UNDECLARED window
+    full = {s_: 10.0 for s_ in starts}
+    delta_with_outside = sum(full.values()) + 50.0
+    ro = emit({"A": 0.0}, {"A": delta_with_outside}, {"A": full},
+              W)["arms"]["A"]
+    ck("a POPULATED table with 50c outside the spine halts as "
+       "PER_WINDOW_RESIDUAL_IS_A_CHANGE_OUTSIDE_THE_DECLARED_WINDOWS",
+       ro["HALT"] and ro["refusal_name_if_halt"] == OUTSIDE)
+    ck("  and the residual reads -50, per the stated sign convention",
+       abs(ro["residual_cents"] + 50.0) < 1e-9
+       and "-50" in ro["residual_sign_convention"])
+    ck("  the two HALTs do NOT share a name",
+       rz["refusal_name_if_halt"] != ro["refusal_name_if_halt"])
     ck("a residual under 1e-6c is ROUNDING, not a finding",
        residual_band(1e-9)["band"] == "ROUNDING")
     t = emit({"A": -11017.71}, {"A": 5.0}, {"A": {starts[0]: 11022.71}}, W)
