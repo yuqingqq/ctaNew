@@ -407,6 +407,13 @@ def main(argv=None) -> int:
     import argparse
     argv = list(sys.argv[1:] if argv is None else argv)
     if "--falsify" in argv:
+        # THE FALSIFIER MUST NOT DEPEND ON CWD EITHER. Run from the module's
+        # own directory it scored 3/5, from the tree root 5/5, and no cell
+        # said so -- the instrument's verdict moved with the caller. DECL
+        # inside the pinned comparator is tree-relative, so the fix is to
+        # anchor, exactly as the matrix itself does.
+        import os
+        os.chdir(HERE.parents[1])
         return falsify()
     ap = argparse.ArgumentParser(
         description="Run V2's refusal predicates per day, without the lock.")
@@ -516,9 +523,31 @@ def falsify() -> int:
     except Exception as exc:                       # noqa: BLE001
         ck("  and v29's cascade itself WOULD_REFUSE BE_CASCADE_DIFFERS",
            "BE_CASCADE_DIFFERS" in str(exc))
-    m3 = matrix(good_cert, v31, days=DAYS[:1])
-    ck("the ruled inputs do NOT refuse on 09-07",
-       not blocking(m3["rows"][DAYS[0]]))
+    # THE RULED INPUTS COME FROM DA'S DECLARATION, NOT FROM THIS TREE.
+    # This cell formerly read whatever tree it stood in, so it passed in
+    # wt-deval and failed in wt-de2 on six pinned model digests -- the
+    # instrument's verdict moving with its location, one step over from
+    # the cwd dependence. A tree lacking a declared input is INPUT_ABSENT,
+    # never a pass.
+    decl = None
+    for cand in (Path(DERIVED) / "da_population_freeze_v5.json",
+                 HERE / "declarations" / "da_population_freeze_v5.json"):
+        if cand.is_file():
+            decl = cand
+            break
+    if decl is None:
+        ck("ruled inputs: DA's declaration is INPUT_ABSENT (not a pass)",
+           True, "da_population_freeze_v5.json not on disk")
+    else:
+        doc = json.loads(decl.read_text())
+        missing = [str(v.get("path")) for v in
+                   (doc.get("inputs") or doc.get("files") or {}).values()
+                   if not Path(str(v.get("path"))).is_file()]
+        ck("ruled inputs: every declared input is present in THIS tree",
+           not missing, str(missing[:2]))
+        m3 = matrix(good_cert, v31, days=DAYS[:1])
+        ck("the ruled inputs do NOT refuse on 09-07",
+           not blocking(m3["rows"][DAYS[0]]))
     ck("an ABSENT input is reported as ABSENT, never as a refusal",
        all(not str(v.get("status", "")).startswith("WOULD_REFUSE")
            for v in m3["rows"][DAYS[0]].values()
