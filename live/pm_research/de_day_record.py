@@ -52,6 +52,13 @@ DAY_SLICE_DIFFERS = "WINNER_SOURCE_DAY_SLICE_DIFFERS"
 NO_DAY_SLICE = "RECEIPT_CARRIES_NO_DAY_SLICE_DIGEST"
 #: The field the receipt must carry, agreed with DA before either landed.
 DAY_SLICE_FIELD = "day_slice"
+#: DE 358 (MEM 395): the chain from the NEWEST record must be TOTAL. Mine
+#: forked because every re-emit pointed `supersedes` at the BASE file, so
+#: v3 superseded v1 and a reader walking backwards never saw v2 -- which
+#: was the FREEZE-BUILT book. Ordering is the provenance; a fork loses it.
+CHAIN_FORKED = "SUPERSESSION_CHAIN_FORKED"
+LANDED = "landed"
+FREEZE_BUILT = "freeze_built"
 ARM_MISMATCH = "DAY_RECORD_ARMS_DISAGREE_ON_THE_BOOK"
 
 
@@ -114,6 +121,113 @@ def stage0_evidence(day: str, derived: Path = DERIVED,
         f"REFUSED {NO_STAGE0}: no structured verdict and no log line for "
         f"{day}. A gate whose verdict is recorded nowhere is "
         f"indistinguishable from a gate that never ran.")
+
+
+def day_records(day: str, derived: Path = DERIVED) -> list:
+    """Every DAY-NAMED record for one day, oldest name first."""
+    c = day.replace("-", "")
+    base = Path(derived) / "fwd_v2" / f"p003_de_forward_value_{c}.json"
+    out = [base] if base.is_file() else []
+    n = 2
+    while True:
+        f = base.with_name(f"p003_de_forward_value_{c}_v{n}.json")
+        if not f.is_file():
+            break
+        out.append(f)
+        n += 1
+    return out
+
+
+def walk_supersession(day: str, derived: Path = DERIVED) -> dict:
+    """From the NEWEST record, does `supersedes` reach every other one?
+
+    A fork is not a bad link -- each link is valid on its own -- it is an
+    UNREACHABLE record, and the thing it loses is the one a cold reader
+    most needs: 09-07's freeze-built book went missing from the chain
+    while every individual record stayed coherent.
+    """
+    files = day_records(day, derived)
+    if not files:
+        return {"day": day, "n_records": 0, "total": True, "walk": []}
+    newest = files[-1]
+    # A HISTORICAL FORK CANNOT BE UNFORKED BY EDITING THE OLD RECORD --
+    # never edit a landed artifact. So the NEWEST record repairs the chain
+    # by naming what its own `supersedes` line cannot reach, and the walk
+    # follows both links. The ordering is still the provenance; the repair
+    # is additive and visible.
+    seen, walk, queue = set(), [], [newest]
+    while queue:
+        cur = queue.pop(0)
+        if cur is None or not cur.is_file() or str(cur) in seen:
+            continue
+        seen.add(str(cur))
+        walk.append(cur.name)
+        doc = json.loads(cur.read_text())
+        nxt = (doc.get("supersedes") or {}).get("path")
+        if nxt:
+            queue.append(Path(nxt))
+        for extra in (doc.get("also_supersedes") or []):
+            if extra.get("path"):
+                queue.append(Path(extra["path"]))
+    unreachable = [f.name for f in files if str(f) not in seen]
+    return {"day": day, "newest": newest.name, "walk": walk,
+            "n_records": len(files), "unreachable": unreachable,
+            "total": not unreachable,
+            "refusal": (f"REFUSED {CHAIN_FORKED}: walking `supersedes` "
+                        f"from {newest.name} never reaches {unreachable}"
+                        if unreachable else None)}
+
+
+def assert_chain_total(day: str, derived: Path = DERIVED) -> dict:
+    w = walk_supersession(day, derived)
+    if not w["total"]:
+        raise SystemExit(w["refusal"])
+    return w
+
+
+def book_lineage(day: str, this_book: str | None, this_admitted,
+                 derived: Path = DERIVED) -> dict:
+    """WHICH BOOK THIS RECORD IS ABOUT, and which record is the day's result.
+
+    Two records for one day may legitimately describe DIFFERENT books: the
+    LANDED book (pre-freeze, produced under its prior pin) and the
+    FREEZE-BUILT rebuild. Under R-908/R-910 the landed-book record stands
+    as the day's result and the freeze-built one is the CONSISTENCY PROOF.
+    A reader must not have to infer that from two digests.
+    """
+    def lineage_of(admitted) -> str:
+        # A PRE-FREEZE BOOK ADMITS UNDER NO ARM: `admitted_by` is None
+        # because the freeze's build rule did not exist when it was built.
+        return LANDED if not admitted else FREEZE_BUILT
+    others = []
+    for f in day_records(day, derived):
+        doc = json.loads(f.read_text())
+        b = doc.get("book_sha256")
+        adm = (doc.get("admitted_by") or {})
+        adm1 = next((v for v in adm.values() if v), None) if isinstance(
+            adm, dict) else adm
+        if b and b != this_book:
+            others.append({"path": str(f), "sha256": _sha(f),
+                           "book_sha256": b, "lineage": lineage_of(adm1),
+                           "admitted_by": adm1})
+    mine = lineage_of(this_admitted)
+    days_result = None
+    if mine == LANDED:
+        days_result = "THIS RECORD"
+    else:
+        days_result = next((o["path"] for o in others
+                            if o["lineage"] == LANDED), None)
+    return {
+        "this_record": mine, "this_book_sha256": this_book,
+        "decided_by": "book_receipt.admitted_by -- a pre-freeze book "
+                      "admits under no arm, a freeze-built one under "
+                      "EXACT or DESCENDANT",
+        "other_books_for_this_day": others,
+        "the_days_result": days_result,
+        "why": "R-908/R-910: the landed-book record stands as produced "
+               "under its prior pin; the freeze-built record is the "
+               "consistency proof, not a second day result",
+    }
 
 
 def day_slice(day: str, cells: dict) -> dict:
@@ -419,6 +533,14 @@ def build(day: str, cells_dir: Path, n_declared: int = 7,
         "n_draws": first["n_draws"], "seed_cli": 0,
         "stage0": stage0,
         "settlement_source": disclosure,
+        "book_lineage": book_lineage(
+            day, first.get("book_sha256"),
+            next(((c.get("book_receipt") or {}).get("admitted_by")
+                  for c in ({a: dict(four_fields(cells[a]["result"]),
+                                     book_receipt=cells[a]["result"][
+                                         "book_receipt"])
+                             for a in arms}).values()), None),
+            derived),
         "book_sha256_field": first.get("book_sha256"),
         "winner_source_sha256_field": (
             (first.get("winner_source") or {}).get("sha256")),
@@ -600,6 +722,54 @@ def falsify() -> int:
            and prior["path"] == str(f) and f.is_file(),
            f"{nxt.name} then {nxt2.name}")
 
+    # --- DE 358: THE CHAIN FROM THE NEWEST RECORD MUST BE TOTAL --------
+    with tempfile.TemporaryDirectory() as td:
+        fv = Path(td) / "fwd_v2"
+        fv.mkdir(parents=True)
+        def rec(name, sup=None, book="b" * 64):
+            d = {"day": "2026-09-30", "book_sha256": book, "cells": {}}
+            if sup:
+                d["supersedes"] = {"path": str(fv / sup),
+                                   "sha256": _sha(fv / sup)}
+            (fv / name).write_text(json.dumps(d))
+        rec("p003_de_forward_value_20260930.json")
+        rec("p003_de_forward_value_20260930_v2.json",
+            "p003_de_forward_value_20260930.json")
+        rec("p003_de_forward_value_20260930_v3.json",
+            "p003_de_forward_value_20260930_v2.json")
+        total = walk_supersession("2026-09-30", Path(td))
+        # THE FORK: v4 points past v3 at the base, exactly as mine did.
+        rec("p003_de_forward_value_20260930_v4.json",
+            "p003_de_forward_value_20260930.json")
+        forked = walk_supersession("2026-09-30", Path(td))
+        try:
+            assert_chain_total("2026-09-30", Path(td))
+            refused = ""
+        except SystemExit as exc:
+            refused = str(exc)
+    ck("a chain pointing at the NEWEST prior reaches every record",
+       total["total"] and len(total["walk"]) == 3,
+       " <- ".join(x.split("_")[-1] for x in total["walk"]))
+    ck("a re-emit pointing past the newest FORKS, and the walk says which "
+       "file is unreachable",
+       not forked["total"]
+       and forked["unreachable"] == ["p003_de_forward_value_20260930_v2.json",
+                                     "p003_de_forward_value_20260930_v3.json"],
+       str(forked["unreachable"]))
+    ck("  and the check REFUSES by name rather than reporting a count",
+       CHAIN_FORKED in refused and "_v2.json" in refused,
+       refused[:70])
+    for _d in ("2026-09-07", "2026-09-08", "2026-09-09"):
+        _w = walk_supersession(_d)
+        if not _w["total"]:
+            print(f"  [RESIDUE] {_d} chain is FORKED: "
+                  f"{_w['unreachable']} unreachable from {_w['newest']}")
+    ck("every landed day's chain is TOTAL",
+       all(walk_supersession(_d)["total"]
+           for _d in ("2026-09-07", "2026-09-08", "2026-09-09")),
+       ", ".join(f"{_d}:{walk_supersession(_d)['total']}"
+                 for _d in ("2026-09-07", "2026-09-08", "2026-09-09")))
+
     # --- DE 357: THE DAY SLICE IS THE KEY, BOTH DIRECTIONS ------------
     import calendar as _cal
     with tempfile.TemporaryDirectory() as td:
@@ -779,19 +949,30 @@ def next_version_path(out: Path) -> tuple:
     supersession.
     """
     out = Path(out)
-    if not out.is_file():
-        return out, None
-    prior = {"path": str(out), "sha256": _sha(out),
-             "kept_as": "provenance, unedited (rule 13)"}
-    stem, n = out.stem, 2
-    if stem.endswith(tuple(f"_v{i}" for i in range(2, 20))):
-        stem, _, tail = stem.rpartition("_v")
-        n = int(tail) + 1
+    stem = out.stem
+    if stem.endswith(tuple(f"_v{i}" for i in range(2, 40))):
+        stem = stem.rpartition("_v")[0]
+    base = out.with_name(f"{stem}{out.suffix}")
+    # THE PRIOR IS THE NEWEST RECORD, NOT THE BASE. Pointing every re-emit
+    # at the base file is what forked 09-07: v3 superseded v1 and the
+    # freeze-built v2 became unreachable from the newest record.
+    existing = [base] if base.is_file() else []
+    n = 2
     while True:
         cand = out.with_name(f"{stem}_v{n}{out.suffix}")
         if not cand.is_file():
-            return cand, prior
+            break
+        existing.append(cand)
         n += 1
+    if not existing:
+        return base, None
+    newest = existing[-1]
+    return (out.with_name(f"{stem}_v{n}{out.suffix}"),
+            {"path": str(newest), "sha256": _sha(newest),
+             "kept_as": "provenance, unedited (rule 13)",
+             "chain_is_total": "this names the NEWEST prior record, so a "
+                               "reader walking `supersedes` backwards "
+                               "reaches every record for this day"})
 
 
 def main(argv=None) -> int:
@@ -827,6 +1008,20 @@ def main(argv=None) -> int:
     out, prior = next_version_path(out)
     if prior:
         rec["supersedes"] = prior
+        # WHAT THE CHAIN CANNOT REACH FROM HERE, NAMED HERE. Measured by
+        # walking from the prior record before this one is written.
+        reach = walk_supersession(a.day, DERIVED)
+        reached = set(reach["walk"])
+        extra = [f for f in day_records(a.day, DERIVED)
+                 if f.name not in reached and str(f) != prior["path"]]
+        if extra:
+            rec["also_supersedes"] = [
+                {"path": str(f), "sha256": _sha(f),
+                 "why": "unreachable through `supersedes` because an "
+                        "earlier re-emit of mine pointed past it; named "
+                        "here so the walk from the newest record is TOTAL "
+                        "without editing a landed artifact"}
+                for f in extra]
     out.write_text(json.dumps(rec, indent=1, default=str))
     print(json.dumps({"wrote": str(out), "sha256": _sha(out)[:16]}))
     for line in rec["emit"]["per_day_lines"]:
