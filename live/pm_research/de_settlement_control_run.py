@@ -238,6 +238,35 @@ def _day_key(value) -> str:
     return str(value or "").replace("-", "")
 
 
+DECL_UNPINNED = "DECLARATION_IDENTITY_UNPINNED"
+
+
+def _declaration_pin(decl_dir=None):
+    """The forward-test declaration's DECLARED identity: path AND sha256.
+
+    Looked for in the freeze chain first, then the resolved params. There
+    is deliberately NO glob fallback: a file that merely sorts last is not
+    the one the freeze names, and picking it would let an unpinned
+    declaration widen the build rule.
+    """
+    d = Path(decl_dir) if decl_dir else HERE / "declarations"
+    try:
+        chain = BEN.resolve_frozen_params_pin(d)
+        pin = chain.get("forward_test_declaration")
+        if pin and pin.get("path") and pin.get("sha256"):
+            return pin
+        params_path = d / Path(str((chain.get("pin") or {}).get("path")
+                                   or "")).name
+        if params_path.is_file():
+            pin = json.loads(params_path.read_text()).get(
+                "forward_test_declaration")
+            if pin and pin.get("path") and pin.get("sha256"):
+                return pin
+    except Exception:                              # noqa: BLE001
+        return None
+    return None
+
+
 def _builder_commit_admissible(builder_commit) -> bool:
     """THE DECLARED BUILD RULE, not a second literal.
 
@@ -251,22 +280,23 @@ def _builder_commit_admissible(builder_commit) -> bool:
     import glob as _glob
     import subprocess as _sp
     if builder_commit == PIPELINE_COMMIT:
-        return True
+        return True     # the exact pin: admitted without a declaration
     # RESOLVE BY DECLARED IDENTITY, never "latest by glob": a file that
     # merely sorts last is not the one the freeze names, and picking it
     # would let an unpinned declaration widen the build rule.
-    pin = None
-    try:
-        pin = BEN.resolve_frozen_params_pin(HERE / "declarations").get(
-            "forward_test_declaration")
-    except Exception:                              # noqa: BLE001
-        pin = None
-    if not pin or not pin.get("path") or not pin.get("sha256"):
-        return False          # DECLARATION_IDENTITY_UNPINNED -> exact only
+    pin = _declaration_pin()
+    if not pin:
+        raise SettlementControlRefused(
+            f"REFUSED {DECL_UNPINNED}: no declaration identity is pinned "
+            f"(neither the freeze chain nor the params name a forward-test "
+            f"declaration with a sha256), so the descendant arm has no "
+            f"source it can trust. Only an exact build-pin match passes.")
     dpath = HERE / "declarations" / Path(str(pin["path"])).name
     if not dpath.is_file() or hashlib.sha256(
             dpath.read_bytes()).hexdigest() != pin["sha256"]:
-        return False          # on-disk file is not the declared identity
+        raise SettlementControlRefused(
+            f"REFUSED {DECL_UNPINNED}: {dpath.name} on disk is not the "
+            f"declared identity {str(pin['sha256'])[:16]}.")
     doc = json.loads(dpath.read_text())
 
     def _find(o, key):
@@ -278,10 +308,13 @@ def _builder_commit_admissible(builder_commit) -> bool:
         elif isinstance(o, list):
             for v in o:
                 yield from _find(v, key)
+    # DA 262's keys, read at the names DA declares them under.
     base = next((str(x).split()[0] for x in _find(doc, "BUILD_PIN")), None)
     digests = next(iter(_find(doc, "BUILD_PINNED_DIGESTS")), None)
     if not base or not digests:
-        return False                    # no declared rule -> exact only
+        raise SettlementControlRefused(
+            f"REFUSED {DECL_UNPINNED}: the declared identity carries no "
+            f"BUILD_PIN / BUILD_PINNED_DIGESTS.")
     root = HERE.parents[1]
     if _sp.run(["git", "-C", str(root), "merge-base", "--is-ancestor",
                 base, str(builder_commit)],
@@ -295,6 +328,16 @@ def _builder_commit_admissible(builder_commit) -> bool:
                 blob.stdout).hexdigest() != want:
             return False
     return True
+
+
+def _admissible_or_exact(builder_commit) -> bool:
+    """Exact match always; the descendant arm only when it can resolve."""
+    if builder_commit == PIPELINE_COMMIT:
+        return True
+    try:
+        return _builder_commit_admissible(builder_commit)
+    except SettlementControlRefused:
+        return False
 
 
 def verify_book_receipt(receipt_path, book_sha: str | None, day: str,
@@ -323,7 +366,7 @@ def verify_book_receipt(receipt_path, book_sha: str | None, day: str,
                         == Path(book_path).resolve()))
     if (not digest_valid or not digest_matches
             or _day_key(receipt.get("day")) != _day_key(day)
-            or not _builder_commit_admissible(builder_commit)
+            or not _admissible_or_exact(builder_commit)
             or not path_matches):
         raise SettlementControlRefused(
             f"REFUSED {BOOK_MISMATCH}: loaded day/digest is "

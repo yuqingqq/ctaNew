@@ -1264,8 +1264,21 @@ def ruled_day_set() -> list:
     except Exception:                               # noqa: BLE001
         path = None
     if path is None or not path.is_file():
-        path = Path(__file__).resolve().parents[2] / PARAMS_REL
+        # NO SILENT FALLBACK. Falling back to PARAMS_REL reported a ruled
+        # set the freeze does not name, and `ruled_day_set_read_from` then
+        # reported the wrong source -- a set nobody declared, described as
+        # one that was.
+        raise RunnerRefused(
+            "REFUSED RULED_SET_UNRESOLVED: the freeze chain names no "
+            "params file this tree can read, so there is no ruled set. A "
+            "fallback here would run a set the freeze does not name.")
+    globals()["_RULED_SET_READ_FROM"] = str(path)
     return list(json.loads(path.read_text()).get("days", []))
+
+
+def ruled_day_set_read_from() -> str:
+    """The file the LAST ruled_day_set() actually read -- computed."""
+    return globals().get("_RULED_SET_READ_FROM") or "NOT_YET_READ"
 
 
 def assert_fixture_day_lock(day: str, fixture: bool, *,
