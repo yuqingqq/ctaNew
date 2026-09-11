@@ -27,6 +27,24 @@ if [ "$H" != "$PIN" ]; then
   done
   echo "$(date -u +%H:%M:%SZ) tree $H is a descendant of $PIN; 7/7 computing modules identical"
 fi
+# A FROZEN ORACLE PER RUN. The settlement ledger is live and grew 55
+# records between 09-07's two arms, which refused the combine. The runner
+# takes no oracle path (RESOLUTIONS_REL is a constant in the PINNED
+# runner), but it resolves the DATA ROOT through be_data_root's accepted
+# branch 1_env_PM_DATA_ROOT -- so a snapshot root freezes the oracle with
+# NO pinned edit. Every other path is a symlink, and book/receipt/mask
+# reach the run as absolute CLI args, so only the ledger is frozen.
+SNAP=/home/yuqing/ctaNew-oracle-${compact}
+rm -rf "$SNAP"; mkdir -p "$SNAP/data/pm_5min"
+for e in /home/yuqing/ctaNew/*; do n=$(basename "$e"); [ "$n" = data ] || ln -s "$e" "$SNAP/$n"; done
+for e in /home/yuqing/ctaNew/data/*; do n=$(basename "$e"); [ "$n" = pm_5min ] || ln -s "$e" "$SNAP/data/$n"; done
+for e in /home/yuqing/ctaNew/data/pm_5min/*; do n=$(basename "$e")
+  [ "$n" = resolutions.jsonl ] || ln -s "$e" "$SNAP/data/pm_5min/$n"; done
+cp /home/yuqing/ctaNew/data/pm_5min/resolutions.jsonl "$SNAP/data/pm_5min/resolutions.jsonl"
+SNAP_SHA=$(sha256sum "$SNAP/data/pm_5min/resolutions.jsonl" | cut -d" " -f1)
+SNAP_N=$(wc -l < "$SNAP/data/pm_5min/resolutions.jsonl")
+echo "$(date -u +%H:%M:%SZ) oracle frozen: $SNAP sha ${SNAP_SHA:0:16} records $SNAP_N"
+export PM_DATA_ROOT="$SNAP"
 export BE_WORKTREE="$TREE" DE_VALUATION_EXPECTED_TREE="$TREE"
 cd "$TREE/live/pm_research" || exit 2
 # STAGE 0 distinguishes NOT-YET-BUILT from WRONG.
@@ -61,6 +79,10 @@ rec = {"protocol": "P003_DE_CHAIN_LAUNCH_PROVENANCE_V1", "day": day,
        "launcher_mtime_utc": datetime.datetime.utcfromtimestamp(
            f.stat().st_mtime).isoformat() + "Z",
        "tree_head": head,
+       "oracle_snapshot_root": __import__("os").environ.get("PM_DATA_ROOT"),
+       "oracle_sha256": __import__("hashlib").sha256(
+           Path(__import__("os").environ["PM_DATA_ROOT"],
+                "data/pm_5min/resolutions.jsonl").read_bytes()).hexdigest(),
        "at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat()}
 out = Path("/home/yuqing/ctaNew/data/pm_5min/derived/fwd_v2")
 out.mkdir(parents=True, exist_ok=True)
