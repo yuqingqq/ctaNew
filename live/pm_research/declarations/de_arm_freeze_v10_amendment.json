@@ -1,0 +1,20 @@
+{
+  "protocol": "P003_DE_ARM_FREEZE_V10_AMENDMENT",
+  "version": 10,
+  "amended_at_utc": "2026-09-11T08:44:31.205715+00:00",
+  "amended_by": "DE 269, on the USER's 08:01Z ruling",
+  "rule": "13 -- superseding receipt; v1..v9 unedited",
+  "frozen_parameters": {
+    "params": {
+      "path": "de_multiday_gate1_params_v31.json",
+      "sha256": "dd58223c6e3654a20389843eb27027af9053b87cf3f921e6c26454068f9f8995"
+    }
+  },
+  "WHY": {
+    "reason": "the cascade record follows the build pin the USER ruled at 03:07Z. v31 is v29 with be_cascade re-pointed to 7ed5a9015f75 and NOTHING ELSE MOVED -- computed: every non-cascade field byte-identical to v29.",
+    "no_parameter_moved": true,
+    "what_this_supersedes": "the base freeze's params digest, which named v29",
+    "why_the_base_freeze_could_not_carry_it": "frozen_params() read de_arm_freeze_v1.json ALONE via a literal FREEZE_REL, so every amendment ruled in band was invisible to the guard that enforces the freeze. A receipt series designed to supersede, read by code that only opens v1, was never rule-13 compliant. The resolver is the fix; this amendment is the first thing it resolves.",
+    "PIPELINE_COMMIT_is_unchanged": "7ed5a90 -- it guards the BOOK, and the book has not moved"
+  }
+}

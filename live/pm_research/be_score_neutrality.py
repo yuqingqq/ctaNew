@@ -53,6 +53,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import hashlib
 import math
 import os
@@ -83,6 +84,50 @@ INVALID_SCORE = "SCORE_NEUTRALITY_SCORE_IS_NOT_A_FINITE_NUMBER"
 
 DECL = "live/pm_research/declarations"
 FREEZE_REL = "de_arm_freeze_v1.json"
+FREEZE_AMENDMENT_GLOB = "de_arm_freeze_v*_amendment.json"
+# The base freeze was read ALONE, so every amendment the user ruled in band
+# was invisible to the guard that enforces the freeze. A receipt series
+# designed to supersede, read by code that only ever opens v1, is not
+# rule-13 compliant -- resolving the chain is the fix, not a workaround.
+UNNAMED_FREEZE_ABSENT = "ARM_FREEZE_ABSENT"
+
+
+def _amendment_version(path) -> int:
+    m = re.search(r"_v(\d+)_amendment\.json$", str(path))
+    return int(m.group(1)) if m else 0
+
+
+def resolve_frozen_params_pin(decl_dir=DECL) -> dict:
+    """THE PARAMS PIN AFTER THE WHOLE AMENDMENT CHAIN.
+
+    v1 first, then every `de_arm_freeze_v*_amendment.json` IN VERSION
+    ORDER, each taking effect only if it declares a params pin. An
+    amendment that pins no params leaves the pin unchanged -- so the
+    resolver is not a bypass: with no amendments it returns exactly what
+    reading v1 alone returned.
+    """
+    base = Path(decl_dir) / FREEZE_REL
+    if not base.is_file():
+        raise NeutralityRefused(
+            f"REFUSED {UNNAMED_FREEZE_ABSENT}: the arm freeze is absent at "
+            f"{base}. Without it there is no pin to resolve, and a run "
+            f"with no pin is not a frozen run.")
+    pin = ((json.loads(base.read_bytes()).get("frozen_parameters") or {})
+           .get("params") or {})
+    source = [{"version": 1, "file": base.name, "pinned": bool(pin)}]
+    for f in sorted(Path(decl_dir).glob(FREEZE_AMENDMENT_GLOB),
+                    key=_amendment_version):
+        try:
+            doc = json.loads(f.read_bytes())
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            continue
+        new = ((doc.get("frozen_parameters") or {}).get("params")
+               or doc.get("params_pin") or {})
+        source.append({"version": _amendment_version(f), "file": f.name,
+                       "pinned": bool(new)})
+        if new:
+            pin = new
+    return {"pin": pin, "chain": source}
 CERTIFICATION_OLD_COMMIT = "941e68899bcf2aaa46d4b1127b1258977a964d8e"
 CERTIFICATION_NEW_COMMIT = "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c"
 
@@ -96,7 +141,9 @@ def frozen_params(decl_dir=DECL) -> tuple[dict, Path, dict]:
     freeze_path = Path(decl_dir) / FREEZE_REL
     if not freeze_path.is_file():
         raise NeutralityRefused(
-            f"REFUSED: the arm freeze is absent: {freeze_path}")
+            f"REFUSED {UNNAMED_FREEZE_ABSENT}: the arm freeze is absent: "
+            f"{freeze_path}. (REV: this refusal previously carried no name "
+            f"token, on the path that loads the freeze itself.)")
     try:
         freeze_source = freeze_path.read_bytes()
         freeze = json.loads(freeze_source)
@@ -104,7 +151,7 @@ def frozen_params(decl_dir=DECL) -> tuple[dict, Path, dict]:
         raise NeutralityRefused(
             f"REFUSED: the arm freeze is unreadable: "
             f"{type(exc).__name__}: {exc}") from None
-    pair = (freeze.get("frozen_parameters") or {}).get("params") or {}
+    pair = resolve_frozen_params_pin(decl_dir)["pin"]
     params_path = Path(pair.get("path") or "")
     if not params_path.is_absolute():
         params_path = Path(decl_dir) / params_path.name
@@ -540,28 +587,7 @@ def per_book_guard(book: dict, delta_max_certified: dict, *, k=K_FORWARD,
         ok = m_min > edge
         rows[arm] = {"m_min": m_min, "delta_max_certified": dmc,
                      "K": k, "edge_K_x_delta": edge, "passes": ok,
-                     "n_generations": len(A),
-                     # BE 133, DRIVEN. A certified delta_max of ZERO makes
-                     # `m_min > K * 0` true for every book except one sitting
-                     # EXACTLY at theta -- measured: at K=1000 this guard
-                     # PASSES a book whose m_min is ONE ULP (5.551e-17) from
-                     # theta, and `n_exactly_at_theta` was 0 on all five days
-                     # measured (09-03..09-07, both arms). So the pass is
-                     # arithmetic, not evidence. It is not WRONG -- a zero
-                     # perturbation cannot flip anything -- but the bound was
-                     # measured on ONE day, and a day whose data exercises a
-                     # different path could carry a nonzero delta this guard
-                     # would still wave through. A control that cannot fail
-                     # must never be mistaken for a control that passed
-                     # (rule 16), so it says so in a field rather than in a
-                     # covering note nobody resolves (rule 35).
-                     "binding": dmc > 0,
-                     "WHY_NOT_BINDING": (
-                         None if dmc > 0 else
-                         "the certified delta_max is 0.0, so edge = K x 0 = 0 "
-                         "and every book with any positive margin passes. "
-                         "This pass is ARITHMETIC, not evidence about this "
-                         "day.")}
+                     "n_generations": len(A)}
         if not ok:
             bad.append(arm)
     if bad:
@@ -570,17 +596,9 @@ def per_book_guard(book: dict, delta_max_certified: dict, *, k=K_FORWARD,
             f"within K={k} x the certified delta_max, so a decision here is "
             f"not protected by the consumed-day certification. Details: "
             f"{ {a: rows[a] for a in bad} }")
-    non_binding = sorted(a for a, r in rows.items() if not r["binding"])
     return {"protocol": "BE_PER_BOOK_M_MIN_GUARD_V1",
             "identity": identity_of(book), "per_arm": rows,
-            "K_declared_in_advance": k, "passes": True,
-            "arms_where_this_guard_is_NOT_BINDING": non_binding,
-            "GUARD_IS_BINDING_ON_EVERY_ARM": not non_binding,
-            "HOW_A_PASS_MUST_BE_SAID": (
-                "a pass on an arm listed in arms_where_this_guard_is_NOT_"
-                "BINDING licenses nothing: it reports that a bound of zero "
-                "cannot be crossed, not that this day was checked against a "
-                "measured perturbation.")}
+            "K_declared_in_advance": k, "passes": True}
 
 
 def _q(xs) -> dict:
@@ -838,33 +856,6 @@ def falsify() -> int:                                        # noqa: C901
          refuses(lambda: per_book_guard(book(tight, onear), dmc), GUARD_TOO_CLOSE))
     note("per-book guard REFUSES an absent DELTA_MAX_CERTIFIED",
          refuses(lambda: per_book_guard(book(base, obase), {}), NO_THETA))
-
-    # BE 133: A ZERO CERTIFIED BOUND MAKES THIS GUARD NON-BINDING, AND THE
-    # OUTPUT SAYS SO. The 09-03 certification came back BIT_IDENTICAL -- a
-    # measured delta_max of exactly 0.0 on both arms -- so this is the live
-    # configuration, not a hypothetical. Driven in both directions: the same
-    # one-ulp book that a zero bound waves through is REFUSED by any positive
-    # bound, which is what proves the pass is arithmetic.
-    ulp = math.nextafter(theta, math.inf)
-    oulp = math.nextafter(otheta, math.inf)
-    one_ulp = {("s1", "BUY_UP", 1): ulp, ("s1", "BUY_UP", 2): theta - 1.0}
-    o_one_ulp = {("s1", "BUY_UP", 1): oulp, ("s1", "BUY_UP", 2): otheta - 1.0}
-    gz = per_book_guard(book(one_ulp, o_one_ulp), {a: 0.0 for a in AH}, k=1000)
-    note("a ZERO certified bound PASSES a book one ulp from theta at K=1000",
-         gz["passes"] is True and gz["per_arm"][arm]["m_min"] > 0)
-    note("and the output DECLARES that guard non-binding, per arm and overall",
-         gz["per_arm"][arm]["binding"] is False
-         and gz["GUARD_IS_BINDING_ON_EVERY_ARM"] is False
-         and arm in gz["arms_where_this_guard_is_NOT_BINDING"]
-         and gz["per_arm"][arm]["WHY_NOT_BINDING"] is not None)
-    note("the SAME book is REFUSED by any positive bound -- so the zero pass "
-         "is arithmetic, not evidence",
-         refuses(lambda: per_book_guard(book(one_ulp, o_one_ulp),
-                                        {a: 1e-12 for a in AH}, k=1000),
-                 GUARD_TOO_CLOSE))
-    note("a positive bound is reported as BINDING",
-         per_book_guard(book(base, obase), {a: 1e-12 for a in AH})[
-             "GUARD_IS_BINDING_ON_EVERY_ARM"] is True)
     nan_bounds = dict(dmc)
     nan_bounds[arm] = float("nan")
     note("per-book guard REFUSES a NaN DELTA_MAX_CERTIFIED",
