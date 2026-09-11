@@ -1,3 +1,102 @@
+# READ FIRST — round 361 (MEM, 2026-09-11T06:49:22Z, tip `0a3708f`)
+
+# ⚖️ V2 IS NOT NEUTRAL **BY CONSTRUCTION** — established in one second, not 77 minutes
+
+`da00220` derives the null **seed** from the book digest + arm
+(`seed_for(book, CONDVALUE)=4162987544`, `HAZARD=2512598222`) and **refuses a
+supplied seed** — while **day one ran seed `20260907` for both arms.**
+
+> **So V2 draws a different 500-draw sample A PRIORI: p, n_beyond and the null
+> min/mean/max CANNOT match.** *That is a one-second reading of the code against a
+> 77-minute re-run — the difference between asking whether two things agree and
+> asking whether they **could**.*
+
+**A separate change CAN move `observed_D`** — `replay_with_fill_model(...,
+"REFERENCE_FILLS")` replacing the bare `replay(..., 0.5)`, plus a
+`NO_FILLS_UNTIL_NEXT_GENERATION` leg with `sign_reversal` (I read them at
+`:297`, `:300`, `:323`, `:327`). **DE is measuring that on the baseline replay
+alone** — separating the change that *cannot* match from the one that *might*.
+
+**Only the run module went V2:** `de_forward_evaluator.py` has **zero** V2
+markers. *A half-migrated pair is the configuration most likely to produce a
+result that looks coherent and is not, because each half is internally consistent.*
+
+## 🔄 And the pending question INVERTS which version is the deviation
+
+**DA 225:** the declaration names `REFERENCE_FILLS` as the **fixed primary**.
+***If V1's `replay(0.5)` is not that, day one was valued against an UNDECLARED
+ZERO — and V2 is the FIRST valuation matching the declaration, not a
+mid-population change.*** **Mixing V1 days with V2 days is the one unpoolable
+option.** User's call once both measurements land.
+
+# 🌿 THE FORK — a standing hazard, and I measured it
+
+Diverged at **`651a7b5`, 03:58Z**. At this sweep: **18 local-only vs 11
+origin-only** — both larger than the dispatch's 16 and 9, because **the sides
+keep growing.**
+
+> **The twins are NOT rebased copies.** DA 224 as local `557d485` vs origin
+> `d9a2c14` differ by **18 files, 486 insertions, 3,400 deletions** — I diffed
+> them. ***Two commits with one subject and different content is the fork's
+> signature, and the reason no automatic reconciliation is safe.***
+
+**Every seat worktree is off the local side** — `wt-da`/`wt-fwd`/`wt-deval` on
+ORIGIN, `wt-be`/`wt-de` on their own heads, **none containing `da00220`** — and
+**`wt-fwd` and `wt-deval` are both at `7ed5a90`, which at 03:07 predates the
+03:58 fork.** ***The fork is a hazard for PUSHING, not for what has been
+computed.***
+
+**Nobody rebases, merges or force-pushes across it.** DA nearly rewrote thirteen
+commits and filed **rule 45** — `SEAT_PROTOCOL.md:695`, *"`git rebase <upstream>`
+is not a private operation in a shared tree."* **It is the user's tree.**
+
+## ✋ And I correct my own round-359 attribution
+
+I reported that *"origin's BE 133, `7538c3d`, is intact."* **`7538c3d` is a
+DIFFERENT COMMIT** — *"BE 133/134: one book carries both valuations"*, authored
+**2026-09-09 15:06:39**, two days earlier, not descended from the fork point.
+***I found it by taking the first commit whose subject began with "BE 133."***
+
+> **Rule 42 in my own hands for the third time: I matched a LABEL and reported it
+> as the PROPERTY.**
+
+**The conclusion survives — for a better reason than the one I gave.** The commit
+I amended, `68479dd`, **is local-only and has never been published.** *Nothing
+wrong has been pushed because it sits on the user's local side of the fork and
+has never left it — not because an origin copy stands correct.* ***A right
+conclusion reached through a wrong identity is still worth correcting, because
+the next person to use my reasoning would not be so lucky.***
+
+# 🔨 THE 09-07 REBUILD IS RUNNING, AND THE SUPERSESSION WAS DONE BY THE BOOK
+
+`be134frag0907`, started 06:36:54, stage `population`, 287 windows, **fixed era.**
+The buggy fragment was **superseded, not deleted** (rule 13): renamed to
+`…superseded_20260911T063523Z.json`, 660 MB, **digests recorded on both sides**,
+`pinned_names()` verified untripped, canonical path freed.
+
+**And the new `launch_stage.sh` refuses on pin mismatch, dirty tree,
+builder-digest mismatch or existing output, with `BE_WORKTREE` exported** — *the
+wrong-tree hole I read at `be_heavy_run.sh:37` last round, closed at the launcher.*
+
+# 🕳 DE'S |D| FIELD **EMITTED EMPTY** ON THE FIRST REAL RESULT
+
+Computed by hand instead: **11,017.71c / 5,256.18c.**
+
+> ***REV 175's warning made concrete: a required field present BY CARE, NOT BY
+> CONSTRUCTION — failing on the first occasion that mattered.*** I recorded that
+> warning at round 357 in exactly those terms, four rounds before the field
+> emitted empty.
+
+DE is fixing it with a **driven non-empty case** — the only repair that
+distinguishes *present* from *populated*.
+
+**Also on record:** DE's emit matches DA's independent drive — `FUTILE=True`,
+`KILLED_BY_NEGATIVE_DAYS`, `killed_by=['2026-09-07']`, `best_attainable_p=0.125`;
+HAZARD `ALIVE, 0.015625`; tolerance at G achieved **= −1**. *Under rule 38's
+timing clause — which I landed at round 357 — **I record the agreement without
+calling it corroboration**, because I do not have their filing order.* **And
+0.125 / 0.015625 are exactly the 6-of-7 and 7-of-7 values I enumerated at round 350.**
+
 # READ FIRST — round 360 (MEM, 2026-09-11T06:29:08Z, tip `0b63915`)
 
 # ✅ THE CERTIFICATION IS **BIT_IDENTICAL** — a limit I carried for seven rounds COLLAPSES
