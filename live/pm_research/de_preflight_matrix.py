@@ -536,15 +536,15 @@ def falsify() -> int:
             decl = cand
             break
     if decl is None:
-        ck("ruled inputs: DA's declaration is INPUT_ABSENT (not a pass)",
-           True, "da_population_freeze_v5.json not on disk")
+        print("  [ABSENT] ruled inputs: da_population_freeze_v5.json is "
+              "not on disk -- the cell reports it, never asserts over it")
     else:
         doc = json.loads(decl.read_text())
         missing = [str(v.get("path")) for v in
                    (doc.get("inputs") or doc.get("files") or {}).values()
                    if not Path(str(v.get("path"))).is_file()]
         ck("ruled inputs: every declared input is present in THIS tree",
-           not missing, str(missing[:2]))
+           not missing)
         m3 = matrix(good_cert, v31, days=DAYS[:1])
         ck("the ruled inputs do NOT refuse on 09-07",
            not blocking(m3["rows"][DAYS[0]]))
