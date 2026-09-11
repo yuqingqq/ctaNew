@@ -1,0 +1,25 @@
+{
+ "protocol": "P003_DE_ARM_FREEZE_V19_AMENDMENT",
+ "version": 19,
+ "rule": "13 -- superseding receipt; v1..v18 unedited",
+ "frozen_parameters": {
+  "params": {
+   "path": "de_multiday_gate1_params_v33.json",
+   "sha256": "aeeb818f3bb18c3e00a71616738eb3ea445891e01f35a7bce8490796148a2312"
+  }
+ },
+ "code_freeze_declaration": {
+  "path": "da_code_freeze_declaration_v7.json",
+  "sha256": "ab3cf6198001283c0293a8f392b63eeed06cc112815e15032f7f588f89767aa6"
+ },
+ "supersedes": {
+  "code_freeze_declaration": {
+   "path": "da_code_freeze_declaration_v6.json"
+  }
+ },
+ "WHY": {
+  "reason": "DA 255 -- Q-DE-332 moved de_forward_value_day.py; under the rule that is a freeze move. Base unchanged.",
+  "chain": "v14(v2) -> v15(v3) -> v16(v4) -> v17(v5) -> v18(v6) -> v19(v7)"
+ },
+ "as_of_utc": "2026-09-11T13:51:13Z"
+}
