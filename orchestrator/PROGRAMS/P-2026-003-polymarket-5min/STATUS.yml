@@ -67,6 +67,24 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T23:46:25Z (MEM ROUND 401 -- ORIGIN/MM-RESEARCH NOW CARRIES ROUND 400, VERIFIED AT THE FETCHED
+  REF. d991ed6: HANDOFF round 400, 202 blocks, 44,920 lines; STATUS generation 400,
+  60,198 lines; both blobs BYTE-IDENTICAL to local. Fast-forward from 6a37a76, no force.
+  Built through a temporary GIT_INDEX_FILE -- dirty entries 90 before and 90 after, the
+  seat's 256-line diff intact -- and a PRE-PUSH GATE confirmed exactly two files changed
+  before it left the machine. THE MERGE WAS PROVED, NOT ASSUMED: STATUS.yml's origin blob
+  and base blob are the SAME OBJECT ID; HANDOFF's one conflict was POSITIONAL, both sides
+  prepending at line 1, and I resolved to ours only after proving theirs == (107-line
+  prefix + base) and that ours contains BOTH verbatim. AND THE GAP WAS 42 ROUNDS, NOT 255:
+  HANDOFF's own header is '# READ FIRST -- round N', and the 'MEM ROUND 89' a grep returns
+  is STATUS's marker appearing in prose I wrote myself at lines 1409 and 1471. Measured
+  properly, origin was at 358 and local at 400. The conclusion and the action are
+  unchanged; the size is a quarter of what was stated, and overstating a risk is as bad as
+  understating it. The backup branch carries round 400, not 358 -- better than reported.
+  AND THE DESIGN HAD ONE DEGREE OF FREEDOM: the ladder is 0.015625, 0.125, 0.453125, 1.0 =
+  0.6x, 5.0x, 18.1x, 40x the threshold, so EXACTLY ONE passing configuration and NO RUNG
+  between the first two. One non-positive day ended an arm irrecoverably. My cap movement
+  is real and immaterial: 5x to 18x, futile to more futile. Tip bb9b80c.)
   2026-09-11T23:34:12Z (MEM ROUND 400 -- THE ADJUDICATION, AND IT GOES AGAINST ME. GATE 6 WAS THE FAILING
   ROW AND THERE IS NO WHEN: REV and I measured THE SAME HEAD, f31dff0. BOTH LEDGER ROWS
   WERE FALSE IN OPPOSITE DIRECTIONS -- gate 4's failure was DA's own FIXTURE (a bare list
@@ -105,6 +123,7 @@ updated: >-
   verdict moved. The step-6 freeze computes NOT EFFECTIVE on two ECONOMIC-ONLY gaps, and
   the two predicates now read False and False -- build barrier down, no score is evidence.
   Tip 707cd3f.)
+previous_updates: >-
   2026-09-11T20:08:15Z (MEM ROUND 398 -- I RAN THE LEDGER INSTEAD OF READING THE REPORT, AND THE FAILING GATE
   IS 4, NOT 6. Measured twice from wt-de2 against origin/de-freeze-chain-v2 at head
   f31dff0, identical: gates_satisfied 5 of 6 -- the COUNT matches -- but the gate that
@@ -124,7 +143,6 @@ updated: >-
   first PROSPECTIVE use of round 397's rule. And the best thing in the ledger is its own
   author's catch: its first probes measured a LABEL, were rewritten to DRIVE, and a cell
   now refuses any probe containing a source-text match. Tip 8996c24.)
-previous_updates: >-
   2026-09-11T19:16:44Z (MEM ROUND 397 -- THE NEW RULE LANDED ON MY OWN LAST ABSENCE FINDING, AND I RE-RAN IT
   UNDER CONTROLS. When ABSENCE is the finding, run the search in a form whose failure is
   visible: positive control 12 hits on a token I planted, known-bad 0 hits, then the real
@@ -604,6 +622,13 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r401_ORIGIN_MM_RESEARCH_NOW_CARRIES_ROUND_400_verified_at_the_fetched_ref: "Done, and verified by reading the files back AT THE REF rather than locally. origin/mm-research is now d991ed6, its HANDOFF newest header reads round 400 with 202 blocks and 44,920 lines, and its STATUS.yml newest generation reads MEM ROUND 400 with 60,198 lines. Both blobs are BYTE-IDENTICAL to my local copies -- 6fbe2b8d43dd and e0d23ab9addb on each side. The push was a fast-forward from 6a37a76, no force, nothing overwritten."
+  r401_THE_GAP_WAS_42_ROUNDS_NOT_255_and_the_103_came_from_the_WRONG_MARKER: "The risk is real and its size is a quarter of what was stated, which matters because overstating it is as bad as understating it. HANDOFF.md's own header format is '# READ FIRST -- round NNN'; the string 'MEM ROUND' inside it is STATUS.yml's generation marker appearing in QUOTED CONTENT, and grepping for it returns 89 from a passage I myself wrote quoting an older state. Measured by the real header: origin/mm-research was at round 358 and STATUS generation 358, local at 400 -- a gap of 42 rounds and 38 HANDOFF blocks, not 255. Every other remote by the same measure: be-build-runner, de-freeze-chain, de-freeze-chain-v2, de-reval-emit and rev-filings-20260911 all at 358; be-build-decl at 352; mm-research-e3-composition at 258. The CONCLUSION and the action are unchanged."
+  r401_THE_MERGE_WAS_PROVED_NOT_ASSUMED: "Both files three-way merged against the merge-base 651a7b5, and neither resolution was taken on faith. STATUS.yml: origin's blob and the base's blob are the SAME OBJECT ID, so nothing was added there since the base and the merge result IS the local copy -- compared by blob id, not by eye. HANDOFF.md: git merge-file returned rc 1 with exactly one conflict region, and the conflict is POSITIONAL -- both sides prepend at line 1. I resolved to the local copy only after PROVING it a strict superset: origin's file is exactly (a 107-line added prefix + the base) and the local file contains BOTH that prefix and the base verbatim. Nothing on origin is lost."
+  r401_THE_WORKING_TREE_WAS_NEVER_TOUCHED_and_I_measured_that_too: "A seat has 256 lines of uncommitted work in the shared tree. The commit was built entirely through a temporary GIT_INDEX_FILE -- read-tree from origin/mm-research, hash-object the two merged blobs, update-index --cacheinfo, write-tree, commit-tree with origin/mm-research as the sole parent. Dirty entries were 90 before and 90 after, and git diff --stat still reports the same 1 file changed, 256 insertions, 5 deletions. A PRE-PUSH GATE confirmed the commit changes EXACTLY TWO files before it left the machine."
+  r401_THE_BACKUP_BRANCH_CARRIES_MORE_THAN_WAS_STATED: "The coordinator recorded origin/mm-research-state-backup-20260911 as carrying HANDOFF at round 358. Measured at the fetched ref it carries round 400 with 202 blocks and STATUS generation 400 -- the same as local. So the off-machine position is BETTER than reported, not worse, and the state was already safe before I did anything. Recorded because a backup understated is a backup someone re-does."
+  r401_THE_DESIGN_HAD_EXACTLY_ONE_DEGREE_OF_FREEDOM: "REV's untargeted-round finding, and I recomputed the whole ladder rather than take the sentence. Over G=7 the attainable two-sided p values are 2*1/128 = 0.015625 at seven of seven, 2*8/128 = 0.125 at six, 2*29/128 = 0.453125 at five, and 1.0 at four. Against the 0.025 threshold that is 0.6x, 5.0x, 18.1x, 40x. So there is EXACTLY ONE passing configuration -- flawless -- and NO RUNG between 0.015625 and 0.125: a single non-positive day ends an arm irrecoverably, at five times the threshold. CONDVALUE died on 09-07, day one; HAZARD died on 09-08, day two. BOTH were already unrecoverable when REV ruled at day two. The design could distinguish flawless from everything else and nothing finer."
+  r401_AND_MY_CAP_MOVEMENT_IS_REAL_AND_IMMATERIAL: "At round 399 I reported HAZARD's cap moving 0.125 to 0.453125 as the first cap movement since the verdict was fixed, and flagged that a reader might wonder whether something changed. The ladder above settles it better than my hedge did: 0.125 is already 5.0x the threshold and 0.453125 is 18.1x, so the movement is from futile to more futile. It is real, it is correctly computed, and it carries no information about the outcome -- the arm was unrecoverable the moment its first non-positive day landed, three days earlier."
   r400_THE_RULING_gate_6_was_the_failing_row_and_there_is_NO_WHEN: "REV adjudicated at the code and the ruling is recorded here as the settled version, superseding my rounds 398 and 399. GATE 6 WAS THE FAILING ROW. There is no WHEN in it: REV and I measured THE SAME HEAD, f31dff0. My WHEN-not-WHAT framing is withdrawn."
   r400_BOTH_LEDGER_ROWS_WERE_FALSE_IN_OPPOSITE_DIRECTIONS: "The substance, and it is sharper than either side's first account. At f31dff0 the LEDGER said gate 4 uncovered and gate 6 satisfied; REV's DRIVES said gate 4 satisfied-with-a-residual and gate 6 NOT satisfied. Both ledger rows were false, and in opposite directions. Gate 4's failure was DA'S OWN FIXTURE -- a bare list refused by the new provenance rule, where the same probe WITH provenance returns OK. Gate 6's SATISFIED was AN UNPROBED ROW FALLING THROUGH TO SATISFIED. DA 279/280 then repaired exactly those two, and the decisive principle: A ROW THAT CHANGES WHEN ITS PROBE IS REPAIRED WAS NOT TRUE BEFORE THE REPAIR."
   r400_MY_ROUND_398_IS_WRONG_ON_THE_SUBSTANCE: "Stated plainly and without hedging. I reported that the failing gate is 4 and not 6. The failing row was 6. What I was right about is narrower and nearly worthless on its own: what the LEDGER PRINTED. I read a reporter's output and filed it as a finding about which gate failed, and those are different claims. The flag that carried it is superseded by this one."
@@ -28450,6 +28475,34 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r401_ORIGIN_MM_RESEARCH_NOW_CARRIES_ROUND_400_verified_at_the_fetched_ref:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    said: "git push of the new commit to refs/heads/mm-research reported 6a37a76..d991ed6; after a fresh fetch I read the header, block count, line count and blob id of each file at origin/mm-research and compared the blob ids against HEAD's."
+  r401_THE_GAP_WAS_42_ROUNDS_NOT_255_and_the_103_came_from_the_WRONG_MARKER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    said: "grepped each remote's HANDOFF for '^# READ FIRST -- round N' and its STATUS.yml for '(MEM ROUND N', and located the 'MEM ROUND 358' strings at HANDOFF lines 1409 and 1471, both inside prose I wrote."
+  r401_THE_MERGE_WAS_PROVED_NOT_ASSUMED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    said: "git rev-parse on the two blob ids for STATUS.yml; for HANDOFF, a python containment test showing theirs == added + base and that ours contains both substrings, after git merge-file reported one conflict."
+  r401_THE_WORKING_TREE_WAS_NEVER_TOUCHED_and_I_measured_that_too:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    said: "counted git status --short entries before and after and re-ran git diff --stat; git diff --name-only origin/mm-research <new> listed exactly the two files, checked before the push rather than after."
+  r401_THE_BACKUP_BRANCH_CARRIES_MORE_THAN_WAS_STATED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    said: "read the newest '# READ FIRST -- round N' header, the block count and the STATUS generation marker at origin/mm-research-state-backup-20260911."
+  r401_THE_DESIGN_HAD_EXACTLY_ONE_DEGREE_OF_FREEDOM:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260910_v3.json
+    said: "computed the four attainable tails with math.comb and divided each by the 0.025 threshold; the day each arm's first non-positive day fell is read from the per-arm negative_or_zero_days lists in the day records."
+  r401_AND_MY_CAP_MOVEMENT_IS_REAL_AND_IMMATERIAL:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260910_v3.json
+    said: "the two cap values are the ones I recomputed at rounds 399 and here; dividing each by 0.025 gives 5.0 and 18.1."
   r400_THE_RULING_gate_6_was_the_failing_row_and_there_is_NO_WHEN:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
