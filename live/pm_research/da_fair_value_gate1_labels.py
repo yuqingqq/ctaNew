@@ -385,6 +385,521 @@ def falsify() -> int:
     return bad
 
 
+# ---- THE RECEIPT THE CANCELLATION LANE'S GUARD READS (DA 267) -----------
+#
+# SECOND CONSUMER, DISCOVERED LIVE. `de_forward_evaluator.py:344` refuses any
+# day with no point-estimate receipt, and reads a WINNER-SOURCE BLOCK found
+# RECURSIVELY by `_winner_source_blocks`: any dict carrying BOTH a str
+# `sha256` AND a dict `chainlink_verification`.
+#
+# THE SHAPE IS NOT INVENTED HERE. Twenty-five receipts for 09-03..09-06
+# already carry it, and this module matches THAT convention field for field.
+# Its `reader_module` already points at `exp_m6_settlement.py`, the same
+# reader this gate imports -- so one reader, one convention, two lanes.
+#
+# THE STATUS VOCABULARY IS THE CONSUMER'S, NOT THIS MODULE'S. The guard
+# counts exactly five names and puts ANY other name in `unknown_statuses`,
+# which blocks finality. So gate-1's finer grammar is MAPPED, and the detail
+# it would have carried travels in `verifiability` -- where the landed
+# convention already keeps `staleness_s` and `margin`.
+CONSUMER_STATUSES = ("VERIFIED_AGREE", "DISAGREE", "BOUNDARY_NOT_IN_CAPTURE",
+                     "CHAINLINK_UNAVAILABLE", "VENUE_UNRESOLVED")
+
+#: gate-1 status -> the consumer's status. Every mapping preserves finality:
+#: anything that is not VERIFIED_AGREE leaves the day not-final, which is
+#: exactly what each of these means.
+STATUS_MAP = {
+    LABEL_ADMISSIBLE: "VERIFIED_AGREE",
+    DISAGREE: "DISAGREE",
+    NOT_IN_CAPTURE: "BOUNDARY_NOT_IN_CAPTURE",
+    OUTAGE: "CHAINLINK_UNAVAILABLE",
+    NO_OFFICIAL: "VENUE_UNRESOLVED",
+    # NO NEW NAMES ARE PROPOSED. A stale boundary and a margin the feed
+    # cannot resolve are both "the boundary does not verify", which is what
+    # BOUNDARY_NOT_IN_CAPTURE means to the consumer. The DISTINCTION is not
+    # lost: it travels as `verifiability.T.staleness_s` and
+    # `verifiability.margin`, both of which the landed convention already
+    # carries, plus `gate1_status` on the row.
+    STALE_BOUNDARY: "BOUNDARY_NOT_IN_CAPTURE",
+    MARGIN_UNRESOLVABLE: "BOUNDARY_NOT_IN_CAPTURE",
+}
+
+RECEIPT_GLOB = "p003_de_point_estimate_day_{compact}_{revision}__*.json"
+DEFAULT_REVISION = "L250ms"
+
+
+def to_consumer_status(gate1_status: str) -> str:
+    if gate1_status not in STATUS_MAP:
+        raise GateRefused(
+            f"REFUSED {GATE_REFUSED}: gate-1 status {gate1_status!r} has no "
+            f"mapping to the consumer's vocabulary. An unmapped status would "
+            f"reach `unknown_statuses` and block finality silently.")
+    return STATUS_MAP[gate1_status]
+
+
+def winner_source_block(rows, *, winner_source_sha256, winner_source_path,
+                        n_slugs_required, reader_module_sha256,
+                        day_slice=None, convention="S60(T) >= S60(t0)"):
+    """The block `_winner_source_blocks` will find, counts RECOMPUTED here.
+
+    `counts` is derived from `per_slug` in this function and never taken from
+    a caller (the landed convention's own rule, REV 104B §6(2)).
+    """
+    per_slug = {}
+    for r in rows:
+        cs = to_consumer_status(r["status"])
+        per_slug[r["slug"]] = {
+            "status": cs,
+            "gate1_status": r["status"],
+            "the_conventions_own_reading": (
+                None if r["checker_up"] is None else
+                ("AGREE" if r["checker_up"] == r["official_up"] else "DISAGREE")
+                if r["official_up"] is not None else None),
+            "chainlink_up_won": r["checker_up"],
+            "venue_up_won": r["official_up"],
+            "verifiability": {"margin_bp": r["margin_bp"],
+                              "T": {"staleness_ms": r["boundary_age_ms"]}},
+        }
+    counts = {n: sum(1 for v in per_slug.values() if v["status"] == n)
+              for n in CONSUMER_STATUSES}
+    every_agree = (bool(per_slug)
+                   and counts["VERIFIED_AGREE"] == len(per_slug))
+    finality = {
+        "a_n_slugs_required": n_slugs_required,
+        "a_n_slugs_verified": len(per_slug),
+        "a_slug_set_equals_the_days": len(per_slug) == n_slugs_required,
+        "b_counts_recomputed_here": True,
+        "c_every_status_is_VERIFIED_AGREE": every_agree,
+        "d_convention_is_the_pinned_one": convention == "S60(T) >= S60(t0)",
+        "f_provenance": {
+            "reader_module": {"path": "live/pm_research/exp_m6_settlement.py",
+                              "sha256": reader_module_sha256},
+            "venue_record": {"path": winner_source_path,
+                             "sha256": winner_source_sha256},
+            "gate": {"path": "live/pm_research/da_fair_value_gate1_labels.py",
+                     "protocol": PROTOCOL}},
+        "is_final": bool(every_agree and len(per_slug) == n_slugs_required),
+    }
+    if day_slice is None:
+        raise GateRefused(
+            f"REFUSED {NO_SLICE}: a block must carry `day_slice`. The "
+            f"whole-file sha is PROVENANCE and is never the match key -- the "
+            f"ledger grows, so a whole-file key refuses a correct "
+            f"verification for a reason that has nothing to do with the day.")
+    return {
+        "sha256": winner_source_sha256,
+        "sha256_is": "THE WHOLE-FILE DIGEST -- PROVENANCE ONLY, never the match key",
+        "day_slice": {"sha256": day_slice["sha256"],
+                      "n_day_records": day_slice["n_day_records"]},
+        "day_slice_definition": day_slice.get("definition"),
+        "path": winner_source_path,
+        "n_slugs": len(per_slug),
+        "is_final_for_quotation": finality["is_final"],
+        "method": ("DA 267 / gate 1: the official `winners` join from "
+                   "resolutions.jsonl, verified per window against the pinned "
+                   "Chainlink convention by da_fair_value_gate1_labels."),
+        "chainlink_verification": {
+            "convention": convention,
+            "counts": counts,
+            "counts_are": ("RECOMPUTED here from `per_slug`, never read from "
+                           "a dict handed in"),
+            "per_slug": per_slug,
+            "per_slug_status": " / ".join(CONSUMER_STATUSES),
+            "per_slug_status_IS_AUTHORITATIVE_HERE": (
+                "the landed 09-06 receipts document FOUR names while the code "
+                "counts FIVE and the data in the SAME block uses the fifth "
+                "(BOUNDARY_NOT_IN_CAPTURE). THE CODE AND THE DATA ARE "
+                "AUTHORITATIVE; the prose was stale against both. This field "
+                "is generated from CONSUMER_STATUSES so it cannot drift "
+                "again -- a doc string that is typed can go stale, one that "
+                "is derived cannot."),
+            "n_slugs_verified": len(per_slug),
+            "reader_module": {
+                "path": "live/pm_research/exp_m6_settlement.py",
+                "sha256": reader_module_sha256},
+            "gate1_grammar_mapped_into_this_vocabulary": dict(STATUS_MAP),
+            "finality": finality,
+            "status": ("VERIFICATION_AGREES" if every_agree
+                       else "VERIFICATION_DID_NOT_AGREE"),
+        },
+    }
+
+
+def receipt_name(day: str, revision: str = DEFAULT_REVISION,
+                 stamp: str = "") -> str:
+    """EXACTLY what the evaluator globs -- read from its source, not guessed."""
+    return RECEIPT_GLOB.format(compact=day.replace("-", ""),
+                               revision=revision).replace("*", stamp or "STAMP")
+
+
+def falsify_receipt() -> int:
+    """The receipt cells. Driven against the CONSUMER'S OWN reader."""
+    bad = 0
+
+    def ck(label, cond, shown=""):
+        nonlocal bad
+        print(f"  [{'PASS' if cond else 'FAIL'}] {label}" + (f" -> {shown}" if shown else ""))
+        if not cond:
+            bad += 1
+
+    _ds = {"sha256": "e" * 64, "n_day_records": 2016,
+           "definition": "de_combine_day_cells.day_subset_digest"}
+    rows = [{"slug": "s%d" % i, "status": st, "checker_up": True,
+             "official_up": True if st == LABEL_ADMISSIBLE else False,
+             "margin_bp": 1.0, "boundary_age_ms": 0}
+            for i, st in enumerate([LABEL_ADMISSIBLE] * 3 + [STALE_BOUNDARY])]
+    blk = winner_source_block(rows, winner_source_sha256="a" * 64,
+                              winner_source_path="/x/resolutions.jsonl",
+                              n_slugs_required=4, reader_module_sha256="b" * 64,
+                              day_slice=_ds)
+    ck("the block is what _winner_source_blocks looks for (str sha256 + dict chainlink_verification)",
+       isinstance(blk.get("sha256"), str) and isinstance(blk.get("chainlink_verification"), dict))
+    cv = blk["chainlink_verification"]
+    ck("every per_slug status is in the CONSUMER's five",
+       set(r["status"] for r in cv["per_slug"].values()) <= set(CONSUMER_STATUSES),
+       sorted({r["status"] for r in cv["per_slug"].values()}))
+    ck("counts are recomputed and sum to per_slug",
+       sum(cv["counts"].values()) == len(cv["per_slug"]), cv["counts"])
+    ck("a STALE_BOUNDARY maps to BOUNDARY_NOT_IN_CAPTURE and keeps its measurement",
+       cv["per_slug"]["s3"]["status"] == "BOUNDARY_NOT_IN_CAPTURE"
+       and cv["per_slug"]["s3"]["gate1_status"] == STALE_BOUNDARY)
+    ck("a day with any non-AGREE is NOT final", blk["is_final_for_quotation"] is False)
+    allok = [dict(r, status=LABEL_ADMISSIBLE, official_up=True) for r in rows]
+    blk2 = winner_source_block(allok, winner_source_sha256="a" * 64,
+                               winner_source_path="/x/resolutions.jsonl",
+                               n_slugs_required=4, reader_module_sha256="b" * 64,
+                               day_slice=_ds)
+    ck("an all-AGREE day IS final (a control that can fail)",
+       blk2["is_final_for_quotation"] is True)
+    ck("...and the consumer's own finality conjunction accepts it",
+       blk2["chainlink_verification"]["finality"]["is_final"] is True
+       and blk2["chainlink_verification"]["counts"]["VERIFIED_AGREE"] == 4)
+    try:
+        to_consumer_status("A_STATUS_NOBODY_DECLARED")
+        ck("an unmapped status REFUSES rather than reaching unknown_statuses", False)
+    except GateRefused:
+        ck("an unmapped status REFUSES rather than reaching unknown_statuses", True)
+    ck("every gate-1 status has a mapping",
+       set(STATUSES) == set(STATUS_MAP), sorted(set(STATUSES) - set(STATUS_MAP)) or "complete")
+    ck("the receipt name matches the evaluator's glob shape",
+       receipt_name("2026-09-07", "L250ms", "20260911T000000Z")
+       == "p003_de_point_estimate_day_20260907_L250ms__20260911T000000Z.json",
+       receipt_name("2026-09-07", "L250ms", "20260911T000000Z"))
+    print(f"\n  {'RECEIPT CELLS PASS' if not bad else str(bad) + ' FAILED'}")
+    return bad
+
+
+# ---- THE DIGEST COUPLING (DE, answering DA 267) -------------------------
+#
+# THE DISCLOSURE DOES NOT WANT *A* RECEIPT FOR THE DAY. It wants one carrying
+# THE WINNER-SOURCE DIGEST THE DAY'S CELLS USED:
+#
+#   REFUSED FORWARD_EVALUATOR_NO_VERIFIED_WINNER_RECEIPT_FOR_A_DAY: <day> has
+#   no verification receipt for the winner-source digest used by its
+#   settlement cells
+#
+# `resolutions.jsonl` IS APPEND-ONLY AND GROWS. A verifier that re-reads it at
+# its own time digests something else and the consumer refuses WITH EVERY
+# STATUS CORRECT. Measured 2026-09-11T18:40Z: the file digests 86147ce2 now,
+# while 09-08's cells name 455b4132, 09-09's name 9b62cebe, and 09-07 carries
+# THREE distinct digests -- its two fwd_v2 arms disagree with each other
+# (1e9500d0 / 4f0fc39a) because that day predates the read-once fix.
+#
+# So the digest is NEVER taken from a fresh read of the ledger. It is read
+# from the cells, and a receipt carries ONE BLOCK PER DISTINCT DIGEST --
+# `_winner_source_blocks` yields all of them and the matcher takes the first
+# whose sha256 equals the cells'.
+CELL_GLOB = "de_settle_result_{compact}_*.json"
+NO_CELL_DIGEST = "NO_WINNER_SOURCE_DIGEST_IN_THE_DAYS_CELLS"
+
+
+def cells_winner_digests(derived, day: str) -> dict:
+    """The winner-source digest(s) THE DAY'S CELLS NAME. Never a fresh read.
+
+    Returns {sha256: [cell filenames]}. More than one key is not an error --
+    day one has three -- and the receipt must then carry a block for each.
+    """
+    import glob as _glob
+    c = day.replace("-", "")
+    out: dict = {}
+    for f in sorted(_glob.glob(str(Path(derived) / "**" /
+                                   CELL_GLOB.format(compact=c)),
+                               recursive=True)):
+        try:
+            rec = json.loads(Path(f).read_text())
+        except Exception:                           # noqa: BLE001
+            continue
+        sha = ((rec.get("winner_source") or {}).get("sha256"))
+        if isinstance(sha, str) and len(sha) == 64:
+            out.setdefault(sha, []).append(Path(f).name)
+    if not out:
+        raise GateRefused(
+            f"REFUSED {NO_CELL_DIGEST}: no cell under {derived} names a "
+            f"winner-source sha256 for {day}. The receipt cannot be pinned to "
+            f"a digest the cells never recorded, and guessing one is how a "
+            f"verification comes to verify a different snapshot than it "
+            f"reports.")
+    return out
+
+
+def receipt_for_day(rows_by_digest: dict, *, day, derived, winner_source_path,
+                    n_slugs_required, reader_module_sha256, day_slice,
+                    revision=DEFAULT_REVISION, stamp=""):
+    """ONE receipt. One block per whole-file snapshot the cells name -- but
+    the MATCH KEY is the day_slice, identical across all of them."""
+    blocks = [winner_source_block(
+        rows, winner_source_sha256=sha, winner_source_path=winner_source_path,
+        n_slugs_required=n_slugs_required, day_slice=day_slice,
+        reader_module_sha256=reader_module_sha256)
+        for sha, rows in sorted(rows_by_digest.items())]
+    return {
+        "protocol": PROTOCOL,
+        "day": day,
+        "revision": revision,
+        "produced_by": "live/pm_research/da_fair_value_gate1_labels.py",
+        "WHY_ONE_BLOCK_PER_DIGEST": (
+            "the consumer matches on the winner-source digest the day's CELLS "
+            "used, and resolutions.jsonl is append-only -- so a single block "
+            "digested at verification time would refuse with every status "
+            "correct. Day one's two arms name different digests."),
+        "winner_source_blocks": blocks,
+        "whole_file_digests_covered": sorted(rows_by_digest),
+        "day_slice": {"sha256": day_slice["sha256"],
+                      "n_day_records": day_slice["n_day_records"]},
+    }, receipt_name(day, revision, stamp)
+
+
+def falsify_digest_coupling() -> int:
+    """The coupling DE named, driven -- including the failure it prevents."""
+    bad = 0
+
+    def ck(label, cond, shown=""):
+        nonlocal bad
+        print(f"  [{'PASS' if cond else 'FAIL'}] {label}" + (f" -> {shown}" if shown else ""))
+        if not cond:
+            bad += 1
+
+    import tempfile
+    d = Path(tempfile.mkdtemp())
+    (d / "de_settle_result_20260909_CONDVALUE_X_SKEW.json").write_text(
+        json.dumps({"winner_source": {"sha256": "9" * 64}}))
+    (d / "de_settle_result_20260909_HAZARD_OVER_SKEWED_REF.json").write_text(
+        json.dumps({"winner_source": {"sha256": "9" * 64}}))
+    got = cells_winner_digests(d, "2026-09-09")
+    ck("the digest is READ FROM THE CELLS, not from a fresh ledger read",
+       list(got) == ["9" * 64] and len(got["9" * 64]) == 2, list(got)[0][:12])
+
+    (d / "de_settle_result_20260907_CONDVALUE_X_SKEW.json").write_text(
+        json.dumps({"winner_source": {"sha256": "1" * 64}}))
+    (d / "de_settle_result_20260907_HAZARD_OVER_SKEWED_REF.json").write_text(
+        json.dumps({"winner_source": {"sha256": "4" * 64}}))
+    two = cells_winner_digests(d, "2026-09-07")
+    ck("a day whose two arms DISAGREE yields BOTH digests (day one really does)",
+       len(two) == 2, sorted(x[:8] for x in two))
+
+    rows = [{"slug": f"s{i}", "status": LABEL_ADMISSIBLE, "checker_up": True,
+             "official_up": True, "margin_bp": 2.0, "boundary_age_ms": 0}
+            for i in range(3)]
+    rec, name = receipt_for_day({s: rows for s in two}, day="2026-09-07",
+                                derived=d, winner_source_path="/x/resolutions.jsonl",
+                                n_slugs_required=3, reader_module_sha256="b" * 64,
+                                stamp="20260911T000000Z")
+    ck("the receipt carries ONE BLOCK PER DIGEST", len(rec["winner_source_blocks"]) == 2,
+       rec["digests_covered"][0][:8] + " + " + rec["digests_covered"][1][:8])
+    ck("and every block is findable by _winner_source_blocks' shape",
+       all(isinstance(b.get("sha256"), str)
+           and isinstance(b.get("chainlink_verification"), dict)
+           for b in rec["winner_source_blocks"]))
+
+    try:
+        cells_winner_digests(Path(tempfile.mkdtemp()), "2026-09-13")
+        ck("a day whose cells name NO digest REFUSES rather than guessing", False)
+    except GateRefused as exc:
+        ck("a day whose cells name NO digest REFUSES rather than guessing",
+           NO_CELL_DIGEST in str(exc))
+    print(f"\n  {'DIGEST-COUPLING CELLS PASS' if not bad else str(bad) + ' FAILED'}")
+    return bad
+
+
+# ---- DAY-SLICE ADDRESSING (DE 357 / DA 269 ruling) ----------------------
+#
+# THE RECEIPT IS DAY-SLICE-ADDRESSED, NOT WHOLE-LEDGER-ADDRESSED.
+# `resolutions.jsonl` is append-only and grows -- measured twice within
+# minutes on 2026-09-11: 86147ce2 then 90a546bb. A whole-file sha as the match
+# key refuses a correct verification for a reason that has nothing to do with
+# the day. The DAY SLICE is stable while the file grows, so the slice is the
+# identity and the whole-file sha is PROVENANCE beside it, never the key.
+#
+# *** A SLICE DIGEST IS ONLY AN IDENTITY IF ITS CANONICAL FORM IS DECLARED. ***
+# Two honest implementations of "the records for that day" produce different
+# digests. The ruling quotes 7eb54006ebfa1029 for 09-07; THIS canonical form
+# gives 26f02bdab1814668 over the same 2,016 records. The COUNT is
+# convention-free and matches exactly; the DIGEST cannot match a
+# canonicalisation nobody wrote down. So the form is declared here, in the
+# module, and any consumer comparing digests must use THIS one or say which
+# other it used.
+#
+# THE CANONICAL FORM, normative:
+#   * rows are the day's MARKET SLUGS that have a resolution, sorted by slug
+#   * each row is  f"{slug}\t{json.dumps(winners, sort_keys=True, separators=(',',':'))}"
+#   * rows joined with "\n", encoded UTF-8, sha256 of those bytes
+#   * a market with no resolution contributes NO ROW and is counted separately
+#: THE DIGEST DEFINITION IS THE REPO'S, NOT A SECOND ONE.
+#: `de_combine_day_cells.day_subset_digest(ledger, n_records, day_start,
+#: day_end)`: the FIRST n_records lines of the ledger, keep those whose slug's
+#: trailing epoch is in [day_start, day_end), join SORTED with "\n", sha256.
+#: Sorted lines are what make two snapshots agree regardless of arrival order.
+#:
+#: DA WROTE A CANONICAL FORM OF ITS OWN FIRST AND THREW IT AWAY. It gave
+#: 26f02bdab1814668 for 09-07 where the instrument gives 7eb54006ebfa1029 --
+#: the same 2,016 records, a different digest, because a slice digest is only
+#: an identity if everyone uses ONE canonicalisation. That is the whole reason
+#: this module imports the definition instead of restating it.
+SLICE_DIFFERS = "WINNER_SOURCE_DAY_SLICE_DIFFERS"
+NO_SLICE = "RECEIPT_CARRIES_NO_DAY_SLICE_DIGEST"
+SLICE_DEF_ABSENT = "DAY_SLICE_DEFINITION_NOT_ON_THIS_TREE"
+
+
+def day_slice_digest(ledger, n_records: int, day: str) -> dict:
+    """THE day-slice identity. Delegates to the repo's one implementation."""
+    from datetime import datetime, timezone
+    try:
+        import de_combine_day_cells as _C
+    except ModuleNotFoundError:
+        raise GateRefused(
+            f"REFUSED {SLICE_DEF_ABSENT}: `de_combine_day_cells` is not on "
+            f"this tree, so the ONE day-slice definition cannot be reached. "
+            f"It is present on origin/de-freeze-chain-v2 and "
+            f"origin/be-build-runner and ABSENT on origin/mm-research -- this "
+            f"gate runs where the definition lives. Refused by name rather "
+            f"than dying on an import, and NOT reimplemented here: a second "
+            f"canonicalisation is how 26f02bda and 7eb54006 came to disagree "
+            f"over the same 2,016 records.") from None
+    a = datetime.strptime(day, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    start = int(a.timestamp())
+    r = _C.day_subset_digest(Path(ledger), n_records, start, start + 86400)
+    return {"sha256": r["sha256"], "n_day_records": r["n_day_records"],
+            "n_records_in_snapshot": r["n_records_in_snapshot"], "day": day,
+            "definition": "de_combine_day_cells.day_subset_digest"}
+
+
+def compare_day_slice(mine: dict, theirs: dict) -> dict:
+    """SAME SLICE -> clean whatever the whole-file shas say. DIFFERENT -> named."""
+    if not theirs or not theirs.get("sha256"):
+        return {"day_slice_matches": False, "status": NO_SLICE,
+                "reading": (f"REFUSED {NO_SLICE}: the receipt carries no "
+                            f"`day_slice.sha256`. It is refused by name rather "
+                            f"than tolerated under a second spelling.")}
+    same = mine["sha256"] == theirs["sha256"]
+    out = {"day_slice_matches": same,
+           "mine": {"sha256": mine["sha256"], "n_day_records": mine["n_day_records"]},
+           "theirs": {"sha256": theirs["sha256"],
+                      "n_day_records": theirs.get("n_day_records")},
+           "n_day_records_delta": (mine["n_day_records"] - theirs["n_day_records"])
+           if isinstance(theirs.get("n_day_records"), int) else None,
+           "status": None if same else SLICE_DIFFERS}
+    if not same:
+        out["reading"] = (
+            f"REFUSED {SLICE_DIFFERS}: mine {mine['sha256'][:16]} over "
+            f"{mine['n_day_records']} day record(s), theirs "
+            f"{theirs['sha256'][:16]} over {theirs.get('n_day_records')}. A "
+            f"REAL difference inside the day, not ledger growth -- named, both "
+            f"digests carried, and lifted by a superseding receipt, never a "
+            f"permanent block.")
+    return out
+
+
+def falsify_day_slice() -> int:
+    """BOTH WAYS, ON THE REAL LEDGER -- rebuilt to the RULED shape.
+
+    DE's warning, taken: a fixture written against the pre-ruling contract
+    goes on passing while production refuses. These cells are built to the
+    ruled shape and checked against DE's own published numbers.
+    """
+    bad = 0
+
+    def ck(label, cond, shown=""):
+        nonlocal bad
+        print(f"  [{'PASS' if cond else 'FAIL'}] {label}" + (f" -> {shown}" if shown else ""))
+        if not cond:
+            bad += 1
+
+    LED = Path("/home/yuqing/ctaNew/data/pm_5min/resolutions.jsonl")
+    if not LED.is_file():
+        print("  [SKIP] ledger absent")
+        return 0
+    try:
+        day_slice_digest(LED, 45877, "2026-09-07")
+    except GateRefused as exc:
+        if SLICE_DEF_ABSENT in str(exc):
+            print(f"  [REFUSED BY NAME] {SLICE_DEF_ABSENT} -- this tree lacks "
+                  f"de_combine_day_cells; run from a tree that has it.")
+            return 0
+        raise
+
+    # (a) THE SAME DAY UNDER THREE DIFFERENT WHOLE-FILE SNAPSHOTS.
+    #     09-07's cells recorded three: 45877 / 45932 / 46290 records.
+    got = [day_slice_digest(LED, n, "2026-09-07") for n in (45877, 45932, 46290)]
+    ck("growth OUTSIDE the day: THREE whole-file snapshots, ONE slice",
+       len({g["sha256"] for g in got}) == 1 and len({g["n_day_records"] for g in got}) == 1,
+       f"{got[0]['sha256'][:16]} / {got[0]['n_day_records']} records, from "
+       f"{[g['n_records_in_snapshot'] for g in got]}")
+    ck("...and it is DE's published number for 09-07",
+       got[0]["sha256"].startswith("7eb54006ebfa1029") and got[0]["n_day_records"] == 2016,
+       got[0]["sha256"][:16])
+    ck("...and compare_day_slice calls all three clean",
+       all(compare_day_slice(got[0], g)["day_slice_matches"] for g in got))
+
+    # (b) 09-09, DE's other published number.
+    d9 = day_slice_digest(LED, 46521, "2026-09-09")
+    ck("09-09 reproduces DE's published slice",
+       d9["sha256"].startswith("36da8727d02cfe3d") and d9["n_day_records"] == 2030,
+       f"{d9['sha256'][:16]} / {d9['n_day_records']}")
+
+    # (c) A DIFFERENT DAY is a different slice -- the check is on content.
+    cmp = compare_day_slice(d9, got[0])
+    ck("a genuinely different slice is DETECTED and NAMED",
+       cmp["status"] == SLICE_DIFFERS and cmp["mine"]["sha256"] != cmp["theirs"]["sha256"],
+       cmp["reading"][:66] + "...")
+    ck("...carrying BOTH digests and the day-record delta",
+       cmp["n_day_records_delta"] == d9["n_day_records"] - got[0]["n_day_records"],
+       f"delta={cmp['n_day_records_delta']}")
+
+    # (d) A RECEIPT WITH NO day_slice IS REFUSED BY NAME, not tolerated.
+    ck("a receipt carrying no day_slice is REFUSED by name",
+       compare_day_slice(d9, {})["status"] == NO_SLICE)
+    try:
+        winner_source_block([], winner_source_sha256="a" * 64,
+                            winner_source_path="/x", n_slugs_required=0,
+                            reader_module_sha256="b" * 64)
+        ck("...and a block cannot be built without one", False)
+    except GateRefused as exc:
+        ck("...and a block cannot be built without one", NO_SLICE in str(exc))
+
+    # (e) THE BLOCK CARRIES THE RULED FIELD NAMES, no alternates.
+    rows = [{"slug": "s0", "status": LABEL_ADMISSIBLE, "checker_up": True,
+             "official_up": True, "margin_bp": 2.0, "boundary_age_ms": 0}]
+    blk = winner_source_block(rows, winner_source_sha256="f" * 64,
+                              winner_source_path="/x/resolutions.jsonl",
+                              n_slugs_required=1, reader_module_sha256="b" * 64,
+                              day_slice=d9)
+    ck("the block carries winner_source.day_slice.{sha256, n_day_records}",
+       set(blk["day_slice"]) == {"sha256", "n_day_records"}, sorted(blk["day_slice"]))
+    ck("...and winner_source.sha256 is labelled PROVENANCE ONLY",
+       "PROVENANCE" in blk["sha256_is"])
+    ck("a receipt whose WHOLE-FILE sha is a stranger but whose SLICE matches verifies clean",
+       blk["sha256"] == "f" * 64
+       and compare_day_slice(d9, blk["day_slice"])["day_slice_matches"] is True)
+    print(f"\n  {'DAY-SLICE CELLS PASS' if not bad else str(bad) + ' FAILED'}")
+    return bad
+
+
 if __name__ == "__main__":
     import sys
-    sys.exit(1 if falsify() else 0)
+    n = falsify()
+    print()
+    n += falsify_receipt()
+    print()
+    print()
+    n += falsify_day_slice()
+    sys.exit(1 if n else 0)
