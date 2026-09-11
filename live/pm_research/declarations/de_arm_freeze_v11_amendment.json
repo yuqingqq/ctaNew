@@ -1,0 +1,19 @@
+{
+ "protocol": "P003_DE_ARM_FREEZE_V11_AMENDMENT",
+ "version": 11,
+ "amended_at_utc": "2026-09-11T11:58:22Z",
+ "amended_by": "DA 259, on the coordinator's DA 234 ruling",
+ "rule": "13 -- superseding receipt; v1..v10 unedited",
+ "frozen_parameters": {
+  "params": {
+   "path": "de_multiday_gate1_params_v32.json",
+   "sha256": "bce61adf3353f03211f2314a1a3749370ab2d451106e20362ae6517814d7fd89"
+  }
+ },
+ "WHY": {
+  "reason": "params v32 extends the ruled day list through 2026-09-13; the resolver takes the LAST params pin",
+  "what_this_supersedes": "v10's pin on params v31",
+  "NO_PIN_MOVES": "the build pin stays 7ed5a9015f75 and no module byte changes",
+  "resolver": "be_score_neutrality.frozen_params() walks the amendment chain and takes the highest amendment THAT PINS PARAMS -- driven three ways at Q-DA-438"
+ }
+}
