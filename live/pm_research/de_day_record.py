@@ -176,6 +176,18 @@ def build(day: str, cells_dir: Path, n_declared: int = 7,
         emit["futility"][a]["FUTILE"] for a in arms)
     emit["EVERY_ARM_ALREADY_DEAD"] = all(
         emit["futility"][a]["FUTILE"] for a in arms)
+    # THE FIELD THAT EXISTS TO SAY STOP, COMPUTED (REVIEW 226). It was
+    # null at the moment every arm was dead -- the one place a reader
+    # looks. Never typed: it follows from the futility block beside it.
+    emit["STOP_ADVICE"] = ("STOP_FOR_FUTILITY"
+                           if emit["EVERY_ARM_ALREADY_DEAD"] else "CONTINUE")
+    emit["STOP_ADVICE_why"] = (
+        "every arm is FUTILE at the declared tolerance, so no remaining "
+        "day can change the verdict; futility stopping only ever reduces "
+        "the chance of declaring success"
+        if emit["EVERY_ARM_ALREADY_DEAD"] else
+        "at least one arm can still attain the threshold on the "
+        "remaining days")
     emit["standing_warning"] = EV.standing_warning(n_declared)
     emit["floor_at_the_G_ACHIEVED_SO_FAR"] = EV.day_sign_p(
         len(per_day_D), len(per_day_D), 2)
@@ -212,7 +224,7 @@ def build(day: str, cells_dir: Path, n_declared: int = 7,
                      G_so_far=len(per_day_D), G_declared=n_declared,
                      tolerance_negative_days=tol,
                      ANY_ARM_ALREADY_DEAD=emit["ANY_ARM_ALREADY_DEAD"],
-                     STOP_ADVICE=progress.get("STOP_ADVICE")),
+                     STOP_ADVICE=emit["STOP_ADVICE"]),
         "at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         **({"reproduction": _reproduction(cells, arms, reproduction_of)}
            if reproduction_of else {}),
@@ -314,8 +326,69 @@ def falsify() -> int:
         else:
             ck("arms naming DIFFERENT books refuse by name", False,
                "NO REAL CELLS TO FIXTURE FROM")
+    # REVIEW 226's two residuals, both driven.
+    import de_revaluation_emit as _EM
+    t8 = _EM.unconditional_window_table("2026-09-08")
+    measured = [r for r in t8 if r["gap_seconds"] is not None]
+    shares = sum(r["share_of_day_gap_time"] for r in measured)
+    ck("the 09-08 gap table MEASURES every row, not 43 nulls",
+       len(t8) == 43 and len(measured) == 43
+       and abs(shares - 1.0) < 1e-6,
+       f"{len(measured)}/{len(t8)} rows, shares sum {shares:.9f}, "
+       f"total {sum(r['gap_seconds'] for r in measured):.3f}s")
+    t7 = _EM.unconditional_window_table("2026-09-07")
+    ck("a day whose artifact CANNOT carry the column says so on the row",
+       all(r["gap_seconds"] is None for r in t7)
+       and all(r.get("gap_seconds_unavailable_because") for r in t7),
+       str(t7[0].get("gap_seconds_unavailable_because"))[:64])
+
+    dead = {a: {"FUTILE": True} for a in ("A", "B")}
+    alive = {"A": {"FUTILE": True}, "B": {"FUTILE": False}}
+    def advice(f):
+        every = all(v["FUTILE"] for v in f.values())
+        return "STOP_FOR_FUTILITY" if every else "CONTINUE"
+    ck("STOP_ADVICE is STOP_FOR_FUTILITY when every arm is dead",
+       advice(dead) == "STOP_FOR_FUTILITY", advice(dead))
+    ck("and CONTINUE while one arm is alive",
+       advice(alive) == "CONTINUE", advice(alive))
+
+    with tempfile.TemporaryDirectory() as td:
+        f = Path(td) / "rec.json"
+        f.write_text("{}")
+        nxt, prior = next_version_path(f)
+        nxt.write_text("{}")
+        nxt2, prior2 = next_version_path(f)
+        ck("a re-emit writes vN+1 and NEVER overwrites the prior record",
+           nxt.name == "rec_v2.json" and nxt2.name == "rec_v3.json"
+           and prior["path"] == str(f) and f.is_file(),
+           f"{nxt.name} then {nxt2.name}")
+
     print(f"\n{ok}/{n} cells pass")
     return 0 if ok == n else 1
+
+
+def next_version_path(out: Path) -> tuple:
+    """vN+1 BESIDE THE PRIOR RECORD, WHICH IS NEVER OVERWRITTEN (rule 13).
+
+    My own re-emit at 15:54Z wrote over the 15:52Z record in place. The
+    cells survived as provenance, but the record did not, and a
+    superseding artifact that destroys what it supersedes is not a
+    supersession.
+    """
+    out = Path(out)
+    if not out.is_file():
+        return out, None
+    prior = {"path": str(out), "sha256": _sha(out),
+             "kept_as": "provenance, unedited (rule 13)"}
+    stem, n = out.stem, 2
+    if stem.endswith(tuple(f"_v{i}" for i in range(2, 20))):
+        stem, _, tail = stem.rpartition("_v")
+        n = int(tail) + 1
+    while True:
+        cand = out.with_name(f"{stem}_v{n}{out.suffix}")
+        if not cand.is_file():
+            return cand, prior
+        n += 1
 
 
 def main(argv=None) -> int:
@@ -338,6 +411,9 @@ def main(argv=None) -> int:
         DERIVED / "fwd_v2"
         / f"p003_de_forward_value_{a.day.replace('-', '')}.json")
     out.parent.mkdir(parents=True, exist_ok=True)
+    out, prior = next_version_path(out)
+    if prior:
+        rec["supersedes"] = prior
     out.write_text(json.dumps(rec, indent=1, default=str))
     print(json.dumps({"wrote": str(out), "sha256": _sha(out)[:16]}))
     for line in rec["emit"]["per_day_lines"]:

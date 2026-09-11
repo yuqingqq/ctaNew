@@ -98,8 +98,43 @@ def spine_for_day(day: str, declaration=None, derived=None) -> list:
         w = _find_key(d, "windows")
         if w:
             return table_rows(w)
+        # REVIEW 226 (and 190 on day one): this branch returned ROWS WITH
+        # ONLY A START, so the table rendered 43 rows with every
+        # `gap_seconds` null -- a table that looks like a measurement and
+        # carries none. The day's own artifact HAS the intervals
+        # (`gap_intervals_by_window`: [[t0, t1], ...] per window start),
+        # so the column is DERIVED from it, never left null and never
+        # carried over from another day.
         starts = d.get("gap_bearing_window_starts") or []
-        return [{"window_start": s, "role": "TABLE"} for s in starts]
+        utcs = d.get("gap_bearing_window_starts_utc") or []
+        by_window = d.get("gap_intervals_by_window") or {}
+        rows = []
+        for i, start in enumerate(starts):
+            iv = (by_window.get(str(start))
+                  or by_window.get(start) or [])
+            secs = (round(sum(float(b) - float(a) for a, b in iv), 6)
+                    if iv else None)
+            rows.append({"window_start": start,
+                         "utc": utcs[i] if i < len(utcs) else None,
+                         "gap_seconds": secs,
+                         "n_gap_intervals": len(iv),
+                         "role": "TABLE"})
+        total = sum(r["gap_seconds"] or 0.0 for r in rows)
+        # A NULL MUST SAY WHY. 09-07's artifact predates the interval map
+        # and carries window STARTS only, so its column is genuinely
+        # unavailable -- which is a different statement from "measured and
+        # empty", and the row now makes that difference readable.
+        why = (None if by_window else
+               f"{art.name} carries no `gap_intervals_by_window`; this "
+               f"day's artifact records gap-bearing window STARTS only, "
+               f"so the seconds are UNAVAILABLE, not zero")
+        for r in rows:
+            r["share_of_day_gap_time"] = (
+                round(r["gap_seconds"] / total, 9)
+                if total and r["gap_seconds"] is not None else None)
+            if why:
+                r["gap_seconds_unavailable_because"] = why
+        return table_rows(rows)
     if declaration:
         return declared_windows(declaration)
     raise RevaluationEmitRefused(
@@ -302,11 +337,21 @@ def unconditional_window_table(day: str, derived=None,
     what lets a reader see where the day's gaps sit even when no delta-D
     exists."""
     spine = spine_for_day(day, declaration=declaration, derived=derived)
-    return [{"window_start": w.get("window_start"), "utc": w.get("utc"),
-             "gap_seconds": w.get("gap_seconds"),
-             "n_gap_intervals": w.get("n_gap_intervals"),
-             "share_of_day_gap_time": w.get("share_of_day_gap_time")}
-            for w in spine]
+    # THE REASON TRAVELS WITH THE NULL. Projecting a fixed field list
+    # dropped `gap_seconds_unavailable_because` on the way out, so the
+    # table went back to bare nulls one function after they were
+    # explained.
+    out = []
+    for w in spine:
+        row = {"window_start": w.get("window_start"), "utc": w.get("utc"),
+               "gap_seconds": w.get("gap_seconds"),
+               "n_gap_intervals": w.get("n_gap_intervals"),
+               "share_of_day_gap_time": w.get("share_of_day_gap_time")}
+        if w.get("gap_seconds_unavailable_because"):
+            row["gap_seconds_unavailable_because"] = w[
+                "gap_seconds_unavailable_because"]
+        out.append(row)
+    return out
 
 
 def running_tally(per_day_D: dict, n_declared: int, sided: int = 2) -> dict:
