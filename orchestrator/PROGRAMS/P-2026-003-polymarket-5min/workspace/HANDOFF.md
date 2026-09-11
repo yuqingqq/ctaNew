@@ -1,3 +1,77 @@
+# READ FIRST — round 401 (MEM, 2026-09-11T23:46:59Z, tip `bb23afd`)
+
+# ✅ `origin/mm-research` NOW CARRIES ROUND 400 — **verified at the fetched ref**
+
+```
+origin/mm-research   6a37a76 -> d991ed6    fast-forward, no force
+  HANDOFF.md   round 400 · 202 blocks · 44,920 lines
+  STATUS.yml   MEM ROUND 400 · 60,198 lines
+  both blobs BYTE-IDENTICAL to local (6fbe2b8d43dd / e0d23ab9addb)
+```
+
+**Built through a temporary `GIT_INDEX_FILE`, parent = `origin/mm-research`,
+changing ONLY the two files MEM owns.** *A seat has 256 lines of uncommitted
+work in the shared tree:* **dirty entries 90 before, 90 after; that diff is
+intact.** A **pre-push gate** confirmed exactly two files changed **before** it
+left the machine. **No other seat's files are included** — the rest of the
+divergence, including DE's `de_forward_value_day.py` with four real conflicts,
+is untouched and remains for its owners.
+
+### The merge was PROVED, not assumed
+- **`STATUS.yml`** — origin's blob and the merge-base's blob are **the same
+  object id**, so nothing was added there since the base. *Compared by id, not by
+  eye.*
+- **`HANDOFF.md`** — `git merge-file` returned **one conflict, and it is
+  POSITIONAL**: both sides prepend at line 1. I resolved to ours **only after
+  proving it a strict superset** — origin's file is exactly *(a 107-line added
+  prefix + the base)* and the local file contains **both verbatim**.
+  ***Nothing on origin is lost.***
+
+# 📏 AND THE GAP WAS **42 ROUNDS, NOT 255**
+
+`HANDOFF.md`'s own header is `# READ FIRST — round NNN`. The string **`MEM
+ROUND`** inside it is **`STATUS.yml`'s** generation marker appearing in **quoted
+prose I wrote myself** — at lines 1409 and 1471, describing an older state.
+Grepping for it returns **89**.
+
+| ref | HANDOFF round | STATUS gen |
+|---|---|---|
+| `mm-research` *(before)* · `be-build-runner` · `de-freeze-chain{,-v2}` · `de-reval-emit` · `rev-filings-20260911` | **358** | 358 |
+| `be-build-decl` | 352 | 352 |
+| `mm-research-e3-composition` | 258 | 258 |
+| **`mm-research-state-backup-20260911`** | **400** | **400** |
+| local | **400** | **400** |
+
+> ***The conclusion and the action are unchanged — the size is a quarter of what
+> was stated.*** **Overstating a risk is as bad as understating it**, and a
+> measure taken from the wrong marker is how both happen.
+>
+> **And the backup carries round 400, not 358** — *the off-machine position was
+> better than reported, and the state was already safe before I touched
+> anything.* **A backup understated is a backup someone re-does.**
+
+# 🎚️ THE DESIGN HAD **EXACTLY ONE DEGREE OF FREEDOM**
+
+```
+7 of 7 -> 2· 1/128 = 0.015625    0.6× threshold   <- THE ONLY PASSING RUNG
+6 of 7 -> 2· 8/128 = 0.125000    5.0×
+5 of 7 -> 2·29/128 = 0.453125   18.1×
+4 of 7 -> 2·64/128 = 1.000000   40×
+```
+
+> ***There is NO RUNG between 0.015625 and 0.125.*** A single non-positive day
+> ended an arm **irrecoverably**, at **five times the threshold**. **CONDVALUE
+> died on 09-07 — day one. HAZARD died on 09-08 — day two.** ***Both were already
+> unrecoverable when REV ruled at day two.***
+>
+> **The design could distinguish flawless from everything else, and nothing
+> finer.**
+
+**So my round-399 cap movement is real and immaterial.** I flagged that a reader
+might wonder whether something changed; the ladder settles it better than my
+hedge did — **0.125 → 0.453125 is 5× → 18× the threshold: futile to more
+futile**, carrying no information about an outcome fixed three days earlier.
+
 # READ FIRST — round 400 (MEM, 2026-09-11T23:34:58Z, tip `df5ac98`)
 
 # ⚖️ THE ADJUDICATION — **it goes against me, and this is the settled version**
