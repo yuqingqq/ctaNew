@@ -1,0 +1,139 @@
+{
+  "protocol": "P003_DE_ARM_FREEZE_V6_AMENDMENT",
+  "version": 6,
+  "amended_at_utc": "2026-09-11T02:50:45.328936+00:00",
+  "amended_by": "DE 227",
+  "rule": "13 -- superseding receipt; no prior version edited",
+  "supersedes": [
+    {
+      "version": "1",
+      "path": "de_arm_freeze_v1.json",
+      "commit": "b5f311a",
+      "sha256": "a4749bc77b6eb3590b880bd8bc58c1e8b8099c35864b448130fbedeac839f1e8"
+    },
+    {
+      "version": "2",
+      "path": "de_arm_freeze_v2_amendment.json",
+      "commit": "3fc91e7",
+      "sha256": "84fbe30927aada09acad652d75bd34e671c1a3dbb54aa81853f4accb379fa4f3"
+    },
+    {
+      "version": "3",
+      "path": "de_arm_freeze_v3_amendment.json",
+      "commit": "cc63ccf",
+      "sha256": "0fe428134dd31c632df04e41f1876cb4a0e9cd25cddc5ffb67d41a484fbc2219"
+    },
+    {
+      "version": "4",
+      "path": "de_arm_freeze_v4_amendment.json",
+      "commit": "d9a88b5",
+      "sha256": "422beed28d7fbe9eef33d2817862600c08e8b7cbbd8e35696e89aeaedde1ac9d"
+    },
+    {
+      "version": "5",
+      "path": "de_arm_freeze_v5_amendment.json",
+      "commit": "6c608f1",
+      "sha256": "191f176e1bcc3baa198a1b38d149746bb16a32cdb0b6b98c842285f2c24aaaee"
+    }
+  ],
+  "AMENDMENT_13_THE_FAILED_SCREEN_PHRASE_QUALIFIED": {
+    "THE_QUESTION_PUT_TO_ME": "does 'these arms FAILED their development screen' remain accurate as written?",
+    "MY_ANSWER": "YES, AS WRITTEN -- and the coordinator's reading is correct. It stands on step 2's own instrument and must not be read as a day-level failure.",
+    "WHAT_IT_IS_ACCURATE_ABOUT": {
+      "the_instrument": "the matched-random settlement control, Holm over two arms",
+      "the_actual_primary": [
+        "2026-09-04",
+        "2026-09-05",
+        "2026-09-06"
+      ],
+      "verified_by_recomputation_tonight": {
+        "CONDVALUE_X_SKEW": {
+          "p": 0.0978,
+          "holm_threshold": 0.025
+        },
+        "HAZARD_OVER_SKEWED_REF": {
+          "p": 0.2435,
+          "holm_threshold": 0.05
+        }
+      },
+      "and_this_instrument_COULD_have_passed": "its floor is 1/(1+500) = 0.001996, twelve times under the threshold. The arms were fully capable of clearing it and did not.",
+      "and_they_did_not_MISS_NARROWLY": "0.0978 is ~4x its threshold and 0.2435 is ~5x its. This is not a floor artifact or a near miss."
+    },
+    "WHAT_IT_MUST_NOT_BE_READ_AS": {
+      "the_wrong_reading": "'the arms were tested on the day-level criterion and failed it'",
+      "why_it_is_wrong": "they were not tested on it in any meaningful sense",
+      "computed": {
+        "day_sign_floor_at_the_actual_primary_G3": 0.25,
+        "threshold": 0.025,
+        "ratio": "the floor is TEN TIMES the threshold",
+        "day_sign_floor_at_G4_the_four_day_set": 0.125
+      },
+      "so": "at the G of the development set, conjunct (a) was STRUCTURALLY UNPASSABLE -- unanimous or not."
+    },
+    "AND_THE_FACT_THAT_MAKES_IT_VIVID": {
+      "HAZARD_ran_4_for_4_POSITIVE": [
+        12381.56,
+        7262.38,
+        1177.04,
+        5318.64
+      ],
+      "and_3_for_3_on_the_actual_primary": true,
+      "and_still_could_not_pass_at_that_G": true,
+      "under_the_SIGN_GATE_reading_it_did_not_merely_fail_conjunct_a_IT_PASSED_IT": "HAZARD has NO negative day on the primary. Read as a sign gate, HAZARD CLEARED conjunct (a) and failed only conjunct (b)."
+    },
+    "THE_QUALIFIED_SENTENCE_TO_USE_FROM_HERE": "These arms FAILED their development screen -- on the matched-random settlement control, which was fully capable of passing them and did not (CONDVALUE p=0.0978, HAZARD p=0.2435, Holm over two). THE FAILURE IS CARRIED ENTIRELY BY THAT INSTRUMENT. It is NOT a prior failure on the day-level criterion: at G=3 that criterion floors at 0.25 against a 0.025 threshold and could not have been passed by any result, and under the sign-gate reading HAZARD passed it 3-for-3. THE FORWARD TEST AT G=7 IS THE FIRST TIME CONJUNCT (a) HAS EVER BEEN ATTAINABLE.",
+    "why_this_is_load_bearing": "a reader who believes these arms already failed a day-level test will read a forward INCONCLUSIVE as a second strike. There is no first strike on that conjunct. The count is zero, not one.",
+    "two_statements_the_record_must_keep_apart": [
+      "STEP 2's VERDICT: rests on its own instrument and STANDS.",
+      "THE FORWARD TEST'S CONJUNCT (a), APPLIED RETROSPECTIVELY TO THOSE DAYS: structurally unpassable, and therefore silent about the arms."
+    ]
+  },
+  "AMENDMENT_14_THE_SETTLEMENT_SOURCE_LIMIT_RESOLVED": {
+    "the_limit": "step 2 called `winner_source` WITHOUT `verification=`, so every cent it published is labelled VENUE_RECORD_NOT_VERIFIED_AGAINST_CHAINLINK and is_final_for_quotation=False",
+    "WHICH_PUBLISHED_NUMBERS_CHANGE": "NONE. Read at the day receipts: DISAGREE = 0 on every one of 09-03..09-06.",
+    "per_day_counts_read_from_the_receipts": {
+      "2026-09-03": {
+        "VERIFIED_AGREE": 244,
+        "DISAGREE": 0,
+        "BOUNDARY_NOT_IN_CAPTURE": 2,
+        "final": false
+      },
+      "2026-09-04": {
+        "VERIFIED_AGREE": 288,
+        "DISAGREE": 0,
+        "BOUNDARY_NOT_IN_CAPTURE": 0,
+        "final": true
+      },
+      "2026-09-05": {
+        "VERIFIED_AGREE": 288,
+        "DISAGREE": 0,
+        "BOUNDARY_NOT_IN_CAPTURE": 0,
+        "final": true
+      },
+      "2026-09-06": {
+        "VERIFIED_AGREE": 287,
+        "DISAGREE": 0,
+        "BOUNDARY_NOT_IN_CAPTURE": 1,
+        "final": false
+      }
+    },
+    "what_was_missing_was_the_LABEL_not_the_MONEY": true,
+    "the_dominance_argument_and_its_one_direction": "a cell's fills name a SUBSET of the day's slugs, so if no slug on the day disagrees, no subset disagrees. That licenses DISAGREE=0 for the cells. It does NOT license a finality claim for a day carrying unreachable slugs -- 09-03 and 09-06 stay non-final by 2 and 1 slugs.",
+    "the_fix": "`settlement_source_disclosure` in de_forward_evaluator.py carries the per-day counts and finality on every published figure, and REFUSES a day whose receipt it cannot find rather than publishing an unlabelled cent."
+  },
+  "AMENDMENT_15_THE_STANDING_WARNING_IS_NOW_UNPROMPTED": {
+    "requirement": "the G=7 position must be said on every per-day emit so it is never something someone had to remember",
+    "implemented": "`standing_warning(G)` is appended to EVERY per-day line",
+    "at_G7": "| G=7 tol=0 UNANIMITY REQUIRED -- the first negative day ends that arm",
+    "at_a_G_where_no_pass_is_attainable": "| G=<n> A PASS IS NOT ATTAINABLE AT THIS G (min p=... > 0.025) -- THIS MEASURES THE CALENDAR",
+    "futility_stays_wired": "reported after EVERY day, with the day that killed it named, and with its CAUSE (TEST_IMPOSSIBLE_AT_THIS_G vs KILLED_BY_NEGATIVE_DAYS) so the calendar is never mistaken for the arms"
+  },
+  "UNCHANGED": [
+    "N=7 and the population 09-07..09-13",
+    "every frozen parameter",
+    "the decision rule",
+    "the pin at adbebf9",
+    "Holm m=2 with selection multiplicity 69"
+  ],
+  "nothing_has_been_run_or_read_against_any_day_in_the_population_by_DE": true
+}

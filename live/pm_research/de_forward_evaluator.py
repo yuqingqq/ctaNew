@@ -205,16 +205,99 @@ def resolve_books(root: Path, days, revision: str, coin: str = "btc") -> dict:
 
 
 # ------------------------------------------------------------- reporting --
-def per_day_line(cell: dict, pool: dict) -> str:
-    """The line the user reads, one per (day, arm)."""
-    return (f"DONE {cell['day']} {cell['arm']} "
+def standing_warning(G: int, sided: int = SIDED) -> str:
+    """Said UNPROMPTED on every emit, so it is never something someone had
+    to remember. At G=7 tolerance is 0: the FIRST negative day ends an arm."""
+    tol = tolerance(G, ALPHA / M_FAMILY, sided)
+    if tol < 0:
+        return (f"| G={G} A PASS IS NOT ATTAINABLE AT THIS G "
+                f"(min p={day_sign_p(G, G, sided):.4f} > "
+                f"{ALPHA / M_FAMILY:.3f}) -- THIS MEASURES THE CALENDAR")
+    if tol == 0:
+        return (f"| G={G} tol=0 UNANIMITY REQUIRED -- the first negative "
+                f"day ends that arm")
+    return f"| G={G} tol={tol} negative day(s) survivable"
+
+
+def per_day_line(cell: dict, pool: dict, G: int = None,
+                 sided: int = SIDED) -> str:
+    """The line the user reads, one per (day, arm), carrying the warning."""
+    head = (f"DONE {cell['day']} {cell['arm']} "
             f"D={cell['D']:+.2f} p={pool['p_two_sided']:.6f} "
             f"n={cell['n']} base={cell['baseline_total_cents']:+.2f} "
             f"arm={cell['arm_total_cents']:+.2f}")
+    return head if G is None else f"{head} {standing_warning(G, sided)}"
+
+
+# --------------------------------------------- settlement-source finality --
+NO_RECEIPT = "FORWARD_EVALUATOR_NO_VERIFIED_WINNER_RECEIPT_FOR_A_DAY"
+
+
+def settlement_source_disclosure(days, derived: Path,
+                                 revision: str = "L250ms") -> dict:
+    """R-810's finality, carried on every published cent figure.
+
+    Step 2 called `winner_source` WITHOUT `verification=`, so every cent it
+    published is `VENUE_RECORD_NOT_VERIFIED_AGAINST_CHAINLINK` and
+    `is_final_for_quotation` is False. This reads the per-day verification
+    the day pipeline already computed and carries it.
+
+    WHY A DAY-LEVEL READ IS SUFFICIENT FOR A CELL-LEVEL CLAIM: a cell's
+    fills name a SUBSET of the day's slugs. If no slug on the day
+    disagrees, no subset of them disagrees. The dominance runs one way and
+    only one way -- it licenses `DISAGREE = 0`, never a finality claim for
+    a day carrying unreachable slugs.
+    """
+    import glob as _glob
+    out, all_final = {}, True
+    for d in days:
+        c = d.replace("-", "")
+        fs = sorted(_glob.glob(str(Path(derived) /
+                    f"p003_de_point_estimate_day_{c}_{revision}__*.json")))
+        if not fs:
+            raise EvaluatorRefused(
+                f"REFUSED {NO_RECEIPT}: {d} has no point-estimate receipt "
+                f"under {derived}. A cent figure whose winner source was "
+                f"never verified must say so, and saying so requires the "
+                f"receipt that did the verifying.")
+        rec = json.loads(Path(fs[-1]).read_text())
+
+        def _walk(o, pre=""):
+            if isinstance(o, dict):
+                for k, v in o.items():
+                    yield from _walk(v, pre + "/" + k)
+            elif isinstance(o, list):
+                for i, v in enumerate(o):
+                    yield from _walk(v, pre + f"[{i}]")
+            else:
+                yield pre, o
+        counts = {k.rsplit("/", 1)[1]: v for k, v in _walk(rec)
+                  if "/chainlink_verification/counts/" in k}
+        final = counts.get("DISAGREE", 1) == 0 and all(
+            v == 0 for k, v in counts.items()
+            if k not in ("VERIFIED_AGREE", "DISAGREE"))
+        all_final &= final
+        out[d] = {"counts": counts, "receipt": Path(fs[-1]).name,
+                  "no_slug_disagrees": counts.get("DISAGREE", None) == 0,
+                  "is_final_for_quotation": final,
+                  "why_not_final": (None if final else
+                                    "slugs the Chainlink stream cannot "
+                                    "reach keep finality gated")}
+    return {
+        "per_day": out,
+        "every_day_final_for_quotation": all_final,
+        "THE_LIMIT_THESE_NUMBERS_CARRY": (
+            "step 2 called `winner_source` without `verification=`, so its "
+            "published cents are labelled VENUE_RECORD_NOT_VERIFIED_"
+            "AGAINST_CHAINLINK. The check has since been read from the day "
+            "receipts and NO SLUG DISAGREES on any day, so NO CENT FIGURE "
+            "CHANGES -- what was missing was the label, not the money."),
+    }
 
 
 def evaluate(root: Path, days, *, n_expected: int = None,
-             arms=ARMS, sided: int = SIDED) -> dict:
+             arms=ARMS, sided: int = SIDED, derived: Path = None,
+             revision: str = "L250ms") -> dict:
     """The whole path. `days` REQUIRED; G comes from it, not a constant."""
     days = list(days)
     if not days:
@@ -232,7 +315,7 @@ def evaluate(root: Path, days, *, n_expected: int = None,
     for a in arms:
         for d in days:
             one = AGG.pooled(cells, (d,), a)
-            lines.append(per_day_line(cells[(d, a)], one))
+            lines.append(per_day_line(cells[(d, a)], one, G, sided))
         pool = AGG.pooled(cells, days, a)
         pools.append(pool)
         per_arm[a] = {
@@ -250,7 +333,12 @@ def evaluate(root: Path, days, *, n_expected: int = None,
             "ANY_ARM_ALREADY_FUTILE":
                 any(per_arm[a]["futility"]["FUTILE"] for a in arms),
             "futile_arms": [a for a in arms
-                            if per_arm[a]["futility"]["FUTILE"]]}
+                            if per_arm[a]["futility"]["FUTILE"]],
+            "standing_warning": standing_warning(G, sided),
+            "settlement_source": (
+                settlement_source_disclosure(days, derived, revision)
+                if derived is not None else
+                {"NOT_COMPUTED": "pass derived= to carry R-810 finality"})}
 
 
 # ------------------------------------------------------------- falsifier --
@@ -318,6 +406,27 @@ def falsify() -> int:                                        # noqa: C901
     ck("the draw component does not move with G",
        attainable_min_p(4, 500)["draw_permutation_component"]
        == attainable_min_p(7, 500)["draw_permutation_component"] == 1 / 501)
+
+    # --- STANDING WARNING: said unprompted, and correct at each G --------
+    ck("G=7 emit warns UNANIMITY REQUIRED", "UNANIMITY REQUIRED"
+       in standing_warning(7))
+    ck("G=4 emit warns the pass is NOT ATTAINABLE",
+       "NOT ATTAINABLE AT THIS G" in standing_warning(4)
+       and "MEASURES THE CALENDAR" in standing_warning(4))
+    ck("G=10 emit reports a survivable day", "tol=1" in standing_warning(10))
+    ck("every per-day line carries the warning when G is given",
+       standing_warning(7) in per_day_line(
+           {"day": "d", "arm": "a", "D": 1.0, "n": 500,
+            "baseline_total_cents": 0.0, "arm_total_cents": 1.0},
+           {"p_two_sided": 0.5}, 7))
+
+    # --- FINALITY: refuses a day it cannot evidence ----------------------
+    with tempfile.TemporaryDirectory() as td:
+        try:
+            settlement_source_disclosure(["2026-09-04"], Path(td))
+            ck("finality REFUSES a day with no receipt", False)
+        except EvaluatorRefused as e:
+            ck("finality REFUSES a day with no receipt", NO_RECEIPT in str(e))
 
     # --- HOLM: m = 2, and the step-down thresholds -----------------------
     h = AGG.holm([0.02, 0.03])
