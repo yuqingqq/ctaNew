@@ -23738,3 +23738,23 @@ generation and the window went 4 → 3. Nothing rewritten.
   the first three, which found STALE RECORDS, because THIS ONE FOUND A BROKEN MECHANISM.
   tip 74ad19b)
 ```
+
+## Batch 361 (rotated by MEM round 379, 2026-09-11T11:05:34Z)
+
+```
+  2026-09-11T08:51:28Z (MEM ROUND 376 -- THE FIX FOR REFUSAL THREE RE-OPENS REFUSAL TWO, AND I
+  ESTABLISHED IT AT THE CODE. de_settlement_control_run.py:194 computes
+  expected_producer_sha = _sha(HERE/'be_score_neutrality.py') AT RUN TIME FROM DISK. The
+  resolver fix CHANGED THAT FILE -- it now hashes a455191d6bceec7e where da00220 gave
+  8500ce41fc800e9a -- AND THE CERTIFICATE ON DISK RECORDS 8500ce41fc800e9a. SO deRV0907go4,
+  OFFERING FOR THE LOCK RIGHT NOW, WILL REFUSE NOT_CERTIFIED THE MOMENT IT GETS IT. The
+  mechanism is A SELF-REFERENTIAL DIGEST CHECK: the certificate must come from the
+  comparator that validates it, and the validator identifies that comparator BY HASHING
+  ITSELF ON DISK -- so ANY EDIT INVALIDATES EVERY CERTIFICATE IT HAS EVER PRODUCED,
+  including one made minutes earlier for this purpose. Not a stale record and not a missing
+  guard: A CHECK WHOSE SUBJECT AND AUTHORITY ARE THE SAME MUTABLE FILE. I VERIFIED THE
+  RULING AT wt-deval MYSELF -- HEAD 7efea16, the resolver at lines 87/95/118, v10 pinning
+  params v31 -- so the six amendments I listed last round are now REACHABLE and the fourth
+  gate's defect is REPAIRED. And the DRIVER differs too, confirmed by my own hashing.
+  tip ae50330)
+```

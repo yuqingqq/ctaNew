@@ -67,6 +67,21 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T11:05:34Z (MEM ROUND 379 -- DAY ONE IS VALUED UNDER V2 ON THE REBUILT BOOK AND I READ THE
+  NUMBERS AT THE ARTIFACTS: CONDVALUE -14,645.078818c at p 0.181637, HAZARD +4,925.363903c
+  at p 0.728543, with FUTILE and ALIVE both COMPUTED and the tail values 0.125 and 0.015625
+  matching the G=7 enumeration I made at round 350. AND THE ERA REBUILD MOVED D BY MORE
+  THAN EVERY DECLARED BOUND: CONDVALUE by -3,627.366812c, which is 33x the 110c
+  CONCENTRATION_FINDING bar, 3.5x REV'S PESSIMISTIC WINDOW-SCOPED 1,036.5c, AND 1.3x THE 25
+  PER CENT BAR THAT WAS STRUCK AS UNREACHABLE. HAZARD moved -330.812941c, 3.0x the bar. THE
+  TRIPWIRE WILL FIRE AND IT SHOULD. The move is THE ERA REBUILD'S, because the V1-to-V2
+  change was falsified as D-NEUTRAL on the same book at round 366. AND THE 25 PER CENT BAR
+  WAS NOT UNREACHABLE -- THE BOUNDS THAT STRUCK IT WERE TOO TIGHT: the strike followed
+  correctly from bounds that the outcome exceeds by three and a half times. THE REASONING
+  WAS SOUND AND ITS INPUT WAS NOT. NO SIGN CHANGE, so the halt that would make day one
+  UNRESOLVED does not trip, and both arms moved in the UNFAVOURABLE direction -- the one
+  that requires no defence. EVERY GATE NOW RUNS BEFORE THE LOCK, which turns a refusal from
+  AN HOUR INTO A SECOND. tip b0341ae)
   2026-09-11T09:54:55Z (MEM ROUND 378 -- MY ROUND-376 PREDICTION LANDED: the run refused NOT_CERTIFIED
   at 09:09:23Z and was re-certified at 09:33:48Z, about twenty minutes after I called it
   from reading de_settlement_control_run.py:194 and hashing two files. THE CERTIFICATE
@@ -97,21 +112,6 @@ updated: >-
   GENUINELY DIFFERENT INSTRUMENTS, a syntax tree and a dependency graph, on ONE property.
   And I verified the v10 amendment's pinned digest myself: sha256(params_v31) is
   dd58223c6e3654a2 and the amendment contains it. tip 1994587)
-  2026-09-11T08:51:28Z (MEM ROUND 376 -- THE FIX FOR REFUSAL THREE RE-OPENS REFUSAL TWO, AND I
-  ESTABLISHED IT AT THE CODE. de_settlement_control_run.py:194 computes
-  expected_producer_sha = _sha(HERE/'be_score_neutrality.py') AT RUN TIME FROM DISK. The
-  resolver fix CHANGED THAT FILE -- it now hashes a455191d6bceec7e where da00220 gave
-  8500ce41fc800e9a -- AND THE CERTIFICATE ON DISK RECORDS 8500ce41fc800e9a. SO deRV0907go4,
-  OFFERING FOR THE LOCK RIGHT NOW, WILL REFUSE NOT_CERTIFIED THE MOMENT IT GETS IT. The
-  mechanism is A SELF-REFERENTIAL DIGEST CHECK: the certificate must come from the
-  comparator that validates it, and the validator identifies that comparator BY HASHING
-  ITSELF ON DISK -- so ANY EDIT INVALIDATES EVERY CERTIFICATE IT HAS EVER PRODUCED,
-  including one made minutes earlier for this purpose. Not a stale record and not a missing
-  guard: A CHECK WHOSE SUBJECT AND AUTHORITY ARE THE SAME MUTABLE FILE. I VERIFIED THE
-  RULING AT wt-deval MYSELF -- HEAD 7efea16, the resolver at lines 87/95/118, v10 pinning
-  params v31 -- so the six amendments I listed last round are now REACHABLE and the fourth
-  gate's defect is REPAIRED. And the DRIVER differs too, confirmed by my own hashing.
-  tip ae50330)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -283,6 +283,15 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 379, day one under V2 on the rebuilt book ---
+  DAY_ONE_IS_VALUED_UNDER_V2_ON_THE_REBUILT_BOOK_AND_I_READ_THE_NUMBERS_AT_THE_ARTIFACTS: "From data/pm_5min/derived/fwd_v2/: CONDVALUE_X_SKEW observed_D = -14,645.078818c at p_two_sided 0.181637; HAZARD_OVER_SKEWED_REF +4,925.363903c at p 0.728543. The forward-value artifact carries FUTILE true for one arm and false for the other, with best_attainable_p 0.125 and 0.015625 and tolerance_negative_days -1 and 0 -- which are exactly the G=7 tail values I enumerated at round 350 and the two states the coordinator reports: CONDVALUE FUTILE, HAZARD ALIVE, both COMPUTED rather than asserted."
+  AND_THE_ERA_REBUILD_MOVED_D_BY_MORE_THAN_EVERY_DECLARED_BOUND_INCLUDING_THE_ONE_WE_STRUCK: "I differenced V2-on-rebuilt against day one's V1 figures: CONDVALUE -3,627.366812c and HAZARD -330.812941c. Against the bars: CONDVALUE is 33.0x the 110c CONCENTRATION_FINDING bar, 197x REV's interval-scoped 18.4c, 3.5x REV'S WINDOW-SCOPED 1,036.5c -- THE PESSIMISTIC END OF THE RANGE -- and 1.3x THE 25 PER CENT BAR THAT WAS STRUCK AS UNREACHABLE. HAZARD is 3.0x the 110c bar and under the window-scoped bound. THE TRIPWIRE WILL FIRE, AND IT SHOULD."
+  AND_THIS_DELTA_IS_ATTRIBUTABLE_TO_THE_ERA_REBUILD_BECAUSE_THE_PROTOCOL_CHANGE_WAS_SHOWN_D_NEUTRAL: "The V1-to-V2 change was falsified as D-neutral at round 366: observed_D_MOVED FALSE on both arms ON THE SAME BOOK, primary D identical to the cent. So the only other thing that changed between day one's number and this one is THE BOOK, and the book changed only by the era fix. THE MOVE IS THE ERA REBUILD'S. Recording the attribution matters because a reader meeting a 3,627c swing beside a protocol version bump will reach for the version first."
+  AND_THE_25_PER_CENT_BAR_WAS_NOT_UNREACHABLE_THE_BOUNDS_THAT_STRUCK_IT_WERE_TOO_TIGHT: "At round 365 I recorded the 25 per cent bar as struck because BOTH of REV's bounds fell below it -- 18.4c and 1,036.5c against 2,754.4c -- and I wrote that even the upper bound was 2.66x below. THE OBSERVED MOVE IS 3,627c, WHICH EXCEEDS THAT BAR. So the strike FOLLOWED CORRECTLY FROM THE BOUNDS AND THE BOUNDS WERE WRONG: the physics argument that bounded a whole-window replay change at about a thousand cents understated it by a factor of three and a half. THE REASONING WAS SOUND AND ITS INPUT WAS NOT."
+  AND_THE_SIGN_DID_NOT_CHANGE_SO_THE_HALT_THAT_WOULD_STOP_EVERYTHING_DOES_NOT_TRIP: "CONDVALUE stays NEGATIVE, going from -11,017.71 to -14,645.08, and HAZARD stays POSITIVE, from +5,256.18 to +4,925.36. REVIEW 186's SIGN_CHANGE_HALT therefore does not fire, and its rule that a sign change would make day one UNRESOLVED RATHER THAN POSITIVE is not engaged. The rebuild made CONDVALUE WORSE and HAZARD SLIGHTLY WORSE -- moving both in the unfavourable direction, which is the direction that requires no defence."
+  EVERY_GATE_NOW_RUNS_BEFORE_THE_LOCK_WHICH_IS_THE_STRUCTURAL_CHANGE_OF_THE_NIGHT: "Matrix, build preflight, acceptance rows, freeze v4, pipeline lock, arm-ahead chains and producer-keyed waiters -- all BEFORE the lock is taken. That is the answer to the five refusals and the fifty-six idle minutes: each of those was a gate firing AFTER a chain had queued, so the cost of a stale record was a lock cycle. Moving the gates ahead of the lock converts a refusal from AN HOUR INTO A SECOND, and it is the first structural change tonight that addresses cost rather than correctness."
+  THE_LOCK_QUEUE_ON_DISK_AND_I_USED_BOTH_DISCRIMINATORS_I_RECORDED: "The lock is held by pids 2397772 and 2397773. be147frag0909 is loaded, ACTIVE, RUNNING with rc=0 -- it HOLDS the lock. deRV0908w1 is loaded and reads failed WITH rc=75, WHICH MEANS OFFERING, NOT DEAD -- the discriminator I learned one round ago from my own near-miss. deRV0907w1 is loaded and failed WITH rc=1, WHICH IS A REAL FAILURE AND NOT AN OFFER. And deEMIT0907d is LoadState=NOT-FOUND -- the transient unit is gone, which LoadState catches and Result would not."
+  AND_THE_09_08_VALUATION_STOPPED_AT_SIX_MINUTES_AND_WAS_RE_ARMED_ON_A_SNAPSHOT: "Recorded as dispatched, with the oracle-snapshot ruling PENDING DE 289. A valuation stopped six minutes in and re-armed against a snapshot is a different object from one that ran to completion, and the difference must survive into whatever it produces -- which is what the pending ruling is for. The 09-09 fragment has been on the lock since 11:00Z."
   # --- MEM round 378, the prediction landed; a poller reads as dead ---
   MY_ROUND_376_PREDICTION_LANDED_AND_THE_REFUSAL_HAPPENED_AT_09_09_23Z: "I wrote at round 376 that the run would refuse NOT_CERTIFIED because the resolver fix had moved the comparator's bytes away from every certificate's recorded producer, and confirmed it against the actual pin at round 377. DE 272 records THE REFUSAL AT 09:09:23Z AND A RE-CERTIFICATION AT 09:33:48Z. The prediction was made from reading de_settlement_control_run.py:194 and hashing two files, about twenty minutes before the run hit it."
   AND_THE_CERTIFICATE_STOCK_IS_NOW_THREE_WITH_EXACTLY_ONE_VALID: "I re-ran the inventory: c5c1fc0ae126a3f7 from BE's rebuild, 8500ce41fc800e9a from the user's hardened comparator, and NOW a455191d6bceec7e in be_score_neutrality_20260903__EV22_vs_NEUTCHK__68e7d23.json -- WHICH MATCHES THE COMPARATOR ON DISK. So the stock went two-and-none-valid to three-and-one-valid, and every retirement was caused by editing the file that validates them. V2 PINS EXACTLY ONE PRODUCER-DIGEST ARTIFACT, which is the right design and also the reason the stock grows by one at every repair."
@@ -27932,6 +27941,55 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 379, 2026-09-11T11:05:34Z ---
+  DAY_ONE_IS_VALUED_UNDER_V2_ON_THE_REBUILT_BOOK_AND_I_READ_THE_NUMBERS_AT_THE_ARTIFACTS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/de_settle_result_20260907_CONDVALUE_X_SKEW.json
+    as_of: 2026-09-11T11:05:34Z
+    said: >-
+      the two per-arm result JSONs and the forward-value artifact read directly from fwd_v2/; the tail values 0.125 and 0.015625 match my round-350 enumeration.
+  AND_THE_ERA_REBUILD_MOVED_D_BY_MORE_THAN_EVERY_DECLARED_BOUND_INCLUDING_THE_ONE_WE_STRUCK:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/de_settle_result_20260907_CONDVALUE_X_SKEW.json
+    as_of: 2026-09-11T11:05:34Z
+    said: >-
+      each delta computed from the V2 artifact values against the six-decimal day-one figures carried in my files since round 359, and divided by each declared bound.
+  AND_THIS_DELTA_IS_ATTRIBUTABLE_TO_THE_ERA_REBUILD_BECAUSE_THE_PROTOCOL_CHANGE_WAS_SHOWN_D_NEUTRAL:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/de_settle_result_20260907_CONDVALUE_X_SKEW.json
+    as_of: 2026-09-11T11:05:34Z
+    said: >-
+      the round-366 falsifier result is recorded in my flags with both arms' identical V1 and V2 primaries; the book is the only other changed input.
+  AND_THE_25_PER_CENT_BAR_WAS_NOT_UNREACHABLE_THE_BOUNDS_THAT_STRUCK_IT_WERE_TOO_TIGHT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/de_settle_result_20260907_CONDVALUE_X_SKEW.json
+    as_of: 2026-09-11T11:05:34Z
+    said: >-
+      the round-365 flags record both bounds and the 2.66x margin; 3,627.367 divided by 2,754.4 is 1.3 and by 1,036.5 is 3.5.
+  AND_THE_SIGN_DID_NOT_CHANGE_SO_THE_HALT_THAT_WOULD_STOP_EVERYTHING_DOES_NOT_TRIP:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/de_settle_result_20260907_CONDVALUE_X_SKEW.json
+    as_of: 2026-09-11T11:05:34Z
+    said: >-
+      both V2 values compared with both V1 values for sign and magnitude; neither arm crosses zero.
+  EVERY_GATE_NOW_RUNS_BEFORE_THE_LOCK_WHICH_IS_THE_STRUCTURAL_CHANGE_OF_THE_NIGHT:
+    prov: RELAYED
+    from: coordinator MEM 379
+    as_of: 2026-09-11T11:05:34Z
+    said: >-
+      the seven gates and their placement as dispatched; the refusal sequence and the 56.3-minute idle window are recorded in my rounds 374 to 376.
+  THE_LOCK_QUEUE_ON_DISK_AND_I_USED_BOTH_DISCRIMINATORS_I_RECORDED:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-measurement-pipeline.timer
+    as_of: 2026-09-11T11:05:34Z
+    said: >-
+      fuser on the lock file; systemctl --user show per unit with LoadState first and ExecMainStatus read, distinguishing rc=75 offers from the rc=1 failure and the absent unit.
+  AND_THE_09_08_VALUATION_STOPPED_AT_SIX_MINUTES_AND_WAS_RE_ARMED_ON_A_SNAPSHOT:
+    prov: RELAYED
+    from: coordinator MEM 379
+    as_of: 2026-09-11T11:05:34Z
+    said: >-
+      the stop, the re-arm and the pending ruling as dispatched; the fragment's hold on the lock is confirmed by the queue reading above.
   # --- MEM round 378, 2026-09-11T09:54:55Z ---
   MY_ROUND_376_PREDICTION_LANDED_AND_THE_REFUSAL_HAPPENED_AT_09_09_23Z:
     prov: CHECKED
