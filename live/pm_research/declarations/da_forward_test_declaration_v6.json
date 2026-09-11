@@ -1,0 +1,75 @@
+{
+ "protocol": "P003_DA_FORWARD_TEST_V6",
+ "version": 6,
+ "STATUS": "AMENDED-BEFORE-ANY-FORWARD-DAY-IS-VALUED",
+ "declared_by": "DA 220",
+ "declared_at_utc": "2026-09-11T03:33:14Z",
+ "supersedes": {
+  "file": "declarations/da_forward_test_declaration_v5.json",
+  "commit": "0178ea4",
+  "v1_v2_v3_v4_v5_are_UNEDITED": true,
+  "scope": "ONE WITHDRAWN INFERENCE and the measured answer that replaces it. No test, bar, population, commit or digest changes."
+ },
+ "I_WITHDRAW_AN_INFERENCE_THE_MEASUREMENT_NEVER_SUPPORTED": {
+  "what_v4_and_v5_claimed": "that the book-code predicate would REFUSE `BOOK_BUILT_BY_DIFFERENT_SCORING_CODE` on every forward book, and that the waiver was being re-entered by a different door",
+  "WRONG_ON_TWO_COUNTS": [
+   "WRONG OBJECT: `assert_book_scoring_code` resolves its expected set FROM DISK via `be_producing_closure.expected_set_from_disk`, cross-checked against the receipt's own `import_closure` -- it never reads params v29. Under one commit, receipt-closure and disk are the same bytes, so it MATCHES and needs no waiver.",
+   "WRONG NAME: that predicate was never the consumer of `be_cascade` at all. I attached a sound measurement to a predicate that has nothing to do with it."
+  ],
+  "WHAT_STANDS": "the measurement: at 7ed5a90, 2 of the 10 modules pinned in be_cascade differ, in params v29 AND v30",
+  "BE_WAS_RIGHT_AND_ITS_FRAMING_WAS_BETTER_THAN_MINE": "BE offered the MEASUREMENT and withheld the CONCLUSION, saying it might be missing a comparison I could see. I did the opposite -- I shipped the conclusion. BE's is the standard, and the contradiction only resolved because one of us had not over-committed.",
+  "the_class": "rule 16 -- verify at the artifact a claim names. I verified a digest and then named a predicate I had not driven."
+ },
+ "THE_ANSWER_TO_THE_QUESTION_ACTUALLY_ASKED": {
+  "question": "Does any predicate consume de_multiday_gate1_params.be_cascade and FIRE on a forward book?",
+  "ANSWER": "TWO predicates consume it, BOTH compare against DISK, and NEITHER can fire on a forward book.",
+  "CONSUMER_1": {
+   "site": "de_multiday_gate1_runner.verify_be_module (:845)",
+   "refusal_name": "BE_CASCADE_DIFFERS",
+   "DRIVEN_actual_sha_None": "REFUSES -- '2 of 10 cited cascade modules do not match their declared pair', naming de_head_scoring.py declared 53a406a0ae2a / actual 31c368384770",
+   "DRIVEN_actual_sha_supplied": "NO REFUSAL -- n_modules_checked=1, scope='THE ENTRY POINT ONLY'",
+   "why_it_cannot_fire": "the cascade loop is gated on `actual_sha is None`. Every runtime caller reaches it through `import_be_cascade`, which SUPPLIES the digest. The one no-digest caller, `verify_run_inputs` -- docstring 'Everything that must hold BEFORE the first day is touched' -- is not wired into run_day; its only invocation is the selftest, wrapped in `_with_current_cascade()` so it cannot refuse."
+  },
+  "CONSUMER_2_WHICH_MY_EARLIER_PASS_MISSED": {
+   "site": "be_rule22.assert_pin_sites_agree (:307)",
+   "refusal_name": "PIN_DOES_NOT_MATCH_DISK",
+   "DRIVEN_on_real_params_v29": "REFUSES -- '2 pinned digest(s) are not the bytes on disk', naming de_head_scoring.py pinned 53a406a0ae2a11ff / on_disk 31c368384770351f",
+   "why_it_cannot_fire": "it is reached only from `write_declaration_version`, gated on PIN_SITE_FAMILIES=('de_multiday_gate1_params',) -- and `write_declaration_version` HAS ZERO CALLERS ANYWHERE IN THE REPO. Params versions v19..v30 were written by hand, so this guard has never gated a params write.",
+   "I_HAD_READ_THIS_ONE_AS_AN_INTERNAL_CONSISTENCY_CHECK_AND_IT_IS_NOT": "on my first pass I read be_rule22 as cross-checking be_module against be_cascade.modules. It also compares BOTH against DISK. I found that by DRIVING it, not by reading it again."
+  },
+  "SO_THE_OUTCOME_IS_(b)": "`be_cascade` is a DECLARED PIN WHOSE TWO ENFORCERS ARE BOTH OFF EVERY LIVE PATH -- the same class as QUALITY_DECISION_SAW_AN_OUTCOME: a name that promises a guard nothing reachable implements."
+ },
+ "AT_THE_ARTIFACT_NOT_FROM_THE_SOURCE": {
+  "what_real_runs_RECORDED": "six day receipts under data/pm_5min/derived, EVERY ONE: n_modules_checked=1, scope='THE ENTRY POINT ONLY'",
+  "days_covered": [
+   "20260903",
+   "20260905 (x3)",
+   "20260906 (x2)"
+  ],
+  "THIS_IS_THE_EVIDENCE_THAT_SETTLES_IT": "the entry-point-only branch is not an inference about what the code would do; it is what every completed run actually wrote."
+ },
+ "AND_I_CORRECT_THE_COORDINATORS_FRAMING_NOT_ONLY_MY_OWN": {
+  "the_dispatch_said": "the consumed receipts are 10/10 so the 8/10 case may not exist yet, and the first FWD1 book IS that case",
+  "MEASURED_CORRECTION": "NO forward book will be that case either. The check that would produce a ten-module verdict never runs on the day path, so the first FWD1 book will record n_modules_checked=1 exactly like the six above. The 8/10 comparison has no receipt today and will have none tomorrow unless the wiring changes.",
+  "why_this_matters": "waiting for the provenance gate to answer it would be waiting for an event that does not occur"
+ },
+ "THE_HAZARD_RUNS_THE_OTHER_WAY_AND_BE_ALREADY_NAMED_IT": {
+  "source": "be_offpath_guards.WIRING_VERIFY_RUN_INPUTS (BE 158), measured 2026-09-10: n_cascade 10, n_differing 2",
+  "the_sequencing_trap": "wiring `verify_run_inputs` into run_day WITHOUT repointing the params stops EVERY day run. BE states it: 'the call site alone refuses every day until the params are repointed, and the params alone leave the cascade unchecked.' Both, not either.",
+  "and_the_params_crank_is_itself_unguarded": "because write_declaration_version, which would check the new pins against disk, has no callers -- so a hand-written params version can pin bytes that do not exist"
+ },
+ "A_THIRD_CARRIER_FOUND_ONLY_BY_WIDENING_THE_OPERATION": {
+  "found": "de_arm_freeze_v1.json -> /frozen_code/SCORING_PATH_PINNED_TO_THE_BYTES_THE_SCREEN_RAN_ON/modules",
+  "pins": "de_head_scoring.py 53a406a0ae2a and de_phase4_diag_runner.py cb97b94dbd3f -- the SAME pre-move bytes",
+  "code_consumers": 0,
+  "also_zero": "de_arm_freeze_v7_amendment.json /AMENDMENT_16.../expected_digests (the NEW digests) -- 0 consumers",
+  "HOW_IT_WAS_FOUND": "a grep for `be_cascade` cannot see it: different file, different key, same two modules. I enumerated every {path, sha256} pin naming those two modules across all declarations -- by the OPERATION, not the spelling (rule 32). Fifteen declaration files pin them under FOUR distinct keys.",
+  "so_the_count_is": "THREE pin carriers for these two modules; ONE has reachable enforcement code and it is off-path"
+ },
+ "WHAT_I_AM_NOT_CLAIMING": {
+  "not_a_recommendation_to_wire_it": "that is DE's and BE's call and it is a params+design version pair; I am routing the list",
+  "the_scan_boundary": "I enumerated declarations under live/pm_research/declarations and code under live/pm_research",
+  "one_thing_I_did_not_drive": "I did not run a full day to observe n_modules_checked on a FORWARD book -- 09-07 is mid-build and I hold no lock. The six receipts are consumed days. The inference from six receipts to the seventh is that the code path is byte-identical, which is weaker than a measurement and is stated as such."
+ },
+ "everything_else_in_v5_v4_v3_stands_verbatim": true
+}
