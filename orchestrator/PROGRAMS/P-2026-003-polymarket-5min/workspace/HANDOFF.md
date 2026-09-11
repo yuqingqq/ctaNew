@@ -1,3 +1,94 @@
+# READ FIRST — round 371 (MEM, 2026-09-11T07:39:48Z, tip `2292a59`)
+
+# 📗 THE REBUILT 09-07 BOOK LANDED — with the three digests I have tracked since 353
+
+`be140book0907` rc=0, 07:35:17Z · `builder_commit 7ed5a9015f75` ·
+`be_daybook_build 2d31a80b5ae5c2c6` · `de_head_scoring 31c368384770351f` ·
+`de_phase4_diag_runner 9e2a0977d8dfc3be` · era `clob_v4_1`. **The same three
+digests I hashed independently at rounds 353–354.** Old book superseded at a
+timestamped path **with its original mtime preserved** — *which is what makes a
+supersession auditable rather than merely tidy.*
+
+## ↕️ And the sizes moved in OPPOSITE directions — I differenced both
+
+| artifact | delta | status |
+|---|---|---|
+| **book** | **+2,010,161 B (+2.01 MB)** | attributed to replay content in the 27 |
+| **fragment** (round 363) | **−232,305 B (−232 KB)** | ***still unexplained*** |
+
+*Recorded together with their different statuses, because a reader meeting only
+the book's growth would assume the fragment's shrinkage had been explained by
+the same mechanism.*
+
+# ✅ THE DECOMPOSITION SUMS TO D **TO THE CENT**, BOTH ARMS
+
+`de_window_decomposition.py` at `7a575ba8`: CONDVALUE **−11,017.712006c**,
+HAZARD **+5,256.176844c**, `windows=287`, **`rows_sum_to_D=True`** on each; peak
+3.052 GiB, 21.4 s. ***Those are the exact six-decimal figures I differenced
+against my own round-359 record at round 366*** — so the falsifier's target was
+already on the record and the decomposition hit it on both arms.
+
+**And because it attributes over all 287 while the emit selects 27, the residual
+is exactly the other 260** (I subtracted them). ***That turns a halt from a
+generic failure into a positive statement about WHERE the change is*** — a
+different and more useful thing for a reader to receive.
+
+# 🔍 REVIEW 189 — an emit that **printed a true row count while emitting 28 rows**
+
+`declared_windows()` read v12's list **with no role filter**, so a `CENSUS_ONLY`
+row entered the table — **and the emit's own `ROW_COUNT_IS_27…` check printed
+true.** ***A guard reporting the count it was written to enforce, beside an
+artifact carrying a different one.***
+
+**And the fixture could not catch it:** 27 windows, **no census row** — *the only
+input that could expose the bug was the one the fixture lacked.* **The
+falsifier-without-the-case-that-matters class, inside this morning's instrument
+for that class.**
+
+Fixed at `ef1ad8e4`, **15/15**: role filter · `d2 == 0.0` → `SIGN_CHANGE_HALT` ·
+per-day spine (43-window fixture → 43 rows; one-short **refuses**). **And DE
+caught its own census cell that had "asserted the defect away"** — *a test
+written so the thing it was meant to detect could not appear in it, found by its
+author one commit after REV found the bug it hid.*
+
+## ⚠️ But the two epochs in the dispatch do not name the same window — I converted them
+
+```
+1788806100 → 18:35:00Z      ← named as the filtered 28th
+1788796500 → 15:55:00Z      ← the CENSUS_ONLY window (1.553 s, verified round 365)
+```
+
+**Either the row the filter removes is 18:35 rather than 15:55, or one identifier
+is a slip.** ***I do not assert which — I record that they do not name the same
+thing.***
+
+# 🔒 A SECOND LOCK RACE — and there is still no arbiter
+
+BE's `be140frag0908` took the lock at ~07:35:30Z **the instant the book freed
+it**, ahead of `deRV0907wait3` — **armed since 07:15:39Z.** *The waiter that had
+been patient for twenty minutes lost to a chain that arrived at the right
+moment.* Same shape as 06:48.
+
+> ***Two autonomous chains, one lock, no arbiter — the durable-waiter discipline
+> that fixed rule 37 produced a new problem, because waiters that outlive their
+> turns now COMPETE.***
+
+**The ruling orders by what is WAITING ON THE RESULT, not by who arrived first:**
+BE yields after the fragment; day one's V2 re-valuation runs next (~77 min);
+09-08's tape follows. *Because day one's V2 is the population's first datum and
+REVIEW 186, DA's v16 and the user's per-day picture all wait on it — while the
+calendar is not binding.* ***Ordering by downstream dependency is what an arbiter
+would do, supplied by hand because there isn't one.*** Expected 07:47–09:05, emit
+immediately after.
+
+# ✅ AND DA v15 SUPPLIES THE HALF I COULD NOT READ
+
+09-08/09/10 have `n_masked = 0` **and `n_thin = 0`.** *At round 370 I opened the
+mask artifacts and confirmed `n_masked = 0` myself, but recorded that **`n_thin`
+was not a field I could see** and marked it relayed.* **DA now supplies it, so
+the confinement is complete: the era fix's row-removing consequence touches 09-07
+only.** Per-day gap artifacts for 09-08+ come from BE 141 as each fragment lands.
+
 # READ FIRST — round 370 (MEM, 2026-09-11T07:34:08Z, tip `ebb4665`)
 
 # ✅ THE EMIT IS REAL AND DRIVEN **8/8 BY TWO HANDS** — its input is not
