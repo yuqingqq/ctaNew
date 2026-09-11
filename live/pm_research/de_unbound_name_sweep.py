@@ -17,6 +17,7 @@ from __future__ import annotations
 import builtins
 import dis
 import importlib
+import os
 import sys
 import tempfile
 import types
@@ -25,6 +26,12 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
+# A STATIC SWEEP MUST RUN WHEN THE TREE IS MID-MOVE -- that is exactly when
+# an unbound name gets introduced. The driver refuses AT IMPORT while the
+# declaration names another commit, which would make this instrument
+# unusable in the only window it is needed. Off for THIS process only; the
+# production arm in the cells drives the entry point with the guard ON.
+os.environ.setdefault("DE_VALUATION_PREFLIGHT_OFF", "1")
 
 # The valuation's computing closure plus the emit it calls at the end --
 # the end is exactly where a late NameError hides.

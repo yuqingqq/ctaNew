@@ -246,6 +246,37 @@ def falsify() -> int:
            f"{str(prov.get('pipeline_commit'))[:12]} all="
            f"{prov.get('every_computing_module_matches_the_pipeline_commit')}")
 
+    # --- CELL 14: A PIN THAT CAN NEVER MOVE IS NOT A PIN EITHER --------
+    # Measured deadlock, 13:33Z: DA's code freeze v3 named the new commit,
+    # an amendment pinning it would have REFUSED as a conflict, and the
+    # valuation went on resolving d095c5a -- two freezes stale, quietly.
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td)
+        (d / "de_arm_freeze_v1.json").write_text(json.dumps(
+            {"code_freeze_declaration": {"path": "cf_v1.json",
+                                         "sha256": "1" * 64}}))
+        (d / "de_arm_freeze_v2_amendment.json").write_text(json.dumps(
+            {"code_freeze_declaration": {"path": "cf_v2.json",
+                                         "sha256": "2" * 64}}))
+        try:
+            R.resolve_declaration_pins(d)
+            silent = ""
+        except Exception as exc:                           # noqa: BLE001
+            silent = str(exc)
+        (d / "de_arm_freeze_v2_amendment.json").write_text(json.dumps(
+            {"code_freeze_declaration": {"path": "cf_v2.json",
+                                         "sha256": "2" * 64},
+             "supersedes": {"code_freeze_declaration": {"path": "cf_v1.json"}}}))
+        moved = R.resolve_declaration_pins(d)["code_freeze_declaration"]
+    ck("a SILENT second pin still refuses by name",
+       "DECLARATION_PIN_CONFLICT" in silent and "cf_v2.json" in silent,
+       silent[:52] or "ADMITTED A SILENT OVERWRITE")
+    ck("a pin that NAMES what it replaces moves, and records both",
+       moved.get("path") == "cf_v2.json"
+       and moved.get("supersedes") == "cf_v1.json"
+       and moved.get("superseded_at") == "de_arm_freeze_v2_amendment.json",
+       f"{moved.get('path')} <- {moved.get('supersedes')}")
+
     # --- CELL 13 (REVIEW 175 B): THE DECLARATION READER ----------------
     # `_declaration_pin`'s second path referenced an unbound `chain`, and
     # the blanket `except` read the NameError as "this declaration names

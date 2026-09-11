@@ -1299,11 +1299,30 @@ def resolve_declaration_pins(decl_dir=None) -> dict:
             prev = out.get(key)
             if prev and (prev["path"] != val["path"]
                          or prev["sha256"] != val["sha256"]):
-                raise RunnerRefused(
-                    f"REFUSED {DECLARATION_PIN_CONFLICT}: {key} is pinned "
-                    f"to {prev['path']}/{prev['sha256'][:12]} and again to "
-                    f"{val['path']}/{val['sha256'][:12]} in {f.name}. A pin "
-                    f"that can be overwritten is not a pin.")
+                # A PIN THAT CAN NEVER MOVE IS NOT A PIN EITHER. The
+                # agree-or-refuse rule deadlocked the chain the first time
+                # a freeze legitimately moved: DA's v3 named the new
+                # commit, a v15 pinning it would have REFUSED, and the
+                # valuation went on resolving a two-freeze-stale commit.
+                # Rule 13 is the resolution -- a correction supersedes IN
+                # BAND -- so a later amendment may replace a pin only by
+                # NAMING THE IDENTITY IT REPLACES. Silent disagreement
+                # still refuses; that was always the real hazard.
+                sup = (doc.get("supersedes") or {}).get(key)
+                named = (sup.get("path") if isinstance(sup, dict)
+                         else sup) == prev["path"]
+                if not named:
+                    raise RunnerRefused(
+                        f"REFUSED {DECLARATION_PIN_CONFLICT}: {key} is "
+                        f"pinned to {prev['path']}/{prev['sha256'][:12]} "
+                        f"and again to {val['path']}/{val['sha256'][:12]} "
+                        f"in {f.name}, which does not name what it "
+                        f"replaces. A pin that can be overwritten SILENTLY "
+                        f"is not a pin; declare "
+                        f'"supersedes": {{"{key}": '
+                        f'{{"path": "{prev["path"]}"}}}} to move it.')
+                val = dict(val, supersedes=prev["path"],
+                           superseded_at=f.name)
             out[key] = dict(val, named_by=f.name)
     return out
 
