@@ -23472,3 +23472,23 @@ generation and the window went 4 → 3. Nothing rewritten.
   SCOPE -- every landing was safe because the branch was not diverged, and the instrument
   could not have told me so. tip dfe3ef5)
 ```
+
+## Batch 348 (rotated by MEM round 366, 2026-09-11T07:13:00Z)
+
+```
+  2026-09-11T06:58:29Z (MEM ROUND 363 -- TWO CORRECTIONS AND A MASK RULING. THE 27 GAP INTERVALS EXCLUDE
+  NO ROWS on the day path -- BINANCE_GAP_EXCLUDED_STATUS is NOT_APPLIED_ON_THE_DAY_PATH,
+  which I read -- so they change WHAT THE REPLAY SEES in retained windows, and row removal
+  comes only from the MASK, whose BTC share is ONE window. THE 232,305-BYTE DELTA HAS NO
+  ESTABLISHED CAUSE. My own round-362 flag attributed none, which I checked rather than
+  assumed. THE 27 AND THE 12 ARE DISJOINT BY DEFINITION -- blackout is THIN AND NOT
+  GAP-OVERLAPPED, in code -- so they are not two estimates of one quantity and must never be
+  reconciled to one; the tripwire becomes TWO SEPARATELY ENUMERATED SETS. RULING: THE MASK
+  ITSELF MUST BE REBUILT under the fixed era for all seven days, because under the buggy era
+  EVERY THIN WINDOW WAS VACUOUSLY A BLACKOUT -- an empty gap list makes the negated-overlap
+  term trivially true. DAY ONE IS CLEAN, ESTABLISHED, superseding my 'probably clean':
+  runner blob 4ba1177f = the pin -- AND THAT IS THE VALUE I HASHED MYSELF AT ROUND 360, so
+  under the timing clause I state that MINE WAS FILED FIRST and this is confirmation, not
+  corroboration. The freeze's tuning field is A DECLARED BOOL NO CODE READS, and its checker
+  EXISTS UNWIRED. tip 929e5b2)
+```

@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T07:13:00Z (MEM ROUND 366 -- THE FALSIFIER PASSED AND THE USER'S AMENDMENT STANDS
+  UNCONDITIONALLY. observed_D_MOVED FALSE on both arms, V2 GENUINELY LOADED this time:
+  CONDVALUE V1 = V2 = -11,017.712006c, HAZARD +5,256.176844c, baseline delta 0.0 -- and I
+  differenced those against my round-359 record, agreeing to 0.0120c and 0.0232c, which is
+  MY OWN ROUNDING AND NOTHING ELSE. THE ROBUSTNESS LEG EXISTS FOR THE FIRST TIME:
+  CONDVALUE -13,459.5c (worse, same sign), HAZARD +5,598.9c (better, same sign),
+  sign_reversal FALSE on both -- so it does NOT block HAZARD and it CONFIRMS CONDVALUE'S
+  NEGATIVE DAY UNDER BOTH FILL ASSUMPTIONS. AND BOTH LEGS RECONCILE TO THE BASELINE I HAVE
+  HELD FOR SEVEN ROUNDS: arm_total minus D gives -4,437.8 on EACH arm against the -4,437.7
+  I recorded at round 359 -- two new quantities closing onto an old one. I ALSO CAUGHT MY
+  OWN COMPARATOR calling HAZARD's leg 'worse' on an absolute-value test: |D| is right for
+  EXTREMITY and wrong for BETTER-OR-WORSE when the sign is favourable -- the round-359
+  confusion, in my own output, caught before it reached a file. The tripwire table is 27
+  rows BY DRIVE, with the 28th carrying the status GAP_RECORDED_NOT_SEEN_BY_REPLAY. SEVEN
+  REV FILINGS ARE STRANDED on a DIRTY TREE -- the same blockage holding my rows, from the
+  other side. tip 25078e7)
   2026-09-11T07:08:41Z (MEM ROUND 365 -- THE TRIPWIRE COULD NOT FIRE AND IS STRUCK. |D| = 11,017.7c made
   the 25 per cent threshold 2,754.4c, while REV's two bounds are 18.4c interval-scoped and
   1,036.5c window-scoped -- I differenced them and EVEN THE UPPER BOUND IS 2.66x BELOW THE
@@ -95,21 +111,6 @@ updated: >-
   expected effect, not a relaxation of the check. DA 231's rebuild must return n_masked = 1
   and exactly that window, TYPED BEFORE IT RUNS. Ruling: 287 on the tripwire table, 288 as
   the coverage denominator, the masked window AS A STATUS. tip 7ce92b9)
-  2026-09-11T06:58:29Z (MEM ROUND 363 -- TWO CORRECTIONS AND A MASK RULING. THE 27 GAP INTERVALS EXCLUDE
-  NO ROWS on the day path -- BINANCE_GAP_EXCLUDED_STATUS is NOT_APPLIED_ON_THE_DAY_PATH,
-  which I read -- so they change WHAT THE REPLAY SEES in retained windows, and row removal
-  comes only from the MASK, whose BTC share is ONE window. THE 232,305-BYTE DELTA HAS NO
-  ESTABLISHED CAUSE. My own round-362 flag attributed none, which I checked rather than
-  assumed. THE 27 AND THE 12 ARE DISJOINT BY DEFINITION -- blackout is THIN AND NOT
-  GAP-OVERLAPPED, in code -- so they are not two estimates of one quantity and must never be
-  reconciled to one; the tripwire becomes TWO SEPARATELY ENUMERATED SETS. RULING: THE MASK
-  ITSELF MUST BE REBUILT under the fixed era for all seven days, because under the buggy era
-  EVERY THIN WINDOW WAS VACUOUSLY A BLACKOUT -- an empty gap list makes the negated-overlap
-  term trivially true. DAY ONE IS CLEAN, ESTABLISHED, superseding my 'probably clean':
-  runner blob 4ba1177f = the pin -- AND THAT IS THE VALUE I HASHED MYSELF AT ROUND 360, so
-  under the timing clause I state that MINE WAS FILED FIRST and this is confirmation, not
-  corroboration. The freeze's tuning field is A DECLARED BOOL NO CODE READS, and its checker
-  EXISTS UNWIRED. tip 929e5b2)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -281,6 +282,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 366, the condition is met ---
+  THE_FALSIFIER_PASSED_AND_THE_USERS_AMENDMENT_NOW_STANDS_UNCONDITIONALLY: "deFMP0907f40 at 07:09:43Z, rc=0, WITH V2 GENUINELY LOADED -- which is the part that failed last time and reported success. observed_D_MOVED FALSE on both arms: CONDVALUE primary V1 = V2 = -11,017.712006c, HAZARD +5,256.176844c, baseline delta 0.0. DA 225's prediction that REFERENCE_FILLS is a PASS-THROUGH held EXACTLY. So the freeze amendment to da00220 for the valuation path IS DISCHARGED OF ITS CONDITION AND STANDS."
+  AND_THE_FIGURES_MATCH_WHAT_I_HAVE_CARRIED_SINCE_ROUND_359_TO_WITHIN_ROUNDING: "I differenced them rather than eyeballing: the falsifier's -11,017.712006c against the -11,017.7c I recorded at round 359 agrees to 0.0120c, and +5,256.176844c against +5,256.2c agrees to 0.0232c. Both differences are the rounding in my own earlier record and nothing else. So the number the amendment now rests on is the SAME NUMBER day one produced, to the micro-cent, and not a near-miss that happens to round the same way."
+  THE_ROBUSTNESS_LEG_EXISTS_FOR_THE_FIRST_TIME_AND_BOTH_ARMS_KEEP_THEIR_SIGN: "NO_FILLS_UNTIL_NEXT_GENERATION: CONDVALUE D = -13,459.5c on an arm total of -17,897.3c, WORSE than primary and the SAME SIGN; HAZARD D = +5,598.9c on an arm total of +1,161.1c, BETTER than primary and the SAME SIGN. sign_reversal FALSE on both. So the leg DOES NOT BLOCK HAZARD'S PROMOTION and it CONFIRMS CONDVALUE'S NEGATIVE DAY UNDER BOTH FILL ASSUMPTIONS -- which is the stronger of the two things it could have done for CONDVALUE."
+  AND_BOTH_LEGS_RECONCILE_TO_THE_BASELINE_I_ALREADY_HELD_WHICH_IS_A_STRUCTURAL_CHECK: "Arm total minus D gives the baseline, and I computed it for each: CONDVALUE -17,897.3 minus -13,459.5 = -4,437.8, and HAZARD +1,161.1 minus +5,598.9 = -4,437.8. THE ZERO-MODEL-CANCEL BASELINE I RECORDED AT ROUND 359 IS -4,437.7c. Both arms, independently, land on the baseline I have carried for seven rounds, to 0.1c of rounding. That is not a restatement of the same number -- it is TWO NEW QUANTITIES CLOSING ONTO AN OLD ONE."
+  AND_I_CAUGHT_MY_OWN_COMPARATOR_CALLING_HAZARDS_LEG_WORSE_BEFORE_I_WROTE_IT_DOWN: "My first pass compared the legs by MAGNITUDE and reported HAZARD's +5,598.9 as 'worse' than +5,256.2 because it is larger in absolute value. For an arm whose favourable direction is POSITIVE that is backwards. |D| IS THE RIGHT STATISTIC FOR EXTREMITY AND THE WRONG ONE FOR BETTER-OR-WORSE WHEN THE SIGN IS FAVOURABLE -- which is the same confusion that produced the day-one framing error at round 359, in my own output, caught this time before it reached a file."
+  THE_TRIPWIRE_TABLE_IS_27_ROWS_BY_DRIVE_NOT_BY_ASSERTION: "BE 138: 15:55's rows are BYTE-IDENTICAL ACROSS ERAS while two gap-seen controls -- 14:45 and one more -- DIFFER. So the instrument was shown to FIRE WHERE IT SHOULD before being trusted where it is silent, which is the two-sided form. The 28th window, the 1.553-second one I converted last round, goes to the CENSUS with the status GAP_RECORDED_NOT_SEEN_BY_REPLAY -- a named status rather than a dropped row."
+  AND_A_RULE_4_FINDING_WAS_ESCALATED_BY_THE_SEAT_THAT_FOUND_IT: "TWO RECORDED GAPS ON 09-07 ARE INVISIBLE TO THE REPLAY AND WERE COUNTED NOWHERE. BE escalated it rather than absorbing it into its own table, the coordinator ruled, and the census is RESTATED ON WALL-CLOCK ATTRIBUTION AS A SEPARATE ARTIFACT. And the flow_intensity fix is DEFERRED to after 09-13's book because the build path is pinned -- a fix deferred for a stated reason, with the reason being the pin rather than convenience."
+  SEVEN_REV_FILINGS_ARE_STRANDED_AND_THE_CAUSE_IS_THE_SHARED_TREE_BEING_DIRTY: "REVIEWs 178 through 184 -- 0c1f136, 066c800, dfe3ef5, 215e3b9, 61daa82, 33e6745, 8310428 -- plus 142, NONE IN ORIGIN, because the shared tree was dirty at every attempt on BE_PROCEDURE.md and BE's in-progress BE 139 edit. That is the same blockage that has held my own rows since round 358, from the other side: not a divergence problem but a CLEANLINESS problem, and the lander refuses on both. REV lands via rule 45 from wt-rev, with 183 and 184 TOGETHER because 184 withdraws 183's headline."
+  AND_LANDING_183_AND_184_TOGETHER_IS_THE_ONLY_ORDER_THAT_IS_HONEST: "184 withdraws 183's headline. Landing 183 alone would publish an over-claim that its own author has already retracted, and landing 184 alone would publish a withdrawal of something absent from the record. The pair is ONE UNIT because rule 13 makes corrections supersede IN BAND -- and in-band requires the superseded thing to be there. Recorded because the sequencing is the part a tired seat drops."
+  THE_TAPE_LANDED_AND_REV_143_IS_WRITING_THE_READING_RULES_WITH_ZERO_CELLS_VISIBLE: "Tape 1,081,029,833 bytes, rc=0, peak 7.62 GB, receipt .v2.json. And REV 143 is writing THE RE-VALUATION'S READING RULES BEFORE THE BOOK EXISTS -- scoping boundaries, aggregate-versus-window firing, sign-change reading, residual size and the ceiling sentences -- on the section 7j pattern. That is the third time this programme has written what may be said before the number exists, and the first time it has been done for a re-valuation rather than a verdict."
   # --- MEM round 365, the tripwire that could not fire ---
   THE_25_PER_CENT_TRIPWIRE_COULD_NOT_FIRE_AND_I_COMPUTED_THE_MARGIN: "Struck. |D| is 11,017.7c so the threshold was 2,754.4c, and REV 139-141 bound the rebuild's delta-D two ways: INTERVAL-SCOPED about 18.4c and WINDOW-SCOPED about 1,036.5c, because gap_overlaps is BOOLEAN and a touched window's replay changes wholesale. I differenced them: EVEN THE UPPER BOUND IS 2.66 TIMES BELOW THE THRESHOLD. REV's framing is the honest one -- 'the two ends of a range, not a correction and a truth' -- and REV WITHDREW ITS OWN REVIEW 183 HEADLINE as over-claiming."
   AND_THE_THING_I_PRAISED_AT_ROUND_362_WAS_ITS_TIMING_WHICH_SAID_NOTHING_ABOUT_ITS_REACHABILITY: "I recorded that threshold approvingly one round ago: 'typed BEFORE the rebuilt book exists' and 'a threshold written after the number would be a threshold chosen to clear it'. Both true, and both about WHEN it was written. NEITHER SAID ANYTHING ABOUT WHETHER IT COULD EVER TRIP. PRE-REGISTRATION IS NECESSARY AND INSUFFICIENT -- a pre-typed threshold can still be unreachable, and rule 15 is the thing that catches that: EVERY CHECKER SHIPS A FALSIFIER, INCLUDING A TRIPWIRE."
@@ -27802,6 +27814,67 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 366, 2026-09-11T07:13:00Z ---
+  THE_FALSIFIER_PASSED_AND_THE_USERS_AMENDMENT_NOW_STANDS_UNCONDITIONALLY:
+    prov: RELAYED
+    from: DE via coordinator MEM 366
+    as_of: 2026-09-11T07:13:00Z
+    said: >-
+      the run's identifiers and the two equalities as dispatched; I checked the figures against my own record below.
+  AND_THE_FIGURES_MATCH_WHAT_I_HAVE_CARRIED_SINCE_ROUND_359_TO_WITHIN_ROUNDING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:13:00Z
+    said: >-
+      the six-decimal values differenced against the one-decimal figures in my round-359 flags: 0.0120c and 0.0232c.
+  THE_ROBUSTNESS_LEG_EXISTS_FOR_THE_FIRST_TIME_AND_BOTH_ARMS_KEEP_THEIR_SIGN:
+    prov: RELAYED
+    from: DE via coordinator MEM 366
+    as_of: 2026-09-11T07:13:00Z
+    said: >-
+      the four figures and the two sign_reversal flags as dispatched; the better/worse directions are stated by sign rather than by magnitude, for the reason recorded below.
+  AND_BOTH_LEGS_RECONCILE_TO_THE_BASELINE_I_ALREADY_HELD_WHICH_IS_A_STRUCTURAL_CHECK:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:13:00Z
+    said: >-
+      arm_total - D computed for both arms giving -4,437.8 each, differenced against the -4,437.7 baseline recorded at round 359.
+  AND_I_CAUGHT_MY_OWN_COMPARATOR_CALLING_HAZARDS_LEG_WORSE_BEFORE_I_WROTE_IT_DOWN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:13:00Z
+    said: >-
+      my comparison script's output labelled HAZARD's leg 'worse' on an absolute-value test; the corrected reading is that a more positive D is better for that arm.
+  THE_TRIPWIRE_TABLE_IS_27_ROWS_BY_DRIVE_NOT_BY_ASSERTION:
+    prov: RELAYED
+    from: BE 138 via coordinator MEM 366
+    as_of: 2026-09-11T07:13:00Z
+    said: >-
+      the byte-identity and the two differing controls as dispatched; the 28th window's identity and duration I verified at round 365.
+  AND_A_RULE_4_FINDING_WAS_ESCALATED_BY_THE_SEAT_THAT_FOUND_IT:
+    prov: RELAYED
+    from: BE and coordinator MEM 366
+    as_of: 2026-09-11T07:13:00Z
+    said: >-
+      the two invisible gaps, the restatement and the deferral as dispatched; rule 4's counted-nowhere prohibition is in CLAUDE.md.
+  SEVEN_REV_FILINGS_ARE_STRANDED_AND_THE_CAUSE_IS_THE_SHARED_TREE_BEING_DIRTY:
+    prov: RELAYED
+    from: coordinator MEM 366
+    as_of: 2026-09-11T07:13:00Z
+    said: >-
+      the seven refs and the dirty-path cause as dispatched; my own unlanded rows and their cause are recorded at rounds 358 to 362.
+  AND_LANDING_183_AND_184_TOGETHER_IS_THE_ONLY_ORDER_THAT_IS_HONEST:
+    prov: RELAYED
+    from: coordinator MEM 366
+    as_of: 2026-09-11T07:13:00Z
+    said: >-
+      the pairing requirement as dispatched; rule 13's in-band supersession is the principle it follows from.
+  THE_TAPE_LANDED_AND_REV_143_IS_WRITING_THE_READING_RULES_WITH_ZERO_CELLS_VISIBLE:
+    prov: RELAYED
+    from: coordinator MEM 366
+    as_of: 2026-09-11T07:13:00Z
+    said: >-
+      the tape's figures and REV 143's scope as dispatched; the 7j precedent is recorded in my files at rounds 344 and 356.
   # --- MEM round 365, 2026-09-11T07:08:41Z ---
   THE_25_PER_CENT_TRIPWIRE_COULD_NOT_FIRE_AND_I_COMPUTED_THE_MARGIN:
     prov: CHECKED
