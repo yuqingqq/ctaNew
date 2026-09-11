@@ -252,12 +252,22 @@ def _builder_commit_admissible(builder_commit) -> bool:
     import subprocess as _sp
     if builder_commit == PIPELINE_COMMIT:
         return True
-    decls = sorted(_glob.glob(str(
-        HERE / "declarations" / "da_forward_test_declaration_v*.json")),
-        key=lambda x: int(x.rsplit("_v", 1)[1][:-5]))
-    if not decls:
-        return False
-    doc = json.loads(Path(decls[-1]).read_text())
+    # RESOLVE BY DECLARED IDENTITY, never "latest by glob": a file that
+    # merely sorts last is not the one the freeze names, and picking it
+    # would let an unpinned declaration widen the build rule.
+    pin = None
+    try:
+        pin = BEN.resolve_frozen_params_pin(HERE / "declarations").get(
+            "forward_test_declaration")
+    except Exception:                              # noqa: BLE001
+        pin = None
+    if not pin or not pin.get("path") or not pin.get("sha256"):
+        return False          # DECLARATION_IDENTITY_UNPINNED -> exact only
+    dpath = HERE / "declarations" / Path(str(pin["path"])).name
+    if not dpath.is_file() or hashlib.sha256(
+            dpath.read_bytes()).hexdigest() != pin["sha256"]:
+        return False          # on-disk file is not the declared identity
+    doc = json.loads(dpath.read_text())
 
     def _find(o, key):
         if isinstance(o, dict):
@@ -432,6 +442,23 @@ def run_one_day_arm(day: str, book_path, arm: str, *, n_draws: int,
     # caller changes.
     if winner_source is None:
         winner_source = R.winner_source(required_slugs=slugs)
+    else:
+        # REGRESSION CLOSED (REVIEW 169): the old call passed
+        # required_slugs, so a slug with no settlement record refused by
+        # name. The once-per-run read cannot know the slugs before the book
+        # is loaded, so the SAME predicate is enforced HERE against the
+        # snapshot -- the day's slugs are checked, not merely assumed
+        # present.
+        _have = winner_source.get("winners") or {}
+        _missing = [s_ for s_ in slugs if s_ not in _have]
+        if _missing:
+            raise SettlementControlRefused(
+                f"REFUSED SETTLEMENT_WINNER_MISSING_FOR_SLUG: "
+                f"{len(_missing)} slug(s) of {day} have no settlement "
+                f"record in the once-per-run oracle "
+                f"({winner_source.get('sha256','?')[:16]}); first: "
+                f"{_missing[:3]}. A settled total over a slug nobody "
+                f"resolved is not a value.")
     winners = winner_source["winners"]
     base_total = settled_total(base_replay["fills"], winners)
     arm_total = settled_total(arm_replay["fills"], winners)
