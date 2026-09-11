@@ -1,0 +1,241 @@
+{
+ "declaration": "DA_CODE_FREEZE_VALUATION_AND_BUILD",
+ "version": 9,
+ "as_of_utc": "2026-09-11T13:57:39Z",
+ "FREEZE_COMMIT": "b34ed9fdd1e32fe2f29db8f7dda8f56b56742b27",
+ "VERIFIED_BY_LS_REMOTE": {
+  "note": "both refs are DA declaration commits on top of b34ed9f; the CODE tree at each equals b34ed9f",
+  "freeze_commit": "b34ed9fdd1e32fe2f29db8f7dda8f56b56742b27"
+ },
+ "THE_RULE_FROM_HERE": "only DECLARATIONS and NEW INSTRUMENT FILES may land. Any closure-module drift REFUSES in population freeze v9 as PIPELINE, by filename.",
+ "VALUATION_CLOSURE_DIGESTS_AT_THE_FREEZE": {
+  "de_asymmetry_null_run.py": "09581cbfc94e1f2d52f36de5cfd272ff68631e7ee7ff00095e3ee6a68dc58a9e",
+  "de_forward_evaluator.py": "6290bb25909817dcb479732a257621d66f338f24e1133192a0ebb892d10322c7",
+  "de_forward_value_day.py": "2966cc357ac2a6e2055ea19bbe6fc9af5353c1496c21ab038d913d5cff7aeb64",
+  "de_matched_cancel_control.py": "dbb37c65f5651ac75b627f074610a3ed34828a054551343286206ae5db0331e8",
+  "de_multiday_gate1_runner.py": "2aa226623522814316ca9cabc6bc2da75f696ea93a47a81ee658f8b5888b24d7",
+  "de_settlement_control_aggregate.py": "ce8e4806a48df8c298e6e59372e41b97d21376ab4d268bd8d7cf4bd1c66355ff",
+  "de_settlement_control_run.py": "d737d0fe1063c747563a5b799aa0d12ad07b18f2bbc89aec3e37873a5defc5bb"
+ },
+ "VALUATION_COMPUTING_MODULES_AS_THE_CODE_DECLARES_THEM": {
+  "source": "de_forward_value_day.COMPUTING_MODULES (read at the artifact, not assembled by DA)",
+  "modules": [
+   "de_settlement_control_run.py",
+   "de_settlement_control_aggregate.py",
+   "de_forward_evaluator.py",
+   "de_asymmetry_null_run.py",
+   "de_matched_cancel_control.py",
+   "de_multiday_gate1_runner.py"
+  ]
+ },
+ "BUILD_SIDE": {
+  "ref": "origin/be-build-runner",
+  "commit": "8afbd1a7447d74455199015ccedc54810e47176a",
+  "BUILD_PIN_declared_in_v27": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+  "five_pinned_digests": {
+   "be_daybook_build.py": {
+    "pinned": "2d31a80b5ae5c2c62fd4992eedb5d8c5020e66e69f015b1aa475e24d963d7fb3",
+    "at_freeze": "2d31a80b5ae5c2c62fd4992eedb5d8c5020e66e69f015b1aa475e24d963d7fb3",
+    "match": true
+   },
+   "be_gate1_fragment.py": {
+    "pinned": "d87c820872ec32670bd0dc4011d2d0279efeb4bd36f358866b771f2034fc75ed",
+    "at_freeze": "d87c820872ec32670bd0dc4011d2d0279efeb4bd36f358866b771f2034fc75ed",
+    "match": true
+   },
+   "be_gate1_state_tape.py": {
+    "pinned": "7a876f1fe98e938cf474ad14082972c50899400a020ea3547f5a80720abc4589",
+    "at_freeze": "7a876f1fe98e938cf474ad14082972c50899400a020ea3547f5a80720abc4589",
+    "match": true
+   },
+   "de_phase4_diag_runner.py": {
+    "pinned": "9e2a0977d8dfc3be1c90ac87817d732e4ca19b6752f3439dd5e505d771d5a47d",
+    "at_freeze": "9e2a0977d8dfc3be1c90ac87817d732e4ca19b6752f3439dd5e505d771d5a47d",
+    "match": true
+   },
+   "de_head_scoring.py": {
+    "pinned": "31c368384770351fdbe5408a0321ee7af89e2eb25fd0d36378f03c9d7b3f03af",
+    "at_freeze": "31c368384770351fdbe5408a0321ee7af89e2eb25fd0d36378f03c9d7b3f03af",
+    "match": true
+   }
+  },
+  "all_five_match_at_the_freeze": true
+ },
+ "WHY_THIS_FREEZE_EXISTS": {
+  "trigger": "(6) stopped on BOOK_BUILT_BY_DIFFERENT_SCORING_CODE",
+  "cause": "runner commits landed AFTER the build branch was cut, so the book's scoring code and the runner's were different objects while every label still agreed",
+  "the_general_shape": "a LABEL (a branch name, a commit ref, a path) is not an IDENTITY. The freeze converts the label into a digest set so drift refuses by filename instead of being discovered in a valuation's output."
+ },
+ "BLOCKER_FOUND_WHILE_VERIFYING_THIS_FREEZE": {
+  "severity": "THE VALUATION CANNOT RUN AT THE COMMIT BEING FROZEN",
+  "what": "de_forward_value_day.PIPELINE_COMMIT is the LITERAL 7efea16b39b89c2ddececc90b68e2f206d6c3500, 47 commits behind the freeze. Its import-time preflight admits a DESCENDANT only when every computing module is byte-identical to that pin, and TWO are not.",
+  "DRIVEN_AT_8afbd1a": "REFUSED VALUATION_COMPUTING_MODULES_ARE_NOT_AT_THE_PIPELINE_COMMIT: right tree, WRONG BYTES in ['de_settlement_control_run.py', 'de_multiday_gate1_runner.py']",
+  "measured": {
+   "de_settlement_control_run.py": {
+    "at_7efea16": "faeae22f347e2032",
+    "at_freeze": "0ce5f04f0aa1b9ca"
+   },
+   "de_multiday_gate1_runner.py": {
+    "at_7efea16": "157413f6562cf5bd",
+    "at_freeze": "acf911db48d445dd"
+   },
+   "the_other_four": "byte-identical across the 47 commits"
+  },
+  "THIS_IS_ITEM_6_ONE_LAYER_UP": "the same failure the freeze is being declared to prevent -- a commit literal that must track a moving thing and did not. Recorded here rather than repaired: de_forward_value_day.py is DE's module and is inside the frozen closure.",
+  "ROUTED_TO_DE": "move PIPELINE_COMMIT to 8afbd1a7447d74455199015ccedc54810e47176a as the first and only closure edit under this freeze, or the freeze is a commit nothing can run from."
+ },
+ "LIMITS": {
+  "what_DA_verified": "ls-remote identity of both refs; the five build-pinned digests at the freeze commit; the valuation closure digests; and the preflight refusal, DRIVEN in a throwaway worktree checked out at the freeze commit.",
+  "what_DA_did_not_verify": "that the frozen code is CORRECT. A freeze pins identity, not quality."
+ },
+ "SUPERSEDES": "da_code_freeze_declaration_v8.json",
+ "supersedes_sha256": "99e1215a2bb2249dcffce0368ef4340f3e5f136b373c02ac711e81b3434b338b",
+ "WHY_V2": "DE 324 (`d095c5a`) makes V2 READ FREEZE_COMMIT from this declaration instead of holding a literal -- 'the self-check had TWO sources of truth'. The freeze therefore moves to the commit that made it readable. v1 stays as provenance (rule 13).",
+ "WHAT_MOVED_FROM_v1": {
+  "v1_FREEZE_COMMIT": "8afbd1a7447d74455199015ccedc54810e47176a",
+  "v2_FREEZE_COMMIT": "d095c5a89995494194aaf78dd985d8cae05cbf61",
+  "pipeline_files_changed_between": [
+   "de_forward_value_day.py (V2)",
+   "de_arm_and_readonce_cells.py"
+  ],
+  "computing_modules_changed_between": "NONE -- all six are byte-identical across 8afbd1a..d095c5a"
+ },
+ "WHY_V3": "DA 251. Q-DE-327 (`bacb4e3`) brings the two emit post-processors INTO the frozen closure on the chain branch -- v2 recorded them ABSENT_AT_THIS_COMMIT, which was true and is now resolved. It also adds `code_freeze_declaration` to the resolver's `want`, which makes this declaration READ for the first time.",
+ "EMIT_POST_PROCESSORS_NOW_IN_THE_CLOSURE": {
+  "de_revaluation_emit.py": {
+   "present_at_freeze": true,
+   "sha256": "87cd5651cc28446203a5e418a613690e2c9085fb297efc03e3bb5e087106e8c5"
+  },
+  "de_window_decomposition.py": {
+   "present_at_freeze": true,
+   "sha256": "f00db67d2ef4b42177b38fa19c42860249c46457de7a411c463c4b703b0e1efa"
+  }
+ },
+ "WHY_V4": "DA 252. Q-DE-328 (`d0bb179`) replaces agree-or-refuse with VERSION-ORDERED SUPERSESSION THAT NAMES WHAT IT REPLACES, which is the ruling's option 1. That commit is the freeze commit, so the declaration moves to it.",
+ "THE_DEADLOCK_IS_RESOLVED": {
+  "was": "v14 pinned v2 and no later amendment could move it -- DRIVEN at Q-DA-460, load_params went red",
+  "now": "DE 328 admits a move when the amendment NAMES the identity it replaces; silent disagreement still refuses, which was always the real hazard",
+  "pin_chain_DA_records_here": [
+   "v14 -> da_code_freeze_declaration_v2.json (names nothing; the original)",
+   "v15 -> v3 (names v2)",
+   "v16 -> v4 (names v3)",
+   "v17 -> v5 (names v4)"
+  ],
+  "what_the_walker_itself_records": "CORRECTED FOR Q-DE-329: the walker now ACCUMULATES THE WHOLE CHAIN. The resolved entry carries `chain` -- a list of {version, named_by, path, sha256}, one per amendment that pinned the key -- plus `named_by`, `version` and a computed `supersedes`. DA 252's v4 said the walker recorded only the immediately superseded identity; that was true of Q-DE-328 and is no longer true. The chain below is therefore a CROSS-CHECK of the walker's, not a substitute."
+ },
+ "WHY_V5": "DA 253. Q-DE-329 (`b34ed9f`) lands the ruling as VERSION-ORDER supersession and is one commit past d0bb179, which v4 named. It MOVED `de_multiday_gate1_runner.py`, and that IS a computing module -- so v4 would have refused WRONG BYTES at this tree. v4 was correct when written and is superseded rather than edited (rule 13).",
+ "THE_RULE_AS_LANDED": {
+  "Q-DE-328": "a later amendment could move a pin ONLY by NAMING the identity it replaced; an unnamed move REFUSED",
+  "Q-DE-329": "PLAIN VERSION ORDER -- the highest amendment wins and an unnamed move is ADMITTED. This is the ruling as worded. DA's v15/v16/v17 still carry `supersedes` blocks: they are no longer required, they are harmless, and they are kept because they state the intent in the artifact rather than leaving it to be inferred from a sort order.",
+  "THE_ONE_REFUSAL_A_VERSION_ORDER_CANNOT_SETTLE": "a SINGLE document pinning the same key TWICE. Caught with an object_pairs_hook, because JSON would otherwise keep the last silently. Version order settles two amendments; it cannot settle one document disagreeing with itself.",
+  "WHAT_THIS_COSTS": "a silent overwrite by a later amendment is now possible. That is the price of the ruling and it is recorded here rather than discovered later: the protection against a wrong pin is now the VERSION NUMBER alone."
+ },
+ "THE_PIN_IS_A_RULE_NOT_A_COMMIT": {
+  "RULE": "the valuation path is frozen when BOTH hold: (a) HEAD IS A DESCENDANT OF THE BASE COMMIT, and (b) EVERY ONE OF THE SEVEN FROZEN MODULES IS BYTE-IDENTICAL TO THE DIGEST DECLARED HERE. Neither half alone is the freeze.",
+  "WHY_A_RULE": "a bare commit made every DECLARATION-ONLY landing look like a freeze move. Between DA 247 and DA 253 the freeze commit was restated FIVE times -- 8afbd1a, d095c5a, 6d22d78, bacb4e3, b34ed9f -- and four of those restatements existed only because the declarations themselves had landed on top. The digests are what the check actually needs; the commit is provenance.",
+  "A_DECLARATION_ONLY_COMMIT_NEVER_MOVES_THE_FREEZE": "a commit that touches only live/pm_research/declarations/** changes NO frozen module digest, so it satisfies (b) unchanged and satisfies (a) by being a descendant. It is therefore NOT a freeze move and needs NO new code-freeze version. This is the rule that ends the v3->v4->v5 churn: those three versions differed only because declarations landed.",
+  "WHAT_STILL_MOVES_THE_FREEZE": "any change to one of the seven module digests below, and nothing else.",
+  "BASE_COMMIT": "b34ed9fdd1e32fe2f29db8f7dda8f56b56742b27",
+  "BASE_IS_PROVENANCE_ONLY": "any DESCENDANT of the base is admissible; the base is not required to be HEAD.",
+  "DIGESTS_TAKEN_AT": "6ed8780263818e690af131f60d62fd6a73963817",
+  "why_digests_may_come_from_a_later_commit_than_the_base": "the base records where the freeze began; the digests record what is frozen NOW. When a module legitimately changes, the digest moves and the base does not."
+ },
+ "SEVEN_FROZEN_MODULES": {
+  "count": 7,
+  "modules": {
+   "de_asymmetry_null_run.py": "09581cbfc94e1f2d52f36de5cfd272ff68631e7ee7ff00095e3ee6a68dc58a9e",
+   "de_forward_evaluator.py": "6290bb25909817dcb479732a257621d66f338f24e1133192a0ebb892d10322c7",
+   "de_forward_value_day.py": "2966cc357ac2a6e2055ea19bbe6fc9af5353c1496c21ab038d913d5cff7aeb64",
+   "de_matched_cancel_control.py": "dbb37c65f5651ac75b627f074610a3ed34828a054551343286206ae5db0331e8",
+   "de_multiday_gate1_runner.py": "2aa226623522814316ca9cabc6bc2da75f696ea93a47a81ee658f8b5888b24d7",
+   "de_settlement_control_aggregate.py": "ce8e4806a48df8c298e6e59372e41b97d21376ab4d268bd8d7cf4bd1c66355ff",
+   "de_settlement_control_run.py": "d737d0fe1063c747563a5b799aa0d12ad07b18f2bbc89aec3e37873a5defc5bb"
+  },
+  "CHECKED_INTERNALLY_BY_THE_VALUATION": {
+   "which": [
+    "de_asymmetry_null_run.py",
+    "de_forward_evaluator.py",
+    "de_forward_value_day.py",
+    "de_matched_cancel_control.py",
+    "de_multiday_gate1_runner.py",
+    "de_settlement_control_aggregate.py"
+   ],
+   "how": "de_forward_value_day.assert_computing_modules_at_the_pipeline_commit, at IMPORT; it walks EVERY declared row and skips only SELF",
+   "refusals": [
+    "VALUATION_CLOSURE_DIGEST_MOVED",
+    "VALUATION_CLOSURE_MODULE_ABSENT",
+    "VALUATION_TREE_IS_NOT_A_DESCENDANT_OF_THE_FROZEN_COMMIT"
+   ]
+  },
+  "CHECKED_EXTERNALLY_BECAUSE_NO_MODULE_VOUCHES_FOR_ITSELF": {
+   "which": "de_settlement_control_run.py",
+   "how": "de_preflight_matrix.v2_matches_declaration -- it reads THIS declaration's row and compares it to the file on disk",
+   "refusal": "WOULD_REFUSE:<V2_MISMATCH>"
+  },
+  "A_NAMING_RECONCILIATION_WORTH_STATING": "in DE's vocabulary here, **\"V2\" means `de_settlement_control_run.py`** -- `SELF` in de_forward_value_day.py is literally that string, and de_preflight_matrix's row is named `v2_matches_declaration`. It does NOT mean `de_forward_value_day.py`, which elsewhere in this programme is also called V2. DA 254's wording -- 'V2's own digest ... checked externally' -- is satisfied under DE's sense of the word, NOT under the other one. `de_forward_value_day.py` is checked INTERNALLY, by the loop, like the other five.",
+  "AND_THIS_CLOSES_Q_DA_458": "*** WITHDRAWN IN v8. THIS CLAIM WAS WRONG AND IT WAS MINE. *** v6/v7 said DE 331 closed Q-DA-458's 'no module vouches for itself' gap. REVIEW 221 is correct that it does not: `assert_computing_modules_at_the_pipeline_commit` LIVES IN de_forward_value_day.py and its loop CHECKS de_forward_value_day.py, because SELF is de_settlement_control_run.py. A module comparing its own bytes to a declared digest is exactly the self-vouching the external row exists to prevent -- anyone who can change the file can change the check. The external row is pointed at de_settlement_control_run.py, which the loop could have covered; the module that NEEDS an external check is the one CONTAINING the check.",
+  "WHAT_IS_ACTUALLY_TRUE": {
+   "checked_by_a_loop_that_lives_elsewhere": [
+    "de_settlement_control_run.py -- by de_preflight_matrix.v2_matches_declaration"
+   ],
+   "checked_by_a_loop_that_lives_in_the_same_file": [
+    "de_forward_value_day.py -- SELF-VOUCHING, the open gap"
+   ],
+   "checked_by_the_loop_and_not_self_referential": [
+    "de_settlement_control_aggregate.py",
+    "de_forward_evaluator.py",
+    "de_asymmetry_null_run.py",
+    "de_matched_cancel_control.py",
+    "de_multiday_gate1_runner.py"
+   ],
+   "so_Q_DA_458_IS_STILL_OPEN": "narrowed, not closed: one module is self-vouching instead of four being unchecked. The fix is to swap the roles -- SELF should be de_forward_value_day.py and the external matrix row should verify de_forward_value_day.py. ROUTED, not repaired: both files are DE's and inside the frozen closure.",
+   "how_this_correction_is_cheap": "landing v8 is a DECLARATION-ONLY change. Under v6's rule it moves NO frozen digest and NO base, so it is not a freeze move -- which is the rule paying for itself on its first correction."
+  }
+ },
+ "SCHEMA_NOTE": "`VALUATION_CLOSURE_DIGESTS_AT_THE_FREEZE` is the key de_forward_value_day._declared_closure_digests() reads, and it keeps ONLY values that are 64-character strings. Every row here is a full sha256. Read at the artifact at 2b77c0e.",
+ "DRIVEN_AT_THE_FREEZE": {
+  "resolver": "code_freeze -> v6, named_by de_arm_freeze_v18_amendment.json, version 18; walker chain v14:v2 -> v15:v3 -> v16:v4 -> v17:v5 -> v18:v6",
+  "V2_import": "OK, frozen=b34ed9fdd1e3, 7 rows read",
+  "external_row": "de_preflight_matrix.v2_matches_declaration -> PASS, sha256 d737d0fe1063c747, declared_by da_code_freeze_declaration_v6.json",
+  "load_params": "NO REFUSAL, G=11",
+  "FALSIFIER_A_digest_moved": "PASS -- appending a byte to de_asymmetry_null_run.py gives REFUSED VALUATION_CLOSURE_DIGEST_MOVED naming that module",
+  "FALSIFIER_C_declaration_only": "PASS AND IT IS THE RULE'S CENTRAL CLAIM -- adding a file under declarations/ leaves V2 importing clean with the same frozen commit. Also measured over real history: every declaration-only commit between b34ed9f and the tip left ALL SEVEN digests unchanged.",
+  "FALSIFIER_B_module_absent_DID_NOT_FIRE": {
+   "claim_tested": "VALUATION_CLOSURE_MODULE_ABSENT",
+   "result": "NOT REACHED. Removing de_matched_cancel_control.py raises ModuleNotFoundError at IMPORT, before the guard runs, because the guard lives in a module that imports it.",
+   "so": "VALUATION_CLOSURE_MODULE_ABSENT is unreachable for any declared row that is also IMPORTED. It can only fire for a declared row the import graph does not pull in. That is not a defect in the freeze -- the absence is still caught, loudly -- but the refusal does NOT carry the name it was written to carry, and a reader expecting that name will not see it. Recorded rather than reported as a pass (rule 15: an instrument that never proved it can fire is not a result)."
+  }
+ },
+ "WHY_V7": "THE RULE'S FIRST REAL TEST, AND IT BEHAVED. Q-DE-332 (`203229a`) MOVED `de_forward_value_day.py` -- a genuine module change, which under this rule IS a freeze move and needs a new version. The guard refused BY NAME at the tip: `REFUSED VALUATION_CLOSURE_DIGEST_MOVED: right tree, WRONG BYTES in ['de_forward_value_day.py'], against the digests declared at b34ed9fdd1e3`. **THE BASE DID NOT MOVE** -- it is still b34ed9f, because ancestry is provenance and only the digest is identity. That is the whole point of v6's rule: a declaration landing costs nothing, a module change costs exactly one version.",
+ "MOVED_SINCE_V6": {
+  "de_forward_value_day.py": {
+   "from": "ddf1662df6ba173f",
+   "to": "2966cc357ac2a6e2"
+  }
+ },
+ "THE_SELF_VOUCHING_RESIDUAL_IS_CLOSED_EXTERNALLY": {
+  "RULING": "DA 256 -- closed EXTERNALLY, not by another freeze move.",
+  "the_external_check": {
+   "what": "da_population_freeze_verify.py",
+   "run_by": "stage 0 (DE 334)",
+   "on_drift": "REFUSES POPULATION_FREEZE_FILE_DRIFTED, naming the file",
+   "why_this_closes_it": "a module cannot vouch for itself, but an instrument OUTSIDE the valuation closure can. The verifier is not imported by the valuation and does not depend on it, so changing de_forward_value_day.py cannot disable the check that catches it."
+  },
+  "DRIVEN_BY_DA_NOT_TAKEN_ON_TRUST": {
+   "control": "the real freeze verifies clean: POPULATION_FREEZE_HOLDS, 67 files, 52 PIPELINE / 15 INSTRUMENT",
+   "falsifier_1_PIPELINE_drift": "REFUSED POPULATION_FREEZE_FILE_DRIFTED: 1 of 67 -- live/pm_research/de_forward_value_day.py (NAMED)",
+   "falsifier_2_INSTRUMENT_drift": "exit-0 REPORT, status POPULATION_FREEZE_HOLDS, INSTRUMENT_DRIFTED populated -- the class split behaving",
+   "falsifier_3_absent": "REFUSED POPULATION_FREEZE_FILE_ABSENT naming the missing path",
+   "note": "DE 334 is NOT LANDED at write time, so DA drove the VERIFIER's behaviour, not DE's stage-0 row. The row itself is unverified until it exists."
+  },
+  "TWO_PROPERTIES_A_CALLER_MUST_KNOW": {
+   "absolute_roots": "ROOTS is a map of ABSOLUTE worktree paths. The verifier reads THOSE trees, not the tree it is invoked from -- correct for a freeze, but it means running it from the build tree does not scope it to the build tree.",
+   "DECL_couples_stage_0_to_DA_versioning": "DECL is a filename literal and assert_decl_is_the_highest REFUSES POPULATION_FREEZE_NOT_THE_HIGHEST when a higher-numbered freeze sits beside it. ONCE STAGE 0 RUNS THIS, EVERY NEW POPULATION FREEZE STOPS STAGE 0 until the repointed verifier is landed on the build ref too. The guard that protects a measurement becomes a production stop. Flagged before it fires."
+  },
+  "ROLE_SWAP_RECORDED_AS_A_POST_POPULATION_ITEM": {
+   "item": "swap SELF and the external matrix row in DE's modules",
+   "why": "SELF is de_settlement_control_run.py while the loop lives in de_forward_value_day.py, so the loop checks its own file. The external row should verify the module CONTAINING the check. DA 256 closes the residual by a DIFFERENT route (the stage-0 verifier), so the swap is no longer blocking -- it is recorded POST-POPULATION so it is not lost.",
+   "status": "POST_POPULATION -- declared, not changed"
+  }
+ }
+}
