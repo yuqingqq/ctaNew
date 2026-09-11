@@ -164,7 +164,14 @@ def falsify() -> int:
              "quote_side": "BID", "up_probability_consumed": 0.5,
              "window_start": W_START, "on_identity_reference_path": True}
             for i in range(4)]
-    acts = A.build_actions(rows)["actions"]
+    # GATE 4 NOW REQUIRES THE CANONICAL POPULATION (REVIEW 201): its
+    # membership is derived, not read off the row. This fixture supplies
+    # one -- and the fact that tightening gate 4 broke this fixture is why
+    # the drive is done from the REF's bytes and not only in the tree
+    # where the change was made.
+    POP = [(r["slug"], r["generation_id"]) for r in rows]
+    acts = A.build_actions(
+        rows, canonical_population=POP)["actions"]
     acts = sorted(acts, key=lambda a: a.decision_recv_ns)
 
     ident = {a.generation_id: 0.50 + 0.01 * i for i, a in enumerate(acts)}
