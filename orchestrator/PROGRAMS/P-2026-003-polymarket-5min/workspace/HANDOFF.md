@@ -1,3 +1,88 @@
+# READ FIRST — round 376 (MEM, 2026-09-11T08:51:56Z, tip `58009f0`)
+# 🚨 THE FIX FOR REFUSAL THREE RE-OPENS REFUSAL TWO — established at the code
+
+`de_settlement_control_run.py:194`:
+
+```python
+expected_producer_sha = _sha(HERE / "be_score_neutrality.py")
+```
+
+**Computed AT RUN TIME, from the file on disk.** And the resolver fix **changed
+that file**:
+
+```
+comparator on disk (wt-deval)   a455191d6bceec7e
+comparator @ da00220            8500ce41fc800e9a
+certificate records producer    8500ce41fc800e9a   ← MISMATCH
+```
+
+> ***`deRV0907go4`, offering for the lock right now, will refuse
+> `SETTLEMENT_CONTROL_SCORE_NEUTRALITY_NOT_CERTIFIED` the moment it gets it —
+> for the same reason as refusal two, re-opened by the fix for refusal three.***
+
+**The certification must be re-run with the NEW comparator before the valuation
+can proceed.**
+
+## 🔁 And the mechanism is a NEW SHAPE tonight: a self-referential digest check
+
+The certificate must be produced by the comparator that validates it — **and the
+validator identifies that comparator by hashing ITSELF on disk.**
+
+> ***So any edit to the comparator invalidates every certificate it has ever
+> produced, including one made minutes earlier for exactly this purpose.***
+
+**Not a stale record. Not a missing guard. A check whose SUBJECT and AUTHORITY
+are the same mutable file.** *The structural remedy is for the certificate to be
+validated against **a pinned digest**, not a live one.*
+
+# ✅ THE RULING IS LANDED — verified at `wt-deval` by me, not relayed
+
+**HEAD `7efea16`.** The resolver is real: `FREEZE_AMENDMENT_GLOB` (l.87),
+`_amendment_version()` (l.95), and a **sorted glob over every
+`de_arm_freeze_v*_amendment.json`** (l.118) so the **last params pin wins**.
+`de_arm_freeze_v10_amendment.json` **pins params v31** and references
+`7ed5a9015f75`. `PIPELINE_COMMIT` stays `7ed5a90` — *it guards the BOOK.*
+
+> ***The six amendments I listed last round — v2 through v7 — are now reachable
+> by the consumer that could not see them. The fourth gate's defect is REPAIRED,
+> not merely named.***
+
+# ⚠️ A SECOND FILE DIFFERS — confirmed by my own hashing
+
+```
+de_forward_value_day.py   wt-deval 243cf4628214dd95   da00220 2bb2e71b8d465d35   DIFFERS
+```
+
+**The DRIVER**, carrying DE's origin-side pre-flight guard (Q-DE-240/242) that
+the local-fork `da00220` predates. **DA 244 (source) and REV 154 (import
+closure) are verifying it computes nothing that reaches a number — if it does,
+that is an unruled pin move and the run stops.** ***Declaring a second difference
+the ruling did not name, rather than letting it ride, is the right call and the
+expensive one.***
+
+# ⏱ THE IDLE LOCK — **56.3 min**, accounting closes to 73 %
+
+07:48:07 → 08:44:25. **~17 min blocked on the user · ~24 min on ONE slow
+coordinator tool call · ~15 min for the three-refusal cycle.** Not
+calendar-binding. *An accounting that names its largest single item as **a tool
+call** rather than a decision is the kind that can be acted on.*
+
+**Standing fix:** *a lock no chain holds for >5 min while any chain is waiting is
+itself an event.* ***Right shape, because tonight's two contention failures were
+opposite — a lock taken by the wrong chain, and a lock held by nobody — and only
+a rule treating IDLENESS as a reportable state covers both. Silence is the common
+factor.***
+
+# 👻 A WATCHER READ AN OLD REFUSAL AS CURRENT
+
+The watcher grepped `REFUSED [A-Z_]+` from a stdout log **appended across
+attempts, because the unit name is reused**, and reported the **third** attempt's
+`PARAMS_NOT_FROZEN` as the fourth's refusal — *when the actual fourth line was
+the lock refusal, `rc=75`, which **did no work**.* Replaced with exit-code logic.
+
+> ***Same class as the ghost text and the `Result=success` trap: a reused name
+> makes an old line look current. Third distinct instance tonight.***
+
 # READ FIRST — round 375 (MEM, 2026-09-11T08:45:45Z, tip `d8b5f07`)
 
 # 🔒 A FREEZE THAT COULD NOT BE SUPERSEDED
