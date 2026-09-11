@@ -23320,3 +23320,26 @@ generation and the window went 4 → 3. Nothing rewritten.
   REFUSALS HAVE BEEN BETTER THAN THEIR PRODUCTIONS, and my own record fits exactly: SIX
   ERRORS, ALL ASSERTIONS; FOUR BEST CALLS, ALL WITHHOLDINGS. tip 4e76ce5)
 ```
+
+## Batch 341 (rotated by MEM round 359, 2026-09-11T05:56:23Z)
+
+```
+  2026-09-11T03:36:08Z (MEM ROUND 356 -- THE 69 IS ANSWERED AND THE ASYMMETRY INVERTS THE INTUITION:
+  'A PASS IS WEAK EVIDENCE FOR THE FAMILY; A FAILURE IS COMPARATIVELY STRONGER EVIDENCE
+  AGAINST IT' -- a pass after a 69-configuration search is weak because something usually
+  looks good eventually, while a failure BY THE TWO SURVIVORS on untouched days is strong.
+  It answers what the prior BECOMES by giving its DIRECTION instead of a value it could not
+  defend. BOTH RESULT SENTENCES ARE WRITTEN VERBATIM BEFORE ANY NUMBER EXISTS and become
+  REQUIRED FIELDS -- a result omitting the applicable one must REFUSE TO EMIT, adopted
+  because two limits were summarised away tonight. NO JOINT EVIDENCE FIGURE: the conjuncts
+  and arms are strongly dependent, no joint null was declared, so no combined number will
+  be quoted -- naming the absence matters because an undeclared joint is the gap a reader
+  fills with the PRODUCT. BE's comparator rebuilt and I VERIFIED IT AT THE ARTIFACT:
+  LUCK_NOT_CERTIFICATION turns a zero-that-means-nothing into a NAMED NON-RESULT, the
+  falsification is enforced BY SHAPE (only REFUTED and SUPPORTED_ON_THIS_DAY exist, NO
+  FIELD CAN EXPRESS A RATE), and per_book_guard states its purpose in eight words: 'the
+  certification bounds the CODE; this checks the DAY.' I CHECKED A STALE TREE FIRST AND
+  CAUGHT IT BEFORE ASSERTING -- the round-348 shape costing nothing this time. THE SEATS'
+  REFUSALS HAVE BEEN BETTER THAN THEIR PRODUCTIONS, and my own record fits exactly: SIX
+  ERRORS, ALL ASSERTIONS; FOUR BEST CALLS, ALL WITHHOLDINGS. tip 4e76ce5)
+```
