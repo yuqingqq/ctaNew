@@ -1,0 +1,30 @@
+{
+ "contract": "BE_STAGE_CLOSEOUT_V1",
+ "day": "20260910",
+ "stage": "tape",
+ "as_of_utc": "2026-09-11T23:33:55Z",
+ "unit": {
+  "unit": "be192tape0910",
+  "LoadState": "loaded",
+  "ActiveState": "active",
+  "SubState": "exited",
+  "Result": "success",
+  "ExecMainStatus": "0",
+  "InvocationID": "7f32263d0e2a4493be371b2472eb279d",
+  "start": "Fri 2026-09-11 18:33:34 UTC",
+  "exit": "Fri 2026-09-11 18:59:02 UTC"
+ },
+ "peak": {
+  "status": "PRESENT",
+  "peak_of_record_bytes": 6496137216,
+  "peak_gib": 6.05,
+  "attempts": 78,
+  "source": "data/pm_5min/derived/be_heavy_run_record_be192tape0910.jsonl"
+ },
+ "artifact": {
+  "status": "PRESENT",
+  "path": "data/pm_5min/derived/phase2_state_tape_gate1_20260910_btc.json",
+  "bytes": 1082539196,
+  "sha256": "731cdd631e561a83c760a076e67be611ab302a563d9ed8d5c30a67fe6bf106fe"
+ }
+}

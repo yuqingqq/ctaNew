@@ -1,0 +1,69 @@
+{
+ "contract": "BE_STAGE_CLOSEOUT_V1",
+ "day": "20260909",
+ "stage": "book",
+ "as_of_utc": "2026-09-11T23:33:45Z",
+ "unit": {
+  "unit": "be191book0909",
+  "LoadState": "loaded",
+  "ActiveState": "active",
+  "SubState": "exited",
+  "Result": "success",
+  "ExecMainStatus": "0",
+  "InvocationID": "a141e3a0da964bf881304700e10bdf55",
+  "start": "Fri 2026-09-11 16:37:12 UTC",
+  "exit": "Fri 2026-09-11 16:59:56 UTC"
+ },
+ "peak": {
+  "status": "PRESENT",
+  "peak_of_record_bytes": 7784624128,
+  "peak_gib": 7.25,
+  "attempts": 1,
+  "source": "data/pm_5min/derived/be_heavy_run_record_be191book0909.jsonl"
+ },
+ "artifact": {
+  "status": "PRESENT",
+  "path": "data/pm_5min/derived/be_daybook_20260909_btc__L250ms__FWD1.pkl",
+  "bytes": 363197300,
+  "sha256": "a72caaa08968dd93524d7344772846ac052fef2b4b5cef10cbd6df3f0e4e5fc3"
+ },
+ "receipt": {
+  "status": "PRESENT",
+  "path": "data/pm_5min/derived/be_daybook_receipt_20260909_btc__L250ms__FWD1.json",
+  "bytes": 79534,
+  "sha256": "ff33488056ee2a68188568b6fe71c5855c2b3c9684d92d7e2f7b41a10f931875"
+ },
+ "book": {
+  "era": "clob_v4_1",
+  "builder_commit": "b34ed9fdd1e32fe2f29db8f7dda8f56b56742b27",
+  "head_unchanged_during_the_run": true,
+  "closure_unchanged_during_the_run": true,
+  "runner_closure_sha256": "2aa226623522814316ca9cabc6bc2da75f696ea93a47a81ee658f8b5888b24d7",
+  "n_windows": 288,
+  "state_join_failed": 0,
+  "kept_by_coin": {
+   "btc": 569107
+  },
+  "ROW_ACCOUNTING": {
+   "accounted": 604779,
+   "by_reason": {
+    "fine": 0,
+    "gap_at_cutoff_excluded": 15,
+    "no_archive": 0,
+    "no_level_history_excluded": 9,
+    "pm": 0,
+    "pre_window_excluded": 35648,
+    "state_join_failed": 0
+   },
+   "dropped": 35672,
+   "if_they_do_not_close": "the residual is UNEXPLAINED and is reported as such rather than absorbed. Both sides are ROW counts and the total comes from round 58's receipt, not from this function -- so a mismatch is a real disagreement between producers, not a unit error",
+   "kept": 569107,
+   "population": "FRAGMENT ROWS -- the rows phase2_arms reads from the day's fragment with status OK",
+   "residual": 0,
+   "rows_accounted_for": true,
+   "rows_pin_receipt": "be_gate1_state_tape_receipt_20260909_btc.json",
+   "rows_published_by_the_tape_receipt": 604779
+  },
+  "readback_matches": true
+ }
+}
