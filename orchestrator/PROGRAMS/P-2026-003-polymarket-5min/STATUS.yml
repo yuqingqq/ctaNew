@@ -367,6 +367,7 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r385_the_landing_is_refused_a_fourth_time_at_125_over_169: "HELD BEHIND_AND_NOT_FF at 14:14:07Z. The series is now 112/131 (round 382), 117/139 (383), 121/159 (384), 125/169 (385): local has gained 13 commits and origin 38 in about two hours, and the same two other-seat files still block the fast-forward. Five MEM rows -- Q-MEM-338 (round 358) through Q-MEM-342 -- are written and UNLANDED. I did not merge, stash or rebase (rules 21 and 45). The backlog now grows by one row per round with no landing path that does not touch another seat's uncommitted work."
   r385_the_09_07_refusal_NAMES_ruled_day_set_BY_ITS_OWN_DELTA: "The thread closes on itself. The refusal that stopped the 09-07 reproduction is BOOK_BUILT_BY_DIFFERENT_SCORING_CODE, declared 157413f6562cf5bd against actual 2aa226623522814, and the instrument prints its own SCORING-PATH DELTA: on the path ['ruled_day_set']+['PARAMS_REL'], changed 6 defs / 2 names, INTERSECTION ['ruled_day_set']. That is the function whose split I drove at round 382 and whose six-versus-eleven consequence I found in the receipts at round 384, now named by the production refusal itself. I did not have to argue the connection; the instrument printed it."
   r385_the_SHARED_TREE_is_47_commits_behind_on_the_VALUATION_CODE: "DA's own code-freeze v8 measures de_multiday_gate1_runner.py at 7efea16 as 157413f6562cf5bd and at the freeze as acf911db48d445dd, calling 7efea16 47 commits behind. I had independently measured the SHARED TREE's runner as 157413f6562cf5bd -- the same bytes. So mm-research carries the 7efea16-era valuation code, which is also what the landed 09-07 and 09-08 books record as their builder. This extends round 383's finding from the comparator to the runner: the tree every seat reads by default is 47 commits behind the freeze on BOTH."
   r385_the_freeze_built_09_08_book_verified_by_my_own_hash: "be183ident0908 produced 390,041,103 B at sha 05144b6fce62e2cc, which I hashed myself rather than reading from the receipt. Its receipt records builder_commit b34ed9fdd1e32fe2, ruled_day_set of ELEVEN days, an import closure of 51 modules, and the runner digest 2aa226623522814316 -- which equals what I measured at BOTH origin refs. The freeze-built book records the freeze's own bytes, which is the whole point of rebuilding it."
@@ -28098,6 +28099,10 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r385_the_landing_is_refused_a_fourth_time_at_125_over_169:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    said: "ran the script --dry with the five ids: LOCK HELD 14:14:07Z then HELD BEHIND_AND_NOT_FF; git rev-list --left-right --count gave 125 169 against 121 159 half an hour earlier and 112 131 two hours earlier."
   r385_the_09_07_refusal_NAMES_ruled_day_set_BY_ITS_OWN_DELTA:
     prov: CHECKED
     artifact: data/pm_5min/derived/de_a_0907_pe.log
