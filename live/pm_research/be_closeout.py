@@ -78,8 +78,19 @@ def _peak(unit: str):
             attempts = row["attempt"]
     if peak is None:
         return {"status": "NO_PEAK_IN_RECORD", "path": str(p)}
-    return {"status": "PRESENT", "peak_of_record_bytes": peak,
-            "peak_gib": round(peak / 2 ** 30, 3), "attempts": attempts,
+    # The wrapper writes this field as an int in recent records and as a STRING
+    # in older ones (be140frag0908, be147frag0909). Coerce, and refuse by type
+    # rather than crash -- a close-out that dies on one day's record silently
+    # leaves that day with no committed number, which is the whole failure this
+    # file exists to prevent.
+    try:
+        peak_i = int(str(peak).strip())
+    except ValueError:
+        return {"status": "PEAK_NOT_NUMERIC", "raw": repr(peak),
+                "path": str(p.relative_to(ROOT))}
+    return {"status": "PRESENT", "peak_of_record_bytes": peak_i,
+            "peak_was_a_string_in_the_record": not isinstance(peak, int),
+            "peak_gib": round(peak_i / 2 ** 30, 3), "attempts": attempts,
             "source": str(p.relative_to(ROOT))}
 
 
@@ -195,10 +206,14 @@ def falsify():
     note("a day with no artifact writes ARTIFACT_ABSENT, not a blank",
          r3["artifact"]["status"] == "ARTIFACT_ABSENT" and "census" not in r3)
     p3.unlink()
+    pk = _peak("be140frag0908")
+    note("a peak stored as a STRING in an older record is coerced, not crashed",
+         pk["status"] == "PRESENT" and isinstance(pk["peak_of_record_bytes"], int),
+         f"{pk.get('peak_gib')} GiB, was_string={pk.get('peak_was_a_string_in_the_record')}")
     r4 = _unit("no_such_unit_be206")
     note("a not-found unit is named as such -- its dead/success/0 are DEFAULTS",
          r4["LoadState"] == "not-found" and "UNIT_NOT_LOADED" in r4["status"])
-    print(json.dumps({"falsifier": "be_closeout", "n": 6, "failed": rc}))
+    print(json.dumps({"falsifier": "be_closeout", "n": 7, "failed": rc}))
     return rc
 
 
