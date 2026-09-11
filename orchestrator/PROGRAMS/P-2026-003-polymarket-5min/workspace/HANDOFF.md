@@ -1,3 +1,110 @@
+# READ FIRST — round 355 (MEM, 2026-09-11T03:30:36Z, tip `fccab36`)
+
+# 🎯 A BAR WAS REFUTED **BEFORE THE RUN** — and only a second seat could do it
+
+REV 173 refuted BE's `REL_BAR = 1e-9`. **I computed the width:**
+
+```
+1e-9 × 17.79        = 1.779e-08   admitted
+ulp(17.79)          = 3.553e-15   last-ulp noise
+ratio               = 5.01e+06    →  6.7 orders of magnitude
+```
+
+> REV: *"a δ that large isn't float noise; it's a behavioural change that
+> happened not to cross theta today."*
+
+**BE set that bar honestly — in the file, before any comparison — and it was
+still wrong IN THE PERMISSIVE DIRECTION.** *The thing that caught it was not more
+care. It was a second independent declaration.*
+
+**This is rule 38 applied PROSPECTIVELY, and it is the first time here.** Every
+previous use was retrospective: two seats had already agreed and the question was
+whether the agreement meant anything. **Here the second declaration came before
+the comparison and changed it.**
+
+# 🚧 NO COMPARATOR RESULT CAN MAKE THE WAIVER AVAILABLE
+
+- One day / zero flips — **necessary, not sufficient.**
+- Four consumed days at REV's criterion with `m_min > δ_max` — sufficient **only
+  for the claim it makes.**
+- **Sufficiency for a FORWARD day requires a PER-BOOK GUARD**, because the
+  deciding quantity is **that day's own occupancy near theta**, and nothing
+  measured on consumed days substitutes. **A green certification does NOT retire
+  it.**
+
+**Falsification declared up front, with the rescue named:** *any flip, any arm,
+any compared day refutes it — **"it does not become 'one in 24,000'."*** *A
+refutation condition that forecloses the rescue is stronger than one that merely
+states a threshold, because the rescue is what actually gets attempted.*
+
+# ✋ I WITHDRAW MY ROUND-354 STATEMENT
+
+I recorded that the book-code predicate **"refuses by name on every forward
+book."** **That does not follow.** `assert_book_scoring_code`
+(`de_multiday_gate1_runner.py:6927`) compares receipt-closure against **DISK**
+(`be_producing_closure.expected_set_from_disk`), and **its own body says the
+recorded 49 is "every module imported anywhere in the build" and is "NEVER
+REFUSED ON, because static reachability OVER-APPROXIMATES."** Under the
+one-commit ruling it **matches and needs no waiver.**
+
+> **DA's 8/10 is sound — I hashed it myself. What does not follow is the
+> consequence. I verified the MEASUREMENT at the artifact and relayed the
+> INFERENCE as though the verification covered both: a checked number and an
+> unchecked conclusion travelled in one flag under one `prov: CHECKED`.**
+
+*Rule 42's shape at the level of a sentence rather than an instrument — I checked
+the part that had a digest and not the part that had a claim.*
+
+# ✅ EVALUATOR PROVENANCE CLOSED — better than expected
+
+`de_forward_evaluator.py` is a **new file**, so there is no older tree it could
+have rehearsed on; my round-354 gap closes. **But the adding commit is `06061d7`,
+not `c73214d`** — git's add-filter names it, +116 lines. *Conclusion unaffected;
+the ref is wrong, and wrong refs are this session's recurring theme.*
+
+**And the stale "28 cells" has a durable source:** `06061d7`'s **commit subject**
+says *"28-cell falsifier"* — permanently. DE's falsifier is **45**. ***A number
+written into a commit message cannot be superseded in band: the message is
+immutable and is exactly what a later reader greps.***
+
+# 🔑 DA'S UNASKED OBSERVATION — carry it prominently
+
+| N | day-sign leg |
+|---|---|
+| 6 | **arithmetically impossible** — 0.03125 > the 0.025 Holm bar |
+| **7** | **attainable, but demands unanimity** — `tolerance_negative_days = 0` |
+
+> ***The USER's N=7 ruling is what made this test capable of passing at all.***
+
+**The original menu of N = 5 / 6 / 9 contained no viable option below 7** — it was
+built on effect size and **never checked the day-cluster floor.**
+
+# 🔎 TWO OPEN ITEMS, ONE OF THEM NARROWER THAN POSED
+
+**`be_cascade` is NOT an unenforced pin.** `be_rule22.py` consumes
+`payload.be_cascade.modules` at **`:377`** and raises at **`:389`/`:397`**, with
+its own commentary at `:226`–`:328` on what such a guard pins **and what it
+cannot see**. **So the question is not whether an enforcer exists — it is whether
+that enforcer runs on a FORWARD BOOK EMIT.** *Filed in the narrower form, because
+the broader one has an answer and would have gone in as an open defect.*
+
+**And the 8/10 case may not exist until the first `FWD1` book** — the consumed
+receipts are all 10/10. *So it cannot be settled by inspecting existing
+artifacts: it needs the first book, or **a constructed case** — rule 42's
+discharge again, rather than waiting for production to supply it.*
+
+**The 69 stays open on the sharp question:** whether *"corrects the prior, not the
+denominator"* is **adequate or merely honest — since nobody has stated what the
+prior BECOMES.** *DE's distinction resolved which number governs the correction,
+correctly; it did not price the adjustment. **An honest label on an unquantified
+adjustment beats a wrong denominator and is not the same as a priced one.***
+
+**Status:** 09-07 building at `7ed5a90`; DE values it on landing, carrying the
+pipeline-provenance limit. **At G=7 tolerance is ZERO — one negative day ends
+that arm** (7-of-7 = 0.015625; **6-of-7 = 0.125**, eight times that and five
+times the bar). *The first forward day is about to produce a sign, which is when
+that tolerance stops being arithmetic.*
+
 # READ FIRST — round 354 (MEM, 2026-09-11T03:24:02Z, tip `b7a0faa`)
 
 # ✅ 09-07 STANDS — **population FINAL: 09-07..09-13, N = 7**
