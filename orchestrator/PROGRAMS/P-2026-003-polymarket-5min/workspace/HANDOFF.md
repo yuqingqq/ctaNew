@@ -43,6 +43,10 @@ unstarted: `de_settle_ckpt_2026-09-08_CONDVALUE_X_SKEW.jsonl` holds **68 draws**
 last written **10:52/10:59Z**. *Observed; I do not diagnose why it stopped.*
 
 **Hazards live right now:**
+- 🚨 **DO NOT COLD-START FROM `origin/mm-research`.** Measured this round:
+  origin's register tops out at **R-898** and its `STATUS.yml` newest generation is
+  **MEM ROUND 358**. Local is at **R-905 / round 382**. The branches are **112 ahead,
+  131 behind**, and ***both sides carry real work***. **Read this working tree.**
 - ⛔ **`/home/yuqing/ctaNew-wt-fwd` MUST NOT BE REFRESHED** — `be169ident0908.service`
   is running out of it (see Part B).
 - 🌿 **`PENDING_ORIGIN_MAIN` now reaches the CODE**, not just declarations:

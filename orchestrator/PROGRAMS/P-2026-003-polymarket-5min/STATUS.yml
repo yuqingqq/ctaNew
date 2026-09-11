@@ -306,6 +306,8 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r382_origins_state_files_are_twenty_four_MEM_rounds_stale: "MEASURED, not estimated: origin/mm-research's COORDINATION.md tops out at R-898 while the local register is at R-905, and origin's STATUS.yml newest generation is MEM ROUND 358 against local 382. The branches are 112 ahead and 131 behind each other and BOTH SIDES CARRY REAL WORK -- local holds R-899..R-905, MEM 359-382, DA 224-263; origin holds REVIEW 205-210, DE 305-315, DA 241/Q-DA-453. Anyone cold-starting from origin/mm-research reads round 358's state. This is the branch the register calls the authority."
+  r382_the_landing_is_blocked_by_two_other_seats_uncommitted_files: "land_register_row.sh --row exited HELD BEHIND_AND_NOT_FF. The script guards the REGISTER file for dirtiness, but its fast-forward can be blocked by a dirty file anywhere in the tree, and here it is: live/pm_research/da_population_freeze_verify.py and workspace/BE_PROCEDURE.md are BOTH modified-uncommitted AND both differ between HEAD and origin/mm-research, so a merge would have to touch them. I did not merge, did not stash and did not rebase -- rules 21 and 45. Q-MEM-338 (round 358) and Q-MEM-339 (this round) are written and UNLANDED, and only those two survive as artifacts; the rows I had recorded as pending for rounds 359-362 and 372 have no file on disk and I am not claiming them."
   r382_I_re_read_at_the_head_and_the_finding_survived_a_harder_guard: "origin/de-freeze-chain-v2 and origin/be-build-runner had BOTH moved to eb923d3 (12:39:24Z) while I was sweeping, two commits past the c853e2d I drove. I re-drove rather than report from the older ref. The split survives, and DE 313 has since made it SHARPER not softer: ruled_day_set() no longer falls back to PARAMS_REL at all -- it raises RULED_SET_UNRESOLVED, its own comment saying a fallback reported a ruled set the freeze does not name -- while load_params() still reads v29 silently. A new ruled_day_set_read_from() reports the file actually read, computed. So one side of the pair refuses when it cannot resolve and the other never tries."
   r382_two_independent_seats_reached_my_headline_from_other_doors: "REVIEW 207 states v32 cannot be loaded and ruled_day_set reads v29 -- the supersession unblocks nothing; REVIEW 210 states the lock record still reports v29; Q-DA-453 re-derived load_params at origin/de-freeze-chain-v2 after that ref MOVED off the dispatch's b310915. Three arrivals at the same seam from three different questions, none of them mine, all filed while I was driving it. Recorded because corroboration nobody arranged is worth more than my own second look."
   r382_ruled_set_and_loader_now_disagree_inside_one_module: "DRIVEN, not read: at c853e2d, ruled_day_set() resolves the freeze chain (9 links) to params_v33 = 11 days, expected_G 11; load_params() in the SAME module still defaults to the PARAMS_REL literal = params_v29 = 6 days, expected_G 6. Two answers to the ruled-day question in one file. The fix's own comment says a second implementation of the ruled set is the defect the programme has closed twice."
@@ -27996,6 +27998,14 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r382_origins_state_files_are_twenty_four_MEM_rounds_stale:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "git show origin/mm-research:<register> | grep '^### R-' | tail -> R-898; the same on STATUS.yml gave (MEM ROUND 358 as the newest generation; git rev-list --left-right --count mm-research...origin/mm-research gave 112 131."
+  r382_the_landing_is_blocked_by_two_other_seats_uncommitted_files:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    said: "ran the script with --dry: LOCK HELD 12:41:10Z then HELD BEHIND_AND_NOT_FF 'Not possible to fast-forward, aborting'. git diff --name-only HEAD origin/mm-research listed both dirty paths; git status --short shows both as ' M'. Searched the scratchpad for row files: row358.txt is the only one whose id is absent from the register."
   r382_I_re_read_at_the_head_and_the_finding_survived_a_harder_guard:
     prov: CHECKED
     artifact: git:eb923d3:live/pm_research/de_multiday_gate1_runner.py
