@@ -839,6 +839,52 @@ there.** DE does not push to it. One DE commit (`a95bd524`, the day-record
 module and the day-slice definition) was pushed at 19:05Z before this rule
 existed and is the user's to keep or revert.
 
+## 16. WHEN A TIGHTENING LANDS, RE-DRIVE WHAT TESTS IT (REVIEW 205, DE 372)
+
+**Four instances in three rounds, and every one was invisible in the
+module that changed, because the module that changed was green:**
+
+| tightening | what broke |
+|---|---|
+| my gate 4 required a canonical population | the FIXTURES of gates 5 and 6, which call `build_actions` |
+| DA's gate 4 tightening | DA's own gate-4 probe |
+| my `action_keys_sha256` became required | DA's gate-6 probe, which constructs `ReplayInputs` |
+| — and that probe crashing | an unprobed LEDGER row defaulted to SATISFIED |
+
+The last one is the reason this is a rule and not a habit: **a tightening
+made a published ledger read BETTER than before.**
+
+**The rule:** when a tightening lands, re-drive the falsifiers of
+everything that TESTS the tightened thing — not only the thing itself —
+at a named tree (§15), before reporting the tightening.
+
+**The rule as an instrument**, because a rule nobody runs is prose beside
+a table: `live/pm_research/de_dependents_sweep.py <module.py> [--tree D]`
+finds every file importing the module, drives each `--falsify`, and
+refuses `DEPENDENT_FALSIFIER_IS_RED_AFTER_THE_TIGHTENING` naming them. A
+dependent with no falsifier is REPORTED, never counted green.
+
+**Two traps it fell into first, both worth keeping in mind:**
+
+- **A stale `.pyc` defeated its own fixture.** `VALUE = 1` and `VALUE = 2`
+  are the same SIZE, and CPython reuses cached bytecode when mtime and
+  size match — so the "tightened" module behaved like the old one and the
+  dependent stayed green. The sweep sets `PYTHONDONTWRITEBYTECODE`.
+- **The verdict is the EXIT CODE, never a count parsed from output.** A
+  module that DRIVES other modules echoes THEIR totals; taking the last
+  `N/M cells pass` line read a nested module's count and attributed it to
+  the wrong subject — the exact defect the sweep exists to catch,
+  committed by the sweep.
+
+**And the sweep's first real run found something a direct run hid:**
+`da_fair_value_ledger.py` is green from the repo with a full environment
+and **red from `/tmp` with a minimal one**, its own control naming the
+cause — `A PATH KNOWN TO BE LANDED COUNTS > 0 — the control that catches a
+cwd bug` → `{'de-freeze-chain-v2': 0, 'be-build-runner': 0}`. I nearly
+"corrected" the sweep to match the greener answer. **When two drives
+disagree, the one with the narrower environment is usually the honest
+one.**
+
 ## CURRENT POSITION — DE, 2026-09-11T12:51Z (written at 97% context)
 
 **Read R-906 (coordinator) after compaction; it carries the coordinator's view.**
