@@ -23593,3 +23593,24 @@ generation and the window went 4 → 3. Nothing rewritten.
   the failure that voided the instrument is the same fact that preserves the
   pre-registration. tip 845e2b6)
 ```
+
+## Batch 354 (rotated by MEM round 372, 2026-09-11T07:42:55Z)
+
+```
+  2026-09-11T07:29:06Z (MEM ROUND 369 -- THE POST-PROCESSOR EXISTS AND I GREPPED THE ORIGIN BLOB: every
+  named token is in af675ac, authored 07:25:05, ahead of the book and ~90 min ahead of the
+  re-valuation. AND MY ROUND-368 GREP WAS CORRECT WHEN IT RAN: 07:24:06, one to two and a
+  half minutes BEFORE the file arrived -- THE ABSENCE I RECORDED WAS TRUE AT THE INSTANT OF
+  MEASUREMENT AND FALSE BY THE TIME IT WAS FILED, which is neither an error nor a vindication
+  but the reason A MEASUREMENT OF A MOVING TREE CARRIES ITS TIMESTAMP OR IT CARRIES NOTHING.
+  THE CORRECTION THAT MATTERS IS PHANTOM VERSUS PREMATURE: DE 252 at 07:08 described code
+  THAT DID NOT EXIST; DE 257 at 07:25 described the DESIGN OF A FILE THAT LANDED FOUR
+  MINUTES LATER. Different failures, different remedies. AND I CLOSED THE OPEN QUESTION ON
+  THE REFERENCE LEVELS: BOTH LITERALS ARE PRESENT -- 18.4 once and 1036.5 once -- while the
+  COMMA FORM 1,036.5 RETURNS ZERO, which is how the number is written in every dispatch, so
+  the search was of the RENDERED figure against SOURCE: the label instead of the property,
+  inside the hunt for that very class. The remaining open item is the INVOKING UNIT, and the
+  coordinator's formulation is exact: A POST-PROCESSOR NOBODY INVOKES IS DE 252 WITH A FILE
+  ATTACHED. Census total 145.306 s minus the 28th gap is 143.753, against the 143.8 I
+  recorded at round 365 -- 47 MILLISECONDS, all of it my own rounding. tip 2e6df95)
+```

@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T07:42:55Z (MEM ROUND 372 -- THE POST-POPULATION QUEUE AND RULE 47. The queue is recorded
+  as ONE item with FOUR owners, all landing together after 09-13's book, each with its
+  falsifier -- and DA 220's reason for pairing the wiring is the keeper: 'the call site
+  alone refuses every day; the params alone leave the cascade unchecked', so EACH HALF
+  ALONE IS WORSE THAN NEITHER. BUT I CHECKED THE REGISTER AND ONLY THE ARBITER IS ABSENT
+  BY TOKEN: flow_intensity appears 49 TIMES on origin, gaps_by_slug 14, verify_run_inputs
+  15. What the dispatch is right about is a DIFFERENT PROPERTY -- APPEARING IS NOT BEING
+  QUEUED AS AN OWNED DEFERRAL -- and that distinction is exactly why the row is worth
+  having, because MENTION AND QUEUEING LOOK IDENTICAL TO A GREP. RULE 47 IS LANDED: two
+  autonomous chains sharing one lock need an ARBITER, NOT POLITENESS -- three incidents
+  tonight, EACH WAITER INDIVIDUALLY CORRECT AND THE PAIR RACED TWICE, and it is THE COST OF
+  THE FIX FOR RULE 37, since durable waiters outlive their turns and therefore COMPETE. I
+  VERIFIED THE RESIDUAL'S SIGN INVERSION ALGEBRAICALLY: residual = -sum(260), so a +50c
+  change OUTSIDE the 27 shows as -50c. And both rows are recorded HERE because the tree is
+  58 AHEAD AND 59 BEHIND AND DIRTY: the content is not lost, its address is pending.
+  tip 762a481)
   2026-09-11T07:39:16Z (MEM ROUND 371 -- THE REBUILT BOOK LANDED with the three digests I hashed myself
   at rounds 353-354, era clob_v4_1, old book superseded WITH ITS ORIGINAL MTIME. I
   differenced the sizes: THE BOOK GREW 2.01 MB while THE FRAGMENT HAD SHRUNK 232 KB --
@@ -98,22 +114,6 @@ updated: >-
   09-08/09/10 ALL ZERO, so THE ROW-REMOVING CONSEQUENCE IS CONFINED TO DAY ONE. And DE v9's
   key fix matters because A MIS-KEYED LOOKUP DOES NOT ERROR, IT FALLS THROUGH TO THE OLD
   VALUE. tip 77fcb80)
-  2026-09-11T07:29:06Z (MEM ROUND 369 -- THE POST-PROCESSOR EXISTS AND I GREPPED THE ORIGIN BLOB: every
-  named token is in af675ac, authored 07:25:05, ahead of the book and ~90 min ahead of the
-  re-valuation. AND MY ROUND-368 GREP WAS CORRECT WHEN IT RAN: 07:24:06, one to two and a
-  half minutes BEFORE the file arrived -- THE ABSENCE I RECORDED WAS TRUE AT THE INSTANT OF
-  MEASUREMENT AND FALSE BY THE TIME IT WAS FILED, which is neither an error nor a vindication
-  but the reason A MEASUREMENT OF A MOVING TREE CARRIES ITS TIMESTAMP OR IT CARRIES NOTHING.
-  THE CORRECTION THAT MATTERS IS PHANTOM VERSUS PREMATURE: DE 252 at 07:08 described code
-  THAT DID NOT EXIST; DE 257 at 07:25 described the DESIGN OF A FILE THAT LANDED FOUR
-  MINUTES LATER. Different failures, different remedies. AND I CLOSED THE OPEN QUESTION ON
-  THE REFERENCE LEVELS: BOTH LITERALS ARE PRESENT -- 18.4 once and 1036.5 once -- while the
-  COMMA FORM 1,036.5 RETURNS ZERO, which is how the number is written in every dispatch, so
-  the search was of the RENDERED figure against SOURCE: the label instead of the property,
-  inside the hunt for that very class. The remaining open item is the INVOKING UNIT, and the
-  coordinator's formulation is exact: A POST-PROCESSOR NOBODY INVOKES IS DE 252 WITH A FILE
-  ATTACHED. Census total 145.306 s minus the 28th gap is 143.753, against the 143.8 I
-  recorded at round 365 -- 47 MILLISECONDS, all of it my own rounding. tip 2e6df95)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -285,6 +285,18 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 372, the queue row and rule 47 ---
+  THE_POST_POPULATION_QUEUE_IS_RECORDED_HERE_AS_ONE_ITEM_WITH_ITS_FOUR_OWNERS: "All landing together after 09-13's book, about 2026-09-14, in ONE COMMIT, each with its falsifier. (a) BE: flow_intensity.gaps_by_slug DROPS BOUNDARY-SPANNING GAPS ENTIRELY, plus the replay-invisible-gap defect at bc1ed86 on two of five consumed days IN BOTH DIRECTIONS. (b) DE: the 24-30 unnamed refusals renamed and driven, the arm-freeze-absent path's BARE 'REFUSED:' named, PIPELINE_MOVED driven on a PERTURBED builder_commit, and the empty |D|-to-zero field given a driven non-empty case. (c) BE AND DE TOGETHER: verify_run_inputs wired AND the params cranked AS A PAIR. (d) COORDINATOR: a LOCK ARBITER."
+  AND_DA_220S_REASON_FOR_PAIRING_C_IS_THE_ONE_TO_KEEP: "'The call site alone refuses every day; the params alone leave the cascade unchecked.' So the two halves are not a task and its follow-up -- EACH HALF ALONE IS WORSE THAN NEITHER. That is why it is one queue item with two owners rather than two items, and it is the same shape I recorded at round 353 when BE said neither the call site nor the params crank works alone. A pair that must land together is a different object from two things that should."
+  BUT_I_CHECKED_THE_REGISTER_AND_ONLY_ONE_OF_THE_FOUR_IS_GENUINELY_ABSENT: "The dispatch says origin's register has ZERO MENTIONS OF THREE OF THESE. I grepped origin's copy: flow_intensity appears 49 TIMES, gaps_by_slug 14, verify_run_inputs 15 -- and arbiter ZERO. So ONLY THE ARBITER IS ABSENT BY TOKEN. What the dispatch is right about is a DIFFERENT PROPERTY: appearing in the register is not the same as BEING QUEUED AS A DEFERRED FIX WITH AN OWNER AND A DATE. A token's presence and an item's status are different things, and I record the distinction rather than endorsing or contradicting the premise."
+  AND_THAT_DISTINCTION_IS_EXACTLY_WHY_THE_ROW_IS_WORTH_HAVING: "Three of these items have been DISCUSSED at length in the register and NONE OF THEM IS QUEUED THERE AS AN OWNED DEFERRAL -- they live by name in BE_PROCEDURE section 10, which is BE'S FILE, NOT THE REGISTER. A deferred fix that lives in one seat's procedure file IS LOST AT THE NEXT RESET, and forty-nine mentions of a token across a discussion do not constitute a queue. The row is the register's copy, and the reason it is needed is precisely that mention and queueing look identical to a grep."
+  RULE_47_IS_LANDED_AND_EACH_WAITER_WAS_INDIVIDUALLY_CORRECT: "At SEAT_PROTOCOL.md:727. Two autonomous chains sharing one lock need AN ARBITER, NOT POLITENESS. Three incidents in one night -- DE's probe against BE's tape at 06:48, BE's fragment against DE's re-valuation at 07:35 where A WAITER ARMED TWENTY MINUTES EARLIER LOST, and the DE waiter deadlock BE described. EACH WAITER WAS INDIVIDUALLY CORRECT AND THE PAIR STILL RACED TWICE, which is the whole argument: POLITENESS CANNOT ORDER TWO PROCESSES THAT CANNOT SEE EACH OTHER."
+  AND_IT_IS_A_COST_OF_THE_FIX_FOR_RULE_37_WHICH_IS_WORTH_SAYING_PLAINLY: "The durable-waiter discipline that closed rule 37 -- a hand-off must never rest on a seat's turn staying alive -- produced waiters that OUTLIVE THEIR TURNS AND THEREFORE COMPETE. That is not an argument against rule 37; it is the shape of a real fix, which solves the problem it names and creates a smaller one at the next level. Recording the lineage matters because the next reader will otherwise treat the races as carelessness rather than as the price of a durability that was itself bought with a lesson."
+  THE_EMITS_TWO_HALT_CONDITIONS_CARRY_ONE_NAME_WHICH_MAKES_THEM_UNREADABLE_APART: "REV 150: 'decomposition missing' and 'change outside the 27' BOTH RAISE PER_WINDOW_TABLE_DOES_NOT_SUM_TO_THE_REPORTED_DELTA_D. Those are opposite diagnoses -- one says the instrument has no input, the other says the world moved somewhere unexpected -- and a single name forces a reader to guess which. DE 263 is splitting the names before about 09:00 and then RESTARTING THE EMIT UNIT, which is the part that makes the fix take effect rather than merely exist."
+  AND_I_VERIFIED_THE_RESIDUALS_SIGN_INVERSION_ALGEBRAICALLY: "The residual is sum(27) minus delta-D, and delta-D is the sum over all 287, which is sum(27) plus sum(the other 260). So the residual equals MINUS SUM(260). I worked it through: A +50c CHANGE OUTSIDE THE 27 APPEARS AS A RESIDUAL OF -50c. Anyone reading the residual as 'the unexplained amount' will get the direction backwards, which is why DE is emitting residual_sign_convention as a field rather than trusting the reader to derive it."
+  THE_EMIT_UNIT_REFUSES_IF_DISK_EVER_DIVERGES_FROM_ORIGIN_AND_THAT_WAS_CHECKED_NOT_RELAYED: "deEMIT0907c runs from wt-de2 at ef1ad8e with BOTH modules' digests matching origin, and its wrapper REFUSES BY NAME -- EMIT_MODULE_IS_NOT_THE_LANDED_BYTES -- if the disk copy ever diverges. The coordinator verified it AT THE WRAPPER rather than relaying it, which is the discipline this programme spent the night learning; and the refusal closes the gap I recorded at round 358, where a run's tree could differ from the declared commit and NOTHING ASKED."
+  AND_BE_139S_CENSUS_CONTROL_FIRED_ON_ITS_FIRST_RUN: "BE filtered by COIN while gaps_by_slug KEYS ON SLUG ONLY -- 160 against 165 -- and the control caught it, BE reconciled, and only then came the result. A control that fires on its first real use is worth more than one that has passed a hundred times, because the first firing is the only evidence that it CAN. This is the same day on which a fixture could not catch a 28-row table and an emit printed a true row count while emitting 28 rows; the difference is that this one had the case that mattered."
+  AND_BOTH_ROWS_ARE_RECORDED_HERE_BECAUSE_THE_REGISTER_CANNOT_TAKE_THEM_YET: "I measured the tree: 58 AHEAD AND 59 BEHIND, with BE_PROCEDURE.md modified and three untracked files present. The lander needs a clean fast-forward and gets neither. So ROW 1 and ROW 2 are recorded in these state files with their owners, falsifiers and reasons, and they land in the register when the fork and the dirty tree are resolved. THE CONTENT IS NOT LOST; ITS ADDRESS IS PENDING -- which is a materially different state from a row that was never written, and is the distinction this round is otherwise about."
   # --- MEM round 371, the book, the decomposition, the lock race ---
   THE_REBUILT_BOOK_LANDED_WITH_THE_THREE_DIGESTS_I_HAVE_BEEN_TRACKING: "be140book0907 rc=0 at 07:35:17Z, 358,259,004 bytes, producing_code.builder_commit 7ed5a9015f75, with be_daybook_build.py 2d31a80b5ae5c2c6, de_head_scoring.py 31c368384770351f and de_phase4_diag_runner.py 9e2a0977d8dfc3be -- THE SAME THREE DIGESTS I HASHED INDEPENDENTLY AT ROUNDS 353 AND 354 and have carried since. Era clob_v4_1. The old book is superseded at a timestamped path WITH ITS ORIGINAL MTIME PRESERVED, which is what makes the supersession auditable rather than merely tidy."
   AND_THE_BOOK_GREW_BY_2_01_MB_WHILE_THE_FRAGMENT_HAD_SHRUNK_BY_232_KB: "I differenced both. BOOK: 358,259,004 minus 356,248,843 is +2,010,161 bytes, 2.01 MB or 1.92 MiB -- attributed to changed replay content in the 27 gap-bearing windows. FRAGMENT, from round 363: 660,075,638 minus 660,307,943 is -232,305 bytes -- and THAT ONE IS STILL UNEXPLAINED. OPPOSITE DIRECTIONS, and I record them together with their different statuses: one attributed, one open. A reader meeting only the book's growth would assume the fragment's shrinkage had been explained by the same mechanism."
@@ -27869,6 +27881,73 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 372, 2026-09-11T07:42:55Z ---
+  THE_POST_POPULATION_QUEUE_IS_RECORDED_HERE_AS_ONE_ITEM_WITH_ITS_FOUR_OWNERS:
+    prov: RELAYED
+    from: coordinator MEM 372
+    as_of: 2026-09-11T07:42:55Z
+    said: >-
+      the four owners and their items as dispatched; my own independent check of the register's coverage is filed separately below.
+  AND_DA_220S_REASON_FOR_PAIRING_C_IS_THE_ONE_TO_KEEP:
+    prov: RELAYED
+    from: DA 220 via coordinator MEM 372
+    as_of: 2026-09-11T07:42:55Z
+    said: >-
+      DA's quoted reason as dispatched; the same both-halves requirement is recorded in my round-353 flags.
+  BUT_I_CHECKED_THE_REGISTER_AND_ONLY_ONE_OF_THE_FOUR_IS_GENUINELY_ABSENT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:42:55Z
+    said: >-
+      grep -ci on git show origin/mm-research of COORDINATION.md for each token: flow_intensity 49, gaps_by_slug 14, verify_run_inputs 15, arbiter 0 and 'LOCK ARBITER' 0.
+  AND_THAT_DISTINCTION_IS_EXACTLY_WHY_THE_ROW_IS_WORTH_HAVING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:42:55Z
+    said: >-
+      the counts above establish that the tokens are present; BE_PROCEDURE section 10 as the items' actual home is as dispatched.
+  RULE_47_IS_LANDED_AND_EACH_WAITER_WAS_INDIVIDUALLY_CORRECT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T07:42:55Z
+    said: >-
+      rule 47 written and located at SEAT_PROTOCOL.md:727 with its three incidents and the interim declaration requirement.
+  AND_IT_IS_A_COST_OF_THE_FIX_FOR_RULE_37_WHICH_IS_WORTH_SAYING_PLAINLY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T07:42:55Z
+    said: >-
+      rule 37 is in SEAT_PROTOCOL from round 332 and rule 47 from this round; the causal relation is stated in rule 47's text.
+  THE_EMITS_TWO_HALT_CONDITIONS_CARRY_ONE_NAME_WHICH_MAKES_THEM_UNREADABLE_APART:
+    prov: RELAYED
+    from: REV 150 via coordinator MEM 372
+    as_of: 2026-09-11T07:42:55Z
+    said: >-
+      the shared refusal name and the split as dispatched; the two halt conditions are recorded in my round-367 and round-370 flags.
+  AND_I_VERIFIED_THE_RESIDUALS_SIGN_INVERSION_ALGEBRAICALLY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:42:55Z
+    said: >-
+      the algebra carried through: residual = sum(27) - (sum(27) + sum(260)) = -sum(260), checked with a worked +50c example.
+  THE_EMIT_UNIT_REFUSES_IF_DISK_EVER_DIVERGES_FROM_ORIGIN_AND_THAT_WAS_CHECKED_NOT_RELAYED:
+    prov: RELAYED
+    from: coordinator MEM 372
+    as_of: 2026-09-11T07:42:55Z
+    said: >-
+      the wrapper's refusal name and the coordinator's own verification as dispatched; the wrong-tree gap it closes is recorded in my round-358 flags.
+  AND_BE_139S_CENSUS_CONTROL_FIRED_ON_ITS_FIRST_RUN:
+    prov: RELAYED
+    from: BE 139 via coordinator MEM 372
+    as_of: 2026-09-11T07:42:55Z
+    said: >-
+      the coin-versus-slug mismatch, the two counts and the ordering as dispatched.
+  AND_BOTH_ROWS_ARE_RECORDED_HERE_BECAUSE_THE_REGISTER_CANNOT_TAKE_THEM_YET:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:42:55Z
+    said: >-
+      git rev-list counts of 58 and 59 against origin/mm-research; git status showing one modified tracked file and three untracked ones.
   # --- MEM round 371, 2026-09-11T07:39:16Z ---
   THE_REBUILT_BOOK_LANDED_WITH_THE_THREE_DIGESTS_I_HAVE_BEEN_TRACKING:
     prov: CHECKED
