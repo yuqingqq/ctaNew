@@ -1,0 +1,3803 @@
+{
+ "protocol": "P003_DA_GUARD_REGISTER_V1",
+ "version": 1,
+ "declared_by": "DA 260",
+ "declared_at_utc": "2026-09-11T12:04:52Z",
+ "WHAT_THIS_IS": "one row per REFUSAL SITE on the build and valuation paths, at the pinned digest, with the condition, the inputs it reads, the rehearsal that exercises it, and whether it HAS been exercised. The user's 'check the issues first', made checkable.",
+ "THE_PREDICATE_IS_COMPUTED_NOT_PROSE": "a real run is ALLOWED only when EVERY ROW IT CAN HIT is exercised. `da_population_freeze_verify.py --guard-gate <lane>` computes it and REFUSES GUARD_ROW_NOT_EXERCISED_BEFORE_A_REAL_RUN, naming each unexercised site.",
+ "n_sites": 167,
+ "n_distinct_refusals": 105,
+ "n_exercised": 136,
+ "n_NOT_exercised": 31,
+ "by_lane": {
+  "BUILD_BUILDER": 22,
+  "VALUATION": 145
+ },
+ "SOURCE_OF_THE_ROWS": "enumerated BY THE OPERATION -- every `raise` whose message carries a REFUSED <NAME>, parsed from the AST at the pinned digest. DE 303(2) and BE 164(1) had not landed row artifacts when this was built, so these are MINE and must be reconciled with theirs, not assumed to agree.",
+ "A_GAP_THIS_ENUMERATION_EXPOSED": {
+  "WHAT": "the BOOK BUILDER IS NOT IN THE POPULATION FREEZE AT ALL",
+  "which": [
+   "live/pm_research/be_daybook_build.py",
+   "live/pm_research/be_era_for_day.py",
+   "live/pm_research/be_gate1_fragment.py"
+  ],
+  "the_freeze_BUILD_PATH_role_is": "the TEN be_cascade modules -- the NULL-RUN path, not the book builder",
+  "consequence": "22 of these refusal sites sit on code the freeze does not pin. A guard register over the build path is only as good as the pin under it, and there is none.",
+  "and_those_22_are_flagged_per_row": "pinned_by_the_freeze: false"
+ },
+ "the_exercise_instrument": {
+  "module": "p003_refusal_exercise_check.py",
+  "POPULATION": 217,
+  "n_exercised": 177,
+  "n_never_exercised": 40,
+  "ITS_DECLARED_LIMIT": "TEXTUAL PREDICATE. A cell that drives a refusal WITHOUT NAMING it reads as never-exercised, so THE ERROR INFLATES RATHER THAN DEFLATES. This is a FLOOR on what has been SEEN to be driven, never an exact defect count."
+ },
+ "rows": [
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:625",
+   "line": 625,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "SUPPLY_DOES_NOT_NAME_ITS_DAY",
+   "in_function": "day_slugs",
+   "condition": "sday is None",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:631",
+   "line": 631,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "SUPPLY_IS_FOR_A_DIFFERENT_DAY",
+   "in_function": "day_slugs",
+   "condition": "str(sday) != str(day)",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:1012",
+   "line": 1012,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "GENERATION_BOUNDS_ARE_NOT_FINITE_NUMBERS",
+   "in_function": "exclude_zero_length_generations",
+   "condition": "nonfinite or malformed",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:1022",
+   "line": 1022,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "ZERO_LENGTH_GENERATIONS_ARE_NOT_A_BOUNDARY_CASE",
+   "in_function": "exclude_zero_length_generations",
+   "condition": "frac > refuse_above",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:1090",
+   "line": 1090,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "MASK_SUPPLY_IS_FOR_A_DIFFERENT_DAY",
+   "in_function": "mask_block",
+   "condition": "str((sup or {}).get('day')) != str(day)",
+   "inputs_read": [
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:1109",
+   "line": 1109,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "MASK_COUNTS_ABSENT",
+   "in_function": "mask_block",
+   "condition": "closes is None",
+   "inputs_read": [
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:1117",
+   "line": 1117,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "MASK_ARITHMETIC_DOES_NOT_CLOSE",
+   "in_function": "mask_block",
+   "condition": "closes is False",
+   "inputs_read": [
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:1319",
+   "line": 1319,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "COVERAGE_BLOCK_INCOMPLETE",
+   "in_function": "assert_coverage",
+   "condition": "missing",
+   "inputs_read": [
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:1335",
+   "line": 1335,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "REFERENCE_GENERATION_COUNT_DISAGREES",
+   "in_function": "assert_coverage",
+   "condition": "v['n_reference_generations'] != n_gen",
+   "inputs_read": [
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:1342",
+   "line": 1342,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "COVERAGE_ARITHMETIC_INCOHERENT",
+   "in_function": "assert_coverage",
+   "condition": "v['n_uncovered'] != v['n_reference_generations'] - v['n_covered']",
+   "inputs_read": [
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:1350",
+   "line": 1350,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "GENERATION_IDENTITY_NOT_UNIQUE",
+   "in_function": "assert_coverage",
+   "condition": "ex['DUPLICATE_GENERATION_ID'] or ex['TWO_GENERATIONS_SHARE_A_T0']",
+   "inputs_read": [
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:1357",
+   "line": 1357,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "COVERED_COUNTS_DISAGREE",
+   "in_function": "assert_coverage",
+   "condition": "v['n_covered'] != v['n_covered_reference_entries']",
+   "inputs_read": [
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:1363",
+   "line": 1363,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "SCORED_KEY_NAMES_NO_REFERENCE_GENERATION",
+   "in_function": "assert_coverage",
+   "condition": "ex['SCORED_KEY_NAMES_NO_REFERENCE_GENERATION']",
+   "inputs_read": [
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:1370",
+   "line": 1370,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "COVERAGE_BELOW_THE_PRE_FIX_TEST",
+   "in_function": "assert_coverage",
+   "condition": "v['n_covered'] < v['pre_fix']['n_covered']",
+   "inputs_read": [
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:1379",
+   "line": 1379,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "COVERAGE_BELOW_FLOOR",
+   "in_function": "assert_coverage",
+   "condition": "min_coverage is not None and (v['coverage'] or 0.0) < min_coverage",
+   "inputs_read": [
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_daybook_build.py",
+   "site": "be_daybook_build.py:803",
+   "line": 803,
+   "at_digest": "2d31a80b5ae5c2c6",
+   "ref": "7ed5a9015f75",
+   "refusal": "PLACEMENT_LATENCY_SPLIT_DOES_NOT_CLOSE",
+   "in_function": "split_by_placement_latency",
+   "condition": "len(kept) + len(dropped) != len(allt) or len(dropped) != n_drop",
+   "inputs_read": [
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "be_daybook_build selftest/falsifier",
+    "command": "python3 live/pm_research/be_daybook_build.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_era_for_day.py",
+   "site": "be_era_for_day.py:90",
+   "line": 90,
+   "at_digest": "6b5afd71ad0a54f4",
+   "ref": "7ed5a9015f75",
+   "refusal": "NO_ERA_SPANS_IN_THE_LEDGER",
+   "in_function": "resolve",
+   "condition": "not spans",
+   "inputs_read": [
+    "A RECEIPT",
+    "FILE STAT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_era_for_day selftest/falsifier",
+    "command": "python3 live/pm_research/be_era_for_day.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_era_for_day.py",
+   "site": "be_era_for_day.py:96",
+   "line": 96,
+   "at_digest": "6b5afd71ad0a54f4",
+   "ref": "7ed5a9015f75",
+   "refusal": "NO_WINDOWS",
+   "in_function": "resolve",
+   "condition": "not slugs",
+   "inputs_read": [
+    "A RECEIPT",
+    "FILE STAT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_era_for_day selftest/falsifier",
+    "command": "python3 live/pm_research/be_era_for_day.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_era_for_day.py",
+   "site": "be_era_for_day.py:121",
+   "line": 121,
+   "at_digest": "6b5afd71ad0a54f4",
+   "ref": "7ed5a9015f75",
+   "refusal": "WINDOW_IN_MORE_THAN_ONE_ERA",
+   "in_function": "resolve",
+   "condition": "multi",
+   "inputs_read": [
+    "A RECEIPT",
+    "FILE STAT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_era_for_day selftest/falsifier",
+    "command": "python3 live/pm_research/be_era_for_day.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_era_for_day.py",
+   "site": "be_era_for_day.py:133",
+   "line": 133,
+   "at_digest": "6b5afd71ad0a54f4",
+   "ref": "7ed5a9015f75",
+   "refusal": "DAY_STRADDLES_ERA_BOUNDARY",
+   "in_function": "resolve",
+   "condition": "len(counts) > 1",
+   "inputs_read": [
+    "A RECEIPT",
+    "FILE STAT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_era_for_day selftest/falsifier",
+    "command": "python3 live/pm_research/be_era_for_day.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_era_for_day.py",
+   "site": "be_era_for_day.py:141",
+   "line": 141,
+   "at_digest": "6b5afd71ad0a54f4",
+   "ref": "7ed5a9015f75",
+   "refusal": "WINDOWS_IN_NO_ERA",
+   "in_function": "resolve",
+   "condition": "no_era",
+   "inputs_read": [
+    "A RECEIPT",
+    "FILE STAT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_era_for_day selftest/falsifier",
+    "command": "python3 live/pm_research/be_era_for_day.py --selftest"
+   }
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "pinned_by_the_freeze": false,
+   "file": "live/pm_research/be_era_for_day.py",
+   "site": "be_era_for_day.py:108",
+   "line": 108,
+   "at_digest": "6b5afd71ad0a54f4",
+   "ref": "7ed5a9015f75",
+   "refusal": "WINDOW_START_UNPARSEABLE",
+   "in_function": "resolve",
+   "condition": "<not an if-guarded raise>",
+   "inputs_read": [
+    "A RECEIPT",
+    "FILE STAT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_era_for_day selftest/falsifier",
+    "command": "python3 live/pm_research/be_era_for_day.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:297",
+   "line": 297,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "NO_SCORES_IN_THE_BOOK",
+   "in_function": "_entries",
+   "condition": "<not an if-guarded raise>",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:111",
+   "line": 111,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "ARM_FREEZE_ABSENT",
+   "in_function": "resolve_frozen_params_pin",
+   "condition": "not base.is_file()",
+   "inputs_read": [
+    "FILE BYTES",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:143",
+   "line": 143,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "ARM_FREEZE_ABSENT",
+   "in_function": "frozen_params",
+   "condition": "not freeze_path.is_file()",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:199",
+   "line": 199,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "NO_THETA_FOR_THE_ARM",
+   "in_function": "arm_heads",
+   "condition": "not out",
+   "inputs_read": [
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:211",
+   "line": 211,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "BOOK_UNREADABLE_NO_COMPARISON_POSSIBLE",
+   "in_function": "load",
+   "condition": "not p.is_file()",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:220",
+   "line": 220,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "BOOK_UNREADABLE_NO_COMPARISON_POSSIBLE",
+   "in_function": "load",
+   "condition": "not isinstance(obj, dict) or 'asm' not in obj or 'header' not in obj",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:251",
+   "line": 251,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "BOOKS_ARE_NOT_THE_SAME_EXPERIMENT",
+   "in_function": "verify_comparison_receipts",
+   "condition": "not all(source_digests.values()) or source_digests['old'] == source_digests['new']",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:286",
+   "line": 286,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "NO_SCORES_IN_THE_BOOK",
+   "in_function": "_entries",
+   "condition": "not by_arm",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:392",
+   "line": 392,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "BOOKS_ARE_NOT_THE_SAME_EXPERIMENT",
+   "in_function": "certify",
+   "condition": "ida != idb",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "ENV",
+    "FILE BYTES"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:397",
+   "line": 397,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "BOOKS_ARE_NOT_THE_SAME_EXPERIMENT",
+   "in_function": "certify",
+   "condition": "old_reference != new_reference",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "ENV",
+    "FILE BYTES"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:567",
+   "line": 567,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "BOOK_M_MIN_WITHIN_K_TIMES_DELTA_MAX_CERTIFIED",
+   "in_function": "per_book_guard",
+   "condition": "not isinstance(k, (int, float)) or isinstance(k, bool) or (not math.isfinite(float(k))) or (k <= 0)",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:594",
+   "line": 594,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "BOOK_M_MIN_WITHIN_K_TIMES_DELTA_MAX_CERTIFIED",
+   "in_function": "per_book_guard",
+   "condition": "bad",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:193",
+   "line": 193,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "ARM_HAS_NO_DECLARED_HEAD",
+   "in_function": "arm_heads",
+   "condition": "not head",
+   "inputs_read": [
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:195",
+   "line": 195,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "NO_THETA_FOR_THE_ARM",
+   "in_function": "arm_heads",
+   "condition": "theta is None",
+   "inputs_read": [
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:216",
+   "line": 216,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "BOOK_UNREADABLE_NO_COMPARISON_POSSIBLE",
+   "in_function": "load",
+   "condition": "<not an if-guarded raise>",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:271",
+   "line": 271,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "BOOKS_ARE_NOT_THE_SAME_EXPERIMENT",
+   "in_function": "verify_comparison_receipts",
+   "condition": "book_sha != source_digests[side] or builder != expected[side] or receipt_identity != identity_of(books[side])",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:307",
+   "line": 307,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SCORE_NEUTRALITY_SCORE_IS_NOT_A_FINITE_NUMBER",
+   "in_function": "gen_max",
+   "condition": "not isinstance(v, dict) or v.get('gen') is None",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:316",
+   "line": 316,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SCORE_NEUTRALITY_SCORE_IS_NOT_A_FINITE_NUMBER",
+   "in_function": "gen_max",
+   "condition": "not isinstance(s, (int, float)) or isinstance(s, bool) or (not math.isfinite(float(s)))",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:330",
+   "line": 330,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "PARTIAL_GENERATION_READ_IS_A_REFUSAL_NOT_A_WEAKER_PASS",
+   "in_function": "reference_generation_keys",
+   "condition": "not isinstance(sides, dict)",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:408",
+   "line": 408,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SCORE_KEY_SETS_DIFFER",
+   "in_function": "certify",
+   "condition": "set(A) != set(B)",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "ENV",
+    "FILE BYTES"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:450",
+   "line": 450,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "PARTIAL_GENERATION_READ_IS_A_REFUSAL_NOT_A_WEAKER_PASS",
+   "in_function": "certify",
+   "condition": "census['n_generations_lost_to_null_scores']",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "ENV",
+    "FILE BYTES"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:458",
+   "line": 458,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "PARTIAL_GENERATION_READ_IS_A_REFUSAL_NOT_A_WEAKER_PASS",
+   "in_function": "certify",
+   "condition": "len(A) != census['n_generations_with_a_score']",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "ENV",
+    "FILE BYTES"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:465",
+   "line": 465,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "PARTIAL_GENERATION_READ_IS_A_REFUSAL_NOT_A_WEAKER_PASS",
+   "in_function": "certify",
+   "condition": "outside_reference",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "ENV",
+    "FILE BYTES"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:576",
+   "line": 576,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "NO_THETA_FOR_THE_ARM",
+   "in_function": "per_book_guard",
+   "condition": "not isinstance(dmc, (int, float)) or isinstance(dmc, bool) or (not math.isfinite(float(dmc))) or (dmc < 0)",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:582",
+   "line": 582,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SCORE_MAP_IS_EMPTY_IDENTICAL_IS_NOT_A_RESULT",
+   "in_function": "per_book_guard",
+   "condition": "not A",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:259",
+   "line": 259,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "BOOKS_ARE_NOT_THE_SAME_EXPERIMENT",
+   "in_function": "verify_comparison_receipts",
+   "condition": "<not an if-guarded raise>",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:292",
+   "line": 292,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SCORE_MAP_IS_EMPTY_IDENTICAL_IS_NOT_A_RESULT",
+   "in_function": "_entries",
+   "condition": "name == head",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:336",
+   "line": 336,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "PARTIAL_GENERATION_READ_IS_A_REFUSAL_NOT_A_WEAKER_PASS",
+   "in_function": "reference_generation_keys",
+   "condition": "not isinstance(generation, dict) or generation.get('gen') is None",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/be_score_neutrality.py",
+   "site": "be_score_neutrality.py:341",
+   "line": 341,
+   "at_digest": "a455191d6bceec7e",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "PARTIAL_GENERATION_READ_IS_A_REFUSAL_NOT_A_WEAKER_PASS",
+   "in_function": "reference_generation_keys",
+   "condition": "key in keys",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "be_score_neutrality selftest/falsifier",
+    "command": "python3 live/pm_research/be_score_neutrality.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:202",
+   "line": 202,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_POPULATION_SHORTER_THAN_DECLARED",
+   "in_function": "futility",
+   "condition": "len(seen) > G_declared",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:259",
+   "line": 259,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_CALLED_WITHOUT_AN_EXPLICIT_DAY_SET",
+   "in_function": "resolve_books",
+   "condition": "not days",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:263",
+   "line": 263,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_DAY_SET_REPEATS_A_DAY",
+   "in_function": "resolve_books",
+   "condition": "len(set(days)) != len(days)",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:270",
+   "line": 270,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_BOOK_MISSING_FOR_A_DECLARED_DAY",
+   "in_function": "resolve_books",
+   "condition": "missing",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:476",
+   "line": 476,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_CALLED_WITHOUT_AN_EXPLICIT_DAY_SET",
+   "in_function": "evaluate",
+   "condition": "not days",
+   "inputs_read": [
+    "A DIGEST"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:478",
+   "line": 478,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_DAY_SET_REPEATS_A_DAY",
+   "in_function": "evaluate",
+   "condition": "len(set(days)) != len(days)",
+   "inputs_read": [
+    "A DIGEST"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:481",
+   "line": 481,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_POPULATION_SHORTER_THAN_DECLARED",
+   "in_function": "evaluate",
+   "condition": "n_expected is not None and G != n_expected",
+   "inputs_read": [
+    "A DIGEST"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:613",
+   "line": 613,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_METADATA_MALFORMED",
+   "in_function": "finalize_result",
+   "condition": "not isinstance(metadata, dict)",
+   "inputs_read": [],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:618",
+   "line": 618,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_METADATA_MALFORMED",
+   "in_function": "finalize_result",
+   "condition": "overlap",
+   "inputs_read": [],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:625",
+   "line": 625,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_REQUIRED_METADATA_MISSING",
+   "in_function": "finalize_result",
+   "condition": "missing",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:650",
+   "line": 650,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_CALLED_WITHOUT_AN_EXPLICIT_DAY_SET",
+   "in_function": "progress_emit",
+   "condition": "not days_scored",
+   "inputs_read": [
+    "A DIGEST"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:652",
+   "line": 652,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_DAY_SET_REPEATS_A_DAY",
+   "in_function": "progress_emit",
+   "condition": "len(set(days_scored)) != len(days_scored)",
+   "inputs_read": [
+    "A DIGEST"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:150",
+   "line": 150,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_DECLARED_ROBUSTNESS_LEG_MISSING",
+   "in_function": "robustness_pool",
+   "condition": "not isinstance(robust, dict) or robust.get('label') != 'NO_FILLS_UNTIL_NEXT_GENERATION' or robust.get('observed_D_cents') is None",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:344",
+   "line": 344,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_NO_VERIFIED_WINNER_RECEIPT_FOR_A_DAY",
+   "in_function": "settlement_source_disclosure",
+   "condition": "not fs",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:369",
+   "line": 369,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_NO_VERIFIED_WINNER_RECEIPT_FOR_A_DAY",
+   "in_function": "settlement_source_disclosure",
+   "condition": "matched is None",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:464",
+   "line": 464,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_ARM_CELLS_DO_NOT_SHARE_ONE_DAY_INPUT_COHORT",
+   "in_function": "_load_forward_cells",
+   "condition": "len(set(canonical.values())) != 1",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:599",
+   "line": 599,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_OUTPUT_ALREADY_EXISTS",
+   "in_function": "_write_json_exclusive",
+   "condition": "<not an if-guarded raise>",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_evaluator.py",
+   "site": "de_forward_evaluator.py:357",
+   "line": 357,
+   "at_digest": "6290bb25909817dc",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "FORWARD_EVALUATOR_NO_VERIFIED_WINNER_RECEIPT_FOR_A_DAY",
+   "in_function": "settlement_source_disclosure",
+   "condition": "<not an if-guarded raise>",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_evaluator selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_evaluator.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_value_day.py",
+   "site": "de_forward_value_day.py:77",
+   "line": 77,
+   "at_digest": "d024925c268e84c3",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "VALUATION_COMPUTING_MODULES_ARE_NOT_AT_THE_PIPELINE_COMMIT",
+   "in_function": "assert_computing_modules_at_the_pipeline_commit",
+   "condition": "not mods",
+   "inputs_read": [
+    "A DIGEST",
+    "A SUBPROCESS",
+    "ENV"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_value_day selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_value_day.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_value_day.py",
+   "site": "de_forward_value_day.py:87",
+   "line": 87,
+   "at_digest": "d024925c268e84c3",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "VALUATION_COMPUTING_MODULES_ARE_NOT_AT_THE_PIPELINE_COMMIT",
+   "in_function": "assert_computing_modules_at_the_pipeline_commit",
+   "condition": "len(trees) != 1",
+   "inputs_read": [
+    "A DIGEST",
+    "A SUBPROCESS",
+    "ENV"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_value_day selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_value_day.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_value_day.py",
+   "site": "de_forward_value_day.py:104",
+   "line": 104,
+   "at_digest": "d024925c268e84c3",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "VALUATION_COMPUTING_MODULES_ARE_NOT_AT_THE_PIPELINE_COMMIT",
+   "in_function": "assert_computing_modules_at_the_pipeline_commit",
+   "condition": "head != PIPELINE_COMMIT and (not descendant)",
+   "inputs_read": [
+    "A DIGEST",
+    "A SUBPROCESS",
+    "ENV"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_value_day selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_value_day.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_value_day.py",
+   "site": "de_forward_value_day.py:119",
+   "line": 119,
+   "at_digest": "d024925c268e84c3",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "VALUATION_COMPUTING_MODULES_ARE_NOT_AT_THE_PIPELINE_COMMIT",
+   "in_function": "assert_computing_modules_at_the_pipeline_commit",
+   "condition": "bad",
+   "inputs_read": [
+    "A DIGEST",
+    "A SUBPROCESS",
+    "ENV"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_value_day selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_value_day.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_value_day.py",
+   "site": "de_forward_value_day.py:125",
+   "line": 125,
+   "at_digest": "d024925c268e84c3",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "VALUATION_RAN_FROM_A_DIFFERENT_TREE_THAN_ITS_LAUNCHER_SELECTED",
+   "in_function": "assert_computing_modules_at_the_pipeline_commit",
+   "condition": "want and str(Path(want).resolve()) != tree",
+   "inputs_read": [
+    "A DIGEST",
+    "A SUBPROCESS",
+    "ENV"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_value_day selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_value_day.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_value_day.py",
+   "site": "de_forward_value_day.py:148",
+   "line": 148,
+   "at_digest": "d024925c268e84c3",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "VALUATION_RECORD_CARRIES_NO_PREFLIGHT_SO_NOTHING_WAS_CHECKED",
+   "in_function": "assert_record_carries_preflight",
+   "condition": "not pf",
+   "inputs_read": [
+    "FILE TEXT",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_value_day selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_value_day.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_forward_value_day.py",
+   "site": "de_forward_value_day.py:155",
+   "line": 155,
+   "at_digest": "d024925c268e84c3",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "VALUATION_COMPUTING_MODULES_ARE_NOT_AT_THE_PIPELINE_COMMIT",
+   "in_function": "assert_record_carries_preflight",
+   "condition": "pf.get('head') != PIPELINE_COMMIT",
+   "inputs_read": [
+    "FILE TEXT",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_forward_value_day selftest/falsifier",
+    "command": "python3 live/pm_research/de_forward_value_day.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:799",
+   "line": 799,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "PARAMS_VERSION_AND_PROTOCOL_STRING_DISAGREE",
+   "in_function": "load_params",
+   "condition": "_pv and isinstance(_fv, int) and (int(_pv.group(1)) != _fv)",
+   "inputs_read": [
+    "A RECEIPT",
+    "FILE TEXT",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:888",
+   "line": 888,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "BE_CASCADE_DIFFERS",
+   "in_function": "verify_be_module",
+   "condition": "actual_sha != declared",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:2533",
+   "line": 2533,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "READ_GATE_ROOT_IS_NOT_THE_LEDGER",
+   "in_function": "read_gate",
+   "condition": "not (root / 'pm_5min/derived').is_dir()",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE TEXT",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:4739",
+   "line": 4739,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "THETA_DRIFT_DISAGREES_WITH_THIS_DAY",
+   "in_function": "_theta_drift_for",
+   "condition": "decisions is not None and n_above and (decisions > n_above)",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5027",
+   "line": 5027,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_WINNER_SOURCE_ABSENT",
+   "in_function": "winner_source",
+   "condition": "not path.is_file()",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5066",
+   "line": 5066,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_WINNER_MISSING_FOR_SLUG",
+   "in_function": "winner_source",
+   "condition": "missing",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5320",
+   "line": 5320,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CHAINLINK_UNAVAILABLE",
+   "in_function": "chainlink_streams",
+   "condition": "n_files == 0",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5757",
+   "line": 5757,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_WINNER_MISSING_FOR_SLUG",
+   "in_function": "_settle_for",
+   "condition": "w is None",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5816",
+   "line": 5816,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_LEGS_DO_NOT_RECONCILE",
+   "in_function": "settlement_legs_by_slug",
+   "condition": "abs(day_total - per_fill) > 1e-09",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5953",
+   "line": 5953,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_PLACEMENT_LATENCY_ABSENT_FROM_THE_DOCUMENT",
+   "in_function": "assert_one_placement_latency",
+   "condition": "not found",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5968",
+   "line": 5968,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_PLACEMENT_LATENCY_DISAGREES_IN_THE_DOCUMENT",
+   "in_function": "assert_one_placement_latency",
+   "condition": "malformed or len(values) != 1",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:6102",
+   "line": 6102,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_BOOK_RECEIPT_NOT_PARSED",
+   "in_function": "placement_latency_from_the_book",
+   "condition": "not isinstance(builder_receipt, dict)",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:6230",
+   "line": 6230,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_BOOK_DECLARES_NO_PLACEMENT_LATENCY",
+   "in_function": "placement_latency_from_the_book",
+   "condition": "require_declared",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:6516",
+   "line": 6516,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_NULL_TOO_SMALL",
+   "in_function": "settlement_arm_day",
+   "condition": "len(null_settle) < params['min_draws_per_arm_day']",
+   "inputs_read": [
+    "A RECEIPT",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:6698",
+   "line": 6698,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "PLACEMENT_LATENCY_REFERENCE_ABSENT_FROM_THE_BOOK",
+   "in_function": "plr_inputs",
+   "condition": "not isinstance(ref, dict) or not ref",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:7139",
+   "line": 7139,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "CACHE_CLOSURE_NOT_FROM_THE_BUILD",
+   "in_function": "write_cache_code_closure",
+   "condition": "not built_by_this_process",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:7232",
+   "line": 7232,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "CACHE_HAS_NO_SCORING_CODE_PIN",
+   "in_function": "assert_cache_code_pin",
+   "condition": "not side.is_file()",
+   "inputs_read": [
+    "A RECEIPT",
+    "FILE TEXT",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:8710",
+   "line": 8710,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "DECISION_LEDGER_HAS_NO_ANCHOR",
+   "in_function": "assert_ledger_anchor",
+   "condition": "anchor is None",
+   "inputs_read": [
+    "A RECEIPT",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:9777",
+   "line": 9777,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_BOOK_PLACEMENT_LATENCY_MOVED_DURING_THE_RUN",
+   "in_function": "run_day",
+   "condition": "_plat_pre is not None and _plat_pre['L_place_ms'] != _plat['L_place_ms']",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE TEXT",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:17733",
+   "line": 17733,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "POST_EMIT_CENSUS_HAS_NO_BAR",
+   "in_function": "_main_day",
+   "condition": "_census['status'] == 'POST_EMIT_CENSUS_HAS_NO_BAR'",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "FILE TEXT",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:872",
+   "line": 872,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "BE_CASCADE_DIFFERS",
+   "in_function": "verify_be_module",
+   "condition": "_casc and actual_sha is None",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5046",
+   "line": 5046,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_WINNER_AMBIGUOUS",
+   "in_function": "winner_source",
+   "condition": "len(trues) != 1",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5054",
+   "line": 5054,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_WINNER_RECORDS_DISAGREE",
+   "in_function": "winner_source",
+   "condition": "prev is not None and prev['up_won'] != up",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5085",
+   "line": 5085,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_VERIFICATION_SOURCE_MALFORMED",
+   "in_function": "winner_source",
+   "condition": "verification is not None",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5099",
+   "line": 5099,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONVENTION_NOT_THE_PINNED_ONE",
+   "in_function": "winner_source",
+   "condition": "verification is not None",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5192",
+   "line": 5192,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_VERIFICATION_SLUG_SET_MISMATCH",
+   "in_function": "winner_source",
+   "condition": "require_verified",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5201",
+   "line": 5201,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CHAINLINK_NO_FILES_READ",
+   "in_function": "winner_source",
+   "condition": "require_verified",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5207",
+   "line": 5207,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_VERIFICATION_PROVENANCE_INCOMPLETE",
+   "in_function": "winner_source",
+   "condition": "require_verified",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5218",
+   "line": 5218,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_WINNERS_NOT_VERIFIED",
+   "in_function": "winner_source",
+   "condition": "require_verified",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5224",
+   "line": 5224,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_WINNER_DISAGREES_WITH_CHAINLINK",
+   "in_function": "winner_source",
+   "condition": "require_verified",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5233",
+   "line": 5233,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_BOUNDARY_NOT_IN_CAPTURE",
+   "in_function": "winner_source",
+   "condition": "require_verified",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5241",
+   "line": 5241,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CHAINLINK_UNAVAILABLE",
+   "in_function": "winner_source",
+   "condition": "require_verified",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:6118",
+   "line": 6118,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_BOOK_PLACEMENT_LATENCY_MALFORMED",
+   "in_function": "placement_latency_from_the_book",
+   "condition": "found",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:6161",
+   "line": 6161,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_BOOK_PLACEMENT_LATENCY_AMBIGUOUS",
+   "in_function": "placement_latency_from_the_book",
+   "condition": "found",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:6188",
+   "line": 6188,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_BOOK_PLACEMENT_LATENCY_SUBRECORD_UNACCOUNTED",
+   "in_function": "placement_latency_from_the_book",
+   "condition": "found",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:9535",
+   "line": 9535,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "ABSOLUTES_DO_NOT_RECONCILE",
+   "in_function": "run_day",
+   "condition": "abs(_recon - observed) > 1e-09",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE TEXT",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5113",
+   "line": 5113,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_VERIFICATION_STATUS_UNKNOWN",
+   "in_function": "winner_source",
+   "condition": "verification is not None",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:5186",
+   "line": 5186,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_VERIFICATION_EMPTY",
+   "in_function": "winner_source",
+   "condition": "require_verified",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:6459",
+   "line": 6459,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "POINT_ESTIMATE_RUN_HAS_NO_TEST_STATISTIC",
+   "in_function": "test_statistic_from",
+   "condition": "(a.get(blk) or {}).get(field) == NULL_NOT_DRAWN_STATUS",
+   "inputs_read": [
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:8989",
+   "line": 8989,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "BOOK_SCORING_UNNAMED_BEYOND_THE_LAZY_SET",
+   "in_function": "run_day",
+   "condition": "fixture",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE TEXT",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:9461",
+   "line": 9461,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_EXCESS_DOES_NOT_RECONCILE",
+   "in_function": "run_day",
+   "condition": "_win801 is not None and r.get('status') in _ARM_DAY_VALUED_STATUSES",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE TEXT",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:9652",
+   "line": 9652,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "EARLY_READ_DAY_NOT_IN_THE_BAR",
+   "in_function": "run_day",
+   "condition": "_ruling765",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE TEXT",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:9726",
+   "line": 9726,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "DECISION_LEDGER_NO_SIGN_CONVENTION",
+   "in_function": "run_day",
+   "condition": "_ruling765 and _ledger765 and (_anchor is not None)",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE TEXT",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:17429",
+   "line": 17429,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "DAY_SUPERSEDES_TARGET_ABSENT",
+   "in_function": "_main_day",
+   "condition": "a.synthetic_day",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "FILE TEXT",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:17435",
+   "line": 17435,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "DAY_SUPERSEDES_NAMES_A_DAY_WITH_NO_SEALED_RECEIPT",
+   "in_function": "_main_day",
+   "condition": "a.synthetic_day",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "FILE TEXT",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:17440",
+   "line": 17440,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "DAY_SUPERSEDES_NOT_THE_CHAIN_HEAD",
+   "in_function": "_main_day",
+   "condition": "a.synthetic_day",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "FILE TEXT",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_multiday_gate1_runner.py",
+   "site": "de_multiday_gate1_runner.py:9661",
+   "line": 9661,
+   "at_digest": "157413f6562cf5bd",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "EARLY_READ_STILL_SEALED",
+   "in_function": "run_day",
+   "condition": "_ruling765",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE TEXT",
+    "JSON",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_multiday_gate1_runner selftest/falsifier",
+    "command": "python3 live/pm_research/de_multiday_gate1_runner.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:118",
+   "line": 118,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CHECKPOINT_MALFORMED",
+   "in_function": "read_cell_checkpoint",
+   "condition": "len(headers) != 1 or not rows or rows[0] is not headers[0]",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:125",
+   "line": 125,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CHECKPOINT_MALFORMED",
+   "in_function": "read_cell_checkpoint",
+   "condition": "not isinstance(header_n, int) or isinstance(header_n, bool) or header_n <= 0",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:172",
+   "line": 172,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_RESULT_DOES_NOT_RECONCILE",
+   "in_function": "_require_equal",
+   "condition": "actual != expected",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:186",
+   "line": 186,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_RESULT_IDENTITY_MISMATCH",
+   "in_function": "_verify_forward_cell",
+   "condition": "not isinstance(book_sha, str) or len(book_sha) != 64",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:192",
+   "line": 192,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_RESULT_IDENTITY_MISMATCH",
+   "in_function": "_verify_forward_cell",
+   "condition": "not isinstance(winner_sha, str) or len(winner_sha) != 64",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:268",
+   "line": 268,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_RESULT_IDENTITY_MISMATCH",
+   "in_function": "_verify_forward_cell",
+   "condition": "wrong_result",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:277",
+   "line": 277,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_RESULT_DOES_NOT_RECONCILE",
+   "in_function": "_verify_forward_cell",
+   "condition": "not all((_finite_number(value) for value in (baseline, arm_total, observed)))",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:296",
+   "line": 296,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_RESULT_IDENTITY_MISMATCH",
+   "in_function": "_verify_forward_cell",
+   "condition": "wrong_header",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:302",
+   "line": 302,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CELL_N_DIFFERS_FROM_THE_DECLARED_N",
+   "in_function": "_verify_forward_cell",
+   "condition": "len(draws) != SC.DECLARED_N",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:331",
+   "line": 331,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_RESULT_DOES_NOT_RECONCILE",
+   "in_function": "_verify_forward_cell",
+   "condition": "not isinstance(robust, dict)",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:339",
+   "line": 339,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_RESULT_DOES_NOT_RECONCILE",
+   "in_function": "_verify_forward_cell",
+   "condition": "not all((_finite_number(value) for value in (robust_base, robust_arm, robust_D)))",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:358",
+   "line": 358,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_RESULT_DOES_NOT_RECONCILE",
+   "in_function": "_verify_forward_cell",
+   "condition": "wrong_robust",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:382",
+   "line": 382,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CELL_N_DIFFERS_FROM_THE_DECLARED_N",
+   "in_function": "load_cell",
+   "condition": "len(draws) != DECLARED_N",
+   "inputs_read": [],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:516",
+   "line": 516,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_PUBLICATION_CLAUSE_UNSATISFIED",
+   "in_function": "publication_block",
+   "condition": "missing",
+   "inputs_read": [
+    "A RECEIPT",
+    "FILE TEXT",
+    "JSON"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:538",
+   "line": 538,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_COMPANION_DAY_PROMOTED_TO_PRIMARY",
+   "in_function": "aggregate",
+   "condition": "set(pools['PRIMARY']['days']) & set(COMPANION_ONLY)",
+   "inputs_read": [
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:112",
+   "line": 112,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CHECKPOINT_MALFORMED",
+   "in_function": "read_cell_checkpoint",
+   "condition": "<not an if-guarded raise>",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:132",
+   "line": 132,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CHECKPOINT_MALFORMED",
+   "in_function": "read_cell_checkpoint",
+   "condition": "row.get('kind') == 'HEADER' or 'i' not in row",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:137",
+   "line": 137,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CHECKPOINT_MALFORMED",
+   "in_function": "read_cell_checkpoint",
+   "condition": "not isinstance(index, int) or isinstance(index, bool)",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:145",
+   "line": 145,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CHECKPOINT_MALFORMED",
+   "in_function": "read_cell_checkpoint",
+   "condition": "not 0 <= index < header_n",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:149",
+   "line": 149,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CHECKPOINT_MALFORMED",
+   "in_function": "read_cell_checkpoint",
+   "condition": "not _finite_number(row.get('D'))",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_aggregate.py",
+   "site": "de_settlement_control_aggregate.py:309",
+   "line": 309,
+   "at_digest": "ce8e4806a48df8c2",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_RESULT_DOES_NOT_RECONCILE",
+   "in_function": "_verify_forward_cell",
+   "condition": "draw.get('seed') != derived_seed + index or not _finite_number(settled)",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_aggregate selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_aggregate.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:69",
+   "line": 69,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_PARAMS_ARE_NOT_THE_FROZEN_PARAMS",
+   "in_function": "frozen_params",
+   "condition": "params is not None and params != frozen",
+   "inputs_read": [
+    "A DIGEST",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:111",
+   "line": 111,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CHECKPOINT_MALFORMED",
+   "in_function": "read_checkpoint",
+   "condition": "len(headers) != 1 or not rows or rows[0] is not headers[0] or any((headers[0].get(key) != value for key, value in expected.items()))",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE TEXT",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:145",
+   "line": 145,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CHECKPOINT_MALFORMED",
+   "in_function": "read_checkpoint",
+   "condition": "draws and sorted(draws) != list(range(max(draws) + 1))",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE TEXT",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:153",
+   "line": 153,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_HAS_NO_SCORE_NEUTRALITY_CERTIFICATION",
+   "in_function": "_load_certifications",
+   "condition": "not sources",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:180",
+   "line": 180,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_HAS_NO_SCORE_NEUTRALITY_CERTIFICATION",
+   "in_function": "certified_delta_bounds",
+   "condition": "not documents",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:246",
+   "line": 246,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_HAS_NO_BOOK_RECEIPT",
+   "in_function": "verify_book_receipt",
+   "condition": "path is None or not path.is_file()",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:268",
+   "line": 268,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_BOOK_AND_RECEIPT_DISAGREE",
+   "in_function": "verify_book_receipt",
+   "condition": "not digest_valid or not digest_matches or _day_key(receipt.get('day')) != _day_key(day) or (builder_commit != PIPELINE_COMMIT) or (not path_matches)",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:340",
+   "line": 340,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CELL_N_DIFFERS_FROM_THE_DECLARED_N",
+   "in_function": "run_one_day_arm",
+   "condition": "n_draws != DECLARED_N",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:345",
+   "line": 345,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_ARM_NOT_IN_THE_FREEZE",
+   "in_function": "run_one_day_arm",
+   "condition": "arm not in params['arms']",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:355",
+   "line": 355,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_SEED_NOT_DERIVED_FROM_BOOK_AND_ARM",
+   "in_function": "run_one_day_arm",
+   "condition": "seed is not None and seed != derived_seed",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:442",
+   "line": 442,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_BELOW_THE_FAIL_CLOSED_FLOOR",
+   "in_function": "run_one_day_arm",
+   "condition": "len(draws) < FLOOR",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:446",
+   "line": 446,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CELL_N_DIFFERS_FROM_THE_DECLARED_N",
+   "in_function": "run_one_day_arm",
+   "condition": "len(draws) != DECLARED_N",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "PARAMS"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:100",
+   "line": 100,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CHECKPOINT_MALFORMED",
+   "in_function": "read_checkpoint",
+   "condition": "<not an if-guarded raise>",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE TEXT",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:117",
+   "line": 117,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CHECKPOINT_MALFORMED",
+   "in_function": "read_checkpoint",
+   "condition": "row.get('kind') == 'HEADER' or 'i' not in row",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE TEXT",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:126",
+   "line": 126,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CHECKPOINT_MALFORMED",
+   "in_function": "read_checkpoint",
+   "condition": "index in draws or not 0 <= index < n_draws",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE TEXT",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:139",
+   "line": 139,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CHECKPOINT_MALFORMED",
+   "in_function": "read_checkpoint",
+   "condition": "row.get('seed') != seed + index or not isinstance(settled, (int, float)) or isinstance(settled, bool) or (not math.isfinite(float(settled))) or (not i",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE TEXT",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:160",
+   "line": 160,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_HAS_NO_SCORE_NEUTRALITY_CERTIFICATION",
+   "in_function": "_load_certifications",
+   "condition": "not path.is_file()",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": false,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest",
+    "STATUS": "NO CELL NAMES THIS REFUSAL -- it is NOT exercised by that command"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:212",
+   "line": 212,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_SCORE_NEUTRALITY_NOT_CERTIFIED",
+   "in_function": "certified_delta_bounds",
+   "condition": "document.get('protocol') != 'BE_SCORE_NEUTRALITY_V2_REVIEW173_BAR' or document.get('verdict') != 'SUPPORTED_ON_THIS_DAY' or identity_day.replace('-', ",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:252",
+   "line": 252,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_HAS_NO_BOOK_RECEIPT",
+   "in_function": "verify_book_receipt",
+   "condition": "<not an if-guarded raise>",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:122",
+   "line": 122,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_CHECKPOINT_MALFORMED",
+   "in_function": "read_checkpoint",
+   "condition": "<not an if-guarded raise>",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE TEXT",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:166",
+   "line": 166,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_SCORE_NEUTRALITY_NOT_CERTIFIED",
+   "in_function": "_load_certifications",
+   "condition": "<not an if-guarded raise>",
+   "inputs_read": [
+    "A DIGEST",
+    "FILE BYTES",
+    "JSON"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:230",
+   "line": 230,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_SCORE_NEUTRALITY_NOT_CERTIFIED",
+   "in_function": "certified_delta_bounds",
+   "condition": "not isinstance(value, (int, float)) or isinstance(value, bool) or (not math.isfinite(float(value))) or (value < 0) or (row.get('A_n_flips') != 0) or (",
+   "inputs_read": [
+    "A DIGEST",
+    "A RECEIPT"
+   ],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest"
+   }
+  },
+  {
+   "lane": "VALUATION",
+   "pinned_by_the_freeze": true,
+   "file": "live/pm_research/de_settlement_control_run.py",
+   "site": "de_settlement_control_run.py:512",
+   "line": 512,
+   "at_digest": "ee206d5d549f7a2c",
+   "ref": "origin/de-freeze-chain-v2",
+   "refusal": "SETTLEMENT_CONTROL_RESULT_ALREADY_EXISTS",
+   "in_function": "write_result_exclusive",
+   "condition": "<not an if-guarded raise>",
+   "inputs_read": [],
+   "exercised_before_real_run": true,
+   "rehearsal": {
+    "name": "de_settlement_control_run selftest/falsifier",
+    "command": "python3 live/pm_research/de_settlement_control_run.py --selftest"
+   }
+  }
+ ],
+ "UNEXERCISED_ROWS_A_REAL_RUN_MAY_NOT_HIT": [
+  {
+   "lane": "BUILD_BUILDER",
+   "site": "be_daybook_build.py:1357",
+   "refusal": "COVERED_COUNTS_DISAGREE",
+   "pinned_by_the_freeze": false
+  },
+  {
+   "lane": "BUILD_BUILDER",
+   "site": "be_daybook_build.py:803",
+   "refusal": "PLACEMENT_LATENCY_SPLIT_DOES_NOT_CLOSE",
+   "pinned_by_the_freeze": false
+  },
+  {
+   "lane": "VALUATION",
+   "site": "be_score_neutrality.py:193",
+   "refusal": "ARM_HAS_NO_DECLARED_HEAD",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "be_score_neutrality.py:408",
+   "refusal": "SCORE_KEY_SETS_DIFFER",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_forward_evaluator.py:613",
+   "refusal": "FORWARD_EVALUATOR_METADATA_MALFORMED",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_forward_evaluator.py:618",
+   "refusal": "FORWARD_EVALUATOR_METADATA_MALFORMED",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_multiday_gate1_runner.py:799",
+   "refusal": "PARAMS_VERSION_AND_PROTOCOL_STRING_DISAGREE",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_multiday_gate1_runner.py:9777",
+   "refusal": "SETTLEMENT_BOOK_PLACEMENT_LATENCY_MOVED_DURING_THE_RUN",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_multiday_gate1_runner.py:5085",
+   "refusal": "SETTLEMENT_VERIFICATION_SOURCE_MALFORMED",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_multiday_gate1_runner.py:5233",
+   "refusal": "SETTLEMENT_BOUNDARY_NOT_IN_CAPTURE",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_multiday_gate1_runner.py:6118",
+   "refusal": "SETTLEMENT_BOOK_PLACEMENT_LATENCY_MALFORMED",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_multiday_gate1_runner.py:5113",
+   "refusal": "SETTLEMENT_VERIFICATION_STATUS_UNKNOWN",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_multiday_gate1_runner.py:8989",
+   "refusal": "BOOK_SCORING_UNNAMED_BEYOND_THE_LAZY_SET",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_multiday_gate1_runner.py:9461",
+   "refusal": "SETTLEMENT_EXCESS_DOES_NOT_RECONCILE",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_multiday_gate1_runner.py:9726",
+   "refusal": "DECISION_LEDGER_NO_SIGN_CONVENTION",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_multiday_gate1_runner.py:17429",
+   "refusal": "DAY_SUPERSEDES_TARGET_ABSENT",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_multiday_gate1_runner.py:17435",
+   "refusal": "DAY_SUPERSEDES_NAMES_A_DAY_WITH_NO_SEALED_RECEIPT",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_multiday_gate1_runner.py:17440",
+   "refusal": "DAY_SUPERSEDES_NOT_THE_CHAIN_HEAD",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_multiday_gate1_runner.py:9661",
+   "refusal": "EARLY_READ_STILL_SEALED",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_settlement_control_aggregate.py:302",
+   "refusal": "SETTLEMENT_CONTROL_CELL_N_DIFFERS_FROM_THE_DECLARED_N",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_settlement_control_aggregate.py:382",
+   "refusal": "SETTLEMENT_CONTROL_CELL_N_DIFFERS_FROM_THE_DECLARED_N",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_settlement_control_aggregate.py:516",
+   "refusal": "SETTLEMENT_CONTROL_PUBLICATION_CLAUSE_UNSATISFIED",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_settlement_control_run.py:69",
+   "refusal": "SETTLEMENT_CONTROL_PARAMS_ARE_NOT_THE_FROZEN_PARAMS",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_settlement_control_run.py:153",
+   "refusal": "SETTLEMENT_CONTROL_HAS_NO_SCORE_NEUTRALITY_CERTIFICATION",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_settlement_control_run.py:180",
+   "refusal": "SETTLEMENT_CONTROL_HAS_NO_SCORE_NEUTRALITY_CERTIFICATION",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_settlement_control_run.py:268",
+   "refusal": "SETTLEMENT_CONTROL_BOOK_AND_RECEIPT_DISAGREE",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_settlement_control_run.py:340",
+   "refusal": "SETTLEMENT_CONTROL_CELL_N_DIFFERS_FROM_THE_DECLARED_N",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_settlement_control_run.py:345",
+   "refusal": "SETTLEMENT_CONTROL_ARM_NOT_IN_THE_FREEZE",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_settlement_control_run.py:355",
+   "refusal": "SETTLEMENT_CONTROL_SEED_NOT_DERIVED_FROM_BOOK_AND_ARM",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_settlement_control_run.py:446",
+   "refusal": "SETTLEMENT_CONTROL_CELL_N_DIFFERS_FROM_THE_DECLARED_N",
+   "pinned_by_the_freeze": true
+  },
+  {
+   "lane": "VALUATION",
+   "site": "de_settlement_control_run.py:160",
+   "refusal": "SETTLEMENT_CONTROL_HAS_NO_SCORE_NEUTRALITY_CERTIFICATION",
+   "pinned_by_the_freeze": true
+  }
+ ],
+ "A_FALSE_CLEAN_I_CAUGHT_IN_MY_OWN_FIRST_PASS": "my first join keyed on `name`/`file`/`line`; the instrument's never_exercised entries key on `token` and `files`. Every lookup returned empty, so the register reported 167 of 167 EXERCISED and ZERO gaps. A clean answer from a broken join looks exactly like a clean answer from a clean system -- I re-checked because it was too clean, not because anything flagged it."
+}
