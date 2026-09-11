@@ -149,7 +149,11 @@ while :; do
   rc=$?
   case $rc in
     0) echo "$(date -u +%H:%M:%SZ) stage 0 clean for $day; offering"; break ;;
-    4) echo "$(date -u +%H:%M:%SZ) $day not built yet; re-checking in 120s"
+    4) if [ "$DRY" = "1" ]; then
+         echo "$(date -u +%H:%M:%SZ) WOULD WAIT: $day is not built yet"
+         exit 4
+       fi
+       echo "$(date -u +%H:%M:%SZ) $day not built yet; re-checking in 120s"
        sleep 120 ;;
     *) echo "$(date -u +%H:%M:%SZ) STAGE 0 REFUSED for $day -- no offer made"
        grep -m3 "REFUSED" /tmp/pf_$compact.log; exit 3 ;;
