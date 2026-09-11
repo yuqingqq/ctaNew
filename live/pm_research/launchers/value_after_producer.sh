@@ -17,7 +17,10 @@
 #   LAUNCHER_BYTES_NOT_COMMITTED        the script is not the landed bytes
 #   VALUATION_INPUT_ABSENT:<file>
 set -uo pipefail
-TREE=/home/yuqing/ctaNew-wt-deval
+# THE TREE IS THE SCRIPT'S OWN, NOT A LABEL. A launcher hard-coding a tree
+# runs another tree's modules whenever it is copied or driven from a second
+# worktree -- and its falsifier then tests bytes nobody is executing.
+TREE=$(cd "$(dirname "$(readlink -f "$0")")/../../.." && pwd)
 LOCK=/home/yuqing/ctaNew/data/.heavy_run.lock
 PY=/home/yuqing/pricer-sol/venv/bin/python3
 DRAWS=0
@@ -47,13 +50,49 @@ if [ "${1:-}" = "--falsify" ]; then
   out=$("$0" --producer dbus.service --day 2026-01-01 \
         --book /tmp/no-such-book-$$.pkl --receipt /dev/null --cert /dev/null \
         --out /tmp --lock "$d/l" --no-wait 2>&1); rc=$?
-  rm -rf "$d"
   ck "an absent book REFUSES by name, not by traceback" \
      "1x13" "$(echo "$out" | grep -c VALUATION_INPUT_ABSENT)x$rc"
+  # STAGE 0 ON THE REAL LAUNCHER PATH: a mirror of wt-deval with ONE byte
+  # moved in de_forward_value_day.py must stop THIS script, by name --
+  # not the gate called by hand, which is the gap REVIEW 204 named.
+  m=$(mktemp -d)
+  "$PY" - "$m" <<'PYM'
+import json, shutil, sys
+from pathlib import Path
+sys.path.insert(0, "/home/yuqing/ctaNew-wt-deval/live/pm_research")
+sys.path.append("/home/yuqing/ctaNew/live/pm_research")
+import da_population_freeze_verify as V
+dst = Path(sys.argv[1]) / "wt-deval"
+for e in json.loads(V.DECL.read_text())["files"]:
+    if e["root"] != "wt-deval":
+        continue
+    src = V.ROOTS[e["root"]] / e["path"]
+    if src.is_file():
+        out = dst / e["path"]
+        out.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, out)
+t = dst / "live/pm_research/de_forward_value_day.py"
+b = bytearray(t.read_bytes()); b[len(b)//2] ^= 0x20; t.write_bytes(bytes(b))
+PYM
+  d2=$(mktemp -d); : > "$d2/l"
+  out=$(DE_STAGE0_ROOT_OVERRIDE="wt-deval=$m/wt-deval" \
+        "$0" --producer dbus.service --day 2026-01-01 \
+        --book /dev/null --receipt /dev/null --cert /dev/null \
+        --out /tmp --lock "$d2/l" --no-wait 2>&1); rc=$?
+  rm -rf "$m"
+  ck "ONE byte in de_forward_value_day.py STOPS the launcher at stage 0" \
+     "1x3" "$(echo "$out" | grep -c "FROZEN_MODULE_DRIFTED:live/pm_research/de_forward_value_day.py")x$rc"
+  out=$("$0" --producer dbus.service --day 2026-01-01 \
+        --book /dev/null --receipt /dev/null --cert /dev/null \
+        --out /tmp --lock "$d2/l" --no-wait --dry-run 2>&1); rc=$?
+  rm -rf "$d2"
+  ck "with no byte moved, stage 0 does NOT stop it (not stuck refusing)" \
+     "0x0" "$(echo "$out" | grep -c "FROZEN_MODULE_DRIFTED")x$rc"
   echo; echo "$ok/$n cells pass"; [ "$ok" = "$n" ] && exit 0 || exit 1
 fi
 
 WAIT=1
+DRY=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --producer) PRODUCER="$2"; shift 2;;
@@ -65,6 +104,7 @@ while [ $# -gt 0 ]; do
     --draws) DRAWS="$2"; shift 2;;
     --lock) LOCK="$2"; shift 2;;
     --no-wait) WAIT=0; shift;;
+    --dry-run) DRY=1; shift;;
     *) refuse "UNKNOWN_ARGUMENT:$1" 10;;
   esac
 done
@@ -86,11 +126,40 @@ fi
 for f in "$BOOK" "$RECEIPT" "$CERT"; do
   [ -e "$f" ] || refuse "VALUATION_INPUT_ABSENT:$f" 13
 done
+PYBIN="$PY"
+GATE="$TREE/live/pm_research/de_stage0_freeze_gate.py"
+GOUT=/tmp/stage0_freeze_${DAY//-/}.json
+# THE FROZEN MODULES, CHECKED FROM OUTSIDE EVERY MODULE (DA 255 / REV 221).
+# de_forward_value_day.py carries the valuation's own freeze check, so it is
+# the one module that vouches for itself: edit the check to lie and nothing
+# inside the closure notices. DA's population-freeze verifier is external to
+# every module it checks, and the declaration classes de_forward_value_day.py
+# PIPELINE, so a byte moving there REFUSES here, by filename, before a lock
+# is taken. INSTRUMENT drift reports and passes -- the thing MEASURING
+# moving is not the thing MEASURED moving.
+# A SCRATCH ROOT IS NEVER SILENT. The override exists so the falsifier can
+# drive THIS path against a mirror; it announces itself, and the gate
+# records the roots it measured in its own report.
+GROOT=()
+if [ -n "${DE_STAGE0_ROOT_OVERRIDE:-}" ]; then
+  echo "$(date -u +%H:%M:%SZ) STAGE 0 ON A SCRATCH ROOT: $DE_STAGE0_ROOT_OVERRIDE"
+  GROOT=(--root "$DE_STAGE0_ROOT_OVERRIDE")
+fi
+[ -f "$GATE" ] || refuse "STAGE0_GATE_ABSENT:$GATE" 16
+"$PYBIN" "$GATE" "${GROOT[@]}" > "$GOUT" 2>&1
+grc=$?
+if [ "$grc" != 0 ]; then
+  echo "$(date -u +%H:%M:%SZ) STAGE 0 FREEZE GATE REFUSED (rc=$grc)"
+  grep -o "REFUSED [A-Z0-9_]*:[^\"]*" "$GOUT" | head -4
+  exit 3
+fi
+
 if ! flock -n "$LOCK" true; then
   refuse "PRODUCER_ENDED_WITHOUT_RELEASING_THE_LOCK:$LOCK" 12
 fi
 
 cd "$TREE" || refuse "TREE_ABSENT:$TREE" 14
+
 H=$(git -C "$TREE" rev-parse HEAD)
 say "tree $TREE head ${H:0:12}"
 PARAMS=$("$PY" -c "
@@ -102,6 +171,7 @@ print(Path('$TREE/live/pm_research/declarations')/Path(
 [ -f "$PARAMS" ] || refuse "PARAMS_NOT_RESOLVED_FROM_THE_CHAIN" 15
 say "params from the chain: $(basename "$PARAMS")"
 
+if [ "$DRY" = 1 ]; then say "dry run: every gate passed, no valuation launched"; exit 0; fi
 export BE_WORKTREE="$TREE" DE_VALUATION_EXPECTED_TREE="$TREE"
 "$TREE/live/pm_research/be_heavy_run.sh" --inner --lock "$LOCK" \
   "$PY" "$TREE/live/pm_research/de_forward_value_day.py" \
