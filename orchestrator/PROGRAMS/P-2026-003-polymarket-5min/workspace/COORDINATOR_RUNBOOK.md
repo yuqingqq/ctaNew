@@ -941,3 +941,51 @@ so the floor is enforced and the documentation names the wrong enforcer. **A rea
 checking whether rule 6 binds the running loop would read that docstring and stop.**
 Satisfied today; false as documentation; and `MIN_DRAWS = 200` is a fourth literal carrier
 of the rule-6 floor, already enumerated on DA's carrier list and bound by `reconcile()`.
+
+## §7k — THE CANONICAL RECORD IS ONE PLACE, AND IT IS NAMED (2026-09-11T23:48Z)
+
+REV's untargeted round found that the programme's record lived in three
+locations and **every one of them was incomplete**: the shared working tree, the
+pushed branch, and the state backup I had just created. Its formulation is the
+rule this section exists to prevent repeating — *a landing rule without a
+destination rule is a receipt for a building nobody enters.* Every seat could
+prove its filing landed; none of those landings was to a place a reader reaches.
+
+**THE RULE: `origin/mm-research` IS THE CANONICAL RECORD.** Register
+(`COORDINATION.md`), state (`STATUS.yml`, `HANDOFF.md`), reviews
+(`workspace/reviews/`) and procedures all resolve there. A filing is not landed
+until it is on that ref. "Landed" means `git ls-tree --name-only` at the
+**fetched** ref returns a count, never a local commit and never a push to a
+seat branch alone.
+
+**Measured at 2026-09-11T23:48Z, and it is canonical by measurement rather than by decree:**
+
+| location | reviews | state | R-entries | STATUS.yml |
+|---|---|---|---|---|
+| `origin/mm-research` | **404** | **round 400** | 919 | **60,251** |
+| `origin/mm-research-state-backup-20260911` | 342 | round 358 | 919 | 60,198 |
+| shared working tree | 360 | round 400 | 919 | 60,251 |
+
+Superset tested as sets, not by count: files in the worktree but not origin =
+**0**; in the backup but not origin = **0**; union of all three = **404** =
+origin. Counts alone would not have established this, and `comm` on
+numerically-sorted input silently would not either — REV nearly filed a
+"22 of 22 missing" cold-start failure that way, so **any set difference whose
+result is the finding is computed as a set, never as sorted-text adjacency.**
+
+**Standing consequences.**
+
+1. **The executing refs stay separate and unchanged.** `de-freeze-chain-v2` and
+   `be-build-runner` are where code EXECUTES and where a code claim is verified.
+   `mm-research` is where the RECORD lives. The two questions have different
+   right answers, and the direction is the opposite of what we assumed for most
+   of the day: the shared tree was ahead of every pushed ref on state and behind
+   on filings.
+2. **The backup branch is a point-in-time snapshot and is now strictly
+   dominated.** It is retained as a snapshot, never read as current. Anything
+   resolved against it is resolved at round 358.
+3. **A citation without a file is a dangling reference.** `COORDINATION.md`
+   cites 103 review numbers of which **18 have no file beside them**;
+   `HANDOFF.md` cites 22 and **0** are missing, so the cold start works and the
+   register is the leaky surface. Closing those 18 is owned by the seat that
+   wrote each review.
