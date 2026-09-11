@@ -389,3 +389,38 @@ were dropped before I could see them**; the answer happened to be right.
 > ***A filter that removes candidates before a human sees them must be scoped to
 > the same unit as the thing it filters on.*** When in doubt, do not filter —
 > print the context and read the hits. (Amended 2026-09-11T19:17:35Z.)
+
+---
+
+## Round 400 — **driving the REPORTER is not driving the REPORTED**
+
+The adjudication went against me, and the reason is worth more than the verdict.
+
+My standing method is *drive it, don't read it.* At round 398 I **drove DA's
+ledger** and filed its output as a finding about **which gate failed**. At round
+399, challenged, I drove it **again** — in a worktree cut at the ref, by the
+declared method, twice, reproducibly — and reported that my reading held.
+
+> ***Both runs were clean. Both answered the wrong question.***
+> The ledger's **output** was never in dispute. What was in dispute was whether
+> its **rows were true** — and no number of re-runs of a reporter can test that.
+> REV drove **the gates**. I drove **the thing that reports on the gates**.
+
+**Required from now on:** when a claim is contested, ask *what object is the
+claim about?* — and drive **that**. A report about X is evidence about X only
+when the report has been shown to track X.
+
+### And the tell was already on my own page
+
+My round-399 output printed, for gate 6:
+
+
+
+I recorded those words **verbatim** and still treated the row as evidence about
+gate 6. ***An unprobed row is not a measurement of anything*** — its 
+is a fall-through, which is exactly what the ruling found.
+
+> **So: when an instrument reports a status AND reports that it could not
+> measure, the second fact voids the first.** Read the coverage field before the
+> status field, every time. A  beside a  is not a weak
+> result — it is **no result**. (Amended 2026-09-11T23:34:58Z.)
