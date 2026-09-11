@@ -1,9 +1,9 @@
 {
  "protocol": "P003_DA_FORWARD_TEST_V26",
  "version": 26,
- "STATUS": "DRAFT -- lands after DE 306's commit exists. <new-valuation> unresolved.",
+ "STATUS": "LANDED",
  "declared_by": "DA 261",
- "declared_at_utc": "2026-09-11T12:11:54Z",
+ "declared_at_utc": "2026-09-11T12:14:17Z",
  "supersedes": {
   "file": "declarations/da_forward_test_declaration_v25.json",
   "rule": "13 -- v1..v25 unedited",
@@ -1666,7 +1666,7 @@
   }
  },
  "THE_VALUATION_PIN_SUPERSESSION": {
-  "STATUS": "UNRESOLVED -- <new-valuation> is DE 306's commit, which does not exist yet",
+  "STATUS": "RESOLVED -- the valuation pin is c853e2d",
   "prior_pin": "68e7d2352c7d7aed / the de-freeze-chain-v2 lineage through f309602",
   "THE_THREE_HUNKS": [
    {
@@ -1717,6 +1717,87 @@
     "be_daybook_receipt_20260908_btc__L250ms__FWD1.json"
    ],
    "they_are_NOT_withdrawn": "produced under the prior pin, kept as provenance; the supersession does not retract them"
+  },
+  "THE_TWO_COMMITS_BY_NAME": {
+   "f309602": {
+    "title": "Q-DE-303 -- the run reads the settlement oracle ONCE, before the first arm",
+    "moved": {
+     "de_forward_value_day.py": {
+      "from": "c397537121a29b44",
+      "to": "d024925c268e84c3"
+     },
+     "de_settlement_control_run.py": {
+      "from": "faeae22f347e2032",
+      "to": "ee206d5d549f7a2c"
+     }
+    }
+   },
+   "c853e2d": {
+    "title": "Q-DE-306 -- the ruled set resolves the freeze chain, and the build rule is declared",
+    "on_refs": [
+     "origin/de-freeze-chain-v2",
+     "origin/be-build-runner"
+    ],
+    "moved": {
+     "de_multiday_gate1_runner.py": {
+      "from": "157413f6562cf5bd",
+      "to": "b53848ff1a7564d9"
+     },
+     "de_settlement_control_run.py": {
+      "from": "ee206d5d549f7a2c",
+      "to": "e566134cc1e2d12a"
+     }
+    }
+   }
+  },
+  "THE_THREE_FALSIFIERS": {
+   "1_09_07_point_estimate_reproduces_to_the_cent": {
+    "CONDVALUE_X_SKEW": -14645.078818000005,
+    "HAZARD_OVER_SKEWED_REF": 4925.363903000005,
+    "status": "PENDING -- DE reports",
+    "refusal": "VALUATION_PIN_MOVED_AND_THE_POINT_ESTIMATE_MOVED_WITH_IT"
+   },
+   "2_09_08_rebuild_bit_identical": {
+    "sha256": "41d22f964ff6fb876c0190b37e9ccf7cc27b26c0e119d1e0e7890435d45798da",
+    "bytes": 390041103,
+    "status": "PENDING -- BE reports",
+    "refusal": "BUILD_RULE_ACCEPTED_A_COMMIT_THAT_CHANGES_THE_BOOK"
+   },
+   "3_the_ruled_day_set_now_resolves_the_chain_head": {
+    "statement": "ruled_day_set() must return the ELEVEN-day list from params v32 via the freeze chain, not v29's six",
+    "status": "PENDING -- DE reports",
+    "refusal": "RULED_DAY_SET_STILL_READS_A_LITERAL_PARAMS_FILE"
+   },
+   "all_three_are_PENDING_and_none_is_recorded_as_done": true
   }
- }
+ },
+ "BUILD_PIN": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+ "BUILD_PINNED_DIGESTS": {
+  "be_daybook_build.py": "2d31a80b5ae5c2c62fd4992eedb5d8c5020e66e69f015b1aa475e24d963d7fb3",
+  "be_gate1_fragment.py": "d87c820872ec32670bd0dc4011d2d0279efeb4bd36f358866b771f2034fc75ed",
+  "be_gate1_state_tape.py": "7a876f1fe98e938cf474ad14082972c50899400a020ea3547f5a80720abc4589",
+  "de_phase4_diag_runner.py": "9e2a0977d8dfc3be1c90ac87817d732e4ca19b6752f3439dd5e505d771d5a47d",
+  "de_head_scoring.py": "31c368384770351fdbe5408a0321ee7af89e2eb25fd0d36378f03c9d7b3f03af"
+ },
+ "HOW_DE_S_RULE_READS_THESE_FIELDS_verified_at_c853e2d": {
+  "field_names": [
+   "BUILD_PIN",
+   "BUILD_PINNED_DIGESTS"
+  ],
+  "read_from": "the HIGHEST-numbered da_forward_test_declaration_v*.json in the RUNNING TREE's declarations/ dir",
+  "BUILD_PIN_is_parsed_as": "str(x).split()[0] -- the first whitespace token, so the value is the bare sha and nothing else",
+  "BUILD_PINNED_DIGESTS_shape": "dict of BASENAME -> FULL 64-char sha256; resolved as live/pm_research/<name> at the candidate commit",
+  "the_fallback_if_absent": "`if not base or not digests: return False` -- NO DECLARED RULE MEANS EXACT-PIN-ONLY. So an absent or misnamed field does not open a hole; it CLOSES the descendant arm and 09-09+ books stay blocked. That is why the field names had to be read at c853e2d and not guessed.",
+  "so_THIS_declaration_is_what_unblocks_09_09_plus": true
+ },
+ "A_DEFECT_IN_v32_THAT_IS_MINE": {
+  "what": "de_multiday_gate1_params_v32.json carries days=11 and expected_G=6 -- INCONSISTENT",
+  "how_it_happened": "DA 234 said 'add 09-09..09-13; change NOTHING else', and I applied that LITERALLY. But `expected_G` is DERIVED FROM `days`, so leaving it alone did not leave the file unchanged -- it left it CONTRADICTORY.",
+  "DE_found_it_the_only_way_it_could_be_found": "a dry attempt refused 'the ruled set has 11 days against the declared expected_G 6'",
+  "THE_LESSON": "'change nothing else' is safe for INDEPENDENT fields and unsafe for DERIVED ones. A single-hunk edit to a field others are computed from is not a single-hunk edit -- and my own flattened diff at Q-DA-449 showed `expected_G` sitting unchanged and I read that as evidence of safety rather than as the defect.",
+  "v33_is_PENDING": "DE 308 is stating, from the READ SITES, what `days` and `expected_G` must be -- forward population only with G=7, or all eleven. THOSE ARE DE'S TWO VALUES TO STATE, not mine to choose: the answer depends on what the read sites mean by G, which is DE's surface.",
+  "what_I_will_do_when_they_land": "land de_multiday_gate1_params_v33.json = v32 with EXACTLY those two fields set, and de_arm_freeze_v12_amendment.json pinning v33, on the three refs, with the v32 -> v33 diff stated as its hunks",
+  "and_v32_stays_as_provenance": "rule 13 -- superseded, not edited, not withdrawn"
+ },
+ "PIPELINE_ZERO_DRIFT_AT_THE_SUPERSESSION": "52 PIPELINE rows = 3 DECLARED MOVERS + 42 verified UNCHANGED at their refs + 7 data/post artifacts verified unchanged ON DISK (they are not in git). ZERO undeclared movers."
 }
