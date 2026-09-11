@@ -35,6 +35,7 @@ import de_forward_evaluator as EV                # noqa: E402
 PROTOCOL = "P003_DE_DAY_RECORD_V1"
 DERIVED = Path("/home/yuqing/ctaNew/data/pm_5min/derived")
 NO_CELL = "DAY_RECORD_CELL_ABSENT"
+NO_STAGE0 = "STAGE0_VERDICT_ABSENT"
 ARM_MISMATCH = "DAY_RECORD_ARMS_DISAGREE_ON_THE_BOOK"
 
 
@@ -57,6 +58,48 @@ def cells_for(day: str, cells_dir: Path) -> dict:
     return out
 
 
+def stage0_evidence(day: str, derived: Path = DERIVED,
+                    log: Path = None) -> dict:
+    """THE GATE'S VERDICT, IN THE RUN'S OWN EVIDENCE (REVIEW 187).
+
+    The gate ran and said so only in /tmp and in a log line -- so the
+    record carried no proof it ran at all, which is indistinguishable
+    from its not having run. Structured first, log lines verbatim second,
+    and REFUSES when neither exists: absence is not a pass.
+    """
+    compact = day.replace("-", "")
+    launch = derived / f"p003_de_chain_launch_{compact}.json"
+    if launch.is_file():
+        doc = json.loads(launch.read_text())
+        v = doc.get("stage0_verdict")
+        if v:
+            return {"structured": True, "source": str(launch),
+                    "verdict": v.get("status"), "rows": v,
+                    "time": doc.get("at_utc")}
+    scratch = Path(f"/tmp/stage0_freeze_{compact}.json")
+    if scratch.is_file():
+        v = json.loads(scratch.read_text())
+        return {"structured": True, "source": str(scratch),
+                "verdict": v.get("status"), "rows": v,
+                "time": time.strftime("%Y-%m-%dT%H:%M:%SZ",
+                                      time.gmtime(scratch.stat().st_mtime)),
+                "WHERE_THIS_LIVES": (
+                    "the launcher wrote the gate's report to /tmp, which "
+                    "is not run-scoped; future launches write it into the "
+                    "launch record before the offer")}
+    if log and Path(log).is_file():
+        lines = [l.rstrip() for l in Path(log).read_text().splitlines()
+                 if "STAGE 0" in l or "stage 0" in l]
+        if lines:
+            return {"structured": False, "source": str(log),
+                    "verdict": None, "log_lines_verbatim": lines,
+                    "time": None}
+    raise SystemExit(
+        f"REFUSED {NO_STAGE0}: no structured verdict and no log line for "
+        f"{day}. A gate whose verdict is recorded nowhere is "
+        f"indistinguishable from a gate that never ran.")
+
+
 def four_fields(result: dict) -> dict:
     """THE FOUR FIELDS PER ARM, at their canonical names."""
     return {"observed_D_cents": result["observed_D_cents"],
@@ -74,26 +117,71 @@ def day_line(day: str, arm: str, r: dict, g: int, tol: int) -> str:
 
 
 def build(day: str, cells_dir: Path, n_declared: int = 7,
-          derived: Path = DERIVED) -> dict:
+          derived: Path = DERIVED, log: Path = None,
+          reproduction_of: Path = None) -> dict:
     cells = cells_for(day, cells_dir)
+    stage0 = stage0_evidence(day, derived, log)
     arms = sorted(cells)
     cohort = CD.combine({a: cells[a]["result"] for a in arms},
                         ledger=None, day_start=0, day_end=0)
-    per_day_D = {}
-    for d, f in _landed_days(derived, day):
-        per_day_D[d] = f
-    per_day_D[day] = cells[arms[0]]["result"]["observed_D_cents"]
+    landed = _landed_days(derived, day)
+    per_day_by_arm = {a: dict(landed.get(a, {})) for a in arms}
+    for a in arms:
+        per_day_by_arm[a][day] = cells[a]["result"]["observed_D_cents"]
+    # the day-level map the tripwire/tally use keeps the reference arm's
+    # sign, as day one's did; the ARM-level maps below carry the verdict.
+    per_day_D = dict(per_day_by_arm[arms[0]])
     thr = EV.ALPHA / EV.M_FAMILY
     tol = EV.tolerance(n_declared, thr, 2)
     # THE DECLARED EVALUATOR COMPUTES THE VERDICT, not this file: the
     # per-day line, the futility verdict with the day that killed it, the
     # attainable minimum p at the G so far, and the tolerance at that G.
-    progress = EV.progress_emit(Path(cells_dir), [day],
-                                n_declared=n_declared, derived=derived)
-    emit = EM.emit_single_book_day(
-        day, {a: cells[a]["result"]["observed_D_cents"] for a in arms},
-        per_day_D, n_declared, derived=derived)
+    # THE EVALUATOR'S EMIT NEEDS THE DAY'S POINT-ESTIMATE RECEIPT, which
+    # verifies the winner source. When that receipt does not exist the
+    # refusal is RECORDED IN BAND, by name -- never silently replaced by
+    # the weaker emit below, because a reader must be able to tell a
+    # computed verdict from an absent one.
+    try:
+        progress = EV.progress_emit(Path(cells_dir), [day],
+                                    n_declared=n_declared, derived=derived)
+    except Exception as exc:                                # noqa: BLE001
+        progress = {"UNAVAILABLE": str(exc),
+                    "per_day_lines": [], "ANY_ARM_ALREADY_DEAD": None,
+                    "WHAT_IS_MISSING": (
+                        "the day's point-estimate receipt "
+                        "p003_de_point_estimate_day_<day>_L250ms__*.json")}
+    # A DAY WITH A SUPERSEDED PAIR HAS A DELTA-D DECOMPOSITION, and the
+    # single-book emit REFUSES rather than silently skipping it. For a
+    # reproduction record that refusal is the correct answer and is
+    # recorded, not routed around: day one's own emit already carries the
+    # decomposition.
+    try:
+        emit = EM.emit_single_book_day(
+            day, {a: cells[a]["result"]["observed_D_cents"] for a in arms},
+            per_day_D, n_declared, derived=derived)
+    except Exception as exc:                                # noqa: BLE001
+        emit = {"SINGLE_BOOK_EMIT_UNAVAILABLE": str(exc),
+                "per_arm_D_cents": {
+                    a: cells[a]["result"]["observed_D_cents"] for a in arms},
+                "running_tally": EM.running_tally(per_day_D, n_declared)}
     emit["progress_emit"] = progress
+    # RULE 10: THE VERDICT IS COMPUTED IN THE ARTIFACT. The futility block
+    # is the frozen evaluator's, per arm, over EVERY scored day's sign --
+    # the same producer day one used, so the two records are comparable
+    # line for line. The two `cause_means` sentences are pre-written and
+    # SELECTED BY THE COMPUTED CAUSE, never typed here.
+    emit["futility"] = {a: EV.futility(per_day_by_arm[a], n_declared)
+                        for a in arms}
+    emit["ANY_ARM_ALREADY_DEAD"] = any(
+        emit["futility"][a]["FUTILE"] for a in arms)
+    emit["EVERY_ARM_ALREADY_DEAD"] = all(
+        emit["futility"][a]["FUTILE"] for a in arms)
+    emit["standing_warning"] = EV.standing_warning(n_declared)
+    emit["floor_at_the_G_ACHIEVED_SO_FAR"] = EV.day_sign_p(
+        len(per_day_D), len(per_day_D), 2)
+    emit["floor_at_the_G_DECLARED"] = EV.day_sign_p(
+        n_declared, n_declared, 2)
+    emit["per_day_D_by_arm"] = per_day_by_arm
     first = cells[arms[0]]["result"]
     return {
         "protocol": PROTOCOL, "day": day,
@@ -112,29 +200,81 @@ def build(day: str, cells_dir: Path, n_declared: int = 7,
                 "book_scoring_code") or {}).get("unnamed_members")
             for a in arms},
         "n_draws": first["n_draws"], "seed_cli": 0,
+        "stage0": stage0,
+        "book_sha256_field": first.get("book_sha256"),
+        "winner_source_sha256_field": (
+            (first.get("winner_source") or {}).get("sha256")),
         "winner_source": first.get("winner_source"),
         "cohort_agreement": cohort,
-        "emit": dict(emit, per_day_lines=progress["per_day_lines"],
+        "emit": dict(emit, per_day_lines=(progress["per_day_lines"] or [
+            day_line(day, a, cells[a]["result"], len(per_day_D), tol)
+            for a in arms]),
                      G_so_far=len(per_day_D), G_declared=n_declared,
                      tolerance_negative_days=tol,
-                     ANY_ARM_ALREADY_DEAD=progress["ANY_ARM_ALREADY_DEAD"],
+                     ANY_ARM_ALREADY_DEAD=emit["ANY_ARM_ALREADY_DEAD"],
                      STOP_ADVICE=progress.get("STOP_ADVICE")),
         "at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        **({"reproduction": _reproduction(cells, arms, reproduction_of)}
+           if reproduction_of else {}),
     }
 
 
-def _landed_days(derived: Path, exclude: str) -> list:
-    out = []
+def _reproduction(cells: dict, arms, landed: Path) -> dict:
+    """D to the cent against the landed record; p differs BY SEED, stated.
+
+    The seed is DERIVED from (book digest, arm). A freeze-built book has a
+    different digest -- its wall-clock fields differ -- so the seed
+    differs, so the 500 permutations differ, so p differs. D is the
+    OBSERVED statistic and does not depend on the draws at all: it is the
+    thing that must reproduce, and the p difference is not a discrepancy.
+    """
+    old = json.loads(Path(landed).read_text())
+    rows = {}
+    for a in arms:
+        r = cells[a]["result"]
+        oc = (old.get("cells") or {}).get(a) or {}
+        old_D = oc.get("D", oc.get("observed_D_cents"))
+        rows[a] = {
+            "landed_D_cents": old_D, "reproduced_D_cents":
+                r["observed_D_cents"],
+            "identical_to_the_cent": (old_D is not None
+                                      and round(old_D, 2)
+                                      == round(r["observed_D_cents"], 2)),
+            "exact_equality": old_D == r["observed_D_cents"],
+            "landed_p": oc.get("p"), "reproduced_p": r["p_two_sided"],
+            "landed_seed": None, "reproduced_seed": r["seed"],
+            "p_differs_because": (
+                "the seed is derived from (book digest, arm); the "
+                "freeze-built book has a different digest, so the 500 "
+                "permutations differ. D does not depend on the draws."),
+        }
+    return {"landed_record": str(landed), "per_arm": rows,
+            "every_arm_reproduces_to_the_cent":
+                all(v["identical_to_the_cent"] for v in rows.values())}
+
+
+def _landed_days(derived: Path, exclude: str) -> dict:
+    """{arm: {day: D}} for every day already landed under the real name.
+
+    PER ARM, NOT PER DAY. Futility is an ARM's property -- the first
+    non-positive day ends THAT arm at tolerance 0 -- so a single per-day
+    number cannot carry it. Day one's HAZARD was POSITIVE and its
+    CONDVALUE negative; collapsing them would have made one arm's verdict
+    the other's.
+    """
+    out: dict = {}
     for f in sorted((derived / "fwd_v2").glob(
             "p003_de_forward_value_*.json")):
+        if "reproduction" in f.name:
+            continue
         d = json.loads(f.read_text())
         day = d.get("day")
         if not day or day == exclude:
             continue
-        cell = (d.get("cells") or {}).get("CONDVALUE_X_SKEW") or {}
-        val = cell.get("D", cell.get("observed_D_cents"))
-        if isinstance(val, (int, float)):
-            out.append((day, val))
+        for arm, cell in (d.get("cells") or {}).items():
+            val = cell.get("D", cell.get("observed_D_cents"))
+            if isinstance(val, (int, float)):
+                out.setdefault(arm, {})[day] = val
     return out
 
 
@@ -184,11 +324,16 @@ def main(argv=None) -> int:
     ap.add_argument("--cells")
     ap.add_argument("--out", default=None)
     ap.add_argument("--n-declared", type=int, default=7)
+    ap.add_argument("--log", default=None)
+    ap.add_argument("--reproduction-of", default=None)
     ap.add_argument("--falsify", action="store_true")
     a = ap.parse_args(argv)
     if a.falsify:
         return falsify()
-    rec = build(a.day, Path(a.cells), a.n_declared)
+    rec = build(a.day, Path(a.cells), a.n_declared,
+                log=Path(a.log) if a.log else None,
+                reproduction_of=(Path(a.reproduction_of)
+                                 if a.reproduction_of else None))
     out = Path(a.out) if a.out else (
         DERIVED / "fwd_v2"
         / f"p003_de_forward_value_{a.day.replace('-', '')}.json")

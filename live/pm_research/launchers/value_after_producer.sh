@@ -153,6 +153,33 @@ if [ "$grc" != 0 ]; then
   grep -o "REFUSED [A-Z0-9_]*:[^\"]*" "$GOUT" | head -4
   exit 3
 fi
+# REVIEW 187: THE GATE'S VERDICT GOES INTO THE RUN'S EVIDENCE, BEFORE THE
+# OFFER. It used to exist only in /tmp and in a log line, so a record
+# carried no proof the gate ran -- indistinguishable from its not having
+# run. Written into the launch record, which is under derived/ and
+# survives the scratch dir.
+"$PYBIN" - "$GOUT" "${day:-$DAY}" <<'PYMERGE'
+import json, sys, time
+from pathlib import Path
+gout, day = Path(sys.argv[1]), sys.argv[2]
+rec = Path("/home/yuqing/ctaNew/data/pm_5min/derived") / (
+    f"p003_de_chain_launch_{day.replace('-', '')}.json")
+doc = {}
+if rec.is_file():
+    try:
+        doc = json.loads(rec.read_text())
+    except Exception:
+        doc = {}
+try:
+    verdict = json.loads(gout.read_text())
+except Exception as exc:
+    verdict = {"status": f"STAGE0_REPORT_UNREADABLE: {exc}"}
+doc["stage0_verdict"] = verdict
+doc["at_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+rec.parent.mkdir(parents=True, exist_ok=True)
+rec.write_text(json.dumps(doc, indent=1, default=str))
+print(f"stage0 verdict recorded in {rec.name}: {verdict.get('status')}")
+PYMERGE
 
 if ! flock -n "$LOCK" true; then
   refuse "PRODUCER_ENDED_WITHOUT_RELEASING_THE_LOCK:$LOCK" 12
