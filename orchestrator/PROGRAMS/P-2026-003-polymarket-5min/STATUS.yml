@@ -67,6 +67,23 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T03:58:01Z (MEM ROUND 358 -- A NEAR-MISS PREVENTED BY LUCK, AND THE GUARD-SHAPED HOLE IS
+  NOW THE NIGHT'S DOMINANT FINDING. DE's valuation unit was pointed at a tree that is NOT
+  the ruled commit and exited 75/TEMPFAIL ON THE LOCK; had the lock been free, DAY ONE'S
+  HEADLINE NUMBER WOULD HAVE COME FROM THE WRONG CODE and nothing would have caught it --
+  the BOOK verifies fine because the book IS correct, it is THE INSTRUMENT READING IT that
+  would have been wrong. THE LOCK PREVENTED THIS, NOT ANY GUARD: luck, not design. AND IT
+  WAS NOT ARMED -- no waiter existed, the unit sat failed, and the turn ended with the
+  intention, which is rule 37 RECURRING IN THE SAME SESSION THAT WROTE IT. RULE 42 EARNED
+  ITSELF AGAIN IN MY HANDS: deFV0907 now returns LoadState=not-found beside Result=success
+  and ExecMainStatus=0 -- the exact dead/success signature I demonstrated with an INVENTED
+  unit name at round 351 -- so WITHOUT LoadState I WOULD HAVE REPORTED 'success' FOR THE
+  UNIT WHOSE FAILURE IS THIS ROUND'S SUBJECT. I ENUMERATED EVERY WORKTREE: EXACTLY TWO OF
+  FORTY-EIGHT ARE AT THE RULED COMMIT (wt-deval and wt-fwd), so FORTY-SIX TREES WOULD
+  PRODUCE A WRONG-CODE RUN IF A UNIT WERE POINTED AT THEM, AND NOTHING ASKS. Requirement:
+  EVERY heavy unit, valuations and analysis too, asserts its tree's HEAD against the
+  declared commit and REFUSES -- and reads the run record's worktree/tip, NEVER ExecStart.
+  NOTHING RAN FROM A WRONG TREE; NO ARTIFACT IS CONTAMINATED. tip 8828194)
   2026-09-11T03:53:44Z (MEM ROUND 357 -- THE FIRST FORWARD BOOK EXISTS AND THE ROUND'S BEST FINDING IS
   ABOUT THE REGISTER. be_daybook_20260907_btc__L250ms__FWD1.pkl, 339 MiB, which I located
   and stat'd, all three digests matching 7ed5a90 -- and NOTHING IS VALUED. The optimised
@@ -103,22 +120,6 @@ updated: >-
   CAUGHT IT BEFORE ASSERTING -- the round-348 shape costing nothing this time. THE SEATS'
   REFUSALS HAVE BEEN BETTER THAN THEIR PRODUCTIONS, and my own record fits exactly: SIX
   ERRORS, ALL ASSERTIONS; FOUR BEST CALLS, ALL WITHHOLDINGS. tip 4e76ce5)
-  2026-09-11T03:30:00Z (MEM ROUND 355 -- A BAR WAS REFUTED BEFORE THE RUN AND I WITHDRAW A CLAIM OF MY
-  OWN. REV 173 refuted BE's REL_BAR = 1e-9: I computed it at 1.779e-08 admitted against
-  ulp(17.79) = 3.553e-15, a ratio of 5.01e6 -- 6.7 ORDERS. BE set that bar HONESTLY, IN THE
-  FILE, BEFORE ANY COMPARISON, and it was still wrong IN THE PERMISSIVE DIRECTION; only a
-  SECOND SEAT DECLARING THE BAR INDEPENDENTLY caught it, which is RULE 38 APPLIED
-  PROSPECTIVELY for the first time here. REV's scope ruling: no comparator result can make
-  the waiver available -- one day/zero flips is NECESSARY NOT SUFFICIENT, and a FORWARD day
-  needs a PER-BOOK GUARD because the deciding quantity is THAT DAY'S OWN OCCUPANCY NEAR
-  THETA. I WITHDRAW MY ROUND-354 STATEMENT that every forward book carries a named refusal:
-  assert_book_scoring_code compares against DISK and its own body says the recorded set is
-  'NEVER REFUSED ON'. DA's 8/10 is SOUND; I verified the MEASUREMENT and relayed the
-  INFERENCE as though the verification covered both. Evaluator provenance CLOSED -- the file
-  is new, though added at 06061d7 not c73214d, and that commit's SUBJECT is where the stale
-  '28-cell' survives. DA's unasked observation: THE USER'S N=7 RULING IS WHAT MADE THIS TEST
-  CAPABLE OF PASSING AT ALL. And be_cascade DOES have an enforcer (be_rule22:377) -- the
-  open question is whether it runs on a forward book emit. tip 97a5caa)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -290,6 +291,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 358, a near-miss prevented by luck, and the guard-shaped hole ---
+  THE_NEAR_MISS_WAS_PREVENTED_BY_A_LOCK_CONFLICT_AND_NOT_BY_ANYTHING_WE_BUILT: DE's valuation unit deFV0907.service was pointed at ~/ctaNew-wt-de2, not at the ruled pipeline commit 7ed5a90, and exited 75/TEMPFAIL at 03:46:32 on the lock held by p003neut0903. HAD THE LOCK BEEN FREE, DAY ONE'S HEADLINE NUMBER WOULD HAVE BEEN PRODUCED BY THE WRONG CODE AND NOTHING WOULD HAVE CAUGHT IT -- the BOOK's provenance verifies fine because the book IS correct; it is THE INSTRUMENT READING IT that would have been wrong. THE LOCK CONFLICT PREVENTED THIS, NOT ANY GUARD. That is luck, not design, and it is recorded in those words.
+  AND_I_COULD_NOT_VERIFY_THE_EXIT_AT_THE_UNIT_BECAUSE_RULE_42_CAUGHT_THE_SAME_TRAP_AGAIN: "I checked LoadState FIRST, as rule 42 requires, and deFV0907.service returns LoadState=not-found -- the unit no longer exists. Its other fields read Result=success, ActiveState=inactive, SubState=dead, ExecMainStatus=0: EXACTLY the dead/success signature I demonstrated at round 351 by inventing a unit name. WITHOUT LoadState I WOULD HAVE REPORTED 'deFV0907: success' FOR THE UNIT WHOSE FAILURE IS THE SUBJECT OF THIS ROUND. Second time rule 42's discharge has earned itself in my hands, and the first where it would have produced a directly contradictory report."
+  AND_THE_HAND_OFF_WAS_NOT_ARMED_WHICH_IS_THE_SAME_SESSIONS_OWN_RULE_RECURRING: "Re-arming the valuation to launch when p003neut0903 exits produced NO WAITER: the unit failed once and SAT FAILED, and DE's turn ended and took the intention with it. That is rule 37 -- a hand-off must never rest on a seat's turn staying alive -- which this programme wrote at round 332 and which has now recurred IN THE SAME SESSION. An intention is not a mechanism, and a turn ending is the most reliable event in this whole system."
+  THE_GUARD_SHAPED_HOLE_IS_NOW_THREE_INSTANCES_IN_ONE_SESSION_AND_IT_IS_THE_NIGHTS_DOMINANT_FINDING: "be_rule22.assert_unchanged catches a worktree HEAD MOVING mid-run. NOTHING CATCHES A RUN STARTING FROM THE WRONG TREE. Instance (i): the 21-minute build loss, where ExecStart said wt-fwd and the run record said worktree wt-be at f75528c, caught ONLY because an unrelated commit happened to move that tree's head. Instance (ii): the coordinator reported that build as running from the right tree BECAUSE THE ExecStart PATH SAID SO, while the run record carried the property in plain text. Instance (iii): this valuation, at a THIRD tree and a THIRD commit."
+  AND_I_ENUMERATED_EVERY_WORKTREE_TWO_OF_FORTY_EIGHT_ARE_AT_THE_RULED_COMMIT: "I listed every worktree and compared each HEAD against 7ed5a90. EXACTLY TWO MATCH: ctaNew-wt-deval and ctaNew-wt-fwd. The other forty-six do not, including the main tree, and ctaNew-wt-de2 now reads ef76b38 -- it has MOVED since the dispatch named it at 3a7756a, and was never the ruled commit either way. So the hole is not a theoretical one: FORTY-SIX TREES WOULD PRODUCE A WRONG-CODE RUN IF A UNIT WERE POINTED AT THEM, and nothing asks."
+  SO_THE_REQUIREMENT_IS_EVERY_HEAVY_UNIT_NOT_JUST_BUILDS: "Every heavy unit -- VALUATIONS AND ANALYSIS UNITS, not only builds -- must ASSERT its working tree's HEAD equals the declared commit and REFUSE ON MISMATCH. And the reading rule that goes with it: READ THE RUN RECORD'S worktree AND tip FIELDS, NEVER THE UNIT'S ExecStart. The path is a LABEL; the record carries the PROPERTY. That is rule 42 applied to a unit file, and instance (ii) is what it costs when it is not."
+  THE_COORDINATORS_OWN_MISS_IS_THE_SHARP_ONE_AND_IT_IS_DA_221S_SHAPE: "Forty minutes before this they RULED, on DE's -m question, that 'the property is WHICH BYTES COMPUTE, not the command form' -- and then did not check which tree DE's own valuation unit would compute from. THE CORRECT RULE WRITTEN, AND NOT APPLIED ONE DISPATCH LATER, TO THE EXACT UNIT IT WAS ABOUT. Same class as DA proposing a principle it had filed 24 hours earlier: A STATED RULE DOES NOT REACH THE NEXT DECISION, INCLUDING WHEN THE STATER IS THE DECIDER."
+  AND_MY_OWN_SHARE_IS_THAT_I_CHECKED_ONE_UNIT_TYPE_AND_NEVER_ASKED_WHETHER_THERE_WERE_OTHERS: At round 353 I verified the BUILD's tree rather than its ExecStart path and recorded that as the discharge the incident asked for. I was right about the build and I never asked whether other unit types existed that needed the same check. The valuation unit was a category I did not enumerate. That is the narrower version of the coordinator's miss -- not a rule I failed to apply, but a rule I applied to the instance in front of me and did not generalise to its class, which is what rule 32 asks and what I have recorded three times against my own instruments.
+  NOTHING_RAN_FROM_A_WRONG_TREE_AND_NO_ARTIFACT_IS_CONTAMINATED: "The plain statement, and it is the one a cold reader needs first. p003neut0903 -- the neutrality certification of 09-03 on 7ed5a90 -- is still building, LoadState=loaded, active and running, which I confirmed. Its selection already reproduces EV22 EXACTLY: 247 slugs, era clob_v4_1. Day one's book exists and is UNVALUED. 09-08, 09-09 and 09-10 are staged for tonight at roughly 22 minutes each, and the final result is calendar-bound at about 2026-09-14."
+  REV_IS_MEASURING_WHETHER_THE_REGISTER_IS_STILL_AN_INSTRUMENT_AND_THE_REMEDY_IS_DEFERRED_ON_PURPOSE: "Whether the last forty or so R-entries were EVER READ AFTER FILING, with a FALSIFIER FIRST. The question is whether the register is still an instrument or has become an artefact we produce. And the discipline around it is the part worth recording: NO REMEDY IS TO BE DESIGNED UNTIL THAT MEASUREMENT EXISTS, because a process fix that becomes another unread artefact would be THE SAME ERROR ONE LEVEL UP. Deferring the fix until the measurement lands is the only way to avoid answering a question about unread artefacts by producing one."
   # --- MEM round 357, the first forward book and the register's own defect ---
   THE_FIRST_FORWARD_BOOK_EXISTS_AND_I_CONFIRMED_IT_ON_DISK: "be_daybook_20260907_btc__L250ms__FWD1.pkl, which I located and stat'd: 339 MiB at data/pm_5min/derived/, written 2026-09-11 03:33:25. rc=0, 21.7 minutes, peak 6.25 GB. All three digests match 7ed5a90 -- builder_commit 7ed5a9015f75de64feeeeaad21d97e4eecc2b15c, de_head_scoring.py 31c368384770351f, de_phase4_diag_runner.py 9e2a0977d8dfc3be, be_daybook_build.py 2d31a80b5ae5c2c6, the last three of which I hashed independently at rounds 353 and 354. NOTHING IS VALUED YET."
   AND_THE_OPTIMISED_CODE_RULING_IS_VINDICATED_BY_MEASUREMENT_AT_ABOUT_2_85X: "21.7 minutes against the four EV21 days at 67.6, 74.3, 44.5 and 60.7 on the old builder. I computed it: mean 61.77 minutes, so 2.85x on the mean, with a RANGE of 2.05x to 3.42x -- the dispatch's 'roughly 3x' is fair for the mean and the best old day was only twice as slow, which is the honest spread. Build speed has STOPPED BEING THE CONSTRAINT: the test is now CALENDAR-BOUND at 09-13 closing 2026-09-14T00:00Z."
@@ -27711,6 +27723,67 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 358, 2026-09-11T03:58:01Z ---
+  THE_NEAR_MISS_WAS_PREVENTED_BY_A_LOCK_CONFLICT_AND_NOT_BY_ANYTHING_WE_BUILT:
+    prov: RELAYED
+    from: coordinator MEM 358
+    as_of: 2026-09-11T03:58:01Z
+    said: >-
+      the unit, its tree and its exit are the coordinator's account; deFV0907.service now resolves LoadState=not-found so its exit status is no longer readable from systemd, which is noted below rather than papered over.
+  AND_I_COULD_NOT_VERIFY_THE_EXIT_AT_THE_UNIT_BECAUSE_RULE_42_CAUGHT_THE_SAME_TRAP_AGAIN:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-measurement-pipeline.timer
+    as_of: 2026-09-11T03:58:01Z
+    said: >-
+      systemctl --user show for deFV0907.service with LoadState read first: not-found, beside Result=success and ExecMainStatus=0; p003neut0903 by contrast returns LoadState=loaded, active, running.
+  AND_THE_HAND_OFF_WAS_NOT_ARMED_WHICH_IS_THE_SAME_SESSIONS_OWN_RULE_RECURRING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T03:58:01Z
+    said: >-
+      rule 37 is in SEAT_PROTOCOL from round 332; the absence of a waiter and the re-arm are the coordinator's account.
+  THE_GUARD_SHAPED_HOLE_IS_NOW_THREE_INSTANCES_IN_ONE_SESSION_AND_IT_IS_THE_NIGHTS_DOMINANT_FINDING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:58:01Z
+    said: >-
+      instance (i) I verified at round 353 with both refs and both timestamps; instance (iii) I verified by enumerating the worktrees below. The guard's move-detecting scope is recorded from round 353.
+  AND_I_ENUMERATED_EVERY_WORKTREE_TWO_OF_FORTY_EIGHT_ARE_AT_THE_RULED_COMMIT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:58:01Z
+    said: >-
+      git worktree list enumerated and each tree's HEAD resolved and compared with git rev-parse 7ed5a90; two matches, forty-six non-matches, one entry (be-r10-c3-stale) with no resolvable HEAD.
+  SO_THE_REQUIREMENT_IS_EVERY_HEAVY_UNIT_NOT_JUST_BUILDS:
+    prov: RELAYED
+    from: coordinator MEM 358
+    as_of: 2026-09-11T03:58:01Z
+    said: >-
+      the requirement as dispatched; its rule-42 relation and the label-versus-property framing are recorded here because the distinction is what makes the requirement checkable.
+  THE_COORDINATORS_OWN_MISS_IS_THE_SHARP_ONE_AND_IT_IS_DA_221S_SHAPE:
+    prov: RELAYED
+    from: coordinator MEM 358
+    as_of: 2026-09-11T03:58:01Z
+    said: >-
+      the coordinator's own account; the DA 221 shape it instantiates is recorded at round 357 with 0da40bb and Q-DA-411 verified.
+  AND_MY_OWN_SHARE_IS_THAT_I_CHECKED_ONE_UNIT_TYPE_AND_NEVER_ASKED_WHETHER_THERE_WERE_OTHERS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:58:01Z
+    said: >-
+      my round-353 flag verified the build worktree's HEAD against 7ed5a90 and named no other unit type; the worktree enumeration above is the generalisation I did not perform then.
+  NOTHING_RAN_FROM_A_WRONG_TREE_AND_NO_ARTIFACT_IS_CONTAMINATED:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-measurement-pipeline.timer
+    as_of: 2026-09-11T03:58:01Z
+    said: >-
+      p003neut0903.service read with LoadState first and found loaded, active, running; the EV22 reproduction figures and the staging are the coordinator's account.
+  REV_IS_MEASURING_WHETHER_THE_REGISTER_IS_STILL_AN_INSTRUMENT_AND_THE_REMEDY_IS_DEFERRED_ON_PURPOSE:
+    prov: RELAYED
+    from: REV via coordinator MEM 358
+    as_of: 2026-09-11T03:58:01Z
+    said: >-
+      the measurement, its falsifier-first ordering and the deferral as dispatched; the DA 221 finding it follows from is recorded at round 357.
   # --- MEM round 357, 2026-09-11T03:53:44Z ---
   THE_FIRST_FORWARD_BOOK_EXISTS_AND_I_CONFIRMED_IT_ON_DISK:
     prov: CHECKED

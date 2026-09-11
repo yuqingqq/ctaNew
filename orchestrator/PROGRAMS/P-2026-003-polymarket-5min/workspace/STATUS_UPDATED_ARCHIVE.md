@@ -23276,3 +23276,24 @@ generation and the window went 4 → 3. Nothing rewritten.
   ONE LAYER UP -- we required books to come from the declared commit and never asked it of
   THE INSTRUMENT THAT READS THEM. tip 1f00438)
 ```
+
+## Batch 340 (rotated by MEM round 358, 2026-09-11T03:58:01Z)
+
+```
+  2026-09-11T03:30:00Z (MEM ROUND 355 -- A BAR WAS REFUTED BEFORE THE RUN AND I WITHDRAW A CLAIM OF MY
+  OWN. REV 173 refuted BE's REL_BAR = 1e-9: I computed it at 1.779e-08 admitted against
+  ulp(17.79) = 3.553e-15, a ratio of 5.01e6 -- 6.7 ORDERS. BE set that bar HONESTLY, IN THE
+  FILE, BEFORE ANY COMPARISON, and it was still wrong IN THE PERMISSIVE DIRECTION; only a
+  SECOND SEAT DECLARING THE BAR INDEPENDENTLY caught it, which is RULE 38 APPLIED
+  PROSPECTIVELY for the first time here. REV's scope ruling: no comparator result can make
+  the waiver available -- one day/zero flips is NECESSARY NOT SUFFICIENT, and a FORWARD day
+  needs a PER-BOOK GUARD because the deciding quantity is THAT DAY'S OWN OCCUPANCY NEAR
+  THETA. I WITHDRAW MY ROUND-354 STATEMENT that every forward book carries a named refusal:
+  assert_book_scoring_code compares against DISK and its own body says the recorded set is
+  'NEVER REFUSED ON'. DA's 8/10 is SOUND; I verified the MEASUREMENT and relayed the
+  INFERENCE as though the verification covered both. Evaluator provenance CLOSED -- the file
+  is new, though added at 06061d7 not c73214d, and that commit's SUBJECT is where the stale
+  '28-cell' survives. DA's unasked observation: THE USER'S N=7 RULING IS WHAT MADE THIS TEST
+  CAPABLE OF PASSING AT ALL. And be_cascade DOES have an enforcer (be_rule22:377) -- the
+  open question is whether it runs on a forward book emit. tip 97a5caa)
+```
