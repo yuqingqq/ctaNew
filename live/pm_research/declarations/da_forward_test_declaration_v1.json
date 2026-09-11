@@ -1,0 +1,280 @@
+{
+ "protocol": "P003_DA_FORWARD_TEST_V1",
+ "version": 1,
+ "STATUS": "DECLARED-BEFORE-ANY-UNTOUCHED-DAY-IS-TOUCHED",
+ "declared_by": "DA 209",
+ "declared_at_utc": "2026-09-11T02:13:22Z",
+ "authorised_by": "USER decision relayed by the coordinator: run the forward test. This OVERRIDES plan v2 step 3 (stop cheaply if the screen fails).",
+ "template": "da_asymmetry_null_declaration v1 e7d5d3f / v2 dea8c42 / v3 6643e87 -- every item a CHECKABLE PREDICATE, nothing as prose, committed with a ref before a single value exists.",
+ "THESE_ARMS_FAILED_THEIR_DEVELOPMENT_SCREEN": {
+  "why_this_is_first": "it changes how a pass reads, so it is not a footnote",
+  "step_2_verdict": "NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM",
+  "on_the_PRIMARY_pool": {
+   "days": [
+    "2026-09-04",
+    "2026-09-05",
+    "2026-09-06"
+   ],
+   "CONDVALUE_X_SKEW_p_two_sided": 0.09780439121756487,
+   "HAZARD_OVER_SKEWED_REF_p_two_sided": 0.2435129740518962
+  },
+  "on_the_COMPANION_pool": {
+   "days": [
+    "2026-09-03",
+    "2026-09-04",
+    "2026-09-05",
+    "2026-09-06"
+   ],
+   "CONDVALUE_X_SKEW_p_two_sided": 0.029940119760479042,
+   "HAZARD_OVER_SKEWED_REF_p_two_sided": 0.033932135728542916,
+   "verdict": "ALSO NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM",
+   "READ_THIS_BEFORE_QUOTING_IT": "both companion p-values are BELOW 0.05 and BOTH FAIL HOLM, because Holm's first step requires the SMALLER p to clear alpha/2 = 0.025 and 0.0299 does not. A reader seeing 0.0299/0.0339 will think it nearly passed. It did -- on UNCORRECTED p, which is not the declared test."
+  },
+  "THE_MULTIPLICITY_IS_NOT_TWO_ARMS": "IT IS TWO ARMS ON A SECOND ATTEMPT. The same two arms, the same frozen thetas, the same estimand, re-tested on new data after failing. That is a second look at one hypothesis family and it must be recorded as such.",
+  "what_it_does_NOT_mean": "the forward test is not invalid for being a second attempt. It means a pass is a pass ON A SECOND ATTEMPT and must be reported with that clause attached, every time."
+ },
+ "POPULATION": {
+  "rule_not_a_list": true,
+  "THE_RULE": "the first FIVE COMPLETE, ERA-ADMISSIBLE, PRISTINE UTC DAYS whose 00:00:00Z START occurs STRICTLY AFTER the freeze commit's author timestamp (plan v2 step 5). PRISTINE means NEITHER ENDPOINT of that day has ever been computed or seen.",
+  "why_by_rule_and_not_by_name": "a named list ('09-08..09-12') silently becomes a CHOICE the moment one of those days fails quality. The rule makes the substitution mechanical.",
+  "freeze_commit": {
+   "resolved_at": "RUN TIME, from the freeze receipt",
+   "status_if_absent": "FORWARD_TEST_NO_FREEZE_COMMIT",
+   "on_absence": "REFUSE. A forward population defined against a freeze that does not exist is not a forward population."
+  },
+  "complete": "a day is COMPLETE when its 23:59:59Z has passed AND its collector coverage/quality metadata qualifies it. Completeness is read from metadata ONLY -- never from outcomes (rule 34a's boundary, demonstrated at DA 182).",
+  "era_admissible": "recv_ns >= 1787579334881534478 (the hf_ws_v2 stamp boundary) for any sub-second feature; the day path is >= 1 s bars and admissible throughout.",
+  "a_failed_quality_day": {
+   "is": "a NAMED STATUS, never a silent drop (rule 4)",
+   "status_name": "DAY_EXCLUDED_ON_QUALITY",
+   "and_then": "the NEXT CHRONOLOGICAL UNTOUCHED DAY is added, WITHOUT INSPECTING ANY OUTCOME on either the excluded day or the added one",
+   "the_predicate_that_makes_this_safe": "the quality decision reads coverage/gap/completeness metadata and NOTHING from the book, the replay or any P&L. A quality rule that could see an outcome is a selection rule.",
+   "refusal_if_violated": "QUALITY_DECISION_SAW_AN_OUTCOME"
+  },
+  "N": 5,
+  "N_is_fixed_before_any_data": true,
+  "days_may_not_be_added_after_the_first_is_touched": "see STOPPING_RULE",
+  "expected_to_resolve_to": {
+   "days": [
+    "2026-09-08",
+    "2026-09-09",
+    "2026-09-10",
+    "2026-09-11",
+    "2026-09-12"
+   ],
+   "this_is_an_EXPECTATION_not_the_rule": "the RULE decides. These are what the rule resolves to on the calendar measured below; if a day fails quality the rule substitutes the next chronological untouched day and this list is stale, not authoritative.",
+   "complete_at": "2026-09-13T00:00:00Z, about 46 h from this declaration"
+  },
+  "MEASURED_CALENDAR": {
+   "measured_at_utc": "2026-09-11T02:13:22Z",
+   "method": "file count under data/pm_5min/raw/<day> against 288 windows x 7 symbols = 2016",
+   "counts": {
+    "2026-09-07": "2016/2016",
+    "2026-09-08": "2016/2016",
+    "2026-09-09": "2016/2016",
+    "2026-09-10": "2016/2016",
+    "2026-09-11": "196/2016 (~2 h in, completes 2026-09-12T00:00Z)"
+   },
+   "verified_independently_by_DA": true,
+   "A_FILE_COUNT_IS_A_COVERAGE_FLOOR_NOT_A_QUALITY_PASS": "2016/2016 says the files exist. The era predicate and the gap predicates are applied separately and a day may still fail them.",
+   "this_corrects_an_earlier_estimate": "R-873's '~2026-09-13 for five untouched days' was an estimate. Measured, four complete days exist NOW and the five PRISTINE days complete 2026-09-13T00:00Z.",
+   "if_REV_123_contradicts_this": "REV's measurement at the artifacts WINS over this count."
+  }
+ },
+ "BOTH_COMPARISONS_ARE_REQUIRED": {
+  "rule": "plan v2 step 6. An arm advances only if BOTH hold. NEITHER ALONE.",
+  "comparison_A": {
+   "name": "vs ZERO-MODEL-CANCEL",
+   "requirement": "the arm's R-801 settlement-P&L delta against the zero-cancel baseline is POSITIVE at the UTC-DAY CLUSTER LEVEL",
+   "unit": "the UTC day, which is the cluster unit (rule 8)"
+  },
+  "comparison_B": {
+   "name": "vs MATCHED RANDOM CANCELLATION",
+   "requirement": "the arm beats the control matched SIMULTANEOUSLY on distinct reference-generation count, side and UTC hour, after the pre-declared two-arm Holm correction",
+   "matched_on": [
+    "distinct_reference_generation_count",
+    "side",
+    "hour"
+   ],
+   "unit_ruling": "USER, R-892 -- the matching unit is the REFERENCE GENERATION, DISTINCT COUNT"
+  },
+  "the_conjunction_is_the_test": "A AND B. An arm that clears one and not the other DOES NOT ADVANCE and is reported as ADVANCED_ON_ONE_COMPARISON_ONLY.",
+  "refusal_if_reported_as_a_pass_on_one": "ADVANCEMENT_CLAIMED_ON_ONE_COMPARISON"
+ },
+ "REPLAY_ASSUMPTION": {
+  "PRIMARY_FIXED_BEFORE_ANY_DATA": "REFERENCE_FILLS",
+  "ROBUSTNESS_LEG_LABELLED": "NO_FILLS_UNTIL_NEXT_GENERATION",
+  "the_robustness_leg_is_always_reported": true,
+  "it_may_never_be_substituted_for_the_primary": true,
+  "A_SIGN_REVERSAL_BLOCKS_PROMOTION": {
+   "predicate": "sign(delta under REFERENCE_FILLS) != sign(delta under NO_FILLS_UNTIL_NEXT_GENERATION), for an arm, at the pool level",
+   "consequence": "PROMOTION IS BLOCKED for that arm",
+   "status": "SIGN_REVERSES_UNDER_THE_ROBUSTNESS_LEG",
+   "why_it_blocks_rather_than_invites_a_choice": "a sign that depends on the fill assumption is a result about the assumption. Choosing the leg that gives the better sign AFTER seeing both is choosing on seen data -- the exact door rule 11 closes."
+  }
+ },
+ "THE_COMBINATION_RULE": {
+  "declared_before_any_day_is_touched": true,
+  "one_sentence": "the verdict is decided by TWO arm-level tests over the pooled forward population and by nothing else; per-day and per-cell outcomes are DESCRIPTIVE and are never counted into a verdict.",
+  "pooling": {
+   "statistic": "the arm's settlement-P&L delta pooled over the forward days",
+   "weights": "MASS-WEIGHTED by each day's baseline tail mass, fixed by the BASELINE so no drawn policy can move its own weight",
+   "null": "for draw index i, take each day's i-th MATCHED draw and combine with the SAME weights; this preserves the day clustering by construction",
+   "n_draws": 500,
+   "rule_6_floor": 200,
+   "floor_authority": "p003_rule6_floor_v1.json THE_NUMBER, reconciled across 18 carriers"
+  },
+  "mixed_cases_enumerated": {
+   "both_arms_advance": "FORWARD_SUPPORT_FOR_BOTH_ARMS",
+   "exactly_one_advances": "FORWARD_SUPPORT_FOR_THAT_ARM_ONLY -- not a programme-level pass; the other arm is not carried by it",
+   "neither_advances": "NO_FORWARD_SUPPORT",
+   "both_advance_with_OPPOSITE_SIGNS": "NOT_ONE_MECHANISM -- OVERRIDES any advancement",
+   "an_arm_advances_while_a_MINORITY_of_days_are_negative": {
+    "predicate": "the arm advances AND at least 2 of the 5 per-day deltas are <= 0",
+    "status": "ADVANCED_ON_A_MINORITY_OF_DAYS",
+    "rule": "this status TRAVELS ON THE VERDICT and is never omitted"
+   },
+   "counting_days_is_not_a_verdict_input": "'3 of 5 were positive' is not an input. Counting days is the rule invented after the fact that this exists to prevent."
+  },
+  "forbidden": [
+   "counting days or cells and reading a verdict off the count",
+   "promoting a per-day p to a verdict",
+   "reporting an arm-level verdict without its two-sided p",
+   "substituting the robustness leg for the primary"
+  ]
+ },
+ "THE_MULTIPLICITY_ACTUALLY_CONTROLLED": {
+  "controlled_family_size": 2,
+  "what_is_controlled": "the TWO arm-level tests, HOLM at alpha 0.05",
+  "holm_is_SEQUENTIAL_and_this_matters": "HOLM IS SEQUENTIAL. The SMALLER p must clear alpha/2 = 0.025; only then does the LARGER p need alpha = 0.05. IF THE FIRST STEP FAILS, HOLM STOPS AND NEITHER ARM ADVANCES.",
+  "per_day_and_per_cell_p_values_are": "DESCRIPTIVE ONLY -- reported, NOT corrected, carrying no verdict",
+  "refusal": "CELL_LEVEL_VERDICT_REPORTED",
+  "AND_THE_SECOND_ATTEMPT_IS_NOT_IN_THIS_NUMBER": "the Holm family is 2 because 2 tests are run here. It does NOT account for this being a SECOND ATTEMPT on the same two arms after a failed screen. That is recorded in THESE_ARMS_FAILED_THEIR_DEVELOPMENT_SCREEN and must travel with any pass; it is a limit on interpretation, not a correction I am applying silently.",
+  "family_may_not_be_reopened": "adding an arm, a day, a pool or a variant after the first day is touched re-opens the family and voids the correction"
+ },
+ "THE_UNIT": {
+  "cluster_unit": "the UTC day (rule 8)",
+  "G": 5,
+  "rule_8_bar": 5,
+  "intervals_claimable": true,
+  "why_this_differs_from_every_prior_declaration": "at G=5 the rule-8 bar is MET for the first time in this programme. An interval IS claimable here, on the UTC-day cluster, and only on it.",
+  "what_is_still_not_a_unit": "the arm-day cell. 2 arms x 5 days is 10 cells and FIVE independent units: the two arms share a day, a book, a reference path and a baseline.",
+  "refusal": "CELLS_COUNTED_AS_INDEPENDENT"
+ },
+ "PRE_REGISTERED_POWER_EXPECTATION": {
+  "why_declared": "so that if it clears, it cleared AGAINST A STATED EXPECTATION THAT IT WOULD NOT",
+  "method": "z from the step-2 two-sided p on the 3-day PRIMARY pool, scaled by sqrt(N/3), against Holm's sequential bars",
+  "observed_z_at_3_days": {
+   "CONDVALUE_X_SKEW": 1.6556,
+   "HAZARD_OVER_SKEWED_REF": 1.1663
+  },
+  "holm_bars": {
+   "step_1_smaller_p_needs_z": 2.2414,
+   "step_2_larger_p_needs_z": 1.96
+  },
+  "projection": {
+   "N=5": {
+    "CONDVALUE_X_SKEW": 2.14,
+    "HAZARD_OVER_SKEWED_REF": 1.51
+   },
+   "N=6": {
+    "CONDVALUE_X_SKEW": 2.34,
+    "HAZARD_OVER_SKEWED_REF": 1.65
+   },
+   "N=9": {
+    "CONDVALUE_X_SKEW": 2.87,
+    "HAZARD_OVER_SKEWED_REF": 2.02
+   }
+  },
+  "THE_DECLARED_EXPECTATION": "FIVE DAYS IS MORE LIKELY TO RETURN INCONCLUSIVE THAN TO CLEAR. At N=5 CONDVALUE projects to z = 2.14 against a bar of 2.2414 and MISSES; HAZARD projects to 1.51 and misses by a distance. FIVE DAYS CLEARS NEITHER ARM.",
+  "AND_A_CORRECTION_TO_THE_DISPATCH": "the dispatch said 'eight would clear'. MEASURED FROM THE ARTIFACT'S OWN p-VALUES THAT IS TRUE FOR ONE ARM AND FALSE FOR THE OTHER: CONDVALUE clears Holm step 1 at SIX days, not eight; HAZARD needs NINE days to clear step 2 and TWELVE if it were the smaller p. Eight days clears CONDVALUE and does NOT clear HAZARD (z 1.90 against 1.96).",
+  "days_to_clear": {
+   "CONDVALUE_X_SKEW_step_1": 6,
+   "HAZARD_OVER_SKEWED_REF_step_2_given_CONDVALUE_clears": 9,
+   "HAZARD_OVER_SKEWED_REF_if_it_were_the_smaller_p": 12
+  },
+  "THIS_IS_AN_UPPER_BOUND_ON_POWER": "sqrt-N scaling assumes a CONSISTENT per-day effect. 2026-09-05 CONDVALUE was -4,941.23 c, A SIGN FLIP, so the per-day effect is demonstrably not consistent and TRUE POWER IS LOWER THAN THESE NUMBERS.",
+  "it_is_a_projection_not_a_prediction_of_the_result": "the forward days are new data and the effect may be larger, smaller, zero or reversed. What is declared is the EXPECTATION, so that the result is read against it rather than against nothing."
+ },
+ "STOPPING_RULE": {
+  "why_this_is_fixed_now": "an INCONCLUSIVE result is the DECLARED MOST LIKELY OUTCOME, and deciding afterwards whether it licenses more days is choosing on seen data. That is the exact door rule 11 closes, and it is the door this section shuts.",
+  "N_is_5_and_there_is_ONE_LOOK": true,
+  "no_interim_analysis": "no result is computed, read or reported until all five days are complete and their exclusions are settled",
+  "AN_INCONCLUSIVE_RESULT_EXHAUSTS_THESE_ARMS_UNDER_THIS_DECLARATION": {
+   "value": true,
+   "status": "INCONCLUSIVE_UNDERPOWERED_AS_PREDICTED",
+   "means": "the arms are NOT promoted and this declaration does NOT license a sixth, seventh, eighth or ninth day. Extending after seeing an inconclusive five-day result is OPTIONAL STOPPING and it inflates the false-positive rate by an amount nobody would then be able to state.",
+   "what_it_does_NOT_mean": "it does not mean the arms are refuted. It means this test did not settle them and no further day may be spent on them under THIS declaration."
+  },
+  "THE_ONLY_LEGITIMATE_ROUTE_TO_MORE_DAYS": {
+   "route": "an AMENDMENT to this declaration, committed BEFORE THE FIRST FORWARD DAY IS TOUCHED, fixing a larger N with its own power statement and its own look structure",
+   "available_now": true,
+   "not_available_later": "after the first day is touched, N is fixed. After the result is seen, no N is legitimate.",
+   "AND_THE_CHOICE_IS_LIVE_AT_THIS_MOMENT_ONLY": "the power numbers above say N=5 clears neither arm, N=6 clears CONDVALUE and N=9 clears both. DECLARING N=6 OR N=9 RIGHT NOW COSTS NOTHING AND IS NOT OPTIONAL STOPPING. Declaring N=5 and extending later is. The decision is the coordinator's and the USER's; the arithmetic is recorded here so it is made with the numbers rather than after them.",
+   "DA_recommendation": "if the programme wants a result rather than a likely INCONCLUSIVE, declare N=9 now. If the calendar cannot afford nine days, declare N=5 knowing it is expected to return inconclusive, and accept that outcome when it arrives."
+  }
+ },
+ "what_a_pass_does_NOT_establish": {
+  "REQUIRED_FIELD_ON_EVERY_RESULT": "forward_limits",
+  "REQUIRED_VALUE": "THIS IS A FORWARD TEST ON FIVE UNTOUCHED DAYS OF TWO ARMS THAT FAILED THEIR DEVELOPMENT SCREEN. A pass is a pass ON A SECOND ATTEMPT, on one coin (btc), at one placement latency (250 ms), under one primary fill assumption (REFERENCE_FILLS), against one cost model. It is not a live-trading result and not a claim about any other instrument, latency or venue.",
+  "on_absence": "REFUSE TO EMIT",
+  "refusal_name": "RESULT_DOES_NOT_STATE_ITS_FORWARD_LIMITS"
+ },
+ "inherits_unchanged": [
+  "the R-801 estimand: trades cash flow + residual x settlement",
+  "the frozen thetas and their pin authority (verify_pinned_thetas refuses at 1 ULP)",
+  "the settlement convention S60(T) >= S60(t0), with the venue-fallback disclosure field",
+  "the rule-6 floor of 200 from p003_rule6_floor_v1.json",
+  "exclusions are statuses with their counts (rule 4)"
+ ],
+ "amended_by": "DA 210 -- the coordinator's MEASURED calendar and the 09-07 endpoint split, folded in before any value exists",
+ "THE_09_07_COMPANION": {
+  "why_it_is_not_in_the_primary": "09-07 IS NOT PRISTINE IN THE WAY 09-08+ ARE, and this declaration does not paper over it.",
+  "clean_on_the_ESTIMAND": {
+   "endpoint": "R-801 settlement P&L",
+   "evidence": "NULL_DRAW count 0; no arm_total_cents anywhere; the receipt records status NOT_VALUED_DAY_NOT_ADMISSIBLE -- the estimator was NOT ASKED",
+   "status": "NEVER COMPUTED"
+  },
+  "consumed_on_the_DIAGNOSTIC": {
+   "endpoint": "the 5-second markout D(E0)",
+   "evidence": "computed with 1,000 persisted draws (500 per arm), and REVIEW 115 RE-DERIVED its null_mean, null_sd and Z from those draws on both arms with zero difference -- so it was not merely computed, it was SEEN",
+   "status": "COMPUTED AND SEEN"
+  },
+  "AND_THE_TWO_ARE_NOT_INDEPENDENT": "same day, same fills, same generations. The markout is CORRELATED with the settlement P&L, so 'never valued on the estimand' is NOT the same as 'unseen'. That is precisely why 09-07 is a companion and not a primary day.",
+  "its_role": "A PRE-DECLARED, LABELLED COMPANION",
+  "reported_ALONGSIDE_and_never_merged": true,
+  "the_result_is_reported_BOTH_WAYS": "primary (5 pristine days) AND primary+09-07",
+  "IF_THE_TWO_DISAGREE": {
+   "status": "THE_09_07_COMPANION_CHANGES_THE_VERDICT",
+   "rule": "NEITHER is promoted. The disagreement is A FINDING ABOUT 09-07 and is reported as one.",
+   "forbidden": "quoting whichever of the two gives the better verdict",
+   "why_it_must_be_fixed_now": "declared in advance it is a finding; decided afterwards it is a menu"
+  },
+  "the_cost_of_this_choice_stated": "waiting for the five pristine days costs about 46 h and REMOVES THE SINGLE CONTESTABLE DAY from a test already short on power. Recorded as a trade, not as a free improvement."
+ },
+ "RULE_11_POSITION": {
+  "why_stated_rather_than_inferred": "a later reader needs this sentence and cannot reconstruct it",
+  "PRISTINE_neither_endpoint_ever_computed_or_seen": [
+   "2026-09-08",
+   "2026-09-09",
+   "2026-09-10",
+   "2026-09-11",
+   "2026-09-12"
+  ],
+  "ENDPOINT_SPLIT": {
+   "2026-09-07": {
+    "settlement_R801": "NEVER COMPUTED",
+    "markout_5s_D_E0": "COMPUTED AND SEEN"
+   }
+  },
+  "CONSUMED_development_data": [
+   "2026-09-03",
+   "2026-09-04",
+   "2026-09-05",
+   "2026-09-06"
+  ],
+  "NO_SELECTION_WAS_MADE_ON_ANY_OF_THEM": "no threshold, parameter, arm or composition was ever selected using 09-07 or any later day. The thetas and every model come from a fit whose population is 2026-08-24 and 2026-08-25 ONLY, finished 2026-08-28T05:52:14Z, with all six model digests matching params v29 (DA 194, Q-DA-398).",
+  "what_the_development_days_WERE_used_for": "09-03..09-06 supplied the point estimates, the asymmetry null and the settlement control. They are SPENT and appear nowhere in the forward test.",
+  "the_freeze_preserves_all_of_them": "nothing on 09-07..09-12 has been valued on the SETTLEMENT endpoint, so freezing now preserves every one of them for this test."
+ }
+}
