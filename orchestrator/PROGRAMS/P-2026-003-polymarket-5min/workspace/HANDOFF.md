@@ -1,3 +1,78 @@
+# READ FIRST — round 375 (MEM, 2026-09-11T08:45:45Z, tip `d8b5f07`)
+
+# 🔒 A FREEZE THAT COULD NOT BE SUPERSEDED
+
+The third refusal — `SETTLEMENT_CONTROL_PARAMS_ARE_NOT_THE_FROZEN_PARAMS` —
+traces to a **literal I read at `be_score_neutrality.py:85`**:
+
+```
+FREEZE_REL = "de_arm_freeze_v1.json"
+```
+
+`frozen_params()` reads **the base freeze only**, so amendments never pinned
+params. V2 demanded params **v29 by digest** while its cascade check demanded
+params naming **`7ed5a90`'s bytes** — ***mutually exclusive under the 03:07
+ruling, with no waiver path.***
+
+## 📂 And I listed SIX amendments the literal cannot see
+
+`de_arm_freeze_v2` … `v7` — **all amendments**, beside the v1 base the literal
+names.
+
+> ***The freeze was superseded IN BAND six times, and not one supersession
+> reached the consumer.*** That is the concrete form of *"a freeze that cannot be
+> superseded in band was never rule-13 compliant"* — **and sharper than the
+> sentence: here the rule-13 supersessions existed, correctly written, going
+> nowhere.**
+
+## 🔢 Fifth literal-that-must-track-a-moving-thing in my own records
+
+| # | instance | round |
+|---|---|---|
+| 1 | the rule-6 floor — 18 carriers, 4 spellings | 336 / 339 |
+| 2 | `real_data_reachable` docstring — `parents[2]`, no resolver | 354 |
+| 3 | **my own rotation delimiter** — an ISO date in prose split a generation | 349 |
+| 4 | `fi.ERA` — a day-independent literal emptied every gap list | 360 |
+| 5 | **`FREEZE_REL`** — pinned to v1 while six amendments exist | **now** |
+
+> ***The first inside a FREEZE reference — which is where a stale literal does
+> the most damage, because the freeze is what everything else is checked
+> against.***
+
+# ⚖️ THE USER RULED: fix the RESOLVER, don't re-pin the build
+
+08:01Z, on a question blocked ~17 minutes. **The books are certified
+bit-identical, so the two candidates differ ONLY IN TIME.**
+
+> ***When two options produce provably identical objects, the choice is not about
+> the result at all — it should be decided on which leaves the better structure
+> behind.***
+
+**DE 269:** resolver + `de_arm_freeze_v10_amendment` pinning params **v31** + a
+new commit — **the valuation pin advances in band while `PIPELINE_COMMIT`, the
+BOOK guard, stays at `7ed5a90`.** *Two pins with two jobs, moved independently —
+only possible because someone distinguished them. Had they been one field, the
+repair would have required re-pinning the books, which is the option the user
+declined.*
+
+**And BE runs 09-08's tape in the gap rather than idling the lock.** *The previous
+two contentions were a lock **taken** by the wrong chain; this was a lock **held
+by nobody** while work existed — **the opposite failure from the same absence of
+an arbiter**, which is rule 47's argument arriving from the other side.*
+
+# 4️⃣ THE FOURTH GATE IS NOW NAMED — closing a count I did not invent
+
+At round 374 the dispatch said **four** and named **three**; **I recorded the
+count as given and did not invent the fourth.** It is **the params digest**.
+
+So: **the pin literal · the certificate's producer · the cascade · the params
+digest** — each correct, each a record lagging a ruling.
+
+> ***But the fourth differs in kind: the first three exposed STALE RECORDS; this
+> one exposed A DEFECT IN THE FREEZE'S OWN SUPERSESSION PATH. A gate that finds a
+> broken mechanism rather than a stale value is worth more than the other three
+> together.***
+
 # READ FIRST — round 374 (MEM, 2026-09-11T08:00:38Z, tip `0f5b188`)
 
 # ✅ TWO COMPARATORS, ONE VERDICT — `NOT_CERTIFIED` cleared
