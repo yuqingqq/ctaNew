@@ -23211,3 +23211,23 @@ generation and the window went 4 → 3. Nothing rewritten.
   have passed conjunct (a) -- HAZARD RAN 4-FOR-4 POSITIVE AND STILL COULD NOT -- but step
   2's verdict rested on the matched-random instrument and STANDS. tip 9d21981)
 ```
+
+## Batch 337 (rotated by MEM round 355, 2026-09-11T03:30:00Z)
+
+```
+  2026-09-11T03:05:24Z (MEM ROUND 352 -- THREE LESSONS PROMOTED TO RULES 42-44 IN SEAT_PROTOCOL, in
+  the existing form, each carrying the incident that earned it. 42: AN INSTRUMENT CHECKS
+  THE PROPERTY, NEVER THE LABEL -- five instances in one night and EVERY SEAT WAS CORRECT
+  ABOUT THE STRING IT EXAMINED, with the checkable form being a question you must ACTUALLY
+  RUN: what would this report if the thing did not exist at all? 43: STOPPING FOR FAILURE
+  IS FREE, STOPPING FOR SUCCESS IS NOT -- futility cannot inflate and needs no alpha, while
+  optional stopping climbs WITH PATIENCE ALONE; I REPLICATED THE DIRECTION INDEPENDENTLY
+  (1.50 / 5.05 / 12.15 / 19.89 per cent against flat fixed-N) and record that MY ABSOLUTE
+  NUMBERS ARE ROUGHLY DOUBLE DE'S because my setup lacks the second leg -- the SHAPE
+  replicates, not the values. 44: A HELD-OUT POPULATION IS CONSUMED BY SCHEDULED WORK, NOT
+  ONLY BY SEATS -- REV's verdict was true and was not the question; the separating test is
+  OUTCOME versus INFRASTRUCTURE, answered by DRIVING the job and reading its read-set, and
+  the finding is RETROSPECTIVE so killing the timers saves nothing. The inverse defect -- a
+  declared refusal with NO PRODUCER -- is a NOTE UNDER RULE 15, not a rule 45, because it
+  is the same relation read from the other end. tip b217d6b)
+```

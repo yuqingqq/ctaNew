@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T03:30:00Z (MEM ROUND 355 -- A BAR WAS REFUTED BEFORE THE RUN AND I WITHDRAW A CLAIM OF MY
+  OWN. REV 173 refuted BE's REL_BAR = 1e-9: I computed it at 1.779e-08 admitted against
+  ulp(17.79) = 3.553e-15, a ratio of 5.01e6 -- 6.7 ORDERS. BE set that bar HONESTLY, IN THE
+  FILE, BEFORE ANY COMPARISON, and it was still wrong IN THE PERMISSIVE DIRECTION; only a
+  SECOND SEAT DECLARING THE BAR INDEPENDENTLY caught it, which is RULE 38 APPLIED
+  PROSPECTIVELY for the first time here. REV's scope ruling: no comparator result can make
+  the waiver available -- one day/zero flips is NECESSARY NOT SUFFICIENT, and a FORWARD day
+  needs a PER-BOOK GUARD because the deciding quantity is THAT DAY'S OWN OCCUPANCY NEAR
+  THETA. I WITHDRAW MY ROUND-354 STATEMENT that every forward book carries a named refusal:
+  assert_book_scoring_code compares against DISK and its own body says the recorded set is
+  'NEVER REFUSED ON'. DA's 8/10 is SOUND; I verified the MEASUREMENT and relayed the
+  INFERENCE as though the verification covered both. Evaluator provenance CLOSED -- the file
+  is new, though added at 06061d7 not c73214d, and that commit's SUBJECT is where the stale
+  '28-cell' survives. DA's unasked observation: THE USER'S N=7 RULING IS WHAT MADE THIS TEST
+  CAPABLE OF PASSING AT ALL. And be_cascade DOES have an enforcer (be_rule22:377) -- the
+  open question is whether it runs on a forward book emit. tip 97a5caa)
   2026-09-11T03:23:28Z (MEM ROUND 354 -- 09-07 IS CLOSED AND THE PIPELINE'S LIMIT IS MEASURED. REVIEW
   171 (f4b5bd8): 09-07 STANDS IN THE PRIMARY, population FINAL at 09-07..09-13, N=7 -- the
   coordinator's drop recommendation wrong, the USER's challenge right. REVIEW 172 goes past
@@ -102,21 +118,6 @@ updated: >-
   09-08..09-11, and the screen failed BOTH arms -- population 09-07..09-13, N=7. PROMOTE
   REV'S RULE: a post-hoc choice is FATAL WHEN ANTI-CONSERVATIVE, SURVIVABLE WITH DISCLOSURE
   WHEN CONSERVATIVE. And the real exposure is the 69, not 09-07. tip 0178ea4)
-  2026-09-11T03:05:24Z (MEM ROUND 352 -- THREE LESSONS PROMOTED TO RULES 42-44 IN SEAT_PROTOCOL, in
-  the existing form, each carrying the incident that earned it. 42: AN INSTRUMENT CHECKS
-  THE PROPERTY, NEVER THE LABEL -- five instances in one night and EVERY SEAT WAS CORRECT
-  ABOUT THE STRING IT EXAMINED, with the checkable form being a question you must ACTUALLY
-  RUN: what would this report if the thing did not exist at all? 43: STOPPING FOR FAILURE
-  IS FREE, STOPPING FOR SUCCESS IS NOT -- futility cannot inflate and needs no alpha, while
-  optional stopping climbs WITH PATIENCE ALONE; I REPLICATED THE DIRECTION INDEPENDENTLY
-  (1.50 / 5.05 / 12.15 / 19.89 per cent against flat fixed-N) and record that MY ABSOLUTE
-  NUMBERS ARE ROUGHLY DOUBLE DE'S because my setup lacks the second leg -- the SHAPE
-  replicates, not the values. 44: A HELD-OUT POPULATION IS CONSUMED BY SCHEDULED WORK, NOT
-  ONLY BY SEATS -- REV's verdict was true and was not the question; the separating test is
-  OUTCOME versus INFRASTRUCTURE, answered by DRIVING the job and reading its read-set, and
-  the finding is RETROSPECTIVE so killing the timers saves nothing. The inverse defect -- a
-  declared refusal with NO PRODUCER -- is a NOTE UNDER RULE 15, not a rule 45, because it
-  is the same relation read from the other end. tip b217d6b)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -288,6 +289,20 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 355, a bar refuted before the run, and two withdrawals ---
+  REV_173_REFUTED_BES_CERTIFICATION_BAR_AND_THE_BAR_WAS_SET_HONESTLY: "REL_BAR = 1e-9 is far too loose. I computed it: on scores reaching 17.79 it admits 1.779e-08 absolute, against ulp(17.79) = 3.553e-15, a ratio of 5.01e+06 -- 6.7 ORDERS OF MAGNITUDE, which the dispatch rounds to seven. REV's sentence is the one to keep: 'a delta that large isn't float noise; it's a behavioural change that happened not to cross theta today.' BE set that bar IN THE FILE, BEFORE ANY COMPARISON, and it was still wrong IN THE PERMISSIVE DIRECTION."
+  AND_ONLY_A_SECOND_SEAT_DECLARING_THE_BAR_INDEPENDENTLY_CAUGHT_IT: This is rule 38 applied PROSPECTIVELY and it is the first time this programme has used it that way. Every previous use was retrospective -- two seats had already agreed and the question was whether the agreement meant anything. Here the second declaration came BEFORE the comparison and CHANGED it. A bar declared in good faith, in the artifact, ahead of the numbers, still landed seven orders wide; the thing that caught it was not more care, it was a second independent declaration.
+  THE_WAIVER_CANNOT_BE_MADE_AVAILABLE_BY_ANY_COMPARATOR_RESULT: REV's scope ruling. One day with zero flips is NECESSARY, NOT SUFFICIENT. Four consumed days at REV's criterion with m_min > delta_max throughout is sufficient ONLY FOR THE CLAIM IT MAKES. SUFFICIENCY FOR A FORWARD DAY REQUIRES A PER-BOOK GUARD, because the deciding quantity is THAT DAY'S OWN OCCUPANCY NEAR THETA and nothing measured on consumed days substitutes for it. BE is building the guard, and A GREEN CERTIFICATION DOES NOT RETIRE IT.
+  AND_THE_FALSIFICATION_IS_DECLARED_UP_FRONT_WITH_NO_RESCUE_CLAUSE: "Any flip, any arm, any compared day REFUTES it -- 'it does not become one in 24,000'. That clause is doing specific work: it forecloses the move where a single flip is divided by the number of comparisons and reported as a rate. A refutation condition that names the rescue it refuses is stronger than one that merely states a threshold, because the rescue is what actually gets attempted."
+  EVALUATOR_PROVENANCE_IS_CLOSED_AND_THE_FILE_IS_NEW_BUT_THE_REF_IS_NOT_THE_ONE_GIVEN: "de_forward_evaluator.py is a NEW FILE -- so there is no older tree it could have rehearsed on, and the gap I recorded at round 354 closes better than expected. But the adding commit is 06061d7, NOT c73214d: git's add-filter names 06061d7, 'Q-DE-226: forward evaluator rehearsed on consumed days -- G from data, futility with its cause, 28-cell falsifier', +116 lines. The conclusion is unaffected and the ref is wrong, and refs being wrong is this session's recurring theme."
+  AND_THE_STALE_28_HAS_A_DURABLE_SOURCE_WHICH_IS_WHY_IT_SURVIVED: "DE's falsifier is 45 cells, not 28 -- DE's own commit records 33 then 45, and the coordinator carried 28 into two dispatches and a user report. The reason it survived is visible: 06061d7's COMMIT SUBJECT says '28-cell falsifier', permanently. A number written into a commit message cannot be superseded in band, because the message is immutable and is exactly what a later reader greps. Recorded so the next reader who finds 28 in git log knows it is stale by construction."
+  MY_ROUND_354_STATEMENT_THAT_EVERY_FORWARD_BOOK_CARRIES_A_NAMED_REFUSAL_IS_WITHDRAWN: "I recorded that the book-code predicate REFUSES BY NAME ON EVERY FORWARD BOOK. That was an INFERENCE from DA's 8/10 measurement, relayed by the coordinator and carried by me as though it were the measurement. It does not follow. The coordinator checked at source and I confirmed at the site: assert_book_scoring_code at de_multiday_gate1_runner.py:6927 compares receipt-closure against DISK via be_producing_closure.expected_set_from_disk, and its own body states the recorded 49 is 'every module imported anywhere in the build' and is 'NEVER REFUSED ON, because static reachability OVER-APPROXIMATES'. Under the one-commit ruling it MATCHES and needs no waiver. SUPERSEDED IN BAND."
+  AND_THE_SHAPE_OF_MY_ERROR_IS_THE_ONE_I_HAVE_BEEN_CATALOGUING_ALL_WEEK: "DA's 8/10 measurement is SOUND -- I hashed it myself last round and two of ten pinned modules differ. What does not follow is the consequence. I verified the MEASUREMENT at the artifact and then relayed the INFERENCE from it as though the verification covered both. A checked number and an unchecked conclusion travelled in one flag under one prov: CHECKED. That is rule 42's shape at the level of a sentence rather than an instrument: I checked the part that had a digest and not the part that had a claim."
+  DAS_UNASKED_OBSERVATION_REFRAMES_THE_WHOLE_N_DECISION: At N=7 the day-sign leg is ATTAINABLE BUT DEMANDS UNANIMITY -- tolerance_negative_days = 0. At N=6 a pass was ARITHMETICALLY IMPOSSIBLE, 0.03125 against the 0.025 Holm bar, which I computed at round 349 and again at 350. SO THE USER'S N=7 RULING IS WHAT MADE THIS TEST CAPABLE OF PASSING AT ALL. And the coordinator's original menu of N = 5, 6 and 9 contained NO VIABLE OPTION BELOW 7, because it was built on effect size and never checked the day-cluster floor.
+  BE_CASCADE_IS_NOT_AN_UNENFORCED_PIN_AND_THE_OPEN_QUESTION_IS_NARROWER_THAN_POSED: "The open item asks whether be_cascade is a DECLARED PIN WITH NO ENFORCER. It has one: be_rule22.py reads payload be_cascade modules at :377 and raises on disagreement at :389 and :397, with its own commentary at :226-:328 on what such a guard pins and -- importantly -- what it CANNOT SEE. So the question is not whether an enforcer exists but WHETHER THAT ENFORCER RUNS ON A FORWARD BOOK EMIT. Recorded in the narrower form because the broader one has an answer and would have been filed as an open defect."
+  AND_THE_8_OF_10_CASE_MAY_NOT_EXIST_UNTIL_THE_FIRST_FWD1_BOOK: "The consumed receipts are all 10/10, so nothing on disk exercises the 8/10 path. That means the question above cannot be settled by inspecting existing artifacts -- it needs the first FWD1 book, or a constructed case. Which is rule 42's discharge again: build the case in which the thing does not hold and see what the instrument says, rather than waiting for production to supply it."
+  AND_THE_MULTIPLICITY_OF_69_IS_OPEN_ON_A_QUESTION_NOBODY_HAS_ANSWERED: REV asks whether v3's 'corrects the prior, not the denominator' is ADEQUATE or MERELY HONEST, since NOBODY HAS STATED WHAT THE PRIOR BECOMES. That is the sharp form. DE's distinction at round 350 resolved a dispute about which number governs the correction, and it did so correctly; it did not say what a 69-configuration search does to the prior it corrects. An honest label on an unquantified adjustment is better than a wrong denominator and is not the same as a priced one.
+  STATUS_IS_09_07_BUILDING_AND_ONE_NEGATIVE_DAY_ENDS_AN_ARM: "09-07 building at 7ed5a90; DE values it on landing, carrying the pipeline-provenance limit. AT G=7 TOLERANCE IS ZERO -- one negative day ends that arm, which I enumerated at round 350: only 7-of-7 clears at 0.015625, and 6-of-7 is 0.125000, eight times the unanimous value and five times the bar. Recorded again here because the first forward day is about to produce a sign, and that is the moment the tolerance becomes concrete rather than arithmetic."
   # --- MEM round 354, 09-07 closed, the limit measured, a new gap ---
   09_07_STANDS_IN_THE_PRIMARY_AND_THE_POPULATION_IS_FINAL_AT_SEVEN: "REVIEW 171, landed f4b5bd8 at 03:15:08. The coordinator's drop recommendation was wrong and the USER's challenge was right. Population FINAL: 09-07..09-13, N=7. I recorded the coordinator's lean toward dropping at round 351 alongside the user's challenge and wrote that the user was probably right; round 353 settled it on REV 128's three arguments and this closes it."
   AND_REVIEW_172_STRENGTHENS_IT_PAST_THE_TIMESTAMP_ORDERING_THAT_WAS_ASKED_FOR: Both frozen thresholds appear in 288df3f at 2026-08-27T15:44:25Z -- which I read at the object -- ELEVEN DAYS AND EIGHT HOURS before the freeze's pin source, not the two days originally dated. Seven independent productions of the same two floats, three verified bit-for-bit and one recorded identical to 8.3e-17. The question asked was ORDERING; what came back was ordering with eleven days of margin, which is a different quality of answer.
@@ -27669,6 +27684,85 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 355, 2026-09-11T03:30:00Z ---
+  REV_173_REFUTED_BES_CERTIFICATION_BAR_AND_THE_BAR_WAS_SET_HONESTLY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:30:00Z
+    said: >-
+      1e-9 * 17.79 computed as 1.779e-08; math.ulp(17.79) as 3.553e-15; their ratio as 5.01e6, log10 = 6.7.
+  AND_ONLY_A_SECOND_SEAT_DECLARING_THE_BAR_INDEPENDENTLY_CAUGHT_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:30:00Z
+    said: >-
+      the arithmetic above establishes the bar's width; the prospective-versus-retrospective distinction is mine, against the uses of rule 38 recorded in these files at rounds 338, 344 and 352.
+  THE_WAIVER_CANNOT_BE_MADE_AVAILABLE_BY_ANY_COMPARATOR_RESULT:
+    prov: RELAYED
+    from: REV 173 via coordinator MEM 355
+    as_of: 2026-09-11T03:30:00Z
+    said: >-
+      the ruling and its three parts as dispatched; recorded with the per-book requirement stated separately because that is the half a green result would otherwise be read as discharging.
+  AND_THE_FALSIFICATION_IS_DECLARED_UP_FRONT_WITH_NO_RESCUE_CLAUSE:
+    prov: RELAYED
+    from: REV 173 via coordinator MEM 355
+    as_of: 2026-09-11T03:30:00Z
+    said: >-
+      the falsification condition and its quoted clause as dispatched.
+  EVALUATOR_PROVENANCE_IS_CLOSED_AND_THE_FILE_IS_NEW_BUT_THE_REF_IS_NOT_THE_ONE_GIVEN:
+    prov: CHECKED
+    artifact: live/pm_research/de_forward_evaluator.py
+    as_of: 2026-09-11T03:30:00Z
+    said: >-
+      git log --diff-filter=A for the path returns 06061d7 as the adding commit with its subject and the 116-line diffstat.
+  AND_THE_STALE_28_HAS_A_DURABLE_SOURCE_WHICH_IS_WHY_IT_SURVIVED:
+    prov: CHECKED
+    artifact: live/pm_research/de_forward_evaluator.py
+    as_of: 2026-09-11T03:30:00Z
+    said: >-
+      06061d7's subject line read at the object and found to contain '28-cell falsifier'; the 33 to 45 progression is DE's as dispatched.
+  MY_ROUND_354_STATEMENT_THAT_EVERY_FORWARD_BOOK_CARRIES_A_NAMED_REFUSAL_IS_WITHDRAWN:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-11T03:30:00Z
+    said: >-
+      the function located at :6927 and its body read: the never-refused-on clause and the over-approximation reason are stated in the code itself; expected_set_from_disk is defined at be_producing_closure.py:373.
+  AND_THE_SHAPE_OF_MY_ERROR_IS_THE_ONE_I_HAVE_BEEN_CATALOGUING_ALL_WEEK:
+    prov: CHECKED
+    artifact: live/pm_research/de_multiday_gate1_runner.py
+    as_of: 2026-09-11T03:30:00Z
+    said: >-
+      my round-354 flag recorded the 2-of-10 hashing in its said: field and the refusal consequence in its value; only the former was verified at an artifact.
+  DAS_UNASKED_OBSERVATION_REFRAMES_THE_WHOLE_N_DECISION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:30:00Z
+    said: >-
+      the G=6 and G=7 two-sided floors computed by me at rounds 349 and 350 as 0.031250 and 0.015625 against the 0.025 bar; the tolerance of zero follows from only unanimity clearing at G=7, which I enumerated at round 350.
+  BE_CASCADE_IS_NOT_AN_UNENFORCED_PIN_AND_THE_OPEN_QUESTION_IS_NARROWER_THAN_POSED:
+    prov: CHECKED
+    artifact: live/pm_research/be_rule22.py
+    as_of: 2026-09-11T03:30:00Z
+    said: >-
+      be_rule22.py read at :377 for the be_cascade.modules consumption and at :389 and :397 for the two raise messages naming it; the surrounding commentary at :226 to :328 read for scope.
+  AND_THE_8_OF_10_CASE_MAY_NOT_EXIST_UNTIL_THE_FIRST_FWD1_BOOK:
+    prov: RELAYED
+    from: coordinator MEM 355
+    as_of: 2026-09-11T03:30:00Z
+    said: >-
+      the all-10/10 status of the consumed receipts as dispatched; the constructed-case remedy is mine.
+  AND_THE_MULTIPLICITY_OF_69_IS_OPEN_ON_A_QUESTION_NOBODY_HAS_ANSWERED:
+    prov: RELAYED
+    from: REV via coordinator MEM 355
+    as_of: 2026-09-11T03:30:00Z
+    said: >-
+      REV's question as dispatched; DE's formulation it interrogates is recorded at round 350.
+  STATUS_IS_09_07_BUILDING_AND_ONE_NEGATIVE_DAY_ENDS_AN_ARM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:30:00Z
+    said: >-
+      the G=7 tail enumerated by me at round 350 with 7-of-7, 6-of-7 and 5-of-7 at 0.015625, 0.125000 and 0.453125.
   # --- MEM round 354, 2026-09-11T03:23:28Z ---
   09_07_STANDS_IN_THE_PRIMARY_AND_THE_POPULATION_IS_FINAL_AT_SEVEN:
     prov: CHECKED
