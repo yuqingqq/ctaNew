@@ -1,0 +1,50 @@
+{
+  "protocol": "P003_DE_BUILD_RESIDUE_CHECK_V1",
+  "as_of_utc": "2026-09-11T03:13:21.411658+00:00",
+  "question": "three code identities touched 09-07's build path in twenty minutes (f75528c failed at 03:02:39, 941e688 stopped, 7ed5a90 live from 03:09:08). Did any of them leave an artifact a later run could reuse?",
+  "METHOD_WRITE_PATHS_READ_FROM_SOURCE_NOT_INFERRED_FROM_THE_TREE": {
+    "builder": "be_daybook_build.py, resolved from git AT EACH OF THE THREE COMMITS",
+    "production_writes_found": [
+      {
+        "what": "the BOOK",
+        "line": "1663-1665",
+        "path": "LEDGER_DERIVED / be_daybook_{day}_{coin}{suffix}.pkl",
+        "call": "dst.write_bytes(buf)"
+      },
+      {
+        "what": "the RECEIPT",
+        "line": "4322-4323",
+        "path": "OUT_DERIVED / be_daybook_receipt_{day}_{coin}{suffix}.json",
+        "call": "dst.write_text(...)"
+      }
+    ],
+    "every_other_write_in_the_module": "inside the falsifier battery, into tempfile.mkdtemp() directories",
+    "the_scratch_parameter": "`scratch: Path | None` appears in the build signature and is NEVER USED IN THE BODY at any of the three commits -- no scratch file is written. The module's own header comment records a past bug where a multi-hundred-MB scratch file landed in a worktree's data/; that path is not taken here.",
+    "the_fragment_and_the_state_tape_are_INPUTS": "day_fragment_pin() + assert_input_matches_its_receipt('fragment', ...) -- read and digest-verified, never written by the build",
+    "NO_CACHE_KEYED_BY_DAY_PLUS_REVISION_EXISTS": "the only day+revision-keyed artifacts this builder produces are the book and its receipt. There is no intermediate parquet, pickle, tranche or generation scratch keyed that way, so the specific hazard -- a cache keyed by day+revision but not by code identity -- has no instance here.",
+    "ALL_THREE_COMMITS_ARE_IDENTICAL_ON_THIS": "same two write paths, same line numbers, and `rule22_checked_before_write` at line 1641 in every one"
+  },
+  "THE_ORDERING_THAT_DECIDES_IT": "_R22.assert_unchanged is called at line 1641; the pickle is built at 1659 and written at 1665. The refusal fires BETWEEN THE LAST COMPUTATION AND THE FIRST PRODUCTION WRITE. There is no production write before it.",
+  "ON_DISK_NOW": {
+    "any_artifact_named_FWD1_anywhere": "NONE (timestamp-free predicate over both data roots)",
+    "the_09_07_book_and_receipt": "only the pre-existing rev=None and __L250ms pairs from 2026-09-08. Untouched.",
+    "everything_written_under_derived_since_02:38Z": [
+      "be_heavy_run_stdout_p003fwd0907.log (03:02:36) and be_heavy_run_record_p003fwd0907.jsonl (03:02:41)",
+      "be_heavy_run_stdout_p003fwd0907b.log (03:05:47) and be_heavy_run_record_p003fwd0907b.jsonl (03:07:48)",
+      "be_heavy_run_stdout_p003fwd0907c.log (03:09:08) and be_heavy_run_record_p003fwd0907c.jsonl (03:09:08)"
+    ],
+    "what_those_are": "LAUNCHER records and stdout, written by the systemd wrapper and not by the builder. They are provenance. No build path reads them as input, so no run can reuse them.",
+    "VERDICT": "NOTHING SURVIVES FROM EITHER ABANDONED RUN. Nothing to delete, and I have deleted nothing."
+  },
+  "A_LATENT_ITEM_FOR_BE_NOT_A_FINDING_AGAINST_THIS_RUN": {
+    "what": "~/ctaNew-wt-fwd/data is a REAL DIRECTORY holding 394 git-tracked artifacts, with a nested `data/data` symlink -- the wt_refresh data-symlink step did not complete there (compare wt-be, where data IS the symlink).",
+    "why_it_is_NOT_biting": "be_data_root.resolve() run from wt-fwd returns data_root=/home/yuqing/ctaNew/data via repo_root, and derived() returns the SHARED derived. DRIVEN, not read.",
+    "why_it_is_still_worth_fixing": "any path built as HERE.parents[1]/data -- the exact idiom the builder's own header records as a past bug -- would write into that stale directory instead. The resolver is immune; a hand-built path is not."
+  },
+  "MY_OWN_INSTRUMENT_FAILED_FIRST_AND_I_AM_RECORDING_IT": {
+    "what_happened": "my first two residue sweeps used `find -newermt '<ts> UTC'`. The find on this machine is bfs, which REJECTS the UTC suffix as an invalid timestamp and errors to stderr. I read the empty stdout as a clean surface. TWO FALSE CLEANS.",
+    "how_it_was_caught": "a positive control -- the sweep must find a file I already knew was there. It did not.",
+    "the_direction": "toward a clean surface, the same direction as every other instrument error tonight, and the second of mine in three hours (the first was an audit hook that missed Path.open because it binds io.open directly).",
+    "the_standing_lesson": "a sweep that returns nothing has not been shown to be able to return something. Drive the control BEFORE believing the zero."
+  }
+}

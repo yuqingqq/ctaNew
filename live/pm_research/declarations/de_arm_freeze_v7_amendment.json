@@ -1,0 +1,140 @@
+{
+  "protocol": "P003_DE_ARM_FREEZE_V7_AMENDMENT",
+  "version": 7,
+  "amended_at_utc": "2026-09-11T03:12:37.262960+00:00",
+  "amended_by": "DE 231 + the coordinator's ONE-COMMIT ruling, on the USER's decision",
+  "rule": "13 -- superseding receipt; no prior version edited",
+  "supersedes": [
+    {
+      "version": "1",
+      "path": "de_arm_freeze_v1.json",
+      "commit": "b5f311a",
+      "sha256": "a4749bc77b6eb3590b880bd8bc58c1e8b8099c35864b448130fbedeac839f1e8"
+    },
+    {
+      "version": "2",
+      "path": "de_arm_freeze_v2_amendment.json",
+      "commit": "3fc91e7",
+      "sha256": "84fbe30927aada09acad652d75bd34e671c1a3dbb54aa81853f4accb379fa4f3"
+    },
+    {
+      "version": "3",
+      "path": "de_arm_freeze_v3_amendment.json",
+      "commit": "cc63ccf",
+      "sha256": "0fe428134dd31c632df04e41f1876cb4a0e9cd25cddc5ffb67d41a484fbc2219"
+    },
+    {
+      "version": "4",
+      "path": "de_arm_freeze_v4_amendment.json",
+      "commit": "d9a88b5",
+      "sha256": "422beed28d7fbe9eef33d2817862600c08e8b7cbbd8e35696e89aeaedde1ac9d"
+    },
+    {
+      "version": "5",
+      "path": "de_arm_freeze_v5_amendment.json",
+      "commit": "6c608f1",
+      "sha256": "191f176e1bcc3baa198a1b38d149746bb16a32cdb0b6b98c842285f2c24aaaee"
+    },
+    {
+      "version": "6",
+      "path": "de_arm_freeze_v6_amendment.json",
+      "commit": "990757a",
+      "sha256": "ef4b49dae2af7a0b10b3bd2d13067d20228b7f38b9858b79ba11c6a428fb0f76"
+    }
+  ],
+  "AMENDMENT_16_ONE_COMMIT_FOR_THE_WHOLE_PIPELINE": {
+    "THE_RULING": "USER: all use the latest code. The ENTIRE forward-test pipeline -- build AND valuation -- runs from ONE commit: 7ed5a9015f75de64feeeeaad21d97e4eecc2b15c.",
+    "what_is_withdrawn": [
+      "the arms-pin carve-out for the scoring path",
+      "~/ctaNew-wt-arms (adbebf9) as a special case",
+      "941e688 as the build commit",
+      "v5's AMENDMENT_10 pin correction, which is now moot"
+    ],
+    "why_ONE_commit_and_not_the_tip": "seats commit every few minutes; 'the tip' would give seven books from seven commits -- the failure that cost 21 minutes tonight. 7ed5a90 is fixed for the duration.",
+    "ancestry_verified_not_assumed": {
+      "d09f25c": "batch daybook model scoring",
+      "e6a214f": "accelerate daybook fragment chunking",
+      "a339734": "share diagnostic head composition"
+    },
+    "expected_digests": {
+      "be_daybook_build.py": "2d31a80b5ae5c2c6",
+      "de_phase4_diag_runner.py": "9e2a0977d8dfc3be",
+      "de_head_scoring.py": "31c368384770351f"
+    },
+    "DAs_byte_rule_survives_unchanged": "resolve the builder at the recorded commit and check the DIGEST, never a label. Only the expected digests move."
+  },
+  "WHAT_WAS_GIVEN_UP_STATED_ON_THE_ARTIFACT": {
+    "THE_SENTENCE": "THE ENTIRE FORWARD TEST -- BUILD AND VALUATION -- RUNS ON CODE THE DEVELOPMENT SCREEN NEVER RAN ON.",
+    "and_I_am_the_seat_that_should_say_it_because_I_refused_to_argue_the_other_way": "I froze to the arms pin precisely BECAUSE a batched scorer changes float summation order and score-neutrality was never established. It still has not been established. The user has ruled that we use the optimized path anyway; that is their call and we execute it.",
+    "MEASURED_RATHER_THAN_ASSERTED_which_two_of_the_thirteen_pinned_SCORING_modules_actually_move": {
+      "moved": [
+        "de_head_scoring.py",
+        "de_phase4_diag_runner.py"
+      ],
+      "unchanged": [
+        "de_score_stream.py",
+        "harmful_stateful_policy.py",
+        "phase2_arms.py",
+        "harmful_exposure_rows.py",
+        "harmful_hazard_model.py",
+        "flow_intensity.py",
+        "pm_tape_density.py",
+        "de_data_root.py",
+        "phase2_state_schema_freeze.py",
+        "policy_optimizer_cancel_skew.py",
+        "policy_optimizer_queue_realistic.py"
+      ],
+      "so_the_exposure_is_NARROWER_than_the_sentence_alone_suggests": "11 of the 13 pinned scoring modules are BYTE-IDENTICAL to what the screen ran. The risk is concentrated in the head-composition and diagnostic-runner paths -- which is exactly where a batched scorer would live, so this narrows WHERE to look, it does not reduce the risk."
+    },
+    "the_comparison_this_endangers": "a later reader comparing the screen's result to the forward result is comparing two arms unless this is on the artifact. It is now on the artifact."
+  },
+  "WHAT_DID_NOT_CHANGE_AND_MUST_NOT_BE_READ_AS_CHANGED": {
+    "THE_FREEZE_MOVED_IS_NOT_THE_ARMS_MOVED": true,
+    "unchanged": [
+      "every parameter",
+      "every threshold",
+      "both thetas",
+      "L_place = 250 ms",
+      "cancel latency",
+      "protection mode",
+      "repost model",
+      "null construction (500 draws, matched on generation count/side/hour, two-sided p)",
+      "the decision rule (Holm, m=2, alpha 0.05, both conjuncts)",
+      "N=7 and the population 09-07..09-13",
+      "selection multiplicity 69"
+    ],
+    "this_ruling_changes_CODE_IDENTITY_ONLY": true
+  },
+  "AMENDMENT_17_THE_CERTIFICATION_IS_THE_LOAD_BEARING_CONTROL": {
+    "what_it_is": "consumed day 09-03 rebuilt on BOTH 941e688 and 7ed5a90 and compared SCORE-FOR-SCORE, reported as a DISTRIBUTION: how many scores differ, by how much, and whether any difference could flip a decision at the frozen thresholds",
+    "owner": "BE, after 09-07 lands",
+    "why_it_is_not_a_nicety": "it is the ONLY thing that can convert 'the pipeline moved' from an open limit into a measured fact.",
+    "if_it_AGREES": "the neutrality I declined to argue is MEASURED, the limit above collapses to a FOOTNOTE, and the certification stands permanently.",
+    "if_it_DISAGREES": "we know BEFORE seven books exist that the forward test measures a different arm than the screen did. That is a finding the user needs, not a reason to argue with the ruling.",
+    "THE_SLOT_IS_LEFT_OPEN_DELIBERATELY": "this field is written so the certification's RESULT folds in as a superseding field (v8) rather than needing another freeze.",
+    "CERTIFICATION_RESULT": "PENDING",
+    "CERTIFICATION_RESULT_AS_OF": null,
+    "a_caution_on_how_to_read_agreement": "score-for-score agreement on ONE consumed day licenses 'no difference observed on 09-03', not 'the paths are identical'. Float summation order can agree on one day's data and differ on another's. Say which was established."
+  },
+  "DE_INSTRUMENTS_WHICH_TREE_THEY_WERE_ON_AND_WHERE_THEY_ARE_NOW": {
+    "were_running_from": "~/ctaNew-wt-arms at adbebf9 (step 2's draws) and ~/ctaNew-wt-de2 at the mm-research tip (everything built tonight)",
+    "now_resolve_from": "7ed5a90, with no exception",
+    "verified_present_at_7ed5a90": [
+      "de_forward_evaluator.py",
+      "de_settlement_control_aggregate.py",
+      "de_settlement_control_run.py",
+      "de_asymmetry_null_run.py",
+      "de_matched_cancel_control.py",
+      "de_multiday_gate1_runner.py",
+      "de_point_estimate_day.py"
+    ],
+    "and_tonights_work_is_IN_it_checked_by_ancestry": {
+      "4170664 (refusal census)": "ancestor",
+      "990757a (v6 + finality)": "ancestor",
+      "c73214d (progress_emit)": "ancestor",
+      "06061d7 (evaluator)": "ancestor"
+    },
+    "so_nothing_of_mine_has_to_move_or_be_rebuilt": true
+  },
+  "nothing_has_been_run_or_read_against_any_day_in_the_population_by_DE": true
+}
