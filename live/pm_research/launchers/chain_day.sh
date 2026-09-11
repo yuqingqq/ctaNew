@@ -40,7 +40,12 @@ for e in /home/yuqing/ctaNew/*; do n=$(basename "$e"); [ "$n" = data ] || ln -s 
 for e in /home/yuqing/ctaNew/data/*; do n=$(basename "$e"); [ "$n" = pm_5min ] || ln -s "$e" "$SNAP/data/$n"; done
 # REV 162: the first snapshot froze ONE of FIVE growing inputs. Every
 # append-only input is COPIED now; only static files are symlinked.
-GROWING="resolutions.jsonl collector_gaps.jsonl markets.jsonl rewards_registry.jsonl collector_runs.jsonl"
+# REVIEW 163: the UNION. collector_health.jsonl grows ~732 B / 20 s and is
+# copied like the rest. raw/ is 4.4 GB and 2,016 files FOR ONE DAY, so it
+# cannot be frozen by copying -- it carries an AS-OF ASSERTION instead,
+# recorded at launch and re-verified at exit.
+GROWING="resolutions.jsonl collector_gaps.jsonl markets.jsonl rewards_registry.jsonl collector_runs.jsonl collector_health.jsonl"
+RAW_IS_ASSERTED_NOT_COPIED=1
 for e in /home/yuqing/ctaNew/data/pm_5min/*; do n=$(basename "$e")
   case " $GROWING " in *" $n "*) continue ;; esac
   ln -s "$e" "$SNAP/data/pm_5min/$n"; done
@@ -65,6 +70,13 @@ SNAP_SHA=$(sha256sum "$SNAP/data/pm_5min/resolutions.jsonl" | cut -d" " -f1)
 SNAP_N=$(wc -l < "$SNAP/data/pm_5min/resolutions.jsonl")
 echo "$(date -u +%H:%M:%SZ) oracle frozen: $SNAP sha ${SNAP_SHA:0:16} records $SNAP_N"
 echo "$(date -u +%H:%M:%SZ) frozen inputs:$FROZEN"
+ASOF=/home/yuqing/ctaNew/data/pm_5min/derived/fwd_v2/p003_de_asof_raw_${compact}.json
+/home/yuqing/pricer-sol/venv/bin/python3 \
+  /home/yuqing/ctaNew-wt-deval/live/pm_research/de_asof_listing.py \
+  listing /home/yuqing/ctaNew "$day" > "$ASOF" || {
+    echo "REFUSED ASOF_LISTING_NOT_TAKEN"; exit 9; }
+echo "$(date -u +%H:%M:%SZ) raw/ as-of: $(/home/yuqing/pricer-sol/venv/bin/python3 -c "
+import json,sys; d=json.load(open(sys.argv[1])); print(d['n_files'],'files',d['total_bytes'],'bytes')" "$ASOF")"
 # NOT PM_DATA_ROOT: be_heavy_run.sh passes --setenv=PM_DATA_ROOT to every
 # unit and would overwrite it. BE_SNAPSHOT_ROOT is the wrapper's opt-in.
 export BE_SNAPSHOT_ROOT="$SNAP"
@@ -175,6 +187,15 @@ while :; do
     sleep 10
   done
   rc=$(systemctl --user show "$u" -p ExecMainStatus --value 2>/dev/null)
-  [ "$rc" != "75" ] && { echo "$(date -u +%H:%M:%SZ) $u ran, rc=$rc"; exit "$rc"; }
+  if [ "$rc" != "75" ]; then
+    echo "$(date -u +%H:%M:%SZ) $u ran, rc=$rc"
+    # RE-VERIFY the as-of listing: a closed day's own inputs must not move.
+    /home/yuqing/pricer-sol/venv/bin/python3 \
+      /home/yuqing/ctaNew-wt-deval/live/pm_research/de_asof_listing.py \
+      verify /home/yuqing/ctaNew "$day" "$ASOF" || {
+        echo "$(date -u +%H:%M:%SZ) as-of re-verification REFUSED"; exit 8; }
+    echo "$(date -u +%H:%M:%SZ) as-of re-verified: the day's raw slice did not move"
+    exit "$rc"
+  fi
   echo "$(date -u +%H:%M:%SZ) $u: lock held, re-offering in 20s"; sleep 20
 done
