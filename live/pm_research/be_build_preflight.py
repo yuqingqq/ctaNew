@@ -285,15 +285,22 @@ def check_day(day: str, stage: str | None = None,
     frag = D / f"harmful_exposure_rows_v3_gate1_{day}_btc.json"
     tape = D / f"phase2_state_tape_gate1_{day}_btc.json"
     book = D / f"be_daybook_{day}_btc__L250ms__FWD1.pkl"
-    graph = (("fragment", frag, None),
-             ("tape", tape, ("fragment", frag)),
-             ("book", book, ("tape", tape)))
     want = stage or "fragment"
-    for label, out_p, dep in graph:
-        rows.append((day, f"{label} output absent",
-                     "PASS" if not out_p.exists() else
-                     f"WOULD_FAIL:{label.upper()}_EXISTS -- the builder "
-                     f"refuses rather than overwriting (rule 13)"))
+    outs = {"fragment": frag, "tape": tape, "book": book}
+    # ONLY THE STAGE UNDER TEST must have its output absent. BE 155: the first
+    # form asserted ALL THREE absent, so running the TAPE flagged
+    # FRAGMENT_EXISTS -- the fragment the tape REQUIRES. A precondition
+    # checker that refuses the normal state of the pipeline is worse than no
+    # checker: it blocks the build it exists to protect.
+    out_p = outs[want]
+    rows.append((day, f"{want} output absent",
+                 "PASS" if not out_p.exists() else
+                 f"WOULD_FAIL:{want.upper()}_EXISTS -- the builder "
+                 f"refuses rather than overwriting (rule 13)"))
+    for label, q in outs.items():
+        if label != want:
+            rows.append((day, f"({label} present: {str(q.exists()).lower()})",
+                         "PASS"))
     if want != "fragment":
         dep_label, dep_p = dict(
             tape=("fragment", frag), book=("tape", tape))[want]
@@ -338,6 +345,15 @@ def falsify() -> int:
         note("a stage whose INPUT is missing fails BY NAME, before the lock",
              any(st.startswith("WOULD_FAIL:BOOK_INPUT_MISSING")
                  for _, _, st in check_day("20260909", stage="book")))
+        # BE 155 regression: the TAPE stage must NOT be refused because the
+        # FRAGMENT it consumes exists. Only the stage under test is checked
+        # for an absent output.
+        _t = check_day("20260909", stage="tape")
+        note("the TAPE stage is NOT refused for FRAGMENT_EXISTS -- only its "
+             "OWN output must be absent",
+             not any("FRAGMENT_EXISTS" in st for _, _, st in _t))
+        note("and the tape stage still requires its input to be present",
+             any("tape input present (fragment)" in c for _, c, _ in _t))
         note("and the same day at the FRAGMENT stage has no input check to fail",
              not any("INPUT_MISSING" in st
                      for _, _, st in check_day("20260909", stage="fragment")))
