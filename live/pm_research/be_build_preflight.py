@@ -388,6 +388,53 @@ def falsify() -> int:
             os.environ.pop("BE_WORKTREE", None)
         else:
             os.environ["BE_WORKTREE"] = real
+    # ---- REVIEW 164: THE ENTRY POINT, INVOKED AS PRODUCTION INVOKES IT.
+    # Every cell above calls an inner function directly: unit-proven,
+    # WIRING-unproven. These run the module as a SUBPROCESS, from a cwd that
+    # is NOT the tree root, with the launcher's real environment, and require
+    # the SAME VERDICT the direct call gives. That distinction is not
+    # academic here -- my own census shipped a KeyError in its file-reading
+    # wrapper while nine cells driving its pure core stayed green.
+    ME = str(Path(__file__).resolve())
+    FOREIGN_CWD = "/tmp"
+
+    def entry(argv, worktree=WT_FWD):
+        env = dict(os.environ)
+        env["PM_DATA_ROOT"] = "/home/yuqing/ctaNew"
+        if worktree is None:
+            env.pop("BE_WORKTREE", None)
+        else:
+            env["BE_WORKTREE"] = worktree
+        return subprocess.run([sys.executable, ME, *argv], cwd=FOREIGN_CWD,
+                              env=env, capture_output=True, text=True,
+                              timeout=900)
+
+    r = entry(["--stage", "tape", "20260910"])
+    direct = check_day("20260910", stage="tape",
+                       mods=import_from_tree(WT_FWD))
+    d_fail = sorted(st for _, _, st in direct if st.startswith("WOULD_FAIL"))
+    note("entry point from a FOREIGN CWD gives the SAME verdict as the "
+         "direct call",
+         all(f in r.stdout for f in d_fail) and bool(d_fail)
+         and r.returncode == 1)
+    note("and it is the input known-bad, named",
+         "WOULD_FAIL:TAPE_INPUT_MISSING(fragment)" in r.stdout)
+
+    r = entry(["--stage", "fragment", "20260910"])
+    note("entry point ADMITS the stage whose preconditions hold (rc 0)",
+         r.returncode == 0 and "n_would_fail\": 0" in r.stdout)
+
+    r = entry(["--stage", "fragment", "20260910"], worktree=None)
+    note("entry point with BE_WORKTREE UNSET fails BY NAME and returns 1",
+         "WOULD_FAIL:BE_WORKTREE_NOT_WT_FWD" in r.stdout
+         and r.returncode == 1)
+
+    r = entry(["--stage", "fragment", "20260910"],
+              worktree="/home/yuqing/ctaNew-wt-be")
+    note("entry point with the WRONG tree fails by the same name",
+         "WOULD_FAIL:BE_WORKTREE_NOT_WT_FWD" in r.stdout
+         and r.returncode == 1)
+
     bad = [n for n, ok in checks if not ok]
     print(json.dumps({"falsifier": "be_build_preflight", "n": len(checks),
                       "n_failed": len(bad), "failed": bad}))
