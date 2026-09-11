@@ -312,3 +312,43 @@ a path, and that file **is absent from `mm-research`** — it exists only on
 **So: cite off-disk evidence as `git:<ref>:<path>` deliberately, and when the
 audit says a path is absent, ask whether the absence is the finding** before
 reaching for the `git:` form. Here it was. (Amended 2026-09-11T12:39:51Z.)
+
+---
+
+## Round 393 — **the audit must GATE the commit, not merely precede it**
+
+Round 382 required `--audit` in the same tool-call block as the write. This
+round satisfied that and still committed a bad citation: the block ran
+
+```bash
+python3 …/mem_flag_provenance.py --audit | grep r393 …   # printed a FINDING
+git add … && git commit …                                # ran anyway
+```
+
+***An audit whose output nothing branches on is a report, not a gate.***
+
+**Required from now on:**
+
+```bash
+A=$(python3 live/pm_research/mem_flag_provenance.py --audit 2>&1 \
+      | grep "rNNN" | grep -v "^  CHECKED")
+if [ -z "$A" ]; then git add … && git commit … ; else echo "$A"; fi
+```
+
+### And the repair failed too, for the reason round 359 already named
+
+My first fix asserted `s.count(artifact_line) == 1` and found **seven** — six
+earlier rounds cite the same path. The assert stopped it, so nothing was
+damaged, but the repair I reached for was **unbounded**.
+
+> **Bound every repair to the round's own key**, by regex anchored on the flag
+> name, and assert that the total occurrence count is **unchanged** afterwards:
+>
+> ```python
+> pat = re.compile(r"(^  %s:\n    prov: CHECKED\n    artifact: )<old>(\n)" % re.escape(KEY), re.M)
+> assert pat.search(s); s2 = pat.sub(r"\1<new>\2", s, count=1)
+> assert s2 != s and s2.count("<old-basename>") == s.count("<old-basename>")
+> ```
+>
+> *Round 359 said repairs are bounded by the round's own block. This is the same
+> rule one level finer: bounded by the round's own KEY.* (Amended 2026-09-11T16:39:21Z.)
