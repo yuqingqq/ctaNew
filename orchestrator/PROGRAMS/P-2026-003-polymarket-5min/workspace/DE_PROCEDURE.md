@@ -801,3 +801,72 @@ TWELVE bear directly on what the freeze commits.** REV is driving them.
 **A freeze resting on guards nobody has seen fire is a freeze resting on
 nothing.** The freeze waits on REV's twelve — hours, not days, and it buys
 the difference between a freeze and a freeze that means something.
+
+## CURRENT POSITION — DE, 2026-09-11T12:51Z (written at 97% context)
+
+**Read R-906 (coordinator) after compaction; it carries the coordinator's view.**
+
+### Where the work stands
+Forward test, N=7, population 09-07..09-13. Day one (09-07) is VALUED and
+combined under a measured waiver; 09-08 onward are not yet valued.
+
+### The commit family (all on `origin/de-freeze-chain-v2`, most also on
+`origin/be-build-runner`)
+- `f309602` read-once: the run reads the settlement oracle ONCE before the
+  first arm; both arms consume it. Licensed by falsifier (a), which PASSED:
+  09-07 reproduces `CONDVALUE −14645.078818` / `HAZARD +4925.363903` to the
+  cent, 23 s, peak 3.07 GiB, artifact
+  `fwd_v2/p003_de_readonce_falsifier_a_20260907_rehearsal.json`.
+- `c853e2d` hunk B (`ruled_day_set` resolves the freeze chain) + hunk C
+  (build rule declared, not a literal).
+- `92e4b7c` REVIEW 169: per-slug `SETTLEMENT_WINNER_MISSING_FOR_SLUG`
+  restored on the read-once path; declaration resolved by identity, no glob.
+- `21678a1` REVIEW 170: `DECLARATION_IDENTITY_UNPINNED` a real refusal;
+  `ruled_day_set` refuses `RULED_SET_UNRESOLVED` instead of falling back.
+- `eb923d3` hunk D: untouched-days guard reads DA's attestation
+  (`ATTESTATION.per_day[<day>].previously_opened_for`) by declared identity.
+- `3dbb107` **MISTAKE — edited `be_score_neutrality.py`**, the certificate's
+  producer. Reverted in `5efb8f0`; the file is `a455191d6bceec7e` again and
+  the certificate is VALID.
+- `5efb8f0` `resolve_declaration_pins()` in the RUNNER (agree-or-refuse,
+  `DECLARATION_PIN_CONFLICT`), replacing the edit above.
+- `1b65b14` stage-0 row `comparator_is_the_certified_producer`.
+
+### The stage-0 refusal — DIAGNOSED, not a blocker
+`de_preflight_matrix` run from **wt-de2** reports for 09-08:
+- `verify_run_inputs` → `REFUSED RUN: 6 pinned model file(s) do not match
+  their declared digest … 'why': 'ABSENT'`
+- `book_receipt` → `REFUSED BOOK_BUILT_BY_DIFFERENT_SCORING_CODE at the
+  settlement-control path for 2026-09-08`
+
+Run from **wt-deval** — the tree the chain actually executes from — only
+`book_receipt` remains, and that one is EXPECTED: the matrix points at the
+old `…__FWD1` 09-08 book built at `7ed5a90`, while (6) is about BE's
+rebuilt `dbb11e4` book. **The model-digest refusal is wt-de2-local (the
+model files are absent there).** Lesson: run the matrix from the tree the
+chain runs from; a refusal read in the wrong tree is not a refusal.
+
+### Pending, in order
+1. **(c)** the growing-ledger fixture for read-once.
+2. **REV's four admitting-arm cells** on the production path, each naming
+   `admitted_by`: descendant+5 digests → `DESCENDANT`; exact pin → `EXACT`;
+   non-descendant → refuse; one digest changed → refuse by digest name;
+   declaration sha moved → refuse by name.
+3. **(6)** the descendant-arm end-to-end on BE's rebuilt 09-08 book at
+   `data/pm_5min/derived/rebuild_identity/` (builder_commit `dbb11e4`),
+   POINT_ESTIMATE via the production chain → cells → combined
+   `..._rehearsal.json` + emit; the record must say `admitted_by: DESCENDANT`.
+4. Re-arm `deCHAIN0908` for 500 draws, then `deCHAIN0909`/`0910` on books.
+
+### Standing rules (hard)
+- **NEVER edit `be_score_neutrality.py`** — the neutrality certificate is
+  pinned to its `producer.sha256`; editing it voids the certificate. I did
+  this once at `3dbb107`.
+- Stage 0 carries `COMPARATOR_ON_DISK_IS_NOT_THE_CERTIFIED_PRODUCER`; a
+  worktree can hold edited bytes long after a commit is reverted — a
+  fast-forward does NOT overwrite a locally modified file.
+- **Instruments: new files only.** Never edit a pinned/valuation-path module
+  without a rule-13 supersession and its falsifier.
+- **stop → re-arm, never in place.** A script under a running unit is frozen
+  bytes; list executing units before any fast-forward.
+- Land from a tree no unit executes from; `wt-deval` is the chain's tree.
