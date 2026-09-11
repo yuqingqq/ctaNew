@@ -67,6 +67,24 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T18:44:43Z (MEM ROUND 395 -- 09-07 HAS TWO GUARD-CARRYING RECORDS OF DIFFERENT BOOKS, AND DAY
+  THREE IS POSITIVE ON BOTH ARMS WITHOUT CHANGING ANYTHING. The dispatch names 09-07 v2;
+  a v3 exists 76 s later, and they are not versions of one thing -- v2 is the FREEZE-BUILT
+  book 887a97eb with admitted_by DESCENDANT, v3 is the LANDED book e2547190 (I hashed it,
+  358,259,004 B) with admitted_by None, which is coherent because the landed book is
+  pre-freeze. AND v3's supersedes points at v1, NOT v2 -- the chain from the newest record
+  skips the freeze-built one. 09-09: CONDVALUE +10295.840461999993 and HAZARD
+  +10836.306347999991, BOTH arms positive, BOTH still FUTILE at caps 0.453125 and 0.125,
+  G_so_far 3, STOP_FOR_FUTILITY -- the second round running I have had to say that
+  positive days change nothing, because the cap is a function of days ALREADY
+  non-positive. The settlement_source guard is in FOUR records, not three. I DROVE the
+  sigma producer: 27 of 27, 0 failed, including an anti-constant cell -- the same window
+  an hour earlier gives a different number. AND I CHECKED THE REASON THAT REPLACED A
+  FALSE REASON, because a corrected note is where a second wrong reason would hide: five
+  call sites not one, but four are in selftest and the sole PRODUCTION site passes its
+  own value, so the claim holds and I file no correction. Two coordinator errors in band,
+  each naming a class: dispatching before verifying, and a stated reason that was
+  checkable and false. REV audited the work it was auditing. Tip 37a8929.)
   2026-09-11T18:30:27Z (MEM ROUND 394 -- A SECOND LANE, AND THE FREEZE NAMES A COMMIT THE PLAN HAS ALREADY
   MOVED PAST. R-917 freezes fair_value_plan.md at 0575444 and describes a 357-line
   protocol; a LATER user commit 876e435 hardened it to 424 lines twelve minutes before
@@ -102,6 +120,7 @@ updated: >-
   string, as day two's already was. 09-09 onward need NO rebuild: they build at the
   frozen lineage, which is why the schedule is as short as it is. Lock FREE and nothing
   running at dispatch. Tip d7812c0.)
+previous_updates: >-
   2026-09-11T16:13:55Z (MEM ROUND 392 -- BOTH ARMS NOW REPRODUCE EXACTLY, WHICH CLOSES THE CAVEAT I LEFT AT
   387. I checked it myself rather than reading the flag: CONDVALUE -14645.078818000005
   and HAZARD 4925.363903000005, each equal to day one's landed cell under ==, on the
@@ -118,7 +137,6 @@ updated: >-
   residue is KEPT. AND I NEARLY ATTRIBUTED THE WRONG DECLARATION: de_09_07_residue_check_v2
   is a BUILD residue check from 03:17Z about builder units, not this. Rule 16 exactly.
   Tip 0a7f2bf.)
-previous_updates: >-
   2026-09-11T16:09:12Z (MEM ROUND 390+391 -- ROUND CLOSE. I COMPUTED THE v1-TO-v2 DIFF MYSELF AND IT IS 174
   CHANGED LEAVES, NOT 2: 172 of them are emit.per_window_table_unconditional, 43 rows by
   exactly 4 fields, every one None -> a real value, plus at_utc and STOP_ADVICE; 4 leaves
@@ -490,6 +508,14 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r395_09_07_HAS_TWO_GUARD_CARRYING_RECORDS_OF_DIFFERENT_BOOKS: "The dispatch names 09-07 v2 as the re-emitted record. A v3 exists, written 76 seconds later, and the two are not versions of the same thing: v2's book is the FREEZE-BUILT reproduction book 887a97eb41e9f83c with admitted_by DESCENDANT on both arms; v3's book is /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc__L250ms__FWD1.pkl at e25471905983e95a -- which I hashed myself, 358,259,004 bytes, THE LANDED BOOK -- with admitted_by None on both arms. That is coherent: the landed book is PRE-FREEZE, so no descendant admission is available for it. Recorded because a reader taking the newest 09-07 record gets the landed, non-admitted book rather than the freeze-built admitted one."
+  r395_AND_v3s_SUPERSEDES_POINTS_AT_v1_NOT_v2: "v3's supersedes names p003_de_forward_value_20260907.json -- the ORIGINAL -- not the v2 written 76 seconds earlier. So the supersession chain from v3 skips v2 entirely, and a reader following supersedes backwards from the newest record never sees the freeze-built one. Both records exist on disk and neither is edited, so nothing is lost; what is absent is the link. Named for DE, not adjudicated: it may be deliberate, since v2 and v3 describe different books rather than successive versions of one."
+  r395_09_09_IS_POSITIVE_ON_BOTH_ARMS_AND_BOTH_STAY_FUTILE: "Read from the cells, not the dispatch: CONDVALUE_X_SKEW D +10295.840461999993 with p 0.3852295409181637 and 25902 cancels; HAZARD_OVER_SKEWED_REF D +10836.306347999991 with p 0.4291417165668663 and 26222 cancels. BOTH arms positive on day three. And both remain FUTILE with the caps unchanged -- CONDVALUE 2 non-positive days capping at 0.453125, HAZARD 1 capping at 0.125 -- G_so_far 3, STOP_ADVICE STOP_FOR_FUTILITY. Two consecutive positive arm-days change nothing, which is the second time in two rounds I have had to say so: the cap is a function of the days already non-positive."
+  r395_THE_SETTLEMENT_SOURCE_GUARD_APPEARS_IN_FOUR_RECORDS_NOT_THREE: "The dispatch names three re-emits carrying settlement_source NO_VERIFIED_WINNER_RECEIPT: 09-07 v2, 09-08 v3, 09-09 v2. On disk FOUR records carry it -- 09-07 v2 AND v3, 09-08 v3, 09-09 v2 -- and the records that do not carry it are exactly the ones written before 18:36Z. So the guard reached everything re-emitted after DE closed it, and 09-07 was re-emitted twice. A guard DE's stage-3 assembler had been emitting past is now present wherever it should be; the count in the dispatch is one short because 09-07 moved again after it was written."
+  r395_I_DROVE_THE_SIGMA_PRODUCER_MYSELF_27_OF_27: "be_sigma_30m.py on disk, run rather than read: {falsifier: be_sigma_30m, n: 27, failed: 0}, rc 0. The cells I watched pass include the ones that matter most: sigma_30m takes NO fallback argument; a consumed-day BTCUSDT window is ADMITTED THROUGH THE PRODUCTION ENTRY POINT off real bookTicker files (sigma 4.628298353273501e-05, n 1800); its local knowledge does not reach the decision (lag 4,281,563 ns); a dense window yields all 1,800 of 1,800 returns; and THE SAME WINDOW AN HOUR EARLIER GIVES A DIFFERENT NUMBER -- the reader is reading, not returning a constant. That last cell is an anti-constant control, which is the thing rule 15 asks for and the thing a producer can most easily fake."
+  r395_I_CHECKED_THE_REASON_THAT_REPLACED_A_FALSE_REASON_AND_IT_HOLDS: "R-920 records that the coordinator's stated reason for not delegating the sigma's gap clause was checkable and false, and replaces it with REV's. I checked the REPLACEMENT, because a corrected note is exactly where a second wrong reason would hide. continuity_from_recv_ns at de_v2_local_selector.py:28 does carry max_gap_ns as a PARAMETER DEFAULT of 1_000_000_000 ns; the module is NOT in da_population_freeze_v19, which I confirmed by loading v19 and searching it, so 'it is frozen' was indeed unavailable. The one wording I had to resolve: there are FIVE call sites, not one -- but four of them (:219, :226, :232, :238) are inside selftest, and the only PRODUCTION site, :127 in local_continuity, does pass max_gap_ns=int(HER.BN_MAX_GAP_S * 1e9) with BN_MAX_GAP_S = 1.0. So the claim holds as written when read as the sole production call site, and I am NOT filing a correction."
+  r395_TWO_COORDINATOR_ERRORS_CORRECTED_IN_BAND_and_the_class_each_names: "Both are worth the state file because both name a class rather than an incident. R-919: the coordinator dispatched on a review finding BEFORE verifying it at the artifact -- its own standing rule -- stopping BE's build mid-flight on REV's report that the sigma producer already existed; BE pushed back with a field-by-field table and the file turned out to be BE's OWN module, be_sigma_30m.py:268 at commit 8fe2a2e, landed minutes before the audit read the tree. BE 195 reversed by BE 196, BE 194 stands. R-920: a ruling right in its conclusion and wrong in its stated reason, which REV checked and replaced -- with the principle stated plainly, that a note whose stated reason a reader can check and disprove poisons the rest of the note. Ten minutes of BE's time was the whole cost, and only because BE pushed back."
+  r395_REV_AUDITED_THE_WORK_IT_WAS_AUDITING: "The sharpest instance of a class I have not seen before in this programme. REV's inventory of prior art named a module as pre-existing and warned of the two-validators defect; the module was the audited seat's own, added 50 seconds after REVIEW 229 and UNTRACKED while REV read the tree. REV 193's rule: an inventory of what already exists must EXCLUDE work landed in the same session -- check authorship and commit date before calling anything prior art, or a seat's fresh module reads as an asset it must defer to. Recorded here because MEM sweeps inventories constantly and the same trap is open to me: an untracked file in a shared tree carries no commit date at all until someone looks for it."
   r394_THE_FREEZE_NAMES_A_COMMIT_THE_PLAN_HAS_ALREADY_MOVED_PAST: "R-917 freezes workspace/fair_value_plan.md v1.2 at commit 0575444 and describes a 357-line protocol. Measured: 0575444 (18:06:45Z) is 357 lines, sha 474528472854cf21; a LATER user commit 876e435 (18:19:19Z, 'Harden fair-value validation plan') changed 735 lines and produced 424, sha 1606fe8d19124d0f; and THE FILE ON DISK IS 1606fe8d19124d0f -- 876e435's version, not the frozen one. R-917 was written at 18:21:55Z, after the hardening. Both commits are the user's. The register's freeze pointer is one commit behind the plan it describes."
   r394_AND_EVERY_PARAMETER_R_917_QUOTES_IS_ABSENT_FROM_THE_FROZEN_COMMIT: "This is not a cosmetic hash slip. I grepped the frozen text and the on-disk text for each design parameter R-917 states, and EVERY ONE is absent from 0575444 and present only on disk: m = 2 (0 vs 4 occurrences), 10 evaluable (0 vs 1), 2^10 / 1,024 (0 vs 2), the minimum two-sided p 0.001953125 (0 vs 1), s60_probability_v1 (0 vs 1), pm_microprice (0 vs 2), bn_bookticker_mid (0 vs 1), placement_latency_ms 250 (0 vs 1), INSUFFICIENT_EVIDENCE (0 vs 4). So R-917's PROSE describes the hardened plan correctly and its HASH names a document that contains none of those terms. The seats implement from disk, so no seat is misled; what is wrong is the pointer, and a pointer is what an automated reader resolves. Rule 12 asks a freeze to be a hash AND a ref; here they disagree."
   r394_DAY_THREE_IS_THE_FIRST_POSITIVE_DAY_and_it_changes_NOTHING: "Read from the artifact and not from the dispatch: CONDVALUE_X_SKEW on 2026-09-09 has observed_D_cents +10295.840461999993, p_two_sided 0.3852295409181637, 500 draws, 25902 cancels, settled total +57373.33741919998, seed 1870006418, admitted_by DESCENDANT, book a72caaa08968dd93, oracle 9b62cebe31ea41ae at 46521 records. It is the arm's FIRST POSITIVE DAY. It changes nothing about the verdict and I computed that rather than asserting it: with two days already non-positive the best attainable is still 5 of 7, still 2*29/128 = 0.453125. A positive day does not restore a negative one -- the cap is set by the days already non-positive, and that is the whole reason futility stopping is free. Only the CONDVALUE cell exists so far; there is no 09-09 HAZARD cell on disk."
@@ -28286,6 +28312,38 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r395_09_07_HAS_TWO_GUARD_CARRYING_RECORDS_OF_DIFFERENT_BOOKS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260907_v3.json
+    said: "flattened v2 and v3 to leaves and differenced: 71 changed, 94 only in v2, 34 only in v3; admitted_by went DESCENDANT to None for both arms and book_sha256 887a97eb to e2547190; sha256sum on the landed 09-07 pkl returned e25471905983e95a."
+  r395_AND_v3s_SUPERSEDES_POINTS_AT_v1_NOT_v2:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260907_v3.json
+    said: "read v3's supersedes block: path ends p003_de_forward_value_20260907.json with sha a5fd7506d7305642..., which is the 11:00:36Z original and not the 18:36:20Z v2."
+  r395_09_09_IS_POSITIVE_ON_BOTH_ARMS_AND_BOTH_STAY_FUTILE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260909_v2.json
+    said: "loaded both 09-09 cells for the D and p values and the v2 day record for the futility blocks, the tally and per_day_D_by_arm, which lists each arm's own three days."
+  r395_THE_SETTLEMENT_SOURCE_GUARD_APPEARS_IN_FOUR_RECORDS_NOT_THREE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260907_v3.json
+    said: "walked every p003_de_forward_value_2026090*.json for a settlement_source key: present in the four named, absent in the five older records including both reproduction files."
+  r395_I_DROVE_THE_SIGMA_PRODUCER_MYSELF_27_OF_27:
+    prov: CHECKED
+    artifact: live/pm_research/be_sigma_30m.py
+    said: "ran the module's falsifier mode to completion and read the final JSON line and the five real-source cells above it."
+  r395_I_CHECKED_THE_REASON_THAT_REPLACED_A_FALSE_REASON_AND_IT_HOLDS:
+    prov: CHECKED
+    artifact: live/pm_research/de_v2_local_selector.py
+    said: "read the signature at :28; grepped the five call sites and resolved each one's enclosing def by walking backwards to the nearest top-level def; loaded da_population_freeze_v19.json and searched its serialisation for both module names, absent."
+  r395_TWO_COORDINATOR_ERRORS_CORRECTED_IN_BAND_and_the_class_each_names:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "read R-919 and R-920 in full; the commit 8fe2a2e and the module path are the ones the entries name, and REVIEW 230 at fce65b4 closes the owed re-audit."
+  r395_REV_AUDITED_THE_WORK_IT_WAS_AUDITING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "R-919 and R-920 both record it; REVIEW 230 states be_sigma_30m.py was added by 8fe2a2e 50 seconds after REVIEW 229 and was untracked at read time, and independently confirms the two estimands differ."
   r394_THE_FREEZE_NAMES_A_COMMIT_THE_PLAN_HAS_ALREADY_MOVED_PAST:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
