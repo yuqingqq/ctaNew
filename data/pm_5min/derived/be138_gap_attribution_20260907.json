@@ -1,0 +1,75 @@
+{
+ "protocol": "BE_GAP_ATTRIBUTION_V1",
+ "as_of_utc": "2026-09-11T07:08:00Z",
+ "question": "does the REPLAY see the 15:55 gap on 09-07 (window 1788796500)?",
+ "ANSWER": "NO -- option (b). The collector recorded it; the fragment does not carry it.",
+ "THE_SOURCE_THAT_GOVERNS_THE_REPLAY": {
+  "file": "data/pm_5min/collector_gaps.jsonl",
+  "resolved_from": "flow_intensity.GAPS (PM / 'collector_gaps.jsonl')",
+  "reached_by": "be_gate1_fragment.selector_for -> fi.gaps_by_slug(era) -> gaps.get(slug, []) -> the 5th element of the selector tuple -> harmful_exposure_rows.build_rows",
+  "SO_IT_IS_NOT_A_DIFFERENT_SOURCE": "this is the SAME ledger DA and the coordinator read. 'different gap sources' is not the explanation."
+ },
+ "THE_MECHANISM": {
+  "1_attribution": "a gap row is attributed to a slug by the collector's own `slug`/`window_start` fields, NOT by the gap's wall-clock time",
+  "2_boundary": "when a disconnect spans a window boundary the `gap_closed` row is stamped against the window that was OPEN WHEN THE DISCONNECT BEGAN, while the gap instant falls in the NEXT window",
+  "3_clamp": "gaps_by_slug computes g0 = max(0, s/1e9 - ws), g1 = min(300, e/1e9 - ws) and keeps only if g1 > g0",
+  "4_this_row": "the 15:55 gap is stamped to the 15:50 slug with RAW offsets (319.259, 320.812) -- entirely past that window's end. Clamped to (319.259, 300.0), so g1 > g0 is FALSE and it is DROPPED.",
+  "5_never_reattributed": "it is not moved to the window whose wall clock contains it. It lands in NEITHER window."
+ },
+ "THE_CENSUS_ON_09_07_btc_clob_v4_1": {
+  "gap_rows_with_both_ns_fields": 35,
+  "kept_by_the_clamp": 33,
+  "distinct_windows_kept": 27,
+  "dropped_by_the_clamp": 2,
+  "AND_THERE_ARE_TWO_NOT_ONE": [
+   {
+    "stamped_to_window": 1788792000,
+    "stamped_utc": "14:40:00Z",
+    "raw_offsets": [
+     303.476,
+     311.176
+    ],
+    "gap_wall_clock_falls_in_window": 1788792300,
+    "falls_in_utc": "14:45:00Z"
+   },
+   {
+    "stamped_to_window": 1788796200,
+    "stamped_utc": "15:50:00Z",
+    "raw_offsets": [
+     319.259,
+     320.812
+    ],
+    "gap_wall_clock_falls_in_window": 1788796500,
+    "falls_in_utc": "15:55:00Z"
+   }
+  ],
+  "note_on_14_45": "14:45 IS in the 27, for its OWN gap (44.505..55.413). It has a seen gap AND a dropped one. 15:55 has only the dropped one, which is why it appears nowhere."
+ },
+ "DRIVEN_AT_THE_FRAGMENT_WITH_POSITIVE_CONTROLS": {
+  "method": "byte range covering every row naming the slug, in the fixed-era fragment and the superseded buggy-era one, digested and compared",
+  "15:55 (the window in question)": {
+   "bytes": 4578982,
+   "occurrences": 4129,
+   "sha_new": "4325b3627f377927",
+   "sha_old": "4325b3627f377927",
+   "verdict": "ROWS BYTE-IDENTICAL -- the replay sees no gap here"
+  },
+  "16:00 (POSITIVE CONTROL, gap seen)": {
+   "bytes_new": 1298750,
+   "bytes_old": 1304971,
+   "sha_new": "57c5d11668dee40b",
+   "sha_old": "183b89f851434318",
+   "verdict": "ROWS DIFFER"
+  },
+  "14:45 (POSITIVE CONTROL, gap seen)": {
+   "bytes_new": 2517789,
+   "bytes_old": 2517784,
+   "sha_new": "bac1e71dd0e5117c",
+   "sha_old": "43df26cdec73d888",
+   "verdict": "ROWS DIFFER"
+  },
+  "why_the_controls_matter": "rule 16: the comparison demonstrably CAN detect a difference -- it finds one on both windows whose gaps the replay sees -- and finds none at 15:55. A null from an instrument that never fired would not be a result."
+ },
+ "WHAT_THIS_SETTLES_FOR_THE_TRIPWIRE": "the per-window table stays at 27 rows and it SUMS. delta-D cannot receive a contribution from the 15:55 gap because the replay never sees it -- established by byte-identical rows against two positive controls, not by argument.",
+ "A_SEPARATE_DEFECT_ESCALATED_NOT_FIXED": "two recorded gaps on 09-07 are invisible to the replay ENTIRELY -- they land in neither window and are counted nowhere. That is rule 4: an exclusion that is not a counted status. It affects BOTH eras equally so it does not change delta-D, but the replay under-represents real gaps. NOT fixed now: flow_intensity is in the pinned build path and changing its bytes mid-test is worse than the defect. Population/measurement call is the coordinator's (rule 14)."
+}
