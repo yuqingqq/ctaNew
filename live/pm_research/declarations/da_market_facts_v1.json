@@ -1,0 +1,214 @@
+{
+ "protocol": "P003_DA_MARKET_FACTS_V1",
+ "dispatch": "DA 283",
+ "legal_tick": {
+  "legal_tick": "0.01",
+  "established": true,
+  "declared_instrument": {
+   "field": "markets.jsonl:orderPriceMinTickSize",
+   "n_records": 46867,
+   "n_without_the_field": 44,
+   "distinct_values": [
+    "0.01"
+   ],
+   "uniform_across_all_coins": true,
+   "by_coin": {
+    "bnb": {
+     "0.01": 6688
+    },
+    "btc": {
+     "0.01": 6690
+    },
+    "doge": {
+     "0.01": 6687
+    },
+    "eth": {
+     "0.01": 6690
+    },
+    "hype": {
+     "0.01": 6688
+    },
+    "sol": {
+     "0.01": 6690
+    },
+    "xrp": {
+     "0.01": 6690
+    }
+   },
+   "by_month": {
+    "2026-08": {
+     "0.01": 24872
+    },
+    "2026-09": {
+     "0.01": 21951
+    }
+   },
+   "uniform_across_the_windows_life": true,
+   "scope_coins_present": true
+  },
+  "observed_instrument": {
+   "source": "data/pm_5min/raw/<day>/<coin>-updown-5m-*.jsonl.gz",
+   "days": [
+    "20260906",
+    "20260907",
+    "20260908"
+   ],
+   "coins": [
+    "btc",
+    "eth"
+   ],
+   "n_files": 24,
+   "n_price_levels": 4171076,
+   "decimal_places_observed": {
+    "1": 379442,
+    "2": 3791292,
+    "3": 342
+   },
+   "n_levels_not_a_multiple_of_0.01": 342,
+   "share_not_a_multiple": 8.199323148271573e-05,
+   "sub_tick_values": {
+    "0.001": 45,
+    "0.002": 12,
+    "0.003": 9,
+    "0.004": 10,
+    "0.005": 14,
+    "0.006": 1,
+    "0.007": 7,
+    "0.008": 7,
+    "0.009": 25,
+    "0.024": 2,
+    "0.025": 4,
+    "0.026": 8,
+    "0.032": 5,
+    "0.057": 2,
+    "0.059": 3,
+    "0.079": 3,
+    "0.109": 3,
+    "0.159": 3,
+    "0.201": 3,
+    "0.226": 1,
+    "0.227": 2,
+    "0.237": 1,
+    "0.238": 1,
+    "0.762": 1,
+    "0.763": 1,
+    "0.773": 2,
+    "0.774": 1,
+    "0.799": 3,
+    "0.841": 3,
+    "0.891": 3,
+    "0.921": 3,
+    "0.941": 3,
+    "0.943": 2,
+    "0.968": 5,
+    "0.974": 8,
+    "0.975": 4,
+    "0.976": 2,
+    "0.991": 25,
+    "0.992": 7,
+    "0.993": 7,
+    "0.994": 1,
+    "0.995": 14,
+    "0.996": 10,
+    "0.997": 9,
+    "0.998": 12,
+    "0.999": 45
+   },
+   "n_windows_with_sub_tick_levels": 8,
+   "windows_sampled": 24,
+   "every_level_is_a_multiple_of_0.01": false
+  },
+  "instruments_agree": false,
+  "THE_CAVEAT_IS_MEASURED": "every market record declares 0.01, uniformly across all coins and both months. The BOOK does not match it exactly: 342 of 4171076 resting levels (0.0082%) sit at 0.001 granularity, in 8 of 24 sampled windows -- and those windows declare 0.01 too. So the tick is the right ROUNDING grid and is NOT a guarantee that no finer price rests on the book.",
+  "what_may_be_frozen_on_this": "bid rounds DOWN and ask rounds UP to 0.01. A quote on that grid is legal; it is not necessarily the best price available.",
+  "uniform_across_btc_and_eth": true,
+  "uniform_across_the_windows_life": true
+ },
+ "maker_fee_rule": {
+  "established": false,
+  "status": "MAKER_FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_ARTIFACTS",
+  "fee_rule": null,
+  "evidence": {
+   "markets_jsonl_fee_fields": [],
+   "markets_jsonl_all_keys": [
+    "clob",
+    "clobTokenIds",
+    "coin",
+    "conditionId",
+    "description",
+    "endDate",
+    "orderMinSize",
+    "orderPriceMinTickSize",
+    "outcomes",
+    "question",
+    "recv_ns",
+    "resolutionSource",
+    "rewardsMaxSpread",
+    "rewardsMinSize",
+    "rewards_authoritative",
+    "rewards_registry_n",
+    "slug",
+    "window_end",
+    "window_start"
+   ],
+   "rewards_registry_fields": [
+    "n",
+    "recv_ns"
+   ],
+   "rewards_registry_carries_a_fee_rule": false,
+   "onchain_audit": {
+    "artifact": "data/pm_5min/derived/p003_da_onchain_fee_audit__20260905T155346Z.json",
+    "sha256": "19c39a333017f083",
+    "formula_recorded": "C * 0.07 * p * (1-p)",
+    "n_maker_legs": 1056,
+    "n_maker_legs_zero": 1046,
+    "n_maker_legs_charged": 10,
+    "maker_charged_share": 0.00946969696969697,
+    "charged_leg_prices": [
+     "0.99"
+    ],
+    "n_taker_legs": 901,
+    "taker_all_charged": true,
+    "taker_formula_match_share": 0.1220865704772475,
+    "the_audits_own_role": "REPORTED, NOT ENFORCED (rule 14). This measures what the chain records; it promotes nothing and clears no gate."
+   }
+  },
+  "maker_zero_share_observed": 0.990530303030303,
+  "WHY_NOT_ESTABLISHED": [
+   "markets.jsonl carries NO fee field -- the market artifact does not state a fee at all",
+   "rewards_registry.jsonl is collected as a COUNT (recv_ns, n) and carries no fee rule, so the registry cannot supply one either",
+   "the on-chain audit measures what the chain RECORDS, and its own `role` says REPORTED, NOT ENFORCED -- it promotes nothing and clears no gate. A measurement of charges is not a market or account rule",
+   "and the measurement is NOT uniformly zero: 10 of 1056 maker legs WERE charged, all at price 0.99, so 'maker fills are free' is false as stated even as a description"
+  ],
+  "WHAT_SECTION_9_REQUIRES": "the VERIFIED maker fee applicable to these markets; a zero fee only if the receipt identifies the SUPPORTING market/account rule",
+  "THEREFORE": "no fee may be frozen, and zero may NOT be assumed. A zero that no rule supports is an assumption wearing a number's clothes, and it would flatter every P&L computed from it. This is a FINDING: the input is unestablishable from what is collected, and `freeze_is_effective` stays False honestly rather than being satisfied by an assumption.",
+  "WHAT_WOULD_ESTABLISH_IT": [
+   "the CLOB fee schedule for these condition ids, captured as an artifact with an as-of",
+   "or the account-level maker-rebate/fee tier that applies to the executing account, captured the same way",
+   "either one identifies a RULE; neither is currently collected"
+  ]
+ },
+ "initial_inventory": {
+  "initial_inventory": 0.0,
+  "units": "signed shares of the UP token, per market",
+  "established": true,
+  "frozen_choice_not_a_measurement": true,
+  "why_zero": "both arms must start from the SAME state (\u00a75 gate 6, \u00a79's 'identical external snapshot and starting state'), and any non-zero start is a position neither arm chose. It would be carried into P&L as settlement value under \u00a79's 'remaining inventory valued at the official settlement outcome', crediting or debiting both arms for a trade neither made.",
+  "where_it_currently_lives": "de_fair_value_replay_seam.replay() reads `initial_state.get('inventory', 0.0)` -- a caller-supplied value with a permissive default. Freezing it here makes the default unnecessary rather than merely convenient.",
+  "the_seam_already_enforces_sharing": "initial_state is a field of ReplayInputs, so two arms starting from different inventories REFUSE REPLAY_ARMS_DO_NOT_SHARE_THEIR_INPUTS -- driven in gate 6's property cells"
+ },
+ "established": {
+  "legal_tick": true,
+  "maker_fee_rule": false,
+  "initial_inventory": true
+ },
+ "n_established": 2,
+ "n_requested": 3,
+ "unestablished": [
+  "maker_fee_rule"
+ ],
+ "AN_UNESTABLISHABLE_INPUT_IS_A_FINDING": "two of three are established from artifacts and one is not. The one that is not is reported as a finding with the evidence that proves it unestablishable, never filled in with a plausible default.",
+ "rule_10": "every number here is computed from an artifact at run time",
+ "data_root": "/home/yuqing/ctaNew",
+ "data_root_is_delegated_to": "da_root.resolve_root (the resolver of record)"
+}

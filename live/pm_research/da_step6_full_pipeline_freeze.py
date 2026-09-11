@@ -497,6 +497,33 @@ def why_not_effective(d: dict) -> list:
     return out
 
 
+
+MARKET_FACTS = "live/pm_research/declarations/da_market_facts_v1.json"
+
+
+def market_facts(ref: str) -> dict:
+    """THE THREE FACTS DA 283 ESTABLISHED, cited from their landed artifact.
+
+    Read by DIGEST rather than recomputed: the measurement belongs to
+    `da_market_facts`, and a freeze that re-derives its inputs can disagree
+    with the artifact it claims to freeze.
+    """
+    b = _blob(ref, MARKET_FACTS)
+    if b is None:
+        return {"present": False, "path": MARKET_FACTS}
+    d = json.loads(b.decode())
+    return {"present": True, "path": MARKET_FACTS,
+            "sha256": hashlib.sha256(b).hexdigest(),
+            "established": d.get("established"),
+            "unestablished": d.get("unestablished"),
+            "legal_tick": d.get("legal_tick", {}).get("legal_tick"),
+            "legal_tick_caveat": d.get("legal_tick", {}).get("THE_CAVEAT_IS_MEASURED"),
+            "initial_inventory": d.get("initial_inventory", {}).get("initial_inventory"),
+            "maker_fee_rule": d.get("maker_fee_rule", {}).get("fee_rule"),
+            "maker_fee_status": d.get("maker_fee_rule", {}).get("status"),
+            "maker_fee_why_not": d.get("maker_fee_rule", {}).get("WHY_NOT_ESTABLISHED")}
+
+
 def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -> dict:
     if fetch:
         subprocess.run(["git", "-C", _root(), "fetch", "--quiet", "origin"], check=False)
@@ -506,6 +533,7 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
     sm = source_manifests(ref)
     lat = latency(ref)
     cands = candidates(ref)
+    mf = market_facts(ref)
 
     chain = []
     for link, paths in CHAIN:
@@ -524,10 +552,28 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
         "epsilon": 1e-6,
         "status_grammar": status_grammar(ref),
         "source_manifests": sm if sm["present"] else MISSING,
-        "initial_inventory": MISSING,
-        "tick_rounding": MISSING,
+        "initial_inventory": ({"value": mf["initial_inventory"],
+                               "units": "signed shares of the UP token, per market",
+                               "established_by": MARKET_FACTS,
+                               "sha256": mf.get("sha256")}
+                              if mf.get("present") and mf.get("initial_inventory") is not None
+                              else MISSING),
+        "tick_rounding": ({"legal_tick": mf["legal_tick"],
+                           "rule": "bid rounds DOWN, ask rounds UP, to the legal tick",
+                           "established_by": MARKET_FACTS,
+                           "sha256": mf.get("sha256"),
+                           "CAVEAT": mf.get("legal_tick_caveat")}
+                          if mf.get("present") and mf.get("legal_tick")
+                          else MISSING),
         "latency": lat,
+        # NOT ESTABLISHABLE, and recorded as a FINDING rather than defaulted.
+        # §9: a zero fee may be used ONLY if the receipt identifies the
+        # supporting market/account rule. Nothing collected identifies one.
         "fee_rule": MISSING,
+        "fee_rule_finding": {"status": mf.get("maker_fee_status"),
+                             "why_not_established": mf.get("maker_fee_why_not"),
+                             "established_by": MARKET_FACTS,
+                             "sha256": mf.get("sha256")} if mf.get("present") else None,
         "quote_parameters": qm if not qm.get("unsatisfied") else MISSING,
         "null_predicate": null_predicate(),
         "success_predicate": success_predicate(),
@@ -555,6 +601,7 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
             "down at a ref rather than carried in conversation; it does not "
             "assert that the pipeline is frozen."),
         "executing_refs": executing_refs(),
+        "market_facts": mf,
         "declared_at_ref": ref, "ref_head": head,
         "chain_in_order": chain,
         "fields": fields,
