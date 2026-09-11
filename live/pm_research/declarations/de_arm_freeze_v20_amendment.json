@@ -1,0 +1,25 @@
+{
+ "protocol": "P003_DE_ARM_FREEZE_V20_AMENDMENT",
+ "version": 20,
+ "rule": "13 -- superseding receipt; v1..v19 unedited",
+ "frozen_parameters": {
+  "params": {
+   "path": "de_multiday_gate1_params_v33.json",
+   "sha256": "aeeb818f3bb18c3e00a71616738eb3ea445891e01f35a7bce8490796148a2312"
+  }
+ },
+ "code_freeze_declaration": {
+  "path": "da_code_freeze_declaration_v8.json",
+  "sha256": "99e1215a2bb2249dcffce0368ef4340f3e5f136b373c02ac711e81b3434b338b"
+ },
+ "supersedes": {
+  "code_freeze_declaration": {
+   "path": "da_code_freeze_declaration_v7.json"
+  }
+ },
+ "WHY": {
+  "reason": "DA 255 -- v8 WITHDRAWS a wrong claim of mine (REVIEW 221): DE 331 narrowed the self-vouching gap, it did not close it. NO digest and NO base change.",
+  "chain": "v14(v2) -> ... -> v19(v7) -> v20(v8)"
+ },
+ "as_of_utc": "2026-09-11T13:52:41Z"
+}
