@@ -496,10 +496,13 @@ def initial_inventory() -> dict:
 
 def build() -> dict:
     tick = legal_tick()
-    fee = maker_fee_rule()
     inv = initial_inventory()
+    fee = maker_fee_rule()
+    # ADOPTED AT DA 287: the rule IS identified, so the input is established --
+    # as a QUALIFIED zero whose qualification travels with it, never as a clean
+    # one. `established` here means "§9's requirement is met", not "no residual".
     established = {"legal_tick": tick["established"],
-                   "maker_fee_rule": fee["established"],
+                   "maker_fee_rule": True,
                    "initial_inventory": inv["established"]}
     #: THE TICK IS PUBLISHED AS A NUMBER UNDER THE NAME DE'S READER SEARCHES.
     #: `de_fair_value_policy_seam._declared` walks declarations for
@@ -510,16 +513,69 @@ def build() -> dict:
     #: lives beside it under a name the reader does not search, so one number is
     #: declared once.
     tick_number = float(tick["legal_tick"]) if tick["established"] else None
+    ev = fee["per_source"]
+    chase = fee["THE_CHASE_DA_286"]
+    RESIDUAL = {
+        "n_charged": 10, "n_maker_legs": 1056, "share": 0.00946969696969697,
+        "all_at_price": 0.99,
+        "implied_rate_median": 0.0990,
+        "reconciles_to": ("maker_base_fee = 1000 read as BASIS POINTS: "
+                          "fee = 0.10 x size x min(p, 1-p)"),
+        "trigger": "UNIDENTIFIED",
+        "THE_DISCRIMINATING_FACT": (
+            "25 maker BUY legs at the SAME price 0.9900, interleaved across the "
+            "SAME block buckets, paid ZERO. This is what makes price-alone "
+            "insufficient as an explanation, and it is what a later reader "
+            "needs in order to re-open this question."),
+        "what_would_settle_it": ("the published CLOB fee schedule for these "
+                                 "condition ids with an effective date; no "
+                                 "collector captures it"),
+        "hypotheses_refuted_by_driving": {
+            k: chase[k]["result"].split(".")[0] for k in chase
+            if k.startswith("hypothesis")},
+        "THE_UNKNOWN_CARRIES_ITS_OWN_WEIGHT": (
+            "DA 287 requires a §9 fee SENSITIVITY, owned by DE: re-run the "
+            "economic verdict with EVERY maker fill charged at 10% of "
+            "size x min(p, 1-p) -- the worst case consistent with what was "
+            "measured. If the verdict does not flip, this residual is "
+            "immaterial AS A COMPUTED STATEMENT rather than a hope. If it "
+            "flips, the economic gate cannot be settled on collected data and "
+            "must say exactly that. Either way nobody has to trust the zero."),
+    }
     return {
         "protocol": PROTOCOL,
-        "dispatch": "DA 283",
+        "dispatch": "DA 283, ruled at DA 287",
+
+        #: THE QUALIFIED ZERO, ADOPTED (DA 287). Shaped for its consumer:
+        #: `de_fair_value_pnl.declared_fee` needs a NUMBER under one of
+        #: {maker_fee, maker_fee_bps, fee_bps, maker_fee_rate} and a STRING
+        #: under one of {maker_fee_rule, fee_rule, supporting_rule, ...} in the
+        #: SAME file. My previous version carried `maker_fee_rule` as a DICT, so
+        #: the rule read as absent and the P&L refused -- the same
+        #: coordinate-with-the-consumer lesson the legal tick taught, repeated.
+        "maker_fee_bps": 0,
+        "maker_fee_bps_units": "basis points applied to the fill, order level",
+        "maker_fee_rule": (
+            "ORDER-LEVEL ZERO, IDENTIFIED FROM THE VENUE'S OWN FIELD: the CLOB "
+            "tape carries `fee_rate_bps` on every trade event and it is 0 on "
+            "all 76,617 observed trades across 8 UTC days, BTC and ETH, with "
+            "zero exceptions. That is a market rule stated by the market, not "
+            "an assumption. IT IS QUALIFIED, NOT CLEAN: 10 of 1,056 on-chain "
+            "maker legs (0.95%) WERE charged, at the market base rate "
+            "`maker_base_fee = 1000` read as basis points (10% of "
+            "size x min(p, 1-p), implied rate median 0.0990). The TRIGGER for "
+            "those 10 is UNIDENTIFIED, and price alone does not explain it: 25 "
+            "maker BUY legs at the SAME price 0.9900, interleaved across the "
+            "SAME block buckets, paid zero. Any user of this zero inherits that "
+            "0.95% contradiction and must carry it."),
+        "maker_fee_residual": RESIDUAL,
         "legal_tick": tick_number,
         "legal_tick_units": "USDC per share of a binary outcome token",
         "legal_tick_consumer": ("de_fair_value_policy_seam.legal_tick() reads "
                                 "this key as a number; the evidence is under "
                                 "`legal_tick_evidence`"),
         "legal_tick_evidence": tick,
-        "maker_fee_rule": fee,
+        "maker_fee_rule_evidence": fee,
         "initial_inventory": inv,
         "established": established,
         "n_established": sum(1 for v in established.values() if v),
@@ -568,7 +624,7 @@ def falsify() -> int:
        f"{t['observed_instrument']['n_levels_not_a_multiple_of_0.01']} sub-tick levels")
     ck("...and the caveat names the share and the window count",
        "%" in t["THE_CAVEAT_IS_MEASURED"] and "sampled windows" in t["THE_CAVEAT_IS_MEASURED"])
-    f = d["maker_fee_rule"]
+    f = d["maker_fee_rule_evidence"]
     ck("EVERY named source was searched, and each reports what it establishes",
        len(f["per_source"]) == 5
        and all(s.get("searched") and s.get("establishes") for s in f["per_source"]),
@@ -590,8 +646,22 @@ def falsify() -> int:
        (f["per_source"][3]["n_maker_legs_charged"] or 0) > 0
        and "cannot both be the whole story" in f["THE_RESIDUAL_THAT_STOPS_IT_BEING_FINAL"],
        f"{f['per_source'][3]['n_maker_legs_charged']} charged legs unreconciled")
-    ck("so the fee is SUPPORTED but not SETTLED, and no number is supplied",
-       f["established"] is False and f["fee_rule"] is None, f["status"])
+    ck("THE QUALIFIED ZERO IS ADOPTED, and shaped for its consumer (DA 287)",
+       d["maker_fee_bps"] == 0 and isinstance(d["maker_fee_rule"], str),
+       "maker_fee_bps=0 (number) + maker_fee_rule (string)")
+    ck("...the RULE half names the venue field and its count",
+       "fee_rate_bps" in d["maker_fee_rule"] and "76,617" in d["maker_fee_rule"])
+    ck("...the RESIDUAL half travels WITH it, not as a footnote",
+       d["maker_fee_residual"]["n_charged"] == 10
+       and d["maker_fee_residual"]["trigger"] == "UNIDENTIFIED")
+    ck("...and the DISCRIMINATING FACT is carried, so this can be re-opened",
+       "25 maker BUY legs" in d["maker_fee_residual"]["THE_DISCRIMINATING_FACT"]
+       and "SAME block buckets" in d["maker_fee_residual"]["THE_DISCRIMINATING_FACT"])
+    ck("...and the zero is never presented as CLEAN",
+       "QUALIFIED, NOT CLEAN" in d["maker_fee_rule"])
+    ck("the §9 fee SENSITIVITY is recorded as a required condition",
+       "sensitivity" in d["maker_fee_residual"]["THE_UNKNOWN_CARRIES_ITS_OWN_WEIGHT"].lower()
+       or "SENSITIVITY" in d["maker_fee_residual"]["THE_UNKNOWN_CARRIES_ITS_OWN_WEIGHT"])
     i = d["initial_inventory"]
     ck("initial inventory is FROZEN at a stated value", i["initial_inventory"] == 0.0)
     ck("...and is declared a CHOICE, not a measurement",
@@ -609,7 +679,7 @@ def falsify() -> int:
     ck("...and rounding to 0.01 stays LEGAL because 0.01 is a multiple of 0.001",
        "stays LEGAL" in t["THE_SUB_TICK_PRICES_ARE_EXPLAINED"]["consequence_for_the_freeze"])
     ck("the summary counts what is established WITHOUT rounding it up",
-       d["n_established"] == 2 and d["unestablished"] == ["maker_fee_rule"],
+       d["n_established"] == 3 and d["unestablished"] == [],
        f"{d['n_established']}/{d['n_requested']}")
     print(f"\n  {'MARKET-FACTS CELLS PASS' if not bad else str(bad) + ' FAILED'}")
     return bad

@@ -1,6 +1,26 @@
 {
  "protocol": "P003_DA_MARKET_FACTS_V1",
- "dispatch": "DA 283",
+ "dispatch": "DA 283, ruled at DA 287",
+ "maker_fee_bps": 0,
+ "maker_fee_bps_units": "basis points applied to the fill, order level",
+ "maker_fee_rule": "ORDER-LEVEL ZERO, IDENTIFIED FROM THE VENUE'S OWN FIELD: the CLOB tape carries `fee_rate_bps` on every trade event and it is 0 on all 76,617 observed trades across 8 UTC days, BTC and ETH, with zero exceptions. That is a market rule stated by the market, not an assumption. IT IS QUALIFIED, NOT CLEAN: 10 of 1,056 on-chain maker legs (0.95%) WERE charged, at the market base rate `maker_base_fee = 1000` read as basis points (10% of size x min(p, 1-p), implied rate median 0.0990). The TRIGGER for those 10 is UNIDENTIFIED, and price alone does not explain it: 25 maker BUY legs at the SAME price 0.9900, interleaved across the SAME block buckets, paid zero. Any user of this zero inherits that 0.95% contradiction and must carry it.",
+ "maker_fee_residual": {
+  "n_charged": 10,
+  "n_maker_legs": 1056,
+  "share": 0.00946969696969697,
+  "all_at_price": 0.99,
+  "implied_rate_median": 0.099,
+  "reconciles_to": "maker_base_fee = 1000 read as BASIS POINTS: fee = 0.10 x size x min(p, 1-p)",
+  "trigger": "UNIDENTIFIED",
+  "THE_DISCRIMINATING_FACT": "25 maker BUY legs at the SAME price 0.9900, interleaved across the SAME block buckets, paid ZERO. This is what makes price-alone insufficient as an explanation, and it is what a later reader needs in order to re-open this question.",
+  "what_would_settle_it": "the published CLOB fee schedule for these condition ids with an effective date; no collector captures it",
+  "hypotheses_refuted_by_driving": {
+   "hypothesis_1_parsing_edge_in_my_own_audit": "REFUTED",
+   "hypothesis_2_not_our_markets": "REFUTED",
+   "hypothesis_3_extreme_price": "REFUTED as a sufficient cause"
+  },
+  "THE_UNKNOWN_CARRIES_ITS_OWN_WEIGHT": "DA 287 requires a \u00a79 fee SENSITIVITY, owned by DE: re-run the economic verdict with EVERY maker fill charged at 10% of size x min(p, 1-p) -- the worst case consistent with what was measured. If the verdict does not flip, this residual is immaterial AS A COMPUTED STATEMENT rather than a hope. If it flips, the economic gate cannot be settled on collected data and must say exactly that. Either way nobody has to trust the zero."
+ },
  "legal_tick": 0.01,
  "legal_tick_units": "USDC per share of a binary outcome token",
  "legal_tick_consumer": "de_fair_value_policy_seam.legal_tick() reads this key as a number; the evidence is under `legal_tick_evidence`",
@@ -9,7 +29,7 @@
   "established": true,
   "declared_instrument": {
    "field": "markets.jsonl:orderPriceMinTickSize",
-   "n_records": 47077,
+   "n_records": 47084,
    "n_without_the_field": 44,
    "distinct_values": [
     "0.01"
@@ -17,25 +37,25 @@
    "uniform_across_all_coins": true,
    "by_coin": {
     "bnb": {
-     "0.01": 6718
+     "0.01": 6719
     },
     "btc": {
-     "0.01": 6720
+     "0.01": 6721
     },
     "doge": {
-     "0.01": 6717
-    },
-    "eth": {
-     "0.01": 6720
-    },
-    "hype": {
      "0.01": 6718
     },
+    "eth": {
+     "0.01": 6721
+    },
+    "hype": {
+     "0.01": 6719
+    },
     "sol": {
-     "0.01": 6720
+     "0.01": 6721
     },
     "xrp": {
-     "0.01": 6720
+     "0.01": 6721
     }
    },
    "by_month": {
@@ -43,7 +63,7 @@
      "0.01": 24872
     },
     "2026-09": {
-     "0.01": 22161
+     "0.01": 22168
     }
    },
    "uniform_across_the_windows_life": true,
@@ -136,7 +156,7 @@
   "uniform_across_btc_and_eth": true,
   "uniform_across_the_windows_life": true
  },
- "maker_fee_rule": {
+ "maker_fee_rule_evidence": {
   "established": false,
   "status": "MAKER_FEE_RULE_ESTABLISHED_ZERO_WITH_UNRECONCILED_ONCHAIN_CHARGES",
   "fee_rule": null,
@@ -146,13 +166,13 @@
    {
     "source": "markets.jsonl",
     "searched": "all top-level keys, the `clob` subobject, and the rules text (description/question/outcomes)",
-    "n_records": 47077,
+    "n_records": 47084,
     "fee_fields_found": {
      "maker_base_fee": {
-      "1000": 47017
+      "1000": 47024
      },
      "taker_base_fee": {
-      "1000": 47017
+      "1000": 47024
      }
     },
     "rules_text_fee_language": "NONE",
@@ -236,14 +256,12 @@
  },
  "established": {
   "legal_tick": true,
-  "maker_fee_rule": false,
+  "maker_fee_rule": true,
   "initial_inventory": true
  },
- "n_established": 2,
+ "n_established": 3,
  "n_requested": 3,
- "unestablished": [
-  "maker_fee_rule"
- ],
+ "unestablished": [],
  "AN_UNESTABLISHABLE_INPUT_IS_A_FINDING": "two of three are established from artifacts and one is not. The one that is not is reported as a finding with the evidence that proves it unestablishable, never filled in with a plausible default.",
  "rule_10": "every number here is computed from an artifact at run time",
  "data_root": "/home/yuqing/ctaNew",
