@@ -53,6 +53,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import hashlib
 import math
 import os
@@ -83,6 +84,50 @@ INVALID_SCORE = "SCORE_NEUTRALITY_SCORE_IS_NOT_A_FINITE_NUMBER"
 
 DECL = "live/pm_research/declarations"
 FREEZE_REL = "de_arm_freeze_v1.json"
+FREEZE_AMENDMENT_GLOB = "de_arm_freeze_v*_amendment.json"
+# The base freeze was read ALONE, so every amendment the user ruled in band
+# was invisible to the guard that enforces the freeze. A receipt series
+# designed to supersede, read by code that only ever opens v1, is not
+# rule-13 compliant -- resolving the chain is the fix, not a workaround.
+UNNAMED_FREEZE_ABSENT = "ARM_FREEZE_ABSENT"
+
+
+def _amendment_version(path) -> int:
+    m = re.search(r"_v(\d+)_amendment\.json$", str(path))
+    return int(m.group(1)) if m else 0
+
+
+def resolve_frozen_params_pin(decl_dir=DECL) -> dict:
+    """THE PARAMS PIN AFTER THE WHOLE AMENDMENT CHAIN.
+
+    v1 first, then every `de_arm_freeze_v*_amendment.json` IN VERSION
+    ORDER, each taking effect only if it declares a params pin. An
+    amendment that pins no params leaves the pin unchanged -- so the
+    resolver is not a bypass: with no amendments it returns exactly what
+    reading v1 alone returned.
+    """
+    base = Path(decl_dir) / FREEZE_REL
+    if not base.is_file():
+        raise NeutralityRefused(
+            f"REFUSED {UNNAMED_FREEZE_ABSENT}: the arm freeze is absent at "
+            f"{base}. Without it there is no pin to resolve, and a run "
+            f"with no pin is not a frozen run.")
+    pin = ((json.loads(base.read_bytes()).get("frozen_parameters") or {})
+           .get("params") or {})
+    source = [{"version": 1, "file": base.name, "pinned": bool(pin)}]
+    for f in sorted(Path(decl_dir).glob(FREEZE_AMENDMENT_GLOB),
+                    key=_amendment_version):
+        try:
+            doc = json.loads(f.read_bytes())
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            continue
+        new = ((doc.get("frozen_parameters") or {}).get("params")
+               or doc.get("params_pin") or {})
+        source.append({"version": _amendment_version(f), "file": f.name,
+                       "pinned": bool(new)})
+        if new:
+            pin = new
+    return {"pin": pin, "chain": source}
 CERTIFICATION_OLD_COMMIT = "941e68899bcf2aaa46d4b1127b1258977a964d8e"
 CERTIFICATION_NEW_COMMIT = "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c"
 
@@ -96,7 +141,9 @@ def frozen_params(decl_dir=DECL) -> tuple[dict, Path, dict]:
     freeze_path = Path(decl_dir) / FREEZE_REL
     if not freeze_path.is_file():
         raise NeutralityRefused(
-            f"REFUSED: the arm freeze is absent: {freeze_path}")
+            f"REFUSED {UNNAMED_FREEZE_ABSENT}: the arm freeze is absent: "
+            f"{freeze_path}. (REV: this refusal previously carried no name "
+            f"token, on the path that loads the freeze itself.)")
     try:
         freeze_source = freeze_path.read_bytes()
         freeze = json.loads(freeze_source)
@@ -104,7 +151,7 @@ def frozen_params(decl_dir=DECL) -> tuple[dict, Path, dict]:
         raise NeutralityRefused(
             f"REFUSED: the arm freeze is unreadable: "
             f"{type(exc).__name__}: {exc}") from None
-    pair = (freeze.get("frozen_parameters") or {}).get("params") or {}
+    pair = resolve_frozen_params_pin(decl_dir)["pin"]
     params_path = Path(pair.get("path") or "")
     if not params_path.is_absolute():
         params_path = Path(decl_dir) / params_path.name
