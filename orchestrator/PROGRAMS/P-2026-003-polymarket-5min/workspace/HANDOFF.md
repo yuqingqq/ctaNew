@@ -1,3 +1,84 @@
+# READ FIRST — round 377 (MEM, 2026-09-11T08:56:30Z, tip `f5f39f5`)
+# 🚨 MY ROUND-376 WARNING, CONFIRMED AGAINST THE PIN GO5 WILL ACTUALLY USE
+
+```
+comparator @ dcec80a                       a455191d6bceec7e
+cert …__da00220.json   producer            8500ce41fc800e9a   ✗
+cert …EV22_vs_NEUTCHK.json  producer       c5c1fc0ae126a3f7   ✗
+```
+
+**The comparator is unchanged from `7efea16` — only the driver moved.** And
+**I inventoried every certificate on disk: there are two, and NEITHER matches.**
+
+> ***`deRV0907go5` will refuse `NOT_CERTIFIED` exactly as go4 would have, unless
+> a THIRD certification is run with the `a455191d` comparator first.***
+
+## 📉 And the inventory is the useful part
+
+The two certificates are the work of **the two instruments whose agreement I
+called rule-38 corroboration at round 374** — the user's hardened comparator and
+BE's rebuild to REV 173's bar. ***Both are now stale against a third that
+produced neither.***
+
+> **The self-referential digest check compounding: each repair to the comparator
+> retires the entire certificate stock. The stock is now two entries and zero
+> valid ones.**
+
+# 🌿 THE PIN IS ON A SIDE REF — I checked both ways
+
+```
+dcec80a  ON  origin/de-freeze-chain-v2
+dcec80a  NOT ON  origin/mm-research
+```
+
+**Rule 45's landing branch working as designed** — *and it means **the register's
+authority lags a valid landing**: the commit is real, published and resolvable by
+ref, while the branch the register treats as canonical cannot contain it until
+the user resolves the fork.* **`PENDING_ORIGIN_MAIN` in DA's v19 is the right way
+to carry a state that is neither landed nor lost.**
+
+## ✋ And I correct my own first reading of the tree
+
+My first pass counted **one dirty file** and would have contradicted the
+dispatch's *"clean"*. **The entry is `?? data` — untracked.** *So the tracked tree
+is clean and the dispatch is right.* ***Counting `git status` lines without
+reading their status character is the same shape as every proxy-for-property
+error in these files*** — caught before writing it down.
+
+# ✅ THE DRIVER DIFFERENCE IS CLEARED BY TWO GENUINELY DIFFERENT INSTRUMENTS
+
+**DA 244, by AST:** zero arithmetic on any quantity — the only BinOps are **path
+joins** and `time.time() − started`; `score`, `_D`, `p_two`, `draw`, `cents`
+appear **only as field names copied into a record.**
+**REV 154, by import closure:** the driver is a **caller** of the computing
+modules, **not a member of their closure.**
+
+> *"Computes nothing that reaches a number."* — ***a syntax tree and a dependency
+> graph, on one property. Rule-38 corroboration of the kind that earns the name.***
+> **No STOP.**
+
+**And DA 246 re-runs the AST against `dcec80a`'s COMMITTED bytes** — *which is the
+half that matters: a clearance obtained on a working copy and applied to a commit
+is a clearance of something else.* **The same gap that produced the wrong-tree
+build at round 353.**
+
+# 🔧 A SAFETY WATCHER WOULD HAVE STOPPED GO5 FOR THE WRONG REASON
+
+It required the pin on `origin/mm-research` — **a condition rule 45's landing
+path cannot satisfy.** Corrected to *"any origin ref contains HEAD"* + clean tree.
+
+> ***A safety check calibrated against a superseded workflow is not conservative
+> — it is a check of the wrong property, and it would have cost a cycle while
+> looking prudent.***
+
+# ✅ AND I VERIFIED THE v10 AMENDMENT'S PINNED DIGEST MYSELF
+
+`sha256(de_multiday_gate1_params_v31.json)` on disk = **`dd58223c6e3654a2`**, and
+the amendment **contains that exact 64-character digest.** *So the pin chain
+closes at the artifact: the amendment names a params file **by content**, and the
+content on disk is what it names — **the property the freeze-fork repair exists
+to make checkable**, verified rather than assumed.*
+
 # READ FIRST — round 376 (MEM, 2026-09-11T08:51:56Z, tip `58009f0`)
 # 🚨 THE FIX FOR REFUSAL THREE RE-OPENS REFUSAL TWO — established at the code
 
