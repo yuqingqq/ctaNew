@@ -1,0 +1,47 @@
+{
+  "protocol": "P003_DE_235_TOLERANCE_SELF_AUDIT_V1",
+  "as_of_utc": "2026-09-11T03:27:23.070541+00:00",
+  "prompted_by": "REV's finding that BE's REL_BAR=1e-9 admits ~1.8e-8 absolute where last-ulp noise is ~2e-15 -- 'a delta that large isn't float noise; it's a behavioural change that happened not to cross theta today'",
+  "THE_ANSWER": "MY DECISION PATH CARRIES NO TOLERANCE AT ALL. Every deciding comparison is EXACT. So there is no REL_BAR of mine to tighten.",
+  "audited_sites": {
+    "futility sign": "de_forward_evaluator.py:136  `v <= 0`  -- exact",
+    "futility death": "de_forward_evaluator.py:139  `best_possible > thr`  -- exact",
+    "impossibility": "de_forward_evaluator.py:143  exact",
+    "tolerance search": "de_forward_evaluator.py:95  `day_sign_p(...) <= threshold`  -- exact",
+    "attainability": "de_forward_evaluator.py:110  exact",
+    "Holm": "de_settlement_control_aggregate.py:140  `ps[k] <= thr`  -- exact",
+    "verdict sign": "de_settlement_control_aggregate.py:150  `D_arm_cents > 0`  -- exact"
+  },
+  "every_1e_12_in_the_file_is_in_a_FALSIFIER_CELL_never_the_production_path": "lines 422-552",
+  "BUT_EXACTNESS_IS_NOT_ROBUSTNESS_AND_REVS_REASONING_TRANSFERS": {
+    "with_the_threshold_changed": "REV's deciding quantity is occupancy near THETA. Mine is occupancy near ZERO -- the futility predicate asks only whether D crossed zero.",
+    "so_the_question_I_must_answer_is_the_same_question": "how close is the sign decision to flipping on a delta of the size REV measured?",
+    "MEASURED": {
+      "admitted_delta_cents": 1.8e-08,
+      "smallest_abs_D_across_the_four_consumed_days": 1177.04,
+      "which": "HAZARD 09-05",
+      "margin_over_delta": 65400000000.0,
+      "reading": "the sign decision sits ~10 ORDERS OF MAGNITUDE from flipping. On the observed scale of D -- thousands of cents -- a float-order delta cannot move it."
+    },
+    "AND_THE_LIMIT_ON_THAT_READING": "it is measured on the FOUR CONSUMED DAYS. A forward day whose D lands near zero would be fragile in exactly REV's sense, and nothing about today's margins prevents that. The margin must be REPORTED PER DAY, not assumed from these four."
+  },
+  "TWO_STRUCTURAL_PROTECTIONS_I_DID_NOT_DESIGN_BUT_SHOULD_RECORD": {
+    "the_p_value_is_QUANTIZED": "p = (1+k)/501, so it can only take values on a grid 0.001996 wide. The nearest attainable values either side of 0.025 are 0.023952 and 0.025948 -- MINIMUM distance 0.000948. A p-value CANNOT sit near its threshold; no float delta of any plausible size reaches it.",
+    "the_floor_comparisons_are_dyadic": "day_sign_p(G,G) is 2/2^G -- exactly representable. At G=7, 0.015625 vs 0.025 is 4.26e13 ulps of margin.",
+    "why_this_matters": "the fragile comparison in this design is the SIGN OF D, and only that one. Holm and the floor are protected by quantization and exact representation respectively."
+  },
+  "WHAT_I_AM_NOT_DOING_AND_WHY": {
+    "not_adding_a_tolerance": "a tolerance on `D <= 0` would CREATE the ambiguity REV is objecting to -- it would let a real behavioural change be absorbed as noise. Exact comparison plus a reported margin is strictly better than a tolerance.",
+    "NOT_MODIFYING_THE_EVALUATOR_AT_ALL": "it is byte-identical to 7ed5a90 (7c137ddc2d8869b5) and I certified that an hour ago. Any edit breaks the provenance I just established and moves the declared pipeline commit. The per-day margin is computable BESIDE the emit without touching the module -- and that is how I will report it.",
+    "if_the_coordinator_wants_it_IN_the_module": "that is a ruling, like the renames, and it lands after the last forward book."
+  },
+  "WHAT_THE_DAY_ONE_EMIT_WILL_CARRY": [
+    "the per-day line: D, p, n, base, arm",
+    "the FUTILITY verdict naming the day and its cause",
+    "the attainable minimum p at the G achieved so far",
+    "the TOLERANCE at that G (0 at the ruled G=7 -- all seven days must be positive)",
+    "the pipeline-provenance limit, because DA's RESULT_DOES_NOT_STATE_ITS_PIPELINE_PROVENANCE_LIMIT refuses an emit that omits it and I will not work around that refusal",
+    "and NEW, from this audit: the margin |D| to zero beside the sign decision, so the fragility is reported rather than assumed"
+  ],
+  "REV_173_NOTED": "no comparator result can make the waiver available; sufficiency for a FORWARD day needs a per-book guard because the deciding quantity is that day's own occupancy near theta. My valuation expects that guard to become a precondition later even though it is not one now. That is the same shape as the finding above: a margin measured on other days does not transfer to this one."
+}
