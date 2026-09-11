@@ -1,0 +1,83 @@
+{
+ "declaration": "DA_FAIR_VALUE_GATE1_SETTLEMENT_LABEL_READER",
+ "version": 1,
+ "as_of_utc": "2026-09-11T18:26:52Z",
+ "protocol": "P003_DA_FAIR_VALUE_GATE1_LABELS_V1",
+ "family": "da_fair_value_gate1_declaration",
+ "AUTHORITY": {
+  "lane": "fair-value, USER-FROZEN",
+  "ruling": "R-917",
+  "dispatch": "DA 266",
+  "plan": {
+   "path": "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md",
+   "commit": "0575444",
+   "sha256_read": "474528472854cf21",
+   "THE_PLAN_SAYS_v1.1_NOT_v1.2": "the dispatch names v1.2; the file at 0575444 carries `# Fair value plan -- v1.1` on line 1. Recorded, not resolved -- DA does not edit the plan."
+  }
+ },
+ "MODULE": {
+  "path": "live/pm_research/da_fair_value_gate1_labels.py",
+  "sha256": "771ccd6ffdc4cbef59e9fd3bb81c6de5b8ba28c68c65354f3891781edce23b61",
+  "new_file": true,
+  "nothing_frozen_moved": "the population freeze verifies HOLDS with this file present; it is not a population row and moves no declared digest."
+ },
+ "READERS_REUSED_NOT_REIMPLEMENTED": {
+  "boundary_read": "exp_m6_settlement.read_at -- the audited convention reader",
+  "population_load": "da_settlement_audit_v1.load_population -- counted exclusions (rule 4)",
+  "coin_to_symbol": "exp_m6_settlement.COINS",
+  "supersession_head": "declaration_chain.resolve_head -- the one chain implementation (BE 77)",
+  "why": "a second reader is a second convention, and a second convention can drift from the audited one silently."
+ },
+ "THE_STATISTIC_AS_LANDED": {
+  "rule": "X60(T) >= X60(t0), TIES UP",
+  "series": "the 60-second TWAP topic, keyed (symbol, 60) exactly as exp_m6_settlement keys it",
+  "three_spellings_one_statistic": "the plan writes S60, the dispatch writes X60, the code keys (symbol, 60). This module resolves it BY THE SERIES KEY, never by the letter."
+ },
+ "STATUS_GRAMMAR_AS_LANDED": {
+  "statuses": [
+   "VERIFIED_AGREE",
+   "VERIFIED_DISAGREE",
+   "NO_OFFICIAL_RESOLUTION",
+   "NOT_IN_CAPTURE",
+   "OUTAGE",
+   "STALE_BOUNDARY",
+   "MARGIN_BELOW_RESOLUTION"
+  ],
+  "ADMITTING": [
+   "VERIFIED_AGREE"
+  ],
+  "rule": "a window is label-admissible ONLY when an OFFICIAL resolution exists AND the checker reads VERIFIED_AGREE. Every other outcome is a COUNTED STATUS and carries NO label.",
+  "exactly_one_status_admits": true,
+  "margin_awareness": {
+   "eps_bp": 0.5,
+   "declared_before_any_audit": true,
+   "why": "X60(T)-X60(t0) can be smaller than the feed resolves. Scoring those either way would manufacture a verdict out of quantisation, so they are their own status.",
+   "provenance": "0.5bp is the split Q-DA-146 pre-registered; it is REUSED, not re-tuned (rule 11)"
+  },
+  "stale_boundary_ms": 1000
+ },
+ "HOLD_RULE": {
+  "trigger": "any VERIFIED_DISAGREE",
+  "effect": "the LANE is on HOLD (plan \u00a710 kill criterion 1) until a superseding receipt explains it",
+  "lifted_by": "a head in this gate's declaration family naming the disagreeing slugs in `explained_disagreements`",
+  "head_resolution": "declaration_chain.resolve_head(DECL_DIR, family) -- computed, not asserted",
+  "refusal": "FAIR_VALUE_LANE_ON_HOLD_UNTIL_A_SUPERSEDING_RECEIPT"
+ },
+ "FALSIFIERS_18_ALL_PASS": {
+  "positive_exact_endpoint": "VERIFIED_AGREE both directions, and a TIE reads UP as the convention pins it",
+  "known_bad_rolling_as_raw": "REFUSED ROLLING_TWAP_PASSED_WHERE_A_RAW_AGGREGATE_PATH_IS_REQUIRED -- crypto_prices_twap_sixty is the ROLLING statistic; each sample already contains the preceding 60s, so integrating it double-counts. The same topic in its OWN endpoint role is admitted, so the control can fail.",
+  "inverted_mapping": "DETECTED as ['VERIFIED_DISAGREE']",
+  "statuses_never_labels": "NO_OFFICIAL / NOT_IN_CAPTURE / MARGIN_BELOW_RESOLUTION / STALE_BOUNDARY each carry label=None",
+  "hold": "driven on 4 REAL disagreements -> ON_HOLD True; the honest rows do NOT hold the lane",
+  "TWO_CELLS_I_HAD_TO_FIX_AND_WHY_IT_MATTERS": "the first inverted-mapping cell used ONE symbol, so the swap pointed at a series that did not exist and every row returned NOT_IN_CAPTURE -- DETECTION BY ABSENCE, which passes while proving nothing about the mapping. The second wrote every window under the SAME (symbol,60) key so later windows clobbered earlier ones. And the first HOLD cell carried an `or not any(...)` escape that made it pass at n_disagree=0 -- a control that cannot fail. All three are fixed and the comment recording them is in the module. R-229's class, caught in my own first pass."
+ },
+ "NOT_RUN_AND_WHY": {
+  "the_real_population_audit": "NOT RUN",
+  "reason": "plan \u00a711 and the dispatch: no heavy lock, do not starve the 09-09 valuation or the queued 09-10..13 builds. exp_m6_settlement.load_streams() reads ~892MB across crypto_prices_twap_sixty and _thirty. Every falsifier above runs on SYNTHETIC fixtures and touches no bulk data.",
+  "what_that_leaves_open": "the gate is PROVEN on its grammar and its three mandated falsifiers; it has NOT yet been run against resolutions.jsonl. The \u00a75 falsifier -- recompute settlement for the audit population and match winner-for-winner -- is the next step and needs an I/O window that does not compete with the replay."
+ },
+ "LIMITS": {
+  "no_score": "this gate produces labels and statuses only. No fair value, no probability, no evidence.",
+  "cancellation_lane_untouched": "no frozen module moved; the population freeze verifies HOLDS."
+ }
+}
