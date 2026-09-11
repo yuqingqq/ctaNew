@@ -328,6 +328,7 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r383_the_landing_blocker_persists_and_the_gap_is_widening: "Re-ran the dry landing at 13:01:26Z: HELD BEHIND_AND_NOT_FF again, same cause as round 382 and the same two files -- live/pm_research/da_population_freeze_verify.py and workspace/BE_PROCEDURE.md, still uncommitted by other seats AND still differing between HEAD and origin/mm-research. The divergence has widened from 112/131 to 117/139 in about twenty minutes. Q-MEM-338 (round 358), Q-MEM-339 (round 382) and Q-MEM-340 (this round) are written and UNLANDED. Did not merge, stash or rebase -- rules 21 and 45."
   r383_falsifier_b_resolves_on_CONTENT_every_data_table_equal: "BE 173's content diff landed at 12:51:28Z, 88 seconds after R-906 called it pending. DATA_DIFFERS is exactly ['asm','asm.assembly'] and the top-level asm differs ONLY because asm.assembly does. Every other table is EQUAL: fr.rows, fr.statuses, fr.terminal_marks, fr.reference, fr.placement_latency, fr.population, fr.n_slugs, header.coin/day/protocol/placement_latency/score_contracts, asm.by_arm, asm.split_by_gen, asm.split_counts. provenance_differs is EMPTY."
   r383_the_five_differing_keys_are_ALL_STOPWATCHES: "I opened both 390 MB books and read the values rather than trusting the diff's labels. bn_cache_clear_s 4.963 vs 5.079; compose_s 22.149 vs 22.286; feature_pass_s 444.93 vs 444.392; score_s_by_head {incumbent_linear_d 12.904 vs 17.373, q1_arrival_composed_lgbm 29.293 vs 29.978}; stages tape_index[score] wall_s 74.58 vs 74.26, peak_rss_mb_highwater 3844.6 vs 3835.1. Every differing value is a stopwatch or a memory highwater -- and rows_indexed, the one CONTENT quantity inside stages, is IDENTICAL at 647129. The two books agree on the market and disagree on how long the machine took."
   r383_the_allowed_different_set_does_not_cover_the_book_timings: "The ruling was identity = CONTENT identity with the allowed-different set NAMED FROM THE RECEIPT SCHEMA, any data table differing = STOP. The set's 18 names are receipt fields -- builder_commit, wall_s, peak_rss_gb, started_utc, producing_code and so on. The five keys that actually differ live inside the BOOK's asm.assembly and NONE of them is in the set. So under the predicate as written the STOP fires, and it fires on stopwatch readings. Named as a gap in the declared set, not adjudicated here."
@@ -28032,6 +28033,10 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r383_the_landing_blocker_persists_and_the_gap_is_widening:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    said: "bash scripts/land_register_row.sh --row <rows> '(Q-MEM-338|Q-MEM-339|Q-MEM-340)' <msg> --dry printed LOCK HELD 13:01:26Z then HELD BEHIND_AND_NOT_FF; git rev-list --left-right --count gave 117 139; comm of the modified set against the HEAD-vs-origin diff set returned both files."
   r383_falsifier_b_resolves_on_CONTENT_every_data_table_equal:
     prov: CHECKED
     artifact: data/pm_5min/derived/be173_book_content_diff_20260908.json
