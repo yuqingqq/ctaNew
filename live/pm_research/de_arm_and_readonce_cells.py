@@ -246,6 +246,80 @@ def falsify() -> int:
            f"{str(prov.get('pipeline_commit'))[:12]} all="
            f"{prov.get('every_computing_module_matches_the_pipeline_commit')}")
 
+    # --- CELL 15: THE FREEZE CHECK TAKES THE BUILD PIN'S FORM ----------
+    # USER RULING, DE 331. A declaration naming a tip can never name the
+    # commit that CONTAINS it -- DA's re-declaration lands on top of the
+    # freeze, so the tip is always one past it, and tip-equality refuses
+    # the correct tree forever. Provenance is ANCESTRY; identity is
+    # DIGESTS; and a module does not vouch for itself.
+    import de_preflight_matrix as MX                       # noqa: E402
+    real_rows, real_frozen = V._declared_closure_digests, V._frozen_commit
+    tree_p = HERE.parents[1]   # the module's own tree, not a cwd
+    head_now = subprocess.run(["git", "-C", str(tree_p), "rev-parse", "HEAD"],
+                              capture_output=True, text=True).stdout.strip()
+    on_disk = {n: hashlib.sha256(
+        (tree_p / "live" / "pm_research" / n).read_bytes()).hexdigest()
+        for n in real_rows()}
+
+    def drive(rows, frozen):
+        V._declared_closure_digests = lambda: rows
+        V._frozen_commit = lambda: frozen
+        try:
+            V.assert_computing_modules_at_the_pipeline_commit()
+            return ""
+        except Exception as exc:                           # noqa: BLE001
+            return str(exc)
+        finally:
+            V._declared_closure_digests = real_rows
+            V._frozen_commit = real_frozen
+
+    frozen_decl = real_frozen()
+    admit_desc = drive(dict(on_disk), frozen_decl)
+    admit_same = drive(dict(on_disk), head_now)
+    one_moved = dict(on_disk, de_forward_evaluator_py=None)
+    one_moved.pop("de_forward_evaluator_py", None)
+    one_moved["de_forward_evaluator.py"] = "0" * 64
+    moved_out = drive(one_moved, frozen_decl)
+    stranger = drive(dict(on_disk), "af675ac" + "0" * 33)
+    # V2's row deliberately wrong: the valuation must ADMIT (it records,
+    # never asserts) and the LAUNCHER's row must refuse.
+    v2_wrong = dict(on_disk)
+    v2_wrong["de_settlement_control_run.py"] = "9" * 64
+    v2_in_module = drive(v2_wrong, frozen_decl)
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td)
+        for f in (HERE / "declarations").glob("de_arm_freeze_v*.json"):
+            (d / f.name).write_bytes(f.read_bytes())
+        cf = json.loads((HERE / "declarations" /
+                         Path(str(R.resolve_declaration_pins(
+                             HERE / "declarations")
+                             ["code_freeze_declaration"]["path"])).name
+                         ).read_text())
+        cf["VALUATION_CLOSURE_DIGESTS_AT_THE_FREEZE"][
+            "de_settlement_control_run.py"] = "9" * 64
+        (d / Path(str(R.resolve_declaration_pins(
+            HERE / "declarations")["code_freeze_declaration"]["path"])).name
+         ).write_text(json.dumps(cf))
+        v2_row_bad = MX.v2_matches_declaration(d)
+    v2_row_live = MX.v2_matches_declaration()
+
+    ck("DESCENDANT tip + the declared rows identical ADMITS",
+       admit_desc == "", admit_desc[:60] or f"head {head_now[:12]}")
+    ck("the SAME tip admits too (no tip-equality either way)",
+       admit_same == "", admit_same[:60] or f"frozen = head {head_now[:12]}")
+    ck("ONE declared row moved REFUSES by module name",
+       "VALUATION_CLOSURE_DIGEST_MOVED" in moved_out
+       and "de_forward_evaluator.py" in moved_out, moved_out[:64])
+    ck("a NON-DESCENDANT freeze commit REFUSES by name",
+       "VALUATION_TREE_IS_NOT_A_DESCENDANT_OF_THE_FROZEN_COMMIT" in stranger,
+       stranger[:60] or "ADMITTED A STRANGER")
+    ck("V2's own row is RECORDED, not asserted: the valuation admits",
+       v2_in_module == "", v2_in_module[:60] or "admits, as ruled")
+    ck("and the LAUNCHER's external row is what refuses it, by name",
+       str(v2_row_bad.get("status", "")).endswith(MX.V2_MISMATCH)
+       and v2_row_live.get("status") == "PASS",
+       f"{v2_row_bad.get('status')} | live {v2_row_live.get('status')}")
+
     # --- CELL 14: VERSION-ORDERED SUPERSESSION (USER RULING, DE 329) ---
     # Measured deadlock, 13:33Z: DA's code freeze v3 named the new commit,
     # my agree-or-refuse rule would have REFUSED the amendment pinning it,

@@ -334,6 +334,7 @@ def generation_gate(day: str, gen, derived=DERIVED) -> dict:
 
 
 COMPARATOR_MISMATCH = "COMPARATOR_ON_DISK_IS_NOT_THE_CERTIFIED_PRODUCER"
+V2_MISMATCH = "V2_ON_DISK_IS_NOT_THE_DECLARED_VALUATION_MODULE"
 
 
 def comparator_matches_cert(derived=DERIVED) -> dict:
@@ -358,6 +359,42 @@ def comparator_matches_cert(derived=DERIVED) -> dict:
                 "detail": f"on disk {got[:16]}, certificate names "
                           f"{str(want)[:16]}"}
     return {"status": "PASS", "sha256": got[:16]}
+
+
+def v2_matches_declaration(decl_dir=None) -> dict:
+    """V2'S DIGEST, CHECKED FROM OUTSIDE V2 (user ruling, DE 331).
+
+    A module cannot vouch for itself: the valuation's own freeze check
+    asserts the OTHER declared rows and merely RECORDS
+    de_settlement_control_run.py's. This row is where that digest is
+    actually verified -- the same job the certificate does for the
+    comparator, one row above.
+    """
+    d = Path(decl_dir) if decl_dir else HERE / "declarations"
+    f = HERE / "de_settlement_control_run.py"
+    if not f.is_file():
+        return _absent("V2")
+    try:
+        pin = (R.resolve_declaration_pins(d) or {}).get(
+            "code_freeze_declaration")
+    except Exception as exc:                              # noqa: BLE001
+        return _refuse(exc)
+    if not pin:
+        return _absent("code_freeze_declaration pin")
+    decl = d / Path(str(pin["path"])).name
+    if not decl.is_file():
+        return _absent("code freeze declaration")
+    want = (json.loads(decl.read_text()).get(
+        "VALUATION_CLOSURE_DIGESTS_AT_THE_FREEZE") or {}).get(
+            "de_settlement_control_run.py")
+    if not want:
+        return _absent("V2 row in the declaration")
+    got = _sha(f)
+    if want != got:
+        return {"status": f"WOULD_REFUSE:{V2_MISMATCH}",
+                "detail": f"on disk {got[:16]}, {decl.name} declares "
+                          f"{str(want)[:16]}"}
+    return {"status": "PASS", "sha256": got[:16], "declared_by": decl.name}
 
 
 def gates_for_day(day: str, *, certification, params_path,
@@ -425,6 +462,7 @@ def gates_for_day(day: str, *, certification, params_path,
     except Exception:                              # noqa: BLE001
         got = None
     row.update(book_acceptance(day, derived))
+    row["v2_is_the_declared_valuation_module"] = v2_matches_declaration()
     row["comparator_is_the_certified_producer"] = comparator_matches_cert(
         derived)
     row["comparator_digest"] = (

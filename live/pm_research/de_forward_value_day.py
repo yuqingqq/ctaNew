@@ -69,6 +69,14 @@ def _frozen_commit() -> str:
 # `!=`, refusing every valid record. A name that cannot hold the answer
 # must not exist.
 WRONG_TREE = "VALUATION_COMPUTING_MODULES_ARE_NOT_AT_THE_PIPELINE_COMMIT"
+NOT_DESCENDANT = "VALUATION_TREE_IS_NOT_A_DESCENDANT_OF_THE_FROZEN_COMMIT"
+ROW_MOVED = "VALUATION_CLOSURE_DIGEST_MOVED"
+ROW_ABSENT = "VALUATION_CLOSURE_MODULE_ABSENT"
+# A MODULE CANNOT VOUCH FOR ITSELF (USER RULING, DE 331). V2's digest is
+# RECORDED in the result and verified OUTSIDE, by the launcher's matrix row
+# against the same declaration -- the way the certificate vouches for the
+# comparator. Everything else in the declaration's rows is asserted here.
+SELF = "de_settlement_control_run.py"
 RELOCATED = "VALUATION_RAN_FROM_A_DIFFERENT_TREE_THAN_ITS_LAUNCHER_SELECTED"
 NO_PREFLIGHT = "VALUATION_RECORD_CARRIES_NO_PREFLIGHT_SO_NOTHING_WAS_CHECKED"
 COMPUTING_MODULES = ("de_settlement_control_run.py",
@@ -131,30 +139,43 @@ def assert_computing_modules_at_the_pipeline_commit(modules=None) -> dict:
     # admissible ONLY when every computing module is byte-identical to the
     # pin -- which the digest loop below proves. A descendant that moved a
     # computing module is refused exactly as a stranger would be.
+    # THE BUILD PIN'S FORM, NOT TIP EQUALITY (USER RULING, DE 331). A
+    # declaration naming a tip can never name the commit that contains it:
+    # DA's re-declaration lands ON TOP of the freeze, so the tip is always
+    # one past it, and a tip-equality check refuses the correct tree
+    # forever. Provenance is ANCESTRY; identity is DIGESTS.
     frozen = _frozen_commit()
-    descendant = head != frozen and subprocess.run(
-        ["git", "-C", tree, "merge-base", "--is-ancestor",
-         frozen, head], capture_output=True).returncode == 0
-    if head != frozen and not descendant:
+    rows = _declared_closure_digests()
+    if head != frozen and subprocess.run(
+            ["git", "-C", tree, "merge-base", "--is-ancestor", frozen, head],
+            capture_output=True).returncode != 0:
         raise ValuationRefused(
-            f"REFUSED {WRONG_TREE}: the computing modules resolved from "
-            f"{tree}, whose HEAD is {head[:12] or 'NONE'}, and the ruled "
-            f"pipeline commit is {frozen[:12]}. A valuation from "
-            f"the wrong tree produces a number from the wrong instrument "
-            f"and the book's provenance still verifies -- so nothing else "
-            f"would catch it.")
-    bad = []
-    for name, f in seen.items():
-        r = subprocess.run(["git", "-C", tree, "show",
-                            f"{frozen}:live/pm_research/{name}"],
-                           capture_output=True)
-        if r.returncode != 0 or hashlib.sha256(r.stdout).hexdigest() != _sha(f):
-            bad.append(name)
-    if bad:
+            f"REFUSED {NOT_DESCENDANT}: the computing modules resolved "
+            f"from {tree}, whose HEAD is {head[:12] or 'NONE'}, which does "
+            f"not descend from the declared freeze commit {frozen[:12]}. A "
+            f"valuation from an unrelated tree produces a number from the "
+            f"wrong instrument while the book's provenance still verifies "
+            f"-- so nothing else would catch it.")
+    moved, absent = [], []
+    for name, want_sha in sorted(rows.items()):
+        if name == SELF:
+            continue
+        f = Path(tree) / "live" / "pm_research" / name
+        if not f.is_file():
+            absent.append(name)
+        elif _sha(f) != want_sha:
+            moved.append(name)
+    if absent:
         raise ValuationRefused(
-            f"REFUSED {WRONG_TREE}: right tree, WRONG BYTES in {bad}. The "
-            f"HEAD check and the digest check catch different faults and "
-            f"neither substitutes for the other.")
+            f"REFUSED {ROW_ABSENT}: the declaration names {absent}, which "
+            f"the tree does not carry. A closure the declaration names and "
+            f"the tree lacks is not a closure.")
+    if moved:
+        raise ValuationRefused(
+            f"REFUSED {ROW_MOVED}: right tree, WRONG BYTES in {moved}, "
+            f"against the digests declared at {frozen[:12]}. Ancestry and "
+            f"digests catch different faults and neither substitutes for "
+            f"the other.")
     want = __import__("os").environ.get("DE_VALUATION_EXPECTED_TREE")
     if want and str(Path(want).resolve()) != tree:
         raise ValuationRefused(
@@ -207,25 +228,55 @@ def assert_record_carries_preflight(path) -> dict:
     return pf
 
 
+def _declared_closure_digests() -> dict:
+    """The frozen digest ROWS, from the same declaration as the commit."""
+    import de_multiday_gate1_runner as _R
+    d = HERE / "declarations"
+    pin = (_R.resolve_declaration_pins(d) or {}).get("code_freeze_declaration")
+    f = d / (Path(str(pin["path"])).name if pin
+             else "da_code_freeze_declaration_v1.json")
+    if not f.is_file():
+        raise ValuationRefused(
+            f"REFUSED {ROW_ABSENT}: the code freeze declaration is absent "
+            f"at {f}. Without it there are no rows to check against.")
+    rows = json.loads(f.read_text()).get(
+        "VALUATION_CLOSURE_DIGESTS_AT_THE_FREEZE") or {}
+    if not rows:
+        raise ValuationRefused(
+            f"REFUSED {ROW_ABSENT}: {f.name} carries no "
+            f"VALUATION_CLOSURE_DIGESTS_AT_THE_FREEZE. An empty row set "
+            f"would pass every module, which is the absence of the check.")
+    return {k: v for k, v in rows.items() if isinstance(v, str)
+            and len(v) == 64}
+
+
 def computing_module_provenance() -> dict:
-    """Each computing module's digest here AND at the frozen commit."""
+    """Each module's digest here AND as the declaration froze it.
+
+    V2's own row is RECORDED, never asserted (rule: a module cannot vouch
+    for itself). The launcher's matrix carries it as an external row.
+    """
     frozen = _frozen_commit()
+    rows = _declared_closure_digests()
     out, all_match = {}, True
-    for name in COMPUTING_MODULES:
-        here = _sha(HERE / name)
-        r = subprocess.run(["git", "-C", str(HERE),
-                            "show", f"{frozen}:live/pm_research/{name}"],
-                           capture_output=True)
-        there = (hashlib.sha256(r.stdout).hexdigest()
-                 if r.returncode == 0 else None)
-        match = (here == there)
-        all_match &= match
-        out[name] = {"digest_here": here[:16],
-                     "digest_at_pipeline_commit":
-                         (there[:16] if there else None),
-                     "identical": match}
+    for name, want_sha in sorted(rows.items()):
+        f = HERE / name
+        here = _sha(f) if f.is_file() else None
+        match = (here == want_sha)
+        if name != SELF:
+            all_match &= match
+        out[name] = {"digest_here": (here or "")[:16],
+                     "digest_at_the_freeze": want_sha[:16],
+                     "identical": match,
+                     "asserted_here": name != SELF}
     return {"pipeline_commit": frozen, "modules": out,
-            "every_computing_module_matches_the_pipeline_commit": all_match}
+            "every_computing_module_matches_the_pipeline_commit": all_match,
+            "self_recorded_not_asserted": {
+                "module": SELF, "digest": (_sha(HERE / SELF)
+                                           if (HERE / SELF).is_file()
+                                           else None),
+                "verified_by": "the launcher's pre-flight matrix row, "
+                               "against the same declaration"}}
 
 
 def runner_provenance() -> dict:
