@@ -1,0 +1,61 @@
+{
+ "protocol": "BE_ARTIFACT_SUPERSESSION_V1",
+ "as_of_utc": "2026-09-11T06:35:34Z",
+ "why": "coordinator ruling BE 134 option (a): 09-07 is rebuilt under the FIXED day-resolved era so the forward population is homogeneous. 27 of 09-07's 287 windows are gap-bearing under the fix and were built as gapless under the day-independent era.",
+ "rule": "13 -- the bytes are MOVED, never edited or deleted. Neither builder takes a revision parameter (the book does, so the book is NOT moved: it is rebuilt as a new revision FWD2 and FWD1 stays in place as provenance). The fragment guard's own message names this action: 'Move or delete it deliberately.'",
+ "moved": [
+  {
+   "from": "data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260907_btc.json",
+   "to": "data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260907_btc.superseded_20260911T063523Z.json",
+   "sha256": "e6c4742ee99046478631f7d06f36d650e5aab9529008499858841f2606db9622",
+   "bytes": 660307943,
+   "produced_by_be_gate1_fragment_digest": "6a08af4b17eaa069"
+  },
+  {
+   "from": "data/pm_5min/derived/phase2_state_tape_gate1_20260907_btc.json",
+   "to": "data/pm_5min/derived/phase2_state_tape_gate1_20260907_btc.superseded_20260911T063523Z.json",
+   "sha256": "51da0c6d6b8b4ad7f4db91a798284d8044db8ec2f33be3f331e28d35aeb51882",
+   "bytes": 1081514527
+  }
+ ],
+ "NOT_moved": [
+  {
+   "path": "data/pm_5min/derived/be_daybook_20260907_btc__L250ms__FWD1.pkl",
+   "why": "the book builder takes --artifact-revision, so the rebuild is FWD2 and FWD1 remains readable at its own path. DE's completed day-one valuation still points at a file that exists."
+  }
+ ],
+ "consequence_stated_plainly": "FWD1's receipt names its fragment and tape by digest, and those digests are preserved above -- but the PATHS it names no longer hold those bytes. Resolve FWD1's inputs through this record.",
+ "reversible": "yes -- move the two files back to their canonical names",
+ "RECEIPT_LOSS_DISCLOSED": {
+  "what": "the 09-07 fragment receipt was OVERWRITTEN by the rebuild. `be_gate1_fragment.main` does `dst.write_text(...)` at a fixed path with no version guard. `be_gate1_state_tape.main` versions its receipt to `.v<N>.json` and carries the comment 'A LANDED RECEIPT IS NEVER OVERWRITTEN (rule 13)'. The tape builder was fixed for exactly this defect; the fragment builder was not.",
+  "the_file_was_untracked": "not in git -- `git ls-files --error-unmatch` returns 'Did you forget to git add?' -- so there is no version history to recover it from either.",
+  "NOT_fixed_now_and_why": "`be_gate1_fragment.py` is PINNED at 7ed5a90 for the forward test. Changing its bytes mid-test would break the pin for the remaining days, which is a worse defect than the one it repairs. Filed for after the test.",
+  "all_that_survives_of_the_old_receipt": {
+   "source": "read into the BE 133 session transcript before the rebuild; this is the only copy",
+   "builder_commit": "010d63d17220",
+   "import_closure_modules": {
+    "be_data_root.py": "c82451a61758f2b1990a11fef06d4fea8e1ef94f70e80c1aaf43d87e4cc5c6bd",
+    "be_gate1_fragment.py": "6a08af4b17eaa06991a72581a34d776712d89d4f85ab7f5ae47d9fc451980f73",
+    "be_rule22.py": "8442d0de697b775edf8940a9de3fff191331d719bc8770436"
+   },
+   "import_closure_first_seen_at": "all three at 'be_gate1_fragment import'",
+   "resources": {
+    "wall_s": 664.8,
+    "peak_rss_gb": 2.073
+   },
+   "fields_NOT_recovered": "n_rows, the population slugs_sha256, the build statuses, and everything else the receipt carried"
+  },
+  "the_FRAGMENT_ITSELF_is_intact": "only the receipt was lost. The old fragment's bytes are preserved at the superseded path with sha256 e6c4742ee99046478631f7d06f36d650e5aab9529008499858841f2606db9622, 660307943 bytes -- so the population can be re-derived from it."
+ },
+ "rebuilt_under_the_fix": {
+  "fragment_sha256": "3d38e3eef9d8690c3b69ff5b6daa3bb821eec5a2d34fb5b2b8d87d9d4de433d3",
+  "bytes": 660075638,
+  "n_rows": 594821,
+  "n_windows": 287,
+  "slugs_sha256": "ca79c76a90823773",
+  "wall_s": 664.6,
+  "peak_rss_gb": 2.088,
+  "delta_vs_superseded_bytes": -232305,
+  "reading": "the digest MOVED and the file is 232,305 bytes smaller, so the era fix changed the fragment -- consistent with 27 of 287 windows carrying gaps under the fix and none under the bug"
+ }
+}

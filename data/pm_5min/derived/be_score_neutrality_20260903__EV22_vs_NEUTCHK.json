@@ -1,0 +1,134 @@
+{
+ "protocol": "BE_SCORE_NEUTRALITY_V2_REVIEW173_BAR",
+ "claim": "SCORING_PATH_CHANGED_BUT_DECISION_EQUIVALENT_ON_MEASURED_DAYS",
+ "identity": {
+  "day": "20260903",
+  "coin": "btc",
+  "placement_latency_ms": 250.0
+ },
+ "bar": "REVIEW 173 A-E; REL_BAR is a REPORTING threshold, not a pass criterion; the pass criterion is A+C",
+ "REL_BAR_reporting_only": 1e-09,
+ "per_arm": {
+  "CONDVALUE_X_SKEW": {
+   "head": "q1_arrival_composed_lgbm",
+   "theta": 0.32450609461933483,
+   "A_n_flips": 0,
+   "A_flip_examples": [],
+   "B_delta_max_abs": 0.0,
+   "B_delta_max_rel": 0.0,
+   "B_delta_max_above_REL_BAR": false,
+   "C_m_min": 1.1564941783226423e-05,
+   "C_ratio_m_min_over_delta_max": null,
+   "C_occupancy": {
+    "within_10^0_x_delta_max": null,
+    "within_10^1_x_delta_max": null,
+    "within_10^2_x_delta_max": null,
+    "within_10^3_x_delta_max": null
+   },
+   "C_n_exactly_at_theta": 0,
+   "C_n_generations": 232307,
+   "D_n_generations_compared": 232307,
+   "D_n_generations_with_a_score": 232307,
+   "D_n_reference_generations_in_book": 313140,
+   "D_n_reference_generations_NOT_SCORED_BY_THE_ASSEMBLY": 80833,
+   "D_fraction_of_the_reference_certified": 0.7418630644440186,
+   "D_rows": 350472,
+   "D_n_rows_with_a_null_score": 0,
+   "D_reconciles": true,
+   "D_WHOSE_SHORTFALL": "the ASSEMBLY's, not this comparator's: a reference generation no scored key names (GENERATION_NOT_SCORED) carries no score for any threshold to compare, so it cannot flip. Counted here as a status (rule 4), never absorbed.",
+   "delta_quantiles": null,
+   "strength": "BIT_IDENTICAL"
+  },
+  "HAZARD_OVER_SKEWED_REF": {
+   "head": "incumbent_linear_d",
+   "theta": 0.43525926488298716,
+   "A_n_flips": 0,
+   "A_flip_examples": [],
+   "B_delta_max_abs": 0.0,
+   "B_delta_max_rel": 0.0,
+   "B_delta_max_above_REL_BAR": false,
+   "C_m_min": 1.6500863170787472e-05,
+   "C_ratio_m_min_over_delta_max": null,
+   "C_occupancy": {
+    "within_10^0_x_delta_max": null,
+    "within_10^1_x_delta_max": null,
+    "within_10^2_x_delta_max": null,
+    "within_10^3_x_delta_max": null
+   },
+   "C_n_exactly_at_theta": 0,
+   "C_n_generations": 232307,
+   "D_n_generations_compared": 232307,
+   "D_n_generations_with_a_score": 232307,
+   "D_n_reference_generations_in_book": 313140,
+   "D_n_reference_generations_NOT_SCORED_BY_THE_ASSEMBLY": 80833,
+   "D_fraction_of_the_reference_certified": 0.7418630644440186,
+   "D_rows": 350472,
+   "D_n_rows_with_a_null_score": 0,
+   "D_reconciles": true,
+   "D_WHOSE_SHORTFALL": "the ASSEMBLY's, not this comparator's: a reference generation no scored key names (GENERATION_NOT_SCORED) carries no score for any threshold to compare, so it cannot flip. Counted here as a status (rule 4), never absorbed.",
+   "delta_quantiles": null,
+   "strength": "BIT_IDENTICAL"
+  }
+ },
+ "POPULATION_THIS_CERTIFIES": {
+  "unit": "reference generations CARRYING A SCORE for the arm's head",
+  "n_certified": {
+   "CONDVALUE_X_SKEW": 232307,
+   "HAZARD_OVER_SKEWED_REF": 232307
+  },
+  "n_reference_generations": {
+   "CONDVALUE_X_SKEW": 313140,
+   "HAZARD_OVER_SKEWED_REF": 313140
+  },
+  "n_not_scored_by_the_assembly": {
+   "CONDVALUE_X_SKEW": 80833,
+   "HAZARD_OVER_SKEWED_REF": 80833
+  },
+  "THE_LIMIT": "decision-equivalence is certified over the SCORED population only. An unscored generation has no score for theta to compare and cannot flip, so it is outside the claim rather than evidence for it. A REQUIRED FIELD because a limit that lives in prose gets summarised away (rule 35)."
+ },
+ "compared_books": {
+  "old": {
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc__L250ms__EV22.pkl",
+   "sha256": "364f733dfd02ef0f5d73f5ea737fc89d2d689c9bf92060c13e2dbead85909577",
+   "digest_is_of_the_unpickled_buffer": true
+  },
+  "new": {
+   "path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260903_btc__L250ms__NEUTCHK.pkl",
+   "sha256": "91c9293f1624be587baffd9dafa15375b167cf2dcd1b93ed225a67a5fb68825f",
+   "digest_is_of_the_unpickled_buffer": true
+  }
+ },
+ "comparison_receipts": {
+  "old": {
+   "path": "data/pm_5min/derived/be_daybook_receipt_20260903_btc__L250ms__EV22.json",
+   "sha256": "70043b2ce014e64e0ec78cbbadfac1c6aa8bb8b9ebb22dc6dbb30f2cf9cee0b2",
+   "book_sha256": "364f733dfd02ef0f5d73f5ea737fc89d2d689c9bf92060c13e2dbead85909577",
+   "builder_commit": "941e68899bcf2aaa46d4b1127b1258977a964d8e",
+   "identity": {
+    "day": "20260903",
+    "coin": "btc",
+    "placement_latency_ms": 250.0
+   }
+  },
+  "new": {
+   "path": "data/pm_5min/derived/be_daybook_receipt_20260903_btc__L250ms__NEUTCHK.json",
+   "sha256": "cbd36ad6b3b1ea929674e1cdc0fc6260f1e1f23bafbf1c80a46be012f16dfb37",
+   "book_sha256": "91c9293f1624be587baffd9dafa15375b167cf2dcd1b93ed225a67a5fb68825f",
+   "builder_commit": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+   "identity": {
+    "day": "20260903",
+    "coin": "btc",
+    "placement_latency_ms": 250.0
+   }
+  }
+ },
+ "producer": {
+  "path": "/home/yuqing/ctaNew-wt-be/live/pm_research/be_score_neutrality.py",
+  "sha256": "c5c1fc0ae126a3f786f495937f4caf2869bb383077d98d4b9510b207f7e5cc7e"
+ },
+ "n_flips_overall": 0,
+ "verdict": "SUPPORTED_ON_THIS_DAY",
+ "falsification_clause": "any decision flip, on any arm, on any compared day, REFUTES decision-equivalence -- it does not become 'one in 24,000'",
+ "WHAT_THIS_DOES_NOT_LICENSE": "that any forward day's decisions are unchanged -- m is a property of the day and the forward days' m values do not exist yet; that the modules are equivalent in general; or any relaxation of BOOK_BUILT_BY_DIFFERENT_SCORING_CODE, which fires on code identity and is firing correctly",
+ "E_provenance_of_the_old_side": "the existing book's STORED per-generation values; no re-execution of the old code, so no environment difference enters the measurement"
+}
