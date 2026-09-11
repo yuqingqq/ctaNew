@@ -63,6 +63,8 @@ GENERATION_BAND = (241_000, 429_000)
 GENERATION_BAND_SOURCE = ("09-07 n_reference_generations 321925 and 09-08 "
                           "342942, widened 25% either side; it will narrow "
                           "as more days land")
+# measured: 321925/594821 = 0.5412 (09-07), 342942/651410 = 0.5265 (09-08)
+GENS_PER_ROW = 0.5339
 
 
 def _first(doc, key):
@@ -116,13 +118,7 @@ def book_acceptance(day: str, derived=DERIVED) -> dict:
         {"status": "WOULD_REFUSE:BOOK_WINDOW_COUNT_NOT_DECLARED",
          "detail": f"n_windows {got} != {want}"})
     gen = _first(doc, "n_reference_generations")
-    lo, hi = GENERATION_BAND
-    row["book_generations"] = (
-        {"status": "PASS", "n_reference_generations": gen,
-         "band": list(GENERATION_BAND), "band_source": GENERATION_BAND_SOURCE}
-        if isinstance(gen, int) and lo <= gen <= hi else
-        {"status": "WOULD_REFUSE:BOOK_GENERATION_COUNT_OUT_OF_BAND",
-         "detail": f"{gen} outside {GENERATION_BAND}"})
+    row["book_generations"] = generation_gate(day, gen, derived)
     bc = _first(doc, "builder_commit")
     row["book_builder_commit"] = (
         _pass() if bc == PIPELINE_BUILD_COMMIT else
@@ -150,6 +146,70 @@ def book_acceptance(day: str, derived=DERIVED) -> dict:
             {"status": "WOULD_REFUSE:BOOK_OLDER_THAN_ITS_TAPE",
              "detail": f"book {bt:.0f} <= tape {tt:.0f}"})
     return row
+
+
+GEN_PER_ROW_TOLERANCE = 0.05     # a declared ROUNDING, not a fitted band
+
+
+def generation_gate(day: str, gen, derived=DERIVED) -> dict:
+    """EXPECTED generations FROM THE DAY'S OWN TAPE, not from a band.
+
+    THE IDENTITY, and where each term is read:
+        expected = fragment_rows(day) x gens_per_row
+        fragment_rows  <- be_gate1_fragment_receipt_<day>_btc.json /build/n_rows
+        gens_per_row   <- the SAME ratio on the OTHER built days
+        observed       <- the book receipt's n_reference_generations
+
+    AND ITS LIMIT, STATED: `gens_per_row` is still cross-day (0.5412 on
+    09-07, 0.5265 on 09-08 -- a 2.7% spread), so this is a per-day-scaled
+    check, not the closed identity REVIEW 158 asked for. THE TERM THAT
+    WOULD CLOSE IT -- the tape's ADMISSIBLE GENERATIONS PER WINDOW -- IS
+    NOT PUBLISHED BY ANY RECEIPT: not the book's, not the fragment's, not
+    the state tape's (checked; the only per-window field anywhere is
+    n_windows). Reading it requires unpickling the book, which this gate
+    must not do, or a new BE artifact. That is a ROUTED GAP, not a
+    tolerance I get to widen.
+
+    So: the tape-scaled expectation is PRIMARY and moves with the day's own
+    tape; the fitted band survives only as a LABELLED SECONDARY.
+    """
+    compact = day.replace("-", "")
+    frag = derived / f"be_gate1_fragment_receipt_{compact}_btc.json"
+    if not isinstance(gen, int):
+        return {"status": "WOULD_REFUSE:BOOK_GENERATION_COUNT_ABSENT"}
+    out = {"n_reference_generations": gen}
+    if frag.is_file():
+        rows = _first(json.loads(frag.read_text()), "n_rows")
+        if isinstance(rows, int) and rows:
+            expected = rows * GENS_PER_ROW
+            rel = abs(gen - expected) / expected
+            out.update({
+                "identity": "expected = fragment_rows x gens_per_row",
+                "fragment_rows": rows, "gens_per_row": GENS_PER_ROW,
+                "expected": round(expected), "relative_error": round(rel, 4),
+                "tolerance": GEN_PER_ROW_TOLERANCE,
+                "term_that_would_close_the_identity":
+                    "the tape's ADMISSIBLE GENERATIONS PER WINDOW -- not "
+                    "published by any receipt; routed, not widened"})
+            if rel > GEN_PER_ROW_TOLERANCE:
+                return {**out, "status":
+                        "WOULD_REFUSE:BOOK_GENERATIONS_OFF_THE_TAPE_"
+                        "SCALED_EXPECTATION"}
+        else:
+            out["identity"] = "fragment receipt carries no n_rows"
+    else:
+        out["identity"] = "INPUT_ABSENT:fragment_receipt"
+    lo, hi = GENERATION_BAND
+    out["secondary_band"] = {"band": list(GENERATION_BAND),
+                             "source": GENERATION_BAND_SOURCE,
+                             "inside": bool(lo <= gen <= hi),
+                             "role": "LABELLED SECONDARY -- fitted to two "
+                                     "days, 1.78x wide, cannot see a "
+                                     "composition change at constant count"}
+    if not out["secondary_band"]["inside"]:
+        return {**out, "status":
+                "WOULD_REFUSE:BOOK_GENERATION_COUNT_OUT_OF_BAND"}
+    return {**out, "status": "PASS"}
 
 
 def gates_for_day(day: str, *, certification, params_path,
@@ -392,6 +452,75 @@ def falsify() -> int:
            "WOULD_REFUSE:BOOK_ERA_NOT_DECLARED")
         ck("  and the other acceptance rows still evaluate independently",
            r["book_windows"]["status"] == "PASS")
+
+    # --- DE 280: EVERY acceptance gate two-armed -----------------------
+    # REV 158: a gate that always returns PASS is indistinguishable from a
+    # working one -- nothing visible breaks. Each cell below drives the
+    # known-bad AND the known-good, so a gate that stopped firing fails
+    # here rather than going quiet in production.
+    import tempfile as _tf, shutil as _sh
+    good = {"selection": {"era": DECLARED_ERA},
+            "assembly_evidence": {"n_windows": 288},
+            "asm": {"n_reference_generations": 347788},
+            "producing_code": {"builder_commit": PIPELINE_BUILD_COMMIT}}
+    with _tf.TemporaryDirectory() as td:
+        d = Path(td)
+        day, compact = "2026-09-09", "20260909"
+        rp = d / f"be_daybook_receipt_{compact}_btc__L250ms__FWD1.json"
+        (d / f"be_daybook_{compact}_btc__L250ms__FWD1.pkl").touch()
+        (d / f"be_gate1_state_tape_receipt_{compact}_btc.json").write_text("{}")
+        (d / f"be_gate1_fragment_receipt_{compact}_btc.json").write_text(
+            json.dumps({"build": {"n_rows": 651410}}))
+        (d / f"be137_gap_windows_{compact}.json").write_text(
+            json.dumps({"n_windows": 43}))
+        (d / f"da_blackout_mask_{compact}.json").write_text("{}")
+        import copy, time, os
+        os.utime(d / f"be_daybook_{compact}_btc__L250ms__FWD1.pkl",
+                 (time.time() + 60, time.time() + 60))
+        rp.write_text(json.dumps(good))
+        base = book_acceptance(day, d)
+        for gate in ("book_era", "book_windows", "book_generations",
+                     "book_builder_commit", "gap_windows_artifact",
+                     "mask_referenced", "book_newer_than_tape"):
+            ck(f"{gate}: PASSES on the known-good",
+               base[gate]["status"] == "PASS")
+        # --- the known-bad arm, one mutation per gate -------------------
+        muts = {
+            "book_era": (lambda g: g["selection"].update({"era": "clob_v3_1"}),
+                         "BOOK_ERA_NOT_DECLARED"),
+            "book_windows": (lambda g: g["assembly_evidence"].update(
+                {"n_windows": 250}), "BOOK_WINDOW_COUNT_NOT_DECLARED"),
+            "book_generations": (lambda g: g["asm"].update(
+                {"n_reference_generations": int(347788 * 0.8)}),
+                "BOOK_GENERATIONS_OFF_THE_TAPE_SCALED_EXPECTATION"),
+            "book_builder_commit": (lambda g: g["producing_code"].update(
+                {"builder_commit": "0" * 40}),
+                "BOOK_NOT_BUILT_AT_THE_BUILD_PIN"),
+        }
+        for gate, (mutate, name) in muts.items():
+            g = copy.deepcopy(good)
+            mutate(g)
+            rp.write_text(json.dumps(g))
+            r = book_acceptance(day, d)
+            ck(f"{gate}: REFUSES {name} on the known-bad",
+               r[gate]["status"] == f"WOULD_REFUSE:{name}")
+        rp.write_text(json.dumps(good))
+        (d / f"be137_gap_windows_{compact}.json").write_text(json.dumps({}))
+        ck("gap_windows_artifact: REFUSES a file with no count",
+           book_acceptance(day, d)["gap_windows_artifact"]["status"]
+           == "WOULD_REFUSE:GAP_WINDOW_ARTIFACT_HAS_NO_COUNT")
+        (d / f"be137_gap_windows_{compact}.json").write_text(
+            json.dumps({"n_windows": 43}))
+        (d / f"da_blackout_mask_{compact}.json").unlink()
+        ck("mask_referenced: ABSENT when the mask is gone (not a refusal)",
+           book_acceptance(day, d)["mask_referenced"]["status"]
+           == "INPUT_ABSENT:mask")
+        (d / f"da_blackout_mask_{compact}.json").write_text("{}")
+        os.utime(d / f"be_daybook_{compact}_btc__L250ms__FWD1.pkl",
+                 (time.time() - 600, time.time() - 600))
+        ck("book_newer_than_tape: REFUSES a book older than its tape",
+           book_acceptance(day, d)["book_newer_than_tape"]["status"]
+           == "WOULD_REFUSE:BOOK_OLDER_THAN_ITS_TAPE")
 
     print(f"\n{ok}/{cells} cells pass")
     return 0 if ok == cells else 1
