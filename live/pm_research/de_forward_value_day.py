@@ -34,6 +34,8 @@ import de_settlement_control_run as SC    # noqa: E402
 PROTOCOL = "P003_DE_FORWARD_VALUE_DAY_V1"
 PIPELINE_COMMIT = "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c"
 WRONG_TREE = "VALUATION_COMPUTING_MODULES_ARE_NOT_AT_THE_PIPELINE_COMMIT"
+RELOCATED = "VALUATION_RAN_FROM_A_DIFFERENT_TREE_THAN_ITS_LAUNCHER_SELECTED"
+NO_PREFLIGHT = "VALUATION_RECORD_CARRIES_NO_PREFLIGHT_SO_NOTHING_WAS_CHECKED"
 COMPUTING_MODULES = ("de_settlement_control_run.py",
                      "de_settlement_control_aggregate.py",
                      "de_forward_evaluator.py",
@@ -108,8 +110,42 @@ def assert_computing_modules_at_the_pipeline_commit(modules=None) -> dict:
             f"REFUSED {WRONG_TREE}: right tree, WRONG BYTES in {bad}. The "
             f"HEAD check and the digest check catch different faults and "
             f"neither substitutes for the other.")
+    want = __import__("os").environ.get("DE_VALUATION_EXPECTED_TREE")
+    if want and str(Path(want).resolve()) != tree:
+        raise ValuationRefused(
+            f"REFUSED {RELOCATED}: the launcher selected {want} and the "
+            f"computing modules actually resolved from {tree}. "
+            f"`be_heavy_run.sh` hardcodes BE_WORKTREE and cds to it, which "
+            f"silently relocated the 09-07 valuation and left NO ERROR -- "
+            f"only a missing field in the record. Prevention can fail; "
+            f"this is the detection.")
     return {"tree": tree, "head": head, "n_modules_checked": len(seen),
+            "launcher_expected_tree": want,
             "resolved_files": {k: str(v) for k, v in seen.items()}}
+
+
+def assert_record_carries_preflight(path) -> dict:
+    """A RECORD WITHOUT A PRE-FLIGHT REFUSES -- absence is not a pass.
+
+    On 09-07 the pre-flight never ran, and the ONLY trace was the ABSENCE
+    of `PREFLIGHT_RESOLVED_TREE` from the emitted record. Absence read
+    exactly like a passing check, which is this session's dominant failure
+    mode arriving inside our own guard. So absence is now a named refusal
+    that any reader -- DA, REV, a later me -- can drive over any record."""
+    rec = json.loads(Path(path).read_text())
+    pf = rec.get("PREFLIGHT_RESOLVED_TREE")
+    if not pf:
+        raise ValuationRefused(
+            f"REFUSED {NO_PREFLIGHT}: {Path(path).name} carries no "
+            f"PREFLIGHT_RESOLVED_TREE. Nothing established which tree "
+            f"computed these numbers. This is NOT a pass -- it is the "
+            f"absence of the check, which is indistinguishable from one "
+            f"unless it refuses.")
+    if pf.get("head") != PIPELINE_COMMIT:
+        raise ValuationRefused(
+            f"REFUSED {WRONG_TREE}: the record's pre-flight names head "
+            f"{str(pf.get('head'))[:12]}, not the pipeline commit.")
+    return pf
 
 
 def computing_module_provenance() -> dict:
