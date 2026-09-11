@@ -36,6 +36,12 @@ PROTOCOL = "P003_DE_DAY_RECORD_V1"
 DERIVED = Path("/home/yuqing/ctaNew/data/pm_5min/derived")
 NO_CELL = "DAY_RECORD_CELL_ABSENT"
 NO_STAGE0 = "STAGE0_VERDICT_ABSENT"
+#: DE 355: the evaluator REFUSES to publish a cent figure whose winner
+#: source was never verified -- and my assembler stepped past that guard by
+#: emitting the record without the disclosure at all. A record now carries
+#: either the verification or this status; it cannot carry neither.
+NO_VERIFIED_WINNER_RECEIPT = "NO_VERIFIED_WINNER_RECEIPT"
+NO_DISCLOSURE = "SETTLEMENT_SOURCE_DISCLOSURE_ABSENT"
 ARM_MISMATCH = "DAY_RECORD_ARMS_DISAGREE_ON_THE_BOOK"
 
 
@@ -100,6 +106,53 @@ def stage0_evidence(day: str, derived: Path = DERIVED,
         f"indistinguishable from a gate that never ran.")
 
 
+def settlement_source(day: str, cells: dict, derived: Path = DERIVED) -> dict:
+    """THE DISCLOSURE, CARRIED EITHER WAY (DE 355).
+
+    `de_forward_evaluator.settlement_source_disclosure` refuses when the
+    day has no point-estimate receipt, with the reason: a cent figure
+    whose winner source was never verified MUST SAY SO. My stage-3
+    assembler caught that refusal and emitted the record anyway, with no
+    disclosure field -- the guard was live and the assembler walked past
+    it, which is the class this programme keeps naming.
+
+    So: the verification when a receipt exists, and a NAMED STATUS when it
+    does not. Never absence.
+    """
+    arms = sorted(cells)
+    ws = {(cells[a]["result"].get("winner_source") or {}).get("sha256")
+          for a in arms}
+    ws_path = {(cells[a]["result"].get("winner_source") or {}).get("path")
+               for a in arms}
+    try:
+        disclosure = EV.settlement_source_disclosure(
+            [day], derived, winner_sources={day: (list(ws)[0]
+                                                  if len(ws) == 1 else None)})
+        return {"status": "VERIFIED", "disclosure": disclosure,
+                "winner_source_sha256": sorted(x for x in ws if x),
+                "carried_by": "de_forward_evaluator."
+                              "settlement_source_disclosure"}
+    except Exception as exc:                                # noqa: BLE001
+        return {
+            "status": NO_VERIFIED_WINNER_RECEIPT,
+            "winner_source_sha256": sorted(x for x in ws if x),
+            "path": sorted(x for x in ws_path if x),
+            "what_was_not_verified":
+                "the venue winner record behind every cent figure in this "
+                "record was NOT checked against the captured Chainlink "
+                "boundary: no p003_de_point_estimate_day_<day>_L250ms__*"
+                " receipt exists for this day, so no instrument performed "
+                "that verification. The figures are VENUE-RECORD values "
+                "and are NOT final for quotation.",
+            "refusal_seen": str(exc)[:300],
+            "produced_by_when_it_exists":
+                "DA's settlement verifier (fair-value lane step 1) is the "
+                "producer of this receipt; when it lands this status "
+                "becomes a real verification and nothing here changes "
+                "shape",
+        }
+
+
 def four_fields(result: dict) -> dict:
     """THE FOUR FIELDS PER ARM, at their canonical names."""
     return {"observed_D_cents": result["observed_D_cents"],
@@ -121,6 +174,11 @@ def build(day: str, cells_dir: Path, n_declared: int = 7,
           reproduction_of: Path = None) -> dict:
     cells = cells_for(day, cells_dir)
     stage0 = stage0_evidence(day, derived, log)
+    disclosure = settlement_source(day, cells, derived)
+    if not disclosure.get("status"):
+        raise SystemExit(
+            f"REFUSED {NO_DISCLOSURE}: {day} -- a record may carry the "
+            f"verification or the named absence of it, never neither.")
     arms = sorted(cells)
     cohort = CD.combine({a: cells[a]["result"] for a in arms},
                         ledger=None, day_start=0, day_end=0)
@@ -216,6 +274,7 @@ def build(day: str, cells_dir: Path, n_declared: int = 7,
             for a in arms},
         "n_draws": first["n_draws"], "seed_cli": 0,
         "stage0": stage0,
+        "settlement_source": disclosure,
         "book_sha256_field": first.get("book_sha256"),
         "winner_source_sha256_field": (
             (first.get("winner_source") or {}).get("sha256")),
@@ -371,6 +430,49 @@ def falsify() -> int:
            nxt.name == "rec_v2.json" and nxt2.name == "rec_v3.json"
            and prior["path"] == str(f) and f.is_file(),
            f"{nxt.name} then {nxt2.name}")
+
+    # --- DE 355: THE DISCLOSURE, BOTH WAYS ----------------------------
+    import shutil as _sh
+    real_cells = cells_for("2026-09-09", DERIVED / "fwd_v2")
+    absent = settlement_source("2026-09-09", real_cells, DERIVED)
+    ck("with NO receipt the record carries the named status, and emits",
+       absent["status"] == NO_VERIFIED_WINNER_RECEIPT
+       and absent["winner_source_sha256"]
+       and "NOT final for quotation" in absent["what_was_not_verified"],
+       f"{absent['status']} ws {absent['winner_source_sha256'][0][:16]}")
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td)
+        ws = (real_cells["CONDVALUE_X_SKEW"]["result"]
+              .get("winner_source") or {})
+        slug = "btc-updown-5m-1789034400"
+        (d / ("p003_de_point_estimate_day_20260909_L250ms__"
+              "20260911T000000Z.json")).write_text(json.dumps({
+                  "day": "2026-09-09",
+                  "winner_source": {
+                      "sha256": ws.get("sha256"),
+                      "is_final_for_quotation": True,
+                      "chainlink_verification": {
+                          "finality": {"is_final": True},
+                          "per_slug": {slug: {"status": "VERIFIED_AGREE"}}}}}))
+        present = settlement_source("2026-09-09", real_cells, d)
+    ck("with a receipt PRESENT the verification itself is carried",
+       present["status"] == "VERIFIED"
+       and present["disclosure"]["per_day"]["2026-09-09"]["counts"][
+           "VERIFIED_AGREE"] == 1
+       and present["disclosure"]["every_day_final_for_quotation"] is True,
+       f"{present['status']} "
+       f"receipt {present['disclosure']['per_day']['2026-09-09']['receipt']}")
+    ck("  and the carried verification names the SAME winner source the "
+       "cells used",
+       present["disclosure"]["per_day"]["2026-09-09"][
+           "winner_source_sha256"] == absent["winner_source_sha256"][0],
+       str(present["disclosure"]["per_day"]["2026-09-09"][
+           "winner_source_sha256"])[:16])
+    rec = build("2026-09-09", DERIVED / "fwd_v2")
+    ck("no record can exist without one of the two",
+       rec["settlement_source"]["status"] in
+       (NO_VERIFIED_WINNER_RECEIPT, "VERIFIED"),
+       rec["settlement_source"]["status"])
 
     import fnmatch as _fn
     import glob as _g
