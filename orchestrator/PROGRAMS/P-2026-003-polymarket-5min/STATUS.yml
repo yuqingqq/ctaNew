@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T07:33:39Z (MEM ROUND 370 -- THE EMIT IS REAL AND DRIVEN 8/8 BY TWO HANDS, AND ITS INPUT
+  DOES NOT EXIST YET. I read the constants: the WHOLE BAND STRUCTURE IS NAMED LITERALS in
+  the first thirty lines -- 110.0, 18.4, 1036.5, 1e-6, 1.0 -- which CONFIRMS THE CLOSE I
+  MADE AT ROUND 369 from the other direction, and the coordinator now attributes their
+  earlier 'not found' to THEIR OWN GREP TRUNCATING AT head -12: the absence was in the
+  instrument, not the file. The waiter is keyed ON THE RESULT FILE, not a unit name,
+  because keying on the unit LATCHED ONTO THE SUPERSEDED ATTEMPT -- 'the file is the
+  precondition; the unit name is a label' -- which also closes my round-369 open item, the
+  invoking unit. BUT THE DECOMPOSITION DOES NOT EXIST: the emit reads RESULT artifacts that
+  carry NO PER-WINDOW CONTRIBUTIONS, so every row is 0.0 BY ABSENCE OF INPUT and the
+  residual trips the halt. READ THAT HALT AS 'DECOMPOSITION MISSING', NEVER AS 'THE DAY
+  MOVED' -- and note the instrument NAMES ITS OWN MISSING INPUT, which is what separates it
+  from the five failures catalogued tonight. I READ THE MASKS MYSELF: 09-07 n_masked 1,
+  09-08/09/10 ALL ZERO, so THE ROW-REMOVING CONSEQUENCE IS CONFINED TO DAY ONE. And DE v9's
+  key fix matters because A MIS-KEYED LOOKUP DOES NOT ERROR, IT FALLS THROUGH TO THE OLD
+  VALUE. tip 77fcb80)
   2026-09-11T07:29:06Z (MEM ROUND 369 -- THE POST-PROCESSOR EXISTS AND I GREPPED THE ORIGIN BLOB: every
   named token is in af675ac, authored 07:25:05, ahead of the book and ~90 min ahead of the
   re-valuation. AND MY ROUND-368 GREP WAS CORRECT WHEN IT RAN: 07:24:06, one to two and a
@@ -100,21 +116,6 @@ updated: >-
   diagnostic, not a compromised one. AND RULE 11 HOLDS BECAUSE NO PER-WINDOW NUMBER EXISTS:
   the failure that voided the instrument is the same fact that preserves the
   pre-registration. tip 845e2b6)
-  2026-09-11T07:17:04Z (MEM ROUND 367 -- RULE 46 LANDED AND I DROVE IT: systemctl show --value returns
-  SYSTEMD'S ORDER, NOT YOURS. Asking SubState, LoadState, Result returns success, loaded,
-  dead -- RESULT, LOADSTATE, SUBSTATE -- so THE FIRST VALUE BACK IS THE LAST ONE ASKED FOR;
-  and asking ActiveState then Result returns 'success inactive', so a positional read TAKES
-  THE EXIT RESULT AS THE ACTIVE STATE. Two instances in one night, one false success and one
-  false failure. AND THE REASON IT HAPPENED TWICE IS THE LINE TO KEEP: the first was in a
-  seat's own notes AT 04:00 and did not reach another seat's script at 07:10 -- FILING IS
-  NOT RETENTION; A RULE IN THE PROTOCOL REACHES THE NEXT SCRIPT, A NOTE IN A PANE DOES NOT.
-  That is DA 221 WITH A REMEDY ATTACHED. My own usage was safe in both forms, which I
-  CHECKED rather than assumed -- and incidental before round 351, deliberate only after.
-  THE USER'S CONDITION IS MET and the amendment stands unconditionally; the robustness leg
-  NEITHER BLOCKS HAZARD NOR RESCUES CONDVALUE. REVIEW 186 wrote the re-valuation's READING
-  RULES WITH ZERO CELLS VISIBLE, including a sign-change rule that DELIBERATELY DISBELIEVES
-  A RESULT THAT WOULD HELP THE ARM. The eight stranded REV filings are on origin via rule
-  45. tip 6f2d431)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -286,6 +287,16 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 370, the emit is real, its input is not ---
+  THE_EMIT_IS_DRIVEN_8_OF_8_BY_TWO_HANDS_AND_ITS_BANDS_ARE_LITERALS_AT_THE_TOP_OF_THE_FILE: "DE drove 8/8 and pasted them; the coordinator drove the same 8/8 FROM THE ORIGIN BLOB IN A SEPARATE DIRECTORY with identical output -- 111c window fires on the window arm, 108c aggregate silent, 111c flat fires on the aggregate arm, unreadable input REFUSES BY NAME, residual at or above 1c HALTS with the declaration's refusal name, residual below 1e-6c is rounding, a sign change halts AND NAMES THE ARM, and the table carries the DECLARED spine. I read the constants myself: CONCENTRATION_BAR_CENTS 110.0, REFERENCE_INTERVAL_SCOPED_CENTS 18.4, REFERENCE_WINDOW_SCOPED_CENTS 1036.5, ROUNDING_BAND_CENTS 1e-6, HALT_BAND_CENTS 1.0 -- THE WHOLE BAND STRUCTURE IS NAMED LITERALS IN THE FIRST THIRTY LINES."
+  AND_THAT_CONFIRMS_THE_CLOSE_I_MADE_LAST_ROUND_FROM_THE_OTHER_DIRECTION: "At round 369 I closed the open question by grepping the blob and finding 18.4 once and 1036.5 once, with the comma form returning zero. The coordinator now reports the same two values as literals at lines 26-27 AND ATTRIBUTES THEIR EARLIER 'NOT FOUND' TO THEIR OWN GREP TRUNCATING AT head -12. So the absence was in the instrument, not the file -- which is the finding I filed, arrived at independently. Under the timing clause: MINE WAS FILED FIRST at round 369, so this is confirmation of my close rather than two independent observations."
+  AND_THE_WAITER_IS_KEYED_ON_THE_RESULT_FILE_BECAUSE_THE_UNIT_NAME_IS_A_LABEL: "deEMIT0907b.service invokes emit_wait.sh keyed on THE V2 RESULT FILE with a SIZE-STABILITY CHECK, not on a unit name -- because DE found that keying on deRV0907* LATCHED ONTO THE SUPERSEDED-BOOK ATTEMPT and would have waited thirty minutes for nothing. DE's sentence is the rule: 'THE FILE IS THE PRECONDITION; THE UNIT NAME IS A LABEL.' That is rule 42 applied to a waiter, and it also answers the open item I recorded at round 369 -- the emit now has an invoking unit, so it is no longer a file with nobody to run it."
+  BUT_THE_DECOMPOSITION_DOES_NOT_EXIST_SO_THE_EMIT_WILL_HALT_BY_CONSTRUCTION: "DE disclosed it: the emit reads the two RESULT artifacts, which carry NO PER-WINDOW CONTRIBUTIONS. So until a decomposition from the BOOKS exists, EVERY ROW IS 0.0 BY ABSENCE OF INPUT and the residual carries the whole delta-D, which trips the 1c halt. THE EMIT SAYS SO IN ITS OWN OUTPUT. READ THAT HALT AS 'DECOMPOSITION MISSING', NEVER AS 'THE DAY MOVED' -- and the fact that the instrument names its own missing input rather than reporting zeros is the difference between this and the five failures catalogued tonight."
+  AND_DE_259S_FALSIFIER_IS_THE_RIGHT_ONE_BECAUSE_ITS_TARGET_IS_A_NUMBER_ALREADY_ON_THE_RECORD: "Read each 09-07 book, attribute each arm's settled D to the 27 declared windows, SUM TO THE CENT -- and the falsifier is that THE SUPERSEDED BOOK'S 27-ROW SUM MUST EQUAL DAY ONE'S D EXACTLY: -11,017.712006 and +5,256.176844. Those are the six-decimal figures I differenced against my own round-359 record at round 366, agreeing to 0.0120c and 0.0232c. So the decomposition is tested against a quantity fixed before it was written, by a party that cannot adjust it. Target before about 08:55."
+  THE_ERA_FIXS_ROW_REMOVING_CONSEQUENCE_IS_CONFINED_TO_DAY_ONE_AND_I_READ_THE_MASKS_MYSELF: "I opened the per-day mask artifacts: 09-07 gives n_masked 1, and 09-08, 09-09 AND 09-10 ALL GIVE n_masked 0. So the row-removing consequence of the fix touches DAY ONE ONLY. The companion half -- that n_thin is also 0 on those days, so the era fix CANNOT BIND ON THEM AT ALL -- is not a top-level field in the artifacts I read and is recorded as relayed. Later days differ under the fix only in REPLAY CONTENT, BE 133 counting 43 gap-bearing windows on 09-08, never in row set."
+  AND_DA_V15S_IDENTITY_CHECK_IS_CLEAN_STRING_BY_STRING: "Every field name crossed from DECLARATION to PRODUCER intact, checked as strings rather than by reading both and judging them the same. That is the discipline that the freeze key's own history argues for: a name that differs by one character between the two sides is invisible to a reader and fatal to a program, and only a string comparison finds it."
+  DE_V9_FIXES_THE_KEY_AND_THE_FAILURE_MODE_IS_WORSE_THAN_A_TYPO: "The key is NO_PARAMETER_OR_MODULE_IS_TUNED AFTER THIS COMMIT -- underscores through TUNED, then SPACES -- which I read at the freeze receipt myself at round 363 and again now. v8 wrote it ALL-UNDERSCORES, so AN AUTOMATED READER WOULD HAVE FOUND NO KEY AND v1'S STALE TRUE WOULD HAVE KEPT ANSWERING. That is the sharp part: a mis-keyed lookup does not error, it FALLS THROUGH TO THE OLD VALUE. DE's line is exactly right: 'the instrument was right; my reference to it was not.'"
+  AND_THE_RECORD_ON_DE_252_IS_THAT_TWO_HOPS_PASSED_AN_EVENT_CLAIM_WITHOUT_A_ONE_SECOND_CHECK: "07:08Z described code not on disk -- PHANTOM. 07:25Z described the design of a file that landed at 07:26Z -- PREMATURE. The coordinator relayed the first TWICE, AND THE THIRD HOP WAS THE USER, via REV 147. My own share is filed at round 368: I recorded the specification in the voice I use for driven things and did not run the grep until the correction arrived. THE CHECK WAS ONE SECOND AT EVERY HOP, and the chain length is what turned one unchecked claim into something a user acted on."
   # --- MEM round 369, phantom versus premature ---
   THE_POST_PROCESSOR_EXISTS_ON_ORIGIN_AND_I_GREPPED_THE_BLOB_MYSELF: "af675ac, 'Q-DE-257: the 09-07 re-valuation emit, committed BEFORE it runs on real inputs', authored 07:25:05. I grepped the ORIGIN BLOB rather than the working tree and every named token is there: CONCENTRATION_FINDING five times, SIGN_CHANGE_HALT four, residual_band four, declared_windows twice, falsify four, emit nine, and the 110 bar twice. It is committed AHEAD of the 09-07 book and about ninety minutes ahead of the re-valuation."
   AND_MY_ROUND_368_GREP_WAS_CORRECT_WHEN_IT_RAN_WHICH_IS_A_DIFFERENT_THING_FROM_BEING_RIGHT: "I ran it at 07:24:06 and the commit is authored 07:25:05, landing about 07:26:29 -- so the file arrived BETWEEN ONE AND TWO AND A HALF MINUTES AFTER MY CHECK, while I was writing the round. The absence I recorded was TRUE AT THE INSTANT OF MEASUREMENT AND FALSE BY THE TIME IT WAS FILED. That is not the same as an error and it is not the same as being right either: A MEASUREMENT OF A MOVING TREE CARRIES ITS TIMESTAMP OR IT CARRIES NOTHING, and mine did."
@@ -27849,6 +27860,61 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 370, 2026-09-11T07:33:39Z ---
+  THE_EMIT_IS_DRIVEN_8_OF_8_BY_TWO_HANDS_AND_ITS_BANDS_ARE_LITERALS_AT_THE_TOP_OF_THE_FILE:
+    prov: CHECKED
+    artifact: live/pm_research/de_revaluation_emit.py
+    as_of: 2026-09-11T07:33:39Z
+    said: >-
+      the af675ac blob read at lines 24-29 showing all five constants by name, and reference_levels_cents present once as the emitted field.
+  AND_THAT_CONFIRMS_THE_CLOSE_I_MADE_LAST_ROUND_FROM_THE_OTHER_DIRECTION:
+    prov: CHECKED
+    artifact: live/pm_research/de_revaluation_emit.py
+    as_of: 2026-09-11T07:33:39Z
+    said: >-
+      my round-369 flag records the grep counts 1, 1 and 0; this round's read of lines 24-29 gives the same two values as named constants.
+  AND_THE_WAITER_IS_KEYED_ON_THE_RESULT_FILE_BECAUSE_THE_UNIT_NAME_IS_A_LABEL:
+    prov: RELAYED
+    from: DE via coordinator MEM 370
+    as_of: 2026-09-11T07:33:39Z
+    said: >-
+      the unit, its key and the superseded-attempt latch as dispatched; the invoking-unit question is the one I recorded as outstanding at round 369.
+  BUT_THE_DECOMPOSITION_DOES_NOT_EXIST_SO_THE_EMIT_WILL_HALT_BY_CONSTRUCTION:
+    prov: RELAYED
+    from: DE 258 via coordinator MEM 370
+    as_of: 2026-09-11T07:33:39Z
+    said: >-
+      the missing per-window contributions and the by-construction halt as dispatched, disclosed by DE rather than found.
+  AND_DE_259S_FALSIFIER_IS_THE_RIGHT_ONE_BECAUSE_ITS_TARGET_IS_A_NUMBER_ALREADY_ON_THE_RECORD:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:33:39Z
+    said: >-
+      the two target figures match the values recorded in my round-366 flags to the decimal; their agreement with my earlier one-decimal record was computed there.
+  THE_ERA_FIXS_ROW_REMOVING_CONSEQUENCE_IS_CONFINED_TO_DAY_ONE_AND_I_READ_THE_MASKS_MYSELF:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/da_blackout_mask_20260908.json
+    as_of: 2026-09-11T07:33:39Z
+    said: >-
+      da_blackout_mask_2026090{7,8,9} and _20260910 opened and searched for n_masked: 1, 0, 0, 0; n_thin is not present as a scalar in those files and is not claimed from them.
+  AND_DA_V15S_IDENTITY_CHECK_IS_CLEAN_STRING_BY_STRING:
+    prov: RELAYED
+    from: DA v15 via coordinator MEM 370
+    as_of: 2026-09-11T07:33:39Z
+    said: >-
+      the identity check and its string-by-string method as dispatched.
+  DE_V9_FIXES_THE_KEY_AND_THE_FAILURE_MODE_IS_WORSE_THAN_A_TYPO:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_arm_freeze_v1.json
+    as_of: 2026-09-11T07:33:39Z
+    said: >-
+      the v1 freeze receipt loaded and its key enumerated as 'NO_PARAMETER_OR_MODULE_IS_TUNED AFTER THIS COMMIT', matching the form DE v9 adopts.
+  AND_THE_RECORD_ON_DE_252_IS_THAT_TWO_HOPS_PASSED_AN_EVENT_CLAIM_WITHOUT_A_ONE_SECOND_CHECK:
+    prov: RELAYED
+    from: REV 147 via coordinator MEM 370
+    as_of: 2026-09-11T07:33:39Z
+    said: >-
+      the hop count and the user's position in it as dispatched; my own share is recorded in my round-368 flags.
   # --- MEM round 369, 2026-09-11T07:29:06Z ---
   THE_POST_PROCESSOR_EXISTS_ON_ORIGIN_AND_I_GREPPED_THE_BLOB_MYSELF:
     prov: CHECKED

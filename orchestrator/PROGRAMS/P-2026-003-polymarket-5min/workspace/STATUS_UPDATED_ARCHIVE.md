@@ -23551,3 +23551,23 @@ generation and the window went 4 → 3. Nothing rewritten.
   REV FILINGS ARE STRANDED on a DIRTY TREE -- the same blockage holding my rows, from the
   other side. tip 25078e7)
 ```
+
+## Batch 352 (rotated by MEM round 370, 2026-09-11T07:33:39Z)
+
+```
+  2026-09-11T07:17:04Z (MEM ROUND 367 -- RULE 46 LANDED AND I DROVE IT: systemctl show --value returns
+  SYSTEMD'S ORDER, NOT YOURS. Asking SubState, LoadState, Result returns success, loaded,
+  dead -- RESULT, LOADSTATE, SUBSTATE -- so THE FIRST VALUE BACK IS THE LAST ONE ASKED FOR;
+  and asking ActiveState then Result returns 'success inactive', so a positional read TAKES
+  THE EXIT RESULT AS THE ACTIVE STATE. Two instances in one night, one false success and one
+  false failure. AND THE REASON IT HAPPENED TWICE IS THE LINE TO KEEP: the first was in a
+  seat's own notes AT 04:00 and did not reach another seat's script at 07:10 -- FILING IS
+  NOT RETENTION; A RULE IN THE PROTOCOL REACHES THE NEXT SCRIPT, A NOTE IN A PANE DOES NOT.
+  That is DA 221 WITH A REMEDY ATTACHED. My own usage was safe in both forms, which I
+  CHECKED rather than assumed -- and incidental before round 351, deliberate only after.
+  THE USER'S CONDITION IS MET and the amendment stands unconditionally; the robustness leg
+  NEITHER BLOCKS HAZARD NOR RESCUES CONDVALUE. REVIEW 186 wrote the re-valuation's READING
+  RULES WITH ZERO CELLS VISIBLE, including a sign-change rule that DELIBERATELY DISBELIEVES
+  A RESULT THAT WOULD HELP THE ARM. The eight stranded REV filings are on origin via rule
+  45. tip 6f2d431)
+```
