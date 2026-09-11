@@ -1,0 +1,147 @@
+{
+  "protocol": "P003_DE_ARM_FREEZE_V3_AMENDMENT",
+  "version": 3,
+  "amended_at_utc": "2026-09-11T02:21:02.871102+00:00",
+  "amended_by": "DE 223, on the USER's population ruling",
+  "supersedes": [
+    {
+      "version": 1,
+      "path": "de_arm_freeze_v1.json",
+      "commit": "b5f311a",
+      "sha256": "a4749bc77b6eb3590b880bd8bc58c1e8b8099c35864b448130fbedeac839f1e8"
+    },
+    {
+      "version": 2,
+      "path": "de_arm_freeze_v2_amendment.json",
+      "commit": "3fc91e7",
+      "sha256": "84fbe30927aada09acad652d75bd34e671c1a3dbb54aa81853f4accb379fa4f3"
+    }
+  ],
+  "rule": "13 -- a SUPERSEDING receipt. Neither v1 nor v2 is edited; both stay as provenance.",
+  "WHAT_KIND_OF_AMENDMENT_THIS_IS": {
+    "this_corrects": "A SCOPE FIELD (which days are the validation population)",
+    "this_does_NOT_correct": "ANY FROZEN PARAMETER. No threshold, latency, convention, protection mode, repost model, null construction or decision rule is touched.",
+    "the_freeze_invariant_still_holds": "NO PARAMETER OR MODULE IS TUNED AFTER THE FREEZE COMMIT (b5f311a). A scope field is not a parameter, and the distinction is stated here so a later reader does not have to infer it."
+  },
+  "AMENDMENT_3_POPULATION_FIXED_BY_USER_RULING": {
+    "THE_RULING": {
+      "N": 6,
+      "population": [
+        "2026-09-07",
+        "2026-09-08",
+        "2026-09-09",
+        "2026-09-10",
+        "2026-09-11",
+        "2026-09-12"
+      ],
+      "last_day_completes": "2026-09-13T00:00:00Z"
+    },
+    "what_it_supersedes": "v1's admissibility field ('starts after b5f311a' = 2026-09-11T02:08Z) and v2's resolution of it (09-12..09-16, complete 09-17T00:00Z)",
+    "THE_LOAD_BEARING_SENTENCE": "THE POPULATION IS FIXED BY USER RULING, NOT BY THE POST-FREEZE RULE.",
+    "v1s_field_is_now_FALSE_for_five_of_the_six_days": "only 2026-09-12 starts after the freeze. 09-07 through 09-11 all began BEFORE 2026-09-11T02:08Z.",
+    "why_this_must_be_superseded_explicitly": "so a later reader cannot resolve it the other way -- the exact failure mode v1 was guarding against when it flagged that params v29 already listed 09-08."
+  },
+  "WHAT_THE_RULING_GAVE_UP": {
+    "the_guarantee_that_no_longer_applies": {
+      "name": "the STRUCTURAL guarantee",
+      "statement": "a day that BEGINS AFTER THE FREEZE CANNOT HAVE BEEN CONSUMED, because it did not exist when the freeze was written",
+      "covers": [
+        "2026-09-12"
+      ],
+      "DOES_NOT_COVER": [
+        "2026-09-07",
+        "2026-09-08",
+        "2026-09-09",
+        "2026-09-10",
+        "2026-09-11"
+      ]
+    },
+    "what_protects_those_five_instead": {
+      "name": "REV 123's ARTIFACT-LEVEL VERIFICATION",
+      "status_reported_by_REV": "CLEAN",
+      "kind": "EVIDENCE, not a guarantee",
+      "THE_RESIDUAL_REV_STATES_IS_PERMANENTLY_UNCLOSABLE": "a TRACELESS READ leaves no evidence. A seat that opened a day's artifact, read it, and wrote nothing has consumed the day INVISIBLY, and NO FILESYSTEM CAN ESTABLISH THAT DID NOT HAPPEN.",
+      "so_the_honest_statement": "five of the six primary days rest on evidence that is clean AND on a residual that cannot be closed by any amount of further checking. That is a WEAKER guarantee than 09-12's, and it is stated here as the weaker guarantee rather than folded into one population."
+    },
+    "why_this_is_recorded": "a receipt that records the ruling without recording what the ruling GAVE UP is not provenance."
+  },
+  "09_07_CARRIES_ITS_OWN_SPLIT_AND_IS_NOW_INSIDE_THE_PRIMARY": {
+    "clean_on_the_ESTIMAND": "its SETTLEMENT valuation was NEVER PERFORMED -- NULL_DRAW count 0, no `arm_total_cents`, and the receipt records that it was not asked for",
+    "consumed_on_the_DIAGNOSTIC": "its 5-SECOND endpoint WAS computed and seen -- REVIEW 115 re-derived its moments from 500 PERSISTED draws on both arms",
+    "what_changed_today": "09-07 is now IN the primary rather than beside it, so this split sits inside the validation population instead of outside it",
+    "what_must_not_be_said": "that 09-07 is untouched. It is untouched ON THE RULED ENDPOINT and consumed on the diagnostic, and those are different statements about the same day."
+  },
+  "THE_PRE_REGISTERED_EXPECTATION_UNDER_N_EQUALS_6": {
+    "recomputed_now_not_afterwards": true,
+    "basis": "v1's pre-registration: both arms at z ~ 1.5 on 3 days, against the 2.24 Holm needs, scaling z ~ sqrt(days)",
+    "at_N_6": 2.121,
+    "the_bar": 2.24,
+    "VERDICT_OF_THE_EXPECTATION": "STILL SHORT. Six days reaches z ~ 2.12 against 2.24.",
+    "and_still_optimistic": "it assumes a CONSISTENT per-day effect, which the data contradicts -- 09-05 CONDVALUE was -4,941 cents, a SIGN FLIP",
+    "and_before_the_multiplicity_correction": "the family is NOT 2 (see the v2 amendment: withdrawn, lower bound 10, pending BE 113). A larger family raises the bar further.",
+    "SO_THE_DECLARED_EXPECTATION_IS_UNCHANGED_IN_DIRECTION": "this population is MORE LIKELY TO RETURN INCONCLUSIVE THAN TO CLEAR."
+  },
+  "UNCHANGED_AND_NOT_DISTURBED": {
+    "the_headline": "THESE TWO ARMS FAILED THEIR DEVELOPMENT SCREEN AND ARE BEING FORWARD-TESTED ANYWAY, BY USER DECISION",
+    "scoring_pinned_to_the_arms_pin_bytes": "the screen ran on the pin; the tip's scoring moved under performance commits whose SCORE-NEUTRALITY WAS NEVER ESTABLISHED, and a batched scorer changes float summation order",
+    "every_frozen_parameter": "unchanged",
+    "the_decision_rule": "unchanged -- Holm, step-down, alpha 0.05, both comparisons required (plan step 6)"
+  },
+  "STILL_OPEN_AND_STILL_BLOCKING_ANY_RUN": [
+    "BE 113's honest candidate enumeration -- multiplicity remains WITHDRAWN, not 2",
+    "DA's amended declaration must land first",
+    "the last day does not complete until 2026-09-13T00:00:00Z"
+  ],
+  "nothing_has_been_run_against_any_day_in_the_population": true,
+  "A_FEASIBILITY_FACT_THE_RULING_EXPOSES_COMPUTED_NOT_ASSERTED": {
+    "why_this_is_here": "the ruled N is now 6. Conjunct (a) of the FROZEN decision rule is a UTC-DAY-CLUSTER test, and a clustered sign permutation over G days has a FLOOR -- a most-extreme attainable p of 1/2^G one-sided, 2/2^G two-sided. Holm requires the smallest p <= alpha/m. So for some (G, m, sidedness) cells the primary CANNOT CLEAR NO MATTER WHAT THE DATA SAYS.",
+    "this_is_arithmetic_not_a_prediction": true,
+    "independently_sourced": "the same fact is recorded, in DA's own words and not mine, inside data/pm_5min/derived/da_dayverdict_20260907.json -> race_withdrawal.race_reading: 'At G=5 with the recorded multiplicity 2 the best achievable adjusted p is 0.0625 > 0.05: the ceiling of a clustered permutation test is its floor, 1/2^G.'",
+    "positive_control": "my formula reproduces DA's independently recorded 0.0625 at G=5, m=2, one-sided; a variant ignoring m does not (checked, both directions)",
+    "computed_table": {
+      "sided=1,m=2": {
+        "adjusted_floor_at_G6": 0.03125,
+        "clears_at_G6": true,
+        "min_G_that_could_clear": 6
+      },
+      "sided=1,m=3": {
+        "adjusted_floor_at_G6": 0.046875,
+        "clears_at_G6": true,
+        "min_G_that_could_clear": 6
+      },
+      "sided=1,m=10": {
+        "adjusted_floor_at_G6": 0.15625,
+        "clears_at_G6": false,
+        "min_G_that_could_clear": 8
+      },
+      "sided=2,m=2": {
+        "adjusted_floor_at_G6": 0.0625,
+        "clears_at_G6": false,
+        "min_G_that_could_clear": 7
+      },
+      "sided=2,m=3": {
+        "adjusted_floor_at_G6": 0.09375,
+        "clears_at_G6": false,
+        "min_G_that_could_clear": 7
+      },
+      "sided=2,m=10": {
+        "adjusted_floor_at_G6": 0.3125,
+        "clears_at_G6": false,
+        "min_G_that_could_clear": 9
+      }
+    },
+    "WHAT_IT_SAYS_AT_THE_RULED_G_EQUALS_6": [
+      "the ruled N=6 clears the arithmetic in EXACTLY ONE CELL: ONE-SIDED and family <= 3.",
+      "family 2 is ALREADY WITHDRAWN by amendment 1 (v2, 3fc91e7); my artifact-based LOWER BOUND is 10. At m=10 the adjusted floor is 0.15625 and G=6 CANNOT CLEAR -- it would need G >= 8.",
+      "TWO-SIDED, the freeze's own stated posture, does not clear at G=6 for ANY family >= 2: floor 0.0625 > 0.05, needing G >= 7."
+    ],
+    "THE_SIDEDNESS_QUESTION_I_AM_RAISING_NOT_DECIDING": {
+      "the_conflict": "the frozen null construction states p is TWO-SIDED, and gives the reason: 'the direction was chosen AFTER the point estimates were seen'. That rationale applies to conjunct (a)'s day-cluster sign test just as it applies to the matched control. DA's cited arithmetic, by contrast, uses the ONE-SIDED floor.",
+      "why_it_matters": "it is the difference between a primary that can clear and one that cannot: one-sided m<=3 clears at G=6; two-sided does not clear at G=6 for any m>=2.",
+      "who_decides": "NOT ME. This is the coordinator's to rule with the user, and it must be ruled BEFORE the first day is read, not after -- choosing sidedness once the sign is visible is rule 11.",
+      "my_reading_stated_as_a_reading": "the freeze's own rationale for two-sidedness is not specific to the control, so I read conjunct (a) as two-sided; under that reading G=6 cannot clear and the ruled population would need a seventh day at family 2, or a ninth at family 10."
+    },
+    "what_this_does_NOT_do": "it does not touch a parameter, and it does not reopen the ruling. N=6 is the population. This records that at N=6 the DECISION RULE may be arithmetically incapable of returning a pass, so that a later reader does not read an INCONCLUSIVE as evidence against the arms when it was foreordained by the floor.",
+    "the_other_conjunct_is_unaffected": "conjunct (b), the generation/side/hour-matched control, pools 500 DRAWS and has floor 1/501 = 0.001996. No feasibility problem there. The floor binds conjunct (a) only."
+  }
+}
