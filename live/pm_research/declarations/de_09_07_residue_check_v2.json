@@ -1,0 +1,97 @@
+{
+  "protocol": "P003_DE_BUILD_RESIDUE_CHECK_V2",
+  "version": 2,
+  "as_of_utc": "2026-09-11T03:17:49.994000+00:00",
+  "supersedes": {
+    "path": "de_09_07_residue_check_v1.json",
+    "sha256": "2fe9d2043279ce2b214a81ba9c68fe699e7eaff9d9d0c2a47f623a849f14ea82",
+    "why": "v1's sweep evidence was gathered with a predicate I had not proven could fire. Re-driven control-first."
+  },
+  "THE_CONTROL_RAN_FIRST_THIS_TIME": {
+    "the_rule": "a sweep that returns nothing has not been shown to be able to return something",
+    "control": "point the sweep at files the FAILED run certainly wrote -- its stdout log and run record",
+    "result": "FOUND be_heavy_run_record_p003fwd0907.jsonl (2,448 B, 03:02) and be_heavy_run_stdout_p003fwd0907.log (29,397 B, 03:02)",
+    "so_the_silence_below_is_worth_something": true,
+    "what_was_broken_before": "find -newermt '<ts> UTC' -- this machine's find is bfs, which rejects the suffix and errors to STDERR; empty stdout read as clean. Two false cleans."
+  },
+  "FOUR_CODE_IDENTITIES_NOT_THREE": [
+    {
+      "unit": "p003fwd0907",
+      "tip": "f75528c",
+      "outcome": "REFUSED 03:02:39 after 21 min, rc=1, peak 6.26 GB"
+    },
+    {
+      "unit": "p003fwd0907b",
+      "tip": "941e688",
+      "outcome": "stopped ~2 min (superseded by the one-commit ruling)"
+    },
+    {
+      "unit": "p003fwd0907c",
+      "tip": "7ed5a90",
+      "outcome": "REFUSED 03:09 -- see THE_FLAG_THAT_WAS_NOT_LATENT"
+    },
+    {
+      "unit": "p003fwd0907d",
+      "tip": "7ed5a90",
+      "outcome": "LIVE from 03:12:03, stage `selected` 287 slugs, era clob_v4_1"
+    }
+  ],
+  "THE_CACHE_HUNT_ANSWERED_FROM_SOURCE": {
+    "the_shape_hunted": "a cache keyed by day+revision but NOT by code identity, which would let a FWD1 book truthfully record builder_commit=7ed5a90 while carrying bytes computed by f75528c -- and every provenance instrument would pass",
+    "THE_SHAPE_EXISTS_AND_IT_NAMES_THE_OUTPUTS_NOT_A_CACHE": {
+      "where": "artifact_paths(day, coin, placement_latency_ms, revision) -> stem = f'{day}_{coin}{latency_tag}{revision_tag}'",
+      "what_it_returns": "exactly two paths: the book pkl and the receipt json. Nothing else is keyed this way.",
+      "AND_ITS_GUARD_IS_REFUSE_ON_PRESENT": "assert_artifacts_absent(book, receipt) -- 'Refuse before expensive work rather than overwrite a landed result'. So even had an abandoned run written them, the next run REFUSES; it cannot silently reuse them.",
+      "so_the_hazard_has_no_instance_here": "the day+revision key is an OUTPUT NAMING SCHEME with a refuse-on-present guard, not a reuse path."
+    },
+    "EVERY_day_keyed_path_in_the_builder_enumerated_from_source_at_ALL_FOUR_commits_identical": [
+      {
+        "line": 322,
+        "path": "be_gate1_state_tape_receipt_{day}_{coin}",
+        "mode": "READ (pin resolver)"
+      },
+      {
+        "line": 344,
+        "path": "be_gate1_fragment_receipt_{day}_{coin}",
+        "mode": "READ (day_fragment_pin -- resolves only, NEVER builds)"
+      },
+      {
+        "line": 1664,
+        "path": "be_daybook_{day}_{coin}.pkl",
+        "mode": "WRITE, after the gate"
+      },
+      {
+        "line": 1874,
+        "path": "artifact_paths stem {day}_{coin}__L..ms__REV",
+        "mode": "OUTPUT NAMES, guarded by assert_artifacts_absent"
+      },
+      {
+        "line": 1903,
+        "path": "da_blackout_mask_{day}.json",
+        "mode": "READ (DA's artifact)"
+      },
+      {
+        "line": 2557,
+        "path": "p003_de_point_estimate_day_{day}",
+        "mode": "READ (glob)"
+      }
+    ],
+    "and_the_day_keyed_INPUTS_are_CONTENT_bound_not_merely_day_bound": "assert_input_matches_its_receipt refuses when there is no producer pin AND when the on-disk digest differs from the one the producing receipt published. A day-keyed input cannot be silently substituted.",
+    "the_scratch_parameter": "present in the build signature, NEVER USED IN THE BODY at any of the four commits",
+    "the_ordering_that_settles_it": "_R22.assert_unchanged at line 1641; pickle built 1659, written 1665. The refusal fires between the last computation and the first production write."
+  },
+  "ON_DISK_NOW_WITH_A_PROVEN_SWEEP": {
+    "everything_under_derived_since_02:38Z": "EIGHT files: four pairs of launcher record + stdout, one per unit. Nothing else.",
+    "artifacts_named_FWD1_anywhere": "NONE",
+    "files_matching_20260907_modified_today": "NONE -- 09-07's pre-existing rev=None and __L250ms books are untouched since 2026-09-08",
+    "VERDICT": "NOTHING SURVIVES FROM ANY ABANDONED RUN. There is nothing to delete and I have deleted nothing."
+  },
+  "THE_FLAG_THAT_WAS_NOT_LATENT": {
+    "what_I_flagged_at_03:09": "~/ctaNew-wt-fwd/data was a REAL directory of 394 tracked files rather than the symlink, and any path built as <worktree>/data would miss the shared root",
+    "the_coordinator_asked_whether_it_is_closed": "the symlink was created 03:11 and is correct; as a STATE it is closed",
+    "BUT_IT_HAD_ALREADY_FIRED": "run c (03:09) died on exactly that path: de_admissible_windows.py:669 -- 'day 20260907 is GOVERNED and no mask artifact was supplied; expected it at /home/yuqing/ctaNew-wt-fwd/data/pm_5min/derived/da_blackout_mask_20260907.json'",
+    "why": "de_admissible_windows computes its root as parents[2] WITH NO RESOLVER -- a limit the builder's own `real_data_reachable` docstring already records. be_data_root is immune; that module is not.",
+    "so_the_correct_statement": "closed as a state, and it was the CAUSE of run c's refusal. The 03:11 symlink is what let run d proceed.",
+    "it_left_no_residue": "the refusal is a READ failure before any write"
+  }
+}
