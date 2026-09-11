@@ -643,10 +643,17 @@ def cells_winner_digests(derived, day: str) -> dict:
 
 
 def receipt_for_day(rows_by_digest: dict, *, day, derived, winner_source_path,
-                    n_slugs_required, reader_module_sha256, day_slice,
-                    revision=DEFAULT_REVISION, stamp=""):
+                    n_slugs_required, reader_module_sha256, ledger,
+                    n_records, revision=DEFAULT_REVISION, stamp=""):
     """ONE receipt. One block per whole-file snapshot the cells name -- but
-    the MATCH KEY is the day_slice, identical across all of them."""
+    the MATCH KEY is the day_slice, identical across all of them.
+
+    THE SLICE IS COMPUTED HERE, NOT ACCEPTED. It used to be a parameter, so a
+    caller could hand in a slice from either of two disagreeing definitions and
+    the receipt would carry it. The receipt now derives its own identity from
+    (ledger, n_records, day) and there is nothing for a caller to get wrong.
+    """
+    day_slice = head_resolved_day_slice(ledger, n_records, day)
     blocks = [winner_source_block(
         rows, winner_source_sha256=sha, winner_source_path=winner_source_path,
         n_slugs_required=n_slugs_required, day_slice=day_slice,
@@ -700,10 +707,7 @@ def falsify_digest_coupling() -> int:
     rows = [{"slug": f"s{i}", "status": LABEL_ADMISSIBLE, "checker_up": True,
              "official_up": True, "margin_bp": 2.0, "boundary_age_ms": 0}
             for i in range(3)]
-    rec, name = receipt_for_day({s: rows for s in two}, day="2026-09-07",
-                                derived=d, winner_source_path="/x/resolutions.jsonl",
-                                n_slugs_required=3, reader_module_sha256="b" * 64,
-                                stamp="20260911T000000Z")
+
     ck("the receipt carries ONE BLOCK PER DIGEST", len(rec["winner_source_blocks"]) == 2,
        rec["digests_covered"][0][:8] + " + " + rec["digests_covered"][1][:8])
     ck("and every block is findable by _winner_source_blocks' shape",
@@ -758,29 +762,30 @@ def falsify_digest_coupling() -> int:
 SLICE_DIFFERS = "WINNER_SOURCE_DAY_SLICE_DIFFERS"
 NO_SLICE = "RECEIPT_CARRIES_NO_DAY_SLICE_DIGEST"
 SLICE_DEF_ABSENT = "DAY_SLICE_DEFINITION_NOT_ON_THIS_TREE"
+PRE_RULING_SLICE = "PRE_RULING_SLICE_DEFINITION_IS_NOT_THE_IDENTITY"
 
 
-def day_slice_digest(ledger, n_records: int, day: str) -> dict:
-    """THE day-slice identity. Delegates to the repo's one implementation."""
-    from datetime import datetime, timezone
-    try:
-        import de_combine_day_cells as _C
-    except ModuleNotFoundError:
-        raise GateRefused(
-            f"REFUSED {SLICE_DEF_ABSENT}: `de_combine_day_cells` is not on "
-            f"this tree, so the ONE day-slice definition cannot be reached. "
-            f"It is present on origin/de-freeze-chain-v2 and "
-            f"origin/be-build-runner and ABSENT on origin/mm-research -- this "
-            f"gate runs where the definition lives. Refused by name rather "
-            f"than dying on an import, and NOT reimplemented here: a second "
-            f"canonicalisation is how 26f02bda and 7eb54006 came to disagree "
-            f"over the same 2,016 records.") from None
-    a = datetime.strptime(day, "%Y-%m-%d").replace(tzinfo=timezone.utc)
-    start = int(a.timestamp())
-    r = _C.day_subset_digest(Path(ledger), n_records, start, start + 86400)
-    return {"sha256": r["sha256"], "n_day_records": r["n_day_records"],
-            "n_records_in_snapshot": r["n_records_in_snapshot"], "day": day,
-            "definition": "de_combine_day_cells.day_subset_digest"}
+def day_slice_digest(*_a, **_k) -> dict:
+    """WITHDRAWN. It computed the PRE-RULING slice and called itself THE identity.
+
+    IT IS THE DEFECT I WITHDREW THIS MORNING, RECURRING INSIDE ONE FILE. This
+    module briefly held TWO slice functions that disagreed on real data --
+    7eb54006ebfa1029 here against 43d6273ba7848627 from
+    `head_resolved_day_slice` over the SAME 2,016 records -- while
+    `receipt_for_day` took the slice as a CALLER-SUPPLIED parameter, so which
+    one reached a receipt depended entirely on the caller. DE measured it
+    against the landed blob.
+
+    IT REFUSES RATHER THAN DELEGATING. Silently redirecting would hand a
+    caller that asked for the old number a DIFFERENT number without telling
+    it, which is how a digest mismatch comes to look like a data problem.
+    """
+    raise GateRefused(
+        f"REFUSED {PRE_RULING_SLICE}: `day_slice_digest` computed the "
+        f"PRE-RULING slice (line-sorted, no head resolution) and is withdrawn. "
+        f"The identity is `head_resolved_day_slice` -- supersession first, "
+        f"then sorted BY SLUG. The two disagree on real data: 7eb54006ebfa1029 "
+        f"against 43d6273ba7848627 over the same 2,016 records of 2026-09-07.")
 
 
 def compare_day_slice(mine: dict, theirs: dict) -> dict:
@@ -829,7 +834,7 @@ def falsify_day_slice() -> int:
         print("  [SKIP] ledger absent")
         return 0
     try:
-        day_slice_digest(LED, 45877, "2026-09-07")
+        head_resolved_day_slice(LED, 45877, "2026-09-07")
     except GateRefused as exc:
         if SLICE_DEF_ABSENT in str(exc):
             print(f"  [REFUSED BY NAME] {SLICE_DEF_ABSENT} -- this tree lacks "
@@ -839,21 +844,21 @@ def falsify_day_slice() -> int:
 
     # (a) THE SAME DAY UNDER THREE DIFFERENT WHOLE-FILE SNAPSHOTS.
     #     09-07's cells recorded three: 45877 / 45932 / 46290 records.
-    got = [day_slice_digest(LED, n, "2026-09-07") for n in (45877, 45932, 46290)]
+    got = [head_resolved_day_slice(LED, n, "2026-09-07") for n in (45877, 45932, 46290)]
     ck("growth OUTSIDE the day: THREE whole-file snapshots, ONE slice",
        len({g["sha256"] for g in got}) == 1 and len({g["n_day_records"] for g in got}) == 1,
        f"{got[0]['sha256'][:16]} / {got[0]['n_day_records']} records, from "
        f"{[g['n_records_in_snapshot'] for g in got]}")
-    ck("...and it is DE's published number for 09-07",
-       got[0]["sha256"].startswith("7eb54006ebfa1029") and got[0]["n_day_records"] == 2016,
+    ck("...and it is the RULED number for 09-07 (not the pre-ruling 7eb54006)",
+       got[0]["sha256"].startswith("43d6273ba7848627") and got[0]["n_day_records"] == 2016,
        got[0]["sha256"][:16])
     ck("...and compare_day_slice calls all three clean",
        all(compare_day_slice(got[0], g)["day_slice_matches"] for g in got))
 
     # (b) 09-09, DE's other published number.
-    d9 = day_slice_digest(LED, 46521, "2026-09-09")
-    ck("09-09 reproduces DE's published slice",
-       d9["sha256"].startswith("36da8727d02cfe3d") and d9["n_day_records"] == 2030,
+    d9 = head_resolved_day_slice(LED, 46521, "2026-09-09")
+    ck("09-09 is the RULED slice, head-resolved from 2,030 lines to 2,016 records",
+       d9["sha256"].startswith("235490f17dcb5d2a") and d9["n_day_records"] == 2016,
        f"{d9['sha256'][:16]} / {d9['n_day_records']}")
 
     # (c) A DIFFERENT DAY is a different slice -- the check is on content.
@@ -1031,6 +1036,16 @@ def falsify_head_resolution() -> int:
         ck("two heads at the same recv_ns REFUSE by slug name",
            TWO_HEADS in str(exc) and "btc-updown-5m-1788980100" in str(exc))
 
+    try:
+        day_slice_digest("x", 1, "2026-09-07")
+        ck("the PRE-RULING slice function REFUSES rather than returning a number", False)
+    except GateRefused as exc:
+        ck("the PRE-RULING slice function REFUSES by name, never delegates silently",
+           PRE_RULING_SLICE in str(exc))
+    import inspect as _i
+    ck("receipt_for_day COMPUTES its slice -- a caller cannot supply one",
+       "day_slice" not in _i.signature(receipt_for_day).parameters,
+       sorted(_i.signature(receipt_for_day).parameters))
     LED = Path("/home/yuqing/ctaNew/data/pm_5min/resolutions.jsonl")
     if LED.is_file():
         r7 = head_resolved_day_slice(LED, 45877, "2026-09-07")
