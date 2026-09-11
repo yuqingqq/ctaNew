@@ -23064,3 +23064,32 @@ generation and the window went 4 → 3. Nothing rewritten.
   this branch; BE's a8567d1 and a35c889 are NOT, and the landing detector still reads 188.
   EVERY PROTECTION AROUND STEP 2 WAS DRIVEN RATHER THAN ASSUMED. tip 2c1fa8b)
 ```
+
+
+## Batch 331 (rotated by MEM round 349, CORRECTED by round 349)
+
+> CORRECTION: this batch originally also held MEM ROUND 347, rotated out ONE ROUND EARLY.
+> Cause: the rotation split generations on any line starting `  <ISO-date>T`, and round 348's
+> own text contains a continuation line beginning `  2026-09-13T00:00Z, ONE LOOK...`. That
+> line was counted as a generation, so a real one was pushed out. Round 347 has been RESTORED
+> to STATUS.yml and the splitter now requires the literal `(MEM ROUND ` marker.
+
+```
+  2026-09-10T20:59:02Z (MEM ROUND 346 -- THE VERDICT. R-897 at f9ba22f:
+  NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM IN BOTH POOLS. PRIMARY 09-04/05/06 CONDVALUE
+  D = 19,117.18 c p = 0.0978 (48/500), HAZARD D = 13,758.07 c p = 0.2435 (121/500);
+  COMPANION all four p = 0.0299 (14/500) and 0.0339 (16/500) -- ALSO FAILS. I RECOMPUTED
+  ALL FOUR under the estimator pre-registered at b72e329 and they match TO THE DIGIT, and I
+  EVALUATED HOLM rather than repeating it: ZERO REJECTIONS IN BOTH POOLS, both failing at
+  the FIRST step. The companion's 0.0299 misses its Holm bar of 0.025 BY THREE DRAWS and is
+  the most misquotable number here. UNLIKE THE ASYMMETRY NULL THIS ONE DOES NOT FLIP ON
+  09-03 -- no pool passes, so there is no adjudication to make. THE CEILING, VERBATIM AND
+  NEVER TO BE WIDENED: 'two frozen policies did not beat their own control on three consumed
+  days' -- nothing about cancellation as a strategy, a redesigned arm, or a fourth day. AND
+  THE BIAS RAN THE ARMS' WAY: distinct-generation matching UNDER-matched exposure, so they
+  failed against a WEAKER control. STEP 3 FIRED AS PRE-DECIDED: no freeze, no forward test,
+  no redesign; 09-07 IN RESERVE AND 09-08..09-12 INTACT. REV retracted its OWN phrase (the
+  exact form: the arm beats the baseline in FEWER THAN HALF the windows on every arm-day,
+  38.2-45.5 per cent). And the day's LAST failure landed at the FINAL STEP of the mechanism
+  built to prevent it: a sentence DESCRIBED instead of SENT. tip 671a8fd)
+```

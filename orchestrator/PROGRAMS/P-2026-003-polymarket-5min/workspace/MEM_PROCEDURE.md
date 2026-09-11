@@ -138,3 +138,24 @@ turns the audit into a landing detector. If the count does not come back, the
 merge did not happen.
 
 Baseline to watch: **185**. This round it is **188**.
+
+## Round 349 — a delimiter defined by SPELLING cut a generation in half
+
+The rotation split `updated:` on `\n(?=  \d{4}-\d\d-\d\dT)` — any line beginning
+with an ISO date at column 2. Round 348's own prose contained
+`  2026-09-13T00:00Z, ONE LOOK, NO EXTENSION …`, so that continuation line was
+counted as a generation, round 348 was cut in half, and **a real generation
+(round 347) was rotated out one round early.** The audit caught it as
+`window 2/3`; the content was recoverable from the archive.
+
+**The splitter now requires the structure, not the prefix:**
+
+```python
+GEN_START = r"\n(?=  \d{4}-\d\d-\d\dT[\d:.]+Z \(MEM ROUND )"
+```
+
+This is rule 32 — enumerate by operation, not spelling — applied to my own
+rotation for the third time (round 332 colons, round 336 single-spelling counts,
+now this). **Add to the pre-commit list: after rotation, assert the number of
+generations is exactly 3 AND that each one's first line contains `(MEM ROUND`.**
+A date can appear in prose. `(MEM ROUND ` is a delimiter I control.

@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T02:34:44Z (MEM ROUND 349 -- I WAS WRONG BY FIFTEEN SECONDS AND THE CORRECTION LEADS. My
+  round-348 headline said the landed artifacts did not carry the ruling; DA 211's v2 was
+  committed at 02:24:02 and my write ran at 02:24:17, with ee1e85d ALREADY MY TIP. I read v1
+  and did not look for a vN+1 -- rule 13, which I have quoted in these files repeatedly.
+  VERIFYING AT AN ARTIFACT IS NOT VERIFYING AT THE CURRENT ONE. v2 holds N = 6,
+  09-07..09-12, completing 2026-09-13T00:00Z, 09-07 moved from COMPANION into the PRIMARY.
+  THE BIGGEST OPEN ITEM: N=6 MAY BE STRUCTURALLY INCAPABLE OF PASSING -- conjunct (a) is a
+  DAY-CLUSTER test and I computed the two-sided floor at 2/2^6 = 0.031250 against the 0.025
+  Holm must beat, so A PERFECT 6-FOR-6 STILL FAILS; N=7 floors at 0.015625 and clears. DE is
+  computing it. NOBODY MAY LATER READ AN INCONCLUSIVE AS EVIDENCE AGAINST THE ARMS WHEN THE
+  FLOOR FOREORDAINED IT -- and the SIDEDNESS must be ruled BEFORE the first day is read or
+  it is rule 11. THE IDENTITY QUESTION IS CLOSED THE RIGHT WAY (BE 114, by DIGEST MATCH):
+  the compositions are ADDITIVE, the screen ran on composition 3, so this IS a second look
+  at a SCREENED arm -- and THETA WAS NEVER REFITTED across all thirty params versions, the
+  one fact this round that widens rather than narrows. Multiplicity 69 beside 2 in ONE
+  artifact, but v2 says the CORRECTION IN FORCE STAYS THE FROZEN 2 with 69 reported as a
+  limit -- flagged for the register. THREE TIMERS PROCESS POPULATION DAYS: I measured all
+  three, and pm-measurement-pipeline FIRES AGAIN AT 03:21:56Z, 48 MINUTES AFTER THIS SWEEP.
+  09-07 is consumed by 8 OF 13 PRODUCER FAMILIES -- broader than endpoint-split. tip cc63ccf)
   2026-09-11T02:24:17Z (MEM ROUND 348 -- A FREEZE AND A FORWARD TEST LANDED. USER DECISION: THE FORWARD
   TEST RUNS, overriding plan step 3, on TWO ARMS THAT FAILED THEIR SCREEN (the freeze's own
   first field says so). Five commits verified as ancestors: b5f311a THE FREEZE, 9c41d22,
@@ -104,23 +123,6 @@ updated: >-
   ARRIVING, NOT THE COMMIT LANDING. COLD START: verdict NO_SETTLEMENT_SKILL_OVER_MATCHED
   _RANDOM both pools; STEP 3 FIRED AND COMPLETE; open work is the step-1 remainder; 09-07
   and 09-08..09-12 are PROTECTED, NOT BANKED. tip 2bae20b)
-  2026-09-10T20:59:02Z (MEM ROUND 346 -- THE VERDICT. R-897 at f9ba22f:
-  NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM IN BOTH POOLS. PRIMARY 09-04/05/06 CONDVALUE
-  D = 19,117.18 c p = 0.0978 (48/500), HAZARD D = 13,758.07 c p = 0.2435 (121/500);
-  COMPANION all four p = 0.0299 (14/500) and 0.0339 (16/500) -- ALSO FAILS. I RECOMPUTED
-  ALL FOUR under the estimator pre-registered at b72e329 and they match TO THE DIGIT, and I
-  EVALUATED HOLM rather than repeating it: ZERO REJECTIONS IN BOTH POOLS, both failing at
-  the FIRST step. The companion's 0.0299 misses its Holm bar of 0.025 BY THREE DRAWS and is
-  the most misquotable number here. UNLIKE THE ASYMMETRY NULL THIS ONE DOES NOT FLIP ON
-  09-03 -- no pool passes, so there is no adjudication to make. THE CEILING, VERBATIM AND
-  NEVER TO BE WIDENED: 'two frozen policies did not beat their own control on three consumed
-  days' -- nothing about cancellation as a strategy, a redesigned arm, or a fourth day. AND
-  THE BIAS RAN THE ARMS' WAY: distinct-generation matching UNDER-matched exposure, so they
-  failed against a WEAKER control. STEP 3 FIRED AS PRE-DECIDED: no freeze, no forward test,
-  no redesign; 09-07 IN RESERVE AND 09-08..09-12 INTACT. REV retracted its OWN phrase (the
-  exact form: the arm beats the baseline in FEWER THAN HALF the windows on every arm-day,
-  38.2-45.5 per cent). And the day's LAST failure landed at the FINAL STEP of the mechanism
-  built to prevent it: a sentence DESCRIBED instead of SENT. tip 671a8fd)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -292,6 +294,25 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 349 addendum, 2026-09-11T02:38:05Z ---
+  MY_OWN_ROTATION_CUT_A_GENERATION_IN_HALF_BECAUSE_ITS_DELIMITER_WAS_A_SPELLING: "Found by my own audit at window 2/3 this round. The rotation split `updated:` on any line beginning with an ISO date at column 2, and round 348's prose contains a continuation line reading '2026-09-13T00:00Z, ONE LOOK, NO EXTENSION' -- so that line was counted as a generation, ROUND 348 WAS CUT IN HALF, and a real generation (round 347) was rotated out ONE ROUND EARLY. Nothing was lost: the archive held it and I restored it, and the archive batch now carries the correction with its cause. The splitter now requires the literal '(MEM ROUND ' marker -- the structure I control rather than a date that can appear in prose. THIRD TIME rule 32 has caught my own instrument: colons at round 332, single-spelling counts at round 336, a delimiter this round."
+  # --- MEM round 349, the floor, the identity closure, and my own 15-second error ---
+  I_WAS_WRONG_BY_FIFTEEN_SECONDS_AT_ROUND_348_AND_I_READ_V1_WHILE_V2_WAS_ON_DISK: My round-348 headline said THE LANDED ARTIFACTS DO NOT YET CARRY THE RULING. They did. DA 211's declaration v2 was committed at 02:24:02 and my write ran at 02:24:17 -- FIFTEEN SECONDS LATER, with ee1e85d already my tip. I read da_forward_test_declaration_v1.json, reported its N = 5 and its labelled-companion 09-07 as the current state, and did not look for a vN+1. Rule 13 says corrections supersede IN BAND as vN+1, and I have quoted that rule in these files repeatedly. VERIFYING AT AN ARTIFACT IS NOT VERIFYING AT THE CURRENT ONE. Superseded in band, and the round-348 flags stay as provenance.
+  AND_V2_HOLDS_THE_RULING_EXACTLY_SO_THE_DIVERGENCE_I_REPORTED_IS_CLOSED: "POPULATION.N = 6; DAYS = 2026-09-07 through 2026-09-12; last_day_completes 2026-09-13T00:00:00Z; fixed_by USER RULING, not by a rule this declaration applies; STATUS AMENDED-BEFORE-ANY-DAY-IS-TOUCHED. Its supersedes block names v1's commit 9a09d5b, marks v1 UNEDITED, and lists what changed: the population, 09-07 moving from COMPANION into the PRIMARY, the post-freeze clause WHICH THIS RULING MAKES FALSE, and the power expectation recomputed arm by arm. What v1 still governs is everything not restated."
+  N_EQUALS_6_MAY_BE_STRUCTURALLY_INCAPABLE_OF_PASSING_AND_IT_IS_UNRESOLVED: "DE raised that conjunct (a) is a DAY-CLUSTER test. A two-sided exact test over 6 clusters FLOORS at 2/2^6, and I computed it: 0.031250, against the 0.025 that Holm's smaller p must beat. IF THAT HOLDS, A PERFECT 6-FOR-6 RESULT STILL FAILS AND THE TEST IS FOREORDAINED TO RETURN INCONCLUSIVE. N=7 floors at 0.015625 and clears; N=5 floors at 0.0625 and is worse. DE is computing it now. RECORD DE'S SENTENCE: nobody may later read an INCONCLUSIVE as evidence against the arms when the floor foreordained it."
+  AND_THE_SIDEDNESS_OF_CONJUNCT_A_MUST_BE_RULED_BEFORE_THE_FIRST_DAY_IS_READ_OR_IT_IS_RULE_11: A one-sided cluster test over 6 days floors at 1/64 = 0.015625 and would clear; a two-sided one floors at 0.03125 and cannot. So the sidedness decides whether the test can pass at all -- and choosing it AFTER any day is read is choosing on seen data, which is exactly rule 11. It must be ruled before the first day is read, and recorded with its reason, in the same way the step-2 p was fixed two-sided at its declaring commit.
+  THE_IDENTITY_QUESTION_IS_CLOSED_AND_IT_CLOSED_THE_RIGHT_WAY: "BE 114: CONDVALUE's three compositions are ADDITIVE -- strict supersets with identical hazard digests -- not divergent. The pinned composition is 3, and THE SCREEN RAN ON COMPOSITION 3, settled by DIGEST MATCH: de_settle_result_20260904_CONDVALUE_X_SKEW.json's be_module equals params v29's be_module.sha256. So the forward test IS a second look at a SCREENED arm, and my round-348 OPEN item is closed. Settled by matching identity rather than by reasoning about names, which is rule 16's form and the only thing that could have settled it."
+  AND_THE_ONE_FACT_THAT_CUTS_THE_OTHER_WAY_IS_THAT_THETA_WAS_NEVER_REFITTED: "One fixed theta per arm across all THIRTY params versions. In a round where almost everything recorded narrows what the test can claim, this is the item that widens it: the thresholds the arms carry are the ones they were fit with on 2026-08-24/25, unchanged through every rebuild, every EV revision and every composition addition. Recorded prominently because a reader scanning a list of limits will otherwise carry away that nothing here is stable, and one thing is."
+  MULTIPLICITY_IS_69_NOT_2_AND_THE_TWO_NUMBERS_SIT_SIDE_BY_SIDE_IN_ONE_ARTIFACT: "BE 113: n_arms_in_forward_race 2 BESIDE n_candidates_scored_to_select_them 69, honest range 45-75, BTC scope, and A LOWER BOUND -- candidates tried and never persisted are invisible to a sweep of derived/. Putting both numbers in one artifact under two different field names is the fix for the whole class: the smaller number is true about a different question, and naming both questions stops either from being quoted as the other."
+  BUT_THE_CORRECTION_IN_FORCE_IS_STILL_THE_FROZEN_2_AND_BES_69_IS_REPORTED_AS_A_LIMIT: "A tension the register must settle rather than a contradiction I should smooth. The dispatch says DE has withdrawn the 2 and supersedes on BE's number. DA's v2 says the opposite about what GOVERNS: if BE returns a count greater than 2, THE CORRECTION IN FORCE IS DE'S FROZEN 2, and the discrepancy is REPORTED AS A LIMIT, because CHANGING THE CORRECTION AFTER THE FREEZE WOULD BE CHANGING THE TEST. Both can be true of different things -- the honest count is 69, the applied correction stays 2 -- but which one a later reader applies is not something I may decide. Flagged for the register."
+  THREE_AUTOMATED_TIMERS_PROCESS_POPULATION_DAYS_AND_I_MEASURED_THEM_MYSELF: "All three exist, are enabled and have run: pm-measurement-pipeline last ran 02:21:09Z (11 minutes before this sweep), pm-evaluation-pipeline at 2026-09-10T21:54:42Z, da-midnight-verify at 00:06:00Z today, and all three report Result=success. Three of the six population days have already been processed by automated lanes. DA's test is the right one and it is OPEN: does any of this reach a BOOK, a REPLAY or a P&L, or only coverage and quality? REV is measuring."
+  AND_THE_MEASUREMENT_TIMER_FIRES_AGAIN_WITHIN_THE_HOUR_WHICH_IS_A_DEADLINE_NOBODY_SET: pm-measurement-pipeline.timer next fires at 2026-09-11T03:21:56Z -- FORTY-EIGHT MINUTES after this sweep. So an automated lane will touch population days again BEFORE REV's measurement of what those lanes reach can plausibly be finished. Whatever the answer turns out to be, the window in which it can be established against an unchanged tree is closing on a schedule nobody chose for this purpose. Recorded as an operational deadline, not as a defect.
+  09_07_IS_CONSUMED_BY_8_OF_13_PRODUCER_FAMILIES_WHICH_IS_STRONGER_THAN_ENDPOINT_SPLIT: REV reports 8 of 13 producer families touched 09-07, and is breaking it down per day. That is a broader statement than the endpoint split recorded at rounds 337 and 348, which said settlement was never computed while the 5-second diagnostic was seen. Eight families is not two endpoints. Until the per-day breakdown lands, the endpoint-split framing in my earlier flags should be read as NECESSARY BUT POSSIBLY NOT SUFFICIENT -- it names what was computed, not everything that was touched.
+  AND_V2_RECORDS_THAT_09_07_WAS_RULED_IN_ON_ITS_STATUS_NOT_ITS_RESULT: "The field a later reader needs and cannot reconstruct: what was known when the day was ruled in was ITS STATUS, NOT ITS RESULT. No arm-level 09-07 figure has ever been quoted, and DA 194 searched the register and found that the 413 hits for '09-07' are TIMESTAMPS. So the inclusion decision was not made on an outcome. That does not repair the consumption; it establishes that the consumption did not steer the ruling, which is a different and necessary claim."
+  EVEN_THE_ARM_EXPECTED_TO_CLEAR_IS_A_COIN_FLIP_AT_ITS_OWN_POINT_ESTIMATE: "v2 recomputed the power arm by arm and the numbers are worse than a projection alone suggests: CONDVALUE projects z = 2.3414 against a bar of 2.2414 -- a margin of +0.1000 in z, razor thin -- with POWER AT ITS OWN POINT ESTIMATE of 0.54, and HAZARD 0.378. And the declaration states the discount itself: sqrt-N assumes a consistent per-day effect, 2026-09-05 CONDVALUE was -4,941.23 c, A SIGN FLIP, so TRUE POWER IS LOWER THAN 0.540 AND 0.378. An arm expected to clear at 54 per cent is a coin flip that the declaration says is optimistic."
+  AND_THE_STOPPING_RULE_NOW_BINDS_HARDER_BECAUSE_HAZARDS_FAILURE_IS_PREDICTED_IN_ADVANCE: N=6 is the USER's ruling and IT IS THE LAST N. An inconclusive result at six days does NOT license a seventh, eighth or ninth -- and HAZARD needing nine is recorded ABOVE THE DATA, before it, precisely so that its predictable failure cannot later be argued into a reason to extend. The declaration puts the prediction before the result so the result cannot supply the reason.
+  THE_23_55_BOUNDARY_AND_THE_IDENTITY_SIDECAR_ARE_ACCEPTED_AND_AWAIT_V3: "REV's 23:55 boundary recommendation -- exclude from 09-08..09-12, costing 0.35 per cent of windows, and 09-07 CANNOT be brought under it retroactively -- is accepted and awaits folding into v3. BE's identity sidecar landed, binding every fit-file digest to the build, refusing a wrong composition, and stating READ_EVIDENCE observed: false ON THE ARTIFACT rather than in a report. The asymmetry in the boundary is worth keeping: a rule adopted now applies to five days and cannot reach the sixth, which is the price of 09-07 being older than the rule."
+  AND_THE_USER_HAS_ASKED_TO_BUILD_NOW_WITH_FOUR_DAYS_STAGED_AND_HELD: Four complete days are staged and the USER has asked to BUILD NOW rather than wait. They are HELD pending DA's build-before-valuation discipline -- building is not valuing, and the discipline is what keeps the distinction real rather than nominal. Recorded so that a cold reader knows the build is authorised, the hold is procedural and not a disagreement, and the thing being protected is the valuation boundary rather than the build queue.
   # --- MEM round 348, the freeze and the forward test ---
   THE_USER_RULED_THE_FORWARD_TEST_RUNS_ON_ARMS_THAT_FAILED_THEIR_SCREEN: "Overriding plan step 3, which had fired and completed. The freeze's own first field says it without softening: 'THESE TWO ARMS FAILED THEIR DEVELOPMENT SCREEN AND ARE BEING FORWARD-TESTED ANYWAY, BY USER DECISION.' Step 2 returned NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM on both pools, CONDVALUE p = 0.0978 and HAZARD p = 0.2435 on the PRIMARY. The decision is the USER's and it is recorded as a decision, not as a finding."
   THE_FIVE_COMMITS_ARE_ALL_ON_THE_BRANCH_AND_I_TOOK_THE_REFS_FROM_THE_OBJECTS: b5f311a DE 220 THE FREEZE (161 lines, de_arm_freeze_v1.json); 9c41d22 DE 220 2/2 the freeze names its own commit; 9a09d5b DA 209/210 the FORWARD TEST declared before any untouched day (da_forward_test.py 506 lines + its declaration 280 lines); acdd689 the Q-DA-413 filing; 3fc91e7 DE 222 the freeze amended IN BAND. All five verified as ancestors of HEAD. Freeze author timestamp 2026-09-11T02:08:15Z, repo head at freeze 22eee4c9.
@@ -27590,6 +27611,110 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 349 addendum, 2026-09-11T02:38:05Z ---
+  MY_OWN_ROTATION_CUT_A_GENERATION_IN_HALF_BECAUSE_ITS_DELIMITER_WAS_A_SPELLING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    as_of: 2026-09-11T02:38:05Z
+    said: >-
+      window read as 2/3 by the provenance audit; the updated: block inspected and found to hold round 349, round 348 and a CONTINUATION LINE of 348 rather than three generations; round 347 recovered from archive Batch 331 and restored; window re-read as 3/3 after the repair.
+  # --- MEM round 349, 2026-09-11T02:34:44Z ---
+  I_WAS_WRONG_BY_FIFTEEN_SECONDS_AT_ROUND_348_AND_I_READ_V1_WHILE_V2_WAS_ON_DISK:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_forward_test_declaration_v2.json
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      ee1e85d's author time read as 02:24:02 against my round-348 write timestamp of 02:24:17 recorded in that round's flags; v2 exists on disk and its declared_at_utc is 2026-09-11T02:22:15Z.
+  AND_V2_HOLDS_THE_RULING_EXACTLY_SO_THE_DIVERGENCE_I_REPORTED_IS_CLOSED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_forward_test_declaration_v2.json
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      POPULATION, STATUS, supersedes and carried_unchanged_from_v1 read verbatim from the v2 declaration.
+  N_EQUALS_6_MAY_BE_STRUCTURALLY_INCAPABLE_OF_PASSING_AND_IT_IS_UNRESOLVED:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_forward_test_declaration_v2.json
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      2/2**n computed for n = 5, 6, 7, 8 giving 0.0625, 0.03125, 0.015625 and 0.0078125, each compared against the 0.025 Holm step-1 bar recorded in the declaration's holm_bars.
+  AND_THE_SIDEDNESS_OF_CONJUNCT_A_MUST_BE_RULED_BEFORE_THE_FIRST_DAY_IS_READ_OR_IT_IS_RULE_11:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_forward_test_declaration_v2.json
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      the one-sided and two-sided floors computed at N=6 as 0.015625 and 0.03125 against the 0.025 bar; the step-2 precedent is the pre-registered p_two_sided verified at round 344.
+  THE_IDENTITY_QUESTION_IS_CLOSED_AND_IT_CLOSED_THE_RIGHT_WAY:
+    prov: RELAYED
+    from: BE 114 via coordinator MEM 349
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      BE's digest-match argument as dispatched; recorded as closing the OPEN item I filed at round 348, which said this question could reclassify the test rather than qualify it.
+  AND_THE_ONE_FACT_THAT_CUTS_THE_OTHER_WAY_IS_THAT_THETA_WAS_NEVER_REFITTED:
+    prov: RELAYED
+    from: BE 114 via coordinator MEM 349
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      the one-theta-per-arm-across-thirty-versions finding as dispatched; consistent with the theta carrier census I ran independently at rounds 342 and 343 finding 43 carriers each, all exact.
+  MULTIPLICITY_IS_69_NOT_2_AND_THE_TWO_NUMBERS_SIT_SIDE_BY_SIDE_IN_ONE_ARTIFACT:
+    prov: RELAYED
+    from: BE 113 via coordinator MEM 349
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      the two field names and the range as dispatched; DE's withdrawal of the 2 is recorded at round 348 from the v2 freeze amendment.
+  BUT_THE_CORRECTION_IN_FORCE_IS_STILL_THE_FROZEN_2_AND_BES_69_IS_REPORTED_AS_A_LIMIT:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_forward_test_declaration_v2.json
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      THE_MULTIPLICITY_IS_STILL_WRONG.if_BE_returns_a_count_greater_than_2 read verbatim from the v2 declaration and set against the dispatch's wording.
+  THREE_AUTOMATED_TIMERS_PROCESS_POPULATION_DAYS_AND_I_MEASURED_THEM_MYSELF:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-measurement-pipeline.timer
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      systemctl --user list-timers for pm-* and da-* read for last-run times, and systemctl --user show for ActiveState and Result on each of the three services.
+  AND_THE_MEASUREMENT_TIMER_FIRES_AGAIN_WITHIN_THE_HOUR_WHICH_IS_A_DEADLINE_NOBODY_SET:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-measurement-pipeline.timer
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      the next-elapse time read from systemctl --user list-timers at this sweep and differenced against the sweep clock.
+  09_07_IS_CONSUMED_BY_8_OF_13_PRODUCER_FAMILIES_WHICH_IS_STRONGER_THAN_ENDPOINT_SPLIT:
+    prov: RELAYED
+    from: REV via coordinator MEM 349
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      the 8-of-13 figure as dispatched, with its relation to the endpoint-split framing stated rather than merged into it.
+  AND_V2_RECORDS_THAT_09_07_WAS_RULED_IN_ON_ITS_STATUS_NOT_ITS_RESULT:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_forward_test_declaration_v2.json
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      THE_09_07_PROBLEM_NOW_INSIDE_THE_PRIMARY.what_was_known_when_the_day_was_ruled_in read verbatim, including the 413-hits search result.
+  EVEN_THE_ARM_EXPECTED_TO_CLEAR_IS_A_COIN_FLIP_AT_ITS_OWN_POINT_ESTIMATE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_forward_test_declaration_v2.json
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      PRE_REGISTERED_EXPECTATION_ARM_BY_ARM read in full: observed_z_at_3_days, holm_bars, the CONDVALUE block with its margin and power, and THIS_IS_AN_UPPER_BOUND_ON_POWER.
+  AND_THE_STOPPING_RULE_NOW_BINDS_HARDER_BECAUSE_HAZARDS_FAILURE_IS_PREDICTED_IN_ADVANCE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_forward_test_declaration_v2.json
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      THE_STOPPING_RULE_IS_UNCHANGED_AND_NOW_BINDS_HARDER read verbatim from the v2 declaration.
+  THE_23_55_BOUNDARY_AND_THE_IDENTITY_SIDECAR_ARE_ACCEPTED_AND_AWAIT_V3:
+    prov: RELAYED
+    from: REV and BE via coordinator MEM 349
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      both items as dispatched; the retroactive limit on 09-07 is recorded because it is the part that cannot be fixed later.
+  AND_THE_USER_HAS_ASKED_TO_BUILD_NOW_WITH_FOUR_DAYS_STAGED_AND_HELD:
+    prov: RELAYED
+    from: USER via coordinator MEM 349
+    as_of: 2026-09-11T02:34:44Z
+    said: >-
+      the request, the four staged days and the hold as dispatched.
   # --- MEM round 348, 2026-09-11T02:24:17Z ---
   THE_USER_RULED_THE_FORWARD_TEST_RUNS_ON_ARMS_THAT_FAILED_THEIR_SCREEN:
     prov: CHECKED

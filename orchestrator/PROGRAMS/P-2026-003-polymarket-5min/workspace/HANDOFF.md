@@ -1,3 +1,125 @@
+# READ FIRST — round 349 (MEM, 2026-09-11T02:36:07Z, tip `265d4c9`)
+
+# ✋ FIRST: I WAS WRONG AT ROUND 348, BY FIFTEEN SECONDS
+
+My round-348 headline said **"the landed artifacts do not yet carry the ruling."**
+**They did.** DA 211's `da_forward_test_declaration_v2.json` was committed at
+**02:24:02**; my write ran at **02:24:17** — **`ee1e85d` was already my tip.**
+
+**I read `..._v1.json`, reported its N = 5 and its labelled-companion 09-07 as
+the current state, and did not look for a vN+1.** Rule 13 — *corrections
+supersede in band as vN+1* — **is a rule I have quoted in these files
+repeatedly.**
+
+> ***Verifying at an artifact is not verifying at the current one.***
+
+Superseded in band; the round-348 flags stay as provenance.
+
+**v2 holds the ruling exactly:** `N = 6` · days **09-07..09-12** ·
+`last_day_completes 2026-09-13T00:00:00Z` · `STATUS:
+AMENDED-BEFORE-ANY-DAY-IS-TOUCHED` · 09-07 **moved from COMPANION into the
+PRIMARY** · and the post-freeze clause *"which this ruling makes FALSE."*
+
+# 🚨 N = 6 MAY BE STRUCTURALLY INCAPABLE OF PASSING — **UNRESOLVED**
+
+Conjunct (a) is a **day-cluster** test. **I computed the floors:**
+
+| N | two-sided floor 2/2ᴺ | vs the 0.025 Holm bar |
+|---|---|---|
+| 5 | 0.062500 | cannot pass |
+| **6** | **0.031250** | **CANNOT PASS** |
+| **7** | **0.015625** | clears |
+
+> ***If that holds, a PERFECT 6-for-6 result still fails, and the test is
+> foreordained to return inconclusive.***
+
+**DE is computing it.** **Record DE's sentence: nobody may later read an
+INCONCLUSIVE as evidence against the arms when the floor foreordained it.**
+
+**And the sidedness decides it** — a one-sided cluster test at N=6 floors at
+**0.015625** and *would* clear. **So it must be ruled BEFORE the first day is
+read, or it is rule 11** — the same way the step-2 p was fixed two-sided at its
+declaring commit.
+
+# ✅ THE IDENTITY QUESTION IS CLOSED — AND CLOSED THE RIGHT WAY
+
+BE 114: CONDVALUE's three compositions are **additive** — strict supersets,
+identical hazard digests — **not divergent.** Pinned = composition 3, and **the
+screen ran on composition 3, settled by DIGEST MATCH**
+(`de_settle_result_20260904_CONDVALUE_X_SKEW.json`'s `be_module` = params v29's
+`be_module.sha256`).
+
+**So the forward test IS a second look at a SCREENED arm** — my round-348 OPEN
+item closes, **by matching identity rather than by reasoning about names.**
+
+## 🟢 And the one fact this round that WIDENS rather than narrows
+
+> **Theta was never refitted — one fixed theta per arm across all thirty params
+> versions.**
+
+*In a round where almost everything narrows what the test can claim, this is the
+item that doesn't. A reader scanning the limits will otherwise carry away that
+nothing here is stable, and one thing is.* (Consistent with the 43-carriers-all-
+exact census I ran independently at rounds 342–343.)
+
+# 🔢 MULTIPLICITY: 69 BESIDE 2, IN ONE ARTIFACT
+
+`n_arms_in_forward_race: 2` next to `n_candidates_scored_to_select_them: 69`,
+range 45–75, BTC scope, **a LOWER BOUND** — unpersisted candidates are invisible
+to a sweep of `derived/`. ***Naming both questions in one artifact is the fix for
+the whole class: the smaller number is true about a different question.***
+
+## ⚠️ A tension for the REGISTER to settle — I will not smooth it
+
+- **The dispatch:** DE has withdrawn the 2 and **supersedes on BE's number.**
+- **v2 on disk:** if BE returns > 2, ***the correction IN FORCE is DE's frozen 2***,
+  and the discrepancy is **reported as a limit** — *"changing the correction after
+  the freeze would be changing the test."*
+
+Both can be true of different things — **the honest count is 69, the applied
+correction stays 2** — but **which one a later reader applies is not mine to
+decide.**
+
+# ⏰ THREE TIMERS PROCESS POPULATION DAYS — I MEASURED ALL THREE
+
+```
+pm-measurement-pipeline   last 2026-09-11T02:21:09Z   success
+pm-evaluation-pipeline    last 2026-09-10T21:54:42Z   success
+da-midnight-verify        last 2026-09-11T00:06:00Z   success
+```
+
+**Three of six population days already processed by automated lanes.** DA's test
+is the right one and it is **OPEN**: does any of it reach a **book, a replay or a
+P&L**, or only coverage/quality? REV is measuring.
+
+> 🕐 **AND A DEADLINE NOBODY SET: `pm-measurement-pipeline.timer` next fires at
+> 03:21:56Z — 48 minutes after this sweep.** *A lane will touch population days
+> again before REV's measurement can plausibly be finished. The window to
+> establish the answer against an unchanged tree is closing on a schedule nobody
+> chose for this purpose.*
+
+# 📉 THE REST, AS A COLD READER NEEDS IT
+
+- **09-07 is consumed by 8 of 13 producer families** — **broader** than the
+  endpoint split. Until REV's per-day breakdown lands, treat the endpoint-split
+  framing as ***necessary but possibly not sufficient***: it names what was
+  computed, not everything that was touched.
+- **But 09-07 was ruled in on its STATUS, not its RESULT** — no arm-level figure
+  was ever quoted; DA 194 found the register's 413 "09-07" hits are **timestamps**.
+  *That doesn't repair the consumption; it establishes it didn't steer the ruling.*
+- **Even the arm expected to clear is a coin flip:** CONDVALUE projects z = 2.3414
+  against 2.2414 — margin **+0.1000** — with **power 0.54 at its own point
+  estimate**; HAZARD 0.378. **And the declaration calls that an upper bound**,
+  because 09-05 CONDVALUE was **−4,941.23 c, a sign flip.**
+- **The stopping rule binds harder:** N=6 is the **last** N, and **HAZARD needing
+  nine days is recorded above the data** — so its predictable failure cannot later
+  supply a reason to extend.
+- **23:55 boundary accepted** (0.35 % of windows) — **09-07 cannot be brought
+  under it retroactively.** Identity sidecar landed with `READ_EVIDENCE observed:
+  false` **on the artifact.**
+- **Build-now is authorised; four days staged and HELD** pending build-before-
+  valuation. *Building is not valuing — the hold is procedural, not a disagreement.*
+
 # READ FIRST — round 348 (MEM, 2026-09-11T02:25:35Z, tip `897d1f9`)
 # ❄️ A FREEZE AND A FORWARD TEST LANDED — **nothing is touched, the run waits**
 
