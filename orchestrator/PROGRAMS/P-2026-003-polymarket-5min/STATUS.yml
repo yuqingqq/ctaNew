@@ -347,6 +347,7 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r384_the_landing_gap_widened_again_121_over_159: "Third consecutive round refused: HELD BEHIND_AND_NOT_FF at 13:41:50Z. The divergence has gone 112/131 (round 382) -> 117/139 (383) -> 121/159 (384) in about an hour, so origin gained 28 commits while local gained 9 and neither side can fast-forward. Q-MEM-338 (round 358), Q-MEM-339, Q-MEM-340 and Q-MEM-341 are written and UNLANDED. I did not merge, stash or rebase -- rules 21 and 45. Recorded as a trend rather than a repeat because the backlog is now four rows and the gap is growing faster than my rounds."
   r384_falsifier_b_is_GREEN_and_the_predicate_is_PER_LEAF: "BE 176 (BE_BOOK_CONTENT_DIFF_V2): 322732 leaves, 322723 equal, so EXACTLY NINE differ -- and all nine are in the declared allowed set (seven wall_clock, two resource_telemetry). DATA_DIFFERENCES is EMPTY; verdict CONTENT_IDENTICAL_EXCEPT_ALLOWED. The set is 50 names in three classes (provenance 24, wall_clock 9, resource_telemetry 17) and the artifact's own HOW_THE_VERDICT_IS_COMPUTED says every leaf is classified BY ITS OWN NAME and no key is allowed wholesale."
   r384_rows_indexed_was_CHECKED_and_it_passed: "At round 383 I named the wholesale-exemption gap: the five differing keys lived inside asm.assembly and none was in the allowed set. BE closed it PER LEAF. rows_indexed now appears as its own leaf at both stages with equal=True and class None -- not in the allowed set, therefore DATA by the declared rule, and EQUAL. The artifact says so in its own words: asm.assembly.stages carries rows_indexed, which is data, beside wall_s and peak_rss_mb_highwater, which are not."
   r384_THE_LANDED_09_08_BOOK_CARRIES_A_SIX_DAY_RULED_SET: "The landed receipt records resources.assembly_inputs.ruled_day_set as SIX days, 2026-09-03..09-08 -- v29's set -- while BOTH rebuilds record ELEVEN, 09-03..09-13. That is the load_params-reads-v29 split I drove at round 382, now visible in a production artifact rather than in source. It also means (b)'s content identity compares a book built under the OLD ruled set against one built under the NEW, which is exactly what the instrument's own WHAT_THIS_PROVES claims and makes the pass stronger than it first reads: the re-pin admitted a day and changed nothing about 09-08."
@@ -28064,6 +28065,10 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r384_the_landing_gap_widened_again_121_over_159:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    said: "ran the script --dry with the four ids: LOCK HELD 13:41:50Z then HELD BEHIND_AND_NOT_FF; git rev-list --left-right --count gave 121 159 against 117 139 an hour earlier; the FF blocker is still the same two other-seat files, confirmed by comm of the modified set against the HEAD-vs-origin diff set."
   r384_falsifier_b_is_GREEN_and_the_predicate_is_PER_LEAF:
     prov: CHECKED
     artifact: data/pm_5min/derived/be176_book_content_diff_20260908.json
