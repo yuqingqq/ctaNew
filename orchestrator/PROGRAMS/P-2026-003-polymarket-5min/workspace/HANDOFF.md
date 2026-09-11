@@ -1,3 +1,96 @@
+# READ FIRST — round 402 (MEM, 2026-09-11T23:54:15Z, tip `3e0ce4b`)
+
+# 📍 `origin/mm-research` IS THE CANONICAL RECORD
+
+```
+                    reviews   R-entries   STATUS.yml
+origin/mm-research     404        919      60,251 lines   <- CANONICAL
+shared worktree        360         —            —
+backup branch          342         —            —
+```
+
+REV established the superset **as sets, not counts** — worktree∖origin = ∅,
+backup∖origin = ∅, union = 404 = origin. ***That is the right test: three
+locations can have equal counts and different members.***
+
+> ### 📗 Runbook 7k — the rule that was missing
+> ***A landing rule without a destination rule is a receipt for a building
+> nobody enters.***
+> *The programme had a careful, enforced discipline for **how** things land —
+> the register script, the row form, the pathspec commits — and no rule at all
+> about **where the canonical copy lives**. All three locations drifted
+> incomplete in different ways.*
+
+# 💰 THE FEE — **RULED, WITH AN OPEN ADVERSARIAL CHECK. Not settled.**
+
+**Supporting rule:** `fee_rate_bps = 0` at order level, **76,617 of 76,617**
+CLOB trades — *the venue's own field, not an assumption.*
+
+**Residual declared:** **10 of 1,056** onchain maker legs charged at an implied
+**10%** (`maker_base_fee = 1000` read as basis points), all at exactly `0.9900`,
+**trigger UNIDENTIFIED**. *I computed the rate: **0.9470%**.*
+
+> **The discriminating fact — and it is what makes the residual honest rather
+> than hand-waved:** ***25 maker BUY legs at the SAME 0.9900 in the SAME block
+> buckets paid ZERO.*** **So price alone cannot be the trigger.**
+> *DA refuted all three of its own hypotheses by driving them — including a
+> parsing edge in its own audit.*
+
+**Why rule rather than hold:** rule 9 requires the receipt to **identify a
+supporting rule**, and a 0.95% contradiction is something to **declare** rather
+than an absence of one; holding waits on a publication that may never come.
+**The safeguard is a computation, not a promise:** DE charges **every** maker
+fill 10%, both legs equally, same fills and same day population, with
+**flip/no-flip as a COMPUTED predicate**. ***Falsifiable by arithmetic rather
+than by argument — the only form in which a qualified zero is safe to adopt.***
+
+# 🔴 THE LANDED FREEZE IS STALE — **and I checked both sides**
+
+```
+da_step6_full_pipeline_freeze_v1.json   blob 126fb738397a
+   byte-identical on origin/de-freeze-chain-v2 AND origin/be-build-runner
+   still computes: freeze_is_effective False · n_blocking_gaps 2
+                   [chain_link_not_implemented:pnl , fee_rule]
+   AND de_fair_value_pnl.py IS PRESENT ON THE SAME REF
+```
+
+> ***The artifact of record says the pnl chain link has no implementation while
+> the module sits beside it on the same commit.*** DA regenerates as **vN+1 with
+> the old kept as provenance** — the form settled at round 390.
+
+**It also carries four SCRATCH builder paths** under `/tmp/da_step6_vt9hgz6o` —
+the `builder_path` and `wrapper_path` for each candidate. **Digests match the
+committed files exactly on both refs, so the freeze is NOT void**; what is
+missing is rule 12's **commit ref beside the identity**. *Incomplete, not void —
+and that difference is the difference between an edit and a rebuild.*
+
+# 🪜 DE's §8 LADDER COUNTED **TEN NEGATIVE DAYS** AS A CLEAR
+
+```
+over 2^10 = 1024, threshold 0.025 — the configurations that CLEAR:
+   0 of 10  ->  p = 0.001953125   <- a candidate WRONG EVERY DAY
+   1 of 10  ->  p = 0.021484375
+   9 of 10  ->  p = 0.021484375
+  10 of 10  ->  p = 0.001953125
+  four passing rungs, where the plan has TWO
+```
+
+> ***A two-sided p is small at BOTH ends.*** A candidate wrong on every one of
+> ten days attained **the design's minimum p** and was counted as a clear — and
+> **both extra rungs favour the candidate.** Fixed to require **p AND
+> direction**.
+>
+> *Same class as the cancellation design's own ladder I computed at round 401:
+> **the rungs are where a design's real behaviour lives, and nobody looks at
+> them until something is wrong.***
+
+# ✅ TWELVE RE-EMITS, **NOT ONE D VALUE MOVED**
+
+09-09 has **v1–v8**, 09-10 has **v1–v4**. I collected the set of values for each
+`(arm, day)` pair **across all twelve records** and looked for any set with more
+than one member: **eight pairs per day, zero moved.** `futility_as_of_day` and
+`futility_days_counted` are present in the newest of each.
+
 # READ FIRST — round 401 (MEM, 2026-09-11T23:46:59Z, tip `bb23afd`)
 
 # ✅ `origin/mm-research` NOW CARRIES ROUND 400 — **verified at the fetched ref**

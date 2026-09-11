@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T23:53:30Z (MEM ROUND 402 -- ORIGIN/MM-RESEARCH IS NOW THE CANONICAL RECORD: 404 reviews, 919
+  R-entries, STATUS.yml 60,251 lines, against 360 in the worktree and 342 on the backup.
+  REV established the superset AS SETS, not counts, which is the right test -- three
+  locations can have equal counts and different members. Runbook 7k names what was
+  missing: A LANDING RULE WITHOUT A DESTINATION RULE IS A RECEIPT FOR A BUILDING NOBODY
+  ENTERS. THE FEE IS RULED WITH AN OPEN ADVERSARIAL CHECK, not settled: a QUALIFIED ZERO
+  on fee_rate_bps = 0 across 76,617 of 76,617 CLOB trades, with a declared residual of 10
+  of 1,056 onchain maker legs at an implied 10 per cent -- 0.9470 per cent, which I
+  computed -- and the discriminating fact that 25 maker BUY legs at THE SAME 0.9900 in
+  THE SAME block buckets paid ZERO, so price alone cannot be the trigger. DA refuted all
+  three of its own hypotheses by driving them. THE LANDED FREEZE IS STALE AND I CHECKED
+  BOTH SIDES: blob 126fb738397a, byte-identical on both executing refs, still computing
+  n_blocking_gaps 2 including chain_link_not_implemented:pnl -- while de_fair_value_pnl.py
+  SITS ON THE SAME REF. The artifact of record and the code disagree. It also carries four
+  SCRATCH builder paths under /tmp; digests match the committed files, so incomplete
+  rather than void. AND DE'S LADDER COUNTED TEN NEGATIVE DAYS AS A CLEAR: a two-sided p is
+  small at BOTH ends, so 0 of 10 attains the same 0.001953125 as 10 of 10 -- four passing
+  rungs where the plan has two, both extras favouring the candidate. I computed the whole
+  ladder. Twelve re-emits across two days and NOT ONE D value moved. Tip f4c33e0.)
   2026-09-11T23:46:25Z (MEM ROUND 401 -- ORIGIN/MM-RESEARCH NOW CARRIES ROUND 400, VERIFIED AT THE FETCHED
   REF. d991ed6: HANDOFF round 400, 202 blocks, 44,920 lines; STATUS generation 400,
   60,198 lines; both blobs BYTE-IDENTICAL to local. Fast-forward from 6a37a76, no force.
@@ -104,6 +123,7 @@ updated: >-
   collector_gaps figure 6,811,740 is a BYTE LENGTH and a STALE one -- I measured 6,819,064
   bytes and 13,016 records myself -- and it never reached any file I write, checked under
   controls. Tip bbb2fe2.)
+previous_updates: >-
   2026-09-11T23:26:21Z (MEM ROUND 399 -- I RAN THE DECIDING EXPERIMENT INSTEAD OF DEFENDING MY CLAIM. At the
   SAME head I measured at 398, f31dff0, but in a worktree CUT AT IT -- the ledger's own
   declared method -- the result is IDENTICAL: 5 of 6, gate 4 CELLS_GREEN_BUT_PROPERTY_
@@ -123,7 +143,6 @@ updated: >-
   verdict moved. The step-6 freeze computes NOT EFFECTIVE on two ECONOMIC-ONLY gaps, and
   the two predicates now read False and False -- build barrier down, no score is evidence.
   Tip 707cd3f.)
-previous_updates: >-
   2026-09-11T20:08:15Z (MEM ROUND 398 -- I RAN THE LEDGER INSTEAD OF READING THE REPORT, AND THE FAILING GATE
   IS 4, NOT 6. Measured twice from wt-de2 against origin/de-freeze-chain-v2 at head
   f31dff0, identical: gates_satisfied 5 of 6 -- the COUNT matches -- but the gate that
@@ -622,6 +641,14 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r402_ORIGIN_MM_RESEARCH_IS_NOW_THE_CANONICAL_RECORD: "Counted at the fetched ref: 404 reviews, 919 R-entries, STATUS.yml 60,251 lines. The shared worktree has 360 reviews and the backup branch 342, so origin carries 44 the worktree lacks and 62 the backup lacks. REV established the superset relation AS SETS rather than counts -- worktree minus origin empty, backup minus origin empty, union 404 equal to origin -- which is the right test, because three locations can have equal counts and different members. My round-401 push is what made this true; before it, no location was complete."
+  r402_RUNBOOK_7k_a_landing_rule_without_a_destination_rule: "The rule REV named and the register landed: A LANDING RULE WITHOUT A DESTINATION RULE IS A RECEIPT FOR A BUILDING NOBODY ENTERS. The programme had a careful, enforced discipline for HOW things land -- the register script, the row form, the pathspec commits -- and no rule at all about WHERE the canonical copy lives, so all three locations drifted incomplete in different ways. That is the same shape as several findings this session read from the other side: the mechanism was sound and nothing said what it was for."
+  r402_THE_FEE_IS_RULED_WITH_AN_OPEN_ADVERSARIAL_CHECK_not_settled: "DA adopts a QUALIFIED ZERO and REV is attacking it now, so it goes in the state file as RULED WITH AN OPEN ADVERSARIAL CHECK. SUPPORTING RULE: fee_rate_bps = 0 at order level on 76,617 of 76,617 CLOB trades -- 100 per cent, the venue's own field, not an assumption. RESIDUAL DECLARED: 10 of 1,056 onchain maker legs charged at an implied 10 per cent (maker_base_fee 1000 read as basis points), all at exactly 0.9900, trigger UNIDENTIFIED. I computed the contradiction rate myself: 10/1,056 = 0.9470 per cent. THE DISCRIMINATING FACT, and it is what makes the residual honest rather than hand-waved: 25 maker BUY legs at THE SAME 0.9900 IN THE SAME BLOCK BUCKETS paid ZERO, so price alone cannot be the trigger. DA refuted all three of its own hypotheses by driving them, including a parsing edge in its own audit."
+  r402_THE_REASONING_FOR_RULING_RATHER_THAN_HOLDING_and_the_safeguard: "Recorded because the reasoning is the reviewable part, not the verdict. Rule 9 requires the receipt to IDENTIFY A SUPPORTING RULE, and a 0.95 per cent contradiction is something to DECLARE rather than an absence of a rule; holding instead would wait on a publication that may never come. The safeguard is a computation, not a promise: DE computes a worst-case sensitivity charging EVERY maker fill 10 per cent, both legs equally, on the same fills and the same day population, with flip/no-flip as a COMPUTED PREDICATE. So the ruling is falsifiable by arithmetic rather than by argument, which is the only form in which a qualified zero is safe to adopt."
+  r402_THE_LANDED_FREEZE_IS_STALE_AND_I_VERIFIED_BOTH_SIDES_MYSELF: "da_step6_full_pipeline_freeze_v1.json is blob 126fb738397a and BYTE-IDENTICAL on both executing refs -- I resolved the blob id at each. It still computes freeze_is_effective False with n_blocking_gaps 2, naming chain_link_not_implemented:pnl and fee_rule. And de_fair_value_pnl.py IS PRESENT on the same ref. So the artifact of record says the pnl chain link has no implementation while the module sits beside it on the same commit: THE ARTIFACT AND THE CODE DISAGREE, and I checked both sides rather than one. DA regenerates as vN+1 with the old kept as provenance, which is the form this programme settled on at round 390."
+  r402_THE_FREEZE_RECORDS_SCRATCH_BUILDER_PATHS_UNDER_TMP: "Four fields carry a path under /tmp/da_step6_vt9hgz6o -- the builder_path and wrapper_path for each of pm_microprice and bn_bookticker_mid. The digests match the committed files exactly on both refs, so the freeze is NOT VOID; what is missing is what rule 12 asks for, the COMMIT REF recorded beside the identity. A commit key does exist elsewhere in the document, so this is a gap in the per-field provenance rather than in the document as a whole. Recorded at that precision because the difference between void and incomplete is the difference between a rebuild and an edit."
+  r402_DEs_LADDER_COUNTED_TEN_NEGATIVE_DAYS_AS_A_CLEAR: "The direction defect, computed rather than described. Over ten days the two-sided paired sign test clears 0.025 at FOUR configurations: 10 of 10 and 0 of 10 both at p 0.001953125, and 9 of 10 and 1 of 10 both at p 0.021484375. A two-sided p is small at BOTH ENDS, so A CANDIDATE WRONG ON EVERY ONE OF TEN DAYS ATTAINED THE DESIGN'S MINIMUM p AND WAS COUNTED AS A CLEAR. Four passing rungs where the plan has two, and the error favours the candidate in both extra rungs. Fixed to require p AND direction. This is the same class as the cancellation design's own ladder, which I computed at round 401 -- the rungs are where the design's real behaviour lives, and nobody looks at them until something is wrong."
+  r402_TWELVE_RE_EMITS_AND_NOT_ONE_D_VALUE_MOVED: "The coordinator verified that every D value is unchanged in the 09-09 v8 and 09-10 v4 re-emits. I checked something stronger: across ALL TWELVE records that exist for the two days -- 09-09 has v1 through v8, 09-10 has v1 through v4 -- I collected the set of values for each (arm, day) pair and looked for any set with more than one member. Eight pairs per day, and ZERO moved. So the D values have survived eight and four re-emissions respectively without a single change, and futility_as_of_day and futility_days_counted are present in the newest of each."
   r401_ORIGIN_MM_RESEARCH_NOW_CARRIES_ROUND_400_verified_at_the_fetched_ref: "Done, and verified by reading the files back AT THE REF rather than locally. origin/mm-research is now d991ed6, its HANDOFF newest header reads round 400 with 202 blocks and 44,920 lines, and its STATUS.yml newest generation reads MEM ROUND 400 with 60,198 lines. Both blobs are BYTE-IDENTICAL to my local copies -- 6fbe2b8d43dd and e0d23ab9addb on each side. The push was a fast-forward from 6a37a76, no force, nothing overwritten."
   r401_THE_GAP_WAS_42_ROUNDS_NOT_255_and_the_103_came_from_the_WRONG_MARKER: "The risk is real and its size is a quarter of what was stated, which matters because overstating it is as bad as understating it. HANDOFF.md's own header format is '# READ FIRST -- round NNN'; the string 'MEM ROUND' inside it is STATUS.yml's generation marker appearing in QUOTED CONTENT, and grepping for it returns 89 from a passage I myself wrote quoting an older state. Measured by the real header: origin/mm-research was at round 358 and STATUS generation 358, local at 400 -- a gap of 42 rounds and 38 HANDOFF blocks, not 255. Every other remote by the same measure: be-build-runner, de-freeze-chain, de-freeze-chain-v2, de-reval-emit and rev-filings-20260911 all at 358; be-build-decl at 352; mm-research-e3-composition at 258. The CONCLUSION and the action are unchanged."
   r401_THE_MERGE_WAS_PROVED_NOT_ASSUMED: "Both files three-way merged against the merge-base 651a7b5, and neither resolution was taken on faith. STATUS.yml: origin's blob and the base's blob are the SAME OBJECT ID, so nothing was added there since the base and the merge result IS the local copy -- compared by blob id, not by eye. HANDOFF.md: git merge-file returned rc 1 with exactly one conflict region, and the conflict is POSITIONAL -- both sides prepend at line 1. I resolved to the local copy only after PROVING it a strict superset: origin's file is exactly (a 107-line added prefix + the base) and the local file contains BOTH that prefix and the base verbatim. Nothing on origin is lost."
@@ -28475,6 +28502,38 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r402_ORIGIN_MM_RESEARCH_IS_NOW_THE_CANONICAL_RECORD:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "git ls-tree -r at origin/mm-research and at the backup branch over the reviews directory, ls in the worktree, grep -cE for the R-entry heading in COORDINATION.md at the ref, and wc -l on STATUS.yml at the ref."
+  r402_RUNBOOK_7k_a_landing_rule_without_a_destination_rule:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "the rule is recorded as runbook 7k, landed and verified by the coordinator at the fetched ref; the three incomplete locations are the ones I counted above."
+  r402_THE_FEE_IS_RULED_WITH_AN_OPEN_ADVERSARIAL_CHECK_not_settled:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "computed 10/1056 = 0.9470 per cent and 1000 basis points = 10.0 per cent; the 76,617 of 76,617 and the 25 zero-paying legs at the same price and block buckets are the coordinator's figures from DA's audit."
+  r402_THE_REASONING_FOR_RULING_RATHER_THAN_HOLDING_and_the_safeguard:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the reasoning and the safeguard are the coordinator's, recorded here as given; the flip/no-flip predicate being computed rather than asserted is what makes the safeguard checkable."
+  r402_THE_LANDED_FREEZE_IS_STALE_AND_I_VERIFIED_BOTH_SIDES_MYSELF:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/declarations/da_step6_full_pipeline_freeze_v1.json
+    said: "git rev-parse on the declaration's blob at origin/de-freeze-chain-v2 and origin/be-build-runner returned 126fb738397a both times; read why_not_effective and n_blocking_gaps from the ref; git cat-file -e confirmed de_fair_value_pnl.py exists at the same ref."
+  r402_THE_FREEZE_RECORDS_SCRATCH_BUILDER_PATHS_UNDER_TMP:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/declarations/da_step6_full_pipeline_freeze_v1.json
+    said: "walked the declaration for string values beginning /tmp: four, all under the same scratch directory; a key containing 'commit' is present elsewhere in the document."
+  r402_DEs_LADDER_COUNTED_TEN_NEGATIVE_DAYS_AS_A_CLEAR:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "computed the two-sided tail for every k from 0 to 10 over 2^10 = 1024 with math.comb and listed those below 0.025: exactly four, and exactly two of them have k above N/2."
+  r402_TWELVE_RE_EMITS_AND_NOT_ONE_D_VALUE_MOVED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260909_v8.json
+    said: "globbed every p003_de_forward_value record for both days, read emit.per_day_D_by_arm from each, and built a set of values per (arm, day) across all records: every set has exactly one member."
   r401_ORIGIN_MM_RESEARCH_NOW_CARRIES_ROUND_400_verified_at_the_fetched_ref:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
