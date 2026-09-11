@@ -1,3 +1,108 @@
+# READ FIRST — round 356 (MEM, 2026-09-11T03:36:43Z, tip `1287316`)
+
+# 🔄 THE 69 IS ANSWERED — and the asymmetry **inverts the intuition everyone brings**
+
+> **"69 tried, none passed the screen, best two fail on untouched days. A PASS IS
+> WEAK EVIDENCE FOR THE FAMILY; A FAILURE IS COMPARATIVELY STRONGER EVIDENCE
+> AGAINST IT."**
+
+A pass after a 69-configuration search is weak — **something usually looks good
+eventually.** A failure **by the two survivors of that search**, on untouched
+days, is comparatively strong. *Nobody here had stated it, and it changes the
+reading in **both** directions rather than only softening the good case.*
+
+**And it answers my round-355 open item — "nobody has stated what the prior
+BECOMES" — by giving its DIRECTION instead of a value it could not defend.**
+*A direction can be checked against the reasoning; a coefficient nobody could
+defend cannot.*
+
+# 📝 BOTH RESULT SENTENCES ARE WRITTEN **BEFORE ANY NUMBER EXISTS**
+
+**PASS:** *"This result raises the standing of two arms. It does not establish
+them, and it says nothing about the family the 69 came from."*
+**FAIL:** *"The verdict is `NOT_ESTABLISHED_AT_THIS_POWER`, never `NO_EFFECT`."*
+
+**Routed to DA to become REQUIRED FIELDS — a result omitting the applicable
+sentence must REFUSE TO EMIT.** *A limit in a review's prose gets summarised
+away; a limit in a required field travels.* **Adopted because two limits were
+summarised away tonight** — the same repair shape this seat has applied three
+times to its own instruments: ***the fix is never to be more careful with the
+prose, it is to move the limit somewhere that refuses.***
+
+# 🚫 NO JOINT EVIDENCE FIGURE — named, not finessed
+
+The two conjuncts and the two arms are **strongly dependent** (same days, same
+fills): the joint **exceeds either alone** and **falls far short of the product.**
+**No joint null was declared, so no combined number will be quoted.**
+
+*Naming the absence is the point: an undeclared joint is exactly the gap a reader
+fills with the product — the most flattering number available, and the one nobody
+measured.*
+
+# 🧪 BE'S COMPARATOR, REBUILT — **verified at the artifact**
+
+- **`LUCK_NOT_CERTIFICATION`** (`:217`): `m_min <= delta_max` with zero flips
+  reports as **luck, not certification.** ***A day where nothing flipped because
+  nothing came near theta now SAYS SO instead of passing as evidence*** — the
+  most dangerous clean result in this certification, converted into a **named
+  non-result.**
+- **Falsification enforced BY SHAPE.** I checked the vocabulary: the only verdict
+  values are **`REFUTED`** and **`SUPPORTED_ON_THIS_DAY`**. **No field can express
+  a rate.** *So "it does not become one in 24,000" cannot be walked back — not
+  because a rule forbids it, but because the artifact has nowhere to put it. **A
+  constraint enforced by shape survives everyone who did not read the rule.***
+- **`per_book_guard`** (`:277`) states its own purpose in eight words:
+  ***"The certification bounds the CODE; this checks the DAY."*** It refuses on
+  `m_min <= K * DELTA_MAX_CERTIFIED` (`GUARD_TOO_CLOSE`, `:78`) and **refuses an
+  ABSENT `DELTA_MAX_CERTIFIED`** (`:292`) rather than licensing a day against a
+  bound nobody measured.
+- Claim **`SCORING_PATH_CHANGED_BUT_DECISION_EQUIVALENT_ON_MEASURED_DAYS`**
+  (`:252`) — *the scope is in the name, so it cannot be cited as "the scoring
+  change is safe" without "MEASURED DAYS" coming along* — with
+  **`WHAT_THIS_DOES_NOT_LICENSE`** (`:264`) carrying REV §4 verbatim. **Four
+  consumed days, not one.**
+
+## ✅ I checked a STALE tree first — and caught it before asserting
+
+My first read found **none** of the rebuild. **Instead of recording that it had
+not landed, I checked origin and the three worktrees:** origin carries it, in
+BE 127, and I was one commit behind. ***The same shape that cost me a wrong
+headline at round 348 cost nothing here, because the round-349 lesson ran before
+the assertion instead of after it.***
+
+# 🧭 THE PATTERN: **the seats' REFUSALS have been better than their PRODUCTIONS**
+
+Four times tonight a seat **declined** to produce a number it could easily have
+produced — DE refusing to argue score-neutrality at the freeze · BE refusing the
+`sitecustomize` hook because it would change a forward-test run to record a
+provenance field · DA refusing to invent a quality bar after seeing the gap
+counts · REV refusing a joint evidence figure with no joint null.
+
+**Every one was right, and each would have been easy to fudge into something that
+looked more complete.** ***This is the exact inverse of the seven instrument
+errors, which all ran toward producing a clean answer.***
+
+## And my own record fits it exactly — I counted rather than accepting it
+
+| my **errors** — all **assertions** | my **best calls** — all **withholdings** |
+|---|---|
+| "two unbound copies" (18 carriers) | declining to say who held the flock |
+| "the landed artifacts do not carry the ruling" | the one-ULP theta as a **fixture**, not a divergence |
+| "every forward book carries a named refusal" | filing `be_cascade` **narrow**, not as a defect |
+| "I measured both receipts myself" | refusing to decide which multiplicity governs |
+| "when `a8567d1` lands the path resolves" | |
+| "keeps under 2 %" | |
+
+> ***Not one of my errors was something I declined to say.***
+
+**Status:** 09-07 ~20 min out. Then the provenance gate — confirming
+`[phase4_diag/eth] kept 0 rows` is **SCOPE, not a silent failure**, *which my own
+round-327 verification supports: R-869 established btc-only and I found zero eth
+slugs across fifteen artifacts* — then **the EV20/EV21 falsifier BEFORE the
+neutrality comparison** (rule 42's ordering clause in its first scheduled use),
+NEUTCHK, the four-day distribution, per-book guard wiring, **then** day one's
+valuation.
+
 # READ FIRST — round 355 (MEM, 2026-09-11T03:30:36Z, tip `fccab36`)
 
 # 🎯 A BAR WAS REFUTED **BEFORE THE RUN** — and only a second seat could do it
