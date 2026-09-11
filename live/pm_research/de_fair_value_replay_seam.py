@@ -34,7 +34,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sys
-from dataclasses import dataclass, asdict, field
+from dataclasses import dataclass, asdict, field, fields as dc_fields
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -81,11 +81,37 @@ class ReplayInputs:
     #: not decide the answer.
     declared_snapshot_sha256: str | None = None
 
+    #: THE ONLY THING EXCLUDED FROM THE DIGEST, and it is excluded
+    #: because it is a claim ABOUT the digest: including it would make the
+    #: digest depend on itself.
+    NOT_AN_INPUT = ("declared_snapshot_sha256",)
+
     def consumed(self) -> dict:
-        return {"non_fair_value_params": self.non_fair_value_params,
-                "initial_state": self.initial_state,
-                "price_path": list(self.price_path),
-                "half_spread": self.half_spread}
+        """EVERY FIELD OF THIS DATACLASS, FOUND BY INTROSPECTION.
+
+        REVIEW 202: my previous 'backstop' digested a HAND-WRITTEN list of
+        four names and `compare_arms` compared a SECOND hand-written list
+        of the same four -- so the backstop covered a field the first list
+        forgot and not one the second forgot, and its coverage was itself
+        a hand-maintained list. That is the thing it was built to replace.
+
+        Now a field added to this dataclass tomorrow is digested with no
+        edit anywhere, and its ABSENCE from the digest is IMPOSSIBLE
+        rather than unlikely: there is no list to forget.
+        """
+        out = {}
+        for f in dc_fields(self):
+            if f.name in self.NOT_AN_INPUT:
+                continue
+            v = getattr(self, f.name)
+            out[f.name] = list(v) if isinstance(v, tuple) else v
+        return out
+
+    @classmethod
+    def digested_field_names(cls) -> tuple:
+        """What the digest covers, derived -- for a reader and for a cell."""
+        return tuple(f.name for f in dc_fields(cls)
+                     if f.name not in cls.NOT_AN_INPUT)
 
     def digest(self) -> str:
         """THE DIGEST OF WHAT IS ACTUALLY CONSUMED -- computed here."""
@@ -141,10 +167,18 @@ def compare_arms(baseline: dict, challenger: dict) -> dict:
                 raise ReplayRefused(
                     f"REFUSED {NO_ARMS}: the {nm} arm carries no {key!r}")
     bi, ci = baseline["inputs"], challenger["inputs"]
-    differing = [k for k in ("non_fair_value_params", "initial_state",
-                             "price_path", "half_spread")
-                 if json.dumps(getattr(bi, k), sort_keys=True, default=str)
-                 != json.dumps(getattr(ci, k), sort_keys=True, default=str)]
+    # ONE SOURCE FOR WHAT IS COMPARED, and it is the dataclass itself.
+    # The second hand-written list lived here; REVIEW 202 measured that
+    # having two lists made the backstop defeatable from either side.
+    b_consumed, c_consumed = bi.consumed(), ci.consumed()
+    differing = sorted(
+        set(b_consumed) | set(c_consumed),
+        key=lambda k: k)
+    differing = [k for k in differing
+                 if json.dumps(b_consumed.get(k), sort_keys=True,
+                               default=str)
+                 != json.dumps(c_consumed.get(k), sort_keys=True,
+                               default=str)]
     if differing:
         raise ReplayRefused(
             f"REFUSED {INPUTS_DIFFER}: {differing} differ between the "
@@ -164,6 +198,10 @@ def compare_arms(baseline: dict, challenger: dict) -> dict:
     out = {"protocol": PROTOCOL,
            "inputs_identical": True,
            "inputs_digest": bi.digest()[:16],
+           "digest_covers": list(type(bi).digested_field_names()),
+           "digest_coverage_is_derived":
+               "dataclasses.fields(ReplayInputs) minus NOT_AN_INPUT -- no "
+               "hand-written list, so a new field cannot be omitted",
            "anchors_identical": same_anchor,
            "order_paths_identical": same_path,
            "baseline_path": baseline["path"].digest()[:16],
@@ -235,7 +273,10 @@ def falsify() -> int:
     # one -- and the fact that tightening gate 4 broke this fixture is why
     # the drive is done from the REF's bytes and not only in the tree
     # where the change was made.
-    POP = [(r["slug"], r["generation_id"]) for r in rows]
+    POP = {"actions": [(r["slug"], r["generation_id"]) for r in rows],
+           "population": "P003_NEUTRAL_REFERENCE_PATH_FIXTURE",
+           "as_of": "2026-09-11T19:00:00Z",
+           "source_identity": f"{Path(__file__).name}.falsify fixture"}
     acts = sorted(A.build_actions(
         rows, canonical_population=POP)["actions"],
         key=lambda a: a.decision_recv_ns)
@@ -347,6 +388,46 @@ def falsify() -> int:
         ck(f"a differing {key} REFUSES, naming the key",
            INPUTS_DIFFER in msg and key in msg,
            msg[:64] or f"ADMITTED A DIFFERING {key}")
+
+    # --- REVIEW 202's falsifier, the one that could not be written before:
+    # a field NOBODY LISTED anywhere, added to the dataclass at runtime.
+    import dataclasses as _dc
+
+    @_dc.dataclass(frozen=True)
+    class InputsPlusOne(ReplayInputs):
+        latency_model_ms: float = 0.0       # a field no list mentions
+
+    a_plus = InputsPlusOne(
+        non_fair_value_params={"max_inventory": 5},
+        initial_state={"inventory": 0.0, "clock": 0},
+        price_path=tuple(prices), half_spread=0.01, latency_model_ms=0.0)
+    b_plus = InputsPlusOne(
+        non_fair_value_params={"max_inventory": 5},
+        initial_state={"inventory": 0.0, "clock": 0},
+        price_path=tuple(prices), half_spread=0.01, latency_model_ms=250.0)
+    ck("a NEW field is digested with NO edit to any list",
+       "latency_model_ms" in InputsPlusOne.digested_field_names()
+       and a_plus.digest() != b_plus.digest(),
+       f"covers {len(InputsPlusOne.digested_field_names())} fields: "
+       f"{', '.join(InputsPlusOne.digested_field_names())}")
+    try:
+        compare_arms(run_arm(acts, v_ident, a_plus),
+                     run_arm(acts, v_chall, b_plus))
+        newfield = ""
+    except ReplayRefused as exc:
+        newfield = str(exc)
+    ck("  and two legs differing ONLY on it are REFUSED, naming it",
+       INPUTS_DIFFER in newfield and "latency_model_ms" in newfield,
+       newfield[:70] or "ADMITTED A DIFFERENCE NO LIST MENTIONED")
+    ck("  while legs AGREEING on it still compare normally",
+       compare_arms(run_arm(acts, v_ident, a_plus),
+                    run_arm(acts, v_chall, a_plus))["verdict"]
+       == "SEAM_IS_HONEST")
+    ck("the digest excludes ONLY the claim about itself",
+       ReplayInputs.NOT_AN_INPUT == ("declared_snapshot_sha256",)
+       and "declared_snapshot_sha256"
+       not in ReplayInputs.digested_field_names(),
+       str(ReplayInputs.digested_field_names()))
 
     ck("identical values with DIFFERENT paths is its own verdict, not a "
        "pass",

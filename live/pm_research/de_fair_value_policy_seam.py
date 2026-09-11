@@ -169,7 +169,10 @@ def falsify() -> int:
     # one -- and the fact that tightening gate 4 broke this fixture is why
     # the drive is done from the REF's bytes and not only in the tree
     # where the change was made.
-    POP = [(r["slug"], r["generation_id"]) for r in rows]
+    POP = {"actions": [(r["slug"], r["generation_id"]) for r in rows],
+           "population": "P003_NEUTRAL_REFERENCE_PATH_FIXTURE",
+           "as_of": "2026-09-11T19:00:00Z",
+           "source_identity": f"{Path(__file__).name}.falsify fixture"}
     acts = A.build_actions(
         rows, canonical_population=POP)["actions"]
     acts = sorted(acts, key=lambda a: a.decision_recv_ns)

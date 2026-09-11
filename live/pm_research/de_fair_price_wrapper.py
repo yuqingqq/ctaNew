@@ -210,7 +210,10 @@ def _hops(**stamped: Stamped) -> dict:
                      "transport_s": s.transport_s,
                      "equal_clocks_declared": s.equal_clocks_declared,
                      "zero_transport_is":
-                         ("DECLARED by the caller, not measured"
+                         ("unavailable -- a clock is absent, so nothing "
+                          "was measured here"
+                          if s.transport_s is None else
+                          "DECLARED by the caller, not measured"
                           if s.equal_clocks_declared and s.transport_s == 0
                           else "measured")}
     return out

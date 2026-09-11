@@ -58,6 +58,13 @@ NOT_IDENTITY_PATH = "ACTION_IS_NOT_ON_THE_NEUTRAL_IDENTITY_REFERENCE_PATH"
 NO_POPULATION = "CANONICAL_POPULATION_NOT_SUPPLIED"
 FLAG_CONTRADICTS = "REFERENCE_PATH_FLAG_CONTRADICTS_THE_CANONICAL_POPULATION"
 NOT_IN_POPULATION = "ACTION_NOT_IN_THE_CANONICAL_POPULATION"
+#: REVIEW 202: the population was an argument with NO PROVENANCE -- a
+#: fabricated one-element population containing the row under test
+#: admitted it. A builder cannot verify that a supplied population is the
+#: true one; it CAN refuse an unattributed one and record the digest of
+#: exactly what it used, so a fabricated population is visible as one
+#: rather than anonymous. That limit is stated, not papered over.
+NO_PROVENANCE = "CANONICAL_POPULATION_HAS_NO_PROVENANCE"
 OUT_OF_SCOPE = "ACTION_COIN_OUT_OF_SCOPE"
 NO_DECISION_STAMP = "ACTION_HAS_NO_DECISION_RECV_NS"
 OUTCOME_UNKNOWN = "ACTION_OUTCOME_NOT_SUPPLIED"
@@ -85,6 +92,34 @@ class ForecastAction:
 
     def as_dict(self) -> dict:
         return dict(asdict(self), key=list(self.key))
+
+
+def population_provenance(population) -> dict:
+    """WHERE THE POPULATION CAME FROM -- required, and digested.
+
+    `de_canonical_action_population.build_actions` already returns
+    `population`, `as_of` and `source_identity`; when its output is passed
+    straight through, the provenance comes with it. A bare iterable must
+    carry the same three under `provenance`, or the build REFUSES.
+    """
+    if isinstance(population, dict):
+        got = {k: population.get(k) for k in
+               ("population", "as_of", "source_identity")}
+        if all(isinstance(v, str) and v.strip() for v in got.values()):
+            return dict(got, supplied_as="the canonical builder's own "
+                                         "output")
+        prov = population.get("provenance") or {}
+        got = {k: prov.get(k) for k in
+               ("population", "as_of", "source_identity")}
+        if all(isinstance(v, str) and v.strip() for v in got.values()):
+            return dict(got, supplied_as="an explicit provenance block")
+    raise ActionsRefused(
+        f"REFUSED {NO_PROVENANCE}: the canonical population carries no "
+        f"`population` / `as_of` / `source_identity`. A population with "
+        f"no provenance cannot be told from one fabricated around the "
+        f"rows under test -- this builder cannot verify WHICH population "
+        f"it was handed, so it refuses an ANONYMOUS one and records the "
+        f"digest of what it used (REVIEW 202).")
 
 
 def canonical_keys(population) -> set:
@@ -129,7 +164,11 @@ def build_actions(consumptions, *, scope=SCOPE_COINS,
     one key that disagree about the VALUE consumed are a duplicate key and
     REFUSE.
     """
-    keys = canonical_keys(canonical_population)
+    keys = canonical_keys(canonical_population)          # None -> NO_POPULATION
+    provenance = population_provenance(canonical_population)
+    keys_digest = __import__("hashlib").sha256(
+        json.dumps(sorted(map(list, keys)), sort_keys=True).encode()
+    ).hexdigest()
     actions: dict = {}
     excluded: dict = {}
 
@@ -200,6 +239,14 @@ def build_actions(consumptions, *, scope=SCOPE_COINS,
     sides = sum(len(a.quote_sides) for a in rows)
     return {"protocol": PROTOCOL, "n_actions": len(rows),
             "canonical_population_size": len(keys),
+            "canonical_population_provenance": provenance,
+            "canonical_population_keys_sha256": keys_digest,
+            "WHAT_THIS_BUILDER_CANNOT_DO":
+                "it cannot verify that the supplied population is the "
+                "true one. It "
+                "refuses an unattributed population and digests exactly "
+                "the keys it used, so a fabricated one is VISIBLE -- it "
+                "is not prevented",
             "membership_decided_by":
                 "the canonical population supplied to this build; the "
                 "row's own `on_identity_reference_path` is CHECKED "
@@ -336,10 +383,34 @@ def falsify() -> int:
         return r
 
     SLUG = "btc-updown-5m-1788825600"
-    POP = [(SLUG, "g1"), (SLUG, "g2")]          # the canonical population
+    # THE POPULATION COMES WITH ITS PROVENANCE (REVIEW 202): a bare list
+    # is refused, so the fixture carries the same three fields the
+    # canonical builder emits.
+    POP = {"actions": [(SLUG, "g1"), (SLUG, "g2")],
+           "population": "P003_NEUTRAL_REFERENCE_PATH_FIXTURE",
+           "as_of": "2026-09-11T19:00:00Z",
+           "source_identity": "de_fair_value_actions.falsify fixture"}
 
     def build(rows, population=POP):
         return build_actions(rows, canonical_population=population)
+
+    try:
+        build_actions([row("BID")],
+                      canonical_population=[(SLUG, "g1")])
+        anon = ""
+    except ActionsRefused as exc:
+        anon = str(exc)
+    ck("an ANONYMOUS population refuses -- a fabricated one must not be "
+       "indistinguishable from the real one",
+       NO_PROVENANCE in anon, anon[:58] or "ADMITTED AN UNATTRIBUTED POPULATION")
+    _p = build([row("BID")])
+    ck("  and the build RECORDS the provenance and the digest of the keys "
+       "it actually used",
+       _p["canonical_population_provenance"]["source_identity"]
+       == "de_fair_value_actions.falsify fixture"
+       and len(_p["canonical_population_keys_sha256"]) == 64
+       and "cannot" in _p["WHAT_THIS_BUILDER_CANNOT_DO"],
+       _p["canonical_population_keys_sha256"][:16])
 
     # --- REVIEW 201 (2): MEMBERSHIP IS DERIVED, THE BIT IS CHECKED ------
     try:
