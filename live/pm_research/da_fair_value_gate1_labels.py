@@ -401,7 +401,7 @@ def falsify() -> int:
 # counts exactly five names and puts ANY other name in `unknown_statuses`,
 # which blocks finality. So gate-1's finer grammar is MAPPED, and the detail
 # it would have carried travels in `verifiability` -- where the landed
-# convention already keeps `staleness_s` and `margin`.
+# convention already keeps a staleness and a margin field (emitted here as `staleness_ms` and `margin_bp` -- MILLISECONDS and BASIS POINTS, not seconds and absolute; the landed 09-06 receipts use `staleness_s`, and that cover has already misled one seat).
 CONSUMER_STATUSES = ("VERIFIED_AGREE", "DISAGREE", "BOUNDARY_NOT_IN_CAPTURE",
                      "CHAINLINK_UNAVAILABLE", "VENUE_UNRESOLVED")
 
@@ -894,6 +894,168 @@ def falsify_day_slice() -> int:
     return bad
 
 
+# ---- HEAD-RESOLVED DAY SLICE (DA 270 ruling) ----------------------------
+#
+# "SORTING IS NOT ORDERING UNTIL THE KEY IS UNIQUE." The slice is built from
+# HEAD-RESOLVED records: the §5 gate-1 supersession rule FIRST, so each slug
+# appears exactly once, THEN sort by slug. Out-of-order appends are then
+# irrelevant, because order is derived from the resolved key and never from
+# file position.
+#
+# THIS IS NOT HYPOTHETICAL AND IT CHANGES A PUBLISHED NUMBER. Measured on the
+# real ledger 2026-09-11: 09-09 holds 2,030 lines for the day but only 2,016
+# DISTINCT slugs -- 14 slugs appear twice, each as a `gave_up` stub
+# (`closed: null`, `winners: null`) followed at a LATER recv_ns by the real
+# resolution. The unresolved slice therefore counts a GIVE-UP BESIDE ITS OWN
+# SUPERSESSION, which is not the day's settled state. 09-07 has no duplicates,
+# so its digest is unchanged.
+#
+# THE HEAD RULE: greatest `recv_ns` wins -- the ledger is append-only and the
+# later record supersedes. A TIE is not broken by position; it REFUSES BY SLUG.
+DUPES_COUNTED = "PRE_RESOLUTION_DUPLICATE_SLUGS"
+TWO_HEADS = "SLUG_HAS_TWO_HEADS_AFTER_RESOLUTION"
+
+
+def head_resolved_day_slice(ledger, n_records: int, day: str) -> dict:
+    """The day's HEAD-RESOLVED slice. One row per slug, then sorted."""
+    import hashlib
+    from collections import defaultdict
+    from datetime import datetime, timezone
+    start = int(datetime.strptime(day, "%Y-%m-%d")
+                .replace(tzinfo=timezone.utc).timestamp())
+    end = start + 86400
+    lines = [x for x in Path(ledger).read_text().splitlines() if x.strip()]
+    if len(lines) < n_records:
+        raise GateRefused(
+            f"REFUSED {SLICE_DIFFERS}: the ledger holds {len(lines)} records "
+            f"and a snapshot claimed {n_records}; a prefix that does not "
+            f"exist cannot be compared.")
+    by = defaultdict(list)
+    for line in lines[:n_records]:
+        try:
+            rec = json.loads(line)
+        except Exception:                           # noqa: BLE001
+            continue
+        slug = str(rec.get("slug") or "")
+        try:
+            t = int(slug.rsplit("-", 1)[1])
+        except (IndexError, ValueError):
+            continue
+        if start <= t < end:
+            by[slug].append((rec.get("recv_ns"), line))
+    heads, dupes, two_heads = {}, {}, []
+    for slug, rows in by.items():
+        if len(rows) > 1:
+            dupes[slug] = len(rows)
+        top = max(r[0] for r in rows if r[0] is not None) if any(
+            r[0] is not None for r in rows) else None
+        if top is None:
+            heads[slug] = sorted(r[1] for r in rows)[0]
+            continue
+        winners = [r[1] for r in rows if r[0] == top]
+        if len(set(winners)) > 1:
+            two_heads.append(slug)
+            continue
+        heads[slug] = winners[0]
+    if two_heads:
+        raise GateRefused(
+            f"REFUSED {TWO_HEADS}: {len(two_heads)} slug(s) resolve to two "
+            f"different heads at the same recv_ns: {sorted(two_heads)[:5]}. "
+            f"Picking one by file position is how an ordering that is not an "
+            f"identity gets used as one.")
+    rows = [heads[s] for s in sorted(heads)]
+    return {"day": day, "sha256": hashlib.sha256("\n".join(rows).encode()).hexdigest(),
+            "n_day_records": len(rows),
+            "n_records_in_snapshot": n_records,
+            "n_lines_before_resolution": sum(len(v) for v in by.values()),
+            DUPES_COUNTED: {"n_slugs": len(dupes), "slugs": sorted(dupes)[:20],
+                            "counted_never_silently_deduped": True},
+            "definition": ("head-resolved: greatest recv_ns per slug, then "
+                           "sorted by slug; ties REFUSE by slug name")}
+
+
+def falsify_head_resolution() -> int:
+    """Shuffle+re-append -> BIT-IDENTICAL. Re-settlement -> changes, named."""
+    bad = 0
+
+    def ck(label, cond, shown=""):
+        nonlocal bad
+        print(f"  [{'PASS' if cond else 'FAIL'}] {label}" + (f" -> {shown}" if shown else ""))
+        if not cond:
+            bad += 1
+
+    import tempfile, random
+    base = []
+    for i in range(6):
+        base.append(json.dumps({"slug": f"btc-updown-5m-{1788980100 + i * 300}",
+                                "recv_ns": 1000 + i, "closed": True,
+                                "winners": {"Up": bool(i % 2)}}))
+    d = Path(tempfile.mkdtemp()); led = d / "r.jsonl"
+    led.write_text("\n".join(base) + "\n")
+    day = "2026-09-09"
+    a = head_resolved_day_slice(led, len(base), day)
+    ck("the head-resolved slice has one row per slug", a["n_day_records"] == 6, a["sha256"][:16])
+
+    shuf = list(base); random.shuffle(shuf)
+    led.write_text("\n".join(shuf) + "\n")
+    b = head_resolved_day_slice(led, len(shuf), day)
+    ck("SHUFFLED file order -> BIT-IDENTICAL slice digest",
+       b["sha256"] == a["sha256"], b["sha256"][:16])
+
+    reapp = shuf + [shuf[0]]
+    led.write_text("\n".join(reapp) + "\n")
+    c = head_resolved_day_slice(led, len(reapp), day)
+    ck("RE-APPENDING the same record -> BIT-IDENTICAL, and the duplicate is COUNTED",
+       c["sha256"] == a["sha256"] and c[DUPES_COUNTED]["n_slugs"] == 1,
+       f"dupes={c[DUPES_COUNTED]['n_slugs']} lines_before={c['n_lines_before_resolution']}")
+
+    resettle = list(base)
+    resettle.append(json.dumps({"slug": "btc-updown-5m-1788980100",
+                                "recv_ns": 999999, "closed": True,
+                                "winners": {"Up": True}}))
+    led.write_text("\n".join(resettle) + "\n")
+    e = head_resolved_day_slice(led, len(resettle), day)
+    ck("a GENUINE RE-SETTLEMENT CHANGES the digest at the SAME row count",
+       e["sha256"] != a["sha256"] and e["n_day_records"] == 6, e["sha256"][:16])
+    ck("...and the superseded slug is NAMED in the counted duplicates",
+       "btc-updown-5m-1788980100" in e[DUPES_COUNTED]["slugs"])
+
+    tie = list(base) + [json.dumps({"slug": "btc-updown-5m-1788980100",
+                                    "recv_ns": 1000, "closed": True,
+                                    "winners": {"Up": True}})]
+    led.write_text("\n".join(tie) + "\n")
+    try:
+        head_resolved_day_slice(led, len(tie), day)
+        ck("two heads at the same recv_ns REFUSE by slug name", False)
+    except GateRefused as exc:
+        ck("two heads at the same recv_ns REFUSE by slug name",
+           TWO_HEADS in str(exc) and "btc-updown-5m-1788980100" in str(exc))
+
+    LED = Path("/home/yuqing/ctaNew/data/pm_5min/resolutions.jsonl")
+    if LED.is_file():
+        r7 = head_resolved_day_slice(LED, 45877, "2026-09-07")
+        # THE RULING CHANGES 09-07 TOO, AND NOT FOR THE REASON I FIRST
+        # ASSERTED. I wrote this cell expecting 7eb54006 to survive because
+        # 09-07 has no duplicates. IT DOES NOT SURVIVE: the landed instrument
+        # sorts LINES, and a line begins `{"recv_ns":...`, so line order IS
+        # recv_ns order, not slug order. The ruling orders by the RESOLVED
+        # KEY. Same 2,016 records, different ordering, different digest --
+        # measured, not argued.
+        ck("09-07 has NO duplicates -- the row count is unchanged",
+           r7["n_day_records"] == 2016 and r7[DUPES_COUNTED]["n_slugs"] == 0,
+           f"{r7['n_day_records']} rows, {r7[DUPES_COUNTED]['n_slugs']} dupes")
+        ck("...but the DIGEST CHANGES ANYWAY, because the ORDERING KEY changed",
+           not r7["sha256"].startswith("7eb54006"),
+           f"{r7['sha256'][:16]} (line-sorted was 7eb54006ebfa1029)")
+        r9 = head_resolved_day_slice(LED, 46521, "2026-09-09")
+        ck("09-09 HAS 14 duplicates, so head-resolution CHANGES it: 2030 -> 2016",
+           r9["n_day_records"] == 2016 and r9[DUPES_COUNTED]["n_slugs"] == 14
+           and not r9["sha256"].startswith("36da8727"),
+           f"{r9['sha256'][:16]} / {r9['n_day_records']} (was 36da8727d02cfe3d / 2030)")
+    print(f"\n  {'HEAD-RESOLUTION CELLS PASS' if not bad else str(bad) + ' FAILED'}")
+    return bad
+
+
 if __name__ == "__main__":
     import sys
     n = falsify()
@@ -902,4 +1064,6 @@ if __name__ == "__main__":
     print()
     print()
     n += falsify_day_slice()
+    print()
+    n += falsify_head_resolution()
     sys.exit(1 if n else 0)
