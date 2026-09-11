@@ -1,3 +1,94 @@
+# READ FIRST — COLD START · **TWO LANES** (MEM 397, 2026-09-11T19:17:35Z, tip `96a1f16`)
+
+> # ⛔ THE SHARED TREE IS **NON-EXECUTING**
+> `/home/yuqing/ctaNew` is **non-executing for both lanes**, and a result
+> produced from it is ***INADMISSIBLE REGARDLESS OF ITS CONTENT***.
+> **Executing trees:** build `wt-fwd` · valuation `wt-deval` · emit
+> post-processors `wt-de2` · ***anything else inadmissible.***
+> It has teeth: a stage-0 row calling `assert_executing_tree` that refuses
+> **`EXECUTED_FROM_AN_UNDECLARED_TREE:<path>`**, reading the payload not the
+> environment.
+>
+> *This closes the thread I opened at round 383 — the shared tree's comparator
+> was not the certified producer — and extended at 385, its runner 47 commits
+> behind. **What I could only record as a hazard now fires.***
+>
+> **Behind, per ref (mine, 19:14Z):** `origin/mm-research` **206** ·
+> `de-freeze-chain-v2` **102** · `be-build-runner` **102**; union of the two
+> build refs **103**. ***The "204" is 102 + 102 — a sum over two refs that share
+> that history.*** DA's declaration carries 205/100 as-of 19:10:01Z; the four
+> minutes are the difference. **Bringing the user's fork into line is the USER's
+> call and was explicitly not taken.**
+
+---
+
+# LANE 1 · CANCELLATION — verdict **FIXED**, descriptive days running
+
+| arm | 09-07 | 09-08 | 09-09 | non-pos | cap |
+|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | −14,645.08 | −49,303.58 | **+10,295.84** | **2** | **0.453125** |
+| `HAZARD_OVER_SKEWED_REF` | +4,925.36 | −23,978.00 | **+10,836.31** | **1** | **0.125** |
+
+Both **FUTILE** · `STOP_FOR_FUTILITY` · **NOT_ESTABLISHED_AT_THIS_POWER**.
+***Read `emit.futility`, never the tally.*** 09-10's build is running from
+`wt-fwd`.
+
+# LANE 2 · FAIR VALUE — **step 0 and step 2 done**
+
+**✅ STEP 0 passes its pre-registered gate — I did the division myself:**
+```
+46,550 / 46,591 = 0.999120     gate 0.990    PASS
+41 disagreements — ALL boundary quality, ZERO unexplained
+§10 kill criterion NOT triggered
+```
+**DA corrected its own first split:** the seven "ties" are ***one feed outage at
+one window*** — **precedence deciding attribution, not data disagreeing.**
+
+**✅ STEP 2 — three independent hands, sharing no step:** REVIEW 194 read it
+**field by field against §4 C2** · **I executed** its falsifier against real
+bookTicker files (**27 cells, 0 failed, rc 0**) · the module's **own 27 two-way
+cells**, each calling the production entry point. *A contract reading cannot
+catch a constant return; an execution cannot catch a contract misreading.*
+
+**Plan frozen, nothing scored.** Closed family of two vs `Identity`, **m = 2**,
+six build gates before any labelled score. *(Freeze pointer still names
+`0575444` while the plan on disk is `876e435`.)*
+
+---
+
+# 🪞 THE RULE OF THE ROUND — and I turned it on myself first
+
+> ### When ABSENCE is the finding, run the search in a form whose failure is visible.
+
+Promoted from REV after two coordinator errors that are **the same shape**:
+accepting a design by **reading its printed fields** rather than testing its
+predicate or grepping that the named refusal exists (R-921), and **grepping the
+stale shared tree** and reporting a landed refusal absent (R-922).
+
+**I re-ran round 396's absence report under controls:**
+
+```
+(a) positive control  — a token I planted    -> 12 hits   the search CAN speak
+(b) known-bad         — an impossible token  ->  0 hits   it isn't matching everything
+(c) the real query    — only then
+```
+
+> **The conclusion stands** — nothing asserts it. ***But the controlled run
+> surfaced three candidates my round-396 run had swallowed***, and I read all
+> three at the line: a task description, my own correction, and a **negative**
+> claim.
+>
+> ### ***My conclusion survived and my method did not.***
+> A bare grep with no control would have returned the same answer from a wrong
+> path or a malformed regex. *Round 379's shape with the sign reversed: there a
+> correct strike followed from wrong bounds; here a correct absence followed from
+> an unproven search.*
+>
+> **And the second defect was SCOPE** — my exclusion was **line-scoped** while
+> the correction markers live in the **flag key** and elsewhere in the sentence.
+> ***A filter that removes candidates before a human sees them must be scoped to
+> the same unit as the thing it filters on.*** Both are now in `MEM_PROCEDURE`.
+
 # READ FIRST — round 396 (MEM, 2026-09-11T18:48:58Z, tip `6b8170a`)
 
 # 🔢 THE 69, STATED PRECISELY — **the form to quote**
