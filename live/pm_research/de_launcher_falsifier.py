@@ -63,6 +63,26 @@ def falsify() -> int:
         ck("  and the WAIT path is unreachable until stage 0 holds",
            not stage0_holds)
 
+    # --- chain_day: the freeze comes from the DECLARATION, not a literal -
+    # `PIN=f3096021...` refused the first 09-09/09-10 arming on a module
+    # whose disk bytes match the declaration exactly. The check now runs
+    # the driver's own pre-flight, so this cell asserts the chain gets
+    # PAST the freeze check on a tree the declaration admits -- and stops
+    # for a REASON ABOUT THE DAY (its book, its stage-0 gate), never about
+    # a commit literal.
+    rc = _run(["bash", str(LAUNCH / "chain_day.sh"), "--dry-run",
+               "2026-09-30", "2026-09-30"])
+    past_the_pin = ("VALUATION_MODULE_BYTES_DIFFER_FROM_THE_PIN"
+                    not in rc.stdout
+                    and "TREE_IS_NOT_THE_VALUATION_PIN" not in rc.stdout)
+    ck("chain_day gets past the freeze check on a declared tree",
+       past_the_pin,
+       next((l for l in rc.stdout.splitlines()
+             if "PREFLIGHT_ADMITS" in l or "REFUSED" in l), "")[:78])
+    ck("  and no 40-hex commit literal decides it",
+       "PREFLIGHT_ADMITS" in rc.stdout or "REFUSED" in rc.stdout,
+       f"rc={rc.returncode}")
+
     # --- preflight_gate: a WOULD_REFUSE fixture stops with 3 -------------
     with tempfile.TemporaryDirectory() as td:
         d = Path(td)

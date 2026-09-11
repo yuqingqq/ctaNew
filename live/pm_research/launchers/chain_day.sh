@@ -11,7 +11,7 @@ scored="${2:?}"
 compact="${day//-/}"
 D=/home/yuqing/ctaNew/data/pm_5min/derived
 TREE=/home/yuqing/ctaNew-wt-deval
-PIN=f3096021711904f10c4ecb06319326b4d9fa28f8
+PYBIN=/home/yuqing/pricer-sol/venv/bin/python3
 CERT=$D/be_score_neutrality_20260903__EV22_vs_NEUTCHK__68e7d23.json
 # A COMMIT CANNOT CONTAIN ITS OWN HASH, and landing launcher fixes moves
 # this tree's HEAD off the literal pin -- which is what refused the first
@@ -35,18 +35,28 @@ if [ -z "$FOUND" ]; then
   exit 10
 fi
 echo "$(date -u +%H:%M:%SZ) launcher ${SELF_SHA:0:16} found on $FOUND"
-H=$(git -C "$TREE" rev-parse HEAD)
-if [ "$H" != "$PIN" ]; then
-  git -C "$TREE" merge-base --is-ancestor "$PIN" "$H" || {
-    echo "REFUSED TREE_IS_NOT_THE_VALUATION_PIN: $H is not a descendant of $PIN"; exit 2; }
-  for m in de_settlement_control_run.py de_forward_evaluator.py            de_settlement_control_aggregate.py de_asymmetry_null_run.py            de_matched_cancel_control.py de_multiday_gate1_runner.py            be_score_neutrality.py; do
-    a=$(sha256sum "$TREE/live/pm_research/$m" | cut -d" " -f1)
-    b=$(git -C "$TREE" show "$PIN:live/pm_research/$m" | sha256sum | cut -d" " -f1)
-    [ "$a" = "$b" ] || {
-      echo "REFUSED VALUATION_MODULE_BYTES_DIFFER_FROM_THE_PIN: $m"; exit 2; }
-  done
-  echo "$(date -u +%H:%M:%SZ) tree $H is a descendant of $PIN; 7/7 computing modules identical"
+# ONE SOURCE OF TRUTH FOR THE FREEZE, AND IT IS NOT A LITERAL HERE.
+# This block used to carry `PIN=f3096021...` and compare seven modules
+# against THAT commit's blobs. The freeze has moved five times since; the
+# literal refused the first 09-09/09-10 arming with
+# VALUATION_MODULE_BYTES_DIFFER_FROM_THE_PIN on a module whose disk bytes
+# MATCH the declaration exactly. So the launcher now runs THE DRIVER'S OWN
+# pre-flight -- ancestry against the declared FREEZE_COMMIT plus the
+# declaration's digest rows, V2's own row recorded not asserted -- and
+# reports whatever it says. A second implementation of a check is a second
+# thing to go stale.
+PFOUT=$("$PYBIN" -c "
+import sys; sys.path.insert(0, '$TREE/live/pm_research')
+import de_forward_value_day as V
+print('PREFLIGHT_ADMITS', V._PREFLIGHT['head'][:12],
+      'frozen', V._frozen_commit()[:12],
+      'modules', V._PREFLIGHT['n_modules_checked'])" 2>&1 | tail -2)
+if ! echo "$PFOUT" | grep -q "PREFLIGHT_ADMITS"; then
+  echo "REFUSED VALUATION_PREFLIGHT_REFUSES: $(echo "$PFOUT" | tail -1)"
+  exit 2
 fi
+echo "$(date -u +%H:%M:%SZ) $PFOUT"
+
 ASOF=/home/yuqing/ctaNew/data/pm_5min/derived/fwd_v2/p003_de_asof_raw_${compact}.json
 /home/yuqing/pricer-sol/venv/bin/python3 \
   /home/yuqing/ctaNew-wt-deval/live/pm_research/de_asof_listing.py \
