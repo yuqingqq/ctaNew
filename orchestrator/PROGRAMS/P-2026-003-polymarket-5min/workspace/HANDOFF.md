@@ -1,3 +1,114 @@
+# READ FIRST — COLD START · **TWO LANES** (MEM 394, 2026-09-11T18:31:14Z, tip `b524a59`)
+
+> # ⚠️ THE ONE THING NOT TO CONCLUDE
+> **Lane 2's activity is NOT the cancellation test reopening.**
+> Lane 1's verdict is **fixed and unrevisable**. The lanes share a programme, a
+> tape and a lock — ***and nothing else.***
+
+---
+
+# LANE 1 · CANCELLATION — **VERDICT FIXED. Descriptive days only.**
+
+> ## Both arms **FUTILE** at day two · `STOP_ADVICE = STOP_FOR_FUTILITY`
+> ## **NOT_ESTABLISHED_AT_THIS_POWER — never NO_EFFECT**
+
+| arm | 09-07 | 09-08 | **09-09** | non-pos | best attainable p |
+|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | −14,645.078818 | −49,303.579891 | **+10,295.840462** | **2** | **0.453125** |
+| `HAZARD_OVER_SKEWED_REF` | +4,925.363903 | −23,977.998804 | *(not yet on disk)* | **1** | **0.125** |
+
+**09-09 CONDVALUE is the arm's FIRST POSITIVE DAY** — p 0.3852295409181637, 500
+draws, 25,902 cancels, `admitted_by DESCENDANT`, book `a72caaa08968dd93`.
+
+> ### 🔴 It changes nothing, and I computed that rather than asserting it.
+> With **two days already non-positive**, the best attainable is still **5 of 7
+> → 2·29/128 = 0.453125**. ***A positive day does not restore a negative one —
+> the cap is set by the days already non-positive. That is precisely why futility
+> stopping is free.***
+
+**Remaining days 09-10..09-13 are DESCRIPTIVE ONLY.** And the standing
+prediction: when all seven land, `running_tally` will read **`G_so_far 7 ·
+days_remaining 0`** — ***read `emit.futility`, not the tally.***
+
+---
+
+# LANE 2 · FAIR VALUE — **plan frozen · NOTHING fitted · NOTHING scored**
+
+**Design, as frozen:** BTC+ETH together, primary unit the combined portfolio UTC
+day · a **CLOSED family of exactly two** challengers — C1 `pm_microprice`, C2
+`bn_bookticker_mid` bound to `s60_probability_v1` + builder digest — against
+**`Identity`**, with **m = 2 forever even if one candidate dies** · **six build
+gates and seven two-way falsifiers before any labelled score** · primary loss
+natural-log loss, `delta_LL_g = LL_g(Identity) − LL_g(c)` · 14 calendar days
+requiring **10 evaluable**, exact two-sided paired day sign test over 2¹⁰ =
+**1,024** assignments · ≥8 nonzero increments or `INSUFFICIENT_EVIDENCE` ·
+economic validation only for predictive winners, on a **new** ten-day clock.
+***`Identity` remains the mandatory baseline and fallback.***
+
+## 🚨 THE FREEZE POINTER IS ONE COMMIT BEHIND THE PLAN
+
+```
+R-917 freezes   0575444  18:06:45Z   357 lines   sha 474528472854cf21
+user hardened   876e435  18:19:19Z   424 lines   sha 1606fe8d19124d0f   <- ON DISK
+R-917 written   18:21:55Z  — after the hardening, still naming 0575444
+```
+
+**Every parameter R-917 quotes is ABSENT from the frozen commit** — `m = 2` (0
+vs 4), `10 evaluable`, `2^10`, `0.001953125`, `s60_probability_v1`,
+`pm_microprice`, `bn_bookticker_mid`, `placement_latency_ms 250`,
+`INSUFFICIENT_EVIDENCE` — *all present only on disk.*
+
+> ***The prose is right and the hash names a document that contains none of those
+> terms.*** Seats implement from disk, so **no seat is misled** — but a pointer is
+> what an automated reader resolves. **Rule 12 asks a freeze to be a hash AND a
+> ref; here they disagree.** *The register should name `876e435`.*
+
+## 🔢 The floor, and an honest comparison
+
+```
+lane 2 floor  2/1024 = 0.001953125     lane 1 floor  2/128 = 0.015625   (8× larger)
+  × m=2       0.003906250              × m=2         0.031250000
+  headroom to 0.05:   12.8×                          1.6×
+  × 69-screen 0.134765625  > 0.05                    1.078125  > 1
+```
+
+> **I corrected my own first reading:** I printed *"CAN pass a 69-fold screen"*
+> beside the number **0.134765625**, which **exceeds 0.05**. ***Both designs fail
+> that screen — but only lane 1's exceeds 1 and stops being a probability at
+> all.*** **Lane 2 buys a much better floor, not immunity.**
+>
+> And R-917's parenthetical is loose: **cancellation's m=2 was attainable too**
+> (0.03125 < 0.05 — I filed that at round 389). What it could not satisfy was
+> **the screen**, and lane 2 inherits that problem unless its own screen is
+> declared.
+
+## ✅ And the plan corrects the coordinator's draft — the rarer direction
+
+`crypto_prices_twap_sixty` is the **rolling 60 s statistic**, *not* the raw
+Chainlink aggregate path; `crypto_prices` is a **Binance spot mirror**, not the
+settlement source. ***So there is no model-free realized integral inside the
+terminal minute***, and the draft's "H1 model-free fair value" was the known-bad
+rolling-TWAP-as-raw-path construction the plan now refuses. Any Binance integral
+there is a **declared cross-venue proxy**, and a probability needs a declared
+model and volatility input. *Rule 9's shape, applied before any fitting.*
+
+**Dispatched, all off the heavy lock** so the descriptive valuations are not
+starved: DA step 1 the settlement-label/status reader · BE step 2 the 30-minute
+sigma producer · DE step 3 the typed C1/C2 wrappers · REV audits the plan's own
+claims against the code independently.
+
+**Unamended and still binding:** the ownership fence in
+`LANE2_FAIR_PRICE_SUCCESSOR_INTERFACE.md`; `SIGMA_ROUTE_A{,_V2}_PROTOCOL.md`,
+whose last result stays **PRICING HOLD**.
+
+---
+
+# STANDING
+
+🌿 **The tree is forked from origin (151/187); a fast-forward is impossible.**
+**Q-MEM-338…348 are unlanded**, including the rows carrying lane 1's outcome.
+***Read this working tree, not `origin/mm-research`.***
+
 # READ FIRST — COLD START (MEM 393, 2026-09-11T16:39:53Z, tip `1277a14`)
 
 # 🧭 PHASE CHANGE — **the user ruled: continue descriptively**
