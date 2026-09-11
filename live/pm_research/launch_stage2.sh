@@ -12,7 +12,13 @@ if [ "${1:-}" = "--falsify" ]; then
   _note() { if [ "$2" = "1" ]; then echo "  PASS  $1"; else echo "  FAIL  $1"; RC=1; fi; }
   # (1) a stage whose INPUT is missing: exit 5, and NO UNIT created.
   U=be158falsify_$$
-  ( cd "$T" && bash "$ME" book 20260910 "$U" >/dev/null 2>&1 ); rc=$?
+  # REVIEW 205 3: --dry-run. WITHOUT it these cells reach the wrapper and
+  # LAUNCH A REAL BOOK BUILD the moment 20260910's tape exists -- their only
+  # safety was the absence of a file the programme is actively creating. The
+  # refusal path is byte-identical either way (--dry-run sits AFTER the
+  # preflight and BEFORE the stage dispatch), so the assertion is unchanged
+  # and the control can no longer cause the event it checks for.
+  ( cd "$T" && bash "$ME" --dry-run book 20260910 "$U" >/dev/null 2>&1 ); rc=$?
   ls=$(systemctl --user show "$U" -p LoadState --value 2>/dev/null)
   _note "entry point refuses a stage whose input is missing with exit 5"         "$([ "$rc" = "5" ] && echo 1 || echo 0)"
   _note "and it creates NO UNIT -- the lock was never offered for"         "$([ "$ls" = "not-found" ] && echo 1 || echo 0)"
@@ -20,7 +26,7 @@ if [ "${1:-}" = "--falsify" ]; then
   #     itself, by design. The unset known-bad belongs to the PREFLIGHT
   #     entry point, which is where it is driven.
   U2=be158falsify2_$$
-  ( cd "$T" && env -u BE_WORKTREE bash "$ME" book 20260910 "$U2" >/dev/null 2>&1 ); rc2=$?
+  ( cd "$T" && env -u BE_WORKTREE bash "$ME" --dry-run book 20260910 "$U2" >/dev/null 2>&1 ); rc2=$?
   _note "with BE_WORKTREE UNSET in the caller it still reaches the same refusal -- the launcher sets it (by design)"         "$([ "$rc2" = "5" ] && echo 1 || echo 0)"
   # (3) an unknown stage is refused before anything else.
   ( cd "$T" && bash "$ME" bogus 20260910 x >/dev/null 2>&1 ); rc3=$?
@@ -31,8 +37,15 @@ if [ "${1:-}" = "--falsify" ]; then
   _note "and says so rather than launching"         "$(printf '%s' "$out" | grep -q 'WOULD LAUNCH' && echo 1 || echo 0)"
   ls4=$(systemctl --user show dryunit -p LoadState --value 2>/dev/null)
   _note "the dry run creates no unit either"         "$([ "$ls4" = "not-found" ] && echo 1 || echo 0)"
-  for u in "$U" "$U2" dryunit; do systemctl --user reset-failed "$u" >/dev/null 2>&1; done
-  echo "{\"falsifier\": \"launch_stage2\", \"n\": 7, \"failed\": $RC}"
+  # (5) THE HAZARD ITSELF, driven on a day whose tape EXISTS: the cell that
+  #     could have built a day must now only echo.
+  U3=be163falsify3_$$
+  out3=$( cd "$T" && bash "$ME" --dry-run book 20260909 "$U3" 2>&1 ); rc5=$?
+  ls3=$(systemctl --user show "$U3" -p LoadState --value 2>/dev/null)
+  _note "on a day whose tape EXISTS the cell echoes instead of building"         "$([ "$rc5" = "0" ] && printf '%s' "$out3" | grep -q 'WOULD LAUNCH' && echo 1 || echo 0)"
+  _note "and still creates no unit -- the control cannot cause the event"         "$([ "$ls3" = "not-found" ] && echo 1 || echo 0)"
+  for u in "$U" "$U2" "$U3" dryunit; do systemctl --user reset-failed "$u" >/dev/null 2>&1; done
+  echo "{\"falsifier\": \"launch_stage2\", \"n\": 9, \"failed\": $RC}"
   exit "$RC"
 fi
 DRY=0
