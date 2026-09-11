@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T13:40:03Z (MEM ROUND 384 -- (b) IS GREEN ON A PER-LEAF PREDICATE, AND THE LANDED BOOK CARRIES
+  A SIX-DAY RULED SET. BE 176: 322732 leaves, 322723 equal, EXACTLY NINE differing and
+  all nine in the declared 50-name set (7 wall_clock, 2 resource_telemetry);
+  DATA_DIFFERENCES empty; verdict CONTENT_IDENTICAL_EXCEPT_ALLOWED. The wholesale
+  exemption I named at 383 is CLOSED PER LEAF -- rows_indexed now stands as its own leaf,
+  unclassified therefore DATA, and EQUAL. THE FINDING IS IN THE RECEIPTS: the LANDED
+  09-08 book records ruled_day_set = SIX days (v29) while both rebuilds record ELEVEN
+  (v33) -- my round-382 load_params split, now visible in a production artifact, and it
+  makes (b) stronger than it reads: the re-pin admitted a day and changed nothing else.
+  BUT THE PER-LEAF RULE WAS APPLIED TO THE BOOK AND NOT THE RECEIPT: 835 receipt leaves
+  are still judged against FOUR names, and classifying its 59 unexpected differences
+  against BE 176's own 50 gives 42 provenance / 8 telemetry / 4 wall_clock and FIVE that
+  would be DATA. The ledger delta is +14180 against the landed book now, not +3849 --
+  that was the FIRST rebuild's number. The final rebuild was built at 2b27cc1, a commit
+  on NO REF that predates every freeze commit, and its receipt was renamed to name a
+  DIFFERENT commit than its own builder_commit. (c) is declared PASSED and I can find no
+  artifact for it -- SPECIFIED, not DRIVEN; admitted_by is in three .py files and in no
+  record yet. A THIRD identity rebuild, be183ident0908, has held the lock since
+  13:37:48Z. Tip 9941d2d.)
   2026-09-11T12:59:14Z (MEM ROUND 383 -- FALSIFIER (b) RESOLVES ON CONTENT AND THE ONLY DIFFERENCES ARE
   STOPWATCHES. BE 173's diff landed 88 s after R-906 called it pending: DATA_DIFFERS is
   exactly ['asm','asm.assembly'] and asm differs only because asm.assembly does. I opened
@@ -113,6 +132,7 @@ updated: >-
   carries a params digest, so DE's cross-version gap is real. And the R-555 positive
   control still asserts a literal G == 6 -- green only while the loader stays on v29.
   Tip 4194e85.)
+previous_updates: >-
   2026-09-11T12:06:27Z (MEM ROUND 381 -- I DIFFED v31 TO v32 AND NOTHING PINNED MOVES: 37 changed
   leaves, and the ONLY pinned-class change is SUPERSEDES.sha256, THE POINTER TO THE
   SUPERSEDED DOCUMENT -- no theta, no min_draws, no alpha, no cascade, no be_module. The
@@ -127,7 +147,6 @@ updated: >-
   TWICE -- and the repetition is itself the finding, since the first giving did not reach
   the next launch. require_ledger REFUSED THE ENV SNAPSHOT BY DESIGN, so the valuation
   reads the oracle ONCE PER RUN with its falsifier pending. tip 64d9682)
-previous_updates: >-
   2026-09-11T11:22:33Z (MEM ROUND 380 -- THE TRIPWIRE REPORTED AND EVERY FIELD MATCHES WHAT I COMPUTED
   LAST ROUND. CONCENTRATION_FINDING TRUE ON BOTH ARMS; DELTA_D -3627.3668120000057 and
   -330.8129409999947, the same values I differenced myself at round 379 TO THE LAST DIGIT;
@@ -328,6 +347,18 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r384_falsifier_b_is_GREEN_and_the_predicate_is_PER_LEAF: "BE 176 (BE_BOOK_CONTENT_DIFF_V2): 322732 leaves, 322723 equal, so EXACTLY NINE differ -- and all nine are in the declared allowed set (seven wall_clock, two resource_telemetry). DATA_DIFFERENCES is EMPTY; verdict CONTENT_IDENTICAL_EXCEPT_ALLOWED. The set is 50 names in three classes (provenance 24, wall_clock 9, resource_telemetry 17) and the artifact's own HOW_THE_VERDICT_IS_COMPUTED says every leaf is classified BY ITS OWN NAME and no key is allowed wholesale."
+  r384_rows_indexed_was_CHECKED_and_it_passed: "At round 383 I named the wholesale-exemption gap: the five differing keys lived inside asm.assembly and none was in the allowed set. BE closed it PER LEAF. rows_indexed now appears as its own leaf at both stages with equal=True and class None -- not in the allowed set, therefore DATA by the declared rule, and EQUAL. The artifact says so in its own words: asm.assembly.stages carries rows_indexed, which is data, beside wall_s and peak_rss_mb_highwater, which are not."
+  r384_THE_LANDED_09_08_BOOK_CARRIES_A_SIX_DAY_RULED_SET: "The landed receipt records resources.assembly_inputs.ruled_day_set as SIX days, 2026-09-03..09-08 -- v29's set -- while BOTH rebuilds record ELEVEN, 09-03..09-13. That is the load_params-reads-v29 split I drove at round 382, now visible in a production artifact rather than in source. It also means (b)'s content identity compares a book built under the OLD ruled set against one built under the NEW, which is exactly what the instrument's own WHAT_THIS_PROVES claims and makes the pass stronger than it first reads: the re-pin admitted a day and changed nothing about 09-08."
+  r384_the_RECEIPT_is_still_compared_against_FOUR_names: "The per-leaf discipline was applied to the BOOK and not to the RECEIPT. be_rebuild_identity still compares 835 receipt leaves against an allowed_to_differ of FOUR producing_code paths and reports 59 unexpected differences. I classified those 59 against BE 176's own 50-name set: 42 provenance, 8 resource_telemetry, 4 wall_clock -- and FIVE that would be DATA: resources.assembly_inputs.ruled_day_set, resources.index_released.freed_fraction_of_index_peak, resources.index_released.required_freed_gb, resources.stages, selection.era_resolution.ledger.bytes. Two are already accounted for (the ruled set above, the ledger below); three are resource fields whose leaf names the 50-name set does not carry."
+  r384_the_two_verdicts_on_one_pair_of_books_read_opposite: "be_rebuild_identity_20260908.json says bit_identical False, verdict REBUILT_BOOK_NOT_IDENTICAL, receipt_clean False. be176_book_content_diff_20260908.json says CONTENT_IDENTICAL_EXCEPT_ALLOWED. Both are correct under their own definitions -- sha identity and content identity -- and the ruling adopted the second. Recorded because a reader who lands on the file whose name contains rebuild_identity reads NOT IDENTICAL, and that is the file a search for the falsifier finds first."
+  r384_the_ledger_delta_is_14180_now_not_3849: "R-907 records the gap ledger growing 3849 B between the builds. Measured across all three receipts: landed 6732586, rebuild-1 6736435, rebuild-2 6746766. So +3849 is the landed-to-FIRST-rebuild delta and it is exactly right; the first-to-second rebuild added a further +10331, for +14180 against the landed book. The number is not wrong, it is a number about the earlier rebuild carried into an entry describing the final one -- and the tape grows while we measure it, which is rule 8's own warning."
+  r384_the_final_rebuild_was_built_at_a_commit_on_NO_REF: "The book the licensing bar is to run end-to-end on was built at 2b27cc1 -- 'DA 246: BOOK IDENTITY declared as CONTENT identity', 12:57:27Z -- and git branch -a --contains returns NOTHING for it. It is on no branch, local or remote, and it PREDATES all four freeze commits in the path. It survives only as a reachable object, most likely a worktree's former HEAD; wt-fwd has since moved to b34ed9f. Rule 12 asks for a hash AND a commit ref; this has the hash."
+  r384_the_receipt_filename_names_a_different_commit_than_its_content: "The rebuild receipt was renamed between 13:22 and 13:38 to ...rebuild.6d22d78.json, while its producing_code.builder_commit reads 2b27cc1974eb00aea4f004571403c3ff5a3acec0. The suffix may mean 'compared against freeze 6d22d78' rather than 'built at', but a filename carrying one commit beside a receipt recording another is a label a reader will resolve the wrong way. Named, not adjudicated -- rule 42's shape on a filename."
+  r384_the_freeze_path_is_linear_and_all_four_are_published: "Verified pairwise rather than read off the entry: 8afbd1a 12:59:47 -> d095c5a 13:11:05 -> 6d22d78 13:26:41 -> bacb4e3 13:28:05, each an ancestor of the next, all four on BOTH origin/de-freeze-chain-v2 and origin/be-build-runner. 28 minutes 18 seconds across four moves, every one a defect found by rehearsal before a real run."
+  r384_falsifier_c_is_declared_PASSED_and_I_can_find_no_artifact: "R-907 records (c) PASSED -- same snapshot both arms, missing slug refuses by name. I searched every .json written under data/ since 12:00 for FALSIFIER_C, falsifier_c, snapshot_both_arms and MISSING_SLUG and found none, and the worktrees symlink data/ so that search covers them. Classified SPECIFIED, not DRIVEN, by the round-368 rule. Note the contrast with (a), whose artifact exists but whose producer does not, and (b), whose artifact and producer both exist."
+  r384_admitted_by_is_PRESENT_in_code_and_not_yet_in_a_record: "The admitting arm is in source -- be_forward_day.py, da_nonhead_census.py and be_receipt_c1_supersede.py carry admitted_by, in the shared tree and on origin/de-freeze-chain-v2. But no artifact written between 12:52 and 13:36 contains the token, and the preflight matrix that would carry cells[arm].book_receipt.admitted_by is stale at 12:48:37Z. PRESENT in code, not yet DRIVEN into a record I can read -- which is the state the licensing bar is about to change, not a defect."
+  r384_a_THIRD_identity_rebuild_is_running_since_133748Z: "be183ident0908.service, loaded/active/running, ExecMainStartTimestamp 13:37:48Z, flock -n -E 75 on data/.heavy_run.lock, be_rebuild_identity.py --build 20260908 out of /home/yuqing/ctaNew-wt-fwd (now b34ed9f), 0.67 GiB at 53 s in. This is R-907's one-more-rebuild, made necessary because the version-ordered pin ruling moves the build closure. wt-fwd MUST NOT be refreshed while it runs."
   r383_the_landing_blocker_persists_and_the_gap_is_widening: "Re-ran the dry landing at 13:01:26Z: HELD BEHIND_AND_NOT_FF again, same cause as round 382 and the same two files -- live/pm_research/da_population_freeze_verify.py and workspace/BE_PROCEDURE.md, still uncommitted by other seats AND still differing between HEAD and origin/mm-research. The divergence has widened from 112/131 to 117/139 in about twenty minutes. Q-MEM-338 (round 358), Q-MEM-339 (round 382) and Q-MEM-340 (this round) are written and UNLANDED. Did not merge, stash or rebase -- rules 21 and 45."
   r383_falsifier_b_resolves_on_CONTENT_every_data_table_equal: "BE 173's content diff landed at 12:51:28Z, 88 seconds after R-906 called it pending. DATA_DIFFERS is exactly ['asm','asm.assembly'] and the top-level asm differs ONLY because asm.assembly does. Every other table is EQUAL: fr.rows, fr.statuses, fr.terminal_marks, fr.reference, fr.placement_latency, fr.population, fr.n_slugs, header.coin/day/protocol/placement_latency/score_contracts, asm.by_arm, asm.split_by_gen, asm.split_counts. provenance_differs is EMPTY."
   r383_the_five_differing_keys_are_ALL_STOPWATCHES: "I opened both 390 MB books and read the values rather than trusting the diff's labels. bn_cache_clear_s 4.963 vs 5.079; compose_s 22.149 vs 22.286; feature_pass_s 444.93 vs 444.392; score_s_by_head {incumbent_linear_d 12.904 vs 17.373, q1_arrival_composed_lgbm 29.293 vs 29.978}; stages tape_index[score] wall_s 74.58 vs 74.26, peak_rss_mb_highwater 3844.6 vs 3835.1. Every differing value is a stopwatch or a memory highwater -- and rows_indexed, the one CONTENT quantity inside stages, is IDENTICAL at 647129. The two books agree on the market and disagree on how long the machine took."
@@ -28033,6 +28064,54 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r384_falsifier_b_is_GREEN_and_the_predicate_is_PER_LEAF:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be176_book_content_diff_20260908.json
+    said: "read n_leaves and n_equal and subtracted them myself rather than trusting a count; listed all nine allowed_differences with their classes; DATA_DIFFERENCES printed as an empty list."
+  r384_rows_indexed_was_CHECKED_and_it_passed:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be176_book_content_diff_20260908.json
+    said: "filtered the 322732 rows for rows_indexed: two leaves, tape_index[score] and tape_index[train], both equal=True and both unclassified, i.e. DATA."
+  r384_THE_LANDED_09_08_BOOK_CARRIES_A_SIX_DAY_RULED_SET:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260908_btc__L250ms__FWD1.json
+    said: "read producing_code.builder_commit and resources.assembly_inputs.ruled_day_set from all three receipts: landed 7ed5a9015f75 with 6 days, rebuild-1 dbb11e4fd286 with 11, rebuild-2 2b27cc1974eb with 11."
+  r384_the_RECEIPT_is_still_compared_against_FOUR_names:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_rebuild_identity_20260908.json
+    said: "loaded the receipt's unexpected_differences and the diff's declared_allowed_set and applied the same any-path-component rule BE used; the counts are mine, computed, not read from either file."
+  r384_the_two_verdicts_on_one_pair_of_books_read_opposite:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_rebuild_identity_20260908.json
+    said: "read the verdict field of each artifact; they are 24 seconds apart on the same pair of books, 13:22:36Z and 13:23:00Z."
+  r384_the_ledger_delta_is_14180_now_not_3849:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/rebuild_identity
+    said: "read selection.era_resolution.ledger.bytes from the landed receipt, the archived dbb11e4 rebuild receipt and the current rebuild receipt, and differenced them."
+  r384_the_final_rebuild_was_built_at_a_commit_on_NO_REF:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/rebuild_identity
+    said: "git cat-file -t 2b27cc1 returned commit; git log -1 gave the subject and 12:57:27; git branch -a --contains returned an empty list; the four freeze commits are all 12:59:47 or later."
+  r384_the_receipt_filename_names_a_different_commit_than_its_content:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/rebuild_identity/be_daybook_receipt_20260908_btc__L250ms__FWD1.rebuild.6d22d78.json
+    said: "listed the directory at 13:22 and again at 13:38: the name gained a .6d22d78 element; read builder_commit and book.sha256 from the renamed file and got 2b27cc1974eb and a430b2593097ebe3."
+  r384_the_freeze_path_is_linear_and_all_four_are_published:
+    prov: CHECKED
+    artifact: live/pm_research/de_settlement_control_run.py
+    said: "git merge-base --is-ancestor pairwise over the four; git branch -a --contains on each; git log -1 --format=%ci for the stamps."
+  r384_falsifier_c_is_declared_PASSED_and_I_can_find_no_artifact:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    said: "find over data/ for .json newer than 2026-09-11 12:00 piped to grep -l for four distinct tokens; empty. Checked that wt-deval and wt-fwd expose data/ as symlinks so the single search suffices."
+  r384_admitted_by_is_PRESENT_in_code_and_not_yet_in_a_record:
+    prov: CHECKED
+    artifact: live/pm_research/be_forward_day.py
+    said: "grep -rl admitted_by over live/pm_research/*.py and over origin/de-freeze-chain-v2; grep -l over every .json written under data/ in the window returned nothing; stat on the matrix artifact gave 12:48:37Z."
+  r384_a_THIRD_identity_rebuild_is_running_since_133748Z:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    said: "fuser gave pids 2692531/2692532; ps gave the command and start; /proc/2692531/cgroup gave be183ident0908.service; systemctl --user show with LoadState gave loaded/active/running."
   r383_the_landing_blocker_persists_and_the_gap_is_widening:
     prov: CHECKED
     artifact: scripts/land_register_row.sh
