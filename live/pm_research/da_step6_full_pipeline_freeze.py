@@ -104,6 +104,107 @@ REQUIRED_FIELDS = (
 # report progress by deleting the questions.
 # ==========================================================================
 
+
+# ==========================================================================
+# THE PINS ARE DERIVED FROM OUTSIDE THIS MODULE.                  (DA 286)
+#
+# REVIEW 209 defeated the previous pair with one edit in this file: the clause
+# pin compared COUNTS, so swapping a clause for "the seam is written in python"
+# still read INTACT; and the pins sat ten lines below the lists they pinned, so
+# shrinking both together yielded freeze_is_effective True, enumeration_intact
+# True and n_blocking_gaps 0 with every real gap present.
+#
+#     A PIN IN THE SAME FILE AS THE THING IT PINS IS A COPY, NOT A CHECK.
+#
+# So the enumeration now comes from `fair_value_plan.md` -- the USER-FROZEN
+# plan, read from the immutable git blob that last changed it -- and the
+# comparison is by CONTENT, not by length. Shrinking a list here now requires
+# editing a document this seat does not own, in a commit that is not this one.
+# ==========================================================================
+
+PLAN_PATH = "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md"
+PLAN_PARSE_FAILED = "PLAN_ENUMERATION_UNPARSEABLE"
+
+#: plan wording -> the identifier this module uses. Explicit, so a plan edit
+#: that renames a link SURFACES as an unmapped name instead of a shorter list.
+_LINK_NAMES = {
+    "immutable inputs": "immutable_inputs", "labels/statuses": "labels_statuses",
+    "actions": "actions", "sigma": "sigma", "fairprice": "fairprice",
+    "fallback": "fallback", "score": "score", "quote mapping": "quote_mapping",
+    "replay": "replay", "p&l": "pnl",
+}
+_FIELD_NAMES = {
+    "all file hashes": "all_file_hashes", "commit ref": "commit_ref",
+    "candidate count": "candidate_count", "action key": "action_key",
+    "epsilon": "epsilon", "status grammar": "status_grammar",
+    "source manifests": "source_manifests",
+    "initial inventory": "initial_inventory", "tick rounding": "tick_rounding",
+    "latency": "latency", "fee rule": "fee_rule",
+    "quote parameters": "quote_parameters",
+    "null and success predicates": ("null_predicate", "success_predicate"),
+}
+
+
+def _plan_blob() -> tuple:
+    """The plan's bytes from the commit that last changed it -- an immutable
+    object reference, not a working-tree read."""
+    # --all, because this module runs from a detached worktree of a CHAIN ref
+    # whose history does not contain the plan. The object is in the shared
+    # database; the branch is not the point.
+    sha = _git("log", "-1", "--all", "--format=%H", "--", PLAN_PATH).stdout.strip()
+    if not sha:
+        raise RuntimeError(f"REFUSED {PLAN_PARSE_FAILED}: no commit touches "
+                           f"{PLAN_PATH}, so the enumeration has no external "
+                           f"source and this module will not fall back to its "
+                           f"own copy.")
+    b = _git("show", f"{sha}:{PLAN_PATH}", text=False).stdout
+    if not b:
+        raise RuntimeError(f"REFUSED {PLAN_PARSE_FAILED}: {PLAN_PATH} is empty "
+                           f"at {sha[:12]}")
+    return sha, b
+
+
+def plan_enumerations() -> dict:
+    """§7's chain links and required fields, PARSED FROM THE PLAN."""
+    sha, b = _plan_blob()
+    text = b.decode("utf-8", "replace")
+    sec = text.split("## 7.", 1)[-1].split("## 8.", 1)[0]
+
+    chain_txt = " ".join(
+        ln.strip() for ln in sec.splitlines()
+        if "->" in ln and ("immutable" in ln or "fallback" in ln))
+    links, unmapped = [], []
+    for raw in [x.strip() for x in chain_txt.split("->") if x.strip()]:
+        key = raw.lower().strip()
+        (links.append(_LINK_NAMES[key]) if key in _LINK_NAMES
+         else unmapped.append(raw))
+
+    m = re.search(r"The declaration records (.+?)\.", sec, re.S)
+    fields, unmapped_f = [], []
+    if m:
+        for raw in re.split(r",\s*", " ".join(m.group(1).split())):
+            key = raw.strip().lower()
+            got = _FIELD_NAMES.get(key)
+            if got is None:
+                unmapped_f.append(raw)
+            elif isinstance(got, tuple):
+                fields.extend(got)
+            else:
+                fields.append(got)
+
+    clause_bullets = [ln for ln in sec.splitlines() if ln.strip().startswith("- ")]
+    if unmapped or unmapped_f or len(links) != 10 or len(fields) != 14:
+        raise RuntimeError(
+            f"REFUSED {PLAN_PARSE_FAILED}: parsed {len(links)} links and "
+            f"{len(fields)} fields from {PLAN_PATH}@{sha[:12]}; unmapped link "
+            f"wording {unmapped}, unmapped field wording {unmapped_f}. A parse "
+            f"that silently yields a SHORTER list is the very failure this pin "
+            f"exists to prevent, so an incomplete parse refuses.")
+    return {"plan_commit": sha, "plan_sha256": hashlib.sha256(b).hexdigest(),
+            "links": tuple(links), "fields": frozenset(fields),
+            "n_quote_clause_bullets": len(clause_bullets)}
+
+
 ENUMERATION_SHRANK = "FREEZE_ENUMERATION_DOES_NOT_MATCH_ITS_PIN"
 
 CHAIN_LINKS_PINNED = (
@@ -120,6 +221,18 @@ REQUIRED_FIELDS_PINNED = frozenset({
 
 #: §7's quote-mapping clauses. A probe that FAILS leaves ALL of these unmet --
 #: never zero of them, which is what an absent list used to mean.
+#: The clause STRINGS, compared by content. A count comparison let REVIEW 209
+#: swap a clause for "the seam is written in python" and still read INTACT.
+QUOTE_CLAUSES_CONTENT = (
+    "UP_uses_p", "DOWN_uses_1_minus_p",
+    "bid_rounds_DOWN_to_the_legal_tick", "ask_rounds_UP_to_the_legal_tick",
+    "prices_bounded_to_the_legal_binary_range",
+    "the_bound_applied_is_RECORDED_not_silent",
+    "crossing_quote_emits_PLACE_WITHHELD_MARKETABLE_CROSS",
+    "no_zero_latency_privilege_for_candidate_induced_change",
+    "the_tick_is_DECLARED_not_invented",
+)
+
 QUOTE_CLAUSES_PINNED = (
     "UP_uses_p", "DOWN_uses_1_minus_p",
     "bid_rounds_DOWN_to_the_legal_tick", "ask_rounds_UP_to_the_legal_tick",
@@ -132,30 +245,41 @@ QUOTE_CLAUSES_PINNED = (
 
 
 def assert_enumerations_intact(chain=None, fields=None, clauses=None) -> dict:
-    """REFUSE if any enumeration no longer matches its pin. Injectable so the
-    refusal can be shown to fire (rule 15)."""
+    """REFUSE unless the live enumerations match THE PLAN, by CONTENT.
+
+    Injectable so the refusal can be shown to fire (rule 15).
+    """
     chain = CHAIN if chain is None else chain
     fields = REQUIRED_FIELDS if fields is None else fields
     clauses = QUOTE_CLAUSES_PINNED if clauses is None else clauses
+    plan = plan_enumerations()
     bad = []
     live = tuple(l for l, _ in chain)
-    if live != CHAIN_LINKS_PINNED:
-        bad.append(f"chain links {live} != pinned {CHAIN_LINKS_PINNED}")
-    if frozenset(fields) != REQUIRED_FIELDS_PINNED:
-        bad.append(f"required fields differ: missing "
-                   f"{sorted(REQUIRED_FIELDS_PINNED - frozenset(fields))}, extra "
-                   f"{sorted(frozenset(fields) - REQUIRED_FIELDS_PINNED)}")
-    if len(clauses) != len(QUOTE_CLAUSES_PINNED):
-        bad.append(f"quote clauses {len(clauses)} != {len(QUOTE_CLAUSES_PINNED)}")
+    if live != plan["links"]:
+        bad.append(f"chain links {live} != the plan's {plan['links']}")
+    if frozenset(fields) != plan["fields"]:
+        bad.append(f"required fields differ from the plan: missing "
+                   f"{sorted(plan['fields'] - frozenset(fields))}, extra "
+                   f"{sorted(frozenset(fields) - plan['fields'])}")
+    # CLAUSES ARE COMPARED BY CONTENT, not by count. Swapping a clause for
+    # "the seam is written in python" used to read INTACT.
+    if tuple(clauses) != QUOTE_CLAUSES_CONTENT:
+        bad.append(f"quote clauses differ by CONTENT: missing "
+                   f"{sorted(set(QUOTE_CLAUSES_CONTENT) - set(clauses))}, extra "
+                   f"{sorted(set(clauses) - set(QUOTE_CLAUSES_CONTENT))}")
     if bad:
         raise RuntimeError(
             f"REFUSED {ENUMERATION_SHRANK}: {'; '.join(bad)}. A gap count is "
-            f"only as strong as the enumeration it is counted over, and an "
-            f"enumeration that can shrink is a way to report progress by "
-            f"deleting the questions.")
-    return {"n_chain_links": len(CHAIN_LINKS_PINNED),
-            "n_required_fields": len(REQUIRED_FIELDS_PINNED),
-            "n_quote_clauses": len(QUOTE_CLAUSES_PINNED), "intact": True}
+            f"only as strong as the enumeration it is counted over, and a pin "
+            f"in the same file as the thing it pins is a copy, not a check.")
+    return {"n_chain_links": len(plan["links"]),
+            "n_required_fields": len(plan["fields"]),
+            "n_quote_clauses": len(QUOTE_CLAUSES_CONTENT),
+            "pinned_by": PLAN_PATH,
+            "plan_commit": plan["plan_commit"][:12],
+            "plan_sha256_16": plan["plan_sha256"][:16],
+            "clauses_compared_by": "CONTENT",
+            "intact": True}
 
 
 #: THE SUBPROCESS PROTOCOL. A probe's result is the line AFTER this sentinel,

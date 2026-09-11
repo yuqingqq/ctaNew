@@ -400,12 +400,61 @@ def maker_fee_rule() -> dict:
             f"difference. Until it is reconciled a zero fee is SUPPORTED but "
             f"not SETTLED, so this module still supplies no number for §9."),
         "per_source": per_source,
+        "THE_CHASE_DA_286": {
+            "hypothesis_1_parsing_edge_in_my_own_audit": {
+                "tested": "decoded all 5 transactions with the audit's own "
+                          "OrderFilled/OrdersMatched topic constants",
+                "result": "REFUTED. Each tx carries exactly ONE OrdersMatched "
+                          "with the normal 3-topic shape, and NO charged leg's "
+                          "maker address is that tx's takerOrderMaker. The "
+                          "maker/taker split is correct; these are genuine "
+                          "resting maker legs.",
+            },
+            "hypothesis_2_not_our_markets": {
+                "tested": "matched each charged leg's asset ids against the "
+                          "94,112 clobTokenIds in markets.jsonl",
+                "result": "REFUTED. All 10 are in OUR markets -- takerAssetId "
+                          "is one of our 5-min tokens in every case, and "
+                          "makerAssetId is 0 (USDC), so all ten are maker BUY "
+                          "legs.",
+            },
+            "hypothesis_3_extreme_price": {
+                "tested": "counted zero-fee maker BUY legs at the SAME price",
+                "result": "REFUTED as a sufficient cause. All 10 charged legs "
+                          "are at EXACTLY 0.9900 -- but 25 maker BUY legs at "
+                          "exactly 0.9900, interleaved across the same block "
+                          "buckets, paid ZERO. Price alone does not decide it.",
+            },
+            "WHAT_THE_CHASE_DID_SETTLE": {
+                "the_RATE_is_identified": (
+                    "implied rate = fee / (size x min(p, 1-p)) has median "
+                    "0.0990 over the charged legs, which is `maker_base_fee = "
+                    "1000` read as BASIS POINTS: 1000 bps = 10%. So the charge "
+                    "reconciles to the schedule field in markets.jsonl by the "
+                    "standard formula fee = 0.10 x size x min(p, 1-p)."),
+                "the_TRIGGER_is_not": (
+                    "nothing in the collected data distinguishes the 10 charged "
+                    "legs from 25 otherwise-identical zero-fee legs at the same "
+                    "price in the same blocks. The rate is known; WHEN it "
+                    "applies is not."),
+            },
+            "THE_ANSWER_TO_SECTION_9": (
+                "the supporting rule for a ZERO maker fee is the venue's own "
+                "order-level `fee_rate_bps`, which is 0 on all 76,617 observed "
+                "trades. It is a rule stated by the market. But it is not a "
+                "CLEAN zero: 10 of 1,056 maker legs (0.95%) were charged at the "
+                "market base rate. A receipt may therefore use zero ONLY if it "
+                "also carries that exception rate; a receipt claiming an "
+                "unqualified zero would be asserting something the chain "
+                "contradicts 0.95% of the time."),
+        },
         "WHAT_WOULD_SETTLE_IT": [
             "a reconciliation of the 10 charged legs: whether they are "
             "taker-side fees attributed to a maker address, a different fee "
             "path, or a parsing edge in the audit",
-            "or the published CLOB fee schedule for these condition ids with an "
-            "effective date, which no collector currently captures",
+            "the published CLOB fee schedule for these condition ids with an "
+            "effective date, which no collector currently captures -- it is now "
+            "the ONLY open question, since the rate itself is reconciled",
         ],
         "CORRECTION_TO_DA_283": (
             "DA 283 reported this input NOT ESTABLISHABLE. That was wrong, and "

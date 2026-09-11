@@ -128,7 +128,14 @@ def seal_ledger(name: str, rel: str, links, why: str) -> dict:
     size = p.stat().st_size
     return {
         "input": name, "path": rel, "present": True,
-        "seal_kind": "PREFIX", "sealed_len": size,
+        "seal_kind": "PREFIX",
+        "sealed_len": size,
+        "sealed_len_units": "BYTES",
+        "sealed_len_is_not_a_record_count": (
+            "6,811,740 for collector_gaps is a BYTE LENGTH. The file holds "
+            "13,016 records. A number with no unit beside it is read as "
+            "whatever the reader expects, and this one was read as a count."),
+        "n_records": sum(1 for _ in open(p, "rb")),
         "prefix_sha256": prefix_digest(p, size),
         "as_of_mtime_utc": time.strftime(
             "%Y-%m-%dT%H:%M:%SZ", time.gmtime(p.stat().st_mtime)),
@@ -139,10 +146,27 @@ def seal_ledger(name: str, rel: str, links, why: str) -> dict:
     }
 
 
+def is_closed_day(day: str) -> bool:
+    """A UTC day is CLOSED once the next one has begun. A CONTENT seal over an
+    OPEN day is a seal over a moving target: REVIEW 209 found 09-11 sealed while
+    it was still accruing, and disk was already +154 book files past the seal
+    within the hour. My own rule -- content seals are for closed captures -- was
+    stated in the docstring and not enforced anywhere, which is the same shape
+    as a property list that omits a property."""
+    return day < time.strftime("%Y%m%d", time.gmtime())
+
+
 def seal_capture(name: str, tmpl: str, pat: str, links, why: str,
                  days) -> dict:
     out = {}
     for day in days:
+        if not is_closed_day(day):
+            out[day] = {"present": False, "sealed": False,
+                        "status": "DAY_IS_OPEN_NOT_SEALED",
+                        "why": ("a CONTENT seal over an open day seals a moving "
+                                "target; this day is still accruing and is "
+                                "excluded until it closes")}
+            continue
         base = _root() / tmpl.format(day=day)
         files = sorted(glob.glob(str(base / pat.format(day=day))))
         if not files:
@@ -183,15 +207,23 @@ def build(days=None, limit: int = 3) -> dict:
     covered = {lk for e in ledgers for lk in e["reads"]}
     covered |= {lk for e in captures for lk in e["reads"]}
     missing_links = [lk for lk in PREDICTIVE_LINKS if lk not in covered]
+    # An OPEN day is EXCLUDED, not counted as a failure and not counted as
+    # sealed. `days_sealed` is what was actually sealed.
+    open_days = sorted({day for c in captures for day, v in c["by_day"].items()
+                        if v.get("status") == "DAY_IS_OPEN_NOT_SEALED"})
+    sealed_days = [d for d in days if d not in open_days]
     all_sealed = (all(e["present"] for e in ledgers)
-                  and all(d["present"] for c in captures
-                          for d in c["by_day"].values()))
+                  and all(v["present"] for c in captures
+                          for day, v in c["by_day"].items()
+                          if day in sealed_days))
     return {
         "protocol": PROTOCOL,
         "dispatch": "DA 284 / REVIEW 208",
         "as_of_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "data_root": str(_root()),
-        "days_sealed": days,
+        "days_requested": days,
+        "days_sealed": sealed_days,
+        "days_open_and_excluded": open_days,
         "ledgers": ledgers,
         "captures": captures,
         "predictive_links_covered": sorted(covered & set(PREDICTIVE_LINKS)),
@@ -200,6 +232,25 @@ def build(days=None, limit: int = 3) -> dict:
         "all_enumerated_inputs_present_and_sealed": all_sealed,
         "n_inputs": len(ledgers) + len(captures),
         "seconds_to_build": round(time.time() - t0, 1),
+        "AN_UNENUMERATED_TREE_GATE_1_READS": {
+            "finding": "REVIEW 209",
+            "path": "data/pm_5min/derived/**",
+            "read_by": "da_fair_value_gate1_labels.cells_winner_digests()",
+            "why_it_is_not_sealed": (
+                "it is a MUTABLE tree that both lanes rewrite -- a content seal "
+                "over it would be stale within the hour and a prefix seal is "
+                "meaningless for a directory. Sealing it would manufacture a "
+                "guarantee, not record one."),
+            "so_the_claim_is_weakened_on_purpose": (
+                "`every_predictive_link_has_a_sealed_input` means every link "
+                "has at least one sealed input. For labels/statuses it does NOT "
+                "mean every byte that link reads is sealed: gate 1 also reads "
+                "this derived tree. Stated here so the field is not read as "
+                "more than it measures."),
+            "what_would_close_it": (
+                "gate 1 reading its winner digests from an enumerated, sealed "
+                "per-day artifact rather than globbing a shared mutable tree"),
+        },
         "WHAT_A_SEAL_DOES_NOT_CLAIM": (
             "it pins the BYTES the chain read. It does not certify they are "
             "correct, complete, or free of collector gaps -- gap statuses are "
@@ -231,12 +282,12 @@ def falsify() -> int:
            for e in d["ledgers"]))
     ck("every per-day capture is CONTENT-sealed with a 64-hex day digest",
        all(len(x["day_sha256"]) == 64 for c in d["captures"]
-           for x in c["by_day"].values() if x["present"]),
+           for x in c["by_day"].values() if x.get("present")),
        f"{len(d['captures'])} captures x {len(d['days_sealed'])} days")
     ck("POSITIVE CONTROL: the book tape day actually carries files",
-       any(x["n_files"] > 100 for c in d["captures"]
+       any(x.get("n_files", 0) > 100 for c in d["captures"]
            if c["input"] == "pm_book_tape" for x in c["by_day"].values()),
-       str({k: v["n_files"] for c in d["captures"]
+       str({k: v.get("n_files", v.get("status")) for c in d["captures"]
             if c["input"] == "pm_book_tape" for k, v in c["by_day"].items()}))
     # THE SEAL MUST BE ABLE TO FIRE.
     lg = d["ledgers"][0]
@@ -246,7 +297,7 @@ def falsify() -> int:
     ck("...and re-digesting the SAME prefix reproduces the seal (it is stable)",
        prefix_digest(p, lg["sealed_len"]) == lg["prefix_sha256"])
     cap = next(c for c in d["captures"] if c["input"] == "pm_book_tape")
-    day = next(k for k, v in cap["by_day"].items() if v["present"])
+    day = next(k for k, v in cap["by_day"].items() if v.get("present"))
     again = seal_capture("pm_book_tape", "data/pm_5min/raw/{day}", "*.jsonl.gz",
                          ("fairprice",), "", [day])
     ck("a day digest is REPRODUCIBLE over the same files",
@@ -255,6 +306,18 @@ def falsify() -> int:
     ck("NEGATIVE CONTROL: dropping one file CHANGES the day digest",
        hashlib.sha256(json.dumps([["x", 1, "y"]], sort_keys=True).encode()).hexdigest()
        != cap["by_day"][day]["day_sha256"])
+    ck("an OPEN day is EXCLUDED from content seals, not sealed while moving",
+       all(v.get("status") == "DAY_IS_OPEN_NOT_SEALED"
+           for c in d["captures"] for k, v in c["by_day"].items()
+           if not is_closed_day(k)),
+       f"open and excluded: {d['days_open_and_excluded']}")
+    ck("...and `days_sealed` reports only what was actually sealed",
+       all(is_closed_day(x) for x in d["days_sealed"]), str(d["days_sealed"]))
+    ck("a byte LENGTH is labelled as one, and the record count is separate",
+       all(e["sealed_len_units"] == "BYTES" and isinstance(e["n_records"], int)
+           for e in d["ledgers"]),
+       str({e["input"]: (e["sealed_len"], e["n_records"]) for e in d["ledgers"]
+            if e["input"] == "collector_gaps"}))
     ck("every PREDICTIVE link (§7 links 1-7) has at least one sealed input",
        d["every_predictive_link_has_a_sealed_input"],
        str(d["predictive_links_not_covered"] or "none uncovered"))
@@ -262,6 +325,10 @@ def falsify() -> int:
        any(c["input"] == "chainlink_prices" for c in d["captures"]))
     ck("C2's own input is sealed separately from Identity's book",
        {c["input"] for c in d["captures"]} >= {"binance_bookticker", "pm_book_tape"})
+    ck("the unenumerated tree gate 1 reads is NAMED, not papered over",
+       d["AN_UNENUMERATED_TREE_GATE_1_READS"]["path"].startswith("data/pm_5min/derived")
+       and "does NOT mean every byte" in
+       d["AN_UNENUMERATED_TREE_GATE_1_READS"]["so_the_claim_is_weakened_on_purpose"])
     ck("a seal does NOT claim the input is good, and says so",
        "never 'is this a good input?'" in d["WHAT_A_SEAL_DOES_NOT_CLAIM"])
     print(f"\n  {'MANIFEST CELLS PASS' if not bad else str(bad) + ' FAILED'}")

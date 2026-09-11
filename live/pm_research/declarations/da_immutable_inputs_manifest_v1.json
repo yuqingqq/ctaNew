@@ -1,11 +1,18 @@
 {
  "protocol": "P003_DA_IMMUTABLE_INPUTS_MANIFEST_V1",
  "dispatch": "DA 284 / REVIEW 208",
- "as_of_utc": "2026-09-11T21:33:16Z",
+ "as_of_utc": "2026-09-11T23:45:38Z",
  "data_root": "/home/yuqing/ctaNew",
- "days_sealed": [
+ "days_requested": [
   "20260909",
   "20260910",
+  "20260911"
+ ],
+ "days_sealed": [
+  "20260909",
+  "20260910"
+ ],
+ "days_open_and_excluded": [
   "20260911"
  ],
  "ledgers": [
@@ -14,9 +21,12 @@
    "path": "data/pm_5min/markets.jsonl",
    "present": true,
    "seal_kind": "PREFIX",
-   "sealed_len": 72949047,
-   "prefix_sha256": "1427cdcfe6173589684a7796667c846603b4ae007a935242e426524ed0700ef5",
-   "as_of_mtime_utc": "2026-09-11T21:30:21Z",
+   "sealed_len": 73232774,
+   "sealed_len_units": "BYTES",
+   "sealed_len_is_not_a_record_count": "6,811,740 for collector_gaps is a BYTE LENGTH. The file holds 13,016 records. A number with no unit beside it is read as whatever the reader expects, and this one was read as a count.",
+   "n_records": 47070,
+   "prefix_sha256": "01f4b7fb12612676cad94be22dd9ef282d659af0b07f9036b90fe692c2d0ebf8",
+   "as_of_mtime_utc": "2026-09-11T23:40:20Z",
    "reads": [
     "immutable_inputs",
     "labels_statuses",
@@ -31,9 +41,12 @@
    "path": "data/pm_5min/resolutions.jsonl",
    "present": true,
    "seal_kind": "PREFIX",
-   "sealed_len": 10046209,
-   "prefix_sha256": "228d9c4f5de67845374f0376277aeea693c13af3a81c494155d1293db7038798",
-   "as_of_mtime_utc": "2026-09-11T21:29:51Z",
+   "sealed_len": 10085209,
+   "sealed_len_units": "BYTES",
+   "sealed_len_is_not_a_record_count": "6,811,740 for collector_gaps is a BYTE LENGTH. The file holds 13,016 records. A number with no unit beside it is read as whatever the reader expects, and this one was read as a count.",
+   "n_records": 47067,
+   "prefix_sha256": "a6648be6a35306a3baba1315db796f5fb671afafe4795e6de79a3098db400872",
+   "as_of_mtime_utc": "2026-09-11T23:40:06Z",
    "reads": [
     "labels_statuses",
     "score"
@@ -48,6 +61,9 @@
    "present": true,
    "seal_kind": "PREFIX",
    "sealed_len": 2111,
+   "sealed_len_units": "BYTES",
+   "sealed_len_is_not_a_record_count": "6,811,740 for collector_gaps is a BYTE LENGTH. The file holds 13,016 records. A number with no unit beside it is read as whatever the reader expects, and this one was read as a count.",
+   "n_records": 2,
    "prefix_sha256": "8b3063379d2a3806e06f5297cf5c4d7f5f530618633694a15877b1e7afe4a428",
    "as_of_mtime_utc": "2026-08-31T22:02:21Z",
    "reads": [
@@ -62,9 +78,12 @@
    "path": "data/pm_5min/collector_gaps.jsonl",
    "present": true,
    "seal_kind": "PREFIX",
-   "sealed_len": 6811740,
-   "prefix_sha256": "3bb89c122f4a680d849cf49d0640a9a05118ae3a6ae40f39c8aa00dbe058b652",
-   "as_of_mtime_utc": "2026-09-11T21:11:45Z",
+   "sealed_len": 6819064,
+   "sealed_len_units": "BYTES",
+   "sealed_len_is_not_a_record_count": "6,811,740 for collector_gaps is a BYTE LENGTH. The file holds 13,016 records. A number with no unit beside it is read as whatever the reader expects, and this one was read as a count.",
+   "n_records": 13016,
+   "prefix_sha256": "1c18518a57a58954863950bd792709207e506a96b7439ffb9da06fc2e429bb33",
+   "as_of_mtime_utc": "2026-09-11T23:00:42Z",
    "reads": [
     "immutable_inputs",
     "labels_statuses"
@@ -105,12 +124,10 @@
      "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
     },
     "20260911": {
-     "present": true,
-     "n_files": 1806,
-     "bytes": 4712298827,
-     "day_sha256": "e5c2e91e9c207bab68fe33fea8938d38ff8348dc5cfa835e3b776e8dd2b66d1b",
-     "seal_kind": "CONTENT",
-     "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
+     "present": false,
+     "sealed": false,
+     "status": "DAY_IS_OPEN_NOT_SEALED",
+     "why": "a CONTENT seal over an open day seals a moving target; this day is still accruing and is excluded until it closes"
     }
    }
   },
@@ -141,12 +158,10 @@
      "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
     },
     "20260911": {
-     "present": true,
-     "n_files": 21,
-     "bytes": 4953676,
-     "day_sha256": "cc3774a38faae8b98e593d124455b5faf5846ffd29470028b2c2c399da16a1eb",
-     "seal_kind": "CONTENT",
-     "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
+     "present": false,
+     "sealed": false,
+     "status": "DAY_IS_OPEN_NOT_SEALED",
+     "why": "a CONTENT seal over an open day seals a moving target; this day is still accruing and is excluded until it closes"
     }
    }
   },
@@ -178,12 +193,10 @@
      "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
     },
     "20260911": {
-     "present": true,
-     "n_files": 336,
-     "bytes": 1724795430,
-     "day_sha256": "3f104219130507551c5d237c41618a79ee9b6d7320775dc39974b54ca0969386",
-     "seal_kind": "CONTENT",
-     "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
+     "present": false,
+     "sealed": false,
+     "status": "DAY_IS_OPEN_NOT_SEALED",
+     "why": "a CONTENT seal over an open day seals a moving target; this day is still accruing and is excluded until it closes"
     }
    }
   }
@@ -201,7 +214,15 @@
  "every_predictive_link_has_a_sealed_input": true,
  "all_enumerated_inputs_present_and_sealed": true,
  "n_inputs": 7,
- "seconds_to_build": 145.3,
+ "seconds_to_build": 96.5,
+ "AN_UNENUMERATED_TREE_GATE_1_READS": {
+  "finding": "REVIEW 209",
+  "path": "data/pm_5min/derived/**",
+  "read_by": "da_fair_value_gate1_labels.cells_winner_digests()",
+  "why_it_is_not_sealed": "it is a MUTABLE tree that both lanes rewrite -- a content seal over it would be stale within the hour and a prefix seal is meaningless for a directory. Sealing it would manufacture a guarantee, not record one.",
+  "so_the_claim_is_weakened_on_purpose": "`every_predictive_link_has_a_sealed_input` means every link has at least one sealed input. For labels/statuses it does NOT mean every byte that link reads is sealed: gate 1 also reads this derived tree. Stated here so the field is not read as more than it measures.",
+  "what_would_close_it": "gate 1 reading its winner digests from an enumerated, sealed per-day artifact rather than globbing a shared mutable tree"
+ },
  "WHAT_A_SEAL_DOES_NOT_CLAIM": "it pins the BYTES the chain read. It does not certify they are correct, complete, or free of collector gaps -- gap statuses are a separate predicate and stay one. A seal answers 'is this the same input?', never 'is this a good input?'",
  "WHY_TWO_SEAL_SHAPES": "append-only ledgers grow while the programme runs, so a whole-file digest ages the moment it is written; per-day captures are closed and can be digested in full"
 }
