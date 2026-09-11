@@ -1,0 +1,32 @@
+{
+ "protocol": "P003_DA_POPULATION_FREEZE_V7_DRAFT",
+ "STATUS": "DRAFT -- <new> digests pending DE 306",
+ "supersedes": "declarations/da_population_freeze_v6.json (rule 13)",
+ "PIPELINE_ROWS_THAT_MOVE": [
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_forward_value_day.py",
+   "CLASS": "PIPELINE",
+   "v6": "c397537121a29b44",
+   "at_f309602": "d024925c268e84c3",
+   "at_DE_306": "<new>"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_settlement_control_run.py",
+   "CLASS": "PIPELINE",
+   "v6": "faeae22f347e2032",
+   "at_f309602": "ee206d5d549f7a2c",
+   "at_DE_306": "<new>"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_multiday_gate1_runner.py",
+   "CLASS": "PIPELINE",
+   "v6": "157413f6562cf5bd",
+   "at_DE_306": "<new> -- ruled_day_set() hunk lands here"
+  }
+ ],
+ "EVERY_OTHER_PIPELINE_ROW_MUST_SHOW_ZERO_DRIFT": "49 of 52. A fourth mover means the supersession reached past its three declared hunks, and that is a finding, not a rebaseline.",
+ "the_check": "da_population_freeze_verify.py PIPELINE branch -- refuses by filename"
+}
