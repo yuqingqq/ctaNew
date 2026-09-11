@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T16:38:04Z (MEM ROUND 393 -- THE USER RULED: CONTINUE DESCRIPTIVELY. Days 09-09..09-13 are
+  built and valued for PER-DAY PERFORMANCE ONLY, and the forward test's outcome stays
+  FIXED AT DAY TWO -- both arms FUTILE, STOP_FOR_FUTILITY computed, no later record can
+  revise it. Descriptive days are not a continuation of the test; they are five more
+  observations of arms whose test already stopped. A PREDICTION FILED BEFORE THEY LAND:
+  G_so_far is len(days_scored), so seven day records will make running_tally read 7 of 7
+  with days_remaining 0 -- a tally that LOOKS like a completed test. The verdict is safe
+  because futility is a function of the negative days already seen, but the thing that
+  distinguishes stopped from completed will be the FUTILITY BLOCK, not the tally. Read
+  futility first. AND I CHECKED THE G_so_far == 2 LITERAL BEFORE FILING IT AS A HAZARD:
+  it asserts on a hand-supplied two-day fixture, not the glob, so it will NOT break --
+  round 379's lesson, that a strike can follow correctly from wrong bounds. Each
+  descriptive day needs its own point-estimate receipt or its progress emit is a refusal
+  string, as day two's already was. 09-09 onward need NO rebuild: they build at the
+  frozen lineage, which is why the schedule is as short as it is. Lock FREE and nothing
+  running at dispatch. Tip d7812c0.)
   2026-09-11T16:13:55Z (MEM ROUND 392 -- BOTH ARMS NOW REPRODUCE EXACTLY, WHICH CLOSES THE CAVEAT I LEFT AT
   387. I checked it myself rather than reading the flag: CONDVALUE -14645.078818000005
   and HAZARD 4925.363903000005, each equal to day one's landed cell under ==, on the
@@ -101,6 +117,7 @@ updated: >-
   140 local-only commits a fast-forward is IMPOSSIBLE however clean the tree is. The
   coordinator's own rule-45 push is blocked by the same thing. Lock free, nothing armed.
   Tip 3046cbf.)
+previous_updates: >-
   2026-09-11T16:02:36Z (MEM ROUND 389 -- THE DESIGN COULD NEVER HAVE SURVIVED ITS OWN SCREEN, AND I
   COMPUTED IT. The floor is 0.015625, reachable only at a perfect 7-of-7. Times m=2, the
   Holm multiplicity as declared, 0.03125 < 0.05 -- it would have passed. Times 69, the
@@ -117,7 +134,6 @@ updated: >-
   round-388 STOP_ADVICE observation is routed as DE 347 with a vN+1 re-emit, in band.
   The post-population queue opens with its members named; the 09-09 build stays HELD and
   days 3-7 are the USER's call. Tip 236fb64.)
-previous_updates: >-
   2026-09-11T16:00:46Z (MEM ROUND 388 -- THE FORWARD TEST'S OUTCOME IS FIXED AT DAY TWO, AND I REPRODUCED
   THE ARITHMETIC THAT FIXES IT. Not read: re-derived from N=7 and a two-sided sign test
   over 128 patterns. CONDVALUE's 2 non-positive days cap it at 5 of 7 -> 2*29/128 =
@@ -455,6 +471,13 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r393_the_USER_RULED_continue_descriptively_and_what_it_does_NOT_change: "The user's words: continue to build and show all the results for remaining days. So 09-09 through 09-13 are built and valued -- for PER-DAY PERFORMANCE ONLY. What it does not change, stated so no later reader has to infer it: the forward test's outcome was FIXED AT DAY TWO by R-910/R-911/R-914, both arms FUTILE with STOP_FOR_FUTILITY computed, and NO LATER RECORD CAN REVISE IT. Each remaining day computes its own fields and its own futility block under the unchanged declared design, G=7 at tolerance 0. Descriptive days are not a continuation of the test; they are five more observations of arms whose test already stopped."
+  r393_PREDICTION_the_descriptive_days_will_drive_the_TALLY_to_7_of_7: "Filed BEFORE the days land so it can be checked afterwards. G_so_far is len(days_scored) in de_forward_evaluator.py:653, and days_scored comes from the day records. When 09-09 through 09-13 land, seven records will match the day-result glob, so running_tally will read G_so_far 7, G_declared 7, days_remaining 0 -- a tally that LOOKS like a test which ran to completion. The verdict is safe because the futility blocks are functions of the negative days already seen and those do not go away; but the thing that distinguishes a completed test from a stopped one will be the FUTILITY BLOCK, not the tally. Anyone reading the day-seven record should read futility first."
+  r393_I_CHECKED_THE_G_so_far_LITERAL_BEFORE_FILING_IT_AS_A_HAZARD: "de_revaluation_emit.py:515 asserts e['running_tally']['G_so_far'] == 2 -- exactly the literal-that-must-track-a-moving-thing shape, and my first reading was that five more days would break it. It will NOT: the cell calls emit_single_book_day with a HAND-SUPPLIED two-day map ({'2026-09-07': -11017.71, '2026-09-08': 5.0}) and asserts on that fixture, not on the day glob. The neighbouring len(per_window_table_unconditional) == 43 is a literal against the same fixture day. Recorded as checked-and-cleared rather than as a warning, because round 379 taught me that a strike can follow correctly from bounds that are wrong."
+  r393_each_descriptive_day_needs_its_own_point_estimate_receipt: "de_forward_evaluator.py globs p003_de_point_estimate_day_<c>_<revision>__*.json per day and REFUSES NO_RECEIPT when a day has none, with the reason in its own words: a cent figure whose winner source was never verified must say so, and saying so requires the receipt that did the verifying. Day two already demonstrated this -- its progress_emit came back UNAVAILABLE carrying that refusal, which I read at round 388. So each of the five descriptive days needs its own point-estimate receipt or its progress emit will be a refusal string rather than a table. Not a defect; a prerequisite worth knowing before five days of builds start."
+  r393_the_lock_order_as_ruled_and_the_timers_that_wait_on_it: "09-09 book about 23 min, then 09-09 valuation about 77 min, then 09-10 fragment then tape then book about 55 min, then 09-10 valuation. 09-11 only after it closes at 2026-09-12T00:00Z; 09-12 and 09-13 likewise, with 09-13's mask hand-made at the boundary by DA. The measurement and evaluation pipelines wait on the heavy lock (BE 149), so the timers do not need separate arbitration for this sequence. At the moment of this dispatch the heavy lock is FREE and nothing is running -- read with fuser on data/.heavy_run.lock, the reader that has said HELD three times today."
+  r393_09_09_onward_need_NO_rebuild_and_that_follows_from_the_lineage: "09-07 and 09-08 needed freeze-built rebuilds because their landed books were produced before the freeze and were inadmissible at the frozen tree -- the 09-07 refusal named ruled_day_set by its own delta, which I recorded at round 385. 09-09 onward are built AT the frozen lineage from the start, so the rebuild step does not recur. Worth stating because the last two days each cost roughly 23 minutes of lock time on a rebuild, and the absence of that step is the reason the remaining schedule is as short as it is."
+  r393_the_method_is_UNCHANGED_and_is_worth_enumerating_once_more: "Dry-run before every stage; the licensed code-frozen valuation path with no closure module moves; freeze-built books only; the oracle read ONCE per run; the stage-0 verdict written run-scoped rather than to /tmp; re-emits vN+1 and never in place; reproduction and rehearsal records named outside the day-result glob. Every one of those is a rule that was bought this session by a failure, and five more days is exactly the interval over which a method decays if it is not written down at the start of it."
   r392_BOTH_arms_now_reproduce_EXACTLY_and_that_closes_my_round_387_caveat: "At round 387 I reported day one's reproduction as EXACT for CONDVALUE ONLY and said plainly that HAZARD was still drawing, so the link was established for one arm and pending for the other. It is now closed for both, and I checked it myself rather than reading the record's flag: CONDVALUE -14645.078818000005 against day one's -14645.078818000005, and HAZARD 4925.363903000005 against day one's 4925.363903000005 -- full float equality, both arms, on the freeze-built book 887a97eb with admitted_by DESCENDANT. The record's own reproduction.every_arm_reproduces_to_the_cent is True and its per-arm exact_equality is True twice, which now agrees with my own comparison."
   r392_I_VERIFIED_ALL_THREE_DECLARED_DIGESTS_AGAINST_DISK: "The record-schema declaration v3 names three files by path and sha256 -- the two mis-named residue records and the correctly named reproduction record. I hashed all three on disk: 3 of 3 MATCH. A residue declaration whose digests are checkable is the difference between recording that two files exist and recording WHICH two files exist, and it is what lets a later reader confirm the residue was never edited."
   r392_the_PROTOCOL_field_CANNOT_discriminate_and_I_proved_it_on_the_files: "Q-DA-468 says the identity filter works on the reproduction BLOCK, not the protocol. I tested that claim on the five files the day-result glob matches rather than accepting it: the two residue records carry protocol P003_DE_DAY_RECORD_V1 -- and so does p003_de_forward_value_20260908.json, a REAL day record. Day one's own record carries a third string, P003_DE_FORWARD_VALUE_DAY_V1_SUPERSEDING, and only the new reproduction record carries P003_DE_DAY_RECORD_V1_REPRODUCTION. So the natural discriminator genuinely does not discriminate: a real day and a reproduction are indistinguishable by protocol, and the presence of the reproduction block is what separates them."
@@ -28237,6 +28260,34 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r393_the_USER_RULED_continue_descriptively_and_what_it_does_NOT_change:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "read R-916's ruling against R-910/R-911/R-914's verdict; the futility blocks in the final record are what fix the outcome and they are functions of days already seen."
+  r393_PREDICTION_the_descriptive_days_will_drive_the_TALLY_to_7_of_7:
+    prov: CHECKED
+    artifact: live/pm_research/de_forward_evaluator.py
+    said: "read G_so_far = len(days_scored) at :653 and the duplicate guard at :651-652; the running_tally fields are assembled from it at :668-671."
+  r393_I_CHECKED_THE_G_so_far_LITERAL_BEFORE_FILING_IT_AS_A_HAZARD:
+    prov: CHECKED
+    artifact: live/pm_research/de_revaluation_emit.py
+    said: "read the cell at :509-519: the two-day map is a literal argument to emit_single_book_day, so the assertion is on the fixture and not on whatever days exist on disk."
+  r393_each_descriptive_day_needs_its_own_point_estimate_receipt:
+    prov: CHECKED
+    artifact: live/pm_research/de_forward_evaluator.py
+    said: "read the per-day glob and the NO_RECEIPT refusal at :335-348; compared against the UNAVAILABLE progress_emit I read in day two's record."
+  r393_the_lock_order_as_ruled_and_the_timers_that_wait_on_it:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    said: "fuser on the lock returned nothing; the order and durations are R-916's, recorded as the coordinator's plan rather than as measurements of mine."
+  r393_09_09_onward_need_NO_rebuild_and_that_follows_from_the_lineage:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/rebuild_identity
+    said: "the three 09-08 rebuild receipts record builder_commits dbb11e4, 2b27cc1 and b34ed9f against the landed book's 7ed5a90; R-916 states 09-09+ build at the frozen lineage."
+  r393_the_method_is_UNCHANGED_and_is_worth_enumerating_once_more:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "enumerated R-916's method paragraph; each clause traces to an R-entry from today that I swept: the /tmp stage-0 source at R-910, the in-place overwrite at R-910, the naming rule at R-915, the once-per-run oracle at R-908."
   r392_BOTH_arms_now_reproduce_EXACTLY_and_that_closes_my_round_387_caveat:
     prov: CHECKED
     artifact: data/pm_5min/derived/fwd_v2/p003_de_reproduction_at_the_freeze_20260907.json
