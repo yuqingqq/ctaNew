@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T18:30:27Z (MEM ROUND 394 -- A SECOND LANE, AND THE FREEZE NAMES A COMMIT THE PLAN HAS ALREADY
+  MOVED PAST. R-917 freezes fair_value_plan.md at 0575444 and describes a 357-line
+  protocol; a LATER user commit 876e435 hardened it to 424 lines twelve minutes before
+  the entry was written, and THE FILE ON DISK IS THAT ONE. Not cosmetic: EVERY parameter
+  R-917 quotes -- m = 2, 10 evaluable, 2^10, 0.001953125, s60_probability_v1,
+  pm_microprice, bn_bookticker_mid, placement_latency_ms 250, INSUFFICIENT_EVIDENCE -- is
+  ABSENT from the frozen commit and present only on disk. The prose is right and the hash
+  names a document containing none of those terms; seats implement from disk so none is
+  misled, but a pointer is what an automated reader resolves. DAY THREE IS THE FIRST
+  POSITIVE DAY -- CONDVALUE +10295.840461999993, p 0.3852295409181637, DESCENDANT -- AND
+  IT CHANGES NOTHING: with two days already non-positive the cap is still 5 of 7, still
+  0.453125, computed not asserted. A positive day does not restore a negative one. LANE
+  2's floor is 2/1024 = 0.001953125, EIGHT TIMES smaller than lane 1's, with 12.8x
+  headroom at m = 2 against 1.6x. I CORRECTED MY OWN FIRST READING: I printed that it CAN
+  pass a 69-fold screen beside the number 0.134765625, which exceeds 0.05 -- both designs
+  fail that screen, but only lane 1's exceeds 1. And R-917's parenthetical is loose:
+  cancellation's m=2 was attainable too; what it could not satisfy was the SCREEN. The
+  thing a cold reader must not conclude: lane 2 is not the cancellation test reopening.
+  Tip da016c5.)
   2026-09-11T16:38:04Z (MEM ROUND 393 -- THE USER RULED: CONTINUE DESCRIPTIVELY. Days 09-09..09-13 are
   built and valued for PER-DAY PERFORMANCE ONLY, and the forward test's outcome stays
   FIXED AT DAY TWO -- both arms FUTILE, STOP_FOR_FUTILITY computed, no later record can
@@ -99,6 +118,7 @@ updated: >-
   residue is KEPT. AND I NEARLY ATTRIBUTED THE WRONG DECLARATION: de_09_07_residue_check_v2
   is a BUILD residue check from 03:17Z about builder units, not this. Rule 16 exactly.
   Tip 0a7f2bf.)
+previous_updates: >-
   2026-09-11T16:09:12Z (MEM ROUND 390+391 -- ROUND CLOSE. I COMPUTED THE v1-TO-v2 DIFF MYSELF AND IT IS 174
   CHANGED LEAVES, NOT 2: 172 of them are emit.per_window_table_unconditional, 43 rows by
   exactly 4 fields, every one None -> a real value, plus at_utc and STOP_ADVICE; 4 leaves
@@ -117,7 +137,6 @@ updated: >-
   140 local-only commits a fast-forward is IMPOSSIBLE however clean the tree is. The
   coordinator's own rule-45 push is blocked by the same thing. Lock free, nothing armed.
   Tip 3046cbf.)
-previous_updates: >-
   2026-09-11T16:02:36Z (MEM ROUND 389 -- THE DESIGN COULD NEVER HAVE SURVIVED ITS OWN SCREEN, AND I
   COMPUTED IT. The floor is 0.015625, reachable only at a perfect 7-of-7. Times m=2, the
   Holm multiplicity as declared, 0.03125 < 0.05 -- it would have passed. Times 69, the
@@ -471,6 +490,13 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r394_THE_FREEZE_NAMES_A_COMMIT_THE_PLAN_HAS_ALREADY_MOVED_PAST: "R-917 freezes workspace/fair_value_plan.md v1.2 at commit 0575444 and describes a 357-line protocol. Measured: 0575444 (18:06:45Z) is 357 lines, sha 474528472854cf21; a LATER user commit 876e435 (18:19:19Z, 'Harden fair-value validation plan') changed 735 lines and produced 424, sha 1606fe8d19124d0f; and THE FILE ON DISK IS 1606fe8d19124d0f -- 876e435's version, not the frozen one. R-917 was written at 18:21:55Z, after the hardening. Both commits are the user's. The register's freeze pointer is one commit behind the plan it describes."
+  r394_AND_EVERY_PARAMETER_R_917_QUOTES_IS_ABSENT_FROM_THE_FROZEN_COMMIT: "This is not a cosmetic hash slip. I grepped the frozen text and the on-disk text for each design parameter R-917 states, and EVERY ONE is absent from 0575444 and present only on disk: m = 2 (0 vs 4 occurrences), 10 evaluable (0 vs 1), 2^10 / 1,024 (0 vs 2), the minimum two-sided p 0.001953125 (0 vs 1), s60_probability_v1 (0 vs 1), pm_microprice (0 vs 2), bn_bookticker_mid (0 vs 1), placement_latency_ms 250 (0 vs 1), INSUFFICIENT_EVIDENCE (0 vs 4). So R-917's PROSE describes the hardened plan correctly and its HASH names a document that contains none of those terms. The seats implement from disk, so no seat is misled; what is wrong is the pointer, and a pointer is what an automated reader resolves. Rule 12 asks a freeze to be a hash AND a ref; here they disagree."
+  r394_DAY_THREE_IS_THE_FIRST_POSITIVE_DAY_and_it_changes_NOTHING: "Read from the artifact and not from the dispatch: CONDVALUE_X_SKEW on 2026-09-09 has observed_D_cents +10295.840461999993, p_two_sided 0.3852295409181637, 500 draws, 25902 cancels, settled total +57373.33741919998, seed 1870006418, admitted_by DESCENDANT, book a72caaa08968dd93, oracle 9b62cebe31ea41ae at 46521 records. It is the arm's FIRST POSITIVE DAY. It changes nothing about the verdict and I computed that rather than asserting it: with two days already non-positive the best attainable is still 5 of 7, still 2*29/128 = 0.453125. A positive day does not restore a negative one -- the cap is set by the days already non-positive, and that is the whole reason futility stopping is free. Only the CONDVALUE cell exists so far; there is no 09-09 HAZARD cell on disk."
+  r394_the_fair_value_floor_is_EIGHT_TIMES_SMALLER_and_I_corrected_my_own_first_reading: "The lane-2 design's minimum attainable two-sided p is 2/1024 = 0.001953125 against the cancellation design's 2/128 = 0.015625 -- eight times smaller. At the declared m = 2 the headroom to 0.05 is 12.8x for fair value against 1.6x for cancellation. My first pass printed a line claiming fair value CAN pass a 69-fold screen; the number beside it said 0.134765625, which is GREATER than 0.05, so the label was wrong and I caught it before filing. Corrected: under a 69-fold screen BOTH designs fail at 0.05, but differently -- cancellation's 1.078125 EXCEEDS 1 and is not even a probability, while fair value's 0.134765625 is a valid probability that simply misses the threshold. Lane 2 buys a much better floor, not immunity."
+  r394_R_917s_parenthetical_about_the_cancellation_arithmetic_is_LOOSE: "R-917 says the fair-value floor keeps Holm m=2 attainable and calls that the arithmetic the cancellation test could not satisfy. At m = 2 the cancellation floor was ALSO attainable: 0.015625 x 2 = 0.03125 < 0.05, which I computed and filed at round 389 in the words would have passed. What the cancellation design could not satisfy was the 69-FOLD SCREEN, not m = 2. The distinction matters because it is the difference between a design that failed its multiplicity and one that failed a screen nobody corrected for, and lane 2 inherits the second problem unless its own screen is declared."
+  r394_TWO_LANES_and_the_one_thing_a_cold_reader_must_not_conclude: "Lane 1 CANCELLATION: verdict FIXED at day two, both arms FUTILE, STOP_FOR_FUTILITY computed; 09-09..09-13 are being valued DESCRIPTIVELY only and no later record can revise the verdict. Lane 2 FAIR VALUE: new, plan frozen, NOTHING fitted and NOTHING scored, a closed family of exactly two challengers against Identity at m = 2 forever even if one dies, six build gates and seven two-way falsifiers before any labelled score, Identity the mandatory baseline and fallback. THE THING NOT TO CONCLUDE: lane 2's activity is not the cancellation test reopening. They share a programme, a tape and a lock, and nothing else. Written into the state file in these words because the two lanes will produce artifacts side by side for days."
+  r394_the_plan_CORRECTS_the_coordinators_draft_on_a_point_of_substance: "Worth recording because it is the rarer direction. The user's plan refuses a construction the coordinator's own draft proposed: crypto_prices_twap_sixty is the rolling 60 s statistic, NOT the raw Chainlink aggregate path, and crypto_prices is a Binance spot mirror rather than the settlement source -- so there is no model-free realized integral inside the terminal minute, and the draft's H1 model-free fair value was the known-bad rolling-TWAP-as-raw-path construction. Any Binance integral in that minute is a declared cross-venue PROXY, and a probability requires a declared model and volatility input. That is rule 9's shape applied before any fitting: the baseline must not be assembled out of the thing it is meant to be independent of."
   r393_the_USER_RULED_continue_descriptively_and_what_it_does_NOT_change: "The user's words: continue to build and show all the results for remaining days. So 09-09 through 09-13 are built and valued -- for PER-DAY PERFORMANCE ONLY. What it does not change, stated so no later reader has to infer it: the forward test's outcome was FIXED AT DAY TWO by R-910/R-911/R-914, both arms FUTILE with STOP_FOR_FUTILITY computed, and NO LATER RECORD CAN REVISE IT. Each remaining day computes its own fields and its own futility block under the unchanged declared design, G=7 at tolerance 0. Descriptive days are not a continuation of the test; they are five more observations of arms whose test already stopped."
   r393_PREDICTION_the_descriptive_days_will_drive_the_TALLY_to_7_of_7: "Filed BEFORE the days land so it can be checked afterwards. G_so_far is len(days_scored) in de_forward_evaluator.py:653, and days_scored comes from the day records. When 09-09 through 09-13 land, seven records will match the day-result glob, so running_tally will read G_so_far 7, G_declared 7, days_remaining 0 -- a tally that LOOKS like a test which ran to completion. The verdict is safe because the futility blocks are functions of the negative days already seen and those do not go away; but the thing that distinguishes a completed test from a stopped one will be the FUTILITY BLOCK, not the tally. Anyone reading the day-seven record should read futility first."
   r393_I_CHECKED_THE_G_so_far_LITERAL_BEFORE_FILING_IT_AS_A_HAZARD: "de_revaluation_emit.py:515 asserts e['running_tally']['G_so_far'] == 2 -- exactly the literal-that-must-track-a-moving-thing shape, and my first reading was that five more days would break it. It will NOT: the cell calls emit_single_book_day with a HAND-SUPPLIED two-day map ({'2026-09-07': -11017.71, '2026-09-08': 5.0}) and asserts on that fixture, not on the day glob. The neighbouring len(per_window_table_unconditional) == 43 is a literal against the same fixture day. Recorded as checked-and-cleared rather than as a warning, because round 379 taught me that a strike can follow correctly from bounds that are wrong."
@@ -28260,6 +28286,34 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r394_THE_FREEZE_NAMES_A_COMMIT_THE_PLAN_HAS_ALREADY_MOVED_PAST:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "git show <commit>:<path> piped to wc -l and sha256sum for both commits and compared against the working file: 357/474528472854cf21, 424/1606fe8d19124d0f, disk 424/1606fe8d19124d0f; git log -1 for each timestamp and author."
+  r394_AND_EVERY_PARAMETER_R_917_QUOTES_IS_ABSENT_FROM_THE_FROZEN_COMMIT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "counted regex matches for thirteen declared parameters in git show 0575444:<path> against the working file; nine parameters changed presence, all from zero to non-zero."
+  r394_DAY_THREE_IS_THE_FIRST_POSITIVE_DAY_and_it_changes_NOTHING:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/de_settle_result_20260909_CONDVALUE_X_SKEW.json
+    said: "loaded the cell and printed each field; recomputed the attainable cap with math.comb for 5-of-7 and got 0.453125, equal to the value already filed at two days scored."
+  r394_the_fair_value_floor_is_EIGHT_TIMES_SMALLER_and_I_corrected_my_own_first_reading:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "computed 2/1024 and 2/128 and their products with 1, 2 and 69, and the ratio 0.05 divided by each floor-times-two: 12.8 and 1.6."
+  r394_R_917s_parenthetical_about_the_cancellation_arithmetic_is_LOOSE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "compared R-917's parenthetical against my own round-389 computation of 0.015625 x 2 = 0.03125 < 0.05, which is on this file's record."
+  r394_TWO_LANES_and_the_one_thing_a_cold_reader_must_not_conclude:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "read R-916 and R-917 together; the ownership fence in LANE2_FAIR_PRICE_SUCCESSOR_INTERFACE.md stays binding and SIGMA_ROUTE_A protocols are NOT amended, their last result still PRICING HOLD."
+  r394_the_plan_CORRECTS_the_coordinators_draft_on_a_point_of_substance:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "read R-917's correction paragraph; the plan on disk carries the refusal and the draft d6d3efc is the 186-line document it supersedes."
   r393_the_USER_RULED_continue_descriptively_and_what_it_does_NOT_change:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
