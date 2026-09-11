@@ -14,7 +14,7 @@ from pathlib import Path
 
 #: v2 is the UNION of DA's list and DE's generator output. v1 stays on disk as
 #: provenance (rule 13) and is NOT the freeze in force.
-DECL = Path(__file__).resolve().parent / "declarations" / "da_population_freeze_v7.json"
+DECL = Path(__file__).resolve().parent / "declarations" / "da_population_freeze_v9.json"
 ROOTS = {"main": Path("/home/yuqing/ctaNew"),
          "wt-fwd": Path("/home/yuqing/ctaNew-wt-fwd"),
          "wt-deval": Path("/home/yuqing/ctaNew-wt-deval"),
@@ -47,6 +47,43 @@ GUARD_DECL = Path(__file__).resolve().parent / "declarations" / "da_guard_regist
 #: AST enumerator saw a new `raise ...Refused` and the register stayed at 167,
 #: because NOTHING JOINED CODE TO ROWS -- a list of guards is not a guard over
 #: the list. v2 re-enumerates AT VERIFY TIME and compares.
+NOT_HIGHEST = "POPULATION_FREEZE_NOT_THE_HIGHEST"
+
+
+def assert_decl_is_the_highest(decl: Path = None) -> dict:
+    """DECL is a FILENAME LITERAL, and twice now it has gone stale in place.
+
+    At DA 258 it was moved v5 -> v6 and never moved again, so the drift
+    reported at Q-DA-450 and the "v7 landed" claim at Q-DA-451 were both
+    measured against SUPERSEDED baselines -- a QUIET error that reached
+    counts. It went stale a second time at DA 247 (pointing at v7 while v9
+    was landed), which is why this exists.
+
+    The fix is not to glob for the newest: "a file that merely sorts last
+    is not the one the freeze names". It is to keep the literal AND REFUSE
+    when a higher-numbered freeze is on disk beside it -- turning a silent
+    stale baseline into a loud refusal, which is the direction that
+    self-corrects.
+    """
+    d = (decl or DECL)
+    import re as _re
+    here = int(_re.search(r"_v(\d+)\.json$", d.name).group(1))
+    found = {}
+    for f in d.parent.glob("da_population_freeze_v*.json"):
+        m = _re.search(r"_v(\d+)\.json$", f.name)
+        if m:
+            found[int(m.group(1))] = f.name
+    top = max(found) if found else here
+    if top > here:
+        raise FreezeRefused(
+            f"REFUSED {NOT_HIGHEST}: this verifier reads {d.name} but "
+            f"{found[top]} is landed beside it. Every digest it compares "
+            f"against is a SUPERSEDED baseline, and a clean answer from it "
+            f"means nothing. Repoint DECL.")
+    return {"decl": d.name, "version": here, "highest_on_disk": top,
+            "versions_present": [found[k] for k in sorted(found)]}
+
+
 GUARD_INCOMPLETE = "GUARD_REGISTER_INCOMPLETE"
 GUARD_STALE = "GUARD_REGISTER_STALE"
 _REFUSAL_NAME = re.compile(r"REFUSED\s*-{0,2}\s*\{?([A-Z][A-Z0-9_]{3,})")
