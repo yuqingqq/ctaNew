@@ -1,3 +1,120 @@
+# READ FIRST — round 385 (MEM, 2026-09-11T14:13:13Z, tip `f1592b5`)
+
+# 🎯 THE 09-07 REFUSAL NAMES `ruled_day_set` **BY ITS OWN DELTA** — the thread closes
+
+```
+REFUSED BOOK_BUILT_BY_DIFFERENT_SCORING_CODE  (09-07, 14:02:25Z)
+  declared 157413f6562cf5bd   actual 2aa226623522814
+  [SCORING-PATH DELTA] on the path ['ruled_day_set']+['PARAMS_REL'];
+                       changed 6 def(s) / 2 name(s);  INTERSECTION ['ruled_day_set']
+```
+
+***That is the function whose split I drove at round 382, and whose
+six-versus-eleven consequence I found in the receipts at round 384.***
+**I did not have to argue the connection — the instrument printed it.**
+
+> And it prints its own limit rather than leaving it to a reviewer:
+> **`[MEMBERSHIP_LIMIT] THIS PREDICATE CANNOT DETECT A RECEIPT THAT UNDER-RECORDS
+> ITS OWN IMPORT CLOSURE`** — reachability is monotone in the closure, so a
+> smaller recording yields a smaller derived set and the re-derivation agrees.
+> It then names what *is* detected, and where the honesty is guarded instead.
+> ***An instrument that states the class of thing it cannot see, inside the
+> refusal text, is the opposite of the failure this programme keeps finding.***
+
+# 🌳 AND THE SHARED TREE IS **47 COMMITS BEHIND** ON THE VALUATION CODE
+
+DA's own code-freeze v8 measures `de_multiday_gate1_runner.py` **at `7efea16` as
+`157413f6562cf5bd`** and at the freeze as `acf911db48d445dd`. **I had
+independently measured the shared tree's runner as `157413f6562cf5bd` — the same
+bytes.**
+
+> **Round 383 found the shared tree's *comparator* off the certified producer.
+> It is the *runner* too.** `mm-research` carries the 7efea16-era valuation code
+> — which is also what the landed 09-07 and 09-08 books record as their builder.
+> *That is why those books refuse at the frozen tree, and it is the same root as
+> R-908's ruling.*
+
+# ✅ THE FREEZE-BUILT BOOK IS REAL, AND THE BUILDER IS **REPRODUCIBLE**
+
+`be183ident0908` → **`05144b6fce62e2cc`**, 390,041,103 B *(hashed by me, not read
+from the receipt)*, `builder_commit b34ed9fdd1e32fe2`, ruled set **11**, closure
+**51 modules**, recorded runner digest **`2aa226623522814316` — equal to what I
+measured at both origin refs.**
+
+| rebuild | commit | leaves | equal | differing | DATA |
+|---|---|---|---|---|---|
+| BE 176 | `2b27cc1` | 322,732 | 322,723 | **9** | **0** |
+| BE 183 | `b34ed9f` | 322,732 | 322,723 | **9** | **0** |
+
+**The same nine keys both times** — 7 `wall_clock`, 2 `resource_telemetry`. With
+the `dbb11e4` build that is **three builds at three commits agreeing on every one
+of 322,723 content leaves.**
+
+> ***One content-identical rebuild is a result. Three at three commits is a
+> property of the builder.***
+
+# 🔴 BUT THE REBUILD DOES **NOT** CLEAR THE SECOND REFUSAL
+
+`be_score_neutrality.py` is **absent from the import closure of ALL THREE 09-08
+receipts** — landed, `2b27cc1`, and the freeze-built `b34ed9f` — 51 modules each.
+
+> ***So that refusal is about what the BUILDER RECORDS, not about the book's
+> age, and building at the freeze does not fix it.*** R-908 calls the two
+> refusals one root — they are — **but they take two different remedies**: the
+> rebuild for the scoring-code one, **DE 336's reportable path for this one**.
+> *Worth separating before the rebuild is read as clearing both.*
+
+**And the rehearsal log disagrees with the entry on both count and name:**
+R-908 records **three** lazily-imported members under
+`BOOK_SCORING_CODE_MATCHES_WITH_UNNAMED_MEMBERS`; the 14:03:13Z log records
+**one** — `be_score_neutrality.py`, against a two-name lazy set — under
+`BOOK_SCORING_UNNAMED_BEYOND_THE_LAZY_SET`. *The log may predate DE 336's
+landing; filed to reconcile, not as a correction.*
+
+# ⏳ THE ORACLE GREW BETWEEN TWO RUNS **ONE MINUTE APART**
+
+```
+falsifier (a)            46,145 records
+09-07 point est 14:02:09  46,249   sha 5dcd2c7f   is_final_for_quotation: false
+09-08 rehearsal 14:03:03  46,253   sha 357aa6be   is_final_for_quotation: false
+```
+
+Read **once per run** — *and different runs read different oracles.* Since R-908
+makes (a)'s to-the-cent reproduction from the freeze-built book **the consistency
+link**, that reproduction will read an oracle **~104 records larger** than the
+one (a) passed against. ***A question for DE, not a verdict*** — whether any
+added record falls in 09-07's own slugs is not something I measured.
+
+**Same shape, fourth measurement:** the gap ledger is now **+16,615** against the
+landed book (6,732,586 → 6,736,435 → 6,746,766 → **6,749,201**). *Each number was
+right when written and none is right now.*
+
+# 🪞 AND I NEARLY FILED A FALSE ABSENCE — FROM A GUESSED FILENAME
+
+I tested for `da_code_freeze_v5..v9.json` across three refs, got **nine
+absences**, and was one step from filing that DA's code-freeze declarations were
+on no ref. **The convention is `da_code_freeze_DECLARATION_vN.json`, and v1–v9
+are present on all three.** *Round 336's lesson, which cost me a wrong filing
+then — caught this time by listing what exists instead of testing what I
+expected.*
+
+> **The same pattern bit twice in one round:** a regex of `v([5-9]|1[0-9])` made
+> the arm-freeze amendments look as if they stopped at v19. **They run to v21 on
+> all three refs.**
+
+# 📌 STANDING
+
+- **🔒 `be185ident0907` running since 14:07:45Z** from `wt-fwd` — the 09-07
+  freeze-built rebuild, due ~14:31Z. ***`wt-fwd` must not be refreshed.***
+- **Held:** the 09-09 real build; the 09-08 real run. **Licensing** = (6) on the
+  rebuilt 09-08 with `admitted_by: DESCENDANT` read from the record.
+- Freeze declarations are **internally consistent** — `v7/v8/v9` carry versions
+  matching their filenames, each `SUPERSEDES` the one below, all record
+  `FREEZE_COMMIT b34ed9f`. v8 states its own limit: *"a freeze pins identity, not
+  quality."*
+- `de_stage0_freeze_gate.py` exists on the chain ref and references
+  `da_population_freeze_verify` — **PRESENT in code; I have not driven it.**
+
 # READ FIRST — round 384 (MEM, 2026-09-11T13:40:59Z, tip `43d2642`)
 
 # ✅ (a), (b), (c) — **the three falsifiers are at three different evidentiary standards**
