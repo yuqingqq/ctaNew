@@ -290,7 +290,11 @@ def run_arm(actions, value_of, inputs: ReplayInputs) -> dict:
             f"non-fair-value input; an arm that replays a different "
             f"population is not sharing its inputs, whatever the tape "
             f"says.")
-    seam = SEAM.run_seam(actions, value_of, half_spread=inputs.half_spread)
+    # THE TICK TRAVELS IN `non_fair_value_params`, so it is digested and
+    # compared like every other non-fair-value input rather than being an
+    # argument the comparison cannot see (REVIEW 201's defect).
+    seam = SEAM.run_seam(actions, value_of, half_spread=inputs.half_spread,
+                         tick=inputs.non_fair_value_params.get("tick"))
     path = replay(seam["quotes"], inputs.price_path, inputs.initial_state)
     return {"inputs": inputs, "path": path,
             "anchors": [q.anchor for q in seam["quotes"]],
@@ -330,7 +334,7 @@ def falsify() -> int:
         key=lambda a: a.decision_recv_ns)
     prices = [0.52, 0.48, 0.55, 0.45, 0.50, 0.60]
     inputs = ReplayInputs(
-        non_fair_value_params={"max_inventory": 5},
+        non_fair_value_params={"max_inventory": 5, "tick": 0.01},
         initial_state={"inventory": 0.0, "clock": 0},
         price_path=tuple(prices), half_spread=0.01,
         action_keys_sha256=action_keys_digest(acts))
@@ -372,7 +376,8 @@ def falsify() -> int:
        and "free to move" in compare_arms(base, pinned)["reading"])
 
     # REVIEW 201'S OWN ARM, FIRST: a FLAT tape against the real one.
-    flat = ReplayInputs(non_fair_value_params={"max_inventory": 5},
+    flat = ReplayInputs(non_fair_value_params={"max_inventory": 5,
+                                               "tick": 0.01},
                         initial_state={"inventory": 0.0, "clock": 0},
                         price_path=tuple([0.99] * len(prices)),
                         half_spread=0.01,
@@ -396,7 +401,8 @@ def falsify() -> int:
        and base["path"].fills != chall_arm["path"].fills,
        f"{len(base['path'].fills)} vs {len(chall_arm['path'].fills)} fills")
     try:
-        ReplayInputs(non_fair_value_params={"max_inventory": 5},
+        ReplayInputs(non_fair_value_params={"max_inventory": 5,
+                                            "tick": 0.01},
                      initial_state={"inventory": 0.0, "clock": 0},
                      price_path=tuple(prices), half_spread=0.01,
                      action_keys_sha256=action_keys_digest(acts),
@@ -409,7 +415,8 @@ def falsify() -> int:
        DECLARED_NOT_COMPUTED in declared_msg,
        declared_msg[:64] or "ADMITTED A DECLARED DIGEST")
     ck("  and a declared digest that MATCHES the computed one admits",
-       ReplayInputs(non_fair_value_params={"max_inventory": 5},
+       ReplayInputs(non_fair_value_params={"max_inventory": 5,
+                                           "tick": 0.01},
                     initial_state={"inventory": 0.0, "clock": 0},
                     price_path=tuple(prices), half_spread=0.01,
                     action_keys_sha256=action_keys_digest(acts),
@@ -417,17 +424,17 @@ def falsify() -> int:
        == inputs.digest(), inputs.digest()[:16])
 
     for key, bad in (("non_fair_value_params",
-                      ReplayInputs({"max_inventory": 9},
+                      ReplayInputs({"max_inventory": 9, "tick": 0.01},
                                    {"inventory": 0.0, "clock": 0},
                                    tuple(prices), 0.01,
                                    action_keys_digest(acts))),
                      ("half_spread",
-                      ReplayInputs({"max_inventory": 5},
+                      ReplayInputs({"max_inventory": 5, "tick": 0.01},
                                    {"inventory": 0.0, "clock": 0},
                                    tuple(prices), 0.02,
                                    action_keys_digest(acts))),
                      ("initial_state",
-                      ReplayInputs({"max_inventory": 5},
+                      ReplayInputs({"max_inventory": 5, "tick": 0.01},
                                    {"inventory": 2.0, "clock": 0},
                                    tuple(prices), 0.01,
                                    action_keys_digest(acts)))):
@@ -450,12 +457,12 @@ def falsify() -> int:
         latency_model_ms: float = 0.0       # a field no list mentions
 
     a_plus = InputsPlusOne(
-        non_fair_value_params={"max_inventory": 5},
+        non_fair_value_params={"max_inventory": 5, "tick": 0.01},
         initial_state={"inventory": 0.0, "clock": 0},
         price_path=tuple(prices), half_spread=0.01,
         action_keys_sha256=action_keys_digest(acts), latency_model_ms=0.0)
     b_plus = InputsPlusOne(
-        non_fair_value_params={"max_inventory": 5},
+        non_fair_value_params={"max_inventory": 5, "tick": 0.01},
         initial_state={"inventory": 0.0, "clock": 0},
         price_path=tuple(prices), half_spread=0.01,
         action_keys_sha256=action_keys_digest(acts), latency_model_ms=250.0)
@@ -495,7 +502,7 @@ def falsify() -> int:
         other_rows, canonical_population=other_pop)["actions"],
         key=lambda a: a.decision_recv_ns)
     other_inputs = ReplayInputs(
-        non_fair_value_params={"max_inventory": 5},
+        non_fair_value_params={"max_inventory": 5, "tick": 0.01},
         initial_state={"inventory": 0.0, "clock": 0},
         price_path=tuple(prices), half_spread=0.01,
         action_keys_sha256=action_keys_digest(other_acts))
@@ -522,7 +529,8 @@ def falsify() -> int:
     # remembering to populate the field.
     import dataclasses as _dc2
     try:
-        ReplayInputs(non_fair_value_params={"max_inventory": 5},
+        ReplayInputs(non_fair_value_params={"max_inventory": 5,
+                                            "tick": 0.01},
                      initial_state={"inventory": 0.0, "clock": 0},
                      price_path=tuple(prices), half_spread=0.01)
         omitted = ""
@@ -540,7 +548,8 @@ def falsify() -> int:
     placeholders, admitted = ("", "none", "0" * 63, "x" * 64), []
     for ph in placeholders:
         try:
-            ReplayInputs(non_fair_value_params={"max_inventory": 5},
+            ReplayInputs(non_fair_value_params={"max_inventory": 5,
+                                                "tick": 0.01},
                          initial_state={"inventory": 0.0, "clock": 0},
                          price_path=tuple(prices), half_spread=0.01,
                          action_keys_sha256=ph)
