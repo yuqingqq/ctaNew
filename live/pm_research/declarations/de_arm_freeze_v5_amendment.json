@@ -1,0 +1,136 @@
+{
+  "protocol": "P003_DE_ARM_FREEZE_V5_AMENDMENT",
+  "version": 5,
+  "amended_at_utc": "2026-09-11T02:38:43.768880+00:00",
+  "amended_by": "DE 225, on the USER's N=7 ruling",
+  "rule": "13 -- superseding receipt; no prior version edited",
+  "supersedes": [
+    {
+      "version": "1",
+      "path": "de_arm_freeze_v1.json",
+      "commit": "b5f311a",
+      "sha256": "a4749bc77b6eb3590b880bd8bc58c1e8b8099c35864b448130fbedeac839f1e8"
+    },
+    {
+      "version": "2",
+      "path": "de_arm_freeze_v2_amendment.json",
+      "commit": "3fc91e7",
+      "sha256": "84fbe30927aada09acad652d75bd34e671c1a3dbb54aa81853f4accb379fa4f3"
+    },
+    {
+      "version": "3",
+      "path": "de_arm_freeze_v3_amendment.json",
+      "commit": "cc63ccf",
+      "sha256": "0fe428134dd31c632df04e41f1876cb4a0e9cd25cddc5ffb67d41a484fbc2219"
+    },
+    {
+      "version": "4",
+      "path": "de_arm_freeze_v4_amendment.json",
+      "commit": "d9a88b5",
+      "sha256": "422beed28d7fbe9eef33d2817862600c08e8b7cbbd8e35696e89aeaedde1ac9d"
+    }
+  ],
+  "AMENDMENT_8_POPULATION_N_EQUALS_7": {
+    "THE_RULING": {
+      "N": 7,
+      "population": [
+        "2026-09-07",
+        "2026-09-08",
+        "2026-09-09",
+        "2026-09-10",
+        "2026-09-11",
+        "2026-09-12",
+        "2026-09-13"
+      ],
+      "last_day_completes": "2026-09-14T00:00:00Z"
+    },
+    "supersedes": "v3's N=6 / 09-07..09-12 (cc63ccf), which superseded v1's post-freeze rule",
+    "what_produced_it": "the TOLERANCE column, which the effect-size menu did not carry",
+    "the_guarantee_ledger_carries_forward_unchanged_in_kind": {
+      "structural_guarantee_covers": [
+        "2026-09-12",
+        "2026-09-13"
+      ],
+      "evidence_only": [
+        "2026-09-07",
+        "2026-09-08",
+        "2026-09-09",
+        "2026-09-10",
+        "2026-09-11"
+      ],
+      "the_unclosable_residual": "a traceless read leaves no evidence; REV 123 reports the artifact-level check clean and names this residual as permanently open. Two of seven days now have the guarantee rather than one of six."
+    }
+  },
+  "AMENDMENT_9_SIDEDNESS_THE_QUESTION_IS_CLOSED_BY_THE_RULING": {
+    "CONFIRMED_AS_THE_COORDINATOR_STATES_IT": "at G=7 the TWO-SIDED floor is 2/128 = 0.015625, under the 0.025 the smaller p must beat. The sidedness decision is no longer load-bearing and we never rule conjunct (a) one-sided.",
+    "why_that_matters_beyond_arithmetic": "it removes the one rule-11-exposed decision in the design. Choosing sidedness after the sign is visible would have been a choice made on seen data; N=7 means no such choice is ever needed.",
+    "both_arms_clear_the_floor": {
+      "first_arm_threshold": 0.025,
+      "second_arm_threshold": 0.05,
+      "min_p_two_sided_G7": 0.015625
+    },
+    "A_NUANCE_I_AM_ADDING_SO_NOBODY_MISREADS_MY_OWN_TOLERANCE_COLUMN": {
+      "the_G9_figure_was_ONE_SIDED": "my 'G=9 is the first N tolerating one negative day' was computed one-sided. Under the TWO-SIDED test we are now committed to, the first N that tolerates a single negative day is G=10, not 9.",
+      "computed": {
+        "G7_two_sided_tolerance": 0,
+        "G9_two_sided_tolerance": 0,
+        "G10_two_sided_tolerance": 1
+      },
+      "so_state_it_plainly": "N=7 REQUIRES 7-FOR-7. So would 8 and 9. No N below 10 buys a single negative day two-sided. The user took N=7 knowing this."
+    }
+  },
+  "AMENDMENT_10_THE_PIN_CORRECTION": {
+    "CORRECTED": {
+      "builder_commit": "adbebf9",
+      "was_wrongly_recorded_as": "a565fd9"
+    },
+    "verified_at_the_artifact_not_from_notes": {
+      "wt_arms_HEAD": "adbebf9",
+      "adbebf9_is_HEAD": true,
+      "a565fd9_is_an_ancestor_4_commits_back": true,
+      "subject": "DE 212 on the arms pin: the decision-endpoint control and its declaration"
+    },
+    "producing_code.builder_commit must read": "adbebf9 for EVERY forward book",
+    "DA_WAS_RIGHT_TO_BLOCK": "the ambiguity made provenance unresolvable; a book cannot record two builder commits.",
+    "AND_HERE_IS_WHAT_THE_CHECK_FOUND_WHICH_NOBODY_ASKED_FOR": {
+      "all_13_pinned_scoring_modules_are_BYTE_IDENTICAL_at_a565fd9_and_adbebf9": true,
+      "and_all_13_match_the_freeze_pin": true,
+      "so": "THE PIN CORRECTION MOVES NO SCORING BYTE. It changes no number any book scores. The diff is confined to the day runner (+379), the point-estimate driver (+10) and the null harnesses/declarations.",
+      "BUT_THE_PRODUCING_CLOSURE_DOES_DIFFER": "de_multiday_gate1_runner.py gained 379 lines between the two commits. A book built at a565fd9 records a different runner digest than one built at adbebf9, so the two are NOT interchangeable under BOOK_BUILT_BY_DIFFERENT_SCORING_CODE.",
+      "THE_OPERATIONAL_CONSEQUENCE_TO_ACT_ON_NOW": "uniformity is what matters, not which commit. If ANY day of the seven was already built at a565fd9 it must be REBUILT at adbebf9, or the population is mixed and the book-code predicate will refuse it. Four days are being built at adbebf9 now; the other three must match."
+    }
+  },
+  "AMENDMENT_11_MULTIPLICITY_FINAL": {
+    "holm_denominator_m": 2,
+    "why": "there are two p-values -- one per arm. Nothing else is being tested forward.",
+    "selection_multiplicity": 69,
+    "range": "45-75",
+    "scope": "BTC",
+    "kind": "lower bound",
+    "source": "BE 113",
+    "what_the_69_is_FOR": "it CORRECTS THE PRIOR, NOT THE DENOMINATOR. 69 candidates were scored to select these 2, so the point estimates that selected them are selection-inflated; the forward test is the instrument that removes that inflation. It never enters Holm.",
+    "withdrawn": "my own lower bound of 10, which counted artifact revisions only and is strictly contained in BE's enumeration",
+    "also_withdrawn": "v2's framing, which treated the candidate count as if it were Holm's family -- the wrong door"
+  },
+  "AMENDMENT_12_THE_REPORTING_REQUIREMENT_FOR_ANY_INCONCLUSIVE": {
+    "THE_SENTENCE": "A test that cannot attain its own threshold has measured nothing about the arms -- it has measured the calendar.",
+    "this_lives_in_the_declaration_not_in_a_pane": true,
+    "required_beside_ANY_inconclusive_verdict": [
+      "the ATTAINABLE MINIMUM p at the G actually achieved (not the G planned)",
+      "the TOLERANCE at the G actually achieved: how many negative days the test could have survived and still cleared",
+      "both computed from the G that actually completed, because a failed-quality day lowers G and moves both numbers"
+    ],
+    "why_the_tolerance_belongs_beside_it": "the minimum p tells a reader whether a pass was POSSIBLE. The tolerance tells them HOW CLOSE TO PERFECTION IT DEMANDED. An INCONCLUSIVE from a test that required 7-for-7 is a different fact from one that allowed slack, and a reader cannot tell them apart from the verdict alone.",
+    "reference_values_at_the_ruled_G7_two_sided": {
+      "attainable_min_p": 0.015625,
+      "holm_adjusted": 0.03125,
+      "tolerance_negative_days": 0
+    }
+  },
+  "UNCHANGED": [
+    "every frozen parameter",
+    "the decision rule",
+    "the scoring pin itself -- verified byte-identical above"
+  ],
+  "nothing_has_been_run_or_read_against_any_day_in_the_population_by_DE": true
+}
