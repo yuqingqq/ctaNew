@@ -67,6 +67,24 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T03:53:44Z (MEM ROUND 357 -- THE FIRST FORWARD BOOK EXISTS AND THE ROUND'S BEST FINDING IS
+  ABOUT THE REGISTER. be_daybook_20260907_btc__L250ms__FWD1.pkl, 339 MiB, which I located
+  and stat'd, all three digests matching 7ed5a90 -- and NOTHING IS VALUED. The optimised
+  ruling is vindicated: 21.7 min against a 61.77-min mean, 2.85x with a 2.05-3.42x RANGE,
+  and build speed HAS STOPPED BEING THE CONSTRAINT -- the test is CALENDAR-BOUND at
+  2026-09-14T00:00Z. (My arithmetic puts the programme at ~3.2 h, not the ~2.5 stated;
+  the conclusion is unaffected and I record my own number beside it.) THE FINDING THAT
+  OUTRANKS THE TECHNICAL WORK, DA 221: five agents re-derived a result the register already
+  held -- I confirmed 0da40bb is R-888 from 09-10 07:17 -- and DA proposed the corrective
+  principle then found IT HAD FILED THAT PRINCIPLE 24 HOURS EARLIER. THE REGISTER'S PROBLEM
+  ISN'T RETRIEVAL: A FILED RESULT DOESN'T REACH THE SEAT'S OWN NEXT CLAIM, INCLUDING WHEN
+  THE SEAT IS THE AUTHOR -- because FILING DISCHARGES THE FEELING OF HAVING HANDLED IT. A
+  standing defect of the method, not an incident. RULE 38 NEEDS A TIMING CLAUSE, and I AM
+  AN INSTANCE TWICE AND POSSIBLY THREE TIMES -- rounds 344, 352 and 354 all needed a
+  sentence about when each leg was filed, and I wrote none. REV 175 found the EXACT INVERSE
+  of the five missing producers: a guard's SUBJECT with no ENFORCEMENT, so REV's
+  NOT_ESTABLISHED_AT_THIS_POWER sentence survives BY DE'S CARE, NOT BY CONSTRUCTION.
+  tip 3a7756a)
   2026-09-11T03:36:08Z (MEM ROUND 356 -- THE 69 IS ANSWERED AND THE ASYMMETRY INVERTS THE INTUITION:
   'A PASS IS WEAK EVIDENCE FOR THE FAMILY; A FAILURE IS COMPARATIVELY STRONGER EVIDENCE
   AGAINST IT' -- a pass after a 69-configuration search is weak because something usually
@@ -101,24 +119,6 @@ updated: >-
   '28-cell' survives. DA's unasked observation: THE USER'S N=7 RULING IS WHAT MADE THIS TEST
   CAPABLE OF PASSING AT ALL. And be_cascade DOES have an enforcer (be_rule22:377) -- the
   open question is whether it runs on a forward book emit. tip 97a5caa)
-  2026-09-11T03:23:28Z (MEM ROUND 354 -- 09-07 IS CLOSED AND THE PIPELINE'S LIMIT IS MEASURED. REVIEW
-  171 (f4b5bd8): 09-07 STANDS IN THE PRIMARY, population FINAL at 09-07..09-13, N=7 -- the
-  coordinator's drop recommendation wrong, the USER's challenge right. REVIEW 172 goes past
-  the ordering that was asked for: both frozen thresholds sit in 288df3f at
-  2026-08-27T15:44:25Z, ELEVEN DAYS AND EIGHT HOURS before the pin source, seven
-  independent productions, three bit-for-bit -- and REV FILED THE TRAVERSAL'S PARTIALITY AS
-  A CAVEAT with the direction that saves it: a partial traversal can only MISS older
-  commits, never invent one, so 08-27 is a sound LOWER BOUND. THE LIMIT IS NOW MEASURED AND
-  I HASHED IT MYSELF: of params v29's TEN pinned .py modules, EXACTLY TWO differ at
-  7ed5a90 -- de_head_scoring and de_phase4_diag_runner, THE TWO SCORING MODULES. 941e688
-  and adbebf9 were both 10/10, so 7ed5a90 is the FIRST candidate that is not; the book-code
-  predicate refuses BY NAME on every forward book and that waiver is UNSUPPORTED, NOT
-  REFUTED. Thetas, min_draws 500, m 2, alpha 0.05 all VERIFIED UNCHANGED. RESIDUE CLOSED,
-  and the defect behind run c is a root computed as parents[2] WITH NO RESOLVER -- I found
-  the builder's own docstring recording it and THREE MODULES BYPASSING be_data_root. NEW
-  GAP: at which commit did DE's evaluator rehearsal run? Same class as the build failure,
-  ONE LAYER UP -- we required books to come from the declared commit and never asked it of
-  THE INSTRUMENT THAT READS THEM. tip 1f00438)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -290,6 +290,18 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 357, the first forward book and the register's own defect ---
+  THE_FIRST_FORWARD_BOOK_EXISTS_AND_I_CONFIRMED_IT_ON_DISK: "be_daybook_20260907_btc__L250ms__FWD1.pkl, which I located and stat'd: 339 MiB at data/pm_5min/derived/, written 2026-09-11 03:33:25. rc=0, 21.7 minutes, peak 6.25 GB. All three digests match 7ed5a90 -- builder_commit 7ed5a9015f75de64feeeeaad21d97e4eecc2b15c, de_head_scoring.py 31c368384770351f, de_phase4_diag_runner.py 9e2a0977d8dfc3be, be_daybook_build.py 2d31a80b5ae5c2c6, the last three of which I hashed independently at rounds 353 and 354. NOTHING IS VALUED YET."
+  AND_THE_OPTIMISED_CODE_RULING_IS_VINDICATED_BY_MEASUREMENT_AT_ABOUT_2_85X: "21.7 minutes against the four EV21 days at 67.6, 74.3, 44.5 and 60.7 on the old builder. I computed it: mean 61.77 minutes, so 2.85x on the mean, with a RANGE of 2.05x to 3.42x -- the dispatch's 'roughly 3x' is fair for the mean and the best old day was only twice as slow, which is the honest spread. Build speed has STOPPED BEING THE CONSTRAINT: the test is now CALENDAR-BOUND at 09-13 closing 2026-09-14T00:00Z."
+  AND_MY_ARITHMETIC_PUTS_THE_PROGRAMME_AT_ABOUT_3_2_HOURS_NOT_2_5: Scaling a ~9-hour programme by the measured mean ratio gives 9 x 21.7/61.77 = 3.2 HOURS, not the ~2.5 the dispatch states. The difference is small and the conclusion -- build time is no longer the binding constraint -- is unaffected either way. Recorded because a figure quoted as a plan is the kind that gets scheduled against, and because I would rather put my own arithmetic beside it than silently adopt a number I did not reproduce.
+  THE_FINDING_THAT_OUTRANKS_THE_TECHNICAL_WORK_IS_THAT_A_FILED_RESULT_DOES_NOT_REACH_THE_SEATS_OWN_NEXT_CLAIM: "DA 221, and it is about DA itself. Five agents spent an hour re-deriving a two-module pin result the register already held -- I confirmed 0da40bb is R-888 at 2026-09-10 07:17, 'the pin is verified -- two modules differ, intersection 0 under an over-approximation'. DA proposed the corrective principle and THEN FOUND IT HAD FILED THAT EXACT PRINCIPLE 24 HOURS EARLIER, Q-DA-411: 'it confirms that I TRANSCRIBED the numbers correctly; it does not confirm that I MEASURED them correctly.' DA's diagnosis is sharper than a search failure: THE REGISTER'S PROBLEM ISN'T RETRIEVAL, IT'S THAT A FILED RESULT DOESN'T REACH THE SEAT'S OWN NEXT CLAIM, INCLUDING WHEN THE SEAT IS THE AUTHOR."
+  AND_BETTER_INDEXING_DOES_NOT_FIX_IT_BECAUSE_FILING_DISCHARGES_THE_FEELING_OF_HAVING_HANDLED_IT: The mechanism is the load-bearing part. Filing a thing produces the sense that it is handled, and the artifact then SITS UNCONSULTED -- by everyone including its author. That is not a retrieval problem and no index addresses it, because the seat never runs the query. Recorded as A STANDING DEFECT OF OUR METHOD, not as an incident, and it is the one finding tonight that applies to every seat in every round rather than to a module.
+  AND_RULE_38_NEEDS_A_TIMING_CLAUSE_BECAUSE_DUPLICATED_WORK_LOOKS_LIKE_CORROBORATION_FROM_OUTSIDE: "The correction: BEFORE CLAIMING CONVERGENCE, STATE WHEN EACH LEG WAS FIRST FILED; if one predates the other AND THE LATER PARTY HAD ACCESS, it is confirmation of a TRANSCRIPTION, not an independent measurement. Rule 38 as it stands asks only whether the instruments differed, which is necessary and insufficient -- two different instruments run a day apart by someone who has read the first result are not two observations, and from outside they are indistinguishable from two."
+  AND_I_AM_AN_INSTANCE_OF_IT_TWICE_AND_POSSIBLY_THREE_TIMES: At round 344 I wrote that the theta agreement WAS corroboration because the instruments differed -- true, and I DID NOT STATE THAT MY CENSUS WAS FILED FIRST at rounds 342-343 and that DA's re-verification came after, with access. At round 352 I replicated DE's optional-stopping direction having already read DE's numbers; I flagged that my absolute values differed, which is evidence I was not transcribing, but I did not state the ordering. And at round 354 I presented my own 2-of-10 hashing as verification WITHOUT RECORDING THAT R-888 HAD HELD THAT RESULT SINCE THE PREVIOUS MORNING. Under the corrected clause all three needed a sentence I did not write.
+  REV_175_FOUND_THE_EXACT_INVERSE_OF_THE_FIVE_MISSING_PRODUCERS: "The power fields ARE on the failure path and REV drove them -- but NOTHING REFUSES a result that drops them. There, names with no guards; here, A GUARD'S SUBJECT WITH NO ENFORCEMENT. And the consequence is specific: REV's 'NOT_ESTABLISHED_AT_THIS_POWER, never NO_EFFECT' sentence DEPENDS ON THOSE TWO NUMBERS BEING VISIBLE, so until DA wires the refusal the sentence survives BY DE'S CARE, NOT BY CONSTRUCTION. Routed to DA."
+  A_VALUATION_IS_RESUMABLE_AND_NO_PARTIAL_ARTIFACT_IS_POSSIBLE: "DE 236 at cd50ebf: an OOM loses AT MOST THE IN-FLIGHT DRAW, the identity binds the book digest, and NO PARTIAL ARTIFACT CAN EXIST. Peak is FLAT AND EARLY and readable in the first minute, which turns a memory question into a one-minute observation rather than a wait. This matters FROM 09-12, when the pipelines wake -- they cannot process day D until D+1 closes -- and the 56-minute, roughly 12 GB catch-up runs share research.slice with the later builds and valuations."
+  THE_ONE_COMMIT_RULE_IS_SATISFIED_BY_BYTES_NOT_BY_COMMAND_FORM_AND_MUST_BE_VERIFIED_NOT_REASONED: "Coordinator ruling: a -m invocation satisfies the one-commit rule because THE PROPERTY IS WHICH BYTES COMPUTE, not the command form -- but it must be VERIFIED BY PRINTING EVERY COMPUTING MODULE'S RESOLVED __file__, not argued. SAME SHAPE AS THE 21-MINUTE LOSS where ExecStart said wt-fwd and the run record said wt-be: the invocation is a label and the resolved path is the property. Rule 42 applied to a command line."
+  STATUS_IS_THE_CERTIFICATION_HOLDING_THE_LOCK_WITH_DAY_ONES_VALUATION_ARMED_BEHIND_IT: p003neut0903 holds the heavy-run lock and exits around 04:00; day one's valuation is ARMED TO FOLLOW, then 09-08, 09-09 and 09-10 tonight. The certification running BEFORE the valuation is DE's ordering clause in force -- the control first, not as confirmation afterwards -- and the arming rather than manual launch is rule 37, a hand-off that does not rest on anyone's turn staying alive.
   # --- MEM round 356, the 69 answered and the refusals pattern ---
   THE_69_IS_ANSWERED_AND_THE_ASYMMETRY_INVERTS_THE_INTUITION_EVERYONE_BRINGS: "REV 174. Sixty-nine tried, none passed the screen, and the best two fail on untouched days: A PASS IS WEAK EVIDENCE FOR THE FAMILY; A FAILURE IS COMPARATIVELY STRONGER EVIDENCE AGAINST IT. A pass after a 69-configuration search is weak because something usually looks good eventually. A failure BY THE TWO SURVIVORS of that search, on untouched days, is comparatively strong. Nobody here had stated it, and it changes the reading in BOTH directions rather than only softening the good case -- which is why it is the headline and not a caveat."
   AND_IT_ANSWERS_WHAT_THE_PRIOR_BECOMES_BY_GIVING_ITS_DIRECTION_INSTEAD_OF_ITS_VALUE: "The question I recorded at round 355 was that nobody had stated what the prior BECOMES. REV's answer does not price it and does not pretend to: it says which way the search history pushes each outcome, and that the push is ASYMMETRIC. That is a real answer to a question that had none, and it is the honest shape -- a direction that can be checked against the reasoning, rather than a coefficient nobody could defend."
@@ -27699,6 +27711,73 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 357, 2026-09-11T03:53:44Z ---
+  THE_FIRST_FORWARD_BOOK_EXISTS_AND_I_CONFIRMED_IT_ON_DISK:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_20260907_btc__L250ms__FWD1.pkl
+    as_of: 2026-09-11T03:53:44Z
+    said: >-
+      the file located and its size and mtime read from the filesystem; the three module digests match the values I hashed at 7ed5a90 in earlier rounds.
+  AND_THE_OPTIMISED_CODE_RULING_IS_VINDICATED_BY_MEASUREMENT_AT_ABOUT_2_85X:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:53:44Z
+    said: >-
+      the four old durations and the new one arithmetically compared: mean 61.775, ratio 2.85, range 2.05 to 3.42.
+  AND_MY_ARITHMETIC_PUTS_THE_PROGRAMME_AT_ABOUT_3_2_HOURS_NOT_2_5:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:53:44Z
+    said: >-
+      9 * 21.7 / 61.775 computed as 3.16 hours against the dispatch's ~2.5; the basis for the smaller figure is not stated in the dispatch and I did not reconstruct it.
+  THE_FINDING_THAT_OUTRANKS_THE_TECHNICAL_WORK_IS_THAT_A_FILED_RESULT_DOES_NOT_REACH_THE_SEATS_OWN_NEXT_CLAIM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:53:44Z
+    said: >-
+      0da40bb read at its object as R-888 with its date and subject; the Q-DA-411 phrase located in COORDINATION.md.
+  AND_BETTER_INDEXING_DOES_NOT_FIX_IT_BECAUSE_FILING_DISCHARGES_THE_FEELING_OF_HAVING_HANDLED_IT:
+    prov: RELAYED
+    from: DA 221 via coordinator MEM 357
+    as_of: 2026-09-11T03:53:44Z
+    said: >-
+      DA's diagnosis as dispatched; the standing-defect framing is the coordinator's instruction and I record it in that form.
+  AND_RULE_38_NEEDS_A_TIMING_CLAUSE_BECAUSE_DUPLICATED_WORK_LOOKS_LIKE_CORROBORATION_FROM_OUTSIDE:
+    prov: RELAYED
+    from: coordinator MEM 357
+    as_of: 2026-09-11T03:53:44Z
+    said: >-
+      the proposed clause as dispatched, recorded for landing in rule 38's text where I wrote the original at round 333.
+  AND_I_AM_AN_INSTANCE_OF_IT_TWICE_AND_POSSIBLY_THREE_TIMES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:53:44Z
+    said: >-
+      my own flags at rounds 342, 343, 344, 352 and 354 checked for a timing statement and found to carry none; 0da40bb's date of 2026-09-10 07:17 predates my round-354 hashing by about twenty hours.
+  REV_175_FOUND_THE_EXACT_INVERSE_OF_THE_FIVE_MISSING_PRODUCERS:
+    prov: RELAYED
+    from: REV 175 via coordinator MEM 357
+    as_of: 2026-09-11T03:53:44Z
+    said: >-
+      REV's finding and its inverse relation to the five missing producers as dispatched; the five are recorded in my files at rounds 351 and 352.
+  A_VALUATION_IS_RESUMABLE_AND_NO_PARTIAL_ARTIFACT_IS_POSSIBLE:
+    prov: RELAYED
+    from: DE 236 via coordinator MEM 357
+    as_of: 2026-09-11T03:53:44Z
+    said: >-
+      DE's resumability properties and the 09-12 contention window as dispatched; the slice's limits I measured myself at rounds 338 and 339.
+  THE_ONE_COMMIT_RULE_IS_SATISFIED_BY_BYTES_NOT_BY_COMMAND_FORM_AND_MUST_BE_VERIFIED_NOT_REASONED:
+    prov: RELAYED
+    from: coordinator MEM 357
+    as_of: 2026-09-11T03:53:44Z
+    said: >-
+      the ruling and its verification requirement as dispatched; the wrong-tree incident it generalises is recorded at round 353 with both refs and timestamps confirmed.
+  STATUS_IS_THE_CERTIFICATION_HOLDING_THE_LOCK_WITH_DAY_ONES_VALUATION_ARMED_BEHIND_IT:
+    prov: RELAYED
+    from: coordinator MEM 357
+    as_of: 2026-09-11T03:53:44Z
+    said: >-
+      the queue and the lock holder as dispatched; the ordering clause is DE's, recorded at round 354, and rule 37 is in SEAT_PROTOCOL from round 332.
   # --- MEM round 356, 2026-09-11T03:36:08Z ---
   THE_69_IS_ANSWERED_AND_THE_ASYMMETRY_INVERTS_THE_INTUITION_EVERYONE_BRINGS:
     prov: RELAYED

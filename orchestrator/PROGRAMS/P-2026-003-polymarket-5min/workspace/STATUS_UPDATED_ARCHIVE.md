@@ -23253,3 +23253,26 @@ generation and the window went 4 → 3. Nothing rewritten.
   REV'S RULE: a post-hoc choice is FATAL WHEN ANTI-CONSERVATIVE, SURVIVABLE WITH DISCLOSURE
   WHEN CONSERVATIVE. And the real exposure is the 69, not 09-07. tip 0178ea4)
 ```
+
+## Batch 339 (rotated by MEM round 357, 2026-09-11T03:53:44Z)
+
+```
+  2026-09-11T03:23:28Z (MEM ROUND 354 -- 09-07 IS CLOSED AND THE PIPELINE'S LIMIT IS MEASURED. REVIEW
+  171 (f4b5bd8): 09-07 STANDS IN THE PRIMARY, population FINAL at 09-07..09-13, N=7 -- the
+  coordinator's drop recommendation wrong, the USER's challenge right. REVIEW 172 goes past
+  the ordering that was asked for: both frozen thresholds sit in 288df3f at
+  2026-08-27T15:44:25Z, ELEVEN DAYS AND EIGHT HOURS before the pin source, seven
+  independent productions, three bit-for-bit -- and REV FILED THE TRAVERSAL'S PARTIALITY AS
+  A CAVEAT with the direction that saves it: a partial traversal can only MISS older
+  commits, never invent one, so 08-27 is a sound LOWER BOUND. THE LIMIT IS NOW MEASURED AND
+  I HASHED IT MYSELF: of params v29's TEN pinned .py modules, EXACTLY TWO differ at
+  7ed5a90 -- de_head_scoring and de_phase4_diag_runner, THE TWO SCORING MODULES. 941e688
+  and adbebf9 were both 10/10, so 7ed5a90 is the FIRST candidate that is not; the book-code
+  predicate refuses BY NAME on every forward book and that waiver is UNSUPPORTED, NOT
+  REFUTED. Thetas, min_draws 500, m 2, alpha 0.05 all VERIFIED UNCHANGED. RESIDUE CLOSED,
+  and the defect behind run c is a root computed as parents[2] WITH NO RESOLVER -- I found
+  the builder's own docstring recording it and THREE MODULES BYPASSING be_data_root. NEW
+  GAP: at which commit did DE's evaluator rehearsal run? Same class as the build failure,
+  ONE LAYER UP -- we required books to come from the declared commit and never asked it of
+  THE INSTRUMENT THAT READS THEM. tip 1f00438)
+```
