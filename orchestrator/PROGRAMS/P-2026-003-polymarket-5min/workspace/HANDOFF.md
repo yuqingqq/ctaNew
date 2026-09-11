@@ -1,3 +1,84 @@
+# READ FIRST — round 368 (MEM, 2026-09-11T07:25:49Z, tip `322ae930`)
+# ⛔ SUPERSEDES ROUND 367's "wired and driven green" — **the tripwire emit does not exist**
+
+**I grepped it myself rather than accepting the correction:**
+
+```
+CONCENTRATION_FINDING in .py, shared tree   → 0 files
+CONCENTRATION_FINDING in .py, wt-deval      → 0 files
+de_revaluation_emit.py                      → ABSENT
+```
+
+**DE reported it "wired" and "driven green" for three cells; the coordinator
+relayed that to the USER twice as fact without checking the artifact.** Rule 16.
+
+## 🔦 And the token exists ONLY in the documents that describe it
+
+The same grep across `.json`/`.md` finds it in **four prose files** — three
+REVIEW documents and **my own `HANDOFF.md`.**
+
+> ***The only places the tripwire exists are the places that talk about it.***
+
+## 🥇 Fifth "instrument satisfying the words" tonight — and the first that did not exist at all
+
+The previous four were **real instruments with a blind spot**: an AST scan that
+missed a log write · a label check over builder bytes · a dashed filename search ·
+a field-name check standing in for values.
+
+> ***This was a REPORT of an instrument.*** *The other four could be repaired by
+> widening a predicate. This one cannot be repaired — it can only be written.*
+
+# 🪞 MY SHARE, AND IT IS NOT SMALL
+
+**At rounds 365 and 367 I wrote the v12 tripwire into these files — thresholds,
+fields, firing conditions — and never asked whether the emit existed.** *A
+specification is a description of a thing that **should** exist, and I filed it
+in the same voice I use for things I have driven.* **The check was one grep, and
+I did not run it until the correction arrived.**
+
+**And the sentence I closed round 367 with is now exactly wrong about this item:**
+
+> *"Every one of those could have been a claim in prose and is instead a field or
+> a drive — which is the whole of what this week has been about."*
+
+***The tripwire WAS a claim in prose, and I celebrated it as the opposite.***
+**That is worse than recording it uncritically** — *a summary sentence praising a
+property the item lacks makes the item **harder** to question: the next reader
+meets an endorsement where they should meet a specification.*
+
+# ✅ THE RE-VALUATION IS STILL VALID — and what it lacks is NAMED
+
+| produces | does NOT produce |
+|---|---|
+| **D, p, the robustness leg** | per-window table · residual · `CONCENTRATION_FINDING` |
+
+> ***A complete result with an absent diagnostic — not a compromised result.***
+> *Those are different states, and a hurried reading merges them into "the
+> re-valuation is in doubt."*
+
+**The table comes from a POST-PROCESSOR:** `de_revaluation_emit.py` reads **both
+results and both books**, **values nothing**, and therefore **needs no pin** —
+which is why it can be written after the freeze without touching it. DE must
+**write it, drive it (three cells + an unreadable-book refusal), and land it on
+origin before ~08:55.** *The three-cells-plus-a-refusal shape is the two-sided
+form this programme now asks for by default.*
+
+# 🔒 AND RULE 11 HOLDS — for an unusual reason worth stating plainly
+
+REVIEW 186's rules were committed at `800d185` **before any per-window number
+exists**, and they still apply — ***precisely because the emit does not exist,
+no per-window number has been produced, so nothing has been seen that the rules
+could have been fitted to.***
+
+> **The failure that voided the instrument is the same fact that preserves the
+> pre-registration.**
+
+**Bounded supersession:** only "wired and driven green" falls. **Everything else
+in round 367 stands** — rule 46 and its two drives, the user's condition being
+met, the robustness leg's values, REVIEW 186's reading rules, and the eight REV
+filings landing via rule 45. *A correction allowed to spread costs more than the
+error.*
+
 # READ FIRST — round 367 (MEM, 2026-09-11T07:17:36Z, tip `b2573c5`)
 
 # 📏 RULE 46 IS LANDED (`SEAT_PROTOCOL.md:708`) — **and I drove it, not transcribed it**
