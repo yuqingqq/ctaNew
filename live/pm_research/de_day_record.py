@@ -171,7 +171,7 @@ def day_line(day: str, arm: str, r: dict, g: int, tol: int) -> str:
 
 def build(day: str, cells_dir: Path, n_declared: int = 7,
           derived: Path = DERIVED, log: Path = None,
-          reproduction_of: Path = None) -> dict:
+          reproduction_of: Path = None, waive: str = None) -> dict:
     cells = cells_for(day, cells_dir)
     stage0 = stage0_evidence(day, derived, log)
     disclosure = settlement_source(day, cells, derived)
@@ -180,8 +180,42 @@ def build(day: str, cells_dir: Path, n_declared: int = 7,
             f"REFUSED {NO_DISCLOSURE}: {day} -- a record may carry the "
             f"verification or the named absence of it, never neither.")
     arms = sorted(cells)
-    cohort = CD.combine({a: cells[a]["result"] for a in arms},
-                        ledger=None, day_start=0, day_end=0)
+    # DAY ONE'S ARMS CARRY DIFFERENT ORACLE SNAPSHOTS -- they were valued
+    # before the read-once fix, which is why day one was combined under a
+    # MEASURED waiver in the first place. Re-assembling it without that
+    # waiver refuses, correctly; the waiver is passed in and RECORDED, so
+    # a re-emit never quietly acquires a cohort agreement the original did
+    # not have.
+    # THE WAIVER IS MEASURED, NOT ASSERTED: the combiner re-digests the
+    # DAY'S OWN RECORDS inside each arm's snapshot prefix and refuses if
+    # they differ. That needs the real ledger and the day's bounds, so a
+    # re-emit under an inherited waiver redoes the measurement rather than
+    # copying the original's conclusion.
+    _ws = (cells[arms[0]]["result"].get("winner_source") or {})
+    _ledger = Path(str(_ws.get("path"))) if _ws.get("path") else None
+    if _ledger is not None and not _ledger.is_absolute():
+        _ledger = Path("/home/yuqing/ctaNew/data/pm_5min") / _ledger
+    _d0 = int(time.mktime(time.strptime(day + " +0000",
+                                        "%Y-%m-%d %z"))) if False else int(
+        __import__("calendar").timegm(time.strptime(day, "%Y-%m-%d")))
+    try:
+        cohort = CD.combine({a: cells[a]["result"] for a in arms},
+                            ledger=_ledger, day_start=_d0,
+                            day_end=_d0 + 86400, waive=waive)
+    except CD.CombineRefused as exc:
+        if not waive:
+            raise SystemExit(
+                f"REFUSED {str(exc)[:120]} -- pass --waive winner_source "
+                f"ONLY if the original record declared that waiver, and it "
+                f"will be recorded here as inherited, not newly granted.")
+        raise
+    if waive:
+        cohort["waiver_inherited_from"] = str(
+            derived / "fwd_v2"
+            / f"p003_de_forward_value_{day.replace('-', '')}.json")
+        cohort["waiver_is_not_newly_granted"] = (
+            "this re-emit inherits the waiver the original record "
+            "declared; it does not create one")
     landed = _landed_days(derived, day)
     per_day_by_arm = {a: dict(landed.get(a, {})) for a in arms}
     for a in arms:
@@ -336,6 +370,14 @@ def _landed_days(derived: Path, exclude: str) -> dict:
     CONDVALUE negative; collapsing them would have made one arm's verdict
     the other's.
     """
+    # ONE DAY, ONE BOOK -- AND THE COUNT MUST NOT DEPEND ON FILENAME ORDER.
+    # I created a third mis-named record myself at 18:36Z
+    # (`p003_de_forward_value_20260907_v2.json`, assembled from the
+    # REBUILD cells), and the day map still counted 09-07 once only
+    # because `sorted()` put v3 after v2 and the later assignment won.
+    # That is order, not identity. Two day records naming DIFFERENT books
+    # for one day are now REPORTED, and disagreeing cents REFUSE.
+    seen_books: dict = {}
     out: dict = {}
     for f in sorted((derived / "fwd_v2").glob(
             "p003_de_forward_value_*.json")):
@@ -351,10 +393,27 @@ def _landed_days(derived: Path, exclude: str) -> dict:
         day = d.get("day")
         if not day or day == exclude:
             continue
+        book = d.get("book_sha256")
+        seen_books.setdefault(day, {})[f.name] = book
         for arm, cell in (d.get("cells") or {}).items():
             val = cell.get("D", cell.get("observed_D_cents"))
-            if isinstance(val, (int, float)):
-                out.setdefault(arm, {})[day] = val
+            if not isinstance(val, (int, float)):
+                continue
+            prev = out.setdefault(arm, {}).get(day)
+            if prev is not None and abs(prev - val) > 1e-6:
+                raise SystemExit(
+                    f"REFUSED DAY_RECORDS_DISAGREE: {day}/{arm} is "
+                    f"{prev} in one record and {val} in {f.name}. Two day "
+                    f"results for one day that disagree on cents cannot "
+                    f"both be the day's result.")
+            out[arm][day] = val
+    for day, byfile in seen_books.items():
+        books = {b for b in byfile.values() if b}
+        if len(books) > 1:
+            print(f"  [RESIDUE] {day} has day-named records over "
+                  f"{len(books)} different books: "
+                  + "; ".join(f"{n}={str(b)[:12]}"
+                              for n, b in sorted(byfile.items())))
     return out
 
 
@@ -534,6 +593,9 @@ def main(argv=None) -> int:
     ap.add_argument("--n-declared", type=int, default=7)
     ap.add_argument("--log", default=None)
     ap.add_argument("--reproduction-of", default=None)
+    ap.add_argument("--waive", default=None,
+                    help="inherit a declared cohort waiver, e.g. "
+                         "winner_source")
     ap.add_argument("--falsify", action="store_true")
     a = ap.parse_args(argv)
     if a.falsify:
@@ -541,7 +603,8 @@ def main(argv=None) -> int:
     rec = build(a.day, Path(a.cells), a.n_declared,
                 log=Path(a.log) if a.log else None,
                 reproduction_of=(Path(a.reproduction_of)
-                                 if a.reproduction_of else None))
+                                 if a.reproduction_of else None),
+                waive=a.waive)
     # A REPRODUCTION IS NEVER NAMED LIKE A DAY RESULT. The day-result
     # glob `p003_de_forward_value_*.json` was picking up the reproduction
     # records, so any reader resolving days by that glob would have
