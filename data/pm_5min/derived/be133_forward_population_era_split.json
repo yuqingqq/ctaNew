@@ -1,0 +1,82 @@
+{
+ "protocol": "BE_FORWARD_POPULATION_ERA_SPLIT_V1",
+ "as_of_utc": "2026-09-11T06:03:38Z",
+ "filed_by": "BE 133, escalating -- this is a POPULATION decision (rule 14)",
+ "HEADLINE": "The fragment builder's era resolution was FIXED after 09-07's fragment was built. 09-03..09-07's fragments were built with the buggy day-independent era, which handed EVERY September window an EMPTY GAP LIST. 09-08's fragment, built now, would not. The forward test's population would be split across two gap treatments at day one.",
+ "the_defect_and_its_fix": {
+  "buggy_call": "HER._era_or_refuse(fi, None, 'be_gate1_fragment')",
+  "what_it_returned": "the module literal fi.ERA = clob_v3_1, whatever day it was asked about",
+  "consequence": "gaps.get(s, []) -- an empty gap list for every September window",
+  "fixed_in": "BE 113 (8df760d), via be_era_for_day.resolve(fi, pop['day'], want)",
+  "also_changed_after_09-07": [
+   "fb3bf44 BE 114",
+   "095caa7 BE 116"
+  ],
+  "builder_digest_that_made_09-06_and_09-07": "6a08af4b17eaa069",
+  "builder_digest_now_BOTH_wt_fwd_AND_HEAD": "d87c820872ec3267"
+ },
+ "MEASURED_not_reasoned": {
+  "method": "population(day) + the FIXED era resolution vs the module literal, counting slugs with a non-empty gap list. No fragment built, no lock taken, nothing written to a protected day.",
+  "20260907": {
+   "n_windows": 287,
+   "era_fixed": "clob_v4_1",
+   "era_buggy": "clob_v3_1",
+   "gap_bearing_windows_FIXED": 27,
+   "gap_bearing_windows_BUGGY": 0
+  },
+  "20260908": {
+   "n_windows": 288,
+   "era_fixed": "clob_v4_1",
+   "era_buggy": "clob_v3_1",
+   "gap_bearing_windows_FIXED": 43,
+   "gap_bearing_windows_BUGGY": 0
+  },
+  "so_the_difference_is_NOT_inert": "27 of 09-07's 287 windows were built as if gapless and are not; 43 of 09-08's 288 would be built correctly. The gaps are an INPUT to `fr` (BE_PROCEDURE 6g), so this reaches the reference, not just a diagnostic field."
+ },
+ "WHY_THIS_IS_NOT_MINE_TO_DECIDE": "rule 14 and the builder's own comment: 'whether Binance feed continuity should ALSO gate it is a population decision (rule 14)'. Rule 13: a seat that cannot rule escalates.",
+ "options_COSTED_not_chosen": {
+  "a_rebuild_09-07_consistent": {
+   "what": "rebuild 09-07 fragment+tape+book with the fixed code so the whole forward population is homogeneous",
+   "cost": "~11 min fragment + ~20 min tape + ~25 min book, plus DE's 77 min re-valuation",
+   "consequence": "supersedes the day-one valuation already landed (MEM 359)"
+  },
+  "b_accept_the_split": {
+   "what": "build 09-08+ with the fixed code, declare the split",
+   "cost": "none in compute",
+   "consequence": "the forward population is not homogeneous; day one differs from days 2+ in gap treatment"
+  },
+  "c_propagate_the_bug": {
+   "what": "build 09-08+ from the OLD fragment bytes to match 09-07",
+   "cost": "none in compute",
+   "consequence": "knowingly building the forward test on a defect BE 113 fixed"
+  }
+ },
+ "WHAT_THIS_DOES_NOT_LICENSE": "This measures gap-bearing WINDOW COUNTS, which are coverage/quality metadata (the DA 182 boundary). It reads no outcome, no score and no P&L on any protected day, and it does not say how much the row content differs -- only that the input differs for 27 and 43 windows respectively.",
+ "tail_questions_answered": {
+  "does_day_D_need_D_plus_1": {
+   "answer": "YES, by 5 SECONDS",
+   "why": "day D's last window starts 23:55:00Z and ends 00:00:00Z of D+1; MARKOUT_S = 5.0 and harmful_exposure_rows reads wf.mid_at(f['t'] + MARKOUT_S), so a fill at the close is valued at 00:00:05Z of D+1",
+   "measured": {
+    "20260907_last_slug": "btc-updown-5m-1788825300 = 2026-09-07T23:55:00Z",
+    "20260908_first_slug": "btc-updown-5m-1788825600 = 2026-09-08T00:00:00Z"
+   },
+   "consequence": "09-13's fragment cannot be built until 2026-09-14T00:00:05Z plus collector flush latency. The END DATE DOES NOT MOVE materially -- it is 5 seconds, not a day -- but the tape cannot start the instant the day closes."
+  },
+  "tape_peak_memory": {
+   "answer": "FLAT at 4.74-4.75 GB in-process on every day measured",
+   "measured_from_receipts": {
+    "20260903": 4.741,
+    "20260904": 4.741,
+    "20260905": 4.741,
+    "20260906": 4.746,
+    "20260907": 4.752
+   },
+   "wall_s_range": [
+    755.4,
+    1528.2
+   ],
+   "note_on_the_5_78_number": "that is the cgroup LEAF, which includes page cache and is a DIFFERENT number from the in-process peak (BE 74). Neither is the other.",
+   "coexistence_verdict": "4.75 + 12 = 16.75 GB against a 14 GB slice cap, so a TAPE CANNOT SHARE THE SLICE WITH A CATCH-UP RUN either -- the same conclusion DE reached for the valuation. The whole tail is a sequencing problem."
+  }
+ }
+}

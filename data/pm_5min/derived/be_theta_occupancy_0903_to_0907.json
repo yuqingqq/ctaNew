@@ -1,0 +1,442 @@
+{
+ "protocol": "BE_THETA_OCCUPANCY_V1",
+ "what_this_measures": "how often each day PUTS THE QUESTION to the scoring code: the distribution of |generation_max_score - theta| at each arm's frozen theta",
+ "WHAT_THIS_DOES_NOT_LICENSE": "This is not a certification and it transfers none. A day's occupancy says how much a certification measured elsewhere COULD be worth on this day; it is never itself evidence that the scoring code is decision-equivalent here (REV's ruling: the deciding quantity is the day's own occupancy).",
+ "certification": "data/pm_5min/derived/be_score_neutrality_20260903__EV22_vs_NEUTCHK.json",
+ "delta_max_certified": {
+  "CONDVALUE_X_SKEW": 0.0,
+  "HAZARD_OVER_SKEWED_REF": 0.0
+ },
+ "absolute_ladder": [
+  1e-12,
+  1e-09,
+  1e-06,
+  0.0001,
+  0.001,
+  0.01,
+  0.1,
+  1.0
+ ],
+ "days": {
+  "be_daybook_20260903_btc__L250ms__NEUTCHK.pkl": {
+   "identity": {
+    "day": "20260903",
+    "coin": "btc",
+    "placement_latency_ms": 250.0
+   },
+   "n_reference_generations": 313140,
+   "per_arm": {
+    "CONDVALUE_X_SKEW": {
+     "head": "q1_arrival_composed_lgbm",
+     "theta": 0.32450609461933483,
+     "params_file": "de_multiday_gate1_params_v29.json",
+     "n_scored_generations": 232307,
+     "n_reference_generations": 313140,
+     "fraction_of_the_reference_scored": 0.7418630644440186,
+     "m_min": 1.1564941783226423e-05,
+     "m_p001": 0.0022133287375674104,
+     "m_p01": 0.022800303086959073,
+     "m_p10": 0.18640249146923563,
+     "m_median": 0.36465625476311514,
+     "n_exactly_at_theta": 0,
+     "n_at_or_above_theta": 19523,
+     "absolute_ladder_counts": {
+      "within_1e-12": 0,
+      "within_1e-09": 0,
+      "within_1e-06": 0,
+      "within_0.0001": 11,
+      "within_0.001": 101,
+      "within_0.01": 993,
+      "within_0.1": 10679,
+      "within_1": 213100
+     },
+     "absolute_ladder_per_1000_generations": {
+      "within_1e-12": 0.0,
+      "within_1e-09": 0.0,
+      "within_1e-06": 0.0,
+      "within_0.0001": 0.047351,
+      "within_0.001": 0.43477,
+      "within_0.01": 4.274516,
+      "within_0.1": 45.969342,
+      "within_1": 917.320615
+     },
+     "LADDER_IS_FIXED": "declared in the module, identical for every day, so no day can pick a ladder after seeing its own margins (rule 11)",
+     "scaled_ladder": "NOT_APPLICABLE_DELTA_MAX_IS_ZERO"
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "head": "incumbent_linear_d",
+     "theta": 0.43525926488298716,
+     "params_file": "de_multiday_gate1_params_v29.json",
+     "n_scored_generations": 232307,
+     "n_reference_generations": 313140,
+     "fraction_of_the_reference_scored": 0.7418630644440186,
+     "m_min": 1.6500863170787472e-05,
+     "m_p001": 0.0015360662882389908,
+     "m_p01": 0.01606532068927169,
+     "m_p10": 0.1499904330054751,
+     "m_median": 0.4935374643476215,
+     "n_exactly_at_theta": 0,
+     "n_at_or_above_theta": 14893,
+     "absolute_ladder_counts": {
+      "within_1e-12": 0,
+      "within_1e-09": 0,
+      "within_1e-06": 0,
+      "within_0.0001": 13,
+      "within_0.001": 156,
+      "within_0.01": 1467,
+      "within_0.1": 15139,
+      "within_1": 208622
+     },
+     "absolute_ladder_per_1000_generations": {
+      "within_1e-12": 0.0,
+      "within_1e-09": 0.0,
+      "within_1e-06": 0.0,
+      "within_0.0001": 0.05596,
+      "within_0.001": 0.671525,
+      "within_0.01": 6.314919,
+      "within_0.1": 65.168075,
+      "within_1": 898.044398
+     },
+     "LADDER_IS_FIXED": "declared in the module, identical for every day, so no day can pick a ladder after seeing its own margins (rule 11)",
+     "scaled_ladder": "NOT_APPLICABLE_DELTA_MAX_IS_ZERO"
+    }
+   }
+  },
+  "be_daybook_20260904_btc__L250ms__EV21.pkl": {
+   "identity": {
+    "day": "20260904",
+    "coin": "btc",
+    "placement_latency_ms": 250.0
+   },
+   "n_reference_generations": 358108,
+   "per_arm": {
+    "CONDVALUE_X_SKEW": {
+     "head": "q1_arrival_composed_lgbm",
+     "theta": 0.32450609461933483,
+     "params_file": "de_multiday_gate1_params_v29.json",
+     "n_scored_generations": 328578,
+     "n_reference_generations": 358108,
+     "fraction_of_the_reference_scored": 0.9175388430305941,
+     "m_min": 3.024504353243973e-06,
+     "m_p001": 0.0020353732474925335,
+     "m_p01": 0.02111518403757262,
+     "m_p10": 0.1787518504110979,
+     "m_median": 0.3663553925205615,
+     "n_exactly_at_theta": 0,
+     "n_at_or_above_theta": 31087,
+     "absolute_ladder_counts": {
+      "within_1e-12": 0,
+      "within_1e-09": 0,
+      "within_1e-06": 0,
+      "within_0.0001": 14,
+      "within_0.001": 159,
+      "within_0.01": 1546,
+      "within_0.1": 16307,
+      "within_1": 296269
+     },
+     "absolute_ladder_per_1000_generations": {
+      "within_1e-12": 0.0,
+      "within_1e-09": 0.0,
+      "within_1e-06": 0.0,
+      "within_0.0001": 0.042608,
+      "within_0.001": 0.483903,
+      "within_0.01": 4.705123,
+      "within_0.1": 49.629007,
+      "within_1": 901.670227
+     },
+     "LADDER_IS_FIXED": "declared in the module, identical for every day, so no day can pick a ladder after seeing its own margins (rule 11)",
+     "scaled_ladder": "NOT_APPLICABLE_DELTA_MAX_IS_ZERO"
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "head": "incumbent_linear_d",
+     "theta": 0.43525926488298716,
+     "params_file": "de_multiday_gate1_params_v29.json",
+     "n_scored_generations": 328578,
+     "n_reference_generations": 358108,
+     "fraction_of_the_reference_scored": 0.9175388430305941,
+     "m_min": 5.164027571891161e-06,
+     "m_p001": 0.0014647132800384988,
+     "m_p01": 0.01323721129739891,
+     "m_p10": 0.13283447285810857,
+     "m_median": 0.4872746909207638,
+     "n_exactly_at_theta": 0,
+     "n_at_or_above_theta": 27713,
+     "absolute_ladder_counts": {
+      "within_1e-12": 0,
+      "within_1e-09": 0,
+      "within_1e-06": 0,
+      "within_0.0001": 20,
+      "within_0.001": 213,
+      "within_0.01": 2461,
+      "within_0.1": 24496,
+      "within_1": 285915
+     },
+     "absolute_ladder_per_1000_generations": {
+      "within_1e-12": 0.0,
+      "within_1e-09": 0.0,
+      "within_1e-06": 0.0,
+      "within_0.0001": 0.060868,
+      "within_0.001": 0.648248,
+      "within_0.01": 7.48985,
+      "within_0.1": 74.551552,
+      "within_1": 870.158684
+     },
+     "LADDER_IS_FIXED": "declared in the module, identical for every day, so no day can pick a ladder after seeing its own margins (rule 11)",
+     "scaled_ladder": "NOT_APPLICABLE_DELTA_MAX_IS_ZERO"
+    }
+   }
+  },
+  "be_daybook_20260905_btc__L250ms__EV21.pkl": {
+   "identity": {
+    "day": "20260905",
+    "coin": "btc",
+    "placement_latency_ms": 250.0
+   },
+   "n_reference_generations": 266593,
+   "per_arm": {
+    "CONDVALUE_X_SKEW": {
+     "head": "q1_arrival_composed_lgbm",
+     "theta": 0.32450609461933483,
+     "params_file": "de_multiday_gate1_params_v29.json",
+     "n_scored_generations": 244298,
+     "n_reference_generations": 266593,
+     "fraction_of_the_reference_scored": 0.9163706473913419,
+     "m_min": 1.662288901860265e-05,
+     "m_p001": 0.0023055630848877184,
+     "m_p01": 0.021317225780348115,
+     "m_p10": 0.18252535814203796,
+     "m_median": 0.3749208698645651,
+     "n_exactly_at_theta": 0,
+     "n_at_or_above_theta": 26952,
+     "absolute_ladder_counts": {
+      "within_1e-12": 0,
+      "within_1e-09": 0,
+      "within_1e-06": 0,
+      "within_0.0001": 12,
+      "within_0.001": 98,
+      "within_0.01": 1114,
+      "within_0.1": 12093,
+      "within_1": 218891
+     },
+     "absolute_ladder_per_1000_generations": {
+      "within_1e-12": 0.0,
+      "within_1e-09": 0.0,
+      "within_1e-06": 0.0,
+      "within_0.0001": 0.04912,
+      "within_0.001": 0.401149,
+      "within_0.01": 4.560005,
+      "within_0.1": 49.501019,
+      "within_1": 895.999967
+     },
+     "LADDER_IS_FIXED": "declared in the module, identical for every day, so no day can pick a ladder after seeing its own margins (rule 11)",
+     "scaled_ladder": "NOT_APPLICABLE_DELTA_MAX_IS_ZERO"
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "head": "incumbent_linear_d",
+     "theta": 0.43525926488298716,
+     "params_file": "de_multiday_gate1_params_v29.json",
+     "n_scored_generations": 244298,
+     "n_reference_generations": 266593,
+     "fraction_of_the_reference_scored": 0.9163706473913419,
+     "m_min": 8.725936038733728e-07,
+     "m_p001": 0.0013188106087369533,
+     "m_p01": 0.01393029911427196,
+     "m_p10": 0.13293038727677298,
+     "m_median": 0.4925786556811452,
+     "n_exactly_at_theta": 0,
+     "n_at_or_above_theta": 18813,
+     "absolute_ladder_counts": {
+      "within_1e-12": 0,
+      "within_1e-09": 0,
+      "within_1e-06": 1,
+      "within_0.0001": 14,
+      "within_0.001": 175,
+      "within_0.01": 1775,
+      "within_0.1": 18039,
+      "within_1": 216983
+     },
+     "absolute_ladder_per_1000_generations": {
+      "within_1e-12": 0.0,
+      "within_1e-09": 0.0,
+      "within_1e-06": 0.004093,
+      "within_0.0001": 0.057307,
+      "within_0.001": 0.716338,
+      "within_0.01": 7.265716,
+      "within_0.1": 73.840146,
+      "within_1": 888.189834
+     },
+     "LADDER_IS_FIXED": "declared in the module, identical for every day, so no day can pick a ladder after seeing its own margins (rule 11)",
+     "scaled_ladder": "NOT_APPLICABLE_DELTA_MAX_IS_ZERO"
+    }
+   }
+  },
+  "be_daybook_20260906_btc__L250ms__EV21.pkl": {
+   "identity": {
+    "day": "20260906",
+    "coin": "btc",
+    "placement_latency_ms": 250.0
+   },
+   "n_reference_generations": 300147,
+   "per_arm": {
+    "CONDVALUE_X_SKEW": {
+     "head": "q1_arrival_composed_lgbm",
+     "theta": 0.32450609461933483,
+     "params_file": "de_multiday_gate1_params_v29.json",
+     "n_scored_generations": 276412,
+     "n_reference_generations": 300147,
+     "fraction_of_the_reference_scored": 0.9209220815133917,
+     "m_min": 5.194066319935686e-06,
+     "m_p001": 0.002159102762429699,
+     "m_p01": 0.022354094308371153,
+     "m_p10": 0.1884447412154642,
+     "m_median": 0.37058685342440245,
+     "n_exactly_at_theta": 0,
+     "n_at_or_above_theta": 25809,
+     "absolute_ladder_counts": {
+      "within_1e-12": 0,
+      "within_1e-09": 0,
+      "within_1e-06": 0,
+      "within_0.0001": 12,
+      "within_0.001": 121,
+      "within_0.01": 1242,
+      "within_0.1": 13004,
+      "within_1": 251050
+     },
+     "absolute_ladder_per_1000_generations": {
+      "within_1e-12": 0.0,
+      "within_1e-09": 0.0,
+      "within_1e-06": 0.0,
+      "within_0.0001": 0.043413,
+      "within_0.001": 0.437752,
+      "within_0.01": 4.493293,
+      "within_0.1": 47.045714,
+      "within_1": 908.245662
+     },
+     "LADDER_IS_FIXED": "declared in the module, identical for every day, so no day can pick a ladder after seeing its own margins (rule 11)",
+     "scaled_ladder": "NOT_APPLICABLE_DELTA_MAX_IS_ZERO"
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "head": "incumbent_linear_d",
+     "theta": 0.43525926488298716,
+     "params_file": "de_multiday_gate1_params_v29.json",
+     "n_scored_generations": 276412,
+     "n_reference_generations": 300147,
+     "fraction_of_the_reference_scored": 0.9209220815133917,
+     "m_min": 2.21475462774956e-06,
+     "m_p001": 0.0015290569400044363,
+     "m_p01": 0.015015152582122882,
+     "m_p10": 0.1408149696515683,
+     "m_median": 0.49702499160486857,
+     "n_exactly_at_theta": 0,
+     "n_at_or_above_theta": 18638,
+     "absolute_ladder_counts": {
+      "within_1e-12": 0,
+      "within_1e-09": 0,
+      "within_1e-06": 0,
+      "within_0.0001": 15,
+      "within_0.001": 175,
+      "within_0.01": 1866,
+      "within_0.1": 19045,
+      "within_1": 246490
+     },
+     "absolute_ladder_per_1000_generations": {
+      "within_1e-12": 0.0,
+      "within_1e-09": 0.0,
+      "within_1e-06": 0.0,
+      "within_0.0001": 0.054267,
+      "within_0.001": 0.633113,
+      "within_0.01": 6.750792,
+      "within_0.1": 68.900771,
+      "within_1": 891.748549
+     },
+     "LADDER_IS_FIXED": "declared in the module, identical for every day, so no day can pick a ladder after seeing its own margins (rule 11)",
+     "scaled_ladder": "NOT_APPLICABLE_DELTA_MAX_IS_ZERO"
+    }
+   }
+  },
+  "be_daybook_20260907_btc__L250ms__FWD1.pkl": {
+   "identity": {
+    "day": "20260907",
+    "coin": "btc",
+    "placement_latency_ms": 250.0
+   },
+   "n_reference_generations": 321925,
+   "per_arm": {
+    "CONDVALUE_X_SKEW": {
+     "head": "q1_arrival_composed_lgbm",
+     "theta": 0.32450609461933483,
+     "params_file": "de_multiday_gate1_params_v29.json",
+     "n_scored_generations": 298735,
+     "n_reference_generations": 321925,
+     "fraction_of_the_reference_scored": 0.9279645880251611,
+     "m_min": 7.541714767744789e-06,
+     "m_p001": 0.0022040529418388966,
+     "m_p01": 0.022899815110951294,
+     "m_p10": 0.18782358556275874,
+     "m_median": 0.36755076315249496,
+     "n_exactly_at_theta": 0,
+     "n_at_or_above_theta": 26264,
+     "absolute_ladder_counts": {
+      "within_1e-12": 0,
+      "within_1e-09": 0,
+      "within_1e-06": 0,
+      "within_0.0001": 13,
+      "within_0.001": 134,
+      "within_0.01": 1333,
+      "within_0.1": 13801,
+      "within_1": 272119
+     },
+     "absolute_ladder_per_1000_generations": {
+      "within_1e-12": 0.0,
+      "within_1e-09": 0.0,
+      "within_1e-06": 0.0,
+      "within_0.0001": 0.043517,
+      "within_0.001": 0.448558,
+      "within_0.01": 4.462149,
+      "within_0.1": 46.198135,
+      "within_1": 910.904313
+     },
+     "LADDER_IS_FIXED": "declared in the module, identical for every day, so no day can pick a ladder after seeing its own margins (rule 11)",
+     "scaled_ladder": "NOT_APPLICABLE_DELTA_MAX_IS_ZERO"
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "head": "incumbent_linear_d",
+     "theta": 0.43525926488298716,
+     "params_file": "de_multiday_gate1_params_v29.json",
+     "n_scored_generations": 298735,
+     "n_reference_generations": 321925,
+     "fraction_of_the_reference_scored": 0.9279645880251611,
+     "m_min": 2.2007965404524654e-06,
+     "m_p001": 0.0013303488750245895,
+     "m_p01": 0.0143281246940698,
+     "m_p10": 0.13493501715485923,
+     "m_median": 0.4907148259407766,
+     "n_exactly_at_theta": 0,
+     "n_at_or_above_theta": 23078,
+     "absolute_ladder_counts": {
+      "within_1e-12": 0,
+      "within_1e-09": 0,
+      "within_1e-06": 0,
+      "within_0.0001": 27,
+      "within_0.001": 227,
+      "within_0.01": 2074,
+      "within_0.1": 21840,
+      "within_1": 264855
+     },
+     "absolute_ladder_per_1000_generations": {
+      "within_1e-12": 0.0,
+      "within_1e-09": 0.0,
+      "within_1e-06": 0.0,
+      "within_0.0001": 0.090381,
+      "within_0.001": 0.759871,
+      "within_0.01": 6.942608,
+      "within_0.1": 73.108273,
+      "within_1": 886.588448
+     },
+     "LADDER_IS_FIXED": "declared in the module, identical for every day, so no day can pick a ladder after seeing its own margins (rule 11)",
+     "scaled_ladder": "NOT_APPLICABLE_DELTA_MAX_IS_ZERO"
+    }
+   }
+  }
+ }
+}

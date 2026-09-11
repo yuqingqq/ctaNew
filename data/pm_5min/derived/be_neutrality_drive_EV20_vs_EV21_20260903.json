@@ -1,0 +1,174 @@
+{
+ "protocol": "BE_NEUTRALITY_DRIVE_V1",
+ "what_this_is": "the comparator driven against two books THE PIPELINE made differ; every earlier cell used a difference the test author wrote",
+ "old": {
+  "revision": "EV20",
+  "path": "data/pm_5min/derived/be_daybook_20260903_btc__L250ms__EV20.pkl",
+  "receipt_generations": 313149
+ },
+ "new": {
+  "revision": "EV21",
+  "path": "data/pm_5min/derived/be_daybook_20260903_btc__L250ms__EV21.pkl",
+  "receipt_generations": 313140
+ },
+ "arms": {
+  "CONDVALUE_X_SKEW": {
+   "head": "q1_arrival_composed_lgbm",
+   "theta": 0.32450609461933483,
+   "params_file": "de_multiday_gate1_params_v29.json"
+  },
+  "HAZARD_OVER_SKEWED_REF": {
+   "head": "incumbent_linear_d",
+   "theta": 0.43525926488298716,
+   "params_file": "de_multiday_gate1_params_v29.json"
+  }
+ },
+ "cell_A_refusal": "REFUSED BOOKS_ARE_NOT_THE_SAME_EXPERIMENT: reference generation identities differ: 9 only in old and 0 only in new.",
+ "cell_A_counts": {
+  "n_only_old": null,
+  "n_only_new": null,
+  "receipt_covered_old": 232309,
+  "receipt_covered_new": 232307,
+  "receipt_reference_old": 313149,
+  "receipt_reference_new": 313140,
+  "NOTE": "the comparator enumerates SCORED generations, so its counts must reconcile against n_covered -- NOT against the nine reference generations EV21 excluded"
+ },
+ "cell_B_admit": {
+  "verdict": "SUPPORTED_ON_THIS_DAY",
+  "per_arm": {
+   "CONDVALUE_X_SKEW": {
+    "strength": "BIT_IDENTICAL",
+    "C_n_generations": 232307,
+    "D_n_generations_compared": 232307,
+    "D_n_reference_generations_in_book": 313140,
+    "D_n_reference_generations_NOT_SCORED_BY_THE_ASSEMBLY": 80833,
+    "D_fraction_of_the_reference_certified": 0.7418630644440186,
+    "D_reconciles": true,
+    "C_m_min": 1.1564941783226423e-05,
+    "C_n_exactly_at_theta": 0
+   },
+   "HAZARD_OVER_SKEWED_REF": {
+    "strength": "BIT_IDENTICAL",
+    "C_n_generations": 232307,
+    "D_n_generations_compared": 232307,
+    "D_n_reference_generations_in_book": 313140,
+    "D_n_reference_generations_NOT_SCORED_BY_THE_ASSEMBLY": 80833,
+    "D_fraction_of_the_reference_certified": 0.7418630644440186,
+    "D_reconciles": true,
+    "C_m_min": 1.6500863170787472e-05,
+    "C_n_exactly_at_theta": 0
+   }
+  },
+  "POPULATION_THIS_CERTIFIES": {
+   "unit": "reference generations CARRYING A SCORE for the arm's head",
+   "n_certified": {
+    "CONDVALUE_X_SKEW": 232307,
+    "HAZARD_OVER_SKEWED_REF": 232307
+   },
+   "n_reference_generations": {
+    "CONDVALUE_X_SKEW": 313140,
+    "HAZARD_OVER_SKEWED_REF": 313140
+   },
+   "n_not_scored_by_the_assembly": {
+    "CONDVALUE_X_SKEW": 80833,
+    "HAZARD_OVER_SKEWED_REF": 80833
+   },
+   "THE_LIMIT": "decision-equivalence is certified over the SCORED population only. An unscored generation has no score for theta to compare and cannot flip, so it is outside the claim rather than evidence for it. A REQUIRED FIELD because a limit that lives in prose gets summarised away (rule 35)."
+  }
+ },
+ "shape_probe": {
+  "asm_top_level_keys": [
+   "assembly",
+   "by_arm",
+   "split_by_gen",
+   "split_counts"
+  ],
+  "by_arm_keys": [
+   "('btc', 'incumbent_linear_d')",
+   "('btc', 'q1_arrival_composed_lgbm')"
+  ],
+  "coverage_present_in_the_BOOK": false,
+  "entries[CONDVALUE_X_SKEW]": {
+   "head": "q1_arrival_composed_lgbm",
+   "n_rows": 350472,
+   "n_rows_with_a_null_score": 0,
+   "n_distinct_generations_among_rows": 232307,
+   "n_distinct_generations_among_SCORED_rows": 232307,
+   "n_generations_dropped_by_the_null_skip": 0,
+   "sample_entry_keys": [
+    "gen",
+    "score",
+    "t0"
+   ]
+  },
+  "entries[HAZARD_OVER_SKEWED_REF]": {
+   "head": "incumbent_linear_d",
+   "n_rows": 350472,
+   "n_rows_with_a_null_score": 0,
+   "n_distinct_generations_among_rows": 232307,
+   "n_distinct_generations_among_SCORED_rows": 232307,
+   "n_generations_dropped_by_the_null_skip": 0,
+   "sample_entry_keys": [
+    "gen",
+    "score",
+    "t0"
+   ]
+  }
+ },
+ "cell_D": {
+  "denominator_old": 313149,
+  "denominator_new": 313140
+ },
+ "cell_C_shared_keys": {
+  "CONDVALUE_X_SKEW": {
+   "head": "q1_arrival_composed_lgbm",
+   "theta": 0.32450609461933483,
+   "n_common": 232307,
+   "n_only_old": 2,
+   "n_only_new": 0,
+   "delta_max_on_shared_keys": 0.0,
+   "n_generations_whose_score_moved": 0,
+   "n_flips_on_shared_keys": 0,
+   "m_min_on_shared_keys": 1.1564941783226423e-05,
+   "occupancy_on_shared_keys": {
+    "within_10^0_x_delta_max": null,
+    "within_10^1_x_delta_max": null,
+    "within_10^2_x_delta_max": null,
+    "within_10^3_x_delta_max": null
+   },
+   "n_exactly_at_theta": 0,
+   "READING": "the nine dropped generations are the ONLY difference; every shared score is bit-identical"
+  },
+  "HAZARD_OVER_SKEWED_REF": {
+   "head": "incumbent_linear_d",
+   "theta": 0.43525926488298716,
+   "n_common": 232307,
+   "n_only_old": 2,
+   "n_only_new": 0,
+   "delta_max_on_shared_keys": 0.0,
+   "n_generations_whose_score_moved": 0,
+   "n_flips_on_shared_keys": 0,
+   "m_min_on_shared_keys": 1.6500863170787472e-05,
+   "occupancy_on_shared_keys": {
+    "within_10^0_x_delta_max": null,
+    "within_10^1_x_delta_max": null,
+    "within_10^2_x_delta_max": null,
+    "within_10^3_x_delta_max": null
+   },
+   "n_exactly_at_theta": 0,
+   "READING": "the nine dropped generations are the ONLY difference; every shared score is bit-identical"
+  }
+ },
+ "drive": {
+  "n_cells": 18,
+  "n_failed": 3,
+  "failed": [
+   "cell A: it refuses under KEYS_DIFFER, not some other name",
+   "cell A: the refusal states its own counts in a readable form",
+   "cell A: those counts NET to the COVERED delta in the receipts"
+  ],
+  "wall_s": 22.4,
+  "verdict": "DRIVE_FAILED",
+  "WHAT_THIS_DOES_NOT_LICENSE": "This drives the comparator, NOT the pipeline. It says the instrument refuses a real pipeline difference under the right name and admits a real book against itself. It says NOTHING about whether 7ed5a90 is score-neutral -- that is the NEUTCHK-vs-EV22 comparison, a different artifact."
+ }
+}
