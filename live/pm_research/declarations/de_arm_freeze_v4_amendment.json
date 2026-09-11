@@ -1,0 +1,145 @@
+{
+  "protocol": "P003_DE_ARM_FREEZE_V4_AMENDMENT",
+  "version": 4,
+  "amended_at_utc": "2026-09-11T02:33:22.963553+00:00",
+  "amended_by": "DE 224",
+  "rule": "13 -- superseding receipt; no prior version edited",
+  "supersedes": [
+    {
+      "version": "1",
+      "path": "de_arm_freeze_v1.json",
+      "commit": "b5f311a",
+      "sha256": "a4749bc77b6eb3590b880bd8bc58c1e8b8099c35864b448130fbedeac839f1e8"
+    },
+    {
+      "version": "2",
+      "path": "de_arm_freeze_v2_amendment.json",
+      "commit": "3fc91e7",
+      "sha256": "84fbe30927aada09acad652d75bd34e671c1a3dbb54aa81853f4accb379fa4f3"
+    },
+    {
+      "version": "3",
+      "path": "de_arm_freeze_v3_amendment.json",
+      "commit": "cc63ccf",
+      "sha256": "0fe428134dd31c632df04e41f1876cb4a0e9cd25cddc5ffb67d41a484fbc2219"
+    }
+  ],
+  "AMENDMENT_5_I_CORRECT_MY_OWN_V3_READING": {
+    "what_v3_said": "that the freeze's TWO-SIDED posture governs conjunct (a) too, and that on that reading ONE-SIDED IS NOT AVAILABLE and G=6 cannot clear.",
+    "THAT_WAS_WRONG_ON_BOTH_HALVES": true,
+    "half_1_conjunct_a_IS_NOT_A_P_VALUED_TEST_AS_DECLARED": {
+      "the_governing_text": "plan v2 step 6: 'An arm advances only if its settlement-P&L delta is POSITIVE against zero-model-cancel at the UTC-day cluster level AND it beats the generation/side/hour-matched random-cancel control after the pre-declared two-arm correction.'",
+      "reading": "conjunct (a) is a SIGN / DIRECTION GATE evaluated at the day-cluster level. The word is POSITIVE, not SIGNIFICANT. The significance-and-multiplicity machinery attaches to conjunct (b) -- 'after the pre-declared two-arm correction' sits in the SECOND clause.",
+      "corroborated_by_the_freeze_itself": "frozen_decision_rule.which = ['CONDVALUE_X_SKEW arm-level pooled','HAZARD_OVER_SKEWED_REF arm-level pooled'] -- the Holm family of 2 is the two ARMS, not the two conjuncts.",
+      "CONSEQUENCE": "the p that enters Holm is conjunct (b)'s matched-control p, which pools 500 DRAWS and floors at 1/501 = 0.001996 REGARDLESS OF G. Under the rule AS DECLARED there is NO day-count floor problem and N=6 is NOT structurally incapable."
+    },
+    "half_2_ONE_SIDED_IS_AVAILABLE_AND_WAS_PRE_DECLARED": {
+      "why_rule_11_does_not_bite": "the one-sided floor was declared in the GOVERNING PLAN, in band, BEFORE tonight and before any sign was visible -- not chosen now.",
+      "three_places_all_computing_1_over_2_to_the_G": [
+        "line 107: 'the earlier G=5 race is directional only. With recorded multiplicity 2, its best possible Holm-adjusted p-value is 0.0625' -- 0.0625 = 2 x 1/2^5, which is ONLY true one-sided",
+        "line 224 (USER ruling R-555): 'G = 6, fixed before any run ... a unanimous pass clears Holm at m = 2' -- true one-sided, FALSE two-sided",
+        "lines 733-736: 'with multiplicity 2 under the clustered sign/permutation floor ... require at least G >= 6 for a possible Holm-clearing result'"
+      ],
+      "so": "my v3 sentence 'one-sided is not available to us' is WITHDRAWN. It is available, it is pre-declared, and adding a day is NOT the only route.",
+      "what_the_freeze_two_sidedness_actually_covers": "the MATCHED-CONTROL statistic D of conjunct (b), where the direction genuinely was chosen after the point estimates were seen. Two-sidedness there costs nothing structural: the floor is 1/501 either way."
+    }
+  },
+  "AMENDMENT_6_THE_FLOOR_TABLE_COMPUTED_NOT_REASONED": {
+    "applies_to": "the CONTINGENCY in which conjunct (a) is upgraded to a significance-bearing day-cluster sign test. Under the rule as declared it does not bind.",
+    "construction_assumed": "day-cluster sign-flip permutation over G complete UTC days; p(k of G) = P[>= k positive] = sum_j>=k C(G,j)/2^G; two-sided = 2x, capped at 1",
+    "holm": {
+      "family": 2,
+      "smaller_p_must_beat": 0.025,
+      "larger_p_must_beat": 0.05
+    },
+    "positive_controls": [
+      "reproduces the plan's independently written 0.0625 at G=5 one-sided",
+      "reproduces the plan's 'G>=6 possible' at one-sided",
+      "a two-sided reading does NOT reproduce 0.0625, so the plan's floor is demonstrably one-sided"
+    ],
+    "table": [
+      {
+        "G": 5,
+        "min_p_one_sided": 0.03125,
+        "min_p_two_sided": 0.0625,
+        "holm_adj_one_sided": 0.0625,
+        "holm_adj_two_sided": 0.125,
+        "clears_one_sided": false,
+        "clears_two_sided": false,
+        "tol_one_sided": -1,
+        "tol_two_sided": -1
+      },
+      {
+        "G": 6,
+        "min_p_one_sided": 0.015625,
+        "min_p_two_sided": 0.03125,
+        "holm_adj_one_sided": 0.03125,
+        "holm_adj_two_sided": 0.0625,
+        "clears_one_sided": true,
+        "clears_two_sided": false,
+        "tol_one_sided": 0,
+        "tol_two_sided": -1
+      },
+      {
+        "G": 7,
+        "min_p_one_sided": 0.007812,
+        "min_p_two_sided": 0.015625,
+        "holm_adj_one_sided": 0.015625,
+        "holm_adj_two_sided": 0.03125,
+        "clears_one_sided": true,
+        "clears_two_sided": true,
+        "tol_one_sided": 0,
+        "tol_two_sided": 0
+      },
+      {
+        "G": 8,
+        "min_p_one_sided": 0.003906,
+        "min_p_two_sided": 0.007812,
+        "holm_adj_one_sided": 0.007812,
+        "holm_adj_two_sided": 0.015625,
+        "clears_one_sided": true,
+        "clears_two_sided": true,
+        "tol_one_sided": 0,
+        "tol_two_sided": 0
+      },
+      {
+        "G": 9,
+        "min_p_one_sided": 0.001953,
+        "min_p_two_sided": 0.003906,
+        "holm_adj_one_sided": 0.003906,
+        "holm_adj_two_sided": 0.007812,
+        "clears_one_sided": true,
+        "clears_two_sided": true,
+        "tol_one_sided": 1,
+        "tol_two_sided": 0
+      }
+    ],
+    "THE_COORDINATORS_ARITHMETIC_IS_CONFIRMED_EXACTLY": "two-sided at G=6 floors at 2/64 = 0.03125 against the 0.025 the smaller p must beat -- A PERFECT 6-FOR-6 RESULT FAILS. G=7 two-sided floors at 0.015625 and clears. Both numbers are correct as stated.",
+    "THE_NUMBER_NOBODY_HAS_ASKED_FOR_YET": "TOLERANCE. At G=6 one-sided the test clears ONLY on a unanimous 6/6 -- a single negative day takes p to 7/64 = 0.109 and it fails. The same is true at G=7 and G=8. G=9 IS THE FIRST N THAT TOLERATES ONE NEGATIVE DAY (8 of 9: p = 0.0195, adjusted 0.039). 09-05 already printed a sign flip of -4,941 cents on CONDVALUE, so unanimity is not a formality."
+  },
+  "AMENDMENT_7_MULTIPLICITY_RESOLVED_TAKING_BES_COUNT": {
+    "supersedes": "the WITHDRAWN field of v2 (3fc91e7) and the family-10 column of v3, which asked the wrong question",
+    "BE_113_landed": {
+      "n_arms_in_forward_race": 2,
+      "n_candidates_scored_to_select_them": 69,
+      "range": "45-75",
+      "scope": "BTC",
+      "kind": "lower bound"
+    },
+    "I_TAKE_IT_AND_I_WITHDRAW_MY_OWN_LOWER_BOUND_OF_10": "BE enumerated from the build record; 10 was my floor from artifact revisions alone and BE's 69 strictly contains it.",
+    "THE_TWO_NUMBERS_ANSWER_TWO_DIFFERENT_QUESTIONS_AND_THAT_IS_WHY_THE_TWO_NUMBER_FORM_IS_RIGHT": {
+      "holm_denominator_m": 2,
+      "why": "Holm's m is the number of TESTS IN THIS FAMILY -- two arms, two p-values. 69 is not a test being run forward.",
+      "selection_multiplicity": 69,
+      "why_it_is_recorded": "rule 12 wants the race that produced these arms. 69 candidates were scored to select 2, so the POINT ESTIMATES are selection-inflated and the forward test is what removes that inflation. It corrects the prior, not the denominator.",
+      "my_v2_framing_was_the_wrong_door": "v2 treated the candidate count as if it were Holm's family. It is not. Both numbers stand, each against its own question -- which is exactly the two-number form BE filed."
+    }
+  },
+  "THE_SENTENCE_THAT_BELONGS_IN_THE_DECLARATION_NOT_IN_A_PANE": "NOBODY MAY LATER READ AN INCONCLUSIVE AS EVIDENCE AGAINST THE ARMS WHEN THE FLOOR FOREORDAINED IT. A test that cannot attain its own threshold has measured nothing about the arms; it has measured the calendar. Any INCONCLUSIVE returned by this forward test must be reported together with the attainable minimum p at the G actually achieved, so a reader can see whether the result was capable of being a pass at all.",
+  "WHAT_IS_STILL_NOT_TOUCHED": [
+    "every frozen parameter",
+    "the pin-bytes decision",
+    "the decision rule itself -- this amendment INTERPRETS conjunct (a) against the governing plan, it does not rewrite it"
+  ],
+  "nothing_has_been_run_against_any_day_in_the_population": true
+}
