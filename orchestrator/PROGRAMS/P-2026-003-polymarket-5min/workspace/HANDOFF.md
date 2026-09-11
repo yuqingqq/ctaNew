@@ -1,3 +1,112 @@
+# READ FIRST — round 354 (MEM, 2026-09-11T03:24:02Z, tip `b7a0faa`)
+
+# ✅ 09-07 STANDS — **population FINAL: 09-07..09-13, N = 7**
+
+REVIEW 171 (`f4b5bd8`, 03:15:08). **The drop recommendation was wrong; the
+USER's challenge was right.**
+
+**REVIEW 172 goes past the ordering that was asked for:** both frozen thresholds
+sit in **`288df3f` at 2026-08-27T15:44:25Z** — *read at the object* — **eleven
+days and eight hours** before the freeze's pin source, **not the two days
+originally dated.** Seven independent productions of the same two floats, three
+verified **bit-for-bit**, one recorded identical to 8.3e-17.
+
+> **And REV filed the traversal's partiality as a CAVEAT rather than burying it**
+> — *"packfile cannot be mapped"* three times, so **counts are not quotable** —
+> **with the direction that saves the conclusion: a partial traversal can only
+> MISS older commits, never invent one, so 08-27 is a sound LOWER BOUND.**
+
+*That is rule 41 exactly — the error **direction**, not the rate — and it is the
+difference between a caveat that voids a finding and one that bounds it.*
+
+# 📏 THE PIPELINE'S LIMIT IS **MEASURED** NOW — and I hashed it myself
+
+DA 218 / v4 (`1efc71d`). I extracted **all ten** pinned  modules from params
+v29, hashed each at `7ed5a90`, and compared:
+
+```
+be_cancel_axis_null · be_data_root · de_matched_random_control
+de_rho_estimator · de_score_stream · harmful_stateful_policy
+phase4_generation_tables · pm_tape_density            MATCH  (8)
+
+de_head_scoring.py            DIFFERS
+de_phase4_diag_runner.py      DIFFERS
+```
+
+> **Exactly two differ — and they are exactly the two SCORING modules.** *Not two
+> arbitrary modules of ten: the pair the screen's scores came out of.*
+
+**`941e688` and `adbebf9` were both 10/10, so `7ed5a90` is the first candidate
+that is not.** Consequence is mechanical: **the book-code predicate refuses BY
+NAME on every forward book**, and per R-885 that waiver is **UNSUPPORTED, NOT
+REFUTED** — the same status, in the same words, the scoring-path waiver has
+carried since round 341.
+
+DA shipped **`RESULT_DOES_NOT_STATE_ITS_PIPELINE_PROVENANCE_LIMIT`** — rule 36
+discharged **by behaviour, not prose.** **Verified UNCHANGED:** both thetas,
+`min_draws 500`, `m 2`, `alpha 0.05`.
+
+> ***"The freeze moved" must not read as "the arms moved."*** *(Second round
+> running — it is the sentence most likely to be compressed into the wrong one.)*
+
+# 🧹 RESIDUE CLOSED — and the defect behind run c is a root with no resolver
+
+**No residue** from the three aborted 09-07 runs: the refusals were **read
+failures before any write**, which is the ordering that makes "no residue"
+checkable rather than hopeful.
+
+**I located the sites.** `be_daybook_build.py`'s own `real_data_reachable`
+docstring (`:1895`, `:1907`) **records the limit in those very words** — and
+`adverse_feature_rows.py:30`, `adverse_feature_rows_fast.py:33` and
+`da_accrual_report.py:556` each compute `parents[2]` directly, while
+`be_data_root.py` exists precisely to resolve it.
+
+> ***The resolver exists and three modules bypass it.***
+
+**A documented limit that no guard enforces is one symlink from a silent
+wrong-root read** — and the failure runs in the expensive direction: *a wrong
+root does not raise, it reads the wrong files and succeeds.*
+
+# ❓ NEW GAP — at which commit did DE's evaluator rehearsal run?
+
+It established G-from-the-data, futility-on-day-one and a 28-cell falsifier.
+**If it ran on an older tree, those are properties of a DIFFERENT EVALUATOR THAT
+HAPPENS TO SHARE A FILENAME.** Routed to DA.
+
+> **Same class as the build failure, one layer up: we established that BOOKS must
+> come from the declared commit, and nobody asked it of THE INSTRUMENT THAT READS
+> THEM.**
+
+# 🗣 DE'S FORMULATION GOES INTO RULE 42 VERBATIM — it is the half I missed
+
+> *"a broken check produces silence, and silence is indistinguishable from good
+> news unless something proves the instrument can speak. That's why **THE CONTROL
+> HAS TO RUN FIRST** rather than as confirmation afterwards — by then you've
+> already believed the zero."*
+
+**Rule 42 as I landed it says to construct the does-not-exist case and run it.
+DE's sentence says WHEN.** *Running the control afterwards makes it a
+confirmation of a belief already formed — a different act with the same commands.*
+**In force: BE runs the EV20/EV21 falsifier BEFORE the neutrality comparison.**
+
+# ⚖️ REV IS DECLARING THE CERTIFICATION'S BAR BEFORE BE'S NUMBERS EXIST
+
+Whether **zero flips on ONE day** can support a **two-module** waiver · whether
+**both arms and both thresholds** are needed · **whether a MARGIN statistic is
+required rather than a flip count** · what a **partial read** means.
+
+*The third is the one that would otherwise be discovered too late: **a flip count
+of zero says nothing about how close anything came to flipping**, and margin is
+the statistic that does.*
+
+**DE's renames are queued behind the entire population** — the single-commit
+ruling means **nothing touching build or valuation lands before 2026-09-14.**
+*The price of one commit for the whole pipeline is that the pipeline is frozen
+for three days, and renames — the safest imaginable change — are frozen with it.
+A rule that admits no safe exception is the only kind that cannot be argued into one.*
+
+**Status:** `p003fwd0907d` running from wt-fwd at `7ed5a90`. **Nothing valued.**
+
 # READ FIRST — round 353 (MEM, 2026-09-11T03:16:57Z, tip `556ef64`)
 # ⚙️ THREE FACTS FROM ROUND 352 ARE STALE — these supersede them
 
