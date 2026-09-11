@@ -579,6 +579,18 @@ except where marked USER-ONLY.
     not two observations. DA proposed this principle and then found it had
     FILED THE SAME PRINCIPLE 24 HOURS EARLIER (Q-DA-411), which is the
     defect it describes, committed by its author against itself.
+
+    **AND THE SECOND WORKED EXAMPLE, WHICH IS THE OPPOSITE ERROR (2026-09-11,
+    DA 222): CONVERGENCE CLAIMED ON A PHRASE MATCH.** `0da40bb`/R-888 records
+    *"two modules differ"* and was read as the prior art for a later finding
+    that also said *"two modules differ"* — but R-888's pair is the RUNNER and
+    `be_daybook_build.py`, measured against a recorded closure, while the later
+    pair is `de_head_scoring.py` and `de_phase4_diag_runner.py`, measured
+    against `be_cascade` pins on disk. **Same words, different modules,
+    different reference, different question.** So the clause cuts both ways:
+    **a prior entry is only prior art for THE SAME QUANTITY — match the
+    identity (what was compared against what), never the phrasing.** A
+    false-positive match wastes the entry; a false-negative wastes the hour.
 39. **Do not schedule around maintenance windows — make the run survive them.**
     (USER ruling, 2026-09-10: *"We don't have to set up the fixed time to run
     tasks, just need to proceed the tasks when there is no jobs running."*)
