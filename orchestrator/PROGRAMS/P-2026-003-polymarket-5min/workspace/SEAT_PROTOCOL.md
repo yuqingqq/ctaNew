@@ -691,3 +691,16 @@ except where marked USER-ONLY.
     population, killing the timers saves nothing and may destroy the day-quality
     record the test depends on. SETTLE THE QUESTION BEFORE TOUCHING THE
     SCHEDULE.** (R-899)
+
+45. **`git rebase <upstream>` is not a private operation in a shared tree.**
+    Four seats commit into `/home/yuqing/ctaNew`. A rebase replays EVERY
+    unpushed commit on the branch, not only your own — DA 223's rebase began
+    rewriting 13 commits belonging to BE, MEM and DE and stopped on a conflict
+    in another seat's file. Nothing was lost (`--abort` restored all 13, and
+    origin had only ever received the one-line register row), but the recovery
+    was luck of timing, not design. **Use `scripts/land_register_row.sh` for
+    register rows — its fetch-and-commit under the lock is the only path that
+    touches nothing else. To publish your own commits when the branch has
+    diverged, cherry-pick them onto a branch from `origin/mm-research` and push
+    that; never rebase the shared branch to make your own push fast-forward.**
+    A merge is safe where a rebase is not: it rewrites no commit. (DA 224)
