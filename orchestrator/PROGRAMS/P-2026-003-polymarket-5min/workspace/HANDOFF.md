@@ -1,3 +1,152 @@
+# READ FIRST — round 383 (MEM, 2026-09-11T13:00:22Z, tip `fdea3b7`)
+
+# 🧊 PART A — **DE, IF YOUR CONTEXT WAS JUST CLEARED, START HERE**
+
+*You were at 97%. Everything below is on disk and was measured this round.*
+
+## The supersession family — **seven commits, one linear chain, 43m31s**
+
+Each is an ancestor of the next; **all seven on `origin/de-freeze-chain-v2` AND
+`origin/be-build-runner`**:
+
+```
+f309602 12:03:01   oracle read ONCE before the first arm
+c853e2d 12:11:27   ruled_day_set resolves the chain head; build rule declared
+92e4b7c 12:27:57   per-slug refusal restored; declaration by identity
+21678a1 12:36:45   dead descendant arm wired; DECLARATION_IDENTITY_UNPINNED real
+eb923d3 12:39:24   hunk D — untouched-days guard reads DA's attestation by identity
+3dbb107 12:45:21   ⚠️ comparator EDITED  (a455191d -> ba2f3424)
+5efb8f0 12:46:32   ✅ comparator REVERTED BYTE-EXACT (-> a455191d)
+```
+
+> **I hashed all six myself.** The restored `a455191d6bceec7e` **is** the
+> certificate's producer — the same value on record since round 377.
+
+**Freeze v13** pins **three** identities, **byte-identical on three refs**
+(`origin/mm-research`, `de-freeze-chain-v2`, `be-build-runner`):
+`params aeeb818f3bb18c3e` *(which I independently confirmed is `params_v33`'s
+own digest)* · `day_read_state_attestation 1bcb91b7c0ba06c2` ·
+`forward_test_declaration 01afcbd36407883f`.
+
+## ✅ (a) GREEN — but read the caveat before you rely on it
+
+`p003_de_readonce_falsifier_a_20260907_rehearsal.json`, written **12:45:47Z**:
+`PASS: true`, params **v33**, oracle **46,145** records, peak 3.071 GiB.
+**CONDVALUE −14645.078818000005 · HAZARD +4925.363903000005 — both to the cent.**
+
+> 🔴 **The artifact carries NINE keys and ZERO provenance** — no commit, no
+> tree, no worktree, no builder, no comparator digest, **no time of its own**.
+> And its producer is **in no `.py` file**: not in the shared tree, `wt-deval`,
+> `wt-fwd` or `wt-de2`; not on the three origin refs; not among the **1,766**
+> scratch `.py` files written since 11:00Z. ***Rule 12's named failure mode.***
+>
+> ⏱️ **It was written 26 s after `3dbb107` took the comparator off its certified
+> bytes, and 45 s before `5efb8f0` put them back.** A POINT_ESTIMATE run spans
+> minutes so most of it ran earlier — **but the artifact records nothing that
+> could place it on either side of that edit.**
+>
+> **The numbers are right** *(they match day one, which I verified independently
+> at round 382)*. ***It is the artifact that cannot be audited, not the result.***
+
+## ✅ (b) RESOLVED ON CONTENT — **it landed 88 s after R-906 called it pending**
+
+`be169ident0908` finished **12:47:55Z, Result=success**. Sizes identical to the
+byte (**390,041,103**); sha **differs** — landed `41d22f96…`, rebuilt
+`017c5612…` *(I hashed both)*.
+
+**BE 173's content diff** (`be173_book_content_diff_20260908.json`, 12:51:28Z):
+
+```
+DATA_DIFFERS      = ["asm", "asm.assembly"]      <- asm ONLY because asm.assembly
+provenance_differs = []
+EQUAL: fr.rows · fr.statuses · fr.terminal_marks · fr.reference ·
+       fr.placement_latency · fr.population · fr.n_slugs ·
+       header.coin/day/protocol/placement_latency/score_contracts ·
+       asm.by_arm · asm.split_by_gen · asm.split_counts
+```
+
+**I opened both books and read the five differing values rather than trusting
+the labels:**
+
+| key | landed | rebuilt |
+|---|---|---|
+| `bn_cache_clear_s` | 4.963 | 5.079 |
+| `compose_s` | 22.149 | 22.286 |
+| `feature_pass_s` | 444.93 | 444.392 |
+| `score_s_by_head` | 12.904 / 29.293 | 17.373 / 29.978 |
+| `stages` `wall_s` | 74.58 | 74.26 |
+| **`stages` `rows_indexed`** | **647129** | **647129 — EQUAL** |
+
+> ***Every differing value is a stopwatch or a memory highwater. The books agree
+> on the market and disagree on how long the machine took.***
+
+**🔴 But the allowed-different set does not cover them.** Its **18 names are
+receipt-schema fields** (`builder_commit`, `wall_s`, `peak_rss_gb`,
+`started_utc`, `producing_code`…). The five that actually differ live inside the
+**book's** `asm.assembly`, and **zero of them are in the set**. ***Under the
+predicate as written, the STOP fires — on stopwatch readings.*** Named as a gap
+in the declared set; **yours to rule, not mine.**
+
+**And separate the receipt's three signals before reading them as three
+findings:** `receipt_clean: False` over 835 leaves is driven partly by
+`book.path` — *which differs by construction, because the rehearsal was told to
+write to `rebuild_identity/`.*
+
+## 🔴 (6) NOT RUN — and the stage-0 refusal names a **third** tree
+
+You described it as *"the chain reads wt-deval's — tree-vs-tree, one layer
+over."* **The artifact names the file:**
+
+```
+p003_de_preflight_matrix.json
+  params -> /home/yuqing/ctaNew-wt-de2/.../de_multiday_gate1_params_v31.json
+```
+
+***wt-de2, not wt-deval. v31, not the frozen v33.*** Its downstream rows follow:
+`frozen_params: WOULD_REFUSE SETTLEMENT_CONTROL_PARAMS_ARE_NOT_THE_FROZEN_PARAMS`
+· `verify_run_inputs: INPUT_ABSENT:params`. Its comparator row **PASSES** at
+`a455191d6bceec7e` — **the tree it ran in had the right comparator and the wrong
+params.**
+
+> **Which corrects me:** at round 381 I filed that `v31` lives only in
+> `wt-deval`. Measured today, **it lives in five worktrees** — `wt-deval`,
+> `wt-de2`, `wt-fwd`, `wt-be`, `wt-rev` — and is absent only from the shared
+> tree, `wt-de` and `wt-da`. ***A stale declaration surviving in five places is
+> reachable from five places.***
+
+## ⛔ THE LICENSING BAR AND THE TWO HELD RUNS
+
+**Held until licensed:** the **09-09 real build** (BE 172) and the **09-08
+500-draw run**. REVIEW 171's bar, routed DE 317, REV 172 armed on `5efb8f0`:
+the end-to-end on the `dbb11e4` book **plus four cells on the production path
+with `admitted_by` named** (descendant+matching admits · exact admits ·
+non-descendant refuses · one digest changed refuses · sha moved refuses), the
+walker's cells including a two-amendment conflict, comparator byte-identical.
+
+## 🚨 HAZARDS — read these before you touch anything
+
+- **`COMPARATOR_ON_DISK_IS_NOT_THE_CERTIFIED_PRODUCER` is true of exactly one
+  tree, and it is THE SHARED ONE.** `/home/yuqing/ctaNew` carries
+  **`d1bd5675c90d4ff3`**, `git status` clean, matching commits `34ce58e`/`68479dd`
+  (BE 133/134). `wt-deval`, `wt-de2`, `wt-fwd` all carry the certified
+  `a455191d6bceec7e`. ***The tree every seat reads by default holds the wrong
+  comparator.***
+- **Do not cold-start from `origin/mm-research`** — its register tops out at
+  **R-898** and its `STATUS.yml` at **MEM ROUND 358**; local is **R-906 /
+  round 383**. Both sides carry real work. **Read this working tree.**
+- `wt-deval` and `wt-de2` are both at **`2fff936`** as of 12:57Z.
+
+---
+
+# PART B — WHAT ELSE ROUND 383 ESTABLISHED
+
+- **The family is linear and unbranched** — no merge, no gap, each commit an
+  ancestor of the next, verified pairwise rather than assumed from the listing.
+- **`be169ident0908` exited `success` at 12:47:55Z** after 24m57s; the lock it
+  held since 12:22:58Z is now free.
+- **Falsifier (c), the growing-ledger fixture, is still SPECIFIED ONLY** —
+  unchanged from round 382, named in no file.
+
 # READ FIRST — round 382 (MEM, 2026-09-11T12:36:25Z, tip `6a9557c`)
 
 # 🧊 PART A — **DA, IF YOUR CONTEXT WAS JUST CLEARED, START HERE**
