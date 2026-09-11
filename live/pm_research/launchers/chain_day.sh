@@ -11,7 +11,7 @@ scored="${2:?}"
 compact="${day//-/}"
 D=/home/yuqing/ctaNew/data/pm_5min/derived
 TREE=/home/yuqing/ctaNew-wt-deval
-PIN=68e7d2352c7d7aed7963e9842aaa68351b38689b
+PIN=f3096021711904f10c4ecb06319326b4d9fa28f8
 CERT=$D/be_score_neutrality_20260903__EV22_vs_NEUTCHK__68e7d23.json
 # A COMMIT CANNOT CONTAIN ITS OWN HASH, and landing launcher fixes moves
 # this tree's HEAD off the literal pin -- which is what refused the first
@@ -75,9 +75,6 @@ from pathlib import Path
 
     pid = subprocess.run(["systemctl", "--user", "show", unit,
                           "-p", "MainPID", "--value"],
-                         capture_output=True, text=True).stdout.strip()
-    if not pid or pid == "0":
-        return "NOT_LAUNCHED_YET"
     try:
         raw = Path(f"/proc/{pid}/environ").read_bytes().decode()
         return dict(kv.split("=", 1) for kv in raw.split("\x00")
