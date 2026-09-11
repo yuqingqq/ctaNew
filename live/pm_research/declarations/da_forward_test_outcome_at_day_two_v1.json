@@ -1,0 +1,187 @@
+{
+ "declaration": "DA_FORWARD_TEST_OUTCOME_AT_DAY_TWO",
+ "version": 1,
+ "as_of_utc": "2026-09-11T16:01:52Z",
+ "PART_1_THE_SUPERSESSION_IS_LICENSED": {
+  "criteria_source": "REVIEW 213's four criteria (REV 188), as recorded in COORDINATION.md",
+  "DA_VERIFIED_ALL_FOUR_INDEPENDENTLY_BEFORE_THIS_DISPATCH": true,
+  "1_admitted_by_DESCENDANT_on_both_cells": {
+   "verified": true,
+   "value": {
+    "CONDVALUE_X_SKEW": "DESCENDANT",
+    "HAZARD_OVER_SKEWED_REF": "DESCENDANT"
+   },
+   "where": "DA 259/Q-DA-465, read from each cell's book_receipt and from the combined record's top-level admitted_by"
+  },
+  "2_one_oracle_snapshot_both_arms": {
+   "verified": true,
+   "sha256": "455b4132ec1f994cda80757635e752c87759d7ccc5df36a98c6bcddb275aed62",
+   "n_records": 46276,
+   "where": "DA 259 -- identical in both cells; de_forward_value_day reads it ONCE before the first arm (Q-DE-303)"
+  },
+  "3_three_unnamed_members_identical_by_digest": {
+   "verified": true,
+   "members": {
+    "CONDVALUE_X_SKEW": [
+     {
+      "module": "be_score_neutrality.py",
+      "recorded": "a455191d6bceec7e20af182243cedfa70373fb29a4d8323b3416f3617ef6c0e9",
+      "recorded_from": "the receipt's builder_commit b34ed9fdd1e3",
+      "on_disk": "a455191d6bceec7e20af182243cedfa70373fb29a4d8323b3416f3617ef6c0e9",
+      "identical": true,
+      "compared_n_hex": 64
+     },
+     {
+      "module": "harmful_hazard_model.py",
+      "recorded": "58b8a2c08eea3cc9ee9bfd13b3ca5648d65a2947275d1cc5df0ad8e1153ac7ed",
+      "recorded_from": "the receipt's builder_commit b34ed9fdd1e3",
+      "on_disk": "58b8a2c08eea3cc9ee9bfd13b3ca5648d65a2947275d1cc5df0ad8e1153ac7ed",
+      "identical": true,
+      "compared_n_hex": 64
+     },
+     {
+      "module": "phase2_state_schema_freeze.py",
+      "recorded": "fe0236b05bc388618931120b743967e59c74dcb2d510a194c10f910fe64f91bd",
+      "recorded_from": "the receipt's builder_commit b34ed9fdd1e3",
+      "on_disk": "fe0236b05bc388618931120b743967e59c74dcb2d510a194c10f910fe64f91bd",
+      "identical": true,
+      "compared_n_hex": 64
+     }
+    ],
+    "HAZARD_OVER_SKEWED_REF": [
+     {
+      "module": "be_score_neutrality.py",
+      "recorded": "a455191d6bceec7e20af182243cedfa70373fb29a4d8323b3416f3617ef6c0e9",
+      "recorded_from": "the receipt's builder_commit b34ed9fdd1e3",
+      "on_disk": "a455191d6bceec7e20af182243cedfa70373fb29a4d8323b3416f3617ef6c0e9",
+      "identical": true,
+      "compared_n_hex": 64
+     },
+     {
+      "module": "harmful_hazard_model.py",
+      "recorded": "58b8a2c08eea3cc9ee9bfd13b3ca5648d65a2947275d1cc5df0ad8e1153ac7ed",
+      "recorded_from": "the receipt's builder_commit b34ed9fdd1e3",
+      "on_disk": "58b8a2c08eea3cc9ee9bfd13b3ca5648d65a2947275d1cc5df0ad8e1153ac7ed",
+      "identical": true,
+      "compared_n_hex": 64
+     },
+     {
+      "module": "phase2_state_schema_freeze.py",
+      "recorded": "fe0236b05bc388618931120b743967e59c74dcb2d510a194c10f910fe64f91bd",
+      "recorded_from": "the receipt's builder_commit b34ed9fdd1e3",
+      "on_disk": "fe0236b05bc388618931120b743967e59c74dcb2d510a194c10f910fe64f91bd",
+      "identical": true,
+      "compared_n_hex": 64
+     }
+    ]
+   },
+   "compared_n_hex": 64,
+   "where": "DA 257/Q-DA-464 -- and ONE of them, be_score_neutrality.py, is BEYOND the two-member ruled lazy exemption; it is reportable only under DE 336's has-not-MOVED rule"
+  },
+  "4_stage0_verdict_recorded_and_structured": {
+   "verified": true,
+   "verdict": "POPULATION_FREEZE_HOLDS",
+   "time": "2026-09-11T14:19:02Z",
+   "structured": true,
+   "rows": {
+    "status": "POPULATION_FREEZE_HOLDS",
+    "n_files": 67,
+    "n_verified": 67,
+    "declared_at_utc": "2026-09-11T12:14:41Z",
+    "n_PIPELINE": 52,
+    "n_INSTRUMENT": 15,
+    "INSTRUMENT_DRIFTED": [],
+    "roots_used": {
+     "main": "/home/yuqing/ctaNew",
+     "wt-fwd": "/home/yuqing/ctaNew-wt-fwd",
+     "wt-deval": "/home/yuqing/ctaNew-wt-deval",
+     "wt-de2": "/home/yuqing/ctaNew-wt-de2"
+    },
+    "roots_are_the_declared_defaults": true,
+    "verifier": {
+     "path": "/home/yuqing/ctaNew-wt-deval/live/pm_research/da_population_freeze_verify.py",
+     "sha256": "74930d284a5cbec2",
+     "declaration": "/home/yuqing/ctaNew-wt-deval/live/pm_research/declarations/da_population_freeze_v17.json"
+    }
+   },
+   "THE_ONE_NON_CONFORMANCE_DA_RECORDED": "stage0.source is /tmp/stage0_freeze_20260908.json, which is NOT run-scoped. The record says so itself. Declared at DA 261 as an OPEN GAP; it does not withdraw the licence, and it is not counted as satisfied either."
+  },
+  "LICENCE": "GRANTED on criteria 1-3 fully and criterion 4 with the run-scoping gap recorded."
+ },
+ "PART_2_DAY_TWOS_RESULT_AS_IT_STANDS": {
+  "record": "data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json",
+  "sha256": "51decc84c8b368d857c6cdc5cb3ecb4a27ffced89bff98005e33fcd6295aabac",
+  "re_emitted_at": "2026-09-11T15:54:50Z, IN PLACE",
+  "cells_as_provenance": "data/pm_5min/derived/fwd_rehearsal_0908/ -- unchanged, not renamed (rule 13)",
+  "per_arm_D_cents": {
+   "CONDVALUE_X_SKEW": -49303.579891000016,
+   "HAZARD_OVER_SKEWED_REF": -23977.998804000017
+  },
+  "p_two_sided_per_arm": {
+   "CONDVALUE_X_SKEW": 0.07584830339321358,
+   "HAZARD_OVER_SKEWED_REF": 1.0,
+   "DA_recomputed_from_the_raw_draws": "37/500 and 500/500 at-or-beyond; both agree to 1e-12 (DA 259)"
+  },
+  "FUTURE_RE_EMITS_ARE_vN_PLUS_1": "this one was OVERWRITTEN IN PLACE and the 15:52:37Z bytes are gone (DA 261). From here a re-emit writes a NEW VERSION; it does not rewrite its own output."
+ },
+ "PART_3_THE_FORWARD_TESTS_OUTCOME": {
+  "OUTCOME": "BOTH ARMS FUTILE AT DAY TWO",
+  "cause": "KILLED_BY_NEGATIVE_DAYS -- 2026-09-07 and 2026-09-08 both negative-or-zero",
+  "per_arm": {
+   "CONDVALUE_X_SKEW": {
+    "n_negative": 2,
+    "best_attainable_p": 0.453125,
+    "threshold": 0.025,
+    "FUTILE": true
+   },
+   "HAZARD_OVER_SKEWED_REF": {
+    "n_negative": 1,
+    "best_attainable_p": 0.125,
+    "threshold": 0.025,
+    "FUTILE": true
+   }
+  },
+  "THE_NAME_OF_THE_OUTCOME": {
+   "IT_IS": "NOT_ESTABLISHED_AT_THIS_POWER",
+   "IT_IS_NOT": "NO_EFFECT",
+   "why_the_distinction_is_not_pedantry": "futility says the DESIGN can no longer reach its own bar with the days it has left. It says NOTHING about whether an effect exists. An arm that is truly zero and an arm with a real effect too small for seven days produce the same futility. Reporting this as NO_EFFECT would claim evidence the design never had."
+  },
+  "multiplicity_as_pre_declared": {
+   "selection_stage": 69,
+   "forward_stage_Holm_m": 2,
+   "params_multiplicity_m": 2,
+   "alpha": 0.05,
+   "sequential_bars": "alpha/m = 0.025 then alpha = 0.05",
+   "note": "the 0.025 threshold in the futility block IS the Holm first bar; both arms exceed it at best attainment"
+  },
+  "days_3_to_7": "NOT REQUIRED BY THE DESIGN -- once both arms are futile, further days cannot change the outcome. They are HELD FOR THE USER'S CALL, not abandoned and not consumed.",
+  "*** THE SINGLE LOAD_BEARING ASSUMPTION, STATED SO IT CAN BE FALSIFIED ***": {
+   "the_outcome_holds_AT_G_EQUALS_7": true,
+   "what_the_record_used": {
+    "emit.G_declared": 7,
+    "cli": "--n-declared 7"
+   },
+   "what_the_runs_own_params_declare": {
+    "params_v33.expected_G": 11,
+    "len(params.days)": 11
+   },
+   "AT_G_11_THE_ANSWER_CHANGES_FOR_ONE_ARM": {
+    "CONDVALUE_X_SKEW": {
+     "best_attainable_p_at_G11": 0.0654296875,
+     "still_futile": true
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "best_attainable_p_at_G11": 0.01171875,
+     "still_futile": false,
+     "*** NOT FUTILE AT G=11 ***": true
+    }
+   },
+   "WHY_G_7_IS_NEVERTHELESS_THE_RIGHT_G": "these are TWO DIFFERENT G's and DA declared the distinction at DA 242(2) before this mattered: `forward_population_G` = 7 is the FORWARD POPULATION count (it matches --n-declared 7 and chain_day.sh:147), while params `expected_G` = 11 is the RULED DAY SET. The day-sign test is over the forward population, so G=7 governs. The design chose 7 because the two-sided floor 2*2^-7 = 0.015625 clears 0.025 while 2*2^-6 = 0.03125 does not.",
+   "SO_THE_FALSIFIER_IS_EXPLICIT": "if the coordinator rules that the forward test's G is the ELEVEN-day ruled set rather than the seven-day forward population, then HAZARD_OVER_SKEWED_REF IS NOT FUTILE and days 3-7 ARE required for it. CONDVALUE_X_SKEW is futile either way. This declaration is wrong in exactly that one way and no other."
+  }
+ },
+ "LIMITS": {
+  "no_verdict_beyond_futility": "futility is a statement about the design's remaining power, not about the world.",
+  "rule_34a": "derived artifacts only; no tier2 path read."
+ }
+}
