@@ -23115,3 +23115,28 @@ generation and the window went 4 → 3. Nothing rewritten.
   _RANDOM both pools; STEP 3 FIRED AND COMPLETE; open work is the step-1 remainder; 09-07
   and 09-08..09-12 are PROTECTED, NOT BANKED. tip 2bae20b)
 ```
+
+## Batch 333 (rotated by MEM round 351, 2026-09-11T02:57:43Z)
+
+```
+  2026-09-11T02:24:17Z (MEM ROUND 348 -- A FREEZE AND A FORWARD TEST LANDED. USER DECISION: THE FORWARD
+  TEST RUNS, overriding plan step 3, on TWO ARMS THAT FAILED THEIR SCREEN (the freeze's own
+  first field says so). Five commits verified as ancestors: b5f311a THE FREEZE, 9c41d22,
+  9a09d5b the forward test declared before any untouched day, acdd689 the filing, 3fc91e7
+  the freeze amended IN BAND. RULING: N = 6, 09-07..09-12, last day completing
+  2026-09-13T00:00Z, ONE LOOK, NO EXTENSION -- an inconclusive result EXHAUSTS these arms.
+  BUT THE LANDED ARTIFACTS DO NOT YET CARRY IT, and a cold reader must not resolve them as
+  current: the forward declaration holds N = 5 with 09-07 as a LABELLED COMPANION never
+  merged, and the v2 amendment resolves PRIMARY to 09-12 onward completing 2026-09-17. I
+  computed the clock: of the six ruled days ONLY 09-12 starts after the freeze at
+  02:08:15Z. THE RULING KNOWINGLY BUYS FOUR CALENDAR DAYS WITH THE STRUCTURAL GUARANTEE --
+  DE priced that trade and judged it worth paying the other way. FOUR LIMITS: multiplicity
+  is NOT 2 and the freeze WITHDRAWS ITS OWN NUMBER pending BE 113 (69, range 45-75, a LOWER
+  BOUND) -- the freeze calls it THE FIELD MOST LIKELY TO DECIDE WHETHER A LATER PASS MEANS
+  ANYTHING; five of six days predate the freeze so protection is EVIDENCE not STRUCTURE,
+  with a residual REV calls PERMANENTLY UNCLOSABLE; 09-07 is endpoint-split and its two
+  endpoints are NOT INDEPENDENT; and N=6 clears CONDVALUE ONLY, on a projection the
+  declaration itself calls AN UPPER BOUND. OPEN: BE's identity finding -- CONDVALUE's
+  composition moved THREE TIMES, so this may be a FIRST look at an UNSCREENED arm.
+  NOTHING IS TOUCHED; the amendment window closes when the first day is opened. tip ee1e85d)
+```

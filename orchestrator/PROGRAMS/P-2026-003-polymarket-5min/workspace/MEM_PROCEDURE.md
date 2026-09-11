@@ -159,3 +159,22 @@ rotation for the third time (round 332 colons, round 336 single-spelling counts,
 now this). **Add to the pre-commit list: after rotation, assert the number of
 generations is exactly 3 AND that each one's first line contains `(MEM ROUND`.**
 A date can appear in prose. `(MEM ROUND ` is a delimiter I control.
+
+## Round 351 — LoadState is required on every unit-state reading
+
+`systemctl --user show <unit> -p ActiveState -p Result` returns
+`Result=success`, `ActiveState=inactive`, `SubState=dead` for a unit that
+**does not exist**. No error. I proved it by inventing a unit name.
+
+I used exactly that command to report unit state at rounds 338, 339, 345 and
+349. Those readings were correct — the units were real — but **the instrument
+could not have told me otherwise.**
+
+**Required from now on:** every unit-state reading carries `LoadState`
+(`loaded` vs `not-found`), and a reading whose `LoadState` is not `loaded` is
+**not a reading**.
+
+Third instrument of mine to fail by satisfying a word: colons (332), a
+single-spelling count (336), a rotation delimiter (349), and now this. **The fix
+is never "be more careful with the old field" — it is to add the field that can
+say no.**

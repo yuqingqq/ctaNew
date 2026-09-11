@@ -67,6 +67,24 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T02:57:43Z (MEM ROUND 351 -- THE TIMER LANES ARE CLEARED AND A FAILURE MODE IS NAMED AS A
+  PATTERN. Measurement and evaluation closures contain ZERO arm, policy, book or scoring
+  modules; da-midnight-verify DRIVEN on 09-03 read raw tape, ledgers, density and the
+  register across 32,416 opens with ZERO books and ZERO score artifacts -- AND THE
+  FALSIFIER FIRES (09-03 shows 11 arm-outcome families), so the zeros are a measurement.
+  Per day the arm-outcome column is 5 on 09-07 and ZERO on every other population day. A
+  CLAIM IS WITHDRAWN: '09-07 never valued, no arm_total_cents anywhere' is true AS A FIELD
+  NAME while arm_total_minus_baseline_total and both arms' trades_cash_flow_cents sit
+  UNSEALED in the same artifact -- and MY FILES CARRIED IT at rounds 338, 348 and 349,
+  superseded in band. THE PATTERN, FOUR SEATS AND ONE MODE: AN INSTRUMENT SATISFYING THE
+  WORDS RATHER THAN THE PROPERTY. AND THE FIFTH IS MINE, PROVED BY EXECUTION: systemctl
+  show returns Result=success for a unit name I INVENTED; LoadState is the property-bearing
+  field, and my readings at rounds 338/339/345/349 were correct from an instrument that
+  COULD NOT HAVE TOLD ME OTHERWISE. THE POPULATION IS OPEN AGAIN and the USER is probably
+  right -- THE DATA IS NEVER THE CONTAMINATED THING; THE DESIGN IS. REV 128 settles it by
+  TIMESTAMP ORDERING. DE: at G=4 the floor is 0.125, so the development data could never
+  have passed conjunct (a) -- HAZARD RAN 4-FOR-4 POSITIVE AND STILL COULD NOT -- but step
+  2's verdict rested on the matched-random instrument and STANDS. tip 9d21981)
   2026-09-11T02:43:10Z (MEM ROUND 350 -- THREE CORRECTIONS, EACH SUPERSEDING AN HOUR-OLD FACT. N IS NOW
   7, population 09-07..09-13, completing 2026-09-14T00:00Z -- and N=6 WAS NEVER RUNNABLE:
   the two-sided day-cluster floor at G=6 is 0.031250 against a 0.025 bar, which I computed
@@ -105,26 +123,6 @@ updated: >-
   limit -- flagged for the register. THREE TIMERS PROCESS POPULATION DAYS: I measured all
   three, and pm-measurement-pipeline FIRES AGAIN AT 03:21:56Z, 48 MINUTES AFTER THIS SWEEP.
   09-07 is consumed by 8 OF 13 PRODUCER FAMILIES -- broader than endpoint-split. tip cc63ccf)
-  2026-09-11T02:24:17Z (MEM ROUND 348 -- A FREEZE AND A FORWARD TEST LANDED. USER DECISION: THE FORWARD
-  TEST RUNS, overriding plan step 3, on TWO ARMS THAT FAILED THEIR SCREEN (the freeze's own
-  first field says so). Five commits verified as ancestors: b5f311a THE FREEZE, 9c41d22,
-  9a09d5b the forward test declared before any untouched day, acdd689 the filing, 3fc91e7
-  the freeze amended IN BAND. RULING: N = 6, 09-07..09-12, last day completing
-  2026-09-13T00:00Z, ONE LOOK, NO EXTENSION -- an inconclusive result EXHAUSTS these arms.
-  BUT THE LANDED ARTIFACTS DO NOT YET CARRY IT, and a cold reader must not resolve them as
-  current: the forward declaration holds N = 5 with 09-07 as a LABELLED COMPANION never
-  merged, and the v2 amendment resolves PRIMARY to 09-12 onward completing 2026-09-17. I
-  computed the clock: of the six ruled days ONLY 09-12 starts after the freeze at
-  02:08:15Z. THE RULING KNOWINGLY BUYS FOUR CALENDAR DAYS WITH THE STRUCTURAL GUARANTEE --
-  DE priced that trade and judged it worth paying the other way. FOUR LIMITS: multiplicity
-  is NOT 2 and the freeze WITHDRAWS ITS OWN NUMBER pending BE 113 (69, range 45-75, a LOWER
-  BOUND) -- the freeze calls it THE FIELD MOST LIKELY TO DECIDE WHETHER A LATER PASS MEANS
-  ANYTHING; five of six days predate the freeze so protection is EVIDENCE not STRUCTURE,
-  with a residual REV calls PERMANENTLY UNCLOSABLE; 09-07 is endpoint-split and its two
-  endpoints are NOT INDEPENDENT; and N=6 clears CONDVALUE ONLY, on a projection the
-  declaration itself calls AN UPPER BOUND. OPEN: BE's identity finding -- CONDVALUE's
-  composition moved THREE TIMES, so this may be a FIRST look at an UNSCREENED arm.
-  NOTHING IS TOUCHED; the amendment window closes when the first day is opened. tip ee1e85d)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -296,6 +294,20 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 351, the lanes cleared, a pattern, and a fifth instance of mine ---
+  THE_TIMER_LANES_ARE_CLEARED_AND_THE_FALSIFIER_FIRING_IS_WHAT_MAKES_THE_SILENCE_COUNT: "REVIEW 169 / REV 127. The measurement lane's 6-module closure and the evaluation lane's 7 contain ZERO arm, policy, book or scoring modules. da-midnight-verify was DRIVEN under an audit hook on 09-03: 32,416 opens, read-set confined to raw tape, collector ledgers, tape density and the register, with ZERO books, ZERO tier1/2 and ZERO score artifacts; its verdict carries 318 keys and none of the outcome class. AND THE FALSIFIER FIRES -- 09-03 shows 11 arm-outcome families -- so the zeros elsewhere are a measurement and not an instrument that cannot see. That is rule 15 discharged on the exact question it was built for."
+  AND_THE_PER_DAY_TABLE_PUTS_THE_WHOLE_EXPOSURE_ON_ONE_DAY: 09-07 = 22 producer families with FIVE ARM-OUTCOME; 09-08 = 15 with 0; 09-09 = 15 with 0; 09-10 = 5 with 0; 09-11 = 3 with 0; 09-12 and 09-13 = 0 and 0. So the automated lanes touched days but did not produce arm outcomes on any of them, and the entire arm-outcome exposure in the population sits on 09-07 alone. A table whose interesting column is zero on six of seven rows is the cleanest result this question could have returned.
+  THE_09_07_NEVER_VALUED_CLAIM_IS_WITHDRAWN_AND_MY_FILES_CARRIED_IT: "The coordinator told the USER repeatedly that 09-07 was never valued -- no arm_total_cents anywhere. That is true AS A FIELD NAME while arm_total_minus_baseline_total and BOTH arms' trades_cash_flow_cents sit UNSEALED IN THE SAME ARTIFACT. A LABEL CHECK WHERE THE PROPERTY IS THE VALUES. I carried the same claim at rounds 338, 348 and 349, quoting the declaration's evidence that the estimator was NOT ASKED. Those flags are SUPERSEDED IN BAND: the estimator may not have been asked under that name, and arm-level values are present regardless."
+  AND_THE_PATTERN_IS_FOUR_SEATS_WITH_ONE_FAILURE_MODE_NOT_FOUR_INCIDENTS: "AN INSTRUMENT SATISFYING THE WORDS RATHER THAN THE PROPERTY. Tonight: the coordinator's arm_total_cents field-name check; DA's builder_commit LABEL standing in for builder BYTES; REV's dashed-versus-compact filename search; and the coordinator's build monitor reporting THREE SUCCESSFUL BUILDS for units that were never created. Four seats, one mode. Filed as a pattern because four incidents get four fixes and a pattern gets a rule -- and because every one of them PASSED, which is the property that makes this class expensive."
+  AND_THE_FIFTH_INSTANCE_IS_MINE_AND_I_PROVED_IT_AGAINST_MY_OWN_READINGS: "I have reported systemd unit state at rounds 338, 339, 345 and 349 using systemctl --user show -p ActiveState -p Result. I just ran that command against a unit name I INVENTED and it returned Result=success, ActiveState=inactive, SubState=dead -- no error, no indication the unit does not exist. THE PROPERTY-BEARING FIELD IS LoadState: not-found for the invented name, loaded for deSettle212 and pm-measurement-pipeline. My four rounds of readings were CORRECT -- I re-checked and those units are loaded -- but MY INSTRUMENT COULD NOT HAVE TOLD ME OTHERWISE. A correct reading from an instrument that cannot fail is not evidence."
+  AND_LOAD_STATE_GOES_INTO_MY_PROCEDURE_AS_THE_REQUIRED_FIELD: "From this round, any unit-state reading I record carries LoadState alongside ActiveState and Result, and a reading whose LoadState is not loaded is NOT a reading. This is the same repair shape as the rotation delimiter at round 349 and the colon guard at round 332: the fix is not to be more careful with the old field, it is to add the field that can say no. Three of my own instruments in twenty rounds have failed by satisfying a word."
+  THE_POPULATION_IS_OPEN_AGAIN_AND_THE_USERS_CHALLENGE_IS_PROBABLY_RIGHT: "The coordinator recommended dropping 09-07 on its five arm-outcome families; the USER challenged it -- 'we rebuild and reevaluate, what's the issue using 9.7 data'. The raw tape is unchanged, so a rebuild yields the same book, and rule 11 forbids CHOOSING AFTER SEEING, not USING data someone looked at. THE DATA IS NEVER THE CONTAMINATED THING; THE DESIGN IS. That sentence is the general form and it is worth more than this decision: contamination is a property of how a choice was made, not of which bytes were read."
+  AND_REV_128_IS_SETTLING_IT_BY_TIMESTAMP_ORDERING_WHICH_IS_THE_RIGHT_TEST: The question is whether ANY frozen element -- thresholds, theta, composition, L=250ms, cancel latency, protection mode, repost model, null construction, decision rule -- POSTDATES the first 09-07 arm-outcome write. If none does, no frozen element could have been chosen in light of anything 09-07 showed, 09-07 stands, and the coordinator's recommendation was wrong. Ordering is the right instrument because it tests the mechanism of contamination rather than its opportunity. Population is therefore 09-07..09-13 OR 09-08..09-14, PENDING.
+  DES_RETROSPECTIVE_FINDING_IS_THAT_THE_DEVELOPMENT_DATA_COULD_NEVER_HAVE_PASSED_CONJUNCT_A: "At G=4 the day-sign floor is 2/16 = 0.1250 against 0.025, which I recomputed, with tolerance -1. So the step-2 development pool could NEVER have passed the forward day-level criterion. And the sharp part: HAZARD RAN 4-FOR-4 POSITIVE -- +12,381.56, +7,262.38, +1,177.04, +5,318.64, the per-day deltas carried in these files since round 334 -- AND STILL COULD NOT PASS. A perfect record against a floor that sits five times above the bar."
+  AND_THE_TWO_STATEMENTS_MUST_STAY_SEPARATE_IN_THE_RECORD: Step 2's verdict rested on the MATCHED-RANDOM instrument -- p = 0.0978 and 0.2435 -- and IT STANDS. The new statement is ONLY that the forward day-level criterion, applied retrospectively, was structurally unpassable on four days. Those are different instruments answering different questions, and merging them would let a structural fact about a criterion be read as a retraction of a result. Recorded as two sentences deliberately, because a reader in a hurry will make one.
+  FUTILITY_FIRED_ON_09_05_AND_ITS_FALSIFIER_PROVES_IT_CAN_ALSO_STAY_SILENT: CONDVALUE's 09-05 printed -4,941 c and futility fired on it. The falsifier proves the check can BOTH fire and stay silent, which is the two-sided form rule 15 asks for and the form this programme has spent a week discovering it usually lacks. A futility stop that has only ever fired is as unestablished as a guard that has only ever passed.
+  AN_OPEN_DEFECT_IN_THE_GOVERNING_DECLARATION_IS_A_GUARD_THAT_CANNOT_FIRE: "QUALITY_DECISION_SAW_AN_OUTCOME has NO PRODUCER. I checked: the string occurs only as a refusal_if_violated LABEL in declarations v1 and v2, and in da_forward_test.py at lines 64 and 539 as an equality test that the DECLARATION CONTAINS THAT STRING. Nothing raises it. So the declaration promises a guard that cannot fire, and the checker verifies the promise rather than the guard -- the same shape as the four instances above, sitting inside the enforcing instrument. DA is fixing it in v3."
+  STATUS_AT_THIS_SWEEP_IS_09_07_BUILDING_AND_NOTHING_VALUED: 09-07 is building as FWD1 from 941e688, about fourteen minutes in. NOTHING IS VALUED. Per-day results are visible by USER instruction and the stopping point remains FIXED at N -- the distinction recorded at round 350, that looking is free while letting what is seen change when we stop is the part that inflates. A build in flight while the population question is open is the correct sequencing and is recorded as such.
   # --- MEM round 350, N is 7, the pin ref was wrong, sealing cancelled ---
   N_IS_NOW_7_AND_N_EQUALS_6_WAS_NEVER_RUNNABLE: "Population 2026-09-07..2026-09-13, last day completes 2026-09-14T00:00Z. The USER moved after DE 224 computed the day-cluster floor. I had computed the same floor one round earlier from DE's raise: two-sided at G=6 floors at 0.031250 against the 0.025 Holm's smaller p must beat, so a PERFECT 6-for-6 FAILS. N=6 was not a weak design, it was an UNRUNNABLE one, and it stood as the ruling for roughly two hours. The coordinator records the menu of 5/6/9 as built on EFFECT SIZE ALONE, never checking the floor, and records it as their error rather than the user's choice."
   AND_THE_SIDEDNESS_QUESTION_IS_MOOT_WHICH_CLOSES_THE_RULE_11_EXPOSURE_I_FILED_LAST_ROUND: "At G=7 the TWO-SIDED floor is 0.015625 and clears, so conjunct (a) stays TWO-SIDED and nothing has to be decided about sidedness at all. That removes the rule-11 exposure DE flagged and that I recorded at round 349 -- choosing sidedness once the sign is visible. The exposure is closed not by ruling it early but by making the ruling unnecessary, which is the better of the two closures: a decision that never has to be made cannot be made badly."
@@ -27626,6 +27638,85 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 351, 2026-09-11T02:57:43Z ---
+  THE_TIMER_LANES_ARE_CLEARED_AND_THE_FALSIFIER_FIRING_IS_WHAT_MAKES_THE_SILENCE_COUNT:
+    prov: RELAYED
+    from: REVIEW 169 / REV 127 via coordinator MEM 351
+    as_of: 2026-09-11T02:57:43Z
+    said: >-
+      the closure sizes, the driven read-set, the 318 keys and the 11-family positive control as dispatched; the three timers' existence and last-run times I measured myself at round 349.
+  AND_THE_PER_DAY_TABLE_PUTS_THE_WHOLE_EXPOSURE_ON_ONE_DAY:
+    prov: RELAYED
+    from: REV via coordinator MEM 351
+    as_of: 2026-09-11T02:57:43Z
+    said: >-
+      the per-day family counts as dispatched; recorded with the arm-outcome column named separately from the family count because only one of them bears on rule 11.
+  THE_09_07_NEVER_VALUED_CLAIM_IS_WITHDRAWN_AND_MY_FILES_CARRIED_IT:
+    prov: RELAYED
+    from: coordinator MEM 351
+    as_of: 2026-09-11T02:57:43Z
+    said: >-
+      the withdrawal and the three named fields as dispatched; my own flags carrying the superseded claim are at rounds 338, 348 and 349 and stay as provenance.
+  AND_THE_PATTERN_IS_FOUR_SEATS_WITH_ONE_FAILURE_MODE_NOT_FOUR_INCIDENTS:
+    prov: RELAYED
+    from: coordinator MEM 351
+    as_of: 2026-09-11T02:57:43Z
+    said: >-
+      the four instances as dispatched; the fifth, mine, is established by execution below.
+  AND_THE_FIFTH_INSTANCE_IS_MINE_AND_I_PROVED_IT_AGAINST_MY_OWN_READINGS:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-measurement-pipeline.timer
+    as_of: 2026-09-11T02:57:43Z
+    said: >-
+      systemctl --user show run against an invented unit name returning Result=success with LoadState=not-found, compared against deSettle212 and pm-measurement-pipeline returning LoadState=loaded.
+  AND_LOAD_STATE_GOES_INTO_MY_PROCEDURE_AS_THE_REQUIRED_FIELD:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-measurement-pipeline.timer
+    as_of: 2026-09-11T02:57:43Z
+    said: >-
+      the LoadState discriminator established above; recorded as a standing requirement in MEM_PROCEDURE.md this round.
+  THE_POPULATION_IS_OPEN_AGAIN_AND_THE_USERS_CHALLENGE_IS_PROBABLY_RIGHT:
+    prov: RELAYED
+    from: USER via coordinator MEM 351
+    as_of: 2026-09-11T02:57:43Z
+    said: >-
+      the challenge and the coordinator's concession as dispatched; recorded with the general principle stated separately from the 09-07 decision it settles.
+  AND_REV_128_IS_SETTLING_IT_BY_TIMESTAMP_ORDERING_WHICH_IS_THE_RIGHT_TEST:
+    prov: RELAYED
+    from: REV 128 via coordinator MEM 351
+    as_of: 2026-09-11T02:57:43Z
+    said: >-
+      the nine frozen elements and the ordering test as dispatched; both candidate populations recorded because neither is yet settled.
+  DES_RETROSPECTIVE_FINDING_IS_THAT_THE_DEVELOPMENT_DATA_COULD_NEVER_HAVE_PASSED_CONJUNCT_A:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T02:57:43Z
+    said: >-
+      2/2**4 recomputed as 0.125 against the 0.025 bar; the four HAZARD deltas taken from my round-334 table and confirmed all positive.
+  AND_THE_TWO_STATEMENTS_MUST_STAY_SEPARATE_IN_THE_RECORD:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T02:57:43Z
+    said: >-
+      the step-2 p-values recomputed to the digit at round 346 and unchanged; the G=4 floor computed here; the two are recorded with their instruments named.
+  FUTILITY_FIRED_ON_09_05_AND_ITS_FALSIFIER_PROVES_IT_CAN_ALSO_STAY_SILENT:
+    prov: RELAYED
+    from: DE via coordinator MEM 351
+    as_of: 2026-09-11T02:57:43Z
+    said: >-
+      the firing and its two-sided falsifier as dispatched; the -4,941 c figure is the 09-05 CONDVALUE delta carried in these files since round 334.
+  AN_OPEN_DEFECT_IN_THE_GOVERNING_DECLARATION_IS_A_GUARD_THAT_CANNOT_FIRE:
+    prov: CHECKED
+    artifact: live/pm_research/da_forward_test.py
+    as_of: 2026-09-11T02:57:43Z
+    said: >-
+      grep across live/pm_research returns four occurrences: two declaration labels and two fq.get comparisons at da_forward_test.py:64 and :539; no raise site exists.
+  STATUS_AT_THIS_SWEEP_IS_09_07_BUILDING_AND_NOTHING_VALUED:
+    prov: RELAYED
+    from: coordinator MEM 351
+    as_of: 2026-09-11T02:57:43Z
+    said: >-
+      the build's revision, commit and elapsed time as dispatched; the visibility ruling and fixed stopping point are recorded at round 350.
   # --- MEM round 350, 2026-09-11T02:43:10Z ---
   N_IS_NOW_7_AND_N_EQUALS_6_WAS_NEVER_RUNNABLE:
     prov: CHECKED
