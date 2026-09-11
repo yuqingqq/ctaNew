@@ -1,0 +1,107 @@
+{
+ "protocol": "P003_DA_FORWARD_TEST_V4",
+ "version": 4,
+ "STATUS": "AMENDED-BEFORE-ANY-FORWARD-DAY-IS-VALUED",
+ "declared_by": "DA 218",
+ "declared_at_utc": "2026-09-11T03:11:02Z",
+ "supersedes": {
+  "file": "declarations/da_forward_test_declaration_v3.json",
+  "commit": "c127261",
+  "v1_v2_v3_are_UNEDITED": true,
+  "rule": "rule 13 -- supersede IN BAND",
+  "scope_of_this_amendment": "ONLY the build-commit and provenance-scope fields. Everything else in v3 stands verbatim."
+ },
+ "authorised_by": "USER ruling relayed by the coordinator: 'all use the latest code.' The ENTIRE forward pipeline runs from ONE commit.",
+ "BUILD_AND_RUN_PROVENANCE": {
+  "THE_ONE_COMMIT": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+  "verified_here_not_accepted": {
+   "commit_exists": true,
+   "authored": "2026-09-11T03:06:53+00:00",
+   "ancestors_confirmed": {
+    "d09f25c": "IS an ancestor",
+    "e6a214f": "IS an ancestor",
+    "a339734": "IS an ancestor"
+   }
+  },
+  "THE_ARMS_PIN_CARVE_OUT_IS_GONE": {
+   "superseded": [
+    "~/ctaNew-wt-arms adbebf9",
+    "941e688",
+    "the pinned-bytes exception for the scoring path"
+   ],
+   "scope_now": "build AND valuation AND the null harness AND the scorer AND the day-run path"
+  },
+  "MY_BYTE_RULE_SURVIVES_UNCHANGED_ONLY_THE_DIGESTS_MOVE": {
+   "the_rule": "resolve the file AT the recorded producing commit and check its DIGEST; never a commit-label equality",
+   "why_it_survives": "the reason it was right is unchanged -- a label can differ over identical bytes, as the consumed books proved (two labels, one digest 73a22121)",
+   "EXPECTED_DIGESTS_AT_7ed5a90_VERIFIED_BY_DA": {
+    "be_daybook_build.py": "2d31a80b5ae5c2c6",
+    "de_phase4_diag_runner.py": "9e2a0977d8dfc3be",
+    "de_head_scoring.py": "31c368384770351f"
+   },
+   "the_superseded_expectation": "73a22121f67b867a58bb for the builder -- it no longer applies to FORWARD books and still applies to the four CONSUMED ones"
+  }
+ },
+ "THE_FACT_THE_RULING_DOES_NOT_STATE_AND_MY_SECTION_MUST": {
+  "MEASURED": "at 7ed5a90, 2 of params v29's 10 PINNED CASCADE modules DIFFER",
+  "which_two": {
+   "de_head_scoring.py": {
+    "at_7ed5a90": "31c368384770",
+    "params_v29_pins": "53a406a0ae2a"
+   },
+   "de_phase4_diag_runner.py": {
+    "at_7ed5a90": "9e2a0977d8df",
+    "params_v29_pins": "cb97b94dbd3f"
+   }
+  },
+  "AND_THEY_ARE_THE_TWO_SCORING_MODULES": true,
+  "the_consequence_stated_plainly": "the book-code predicate will REFUSE BY NAME (BOOK_BUILT_BY_DIFFERENT_SCORING_CODE) on EVERY forward book, and the waiver question returns. Per R-885 that waiver is UNSUPPORTED, NOT REFUTED.",
+  "and_these_are_exactly_the_modules_the_performance_commits_moved": "d09f25c (batch daybook model scoring) and a339734 (share diagnostic head composition) -- whose SCORE-NEUTRALITY WAS NEVER ESTABLISHED. That is why DE pinned in the first place.",
+  "this_is_not_an_argument_with_the_ruling": "the USER has ruled and it is executed. It is the limit the receipt must carry."
+ },
+ "WHY_THE_CERTIFICATION_IS_THE_LOAD_BEARING_CONTROL": {
+  "what_it_is": "consumed day 09-03 rebuilt on 941e688 AND 7ed5a90, compared SCORE-FOR-SCORE as a DISTRIBUTION",
+  "what_it_can_convert": "it is the ONLY thing that can turn the two differing SCORING modules from an UNSUPPORTED WAIVER into a MEASURED FACT. If scores reproduce, the byte difference has a measured null effect and the refusal becomes a documented byte-difference rather than an unsupported override.",
+  "if_it_reproduces": "the limit collapses to a footnote and the certification stands permanently",
+  "if_it_does_not": "we know BEFORE seven books exist that the forward test measures a DIFFERENT ARM than the screen did -- a finding the user needs, not a reason to argue",
+  "the_decision_relevant_question_it_must_answer": "not merely 'do scores differ' but WHETHER ANY DIFFERENCE COULD FLIP A DECISION AT THE FROZEN THETAS. A float-ordering difference below the threshold gap changes no cancel and is immaterial; one that crosses a theta is a different policy."
+ },
+ "WHAT_DID_NOT_CHANGE_VERIFIED_AT_7ed5a90": {
+  "CONDVALUE_X_SKEW_theta": 0.32450609461933483,
+  "HAZARD_OVER_SKEWED_REF_theta": 0.43525926488298716,
+  "both_bit_identical_to_the_frozen_values": true,
+  "min_draws_per_arm_day": 500,
+  "multiplicity_m": 2,
+  "alpha": 0.05,
+  "also_unchanged": [
+   "latency",
+   "protection mode",
+   "repost model",
+   "null construction",
+   "decision rule"
+  ],
+  "THE_SENTENCE_THAT_MUST_NOT_BE_MISREAD": "'THE FREEZE MOVED' MUST NOT BE READABLE AS 'THE ARMS MOVED'. No parameter, threshold, theta, latency, protection mode, repost model, null construction or decision rule changed -- I verified the thetas and the three statistical constants at 7ed5a90 myself. What moved is the CODE THAT EXECUTES THEM."
+ },
+ "THE_STATEMENT_THE_RECEIPT_MUST_CARRY": {
+  "required_field": "pipeline_provenance_limit",
+  "REQUIRED_VALUE": "THE ENTIRE FORWARD TEST -- BUILD AND VALUATION -- RUNS ON CODE THE DEVELOPMENT SCREEN NEVER RAN ON. Two of the ten pinned scoring modules differ from params v29 at the running commit, and the book-code predicate refuses by name on every forward book. No parameter, threshold, theta, latency, protection mode, repost model, null construction or decision rule changed. This limit is DISCHARGED ONLY BY THE 09-03 SCORE-FOR-SCORE CERTIFICATION; until that lands it is an OPEN LIMIT and is stated as one.",
+  "on_absence": "REFUSE TO EMIT",
+  "refusal_name": "RESULT_DOES_NOT_STATE_ITS_PIPELINE_PROVENANCE_LIMIT",
+  "it_goes_ON_THE_ARTIFACT_not_in_a_commit_body": "a reader resolves fields; nobody resolves a commit message"
+ },
+ "everything_else_in_v3_stands_verbatim": [
+  "POPULATION N=7 and the 09-07 line that takes either answer without a v5",
+  "BOTH_COMPARISONS_ARE_REQUIRED",
+  "REPLAY_ASSUMPTION and the sign-reversal block",
+  "THE_COMBINATION_RULE",
+  "STOPPING_RULE -- one look, inconclusive EXHAUSTS",
+  "THE_GOVERNING_LIMIT -- attested not guaranteed; the traceless read is permanently unclosable",
+  "PRE_REGISTERED_EXPECTATION_ARM_BY_ARM -- HAZARD underpowered by construction",
+  "THE_23_55_CONVENTION",
+  "PRODUCER_FAMILIES_PER_DAY",
+  "DE_RETROSPECTIVE_FINDING_BOUNDED",
+  "REFUSAL_PRODUCERS",
+  "PER_DAY_VISIBILITY",
+  "SIDEDNESS_IS_MOOT_AT_N7"
+ ]
+}

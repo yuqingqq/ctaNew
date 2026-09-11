@@ -34,6 +34,8 @@ CELLS_INDEPENDENT = "CELLS_COUNTED_AS_INDEPENDENT"
 CELL_VERDICT = "CELL_LEVEL_VERDICT_REPORTED"
 QUALITY_SAW_OUTCOME = "QUALITY_DECISION_SAW_AN_OUTCOME"
 NO_FORWARD_LIMITS = "RESULT_DOES_NOT_STATE_ITS_FORWARD_LIMITS"
+# DA 218: v4 adds a refusal, so it gets a producer in the SAME commit.
+NO_PIPELINE_LIMIT = "RESULT_DOES_NOT_STATE_ITS_PIPELINE_PROVENANCE_LIMIT"
 
 # ---- the three STATUSES the declaration promises
 MINORITY_DAYS = "ADVANCED_ON_A_MINORITY_OF_DAYS"
@@ -53,6 +55,13 @@ def require_forward_result(result: dict, n_days: int = 7) -> dict:
             f"REFUSED {NO_FORWARD_LIMITS}: the result carries no "
             f"`forward_limits` field. A pass on a second attempt, one coin, "
             f"one latency, one fill assumption must say so ON the result.")
+    # RESULT_DOES_NOT_STATE_ITS_PIPELINE_PROVENANCE_LIMIT
+    if not result.get("pipeline_provenance_limit"):
+        raise ForwardResultRefused(
+            f"REFUSED {NO_PIPELINE_LIMIT}: the result carries no "
+            f"`pipeline_provenance_limit`. The whole pipeline runs on code the "
+            f"development screen never ran on; a result that cannot say so is "
+            f"not quotable.")
     # ADVANCEMENT_CLAIMED_ON_ONE_COMPARISON
     for arm, a in (result.get("arms") or {}).items():
         if a.get("advances") and not (a.get("beats_zero_cancel")
@@ -133,6 +142,7 @@ def _fires(result, name, n_days=7):
 
 def selftest(quiet: bool = False) -> int:
     GOOD = {"forward_limits": "second attempt, btc only, L=250ms",
+            "pipeline_provenance_limit": "build and valuation on 7ed5a90",
             "arms": {"CONDVALUE_X_SKEW": {"advances": True,
                                           "beats_zero_cancel": True,
                                           "beats_matched_random": True,
@@ -147,6 +157,10 @@ def selftest(quiet: bool = False) -> int:
     # every declared REFUSAL fires BY ITS DECLARED NAME
     b = copy.deepcopy(GOOD); b.pop("forward_limits")
     _ok(_fires(b, NO_FORWARD_LIMITS), f"{NO_FORWARD_LIMITS} FIRES")
+    b = copy.deepcopy(GOOD); b.pop("pipeline_provenance_limit")
+    _ok(_fires(b, NO_PIPELINE_LIMIT),
+        f"{NO_PIPELINE_LIMIT} FIRES -- added by v4 and given a producer in the "
+        f"SAME commit, so it is never a promise without one")
     b = copy.deepcopy(GOOD); b["arms"]["CONDVALUE_X_SKEW"]["beats_matched_random"] = False
     _ok(_fires(b, ONE_COMPARISON),
         f"{ONE_COMPARISON} FIRES -- one comparison is not an advancement")
