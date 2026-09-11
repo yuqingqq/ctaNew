@@ -1,0 +1,34 @@
+{
+ "contract": "BE_STAGE_CLOSEOUT_V1",
+ "day": "20260907",
+ "stage": "census",
+ "as_of_utc": "2026-09-11T23:33:31Z",
+ "unit": {
+  "status": "NO_UNIT_NAMED"
+ },
+ "artifact": {
+  "status": "PRESENT",
+  "path": "data/pm_5min/derived/be_book_window_census_20260907.json",
+  "bytes": 81556,
+  "sha256": "12a9e4968bb4c55831100421ee7c29aca95c481ce4928b9616e5c4315a1ccc89"
+ },
+ "census": {
+  "contract_version": 2,
+  "era": "clob_v4_1",
+  "n_windows_supplied": 287,
+  "n_windows_in_census": 287,
+  "off_window_windows_not_in_the_supplied_set": [],
+  "off_window_count": 0,
+  "totals": {
+   "reference_generations": 321925,
+   "observed_generations": 320565,
+   "book_generations": 321925,
+   "zero_length_excluded": 1,
+   "n_windows_reference_ne_book": 0,
+   "book_minus_observed": 1360,
+   "gap_seconds": 136.053222,
+   "tape_rows": 593073,
+   "gens_per_row": 0.542808
+  }
+ }
+}

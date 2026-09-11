@@ -1,0 +1,15 @@
+{
+ "contract": "BE_STAGE_CLOSEOUT_V1",
+ "day": "20260909",
+ "stage": "tape",
+ "as_of_utc": "2026-09-11T23:33:37Z",
+ "unit": {
+  "status": "NO_UNIT_NAMED"
+ },
+ "artifact": {
+  "status": "PRESENT",
+  "path": "data/pm_5min/derived/phase2_state_tape_gate1_20260909_btc.json",
+  "bytes": 1105665237,
+  "sha256": "7ab27170417a75702694969f70a3726f708aec486484619115de1e64c6feb639"
+ }
+}
