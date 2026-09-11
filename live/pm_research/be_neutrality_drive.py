@@ -42,6 +42,7 @@ from __future__ import annotations
 
 import gc
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -71,9 +72,23 @@ def receipt_path(rev: str) -> Path:
 
 
 def receipt_generations(rev: str) -> int:
-    """The count from the PRODUCER's own receipt -- an independent number."""
+    """The REFERENCE generation count from the PRODUCER's own receipt."""
     d = json.loads(receipt_path(rev).read_text())
     return int((d.get("reference") or {})["generations"])
+
+
+def receipt_covered(rev: str, head: str) -> int:
+    """The count of generations the ASSEMBLY SCORED for `head`.
+
+    CORRECTED BEFORE THE RUN. The first form of cell A expected the refusal to
+    name NINE -- the difference in REFERENCE generations, 313,149 vs 313,140.
+    But `gen_max` enumerates SCORED generations, and the receipts say EV20
+    covered 232,309 and EV21 covered 232,307. **The comparator compares the
+    covered population, so the number it must name is TWO.** Reading the
+    expectation off the wrong field would have failed a correct comparator,
+    and I would have spent the lock learning it."""
+    d = json.loads(receipt_path(rev).read_text())
+    return int(d["asm"]["coverage_by_head"][head]["n_covered"])
 
 
 def main() -> int:
@@ -108,6 +123,7 @@ def main() -> int:
         return 3
 
     arms = arm_heads()
+    arms_for_expectation = arms
     result: dict = {
         "protocol": "BE_NEUTRALITY_DRIVE_V1",
         "what_this_is": (
@@ -131,11 +147,32 @@ def main() -> int:
          refusal is not None)
     note("cell A: it refuses under KEYS_DIFFER, not some other name",
          refusal is not None and KEYS_DIFFER in refusal, refusal)
-    expect = (f"{g_old_receipt - g_new_receipt} generation(s) only in old "
-              f"and 0 only in new")
-    note("cell A: the refusal names the count the RECEIPTS imply",
-         refusal is not None and expect in refusal, f"expected: {expect}")
+    # The refusal's OWN numbers, parsed, against the RECEIPTS' covered delta.
+    # The expectation is derived from the producers' `n_covered`, never typed.
+    m = re.search(r"has (\d+) generation\(s\) only in old and (\d+) only in new",
+                  refusal or "")
+    n_only_old = int(m.group(1)) if m else None
+    n_only_new = int(m.group(2)) if m else None
+    head0 = arms_for_expectation[sorted(arms_for_expectation)[0]]["head"]
+    covered_delta = (receipt_covered(OLD_REV, head0)
+                     - receipt_covered(NEW_REV, head0))
+    note("cell A: the refusal states its own counts in a readable form",
+         m is not None, refusal)
+    note("cell A: those counts NET to the COVERED delta in the receipts",
+         m is not None and (n_only_old - n_only_new) == covered_delta,
+         f"only_old={n_only_old} only_new={n_only_new} "
+         f"receipts covered delta={covered_delta}")
     result["cell_A_refusal"] = refusal
+    result["cell_A_counts"] = {
+        "n_only_old": n_only_old, "n_only_new": n_only_new,
+        "receipt_covered_old": receipt_covered(OLD_REV, head0),
+        "receipt_covered_new": receipt_covered(NEW_REV, head0),
+        "receipt_reference_old": g_old_receipt,
+        "receipt_reference_new": g_new_receipt,
+        "NOTE": ("the comparator enumerates SCORED generations, so its counts "
+                 "must reconcile against n_covered -- NOT against the nine "
+                 "reference generations EV21 excluded"),
+    }
 
     # ---- CELL B: the ADMIT direction, on a REAL book.
     admitted = None
@@ -148,6 +185,17 @@ def main() -> int:
         note("cell B: verdict is SUPPORTED_ON_THIS_DAY",
              admitted["verdict"] == "SUPPORTED_ON_THIS_DAY",
              admitted["verdict"])
+        for a, row in admitted["per_arm"].items():
+            h = arms[a]["head"]
+            note(f"cell B[{a}]: D counts the COVERED generations, "
+                 f"reconciled against the receipt",
+                 row["D_n_generations_compared"] == receipt_covered(NEW_REV, h),
+                 f'{row["D_n_generations_compared"]} vs '
+                 f'{receipt_covered(NEW_REV, h)}')
+            note(f"cell B[{a}]: the unscored reference generations are COUNTED",
+                 row["D_n_reference_generations_NOT_SCORED_BY_THE_ASSEMBLY"]
+                 == g_new_receipt - receipt_covered(NEW_REV, h),
+                 row["D_n_reference_generations_NOT_SCORED_BY_THE_ASSEMBLY"])
         note("cell B: every arm reads BIT_IDENTICAL",
              all(r["strength"] == "BIT_IDENTICAL"
                  for r in admitted["per_arm"].values()),
@@ -158,9 +206,14 @@ def main() -> int:
             "verdict": admitted["verdict"],
             "per_arm": {a: {k: r[k] for k in
                             ("strength", "C_n_generations",
-                             "D_n_generations_in_book", "D_reconciles",
-                             "C_m_min", "C_n_exactly_at_theta")}
+                             "D_n_generations_compared",
+                             "D_n_reference_generations_in_book",
+                             "D_n_reference_generations_NOT_SCORED_BY_THE_ASSEMBLY",
+                             "D_fraction_of_the_reference_certified",
+                             "D_reconciles", "C_m_min",
+                             "C_n_exactly_at_theta")}
                         for a, r in admitted["per_arm"].items()},
+            "POPULATION_THIS_CERTIFIES": admitted["POPULATION_THIS_CERTIFIES"],
         }
 
     # ---- SHAPE PROBE: what coverage evidence does the BOOK itself carry?
@@ -245,11 +298,12 @@ def main() -> int:
                 "shared score is bit-identical" if d_max == 0.0 else
                 "the exclusion moved scores on generations it did not drop"),
         }
-        note(f"cell C[{arm}]: the shared-key count is the NEW receipt's count",
-             len(common) == g_new_receipt, f"{len(common)} vs {g_new_receipt}")
-        note(f"cell C[{arm}]: exactly the receipt delta is only-in-old",
-             only_old == g_old_receipt - g_new_receipt
-             and only_new == 0, f"only_old={only_old} only_new={only_new}")
+        note(f"cell C[{arm}]: the new book's keys are its COVERED count",
+             len(common) + only_new == receipt_covered(NEW_REV, head),
+             f"{len(common)}+{only_new} vs {receipt_covered(NEW_REV, head)}")
+        note(f"cell C[{arm}]: the old book's keys are its COVERED count",
+             len(common) + only_old == receipt_covered(OLD_REV, head),
+             f"{len(common)}+{only_old} vs {receipt_covered(OLD_REV, head)}")
         del A, B, common, deltas, margins
         gc.collect()
     result["cell_C_shared_keys"] = shared
