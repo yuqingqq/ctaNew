@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T20:08:15Z (MEM ROUND 398 -- I RAN THE LEDGER INSTEAD OF READING THE REPORT, AND THE FAILING GATE
+  IS 4, NOT 6. Measured twice from wt-de2 against origin/de-freeze-chain-v2 at head
+  f31dff0, identical: gates_satisfied 5 of 6 -- the COUNT matches -- but the gate that
+  fails is GATE 4, CELLS_GREEN_BUT_PROPERTY_UNCOVERED at 1 of 7 properties, while GATE 6
+  reads SATISFIED. Filed as measured with ref, head and time, not as a contradiction: the
+  refs move fast and the introspection fix may have landed between. AND TWO GATES READ
+  SATISFIED WITH THEIR PROPERTY PROBE CRASHED -- gates 5 and 6 both carry probed false
+  with 'IndexError: list index out of range' and both read SATISFIED, which is
+  CELLS_PASSING_IS_NOT_PROPERTIES_COVERED in its sharpest form. CAVEAT I STATE RATHER
+  THAN HIDE: I ran from wt-de2 and the ledger's declared method is a worktree CUT AT THE
+  REF, so the IndexError may be my environment -- that is the next check and I have not
+  done it. NO LABELLED SCORE IS READABLE and I verified BOTH mechanisms: score_actions
+  takes outcomes FOURTH POSITIONAL with NO DEFAULT and says so in its docstring, and the
+  live ledger returns no_labelled_score_permitted True with score_is_evidence_permitted
+  False as TWO predicates. I proved the seam modules open no settlement UNDER CONTROLS --
+  27 files can be found, an impossible token cannot, the three seams give zero -- the
+  first PROSPECTIVE use of round 397's rule. And the best thing in the ledger is its own
+  author's catch: its first probes measured a LABEL, were rewritten to DRIVE, and a cell
+  now refuses any probe containing a source-text match. Tip 8996c24.)
   2026-09-11T19:16:44Z (MEM ROUND 397 -- THE NEW RULE LANDED ON MY OWN LAST ABSENCE FINDING, AND I RE-RAN IT
   UNDER CONTROLS. When ABSENCE is the finding, run the search in a form whose failure is
   visible: positive control 12 hits on a token I planted, known-bad 0 hits, then the real
@@ -106,6 +125,7 @@ updated: >-
   resolved the call graph mechanically. Same conclusions, no shared step. DE 358 takes
   the forked 09-07 chain as work, with a total chain, an explicit book_lineage and a cell
   that refuses SUPERSESSION_CHAIN_FORKED. Tip d165fa9.)
+previous_updates: >-
   2026-09-11T18:44:43Z (MEM ROUND 395 -- 09-07 HAS TWO GUARD-CARRYING RECORDS OF DIFFERENT BOOKS, AND DAY
   THREE IS POSITIVE ON BOTH ARMS WITHOUT CHANGING ANYTHING. The dispatch names 09-07 v2;
   a v3 exists 76 s later, and they are not versions of one thing -- v2 is the FREEZE-BUILT
@@ -124,7 +144,6 @@ updated: >-
   own value, so the claim holds and I file no correction. Two coordinator errors in band,
   each naming a class: dispatching before verifying, and a stated reason that was
   checkable and false. REV audited the work it was auditing. Tip 37a8929.)
-previous_updates: >-
   2026-09-11T18:30:27Z (MEM ROUND 394 -- A SECOND LANE, AND THE FREEZE NAMES A COMMIT THE PLAN HAS ALREADY
   MOVED PAST. R-917 freezes fair_value_plan.md at 0575444 and describes a 357-line
   protocol; a LATER user commit 876e435 hardened it to 424 lines twelve minutes before
@@ -547,6 +566,14 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r398_I_RAN_THE_LEDGER_AND_THE_FAILING_GATE_IS_4_NOT_6: "Measured twice from wt-de2 against origin/de-freeze-chain-v2 at head f31dff0, at 20:06Z and 20:07Z, identical both times. gates_satisfied 5 of 6 -- the COUNT matches the dispatch. The IDENTITY does not: the gate that fails is GATE 4, status CELLS_GREEN_BUT_PROPERTY_UNCOVERED with 1 of 7 properties true and six not-true (one_row_per_decision_not_per_quote, key_is_four_part, same_value_both_sides, duplicate_key_refuses, claimed_path_flag_checked, off_population_row_is_a_status). GATE 6 reads SATISFIED. Filed as measured, with the ref and head and time, not as a contradiction of the entry: the refs move fast and R-926 may describe a different head, or gate 6's introspection fix may have landed between."
+  r398_AND_TWO_GATES_READ_SATISFIED_WITH_THEIR_PROPERTY_PROBE_CRASHED: "Gate 5 and gate 6 both carry properties.probed false with reason 'IndexError: list index out of range' -- the probe threw and the exception text is recorded -- and BOTH read status SATISFIED. That is CELLS_PASSING_IS_NOT_PROPERTIES_COVERED in its sharpest form: not merely cells green while properties go unmeasured, but a gate reading SATISFIED while the instrument that would measure its properties raised. The recording is honest -- it says probed false and gives the exception rather than reporting coverage -- and the status did not consume that fact. IMPORTANT CAVEAT I state rather than hide: I ran from wt-de2, and the ledger's own declared method is to drive in a worktree CUT AT THE REF, so the IndexError may be an artefact of my invocation environment. That is the next thing to check and I have not checked it."
+  r398_NO_LABELLED_SCORE_IS_READABLE_AND_I_VERIFIED_BOTH_MECHANISMS: "Two independent mechanisms, both checked. BY CONSTRUCTION: score_actions(actions, identity_at, challenger_at, outcomes, *, eps=EPSILON) takes outcomes as the FOURTH POSITIONAL parameter with NO DEFAULT, so no caller can score without supplying one, and its docstring says it outright -- 'Nothing here loads an outcome: step 6 owns that, and this file must be landable before any labelled score exists.' BY PREDICATE: the live ledger returns no_labelled_score_permitted True and score_is_evidence_permitted False, and the declaration keeps them as TWO predicates, because clearing the build gates lowers the section 5 barrier while section 11's sentence stays binding -- one boolean reading as blanket permission is how a build gate becomes a licence."
+  r398_AND_I_PROVED_THE_SEAM_MODULES_OPEN_NO_SETTLEMENT_UNDER_CONTROLS: "First prospective use of round 397's rule rather than a retrospective one. POSITIVE CONTROL: searching the chain ref for settlement-opening vocabulary (resolutions.jsonl, winner_source, SETTLE_UP_CENTS) found 27 files, so the search could speak. KNOWN-BAD: an impossible token found 0. Only then the query: de_fair_value_actions.py, da_fair_price_identity.py and be_sigma_30m.py return ZERO settlement-opening hits each. The absence is now worth something because the instrument demonstrated it can fire, which is exactly what the round-396 version of this search could not have told me."
+  r398_THE_LEDGERS_OWN_DEFECT_CAUGHT_BY_ITS_AUTHOR_IS_THE_BEST_THING_IN_IT: "A_DEFECT_FOUND_IN_MY_OWN_INSTRUMENT_AND_FIXED_BEFORE_LANDING: v5's first gate-3 and gate-5 property probes reported coverage from 'text' in src SOURCE-TEXT matches -- a control that fires on a LABEL -- which is the exact defect REVIEW 201 found in the module those probes test. Both were rewritten to IMPORT AND DRIVE, and a cell now REFUSES any probe containing a source-text match, so the defect cannot return quietly. That is rule 42 turned on the instrument itself by the seat that wrote it, and the falsifier cell I drove confirms it: NO property probe reports coverage from a SOURCE-TEXT match, 4 probes; every property probe IMPORTS and DRIVES its module."
+  r398_CELLS_PASSING_IS_NOT_PROPERTIES_COVERED_promoted_as_a_standing_class: "REV has now named it three times -- gate 4 at 16 of 16 cells with four of six properties enforced, and gate 6 twice, at 11 of 11 cells proving the arms DECLARED the same inputs rather than RAN on them, so a FLAT TAPE PASSED. The rule: before a gate is reported satisfied, each declared property maps to the cell covering it, and cells and properties_covered are SEPARATE FIELDS -- a gate with a green falsifier but an uncovered declared property cannot read SATISFIED. The live run shows why the separation is not cosmetic: every one of the six gates is DRIVEN_GREEN with rc 0 and zero failed cells, including the one that does not satisfy."
+  r398_THE_LEDGER_STATES_WHAT_IT_DOES_NOT_CLAIM: "Three limits in its own words, and each closes a reading I would otherwise have to make. Gates 1 and 2 carry NO second DA instrument -- gate 1 is DA's own module so DA's cells are its first instrument and not a check on it, and gate 2's 27 cells are BE's, re-driven against the ref's bytes, which tests the LANDING and not the property set. The property probes cover the properties section 5 states IN WORDS, so a property the plan does not state is not measured. And the ledger measures the two chain refs ONLY: origin/mm-research is the user's fork, declared NON-EXECUTING, and presence there NEVER satisfies a gate."
+  r398_09_10s_VALUATION_HOLDS_THE_LOCK_and_its_blocker_is_published: "deRV20260910w1.service has held data/.heavy_run.lock since 19:40:48Z, 23 minutes in when I read it, due about 21:00Z. Its blocker was a missing be137_gap_windows_20260910.json; the file now exists at 5,359 bytes written 19:39:01Z, about two minutes before the valuation started, and the fix is folded into the FRAGMENT STAGE so 09-11 through 09-13 cannot repeat it. That last part is what makes it a fix rather than a repair: the artifact was produced AND the stage that needed it now produces it."
   r397_I_APPLIED_THE_NEW_RULE_TO_MY_OWN_ROUND_396_ABSENCE_FINDING: "The rule promoted this round -- when ABSENCE is the finding, run the search in a form whose failure is visible -- lands on my own most recent absence claim, so I re-ran it under controls instead of standing on it. POSITIVE CONTROL: the same command pattern searching for 0.134765625, a token I planted myself, returned 12 hits, so the search could speak. KNOWN-BAD: a token that cannot exist returned 0. Then the real query, bracketed by both. THE CONCLUSION STANDS -- no artifact, declaration, review or register entry asserts that anything can pass a 69-fold screen -- BUT THE CONTROLLED RUN SURFACED THREE CANDIDATES MY ROUND-396 RUN HAD SWALLOWED, and I read all three at the line rather than dismissing them: STATUS.yml:533 describes the task, :549 is my own correction, :581 is a NEGATIVE claim (no attainable outcome WOULD clear). Benign, all three."
   r397_MY_ROUND_396_CONCLUSION_SURVIVED_BUT_MY_METHOD_DID_NOT: "Stated plainly because the two are separable and only one of them was sound. At 396 I reported an absence from a bare grep with no positive control: had my path been wrong, my regex malformed or my tree the wrong one, the command would have returned nothing and I would have reported the same absence with the same confidence. The finding was right and the instrument could not have told me if it were not. That is round 379's shape with the sign reversed -- there a correct strike followed from wrong bounds; here a correct absence followed from an unproven search."
   r397_AND_THE_DEFECT_IN_MY_FILTER_WAS_SCOPE: "Worth the detail because it is the reusable part. My exclusion was LINE-SCOPED -- grep -v on corrected, first reading, superseding -- while the markers that identify a correction live in the FLAG KEY and elsewhere in the sentence, often beyond the matched line. So a correction whose marker fell outside the line was silently dropped from the output rather than shown and dismissed. A filter that removes candidates before a human sees them must be scoped to the same unit as the thing it filters on; mine was not, and the result was an answer that happened to be right with three cases I never saw."
@@ -28367,6 +28394,38 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r398_I_RAN_THE_LEDGER_AND_THE_FAILING_GATE_IS_4_NOT_6:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/declarations/da_fair_value_progress_ledger_v5.json
+    said: "ran da_fair_value_ledger.py main entry twice from /home/yuqing/ctaNew-wt-de2 and read gates_satisfied, each row's status and each row's properties block; ref_head f31dff0 both times and origin/de-freeze-chain-v2 resolved to the same head after a fresh fetch."
+  r398_AND_TWO_GATES_READ_SATISFIED_WITH_THEIR_PROPERTY_PROBE_CRASHED:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/declarations/da_fair_value_progress_ledger_v5.json
+    said: "read each gate row's properties block from the live run: gates 5 and 6 give probed false with the IndexError string while their status fields read SATISFIED; gates 1 and 2 give probed false with a REASON rather than an exception."
+  r398_NO_LABELLED_SCORE_IS_READABLE_AND_I_VERIFIED_BOTH_MECHANISMS:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/de_fair_value_actions.py
+    said: "read the signature and docstring at de_fair_value_actions.py:228 on both chain refs; read no_labelled_score_permitted and score_is_evidence_permitted from the live ledger run."
+  r398_AND_I_PROVED_THE_SEAM_MODULES_OPEN_NO_SETTLEMENT_UNDER_CONTROLS:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/de_fair_value_actions.py
+    said: "git grep -ln for three settlement tokens across origin/de-freeze-chain-v2's live/pm_research/*.py gave 27 files; an impossible token gave 0; the three named seam modules gave 0 hits each."
+  r398_THE_LEDGERS_OWN_DEFECT_CAUGHT_BY_ITS_AUTHOR_IS_THE_BEST_THING_IN_IT:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/da_fair_value_ledger.py
+    said: "ran the instrument's --falsify from wt-de2: rc 0, LEDGER CELLS PASS, including the two cells above and 'every row names the BLOB its verdict was earned against'; its content digest e1e8ac8409840454 matches the declaration's THE_INSTRUMENT block, which I hashed myself."
+  r398_CELLS_PASSING_IS_NOT_PROPERTIES_COVERED_promoted_as_a_standing_class:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/declarations/da_fair_value_progress_ledger_v5.json
+    said: "read the CELLS_PASSING_IS_NOT_PROPERTIES_COVERED block verbatim from the declaration at the chain ref; the live run's per-gate cells blocks read DRIVEN_GREEN with n 50, 27, 29, 22, 9 and 20 and failed 0 in every case."
+  r398_THE_LEDGER_STATES_WHAT_IT_DOES_NOT_CLAIM:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/declarations/da_fair_value_progress_ledger_v5.json
+    said: "read the WHAT_IS_NOT_CLAIMED list verbatim; the three-measurement method in THE_INSTRUMENT is presence by git ls-tree at a fetched ref, behaviour by driving the falsifier in a worktree cut at that ref, properties by DA's own adversarial cells."
+  r398_09_10s_VALUATION_HOLDS_THE_LOCK_and_its_blocker_is_published:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be137_gap_windows_20260910.json
+    said: "fuser on the heavy lock gave pids 3196615/3196616; /proc/<pid>/cgroup resolved to deRV20260910w1.service; ps gave the 19:40:48 start; ls gave the gap-windows file at 5,359 bytes and 19:39:01Z."
   r397_I_APPLIED_THE_NEW_RULE_TO_MY_OWN_ROUND_396_ABSENCE_FINDING:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
