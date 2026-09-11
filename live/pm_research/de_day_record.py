@@ -196,7 +196,10 @@ def build(day: str, cells_dir: Path, n_declared: int = 7,
     emit["per_day_D_by_arm"] = per_day_by_arm
     first = cells[arms[0]]["result"]
     return {
-        "protocol": PROTOCOL, "day": day,
+        "protocol": (PROTOCOL + "_REPRODUCTION" if reproduction_of
+                     else PROTOCOL),
+        "IS_A_DAY_RESULT": not bool(reproduction_of),
+        "day": day,
         "book": first.get("book"), "book_sha256": first.get("book_sha256"),
         "cells": {a: dict(four_fields(cells[a]["result"]),
                           book_receipt=cells[a]["result"]["book_receipt"],
@@ -277,9 +280,15 @@ def _landed_days(derived: Path, exclude: str) -> dict:
     out: dict = {}
     for f in sorted((derived / "fwd_v2").glob(
             "p003_de_forward_value_*.json")):
-        if "reproduction" in f.name:
-            continue
         d = json.loads(f.read_text())
+        # IDENTITY, NOT VOCABULARY: a record carrying a `reproduction`
+        # block is a reproduction of a day already counted, never a second
+        # day. The filename filter that used to do this job was the
+        # symptom -- a reproduction record must not be NAMED like a day
+        # result in the first place, and now it is not.
+        if d.get("reproduction") or d.get("protocol", "").endswith(
+                "_REPRODUCTION"):
+            continue
         day = d.get("day")
         if not day or day == exclude:
             continue
@@ -363,6 +372,30 @@ def falsify() -> int:
            and prior["path"] == str(f) and f.is_file(),
            f"{nxt.name} then {nxt2.name}")
 
+    import fnmatch as _fn
+    import glob as _g
+    rep_name = (f"p003_de_reproduction_at_the_freeze_20260907.json")
+    day_name = (f"p003_de_forward_value_20260907.json")
+    ck("a reproduction emitted NOW is named outside the day-result glob",
+       not _fn.fnmatch(rep_name, "p003_de_forward_value_*.json")
+       and _fn.fnmatch(day_name, "p003_de_forward_value_*.json"),
+       rep_name)
+    # RESIDUE, REPORTED AND NOT DELETED: the two records written under the
+    # old name are still in fwd_v2/ and the day-result glob still matches
+    # them. They are the coordinator's to rule on; the identity filter
+    # below is what keeps them out of any count meanwhile.
+    legacy = sorted(Path(x).name for x in
+                    _g.glob(str(DERIVED / "fwd_v2"
+                                / "p003_de_forward_value_*reproduction*")))
+    if legacy:
+        print(f"  [RESIDUE] {len(legacy)} record(s) under the old name, "
+              f"not deleted: {', '.join(legacy)}")
+    seen = _landed_days(DERIVED, "2026-01-01")
+    ck("and the day map counts each real day ONCE, by identity",
+       all(len(v) == len(set(v)) for v in seen.values())
+       and all("2026-09-07" in v and "2026-09-08" in v
+               for v in seen.values()),
+       json.dumps({a: sorted(v) for a, v in seen.items()}))
     print(f"\n{ok}/{n} cells pass")
     return 0 if ok == n else 1
 
@@ -407,9 +440,15 @@ def main(argv=None) -> int:
                 log=Path(a.log) if a.log else None,
                 reproduction_of=(Path(a.reproduction_of)
                                  if a.reproduction_of else None))
+    # A REPRODUCTION IS NEVER NAMED LIKE A DAY RESULT. The day-result
+    # glob `p003_de_forward_value_*.json` was picking up the reproduction
+    # records, so any reader resolving days by that glob would have
+    # counted 09-07 twice.
     out = Path(a.out) if a.out else (
         DERIVED / "fwd_v2"
-        / f"p003_de_forward_value_{a.day.replace('-', '')}.json")
+        / (f"p003_de_reproduction_at_the_freeze_{a.day.replace('-', '')}"
+           f".json" if a.reproduction_of else
+           f"p003_de_forward_value_{a.day.replace('-', '')}.json"))
     out.parent.mkdir(parents=True, exist_ok=True)
     out, prior = next_version_path(out)
     if prior:
