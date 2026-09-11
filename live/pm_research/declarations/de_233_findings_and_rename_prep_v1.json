@@ -1,0 +1,71 @@
+{
+  "protocol": "P003_DE_233_FINDINGS_AND_RENAME_PREPARATION_V1",
+  "as_of_utc": "2026-09-11T03:21:38.297442+00:00",
+  "FINDING_1_A_LIMIT_A_DOCSTRING_RECORDS_AND_NO_GUARD_ENFORCES": {
+    "the_defect": "de_admissible_windows.py:64 -- `ROOT = Path(__file__).resolve().parents[2]` -- computes its data root from its own file position with NO resolver. From a worktree it reads <worktree>/data, not the ledger.",
+    "it_is_not_theoretical": "it refused p003fwd0907c at 03:09 (de_admissible_windows.py:669, blackout mask expected under wt-fwd/data). The 03:11 symlink is what let run d proceed.",
+    "why_it_is_a_FINDING_and_not_an_incident": "the builder's own `real_data_reachable` docstring ALREADY RECORDS this exact limit -- 'de_admissible_windows computes its own root as parents[2] with no resolver'. A limit that a docstring records and no guard enforces is one symlink away from a silent wrong-root READ.",
+    "and_the_failure_mode_that_matters_is_not_the_refusal": "a refusal is the GOOD case -- loud, before any write. The bad case is a wrong-root read that SUCCEEDS because a stale file happens to be present at the worktree path. wt-fwd held 394 stale tracked artifacts at 03:09; a module reading one of those would have got plausible-looking bytes and no error.",
+    "THE_CLASS_IS_LARGER_THAN_THE_ONE_MODULE": {
+      "measured": "79 modules under live/pm_research use parents[N] WITHOUT importing a data-root resolver; of those, a subset build a data path from it -- including da_blackout_mask.py, be_producing_closure.py, be_placement_latency_reconcile.py, da_accrual_report.py, collect_pm.py, collect_pm_prices.py",
+      "not_all_are_hazards": "many never touch data/. The hazard is the intersection: parents[N] AND a data path built from it AND reachable from a worktree run.",
+      "I_am_NOT_claiming_that_intersection_is_enumerated": "I measured the outer set (79) and named examples inside it. Sizing the actual hazard needs the third conjunct driven, not grepped.",
+      "the_fix_shape": "import the resolver rather than computing a root; or add a guard that refuses when the computed root is not the ledger root -- REFUSE, never fall back, because a fallback is how the wrong root goes quiet."
+    },
+    "routing": "de_admissible_windows.py is DE's. da_blackout_mask.py and da_* are DA's; be_* are BE's. I am filing the class, not editing another seat's module."
+  },
+  "RENAME_PREPARATION_PREPARED_NOT_LANDED": {
+    "status": "PREPARED. NOTHING LANDED. Nothing will land until the last forward book exists.",
+    "why": "a rename landed under a running build cost 21 minutes tonight, and 7ed5a90 is now the declared pipeline commit for build AND valuation across all seven books -- so a rename moves the DECLARED PIPELINE COMMIT and cannot land mid-population at all, not merely mid-build.",
+    "THE_ANSWER_TO_THE_CASCADE_QUESTION_AND_IT_IS_TWO_ANSWERS": {
+      "for_the_105_I_was_routed": "NO. All 105 are in de_multiday_gate1_runner.py, which is NOT one of params v29's ten cascade modules. Renaming them does not touch the cascade.",
+      "BUT_THE_CASCADE_HAS_ITS_OWN_AND_NOBODY_HAS_COUNTED_THEM": {
+        "measured_with_the_programmes_own_census": {
+          "be_cancel_axis_null.py": 9,
+          "de_phase4_diag_runner.py": 16,
+          "pm_tape_density.py": 3,
+          "be_data_root.py": 2,
+          "de_matched_random_control.py": 1,
+          "harmful_stateful_policy.py": 1,
+          "total": 32,
+          "modules_affected": "6 of 10"
+        },
+        "and_the_worst_placed_one": "16 of the 32 are in de_phase4_diag_runner.py -- ONE OF THE TWO MODULES ALREADY DIFFERING AT 7ed5a90 and already causing the book-code predicate to refuse. A rename there compounds the exact divergence BE's certification exists to measure.",
+        "SO_THESE_MUST_NOT_BE_RENAMED_AT_ALL_during_this_forward_test": true,
+        "seat_boundary": "11 of the 32 are BE's (be_cancel_axis_null 9, be_data_root 2). I am routing those, not touching them."
+      }
+    },
+    "the_naming_rule_and_it_is_one_cause_not_105": "these sites LEAD WITH THE SUBJECT (`REFUSED DAY {day}:`, `REFUSED at {where}:`, `REFUSED RUN:`) so a name-matching reader takes a date or a preposition as the refusal name. Fix: prepend a property token, keep the subject as context. Prose unchanged.",
+    "the_landing_contract": [
+      "ONE commit, after the last forward book",
+      "every renamed site DRIVEN FIRING UNDER ITS NEW NAME before the commit is reported",
+      "a rename never seen to fire is a relabelling, not a fix",
+      "and the control runs FIRST, not as confirmation"
+    ]
+  },
+  "SCORE_NEUTRALITY_MY_ANSWER_BEFORE_THE_NUMBER_EXISTS": {
+    "the_question": "can BE's 09-03 comparison establish score-neutrality?",
+    "MY_ANSWER": "NO -- not as a property of the code. It can establish something narrower and still valuable, and it can REFUTE neutrality outright, which is the outcome worth having early.",
+    "why_one_day_cannot_establish_it": "float summation reordering produces a difference only when the summands EXERCISE the reordering -- heterogeneous magnitudes and cancellation. That is data-dependent. Agreement on 09-03 is an existence result over 09-03's inputs, not a property of the operator. The honest claim after one day is exactly what v7 already reserves: NO DIFFERENCE OBSERVED ON 09-03.",
+    "the_asymmetry_that_makes_it_worth_running_anyway": "DISAGREEMENT IS CONCLUSIVE AND AGREEMENT IS NOT. If 09-03 differs, we know before seven books exist, and that is the finding the user needs.",
+    "TWO_STRENGTHENINGS_BOTH_CHEAP": {
+      "1_use_all_four_consumed_days": "09-03, 09-04, 09-05 and 09-06 are ALL consumed. Using them costs nothing under rule 11 and only compute. Four days is strictly more of the operator's input space than one.",
+      "2_ASK_THE_DECISION_QUESTION_NOT_THE_EQUALITY_QUESTION": {
+        "why": "the arms decide by threshold crossing at theta. A score difference matters ONLY for observations within that difference of the threshold. Equality is sufficient but far stronger than needed, and it is the wrong bar to fail on.",
+        "the_closed_form": "let D = max |score_new - score_old| over compared observations, and per arm let m = min |score_old - theta|. IF D < m THEN NO DECISION CAN FLIP -- that is a PROOF over the compared population, not an absence of evidence.",
+        "the_number_to_report_beside_it": "the COULD-FLIP POPULATION: count of observations with |score - theta| <= D. If it is 0, decisions are invariant on that day even when scores are not.",
+        "per_arm": "computed separately for each arm's theta, because the margins differ."
+      }
+    },
+    "what_I_would_have_BE_report": [
+      "n compared",
+      "n differing",
+      "the full distribution of |delta|, not just the max",
+      "D = max |delta|",
+      "per-arm min margin m",
+      "the could-flip count at D",
+      "and whether any compared observation actually crossed"
+    ],
+    "and_the_limit_that_survives_every_version_of_this": "it establishes decision-invariance on the days COMPARED. The forward days are different data and are not covered. That limit does not go away and should not be written out of the certification."
+  }
+}
