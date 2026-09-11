@@ -1,3 +1,84 @@
+# READ FIRST — round 381 (MEM, 2026-09-11T12:06:53Z, tip `e3d8e25`)
+
+# 🔍 I DIFFED params v31 → v32 — **nothing pinned moves**
+
+**37 changed leaves**, and **the only pinned-class change is `SUPERSEDES.sha256`** —
+*the pointer to the superseded document, not a pin on anything the run consumes.*
+
+```
+NO theta · NO min_draws · NO alpha · NO be_cascade · NO be_module
+the substantive change:  ONE ADDITIVE HUNK on `days`
+                         + 09-09 … 09-13,  every_existing: True
+WHY_THIS_SUPERSEDES_V31.NO_PIN_MOVES = "the build pin stays 7ed5a9…"
+```
+
+## 🔗 And the pointer moves to a digest I computed myself
+
+`SUPERSEDES.sha256`: `066b52f2…` (v29's) → **`dd58223c6e3654a2`** — ***which is
+the sha256 of `params_v31.json` that I hashed at round 377*** while verifying the
+v10 amendment's pin.
+
+> ***The chain closes on a value already on the record: v32 names v31 by content,
+> and the content is what I measured four rounds ago.*** **A supersession pointer
+> verified against an independently computed digest is what makes rule 13
+> checkable rather than declarative.**
+
+## 🌿 And v31 exists ONLY in `wt-deval`
+
+I looked in both trees: **v31 is only on the side branch; v32 is in both.**
+
+> ***`PENDING_ORIGIN_MAIN` now reaches the DECLARATIONS, not just the commits: a
+> reader working from `mm-research` alone cannot resolve v32's supersession
+> target.*** Worth naming before someone tries to validate the chain from there.
+
+# ✅ DAY-ONE RESULTS UNCHANGED — tested by exact equality, not by eye
+
+`−14645.078818000005` and `+4925.363903000005`, compared for **exact equality**
+against round 379.
+
+> *A round whose headline is a method change is exactly the round in which a
+> quietly moved number would pass — and "unchanged" asserted without a comparison
+> is the weakest sentence in any state file.*
+
+# 🧭 THE METHOD IS NOW **ENUMERATE GUARDS, THEN REHEARSE** — before any real run
+
+**A user directive, given twice.**
+
+*That is the generalisation of everything this day produced: five refusals
+discovered at the lock · a snapshot found off on the real path · a waiter that
+stalled on a free lock · a tripwire that did not exist.* ***Every one was a guard
+whose behaviour was known only when it fired. Enumerating and rehearsing moves
+the discovery before the run.***
+
+> **And that the directive had to be given TWICE is itself the finding — the
+> first giving did not reach the next launch.** *Which is DA 221's shape again:
+> a stated rule does not reach the next decision.*
+
+# ⚖️ `require_ledger` REFUSED THE ENV SNAPSHOT — **by design**
+
+So the valuation **reads the oracle once per run**, falsifier **pending**.
+
+> ***A guard refusing a mechanism built to satisfy it is the sharpest kind of
+> design feedback:*** the snapshot was an attempt to make the oracle
+> reproducible, and the ledger requirement said **an environment-carried snapshot
+> is not the same object as a read.**
+
+*Recorded with the falsifier marked PENDING, because "once per run" is a claim
+about behaviour, and behaviour is what a falsifier is for.*
+
+# 🔒 BOTH CHAINS NOW WAIT ON A **REHEARSAL**, NOT A LOCK
+
+09-08's real valuation waits on **its point-estimate rehearsal**; 09-09's book
+waits on **v32 + a dry-run**.
+
+> ***The new method visible in the queue: what blocks the chains is no longer
+> contention but PREPARATION.*** **A day spent on locks bought a method in which
+> the waiting happens before the resource is held rather than while it is.**
+
+**And census v3 identity is exact** — *after the coin-versus-slug mismatch BE's
+own control caught at 160 against 165, an exact identity is what closes that
+thread, and it means the field names crossed **string by string**.*
+
 # READ FIRST — round 380 (MEM, 2026-09-11T11:23:01Z, tip `63e7b05`)
 
 # 📐 THE TRIPWIRE REPORTED — every field matches what I computed last round
