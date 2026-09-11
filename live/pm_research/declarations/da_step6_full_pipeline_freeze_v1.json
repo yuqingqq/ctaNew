@@ -1,0 +1,336 @@
+{
+ "protocol": "P003_DA_STEP6_FULL_PIPELINE_FREEZE_V1",
+ "plan": "fair_value_plan.md v1.2",
+ "DRAFT": false,
+ "LANDED_BY": "DA 281",
+ "freeze_is_effective": false,
+ "WHAT_freeze_is_effective_MEANS": "TRUE only when every \u00a77 field resolves and every chain link has an implementation. It is FALSE here. The declaration exists so that \u00a711 step 6 has an artifact and so that what is missing is written down at a ref rather than carried in conversation; it does not assert that the pipeline is frozen.",
+ "executing_refs": {
+  "heads": {
+   "origin/de-freeze-chain-v2": "9ec30e9fb4034111b871b0afb91d27cd0578ae11",
+   "origin/be-build-runner": "9ec30e9fb4034111b871b0afb91d27cd0578ae11"
+  },
+  "heads_equal": true,
+  "commits_each_has_that_the_other_does_not": {
+   "origin/de-freeze-chain-v2": 0,
+   "origin/be-build-runner": 0
+  },
+  "n_lane_modules_compared": 8,
+  "all_lane_modules_byte_identical": true,
+  "modules_that_differ": [],
+  "the_rule": "a gate is satisfied by the BLOB on both refs, not by the heads matching; two shas with identical modules blocks nothing"
+ },
+ "declared_at_ref": "origin/de-freeze-chain-v2",
+ "ref_head": "9ec30e9fb4034111b871b0afb91d27cd0578ae11",
+ "chain_in_order": [
+  {
+   "link": "immutable_inputs",
+   "paths": [],
+   "sha256": {},
+   "implemented": false
+  },
+  {
+   "link": "labels_statuses",
+   "paths": [
+    "live/pm_research/da_fair_value_gate1_labels.py"
+   ],
+   "sha256": {
+    "live/pm_research/da_fair_value_gate1_labels.py": "73dca3620474a3363fb50694a59df5c6b81460bd14f55a234e7f7d30780515b3"
+   },
+   "implemented": true
+  },
+  {
+   "link": "actions",
+   "paths": [
+    "live/pm_research/de_canonical_action_population.py",
+    "live/pm_research/de_fair_value_actions.py"
+   ],
+   "sha256": {
+    "live/pm_research/de_canonical_action_population.py": "76e204a6788218aec19c0ed6951bd5a25b34ff29f51f2fb89e2a886b652967e6",
+    "live/pm_research/de_fair_value_actions.py": "a1affe64504758a7a6a290fe2a21396c01edb21d429e5de420be2be9f2510ba8"
+   },
+   "implemented": true
+  },
+  {
+   "link": "sigma",
+   "paths": [
+    "live/pm_research/be_sigma_30m.py"
+   ],
+   "sha256": {
+    "live/pm_research/be_sigma_30m.py": "8d7a2448937e0fd3bc720ba64fa423fde5e615ad9c1f6b77cff2d4ec159a90c7"
+   },
+   "implemented": true
+  },
+  {
+   "link": "fairprice",
+   "paths": [
+    "live/pm_research/da_fair_price_identity.py",
+    "live/pm_research/de_fair_price_wrapper.py"
+   ],
+   "sha256": {
+    "live/pm_research/da_fair_price_identity.py": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
+    "live/pm_research/de_fair_price_wrapper.py": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0"
+   },
+   "implemented": true
+  },
+  {
+   "link": "fallback",
+   "paths": [
+    "live/pm_research/de_fair_price_wrapper.py",
+    "live/pm_research/de_fair_value_policy_seam.py"
+   ],
+   "sha256": {
+    "live/pm_research/de_fair_price_wrapper.py": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0",
+    "live/pm_research/de_fair_value_policy_seam.py": "2d12ce30c58f4a207dfbfacb3fc897112fc07edfd7798aecae1b917215456e0c"
+   },
+   "implemented": true
+  },
+  {
+   "link": "score",
+   "paths": [
+    "live/pm_research/de_fair_value_actions.py"
+   ],
+   "sha256": {
+    "live/pm_research/de_fair_value_actions.py": "a1affe64504758a7a6a290fe2a21396c01edb21d429e5de420be2be9f2510ba8"
+   },
+   "implemented": true
+  },
+  {
+   "link": "quote_mapping",
+   "paths": [
+    "live/pm_research/de_fair_value_policy_seam.py"
+   ],
+   "sha256": {
+    "live/pm_research/de_fair_value_policy_seam.py": "2d12ce30c58f4a207dfbfacb3fc897112fc07edfd7798aecae1b917215456e0c"
+   },
+   "implemented": true
+  },
+  {
+   "link": "replay",
+   "paths": [
+    "live/pm_research/de_fair_value_replay_seam.py"
+   ],
+   "sha256": {
+    "live/pm_research/de_fair_value_replay_seam.py": "bda46d20bfc856b62a9039f5f912f17f703aeaf7e423e808d77a627c48bcb5fb"
+   },
+   "implemented": true
+  },
+  {
+   "link": "pnl",
+   "paths": [],
+   "sha256": {},
+   "implemented": false
+  }
+ ],
+ "fields": {
+  "all_file_hashes": {
+   "live/pm_research/da_fair_value_gate1_labels.py": "73dca3620474a3363fb50694a59df5c6b81460bd14f55a234e7f7d30780515b3",
+   "live/pm_research/de_canonical_action_population.py": "76e204a6788218aec19c0ed6951bd5a25b34ff29f51f2fb89e2a886b652967e6",
+   "live/pm_research/de_fair_value_actions.py": "a1affe64504758a7a6a290fe2a21396c01edb21d429e5de420be2be9f2510ba8",
+   "live/pm_research/be_sigma_30m.py": "8d7a2448937e0fd3bc720ba64fa423fde5e615ad9c1f6b77cff2d4ec159a90c7",
+   "live/pm_research/da_fair_price_identity.py": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
+   "live/pm_research/de_fair_price_wrapper.py": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0",
+   "live/pm_research/de_fair_value_policy_seam.py": "2d12ce30c58f4a207dfbfacb3fc897112fc07edfd7798aecae1b917215456e0c",
+   "live/pm_research/de_fair_value_replay_seam.py": "bda46d20bfc856b62a9039f5f912f17f703aeaf7e423e808d77a627c48bcb5fb"
+  },
+  "commit_ref": {
+   "ref": "origin/de-freeze-chain-v2",
+   "head": "9ec30e9fb4034111b871b0afb91d27cd0578ae11",
+   "mirror": "origin/be-build-runner",
+   "mirror_head": "9ec30e9fb4034111b871b0afb91d27cd0578ae11"
+  },
+  "candidate_count": {
+   "n": 2,
+   "m_for_multiplicity": 2,
+   "M_IS_TWO_FOREVER": "m = 2 is fixed at freeze and does not shrink if a candidate dies, is withdrawn, or fails to produce a value. Holm is across C1 and C2 whatever happens to either; a multiplicity that shrinks after the fact is selection on the outcome.",
+   "identities": {
+    "pm_microprice": {
+     "estimator": "pm_microprice",
+     "model_version": null,
+     "builder_path": "/tmp/da_step6_m4j1tyaq/live/pm_research/da_fair_price_identity.py",
+     "builder_sha256": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
+     "wrapper_path": "/tmp/da_step6_m4j1tyaq/live/pm_research/de_fair_price_wrapper.py",
+     "wrapper_sha256": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0"
+    },
+    "bn_bookticker_mid": {
+     "estimator": "bn_bookticker_mid",
+     "model_version": "s60_probability_v1",
+     "builder_path": "/tmp/da_step6_m4j1tyaq/live/pm_research/da_fair_price_identity.py",
+     "builder_sha256": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
+     "wrapper_path": "/tmp/da_step6_m4j1tyaq/live/pm_research/de_fair_price_wrapper.py",
+     "wrapper_sha256": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0"
+    }
+   },
+   "model_version_binds_to": [
+    "bn_bookticker_mid"
+   ],
+   "model_version_is_None_for": [
+    "pm_microprice"
+   ],
+   "MEASURED_CORRECTION": "DA 278 binds both candidates to model_version=s60_probability_v1; the artifact binds it to C2 only and C1 to None, on purpose",
+   "declared_model_version": "s60_probability_v1"
+  },
+  "action_key": "(coin, slug, generation_id, decision_recv_ns)",
+  "epsilon": 1e-06,
+  "status_grammar": {
+   "gate1_label_statuses": [
+    "DISAGREE",
+    "LABEL_ADMISSIBLE",
+    "MARGIN_UNRESOLVABLE",
+    "NOT_IN_CAPTURE",
+    "NO_OFFICIAL",
+    "OUTAGE",
+    "STALE_BOUNDARY"
+   ],
+   "gate1_admitting": [
+    "LABEL_ADMISSIBLE"
+   ],
+   "EXACTLY_ONE_ADMITS": true,
+   "consumer_statuses": [
+    "BOUNDARY_NOT_IN_CAPTURE",
+    "CHAINLINK_UNAVAILABLE",
+    "DISAGREE",
+    "VENUE_UNRESOLVED",
+    "VERIFIED_AGREE"
+   ],
+   "fairprice_statuses": [],
+   "action_exclusion_statuses": [
+    "DUPLICATE_KEY",
+    "FLAG_CONTRADICTS",
+    "NOT_IDENTITY_PATH",
+    "NOT_IN_POPULATION",
+    "NO_DECISION_STAMP",
+    "NO_POPULATION",
+    "NO_PROVENANCE",
+    "OUTCOME_UNKNOWN",
+    "OUT_OF_SCOPE",
+    "PROTOCOL"
+   ]
+  },
+  "source_manifests": "MISSING",
+  "initial_inventory": "MISSING",
+  "tick_rounding": "MISSING",
+  "latency": {
+   "placement_latency_ms": 250,
+   "applies_to": "every new generation in BOTH legs",
+   "CLASS": "SIMULATION ASSUMPTION",
+   "is_a_measured_live_end_to_end_latency": false,
+   "must_never_be_described_as_empirical": true,
+   "IS_NOT": "a measured live end-to-end latency. The receipt must never describe this parameter as empirical.",
+   "no_challenger_receives_an_instantaneous_first_placement": true,
+   "required_count_field": "n_fills_removed_before_generation_start_plus_250ms",
+   "bound_in_a_frozen_chain_file": [],
+   "present_in_the_chain": false,
+   "harmful_flow_cancellation": "DISABLED",
+   "quote_replacement": "ordinary replacement follows one shared, separately declared lifecycle in both legs"
+  },
+  "fee_rule": "MISSING",
+  "quote_parameters": "MISSING",
+  "null_predicate": {
+   "primary_null": "median_g(delta_LL_g) = 0",
+   "statistic": "LL_g(estimator) = mean natural-log loss over canonical forecast actions; delta_LL_g(c) = LL_g(Identity) - LL_g(c)",
+   "sign_of_better": "positive delta_LL_g is better",
+   "test": "exact two-sided paired day sign test, enumerating all 2^G day-sign assignments",
+   "G_target": 10,
+   "n_assignments_at_G10": 1024,
+   "above_the_200_null_minimum": true,
+   "smallest_two_sided_p_at_G10": 0.001953125,
+   "multiplicity_m": 2,
+   "correction": "Holm across C1 and C2",
+   "ties": "an exactly zero daily increment is a REPORTED TIE, excluded from the sign count, never silently given a favourable sign",
+   "min_nonzero_portfolio_days": 8,
+   "n_assignments_at_8_nonzero": 256,
+   "below_that": "INSUFFICIENT_EVIDENCE",
+   "summaries_use_all_ten_days_including_zeros": true,
+   "portfolio_day": "BTC+ETH mean giving each coin equal weight; action counts remain reported; no action, fill, market or coin is treated as an independent day"
+  },
+  "success_predicate": {
+   "all_of": {
+    "1_holm_corrected_p": "< 0.05 on the primary log-loss increment",
+    "2_mean_and_median": "both delta_LL_g summaries positive",
+    "3_native_coverage_gate": ">= 95% of Identity-eligible actions for EACH of BTC and ETH",
+    "4_predicates": "all population, timestamp, complement and reconciliation predicates pass"
+   },
+   "cannot_rescue_a_failed_primary": [
+    "Brier",
+    "a favourable coin cell",
+    "a favourable time-to-expiry cell"
+   ],
+   "accrual": {
+    "observe": "the first 14 consecutive calendar days",
+    "require": "the first 10 evaluable complete BTC+ETH UTC days",
+    "failed_data_gate_days": "remain counted, with statuses",
+    "if_fewer_than_10_by_day_14": "INSUFFICIENT_EVIDENCE",
+    "do_not_extend_opportunistically": true,
+    "starts": "the first complete UTC day STRICTLY AFTER this freeze"
+   },
+   "day_eligibility_is_candidate_blind": "resolved by the frozen day/book gate, official resolutions and settlement-verification coverage only. Challenger availability, score, fills or P&L can NEVER remove a day or replace it with a later one.",
+   "all_ten_days_become_consumed_regardless_of_verdict": true
+  }
+ },
+ "abstention_reading_constraint_R924": {
+  "present": true,
+  "path": "live/pm_research/declarations/da_step6_abstention_constraint_v1.json",
+  "sha256": "f044140868c9dbff96e636f622fa9ddf71e14ec03f031c4ae3075090ca549930",
+  "THE_CONSTRAINT_VERBATIM": "\u00a76 scores the policy's Identity fallback wherever a challenger is non-OK, so a challenger that abstains EXACTLY where it would have been wrong still improves the primary statistic; \u00a78's 95% native-coverage gate bounds but does not eliminate this, since selective abstention inside the 5% allowance still flatters.",
+  "mechanism": "a challenger is rewarded for its own silence: it keeps the Identity score on every action it declines, so declining precisely the actions it would have got wrong raises its measured performance above its real performance.",
+  "must_be_reproduced_verbatim_in_this_receipt": true
+ },
+ "required_fields": [
+  "all_file_hashes",
+  "commit_ref",
+  "candidate_count",
+  "action_key",
+  "epsilon",
+  "status_grammar",
+  "source_manifests",
+  "initial_inventory",
+  "tick_rounding",
+  "latency",
+  "fee_rule",
+  "quote_parameters",
+  "null_predicate",
+  "success_predicate"
+ ],
+ "fields_present": [
+  "action_key",
+  "all_file_hashes",
+  "candidate_count",
+  "commit_ref",
+  "epsilon",
+  "latency",
+  "null_predicate",
+  "status_grammar",
+  "success_predicate"
+ ],
+ "fields_missing": [
+  "fee_rule",
+  "initial_inventory",
+  "quote_parameters",
+  "source_manifests",
+  "tick_rounding"
+ ],
+ "blocking_gaps": [
+  "chain_link_not_implemented:immutable_inputs",
+  "chain_link_not_implemented:pnl",
+  "fee_rule",
+  "initial_inventory",
+  "latency:placement_latency_ms_not_bound_in_any_frozen_chain_file",
+  "quote_mapping_property:DOWN_uses_1_minus_p",
+  "quote_mapping_property:ask_rounds_UP_to_the_legal_tick",
+  "quote_mapping_property:bid_rounds_DOWN_to_the_legal_tick",
+  "quote_mapping_property:crossing_quote_emits_PLACE_WITHHELD_MARKETABLE_CROSS",
+  "quote_mapping_property:never_silently_clamped",
+  "quote_mapping_property:no_zero_latency_privilege_for_candidate_induced_change",
+  "quote_mapping_property:prices_bounded_to_the_legal_binary_range",
+  "quote_parameters",
+  "source_manifests",
+  "tick_rounding"
+ ],
+ "n_blocking_gaps": 15,
+ "rev203_six_of_six": false,
+ "ready_to_land": false,
+ "WHY_NOT_LANDED": "DA 278: draft only until REV 203 returns six of six. `ready_to_land` requires BOTH an empty gap list and that return, and this file cannot measure the second, so it defaults False and must be passed in.",
+ "EVERY_VERDICT_COMPUTED_FROM_ARTIFACT_FIELDS": true,
+ "NO_PROSE_ONLY_PASS": "\u00a77 forbids one. Every predicate above is computed from a blob at the ref or driven against it; none is satisfied by a sentence."
+}

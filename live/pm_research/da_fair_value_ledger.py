@@ -613,29 +613,59 @@ def probe_gate(gate: int, worktree: str, timeout: int = 300) -> dict:
 
 
 
-FREEZE_DECL_RE = r"(fair_value.*(freeze|frozen)|freeze.*fair_value)"
+FREEZE_DECL_RE = r"(step6.*(freeze|frozen)|fair_value.*(freeze|frozen)|freeze.*fair_value)"
 
 
 def step11_step6_freeze(refs=EXECUTING_REFS) -> dict:
-    """IS §11 STEP 6 SATISFIED? It is NOT the same question as gate 6.
+    """IS §11 STEP 6 SATISFIED? It is NOT the same question as gate 6, and it
+    is NOT the question "does a freeze declaration exist".
 
     §5 gate 6 is the replay seam. §11 step 6 is "freeze the full pipeline and
-    both candidate identities" -- a strictly larger claim, and the one the
-    sentence "No fair-value score is evidence before step 6" is about. With all
-    six BUILD gates green, the §5 barrier is down and this one is not, so the
-    ledger measures it rather than letting one boolean read as permission.
+    both candidate identities" -- the claim the sentence "No fair-value score
+    is evidence before step 6" is about.
+
+    THIS USED TO COUNT FILES, AND THAT WAS A LATENT UNLOCK. DA 281 landed
+    `da_step6_full_pipeline_freeze_v1.json`, and under the old rule its mere
+    EXISTENCE would have flipped `score_is_evidence_permitted` to True -- while
+    the declaration itself computes `freeze_is_effective: false` and names 15
+    blocking gaps. A labelled score would have become permissible because a
+    document appeared saying the pipeline is not frozen.
+
+    So the predicate now READS THE DECLARATION and requires
+    `freeze_is_effective is True` on EVERY executing ref. A declaration that
+    cannot honestly be effective unlocks nothing by existing.
     """
-    found = {}
+    DIRS = ("live/pm_research/declarations/",
+            "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/")
+    found, effective = {}, {}
     for ref in refs:
-        r = _git("ls-tree", "-r", "--name-only", ref,
-                 "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/")
-        hits = [l.strip() for l in r.stdout.splitlines()
-                if re.search(FREEZE_DECL_RE, l, re.I)]
-        found[ref] = sorted(hits)
+        hits = []
+        for d in DIRS:
+            r = _git("ls-tree", "-r", "--name-only", ref, d)
+            hits += [l.strip() for l in r.stdout.splitlines()
+                     if re.search(FREEZE_DECL_RE, l, re.I)]
+        found[ref] = sorted(set(hits))
+        eff = []
+        for path in found[ref]:
+            if not path.endswith(".json"):
+                continue
+            b = _git("show", f"{ref}:{path}", text=False).stdout
+            try:
+                eff.append(json.loads(b.decode()).get("freeze_is_effective") is True)
+            except Exception:
+                eff.append(False)
+        effective[ref] = any(eff)
     n = min(len(v) for v in found.values()) if found else 0
-    return {"declarations_found": found, "n_on_every_executing_ref": n,
-            "satisfied": n > 0,
-            "measured": "git ls-tree -r <ref> <program dir> | match a freeze declaration",
+    return {"declarations_found": found,
+            "n_on_every_executing_ref": n,
+            "a_declaration_exists": n > 0,
+            "freeze_is_effective_per_ref": effective,
+            "satisfied": bool(effective) and all(effective.values()),
+            "measured": ("git ls-tree the declaration dirs at each ref, then READ "
+                         "each declaration's own computed `freeze_is_effective`"),
+            "EXISTENCE_IS_NOT_EFFECTIVENESS": (
+                "counting files would let a declaration that says the pipeline "
+                "is NOT frozen unlock a labelled score by existing"),
             "why_separate": ("§5 gate 6 is the replay seam; §11 step 6 is the "
                              "FULL-PIPELINE freeze plus both candidate "
                              "identities, which the seam does not establish")}
@@ -892,6 +922,12 @@ def falsify() -> int:
        all(r_["cells"].get("driven") for r_ in led["gates"])
        and led["behaviour_is_driven_not_recorded"])
     # ---- §11 step 6 is measured, and is NOT gate 6 ------------------------
+    ck("a freeze declaration that is NOT effective does NOT satisfy step 6",
+       not (led["step11_step6_freeze"]["a_declaration_exists"]
+            and led["step11_step6_freeze"]["satisfied"]
+            and not all(led["step11_step6_freeze"]["freeze_is_effective_per_ref"].values())),
+       f"exists={led['step11_step6_freeze']['a_declaration_exists']} "
+       f"satisfied={led['step11_step6_freeze']['satisfied']}")
     ck("§11 step 6 is measured SEPARATELY from §5 gate 6",
        "step11_step6_freeze" in led and "satisfied" in led["step11_step6_freeze"],
        f"step6 satisfied={led['step11_step6_freeze']['satisfied']} "
