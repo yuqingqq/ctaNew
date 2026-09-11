@@ -1,0 +1,17 @@
+{
+ "protocol": "P003_DE_ARM_FREEZE_V12_AMENDMENT",
+ "version": 12,
+ "rule": "13 -- superseding receipt; v1..v11 unedited",
+ "frozen_parameters": {
+  "params": {
+   "path": "de_multiday_gate1_params_v33.json",
+   "sha256": "aeeb818f3bb18c3e00a71616738eb3ea445891e01f35a7bce8490796148a2312"
+  }
+ },
+ "WHY": {
+  "reason": "params v33 fixes expected_G to equal len(days) = 11; v12 is the link that moves the chain to it",
+  "what_this_supersedes": "v11's pin on params v32",
+  "NO_PIN_MOVES": "no build or valuation commit changes",
+  "resolver": "be_score_neutrality.frozen_params() takes the highest amendment THAT PINS PARAMS -- driven three ways at Q-DA-438"
+ }
+}
