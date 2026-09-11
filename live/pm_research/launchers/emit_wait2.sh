@@ -10,7 +10,9 @@ set -u
 D=/home/yuqing/ctaNew/data/pm_5min/derived
 PY=/home/yuqing/pricer-sol/venv/bin/python3
 SRC=/home/yuqing/ctaNew-wt-de2/live/pm_research
-V2=$D/fwd_v2/p003_de_forward_value_20260907.json
+DAY="${1:-2026-09-07}"; COMPACT="${DAY//-/}"
+PRODUCER="${2:?usage: emit_wait2.sh <YYYY-MM-DD> <producer-unit>}"
+V2=$D/fwd_v2/p003_de_forward_value_${COMPACT}.json
 OLDBOOK=$D/be_daybook_20260907_btc__L250ms__FWD1.superseded_20260911T071439Z.pkl
 
 for m in de_revaluation_emit.py de_window_decomposition.py; do
@@ -20,15 +22,28 @@ for m in de_revaluation_emit.py de_window_decomposition.py; do
 done
 echo "$(date -u +%H:%M:%SZ) emit modules verified against origin/mm-research"
 
-echo "$(date -u +%H:%M:%SZ) waiting for $V2"
-for _ in $(seq 1 720); do
+# THE BUDGET IS THE PRODUCER, NOT A CLOCK.
+# deEMIT0907d started its 3h budget at ARMING -- two hours before the
+# valuation it was waiting for even launched -- and expired ten minutes
+# before the result landed. A waiter whose clock starts when IT starts is
+# measuring the wrong thing: it should end when its PRODUCER ends.
+echo "$(date -u +%H:%M:%SZ) waiting for $V2 (producer $PRODUCER)"
+while :; do
   if [ -f "$V2" ]; then
     s1=$(stat -c %s "$V2"); sleep 10; s2=$(stat -c %s "$V2")
     [ "$s1" = "$s2" ] && break
   fi
+  sub=$(systemctl --user show "$PRODUCER" -p SubState --value 2>/dev/null)
+  case "$sub" in
+    exited|dead|failed|"")
+      sleep 20                       # a last look: the write may be in flight
+      if [ ! -f "$V2" ]; then
+        echo "REFUSED EMIT_PRODUCER_ENDED_WITHOUT_RESULT: $PRODUCER is"              "$sub and $V2 does not exist. Nothing to emit."
+        exit 3
+      fi ;;
+  esac
   sleep 15
 done
-[ -f "$V2" ] || { echo "$(date -u +%H:%M:%SZ) no V2 result after 3h"; exit 3; }
 
 # the rebuilt book is whatever the V2 result names -- never guessed
 NEWBOOK=$("$PY" -c "import json,sys;print(json.load(open(sys.argv[1]))['book'])" "$V2")
