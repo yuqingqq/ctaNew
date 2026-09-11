@@ -67,6 +67,20 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T12:06:27Z (MEM ROUND 381 -- I DIFFED v31 TO v32 AND NOTHING PINNED MOVES: 37 changed
+  leaves, and the ONLY pinned-class change is SUPERSEDES.sha256, THE POINTER TO THE
+  SUPERSEDED DOCUMENT -- no theta, no min_draws, no alpha, no cascade, no be_module. The
+  substantive change is A SINGLE ADDITIVE HUNK ON days, 09-09 through 09-13, with
+  every_existing TRUE. AND THE POINTER MOVES TO dd58223c6e3654a2, WHICH IS THE DIGEST I
+  HASHED MYSELF AT ROUND 377 -- so the chain closes at a value already on the record. v31
+  exists ONLY IN wt-deval, so PENDING_ORIGIN_MAIN now reaches the DECLARATIONS and not just
+  the commits: a reader working from mm-research cannot resolve v32's supersession target.
+  DAY-ONE RESULTS UNCHANGED, tested by EXACT EQUALITY rather than by eye -- because a round
+  whose headline is a method change is exactly the round in which a quietly moved number
+  would pass. THE METHOD IS NOW ENUMERATE-GUARDS-THEN-REHEARSE, a user directive GIVEN
+  TWICE -- and the repetition is itself the finding, since the first giving did not reach
+  the next launch. require_ledger REFUSED THE ENV SNAPSHOT BY DESIGN, so the valuation
+  reads the oracle ONCE PER RUN with its falsifier pending. tip 64d9682)
   2026-09-11T11:22:33Z (MEM ROUND 380 -- THE TRIPWIRE REPORTED AND EVERY FIELD MATCHES WHAT I COMPUTED
   LAST ROUND. CONCENTRATION_FINDING TRUE ON BOTH ARMS; DELTA_D -3627.3668120000057 and
   -330.8129409999947, the same values I differenced myself at round 379 TO THE LAST DIGIT;
@@ -97,21 +111,6 @@ updated: >-
   UNRESOLVED does not trip, and both arms moved in the UNFAVOURABLE direction -- the one
   that requires no defence. EVERY GATE NOW RUNS BEFORE THE LOCK, which turns a refusal from
   AN HOUR INTO A SECOND. tip b0341ae)
-  2026-09-11T09:54:55Z (MEM ROUND 378 -- MY ROUND-376 PREDICTION LANDED: the run refused NOT_CERTIFIED
-  at 09:09:23Z and was re-certified at 09:33:48Z, about twenty minutes after I called it
-  from reading de_settlement_control_run.py:194 and hashing two files. THE CERTIFICATE
-  STOCK IS NOW THREE WITH EXACTLY ONE VALID -- c5c1fc0a, 8500ce41 and the new a455191d in
-  the __68e7d23 certificate, which I confirmed MATCHES THE COMPARATOR ON DISK. Every
-  retirement was caused by editing the file that validates them. THE PIN IS 68e7d23, ON
-  de-freeze-chain-v2 AND STILL NOT ON mm-research, so PENDING_ORIGIN_MAIN is not a
-  transient but THE STANDING CONDITION. LOCK QUEUE AS IT STANDS ON DISK: deRV0907w1 HOLDS
-  IT (pids 2298230/2298231), deEMIT0907d is armed and waiting ON THE RESULT FILE, and
-  be147frag0909 reads FAILED -- AND I NEARLY FILED IT AS DEAD. It is rc=75 with
-  start==exit at the same second and the cycle repeating: FLOCK OFFERING. The dispatch is
-  right and my first reading was wrong. A POLLING UNIT IS INDISTINGUISHABLE FROM A DEAD ONE
-  BY ActiveState AND Result ALONE, and the discriminator -- rc=75 means DID NO WORK -- is
-  the one I recorded from the coordinator's own watcher fix ONE ROUND EARLIER.
-  tip 85824fd)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -283,6 +282,15 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 381, enumerate then rehearse ---
+  I_DIFFED_V31_TO_V32_AND_NOTHING_PINNED_MOVES: "Thirty-seven changed leaves, and THE ONLY PINNED-CLASS CHANGE IS SUPERSEDES.sha256 -- the POINTER TO THE SUPERSEDED DOCUMENT, not a pin on anything the run consumes. NO THETA, NO min_draws, NO alpha, NO be_cascade, NO be_module moved. The substantive change is A SINGLE HUNK ON days, adding 2026-09-09 through 09-13 with every_existing TRUE, so nothing was removed. And the artifact says so itself: WHY_THIS_SUPERSEDES_V31.NO_PIN_MOVES reads 'the build pin stays 7ed5a9…'."
+  AND_THE_SUPERSESSION_POINTER_MOVES_TO_A_DIGEST_I_COMPUTED_MYSELF_AT_ROUND_377: "SUPERSEDES.sha256 goes from 066b52f2, which was v29's, to dd58223c6e3654a2 -- AND dd58223c6e3654a2 IS THE SHA256 OF params_v31.json THAT I HASHED AT ROUND 377 when I verified the v10 amendment's pin. So the chain closes at a value already on the record: v32 names v31 by content, and the content is what I measured four rounds ago. A supersession pointer verified against an independently computed digest is the form rule 13 needs to be checkable rather than declarative."
+  AND_V31_IS_NOT_IN_THE_MAIN_TREE_WHICH_IS_THE_FORK_STATE_SHOWING_IN_THE_PARAMS: "I looked for both files in both places: v31 exists ONLY in wt-deval, while v32 exists in BOTH. So the params chain the valuation depends on lives on the side branch, exactly as the pin does -- and a reader working from the main tree alone cannot resolve v32's supersession target. That is the PENDING_ORIGIN_MAIN condition reaching the declarations, not just the commits, and it is worth naming before someone tries to validate the chain from mm-research."
+  DAY_ONES_RESULTS_ARE_UNCHANGED_AND_I_CHECKED_BY_EQUALITY_NOT_BY_EYE: "CONDVALUE -14645.078818000005 and HAZARD 4925.363903000005, tested for EXACT EQUALITY against the values I read at round 379. Both unchanged. Recorded because a round whose headline is a method change is exactly the round in which a quietly moved number would go unnoticed, and 'unchanged' asserted without a comparison is the weakest sentence in any state file."
+  THE_METHOD_IS_NOW_ENUMERATE_GUARDS_THEN_REHEARSE_BEFORE_ANY_REAL_RUN: "A USER DIRECTIVE, GIVEN TWICE. That is the generalisation of everything this day produced: five refusals discovered at the lock, a snapshot found off on the real path, a waiter that stalled on a free lock, a tripwire that did not exist. Every one was a guard whose behaviour was known only when it fired. ENUMERATING THE GUARDS AND REHEARSING THEM MOVES THE DISCOVERY BEFORE THE RUN -- and the fact that the directive had to be given twice is itself the finding, since the first giving did not reach the next launch."
+  AND_REQUIRE_LEDGER_REFUSED_THE_ENV_SNAPSHOT_BY_DESIGN: "So the valuation READS THE ORACLE ONCE PER RUN, with the falsifier still pending. A guard refusing a mechanism built to satisfy it is the sharpest kind of design feedback: the snapshot was an attempt to make the oracle reproducible, and the ledger requirement said that an environment-carried snapshot is not the same object as a read. Recorded with the falsifier marked PENDING, because a once-per-run read is a claim about behaviour and behaviour is what a falsifier is for."
+  AND_THE_TWO_CHAINS_BOTH_WAIT_ON_A_REHEARSAL_RATHER_THAN_ON_A_LOCK: "09-08's real valuation waits on ITS POINT-ESTIMATE REHEARSAL; 09-09's book waits on v32 PLUS A DRY-RUN. That is the new method visible in the queue: what blocks the chains is no longer contention but PREPARATION, which is the intended trade. A day spent on locks bought a method in which the waiting happens before the resource is held rather than while it is."
+  AND_CENSUS_V3_IDENTITY_IS_EXACT: "Recorded plainly. After the coin-versus-slug mismatch that BE's own control caught at 160 against 165, and the two reconciliations since, an EXACT identity on v3 is the state that closes that thread. An identity check reported as exact means field names crossed from declaration to producer STRING BY STRING, which is the method DA established and the only one that finds a name differing by one character."
   # --- MEM round 380, the tripwire reported ---
   THE_TRIPWIRE_REPORTED_AND_EVERY_FIELD_MATCHES_WHAT_I_COMPUTED_LAST_ROUND: "I read p003_de_revaluation_emit_20260907.json directly. CONCENTRATION_FINDING TRUE ON BOTH ARMS. DELTA_D_cents -3627.3668120000057 and -330.8129409999947 -- THE SAME VALUES I DIFFERENCED MYSELF AT ROUND 379, to the last digit. SIGN_CHANGE_HALT false, halted_arms empty, HALT false on both, refusal_name_if_halt None, and what_a_halt_here_means reading 'within band'. reference_levels_cents carries 18.4 and 1036.5 as declared."
   AND_THE_RESIDUAL_PROVES_THE_WHOLE_MOVE_HAPPENED_INSIDE_THE_27_DECLARED_WINDOWS: "residual_cents is 5.9117e-12 on CONDVALUE and -4.7748e-12 on HAZARD. I compared them to the declared bands: BOTH ARE ABOUT 169,000 AND 209,000 TIMES BELOW EVEN THE 1e-6 ROUNDING BAND, and eleven orders below the 1c HALT. So THE ENTIRE DELTA-D IS ACCOUNTED FOR INSIDE THE 27 DECLARED WINDOWS AND NOTHING MOVED OUTSIDE THE SPINE. That is the positive result rule 4's halt exists to detect the absence of -- and it is now MEASURED rather than assumed."
@@ -27950,6 +27958,55 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 381, 2026-09-11T12:06:27Z ---
+  I_DIFFED_V31_TO_V32_AND_NOTHING_PINNED_MOVES:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v32.json
+    as_of: 2026-09-11T12:06:27Z
+    said: >-
+      both params files flattened to leaves and differenced: 37 changes, of which the only sha256/theta/draws/alpha/cascade-class one is the SUPERSEDES pointer; the days hunk is additive with every_existing true.
+  AND_THE_SUPERSESSION_POINTER_MOVES_TO_A_DIGEST_I_COMPUTED_MYSELF_AT_ROUND_377:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v32.json
+    as_of: 2026-09-11T12:06:27Z
+    said: >-
+      the v31 digest recorded in my round-377 flags as dd58223c6e3654a2 matches the SUPERSEDES.sha256 value in v32.
+  AND_V31_IS_NOT_IN_THE_MAIN_TREE_WHICH_IS_THE_FORK_STATE_SHOWING_IN_THE_PARAMS:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v32.json
+    as_of: 2026-09-11T12:06:27Z
+    said: >-
+      existence checked for v31 and v32 under both live/pm_research/declarations and the wt-deval copy: v31 present only in wt-deval.
+  DAY_ONES_RESULTS_ARE_UNCHANGED_AND_I_CHECKED_BY_EQUALITY_NOT_BY_EYE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/de_settle_result_20260907_CONDVALUE_X_SKEW.json
+    as_of: 2026-09-11T12:06:27Z
+    said: >-
+      both per-arm result artifacts re-read and their observed_D compared for exact equality against the round-379 values.
+  THE_METHOD_IS_NOW_ENUMERATE_GUARDS_THEN_REHEARSE_BEFORE_ANY_REAL_RUN:
+    prov: RELAYED
+    from: USER via coordinator MEM 381
+    as_of: 2026-09-11T12:06:27Z
+    said: >-
+      the directive and its repetition as dispatched; the day's refusals and their costs are recorded across my rounds 374 to 380.
+  AND_REQUIRE_LEDGER_REFUSED_THE_ENV_SNAPSHOT_BY_DESIGN:
+    prov: RELAYED
+    from: DE 303 via coordinator MEM 381
+    as_of: 2026-09-11T12:06:27Z
+    said: >-
+      the refusal, the once-per-run resolution and the pending falsifier as dispatched.
+  AND_THE_TWO_CHAINS_BOTH_WAIT_ON_A_REHEARSAL_RATHER_THAN_ON_A_LOCK:
+    prov: RELAYED
+    from: coordinator MEM 381
+    as_of: 2026-09-11T12:06:27Z
+    said: >-
+      both chains' blocking conditions as dispatched; the contrast with the morning's lock contention is recorded across my rounds 371 to 380.
+  AND_CENSUS_V3_IDENTITY_IS_EXACT:
+    prov: RELAYED
+    from: BE via coordinator MEM 381
+    as_of: 2026-09-11T12:06:27Z
+    said: >-
+      the exact identity as dispatched; the earlier 160-versus-165 mismatch is recorded in my round-372 flags.
   # --- MEM round 380, 2026-09-11T11:22:33Z ---
   THE_TRIPWIRE_REPORTED_AND_EVERY_FIELD_MATCHES_WHAT_I_COMPUTED_LAST_ROUND:
     prov: CHECKED

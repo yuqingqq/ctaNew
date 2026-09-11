@@ -23778,3 +23778,23 @@ generation and the window went 4 → 3. Nothing rewritten.
   And I verified the v10 amendment's pinned digest myself: sha256(params_v31) is
   dd58223c6e3654a2 and the amendment contains it. tip 1994587)
 ```
+
+## Batch 363 (rotated by MEM round 381, 2026-09-11T12:06:27Z)
+
+```
+  2026-09-11T09:54:55Z (MEM ROUND 378 -- MY ROUND-376 PREDICTION LANDED: the run refused NOT_CERTIFIED
+  at 09:09:23Z and was re-certified at 09:33:48Z, about twenty minutes after I called it
+  from reading de_settlement_control_run.py:194 and hashing two files. THE CERTIFICATE
+  STOCK IS NOW THREE WITH EXACTLY ONE VALID -- c5c1fc0a, 8500ce41 and the new a455191d in
+  the __68e7d23 certificate, which I confirmed MATCHES THE COMPARATOR ON DISK. Every
+  retirement was caused by editing the file that validates them. THE PIN IS 68e7d23, ON
+  de-freeze-chain-v2 AND STILL NOT ON mm-research, so PENDING_ORIGIN_MAIN is not a
+  transient but THE STANDING CONDITION. LOCK QUEUE AS IT STANDS ON DISK: deRV0907w1 HOLDS
+  IT (pids 2298230/2298231), deEMIT0907d is armed and waiting ON THE RESULT FILE, and
+  be147frag0909 reads FAILED -- AND I NEARLY FILED IT AS DEAD. It is rc=75 with
+  start==exit at the same second and the cycle repeating: FLOCK OFFERING. The dispatch is
+  right and my first reading was wrong. A POLLING UNIT IS INDISTINGUISHABLE FROM A DEAD ONE
+  BY ActiveState AND Result ALONE, and the discriminator -- rc=75 means DID NO WORK -- is
+  the one I recorded from the coordinator's own watcher fix ONE ROUND EARLIER.
+  tip 85824fd)
+```
