@@ -246,36 +246,50 @@ def falsify() -> int:
            f"{str(prov.get('pipeline_commit'))[:12]} all="
            f"{prov.get('every_computing_module_matches_the_pipeline_commit')}")
 
-    # --- CELL 14: A PIN THAT CAN NEVER MOVE IS NOT A PIN EITHER --------
+    # --- CELL 14: VERSION-ORDERED SUPERSESSION (USER RULING, DE 329) ---
     # Measured deadlock, 13:33Z: DA's code freeze v3 named the new commit,
-    # an amendment pinning it would have REFUSED as a conflict, and the
-    # valuation went on resolving d095c5a -- two freezes stale, quietly.
+    # my agree-or-refuse rule would have REFUSED the amendment pinning it,
+    # and the valuation went on resolving d095c5a -- two freezes stale,
+    # quietly. Declaration pins now supersede in version order exactly as
+    # params pins do; the chain is recorded so the move is visible.
     with tempfile.TemporaryDirectory() as td:
         d = Path(td)
         (d / "de_arm_freeze_v1.json").write_text(json.dumps(
-            {"code_freeze_declaration": {"path": "cf_v1.json",
-                                         "sha256": "1" * 64}}))
-        (d / "de_arm_freeze_v2_amendment.json").write_text(json.dumps(
             {"code_freeze_declaration": {"path": "cf_v2.json",
                                          "sha256": "2" * 64}}))
+        (d / "de_arm_freeze_v14_amendment.json").write_text(json.dumps(
+            {"code_freeze_declaration": {"path": "cf_v3.json",
+                                         "sha256": "3" * 64}}))
+        (d / "de_arm_freeze_v15_amendment.json").write_text(json.dumps(
+            {"code_freeze_declaration": {"path": "cf_v4.json",
+                                         "sha256": "4" * 64}}))
+        moved = R.resolve_declaration_pins(d)["code_freeze_declaration"]
+        # ONE amendment, the SAME key twice, different identities: version
+        # order cannot settle a document disagreeing with itself, and JSON
+        # would have kept the last silently.
+        (d / "de_arm_freeze_v16_amendment.json").write_bytes(json.dumps(
+            {"code_freeze_declaration": {"path": "cf_v5.json",
+                                         "sha256": "5" * 64}}).encode()[:-1]
+            + b', "code_freeze_declaration": {"path": "cf_v6.json", '
+              b'"sha256": "6666666666666666666666666666666666666666'
+              b'666666666666666666666666"}}')
         try:
             R.resolve_declaration_pins(d)
-            silent = ""
+            dup = ""
         except Exception as exc:                           # noqa: BLE001
-            silent = str(exc)
-        (d / "de_arm_freeze_v2_amendment.json").write_text(json.dumps(
-            {"code_freeze_declaration": {"path": "cf_v2.json",
-                                         "sha256": "2" * 64},
-             "supersedes": {"code_freeze_declaration": {"path": "cf_v1.json"}}}))
-        moved = R.resolve_declaration_pins(d)["code_freeze_declaration"]
-    ck("a SILENT second pin still refuses by name",
-       "DECLARATION_PIN_CONFLICT" in silent and "cf_v2.json" in silent,
-       silent[:52] or "ADMITTED A SILENT OVERWRITE")
-    ck("a pin that NAMES what it replaces moves, and records both",
-       moved.get("path") == "cf_v2.json"
-       and moved.get("supersedes") == "cf_v1.json"
-       and moved.get("superseded_at") == "de_arm_freeze_v2_amendment.json",
-       f"{moved.get('path')} <- {moved.get('supersedes')}")
+            dup = str(exc)
+    ck("v14 -> v15 SUPERSEDES: the later amendment's identity wins",
+       moved.get("path") == "cf_v4.json" and moved.get("version") == 15
+       and moved.get("supersedes") == "cf_v3.json",
+       f"{moved.get('path')} v{moved.get('version')} "
+       f"<- {moved.get('supersedes')}")
+    ck("the FULL CHAIN of pins is recorded, in version order (rule 13)",
+       [(c["version"], c["path"]) for c in moved.get("chain", [])]
+       == [(1, "cf_v2.json"), (14, "cf_v3.json"), (15, "cf_v4.json")],
+       str([(c["version"], c["path"]) for c in moved.get("chain", [])]))
+    ck("ONE amendment pinning the same key twice still REFUSES by name",
+       "DECLARATION_PIN_CONFLICT" in dup and "cf_v6.json" in dup,
+       dup[:60] or "ADMITTED A DOCUMENT DISAGREEING WITH ITSELF")
 
     # --- CELL 13 (REVIEW 175 B): THE DECLARATION READER ----------------
     # `_declaration_pin`'s second path referenced an unbound `chain`, and
@@ -303,12 +317,16 @@ def falsify() -> int:
         fallback = SC._declaration_pin(d)
         (d / "p_cell.json").write_text(json.dumps({"no_pin_here": True}))
         nothing = SC._declaration_pin(d)
-        (d / "de_arm_freeze_v2_amendment.json").write_text(json.dumps(
+        # A REFUSAL, NOT A DISAGREEMENT. Two amendments naming different
+        # identities is now legitimate supersession (DE 329); the refusal
+        # that remains is ONE amendment pinning the same key twice, which
+        # version order cannot settle.
+        (d / "de_arm_freeze_v2_amendment.json").write_bytes(json.dumps(
             {"forward_test_declaration": {"path": "a.json",
-                                          "sha256": "a" * 64}}))
-        (d / "de_arm_freeze_v3_amendment.json").write_text(json.dumps(
-            {"forward_test_declaration": {"path": "b.json",
-                                          "sha256": "b" * 64}}))
+                                          "sha256": "a" * 64}}).encode()[:-1]
+            + b', "forward_test_declaration": {"path": "b.json", '
+              b'"sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+              b'bbbbbbbbbbbbbbbbbbbbbbbb"}}')
         try:
             SC._declaration_pin(d)
             conflict = ""

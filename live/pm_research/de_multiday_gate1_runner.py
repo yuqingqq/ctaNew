@@ -1257,17 +1257,28 @@ DECLARATION_PIN_CONFLICT = "DECLARATION_PIN_CONFLICT"
 
 
 def resolve_declaration_pins(decl_dir=None) -> dict:
-    """The DECLARATION identities the freeze chain names, AGREE-OR-REFUSE.
+    """The DECLARATION identities the freeze chain names, VERSION-ORDERED.
 
     It lives HERE, not in be_score_neutrality.py: that module is the
     NEUTRALITY CERTIFICATE'S PRODUCER, and the certificate is pinned to its
     digest -- editing it voids the certificate. I edited it once at
     3dbb107 and reverted; this is the version that does not.
 
-    Walks v1 then every amendment in version order. A later amendment may
-    ADD a pin; two amendments naming DIFFERENT identities for the same
-    declaration REFUSE rather than the last one silently winning, because a
-    pin that can be overwritten is not a pin.
+    SUPERSESSION, LIKE THE PARAMS PIN (USER RULING, DE 329). Walks v1 then
+    every amendment IN VERSION ORDER; for the same key the LATER amendment
+    wins, and the full chain of pins is recorded per key with the
+    amendment version that named each -- rule 13's provenance, in band.
+
+    My agree-or-refuse version deadlocked the chain the first time a freeze
+    legitimately moved: DA's code freeze v3 named the new commit, the
+    amendment pinning it would have REFUSED, and the valuation went on
+    resolving a two-freeze-stale commit. A pin that can never move is not a
+    pin either.
+
+    The refusal that remains is the one a version order cannot settle: ONE
+    amendment pinning the same key twice with DIFFERENT identities. JSON
+    keeps the last of duplicate keys silently, so the document is parsed
+    pair by pair and the duplicate is seen rather than absorbed.
     """
     import re as _re
     d = Path(decl_dir) if decl_dir else Path(__file__).resolve().parent / \
@@ -1287,43 +1298,49 @@ def resolve_declaration_pins(decl_dir=None) -> dict:
     for f in files:
         if not f.is_file():
             continue
+        version = 1 if f.name == "de_arm_freeze_v1.json" else int(
+            _re.search(r"_v(\d+)_amendment", f.name).group(1))
+        seen_here: dict = {}
+
+        def _pairs(pairs, _f=f, _seen=seen_here):
+            """DUPLICATE KEYS IN ONE DOCUMENT ARE VISIBLE HERE OR NOWHERE."""
+            o = {}
+            for k, v in pairs:
+                if k in o and o[k] != v:
+                    _seen.setdefault(k, []).append((o[k], v))
+                o[k] = v
+            return o
+
         try:
-            doc = json.loads(f.read_bytes())
+            doc = json.loads(f.read_bytes(), object_pairs_hook=_pairs)
         except Exception:                          # noqa: BLE001
             continue
         for key in want:
+            if key in seen_here:
+                a, b = seen_here[key][0]
+                raise RunnerRefused(
+                    f"REFUSED {DECLARATION_PIN_CONFLICT}: {f.name} pins "
+                    f"{key} TWICE, to "
+                    f"{(a or {}).get('path')}/"
+                    f"{str((a or {}).get('sha256'))[:12]} and "
+                    f"{(b or {}).get('path')}/"
+                    f"{str((b or {}).get('sha256'))[:12]}. Version order "
+                    f"settles two amendments; it cannot settle one "
+                    f"document disagreeing with itself, and JSON would "
+                    f"have kept the last silently.")
             val = doc.get(key)
             if not (isinstance(val, dict) and val.get("path")
                     and val.get("sha256")):
                 continue
             prev = out.get(key)
-            if prev and (prev["path"] != val["path"]
-                         or prev["sha256"] != val["sha256"]):
-                # A PIN THAT CAN NEVER MOVE IS NOT A PIN EITHER. The
-                # agree-or-refuse rule deadlocked the chain the first time
-                # a freeze legitimately moved: DA's v3 named the new
-                # commit, a v15 pinning it would have REFUSED, and the
-                # valuation went on resolving a two-freeze-stale commit.
-                # Rule 13 is the resolution -- a correction supersedes IN
-                # BAND -- so a later amendment may replace a pin only by
-                # NAMING THE IDENTITY IT REPLACES. Silent disagreement
-                # still refuses; that was always the real hazard.
-                sup = (doc.get("supersedes") or {}).get(key)
-                named = (sup.get("path") if isinstance(sup, dict)
-                         else sup) == prev["path"]
-                if not named:
-                    raise RunnerRefused(
-                        f"REFUSED {DECLARATION_PIN_CONFLICT}: {key} is "
-                        f"pinned to {prev['path']}/{prev['sha256'][:12]} "
-                        f"and again to {val['path']}/{val['sha256'][:12]} "
-                        f"in {f.name}, which does not name what it "
-                        f"replaces. A pin that can be overwritten SILENTLY "
-                        f"is not a pin; declare "
-                        f'"supersedes": {{"{key}": '
-                        f'{{"path": "{prev["path"]}"}}}} to move it.')
-                val = dict(val, supersedes=prev["path"],
-                           superseded_at=f.name)
-            out[key] = dict(val, named_by=f.name)
+            chain = list(prev.get("chain", [])) if prev else []
+            chain.append({"version": version, "named_by": f.name,
+                          "path": val["path"], "sha256": val["sha256"]})
+            out[key] = dict(val, named_by=f.name, version=version,
+                            chain=chain,
+                            supersedes=(prev.get("path") if prev
+                                        and prev["path"] != val["path"]
+                                        else None))
     return out
 
 
