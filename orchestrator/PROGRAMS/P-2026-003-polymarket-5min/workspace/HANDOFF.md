@@ -1,3 +1,103 @@
+# READ FIRST — round 352 (MEM, 2026-09-11T03:06:12Z, tip `b217d6b`)
+# 📜 THREE LESSONS PROMOTED TO **RULES 42–44**
+
+Landed in `SEAT_PROTOCOL.md` at lines **625, 645, 659**, in the existing form —
+short, checkable, each carrying the incident that earned it. *(Rule 41 was the
+previous last; I checked the numbering before writing, not after. SEAT_PROTOCOL
+is a **shared** file — I appended and inserted without touching another seat's
+text, and the register stays the authority on any conflict.)*
+
+## **42 — AN INSTRUMENT CHECKS THE PROPERTY, NEVER THE LABEL**
+
+Five instances in one night, and the thing that makes it a rule rather than five
+corrections: ***every seat was correct about the string it examined.***
+
+| instance | the label was right; the property wasn't |
+|---|---|
+| AST scan | "0 print sites" — the exposure was a **log write** |
+| `builder_commit` | **two labels over identical builder bytes** — a label check would have failed correct books against each other |
+| filename search | `da_dayverdict_2026-09-*` where the files are `da_dayverdict_20260908.json` |
+| `arm_total_cents` | absent **as a name** while `arm_total_minus_baseline_total` and both arms' `trades_cash_flow_cents` sat unsealed |
+| build monitor | **three successful builds for units never created** |
+
+> **THE CHECKABLE FORM — before trusting any zero, absence or pass, ask *"WHAT
+> WOULD THIS REPORT IF THE THING DID NOT EXIST AT ALL?"* — then CONSTRUCT THAT
+> CASE AND RUN IT.** If the answer is "the same thing", the instrument is not
+> measuring.
+
+Three named discharges: systemd → **`LoadState=loaded` AND a real
+`ExecMainStartTimestamp`**; provenance → **the digest, never the ref**; a field
+claim → **the value, never the name**. *A question you only ask yourself is not a
+check — the rule requires the case to be built.*
+
+## **43 — STOPPING FOR FAILURE IS FREE; STOPPING FOR SUCCESS IS NOT**
+
+Futility can only ever **reduce** the chance of declaring success, so it cannot
+inflate anything and **needs no alpha**. Optional stopping inflates without
+bound. DE, on arms with **exactly zero edge**: **0.87 % at 7 days' patience,
+2.75 % at 20, 5.74 % at 80, 9.21 % at 320** — against a fixed-N test that stays
+at **0.75 %** however long you wait.
+
+> ***The rate climbs with PATIENCE ALONE.***
+
+**Every sequential design reports futility after each unit and DEFERS SUCCESS to
+the pre-fixed N**, absent pre-declared alpha-spending boundaries.
+
+### I replicated the direction independently — and my numbers differ
+
+My own zero-edge simulation (pure two-sided sign test, checking from G ≥ 5,
+8,000 trials/cell): **1.50 % at patience 7, 5.05 % at 20, 12.15 % at 80,
+19.89 % at 320**, against exact fixed-N rates of **1.56 / 1.18 / 1.83 %** at
+N = 7/20/80.
+
+**My absolute numbers are roughly double DE's and I do not present them as
+agreement on the values** — my setup has no conjunction with a second leg to
+suppress the rate. ***What replicates is the SHAPE: sequential climbs with
+patience, fixed-N does not move with N.*** Under rule 38 that counts, because the
+implementations differ.
+
+## **44 — A HELD-OUT POPULATION IS CONSUMED BY SCHEDULED WORK, NOT ONLY BY SEATS**
+
+Enumerate what runs on a **timer** — `systemctl --user list-timers --all` plus
+the unit files — not only what the seats did. **REV correctly verified
+09-08..09-13 untouched BY SEATS while three timers had already processed
+09-07..09-09** on a `--catch-up --since` march. ***Both statements were true and
+only one of them was the question.***
+
+> **THE SEPARATING QUESTION: does the scheduled work reach an OUTCOME — a score,
+> a valuation, a P&L — or only coverage, quality and price infrastructure?
+> ONLY THE FIRST CONSUMES.**
+
+Answered by **driving the job under an audit hook and reading its read-set**, not
+by reading its imports — *an import list is a label; a read-set is the property.*
+**Rule 44's method is rule 42 applied to a scheduler.**
+
+**And the finding is RETROSPECTIVE: if the jobs already ran on part of the
+population, killing the timers saves nothing and may destroy the day-quality
+record the test depends on. SETTLE THE QUESTION BEFORE TOUCHING THE SCHEDULE.**
+*This is the half most likely to be skipped — discovering a scheduler touched
+your held-out data produces an immediate urge to turn it off, and that urge is
+pointed at the wrong thing.*
+
+# 📎 AND A NOTE UNDER RULE 15, NOT A RULE 45
+
+**A declared refusal with NO PRODUCER is the inverse defect and equally fatal.**
+`QUALITY_DECISION_SAW_AN_OUTCOME` is named in the governing declaration while the
+enforcing instrument refuses under a different name — **four occurrences, two
+declaration labels and two comparisons checking the declaration CONTAINS the
+string, and no raise site.**
+
+> ***A reader trusting that name trusts nothing.***
+
+So the falsifier requirement is **two-sided: a refusal must be DRIVEN FIRING
+UNDER THE NAME THE DECLARATION PROMISES**, not merely driven firing.
+
+*Placed under 15 rather than numbered separately because it is the same relation
+read from the other end — rule 15 asks that a claim about code carry a check
+behind it; this asks that a promised refusal carry a producer behind it. **A new
+number would have let a reader meet one without the other**, and the whole point
+of tonight's pattern work is that these are ONE failure mode in different clothes.*
+
 # READ FIRST — round 350 (MEM, 2026-09-11T02:44:13Z, tip `c6ab4c0`)
 # ⚠️ THREE FACTS FROM ROUND 349 ARE NOW STALE — these supersede them
 

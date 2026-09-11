@@ -78,6 +78,15 @@ except where marked USER-ONLY.
     claim about code behaviour drifts from the code without either the entry
     or the code noticing — rule 15 of CLAUDE.md applied to the register
     itself.
+    **AND THE INVERSE DEFECT IS EQUALLY FATAL: a declared refusal with NO
+    PRODUCER.** REV found `QUALITY_DECISION_SAW_AN_OUTCOME` named in the
+    governing forward-test declaration while the enforcing instrument refuses
+    under a different name; MEM confirmed four occurrences — two declaration
+    labels and two comparisons checking that the declaration CONTAINS the
+    string — and no raise site. **A reader trusting that name trusts nothing.**
+    So the falsifier requirement is two-sided: a refusal must be DRIVEN FIRING
+    **under the name the declaration promises**, not merely driven firing.
+    (2026-09-11, MEM 352.)
 16. **A control that cannot fail must never be mistaken for a control that
     passed** (R-249; MEM's consolidation of four named instances: a fixture
     supplying what the code should produce; a guard shown only to refuse —
@@ -612,3 +621,52 @@ except where marked USER-ONLY.
     "the error inflates rather than deflates" as an apology for exactly this
     reason. **And when choosing between two instruments, prefer the one that fails
     noisily even if it fails more often.** (R-897)
+
+42. **An instrument checks the PROPERTY, never the LABEL.** (2026-09-11, five
+    instances in one night, and *every seat was correct about the string it
+    examined*.) DA's AST scan reported "0 print sites" and read as clean — the
+    real exposure was a LOG WRITE, found only by opening an actual log. DA
+    required `builder_commit` to equal one commit, while the consumed books carry
+    TWO labels over IDENTICAL builder bytes — so a label check would have failed
+    correct books against each other. REV searched `da_dayverdict_2026-09-*`
+    where the files are `da_dayverdict_20260908.json`. The coordinator told the
+    USER 09-07 had "no `arm_total_cents` anywhere" — true AS A FIELD NAME while
+    `arm_total_minus_baseline_total` and both arms' `trades_cash_flow_cents` sat
+    unsealed in the same artifact. And a build monitor reported THREE SUCCESSFUL
+    BUILDS for units never created, because `systemctl show` returns
+    `dead`/`success` for a nonexistent unit.
+    **THE CHECKABLE FORM — before trusting any zero, absence or pass, ask: "WHAT
+    WOULD THIS REPORT IF THE THING DID NOT EXIST AT ALL?" Then construct that
+    case and RUN it.** If the answer is "the same thing", the instrument is not
+    measuring. For systemd, require `LoadState=loaded` AND a real
+    `ExecMainStartTimestamp`. For provenance, the DIGEST, never the ref. For a
+    field claim, the VALUE, never the name. (R-899)
+
+43. **Stopping for FAILURE is free; stopping for SUCCESS is not.** (2026-09-11,
+    DE, two independent runs of 20k and 60k trials agreeing.) Futility stopping
+    can only ever REDUCE the chance of declaring success, so it cannot inflate
+    anything and **needs no alpha**. Stopping early on a FAVOURABLE result is
+    optional stopping and inflates without bound. Measured on arms with EXACTLY
+    ZERO edge, "keep adding days until p ≤ 0.025" declares success in **0.87 % at
+    7 days' patience, 2.75 % at 20, 5.74 % at 80, 9.21 % at 320** — **the rate
+    climbs WITH PATIENCE ALONE**, while a fixed-N test stays at 0.75 % however
+    long you wait.
+    **SO: every sequential design REPORTS FUTILITY after each unit and DEFERS
+    SUCCESS to the pre-fixed N**, unless pre-declared alpha-spending boundaries
+    exist. The asymmetry is not a convention — it is which direction the error
+    can run. (R-899)
+
+44. **A held-out population is consumed by SCHEDULED WORK, not only by seats.**
+    (2026-09-11, REV.) Before accepting any untouched verdict, enumerate what
+    runs on a TIMER — `systemctl --user list-timers --all` plus the unit files —
+    not only what the seats did. REV correctly verified 09-08..09-13 untouched
+    BY SEATS while three timers had already processed 09-07..09-09 on a
+    `--catch-up --since` march.
+    **THE SEPARATING QUESTION: does the scheduled work reach an OUTCOME — a
+    score, a valuation, a P&L — or only coverage, quality and price
+    infrastructure? ONLY THE FIRST CONSUMES.** Answer it by DRIVING the job
+    under an audit hook and reading its read-set, not by reading its imports.
+    **And the finding is RETROSPECTIVE: if the jobs already ran on part of the
+    population, killing the timers saves nothing and may destroy the day-quality
+    record the test depends on. SETTLE THE QUESTION BEFORE TOUCHING THE
+    SCHEDULE.** (R-899)

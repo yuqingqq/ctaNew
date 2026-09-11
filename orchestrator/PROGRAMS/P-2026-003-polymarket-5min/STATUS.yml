@@ -67,6 +67,21 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T03:05:24Z (MEM ROUND 352 -- THREE LESSONS PROMOTED TO RULES 42-44 IN SEAT_PROTOCOL, in
+  the existing form, each carrying the incident that earned it. 42: AN INSTRUMENT CHECKS
+  THE PROPERTY, NEVER THE LABEL -- five instances in one night and EVERY SEAT WAS CORRECT
+  ABOUT THE STRING IT EXAMINED, with the checkable form being a question you must ACTUALLY
+  RUN: what would this report if the thing did not exist at all? 43: STOPPING FOR FAILURE
+  IS FREE, STOPPING FOR SUCCESS IS NOT -- futility cannot inflate and needs no alpha, while
+  optional stopping climbs WITH PATIENCE ALONE; I REPLICATED THE DIRECTION INDEPENDENTLY
+  (1.50 / 5.05 / 12.15 / 19.89 per cent against flat fixed-N) and record that MY ABSOLUTE
+  NUMBERS ARE ROUGHLY DOUBLE DE'S because my setup lacks the second leg -- the SHAPE
+  replicates, not the values. 44: A HELD-OUT POPULATION IS CONSUMED BY SCHEDULED WORK, NOT
+  ONLY BY SEATS -- REV's verdict was true and was not the question; the separating test is
+  OUTCOME versus INFRASTRUCTURE, answered by DRIVING the job and reading its read-set, and
+  the finding is RETROSPECTIVE so killing the timers saves nothing. The inverse defect -- a
+  declared refusal with NO PRODUCER -- is a NOTE UNDER RULE 15, not a rule 45, because it
+  is the same relation read from the other end. tip b217d6b)
   2026-09-11T02:57:43Z (MEM ROUND 351 -- THE TIMER LANES ARE CLEARED AND A FAILURE MODE IS NAMED AS A
   PATTERN. Measurement and evaluation closures contain ZERO arm, policy, book or scoring
   modules; da-midnight-verify DRIVEN on 09-03 read raw tape, ledgers, density and the
@@ -104,25 +119,6 @@ updated: >-
   DE closed my round-349 multiplicity tension by DISTINGUISHING: Holm's m = 2 because there
   are two p-values; 69 is SELECTION multiplicity, correcting the prior not the denominator.
   tip 5c91ac5)
-  2026-09-11T02:34:44Z (MEM ROUND 349 -- I WAS WRONG BY FIFTEEN SECONDS AND THE CORRECTION LEADS. My
-  round-348 headline said the landed artifacts did not carry the ruling; DA 211's v2 was
-  committed at 02:24:02 and my write ran at 02:24:17, with ee1e85d ALREADY MY TIP. I read v1
-  and did not look for a vN+1 -- rule 13, which I have quoted in these files repeatedly.
-  VERIFYING AT AN ARTIFACT IS NOT VERIFYING AT THE CURRENT ONE. v2 holds N = 6,
-  09-07..09-12, completing 2026-09-13T00:00Z, 09-07 moved from COMPANION into the PRIMARY.
-  THE BIGGEST OPEN ITEM: N=6 MAY BE STRUCTURALLY INCAPABLE OF PASSING -- conjunct (a) is a
-  DAY-CLUSTER test and I computed the two-sided floor at 2/2^6 = 0.031250 against the 0.025
-  Holm must beat, so A PERFECT 6-FOR-6 STILL FAILS; N=7 floors at 0.015625 and clears. DE is
-  computing it. NOBODY MAY LATER READ AN INCONCLUSIVE AS EVIDENCE AGAINST THE ARMS WHEN THE
-  FLOOR FOREORDAINED IT -- and the SIDEDNESS must be ruled BEFORE the first day is read or
-  it is rule 11. THE IDENTITY QUESTION IS CLOSED THE RIGHT WAY (BE 114, by DIGEST MATCH):
-  the compositions are ADDITIVE, the screen ran on composition 3, so this IS a second look
-  at a SCREENED arm -- and THETA WAS NEVER REFITTED across all thirty params versions, the
-  one fact this round that widens rather than narrows. Multiplicity 69 beside 2 in ONE
-  artifact, but v2 says the CORRECTION IN FORCE STAYS THE FROZEN 2 with 69 reported as a
-  limit -- flagged for the register. THREE TIMERS PROCESS POPULATION DAYS: I measured all
-  three, and pm-measurement-pipeline FIRES AGAIN AT 03:21:56Z, 48 MINUTES AFTER THIS SWEEP.
-  09-07 is consumed by 8 OF 13 PRODUCER FAMILIES -- broader than endpoint-split. tip cc63ccf)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -294,6 +290,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 352, rules 42-44 promoted ---
+  RULES_42_TO_44_ARE_LANDED_IN_SEAT_PROTOCOL_AND_41_WAS_THE_PREVIOUS_LAST: "I checked the numbering before writing rather than after: rule 41 was the last, 42 through 44 did not exist, and rule 15's block sits at line 76. The three new rules are appended in the existing form -- short, checkable, each carrying the incident that earned it -- at lines 625, 645 and 659. SEAT_PROTOCOL is a SHARED file and I am not its sole writer, so I appended and inserted without touching another seat's text, and the register remains the authority on any conflict."
+  RULE_42_IS_THAT_AN_INSTRUMENT_CHECKS_THE_PROPERTY_NEVER_THE_LABEL: "Five instances in one night, and the thing that makes it a rule rather than five corrections: EVERY SEAT WAS CORRECT ABOUT THE STRING IT EXAMINED. An AST scan reporting 0 print sites while the exposure was a LOG WRITE; a builder_commit label check that would have failed correct books against each other because two labels sit over IDENTICAL builder bytes; a dashed filename search against compact filenames; a field-name check standing in for values; and a build monitor passing three units that were never created."
+  AND_RULE_42S_CHECKABLE_FORM_IS_A_QUESTION_YOU_MUST_ACTUALLY_RUN: "Before trusting any zero, absence or pass: WHAT WOULD THIS REPORT IF THE THING DID NOT EXIST AT ALL? Then CONSTRUCT THAT CASE AND RUN IT. If the answer is 'the same thing', the instrument is not measuring. The rule names three concrete discharges: for systemd, LoadState=loaded AND a real ExecMainStartTimestamp; for provenance, the DIGEST never the ref; for a field claim, the VALUE never the name. A question you only ask yourself is not a check -- the rule requires the case to be built."
+  RULE_43_IS_THAT_STOPPING_FOR_FAILURE_IS_FREE_AND_STOPPING_FOR_SUCCESS_IS_NOT: "Futility stopping can only ever REDUCE the chance of declaring success, so it cannot inflate anything and needs no alpha. Stopping early on a favourable result inflates without bound. DE's measurement on arms with EXACTLY ZERO edge: 0.87 per cent at 7 days' patience, 2.75 at 20, 5.74 at 80, 9.21 at 320, against a fixed-N test that stays at 0.75 however long you wait. THE RATE CLIMBS WITH PATIENCE ALONE. So every sequential design reports futility after each unit and DEFERS SUCCESS to the pre-fixed N, absent pre-declared alpha-spending boundaries."
+  AND_I_REPLICATED_THE_DIRECTION_INDEPENDENTLY_WITH_DIFFERENT_ABSOLUTE_NUMBERS: "I wrote my own zero-edge simulation -- a pure two-sided sign test, checking from G>=5, 8,000 trials per cell -- and got 1.50 per cent at patience 7, 5.05 at 20, 12.15 at 80 and 19.89 at 320, against exact fixed-N rates of 1.56, 1.18 and 1.83 per cent at N = 7, 20 and 80. MY ABSOLUTE NUMBERS ARE ROUGHLY DOUBLE DE'S AND I DO NOT PRESENT THEM AS AGREEMENT ON THE VALUES: my setup has no conjunction with a second leg to suppress the rate. What replicates is the SHAPE -- the sequential rate climbs with patience alone while the fixed-N rate does not move with N. Under rule 38 that is corroboration because the implementations differ."
+  RULE_44_IS_THAT_A_HELD_OUT_POPULATION_IS_CONSUMED_BY_SCHEDULED_WORK_NOT_ONLY_BY_SEATS: Before accepting any untouched verdict, enumerate what runs on a TIMER -- systemctl --user list-timers --all plus the unit files -- not only what the seats did. REV correctly verified 09-08..09-13 untouched BY SEATS while three timers had already processed 09-07..09-09 on a --catch-up --since march. Both statements were true and only one of them was the question.
+  AND_RULE_44S_SEPARATING_QUESTION_IS_OUTCOME_VERSUS_INFRASTRUCTURE_ANSWERED_BY_DRIVING: Does the scheduled work reach an OUTCOME -- a score, a valuation, a P&L -- or only coverage, quality and price infrastructure? ONLY THE FIRST CONSUMES. And the rule requires it answered by DRIVING the job under an audit hook and reading its read-set, not by reading its imports, because an import list is a label and a read-set is the property. Rule 44's method is rule 42 applied to a scheduler.
+  AND_THE_FINDING_IS_RETROSPECTIVE_SO_KILLING_THE_TIMERS_SAVES_NOTHING: If the jobs already ran on part of the population, stopping them now recovers nothing that was consumed AND MAY DESTROY THE DAY-QUALITY RECORD THE TEST DEPENDS ON. Settle the question before touching the schedule. This is the half of the rule most likely to be skipped, because discovering a scheduler touched your held-out data produces an immediate urge to turn it off, and that urge is pointed at the wrong thing.
+  THE_INVERSE_DEFECT_IS_A_NOTE_UNDER_RULE_15_RATHER_THAN_A_FOURTH_RULE: "A declared refusal with NO PRODUCER, inserted into rule 15's block at line 81: REV found QUALITY_DECISION_SAW_AN_OUTCOME named in the governing declaration while the enforcing instrument refuses under a different name, and I confirmed four occurrences -- two declaration labels and two comparisons checking that the declaration CONTAINS the string -- with no raise site. A READER TRUSTING THAT NAME TRUSTS NOTHING. The falsifier requirement is therefore two-sided: a refusal must be DRIVEN FIRING UNDER THE NAME THE DECLARATION PROMISES, not merely driven firing."
+  AND_PLACING_IT_UNDER_15_RATHER_THAN_AS_RULE_45_IS_THE_RIGHT_CALL: It is the inverse of a defect rule 15 already covers -- rule 15 asks that a claim about code carry a check behind it, and this asks that a promised refusal carry a producer behind it. The same relation, read from the other end. A new number would have let a reader meet one without the other, and the whole point of the pattern work tonight is that these are ONE failure mode wearing different clothes.
   # --- MEM round 351, the lanes cleared, a pattern, and a fifth instance of mine ---
   THE_TIMER_LANES_ARE_CLEARED_AND_THE_FALSIFIER_FIRING_IS_WHAT_MAKES_THE_SILENCE_COUNT: "REVIEW 169 / REV 127. The measurement lane's 6-module closure and the evaluation lane's 7 contain ZERO arm, policy, book or scoring modules. da-midnight-verify was DRIVEN under an audit hook on 09-03: 32,416 opens, read-set confined to raw tape, collector ledgers, tape density and the register, with ZERO books, ZERO tier1/2 and ZERO score artifacts; its verdict carries 318 keys and none of the outcome class. AND THE FALSIFIER FIRES -- 09-03 shows 11 arm-outcome families -- so the zeros elsewhere are a measurement and not an instrument that cannot see. That is rule 15 discharged on the exact question it was built for."
   AND_THE_PER_DAY_TABLE_PUTS_THE_WHOLE_EXPOSURE_ON_ONE_DAY: 09-07 = 22 producer families with FIVE ARM-OUTCOME; 09-08 = 15 with 0; 09-09 = 15 with 0; 09-10 = 5 with 0; 09-11 = 3 with 0; 09-12 and 09-13 = 0 and 0. So the automated lanes touched days but did not produce arm outcomes on any of them, and the entire arm-outcome exposure in the population sits on 09-07 alone. A table whose interesting column is zero on six of seven rows is the cleanest result this question could have returned.
@@ -27638,6 +27645,67 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 352, 2026-09-11T03:05:24Z ---
+  RULES_42_TO_44_ARE_LANDED_IN_SEAT_PROTOCOL_AND_41_WAS_THE_PREVIOUS_LAST:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T03:05:24Z
+    said: >-
+      the rule list grepped before the write showing 41 as the highest and no 42-44; after the write, 42, 43 and 44 resolve at lines 625, 645 and 659 and the rule-15 note at line 81.
+  RULE_42_IS_THAT_AN_INSTRUMENT_CHECKS_THE_PROPERTY_NEVER_THE_LABEL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T03:05:24Z
+    said: >-
+      the five instances as landed in rule 42; the systemctl instance I established by execution at round 351 and the filename instance I verified here -- the files are da_dayverdict_20260826.json and similar, compact, so a 2026-09-* glob matches nothing.
+  AND_RULE_42S_CHECKABLE_FORM_IS_A_QUESTION_YOU_MUST_ACTUALLY_RUN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T03:05:24Z
+    said: >-
+      the checkable form as landed in rule 42, including the three named discharges.
+  RULE_43_IS_THAT_STOPPING_FOR_FAILURE_IS_FREE_AND_STOPPING_FOR_SUCCESS_IS_NOT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T03:05:24Z
+    said: >-
+      DE's four measured rates and the fixed-N reference as landed in rule 43, from two independent runs of 20k and 60k trials.
+  AND_I_REPLICATED_THE_DIRECTION_INDEPENDENTLY_WITH_DIFFERENT_ABSOLUTE_NUMBERS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T03:05:24Z
+    said: >-
+      my own simulation run at this round with its parameters stated; the fixed-N rates computed exactly rather than simulated. The divergence in absolute level is stated as a difference in setup, not resolved in my favour.
+  RULE_44_IS_THAT_A_HELD_OUT_POPULATION_IS_CONSUMED_BY_SCHEDULED_WORK_NOT_ONLY_BY_SEATS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T03:05:24Z
+    said: >-
+      rule 44 as landed; the three timers and their last-run times I measured myself at round 349.
+  AND_RULE_44S_SEPARATING_QUESTION_IS_OUTCOME_VERSUS_INFRASTRUCTURE_ANSWERED_BY_DRIVING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T03:05:24Z
+    said: >-
+      the separating question and the driving requirement as landed in rule 44; the 09-03 audit-hook drive with its 32,416 opens is recorded at round 351.
+  AND_THE_FINDING_IS_RETROSPECTIVE_SO_KILLING_THE_TIMERS_SAVES_NOTHING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T03:05:24Z
+    said: >-
+      the retrospective clause as landed in rule 44.
+  THE_INVERSE_DEFECT_IS_A_NOTE_UNDER_RULE_15_RATHER_THAN_A_FOURTH_RULE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T03:05:24Z
+    said: >-
+      the note as inserted before rule 16; the four occurrences and the absent raise site I verified by grep at round 351.
+  AND_PLACING_IT_UNDER_15_RATHER_THAN_AS_RULE_45_IS_THE_RIGHT_CALL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T03:05:24Z
+    said: >-
+      the placement verified: the note sits inside rule 15's block and before rule 16's opening line.
   # --- MEM round 351, 2026-09-11T02:57:43Z ---
   THE_TIMER_LANES_ARE_CLEARED_AND_THE_FALSIFIER_FIRING_IS_WHAT_MAKES_THE_SILENCE_COUNT:
     prov: RELAYED

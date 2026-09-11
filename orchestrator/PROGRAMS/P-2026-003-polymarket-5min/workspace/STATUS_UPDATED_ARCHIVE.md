@@ -23140,3 +23140,27 @@ generation and the window went 4 → 3. Nothing rewritten.
   composition moved THREE TIMES, so this may be a FIRST look at an UNSCREENED arm.
   NOTHING IS TOUCHED; the amendment window closes when the first day is opened. tip ee1e85d)
 ```
+
+## Batch 334 (rotated by MEM round 352, 2026-09-11T03:05:24Z)
+
+```
+  2026-09-11T02:34:44Z (MEM ROUND 349 -- I WAS WRONG BY FIFTEEN SECONDS AND THE CORRECTION LEADS. My
+  round-348 headline said the landed artifacts did not carry the ruling; DA 211's v2 was
+  committed at 02:24:02 and my write ran at 02:24:17, with ee1e85d ALREADY MY TIP. I read v1
+  and did not look for a vN+1 -- rule 13, which I have quoted in these files repeatedly.
+  VERIFYING AT AN ARTIFACT IS NOT VERIFYING AT THE CURRENT ONE. v2 holds N = 6,
+  09-07..09-12, completing 2026-09-13T00:00Z, 09-07 moved from COMPANION into the PRIMARY.
+  THE BIGGEST OPEN ITEM: N=6 MAY BE STRUCTURALLY INCAPABLE OF PASSING -- conjunct (a) is a
+  DAY-CLUSTER test and I computed the two-sided floor at 2/2^6 = 0.031250 against the 0.025
+  Holm must beat, so A PERFECT 6-FOR-6 STILL FAILS; N=7 floors at 0.015625 and clears. DE is
+  computing it. NOBODY MAY LATER READ AN INCONCLUSIVE AS EVIDENCE AGAINST THE ARMS WHEN THE
+  FLOOR FOREORDAINED IT -- and the SIDEDNESS must be ruled BEFORE the first day is read or
+  it is rule 11. THE IDENTITY QUESTION IS CLOSED THE RIGHT WAY (BE 114, by DIGEST MATCH):
+  the compositions are ADDITIVE, the screen ran on composition 3, so this IS a second look
+  at a SCREENED arm -- and THETA WAS NEVER REFITTED across all thirty params versions, the
+  one fact this round that widens rather than narrows. Multiplicity 69 beside 2 in ONE
+  artifact, but v2 says the CORRECTION IN FORCE STAYS THE FROZEN 2 with 69 reported as a
+  limit -- flagged for the register. THREE TIMERS PROCESS POPULATION DAYS: I measured all
+  three, and pm-measurement-pipeline FIRES AGAIN AT 03:21:56Z, 48 MINUTES AFTER THIS SWEEP.
+  09-07 is consumed by 8 OF 13 PRODUCER FAMILIES -- broader than endpoint-split. tip cc63ccf)
+```
