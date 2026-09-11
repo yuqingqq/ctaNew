@@ -256,6 +256,12 @@ def _declaration_pin(decl_dir=None):   # decl_dir: cells pass a fixture dir
         pin = R.resolve_declaration_pins(d).get("forward_test_declaration")
         if pin and pin.get("path") and pin.get("sha256"):
             return pin
+        # THE SECOND PATH WAS DEAD AND SILENT: `chain` was never bound, so
+        # this line raised NameError, which the blanket `except` below read
+        # as "no pin" -- an unbound name reported as a clean absence. The
+        # chain's PARAMS pin is resolved here, by the same resolver the
+        # launcher uses, and the `except` no longer swallows a defect.
+        chain = BEN.resolve_frozen_params_pin(d)
         params_path = d / Path(str((chain.get("pin") or {}).get("path")
                                    or "")).name
         if params_path.is_file():
@@ -263,7 +269,10 @@ def _declaration_pin(decl_dir=None):   # decl_dir: cells pass a fixture dir
                 "forward_test_declaration")
             if pin and pin.get("path") and pin.get("sha256"):
                 return pin
-    except Exception:                              # noqa: BLE001
+    except (OSError, ValueError, KeyError, TypeError):
+        # ABSENCE ONLY. A refusal (R.RunnerRefused, BEN.NeutralityRefused)
+        # and a programming error (NameError, AttributeError) propagate:
+        # both are the opposite of "this declaration names no pin".
         return None
     return None
 

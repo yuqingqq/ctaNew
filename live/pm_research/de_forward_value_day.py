@@ -61,7 +61,13 @@ def _frozen_commit() -> str:
     return str(json.loads(f.read_text())["FREEZE_COMMIT"]).split()[0]
 
 
-PIPELINE_COMMIT = "READ_FROM_THE_CODE_FREEZE_DECLARATION"
+# NO LITERAL AND NO SENTINEL. The frozen commit is READ from DA's code
+# freeze declaration by declared identity (`_frozen_commit()`), at every
+# use site. A module-level sentinel was worse than the literal it replaced:
+# it read like a value, so two sites kept interpolating it -- one into
+# `git show`, crashing the record build with a NameError's cousin, one into
+# `!=`, refusing every valid record. A name that cannot hold the answer
+# must not exist.
 WRONG_TREE = "VALUATION_COMPUTING_MODULES_ARE_NOT_AT_THE_PIPELINE_COMMIT"
 RELOCATED = "VALUATION_RAN_FROM_A_DIFFERENT_TREE_THAN_ITS_LAUNCHER_SELECTED"
 NO_PREFLIGHT = "VALUATION_RECORD_CARRIES_NO_PREFLIGHT_SO_NOTHING_WAS_CHECKED"
@@ -119,7 +125,7 @@ def assert_computing_modules_at_the_pipeline_commit(modules=None) -> dict:
     tree = trees.pop()
     head = subprocess.run(["git", "-C", tree, "rev-parse", "HEAD"],
                           capture_output=True, text=True).stdout.strip()
-    # A COMMIT CANNOT CONTAIN ITS OWN HASH. PIPELINE_COMMIT names the
+    # A COMMIT CANNOT CONTAIN ITS OWN HASH. The frozen commit names the
     # commit the COMPUTING MODULES are pinned at; the tree may be a
     # DESCENDANT of it (this driver's own landing is one), and that is
     # admissible ONLY when every computing module is byte-identical to the
@@ -180,15 +186,30 @@ def assert_record_carries_preflight(path) -> dict:
             f"computed these numbers. This is NOT a pass -- it is the "
             f"absence of the check, which is indistinguishable from one "
             f"unless it refuses.")
-    if pf.get("head") != PIPELINE_COMMIT:
-        raise ValuationRefused(
-            f"REFUSED {WRONG_TREE}: the record's pre-flight names head "
-            f"{str(pf.get('head'))[:12]}, not the pipeline commit.")
+    # DESCENDANT, SAME RULE AS THE PRE-FLIGHT ITSELF. The tree that
+    # computes may descend from the frozen commit; the pre-flight admits
+    # that only when every computing module is byte-identical to the pin.
+    # A reader holding only the record must apply the SAME rule from the
+    # record's own evidence -- not a stricter one, or every valid record
+    # refuses, and not a looser one.
+    frozen = _frozen_commit()
+    head = str(pf.get("head") or "")
+    if head != frozen:
+        prov = rec.get("computing_module_provenance") or {}
+        if not (prov.get("pipeline_commit") == frozen
+                and prov.get(
+                    "every_computing_module_matches_the_pipeline_commit")):
+            raise ValuationRefused(
+                f"REFUSED {WRONG_TREE}: the record's pre-flight names head "
+                f"{head[:12]}, which is not the frozen commit "
+                f"{frozen[:12]}, and the record does not show every "
+                f"computing module identical to it.")
     return pf
 
 
 def computing_module_provenance() -> dict:
-    """Each computing module's digest here AND at the pipeline commit."""
+    """Each computing module's digest here AND at the frozen commit."""
+    frozen = _frozen_commit()
     out, all_match = {}, True
     for name in COMPUTING_MODULES:
         here = _sha(HERE / name)
@@ -203,7 +224,7 @@ def computing_module_provenance() -> dict:
                      "digest_at_pipeline_commit":
                          (there[:16] if there else None),
                      "identical": match}
-    return {"pipeline_commit": PIPELINE_COMMIT, "modules": out,
+    return {"pipeline_commit": frozen, "modules": out,
             "every_computing_module_matches_the_pipeline_commit": all_match}
 
 
