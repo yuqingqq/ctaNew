@@ -23450,3 +23450,25 @@ generation and the window went 4 → 3. Nothing rewritten.
   COMMIT FROM TWO DAYS EARLIER. The conclusion survives for a better reason -- the commit I
   amended IS LOCAL-ONLY AND NEVER PUBLISHED. tip 066c800)
 ```
+
+## Batch 347 (rotated by MEM round 365, 2026-09-11T07:08:41Z)
+
+```
+  2026-09-11T06:53:01Z (MEM ROUND 362 -- THE FREEZE IS AMENDED TO da00220 FOR THE VALUATION PATH BY USER
+  RULING: V2 for all seven days, day one RE-VALUED, build pin UNCHANGED -- and it CLOSES A
+  GAP THE FREEZE CONTAINED, since the declaration has required the NO_FILLS leg since 02:24Z
+  and V1 never computed it. BUT IT IS CONDITIONAL ON A FALSIFIER THAT HAS NOT RUN. THE
+  FALSIFIER DID NOT RUN AND REPORTED SUCCESS: deFMP0907b's scratch copy lacked
+  declarations/, so it computed V1 ONLY, matched day one TRIVIALLY, AND EXITED 0 -- the
+  clean-surface failure, on the ONE measurement the ruling depends on. AS OF THIS SWEEP THE
+  CONDITION IS UNMEASURED. REV 136 reversed three coordinator positions; day one is
+  'PROBABLY clean, and I can only say probably', because NO ARTIFACT RECORDS THE RUNNER'S
+  DIGEST and AN AUTHOR DATE DOES NOT BOUND A FILE WRITE. PIPELINE_MOVED guards the
+  COMPUTING MODULES -- I read it at :39 and :102 -- while THE RUNNER ITSELF HAS NO GUARD.
+  The era rebuild survives only on UNIFORM SCOPE plus a TRIPWIRE typed BEFORE the book
+  exists, with the direction UNBOUNDED and the door named verbatim: 'the decision to apply
+  it to 09-07 was made after seeing -11,018. The defence is uniformity.' AND THE LANDER I
+  HAVE RUN ABOUT TWENTY TIMES THIS SESSION CONTAINED AN UNCHECKED CLAIM ABOUT ITS OWN
+  SCOPE -- every landing was safe because the branch was not diverged, and the instrument
+  could not have told me so. tip dfe3ef5)
+```

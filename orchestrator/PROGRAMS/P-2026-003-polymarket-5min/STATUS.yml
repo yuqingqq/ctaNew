@@ -67,6 +67,20 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T07:08:41Z (MEM ROUND 365 -- THE TRIPWIRE COULD NOT FIRE AND IS STRUCK. |D| = 11,017.7c made
+  the 25 per cent threshold 2,754.4c, while REV's two bounds are 18.4c interval-scoped and
+  1,036.5c window-scoped -- I differenced them and EVEN THE UPPER BOUND IS 2.66x BELOW THE
+  THRESHOLD. AND WHAT I PRAISED AT ROUND 362 WAS ITS TIMING, WHICH SAID NOTHING ABOUT ITS
+  REACHABILITY: pre-registration is NECESSARY AND INSUFFICIENT, and rule 15 is what catches
+  a threshold that cannot trip. The replacement is 110c, and I checked where it sits: the
+  WINDOW-SCOPED bound WOULD FIRE IT and the interval-scoped would not -- placed so THE
+  PESSIMISTIC END TRIPS IT, with a PER-WINDOW clause because 20:45 alone holds 25.2 per cent
+  of the day's gap time and an aggregate-only trigger is blind in exactly the shape of the
+  likeliest finding. A 28TH GAP WINDOW: 1788796500 at 15:55:00Z, 1.553 s, fully interior and
+  supplied, in the ledger and NOT in BE's 27 -- so THE 27 IS A STRICT SUBSET OF 28, and the
+  routed question asks WHY a recorded gap is dropped, because a minimum-duration threshold
+  would drop ALL short gaps. SET (ii) IS EMPTY BY MEASUREMENT: the rebuilt mask returned
+  exactly the values DA typed before it ran. tip a78af1a)
   2026-09-11T07:02:26Z (MEM ROUND 364 -- THE 288th WINDOW IS NAMED AND THE TRIPWIRE NARROWS TO ONE
   MECHANISM. I verified every part at the artifact: n_gap_bearing 27, era clob_v4_1,
   includes_1788807300 FALSE, missing_interior_window [1788807300] at 18:55:00Z -- and I
@@ -96,23 +110,6 @@ updated: >-
   under the timing clause I state that MINE WAS FILED FIRST and this is confirmation, not
   corroboration. The freeze's tuning field is A DECLARED BOOL NO CODE READS, and its checker
   EXISTS UNWIRED. tip 929e5b2)
-  2026-09-11T06:53:01Z (MEM ROUND 362 -- THE FREEZE IS AMENDED TO da00220 FOR THE VALUATION PATH BY USER
-  RULING: V2 for all seven days, day one RE-VALUED, build pin UNCHANGED -- and it CLOSES A
-  GAP THE FREEZE CONTAINED, since the declaration has required the NO_FILLS leg since 02:24Z
-  and V1 never computed it. BUT IT IS CONDITIONAL ON A FALSIFIER THAT HAS NOT RUN. THE
-  FALSIFIER DID NOT RUN AND REPORTED SUCCESS: deFMP0907b's scratch copy lacked
-  declarations/, so it computed V1 ONLY, matched day one TRIVIALLY, AND EXITED 0 -- the
-  clean-surface failure, on the ONE measurement the ruling depends on. AS OF THIS SWEEP THE
-  CONDITION IS UNMEASURED. REV 136 reversed three coordinator positions; day one is
-  'PROBABLY clean, and I can only say probably', because NO ARTIFACT RECORDS THE RUNNER'S
-  DIGEST and AN AUTHOR DATE DOES NOT BOUND A FILE WRITE. PIPELINE_MOVED guards the
-  COMPUTING MODULES -- I read it at :39 and :102 -- while THE RUNNER ITSELF HAS NO GUARD.
-  The era rebuild survives only on UNIFORM SCOPE plus a TRIPWIRE typed BEFORE the book
-  exists, with the direction UNBOUNDED and the door named verbatim: 'the decision to apply
-  it to 09-07 was made after seeing -11,018. The defence is uniformity.' AND THE LANDER I
-  HAVE RUN ABOUT TWENTY TIMES THIS SESSION CONTAINED AN UNCHECKED CLAIM ABOUT ITS OWN
-  SCOPE -- every landing was safe because the branch was not diverged, and the instrument
-  could not have told me so. tip dfe3ef5)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -284,6 +281,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 365, the tripwire that could not fire ---
+  THE_25_PER_CENT_TRIPWIRE_COULD_NOT_FIRE_AND_I_COMPUTED_THE_MARGIN: "Struck. |D| is 11,017.7c so the threshold was 2,754.4c, and REV 139-141 bound the rebuild's delta-D two ways: INTERVAL-SCOPED about 18.4c and WINDOW-SCOPED about 1,036.5c, because gap_overlaps is BOOLEAN and a touched window's replay changes wholesale. I differenced them: EVEN THE UPPER BOUND IS 2.66 TIMES BELOW THE THRESHOLD. REV's framing is the honest one -- 'the two ends of a range, not a correction and a truth' -- and REV WITHDREW ITS OWN REVIEW 183 HEADLINE as over-claiming."
+  AND_THE_THING_I_PRAISED_AT_ROUND_362_WAS_ITS_TIMING_WHICH_SAID_NOTHING_ABOUT_ITS_REACHABILITY: "I recorded that threshold approvingly one round ago: 'typed BEFORE the rebuilt book exists' and 'a threshold written after the number would be a threshold chosen to clear it'. Both true, and both about WHEN it was written. NEITHER SAID ANYTHING ABOUT WHETHER IT COULD EVER TRIP. PRE-REGISTRATION IS NECESSARY AND INSUFFICIENT -- a pre-typed threshold can still be unreachable, and rule 15 is the thing that catches that: EVERY CHECKER SHIPS A FALSIFIER, INCLUDING A TRIPWIRE."
+  AND_Q_DA_58S_CONCENTRATION_DOES_NOT_REACH_THE_OLD_THRESHOLD_EITHER: "The concentration argument that made 25 per cent look conceivable does not carry: 36.2 seconds at 20:45 is about ELEVEN GENERATIONS, about 38c at 8.2x, and THE WHOLE WINDOW IS ABOUT 316c -- against a 2,754c threshold. So the route by which a small masked share could have produced a large delta was itself an order of magnitude short. The threshold was not merely conservative, it was outside the reachable space by every path anyone had proposed."
+  THE_REPLACEMENT_IS_110C_AND_IT_SITS_BETWEEN_THE_TWO_ENDS_OF_THE_RANGE_BY_DESIGN: "v12: an UNCONDITIONAL per-window report -- delta-D, each window's delta with its GAP-SECONDS, and BOTH reference levels printed -- with CONCENTRATION_FINDING if |delta-D| exceeds 110c in aggregate OR ANY SINGLE WINDOW exceeds 110c. I checked where 110 sits: the WINDOW-SCOPED bound of 1,036.5c WOULD FIRE IT and the interval-scoped 18.4c would not. So the threshold is placed so that THE PESSIMISTIC END OF THE RANGE TRIPS IT, which is the only placement consistent with 'firing costs a paragraph, missing costs the finding'."
+  AND_THE_PER_WINDOW_CLAUSE_EXISTS_BECAUSE_AGGREGATE_ONLY_IS_DEFEATED_BY_OFFSETTING_MOVES: "20:45 alone holds 25 per cent of the day's gap time -- 36.2 of 143.8 seconds, which I computed -- so a single window can carry the whole effect while the aggregate cancels. An aggregate-only trigger is therefore not a weaker version of the same check, it is a check with a blind spot shaped exactly like the most likely finding. SIGN_CHANGE_HALT is unchanged and THE TABLE MUST SUM TO DELTA-D, which is what stops a per-window report from being a set of numbers with no closure."
+  A_28TH_GAP_WINDOW_EXISTS_IN_THE_LEDGER_AND_I_CONFIRMED_ITS_ARITHMETIC: "1788796500, which I converted: 2026-09-07T15:55:00Z. The gap runs 15:55:19.259 to 15:55:20.812, which differences to 1.553 SECONDS, and it is FULLY INTERIOR to the window and the window is SUPPLIED. It is in the ledger and NOT in BE's 27 at v11. So BE's 27 IS A STRICT SUBSET OF THE LEDGER'S 28, which is a cleaner statement than 'the counts disagree'."
+  AND_THE_ROUTED_QUESTION_IS_THE_RIGHT_ONE_BECAUSE_ITS_ANSWER_GENERALISES: "Does the replay SEE it -- and if not, WHY does the fragment drop a recorded gap? The second half is what makes this more than one window: A MINIMUM-DURATION THRESHOLD WOULD MEAN IT DROPS ALL SHORT GAPS, so a one-window discrepancy would be the visible corner of a systematic filter. Asking why rather than only whether is the difference between reconciling a count and finding a rule."
+  SET_TWO_IS_EMPTY_BY_MEASUREMENT_NOT_BY_ARGUMENT: "The mask rebuilt under the FIXED era returns masked_windows == [1788807300] and n_masked == 1 -- NO FLIP. That is the confirming measurement whose expected values DA typed before it ran, and it returned them. So the mask-flip mechanism is empty BY MEASUREMENT, where one round ago it was empty by an argument from a predicate. The only delta-D source is the 27's -- or 28's -- replay-content change in retained rows."
+  AND_THE_DENOMINATORS_ARE_RULED_WITH_BOTH_ON_THE_TABLE: "287 supplied for the per-window table; 288 as the coverage denominator WITH THE MASKED WINDOW AS A STATUS ROW. Recorded for the second round because it is the general repair for a class this programme keeps meeting: not choosing between two right numbers, but publishing both with what each counts and making the difference a NAMED ROW rather than an absence."
+  THE_COORDINATORS_LEDGER_INSTRUMENT_TOOK_FOUR_ATTEMPTS_AND_THE_FIRST_THREE_LOOKED_CLEAN: "Recorded because the failure modes are the catalogue: an ASSUMED SCHEMA, a NONEXISTENT FIELD, and a VACUOUS COIN FILTER -- returning clean zeros or an inflated 336 seconds. THE FOURTH, SCHEMA-FIRST AND BTC-ONLY, gives 143.8 gap-seconds, which I checked is 0.167 PER CENT of the supplied day, with 20:45 at 36.2 seconds over six gaps. Three wrong readings, none of which announced itself, on the way to one that did -- and the corrective was to READ THE SCHEMA BEFORE THE DATA."
+  AND_THAT_WINDOW_MATCHES_REVS_INDEPENDENT_READ_WHICH_IS_WHERE_THE_CONFIDENCE_COMES_FROM: "20:45 agrees between the coordinator's fourth attempt and REV's independent read. Under the timing clause I state what I can: two readings of the same ledger by different pairings, and I do not have their order. What makes the agreement worth something here is that THE FIRST THREE ATTEMPTS DISAGREED WITH EVERYTHING, so a fourth that lands on another seat's number is a different kind of event from a first that does."
+  AND_THE_FREEZE_PREDICATE_IS_COMPUTED_NOW_WITH_ABSENT_AT_PIN_MEANING_MOVED: "DE: FALSE from 7ed5a90 to da00220 for the three valuation modules, TRUE at the amended pin and for all fourteen build modules; an EMPTY SCOPE REFUSES; and ABSENT-AT-PIN COUNTS AS MOVED. That last clause is the one I would have asked for: at round 360 I found two pipeline files that DO NOT EXIST at 7ed5a90, so a comparator that treats absence as anything other than movement would have reported them as matching nothing or as differing from nothing. The unread bool of round 362 now has a computed predicate behind it."
   # --- MEM round 364, the 288th window named ---
   THE_288TH_WINDOW_IS_1788807300_AND_I_CONFIRMED_EVERY_PART_OF_IT_AT_THE_ARTIFACT: "BE 137 closes 27-vs-12 and the 288th. I read be137_gap_windows_20260907.json: n_gap_bearing 27, era clob_v4_1 (the FIXED era), includes_1788807300 FALSE, missing_interior_window [1788807300] with missing_interior_window_utc ['18:55:00Z'], first_window 1788739200 and last_window 1788825300. I converted the epoch myself: 1788807300 IS 2026-09-07T18:55:00Z. And the slot arithmetic closes -- first to last at 300 seconds gives EXACTLY 288 SLOTS, of which 287 are supplied and the ONE MISSING INTERIOR SLOT IS THE MASKED WINDOW."
   AND_ONE_DENOMINATOR_WITH_TWO_CORRECT_NUMBERS_DIFFERING_BY_EXACTLY_THE_MASKED_WINDOW: "The window is ABSENT FROM THE SUPPLIED POPULATION, which is why it cannot be among the 27: A WINDOW THAT IS NOT SUPPLIED CANNOT BE GAP-BEARING. DA's 288 counts expected-AND-covered; the supply is 287. So the two figures were never in conflict -- they differ by the masked window and by nothing else. This is the fourth time in ten rounds that two right numbers looked like a disagreement because their units were unstated."
@@ -27792,6 +27802,79 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 365, 2026-09-11T07:08:41Z ---
+  THE_25_PER_CENT_TRIPWIRE_COULD_NOT_FIRE_AND_I_COMPUTED_THE_MARGIN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:08:41Z
+    said: >-
+      0.25 * 11,017.7 computed as 2,754.4c and compared with both bounds; 2,754.4/1,036.5 = 2.66.
+  AND_THE_THING_I_PRAISED_AT_ROUND_362_WAS_ITS_TIMING_WHICH_SAID_NOTHING_ABOUT_ITS_REACHABILITY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:08:41Z
+    said: >-
+      my round-362 flag recording the 25 per cent threshold is about its pre-typed status only; the reachability computation above is what it lacked.
+  AND_Q_DA_58S_CONCENTRATION_DOES_NOT_REACH_THE_OLD_THRESHOLD_EITHER:
+    prov: RELAYED
+    from: REV 139-141 via coordinator MEM 365
+    as_of: 2026-09-11T07:08:41Z
+    said: >-
+      the generation count and the per-window figure as dispatched; 316c against 2,754.4c compared by me.
+  THE_REPLACEMENT_IS_110C_AND_IT_SITS_BETWEEN_THE_TWO_ENDS_OF_THE_RANGE_BY_DESIGN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:08:41Z
+    said: >-
+      110c compared against both bounds: 1,036.5 > 110 and 18.4 < 110; 2,754.4/110 = 25.0, the factor by which the threshold moved.
+  AND_THE_PER_WINDOW_CLAUSE_EXISTS_BECAUSE_AGGREGATE_ONLY_IS_DEFEATED_BY_OFFSETTING_MOVES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:08:41Z
+    said: >-
+      36.2/143.8 computed as 25.2 per cent; the sum-to-delta-D requirement and the unchanged halt as dispatched.
+  A_28TH_GAP_WINDOW_EXISTS_IN_THE_LEDGER_AND_I_CONFIRMED_ITS_ARITHMETIC:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be137_gap_windows_20260907.json
+    as_of: 2026-09-11T07:08:41Z
+    said: >-
+      1788796500 converted with datetime.fromtimestamp to 15:55:00Z; 20.812 - 19.259 = 1.553 s; the offsets 19.259 and 20.812 both lie strictly inside the 300-second window.
+  AND_THE_ROUTED_QUESTION_IS_THE_RIGHT_ONE_BECAUSE_ITS_ANSWER_GENERALISES:
+    prov: RELAYED
+    from: coordinator MEM 365
+    as_of: 2026-09-11T07:08:41Z
+    said: >-
+      the routing and the minimum-duration hypothesis as dispatched.
+  SET_TWO_IS_EMPTY_BY_MEASUREMENT_NOT_BY_ARGUMENT:
+    prov: RELAYED
+    from: DA 231 via coordinator MEM 365
+    as_of: 2026-09-11T07:08:41Z
+    said: >-
+      the rebuild's two returned values as dispatched, against the expectations I recorded as pre-typed at round 364.
+  AND_THE_DENOMINATORS_ARE_RULED_WITH_BOTH_ON_THE_TABLE:
+    prov: RELAYED
+    from: coordinator MEM 365
+    as_of: 2026-09-11T07:08:41Z
+    said: >-
+      the ruling as dispatched and consistent with the round-364 form; rule 4 requires exclusions to be statuses.
+  THE_COORDINATORS_LEDGER_INSTRUMENT_TOOK_FOUR_ATTEMPTS_AND_THE_FIRST_THREE_LOOKED_CLEAN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:08:41Z
+    said: >-
+      143.8 / (287*300) computed as 0.167 per cent; the three failed attempts and their causes as dispatched.
+  AND_THAT_WINDOW_MATCHES_REVS_INDEPENDENT_READ_WHICH_IS_WHERE_THE_CONFIDENCE_COMES_FROM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:08:41Z
+    said: >-
+      the agreement as dispatched; the filing order is not established and is not claimed.
+  AND_THE_FREEZE_PREDICATE_IS_COMPUTED_NOW_WITH_ABSENT_AT_PIN_MEANING_MOVED:
+    prov: RELAYED
+    from: DE via coordinator MEM 365
+    as_of: 2026-09-11T07:08:41Z
+    said: >-
+      the four computed results and the three clauses as dispatched; the two absent-at-pin files are the ones I established at round 360.
   # --- MEM round 364, 2026-09-11T07:02:26Z ---
   THE_288TH_WINDOW_IS_1788807300_AND_I_CONFIRMED_EVERY_PART_OF_IT_AT_THE_ARTIFACT:
     prov: CHECKED
