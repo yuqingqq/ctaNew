@@ -168,6 +168,34 @@ def computing_module_provenance() -> dict:
             "every_computing_module_matches_the_pipeline_commit": all_match}
 
 
+def runner_provenance() -> dict:
+    """THE RUNNER'S OWN DIGEST AND ITS IMPORT CLOSURE (rule 22).
+
+    Today `be_module` records be_cancel_axis_null's digest -- not the
+    runner's -- so a result cannot prove WHICH RUNNER produced it. Day one
+    could only be shown clean by REV reconstructing from the launch record
+    and the reflog; a result must prove itself from its own artifact.
+
+    THE HEADER-SIDE IS NOT DONE HERE AND I SAY SO: the checkpoint HEADER is
+    written inside `run_one_day_arm`, which is now PINNED at the valuation
+    commit. Adding a field there would move the pin the freeze just set.
+    So the closure is captured BEFORE and AFTER each arm instead, and a
+    mid-run rewrite shows up as a difference between the two -- the same
+    detectability, without editing a frozen module.
+    """
+    out = {}
+    for name, mod in sorted(sys.modules.items()):
+        f = getattr(mod, "__file__", None)
+        if not f or "/pm_research/" not in str(f):
+            continue
+        fp = Path(f)
+        if fp.is_file():
+            out[fp.name] = _sha(fp)[:16]
+    return {"runner": out.get("de_settlement_control_run.py"),
+            "driver": out.get("de_forward_value_day.py"),
+            "n_modules_in_closure": len(out), "closure": out}
+
+
 def pipeline_provenance_limit() -> dict:
     """DA refuses a result that does not state this. It is not decoration."""
     return {
@@ -253,8 +281,20 @@ def main(argv=None) -> int:
     for arm in E.ARMS:
         print(json.dumps({"stage": "valuing", "day": a.day, "arm": arm}),
               flush=True)
+        before = runner_provenance()
         res = SC.run_one_day_arm(a.day, a.book, arm, n_draws=a.n_draws,
                                  seed=a.seed, out_dir=out_dir)
+        after = runner_provenance()
+        moved = sorted(k for k in set(before["closure"]) | set(after["closure"])
+                       if before["closure"].get(k) != after["closure"].get(k))
+        res["runner_provenance"] = {
+            "before": before, "after": after,
+            "modules_that_changed_under_the_run": moved,
+            "A_MODULE_CHANGED_UNDER_THIS_RUN": bool(moved),
+            "why_before_and_after": (
+                "the checkpoint HEADER is written inside a PINNED module; "
+                "capturing the closure either side of the call detects a "
+                "mid-run rewrite without editing frozen bytes")}
         c = a.day.replace("-", "")
         (out_dir / f"de_settle_result_{c}_{arm}.json").write_text(
             json.dumps(res, indent=1, default=str))
@@ -275,6 +315,7 @@ def main(argv=None) -> int:
               "MARGIN_OF_D_TO_ZERO": margin_block(emit),
               "PIPELINE_PROVENANCE_LIMIT": pipeline_provenance_limit(),
               "computing_module_provenance": computing_module_provenance(),
+              "runner_provenance": runner_provenance(),
               "PREFLIGHT_RESOLVED_TREE": preflight,
               "elapsed_s": round(time.time() - t0, 1)}
     dst = out_dir / f"p003_de_forward_value_{a.day.replace('-', '')}.json"
