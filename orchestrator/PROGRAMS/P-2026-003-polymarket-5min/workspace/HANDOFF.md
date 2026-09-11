@@ -1,3 +1,104 @@
+# READ FIRST — round 367 (MEM, 2026-09-11T07:17:36Z, tip `b2573c5`)
+
+# 📏 RULE 46 IS LANDED (`SEAT_PROTOCOL.md:708`) — **and I drove it, not transcribed it**
+
+```
+asked:    SubState, LoadState, Result
+returned: success,  loaded,    dead      ← Result, LoadState, SubState
+```
+
+> ***The first value back is the LAST one asked for.***
+
+Second drive: asking `ActiveState` then `Result` returns **`success inactive`** —
+so **a positional pair read takes the exit result as the active state.**
+**Use one property per call, or drop `--value` and parse `Key=value`.**
+
+**And the defaults lie quietly:** `Result=success` and `ExecMainStatus=0` are
+**stale defaults on a nonexistent or running unit** — which is how a monitor
+reported **three successful builds for units never created.** The discriminators
+are **`LoadState=loaded`, a real `ExecMainStartTimestamp`, and `SubState`.**
+
+**Two instances, one in each direction:** a **false success** (the monitor) and a
+**false failure** (a book waiter that read `ActiveState` as the exit code, took
+the failure branch, and **did not launch for four minutes on a free lock**).
+
+## 🪞 My own usage was safe in both forms — which I checked, not assumed
+
+At rounds 338/339/345 I used the multi-property form **without `--value`**, so
+the output was `Key=value` lines printed whole. From 351 I used **one property
+per call**. ***Not a boast: the safe form was incidental before 351 and
+deliberate only after, when the `LoadState` discharge made me split the calls.
+The rule makes it mandatory rather than lucky.***
+
+## 🎯 And the reason it happened TWICE is the line to keep
+
+**The first instance was written into a seat's own notes at 04:00 and did not
+reach another seat's script at 07:10.**
+
+> ***FILING IS NOT RETENTION. A rule in the protocol reaches the next script; a
+> note in a pane does not.***
+
+**That is DA 221 — "a filed result does not reach the seat's own next claim" —
+with a REMEDY attached: the difference between a note and a protocol rule is
+REACH, and reach is why promotion is a different act from recording.**
+
+# ✅ THE USER'S CONDITION IS MET — the amendment stands unconditionally
+
+`deFMP0907f40`, V2 loaded: `observed_D_MOVED: False`, primary D identical **to
+the cent** both arms, baseline delta 0.0. *(I differenced those against my
+round-359 record last round: 0.012c and 0.023c — my own rounding.)*
+
+**The robustness leg neither blocks HAZARD nor rescues CONDVALUE** — ***the
+cleanest thing a robustness leg can do: it changes no verdict and removes an
+excuse.***
+
+# 📜 REVIEW 186 — the reading rules, written with **zero cells visible** (07:12Z, before the book)
+
+- **Scoping:** tens of cents ⇒ interval scope; thousands ⇒ window scope.
+- **Firing:** aggregate vs single-window.
+- **Residual bands:** `<1e-6c` rounding · `1e-6–1c` reported · **`≥1c` HALTS** —
+  *a contribution in no row means a change **outside the 27**, which makes **both
+  reference levels invalid** and **retires rules 1–3 until it is located**.*
+- **Licenses nothing about the arms.**
+
+> **The sign-change rule: a sign change on the rebuild is a finding ABOUT THE
+> REBUILD. The new D is NOT adopted; day one becomes UNRESOLVED, not positive.**
+> Escape needs **all four** of residual <1c, no ratio outlier, books identical
+> outside the 27, closures differing only by the era fix.
+>
+> ***REV's own phrase: "this rule deliberately disbelieves a result that would
+> help the arm" — written by the seat that would benefit from believing it,
+> before the number exists.***
+
+**And the eight stranded REV filings (178–184, 142) are on origin via rule 45**
+— *second seat to use that path this morning, clearing the backlog I recorded as
+stranded on a **dirty tree**, not on the divergence. My own rows now have a
+demonstrated route.*
+
+# ⚙️ ONE WAITER OUTLIVED ITS AUTHOR AND ONE DID NOT — in the same round
+
+**DE's V2 waiter is a durable unit:** reads the revision **from BE's receipt**
+(never assumed) · waits for the receipt · offers for the lock **unboundedly** ·
+writes to a fresh `fwd_v2/` **so V2 never inherits a V1 checkpoint.**
+
+**Against that: the 09-07 book's own waiter existed only inside a turn and never
+became a process.** ***Rule 37, and the contrast in a single round between a
+hand-off that outlives its author and one that does not.***
+
+*(`deFMP0907wait3` is a zombie from a failed RAN detection — **it holds no lock**,
+so it is housekeeping, not an outage. Worth stating, because "zombie unit" reads
+as an incident.)*
+
+# 📋 DA v12 — every item a FIELD or a DRIVE, not a sentence
+
+Condition MET **as a measured field** · leg values **as fields** · gap-seconds
+column **pre-committed** · 27 rows **by drive** · set (ii) **empty by
+measurement** · census restated on wall-clock attribution with
+`GAP_RECORDED_NOT_SEEN_BY_REPLAY` · `flow_intensity` deferred past 09-13.
+
+***Every one of those could have been a claim in prose and is instead a field or
+a drive — which is the whole of what this week has been about.***
+
 # READ FIRST — round 366 (MEM, 2026-09-11T07:13:29Z, tip `1a5feaf`)
 
 # ✅ THE FALSIFIER PASSED — **the user's amendment stands unconditionally**
