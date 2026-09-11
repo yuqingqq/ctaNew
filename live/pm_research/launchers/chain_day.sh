@@ -45,6 +45,11 @@ echo "$(date -u +%H:%M:%SZ) launcher ${SELF_SHA:0:16} found on $FOUND"
 # declaration's digest rows, V2's own row recorded not asserted -- and
 # reports whatever it says. A second implementation of a check is a second
 # thing to go stale.
+# THE TREE'S HEAD, STILL NEEDED BELOW. Excising the literal-pin block took
+# `H=` with it and `set -u` killed the chain at the launch record, 50
+# seconds in -- the fourth launcher I have broken by removing a block
+# without re-reading its variables' other uses.
+H=$(git -C "$TREE" rev-parse HEAD)
 PFOUT=$("$PYBIN" -c "
 import sys; sys.path.insert(0, '$TREE/live/pm_research')
 import de_forward_value_day as V

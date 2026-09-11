@@ -72,16 +72,21 @@ def falsify() -> int:
     # a commit literal.
     rc = _run(["bash", str(LAUNCH / "chain_day.sh"), "--dry-run",
                "2026-09-30", "2026-09-30"])
-    past_the_pin = ("VALUATION_MODULE_BYTES_DIFFER_FROM_THE_PIN"
-                    not in rc.stdout
-                    and "TREE_IS_NOT_THE_VALUATION_PIN" not in rc.stdout)
-    ck("chain_day gets past the freeze check on a declared tree",
-       past_the_pin,
+    # ABSENCE OF A REFUSAL IS NOT ARRIVAL. My first version passed when the
+    # pin refusal was merely missing -- and it was missing because the run
+    # stopped EARLIER, at the launcher's self-digest check, so the cell
+    # was green on a script that never reached the freeze check at all.
+    # The cell now requires the pre-flight's own line.
+    ck("chain_day REACHES the freeze check and the pre-flight decides it",
+       "PREFLIGHT_ADMITS" in rc.stdout,
        next((l for l in rc.stdout.splitlines()
              if "PREFLIGHT_ADMITS" in l or "REFUSED" in l), "")[:78])
-    ck("  and no 40-hex commit literal decides it",
-       "PREFLIGHT_ADMITS" in rc.stdout or "REFUSED" in rc.stdout,
-       f"rc={rc.returncode}")
+    ck("  and it runs to a decision about the DAY, not an unbound name",
+       "unbound variable" not in rc.stdout + rc.stderr
+       and ("WOULD LAUNCH" in rc.stdout or "INPUT_ABSENT" in rc.stdout
+            or "not built yet" in rc.stdout or rc.returncode in (0, 3, 4)),
+       f"rc={rc.returncode} "
+       + (rc.stdout + rc.stderr).strip().splitlines()[-1][:60])
 
     # --- preflight_gate: a WOULD_REFUSE fixture stops with 3 -------------
     with tempfile.TemporaryDirectory() as td:
