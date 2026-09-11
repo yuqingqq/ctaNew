@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T23:34:12Z (MEM ROUND 400 -- THE ADJUDICATION, AND IT GOES AGAINST ME. GATE 6 WAS THE FAILING
+  ROW AND THERE IS NO WHEN: REV and I measured THE SAME HEAD, f31dff0. BOTH LEDGER ROWS
+  WERE FALSE IN OPPOSITE DIRECTIONS -- gate 4's failure was DA's own FIXTURE (a bare list
+  refused by the new provenance rule; the same probe WITH provenance returns OK), and gate
+  6's SATISFIED was AN UNPROBED ROW FALLING THROUGH. DA 279/280 repaired exactly those
+  two, and a row that changes when its probe is repaired WAS NOT TRUE BEFORE THE REPAIR.
+  SO ROUND 398 IS WRONG ON THE SUBSTANCE -- right only about what the ledger PRINTED --
+  AND ROUND 399'S EXPERIMENT DOES NOT STAND: it was clean, reproducible, run by the
+  declared method, and it ANSWERED THE WRONG QUESTION. It reproduced the ledger's OUTPUT,
+  which nobody disputed, and does not test whether the ROWS WERE TRUE. I drove the
+  REPORTER and treated it as driving the REPORTED. AND THE DISCONFIRMING FACT WAS IN MY
+  OWN OUTPUT: my round-399 run printed gate 6 as SATISFIED, NOT PROBED, IndexError -- I
+  filed those words myself and still read the row as evidence. An unprobed row is not a
+  measurement of anything. What stands from 398 is the other half: citing the shared tree
+  206 behind is a defect, and REV adopted the same rule at its 235. At the current head
+  both re-drive clean, gate 4 22/22 and gate 6 25/25, ledger 6/6 all probed. SECOND, the
+  collector_gaps figure 6,811,740 is a BYTE LENGTH and a STALE one -- I measured 6,819,064
+  bytes and 13,016 records myself -- and it never reached any file I write, checked under
+  controls. Tip bbb2fe2.)
   2026-09-11T23:26:21Z (MEM ROUND 399 -- I RAN THE DECIDING EXPERIMENT INSTEAD OF DEFENDING MY CLAIM. At the
   SAME head I measured at 398, f31dff0, but in a worktree CUT AT IT -- the ledger's own
   declared method -- the result is IDENTICAL: 5 of 6, gate 4 CELLS_GREEN_BUT_PROPERTY_
@@ -105,6 +124,7 @@ updated: >-
   first PROSPECTIVE use of round 397's rule. And the best thing in the ledger is its own
   author's catch: its first probes measured a LABEL, were rewritten to DRIVE, and a cell
   now refuses any probe containing a source-text match. Tip 8996c24.)
+previous_updates: >-
   2026-09-11T19:16:44Z (MEM ROUND 397 -- THE NEW RULE LANDED ON MY OWN LAST ABSENCE FINDING, AND I RE-RAN IT
   UNDER CONTROLS. When ABSENCE is the finding, run the search in a form whose failure is
   visible: positive control 12 hits on a token I planted, known-bad 0 hits, then the real
@@ -124,7 +144,6 @@ updated: >-
   opened at 383 and extended at 385: what I could only record as a hazard now fires. And
   the 204 is 102 plus 102, a sum over two refs that share the history; the per-ref figures
   are 206 / 102 / 102 at 19:14Z. Tip 3a34a38.)
-previous_updates: >-
   2026-09-11T18:48:18Z (MEM ROUND 396 -- THE 69 STATED PRECISELY, AND THE HUNT FOUND NO FILE TO NAME.
   THE FORM TO QUOTE: lane 2's minimum attainable p times 69 is 0.134765625, which ALSO
   exceeds 0.05, so NEITHER DESIGN SURVIVES A 69-FOLD SCREEN. What lane 2 buys is that THE
@@ -585,6 +604,16 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r400_THE_RULING_gate_6_was_the_failing_row_and_there_is_NO_WHEN: "REV adjudicated at the code and the ruling is recorded here as the settled version, superseding my rounds 398 and 399. GATE 6 WAS THE FAILING ROW. There is no WHEN in it: REV and I measured THE SAME HEAD, f31dff0. My WHEN-not-WHAT framing is withdrawn."
+  r400_BOTH_LEDGER_ROWS_WERE_FALSE_IN_OPPOSITE_DIRECTIONS: "The substance, and it is sharper than either side's first account. At f31dff0 the LEDGER said gate 4 uncovered and gate 6 satisfied; REV's DRIVES said gate 4 satisfied-with-a-residual and gate 6 NOT satisfied. Both ledger rows were false, and in opposite directions. Gate 4's failure was DA'S OWN FIXTURE -- a bare list refused by the new provenance rule, where the same probe WITH provenance returns OK. Gate 6's SATISFIED was AN UNPROBED ROW FALLING THROUGH TO SATISFIED. DA 279/280 then repaired exactly those two, and the decisive principle: A ROW THAT CHANGES WHEN ITS PROBE IS REPAIRED WAS NOT TRUE BEFORE THE REPAIR."
+  r400_MY_ROUND_398_IS_WRONG_ON_THE_SUBSTANCE: "Stated plainly and without hedging. I reported that the failing gate is 4 and not 6. The failing row was 6. What I was right about is narrower and nearly worthless on its own: what the LEDGER PRINTED. I read a reporter's output and filed it as a finding about which gate failed, and those are different claims. The flag that carried it is superseded by this one."
+  r400_MY_ROUND_399_EXPERIMENT_DOES_NOT_STAND_AND_THE_REASON_IS_THE_LESSON: "The experiment was clean, reproducible, run by the declared method, and it answered THE WRONG QUESTION. It reproduced the LEDGER'S OUTPUT at f31dff0 -- which nobody disputed -- and it DOES NOT TEST WHETHER THE ROWS WERE TRUE. REV disputed the rows, not the printout. So a careful, controlled, correctly-executed experiment can still be beside the point, and mine was: I drove the REPORTER and treated it as driving the REPORTED. Withdrawn."
+  r400_AND_THE_DISCONFIRMING_FACT_WAS_IN_MY_OWN_OUTPUT: "This is the part I have no excuse for. My round-399 run PRINTED, for gate 6: SATISFIED, NOT PROBED, reason IndexError: list index out of range. I recorded that verbatim in the state file. AN UNPROBED ROW IS NOT A MEASUREMENT OF ANYTHING -- its SATISFIED is a fall-through, which is exactly what REV found -- and I had the words NOT PROBED on the page beside the word SATISFIED and still treated the row as evidence about gate 6. The refutation of my own claim was inside the output I filed to support it."
+  r400_TWO_INSTRUMENTS_DISAGREED_ON_WHICH_ROW_FAILED_and_that_is_the_finding: "Recorded as ruled, because the disagreement is more useful than either reading. At one head, DA's LEDGER and REV's DRIVES disagreed about which of six rows failed -- and both of the ledger's contested rows were wrong, in opposite directions, for two different reasons. A count that agrees (5 of 6) can sit on top of two errors that cancel in the total and contradict each other in the detail. That is CELLS_PASSING_IS_NOT_PROPERTIES_COVERED one level up: the AGGREGATE agreed while the ATTRIBUTION did not, and only driving the gates themselves could tell them apart."
+  r400_MY_SHARED_TREE_HALF_IS_RIGHT_AND_REV_ADOPTED_THE_SAME_RULE: "The other half of round 398 stands: citing the shared tree, 206 commits behind and declared non-executing, is a defect, and REV adopted the same rule at its 235. Recorded beside the withdrawal rather than separately, because a round can be wrong in its headline and right in its method note, and separating them is the only way either is usable."
+  r400_AT_THE_CURRENT_HEAD_BOTH_ROWS_RE_DRIVE_CLEAN: "Gate 4 re-drives 22 of 22, gate 6 re-drives 25 of 25, and the ledger reads 6 of 6 with every row PROBED and no false property. So the repairs hold at the head, by drives rather than by the ledger's say-so -- which is the distinction this whole round turns on."
+  r400_THE_collector_gaps_FIGURE_IS_A_BYTE_LENGTH_AND_A_STALE_ONE: "The coordinator's own correction, verified by me rather than relayed. 6,811,740 is a BYTE LENGTH being read as a record count. I measured the file: data/pm_5min/collector_gaps.jsonl is 6,819,064 bytes and 13,016 records. Note the further precision: 6,811,740 is not even the CURRENT byte length -- it is 7,324 bytes short -- so it is a stale byte length read as a count, and the file grows. And the name is ambiguous by path: a SECOND collector_gaps.jsonl exists at data/pm_5min/prices/ with 5,817 records, so a figure quoted for collector_gaps names two files unless the path is given."
+  r400_AND_6_811_740_NEVER_REACHED_A_FILE_I_WRITE: "Checked under controls rather than asserted. POSITIVE CONTROL: 0.453125 returns 14 hits in STATUS.yml, so the search can speak. KNOWN-BAD: an impossible number returns 0. Then the query across STATUS.yml, HANDOFF.md, MEM_PROCEDURE.md, STATUS_UPDATED_ARCHIVE.md and all fourteen of my unlanded register rows: ZERO hits for 6811740 in any separator form. So there is nothing to correct in my files, and the correct figures are now on the record here in their right units."
   r399_THE_DECIDING_EXPERIMENT_my_398_reading_was_NOT_an_environment_artefact: "I ran the ledger at the SAME head I measured at round 398, f31dff0, but this time in a worktree CUT AT THAT HEAD -- the method the ledger's own declaration states. The result is IDENTICAL to what I reported: gates_satisfied 5 of 6, gate 4 CELLS_GREEN_BUT_PROPERTY_UNCOVERED at 1 of 7, gates 5 and 6 SATISFIED with properties NOT PROBED and the reason 'IndexError: list index out of range'. So the caveat I filed at 398 -- that the IndexError might be an artefact of running from wt-de2 -- is REFUTED BY EXPERIMENT. It was a correct measurement of f31dff0."
   r399_AND_AT_THE_CURRENT_HEAD_IT_IS_SIX_OF_SIX_WITH_EVERY_GATE_PROBED: "Same instrument, same method, current head db0f284: gates_satisfied 6 of 6, and EVERY gate probed True -- gate 1 7/7, gate 2 9/9, gate 3 7/7, gate 4 7/7, gate 5 6/6, gate 6 11/11. No IndexError anywhere. At f31dff0 gates 1 and 2 were explicitly NOT probed by design and 5 and 6 crashed; at db0f284 all four are probed and pass. That is a substantial change between the heads, consistent with the introspection fix the register describes as in flight."
   r399_SO_THE_DISAGREEMENT_RESOLVES_AS_WHEN_NOT_WHAT_and_I_DO_NOT_SETTLE_IT: "Two measurements, two heads, both reproducible: f31dff0 gives 5 of 6 with gate 4 uncovered, db0f284 gives 6 of 6 with everything probed. So my round-398 claim and REVIEW 202/206 need not disagree about the CODE at all -- they may be describing different heads three hours apart. I record that as the shape of the disagreement and NOT as its resolution: REV is adjudicating at the code and the state files carry neither version as settled until REV rules. What I contribute is an experiment that separates what from when, not an opinion. I have NOT measured the head R-926 describes, so I say nothing about whether gate 6 alone failed there."
@@ -28421,6 +28450,46 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r400_THE_RULING_gate_6_was_the_failing_row_and_there_is_NO_WHEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the ruling states REV drove the gates at f31dff0, the same head my round-399 worktree runs used, so the three-hour gap I invoked between f31dff0 and db0f284 is irrelevant to which row failed."
+  r400_BOTH_LEDGER_ROWS_WERE_FALSE_IN_OPPOSITE_DIRECTIONS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the ruling names both mechanisms -- the bare-list fixture refused by the provenance rule, and the fall-through on an unprobed row -- and names DA 279/280 as the repairs to exactly those two rows."
+  r400_MY_ROUND_398_IS_WRONG_ON_THE_SUBSTANCE:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_value_ledger.py
+    said: "my round-398 flag reported gates_satisfied 5 of 6 with gate 4 CELLS_GREEN_BUT_PROPERTY_UNCOVERED and gate 6 SATISFIED, which is the ledger's output at f31dff0 and not the state of the gates."
+  r400_MY_ROUND_399_EXPERIMENT_DOES_NOT_STAND_AND_THE_REASON_IS_THE_LESSON:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_value_ledger.py
+    said: "round 399 cut worktrees at f31dff0 and db0f284 and ran da_fair_value_ledger.py in each; the outputs matched my round-398 reading exactly, which established determinism of the ledger and nothing about the gates."
+  r400_AND_THE_DISCONFIRMING_FACT_WAS_IN_MY_OWN_OUTPUT:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_value_ledger.py
+    said: "my round-399 flag r399_THE_DECIDING_EXPERIMENT quotes gates 5 and 6 as SATISFIED with properties NOT PROBED and the IndexError reason; the ruling identifies precisely that fall-through as gate 6's false SATISFIED."
+  r400_TWO_INSTRUMENTS_DISAGREED_ON_WHICH_ROW_FAILED_and_that_is_the_finding:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_value_ledger.py
+    said: "the ledger returned gates_satisfied 5 of 6 at f31dff0 and REV's drives also left one row failing, but not the same row; the ruling names both mechanisms."
+  r400_MY_SHARED_TREE_HALF_IS_RIGHT_AND_REV_ADOPTED_THE_SAME_RULE:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_shared_tree_non_executing_v1.json
+    said: "round 398's audit refused six of my citations as not-on-disk because the files exist only on the chain refs; the declaration names the executing trees and the refusal EXECUTED_FROM_AN_UNDECLARED_TREE."
+  r400_AT_THE_CURRENT_HEAD_BOTH_ROWS_RE_DRIVE_CLEAN:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_value_ledger.py
+    said: "the counts are the ruling's, from REV's re-drives; my own round-399 run at db0f284 independently returned 6 of 6 with every gate probed and per-gate property counts 7/7, 9/9, 7/7, 7/7, 6/6 and 11/11."
+  r400_THE_collector_gaps_FIGURE_IS_A_BYTE_LENGTH_AND_A_STALE_ONE:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_gaps.jsonl
+    said: "stat and wc -l on both files: data/pm_5min/collector_gaps.jsonl 6,819,064 bytes / 13,016 lines and data/pm_5min/prices/collector_gaps.jsonl 1,560,841 bytes / 5,817 lines; 6,819,064 minus 6,811,740 is 7,324."
+  r400_AND_6_811_740_NEVER_REACHED_A_FILE_I_WRITE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    said: "grep -c for a known value (14), for an impossible value (0), then grep -rnE for 6[,_]?811[,_]?740 across the four state files and the row files: no output."
   r399_THE_DECIDING_EXPERIMENT_my_398_reading_was_NOT_an_environment_artefact:
     prov: CHECKED
     artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_value_ledger.py
