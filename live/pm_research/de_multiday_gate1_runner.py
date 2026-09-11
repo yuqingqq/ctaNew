@@ -825,17 +825,26 @@ def load_params(path: Path | None = None) -> dict:
             f"is a day chosen after the fact, not a smaller test.")
     req = d.get("required_previously_opened_for")
     if req is not None:
+        # HUNK D: the attestation is a DECLARATION, not per-day literals in
+        # a pinned module. A literal per day is the class that bit us at
+        # 11:53Z and would need a code edit for every future day. DA's
+        # declaration is read by DECLARED IDENTITY -- path + sha through
+        # the freeze chain -- exactly as the forward-test declaration is,
+        # and the module dict remains as the fallback for the days it
+        # already attests.
+        attested = _attested_day_read_state()
         bad = {}
         for day in days:
-            st = DESIGN.DAY_READ_STATE.get(day)
+            st = attested.get(day) or DESIGN.DAY_READ_STATE.get(day)
             if st is None:
-                bad[day] = "NO_READ_STATE_RECORDED"
+                bad[day] = "DAY_READ_STATE_UNATTESTED"
             elif st["previously_opened_for"] != req:
                 bad[day] = st["previously_opened_for"]
         if bad:
             raise RunnerRefused(
                 f"REFUSED: the ruled set contains days whose "
-                f"previously_opened_for is not {req!r}: {bad}. R-555 is "
+                f"previously_opened_for is not {req!r} "
+                f"({DAY_READ_STATE_UNATTESTED} where absent): {bad}. R-555 is "
                 f"untouched days only.")
     return d
 
@@ -1241,6 +1250,45 @@ def generate_draws_in_process(params: dict, *, day: str, arm: str,
         },
         "cite": cite,
     }
+
+
+DAY_READ_STATE_UNATTESTED = "DAY_READ_STATE_UNATTESTED"
+
+
+def _attested_day_read_state(decl_dir=None) -> dict:
+    """DA's day-read-state attestation, by DECLARED IDENTITY.
+
+    Schema read (DA's da_day_read_state_attestation_v1.json):
+        ATTESTATION.per_day : {"<YYYY-MM-DD>": {"previously_opened_for":
+                               "none" | <what>, ...}}
+    Extra keys per day are ignored; only `previously_opened_for` is read.
+
+    Identity comes from the freeze chain; with none pinned the file is not
+    trusted and the module dict alone answers, so an unattested day still
+    refuses rather than silently passing.
+    """
+    d = Path(decl_dir) if decl_dir else Path(__file__).resolve().parent / \
+        "declarations"
+    try:
+        import be_score_neutrality as _BEN
+        chain = _BEN.resolve_frozen_params_pin(d)
+        pin = chain.get("day_read_state_attestation")
+        if not pin or not pin.get("path") or not pin.get("sha256"):
+            return {}
+        f = d / Path(str(pin["path"])).name
+        if not f.is_file():
+            return {}
+        if hashlib.sha256(f.read_bytes()).hexdigest() != pin["sha256"]:
+            raise RunnerRefused(
+                f"REFUSED DECLARATION_IDENTITY_UNPINNED: "
+                f"{f.name} on disk is not the declared identity "
+                f"{str(pin['sha256'])[:16]}.")
+        return dict(((json.loads(f.read_text()).get("ATTESTATION") or {})
+                     .get("per_day") or {}))
+    except RunnerRefused:
+        raise
+    except Exception:                              # noqa: BLE001
+        return {}
 
 
 def ruled_day_set() -> list:
