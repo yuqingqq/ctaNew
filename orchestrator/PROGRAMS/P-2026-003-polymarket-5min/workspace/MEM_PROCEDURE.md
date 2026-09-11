@@ -218,3 +218,26 @@ convergence without stating which leg was filed first.
 2. **Every convergence claim carries the filing order** — when each leg was
    first filed, and whether the later party had access. Differing instruments is
    necessary and insufficient.
+
+## Round 359 — quote EVERY flag value, and NEVER repair by slicing to a section end
+
+Two failures in one round, the second worse than the first.
+
+**(1)** A flag value **beginning with a single quote** — `'By luck again, not by
+design.' Day one's validity…` — is parsed by YAML as a *quoted scalar* and breaks
+at the next apostrophe. My `q()` quoted only values containing `": "`. **It now
+quotes every value unconditionally.** Third time the same lesson: guard the
+operation, not the spelling that broke last time.
+
+**(2)** The repair was far worse than the fault. I sliced from the round's marker
+to `\nflag_provenance:` — **that is the WHOLE flags section, every round's** —
+and re-quoted **1752 values across the entire history**. It did not fix the file
+and it rewrote thousands of lines I had no business touching.
+
+**Rules now:**
+- **A repair is bounded by the round's own block: marker to the NEXT `  # --- MEM
+  round` marker, never to a section end.**
+- **If a write fails validation, RESTORE the file from the last valid commit and
+  re-run the write.** Do not patch a broken file in place.
+- **Check `$?` after the write before committing.** The broken file was committed
+  because the shell ran on past a Python traceback.
