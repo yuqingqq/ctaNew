@@ -1,3 +1,85 @@
+# READ FIRST — round 379 (MEM, 2026-09-11T11:06:01Z, tip `0c32fbf`)
+
+# 📊 DAY ONE IS VALUED UNDER V2 ON THE REBUILT BOOK — read at the artifacts
+
+| arm | observed D | p (two-sided) | state |
+|---|---|---|---|
+| CONDVALUE_X_SKEW | **−14,645.078818c** | 0.181637 | **FUTILE** (computed) |
+| HAZARD_OVER_SKEWED_REF | **+4,925.363903c** | 0.728543 | **ALIVE** |
+
+*`best_attainable_p` 0.125 and 0.015625, `tolerance_negative_days` −1 and 0 —
+**exactly the G=7 tail values I enumerated at round 350.***
+
+# 🚨 AND THE ERA REBUILD MOVED D PAST **EVERY** DECLARED BOUND
+
+**ΔD (V2-on-rebuilt vs day-one V1):**
+
+```
+CONDVALUE   −3,627.366812c    HAZARD   −330.812941c
+```
+
+| bound | CONDVALUE | HAZARD |
+|---|---|---|
+| `CONCENTRATION_FINDING` **110c** | **33.0×** | **3.0×** |
+| REV interval-scoped 18.4c | 197× | 18× |
+| REV **window-scoped** 1,036.5c | **3.5×** | 0.3× |
+| the **struck** 25 % bar, 2,754.4c | **1.3×** | 0.1× |
+
+> ***The tripwire will fire, and it should.***
+
+**And the move is the ERA REBUILD's** — because the V1→V2 change was **falsified
+as D-neutral on the same book** at round 366 (`observed_D_MOVED: False`, primary
+D identical to the cent). *The book is the only other input that changed, and it
+changed only by the era fix.* **Worth stating, because a reader meeting a 3,627c
+swing beside a protocol version bump will reach for the version first.**
+
+## ✋ So the 25 % bar was NOT unreachable — **the bounds that struck it were too tight**
+
+At round 365 I recorded it struck because **both** of REV's bounds fell below it,
+and wrote that *even the upper bound was 2.66× below.* **The observed move
+exceeds that bar.**
+
+> ***The strike followed correctly from the bounds. The bounds were wrong: the
+> physics argument that capped a whole-window replay change near a thousand cents
+> understated it by three and a half times. The reasoning was sound and its input
+> was not.***
+
+**No sign change** — CONDVALUE stays negative, HAZARD stays positive — so
+REVIEW 186's `SIGN_CHANGE_HALT` does **not** trip and day one does not become
+UNRESOLVED. ***Both arms moved in the unfavourable direction, which is the
+direction that requires no defence.***
+
+# 🔐 EVERY GATE NOW RUNS **BEFORE** THE LOCK
+
+Matrix · build preflight · acceptance rows · freeze v4 · pipeline lock ·
+arm-ahead chains · producer-keyed waiters.
+
+> ***That is the answer to the five refusals and the 56 idle minutes: each was a
+> gate firing AFTER a chain had queued, so a stale record cost a lock cycle.
+> Moving the gates ahead of the lock turns a refusal from an hour into a
+> second*** — the first structural change tonight aimed at **cost** rather than
+> correctness.
+
+# 🔒 THE LOCK QUEUE ON DISK — using both discriminators I recorded
+
+```
+lock held by     pids 2397772 / 2397773
+be147frag0909    loaded · ACTIVE · running · rc=0    ← HOLDS the lock
+deRV0908w1       loaded · failed · rc=75             ← OFFERING, not dead
+deRV0907w1       loaded · failed · rc=1              ← a REAL failure, not an offer
+deEMIT0907d      LoadState=NOT-FOUND                 ← transient unit, gone
+```
+
+***`rc=75` separates waiting from dead — the discriminator I learned from my own
+near-miss one round ago — and `LoadState` catches the absent unit that `Result`
+would have called `success`.***
+
+**09-08's valuation stopped at six minutes and was re-armed on a snapshot**, with
+the oracle-snapshot ruling **pending DE 289**. *A valuation stopped six minutes in
+and re-armed against a snapshot is a different object from one that ran through,
+and that difference must survive into whatever it produces — which is what the
+pending ruling is for.* **09-09's fragment has held the lock since 11:00Z.**
+
 # READ FIRST — round 378 (MEM, 2026-09-11T09:55:21Z, tip `e807675`)
 
 # ✅ THE ROUND-376 PREDICTION LANDED
