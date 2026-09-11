@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T02:43:10Z (MEM ROUND 350 -- THREE CORRECTIONS, EACH SUPERSEDING AN HOUR-OLD FACT. N IS NOW
+  7, population 09-07..09-13, completing 2026-09-14T00:00Z -- and N=6 WAS NEVER RUNNABLE:
+  the two-sided day-cluster floor at G=6 is 0.031250 against a 0.025 bar, which I computed
+  at round 349 from DE's raise. The coordinator records the 5/6/9 menu as built on EFFECT
+  SIZE ALONE, never checking the floor, and as THEIR error. AT G=7 the two-sided floor is
+  0.015625 and clears, so THE SIDEDNESS QUESTION IS MOOT and the rule-11 exposure I filed
+  last round is CLOSED BY BECOMING UNNECESSARY. AND THE FUTILITY ASYMMETRY IS SHARPER THAN
+  STATED: I enumerated the tail and ONLY 7-of-7 clears -- 6-of-7 is 0.125000, EIGHT TIMES
+  the unanimous value and FIVE TIMES the bar -- so one negative day does not weaken the
+  test, it ends it; and futility stopping is STATISTICALLY FREE. EXPECT IT TO FIRE: 09-05
+  printed -4,941 c. THE PIN REF QUOTED ALL NIGHT WAS WRONG -- the arms worktree is at
+  adbebf9, which I read directly, not a565fd9; the commit moved and THE PINNED BYTES DID
+  NOT, which is why it survived a night. And the forward builds run from NEITHER: 941e688,
+  whose builder I HASHED at 73a22121f67b against 2d31a80b5ae5 everywhere after e6a214f --
+  chosen because it AVOIDS an argument rather than winning it. SEALING IS CANCELLED BY USER
+  INSTRUCTION with the trade-off stated: LOOKING IS FREE, the stopping point stays FIXED.
+  DE closed my round-349 multiplicity tension by DISTINGUISHING: Holm's m = 2 because there
+  are two p-values; 69 is SELECTION multiplicity, correcting the prior not the denominator.
+  tip 5c91ac5)
   2026-09-11T02:34:44Z (MEM ROUND 349 -- I WAS WRONG BY FIFTEEN SECONDS AND THE CORRECTION LEADS. My
   round-348 headline said the landed artifacts did not carry the ruling; DA 211's v2 was
   committed at 02:24:02 and my write ran at 02:24:17, with ee1e85d ALREADY MY TIP. I read v1
@@ -106,23 +125,6 @@ updated: >-
   declaration itself calls AN UPPER BOUND. OPEN: BE's identity finding -- CONDVALUE's
   composition moved THREE TIMES, so this may be a FIRST look at an UNSCREENED arm.
   NOTHING IS TOUCHED; the amendment window closes when the first day is opened. tip ee1e85d)
-  2026-09-10T21:02:01Z (MEM ROUND 347 -- THE DAY'S FINAL SWEEP. THE 7J CONTROL FIRED AT ITS FIRST REAL
-  OPPORTUNITY AND RETURNED THREE FINDINGS (R-898, 671a8fd) -- a dropped rule-11 provenance
-  clause, bare companion p-values, and a limit that postdated its text. RECORDED AS THE
-  CONTROL WORKING. I computed the companion's Holm-adjusted values rather than repeating
-  them: 0.0299 and 0.0339 BOTH BECOME 0.0598, so the raw pair reads as significance and
-  MUST NEVER TRAVEL WITHOUT ITS CORRECTION. THE CORROBORATION NOBODY ARRANGED IS THE
-  STRONGEST THING IN THE DAY: REV's ledger sums, computed HOURS BEFORE THE RUN FINISHED by
-  different code on a different artifact, equal the verdict's D to the cent -- and I
-  reproduced them from the per-day deltas I FILED AS UNVERIFIED AT ROUND 334, which the run
-  has now confirmed. TALLY: TEN QUIET FAILURES AGAINST THREE LOUD ONES, the three caught in
-  minutes and the ten costing the day. MY LANDING DETECTOR MOVED 188->190 AND THE NET HIDES
-  -3 AND +5: three cleared, five appeared because THE RUN EXITED and /proc is gone --
-  exactly the ephemerality I filed at round 338. AND I CORRECT MY OWN ROUND-343 FRAMING: the
-  work landed as 933b267, a8567d1 is STILL not an ancestor, so the detector detects THE WORK
-  ARRIVING, NOT THE COMMIT LANDING. COLD START: verdict NO_SETTLEMENT_SKILL_OVER_MATCHED
-  _RANDOM both pools; STEP 3 FIRED AND COMPLETE; open work is the step-1 remainder; 09-07
-  and 09-08..09-12 are PROTECTED, NOT BANKED. tip 2bae20b)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -294,6 +296,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 350, N is 7, the pin ref was wrong, sealing cancelled ---
+  N_IS_NOW_7_AND_N_EQUALS_6_WAS_NEVER_RUNNABLE: "Population 2026-09-07..2026-09-13, last day completes 2026-09-14T00:00Z. The USER moved after DE 224 computed the day-cluster floor. I had computed the same floor one round earlier from DE's raise: two-sided at G=6 floors at 0.031250 against the 0.025 Holm's smaller p must beat, so a PERFECT 6-for-6 FAILS. N=6 was not a weak design, it was an UNRUNNABLE one, and it stood as the ruling for roughly two hours. The coordinator records the menu of 5/6/9 as built on EFFECT SIZE ALONE, never checking the floor, and records it as their error rather than the user's choice."
+  AND_THE_SIDEDNESS_QUESTION_IS_MOOT_WHICH_CLOSES_THE_RULE_11_EXPOSURE_I_FILED_LAST_ROUND: "At G=7 the TWO-SIDED floor is 0.015625 and clears, so conjunct (a) stays TWO-SIDED and nothing has to be decided about sidedness at all. That removes the rule-11 exposure DE flagged and that I recorded at round 349 -- choosing sidedness once the sign is visible. The exposure is closed not by ruling it early but by making the ruling unnecessary, which is the better of the two closures: a decision that never has to be made cannot be made badly."
+  AND_THE_FUTILITY_ASYMMETRY_IS_SHARPER_THAN_ONE_BAD_DAY_KILLS_IT: "I enumerated the whole tail. At G=7 ONLY 7-of-7 clears, at two-sided p = 0.015625. SIX-of-seven jumps to 2*8/128 = 0.125000 -- EIGHT TIMES the unanimous value and FIVE TIMES the bar. So a single negative day does not weaken the test, it puts the result an order of magnitude outside what can pass. And stopping for futility costs NOTHING statistically, because it can only ever REDUCE the chance of declaring success. EXPECT IT TO FIRE: 2026-09-05 printed -4,941 c on CONDVALUE, in the development pool, on the same estimand."
+  THE_PIN_REF_GIVEN_ALL_NIGHT_WAS_WRONG_AND_I_READ_THE_WORKTREE_MYSELF: "The arms worktree is at adbebf9 (DE 212, 2026-09-10 16:40), not a565fd9 (DE 202, 05:24). I did not take that from the dispatch -- I read HEAD in ~/ctaNew-wt-arms directly and it returns adbebf9. THE COMMIT MOVED AND THE PINNED BYTES DID NOT, which is why nothing downstream broke and why the wrong ref survived a whole night of being quoted: a stale ref that names the right bytes is invisible until someone resolves it."
+  AND_THE_FORWARD_BUILDS_RUN_FROM_NEITHER_TREE_BUT_FROM_941E688_WHICH_I_VERIFIED_BY_HASHING: "The ruled build commit is 941e688 because its be_daybook_build.py is BYTE-IDENTICAL to the builder that built all four consumed books. I hashed it rather than accepting it: at 941e688 the file is sha256 73a22121f67b, and at e6a214f, at adbebf9 and at the current HEAD it is 2d31a80b5ae5. The dispatch's two digests are exactly right and the split is exactly where it says it is."
+  AND_CHOOSING_941E688_AVOIDS_AN_ARGUMENT_RATHER_THAN_WINNING_IT: "e6a214f's change to the builder is +10/-2 and reads as default-preserving: it parses --chunk-windows and falls back to CHUNK_WINDOWS when the flag is absent. It also ADDS A REFUSAL for a non-positive value. So a forward build on any later tree would rest on the argument that a CLI addition is score-neutral -- and 941e688 removes the need to make it. THAT IS THE SAME DISCIPLINE DE APPLIED WHEN IT REFUSED TO ARGUE THE TIP WAS SCORE-NEUTRAL AT THE FREEZE. The conservative choice is not the cautious one here, it is the one that needs no defence."
+  THE_FORWARD_ARTIFACT_REVISION_IS_FWD1_AND_EV23_IS_BURNED_AS_A_NAME: "EV20, EV21 and EV22 are consumed. EV23 is BURNED: a unit and a launch record exist for it with NO ARTIFACT, so reusing the name would make the record permanently ambiguous -- two different things answering to one label, which is the class this programme has spent a week cataloguing. Burning a name costs nothing and buying it back later is impossible. The forward revision is FWD1."
+  PER_DAY_RESULTS_ARE_VISIBLE_BY_USER_INSTRUCTION_AND_SEALING_IS_CANCELLED: "DA established that v2 had already removed every degree of freedom a peek could exploit: 'A peek would tell someone the answer early; there is nothing left to tune.' THE STOPPING POINT STAYS FIXED AT N=7. That is the whole of it -- LOOKING IS FREE, and letting what is seen change WHEN WE STOP is the part that inflates. Recorded as a choice made by the USER WITH THE TRADE-OFF STATED, so that a later reader does not read visibility as an oversight or as a lapse in discipline."
+  ALL_FOUR_DETERMINABLE_DAYS_ARE_RULED_ADMISSIBLE_BEFORE_ANY_DAY_IS_VALUED: ba28469, DA 215, committed 02:38. The ruling comes BEFORE valuation, which is the only ordering under which it means anything. Its bars are IMPORTED, NOT TYPED -- so a bar cannot drift from its authority -- and its allowlist REFUSES any path matching daybook|ledger|settle|arm|result|verdict|null|score|fill|tranche. That is an allowlist defined by what it must never touch, which is the right way round for a check that runs before the data is looked at.
+  AND_09_13_STILL_NEEDS_THE_SAME_DETERMINATION_WITH_A_NAMED_RESIDUAL_ON_THREE_DAYS: "09-13 joined the population with the move to N=7 and has not been ruled. And 09-11, 09-12 and 09-13 inherit DA's NAMED RESIDUAL: they cannot be ruled before the earlier days are seen. So admissibility for the back half of the population is not merely outstanding, it is ORDERED -- it becomes determinable only as the test proceeds, which means the population is not fully fixed in the way a reader of 'N=7, 09-07..09-13' would assume."
+  DE_RESOLVED_THE_MULTIPLICITY_TENSION_I_FLAGGED_AND_RESOLVED_IT_BETTER_THAN_EITHER_SIDE_HAD: "At round 349 I flagged a tension for the register: the dispatch said DE supersedes on BE's 69 while DA's v2 said the correction in force stays the frozen 2. DE resolved it by distinguishing two different quantities rather than picking one. HOLM'S m = 2 BECAUSE THERE ARE TWO p-VALUES; 69 IS SELECTION MULTIPLICITY, WHICH 'CORRECTS THE PRIOR, NOT THE DENOMINATOR.' Both numbers are right about different things and neither is the other's competitor. My flagged tension is CLOSED, and closed by a distinction rather than a ruling."
+  REVS_PER_DAY_PRODUCER_FAMILY_TABLE_IS_STILL_OPEN_AND_IT_COULD_STILL_MOVE_THE_POPULATION: Three systemd timers have processed 09-07, 09-08 and 09-09 automatically, and REV reports 09-07 consumed by 8 of 13 producer families. The per-day breakdown is not in. It could still move the population, and builds do NOT depend on it -- so the build may proceed while the question stays open, which is the right sequencing but must be recorded explicitly, because a build that completes while a population question is open will look retrospectively like the question was settled.
   # --- MEM round 349 addendum, 2026-09-11T02:38:05Z ---
   MY_OWN_ROTATION_CUT_A_GENERATION_IN_HALF_BECAUSE_ITS_DELIMITER_WAS_A_SPELLING: "Found by my own audit at window 2/3 this round. The rotation split `updated:` on any line beginning with an ISO date at column 2, and round 348's prose contains a continuation line reading '2026-09-13T00:00Z, ONE LOOK, NO EXTENSION' -- so that line was counted as a generation, ROUND 348 WAS CUT IN HALF, and a real generation (round 347) was rotated out ONE ROUND EARLY. Nothing was lost: the archive held it and I restored it, and the archive batch now carries the correction with its cause. The splitter now requires the literal '(MEM ROUND ' marker -- the structure I control rather than a date that can appear in prose. THIRD TIME rule 32 has caught my own instrument: colons at round 332, single-spelling counts at round 336, a delimiter this round."
   # --- MEM round 349, the floor, the identity closure, and my own 15-second error ---
@@ -27611,6 +27626,79 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 350, 2026-09-11T02:43:10Z ---
+  N_IS_NOW_7_AND_N_EQUALS_6_WAS_NEVER_RUNNABLE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T02:43:10Z
+    said: >-
+      the G=6 and G=7 two-sided exact sign-test floors recomputed at this round: 2/64 = 0.031250 and 2/128 = 0.015625 against the 0.025 bar.
+  AND_THE_SIDEDNESS_QUESTION_IS_MOOT_WHICH_CLOSES_THE_RULE_11_EXPOSURE_I_FILED_LAST_ROUND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T02:43:10Z
+    said: >-
+      the two-sided floor at G=7 computed as 0.015625, below the 0.025 bar, so the one-sided alternative buys nothing.
+  AND_THE_FUTILITY_ASYMMETRY_IS_SHARPER_THAN_ONE_BAD_DAY_KILLS_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T02:43:10Z
+    said: >-
+      the two-sided exact sign-test p enumerated at G=7 for 7-of-7, 6-of-7 and 5-of-7 as 0.015625, 0.125000 and 0.453125.
+  THE_PIN_REF_GIVEN_ALL_NIGHT_WAS_WRONG_AND_I_READ_THE_WORKTREE_MYSELF:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-11T02:43:10Z
+    said: >-
+      git -C ~/ctaNew-wt-arms rev-parse HEAD returns adbebf9; both commits read at their objects for subject and date.
+  AND_THE_FORWARD_BUILDS_RUN_FROM_NEITHER_TREE_BUT_FROM_941E688_WHICH_I_VERIFIED_BY_HASHING:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-11T02:43:10Z
+    said: >-
+      git show of live/pm_research/be_daybook_build.py at 941e688, e6a214f, adbebf9 and HEAD, hashed with sha256sum: one distinct value before e6a214f and one after.
+  AND_CHOOSING_941E688_AVOIDS_AN_ARGUMENT_RATHER_THAN_WINNING_IT:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-11T02:43:10Z
+    said: >-
+      the e6a214f diff for be_daybook_build.py read: a --chunk-windows argv parse defaulting to CHUNK_WINDOWS, plus a BookRefused on a non-positive value.
+  THE_FORWARD_ARTIFACT_REVISION_IS_FWD1_AND_EV23_IS_BURNED_AS_A_NAME:
+    prov: RELAYED
+    from: coordinator MEM 350
+    as_of: 2026-09-11T02:43:10Z
+    said: >-
+      the burn and its reason as dispatched; recorded because the cost of the alternative is permanent and the cost of the burn is a word.
+  PER_DAY_RESULTS_ARE_VISIBLE_BY_USER_INSTRUCTION_AND_SEALING_IS_CANCELLED:
+    prov: RELAYED
+    from: USER via coordinator MEM 350
+    as_of: 2026-09-11T02:43:10Z
+    said: >-
+      DA's finding and the user's instruction as dispatched; the fixed stopping point is the part that carries the statistical weight and is recorded as unchanged.
+  ALL_FOUR_DETERMINABLE_DAYS_ARE_RULED_ADMISSIBLE_BEFORE_ANY_DAY_IS_VALUED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T02:43:10Z
+    said: >-
+      commit ba28469 read at its object for subject and timestamp; the imported-bars and allowlist design as dispatched.
+  AND_09_13_STILL_NEEDS_THE_SAME_DETERMINATION_WITH_A_NAMED_RESIDUAL_ON_THREE_DAYS:
+    prov: RELAYED
+    from: DA via coordinator MEM 350
+    as_of: 2026-09-11T02:43:10Z
+    said: >-
+      the outstanding determination and the named residual as dispatched; recorded as an ordering constraint rather than a queue item.
+  DE_RESOLVED_THE_MULTIPLICITY_TENSION_I_FLAGGED_AND_RESOLVED_IT_BETTER_THAN_EITHER_SIDE_HAD:
+    prov: RELAYED
+    from: DE via coordinator MEM 350
+    as_of: 2026-09-11T02:43:10Z
+    said: >-
+      DE's formulation quoted verbatim; it supersedes the tension I filed at round 349, which is recorded there with both sides.
+  REVS_PER_DAY_PRODUCER_FAMILY_TABLE_IS_STILL_OPEN_AND_IT_COULD_STILL_MOVE_THE_POPULATION:
+    prov: RELAYED
+    from: REV via coordinator MEM 350
+    as_of: 2026-09-11T02:43:10Z
+    said: >-
+      the open status and the build independence as dispatched; the three timers I measured myself at round 349 with their last-run times and Result=success.
   # --- MEM round 349 addendum, 2026-09-11T02:38:05Z ---
   MY_OWN_ROTATION_CUT_A_GENERATION_IN_HALF_BECAUSE_ITS_DELIMITER_WAS_A_SPELLING:
     prov: CHECKED

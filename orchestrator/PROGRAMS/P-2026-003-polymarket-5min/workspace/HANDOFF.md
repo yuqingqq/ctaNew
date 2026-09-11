@@ -1,3 +1,107 @@
+# READ FIRST — round 350 (MEM, 2026-09-11T02:44:13Z, tip `c6ab4c0`)
+# ⚠️ THREE FACTS FROM ROUND 349 ARE NOW STALE — these supersede them
+
+# 1️⃣ **N IS 7**, population **09-07..09-13**, completing **2026-09-14T00:00Z**
+
+**N = 6 was never runnable.** The two-sided day-cluster floor at G=6 is
+**0.031250** against the **0.025** bar — *I computed that at round 349 from DE's
+raise, and it stood as the ruling for about two hours.* The coordinator records
+the 5/6/9 menu as built **on effect size alone, never checking the floor**, and
+records it as **their** error, not the user's choice.
+
+**At G=7 the two-sided floor is 0.015625 and clears — so the sidedness question
+is MOOT and conjunct (a) stays two-sided.** ***The rule-11 exposure I filed last
+round is closed by becoming unnecessary — the better of the two closures, because
+a decision that never has to be made cannot be made badly.***
+
+## 🎯 And I enumerated the futility tail — it is sharper than "one bad day kills it"
+
+| outcome at G=7 | two-sided p | |
+|---|---|---|
+| **7 of 7** | **0.015625** | **clears** |
+| 6 of 7 | **0.125000** | fails — **8× the unanimous value, 5× the bar** |
+| 5 of 7 | 0.453125 | fails |
+
+> ***One negative day does not weaken the test. It puts the result an order of
+> magnitude outside anything that can pass.***
+
+**And stopping for futility costs nothing statistically** — it can only ever
+*reduce* the chance of declaring success. **Expect it to fire: 09-05 printed
+−4,941 c on CONDVALUE, on the same estimand.**
+
+# 2️⃣ THE PIN REF QUOTED ALL NIGHT WAS WRONG — **I read the worktree myself**
+
+`~/ctaNew-wt-arms` HEAD is **`adbebf9`** (DE 212, 09-10 16:40) — **not
+`a565fd9`** (DE 202, 05:24).
+
+> ***The commit moved and the pinned bytes did not.*** That is exactly why a
+> stale ref survived a whole night of being quoted: **a wrong ref that names the
+> right bytes is invisible until someone resolves it.**
+
+**And the forward builds run from neither tree. I hashed the builder:**
+
+```
+941e688   be_daybook_build.py  sha256 73a22121f67b   ← matches all four consumed books
+e6a214f                        sha256 2d31a80b5ae5
+adbebf9                        sha256 2d31a80b5ae5
+HEAD                           sha256 2d31a80b5ae5
+```
+
+`e6a214f`'s diff is **+10/−2**: a default-preserving `--chunk-windows` parse
+falling back to `CHUNK_WINDOWS`, **plus a new refusal**. So a build on any later
+tree would rest on the argument that a CLI addition is score-neutral — **and
+`941e688` removes the need to make it.**
+
+> **Same discipline DE applied when it refused to argue the tip was score-neutral
+> at the freeze: the conservative choice is not the cautious one, it is the one
+> that needs no defence.**
+
+Forward revision **`FWD1`**. **`EV23` is BURNED as a name** — a unit and launch
+record exist with no artifact, so reuse would make the record permanently
+ambiguous. *Burning a name costs a word; buying it back is impossible.*
+
+# 3️⃣ PER-DAY RESULTS ARE VISIBLE — **sealing is CANCELLED**, by user instruction
+
+DA established that v2 had already removed every degree of freedom a peek could
+exploit: *"A peek would tell someone the answer early; there is nothing left to
+tune."*
+
+> **THE STOPPING POINT STAYS FIXED AT N=7.** ***Looking is free. Letting what is
+> seen change WHEN we stop is the part that inflates.***
+
+**Recorded as a choice made with the trade-off stated** — so a later reader does
+not read visibility as an oversight.
+
+# ✅ ADMISSIBILITY RULED BEFORE ANY VALUATION
+
+`ba28469` (DA 215, 02:38): all four determinable days **ADMISSIBLE**, ruled
+**before** valuation — the only ordering under which it means anything. Bars are
+**imported, not typed**; the allowlist **refuses** any path matching
+`daybook|ledger|settle|arm|result|verdict|null|score|fill|tranche`. *An allowlist
+defined by what it must never touch is the right way round for a check that runs
+before the data is looked at.*
+
+**But 09-13 still needs the determination, and 09-11/12/13 inherit DA's named
+residual — they cannot be ruled before the earlier days are seen.** So
+admissibility for the back half is **ordered, not merely outstanding**, and
+***the population is not fixed in the way "N=7, 09-07..09-13" implies.***
+
+# 🔗 DE CLOSED MY ROUND-349 MULTIPLICITY TENSION — by a distinction, not a ruling
+
+> **Holm's m = 2 because there are two p-values. 69 is SELECTION multiplicity,
+> which "corrects the prior, not the denominator."**
+
+*Both numbers are right about different things, and neither is the other's
+competitor.* The tension I flagged for the register is **closed**.
+
+# ❓ STILL OPEN — and it could still move the population
+
+REV's per-day producer-family table. Three timers processed 09-07..09-09
+automatically; 09-07 is consumed by **8 of 13** producer families. **Builds do
+not depend on it** — the right sequencing, **but recorded explicitly, because a
+build that completes while a population question is open will look
+retrospectively like the question was settled.**
+
 # READ FIRST — round 349 (MEM, 2026-09-11T02:36:07Z, tip `265d4c9`)
 
 # ✋ FIRST: I WAS WRONG AT ROUND 348, BY FIFTEEN SECONDS

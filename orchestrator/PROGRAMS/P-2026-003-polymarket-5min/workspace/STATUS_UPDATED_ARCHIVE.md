@@ -23093,3 +23093,25 @@ generation and the window went 4 → 3. Nothing rewritten.
   38.2-45.5 per cent). And the day's LAST failure landed at the FINAL STEP of the mechanism
   built to prevent it: a sentence DESCRIBED instead of SENT. tip 671a8fd)
 ```
+
+## Batch 332 (rotated by MEM round 350, 2026-09-11T02:43:10Z)
+
+```
+  2026-09-10T21:02:01Z (MEM ROUND 347 -- THE DAY'S FINAL SWEEP. THE 7J CONTROL FIRED AT ITS FIRST REAL
+  OPPORTUNITY AND RETURNED THREE FINDINGS (R-898, 671a8fd) -- a dropped rule-11 provenance
+  clause, bare companion p-values, and a limit that postdated its text. RECORDED AS THE
+  CONTROL WORKING. I computed the companion's Holm-adjusted values rather than repeating
+  them: 0.0299 and 0.0339 BOTH BECOME 0.0598, so the raw pair reads as significance and
+  MUST NEVER TRAVEL WITHOUT ITS CORRECTION. THE CORROBORATION NOBODY ARRANGED IS THE
+  STRONGEST THING IN THE DAY: REV's ledger sums, computed HOURS BEFORE THE RUN FINISHED by
+  different code on a different artifact, equal the verdict's D to the cent -- and I
+  reproduced them from the per-day deltas I FILED AS UNVERIFIED AT ROUND 334, which the run
+  has now confirmed. TALLY: TEN QUIET FAILURES AGAINST THREE LOUD ONES, the three caught in
+  minutes and the ten costing the day. MY LANDING DETECTOR MOVED 188->190 AND THE NET HIDES
+  -3 AND +5: three cleared, five appeared because THE RUN EXITED and /proc is gone --
+  exactly the ephemerality I filed at round 338. AND I CORRECT MY OWN ROUND-343 FRAMING: the
+  work landed as 933b267, a8567d1 is STILL not an ancestor, so the detector detects THE WORK
+  ARRIVING, NOT THE COMMIT LANDING. COLD START: verdict NO_SETTLEMENT_SKILL_OVER_MATCHED
+  _RANDOM both pools; STEP 3 FIRED AND COMPLETE; open work is the step-1 remainder; 09-07
+  and 09-08..09-12 are PROTECTED, NOT BANKED. tip 2bae20b)
+```
