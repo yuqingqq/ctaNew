@@ -67,6 +67,24 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T16:09:12Z (MEM ROUND 390+391 -- ROUND CLOSE. I COMPUTED THE v1-TO-v2 DIFF MYSELF AND IT IS 174
+  CHANGED LEAVES, NOT 2: 172 of them are emit.per_window_table_unconditional, 43 rows by
+  exactly 4 fields, every one None -> a real value, plus at_utc and STOP_ADVICE; 4 leaves
+  added, 0 removed. AND ZERO VERDICT-BEARING LEAVES MOVED -- no D, no p, no futility, no
+  tally, no cells, no admitted_by -- which is the claim that matters and is now safe by
+  computation rather than assertion. R-914's 'nothing else moved' is TRUE WHERE IT
+  MATTERS AND SHORT BY 172 AS ENUMERATED; its own other clause names those leaves as the
+  second residual. THE SUPERSESSION IS RULE 13 IN CHECKABLE FORM: supersedes.sha256
+  51decc84... recomputed from v1's bytes by me and matching, kept_as 'provenance,
+  unedited' -- one hour after the previous emit corrected itself by overwrite with no
+  recoverable predecessor. Of my two round-388 residuals, STOP_ADVICE is CLOSED and
+  running_tally is NOT. I drove BE's new tree-pin guard: 8/8 both directions, with a cell
+  that annotates which condition it actually tests. AND I CORRECT MYSELF: for six rounds
+  I filed the landing as blocked by 'two other-seat files'. It is 68 paths -- 1 modified,
+  67 untracked-but-tracked-on-origin, 5 of 5 sampled BYTE-IDENTICAL to origin -- and with
+  140 local-only commits a fast-forward is IMPOSSIBLE however clean the tree is. The
+  coordinator's own rule-45 push is blocked by the same thing. Lock free, nothing armed.
+  Tip 3046cbf.)
   2026-09-11T16:02:36Z (MEM ROUND 389 -- THE DESIGN COULD NEVER HAVE SURVIVED ITS OWN SCREEN, AND I
   COMPUTED IT. The floor is 0.015625, reachable only at a perfect 7-of-7. Times m=2, the
   Holm multiplicity as declared, 0.03125 < 0.05 -- it would have passed. Times 69, the
@@ -103,6 +121,7 @@ updated: >-
   POPULATION_FREEZE_HOLDS 67/67 -- but the report it rests on lives in /tmp, and the
   emit was overwritten in place so the 15:52:37Z record is gone. The 09-09 build is HELD;
   continuing for descriptive per-day performance is the USER's call. Tip 73d5655.)
+previous_updates: >-
   2026-09-11T15:48:48Z (MEM ROUND 387 -- DAY ONE REPRODUCES EXACTLY FROM THE FREEZE-BUILT BOOK, AND DAY
   TWO'S TWO CELLS ARE VERIFIED BY RECOMPUTATION. The 09-07 reproduction returns D
   -14645.078818000005 against day one's -14645.078818000005 -- delta ZERO, not merely to
@@ -121,7 +140,6 @@ updated: >-
   fwd_rehearsal_0908 -- the third name this week that outlived what it described -- and
   the 09-07 rerun holds a PRIVATE lock, so the heavy lock reads free while a real
   valuation runs. Tip 7402916.)
-previous_updates: >-
   2026-09-11T14:12:02Z (MEM ROUND 385 -- THE 09-07 REFUSAL NAMES ruled_day_set BY ITS OWN DELTA, AND THE
   THREAD CLOSES. The refusal blocking the reproduction prints its own SCORING-PATH DELTA:
   INTERSECTION ['ruled_day_set'] -- the function whose split I drove at 382 and whose
@@ -421,6 +439,18 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r391_I_COMPUTED_THE_v1_v2_DIFF_MYSELF_and_it_is_174_not_2: "R-914 records 'nothing else moved' as COMPUTED and enumerates the diff as exactly STOP_ADVICE, STOP_ADVICE_why, supersedes and at_utc. I flattened both records to leaves and differenced them: 532 leaves in v1, 536 in v2; 174 CHANGED values, 4 added, 0 removed. The 174 decompose exactly as 172 leaves of emit.per_window_table_unconditional -- 43 rows times precisely 4 fields (utc, gap_seconds, n_gap_intervals, share_of_day_gap_time), every single one going from None to a real value -- plus at_utc and emit.STOP_ADVICE. The four added are STOP_ADVICE_why and the three supersedes fields."
+  r391_ZERO_verdict_bearing_leaves_moved_and_THAT_is_the_claim_that_matters: "I checked the surface that could change the result rather than trusting the enumeration: observed_D, p_two_sided, futility, running_tally, G_so_far, G_declared, tolerance_negative_days, the floor, per_day_D_by_arm, per_arm_D_cents, cells, admitted_by, book_sha256, winner_source and the ALREADY_DEAD booleans. NOT ONE of them differs between v1 and v2. The supersession is safe in the only sense that matters, and now it is safe by computation rather than by assertion."
+  r391_nothing_else_moved_is_TRUE_WHERE_IT_MATTERS_and_INCOMPLETE_AS_ENUMERATED: "Both clauses of R-914 are individually right and they do not agree with each other: one says the diff is exactly four things, the other says 'the second residual closed with real values' -- and that second residual IS the 172 window-table leaves the first clause omits. So the claim is true in substance and its enumeration is short by 172. Recorded precisely because 'nothing else moved' is the sentence that licenses a supersession as safe, and a reader checking it against the file would find 174 changes and no way to tell which reading was meant."
+  r390_the_v2_SUPERSESSION_is_rule_13_in_CHECKABLE_form: "v2 carries supersedes.path naming the 15:54:50Z record, supersedes.sha256 51decc84c8b368d857c6cdc5cb3ecb4a27ffced89bff98005e33fcd6295aabac -- which I recomputed from that file's bytes myself and it MATCHES -- and supersedes.kept_as 'provenance, unedited (rule 13)'. Both files are on disk. One hour earlier the previous emit was corrected by OVERWRITING itself in place with no recoverable predecessor. Same artifact family, same day, opposite discipline: this is what rule 13 looks like when it is a field a reader can resolve rather than a sentence."
+  r390_my_round_388_STOP_ADVICE_observation_is_CLOSED_and_the_other_is_NOT: "Of the two residuals I filed at round 388, one is closed and one is not, and both should be said. CLOSED: emit.STOP_ADVICE now reads STOP_FOR_FUTILITY with a STOP_ADVICE_why beside it, where v1 had None while both ALREADY_DEAD booleans were True. STILL OPEN: emit.running_tally.negative_or_zero_days is still ['2026-09-07','2026-09-08'] in v2 -- one arm's list in a per-day slot, the shape DE 346 fixed one level below. On two days a leak and a correct union remain observationally identical; a third day would separate them."
+  r390_I_DROVE_BEs_new_tree_pin_guard_and_it_passes_8_of_8: "be_tree_pin_guard.sh, run by me rather than read: 8 cells, 0 failed. It ADMITS the live build tree on descendant-plus-five-digests with exit 0 and says WHY, computed; it REFUSES a tree off the pin's lineage with exit 4 naming PIN_NOT_ANCESTOR; it REFUSES a descendant whose pinned bytes moved naming PINNED_DIGEST_MOVED and the file; it REFUSES a non-git path with exit 2. And one cell annotates itself honestly -- 'the digest cell's commit really IS an ancestor, so the cell tests (2), not (1)' -- which is a falsifier saying which condition it actually exercises rather than which one it is named for."
+  r390_the_PIN_literal_REMAINS_and_that_is_now_CORRECT: "launch_stage2.sh:122 still carries PIN=7ed5a9015f75de64... The defect BE 188 fixed was not the literal but the EQUALITY four lines on, and the literal is now passed as a BASE to the guard: bash be_tree_pin_guard.sh \"\" \"\" || exit 4. A base pin is exactly what a descendant-plus-digests rule needs, so the literal is load-bearing in the right way. The comment beside it names the class in the programme's own words -- a LITERAL THAT MUST TRACK A MOVING THING -- and records that the tree has legitimately advanced four times since the pin."
+  r390_wt_fwd_is_EXACTLY_112_commits_past_the_pin: "R-912 says wt-fwd is 112 commits past 7ed5a90, which is why an equality against the pin refused a 09-09 book the preflight had admitted 25 of 25. Counted rather than taken: git rev-list --count 7ed5a90..b34ed9f returns 112, and wt-fwd's HEAD is b34ed9f."
+  r390_MY_OWN_FRAMING_OF_THE_LANDING_BLOCKER_WAS_TOO_NARROW: "For six rounds I filed the landing as blocked by 'the same two other-seat files'. Measured properly today the blocker set is 68 PATHS: exactly ONE modified tracked file (da_population_freeze_verify.py) and SIXTY-SEVEN untracked files that exist on origin as tracked ones -- 44 declarations, 18 REVIEW documents and 5 modules. I sampled five of the untracked ones against origin's tracked copies and all five are BYTE-IDENTICAL, so for those paths the divergence is bookkeeping, not content. And the first-order fact is one I never stated: with 140 local-only commits a fast-forward is IMPOSSIBLE however clean the tree is, so land_register_row's path is structurally closed rather than transiently blocked. My earlier framing named a true obstacle and implied a smaller one than exists."
+  r390_the_COORDINATORS_OWN_ORDERED_PUSH_is_blocked_by_the_same_thing: "R-912 orders a push by rule 45 for BE's two shared-tree commits, 223f352 and 73d5655. Neither is an ancestor of origin/mm-research. So this is no longer a MEM-seat inconvenience about register rows: the register's own entry orders an action the branch state does not permit, and BE's landed work sits beside my seven rows on the same side of the same fork."
+  r391_the_machine_is_QUIET_and_I_confirmed_it_on_the_real_path: "At round close the heavy lock data/.heavy_run.lock has no holder and no research unit is in a running state. I read the lock with fuser on the path BE 189 confirmed every heavy run takes -- the same reader that has said HELD three times this session with the pids resolved to units -- so this FREE is from an instrument that has demonstrated it can say otherwise."
+  r391_the_post_population_queue_stands_at_twelve_plus_three_and_item_12_is_mine: "R-913 consolidates twelve items plus the standing list from BE_PROCEDURE section 10 and the MEM 372 row, and R-914 routes three more from REVIEW 190 -- the gap-seconds union question, the share_of_day_gap_time name, and the self-vouching residual on a direct invocation. Item 12 is the two-path declaration landing rule and the fork, which is my own MEM 382 finding arriving on the programme's queue rather than staying in my state file. Nothing in the queue runs inside the population; it opens on the user's word."
   r389_landing_refused_a_sixth_time_at_139_over_181: "HELD BEHIND_AND_NOT_FF again. The series across rounds 382-389: 112/131, 117/139, 121/159, 125/169, 129/173, 139/181. SEVEN MEM rows are written and unlanded, Q-MEM-338 (round 358) through Q-MEM-344, and the row now covering the forward test's terminal result is among them. I did not merge, stash or rebase (rules 21, 45). Recorded plainly: the programme's own register does not yet carry the outcome, and the only artifact that does is this state file and the HANDOFF, both of which are also local-only."
   r389_THE_DESIGN_COULD_NEVER_HAVE_SURVIVED_ITS_OWN_SCREEN: "Computed, not quoted. The design's minimum attainable p is 0.015625, reachable only at a perfect 7-of-7. Times m=2, the Holm multiplicity as declared, that is 0.03125 < 0.05 -- it would have passed. Times 69, the candidates actually screened, it is 1.078125 > 1. Equivalently 1/69 = 0.014492754 and the floor 0.015625 EXCEEDS it: no outcome of this test, however perfect, could have survived a correction over the screen that produced the arms. The fail sentence is the weaker of two true statements, and this one was computable before any day was valued."
   r389_what_that_statement_does_and_does_not_say: "It is a statement about the DESIGN, not about the arms. It says the forward test as specified had no attainable outcome that would clear a Bonferroni correction over its own 69-candidate screen -- so a pass would have needed a larger G, or a screen-independent justification for m=2, and neither was available at the time it was fixed. It does NOT say the arms have no effect; nothing here bears on that, and the pre-written sentence remains NOT_ESTABLISHED_AT_THIS_POWER. Recorded in both halves because the sharper statement is the easier one to over-read."
@@ -28184,6 +28214,54 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r391_I_COMPUTED_THE_v1_v2_DIFF_MYSELF_and_it_is_174_not_2:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908_v2.json
+    said: "walked both documents to leaf paths, took the symmetric difference of the key sets and the value-inequality set over the intersection, then partitioned the changed set by prefix: 172 under emit.per_window_table_unconditional and 2 others; confirmed every window change had None on the v1 side."
+  r391_ZERO_verdict_bearing_leaves_moved_and_THAT_is_the_claim_that_matters:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908_v2.json
+    said: "filtered the 174 changed leaf paths for fifteen verdict-bearing tokens and got an empty list."
+  r391_nothing_else_moved_is_TRUE_WHERE_IT_MATTERS_and_INCOMPLETE_AS_ENUMERATED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "read R-914's two clauses against my own leaf diff; the window table is the only surface that reconciles them."
+  r390_the_v2_SUPERSESSION_is_rule_13_in_CHECKABLE_form:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908_v2.json
+    said: "hashlib.sha256 over the v1 file's bytes gave 51decc84c8b368d8... equal to the declared supersedes.sha256; both records are present in the directory listing with distinct mtimes 15:54:50Z and 16:03:05Z."
+  r390_my_round_388_STOP_ADVICE_observation_is_CLOSED_and_the_other_is_NOT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908_v2.json
+    said: "read emit.STOP_ADVICE, emit.STOP_ADVICE_why and emit.running_tally.negative_or_zero_days from v2 and compared each against the arms' own futility.negative_or_zero_days: CONDVALUE two days, HAZARD one."
+  r390_I_DROVE_BEs_new_tree_pin_guard_and_it_passes_8_of_8:
+    prov: CHECKED
+    artifact: live/pm_research/be_tree_pin_guard.sh
+    said: "ran the script's falsifier mode and read all eight PASS lines and the closing JSON {falsifier: be_tree_pin_guard, n: 8, failed: 0}."
+  r390_the_PIN_literal_REMAINS_and_that_is_now_CORRECT:
+    prov: CHECKED
+    artifact: live/pm_research/launch_stage2.sh
+    said: "read lines 118-160: PIN is defined at :122 and consumed only at the be_tree_pin_guard.sh call; grep for the hash found it at :122 and in the explanatory comment at :152, nowhere else."
+  r390_wt_fwd_is_EXACTLY_112_commits_past_the_pin:
+    prov: CHECKED
+    artifact: live/pm_research/launch_stage2.sh
+    said: "git -C the wt-fwd worktree rev-parse HEAD gave b34ed9f; git rev-list --count from the pin to that commit gave 112."
+  r390_MY_OWN_FRAMING_OF_THE_LANDING_BLOCKER_WAS_TOO_NARROW:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    said: "intersected git status --short with git diff --name-only HEAD origin/mm-research to get 68 paths, split them by status into 1 modified and 67 untracked, counted them by directory, and compared five untracked files' sha256 against git show origin/mm-research:<path>."
+  r390_the_COORDINATORS_OWN_ORDERED_PUSH_is_blocked_by_the_same_thing:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    said: "git merge-base --is-ancestor for each of the two commits against origin/mm-research returned non-zero for both after a fresh fetch."
+  r391_the_machine_is_QUIET_and_I_confirmed_it_on_the_real_path:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    said: "fuser on the path returned nothing and systemctl --user list-units filtered to running research services returned no rows."
+  r391_the_post_population_queue_stands_at_twelve_plus_three_and_item_12_is_mine:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "enumerated R-913's twelve numbered items and R-914's three routed ones; item 12 names the fork that MEM 382 measured."
   r389_landing_refused_a_sixth_time_at_139_over_181:
     prov: CHECKED
     artifact: scripts/land_register_row.sh
