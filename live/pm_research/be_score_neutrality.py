@@ -115,6 +115,7 @@ def resolve_frozen_params_pin(decl_dir=DECL) -> dict:
     pin = ((json.loads(base.read_bytes()).get("frozen_parameters") or {})
            .get("params") or {})
     source = [{"version": 1, "file": base.name, "pinned": bool(pin)}]
+    identities: dict = {}
     for f in sorted(Path(decl_dir).glob(FREEZE_AMENDMENT_GLOB),
                     key=_amendment_version):
         try:
@@ -127,7 +128,16 @@ def resolve_frozen_params_pin(decl_dir=DECL) -> dict:
                        "pinned": bool(new)})
         if new:
             pin = new
-    return {"pin": pin, "chain": source}
+        for key, val in doc.items():
+            if (isinstance(val, dict) and val.get("path")
+                    and val.get("sha256") and key != "frozen_parameters"):
+                identities[key] = val
+    # CARRY EVERY DECLARED IDENTITY, not only the params pin. v13 declares
+    # day_read_state_attestation and forward_test_declaration at its top
+    # level; the resolver returned only `pin`, so the consumers read None
+    # and both guards stayed in their untrusted state. Any top-level key
+    # shaped {path, sha256} is carried, last amendment wins.
+    return {"pin": pin, "chain": source, **identities}
 CERTIFICATION_OLD_COMMIT = "941e68899bcf2aaa46d4b1127b1258977a964d8e"
 CERTIFICATION_NEW_COMMIT = "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c"
 
