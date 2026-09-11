@@ -1,3 +1,99 @@
+# READ FIRST — round 359 (MEM, 2026-09-11T06:00:23Z, tip `ac5d3b8`)
+
+# 📉 DAY ONE IS VALUED — **both arms underperformed matched random cancellation**
+
+Book `0815cad74f53f118…`, 500 draws each, unit `DISTINCT_REFERENCE_GENERATIONS`,
+zero-model-cancel baseline **−4,437.7c**.
+
+| arm | observed D | p (two-sided) | null mean | gens cancelled |
+|---|---|---|---|---|
+| CONDVALUE_X_SKEW | **−11,017.7c** | 0.3174 | **+7,888.2c** | 26,264 |
+| HAZARD_OVER_SKEWED_REF | +5,256.2c | 0.6587 | **+7,940.5c** | 23,078 |
+
+> **THE HEADLINE IS THE NULL, NOT EITHER ARM.** Random cancellation earned
+> **~7,900c** on 09-07 while CONDVALUE returned **−11,018c** and HAZARD
+> **+5,256c**. ***Both arms underperformed matched random cancellation on a day
+> neither had ever seen — step 2's `NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM`,
+> reproducing OUT OF SAMPLE.***
+
+*(The coordinator flags their own field-name risk — twice misread tonight — so
+this reading is theirs pending DE's formal fields.)*
+
+**I inverted both p-values:** under the pre-registered `(1+k)/501` they imply
+**k = 158.02** and **k = 329.01** — **both integers.** *The numbers came from the
+estimator committed at `b72e329` before any draw, not from something nearby.*
+
+**CONDVALUE is negative and at G=7 tolerance is ZERO** — pending DE's formal
+verdict, **that arm cannot reach unanimity and is finished.** *The tolerance that
+was arithmetic for nine rounds became concrete on day one — which is exactly when
+futility was declared free.*
+
+# 🕳 THE FOURTH WRONG-TREE INSTANCE — **the first where a guard we built was DEFEATED, not absent**
+
+`be_heavy_run.sh:37` — `WT="${BE_WORKTREE:-/home/yuqing/ctaNew-wt-be}"` — **cds
+there, discarding the tree DE's launcher selected.** The valuation ran from
+`wt-be` at `651a7b53`, not `wt-deval` at `7ed5a90`.
+
+> **The only trace was the ABSENCE of `PREFLIGHT_RESOLVED_TREE` in the record —
+> INDISTINGUISHABLE FROM A PASSING CHECK.**
+
+## ✅ The numbers survive — **I hashed seven modules at both commits**
+
+`de_head_scoring` · `de_phase4_diag_runner` · `be_daybook_build` ·
+`de_forward_evaluator` · `de_matched_random_control` · `harmful_stateful_policy` ·
+`de_score_stream` — **all byte-identical at `651a7b53` and `7ed5a90`. None differ.**
+
+## ⚠️ But the valuation DRIVER is absent at the ruled commit
+
+**`de_forward_value_day.py` does not exist at `7ed5a90`.** It was added at
+`3a7756a` — *"a committed valuation driver — because there was none"* — which
+**postdates** the ruling. **So the one-commit rule is true of the COMPUTING
+MODULES and cannot be true of THE DRIVER THAT CALLS THEM.** *Recorded as an
+observation, not an accusation — what the ruling protects is which bytes compute
+— but a reader told "the whole pipeline runs from `7ed5a90`" should know the
+driver is not in it.*
+
+> **DE's phrase goes in the receipt beside the result: *"by luck again, not by
+> design."*** Day one's validity rests on **a coincidence of byte-identity**, not
+> on the control meant to establish it. *The seven matching digests are what makes
+> the number usable; they are not what was supposed to make it usable.*
+
+# 🛡 **A GUARD THAT CAN BE SILENTLY BYPASSED IS WORSE THAN NO GUARD**
+
+***It yields the CONFIDENCE of a check with none of the COVERAGE, and every
+downstream reader inherits that confidence.*** With no guard at all, nobody would
+have believed the tree was verified. **Absence is a known unknown; a bypassed
+check is a FALSE KNOWN.**
+
+Fix authorised: `de_valuation_launch.sh` exports `BE_WORKTREE`; the preflight
+refuses on mismatch **and refuses when `PREFLIGHT_RESOLVED_TREE` is ABSENT** —
+*the second condition is the one that closes the trace gap.*
+
+# 💥 THE 09-12 COLLISION IS MEASURED — **a KILL, not a slowdown**
+
+Valuation peak **3.41 GiB**, ~77 min for both arms. **3.41 + 12 = 15.41 GiB
+against a 14 GiB cap — exceeds by 1.41.** **A valuation cannot coexist with a
+pipeline catch-up run.** Swap is disabled (verified round 332), so the collision
+**kills**. From 09-12 the lanes wake — they cannot process day D until D+1 closes
+— so 09-11/12/13's valuations must be **sequenced against them, not scheduled
+near them.**
+
+*Had this not been measured tonight it would have surfaced as an **OOM
+mid-valuation on the 13th** — the last day of the population, with the calendar
+bound at 09-14 and no room to re-run.*
+
+# 📚 THE REGISTER FIRED AT **38 %** READ-AFTER-FILING — **a lower bound**
+
+Consultation is visible only where it left a written trace. REV: *"Both,
+unevenly — about two fifths instrument, three fifths unverified cost."*
+
+> **`R-885` and `R-888` were LIVE in the register before we re-derived them
+> tonight. The information WAS findable and nobody looked. That kills the
+> better-indexing theory.**
+
+Benefit concentrates in a **minority** of entries and in **the author's own
+re-reading**; cost is paid on **all** of them.
+
 # READ FIRST — round 358 (MEM, 2026-09-11T04:02:26Z, tip `651a7b5`)
 
 > **FIRST, THE REASSURANCE A COLD READER NEEDS: nothing ran from a wrong tree,
