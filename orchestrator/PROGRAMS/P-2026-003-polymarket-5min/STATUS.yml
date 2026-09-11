@@ -67,6 +67,26 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T18:48:18Z (MEM ROUND 396 -- THE 69 STATED PRECISELY, AND THE HUNT FOUND NO FILE TO NAME.
+  THE FORM TO QUOTE: lane 2's minimum attainable p times 69 is 0.134765625, which ALSO
+  exceeds 0.05, so NEITHER DESIGN SURVIVES A 69-FOLD SCREEN. What lane 2 buys is that THE
+  69 DOES NOT APPLY TO IT -- section 4 declares a CLOSED FAMILY OF EXACTLY TWO, fixed
+  before any scoring, m = 2 forever even if one dies -- a structural property of the
+  declaration, NOT immunity to the arithmetic. MY ROUND-394 FRAMING WAS RIGHT AND
+  INCOMPLETE: I compared floors without saying the 69 is not lane 2's multiplicity at
+  all, and a reader of my sentence could conclude lane 2 faces the same screen with
+  better odds, which is the opposite of the case. THE HUNT: I swept three trees for the
+  fold phrasing, the product 0.134765625 and the assertive verb forms; THREE hits carry
+  the claim and ALL THREE ARE INSIDE MY OWN CORRECTIONS, each quoting it to strike it. No
+  declaration, review, register entry or artifact asserts it -- THERE IS NO FILE TO NAME.
+  And the hunt has its own hazard: a grep-based checker WILL flag my corrections, because
+  a correction must quote what it corrects; the discriminator has to be structural, not
+  the token. MY SIGMA DRIVE AND MY CALL-SITE CHECK ARE FILED AS THE SECOND HAND ON REVIEW
+  194 -- and the instruments genuinely differed: REV read the contract against the source,
+  I EXECUTED the code against real files; REV argued from the predicate's shape, I
+  resolved the call graph mechanically. Same conclusions, no shared step. DE 358 takes
+  the forked 09-07 chain as work, with a total chain, an explicit book_lineage and a cell
+  that refuses SUPERSESSION_CHAIN_FORKED. Tip d165fa9.)
   2026-09-11T18:44:43Z (MEM ROUND 395 -- 09-07 HAS TWO GUARD-CARRYING RECORDS OF DIFFERENT BOOKS, AND DAY
   THREE IS POSITIVE ON BOTH ARMS WITHOUT CHANGING ANYTHING. The dispatch names 09-07 v2;
   a v3 exists 76 s later, and they are not versions of one thing -- v2 is the FREEZE-BUILT
@@ -104,6 +124,7 @@ updated: >-
   cancellation's m=2 was attainable too; what it could not satisfy was the SCREEN. The
   thing a cold reader must not conclude: lane 2 is not the cancellation test reopening.
   Tip da016c5.)
+previous_updates: >-
   2026-09-11T16:38:04Z (MEM ROUND 393 -- THE USER RULED: CONTINUE DESCRIPTIVELY. Days 09-09..09-13 are
   built and valued for PER-DAY PERFORMANCE ONLY, and the forward test's outcome stays
   FIXED AT DAY TWO -- both arms FUTILE, STOP_FOR_FUTILITY computed, no later record can
@@ -120,7 +141,6 @@ updated: >-
   string, as day two's already was. 09-09 onward need NO rebuild: they build at the
   frozen lineage, which is why the schedule is as short as it is. Lock FREE and nothing
   running at dispatch. Tip d7812c0.)
-previous_updates: >-
   2026-09-11T16:13:55Z (MEM ROUND 392 -- BOTH ARMS NOW REPRODUCE EXACTLY, WHICH CLOSES THE CAVEAT I LEFT AT
   387. I checked it myself rather than reading the flag: CONDVALUE -14645.078818000005
   and HAZARD 4925.363903000005, each equal to day one's landed cell under ==, on the
@@ -508,6 +528,13 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r396_THE_69_STATED_PRECISELY_AS_RULED: "The form to quote from here, and it supersedes my own round-394 phrasing. Lane 2's minimum attainable two-sided p is 2/1024 = 0.001953125; times 69 that is 0.134765625, WHICH ALSO EXCEEDS 0.05. So NEITHER DESIGN SURVIVES A 69-FOLD SCREEN. What lane 2 buys is not a better position against the 69 -- it is that THE 69 DOES NOT APPLY TO IT: section 4 declares a CLOSED FAMILY OF EXACTLY TWO candidates, fixed before any scoring, with m = 2 forever even if one dies, so the multiplicity that governs lane 2 is 2 and not 69. That is a structural property of the declaration, NOT immunity to the arithmetic."
+  r396_MY_ROUND_394_FRAMING_WAS_RIGHT_AND_INCOMPLETE: "At 394 I wrote that lane 2 buys a much better floor and not immunity. True, and it compares the two designs' arithmetic without saying the thing that actually matters: the 69 is not lane 2's multiplicity at all. A reader of my sentence could conclude lane 2 faces the same screen with better odds, which is the opposite of the case. The refinement is the coordinator's and I record it as superseding mine rather than as an addition, because the two sentences would otherwise sit side by side saying different things."
+  r396_THE_HUNT_FOUND_NO_FILE_TO_NAME: "I was asked to name any artifact or doc printing that something CAN pass a 69-fold screen. I swept the programme directory, live/pm_research and docs for the fold phrasing, the candidate phrasing, the product 0.134765625 and the assertive verb forms can/could/would/will pass, clear or survive within forty characters of 69. THREE hits carry the claim and ALL THREE ARE INSIDE MY OWN CORRECTIONS -- STATUS.yml lines 102 and 522, HANDOFF.md line 176 -- each quoting the wrong claim in order to strike it. NO declaration, review, register entry or emitted artifact asserts it. There is no file to name."
+  r396_AND_THE_HUNT_ITSELF_HAS_A_HAZARD_WORTH_NAMING: "A grep-based checker looking for that sentence will FLAG MY TWO CORRECTIONS, because a correction must quote the thing it corrects in order to strike it. The struck claim and the asserted claim are the same string; only the surrounding clause separates them. That is the residue problem in prose rather than in filenames, and the same resolution applies: the discriminator has to be structural -- here, the words I CORRECTED MY OWN FIRST READING immediately before it -- not the presence of the token. Recorded so the next sweep does not read my correction as the defect."
+  r396_MY_SIGMA_DRIVE_IS_THE_SECOND_HAND_ON_REVIEW_194: "Filed as ruled, under the standard that convergence only counts if the instruments differ -- and they did. REVIEW 194 verified be_sigma_30m.py against section 4 C2 FIELD BY FIELD, reading the contract and checking each clause against the code. I did not read the contract at all: I RAN the module's falsifier to completion and read its terminal JSON, {falsifier: be_sigma_30m, n: 27, failed: 0} at rc 0, plus the five real-source cells it printed. One instrument was a reading of the spec against the source; the other was an execution of the code against real bookTicker files. Same conclusion, no shared step, no shared input -- which is what makes the agreement worth something."
+  r396_AND_SO_IS_MY_CHECK_OF_THE_REPLACED_REASON: "Same standard, same round. REV reasoned about the delegation from the shape of the predicate -- an endpoint-coverage and max-gap predicate against the sigma's four admissibility clauses. I did not reason about it: I resolved each of the five call sites of continuity_from_recv_ns to its enclosing def by walking the source backwards to the nearest top-level definition, found four of them inside selftest and one in local_continuity, and read what that one passes. REV's route was the design argument; mine was a mechanical resolution of the call graph. They agree, and neither needed the other's step."
+  r396_DE_358_the_forked_09_07_chain_is_now_WORK: "The finding I filed at 395 is dispatched. DE 358 re-emits 09-07 with a TOTAL chain and an explicit book_lineage, plus a cell that refuses SUPERSESSION_CHAIN_FORKED. That is the right shape twice over: the remedy is a total order rather than a patched pointer, so the walk from the newest record reaches every predecessor; and the guard is a cell that can FIRE rather than a note that the chain should be total. Both records stay on disk unedited, which is what made the fork visible and diagnosable in the first place."
   r395_09_07_HAS_TWO_GUARD_CARRYING_RECORDS_OF_DIFFERENT_BOOKS: "The dispatch names 09-07 v2 as the re-emitted record. A v3 exists, written 76 seconds later, and the two are not versions of the same thing: v2's book is the FREEZE-BUILT reproduction book 887a97eb41e9f83c with admitted_by DESCENDANT on both arms; v3's book is /home/yuqing/ctaNew/data/pm_5min/derived/be_daybook_20260907_btc__L250ms__FWD1.pkl at e25471905983e95a -- which I hashed myself, 358,259,004 bytes, THE LANDED BOOK -- with admitted_by None on both arms. That is coherent: the landed book is PRE-FREEZE, so no descendant admission is available for it. Recorded because a reader taking the newest 09-07 record gets the landed, non-admitted book rather than the freeze-built admitted one."
   r395_AND_v3s_SUPERSEDES_POINTS_AT_v1_NOT_v2: "v3's supersedes names p003_de_forward_value_20260907.json -- the ORIGINAL -- not the v2 written 76 seconds earlier. So the supersession chain from v3 skips v2 entirely, and a reader following supersedes backwards from the newest record never sees the freeze-built one. Both records exist on disk and neither is edited, so nothing is lost; what is absent is the link. Named for DE, not adjudicated: it may be deliberate, since v2 and v3 describe different books rather than successive versions of one."
   r395_09_09_IS_POSITIVE_ON_BOTH_ARMS_AND_BOTH_STAY_FUTILE: "Read from the cells, not the dispatch: CONDVALUE_X_SKEW D +10295.840461999993 with p 0.3852295409181637 and 25902 cancels; HAZARD_OVER_SKEWED_REF D +10836.306347999991 with p 0.4291417165668663 and 26222 cancels. BOTH arms positive on day three. And both remain FUTILE with the caps unchanged -- CONDVALUE 2 non-positive days capping at 0.453125, HAZARD 1 capping at 0.125 -- G_so_far 3, STOP_ADVICE STOP_FOR_FUTILITY. Two consecutive positive arm-days change nothing, which is the second time in two rounds I have had to say so: the cap is a function of the days already non-positive."
@@ -28312,6 +28339,34 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r396_THE_69_STATED_PRECISELY_AS_RULED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "computed 2/1024 times 69 = 0.134765625 and compared against 0.05; read section 4's closed-family clause and the m = 2 forever rule from the plan on disk."
+  r396_MY_ROUND_394_FRAMING_WAS_RIGHT_AND_INCOMPLETE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    said: "re-read my own r394 flag text and the round-394 updated block against the ruling; my wording compares floors, the ruling identifies the applicable multiplicity."
+  r396_THE_HUNT_FOUND_NO_FILE_TO_NAME:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    said: "grep -rniE over three trees for 69-fold, 69-candidate, 0.134765625 and the assertive verb patterns; read the surrounding lines of every hit; the only other 69 references are REVIEW 171/174/186 and two arm-freeze amendments, all making the NEGATIVE claim."
+  r396_AND_THE_HUNT_ITSELF_HAS_A_HAZARD_WORTH_NAMING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    said: "read HANDOFF.md line 176 and STATUS.yml lines 102 and 522 in context: each is preceded within one clause by an explicit statement that the reading was corrected."
+  r396_MY_SIGMA_DRIVE_IS_THE_SECOND_HAND_ON_REVIEW_194:
+    prov: CHECKED
+    artifact: live/pm_research/be_sigma_30m.py
+    said: "ran the falsifier mode to completion; the cells I watched pass are no-fallback, production-entry admission at sigma 4.628298353273501e-05 with n 1800, local knowledge lag 4,281,563 ns, 1,800 of 1,800 returns on a dense window, and the same window an hour earlier giving a different number."
+  r396_AND_SO_IS_MY_CHECK_OF_THE_REPLACED_REASON:
+    prov: CHECKED
+    artifact: live/pm_research/de_v2_local_selector.py
+    said: "walked the file's lines backwards from each of :127, :219, :226, :232 and :238 to the nearest line matching a top-level def and printed the enclosing name and whether max_gap_ns appears within six lines of the call."
+  r396_DE_358_the_forked_09_07_chain_is_now_WORK:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260907_v3.json
+    said: "the fork is the one I measured at round 395: v3's supersedes names the 11:00:36Z original at sha a5fd7506d7305642 rather than the 18:36:20Z v2, and the two records carry different books, 887a97eb freeze-built against e2547190 landed."
   r395_09_07_HAS_TWO_GUARD_CARRYING_RECORDS_OF_DIFFERENT_BOOKS:
     prov: CHECKED
     artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260907_v3.json
