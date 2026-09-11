@@ -23696,3 +23696,24 @@ generation and the window went 4 → 3. Nothing rewritten.
   RULING TURNS THE COLLISION INTO A THIRD CORROBORATION, because BIT_IDENTICAL passes
   every tolerance. tip 2981ef8)
 ```
+
+## Batch 359 (rotated by MEM round 377, 2026-09-11T08:56:01Z)
+
+```
+  2026-09-11T08:00:11Z (MEM ROUND 374 -- FOUR CORRECT GATES, FOUR STALE RECORDS. The re-certification
+  landed BIT_IDENTICAL with producer digest 8500ce41fc80, WHICH I HASHED MYSELF LAST ROUND,
+  so two genuinely different comparators now give one verdict -- rule-38 corroboration, and
+  NOT_CERTIFIED is cleared. THE RELAUNCH THEN REFUSED AT THE NEXT GATE ON EXACTLY THE
+  MISMATCH I DROVE AT ROUND 340: params v29 names de_head_scoring.py as 53a406a0, and when
+  I ran verify_run_inputs myself twenty-four rounds ago it raised BE_CASCADE_DIFFERS naming
+  53a406a0 DECLARED against 31c36838 ACTUAL. THE GUARD I FOUND OFF THE PATH IT GUARDS IS
+  NOW ON THE PATH AND REFUSING ON THAT VERY PAIR -- and DA 220's warning, that the call site
+  alone refuses every day until the params are repointed, is now the observed behaviour of a
+  running valuation. THE RULING REPOINTS THE RECORD TO BYTES ALREADY RULED: I hashed both
+  moving digests at 7ed5a90 and they match the ruling exactly, with every other field
+  byte-identical. NOT A RULE-11 EXPOSURE -- no result exists and the check's substance was
+  already true. AND THE PATTERN IS THE REGISTER'S LESSON ARRIVING THROUGH CODE: a filed
+  result does not reach the next claim, AND A RULED CHANGE DOES NOT REACH THE RECORDS THAT
+  DESCRIBE IT -- except that V2 REFUSES when its record is stale, while a lagging register
+  simply goes unread. tip c8b2351)
+```

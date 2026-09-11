@@ -67,6 +67,21 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T08:56:01Z (MEM ROUND 377 -- MY ROUND-376 WARNING IS CONFIRMED AGAINST THE ACTUAL PIN. The
+  comparator at dcec80a still hashes a455191d6bceec7e, and I INVENTORIED EVERY CERTIFICATE
+  ON DISK: one records producer 8500ce41 and the other c5c1fc0a. NEITHER MATCHES THE
+  COMPARATOR GO5 WILL RUN, so deRV0907go5 WILL REFUSE NOT_CERTIFIED exactly as go4 would
+  have, unless a THIRD certification is run with the a455191d comparator first. And the
+  inventory is the useful part: the two certificates are the work of the two instruments
+  whose agreement I called rule-38 corroboration at round 374, AND BOTH ARE NOW STALE
+  AGAINST A THIRD -- the self-referential digest check compounding, with a stock of two and
+  zero valid. THE PIN dcec80a IS ON origin/de-freeze-chain-v2 AND NOT ON origin/mm-research,
+  which I checked both ways: THE REGISTER'S AUTHORITY LAGS A VALID LANDING. I also correct
+  my own first reading -- the one 'dirty' entry in wt-deval is '?? data', UNTRACKED, so the
+  tracked tree is clean and the dispatch is right. The driver difference is cleared by TWO
+  GENUINELY DIFFERENT INSTRUMENTS, a syntax tree and a dependency graph, on ONE property.
+  And I verified the v10 amendment's pinned digest myself: sha256(params_v31) is
+  dd58223c6e3654a2 and the amendment contains it. tip 1994587)
   2026-09-11T08:51:28Z (MEM ROUND 376 -- THE FIX FOR REFUSAL THREE RE-OPENS REFUSAL TWO, AND I
   ESTABLISHED IT AT THE CODE. de_settlement_control_run.py:194 computes
   expected_producer_sha = _sha(HERE/'be_score_neutrality.py') AT RUN TIME FROM DISK. The
@@ -98,22 +113,6 @@ updated: >-
   closes the count I recorded at round 374 without inventing it; it differs in kind from
   the first three, which found STALE RECORDS, because THIS ONE FOUND A BROKEN MECHANISM.
   tip 74ad19b)
-  2026-09-11T08:00:11Z (MEM ROUND 374 -- FOUR CORRECT GATES, FOUR STALE RECORDS. The re-certification
-  landed BIT_IDENTICAL with producer digest 8500ce41fc80, WHICH I HASHED MYSELF LAST ROUND,
-  so two genuinely different comparators now give one verdict -- rule-38 corroboration, and
-  NOT_CERTIFIED is cleared. THE RELAUNCH THEN REFUSED AT THE NEXT GATE ON EXACTLY THE
-  MISMATCH I DROVE AT ROUND 340: params v29 names de_head_scoring.py as 53a406a0, and when
-  I ran verify_run_inputs myself twenty-four rounds ago it raised BE_CASCADE_DIFFERS naming
-  53a406a0 DECLARED against 31c36838 ACTUAL. THE GUARD I FOUND OFF THE PATH IT GUARDS IS
-  NOW ON THE PATH AND REFUSING ON THAT VERY PAIR -- and DA 220's warning, that the call site
-  alone refuses every day until the params are repointed, is now the observed behaviour of a
-  running valuation. THE RULING REPOINTS THE RECORD TO BYTES ALREADY RULED: I hashed both
-  moving digests at 7ed5a90 and they match the ruling exactly, with every other field
-  byte-identical. NOT A RULE-11 EXPOSURE -- no result exists and the check's substance was
-  already true. AND THE PATTERN IS THE REGISTER'S LESSON ARRIVING THROUGH CODE: a filed
-  result does not reach the next claim, AND A RULED CHANGE DOES NOT REACH THE RECORDS THAT
-  DESCRIBE IT -- except that V2 REFUSES when its record is stale, while a lagging register
-  simply goes unread. tip c8b2351)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -285,6 +284,15 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 377, two certificates and neither valid ---
+  MY_ROUND_376_WARNING_IS_CONFIRMED_AGAINST_THE_ACTUAL_PIN_GO5_WILL_USE: "The comparator at dcec80a hashes a455191d6bceec7e -- UNCHANGED from 7efea16, since only the driver moved. AND I INVENTORIED EVERY CERTIFICATE ON DISK: be_score_neutrality_20260903__EV22_vs_NEUTCHK__da00220.json records producer 8500ce41fc800e9a, and the earlier be_score_neutrality_20260903__EV22_vs_NEUTCHK.json records c5c1fc0ae126a3f7. NEITHER MATCHES THE COMPARATOR GO5 WILL RUN. So deRV0907go5 will refuse NOT_CERTIFIED exactly as go4 would have, UNLESS A THIRD CERTIFICATION IS RUN WITH THE a455191d COMPARATOR FIRST."
+  AND_THE_INVENTORY_IS_THE_USEFUL_PART_BECAUSE_TWO_CERTIFICATES_EXIST_AND_BOTH_ARE_STALE: "One was made by the user's hardened comparator and one by BE's rebuild to REV 173's bar -- the two instruments whose agreement I recorded as rule-38 corroboration at round 374. BOTH ARE NOW STALE AGAINST A THIRD COMPARATOR that neither produced. That is the self-referential digest check compounding: each repair to the comparator retires the entire certificate stock, and the stock now has two entries and zero valid ones."
+  THE_VALUATION_PIN_IS_DCEC80A_AND_IT_IS_ON_A_SIDE_REF_NOT_ON_MM_RESEARCH: "I checked both: dcec80a is ON origin/de-freeze-chain-v2 and NOT ON origin/mm-research. That is rule 45's landing branch working as designed, and it means THE REGISTER'S AUTHORITY LAGS A VALID LANDING -- the commit is real, published and resolvable by ref, while the branch the register treats as canonical does not contain it and cannot until the user resolves the fork. Declared PENDING_ORIGIN_MAIN in DA's v19, which is the right way to carry a state that is neither landed nor lost."
+  AND_I_CORRECT_MY_OWN_FIRST_READING_OF_THE_TREE_AS_DIRTY: "My first pass counted one dirty file in wt-deval and would have contradicted the dispatch's 'clean'. I looked: THE ONE ENTRY IS '?? data', AN UNTRACKED DIRECTORY, not a modification -- so the TRACKED tree is clean and the dispatch is right. Recorded because I caught it before writing it down, and because counting git status lines without reading their status character is the same shape as every proxy-for-property error in these files."
+  THE_DRIVER_DIFFERENCE_IS_CLEARED_BY_TWO_INSTRUMENTS_ON_ONE_PROPERTY: "DA 244 BY AST: zero arithmetic on any quantity, the only BinOps being PATH JOINS and time.time() minus started, with score, _D, p_two, draw and cents appearing only as FIELD NAMES COPIED INTO A RECORD. REV 154 BY IMPORT CLOSURE: the driver is a CALLER of the computing modules, not a member of their closure. 'COMPUTES NOTHING THAT REACHES A NUMBER.' Two genuinely different instruments -- a syntax tree and a dependency graph -- on the same property, which is rule-38 corroboration of the kind that actually earns the name. NO STOP."
+  AND_DA_RE_RUNS_THE_AST_AGAINST_THE_COMMITTED_BYTES_WHICH_IS_THE_HALF_THAT_MATTERS: "DA 246 runs it again against dcec80a's COMMITTED BYTES rather than the working copy it first examined. That closes the gap between what was checked and what will run -- the same gap that produced the wrong-tree build at round 353 and the stale-blob reads earlier tonight. A clearance obtained on a working copy and applied to a commit is a clearance of something else."
+  A_COORDINATOR_SAFETY_WATCHER_WOULD_HAVE_STOPPED_GO5_FOR_THE_WRONG_REASON: "It required the pin to be on origin/mm-research and would have STOPPED go5 AT TAPE-EXIT -- but rule 45 lands on a SIDE REF, so the condition it enforced was one the landing path cannot satisfy. Corrected to 'any origin ref contains HEAD' plus a clean tree. A safety check calibrated against a workflow that has been superseded is not a conservative check, it is A CHECK OF THE WRONG PROPERTY, and it would have cost a cycle while looking prudent."
+  AND_I_INDEPENDENTLY_VERIFIED_THE_V10_AMENDMENTS_PINNED_PARAMS_DIGEST: "sha256 of de_multiday_gate1_params_v31.json on disk is dd58223c6e3654a2, the amendment CONTAINS that exact 64-character digest, and the dd58223c prefix the coordinator quoted matches. So the pin chain closes at the artifact: the amendment names a params file BY CONTENT, and the content on disk is what it names. That is the property the freeze-fork repair exists to make checkable, verified rather than assumed."
   # --- MEM round 376, the fix that re-opens the earlier refusal ---
   THE_FIX_FOR_REFUSAL_THREE_RE_OPENS_REFUSAL_TWO_AND_I_ESTABLISHED_IT_AT_THE_CODE: "URGENT AND ON THE CRITICAL PATH. de_settlement_control_run.py line 194 computes expected_producer_sha = _sha(HERE / 'be_score_neutrality.py') -- AT RUN TIME, FROM THE FILE ON DISK. The resolver fix CHANGED THAT FILE: it now hashes a455191d6bceec7e in wt-deval, where at da00220 it was 8500ce41fc800e9a. AND THE CERTIFICATE ON DISK RECORDS PRODUCER 8500ce41fc800e9a. So deRV0907go4, which is offering for the lock right now, WILL REFUSE WITH SETTLEMENT_CONTROL_SCORE_NEUTRALITY_NOT_CERTIFIED THE MOMENT IT GETS THE LOCK -- for the same reason as refusal two, re-opened by the fix for refusal three."
   AND_THE_MECHANISM_IS_A_SELF_REFERENTIAL_DIGEST_CHECK_WHICH_IS_A_NEW_SHAPE_TONIGHT: "The certificate must be produced by the comparator that validates it, and the validator identifies that comparator BY HASHING ITSELF-ON-DISK. So ANY EDIT TO THE COMPARATOR INVALIDATES EVERY CERTIFICATE IT HAS EVER PRODUCED, including one made minutes earlier for exactly this purpose. That is not a stale record and not a missing guard: it is A CHECK WHOSE SUBJECT AND AUTHORITY ARE THE SAME MUTABLE FILE. The remedy is to re-run the certification with the new comparator; the structural remedy is for the certificate to be validated against A PINNED DIGEST rather than a live one."
@@ -27916,6 +27924,55 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 377, 2026-09-11T08:56:01Z ---
+  MY_ROUND_376_WARNING_IS_CONFIRMED_AGAINST_THE_ACTUAL_PIN_GO5_WILL_USE:
+    prov: CHECKED
+    artifact: live/pm_research/be_score_neutrality.py
+    as_of: 2026-09-11T08:56:01Z
+    said: >-
+      be_score_neutrality.py hashed on disk in wt-deval at dcec80a; every be_score_neutrality_*.json in data/pm_5min/derived read for producer.sha256 -- two certificates, neither matching.
+  AND_THE_INVENTORY_IS_THE_USEFUL_PART_BECAUSE_TWO_CERTIFICATES_EXIST_AND_BOTH_ARE_STALE:
+    prov: CHECKED
+    artifact: live/pm_research/be_score_neutrality.py
+    as_of: 2026-09-11T08:56:01Z
+    said: >-
+      the two certificates and their distinct producer digests read from the artifacts; the comparator on disk differs from both.
+  THE_VALUATION_PIN_IS_DCEC80A_AND_IT_IS_ON_A_SIDE_REF_NOT_ON_MM_RESEARCH:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T08:56:01Z
+    said: >-
+      git merge-base --is-ancestor run for dcec80a against both refs: false for origin/mm-research, true for origin/de-freeze-chain-v2.
+  AND_I_CORRECT_MY_OWN_FIRST_READING_OF_THE_TREE_AS_DIRTY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T08:56:01Z
+    said: >-
+      git status --short in wt-deval returning a single '?? data' line; no modified or staged tracked path.
+  THE_DRIVER_DIFFERENCE_IS_CLEARED_BY_TWO_INSTRUMENTS_ON_ONE_PROPERTY:
+    prov: RELAYED
+    from: DA 244 and REV 154 via coordinator MEM 377
+    as_of: 2026-09-11T08:56:01Z
+    said: >-
+      both methods and their findings as dispatched; the driver's difference from da00220 I confirmed by hashing at round 376.
+  AND_DA_RE_RUNS_THE_AST_AGAINST_THE_COMMITTED_BYTES_WHICH_IS_THE_HALF_THAT_MATTERS:
+    prov: RELAYED
+    from: DA 246 via coordinator MEM 377
+    as_of: 2026-09-11T08:56:01Z
+    said: >-
+      the re-run against committed bytes as dispatched.
+  A_COORDINATOR_SAFETY_WATCHER_WOULD_HAVE_STOPPED_GO5_FOR_THE_WRONG_REASON:
+    prov: RELAYED
+    from: coordinator MEM 377
+    as_of: 2026-09-11T08:56:01Z
+    said: >-
+      the watcher's original condition, its failure mode and the correction as dispatched; that rule 45 lands on a side ref I confirmed above by finding dcec80a on de-freeze-chain-v2 only.
+  AND_I_INDEPENDENTLY_VERIFIED_THE_V10_AMENDMENTS_PINNED_PARAMS_DIGEST:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T08:56:01Z
+    said: >-
+      params_v31.json hashed with sha256 giving dd58223c6e3654a2; the amendment's 64-hex tokens searched and the digest found among them.
   # --- MEM round 376, 2026-09-11T08:51:28Z ---
   THE_FIX_FOR_REFUSAL_THREE_RE_OPENS_REFUSAL_TWO_AND_I_ESTABLISHED_IT_AT_THE_CODE:
     prov: CHECKED
