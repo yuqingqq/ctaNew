@@ -1,0 +1,35 @@
+{
+  "protocol": "P003_DE_236_VALUATION_MEMORY_AND_RESUME_V1",
+  "as_of_utc": "2026-09-11T03:36:20.651321+00:00",
+  "Q1_IS_A_VALUATION_RESUMABLE_AFTER_AN_OOM_KILL": {
+    "ANSWER": "YES, FULLY. An OOM kill at draw 400 of 500 loses AT MOST THE IN-FLIGHT DRAW.",
+    "read_from_source_de_settlement_control_run.py": [
+      "identity = ASYM.run_identity(day, arm, book_sha, n_draws, seed)",
+      "state = ASYM.read_checkpoint(ckpt, identity); done = state['draws']",
+      "for i in range(n_draws): if i in done: continue   <- completed draws are SKIPPED",
+      "ASYM.append_draw(ckpt, row)  per draw, fsync'd (established at DE 214)",
+      "the result reports `resumed_from_draw`, so a resume is visible in the artifact rather than silent"
+    ],
+    "NO_PARTIAL_ARTIFACT_IS_POSSIBLE": "the result dict is only RETURNED after the loop and after the FLOOR check; the caller writes it. An OOM mid-loop leaves the checkpoint -- a gapless prefix, which IS the resume state -- and no result JSON.",
+    "and_the_resume_is_SAFE_not_merely_possible": "read_checkpoint verifies three properties: the checkpoint is for THIS run (identity), no index appears twice, and the indices are a prefix with no hole. An identity mismatch REFUSES by name rather than mixing draws across populations, seeds or books.",
+    "the_identity_includes_the_BOOK_DIGEST": "so an OOM followed by a book rebuild starts clean instead of mixing bytes from two books -- the same hazard the residue check hunted, closed here by construction.",
+    "the_floor_is_fail_closed": "a resumed run that ended short refuses at FLOOR=200 rather than reporting an under-sampled null."
+  },
+  "Q2_THE_MEMORY_PROFILE_AND_A_STRUCTURAL_FACT_THAT_CHANGES_THE_RISK": {
+    "NOT_YET_MEASURED_AND_I_AM_NOT_GUESSING_A_NUMBER": "no DE valuation has ever been profiled against this cap. There is no run record carrying a peak for one. I will measure it when 09-07 is valued, with the lanes idle, and report the peak.",
+    "BUT_THE_SHAPE_IS_READABLE_FROM_SOURCE_AND_IT_MATTERS_MORE_THAN_THE_NUMBER": {
+      "what_is_resident": "bk (the daybook), rows, pool, row_index -- ALL LOADED ONCE BEFORE THE LOOP",
+      "what_the_loop_allocates": "per draw: MCC.draw_one, flags_for, mod.replay, settled_total -- transient, not accumulated",
+      "SO_PEAK_IS_REACHED_EARLY_AND_IS_FLAT": "memory does NOT grow with draw count. A valuation that fits at draw 1 fits at draw 500.",
+      "THE_CONSEQUENCE_FOR_SEQUENCING": "a valuation will NOT die at draw 400 of its own accord. The only way it dies late is if something ELSE arrives mid-run and pushes the slice over -- which is exactly the catch-up lane starting during a valuation.",
+      "and_that_is_the_likely_collision": "a cell took 3.89 s/draw measured, so 500 draws is ~32 min and a day's two arms ~1 h. A one-hour window is wide enough for a timer to fire inside it."
+    }
+  },
+  "WHAT_I_RECOMMEND_FOR_THE_TAIL_CONDITIONAL_ON_THE_MEASUREMENT": {
+    "if_peak <= 3 GB": "valuations coexist with a ~12 GB catch-up run under the 14 GB cap, with little headroom; still worth not starting one deliberately inside a lane window",
+    "if_peak >= 8 GB": "they cannot coexist and 09-11..09-13 must be sequenced around the lanes",
+    "the_cheap_mitigation_that_works_either_way": "because peak is flat and early, a valuation can be STARTED and its peak read within the first minute -- so the decision to proceed or defer can be made on measurement rather than on a schedule",
+    "and_the_cost_of_being_wrong_is_bounded": "an OOM costs the in-flight draw, not the day. That is a materially cheaper failure than the build's -- a killed build loses its whole run."
+  },
+  "WHEN": "09-07's valuation runs with the lanes idle and the slice to itself; the peak is measured there and reported."
+}
