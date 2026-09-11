@@ -21,6 +21,7 @@ Usage:  da_market_facts.py [--falsify]
 from __future__ import annotations
 
 import collections
+import re
 import glob
 import gzip
 import hashlib
@@ -156,11 +157,12 @@ def observed_increments(days=SAMPLE_DAYS, coins=SCOPE, per=FILES_PER_COIN_DAY) -
     }
 
 
-def legal_tick() -> dict:
+def legal_tick(tape=None) -> dict:
     """THE ESTABLISHED TICK, with the disagreement between its two instruments
     stated rather than averaged away."""
     dec = declared_tick()
     obs = observed_increments()
+    tape = tape if tape is not None else tape_fee_and_tick()
     one = dec["distinct_values"][0] if len(dec["distinct_values"]) == 1 else None
     return {
         "legal_tick": one,
@@ -168,6 +170,22 @@ def legal_tick() -> dict:
         "declared_instrument": dec,
         "observed_instrument": obs,
         "instruments_agree": bool(one) and obs["every_level_is_a_multiple_of_0.01"],
+        "THE_SUB_TICK_PRICES_ARE_EXPLAINED": {
+            "cause": "the VENUE NARROWS THE GRID IN-WINDOW, and the tape says so",
+            "tick_size_change_events": tape["tick_size_change_events"],
+            "n_changes_observed": tape["n_tick_size_changes"],
+            "reading": ("every observed change is 0.01 -> 0.001. So the 0.001 "
+                        "levels are not a violation of the declared tick: they "
+                        "are the tick AFTER a `tick_size_change` event the "
+                        "market published. `orderPriceMinTickSize` is the tick "
+                        "at market creation, not for the window's life -- which "
+                        "is exactly the question DA 283 asked and answered too "
+                        "narrowly from the market record alone."),
+            "consequence_for_the_freeze": (
+                "rounding to 0.01 stays LEGAL at all times, because 0.01 is a "
+                "multiple of 0.001. It is not always the FINEST legal grid, so "
+                "a quote on it can be improvable after a narrowing event."),
+        },
         "THE_CAVEAT_IS_MEASURED": (
             f"every market record declares {one}, uniformly across all coins and "
             f"both months. The BOOK does not match it exactly: "
@@ -186,29 +204,107 @@ def legal_tick() -> dict:
     }
 
 
-def maker_fee_rule() -> dict:
-    """THE MAKER FEE -- and why it CANNOT be established from what is collected.
 
-    §9: "the verified maker fee applicable to these markets. A zero fee is used
-    only if the receipt identifies the supporting market/account rule."
+def tape_fee_and_tick(days=None, coins=SCOPE, per=6) -> dict:
+    """THE CLOB TAPE'S OWN FIELDS -- the source I did not search in DA 283.
 
-    The on-chain audit measures what the chain RECORDS. That is not the same as
-    a RULE, and §9 asks for the rule.
+    The tape carries `fee_rate_bps` on every trade event and `tick_size_change`
+    events when the venue narrows the grid. Both are the VENUE's own statements
+    at the time of the event, which is a stronger source than either the market
+    record or an inference from prices.
     """
-    ev = {}
-    # 1. markets.jsonl carries no fee field at all.
-    keys = set()
+    import gzip, glob as _g, os as _os
+    days = days or sorted(_os.listdir(_p("data/pm_5min/raw")))[-8:]
+    fee = collections.Counter(); nonzero = []
+    ticks = collections.Counter(); changes = collections.Counter()
+    n_trade = n_msg = n_files = 0
+    for day in days:
+        for coin in coins:
+            pat = str(_p("data/pm_5min/raw") / day / f"{coin}-updown-5m-*.jsonl.gz")
+            for f in sorted(_g.glob(pat))[:per]:
+                n_files += 1
+                try:
+                    lines = gzip.open(f, "rt", errors="replace").read().splitlines()
+                except Exception:
+                    continue
+                for ln in lines:
+                    try:
+                        payload = json.loads(ln.split("\t", 1)[1])
+                    except Exception:
+                        continue
+                    for bk in (payload if isinstance(payload, list) else [payload]):
+                        n_msg += 1
+                        if "fee_rate_bps" in bk:
+                            v = str(bk["fee_rate_bps"]); fee[v] += 1; n_trade += 1
+                            if v not in ("0", "0.0") and len(nonzero) < 10:
+                                nonzero.append({"day": day, "coin": coin,
+                                                "fee_rate_bps": v,
+                                                "price": bk.get("price")})
+                        if "tick_size" in bk:
+                            ticks[str(bk["tick_size"])] += 1
+                        if bk.get("new_tick_size") is not None:
+                            changes[f"{bk.get('old_tick_size')}->{bk.get('new_tick_size')}"] += 1
+    return {
+        "days": list(days), "n_files": n_files, "n_messages": n_msg,
+        "n_trade_events_carrying_fee_rate_bps": n_trade,
+        "fee_rate_bps_distribution": dict(fee),
+        "fee_rate_bps_is_uniformly_zero": (set(fee) <= {"0", "0.0"}) and n_trade > 0,
+        "non_zero_fee_events": nonzero,
+        "tick_size_values_on_the_tape": dict(ticks),
+        "tick_size_change_events": dict(changes),
+        "n_tick_size_changes": sum(changes.values()),
+    }
+
+
+def maker_fee_rule() -> dict:
+    """THE MAKER FEE, searched SOURCE BY SOURCE (DA 285).
+
+    DA 283 CONCLUDED "NOT ESTABLISHABLE" AND THAT WAS WRONG. I searched the
+    top-level keys of `markets.jsonl` and the rewards registry and stopped. The
+    fee was in two places I had not opened: the `clob` SUBOBJECT of every market
+    record, and the CLOB tape's own `fee_rate_bps` field on every trade event.
+    An "unobtainable" verdict reached by an unfinished search is a finding about
+    the search, not about the data -- the same shape as every other instrument
+    defect this lane has found, one level up.
+    """
+    per_source = []
+
+    # A. markets.jsonl -- top level AND the `clob` subobject.
+    top_keys, clob_keys, clob_vals = set(), collections.Counter(), collections.defaultdict(collections.Counter)
+    rules_hits = collections.Counter()
+    rules_re = re.compile(r"\bfee|\bmaker|\btaker|\brebate|\bcommission|\bbps\b", re.I)
+    n = 0
     with open(_p(MARKETS)) as fh:
-        for i, line in enumerate(fh):
-            if i >= 2000:
-                break
+        for line in fh:
             try:
-                keys |= set(json.loads(line).keys())
+                d = json.loads(line)
             except Exception:
-                pass
-    ev["markets_jsonl_fee_fields"] = sorted(k for k in keys if "fee" in k.lower())
-    ev["markets_jsonl_all_keys"] = sorted(keys)
-    # 2. the rewards registry is collected as a COUNT, not as contents.
+                continue
+            n += 1
+            top_keys |= set(d.keys())
+            c = d.get("clob")
+            if isinstance(c, dict):
+                clob_keys.update(c.keys())
+                for k, v in c.items():
+                    if not isinstance(v, (dict, list)):
+                        clob_vals[k][str(v)] += 1
+            txt = " ".join(str(d.get(k, "")) for k in ("description", "question", "outcomes"))
+            for m in set(rules_re.findall(txt)):
+                rules_hits[m.lower()] += 1
+    per_source.append({
+        "source": "markets.jsonl", "searched": "all top-level keys, the `clob` "
+        "subobject, and the rules text (description/question/outcomes)",
+        "n_records": n,
+        "fee_fields_found": {k: dict(clob_vals[k].most_common(3))
+                             for k in clob_keys if "fee" in k.lower()},
+        "rules_text_fee_language": dict(rules_hits) or "NONE",
+        "establishes": ("a per-market fee SCHEDULE field: maker_base_fee and "
+                        "taker_base_fee, uniform across every record"),
+        "does_not_establish": ("the UNITS of that field, nor the rate actually "
+                               "applied to a fill"),
+    })
+
+    # B. rewards_registry.jsonl
     rk = collections.Counter()
     try:
         with open(_p(REWARDS)) as fh:
@@ -219,70 +315,107 @@ def maker_fee_rule() -> dict:
                     pass
     except FileNotFoundError:
         pass
-    ev["rewards_registry_fields"] = sorted(rk)
-    ev["rewards_registry_carries_a_fee_rule"] = any(
-        "fee" in k.lower() for k in rk)
-    # 3. the on-chain audit: what the chain records.
+    per_source.append({
+        "source": "rewards_registry.jsonl", "searched": "every field",
+        "fields": sorted(rk),
+        "establishes": "NOTHING about fees",
+        "does_not_establish": ("it is collected as a COUNT -- recv_ns and n -- "
+                               "so the registry's contents were never captured"),
+    })
+
+    # C. THE CLOB TAPE'S OWN FIELDS -- the decisive source.
+    tape = tape_fee_and_tick()
+    per_source.append({
+        "source": "the CLOB tape (data/pm_5min/raw/<day>/<slug>.jsonl.gz)",
+        "searched": "every payload field on every message in the sample",
+        "n_files": tape["n_files"], "n_messages": tape["n_messages"],
+        "n_trade_events": tape["n_trade_events_carrying_fee_rate_bps"],
+        "fee_rate_bps_distribution": tape["fee_rate_bps_distribution"],
+        "establishes": ("the VENUE's own per-trade fee rate: `fee_rate_bps`, "
+                        "uniformly 0 on every observed trade in these markets"),
+        "does_not_establish": ("what would happen at a different rate; it is a "
+                               "record of what WAS charged, not a published "
+                               "schedule with an effective date"),
+    })
+
+    # D. on-chain settlement receipts.
     try:
         a = json.loads(_p(FEE_AUDIT).read_text())
-        ev["onchain_audit"] = {
-            "artifact": FEE_AUDIT,
-            "sha256": hashlib.sha256(_p(FEE_AUDIT).read_bytes()).hexdigest()[:16],
-            "formula_recorded": a.get("formula"),
-            "n_maker_legs": a.get("n_maker_legs"),
-            "n_maker_legs_zero": a.get("n_maker_legs_zero"),
-            "n_maker_legs_charged": a.get("n_maker_legs_charged"),
-            "maker_charged_share": a.get("maker_charged_share"),
-            "charged_leg_prices": sorted(
-                {str(r.get("price")) for r in a.get("maker_charged_detail", [])}),
-            "n_taker_legs": a.get("n_taker_legs"),
-            "taker_all_charged": a.get("taker_all_charged"),
-            "taker_formula_match_share": a.get("taker_formula_match_share"),
-            "the_audits_own_role": a.get("role"),
-        }
     except Exception as e:
-        ev["onchain_audit"] = {"error": f"{type(e).__name__}: {e}"}
-    o = ev.get("onchain_audit", {})
-    zero_share = ((o.get("n_maker_legs_zero") or 0) / o["n_maker_legs"]
-                  if o.get("n_maker_legs") else None)
+        a = {"error": str(e)}
+    per_source.append({
+        "source": "onchain/receipts (via p003_da_onchain_fee_audit)",
+        "searched": f"{a.get('n_receipt_files')} settlement receipts, "
+                    f"{a.get('n_legs')} legs",
+        "n_maker_legs": a.get("n_maker_legs"),
+        "n_maker_legs_zero": a.get("n_maker_legs_zero"),
+        "n_maker_legs_charged": a.get("n_maker_legs_charged"),
+        "charged_leg_prices": sorted({str(r.get("price"))
+                                      for r in a.get("maker_charged_detail", [])}),
+        "establishes": ("that maker fills are overwhelmingly zero-fee on chain: "
+                        f"{a.get('n_maker_legs_zero')} of {a.get('n_maker_legs')}"),
+        "does_not_establish": ("why the remaining "
+                               f"{a.get('n_maker_legs_charged')} legs WERE "
+                               "charged; the audit's own role is REPORTED, NOT "
+                               "ENFORCED"),
+    })
+
+    # E. collector metadata.
+    meta_hits = 0
+    for rel in ("data/pm_5min/collector_runs.jsonl",
+                "data/pm_5min/collector_provenance.jsonl"):
+        try:
+            meta_hits += sum(1 for l in open(_p(rel))
+                             if re.search(r"fee|maker|taker|rebate", l, re.I))
+        except FileNotFoundError:
+            pass
+    per_source.append({
+        "source": "collector metadata (runs, provenance)",
+        "searched": "every line for fee/maker/taker/rebate",
+        "matches": meta_hits,
+        "establishes": "NOTHING -- no collector names a fee schedule",
+    })
+
+    charged = (a.get("n_maker_legs_charged") or 0)
+    zero_on_tape = tape["fee_rate_bps_is_uniformly_zero"]
+    established = bool(zero_on_tape) and charged == 0
     return {
-        "established": False,
-        "status": FEE_UNESTABLISHABLE,
-        "fee_rule": None,
-        "evidence": ev,
-        "maker_zero_share_observed": zero_share,
-        "WHY_NOT_ESTABLISHED": [
-            "markets.jsonl carries NO fee field -- the market artifact does not "
-            "state a fee at all",
-            "rewards_registry.jsonl is collected as a COUNT (recv_ns, n) and "
-            "carries no fee rule, so the registry cannot supply one either",
-            "the on-chain audit measures what the chain RECORDS, and its own "
-            "`role` says REPORTED, NOT ENFORCED -- it promotes nothing and "
-            "clears no gate. A measurement of charges is not a market or "
-            "account rule",
-            "and the measurement is NOT uniformly zero: "
-            f"{o.get('n_maker_legs_charged')} of {o.get('n_maker_legs')} maker "
-            f"legs WERE charged, all at price 0.99, so 'maker fills are free' "
-            f"is false as stated even as a description",
+        "established": established,
+        "status": ("MAKER_FEE_RULE_ESTABLISHED_ZERO_WITH_UNRECONCILED_ONCHAIN_CHARGES"
+                   if zero_on_tape and charged
+                   else ("MAKER_FEE_RULE_ESTABLISHED_ZERO" if established
+                         else FEE_UNESTABLISHABLE)),
+        "fee_rule": None if not established else {"maker_fee_bps": 0},
+        "THE_SUPPORTING_RULE_SECTION_9_ASKS_FOR": (
+            "the venue's own `fee_rate_bps` field, carried on every trade event "
+            "in the CLOB tape and equal to 0 on all "
+            f"{tape['n_trade_events_carrying_fee_rate_bps']} observed trades "
+            f"across {len(tape['days'])} days, BTC and ETH. That is a market "
+            "rule stated by the market, not an assumption."),
+        "THE_RESIDUAL_THAT_STOPS_IT_BEING_FINAL": (
+            f"{charged} of {a.get('n_maker_legs')} maker legs in the SAME "
+            f"markets carry a non-zero on-chain fee, all at price 0.99, in 5 "
+            f"transactions. 0 bps on the tape and a charge on chain cannot both "
+            f"be the whole story, and no collected source explains the "
+            f"difference. Until it is reconciled a zero fee is SUPPORTED but "
+            f"not SETTLED, so this module still supplies no number for §9."),
+        "per_source": per_source,
+        "WHAT_WOULD_SETTLE_IT": [
+            "a reconciliation of the 10 charged legs: whether they are "
+            "taker-side fees attributed to a maker address, a different fee "
+            "path, or a parsing edge in the audit",
+            "or the published CLOB fee schedule for these condition ids with an "
+            "effective date, which no collector currently captures",
         ],
-        "WHAT_SECTION_9_REQUIRES": (
-            "the VERIFIED maker fee applicable to these markets; a zero fee "
-            "only if the receipt identifies the SUPPORTING market/account rule"),
-        "THEREFORE": (
-            "no fee may be frozen, and zero may NOT be assumed. A zero that no "
-            "rule supports is an assumption wearing a number's clothes, and it "
-            "would flatter every P&L computed from it. This is a FINDING: the "
-            "input is unestablishable from what is collected, and "
-            "`freeze_is_effective` stays False honestly rather than being "
-            "satisfied by an assumption."),
-        "WHAT_WOULD_ESTABLISH_IT": [
-            "the CLOB fee schedule for these condition ids, captured as an "
-            "artifact with an as-of",
-            "or the account-level maker-rebate/fee tier that applies to the "
-            "executing account, captured the same way",
-            "either one identifies a RULE; neither is currently collected",
-        ],
+        "CORRECTION_TO_DA_283": (
+            "DA 283 reported this input NOT ESTABLISHABLE. That was wrong, and "
+            "wrong in a way worth naming: I searched the TOP-LEVEL keys of "
+            "markets.jsonl and the rewards registry and stopped. The fee was in "
+            "the `clob` SUBOBJECT of every market record and in the tape's own "
+            "`fee_rate_bps` on every trade. An unobtainable verdict reached by "
+            "an unfinished search is a finding about the search."),
     }
+
 
 
 def initial_inventory() -> dict:
@@ -387,19 +520,29 @@ def falsify() -> int:
     ck("...and the caveat names the share and the window count",
        "%" in t["THE_CAVEAT_IS_MEASURED"] and "sampled windows" in t["THE_CAVEAT_IS_MEASURED"])
     f = d["maker_fee_rule"]
-    ck("THE FEE IS NOT ESTABLISHED, and supplies no number",
+    ck("EVERY named source was searched, and each reports what it establishes",
+       len(f["per_source"]) == 5
+       and all(s.get("searched") and s.get("establishes") for s in f["per_source"]),
+       f"{len(f['per_source'])} sources")
+    ck("markets.jsonl's `clob` SUBOBJECT carries the fee schedule fields",
+       "maker_base_fee" in f["per_source"][0]["fee_fields_found"],
+       str(f["per_source"][0]["fee_fields_found"]))
+    ck("...and DA 283's 'no fee field' was a SEARCH failure, now named",
+       "unfinished search" in f["CORRECTION_TO_DA_283"])
+    ck("the CLOB tape's own per-trade fee rate is uniformly ZERO",
+       set(f["per_source"][2]["fee_rate_bps_distribution"]) <= {"0", "0.0"},
+       str(f["per_source"][2]["fee_rate_bps_distribution"]))
+    ck("...over a real sample, not one file",
+       f["per_source"][2]["n_trade_events"] > 10000,
+       f"{f['per_source'][2]['n_trade_events']} trade events")
+    ck("the SUPPORTING RULE §9 asks for is now NAMED",
+       "fee_rate_bps" in f["THE_SUPPORTING_RULE_SECTION_9_ASKS_FOR"])
+    ck("but the on-chain residual is NOT swept under it",
+       (f["per_source"][3]["n_maker_legs_charged"] or 0) > 0
+       and "cannot both be the whole story" in f["THE_RESIDUAL_THAT_STOPS_IT_BEING_FINAL"],
+       f"{f['per_source'][3]['n_maker_legs_charged']} charged legs unreconciled")
+    ck("so the fee is SUPPORTED but not SETTLED, and no number is supplied",
        f["established"] is False and f["fee_rule"] is None, f["status"])
-    ck("...because markets.jsonl carries no fee field",
-       f["evidence"]["markets_jsonl_fee_fields"] == [])
-    ck("...and the rewards registry carries no fee rule",
-       f["evidence"]["rewards_registry_carries_a_fee_rule"] is False,
-       str(f["evidence"]["rewards_registry_fields"]))
-    ck("...and the on-chain maker legs are NOT uniformly zero",
-       (f["evidence"]["onchain_audit"].get("n_maker_legs_charged") or 0) > 0,
-       f"{f['evidence']['onchain_audit'].get('n_maker_legs_charged')} charged of "
-       f"{f['evidence']['onchain_audit'].get('n_maker_legs')}")
-    ck("a zero fee is NOT substituted anywhere in the output",
-       f["fee_rule"] is None and "zero may NOT be assumed" in f["THEREFORE"])
     i = d["initial_inventory"]
     ck("initial inventory is FROZEN at a stated value", i["initial_inventory"] == 0.0)
     ck("...and is declared a CHOICE, not a measurement",
@@ -409,6 +552,13 @@ def falsify() -> int:
        repr(d["legal_tick"]))
     ck("...and it is declared exactly ONCE as a number (two is not a number)",
        True, "evidence lives under `legal_tick_evidence`, which no reader searches")
+    ck("the sub-tick prices are EXPLAINED by a venue tick-size change",
+       t["THE_SUB_TICK_PRICES_ARE_EXPLAINED"]["n_changes_observed"] > 0
+       and all(k == "0.01->0.001" for k in
+               t["THE_SUB_TICK_PRICES_ARE_EXPLAINED"]["tick_size_change_events"]),
+       str(t["THE_SUB_TICK_PRICES_ARE_EXPLAINED"]["tick_size_change_events"]))
+    ck("...and rounding to 0.01 stays LEGAL because 0.01 is a multiple of 0.001",
+       "stays LEGAL" in t["THE_SUB_TICK_PRICES_ARE_EXPLAINED"]["consequence_for_the_freeze"])
     ck("the summary counts what is established WITHOUT rounding it up",
        d["n_established"] == 2 and d["unestablished"] == ["maker_fee_rule"],
        f"{d['n_established']}/{d['n_requested']}")

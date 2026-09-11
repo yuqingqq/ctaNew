@@ -9,7 +9,7 @@
   "established": true,
   "declared_instrument": {
    "field": "markets.jsonl:orderPriceMinTickSize",
-   "n_records": 46867,
+   "n_records": 47049,
    "n_without_the_field": 44,
    "distinct_values": [
     "0.01"
@@ -17,25 +17,25 @@
    "uniform_across_all_coins": true,
    "by_coin": {
     "bnb": {
-     "0.01": 6688
+     "0.01": 6714
     },
     "btc": {
-     "0.01": 6690
+     "0.01": 6716
     },
     "doge": {
-     "0.01": 6687
+     "0.01": 6713
     },
     "eth": {
-     "0.01": 6690
+     "0.01": 6716
     },
     "hype": {
-     "0.01": 6688
+     "0.01": 6714
     },
     "sol": {
-     "0.01": 6690
+     "0.01": 6716
     },
     "xrp": {
-     "0.01": 6690
+     "0.01": 6716
     }
    },
    "by_month": {
@@ -43,7 +43,7 @@
      "0.01": 24872
     },
     "2026-09": {
-     "0.01": 21951
+     "0.01": 22133
     }
    },
    "uniform_across_the_windows_life": true,
@@ -122,6 +122,15 @@
    "every_level_is_a_multiple_of_0.01": false
   },
   "instruments_agree": false,
+  "THE_SUB_TICK_PRICES_ARE_EXPLAINED": {
+   "cause": "the VENUE NARROWS THE GRID IN-WINDOW, and the tape says so",
+   "tick_size_change_events": {
+    "0.01->0.001": 284
+   },
+   "n_changes_observed": 284,
+   "reading": "every observed change is 0.01 -> 0.001. So the 0.001 levels are not a violation of the declared tick: they are the tick AFTER a `tick_size_change` event the market published. `orderPriceMinTickSize` is the tick at market creation, not for the window's life -- which is exactly the question DA 283 asked and answered too narrowly from the market record alone.",
+   "consequence_for_the_freeze": "rounding to 0.01 stays LEGAL at all times, because 0.01 is a multiple of 0.001. It is not always the FINEST legal grid, so a quote on it can be improvable after a narrowing event."
+  },
   "THE_CAVEAT_IS_MEASURED": "every market record declares 0.01, uniformly across all coins and both months. The BOOK does not match it exactly: 342 of 4171076 resting levels (0.0082%) sit at 0.001 granularity, in 8 of 24 sampled windows -- and those windows declare 0.01 too. So the tick is the right ROUNDING grid and is NOT a guarantee that no finer price rests on the book.",
   "what_may_be_frozen_on_this": "bid rounds DOWN and ask rounds UP to 0.01. A quote on that grid is legal; it is not necessarily the best price available.",
   "uniform_across_btc_and_eth": true,
@@ -129,67 +138,73 @@
  },
  "maker_fee_rule": {
   "established": false,
-  "status": "MAKER_FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_ARTIFACTS",
+  "status": "MAKER_FEE_RULE_ESTABLISHED_ZERO_WITH_UNRECONCILED_ONCHAIN_CHARGES",
   "fee_rule": null,
-  "evidence": {
-   "markets_jsonl_fee_fields": [],
-   "markets_jsonl_all_keys": [
-    "clob",
-    "clobTokenIds",
-    "coin",
-    "conditionId",
-    "description",
-    "endDate",
-    "orderMinSize",
-    "orderPriceMinTickSize",
-    "outcomes",
-    "question",
-    "recv_ns",
-    "resolutionSource",
-    "rewardsMaxSpread",
-    "rewardsMinSize",
-    "rewards_authoritative",
-    "rewards_registry_n",
-    "slug",
-    "window_end",
-    "window_start"
-   ],
-   "rewards_registry_fields": [
-    "n",
-    "recv_ns"
-   ],
-   "rewards_registry_carries_a_fee_rule": false,
-   "onchain_audit": {
-    "artifact": "data/pm_5min/derived/p003_da_onchain_fee_audit__20260905T155346Z.json",
-    "sha256": "19c39a333017f083",
-    "formula_recorded": "C * 0.07 * p * (1-p)",
+  "THE_SUPPORTING_RULE_SECTION_9_ASKS_FOR": "the venue's own `fee_rate_bps` field, carried on every trade event in the CLOB tape and equal to 0 on all 76617 observed trades across 8 days, BTC and ETH. That is a market rule stated by the market, not an assumption.",
+  "THE_RESIDUAL_THAT_STOPS_IT_BEING_FINAL": "10 of 1056 maker legs in the SAME markets carry a non-zero on-chain fee, all at price 0.99, in 5 transactions. 0 bps on the tape and a charge on chain cannot both be the whole story, and no collected source explains the difference. Until it is reconciled a zero fee is SUPPORTED but not SETTLED, so this module still supplies no number for \u00a79.",
+  "per_source": [
+   {
+    "source": "markets.jsonl",
+    "searched": "all top-level keys, the `clob` subobject, and the rules text (description/question/outcomes)",
+    "n_records": 47056,
+    "fee_fields_found": {
+     "maker_base_fee": {
+      "1000": 46996
+     },
+     "taker_base_fee": {
+      "1000": 46996
+     }
+    },
+    "rules_text_fee_language": "NONE",
+    "establishes": "a per-market fee SCHEDULE field: maker_base_fee and taker_base_fee, uniform across every record",
+    "does_not_establish": "the UNITS of that field, nor the rate actually applied to a fill"
+   },
+   {
+    "source": "rewards_registry.jsonl",
+    "searched": "every field",
+    "fields": [
+     "n",
+     "recv_ns"
+    ],
+    "establishes": "NOTHING about fees",
+    "does_not_establish": "it is collected as a COUNT -- recv_ns and n -- so the registry's contents were never captured"
+   },
+   {
+    "source": "the CLOB tape (data/pm_5min/raw/<day>/<slug>.jsonl.gz)",
+    "searched": "every payload field on every message in the sample",
+    "n_files": 96,
+    "n_messages": 6169909,
+    "n_trade_events": 76617,
+    "fee_rate_bps_distribution": {
+     "0": 76617
+    },
+    "establishes": "the VENUE's own per-trade fee rate: `fee_rate_bps`, uniformly 0 on every observed trade in these markets",
+    "does_not_establish": "what would happen at a different rate; it is a record of what WAS charged, not a published schedule with an effective date"
+   },
+   {
+    "source": "onchain/receipts (via p003_da_onchain_fee_audit)",
+    "searched": "901 settlement receipts, 1957 legs",
     "n_maker_legs": 1056,
     "n_maker_legs_zero": 1046,
     "n_maker_legs_charged": 10,
-    "maker_charged_share": 0.00946969696969697,
     "charged_leg_prices": [
      "0.99"
     ],
-    "n_taker_legs": 901,
-    "taker_all_charged": true,
-    "taker_formula_match_share": 0.1220865704772475,
-    "the_audits_own_role": "REPORTED, NOT ENFORCED (rule 14). This measures what the chain records; it promotes nothing and clears no gate."
+    "establishes": "that maker fills are overwhelmingly zero-fee on chain: 1046 of 1056",
+    "does_not_establish": "why the remaining 10 legs WERE charged; the audit's own role is REPORTED, NOT ENFORCED"
+   },
+   {
+    "source": "collector metadata (runs, provenance)",
+    "searched": "every line for fee/maker/taker/rebate",
+    "matches": 0,
+    "establishes": "NOTHING -- no collector names a fee schedule"
    }
-  },
-  "maker_zero_share_observed": 0.990530303030303,
-  "WHY_NOT_ESTABLISHED": [
-   "markets.jsonl carries NO fee field -- the market artifact does not state a fee at all",
-   "rewards_registry.jsonl is collected as a COUNT (recv_ns, n) and carries no fee rule, so the registry cannot supply one either",
-   "the on-chain audit measures what the chain RECORDS, and its own `role` says REPORTED, NOT ENFORCED -- it promotes nothing and clears no gate. A measurement of charges is not a market or account rule",
-   "and the measurement is NOT uniformly zero: 10 of 1056 maker legs WERE charged, all at price 0.99, so 'maker fills are free' is false as stated even as a description"
   ],
-  "WHAT_SECTION_9_REQUIRES": "the VERIFIED maker fee applicable to these markets; a zero fee only if the receipt identifies the SUPPORTING market/account rule",
-  "THEREFORE": "no fee may be frozen, and zero may NOT be assumed. A zero that no rule supports is an assumption wearing a number's clothes, and it would flatter every P&L computed from it. This is a FINDING: the input is unestablishable from what is collected, and `freeze_is_effective` stays False honestly rather than being satisfied by an assumption.",
-  "WHAT_WOULD_ESTABLISH_IT": [
-   "the CLOB fee schedule for these condition ids, captured as an artifact with an as-of",
-   "or the account-level maker-rebate/fee tier that applies to the executing account, captured the same way",
-   "either one identifies a RULE; neither is currently collected"
-  ]
+  "WHAT_WOULD_SETTLE_IT": [
+   "a reconciliation of the 10 charged legs: whether they are taker-side fees attributed to a maker address, a different fee path, or a parsing edge in the audit",
+   "or the published CLOB fee schedule for these condition ids with an effective date, which no collector currently captures"
+  ],
+  "CORRECTION_TO_DA_283": "DA 283 reported this input NOT ESTABLISHABLE. That was wrong, and wrong in a way worth naming: I searched the TOP-LEVEL keys of markets.jsonl and the rewards registry and stopped. The fee was in the `clob` SUBOBJECT of every market record and in the tape's own `fee_rate_bps` on every trade. An unobtainable verdict reached by an unfinished search is a finding about the search."
  },
  "initial_inventory": {
   "initial_inventory": 0.0,
