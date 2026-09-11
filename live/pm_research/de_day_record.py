@@ -42,6 +42,16 @@ NO_STAGE0 = "STAGE0_VERDICT_ABSENT"
 #: either the verification or this status; it cannot carry neither.
 NO_VERIFIED_WINNER_RECEIPT = "NO_VERIFIED_WINNER_RECEIPT"
 NO_DISCLOSURE = "SETTLEMENT_SOURCE_DISCLOSURE_ABSENT"
+#: DE 357 / DA 269 (USER ruling): the receipt is DAY-SLICE-ADDRESSED. The
+#: ledger is append-only and grows, so the whole-file sha of a snapshot
+#: read minutes apart differs while THE DAY'S OWN RECORDS DO NOT -- 09-07's
+#: slice was 2,016 records at 7eb54006ebfa1029 under two snapshots forty
+#: minutes apart. The slice is the match key; the whole-file sha is
+#: provenance beside it, never the key.
+DAY_SLICE_DIFFERS = "WINNER_SOURCE_DAY_SLICE_DIFFERS"
+NO_DAY_SLICE = "RECEIPT_CARRIES_NO_DAY_SLICE_DIGEST"
+#: The field the receipt must carry, agreed with DA before either landed.
+DAY_SLICE_FIELD = "day_slice"
 ARM_MISMATCH = "DAY_RECORD_ARMS_DISAGREE_ON_THE_BOOK"
 
 
@@ -106,6 +116,75 @@ def stage0_evidence(day: str, derived: Path = DERIVED,
         f"indistinguishable from a gate that never ran.")
 
 
+def day_slice(day: str, cells: dict) -> dict:
+    """THE DAY'S OWN RECORDS, under each arm's snapshot prefix.
+
+    Reuses `de_combine_day_cells.day_subset_digest` -- the instrument that
+    measured 09-07's slice this morning -- rather than a second
+    implementation of the same digest. Canonical ordering is its (sorted
+    lines), so two snapshots agree whenever the day's records do.
+    """
+    import calendar
+    arms = sorted(cells)
+    ws = {a: (cells[a]["result"].get("winner_source") or {}) for a in arms}
+    path = next((w.get("path") for w in ws.values() if w.get("path")), None)
+    if not path:
+        return {"available": False, "why": "no arm names a winner-source path"}
+    ledger = Path(str(path))
+    if not ledger.is_absolute():
+        ledger = Path("/home/yuqing/ctaNew/data/pm_5min") / ledger
+    if not ledger.is_file():
+        return {"available": False, "why": f"ledger absent at {ledger}"}
+    d0 = calendar.timegm(time.strptime(day, "%Y-%m-%d"))
+    per_arm = {}
+    for a in arms:
+        n = ws[a].get("n_records")
+        if not isinstance(n, int):
+            return {"available": False, "why": f"{a} names no n_records"}
+        per_arm[a] = CD.day_subset_digest(ledger, int(n), d0, d0 + 86400)
+    shas = {v["sha256"] for v in per_arm.values()}
+    return {"available": True, "per_arm": per_arm,
+            "arms_agree_on_the_day_slice": len(shas) == 1,
+            "sha256": shas.pop() if len(shas) == 1 else None,
+            "n_day_records": per_arm[arms[0]]["n_day_records"],
+            "whole_file_sha256_by_arm": {a: ws[a].get("sha256") for a in arms},
+            "day_start": d0, "day_end": d0 + 86400,
+            "measured_by": "de_combine_day_cells.day_subset_digest"}
+
+
+def _receipt_day_slice(day: str, derived: Path) -> dict:
+    """The slice digest the RECEIPT declares, if a receipt exists."""
+    import glob as _g
+    c = day.replace("-", "")
+    fs = sorted(_g.glob(str(Path(derived)
+                            / f"p003_de_point_estimate_day_{c}_L250ms__*.json")))
+    for f in reversed(fs):
+        try:
+            doc = json.loads(Path(f).read_text())
+        except Exception:                                   # noqa: BLE001
+            continue
+        for blk in _walk_blocks(doc):
+            ds = blk.get(DAY_SLICE_FIELD)
+            if isinstance(ds, dict) and ds.get("sha256"):
+                return {"receipt": Path(f).name, "day_slice": ds,
+                        "whole_file_sha256": blk.get("sha256")}
+        return {"receipt": Path(f).name, "day_slice": None,
+                "whole_file_sha256": None}
+    return {"receipt": None, "day_slice": None, "whole_file_sha256": None}
+
+
+def _walk_blocks(value):
+    """Any dict carrying a winner-source shape, wherever it is nested."""
+    if isinstance(value, dict):
+        if isinstance(value.get("chainlink_verification"), dict):
+            yield value
+        for child in value.values():
+            yield from _walk_blocks(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from _walk_blocks(child)
+
+
 def settlement_source(day: str, cells: dict, derived: Path = DERIVED) -> dict:
     """THE DISCLOSURE, CARRIED EITHER WAY (DE 355).
 
@@ -124,17 +203,48 @@ def settlement_source(day: str, cells: dict, derived: Path = DERIVED) -> dict:
           for a in arms}
     ws_path = {(cells[a]["result"].get("winner_source") or {}).get("path")
                for a in arms}
+    slice_here = day_slice(day, cells)
+    declared = _receipt_day_slice(day, derived)
     try:
+        # THE MATCH KEY IS THE DAY SLICE, NOT THE WHOLE FILE (DE 357).
+        # The frozen disclosure matches on the whole-file sha, which the
+        # ledger's growth moves; passing None lets it supply the
+        # VERIFICATION while the SLICE identity is enforced here, with
+        # both digests recorded either way.
         disclosure = EV.settlement_source_disclosure(
-            [day], derived, winner_sources={day: (list(ws)[0]
-                                                  if len(ws) == 1 else None)})
-        return {"status": "VERIFIED", "disclosure": disclosure,
-                "winner_source_sha256": sorted(x for x in ws if x),
-                "carried_by": "de_forward_evaluator."
-                              "settlement_source_disclosure"}
+            [day], derived, winner_sources={day: None})
+        out = {"status": "VERIFIED", "disclosure": disclosure,
+               "day_slice": slice_here,
+               "receipt_declares": declared,
+               "winner_source_sha256": sorted(x for x in ws if x),
+               "matched_on": "the day slice; the whole-file sha is "
+                             "provenance, never the key",
+               "carried_by": "de_forward_evaluator."
+                             "settlement_source_disclosure"}
+        dec = (declared.get("day_slice") or {}).get("sha256")
+        if not dec:
+            out["status"] = NO_DAY_SLICE
+            out["what_was_not_verified"] = (
+                f"a receipt exists ({declared.get('receipt')}) but carries "
+                f"no `{DAY_SLICE_FIELD}.sha256`, so nothing addresses THIS "
+                f"day's records; a whole-file sha cannot serve as the key "
+                f"because the ledger grows between any two reads")
+        elif slice_here.get("available") and dec != slice_here.get("sha256"):
+            out["status"] = DAY_SLICE_DIFFERS
+            out["what_was_not_verified"] = (
+                f"the receipt verified a day slice at {dec[:16]} and this "
+                f"day's cells read {str(slice_here.get('sha256'))[:16]}: "
+                f"the DAY'S OWN RECORDS differ, which ledger growth cannot "
+                f"cause")
+            out["record_count_delta"] = (
+                (declared.get("day_slice") or {}).get("n_day_records"),
+                slice_here.get("n_day_records"))
+        return out
     except Exception as exc:                                # noqa: BLE001
         return {
             "status": NO_VERIFIED_WINNER_RECEIPT,
+            "day_slice": slice_here,
+            "receipt_declares": declared,
             "winner_source_sha256": sorted(x for x in ws if x),
             "path": sorted(x for x in ws_path if x),
             "what_was_not_verified":
@@ -490,6 +600,96 @@ def falsify() -> int:
            and prior["path"] == str(f) and f.is_file(),
            f"{nxt.name} then {nxt2.name}")
 
+    # --- DE 357: THE DAY SLICE IS THE KEY, BOTH DIRECTIONS ------------
+    import calendar as _cal
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td)
+        led = d / "resolutions.jsonl"
+        d0 = _cal.timegm(time.strptime("2026-09-09", "%Y-%m-%d"))
+        inside = [json.dumps({"slug": f"btc-updown-5m-{d0 + i * 300}",
+                              "closed": True, "winners": {"Up": True}})
+                  for i in range(6)]
+        outside = [json.dumps({"slug": f"btc-updown-5m-{d0 + 86400 + i * 300}",
+                               "closed": True, "winners": {"Up": True}})
+                   for i in range(4)]
+        led.write_text("\n".join(inside + outside) + "\n")
+        base = CD.day_subset_digest(led, len(inside) + len(outside),
+                                    d0, d0 + 86400)
+        # GROWTH OUTSIDE THE DAY: the file changes, the slice does not.
+        before_file = hashlib.sha256(led.read_bytes()).hexdigest()
+        led.write_text(led.read_text() + "\n".join(
+            json.dumps({"slug": f"btc-updown-5m-{d0 + 86400 + (9 + i) * 300}",
+                        "closed": True, "winners": {"Up": False}})
+            for i in range(5)) + "\n")
+        grown = CD.day_subset_digest(led, len(inside) + len(outside) + 5,
+                                     d0, d0 + 86400)
+        after_file = hashlib.sha256(led.read_bytes()).hexdigest()
+        ck("ledger growth OUTSIDE the day leaves the slice IDENTICAL",
+           grown["sha256"] == base["sha256"] and before_file != after_file
+           and grown["n_day_records"] == base["n_day_records"] == 6,
+           f"slice {base['sha256'][:12]} unchanged; file "
+           f"{before_file[:8]} -> {after_file[:8]}")
+        # ONE RECORD INSIDE THE DAY: the slice moves, and by name.
+        flipped = list(inside)
+        flipped[2] = json.dumps({"slug": f"btc-updown-5m-{d0 + 600}",
+                                 "closed": True, "winners": {"Up": False}})
+        led.write_text("\n".join(flipped + outside) + "\n")
+        changed = CD.day_subset_digest(led, len(flipped) + len(outside),
+                                       d0, d0 + 86400)
+        ck("ONE record changed INSIDE the day moves the slice digest",
+           changed["sha256"] != base["sha256"]
+           and changed["n_day_records"] == base["n_day_records"],
+           f"{base['sha256'][:12]} -> {changed['sha256'][:12]} "
+           f"at the same {base['n_day_records']} records")
+
+    real_cells = cells_for("2026-09-09", DERIVED / "fwd_v2")
+    sl = day_slice("2026-09-09", real_cells)
+    ck("the real day's slice is measured, and both arms agree on it",
+       sl["available"] and sl["arms_agree_on_the_day_slice"]
+       and sl["n_day_records"] > 0,
+       f"{sl['sha256'][:16]} over {sl['n_day_records']} records")
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td)
+        ws = (real_cells["CONDVALUE_X_SKEW"]["result"]
+              .get("winner_source") or {})
+        def _receipt(slice_sha, n):
+            return json.dumps({"day": "2026-09-09", "winner_source": {
+                "sha256": "f" * 64,          # a DIFFERENT whole-file sha
+                "is_final_for_quotation": True,
+                DAY_SLICE_FIELD: {"sha256": slice_sha, "n_day_records": n},
+                "chainlink_verification": {
+                    "finality": {"is_final": True},
+                    "per_slug": {"s": {"status": "VERIFIED_AGREE"}}}}})
+        f = d / ("p003_de_point_estimate_day_20260909_L250ms__"
+                 "20260911T000000Z.json")
+        f.write_text(_receipt(sl["sha256"], sl["n_day_records"]))
+        same_slice = settlement_source("2026-09-09", real_cells, d)
+        f.write_text(_receipt("a" * 64, sl["n_day_records"] - 3))
+        other_slice = settlement_source("2026-09-09", real_cells, d)
+        f.write_text(json.dumps({"day": "2026-09-09", "winner_source": {
+            "sha256": ws.get("sha256"), "is_final_for_quotation": True,
+            "chainlink_verification": {
+                "finality": {"is_final": True},
+                "per_slug": {"s": {"status": "VERIFIED_AGREE"}}}}}))
+        no_slice = settlement_source("2026-09-09", real_cells, d)
+    ck("a receipt whose WHOLE-FILE sha differs but whose DAY SLICE matches "
+       "verifies clean",
+       same_slice["status"] == "VERIFIED"
+       and same_slice["receipt_declares"]["whole_file_sha256"]
+       != same_slice["day_slice"]["whole_file_sha256_by_arm"][
+           "CONDVALUE_X_SKEW"],
+       f"{same_slice['status']}; receipt file-sha ffff… vs cells' "
+       f"{sl['whole_file_sha256_by_arm']['CONDVALUE_X_SKEW'][:12]}")
+    ck("a GENUINE day-slice difference is a NAMED status with both digests "
+       "and the count delta",
+       other_slice["status"] == DAY_SLICE_DIFFERS
+       and other_slice["record_count_delta"][0]
+       != other_slice["record_count_delta"][1],
+       f"{other_slice['status']} delta {other_slice['record_count_delta']}")
+    ck("a receipt carrying NO day slice is named, never a silent pass",
+       no_slice["status"] == NO_DAY_SLICE,
+       no_slice["status"])
+
     # --- DE 355: THE DISCLOSURE, BOTH WAYS ----------------------------
     import shutil as _sh
     real_cells = cells_for("2026-09-09", DERIVED / "fwd_v2")
@@ -510,6 +710,15 @@ def falsify() -> int:
                   "winner_source": {
                       "sha256": ws.get("sha256"),
                       "is_final_for_quotation": True,
+                      # THE RULED SHAPE (DE 357): the day slice is what a
+                      # consumer matches on, so the fixture carries it --
+                      # a fixture built to the old shape would test the
+                      # old contract and pass while production refused.
+                      DAY_SLICE_FIELD: {
+                          "sha256": day_slice("2026-09-09",
+                                              real_cells)["sha256"],
+                          "n_day_records": day_slice(
+                              "2026-09-09", real_cells)["n_day_records"]},
                       "chainlink_verification": {
                           "finality": {"is_final": True},
                           "per_slug": {slug: {"status": "VERIFIED_AGREE"}}}}}))
