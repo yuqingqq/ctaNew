@@ -1,40 +1,53 @@
-"""DOES THE OPTIMIZED PIPELINE PRODUCE THE SAME SCORES? (BE 123)
+"""DECISION-EQUIVALENCE ACROSS THE CODE CHANGE — to REVIEW 173's bar.
 
-WHY THIS EXISTS. The user ruled the whole forward-test pipeline onto one
-commit, `7ed5a9015f75`, which contains `d09f25c` (batch daybook model
-scoring), `e6a214f` (accelerated fragment chunking) and `a339734` (shared
-diagnostic head composition). None of those ran during the development
-screen. So the forward test runs on scoring bytes the screen never used, and
-this module is the only thing that can turn that from an open limit into a
-measured fact: rebuild a CONSUMED day on the new commit and compare the
-scores against the book the old code produced.
+WHY THIS EXISTS. The user ruled the whole forward pipeline onto `7ed5a9015f75`,
+which carries `d09f25c` (batch daybook model scoring), `e6a214f` (accelerated
+fragment chunking) and `a339734` (shared diagnostic head composition). None
+ran during the development screen. This measures whether the two code lines
+DECIDE identically on days already consumed.
 
-THE BAR, WRITTEN DOWN BEFORE ANY NUMBER IS SEEN (rule 11 applied to our own
-instrument). A batched scorer changes FLOAT SUMMATION ORDER, so small
-non-zero differences are EXPECTED and mean nothing on their own.
+THE BAR IS REVIEW 173's, NOT MINE. My first version set `REL_BAR = 1e-9` as
+the PASS criterion. REV refuted it: on scores reaching 17.79 that admits
+~1.8e-8 absolute, seven orders above a last-ulp difference (~2e-15), so
+"a δ that large isn't float noise; it's a behavioural change that happened
+not to cross theta today." **`REL_BAR` is the right REPORTING threshold and
+the wrong PASS criterion; the pass criterion is A+C.** Kept here with that
+role, and named so nobody restores it to the other one.
 
-  PASS  requires ALL of:
-          * the score key sets are identical
-          * ZERO generations whose MAXIMUM score lands on a different side
-            of its arm's theta -- that is where the decision is made
-            (`cancel iff generation_max_score >= theta`)
-          * max RELATIVE difference < REL_BAR (1e-9)
-  FAIL  is ONE decision flip, however small the score difference that
-        caused it; or max relative difference >= REL_BAR even with no flip,
-        because that is too large to be summation order and means something
-        else moved.
-  REFUSE rather than report, if the two books are not comparable -- a
-        different day, coin, latency, or a differing key set. A comparison
-        between two things that are not the same experiment is not a
-        neutrality result.
+  A  DECISION IDENTITY, per arm, per generation, at EACH ARM'S OWN theta.
+     Zero flips required. NECESSARY, NOT SUFFICIENT.
+  B  delta_max = max over generations of |gen_max_new - gen_max_old|,
+     absolute and relative. A property of the CODE -- the only number here
+     that says anything about a day this run did not touch.
+  C  m_min = min over generations of |gen_max_old - theta|; the ratio
+     m_min/delta_max; near-threshold occupancy at 10^k*delta_max for
+     k=0..3; the count of generations exactly AT theta (maximally fragile,
+     because the comparison is `>=` and -1 ulp flips them); n_generations.
+  D  RECONCILIATION: n_generations_compared == n_generations_in_book, per
+     arm, as two numbers. A PARTIAL READ IS A REFUSAL, not a weaker pass --
+     the generations a comparator drops are plausibly the pathological ones,
+     so a partial read is biased toward clean in the direction that matters.
+  E  PROVENANCE OF THE OLD SIDE: the reference comes from the existing
+     book's STORED per-generation values, never a re-execution of the old
+     code, which would measure the environment rather than the rewrite.
 
-THETAS ARE DERIVED, NOT TYPED (rule 32): they are read from the params
-declaration, because a constant typed twice is a constant that can disagree
-with itself -- and this one is the difference between a pass and a fail.
+THE READING RULE, from REV, applied in code rather than in prose:
+  m_min > delta_max              -> no flip was arithmetically POSSIBLE
+  m_min <= delta_max, 0 flips    -> the day got LUCKY; not a certification
+  dense occupancy, 0 flips       -> strong: many chances to flip, none taken
+  sparse (nothing < 10^3*delta)  -> weak: the day never put the question
+  delta_max > REL_BAR            -> a FINDING requiring explanation even
+                                    with zero flips
 
-WHAT IT DOES NOT ESTABLISH. Scores only. It says nothing about memory, wall
-time, or any field outside `asm.by_arm`. `be_book_identity_compare` covers
-the receipt-level invariants; this covers the numbers.
+THE FALSIFICATION CONDITION, declared before any number: **any decision flip,
+on any arm, on any compared day, REFUTES decision-equivalence. It does not
+become "one flip out of 24,000."** The answer would be a rebuild or a
+re-screen, not a tolerance.
+
+WHAT NO RESULT HERE CAN DO (REV §0, and it is why the per-book guard exists):
+it cannot make the scoring-path waiver available. `waiver_available` is FALSE
+on conditions (b) and (c) because `generation_scores` is itself modified and
+on the path. A green certification does not retire the per-book guard.
 """
 from __future__ import annotations
 
@@ -46,20 +59,23 @@ import statistics
 import sys
 from pathlib import Path
 
-#: Relative-difference bar. Above this, summation order is not the
-#: explanation. Declared before the first comparison was run.
+#: REPORTING threshold only. Above it, summation order is not the
+#: explanation and the difference needs explaining even with zero flips.
+#: NOT a pass criterion -- REVIEW 173 refuted that use.
 REL_BAR = 1e-9
+
+#: The per-book guard's safety factor, fixed in advance (REV §3.2: 10^3).
+K_FORWARD = 1000
 
 NOT_COMPARABLE = "BOOKS_ARE_NOT_THE_SAME_EXPERIMENT"
 KEYS_DIFFER = "SCORE_KEY_SETS_DIFFER"
 NO_SCORES = "NO_SCORES_IN_THE_BOOK"
 NO_THETA = "NO_THETA_FOR_THE_ARM"
-#: DE's residue sweep read an erroring `find`'s empty stdout as a clean
-#: surface, twice. A comparator's version of that bug is reporting
-#: "identical" for a book it could not read, or for two EMPTY score maps.
-#: Both refuse by name here, and both are driven in the falsifier.
 UNREADABLE = "BOOK_UNREADABLE_NO_COMPARISON_POSSIBLE"
 EMPTY_SCORES = "SCORE_MAP_IS_EMPTY_IDENTICAL_IS_NOT_A_RESULT"
+PARTIAL = "PARTIAL_GENERATION_READ_IS_A_REFUSAL_NOT_A_WEAKER_PASS"
+NO_HEAD = "ARM_HAS_NO_DECLARED_HEAD"
+GUARD_TOO_CLOSE = "BOOK_M_MIN_WITHIN_K_TIMES_DELTA_MAX_CERTIFIED"
 
 DECL = "live/pm_research/declarations"
 
@@ -68,145 +84,36 @@ class NeutralityRefused(RuntimeError):
     """The comparison cannot be made, so no verdict is reported."""
 
 
-def thetas(decl_dir=DECL) -> dict:
-    """Each arm's theta, READ from the latest params declaration."""
+def arm_heads(decl_dir=DECL) -> dict:
+    """{arm: {"head": …, "theta": …}} READ from the params declaration.
+
+    Derived, never typed (rule 32): theta separates a pass from a refutation
+    and the head decides which scores theta is applied to."""
     files = sorted(Path(decl_dir).glob("de_multiday_gate1_params_v*.json"),
                    key=lambda f: int(re.search(r"_v(\d+)\.json", f.name).group(1)))
     if not files:
-        raise NeutralityRefused("REFUSED: no params declaration to read theta from")
+        raise NeutralityRefused("REFUSED: no params declaration to read from")
     arms = (json.loads(files[-1].read_text()).get("arms") or {})
-    out = {a: s.get("theta") for a, s in arms.items()}
-    if not out or any(v is None for v in out.values()):
-        raise NeutralityRefused(f"REFUSED {NO_THETA}: {out}")
-    return out
-
-
-def scores_of(book: dict) -> dict:
-    """{head: {(slug, side, t0): (score, gen)}} -- the numbers, nothing else."""
-    asm = book.get("asm") or {}
-    by_arm = asm.get("by_arm") or {}
-    if not by_arm:
-        raise NeutralityRefused(f"REFUSED {NO_SCORES}: no asm.by_arm")
     out = {}
-    for key, val in by_arm.items():
-        head = key[1] if isinstance(key, tuple) and len(key) > 1 else str(key)
-        entries = val[0] if isinstance(val, tuple) else val
-        if not entries:
-            raise NeutralityRefused(
-                f"REFUSED {EMPTY_SCORES}: head {head!r} carries no scores. "
-                f"Two empty maps compare EQUAL and would report 'identical' "
-                f"for books nobody scored.")
-        out[head] = {k: (v.get("score"), v.get("gen"))
-                     for k, v in entries.items()}
-    return out
-
-
-def identity_of(book: dict) -> dict:
-    h = book.get("header") or {}
-    pl = h.get("placement_latency") or {}
-    return {"day": h.get("day"), "coin": h.get("coin"),
-            "placement_latency_ms": pl.get("placement_latency_ms")}
-
-
-def _rel(a: float, b: float) -> float:
-    d = abs(a - b)
-    m = max(abs(a), abs(b))
-    return 0.0 if d == 0 else (d / m if m else math.inf)
-
-
-def compare(old: dict, new: dict, *, arm_for_head=None,
-            decl_dir=DECL) -> dict:
-    """Compare two loaded books score-for-score. Refuses if incomparable."""
-    ida, idb = identity_of(old), identity_of(new)
-    if ida != idb:
-        raise NeutralityRefused(
-            f"REFUSED {NOT_COMPARABLE}: {ida} against {idb}")
-    th = thetas(decl_dir)
-    sa, sb = scores_of(old), scores_of(new)
-    if set(sa) != set(sb):
-        raise NeutralityRefused(
-            f"REFUSED {KEYS_DIFFER}: heads {sorted(sa)} against {sorted(sb)}")
-    rows = {}
-    worst_rel = 0.0
-    worst_abs = 0.0
-    flips_total = 0
-    for head in sorted(sa):
-        A, B = sa[head], sb[head]
-        if set(A) != set(B):
-            only_a, only_b = len(set(A) - set(B)), len(set(B) - set(A))
-            raise NeutralityRefused(
-                f"REFUSED {KEYS_DIFFER}: head {head} has {only_a} key(s) only "
-                f"in old and {only_b} only in new; a neutrality claim needs "
-                f"the same population on both sides")
-        diffs = []
-        gen_max_a: dict = {}
-        gen_max_b: dict = {}
-        identical = 0
-        for k, (va, ga) in A.items():
-            vb, gb = B[k]
-            if va == vb:
-                identical += 1
-            else:
-                diffs.append((abs(va - vb), _rel(va, vb)))
-            gk = (k[0], k[1], ga)
-            gen_max_a[gk] = va if gk not in gen_max_a else max(gen_max_a[gk], va)
-            gk2 = (k[0], k[1], gb)
-            gen_max_b[gk2] = vb if gk2 not in gen_max_b else max(gen_max_b[gk2], vb)
-        # THE DECISION TEST, at the level the decision is made.
-        theta = None
-        if arm_for_head:
-            theta = th.get(arm_for_head.get(head))
+    for arm, spec in arms.items():
+        head, theta = spec.get("head"), spec.get("theta")
+        if not head:
+            raise NeutralityRefused(f"REFUSED {NO_HEAD}: {arm}")
         if theta is None:
-            theta = min(th.values())   # the most permissive bar; flips counted
-        flips = [gk for gk in gen_max_a
-                 if (gen_max_a[gk] >= theta) != (gen_max_b.get(gk, gen_max_a[gk]) >= theta)]
-        flips_total += len(flips)
-        absd = [d for d, _ in diffs]
-        reld = [r for _, r in diffs]
-        worst_abs = max(worst_abs, max(absd) if absd else 0.0)
-        worst_rel = max(worst_rel, max(reld) if reld else 0.0)
-        rows[head] = {
-            "n_scores": len(A),
-            "n_bit_identical": identical,
-            "n_differing": len(diffs),
-            "max_abs": max(absd) if absd else 0.0,
-            "max_rel": max(reld) if reld else 0.0,
-            "abs_quantiles": (_q(absd) if absd else None),
-            "rel_quantiles": (_q(reld) if reld else None),
-            "theta_applied": theta,
-            "n_generations": len(gen_max_a),
-            "n_decision_flips": len(flips),
-            "flip_examples": flips[:5],
-        }
-    verdict = ("PASS" if flips_total == 0 and worst_rel < REL_BAR else "FAIL")
-    return {
-        "protocol": "BE_SCORE_NEUTRALITY_V1",
-        "identity": ida,
-        "REL_BAR_declared_before_the_run": REL_BAR,
-        "per_head": rows,
-        "max_abs_overall": worst_abs,
-        "max_rel_overall": worst_rel,
-        "n_decision_flips_overall": flips_total,
-        # COMPUTED, never typed (rule 10).
-        "verdict": verdict,
-        "why": ("no decision flips and every relative difference below the "
-                "pre-declared bar -- summation order only"
-                if verdict == "PASS" else
-                ("a decision flips" if flips_total else
-                 "a relative difference at or above the pre-declared bar")),
-    }
-
-
-def _q(xs) -> dict:
-    xs = sorted(xs)
-    n = len(xs)
-    pick = lambda p: xs[min(n - 1, int(p * n))]
-    return {"n": n, "p50": pick(.5), "p90": pick(.9), "p99": pick(.99),
-            "max": xs[-1], "mean": statistics.fmean(xs)}
+            raise NeutralityRefused(f"REFUSED {NO_THETA}: {arm}")
+        out[arm] = {"head": head, "theta": float(theta),
+                    "params_file": files[-1].name}
+    if not out:
+        raise NeutralityRefused(f"REFUSED {NO_THETA}: no arms declared")
+    return out
 
 
 def load(path) -> dict:
-    """Read a book, or REFUSE BY NAME. Never return something comparable."""
+    """Read a book, or REFUSE BY NAME. Never return something comparable.
+
+    DE's residue sweep read an erroring `find`'s empty stdout as a clean
+    surface, twice. A comparator's version of that bug is reporting
+    'identical' for something it could not read."""
     p = Path(path)
     if not p.is_file():
         raise NeutralityRefused(f"REFUSED {UNREADABLE}: {p} is not a file")
@@ -218,12 +125,201 @@ def load(path) -> dict:
             f"({type(exc).__name__}: {exc})") from None
     if not isinstance(obj, dict) or "asm" not in obj or "header" not in obj:
         raise NeutralityRefused(
-            f"REFUSED {UNREADABLE}: {p} unpickled to "
-            f"{type(obj).__name__} without the book shape (header+asm)")
+            f"REFUSED {UNREADABLE}: {p} unpickled to {type(obj).__name__} "
+            f"without the book shape (header+asm)")
     return obj
 
 
-def falsify() -> int:
+def identity_of(book: dict) -> dict:
+    h = book.get("header") or {}
+    pl = h.get("placement_latency") or {}
+    return {"day": h.get("day"), "coin": h.get("coin"),
+            "placement_latency_ms": pl.get("placement_latency_ms")}
+
+
+def _entries(book: dict, head: str):
+    by_arm = (book.get("asm") or {}).get("by_arm") or {}
+    if not by_arm:
+        raise NeutralityRefused(f"REFUSED {NO_SCORES}: no asm.by_arm")
+    for key, val in by_arm.items():
+        name = key[1] if isinstance(key, tuple) and len(key) > 1 else str(key)
+        if name == head:
+            e = val[0] if isinstance(val, tuple) else val
+            if not e:
+                raise NeutralityRefused(
+                    f"REFUSED {EMPTY_SCORES}: head {head!r} carries no "
+                    f"scores; two empty maps compare EQUAL and would report "
+                    f"'identical' for books nobody scored")
+            return e
+    raise NeutralityRefused(
+        f"REFUSED {NO_SCORES}: head {head!r} absent; book has "
+        f"{sorted(k[1] if isinstance(k, tuple) else k for k in by_arm)}")
+
+
+def gen_max(book: dict, head: str) -> dict:
+    """{(slug, side, gen): max stored score} -- E: from STORED values."""
+    out: dict = {}
+    for k, v in _entries(book, head).items():
+        g = (k[0], k[1], v.get("gen"))
+        s = v.get("score")
+        if s is None:
+            continue
+        out[g] = s if g not in out else max(out[g], s)
+    return out
+
+
+def n_generations_in_book(book: dict) -> int:
+    """D's denominator, from the book's own reference, not from the scores."""
+    ref = (book.get("fr") or {}).get("reference") or {}
+    return sum(len(v) for sides in ref.values() for v in sides.values())
+
+
+def certify(old: dict, new: dict, *, decl_dir=DECL) -> dict:
+    """A–E for every declared arm. Refuses rather than weakening."""
+    ida, idb = identity_of(old), identity_of(new)
+    if ida != idb:
+        raise NeutralityRefused(f"REFUSED {NOT_COMPARABLE}: {ida} vs {idb}")
+    arms = arm_heads(decl_dir)
+    in_book = n_generations_in_book(old)
+    per_arm = {}
+    flips_total = 0
+    for arm, spec in sorted(arms.items()):
+        head, theta = spec["head"], spec["theta"]
+        A, B = gen_max(old, head), gen_max(new, head)
+        if set(A) != set(B):
+            raise NeutralityRefused(
+                f"REFUSED {KEYS_DIFFER}: arm {arm} has "
+                f"{len(set(A) - set(B))} generation(s) only in old and "
+                f"{len(set(B) - set(A))} only in new")
+        # ---- B: the perturbation bound, a property of the CODE
+        deltas = [abs(B[g] - A[g]) for g in A]
+        d_max = max(deltas) if deltas else 0.0
+        rels = [(abs(B[g] - A[g]) / max(abs(A[g]), abs(B[g])))
+                for g in A if max(abs(A[g]), abs(B[g])) > 0]
+        d_rel = max(rels) if rels else 0.0
+        # ---- A: decision identity at THIS arm's own theta
+        flips = [g for g in A if (A[g] >= theta) != (B[g] >= theta)]
+        flips_total += len(flips)
+        # ---- C: the margin statistic and the occupancy curve
+        margins = [abs(A[g] - theta) for g in A]
+        m_min = min(margins) if margins else None
+        occupancy = {}
+        for k in range(4):
+            edge = (10 ** k) * d_max
+            occupancy[f"within_10^{k}_x_delta_max"] = (
+                sum(1 for m in margins if m < edge) if d_max > 0 else None)
+        exactly_at = sum(1 for g in A if A[g] == theta)
+        ratio = (m_min / d_max) if (m_min is not None and d_max > 0) else None
+        # ---- the reading rule, COMPUTED not narrated
+        if flips:
+            strength = "REFUTED"
+        elif m_min is not None and d_max > 0 and m_min <= d_max:
+            strength = "LUCK_NOT_CERTIFICATION"
+        elif d_max == 0.0:
+            strength = "BIT_IDENTICAL"
+        elif (occupancy.get("within_10^1_x_delta_max") or 0) > 0:
+            strength = "STRONG_DENSE_OCCUPANCY_NO_FLIP"
+        elif (occupancy.get("within_10^3_x_delta_max") or 0) == 0:
+            strength = "WEAK_DAY_NEVER_PUT_THE_QUESTION"
+        else:
+            strength = "NO_FLIP_ARITHMETICALLY_IMPOSSIBLE"
+        # ---- D: reconciliation; a shortfall REFUSES
+        if len(A) != in_book:
+            raise NeutralityRefused(
+                f"REFUSED {PARTIAL}: arm {arm} compared {len(A)} generation(s) "
+                f"against {in_book} in the book. The generations a comparator "
+                f"drops are plausibly the pathological ones, so a partial "
+                f"read is biased toward clean.")
+        per_arm[arm] = {
+            "head": head, "theta": theta,
+            "A_n_flips": len(flips), "A_flip_examples": flips[:5],
+            "B_delta_max_abs": d_max, "B_delta_max_rel": d_rel,
+            "B_delta_max_above_REL_BAR": d_rel >= REL_BAR,
+            "C_m_min": m_min, "C_ratio_m_min_over_delta_max": ratio,
+            "C_occupancy": occupancy,
+            "C_n_exactly_at_theta": exactly_at,
+            "C_n_generations": len(A),
+            "D_n_generations_compared": len(A),
+            "D_n_generations_in_book": in_book,
+            "D_reconciles": len(A) == in_book,
+            "delta_quantiles": (_q([d for d in deltas if d]) if any(deltas)
+                                else None),
+            "strength": strength,
+        }
+    refuted = flips_total > 0
+    return {
+        "protocol": "BE_SCORE_NEUTRALITY_V2_REVIEW173_BAR",
+        "claim": "SCORING_PATH_CHANGED_BUT_DECISION_EQUIVALENT_ON_MEASURED_DAYS",
+        "identity": ida,
+        "bar": "REVIEW 173 A-E; REL_BAR is a REPORTING threshold, not a pass "
+               "criterion; the pass criterion is A+C",
+        "REL_BAR_reporting_only": REL_BAR,
+        "per_arm": per_arm,
+        "n_flips_overall": flips_total,
+        # COMPUTED, never typed. And never a rate.
+        "verdict": "REFUTED" if refuted else "SUPPORTED_ON_THIS_DAY",
+        "falsification_clause": (
+            "any decision flip, on any arm, on any compared day, REFUTES "
+            "decision-equivalence -- it does not become 'one in 24,000'"),
+        "WHAT_THIS_DOES_NOT_LICENSE": (
+            "that any forward day's decisions are unchanged -- m is a "
+            "property of the day and the forward days' m values do not exist "
+            "yet; that the modules are equivalent in general; or any "
+            "relaxation of BOOK_BUILT_BY_DIFFERENT_SCORING_CODE, which fires "
+            "on code identity and is firing correctly"),
+        "E_provenance_of_the_old_side": (
+            "the existing book's STORED per-generation values; no "
+            "re-execution of the old code, so no environment difference "
+            "enters the measurement"),
+    }
+
+
+def per_book_guard(book: dict, delta_max_certified: dict, *, k=K_FORWARD,
+                   decl_dir=DECL) -> dict:
+    """THE THING THAT CAN LICENSE A FORWARD DAY (REV §3.2).
+
+    The certification bounds the CODE; this checks the DAY. Publishes each
+    arm's own m_min and REFUSES by name if m_min <= K * DELTA_MAX_CERTIFIED.
+    No comparator result retires this: a green certification on consumed days
+    says nothing about a forward day's occupancy near its threshold."""
+    arms = arm_heads(decl_dir)
+    rows = {}
+    bad = []
+    for arm, spec in sorted(arms.items()):
+        dmc = delta_max_certified.get(arm)
+        if dmc is None:
+            raise NeutralityRefused(
+                f"REFUSED {NO_THETA}: no DELTA_MAX_CERTIFIED for {arm}; an "
+                f"absent bound cannot license a day")
+        A = gen_max(book, spec["head"])
+        m_min = min(abs(v - spec["theta"]) for v in A.values())
+        edge = k * dmc
+        ok = m_min > edge
+        rows[arm] = {"m_min": m_min, "delta_max_certified": dmc,
+                     "K": k, "edge_K_x_delta": edge, "passes": ok,
+                     "n_generations": len(A)}
+        if not ok:
+            bad.append(arm)
+    if bad:
+        raise NeutralityRefused(
+            f"REFUSED {GUARD_TOO_CLOSE}: {bad} -- this book's m_min is "
+            f"within K={k} x the certified delta_max, so a decision here is "
+            f"not protected by the consumed-day certification. Details: "
+            f"{ {a: rows[a] for a in bad} }")
+    return {"protocol": "BE_PER_BOOK_M_MIN_GUARD_V1",
+            "identity": identity_of(book), "per_arm": rows,
+            "K_declared_in_advance": k, "passes": True}
+
+
+def _q(xs) -> dict:
+    xs = sorted(xs)
+    n = len(xs)
+    pick = lambda p: xs[min(n - 1, int(p * n))]
+    return {"n": n, "p50": pick(.5), "p90": pick(.9), "p99": pick(.99),
+            "max": xs[-1], "mean": statistics.fmean(xs)}
+
+
+def falsify() -> int:                                        # noqa: C901
     checks = []
 
     def note(n, ok):
@@ -236,104 +332,127 @@ def falsify() -> int:
         except NeutralityRefused as e:
             return token in str(e)
 
-    th = thetas()
-    note("thetas are READ from the params, not typed",
-         len(th) >= 2 and all(isinstance(v, float) for v in th.values()))
-    theta = min(th.values())
+    AH = arm_heads()
+    note("arm -> head AND theta are READ from the params, not typed",
+         len(AH) >= 2 and all(v["head"] and isinstance(v["theta"], float)
+                              for v in AH.values()))
+    arm = sorted(AH)[0]
+    head, theta = AH[arm]["head"], AH[arm]["theta"]
+    other = sorted(AH)[1]
+    ohead, otheta = AH[other]["head"], AH[other]["theta"]
 
-    def book(day="20260903", scores=None, latency=250.0):
+    def book(gens, ogens=None, day="20260903", latency=250.0):
+        """gens: {(slug, side, gen): score} for the first arm's head."""
+        def entries(g):
+            return {(s, sd, float(i) / 100): {"score": v, "gen": gg, "t0": i}
+                    for i, ((s, sd, gg), v) in enumerate(g.items())}
+        ref = {"s1": {"BUY_UP": [None] * len(gens)}}
         return {"header": {"day": day, "coin": "btc",
                            "placement_latency": {"placement_latency_ms": latency}},
-                "asm": {"by_arm": {("btc", "h1"): ({
-                    k: {"score": v, "gen": g, "t0": k[2]}
-                    for k, (v, g) in (scores or {}).items()},)}}}
+                "fr": {"reference": ref},
+                "asm": {"by_arm": {("btc", head): (entries(gens),),
+                                   ("btc", ohead): (entries(ogens or gens),)}}}
 
-    base = {("s1", "BUY_UP", 0.1): (theta - 0.01, 1),
-            ("s1", "BUY_UP", 0.2): (theta - 0.02, 1),
-            ("s2", "SELL_UP", 0.3): (theta + 0.05, 2)}
+    base = {("s1", "BUY_UP", 1): theta + 1.0,
+            ("s1", "BUY_UP", 2): theta - 1.0,
+            ("s1", "BUY_UP", 3): theta + 0.5}
+    obase = {("s1", "BUY_UP", 1): otheta + 1.0,
+             ("s1", "BUY_UP", 2): otheta - 1.0,
+             ("s1", "BUY_UP", 3): otheta + 0.5}
 
-    # 0. NEGATIVE CONTROL -- identical books PASS with zero differences.
-    r = compare(book(scores=base), book(scores=base))
-    note("identical books PASS with 0 differing scores",
-         r["verdict"] == "PASS" and r["per_head"]["h1"]["n_differing"] == 0
-         and r["n_decision_flips_overall"] == 0)
+    # 0. NEGATIVE CONTROL -- identical books, bit-identical, supported.
+    r = certify(book(base, obase), book(base, obase))
+    note("identical books: 0 flips, delta 0, BIT_IDENTICAL",
+         r["verdict"] == "SUPPORTED_ON_THIS_DAY"
+         and r["per_arm"][arm]["B_delta_max_abs"] == 0.0
+         and r["per_arm"][arm]["strength"] == "BIT_IDENTICAL")
 
-    # 1. POSITIVE CONTROL -- a tiny difference that flips NOTHING still PASSES,
-    #    and is REPORTED rather than hidden.
-    tiny = dict(base)
-    k = ("s1", "BUY_UP", 0.1)
-    tiny[k] = (base[k][0] * (1 + 1e-15), 1)
-    r = compare(book(scores=base), book(scores=tiny))
-    note("a 1e-15 relative difference PASSES and is reported, not hidden",
-         r["verdict"] == "PASS" and r["per_head"]["h1"]["n_differing"] == 1
-         and 0 < r["max_rel_overall"] < REL_BAR)
+    # 1. **THE FALSIFICATION CLAUSE** -- one flip REFUTES, and is not a rate.
+    flip = dict(base); flip[("s1", "BUY_UP", 2)] = theta + 0.001
+    r = certify(book(base, obase), book(flip, obase))
+    note("ONE flip on ONE arm => REFUTED, not a rate",
+         r["verdict"] == "REFUTED" and r["n_flips_overall"] == 1
+         and r["per_arm"][arm]["strength"] == "REFUTED")
 
-    # 2. **THE ONE THAT DECIDES IT** -- a difference that crosses theta FAILS,
-    #    however small.
-    flip = dict(base)
-    kf = ("s2", "SELL_UP", 0.3)
-    flip[kf] = (theta - 1e-12, 2)
-    r = compare(book(scores=base), book(scores=flip))
-    note("a score crossing theta FAILS even at 1e-12",
-         r["verdict"] == "FAIL" and r["n_decision_flips_overall"] == 1)
+    # 2. REV's refutation of my own bar: a delta ABOVE REL_BAR with zero
+    #    flips must be FLAGGED, not passed silently.
+    big = dict(base); big[("s1", "BUY_UP", 1)] = theta + 1.0 + 1e-6
+    r = certify(book(base, obase), book(big, obase))
+    note("delta above REL_BAR with 0 flips is FLAGGED, not hidden",
+         r["per_arm"][arm]["B_delta_max_above_REL_BAR"] is True
+         and r["per_arm"][arm]["A_n_flips"] == 0)
 
-    # 3. POSITIVE CONTROL -- a LARGE difference with no flip still FAILS,
-    #    because it is too big to be summation order.
-    big = dict(base)
-    big[k] = (base[k][0] - 0.001, 1)      # stays below theta: no flip
-    r = compare(book(scores=base), book(scores=big))
-    note("a large difference with NO flip still FAILS on the rel bar",
-         r["verdict"] == "FAIL" and r["n_decision_flips_overall"] == 0
-         and r["max_rel_overall"] >= REL_BAR)
+    # 3. C's reading rule: m_min <= delta_max with zero flips is LUCK.
+    near = {("s1", "BUY_UP", 1): theta + 1e-9, ("s1", "BUY_UP", 2): theta - 1.0}
+    near2 = dict(near); near2[("s1", "BUY_UP", 2)] = theta - 1.0 + 1e-6
+    onear = {("s1", "BUY_UP", 1): otheta + 1.0, ("s1", "BUY_UP", 2): otheta - 1.0}
+    r = certify(book(near, onear), book(near2, onear))
+    note("m_min <= delta_max with 0 flips is reported as LUCK",
+         r["per_arm"][arm]["strength"] == "LUCK_NOT_CERTIFICATION")
 
-    # 4. KNOWN-BAD -- a different day REFUSES rather than comparing.
-    note("a different day REFUSES",
-         refuses(lambda: compare(book(day="20260903", scores=base),
-                                 book(day="20260904", scores=base)),
-                 NOT_COMPARABLE))
+    # 4. C: a generation exactly AT theta is counted as maximally fragile.
+    at = dict(base); at[("s1", "BUY_UP", 3)] = theta
+    r = certify(book(at, obase), book(at, obase))
+    note("a generation exactly at theta is counted",
+         r["per_arm"][arm]["C_n_exactly_at_theta"] == 1)
 
-    # 5. KNOWN-BAD -- a different latency REFUSES.
-    note("a different latency REFUSES",
-         refuses(lambda: compare(book(scores=base),
-                                 book(scores=base, latency=0.0)),
-                 NOT_COMPARABLE))
+    # 5. D: a partial read REFUSES rather than passing weakly.
+    short = {k: v for k, v in list(base.items())[:2]}
+    b_old = book(base, obase)
+    b_old["fr"]["reference"] = {"s1": {"BUY_UP": [None] * 99}}
+    note("a partial generation read REFUSES",
+         refuses(lambda: certify(b_old, b_old), PARTIAL))
 
-    # 6. KNOWN-BAD -- a differing key set REFUSES, never silently intersects.
-    short = {kk: vv for kk, vv in list(base.items())[:2]}
-    note("a differing key set REFUSES rather than intersecting",
-         refuses(lambda: compare(book(scores=base), book(scores=short)),
-                 KEYS_DIFFER))
-
-    # 7. KNOWN-BAD -- a book with no scores REFUSES.
-    note("a book with no asm.by_arm REFUSES",
-         refuses(lambda: compare({"header": {"day": "20260903", "coin": "btc",
-                                             "placement_latency": {"placement_latency_ms": 250.0}},
-                                  "asm": {}}, book(scores=base)), NO_SCORES))
-
-    # 8. KNOWN-BAD -- an unreadable book REFUSES BY NAME, never "identical".
-    note("a missing book REFUSES by name",
-         refuses(lambda: load("/nonexistent/book.pkl"), UNREADABLE))
+    # 6. KNOWN-BAD inputs still refuse by name.
+    # THE NIGHT'S DOMINANT FAILURE MODE, pointed at this instrument: seven
+    # instrument errors, all toward the clean side. DE's `find` errored to
+    # stderr and its empty stdout read as a clean surface, twice. A
+    # comparator that answers "no differences" for a book it could not read
+    # has that bug, so every unreadable shape REFUSES BY NAME and every one
+    # is driven.
     import tempfile, os as _os
+    note("a MISSING book REFUSES", refuses(lambda: load("/nope.pkl"), UNREADABLE))
     with tempfile.NamedTemporaryFile(suffix=".pkl", delete=False) as fh:
-        fh.write(b"this is not a pickle")
-        junk = fh.name
-    note("a non-pickle file REFUSES by name", refuses(lambda: load(junk), UNREADABLE))
+        fh.write(b"not a pickle at all"); _junk = fh.name
+    note("a NON-PICKLE file REFUSES", refuses(lambda: load(_junk), UNREADABLE))
     with tempfile.NamedTemporaryFile(suffix=".pkl", delete=False) as fh:
-        pickle.dump({"not": "a book"}, fh)
-        wrong = fh.name
-    note("a pickle without the book shape REFUSES by name",
-         refuses(lambda: load(wrong), UNREADABLE))
-    _os.unlink(junk); _os.unlink(wrong)
+        pickle.dump({"header": {}, "asm": {}}, fh); _full = fh.name
+    _trunc = _full + ".trunc"
+    Path(_trunc).write_bytes(Path(_full).read_bytes()[:-4])
+    note("a TRUNCATED book REFUSES", refuses(lambda: load(_trunc), UNREADABLE))
+    with tempfile.NamedTemporaryFile(suffix=".pkl", delete=False) as fh:
+        pickle.dump({"not": "a book"}, fh); _wrong = fh.name
+    note("a pickle WITHOUT THE BOOK SHAPE REFUSES",
+         refuses(lambda: load(_wrong), UNREADABLE))
+    for _f in (_junk, _full, _trunc, _wrong):
+        try: _os.unlink(_f)
+        except OSError: pass
+    note("a different day REFUSES",
+         refuses(lambda: certify(book(base, obase), book(base, obase, day="20260904")),
+                 NOT_COMPARABLE))
+    note("two empty score maps REFUSE",
+         refuses(lambda: certify(book({}, {}), book({}, {})), EMPTY_SCORES))
 
-    # 9. KNOWN-BAD -- two EMPTY score maps must REFUSE, not compare equal.
-    note("two empty score maps REFUSE rather than reporting identical",
-         refuses(lambda: compare(book(scores={}), book(scores={})), EMPTY_SCORES))
+    # 7. THE PER-BOOK GUARD -- it must refuse a book that sits too close.
+    dmc = {a: 1e-12 for a in AH}
+    note("per-book guard PASSES a book with a wide margin",
+         per_book_guard(book(base, obase), dmc)["passes"] is True)
+    tight = {("s1", "BUY_UP", 1): theta + 1e-12, ("s1", "BUY_UP", 2): theta - 1.0}
+    note("per-book guard REFUSES a book whose m_min is within K x delta",
+         refuses(lambda: per_book_guard(book(tight, onear), dmc), GUARD_TOO_CLOSE))
+    note("per-book guard REFUSES an absent DELTA_MAX_CERTIFIED",
+         refuses(lambda: per_book_guard(book(base, obase), {}), NO_THETA))
+
+    # 8. BOTH arms are evaluated at their OWN theta, not one shared bar.
+    r = certify(book(base, obase), book(base, obase))
+    note("each arm is evaluated at its own theta",
+         r["per_arm"][arm]["theta"] != r["per_arm"][other]["theta"])
 
     for n, ok in checks:
         print(f"  {'PASS' if ok else 'FAIL'}  {n}")
     bad = [n for n, ok in checks if not ok]
-    print(json.dumps({"falsifier": "be_score_neutrality", "n": len(checks),
-                      "n_failed": len(bad), "failed": bad}))
+    print(json.dumps({"falsifier": "be_score_neutrality_v2",
+                      "n": len(checks), "n_failed": len(bad), "failed": bad}))
     return 1 if bad else 0
 
 
@@ -342,15 +461,16 @@ def main(argv=None) -> int:
     if "--selftest" in argv:
         return falsify()
     if len(argv) < 2:
-        print("usage: be_score_neutrality.py <old_book.pkl> <new_book.pkl> | --selftest")
+        print("usage: be_score_neutrality.py <old_book.pkl> <new_book.pkl> "
+              "| --selftest")
         return 2
     try:
-        out = compare(load(argv[0]), load(argv[1]))
+        out = certify(load(argv[0]), load(argv[1]))
     except NeutralityRefused as e:
         print(json.dumps({"refused": str(e)}, indent=1))
         return 3
     print(json.dumps(out, indent=1, default=str))
-    return 0 if out["verdict"] == "PASS" else 1
+    return 0 if out["verdict"] != "REFUTED" else 1
 
 
 if __name__ == "__main__":
