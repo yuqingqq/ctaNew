@@ -1240,12 +1240,16 @@ def falsify() -> int:
            "CONDVALUE_X_SKEW"],
        f"{same_slice['status']}; receipt file-sha ffff… vs cells' "
        f"{sl['whole_file_sha256_by_arm']['CONDVALUE_X_SKEW'][:12]}")
+    # READ THE KEY THE WAY A CONSUMER MUST: the delta exists only on the
+    # DIFFERS branch, and asserting it with [] made the cell raise
+    # KeyError instead of FAILING when the status was something else --
+    # an exception is not a verdict, and it hid which branch was taken.
+    _delta = other_slice.get("record_count_delta")
     ck("a GENUINE day-slice difference is a NAMED status with both digests "
        "and the count delta",
        other_slice["status"] == DAY_SLICE_DIFFERS
-       and other_slice["record_count_delta"][0]
-       != other_slice["record_count_delta"][1],
-       f"{other_slice['status']} delta {other_slice['record_count_delta']}")
+       and isinstance(_delta, (list, tuple)) and _delta[0] != _delta[1],
+       f"{other_slice['status']} delta {_delta}")
     ck("a receipt carrying NO day slice is named, never a silent pass",
        no_slice["status"] == NO_DAY_SLICE,
        no_slice["status"])
@@ -1283,19 +1287,23 @@ def falsify() -> int:
                           "finality": {"is_final": True},
                           "per_slug": {slug: {"status": "VERIFIED_AGREE"}}}}}))
         present = settlement_source("2026-09-09", real_cells, d)
+    # EVERY READ HERE IS DEFENSIVE FOR ONE REASON: these keys exist only
+    # on the VERIFIED branch, and indexing them directly turned a wrong
+    # STATUS into a KeyError -- an exception where a verdict belongs, and
+    # it hid which branch the code took. Twice in one file today.
+    _pd = ((present.get("disclosure") or {}).get("per_day") or {}).get(
+        "2026-09-09") or {}
     ck("with a receipt PRESENT the verification itself is carried",
-       present["status"] == "VERIFIED"
-       and present["disclosure"]["per_day"]["2026-09-09"]["counts"][
-           "VERIFIED_AGREE"] == 1
-       and present["disclosure"]["every_day_final_for_quotation"] is True,
-       f"{present['status']} "
-       f"receipt {present['disclosure']['per_day']['2026-09-09']['receipt']}")
+       present.get("status") == "VERIFIED"
+       and (_pd.get("counts") or {}).get("VERIFIED_AGREE") == 1
+       and (present.get("disclosure") or {}).get(
+           "every_day_final_for_quotation") is True,
+       f"{present.get('status')} receipt {_pd.get('receipt')}")
     ck("  and the carried verification names the SAME winner source the "
        "cells used",
-       present["disclosure"]["per_day"]["2026-09-09"][
-           "winner_source_sha256"] == absent["winner_source_sha256"][0],
-       str(present["disclosure"]["per_day"]["2026-09-09"][
-           "winner_source_sha256"])[:16])
+       _pd.get("winner_source_sha256")
+       == (absent.get("winner_source_sha256") or [None])[0],
+       str(_pd.get("winner_source_sha256"))[:16])
     rec = build("2026-09-09", DERIVED / "fwd_v2")
     ck("no record can exist without one of the two",
        rec["settlement_source"]["status"] in
