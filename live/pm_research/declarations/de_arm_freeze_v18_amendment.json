@@ -1,0 +1,25 @@
+{
+ "protocol": "P003_DE_ARM_FREEZE_V18_AMENDMENT",
+ "version": 18,
+ "rule": "13 -- superseding receipt; v1..v17 unedited",
+ "frozen_parameters": {
+  "params": {
+   "path": "de_multiday_gate1_params_v33.json",
+   "sha256": "aeeb818f3bb18c3e00a71616738eb3ea445891e01f35a7bce8490796148a2312"
+  }
+ },
+ "code_freeze_declaration": {
+  "path": "da_code_freeze_declaration_v6.json",
+  "sha256": "708ddfb6f0125c2b0423d9b640673221f90ddbe99c6e632566e60279d46cc76d"
+ },
+ "supersedes": {
+  "code_freeze_declaration": {
+   "path": "da_code_freeze_declaration_v5.json"
+  }
+ },
+ "WHY": {
+  "reason": "DA 254 -- the freeze becomes a RULE (base + seven digests); a declaration-only commit no longer moves it.",
+  "chain": "v14(v2) -> v15(v3) -> v16(v4) -> v17(v5) -> v18(v6)"
+ },
+ "as_of_utc": "2026-09-11T13:49:52Z"
+}
