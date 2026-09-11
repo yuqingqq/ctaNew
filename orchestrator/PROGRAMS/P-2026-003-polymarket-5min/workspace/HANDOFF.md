@@ -1,3 +1,109 @@
+# READ FIRST — round 362 (MEM, 2026-09-11T06:53:37Z, tip `ad4d552`)
+
+# ⚖️ THE FREEZE IS AMENDED TO `da00220` FOR THE VALUATION PATH — **user ruling**
+
+V2 for all seven days · day one **re-valued** under it · **build pin `7ed5a90`
+unchanged**.
+
+**The reason belongs in the receipt:** the declaration has required the
+`NO_FILLS_UNTIL_NEXT_GENERATION` leg **since v2 at `ee1e85d`, 02:24Z**, and V1
+**never computed it** — ***so the amendment closes a gap the freeze contained,
+rather than opening one.*** Two branches considered and not taken:
+revert-to-V1-and-relax-the-leg (**anti-conservative**); hold-until-fork-resolved.
+
+> **AND IT IS CONDITIONAL: V2's primary D must match V1 TO THE CENT. Any movement
+> voids it and returns to the user.** *This is not a decision to adopt V2 — it is
+> a decision to adopt V2 **if** a specific measurement comes back a specific way.*
+
+# 🚨 THE FALSIFIER DID NOT RUN — **AND REPORTED SUCCESS**
+
+`deFMP0907b`, line 1: `v2_import_refused … v2mods/declarations/… No such file`.
+DE's scratch copy lacked `declarations/`, **so the run computed V1 only, matched
+day one TRIVIALLY, and EXITED 0.**
+
+> ***The clean-surface failure — on the one measurement the user's ruling is
+> conditional on.***
+
+Fixed: **hard refusal by name** on import failure; unbounded lock wait replacing
+a 30-minute loop; BE holds the tape→book gap for it.
+**AS OF THIS SWEEP THE CONDITION IS UNMEASURED.**
+
+# 🔄 REV 136 REVERSED THREE POSITIONS
+
+**(a)** `da00220` **violates the freeze at the bytes** — the very file DE refused
+to touch at Q-DE-228 for that reason. **So re-pin or revert is a USER ruling, not
+a seat repair.** *And a small thing worth knowing: the field is literally
+`'NO_PARAMETER_OR_MODULE_IS_TUNED AFTER THIS COMMIT'` — **with a space** — so
+anyone grepping the all-underscore form (including my own round-348 flag) **finds
+nothing**.*
+
+**(b) Day one is "probably clean, and I can only say probably."** Start ≈04:04Z,
+43 min before the commit, Python imports once — **but no result artifact records
+the RUNNER's digest** (`be_module` names `be_cancel_axis_null`), the file was
+**rewritten twice since**, and ***an author date does not bound a file write.***
+*BE 114's identity gap one level up: we settled which composition the screen ran
+on **by digest**, and cannot do the same for the runner because nothing records
+it.* **Rule 22:** runner digest + import closure into every result **and the
+draw-0 checkpoint header.**
+
+**(c)** I read the site: `PIPELINE_MOVED` (`:39`, raised `:102`) checks
+`worktree_head_matches_pipeline_commit` **and**
+`every_computing_module_matches_the_pipeline_commit`. **REV's point stands beside
+that: the valuation runner's own provenance is NOT among the things it compares**,
+so it passes at `da00220` because the books are at `7ed5a90`. ***A guard over the
+inputs, with the instrument unguarded.***
+
+# 🧪 THE ERA REBUILD SURVIVES ONLY ON TWO PRE-DECLARED CONDITIONS
+
+**Uniform scope** — all seven population days under the fix, consumed days
+untouched, the certification day buggy-era **on both sides and flagged**. **And
+the tripwire** — ΔD plus per-window P&L of **every excluded window**, with
+**|ΔD| > 25 %|D| a FINDING, not a new D**, the 25 % **typed before the rebuilt
+book exists.** *A threshold written after the number is a threshold chosen to
+clear it.*
+
+**Direction is NOT bounded — the rebuild can move D UP.** 12 masked windows, 0.6 %
+of coin-windows; erasing 11,018c needs ~25× concentration, **and Q-DA-58 measured
+77 % of drift in the worst 10 %** — *which is why the direction is left unbounded
+rather than argued down.*
+
+> **The door, verbatim: *"the decision to apply it to 09-07 was made after seeing
+> −11,018. The defence is uniformity."*** *A defence named as a defence, before
+> anyone needs it.*
+
+**REV drove 13/13 of the user's refusals by name, with one real finding: the
+arm-freeze-absent path raises a bare `REFUSED:` with NO NAME TOKEN.** *Fifth
+member of that family — five names with no producer, now one producer with no
+name. An unnamed refusal cannot be searched, cannot be caught by the standing
+check, and reads to a caller as any other failure.*
+
+# 🔨 09-07 REBUILT, AND SMALLER
+
+`be134frag0907` rc=0, **660,075,638 B** against the buggy-era **660,307,943 B** —
+**232,305 bytes smaller** (227 KiB / 232 KB). 594,821 rows, 287 windows,
+`builder_commit 7ed5a90`, `worktree wt-fwd`. Old fragment **superseded per rule
+13** with digests both sides. **Tape stage running** (`be134tape20260907`).
+
+# 🪞 THE LANDER I HAVE USED ALL SESSION CARRIED AN UNCHECKED CLAIM ABOUT ITSELF
+
+`land_register_row.sh` rebases onto origin when behind. Its comment claims *"the
+ONE sanctioned rebase… only the commit this script just made"* — and **DA 226's
+added line says it plainly: *"the comment above ASSERTS… nothing CHECKED it."***
+
+> ***I have run that script about twenty times this session. Every landing was
+> safe because the branch was not diverged — and the instrument could not have
+> told me so.***
+
+**The refusal is already landed on BOTH sides** (9 `FOREIGN` references in each),
+so it needs no reconciling. **And it is why my landings failed with a
+fast-forward abort rather than silently replaying other seats' work: the script
+refused — and I read that refusal as an obstacle for three rounds without
+recognising it as the guard doing its job.**
+
+**Rule 45 leaves exactly one landing path: cherry-pick onto an origin-cut
+branch.** My rows for rounds 358–362 remain written and unlanded — ***a known
+state with a known remedy, not a blockage.***
+
 # READ FIRST — round 361 (MEM, 2026-09-11T06:49:22Z, tip `0a3708f`)
 
 # ⚖️ V2 IS NOT NEUTRAL **BY CONSTRUCTION** — established in one second, not 77 minutes
