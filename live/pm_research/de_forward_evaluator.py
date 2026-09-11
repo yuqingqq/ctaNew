@@ -341,6 +341,64 @@ def evaluate(root: Path, days, *, n_expected: int = None,
                 {"NOT_COMPUTED": "pass derived= to carry R-810 finality"})}
 
 
+def progress_emit(root: Path, days_scored, *, n_declared: int,
+                  arms=ARMS, sided: int = SIDED, derived: Path = None,
+                  revision: str = "L250ms") -> dict:
+    """WHAT IS EMITTED AFTER EVERY DAY, UNPROMPTED. All four travel together.
+
+    Nothing here is remembered at the moment it matters: the per-day line,
+    the futility verdict WITH the day that killed it and its cause, the
+    attainable minimum p AT THE G ACHIEVED SO FAR, and the tolerance at
+    that G. At the ruled G=7 the tolerance is 0, so this says on DAY ONE
+    that the first negative day ends an arm -- not on day seven.
+    """
+    days_scored = list(days_scored)
+    if not days_scored:
+        raise EvaluatorRefused(f"REFUSED {NO_DAYS}: nothing scored yet.")
+    if len(set(days_scored)) != len(days_scored):
+        raise EvaluatorRefused(f"REFUSED {DUP_DAY}: {days_scored}")
+    G_so_far = len(days_scored)
+    cells = {(d, a): AGG.load_cell(Path(root), d, a)
+             for d in days_scored for a in arms}
+    lines, per_arm = [], {}
+    for a in arms:
+        for d in days_scored:
+            lines.append(per_day_line(cells[(d, a)],
+                                      AGG.pooled(cells, (d,), a),
+                                      n_declared, sided))
+        pool = AGG.pooled(cells, days_scored, a)
+        per_arm[a] = {"pooled_so_far": pool,
+                      "futility": futility(pool["per_day_D_cents"],
+                                           n_declared, sided)}
+    n = min(p["pooled_so_far"]["n_draws"] for p in per_arm.values())
+    out = {
+        "protocol": PROTOCOL, "emit": "AFTER_EVERY_DAY",
+        "days_scored": days_scored, "G_so_far": G_so_far,
+        "G_declared": n_declared, "days_remaining": n_declared - G_so_far,
+        "per_day_lines": lines,
+        "floor_at_the_G_ACHIEVED_SO_FAR": floor_block(G_so_far, n, sided),
+        "floor_at_the_G_DECLARED": floor_block(n_declared, n, sided),
+        "futility": {a: per_arm[a]["futility"] for a in arms},
+        "ANY_ARM_ALREADY_DEAD": any(per_arm[a]["futility"]["FUTILE"]
+                                    for a in arms),
+        "standing_warning": standing_warning(n_declared, sided),
+    }
+    if derived is not None:
+        out["settlement_source"] = settlement_source_disclosure(
+            days_scored, derived, revision)
+    dead = [a for a in arms if per_arm[a]["futility"]["FUTILE"]]
+    out["STOP_ADVICE"] = (
+        "NOT FUTILE -- continue" if not dead else
+        "FUTILE for " + ", ".join(
+            f"{a} ({per_arm[a]['futility']['cause']}"
+            + (f", killed by {per_arm[a]['futility']['negative_or_zero_days']}"
+               if per_arm[a]["futility"]["negative_or_zero_days"] else "")
+            + ")" for a in dead)
+        + ". Stopping now is FREE: it can only reduce the chance of "
+          "declaring success, never inflate one.")
+    return out
+
+
 # ------------------------------------------------------------- falsifier --
 def falsify() -> int:                                        # noqa: C901
     """rule 15: a positive control it MUST flag, a known-bad it must
@@ -427,6 +485,64 @@ def falsify() -> int:                                        # noqa: C901
             ck("finality REFUSES a day with no receipt", False)
         except EvaluatorRefused as e:
             ck("finality REFUSES a day with no receipt", NO_RECEIPT in str(e))
+
+    # --- G FROM THE DATA: driven on a 6-day AND an 8-day fixture ---------
+    def _fixture(td, days, D_by_day):
+        root = Path(td)
+        for d in days:
+            c = d.replace("-", "")
+            for arm in ARMS:
+                (root / f"de_settle_result_{c}_{arm}.json").write_text(
+                    json.dumps({"observed_D_cents": D_by_day[d],
+                                "zero_model_cancel_baseline_total_cents": 0.0,
+                                "arm_settled_total_cents": D_by_day[d]}))
+                with (root / f"de_settle_ckpt_{d}_{arm}.jsonl").open("w") as f:
+                    f.write(json.dumps({"kind": "HEADER",
+                                        "n_draws": 500}) + "\n")
+                    for i in range(500):
+                        f.write(json.dumps({"i": i, "D": 0.0}) + "\n")
+        return root
+
+    with tempfile.TemporaryDirectory() as td:
+        d6 = [f"2026-09-{7 + i:02d}" for i in range(6)]
+        r6 = evaluate(_fixture(td, d6, {d: +1.0 for d in d6}), d6)
+        ck("a 6-day fixture yields G=6 FROM THE DATA", r6["G"] == 6)
+        ck("  and its floor is the G=6 floor, not a constant",
+           abs(r6["FLOOR_BLOCK_CARRIED_ON_EVERY_RESULT"]
+               ["attainable_minimum_p"]["day_sign_component"]
+               - 2 / 64) < 1e-12)
+        ck("  and a G=6 pass is NOT attainable two-sided",
+           not r6["FLOOR_BLOCK_CARRIED_ON_EVERY_RESULT"]
+           ["a_pass_was_possible_at_this_G"])
+    with tempfile.TemporaryDirectory() as td:
+        d8 = [f"2026-09-{7 + i:02d}" for i in range(8)]
+        r8 = evaluate(_fixture(td, d8, {d: +1.0 for d in d8}), d8)
+        ck("an 8-day fixture yields G=8 FROM THE DATA", r8["G"] == 8)
+        ck("  and its floor is the G=8 floor", abs(
+            r8["FLOOR_BLOCK_CARRIED_ON_EVERY_RESULT"]
+            ["attainable_minimum_p"]["day_sign_component"] - 2 / 256) < 1e-12)
+        ck("  and a G=8 pass IS attainable",
+           r8["FLOOR_BLOCK_CARRIED_ON_EVERY_RESULT"]
+           ["a_pass_was_possible_at_this_G"])
+        ck("  the two fixtures give DIFFERENT floors, so G is not pinned",
+           r6["FLOOR_BLOCK_CARRIED_ON_EVERY_RESULT"]["attainable_minimum_p"]
+           ["day_sign_component"] != r8["FLOOR_BLOCK_CARRIED_ON_EVERY_RESULT"]
+           ["attainable_minimum_p"]["day_sign_component"])
+        # and the per-day emit, on day 1 of 8, must already warn
+        p1 = progress_emit(Path(td), d8[:1], n_declared=8)
+        ck("progress_emit works on DAY ONE", p1["G_so_far"] == 1
+           and p1["days_remaining"] == 7)
+        ck("  and carries the floor at the G ACHIEVED and at the G DECLARED",
+           "floor_at_the_G_ACHIEVED_SO_FAR" in p1
+           and "floor_at_the_G_DECLARED" in p1)
+        ck("  and says STOP_ADVICE unprompted", "STOP_ADVICE" in p1)
+        d8bad = dict({d: +1.0 for d in d8}, **{d8[0]: -5.0})
+        with tempfile.TemporaryDirectory() as td2:
+            p2 = progress_emit(_fixture(td2, d8, d8bad), d8[:1], n_declared=8)
+            ck("  a negative DAY ONE is called dead immediately",
+               p2["ANY_ARM_ALREADY_DEAD"] and "FUTILE for " in p2["STOP_ADVICE"])
+            ck("  and the STOP_ADVICE names the day that killed it",
+               d8[0] in p2["STOP_ADVICE"])
 
     # --- HOLM: m = 2, and the step-down thresholds -----------------------
     h = AGG.holm([0.02, 0.03])
