@@ -1,3 +1,73 @@
+# READ FIRST — round 378 (MEM, 2026-09-11T09:55:21Z, tip `e807675`)
+
+# ✅ THE ROUND-376 PREDICTION LANDED
+
+**Refusal `NOT_CERTIFIED` at 09:09:23Z · re-certified 09:33:48Z.** *Called about
+twenty minutes earlier from reading `de_settlement_control_run.py:194` and
+hashing two files.*
+
+## 📜 The certificate stock is now THREE, with exactly ONE valid
+
+```
+c5c1fc0ae126a3f7   BE's rebuild                 stale
+8500ce41fc800e9a   the user's hardened copy     stale
+a455191d6bceec7e   __68e7d23.json               ← MATCHES THE COMPARATOR ON DISK
+```
+
+> ***Every retirement was caused by editing the file that validates them.***
+> V2 pins **exactly one** producer-digest artifact — the right design, **and the
+> reason the stock grows by one at every repair.**
+
+# 🌿 THE PIN IS `68e7d23` — and still NOT on `mm-research`
+
+I checked both refs: **on `origin/de-freeze-chain-v2`, not on
+`origin/mm-research`.** ***The pin has moved twice since `dcec80a` and the
+canonical branch has contained none of them*** — so `PENDING_ORIGIN_MAIN` is **not
+a transient but the standing condition** until the fork resolves. **A cold reader
+resolves the pin by ref, not by the register.**
+
+# 🔒 THE LOCK QUEUE, READ FROM DISK
+
+```
+lock held by      pid 2298230 (flock) + 2298231 (python3)
+deRV0907w1        loaded · ACTIVE · RUNNING     ← holds the lock
+deEMIT0907d       loaded · ACTIVE · RUNNING     ← armed, waiting on the RESULT FILE
+be147frag0909     loaded · FAILED · FAILED      ← offering (see below)
+```
+
+## 🪞 And I nearly filed a POLLING unit as a DEAD one
+
+`be147frag0909` reads **failed**; the dispatch says **polling.** *I looked
+instead of choosing:* `Result=exit-code`, **`ExecMainStatus=75`**,
+**`ExecMainStartTimestamp == ExecMainExitTimestamp`, same second**, and the
+journal showing **Started → exited 75/TEMPFAIL → Failed, repeating.**
+
+> ***That is `flock -n -E 75` offering. The dispatch is right and my first
+> reading was wrong.***
+
+**A polling unit is indistinguishable from a dead one by `ActiveState` and
+`Result` alone** — both say failed, both say exit-code. **The discriminators are
+`rc=75` specifically (it *did no work*) and `ExecMainStartTimestamp` advancing.**
+
+> ***And that is exactly the correction the coordinator made to their own watcher
+> at round 376 — which I recorded, and then walked into one round later.***
+> **Rule 46's family gains a member: `LoadState` separates EXISTING from ABSENT;
+> `rc=75` separates WAITING from DEAD.**
+
+# 📗 BUILD STATE
+
+**09-08's book landed 09:33:03Z** — 390,041,103 B, rc=0, ~23 min — **31.8 MB
+larger than 09-07's rebuilt 358,259,004** (I differenced them). **09-07's V2
+valuation running since ~09:34Z**, out near 10:51Z. 09-09's fragment offers
+behind it; 09-08's valuation is being armed.
+
+**And R-899 closed the freeze-chain hole at `68e7d23` BEFORE go5,
+declarations-only**, with F2 and the line-650 falsifier ruled **post-population.**
+***Closing a chain defect before the run that would expose it, and deferring the
+two items that would move code during a population, is the ordering this
+programme arrived at the hard way — and declarations-only scope is what makes it
+safe mid-population at all.***
+
 # READ FIRST — round 377 (MEM, 2026-09-11T08:56:30Z, tip `f5f39f5`)
 # 🚨 MY ROUND-376 WARNING, CONFIRMED AGAINST THE PIN GO5 WILL ACTUALLY USE
 
