@@ -54,6 +54,13 @@ INPUTS_DIFFER = "REPLAY_ARMS_DO_NOT_SHARE_THEIR_INPUTS"
 #: consumed now, and a declared digest that disagrees with the computed
 #: one is its own refusal.
 CONSUMED_DIFFER = "REPLAY_ARMS_CONSUMED_DIFFERENT_INPUTS"
+#: REVIEW 203, the flat-tape defect ONE LEVEL OVER: the declared property
+#: is "every other non-fair-value input", and the ACTION LIST is one --
+#: but it was an argument to run_arm, not a field, so two arms could be
+#: replayed on different action populations and compare as sharing their
+#: inputs. The action key-set digest is a FIELD now, and run_arm refuses
+#: actions that are not the declared population.
+ACTIONS_NOT_DECLARED = "REPLAY_ACTIONS_ARE_NOT_THE_DECLARED_POPULATION"
 DECLARED_NOT_COMPUTED = "REPLAY_DECLARED_SNAPSHOT_IS_NOT_WHAT_WAS_CONSUMED"
 PATH_PINNED = "REPLAY_OUTCOME_PATH_IS_PINNED"
 NO_ARMS = "REPLAY_HAS_FEWER_THAN_TWO_ARMS"
@@ -76,6 +83,9 @@ class ReplayInputs:
     initial_state: dict
     price_path: tuple
     half_spread: float
+    #: THE ACTION POPULATION, BY KEY-SET DIGEST. A field, so `consumed()`
+    #: digests it and `compare_arms` compares it with no edit to either.
+    action_keys_sha256: str = ""
     #: OPTIONAL, and CHECKED against the computed digest when present. A
     #: caller may say which snapshot it believes it is replaying; it may
     #: not decide the answer.
@@ -238,10 +248,27 @@ def compare_arms(baseline: dict, challenger: dict) -> dict:
     return out
 
 
+def action_keys_digest(actions) -> str:
+    """The key-set of an action list, canonically."""
+    keys = sorted([list(a.key) for a in actions])
+    return hashlib.sha256(json.dumps(keys, sort_keys=True).encode()
+                          ).hexdigest()
+
+
 def run_arm(actions, value_of, inputs: ReplayInputs) -> dict:
-    """One arm. THE TAPE AND THE SPREAD COME FROM `inputs`, so there is no
-    way to replay two arms on different tapes and have the comparison
-    call them shared."""
+    """One arm. THE TAPE, THE SPREAD AND THE ACTION POPULATION COME FROM
+    `inputs`, so there is no way to replay two arms on different tapes --
+    or different action lists -- and have the comparison call them
+    shared."""
+    got = action_keys_digest(actions)
+    if inputs.action_keys_sha256 and inputs.action_keys_sha256 != got:
+        raise ReplayRefused(
+            f"REFUSED {ACTIONS_NOT_DECLARED}: this arm was handed actions "
+            f"digesting to {got[:16]} while its inputs declare "
+            f"{inputs.action_keys_sha256[:16]}. The action list is a "
+            f"non-fair-value input; an arm that replays a different "
+            f"population is not sharing its inputs, whatever the tape "
+            f"says.")
     seam = SEAM.run_seam(actions, value_of, half_spread=inputs.half_spread)
     path = replay(seam["quotes"], inputs.price_path, inputs.initial_state)
     return {"inputs": inputs, "path": path,
@@ -284,16 +311,14 @@ def falsify() -> int:
     inputs = ReplayInputs(
         non_fair_value_params={"max_inventory": 5},
         initial_state={"inventory": 0.0, "clock": 0},
-        price_path=tuple(prices), half_spread=0.01)
-
-    ident = {a.generation_id: 0.50 for a in acts}
-    chall = {a.generation_id: 0.58 for a in acts}
+        price_path=tuple(prices), half_spread=0.01,
+        action_keys_sha256=action_keys_digest(acts))
 
     def v_ident(a):
-        return ident[a.generation_id], FP.IDENTITY, False
+        return 0.50, FP.IDENTITY, False
 
     def v_chall(a):
-        return chall[a.generation_id], FP.BN_BOOKTICKER, False
+        return 0.58, FP.BN_BOOKTICKER, False
 
     base = run_arm(acts, v_ident, inputs)
     same = run_arm(acts, v_ident, inputs)
@@ -329,7 +354,8 @@ def falsify() -> int:
     flat = ReplayInputs(non_fair_value_params={"max_inventory": 5},
                         initial_state={"inventory": 0.0, "clock": 0},
                         price_path=tuple([0.99] * len(prices)),
-                        half_spread=0.01)
+                        half_spread=0.01,
+                        action_keys_sha256=action_keys_digest(acts))
     flat_arm = run_arm(acts, v_chall, flat)
     try:
         compare_arms(base, flat_arm)
@@ -352,6 +378,7 @@ def falsify() -> int:
         ReplayInputs(non_fair_value_params={"max_inventory": 5},
                      initial_state={"inventory": 0.0, "clock": 0},
                      price_path=tuple(prices), half_spread=0.01,
+                     action_keys_sha256=action_keys_digest(acts),
                      declared_snapshot_sha256="f" * 64)
         declared_msg = ""
     except ReplayRefused as exc:
@@ -364,21 +391,25 @@ def falsify() -> int:
        ReplayInputs(non_fair_value_params={"max_inventory": 5},
                     initial_state={"inventory": 0.0, "clock": 0},
                     price_path=tuple(prices), half_spread=0.01,
+                    action_keys_sha256=action_keys_digest(acts),
                     declared_snapshot_sha256=inputs.digest()).digest()
        == inputs.digest(), inputs.digest()[:16])
 
     for key, bad in (("non_fair_value_params",
                       ReplayInputs({"max_inventory": 9},
                                    {"inventory": 0.0, "clock": 0},
-                                   tuple(prices), 0.01)),
+                                   tuple(prices), 0.01,
+                                   action_keys_digest(acts))),
                      ("half_spread",
                       ReplayInputs({"max_inventory": 5},
                                    {"inventory": 0.0, "clock": 0},
-                                   tuple(prices), 0.02)),
+                                   tuple(prices), 0.02,
+                                   action_keys_digest(acts))),
                      ("initial_state",
                       ReplayInputs({"max_inventory": 5},
                                    {"inventory": 2.0, "clock": 0},
-                                   tuple(prices), 0.01))):
+                                   tuple(prices), 0.01,
+                                   action_keys_digest(acts)))):
         other = run_arm(acts, v_chall, bad)
         try:
             compare_arms(base, other)
@@ -400,11 +431,13 @@ def falsify() -> int:
     a_plus = InputsPlusOne(
         non_fair_value_params={"max_inventory": 5},
         initial_state={"inventory": 0.0, "clock": 0},
-        price_path=tuple(prices), half_spread=0.01, latency_model_ms=0.0)
+        price_path=tuple(prices), half_spread=0.01,
+        action_keys_sha256=action_keys_digest(acts), latency_model_ms=0.0)
     b_plus = InputsPlusOne(
         non_fair_value_params={"max_inventory": 5},
         initial_state={"inventory": 0.0, "clock": 0},
-        price_path=tuple(prices), half_spread=0.01, latency_model_ms=250.0)
+        price_path=tuple(prices), half_spread=0.01,
+        action_keys_sha256=action_keys_digest(acts), latency_model_ms=250.0)
     ck("a NEW field is digested with NO edit to any list",
        "latency_model_ms" in InputsPlusOne.digested_field_names()
        and a_plus.digest() != b_plus.digest(),
@@ -428,6 +461,46 @@ def falsify() -> int:
        and "declared_snapshot_sha256"
        not in ReplayInputs.digested_field_names(),
        str(ReplayInputs.digested_field_names()))
+
+    # --- REVIEW 203: THE ACTION LIST IS AN INPUT TOO --------------------
+    other_rows = [dict(r, generation_id=f"h{i}") for i, r in
+                  enumerate(rows[:3])]
+    other_pop = {"actions": [(r["slug"], r["generation_id"])
+                             for r in other_rows],
+                 "population": "P003_NEUTRAL_REFERENCE_PATH_FIXTURE",
+                 "as_of": "2026-09-11T20:00:00Z",
+                 "source_identity": "replay seam falsify fixture"}
+    other_acts = sorted(A.build_actions(
+        other_rows, canonical_population=other_pop)["actions"],
+        key=lambda a: a.decision_recv_ns)
+    other_inputs = ReplayInputs(
+        non_fair_value_params={"max_inventory": 5},
+        initial_state={"inventory": 0.0, "clock": 0},
+        price_path=tuple(prices), half_spread=0.01,
+        action_keys_sha256=action_keys_digest(other_acts))
+    try:
+        compare_arms(run_arm(acts, v_ident, inputs),
+                     run_arm(other_acts, v_chall, other_inputs))
+        pop_msg = ""
+    except ReplayRefused as exc:
+        pop_msg = str(exc)
+    ck("two arms on DIFFERENT ACTION POPULATIONS are REFUSED, with no "
+       "list touched",
+       INPUTS_DIFFER in pop_msg and "action_keys_sha256" in pop_msg,
+       pop_msg[:72] or "ADMITTED TWO DIFFERENT ACTION POPULATIONS")
+    try:
+        run_arm(other_acts, v_chall, inputs)
+        swap_msg = ""
+    except ReplayRefused as exc:
+        swap_msg = str(exc)
+    ck("  and an arm handed actions that are NOT its declared population "
+       "refuses before it replays anything",
+       ACTIONS_NOT_DECLARED in swap_msg,
+       swap_msg[:64] or "REPLAYED AN UNDECLARED POPULATION")
+    ck("  while the action digest is covered by the SAME introspection, "
+       "not a new list",
+       "action_keys_sha256" in ReplayInputs.digested_field_names(),
+       ", ".join(ReplayInputs.digested_field_names()))
 
     ck("identical values with DIFFERENT paths is its own verdict, not a "
        "pass",
