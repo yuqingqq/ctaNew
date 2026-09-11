@@ -238,6 +238,13 @@ def falsify() -> int:
            f"rc={pr.returncode} " + (
                f"cells={rec.get('cells')}" if pr.returncode == 0
                else pr.stderr.strip()[-64:]))
+        arms = (rec.get("cells") or {})
+        ck("every arm's cell carries its book receipt's ADMITTING ARM",
+           bool(arms) and all(
+               ((c.get("book_receipt") or {}).get("admitted_by")
+                in ("EXACT", "DESCENDANT")) for c in arms.values()),
+           ", ".join(f"{a}:{(c.get('book_receipt') or {}).get('admitted_by')}"
+                     for a, c in arms.items()) or "NO CELLS")
         ck("the record's provenance names the FROZEN commit and every "
            "computing module matches it",
            prov.get("pipeline_commit") == frozen

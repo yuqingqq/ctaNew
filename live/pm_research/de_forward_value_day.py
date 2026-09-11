@@ -434,9 +434,15 @@ def main(argv=None) -> int:
         c = a.day.replace("-", "")
         (out_dir / f"de_settle_result_{c}_{arm}.json").write_text(
             json.dumps(res, indent=1, default=str))
+        # THE ADMITTING ARM TRAVELS WITH THE NUMBER. A receipt that admits
+        # as DESCENDANT and one that admits EXACTLY are different claims
+        # about which code built the book, and a reader holding only the
+        # combined record could not tell them apart -- it had to open the
+        # per-arm result file, which is not where anyone looks.
         cells[arm] = {"D": res["observed_D_cents"],
                       "p": res["p_two_sided"], "n": res["n_draws"],
-                      "resumed_from_draw": res["resumed_from_draw"]}
+                      "resumed_from_draw": res["resumed_from_draw"],
+                      "book_receipt": res.get("book_receipt")}
         print(json.dumps({"stage": "valued", "arm": arm,
                           "D": res["observed_D_cents"],
                           "p": res["p_two_sided"]}), flush=True)
