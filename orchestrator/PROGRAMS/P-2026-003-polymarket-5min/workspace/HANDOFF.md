@@ -1,3 +1,90 @@
+# READ FIRST — COLD START (MEM 393, 2026-09-11T16:39:53Z, tip `1277a14`)
+
+# 🧭 PHASE CHANGE — **the user ruled: continue descriptively**
+
+> ### The forward test's VERDICT IS FIXED AT DAY TWO and cannot be revised.
+> ### Days 09-09..09-13 are being built and valued for **PER-DAY PERFORMANCE ONLY**.
+
+***Descriptive days are not a continuation of the test. They are five more
+observations of arms whose test already stopped.*** DA 264's declaration says it
+in its own words: *"it is NOT additional evidence toward the forward test."*
+
+# ⚠️ READ THE FUTILITY BLOCK, NOT THE TALLY — **a prediction filed before the days land**
+
+`G_so_far = len(days_scored)` (`de_forward_evaluator.py:653`). When the five
+descriptive days land, **seven records will match the day glob**, so
+`running_tally` will read:
+
+```
+G_so_far 7 · G_declared 7 · days_remaining 0     <- LOOKS like a completed test
+```
+
+> **The verdict is safe** — futility is a function of the negative days *already
+> seen*, and those do not go away. ***But the field that distinguishes a stopped
+> test from a completed one will be the FUTILITY BLOCK, not the tally.***
+> **Anyone reading the day-seven record must read `emit.futility` first.**
+
+# 1 · THE OUTCOME (unchanged)
+
+| arm | 09-07 | 09-08 | non-pos | best attainable p | |
+|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | −14,645.078818 | −49,303.579891 | **2** | **0.453125** | FUTILE |
+| `HAZARD_OVER_SKEWED_REF` | **+4,925.363903** | −23,977.998804 | **1** | **0.125** | FUTILE |
+
+`STOP_ADVICE = STOP_FOR_FUTILITY` · threshold 0.025 · floor **0.015625** (7-of-7
+only) · tolerance 0 · Holm m=2.
+**NOT_ESTABLISHED_AT_THIS_POWER — never NO_EFFECT.**
+*And, computed: floor × 69 = **1.078125 > 1** — the design could never have
+cleared a correction over the screen that produced the arms.*
+
+# 2 · THE SCHEDULE ON THE LOCK
+
+```
+09-09 book  (~23 min)  ->  09-09 valuation (~77 min)
+09-10 fragment -> tape -> book (~55 min)  ->  09-10 valuation
+09-11 only after it closes 2026-09-12T00:00Z ; then 09-12, 09-13
+09-13's mask hand-made at the boundary (DA)
+```
+
+**09-09 onward need NO rebuild** — they build at the frozen lineage from the
+start. *That is why the schedule is this short: 09-07 and 09-08 each cost ~23 min
+of lock time on a freeze-built rebuild first.* Measurement/evaluation pipelines
+**wait on the heavy lock** (BE 149), so no separate arbiter is needed.
+
+**At this dispatch: lock FREE, nothing running.**
+
+# 3 · METHOD — unchanged, and every clause was bought by a failure today
+
+dry-run before every stage · the licensed code-frozen valuation path, no closure
+module moves · freeze-built books only · **oracle read ONCE per run** ·
+**stage-0 verdict run-scoped** (not `/tmp` — R-910) · **re-emits vN+1, never in
+place** (R-910) · **reproduction/rehearsal records named outside the day glob**
+(R-915).
+
+> ⚠️ **Each descriptive day needs its own point-estimate receipt**, or its
+> `progress_emit` comes back as a refusal string rather than a table —
+> `NO_RECEIPT`, *"a cent figure whose winner source was never verified must say
+> so."* **Day two already showed this.**
+
+# 4 · THE ARTIFACTS AND THE READER TRAPS
+
+```
+FINAL RECORD   fwd_v2/p003_de_forward_value_20260908_v2.json   (v1 kept, unedited)
+(a) REPRO      fwd_v2/p003_de_reproduction_at_the_freeze_20260907.json
+               IS_A_DAY_RESULT false · BOTH arms exact vs day one
+CELLS          fwd_v2/ · fwd_rehearsal_0908/ · fwd_a_0907_rebuild/
+```
+
+1. **Cells in three directories**, `load_cell` takes **one root**.
+2. **Day two's real result sits in a directory named `rehearsal`.**
+3. **Two mis-named reproduction records are inside the day glob** — KEPT as
+   declared residue, `NOT_A_DAY_RESULT`, named by path *and sha*. ***They carry
+   the same protocol string as a real day record***, so only the presence of a
+   `reproduction` block separates them.
+4. 🌿 **The tree is forked from origin (148/186); a fast-forward is impossible.**
+   **Q-MEM-338…347 are unlanded**, including the rows carrying the outcome.
+   ***Read this working tree, not `origin/mm-research`.***
+
 # READ FIRST — COLD START (MEM 392, 2026-09-11T16:14:42Z, tip `3acc367`)
 
 *The forward test is finished. This block is written to be sufficient with no
