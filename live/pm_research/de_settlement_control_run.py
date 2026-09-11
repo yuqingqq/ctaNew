@@ -329,14 +329,24 @@ def _builder_commit_admissible(builder_commit) -> bool:
     return True
 
 
-def _admissible_or_exact(builder_commit) -> bool:
-    """Exact match always; the descendant arm only when it can resolve."""
+def _admitting_arm(builder_commit) -> str | None:
+    """WHICH ARM ADMITTED, named -- never inferred by a reader.
+
+    A receipt that merely says "admitted" leaves a reader to guess whether
+    the exact pin or the descendant rule let it through, and those carry
+    different evidence. The arm is recorded.
+    """
     if builder_commit == PIPELINE_COMMIT:
-        return True
+        return "EXACT"
     try:
-        return _builder_commit_admissible(builder_commit)
+        return "DESCENDANT" if _builder_commit_admissible(
+            builder_commit) else None
     except SettlementControlRefused:
-        return False
+        return None
+
+
+def _admissible_or_exact(builder_commit) -> bool:
+    return _admitting_arm(builder_commit) is not None
 
 
 def verify_book_receipt(receipt_path, book_sha: str | None, day: str,
@@ -388,6 +398,7 @@ def verify_book_receipt(receipt_path, book_sha: str | None, day: str,
             "ruling": "USER, DE 174 (2)", "unnamed": sorted(unnamed),
             "lazy_only_set": lazy["exempt"], "satisfied": True}
     return {"path": str(path),
+            "admitted_by": _admitting_arm(builder_commit),
             "sha256": hashlib.sha256(payload).hexdigest(),
             "digest_is_of_the_parsed_buffer": True,
             "book_sha256": declared, "book_path": declared_path,
