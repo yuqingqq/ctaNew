@@ -352,3 +352,40 @@ damaged, but the repair I reached for was **unbounded**.
 >
 > *Round 359 said repairs are bounded by the round's own block. This is the same
 > rule one level finer: bounded by the round's own KEY.* (Amended 2026-09-11T16:39:21Z.)
+
+---
+
+## Round 397 — **when ABSENCE is the finding, the search must be able to fail visibly**
+
+Promoted from REV via R-922, and the first thing I did with it was turn it on my
+own round-396 report that *no file asserts "can pass a 69-fold screen."*
+
+**The conclusion survived. The method did not.** I had run a bare
+`grep -rniE` over three trees. ***Had my path been wrong, my regex malformed or
+my tree the wrong one, the command would have returned nothing and I would have
+reported the same absence with the same confidence.***
+
+**Required from now on — three searches, in this order:**
+
+```bash
+# (a) POSITIVE CONTROL: a token I know is present, same command shape
+grep -rniE "<token-I-planted>" <trees> | wc -l      # MUST be > 0
+# (b) KNOWN-BAD: a token that cannot exist
+grep -rniE "zz_impossible_token" <trees> | wc -l    # MUST be 0
+# (c) THE REAL QUERY, only then
+```
+
+*(a) proves the search can speak; (b) proves it is not matching everything.
+An absence reported without (a) is a zero from an instrument that never showed
+it can fire — SEAT_PROTOCOL rule 15, in a shell.*
+
+### And the second defect was SCOPE, which is the reusable half
+
+My exclusion filter was **line-scoped** (`grep -v corrected|first reading`)
+while the markers identifying a correction live in the **flag key** and
+elsewhere in the sentence — often outside the matched line. **Three candidates
+were dropped before I could see them**; the answer happened to be right.
+
+> ***A filter that removes candidates before a human sees them must be scoped to
+> the same unit as the thing it filters on.*** When in doubt, do not filter —
+> print the context and read the hits. (Amended 2026-09-11T19:17:35Z.)
