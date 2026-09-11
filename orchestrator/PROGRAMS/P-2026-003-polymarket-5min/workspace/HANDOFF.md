@@ -1,3 +1,82 @@
+# READ FIRST — COLD START · **TWO LANES** (MEM 399, 2026-09-11T23:27:00Z, tip `aed9851`)
+
+> ⛔ **The shared tree `/home/yuqing/ctaNew` is NON-EXECUTING.** Build `wt-fwd` ·
+> valuation `wt-deval` · emit post-processors `wt-de2` · **anything else
+> inadmissible.** *Most fair-value files below exist **only** on the chain refs.*
+
+# ⚖️ AN OPEN DISAGREEMENT — **recorded, NOT settled**
+
+My round-398 reading (gate 4 failing) **contradicts REVIEW 202/206**.
+**REV is adjudicating at the code. Neither version is written here as settled.**
+
+**What I contribute is an experiment, not an opinion.** Two runs of DA's ledger,
+each in a worktree **cut at the ref** — *the method the ledger's own declaration
+states*:
+
+| head | result |
+|---|---|
+| **`f31dff0`** *(the head I measured at 398)* | **5 of 6** · gate 4 `CELLS_GREEN_BUT_PROPERTY_UNCOVERED` **1/7** · gates 5 & 6 SATISFIED, probes throwing **`IndexError`** |
+| **`db0f284`** *(current)* | **6 of 6** · **every gate probed** — 7/7, 9/9, 7/7, 7/7, 6/6, 11/11 · no IndexError |
+
+> ***So the disagreement may be about WHEN, not WHAT*** — three hours and many
+> commits apart. **My 398 caveat (that the IndexError might be a `wt-de2`
+> artefact) is REFUTED BY EXPERIMENT: it was a correct measurement of
+> `f31dff0`.** ***I did not measure R-926's head, so I say nothing about it.***
+
+### 🪞 And the worse half stands whatever REV rules
+At 398 I **read** the *worktree-cut-at-the-ref* clause, **quoted it in a flag**,
+and **ran from `wt-de2` anyway** — noticing only while writing the caveat.
+***Recording the correct method in the same round I departed from it is a
+failure a reader cannot catch, because the flag and the method agree on the
+page.***
+
+---
+
+# LANE 1 · CANCELLATION — verdict **FIXED** · day four in
+
+| arm | 09-07 | 09-08 | 09-09 | **09-10** | non-pos | **cap** |
+|---|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | −14,645.08 | −49,303.58 | +10,295.84 | **+1,741.26** | 2 | 0.453125 |
+| `HAZARD_OVER_SKEWED_REF` | +4,925.36 | −23,978.00 | +10,836.31 | **−6,575.49** | **2** | **0.453125** |
+
+`G_so_far 4` · `STOP_FOR_FUTILITY` · both **FUTILE**.
+
+> ### 🔔 HAZARD's cap MOVED — the first movement since the verdict was fixed.
+> Its second non-positive day takes it from **6-of-7 → 0.125** to **5-of-7 →
+> 0.453125** *(I recomputed both)*. ***Nothing about the verdict moved.*** The
+> verdict was fixed at day two; what moved is the best attainable **had the test
+> still been running** — and it moved **toward** futility, not away.
+
+# LANE 2 · FAIR VALUE — build gates green, **no score is evidence**
+
+**Step-6 freeze** `da_step6_full_pipeline_freeze_v1.json` exists on the chain ref
+and in `wt-de2` — **absent from the shared tree** — and computes
+**`freeze_is_effective: False`**, naming why:
+
+```
+§7 chain_link_not_implemented:pnl  — the last link has no implementation; nothing computes P&L
+§7 fee_rule                        — no fee appears anywhere in the frozen chain, so a P&L
+                                     computed from it would be gross
+market_facts.maker_fee_status = MAKER_FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_ARTIFACTS
+```
+
+***Both remaining gaps are ECONOMIC-ONLY.*** The predictive half is blocked by
+neither; the immutable-inputs manifest closed that blocker.
+
+> ### The two predicates are now doing exactly what they were separated for:
+> **`no_labelled_score_permitted: False`** — the §5 build barrier is down at 6/6 —
+> **and `score_is_evidence_permitted: False`**, because §11's step-6 freeze is
+> **NOT EFFECTIVE**. ***One boolean reading as blanket permission is how a build
+> gate becomes a licence; here the gates are green and no score is evidence.***
+> *The distinction stopped being theoretical the moment the sixth gate went
+> green.*
+
+**Standing class, named by REV three times:**
+***`CELLS_PASSING_IS_NOT_PROPERTIES_COVERED`*** — before a gate reads SATISFIED,
+each declared property maps to the cell covering it; **cells and
+`properties_covered` are separate fields.** *The false 6/6 that preceded the
+confirmed one counted **three unprobed rows**.*
+
 # READ FIRST — COLD START · **TWO LANES** (MEM 397, 2026-09-11T19:17:35Z, tip `96a1f16`)
 
 > # ⛔ THE SHARED TREE IS **NON-EXECUTING**
