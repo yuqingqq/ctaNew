@@ -723,3 +723,18 @@ except where marked USER-ONLY.
     seat's own notes within the hour and did not reach the next seat's script.
     FILING IS NOT RETENTION. A rule in the protocol reaches the next script; a
     note in a pane does not.** (R-900)
+
+47. **Two autonomous chains sharing one lock need an ARBITER, not politeness.**
+    (2026-09-11, three contention incidents in one night.) DE's probe against
+    BE's tape at 06:48; BE's fragment against DE's re-valuation at 07:35, where
+    a waiter **armed twenty minutes earlier** lost to a chain that arrived at
+    the right moment; and the DE waiter deadlock BE described.
+    **EACH WAITER WAS INDIVIDUALLY CORRECT AND THE PAIR STILL RACED TWICE.**
+    The durable-waiter discipline that fixed rule 37 produced waiters that
+    **outlive their turns and therefore COMPETE** — politeness cannot order
+    two processes that cannot see each other.
+    **The fix is a single QUEUE UNIT with a declared order, replacing per-seat
+    waiters racing on `fuser`.** Until it exists: **any seat launching a
+    lock-holding unit while another seat's waiter is armed DECLARES THE ORDER
+    TO THE COORDINATOR FIRST.** And order by **what is waiting on the result**,
+    not by who arrived — that is what an arbiter would do. (R-901)
