@@ -211,15 +211,21 @@ def quote_mapping(ref: str) -> dict:
         "import json,sys,inspect; sys.path.insert(0, %r)\n"
         "import de_fair_value_policy_seam as S\n"
         "o={}\n"
-        "q=S.quote_from(0.5, slug='s', generation_id='g', half_spread=0.01, priced_by='x')\n"
-        "o['anchor_is_p']= (q.anchor==0.5)\n"
+        "def q(v,**kw):\n"
+        "    return S.quote_from(v, slug='s', generation_id='g',\n"
+        "                        half_spread=kw.pop('hs',0.0001),\n"
+        "                        priced_by='c2', **kw)\n"
+        "up, dn = q(0.5237), q(0.5237, side='DOWN')\n"
+        "o['up_anchor']=up.anchor; o['up_bid']=up.bid; o['up_ask']=up.ask\n"
+        "o['dn_p_side']=dn.p_side; o['tick']=up.tick\n"
+        "hi, lo = q(0.999, hs=0.01), q(0.001, hs=0.01)\n"
+        "o['hi_ask']=hi.ask; o['lo_bid']=lo.bid\n"
+        "o['hi_bounded']=len(hi.bounded)>0 or len(lo.bounded)>0\n"
+        "x = q(0.5, hs=0.01, best_bid=0.60, best_ask=0.62, decision_ms=1000.0)\n"
+        "o['cross_withheld']=bool(x.withheld); o['cross_reason']=x.withheld_reason\n"
+        "o['effective_ms']=x.effective_ms; o['decision_ms']=x.decision_ms\n"
+        "o['latency_ms']=x.latency_ms\n"
         "o['sig']=list(inspect.signature(S.quote_from).parameters)\n"
-        "hi=S.quote_from(0.999, slug='s', generation_id='g', half_spread=0.01, priced_by='x')\n"
-        "o['ask_at_p999']=hi.ask\n"
-        "lo=S.quote_from(0.001, slug='s', generation_id='g', half_spread=0.01, priced_by='x')\n"
-        "o['bid_at_p001']=lo.bid\n"
-        "t=S.quote_from(0.5237, slug='s', generation_id='g', half_spread=0.0001, priced_by='x')\n"
-        "o['bid_odd']=t.bid; o['ask_odd']=t.ask\n"
         "print(json.dumps(o))\n" % pm)
     r = subprocess.run(["python3", "-c", code], cwd=pm, capture_output=True, text=True)
     _git("worktree", "remove", "--force", wt)
@@ -227,22 +233,23 @@ def quote_mapping(ref: str) -> dict:
         d = json.loads(r.stdout.strip().splitlines()[-1])
     except Exception as e:
         return {"error": f"{type(e).__name__}: {str(e)[:120]}", "raw": r.stderr[-200:]}
-    TICK = 0.01     # the legal binary tick this draft ASSUMES; see gaps below
+    TICK = d.get("tick") or 0.01
     props = {
-        "UP_uses_p": d["anchor_is_p"],
-        "DOWN_uses_1_minus_p": ("outcome" in d["sig"] or "side" in d["sig"]),
+        "UP_uses_p": abs(d["up_anchor"] - 0.5237) < 1e-12,
+        "DOWN_uses_1_minus_p": abs(d["dn_p_side"] - (1 - 0.5237)) < 1e-12,
         "bid_rounds_DOWN_to_the_legal_tick":
-            abs(d["bid_odd"] * (1 / TICK) - round(d["bid_odd"] * (1 / TICK))) < 1e-9,
+            abs(d["up_bid"] - 0.52) < 1e-9,
         "ask_rounds_UP_to_the_legal_tick":
-            abs(d["ask_odd"] * (1 / TICK) - round(d["ask_odd"] * (1 / TICK))) < 1e-9,
+            abs(d["up_ask"] - 0.53) < 1e-9,
         "prices_bounded_to_the_legal_binary_range":
-            (d["ask_at_p999"] <= 1.0 and d["bid_at_p001"] >= 0.0),
+            (d["hi_ask"] <= 1.0 and d["lo_bid"] >= 0.0),
+        "the_bound_applied_is_RECORDED_not_silent": bool(d["hi_bounded"]),
         "crossing_quote_emits_PLACE_WITHHELD_MARKETABLE_CROSS":
-            ("MARKETABLE_CROSS" in src and "PLACE_WITHHELD" in src),
-        "never_silently_clamped":
-            ("MARKETABLE_CROSS" in src),
+            bool(d["cross_withheld"]) and d["cross_reason"] == "MARKETABLE_CROSS",
         "no_zero_latency_privilege_for_candidate_induced_change":
-            ("latency" in src.lower()),
+            (d["effective_ms"] - d["decision_ms"]) == d["latency_ms"] > 0,
+        "the_tick_is_DECLARED_not_invented":
+            "tick" in d["sig"] and TICK == 0.01,
     }
     return {
         "driven_against": "live/pm_research/de_fair_value_policy_seam.py",
@@ -256,10 +263,11 @@ def quote_mapping(ref: str) -> dict:
         "n_satisfied": sum(1 for v in props.values() if v),
         "n_declared": len(props),
         "unsatisfied": sorted(k for k, v in props.items() if not v),
-        "THE_TICK_IS_ASSUMED_NOT_DECLARED":
-            f"this probe assumed tick={TICK}; no fair-value module declares a "
-            f"legal tick, so the rounding predicates are measured against an "
-            f"assumption and cannot be a freeze input until one is declared",
+        "THE_TICK_IS_DECLARED_AND_READ": (
+            f"tick={TICK}, read by the seam from DA's landed declaration "
+            f"(`da_market_facts_v1.json`). The seam REFUSES "
+            f"LEGAL_TICK_IS_NOT_DECLARED rather than inventing one, which is "
+            f"why this probe could not run until the tick was established."),
     }
 
 
@@ -574,7 +582,15 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
                              "why_not_established": mf.get("maker_fee_why_not"),
                              "established_by": MARKET_FACTS,
                              "sha256": mf.get("sha256")} if mf.get("present") else None,
-        "quote_parameters": qm if not qm.get("unsatisfied") else MISSING,
+        # A CRASHED PROBE IS NOT A PASS. `not qm.get("unsatisfied")` was True
+        # when the key was ABSENT, so an ERRORED probe resolved this field and
+        # removed eight gaps at once -- the `else: SATISFIED` defect of DA 280,
+        # in this module, firing in my own favour. The field now requires the
+        # probe to have RUN: a `properties` block present AND nothing unmet.
+        "quote_parameters": (qm if (isinstance(qm.get("properties"), dict)
+                                    and qm.get("unsatisfied") == [])
+                             else MISSING),
+        "quote_parameters_probe_error": qm.get("error"),
         "null_predicate": null_predicate(),
         "success_predicate": success_predicate(),
     }

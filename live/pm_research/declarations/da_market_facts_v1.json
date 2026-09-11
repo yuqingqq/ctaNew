@@ -1,7 +1,10 @@
 {
  "protocol": "P003_DA_MARKET_FACTS_V1",
  "dispatch": "DA 283",
- "legal_tick": {
+ "legal_tick": 0.01,
+ "legal_tick_units": "USDC per share of a binary outcome token",
+ "legal_tick_consumer": "de_fair_value_policy_seam.legal_tick() reads this key as a number; the evidence is under `legal_tick_evidence`",
+ "legal_tick_evidence": {
   "legal_tick": "0.01",
   "established": true,
   "declared_instrument": {

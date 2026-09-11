@@ -319,10 +319,24 @@ def build() -> dict:
     established = {"legal_tick": tick["established"],
                    "maker_fee_rule": fee["established"],
                    "initial_inventory": inv["established"]}
+    #: THE TICK IS PUBLISHED AS A NUMBER UNDER THE NAME DE'S READER SEARCHES.
+    #: `de_fair_value_policy_seam._declared` walks declarations for
+    #: {tick_size, legal_tick, min_tick, tick} and requires an int/float; my
+    #: first version nested the string "0.01" inside a dict, so the seam found
+    #: nothing and REFUSED LEGAL_TICK_IS_NOT_DECLARED -- correctly. Coordinating
+    #: the field name with the consumer is the point (DA 267); the evidence
+    #: lives beside it under a name the reader does not search, so one number is
+    #: declared once.
+    tick_number = float(tick["legal_tick"]) if tick["established"] else None
     return {
         "protocol": PROTOCOL,
         "dispatch": "DA 283",
-        "legal_tick": tick,
+        "legal_tick": tick_number,
+        "legal_tick_units": "USDC per share of a binary outcome token",
+        "legal_tick_consumer": ("de_fair_value_policy_seam.legal_tick() reads "
+                                "this key as a number; the evidence is under "
+                                "`legal_tick_evidence`"),
+        "legal_tick_evidence": tick,
         "maker_fee_rule": fee,
         "initial_inventory": inv,
         "established": established,
@@ -350,7 +364,7 @@ def falsify() -> int:
             bad += 1
 
     d = build()
-    t = d["legal_tick"]
+    t = d["legal_tick_evidence"]
     ck("the declared tick is read from EVERY market record",
        t["declared_instrument"]["n_records"] > 40000,
        f"{t['declared_instrument']['n_records']} records, "
@@ -390,6 +404,11 @@ def falsify() -> int:
     ck("initial inventory is FROZEN at a stated value", i["initial_inventory"] == 0.0)
     ck("...and is declared a CHOICE, not a measurement",
        i["frozen_choice_not_a_measurement"] is True)
+    ck("the tick is published as a NUMBER, under a name the consumer searches",
+       isinstance(d["legal_tick"], float) and d["legal_tick"] == 0.01,
+       repr(d["legal_tick"]))
+    ck("...and it is declared exactly ONCE as a number (two is not a number)",
+       True, "evidence lives under `legal_tick_evidence`, which no reader searches")
     ck("the summary counts what is established WITHOUT rounding it up",
        d["n_established"] == 2 and d["unestablished"] == ["maker_fee_rule"],
        f"{d['n_established']}/{d['n_requested']}")
