@@ -57,6 +57,12 @@ DAY_SLICE_FIELD = "day_slice"
 #: v3 superseded v1 and a reader walking backwards never saw v2 -- which
 #: was the FREEZE-BUILT book. Ordering is the provenance; a fork loses it.
 CHAIN_FORKED = "SUPERSESSION_CHAIN_FORKED"
+#: A SECOND LINEAGE IS NOT A FORK (DE 359). Chaining the landed and
+#: freeze-built records into one line would manufacture the confusion the
+#: chain exists to cure, so totality is scoped PER LINEAGE and the
+#: lineages are joined by an explicit cross-link. A second lineage that
+#: nothing links to is its own named defect -- not a fork, not fine.
+LINEAGE_NOT_LINKED = "SECOND_LINEAGE_NOT_LINKED_FROM_THE_NEWEST_RECORD"
 LANDED = "landed"
 FREEZE_BUILT = "freeze_built"
 ARM_MISMATCH = "DAY_RECORD_ARMS_DISAGREE_ON_THE_BOOK"
@@ -138,6 +144,17 @@ def day_records(day: str, derived: Path = DERIVED) -> list:
     return out
 
 
+def lineage_of_record(doc: dict) -> str:
+    """A record's lineage, from the record itself."""
+    bl = doc.get("book_lineage") or {}
+    if bl.get("this_record"):
+        return str(bl["this_record"])
+    adm = doc.get("admitted_by")
+    adm1 = (next((v for v in adm.values() if v), None)
+            if isinstance(adm, dict) else adm)
+    return FREEZE_BUILT if adm1 else LANDED
+
+
 def walk_supersession(day: str, derived: Path = DERIVED) -> dict:
     """From the NEWEST record, does `supersedes` reach every other one?
 
@@ -169,18 +186,46 @@ def walk_supersession(day: str, derived: Path = DERIVED) -> dict:
         for extra in (doc.get("also_supersedes") or []):
             if extra.get("path"):
                 queue.append(Path(extra["path"]))
-    unreachable = [f.name for f in files if str(f) not in seen]
+    # TOTALITY IS PER LINEAGE. A record of the OTHER lineage that the walk
+    # does not reach is not a fork; it must instead be LINKED from the
+    # newest record, and that is a different name.
+    by_lineage: dict = {}
+    for f in files:
+        by_lineage.setdefault(
+            lineage_of_record(json.loads(f.read_text())), []).append(f)
+    mine = lineage_of_record(json.loads(newest.read_text()))
+    unreachable = [f.name for f in by_lineage.get(mine, [])
+                   if str(f) not in seen]
+    newest_doc = json.loads(newest.read_text())
+    linked = {Path(str(x.get("path"))).name
+              for x in ((newest_doc.get("book_lineage") or {})
+                        .get("other_books_for_this_day") or [])}
+    linked |= {Path(str(x.get("path"))).name
+               for x in (newest_doc.get("also_supersedes") or [])}
+    other_lineages = {k: [f.name for f in v]
+                      for k, v in by_lineage.items() if k != mine}
+    unlinked = sorted(n for names in other_lineages.values()
+                      for n in names if n not in linked)
     return {"day": day, "newest": newest.name, "walk": walk,
             "n_records": len(files), "unreachable": unreachable,
+            "lineage_of_newest": mine,
+            "lineages": {k: [f.name for f in v]
+                         for k, v in by_lineage.items()},
+            "other_lineages_linked_from_the_newest": not unlinked,
+            "unlinked_other_lineage": unlinked,
             "total": not unreachable,
             "refusal": (f"REFUSED {CHAIN_FORKED}: walking `supersedes` "
-                        f"from {newest.name} never reaches {unreachable}"
-                        if unreachable else None)}
+                        f"from {newest.name} never reaches {unreachable} "
+                        f"within the {mine} lineage"
+                        if unreachable else
+                        (f"REFUSED {LINEAGE_NOT_LINKED}: {unlinked} are a "
+                         f"second lineage that {newest.name} does not link"
+                         if unlinked else None))}
 
 
 def assert_chain_total(day: str, derived: Path = DERIVED) -> dict:
     w = walk_supersession(day, derived)
-    if not w["total"]:
+    if not w["total"] or w["unlinked_other_lineage"]:
         raise SystemExit(w["refusal"])
     return w
 
@@ -250,12 +295,27 @@ def day_slice(day: str, cells: dict) -> dict:
     if not ledger.is_file():
         return {"available": False, "why": f"ledger absent at {ledger}"}
     d0 = calendar.timegm(time.strptime(day, "%Y-%m-%d"))
+    # THE HEAD-RESOLVED DEFINITION, DA 270. A pre-resolution slice counts a
+    # `gave_up` stub BESIDE ITS OWN SUPERSESSION -- 09-09 has fourteen such
+    # slugs, 2,030 lines for 2,016 markets -- and that is not the day's
+    # settled state. The definition is imported from DA's module, never
+    # re-implemented: two canonicalisations of one digest is the defect
+    # that produced 26f02bda against 7eb54006.
+    try:
+        import da_fair_value_gate1_labels as _G
+        _slice = lambda n: _G.head_resolved_day_slice(ledger, int(n), day)
+        _definition = "da_fair_value_gate1_labels.head_resolved_day_slice"
+    except ModuleNotFoundError:
+        return {"available": False,
+                "why": "DAY_SLICE_DEFINITION_NOT_ON_THIS_TREE: "
+                       "da_fair_value_gate1_labels is absent, so the ONE "
+                       "head-resolved definition cannot be reached"}
     per_arm = {}
     for a in arms:
         n = ws[a].get("n_records")
         if not isinstance(n, int):
             return {"available": False, "why": f"{a} names no n_records"}
-        per_arm[a] = CD.day_subset_digest(ledger, int(n), d0, d0 + 86400)
+        per_arm[a] = _slice(n)
     shas = {v["sha256"] for v in per_arm.values()}
     return {"available": True, "per_arm": per_arm,
             "arms_agree_on_the_day_slice": len(shas) == 1,
@@ -263,7 +323,11 @@ def day_slice(day: str, cells: dict) -> dict:
             "n_day_records": per_arm[arms[0]]["n_day_records"],
             "whole_file_sha256_by_arm": {a: ws[a].get("sha256") for a in arms},
             "day_start": d0, "day_end": d0 + 86400,
-            "measured_by": "de_combine_day_cells.day_subset_digest"}
+            "n_lines_before_resolution": per_arm[arms[0]].get(
+                "n_lines_before_resolution"),
+            "pre_resolution_duplicate_slugs": per_arm[arms[0]].get(
+                "PRE_RESOLUTION_DUPLICATE_SLUGS"),
+            "measured_by": _definition}
 
 
 def _receipt_day_slice(day: str, derived: Path) -> dict:
@@ -759,6 +823,85 @@ def falsify() -> int:
     ck("  and the check REFUSES by name rather than reporting a count",
        CHAIN_FORKED in refused and "_v2.json" in refused,
        refused[:70])
+    # PER-LINEAGE SCOPING (DE 359): a second lineage is not a fork.
+    with tempfile.TemporaryDirectory() as td:
+        fv = Path(td) / "fwd_v2"
+        fv.mkdir(parents=True)
+        def rec2(name, sup=None, lineage=LANDED, also=()):
+            d = {"day": "2026-09-29", "book_sha256": "c" * 64, "cells": {},
+                 "book_lineage": {"this_record": lineage}}
+            if sup:
+                d["supersedes"] = {"path": str(fv / sup),
+                                   "sha256": _sha(fv / sup)}
+            if also:
+                d["book_lineage"]["other_books_for_this_day"] = [
+                    {"path": str(fv / x), "sha256": _sha(fv / x)}
+                    for x in also]
+            (fv / name).write_text(json.dumps(d))
+        rec2("p003_de_forward_value_20260929.json", lineage=FREEZE_BUILT)
+        rec2("p003_de_forward_value_20260929_v2.json",
+             "p003_de_forward_value_20260929.json", LANDED,
+             also=("p003_de_forward_value_20260929.json",))
+        two_lineages = walk_supersession("2026-09-29", Path(td))
+        rec2("p003_de_forward_value_20260929_v3.json",
+             "p003_de_forward_value_20260929.json", LANDED,
+             also=("p003_de_forward_value_20260929.json",))
+        forked_in_lineage = walk_supersession("2026-09-29", Path(td))
+    # THE UNLINKED CASE GETS ITS OWN DIRECTORY: in the one above a fork is
+    # already present, and a cell whose fixture carries two defects cannot
+    # say which one it detected.
+    with tempfile.TemporaryDirectory() as td2:
+        fv = Path(td2) / "fwd_v2"
+        fv.mkdir(parents=True)
+        def rec3(name, sup=None, lineage=LANDED):
+            d = {"day": "2026-09-29", "book_sha256": "c" * 64, "cells": {},
+                 "book_lineage": {"this_record": lineage}}
+            if sup:
+                d["supersedes"] = {"path": str(fv / sup),
+                                   "sha256": _sha(fv / sup)}
+            (fv / name).write_text(json.dumps(d))
+        rec3("p003_de_forward_value_20260929.json", lineage=FREEZE_BUILT)
+        rec3("p003_de_forward_value_20260929_v2.json", lineage=LANDED)
+        rec3("p003_de_forward_value_20260929_v3.json",
+             "p003_de_forward_value_20260929_v2.json", LANDED)
+        unlinked = walk_supersession("2026-09-29", Path(td2))
+    ck("a SECOND LINEAGE is not a fork -- the walk stays total",
+       two_lineages["total"]
+       and set(two_lineages["lineages"]) == {LANDED, FREEZE_BUILT}
+       and two_lineages["other_lineages_linked_from_the_newest"],
+       str({k: len(v) for k, v in two_lineages["lineages"].items()}))
+    ck("a fork WITHIN one lineage still refuses, naming the file",
+       not forked_in_lineage["total"]
+       and forked_in_lineage["unreachable"]
+       == ["p003_de_forward_value_20260929_v2.json"],
+       str(forked_in_lineage["unreachable"]))
+    ck("a second lineage the newest record does NOT link is its own name",
+       unlinked["total"]
+       and unlinked["unlinked_other_lineage"]
+       == ["p003_de_forward_value_20260929.json"]
+       and LINEAGE_NOT_LINKED in (unlinked["refusal"] or ""),
+       str(unlinked["unlinked_other_lineage"]))
+
+    # THE TWO SLICE DEFINITIONS ARE NOT INTERCHANGEABLE, on real data.
+    _cells9 = cells_for("2026-09-09", DERIVED / "fwd_v2")
+    _n9 = (_cells9["CONDVALUE_X_SKEW"]["result"]["winner_source"]["n_records"])
+    import calendar as _c2
+    _d09 = _c2.timegm(time.strptime("2026-09-09", "%Y-%m-%d"))
+    _raw = CD.day_subset_digest(
+        Path("/home/yuqing/ctaNew/data/pm_5min/resolutions.jsonl"),
+        int(_n9), _d09, _d09 + 86400)
+    _head = day_slice("2026-09-09", _cells9)
+    ck("head resolution CHANGES the slice on real data, so the two "
+       "definitions are not interchangeable",
+       _raw["sha256"] != _head["sha256"]
+       and _raw["n_day_records"] == 2030 and _head["n_day_records"] == 2016,
+       f"pre-resolution {_raw['n_day_records']} rows "
+       f"{_raw['sha256'][:12]} vs head-resolved {_head['n_day_records']} "
+       f"{_head['sha256'][:12]}")
+    ck("  and the duplicates are COUNTED, never silently deduped",
+       (_head["pre_resolution_duplicate_slugs"] or {}).get("n_slugs") == 14,
+       str((_head["pre_resolution_duplicate_slugs"] or {}).get("n_slugs")))
+
     for _d in ("2026-09-07", "2026-09-08", "2026-09-09"):
         _w = walk_supersession(_d)
         if not _w["total"]:
