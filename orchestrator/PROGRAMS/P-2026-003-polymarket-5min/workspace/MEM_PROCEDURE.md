@@ -198,3 +198,23 @@ my own sequence:**
 **Never leave a state-file edit uncommitted across another command.** This is a
 shared tree with several seats' tooling running in it; an uncommitted edit is not
 state, it is a gamble.
+
+## Round 357 — check the register BEFORE re-deriving, and date every convergence
+
+DA 221: **a filed result does not reach the seat's own next claim, including when
+the seat is the author** — because filing discharges the feeling of having
+handled it, and the artifact then sits unconsulted. Better indexing does not fix
+this.
+
+**I am an instance.** At round 354 I presented my own 2-of-10 hashing as
+verification without recording that **R-888 had held that result since the
+previous morning** (`0da40bb`, 09-10 07:17). At rounds 344 and 352 I claimed
+convergence without stating which leg was filed first.
+
+**Required from now on, both halves:**
+
+1. **Before re-deriving anything, grep `COORDINATION.md` for it.** If the
+   register already holds it, say so and state what my instrument adds.
+2. **Every convergence claim carries the filing order** — when each leg was
+   first filed, and whether the later party had access. Differing instruments is
+   necessary and insufficient.
