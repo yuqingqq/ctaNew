@@ -584,5 +584,16 @@ except Exception:
     echo "exit=$rc for $d  <-- INSTRUMENT FAILURE: NO PARSEABLE VERDICT NAMING $d. NOTHING WAS VERIFIED." >> "$LOG"
   fi
 done
+# DA 251 (REV 157(b)): every RUNNING unit's ExecStart paths, stat'd against the
+# unit's own start. RECORDED, NOT FATAL, and that is deliberate: this script's
+# job is producing verdicts and masks, and a drifted scratchpad script in some
+# unrelated unit must never be the reason a mask is missing at valuation time.
+# It does not touch $broke. Run `da_unit_script_drift.py` on demand for the
+# refusal form.
+{
+  echo "--- unit script drift $(date -u +%FT%TZ) ---"
+  "$PY" "$SELFDIR/da_unit_script_drift.py" --json 2>&1 || true
+} >> "$LOG"
+
 echo "done $(date -u +%FT%TZ); worst_instrument_rc=$broke" >> "$LOG"
 exit "$broke"
