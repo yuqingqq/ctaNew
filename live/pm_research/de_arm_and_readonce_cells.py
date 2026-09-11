@@ -106,6 +106,22 @@ def falsify() -> int:
        set(pins) == {"day_read_state_attestation",
                      "forward_test_declaration"},
        ",".join(sorted(pins)))
+    # DE 324: ONE VERDICT, WHATEVER THE CWD. The self-check refused from
+    # every directory because its digest loop still used the literal
+    # PIPELINE_COMMIT (now a sentinel) while the HEAD check used the
+    # resolved frozen commit -- two sources of truth in one function.
+    import subprocess as _sp
+    verdicts = []
+    for cwd in ("/tmp", str(HERE.parents[1])):
+        r = _sp.run(["/home/yuqing/pricer-sol/venv/bin/python3", "-c",
+                     "import sys; sys.path.insert(0, %r)\n"
+                     "import de_forward_value_day as V\n"
+                     "print(V._PREFLIGHT['head'])" % str(HERE)],
+                    capture_output=True, text=True, cwd=cwd)
+        verdicts.append((r.returncode, r.stdout.strip()))
+    ck("the self-check gives ONE verdict from /tmp and from the tree root",
+       verdicts[0] == verdicts[1] and verdicts[0][0] == 0,
+       f"{verdicts[0][1][:12]}")
     print(f"\n{ok}/{n} cells pass")
     return 0 if ok == n else 1
 

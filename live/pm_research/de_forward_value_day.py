@@ -33,7 +33,35 @@ import de_multiday_gate1_runner as R      # noqa: E402
 import de_settlement_control_run as SC    # noqa: E402
 
 PROTOCOL = "P003_DE_FORWARD_VALUE_DAY_V1"
-PIPELINE_COMMIT = "7efea16b39b89c2ddececc90b68e2f206d6c3500"
+def _frozen_commit() -> str:
+    """The frozen commit, READ FROM DA's declaration by declared identity.
+
+    A literal here froze the valuation against a commit it no longer is:
+    V2 compared its own seven modules to 7ed5a90 and refused ITSELF. The
+    commit is a declaration, resolved through the freeze chain like every
+    other identity, so the freeze can move without a code edit.
+    """
+    import de_multiday_gate1_runner as _R
+    d = HERE / "declarations"
+    pin = (_R.resolve_declaration_pins(d) or {}).get("code_freeze_declaration")
+    f = d / (Path(str(pin["path"])).name if pin else
+             "da_code_freeze_declaration_v1.json")
+    if pin and pin.get("sha256") and f.is_file():
+        if hashlib.sha256(f.read_bytes()).hexdigest() != pin["sha256"]:
+            raise ValuationRefused(
+                f"REFUSED {WRONG_TREE}: {f.name} is not the declared "
+                f"identity {str(pin['sha256'])[:16]}.")
+    if not f.is_file():
+        raise ValuationRefused(
+            f"REFUSED {WRONG_TREE}: no code-freeze declaration at {f}.")
+    # DA's declarations carry commits as "<sha> -- <prose>" (BUILD_PIN does
+    # too). Take the sha, not the sentence: passing the whole string to git
+    # made every module read ABSENT and the self-check blamed six modules
+    # for one parsing mistake.
+    return str(json.loads(f.read_text())["FREEZE_COMMIT"]).split()[0]
+
+
+PIPELINE_COMMIT = "READ_FROM_THE_CODE_FREEZE_DECLARATION"
 WRONG_TREE = "VALUATION_COMPUTING_MODULES_ARE_NOT_AT_THE_PIPELINE_COMMIT"
 RELOCATED = "VALUATION_RAN_FROM_A_DIFFERENT_TREE_THAN_ITS_LAUNCHER_SELECTED"
 NO_PREFLIGHT = "VALUATION_RECORD_CARRIES_NO_PREFLIGHT_SO_NOTHING_WAS_CHECKED"
@@ -97,21 +125,22 @@ def assert_computing_modules_at_the_pipeline_commit(modules=None) -> dict:
     # admissible ONLY when every computing module is byte-identical to the
     # pin -- which the digest loop below proves. A descendant that moved a
     # computing module is refused exactly as a stranger would be.
-    descendant = head != PIPELINE_COMMIT and subprocess.run(
+    frozen = _frozen_commit()
+    descendant = head != frozen and subprocess.run(
         ["git", "-C", tree, "merge-base", "--is-ancestor",
-         PIPELINE_COMMIT, head], capture_output=True).returncode == 0
-    if head != PIPELINE_COMMIT and not descendant:
+         frozen, head], capture_output=True).returncode == 0
+    if head != frozen and not descendant:
         raise ValuationRefused(
             f"REFUSED {WRONG_TREE}: the computing modules resolved from "
             f"{tree}, whose HEAD is {head[:12] or 'NONE'}, and the ruled "
-            f"pipeline commit is {PIPELINE_COMMIT[:12]}. A valuation from "
+            f"pipeline commit is {frozen[:12]}. A valuation from "
             f"the wrong tree produces a number from the wrong instrument "
             f"and the book's provenance still verifies -- so nothing else "
             f"would catch it.")
     bad = []
     for name, f in seen.items():
         r = subprocess.run(["git", "-C", tree, "show",
-                            f"{PIPELINE_COMMIT}:live/pm_research/{name}"],
+                            f"{frozen}:live/pm_research/{name}"],
                            capture_output=True)
         if r.returncode != 0 or hashlib.sha256(r.stdout).hexdigest() != _sha(f):
             bad.append(name)
@@ -164,7 +193,7 @@ def computing_module_provenance() -> dict:
     for name in COMPUTING_MODULES:
         here = _sha(HERE / name)
         r = subprocess.run(["git", "-C", str(HERE),
-                            "show", f"{PIPELINE_COMMIT}:live/pm_research/{name}"],
+                            "show", f"{frozen}:live/pm_research/{name}"],
                            capture_output=True)
         there = (hashlib.sha256(r.stdout).hexdigest()
                  if r.returncode == 0 else None)
