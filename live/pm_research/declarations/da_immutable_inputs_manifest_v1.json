@@ -1,0 +1,207 @@
+{
+ "protocol": "P003_DA_IMMUTABLE_INPUTS_MANIFEST_V1",
+ "dispatch": "DA 284 / REVIEW 208",
+ "as_of_utc": "2026-09-11T21:33:16Z",
+ "data_root": "/home/yuqing/ctaNew",
+ "days_sealed": [
+  "20260909",
+  "20260910",
+  "20260911"
+ ],
+ "ledgers": [
+  {
+   "input": "markets",
+   "path": "data/pm_5min/markets.jsonl",
+   "present": true,
+   "seal_kind": "PREFIX",
+   "sealed_len": 72949047,
+   "prefix_sha256": "1427cdcfe6173589684a7796667c846603b4ae007a935242e426524ed0700ef5",
+   "as_of_mtime_utc": "2026-09-11T21:30:21Z",
+   "reads": [
+    "immutable_inputs",
+    "labels_statuses",
+    "quote_mapping"
+   ],
+   "why": "market definitions: window, tokens, and the legal tick the seam reads",
+   "append_is_legal": true,
+   "verify_rule": "re-digest the first `sealed_len` bytes: equal means UNCHANGED or APPEND; different or shorter means EDITED"
+  },
+  {
+   "input": "resolutions",
+   "path": "data/pm_5min/resolutions.jsonl",
+   "present": true,
+   "seal_kind": "PREFIX",
+   "sealed_len": 10046209,
+   "prefix_sha256": "228d9c4f5de67845374f0376277aeea693c13af3a81c494155d1293db7038798",
+   "as_of_mtime_utc": "2026-09-11T21:29:51Z",
+   "reads": [
+    "labels_statuses",
+    "score"
+   ],
+   "why": "the OFFICIAL settled outcome -- \u00a78's labels, its day-eligibility input, and the outcome the paired score is joined against",
+   "append_is_legal": true,
+   "verify_rule": "re-digest the first `sealed_len` bytes: equal means UNCHANGED or APPEND; different or shorter means EDITED"
+  },
+  {
+   "input": "collector_runs",
+   "path": "data/pm_5min/collector_runs.jsonl",
+   "present": true,
+   "seal_kind": "PREFIX",
+   "sealed_len": 2111,
+   "prefix_sha256": "8b3063379d2a3806e06f5297cf5c4d7f5f530618633694a15877b1e7afe4a428",
+   "as_of_mtime_utc": "2026-08-31T22:02:21Z",
+   "reads": [
+    "immutable_inputs"
+   ],
+   "why": "collector/stamp boundaries; era purity is a per-event predicate (rule 5)",
+   "append_is_legal": true,
+   "verify_rule": "re-digest the first `sealed_len` bytes: equal means UNCHANGED or APPEND; different or shorter means EDITED"
+  },
+  {
+   "input": "collector_gaps",
+   "path": "data/pm_5min/collector_gaps.jsonl",
+   "present": true,
+   "seal_kind": "PREFIX",
+   "sealed_len": 6811740,
+   "prefix_sha256": "3bb89c122f4a680d849cf49d0640a9a05118ae3a6ae40f39c8aa00dbe058b652",
+   "as_of_mtime_utc": "2026-09-11T21:11:45Z",
+   "reads": [
+    "immutable_inputs",
+    "labels_statuses"
+   ],
+   "why": "gap windows -- the statuses that make an exclusion a status, not a drop",
+   "append_is_legal": true,
+   "verify_rule": "re-digest the first `sealed_len` bytes: equal means UNCHANGED or APPEND; different or shorter means EDITED"
+  }
+ ],
+ "captures": [
+  {
+   "input": "pm_book_tape",
+   "path_template": "data/pm_5min/raw/{day}",
+   "pattern": "*.jsonl.gz",
+   "seal_kind": "CONTENT",
+   "reads": [
+    "fairprice",
+    "fallback",
+    "actions",
+    "quote_mapping"
+   ],
+   "why": "the PM order book -- Identity, the mandatory baseline",
+   "by_day": {
+    "20260909": {
+     "present": true,
+     "n_files": 2016,
+     "bytes": 4695968236,
+     "day_sha256": "d24ebcecd6b011c19b2509dbc3bea0adbe0be7838e77ef4b6aa7a1db09b95088",
+     "seal_kind": "CONTENT",
+     "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
+    },
+    "20260910": {
+     "present": true,
+     "n_files": 2016,
+     "bytes": 5027534732,
+     "day_sha256": "555e447b911d30dc69793b78126e9a5642a484c5bb90108e544e267c8007b321",
+     "seal_kind": "CONTENT",
+     "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
+    },
+    "20260911": {
+     "present": true,
+     "n_files": 1806,
+     "bytes": 4712298827,
+     "day_sha256": "e5c2e91e9c207bab68fe33fea8938d38ff8348dc5cfa835e3b776e8dd2b66d1b",
+     "seal_kind": "CONTENT",
+     "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
+    }
+   }
+  },
+  {
+   "input": "chainlink_prices",
+   "path_template": "data/pm_5min/prices/crypto_prices",
+   "pattern": "{day}_*.csv.gz",
+   "seal_kind": "CONTENT",
+   "reads": [
+    "labels_statuses"
+   ],
+   "why": "the settlement feed: PM binaries settle on Chainlink, never Binance",
+   "by_day": {
+    "20260909": {
+     "present": true,
+     "n_files": 24,
+     "bytes": 5625626,
+     "day_sha256": "1f9e30b1c306e07f72e5be34c3796a5efd4358011e9ef3f816cee0fc6aac3eef",
+     "seal_kind": "CONTENT",
+     "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
+    },
+    "20260910": {
+     "present": true,
+     "n_files": 24,
+     "bytes": 5619607,
+     "day_sha256": "3d6799efa0d06e000287bd37cd7e8e87e8fedfc89c89b706b0cba4d627ea4026",
+     "seal_kind": "CONTENT",
+     "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
+    },
+    "20260911": {
+     "present": true,
+     "n_files": 21,
+     "bytes": 4953676,
+     "day_sha256": "cc3774a38faae8b98e593d124455b5faf5846ffd29470028b2c2c399da16a1eb",
+     "seal_kind": "CONTENT",
+     "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
+    }
+   }
+  },
+  {
+   "input": "binance_bookticker",
+   "path_template": "data/mm_hf/raw/bookTicker",
+   "pattern": "*/{day}_*.csv.gz",
+   "seal_kind": "CONTENT",
+   "reads": [
+    "sigma",
+    "fairprice"
+   ],
+   "why": "C2's input: bn_bookticker_mid and the 30-minute sigma",
+   "by_day": {
+    "20260909": {
+     "present": true,
+     "n_files": 384,
+     "bytes": 1735705959,
+     "day_sha256": "b8c242544c776b631c41aa5ccee810fffd8326ee5e9d90c8235c39b2d7292e46",
+     "seal_kind": "CONTENT",
+     "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
+    },
+    "20260910": {
+     "present": true,
+     "n_files": 384,
+     "bytes": 1625168771,
+     "day_sha256": "af64d5c67c6db3231adb1f9662df34040bbc66856c5d3b2bac46f46c0fcce6f9",
+     "seal_kind": "CONTENT",
+     "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
+    },
+    "20260911": {
+     "present": true,
+     "n_files": 336,
+     "bytes": 1724795430,
+     "day_sha256": "3f104219130507551c5d237c41618a79ee9b6d7320775dc39974b54ca0969386",
+     "seal_kind": "CONTENT",
+     "covers": "every file digested; the day digest is over the sorted (name, size, sha256) triples, so an added, removed or altered file all change it"
+    }
+   }
+  }
+ ],
+ "predictive_links_covered": [
+  "actions",
+  "fairprice",
+  "fallback",
+  "immutable_inputs",
+  "labels_statuses",
+  "score",
+  "sigma"
+ ],
+ "predictive_links_not_covered": [],
+ "every_predictive_link_has_a_sealed_input": true,
+ "all_enumerated_inputs_present_and_sealed": true,
+ "n_inputs": 7,
+ "seconds_to_build": 145.3,
+ "WHAT_A_SEAL_DOES_NOT_CLAIM": "it pins the BYTES the chain read. It does not certify they are correct, complete, or free of collector gaps -- gap statuses are a separate predicate and stay one. A seal answers 'is this the same input?', never 'is this a good input?'",
+ "WHY_TWO_SEAL_SHAPES": "append-only ledgers grow while the programme runs, so a whole-file digest ages the moment it is written; per-day captures are closed and can be digested in full"
+}

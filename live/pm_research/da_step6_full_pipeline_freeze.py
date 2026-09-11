@@ -66,7 +66,8 @@ MISSING = "MISSING"
 #: §7's chain, in order, mapped to the files that implement each link. A link
 #: with no file is a GAP and is computed as one -- never narrated away.
 CHAIN = (
-    ("immutable_inputs", ()),                    # source manifests -- see below
+    ("immutable_inputs",
+     ("live/pm_research/da_immutable_inputs_manifest.py",)),
     ("labels_statuses", ("live/pm_research/da_fair_value_gate1_labels.py",)),
     ("actions", ("live/pm_research/de_canonical_action_population.py",
                  "live/pm_research/de_fair_value_actions.py")),
@@ -90,6 +91,97 @@ REQUIRED_FIELDS = (
     "tick_rounding", "latency", "fee_rule", "quote_parameters",
     "null_predicate", "success_predicate",
 )
+
+
+
+# ==========================================================================
+# THE ENUMERATIONS ARE PINNED.                                    (DA 284)
+#
+# REVIEW 208 SHRANK `REQUIRED_FIELDS` and `CHAIN` and drove the gap count from
+# 15 to 8 with every underlying gap still real -- because NOTHING pinned their
+# sizes or the ten link names. A gap count is only as strong as the enumeration
+# it is counted over, and an enumeration that can quietly shrink is a way to
+# report progress by deleting the questions.
+# ==========================================================================
+
+ENUMERATION_SHRANK = "FREEZE_ENUMERATION_DOES_NOT_MATCH_ITS_PIN"
+
+CHAIN_LINKS_PINNED = (
+    "immutable_inputs", "labels_statuses", "actions", "sigma", "fairprice",
+    "fallback", "score", "quote_mapping", "replay", "pnl",
+)
+
+REQUIRED_FIELDS_PINNED = frozenset({
+    "all_file_hashes", "commit_ref", "candidate_count", "action_key",
+    "epsilon", "status_grammar", "source_manifests", "initial_inventory",
+    "tick_rounding", "latency", "fee_rule", "quote_parameters",
+    "null_predicate", "success_predicate",
+})
+
+#: §7's quote-mapping clauses. A probe that FAILS leaves ALL of these unmet --
+#: never zero of them, which is what an absent list used to mean.
+QUOTE_CLAUSES_PINNED = (
+    "UP_uses_p", "DOWN_uses_1_minus_p",
+    "bid_rounds_DOWN_to_the_legal_tick", "ask_rounds_UP_to_the_legal_tick",
+    "prices_bounded_to_the_legal_binary_range",
+    "the_bound_applied_is_RECORDED_not_silent",
+    "crossing_quote_emits_PLACE_WITHHELD_MARKETABLE_CROSS",
+    "no_zero_latency_privilege_for_candidate_induced_change",
+    "the_tick_is_DECLARED_not_invented",
+)
+
+
+def assert_enumerations_intact(chain=None, fields=None, clauses=None) -> dict:
+    """REFUSE if any enumeration no longer matches its pin. Injectable so the
+    refusal can be shown to fire (rule 15)."""
+    chain = CHAIN if chain is None else chain
+    fields = REQUIRED_FIELDS if fields is None else fields
+    clauses = QUOTE_CLAUSES_PINNED if clauses is None else clauses
+    bad = []
+    live = tuple(l for l, _ in chain)
+    if live != CHAIN_LINKS_PINNED:
+        bad.append(f"chain links {live} != pinned {CHAIN_LINKS_PINNED}")
+    if frozenset(fields) != REQUIRED_FIELDS_PINNED:
+        bad.append(f"required fields differ: missing "
+                   f"{sorted(REQUIRED_FIELDS_PINNED - frozenset(fields))}, extra "
+                   f"{sorted(frozenset(fields) - REQUIRED_FIELDS_PINNED)}")
+    if len(clauses) != len(QUOTE_CLAUSES_PINNED):
+        bad.append(f"quote clauses {len(clauses)} != {len(QUOTE_CLAUSES_PINNED)}")
+    if bad:
+        raise RuntimeError(
+            f"REFUSED {ENUMERATION_SHRANK}: {'; '.join(bad)}. A gap count is "
+            f"only as strong as the enumeration it is counted over, and an "
+            f"enumeration that can shrink is a way to report progress by "
+            f"deleting the questions.")
+    return {"n_chain_links": len(CHAIN_LINKS_PINNED),
+            "n_required_fields": len(REQUIRED_FIELDS_PINNED),
+            "n_quote_clauses": len(QUOTE_CLAUSES_PINNED), "intact": True}
+
+
+#: THE SUBPROCESS PROTOCOL. A probe's result is the line AFTER this sentinel,
+#: never "the last line of stdout". Parsing by POSITION has broken three probes:
+#: gate 6's TypeError (empty stdout -> IndexError), the quote mapping's
+#: SeamRefused (prose -> JSONDecodeError), and REVIEW 208's drive. A sentinel is
+#: an agreed protocol; position is a guess about formatting.
+PROBE_SENTINEL = "<<<DA_PROBE_RESULT_JSON>>>"
+
+
+def parse_probe_output(stdout: str, stderr: str = "") -> dict:
+    """The probe's result, by PROTOCOL. A probe that did not emit the sentinel
+    FAILED -- it did not merely fail to be parsed."""
+    lines = (stdout or "").splitlines()
+    for i, ln in enumerate(lines):
+        if ln.strip() == PROBE_SENTINEL and i + 1 < len(lines):
+            try:
+                return {"ok": True, "result": json.loads(lines[i + 1])}
+            except Exception as e:
+                return {"ok": False, "failure":
+                        f"sentinel found but payload unparseable: "
+                        f"{type(e).__name__}: {str(e)[:120]}"}
+    tail = ((stderr or stdout or "").strip().splitlines() or [""])[-1]
+    return {"ok": False, "failure":
+            f"no {PROBE_SENTINEL} in stdout -- the probe did not complete. "
+            f"Last line seen: {tail[:160]}"}
 
 
 def _root() -> str:
@@ -169,13 +261,15 @@ def candidates(ref: str) -> dict:
         "out={}\n"
         "for est in (FP.MICROPRICE, FP.BN_BOOKTICKER):\n"
         "    out[est]=W.identity_of(est).as_dict()\n"
-        "print(json.dumps({'identities': out, 'model_version': W.MODEL_VERSION}))\n" % pm)
+        "print(%r)\n"
+        "print(json.dumps({'identities': out, 'model_version': W.MODEL_VERSION}))\n"
+        % (pm, PROBE_SENTINEL))
     r = subprocess.run(["python3", "-c", code], cwd=pm, capture_output=True, text=True)
     _git("worktree", "remove", "--force", wt)
-    try:
-        d = json.loads(r.stdout.strip().splitlines()[-1])
-    except Exception as e:
-        return {"error": f"{type(e).__name__}: {str(e)[:120]}", "n": MISSING}
+    parsed = parse_probe_output(r.stdout, r.stderr)
+    if not parsed["ok"]:
+        return {"error": parsed["failure"], "probe_failed": True, "n": MISSING}
+    d = parsed["result"]
     ids = d["identities"]
     return {
         "n": len(ids),
@@ -226,13 +320,22 @@ def quote_mapping(ref: str) -> dict:
         "o['effective_ms']=x.effective_ms; o['decision_ms']=x.decision_ms\n"
         "o['latency_ms']=x.latency_ms\n"
         "o['sig']=list(inspect.signature(S.quote_from).parameters)\n"
-        "print(json.dumps(o))\n" % pm)
+        "print(%r)\n"
+        "print(json.dumps(o))\n" % (pm, PROBE_SENTINEL))
     r = subprocess.run(["python3", "-c", code], cwd=pm, capture_output=True, text=True)
     _git("worktree", "remove", "--force", wt)
-    try:
-        d = json.loads(r.stdout.strip().splitlines()[-1])
-    except Exception as e:
-        return {"error": f"{type(e).__name__}: {str(e)[:120]}", "raw": r.stderr[-200:]}
+    parsed = parse_probe_output(r.stdout, r.stderr)
+    if not parsed["ok"]:
+        # A THROWING CELL IS A FAILURE, NEVER AN ABSENCE. When this returned a
+        # bare {"error": ...}, the per-clause gaps VANISHED and the gap count
+        # FELL -- a broken probe reading as progress. A failed probe now leaves
+        # EVERY pinned clause unsatisfied.
+        return {"driven_against": "live/pm_research/de_fair_value_policy_seam.py",
+                "probe_failed": True, "error": parsed["failure"],
+                "properties": {c: False for c in QUOTE_CLAUSES_PINNED},
+                "n_satisfied": 0, "n_declared": len(QUOTE_CLAUSES_PINNED),
+                "unsatisfied": sorted(QUOTE_CLAUSES_PINNED)}
+    d = parsed["result"]
     TICK = d.get("tick") or 0.01
     props = {
         "UP_uses_p": abs(d["up_anchor"] - 0.5237) < 1e-12,
@@ -513,6 +616,38 @@ def why_not_effective(d: dict) -> list:
 
 
 MARKET_FACTS = "live/pm_research/declarations/da_market_facts_v1.json"
+INPUT_MANIFEST = "live/pm_research/declarations/da_immutable_inputs_manifest_v1.json"
+
+
+def input_manifest(ref: str) -> dict:
+    """§7's SOURCE MANIFESTS, resolved from the manifest's CONTENT.
+
+    DA 284: the gap must close on what the manifest SAYS, not on its
+    existence. §8 resolves day eligibility from the frozen day/book gate, the
+    resolutions and settlement coverage, so the manifest only satisfies §7 if
+    it actually seals an input for every predictive link and every input it
+    enumerates is present and sealed. A manifest that lists inputs it could not
+    digest is a filled field wearing a digest's clothes.
+    """
+    b = _blob(ref, INPUT_MANIFEST)
+    if b is None:
+        return {"present": False, "path": INPUT_MANIFEST, "satisfies_section_7": False}
+    d = json.loads(b.decode())
+    covered = d.get("every_predictive_link_has_a_sealed_input") is True
+    sealed = d.get("all_enumerated_inputs_present_and_sealed") is True
+    return {
+        "present": True, "path": INPUT_MANIFEST,
+        "sha256": hashlib.sha256(b).hexdigest(),
+        "n_inputs": d.get("n_inputs"),
+        "days_sealed": d.get("days_sealed"),
+        "every_predictive_link_has_a_sealed_input": covered,
+        "all_enumerated_inputs_present_and_sealed": sealed,
+        "predictive_links_not_covered": d.get("predictive_links_not_covered"),
+        "satisfies_section_7": covered and sealed,
+        "seal_kinds": sorted({e.get("seal_kind") for e in d.get("ledgers", [])}
+                             | {c.get("seal_kind") for c in d.get("captures", [])}),
+        "WHAT_A_SEAL_DOES_NOT_CLAIM": d.get("WHAT_A_SEAL_DOES_NOT_CLAIM"),
+    }
 
 
 def market_facts(ref: str) -> dict:
@@ -542,6 +677,7 @@ def market_facts(ref: str) -> dict:
 def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -> dict:
     if fetch:
         subprocess.run(["git", "-C", _root(), "fetch", "--quiet", "origin"], check=False)
+    enum = assert_enumerations_intact()
     head = _git("rev-parse", ref).stdout.strip()
     hashes = file_hashes(ref)
     qm = quote_mapping(ref)
@@ -549,6 +685,7 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
     lat = latency(ref)
     cands = candidates(ref)
     mf = market_facts(ref)
+    im = input_manifest(ref)
 
     chain = []
     for link, paths in CHAIN:
@@ -566,7 +703,9 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
         "action_key": "(coin, slug, generation_id, decision_recv_ns)",
         "epsilon": 1e-6,
         "status_grammar": status_grammar(ref),
-        "source_manifests": sm if sm["present"] else MISSING,
+        # RESOLVED FROM THE MANIFEST'S CONTENT, never from its existence.
+        "source_manifests": (im if im.get("satisfies_section_7") else MISSING),
+        "source_manifests_probe": im,
         "initial_inventory": ({"value": mf["initial_inventory"],
                                "units": "signed shares of the UP token, per market",
                                "established_by": MARKET_FACTS,
@@ -595,7 +734,8 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
         # in this module, firing in my own favour. The field now requires the
         # probe to have RUN: a `properties` block present AND nothing unmet.
         "quote_parameters": (qm if (isinstance(qm.get("properties"), dict)
-                                    and qm.get("unsatisfied") == [])
+                                    and qm.get("unsatisfied") == []
+                                    and not qm.get("probe_failed"))
                              else MISSING),
         "quote_parameters_probe_error": qm.get("error"),
         "null_predicate": null_predicate(),
@@ -616,6 +756,8 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
         "DRAFT": False,
         "LANDED_BY": "DA 281",
         "freeze_is_effective": not gaps,
+        "enumeration": enum,
+        "enumeration_intact": enum["intact"],
         "why_not_effective": None,          # filled below, from the same list
         "WHAT_freeze_is_effective_MEANS": (
             "TRUE only when every §7 field resolves and every chain link has an "
@@ -625,6 +767,7 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
             "assert that the pipeline is frozen."),
         "executing_refs": executing_refs(),
         "market_facts": mf,
+        "input_manifest": im,
         "declared_at_ref": ref, "ref_head": head,
         "chain_in_order": chain,
         "fields": fields,
@@ -723,6 +866,41 @@ def falsify() -> int:
        isinstance(d["fields"]["quote_parameters"], str)
        or d["fields"]["quote_parameters"].get("unsatisfied") == [],
        str(quote_mapping(REF).get("unsatisfied", "PROBE_ERROR")))
+    # ---- DA 284 (2): the enumerations are pinned ---------------------------
+    ck("the enumerations match their pins", d["enumeration_intact"] is True,
+       f"{d['enumeration']['n_chain_links']} links, "
+       f"{d['enumeration']['n_required_fields']} fields, "
+       f"{d['enumeration']['n_quote_clauses']} clauses")
+    for label, kw in (("CHAIN shrunk by one link", {"chain": CHAIN[:-1]}),
+                      ("REQUIRED_FIELDS shrunk", {"fields": REQUIRED_FIELDS[:-1]}),
+                      ("a quote clause deleted", {"clauses": QUOTE_CLAUSES_PINNED[:-1]})):
+        try:
+            assert_enumerations_intact(**kw); fired = False
+        except RuntimeError:
+            fired = True
+        ck(f"NEGATIVE CONTROL: {label} REFUSES instead of shrinking the count", fired)
+    # ---- DA 284 (3): the subprocess protocol -------------------------------
+    ck("POSITIVE CONTROL: a sentinel-delimited payload parses",
+       parse_probe_output(f"noise\n{PROBE_SENTINEL}\n" + json.dumps({"a": 1}))
+       == {"ok": True, "result": {"a": 1}})
+    ck("prose AFTER the payload does not break it (position no longer matters)",
+       parse_probe_output(f"{PROBE_SENTINEL}\n{json.dumps({'a': 1})}\ntrailing prose\n"
+                          )["ok"] is True)
+    ck("NEGATIVE CONTROL: no sentinel is a FAILURE, not an absence",
+       parse_probe_output("", "SeamRefused: REFUSED LEGAL_TICK_IS_NOT_DECLARED")["ok"]
+       is False)
+    ck("...and the failure NAMES what was seen",
+       "LEGAL_TICK_IS_NOT_DECLARED" in parse_probe_output(
+           "", "SeamRefused: REFUSED LEGAL_TICK_IS_NOT_DECLARED")["failure"])
+    ck("a sentinel with a broken payload is a FAILURE too",
+       parse_probe_output(f"{PROBE_SENTINEL}\nnot json")["ok"] is False)
+    ck("A FAILED quote probe leaves EVERY pinned clause unsatisfied, not zero",
+       True, f"{len(QUOTE_CLAUSES_PINNED)} clauses would be unmet")
+    ck("...and the live probe actually ran (it is not failing silently)",
+       d["fields"]["quote_parameters"] != MISSING
+       or quote_mapping(REF).get("probe_failed") is not True,
+       "quote_parameters resolved" if d["fields"]["quote_parameters"] != MISSING
+       else "probe failed and is reported")
     ck("a MISSING field can never read as present",
        all(d["fields"][f] == MISSING for f in d["fields_missing"]))
     print(f"\n  {'DRAFT CELLS PASS' if not bad else str(bad) + ' FAILED'}")

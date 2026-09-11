@@ -652,11 +652,19 @@ def step11_step6_freeze(refs=EXECUTING_REFS) -> dict:
             b = _git("show", f"{ref}:{path}", text=False).stdout
             try:
                 decl = json.loads(b.decode())
-                # BOTH, so a declaration that CLAIMS effectiveness while naming
-                # its own blocking gaps cannot unlock anything. The claim and
-                # the evidence for it must agree inside the same document.
+                # TWO CHECKS THAT ARE ACTUALLY TWO (DA 284 / REVIEW 208).
+                # The previous pair -- `freeze_is_effective` AND
+                # `n_blocking_gaps == 0` -- were both functions of the SAME
+                # gap list, so requiring both checked one thing twice; my own
+                # cell asserted the identity between them. The second
+                # condition is now INDEPENDENT: the declaration must also
+                # report `enumeration_intact`, i.e. its chain-link names and
+                # required-field set still match their pins. REVIEW 208 shrank
+                # those tuples and drove 15 gaps to 8 with every gap still
+                # real, so an empty gap list means nothing unless the
+                # enumeration it was counted over is whole.
                 eff.append(decl.get("freeze_is_effective") is True
-                           and decl.get("n_blocking_gaps", 1) == 0)
+                           and decl.get("enumeration_intact") is True)
             except Exception:
                 eff.append(False)          # unreadable defaults to NOT effective
         effective[ref] = any(eff)
@@ -668,6 +676,11 @@ def step11_step6_freeze(refs=EXECUTING_REFS) -> dict:
             "satisfied": bool(effective) and all(effective.values()),
             "measured": ("git ls-tree the declaration dirs at each ref, then READ "
                          "each declaration's own computed `freeze_is_effective`"),
+            "the_two_conditions": (
+                "freeze_is_effective (no gaps) AND enumeration_intact (the "
+                "gap list was counted over the pinned enumeration). They are "
+                "independent: the first can be satisfied by closing gaps, the "
+                "second only by keeping the questions"),
             "EXISTENCE_IS_NOT_EFFECTIVENESS": (
                 "counting files would let a declaration that says the pipeline "
                 "is NOT frozen unlock a labelled score by existing"),
