@@ -530,22 +530,69 @@ def falsify() -> int:
     # the cwd dependence. A tree lacking a declared input is INPUT_ABSENT,
     # never a pass.
     m3 = matrix(good_cert, v31, days=DAYS[:1])
-    decl = None
-    for cand in (Path(DERIVED) / "da_population_freeze_v5.json",
-                 HERE / "declarations" / "da_population_freeze_v5.json"):
-        if cand.is_file():
-            decl = cand
-            break
-    if decl is None:
-        print("  [ABSENT] ruled inputs: da_population_freeze_v5.json is "
-              "not on disk -- the cell reports it, never asserts over it")
+    # READ FROM THE FETCHED REF, NEVER BY PULLING A TREE UNDER A RUNNING
+    # UNIT. wt-deval is executing chain loops and an emit waiter; a refresh
+    # there is the class closed this morning. `git cat-file` reads the blob
+    # without touching any checkout, and the cell records ref AND blob.
+    import subprocess
+    REF = "origin/de-freeze-chain-v2"
+    REL = "live/pm_research/declarations/da_population_freeze_v5.json"
+    blob = subprocess.run(["git", "-C", str(HERE.parents[1]),
+                           "rev-parse", f"{REF}:{REL}"],
+                          capture_output=True, text=True).stdout.strip()
+    raw = subprocess.run(["git", "-C", str(HERE.parents[1]),
+                          "cat-file", "-p", f"{REF}:{REL}"],
+                         capture_output=True, text=True).stdout
+    if not raw:
+        print(f"  [ABSENT] ruled inputs: {REL} not readable on {REF}")
     else:
-        doc = json.loads(decl.read_text())
-        missing = [str(v.get("path")) for v in
-                   (doc.get("inputs") or doc.get("files") or {}).values()
-                   if not Path(str(v.get("path"))).is_file()]
-        ck("ruled inputs: every declared input is present in THIS tree",
+        doc = json.loads(raw)
+        files = doc.get("files") or []
+        # the declaration's OWN root names, read from it -- not guessed
+        roots = {"main": Path("/home/yuqing/ctaNew"),
+                 "wt-deval": Path("/home/yuqing/ctaNew-wt-deval"),
+                 "wt-de2": Path("/home/yuqing/ctaNew-wt-de2"),
+                 "wt-fwd": Path("/home/yuqing/ctaNew-wt-fwd"),
+                 "wt-be": Path("/home/yuqing/ctaNew-wt-be")}
+        # THE CLASS COMES FROM THE DECLARATION'S OWN FIELD, and so does
+        # the moment the rule changes: `instrument_freeze_called` is read,
+        # not coded. Until DA lands the instrument freeze, an INSTRUMENT
+        # drift is REPORTED; a PIPELINE drift always FAILS.
+        frozen_called = bool(doc.get("instrument_freeze_called", False))
+        missing, mism, drift = [], [], []
+        for f in files:
+            base = roots.get(f.get("root"))
+            if base is None:
+                missing.append(f"UNKNOWN_ROOT:{f.get('root')}")
+                continue
+            path = base / str(f.get("path"))
+            if not path.is_file():
+                missing.append(str(path))
+                continue
+            want = f.get("sha256")
+            if want and hashlib.sha256(
+                    path.read_bytes()).hexdigest() != want:
+                got = hashlib.sha256(path.read_bytes()).hexdigest()
+                line = (f"{f.get('path')} {want[:16]}->{got[:16]}")
+                if str(f.get("CLASS")).upper() == "INSTRUMENT" \
+                        and not frozen_called:
+                    drift.append(line)
+                else:
+                    mism.append(line)
+        print(f"  ruled inputs read from {REF} blob {blob[:16]}: "
+              f"{len(files)} declared, {len(missing)} absent, "
+              f"{len(mism)} PIPELINE mismatches, {len(drift)} INSTRUMENT "
+              f"drifts (instrument_freeze_called="
+              f"{doc.get('instrument_freeze_called', 'ABSENT')})")
+        for line in drift:
+            print(f"    INSTRUMENT_DRIFTED_SINCE_DECLARATION:{line}")
+        ck("ruled inputs: every declared input is PRESENT",
            not missing)
+        ck("ruled inputs: every PIPELINE input MATCHES its declared sha",
+           not mism)
+        ck("INSTRUMENT drift is REPORTED, and FAILS only once "
+           "instrument_freeze_called is true",
+           frozen_called is False or not drift)
         ck("the ruled inputs do NOT refuse on 09-07",
            not blocking(m3["rows"][DAYS[0]]))
     ck("an ABSENT input is reported as ABSENT, never as a refusal",
