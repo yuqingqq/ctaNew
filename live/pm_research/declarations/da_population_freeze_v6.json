@@ -1,12 +1,12 @@
 {
  "protocol": "P003_DA_POPULATION_FREEZE_V6",
  "version": 6,
- "declared_by": "DA 257",
- "declared_at_utc": "2026-09-11T11:42:05Z",
+ "declared_by": "DA 258",
+ "declared_at_utc": "2026-09-11T11:52:35Z",
  "supersedes": {
   "file": "declarations/da_population_freeze_v5.json",
   "rule": "13 -- v1..v5 unedited",
-  "scope": "INSTRUMENT shas recomputed FROM ORIGIN REFS; the instrument-freeze flag added. No PIPELINE entry changes."
+  "scope": "INSTRUMENT shas recomputed FROM THE REFS; be_heavy_run.sh added (both executing copies); the flag split per seat."
  },
  "THE_SPLIT_RULED_AT_R_900_7": {
   "PIPELINE": "the pinned build modules, the valuation-path modules, the valuation import closure, the certificate, params v31, freeze chain v1..v10, the declarations, the masks and the artifacts. DRIFT REFUSES BY FILENAME.",
@@ -28,9 +28,9 @@
    "NOTE_THE_TIP_IS_c49b27a_NOT_621930a": "Q-DE-292's commit 621930a is a DESCENDANT of the wt-deval tip; the tree is still at c49b27a with the two files present as UNCOMMITTED bytes. Both satisfy the rule (descendants of 68e7d23), and the rule is why this declaration does not go stale on that difference."
   }
  },
- "n_files": 65,
+ "n_files": 67,
  "n_PIPELINE": 52,
- "n_INSTRUMENT": 13,
+ "n_INSTRUMENT": 15,
  "files": [
   {
    "root": "main",
@@ -120,6 +120,18 @@
   },
   {
    "root": "main",
+   "path": "live/pm_research/be_heavy_run.sh",
+   "role": "BUILD_WRAPPER",
+   "CLASS": "INSTRUMENT",
+   "seat": "BE",
+   "origin_ref": "origin/mm-research",
+   "sha256": "5e5645b1060371a999f58fbea9bb8e284b158c9140e05bd1dd184d5bcd83ccd1",
+   "named_by": [
+    "DA"
+   ]
+  },
+  {
+   "root": "main",
    "path": "live/pm_research/da_population_freeze_verify.py",
    "role": "INSTRUMENT_FILE",
    "sha256": "db455033a06875017ca48bbb455e50d67debd3d1ab02a02ab419de645c6d0725",
@@ -198,6 +210,18 @@
    ],
    "asserted_against": "origin/mm-research:live/pm_research/de_window_decomposition.py",
    "asserted_digest": "f00db67d2ef4b42177b38fa19c42860249c46457de7a411c463c4b703b0e1efa"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/be_heavy_run.sh",
+   "role": "VALUATION_WRAPPER",
+   "CLASS": "INSTRUMENT",
+   "seat": "DE",
+   "origin_ref": "origin/de-freeze-chain-v2",
+   "sha256": "0d72eceea567124c5df5f01de29f074847a4f3965d28d5177436fcf1d4dd3d86",
+   "named_by": [
+    "DA"
+   ]
   },
   {
    "root": "wt-deval",
@@ -754,62 +778,97 @@
  },
  "THE_VERIFIER_NOW_CHECKS_TWO_THINGS_FOR_THESE_ENTRIES": "(a) the EXECUTED path's bytes equal the declared digest -- PIPELINE, refuse by filename; and (b) the declared digest equals what the ASSERTED origin ref carries, refusing EMIT_ASSERTION_DIGEST_MISMATCH by filename. (b) is the waiter's own expectation, checked independently of the waiter.",
  "PIPELINE_DRIFT_AT_RECOMPUTE": "ZERO -- VERIFIED, NOT ASSUMED. The v4 verifier was run before recomputing and returned POPULATION_FREEZE_HOLDS with all 52 PIPELINE digests intact and 7 INSTRUMENT drifts reported at exit 0.",
- "INSTRUMENT_REBASELINE": "7 INSTRUMENT digests re-read, and de_snapshot_probe.py ADDED. THIS IS A RE-BASELINE, NOT THE INSTRUMENT FREEZE -- that is still the coordinator's to call.",
- "STATUS": "DRAFT -- NOT LANDED. Lands only on the coordinator's word, after REVIEW 165/166 clear both seats' cells.",
- "instrument_freeze_called": false,
- "WHAT_THE_FLAG_IS_FOR": "DE's cell reads `instrument_freeze_called` to decide whether INSTRUMENT drift REPORTS or FAILS. While false, an instrument landing is expected and reports at exit 0. v7 flips it to true and freezes the class -- and that is the coordinator's call, not a seat's.",
- "INSTRUMENT_SHAS_RECOMPUTED_FROM_ORIGIN_REFS": {
-  "method": "each INSTRUMENT entry resolved on the origin ref that CARRIES it -- not from a worktree, not from the dispatch",
-  "n_recomputed": 13,
-  "N_STALE_FOUND": 5,
-  "THE_DISPATCH_SAID_FOUR_I_FIND_FIVE": true,
-  "stale": [
+ "INSTRUMENT_REBASELINE": {
+  "n_rebased": 5,
+  "entries": [
    {
     "path": "live/pm_research/be_build_preflight.py",
-    "ref": "origin/mm-research",
-    "v5_declared": "7bf43340166a4de2",
-    "on_ref": "06bf6c4809ee935e",
-    "moved_by": "bfafdea BE 158: REVIEW 164 -- each instrument now has a cell that invokes its EN"
+    "from": "7bf43340166a4de2",
+    "to": "06bf6c4809ee935e",
+    "ref": "origin/mm-research"
    },
    {
     "path": "live/pm_research/da_population_freeze_verify.py",
-    "ref": "origin/mm-research",
-    "v5_declared": "ead268c1b82dedc3",
-    "on_ref": "db455033a0687501",
-    "moved_by": "3377b39 DA 255: the oracle snapshot is DONE (with two record defects), and freez"
+    "from": "ead268c1b82dedc3",
+    "to": "db455033a0687501",
+    "ref": "origin/mm-research"
    },
    {
     "path": "live/pm_research/launch_stage2.sh",
-    "ref": "origin/mm-research",
-    "v5_declared": "eba4c732da3e28c8",
-    "on_ref": "1dfe7a0e7c818b29",
-    "moved_by": "bfafdea BE 158: REVIEW 164 -- each instrument now has a cell that invokes its EN"
+    "from": "eba4c732da3e28c8",
+    "to": "1dfe7a0e7c818b29",
+    "ref": "origin/mm-research"
    },
    {
     "path": "live/pm_research/de_preflight_matrix.py",
-    "ref": "origin/de-freeze-chain-v2",
-    "v5_declared": "066dfad824dbec6d",
-    "on_ref": "3fc8351c48435b12",
-    "moved_by": "b40a52a Q-DE-298: the ruled-inputs cell asserts BY CLASS, and reads the flip fro"
+    "from": "066dfad824dbec6d",
+    "to": "3fc8351c48435b12",
+    "ref": "origin/de-freeze-chain-v2"
    },
    {
     "path": "live/pm_research/launchers/chain_day.sh",
-    "ref": "origin/de-freeze-chain-v2",
-    "v5_declared": "be252397283b2ccb",
-    "on_ref": "7b4aa99809db20e1",
-    "moved_by": "5399091 Q-DE-294: launcher self-digest, the unit's own environ, and lists comput"
+    "from": "be252397283b2ccb",
+    "to": "7b4aa99809db20e1",
+    "ref": "origin/de-freeze-chain-v2"
    }
   ],
-  "and_each_instrument_entry_now_carries_its_origin_ref": "v5 recorded the WORKTREE root but not the origin ref. DE's cell reads from a BRANCH, so an entry without a ref cannot be resolved the way the cell resolves it."
+  "method": "recomputed FROM THE ORIGIN REF that carries each file -- BE's at bfafdea/origin/mm-research, DE's at the origin/de-freeze-chain-v2 tip -- never from a worktree and never from the dispatch"
  },
- "THE_FIFTH_IS_MINE_AND_THE_CAUSE_IS_AN_ORDERING_MISTAKE_I_MADE": {
-  "file": "live/pm_research/da_population_freeze_verify.py",
-  "v5_declared": "ead268c1b82dedc3",
-  "on_origin_mm_research": "db455033a0687501",
-  "moved_by": "3377b39 -- MY OWN DA 255 COMMIT, the one that landed v5",
-  "WHAT_I_DID": "I refreshed the INSTRUMENT baselines, THEN edited the verifier to point at v5, THEN committed. So v5 declares the PRE-EDIT bytes of a file the SAME COMMIT changed.",
-  "so_v5s_declaration_of_its_own_verifier_was_stale_the_instant_it_landed": true,
-  "THE_RULE_THAT_PREVENTS_IT": "recompute baselines AFTER every edit and FROM THE REF, never from the working tree before the last change. A baseline taken mid-edit describes a file that no longer exists.",
-  "and_it_is_the_same_shape_as_the_launch_record_defect_I_filed_an_hour_ago": "a provenance field written before the thing it describes finished changing"
- }
+ "STATUS": "RE-BASELINE -- NOT the instrument freeze",
+ "instrument_freeze_called": {
+  "BE": false,
+  "DE": false
+ },
+ "WHAT_THE_FLAG_IS_FOR": "DE's cell reads instrument_freeze_called to decide whether INSTRUMENT drift REPORTS or FAILS. SPLIT PER SEAT because the two classes settle independently: REVIEW 166 rules BE's freezable after BE 161, while DE's waits for REV's review of the five commits that landed on the chain branch during REV's round (Q-DE-296, 296b, 296c, DA 256, Q-DE-298). A single flag would have forced the slower seat to gate the faster one.",
+ "PIPELINE_UNCHANGED_AND_VERIFIED": "ZERO DRIFT, verified BEFORE rebaselining: the v5 verifier returned POPULATION_FREEZE_HOLDS with all 52 PIPELINE digests intact and 4 INSTRUMENT drifts at exit 0. No PIPELINE entry is touched by v6.",
+ "BEs_INSTRUMENT_SET_IS_THREE_FILES_AND_I_DECLARE_WHICH_COPY": {
+  "1_preflight": {
+   "path": "live/pm_research/be_build_preflight.py",
+   "ref": "origin/mm-research",
+   "sha256": "06bf6c4809ee935e45fbb540277d7b730688ae0037860d46c687d839b043fa7d"
+  },
+  "2_launcher": {
+   "path": "live/pm_research/launch_stage2.sh",
+   "ref": "origin/mm-research",
+   "sha256": "1dfe7a0e7c818b29717dcd7272e0abdd5ae77decab5c2cc998f53ad88c89e6ff"
+  },
+  "3_THE_WRAPPER_AND_WHICH_COPY_MATTERS": {
+   "path": "/home/yuqing/ctaNew/live/pm_research/be_heavy_run.sh -- THE SHARED (main) TREE",
+   "lines": 527,
+   "sha256": "5e5645b1060371a999f58fbea9bb8e284b158c9140e05bd1dd184d5bcd83ccd1",
+   "ref": "origin/mm-research",
+   "NOT_the_wt_fwd_copy": {
+    "path": "/home/yuqing/ctaNew-wt-fwd/...",
+    "lines": 522,
+    "sha256_16": "e00e70f18bbaf674"
+   },
+   "ESTABLISHED_AT_THE_UNITS_NOT_ASSUMED": "I mapped each unit's ExecStart to the copy it runs: be156book0909 (a BOOK BUILD), be134frag0907 and be131occ all execute /home/yuqing/ctaNew/live/pm_research/be_heavy_run.sh. be129probe and be129scored execute the wt-be copy, which is BYTE-IDENTICAL to main (5e5645b1060371a9, 527 lines).",
+   "all_three_verified_at_bfafdea_too": {
+    "be_build_preflight.py": "06bf6c4809ee935e45fbb540277d7b730688ae0037860d46c687d839b043fa7d",
+    "launch_stage2.sh": "1dfe7a0e7c818b29717dcd7272e0abdd5ae77decab5c2cc998f53ad88c89e6ff",
+    "be_heavy_run.sh": "5e5645b1060371a999f58fbea9bb8e284b158c9140e05bd1dd184d5bcd83ccd1"
+   }
+  }
+ },
+ "A_GAP_v6_CLOSES_THAT_NOBODY_HAD_NAMED": {
+  "what": "be_heavy_run.sh was NOT IN THE FREEZE AT ALL -- v5 pinned neither copy",
+  "and_there_are_TWO_EXECUTING_COPIES_WITH_DIFFERENT_BYTES": {
+   "BUILD_wrapper": {
+    "copy": "main / wt-be",
+    "lines": 527,
+    "sha256_16": "5e5645b1060371a9",
+    "who_runs_it": "BE's build units"
+   },
+   "VALUATION_wrapper": {
+    "copy": "wt-deval / wt-de2",
+    "lines": 530,
+    "sha256_16": "0d72eceea567124c",
+    "who_runs_it": "the valuation and chain units",
+    "what_it_adds": "the BE_SNAPSHOT_ROOT opt-in (Q-DE-292)"
+   }
+  },
+  "SO_be_heavy_run_sh_WITHOUT_A_ROOT_IS_AMBIGUOUS": "naming 'the wrapper' pins nothing: two copies execute, they differ by 3 lines and by digest, and each belongs to a different seat's class. v6 pins BOTH, with the role and the seat.",
+  "a_third_and_fourth_copy_exist_and_are_NOT_pinned": "wt-fwd (522 lines) and the wt-be copy, which is byte-identical to main"
+ },
+ "WHAT_AN_INSTRUMENT_DRIFT_REPORT_MEANS_NOW_AND_IT_CHANGED_WITH_v6": "v6's INSTRUMENT baselines are taken FROM THE ORIGIN REFS, while the verifier reads bytes FROM THE WORKTREES. So a reported drift now means 'this worktree's copy differs from the ref it is pinned against' -- which includes the ordinary case of a worktree that has not pulled yet, or one holding an uncommitted edit. It is NOT synonymous with 'someone changed a file since the freeze'. Before v6 the baseline and the check both came from the worktree, so a drift meant an edit. A reader who carries the old meaning across will over-read these reports."
 }
