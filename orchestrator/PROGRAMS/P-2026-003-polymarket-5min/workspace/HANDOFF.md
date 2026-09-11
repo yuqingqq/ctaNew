@@ -1,3 +1,135 @@
+# READ FIRST — round close, 2026-09-11 (MEM 390+391, 2026-09-11T16:10:08Z, tip `bb69677`)
+
+# 🧊 COLD START — **the forward test is finished. Read this first, then stop.**
+
+## 1 · THE OUTCOME
+
+> ### Both arms **FUTILE** at **G = 2 of 7**. `STOP_FOR_FUTILITY`.
+> ### **NOT_ESTABLISHED_AT_THIS_POWER — never NO_EFFECT.**
+
+| arm | day one (09-07) | day two (09-08) | non-pos | best attainable p | verdict |
+|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | −14,645.078818 | −49,303.579891 | **2** | 2·29/128 = **0.453125** | FUTILE |
+| `HAZARD_OVER_SKEWED_REF` | **+4,925.363903** | −23,977.998804 | **1** | 2·8/128 = **0.125** | FUTILE |
+
+Threshold 0.025 · floor 2·1/128 = **0.015625** at 7-of-7 · tolerance 0 · unanimity.
+***The cap comes from the days already seen — days 3–7 cannot move it.***
+
+**And the sharper statement:** floor **× 2 = 0.03125 < 0.05** (Holm as declared —
+would have passed); **× 69 = 1.078125 > 1**; **1/69 = 0.014492754 < floor**.
+***No outcome of this test could have cleared a correction over the 69-candidate
+screen that produced the arms.*** A statement about the **design**, not the arms.
+
+## 2 · THE ARTIFACTS, BY PATH
+
+```
+FINAL RECORD   data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908_v2.json
+  superseded   …/p003_de_forward_value_20260908.json   KEPT, unedited (rule 13)
+               supersedes.sha256 51decc84c8b368d8…  = v1's actual bytes (I hashed it)
+
+CELLS  day one  data/pm_5min/derived/fwd_v2/de_settle_result_20260907_<arm>.json
+       day two  data/pm_5min/derived/fwd_rehearsal_0908/de_settle_result_20260908_<arm>.json   ⚠ "rehearsal" is a FULL run
+       (a) repro data/pm_5min/derived/fwd_a_0907_rebuild/de_settle_result_20260907_<arm>.json
+
+BOOKS  09-08 freeze-built  …/rebuild_identity/…FWD1.rebuild.pkl   sha 05144b6fce62e2cc
+       09-07 freeze-built  …/rebuild_identity/…20260907…           sha 887a97eb41e9f83c
+```
+
+> ⚠️ **The cells live in THREE directories** and `load_cell` takes **one root** —
+> anything that re-combines must reconcile that first.
+
+## 3 · THE FREEZE LINEAGE
+
+```
+valuation pin = RULE: descendant of FREEZE_COMMIT b34ed9f + frozen module digests
+supersession  f309602 → c853e2d → 92e4b7c → 21678a1 → eb923d3 → 3dbb107 → 5efb8f0
+freeze commit 8afbd1a → d095c5a → 6d22d78 → bacb4e3 → b34ed9f
+declarations  code-freeze v10 lineage · population freeze v17 · record schema v2
+              arm-freeze amendments to v23 · licensing + outcome by DA 262 (three refs)
+comparator    a455191d6bceec7e  = the certificate's producer, unmoved
+```
+
+**Verified this session, by hashing rather than reading:** three rebuilds at
+three commits gave **322,723 of 322,732 content leaves equal**, the nine
+differences all `wall_clock`/`resource_telemetry`. Day one reproduces from the
+freeze-built book **EXACTLY** — delta 0.0000000000c, across a different book,
+seed and oracle.
+
+## 4 · WHAT IS HELD, AND WHAT IS OPEN
+
+- ⛔ **The 09-09 real build is HELD.** Days 09-09..09-13 are **not required by
+  the design**; whether they are valued **descriptively** is the **user's call**.
+  The population stays protected — books build from archives at any time.
+- 📋 **The post-population queue: twelve items (R-913) + three (REVIEW 190).**
+  *Opens on the user's word; nothing in it runs inside the population.*
+- 🔓 **Lock free, nothing armed** — read with `fuser` on `data/.heavy_run.lock`,
+  *the same reader that has said HELD three times today.*
+
+---
+
+# WHAT ROUND 390+391 ADDED
+
+## 🔢 I computed the v1→v2 diff myself — **174 changed leaves, not 2**
+
+```
+532 leaves -> 536.   CHANGED 174 = 172 window-table + 2 (at_utc, STOP_ADVICE)
+   172 = 43 rows × exactly 4 fields, EVERY ONE None -> a real value
+ADDED 4  (STOP_ADVICE_why, supersedes.path/.sha256/.kept_as)    REMOVED 0
+VERDICT-BEARING LEAVES MOVED: 0
+```
+
+> **Zero** — no D, no p, no futility, no tally, no cells, no `admitted_by`, no
+> book sha, no winner source. ***That is the claim that matters, and it is now
+> safe by computation rather than by assertion.***
+>
+> So R-914's *"nothing else moved"* is **true where it matters and short by 172
+> as enumerated** — and its own other clause, *"the second residual closed with
+> real values"*, is exactly those 172 leaves. **Both clauses right; they do not
+> agree with each other.**
+
+## ✅ And the supersession is **rule 13 in checkable form**
+
+`supersedes.sha256` **recomputed by me from v1's bytes — matches**;
+`kept_as: "provenance, unedited (rule 13)"`; **both files on disk.** ***One hour
+after the previous emit corrected itself by overwriting in place with no
+recoverable predecessor.*** Same family, same day, opposite discipline.
+
+**Of my two round-388 residuals: `STOP_ADVICE` is CLOSED; `running_tally` is
+NOT** — still one arm's list in a per-day slot. *On two days a leak and a correct
+union stay observationally identical.*
+
+## 🔧 I drove BE's new guard — **8/8, both directions**
+
+Admits the live tree **and says why, computed** · refuses off-lineage
+(`PIN_NOT_ANCESTOR`) · refuses a descendant whose pinned bytes moved
+(`PINNED_DIGEST_MOVED`, naming the file) · refuses a non-git path. **And one cell
+annotates itself honestly** — *"the digest cell's commit really IS an ancestor,
+so the cell tests (2), not (1)."* The `PIN` literal remains at
+`launch_stage2.sh:122` and that is now **correct**: it is a **base passed to a
+rule**, not an equality. wt-fwd is **exactly 112 commits** past it (counted).
+
+## 🪞 AND I CORRECT MYSELF — six rounds of too-narrow framing
+
+I filed the landing six times as blocked by *"the same two other-seat files."*
+**Measured properly:**
+
+```
+68 paths block it:   1 modified tracked  +  67 untracked-but-tracked-on-origin
+                     (44 declarations, 18 REVIEWs, 5 modules)
+     5 of 5 sampled are BYTE-IDENTICAL to origin's copies
+AND: with 140 local-only commits a fast-forward is IMPOSSIBLE however clean the tree is
+```
+
+> ***So the landing path is structurally closed, not transiently blocked, and the
+> divergence is bookkeeping rather than content for those paths.*** My earlier
+> framing named a true obstacle and implied a smaller one than exists.
+>
+> **This is no longer a MEM-seat matter:** R-912 orders a rule-45 push for BE's
+> `223f352` and `73d5655`, and **neither is on origin.** ***The register's own
+> entry orders an action the branch state does not permit*** — and **Q-MEM-338
+> through Q-MEM-345, including the row carrying the forward test's outcome,
+> stand on the same side of the same fork.**
+
 # READ FIRST — rounds 388 + 389 (MEM, 2026-09-11T16:03:23Z, tip `5690a08`)
 
 # ⏹️ THE FORWARD TEST IS OVER. **Both arms futile at G = 2 of 7.**
