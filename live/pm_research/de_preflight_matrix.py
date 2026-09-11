@@ -333,6 +333,33 @@ def generation_gate(day: str, gen, derived=DERIVED) -> dict:
     return {**out, "status": "PASS"}
 
 
+COMPARATOR_MISMATCH = "COMPARATOR_ON_DISK_IS_NOT_THE_CERTIFIED_PRODUCER"
+
+
+def comparator_matches_cert(derived=DERIVED) -> dict:
+    """The comparator ON DISK must be the one the certificate names.
+
+    The 09:09Z class: the certificate is pinned to producer.sha256, so any
+    edit to be_score_neutrality.py voids it -- and a worktree can hold
+    edited bytes long after the commit is reverted (mine did, for an hour).
+    Checked here so it costs seconds instead of a valuation.
+    """
+    cert = Path(derived) / ("be_score_neutrality_20260903__EV22_vs_"
+                            "NEUTCHK__68e7d23.json")
+    f = HERE / "be_score_neutrality.py"
+    if not cert.is_file():
+        return _absent("certificate")
+    if not f.is_file():
+        return _absent("comparator")
+    want = (json.loads(cert.read_text()).get("producer") or {}).get("sha256")
+    got = _sha(f)
+    if want != got:
+        return {"status": f"WOULD_REFUSE:{COMPARATOR_MISMATCH}",
+                "detail": f"on disk {got[:16]}, certificate names "
+                          f"{str(want)[:16]}"}
+    return {"status": "PASS", "sha256": got[:16]}
+
+
 def gates_for_day(day: str, *, certification, params_path,
                   derived=DERIVED) -> dict:
     """Every gate V2 applies before the first draw, for one day."""
@@ -398,6 +425,8 @@ def gates_for_day(day: str, *, certification, params_path,
     except Exception:                              # noqa: BLE001
         got = None
     row.update(book_acceptance(day, derived))
+    row["comparator_is_the_certified_producer"] = comparator_matches_cert(
+        derived)
     row["comparator_digest"] = (
         _pass() if got == want else
         {"status": "WOULD_REFUSE:SETTLEMENT_CONTROL_SCORE_NEUTRALITY_"
