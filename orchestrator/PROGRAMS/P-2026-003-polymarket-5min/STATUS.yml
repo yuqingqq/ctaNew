@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T16:13:55Z (MEM ROUND 392 -- BOTH ARMS NOW REPRODUCE EXACTLY, WHICH CLOSES THE CAVEAT I LEFT AT
+  387. I checked it myself rather than reading the flag: CONDVALUE -14645.078818000005
+  and HAZARD 4925.363903000005, each equal to day one's landed cell under ==, on the
+  freeze-built 887a97eb book with admitted_by DESCENDANT. I VERIFIED ALL THREE DECLARED
+  DIGESTS against disk -- 3 of 3 -- so the residue declaration names WHICH two files, not
+  merely that two exist. AND I TESTED THE FILTER'S DISCRIMINATOR RATHER THAN ACCEPTING
+  IT: the two residue records carry protocol P003_DE_DAY_RECORD_V1 -- and so does a REAL
+  day record -- so the protocol genuinely cannot separate a reproduction from a day; only
+  the reproduction block can. Recomputing the day map over the five files the glob matches
+  gives exactly {09-07, 09-08}, n=2, the same G_so_far the emit computes. One thing worth
+  naming: the new record carries an explicit IS_A_DAY_RESULT False and NEITHER residue
+  file has that key, so the marker in force is the one the residue happens to carry, not
+  the one the schema declares. The fix is in the NAME with the filter as backup, and the
+  residue is KEPT. AND I NEARLY ATTRIBUTED THE WRONG DECLARATION: de_09_07_residue_check_v2
+  is a BUILD residue check from 03:17Z about builder units, not this. Rule 16 exactly.
+  Tip 0a7f2bf.)
   2026-09-11T16:09:12Z (MEM ROUND 390+391 -- ROUND CLOSE. I COMPUTED THE v1-TO-v2 DIFF MYSELF AND IT IS 174
   CHANGED LEAVES, NOT 2: 172 of them are emit.per_window_table_unconditional, 43 rows by
   exactly 4 fields, every one None -> a real value, plus at_utc and STOP_ADVICE; 4 leaves
@@ -101,6 +117,7 @@ updated: >-
   round-388 STOP_ADVICE observation is routed as DE 347 with a vN+1 re-emit, in band.
   The post-population queue opens with its members named; the 09-09 build stays HELD and
   days 3-7 are the USER's call. Tip 236fb64.)
+previous_updates: >-
   2026-09-11T16:00:46Z (MEM ROUND 388 -- THE FORWARD TEST'S OUTCOME IS FIXED AT DAY TWO, AND I REPRODUCED
   THE ARITHMETIC THAT FIXES IT. Not read: re-derived from N=7 and a two-sided sign test
   over 128 patterns. CONDVALUE's 2 non-positive days cap it at 5 of 7 -> 2*29/128 =
@@ -121,7 +138,6 @@ updated: >-
   POPULATION_FREEZE_HOLDS 67/67 -- but the report it rests on lives in /tmp, and the
   emit was overwritten in place so the 15:52:37Z record is gone. The 09-09 build is HELD;
   continuing for descriptive per-day performance is the USER's call. Tip 73d5655.)
-previous_updates: >-
   2026-09-11T15:48:48Z (MEM ROUND 387 -- DAY ONE REPRODUCES EXACTLY FROM THE FREEZE-BUILT BOOK, AND DAY
   TWO'S TWO CELLS ARE VERIFIED BY RECOMPUTATION. The 09-07 reproduction returns D
   -14645.078818000005 against day one's -14645.078818000005 -- delta ZERO, not merely to
@@ -439,6 +455,13 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r392_BOTH_arms_now_reproduce_EXACTLY_and_that_closes_my_round_387_caveat: "At round 387 I reported day one's reproduction as EXACT for CONDVALUE ONLY and said plainly that HAZARD was still drawing, so the link was established for one arm and pending for the other. It is now closed for both, and I checked it myself rather than reading the record's flag: CONDVALUE -14645.078818000005 against day one's -14645.078818000005, and HAZARD 4925.363903000005 against day one's 4925.363903000005 -- full float equality, both arms, on the freeze-built book 887a97eb with admitted_by DESCENDANT. The record's own reproduction.every_arm_reproduces_to_the_cent is True and its per-arm exact_equality is True twice, which now agrees with my own comparison."
+  r392_I_VERIFIED_ALL_THREE_DECLARED_DIGESTS_AGAINST_DISK: "The record-schema declaration v3 names three files by path and sha256 -- the two mis-named residue records and the correctly named reproduction record. I hashed all three on disk: 3 of 3 MATCH. A residue declaration whose digests are checkable is the difference between recording that two files exist and recording WHICH two files exist, and it is what lets a later reader confirm the residue was never edited."
+  r392_the_PROTOCOL_field_CANNOT_discriminate_and_I_proved_it_on_the_files: "Q-DA-468 says the identity filter works on the reproduction BLOCK, not the protocol. I tested that claim on the five files the day-result glob matches rather than accepting it: the two residue records carry protocol P003_DE_DAY_RECORD_V1 -- and so does p003_de_forward_value_20260908.json, a REAL day record. Day one's own record carries a third string, P003_DE_FORWARD_VALUE_DAY_V1_SUPERSEDING, and only the new reproduction record carries P003_DE_DAY_RECORD_V1_REPRODUCTION. So the natural discriminator genuinely does not discriminate: a real day and a reproduction are indistinguishable by protocol, and the presence of the reproduction block is what separates them."
+  r392_the_day_map_counts_TWO_and_I_recomputed_it_over_the_files_on_disk: "Five files match p003_de_forward_value_*.json right now, two of them reproductions, so an unfiltered day map would count 09-07 twice more. Filtering out records that carry a reproduction block and taking days by identity gives exactly {2026-09-07, 2026-09-08}, n=2 -- the same G_so_far the emit computes. The hazard is real and present on disk at this moment; the fix is the filter plus the name, and the filter is doing the work today because the residue predates the name."
+  r392_the_marker_that_WORKS_is_not_the_marker_the_SCHEMA_declares: "The new reproduction record carries an explicit top-level IS_A_DAY_RESULT False. Neither residue record has that key at all -- they carry no IS_A_DAY_RESULT. So two different mechanisms mark the same fact: an explicit boolean on the record written after the rule, and an inferred property, the presence of a reproduction block, on the two written before it. The filter necessarily keys on the inferred one, because the explicit one is absent from exactly the files it must exclude. Worth naming: the discriminator in force is the one the residue happens to carry."
+  r392_the_naming_rule_puts_the_fix_in_the_NAME_and_keeps_the_filter_as_backup: "The declared rule is that a reproduction record is named p003_de_reproduction_* and NEVER p003_de_forward_value_*, and its stated reason is the right one: the forward-value pattern IS the day-result glob, so a reproduction named into it is counted as a day until something filters it out, and a filter is a thing that can be forgotten. A name cannot be forgotten by a later reader in the way a filter can. The residue is KEPT, not deleted -- artifacts are never deleted, and these two are the provenance of how the naming rule came to exist."
+  r392_I_NEARLY_ATTRIBUTED_THE_WRONG_RESIDUE_DECLARATION: "Searching the declarations directory for the residue rule, I found de_09_07_residue_check_v1/v2.json and began reading v2 as the artifact R-915 describes. It is not: it is P003_DE_BUILD_RESIDUE_CHECK_V2, written 03:17:49Z, about BUILD residue from four 09-07 builder units -- a different object with a similar name, thirteen hours earlier. The declaration R-915 means is da_record_schema_declaration_v3.json, landed at 16:10:16Z. Rule 16 in its exact form: grep hits on vocabulary are not references, and I had to read the protocol field to see it."
   r391_I_COMPUTED_THE_v1_v2_DIFF_MYSELF_and_it_is_174_not_2: "R-914 records 'nothing else moved' as COMPUTED and enumerates the diff as exactly STOP_ADVICE, STOP_ADVICE_why, supersedes and at_utc. I flattened both records to leaves and differenced them: 532 leaves in v1, 536 in v2; 174 CHANGED values, 4 added, 0 removed. The 174 decompose exactly as 172 leaves of emit.per_window_table_unconditional -- 43 rows times precisely 4 fields (utc, gap_seconds, n_gap_intervals, share_of_day_gap_time), every single one going from None to a real value -- plus at_utc and emit.STOP_ADVICE. The four added are STOP_ADVICE_why and the three supersedes fields."
   r391_ZERO_verdict_bearing_leaves_moved_and_THAT_is_the_claim_that_matters: "I checked the surface that could change the result rather than trusting the enumeration: observed_D, p_two_sided, futility, running_tally, G_so_far, G_declared, tolerance_negative_days, the floor, per_day_D_by_arm, per_arm_D_cents, cells, admitted_by, book_sha256, winner_source and the ALREADY_DEAD booleans. NOT ONE of them differs between v1 and v2. The supersession is safe in the only sense that matters, and now it is safe by computation rather than by assertion."
   r391_nothing_else_moved_is_TRUE_WHERE_IT_MATTERS_and_INCOMPLETE_AS_ENUMERATED: "Both clauses of R-914 are individually right and they do not agree with each other: one says the diff is exactly four things, the other says 'the second residual closed with real values' -- and that second residual IS the 172 window-table leaves the first clause omits. So the claim is true in substance and its enumeration is short by 172. Recorded precisely because 'nothing else moved' is the sentence that licenses a supersession as safe, and a reader checking it against the file would find 174 changes and no way to tell which reading was meant."
@@ -28214,6 +28237,34 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r392_BOTH_arms_now_reproduce_EXACTLY_and_that_closes_my_round_387_caveat:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_reproduction_at_the_freeze_20260907.json
+    said: "loaded the reproduction record's cells and day one's two landed cells and compared observed_D_cents with == for each arm: True both times."
+  r392_I_VERIFIED_ALL_THREE_DECLARED_DIGESTS_AGAINST_DISK:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_record_schema_declaration_v3.json
+    said: "sha256 over each of the three files' bytes compared against the declaration's values: 0cf2bb7f..., 8d34f8e7... and 82fd3784... all equal."
+  r392_the_PROTOCOL_field_CANNOT_discriminate_and_I_proved_it_on_the_files:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_reproduction_at_the_freeze_20260907.json
+    said: "read the protocol field of all five day-glob files plus the reproduction record: three distinct strings, with the residue sharing one with a real day record."
+  r392_the_day_map_counts_TWO_and_I_recomputed_it_over_the_files_on_disk:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2
+    said: "globbed the five files, excluded those with a reproduction block, collected the day field into a set: exactly two days."
+  r392_the_marker_that_WORKS_is_not_the_marker_the_SCHEMA_declares:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_reproduction_at_the_freeze_20260907.json
+    said: "read IS_A_DAY_RESULT across all six records: present and False on the new reproduction record only, absent from the two residue files and from both real day records."
+  r392_the_naming_rule_puts_the_fix_in_the_NAME_and_keeps_the_filter_as_backup:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_record_schema_declaration_v3.json
+    said: "read NAMING_RULE_FOR_REPRODUCTION_RECORDS and RESIDUE_TWO_MIS_NAMED_REPRODUCTION_RECORDS in full, including the STATUS NOT_A_DAY_RESULT and KEPT_NOT_DELETED fields."
+  r392_I_NEARLY_ATTRIBUTED_THE_WRONG_RESIDUE_DECLARATION:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_09_07_residue_check_v2.json
+    said: "read that file's protocol (P003_DE_BUILD_RESIDUE_CHECK_V2) and as_of_utc (03:17:49Z) and its contents about builder units, then found the real one by reading DA 263's commit stat: two files, da_admissible_books_declaration_v3.json and da_record_schema_declaration_v3.json."
   r391_I_COMPUTED_THE_v1_v2_DIFF_MYSELF_and_it_is_174_not_2:
     prov: CHECKED
     artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908_v2.json
