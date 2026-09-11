@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T19:16:44Z (MEM ROUND 397 -- THE NEW RULE LANDED ON MY OWN LAST ABSENCE FINDING, AND I RE-RAN IT
+  UNDER CONTROLS. When ABSENCE is the finding, run the search in a form whose failure is
+  visible: positive control 12 hits on a token I planted, known-bad 0 hits, then the real
+  query. THE CONCLUSION STANDS -- nothing asserts that anything can pass a 69-fold screen
+  -- BUT THE CONTROLLED RUN SURFACED THREE CANDIDATES MY ROUND-396 RUN HAD SWALLOWED, and
+  I read all three at the line: a task description, my own correction, and a NEGATIVE
+  claim. MY CONCLUSION SURVIVED AND MY METHOD DID NOT: at 396 I ran a bare grep with no
+  control, so a wrong path or a malformed regex would have produced the same answer with
+  the same confidence -- round 379's shape with the sign reversed. And the defect was
+  SCOPE: my exclusion was LINE-scoped while the correction markers live in the flag key
+  and elsewhere in the sentence, so three cases were dropped before I could see them. A
+  filter must be scoped to the same unit as the thing it filters on. STEP 0 PASSES: I
+  divided 46,550 by 46,591 myself -- 0.999120 against a 0.990 gate, 41 disagreements, all
+  boundary quality, zero unexplained. DA corrected its own split: seven ties are ONE feed
+  outage, precedence deciding attribution rather than data disagreeing. THE SHARED TREE IS
+  DECLARED NON-EXECUTING with a stage-0 row that REFUSES -- which closes the thread I
+  opened at 383 and extended at 385: what I could only record as a hazard now fires. And
+  the 204 is 102 plus 102, a sum over two refs that share the history; the per-ref figures
+  are 206 / 102 / 102 at 19:14Z. Tip 3a34a38.)
   2026-09-11T18:48:18Z (MEM ROUND 396 -- THE 69 STATED PRECISELY, AND THE HUNT FOUND NO FILE TO NAME.
   THE FORM TO QUOTE: lane 2's minimum attainable p times 69 is 0.134765625, which ALSO
   exceeds 0.05, so NEITHER DESIGN SURVIVES A 69-FOLD SCREEN. What lane 2 buys is that THE
@@ -105,6 +124,7 @@ updated: >-
   own value, so the claim holds and I file no correction. Two coordinator errors in band,
   each naming a class: dispatching before verifying, and a stated reason that was
   checkable and false. REV audited the work it was auditing. Tip 37a8929.)
+previous_updates: >-
   2026-09-11T18:30:27Z (MEM ROUND 394 -- A SECOND LANE, AND THE FREEZE NAMES A COMMIT THE PLAN HAS ALREADY
   MOVED PAST. R-917 freezes fair_value_plan.md at 0575444 and describes a 357-line
   protocol; a LATER user commit 876e435 hardened it to 424 lines twelve minutes before
@@ -124,7 +144,6 @@ updated: >-
   cancellation's m=2 was attainable too; what it could not satisfy was the SCREEN. The
   thing a cold reader must not conclude: lane 2 is not the cancellation test reopening.
   Tip da016c5.)
-previous_updates: >-
   2026-09-11T16:38:04Z (MEM ROUND 393 -- THE USER RULED: CONTINUE DESCRIPTIVELY. Days 09-09..09-13 are
   built and valued for PER-DAY PERFORMANCE ONLY, and the forward test's outcome stays
   FIXED AT DAY TWO -- both arms FUTILE, STOP_FOR_FUTILITY computed, no later record can
@@ -528,6 +547,15 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r397_I_APPLIED_THE_NEW_RULE_TO_MY_OWN_ROUND_396_ABSENCE_FINDING: "The rule promoted this round -- when ABSENCE is the finding, run the search in a form whose failure is visible -- lands on my own most recent absence claim, so I re-ran it under controls instead of standing on it. POSITIVE CONTROL: the same command pattern searching for 0.134765625, a token I planted myself, returned 12 hits, so the search could speak. KNOWN-BAD: a token that cannot exist returned 0. Then the real query, bracketed by both. THE CONCLUSION STANDS -- no artifact, declaration, review or register entry asserts that anything can pass a 69-fold screen -- BUT THE CONTROLLED RUN SURFACED THREE CANDIDATES MY ROUND-396 RUN HAD SWALLOWED, and I read all three at the line rather than dismissing them: STATUS.yml:533 describes the task, :549 is my own correction, :581 is a NEGATIVE claim (no attainable outcome WOULD clear). Benign, all three."
+  r397_MY_ROUND_396_CONCLUSION_SURVIVED_BUT_MY_METHOD_DID_NOT: "Stated plainly because the two are separable and only one of them was sound. At 396 I reported an absence from a bare grep with no positive control: had my path been wrong, my regex malformed or my tree the wrong one, the command would have returned nothing and I would have reported the same absence with the same confidence. The finding was right and the instrument could not have told me if it were not. That is round 379's shape with the sign reversed -- there a correct strike followed from wrong bounds; here a correct absence followed from an unproven search."
+  r397_AND_THE_DEFECT_IN_MY_FILTER_WAS_SCOPE: "Worth the detail because it is the reusable part. My exclusion was LINE-SCOPED -- grep -v on corrected, first reading, superseding -- while the markers that identify a correction live in the FLAG KEY and elsewhere in the sentence, often beyond the matched line. So a correction whose marker fell outside the line was silently dropped from the output rather than shown and dismissed. A filter that removes candidates before a human sees them must be scoped to the same unit as the thing it filters on; mine was not, and the result was an answer that happened to be right with three cases I never saw."
+  r397_STEP_0_PASSES_ITS_PRE_REGISTERED_GATE_and_I_did_the_arithmetic: "46,550 of 46,591 agree. I divided them myself: 0.999120, against a pre-registered gate of 0.990 -- PASS, and 41 disagreements. Every one of the 41 is characterised as boundary quality with ZERO unexplained, and section 10's kill criterion is not triggered. Recorded with the division done rather than the ratio copied, because a gate quoted as a ratio is a number nobody has recomputed."
+  r397_DAs_OWN_FIRST_SPLIT_CORRECTED_PRECEDENCE_NOT_DATA: "DA's first split of the residual reported seven ties. Corrected in band by DA itself: the seven are ONE FEED OUTAGE AT ONE WINDOW, and what produced the tie was PRECEDENCE DECIDING ATTRIBUTION rather than the data disagreeing. That is the same class the programme keeps finding -- a count of events that is really a count of one event seen through a rule -- and it is the second time today a seat has corrected its own first reading before anyone else did. Recorded as a correction by the seat that made it, which is the cheapest kind."
+  r397_THE_SHARED_TREE_IS_DECLARED_NON_EXECUTING_and_that_CLOSES_MY_383_385_THREAD: "da_shared_tree_non_executing_v1.json, DA 272, as-of 19:10:01Z: /home/yuqing/ctaNew is NON-EXECUTING FOR BOTH LANES and a result produced from it is INADMISSIBLE REGARDLESS OF ITS CONTENT. The executing trees are named -- wt-fwd for build, wt-deval for valuation, wt-de2 for the emit post-processors, anything else inadmissible -- and it has TEETH: a stage-0 row calling assert_executing_tree, refusing EXECUTED_FROM_AN_UNDECLARED_TREE with the path, and READING THE PAYLOAD NOT THE ENVIRONMENT. This closes the thread I opened at round 383 (the shared tree's comparator was not the certified producer) and extended at 385 (its runner was 47 commits behind too): what I could only record as a hazard is now a refusal that fires."
+  r397_THE_204_IS_A_SUM_OF_TWO_PER_REF_COUNTS: "The dispatch says the shared tree is 204 commits behind. The declaration itself says 205 behind origin/mm-research and 100 behind origin/de-freeze-chain-v2, as of 19:10:01Z. I measured at 19:14Z: 206, 102 and 102 against the three refs, with the UNION of the two build refs' unseen commits being 103. So 204 is 102 plus 102 -- a sum over two refs that share nearly all of that history, which double-counts it. The figure to quote is per ref, and the declaration's own pair is the right form. DA's 205/100 and my 206/102 differ only because the refs moved in four minutes, which is why the declaration carries an as-of."
+  r397_STEP_2_NOW_HAS_THREE_INDEPENDENT_HANDS: "The sigma producer is verified by three instruments that share no step: REVIEW 194 read it field by field against section 4 C2; I executed its falsifier to completion against real bookTicker files, 27 cells and 0 failed; and the module's own 27 two-way cells are the third, since each calls the production entry point and none reaches inside. Three hands matter here only because each could have failed independently -- a contract reading cannot catch a constant return, an execution cannot catch a contract misreading, and the module's own cells cannot catch either if they never call production."
+  r397_THE_TWO_COORDINATOR_ERRORS_AND_THE_RULE_PROMOTED_FROM_THEM: "R-921: a design was accepted by READING ITS PRINTED FIELDS rather than testing its predicate or grepping that the named refusal exists -- REVIEW 196 found the lineage discriminator unsound, the named refusal absent, and a cold reader reaching 5 of 7. R-922's context: the stale SHARED tree was grepped and a landed refusal reported absent, which is the non-executing hazard biting the person looking for it. THE RULE PROMOTED FROM REV, and it is the one I then applied to myself: WHEN ABSENCE IS THE FINDING, RUN THE SEARCH IN A FORM WHOSE FAILURE IS VISIBLE. Both errors are absence claims from unproven instruments, which is the single most repeated failure shape in this programme."
   r396_THE_69_STATED_PRECISELY_AS_RULED: "The form to quote from here, and it supersedes my own round-394 phrasing. Lane 2's minimum attainable two-sided p is 2/1024 = 0.001953125; times 69 that is 0.134765625, WHICH ALSO EXCEEDS 0.05. So NEITHER DESIGN SURVIVES A 69-FOLD SCREEN. What lane 2 buys is not a better position against the 69 -- it is that THE 69 DOES NOT APPLY TO IT: section 4 declares a CLOSED FAMILY OF EXACTLY TWO candidates, fixed before any scoring, with m = 2 forever even if one dies, so the multiplicity that governs lane 2 is 2 and not 69. That is a structural property of the declaration, NOT immunity to the arithmetic."
   r396_MY_ROUND_394_FRAMING_WAS_RIGHT_AND_INCOMPLETE: "At 394 I wrote that lane 2 buys a much better floor and not immunity. True, and it compares the two designs' arithmetic without saying the thing that actually matters: the 69 is not lane 2's multiplicity at all. A reader of my sentence could conclude lane 2 faces the same screen with better odds, which is the opposite of the case. The refinement is the coordinator's and I record it as superseding mine rather than as an addition, because the two sentences would otherwise sit side by side saying different things."
   r396_THE_HUNT_FOUND_NO_FILE_TO_NAME: "I was asked to name any artifact or doc printing that something CAN pass a 69-fold screen. I swept the programme directory, live/pm_research and docs for the fold phrasing, the candidate phrasing, the product 0.134765625 and the assertive verb forms can/could/would/will pass, clear or survive within forty characters of 69. THREE hits carry the claim and ALL THREE ARE INSIDE MY OWN CORRECTIONS -- STATUS.yml lines 102 and 522, HANDOFF.md line 176 -- each quoting the wrong claim in order to strike it. NO declaration, review, register entry or emitted artifact asserts it. There is no file to name."
@@ -28339,6 +28367,42 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r397_I_APPLIED_THE_NEW_RULE_TO_MY_OWN_ROUND_396_ABSENCE_FINDING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    said: "ran three searches in sequence -- a planted token (12 hits), an impossible token (0 hits), then the assertive-verb pattern -- and printed 80 characters of context around each surviving hit to read it at the line."
+  r397_MY_ROUND_396_CONCLUSION_SURVIVED_BUT_MY_METHOD_DID_NOT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    said: "compared the round-396 flag's own recorded method (grep -rniE over three trees, no control) against the controlled re-run; the difference is the two control searches, not the query."
+  r397_AND_THE_DEFECT_IN_MY_FILTER_WAS_SCOPE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/STATUS.yml
+    said: "the three surviving hits at :533, :549 and :581 all carry their correction or negation marker outside the 80-character window my line filter examined."
+  r397_STEP_0_PASSES_ITS_PRE_REGISTERED_GATE_and_I_did_the_arithmetic:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "computed 46550/46591 = 0.999120 and 46591-46550 = 41 in python and compared against the 0.990 gate."
+  r397_DAs_OWN_FIRST_SPLIT_CORRECTED_PRECEDENCE_NOT_DATA:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "read R-922's account of the correction; the seven collapse to one window and the mechanism named is precedence in attribution, not a data disagreement."
+  r397_THE_SHARED_TREE_IS_DECLARED_NON_EXECUTING_and_that_CLOSES_MY_383_385_THREAD:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_shared_tree_non_executing_v1.json
+    said: "read the declaration's THE_RULE, THE_EXECUTING_TREES and THE_STAGE_0_ROW_THAT_GIVES_IT_TEETH blocks; the refusal name and the entry point assert_executing_tree(module, cwd, lane) are stated there."
+  r397_THE_204_IS_A_SUM_OF_TWO_PER_REF_COUNTS:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/da_shared_tree_non_executing_v1.json
+    said: "git rev-list --count HEAD..<ref> for all three refs and the two-ref union; the declaration's THE_SHARED_TREE_MEASURED block carries 205 and 100 with as_of_utc 19:10:01Z."
+  r397_STEP_2_NOW_HAS_THREE_INDEPENDENT_HANDS:
+    prov: CHECKED
+    artifact: live/pm_research/be_sigma_30m.py
+    said: "the falsifier's terminal JSON was {falsifier: be_sigma_30m, n: 27, failed: 0} at rc 0 when I ran it; REVIEW 194's field-by-field basis and the cells' use of the production entry point are recorded in R-920."
+  r397_THE_TWO_COORDINATOR_ERRORS_AND_THE_RULE_PROMOTED_FROM_THEM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "read R-921 and R-922; the first names reading fields instead of testing predicates, the second names grepping the stale tree, and the promoted rule is stated in R-922."
   r396_THE_69_STATED_PRECISELY_AS_RULED:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
