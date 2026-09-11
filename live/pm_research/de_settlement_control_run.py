@@ -239,9 +239,11 @@ def _day_key(value) -> str:
 
 
 DECL_UNPINNED = "DECLARATION_IDENTITY_UNPINNED"
+BUILD_NOT_DESCENDANT = "BUILD_COMMIT_IS_NOT_A_DESCENDANT_OF_THE_BUILD_PIN"
+BUILD_DIGEST_MOVED = "BUILD_PINNED_DIGEST_MOVED"
 
 
-def _declaration_pin(decl_dir=None):
+def _declaration_pin(decl_dir=None):   # decl_dir: cells pass a fixture dir
     """The forward-test declaration's DECLARED identity: path AND sha256.
 
     Looked for in the freeze chain first, then the resolved params. There
@@ -318,14 +320,21 @@ def _builder_commit_admissible(builder_commit) -> bool:
     if _sp.run(["git", "-C", str(root), "merge-base", "--is-ancestor",
                 base, str(builder_commit)],
                capture_output=True).returncode != 0:
-        return False
+        raise SettlementControlRefused(
+            f"REFUSED {BUILD_NOT_DESCENDANT}: {str(builder_commit)[:12]} "
+            f"does not descend from the declared build pin "
+            f"{str(base)[:12]}.")
     for name, want in dict(digests).items():
         blob = _sp.run(["git", "-C", str(root), "show",
                         f"{builder_commit}:live/pm_research/{name}"],
                        capture_output=True)
-        if blob.returncode != 0 or hashlib.sha256(
-                blob.stdout).hexdigest() != want:
-            return False
+        got = (hashlib.sha256(blob.stdout).hexdigest()
+               if blob.returncode == 0 else "ABSENT")
+        if got != want:
+            raise SettlementControlRefused(
+                f"REFUSED {BUILD_DIGEST_MOVED}: {name} at "
+                f"{str(builder_commit)[:12]} is {got[:16]}, the declaration "
+                f"pins {str(want)[:16]}.")
     return True
 
 

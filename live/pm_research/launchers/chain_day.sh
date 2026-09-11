@@ -62,6 +62,16 @@ import json,sys; d=json.load(open(sys.argv[1])); print(d['n_files'],'files',d['t
 
 export BE_WORKTREE="$TREE" DE_VALUATION_EXPECTED_TREE="$TREE"
 cd "$TREE/live/pm_research" || exit 2
+# NEVER a version literal: the params file is whatever the FREEZE CHAIN
+# resolves. A stale default named v31 while the chain had moved to v33.
+PARAMS=$(/home/yuqing/pricer-sol/venv/bin/python3 -c "
+import sys; sys.path.insert(0,'$TREE/live/pm_research')
+import be_score_neutrality as B
+from pathlib import Path
+print(Path('$TREE/live/pm_research/declarations')/Path(
+    B.resolve_frozen_params_pin(Path('$TREE/live/pm_research/declarations'))['pin']['path']).name)")
+[ -f "$PARAMS" ] || { echo "REFUSED PARAMS_NOT_RESOLVED_FROM_THE_CHAIN"; exit 11; }
+echo "$(date -u +%H:%M:%SZ) params from the chain: $(basename "$PARAMS")"
 # REV 157: the launcher's own provenance, beside the day's receipt, so a
 # receipt can be traced to the bytes that launched it after the scratchpad
 # is gone.
@@ -142,7 +152,7 @@ while :; do
     --day "$day" --book $D/be_daybook_${compact}_btc__L250ms__FWD1.pkl \
     --book-receipt $D/be_daybook_receipt_${compact}_btc__L250ms__FWD1.json \
     --score-certification "$CERT" \
-    --params $TREE/live/pm_research/declarations/de_multiday_gate1_params_v31.json \
+    --params "$PARAMS" \
     --out-dir $D/fwd_v2 --n-draws 500 --seed 0 \
     --days-scored "$scored" --n-declared 7 --derived $D >/dev/null 2>&1
   while :; do

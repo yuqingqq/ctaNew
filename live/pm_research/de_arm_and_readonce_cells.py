@@ -4,7 +4,7 @@ Both properties are about what a RUN records, so each cell drives the same
 functions the run calls -- never a re-implementation.
 """
 from __future__ import annotations
-import hashlib, json, sys, tempfile
+import hashlib, json, sys, tempfile   # noqa: F401
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -66,6 +66,41 @@ def falsify() -> int:
        SC._admitting_arm("dbb11e4") == "DESCENDANT")
     ck("a non-descendant refuses (no arm)",
        SC._admitting_arm("0" * 40) is None)
+    # (3) both former silent Falses now REFUSE BY NAME
+    import tempfile as _tf, shutil as _sh
+    try:
+        SC._builder_commit_admissible("0" * 40)
+        ck("a non-descendant refuses BY NAME", False)
+    except SC.SettlementControlRefused as e:
+        ck("a non-descendant refuses BY NAME",
+           SC.BUILD_NOT_DESCENDANT in str(e))
+    # The fixture declaration lives INSIDE the real declarations dir under
+    # a distinct name: moving HERE to a temp tree also moves the git root
+    # the descendant check uses, so NOT_DESCENDANT fired before the digest
+    # check could. Keep HERE real; vary only the pinned identity.
+    D = HERE / "declarations"
+    fx = D / "da_forward_test_declaration_v26.DIGESTCELL.json"
+    try:
+        doc = json.loads(
+            (D / "da_forward_test_declaration_v26.json").read_text())
+        k = sorted(doc["BUILD_PINNED_DIGESTS"])[0]
+        doc["BUILD_PINNED_DIGESTS"][k] = "0" * 64
+        fx.write_text(json.dumps(doc))
+        pin = {"path": fx.name,
+               "sha256": hashlib.sha256(fx.read_bytes()).hexdigest()}
+        orig_pin = SC._declaration_pin
+        SC._declaration_pin = lambda decl_dir=None, _p=pin: _p
+        try:
+            SC._builder_commit_admissible("dbb11e4")
+            ck("one declared digest moved refuses BY NAME", False)
+        except SC.SettlementControlRefused as e:
+            ck("one declared digest moved refuses BY NAME",
+               SC.BUILD_DIGEST_MOVED in str(e) and k in str(e), k)
+        finally:
+            SC._declaration_pin = orig_pin
+    finally:
+        if fx.exists():
+            fx.unlink()          # the cell leaves nothing behind
     pins = R.resolve_declaration_pins()
     ck("both declaration identities are pinned and named",
        set(pins) == {"day_read_state_attestation",

@@ -495,7 +495,10 @@ def main(argv=None) -> int:
         derived / "be_score_neutrality_20260903__EV22_vs_NEUTCHK__"
                   "68e7d23.json")
     params = Path(a.params) if a.params else (
-        decls / "de_multiday_gate1_params_v31.json")
+        decls / Path(str((R.resolve_declaration_pins(decls) or {}).get(
+            "params", {}).get("path")
+            or __import__("be_score_neutrality").resolve_frozen_params_pin(
+                decls)["pin"]["path"])).name)
     # PRINT THE RESOLVED ABSOLUTE PATHS, THEN REFUSE IF ANY IS MISSING.
     # Run as `-m` with an unsupported flag, the old positional form took
     # "--days" as the certificate and a date as the params file, then
