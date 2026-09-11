@@ -9,15 +9,18 @@ file and requires the refusal to NAME that file. A verifier that has never
 been seen to fire is not a control.
 """
 from __future__ import annotations
-import argparse, hashlib, json, os, shutil, sys, tempfile
+import argparse, hashlib, json, os, shutil, subprocess, sys, tempfile
 from pathlib import Path
 
 #: v2 is the UNION of DA's list and DE's generator output. v1 stays on disk as
 #: provenance (rule 13) and is NOT the freeze in force.
-DECL = Path(__file__).resolve().parent / "declarations" / "da_population_freeze_v3.json"
+DECL = Path(__file__).resolve().parent / "declarations" / "da_population_freeze_v4.json"
 ROOTS = {"main": Path("/home/yuqing/ctaNew"),
          "wt-fwd": Path("/home/yuqing/ctaNew-wt-fwd"),
-         "wt-deval": Path("/home/yuqing/ctaNew-wt-deval")}
+         "wt-deval": Path("/home/yuqing/ctaNew-wt-deval"),
+         #: the emit waiter runs the two RESULT-BEARING modules from a FOURTH
+         #: worktree. Classing them by a tree they were absent from was the gap.
+         "wt-de2": Path("/home/yuqing/ctaNew-wt-de2")}
 
 DRIFT = "POPULATION_FREEZE_FILE_DRIFTED"
 #: R-900(7): two classes, two consequences. A PIPELINE byte moving means the
@@ -28,6 +31,13 @@ DRIFT = "POPULATION_FREEZE_FILE_DRIFTED"
 INSTRUMENT_DRIFT = "INSTRUMENT_DRIFTED"
 ABSENT = "POPULATION_FREEZE_FILE_ABSENT"
 NO_DECL = "POPULATION_FREEZE_DECLARATION_ABSENT"
+#: An entry carrying `asserted_against` is checked TWICE: its executed bytes
+#: against the declared digest (DRIFT), and the declared digest against what the
+#: named origin ref actually carries (ASSERT_MISMATCH). The second is the emit
+#: waiter's own expectation, checked WITHOUT trusting the waiter -- the ref it
+#: names is the one that matters, and pointing at the wrong ref would bless
+#: stale bytes silently.
+ASSERT_MISMATCH = "EMIT_ASSERTION_DIGEST_MISMATCH"
 
 
 class FreezeRefused(RuntimeError):
@@ -63,6 +73,28 @@ def verify(decl_path: Path = DECL, roots=None) -> dict:
     if absent:
         raise FreezeRefused(
             f"REFUSED {ABSENT}: {len(absent)} declared file(s) are gone -- {absent[:4]}")
+    bad_assert = []
+    for e in d["files"]:
+        ref = e.get("asserted_against")
+        if not ref:
+            continue
+        gitref, _, gpath = ref.partition(":")
+        # THE REF IS A REPOSITORY FACT, NOT A FILE IN THE MIRROR. Resolve it
+        # against the REAL worktree even when `roots` points at a scratch copy:
+        # a mirror has no .git, so looking the ref up there would report ABSENT
+        # for every entry and turn the whole branch into a false alarm.
+        out = subprocess.run(["git", "-C", str(ROOTS[e["root"]]), "show", f"{gitref}:{gpath}"],
+                             capture_output=True)
+        got = hashlib.sha256(out.stdout).hexdigest() if out.returncode == 0 else None
+        if got != e.get("asserted_digest"):
+            bad_assert.append({"path": e["path"], "ref": ref,
+                               "declared": (e.get("asserted_digest") or "")[:16],
+                               "on_ref": (got or "ABSENT")[:16]})
+    if bad_assert:
+        names = ", ".join(x["path"] for x in bad_assert)
+        raise FreezeRefused(
+            f"REFUSED {ASSERT_MISMATCH}: {len(bad_assert)} entr(ies) no longer match "
+            f"the origin ref they are asserted against -- {names}. First: {bad_assert[0]}")
     if drifted:
         names = ", ".join(x["path"] for x in drifted[:4])
         raise FreezeRefused(
@@ -147,6 +179,22 @@ def falsify() -> int:
                    expect_refuse and DRIFT in str(ex) and e["path"] in str(ex))
             tgt.write_bytes(orig)
         ck("  and both restorations verify clean",
+           verify(DECL, sroots)["status"] == "POPULATION_FREEZE_HOLDS")
+
+        # the ASSERTED-DIGEST branch: point the expectation at the wrong bytes
+        import copy as _c
+        d2 = _c.deepcopy(d)
+        tgt2 = next(e for e in d2["files"] if e.get("asserted_against"))
+        tgt2["asserted_digest"] = "0" * 64
+        dp = td / "bad_assert.json"; dp.write_text(json.dumps(d2))
+        try:
+            verify(dp, sroots)
+            ck("a WRONG asserted digest REFUSES", False)
+        except FreezeRefused as ex:
+            ck(f"a WRONG asserted digest REFUSES by filename "
+               f"({Path(tgt2['path']).name})",
+               "EMIT_ASSERTION_DIGEST_MISMATCH" in str(ex) and tgt2["path"] in str(ex))
+        ck("  and the UNMODIFIED declaration still verifies",
            verify(DECL, sroots)["status"] == "POPULATION_FREEZE_HOLDS")
 
         # a DELETED file refuses under a different name
