@@ -67,6 +67,26 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T16:00:46Z (MEM ROUND 388 -- THE FORWARD TEST'S OUTCOME IS FIXED AT DAY TWO, AND I REPRODUCED
+  THE ARITHMETIC THAT FIXES IT. Not read: re-derived from N=7 and a two-sided sign test
+  over 128 patterns. CONDVALUE's 2 non-positive days cap it at 5 of 7 -> 2*29/128 =
+  0.453125; HAZARD's 1 caps it at 6 of 7 -> 2*8/128 = 0.125; the declared floor is
+  2*1/128 = 0.015625 at 7-of-7. Both caps equal the filed values exactly and I evaluated
+  the 0.025 comparison myself. BOTH ARMS FUTILE, KILLED_BY_NEGATIVE_DAYS. The cap comes
+  from the days ALREADY SEEN, so days 3-7 cannot move it: the outcome is a consequence of
+  arithmetic on a design committed before the first draw, not a decision anyone took. THE
+  SENTENCE IS NOT_ESTABLISHED_AT_THIS_POWER AND NEVER NO_EFFECT -- at a floor reachable
+  only at 7-of-7 this design could not have licensed absence -- with REVIEW 174's
+  asymmetry beside it and Holm m=2 unchanged. DE 346's per-arm fix TOOK and I checked it
+  from outside: HAZARD's 09-07 reads +4925.363903000005 in the map and the same in its
+  own cell, which the old shared map could not have produced. BUT running_tally still
+  presents one arm's negative-day list in a per-day slot -- leak and union are
+  observationally identical on two days, and a third would separate them. Licensing
+  verified field by field: DESCENDANT both arms, all six unnamed-member rows
+  recorded==on_disk by my own comparison, cohort agreement empty, stage 0
+  POPULATION_FREEZE_HOLDS 67/67 -- but the report it rests on lives in /tmp, and the
+  emit was overwritten in place so the 15:52:37Z record is gone. The 09-09 build is HELD;
+  continuing for descriptive per-day performance is the USER's call. Tip 73d5655.)
   2026-09-11T15:48:48Z (MEM ROUND 387 -- DAY ONE REPRODUCES EXACTLY FROM THE FREEZE-BUILT BOOK, AND DAY
   TWO'S TWO CELLS ARE VERIFIED BY RECOMPUTATION. The 09-07 reproduction returns D
   -14645.078818000005 against day one's -14645.078818000005 -- delta ZERO, not merely to
@@ -105,6 +125,7 @@ updated: >-
   both snapshots is_final_for_quotation false. And I nearly filed a FALSE ABSENCE from a
   guessed filename: da_code_freeze_vN vs da_code_freeze_DECLARATION_vN, all nine present
   on all three refs. Tip 566ea87.)
+previous_updates: >-
   2026-09-11T13:40:03Z (MEM ROUND 384 -- (b) IS GREEN ON A PER-LEAF PREDICATE, AND THE LANDED BOOK CARRIES
   A SIX-DAY RULED SET. BE 176: 322732 leaves, 322723 equal, EXACTLY NINE differing and
   all nine in the declared 50-name set (7 wall_clock, 2 resource_telemetry);
@@ -124,7 +145,6 @@ updated: >-
   artifact for it -- SPECIFIED, not DRIVEN; admitted_by is in three .py files and in no
   record yet. A THIRD identity rebuild, be183ident0908, has held the lock since
   13:37:48Z. Tip 9941d2d.)
-previous_updates: >-
   2026-09-11T12:59:14Z (MEM ROUND 383 -- FALSIFIER (b) RESOLVES ON CONTENT AND THE ONLY DIFFERENCES ARE
   STOPWATCHES. BE 173's diff landed 88 s after R-906 called it pending: DATA_DIFFERS is
   exactly ['asm','asm.assembly'] and asm differs only because asm.assembly does. I opened
@@ -385,6 +405,18 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r388_BOTH_futility_p_values_REPRODUCED_from_the_declared_design: "I did not read these numbers, I re-derived them from N=7 and a two-sided sign test over 2^7 = 128 sign patterns. CONDVALUE has 2 non-positive days, so it can reach at best 5 of 7: 2*(C(7,5)+C(7,6)+C(7,7))/128 = 2*29/128 = 0.453125. HAZARD has 1, so at best 6 of 7: 2*(7+1)/128 = 2*8/128 = 0.125. Both equal the filed best_attainable_p exactly, and I evaluated the comparison against the 0.025 threshold myself rather than reading FUTILE. The record's own floor_at_the_G_DECLARED, 0.015625, is 2*1/128 -- the 7-of-7 tail, the same value on this programme's record since the design was fixed."
+  r388_THE_OUTCOME_IS_ARITHMETIC_AND_NOT_JUDGEMENT: "Under the design the user fixed -- N=7, one look, unanimity at tolerance_negative_days 0 -- a single non-positive day ends an arm. CONDVALUE has two and HAZARD has one, so the best either can still attain is 0.453125 and 0.125 against a 0.025 threshold. Days 3 through 7 cannot move either number down, because the cap comes from the days ALREADY SEEN and not from the days remaining. That is why the test's outcome is fixed at day two: not a decision anyone took, a consequence of arithmetic on a design committed before the first draw."
+  r388_the_sentence_is_NOT_ESTABLISHED_AT_THIS_POWER_and_NEVER_NO_EFFECT: "The pre-written outcome sentence applies and the distinction is the whole point: at G=2 of a declared 7, with a floor of 0.015625 attainable only at 7-of-7, this design could never have licensed 'no effect' -- failing to reject at this power is not evidence of absence. REVIEW 174's asymmetry still stands beside it: a failure by the two survivors of the 69 is comparatively stronger evidence against the family they came from than a failure by two arms picked at random would be. Holm m=2 unchanged. Recorded in the state file in these words so no later reader shortens it."
+  r388_DE_346s_per_arm_fix_TOOK_and_I_checked_it_from_outside: "The assembly had shared one per-day D map across arms. It is fixed and I verified it independently rather than reading the fix: emit.per_day_D_by_arm now gives CONDVALUE 09-07 -14645.078818000005 and 09-08 -49303.579891000016 (two negatives) and HAZARD 09-07 +4925.363903000005 and 09-08 -23977.998804000017 (one). I then opened day one's HAZARD CELL directly and it reads +4925.363903000005 -- the same value. Under the old shared map HAZARD's 09-07 entry would have carried CONDVALUE's negative, so this is the discriminating check and it passes."
+  r388_but_running_tally_still_presents_ONE_ARMS_negative_days: "emit.running_tally.negative_or_zero_days is ['2026-09-07','2026-09-08'] -- a per-arm shape in a per-day slot, one level above the map DE 346 just made per-arm. On THIS data I cannot distinguish the two readings: CONDVALUE's list is ['09-07','09-08'] and the union across arms is also ['09-07','09-08'], so a leak and a correctly computed union are observationally identical here. I am not calling it a defect; I am naming that the shape is the one just fixed below it and that a third day would separate the readings. For DE to confirm which it is."
+  r388_the_registers_path_to_the_futility_block_is_one_level_short: "R-910 cites futility.CONDVALUE_X_SKEW.FUTILE. The record has no top-level futility key: the block lives at emit.futility.<arm>. Trivial to a human reader and not trivial to an automated one, which is the reason receipts are resolved by field path in this programme at all."
+  r388_the_licensing_evidence_verified_field_by_field: "admitted_by is DESCENDANT for both arms. The three unnamed scoring-set members are be_score_neutrality.py, harmful_hazard_model.py and phase2_state_schema_freeze.py, and for BOTH arms I compared recorded against on_disk string by string: all six rows equal, identical True. Note two of the three are the ruled lazy-exemption set and the third is be_score_neutrality.py -- the member that was OUTSIDE it at round 385 and refused the run; it now records a455191d6bceec7e, the certificate's producer I have tracked since round 377. cohort_agreement has waiver_needed False and fields_differing empty. stage0 reads POPULATION_FREEZE_HOLDS, 67 of 67 verified, 52 PIPELINE and 15 INSTRUMENT with INSTRUMENT_DRIFTED empty, verifier 74930d284a5cbec2 against declaration v17 at 14:19:02Z."
+  r388_the_LICENCE_RESTS_ON_A_REPORT_THAT_LIVES_IN_TMP: "stage0.source is /tmp/stage0_freeze_20260908.json. The file EXISTS as I write -- 661 bytes, 14:19:02Z -- so the evidence is resolvable right now, and the record's own WHERE_THIS_LIVES field says the launcher wrote it there. But /tmp is outside every artifact tree, untracked, and cleared by a reboot or a tmp sweep, and the licence has already been granted on it. The entry says future launches write it run-scoped; until one does, a licence granted today is evidenced by a file that no policy keeps."
+  r388_the_record_was_OVERWRITTEN_IN_PLACE_and_the_earlier_one_is_GONE: "The 15:52:37Z emit was replaced by the 15:54:50Z one at the same path. There is a single file, data/ is untracked, and no .vN or dated sibling exists, so the earlier record is not recoverable from this machine. R-910 says so itself and gives the right mitigation -- the cells in fwd_rehearsal_0908/ are the provenance, and they are, since I recomputed both p from their checkpoints last round -- and rules future re-emits vN+1. Recorded because rule 13 says never edit a frozen artifact, the correction was made by overwrite, and the entry names it in band rather than quietly."
+  r388_the_record_carries_a_REFUSAL_INSIDE_ITSELF: "emit.progress_emit is not a table but UNAVAILABLE, carrying REFUSED FORWARD_EVALUATOR_NO_VERIFIED_WINNER_RECEIPT_FOR_A_DAY: 2026-09-08 has no point-estimate receipt, with the reason in its own words -- a cent figure whose winner source was never verified must say so, and saying so requires the receipt that did the verifying. So the record that licenses the result also declines to print one of its own sub-tables. That is the behaviour rule 10 asks for, appearing inside the terminal artifact rather than beside it."
+  r388_STOP_ADVICE_is_None_while_EVERY_ARM_ALREADY_DEAD_is_True: "In the same emit, ANY_ARM_ALREADY_DEAD and EVERY_ARM_ALREADY_DEAD are both True and STOP_ADVICE is None. The stop is determined by the futility blocks and the tally, so nothing is wrong with the result; what is empty is the field whose name promises the advice. Filed as an observation for DE rather than a defect, because I did not read the code that populates it and do not know whether it is reserved for a different condition."
+  r388_the_09_09_build_is_HELD_and_the_continuation_is_the_USERS_call: "The 09-09 real build is held. Whether 09-09 through 09-13 are built and valued for DESCRIPTIVE per-day performance is the user's decision, not a seat's, and the population stays protected either way -- books build from archives at any time, so nothing is lost by waiting. Recorded so that the next round does not read the held build as a blocked task needing a fix."
   r387_landing_refused_a_fifth_time_at_129_over_173: "HELD BEHIND_AND_NOT_FF again. The series is 112/131, 117/139, 121/159, 125/169, 129/173 across rounds 382-387: local has gained 17 commits and origin 42 in about three and a half hours, on the same two other-seat files. SIX MEM rows are now written and unlanded, Q-MEM-338 (round 358) through Q-MEM-343. I did not merge, stash or rebase (rules 21, 45). The backlog grows by one row per round and no landing path exists that does not touch another seat's uncommitted work."
   r387_the_09_07_reproduction_is_EXACT_not_merely_to_the_cent: "R-909 requires day one's D to reproduce to the cent from the freeze-built book. It reproduces EXACTLY: -14645.078818000005 against -14645.078818000005, delta 0.0000000000 cents, and arm_settled_total_cents -19082.8184176 and 27073 cancels are identical too. This is across a DIFFERENT book (887a97eb vs the landed one), a DIFFERENT seed (88265706 vs 4124458766) and a DIFFERENT oracle (46290 records vs 46145); p moves as expected with the seed, 0.16966067864271456 against 0.18163672654690619. CONDVALUE ONLY -- the HAZARD arm was still drawing when I read it, so the link is established for one arm and pending for the other, and I do not report it as both."
   r387_the_oracle_grew_145_records_and_D_DID_NOT_MOVE: "At round 385 I flagged that the consistency-link reproduction would read an oracle about a hundred records larger than the one falsifier (a) passed against, and said plainly that whether any added record falls in 09-07's own slugs was not something I measured. It is now answered empirically rather than by argument: the reproduction read 46290 records against (a)'s 46145 -- 145 more -- and D did not move by a cent. The question I could not settle by reasoning was settled by the run."
@@ -28129,6 +28161,54 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r388_BOTH_futility_p_values_REPRODUCED_from_the_declared_design:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json
+    said: "computed the binomial tails with math.comb for need in (7,6,5) giving 0.015625, 0.125 and 0.453125, then matched each arm's n_negative to its attainable best and compared against best_attainable_p_given_what_is_already_seen: equal to within 1e-12 for both arms."
+  r388_THE_OUTCOME_IS_ARITHMETIC_AND_NOT_JUDGEMENT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json
+    said: "read emit.futility for both arms, emit.running_tally (G_so_far 2, G_declared 7, days_remaining 5, tolerance 0, computed_not_typed true) and emit.EVERY_ARM_ALREADY_DEAD True; re-derived the caps myself as above."
+  r388_the_sentence_is_NOT_ESTABLISHED_AT_THIS_POWER_and_NEVER_NO_EFFECT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "read R-910's wording against the emit's own numbers; the floor and the attainable minima are the arithmetic that makes the distinction non-rhetorical."
+  r388_DE_346s_per_arm_fix_TOOK_and_I_checked_it_from_outside:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/de_settle_result_20260907_HAZARD_OVER_SKEWED_REF.json
+    said: "printed emit.per_day_D_by_arm per arm, derived each arm's negative set from the map and compared with its futility block's n_negative (2 and 1, both agreeing), then read observed_D_cents straight from day one's HAZARD cell."
+  r388_but_running_tally_still_presents_ONE_ARMS_negative_days:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json
+    said: "compared emit.running_tally.negative_or_zero_days against each arm's futility.negative_or_zero_days: CONDVALUE ['2026-09-07','2026-09-08'], HAZARD ['2026-09-08']; the union equals CONDVALUE's list on this data."
+  r388_the_registers_path_to_the_futility_block_is_one_level_short:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json
+    said: "listed the record's top-level keys -- protocol, day, book, book_sha256, cells, admitted_by, unnamed_scoring_members, n_draws, seed_cli, stage0, book_sha256_field, winner_source_sha256_field, winner_source, cohort_agreement, emit, at_utc -- no futility among them; walked every path and found 25 under emit.futility."
+  r388_the_licensing_evidence_verified_field_by_field:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json
+    said: "read admitted_by, walked unnamed_scoring_members for both arms comparing recorded == on_disk myself rather than trusting the identical flag, and read cohort_agreement and the whole stage0 block."
+  r388_the_LICENCE_RESTS_ON_A_REPORT_THAT_LIVES_IN_TMP:
+    prov: CHECKED
+    artifact: /tmp/stage0_freeze_20260908.json
+    said: "stat on the path returned 661 bytes at 14:19:02Z; the record's stage0.source names that exact path and its rows block carries the verifier digest and declaration."
+  r388_the_record_was_OVERWRITTEN_IN_PLACE_and_the_earlier_one_is_GONE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json
+    said: "listed the directory for any sibling of the record and found exactly one file, at_utc 2026-09-11T15:54:50Z matching its mtime; git log on the path confirms data/ is not tracked."
+  r388_the_record_carries_a_REFUSAL_INSIDE_ITSELF:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json
+    said: "read emit.progress_emit and found the UNAVAILABLE key with the refusal text instead of a table."
+  r388_STOP_ADVICE_is_None_while_EVERY_ARM_ALREADY_DEAD_is_True:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json
+    said: "read emit.STOP_ADVICE (None), emit.ANY_ARM_ALREADY_DEAD (True) and emit.EVERY_ARM_ALREADY_DEAD (True) from the same record."
+  r388_the_09_09_build_is_HELD_and_the_continuation_is_the_USERS_call:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "read R-910's closing ruling; the tripwire in the same emit reads NOT_APPLICABLE_SINGLE_BOOK_NO_SUPERSEDED_PAIR with its pair glob recorded, so no superseded-pair work is pending either."
   r387_landing_refused_a_fifth_time_at_129_over_173:
     prov: CHECKED
     artifact: scripts/land_register_row.sh
