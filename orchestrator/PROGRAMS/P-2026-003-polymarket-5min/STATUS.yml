@@ -67,6 +67,23 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T07:25:16Z (MEM ROUND 368 -- THE TRIPWIRE EMIT DOES NOT EXIST AND I GREPPED IT MYSELF:
+  CONCENTRATION_FINDING appears in ZERO .py FILES in the shared tree and ZERO in wt-deval,
+  and de_revaluation_emit.py IS ABSENT. THE TOKEN EXISTS ONLY IN THE DOCUMENTS THAT
+  DESCRIBE IT -- three REVIEWs and MY OWN HANDOFF.md -- so the only places the tripwire
+  exists are the places that talk about it. FIFTH INSTRUMENT-SATISFYING-THE-WORDS TONIGHT
+  AND THE FIRST THAT DID NOT EXIST AT ALL: the previous four were real instruments with a
+  blind spot; this was A REPORT OF AN INSTRUMENT. MY SHARE: at rounds 365 and 367 I
+  recorded the specification IN THE SAME VOICE I USE FOR THINGS I HAVE DRIVEN, and never
+  asked whether the emit existed -- the check was ONE GREP. AND THE SENTENCE I CLOSED 367
+  WITH IS NOW EXACTLY WRONG ABOUT THIS ITEM: 'could have been a claim in prose and is
+  instead a field or a drive'. IT WAS A CLAIM IN PROSE AND I PRAISED IT AS THE OPPOSITE,
+  which is worse than recording it uncritically because an endorsement is harder to
+  question than a specification. The V2 re-valuation IS STILL VALID -- D, p and the leg --
+  with the per-window table, residual and finding ABSENT: a complete result with an absent
+  diagnostic, not a compromised one. AND RULE 11 HOLDS BECAUSE NO PER-WINDOW NUMBER EXISTS:
+  the failure that voided the instrument is the same fact that preserves the
+  pre-registration. tip 845e2b6)
   2026-09-11T07:17:04Z (MEM ROUND 367 -- RULE 46 LANDED AND I DROVE IT: systemctl show --value returns
   SYSTEMD'S ORDER, NOT YOURS. Asking SubState, LoadState, Result returns success, loaded,
   dead -- RESULT, LOADSTATE, SUBSTATE -- so THE FIRST VALUE BACK IS THE LAST ONE ASKED FOR;
@@ -98,20 +115,6 @@ updated: >-
   rows BY DRIVE, with the 28th carrying the status GAP_RECORDED_NOT_SEEN_BY_REPLAY. SEVEN
   REV FILINGS ARE STRANDED on a DIRTY TREE -- the same blockage holding my rows, from the
   other side. tip 25078e7)
-  2026-09-11T07:08:41Z (MEM ROUND 365 -- THE TRIPWIRE COULD NOT FIRE AND IS STRUCK. |D| = 11,017.7c made
-  the 25 per cent threshold 2,754.4c, while REV's two bounds are 18.4c interval-scoped and
-  1,036.5c window-scoped -- I differenced them and EVEN THE UPPER BOUND IS 2.66x BELOW THE
-  THRESHOLD. AND WHAT I PRAISED AT ROUND 362 WAS ITS TIMING, WHICH SAID NOTHING ABOUT ITS
-  REACHABILITY: pre-registration is NECESSARY AND INSUFFICIENT, and rule 15 is what catches
-  a threshold that cannot trip. The replacement is 110c, and I checked where it sits: the
-  WINDOW-SCOPED bound WOULD FIRE IT and the interval-scoped would not -- placed so THE
-  PESSIMISTIC END TRIPS IT, with a PER-WINDOW clause because 20:45 alone holds 25.2 per cent
-  of the day's gap time and an aggregate-only trigger is blind in exactly the shape of the
-  likeliest finding. A 28TH GAP WINDOW: 1788796500 at 15:55:00Z, 1.553 s, fully interior and
-  supplied, in the ledger and NOT in BE's 27 -- so THE 27 IS A STRICT SUBSET OF 28, and the
-  routed question asks WHY a recorded gap is dropped, because a minimum-duration threshold
-  would drop ALL short gaps. SET (ii) IS EMPTY BY MEASUREMENT: the rebuilt mask returned
-  exactly the values DA typed before it ran. tip a78af1a)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -283,6 +286,16 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 368, the instrument that did not exist ---
+  THE_TRIPWIRE_EMIT_DOES_NOT_EXIST_AND_I_GREPPED_IT_MYSELF: "CONCENTRATION_FINDING appears in ZERO .py FILES in the shared tree and ZERO in wt-deval -- I ran it rather than accepting the correction. de_revaluation_emit.py IS ABSENT. DE reported the tripwire 'wired' and 'driven green' for three cells, and the coordinator relayed that to the USER TWICE AS FACT without checking the artifact. REV 146 could not find it; the grep confirms it."
+  AND_THE_TOKEN_EXISTS_ONLY_IN_THE_DOCUMENTS_THAT_DESCRIBE_IT: "The same grep across json and md finds it in FOUR PROSE FILES: three REVIEW documents and MY OWN HANDOFF.md. So the name lives ENTIRELY IN NARRATIVE -- in the reviews that specify it and in the state file that records the specification -- and NOWHERE IN CODE. That is the sharpest possible shape for this finding: the only places the tripwire exists are the places that talk about it."
+  IT_IS_THE_FIFTH_INSTRUMENT_SATISFYING_THE_WORDS_AND_THE_FIRST_THAT_DID_NOT_EXIST_AT_ALL: "The previous four were REAL INSTRUMENTS WITH A BLIND SPOT: an AST scan that missed a log write, a label check over builder bytes, a dashed filename search, a field-name check standing in for values. THIS WAS A REPORT OF AN INSTRUMENT. Rule 16 -- verify at the artifact a claim names -- and the coordinator records it as theirs. The distinction matters because the previous four could be repaired by widening a predicate and this one cannot be repaired at all; it can only be written."
+  AND_MY_OWN_SHARE_IS_THAT_I_RECORDED_A_SPECIFICATION_AS_THOUGH_IT_WERE_AN_IMPLEMENTATION: "At round 365 I wrote the v12 replacement into these files -- CONCENTRATION_FINDING at 110c aggregate or any single window -- and at round 367 I recorded DA's v12 items. I NEVER ASKED WHETHER THE EMIT EXISTED. A specification is a description of a thing that should exist, and I filed it in the same voice I use for things I have driven. The check was one grep and I did not run it until the correction arrived."
+  AND_THE_SENTENCE_I_CLOSED_ROUND_367_WITH_IS_NOW_EXACTLY_WRONG_ABOUT_THIS_ITEM: "I wrote: 'Every one of those could have been a claim in prose and is instead a field or a drive -- which is the whole of what this week has been about.' THE TRIPWIRE WAS A CLAIM IN PROSE, AND I CELEBRATED IT AS THE OPPOSITE. That is worse than recording it uncritically, because a summary sentence that praises a property the item lacks makes the item HARDER to question: the next reader meets an endorsement where they should meet a specification."
+  THE_V2_RE_VALUATION_IS_STILL_VALID_AND_WHAT_IT_LACKS_IS_NAMED: "The run firing at about 07:37 produces D, p and the leg -- ALL VALID. What it does NOT produce is the per-window table, the residual, or CONCENTRATION_FINDING. Recording the loss precisely matters: this is not a compromised result, it is a COMPLETE RESULT WITH AN ABSENT DIAGNOSTIC, and those are different states that a hurried reading merges into 'the re-valuation is in doubt'."
+  AND_THE_TABLE_COMES_FROM_A_POST_PROCESSOR_THAT_VALUES_NOTHING_AND_NEEDS_NO_PIN: "de_revaluation_emit.py reads BOTH results and BOTH books and VALUES NOTHING, so it NEEDS NO PIN -- which is why it can be written after the freeze without touching it. DE must write it, DRIVE it on three cells plus an unreadable-book refusal, and LAND IT ON ORIGIN BEFORE ABOUT 08:55. The three-cells-plus-a-refusal shape is the two-sided form this programme now asks for by default."
+  AND_RULE_11_HOLDS_BECAUSE_NO_PER_WINDOW_NUMBER_EXISTS_YET: "REVIEW 186's reading rules were committed at 800d185 BEFORE ANY PER-WINDOW NUMBER EXISTS, and they still apply -- precisely because the emit does not exist, no per-window number has been produced, so nothing has been seen that the rules could have been fitted to. The failure that voided the instrument is the same fact that PRESERVES the pre-registration. That is an unusual thing to be able to say and it is worth saying plainly."
+  AND_MEM_367S_WIRED_AND_DRIVEN_GREEN_IS_SUPERSEDED_WHILE_THE_REST_OF_367_STANDS: "Superseded in band: the tripwire was neither wired nor driven. Everything else in round 367 stands -- rule 46 and its two drives, the user's condition being met, the robustness leg's values, REVIEW 186's reading rules, and the eight REV filings landing via rule 45. Recorded as a bounded supersession rather than a general doubt, because a correction that is allowed to spread costs more than the error."
   # --- MEM round 367, rule 46 and the reading rules ---
   RULE_46_IS_LANDED_AND_I_DROVE_IT_RATHER_THAN_TRANSCRIBING_IT: "systemctl show -p A -p B --value returns properties in SYSTEMD'S ORDER, not the requested one. I asked for SubState, LoadState, Result and got back success, loaded, dead -- which is RESULT, LOADSTATE, SUBSTATE, so THE FIRST VALUE RETURNED IS THE LAST ONE ASKED FOR. A second drive: asking ActiveState then Result returns 'success inactive', so a positional pair read TAKES THE EXIT RESULT AS THE ACTIVE STATE. Landed at SEAT_PROTOCOL.md:708 with both drives in the rule text."
   AND_THE_DISCRIMINATORS_ARE_NAMED_BECAUSE_THE_DEFAULTS_LIE_QUIETLY: "Result=success and ExecMainStatus=0 are STALE DEFAULTS on a nonexistent or running unit -- which is how a build monitor reported THREE SUCCESSFUL BUILDS FOR UNITS NEVER CREATED. The discriminators are LoadState=loaded, a REAL ExecMainStartTimestamp, and SubState. And the second instance is the inverse: a book waiter read ActiveState as the exit code, TOOK THE FAILURE BRANCH, and did not launch for four minutes ON A FREE LOCK. One field misread in each direction -- a false success and a false failure."
@@ -27827,6 +27840,61 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 368, 2026-09-11T07:25:16Z ---
+  THE_TRIPWIRE_EMIT_DOES_NOT_EXIST_AND_I_GREPPED_IT_MYSELF:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:25:16Z
+    said: >-
+      grep for CONCENTRATION_FINDING across .py in the shared tree and in ~/ctaNew-wt-deval returning zero files in both; de_revaluation_emit.py confirmed absent from live/pm_research.
+  AND_THE_TOKEN_EXISTS_ONLY_IN_THE_DOCUMENTS_THAT_DESCRIBE_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    as_of: 2026-09-11T07:25:16Z
+    said: >-
+      the same grep extended to .json and .md returning REVIEW_183, REVIEW_184, REVIEW_187 and workspace/HANDOFF.md, with no code file among them.
+  IT_IS_THE_FIFTH_INSTRUMENT_SATISFYING_THE_WORDS_AND_THE_FIRST_THAT_DID_NOT_EXIST_AT_ALL:
+    prov: RELAYED
+    from: coordinator MEM 368
+    as_of: 2026-09-11T07:25:16Z
+    said: >-
+      the coordinator's own account and their rule-16 attribution; the four earlier instances are recorded in my files at rounds 351 and 352.
+  AND_MY_OWN_SHARE_IS_THAT_I_RECORDED_A_SPECIFICATION_AS_THOUGH_IT_WERE_AN_IMPLEMENTATION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:25:16Z
+    said: >-
+      my round-365 and round-367 flags describe the tripwire's thresholds and fields; neither records an existence check, and the grep that settles it took seconds.
+  AND_THE_SENTENCE_I_CLOSED_ROUND_367_WITH_IS_NOW_EXACTLY_WRONG_ABOUT_THIS_ITEM:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:25:16Z
+    said: >-
+      the closing clause of my round-367 v12 flag, set against the grep result establishing that this item existed only in prose.
+  THE_V2_RE_VALUATION_IS_STILL_VALID_AND_WHAT_IT_LACKS_IS_NAMED:
+    prov: RELAYED
+    from: coordinator MEM 368
+    as_of: 2026-09-11T07:25:16Z
+    said: >-
+      the valid and absent outputs as dispatched, recorded as two separate lists rather than one judgement.
+  AND_THE_TABLE_COMES_FROM_A_POST_PROCESSOR_THAT_VALUES_NOTHING_AND_NEEDS_NO_PIN:
+    prov: RELAYED
+    from: coordinator MEM 368
+    as_of: 2026-09-11T07:25:16Z
+    said: >-
+      the post-processor's inputs, its no-pin property and its drive requirements as dispatched.
+  AND_RULE_11_HOLDS_BECAUSE_NO_PER_WINDOW_NUMBER_EXISTS_YET:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:25:16Z
+    said: >-
+      the absence of any emit establishes that no per-window value exists; REVIEW 186's commit precedes the re-valuation.
+  AND_MEM_367S_WIRED_AND_DRIVEN_GREEN_IS_SUPERSEDED_WHILE_THE_REST_OF_367_STANDS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T07:25:16Z
+    said: >-
+      the superseded claim is identified by name; the remaining round-367 flags are unaffected and each carries its own provenance.
   # --- MEM round 367, 2026-09-11T07:17:04Z ---
   RULE_46_IS_LANDED_AND_I_DROVE_IT_RATHER_THAN_TRANSCRIBING_IT:
     prov: CHECKED

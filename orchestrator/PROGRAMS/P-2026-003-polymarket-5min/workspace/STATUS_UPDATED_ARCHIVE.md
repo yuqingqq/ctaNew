@@ -23511,3 +23511,22 @@ generation and the window went 4 → 3. Nothing rewritten.
   and exactly that window, TYPED BEFORE IT RUNS. Ruling: 287 on the tripwire table, 288 as
   the coverage denominator, the masked window AS A STATUS. tip 7ce92b9)
 ```
+
+## Batch 350 (rotated by MEM round 368, 2026-09-11T07:25:16Z)
+
+```
+  2026-09-11T07:08:41Z (MEM ROUND 365 -- THE TRIPWIRE COULD NOT FIRE AND IS STRUCK. |D| = 11,017.7c made
+  the 25 per cent threshold 2,754.4c, while REV's two bounds are 18.4c interval-scoped and
+  1,036.5c window-scoped -- I differenced them and EVEN THE UPPER BOUND IS 2.66x BELOW THE
+  THRESHOLD. AND WHAT I PRAISED AT ROUND 362 WAS ITS TIMING, WHICH SAID NOTHING ABOUT ITS
+  REACHABILITY: pre-registration is NECESSARY AND INSUFFICIENT, and rule 15 is what catches
+  a threshold that cannot trip. The replacement is 110c, and I checked where it sits: the
+  WINDOW-SCOPED bound WOULD FIRE IT and the interval-scoped would not -- placed so THE
+  PESSIMISTIC END TRIPS IT, with a PER-WINDOW clause because 20:45 alone holds 25.2 per cent
+  of the day's gap time and an aggregate-only trigger is blind in exactly the shape of the
+  likeliest finding. A 28TH GAP WINDOW: 1788796500 at 15:55:00Z, 1.553 s, fully interior and
+  supplied, in the ledger and NOT in BE's 27 -- so THE 27 IS A STRICT SUBSET OF 28, and the
+  routed question asks WHY a recorded gap is dropped, because a minimum-duration threshold
+  would drop ALL short gaps. SET (ii) IS EMPTY BY MEASUREMENT: the rebuilt mask returned
+  exactly the values DA typed before it ran. tip a78af1a)
+```
