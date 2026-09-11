@@ -38,15 +38,55 @@ SNAP=/home/yuqing/ctaNew-oracle-${compact}
 rm -rf "$SNAP"; mkdir -p "$SNAP/data/pm_5min"
 for e in /home/yuqing/ctaNew/*; do n=$(basename "$e"); [ "$n" = data ] || ln -s "$e" "$SNAP/$n"; done
 for e in /home/yuqing/ctaNew/data/*; do n=$(basename "$e"); [ "$n" = pm_5min ] || ln -s "$e" "$SNAP/data/$n"; done
+# REV 162: the first snapshot froze ONE of FIVE growing inputs -- the one
+# digested in the cell -- and left the rest as symlinks to live files.
+# Every append-only input is COPIED; only static files are symlinked.
+GROWING="resolutions.jsonl collector_gaps.jsonl markets.jsonl \
+rewards_registry.jsonl collector_runs.jsonl"
 for e in /home/yuqing/ctaNew/data/pm_5min/*; do n=$(basename "$e")
-  [ "$n" = resolutions.jsonl ] || ln -s "$e" "$SNAP/data/pm_5min/$n"; done
-cp /home/yuqing/ctaNew/data/pm_5min/resolutions.jsonl "$SNAP/data/pm_5min/resolutions.jsonl"
+  case " $GROWING " in *" $n "*) continue ;; esac
+  ln -s "$e" "$SNAP/data/pm_5min/$n"; done
+for n in $GROWING; do
+  src=/home/yuqing/ctaNew/data/pm_5min/$n
+  [ -f "$src" ] && cp "$src" "$SNAP/data/pm_5min/$n"
+done
+# and mm_hf's own ledger, which also grows
+rm -f "$SNAP/data/mm_hf"; mkdir -p "$SNAP/data/mm_hf"
+for e in /home/yuqing/ctaNew/data/mm_hf/*; do n=$(basename "$e")
+  if [ "$n" = collector_runs.jsonl ]; then cp "$e" "$SNAP/data/mm_hf/$n"
+  else ln -s "$e" "$SNAP/data/mm_hf/$n"; fi; done
+# REFUSE if any growing input is still a symlink to the live tree.
+for n in $GROWING; do
+  f="$SNAP/data/pm_5min/$n"
+  [ -e "$f" ] || continue
+  if [ -L "$f" ]; then
+    echo "REFUSED SNAPSHOT_ROOT_HAS_LIVE_INPUT:$n -- a growing file left as"\
+         "a symlink is not frozen, and the run would read it as it grows"
+    exit 5
+  fi
+done
+[ -L "$SNAP/data/mm_hf/collector_runs.jsonl" ] && {
+  echo "REFUSED SNAPSHOT_ROOT_HAS_LIVE_INPUT:mm_hf/collector_runs.jsonl"; exit 5; }
+FROZEN_SHAS=""
+for n in $GROWING; do
+  f="$SNAP/data/pm_5min/$n"; [ -f "$f" ] || continue
+  FROZEN_SHAS="$FROZEN_SHAS $n:$(sha256sum "$f" | cut -c1-16)"
+done
 SNAP_SHA=$(sha256sum "$SNAP/data/pm_5min/resolutions.jsonl" | cut -d" " -f1)
 SNAP_N=$(wc -l < "$SNAP/data/pm_5min/resolutions.jsonl")
-echo "$(date -u +%H:%M:%SZ) oracle frozen: $SNAP sha ${SNAP_SHA:0:16} records $SNAP_N"
+echo "$(date -u +%H:%M:%SZ) oracle frozen: $SNAP oracle ${SNAP_SHA:0:16} records $SNAP_N"
+echo "$(date -u +%H:%M:%SZ) frozen inputs:$FROZEN_SHAS"
 export PM_DATA_ROOT="$SNAP"
 export BE_WORKTREE="$TREE" DE_VALUATION_EXPECTED_TREE="$TREE"
 cd "$TREE/live/pm_research" || exit 2
+# REV 157: the launcher's own provenance, beside the day's receipt, so a
+# receipt can be traced to the bytes that launched it after the scratchpad
+# is gone.
+self=/home/yuqing/ctaNew-wt-deval/live/pm_research/launchers/chain_day.sh
+/home/yuqing/pricer-sol/venv/bin/python3 - "$day" "$self" "$H" <<'PYL'
+[ -f "/home/yuqing/ctaNew/data/pm_5min/derived/fwd_v2/p003_de_chain_launch_${compact}.json" ] || {
+  echo "REFUSED CHAIN_LAUNCH_RECORD_NOT_WRITTEN: no provenance record, no offer"; exit 6; }
+
 # STAGE 0 distinguishes NOT-YET-BUILT from WRONG.
 #   exit 3 = WOULD_REFUSE -> a stale or wrong record: stop, named.
 #   exit 4 = INPUT_ABSENT -> the book is not built yet: wait, no offer.
@@ -64,11 +104,7 @@ while :; do
   esac
 done
 
-# REV 157: the launcher's own provenance, beside the day's receipt, so a
-# receipt can be traced to the bytes that launched it after the scratchpad
-# is gone.
-self=/home/yuqing/ctaNew-wt-deval/live/pm_research/launchers/chain_day.sh
-/home/yuqing/pricer-sol/venv/bin/python3 - "$day" "$self" "$H" <<'PYL'
+
 import hashlib, json, sys, datetime
 from pathlib import Path
 day, self_path, head = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -80,6 +116,19 @@ rec = {"protocol": "P003_DE_CHAIN_LAUNCH_PROVENANCE_V1", "day": day,
            f.stat().st_mtime).isoformat() + "Z",
        "tree_head": head,
        "oracle_snapshot_root": __import__("os").environ.get("PM_DATA_ROOT"),
+       "pm_data_root_read_back_from_unit_environ": (
+           dict(kv.split("=", 1) for kv in
+                Path(f"/proc/{__import__('os').getppid()}/environ")
+                .read_bytes().decode().split("\x00") if "=" in kv)
+           .get("PM_DATA_ROOT")),
+       "frozen_inputs": {f.name: __import__("hashlib").sha256(
+           f.read_bytes()).hexdigest() for f in sorted(
+           Path(__import__("os").environ["PM_DATA_ROOT"],
+                "data/pm_5min").iterdir()) if f.is_file()
+           and not f.is_symlink()},
+       "symlinked_inputs": {f.name: str(f.resolve()) for f in sorted(
+           Path(__import__("os").environ["PM_DATA_ROOT"],
+                "data/pm_5min").iterdir()) if f.is_symlink()},
        "oracle_sha256": __import__("hashlib").sha256(
            Path(__import__("os").environ["PM_DATA_ROOT"],
                 "data/pm_5min/resolutions.jsonl").read_bytes()).hexdigest(),
