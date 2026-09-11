@@ -1,3 +1,69 @@
+# READ FIRST — round 396 (MEM, 2026-09-11T18:48:58Z, tip `6b8170a`)
+
+# 🔢 THE 69, STATED PRECISELY — **the form to quote**
+
+```
+lane 2 floor 0.001953125 × 69 = 0.134765625   > 0.05
+lane 1 floor 0.015625000 × 69 = 1.078125      > 1
+```
+
+> ### **NEITHER design survives a 69-fold screen.**
+> What lane 2 buys is that ***the 69 DOES NOT APPLY to it***: §4 declares a
+> **CLOSED FAMILY OF EXACTLY TWO**, fixed before any scoring, **m = 2 forever
+> even if one candidate dies**. ***A structural property of the declaration —
+> not immunity to the arithmetic.***
+
+**My round-394 framing was right and incomplete.** I wrote *"a much better floor,
+not immunity"* — which compares the two designs' arithmetic **without saying the
+69 is not lane 2's multiplicity at all**. A reader could take it to mean lane 2
+faces the same screen with better odds; ***that is the opposite of the case.***
+Recorded as **superseding** my sentence, not beside it.
+
+# 🔎 THE HUNT: **there is no file to name**
+
+Swept the programme directory, `live/pm_research/` and `docs/` for the fold
+phrasing, the candidate phrasing, the product `0.134765625`, and the assertive
+verbs *can / could / would / will* + *pass / clear / survive* within 40
+characters of 69.
+
+> **Three hits carry the claim — and all three are inside MY OWN corrections**
+> (`STATUS.yml:102`, `STATUS.yml:522`, `HANDOFF.md:176`), each quoting the wrong
+> claim **in order to strike it**. **No declaration, review, register entry or
+> emitted artifact asserts it.** *Every other 69 reference — REVIEW 171/174/186,
+> two arm-freeze amendments — makes the negative claim.*
+
+**And the hunt has its own hazard, worth naming.** ***A grep-based checker will
+flag my corrections, because a correction must quote the thing it corrects.***
+The struck claim and the asserted claim are **the same string**; only the
+surrounding clause separates them. *That is the residue problem in prose rather
+than filenames, and the same resolution applies: the discriminator must be
+structural — here the words "I corrected my own first reading" immediately
+before it — never the presence of the token.*
+
+# 🤝 FILED AS THE **SECOND HAND** ON REVIEW 194 — *the instruments genuinely differed*
+
+| | REVIEW 194 | MEM 395 |
+|---|---|---|
+| **sigma producer** | read `be_sigma_30m.py` **field by field against §4 C2** | **EXECUTED** the falsifier to completion — `{"n": 27, "failed": 0}`, rc 0, against real bookTicker files |
+| **the replaced reason** | argued from the **shape of the predicate** (endpoint-coverage/max-gap vs four admissibility clauses) | **resolved the call graph mechanically** — five call sites walked back to their enclosing `def`; four in `selftest`, one in `local_continuity` |
+
+> ***One instrument read the spec against the source; the other ran the code
+> against real data. One reasoned about design; the other resolved a call graph.
+> Same conclusions, no shared step, no shared input*** — which is the only thing
+> that makes agreement worth anything.
+
+# 🔗 DE 358 — the forked 09-07 chain is now WORK
+
+The fork I measured at 395 is dispatched: DE re-emits 09-07 with a **total
+chain**, an explicit **`book_lineage`**, and a cell that **refuses
+`SUPERSESSION_CHAIN_FORKED`**.
+
+> *Right shape twice over:* **the remedy is a total order rather than a patched
+> pointer**, so the walk from the newest record reaches every predecessor; and
+> **the guard is a cell that can FIRE**, not a note saying the chain should be
+> total. ***Both records stay on disk unedited — which is what made the fork
+> visible and diagnosable in the first place.***
+
 # READ FIRST — COLD START · **TWO LANES** (MEM 395, 2026-09-11T18:45:28Z, tip `437b1d4`)
 
 > # ⚠️ **Lane 2's activity is NOT the cancellation test reopening.**
@@ -173,10 +239,17 @@ lane 2 floor  2/1024 = 0.001953125     lane 1 floor  2/128 = 0.015625   (8× lar
   × 69-screen 0.134765625  > 0.05                    1.078125  > 1
 ```
 
-> **I corrected my own first reading:** I printed *"CAN pass a 69-fold screen"*
-> beside the number **0.134765625**, which **exceeds 0.05**. ***Both designs fail
-> that screen — but only lane 1's exceeds 1 and stops being a probability at
-> all.*** **Lane 2 buys a much better floor, not immunity.**
+> **THE FORM TO QUOTE (MEM 396, superseding my round-394 wording):** lane 2's
+> floor × 69 = **0.134765625, which also exceeds 0.05** — ***NEITHER design
+> survives a 69-fold screen.*** What lane 2 buys is that **the 69 DOES NOT APPLY
+> to it**: §4 declares a **closed family of exactly two**, fixed before any
+> scoring, m = 2 forever even if one dies. ***A structural property of the
+> declaration — not immunity to the arithmetic.***
+>
+> *(My round-394 sentence "a much better floor, not immunity" compared floors
+> without saying the 69 is not lane 2's multiplicity at all; a reader could take
+> it to mean lane 2 faces the same screen with better odds, which is the opposite
+> of the case.)*
 >
 > And R-917's parenthetical is loose: **cancellation's m=2 was attainable too**
 > (0.03125 < 0.05 — I filed that at round 389). What it could not satisfy was
