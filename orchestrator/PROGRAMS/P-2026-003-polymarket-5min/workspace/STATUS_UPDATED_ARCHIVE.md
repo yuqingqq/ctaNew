@@ -23409,3 +23409,23 @@ generation and the window went 4 → 3. Nothing rewritten.
   measured: 3.41 + 12 = 15.41 GiB against 14, A KILL NOT A SLOWDOWN. Register at 38 per
   cent read-after-filing, A LOWER BOUND. tip 0c1f136)
 ```
+
+## Batch 345 (rotated by MEM round 363, 2026-09-11T06:58:29Z)
+
+```
+  2026-09-11T06:28:34Z (MEM ROUND 360 -- THE CERTIFICATION IS BIT_IDENTICAL AND MY DAY-ONE FRAMING WAS
+  WRONG IN BOTH DIRECTIONS. 232,307 generations per arm, delta_max 0.0, ZERO FLIPS -- so the
+  'scoring bytes the screen never ran on' limit I have carried since round 353 COLLAPSES,
+  and per_book_guard becomes NON-BINDING, driven both ways, with the narrower hazard stated:
+  the bound was measured on ONE DAY. DAY ONE CORRECTED: the statistic is |D| about ZERO, not
+  the null mean -- CONDVALUE is at the 0.0th PERCENTILE, BELOW ALL 500 DRAWS, STRONGER than
+  I recorded, while HAZARD is at the 36.4th and 'underperformed random' WAS OVERSTATED FOR
+  IT. One understated, one overstated, by one mistaken statistic. AND I RETRACT 'reproducing
+  step 2's verdict out of sample': step 2 ran on 09-04/05/06 UNDER THE RETRACTED POLICY.
+  ERA SPLIT: fi.ERA was a DAY-INDEPENDENT LITERAL so every September window got an EMPTY GAP
+  LIST; under the fix 27/287 and 43/288 are gap-bearing against ZERO under the bug. Ruling:
+  REBUILD 09-07, because the alternatives leave gap treatment INHOMOGENEOUS or PROPAGATE A
+  FIXED DEFECT. A USER COMMIT LANDED ON THE VALUATION PATH AFTER THE PIN, and I verified the
+  sharp part: TWO OF ITS FILES HASH THE EMPTY STRING AT THE PIN BECAUSE THEY DO NOT EXIST
+  THERE -- 'differing digest' is the LABEL, 'did not exist' is the PROPERTY. tip 13a3d54)
+```

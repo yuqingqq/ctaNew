@@ -67,6 +67,21 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T06:58:29Z (MEM ROUND 363 -- TWO CORRECTIONS AND A MASK RULING. THE 27 GAP INTERVALS EXCLUDE
+  NO ROWS on the day path -- BINANCE_GAP_EXCLUDED_STATUS is NOT_APPLIED_ON_THE_DAY_PATH,
+  which I read -- so they change WHAT THE REPLAY SEES in retained windows, and row removal
+  comes only from the MASK, whose BTC share is ONE window. THE 232,305-BYTE DELTA HAS NO
+  ESTABLISHED CAUSE. My own round-362 flag attributed none, which I checked rather than
+  assumed. THE 27 AND THE 12 ARE DISJOINT BY DEFINITION -- blackout is THIN AND NOT
+  GAP-OVERLAPPED, in code -- so they are not two estimates of one quantity and must never be
+  reconciled to one; the tripwire becomes TWO SEPARATELY ENUMERATED SETS. RULING: THE MASK
+  ITSELF MUST BE REBUILT under the fixed era for all seven days, because under the buggy era
+  EVERY THIN WINDOW WAS VACUOUSLY A BLACKOUT -- an empty gap list makes the negated-overlap
+  term trivially true. DAY ONE IS CLEAN, ESTABLISHED, superseding my 'probably clean':
+  runner blob 4ba1177f = the pin -- AND THAT IS THE VALUE I HASHED MYSELF AT ROUND 360, so
+  under the timing clause I state that MINE WAS FILED FIRST and this is confirmation, not
+  corroboration. The freeze's tuning field is A DECLARED BOOL NO CODE READS, and its checker
+  EXISTS UNWIRED. tip 929e5b2)
   2026-09-11T06:53:01Z (MEM ROUND 362 -- THE FREEZE IS AMENDED TO da00220 FOR THE VALUATION PATH BY USER
   RULING: V2 for all seven days, day one RE-VALUED, build pin UNCHANGED -- and it CLOSES A
   GAP THE FREEZE CONTAINED, since the declaration has required the NO_FILLS leg since 02:24Z
@@ -100,21 +115,6 @@ updated: >-
   ATTRIBUTION: I identified 'origin's BE 133' BY SUBJECT PREFIX and it is a DIFFERENT
   COMMIT FROM TWO DAYS EARLIER. The conclusion survives for a better reason -- the commit I
   amended IS LOCAL-ONLY AND NEVER PUBLISHED. tip 066c800)
-  2026-09-11T06:28:34Z (MEM ROUND 360 -- THE CERTIFICATION IS BIT_IDENTICAL AND MY DAY-ONE FRAMING WAS
-  WRONG IN BOTH DIRECTIONS. 232,307 generations per arm, delta_max 0.0, ZERO FLIPS -- so the
-  'scoring bytes the screen never ran on' limit I have carried since round 353 COLLAPSES,
-  and per_book_guard becomes NON-BINDING, driven both ways, with the narrower hazard stated:
-  the bound was measured on ONE DAY. DAY ONE CORRECTED: the statistic is |D| about ZERO, not
-  the null mean -- CONDVALUE is at the 0.0th PERCENTILE, BELOW ALL 500 DRAWS, STRONGER than
-  I recorded, while HAZARD is at the 36.4th and 'underperformed random' WAS OVERSTATED FOR
-  IT. One understated, one overstated, by one mistaken statistic. AND I RETRACT 'reproducing
-  step 2's verdict out of sample': step 2 ran on 09-04/05/06 UNDER THE RETRACTED POLICY.
-  ERA SPLIT: fi.ERA was a DAY-INDEPENDENT LITERAL so every September window got an EMPTY GAP
-  LIST; under the fix 27/287 and 43/288 are gap-bearing against ZERO under the bug. Ruling:
-  REBUILD 09-07, because the alternatives leave gap treatment INHOMOGENEOUS or PROPAGATE A
-  FIXED DEFECT. A USER COMMIT LANDED ON THE VALUATION PATH AFTER THE PIN, and I verified the
-  sharp part: TWO OF ITS FILES HASH THE EMPTY STRING AT THE PIN BECAUSE THEY DO NOT EXIST
-  THERE -- 'differing digest' is the LABEL, 'did not exist' is the PROPERTY. tip 13a3d54)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -286,6 +286,15 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 363, two corrections and a mask ruling ---
+  THE_SIZE_DELTAS_CAUSE_IS_UNEXPLAINED_AND_THE_GAP_INTERVALS_EXCLUDE_NO_ROWS: "Correction 1. The 27 gap intervals EXCLUDE NO ROWS on the day path -- I read it: BINANCE_GAP_EXCLUDED_STATUS = 'NOT_APPLIED_ON_THE_DAY_PATH' at be_daybook_build.py:660, carried into the status at :662 and onto the selection at :1219. THEY CHANGE WHAT THE REPLAY SEES IN RETAINED WINDOWS. Row removal comes only from the blackout MASK, whose BTC share is ONE window, 1788807300. SO THE 232,305-BYTE DELTA HAS NO ESTABLISHED CAUSE and is pending DA and BE."
+  AND_MY_OWN_ROUND_362_FLAG_ATTRIBUTED_NO_CAUSE_SO_THERE_IS_NOTHING_IN_MY_FILES_TO_RETRACT: "I checked my own text rather than assume. The round-362 flag records the two byte counts, the difference, both unit readings, the row and window counts and the provenance -- and the string 'exclud' does not appear in it. So the correction lands on the dispatch's wording and not on the state files. That is not a credit to me: I RECORDED A MEASUREMENT WITHOUT AN EXPLANATION, which is only the right shape by default. The substantive update is that THE CAUSE IS NOW EXPLICITLY UNEXPLAINED, which is a stronger statement than silence."
+  THE_27_AND_THE_12_ARE_DISJOINT_BY_DEFINITION_AND_MUST_NEVER_BE_RECONCILED_TO_ONE: "Correction 2, and the definition is in code: da_content_liveness_rule.py builds its blackout set as windows that are THIN -- b < med * thin_frac -- AND NOT gap-overlapped, via 'not TD.gap_overlaps(gaps, c, w, w + WINDOW_S)'. So BLACKOUT is thin AND NOT gap-overlapped, and the two sets CANNOT INTERSECT BY CONSTRUCTION. REV's 12 was 7 coins over 2,016 windows; BE's 27 is BTC over 287. NEITHER IS WRONG AND THEY ARE NOT TWO ESTIMATES OF ONE QUANTITY."
+  AND_REVS_MAGNITUDE_BOUND_WAS_ON_THE_WRONG_SET_SO_THE_TRIPWIRE_BECOMES_TWO_ENUMERATIONS: "The bound is being re-derived. The corrected tripwire is v10 with TWO SEPARATELY ENUMERATED SETS: 27 gap-bearing windows, which are a REPLAY CHANGE WITH ROWS RETAINED, and mask flips, which are a ROW-COUNT CHANGE, at most one expected for BTC. Two mechanisms, two counts, two units -- and a single combined number would have been a quantity with no referent. This is the same shape as coverage 0.7419 against 247-of-288 and as the 4-raises-versus-1-violation partition: numbers in one sentence that count different things."
+  THE_MASK_MUST_BE_REBUILT_UNDER_THE_FIXED_ERA_TOO_NOT_JUST_THE_BOOK: "Rule 14 ruling, routed by DA 230. The mask's CLASSIFICATION DEPENDS ON THE GAP LEDGER, and under the buggy era EVERY THIN WINDOW WAS VACUOUSLY A BLACKOUT -- because the gap list was empty, so the not-gap-overlapped condition was trivially true for everything thin. Uniform scope therefore reaches the mask for all seven days. DA 231 is rebuilding 09-07's mask NOW, OUTCOME-BLIND under the DA 215 allowlist, BEFORE the book."
+  DAY_ONE_IS_CLEAN_ESTABLISHED_AND_IT_SUPERSEDES_PROBABLY_CLEAN: "REVIEW 137/179: launch record deFV0907b at 04:04:30Z, wt-be reflog HEAD 651a7b5, RUNNER BLOB 4ba1177f = THE PIN, and da00220 NOT AN ANCESTOR. Residual stated rather than hidden: a dirty working file at import is not excluded. This supersedes the 'probably clean, and I can only say probably' I recorded one round ago, and the upgrade came from the reflog and the blob rather than from an author date -- which is exactly what REV said an author date could not do."
+  AND_MY_OWN_ROUND_360_HASH_MATCHES_THE_RUNNER_BLOB_WITH_THE_FILING_ORDER_STATED: "At round 360, checking which of the user commit's five files existed at the pin, I hashed de_settlement_control_run.py at 7ed5a90 and recorded 4ba1177fff3a3bbd. REV's runner blob is 4ba1177f. THE SAME VALUE. Under the timing clause I landed at round 357 I state the order rather than claim convergence: MINE WAS FILED FIRST, at round 360, and REV's finding came later -- so this is my measurement CONFIRMING REV's, not two independent observations, and I do not present it as corroboration."
+  THE_TUNING_FIELD_IS_A_DECLARED_BOOL_READ_BY_NO_CODE_AND_ITS_CHECKER_IS_UNWIRED: "NO_PARAMETER_OR_MODULE_IS_TUNED -- with the space in its key that I recorded last round -- is a DECLARED BOOLEAN THAT NO CODE READS. And the checker that would enforce the property, FORWARD_COMPUTING_MODULES_NOT_AT_FROZEN_PIPELINE, EXISTS IN de_forward_value_day.py UNWIRED. So the freeze's central promise had a field nobody reads and a guard nobody calls -- both halves of the class this programme has been cataloguing, in one clause. DE is wiring it at import."
   # --- MEM round 362, the freeze amended, three reversals, a falsifier that did not run ---
   THE_FREEZE_IS_AMENDED_TO_DA00220_FOR_THE_VALUATION_PATH_BY_USER_RULING: "V2 for all seven days, day one RE-VALUED under it, build pin 7ed5a90 UNCHANGED. The reason belongs in the receipt: the declaration has required the NO_FILLS_UNTIL_NEXT_GENERATION leg since v2 at ee1e85d, 02:24Z, and V1 NEVER COMPUTED IT -- so the amendment CLOSES A GAP THE FREEZE CONTAINED rather than opening one. Two branches considered and not taken: revert-to-V1-and-relax-the-leg, which is anti-conservative; and hold-until-fork-resolved."
   AND_IT_IS_CONDITIONAL_ON_A_FALSIFIER_THAT_HAS_NOT_RUN: "V2's primary D must match V1 TO THE CENT; ANY MOVEMENT VOIDS THE AMENDMENT AND RETURNS TO THE USER. So the ruling is not a decision to adopt V2 -- it is a decision to adopt V2 IF a specific measurement comes back a specific way, and as of this sweep THAT MEASUREMENT DOES NOT EXIST. Recorded in that form because a conditional ruling quoted without its condition becomes an unconditional one within about two hops."
@@ -27774,6 +27783,55 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 363, 2026-09-11T06:58:29Z ---
+  THE_SIZE_DELTAS_CAUSE_IS_UNEXPLAINED_AND_THE_GAP_INTERVALS_EXCLUDE_NO_ROWS:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-11T06:58:29Z
+    said: >-
+      be_daybook_build.py read at :660, :662 and :1219 for the constant, its status field and its use; the one-window BTC mask share is as dispatched.
+  AND_MY_OWN_ROUND_362_FLAG_ATTRIBUTED_NO_CAUSE_SO_THERE_IS_NOTHING_IN_MY_FILES_TO_RETRACT:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-11T06:58:29Z
+    said: >-
+      the round-362 flag value loaded from STATUS.yml and searched: it contains the arithmetic and the identifiers and no causal clause.
+  THE_27_AND_THE_12_ARE_DISJOINT_BY_DEFINITION_AND_MUST_NEVER_BE_RECONCILED_TO_ONE:
+    prov: CHECKED
+    artifact: live/pm_research/da_content_liveness_rule.py
+    as_of: 2026-09-11T06:58:29Z
+    said: >-
+      da_content_liveness_rule.py read around :218-222: the invis comprehension requires both the thinness predicate and the negated gap overlap; 7*288 = 2016 computed as REV's denominator against BE's 287.
+  AND_REVS_MAGNITUDE_BOUND_WAS_ON_THE_WRONG_SET_SO_THE_TRIPWIRE_BECOMES_TWO_ENUMERATIONS:
+    prov: RELAYED
+    from: coordinator MEM 363
+    as_of: 2026-09-11T06:58:29Z
+    said: >-
+      the v10 tripwire's two sets and their mechanisms as dispatched; the earlier instances of the same shape are recorded at rounds 335 and 345.
+  THE_MASK_MUST_BE_REBUILT_UNDER_THE_FIXED_ERA_TOO_NOT_JUST_THE_BOOK:
+    prov: CHECKED
+    artifact: live/pm_research/da_content_liveness_rule.py
+    as_of: 2026-09-11T06:58:29Z
+    said: >-
+      the vacuity follows from the predicate I read above: with an empty gap list the negated-overlap term is always true, so blackout collapses to thinness alone.
+  DAY_ONE_IS_CLEAN_ESTABLISHED_AND_IT_SUPERSEDES_PROBABLY_CLEAN:
+    prov: RELAYED
+    from: REVIEW 137/179 via coordinator MEM 363
+    as_of: 2026-09-11T06:58:29Z
+    said: >-
+      the four facts and the residual as dispatched; the superseded formulation is in my round-362 flags.
+  AND_MY_OWN_ROUND_360_HASH_MATCHES_THE_RUNNER_BLOB_WITH_THE_FILING_ORDER_STATED:
+    prov: CHECKED
+    artifact: live/pm_research/de_settlement_control_run.py
+    as_of: 2026-09-11T06:58:29Z
+    said: >-
+      de_settlement_control_run.py hashed at 7ed5a90 giving 4ba1177fff3a3bbd, matching the round-360 flag that recorded it and the blob REV names.
+  THE_TUNING_FIELD_IS_A_DECLARED_BOOL_READ_BY_NO_CODE_AND_ITS_CHECKER_IS_UNWIRED:
+    prov: RELAYED
+    from: coordinator MEM 363
+    as_of: 2026-09-11T06:58:29Z
+    said: >-
+      the unread-bool and unwired-checker status as dispatched; I read the checker's definition and raise site myself at round 362, at de_forward_value_day.py:39 and :102.
   # --- MEM round 362, 2026-09-11T06:53:01Z ---
   THE_FREEZE_IS_AMENDED_TO_DA00220_FOR_THE_VALUATION_PATH_BY_USER_RULING:
     prov: RELAYED
