@@ -424,6 +424,79 @@ def executing_refs() -> dict:
     }
 
 
+
+#: §7's requirements, each with the ONE LINE a reader needs when it is unmet.
+#: Keyed to the field or chain link that decides it, so the line is attached to
+#: a COMPUTED verdict and cannot drift away from it.
+WHY_LINES = {
+    "source_manifests":
+        "no manifest enumerates the immutable inputs, so the frozen chain "
+        "begins at a link nothing identifies",
+    "initial_inventory":
+        "inventory enters replay only as a caller-supplied `initial_state`; no "
+        "frozen starting value exists to replay from",
+    "tick_rounding":
+        "no fair-value module declares a legal tick, so 'rounds to the tick' "
+        "has no tick to round to",
+    "fee_rule":
+        "no fee appears anywhere in the frozen chain, so a P&L computed from it "
+        "would be gross by construction",
+    "quote_parameters":
+        "the seam satisfies 1 of §7's 8 quote-mapping clauses; see "
+        "`fields.quote_parameters` for the seven driven failures",
+    "chain:immutable_inputs":
+        "the first link of §7's chain has no implementation and no manifest",
+    "chain:pnl":
+        "the last link of §7's chain has no implementation; nothing computes P&L",
+    "latency:placement_latency_ms_not_bound_in_any_frozen_chain_file":
+        "placement_latency_ms = 250 is declared here but is not BOUND in any "
+        "file the freeze covers; it lives in the cancellation lane's daybook "
+        "builder and appears in this lane only as the string 'L250ms' in a "
+        "receipt filename",
+    "quote_mapping_property:UP_uses_p":
+        "the anchor is not the consumed probability",
+    "quote_mapping_property:DOWN_uses_1_minus_p":
+        "quote_from takes no side or outcome, so there is no DOWN quote to map",
+    "quote_mapping_property:bid_rounds_DOWN_to_the_legal_tick":
+        "bid uses symmetric round(x, 12), not a downward round to a legal tick",
+    "quote_mapping_property:ask_rounds_UP_to_the_legal_tick":
+        "ask uses symmetric round(x, 12), not an upward round to a legal tick",
+    "quote_mapping_property:prices_bounded_to_the_legal_binary_range":
+        "unbounded: at p=0.999 the ask is 1.009 and at p=0.001 the bid is "
+        "-0.009, both outside the legal binary range",
+    "quote_mapping_property:crossing_quote_emits_PLACE_WITHHELD_MARKETABLE_CROSS":
+        "MARKETABLE_CROSS appears in ZERO .py files in the lane; the event §7 "
+        "requires does not exist to be emitted",
+    "quote_mapping_property:never_silently_clamped":
+        "with no withhold path there is nothing to prefer over clamping",
+    "quote_mapping_property:no_zero_latency_privilege_for_candidate_induced_change":
+        "the seam carries no latency at all, so it cannot deny a privilege it "
+        "never models",
+}
+
+
+def why_not_effective(d: dict) -> list:
+    """EXACTLY WHAT MAKES `freeze_is_effective` FALSE -- one computed line per
+    unmet §7 requirement (DA 282).
+
+    Built from the SAME gap list the predicate is computed from, so the
+    explanation cannot disagree with the verdict: every gap must resolve to a
+    line, and a gap with no line is itself reported rather than dropped.
+    """
+    out = []
+    for g in d["blocking_gaps"]:
+        key = g.replace("chain_link_not_implemented:", "chain:")
+        out.append({
+            "requirement": g,
+            "section": "§7",
+            "satisfied": False,
+            "why": WHY_LINES.get(key, WHY_LINES.get(g, "NO LINE RECORDED FOR "
+                                                    "THIS GAP -- see rule below")),
+            "line_recorded": (key in WHY_LINES) or (g in WHY_LINES),
+        })
+    return out
+
+
 def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -> dict:
     if fetch:
         subprocess.run(["git", "-C", _root(), "fetch", "--quiet", "origin"], check=False)
@@ -469,11 +542,12 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
     if not lat["present_in_the_chain"]:
         gaps.append("latency:placement_latency_ms_not_bound_in_any_frozen_chain_file")
 
-    return {
+    out = {
         "protocol": PROTOCOL, "plan": PLAN,
         "DRAFT": False,
         "LANDED_BY": "DA 281",
         "freeze_is_effective": not gaps,
+        "why_not_effective": None,          # filled below, from the same list
         "WHAT_freeze_is_effective_MEANS": (
             "TRUE only when every §7 field resolves and every chain link has an "
             "implementation. It is FALSE here. The declaration exists so that "
@@ -496,11 +570,17 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
                            "`ready_to_land` requires BOTH an empty gap list and "
                            "that return, and this file cannot measure the second, "
                            "so it defaults False and must be passed in."),
+        "n_blocking_gaps_without_a_recorded_line": None,   # filled below
         "EVERY_VERDICT_COMPUTED_FROM_ARTIFACT_FIELDS": True,
         "NO_PROSE_ONLY_PASS": ("§7 forbids one. Every predicate above is "
                                "computed from a blob at the ref or driven "
                                "against it; none is satisfied by a sentence."),
     }
+    why = why_not_effective(out)
+    out["why_not_effective"] = why
+    out["n_blocking_gaps_without_a_recorded_line"] = sum(
+        1 for w in why if not w["line_recorded"])
+    return out
 
 
 def falsify() -> int:

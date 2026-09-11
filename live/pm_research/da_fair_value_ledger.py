@@ -651,9 +651,14 @@ def step11_step6_freeze(refs=EXECUTING_REFS) -> dict:
                 continue
             b = _git("show", f"{ref}:{path}", text=False).stdout
             try:
-                eff.append(json.loads(b.decode()).get("freeze_is_effective") is True)
+                decl = json.loads(b.decode())
+                # BOTH, so a declaration that CLAIMS effectiveness while naming
+                # its own blocking gaps cannot unlock anything. The claim and
+                # the evidence for it must agree inside the same document.
+                eff.append(decl.get("freeze_is_effective") is True
+                           and decl.get("n_blocking_gaps", 1) == 0)
             except Exception:
-                eff.append(False)
+                eff.append(False)          # unreadable defaults to NOT effective
         effective[ref] = any(eff)
     n = min(len(v) for v in found.values()) if found else 0
     return {"declarations_found": found,
@@ -669,6 +674,90 @@ def step11_step6_freeze(refs=EXECUTING_REFS) -> dict:
             "why_separate": ("§5 gate 6 is the replay seam; §11 step 6 is the "
                              "FULL-PIPELINE freeze plus both candidate "
                              "identities, which the seam does not establish")}
+
+
+
+# ==========================================================================
+# A CHECK WHOSE ABSENCE DEFAULTS TO PERMISSIVE MUST BE ASSERTED PRESENT,
+# NOT MERELY PRESENT.                                          (DA 282)
+#
+# The rule comes from a near-miss in the round before. A patch regex rewriting
+# `step11_step6_freeze` silently deleted the `UNPROBED` constant that sits
+# between it and `build`. The next drive raised NameError, so it was caught --
+# LOUD ONLY BY LUCK. Had the regex instead deleted a guard whose absence made a
+# branch fall through to a permissive default, nothing would have raised and
+# the ledger would have gone on printing a friendlier number. That is precisely
+# the shape of the `else: SATISFIED` defect DA 280 removed, arriving by a
+# different door: not a default written on purpose, but a default created by
+# DELETION.
+#
+# So the named predicates are DATA, and the ledger refuses to run without them.
+# Presence is asserted, not assumed; a missing one is named in the refusal.
+# ==========================================================================
+
+PREDICATE_MISSING = "PREDICATE_MISSING_FROM_THE_LEDGER"
+
+#: Callables whose absence would remove a refusal or a distinction.
+REQUIRED_CALLABLES = (
+    "row_status",                    # the no-default status decision
+    "step11_step6_freeze",           # existence-is-not-effectiveness
+    "executing_refs_divergence",     # blob-not-head comparison
+    "drive_gate",                    # behaviour driven, not recorded
+    "probe_gate",                    # properties driven
+    "unattributed_files",            # a wrong path attribution shows up
+    "_root",                         # repo resolved from the module, not cwd
+    "_count",
+)
+
+#: Output fields whose ABSENCE a reader could mistake for permission. A missing
+#: `no_labelled_score_permitted` does not read as False -- it reads as nothing,
+#: and nothing is what a permissive default looks like from the outside.
+REQUIRED_OUTPUT_FIELDS = (
+    "gates_satisfied",
+    "gates_probed",
+    "gates_satisfied_counts_only_probed_rows",
+    "unprobed_gates",
+    "no_labelled_score_permitted",
+    "score_is_evidence_permitted",
+    "step11_step6_freeze",
+    "executing_refs",
+)
+
+#: Constants the branches compare against.
+REQUIRED_NAMES = ("UNPROBED", "N_GATES", "EXECUTING_REFS", "REQUIRED_REFS")
+
+
+def assert_own_predicates_present(ns=None) -> dict:
+    """REFUSE if any named predicate is missing from this module.
+
+    `ns` is injectable so the falsifier can prove the refusal fires -- a guard
+    that has never been shown to fire is not a guard (rule 15).
+    """
+    ns = globals() if ns is None else ns
+    missing = [n for n in REQUIRED_CALLABLES if not callable(ns.get(n))]
+    missing += [n for n in REQUIRED_NAMES if n not in ns]
+    if missing:
+        raise RuntimeError(
+            f"REFUSED {PREDICATE_MISSING}: {', '.join(sorted(missing))}. "
+            f"This ledger's answers are only as trustworthy as the checks that "
+            f"produce them, and a check that is GONE cannot report that it is "
+            f"gone. Presence is asserted here rather than assumed, because a "
+            f"deletion that removes a refusal leaves a permissive default "
+            f"behind and raises nothing.")
+    return {"callables": list(REQUIRED_CALLABLES), "names": list(REQUIRED_NAMES),
+            "all_present": True}
+
+
+def assert_output_fields_present(out: dict) -> dict:
+    """REFUSE if the ledger's own output is missing a field a reader relies on."""
+    missing = [f for f in REQUIRED_OUTPUT_FIELDS if f not in out]
+    if missing:
+        raise RuntimeError(
+            f"REFUSED {PREDICATE_MISSING}: the ledger computed a result with no "
+            f"{', '.join(sorted(missing))}. An absent predicate does not read "
+            f"as False to a reader; it reads as nothing, which is what a "
+            f"permissive default looks like from outside.")
+    return {"fields": list(REQUIRED_OUTPUT_FIELDS), "all_present": True}
 
 
 UNPROBED = "PROPERTIES_NOT_PROBED"
@@ -734,6 +823,8 @@ def executing_refs_divergence() -> dict:
 
 
 def build(fetch: bool = True, drive: bool = True, ref: str = EXECUTING_REFS[0]) -> dict:
+    # THE LEDGER CHECKS ITSELF BEFORE IT CHECKS THE LANE (DA 282).
+    self_check = assert_own_predicates_present()
     if fetch:
         subprocess.run(["git", "-C", _root(), "fetch", "--quiet", "origin"], check=False)
     head = _git("rev-parse", "--short", ref).stdout.strip()
@@ -831,6 +922,11 @@ def build(fetch: bool = True, drive: bool = True, ref: str = EXECUTING_REFS[0]) 
         "unattributed_lane_files": {r: unattributed_files(r) for r in EXECUTING_REFS},
         "every_status_computed_here": True,
         "no_status_copied_from_a_report": True,
+        "self_check": self_check,
+        "A_CHECK_WHOSE_ABSENCE_DEFAULTS_PERMISSIVE_IS_ASSERTED_PRESENT": (
+            "every named predicate is verified present before this ran; a "
+            "deletion that removes a refusal leaves a permissive default and "
+            "raises nothing, so presence is asserted rather than assumed"),
         "behaviour_is_driven_not_recorded": bool(drive),
     }
 
@@ -898,6 +994,7 @@ def falsify() -> int:
 
     # ---- the ledger itself -------------------------------------------------
     led = build()
+    assert_output_fields_present(led)
     ck("every gate has a COMPUTED status", all(r_["status"] for r_ in led["gates"]),
        f"{len(led['gates'])} gates")
     ck("the score predicate is COMPUTED from the count against SIX",
@@ -922,6 +1019,40 @@ def falsify() -> int:
        all(r_["cells"].get("driven") for r_ in led["gates"])
        and led["behaviour_is_driven_not_recorded"])
     # ---- §11 step 6 is measured, and is NOT gate 6 ------------------------
+    # ---- THE LEDGER CHECKS ITSELF (DA 282) --------------------------------
+    ck("POSITIVE CONTROL: every named predicate is present in this module",
+       assert_own_predicates_present()["all_present"] is True,
+       f"{len(REQUIRED_CALLABLES)} callables + {len(REQUIRED_NAMES)} names")
+    for _gone in ("row_status", "step11_step6_freeze", "_root"):
+        _ns = {k: v for k, v in globals().items() if k != _gone}
+        try:
+            assert_own_predicates_present(_ns)
+            _fired, _msg = False, "NO REFUSAL"
+        except RuntimeError as _e:
+            _fired, _msg = True, str(_e).split(":")[1].strip()[:40]
+        ck(f"NEGATIVE CONTROL: deleting `{_gone}` REFUSES by name", _fired, _msg)
+    _ns = {k: v for k, v in globals().items() if k != "UNPROBED"}
+    try:
+        assert_own_predicates_present(_ns); _fired = False
+    except RuntimeError:
+        _fired = True
+    ck("...and deleting the CONSTANT that was lost for real also refuses", _fired)
+    try:
+        assert_output_fields_present({k: v for k, v in led.items()
+                                      if k != "score_is_evidence_permitted"})
+        _fired = False
+    except RuntimeError:
+        _fired = True
+    ck("an output MISSING a predicate refuses -- absence does not read as False",
+       _fired)
+    ck("...and the real output carries every required field",
+       assert_output_fields_present(led)["all_present"] is True,
+       f"{len(REQUIRED_OUTPUT_FIELDS)} fields")
+    ck("a declaration CLAIMING effectiveness while naming gaps cannot unlock",
+       True if not led["step11_step6_freeze"]["a_declaration_exists"] else
+       (led["step11_step6_freeze"]["satisfied"] is False),
+       f"exists={led['step11_step6_freeze']['a_declaration_exists']} "
+       f"satisfied={led['step11_step6_freeze']['satisfied']}")
     ck("a freeze declaration that is NOT effective does NOT satisfy step 6",
        not (led["step11_step6_freeze"]["a_declaration_exists"]
             and led["step11_step6_freeze"]["satisfied"]

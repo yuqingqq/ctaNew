@@ -4,11 +4,118 @@
  "DRAFT": false,
  "LANDED_BY": "DA 281",
  "freeze_is_effective": false,
+ "why_not_effective": [
+  {
+   "requirement": "chain_link_not_implemented:immutable_inputs",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "the first link of \u00a77's chain has no implementation and no manifest",
+   "line_recorded": true
+  },
+  {
+   "requirement": "chain_link_not_implemented:pnl",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "the last link of \u00a77's chain has no implementation; nothing computes P&L",
+   "line_recorded": true
+  },
+  {
+   "requirement": "fee_rule",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "no fee appears anywhere in the frozen chain, so a P&L computed from it would be gross by construction",
+   "line_recorded": true
+  },
+  {
+   "requirement": "initial_inventory",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "inventory enters replay only as a caller-supplied `initial_state`; no frozen starting value exists to replay from",
+   "line_recorded": true
+  },
+  {
+   "requirement": "latency:placement_latency_ms_not_bound_in_any_frozen_chain_file",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "placement_latency_ms = 250 is declared here but is not BOUND in any file the freeze covers; it lives in the cancellation lane's daybook builder and appears in this lane only as the string 'L250ms' in a receipt filename",
+   "line_recorded": true
+  },
+  {
+   "requirement": "quote_mapping_property:DOWN_uses_1_minus_p",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "quote_from takes no side or outcome, so there is no DOWN quote to map",
+   "line_recorded": true
+  },
+  {
+   "requirement": "quote_mapping_property:ask_rounds_UP_to_the_legal_tick",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "ask uses symmetric round(x, 12), not an upward round to a legal tick",
+   "line_recorded": true
+  },
+  {
+   "requirement": "quote_mapping_property:bid_rounds_DOWN_to_the_legal_tick",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "bid uses symmetric round(x, 12), not a downward round to a legal tick",
+   "line_recorded": true
+  },
+  {
+   "requirement": "quote_mapping_property:crossing_quote_emits_PLACE_WITHHELD_MARKETABLE_CROSS",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "MARKETABLE_CROSS appears in ZERO .py files in the lane; the event \u00a77 requires does not exist to be emitted",
+   "line_recorded": true
+  },
+  {
+   "requirement": "quote_mapping_property:never_silently_clamped",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "with no withhold path there is nothing to prefer over clamping",
+   "line_recorded": true
+  },
+  {
+   "requirement": "quote_mapping_property:no_zero_latency_privilege_for_candidate_induced_change",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "the seam carries no latency at all, so it cannot deny a privilege it never models",
+   "line_recorded": true
+  },
+  {
+   "requirement": "quote_mapping_property:prices_bounded_to_the_legal_binary_range",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "unbounded: at p=0.999 the ask is 1.009 and at p=0.001 the bid is -0.009, both outside the legal binary range",
+   "line_recorded": true
+  },
+  {
+   "requirement": "quote_parameters",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "the seam satisfies 1 of \u00a77's 8 quote-mapping clauses; see `fields.quote_parameters` for the seven driven failures",
+   "line_recorded": true
+  },
+  {
+   "requirement": "source_manifests",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "no manifest enumerates the immutable inputs, so the frozen chain begins at a link nothing identifies",
+   "line_recorded": true
+  },
+  {
+   "requirement": "tick_rounding",
+   "section": "\u00a77",
+   "satisfied": false,
+   "why": "no fair-value module declares a legal tick, so 'rounds to the tick' has no tick to round to",
+   "line_recorded": true
+  }
+ ],
  "WHAT_freeze_is_effective_MEANS": "TRUE only when every \u00a77 field resolves and every chain link has an implementation. It is FALSE here. The declaration exists so that \u00a711 step 6 has an artifact and so that what is missing is written down at a ref rather than carried in conversation; it does not assert that the pipeline is frozen.",
  "executing_refs": {
   "heads": {
-   "origin/de-freeze-chain-v2": "9ec30e9fb4034111b871b0afb91d27cd0578ae11",
-   "origin/be-build-runner": "9ec30e9fb4034111b871b0afb91d27cd0578ae11"
+   "origin/de-freeze-chain-v2": "8882434f9edcb2b5e346d7f90f05cf8fc6bc0213",
+   "origin/be-build-runner": "8882434f9edcb2b5e346d7f90f05cf8fc6bc0213"
   },
   "heads_equal": true,
   "commits_each_has_that_the_other_does_not": {
@@ -21,7 +128,7 @@
   "the_rule": "a gate is satisfied by the BLOB on both refs, not by the heads matching; two shas with identical modules blocks nothing"
  },
  "declared_at_ref": "origin/de-freeze-chain-v2",
- "ref_head": "9ec30e9fb4034111b871b0afb91d27cd0578ae11",
+ "ref_head": "8882434f9edcb2b5e346d7f90f05cf8fc6bc0213",
  "chain_in_order": [
   {
    "link": "immutable_inputs",
@@ -135,9 +242,9 @@
   },
   "commit_ref": {
    "ref": "origin/de-freeze-chain-v2",
-   "head": "9ec30e9fb4034111b871b0afb91d27cd0578ae11",
+   "head": "8882434f9edcb2b5e346d7f90f05cf8fc6bc0213",
    "mirror": "origin/be-build-runner",
-   "mirror_head": "9ec30e9fb4034111b871b0afb91d27cd0578ae11"
+   "mirror_head": "8882434f9edcb2b5e346d7f90f05cf8fc6bc0213"
   },
   "candidate_count": {
    "n": 2,
@@ -147,17 +254,17 @@
     "pm_microprice": {
      "estimator": "pm_microprice",
      "model_version": null,
-     "builder_path": "/tmp/da_step6_m4j1tyaq/live/pm_research/da_fair_price_identity.py",
+     "builder_path": "/tmp/da_step6_fe15gr4n/live/pm_research/da_fair_price_identity.py",
      "builder_sha256": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
-     "wrapper_path": "/tmp/da_step6_m4j1tyaq/live/pm_research/de_fair_price_wrapper.py",
+     "wrapper_path": "/tmp/da_step6_fe15gr4n/live/pm_research/de_fair_price_wrapper.py",
      "wrapper_sha256": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0"
     },
     "bn_bookticker_mid": {
      "estimator": "bn_bookticker_mid",
      "model_version": "s60_probability_v1",
-     "builder_path": "/tmp/da_step6_m4j1tyaq/live/pm_research/da_fair_price_identity.py",
+     "builder_path": "/tmp/da_step6_fe15gr4n/live/pm_research/da_fair_price_identity.py",
      "builder_sha256": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
-     "wrapper_path": "/tmp/da_step6_m4j1tyaq/live/pm_research/de_fair_price_wrapper.py",
+     "wrapper_path": "/tmp/da_step6_fe15gr4n/live/pm_research/de_fair_price_wrapper.py",
      "wrapper_sha256": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0"
     }
    },
@@ -331,6 +438,7 @@
  "rev203_six_of_six": false,
  "ready_to_land": false,
  "WHY_NOT_LANDED": "DA 278: draft only until REV 203 returns six of six. `ready_to_land` requires BOTH an empty gap list and that return, and this file cannot measure the second, so it defaults False and must be passed in.",
+ "n_blocking_gaps_without_a_recorded_line": 0,
  "EVERY_VERDICT_COMPUTED_FROM_ARTIFACT_FIELDS": true,
  "NO_PROSE_ONLY_PASS": "\u00a77 forbids one. Every predicate above is computed from a blob at the ref or driven against it; none is satisfied by a sentence."
 }
