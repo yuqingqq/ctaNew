@@ -67,6 +67,24 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T15:48:48Z (MEM ROUND 387 -- DAY ONE REPRODUCES EXACTLY FROM THE FREEZE-BUILT BOOK, AND DAY
+  TWO'S TWO CELLS ARE VERIFIED BY RECOMPUTATION. The 09-07 reproduction returns D
+  -14645.078818000005 against day one's -14645.078818000005 -- delta ZERO, not merely to
+  the cent -- with settled total and 27073 cancels identical, across a DIFFERENT book, a
+  DIFFERENT seed and an oracle 145 records larger. That answers the question I left open
+  at 385: the oracle grew and D did not move. CONDVALUE only; HAZARD was still drawing.
+  DAY TWO, read from the files: CONDVALUE D -49303.579891 p 0.075848, 28246 cancels;
+  HAZARD D -23977.998804 p 1.0, 29512 cancels; both admitted_by DESCENDANT on the
+  freeze-built 05144b6f book. I RECOMPUTED BOTH p FROM THE 500 CHECKPOINT DRAWS under the
+  pre-registered estimator -- 37/500 and 500/500 -- and both match to the last digit;
+  HAZARD's 1.0 is the estimator's CEILING and attainable, not a missing computation.
+  BOTH DAY-TWO D ARE NEGATIVE. The tally that turns that into a status is the EMIT's, and
+  the emit has not run -- so this file says PENDING THE EMIT and states no verdict. AND
+  THE RE-COMBINE HAS A SECOND BLOCKER NOBODY NAMED: the cells are in THREE directories
+  while load_cell takes ONE root. Day two's real result lives in a directory called
+  fwd_rehearsal_0908 -- the third name this week that outlived what it described -- and
+  the 09-07 rerun holds a PRIVATE lock, so the heavy lock reads free while a real
+  valuation runs. Tip 7402916.)
   2026-09-11T14:12:02Z (MEM ROUND 385 -- THE 09-07 REFUSAL NAMES ruled_day_set BY ITS OWN DELTA, AND THE
   THREAD CLOSES. The refusal blocking the reproduction prints its own SCORING-PATH DELTA:
   INTERSECTION ['ruled_day_set'] -- the function whose split I drove at 382 and whose
@@ -106,6 +124,7 @@ updated: >-
   artifact for it -- SPECIFIED, not DRIVEN; admitted_by is in three .py files and in no
   record yet. A THIRD identity rebuild, be183ident0908, has held the lock since
   13:37:48Z. Tip 9941d2d.)
+previous_updates: >-
   2026-09-11T12:59:14Z (MEM ROUND 383 -- FALSIFIER (b) RESOLVES ON CONTENT AND THE ONLY DIFFERENCES ARE
   STOPWATCHES. BE 173's diff landed 88 s after R-906 called it pending: DATA_DIFFERS is
   exactly ['asm','asm.assembly'] and asm differs only because asm.assembly does. I opened
@@ -128,7 +147,6 @@ updated: >-
   v31. Which corrects me: at 381 I filed v31 as living only in wt-deval; it lives in
   FIVE worktrees. Family verified linear, seven commits in 43m31s; freeze v13 pins three
   identities identical on three refs. Tip 49840dc.)
-previous_updates: >-
   2026-09-11T12:34:09Z (MEM ROUND 382 -- THE LOCK IS NOT IDLE: A FALSIFIER TOOK IT AT 12:22:58Z, AND THE
   SUPERSESSION LEFT TWO RULED SETS IN ONE MODULE. Driven, not read: at c853e2d
   ruled_day_set() resolves the freeze chain to params_v33 -- 11 days, expected_G 11 --
@@ -367,6 +385,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r387_the_09_07_reproduction_is_EXACT_not_merely_to_the_cent: "R-909 requires day one's D to reproduce to the cent from the freeze-built book. It reproduces EXACTLY: -14645.078818000005 against -14645.078818000005, delta 0.0000000000 cents, and arm_settled_total_cents -19082.8184176 and 27073 cancels are identical too. This is across a DIFFERENT book (887a97eb vs the landed one), a DIFFERENT seed (88265706 vs 4124458766) and a DIFFERENT oracle (46290 records vs 46145); p moves as expected with the seed, 0.16966067864271456 against 0.18163672654690619. CONDVALUE ONLY -- the HAZARD arm was still drawing when I read it, so the link is established for one arm and pending for the other, and I do not report it as both."
+  r387_the_oracle_grew_145_records_and_D_DID_NOT_MOVE: "At round 385 I flagged that the consistency-link reproduction would read an oracle about a hundred records larger than the one falsifier (a) passed against, and said plainly that whether any added record falls in 09-07's own slugs was not something I measured. It is now answered empirically rather than by argument: the reproduction read 46290 records against (a)'s 46145 -- 145 more -- and D did not move by a cent. The question I could not settle by reasoning was settled by the run."
+  r387_day_two_both_arms_read_from_the_files: "CONDVALUE_X_SKEW: D -49303.579891000016 c, p 0.07584830339321358, 500 draws, 28246 cancels, settled total +36923.3203834, seed 1357784335. HAZARD_OVER_SKEWED_REF: D -23977.998804000017 c, p 1.0, 500 draws, 29512 cancels, settled total +62248.9014704, seed 154326921. Both carry book_receipt.admitted_by DESCENDANT and both name book sha 05144b6fce62e2cc -- the freeze-built 09-08 book I hashed myself at round 385. Both D are negative. Oracle 455b4132ec1f994c, 46276 records, read once for the pair."
+  r387_I_RECOMPUTED_both_p_values_from_the_500_checkpoint_draws: "Rather than read p, I re-derived it under the pre-registered estimator p = (1 + #{|D_null| >= |D_arm|}) / (1 + n_draws). CONDVALUE: 37 of 500 draws at least as extreme, 38/501 = 0.07584830339321358. HAZARD: 500 of 500, 501/501 = 1.0. Both match the filed values to the last digit. The estimator was committed at b72e329 before any draw, and this is the first time I have driven it on a day other than day one."
+  r387_HAZARDs_p_is_at_the_ESTIMATORS_CEILING_and_that_is_attainable: "p = 1.0 exactly, because ALL 500 null draws were at least as extreme as the arm: 501/501. That is the largest value the pre-registered estimator can return and it is not a degenerate or error value -- it says the arm's |D| is less extreme than every draw of its own matched null. Recorded because a p of exactly 1.0 reads like a missing computation, and here it is the computation's correct output, which I confirmed by counting the draws myself."
+  r387_PENDING_THE_EMIT_and_I_do_not_state_the_verdict: "Both day-two arms are negative and the standing rule is G=7 with tolerance_negative_days 0 and unanimity. The tally that turns those facts into a status is computed BY THE EMIT, and the emit has not run -- the combiner refused before reaching it. So this file records the two D values, the two p values and the rule, and states the position as PENDING THE EMIT. Rule 10 is the reason: a conclusion written beside a table has contradicted the table three times in this programme, and the one thing I must not do is compute the verdict in prose while the instrument that owns it is blocked."
+  r387_the_cells_are_in_THREE_DIRECTORIES_and_the_loader_takes_ONE_root: "day one is in fwd_v2/, day two in fwd_rehearsal_0908/, and day one's freeze-built reproduction in fwd_a_0907_rebuild/. de_forward_evaluator._load_forward_cells(root, days, arms) calls AGG.load_cell(root, day, arm), which builds root / f'de_settle_result_{c}_{arm}.json' -- ONE root for every day. So the ruled 're-combine over the two existing cells, no rerun' cannot run as written until the cells share a root. That is a SECOND blocker beyond the reader-location fix, and R-909 does not name it. Named for DE; the remedy is theirs to choose."
+  r387_day_twos_RESULT_lives_in_a_directory_named_rehearsal: "The launcher passed the chain's default --n-draws 500, so what was called a point-estimate rehearsal was a full run -- confirmed by n_draws 500 in both cells and 500 lines in each checkpoint. The durable consequence is not the surprise but the NAME: day two's real, admitted, freeze-built result is stored in fwd_rehearsal_0908/. Any reader or instrument that filters cells by path, or that treats 'rehearsal' as excluded, will miss day two entirely. Third instance this week of a name that outlives what it described, after the receipt filename and the guessed declaration name."
+  r387_the_combiner_refusal_ORIGINATES_in_the_aggregate_module: "R-909 cites de_forward_evaluator._load_forward_cells (:435). Both the refusal name SETTLEMENT_CONTROL_RESULT_IDENTITY_MISMATCH and the field required_guard_evidence are defined in de_settlement_control_aggregate.py and in no other module on the chain ref. _load_forward_cells wraps the loop in try/except AGG.AggregateRefused and re-raises as EvaluatorRefused, so the citation names where it SURFACED and the aggregate module is where it is DECIDED. The reader that must be fixed is load_cell's verification, not the evaluator's loop."
+  r387_the_09_07_rerun_holds_a_PRIVATE_lock_so_the_heavy_lock_reads_free: "deA0907R.service is running a full 500-draw valuation through launchers/value_after_producer.sh with --lock /tmp/de_a0907_private.lock. The heavy lock data/.heavy_run.lock therefore has NO holder while a real valuation is in progress. A watcher keyed on the heavy lock would report the box idle right now, which is exactly the shape of R-909's own lesson -- the seats sat idle for an hour because no artifact landed where the watchers looked. Same defect, different resource."
+  r387_the_oracle_series_now_has_FIVE_points: "46145 at falsifier (a); 46249 at the 09-07 point estimate 14:02:09Z; 46253 at the 09-08 rehearsal 14:03:03Z; 46276 for day two's pair; 46290 for the 09-07 reproduction. Read once per run and a different value every run -- 145 records across the series. Recorded as a series rather than a pair because the growth is steady and every future receipt will carry a different number, so no single quoted figure will stay true."
   r385_the_landing_is_refused_a_fourth_time_at_125_over_169: "HELD BEHIND_AND_NOT_FF at 14:14:07Z. The series is now 112/131 (round 382), 117/139 (383), 121/159 (384), 125/169 (385): local has gained 13 commits and origin 38 in about two hours, and the same two other-seat files still block the fast-forward. Five MEM rows -- Q-MEM-338 (round 358) through Q-MEM-342 -- are written and UNLANDED. I did not merge, stash or rebase (rules 21 and 45). The backlog now grows by one row per round with no landing path that does not touch another seat's uncommitted work."
   r385_the_09_07_refusal_NAMES_ruled_day_set_BY_ITS_OWN_DELTA: "The thread closes on itself. The refusal that stopped the 09-07 reproduction is BOOK_BUILT_BY_DIFFERENT_SCORING_CODE, declared 157413f6562cf5bd against actual 2aa226623522814, and the instrument prints its own SCORING-PATH DELTA: on the path ['ruled_day_set']+['PARAMS_REL'], changed 6 defs / 2 names, INTERSECTION ['ruled_day_set']. That is the function whose split I drove at round 382 and whose six-versus-eleven consequence I found in the receipts at round 384, now named by the production refusal itself. I did not have to argue the connection; the instrument printed it."
   r385_the_SHARED_TREE_is_47_commits_behind_on_the_VALUATION_CODE: "DA's own code-freeze v8 measures de_multiday_gate1_runner.py at 7efea16 as 157413f6562cf5bd and at the freeze as acf911db48d445dd, calling 7efea16 47 commits behind. I had independently measured the SHARED TREE's runner as 157413f6562cf5bd -- the same bytes. So mm-research carries the 7efea16-era valuation code, which is also what the landed 09-07 and 09-08 books record as their builder. This extends round 383's finding from the comparator to the runner: the tree every seat reads by default is 47 commits behind the freeze on BOTH."
@@ -28099,6 +28128,50 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r387_the_09_07_reproduction_is_EXACT_not_merely_to_the_cent:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_a_0907_rebuild/de_settle_result_20260907_CONDVALUE_X_SKEW.json
+    said: "loaded the reproduction cell and day one's cell and differenced observed_D_cents in python; the difference is exactly zero and the equality test on the float is True; compared settled total, cancels, seed, book sha and oracle records side by side."
+  r387_the_oracle_grew_145_records_and_D_DID_NOT_MOVE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_a_0907_rebuild/de_settle_result_20260907_CONDVALUE_X_SKEW.json
+    said: "read winner_source.n_records from the reproduction cell (46290) against the 46145 recorded in the falsifier-(a) artifact, and compared observed_D_cents across the two runs: identical to the last digit."
+  r387_day_two_both_arms_read_from_the_files:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_rehearsal_0908/de_settle_result_20260908_CONDVALUE_X_SKEW.json
+    said: "loaded both result cells and printed the named fields; walked each document for any admitted_by key and found it at book_receipt.admitted_by in both."
+  r387_I_RECOMPUTED_both_p_values_from_the_500_checkpoint_draws:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_rehearsal_0908/de_settle_ckpt_2026-09-08_CONDVALUE_X_SKEW.jsonl
+    said: "parsed each checkpoint line for its D, took absolute values, counted those at or beyond the arm's |D|, applied the estimator and compared against p_two_sided in the result cell; 500 draws present in each checkpoint."
+  r387_HAZARDs_p_is_at_the_ESTIMATORS_CEILING_and_that_is_attainable:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_rehearsal_0908/de_settle_ckpt_2026-09-08_HAZARD_OVER_SKEWED_REF.jsonl
+    said: "counted 500 of 500 checkpoint draws with |D_null| >= |D_arm| and evaluated (1+500)/(1+500) = 1.0, equal to the filed p_two_sided."
+  r387_PENDING_THE_EMIT_and_I_do_not_state_the_verdict:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_rehearsal_0908
+    said: "read both result cells; confirmed no combined record exists under any of the three cell directories; the combine's own refusal is recorded in the round's other flags."
+  r387_the_cells_are_in_THREE_DIRECTORIES_and_the_loader_takes_ONE_root:
+    prov: CHECKED
+    artifact: live/pm_research/de_settlement_control_aggregate.py
+    said: "read load_cell's body at origin/de-freeze-chain-v2 lines 371ff and _load_forward_cells in de_forward_evaluator.py; listed the de_settle_result files on disk and found them under three distinct parent directories."
+  r387_day_twos_RESULT_lives_in_a_directory_named_rehearsal:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_rehearsal_0908/de_settle_result_20260908_HAZARD_OVER_SKEWED_REF.json
+    said: "counted the checkpoint lines (500 each) and read n_draws 500 from both cells; the directory name is fwd_rehearsal_0908 and it holds the only 09-08 result cells on disk."
+  r387_the_combiner_refusal_ORIGINATES_in_the_aggregate_module:
+    prov: CHECKED
+    artifact: live/pm_research/de_settlement_control_aggregate.py
+    said: "git grep -ln for both tokens across live/pm_research/*.py at origin/de-freeze-chain-v2 returned de_settlement_control_aggregate.py alone; read _load_forward_cells and saw it catch AGG.AggregateRefused and re-raise."
+  r387_the_09_07_rerun_holds_a_PRIVATE_lock_so_the_heavy_lock_reads_free:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    said: "fuser on the heavy lock returned nothing; systemctl --user list-units showed deA0907R.service active and running with the private lock path in its ExecStart; its HAZARD checkpoint was still growing at 15:47:02Z."
+  r387_the_oracle_series_now_has_FIVE_points:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_a_0907_rebuild/de_settle_result_20260907_CONDVALUE_X_SKEW.json
+    said: "read winner_source.n_records from each run's cell or snapshot artifact in time order: 46145, 46249, 46253, 46276, 46290."
   r385_the_landing_is_refused_a_fourth_time_at_125_over_169:
     prov: CHECKED
     artifact: scripts/land_register_row.sh
