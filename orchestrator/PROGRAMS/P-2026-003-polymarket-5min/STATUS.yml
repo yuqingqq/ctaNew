@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T05:46:35Z (MEM ROUND 359 -- DAY ONE IS VALUED AND BOTH ARMS UNDERPERFORMED MATCHED RANDOM.
+  CONDVALUE observed_D -11,017.7c p 0.3174; HAZARD +5,256.2c p 0.6587; BOTH NULL MEANS NEAR
+  +7,900c, so random cancellation earned ~7,900c on a day neither arm had ever seen --
+  step 2's verdict REPRODUCING OUT OF SAMPLE. I inverted both p-values and they give k =
+  158 and 329 EXACTLY, so the PRE-REGISTERED estimator produced them. CONDVALUE IS NEGATIVE
+  and at G=7 TOLERANCE IS ZERO, so that arm cannot reach unanimity. THE FOURTH WRONG-TREE
+  INSTANCE IS THE FIRST WHERE A GUARD WE BUILT WAS DEFEATED RATHER THAN ABSENT:
+  be_heavy_run.sh:37 discards the caller's tree, and THE ONLY TRACE WAS AN ABSENT FIELD --
+  INDISTINGUISHABLE FROM A PASSING CHECK. THE NUMBERS SURVIVE AND I HASHED SEVEN MODULES AT
+  BOTH COMMITS: ALL IDENTICAL, NONE DIFFERING. BUT THE VALUATION DRIVER ITSELF IS ABSENT AT
+  7ed5a90 -- added later at 3a7756a -- so the one-commit ruling is true of the COMPUTING
+  MODULES and cannot be true of THE DRIVER THAT CALLS THEM. DE's phrase goes in the receipt:
+  'BY LUCK AGAIN, NOT BY DESIGN.' A GUARD THAT CAN BE SILENTLY BYPASSED IS WORSE THAN NO
+  GUARD -- absence is a known unknown, a bypassed check is a FALSE KNOWN. 09-12 collision
+  measured: 3.41 + 12 = 15.41 GiB against 14, A KILL NOT A SLOWDOWN. Register at 38 per
+  cent read-after-filing, A LOWER BOUND. tip da00220)
   2026-09-11T03:58:01Z (MEM ROUND 358 -- A NEAR-MISS PREVENTED BY LUCK, AND THE GUARD-SHAPED HOLE IS
   NOW THE NIGHT'S DOMINANT FINDING. DE's valuation unit was pointed at a tree that is NOT
   the ruled commit and exited 75/TEMPFAIL ON THE LOCK; had the lock been free, DAY ONE'S
@@ -102,24 +118,6 @@ updated: >-
   of the five missing producers: a guard's SUBJECT with no ENFORCEMENT, so REV's
   NOT_ESTABLISHED_AT_THIS_POWER sentence survives BY DE'S CARE, NOT BY CONSTRUCTION.
   tip 3a7756a)
-  2026-09-11T03:36:08Z (MEM ROUND 356 -- THE 69 IS ANSWERED AND THE ASYMMETRY INVERTS THE INTUITION:
-  'A PASS IS WEAK EVIDENCE FOR THE FAMILY; A FAILURE IS COMPARATIVELY STRONGER EVIDENCE
-  AGAINST IT' -- a pass after a 69-configuration search is weak because something usually
-  looks good eventually, while a failure BY THE TWO SURVIVORS on untouched days is strong.
-  It answers what the prior BECOMES by giving its DIRECTION instead of a value it could not
-  defend. BOTH RESULT SENTENCES ARE WRITTEN VERBATIM BEFORE ANY NUMBER EXISTS and become
-  REQUIRED FIELDS -- a result omitting the applicable one must REFUSE TO EMIT, adopted
-  because two limits were summarised away tonight. NO JOINT EVIDENCE FIGURE: the conjuncts
-  and arms are strongly dependent, no joint null was declared, so no combined number will
-  be quoted -- naming the absence matters because an undeclared joint is the gap a reader
-  fills with the PRODUCT. BE's comparator rebuilt and I VERIFIED IT AT THE ARTIFACT:
-  LUCK_NOT_CERTIFICATION turns a zero-that-means-nothing into a NAMED NON-RESULT, the
-  falsification is enforced BY SHAPE (only REFUTED and SUPPORTED_ON_THIS_DAY exist, NO
-  FIELD CAN EXPRESS A RATE), and per_book_guard states its purpose in eight words: 'the
-  certification bounds the CODE; this checks the DAY.' I CHECKED A STALE TREE FIRST AND
-  CAUGHT IT BEFORE ASSERTING -- the round-348 shape costing nothing this time. THE SEATS'
-  REFUSALS HAVE BEEN BETTER THAN THEIR PRODUCTIONS, and my own record fits exactly: SIX
-  ERRORS, ALL ASSERTIONS; FOUR BEST CALLS, ALL WITHHOLDINGS. tip 4e76ce5)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -291,6 +289,21 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 359, day one is valued ---
+  DAY_ONE_OF_THE_FORWARD_TEST_IS_VALUED_AND_BOTH_ARMS_UNDERPERFORMED_MATCHED_RANDOM: Book 0815cad74f53f118, 500 draws each, matching unit DISTINCT_REFERENCE_GENERATIONS, zero-model-cancel baseline -4,437.7c. CONDVALUE_X_SKEW observed_D -11,017.7c, p_two_sided 0.3174, null mean +7,888.2c, 26,264 generations cancelled. HAZARD_OVER_SKEWED_REF observed_D +5,256.2c, p_two_sided 0.6587, null mean +7,940.5c, 23,078 generations cancelled. BOTH NULL MEANS SIT NEAR +7,900c, so random cancellation earned about 7,900c on 09-07 while CONDVALUE returned -11,018c and HAZARD +5,256c.
+  AND_BOTH_P_VALUES_REPRODUCE_THE_PRE_REGISTERED_ESTIMATOR_EXACTLY: I inverted them rather than accepting them. Under the declared (1+k)/(1+n) with n=500, p = 0.3174 implies k = 158.02 and p = 0.6587 implies k = 329.01 -- BOTH INTEGERS to within two hundredths. So the numbers were produced by the estimator that was pre-registered at b72e329 and verified unmodified at round 344, not by some other formula that happens to land nearby.
+  CONDVALUE_IS_NEGATIVE_ON_DAY_ONE_AND_AT_G_EQUALS_7_TOLERANCE_IS_ZERO: "So pending DE's formal verdict THAT ARM CANNOT REACH UNANIMITY AND IS FINISHED. I enumerated the tail at round 350: at G=7 only 7-of-7 clears at 0.015625, and 6-of-7 is 0.125000 -- eight times the unanimous value and five times the bar. The tolerance that has been arithmetic for nine rounds became concrete on the first day, which is exactly when the futility asymmetry was declared to be free: stopping now costs nothing because it can only reduce the chance of declaring success."
+  AND_IT_REPRODUCES_STEP_TWOS_VERDICT_OUT_OF_SAMPLE: "Both arms underperformed matched random cancellation ON A DAY NEITHER HAD EVER SEEN. That is NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM reproducing out of sample -- the development screen's finding, on untouched data, by a different route. Recorded as the coordinator's reading pending DE's fields, with their own caveat attached in their words: they have misread field names twice tonight."
+  THE_FOURTH_WRONG_TREE_INSTANCE_IS_THE_FIRST_WHERE_A_GUARD_WE_BUILT_WAS_DEFEATED_RATHER_THAN_ABSENT: be_heavy_run.sh line 37 reads WT="${BE_WORKTREE:-/home/yuqing/ctaNew-wt-be}" and cds there, DISCARDING the tree DE's launcher selected. I read the line. The valuation therefore ran from wt-be at 651a7b53, not wt-deval at 7ed5a90 -- and THE ONLY TRACE WAS THE ABSENCE OF PREFLIGHT_RESOLVED_TREE IN THE RECORD, which is INDISTINGUISHABLE FROM A PASSING CHECK. The three earlier instances were guards that did not exist for the case; this is a guard that existed and was silently routed around.
+  THE_NUMBERS_SURVIVE_AND_I_HASHED_SEVEN_MODULES_AT_BOTH_COMMITS_MYSELF: de_head_scoring.py 31c368384770351f, de_phase4_diag_runner.py 9e2a0977d8dfc3be, be_daybook_build.py 2d31a80b5ae5c2c6, de_forward_evaluator.py 7c137ddc2d8869b5, de_matched_random_control.py f77aaf2bd2f21988, harmful_stateful_policy.py 65b9fe29aca85a01 and de_score_stream.py 21ff2fd126624c2f are ALL BYTE-IDENTICAL at 651a7b53 and 7ed5a90. Zero differ. CHECKED, not assumed -- which is the only basis on which day one's numbers stand.
+  BUT_THE_VALUATION_DRIVER_ITSELF_DOES_NOT_EXIST_AT_THE_RULED_COMMIT: "de_forward_value_day.py is ABSENT at 7ed5a90 and present at 651a7b53. It was ADDED at 3a7756a, 'Q-DE-237: a committed valuation driver -- because there was none', which POSTDATES the ruled commit. So the one-commit ruling is true of the COMPUTING MODULES and cannot be true of THE DRIVER THAT CALLS THEM: there is no copy of it at 7ed5a90 to be identical to. Recorded as an observation and not an accusation -- it may be entirely intended, since what the ruling protects is which bytes compute -- but a reader told 'the whole pipeline runs from 7ed5a90' should know the driver is not in it."
+  AND_DES_CHARACTERISATION_IS_WHAT_GOES_IN_THE_RECEIPT_BESIDE_THE_RESULT: 'By luck again, not by design.' Day one's validity rests on A COINCIDENCE OF BYTE-IDENTITY, not on the control meant to establish it. A reader must know that, because a result whose provenance check was bypassed and which survives anyway is indistinguishable -- from the outside and from the number itself -- from one whose check ran. The seven matching digests are what makes the number usable; they are not what was supposed to make it usable.
+  A_GUARD_THAT_CAN_BE_SILENTLY_BYPASSED_IS_WORSE_THAN_NO_GUARD: "It yields THE CONFIDENCE OF A CHECK WITH NONE OF THE COVERAGE, and every downstream reader inherits that confidence. With no guard at all, nobody would have believed the tree was verified. This is the sharpest form the night's dominant finding has taken and it belongs in the protocol: absence of a check is a known unknown, whereas a bypassed check is a false known. The fix authorised -- de_valuation_launch.sh exports BE_WORKTREE, and the preflight refuses on mismatch AND REFUSES WHEN PREFLIGHT_RESOLVED_TREE IS ABSENT -- makes the silent case loud, which is the only repair that addresses the actual failure."
+  THE_09_12_COLLISION_IS_MEASURED_AND_IT_IS_A_KILL_NOT_A_SLOWDOWN: "Valuation peak 3.41 GiB, about 77 minutes for both arms. I computed the sum: 3.41 + 12 = 15.41 GiB against a 14 GiB cap, EXCEEDING IT BY 1.41 GiB -- so A VALUATION CANNOT COEXIST WITH A PIPELINE CATCH-UP RUN. From 09-12 the lanes wake, since they cannot process day D until D+1 closes, so 09-11, 09-12 and 09-13's valuations must be SEQUENCED against them rather than scheduled near them. SWAP IS DISABLED, which I verified at round 332: the collision is a KILL."
+  AND_MEASURING_IT_TONIGHT_IS_WHAT_TURNED_AN_OOM_ON_THE_13TH_INTO_A_SCHEDULING_CONSTRAINT: Had this not been measured it would have surfaced as an OOM MID-VALUATION ON THE 13TH -- on the last day of the population, with the calendar bound at 2026-09-14 and no room to re-run. The measurement cost one observation; the failure would have cost the test. Recorded because the value of a measurement taken early is invisible afterwards, and this is a case where it can still be stated.
+  THE_REGISTER_FIRED_AT_38_PER_CENT_READ_AFTER_FILING_AND_THAT_IS_A_LOWER_BOUND: "REV 176, and the bound direction matters: consultation is visible ONLY WHERE IT LEFT A WRITTEN TRACE, so 38 per cent is a floor, not a point. REV's summary: 'Both, unevenly -- about two fifths instrument, three fifths unverified cost.' Benefit concentrates in a MINORITY of entries and in THE AUTHOR'S OWN RE-READING, while cost is paid on ALL of them at the ten-minute cadence the coordinator set."
+  AND_R_885_AND_R_888_WERE_LIVE_IN_THE_REGISTER_BEFORE_WE_RE_DERIVED_THEM_WHICH_KILLS_THE_INDEXING_THEORY: "The information WAS FINDABLE AND NOBODY LOOKED. I confirmed 0da40bb is R-888 at round 357, from the previous morning, and R-885 is the under-approximation finding I have cited in these files since round 340. So the failure is not retrieval and no index addresses it -- which is DA 221's diagnosis measured rather than argued, and it is why the remedy stays deferred: a process fix that becomes another unread artefact would be the same error one level up."
+  THE_REGISTER_ROWS_FOR_ROUNDS_358_AND_359_ARE_BLOCKED_BY_A_CONFLICT_THAT_IS_NOT_MINE: "The lander needs a clean fast-forward and this tree is diverged: BE's local commits and DE's origin commits both changed de_forward_value_day.py, and merging them produces a CONTENT CONFLICT in that file. RESOLVING IT WOULD MEAN ME ADJUDICATING ANOTHER SEAT'S CODE, which is further than rule 21's prohibition on rebasing. I ABORTED THE MERGE, confirmed the tree returned to exactly how I found it, and left both rows written and unlanded. They land the moment their owners reconcile that file."
   # --- MEM round 358, a near-miss prevented by luck, and the guard-shaped hole ---
   THE_NEAR_MISS_WAS_PREVENTED_BY_A_LOCK_CONFLICT_AND_NOT_BY_ANYTHING_WE_BUILT: DE's valuation unit deFV0907.service was pointed at ~/ctaNew-wt-de2, not at the ruled pipeline commit 7ed5a90, and exited 75/TEMPFAIL at 03:46:32 on the lock held by p003neut0903. HAD THE LOCK BEEN FREE, DAY ONE'S HEADLINE NUMBER WOULD HAVE BEEN PRODUCED BY THE WRONG CODE AND NOTHING WOULD HAVE CAUGHT IT -- the BOOK's provenance verifies fine because the book IS correct; it is THE INSTRUMENT READING IT that would have been wrong. THE LOCK CONFLICT PREVENTED THIS, NOT ANY GUARD. That is luck, not design, and it is recorded in those words.
   AND_I_COULD_NOT_VERIFY_THE_EXIT_AT_THE_UNIT_BECAUSE_RULE_42_CAUGHT_THE_SAME_TRAP_AGAIN: "I checked LoadState FIRST, as rule 42 requires, and deFV0907.service returns LoadState=not-found -- the unit no longer exists. Its other fields read Result=success, ActiveState=inactive, SubState=dead, ExecMainStatus=0: EXACTLY the dead/success signature I demonstrated at round 351 by inventing a unit name. WITHOUT LoadState I WOULD HAVE REPORTED 'deFV0907: success' FOR THE UNIT WHOSE FAILURE IS THE SUBJECT OF THIS ROUND. Second time rule 42's discharge has earned itself in my hands, and the first where it would have produced a directly contradictory report."
@@ -27723,6 +27736,91 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 359, 2026-09-11T05:46:35Z ---
+  DAY_ONE_OF_THE_FORWARD_TEST_IS_VALUED_AND_BOTH_ARMS_UNDERPERFORMED_MATCHED_RANDOM:
+    prov: RELAYED
+    from: DE via coordinator MEM 359
+    as_of: 2026-09-11T05:46:35Z
+    said: >-
+      the figures as dispatched; the coordinator flags their own field-name risk and I record the reading as theirs pending DE's formal fields. The p-value check below is mine.
+  AND_BOTH_P_VALUES_REPRODUCE_THE_PRE_REGISTERED_ESTIMATOR_EXACTLY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T05:46:35Z
+    said: >-
+      0.3174*501-1 and 0.6587*501-1 computed as 158.02 and 329.01; the estimator and its single-commit history were verified at round 344.
+  CONDVALUE_IS_NEGATIVE_ON_DAY_ONE_AND_AT_G_EQUALS_7_TOLERANCE_IS_ZERO:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T05:46:35Z
+    said: >-
+      the G=7 two-sided tail computed by me at round 350; the day-one sign is DE's measurement.
+  AND_IT_REPRODUCES_STEP_TWOS_VERDICT_OUT_OF_SAMPLE:
+    prov: RELAYED
+    from: coordinator MEM 359
+    as_of: 2026-09-11T05:46:35Z
+    said: >-
+      the reading and its caveat as dispatched; step 2's verdict and its p-values are recorded in my files from round 346 with all four p-values recomputed.
+  THE_FOURTH_WRONG_TREE_INSTANCE_IS_THE_FIRST_WHERE_A_GUARD_WE_BUILT_WAS_DEFEATED_RATHER_THAN_ABSENT:
+    prov: CHECKED
+    artifact: live/pm_research/be_heavy_run.sh
+    as_of: 2026-09-11T05:46:35Z
+    said: >-
+      be_heavy_run.sh:37 read verbatim: the parameter default discards a caller-selected tree unless BE_WORKTREE is exported.
+  THE_NUMBERS_SURVIVE_AND_I_HASHED_SEVEN_MODULES_AT_BOTH_COMMITS_MYSELF:
+    prov: CHECKED
+    artifact: live/pm_research/be_heavy_run.sh
+    as_of: 2026-09-11T05:46:35Z
+    said: >-
+      each module's blob at both commits hashed with sha256 and compared: seven identical, none differing.
+  BUT_THE_VALUATION_DRIVER_ITSELF_DOES_NOT_EXIST_AT_THE_RULED_COMMIT:
+    prov: CHECKED
+    artifact: live/pm_research/de_forward_value_day.py
+    as_of: 2026-09-11T05:46:35Z
+    said: >-
+      git cat-file -e for the path at both commits: present at 651a7b53, absent at 7ed5a90; git log --diff-filter=A names 3a7756a as the adding commit.
+  AND_DES_CHARACTERISATION_IS_WHAT_GOES_IN_THE_RECEIPT_BESIDE_THE_RESULT:
+    prov: RELAYED
+    from: DE via coordinator MEM 359
+    as_of: 2026-09-11T05:46:35Z
+    said: >-
+      DE's phrase quoted; the byte-identity that rescues the result is my own hashing above, and the distinction between rescuing and establishing is recorded deliberately.
+  A_GUARD_THAT_CAN_BE_SILENTLY_BYPASSED_IS_WORSE_THAN_NO_GUARD:
+    prov: CHECKED
+    artifact: live/pm_research/be_heavy_run.sh
+    as_of: 2026-09-11T05:46:35Z
+    said: >-
+      the bypass mechanism established at be_heavy_run.sh:37; the fix's two refusal conditions as dispatched, with the absence-refusal being the one that closes the trace gap.
+  THE_09_12_COLLISION_IS_MEASURED_AND_IT_IS_A_KILL_NOT_A_SLOWDOWN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T05:46:35Z
+    said: >-
+      3.41 + 12 computed against the 14 GiB MemoryMax I read from the slice at round 332, where MemorySwapMax=0 was also confirmed.
+  AND_MEASURING_IT_TONIGHT_IS_WHAT_TURNED_AN_OOM_ON_THE_13TH_INTO_A_SCHEDULING_CONSTRAINT:
+    prov: RELAYED
+    from: coordinator MEM 359
+    as_of: 2026-09-11T05:46:35Z
+    said: >-
+      the counterfactual is the coordinator's and is recorded as one; the arithmetic and the swap setting are mine.
+  THE_REGISTER_FIRED_AT_38_PER_CENT_READ_AFTER_FILING_AND_THAT_IS_A_LOWER_BOUND:
+    prov: RELAYED
+    from: REV 176 via coordinator MEM 359
+    as_of: 2026-09-11T05:46:35Z
+    said: >-
+      the figure, its lower-bound direction and REV's summary as dispatched; the measurement was run falsifier-first per the discipline recorded at round 358.
+  AND_R_885_AND_R_888_WERE_LIVE_IN_THE_REGISTER_BEFORE_WE_RE_DERIVED_THEM_WHICH_KILLS_THE_INDEXING_THEORY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T05:46:35Z
+    said: >-
+      0da40bb verified as R-888 with its date at round 357; R-885's presence in the register is established by my own citations of it from round 340 onward.
+  THE_REGISTER_ROWS_FOR_ROUNDS_358_AND_359_ARE_BLOCKED_BY_A_CONFLICT_THAT_IS_NOT_MINE:
+    prov: CHECKED
+    artifact: live/pm_research/de_forward_value_day.py
+    as_of: 2026-09-11T05:46:35Z
+    said: >-
+      git merge reported CONFLICT (content) in live/pm_research/de_forward_value_day.py; git merge --abort restored HEAD and the working tree, and my round-358 generation is still present in STATUS.yml.
   # --- MEM round 358, 2026-09-11T03:58:01Z ---
   THE_NEAR_MISS_WAS_PREVENTED_BY_A_LOCK_CONFLICT_AND_NOT_BY_ANYTHING_WE_BUILT:
     prov: RELAYED
