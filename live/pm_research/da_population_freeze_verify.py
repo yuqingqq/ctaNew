@@ -38,6 +38,11 @@ NO_DECL = "POPULATION_FREEZE_DECLARATION_ABSENT"
 #: names is the one that matters, and pointing at the wrong ref would bless
 #: stale bytes silently.
 ASSERT_MISMATCH = "EMIT_ASSERTION_DIGEST_MISMATCH"
+#: DA 260: the guard register's gate. A real run is allowed only when EVERY row
+#: it can hit is exercised. COMPUTED, never prose -- the register lists the
+#: sites and this counts them.
+GUARD_GATE = "GUARD_ROW_NOT_EXERCISED_BEFORE_A_REAL_RUN"
+GUARD_DECL = Path(__file__).resolve().parent / "declarations" / "da_guard_register_v1.json"
 
 
 class FreezeRefused(RuntimeError):
@@ -107,6 +112,28 @@ def verify(decl_path: Path = DECL, roots=None) -> dict:
             "INSTRUMENT_DRIFTED": [f"{INSTRUMENT_DRIFT}:{r['path']}"
                                    f" {r['declared']}->{r['on_disk'] or 'ABSENT'}"
                                    for r in instr]}
+
+
+def guard_gate(lanes=None, decl: Path = GUARD_DECL) -> dict:
+    """REFUSE a real run while any row it can hit is unexercised (DA 260)."""
+    if not decl.is_file():
+        raise FreezeRefused(f"REFUSED {GUARD_GATE}: no guard register at {decl}")
+    d = json.loads(decl.read_text())
+    rows = d["rows"] if lanes is None else [
+        r for r in d["rows"] if r["lane"] in set(lanes)]
+    if not rows:
+        raise FreezeRefused(
+            f"REFUSED {GUARD_GATE}: no rows for lane(s) {lanes} -- an empty "
+            f"lane cannot exonerate a run (the aggregate-only trap)")
+    bad = [r for r in rows if not r.get("exercised_before_real_run")]
+    if bad:
+        names = ", ".join(f"{r['site']}:{r['refusal']}" for r in bad[:4])
+        raise FreezeRefused(
+            f"REFUSED {GUARD_GATE}: {len(bad)} of {len(rows)} guard row(s) on "
+            f"lane(s) {lanes or 'ALL'} are NOT exercised -- {names}. A real run "
+            f"is allowed only when every row it can hit has been driven.")
+    return {"status": "EVERY_GUARD_ROW_ON_THESE_LANES_IS_EXERCISED",
+            "lanes": lanes or "ALL", "n_rows": len(rows)}
 
 
 def falsify() -> int:
@@ -197,6 +224,29 @@ def falsify() -> int:
         ck("  and the UNMODIFIED declaration still verifies",
            verify(DECL, sroots)["status"] == "POPULATION_FREEZE_HOLDS")
 
+        # ---- DA 260: the guard gate, both directions ----
+        try:
+            guard_gate(["VALUATION"])
+            ck("the guard gate on a lane with unexercised rows REFUSES", False)
+        except FreezeRefused as ex:
+            ck("the guard gate REFUSES an unexercised lane, naming sites",
+               GUARD_GATE in str(ex) and ":" in str(ex))
+        gd = json.loads(GUARD_DECL.read_text())
+        allok = td / "all_exercised.json"
+        for r in gd["rows"]:
+            r["exercised_before_real_run"] = True
+        allok.write_text(json.dumps(gd))
+        ck("  and ADMITS when every row is exercised",
+           guard_gate(None, allok)["status"].startswith("EVERY_GUARD_ROW"))
+        empty = td / "empty_lane.json"
+        empty.write_text(json.dumps({"rows": []}))
+        try:
+            guard_gate(None, empty)
+            ck("  an EMPTY register does not exonerate a run", False)
+        except FreezeRefused as ex:
+            ck("  an EMPTY register REFUSES rather than passing vacuously",
+               GUARD_GATE in str(ex))
+
         # a DELETED file refuses under a different name
         e = next(x for x in d["files"] if x.get("CLASS") != "INSTRUMENT")
         tgt = sroots[e["root"]] / e["path"]
@@ -216,7 +266,15 @@ def falsify() -> int:
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--falsify", action="store_true")
+    ap.add_argument("--guard-gate", nargs="*", default=None,
+                    help="lane(s) a real run can hit; omit the value for ALL")
     a = ap.parse_args()
+    if a.guard_gate is not None:
+        try:
+            print(json.dumps(guard_gate(a.guard_gate or None), indent=1))
+        except FreezeRefused as e:
+            print(str(e)); sys.exit(4)
+        sys.exit(0)
     if a.falsify:
         sys.exit(falsify())
     try:
