@@ -23429,3 +23429,24 @@ generation and the window went 4 → 3. Nothing rewritten.
   sharp part: TWO OF ITS FILES HASH THE EMPTY STRING AT THE PIN BECAUSE THEY DO NOT EXIST
   THERE -- 'differing digest' is the LABEL, 'did not exist' is the PROPERTY. tip 13a3d54)
 ```
+
+## Batch 346 (rotated by MEM round 364, 2026-09-11T07:02:26Z)
+
+```
+  2026-09-11T06:46:35Z (MEM ROUND 361 -- V2 IS NOT NEUTRAL BY CONSTRUCTION AND THE FORK IS A STANDING
+  HAZARD. The user's da00220 derives the null SEED from the book digest plus the arm and
+  REFUSES a supplied seed, while day one ran seed 20260907 for both arms -- so V2 DRAWS A
+  DIFFERENT SAMPLE A PRIORI and p cannot match. ONE SECOND OF READING AGAINST A 77-MINUTE
+  RE-RUN. A separate change -- REFERENCE_FILLS replacing replay(0.5), plus a
+  NO_FILLS_UNTIL_NEXT_GENERATION leg -- CAN move observed_D and is being measured alone.
+  ONLY THE RUN MODULE WENT V2; the evaluator has ZERO V2 markers. AND THE PENDING QUESTION
+  INVERTS WHICH VERSION IS THE DEVIATION: if V1's replay(0.5) is not the declared
+  REFERENCE_FILLS primary, DAY ONE WAS VALUED AGAINST AN UNDECLARED ZERO and V2 is the
+  FIRST valuation matching the declaration. THE FORK: 18 local-only against 11 origin-only
+  from 651a7b5, and THE TWINS ARE NOT REBASED COPIES -- DA 224's two copies differ by 18
+  files and 3,400 deletions, which I diffed. Every seat worktree is off the local side and
+  the pin PREDATES the fork, so nothing computed is affected. AND I CORRECT MY ROUND-359
+  ATTRIBUTION: I identified 'origin's BE 133' BY SUBJECT PREFIX and it is a DIFFERENT
+  COMMIT FROM TWO DAYS EARLIER. The conclusion survives for a better reason -- the commit I
+  amended IS LOCAL-ONLY AND NEVER PUBLISHED. tip 066c800)
+```

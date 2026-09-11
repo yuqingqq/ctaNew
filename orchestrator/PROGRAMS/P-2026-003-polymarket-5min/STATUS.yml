@@ -67,6 +67,20 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T07:02:26Z (MEM ROUND 364 -- THE 288th WINDOW IS NAMED AND THE TRIPWIRE NARROWS TO ONE
+  MECHANISM. I verified every part at the artifact: n_gap_bearing 27, era clob_v4_1,
+  includes_1788807300 FALSE, missing_interior_window [1788807300] at 18:55:00Z -- and I
+  converted the epoch and closed the slot arithmetic myself: first to last at 300s gives
+  EXACTLY 288 SLOTS, 287 supplied, and THE ONE MISSING INTERIOR SLOT IS THE MASKED WINDOW.
+  So DA's 288 and BE's 287 were never in conflict: ONE DENOMINATOR, TWO CORRECT NUMBERS,
+  DIFFERING BY EXACTLY THAT WINDOW. AND THE SEATS AGREE ON ITS IDENTITY, NOT MERELY ITS
+  COUNT -- agreement on WHICH ONE is not producible by coincidence the way agreement on HOW
+  MANY is. THE MASK-FLIP MECHANISM IS EMPTY FOR BTC 09-07, since an unsupplied window
+  contributes zero rows under either era and stays a blackout under the fix, SO THE ONLY
+  DELTA-D SOURCE IS THE 27'S REPLAY-CONTENT CHANGE IN RETAINED ROWS -- a narrowing of the
+  expected effect, not a relaxation of the check. DA 231's rebuild must return n_masked = 1
+  and exactly that window, TYPED BEFORE IT RUNS. Ruling: 287 on the tripwire table, 288 as
+  the coverage denominator, the masked window AS A STATUS. tip 7ce92b9)
   2026-09-11T06:58:29Z (MEM ROUND 363 -- TWO CORRECTIONS AND A MASK RULING. THE 27 GAP INTERVALS EXCLUDE
   NO ROWS on the day path -- BINANCE_GAP_EXCLUDED_STATUS is NOT_APPLIED_ON_THE_DAY_PATH,
   which I read -- so they change WHAT THE REPLAY SEES in retained windows, and row removal
@@ -99,22 +113,6 @@ updated: >-
   HAVE RUN ABOUT TWENTY TIMES THIS SESSION CONTAINED AN UNCHECKED CLAIM ABOUT ITS OWN
   SCOPE -- every landing was safe because the branch was not diverged, and the instrument
   could not have told me so. tip dfe3ef5)
-  2026-09-11T06:46:35Z (MEM ROUND 361 -- V2 IS NOT NEUTRAL BY CONSTRUCTION AND THE FORK IS A STANDING
-  HAZARD. The user's da00220 derives the null SEED from the book digest plus the arm and
-  REFUSES a supplied seed, while day one ran seed 20260907 for both arms -- so V2 DRAWS A
-  DIFFERENT SAMPLE A PRIORI and p cannot match. ONE SECOND OF READING AGAINST A 77-MINUTE
-  RE-RUN. A separate change -- REFERENCE_FILLS replacing replay(0.5), plus a
-  NO_FILLS_UNTIL_NEXT_GENERATION leg -- CAN move observed_D and is being measured alone.
-  ONLY THE RUN MODULE WENT V2; the evaluator has ZERO V2 markers. AND THE PENDING QUESTION
-  INVERTS WHICH VERSION IS THE DEVIATION: if V1's replay(0.5) is not the declared
-  REFERENCE_FILLS primary, DAY ONE WAS VALUED AGAINST AN UNDECLARED ZERO and V2 is the
-  FIRST valuation matching the declaration. THE FORK: 18 local-only against 11 origin-only
-  from 651a7b5, and THE TWINS ARE NOT REBASED COPIES -- DA 224's two copies differ by 18
-  files and 3,400 deletions, which I diffed. Every seat worktree is off the local side and
-  the pin PREDATES the fork, so nothing computed is affected. AND I CORRECT MY ROUND-359
-  ATTRIBUTION: I identified 'origin's BE 133' BY SUBJECT PREFIX and it is a DIFFERENT
-  COMMIT FROM TWO DAYS EARLIER. The conclusion survives for a better reason -- the commit I
-  amended IS LOCAL-ONLY AND NEVER PUBLISHED. tip 066c800)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -286,6 +284,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 364, the 288th window named ---
+  THE_288TH_WINDOW_IS_1788807300_AND_I_CONFIRMED_EVERY_PART_OF_IT_AT_THE_ARTIFACT: "BE 137 closes 27-vs-12 and the 288th. I read be137_gap_windows_20260907.json: n_gap_bearing 27, era clob_v4_1 (the FIXED era), includes_1788807300 FALSE, missing_interior_window [1788807300] with missing_interior_window_utc ['18:55:00Z'], first_window 1788739200 and last_window 1788825300. I converted the epoch myself: 1788807300 IS 2026-09-07T18:55:00Z. And the slot arithmetic closes -- first to last at 300 seconds gives EXACTLY 288 SLOTS, of which 287 are supplied and the ONE MISSING INTERIOR SLOT IS THE MASKED WINDOW."
+  AND_ONE_DENOMINATOR_WITH_TWO_CORRECT_NUMBERS_DIFFERING_BY_EXACTLY_THE_MASKED_WINDOW: "The window is ABSENT FROM THE SUPPLIED POPULATION, which is why it cannot be among the 27: A WINDOW THAT IS NOT SUPPLIED CANNOT BE GAP-BEARING. DA's 288 counts expected-AND-covered; the supply is 287. So the two figures were never in conflict -- they differ by the masked window and by nothing else. This is the fourth time in ten rounds that two right numbers looked like a disagreement because their units were unstated."
+  AND_THE_SEATS_AGREE_ON_THE_WINDOWS_IDENTITY_NOT_MERELY_ITS_COUNT: "That is what makes this rule-38 corroboration rather than two tallies landing on one integer. DA named a window; BE's artifact names the same window by id and by UTC, from a different instrument on a different question. Agreement on WHICH ONE is not producible by coincidence in the way agreement on HOW MANY is. Under the timing clause I landed at round 357 I record what I can establish: both are present in the artifact I read, and I do not have their independent filing order."
+  THE_MASK_FLIP_MECHANISM_IS_EMPTY_FOR_BTC_09_07_SO_ONE_MECHANISM_REMAINS: "1788807300 contributes ZERO ROWS under either era because it is unsupplied, and it does not overlap a gap -- so under the FIXED era it remains thin-and-not-gap-overlapped, which is still a blackout. THEREFORE THE ONLY SOURCE OF DELTA-D ON THE REBUILD IS THE 27'S REPLAY-CONTENT CHANGE IN RETAINED ROWS. The two-mechanism tripwire I recorded one round ago collapses to one FOR THIS DAY, which is a narrowing of the expected effect and not a relaxation of the check."
+  AND_DA_231S_MASK_REBUILD_IS_THE_CONFIRMING_MEASUREMENT_WITH_ITS_EXPECTED_VALUES_TYPED: "It must show n_masked = 1 and masked_windows == [1788807300]. Those are typed BEFORE the rebuild returns, which makes it a test rather than a description: a rebuild that returns something else is a finding, and a rebuild that returns exactly this confirms a mechanism argued from a predicate. The expectation being falsifiable is the whole of its value."
+  THE_TRIPWIRE_TABLE_USES_287_AND_288_IS_THE_COVERAGE_DENOMINATOR_WITH_THE_MASKED_WINDOW_AS_A_STATUS: "Coordinator ruling under rule 14. BOTH NUMBERS GO ON THE TABLE WITH THEIR ROLES NAMED: 287 is the per-window population, 288 is the coverage denominator, and the masked window appears as A STATUS rather than a silent absence, which is rule 4. That is the general repair for the class -- not choosing between two right numbers but publishing both with what each counts."
+  THE_EMPTY_TRAIN_SPLIT_IS_SCOPE_AND_A_NON_ZERO_COUNT_WOULD_BE_THE_ALARM: "'[train] DONE {slugs: 0}' is EMPTY_BY_CONSTRUCTION, declared true in inputs.train_split with a digest on the deliberate 234-byte empty input. And the inversion is what makes it checkable: A NON-ZERO TRAIN COUNT WOULD BE THE ALARM, because a forward day labelled train would report as A FITTING DAY. A zero that is expected, with its opposite named as the failure, is the shape a zero needs in order to be evidence -- which is the lesson from the timer-lane zeros at round 351."
+  AND_BE_KILLED_THE_AUTO_CHAIN_SO_THE_BOOK_WAITS_FOR_A_PROBE_OR_A_TIMEOUT: "The book waits for DE's probe or ten minutes, rather than proceeding automatically. Recorded because an auto-chain that runs the next stage while a question is open is how a queue turns an open item into a settled one without anyone deciding it -- the same shape as a build completing while a population question is open, which I recorded at round 350."
+  BES_WORK_IS_ON_ORIGIN_VIA_RULE_45_AND_BE_SELF_CORRECTED_A_READ_TAKEN_MID_COMMIT: "Four commits landed by cherry-pick onto an origin-cut branch: b366c66, 34ce58e, daa60d0 and 9214c2f -- which is the one landing path rule 45 leaves, demonstrated rather than described. AND BE SELF-CORRECTED AN EARLIER 'LOOKED REVERTED': it had been INFERRED FROM A DIGEST READ TAKEN WHILE ANOTHER SEAT WAS COMMITTING. A read of a shared tree mid-write is not a measurement of that tree, and BE caught its own."
+  AND_THE_COORDINATORS_TWO_CORRECTIONS_ARE_ALREADY_IN_MY_FILES_FROM_LAST_ROUND: "(a) 'gap-bearing windows now excluded' is wrong because the gap list excludes nothing on the day path -- I read BINANCE_GAP_EXCLUDED_STATUS = NOT_APPLIED_ON_THE_DAY_PATH at be_daybook_build.py:660 and recorded it at round 363. (b) REV 136's '12 masked windows, 0.6 per cent' bound was on the WRONG SET, and REV is re-deriving on 27 over 287 with per-window gap durations from the ledger. Both were filed at round 363; this round adds that the re-derivation is under way and now has the 27 BY ID to work from."
   # --- MEM round 363, two corrections and a mask ruling ---
   THE_SIZE_DELTAS_CAUSE_IS_UNEXPLAINED_AND_THE_GAP_INTERVALS_EXCLUDE_NO_ROWS: "Correction 1. The 27 gap intervals EXCLUDE NO ROWS on the day path -- I read it: BINANCE_GAP_EXCLUDED_STATUS = 'NOT_APPLIED_ON_THE_DAY_PATH' at be_daybook_build.py:660, carried into the status at :662 and onto the selection at :1219. THEY CHANGE WHAT THE REPLAY SEES IN RETAINED WINDOWS. Row removal comes only from the blackout MASK, whose BTC share is ONE window, 1788807300. SO THE 232,305-BYTE DELTA HAS NO ESTABLISHED CAUSE and is pending DA and BE."
   AND_MY_OWN_ROUND_362_FLAG_ATTRIBUTED_NO_CAUSE_SO_THERE_IS_NOTHING_IN_MY_FILES_TO_RETRACT: "I checked my own text rather than assume. The round-362 flag records the two byte counts, the difference, both unit readings, the row and window counts and the provenance -- and the string 'exclud' does not appear in it. So the correction lands on the dispatch's wording and not on the state files. That is not a credit to me: I RECORDED A MEASUREMENT WITHOUT AN EXPLANATION, which is only the right shape by default. The substantive update is that THE CAUSE IS NOW EXPLICITLY UNEXPLAINED, which is a stronger statement than silence."
@@ -27783,6 +27792,67 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 364, 2026-09-11T07:02:26Z ---
+  THE_288TH_WINDOW_IS_1788807300_AND_I_CONFIRMED_EVERY_PART_OF_IT_AT_THE_ARTIFACT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be137_gap_windows_20260907.json
+    as_of: 2026-09-11T07:02:26Z
+    said: >-
+      the artifact loaded and its fields read; 1788807300 converted with datetime.fromtimestamp to 18:55:00Z; (1788825300-1788739200)/300+1 computed as 288 and 1788807300 confirmed to lie on the 300-second grid between them.
+  AND_ONE_DENOMINATOR_WITH_TWO_CORRECT_NUMBERS_DIFFERING_BY_EXACTLY_THE_MASKED_WINDOW:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be137_gap_windows_20260907.json
+    as_of: 2026-09-11T07:02:26Z
+    said: >-
+      the artifact's own headline field states the absence from supply as the reason; includes_1788807300 is False and missing_interior_window is exactly [1788807300].
+  AND_THE_SEATS_AGREE_ON_THE_WINDOWS_IDENTITY_NOT_MERELY_ITS_COUNT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be137_gap_windows_20260907.json
+    as_of: 2026-09-11T07:02:26Z
+    said: >-
+      the identity match is between DA's named window and the artifact's missing_interior_window field; the filing order of the two findings is not established here and is not claimed.
+  THE_MASK_FLIP_MECHANISM_IS_EMPTY_FOR_BTC_09_07_SO_ONE_MECHANISM_REMAINS:
+    prov: RELAYED
+    from: BE 137 via coordinator MEM 364
+    as_of: 2026-09-11T07:02:26Z
+    said: >-
+      the zero-row and no-overlap properties as dispatched; the blackout predicate -- thin AND NOT gap-overlapped -- I read in code at round 363.
+  AND_DA_231S_MASK_REBUILD_IS_THE_CONFIRMING_MEASUREMENT_WITH_ITS_EXPECTED_VALUES_TYPED:
+    prov: RELAYED
+    from: coordinator MEM 364
+    as_of: 2026-09-11T07:02:26Z
+    said: >-
+      the two expected values as dispatched, recorded as pre-typed.
+  THE_TRIPWIRE_TABLE_USES_287_AND_288_IS_THE_COVERAGE_DENOMINATOR_WITH_THE_MASKED_WINDOW_AS_A_STATUS:
+    prov: RELAYED
+    from: coordinator MEM 364
+    as_of: 2026-09-11T07:02:26Z
+    said: >-
+      the ruling and the two roles as dispatched; rule 4's exclusions-are-statuses requirement is in CLAUDE.md's reliability rules.
+  THE_EMPTY_TRAIN_SPLIT_IS_SCOPE_AND_A_NON_ZERO_COUNT_WOULD_BE_THE_ALARM:
+    prov: RELAYED
+    from: BE via coordinator MEM 364
+    as_of: 2026-09-11T07:02:26Z
+    said: >-
+      the EMPTY_BY_CONSTRUCTION field, the digest on the empty input and the inverted alarm as dispatched.
+  AND_BE_KILLED_THE_AUTO_CHAIN_SO_THE_BOOK_WAITS_FOR_A_PROBE_OR_A_TIMEOUT:
+    prov: RELAYED
+    from: BE 136 via coordinator MEM 364
+    as_of: 2026-09-11T07:02:26Z
+    said: >-
+      the kill and the two release conditions as dispatched.
+  BES_WORK_IS_ON_ORIGIN_VIA_RULE_45_AND_BE_SELF_CORRECTED_A_READ_TAKEN_MID_COMMIT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be137_gap_windows_20260907.json
+    as_of: 2026-09-11T07:02:26Z
+    said: >-
+      daa60d0 is reachable and contains the artifact path I read; the artifact resolves identically from origin/mm-research, so BE's work is present on that side.
+  AND_THE_COORDINATORS_TWO_CORRECTIONS_ARE_ALREADY_IN_MY_FILES_FROM_LAST_ROUND:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be137_gap_windows_20260907.json
+    as_of: 2026-09-11T07:02:26Z
+    said: >-
+      both corrections are recorded in my round-363 flags with the constant read at its line; the 27 ids are in the artifact read this round.
   # --- MEM round 363, 2026-09-11T06:58:29Z ---
   THE_SIZE_DELTAS_CAUSE_IS_UNEXPLAINED_AND_THE_GAP_INTERVALS_EXCLUDE_NO_ROWS:
     prov: CHECKED
