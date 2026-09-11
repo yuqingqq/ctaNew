@@ -199,9 +199,20 @@ def _hops(**stamped: Stamped) -> dict:
         if s is None:
             out[name] = None
             continue
+        # THE DECLARATION IS KEPT, NOT JUST DEMANDED. REVIEW 201: the
+        # refusal text promises that `equal_clocks_declared` "is
+        # recorded", and this function dropped it -- so a declared-equal
+        # feed landed as transport_s 0.0, indistinguishable from a
+        # MEASURED zero. A refusal that names evidence it does not keep is
+        # the decorative class, in my own guard.
         out[name] = {"source": s.source, "source_as_of": s.source_as_of,
                      "local_receipt": s.local_receipt,
-                     "transport_s": s.transport_s}
+                     "transport_s": s.transport_s,
+                     "equal_clocks_declared": s.equal_clocks_declared,
+                     "zero_transport_is":
+                         ("DECLARED by the caller, not measured"
+                          if s.equal_clocks_declared and s.transport_s == 0
+                          else "measured")}
     return out
 
 
@@ -659,6 +670,14 @@ def falsify() -> int:
     ck("  and equality is admissible only when DECLARED, never by accident",
        declared == "" and ordinary == "",
        "equal_clocks_declared=True admits; an ordinary pair admits")
+    _eq = Stamped(1.0, 1000.0, 1000.0, "x", equal_clocks_declared=True)
+    _hop = _hops(only=_eq)["only"]
+    ck("  and a DECLARED zero transport is recorded as declared, never "
+       "left to read as measured",
+       _hop["equal_clocks_declared"] is True
+       and _hop["transport_s"] == 0
+       and "DECLARED" in _hop["zero_transport_is"],
+       _hop["zero_transport_is"])
 
     # --- REVIEW 199: the three single-use causes, each now driven --------
     _ref = Stamped(60000.0, 900.0, 905.0, FP.CHAINLINK_REF_SOURCE)

@@ -49,6 +49,15 @@ SCOPE_COINS = ("btc", "eth")      # step 4/5 scope
 
 DUPLICATE_KEY = "FORECAST_ACTION_DUPLICATE_KEY"
 NOT_IDENTITY_PATH = "ACTION_IS_NOT_ON_THE_NEUTRAL_IDENTITY_REFERENCE_PATH"
+#: REVIEW 201's two unenforceable properties, now enforced. The flag was
+#: READ, never DERIVED -- so the control fired on a LABEL and could not
+#: tell a genuinely off-path row from a caller that set the bit; and
+#: nothing joined these rows to `de_canonical_action_population`, so "one
+#: row per ACTUAL consumption decision" was a property of whatever list
+#: the caller passed.
+NO_POPULATION = "CANONICAL_POPULATION_NOT_SUPPLIED"
+FLAG_CONTRADICTS = "REFERENCE_PATH_FLAG_CONTRADICTS_THE_CANONICAL_POPULATION"
+NOT_IN_POPULATION = "ACTION_NOT_IN_THE_CANONICAL_POPULATION"
 OUT_OF_SCOPE = "ACTION_COIN_OUT_OF_SCOPE"
 NO_DECISION_STAMP = "ACTION_HAS_NO_DECISION_RECV_NS"
 OUTCOME_UNKNOWN = "ACTION_OUTCOME_NOT_SUPPLIED"
@@ -78,7 +87,40 @@ class ForecastAction:
         return dict(asdict(self), key=list(self.key))
 
 
-def build_actions(consumptions, *, scope=SCOPE_COINS) -> dict:
+def canonical_keys(population) -> set:
+    """`(slug, generation_id)` for every canonical action, from the
+    canonical population itself.
+
+    Accepts `de_canonical_action_population.build_actions`' output, or any
+    iterable of rows or pairs. The point is that MEMBERSHIP COMES FROM THE
+    POPULATION, never from a bit on the row being tested.
+    """
+    if population is None:
+        raise ActionsRefused(
+            f"REFUSED {NO_POPULATION}: no canonical population was "
+            f"supplied, so reference-path membership could only be read "
+            f"off the rows themselves. A control that fires on a label "
+            f"cannot tell an off-path row from a caller that set the bit "
+            f"(REVIEW 201).")
+    rows = population
+    if isinstance(population, dict):
+        rows = (population.get("actions") or population.get("rows")
+                or population.get("canonical") or [])
+    out = set()
+    for r in rows:
+        if isinstance(r, (tuple, list)) and len(r) >= 2:
+            out.add((str(r[0]), str(r[1])))
+        elif isinstance(r, dict):
+            gen = r.get("generation_id", r.get("gen"))
+            out.add((str(r.get("slug")), str(gen)))
+        else:
+            gen = getattr(r, "generation_id", getattr(r, "gen", None))
+            out.add((str(getattr(r, "slug", None)), str(gen)))
+    return out
+
+
+def build_actions(consumptions, *, scope=SCOPE_COINS,
+                  canonical_population=None) -> dict:
     """Fold quote-side consumptions into canonical actions.
 
     `consumptions` is an iterable of dicts carrying at least coin, slug,
@@ -87,6 +129,7 @@ def build_actions(consumptions, *, scope=SCOPE_COINS) -> dict:
     one key that disagree about the VALUE consumed are a duplicate key and
     REFUSE.
     """
+    keys = canonical_keys(canonical_population)
     actions: dict = {}
     excluded: dict = {}
 
@@ -100,12 +143,23 @@ def build_actions(consumptions, *, scope=SCOPE_COINS) -> dict:
         if coin not in scope:
             drop(row, OUT_OF_SCOPE)
             continue
-        if not row.get("on_identity_reference_path"):
-            # THE NEUTRAL REFERENCE PATH IS THE POPULATION (rule 1): an
-            # action taken on a path the policy itself perturbed is
-            # outcome-selected, and the unit is the DECISION-TIME
-            # exposure.
-            drop(row, NOT_IDENTITY_PATH)
+        # MEMBERSHIP IS DERIVED, AND THE CALLER'S BIT IS CHECKED AGAINST
+        # IT. The neutral reference path is the population (rule 1): an
+        # action taken on a path the policy itself perturbed is
+        # outcome-selected, and the unit is the DECISION-TIME exposure.
+        on_path = (str(row.get("slug")),
+                   str(row.get("generation_id"))) in keys
+        claimed = row.get("on_identity_reference_path")
+        if claimed is not None and bool(claimed) != on_path:
+            raise ActionsRefused(
+                f"REFUSED {FLAG_CONTRADICTS}: the row claims "
+                f"on_identity_reference_path={bool(claimed)} for "
+                f"{row.get('slug')}/{row.get('generation_id')} and the "
+                f"canonical population says {on_path}. The population "
+                f"decides; a row that disagrees with it is a wiring error "
+                f"one level up, not a row to drop quietly.")
+        if not on_path:
+            drop(row, NOT_IN_POPULATION)
             continue
         stamp = row.get("decision_recv_ns")
         if not isinstance(stamp, int) or isinstance(stamp, bool):
@@ -145,6 +199,11 @@ def build_actions(consumptions, *, scope=SCOPE_COINS) -> dict:
     rows = [v["action"] for v in actions.values()]
     sides = sum(len(a.quote_sides) for a in rows)
     return {"protocol": PROTOCOL, "n_actions": len(rows),
+            "canonical_population_size": len(keys),
+            "membership_decided_by":
+                "the canonical population supplied to this build; the "
+                "row's own `on_identity_reference_path` is CHECKED "
+                "against it and never trusted",
             "n_quote_sides_folded": sides,
             "sides_per_action": (sides / len(rows)) if rows else None,
             "actions": rows,
@@ -267,36 +326,77 @@ def falsify() -> int:
 
     W_START = 1788825600
 
-    def row(side, stamp=1000, coin="btc", gen="g1", val=0.6, path=True,
+    def row(side, stamp=1000, coin="btc", gen="g1", val=0.6, path=None,
             slug="btc-updown-5m-1788825600"):
-        return {"coin": coin, "slug": slug, "generation_id": gen,
-                "decision_recv_ns": stamp, "quote_side": side,
-                "up_probability_consumed": val, "window_start": W_START,
-                "on_identity_reference_path": path}
+        r = {"coin": coin, "slug": slug, "generation_id": gen,
+             "decision_recv_ns": stamp, "quote_side": side,
+             "up_probability_consumed": val, "window_start": W_START}
+        if path is not None:
+            r["on_identity_reference_path"] = path
+        return r
 
-    both = build_actions([row("BID"), row("ASK")])
+    SLUG = "btc-updown-5m-1788825600"
+    POP = [(SLUG, "g1"), (SLUG, "g2")]          # the canonical population
+
+    def build(rows, population=POP):
+        return build_actions(rows, canonical_population=population)
+
+    # --- REVIEW 201 (2): MEMBERSHIP IS DERIVED, THE BIT IS CHECKED ------
+    try:
+        build_actions([row("BID")], canonical_population=None)
+        unjoined = ""
+    except ActionsRefused as exc:
+        unjoined = str(exc)
+    ck("a build with NO canonical population REFUSES -- the flag alone is "
+       "a label",
+       NO_POPULATION in unjoined,
+       unjoined[:58] or "BUILT FROM THE CALLER'S BIT ALONE")
+    off = build([row("BID", gen="g9")])
+    ck("a row absent from the population is EXCLUDED by the population, "
+       "not by its own bit",
+       off["n_actions"] == 0
+       and off["excluded"] == {NOT_IN_POPULATION: 1},
+       json.dumps(off["excluded"]))
+    try:
+        build([row("BID", gen="g9", path=True)])
+        lied = ""
+    except ActionsRefused as exc:
+        lied = str(exc)
+    ck("a row whose FLAG contradicts the population REFUSES by name",
+       FLAG_CONTRADICTS in lied, lied[:58] or "TRUSTED THE BIT")
+    try:
+        build([row("BID", path=False)])
+        lied2 = ""
+    except ActionsRefused as exc:
+        lied2 = str(exc)
+    ck("  and the contradiction is caught in BOTH directions",
+       FLAG_CONTRADICTS in lied2,
+       lied2[:58] or "TRUSTED A FALSE BIT OVER THE POPULATION")
+
+    both = build([row("BID"), row("ASK")])
     ck("two quote sides consuming ONE value at one key are ONE action",
        both["n_actions"] == 1 and both["n_quote_sides_folded"] == 2
        and both["actions"][0].quote_sides == ("ASK", "BID"),
        f"{both['n_quote_sides_folded']} sides -> {both['n_actions']} action")
     ck("  and the fold is reported, so a reader sees the ratio",
        both["sides_per_action"] == 2.0, str(both["sides_per_action"]))
-    spread = build_actions([row("BID"), row("ASK", stamp=1001)])
+    spread = build([row("BID"), row("ASK", stamp=1001)])
     ck("the SAME sides at DIFFERENT timestamps are two actions",
        spread["n_actions"] == 2, str(spread["n_actions"]))
     try:
-        build_actions([row("BID"), row("ASK", val=0.7)])
+        build([row("BID"), row("ASK", val=0.7)])
         dup = ""
     except ActionsRefused as exc:
         dup = str(exc)
     ck("two VALUES at one key REFUSE the build, by name",
        DUPLICATE_KEY in dup, dup[:58] or "ADMITTED A DUPLICATE KEY")
-    off = build_actions([row("BID", coin="sol"), row("BID", path=False)])
-    ck("out-of-scope and off-reference-path rows are EXCLUDED BY STATUS, "
+    off2 = build([row("BID", coin="sol"), row("BID", gen="g9",
+                                               path=None)])
+    ck("out-of-scope and out-of-population rows are EXCLUDED BY STATUS, "
        "never dropped silently",
-       off["n_actions"] == 0
-       and off["excluded"] == {OUT_OF_SCOPE: 1, NOT_IDENTITY_PATH: 1},
-       json.dumps(off["excluded"]))
+       off2["n_actions"] == 0
+       and off2["excluded"] == {OUT_OF_SCOPE: 1, NOT_IN_POPULATION: 1},
+       json.dumps(off2["excluded"]))
 
     acts = both["actions"]
     slug = acts[0].slug
@@ -349,7 +449,7 @@ def falsify() -> int:
     # THE ABSTENTION ATTACK, DRIVEN: a challenger that is right where it
     # answers and silent where it is wrong must NOT be able to buy a
     # better primary number by abstaining.
-    two = build_actions([row("BID"), row("BID", stamp=2000, gen="g2")])
+    two = build([row("BID"), row("BID", stamp=2000, gen="g2")])
     a1, a2 = sorted(two["actions"], key=lambda x: x.decision_recv_ns)
     outcomes = {slug: True}
     always = score_actions([a1, a2], ident_ok,

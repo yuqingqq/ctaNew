@@ -44,6 +44,17 @@ import de_fair_value_policy_seam as SEAM         # noqa: E402
 
 PROTOCOL = "P003_DE_FAIR_VALUE_REPLAY_SEAM_V1"
 INPUTS_DIFFER = "REPLAY_ARMS_DO_NOT_SHARE_THEIR_INPUTS"
+#: REVIEW 201 drove the defect this constant now guards: a challenger
+#: replayed on a FLAT 0.99 tape against a baseline on the real tape
+#: returned SEAM_IS_HONEST with a MATCHING inputs digest, because
+#: `price_path` and `half_spread` were ARGUMENTS to run_arm, outside
+#: ReplayInputs, and `input_snapshot_sha256` was a caller-supplied string
+#: this module never computed. Inventory went -1.0 -> -6.0 and every unit
+#: of it was the tape. The digest is COMPUTED from what the run actually
+#: consumed now, and a declared digest that disagrees with the computed
+#: one is its own refusal.
+CONSUMED_DIFFER = "REPLAY_ARMS_CONSUMED_DIFFERENT_INPUTS"
+DECLARED_NOT_COMPUTED = "REPLAY_DECLARED_SNAPSHOT_IS_NOT_WHAT_WAS_CONSUMED"
 PATH_PINNED = "REPLAY_OUTCOME_PATH_IS_PINNED"
 NO_ARMS = "REPLAY_HAS_FEWER_THAN_TWO_ARMS"
 
@@ -54,14 +65,43 @@ class ReplayRefused(ValueError):
 
 @dataclass(frozen=True)
 class ReplayInputs:
-    """THE HALF THAT MUST BE IDENTICAL."""
+    """THE HALF THAT MUST BE IDENTICAL -- INCLUDING THE TAPE.
+
+    `price_path` and `half_spread` live HERE and not in `run_arm`'s
+    signature, because an input a comparison cannot see is an input the
+    arms do not actually share. That was the whole of REVIEW 201's
+    finding, and moving them is the fix rather than adding a check.
+    """
     non_fair_value_params: dict
-    input_snapshot_sha256: str
     initial_state: dict
+    price_path: tuple
+    half_spread: float
+    #: OPTIONAL, and CHECKED against the computed digest when present. A
+    #: caller may say which snapshot it believes it is replaying; it may
+    #: not decide the answer.
+    declared_snapshot_sha256: str | None = None
+
+    def consumed(self) -> dict:
+        return {"non_fair_value_params": self.non_fair_value_params,
+                "initial_state": self.initial_state,
+                "price_path": list(self.price_path),
+                "half_spread": self.half_spread}
 
     def digest(self) -> str:
+        """THE DIGEST OF WHAT IS ACTUALLY CONSUMED -- computed here."""
         return hashlib.sha256(json.dumps(
-            asdict(self), sort_keys=True, default=str).encode()).hexdigest()
+            self.consumed(), sort_keys=True, default=str).encode()).hexdigest()
+
+    def __post_init__(self) -> None:
+        if (self.declared_snapshot_sha256
+                and self.declared_snapshot_sha256 != self.digest()):
+            raise ReplayRefused(
+                f"REFUSED {DECLARED_NOT_COMPUTED}: the caller declares "
+                f"{self.declared_snapshot_sha256[:16]} and the inputs it "
+                f"actually carries digest to {self.digest()[:16]}. A "
+                f"snapshot identity supplied rather than computed is a "
+                f"label, and REVIEW 201 measured a flat tape passing "
+                f"behind one.")
 
 
 @dataclass(frozen=True)
@@ -101,8 +141,8 @@ def compare_arms(baseline: dict, challenger: dict) -> dict:
                 raise ReplayRefused(
                     f"REFUSED {NO_ARMS}: the {nm} arm carries no {key!r}")
     bi, ci = baseline["inputs"], challenger["inputs"]
-    differing = [k for k in ("non_fair_value_params",
-                             "input_snapshot_sha256", "initial_state")
+    differing = [k for k in ("non_fair_value_params", "initial_state",
+                             "price_path", "half_spread")
                  if json.dumps(getattr(bi, k), sort_keys=True, default=str)
                  != json.dumps(getattr(ci, k), sort_keys=True, default=str)]
     if differing:
@@ -110,6 +150,15 @@ def compare_arms(baseline: dict, challenger: dict) -> dict:
             f"REFUSED {INPUTS_DIFFER}: {differing} differ between the "
             f"arms. A replay whose arms do not share their inputs "
             f"measures the inputs, not the fair value.")
+    # THE COMPUTED DIGEST IS THE BACKSTOP: a field added later that the
+    # list above forgets still moves this number, so the check does not
+    # depend on my remembering to extend a list.
+    if bi.digest() != ci.digest():
+        raise ReplayRefused(
+            f"REFUSED {CONSUMED_DIFFER}: the arms' CONSUMED inputs digest "
+            f"to {bi.digest()[:16]} and {ci.digest()[:16]}. Something the "
+            f"field list above does not name differs, and an input a "
+            f"comparison cannot see is not shared.")
     same_anchor = baseline["anchors"] == challenger["anchors"]
     same_path = baseline["path"].digest() == challenger["path"].digest()
     out = {"protocol": PROTOCOL,
@@ -151,11 +200,12 @@ def compare_arms(baseline: dict, challenger: dict) -> dict:
     return out
 
 
-def run_arm(actions, value_of, inputs: ReplayInputs, price_path,
-            half_spread=0.01) -> dict:
-    """One arm: the seam produces quotes, the engine produces the path."""
-    seam = SEAM.run_seam(actions, value_of, half_spread=half_spread)
-    path = replay(seam["quotes"], price_path, inputs.initial_state)
+def run_arm(actions, value_of, inputs: ReplayInputs) -> dict:
+    """One arm. THE TAPE AND THE SPREAD COME FROM `inputs`, so there is no
+    way to replay two arms on different tapes and have the comparison
+    call them shared."""
+    seam = SEAM.run_seam(actions, value_of, half_spread=inputs.half_spread)
+    path = replay(seam["quotes"], inputs.price_path, inputs.initial_state)
     return {"inputs": inputs, "path": path,
             "anchors": [q.anchor for q in seam["quotes"]],
             "trajectory": seam["trajectory"], "seam": seam}
@@ -184,9 +234,9 @@ def falsify() -> int:
                   key=lambda a: a.decision_recv_ns)
     prices = [0.52, 0.48, 0.55, 0.45, 0.50, 0.60]
     inputs = ReplayInputs(
-        non_fair_value_params={"half_spread": 0.01, "max_inventory": 5},
-        input_snapshot_sha256="a" * 64,
-        initial_state={"inventory": 0.0, "clock": 0})
+        non_fair_value_params={"max_inventory": 5},
+        initial_state={"inventory": 0.0, "clock": 0},
+        price_path=tuple(prices), half_spread=0.01)
 
     ident = {a.generation_id: 0.50 for a in acts}
     chall = {a.generation_id: 0.58 for a in acts}
@@ -197,13 +247,13 @@ def falsify() -> int:
     def v_chall(a):
         return chall[a.generation_id], FP.BN_BOOKTICKER, False
 
-    base = run_arm(acts, v_ident, inputs, prices)
-    same = run_arm(acts, v_ident, inputs, prices)
+    base = run_arm(acts, v_ident, inputs)
+    same = run_arm(acts, v_ident, inputs)
     ck("Identity against itself is a NO_OP: same inputs, same path",
        compare_arms(base, same)["verdict"] == "NO_OP",
        f"path {base['path'].digest()[:16]}")
 
-    chall_arm = run_arm(acts, v_chall, inputs, prices)
+    chall_arm = run_arm(acts, v_chall, inputs)
     honest = compare_arms(base, chall_arm)
     ck("a DIFFERENT value produces a DIFFERENT order path -- the seam is "
        "honest",
@@ -227,19 +277,61 @@ def falsify() -> int:
        "queue position" in compare_arms(base, pinned)["reading"]
        and "free to move" in compare_arms(base, pinned)["reading"])
 
+    # REVIEW 201'S OWN ARM, FIRST: a FLAT tape against the real one.
+    flat = ReplayInputs(non_fair_value_params={"max_inventory": 5},
+                        initial_state={"inventory": 0.0, "clock": 0},
+                        price_path=tuple([0.99] * len(prices)),
+                        half_spread=0.01)
+    flat_arm = run_arm(acts, v_chall, flat)
+    try:
+        compare_arms(base, flat_arm)
+        flat_msg = ""
+    except ReplayRefused as exc:
+        flat_msg = str(exc)
+    ck("a challenger on a FLAT 0.99 TAPE is REFUSED by name (REVIEW 201's "
+       "own drive, which used to return SEAM_IS_HONEST)",
+       INPUTS_DIFFER in flat_msg and "price_path" in flat_msg,
+       flat_msg[:72] or f"ADMITTED A FLAT TAPE: inventory "
+                        f"{flat_arm['path'].inventory}")
+    ck("  and the real-tape pair still PASSES, so the guard is not merely "
+       "strict",
+       compare_arms(base, chall_arm)["verdict"] == "SEAM_IS_HONEST")
+    ck("  while the legs remain FREE to produce different order paths",
+       base["path"].digest() != chall_arm["path"].digest()
+       and base["path"].fills != chall_arm["path"].fills,
+       f"{len(base['path'].fills)} vs {len(chall_arm['path'].fills)} fills")
+    try:
+        ReplayInputs(non_fair_value_params={"max_inventory": 5},
+                     initial_state={"inventory": 0.0, "clock": 0},
+                     price_path=tuple(prices), half_spread=0.01,
+                     declared_snapshot_sha256="f" * 64)
+        declared_msg = ""
+    except ReplayRefused as exc:
+        declared_msg = str(exc)
+    ck("a DECLARED snapshot digest that is not what the inputs carry "
+       "REFUSES",
+       DECLARED_NOT_COMPUTED in declared_msg,
+       declared_msg[:64] or "ADMITTED A DECLARED DIGEST")
+    ck("  and a declared digest that MATCHES the computed one admits",
+       ReplayInputs(non_fair_value_params={"max_inventory": 5},
+                    initial_state={"inventory": 0.0, "clock": 0},
+                    price_path=tuple(prices), half_spread=0.01,
+                    declared_snapshot_sha256=inputs.digest()).digest()
+       == inputs.digest(), inputs.digest()[:16])
+
     for key, bad in (("non_fair_value_params",
-                      ReplayInputs({"half_spread": 0.02,
-                                    "max_inventory": 5},
-                                   "a" * 64, {"inventory": 0.0, "clock": 0})),
-                     ("input_snapshot_sha256",
-                      ReplayInputs({"half_spread": 0.01,
-                                    "max_inventory": 5},
-                                   "b" * 64, {"inventory": 0.0, "clock": 0})),
+                      ReplayInputs({"max_inventory": 9},
+                                   {"inventory": 0.0, "clock": 0},
+                                   tuple(prices), 0.01)),
+                     ("half_spread",
+                      ReplayInputs({"max_inventory": 5},
+                                   {"inventory": 0.0, "clock": 0},
+                                   tuple(prices), 0.02)),
                      ("initial_state",
-                      ReplayInputs({"half_spread": 0.01,
-                                    "max_inventory": 5},
-                                   "a" * 64, {"inventory": 2.0, "clock": 0}))):
-        other = run_arm(acts, v_chall, bad, prices)
+                      ReplayInputs({"max_inventory": 5},
+                                   {"inventory": 2.0, "clock": 0},
+                                   tuple(prices), 0.01))):
+        other = run_arm(acts, v_chall, bad)
         try:
             compare_arms(base, other)
             msg = ""
