@@ -724,3 +724,275 @@ file before committing it, and if it carries someone else's work, LAND IT AND
 SAY SO IN THE MESSAGE** — naming what is not mine and that I have not reviewed
 it. Leaving it uncommitted is worse: R-857 lost four of DA's files exactly
 that way, and an uncommitted edit is recoverable from nothing.
+
+---
+
+## 9. BE 133–136 (2026-09-11) — rebuilding a day, and what a day actually costs
+
+### 9a. A DAY IS FOUR STAGES, NOT ONE
+
+`be_gate1_fragment --day` → `be_gate1_state_tape --day` → `be_daybook_build
+--day` → DE's valuation. The tape **refuses** without a fragment (*"the tape
+is built FROM it; building a tape without one would be a tape about a
+different population"*), and the book refuses without a tape. Measured, at
+L=250:
+
+| stage | wall | in-process peak |
+|---|---|---|
+| fragment | ~665 s (11 min) | 2.07–2.09 GB |
+| tape | 755–1,528 s (13–25 min) | **4.74–4.75 GB, FLAT on every day** |
+| book | ~1,300–1,600 s (22–27 min) | 4.3–6.3 GB |
+| (DE) valuation | ~77 min | 3.41 GiB |
+
+**The tape's peak does not scale with the day** — five days all sit at 4.74.
+Wall does. And 4.75 + a ~12 GB pipeline catch-up = 16.75 GB against a 14 GB
+slice cap, so **a tape cannot share the slice with a catch-up run** — the same
+conclusion DE reached for the valuation.
+
+**Nothing schedules the fragment or the tape.** No timer produces them; the
+ones through 09-07 were built by hand, and the apparent nightly cadence was
+just prior work that stopped when that work stopped. Check
+`ls data/pm_5min/derived/phase2_state_tape_gate1_*` before promising a book.
+
+### 9b. REBUILDING A DAY: THE BOOK HAS A REVISION, THE OTHER TWO DO NOT
+
+`artifact_paths(day, coin, L, revision)` gives the book `__FWD2` and
+`assert_artifacts_absent` keeps FWD1 as provenance. **The fragment and tape
+have no revision parameter**, and both `guard_output`s refuse an existing
+path — the fragment's message names the intended action: *"Move or delete it
+deliberately."* So: **move, never delete**, digest both sides, and write a
+supersession record. Never patch the builders to add a revision — they are
+pinned for the forward test and changing their bytes is worse than the
+problem.
+
+### 9c. `be_gate1_fragment` OVERWRITES ITS OWN RECEIPT — AND THE FILE IS UNTRACKED
+
+`be_gate1_state_tape.main` versions its receipt to `.v<N>.json` and carries
+the comment *"A LANDED RECEIPT IS NEVER OVERWRITTEN (rule 13)"*.
+`be_gate1_fragment.main` does a plain `dst.write_text(...)` at a fixed path.
+**The tape builder was fixed for exactly this defect and the fragment builder
+was not.** Rebuilding 09-07 destroyed its fragment receipt, and
+`git ls-files --error-unmatch` says the file was never tracked, so there is no
+history to recover it from either. **Before rebuilding any day, copy the
+fragment receipt aside by hand.** The fragment itself is safe — only the
+receipt is lost, and the population can be re-derived from the moved bytes.
+
+### 9d. `[train] DONE {'slugs': 0}` IS SCOPE, AND ITS OPPOSITE IS THE DEFECT
+
+`build_state_tape_v2` maps `(("train", FRAG), ("score", TOP))` and a Gate-1
+tape has ONE population, so one split has no input **by construction**. The
+day fragment goes in the **topup** slot, so its split is **score** — because
+*"nothing is trained on a ruled forward day; labelling it `train` would report
+it as a day the heads were fitted on, which is the look-ahead-shaped
+misreport."* So a **non-zero train count is the alarm**, not the zero. The
+receipt distinguishes it from a silent zero by field, not by prose:
+`inputs.train_split.EMPTY_BY_CONSTRUCTION: true`, with a digest on the
+deliberate 234-byte empty input, beside `score_split."THE_DAY'S_ROWS": true`.
+
+### 9e. `RULED_DAYS` IN `be_gate1_fragment` IS A STALE LITERAL NOBODY ENFORCES
+
+`RULED_DAYS = ("20260901" … "20260905")` appears at its definition and in
+`declaration()` — **and nowhere else**. `build()` does not consult it, which
+is why 09-06 and 09-07 fragments exist. A limit that lives only in a
+declaration does not bind the result (rule 35). Do not read it as a gate.
+
+### 9f. LANDING WHEN LOCAL `mm-research` IS FORKED (rule 45)
+
+`land_register_row.sh` **rebases onto origin** when it finds itself behind, so
+from a forked local branch it replays every local-only commit, not yours.
+Land from a worktree cut from `origin/mm-research` instead. Two mechanics that
+cost me time:
+
+* **`wt/data` is the ledger symlink, so a file under `data/` is THE SAME FILE
+  in every worktree** — `cp` refuses. Stage the blob straight into the
+  worktree's index: `sha=$(git hash-object -w <path>)` then
+  `git -C <wt> update-index --add --cacheinfo <mode>,$sha,<path>`. Preserve the
+  MODE — `be_heavy_run.sh` is `100755` and staging it `100644` silently drops
+  the execute bit.
+* **`update-index` does not write the working tree**, so afterwards the
+  worktree shows those files as modified against its own HEAD. Verify the
+  working copies are the STALE ones, then `git checkout --` them *in the
+  worktree* to resync.
+
+Verify a landing at ORIGIN after a fetch — `git cat-file -e
+origin/mm-research:<path>` — never at the local sha you remember.
+
+### 9g. KILLING A CHAIN DRIVER DOES NOT KILL THE RUN
+
+When the coordinator said "do not auto-chain the book", I stopped the
+background driver mid-wait; the tape unit stayed `loaded/active/running` and
+finished normally. That is R-628's property observed rather than argued: the
+payload is the *manager's* child, not the launcher's. **So a chain is always
+interruptible** — never hesitate to stop a driver to yield the lock.
+
+### 9h. A STALE READ ACROSS A MOVING HEAD LOOKS EXACTLY LIKE A REVERT
+
+I inferred that my own landed change had been reverted, from a digest
+comparison taken while another seat was committing in the shared tree between
+my two reads. It had not. **On this box HEAD moves under you constantly**:
+re-read both sides in the SAME command before concluding anything about what
+happened to a file, and grep the CONTENT MARKER rather than comparing digests
+you gathered a minute apart.
+
+---
+
+## 10. THE DEFERRED FIX QUEUE — do not lose these when the test ends
+
+Written at BE 139 because the forward test pins the build path and several
+real defects are therefore **knowingly** left in place until the last forward
+book (09-13) exists. **When contexts turn over, this list is what survives.**
+Each lands *after* that book, beside DE's refusal renames and the guard/params
+pair.
+
+### 10a. `flow_intensity.gaps_by_slug` DROPS BOUNDARY-SPANNING GAPS ENTIRELY
+
+A gap row is attributed to a slug by the collector's `window_start` field, not
+by the gap's own wall clock. `gaps_by_slug` clamps the offsets to
+`[0, WINDOW_S]` and keeps only `g1 > g0`, so a gap whose instant falls outside
+its stamped window produces an empty interval, is **dropped, and is never
+re-attributed to the window that contains it**. It lands in neither window and
+is counted nowhere — rule 4, an exclusion that is not a counted status.
+
+**It runs in BOTH directions**, measured across the five consumed days
+(`be_gap_census_wallclock.json`):
+
+| day | rows | replay windows | wall-clock windows | not seen |
+|---|---|---|---|---|
+| 09-03 | 376 | 160 | 160 | 0 |
+| 09-04 | 80 | 52 | **53** | **1** |
+| 09-05 | 19 | 13 | 13 | 0 |
+| 09-06 | 14 | 14 | 14 | 0 |
+| 09-07 | 35 | 27 | **28** | **2** |
+
+* 09-07, stamped 14:40, raw `(303.476, 311.176)` — **after** that window ends,
+  lands in 14:45.
+* 09-07, stamped 15:50, raw `(319.259, 320.812)` — lands in 15:55. *This is
+  the "28th gap-bearing window" DA and the coordinator found independently.*
+* 09-04, stamped 22:30, raw `(-198.702, -197.404)` — **negative**, the gap
+  happened *before* its stamped window began; lands in 22:25.
+
+**The fix** is to re-attribute by wall clock (or to split a straddling gap
+across both windows) inside `gaps_by_slug`. It changes what the replay sees,
+so it invalidates every book built before it and **must not be applied
+mid-test**. Ruled deferred by the coordinator at BE 139; the census artifact
+carries the status `GAP_RECORDED_NOT_SEEN_BY_REPLAY` in the meantime.
+
+### 10b. `be_gate1_fragment` OVERWRITES ITS OWN RECEIPT
+
+See §9c. `be_gate1_state_tape` was fixed for exactly this and versions to
+`.v<N>.json`; the fragment builder still does a plain `write_text` at a fixed
+path, and the file is untracked so git cannot recover it either. Rebuilding
+09-07 destroyed its fragment receipt. **Fix: version it the way the tape
+builder does.** Until then, copy the receipt aside before any rebuild.
+
+### 10c. `RULED_DAYS` IS A DECLARATION NOTHING ENFORCES
+
+See §9e. Either enforce it in `build()` or delete it — a limit that lives only
+in a declaration does not bind the result (rule 35), and right now it reads as
+a gate to anyone who greps for one.
+
+### 10d. THE `--poll` UNIT-NAME ERROR — landed, listed so it is not re-fixed
+
+Already fixed (§8, the grouped redirect). Listed here only so nobody spends a
+round rediscovering it.
+
+### 10e. `systemctl show -p A -p B --value` RETURNS SYSTEMD'S ORDER, NOT YOURS
+
+**This caught TWO SEATS IN ONE NIGHT** — the coordinator at 03:59Z and me at
+07:10Z — which makes it a class, not a slip. `systemctl show` emits the
+properties in *its own* order regardless of the order you request them, so a
+positional `read` over `--value` output silently assigns the wrong field. Mine
+put `ActiveState` ("active") into the exit-status variable, my book-waiter
+took the failure branch on a **successful** tape, and **the book did not
+launch — four minutes of open lock on the critical path**, found by the
+coordinator and not by me.
+
+```bash
+# WRONG -- silently misassigns
+read -r LS AS SS MS RS ID <<<"$(systemctl --user show "$U" \
+  -p LoadState -p ActiveState -p SubState -p ExecMainStatus -p Result \
+  -p InvocationID --value | tr '\n' ' ')"
+
+# RIGHT -- one property per call, keyed by name
+field() { systemctl --user show "$1" -p "$2" | sed "s/^$2=//"; }
+```
+
+**One property per call, or parse `Key=value`. Never positionally.** And
+remember `LoadState=not-found` makes every other field a **DEFAULT, not a
+reading** (R-648) — a collected unit reports `dead`/`success`/`0` exactly like
+a clean one, so a reading without `LoadState=loaded` AND a non-empty
+`InvocationID` is VOID.
+
+### 10f. A HAND-OFF MUST NOT BE A LOOP INSIDE YOUR OWN TURN
+
+Related but distinct, and it cost a valuation tonight as well as my book: a
+waiter that lives in the seat's turn dies with the turn. Use a
+harness-tracked background task (it survives across turns and re-invokes the
+seat on exit) or a systemd unit — never "I will launch it when X finishes".
+**And never gate on another seat's unit merely being `running`:** DE's
+`deFMP0907wait3` is itself a *waiter*, so my "no `deFMP*` running" condition
+could never clear while the lock sat FREE — two waiters, an idle box. Gate on
+the LOCK, and launch through `--poll`, which refuses-and-retries (rc 75) if
+someone else takes it first. That makes the race safe instead of needing to
+be won.
+
+## §11. BE 188/189 — TWO INSTRUMENTS FOUND BY REHEARSING, NOT BY RUNNING
+
+The 09-09 dry-run BE 188 asked for was a rehearsal of a build that never ran.
+It surfaced two live instrument defects, one of them mine, in ten minutes.
+
+### 11a. A PIN HELD AS AN EQUALITY IS A LITERAL THAT MUST TRACK A MOVING THING
+
+`launch_stage2.sh` asserted `HEAD == 7ed5a90` four lines below a preflight
+that BE 163 had already re-ruled to DESCENDANT + five digests. The tree has
+advanced **112 commits** since the pin. Result: the preflight admitted
+20260909 with 25/25 rows and the launcher refused it, `rc=4`.
+
+The tell was available and unread: the launcher's own falsifier had been
+**4-of-12 RED since the first fast-forward** — and all four failures were its
+ADMIT cells. *A falsifier that is only run when its file is edited is a
+falsifier that reports on the day it is written.* Re-run every instrument's
+falsifier after the TREE moves, not only after the FILE moves.
+
+Fix: `be_tree_pin_guard.sh`, the ruled predicate in one place, falsifier 8/8,
+both directions driven on real commits of this repo (no tree moved, no
+worktree created): `origin/mm-research` → `PIN_NOT_ANCESTOR`, ancestor
+`5df2f46` → `PINNED_DIGEST_MOVED`, with a cell proving that commit really is
+an ancestor so it tests the digest half and not the ancestry half.
+
+**The same shape is live in `de_valuation_launch.sh:29`** (`[ "$HEAD" != "$PIN" ]`,
+then six module digests). Measured 2026-09-11: it refuses **every tree on this
+box** — wt-deval `b8d82d4`, wt-fwd `b34ed9f`, shared `223f352` — and 4 of its 6
+module digests differ from the pin *by design*, because the freeze moved the
+evaluator and the runner. It is inert rather than protective: the valuation
+units on this box run `be_heavy_run.sh` from wt-deval directly, not through it.
+DE's file, DE's fix — recorded here, filed to the register, not edited by BE.
+
+### 11b. §10f SAID "GATE ON THE LOCK". I THEN READ THE WRONG LOCK.
+
+Every `lock: FREE` line this seat reported came from `flock -n` on
+`data/pm_5min/.heavy.lock`. The lock the units take is
+`data/.heavy_run.lock` (`be_heavy_run.sh:35`, 52 files reference it). The path
+I probed is referenced by **nothing** in the repository, and `flock` CREATED it
+on first use — `mtime 15:51:15.427Z`, the second of my first probe. A lock file
+nobody contends **always reads FREE**: it could not say HELD, so it had never
+proved it could fire (rule 15), and it reported anyway.
+
+No build was mis-gated — the launcher offers through `be_heavy_run.sh --poll`,
+which takes the real lock — so the damage is confined to what this seat *said*.
+That is the exact failure mode of a quiet instrument: the reports were wrong
+while the machinery was right, and nothing in the machinery could contradict it.
+
+Fix: `be_lock_state.sh`, falsifier 10/10. Two design rules it obeys:
+- **It does not retype the path.** It reads `LOCK="${BE_HEAVY_LOCK:-...}"` out
+  of `be_heavy_run.sh` and REFUSES (exit 3) if that read fails. A second
+  literal would be 11a one file further on, and a silent fallback is how the
+  first one survived.
+- **Its falsifier holds the lock** in another process and requires the reader
+  to say HELD, then FREE again. A lock reader that has never been driven
+  against a held lock is a constant.
+
+The cell that would have caught the original: *the path resolved is referenced
+by more than one pipeline instrument; the path previously probed by none.*
+Generalise it — **a path an instrument reads should be reachable from the code
+that writes it.** A path only this seat names is a path only this seat believes.
