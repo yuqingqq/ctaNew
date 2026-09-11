@@ -57,5 +57,36 @@
   "peak_rss_gb": 2.088,
   "delta_vs_superseded_bytes": -232305,
   "reading": "the digest MOVED and the file is 232,305 bytes smaller, so the era fix changed the fragment -- consistent with 27 of 287 windows carrying gaps under the fix and none under the bug"
+ },
+ "BOOK_SUPERSEDED_AT_BE140": {
+  "why": "coordinator ruling BE 140: the rebuilt day one keeps the revision label FWD1 so it is homogeneous with 09-08..09-10, rather than the FWD2 I had planned. The old FWD1 pair is RENAMED, not overwritten and not deleted (rule 13). `assert_artifacts_absent` refuses if EITHER the book or its receipt is present, so both had to move.",
+  "moved": [
+   {
+    "from": "data/pm_5min/derived/be_daybook_20260907_btc__L250ms__FWD1.pkl",
+    "to": "data/pm_5min/derived/be_daybook_20260907_btc__L250ms__FWD1.superseded_20260911T071439Z.pkl",
+    "sha256": "0815cad74f53f11837bdee520f390c919d5cfe5e4c5b6f86b0d5b5f072352dca",
+    "bytes": 356248843
+   },
+   {
+    "from": "data/pm_5min/derived/be_daybook_receipt_20260907_btc__L250ms__FWD1.json",
+    "to": "data/pm_5min/derived/be_daybook_receipt_20260907_btc__L250ms__FWD1.superseded_20260911T071439Z.json",
+    "sha256": "6d5a98d2681a60debcd3b80106d9e6d44bef27836edcbee46ab063f022468475",
+    "bytes": 79175
+   }
+  ],
+  "digests_verified_both_sides": true,
+  "canonical_paths_confirmed_free_before_launch": true,
+  "consequence_stated_plainly": "DE's completed day-one valuation was computed on the bytes now at the superseded path. The digest is preserved above so the valuation stays attributable -- but the PATH it names no longer holds those bytes, and the valuation must be RE-RUN on the rebuilt book.",
+  "reversible": "yes -- move both files back to their canonical names",
+  "note_on_this_record": "this file was deleted from the working tree between BE 134 and BE 140 and was restored from origin/mm-research, where it had been landed. That is why landing an artifact matters even when it is only metadata.",
+  "rebuild_launched": {
+   "unit": "be140book0907",
+   "utc": "2026-09-11T07:15:01Z",
+   "invocation_id": "045ba93d8f5c4f4d930e1f46d6345aff",
+   "worktree": "/home/yuqing/ctaNew-wt-fwd",
+   "tip": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+   "args": "--day 20260907 --placement-latency-ms 250 --artifact-revision FWD1",
+   "builder_digest_asserted": "2d31a80b5ae5c2c6"
+  }
  }
 }

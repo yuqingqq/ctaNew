@@ -896,10 +896,42 @@ a gate to anyone who greps for one.
 Already fixed (§8, the grouped redirect). Listed here only so nobody spends a
 round rediscovering it.
 
-**A WARNING FROM THIS ROUND.** `systemctl show -p A -p B -p C --value` returns
-the properties in **systemd's** order, not the order you asked for. A
-positional `read` over that output assigned `ActiveState` to my exit-status
-variable, my book-waiter took the failure branch on a **successful** tape, and
-the book did not launch. **Parse `Key=Value` by NAME** (`systemctl show "$U"
--p "$P" | sed "s/^$P=//"`), never positionally — and remember `LoadState=
-not-found` makes every other field a DEFAULT, not a reading (R-648).
+### 10e. `systemctl show -p A -p B --value` RETURNS SYSTEMD'S ORDER, NOT YOURS
+
+**This caught TWO SEATS IN ONE NIGHT** — the coordinator at 03:59Z and me at
+07:10Z — which makes it a class, not a slip. `systemctl show` emits the
+properties in *its own* order regardless of the order you request them, so a
+positional `read` over `--value` output silently assigns the wrong field. Mine
+put `ActiveState` ("active") into the exit-status variable, my book-waiter
+took the failure branch on a **successful** tape, and **the book did not
+launch — four minutes of open lock on the critical path**, found by the
+coordinator and not by me.
+
+```bash
+# WRONG -- silently misassigns
+read -r LS AS SS MS RS ID <<<"$(systemctl --user show "$U" \
+  -p LoadState -p ActiveState -p SubState -p ExecMainStatus -p Result \
+  -p InvocationID --value | tr '\n' ' ')"
+
+# RIGHT -- one property per call, keyed by name
+field() { systemctl --user show "$1" -p "$2" | sed "s/^$2=//"; }
+```
+
+**One property per call, or parse `Key=value`. Never positionally.** And
+remember `LoadState=not-found` makes every other field a **DEFAULT, not a
+reading** (R-648) — a collected unit reports `dead`/`success`/`0` exactly like
+a clean one, so a reading without `LoadState=loaded` AND a non-empty
+`InvocationID` is VOID.
+
+### 10f. A HAND-OFF MUST NOT BE A LOOP INSIDE YOUR OWN TURN
+
+Related but distinct, and it cost a valuation tonight as well as my book: a
+waiter that lives in the seat's turn dies with the turn. Use a
+harness-tracked background task (it survives across turns and re-invokes the
+seat on exit) or a systemd unit — never "I will launch it when X finishes".
+**And never gate on another seat's unit merely being `running`:** DE's
+`deFMP0907wait3` is itself a *waiter*, so my "no `deFMP*` running" condition
+could never clear while the lock sat FREE — two waiters, an idle box. Gate on
+the LOCK, and launch through `--poll`, which refuses-and-retries (rc 75) if
+someone else takes it first. That makes the race safe instead of needing to
+be won.
