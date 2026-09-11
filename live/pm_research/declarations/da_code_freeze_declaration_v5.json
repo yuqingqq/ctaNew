@@ -1,0 +1,136 @@
+{
+ "declaration": "DA_CODE_FREEZE_VALUATION_AND_BUILD",
+ "version": 5,
+ "as_of_utc": "2026-09-11T13:38:59Z",
+ "FREEZE_COMMIT": "b34ed9fdd1e32fe2f29db8f7dda8f56b56742b27",
+ "VERIFIED_BY_LS_REMOTE": {
+  "note": "both refs are DA declaration commits on top of b34ed9f; the CODE tree at each equals b34ed9f",
+  "freeze_commit": "b34ed9fdd1e32fe2f29db8f7dda8f56b56742b27"
+ },
+ "THE_RULE_FROM_HERE": "only DECLARATIONS and NEW INSTRUMENT FILES may land. Any closure-module drift REFUSES in population freeze v9 as PIPELINE, by filename.",
+ "VALUATION_CLOSURE_DIGESTS_AT_THE_FREEZE": {
+  "de_multiday_gate1_runner.py": "2aa226623522814316ca9cabc6bc2da75f696ea93a47a81ee658f8b5888b24d7",
+  "de_forward_value_day.py": "875a01c508b0a674268006d95dd62fb6e5aceed1aad912d14689334b388c0e20",
+  "de_forward_evaluator.py": "6290bb25909817dcb479732a257621d66f338f24e1133192a0ebb892d10322c7",
+  "be_data_root.py": "c82451a61758f2b1990a11fef06d4fea8e1ef94f70e80c1aaf43d87e4cc5c6bd",
+  "de_asymmetry_null_run.py": "09581cbfc94e1f2d52f36de5cfd272ff68631e7ee7ff00095e3ee6a68dc58a9e",
+  "de_revaluation_emit.py": "87cd5651cc28446203a5e418a613690e2c9085fb297efc03e3bb5e087106e8c5",
+  "de_settlement_control_run.py": "d737d0fe1063c747563a5b799aa0d12ad07b18f2bbc89aec3e37873a5defc5bb",
+  "de_settlement_control_aggregate.py": "ce8e4806a48df8c298e6e59372e41b97d21376ab4d268bd8d7cf4bd1c66355ff",
+  "de_matched_cancel_control.py": "dbb37c65f5651ac75b627f074610a3ed34828a054551343286206ae5db0331e8",
+  "be_score_neutrality.py": "a455191d6bceec7e20af182243cedfa70373fb29a4d8323b3416f3617ef6c0e9"
+ },
+ "VALUATION_COMPUTING_MODULES_AS_THE_CODE_DECLARES_THEM": {
+  "source": "de_forward_value_day.COMPUTING_MODULES (read at the artifact, not assembled by DA)",
+  "modules": [
+   "de_settlement_control_run.py",
+   "de_settlement_control_aggregate.py",
+   "de_forward_evaluator.py",
+   "de_asymmetry_null_run.py",
+   "de_matched_cancel_control.py",
+   "de_multiday_gate1_runner.py"
+  ]
+ },
+ "BUILD_SIDE": {
+  "ref": "origin/be-build-runner",
+  "commit": "8afbd1a7447d74455199015ccedc54810e47176a",
+  "BUILD_PIN_declared_in_v27": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+  "five_pinned_digests": {
+   "be_daybook_build.py": {
+    "pinned": "2d31a80b5ae5c2c62fd4992eedb5d8c5020e66e69f015b1aa475e24d963d7fb3",
+    "at_freeze": "2d31a80b5ae5c2c62fd4992eedb5d8c5020e66e69f015b1aa475e24d963d7fb3",
+    "match": true
+   },
+   "be_gate1_fragment.py": {
+    "pinned": "d87c820872ec32670bd0dc4011d2d0279efeb4bd36f358866b771f2034fc75ed",
+    "at_freeze": "d87c820872ec32670bd0dc4011d2d0279efeb4bd36f358866b771f2034fc75ed",
+    "match": true
+   },
+   "be_gate1_state_tape.py": {
+    "pinned": "7a876f1fe98e938cf474ad14082972c50899400a020ea3547f5a80720abc4589",
+    "at_freeze": "7a876f1fe98e938cf474ad14082972c50899400a020ea3547f5a80720abc4589",
+    "match": true
+   },
+   "de_phase4_diag_runner.py": {
+    "pinned": "9e2a0977d8dfc3be1c90ac87817d732e4ca19b6752f3439dd5e505d771d5a47d",
+    "at_freeze": "9e2a0977d8dfc3be1c90ac87817d732e4ca19b6752f3439dd5e505d771d5a47d",
+    "match": true
+   },
+   "de_head_scoring.py": {
+    "pinned": "31c368384770351fdbe5408a0321ee7af89e2eb25fd0d36378f03c9d7b3f03af",
+    "at_freeze": "31c368384770351fdbe5408a0321ee7af89e2eb25fd0d36378f03c9d7b3f03af",
+    "match": true
+   }
+  },
+  "all_five_match_at_the_freeze": true
+ },
+ "WHY_THIS_FREEZE_EXISTS": {
+  "trigger": "(6) stopped on BOOK_BUILT_BY_DIFFERENT_SCORING_CODE",
+  "cause": "runner commits landed AFTER the build branch was cut, so the book's scoring code and the runner's were different objects while every label still agreed",
+  "the_general_shape": "a LABEL (a branch name, a commit ref, a path) is not an IDENTITY. The freeze converts the label into a digest set so drift refuses by filename instead of being discovered in a valuation's output."
+ },
+ "BLOCKER_FOUND_WHILE_VERIFYING_THIS_FREEZE": {
+  "severity": "THE VALUATION CANNOT RUN AT THE COMMIT BEING FROZEN",
+  "what": "de_forward_value_day.PIPELINE_COMMIT is the LITERAL 7efea16b39b89c2ddececc90b68e2f206d6c3500, 47 commits behind the freeze. Its import-time preflight admits a DESCENDANT only when every computing module is byte-identical to that pin, and TWO are not.",
+  "DRIVEN_AT_8afbd1a": "REFUSED VALUATION_COMPUTING_MODULES_ARE_NOT_AT_THE_PIPELINE_COMMIT: right tree, WRONG BYTES in ['de_settlement_control_run.py', 'de_multiday_gate1_runner.py']",
+  "measured": {
+   "de_settlement_control_run.py": {
+    "at_7efea16": "faeae22f347e2032",
+    "at_freeze": "0ce5f04f0aa1b9ca"
+   },
+   "de_multiday_gate1_runner.py": {
+    "at_7efea16": "157413f6562cf5bd",
+    "at_freeze": "acf911db48d445dd"
+   },
+   "the_other_four": "byte-identical across the 47 commits"
+  },
+  "THIS_IS_ITEM_6_ONE_LAYER_UP": "the same failure the freeze is being declared to prevent -- a commit literal that must track a moving thing and did not. Recorded here rather than repaired: de_forward_value_day.py is DE's module and is inside the frozen closure.",
+  "ROUTED_TO_DE": "move PIPELINE_COMMIT to 8afbd1a7447d74455199015ccedc54810e47176a as the first and only closure edit under this freeze, or the freeze is a commit nothing can run from."
+ },
+ "LIMITS": {
+  "what_DA_verified": "ls-remote identity of both refs; the five build-pinned digests at the freeze commit; the valuation closure digests; and the preflight refusal, DRIVEN in a throwaway worktree checked out at the freeze commit.",
+  "what_DA_did_not_verify": "that the frozen code is CORRECT. A freeze pins identity, not quality."
+ },
+ "SUPERSEDES": "da_code_freeze_declaration_v4.json",
+ "supersedes_sha256": "280e6180636872d4e5cbf95b71e0ae9d123dfda79270f4e44cbd6c47a551e8ae",
+ "WHY_V2": "DE 324 (`d095c5a`) makes V2 READ FREEZE_COMMIT from this declaration instead of holding a literal -- 'the self-check had TWO sources of truth'. The freeze therefore moves to the commit that made it readable. v1 stays as provenance (rule 13).",
+ "WHAT_MOVED_FROM_v1": {
+  "v1_FREEZE_COMMIT": "8afbd1a7447d74455199015ccedc54810e47176a",
+  "v2_FREEZE_COMMIT": "d095c5a89995494194aaf78dd985d8cae05cbf61",
+  "pipeline_files_changed_between": [
+   "de_forward_value_day.py (V2)",
+   "de_arm_and_readonce_cells.py"
+  ],
+  "computing_modules_changed_between": "NONE -- all six are byte-identical across 8afbd1a..d095c5a"
+ },
+ "WHY_V3": "DA 251. Q-DE-327 (`bacb4e3`) brings the two emit post-processors INTO the frozen closure on the chain branch -- v2 recorded them ABSENT_AT_THIS_COMMIT, which was true and is now resolved. It also adds `code_freeze_declaration` to the resolver's `want`, which makes this declaration READ for the first time.",
+ "EMIT_POST_PROCESSORS_NOW_IN_THE_CLOSURE": {
+  "de_revaluation_emit.py": {
+   "present_at_freeze": true,
+   "sha256": "87cd5651cc28446203a5e418a613690e2c9085fb297efc03e3bb5e087106e8c5"
+  },
+  "de_window_decomposition.py": {
+   "present_at_freeze": true,
+   "sha256": "f00db67d2ef4b42177b38fa19c42860249c46457de7a411c463c4b703b0e1efa"
+  }
+ },
+ "WHY_V4": "DA 252. Q-DE-328 (`d0bb179`) replaces agree-or-refuse with VERSION-ORDERED SUPERSESSION THAT NAMES WHAT IT REPLACES, which is the ruling's option 1. That commit is the freeze commit, so the declaration moves to it.",
+ "THE_DEADLOCK_IS_RESOLVED": {
+  "was": "v14 pinned v2 and no later amendment could move it -- DRIVEN at Q-DA-460, load_params went red",
+  "now": "DE 328 admits a move when the amendment NAMES the identity it replaces; silent disagreement still refuses, which was always the real hazard",
+  "pin_chain_DA_records_here": [
+   "v14 -> da_code_freeze_declaration_v2.json (names nothing; the original)",
+   "v15 -> v3 (names v2)",
+   "v16 -> v4 (names v3)",
+   "v17 -> v5 (names v4)"
+  ],
+  "what_the_walker_itself_records": "CORRECTED FOR Q-DE-329: the walker now ACCUMULATES THE WHOLE CHAIN. The resolved entry carries `chain` -- a list of {version, named_by, path, sha256}, one per amendment that pinned the key -- plus `named_by`, `version` and a computed `supersedes`. DA 252's v4 said the walker recorded only the immediately superseded identity; that was true of Q-DE-328 and is no longer true. The chain below is therefore a CROSS-CHECK of the walker's, not a substitute."
+ },
+ "WHY_V5": "DA 253. Q-DE-329 (`b34ed9f`) lands the ruling as VERSION-ORDER supersession and is one commit past d0bb179, which v4 named. It MOVED `de_multiday_gate1_runner.py`, and that IS a computing module -- so v4 would have refused WRONG BYTES at this tree. v4 was correct when written and is superseded rather than edited (rule 13).",
+ "THE_RULE_AS_LANDED": {
+  "Q-DE-328": "a later amendment could move a pin ONLY by NAMING the identity it replaced; an unnamed move REFUSED",
+  "Q-DE-329": "PLAIN VERSION ORDER -- the highest amendment wins and an unnamed move is ADMITTED. This is the ruling as worded. DA's v15/v16/v17 still carry `supersedes` blocks: they are no longer required, they are harmless, and they are kept because they state the intent in the artifact rather than leaving it to be inferred from a sort order.",
+  "THE_ONE_REFUSAL_A_VERSION_ORDER_CANNOT_SETTLE": "a SINGLE document pinning the same key TWICE. Caught with an object_pairs_hook, because JSON would otherwise keep the last silently. Version order settles two amendments; it cannot settle one document disagreeing with itself.",
+  "WHAT_THIS_COSTS": "a silent overwrite by a later amendment is now possible. That is the price of the ruling and it is recorded here rather than discovered later: the protection against a wrong pin is now the VERSION NUMBER alone."
+ }
+}
