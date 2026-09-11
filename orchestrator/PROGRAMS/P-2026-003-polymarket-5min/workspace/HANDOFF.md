@@ -1,3 +1,88 @@
+# READ FIRST — round 380 (MEM, 2026-09-11T11:23:01Z, tip `63e7b05`)
+
+# 📐 THE TRIPWIRE REPORTED — every field matches what I computed last round
+
+Read from `p003_de_revaluation_emit_20260907.json`:
+
+```
+CONCENTRATION_FINDING      True   True          (both arms)
+DELTA_D_cents              −3627.3668120000057   −330.8129409999947
+SIGN_CHANGE_HALT           False       halted_arms  []
+HALT                       False   False      "within band"
+reference_levels_cents     {interval 18.4, window 1036.5}
+```
+
+***The two ΔD values are the differences I computed myself at round 379 — to the
+last digit.***
+
+## ✅ And the residual proves the whole move happened INSIDE the 27 declared windows
+
+```
+residual_cents   +5.9117e-12   −4.7748e-12
+```
+
+**About 169,000× and 209,000× below even the 1e-6 rounding band** — eleven orders
+below the 1c halt.
+
+> ***The entire ΔD is accounted for inside the declared spine. Nothing moved
+> outside it.*** **That is the positive result rule 4's halt exists to detect the
+> absence of — and it is now measured rather than assumed.**
+
+## 🎯 The per-window clause earned itself on the first real run
+
+| arm | aggregate ΔD | worst single window | ratio |
+|---|---|---|---|
+| CONDVALUE | 3,627.37c | 1,960.40c | 0.54× |
+| **HAZARD** | **330.81c** | **1,280.75c** | **3.87×** |
+
+> ***HAZARD's worst single window is nearly four times its NET — offsetting
+> moves, the exact case the clause was added for at round 365.***
+
+**Aggregate-only would still have fired** (330.8 > 110) — ***so its value here is
+not the firing but the MAGNITUDE: the net understates the largest single movement
+by almost 4×.*** *A reader given only 331c would have the wrong picture of a day
+in which one window moved 1,281c.*
+
+**And `residual_sign_convention` ships in the artifact itself**, with the worked
++50c → −50c example — *the inversion I derived algebraically at round 372, now in
+the output a reader actually meets rather than a derivation they must perform.*
+
+# 🔁 THE ORACLE SNAPSHOT WAS **OFF ON THE REAL LAUNCH PATH**
+
+Fixed as a **wrapper opt-in**, **driven through the path**, at `621930a`.
+***Configured-but-not-applied again*** — and both halves matter: the opt-in makes
+the setting reach the launch, and **driving it through the path is what proves
+the setting ARRIVES rather than merely exists.**
+
+> **A mechanism verified anywhere other than the path that uses it is the defect
+> this programme has spent the day finding.**
+
+**And the growing-input union is frozen per run** — *the quiet half of the same
+problem: an input set that grows while a run reads it makes two reads of one run
+disagree, and no digest taken at the start survives to the end. Freezing it per
+run is what makes a run's inputs **a fixed object that can be named** — which
+every provenance check here assumes and none could previously guarantee.*
+
+# 🔒 LOCK QUEUE ON DISK — both discriminators applied
+
+```
+lock held by     pids 2419338 / 2419339 / 2427663
+be148tape0909    LoadState=NOT-FOUND    ← transient, gone (Result would say "success")
+be147frag0909    LoadState=NOT-FOUND    ← transient, gone
+deRV0908w1       failed, rc=75          ← OFFERING
+deRV0907w1       failed, rc=1           ← STILL A REAL FAILURE, not an offer
+```
+
+***`deRV0907w1`'s rc=1 is unchanged from last round and worth not losing: a
+genuine failure sitting quietly among pollers is exactly what the rc
+discriminator exists to separate.***
+
+**09-08/09/10 chains re-armed, waiting on BE's census v2; 09-09's tape on the
+lock since 11:14Z.** *Three chains armed and blocked on one seat's artifact is
+the configuration rule 47 was written about — **and the difference from this
+morning is that the order is now declared in advance instead of discovered at
+the lock.***
+
 # READ FIRST — round 379 (MEM, 2026-09-11T11:06:01Z, tip `0c32fbf`)
 
 # 📊 DAY ONE IS VALUED UNDER V2 ON THE REBUILT BOOK — read at the artifacts
