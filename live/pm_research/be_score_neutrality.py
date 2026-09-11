@@ -52,9 +52,9 @@ on the path. A green certification does not retire the per-book guard.
 from __future__ import annotations
 
 import json
+import hashlib
 import math
 import pickle
-import re
 import statistics
 import sys
 from pathlib import Path
@@ -78,22 +78,59 @@ NO_HEAD = "ARM_HAS_NO_DECLARED_HEAD"
 GUARD_TOO_CLOSE = "BOOK_M_MIN_WITHIN_K_TIMES_DELTA_MAX_CERTIFIED"
 
 DECL = "live/pm_research/declarations"
+FREEZE_REL = "de_arm_freeze_v1.json"
 
 
 class NeutralityRefused(RuntimeError):
     """The comparison cannot be made, so no verdict is reported."""
 
 
+def frozen_params(decl_dir=DECL) -> tuple[dict, Path, dict]:
+    """Resolve and digest-check the params named by the arm freeze."""
+    freeze_path = Path(decl_dir) / FREEZE_REL
+    if not freeze_path.is_file():
+        raise NeutralityRefused(
+            f"REFUSED: the arm freeze is absent: {freeze_path}")
+    try:
+        freeze = json.loads(freeze_path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise NeutralityRefused(
+            f"REFUSED: the arm freeze is unreadable: "
+            f"{type(exc).__name__}: {exc}") from None
+    pair = (freeze.get("frozen_parameters") or {}).get("params") or {}
+    params_path = Path(pair.get("path") or "")
+    if not params_path.is_absolute():
+        params_path = Path(decl_dir) / params_path.name
+    if not params_path.is_file():
+        raise NeutralityRefused(
+            f"REFUSED: the frozen params declaration is absent: {params_path}")
+    try:
+        params = json.loads(params_path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise NeutralityRefused(
+            f"REFUSED: the frozen params declaration is unreadable: "
+            f"{type(exc).__name__}: {exc}") from None
+    digest = hashlib.sha256(params_path.read_bytes()).hexdigest()
+    if digest != pair.get("sha256"):
+        raise NeutralityRefused(
+            f"REFUSED: the frozen params digest moved: declared "
+            f"{pair.get('sha256')}, read {digest}")
+    version = params.get("version")
+    protocol = str(params.get("protocol") or "")
+    if not isinstance(version, int) or not protocol.endswith(f"_V{version}"):
+        raise NeutralityRefused(
+            f"REFUSED: {params_path.name} has inconsistent identity "
+            f"(version={version!r}, protocol={protocol!r})")
+    return params, params_path, pair
+
+
 def arm_heads(decl_dir=DECL) -> dict:
-    """{arm: {"head": …, "theta": …}} READ from the params declaration.
+    """{arm: {"head": …, "theta": …}} READ from the frozen params.
 
     Derived, never typed (rule 32): theta separates a pass from a refutation
     and the head decides which scores theta is applied to."""
-    files = sorted(Path(decl_dir).glob("de_multiday_gate1_params_v*.json"),
-                   key=lambda f: int(re.search(r"_v(\d+)\.json", f.name).group(1)))
-    if not files:
-        raise NeutralityRefused("REFUSED: no params declaration to read from")
-    arms = (json.loads(files[-1].read_text()).get("arms") or {})
+    params, params_path, _ = frozen_params(decl_dir)
+    arms = params.get("arms") or {}
     out = {}
     for arm, spec in arms.items():
         head, theta = spec.get("head"), spec.get("theta")
@@ -102,7 +139,7 @@ def arm_heads(decl_dir=DECL) -> dict:
         if theta is None:
             raise NeutralityRefused(f"REFUSED {NO_THETA}: {arm}")
         out[arm] = {"head": head, "theta": float(theta),
-                    "params_file": files[-1].name}
+                    "params_file": params_path.name}
     if not out:
         raise NeutralityRefused(f"REFUSED {NO_THETA}: no arms declared")
     return out
@@ -170,7 +207,8 @@ def gen_max(book: dict, head: str) -> dict:
 
 def n_generations_in_book(book: dict) -> int:
     """D's denominator, from the book's own reference, not from the scores."""
-    ref = (book.get("fr") or {}).get("reference") or {}
+    ref = ((book.get("fr") or {}).get("reference")
+           if "fr" in book else book.get("ref")) or {}
     return sum(len(v) for sides in ref.values() for v in sides.values())
 
 
@@ -247,6 +285,12 @@ def certify(old: dict, new: dict, *, decl_dir=DECL) -> dict:
             "strength": strength,
         }
     refuted = flips_total > 0
+    uncertified = any(
+        row["strength"] == "LUCK_NOT_CERTIFICATION"
+        for row in per_arm.values())
+    verdict = ("REFUTED" if refuted else
+               "NOT_CERTIFIED_ON_THIS_DAY" if uncertified else
+               "SUPPORTED_ON_THIS_DAY")
     return {
         "protocol": "BE_SCORE_NEUTRALITY_V2_REVIEW173_BAR",
         "claim": "SCORING_PATH_CHANGED_BUT_DECISION_EQUIVALENT_ON_MEASURED_DAYS",
@@ -257,7 +301,7 @@ def certify(old: dict, new: dict, *, decl_dir=DECL) -> dict:
         "per_arm": per_arm,
         "n_flips_overall": flips_total,
         # COMPUTED, never typed. And never a rate.
-        "verdict": "REFUTED" if refuted else "SUPPORTED_ON_THIS_DAY",
+        "verdict": verdict,
         "falsification_clause": (
             "any decision flip, on any arm, on any compared day, REFUTES "
             "decision-equivalence -- it does not become 'one in 24,000'"),
@@ -336,6 +380,10 @@ def falsify() -> int:                                        # noqa: C901
     note("arm -> head AND theta are READ from the params, not typed",
          len(AH) >= 2 and all(v["head"] and isinstance(v["theta"], float)
                               for v in AH.values()))
+    frozen_name = Path(json.loads((Path(DECL) / FREEZE_REL).read_text())
+                       ["frozen_parameters"]["params"]["path"]).name
+    note("a malformed later params file cannot move the frozen comparator",
+         {v["params_file"] for v in AH.values()} == {frozen_name})
     arm = sorted(AH)[0]
     head, theta = AH[arm]["head"], AH[arm]["theta"]
     other = sorted(AH)[1]
@@ -387,8 +435,9 @@ def falsify() -> int:                                        # noqa: C901
     near2 = dict(near); near2[("s1", "BUY_UP", 2)] = theta - 1.0 + 1e-6
     onear = {("s1", "BUY_UP", 1): otheta + 1.0, ("s1", "BUY_UP", 2): otheta - 1.0}
     r = certify(book(near, onear), book(near2, onear))
-    note("m_min <= delta_max with 0 flips is reported as LUCK",
-         r["per_arm"][arm]["strength"] == "LUCK_NOT_CERTIFICATION")
+    note("m_min <= delta_max with 0 flips is a NON-CERTIFICATION",
+         r["per_arm"][arm]["strength"] == "LUCK_NOT_CERTIFICATION"
+         and r["verdict"] == "NOT_CERTIFIED_ON_THIS_DAY")
 
     # 4. C: a generation exactly AT theta is counted as maximally fragile.
     at = dict(base); at[("s1", "BUY_UP", 3)] = theta
@@ -470,7 +519,7 @@ def main(argv=None) -> int:
         print(json.dumps({"refused": str(e)}, indent=1))
         return 3
     print(json.dumps(out, indent=1, default=str))
-    return 0 if out["verdict"] != "REFUTED" else 1
+    return 0 if out["verdict"] == "SUPPORTED_ON_THIS_DAY" else 1
 
 
 if __name__ == "__main__":
