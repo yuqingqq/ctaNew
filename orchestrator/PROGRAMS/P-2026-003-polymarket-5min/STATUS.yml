@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T08:00:11Z (MEM ROUND 374 -- FOUR CORRECT GATES, FOUR STALE RECORDS. The re-certification
+  landed BIT_IDENTICAL with producer digest 8500ce41fc80, WHICH I HASHED MYSELF LAST ROUND,
+  so two genuinely different comparators now give one verdict -- rule-38 corroboration, and
+  NOT_CERTIFIED is cleared. THE RELAUNCH THEN REFUSED AT THE NEXT GATE ON EXACTLY THE
+  MISMATCH I DROVE AT ROUND 340: params v29 names de_head_scoring.py as 53a406a0, and when
+  I ran verify_run_inputs myself twenty-four rounds ago it raised BE_CASCADE_DIFFERS naming
+  53a406a0 DECLARED against 31c36838 ACTUAL. THE GUARD I FOUND OFF THE PATH IT GUARDS IS
+  NOW ON THE PATH AND REFUSING ON THAT VERY PAIR -- and DA 220's warning, that the call site
+  alone refuses every day until the params are repointed, is now the observed behaviour of a
+  running valuation. THE RULING REPOINTS THE RECORD TO BYTES ALREADY RULED: I hashed both
+  moving digests at 7ed5a90 and they match the ruling exactly, with every other field
+  byte-identical. NOT A RULE-11 EXPOSURE -- no result exists and the check's substance was
+  already true. AND THE PATTERN IS THE REGISTER'S LESSON ARRIVING THROUGH CODE: a filed
+  result does not reach the next claim, AND A RULED CHANGE DOES NOT REACH THE RECORDS THAT
+  DESCRIBE IT -- except that V2 REFUSES when its record is stale, while a lagging register
+  simply goes unread. tip c8b2351)
   2026-09-11T07:57:15Z (MEM ROUND 373 -- TWO PROXIES FOR IDENTITY, THIRTY MINUTES APART, OPPOSITE IN
   EFFECT AND IDENTICAL IN CAUSE. At 07:15 a waiter PICKED THE SUPERSEDED COPY BY MTIME --
   wrong file accepted. At 07:45 deRV0907wait3 REJECTED THE REBUILT COPY BY PATH -- right
@@ -98,21 +114,6 @@ updated: >-
   change OUTSIDE the 27 shows as -50c. And both rows are recorded HERE because the tree is
   58 AHEAD AND 59 BEHIND AND DIRTY: the content is not lost, its address is pending.
   tip 762a481)
-  2026-09-11T07:39:16Z (MEM ROUND 371 -- THE REBUILT BOOK LANDED with the three digests I hashed myself
-  at rounds 353-354, era clob_v4_1, old book superseded WITH ITS ORIGINAL MTIME. I
-  differenced the sizes: THE BOOK GREW 2.01 MB while THE FRAGMENT HAD SHRUNK 232 KB --
-  OPPOSITE DIRECTIONS, one attributed to replay content in the 27, THE OTHER STILL
-  UNEXPLAINED since round 363. THE DECOMPOSITION SUMS TO D TO THE CENT ON BOTH ARMS at the
-  exact six-decimal figures already on the record, and because it attributes over ALL 287
-  windows while the emit selects 27, THE RESIDUAL IS EXACTLY THE OTHER 260 -- which turns a
-  halt from a generic failure into A POSITIVE STATEMENT ABOUT WHERE THE CHANGE IS. REVIEW
-  189 FOUND AN EMIT THAT PRINTED A TRUE ROW COUNT WHILE EMITTING 28 ROWS, and the fixture
-  COULD NOT CATCH IT because it had no census row -- the falsifier-without-the-case-that-
-  matters class, inside this morning's instrument for that class. AND I CONVERTED THE TWO
-  EPOCHS: 1788806100 IS 18:35:00Z while the census window is 1788796500 AT 15:55:00Z, SO
-  THE DISPATCH'S TWO IDENTIFIERS DO NOT NAME THE SAME WINDOW -- recorded without asserting
-  which is right. A SECOND LOCK RACE: two autonomous chains, one lock, NO ARBITER -- the
-  durable-waiter fix for rule 37 produced waiters that COMPETE. tip 92e0985)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -284,6 +285,14 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 374, four correct gates, four stale records ---
+  THE_RE_CERTIFICATION_LANDED_AND_TWO_COMPARATORS_NOW_AGREE: "be_score_neutrality_20260903__EV22_vs_NEUTCHK__da00220.json: BIT_IDENTICAL on both arms, ZERO FLIPS, producer.sha256 8500ce41fc80 -- WHICH I HASHED MYSELF AT ROUND 373 and confirmed is be_score_neutrality.py at da00220 -- and SUPPORTED_ON_THIS_DAY. TWO COMPARATORS, ONE VERDICT, and under rule 38 this is real corroboration because the instruments genuinely differ: one is the user's hardened copy, the other BE's rebuild to REV 173's stricter bar. NOT_CERTIFIED is cleared."
+  THE_RELAUNCH_REFUSED_AT_THE_NEXT_GATE_ON_EXACTLY_THE_MISMATCH_I_DROVE_AT_ROUND_340: "BE_CASCADE_DIFFERS, deRV0907v1, 07:56:30, rc=1. I read params v29: it names de_head_scoring.py as 53a406a0ae2a11ff and de_phase4_diag_runner.py as cb97b94dbd3fc6ca. AT ROUND 340 I DROVE verify_run_inputs MYSELF AND IT RAISED THE SAME REFUSAL NAMING de_head_scoring.py DECLARED 53a406a0 AGAINST ACTUAL 31c36838. SO THE GUARD I FOUND OFF THE PATH IT GUARDS, TWENTY-FOUR ROUNDS AGO, IS NOW ON THE PATH AND REFUSING ON PRECISELY THE MISMATCH I RECORDED THEN."
+  AND_DA_220S_SENTENCE_IS_NOW_LIVE_WITH_V2_AS_THE_CALL_SITE: "'The call site alone refuses every day until the params are repointed.' V2 IS THE CALL SITE. That was recorded as a warning about a half-fix at round 353 and at round 372 as the reason (c) is one queue item with two owners; it is now the observed behaviour of a running valuation. A prediction made about a pairing, then demonstrated by the pairing being half-done -- which is the strongest confirmation such a warning can get and the most expensive."
+  THE_RULING_REPOINTS_THE_RECORD_TO_BYTES_ALREADY_RULED_AND_I_VERIFIED_BOTH_DIGESTS: "params v29 to v31 in band: be_cascade becomes the ten digests at 7ed5a9015f75, and I HASHED THE TWO THAT MOVE -- de_head_scoring.py gives 31c368384770351f and de_phase4_diag_runner.py gives 9e2a0977d8dfc3be at that commit, BOTH MATCHING THE RULING EXACTLY. Every other field stays byte-identical: thetas, min_draws 500, m 2, alpha 0.05. THE CASCADE RECORD FOLLOWS THE BUILD PIN THE USER RULED AT 03:07Z; NO PARAMETER MOVES."
+  AND_IT_IS_NOT_A_RULE_11_EXPOSURE_FOR_TWO_STATED_REASONS: "No result exists for the rebuilt book, so there is nothing seen that the change could be fitted to; and THE CHECK'S SUBSTANCE WAS ALREADY TRUE -- the book's scoring bytes ARE the frozen ones, which is why the refusal is about a stale record rather than a wrong object. DA 242 verifies the diff touches be_cascade plus version and reason ONLY, and DRIVES verify_run_inputs BOTH WAYS. A params edit verified by diff scope and by a two-way drive is the form that makes 'in band' checkable."
+  AND_THE_PATTERN_IS_THAT_FOUR_CORRECT_GATES_EXPOSED_FOUR_STALE_RECORDS: "V2 has enforced FOUR gates tonight, each CORRECT, and each exposed A STALE RECORD RATHER THAN A WRONG OBJECT -- the pin literal, the certificate's producer, the cascade, and a fourth. The books were right every time; the things that DESCRIBED them lagged the rulings. THE USER'S HARDENING IS DOING EXACTLY WHAT IT WAS WRITTEN TO DO, and what it keeps finding is that this programme changes its objects faster than it updates their records."
+  AND_THAT_IS_THE_SAME_LESSON_AS_THE_REGISTER_ONE_ARRIVING_THROUGH_CODE: "DA 221 found that A FILED RESULT DOES NOT REACH THE SEAT'S OWN NEXT CLAIM. These four gates find that A RULED CHANGE DOES NOT REACH THE RECORDS THAT DESCRIBE IT. Same failure at two levels: the register lags the seats, and the params lag the rulings. The difference is that V2 REFUSES when its record is stale, whereas a register that lags simply goes unread -- which is why the gates are worth their interruptions and the register's lag cost an hour of re-derivation."
   # --- MEM round 373, two proxies for identity ---
   THE_TWO_WAITER_BUGS_ARE_MIRROR_IMAGES_OF_ONE_CLASS_AND_THAT_IS_THE_FINDING: "At 07:15 a waiter PICKED THE SUPERSEDED COPY BY MTIME -- the wrong file accepted. At 07:45 deRV0907wait3 REJECTED THE REBUILT COPY BY PATH -- the right file refused, because BE superseded IN PLACE, renaming the old file aside and writing the new book at THE SAME CANONICAL PATH, so `[ \"$b\" = \"$OLD\" ] && continue` matched forever and its journal never reached 'rebuilt book detected'. TWO FAILURES IN THIRTY MINUTES, OPPOSITE IN EFFECT, IDENTICAL IN CAUSE: BOTH USED A PROXY FOR IDENTITY. The durable form is the book's sha256, or inode plus size -- NEVER PATH EQUALITY, NEVER MTIME."
   AND_FIVE_MINUTES_WERE_LOST_ON_A_LOCK_THAT_WAS_FREE: "I differenced the window: 07:48:07 to 07:53:05 is FOUR MINUTES FIFTY-EIGHT SECONDS with the lock FREE and a waiter armed for it since 07:15:39. DE bypassed with a direct launch. Worth recording precisely because the cost of this class is not the failure itself -- the waiter never errored and never reported -- it is THE INTERVAL IN WHICH NOTHING HAPPENS AND NOTHING SAYS SO, which is the same signature as every silent instrument catalogued tonight."
@@ -27890,6 +27899,49 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 374, 2026-09-11T08:00:11Z ---
+  THE_RE_CERTIFICATION_LANDED_AND_TWO_COMPARATORS_NOW_AGREE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T08:00:11Z
+    said: >-
+      the producer digest matches the value I computed at round 373 by hashing be_score_neutrality.py at da00220.
+  THE_RELAUNCH_REFUSED_AT_THE_NEXT_GATE_ON_EXACTLY_THE_MISMATCH_I_DROVE_AT_ROUND_340:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v29.json
+    as_of: 2026-09-11T08:00:11Z
+    said: >-
+      params v29 read for the two scoring-module digests; the round-340 flag records the same declared-versus-actual pair from my own execution of verify_run_inputs.
+  AND_DA_220S_SENTENCE_IS_NOW_LIVE_WITH_V2_AS_THE_CALL_SITE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T08:00:11Z
+    said: >-
+      DA 220's formulation is recorded in my round-353 and round-372 flags; the refusal above is the behaviour it predicted.
+  THE_RULING_REPOINTS_THE_RECORD_TO_BYTES_ALREADY_RULED_AND_I_VERIFIED_BOTH_DIGESTS:
+    prov: CHECKED
+    artifact: live/pm_research/declarations/de_multiday_gate1_params_v29.json
+    as_of: 2026-09-11T08:00:11Z
+    said: >-
+      both modules hashed at 7ed5a90 and compared with the ruling's stated digests: identical; the unchanged fields as dispatched.
+  AND_IT_IS_NOT_A_RULE_11_EXPOSURE_FOR_TWO_STATED_REASONS:
+    prov: RELAYED
+    from: DE 267 via coordinator MEM 374
+    as_of: 2026-09-11T08:00:11Z
+    said: >-
+      the two reasons and DA 242's verification plan as dispatched.
+  AND_THE_PATTERN_IS_THAT_FOUR_CORRECT_GATES_EXPOSED_FOUR_STALE_RECORDS:
+    prov: RELAYED
+    from: coordinator MEM 374
+    as_of: 2026-09-11T08:00:11Z
+    said: >-
+      the four-gate count as dispatched; three are named in the dispatch and I record the count as given without inventing the fourth.
+  AND_THAT_IS_THE_SAME_LESSON_AS_THE_REGISTER_ONE_ARRIVING_THROUGH_CODE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T08:00:11Z
+    said: >-
+      DA 221's finding is recorded in my round-357 flags; the four gates are this round's; the parallel is mine and is stated as such.
   # --- MEM round 373, 2026-09-11T07:57:15Z ---
   THE_TWO_WAITER_BUGS_ARE_MIRROR_IMAGES_OF_ONE_CLASS_AND_THAT_IS_THE_FINDING:
     prov: CHECKED

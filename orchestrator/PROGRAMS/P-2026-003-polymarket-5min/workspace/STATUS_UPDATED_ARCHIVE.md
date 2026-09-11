@@ -23635,3 +23635,23 @@ generation and the window went 4 → 3. Nothing rewritten.
   key fix matters because A MIS-KEYED LOOKUP DOES NOT ERROR, IT FALLS THROUGH TO THE OLD
   VALUE. tip 77fcb80)
 ```
+
+## Batch 356 (rotated by MEM round 374, 2026-09-11T08:00:11Z)
+
+```
+  2026-09-11T07:39:16Z (MEM ROUND 371 -- THE REBUILT BOOK LANDED with the three digests I hashed myself
+  at rounds 353-354, era clob_v4_1, old book superseded WITH ITS ORIGINAL MTIME. I
+  differenced the sizes: THE BOOK GREW 2.01 MB while THE FRAGMENT HAD SHRUNK 232 KB --
+  OPPOSITE DIRECTIONS, one attributed to replay content in the 27, THE OTHER STILL
+  UNEXPLAINED since round 363. THE DECOMPOSITION SUMS TO D TO THE CENT ON BOTH ARMS at the
+  exact six-decimal figures already on the record, and because it attributes over ALL 287
+  windows while the emit selects 27, THE RESIDUAL IS EXACTLY THE OTHER 260 -- which turns a
+  halt from a generic failure into A POSITIVE STATEMENT ABOUT WHERE THE CHANGE IS. REVIEW
+  189 FOUND AN EMIT THAT PRINTED A TRUE ROW COUNT WHILE EMITTING 28 ROWS, and the fixture
+  COULD NOT CATCH IT because it had no census row -- the falsifier-without-the-case-that-
+  matters class, inside this morning's instrument for that class. AND I CONVERTED THE TWO
+  EPOCHS: 1788806100 IS 18:35:00Z while the census window is 1788796500 AT 15:55:00Z, SO
+  THE DISPATCH'S TWO IDENTIFIERS DO NOT NAME THE SAME WINDOW -- recorded without asserting
+  which is right. A SECOND LOCK RACE: two autonomous chains, one lock, NO ARBITER -- the
+  durable-waiter fix for rule 37 produced waiters that COMPETE. tip 92e0985)
+```
