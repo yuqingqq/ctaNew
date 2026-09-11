@@ -333,7 +333,8 @@ def robustness_result(primary_D: float, robust_base: float,
 
 def run_one_day_arm(day: str, book_path, arm: str, *, n_draws: int,
                     seed: int | None = None, out_dir: Path, book_receipt,
-                    score_certifications, params=None) -> dict:
+                    score_certifications, params=None,
+                    winner_source=None) -> dict:
     """Value one arm and its matched null after every input guard passes."""
     if n_draws != DECLARED_N:
         raise SettlementControlRefused(
@@ -373,7 +374,14 @@ def run_one_day_arm(day: str, book_path, arm: str, *, n_draws: int,
         module, book, rows, theta, "NO_FILLS_UNTIL_NEXT_GENERATION")
 
     slugs = sorted({row["slug"] for row in book["rows"]})
-    winner_source = R.winner_source(required_slugs=slugs)
+    # READ ONCE PER RUN, NOT ONCE PER ARM. The settlement ledger is live;
+    # two arms 40 minutes apart read two states and the cohort predicate
+    # refused. The caller reads it before the first arm and passes the same
+    # object to both, so the cells AGREE BY CONSTRUCTION rather than by a
+    # waiver. `None` reproduces the previous behaviour exactly, so no other
+    # caller changes.
+    if winner_source is None:
+        winner_source = R.winner_source(required_slugs=slugs)
     winners = winner_source["winners"]
     base_total = settled_total(base_replay["fills"], winners)
     arm_total = settled_total(arm_replay["fills"], winners)

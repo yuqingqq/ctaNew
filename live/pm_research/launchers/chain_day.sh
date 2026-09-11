@@ -97,9 +97,12 @@ echo "$(date -u +%H:%M:%SZ) raw/ as-of: $(/home/yuqing/pricer-sol/venv/bin/pytho
 import json,sys; d=json.load(open(sys.argv[1])); print(d['n_files'],'files',d['total_bytes'],'bytes')" "$ASOF")"
 # NOT PM_DATA_ROOT: be_heavy_run.sh passes --setenv=PM_DATA_ROOT to every
 # unit and would overwrite it. BE_SNAPSHOT_ROOT is the wrapper's opt-in.
-export BE_SNAPSHOT_ROOT="$SNAP"
-export DE_EXPECT_SNAPSHOT_ROOT="$SNAP"
-export PM_DATA_ROOT="$SNAP"
+# RETIRED on the valuation path (DE 303): the oracle is read ONCE by the
+# run itself, so no snapshot root is needed and require_ledger sees the
+# canonical ledger. The as-of digests below stay -- they are PROVENANCE for
+# the other growing inputs, not the cohort.
+: # BE_SNAPSHOT_ROOT intentionally not exported
+: # DE_EXPECT_SNAPSHOT_ROOT / PM_DATA_ROOT intentionally not exported
 export BE_WORKTREE="$TREE" DE_VALUATION_EXPECTED_TREE="$TREE"
 cd "$TREE/live/pm_research" || exit 2
 # REV 157: the launcher's own provenance, beside the day's receipt, so a

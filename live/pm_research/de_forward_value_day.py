@@ -294,6 +294,16 @@ def main(argv=None) -> int:
     out_dir = Path(a.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
+    # ONE ORACLE READ FOR THE WHOLE RUN, before the first arm.
+    oracle = R.winner_source()
+    (out_dir / f"winner_source_{a.day.replace('-', '')}.json").write_text(
+        json.dumps({k: oracle.get(k) for k in
+                    ("path", "sha256", "n_records", "n_closed_records",
+                     "n_slugs", "method", "is_final_for_quotation")},
+                   indent=1, default=str))
+    print(json.dumps({"stage": "oracle_read_once",
+                      "sha256": oracle["sha256"][:16],
+                      "n_records": oracle["n_records"]}), flush=True)
     cells = {}
     for arm in E.ARMS:
         print(json.dumps({"stage": "valuing", "day": a.day, "arm": arm}),
@@ -307,7 +317,8 @@ def main(argv=None) -> int:
                                  book_receipt=a.book_receipt,
                                  score_certifications=a.score_certification,
                                  params=(R.load_params(Path(a.params))
-                                         if a.params else None))
+                                         if a.params else None),
+                                 winner_source=oracle)
         after = runner_provenance()
         moved = sorted(k for k in set(before["closure"]) | set(after["closure"])
                        if before["closure"].get(k) != after["closure"].get(k))
