@@ -72,7 +72,8 @@ MARKOUT_S = 5.0          # harmful_exposure_rows: a fill at the close is
 WRONG_TREE = "PREFLIGHT_IMPORTED_FROM_ANOTHER_TREE"
 # The modules whose ANSWERS this preflight reports. They must come from the
 # tree under test.
-TREE_MODULES = ("flow_intensity", "be_era_for_day", "be_gate1_fragment")
+TREE_MODULES = ("flow_intensity", "be_era_for_day", "be_gate1_fragment",
+                "de_phase4_diag_runner")
 
 
 class PreflightRefused(RuntimeError):
@@ -144,6 +145,12 @@ def _day_bounds(day: str) -> tuple[int, int]:
     d = datetime.datetime.strptime(day, "%Y%m%d").replace(
         tzinfo=datetime.UTC)
     return int(d.timestamp()), int(d.timestamp()) + DAY_S
+
+
+def day_hyphen(day: str) -> str:
+    """The front door takes '2026-09-09'; every other seam here takes
+    '20260909'. Converted once, here, rather than at each call site."""
+    return f"{day[:4]}-{day[4:6]}-{day[6:8]}"
 
 
 def _sha(b: bytes) -> str:
@@ -290,12 +297,16 @@ def check_day(day: str, stage: str | None = None,
               derived: Path | None = None) -> list[tuple[str, str, str]]:
     # REVIEW 158: the day checks run the TREE UNDER TEST's code, never the
     # shared tree's. `import_from_tree` refuses if that is not what happened.
-    m = mods if mods is not None else import_from_tree(
+    mods_ = mods if mods is not None else import_from_tree(
         os.environ.get("BE_WORKTREE") or WT_FWD)
-    fi, EFD, FR = (m["flow_intensity"], m["be_era_for_day"],
-                   m["be_gate1_fragment"])
+    fi, EFD, FR = (mods_["flow_intensity"], mods_["be_era_for_day"],
+                   mods_["be_gate1_fragment"])
 
     rows = []
+    coin = "btc"
+    D = Path(derived) if derived is not None else Path(
+        os.environ.get("BE_PREFLIGHT_DERIVED")
+        or "/home/yuqing/ctaNew/data/pm_5min/derived")
     d0, d1 = _day_bounds(day)
 
     # 0. is the day even buildable? D+1 by MARKOUT_S, not merely D closed.
@@ -347,6 +358,38 @@ def check_day(day: str, stage: str | None = None,
                  f"WOULD_FAIL:SLUG_INPUTS_MISSING(n={len(miss)},"
                  f"first={miss[0]})"))
 
+    # 3b. THE BUILDER'S OWN FRONT DOOR (BE 164). Everything above REPLICATES
+    #     a check; this one CALLS the thing the builder calls. It is the gate
+    #     that cost 11 minutes on the lock when 09-09's book refused on the
+    #     ruled set, and replicating that predicate here would have been the
+    #     second copy that drifts. Mirrors be_daybook_build.py:1537:
+    #         R.day_assembly_inputs(day, tape={path,sha256},
+    #                               fragment={path,sha256})
+    #     It is the FRONT DOOR, so all seven guards inside
+    #     verify_assembly_input and the one in day_assembly_inputs fire HERE,
+    #     in about ten seconds, instead of eleven minutes into a build.
+    if (stage or "fragment") == "book":
+        D2 = D
+        tp = D2 / f"phase2_state_tape_gate1_{day}_{coin}.json"
+        fp = D2 / f"harmful_exposure_rows_v3_gate1_{day}_{coin}.json"
+        if not (tp.is_file() and fp.is_file()):
+            rows.append((day, "builder front door (day_assembly_inputs)",
+                         "NOT_YET:INPUTS_ABSENT -- the stage-graph rows above "
+                         "name which"))
+        else:
+            try:
+                R = mods_["de_phase4_diag_runner"]
+                inp = R.day_assembly_inputs(
+                    day_hyphen(day),
+                    tape={"path": str(tp), "sha256": _sha(tp.read_bytes())},
+                    fragment={"path": str(fp), "sha256": _sha(fp.read_bytes())})
+                rows.append((day, "builder front door (day_assembly_inputs)",
+                             f"PASS (regime={inp.get('regime')})"))
+            except Exception as exc:
+                rows.append((day, "builder front door (day_assembly_inputs)",
+                             f"WOULD_FAIL:FRONT_DOOR_REFUSED("
+                             f"{type(exc).__name__}: {str(exc)[:90]})"))
+
     # 4. DA's MASK for the day.
     m = Path(f"/home/yuqing/ctaNew/data/pm_5min/derived/da_blackout_mask_{day}.json")
     if not m.is_file():
@@ -379,9 +422,6 @@ def check_day(day: str, stage: str | None = None,
     #    refuse rather than overwrite, rule 13) and its INPUT must be present.
     #    The 09-08 book died 13 minutes in on a MISSING TAPE -- an input, which
     #    an output-absent check alone does not cover.
-    D = Path(derived) if derived is not None else Path(
-        os.environ.get("BE_PREFLIGHT_DERIVED")
-        or "/home/yuqing/ctaNew/data/pm_5min/derived")
     rows.extend(stage_graph_rows(day, stage or "fragment", D))
     return rows
 
