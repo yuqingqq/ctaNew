@@ -25,6 +25,7 @@ import de_multiday_gate1_runner as R         # noqa: E402
 import de_settlement_control_run as SC       # noqa: E402
 
 PROTOCOL = "P003_DE_PREFLIGHT_MATRIX_V1"
+PIPELINE_BUILD_COMMIT = "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c"
 DAYS = ["2026-09-07", "2026-09-08", "2026-09-09", "2026-09-10",
         "2026-09-11", "2026-09-12", "2026-09-13"]
 DERIVED = Path("/home/yuqing/ctaNew/data/pm_5min/derived")
@@ -49,6 +50,106 @@ def _refuse(exc):
 
 def _absent(which):
     return {"status": f"INPUT_ABSENT:{which}"}
+
+
+DECLARED_ERA = "clob_v4_1"
+DECLARED_WINDOWS = 288
+WINDOW_EXCEPTIONS = {"2026-09-07": 287}   # named, not silently tolerated
+# The generation band is set by the days ALREADY BUILT -- 09-07 at 321,925
+# and 09-08 at 342,942 reference generations -- widened by 25% either side.
+# It is a SMOKE band, not a specification: it catches a book an order of
+# magnitude off, which is the shape "built wrong and nobody looked" takes.
+GENERATION_BAND = (241_000, 429_000)
+GENERATION_BAND_SOURCE = ("09-07 n_reference_generations 321925 and 09-08 "
+                          "342942, widened 25% either side; it will narrow "
+                          "as more days land")
+
+
+def _first(doc, key):
+    def walk(o):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if k == key:
+                    yield v
+                yield from walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                yield from walk(v)
+    return next(iter(walk(doc)), None)
+
+
+def book_acceptance(day: str, derived=DERIVED) -> dict:
+    """DID THE BOOK GET BUILT RIGHT? Receipt and summary fields ONLY.
+
+    The era bug was "the book was built wrong and nobody looked until the
+    valuation". These rows look between build and valuation, read nothing
+    but the receipt, and cost milliseconds.
+    """
+    compact = day.replace("-", "")
+    receipt = derived / f"be_daybook_receipt_{compact}_btc__L250ms__FWD1.json"
+    book = derived / f"be_daybook_{compact}_btc__L250ms__FWD1.pkl"
+    gaps = derived / f"be137_gap_windows_{compact}.json"
+    mask = derived / f"da_blackout_mask_{compact}.json"
+    row = {}
+    if not receipt.is_file():
+        return {"book_era": _absent("receipt"),
+                "book_windows": _absent("receipt"),
+                "book_generations": _absent("receipt"),
+                "book_builder_commit": _absent("receipt"),
+                "gap_windows_artifact": (_pass() if gaps.is_file()
+                                         else _absent("gap_windows")),
+                "mask_referenced": (_pass() if mask.is_file()
+                                    else _absent("mask")),
+                "book_newer_than_tape": _absent("book")}
+    doc = json.loads(receipt.read_text())
+    era = _first(doc, "era")
+    row["book_era"] = (_pass() if era == DECLARED_ERA else
+                       {"status": "WOULD_REFUSE:BOOK_ERA_NOT_DECLARED",
+                        "detail": f"era {era!r} != {DECLARED_ERA!r}"})
+    want = WINDOW_EXCEPTIONS.get(day, DECLARED_WINDOWS)
+    got = _first(doc, "n_windows")
+    row["book_windows"] = (
+        {"status": "PASS", "n_windows": got,
+         "note": (f"{day} is the DECLARED EXCEPTION at {want}"
+                  if day in WINDOW_EXCEPTIONS else None)}
+        if got == want else
+        {"status": "WOULD_REFUSE:BOOK_WINDOW_COUNT_NOT_DECLARED",
+         "detail": f"n_windows {got} != {want}"})
+    gen = _first(doc, "n_reference_generations")
+    lo, hi = GENERATION_BAND
+    row["book_generations"] = (
+        {"status": "PASS", "n_reference_generations": gen,
+         "band": list(GENERATION_BAND), "band_source": GENERATION_BAND_SOURCE}
+        if isinstance(gen, int) and lo <= gen <= hi else
+        {"status": "WOULD_REFUSE:BOOK_GENERATION_COUNT_OUT_OF_BAND",
+         "detail": f"{gen} outside {GENERATION_BAND}"})
+    bc = _first(doc, "builder_commit")
+    row["book_builder_commit"] = (
+        _pass() if bc == PIPELINE_BUILD_COMMIT else
+        {"status": "WOULD_REFUSE:BOOK_NOT_BUILT_AT_THE_BUILD_PIN",
+         "detail": f"{str(bc)[:16]} != {PIPELINE_BUILD_COMMIT[:16]}"})
+    if gaps.is_file():
+        g = json.loads(gaps.read_text())
+        n = g.get("n_windows") or g.get("n_gap_bearing")
+        row["gap_windows_artifact"] = (
+            {"status": "PASS", "n_windows": n} if n is not None else
+            {"status": "WOULD_REFUSE:GAP_WINDOW_ARTIFACT_HAS_NO_COUNT"})
+    else:
+        row["gap_windows_artifact"] = _absent("gap_windows")
+    row["mask_referenced"] = (_pass() if mask.is_file()
+                              else _absent("mask"))
+    tape = sorted(derived.glob(f"be_gate1_state_tape_receipt_{compact}_*.json"))
+    if not book.is_file():
+        row["book_newer_than_tape"] = _absent("book")
+    elif not tape:
+        row["book_newer_than_tape"] = _absent("tape_receipt")
+    else:
+        bt, tt = book.stat().st_mtime, max(t.stat().st_mtime for t in tape)
+        row["book_newer_than_tape"] = (
+            _pass() if bt > tt else
+            {"status": "WOULD_REFUSE:BOOK_OLDER_THAN_ITS_TAPE",
+             "detail": f"book {bt:.0f} <= tape {tt:.0f}"})
+    return row
 
 
 def gates_for_day(day: str, *, certification, params_path,
@@ -115,6 +216,7 @@ def gates_for_day(day: str, *, certification, params_path,
                .get("producer") or {}).get("sha256")
     except Exception:                              # noqa: BLE001
         got = None
+    row.update(book_acceptance(day, derived))
     row["comparator_digest"] = (
         _pass() if got == want else
         {"status": "WOULD_REFUSE:SETTLEMENT_CONTROL_SCORE_NEUTRALITY_"
@@ -244,6 +346,23 @@ def falsify() -> int:
        all(not str(v.get("status", "")).startswith("WOULD_REFUSE")
            for v in m3["rows"][DAYS[0]].values()
            if str(v.get("status", "")).startswith("INPUT_ABSENT")))
+    # --- DE 278: a wrong-era receipt must be caught BEFORE the lock ----
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as td:
+        d = Path(td)
+        (d / "be_daybook_receipt_20260909_btc__L250ms__FWD1.json").write_text(
+            json.dumps({"selection": {"era": "clob_v3_1"},
+                        "assembly_evidence": {"n_windows": 288},
+                        "asm": {"n_reference_generations": 300000},
+                        "producing_code": {
+                            "builder_commit": PIPELINE_BUILD_COMMIT}}))
+        r = book_acceptance("2026-09-09", d)
+        ck("a receipt with era clob_v3_1 WOULD_REFUSE BOOK_ERA_NOT_DECLARED",
+           r["book_era"]["status"] ==
+           "WOULD_REFUSE:BOOK_ERA_NOT_DECLARED")
+        ck("  and the other acceptance rows still evaluate independently",
+           r["book_windows"]["status"] == "PASS")
+
     print(f"\n{ok}/{cells} cells pass")
     return 0 if ok == cells else 1
 
