@@ -984,8 +984,22 @@ result is the finding is computed as a set, never as sorted-text adjacency.**
 2. **The backup branch is a point-in-time snapshot and is now strictly
    dominated.** It is retained as a snapshot, never read as current. Anything
    resolved against it is resolved at round 358.
-3. **A citation without a file is a dangling reference.** `COORDINATION.md`
-   cites 103 review numbers of which **18 have no file beside them**;
-   `HANDOFF.md` cites 22 and **0** are missing, so the cold start works and the
-   register is the leaky surface. Closing those 18 is owned by the seat that
-   wrote each review.
+3. **A citation without a file is a dangling reference — and the count depends
+   on WHERE you look, which is this section's whole point.** `COORDINATION.md`
+   cites **106** review numbers. Measured against the canonical ref, **9** have
+   no file: **86, 104, 155, 158, 162, 163, 164, 166, 167**. Measured against the
+   shared working tree, **22** do. The 13 extra are reviews that exist at origin
+   and not in the tree, ten of them REV's own recent filings.
+
+   **I first wrote "18 dangling" here, taking REV's figure without checking it —
+   the third time tonight I relayed a number I had not measured** (the others:
+   `collector_gaps` as a byte length, and BE's census I re-asked for twice).
+   REV's 18 was not wrong so much as measured at an incomplete location, which
+   is exactly the defect REV had just found in everyone else. **An instrument
+   pointed at the wrong ref produces a number that looks like a finding.** The
+   corrected instrument carries positive controls: reviews 206, 221 and 246 are
+   known to exist and must not be flagged, and they are not.
+
+   Closing the 9 is owned by the seat that wrote each review. Note that
+   155 and 158 and 162–167 are consecutive, which suggests one batch that never
+   landed rather than nine independent misses.
