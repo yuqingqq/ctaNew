@@ -1,0 +1,161 @@
+{
+  "protocol": "P003_DE_ARM_FREEZE_V1",
+  "frozen_at_utc": "2026-09-11T02:08:15.084779+00:00",
+  "frozen_by": "DE 220, on the USER's decision to run the forward test",
+  "freeze_commit_ref": "SET_BY_THE_COMMIT_THAT_CARRIES_THIS_FILE",
+  "repo_head_at_freeze": "22eee4c9e0a8110d7303596a7672820ddb7e3567",
+  "THE_ONE_THING_A_LATER_READER_MUST_SEE_FIRST": {
+    "HEADLINE": "THESE TWO ARMS FAILED THEIR DEVELOPMENT SCREEN AND ARE BEING FORWARD-TESTED ANYWAY, BY USER DECISION.",
+    "the_screen": "plan v2 step 2, the decision-endpoint control: each arm's R-801 settlement P&L against 500 random cancellation policies matched on distinct reference-generation count, side and UTC hour",
+    "the_result": "NO_SETTLEMENT_SKILL_OVER_MATCHED_RANDOM on BOTH pools",
+    "PRIMARY_09_04_05_06": {
+      "CONDVALUE_X_SKEW": {
+        "D_arm_cents": 19117.177,
+        "p_two_sided": 0.0978,
+        "n_at_or_beyond": 48,
+        "holm_threshold": 0.025,
+        "result": "FAIL"
+      },
+      "HAZARD_OVER_SKEWED_REF": {
+        "D_arm_cents": 13758.065,
+        "p_two_sided": 0.2435,
+        "n_at_or_beyond": 121,
+        "holm_threshold": 0.05,
+        "result": "FAIL"
+      }
+    },
+    "COMPANION_ALL_FOUR_also_failed": {
+      "CONDVALUE_X_SKEW": {
+        "p": 0.0299
+      },
+      "HAZARD_OVER_SKEWED_REF": {
+        "p": 0.0339
+      }
+    },
+    "and_the_matching_biased_TOWARD_the_arms": "distinct-generation matching UNDER-matches raw exposure (max 23 cancels on one reference generation), so the control was the weaker de-leverer and these failures are against a handicapped control",
+    "WHAT_THIS_CHANGES_ABOUT_THE_MULTIPLICITY": "the forward test's multiplicity is NOT two arms. It is TWO ARMS ON A SECOND ATTEMPT. A forward test following a FAILED screen is a different object from one following a pass, and anyone reading a later pass must see that without digging.",
+    "verdict_artifact": "data/pm_5min/derived/settle/de_settlement_control_verdict.json"
+  },
+  "PRE_REGISTERED_EXPECTATION": {
+    "written_before_any_validation_day_landed": true,
+    "power_position": "on 3 days both arms sit at z ~ 1.5 against the 2.24 Holm needs",
+    "scaling": "z ~ sqrt(days): FIVE days reaches z ~ 1.95 -- STILL SHORT. Eight would clear.",
+    "and_that_is_OPTIMISTIC": "it assumes a CONSISTENT per-day effect, which the data contradicts -- 09-05 CONDVALUE was -4,941 cents, a SIGN FLIP",
+    "THE_DECLARED_EXPECTATION": "FIVE DAYS IS MORE LIKELY TO RETURN INCONCLUSIVE THAN TO CLEAR.",
+    "why_this_is_here": "so it is a pre-registered expectation and not an excuse afterwards"
+  },
+  "frozen_parameters": {
+    "thresholds": {
+      "CONDVALUE_X_SKEW": 0.32450609461933483,
+      "HAZARD_OVER_SKEWED_REF": 0.43525926488298716,
+      "verified_clean_and_consistent_at": "263e41d",
+      "pin_source": "data/pm_5min/derived/be_cancel_axis_null_v1.json, cells.<arm>.arm_filed.theta"
+    },
+    "L_place_ms": 250.0,
+    "cancel_latency_ms": "`cancel_latency_ms` in `_qr_spec` -- a DIFFERENT parameter from L_place (BE 100, Q-BE-343)",
+    "settlement_convention": "R-801: trades cash flow + share-delta x settlement; winners settle on CHAINLINK, verified per window by S60(T) >= S60(t0)",
+    "protection_mode": "REFERENCE_FILLS as the fixed primary replay assumption; NO_FILLS_UNTIL_NEXT_GENERATION as a LABELLED robustness leg (plan step 6). A sign reversal between them BLOCKS promotion rather than inviting a post-result choice.",
+    "repost_model": "production repost: one REFERENCE generation may be re-placed as a new POLICY generation and cancelled again (`7`, `7.r1`)",
+    "params": {
+      "path": "live/pm_research/declarations/de_multiday_gate1_params_v29.json",
+      "sha256": "066b52f23b459fb8cff02d20c7738f352afeda1a90eeed9dc5f88b7088f0f3be"
+    }
+  },
+  "frozen_null_construction": {
+    "matching_unit": "DISTINCT REFERENCE GENERATIONS (USER, R-892 / DE 209)",
+    "matched_on": [
+      "distinct_reference_generation_count",
+      "side",
+      "utc_hour"
+    ],
+    "n_draws": 500,
+    "floor": 200,
+    "floor_is": "FAIL-CLOSED",
+    "p": "TWO-SIDED, (1 + #{|D_null| >= |D_arm|}) / (1 + n)",
+    "why_two_sided": "the direction was chosen AFTER the point estimates were seen",
+    "pooling": "D_arm = the SUM of per-day D (cash adds); the null pools DRAWS, not p-values, preserving day structure"
+  },
+  "frozen_decision_rule": {
+    "family": 2,
+    "which": [
+      "CONDVALUE_X_SKEW arm-level pooled",
+      "HAZARD_OVER_SKEWED_REF arm-level pooled"
+    ],
+    "correction": "HOLM, step-down",
+    "alpha": 0.05,
+    "both_comparisons_required_plan_step_6": "an arm advances only if its settlement-P&L delta is positive against zero-model-cancel AT THE UTC-DAY CLUSTER LEVEL **and** it beats the generation/side/hour-matched random control after the two-arm correction",
+    "mixed_cases_enumerated_in_advance": true
+  },
+  "DECLARED_NULLS_INSIDE_THIS_RECEIPT": {
+    "settlement_control": {
+      "declaration": "de_settlement_control_declaration_v1.json",
+      "committed_before_any_draw": "b72e329",
+      "sha256": "810680f10e88cf388dc19780e56d79f54f3184207985bd0f8f6e2495f40d97da"
+    },
+    "settlement_control_v2_field_path": {
+      "ref": "a52baec",
+      "sha256": "e55cf55cfdd8ed61040342dbb7c87995a971b00e882217b3affc201f5b8ddbc6"
+    },
+    "asymmetry_null": {
+      "declaration": "da_asymmetry_null_declaration_v1.json",
+      "committed_before_any_draw": "e7d5d3f"
+    },
+    "why_inside": "rule 12: the declared nulls live IN the receipt, not beside it"
+  },
+  "CANDIDATES_IN_THE_FORWARD_RACE_AT_FREEZE_TIME": {
+    "n": 2,
+    "which": [
+      "CONDVALUE_X_SKEW",
+      "HAZARD_OVER_SKEWED_REF"
+    ],
+    "reference_not_a_candidate": "QR_SKEW_ONLY remains the reference and is not in the race",
+    "recorded_at_freeze_time_because": "rule 12 -- multiplicity recorded when the race starts, not when it ends",
+    "but_see_the_headline": "the effective multiplicity is TWO ARMS ON A SECOND ATTEMPT"
+  },
+  "frozen_code": {
+    "SCORING_PATH_PINNED_TO_THE_BYTES_THE_SCREEN_RAN_ON": {
+      "why": "the development screen was run from the ARMS PIN. The tip's scoring modules have since moved (performance commits whose SCORE-NEUTRALITY WAS NEVER ESTABLISHED -- a batched scorer replacing a looped one changes float summation order). Freezing the tip would forward-test different scoring code than the screen characterised, which is not a forward test of these arms.",
+      "pin_worktree": "~/ctaNew-wt-arms",
+      "modules": {
+        "de_head_scoring.py": "53a406a0ae2a11ff7f4d17e4d65c6266d6fe53cce41fb4f8d7f14286a8adec28",
+        "de_phase4_diag_runner.py": "cb97b94dbd3fc6ca23487bc5b17d36825b57bd9216809098b0a65decb333e5cc",
+        "de_score_stream.py": "21ff2fd126624c2f13cb6b95c7d0618f4c58cb844019c6762b076498884c1342",
+        "harmful_stateful_policy.py": "65b9fe29aca85a01c0a663e5788b2612daf0c8cd5767d8842fa1706a03246c42",
+        "phase2_arms.py": "e8c7134da15112e18825ec5046513b894490d3dd803189e06d00238eafc0205c",
+        "harmful_exposure_rows.py": "57654d0293e5739187014b7fadc8ff89fbb47e590fe205bcf618b18cbb64fb9a",
+        "harmful_hazard_model.py": "58b8a2c08eea3cc9ee9bfd13b3ca5648d65a2947275d1cc5df0ad8e1153ac7ed",
+        "flow_intensity.py": "e0b0c5787770ba3d70afcfda560352ea8ae314fb281ec60d0cbc64442fff0fdd",
+        "pm_tape_density.py": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912",
+        "de_data_root.py": "eaffa4f949c7adb81333526a5536785d3d86d675bbd160f934c790a4a91b8619",
+        "phase2_state_schema_freeze.py": "fe0236b05bc388618931120b743967e59c74dcb2d510a194c10f910fe64f91bd",
+        "policy_optimizer_cancel_skew.py": "7ed7b72df65d809cfeef467e70849383a4708eb3dada176d81320f4533584c65",
+        "policy_optimizer_queue_realistic.py": "ae13af2931bc33b85b6a73a144261f0ca1d45b4767e985cf94e0cdda0e5c204c"
+      }
+    },
+    "PIPELINE_AT_THE_FREEZE_COMMIT": {
+      "de_multiday_gate1_runner.py": "157413f6562cf5bd06d84b29ddb7748a2cd96e8d978cc3f28e3552232be831b6",
+      "de_point_estimate_day.py": "ad2b33c42bb7d85708fb414fbc19082f4f5ff516b23fe3611c95039be1db79e2",
+      "de_settlement_control_run.py": "4ba1177fff3a3bbda58cd1727e4f861a54b9304f84aa7127a853cc9e8eab2c7e",
+      "de_settlement_control_aggregate.py": "2da90644848ca531417832e33e14fecf6feddef4ceb5bf1a2163e5170b1a3329",
+      "de_matched_cancel_control.py": "dbb37c65f5651ac75b627f074610a3ed34828a054551343286206ae5db0331e8",
+      "be_cancel_axis_null.py": "21f460b1c9d58d37638ff1b5197bec411f8df9dd87e0eb26a2f1e37f7d92c249",
+      "be_daybook_build.py": "2d31a80b5ae5c2c62fd4992eedb5d8c5020e66e69f015b1aa475e24d963d7fb3",
+      "de_asymmetry_null_run.py": "09581cbfc94e1f2d52f36de5cfd272ff68631e7ee7ff00095e3ee6a68dc58a9e"
+    },
+    "full_pipeline_is_in_the_repo": "data -> target -> fit -> artifact; no scratch-dir producer (rule 12 -- a scratch builder voided a freeze in this programme once)"
+  },
+  "NO_PARAMETER_OR_MODULE_IS_TUNED AFTER THIS COMMIT": true,
+  "validation_population_NOT_YET_TOUCHED": {
+    "rule": "plan step 5 -- PRIMARY is the first FIVE complete, era-admissible UTC days whose STARTS occur AFTER this freeze commit",
+    "consumed_and_therefore_excluded": [
+      "2026-09-03",
+      "2026-09-04",
+      "2026-09-05",
+      "2026-09-06",
+      "2026-09-07"
+    ],
+    "CAUTION_params_days_already_lists_2026-09-08": "the ruled day set in params v29 now includes 09-08. That is NOT a licence to use it: admissibility for the forward test is 'starts after the freeze commit', and this receipt is the clock.",
+    "nothing_has_been_run_against_09-08_or_later": true,
+    "no_interval_below_five_complete_days": "rule 8"
+  }
+}
