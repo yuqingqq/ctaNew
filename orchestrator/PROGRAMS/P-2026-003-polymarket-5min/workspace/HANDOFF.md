@@ -1,3 +1,106 @@
+# READ FIRST — rounds 388 + 389 (MEM, 2026-09-11T16:03:23Z, tip `5690a08`)
+
+# ⏹️ THE FORWARD TEST IS OVER. **Both arms futile at G = 2 of 7.**
+
+## The outcome is arithmetic — I re-derived it rather than reading it
+
+Two-sided sign test over **2⁷ = 128** patterns, `tolerance_negative_days = 0`:
+
+| arm | non-positive days | best attainable | = | filed | > 0.025 |
+|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | **2** → at best 5 of 7 | 2·29/128 | **0.453125** | 0.453125 ✓ | **FUTILE** |
+| `HAZARD_OVER_SKEWED_REF` | **1** → at best 6 of 7 | 2·8/128 | **0.125** | 0.125 ✓ | **FUTILE** |
+| declared floor | 7 of 7 | 2·1/128 | **0.015625** | 0.015625 ✓ | — |
+
+Cause `KILLED_BY_NEGATIVE_DAYS` both arms. ***The cap comes from the days
+ALREADY SEEN, so days 3–7 cannot move it*** — the outcome is a consequence of
+arithmetic on a design committed before the first draw, **not a decision anyone
+took.**
+
+> ### The sentence is **NOT_ESTABLISHED_AT_THIS_POWER — never NO_EFFECT.**
+> *At a floor reachable only at 7-of-7, this design could not have licensed
+> absence.* REVIEW 174's asymmetry stands beside it; Holm **m=2 unchanged**.
+
+# 🔬 AND THE SHARPER STATEMENT: **the design could never have survived its own screen**
+
+```
+floor 0.015625  ×  1  = 0.015625   < 0.05     uncorrected
+                ×  2  = 0.031250   < 0.05     Holm m=2 as declared  -> WOULD have passed
+                × 69  = 1.078125   > 1        the candidates actually screened
+        1/69 = 0.014492754   <   floor 0.015625
+```
+
+***No outcome of this test, however perfect, could have cleared a Bonferroni
+correction over the 69-candidate screen that produced the arms.*** A pass would
+have needed a larger G, or a screen-independent justification for m=2 — and
+neither was available when the design was fixed. **Computable before any day was
+valued; the fail sentence is the weaker of two true statements.**
+
+> ⚠️ **It is a statement about the DESIGN, not the arms.** Nothing here bears on
+> whether an effect exists. *The sharper statement is the easier one to
+> over-read, so both halves are on the record.*
+
+# ✅ WHAT I VERIFIED FIELD BY FIELD
+
+- **Licensing:** `admitted_by: DESCENDANT` both arms · the **three** unnamed
+  scoring members (`be_score_neutrality.py`, `harmful_hazard_model.py`,
+  `phase2_state_schema_freeze.py`) with **all six rows `recorded == on_disk` by
+  my own string comparison** · `cohort_agreement` empty · stage 0
+  **`POPULATION_FREEZE_HOLDS`, 67/67, 52 PIPELINE / 15 INSTRUMENT,
+  `INSTRUMENT_DRIFTED: []`**.
+- **DE 346's per-arm fix took, checked from outside:** HAZARD's 09-07 reads
+  **+4,925.363903000005** in the map *and the same in its own cell* — a value the
+  old shared map could not have produced.
+- **The record carries a refusal inside itself:** `emit.progress_emit` is
+  `UNAVAILABLE`, *"a cent figure whose winner source was never verified must say
+  so."* **Rule 10 appearing inside the terminal artifact rather than beside it.**
+
+# 🔴 THREE THINGS TO CARRY FORWARD
+
+1. **`running_tally` still presents one arm's negative-day list in a per-day
+   slot** — the shape DE 346 just fixed one level below. On two days a leak and a
+   correct union are **observationally identical**; ***a third day would separate
+   them.*** For DE to confirm.
+2. **The licence rests on a report in `/tmp`** — `stage0_freeze_20260908.json`,
+   661 B, exists now, **untracked and outside every artifact tree**. Future
+   launches write it run-scoped; until one does, *a licence granted today is
+   evidenced by a file no policy keeps.*
+3. **The emit was overwritten in place** (15:52:37Z → 15:54:50Z) and the earlier
+   record **is not recoverable**. The cells are the provenance — *they are; I
+   recomputed both p from their checkpoints* — and re-emits are **vN+1** from
+   here. **DE 347's `STOP_ADVICE` fix lands that way**, in band.
+
+# 🔍 AND I CHECKED BE 189's FAILURE MODE AGAINST MY OWN READS
+
+BE found its own lock instrument reading a path **nothing references**, which
+`flock` *created on first probe* — so it could only ever say FREE and **had never
+proved it could fire.**
+
+> **I did not assume it missed me.** My reads used `fuser` on
+> **`data/.heavy_run.lock`** — the path BE confirms every heavy run takes — and
+> that reader has **said HELD three times with the pids resolved through
+> `/proc/<pid>/cgroup` to `be169ident0908`, `be183ident0908`, `be185ident0907`,
+> and FREE once.** ***It has demonstrated both states on the real path.***
+> BE's stray file was created **15:51:15Z, after** my round-387 report, and is
+> removed. **So round 387's finding stands.**
+
+**Also recorded, not edited:** `de_valuation_launch.sh:29` carries BE 188's shape
+and is **live-red on every tree** (4 of 6 digests differing **by design**), and
+**inert** — the valuation units bypass it. *A guard red everywhere and consulted
+nowhere is the same class as a guard that can never fire, from the other side.*
+
+# 📋 THE POST-POPULATION QUEUE IS OPEN
+
+`BE_PROCEDURE §10` · the MEM 372 row · the role-swap for the self-vouching module
+· `de_asymmetry_null_run:550` · the **G=7 machine check against `--n-declared`**
+· the `--n-declared` field · the runner's once-per-run oracle read in the null
+module.
+
+> **The 09-09 build stays HELD.** Days 09-09..09-13 are **not required by the
+> design** — whether they are valued *descriptively* is the **user's call**, and
+> the population stays protected either way: books build from archives at any
+> time, so nothing is lost by waiting.
+
 # READ FIRST — round 387 (MEM, 2026-09-11T15:49:40Z, tip `2b5dea1`)
 
 # 🎯 DAY ONE REPRODUCES **EXACTLY** FROM THE FREEZE-BUILT BOOK
