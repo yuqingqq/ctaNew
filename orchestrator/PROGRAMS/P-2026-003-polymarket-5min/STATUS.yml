@@ -67,6 +67,23 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T03:17:38Z (MEM ROUND 353 -- THE BUILD COMMIT MOVED FOR THE WHOLE PIPELINE. USER RULING:
+  build AND valuation, evaluator, null harness, scorer and day-run path ALL from 7ed5a90 --
+  the arms-pin carve-out is GONE, no adbebf9, no 941e688. I verified the ancestry and
+  HASHED all three declared digests: they match EXACTLY. AND 7ed5a90 IS MY OWN ROUND-352
+  COMMIT, chosen for its ANCESTRY not its content, so a reader opening it finds protocol
+  rules and no code -- recorded because it reads as a defect and is not. THE LIMIT, which
+  must sit ON THE ARTIFACT: the forward test runs on SCORING BYTES THE SCREEN NEVER RAN ON
+  -- consumed books built with 73a22121f67b, the forward pipeline with 2d31a80b5ae5, both
+  hashed by me -- while NO parameter, threshold, theta, latency, protection, repost, null
+  or decision rule changed. 'THE FREEZE MOVED' MUST NOT READ AS 'THE ARMS MOVED.' A BUILD
+  FAILED AT 21 MINUTES FROM THE WRONG TREE: be_rule22 caught the head MOVING under it and
+  saved a book that would have looked valid with the wrong provenance -- but NOTHING CAUGHT
+  STARTING FROM THE WRONG HEAD, and that guard does not exist yet. 09-07 STANDS: the
+  unsealed numbers are for the RETRACTED policy, the traceless residual is equally true of
+  09-08..09-11, and the screen failed BOTH arms -- population 09-07..09-13, N=7. PROMOTE
+  REV'S RULE: a post-hoc choice is FATAL WHEN ANTI-CONSERVATIVE, SURVIVABLE WITH DISCLOSURE
+  WHEN CONSERVATIVE. And the real exposure is the 69, not 09-07. tip 0178ea4)
   2026-09-11T03:05:24Z (MEM ROUND 352 -- THREE LESSONS PROMOTED TO RULES 42-44 IN SEAT_PROTOCOL, in
   the existing form, each carrying the incident that earned it. 42: AN INSTRUMENT CHECKS
   THE PROPERTY, NEVER THE LABEL -- five instances in one night and EVERY SEAT WAS CORRECT
@@ -100,25 +117,6 @@ updated: >-
   TIMESTAMP ORDERING. DE: at G=4 the floor is 0.125, so the development data could never
   have passed conjunct (a) -- HAZARD RAN 4-FOR-4 POSITIVE AND STILL COULD NOT -- but step
   2's verdict rested on the matched-random instrument and STANDS. tip 9d21981)
-  2026-09-11T02:43:10Z (MEM ROUND 350 -- THREE CORRECTIONS, EACH SUPERSEDING AN HOUR-OLD FACT. N IS NOW
-  7, population 09-07..09-13, completing 2026-09-14T00:00Z -- and N=6 WAS NEVER RUNNABLE:
-  the two-sided day-cluster floor at G=6 is 0.031250 against a 0.025 bar, which I computed
-  at round 349 from DE's raise. The coordinator records the 5/6/9 menu as built on EFFECT
-  SIZE ALONE, never checking the floor, and as THEIR error. AT G=7 the two-sided floor is
-  0.015625 and clears, so THE SIDEDNESS QUESTION IS MOOT and the rule-11 exposure I filed
-  last round is CLOSED BY BECOMING UNNECESSARY. AND THE FUTILITY ASYMMETRY IS SHARPER THAN
-  STATED: I enumerated the tail and ONLY 7-of-7 clears -- 6-of-7 is 0.125000, EIGHT TIMES
-  the unanimous value and FIVE TIMES the bar -- so one negative day does not weaken the
-  test, it ends it; and futility stopping is STATISTICALLY FREE. EXPECT IT TO FIRE: 09-05
-  printed -4,941 c. THE PIN REF QUOTED ALL NIGHT WAS WRONG -- the arms worktree is at
-  adbebf9, which I read directly, not a565fd9; the commit moved and THE PINNED BYTES DID
-  NOT, which is why it survived a night. And the forward builds run from NEITHER: 941e688,
-  whose builder I HASHED at 73a22121f67b against 2d31a80b5ae5 everywhere after e6a214f --
-  chosen because it AVOIDS an argument rather than winning it. SEALING IS CANCELLED BY USER
-  INSTRUCTION with the trade-off stated: LOOKING IS FREE, the stopping point stays FIXED.
-  DE closed my round-349 multiplicity tension by DISTINGUISHING: Holm's m = 2 because there
-  are two p-values; 69 is SELECTION multiplicity, correcting the prior not the denominator.
-  tip 5c91ac5)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -290,6 +288,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 353, the build commit moved for the whole pipeline ---
+  THE_WHOLE_FORWARD_PIPELINE_NOW_RUNS_FROM_7ED5A90_AND_THE_ARMS_PIN_CARVE_OUT_IS_GONE: "USER ruling: build AND valuation, evaluator, null harness, scorer and day-run path all from 7ed5a9015f75. No adbebf9 exception, no 941e688. I verified the ancestry rather than accepting it: d09f25c, e6a214f and a339734 are all ancestors of 7ed5a90, and the three declared digests hash EXACTLY as stated -- be_daybook_build.py 2d31a80b5ae5c2c6, de_phase4_diag_runner.py 9e2a0977d8dfc3be, de_head_scoring.py 31c368384770351f. The pin refs I recorded at round 350 are superseded in band."
+  AND_THE_BUILD_COMMIT_IS_MY_OWN_STATE_FILE_COMMIT_WHICH_A_COLD_READER_MUST_NOT_MISREAD: "7ed5a90 is 'MEM 352: three lessons promoted to SEAT_PROTOCOL rules 42-44' -- my commit from the previous round. It was chosen for its ANCESTRY, not its content, and its own content is documentation. A reader told the pipeline runs from 7ed5a90 and then opening that commit will find protocol rules and no code. That is not a defect and it is exactly the kind of thing that reads as one at 3am, so it is recorded here rather than left to be discovered."
+  THE_LIMIT_IT_CREATES_IS_THAT_THE_FORWARD_TEST_RUNS_ON_SCORING_BYTES_THE_SCREEN_NEVER_RAN_ON: "It must sit ON THE ARTIFACT, not in a commit body. I can state it from my own measurements across two rounds: the consumed books were built with be_daybook_build.py at 73a22121f67b, which I hashed at round 350, and the forward pipeline builds with 2d31a80b5ae5, which I hashed this round at 7ed5a90. DIFFERENT BYTES. AND WHAT DID NOT CHANGE: no parameter, threshold, theta, latency, protection mode, repost model, null construction or decision rule. 'THE FREEZE MOVED' MUST NOT READ AS 'THE ARMS MOVED.'"
+  A_BUILD_FAILED_AT_21_MINUTES_FROM_THE_WRONG_TREE_AND_THE_GUARD_CAUGHT_THE_WRONG_HALF_OF_IT: p003fwd0907 ran with worktree /home/yuqing/ctaNew-wt-be at tip f75528c -- not the pinned commit -- after BE had correctly cut ~/ctaNew-wt-fwd and launched from wt-be anyway. At 02:45:05Z BE committed 07d5d97 INTO THAT TREE, moving its head under its own running build; be_rule22.assert_unchanged refused at 03:02:39Z before the book was written. I confirmed both refs and both timestamps. THE GUARD CAUGHT THE HEAD MOVING and thereby prevented a book that would have looked valid while carrying the wrong provenance -- but NOTHING CAUGHT STARTING FROM THE WRONG HEAD.
+  AND_TWO_STANDING_CONTROLS_COME_OUT_OF_IT_ONE_OF_WHICH_DOES_NOT_EXIST_YET: "First: NOTHING COMMITS INTO A TREE HOSTING A RUNNING BUILD until its receipt exists. Second: THE LAUNCH MUST ASSERT THE WORKING TREE'S HEAD EQUALS THE DECLARED BUILD COMMIT AND REFUSE ON MISMATCH. The second is the one with no implementation -- be_rule22 catches a head MOVING, which is a different property from STARTING at the right place, and the incident shows the two are not substitutes. A guard for the after-state cannot cover the before-state."
+  AND_THE_SIXTH_INSTANCE_OF_LABEL_OVER_PROPERTY_IS_THE_COORDINATORS_AND_MINE_IS_THE_INSTRUMENT_THAT_CAUGHT_IT: "The coordinator told the USER the build was running from wt-fwd because the UNIT'S ExecStart PATH said so, while the run record's worktree field said wt-be IN PLAIN TEXT. Rule 42, landed one round earlier, in its sixth instance within hours of being written. And this round I applied rule 42's discharge to myself for the first time: I read LoadState BEFORE ActiveState on both units -- p003fwd0907d loaded/active/running, p003fwd0907 loaded/failed/exit-code -- so the failure I am recording is a real unit's real failure and not the dead/success an invented name returns."
+  09_07_STANDS_AND_MY_OWN_RECORDED_LEAN_TOWARD_DROPPING_IT_WAS_WRONG: "REV 128: 'dropping 09-07 would not have touched this one -- which is the sharpest sign the drop was aimed at the wrong object.' The unsealed arm_total_minus_baseline_total and trades_cash_flow_cents on 09-07 are for the RETRACTED policy -- a number for a decision rule that no longer exists -- so they cannot have shaped the frozen design. The traceless-read residual is EQUALLY TRUE of 09-08..09-11, so it never justified singling 09-07 out. And the screen ran on 09-03..09-06 with BOTH ARMS FAILING, so selection was not by passing it. POPULATION STAYS 09-07..09-13, N=7."
+  REVS_GENERAL_RULE_IS_THAT_A_POST_HOC_CHOICE_IS_FATAL_WHEN_ANTI_CONSERVATIVE_AND_SURVIVABLE_WHEN_CONSERVATIVE: Fatal when ANTI-CONSERVATIVE, SURVIVABLE WITH DISCLOSURE when CONSERVATIVE. That separates the choices rule 11 must FORBID from those it need only require DISCLOSED, and the programme -- the coordinator says themselves in particular -- has been applying rule 11 as a blanket prohibition. Dropping a day that can only shrink the population and lower the power is conservative; choosing the pool that passes is not. Same procedure, opposite directions, and only one of them is the thing rule 11 exists to stop.
+  A_NEW_NAMED_DELIVERABLE_IS_TO_CERTIFY_THE_NEW_CODE_REPRODUCES_THE_OLD_RESULTS: "USER's. BE rebuilds consumed 09-03 once on 7ed5a90 under a NON-COLLIDING revision and compares against the existing consumed book, whose builder bytes are the old 73a22121f67b. THE BAR IS DECISIONS, NOT DIGITS: float differences around 1e-15 are EXPECTED from batched summation and mean nothing, while ONE DECISION FLIP at the frozen thresholds is a FAIL however small the cause. The bar is declared before the numbers are seen and the comparator ships a falsifier."
+  AND_THE_BAR_BEING_DECISIONS_RATHER_THAN_DIGITS_IS_WHAT_MAKES_IT_A_TEST: "A digit bar would fail on arithmetic that is known to differ harmlessly, and passing it would prove nothing about the thing at risk. A decision bar tests the property the frozen thresholds actually consume. It is also the harder bar in the direction that matters: a difference too small to see can still flip a decision that sits on a threshold, and that flip is a FAIL. Declared before the numbers exist, which is the only time such a bar can be set honestly."
+  REVS_ESCALATION_IS_THAT_THE_REAL_SELECTION_EXPOSURE_IS_THE_69_NOT_09_07: Orthogonal to the day question and much larger. Holm's m = 2 prices TWO ARMS, not a 69-configuration search history; v3 records the 69 honestly, AND RECORDING IS NOT CONTROLLING. So the programme has spent hours on a day whose exposure REV has now shown to be nil while the exposure that is real sits in a field that is merely documented. This is the limit most likely to matter at the end, and it is recorded in those terms rather than as an item.
+  STATUS_IS_09_07_BUILDING_FROM_THE_RIGHT_TREE_AT_THE_RIGHT_COMMIT_AND_I_CHECKED_BOTH: "p003fwd0907d is running since 03:12:03Z from wt-fwd, and I verified the tree rather than the unit's path: ~/ctaNew-wt-fwd HEAD equals 7ed5a90 exactly, which is the ruled build commit. The failed predecessor p003fwd0907 shows loaded/failed/exit-code. NOTHING IS VALUED. Checking the tree's HEAD rather than the ExecStart path is the discharge the incident above asks for, applied to the replacement run."
   # --- MEM round 352, rules 42-44 promoted ---
   RULES_42_TO_44_ARE_LANDED_IN_SEAT_PROTOCOL_AND_41_WAS_THE_PREVIOUS_LAST: "I checked the numbering before writing rather than after: rule 41 was the last, 42 through 44 did not exist, and rule 15's block sits at line 76. The three new rules are appended in the existing form -- short, checkable, each carrying the incident that earned it -- at lines 625, 645 and 659. SEAT_PROTOCOL is a SHARED file and I am not its sole writer, so I appended and inserted without touching another seat's text, and the register remains the authority on any conflict."
   RULE_42_IS_THAT_AN_INSTRUMENT_CHECKS_THE_PROPERTY_NEVER_THE_LABEL: "Five instances in one night, and the thing that makes it a rule rather than five corrections: EVERY SEAT WAS CORRECT ABOUT THE STRING IT EXAMINED. An AST scan reporting 0 print sites while the exposure was a LOG WRITE; a builder_commit label check that would have failed correct books against each other because two labels sit over IDENTICAL builder bytes; a dashed filename search against compact filenames; a field-name check standing in for values; and a build monitor passing three units that were never created."
@@ -27645,6 +27656,79 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 353, 2026-09-11T03:17:38Z ---
+  THE_WHOLE_FORWARD_PIPELINE_NOW_RUNS_FROM_7ED5A90_AND_THE_ARMS_PIN_CARVE_OUT_IS_GONE:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-11T03:17:38Z
+    said: >-
+      git merge-base --is-ancestor run for the three named commits against 7ed5a90; each of the three files hashed with sha256 at 7ed5a90 and compared with the declared digest.
+  AND_THE_BUILD_COMMIT_IS_MY_OWN_STATE_FILE_COMMIT_WHICH_A_COLD_READER_MUST_NOT_MISREAD:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:17:38Z
+    said: >-
+      git log of 7ed5a90 read for author, subject and date: MEM 352, yqq, 2026-09-11 03:06, touching SEAT_PROTOCOL.md and the three MEM state files.
+  THE_LIMIT_IT_CREATES_IS_THAT_THE_FORWARD_TEST_RUNS_ON_SCORING_BYTES_THE_SCREEN_NEVER_RAN_ON:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-11T03:17:38Z
+    said: >-
+      the two builder digests hashed by me at rounds 350 and 353 respectively and compared; the unchanged list as ruled.
+  A_BUILD_FAILED_AT_21_MINUTES_FROM_THE_WRONG_TREE_AND_THE_GUARD_CAUGHT_THE_WRONG_HALF_OF_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T03:17:38Z
+    said: >-
+      07d5d97 read at its object: 'BE 116: the model composition for a build', 2026-09-11 02:45:05; f75528c read at 02:24:06; wt-be HEAD confirmed at 07d5d97 and wt-fwd HEAD confirmed equal to 7ed5a90.
+  AND_TWO_STANDING_CONTROLS_COME_OUT_OF_IT_ONE_OF_WHICH_DOES_NOT_EXIST_YET:
+    prov: RELAYED
+    from: coordinator MEM 353
+    as_of: 2026-09-11T03:17:38Z
+    said: >-
+      the two controls as dispatched; the gap between them is the incident's own evidence, since be_rule22 fired and the wrong start went undetected for 21 minutes.
+  AND_THE_SIXTH_INSTANCE_OF_LABEL_OVER_PROPERTY_IS_THE_COORDINATORS_AND_MINE_IS_THE_INSTRUMENT_THAT_CAUGHT_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T03:17:38Z
+    said: >-
+      systemctl --user show run with LoadState first on both units, per the discharge landed in rule 42 at round 352.
+  09_07_STANDS_AND_MY_OWN_RECORDED_LEAN_TOWARD_DROPPING_IT_WAS_WRONG:
+    prov: RELAYED
+    from: REV 128 via coordinator MEM 353
+    as_of: 2026-09-11T03:17:38Z
+    said: >-
+      REV's three arguments as dispatched; at round 351 I recorded the coordinator's drop recommendation alongside the USER's challenge and wrote that the user was probably right -- this settles it in that direction.
+  REVS_GENERAL_RULE_IS_THAT_A_POST_HOC_CHOICE_IS_FATAL_WHEN_ANTI_CONSERVATIVE_AND_SURVIVABLE_WHEN_CONSERVATIVE:
+    prov: RELAYED
+    from: REV via coordinator MEM 353
+    as_of: 2026-09-11T03:17:38Z
+    said: >-
+      REV's formulation as dispatched, recorded for promotion; it refines rule 11 rather than replacing it.
+  A_NEW_NAMED_DELIVERABLE_IS_TO_CERTIFY_THE_NEW_CODE_REPRODUCES_THE_OLD_RESULTS:
+    prov: RELAYED
+    from: USER via coordinator MEM 353
+    as_of: 2026-09-11T03:17:38Z
+    said: >-
+      the deliverable and its bar as dispatched; the two builder digests it spans are the ones I hashed at rounds 350 and 353.
+  AND_THE_BAR_BEING_DECISIONS_RATHER_THAN_DIGITS_IS_WHAT_MAKES_IT_A_TEST:
+    prov: RELAYED
+    from: USER via coordinator MEM 353
+    as_of: 2026-09-11T03:17:38Z
+    said: >-
+      the bar as dispatched; recorded with its rationale because a later reader meeting '1e-15 differences are fine' without the decision clause would read it as a tolerance.
+  REVS_ESCALATION_IS_THAT_THE_REAL_SELECTION_EXPOSURE_IS_THE_69_NOT_09_07:
+    prov: RELAYED
+    from: REV via coordinator MEM 353
+    as_of: 2026-09-11T03:17:38Z
+    said: >-
+      REV's escalation as dispatched; the 69-versus-2 distinction was closed by DE at round 350 as selection multiplicity correcting the prior rather than the denominator, which is the same point from the other side.
+  STATUS_IS_09_07_BUILDING_FROM_THE_RIGHT_TREE_AT_THE_RIGHT_COMMIT_AND_I_CHECKED_BOTH:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    as_of: 2026-09-11T03:17:38Z
+    said: >-
+      git -C ~/ctaNew-wt-fwd rev-parse HEAD compared for equality with git rev-parse 7ed5a90; both units read with LoadState first.
   # --- MEM round 352, 2026-09-11T03:05:24Z ---
   RULES_42_TO_44_ARE_LANDED_IN_SEAT_PROTOCOL_AND_41_WAS_THE_PREVIOUS_LAST:
     prov: CHECKED

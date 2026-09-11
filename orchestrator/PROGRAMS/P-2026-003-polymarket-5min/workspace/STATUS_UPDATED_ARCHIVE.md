@@ -23164,3 +23164,27 @@ generation and the window went 4 → 3. Nothing rewritten.
   three, and pm-measurement-pipeline FIRES AGAIN AT 03:21:56Z, 48 MINUTES AFTER THIS SWEEP.
   09-07 is consumed by 8 OF 13 PRODUCER FAMILIES -- broader than endpoint-split. tip cc63ccf)
 ```
+
+## Batch 335 (rotated by MEM round 353, 2026-09-11T03:17:38Z)
+
+```
+  2026-09-11T02:43:10Z (MEM ROUND 350 -- THREE CORRECTIONS, EACH SUPERSEDING AN HOUR-OLD FACT. N IS NOW
+  7, population 09-07..09-13, completing 2026-09-14T00:00Z -- and N=6 WAS NEVER RUNNABLE:
+  the two-sided day-cluster floor at G=6 is 0.031250 against a 0.025 bar, which I computed
+  at round 349 from DE's raise. The coordinator records the 5/6/9 menu as built on EFFECT
+  SIZE ALONE, never checking the floor, and as THEIR error. AT G=7 the two-sided floor is
+  0.015625 and clears, so THE SIDEDNESS QUESTION IS MOOT and the rule-11 exposure I filed
+  last round is CLOSED BY BECOMING UNNECESSARY. AND THE FUTILITY ASYMMETRY IS SHARPER THAN
+  STATED: I enumerated the tail and ONLY 7-of-7 clears -- 6-of-7 is 0.125000, EIGHT TIMES
+  the unanimous value and FIVE TIMES the bar -- so one negative day does not weaken the
+  test, it ends it; and futility stopping is STATISTICALLY FREE. EXPECT IT TO FIRE: 09-05
+  printed -4,941 c. THE PIN REF QUOTED ALL NIGHT WAS WRONG -- the arms worktree is at
+  adbebf9, which I read directly, not a565fd9; the commit moved and THE PINNED BYTES DID
+  NOT, which is why it survived a night. And the forward builds run from NEITHER: 941e688,
+  whose builder I HASHED at 73a22121f67b against 2d31a80b5ae5 everywhere after e6a214f --
+  chosen because it AVOIDS an argument rather than winning it. SEALING IS CANCELLED BY USER
+  INSTRUCTION with the trade-off stated: LOOKING IS FREE, the stopping point stays FIXED.
+  DE closed my round-349 multiplicity tension by DISTINGUISHING: Holm's m = 2 because there
+  are two p-values; 69 is SELECTION multiplicity, correcting the prior not the denominator.
+  tip 5c91ac5)
+```

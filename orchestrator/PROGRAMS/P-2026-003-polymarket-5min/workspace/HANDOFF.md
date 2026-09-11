@@ -1,3 +1,136 @@
+# READ FIRST — round 353 (MEM, 2026-09-11T03:16:57Z, tip `556ef64`)
+# ⚙️ THREE FACTS FROM ROUND 352 ARE STALE — these supersede them
+
+# 1️⃣ THE WHOLE PIPELINE RUNS FROM **`7ed5a90`** — the arms-pin carve-out is GONE
+
+Build **and** valuation, evaluator, null harness, scorer, day-run path. **No
+`adbebf9` exception. No `941e688`.** I verified rather than accepted:
+
+```
+d09f25c  ANCESTOR      be_daybook_build.py       2d31a80b5ae5c2c6  ✓
+e6a214f  ANCESTOR      de_phase4_diag_runner.py  9e2a0977d8dfc3be  ✓
+a339734  ANCESTOR      de_head_scoring.py        31c368384770351f  ✓
+```
+
+**All three digests hash exactly as declared.** My round-350 pin refs are
+superseded in band.
+
+## ⚠️ And `7ed5a90` is **my own round-352 commit**
+
+*"MEM 352: three lessons promoted to SEAT_PROTOCOL rules 42-44."* **It was chosen
+for its ANCESTRY, not its content** — a reader told the pipeline runs from
+`7ed5a90` and then opening it will find **protocol rules and no code.** *Not a
+defect, and exactly the kind of thing that reads as one at 3am, so it is recorded
+here rather than left to be discovered.*
+
+## 🚩 THE LIMIT — and it must sit ON THE ARTIFACT, not in a commit body
+
+> **The forward test now runs on SCORING BYTES THE DEVELOPMENT SCREEN NEVER RAN
+> ON.**
+
+I can state it from my own hashes across two rounds: **consumed books built with
+`73a22121f67b`** (round 350) · **forward pipeline builds with `2d31a80b5ae5`**
+(this round). **Different bytes.**
+
+**What did NOT change:** no parameter, threshold, theta, latency, protection
+mode, repost model, null construction or decision rule.
+
+> ***"The freeze moved" must not read as "the arms moved."***
+
+# 2️⃣ A BUILD FAILED AT 21 MINUTES FROM THE WRONG TREE
+
+`p003fwd0907` ran with `worktree: ~/ctaNew-wt-be` at tip **`f75528c`** — not the
+pinned commit at all — after BE had correctly cut `~/ctaNew-wt-fwd` **and
+launched from wt-be anyway.** At **02:45:05Z** BE committed **`07d5d97`** into
+that tree, **moving its head under its own running build**; `be_rule22.assert_
+unchanged` refused at **03:02:39Z**, before the book was written. *(I confirmed
+both refs and both timestamps, and wt-be's HEAD is indeed `07d5d97`.)*
+
+> **The guard caught the head MOVING, and thereby prevented a book that would
+> have looked valid while carrying the wrong provenance.**
+
+**Two standing controls — and one of them does not exist yet:**
+
+1. **Nothing commits into a tree hosting a running build until its receipt exists.**
+2. **The launch must ASSERT the working tree's HEAD equals the declared build
+   commit and REFUSE on mismatch.**
+
+***`be_rule22` catches a head MOVING; nothing caught STARTING from the wrong
+head. A guard for the after-state cannot cover the before-state***, and the
+incident is the proof: the wrong start went undetected for 21 minutes.
+
+## 🔁 The sixth instance of rule 42 — within hours of the rule being written
+
+The coordinator told the USER the build was running from wt-fwd **because the
+unit's `ExecStart` path said so**, while the run record's `worktree` field said
+**wt-be in plain text.**
+
+**And this round I applied rule 42's discharge to myself for the first time** —
+`LoadState` read **before** ActiveState on both units: `p003fwd0907d`
+loaded/active/running, `p003fwd0907` loaded/failed/exit-code. *So the failure I
+am recording is a real unit's real failure, not the `dead`/`success` an invented
+name returns.*
+
+# 3️⃣ **09-07 STANDS** — the drop recommendation was aimed at the wrong object
+
+REV 128: *"dropping 09-07 would not have touched this one — which is the sharpest
+sign the drop was aimed at the wrong object."*
+
+- The unsealed `arm_total_minus_baseline_total` / `trades_cash_flow_cents` on
+  09-07 are **for the RETRACTED policy** — *a number for a decision rule that no
+  longer exists* — so they **cannot** have shaped the frozen design.
+- The traceless-read residual is **equally true of 09-08..09-11**, so it never
+  justified singling 09-07 out.
+- The screen ran on 09-03..09-06 with **both arms failing**, so selection was
+  **not** by passing it.
+
+**Population stays 09-07..09-13, N=7.**
+
+# 📐 PROMOTE REV'S GENERAL RULE
+
+> **A post-hoc choice is FATAL when ANTI-CONSERVATIVE, and SURVIVABLE WITH
+> DISCLOSURE when CONSERVATIVE.**
+
+*That separates the choices rule 11 must **forbid** from those it need only
+require **disclosed** — and this programme has been applying rule 11 as a blanket
+prohibition.* Dropping a day that can only shrink the population and lower the
+power is **conservative**; choosing the pool that passes is not. **Same
+procedure, opposite directions, and only one is what rule 11 exists to stop.**
+
+# 🧪 NEW NAMED DELIVERABLE — certify the new code reproduces the old results
+
+BE rebuilds consumed **09-03** once on `7ed5a90` under a **non-colliding
+revision** and compares against the existing consumed book (builder bytes
+`73a22121f67b`).
+
+> **THE BAR IS DECISIONS, NOT DIGITS.** ~1e-15 float differences are **expected**
+> from batched summation and mean nothing. **ONE decision flip at the frozen
+> thresholds is a FAIL, however small the cause.**
+
+*A digit bar would fail on arithmetic known to differ harmlessly, and passing it
+would prove nothing about the thing at risk. A decision bar tests the property
+the frozen thresholds actually consume — and it is harder in the direction that
+matters, because a difference too small to see can still flip a decision sitting
+on a threshold.* **Declared before the numbers are seen; comparator ships a
+falsifier.**
+
+# 🔭 REV'S ESCALATION — the limit most likely to matter at the end
+
+> **The real selection exposure is not 09-07. It is the MULTIPLICITY OF 69 —
+> orthogonal, and much larger.**
+
+Holm's m = 2 prices **two arms**, not a 69-configuration search history. **v3
+records it honestly, and recording is not controlling.** *The programme spent
+hours on a day whose exposure REV has now shown to be nil, while the exposure
+that is real sits in a field that is merely documented.*
+
+# 📍 STATUS
+
+`p003fwd0907d` running since **03:12:03Z** from wt-fwd — **and I verified the
+tree, not the unit's path: `~/ctaNew-wt-fwd` HEAD equals `7ed5a90` exactly.**
+*That is the discharge the incident above asks for, applied to the replacement
+run.* **Nothing valued.**
+
 # READ FIRST — round 352 (MEM, 2026-09-11T03:06:12Z, tip `b217d6b`)
 # 📜 THREE LESSONS PROMOTED TO **RULES 42–44**
 
