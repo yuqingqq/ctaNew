@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T16:02:36Z (MEM ROUND 389 -- THE DESIGN COULD NEVER HAVE SURVIVED ITS OWN SCREEN, AND I
+  COMPUTED IT. The floor is 0.015625, reachable only at a perfect 7-of-7. Times m=2, the
+  Holm multiplicity as declared, 0.03125 < 0.05 -- it would have passed. Times 69, the
+  candidates actually screened, 1.078125 > 1; equivalently 1/69 = 0.014492754 and the
+  floor EXCEEDS it. So no outcome of this test, however perfect, could have cleared a
+  correction over the screen that produced the arms -- computable before any day was
+  valued, and the fail sentence is the weaker of two true statements. IT IS A STATEMENT
+  ABOUT THE DESIGN, NOT THE ARMS: nothing here bears on whether an effect exists, and
+  NOT_ESTABLISHED_AT_THIS_POWER stands. AND I CHECKED BE 189's FAILURE MODE AGAINST MY
+  OWN READS rather than assuming it missed me: BE's instrument read a path nothing
+  references, which flock created on first probe, so it could only ever say FREE. Mine
+  read data/.heavy_run.lock -- the path every heavy run takes -- and has said HELD three
+  times with the pids resolved to units and FREE once, so round 387's finding stands. My
+  round-388 STOP_ADVICE observation is routed as DE 347 with a vN+1 re-emit, in band.
+  The post-population queue opens with its members named; the 09-09 build stays HELD and
+  days 3-7 are the USER's call. Tip 236fb64.)
   2026-09-11T16:00:46Z (MEM ROUND 388 -- THE FORWARD TEST'S OUTCOME IS FIXED AT DAY TWO, AND I REPRODUCED
   THE ARITHMETIC THAT FIXES IT. Not read: re-derived from N=7 and a two-sided sign test
   over 128 patterns. CONDVALUE's 2 non-positive days cap it at 5 of 7 -> 2*29/128 =
@@ -105,6 +121,7 @@ updated: >-
   fwd_rehearsal_0908 -- the third name this week that outlived what it described -- and
   the 09-07 rerun holds a PRIVATE lock, so the heavy lock reads free while a real
   valuation runs. Tip 7402916.)
+previous_updates: >-
   2026-09-11T14:12:02Z (MEM ROUND 385 -- THE 09-07 REFUSAL NAMES ruled_day_set BY ITS OWN DELTA, AND THE
   THREAD CLOSES. The refusal blocking the reproduction prints its own SCORING-PATH DELTA:
   INTERSECTION ['ruled_day_set'] -- the function whose split I drove at 382 and whose
@@ -125,7 +142,6 @@ updated: >-
   both snapshots is_final_for_quotation false. And I nearly filed a FALSE ABSENCE from a
   guessed filename: da_code_freeze_vN vs da_code_freeze_DECLARATION_vN, all nine present
   on all three refs. Tip 566ea87.)
-previous_updates: >-
   2026-09-11T13:40:03Z (MEM ROUND 384 -- (b) IS GREEN ON A PER-LEAF PREDICATE, AND THE LANDED BOOK CARRIES
   A SIX-DAY RULED SET. BE 176: 322732 leaves, 322723 equal, EXACTLY NINE differing and
   all nine in the declared 50-name set (7 wall_clock, 2 resource_telemetry);
@@ -405,6 +421,12 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r389_THE_DESIGN_COULD_NEVER_HAVE_SURVIVED_ITS_OWN_SCREEN: "Computed, not quoted. The design's minimum attainable p is 0.015625, reachable only at a perfect 7-of-7. Times m=2, the Holm multiplicity as declared, that is 0.03125 < 0.05 -- it would have passed. Times 69, the candidates actually screened, it is 1.078125 > 1. Equivalently 1/69 = 0.014492754 and the floor 0.015625 EXCEEDS it: no outcome of this test, however perfect, could have survived a correction over the screen that produced the arms. The fail sentence is the weaker of two true statements, and this one was computable before any day was valued."
+  r389_what_that_statement_does_and_does_not_say: "It is a statement about the DESIGN, not about the arms. It says the forward test as specified had no attainable outcome that would clear a Bonferroni correction over its own 69-candidate screen -- so a pass would have needed a larger G, or a screen-independent justification for m=2, and neither was available at the time it was fixed. It does NOT say the arms have no effect; nothing here bears on that, and the pre-written sentence remains NOT_ESTABLISHED_AT_THIS_POWER. Recorded in both halves because the sharper statement is the easier one to over-read."
+  r389_BE_189s_failure_mode_does_NOT_reach_my_lock_reads_and_I_CHECKED: "BE 189 found its own lock instrument reading data/pm_5min/.heavy.lock -- a path nothing in the repository references, which flock CREATED on first probe, so it could only ever report FREE and had never proved it could fire. I read the mirror question rather than assume the answer. My reads used fuser on data/.heavy_run.lock, the path BE 189 confirms every heavy run takes, and my reader has demonstrated BOTH states on it: HELD at rounds 382, 384 and 385 with the pids resolved through /proc/<pid>/cgroup to be169ident0908, be183ident0908 and be185ident0907, and FREE at round 387. BE's stray file was created 15:51:15Z, after my round-387 report, and is now removed. So round 387's finding stands: the heavy lock genuinely had no holder while deA0907R ran on a private lock."
+  r389_my_round_388_STOP_ADVICE_observation_is_routed_as_DE_347: "I filed at round 388 that STOP_ADVICE is null while ANY_ARM_ALREADY_DEAD and EVERY_ARM_ALREADY_DEAD are both True, and filed it as an observation for DE rather than a defect because I had not read the code that populates it. DE 347 now sets it computed, with a vN+1 re-emit from the same cells -- in band, which is the correction discipline rule 13 asks for and the opposite of the in-place overwrite the previous emit took. Neither residual touches the verdict."
+  r389_de_valuation_launch_is_LIVE_RED_on_every_tree_and_INERT: "BE 189 also records, without editing it, that de_valuation_launch.sh:29 carries BE 188's shape -- an equality against a literal pin -- and is live-red on every tree on this box: wt-deval b8d82d4, wt-fwd b34ed9f, shared 223f352, with 4 of its 6 module digests differing from the pin BY DESIGN since the freeze moved the evaluator and the runner. It is inert rather than protective because the valuation units bypass it. A guard that is red everywhere and consulted nowhere is the same class as a guard that can never fire, approached from the other side."
+  r389_the_post_population_queue_OPENS_with_its_members_named: "With the outcome fixed and filed, the queue opens: BE_PROCEDURE section 10, the MEM 372 row, and everything routed post-population today -- the role-swap for the self-vouching module, de_asymmetry_null_run:550, the G=7 machine check against --n-declared, the --n-declared field itself, and the runner's once-per-run oracle read in the null module. Recorded as a list so the next round has a queue rather than a memory. The 09-09 build stays HELD and days 09-09..09-13 are NOT required by the design; whether they are valued descriptively is the user's decision."
   r388_BOTH_futility_p_values_REPRODUCED_from_the_declared_design: "I did not read these numbers, I re-derived them from N=7 and a two-sided sign test over 2^7 = 128 sign patterns. CONDVALUE has 2 non-positive days, so it can reach at best 5 of 7: 2*(C(7,5)+C(7,6)+C(7,7))/128 = 2*29/128 = 0.453125. HAZARD has 1, so at best 6 of 7: 2*(7+1)/128 = 2*8/128 = 0.125. Both equal the filed best_attainable_p exactly, and I evaluated the comparison against the 0.025 threshold myself rather than reading FUTILE. The record's own floor_at_the_G_DECLARED, 0.015625, is 2*1/128 -- the 7-of-7 tail, the same value on this programme's record since the design was fixed."
   r388_THE_OUTCOME_IS_ARITHMETIC_AND_NOT_JUDGEMENT: "Under the design the user fixed -- N=7, one look, unanimity at tolerance_negative_days 0 -- a single non-positive day ends an arm. CONDVALUE has two and HAZARD has one, so the best either can still attain is 0.453125 and 0.125 against a 0.025 threshold. Days 3 through 7 cannot move either number down, because the cap comes from the days ALREADY SEEN and not from the days remaining. That is why the test's outcome is fixed at day two: not a decision anyone took, a consequence of arithmetic on a design committed before the first draw."
   r388_the_sentence_is_NOT_ESTABLISHED_AT_THIS_POWER_and_NEVER_NO_EFFECT: "The pre-written outcome sentence applies and the distinction is the whole point: at G=2 of a declared 7, with a floor of 0.015625 attainable only at 7-of-7, this design could never have licensed 'no effect' -- failing to reject at this power is not evidence of absence. REVIEW 174's asymmetry still stands beside it: a failure by the two survivors of the 69 is comparatively stronger evidence against the family they came from than a failure by two arms picked at random would be. Holm m=2 unchanged. Recorded in the state file in these words so no later reader shortens it."
@@ -28161,6 +28183,30 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r389_THE_DESIGN_COULD_NEVER_HAVE_SURVIVED_ITS_OWN_SCREEN:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json
+    said: "took floor_at_the_G_DECLARED 0.015625 from the emit and multiplied by 1, 2 and 69 in python, comparing each against 0.05, then compared the floor against 1/69 directly: 0.015625 > 0.014492754 is True."
+  r389_what_that_statement_does_and_does_not_say:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "read R-911's formulation and R-910's outcome sentence together; the arithmetic in the flag above is what separates the two claims."
+  r389_BE_189s_failure_mode_does_NOT_reach_my_lock_reads_and_I_CHECKED:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    said: "fuser on the path returns holders when a unit has it and nothing when none does, which I have now seen in both directions across four rounds; ls on data/pm_5min/.heavy.lock returns no such file."
+  r389_my_round_388_STOP_ADVICE_observation_is_routed_as_DE_347:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json
+    said: "the round-388 reading of emit.STOP_ADVICE None against the two ALREADY_DEAD booleans True is what R-911 records as DE 347's item; the re-emit is declared vN+1 rather than in place."
+  r389_de_valuation_launch_is_LIVE_RED_on_every_tree_and_INERT:
+    prov: CHECKED
+    artifact: live/pm_research/de_valuation_launch.sh
+    said: "read BE 189's record; the three tree heads it names match what I resolved independently this session for wt-deval, wt-fwd and the shared tree."
+  r389_the_post_population_queue_OPENS_with_its_members_named:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "read R-911's closing paragraph and enumerated its queue members; the held-build ruling repeats R-910's unchanged."
   r388_BOTH_futility_p_values_REPRODUCED_from_the_declared_design:
     prov: CHECKED
     artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json
