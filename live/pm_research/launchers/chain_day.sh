@@ -11,8 +11,22 @@ D=/home/yuqing/ctaNew/data/pm_5min/derived
 TREE=/home/yuqing/ctaNew-wt-deval
 PIN=68e7d2352c7d7aed7963e9842aaa68351b38689b
 CERT=$D/be_score_neutrality_20260903__EV22_vs_NEUTCHK__68e7d23.json
+# A COMMIT CANNOT CONTAIN ITS OWN HASH, and landing launcher fixes moves
+# this tree's HEAD off the literal pin -- which is what refused the first
+# 09-09/09-10 arming. Same rule the driver already uses: a DESCENDANT is
+# admissible ONLY when every computing module is byte-identical to the pin.
 H=$(git -C "$TREE" rev-parse HEAD)
-[ "$H" = "$PIN" ] || { echo "REFUSED TREE_IS_NOT_THE_VALUATION_PIN: $H"; exit 2; }
+if [ "$H" != "$PIN" ]; then
+  git -C "$TREE" merge-base --is-ancestor "$PIN" "$H" || {
+    echo "REFUSED TREE_IS_NOT_THE_VALUATION_PIN: $H is not a descendant of $PIN"; exit 2; }
+  for m in de_settlement_control_run.py de_forward_evaluator.py            de_settlement_control_aggregate.py de_asymmetry_null_run.py            de_matched_cancel_control.py de_multiday_gate1_runner.py            be_score_neutrality.py; do
+    a=$(sha256sum "$TREE/live/pm_research/$m" | cut -d" " -f1)
+    b=$(git -C "$TREE" show "$PIN:live/pm_research/$m" | sha256sum | cut -d" " -f1)
+    [ "$a" = "$b" ] || {
+      echo "REFUSED VALUATION_MODULE_BYTES_DIFFER_FROM_THE_PIN: $m"; exit 2; }
+  done
+  echo "$(date -u +%H:%M:%SZ) tree $H is a descendant of $PIN; 7/7 computing modules identical"
+fi
 export BE_WORKTREE="$TREE" DE_VALUATION_EXPECTED_TREE="$TREE"
 cd "$TREE/live/pm_research" || exit 2
 # STAGE 0 distinguishes NOT-YET-BUILT from WRONG.
