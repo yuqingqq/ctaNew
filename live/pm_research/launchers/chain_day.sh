@@ -67,38 +67,45 @@ cd "$TREE/live/pm_research" || exit 2
 # is gone.
 self=/home/yuqing/ctaNew-wt-deval/live/pm_research/launchers/chain_day.sh
 /home/yuqing/pricer-sol/venv/bin/python3 - "$day" "$self" "$H" <<'PYL'
-import hashlib, json, os, sys, datetime
+import datetime, hashlib, json, sys
 from pathlib import Path
 
 
+def _growing_digests():
+    """The growing inputs AS THE RUN WILL READ THEM -- canonical ledger.
+
+    The snapshot root was retired at DE 303 when the oracle became a
+    once-per-run read; this block still dereferenced PM_DATA_ROOT and
+    raised KeyError, so NO record was written while the launcher carried a
+    refusal name promising one.
+    """
+    base = Path("/home/yuqing/ctaNew/data/pm_5min")
+    names = ("resolutions.jsonl", "collector_gaps.jsonl", "markets.jsonl",
+             "rewards_registry.jsonl", "collector_runs.jsonl",
+             "collector_health.jsonl")
+    return {n: hashlib.sha256((base / n).read_bytes()).hexdigest()
+            for n in names if (base / n).is_file()}
 
 
-    pid = subprocess.run(["systemctl", "--user", "show", unit,
-                          "-p", "MainPID", "--value"],
-    try:
-        raw = Path(f"/proc/{pid}/environ").read_bytes().decode()
-        return dict(kv.split("=", 1) for kv in raw.split("\x00")
-                    if "=" in kv).get("PM_DATA_ROOT", "ABSENT_IN_UNIT")
-    except OSError:
-        return "NOT_LAUNCHED_YET"
 day, self_path, head = sys.argv[1], sys.argv[2], sys.argv[3]
 f = Path(self_path)
-rec = {"protocol": "P003_DE_CHAIN_LAUNCH_PROVENANCE_V1", "day": day,
+compact = day.replace("-", "")
+rec = {"protocol": "P003_DE_CHAIN_LAUNCH_PROVENANCE_V2", "day": day,
        "launcher_path": str(f),
        "launcher_sha256": hashlib.sha256(f.read_bytes()).hexdigest(),
-       "launcher_mtime_utc": datetime.datetime.utcfromtimestamp(
-           f.stat().st_mtime).isoformat() + "Z",
+       "launcher_mtime_utc": datetime.datetime.fromtimestamp(
+           f.stat().st_mtime, datetime.timezone.utc).isoformat(),
        "tree_head": head,
        "data_root": "/home/yuqing/ctaNew/data",
        "oracle": "READ ONCE BY THE RUN (DE 303); no snapshot root",
        "asof_raw_listing": str(Path(
            "/home/yuqing/ctaNew/data/pm_5min/derived/fwd_v2",
-           f"p003_de_asof_raw_{day.replace('-', '')}.json")),
+           f"p003_de_asof_raw_{compact}.json")),
        "growing_input_digests": _growing_digests(),
        "at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat()}
 out = Path("/home/yuqing/ctaNew/data/pm_5min/derived/fwd_v2")
 out.mkdir(parents=True, exist_ok=True)
-(out / f"p003_de_chain_launch_{day.replace('-', '')}.json").write_text(
+(out / f"p003_de_chain_launch_{compact}.json").write_text(
     json.dumps(rec, indent=1))
 print("  launch provenance:", rec["launcher_sha256"][:16], head[:12])
 PYL
