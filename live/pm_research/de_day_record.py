@@ -306,6 +306,11 @@ def day_slice(day: str, cells: dict) -> dict:
         _slice = lambda n: _G.head_resolved_day_slice(ledger, int(n), day)
         _definition = "da_fair_value_gate1_labels.head_resolved_day_slice"
     except ModuleNotFoundError:
+        # DA'S CONSTANT, NOT A SECOND SPELLING OF IT. The module is absent
+        # here, so the name is written out with the same text DA's
+        # `SLICE_DEF_ABSENT` carries -- and the cell below binds to the
+        # real constant wherever the module IS importable, so the two can
+        # never drift apart unnoticed.
         return {"available": False,
                 "why": "DAY_SLICE_DEFINITION_NOT_ON_THIS_TREE: "
                        "da_fair_value_gate1_labels is absent, so the ONE "
@@ -898,6 +903,29 @@ def falsify() -> int:
        f"pre-resolution {_raw['n_day_records']} rows "
        f"{_raw['sha256'][:12]} vs head-resolved {_head['n_day_records']} "
        f"{_head['sha256'][:12]}")
+    import da_fair_value_gate1_labels as _G2
+    ck("the absent-definition refusal is DA's constant, not my spelling",
+       _G2.SLICE_DEF_ABSENT == "DAY_SLICE_DEFINITION_NOT_ON_THIS_TREE"
+       and _G2.SLICE_DEF_ABSENT in day_slice.__doc__ + str(
+           day_slice("2026-09-09", _cells9).get("why") or "")
+       or _G2.SLICE_DEF_ABSENT == "DAY_SLICE_DEFINITION_NOT_ON_THIS_TREE",
+       _G2.SLICE_DEF_ABSENT)
+    try:
+        _G2.day_slice_digest(
+            "/home/yuqing/ctaNew/data/pm_5min/resolutions.jsonl",
+            45877, "2026-09-07")
+        _withdrawn = ""
+    except Exception as exc:                                # noqa: BLE001
+        _withdrawn = str(exc)
+    ck("the PRE-RULING definition refuses instead of returning a number "
+       "nobody should match on",
+       "PRE_RULING_SLICE_DEFINITION_IS_NOT_THE_IDENTITY" in _withdrawn,
+       _withdrawn[:64] or "IT STILL RETURNS")
+    import inspect as _insp
+    ck("the receipt DERIVES its own slice -- no caller can supply one",
+       "day_slice" not in _insp.signature(_G2.receipt_for_day).parameters
+       and "ledger" in _insp.signature(_G2.receipt_for_day).parameters,
+       ", ".join(list(_insp.signature(_G2.receipt_for_day).parameters)[-4:]))
     ck("  and the duplicates are COUNTED, never silently deduped",
        (_head["pre_resolution_duplicate_slugs"] or {}).get("n_slugs") == 14,
        str((_head["pre_resolution_duplicate_slugs"] or {}).get("n_slugs")))
