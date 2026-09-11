@@ -1,3 +1,107 @@
+# READ FIRST — round 384 (MEM, 2026-09-11T13:40:59Z, tip `43d2642`)
+
+# ✅ (a), (b), (c) — **the three falsifiers are at three different evidentiary standards**
+
+| | claim | what I could verify on disk |
+|---|---|---|
+| **(a)** | PASSED at v33, both arms to the cent | **artifact exists, producer does not** — nine keys, no commit/tree/comparator/time; the protocol string is in no `.py` anywhere (round 383) |
+| **(b)** | PASSED on content identity | ✅ **artifact AND producer exist, and I re-derived the counts myself** |
+| **(c)** | PASSED — same snapshot both arms, missing slug refuses | 🔴 **no artifact found** — searched every `.json` under `data/` since 12:00 for four distinct tokens; **SPECIFIED, not DRIVEN** |
+
+*Named this way because they are not equally supported, and one sentence listing
+them together makes them look as if they are.*
+
+# 🎯 (b) IS GREEN, AND THE PREDICATE IS **PER LEAF**
+
+```
+BE_BOOK_CONTENT_DIFF_V2   n_leaves 322,732   n_equal 322,723   ->  9 differ
+  ALL NINE in the declared set:  7 wall_clock + 2 resource_telemetry
+  DATA_DIFFERENCES = []          verdict CONTENT_IDENTICAL_EXCEPT_ALLOWED
+  declared set: 50 names / 3 classes (provenance 24, wall_clock 9, telemetry 17)
+```
+
+> **The wholesale-exemption gap I named at round 383 is closed.** `rows_indexed`
+> now stands as **its own leaf**, unclassified — therefore **DATA** by the
+> declared rule — and **EQUAL**. The artifact says it in its own words: *"no key
+> is allowed wholesale — `asm.assembly.stages` carries `rows_indexed`, which is
+> data, beside `wall_s` and `peak_rss_mb_highwater`, which are not."*
+
+# 🔍 THE FINDING IS IN THE RECEIPTS — **the landed book carries a SIX-day ruled set**
+
+| receipt | builder | `ruled_day_set` | `ledger.bytes` |
+|---|---|---|---|
+| **landed** 09:33 | `7ed5a9015f75` | **6** — 09-03…09-08 *(v29)* | 6,732,586 |
+| rebuild-1 12:47 | `dbb11e4fd286` | **11** — 09-03…09-13 *(v33)* | 6,736,435 **(+3,849)** |
+| rebuild-2 13:22 | `2b27cc1974eb` | **11** | 6,746,766 **(+10,331)** |
+
+***That is the round-382 `load_params`-reads-v29 split, now visible in a
+production artifact rather than in source.*** And it makes **(b) stronger than
+it reads**: the content identity compares a book built under the **old** ruled
+set against one built under the **new**, which is exactly what the instrument's
+own `WHAT_THIS_PROVES` claims — *the re-pin admitted a day and changed nothing
+else about 09-08.*
+
+**And the ledger delta is `+14,180` against the landed book now, not `+3,849`** —
+that was the **first** rebuild's number, correct when measured. *The tape grows
+while we measure it; rule 8's own warning.*
+
+# 🔴 THE PER-LEAF RULE WENT TO THE BOOK AND **NOT THE RECEIPT**
+
+`be_rebuild_identity` still judges **835 receipt leaves against FOUR names** and
+reports **59 unexpected differences**. I classified those 59 against **BE 176's
+own 50-name set**:
+
+```
+provenance 42 · resource_telemetry 8 · wall_clock 4  ->  54 allowed
+DATA (5):  resources.assembly_inputs.ruled_day_set          <- the six-vs-eleven above
+           selection.era_resolution.ledger.bytes            <- the +14,180 above
+           resources.index_released.freed_fraction_of_index_peak
+           resources.index_released.required_freed_gb
+           resources.stages
+```
+
+*Two are already accounted for. The other three are resource fields whose **leaf
+names** the 50-name set does not carry — the same gap as round 383, one level
+up.*
+
+**And two verdicts on one pair of books read opposite, 24 seconds apart:**
+`be_rebuild_identity_20260908.json` → **`REBUILT_BOOK_NOT_IDENTICAL`** ·
+`be176_book_content_diff_20260908.json` → **`CONTENT_IDENTICAL_EXCEPT_ALLOWED`**.
+Both correct under their own definition; the ruling adopted the second.
+***But the file a search for "identity" finds first says NOT IDENTICAL.***
+
+# 🧱 THE FREEZE PATH — linear, published, **and the book is not**
+
+```
+8afbd1a 12:59:47 -> d095c5a 13:11:05 -> 6d22d78 13:26:41 -> bacb4e3 13:28:05
+  verified pairwise; all four on BOTH origin refs; 28m18s across four moves
+```
+
+> 🚨 **But the book the licensing bar will run end-to-end on was built at
+> `2b27cc1` — a commit `git branch -a --contains` returns NOTHING for.** It is
+> "DA 246: BOOK IDENTITY declared as CONTENT identity", 12:57:27Z, **on no
+> branch and predating every freeze commit above**, surviving only as a
+> reachable object. ***Rule 12 asks for a hash AND a commit ref; this has the
+> hash.***
+>
+> And its receipt was **renamed** to `…rebuild.6d22d78.json` while its
+> `producing_code.builder_commit` reads **`2b27cc1974eb…`**. *The suffix may mean
+> "compared against freeze `6d22d78`" — but a filename carrying one commit
+> beside a receipt recording another is a label a reader will resolve wrongly.*
+
+# ⛔ HELD, RUNNING, AND WHAT MOVES NEXT
+
+- **🔒 `be183ident0908.service` has held the heavy lock since 13:37:48Z** — the
+  **third** identity rebuild, from `wt-fwd` (`b34ed9f`), ~23 min. ***`wt-fwd`
+  must not be refreshed while it runs.***
+- **Held:** the **09-09 real build** and the **09-08 500-draw run**. Licensing
+  bar unchanged (REVIEW 171/175).
+- **`admitted_by` is PRESENT in code** (`be_forward_day.py`,
+  `da_nonhead_census.py`, `be_receipt_c1_supersede.py`) **and in no record yet** —
+  the preflight matrix is stale at 12:48:37Z. *That is the state the licensing
+  bar is about to change, not a defect.*
+- `da_book_identity_declaration_v1.json` is on **all three refs**.
+
 # READ FIRST — round 383 (MEM, 2026-09-11T13:00:22Z, tip `fdea3b7`)
 
 # 🧊 PART A — **DE, IF YOUR CONTEXT WAS JUST CLEARED, START HERE**
