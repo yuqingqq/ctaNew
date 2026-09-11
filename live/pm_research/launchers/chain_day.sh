@@ -15,6 +15,24 @@ CERT=$D/be_score_neutrality_20260903__EV22_vs_NEUTCHK__68e7d23.json
 # this tree's HEAD off the literal pin -- which is what refused the first
 # 09-09/09-10 arming. Same rule the driver already uses: a DESCENDANT is
 # admissible ONLY when every computing module is byte-identical to the pin.
+# LAUNCHER_BYTES_NOT_COMMITTED: the launcher digests ITSELF and refuses
+# unless those exact bytes exist as a blob reachable from an origin ref.
+# A launcher whose bytes are in no commit cannot be reproduced from the
+# tree, and the receipts it produces cannot be traced.
+SELF_PATH="${BASH_SOURCE[0]}"
+SELF_SHA=$(sha256sum "$SELF_PATH" | cut -d" " -f1)
+FOUND=""
+for ref in $(git -C "$TREE" for-each-ref --format="%(refname)" refs/remotes/origin 2>/dev/null); do
+  b=$(git -C "$TREE" rev-parse "$ref:live/pm_research/launchers/chain_day.sh" 2>/dev/null) || continue
+  s=$(git -C "$TREE" cat-file blob "$b" 2>/dev/null | sha256sum | cut -d" " -f1)
+  [ "$s" = "$SELF_SHA" ] && { FOUND="$ref"; break; }
+done
+if [ -z "$FOUND" ]; then
+  echo "REFUSED LAUNCHER_BYTES_NOT_COMMITTED: ${SELF_SHA:0:16} is in no blob"\
+       "on any origin ref; this launcher cannot be reproduced from the tree"
+  exit 10
+fi
+echo "$(date -u +%H:%M:%SZ) launcher ${SELF_SHA:0:16} found on $FOUND"
 H=$(git -C "$TREE" rev-parse HEAD)
 if [ "$H" != "$PIN" ]; then
   git -C "$TREE" merge-base --is-ancestor "$PIN" "$H" || {
@@ -93,29 +111,55 @@ import hashlib, json, os, sys, datetime
 from pathlib import Path
 
 
-def _root():
-    return Path(os.environ["PM_DATA_ROOT"], "data", "pm_5min")
+def _walk_snapshot():
+    """STAT EVERY PATH under the snapshot root -- never a literal list.
+
+    The record previously enumerated one directory and reported five
+    copies where seven exist. What a file IS on disk is the property; a
+    list written beside the code that makes the copies drifts from it.
+    """
+    root = Path(os.environ["PM_DATA_ROOT"])
+    frozen, linked = {}, {}
+    for f in sorted(root.rglob("*")):
+        rel = str(f.relative_to(root))
+        if f.is_symlink():
+            linked[rel] = os.readlink(f)
+        elif f.is_file():
+            frozen[rel] = hashlib.sha256(f.read_bytes()).hexdigest()
+    return frozen, linked
 
 
 def _digests():
-    return {f.name: hashlib.sha256(f.read_bytes()).hexdigest()
-            for f in sorted(_root().iterdir())
-            if f.is_file() and not f.is_symlink()}
+    return _walk_snapshot()[0]
 
 
 def _symlinks():
-    return {f.name: str(f.resolve()) for f in sorted(_root().iterdir())
-            if f.is_symlink()}
+    return _walk_snapshot()[1]
 
 
-def _environ_of_unit():
-    """Read PM_DATA_ROOT back from the PROCESS, not from this shell."""
+def _environ_of_unit(unit=None):
+    """PM_DATA_ROOT as the VALUATION UNIT actually has it.
+
+    The previous version read /proc/$PPID/environ -- the launcher shell,
+    which a bash `export` never rewrites -- so the field was inert and read
+    None. Until the unit exists there is nothing to read, and the record
+    says NOT_LAUNCHED_YET rather than None: absence must not look like a
+    measurement.
+    """
+    import subprocess
+    if not unit:
+        return "NOT_LAUNCHED_YET"
+    pid = subprocess.run(["systemctl", "--user", "show", unit,
+                          "-p", "MainPID", "--value"],
+                         capture_output=True, text=True).stdout.strip()
+    if not pid or pid == "0":
+        return "NOT_LAUNCHED_YET"
     try:
-        raw = Path(f"/proc/{os.getppid()}/environ").read_bytes().decode()
+        raw = Path(f"/proc/{pid}/environ").read_bytes().decode()
         return dict(kv.split("=", 1) for kv in raw.split("\x00")
-                    if "=" in kv).get("PM_DATA_ROOT")
+                    if "=" in kv).get("PM_DATA_ROOT", "ABSENT_IN_UNIT")
     except OSError:
-        return None
+        return "NOT_LAUNCHED_YET"
 day, self_path, head = sys.argv[1], sys.argv[2], sys.argv[3]
 f = Path(self_path)
 rec = {"protocol": "P003_DE_CHAIN_LAUNCH_PROVENANCE_V1", "day": day,
@@ -125,7 +169,8 @@ rec = {"protocol": "P003_DE_CHAIN_LAUNCH_PROVENANCE_V1", "day": day,
            f.stat().st_mtime).isoformat() + "Z",
        "tree_head": head,
        "oracle_snapshot_root": os.environ.get("PM_DATA_ROOT"),
-       "pm_data_root_from_unit_environ": _environ_of_unit(),
+       "pm_data_root_from_unit_environ": _environ_of_unit(
+           sys.argv[4] if len(sys.argv) > 4 else None),
        "frozen_inputs": _digests(),
        "symlinked_inputs": _symlinks(),
        "oracle_snapshot_root": __import__("os").environ.get("PM_DATA_ROOT"),
