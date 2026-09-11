@@ -23366,3 +23366,25 @@ generation and the window went 4 → 3. Nothing rewritten.
   NOT_ESTABLISHED_AT_THIS_POWER sentence survives BY DE'S CARE, NOT BY CONSTRUCTION.
   tip 3a7756a)
 ```
+
+## Batch 343 (rotated by MEM round 361, 2026-09-11T06:46:35Z)
+
+```
+  2026-09-11T03:58:01Z (MEM ROUND 358 -- A NEAR-MISS PREVENTED BY LUCK, AND THE GUARD-SHAPED HOLE IS
+  NOW THE NIGHT'S DOMINANT FINDING. DE's valuation unit was pointed at a tree that is NOT
+  the ruled commit and exited 75/TEMPFAIL ON THE LOCK; had the lock been free, DAY ONE'S
+  HEADLINE NUMBER WOULD HAVE COME FROM THE WRONG CODE and nothing would have caught it --
+  the BOOK verifies fine because the book IS correct, it is THE INSTRUMENT READING IT that
+  would have been wrong. THE LOCK PREVENTED THIS, NOT ANY GUARD: luck, not design. AND IT
+  WAS NOT ARMED -- no waiter existed, the unit sat failed, and the turn ended with the
+  intention, which is rule 37 RECURRING IN THE SAME SESSION THAT WROTE IT. RULE 42 EARNED
+  ITSELF AGAIN IN MY HANDS: deFV0907 now returns LoadState=not-found beside Result=success
+  and ExecMainStatus=0 -- the exact dead/success signature I demonstrated with an INVENTED
+  unit name at round 351 -- so WITHOUT LoadState I WOULD HAVE REPORTED 'success' FOR THE
+  UNIT WHOSE FAILURE IS THIS ROUND'S SUBJECT. I ENUMERATED EVERY WORKTREE: EXACTLY TWO OF
+  FORTY-EIGHT ARE AT THE RULED COMMIT (wt-deval and wt-fwd), so FORTY-SIX TREES WOULD
+  PRODUCE A WRONG-CODE RUN IF A UNIT WERE POINTED AT THEM, AND NOTHING ASKS. Requirement:
+  EVERY heavy unit, valuations and analysis too, asserts its tree's HEAD against the
+  declared commit and REFUSES -- and reads the run record's worktree/tip, NEVER ExecStart.
+  NOTHING RAN FROM A WRONG TREE; NO ARTIFACT IS CONTAMINATED. tip 8828194)
+```

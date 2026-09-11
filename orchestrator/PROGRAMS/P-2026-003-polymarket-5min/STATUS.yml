@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T06:46:35Z (MEM ROUND 361 -- V2 IS NOT NEUTRAL BY CONSTRUCTION AND THE FORK IS A STANDING
+  HAZARD. The user's da00220 derives the null SEED from the book digest plus the arm and
+  REFUSES a supplied seed, while day one ran seed 20260907 for both arms -- so V2 DRAWS A
+  DIFFERENT SAMPLE A PRIORI and p cannot match. ONE SECOND OF READING AGAINST A 77-MINUTE
+  RE-RUN. A separate change -- REFERENCE_FILLS replacing replay(0.5), plus a
+  NO_FILLS_UNTIL_NEXT_GENERATION leg -- CAN move observed_D and is being measured alone.
+  ONLY THE RUN MODULE WENT V2; the evaluator has ZERO V2 markers. AND THE PENDING QUESTION
+  INVERTS WHICH VERSION IS THE DEVIATION: if V1's replay(0.5) is not the declared
+  REFERENCE_FILLS primary, DAY ONE WAS VALUED AGAINST AN UNDECLARED ZERO and V2 is the
+  FIRST valuation matching the declaration. THE FORK: 18 local-only against 11 origin-only
+  from 651a7b5, and THE TWINS ARE NOT REBASED COPIES -- DA 224's two copies differ by 18
+  files and 3,400 deletions, which I diffed. Every seat worktree is off the local side and
+  the pin PREDATES the fork, so nothing computed is affected. AND I CORRECT MY ROUND-359
+  ATTRIBUTION: I identified 'origin's BE 133' BY SUBJECT PREFIX and it is a DIFFERENT
+  COMMIT FROM TWO DAYS EARLIER. The conclusion survives for a better reason -- the commit I
+  amended IS LOCAL-ONLY AND NEVER PUBLISHED. tip 066c800)
   2026-09-11T06:28:34Z (MEM ROUND 360 -- THE CERTIFICATION IS BIT_IDENTICAL AND MY DAY-ONE FRAMING WAS
   WRONG IN BOTH DIRECTIONS. 232,307 generations per arm, delta_max 0.0, ZERO FLIPS -- so the
   'scoring bytes the screen never ran on' limit I have carried since round 353 COLLAPSES,
@@ -98,23 +114,6 @@ updated: >-
   GUARD -- absence is a known unknown, a bypassed check is a FALSE KNOWN. 09-12 collision
   measured: 3.41 + 12 = 15.41 GiB against 14, A KILL NOT A SLOWDOWN. Register at 38 per
   cent read-after-filing, A LOWER BOUND. tip 0c1f136)
-  2026-09-11T03:58:01Z (MEM ROUND 358 -- A NEAR-MISS PREVENTED BY LUCK, AND THE GUARD-SHAPED HOLE IS
-  NOW THE NIGHT'S DOMINANT FINDING. DE's valuation unit was pointed at a tree that is NOT
-  the ruled commit and exited 75/TEMPFAIL ON THE LOCK; had the lock been free, DAY ONE'S
-  HEADLINE NUMBER WOULD HAVE COME FROM THE WRONG CODE and nothing would have caught it --
-  the BOOK verifies fine because the book IS correct, it is THE INSTRUMENT READING IT that
-  would have been wrong. THE LOCK PREVENTED THIS, NOT ANY GUARD: luck, not design. AND IT
-  WAS NOT ARMED -- no waiter existed, the unit sat failed, and the turn ended with the
-  intention, which is rule 37 RECURRING IN THE SAME SESSION THAT WROTE IT. RULE 42 EARNED
-  ITSELF AGAIN IN MY HANDS: deFV0907 now returns LoadState=not-found beside Result=success
-  and ExecMainStatus=0 -- the exact dead/success signature I demonstrated with an INVENTED
-  unit name at round 351 -- so WITHOUT LoadState I WOULD HAVE REPORTED 'success' FOR THE
-  UNIT WHOSE FAILURE IS THIS ROUND'S SUBJECT. I ENUMERATED EVERY WORKTREE: EXACTLY TWO OF
-  FORTY-EIGHT ARE AT THE RULED COMMIT (wt-deval and wt-fwd), so FORTY-SIX TREES WOULD
-  PRODUCE A WRONG-CODE RUN IF A UNIT WERE POINTED AT THEM, AND NOTHING ASKS. Requirement:
-  EVERY heavy unit, valuations and analysis too, asserts its tree's HEAD against the
-  declared commit and REFUSES -- and reads the run record's worktree/tip, NEVER ExecStart.
-  NOTHING RAN FROM A WRONG TREE; NO ARTIFACT IS CONTAMINATED. tip 8828194)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -286,6 +285,19 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 361, V2 is not neutral, and the fork ---
+  V2_IS_NOT_NEUTRAL_BY_CONSTRUCTION_AND_IT_TOOK_ONE_SECOND_TO_ESTABLISH: "DE 244. The user's da00220 derives the null SEED from the book digest plus the arm -- seed_for(book, CONDVALUE) = 4162987544, HAZARD = 2512598222 -- and REFUSES a supplied seed, while day one ran seed 20260907 for BOTH arms. So V2 DRAWS A DIFFERENT 500-DRAW SAMPLE A PRIORI: p, n_beyond and the null min, mean and max CANNOT MATCH. That is a one-second reading of the code against a 77-minute re-run, and it is the difference between asking whether two things agree and asking whether they COULD."
+  AND_A_SEPARATE_CHANGE_CAN_MOVE_OBSERVED_D_WHICH_IS_BEING_MEASURED_ALONE: "V2 also replaces the bare mod.replay(..., 0.5) baseline with replay_with_fill_model(..., 'REFERENCE_FILLS') and adds a NO_FILLS_UNTIL_NEXT_GENERATION leg with sign_reversal. I read those at de_settlement_control_run.py: replay_with_fill_model at :297 branching on REFERENCE_FILLS at :300, the robustness label at :323 and primary_label REFERENCE_FILLS at :327. THAT CAN MOVE observed_D, so DE is measuring it ON THE BASELINE REPLAY ALONE -- separating the change that cannot match from the change that might."
+  AND_ONLY_THE_RUN_MODULE_WENT_V2_WHILE_THE_EVALUATOR_IS_STILL_V1: "I checked: de_forward_evaluator.py contains ZERO V2 markers. So the protocol change is confined to de_settlement_control_run.py and the evaluator that consumes its output has not moved. A half-migrated pair is the configuration most likely to produce a result that looks coherent and is not, because each half is internally consistent."
+  AND_THE_PENDING_QUESTION_INVERTS_WHICH_VERSION_IS_THE_DEVIATION: "DA 225: the declaration names REFERENCE_FILLS as the FIXED PRIMARY replay assumption. IF V1'S replay(0.5) IS NOT THAT, then day one was valued AGAINST AN UNDECLARED ZERO and V2 IS THE FIRST VALUATION MATCHING THE DECLARATION -- not a mid-population change. The whole framing of this round turns on that one comparison, and it is the right thing to settle before anything is pooled. MIXING V1 DAYS WITH V2 DAYS IS THE ONE UNPOOLABLE OPTION; the user's call once both measurements land."
+  THE_BRANCH_FORK_IS_A_STANDING_HAZARD_AND_I_MEASURED_IT: "Local mm-research and origin/mm-research diverged at 651a7b5, 2026-09-11 03:58. At this sweep the split reads EIGHTEEN LOCAL-ONLY against ELEVEN ORIGIN-ONLY, both larger than the 16 and 9 the dispatch names because the sides keep growing. THE TWIN COMMITS ARE NOT REBASED COPIES: DA 224 as local 557d485 against origin d9a2c14 differs by 18 FILES, 486 INSERTIONS AND 3,400 DELETIONS, which I diffed. Two commits with one subject and different content is the fork's signature and the reason no automatic reconciliation is safe."
+  AND_EVERY_SEAT_WORKTREE_IS_OFF_THE_LOCAL_SIDE_SO_THE_PINNED_WORK_IS_UNAFFECTED: "I checked each: wt-da, wt-fwd and wt-deval are on the ORIGIN side; wt-be and wt-de sit on their own heads; NONE OF THE FIVE CONTAINS da00220. And wt-fwd and wt-deval are both at 7ed5a90, which at 03:07 PREDATES THE 03:58 FORK -- so the pin, the builds and the pinned valuation are unaffected by the divergence. The fork is a hazard for PUSHING, not for what has been computed."
+  AND_I_MUST_CORRECT_MY_OWN_ROUND_359_ATTRIBUTION_BECAUSE_I_MATCHED_A_SUBJECT_PREFIX: "At round 359 I reported that my amend rewrote BE 133 and that 'origin's BE 133, 7538c3d, is intact'. 7538c3d IS A DIFFERENT COMMIT: 'BE 133/134: one book carries both valuations', authored 2026-09-09 15:06:39, two days earlier, and it does not descend from the fork point. I FOUND IT BY TAKING THE FIRST COMMIT WHOSE SUBJECT BEGAN WITH 'BE 133'. That is rule 42 in my own hands for the third time -- I matched a LABEL and reported it as the PROPERTY."
+  AND_THE_CONCLUSION_SURVIVES_FOR_A_BETTER_REASON_THAN_THE_ONE_I_GAVE: "The commit I amended, 68479dd, IS LOCAL-ONLY -- git merge-base confirms it is not an ancestor of origin/mm-research and has never been published. So nothing wrong has been pushed, which is what I reported, but the reason is that THE COMMIT IS ON THE USER'S LOCAL SIDE OF THE FORK AND HAS NEVER LEFT IT, not that an origin copy stands correct. A right conclusion reached through a wrong identity is still worth correcting, because the next person to use my reasoning would not be so lucky."
+  NOBODY_RECONCILES_ACROSS_THE_FORK_AND_RULE_45_IS_LANDED: "No rebase, no merge, no force-push across it. DA nearly rewrote THIRTEEN commits that way and filed rule 45, which I found at SEAT_PROTOCOL.md:695: 'git rebase <upstream> is not a private operation in a shared tree.' IT IS THE USER'S TREE. This is the fourth time in four rounds that a seat's instinct to tidy history has been stopped by someone noticing first, and the only one where the stopper was the seat itself."
+  THE_09_07_REBUILD_IS_RUNNING_AND_THE_SUPERSESSION_WAS_DONE_BY_THE_BOOK: "be134frag0907 started 06:36:54, stage population, 287 windows, under the FIXED era. BE superseded the buggy-era fragment per rule 13 rather than deleting it: harmful_exposure_rows_v3_gate1_20260907_btc.json renamed to a superseded_20260911T063523Z copy, 660 MB, DIGESTS RECORDED ON BOTH SIDES, pinned_names() verified untripped, canonical path freed. And the new launch_stage.sh refuses on pin mismatch, dirty tree, builder-digest mismatch or existing output, with BE_WORKTREE exported -- which is the wrong-tree hole from round 358 closed at the launcher."
+  AND_DES_ABSOLUTE_D_FIELD_EMITTED_EMPTY_ON_THE_FIRST_REAL_RESULT: "Computed by hand instead: 11,017.71c and 5,256.18c. THAT IS REV 175'S WARNING MADE CONCRETE -- a required field present BY CARE, NOT BY CONSTRUCTION, failing on the first occasion that mattered. I recorded that warning at round 357 in exactly those terms, four rounds before the field emitted empty. DE is fixing it with a DRIVEN NON-EMPTY CASE, which is the only repair that distinguishes a field that is present from one that is populated."
+  AND_DES_EMIT_FIELDS_MATCH_DAS_INDEPENDENT_DRIVE_EXACTLY: "FUTILE=True, KILLED_BY_NEGATIVE_DAYS, killed_by=['2026-09-07'], best_attainable_p=0.125 for CONDVALUE; HAZARD ALIVE at 0.015625; tolerance at G achieved = -1. Under rule 38's timing clause, which I landed at round 357, this is a convergence I must date rather than assert: the two were produced independently and I do not have their filing order, so I record the agreement WITHOUT claiming it is corroboration. And 0.125 and 0.015625 are the 6-of-7 and 7-of-7 values I enumerated at round 350."
   # --- MEM round 360, bit-identical, corrected, split ---
   THE_CERTIFICATION_CAME_BACK_BIT_IDENTICAL_ON_BOTH_ARMS: "be_score_neutrality_20260903__EV22_vs_NEUTCHK.json, SUPPORTED_ON_THIS_DAY: 232,307 generations per arm, delta_max 0.0, ZERO FLIPS, m_min 1.156e-05 and 1.650e-05. So the limit I have carried since round 353 -- that the forward test runs on SCORING BYTES THE SCREEN NEVER RAN ON -- COLLAPSES. The bytes differ and the decisions do not, measured rather than argued, on the day the comparison was declared against."
   AND_THE_CONSEQUENCE_IS_HANDLED_AS_FIELDS_NOT_AS_A_CLAIM: "With a zero bound the per_book_guard is NON-BINDING, because K times zero is zero -- and that is DRIVEN BOTH WAYS rather than asserted. The narrower hazard stands and is stated: THE BOUND WAS MEASURED ON ONE DAY. A guard that becomes vacuous under a particular measurement is exactly the case that reads as a pass, and naming its vacuity in a field is what stops it being read as coverage."
@@ -27747,6 +27759,79 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 361, 2026-09-11T06:46:35Z ---
+  V2_IS_NOT_NEUTRAL_BY_CONSTRUCTION_AND_IT_TOOK_ONE_SECOND_TO_ESTABLISH:
+    prov: RELAYED
+    from: DE 244 via coordinator MEM 361
+    as_of: 2026-09-11T06:46:35Z
+    said: >-
+      the seed values and the refusal-on-supplied-seed as dispatched; I confirmed the surrounding V2 machinery at the file below.
+  AND_A_SEPARATE_CHANGE_CAN_MOVE_OBSERVED_D_WHICH_IS_BEING_MEASURED_ALONE:
+    prov: CHECKED
+    artifact: live/pm_research/de_settlement_control_run.py
+    as_of: 2026-09-11T06:46:35Z
+    said: >-
+      de_settlement_control_run.py read at lines 297, 300, 323 and 327 for the fill-model replay, the two labels and the primary designation.
+  AND_ONLY_THE_RUN_MODULE_WENT_V2_WHILE_THE_EVALUATOR_IS_STILL_V1:
+    prov: CHECKED
+    artifact: live/pm_research/de_settlement_control_run.py
+    as_of: 2026-09-11T06:46:35Z
+    said: >-
+      grep for V2 protocol markers in de_forward_evaluator.py returning zero, against their presence in de_settlement_control_run.py.
+  AND_THE_PENDING_QUESTION_INVERTS_WHICH_VERSION_IS_THE_DEVIATION:
+    prov: RELAYED
+    from: DA 225 via coordinator MEM 361
+    as_of: 2026-09-11T06:46:35Z
+    said: >-
+      the pending comparison and the unpoolable option as dispatched; the declaration's REFERENCE_FILLS primary is recorded in my files from round 338.
+  THE_BRANCH_FORK_IS_A_STANDING_HAZARD_AND_I_MEASURED_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T06:46:35Z
+    said: >-
+      git merge-base resolved to 651a7b5; rev-list counts of 18 and 11; git diff --stat between the two DA 224 commits giving 18 files, 486 insertions, 3400 deletions.
+  AND_EVERY_SEAT_WORKTREE_IS_OFF_THE_LOCAL_SIDE_SO_THE_PINNED_WORK_IS_UNAFFECTED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T06:46:35Z
+    said: >-
+      each worktree's HEAD resolved and tested for ancestry against origin/mm-research and for containing da00220; wt-fwd and wt-deval confirmed equal to 7ed5a90.
+  AND_I_MUST_CORRECT_MY_OWN_ROUND_359_ATTRIBUTION_BECAUSE_I_MATCHED_A_SUBJECT_PREFIX:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T06:46:35Z
+    said: >-
+      7538c3d read at its object for subject and date; git merge-base --is-ancestor shows it does not descend from the fork point 651a7b5.
+  AND_THE_CONCLUSION_SURVIVES_FOR_A_BETTER_REASON_THAN_THE_ONE_I_GAVE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T06:46:35Z
+    said: >-
+      git merge-base --is-ancestor 68479dd origin/mm-research returns false; the amend's file list shows STATUS.yml alongside three of BE's files.
+  NOBODY_RECONCILES_ACROSS_THE_FORK_AND_RULE_45_IS_LANDED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md
+    as_of: 2026-09-11T06:46:35Z
+    said: >-
+      rule 45 located at SEAT_PROTOCOL.md:695 with its opening clause read verbatim.
+  THE_09_07_REBUILD_IS_RUNNING_AND_THE_SUPERSESSION_WAS_DONE_BY_THE_BOOK:
+    prov: RELAYED
+    from: BE via coordinator MEM 361
+    as_of: 2026-09-11T06:46:35Z
+    said: >-
+      the rebuild's stage and the supersession mechanics as dispatched; the BE_WORKTREE export closes the bypass I read at be_heavy_run.sh:37 at round 359.
+  AND_DES_ABSOLUTE_D_FIELD_EMITTED_EMPTY_ON_THE_FIRST_REAL_RESULT:
+    prov: RELAYED
+    from: DE via coordinator MEM 361
+    as_of: 2026-09-11T06:46:35Z
+    said: >-
+      the empty emit and the hand-computed values as dispatched; REV 175's warning is recorded in my files at round 357.
+  AND_DES_EMIT_FIELDS_MATCH_DAS_INDEPENDENT_DRIVE_EXACTLY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T06:46:35Z
+    said: >-
+      the two p-values match the G=7 tail I computed at round 350: 2*8/128 = 0.125 and 2*1/128 = 0.015625; the filing order of DE's emit and DA's drive is not established here.
   # --- MEM round 360, 2026-09-11T06:28:34Z ---
   THE_CERTIFICATION_CAME_BACK_BIT_IDENTICAL_ON_BOTH_ARMS:
     prov: RELAYED
