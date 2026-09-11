@@ -570,6 +570,15 @@ except where marked USER-ONLY.
     confirmation — the same class as reading an exact reproduction as proof.
     (coordinator, R-883)
 
+    **AND THE TIMING CLAUSE (2026-09-11, DA 221): BEFORE CLAIMING CONVERGENCE,
+    STATE WHEN EACH LEG WAS FIRST FILED.** If one predates the other and the
+    later party had access, it is confirmation of a TRANSCRIPTION, not an
+    independent measurement — and from outside the two are indistinguishable.
+    Differing instruments is NECESSARY AND INSUFFICIENT: two different
+    instruments run a day apart by someone who has read the first result are
+    not two observations. DA proposed this principle and then found it had
+    FILED THE SAME PRINCIPLE 24 HOURS EARLIER (Q-DA-411), which is the
+    defect it describes, committed by its author against itself.
 39. **Do not schedule around maintenance windows — make the run survive them.**
     (USER ruling, 2026-09-10: *"We don't have to set up the fixed time to run
     tasks, just need to proceed the tasks when there is no jobs running."*)
