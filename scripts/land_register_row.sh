@@ -78,6 +78,32 @@ for i in 1 2 3; do
     # only under the lock, only when NO OTHER PATH is dirty; abort on failure. Otherwise the commit is STRANDED and reported.
     OTHER_DIRTY=$(git status --short | grep -v '^??' | grep -v -- " $REG\$" || true)
     [ -z "$OTHER_DIRTY" ] || { echo "STRANDED (report it): origin moved during the landing and another path is dirty -- no rebase over another seat's files (rule 21); the coordinator rebases stranded commits at the first clean-tree moment (R-586)"; echo "$OTHER_DIRTY" | head -3; exit 10; }
+    # DA 226: the comment above ASSERTS "only the commit this script just made" -- nothing CHECKED it.
+    # A rebase replays EVERY unpushed commit on the branch. DA 223 began rewriting 13 belonging to BE, MEM
+    # and DE and stopped on a conflict in another seat's file. REFUSE BY NAME instead of trusting the claim.
+    FOREIGN=$(python3 - "$IDS" "$REMOTE/$BRANCH" <<'PYCHK'
+import re, subprocess, sys
+ids, upstream = sys.argv[1], sys.argv[2]
+seats = sorted(set(re.findall(r'Q-([A-Z]+)-', ids)))
+out = subprocess.run(['git','rev-list',upstream+'..HEAD'],capture_output=True,text=True).stdout.split()
+foreign=[]
+for c in out:
+    subj = subprocess.run(['git','log','-1','--format=%s',c],capture_output=True,text=True).stdout.strip()
+    own = any(subj.startswith(s+' ') or subj.startswith('Q-'+s+'-') or ('('+s+' ') in subj
+              or (s=='REV' and subj.startswith('REVIEW ')) for s in seats)
+    if not own: foreign.append(f"{c[:9]} {subj[:88]}")
+# NAMED LIMIT: every commit here carries the same git author, so seat attribution is by SUBJECT.
+# An unrecognised subject is treated as FOREIGN -- the loud direction, deliberately.
+print("\n".join(foreign))
+PYCHK
+)
+    if [ -n "$FOREIGN" ]; then
+      echo "REFUSED FOREIGN_COMMIT_IN_REBASE_SET: rebasing onto $REMOTE/$BRANCH would replay $(echo "$FOREIGN" | wc -l) commit(s) this seat did not author:"
+      echo "$FOREIGN" | sed 's/^/    /'
+      echo "  The row is COMMITTED and UNPUSHED. Land it the rule-45 way: cherry-pick YOUR OWN commits onto a branch cut"
+      echo "  from $REMOTE/$BRANCH and push that -- never rebase the shared branch to make your own push fast-forward."
+      exit 18
+    fi
     rb=$(git rebase -q "$REMOTE/$BRANCH" 2>&1) || { git rebase --abort 2>/dev/null; echo "STRANDED (report it): rebase onto $REMOTE/$BRANCH failed and was aborted: $rb"; exit 10; }
   fi
   out=$(git push -q "$REMOTE" "HEAD:$BRANCH" 2>&1) && { echo "PUSHED $(git rev-parse --short HEAD)"; exit 0; }
