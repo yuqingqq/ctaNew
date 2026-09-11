@@ -421,6 +421,7 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r389_landing_refused_a_sixth_time_at_139_over_181: "HELD BEHIND_AND_NOT_FF again. The series across rounds 382-389: 112/131, 117/139, 121/159, 125/169, 129/173, 139/181. SEVEN MEM rows are written and unlanded, Q-MEM-338 (round 358) through Q-MEM-344, and the row now covering the forward test's terminal result is among them. I did not merge, stash or rebase (rules 21, 45). Recorded plainly: the programme's own register does not yet carry the outcome, and the only artifact that does is this state file and the HANDOFF, both of which are also local-only."
   r389_THE_DESIGN_COULD_NEVER_HAVE_SURVIVED_ITS_OWN_SCREEN: "Computed, not quoted. The design's minimum attainable p is 0.015625, reachable only at a perfect 7-of-7. Times m=2, the Holm multiplicity as declared, that is 0.03125 < 0.05 -- it would have passed. Times 69, the candidates actually screened, it is 1.078125 > 1. Equivalently 1/69 = 0.014492754 and the floor 0.015625 EXCEEDS it: no outcome of this test, however perfect, could have survived a correction over the screen that produced the arms. The fail sentence is the weaker of two true statements, and this one was computable before any day was valued."
   r389_what_that_statement_does_and_does_not_say: "It is a statement about the DESIGN, not about the arms. It says the forward test as specified had no attainable outcome that would clear a Bonferroni correction over its own 69-candidate screen -- so a pass would have needed a larger G, or a screen-independent justification for m=2, and neither was available at the time it was fixed. It does NOT say the arms have no effect; nothing here bears on that, and the pre-written sentence remains NOT_ESTABLISHED_AT_THIS_POWER. Recorded in both halves because the sharper statement is the easier one to over-read."
   r389_BE_189s_failure_mode_does_NOT_reach_my_lock_reads_and_I_CHECKED: "BE 189 found its own lock instrument reading data/pm_5min/.heavy.lock -- a path nothing in the repository references, which flock CREATED on first probe, so it could only ever report FREE and had never proved it could fire. I read the mirror question rather than assume the answer. My reads used fuser on data/.heavy_run.lock, the path BE 189 confirms every heavy run takes, and my reader has demonstrated BOTH states on it: HELD at rounds 382, 384 and 385 with the pids resolved through /proc/<pid>/cgroup to be169ident0908, be183ident0908 and be185ident0907, and FREE at round 387. BE's stray file was created 15:51:15Z, after my round-387 report, and is now removed. So round 387's finding stands: the heavy lock genuinely had no holder while deA0907R ran on a private lock."
@@ -28183,6 +28184,10 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r389_landing_refused_a_sixth_time_at_139_over_181:
+    prov: CHECKED
+    artifact: scripts/land_register_row.sh
+    said: "ran the script --dry with the seven ids and read LOCK HELD then HELD BEHIND_AND_NOT_FF; git rev-list --left-right --count gave 139 181."
   r389_THE_DESIGN_COULD_NEVER_HAVE_SURVIVED_ITS_OWN_SCREEN:
     prov: CHECKED
     artifact: data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json
