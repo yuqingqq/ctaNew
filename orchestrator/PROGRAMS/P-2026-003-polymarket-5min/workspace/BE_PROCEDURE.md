@@ -724,3 +724,112 @@ file before committing it, and if it carries someone else's work, LAND IT AND
 SAY SO IN THE MESSAGE** — naming what is not mine and that I have not reviewed
 it. Leaving it uncommitted is worse: R-857 lost four of DA's files exactly
 that way, and an uncommitted edit is recoverable from nothing.
+
+---
+
+## 9. BE 133–136 (2026-09-11) — rebuilding a day, and what a day actually costs
+
+### 9a. A DAY IS FOUR STAGES, NOT ONE
+
+`be_gate1_fragment --day` → `be_gate1_state_tape --day` → `be_daybook_build
+--day` → DE's valuation. The tape **refuses** without a fragment (*"the tape
+is built FROM it; building a tape without one would be a tape about a
+different population"*), and the book refuses without a tape. Measured, at
+L=250:
+
+| stage | wall | in-process peak |
+|---|---|---|
+| fragment | ~665 s (11 min) | 2.07–2.09 GB |
+| tape | 755–1,528 s (13–25 min) | **4.74–4.75 GB, FLAT on every day** |
+| book | ~1,300–1,600 s (22–27 min) | 4.3–6.3 GB |
+| (DE) valuation | ~77 min | 3.41 GiB |
+
+**The tape's peak does not scale with the day** — five days all sit at 4.74.
+Wall does. And 4.75 + a ~12 GB pipeline catch-up = 16.75 GB against a 14 GB
+slice cap, so **a tape cannot share the slice with a catch-up run** — the same
+conclusion DE reached for the valuation.
+
+**Nothing schedules the fragment or the tape.** No timer produces them; the
+ones through 09-07 were built by hand, and the apparent nightly cadence was
+just prior work that stopped when that work stopped. Check
+`ls data/pm_5min/derived/phase2_state_tape_gate1_*` before promising a book.
+
+### 9b. REBUILDING A DAY: THE BOOK HAS A REVISION, THE OTHER TWO DO NOT
+
+`artifact_paths(day, coin, L, revision)` gives the book `__FWD2` and
+`assert_artifacts_absent` keeps FWD1 as provenance. **The fragment and tape
+have no revision parameter**, and both `guard_output`s refuse an existing
+path — the fragment's message names the intended action: *"Move or delete it
+deliberately."* So: **move, never delete**, digest both sides, and write a
+supersession record. Never patch the builders to add a revision — they are
+pinned for the forward test and changing their bytes is worse than the
+problem.
+
+### 9c. `be_gate1_fragment` OVERWRITES ITS OWN RECEIPT — AND THE FILE IS UNTRACKED
+
+`be_gate1_state_tape.main` versions its receipt to `.v<N>.json` and carries
+the comment *"A LANDED RECEIPT IS NEVER OVERWRITTEN (rule 13)"*.
+`be_gate1_fragment.main` does a plain `dst.write_text(...)` at a fixed path.
+**The tape builder was fixed for exactly this defect and the fragment builder
+was not.** Rebuilding 09-07 destroyed its fragment receipt, and
+`git ls-files --error-unmatch` says the file was never tracked, so there is no
+history to recover it from either. **Before rebuilding any day, copy the
+fragment receipt aside by hand.** The fragment itself is safe — only the
+receipt is lost, and the population can be re-derived from the moved bytes.
+
+### 9d. `[train] DONE {'slugs': 0}` IS SCOPE, AND ITS OPPOSITE IS THE DEFECT
+
+`build_state_tape_v2` maps `(("train", FRAG), ("score", TOP))` and a Gate-1
+tape has ONE population, so one split has no input **by construction**. The
+day fragment goes in the **topup** slot, so its split is **score** — because
+*"nothing is trained on a ruled forward day; labelling it `train` would report
+it as a day the heads were fitted on, which is the look-ahead-shaped
+misreport."* So a **non-zero train count is the alarm**, not the zero. The
+receipt distinguishes it from a silent zero by field, not by prose:
+`inputs.train_split.EMPTY_BY_CONSTRUCTION: true`, with a digest on the
+deliberate 234-byte empty input, beside `score_split."THE_DAY'S_ROWS": true`.
+
+### 9e. `RULED_DAYS` IN `be_gate1_fragment` IS A STALE LITERAL NOBODY ENFORCES
+
+`RULED_DAYS = ("20260901" … "20260905")` appears at its definition and in
+`declaration()` — **and nowhere else**. `build()` does not consult it, which
+is why 09-06 and 09-07 fragments exist. A limit that lives only in a
+declaration does not bind the result (rule 35). Do not read it as a gate.
+
+### 9f. LANDING WHEN LOCAL `mm-research` IS FORKED (rule 45)
+
+`land_register_row.sh` **rebases onto origin** when it finds itself behind, so
+from a forked local branch it replays every local-only commit, not yours.
+Land from a worktree cut from `origin/mm-research` instead. Two mechanics that
+cost me time:
+
+* **`wt/data` is the ledger symlink, so a file under `data/` is THE SAME FILE
+  in every worktree** — `cp` refuses. Stage the blob straight into the
+  worktree's index: `sha=$(git hash-object -w <path>)` then
+  `git -C <wt> update-index --add --cacheinfo <mode>,$sha,<path>`. Preserve the
+  MODE — `be_heavy_run.sh` is `100755` and staging it `100644` silently drops
+  the execute bit.
+* **`update-index` does not write the working tree**, so afterwards the
+  worktree shows those files as modified against its own HEAD. Verify the
+  working copies are the STALE ones, then `git checkout --` them *in the
+  worktree* to resync.
+
+Verify a landing at ORIGIN after a fetch — `git cat-file -e
+origin/mm-research:<path>` — never at the local sha you remember.
+
+### 9g. KILLING A CHAIN DRIVER DOES NOT KILL THE RUN
+
+When the coordinator said "do not auto-chain the book", I stopped the
+background driver mid-wait; the tape unit stayed `loaded/active/running` and
+finished normally. That is R-628's property observed rather than argued: the
+payload is the *manager's* child, not the launcher's. **So a chain is always
+interruptible** — never hesitate to stop a driver to yield the lock.
+
+### 9h. A STALE READ ACROSS A MOVING HEAD LOOKS EXACTLY LIKE A REVERT
+
+I inferred that my own landed change had been reverted, from a digest
+comparison taken while another seat was committing in the shared tree between
+my two reads. It had not. **On this box HEAD moves under you constantly**:
+re-read both sides in the SAME command before concluding anything about what
+happened to a file, and grep the CONTENT MARKER rather than comparing digests
+you gathered a minute apart.
