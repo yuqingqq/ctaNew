@@ -1,0 +1,54 @@
+{
+ "protocol": "P003_DA_FORWARD_TEST_V8",
+ "version": 8,
+ "STATUS": "DAY-ONE VALUED, SUPERSEDED IN BAND, AND MISSING ITS DECLARED ROBUSTNESS LEG",
+ "declared_by": "DA 225",
+ "declared_at_utc": "2026-09-11T06:37:17Z",
+ "supersedes": {
+  "file": "declarations/da_forward_test_declaration_v7.json",
+  "commit": "d9a2c14",
+  "v1_through_v7_are_UNEDITED": true,
+  "scope": "RULING 2's framing only, replaced by a measured answer. No bar, population, threshold or theta changes."
+ },
+ "THE_QUESTION": "Does V1 -- the protocol that valued day one -- implement the declared PRIMARY replay assumption?",
+ "THE_ANSWER": "YES. Day one was NOT valued against an undeclared zero point.",
+ "a_WHAT_THE_0_5_ACTUALLY_IS": {
+  "it_is_a_THETA_not_a_fill_probability_and_not_a_mid": true,
+  "the_signature": "be_cancel_axis_null.replay(bk, scores, theta) -- the 0.5 binds to `theta`, the same parameter the ARM call fills with its frozen theta",
+  "why_0_5_specifically": "`flagged_stream(rows, [])` assigns score 1.0 to FLAGGED indices and 0.0 to the rest. With an EMPTY flag list every score is 0.0, so nothing reaches 0.5 and NOTHING CANCELS. Any theta in (0,1] would do; 0.5 is an arbitrary point inside that interval. THE BASELINE IS A GENUINE ZERO-MODEL-CANCEL PATH.",
+  "and_the_FILL_assumption_which_is_what_the_declaration_is_about": "bare `replay` takes fills from `de_phase4_diag_runner.received_fills(res, bk['ref'], _decision_times(scores))` -- FILLS OFF THE REFERENCE PATH. That IS `REFERENCE_FILLS`."
+ },
+ "b_ESTABLISHED_BY_IDENTITY_RATHER_THAN_BY_ARGUMENT": {
+  "THE_USERS_OWN_V2_CODE_SETTLES_IT": "`replay_with_fill_model(module, book, scores, theta, fill_model)` opens with: `if fill_model == 'REFERENCE_FILLS': return module.replay(book, scores, theta)`. REFERENCE_FILLS IS A PASS-THROUGH TO THE EXACT CALL V1 MAKES.",
+  "line_for_line": {
+   "V1_baseline": "mod.replay(bk, mod.flagged_stream(bk['rows'], []), 0.5)",
+   "V2_baseline": "replay_with_fill_model(module, book, flagged_stream(book['rows'], []), 0.5, 'REFERENCE_FILLS') -> the same call",
+   "V1_arm": "mod.replay(bk, rows, theta)",
+   "V2_arm": "replay_with_fill_model(module, book, rows, theta, 'REFERENCE_FILLS') -> the same call"
+  },
+  "CONCLUSION": "V1 and V2 compute the PRIMARY through the same function with the same arguments. V2 does not correct the primary; IT ADDS TWO FURTHER REPLAYS for the robustness leg."
+ },
+ "SO_THE_CONDITIONAL_IN_THE_DISPATCH_DOES_NOT_FIRE": {
+  "not_this": "'day one ran the wrong baseline' -- it did not; the primary matches the declaration",
+  "but_this": "'adopt the user's change?' -- and the thing being adopted is NOT a different primary, it is the DECLARED ROBUSTNESS LEG that V1 never computed",
+  "why_the_distinction_matters": "a re-valuation framed as 'fixing a wrong zero point' would be correcting an error; framed correctly it is ADDING A LEG the declaration always required. The second needs no defence against rule 11 at all, because the primary number does not move."
+ },
+ "THE_REAL_GAP_DAY_ONE_HAS_NO_ROBUSTNESS_LEG": {
+  "the_declaration_since_v2_ee1e85d": "REFERENCE_FILLS is the FIXED primary; NO_FILLS_UNTIL_NEXT_GENERATION is a LABELLED robustness leg; a SIGN REVERSAL BLOCKS PROMOTION rather than inviting a post-result choice",
+  "V1_computes_the_primary_and_NOT_the_leg": true,
+  "AND_MY_OWN_GUARD_ALREADY_REFUSES_THIS": "da_forward_result_guard raises RESULT_DOES_NOT_CARRY_THE_DECLARED_ROBUSTNESS_LEG on an arm without it, and PROMOTION_CLAIMED_DESPITE_ROBUSTNESS_SIGN_REVERSAL on a reversal. Both were driven at Q-DA-421.",
+  "so": "day one as valued is NOT a quotable forward result under the guard the declaration already carries -- INDEPENDENTLY of the era rebuild. Two separate reasons to re-value the same day."
+ },
+ "RULING_2_RESTATED_WITH_A_SHARPER_TEST": {
+  "status": "PENDING MEASUREMENT (DE)",
+  "THE_PREDICTION_THIS_FINDING_LICENSES": "V2's PRIMARY D on 09-07 must be BIT-IDENTICAL to V1's, because it is literally the same call on the same book. This is not a hope; it is a consequence of the pass-through.",
+  "so_the_measurement_is_now_a_FALSIFIER_not_a_comparison": "if the primary D moves AT ALL, the movement did NOT come from the fill model and something else in da00220's +1827/-314 changed the primary path. THAT would be the finding, and it is the case the test should be looking for.",
+  "the_rule_unchanged": {
+   "bit_identical": "V2 adopted for all seven days",
+   "any_movement": "USER DECISION -- no seat chooses the version after seeing which D it produces"
+  },
+  "and_the_robustness_leg_is_adopted_either_way": "the leg is DECLARED, not optional. Whatever is decided about V2's primary, a result without the leg cannot be promoted, because the guard refuses it by name."
+ },
+ "everything_else_in_v7_stands_verbatim": true,
+ "population_unchanged": "N=7, 09-07..09-13"
+}
