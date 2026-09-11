@@ -1,0 +1,947 @@
+{
+ "protocol": "P003_DA_FORWARD_TEST_V15",
+ "version": 15,
+ "STATUS": "DAY ONE SUPERSEDED ON TWO GROUNDS; VALUATION PROTOCOL V2 RULED FOR ALL SEVEN DAYS",
+ "declared_by": "DA 239",
+ "declared_at_utc": "2026-09-11T07:29:49Z",
+ "supersedes": {
+  "file": "declarations/da_forward_test_declaration_v14.json",
+  "commit": "845e2b6",
+  "v1_through_v14_are_UNEDITED": true,
+  "note_on_numbering": "the dispatch said v13; v13 and v14 are both landed, so this supersedes in band as v15 (rule 13)",
+  "scope": "the table's PRODUCER is named, the identity check is reported, and the masks are restated. The tripwire's VALUES still wait for the table."
+ },
+ "RULING_1_VALUATION_PROTOCOL_V2_FOR_ALL_SEVEN_DAYS": {
+  "day_one_is_RE_VALUED": true,
+  "superseded_on_TWO_INDEPENDENT_GROUNDS": [
+   "the era rebuild (BE 133: `fi.ERA` a day-independent literal; 27 of 09-07's 287 windows gap-bearing under the fix)",
+   "the MISSING DECLARED LEG -- V1 computes no NO_FILLS_UNTIL_NEXT_GENERATION, and the guard refuses it by name"
+  ],
+  "either_alone_would_supersede_the_day": true,
+  "what_V2_is_NOT": "a different primary. REFERENCE_FILLS is a pass-through to the identical call V1 makes (v8, DA 225)."
+ },
+ "RULING_2_TWO_PINS_STATED_SEPARATELY": {
+  "BUILD_PIN": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c -- UNCHANGED",
+  "VALUATION_PIN": "da00220",
+  "VERIFIED_BY_ME_NOT_ACCEPTED": {
+   "7ed5a90_is_an_ancestor_of_da00220": true,
+   "build_side_modules_byte_identical_across_the_two": {
+    "be_daybook_build.py": "2d31a80b5ae5c2c6",
+    "be_cancel_axis_null.py": "21f460b1c9d58d37",
+    "be_era_for_day.py": "6b5afd71ad0a54f4",
+    "be_gate1_fragment.py": "d87c820872ec3267",
+    "harmful_stateful_policy.py": "65b9fe29aca85a01",
+    "de_head_scoring.py": "31c368384770351f",
+    "de_phase4_diag_runner.py": "9e2a0977d8dfc3be"
+   },
+   "all_seven_IDENTICAL": true
+  },
+  "WHY_TWO_PINS_IS_NOT_A_PIPELINE_SPLIT": "a split would mean the two halves disagree about the object under test. They do not: every build-side module is BYTE-IDENTICAL at both pins, and the valuation pin is a DESCENDANT of the build pin. V2 changes only what the declaration already required -- it adds the robustness leg and binds the seed. THE BOOK, THE SCORER, THE POLICY AND THE THETAS ARE THE SAME BYTES.",
+  "and_the_8_of_10_cascade_limit_is_UNCHANGED_by_this": "de_head_scoring and de_phase4_diag_runner are identical at both pins, so the pipeline_provenance_limit from v4 carries forward verbatim. Moving the valuation pin does not touch it either way.",
+  "valuation_pin_status": "RULED",
+  "ruled_by": "USER",
+  "freeze_amended_in_band_by": "DE",
+  "reason_on_the_record": "the declaration required the NO_FILLS_UNTIL_NEXT_GENERATION leg since v2 (ee1e85d) and V1 never computed it -- the amendment CLOSES A GAP THE FREEZE ITSELF CONTAINED",
+  "THE_CONDITIONAL_THAT_KEEPS_THIS_RULING_FALSIFIABLE": {
+   "field": "primary_D_must_match_V1_to_the_cent",
+   "RESULT": "MET",
+   "unit_id": "deFMP0907f40",
+   "rc": 0,
+   "V2_loaded": true,
+   "no_v2_import_refused_this_time": true,
+   "artifact": "data/pm_5min/derived/fwd/p003_de_fillmodel_probe_20260907.json",
+   "READ_BY_ME_AT_THE_ARTIFACT_TO_FULL_PRECISION_NOT_TAKEN_FROM_THE_DISPATCH": {
+    "CONDVALUE_X_SKEW": {
+     "arm_total_v1_cents": -15455.4516056,
+     "arm_total_v2_cents": -15455.4516056,
+     "observed_D_v1_cents": -11017.712006000005,
+     "observed_D_v2_cents": -11017.712006000005,
+     "observed_D_MOVED": false
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "arm_total_v1_cents": 818.4372444000091,
+     "arm_total_v2_cents": 818.4372444000091,
+     "observed_D_v1_cents": 5256.176844000004,
+     "observed_D_v2_cents": 5256.176844000004,
+     "observed_D_MOVED": false
+    },
+    "baseline_v1_cents": -4437.739599599995,
+    "baseline_v2_REFERENCE_FILLS_cents": -4437.739599599995,
+    "baseline_delta_cents": 0.0,
+    "baseline_moved": false
+   },
+   "NOT_MERELY_TO_THE_CENT_BUT_TO_THE_LAST_FLOAT_DIGIT": true,
+   "WHAT_THIS_DISCHARGES": "the USER's freeze amendment to da00220 was ruled CONDITIONAL on this. The condition is MET, so the amendment stands and does not return to the user.",
+   "AND_IT_IS_THE_PREDICTION_FROM_v8_HOLDING_NOT_A_SURPRISE": "DA 225 established that V2's REFERENCE_FILLS branch RETURNS module.replay(book, scores, theta) unchanged -- the identical call V1 makes -- and predicted the primary therefore CANNOT move. It did not move, in either arm, in either the arm total or the baseline. A prediction from reading the code, confirmed by running it."
+  },
+  "BRANCHES_CONSIDERED_AND_NOT_TAKEN": {
+   "revert_to_V1_for_all_seven_and_RELAX_the_leg_in_band": {
+    "status": "CONSIDERED AND NOT TAKEN",
+    "THE_ANTI_CONSERVATIVE_NOTE": "this reads as the cautious option -- 'touch nothing frozen' -- and it is the opposite. It WITHDRAWS a declared robustness leg AFTER day one was seen, which weakens the test with data in hand, and it would require deleting RESULT_DOES_NOT_CARRY_THE_DECLARED_ROBUSTNESS_LEG from the guard. Leaving the freeze untouched would have cost more integrity than amending it."
+   },
+   "hold_until_the_fork_is_resolved": {
+    "status": "CONSIDERED AND NOT TAKEN",
+    "cost": "six unbuilt population days wait on a merge question that does not touch the object under test"
+   }
+  },
+  "why_this_was_never_a_seat_decision": "REV 136 \u00a70: da00220 violates the freeze's NO_PARAMETER_OR_MODULE_IS_TUNED_AFTER_THIS_COMMIT=True at the bytes for de_settlement_control_run.py, so adopting V2 is a FREEZE AMENDMENT under rules 12/13. A seat costing the branches is correct; a seat CHOOSING one is not. The USER chose."
+ },
+ "RULING_3_THE_SEED_AND_WHY_THE_V1_NULL_IS_PROVENANCE_NOT_A_COMPARATOR": {
+  "V1_seed": "20260907 -- THE DAY, as an integer, with per-draw rng = Random(seed + i)",
+  "V2_seed": "seed_for(book_sha, arm) = int(sha256(f'{book_sha}|{arm}|P003_GATE1_MULTIDAY')[:8], 16)",
+  "V2_values_at_the_day_one_book": {
+   "CONDVALUE_X_SKEW": 4162987544,
+   "HAZARD_OVER_SKEWED_REF": 2512598222
+  },
+  "SO_THE_RE_VALUED_NULL_IS_A_DIFFERENT_VALID_DRAW_OF_THE_SAME_ESTIMAND": true,
+  "the_V1_null_is_NOT_a_comparator": "comparing the re-valued null to V1's would be comparing two draws, not measuring a change. Only the PRIMARY D is comparable across protocols, and only because it is the same call.",
+  "AND_A_FACT_I_MEASURED_THAT_NOBODY_HAD_STATED": {
+   "BOTH_ARMS_SHARED_V1_SEED_20260907": "verified in both checkpoint HEADERS on disk",
+   "means": "CONDVALUE and HAZARD drew their day-one nulls from the SAME RNG STREAM, Random(20260907 + i). Each arm's own p remains valid -- the null is still a legitimate distribution for that arm -- BUT THE TWO ARMS' NULLS ARE COUPLED, not independent.",
+   "why_it_matters": "anything treating the two arms as independent cells inherits that coupling, which is the same concern `effective_independent_units` exists for. V2 removes it: the seed is ARM-SPECIFIC.",
+   "this_is_a_third_substantive_thing_V2_fixes": "beyond the leg and the book-binding, and it was not in the ruling as sent"
+  }
+ },
+ "RULING_4_DEs_MEASUREMENT_IS_THE_FALSIFIER_OF_RULING_1": {
+  "the_test": "V2's PRIMARY D on 09-07, computed on the SAME book, must equal V1's TO THE CENT",
+  "why_it_must": "REFERENCE_FILLS returns module.replay(book, scores, theta) unchanged -- the same call, same arguments",
+  "if_it_matches": "ruling 1 stands and V2 is adopted for all seven days",
+  "IF_IT_MOVES_AT_ALL": "THE RULING IS VOID AND GOES TO THE USER. A movement cannot have come from the fill model, so it would mean something else in da00220's +1827/-314 changed the primary path -- which is a finding, not a tuning.",
+  "the_comparison_must_be_on_the_SAME_BOOK": "against the pre-rebuild FWD1 book 0815cad74f53f118, not the era-rebuilt one. Comparing V2-on-new-book to V1-on-old-book confounds the protocol with the era fix and tests neither.",
+  "on_absence": "REFUSE",
+  "refusal_name": "PROTOCOL_V2_ADOPTED_WITHOUT_ITS_PRIMARY_D_FALSIFIER"
+ },
+ "THE_RULE_11_TIMELINE_AS_TWO_FIELDS_BECAUSE_ONLY_ONE_HALF_DISCHARGES_IT": {
+  "HALF_THAT_DISCHARGES_RULE_11": {
+   "the_fixs_RULE_predates_the_data": "BE 113 `8df760d` @ 2026-09-09T08:05:57Z",
+   "FWD1_book_built": "2026-09-11T03:33:25Z (43h27m later)",
+   "day_one_valued": "CONDVALUE 04:41:56Z, HAZARD 05:21:21Z (44h36m later)",
+   "so": "the correction's rule AND its direction were fixed long before any forward datum existed; nothing was chosen after seeing"
+  },
+  "HALF_THAT_IS_DISCLOSED_NOT_CLAIMED_AWAY": {
+   "the_KNOWLEDGE_that_the_literal_survived_POSTDATES_day_one": "BE 133 @ 2026-09-11T05:46:46Z",
+   "which_is_AFTER": "~25 minutes after HAZARD was valued, ~65 after CONDVALUE",
+   "stated_plainly": "THE FIX'S RULE PREDATES THE DATA; THE KNOWLEDGE THAT IT HAD NOT TAKEN EFFECT DOES NOT. Only the first discharges rule 11. The second is a post-hoc discovery and is recorded as one."
+  },
+  "what_would_have_made_it_a_rule_11_breach": "choosing WHETHER to rebuild after seeing which way the rebuild moves D -- foreclosed by ruling it before the rebuild runs"
+ },
+ "everything_else_in_v8_v7_stands_verbatim": true,
+ "population_unchanged": "N=7, 09-07..09-13",
+ "RULING_5_THE_PRE_DECLARED_TRIPWIRE_ON_THE_09_07_RE_VALUATION": {
+  "STATUS": "THE 25 PERCENT THRESHOLD IS STRUCK -- IT COULD NOT FIRE",
+  "WHY_STRUCK_AND_IT_IS_MY_OWN_RULE_TURNED_ON_MY_OWN_DECLARATION": "rule 15: a checker that cannot fire is not a control. I typed 0.25*|D| -- bars of 2,754c and 1,314c -- against a physics that REV 139-141 bounds at 18.4c (interval-scoped) to 1,036.5c (window-scoped). THE BAR SAT ABOVE THE ENTIRE RANGE OF THE EFFECT. I pre-registered a number that could never fire, which is the same defect as a guard that is never invoked -- and I filed that defect against other seats twice tonight.",
+  "REVs_arithmetic_cited_as_REVs": "36.2 s at 20:45 ~ 11 generations ~ 38c at 8.2x concentration; the whole 300 s window ~ 92 generations ~ 316c -- an ORDER short of 2,754c. Q-DA-58's fill concentration does not rescue it.",
+  "MY_INDEPENDENT_CONFIRMATION_OF_THE_PREMISE_FROM_A_DIFFERENT_SOURCE": {
+   "what_I_checked": "the concentration the per-window clause depends on, from collector_gaps.jsonl -- era-independent, not REV's source",
+   "measured": "the 20:45 window holds 36.19 s of the day's 145.3 s btc gap time = 24.9 %",
+   "REV_said": "~36.2 s, ~25 %",
+   "agreement": "to the second and the percentage point",
+   "rule_38": "different instruments, same answer -- and my ledger view was in hand before this dispatch"
+  },
+  "THE_REPLACEMENT_REVs_EXACTLY_THREE_PARTS": {
+   "PART_1_UNCONDITIONAL_REPORT": {
+    "always_reported_whatever_the_values": [
+     "DELTA_D per arm",
+     "each window's delta contribution WITH ITS GAP-SECONDS BESIDE IT",
+     "BOTH reference levels printed: 18.4c INTERVAL-SCOPED and 1,036.5c WINDOW-SCOPED"
+    ],
+    "why_both_levels": "the two scopings differ by ~56x and DELTA_D ITSELF DISCRIMINATES -- tens of cents means only the gap seconds changed; thousands means the whole window's replay changed. Printing both turns the result into a measurement of WHICH PHYSICS APPLIES rather than a number needing interpretation.",
+    "on_absence": "REFUSE",
+    "refusal_name": "RE_VALUATION_REPORTED_WITHOUT_ITS_PER_WINDOW_TABLE"
+   },
+   "PART_2_CONCENTRATION_FINDING": {
+    "fires_if": "abs(DELTA_D) > 110 cents AGGREGATE **OR** ANY SINGLE WINDOW'S contribution > 110 cents",
+    "WHY_PER_WINDOW_AND_NOT_ONLY_AGGREGATE": "the largest window holds 25 % of all gap time -- I measured 24.9 % -- so aggregate-only is defeated by offsetting moves: +2,000c at 20:45 and -1,900c elsewhere nets +100c and fires NOTHING, while hiding exactly the concentration the control exists to find.",
+    "meaning_if_it_fires": "a FINDING, not a new D -- the population's gap treatment is the story and it goes to the user"
+   },
+   "PART_3_SIGN_CHANGE_HALT": {
+    "unchanged": true,
+    "fires_if": "the sign of D changes for either arm between day one and the re-valuation",
+    "meaning": "HALT -- the day's direction is not a detail that moves under a data-quality repair"
+   }
+  },
+  "THE_TABLE_MUST_SUM_TO_DELTA_D": {
+   "ROW_COUNT_IS_27_AND_27_OR_28_IS_STRUCK": true,
+   "ESTABLISHED_BY_DRIVE_NOT_BY_ARGUMENT": {
+    "BE_138": "2f8f5d7",
+    "what_was_driven": "the fragment's rows at 15:55 are BYTE-IDENTICAL between the buggy and the fixed era, while at 14:45 and a second gap-seen window they DIFFER",
+    "WHY_THAT_IS_A_RESULT_AND_NOT_A_NULL": "the instrument FIRED where it should -- two windows moved -- and found nothing at 15:55. A null from an instrument that never fired would not be a result (rule 15). THIS one demonstrated it could fire in the same drive.",
+    "so": "DELTA_D cannot take a contribution from a gap the replay never sees, and the 27-row table SUMS TO DELTA_D BY CONSTRUCTION"
+   },
+   "the_requirement_stands": "the per-window contributions must SUM to DELTA_D",
+   "A_RESIDUAL_THAT_LANDS_IN_NO_ROW_IS_STILL_A_FINDING": "now a stronger check, because the row count is no longer in doubt",
+   "on_a_non_zero_residual": "REFUSE",
+   "refusal_name": "PER_WINDOW_TABLE_DOES_NOT_SUM_TO_THE_REPORTED_DELTA_D"
+  },
+  "THE_GAP_SECONDS_COLUMN_IS_PRE_COMMITTED_HERE_SO_IT_CANNOT_BE_CHOSEN_LATER": {
+   "source": "data/pm_5min/collector_gaps.jsonl via pm_tape_density -- era-independent, outcome-blind",
+   "measured_before_the_rebuilt_book_existed": true,
+   "btc_windows_carrying_gap_time": 28,
+   "total_gap_seconds": 145.306,
+   "windows": [
+    {
+     "window_start": 1788813900,
+     "utc": "20:45:00Z",
+     "gap_seconds": 36.187,
+     "n_gap_intervals": 6,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.249,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788792300,
+     "utc": "14:45:00Z",
+     "gap_seconds": 18.608,
+     "n_gap_intervals": 2,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.1281,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788764100,
+     "utc": "06:55:00Z",
+     "gap_seconds": 12.848,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0884,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788753600,
+     "utc": "04:00:00Z",
+     "gap_seconds": 12.755,
+     "n_gap_intervals": 2,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0878,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788755400,
+     "utc": "04:30:00Z",
+     "gap_seconds": 10.512,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0723,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788796800,
+     "utc": "16:00:00Z",
+     "gap_seconds": 9.73,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.067,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788783300,
+     "utc": "12:15:00Z",
+     "gap_seconds": 6.293,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0433,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788759900,
+     "utc": "05:45:00Z",
+     "gap_seconds": 2.891,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0199,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788742800,
+     "utc": "01:00:00Z",
+     "gap_seconds": 2.399,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0165,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788788700,
+     "utc": "13:45:00Z",
+     "gap_seconds": 2.283,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0157,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788804000,
+     "utc": "18:00:00Z",
+     "gap_seconds": 2.22,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0153,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788769500,
+     "utc": "08:25:00Z",
+     "gap_seconds": 2.21,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0152,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788790200,
+     "utc": "14:10:00Z",
+     "gap_seconds": 2.13,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0147,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788810300,
+     "utc": "19:45:00Z",
+     "gap_seconds": 2.113,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0145,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788794100,
+     "utc": "15:15:00Z",
+     "gap_seconds": 1.979,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0136,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788739500,
+     "utc": "00:05:00Z",
+     "gap_seconds": 1.932,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0133,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788742500,
+     "utc": "00:55:00Z",
+     "gap_seconds": 1.922,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0132,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788742200,
+     "utc": "00:50:00Z",
+     "gap_seconds": 1.912,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0132,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788758100,
+     "utc": "05:15:00Z",
+     "gap_seconds": 1.768,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0122,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788803100,
+     "utc": "17:45:00Z",
+     "gap_seconds": 1.71,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0118,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788796500,
+     "utc": "15:55:00Z",
+     "gap_seconds": 1.553,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": false,
+     "share_of_day_gap_time": 0.0107,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "CENSUS_ONLY -- GAP_RECORDED_NOT_SEEN_BY_REPLAY"
+    },
+    {
+     "window_start": 1788753900,
+     "utc": "04:05:00Z",
+     "gap_seconds": 1.507,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0104,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788815400,
+     "utc": "21:10:00Z",
+     "gap_seconds": 1.502,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0103,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788775500,
+     "utc": "10:05:00Z",
+     "gap_seconds": 1.496,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0103,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788806700,
+     "utc": "18:45:00Z",
+     "gap_seconds": 1.442,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0099,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788817200,
+     "utc": "21:40:00Z",
+     "gap_seconds": 1.358,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0093,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788824700,
+     "utc": "23:45:00Z",
+     "gap_seconds": 1.035,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0071,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    },
+    {
+     "window_start": 1788764400,
+     "utc": "07:00:00Z",
+     "gap_seconds": 1.01,
+     "n_gap_intervals": 1,
+     "in_BE_137_list": true,
+     "share_of_day_gap_time": 0.0069,
+     "delta_D_cents": "TO BE FILLED BY THE RE-VALUATION",
+     "role": "TABLE"
+    }
+   ],
+   "table_rows": 27,
+   "census_only_rows": 1,
+   "btc_gap_intervals_on_the_day": 35
+  },
+  "D_day_one_per_arm_FIXED": {
+   "CONDVALUE_X_SKEW": -11017.712006000005,
+   "HAZARD_OVER_SKEWED_REF": 5256.176844000004
+  },
+  "DIRECTION_IS_NOT_BOUNDED": "the gap-bearing windows could hold the arm's best cancels or its worst; D can move UP",
+  "SET_ii_MASK_FLIPS_IS_EMPTY_BY_MEASUREMENT": {
+   "measured_at_DA_231_and_DA_233": "n_masked == 1 and masked_windows == [1788807300]",
+   "and_it_cannot_flip_as_a_PROPERTY": "that window is overlapped by none of the day's 35 btc ledger gaps, so it satisfies 'thin AND NOT gap-overlapped' under any era",
+   "RULE_11_ORDERING_NOTE_INTACT": "the count measurement predates BE 137; the identity recomputation postdates it but reproduces the FROZEN 2026-09-08 artifact, three days before either seat looked -- corroboration, not transcription",
+   "so_any_DELTA_D_is_attributable_to_SET_i_ALONE": true
+  },
+  "THE_CENSUS_IS_NOT_THE_TABLE_AND_THE_UNITS_DIFFER": {
+   "MY_MEASURED_UNITS_STATED_BECAUSE_THE_TWO_SEATS_COUNT_DIFFERENT_OBJECTS": {
+    "btc_gap_INTERVALS_on_09_07": 35,
+    "btc_WINDOWS_carrying_gap_time": 28,
+    "windows_in_the_TABLE": 27,
+    "windows_CENSUS_ONLY": 1,
+    "the_15_55_window_holds_exactly": "1 interval",
+    "and_window_level_counting_hides_interval_level_facts": "20:45 carries SIX intervals, 04:00 and 14:45 carry two each",
+    "SO_AN_INTERVAL_LEVEL_STATUS_CANNOT_BE_READ_OFF_A_WINDOW_LEVEL_TABLE": "which is exactly why the census must be INTERVAL-level. BE's 'two recorded gaps invisible to the replay' is an INTERVAL count; my 28-vs-27 is a WINDOW count. Both are right and they are not the same number."
+   },
+   "THE_NAMED_STATUS": "GAP_RECORDED_NOT_SEEN_BY_REPLAY",
+   "applies_to": [
+    {
+     "window": 1788796500,
+     "utc": "2026-09-07T15:55:00Z-16:00:00Z",
+     "gap_seconds": 1.553,
+     "n_intervals": 1,
+     "in_the_table": false,
+     "reason": "the replay's rows are byte-identical across eras here (BE 138)"
+    }
+   ],
+   "AND_BE_FOUND_THE_GENERAL_CASE_WHICH_IS_A_RULE_4_BREACH": "two recorded gaps on 09-07 are invisible to the replay entirely and were counted NOWHERE -- an exclusion that was not a status. Both take the same status in the census.",
+   "recorded_as_BEs_count_not_mine": "I measured the WINDOW-level difference (exactly one window). BE measured the INTERVAL-level invisibility (two gaps). I have not reconciled the two counts and do not assert they describe the same objects -- one of BE's two may sit inside a window that remains in the 27 via a different interval.",
+   "why_DELTA_D_is_undisturbed": "these gaps hit BOTH eras equally, so they cancel in the difference"
+  },
+  "THE_LIMIT_IS_DECLARED_NOT_FIXED": {
+   "THE_DEFECT": "the replay UNDER-REPRESENTS recorded gaps, because `flow_intensity` attributes gap time by FLOW rather than by WALL-CLOCK",
+   "WHY_IT_IS_NOT_BEING_FIXED_NOW": "`flow_intensity` is in the PINNED BUILD PATH. Changing its bytes mid-population is worse than the defect -- it would move the build pin under six unbuilt days to correct a bias that cancels in every difference we are computing.",
+   "THE_RULING_rule_14": "the gap CENSUS is restated on WALL-CLOCK attribution as a SEPARATE artifact -- metadata only, NO pipeline bytes -- so every recorded gap carries a status. BE is producing it.",
+   "what_this_buys": "rule 4 is satisfied without touching the freeze: nothing is silently dropped, and nothing that runs is changed",
+   "and_what_it_does_NOT_buy": "the forward test still runs on a replay that under-represents gaps. That is a LIMIT on every forward day, not only on 09-07, and it is stated as one rather than repaired mid-population.",
+   "on_absence": "REFUSE",
+   "refusal_name": "RESULT_DOES_NOT_STATE_THE_GAP_ATTRIBUTION_LIMIT"
+  }
+ },
+ "RULING_6_UNIFORM_SCOPE_DECLARED_BEFORE_THE_REBUILD": {
+  "THE_DOOR_DISCLOSED_VERBATIM": "the era fix's RULE predates day one by 44h36m -- but 'the decision to APPLY it to 09-07 was made after seeing -11,018. That's the door. The defence is UNIFORMITY.'",
+  "SO_UNIFORMITY_IS_DECLARED_NOW_NOT_ARGUED_LATER": {
+   "ALL_SEVEN_POPULATION_DAYS_UNDER_THE_FIX": "09-08..09-13 are built fresh under it; 09-07 is rebuilt under it",
+   "NO_DAY_IS_RE_TOUCHED_SELECTIVELY": true,
+   "CONSUMED_DAYS_09_03_TO_09_06_ARE_NOT_REBUILT": "they are not population, and re-touching them re-touches step-2 evidence"
+  },
+  "THE_CONSEQUENCE_STATED_RATHER_THAN_LEFT_TO_BE_FOUND": "the certification day 09-03 is BUGGY-ERA ON BOTH SIDES. That is still a VALID same-bytes comparison -- both sides ran the same era code -- but its OCCUPANCY IS NOT REPRESENTATIVE of fixed-era forward days. BE 132's occupancy instrument is the bridge, and the certification must not be read as evidence about forward-day occupancy.",
+  "on_absence": "REFUSE",
+  "refusal_name": "ERA_FIX_APPLIED_TO_A_SUBSET_OF_THE_POPULATION"
+ },
+ "RULING_7_DAY_ONES_STANDING_IS_PROBABLY_CLEAN_AND_THAT_IS_A_LIMIT_NOT_A_VERDICT": {
+  "the_limit": "the RUNNER's own digest is not in the day-one artifact -- the recorded `be_module` (21f460b1c9d58d37) is BE's cascade entry point, a DIFFERENT module -- and the runner file was rewritten twice after 04:04Z",
+  "so": "day one's producing code cannot be established FROM the artifact; it is inferred from the computing-module provenance block",
+  "closable_only_by": [
+   "DE adding the runner digest AND its import closure (rule 22) to every future result",
+   "whatever REV can reconstruct for day one specifically"
+  ],
+  "and_this_is_the_same_class_as_the_whole_night": "a field that names something adjacent to what a reader will assume it names",
+  "on_absence": "REFUSE",
+  "refusal_name": "RESULT_DOES_NOT_CARRY_ITS_OWN_PRODUCING_CODE_DIGEST"
+ },
+ "WHAT_I_MEASURED_MYSELF_ON_REVS_TWO_ITEMS": {
+  "PIPELINE_MOVED_ANSWERS_DEs_OPEN_QUESTION_AND_THE_ANSWER_IS_BOTH": {
+   "site": "de_forward_value_day.py:39 PIPELINE_MOVED = 'FORWARD_COMPUTING_MODULES_NOT_AT_FROZEN_PIPELINE'; raised at :102",
+   "it_compares_BOTH": [
+    "worktree_head_matches_pipeline_commit -- a TREE LABEL",
+    "every_computing_module_matches_the_pipeline_commit -- MODULE DIGESTS"
+   ],
+   "it_refuses_if_EITHER_fails": true,
+   "SO_IT_WOULD_FIRE_ON_A_VALUATION_RUN_FROM_da00220": "because the label half fails, whatever the digests say",
+   "AND_A_DEFECT_IN_ITS_MESSAGE_THAT_I_FOUND_WHILE_THERE": "the message prints `differing modules are {moved}` where `moved` lists ONLY digest mismatches. A run whose HEAD differs but whose modules are all identical refuses with `differing modules are []` -- a refusal that names an empty cause. That is the label-vs-bytes confusion I have been chasing all night, inside the guard meant to catch it.",
+   "why_REV_could_not_drive_it": "not established by me; I read and did not drive it, and I say so"
+  },
+  "THE_UNNAMED_REFUSALS_ARE_EIGHT_NOT_ONE": {
+   "REV_said": "the arm-freeze-absent path is the only unnamed refusal in the V2 modules",
+   "I_enumerated_BY_THE_OPERATION": "a literal `REFUSED:` with no ALLCAPS token following, across all five V2 modules",
+   "FOUND": 8,
+   "where": {
+    "de_settlement_control_run.py": [
+     306
+    ],
+    "be_score_neutrality.py": [
+     99,
+     105,
+     113,
+     119,
+     124,
+     130,
+     580
+    ]
+   },
+   "NOT_counted_and_why": "`de_settlement_control_aggregate.py:89,93` and `run.py:283` interpolate a NAME variable (`{refusal}`, `{R.LAZY_ONLY_EXEMPTION}`) -- named at runtime, the idiom the refusal-coverage check already recognises; and `be_score_neutrality.py:312` is prose in a docstring.",
+   "the_shape_repeating": "REV said one, the operation found eight -- the third time tonight (Q-DA-397 six->eleven, Q-DA-417 one->five)"
+  },
+  "NAMED_NOT_DRIVEN_LISTED_AS_SUCH_NOT_AS_PASSING": {
+   "REV_drove": "13 of 13 of the user's refusals by name (two first-pass failures were REV's own fixtures)",
+   "NOT_driven": [
+    "PIPELINE_MOVED",
+    "BAD_EXISTING",
+    "OUTPUT_EXISTS (de_forward_value_day)",
+    "plus five requiring a book fixture"
+   ],
+   "status": "NAMED, NOT DRIVEN -- these do not count toward coverage and must not be reported as passing"
+  }
+ },
+ "I_WITHDRAW_MY_OWN_MASK_HYPOTHESIS_IT_IS_MEASURED_FALSE": {
+  "what_I_claimed_at_Q_DA_425_6": "that the mask was built under the buggy era when load_gaps() returned empty for September, so every thin window was vacuously a blackout, and the fix could flip BTC's masked window",
+  "WHY_IT_IS_WRONG": "`pm_tape_density.load_gaps()` TAKES NO ERA PARAMETER AT ALL. It reads data/pm_5min/collector_gaps.jsonl directly and keys on coin/gap_start_ns/gap_end_ns. THE MASK'S GAP SOURCE HAS NO ERA DEPENDENCE AND NEVER DID.",
+  "AND_THE_LEDGER_WAS_NEVER_EMPTY_FOR_09_07": "35 BTC gap rows overlap 2026-09-07, totalling 145.3 s",
+  "so": "the mask was never blind to September gaps; the premise of my concern did not hold",
+  "I_inferred_an_era_dependence_from_the_word_gap_without_checking_the_function_had_one": true,
+  "direction": "a FALSE ALARM -- the loud kind. It reached a dispatch and a ruling, and it is corrected within the hour."
+ },
+ "RULING_8_THE_09_07_MASK_REBUILD_DA_231": {
+  "ordered": "rebuild the 09-07 day-quality mask under the fixed era; publish n_masked BEFORE and AFTER",
+  "DONE_AND_THE_ANSWER_IS_NO_CHANGE": true,
+  "BEFORE_frozen_2026_09_08": {
+   "total": 12,
+   "bnb": 1,
+   "btc": 1,
+   "doge": 1,
+   "eth": 3,
+   "hype": 2,
+   "sol": 3,
+   "xrp": 1
+  },
+  "AFTER_rebuilt_20260911T065820Z": {
+   "total": 12,
+   "bnb": 1,
+   "btc": 1,
+   "doge": 1,
+   "eth": 3,
+   "hype": 2,
+   "sol": 3,
+   "xrp": 1
+  },
+  "IDENTICAL_PER_COIN": true,
+  "btc_detail": {
+   "n_windows": 288,
+   "n_invisible_thin": 1,
+   "status": "CONTENT_LIVE",
+   "L1_severity": 0.00347,
+   "L2_longest_run_windows": 1,
+   "median_bytes": 67800201,
+   "the_one_masked_window": 1788807300,
+   "utc": "2026-09-07T18:55:00Z-19:00:00Z",
+   "is_it_overlapped_by_a_LEDGER_gap": "NO -- checked against all 35 BTC ledger gaps on the day",
+   "so_it_CANNOT_flip": "a window that no gap interval overlaps stays 'thin AND NOT gap-overlapped', which is a blackout"
+  },
+  "outcome_blind": "read only data/pm_5min/raw (via pm_tape_density.scan_day) and data/pm_5min/collector_gaps.jsonl -- both on the DA 215 allowlist. No book, replay, P&L, verdict or arm value was opened.",
+  "remaining_days": "09-08..09-13 as each closes, before that day's valuation -- and on this evidence the expected result is NO CHANGE there too"
+ },
+ "CORRECTING_THE_RECORD_ON_A_MECHANISM_THAT_IS_NOT_MINE_BUT_WOULD_BE_INHERITED": {
+  "MEM_362_5_says": "the rebuilt fragment is 232 KB smaller, 'consistent with gap-bearing windows now excluded'",
+  "THE_MECHANISM_IS_WRONG": "the gaps exclude NOTHING on the day path (be_daybook_build:645-664). A size delta cannot be explained by an exclusion that does not happen.",
+  "what_I_can_say_about_the_size_delta": "NOTHING FROM MY SURFACE -- the only 09-07 fragment artifact I can see is be_gate1_fragment_receipt_20260907_btc.json (12,320 bytes). I did not open a fragment binary and I do not guess.",
+  "so_it_is_recorded_as_UNEXPLAINED": true,
+  "what_would_explain_it": "BE reading the fragment's own per-window row counts before and after; a smaller fragment with the SAME window count is a content change, with FEWER windows it is an exclusion -- and only one of those is consistent with the day path"
+ },
+ "OPEN_NOT_RESOLVED": {
+  "status": "BOTH CLOSED BY BE 137 -- see below",
+  "superseded_by": "THE_TWO_OPEN_ITEMS_ARE_CLOSED"
+ },
+ "THE_TWO_OPEN_ITEMS_ARE_CLOSED": {
+  "THE_288th_WINDOW_IS_MY_MASKED_WINDOW": {
+   "BE_137": "the window absent from the SUPPLIED population (de_admissible_windows.supply -> 287) is 1788807300",
+   "my_288": "expected-AND-covered; BE's 287 is SUPPLIED",
+   "ONE_DENOMINATOR_TWO_CORRECT_NUMBERS": "they differ by EXACTLY the one masked window",
+   "AND_THE_SEATS_AGREE_ON_ITS_IDENTITY_NOT_ONLY_ITS_COUNT": true,
+   "neither_instrument_was_wrong": "the 287-vs-288 gap was a population-name gap, not an error"
+  },
+  "THE_27_ARE_PUBLISHED_BY_ID": {
+   "file": "be137_gap_windows_20260907.json",
+   "commit": "daa60d0",
+   "n": 27,
+   "1788807300_is_among_them": false,
+   "verified_by_me_against_the_published_file": true
+  }
+ },
+ "MY_REBUILD_IS_THE_CONFIRMING_MEASUREMENT_AND_I_MEASURED_IDENTITY_NOT_ONLY_COUNT": {
+  "what_was_asked": "confirm n_masked stays 1 AND masked_windows == [1788807300]",
+  "HOW_I_MEASURED_IT": "re-ran the detector's own predicate over the day's raw tape -- thin = bytes < median x thin_frac, blackout = thin AND NOT gap_overlaps(ledger) -- and took the WINDOW IDS, not just the count",
+  "RESULT": {
+   "btc_windows_scanned": 288,
+   "median_bytes": 67800201,
+   "masked_windows": [
+    1788807300
+   ],
+   "n_masked": 1,
+   "assertion_n_masked_eq_1_and_windows_eq_1788807300": true
+  },
+  "so_set_ii_of_the_tripwire_is_EMPTY_BY_MEASUREMENT_not_only_by_inference": true,
+  "RULE_38_WITH_ITS_TIMING_CLAUSE_APPLIED_TO_MY_OWN_CLAIM": {
+   "BEs_leg": "an INFERENCE from the published ids (1788807300 not among the 27, and not supplied)",
+   "my_leg": "a MEASUREMENT that re-ran the predicate",
+   "the_instruments_differ": true,
+   "AND_THE_TIMING_STATED_AS_THE_CLAUSE_REQUIRES": "my COUNT measurement (12 before / 12 after) ran BEFORE BE 137's ids landed and is independent. My IDENTITY recomputation ran AFTER them, so on its own it would be confirmation-with-access. IT IS NOT, because the identity was already fixed in the FROZEN mask artifact of 2026-09-08 -- masked_windows [1788807300] -- which predates BE 137 by three days. The recomputation reproduces a record that was written long before either seat looked.",
+   "so_this_is_corroboration_and_not_transcription": true
+  }
+ },
+ "A_NEW_SEAM_OPENED_BY_THE_CROSS_CHECK_AND_IT_AFFECTS_THE_TRIPWIRE_TABLE": {
+  "WHAT_I_DID": "intersected BE's 27 published ids with the windows MY gap source says carry a gap -- collector_gaps.jsonl via pm_tape_density.gap_overlaps, an ERA-INDEPENDENT source, against BE's ERA-RESOLVED fragment list. Two different gap sources, same question.",
+  "RESULT": {
+   "windows_carrying_a_gap_per_the_COLLECTOR_LEDGER": 28,
+   "windows_in_BEs_list": 27,
+   "BEs_27_is_a_STRICT_SUBSET_of_my_28": true,
+   "THE_ONE_IN_MINE_AND_NOT_BEs": 1788796500
+  },
+  "THE_MISSING_WINDOW_MEASURED": {
+   "window": 1788796500,
+   "utc": "2026-09-07T15:55:00Z-16:00:00Z",
+   "overlapping_ledger_gap": "15:55:19.259214Z -> 15:55:20.812118Z",
+   "duration_s": 1.553,
+   "overlap_with_the_window_s": 1.553,
+   "it_is_FULLY_INTERIOR_not_a_boundary_artefact": true,
+   "and_it_IS_in_the_supplied_population": "the only unsupplied window is 1788807300",
+   "neighbours_for_contrast": "15:50 has NO ledger gap; 16:00 HAS one and IS in BE's 27"
+  },
+  "WHY_THIS_IS_NOT_A_CLAIM_THAT_BE_IS_WRONG": "the two lists come from DIFFERENT GAP SOURCES -- BE's era-resolved per-slug fragment gaps vs the collector ledger. A gap the collector recorded may legitimately not reach the fragment. I have not established which view governs the replay, and I do not guess.",
+  "WHY_IT_MUST_BE_RESOLVED_BEFORE_THE_TABLE_IS_USED": "if the per-window table enumerates 27 and 28 windows actually changed what the replay sees, then ONE WINDOW'S CONTRIBUTION LANDS IN THE TOTAL AND IN NO ROW -- the table will not sum to DELTA_D, and completeness cannot be checked. That is the exact failure the per-window requirement exists to prevent.",
+  "ROUTED_TO_BE": "does the replay see the 15:55 gap? If yes the table has 28 rows; if no, say why the collector recorded a gap the fragment does not carry."
+ },
+ "RULING_9_DENOMINATORS_RULE_14": {
+  "the_per_window_tripwire_table_uses": "287 -- the SUPPLIED population",
+  "why": "the table is about rows the replay touches, and the masked window has none",
+  "288_appears_as": "the COVERAGE denominator",
+  "and_the_one_masked_window_is_listed_as_a_STATUS_never_silently_dropped": "rule 4",
+  "both_on_the_table_with_their_roles_named": true,
+  "the_status_row": {
+   "window": 1788807300,
+   "utc": "2026-09-07T18:55:00Z-19:00:00Z",
+   "status": "BLACKOUT_MASKED_NOT_SUPPLIED",
+   "rows_contributed": 0,
+   "overlapped_by_a_ledger_gap": false,
+   "so_it_cannot_flip_under_any_era": "it satisfies 'thin AND NOT gap-overlapped' regardless of which era resolves"
+  }
+ },
+ "THE_ROBUSTNESS_LEG_FIRST_VALUES_MEASURED": {
+  "why_this_matters": "day one lacked the leg the declaration has required since v2 (ee1e85d) -- one of the TWO grounds on which it was superseded. The leg now exists, computed on the FROZEN book.",
+  "unit_id": "deFMP0907f40",
+  "label": "NO_FILLS_UNTIL_NEXT_GENERATION",
+  "primary_label": "REFERENCE_FILLS",
+  "CONDVALUE_X_SKEW": {
+   "arm_settled_total_cents": -17897.264859599993,
+   "observed_D_cents": -13459.525259999999,
+   "primary_observed_D_cents": -11017.712006000005,
+   "sign_reversal": false
+  },
+  "HAZARD_OVER_SKEWED_REF": {
+   "arm_settled_total_cents": 1161.1274434000102,
+   "observed_D_cents": 5598.867043000006,
+   "primary_observed_D_cents": 5256.176844000004,
+   "sign_reversal": false
+  },
+  "a_sign_reversal_blocks_promotion": true,
+  "SO_THE_LEG_NEITHER_BLOCKS_HAZARD_NOR_RESCUES_CONDVALUE": true,
+  "A_STRUCTURAL_CHECK_I_MADE_RATHER_THAN_ASSUMED": {
+   "the_legs_baseline": -4437.739599599995,
+   "the_primary_baseline": -4437.739599599995,
+   "BIT_IDENTICAL": true,
+   "and_it_MUST_be_and_here_is_why": "the zero-model-cancel baseline scores every row 0.0 against theta 0.5, so it issues NO CANCELS -- and with no cancels there are NO REPOSTS for a repost fill model to act on. The robust baseline is therefore the SAME replay as the primary baseline by construction.",
+   "what_it_would_have_meant_if_they_DIFFERED": "a repost fill model changing a path that reposts nothing -- which would have been a defect in the leg, not a property of the arms. The check costs one comparison and rules that out."
+  },
+  "arithmetic_verified": {
+   "CONDVALUE": "-17897.264859599993 - (-4437.739599599995) = -13459.525259999998 == reported",
+   "HAZARD": "1161.1274434000102 - (-4437.739599599995) = 5598.867043000005 == reported"
+  }
+ },
+ "WHY_MY_STRUCK_25_PERCENT_BAR_WAS_ANCHORED_TO_THE_WRONG_PHYSICS": {
+  "the_legs_movement_from_the_primary": {
+   "CONDVALUE_cents": -2441.813253999994,
+   "as_fraction_of_abs_D": 0.0652,
+   "HAZARD_cents": 342.690199000002
+  },
+  "THE_OBSERVATION": "my 0.25*|D| bar would have been a PLAUSIBLE threshold for FILL-MODEL sensitivity -- CONDVALUE's leg moves 22.2 % of |D|, just under it. I applied that bar to ERA-GAP sensitivity, which REV bounds at 18.4c-1,036.5c, two orders smaller.",
+  "the_lesson_stated_as_a_mechanism": "I anchored a threshold on the magnitude of a DIFFERENT perturbation of the same quantity. Both are 'how much can D move', and only one of them was the question. A threshold needs the physics of the SPECIFIC perturbation it gates, not a plausible fraction of the headline number.",
+  "and_it_is_the_same_shape_as_the_night_s_other_errors": "a number that is right about one object attached to another"
+ },
+ "A_DANGLING_REFERENCE_IN_MY_OWN_v9_THROUGH_v13_CORRECTED": {
+  "what_I_wrote_five_times": "NO_PARAMETER_OR_MODULE_IS_TUNED_AFTER_THIS_COMMIT (underscores)",
+  "what_de_arm_freeze_v1_ACTUALLY_KEYS": "'NO_PARAMETER_OR_MODULE_IS_TUNED AFTER THIS COMMIT' -- WITH A SPACE before AFTER",
+  "so_a_reader_resolving_my_name_finds_NOTHING": true,
+  "AND_IT_IS_WORSE_THAN_A_SPELLING_SLIP_THE_NAME_IS_ALSO_SUPERSEDED": {
+   "de_arm_freeze_v8_amendment": "AMENDMENT_19 -- THE TUNING CLAIM IS NOW A COMPUTED PREDICATE",
+   "its_own_what_it_replaces_field": "'NO_PARAMETER_OR_MODULE_IS_TUNED_AFTER_THIS_COMMIT, a typed boolean'",
+   "THE_CURRENT_KEY_IS": "NO_MODULE_TUNED_BETWEEN_THESE_COMMITS",
+   "instrument": "de_freeze_predicate.no_module_tuned_between(pin, commit, modules) -- returns the evidence, never a bare boolean",
+   "AND_IT_IS_SCOPED_THREE_WAYS_WHICH_A_SINGLE_BOOLEAN_COULD_NOT_EXPRESS": {
+    "BUILD_SCOPE/NO_MODULE_TUNED_BETWEEN_THESE_COMMITS": true,
+    "VALUATION_SCOPE_AT_THE_AMENDED_PIN/NO_MODULE_TUNED_BETWEEN_THESE_COMMITS": true,
+    "VALUATION_SCOPE_AGAINST_THE_OLD_PIN_THE_PRE_AMENDMENT_STATE/NO_MODULE_TUNED_BETWEEN_THESE_COMMITS": false
+   }
+  },
+  "MY_SUBSTANTIVE_CLAIM_SURVIVES_AND_IS_NOW_COMPUTED_RATHER_THAN_TYPED": "v9 said da00220 VIOLATES the freeze's no-tuning clause at the bytes for de_settlement_control_run.py. Under the computed predicate that is exactly VALUATION_SCOPE_AGAINST_THE_OLD_PIN... = False, with BUILD_SCOPE True and VALUATION_SCOPE_AT_THE_AMENDED_PIN True. The claim was right; only the handle was wrong.",
+  "THE_CORRECTED_REFERENCE_FOR_ANY_READER_OF_v9_THROUGH_v13": "resolve `de_arm_freeze_v8_amendment.AMENDMENT_19_THE_TUNING_CLAIM_IS_NOW_A_COMPUTED_PREDICATE.<scope>.NO_MODULE_TUNED_BETWEEN_THESE_COMMITS`, naming the scope. Do NOT resolve the underscored name; it never existed.",
+  "ROUTED_TO_DE_NOT_REPAIRED_BY_ME": "de_arm_freeze_v8_amendment's own `what_it_replaces` ALSO writes the name with underscores -- the same slip, inside the artifact that supersedes it. That is DE's declaration prose; I am naming it, not editing it.",
+  "rule_16": "match identity, not vocabulary -- and I failed it five times in my own files"
+ },
+ "FIXED_ERA_MASKS_FOR_09_08_09_09_09_10_BUILT_AND_PUBLISHED": {
+  "ruling": "DA 231 -- each population day's mask under the fixed era, before that day's valuation",
+  "producer": "da_blackout_mask.py --day <d> --write (DA-owned)",
+  "artifacts_written": [
+   "data/pm_5min/derived/da_blackout_mask_20260908.json",
+   "data/pm_5min/derived/da_blackout_mask_20260909.json",
+   "data/pm_5min/derived/da_blackout_mask_20260910.json"
+  ],
+  "detector_frozen_and_identical_across_all_three": {
+   "version": "v1_FROZEN",
+   "module_sha256_prefix": "7196676840304f30",
+   "thin_frac": 0.05
+  },
+  "RESULTS": {
+   "20260908": {
+    "total_masked_windows": 0,
+    "total_coverage_absent_windows": 0,
+    "n_coins": 7,
+    "coverage_denominator_windows": 2016,
+    "btc_n_windows_total": 288,
+    "btc_n_masked": 0,
+    "btc_masked_windows": [],
+    "day_closed_calendar": true,
+    "day_status_frozen": "CONTENT_LIVE"
+   },
+   "20260909": {
+    "total_masked_windows": 0,
+    "total_coverage_absent_windows": 0,
+    "n_coins": 7,
+    "coverage_denominator_windows": 2016,
+    "btc_n_windows_total": 288,
+    "btc_n_masked": 0,
+    "btc_masked_windows": [],
+    "day_closed_calendar": true,
+    "day_status_frozen": "CONTENT_LIVE"
+   },
+   "20260910": {
+    "total_masked_windows": 0,
+    "total_coverage_absent_windows": 0,
+    "n_coins": 7,
+    "coverage_denominator_windows": 2016,
+    "btc_n_windows_total": 288,
+    "btc_n_masked": 0,
+    "btc_masked_windows": [],
+    "day_closed_calendar": true,
+    "day_status_frozen": "CONTENT_LIVE"
+   }
+  },
+  "AND_THE_HONEST_READING_OF_A_ZERO": {
+   "n_THIN_is_also_zero_on_all_three_days_for_all_seven_coins": true,
+   "so": "no window was even BELOW the thin threshold, which means the gap-overlap branch never had to discriminate. THE ERA QUESTION CANNOT BIND ON A DAY WITH NO THIN WINDOWS -- these three masks are era-invariant for a reason stronger than 'the gap source has no era'.",
+   "THE_POSITIVE_CONTROL_THAT_MAKES_THIS_A_RESULT_AND_NOT_A_SILENCE": "the SAME code path produced 12 masked windows on 09-07 minutes earlier, and BTC's single window there was reproduced by id. An instrument that never fired would not be a result (rule 15); this one fired on the adjacent day."
+  },
+  "outcome_blind": "read only TD.RAW = data/pm_5min/raw and data/pm_5min/collector_gaps.jsonl -- both on the DA 215 allowlist. NO path under data/pm_5min/tier2/ was opened, for any day.",
+  "remaining": "09-11, 09-12, 09-13 as each closes, before that day's valuation"
+ },
+ "THE_PRODUCER_OF_THE_TABLE_IS_NAMED_WITH_ITS_RULE_11_EVIDENCE": {
+  "module": "live/pm_research/de_revaluation_emit.py",
+  "commit": "af675ac",
+  "committed_at_utc": "2026-09-11T07:25:05Z",
+  "file_sha256_16": "d3ddf0870bc30084",
+  "lines": 227,
+  "produces": [
+   "the 27-row per-window table",
+   "the residual",
+   "CONCENTRATION_FINDING",
+   "SIGN_CHANGE_HALT"
+  ],
+  "WHY_IT_NEEDS_NO_PIN": "it is a POST-PROCESSOR: it reads day one's V1 result, the V2 result from fwd_v2/, and both 09-07 books. IT VALUES NOTHING.",
+  "RULE_11_EVIDENCE_AND_I_READ_BOTH_TIMES_FROM_THE_CLOCK_NOT_FROM_A_REPORT": {
+   "producer_committed": "2026-09-11T07:25:05Z",
+   "the_rebuilt_09_07_book": "DID NOT EXIST at declaration time -- the only 09-07 forward book on disk remained the PRE-rebuild 0815cad74f53f118",
+   "so": "the instrument that decides whether the re-valuation is a finding was fixed BEFORE the data it will judge"
+  }
+ },
+ "THE_IDENTITY_CHECK_DECLARATION_SIDE_STRINGS_COMPARED_NOT_PARAPHRASED": {
+  "method": "AST over af675ac -- every module-level string constant and every literal dict KEY -- compared against the names v12 PROMISES",
+  "MATCHES_BYTE_FOR_BYTE": {
+   "CONCENTRATION_FINDING": "present as an emitted key",
+   "SIGN_CHANGE_HALT": "present as an emitted key",
+   "PER_WINDOW_TABLE_DOES_NOT_SUM_TO_THE_REPORTED_DELTA_D": "== the producer's BAD_SUM constant",
+   "numeric_constants": {
+    "CONCENTRATION_BAR_CENTS": 110.0,
+    "REFERENCE_INTERVAL_SCOPED_CENTS": 18.4,
+    "REFERENCE_WINDOW_SCOPED_CENTS": 1036.5,
+    "all_three_match_v12": true
+   },
+   "table_columns_6_of_8": [
+    "window_start",
+    "utc",
+    "gap_seconds",
+    "n_gap_intervals",
+    "share_of_day_gap_time",
+    "delta_D_cents"
+   ]
+  },
+  "MISMATCH_1_ONE_CONDITION_TWO_NAMES": {
+   "v12_promises": "RE_VALUATION_REPORTED_WITHOUT_ITS_PER_WINDOW_TABLE",
+   "af675ac_raises": "REVALUATION_EMIT_HAS_NO_PER_WINDOW_TABLE",
+   "same_condition_different_strings": true,
+   "consequence": "a reader resolving MY name against the producer finds nothing",
+   "WHICH_SIDE_IS_WRONG": "MINE. The producer's name is the one that will appear in a refusal, and a declaration exists to be resolvable against what runs. I adopt the producer's string.",
+   "ADOPTED": "REVALUATION_EMIT_HAS_NO_PER_WINDOW_TABLE"
+  },
+  "MISMATCH_2_TWO_DECLARED_COLUMNS_THE_PRODUCER_DOES_NOT_EMIT": {
+   "v12_pre_committed_columns_absent_from_af675ac": [
+    "in_BE_137_list",
+    "role"
+   ],
+   "consequence": "the TABLE-vs-CENSUS_ONLY distinction and BE-137 membership will NOT appear on the emitted artifact. The 15:55 census row could not be identified from the emitted table alone.",
+   "WHICH_SIDE_IS_WRONG": "NEITHER, ON THE EVIDENCE -- the emitted table is the 27 TABLE rows, so a `role` column would be constant and `in_BE_137_list` would be uniformly true. They were MY bookkeeping on a 28-row pre-commitment, not a promise about the emitted artifact.",
+   "so_it_is_recorded_as_a_SCOPE_difference_not_a_defect": true,
+   "but_the_census_row_still_needs_a_home": "the 15:55 row belongs to BE's wall-clock census artifact, not to this table"
+  },
+  "MISMATCH_3_AND_4_TWO_NAMES_v12_PROMISES_WITH_NO_PRODUCER_HERE": {
+   "GAP_RECORDED_NOT_SEEN_BY_REPLAY": "a STATUS; its producer is BE's separate wall-clock census, not this emitter",
+   "RESULT_DOES_NOT_STATE_THE_GAP_ATTRIBUTION_LIMIT": "a refusal on the RESULT, not on the table emitter",
+   "NAMED_AS_UNPRODUCED_HERE_RATHER_THAN_ASSUMED_ELSEWHERE": "I am not claiming either is defective -- both plausibly belong to other producers. I am recording that AS OF af675ac NEITHER HAS A REACHABLE RAISE IN THIS MODULE, so nobody should read them as covered by it.",
+   "this_is_the_exact_defect_class_I_filed_at_Q_DA_417": "a declared name whose producer is assumed rather than located"
+  },
+  "WHAT_THE_PRODUCER_HAS_THAT_v12_DID_NOT_NAME_AND_I_ADOPT_AS_A_REFINEMENT": {
+   "THREE_RESIDUAL_BANDS": {
+    "ROUNDING": "abs(residual) < 1e-6 cents -- not a finding",
+    "REPORT": "1e-6 <= abs(residual) < 1.0 cents -- reported, not halting",
+    "HALT": "abs(residual) >= 1.0 cents -- HALT carrying PER_WINDOW_TABLE_DOES_NOT_SUM_TO_THE_REPORTED_DELTA_D"
+   },
+   "constants": {
+    "rounding_below_cents": 1e-06,
+    "halt_at_or_above_cents": 1.0
+   },
+   "WHY_THE_PRODUCER_IS_RIGHT_AND_v12_WAS_UNDER_SPECIFIED": "v12 read the residual as BINARY -- 'a residual that lands in no row is a finding'. Under that reading a 1e-9-cent FLOAT ROUNDING residual would be reported as a finding, which is false and would have cost a round. The three bands are the correct specification and I adopt them.",
+   "REVALUATION_EMIT_CANNOT_READ_A_REQUIRED_INPUT": "a refusal v12 did not name; adopted"
+  },
+  "A_FALSE_ALARM_I_CHECKED_BEFORE_REPORTING": "NO_TABLE is raised at TWO sites, and the second is inside concentration_finding, which looked like a refusal whose name does not describe its raise site. It is raised on `not rows` -- an EMPTY table -- so the name fits exactly. Checked, not filed.",
+  "AND_A_CORROBORATION_THE_SEAM_PRODUCED": "af675ac's refusal text quotes 'the largest window holds 24.9% of the day's gap time' -- MY measurement from the collector ledger, filed at Q-DA-428. The number crossed the seam intact."
+ },
+ "FIXED_ERA_MASK_ADMISSIBILITY_ON_ONE_PAGE": {
+  "20260907": {
+   "total_masked_windows": 12,
+   "btc_n_masked": 1,
+   "btc_masked_windows": [
+    1788807300
+   ],
+   "coverage": "2016/2016"
+  },
+  "20260908": {
+   "total_masked_windows": 0,
+   "btc_n_masked": 0,
+   "btc_masked_windows": [],
+   "coverage": "2016/2016"
+  },
+  "20260909": {
+   "total_masked_windows": 0,
+   "btc_n_masked": 0,
+   "btc_masked_windows": [],
+   "coverage": "2016/2016"
+  },
+  "20260910": {
+   "total_masked_windows": 0,
+   "btc_n_masked": 0,
+   "btc_masked_windows": [],
+   "coverage": "2016/2016"
+  },
+  "detector_identical_across_all_four": {
+   "version": "v1_FROZEN",
+   "module_sha256_prefix": "7196676840304f30",
+   "thin_frac": 0.05
+  },
+  "still_to_come": [
+   "20260911",
+   "20260912",
+   "20260913"
+  ],
+  "note": "09-08/09/10 have n_thin = 0 as well, so the era cannot bind on them; 09-07 is the only population day with any thin window"
+ }
+}
