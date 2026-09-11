@@ -1,3 +1,104 @@
+# READ FIRST — COLD START · **TWO LANES** (MEM 395, 2026-09-11T18:45:28Z, tip `437b1d4`)
+
+> # ⚠️ **Lane 2's activity is NOT the cancellation test reopening.**
+> Lane 1's verdict is **fixed and unrevisable**. The lanes share a programme, a
+> tape and a lock — ***and nothing else.***
+
+---
+
+# LANE 1 · CANCELLATION — **VERDICT FIXED · descriptive days running**
+
+| arm | 09-07 | 09-08 | 09-09 | non-pos | cap | |
+|---|---|---|---|---|---|---|
+| `CONDVALUE_X_SKEW` | −14,645.078818 | −49,303.579891 | **+10,295.840462** | **2** | **0.453125** | FUTILE |
+| `HAZARD_OVER_SKEWED_REF` | +4,925.363903 | −23,977.998804 | **+10,836.306348** | **1** | **0.125** | FUTILE |
+
+`G_so_far 3` · `STOP_ADVICE = STOP_FOR_FUTILITY` · **NOT_ESTABLISHED_AT_THIS_POWER**.
+
+> ### 🔴 Day three is positive on BOTH arms and changes nothing.
+> ***The cap is a function of the days already non-positive.*** A positive day
+> does not restore a negative one — which is why futility stopping is free.
+> **Second round running I have had to write this sentence.**
+
+**09-10's tape is on the lock, book next.** Standing prediction: when all seven
+land the tally reads **`G_so_far 7 · days_remaining 0`** — ***read
+`emit.futility`, never the tally.***
+
+## 🔍 09-07 NOW HAS **TWO** GUARD-CARRYING RECORDS — OF **DIFFERENT BOOKS**
+
+```
+v2  18:36:20Z   book 887a97eb41e9f83c  = the FREEZE-BUILT reproduction book   admitted_by DESCENDANT
+v3  18:37:36Z   book e25471905983e95a  = the LANDED book (358,259,004 B)      admitted_by None
+                └─ v3.supersedes points at v1 — NOT v2
+```
+
+*Coherent: the landed book is **pre-freeze**, so no descendant admission exists
+for it.* **But a reader taking "the newest 09-07 record" gets the landed,
+non-admitted book**, and ***following `supersedes` backwards from v3 never
+reaches the freeze-built one.*** Named for DE; it may be deliberate, since the
+two describe different books rather than successive versions of one.
+
+**The `settlement_source: NO_VERIFIED_WINNER_RECEIPT` guard is in FOUR records,
+not three** — 09-07 v2 *and* v3, 09-08 v3, 09-09 v2 — i.e. everything re-emitted
+after 18:36Z. *The guard DE's stage-3 assembler had been emitting past now
+reaches everywhere it should.*
+
+---
+
+# LANE 2 · FAIR VALUE — **step 2 LANDED AND VERIFIED**
+
+**✅ Step 2 — the sigma producer.** `be_sigma_30m.py`, pushed **`f9a5bc7`**.
+**I drove it myself: `{"falsifier": "be_sigma_30m", "n": 27, "failed": 0}`, rc 0.**
+Cells include: **no fallback argument** · a consumed-day BTCUSDT window admitted
+**through the production entry point** off real bookTicker files (σ
+4.628298353273501e-05, n 1800) · local knowledge does not reach the decision
+(lag 4,281,563 ns) · a dense window yields **all 1,800 of 1,800** returns · and
+***the same window an hour earlier gives a different number — the reader is
+reading, not returning a constant.*** **That last cell is the anti-constant
+control, the thing a producer can most easily fake.**
+
+**Step 1** in flight — a **day-slice-addressed receipt serving BOTH lanes**.
+**Step 3** wrappers in flight with the **two-regime correction** (before `T−60`
+the realized past is irrelevant and `partial` must be None; from `T−60` it is
+required).
+
+**Still true:** plan frozen, **nothing scored**, closed family of two against
+`Identity`, **m = 2 forever**, six build gates and seven two-way falsifiers
+before any labelled score. **The freeze pointer still names `0575444` while the
+plan on disk is `876e435`.**
+
+---
+
+# 🪞 TWO COORDINATOR ERRORS, CORRECTED IN BAND — each names a class
+
+**R-919 — dispatched on a review finding before verifying it.** REV reported the
+sigma producer as pre-existing prior art; BE's build was stopped mid-flight. BE
+pushed back with a field-by-field table, and the module turned out to be **BE's
+own**, `be_sigma_30m.py:268` at `8fe2a2e`, **landed minutes before the audit read
+the tree and untracked while REV read it.**
+
+> ***REV audited the work it was auditing.*** **REV 193's rule: an inventory of
+> "what already exists" must EXCLUDE work landed in the same session — check
+> authorship and commit date before calling anything prior art.** *MEM sweeps
+> inventories constantly; the same trap is open to me, and an untracked file
+> carries no commit date at all until someone looks for it.*
+
+**R-920 — a ruling right in conclusion, wrong in its stated reason**, which REV
+checked and replaced. The principle, stated plainly: ***a note whose stated
+reason a reader can check and disprove poisons the rest of the note.***
+
+> **I checked the REPLACEMENT**, because a corrected note is exactly where a
+> second wrong reason would hide. `max_gap_ns` **is** a parameter default;
+> `de_v2_local_selector.py` is **not** in `da_population_freeze_v19`. There are
+> **five** call sites, not one — **but four are inside `selftest`**, and the sole
+> **production** site passes `max_gap_ns=int(HER.BN_MAX_GAP_S * 1e9)`.
+> ***The claim holds. I file no correction.***
+
+---
+
+🌿 **Forked from origin (160/192); fast-forward impossible. Q-MEM-338…349
+unlanded. Read this working tree, not `origin/mm-research`.**
+
 # READ FIRST — COLD START · **TWO LANES** (MEM 394, 2026-09-11T18:31:14Z, tip `b524a59`)
 
 > # ⚠️ THE ONE THING NOT TO CONCLUDE
