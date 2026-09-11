@@ -1,3 +1,106 @@
+# READ FIRST — round 360 (MEM, 2026-09-11T06:29:08Z, tip `0b63915`)
+
+# ✅ THE CERTIFICATION IS **BIT_IDENTICAL** — a limit I carried for seven rounds COLLAPSES
+
+232,307 generations per arm · **delta_max 0.0** · **zero flips** · m_min
+1.156e-05 / 1.650e-05 · `SUPPORTED_ON_THIS_DAY`.
+
+> **"The forward test runs on scoring bytes the development screen never ran on"
+> — which I have recorded since round 353 — is retired.** The bytes differ and
+> **the decisions do not**, measured rather than argued.
+
+**Handled as fields, not as a claim:** with a zero bound `per_book_guard` is
+**NON-BINDING** (K × 0 = 0), **driven both ways** — and the narrower hazard is
+stated: **the bound was measured on ONE DAY.** *A guard that goes vacuous under a
+particular measurement reads exactly like a pass; naming the vacuity in a field
+is what stops it being read as coverage.*
+
+# ✋ DAY ONE CORRECTED — **and my framing was wrong in BOTH directions**
+
+The statistic is **|D| about ZERO**, not the null mean.
+
+| arm | percentile | what I said at round 359 |
+|---|---|---|
+| CONDVALUE | **0.0th — below all 500 draws** | **understated** — it is *stronger* |
+| HAZARD | **36.4th** | **overstated** — "underperformed random" is wrong for it |
+
+*A negative day is ~11 % likely under this 89-%-positive null, so CONDVALUE's is
+genuinely extreme.* ***One arm understated and one overstated, by the same
+mistaken statistic.***
+
+**And I retract "reproducing step 2's verdict out of sample."** *Step 2 ran on
+09-04/05/06 **under the retracted policy** (`03dbc1e`), so day one is not a
+reproduction of it.* **The caveat I attached was about field names and would not
+have caught this — the error was in what the comparison WAS, not in which fields
+were read.**
+
+**Futility is driven** — `FUTILE: True, KILLED_BY_NEGATIVE_DAYS`,
+`attainable_minimum_p(G=1) = 1.0`. **What it ends is conjunct (a) for CONDVALUE:
+futility OF THE TEST, never NO_EFFECT.** *REV's pre-written failure wording
+arriving on day one — which is when a narrow phrase is hardest to hold.*
+
+# 🕰 THE ERA SPLIT — a day-independent literal emptied every September gap list
+
+`fi.ERA` was the literal `clob_v3_1`, so **every September window received an
+EMPTY gap list.** Fixed at BE 113 **before any forward valuation.** Measured
+under the fix: **27/287** of 09-07's windows and **43/288** of 09-08's are
+gap-bearing — **against ZERO under the bug.**
+
+*A literal that must track a moving thing, in the field deciding which windows
+are admissible. This programme has now found that class in **a floor, a
+docstring, a delimiter, and an era.***
+
+**RULING — rebuild 09-07, day one superseded in band.** The reasons are the
+useful part: **(b) leaves gap treatment INHOMOGENEOUS across the population**
+(rules 4/5), **(c) propagates a fixed defect.** *The rebuild's cost is paid to
+keep one treatment across seven days.* **REV is checking the correction's
+direction before it runs** — control-first, applied to a fix rather than a
+measurement.
+
+# 🔧 A USER COMMIT LANDED ON THE VALUATION PATH **AFTER** THE PIN
+
+`da00220`, **04:47:29** — after the 03:07 pin — rewriting five valuation files:
+PROTOCOL V1→V2, a `PIPELINE_COMMIT` literal, nine new refusals. **Day one's three
+computing modules at `651a7b53` are pin-identical** (I hashed them at round 359).
+
+## 🔍 And I checked the sharp part — it extends my round-359 finding
+
+`sha256("") = e3b0c44298fc1c14`. **At `7ed5a90`, BOTH `be_score_neutrality.py`
+AND `de_forward_value_day.py` DO NOT EXIST** — so a digest comparison against the
+pin hashes **nothing** for them and reports a **mismatch**.
+
+> ***Two of the pipeline's files postdate the commit the whole pipeline is pinned
+> to — and a comparator that does not distinguish ABSENT from DIFFERENT reports
+> the wrong one. Rule 42 exactly: "differing digest" is the LABEL; "did not
+> exist" is the PROPERTY.***
+
+**Days 2–7 may not silently run V2 while day one ran V1.** DE is measuring V2's
+D-neutrality on 09-07 — **bit-identical → adopt for all seven; any movement →
+the user.** *The question is not whether V2 is better but whether the seven days
+are one experiment* — **the same homogeneity principle as the era ruling, twice
+in one round.**
+
+# ⏱ THE REAL PER-DAY COST IS ~2 HOURS, NOT A VALUATION
+
+**None of 09-08..09-13 exist.** Tapes are built **by hand, no automation**, ~17
+min each — so **tape → book → valuation ≈ 2 h per day.** D+1 dependency is ~5 s;
+end date holds ~09-14. *A per-day cost stated as the valuation alone would have
+understated the remaining programme by more than half.*
+
+**Neither a valuation (3.41 GiB) nor a tape (5.78 GiB) coexists with a 12 GiB
+catch-up lane** against a 14 GiB cap. **DE: sequence the lanes FIRST, never mask
+them.** *`MemorySwapMax` is zero, so a masked lane is a **deferred kill**, not an
+avoided one.*
+
+# 🔁 DA'S REBASE NEAR-MISS CONFIRMS THE NUMBER I AM HOLDING
+
+`git rebase <upstream>` in a four-seat tree **replays every unpushed commit
+present — thirteen, not DA's.** Aborted, nothing lost, land script only.
+
+**My own tree reads 13 ahead, and those thirteen are the SHARED POOL, not one
+seat's.** *DA and I arrived at the same figure from opposite ends — which is why
+I declined to rebase at round 358 and decline again here.*
+
 # READ FIRST — round 359 (MEM, 2026-09-11T06:00:23Z, tip `ac5d3b8`)
 
 # 📉 DAY ONE IS VALUED — **both arms underperformed matched random cancellation**
