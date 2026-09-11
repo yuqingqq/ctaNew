@@ -86,6 +86,8 @@ FAIR_VALUE_FILE_RE = r"(fair|sigma|forecast|seam|canonical)"
 BEHAVIOUR = {
     1: {"verdict": "DRIVEN_GREEN", "source": "DA cells in da_fair_value_gate1_labels.falsify*"},
     2: {"verdict": "DRIVEN_GREEN",
+        "driven_against_blob_sha256": "8d7a2448937e0fd3",
+        "REVERTS_IF_THE_BLOB_MOVES": True,
         "source": ("BE's 27 cells, RE-DRIVEN BY DA AGAINST THE PUSHED BLOB -- a worktree cut at "
                    "origin/de-freeze-chain-v2, module resolved from that tree, blob sha256 "
                    "8d7a2448937e0fd3, falsify() -> {'n': 27, 'failed': 0}. The original green "
@@ -144,6 +146,13 @@ def unattributed_files(ref: str) -> list:
     return sorted(out)
 
 
+def _blob_sha16(ref: str, path: str) -> str:
+    r = subprocess.run(["git", "-C", _root(), "show", f"{ref}:{path}"],
+                       capture_output=True)
+    import hashlib
+    return hashlib.sha256(r.stdout).hexdigest()[:16] if r.returncode == 0 else ""
+
+
 def build(fetch: bool = True) -> dict:
     if fetch:
         subprocess.run(["git", "fetch", "--quiet", "origin"], check=False)
@@ -153,6 +162,18 @@ def build(fetch: bool = True) -> dict:
         present_on = [ref for ref in EXECUTING_REFS
                       if paths and all(per_ref[ref][p] > 0 for p in paths)]
         beh = BEHAVIOUR.get(n)
+        # A DRIVEN VERDICT IS EARNED AGAINST SPECIFIC BYTES. If those bytes
+        # move, the verdict is not evidence about the new ones -- so it
+        # REVERTS here rather than waiting for someone to remember.
+        if beh and beh.get("REVERTS_IF_THE_BLOB_MOVES") and paths:
+            now = _blob_sha16(EXECUTING_REFS[0], paths[0])
+            if now and now != beh.get("driven_against_blob_sha256"):
+                beh = dict(beh, verdict="STALE_VERDICT_BLOB_MOVED",
+                           blob_now=now,
+                           note=("the cells were driven against "
+                                 f"{beh.get('driven_against_blob_sha256')}; the ref "
+                                 f"now carries {now}. The verdict is withdrawn "
+                                 "until they are re-driven."))
         if not paths:
             status = "NOT_STARTED"
         elif not present_on:
