@@ -2,7 +2,7 @@
  "contract": "BE_STAGE_CLOSEOUT_V1",
  "day": "20260910",
  "stage": "book",
- "as_of_utc": "2026-09-11T23:33:56Z",
+ "as_of_utc": "2026-09-11T23:34:31Z",
  "unit": {
   "unit": "be197book0910",
   "LoadState": "loaded",
@@ -17,6 +17,7 @@
  "peak": {
   "status": "PRESENT",
   "peak_of_record_bytes": 6788284416,
+  "peak_was_a_string_in_the_record": false,
   "peak_gib": 6.322,
   "attempts": 1,
   "source": "data/pm_5min/derived/be_heavy_run_record_be197book0910.jsonl"

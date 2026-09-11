@@ -1,0 +1,49 @@
+{
+ "contract": "BE_STAGE_CLOSEOUT_V1",
+ "day": "20260909",
+ "stage": "fragment",
+ "as_of_utc": "2026-09-11T23:34:42Z",
+ "unit": {
+  "unit": "be147frag0909",
+  "LoadState": "not-found",
+  "status": "UNIT_NOT_LOADED -- any state here would be a default"
+ },
+ "peak": {
+  "status": "PRESENT",
+  "peak_of_record_bytes": 4122640384,
+  "peak_was_a_string_in_the_record": true,
+  "peak_gib": 3.84,
+  "attempts": 81,
+  "source": "data/pm_5min/derived/be_heavy_run_record_be147frag0909.jsonl"
+ },
+ "artifact": {
+  "status": "PRESENT",
+  "path": "data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260909_btc.json",
+  "bytes": 673546774,
+  "sha256": "90d8ddefd91e26bab4d804441b4346f3360c779938b08f46652f9fd6382ea587"
+ },
+ "fragment": {
+  "n_windows": 288,
+  "n_rows": 610147,
+  "days": [
+   "2026-09-09"
+  ],
+  "schema": "harmful_exposure_v3_4_fill_scoped_markout",
+  "guards": {
+   "boundary_time_violations": 0,
+   "consume_clock_violations": 0,
+   "reconciliation_failures": 0,
+   "unhooked_state_changes": 0,
+   "wrong_generation_assignments": 0,
+   "windows_excluded_binance_gap": 0
+  }
+ },
+ "gap_windows": {
+  "status": "PRESENT",
+  "path": "data/pm_5min/derived/be137_gap_windows_20260909.json",
+  "bytes": 5104,
+  "sha256": "9b4ece5cf2f52e1eb51e3c91163efc8ab9cf6d41ccffd2c31aeaf24161757647",
+  "n_gap_bearing": 42,
+  "era": "clob_v4_1"
+ }
+}
