@@ -802,6 +802,43 @@ TWELVE bear directly on what the freeze commits.** REV is driving them.
 nothing.** The freeze waits on REV's twelve — hours, not days, and it buys
 the difference between a freeze and a freeze that means something.
 
+## 15. EVERY DRIVE NAMES ITS TREE (USER/DA 272 ruling, 2026-09-11T19:0xZ)
+
+**The shared tree `/home/yuqing/ctaNew` is DECLARED NON-EXECUTING for both
+lanes.** It sat 204 commits behind `origin/mm-research` while carrying
+PRE-FREEZE copies of frozen closure modules — `de_forward_evaluator`
+`7c137ddc` where the freeze declares `6290bb25`,
+`de_settlement_control_aggregate`, `de_revaluation_emit` — and 8 of 36
+cells fail when the day-record falsifier is driven there.
+
+**A green result from the shared tree is not evidence.** Neither is a
+red one: `SUPERSESSION_CHAIN_FORKED` was reported ABSENT twice in one day
+by two readers, and both greps were against that tree while the refusal
+had been in `live/pm_research/de_day_record.py` on both chain refs since
+18:48Z. The coordinator recorded the same wrong-tree error at 12:52Z; DA
+hit it from the other side over `de_combine_day_cells`.
+
+**So every drive states the tree it ran in, in the same line as its
+result**, and a claim about code — present, absent, green, red — names
+either a worktree path or a ref:
+
+    driven from /home/yuqing/ctaNew-wt-de2   36/36
+    git grep -n <name> origin/de-freeze-chain-v2 -- live/
+
+`git grep <ref>` needs no checkout and cannot be stale, which makes it the
+cheaper habit and the one to reach for first.
+
+**A corollary that cost a round:** a falsifier run in only one tree tests
+one tree's data. Two of my cells indexed a key present on a single status
+branch and raised `KeyError` instead of FAILING — an exception where a
+verdict belongs — and that surfaced only when the same file was driven on
+an mm-research worktree where those branches take a different path.
+
+**`origin/mm-research` is the USER's fork and the user decides what lands
+there.** DE does not push to it. One DE commit (`a95bd524`, the day-record
+module and the day-slice definition) was pushed at 19:05Z before this rule
+existed and is the user's to keep or revert.
+
 ## CURRENT POSITION — DE, 2026-09-11T12:51Z (written at 97% context)
 
 **Read R-906 (coordinator) after compaction; it carries the coordinator's view.**

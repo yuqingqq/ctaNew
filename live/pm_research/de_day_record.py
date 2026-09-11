@@ -738,7 +738,7 @@ def build(day: str, cells_dir: Path, n_declared: int = 7,
         n_declared, n_declared, 2)
     emit["per_day_D_by_arm"] = per_day_by_arm
     first = cells[arms[0]]["result"]
-    return {
+    rec = {
         "protocol": (PROTOCOL + "_REPRODUCTION" if reproduction_of
                      else PROTOCOL),
         "IS_A_DAY_RESULT": not bool(reproduction_of),
@@ -761,6 +761,10 @@ def build(day: str, cells_dir: Path, n_declared: int = 7,
         "stage0": stage0,
         "settlement_source": disclosure,
         "IS_A_DAY_RESULT": None,   # set from the lineage block below
+        # THE DISCLOSURE BELONGS TO THE RECORD, NOT TO main(). It was
+        # computed in the CLI path only, so a caller using `build()` got a
+        # record without it -- two ways to make one record, differing in a
+        # field a cold reader depends on.
         "book_lineage": book_lineage(
             day, first.get("book_sha256"),
             next(((c.get("book_receipt") or {}).get("admitted_by")
@@ -787,6 +791,15 @@ def build(day: str, cells_dir: Path, n_declared: int = 7,
         **({"reproduction": _reproduction(cells, arms, reproduction_of)}
            if reproduction_of else {}),
     }
+    hist = walk_supersession(day, derived).get("historical_forks") or {}
+    if hist:
+        rec["book_lineage"]["historical_forks_in_this_lineage"] = {
+            "pairs": hist,
+            "why": "records that predate the newest-prior rule name the "
+                   "same parent; they are landed and rule 13 forbids "
+                   "editing them, so the fork is DISCLOSED here and every "
+                   "record stays reachable through `also_supersedes`"}
+    return rec
 
 
 def _reproduction(cells: dict, arms, landed: Path) -> dict:
@@ -1431,14 +1444,6 @@ def main(argv=None) -> int:
     rec["IS_A_DAY_RESULT"] = (
         rec["book_lineage"]["the_days_result"] == "THIS RECORD"
         if not a.reproduction_of else False)
-    hist = walk_supersession(a.day, DERIVED).get("historical_forks") or {}
-    if hist:
-        rec["book_lineage"]["historical_forks_in_this_lineage"] = {
-            "pairs": hist,
-            "why": "records that predate the newest-prior rule name the "
-                   "same parent; they are landed and rule 13 forbids "
-                   "editing them, so the fork is DISCLOSED here and every "
-                   "record stays reachable through `also_supersedes`"}
     out.write_text(json.dumps(rec, indent=1, default=str))
     print(json.dumps({"wrote": str(out), "sha256": _sha(out)[:16]}))
     for line in rec["emit"]["per_day_lines"]:
