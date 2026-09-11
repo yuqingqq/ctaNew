@@ -876,6 +876,22 @@ dependent with no falsifier is REPORTED, never counted green.
   the wrong subject — the exact defect the sweep exists to catch,
   committed by the sweep.
 
+**`$?` AFTER A PIPELINE IS THE LAST COMMAND'S, AND I READ IT WRONG TWICE
+IN ONE DAY.** Reporting the ledger's exit code I wrote
+`python … | grep …; echo "rc=$?"` and published **rc=0 in both states**.
+Measured properly — redirect to a file, then read `$?` — the broken state
+is **rc=1** and the fixed state **rc=0**, so a harness reading the exit
+code was never lied to. The same mistake cost an inert stage-0 gate at
+16:41Z (`grc=$?` after `gate | head | tr`). **Never read `$?` through a
+pipe: redirect, then read.**
+
+**And a `[FAIL]` grep matches vocabulary, not identity.** Two of DA's
+PASS labels contain the literal text `"[PASS]/[FAIL] lines"` — the NAME of
+a counting method — so `grep -c '\[FAIL\]'` returns 2 on a run with zero
+failures. The sweep's own parser anchors at line start
+(`^\s*\[(PASS|FAIL)\]`) and returns 0 on that same output, which is why
+the instrument was right while my ad-hoc grep beside it was not.
+
 **And the sweep's first real run found something a direct run hid:**
 `da_fair_value_ledger.py` is green from the repo with a full environment
 and **red from `/tmp` with a minimal one**, its own control naming the
