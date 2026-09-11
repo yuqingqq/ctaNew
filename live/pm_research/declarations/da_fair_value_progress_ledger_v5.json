@@ -1,0 +1,48 @@
+{
+ "protocol": "P003_DA_FAIR_VALUE_PROGRESS_LEDGER_V5",
+ "supersedes": "da_fair_value_progress_ledger_v4.json",
+ "declared_at": "2026-09-11T19:55:01Z",
+ "seat": "DA",
+ "dispatch": "DA 277",
+
+ "WHAT_CHANGED": "the ledger is RE-KEYED on fair_value_plan.md v1.2 §5's SIX BUILD GATES. v4 was keyed on §11's EIGHT implementation steps while the rule it enforces is stated over the six gates, so its gates_satisfied was counted out of eight against a threshold of six and was not comparable with any other seat's count of the same thing.",
+
+ "THE_DIVERGENCE_THAT_CAUSED_IT": {
+  "gates_1_to_5": "are §11 steps 1 to 5",
+  "gate_6_is_not_step_6": "§5 gate 6 is the REPLAY SEAM. §11 step 6 is FREEZE THE FULL PIPELINE and both candidate identities, which subsumes the seam and is a strictly larger claim. Satisfying gate 6 does not satisfy step 6.",
+  "steps_7_and_8_have_no_gate": "ten-day predictive validation; economic clock. They are what the gates unlock, not gates."
+ },
+
+ "THIS_DECLARATION_CARRIES_NO_ROW_STATUSES_ON_PURPOSE": "v4's declaration was a DUMP of the ledger's output, and a dumped status is a copy that ages. Measured today: DE's gate-4 tightening landed at 19:42Z and broke gates 5 and 6 in the same push; a status written at 19:29Z was false fifteen minutes later. The statuses live only in the module, which COMPUTES them when it runs.",
+
+ "THE_INSTRUMENT": {
+  "path": "live/pm_research/da_fair_value_ledger.py",
+  "content_sha256_16": "e1e8ac8409840454",
+  "entry_points": ["da_fair_value_ledger.py", "da_fair_value_ledger.py --falsify"],
+  "cells": 26,
+  "three_independent_measurements_per_row": [
+   "PRESENCE: git ls-tree counts at a FETCHED ref",
+   "BEHAVIOUR: the gate's own falsifier DRIVEN in a worktree cut at that ref -- exit code and cell count, never a remembered verdict",
+   "PROPERTIES: DA's own adversarial cells for the properties §5 states in words, driven against the same bytes"
+  ]
+ },
+
+ "CELLS_PASSING_IS_NOT_PROPERTIES_COVERED": "a green falsifier over an incomplete property set is the shape a cell count cannot show. REV found it twice: gate 4 at 16/16 cells with four of six properties enforced, and gate 6 at 11/11 cells proving the arms DECLARED the same inputs rather than RAN on them -- a flat tape passed. So cells and properties_covered are separate fields, and a gate with a green falsifier but an uncovered declared property cannot read SATISFIED.",
+
+ "TWO_PREDICATES_NOT_ONE": {
+  "no_labelled_score_permitted": "(gates_satisfied < 6). DA 277's predicate, kept exactly. It covers §5's BUILD GATES ONLY and goes False when the build barrier is down.",
+  "score_is_evidence_permitted": "(gates_satisfied >= 6) AND the §11 step-6 full-pipeline freeze exists on every executing ref.",
+  "why": "with all six build gates green the §5 barrier is down and §11's sentence 'No fair-value score is evidence before step 6' is still binding, because step 6 is the full-pipeline freeze and not the replay seam. One boolean reading as blanket permission is how a build gate becomes a licence.",
+  "measured_now": "gates_satisfied 6/6 -> no_labelled_score_permitted FALSE; step-6 freeze declarations on every executing ref 0 -> score_is_evidence_permitted FALSE"
+ },
+
+ "A_DEFECT_FOUND_IN_MY_OWN_INSTRUMENT_AND_FIXED_BEFORE_LANDING": "v5's first gate-3 and gate-5 property probes reported coverage from 'text' in src source-text matches -- a control that fires on a LABEL, which is the exact defect REVIEW 201 found in the module those probes test. Both were rewritten to import and DRIVE. A cell now refuses any probe containing a source-text match, so the defect cannot return quietly.",
+
+ "WHAT_IS_NOT_CLAIMED": [
+  "gates 1 and 2 carry NO second DA instrument. Gate 1 is DA's own module, so DA's cells are its first instrument and not a check on it; gate 2's 27 cells are BE's, re-driven here against the ref's bytes, which tests the LANDING and not the property set.",
+  "the property probes cover the properties §5 states IN WORDS. A property the plan does not state is not measured by them.",
+  "this ledger measures the two chain refs only. origin/mm-research is the user's fork, declared NON-EXECUTING, and presence there never satisfies a gate."
+ ],
+
+ "rule_10": "every field above that is a number or a boolean is computed by the module at run time; this file declares the RULE and the instrument's identity, never a result."
+}
