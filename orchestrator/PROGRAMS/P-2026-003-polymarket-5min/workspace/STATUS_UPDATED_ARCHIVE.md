@@ -23676,3 +23676,23 @@ generation and the window went 4 → 3. Nothing rewritten.
   58 AHEAD AND 59 BEHIND AND DIRTY: the content is not lost, its address is pending.
   tip 762a481)
 ```
+
+## Batch 358 (rotated by MEM round 376, 2026-09-11T08:51:28Z)
+
+```
+  2026-09-11T07:57:15Z (MEM ROUND 373 -- TWO PROXIES FOR IDENTITY, THIRTY MINUTES APART, OPPOSITE IN
+  EFFECT AND IDENTICAL IN CAUSE. At 07:15 a waiter PICKED THE SUPERSEDED COPY BY MTIME --
+  wrong file accepted. At 07:45 deRV0907wait3 REJECTED THE REBUILT COPY BY PATH -- right
+  file refused, because BE superseded IN PLACE and the new book took THE SAME CANONICAL
+  PATH, so the skip test matched forever and the journal never reached 'rebuilt book
+  detected'. THE DURABLE FORM IS THE SHA256, never path, never mtime. FOUR MINUTES
+  FIFTY-EIGHT SECONDS LOST ON A LOCK THAT WAS FREE -- and the cost of this class is never
+  the failure, it is THE INTERVAL IN WHICH NOTHING HAPPENS AND NOTHING SAYS SO. THE DIRECT
+  LAUNCH THEN REFUSED IN TEN SECONDS AND WAS RIGHT TO: I hashed the demanded producer
+  digest and 8500ce41fc80 IS THE COMPARATOR AT da00220, while the certificate on disk came
+  from BE's rebuild at e31fc59 (2f65dd0e029c). TWO VALID INSTRUMENTS, V2 PINNED TO THE
+  EARLIER. And across the three commits that matter the comparator is ABSENT AT THE PIN,
+  THEN ONE THING, THEN ANOTHER -- completing the picture I started at round 360. THE
+  RULING TURNS THE COLLISION INTO A THIRD CORROBORATION, because BIT_IDENTICAL passes
+  every tolerance. tip 2981ef8)
+```

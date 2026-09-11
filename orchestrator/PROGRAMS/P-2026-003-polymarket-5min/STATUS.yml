@@ -67,6 +67,21 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-11T08:51:28Z (MEM ROUND 376 -- THE FIX FOR REFUSAL THREE RE-OPENS REFUSAL TWO, AND I
+  ESTABLISHED IT AT THE CODE. de_settlement_control_run.py:194 computes
+  expected_producer_sha = _sha(HERE/'be_score_neutrality.py') AT RUN TIME FROM DISK. The
+  resolver fix CHANGED THAT FILE -- it now hashes a455191d6bceec7e where da00220 gave
+  8500ce41fc800e9a -- AND THE CERTIFICATE ON DISK RECORDS 8500ce41fc800e9a. SO deRV0907go4,
+  OFFERING FOR THE LOCK RIGHT NOW, WILL REFUSE NOT_CERTIFIED THE MOMENT IT GETS IT. The
+  mechanism is A SELF-REFERENTIAL DIGEST CHECK: the certificate must come from the
+  comparator that validates it, and the validator identifies that comparator BY HASHING
+  ITSELF ON DISK -- so ANY EDIT INVALIDATES EVERY CERTIFICATE IT HAS EVER PRODUCED,
+  including one made minutes earlier for this purpose. Not a stale record and not a missing
+  guard: A CHECK WHOSE SUBJECT AND AUTHORITY ARE THE SAME MUTABLE FILE. I VERIFIED THE
+  RULING AT wt-deval MYSELF -- HEAD 7efea16, the resolver at lines 87/95/118, v10 pinning
+  params v31 -- so the six amendments I listed last round are now REACHABLE and the fourth
+  gate's defect is REPAIRED. And the DRIVER differs too, confirmed by my own hashing.
+  tip ae50330)
   2026-09-11T08:45:21Z (MEM ROUND 375 -- A FREEZE THAT COULD NOT BE SUPERSEDED. The third refusal,
   SETTLEMENT_CONTROL_PARAMS_ARE_NOT_THE_FROZEN_PARAMS, traces to a LITERAL I read at
   be_score_neutrality.py:85 -- FREEZE_REL = 'de_arm_freeze_v1.json' -- with frozen_params()
@@ -99,21 +114,6 @@ updated: >-
   result does not reach the next claim, AND A RULED CHANGE DOES NOT REACH THE RECORDS THAT
   DESCRIBE IT -- except that V2 REFUSES when its record is stale, while a lagging register
   simply goes unread. tip c8b2351)
-  2026-09-11T07:57:15Z (MEM ROUND 373 -- TWO PROXIES FOR IDENTITY, THIRTY MINUTES APART, OPPOSITE IN
-  EFFECT AND IDENTICAL IN CAUSE. At 07:15 a waiter PICKED THE SUPERSEDED COPY BY MTIME --
-  wrong file accepted. At 07:45 deRV0907wait3 REJECTED THE REBUILT COPY BY PATH -- right
-  file refused, because BE superseded IN PLACE and the new book took THE SAME CANONICAL
-  PATH, so the skip test matched forever and the journal never reached 'rebuilt book
-  detected'. THE DURABLE FORM IS THE SHA256, never path, never mtime. FOUR MINUTES
-  FIFTY-EIGHT SECONDS LOST ON A LOCK THAT WAS FREE -- and the cost of this class is never
-  the failure, it is THE INTERVAL IN WHICH NOTHING HAPPENS AND NOTHING SAYS SO. THE DIRECT
-  LAUNCH THEN REFUSED IN TEN SECONDS AND WAS RIGHT TO: I hashed the demanded producer
-  digest and 8500ce41fc80 IS THE COMPARATOR AT da00220, while the certificate on disk came
-  from BE's rebuild at e31fc59 (2f65dd0e029c). TWO VALID INSTRUMENTS, V2 PINNED TO THE
-  EARLIER. And across the three commits that matter the comparator is ABSENT AT THE PIN,
-  THEN ONE THING, THEN ANOTHER -- completing the picture I started at round 360. THE
-  RULING TURNS THE COLLISION INTO A THIRD CORROBORATION, because BIT_IDENTICAL passes
-  every tolerance. tip 2981ef8)
 previous_updates: >-
   2026-09-04T15:10Z (USER-DIRECTED DOCUMENT RECONCILIATION TO R-531; NO NEW
   RESULT.) CURRENT STATE: PROGRAMME HALTED ON THE USER'S INSTRUCTION; NO HEAVY
@@ -285,6 +285,15 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  # --- MEM round 376, the fix that re-opens the earlier refusal ---
+  THE_FIX_FOR_REFUSAL_THREE_RE_OPENS_REFUSAL_TWO_AND_I_ESTABLISHED_IT_AT_THE_CODE: "URGENT AND ON THE CRITICAL PATH. de_settlement_control_run.py line 194 computes expected_producer_sha = _sha(HERE / 'be_score_neutrality.py') -- AT RUN TIME, FROM THE FILE ON DISK. The resolver fix CHANGED THAT FILE: it now hashes a455191d6bceec7e in wt-deval, where at da00220 it was 8500ce41fc800e9a. AND THE CERTIFICATE ON DISK RECORDS PRODUCER 8500ce41fc800e9a. So deRV0907go4, which is offering for the lock right now, WILL REFUSE WITH SETTLEMENT_CONTROL_SCORE_NEUTRALITY_NOT_CERTIFIED THE MOMENT IT GETS THE LOCK -- for the same reason as refusal two, re-opened by the fix for refusal three."
+  AND_THE_MECHANISM_IS_A_SELF_REFERENTIAL_DIGEST_CHECK_WHICH_IS_A_NEW_SHAPE_TONIGHT: "The certificate must be produced by the comparator that validates it, and the validator identifies that comparator BY HASHING ITSELF-ON-DISK. So ANY EDIT TO THE COMPARATOR INVALIDATES EVERY CERTIFICATE IT HAS EVER PRODUCED, including one made minutes earlier for exactly this purpose. That is not a stale record and not a missing guard: it is A CHECK WHOSE SUBJECT AND AUTHORITY ARE THE SAME MUTABLE FILE. The remedy is to re-run the certification with the new comparator; the structural remedy is for the certificate to be validated against A PINNED DIGEST rather than a live one."
+  THE_RULING_IS_LANDED_AND_I_VERIFIED_IT_AT_WT_DEVAL_RATHER_THAN_RELAYING_IT: "HEAD 7efea16. The resolver is real: FREEZE_AMENDMENT_GLOB at line 87, _amendment_version() at 95, and at 118 a sorted glob over every de_arm_freeze_v*_amendment.json so the LAST params pin wins. And de_arm_freeze_v10_amendment.json PINS de_multiday_gate1_params_v31.json and references 7ed5a9015f75. So the six amendments I listed last round -- v2 through v7 -- are now reachable by the consumer that could not see them, and the defect the fourth gate found is REPAIRED, not merely named."
+  AND_THE_SECOND_DIFFERING_FILE_IS_CONFIRMED_BY_MY_OWN_HASHING: "de_forward_value_day.py -- THE DRIVER -- hashes 243cf4628214dd95 in wt-deval against 2bb2e71b8d465d35 at da00220. IT DIFFERS. It carries DE's origin-side pre-flight guard from Q-DE-240/242, which the local-fork da00220 predates. DA 244 on the source side and REV 154 on the import-closure side are verifying it computes nothing reaching a number; if it does, THAT IS AN UNRULED PIN MOVE AND THE RUN STOPS. Declaring a second difference the ruling did not name, rather than letting it ride, is the right call and the expensive one."
+  THE_IDLE_LOCK_IS_56_3_MINUTES_AND_THE_ACCOUNTING_CLOSES_TO_73_PER_CENT: "I differenced it: 07:48:07 to 08:44:25 is 56.3 MINUTES. The two named causes are about 17 minutes blocked on the user and about 24 on ONE SLOW COORDINATOR TOOL CALL, which is 41 minutes or 73 PER CENT; the remaining 15 belong to the three-refusal cycle. NOT CALENDAR-BINDING -- 09-13 closes 2026-09-14T00:00Z -- so the cost is inside a window. An accounting that names its largest single item as a tool call rather than a decision is the kind that can be acted on."
+  AND_THE_STANDING_FIX_MAKES_AN_IDLE_LOCK_ITSELF_AN_EVENT: "Rule 47 draft: A LOCK THAT NO CHAIN HOLDS FOR MORE THAN FIVE MINUTES WHILE ANY CHAIN IS WAITING IS ITSELF AN EVENT, and the arbiter reports it. That is the right shape because tonight's two contention failures were opposite -- a lock taken by the wrong chain, and a lock held by nobody -- and only a rule that treats IDLENESS AS A REPORTABLE STATE covers both. Silence is the common factor: in each case nothing was wrong enough to raise."
+  A_WATCHER_READ_AN_OLD_REFUSAL_AS_CURRENT_BECAUSE_THE_UNIT_NAME_WAS_REUSED: "The fourth-attempt watcher grepped REFUSED [A-Z_]+ from a stdout log APPENDED ACROSS ATTEMPTS -- because the unit NAME is reused -- and reported the THIRD attempt's PARAMS_NOT_FROZEN traceback as the fourth's refusal. The actual fourth line was the LOCK refusal, rc=75, which DID NO WORK. Replaced with exit-code logic ignoring rc=75. SAME CLASS AS THE GHOST TEXT AND THE Result=success TRAP: A REUSED NAME MAKES AN OLD LINE LOOK CURRENT, and that is now the third distinct instance of it tonight."
+  AND_THE_FOURTH_GATES_FINDING_IS_NOW_REPAIRED_RATHER_THAN_ONLY_NAMED: "A freeze whose enforcer read only the base document could not be superseded in band; IT NOW CAN. That closes the arc I recorded at round 375, where six correctly-written rule-13 supersessions were going nowhere. The repair is worth more than the three stale records the other gates found, for the reason I gave then: a gate that finds a broken mechanism rather than a stale value is worth more than the others together -- and this one has now been fixed rather than worked around."
   # --- MEM round 375, a freeze that could not be superseded ---
   THE_THIRD_REFUSAL_IS_A_FORK_WITH_NO_WAIVER_PATH_AND_I_READ_THE_LITERAL: "SETTLEMENT_CONTROL_PARAMS_ARE_NOT_THE_FROZEN_PARAMS. At da00220, be_score_neutrality.py line 85 reads FREEZE_REL = 'de_arm_freeze_v1.json' -- A LITERAL -- and frozen_params() reads THE BASE FREEZE ONLY, so amendments never pinned params. V2 therefore demanded params v29 BY DIGEST while its own cascade check demanded params naming 7ed5a90's bytes. MUTUALLY EXCLUSIVE UNDER THE USER'S 03:07 RULING, with no waiver path on verify_run_inputs(params)."
   AND_THERE_ARE_SIX_AMENDMENTS_THE_LITERAL_CANNOT_SEE: "I listed them: de_arm_freeze_v2 through v7, ALL AMENDMENTS, beside the v1 base the literal names. SO THE FREEZE HAS BEEN SUPERSEDED SIX TIMES IN BAND AND NOT ONE OF THOSE SUPERSESSIONS REACHED THE CONSUMER. That is the concrete form of the coordinator's sentence and it is sharper than the sentence: A FREEZE THAT CANNOT BE SUPERSEDED IN BAND WAS NEVER RULE-13 COMPLIANT -- and here rule-13 supersessions existed, correctly written, going nowhere."
@@ -27907,6 +27916,55 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  # --- MEM round 376, 2026-09-11T08:51:28Z ---
+  THE_FIX_FOR_REFUSAL_THREE_RE_OPENS_REFUSAL_TWO_AND_I_ESTABLISHED_IT_AT_THE_CODE:
+    prov: CHECKED
+    artifact: live/pm_research/de_settlement_control_run.py
+    as_of: 2026-09-11T08:51:28Z
+    said: >-
+      de_settlement_control_run.py read at lines 190-205 in wt-deval; be_score_neutrality.py hashed on disk at a455191d6bceec7e against the certificate's recorded producer 8500ce41fc800e9a.
+  AND_THE_MECHANISM_IS_A_SELF_REFERENTIAL_DIGEST_CHECK_WHICH_IS_A_NEW_SHAPE_TONIGHT:
+    prov: CHECKED
+    artifact: live/pm_research/be_score_neutrality.py
+    as_of: 2026-09-11T08:51:28Z
+    said: >-
+      the expected_producer_sha computation read at the site; the two digests compared; no pinned-digest alternative is present in the code I read.
+  THE_RULING_IS_LANDED_AND_I_VERIFIED_IT_AT_WT_DEVAL_RATHER_THAN_RELAYING_IT:
+    prov: CHECKED
+    artifact: live/pm_research/be_score_neutrality.py
+    as_of: 2026-09-11T08:51:28Z
+    said: >-
+      wt-deval HEAD read as 7efea16; the three resolver sites grepped at lines 87, 95 and 118; the v10 amendment loaded and its params pin and commit reference read.
+  AND_THE_SECOND_DIFFERING_FILE_IS_CONFIRMED_BY_MY_OWN_HASHING:
+    prov: CHECKED
+    artifact: live/pm_research/be_score_neutrality.py
+    as_of: 2026-09-11T08:51:28Z
+    said: >-
+      both files hashed on disk in wt-deval and at da00220: the comparator and the driver each differ, and the driver's difference is the one the ruling did not name.
+  THE_IDLE_LOCK_IS_56_3_MINUTES_AND_THE_ACCOUNTING_CLOSES_TO_73_PER_CENT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    as_of: 2026-09-11T08:51:28Z
+    said: >-
+      08:44:25 minus 07:48:07 computed as 56.3 minutes; the two named causes summed to 41 and expressed as a share.
+  AND_THE_STANDING_FIX_MAKES_AN_IDLE_LOCK_ITSELF_AN_EVENT:
+    prov: RELAYED
+    from: coordinator MEM 376
+    as_of: 2026-09-11T08:51:28Z
+    said: >-
+      the draft clause as dispatched; rule 47 is in SEAT_PROTOCOL from round 372 and the two contention incidents are recorded at rounds 371 and 375.
+  A_WATCHER_READ_AN_OLD_REFUSAL_AS_CURRENT_BECAUSE_THE_UNIT_NAME_WAS_REUSED:
+    prov: RELAYED
+    from: coordinator MEM 376
+    as_of: 2026-09-11T08:51:28Z
+    said: >-
+      the watcher's grep, the appended log and the rc=75 line as dispatched; the ghost-text and dead/success instances are recorded in my files at rounds 336 and 351.
+  AND_THE_FOURTH_GATES_FINDING_IS_NOW_REPAIRED_RATHER_THAN_ONLY_NAMED:
+    prov: CHECKED
+    artifact: live/pm_research/be_score_neutrality.py
+    as_of: 2026-09-11T08:51:28Z
+    said: >-
+      the resolver verified at its three sites above; the six unreachable amendments are the ones I listed at round 375.
   # --- MEM round 375, 2026-09-11T08:45:21Z ---
   THE_THIRD_REFUSAL_IS_A_FORK_WITH_NO_WAIVER_PATH_AND_I_READ_THE_LITERAL:
     prov: CHECKED
