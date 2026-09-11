@@ -1,3 +1,75 @@
+# READ FIRST — round 374 (MEM, 2026-09-11T08:00:38Z, tip `0f5b188`)
+
+# ✅ TWO COMPARATORS, ONE VERDICT — `NOT_CERTIFIED` cleared
+
+`…__da00220.json`: **BIT_IDENTICAL** both arms, **0 flips**,
+`producer.sha256 = 8500ce41fc80` — ***which I hashed myself last round and
+confirmed is the comparator at `da00220`*** — `SUPPORTED_ON_THIS_DAY`.
+
+> **Rule-38 corroboration, and genuinely so: the instruments differ** — one is
+> the user's hardened copy, the other BE's rebuild to REV 173's stricter bar.
+
+# 🚧 THE RELAUNCH REFUSED AT THE NEXT GATE — **on exactly the mismatch I drove at round 340**
+
+`BE_CASCADE_DIFFERS`, 07:56:30, rc=1. **I read params v29:**
+
+```
+v29 names   de_head_scoring.py        53a406a0ae2a11ff
+v29 names   de_phase4_diag_runner.py  cb97b94dbd3fc6ca
+```
+
+**At round 340 I ran `verify_run_inputs` myself** and it raised
+`REFUSED BE_CASCADE_DIFFERS: 2 of 10 … de_head_scoring.py declared 53a406a0…
+actual 31c36838…`
+
+> ***The guard I found "off the path it guards" twenty-four rounds ago is now ON
+> the path — and refusing on precisely the pair I recorded then.***
+
+**And DA 220's sentence is now live, with V2 as the call site:** *"the call site
+alone refuses every day until the params are repointed."* ***A warning I recorded
+at round 353 about a half-fix, demonstrated by the pairing being half-done — the
+strongest confirmation such a warning can get, and the most expensive.***
+
+# 🔧 THE RULING REPOINTS THE **RECORD** TO BYTES ALREADY RULED — both digests verified
+
+I hashed the two that move at `7ed5a90`:
+
+```
+de_head_scoring.py        31c368384770351f   ← matches the ruling
+de_phase4_diag_runner.py  9e2a0977d8dfc3be   ← matches the ruling
+```
+
+**Every other field byte-identical** — thetas, `min_draws 500`, `m 2`,
+`alpha 0.05`. ***The cascade record follows the build pin the user ruled at
+03:07Z. No parameter moves.***
+
+**Not a rule-11 exposure, for two stated reasons:** no result exists for the
+rebuilt book, so there is nothing seen to fit to; **and the check's substance was
+already true** — *the book's scoring bytes ARE the frozen ones, which is why this
+is a stale record and not a wrong object.* DA 242 verifies **the diff touches
+`be_cascade` + version/reason only** and **drives `verify_run_inputs` both ways**.
+
+# 🔁 THE PATTERN — four correct gates, four stale records
+
+**V2 has enforced four gates tonight, every one correct, and each exposed a
+STALE RECORD rather than a wrong object** — the pin literal, the certificate's
+producer, the cascade, and a fourth.
+
+> ***The books were right every time. The things that DESCRIBED them lagged the
+> rulings.*** The user's hardening is doing exactly what it was written to do —
+> and what it keeps finding is that **this programme changes its objects faster
+> than it updates their records.**
+
+## And that is the register's lesson arriving through code
+
+**DA 221:** *a filed result does not reach the seat's own next claim.*
+**These four gates:** *a ruled change does not reach the records that describe it.*
+
+> **Same failure at two levels — the register lags the seats, the params lag the
+> rulings.** ***The difference is that V2 REFUSES when its record is stale, while
+> a lagging register simply goes unread — which is why these gates are worth
+> their interruptions, and why the register's lag cost an hour of re-derivation.***
+
 # READ FIRST — round 373 (MEM, 2026-09-11T07:57:41Z, tip `74a5aeb`)
 
 # 🔁 TWO PROXIES FOR IDENTITY, THIRTY MINUTES APART — opposite in effect, identical in cause
