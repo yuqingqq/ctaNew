@@ -12,7 +12,9 @@ from __future__ import annotations
 import argparse, hashlib, json, os, shutil, sys, tempfile
 from pathlib import Path
 
-DECL = Path(__file__).resolve().parent / "declarations" / "da_population_freeze_v1.json"
+#: v2 is the UNION of DA's list and DE's generator output. v1 stays on disk as
+#: provenance (rule 13) and is NOT the freeze in force.
+DECL = Path(__file__).resolve().parent / "declarations" / "da_population_freeze_v2.json"
 ROOTS = {"main": Path("/home/yuqing/ctaNew"),
          "wt-fwd": Path("/home/yuqing/ctaNew-wt-fwd"),
          "wt-deval": Path("/home/yuqing/ctaNew-wt-deval")}
