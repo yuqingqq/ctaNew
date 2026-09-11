@@ -13,6 +13,7 @@ import json
 import math
 import os
 import random
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -238,6 +239,9 @@ def _day_key(value) -> str:
     return str(value or "").replace("-", "")
 
 
+UNNAMED_OK = "BOOK_SCORING_CODE_MATCHES_WITH_UNNAMED_MEMBERS"
+UNNAMED_MOVED = "BOOK_SCORING_UNNAMED_MEMBER_MOVED_SINCE_THE_BUILD"
+UNNAMED_NO_DIGEST = "BOOK_SCORING_UNNAMED_MEMBER_HAS_NO_RECORDED_DIGEST"
 DECL_UNPINNED = "DECLARATION_IDENTITY_UNPINNED"
 BUILD_NOT_DESCENDANT = "BUILD_COMMIT_IS_NOT_A_DESCENDANT_OF_THE_BUILD_PIN"
 BUILD_DIGEST_MOVED = "BUILD_PINNED_DIGEST_MOVED"
@@ -275,6 +279,83 @@ def _declaration_pin(decl_dir=None):   # decl_dir: cells pass a fixture dir
         # both are the opposite of "this declaration names no pin".
         return None
     return None
+
+
+def unnamed_member_rows(unnamed, receipt: dict, root=None) -> list:
+    """Each unnamed scoring-set member: recorded digest vs the file on disk.
+
+    USER RULING, DE 336. Static reachability OVER-APPROXIMATES the run, so
+    a lazily imported module on an untaken branch is in the set and
+    legitimately absent from the recording -- the runner says so and BE's
+    receipt says so in its own REPORTABLE_NEVER_REFUSABLE block. What
+    matters is not that it was named, but that IT HAS NOT MOVED between
+    the build and this read: bytes that did not run and did not change
+    cannot have changed the scores.
+
+    WHERE THE RECORDED DIGEST COMES FROM, measured rather than assumed:
+    for these members the receipt's own `import_closure.modules` map has
+    NO entry -- they were never imported -- so the digest the receipt does
+    carry for them is the one at its `builder_commit`, read from git. The
+    receipt's recorded digests are TRUNCATED (24 hex on the real receipt),
+    so the comparison is by prefix in whichever direction is shorter; an
+    equality test would have refused every member.
+    """
+    root = Path(root) if root else HERE
+    pc = receipt.get("producing_code") or {}
+    recorded_map = (pc.get("import_closure") or {}).get("modules") or {}
+    commit = pc.get("builder_commit")
+    rows = []
+    for m in sorted(unnamed):
+        f = root / m
+        disk = _sha(f) if f.is_file() else None
+        recorded = recorded_map.get(m)
+        source = "receipt.import_closure.modules"
+        if not recorded and commit:
+            r = subprocess.run(
+                ["git", "-C", str(root), "show",
+                 f"{commit}:live/pm_research/{m}"], capture_output=True)
+            if r.returncode == 0:
+                recorded = hashlib.sha256(r.stdout).hexdigest()
+                source = f"the receipt's builder_commit {str(commit)[:12]}"
+        short = min(len(recorded or ""), len(disk or "")) or 0
+        identical = bool(recorded and disk
+                         and recorded[:short] == disk[:short])
+        rows.append({"module": m, "recorded": (recorded or None),
+                     "recorded_from": source if recorded else None,
+                     "on_disk": disk, "identical": identical,
+                     "compared_n_hex": short})
+    return rows
+
+
+def assert_unnamed_members_admissible(rows, unnamed=()) -> dict:
+    """REPORTABLE iff nothing moved; REFUSES BY NAME otherwise (DE 336)."""
+    no_digest = [r["module"] for r in rows if not r["recorded"]]
+    moved = [r["module"] for r in rows
+             if r["recorded"] and not r["identical"]]
+    if no_digest:
+        raise SettlementControlRefused(
+            f"REFUSED {UNNAMED_NO_DIGEST}: {no_digest} -- the receipt "
+            f"records no digest for these and its builder commit does not "
+            f"carry them either. Absence of evidence about bytes that can "
+            f"score is not evidence they are unchanged.")
+    if moved:
+        first = [r for r in rows if r["module"] == moved[0]][0]
+        raise SettlementControlRefused(
+            f"REFUSED {UNNAMED_MOVED}: {moved} -- in the scoring set, not "
+            f"named by the receipt, and CHANGED since the build. First: "
+            f"{first}")
+    lazy = R.ruled_lazy_exemption(HERE)
+    return {"status": UNNAMED_OK, "unnamed_members": rows,
+            "unnamed_members_are_reportable_because":
+                "each is in the statically reachable set, absent from the "
+                "recording because it did not run, and IDENTICAL to the "
+                "bytes the receipt's own provenance names (USER, DE 336)",
+            "ruled_lazy_exemption_NOT_WIDENED": {
+                "ruling": "USER, DE 174 (2), unchanged",
+                "lazy_only_set": lazy["exempt"],
+                "unnamed_here": sorted(unnamed),
+                "outside_the_exemption": sorted(
+                    set(unnamed) - set(lazy["exempt"]))}}
 
 
 def _builder_commit_admissible(builder_commit) -> bool:
@@ -404,17 +485,16 @@ def verify_book_receipt(receipt_path, book_sha: str | None, day: str,
     scoring = R.assert_book_scoring_code(
         receipt, where=f"the settlement-control path for {day}")
     if not scoring.get("is_a_match"):
+        # USER RULING, DE 336: the exemption is NOT widened. An unnamed
+        # member is REPORTABLE, never refusable, IFF it has not moved; one
+        # whose digest mismatches, or that carries no digest at all,
+        # REFUSES BY NAME. Books built before the freeze carry the
+        # pre-freeze closure, and that is a provenance fact about bytes,
+        # not a licence to skip the check.
         unnamed = set(scoring.get(
             "in_the_set_and_NOT_named_by_the_receipt") or [])
-        lazy = R.ruled_lazy_exemption(HERE)
-        beyond = sorted(unnamed - set(lazy["exempt"]))
-        if beyond:
-            raise SettlementControlRefused(
-                f"REFUSED {R.LAZY_ONLY_EXEMPTION}: receipt omits {beyond}, "
-                f"outside the ruled lazy-import set {lazy['exempt']}.")
-        scoring["ruled_lazy_exemption"] = {
-            "ruling": "USER, DE 174 (2)", "unnamed": sorted(unnamed),
-            "lazy_only_set": lazy["exempt"], "satisfied": True}
+        rows = unnamed_member_rows(unnamed, receipt)
+        scoring.update(assert_unnamed_members_admissible(rows, unnamed))
     return {"path": str(path),
             "admitted_by": _admitting_arm(builder_commit),
             "sha256": hashlib.sha256(payload).hexdigest(),

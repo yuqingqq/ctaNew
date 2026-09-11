@@ -253,6 +253,61 @@ def falsify() -> int:
            f"{str(prov.get('pipeline_commit'))[:12]} all="
            f"{prov.get('every_computing_module_matches_the_pipeline_commit')}")
 
+    # --- CELL 16: UNNAMED SCORING-SET MEMBERS (USER RULING, DE 336) ----
+    # Static reachability OVER-APPROXIMATES the run: a lazily imported
+    # module on an untaken branch is in the set and legitimately absent
+    # from the recording. What matters is that it HAS NOT MOVED -- bytes
+    # that did not run and did not change cannot have changed the scores.
+    # The exemption is NOT widened; the digest is what decides.
+    THREE = ["be_score_neutrality.py", "harmful_hazard_model.py",
+             "phase2_state_schema_freeze.py"]
+    rcpt = json.loads((Path("/home/yuqing/ctaNew/data/pm_5min/derived")
+                       / "rebuild_identity"
+                       / "be_daybook_receipt_20260908_btc__L250ms__"
+                         "FWD1.rebuild.json").read_text())
+    real_rows = SC.unnamed_member_rows(THREE, rcpt)
+    try:
+        rep = SC.assert_unnamed_members_admissible(real_rows, THREE)
+        proceeded = rep.get("status")
+    except Exception as exc:                               # noqa: BLE001
+        rep, proceeded = {}, str(exc)
+    ck("THREE matched unnamed members are REPORTABLE and it proceeds",
+       proceeded == SC.UNNAMED_OK and all(r["identical"] for r in real_rows)
+       and len(real_rows) == 3,
+       ", ".join(f"{r['module'].split('.')[0]}:{r['recorded'][:8]}"
+                 for r in real_rows))
+    ck("the record lists them BY NAME AND DIGEST, and says the exemption "
+       "was not widened",
+       [r["module"] for r in rep.get("unnamed_members", [])] == THREE
+       and all(r.get("recorded") for r in rep.get("unnamed_members", []))
+       and rep.get("ruled_lazy_exemption_NOT_WIDENED", {}).get(
+           "outside_the_exemption") == ["be_score_neutrality.py"],
+       str(rep.get("ruled_lazy_exemption_NOT_WIDENED", {}).get(
+           "outside_the_exemption")))
+    moved_rows = [dict(r, identical=False) if r["module"] == THREE[1] else r
+                  for r in real_rows]
+    try:
+        SC.assert_unnamed_members_admissible(moved_rows, THREE)
+        moved_out = ""
+    except Exception as exc:                               # noqa: BLE001
+        moved_out = str(exc)
+    ck("ONE member CHANGED since the build REFUSES by name",
+       SC.UNNAMED_MOVED in moved_out and THREE[1] in moved_out,
+       moved_out[:64] or "ADMITTED A MOVED MEMBER")
+    absent_rows = [dict(r, recorded=None, recorded_from=None)
+                   if r["module"] == THREE[2] else r for r in real_rows]
+    try:
+        SC.assert_unnamed_members_admissible(absent_rows, THREE)
+        absent_out = ""
+    except Exception as exc:                               # noqa: BLE001
+        absent_out = str(exc)
+    ck("ONE member with NO recorded digest REFUSES by name",
+       SC.UNNAMED_NO_DIGEST in absent_out and THREE[2] in absent_out,
+       absent_out[:64] or "ADMITTED A MEMBER WITH NO DIGEST")
+    ck("the digest comparison survives the receipt's TRUNCATED digests",
+       all(r["compared_n_hex"] >= 24 for r in real_rows),
+       f"compared {sorted({r['compared_n_hex'] for r in real_rows})} hex")
+
     # --- CELL 15: THE FREEZE CHECK TAKES THE BUILD PIN'S FORM ----------
     # USER RULING, DE 331. A declaration naming a tip can never name the
     # commit that CONTAINS it -- DA's re-declaration lands on top of the
@@ -322,10 +377,16 @@ def falsify() -> int:
        stranger[:60] or "ADMITTED A STRANGER")
     ck("V2's own row is RECORDED, not asserted: the valuation admits",
        v2_in_module == "", v2_in_module[:60] or "admits, as ruled")
+    # THE PROPERTY IS THAT THE EXTERNAL ROW FIRES, not that the live row
+    # happens to be green: between a landed V2 edit and DA's declaration
+    # the live row refuses BY THE SAME NAME, which is the row working, and
+    # a cell that failed on it would be failing for the wrong reason.
     ck("and the LAUNCHER's external row is what refuses it, by name",
        str(v2_row_bad.get("status", "")).endswith(MX.V2_MISMATCH)
-       and v2_row_live.get("status") == "PASS",
-       f"{v2_row_bad.get('status')} | live {v2_row_live.get('status')}")
+       and v2_row_live.get("status") in (
+           "PASS", f"WOULD_REFUSE:{MX.V2_MISMATCH}"),
+       f"fixture {v2_row_bad.get('status')} | live "
+       f"{v2_row_live.get('status')}")
 
     # --- CELL 14: VERSION-ORDERED SUPERSESSION (USER RULING, DE 329) ---
     # Measured deadlock, 13:33Z: DA's code freeze v3 named the new commit,
