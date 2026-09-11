@@ -57,6 +57,16 @@ STEPS = (
     (8, "economic clock, predictive winners only", ()),
 )
 
+#: WHO OWNS EACH GATE AND WHERE IT MUST LIVE. The plan implies both and
+#: nothing tracked either, so a gate could be silently claimed by two seats or
+#: landed to the wrong branch and nobody would see it.
+#:
+#: REQUIRED REFS ARE BOTH EXECUTING REFS. `origin/mm-research` is the user's
+#: fork and is declared NON-EXECUTING (da_shared_tree_non_executing_v1.json), so
+#: presence there NEVER satisfies a gate -- it is recorded and ignored.
+OWNER = {1: "DA", 2: "BE", 3: "DE", 4: "DE", 5: "DE", 6: "DE", 7: "DE", 8: "DE"}
+REQUIRED_REFS = EXECUTING_REFS
+
 #: THE PATH -> STEP MAPPING IS DA'S ATTRIBUTION AND IS THIS LEDGER'S WEAKEST
 #: LINK. A status keyed on a path nobody declared measures the GUESS, not the
 #: lane. The first version of this file guessed `de_canonical_forecast_action`
@@ -75,7 +85,12 @@ FAIR_VALUE_FILE_RE = r"(fair|sigma|forecast|seam|canonical)"
 #: own cell output, recorded with its source so it is attributable.
 BEHAVIOUR = {
     1: {"verdict": "DRIVEN_GREEN", "source": "DA cells in da_fair_value_gate1_labels.falsify*"},
-    2: {"verdict": "UNVERIFIED_BY_DA", "source": "BE's cells; DA has not driven them"},
+    2: {"verdict": "DRIVEN_GREEN",
+        "source": ("BE's 27 cells, RE-DRIVEN BY DA AGAINST THE PUSHED BLOB -- a worktree cut at "
+                   "origin/de-freeze-chain-v2, module resolved from that tree, blob sha256 "
+                   "8d7a2448937e0fd3, falsify() -> {'n': 27, 'failed': 0}. The original green "
+                   "run was against a file in the SHARED tree; its bytes are identical, but "
+                   "identical bytes is a measurement, not an assumption, so it was re-driven.")},
     3: {"verdict": "FAILING", "source": "REVIEW 199 / DE cells: five of six properties green, "
                                         "the collapsed-timestamps clause not enforced"},
 }
@@ -152,7 +167,14 @@ def build(fetch: bool = True) -> dict:
             status = "LANDED_BEHAVIOUR_UNVERIFIED"
         if status == "SATISFIED":
             satisfied += 1
+        missing_refs = [r for r in REQUIRED_REFS if r not in present_on] if paths else []
         rows.append({"step": n, "title": title, "paths": list(paths),
+                     "owner": OWNER.get(n),
+                     "required_refs": list(REQUIRED_REFS),
+                     "missing_from_required_refs": missing_refs,
+                     "landed_only_on_the_non_executing_fork": bool(
+                         paths and not present_on
+                         and all(per_ref["origin/mm-research"][p] > 0 for p in paths)),
                      "counts_per_ref": per_ref,
                      "present_on_executing_refs": present_on,
                      "behaviour": beh, "status": status,
@@ -164,6 +186,10 @@ def build(fetch: bool = True) -> dict:
                "fair_value_plan.md v1.2 §11: 'No fair-value score is evidence before step 6.'",
            "THE_STANDING_RULE":
                "A LANDING IS PROVEN BY A COUNT AT A FETCHED REF, NEVER BY A COMMIT SHA IN PROSE.",
+           "owners": dict(OWNER),
+           "required_refs": list(REQUIRED_REFS),
+           "non_executing_ref": "origin/mm-research",
+           "no_gate_claimed_by_two_seats": len(OWNER) == len(STEPS),
            "unattributed_lane_files": {r: unattributed_files(r) for r in EXECUTING_REFS},
            "THE_PATH_TO_STEP_MAPPING_IS_DAS_ATTRIBUTION":
                ("it is this ledger's weakest link: a status keyed on a path nobody declared "
@@ -205,6 +231,16 @@ def falsify() -> int:
         for r in EXECUTING_REFS})
     ck("...and the count is the SAME whatever the cwd",
        _count(EXECUTING_REFS[0], "live/pm_research/da_fair_value_gate1_labels.py") == 1)
+    ck("every gate has exactly ONE owning seat",
+       len(OWNER) == len(STEPS) and all(r["owner"] for r in led["steps"]),
+       {r["step"]: r["owner"] for r in led["steps"]})
+    ck("a gate missing from a REQUIRED ref is named, not silently satisfied",
+       all(isinstance(r["missing_from_required_refs"], list) for r in led["steps"]),
+       {r["step"]: [x.replace("origin/", "") for x in r["missing_from_required_refs"]]
+        for r in led["steps"] if r["missing_from_required_refs"]})
+    ck("presence ONLY on the non-executing fork is flagged, never counted",
+       all(r["landed_only_on_the_non_executing_fork"] is False or r["status"] != "SATISFIED"
+           for r in led["steps"]))
     ck("no lane file is left UNATTRIBUTED without being named",
        isinstance(led["unattributed_lane_files"], dict),
        {k.replace("origin/", ""): len(v) for k, v in led["unattributed_lane_files"].items()})
