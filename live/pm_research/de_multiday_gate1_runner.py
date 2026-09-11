@@ -1253,6 +1253,52 @@ def generate_draws_in_process(params: dict, *, day: str, arm: str,
 
 
 DAY_READ_STATE_UNATTESTED = "DAY_READ_STATE_UNATTESTED"
+DECLARATION_PIN_CONFLICT = "DECLARATION_PIN_CONFLICT"
+
+
+def resolve_declaration_pins(decl_dir=None) -> dict:
+    """The DECLARATION identities the freeze chain names, AGREE-OR-REFUSE.
+
+    It lives HERE, not in be_score_neutrality.py: that module is the
+    NEUTRALITY CERTIFICATE'S PRODUCER, and the certificate is pinned to its
+    digest -- editing it voids the certificate. I edited it once at
+    3dbb107 and reverted; this is the version that does not.
+
+    Walks v1 then every amendment in version order. A later amendment may
+    ADD a pin; two amendments naming DIFFERENT identities for the same
+    declaration REFUSE rather than the last one silently winning, because a
+    pin that can be overwritten is not a pin.
+    """
+    import re as _re
+    d = Path(decl_dir) if decl_dir else Path(__file__).resolve().parent / \
+        "declarations"
+    want = ("day_read_state_attestation", "forward_test_declaration")
+    out: dict = {}
+    files = [d / "de_arm_freeze_v1.json"] + sorted(
+        d.glob("de_arm_freeze_v*_amendment.json"),
+        key=lambda f: int(_re.search(r"_v(\d+)_amendment", f.name).group(1)))
+    for f in files:
+        if not f.is_file():
+            continue
+        try:
+            doc = json.loads(f.read_bytes())
+        except Exception:                          # noqa: BLE001
+            continue
+        for key in want:
+            val = doc.get(key)
+            if not (isinstance(val, dict) and val.get("path")
+                    and val.get("sha256")):
+                continue
+            prev = out.get(key)
+            if prev and (prev["path"] != val["path"]
+                         or prev["sha256"] != val["sha256"]):
+                raise RunnerRefused(
+                    f"REFUSED {DECLARATION_PIN_CONFLICT}: {key} is pinned "
+                    f"to {prev['path']}/{prev['sha256'][:12]} and again to "
+                    f"{val['path']}/{val['sha256'][:12]} in {f.name}. A pin "
+                    f"that can be overwritten is not a pin.")
+            out[key] = dict(val, named_by=f.name)
+    return out
 
 
 def _attested_day_read_state(decl_dir=None) -> dict:
@@ -1270,9 +1316,7 @@ def _attested_day_read_state(decl_dir=None) -> dict:
     d = Path(decl_dir) if decl_dir else Path(__file__).resolve().parent / \
         "declarations"
     try:
-        import be_score_neutrality as _BEN
-        chain = _BEN.resolve_frozen_params_pin(d)
-        pin = chain.get("day_read_state_attestation")
+        pin = resolve_declaration_pins(d).get("day_read_state_attestation")
         if not pin or not pin.get("path") or not pin.get("sha256"):
             return {}
         f = d / Path(str(pin["path"])).name

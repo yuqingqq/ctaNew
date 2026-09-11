@@ -251,8 +251,7 @@ def _declaration_pin(decl_dir=None):
     """
     d = Path(decl_dir) if decl_dir else HERE / "declarations"
     try:
-        chain = BEN.resolve_frozen_params_pin(d)
-        pin = chain.get("forward_test_declaration")
+        pin = R.resolve_declaration_pins(d).get("forward_test_declaration")
         if pin and pin.get("path") and pin.get("sha256"):
             return pin
         params_path = d / Path(str((chain.get("pin") or {}).get("path")
