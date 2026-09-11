@@ -1,0 +1,41 @@
+{
+ "protocol": "P003_DA_FORWARD_TEST_V5",
+ "version": 5,
+ "STATUS": "AMENDED-BEFORE-ANY-FORWARD-DAY-IS-VALUED",
+ "declared_by": "DA 218",
+ "declared_at_utc": "2026-09-11T03:16:58Z",
+ "supersedes": {
+  "file": "declarations/da_forward_test_declaration_v4.json",
+  "commit": "1efc71d",
+  "v1_v2_v3_v4_are_UNEDITED": true,
+  "why_a_v5_AT_ALL_and_not_an_edit": "v4 LANDED AND PUSHED (1efc71d, and REV pushed f4b5bd8 on top of it). The moment it was public it was frozen. I had a strictly ADDITIVE measurement to add and I added it as a SUPERSEDING FILE rather than editing v4 -- rule 13. Nothing in v4 is wrong; v4's statement about params v29 is true and stays true.",
+  "scope_of_this_amendment": "THREE MEASURED FACTS ONLY. No declared test, bar, population, commit or digest changes."
+ },
+ "FACT_1_THE_CASCADE_DIVERGENCE_HOLDS_AGAINST_THE_CURRENT_PARAMS_NOT_ONLY_v29": {
+  "v4_said": "at 7ed5a90, 2 of params v29's 10 pinned cascade modules differ",
+  "what_I_measured_after_v4_landed": "params v30 is the params of record (landed by BE 161 as 933b267)",
+  "RESULT": "v30 pins THE SAME TWO DIGESTS (53a406a0ae2a, cb97b94dbd3f) and is ALSO 8/10 at 7ed5a90",
+  "every_params_v19_through_v30_carries_n_modules_10": true,
+  "WHY_IT_MATTERS": "it forecloses the obvious objection -- that I read a stale declaration. THE NEWEST PARAMS STILL PINS THE PRE-MOVE SCORING BYTES. This is the live pin, not a historical one.",
+  "and_it_is_a_correction_of_my_own_near_miss": "I measured v29 first and would have reported only v29. A `ls` for n_modules surfaced v30's existence. Reading ONE declaration and calling it THE pin is the same act as a head -20 read as a set."
+ },
+ "FACT_2_A_SECOND_SEAT_CONVERGED_AND_ONE_NUMBER_DISAGREES": {
+  "DE_measured_it_independently": "Q-DE-231 (e73d485), landed while I was verifying -- neither seat saw the other's work",
+  "DE_NAMES_THE_SAME_TWO_MODULES": [
+   "de_head_scoring.py",
+   "de_phase4_diag_runner.py"
+  ],
+  "rule_38_satisfied_and_stated_precisely": "the instruments DIFFERED -- DE resolved its own pin set, I resolved params v29/v30's be_cascade array -- so the pair of answers is the finding. Had we run the same query, agreement would have been arithmetic, not evidence.",
+  "THE_DENOMINATORS_DISAGREE_AND_I_DO_NOT_RESOLVE_IT": "DE says 2 of THIRTEEN pinned scoring modules; I measure 2 of TEN, and every params v19..v30 carries n_modules=10. THE NUMERATOR AND THE NAMES AGREE EXACTLY; THE DENOMINATOR DOES NOT. That is DE's set to name, not mine to overrule -- and I record it rather than quietly adopting whichever number reads better.",
+  "what_DE_did_not_state_and_this_artifact_does": "that the book-code predicate refuses BY NAME on this, and that per Q-DA-395 `import_be_cascade` supplies `actual_sha` and takes the entry-point-only branch -- SO THE TEN-MODULE CHECK IS REACHED ONLY FROM THE SELFTEST AND A DAY RUN WOULD NOT REFUSE AUTOMATICALLY. That is the WORSE half, not the better one: the divergence will not announce itself at run time. A guard that cannot fire on the live path is not a guard.",
+  "DE_and_I_agree_on_the_consequence": "score-neutrality was never established and still has not been"
+ },
+ "FACT_3_THE_09_07_QUESTION_IS_CLOSED_AND_THE_PRE_DECLARED_LINE_ABSORBED_IT": {
+  "REV_171_verdict": "09-07 STANDS IN THE PRIMARY. No frozen element was fit, tuned, chosen or selected after a 09-07 result existed; the two things that moved after it are USER-authored defect repairs with exactly one correct form each, determined by objects fixed before 09-07 existed.",
+  "THE_DECLARATION_REQUIRED_NO_CHANGE_TO_ACCEPT_IT": "v3's 09-07 line was written to take EITHER answer. It took this one. POPULATION N=7 (09-07..09-13) is unchanged, and no version of this declaration moved because the answer arrived.",
+  "THIS_IS_THE_POINT_OF_DECLARING_BEFORE_THE_ANSWER": "had the line not been written that way, a verdict arriving now would have forced a choice AFTER the answer was known -- which is rule 11. The line cost two sentences and bought the whole question.",
+  "and_the_bound_I_keep_on_it": "REV measured it; I did not. I am recording REV's verdict, not corroborating it."
+ },
+ "everything_else_in_v4_AND_v3_stands_verbatim": true,
+ "THE_STATEMENT_THE_RECEIPT_MUST_CARRY_IS_UNCHANGED_FROM_v4": "pipeline_provenance_limit, on absence REFUSE"
+}
