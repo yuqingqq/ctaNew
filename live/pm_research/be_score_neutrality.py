@@ -515,15 +515,26 @@ def per_book_guard(book: dict, delta_max_certified: dict, *, k=K_FORWARD,
     No comparator result retires this: a green certification on consumed days
     says nothing about a forward day's occupancy near its threshold."""
     arms = arm_heads(decl_dir)
+    if (not isinstance(k, (int, float)) or isinstance(k, bool)
+            or not math.isfinite(float(k)) or k <= 0):
+        raise NeutralityRefused(
+            f"REFUSED {GUARD_TOO_CLOSE}: K must be finite and positive, "
+            f"got {k!r}.")
     rows = {}
     bad = []
     for arm, spec in sorted(arms.items()):
         dmc = delta_max_certified.get(arm)
-        if dmc is None:
+        if (not isinstance(dmc, (int, float)) or isinstance(dmc, bool)
+                or not math.isfinite(float(dmc)) or dmc < 0):
             raise NeutralityRefused(
-                f"REFUSED {NO_THETA}: no DELTA_MAX_CERTIFIED for {arm}; an "
-                f"absent bound cannot license a day")
+                f"REFUSED {NO_THETA}: no finite nonnegative "
+                f"DELTA_MAX_CERTIFIED for {arm} (read {dmc!r}); an absent or "
+                f"invalid bound cannot license a day")
         A = gen_max(book, spec["head"])
+        if not A:
+            raise NeutralityRefused(
+                f"REFUSED {EMPTY_SCORES}: head {spec['head']!r} has no "
+                f"usable generation score on this forward book.")
         m_min = min(abs(v - spec["theta"]) for v in A.values())
         edge = k * dmc
         ok = m_min > edge
@@ -798,6 +809,11 @@ def falsify() -> int:                                        # noqa: C901
          refuses(lambda: per_book_guard(book(tight, onear), dmc), GUARD_TOO_CLOSE))
     note("per-book guard REFUSES an absent DELTA_MAX_CERTIFIED",
          refuses(lambda: per_book_guard(book(base, obase), {}), NO_THETA))
+    nan_bounds = dict(dmc)
+    nan_bounds[arm] = float("nan")
+    note("per-book guard REFUSES a NaN DELTA_MAX_CERTIFIED",
+         refuses(lambda: per_book_guard(book(base, obase), nan_bounds),
+                 NO_THETA))
 
     # 8. BOTH arms are evaluated at their OWN theta, not one shared bar.
     r = certify(book(base, obase), book(base, obase))

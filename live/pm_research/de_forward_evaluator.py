@@ -40,10 +40,13 @@ as if it were the test's floor understates or overstates it.
 """
 from __future__ import annotations
 
+import argparse
 import json
+import os
 import sys
 from math import comb
 from pathlib import Path
+from time import time_ns
 
 HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
@@ -61,6 +64,16 @@ NO_DAYS = "FORWARD_EVALUATOR_CALLED_WITHOUT_AN_EXPLICIT_DAY_SET"
 DUP_DAY = "FORWARD_EVALUATOR_DAY_SET_REPEATS_A_DAY"
 MISSING = "FORWARD_EVALUATOR_BOOK_MISSING_FOR_A_DECLARED_DAY"
 SHORT = "FORWARD_EVALUATOR_POPULATION_SHORTER_THAN_DECLARED"
+NO_ROBUSTNESS = "FORWARD_EVALUATOR_DECLARED_ROBUSTNESS_LEG_MISSING"
+OUTPUT_EXISTS = "FORWARD_EVALUATOR_OUTPUT_ALREADY_EXISTS"
+BAD_METADATA = "FORWARD_EVALUATOR_METADATA_MALFORMED"
+MISSING_METADATA = "FORWARD_EVALUATOR_REQUIRED_METADATA_MISSING"
+CELL_COHORT = "FORWARD_ARM_CELLS_DO_NOT_SHARE_ONE_DAY_INPUT_COHORT"
+
+VERDICT_BOTH = "FORWARD_SUPPORT_FOR_BOTH_ARMS"
+VERDICT_ONE = "FORWARD_SUPPORT_FOR_THAT_ARM_ONLY"
+VERDICT_NONE = "NO_FORWARD_SUPPORT"
+VERDICT_SPLIT = "NOT_ONE_MECHANISM"
 
 
 class EvaluatorRefused(RuntimeError):
@@ -117,6 +130,64 @@ def floor_block(G: int, n_draws: int, sided: int = SIDED) -> dict:
             "the minimum p says whether a pass was POSSIBLE; the tolerance "
             "says how close to perfection it demanded"),
     }
+
+
+def _sign(value: float) -> int:
+    value = float(value)
+    return 1 if value > 0 else -1 if value < 0 else 0
+
+
+def robustness_pool(cells: dict, days, arm: str,
+                    primary_D: float) -> dict:
+    """Pool the declared fill-assumption leg; absence is not a zero."""
+    per_day = {}
+    for day in days:
+        robust = (cells[(day, arm)].get("result") or {}).get(
+            "robustness_leg")
+        if (not isinstance(robust, dict)
+                or robust.get("label") != "NO_FILLS_UNTIL_NEXT_GENERATION"
+                or robust.get("observed_D_cents") is None):
+            raise EvaluatorRefused(
+                f"REFUSED {NO_ROBUSTNESS}: {day}/{arm} does not carry the "
+                f"labelled NO_FILLS_UNTIL_NEXT_GENERATION delta. The leg is "
+                f"always reported and may never be substituted with zero.")
+        per_day[day] = float(robust["observed_D_cents"])
+    pooled_D = sum(per_day.values())
+    return {
+        "label": "NO_FILLS_UNTIL_NEXT_GENERATION",
+        "pooling": "SUM_OF_PER_DAY_CASH_DELTAS",
+        "observed_D_cents": pooled_D,
+        "per_day_D_cents": per_day,
+        "primary_label": "REFERENCE_FILLS",
+        "primary_observed_D_cents": primary_D,
+        "sign_reversal": _sign(primary_D) != _sign(pooled_D),
+        "a_sign_reversal_blocks_promotion": True,
+    }
+
+
+def verdict_for_forward(arms: dict) -> dict:
+    advancing = [name for name, row in arms.items() if row["advances"]]
+    pooled_passing = [name for name, row in arms.items()
+                      if row["pooled_advances_before_robustness"]]
+    signs = {_sign(arms[name]["pooled"]["D_arm_cents"])
+             for name in pooled_passing}
+    if len(pooled_passing) == 2 and len(signs) > 1:
+        verdict = VERDICT_SPLIT
+        why = "two opposite significant effects are not one mechanism"
+        advancing = []
+    elif len(advancing) == 2:
+        verdict = VERDICT_BOTH
+        why = "both arms clear both comparisons and the robustness block"
+    elif len(advancing) == 1:
+        verdict = VERDICT_ONE
+        why = "one arm clears; this is not a programme-level pass"
+    else:
+        verdict = VERDICT_NONE
+        why = "neither arm clears both comparisons and the robustness block"
+    return {"verdict": verdict, "why": why,
+            "n_arms_advancing": len(advancing),
+            "arms_advancing": advancing,
+            "triggers_no_extension_rule": not advancing}
 
 
 # --------------------------------------------------------------- futility --
@@ -233,8 +304,21 @@ def per_day_line(cell: dict, pool: dict, G: int = None,
 NO_RECEIPT = "FORWARD_EVALUATOR_NO_VERIFIED_WINNER_RECEIPT_FOR_A_DAY"
 
 
+def _winner_source_blocks(value):
+    if isinstance(value, dict):
+        if (isinstance(value.get("chainlink_verification"), dict)
+                and isinstance(value.get("sha256"), str)):
+            yield value
+        for child in value.values():
+            yield from _winner_source_blocks(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from _winner_source_blocks(child)
+
+
 def settlement_source_disclosure(days, derived: Path,
-                                 revision: str = "L250ms") -> dict:
+                                 revision: str = "L250ms",
+                                 winner_sources=None) -> dict:
     """R-810's finality, carried on every published cent figure.
 
     Step 2 called `winner_source` WITHOUT `verification=`, so every cent it
@@ -249,7 +333,9 @@ def settlement_source_disclosure(days, derived: Path,
     a day carrying unreachable slugs.
     """
     import glob as _glob
+    import hashlib
     out, all_final = {}, True
+    winner_sources = winner_sources or {}
     for d in days:
         c = d.replace("-", "")
         fs = sorted(_glob.glob(str(Path(derived) /
@@ -260,39 +346,125 @@ def settlement_source_disclosure(days, derived: Path,
                 f"under {derived}. A cent figure whose winner source was "
                 f"never verified must say so, and saying so requires the "
                 f"receipt that did the verifying.")
-        rec = json.loads(Path(fs[-1]).read_text())
-
-        def _walk(o, pre=""):
-            if isinstance(o, dict):
-                for k, v in o.items():
-                    yield from _walk(v, pre + "/" + k)
-            elif isinstance(o, list):
-                for i, v in enumerate(o):
-                    yield from _walk(v, pre + f"[{i}]")
-            else:
-                yield pre, o
-        counts = {k.rsplit("/", 1)[1]: v for k, v in _walk(rec)
-                  if "/chainlink_verification/counts/" in k}
+        expected_sha = winner_sources.get(d)
+        matched = None
+        for candidate in reversed(fs):
+            path = Path(candidate)
+            try:
+                payload = path.read_bytes()
+                rec = json.loads(payload)
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise EvaluatorRefused(
+                    f"REFUSED {NO_RECEIPT}: unreadable verification receipt "
+                    f"{path}: {type(exc).__name__}: {exc}") from None
+            if str(rec.get("day") or "").replace("-", "") != c:
+                continue
+            for block in _winner_source_blocks(rec):
+                if expected_sha is None or block.get("sha256") == expected_sha:
+                    matched = (path, payload, block)
+                    break
+            if matched is not None:
+                break
+        if matched is None:
+            raise EvaluatorRefused(
+                f"REFUSED {NO_RECEIPT}: {d} has no verification receipt for "
+                f"the winner-source digest used by its settlement cells, "
+                f"{expected_sha}.")
+        path, payload, winner_source = matched
+        verification = winner_source["chainlink_verification"]
+        per_slug = verification.get("per_slug") or {}
+        statuses = [row.get("status") for row in per_slug.values()
+                    if isinstance(row, dict)]
+        names = ("VERIFIED_AGREE", "DISAGREE", "BOUNDARY_NOT_IN_CAPTURE",
+                 "CHAINLINK_UNAVAILABLE", "VENUE_UNRESOLVED")
+        counts = {name: statuses.count(name) for name in names}
+        unknown = sorted(set(statuses) - set(names))
+        finality = verification.get("finality") or {}
         final = counts.get("DISAGREE", 1) == 0 and all(
             v == 0 for k, v in counts.items()
-            if k not in ("VERIFIED_AGREE", "DISAGREE"))
+            if k not in ("VERIFIED_AGREE", "DISAGREE")) \
+            and bool(per_slug) and not unknown \
+            and counts["VERIFIED_AGREE"] == len(per_slug) \
+            and finality.get("is_final") is True \
+            and winner_source.get("is_final_for_quotation") is True
         all_final &= final
-        out[d] = {"counts": counts, "receipt": Path(fs[-1]).name,
+        out[d] = {"counts": counts, "receipt": path.name,
+                  "receipt_sha256": hashlib.sha256(payload).hexdigest(),
+                  "winner_source_sha256": winner_source.get("sha256"),
+                  "matches_settlement_cells": (
+                      expected_sha is None
+                      or winner_source.get("sha256") == expected_sha),
                   "no_slug_disagrees": counts.get("DISAGREE", None) == 0,
                   "is_final_for_quotation": final,
+                  "unknown_statuses": unknown,
                   "why_not_final": (None if final else
                                     "slugs the Chainlink stream cannot "
                                     "reach keep finality gated")}
+    n_disagree = sum(row["counts"]["DISAGREE"] for row in out.values())
+    if all_final:
+        reading = (
+            "Every settlement cell's exact winner-source bytes have an "
+            "identity-matched verification, and every slug agrees. The "
+            "verification changes no cent figure.")
+    elif n_disagree:
+        reading = (
+            f"{n_disagree} slug disagreement(s) are present. Settlement cents "
+            "using the venue winner record are not final for quotation.")
+    else:
+        reading = (
+            "No slug disagreement is recorded, but at least one winner is not "
+            "verifiable from the captured Chainlink boundary. The cent figures "
+            "remain venue-record values and are not final for quotation.")
     return {
         "per_day": out,
         "every_day_final_for_quotation": all_final,
-        "THE_LIMIT_THESE_NUMBERS_CARRY": (
-            "step 2 called `winner_source` without `verification=`, so its "
-            "published cents are labelled VENUE_RECORD_NOT_VERIFIED_"
-            "AGAINST_CHAINLINK. The check has since been read from the day "
-            "receipts and NO SLUG DISAGREES on any day, so NO CENT FIGURE "
-            "CHANGES -- what was missing was the label, not the money."),
+        "n_slug_disagreements": n_disagree,
+        "THE_LIMIT_THESE_NUMBERS_CARRY": reading,
     }
+
+
+def _load_forward_cells(root: Path, days, arms) -> dict:
+    """Load only cells that reconcile to the V2 runner checkpoints."""
+    try:
+        cells = {
+            (day, arm): AGG.load_cell(
+                Path(root), day, arm, strict_forward=True)
+            for day in days for arm in arms
+        }
+    except AGG.AggregateRefused as exc:
+        raise EvaluatorRefused(str(exc)) from None
+    for day in days:
+        shared = {}
+        for arm in arms:
+            result = cells[(day, arm)]["result"]
+            robust = result["robustness_leg"]
+            shared[arm] = {
+                "book_sha256": result.get("book_sha256"),
+                "winner_source": result.get("winner_source"),
+                "zero_model_cancel_baseline_total_cents": result.get(
+                    "zero_model_cancel_baseline_total_cents"),
+                "robust_zero_model_cancel_baseline_total_cents": robust.get(
+                    "zero_model_cancel_baseline_total_cents"),
+                "book_receipt": result.get("book_receipt"),
+                "params_pin": result.get("params_pin"),
+                "input_verification": result.get("input_verification"),
+                "score_neutrality_certifications": result.get(
+                    "score_neutrality_certifications"),
+                "score_delta_max_certified": result.get(
+                    "score_delta_max_certified"),
+                "forward_book_margin_guard": result.get(
+                    "forward_book_margin_guard"),
+                "producer": result.get("producer"),
+            }
+        canonical = {
+            arm: json.dumps(value, sort_keys=True, separators=(",", ":"))
+            for arm, value in shared.items()
+        }
+        if len(set(canonical.values())) != 1:
+            raise EvaluatorRefused(
+                f"REFUSED {CELL_COHORT}: {day} arm cells disagree on their "
+                f"book, zero-cancel baselines or guard inputs.")
+    return cells
 
 
 def evaluate(root: Path, days, *, n_expected: int = None,
@@ -309,8 +481,7 @@ def evaluate(root: Path, days, *, n_expected: int = None,
         raise EvaluatorRefused(
             f"REFUSED {SHORT}: declared N={n_expected}, given G={G}. The "
             f"floor moves with G; a short population is a different test.")
-    cells = {(d, a): AGG.load_cell(Path(root), d, a)
-             for d in days for a in arms}
+    cells = _load_forward_cells(Path(root), days, arms)
     lines, pools, per_arm = [], [], {}
     for a in arms:
         for d in days:
@@ -318,27 +489,149 @@ def evaluate(root: Path, days, *, n_expected: int = None,
             lines.append(per_day_line(cells[(d, a)], one, G, sided))
         pool = AGG.pooled(cells, days, a)
         pools.append(pool)
+        day_p = day_sign_p(
+            sum(1 for value in pool["per_day_D_cents"].values()
+                if value > 0), G, sided)
         per_arm[a] = {
             "pooled": pool,
-            "futility": futility(pool["per_day_D_cents"], G, sided)}
-    holms = AGG.holm([p["p_two_sided"] for p in pools])
-    v = AGG.verdict_for(pools, holms)
+            "primary_fill_assumption": "REFERENCE_FILLS",
+            "day_sign_test": {
+                "p_two_sided": day_p,
+                "n_positive_days": sum(
+                    1 for value in pool["per_day_D_cents"].values()
+                    if value > 0),
+                "n_non_positive_days": sum(
+                    1 for value in pool["per_day_D_cents"].values()
+                    if value <= 0),
+                "unit": "UTC_DAY"},
+            "matched_random_test": {
+                "p_two_sided": pool["p_two_sided"],
+                "n_draws": pool["n_draws"]},
+            "intersection_union_p": max(day_p, pool["p_two_sided"]),
+            "futility": futility(pool["per_day_D_cents"], G, sided),
+            "robustness_leg": robustness_pool(
+                cells, days, a, pool["D_arm_cents"])}
+    holms = AGG.holm(
+        [per_arm[a]["intersection_union_p"] for a in arms])
+    arm_results = {}
+    for a, h in zip(arms, holms):
+        row = per_arm[a]
+        positive = row["pooled"]["D_arm_cents"] > 0
+        beats_zero = (positive
+                      and row["day_sign_test"]["p_two_sided"]
+                      <= h["threshold"])
+        beats_random = (positive
+                         and row["matched_random_test"]["p_two_sided"]
+                         <= h["threshold"])
+        pooled_advances = h["passes"] and beats_zero and beats_random
+        advances = (pooled_advances
+                    and not row["robustness_leg"]["sign_reversal"])
+        arm_results[a] = {
+            **row, "holm": h,
+            "beats_zero_cancel": beats_zero,
+            "beats_matched_random": beats_random,
+            "pooled_advances_before_robustness": pooled_advances,
+            "advances": advances,
+            "per_day_delta": list(row["pooled"]["per_day_D_cents"].values())}
+    v = verdict_for_forward(arm_results)
     n = min(p["n_draws"] for p in pools)
-    return {"protocol": PROTOCOL, "G": G, "days": days, "arms": list(arms),
+    floor = floor_block(G, n, sided)
+    from da_forward_result_guard import (             # local: no import cycle
+        FAIL_SELECTION_READING, PASS_SELECTION_READING)
+    selection_reading = (PASS_SELECTION_READING
+                         if any(a["advances"] for a in arm_results.values())
+                         else FAIL_SELECTION_READING)
+    return {"protocol": PROTOCOL, "G": G, "days": days,
+            "arm_order": list(arms), "arms": arm_results,
             "per_day_lines": lines,
-            "per_arm": {a: {**per_arm[a], "holm": h}
-                        for a, h in zip(arms, holms)},
+            "per_arm": arm_results,
             "verdict": v,
-            "FLOOR_BLOCK_CARRIED_ON_EVERY_RESULT": floor_block(G, n, sided),
+            "FLOOR_BLOCK_CARRIED_ON_EVERY_RESULT": floor,
+            "attainable_minimum_p": floor["attainable_minimum_p"],
+            "tolerance_negative_days": floor["tolerance_negative_days"],
+            "a_pass_was_possible_at_this_G":
+                floor["a_pass_was_possible_at_this_G"],
+            "selection_history_reading": selection_reading,
+            "n_independent_units": G,
+            "per_cell": {
+                f"{d}|{a}": {
+                    "D_cents": cells[(d, a)]["D"],
+                    "p_two_sided_descriptive_only":
+                        cells[(d, a)]["result"].get("p_two_sided"),
+                    "n_draws": cells[(d, a)]["n"],
+                    "input_validation":
+                        cells[(d, a)]["cell_validation"],
+                    "result_source": cells[(d, a)]["result_source"],
+                    "checkpoint_source":
+                        cells[(d, a)]["checkpoint_source"]}
+                for d in days for a in arms},
             "ANY_ARM_ALREADY_FUTILE":
-                any(per_arm[a]["futility"]["FUTILE"] for a in arms),
+                any(arm_results[a]["futility"]["FUTILE"] for a in arms),
             "futile_arms": [a for a in arms
-                            if per_arm[a]["futility"]["FUTILE"]],
+                            if arm_results[a]["futility"]["FUTILE"]],
             "standing_warning": standing_warning(G, sided),
             "settlement_source": (
-                settlement_source_disclosure(days, derived, revision)
+                settlement_source_disclosure(
+                    days, derived, revision,
+                    winner_sources={
+                        d: cells[(d, arms[0])]["result"]
+                            ["winner_source"]["sha256"]
+                        for d in days})
                 if derived is not None else
                 {"NOT_COMPUTED": "pass derived= to carry R-810 finality"})}
+
+
+def _write_json_exclusive(path: Path, payload: dict) -> None:
+    """Publish atomically without ever replacing an existing result."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(
+        f".{path.name}.{os.getpid()}.{time_ns()}.tmp")
+    try:
+        with temporary.open("x") as handle:
+            json.dump(payload, handle, indent=1, default=str)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        try:
+            os.link(temporary, path)
+        except FileExistsError:
+            raise EvaluatorRefused(
+                f"REFUSED {OUTPUT_EXISTS}: {path}. A final result is "
+                f"immutable; use a new revision rather than replacing it.") \
+                from None
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def finalize_result(computed: dict, metadata: dict, output: Path) -> dict:
+    """Bind required human-readable limits, guard, then publish once."""
+    from da_forward_result_guard import (             # local: no import cycle
+        classify_forward_result, require_forward_result)
+
+    if not isinstance(metadata, dict):
+        raise EvaluatorRefused(
+            f"REFUSED {BAD_METADATA}: expected an object, got "
+            f"{type(metadata).__name__}.")
+    overlap = sorted(set(computed) & set(metadata))
+    if overlap:
+        raise EvaluatorRefused(
+            f"REFUSED {BAD_METADATA}: metadata may not replace computed "
+            f"fields: {overlap}.")
+    required = ("forward_limits", "pipeline_provenance_limit",
+                "quality_decisions")
+    missing = [name for name in required if not metadata.get(name)]
+    if missing:
+        raise EvaluatorRefused(
+            f"REFUSED {MISSING_METADATA}: {missing}. These fields must be "
+            f"bound before the result is written, not added later.")
+    result = {**computed, **metadata}
+    n_days = int(result.get("G", len(result.get("days") or [])))
+    result["result_guard"] = require_forward_result(result, n_days=n_days)
+    result["declared_statuses"] = classify_forward_result(
+        result, n_days=n_days)
+    _write_json_exclusive(Path(output), result)
+    return result
 
 
 def progress_emit(root: Path, days_scored, *, n_declared: int,
@@ -358,8 +651,7 @@ def progress_emit(root: Path, days_scored, *, n_declared: int,
     if len(set(days_scored)) != len(days_scored):
         raise EvaluatorRefused(f"REFUSED {DUP_DAY}: {days_scored}")
     G_so_far = len(days_scored)
-    cells = {(d, a): AGG.load_cell(Path(root), d, a)
-             for d in days_scored for a in arms}
+    cells = _load_forward_cells(Path(root), days_scored, arms)
     lines, per_arm = [], {}
     for a in arms:
         for d in days_scored:
@@ -385,7 +677,11 @@ def progress_emit(root: Path, days_scored, *, n_declared: int,
     }
     if derived is not None:
         out["settlement_source"] = settlement_source_disclosure(
-            days_scored, derived, revision)
+            days_scored, derived, revision,
+            winner_sources={
+                d: cells[(d, arms[0])]["result"]
+                    ["winner_source"]["sha256"]
+                for d in days_scored})
     dead = [a for a in arms if per_arm[a]["futility"]["FUTILE"]]
     out["STOP_ADVICE"] = (
         "NOT FUTILE -- continue" if not dead else
@@ -404,6 +700,9 @@ def falsify() -> int:                                        # noqa: C901
     """rule 15: a positive control it MUST flag, a known-bad it must
     REFUSE, and a partial input it must not silently accept."""
     import tempfile
+    import hashlib
+    import de_multiday_gate1_runner as R
+    import de_settlement_control_run as SC
     cells, n = 0, 0
 
     def ck(name, cond):
@@ -486,21 +785,114 @@ def falsify() -> int:                                        # noqa: C901
         except EvaluatorRefused as e:
             ck("finality REFUSES a day with no receipt", NO_RECEIPT in str(e))
 
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        day, winner_sha = "2026-09-07", "a" * 64
+        receipt = root / (
+            "p003_de_point_estimate_day_20260907_L250ms__fixture.json")
+        verified = {
+            "day": day,
+            "nested": {"winner_source": {
+                "sha256": winner_sha, "is_final_for_quotation": True,
+                "chainlink_verification": {
+                    "per_slug": {"slug": {"status": "VERIFIED_AGREE"}},
+                    "finality": {"is_final": True}}}}}
+        receipt.write_text(json.dumps(verified))
+        disclosure = settlement_source_disclosure(
+            [day], root, winner_sources={day: winner_sha})
+        ck("finality binds to the exact winner-source digest used for P&L",
+           disclosure["per_day"][day]["matches_settlement_cells"] is True
+           and disclosure["every_day_final_for_quotation"] is True)
+        try:
+            settlement_source_disclosure(
+                [day], root, winner_sources={day: "b" * 64})
+            ck("finality REFUSES a receipt for different winner bytes", False)
+        except EvaluatorRefused as exc:
+            ck("finality REFUSES a receipt for different winner bytes",
+               NO_RECEIPT in str(exc))
+        verified["nested"]["winner_source"]["chainlink_verification"][
+            "per_slug"]["slug"]["status"] = "DISAGREE"
+        receipt.write_text(json.dumps(verified))
+        disclosure = settlement_source_disclosure(
+            [day], root, winner_sources={day: winner_sha})
+        ck("a disagreement cannot be labelled final",
+           disclosure["every_day_final_for_quotation"] is False)
+
     # --- G FROM THE DATA: driven on a 6-day AND an 8-day fixture ---------
     def _fixture(td, days, D_by_day):
         root = Path(td)
         for d in days:
             c = d.replace("-", "")
             for arm in ARMS:
+                D = D_by_day[d]
+                book_sha = hashlib.sha256(d.encode()).hexdigest()
+                seed = R.seed_for(book_sha, arm)
+                winner_sha = "f" * 64
+                checkpoint = root / f"de_settle_ckpt_{d}_{arm}.jsonl"
+                identity = SC.run_identity(
+                    d, arm, book_sha, SC.DECLARED_N, seed, winner_sha)
+                with checkpoint.open("w") as handle:
+                    handle.write(json.dumps({
+                        "kind": "HEADER", "identity": identity,
+                        "protocol": SC.PROTOCOL,
+                        "n_draws": SC.DECLARED_N, "seed": seed,
+                        "day": d, "arm": arm,
+                        "winner_source_sha256": winner_sha,
+                        "baseline_total_cents": 0.0}) + "\n")
+                    for index in range(SC.DECLARED_N):
+                        handle.write(json.dumps({
+                            "i": index, "seed": seed + index,
+                            "settled_total_cents": 0.0,
+                            "D": 0.0}) + "\n")
+                result = {
+                    "protocol": SC.PROTOCOL, "day": d, "arm": arm,
+                    "book_sha256": book_sha,
+                    "winner_source": {"path": "resolutions.jsonl",
+                                      "sha256": winner_sha},
+                    "book_receipt": {
+                        "sha256": "b" * 64, "book_sha256": book_sha,
+                        "builder_commit": SC.PIPELINE_COMMIT,
+                        "book_scoring_code": {}},
+                    "params_pin": {
+                        "path": "params.json", "sha256": "c" * 64},
+                    "input_verification": {
+                        "be_module": {}, "models": {}, "thetas": {}},
+                    "score_neutrality_certifications": [
+                        {"path": "cert.json", "sha256": "d" * 64}],
+                    "score_delta_max_certified": {
+                        frozen_arm: 0.25
+                        for frozen_arm in SC.BEN.arm_heads()},
+                    "forward_book_margin_guard": {"passes": True},
+                    "primary_fill_assumption": "REFERENCE_FILLS",
+                    "zero_model_cancel_baseline_total_cents": 0.0,
+                    "arm_settled_total_cents": D,
+                    "observed_D_cents": D,
+                    "robustness_leg": {
+                        "label": "NO_FILLS_UNTIL_NEXT_GENERATION",
+                        "zero_model_cancel_baseline_total_cents": 0.0,
+                        "arm_settled_total_cents": D,
+                        "observed_D_cents": D,
+                        "primary_label": "REFERENCE_FILLS",
+                        "primary_observed_D_cents": D,
+                        "sign_reversal": False,
+                        "a_sign_reversal_blocks_promotion": True},
+                    "n_draws": SC.DECLARED_N, "seed": seed,
+                    "null": {"n": SC.DECLARED_N, "min_D": 0.0,
+                             "max_D": 0.0, "mean_D": 0.0,
+                             "n_at_or_beyond_two_sided": 0},
+                    "p_two_sided": 1 / (1 + SC.DECLARED_N),
+                    "checkpoint": str(checkpoint),
+                    "checkpoint_sha256":
+                        hashlib.sha256(checkpoint.read_bytes()).hexdigest(),
+                    "be_module": "e" * 64,
+                    "producer": {
+                        "path": str(Path(SC.__file__).resolve()),
+                        "sha256": hashlib.sha256(
+                            Path(SC.__file__).read_bytes()).hexdigest(),
+                    },
+                }
                 (root / f"de_settle_result_{c}_{arm}.json").write_text(
-                    json.dumps({"observed_D_cents": D_by_day[d],
-                                "zero_model_cancel_baseline_total_cents": 0.0,
-                                "arm_settled_total_cents": D_by_day[d]}))
-                with (root / f"de_settle_ckpt_{d}_{arm}.jsonl").open("w") as f:
-                    f.write(json.dumps({"kind": "HEADER",
-                                        "n_draws": 500}) + "\n")
-                    for i in range(500):
-                        f.write(json.dumps({"i": i, "D": 0.0}) + "\n")
+                    json.dumps(result))
         return root
 
     with tempfile.TemporaryDirectory() as td:
@@ -543,6 +935,92 @@ def falsify() -> int:                                        # noqa: C901
                p2["ANY_ARM_ALREADY_DEAD"] and "FUTILE for " in p2["STOP_ADVICE"])
             ck("  and the STOP_ADVICE names the day that killed it",
                d8[0] in p2["STOP_ADVICE"])
+
+    # --- BOTH CONJUNCTS: a low draw p cannot hide a negative day --------
+    with tempfile.TemporaryDirectory() as td:
+        d7 = [f"2026-09-{7 + i:02d}" for i in range(7)]
+        one_negative = {day: 1.0 for day in d7}
+        one_negative[d7[-1]] = -1.0
+        r7 = evaluate(_fixture(td, d7, one_negative), d7)
+        ck("a tiny matched-random p cannot pass a 6-of-7 day-sign run",
+           r7["verdict"]["verdict"] == VERDICT_NONE
+           and not any(row["advances"] for row in r7["arms"].values()))
+        ck("  the day-sign p, not a warning, is the blocking conjunct",
+           all(abs(row["day_sign_test"]["p_two_sided"] - 0.125) < 1e-12
+               and row["matched_random_test"]["p_two_sided"] == 1 / 501
+               for row in r7["arms"].values()))
+    with tempfile.TemporaryDirectory() as td:
+        d7 = [f"2026-09-{7 + i:02d}" for i in range(7)]
+        unanimous = evaluate(
+            _fixture(td, d7, {day: 1.0 for day in d7}), d7)
+        ck("a unanimous positive fixture can clear both conjuncts",
+           unanimous["verdict"]["verdict"] == VERDICT_BOTH
+           and all(row["advances"] for row in unanimous["arms"].values()))
+        ck("  the evaluator emits an arm MAPPING for the result guard",
+           isinstance(unanimous["arms"], dict)
+           and set(unanimous["arms"]) == set(ARMS))
+
+        # The result cannot be published without its interpretive limits,
+        # and cannot be silently replaced after it is published once.
+        final_path = Path(td) / "forward_result.json"
+        metadata = {
+            "forward_limits": "second attempt, btc only, L=250ms",
+            "pipeline_provenance_limit": "build and valuation moved together",
+            "quality_decisions": {
+                day: {"sources_read": ["data/pm_5min/raw"]}
+                for day in d7},
+        }
+        final = finalize_result(unanimous, metadata, final_path)
+        ck("finalization runs the result guard before exclusive publication",
+           final_path.is_file()
+           and final["result_guard"]["status"]
+           == "FORWARD_RESULT_FIELDS_PRESENT")
+        try:
+            finalize_result(unanimous, metadata, final_path)
+            ck("finalization REFUSES to replace an existing result", False)
+        except EvaluatorRefused as exc:
+            ck("finalization REFUSES to replace an existing result",
+               OUTPUT_EXISTS in str(exc))
+        try:
+            finalize_result(unanimous,
+                            {k: v for k, v in metadata.items()
+                             if k != "quality_decisions"},
+                            Path(td) / "missing.json")
+            ck("finalization REFUSES missing required metadata", False)
+        except EvaluatorRefused as exc:
+            ck("finalization REFUSES missing required metadata",
+               MISSING_METADATA in str(exc))
+
+    # The robustness leg is mandatory and its sign can only block.
+    with tempfile.TemporaryDirectory() as td:
+        d7 = [f"2026-09-{7 + i:02d}" for i in range(7)]
+        root = _fixture(td, d7, {day: 1.0 for day in d7})
+        cell = root / f"de_settle_result_{d7[0].replace('-', '')}_{ARMS[0]}.json"
+        payload = json.loads(cell.read_text())
+        payload.pop("robustness_leg")
+        cell.write_text(json.dumps(payload))
+        try:
+            evaluate(root, d7)
+            ck("evaluate REFUSES a missing robustness leg", False)
+        except EvaluatorRefused as exc:
+            ck("evaluate REFUSES a missing robustness leg",
+               (NO_ROBUSTNESS in str(exc)
+                or AGG.BAD_RECONCILIATION in str(exc)))
+
+    with tempfile.TemporaryDirectory() as td:
+        day = "2026-09-07"
+        root = _fixture(td, [day], {day: 1.0})
+        cell = root / (
+            f"de_settle_result_{day.replace('-', '')}_{ARMS[0]}.json")
+        payload = json.loads(cell.read_text())
+        payload["params_pin"]["sha256"] = "f" * 64
+        cell.write_text(json.dumps(payload))
+        try:
+            evaluate(root, [day])
+            ck("evaluate REFUSES arm cells from different input cohorts", False)
+        except EvaluatorRefused as exc:
+            ck("evaluate REFUSES arm cells from different input cohorts",
+               CELL_COHORT in str(exc))
 
     # --- HOLM: m = 2, and the step-down thresholds -----------------------
     h = AGG.holm([0.02, 0.03])
@@ -604,11 +1082,36 @@ def falsify() -> int:                                        # noqa: C901
 
 
 def main(argv=None) -> int:
-    argv = list(sys.argv[1:] if argv is None else argv)
-    if "--falsify" in argv:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--falsify", action="store_true")
+    parser.add_argument("--root")
+    parser.add_argument("--days", nargs="+")
+    parser.add_argument("--n-expected", type=int)
+    parser.add_argument("--derived")
+    parser.add_argument("--revision", default="L250ms")
+    parser.add_argument("--metadata")
+    parser.add_argument("--output")
+    args = parser.parse_args(argv)
+    if args.falsify:
         return falsify()
-    print("usage: de_forward_evaluator.py --falsify")
-    return 2
+    required = {"root": args.root, "days": args.days,
+                "n_expected": args.n_expected, "derived": args.derived,
+                "metadata": args.metadata, "output": args.output}
+    missing = [name for name, value in required.items() if value is None]
+    if missing:
+        parser.error("the final evaluator requires " + ", ".join(missing))
+    try:
+        metadata = json.loads(Path(args.metadata).read_text())
+        computed = evaluate(
+            Path(args.root), args.days, n_expected=args.n_expected,
+            derived=Path(args.derived), revision=args.revision)
+        result = finalize_result(computed, metadata, Path(args.output))
+    except (EvaluatorRefused, OSError, json.JSONDecodeError) as exc:
+        print(json.dumps({"refused": str(exc)}, indent=1))
+        return 3
+    print(json.dumps({"written": args.output,
+                      "verdict": result["verdict"]}, indent=1))
+    return 0
 
 
 if __name__ == "__main__":
