@@ -103,9 +103,16 @@ def falsify() -> int:
         if fx.exists():
             fx.unlink()          # the cell leaves nothing behind
     pins = R.resolve_declaration_pins()
-    ck("both declaration identities are pinned and named",
+    # ALL THREE, INCLUDING THE ONE THE VALUATION'S OWN COMMIT COMES FROM.
+    # `code_freeze_declaration` was pinned by DA's freeze v14 and wanted by
+    # nobody, so the resolver returned None for it and `_frozen_commit()`
+    # fell back to the v1 FILENAME -- a commit two freezes stale, read
+    # without a refusal. An identity the chain pins and the reader does not
+    # ask for is not pinned.
+    ck("every declaration identity the chain pins is named here",
        set(pins) == {"day_read_state_attestation",
-                     "forward_test_declaration"},
+                     "forward_test_declaration",
+                     "code_freeze_declaration"},
        ",".join(sorted(pins)))
     # DE 324: ONE VERDICT, WHATEVER THE CWD. The self-check refused from
     # every directory because its digest loop still used the literal

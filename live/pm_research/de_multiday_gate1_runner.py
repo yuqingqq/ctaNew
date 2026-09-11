@@ -1272,7 +1272,14 @@ def resolve_declaration_pins(decl_dir=None) -> dict:
     import re as _re
     d = Path(decl_dir) if decl_dir else Path(__file__).resolve().parent / \
         "declarations"
-    want = ("day_read_state_attestation", "forward_test_declaration")
+    # CODE_FREEZE_DECLARATION IS CARRIED HERE OR BY NOTHING. DA's freeze
+    # v14 pinned it and said so in the amendment: "this pin is carried by
+    # nothing until DE adds the key". A pin nobody reads is not a pin --
+    # `_frozen_commit()` was falling back to the v1 FILENAME and reading a
+    # commit two freezes stale, with no refusal, because the resolver
+    # returned None for a key it had never been asked to want.
+    want = ("day_read_state_attestation", "forward_test_declaration",
+            "code_freeze_declaration")
     out: dict = {}
     files = [d / "de_arm_freeze_v1.json"] + sorted(
         d.glob("de_arm_freeze_v*_amendment.json"),
