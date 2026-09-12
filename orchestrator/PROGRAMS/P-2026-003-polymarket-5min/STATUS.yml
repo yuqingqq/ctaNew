@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T01:17:06Z (MEM ROUND 418 -- A CROSS-SEAT CORRECTION THAT MAY HALVE THE BAND MARGIN, RECORDED AS
+  PENDING REV AND NOT AS SETTLED. REV's 90.9 per cent looks like a FILE-PRESENCE measure
+  while BE's stage 0 failed 09-11 on INTERIOR WINDOWS -- a DIFFERENT CRITERION -- so
+  whichever day REV counted, THE OTHER CRITERION'S FAILURE IS UNCOUNTED and EITHER WAY
+  THERE ARE TWO FAILING DAYS IN ELEVEN. I COMPUTED THE CONSEQUENCE: 10/11 gives P = 0.6
+  per cent; the union 9/11 gives 9.4; times ETH at 95 per cent, 18.3; times ETH at 90 per
+  cent, THIRTY PER CENT -- A FIFTY-FOLD INCREASE. AND THE HEADLINE IS UNDERSTATED, NOT
+  OVERSTATED: at the worst case the margin is 0.31 days against a standard deviation of
+  1.65, so the margin is 0.19 SD AND A SINGLE LOST NIGHT IS 3.2 TIMES IT. I CENSUSED THE
+  DAYS MYSELF: ZERO of eleven have no gap events, so CLEAN DAY IS A THRESHOLD OWNED BY
+  BE'S GATE, NOT A PROPERTY OF A DAY. SWEEPING THAT THRESHOLD MOVES THE PASS COUNT FROM 0
+  TO 10 OF 11 and P from 100 per cent to 0.6 -- THE WHOLE CONCLUSION IS RECOVERABLE FROM
+  THE THRESHOLD ALONE. But it is NOT uniformly steep: eight days at or below 210 and three
+  outliers above 608 make A WIDE PLATEAU, so the sharper question is WHERE THE GATE SITS
+  RELATIVE TO IT. And 09-11 is MID-PACK in the ledger while FAILING stage 0 -- a quality
+  signal that inverts against verdicts should stop being used for band planning. MY OWN
+  CENSUS CARRIES TWO FAILURES I STATE: my symbol filter kept unsymboled records so the
+  counts are an upper bound, and my duration key missed entirely so I QUOTE NO SECONDS.
+  Tip 7f0e74b.)
   2026-09-12T01:11:55Z (MEM ROUND 417 -- AN EXCEPTION LOG IS SILENT EXACTLY WHEN THINGS ARE HEALTHY, which
   is the general form of the sentence I reached at 416 and subsumes it. BOTH PROPOSED
   FIXES WERE ALSO WRONG: max(recv_ns) is only LESS BAD, and both fail in the limit of a
@@ -105,6 +124,7 @@ updated: >-
   MANUFACTURED A REASON -- I wrote that GAP SPARSITY NEVER TOUCHES IT, and gap sparsity is
   THE WHOLE PROBLEM. Not yet a finding: the failure is CONSERVATIVE and REV rules, and the
   named exclusion is that recv_ns may itself be stale-written. Tip 736241f.)
+previous_updates: >-
   2026-09-12T00:59:55Z (MEM ROUND 415 -- VALIDATION STARTS NO EARLIER THAN 2026-09-14, RULED TONIGHT BECAUSE
   TOMORROW IT WOULD BE A CHOICE MADE AFTER SEEING, and expressed as a RULE rather than a
   date so it cannot drift: first complete UTC day strictly after the freeze becomes
@@ -125,7 +145,6 @@ updated: >-
   INHERITS THE TYPE of its second operand whenever the gates are complete. THE GATE IS NOT
   A BOOLEAN BY CONSTRUCTION. My run at the chain-ref head returned False, so the value
   depends on the moment -- which is the instability the fix must remove. Tip e152466.)
-previous_updates: >-
   2026-09-12T00:55:43Z (MEM ROUND 414 -- THE TWO-COIN CLAUSE IS IN THE PLAN THREE TIMES AND I READ ALL
   THREE. Lines 91-93: PER-COIN TABLES ARE DIAGNOSTICS AND CANNOT AUTHORIZE A COIN-SPECIFIC
   DEPLOYMENT; a coin-specific decision requires A NEW FAMILY AND NEW MULTIPLICITY
@@ -931,6 +950,16 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r418_RECORDED_AS_PENDING_REVS_CONFIRMATION_NOT_AS_SETTLED: "The whole of this round is recorded as PENDING. DE noticed that REV's 90.9 per cent joint pass rate looks like a FILE-PRESENCE measure while BE's stage 0 failed 09-11 on INTERIOR WINDOWS -- A DIFFERENT CRITERION -- so whichever day REV counted as its single failure, THE OTHER CRITERION'S FAILURE IS UNCOUNTED. If REV counted 09-03 the interior hazard is uncounted; if it counted 09-11 the missing-window hazard is. EITHER WAY THERE ARE TWO FAILING DAYS IN ELEVEN, NOT ONE. DE's one-line discriminating question is with REV and nothing here is settled until it answers."
+  r418_ARITHMETIC_ON_ANOTHER_SEATS_NUMBER_IS_THE_HARDEST_KIND_TO_GO_LOOKING_FOR: "Worth recording as a class. A seat checking its own arithmetic is routine and a reviewer checking a seat's arithmetic is the job; a seat noticing that ANOTHER seat's number answers a DIFFERENT QUESTION than the one it is being used for has no natural trigger -- nothing in DE's own work required it to look at how REV counted days. This is the second time tonight a cross-seat read produced the sharpest finding of its hour, the first being REV noticing that the sigma module it was auditing was the audited seat's own."
+  r418_I_COMPUTED_THE_CONSEQUENCE_AND_P_GOES_FROM_0_6_TO_30_PER_CENT: "The binomial tail, computed by me for each scenario, P being the chance of fewer than 10 evaluable days in 14. REV's 10 of 11 at 0.9091: 12.73 expected, 2.73 margin, P = 0.6 per cent. DE's union at 9 of 11 = 0.8182: 11.45 expected, 1.45 margin, P = 9.4 PER CENT. Times ETH at 95 per cent, joint 0.7773: 10.88 expected, 0.88 margin, P = 18.3 PER CENT. Times ETH at 90 per cent, joint 0.7364: 10.31 expected, 0.31 margin, P = 30.0 PER CENT. THE CORRECTION PLUS A 90 PER CENT ETH BUILD RATE MOVES THE CHANCE OF NO VERDICT FROM 0.6 PER CENT TO THIRTY PER CENT -- A FIFTY-FOLD INCREASE."
+  r418_AND_THE_MARGIN_IS_0_19_STANDARD_DEVIATIONS_so_the_headline_is_UNDERSTATED: "The phrase inside the noise of a single bad night can be made exact. At the worst case the margin is 0.31 DAYS against a binomial standard deviation of 1.65 DAYS -- the margin is 0.19 SD, and A SINGLE LOST NIGHT IS 3.2 TIMES THE ENTIRE MARGIN. So the honest headline is not merely that the band is one bad night from returning no verdict: AT 90 PER CENT ETH NIGHTLY THE TEST RETURNS NO VERDICT ROUGHLY THIRTY PER CENT OF THE TIME, before any of the qualifications that make 81.8 itself an upper bound. THE STATED HEADLINE UNDERSTATES IT."
+  r418_EVERY_ONE_OF_THE_ELEVEN_DAYS_CARRIES_GAPS_and_I_censused_it_myself: "ZERO DAYS WITH NO GAP EVENTS across 09-01 to 09-11. So CLEAN DAY IS A THRESHOLD OWNED BY BE'S GATE, NOT A BINARY PROPERTY OF A DAY, and the pass rate is a FUNCTION of where that threshold sits -- quoting the rate without the threshold is quoting half a statistic. My per-day counts sorted are 30, 48, 98, 132, 138, 138, 164, 210, 608, 740 and 847, a 28-fold spread across eleven days."
+  r418_AND_MY_CENSUS_CARRIES_TWO_FAILURES_OF_MY_OWN_which_I_state: "My symbol filter KEPT RECORDS WITH NO SYMBOL FIELD, so my counts are an UPPER BOUND and NOT btc-specific -- which is why mine run 30 to 847 against the reported btc range of 14 to 376. And my duration key missed entirely: gap_seconds, gap_s and duration_s all returned nothing, so my seconds column came out all zeros and I QUOTE NO SECONDS AT ALL. Neither is a finding about the data; both are my checker. Stated because a zero from a key that does not exist reads exactly like a measured zero, which is this session's most repeated failure and I have now produced it twice."
+  r418_THE_RATE_IS_STEEP_IN_THE_THRESHOLD_AND_I_SWEPT_IT: "The coordinator asked DE how the rate moves if the gate moved one step. On my own census the answer is dramatic: sweeping the threshold from 25 to 800 events moves THE PASS COUNT FROM 0 TO 10 OF 11 and P(INSUFFICIENT_EVIDENCE) FROM 100 PER CENT TO 0.6 PER CENT. THE ENTIRE BAND-RISK CONCLUSION IS RECOVERABLE FROM THE THRESHOLD ALONE. So the band margin is at least as much a property of one number at be_build_preflight.py:360 as it is of the data -- which is what the coordinator suspected and what this sweep supports."
+  r418_BUT_THERE_IS_A_PLATEAU_AND_THAT_SHARPENS_THE_QUESTION: "A refinement to my own claim, because THE RATE IS NOT UNIFORMLY STEEP. The sorted counts cluster: eight days at or below 210 and three outliers at 608, 740 and 847. So any threshold BETWEEN 210 AND 608 gives the same 8 of 11 = 72.7 per cent -- A WIDE PLATEAU -- while thresholds below 150 or above 608 move the rate sharply. THE SENSITIVITY QUESTION IS THEREFORE NOT how steep the curve is but WHERE THE GATE SITS RELATIVE TO THE PLATEAU: inside it, the margin is robust to a step; at an edge, it is not. That is a sharper question than the one asked and it is answerable from the gate's current value."
+  r418_THE_QUALITY_SIGNAL_INVERTS_AGAINST_THE_VERDICT: "The gap ledger is COLLECTOR-WRITTEN AND CAN BE STALE, and 09-11 LOOKS MID-PACK IN THE LEDGER WHILE FAILING STAGE 0 -- my own census puts it at 134 events, eighth of eleven by my ordering and squarely mid-pack. So ANY RATE COMPUTED FROM THE LEDGER OR FROM FILE PRESENCE IS AN UPPER BOUND. That is AT LEAST ONE RANKING INVERSION IN ELEVEN DAYS, and the standing question is whether there are more. A QUALITY SIGNAL THAT INVERTS AGAINST ACTUAL VERDICTS SHOULD STOP BEING USED FOR BAND PLANNING -- which is the same lesson as the liveness check one level out: the signal being read is not the signal that decides."
+  r418_THE_USER_MUST_BE_TOLD_BEFORE_COMMITTING_NOT_AFTER: "The practical consequence and the reason for the urgency. If this holds, the honest headline is that THE BAND IS ONE BAD NIGHT FROM RETURNING NO VERDICT AFTER TWO WEEKS OF NIGHTLY TWO-COIN BUILDS -- and the user is being asked to commit to exactly those two weeks. The coordinator has already told them the numbers given an hour ago MAY UNDERSTATE BY HALF THE MARGIN, before DE's proper computation lands. Correcting a number one has already given, before being asked and before the corrected version is final, is the behaviour that makes the first number worth having given at all."
   r417_AN_EXCEPTION_LOG_IS_SILENT_EXACTLY_WHEN_THINGS_ARE_HEALTHY: "REVIEW 259's general form, and it subsumes the sentence I reached at round 416. I had written that gap sparsity is the whole problem; REV names the class: collector_gaps.jsonl IS AN EXCEPTION LOG -- every class in it is an anomaly or a lifecycle event -- and AN EXCEPTION LOG IS SILENT EXACTLY WHEN THINGS ARE HEALTHY. So no statistic over it can prove liveness, because its emptiness is the healthy state. That is a stronger statement than mine and it generalises past this file to every log built the same way."
   r417_AND_BOTH_PROPOSED_FIXES_WERE_ALSO_WRONG: "max(window_start) cannot prove liveness AND NEITHER CAN max(recv_ns), which was the proposed replacement: it is only LESS BAD because stalls are commoner than gaps, and BOTH FAIL IN THE LIMIT OF A CLEAN COLLECTOR. Note what happened to the named exclusion -- whether recv_ns can be stale-written or backfilled CAME BACK CLEAN, strictly monotone with zero out-of-order -- AND IT WAS THE WRONG QUESTION. A validated answer to a question that does not decide the matter is not progress, and naming the exclusion was still right: it is how the wrong question got asked out loud where it could be seen."
   r417_THE_CORRECT_SIGNAL_ALREADY_EXISTS_AND_I_MEASURED_IT: "collector_health.jsonl: I read 16,017 records where REV read 16,010, the difference being about seven minutes of a sixty-second beat. ALL RECORDS FALL IN ONE BUCKET -- I cannot confirm the class NAME because my key guess did not match the field, which is my checker and not the data. Inter-record interval p50 60.0 s, p90 60.0 s, MAXIMUM 133.1 s, reproducing REV's figures exactly. It is AN UNCONDITIONAL SIXTY-SECOND HEARTBEAT WRITTEN WHETHER OR NOT ANYTHING GOES WRONG, and the observed maximum is THE EMPIRICAL BASIS FOR A STALENESS BOUND RATHER THAN AN INVENTED NUMBER."
@@ -28925,6 +28954,46 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r418_RECORDED_AS_PENDING_REVS_CONFIRMATION_NOT_AS_SETTLED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the two-criteria observation and the discriminating question are DE's; REV's 10-of-11 denominator is the one I recomputed at round 417."
+  r418_ARITHMETIC_ON_ANOTHER_SEATS_NUMBER_IS_THE_HARDEST_KIND_TO_GO_LOOKING_FOR:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "DE's observation came from outside its own task; REV's prior-art instance is recorded at round 395."
+  r418_I_COMPUTED_THE_CONSEQUENCE_AND_P_GOES_FROM_0_6_TO_30_PER_CENT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "summed comb(14,k)*p**k*(1-p)**(14-k) for k below 10 at each joint rate; the reported joint figures 0.777 and 0.736 reproduce as 0.7773 and 0.7364."
+  r418_AND_THE_MARGIN_IS_0_19_STANDARD_DEVIATIONS_so_the_headline_is_UNDERSTATED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "sqrt(14*p*(1-p)) at p = 0.7364 is 1.65 days against a margin of 0.31; 1/0.31 is 3.2."
+  r418_EVERY_ONE_OF_THE_ELEVEN_DAYS_CARRIES_GAPS_and_I_censused_it_myself:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_gaps.jsonl
+    said: "grouped every ledger record carrying a window_start by its UTC day and counted events per day for 09-01 onward: eleven days, none with zero."
+  r418_AND_MY_CENSUS_CARRIES_TWO_FAILURES_OF_MY_OWN_which_I_state:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_gaps.jsonl
+    said: "the census filtered on a symbol field that most records do not carry and summed three candidate duration keys, all absent; the qualitative result -- no day with zero events -- does not depend on either."
+  r418_THE_RATE_IS_STEEP_IN_THE_THRESHOLD_AND_I_SWEPT_IT:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "counted days at or below each of seven thresholds over my per-day census and evaluated the binomial tail at each resulting rate."
+  r418_BUT_THERE_IS_A_PLATEAU_AND_THAT_SHARPENS_THE_QUESTION:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "the sorted per-day counts show a gap between 210 and 608 with no day in between, so every threshold in that interval partitions the eleven days identically."
+  r418_THE_QUALITY_SIGNAL_INVERTS_AGAINST_THE_VERDICT:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_gaps.jsonl
+    said: "my per-day census places 09-11 at 134 events against a range of 30 to 847, while stage 0 failed it; the staleness of the ledger is the same property REV established for the liveness check."
+  r418_THE_USER_MUST_BE_TOLD_BEFORE_COMMITTING_NOT_AFTER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the two-week nightly programme is the second of the three questions put to the user at round 414; the correction was sent ahead of DE's computation."
   r417_AN_EXCEPTION_LOG_IS_SILENT_EXACTLY_WHEN_THINGS_ARE_HEALTHY:
     prov: CHECKED
     artifact: data/pm_5min/collector_gaps.jsonl
