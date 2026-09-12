@@ -1,3 +1,99 @@
+# READ FIRST — round 409 (MEM, 2026-09-12T00:30:44Z, tip `b6fbcb9`)
+
+# ✅ THE PREDICTIVE CLOCK IS **NOT** BLOCKED BY THE ECONOMIC GAP
+
+**Proved by rehearsal, not argued.** DE ran the whole §8 path with the fee
+**UNDECLARED** and ***both candidates produced full verdicts***;
+`MAKER_FEE_IS_NOT_DECLARED` reaches **only §9**.
+
+> ***That is round 407's third proof coming back the good way*** — the one built
+> to discover whether an economic gap was silently blocking the **predictive**
+> clock. **It was not, and the answer arrived tonight rather than on day 1**,
+> which is the whole point of rehearsing a clock that cannot be rewound.
+
+**Also established** — *and these three are DE's numbers, relayed:* candidate
+non-OK on **44 of 156** actions, so **Identity fallback is the normal case**; an
+exactly-zero day completes as a **REPORTED TIE named by day**, `n_ties_excluded
+= 1`, `n_nonzero = 9`, ***never given the candidate's sign***.
+
+> *I searched for the rehearsal's artifacts under controls — **333 files written
+> since 00:00Z**, so the search could speak — and **did not locate them**. My
+> query was also **bounded** (first 300 files, ≤4 MB), so it is not a clean
+> absence either. **Seconded by nothing of mine.***
+
+## 🏷️ Three ANONYMOUS refusals are now named
+
+***An anonymous refusal cannot be inventoried, so it cannot be cleared before a
+run — which guarantees it is discovered by FIRING, on the one day that cannot be
+spent.*** The scanner that refuses new ones has **both halves of a control**: it
+**sees a planted refusal** and **does not flag a forwarded message** — the second
+proving it isn't merely matching the word REFUSED.
+
+# 🧊 THE REMAINING BLOCK IS THE **FREEZE**, NOT THE ARITHMETIC
+
+§8 starts the first complete UTC day **strictly after the FULL pipeline freeze**,
+and the freeze computes `freeze_is_effective: false` while `fee_rule` is open —
+*which I verified independently at rounds 402 and 404, at both executing refs.*
+
+> ### The pivot question, put to DA:
+> ***In its ledger's semantics, does a gap CLOSE when it is ANSWERED NEGATIVELY?***
+>
+> - **"the fee rule is DECLARED"** → an honest *not-establishable* declaration
+>   closes it, and §8 starts by **executing** the plan.
+> - **"the fee rule is KNOWN"** → starting the clock requires **AMENDING a
+>   user-authored frozen plan** — ***the user's call, to be put to them rather
+>   than taken.***
+>
+> **And DA was told explicitly that the answer is not wanted engineered to come
+> out CLOSED.** *A question about a definition, asked of the seat that owns it,
+> with the asker's preferred answer withheld — the only construction under which
+> the answer is worth anything.*
+
+# 🚨 THE SHARPEST OPEN QUESTION — **a validity threat, not a caveat**
+
+**Is Identity a price at the decision instants, or sometimes an ARTIFACT?**
+
+```
+book 0.01 / 0.99  ->  mid 0.500   spread 0.98   <- the WIDEST POSSIBLE quote
+book 0.49 / 0.51  ->  mid 0.500   spread 0.02   <- a tight, informative quote
+                      BOTH RENDER AS THE IDENTICAL NUMBER
+```
+
+> ***Identity's value cannot distinguish "the market is certain it is a coin
+> flip" from "there is no market."*** The midpoint is a lossy projection that
+> **discards exactly the variable that separates them** — ***the absence of an
+> opinion rendered as a confident one.***
+>
+> **Every challenger is flattered by exactly that share.** If it is large,
+> ***both challengers beat Identity for reasons unrelated to fair value, the test
+> PASSES, and the pass means nothing.*** **A caveat is a sentence in the receipt;
+> this would make the receipt's conclusion untrue.**
+
+**Measurable NOW, before any validation day is consumed** — REV is measuring
+spread and one-sidedness **at the decision instants**, the fraction of Identity
+within a ***pre-stated*** ε of 0.5, and the challengers' advantage partitioned
+into **artifact-suspect vs clean** instants. *The pre-stated ε is what keeps it
+from becoming a threshold chosen after seeing.*
+
+# 🔗 C1 READS THE **SAME BOOK EVENT** AS IDENTITY — the code says so twice
+
+| file | its own words |
+|---|---|
+| `de_fair_price_wrapper.py:252` | *"…on the **SAME book event**. C1 differs from Identity in the **VALUE only**"* |
+| `da_fair_price_identity.py:365` | `microprice_from_book` *"calls `identity_from_book` for the verdict and differs **ONLY in the number**"* |
+| cell at `:500` | *"an inadmissible book gives C1 and Identity the **SAME status**"* |
+
+***C1 is a deterministic size-reweighting of Identity's own two prices, sharing
+its verdict path entirely.***
+
+> **So `m = 2` counts as two what may be one-and-a-bit**, costing power against a
+> candidate that was never independent. **That does not make Holm wrong** —
+> ***and m is NOT being changed, because shrinking it after the fact is selection
+> on the outcome***, the exact defect the closed-family construction exists to
+> prevent. **What is owed is a STATED caveat on `M_IS_TWO_FOREVER`, not a silent
+> one** — so a later reader knows the test ran at a multiplicity its own authors
+> believed was conservative, **and why they kept it.**
+
 # READ FIRST — round 408 (MEM, 2026-09-12T00:25:55Z, tip `dd36eb6`)
 
 # ⛔ SIX TIMERS RUN ON THIS MACHINE — **and they BLOCK the §8 clock**

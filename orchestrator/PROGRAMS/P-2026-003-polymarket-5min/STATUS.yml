@@ -67,6 +67,26 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T00:29:58Z (MEM ROUND 409 -- THE PREDICTIVE CLOCK IS NOT BLOCKED BY THE ECONOMIC GAP, PROVED BY
+  REHEARSAL: the whole path ran with the fee UNDECLARED and both candidates produced full
+  verdicts; MAKER_FEE_IS_NOT_DECLARED reaches only section 9. That is round 407's third
+  proof coming back the GOOD way, tonight rather than on day 1. The three rehearsal
+  numbers -- 44 of 156 actions non-OK, n_ties_excluded 1, n_nonzero 9 -- are RELAYED: my
+  controlled search (333 files since 00:00Z so it could speak) did not locate the
+  artifacts, and was bounded, so not a clean absence either. THREE ANONYMOUS REFUSALS ARE
+  NOW NAMED, because an anonymous refusal cannot be inventoried so it cannot be cleared
+  before a run -- guaranteed to be discovered by FIRING, on the one day that cannot be
+  spent. THE REMAINING BLOCK IS THE FREEZE, NOT THE ARITHMETIC: does a gap CLOSE when
+  ANSWERED NEGATIVELY? DECLARED closes it; KNOWN requires amending a user-authored frozen
+  plan, which is the user's call -- and DA was explicitly told the answer is not wanted
+  engineered to come out closed. AND THE SHARPEST OPEN QUESTION IS A VALIDITY THREAT: a
+  0.01/0.99 book has mid 0.500 and SPREAD 0.98; a 0.49/0.51 book has mid 0.500 and spread
+  0.02 -- BOTH RENDER AS THE IDENTICAL NUMBER, so Identity cannot distinguish a market
+  certain of a coin flip from NO MARKET AT ALL. Every challenger is flattered by exactly
+  that share; if it is large the test PASSES AND THE PASS MEANS NOTHING. Measurable NOW,
+  before a day is consumed. And C1 reads the SAME book event as Identity -- the code says
+  so twice, unprompted -- so m=2 counts as two what may be one-and-a-bit; m is NOT changed
+  because shrinking it after the fact is selection on the outcome. Tip f478a49.)
   2026-09-12T00:24:52Z (MEM ROUND 408 -- SIX TIMERS RUN ON THIS MACHINE AND THEY BLOCK THE SECTION 8 CLOCK.
   A TIMER THAT EVALUATES OR MEASURES A DAY CONSUMES IT, and NO REVIEW OF WHAT ANY SEAT DID
   WILL EVER FIND IT BECAUSE NO SEAT DID IT. THIS IS A RECURRENCE -- the same lesson is on
@@ -103,6 +123,7 @@ updated: >-
   the websocket field does not, because it reads zero for all six. A CHECK KEYED ON A
   LABEL FIRES ON A MISLABEL; A CHECK KEYED ON A PROPERTY SURVIVES RELABELLING -- rule 42
   stated for instruments, and I was the reader-side instance one round ago. Tip 577d14f.)
+previous_updates: >-
   2026-09-12T00:13:31Z (MEM ROUND 406 -- I WITHDRAW MY ROUND-405 CONCLUSION, AND THE CAUSE IS THE FAILURE I
   HAD ALREADY WRITTEN A RULE AGAINST. The venue's field IS populated; DA's zero on 76,617
   of 76,617 IS a real observation. MY MEASUREMENT WAS RIGHT -- fee_source_status does read
@@ -122,7 +143,6 @@ updated: >-
   fee schedule. The waiter withdrawal is the same shape one layer out: a ps filter
   excluding 'claude' DELETED THE CLASS BEING HUNTED. The conclusion survives, the
   diagnosis does not. Tip c10f4bc.)
-previous_updates: >-
   2026-09-12T00:08:42Z (MEM ROUND 405 -- THE VENUE-SIDE FEE OBSERVATION DOES NOT EXIST, AND I MEASURED THE
   TAPE MYSELF. Twenty-one part files across 09-07, 09-08 and 09-09, all coins:
   2,046,973 rows, fee_source_status = UNPOPULATED_WS_ZERO on 2,046,973 of 2,046,973,
@@ -753,6 +773,15 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r409_THE_PREDICTIVE_CLOCK_IS_NOT_BLOCKED_BY_THE_ECONOMIC_GAP: "The most consequential result of the hour, and it was PROVED BY REHEARSAL rather than argued. DE ran the whole section 8 path with the fee UNDECLARED and BOTH candidates produced full verdicts; MAKER_FEE_IS_NOT_DECLARED reaches only section 9. That is round 407's third proof coming back the GOOD way -- the one designed to discover whether an economic gap was silently blocking the predictive clock. It was not, and the answer arrived tonight rather than on day 1, which is the entire point of rehearsing a clock that cannot be rewound."
+  r409_THE_REHEARSALS_THREE_NUMBERS_ARE_RELAYED_AND_I_SAY_SO: "Candidate non-OK on 44 of 156 actions, so Identity fallback is exercised as THE NORMAL CASE; an exactly-zero day completes as a REPORTED TIE NAMED BY DAY with n_ties_excluded 1 and n_nonzero 9, never given the candidate's sign. I searched for the rehearsal's own artifacts under controls -- 333 files written since 00:00Z so the search could speak, an impossible name returning zero -- and MY QUERY DID NOT LOCATE THEM; it was also bounded, capped at the first 300 files and 4 MB each, so it is not a clean absence either. These three numbers stay labelled as DE's, seconded by nothing of mine."
+  r409_AN_ANONYMOUS_REFUSAL_CANNOT_BE_INVENTORIED_SO_IT_CANNOT_BE_CLEARED: "Three refusals on the path were ANONYMOUS and are now named. The reasoning is exactly why the rehearsal's deliverable is an inventory: a refusal with no name cannot appear in a list, so it cannot be marked would-fire or would-not before a run, so it is guaranteed to be discovered by firing -- on the one day that cannot be spent. And the fix has the right shape: a SCANNER that refuses to admit a new anonymous refusal, with a positive control that sees a PLANTED one and does not flag a FORWARDED message. Both halves matter -- the control proves it can fire, and the forwarded-message case proves it is not just matching the word REFUSED."
+  r409_THE_REMAINING_BLOCK_IS_THE_FREEZE_NOT_THE_ARITHMETIC: "Section 8 starts on the first complete UTC day STRICTLY AFTER THE FULL PIPELINE FREEZE, and the freeze computes freeze_is_effective false while fee_rule is open -- which I verified independently at rounds 402 and 404 at both executing refs. So what stands between the lane and a running clock is not a computation anyone can fix; it is a DEFINITION. The pivot question put to DA: IN ITS LEDGER'S SEMANTICS, DOES A GAP CLOSE WHEN IT IS ANSWERED NEGATIVELY? If the gap means the fee rule is DECLARED, an honest not-establishable declaration closes it and section 8 starts by EXECUTING the plan. If it means the fee rule is KNOWN, starting the clock requires AMENDING a user-authored frozen plan -- the user's call, to be put to them rather than taken."
+  r409_AND_THE_COORDINATOR_REFUSED_TO_ENGINEER_THE_ANSWER: "Recorded because it is the rarer half. DA was told explicitly that the answer is not wanted engineered to come out CLOSED. A question about a definition, asked of the seat that owns the definition, with the asker's preferred answer withheld -- that is the only construction under which the answer is worth anything, and the opposite construction is how a frozen plan gets amended by implication rather than by decision."
+  r409_IDENTITY_MAY_BE_AN_ARTIFACT_AT_THE_DECISION_INSTANTS: "REV's untargeted round found the sharpest open question in the lane, and I computed the mechanism rather than restating it. A 0.01/0.99 book has midpoint 0.500 AND SPREAD 0.98 -- THE WIDEST POSSIBLE QUOTE, saying almost nothing. A 0.49/0.51 book has midpoint 0.500 AND SPREAD 0.02 -- a tight, informative quote. BOTH RENDER AS THE IDENTICAL NUMBER. So Identity's value cannot distinguish 'the market is certain it is a coin flip' from 'THERE IS NO MARKET': the midpoint is a lossy projection that discards exactly the variable that separates them. THE ABSENCE OF AN OPINION RENDERED AS A CONFIDENT ONE."
+  r409_AND_IT_IS_A_VALIDITY_THREAT_RATHER_THAN_A_CAVEAT: "The distinction is what makes it urgent. EVERY CHALLENGER IS FLATTERED BY EXACTLY THAT SHARE: if the artifact share is large, both challengers beat Identity FOR REASONS UNRELATED TO FAIR VALUE, THE TEST PASSES, AND THE PASS MEANS NOTHING. A caveat would be a sentence in the receipt; this would make the receipt's conclusion untrue. And it is MEASURABLE NOW from collected data, BEFORE ANY VALIDATION DAY IS CONSUMED -- REV is measuring spread and one-sidedness AT THE DECISION INSTANTS, the fraction of Identity within a PRE-STATED epsilon of 0.5, and the challengers' advantage partitioned into artifact-suspect versus clean instants. The pre-stated epsilon is what keeps it from becoming a threshold chosen after seeing."
+  r409_C1_READS_THE_SAME_BOOK_EVENT_AS_IDENTITY_AND_THE_CODE_SAYS_SO_TWICE: "Verified at source in both modules, unprompted by either author. de_fair_price_wrapper.py says C1 and Identity disagree only when they disagree 'on the SAME book event. C1 differs from Identity in the VALUE only'; da_fair_price_identity.py says microprice_from_book 'calls identity_from_book for the verdict and differs ONLY in the number'; and a cell asserts that an inadmissible book gives C1 and Identity THE SAME STATUS. So C1 is a DETERMINISTIC SIZE-REWEIGHTING OF IDENTITY'S OWN TWO PRICES, sharing its verdict path entirely."
+  r409_m_IS_NOT_BEING_CHANGED_AND_THE_CAVEAT_MUST_BE_STATED_NOT_SILENT: "The multiplicity consequence: m = 2 counts as two what may be ONE AND A BIT, costing power against a candidate that was never independent. That does not make Holm wrong. AND m IS NOT BEING CHANGED -- it is frozen, and SHRINKING IT AFTER THE FACT IS SELECTION ON THE OUTCOME, the same defect the whole closed-family construction exists to prevent. What is owed is a STATED caveat on the M_IS_TWO_FOREVER clause rather than a silent one, so a later reader knows the test was run at a multiplicity its own authors believed was conservative, and why they kept it."
   r408_THIS_BLOCKS_THE_SECTION_8_CLOCK_and_it_is_a_RECURRENCE: "Recorded as BLOCKING. Section 8 requires validation on LATER UNTOUCHED DAYS and rule 11 says choosing after seeing voids the test; A TIMER THAT EVALUATES OR MEASURES A DAY CONSUMES IT, silently and on a schedule, and NO REVIEW OF WHAT ANY SEAT DID WILL EVER FIND IT BECAUSE NO SEAT DID IT. This programme has paid for this exact lesson once already -- it is on my standing record as timers consume held-out populations, enumerate what runs on a schedule before calling a population untouched. The recurrence is the finding: the lesson was learned as a fact about one incident and not as a step in the procedure for declaring a population clean."
   r408_I_ENUMERATED_THE_SIX_TIMERS_MYSELF_AT_00_23Z: "Read from systemctl --user list-timers rather than relayed. pm-research-guard.timer fired 44 seconds before I read it and fires EVERY MINUTE. pm-lane-health.timer last 00:15:08Z, next 00:30:00Z, about every fifteen minutes. pm-evaluation-pipeline.timer last 2026-09-11T21:52:58Z, NEXT 2026-09-12T03:52:27Z -- three hours twenty-nine minutes from my read. da-midnight-verify.timer daily, ran 00:06:00Z, next 2026-09-13T00:06:00Z. pm-measurement-pipeline.timer ran 00:20:42Z and shows NO NEXT WHILE IT RUNS. launchpadlib-cache-clean.timer is an OS cache job and unrelated."
   r408_A_SCHEDULED_UNIT_HELD_THE_HEAVY_LOCK_AS_I_READ_IT: "Not a hypothetical contention. pids 3507151 and 3507157 held data/.heavy_run.lock, both in pm-measurement-pipeline.service, running /usr/bin/flock on that lock wrapping measurement_batch --catch-up --since 2026-08-20 --lane measurement --max-days 1 --scheduled --json. So a TIMER takes the same lock BE's book builds take, and BE is mid-sequence on 09-11. That is the never-refresh-a-worktree-under-a-running-unit failure in a new costume: a scheduled process reaching into a resource a seat is using, with no seat aware of it."
@@ -28662,6 +28691,42 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r409_THE_PREDICTIVE_CLOCK_IS_NOT_BLOCKED_BY_THE_ECONOMIC_GAP:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the rehearsal and its verdicts are DE's, run end to end with the fee undeclared; the round-407 proof it answers is the one I recorded as 'if the predictive leg cannot run without a fee, an economic gap is blocking the predictive clock'."
+  r409_THE_REHEARSALS_THREE_NUMBERS_ARE_RELAYED_AND_I_SAY_SO:
+    prov: CHECKED
+    artifact: data/pm_5min
+    said: "find over data and live for files newer than 2026-09-12T00:00Z gave 333, an impossible filename gave 0, and a content grep over the first 300 of them for n_ties_excluded, n_nonzero and MAKER_FEE_IS_NOT_DECLARED returned no file."
+  r409_AN_ANONYMOUS_REFUSAL_CANNOT_BE_INVENTORIED_SO_IT_CANNOT_BE_CLEARED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the three anonymous refusals, the scanner and its two-sided control are DE's, recorded in the rehearsal's report."
+  r409_THE_REMAINING_BLOCK_IS_THE_FREEZE_NOT_THE_ARITHMETIC:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/declarations/da_step6_full_pipeline_freeze_v1.json
+    said: "I read freeze_is_effective false with n_blocking_gaps 2 at blob 126fb738397a on both executing refs at round 402; the two readings of the gap's definition are the coordinator's framing of the question to DA."
+  r409_AND_THE_COORDINATOR_REFUSED_TO_ENGINEER_THE_ANSWER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the instruction to DA is the coordinator's own, stated in the dispatch alongside the pivot question."
+  r409_IDENTITY_MAY_BE_AN_ARTIFACT_AT_THE_DECISION_INSTANTS:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_price_identity.py
+    said: "computed midpoints and spreads for 0.01/0.99, 0.02/0.98, 0.45/0.55 and 0.49/0.51: all four give 0.500 with spreads 0.98, 0.96, 0.10 and 0.02."
+  r409_AND_IT_IS_A_VALIDITY_THREAT_RATHER_THAN_A_CAVEAT:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_price_identity.py
+    said: "the measurement plan is REV's; the pre-stated epsilon requirement is rule 11's shape applied before the measurement rather than after."
+  r409_C1_READS_THE_SAME_BOOK_EVENT_AS_IDENTITY_AND_THE_CODE_SAYS_SO_TWICE:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/de_fair_price_wrapper.py
+    said: "read line 252 of the wrapper, line 365 of da_fair_price_identity.py and the cell at line 500 asserting the shared status on an inadmissible book."
+  r409_m_IS_NOT_BEING_CHANGED_AND_THE_CAVEAT_MUST_BE_STATED_NOT_SILENT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "the M_IS_TWO_FOREVER clause is in the frozen plan's section 4; the non-independence is the construction I verified above at both modules."
   r408_THIS_BLOCKS_THE_SECTION_8_CLOCK_and_it_is_a_RECURRENCE:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
