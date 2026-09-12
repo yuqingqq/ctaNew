@@ -1,3 +1,98 @@
+# READ FIRST — round 416 (MEM, 2026-09-12T01:06:05Z, tip `2ca53e0`)
+
+# ⚰️ C2 IS STRUCTURALLY DEAD — **settled by a RANGE, not a pooled figure**
+
+```
+frac >= 1s over eight days:  span 0.1768 … 0.2707   mean 0.2347   sd 0.0312   range 0.0939
+sub-second share NEVER below 0.7293  ->  on C2's BEST day, nearly 3 generations in 4
+                                          are gone before it can speak
+0 of 8 days reach the 95% gate      best day's shortfall 0.6793
+```
+
+## 🎯 And the decisive ratio is **gap over SWING**, not gap over level
+
+*"0.234 is far from 0.95"* invites **"maybe a better day exists."** That
+invitation has to be closed, and the strongest closure is not a multiple of the
+average:
+
+> ### From the BEST of eight days the gap is **0.6793**, while the ENTIRE day-to-day variation is **0.0939** — ***the gap is 7.2× the whole swing.***
+> **No day within the observed variation can close it.** *That answers the
+> objection directly rather than by comparison to a mean.*
+
+*(Small note, recorded rather than rounded into agreement: 0.95 / 0.2347 = **4.05**,
+not the reported 4.06 — a fourth-significant-figure difference, immaterial to the
+conclusion. **Silently rounding my result to match a reported one is how two
+independent computations stop being independent.**)*
+
+**Two constructions worth keeping:** 09-14 now **refuses**
+`PLUMBING_RUN_TOUCHED_A_PROTECTED_DAY`, **driven** — the ruled floor is a thing
+that fires, not a date someone respects. And 09-11…09-13 are recorded as
+`NO_DAY_BOOK_FOR_THIS_DAY` — ***a status, not an omission — so a re-run extends
+the measurement with no code change once the books land.***
+
+# 🔁 A HYPOTHESIS **WITHDRAWN AND RE-RAISED** — recorded as a SEQUENCE
+
+**00:33Z** — hypothesis: the gap-ledger check conflates *no-gap-near-day-end*
+with *ledger-stopped*. **Reconstructed per-day → all five would fail, including
+four that passed → reading declared wrong, check called a correctly-implemented
+liveness proof.**
+***The reconstruction was wrong and the conclusion was too comfortable.***
+
+**01:01Z — new evidence. I measured the ledger myself and it reproduces:**
+
+```
+13,023 records        last recv_ns  2026-09-12T00:51:31.316Z
+distinct window_start  2,379  UNCHANGED      max still 1789167600 = 09-11 23:00:00Z
+5 records with recv_ns since 00:12Z  ->  NOT ONE carries a window_start
+12,453 window-bearing records  =  EXACTLY my round-410 count  ->  ZERO new windows since
+LAG between newest recv_ns and newest window_start:  6,691 s  =  1.9 HOURS
+```
+
+> **`window_start` advances only when a GAP OCCURS. `recv_ns` advances whenever
+> the collector is ALIVE. The check uses the former to prove the latter.**
+> ### ***So a perfectly-running collector is indistinguishable from a dead one — and the cleaner the period, the longer the newest day stays blocked.***
+> *The guard punishes exactly the condition it should reward.* The earlier
+> within-the-hour estimate came from 09-11's **gappy** 20:00–23:00 stretch
+> **generalised to a quiet one.**
+
+**NOT YET A FINDING:** the failure is **conservative** — a false **refusal**, not
+a false pass — **and REV rules, explicitly not the coordinator.** *Named
+exclusion: **it has not been checked whether `recv_ns` can be stale-written or
+backfilled**, which would make it a worse liveness signal than it looks. A
+hypothesis that replaces one unvalidated signal with another is not yet an
+improvement.*
+
+## 🪞 AND MY OWN ROUND-410 ENDORSEMENT IS IMPLICATED
+
+I seconded the withdrawn conclusion, and my error has a precise shape:
+
+> ### ***I verified that the code does what it says — and not that what it says is true.***
+> Whether the predicate proves liveness depends on whether `window_start` tracks
+> **the collector** or **gaps** — a question about **the data, not the code** —
+> **and I never asked it.** *I took the docstring's account of the predicate's
+> meaning as the predicate's meaning.*
+
+**And worse, I did not merely agree — I manufactured a reason.** I wrote that
+***"gap sparsity never touches it, because the question is never about this day's
+gaps."***
+
+> ### **That sentence is exactly wrong. Gap sparsity is the whole problem** —
+> a gap-only signal in a gap-free period never advances, **which is precisely
+> what 1.9 hours of unmoved `window_start` now shows.**
+> *I dismissed the mechanism that turns out to be the mechanism — while agreeing
+> with someone else's withdrawal of the same idea.*
+
+# ⏱️ 09-11 AT 01:03Z — probed by me
+
+**The gap-ledger term is STILL FAILING**: max `window_start` 1789167600 against
+the needed 1789170900, **short by 3,300 s**.
+
+> **The two stage-0 terms are independent**, so ***09-11 can still fail at 02:00Z
+> on the gap-ledger term ALONE even if the interior-window count comes down —
+> and that failure would say NOTHING about the day's quality.*** *Recorded in
+> advance, so that if it happens nobody reads a liveness-signal artefact as a
+> statement about the data.*
+
 # READ FIRST — round 415 (MEM, 2026-09-12T01:01:42Z, tip `2065e92`)
 
 # 📅 VALIDATION STARTS **NO EARLIER THAN 2026-09-14** — ruled tonight, as a RULE
