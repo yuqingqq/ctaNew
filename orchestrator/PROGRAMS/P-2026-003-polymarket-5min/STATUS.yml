@@ -67,6 +67,27 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T00:45:15Z (MEM ROUND 412 -- THE IDENTITY-AS-ARTIFACT THREAT IS REFUTED BY ITS OWN AUTHOR,
+  MEASURED BEFORE ANY DAY WAS CONSUMED: artifact share 0.17 per cent BTC and 0.58 per cent
+  ETH over 9.4 MILLION states, spread ONE TICK at p50 and p90, ZERO one-sided, ZERO
+  crossed. AND REV REFUSED TO LEAN ON ITS OWN 130-OF-130 -- I computed whether that was
+  right rather than praising it: at 0.17 per cent P(zero in 130) = 0.80, at 0.58 per cent
+  0.47, and it would take 516 draws for a clean run to be surprising. SEEING 130 CLEAN IS
+  THE EXPECTED OUTCOME EVEN IF THE ARTIFACT IS REAL -- the weaker evidence pointed the same
+  way and citing it would have been citing NOISE THAT HAPPENED TO AGREE. THE C1 BOUND IS
+  ALGEBRAIC: |w*a+(1-w)*b - (a+b)/2| = |w-1/2|*(a-b) <= (a-b)/2, proved and then checked
+  over 200,000 books maxing at 0.999992. At p90 spread 0.005 that is 0.0025; on one tick,
+  0.0005. C1 IS A HALF-TICK PERTURBATION OF THE BASELINE, and REV's framing -- m = 2 counts
+  as two A BASELINE AND A HALF-TICK PERTURBATION OF IT -- names the SIZE and not only the
+  SOURCE. A SHARPENING I OFFER REV, NOT A CORRECTION: the exact sign test is
+  MAGNITUDE-BLIND -- ten of ten passes however small the improvement, provided each
+  increment is NONZERO -- so the binding constraint on C1 is the NONZERO-INCREMENT COUNT
+  against the at-least-8 rule, and magnitude enters ONLY through the tie rate. THE FEE
+  ABSENCE IS NOW REAL: REV's positive control passed at 724,950 / 532,140 / 557,455 hash
+  lines, so fee_rate_bps HAS NEVER BEEN OBSERVED ON A CHARGED FILL -- round 397's rule
+  producing a positive result for someone else. And DA turned a procedural guard into a
+  third condition INSIDE the predicate: A PROCEDURE I HAVE TO REMEMBER IS ONE I CAN
+  FORGET. Tip 845d780.)
   2026-09-12T00:41:33Z (MEM ROUND 411 -- NO ETH DAY BOOK EXISTS, AND IT BLOCKS THE SECTION 8 CLOCK MORE
   FUNDAMENTALLY THAN THE FEE OR THE FREEZE EVER DID. I counted with controls: 26 day books
   on disk, TWENTY-SIX BTC, ZERO ETH, zero non-btc tokens of any kind, days 09-03 through
@@ -107,6 +128,7 @@ updated: >-
   DAYS, which STRENGTHENS the validity case. And I measured the self-clearing live: max
   1789167600 = 23:00:00Z against the needed 1789170900 = 23:55:00Z, SHORT BY 55 MINUTES
   against 10-40 minute spacing. Tip f774d2b.)
+previous_updates: >-
   2026-09-12T00:29:58Z (MEM ROUND 409 -- THE PREDICTIVE CLOCK IS NOT BLOCKED BY THE ECONOMIC GAP, PROVED BY
   REHEARSAL: the whole path ran with the fee UNDECLARED and both candidates produced full
   verdicts; MAKER_FEE_IS_NOT_DECLARED reaches only section 9. That is round 407's third
@@ -127,7 +149,6 @@ updated: >-
   before a day is consumed. And C1 reads the SAME book event as Identity -- the code says
   so twice, unprompted -- so m=2 counts as two what may be one-and-a-bit; m is NOT changed
   because shrinking it after the fact is selection on the outcome. Tip f478a49.)
-previous_updates: >-
   2026-09-12T00:24:52Z (MEM ROUND 408 -- SIX TIMERS RUN ON THIS MACHINE AND THEY BLOCK THE SECTION 8 CLOCK.
   A TIMER THAT EVALUATES OR MEASURES A DAY CONSUMES IT, and NO REVIEW OF WHAT ANY SEAT DID
   WILL EVER FIND IT BECAUSE NO SEAT DID IT. THIS IS A RECURRENCE -- the same lesson is on
@@ -813,6 +834,14 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r412_THE_IDENTITY_AS_ARTIFACT_HYPOTHESIS_IS_REFUTED_BY_ITS_OWN_AUTHOR: "Measured and dismissed BEFORE any day was consumed, which is the outcome raising a threat is for. Artifact share 0.17 per cent BTC and 0.58 per cent ETH over 9.4 MILLION price_change states; spread is ONE TICK at both p50 and p90; ZERO one-sided books; ZERO crossed. So Identity is a REAL COMPARATOR at the decision instants, and the concern is QUANTIFIED rather than argued away -- the difference being that a quantified threat can be revisited if the rate moves, and an argued-away one cannot."
+  r412_AND_REV_REFUSED_TO_LEAN_ON_ITS_OWN_130_OF_130_which_I_verified_was_RIGHT: "REV explicitly refused to cite its 130-of-130 clean decision instants, naming their LOW POWER at a 0.2 to 0.6 per cent rate and pointing instead at the 9.4M all-states figure. I computed whether that refusal was justified rather than praising it: at 0.17 per cent, P(zero artifacts in 130 draws) = 0.80; at 0.58 per cent it is 0.47. SO SEEING 130 CLEAN INSTANTS IS THE EXPECTED OUTCOME EVEN IF THE ARTIFACT IS ENTIRELY REAL -- it would take 516 draws for a clean run to be surprising at 0.58 per cent. The refusal was not modesty. THE WEAKER EVIDENCE POINTED THE SAME WAY AND WOULD HAVE BEEN EASY TO CITE, AND CITING IT WOULD HAVE BEEN CITING NOISE THAT HAPPENED TO AGREE."
+  r412_THE_C1_BOUND_IS_ALGEBRAIC_NOT_EMPIRICAL_AND_I_PROVED_IT: "|C1 - Identity| <= spread/2 EXACT AND BY CONSTRUCTION, because C1 is a convex combination of the same two prices of which Identity is the midpoint. The algebra: |w*a + (1-w)*b - (a+b)/2| = |w - 1/2| * (a-b) <= (a-b)/2, for any weight w in [0,1]. I also checked it numerically over 200,000 random books and the ratio to spread/2 maxes at 0.999992, approaching but never exceeding 1 exactly as the algebra requires. At the measured p90 spread of 0.005 that is |C1 - Identity| <= 0.0025, and on a one-tick spread it is 0.0005. C1 IS A HALF-TICK PERTURBATION OF THE BASELINE."
+  r412_REVs_FORMULATION_IS_BETTER_THAN_THE_ONE_IT_REPLACES: "m = 2 counts as two A BASELINE AND A HALF-TICK PERTURBATION OF IT. That is sharper than the earlier framing of C1 as reading the same book event, because it names the SIZE of the difference and not only its SOURCE: two estimators can share an input and still differ materially, and the point here is that these cannot. Recorded in REV's words. m is NOT being changed; the caveat belongs in M_IS_TWO_FOREVER and REV is drafting the sentence."
+  r412_AND_A_SHARPENING_OFFERED_TO_REV_the_sign_test_is_MAGNITUDE_BLIND: "Offered as a sharpening of the question, NOT a correction. The asked-for computation is a perfect-foresight upper bound on C1's per-day log-loss improvement, compared against what the sign test can DETECT at G=10. But the exact sign test counts SIGNS of nonzero daily increments: ten of ten gives 0.001953125 and nine of ten gives 0.021484375, both under 0.025, while eight of ten gives 0.109375 and fails. SO A HALF-TICK IMPROVEMENT ON TEN OF TEN DAYS PASSES, HOWEVER SMALL, PROVIDED EACH DAILY INCREMENT IS NONZERO AND POSITIVE. The binding constraint on C1 is therefore not the SIZE of the improvement but the NONZERO-INCREMENT COUNT -- the plan needs at least 8 nonzero or INSUFFICIENT_EVIDENCE -- and magnitude enters ONLY through its effect on the TIE RATE. A magnitude bound does not by itself bound a sign test."
+  r412_THE_INSTRUCTION_TO_REV_IS_THE_PART_WORTH_KEEPING: "REV was told NOT TO SOFTEN the conclusion if the arithmetic says the test cannot demonstrate anything, AND NOT TO REACH FOR IT IF IT DOES NOT -- a bound comfortably above the threshold being an equally good answer. That is a two-sided instruction, and it is the only form under which the answer is informative: an instruction to find a problem produces problems, and an instruction to clear the path produces clearances. Recorded because the dramatic possible outcome -- that the closed family holds one candidate that cannot cover the decisions and one that cannot move the statistic -- is exactly the kind a seat could be tempted toward."
+  r412_THE_FEE_ABSENCE_IS_NOW_REAL_RATHER_THAN_UNTESTED: "REV's POSITIVE CONTROL PASSED -- 724,950 / 532,140 / 557,455 hash lines found in the same files -- so the zero matches is a GENUINE ABSENCE: fee_rate_bps HAS NEVER BEEN OBSERVED ON A CHARGED FILL. That is the cleanest statement yet of why the venue field cannot support a fee rule, and it belongs in DA's declaration in those words. Note the method is exactly the rule promoted at round 397 -- when absence is the finding, run the search in a form whose failure is visible -- and this is the first time it has produced a POSITIVE result for someone else rather than catching an error of mine."
+  r412_DA_TURNED_A_PROCEDURAL_GUARD_INTO_A_CONDITION_INSIDE_THE_PREDICATE: "DA's freeze predicate now BLOCKS on REV's section 7 versus section 9 adjudication, computing FALSE until REV rules -- a third condition inside the predicate rather than a note the coordinator has to remember to check. The formulation is the coordinator's own and it is the best sentence of the round: A PROCEDURE I HAVE TO REMEMBER IS ONE I CAN FORGET. Every guard-shaped hole recorded tonight has this shape -- the waiter that was an intention, the arming that was not real, the polling clock held open by a turn -- and each was fixed the same way, by moving the requirement from a person into a thing that refuses."
   r411_NO_ETH_DAY_BOOK_EXISTS_AND_I_COUNTED_IT_WITH_CONTROLS: "Twenty-six day books on disk. TWENTY-SIX ARE BTC. ZERO ARE ETH, and zero carry any non-btc coin token at all. Controls ran first: the pattern finds 26 books so it can speak, and an impossible coin token returns 0. The days present are 09-03 through 09-11 -- NINE, not the eight in the dispatch, because 09-11's book has landed since it was written. This was found by running the section 8 path on REAL books rather than synthetic ones, and SYNTHETIC DATA COULD NEVER HAVE PRODUCED IT: a fixture supplies whatever coins it is asked for."
   r411_SO_EVERY_REAL_DAY_IS_COINS_INCOMPLETE_AND_IT_IS_A_DATA_BLOCKER: "The plan requires the first 10 evaluable COMPLETE BTC+ETH UTC days and scores a BTC+ETH portfolio day with EACH COIN EQUALLY WEIGHTED. With no ETH book for any day, EVERY REAL DAY IS COINS_INCOMPLETE AS DECLARED, and the clock cannot start on btc-only books. That is a DATA blocker and not a code one -- nothing in the scorer, the seams or the freeze can be fixed to make it go away, which is why it blocks the section 8 clock more fundamentally than the fee or the freeze ever did. Those two were definitions and declarations; this is an absent half of the population."
   r411_THE_THREE_FACTS_BE_IS_ESTABLISHING_AND_WHY_THEY_DIVERGE_ENORMOUSLY: "Before anything is built: (i) whether an ETH day book is BUILDABLE with the current pipeline at all, CHECKED AT THE CODE -- because every book being named ..._btc__L250ms__FWD1.pkl is SUGGESTIVE BUT NOT PROOF, which is the right standard and the one I would have been tempted to skip; (ii) whether the underlying ETH DATA EXISTS for those days, or whether this is a collection gap that CAN NEVER BE RETRO-COLLECTED; (iii) what one ETH day costs in wall-clock, peak memory and lock time. THE ANSWERS DIVERGE ENORMOUSLY: one is a night of building, the other means THE SECTION 8 POPULATION CAN ONLY EVER BE FORWARD-LOOKING."
@@ -28748,6 +28777,38 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r412_THE_IDENTITY_AS_ARTIFACT_HYPOTHESIS_IS_REFUTED_BY_ITS_OWN_AUTHOR:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the four figures are REV's measurement over the all-states population; the refutation is of REV's own hypothesis raised at round 409."
+  r412_AND_REV_REFUSED_TO_LEAN_ON_ITS_OWN_130_OF_130_which_I_verified_was_RIGHT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "computed (1-rate)**130 at 0.0017, 0.0058 and 0.006 giving 0.80, 0.47 and 0.46, and log(0.05)/log(1-0.0058) giving 516 draws."
+  r412_THE_C1_BOUND_IS_ALGEBRAIC_NOT_EMPIRICAL_AND_I_PROVED_IT:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_price_identity.py
+    said: "derived the identity |w*a+(1-w)*b - (a+b)/2| = |w-1/2|*(a-b) and confirmed the bound numerically over 200,000 sampled books."
+  r412_REVs_FORMULATION_IS_BETTER_THAN_THE_ONE_IT_REPLACES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "the formulation is REV's; the earlier same-book-event finding is at round 409, verified at both modules' own comments."
+  r412_AND_A_SHARPENING_OFFERED_TO_REV_the_sign_test_is_MAGNITUDE_BLIND:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "computed the two-sided ladder over 2^10 for 10, 9 and 8 of ten: 0.001953125, 0.021484375 and 0.109375; the at-least-8-nonzero rule is section 8's own."
+  r412_THE_INSTRUCTION_TO_REV_IS_THE_PART_WORTH_KEEPING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the instruction is the coordinator's, given alongside the request for the computation."
+  r412_THE_FEE_ABSENCE_IS_NOW_REAL_RATHER_THAN_UNTESTED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the three hash-line counts are REV's control, run over the same files as the query that returned zero."
+  r412_DA_TURNED_A_PROCEDURAL_GUARD_INTO_A_CONDITION_INSIDE_THE_PREDICATE:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/declarations/da_step6_full_pipeline_freeze_v1.json
+    said: "the third condition and its false-until-ruled behaviour are DA's; the freeze predicate is the one I read at rounds 402 and 404 computing freeze_is_effective false with two blocking gaps."
   r411_NO_ETH_DAY_BOOK_EXISTS_AND_I_COUNTED_IT_WITH_CONTROLS:
     prov: CHECKED
     artifact: data/pm_5min/derived
