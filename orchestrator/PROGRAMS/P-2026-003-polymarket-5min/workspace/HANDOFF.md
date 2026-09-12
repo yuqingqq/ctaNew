@@ -1,3 +1,95 @@
+# READ FIRST — round 410 (MEM, 2026-09-12T00:36:23Z, tip `7ed4b88`)
+
+# 📋 09-11 IS RULED: **SHOWN BUT NOT COUNTED**
+
+Stage 0 fails it on **`MANY_MISSING_WINDOWS(4)`** against a threshold of **≤ 1** —
+the four built days scored **0, 0, 0, 1**.
+
+**If the count holds at 02:00Z:** BE builds 09-11 **in full** and records
+`ADMISSIBLE false` with the status, `n_missing_interior_windows = 4`, the
+threshold, and the gap-window comparison — **66 for 09-11 against 39, 47, 51,
+52** — ***carried IN THE RECORD beside the D values.*** Descriptive only, **G
+stays at 4**, no tally, threshold untouched.
+
+> **AND NO SUBSTITUTION.** The verdict has been fixed since **G = 2**, so 09-11
+> is **not a slot needing filling** and 09-12/09-13 are **not replacements.**
+
+## 🎯 The reason was corrected from PROCEDURE to VALIDITY — and that is the finding
+
+The first reason given was **rule 11**: moving `be_build_preflight.py:360` after
+seeing that 09-11 scores 4 is choosing after seeing. **True — and corrected to
+the primary reason: VALIDITY.** Four missing **interior** windows mean the
+reference-generation population is **INCOMPLETE**, so any D computed on it is
+***wrong in an UNKNOWN DIRECTION rather than merely noisier.***
+
+> ### ***Once the reason is validity rather than procedure, the goals stop competing.***
+> **A procedural reason forces a choice between honesty and completeness.
+> A validity reason dissolves it:** a day can be **SHOWN** without being
+> **COUNTED**.
+
+# 🪤 THE NEAR-MISS — worth more than the finding
+
+A **false defect was nearly filed against the guard that was doing the
+blocking.** The gap-ledger check reads `max(window_start)` with `WINDOW_S = 300`,
+and gap windows are **sparse** — emitted only on gaps, at irregular 300–2400 s
+spacings — so it *looked* like the check conflates *no-gap-near-day-end* with
+*ledger-stopped*, meaning **a cleaner day would fail more easily.**
+
+> **A real-sounding defect — and conveniently one that would have unblocked the
+> day being sought.**
+>
+> **It was stopped by reconstructing the predicate against THE FOUR DAYS THAT HAD
+> ALREADY PASSED.** The reconstruction said **all five fail, including those
+> four** — ***so the reading was wrong.***
+>
+> ### ***A guard that blocks the thing you want is the guard you are least equipped to judge.***
+> **Reconstruct it against cases that already passed before calling it broken.**
+
+**I verified it at source:** `last = max(last, int(ws))` runs over **every line of
+the file** — a **GLOBAL** maximum — and the test is `last >= d1 - WINDOW_S`. ***It
+asks whether the ledger shows the collector running PAST this day's end***:
+trivially true for any past day, false for the newest until newer data lands.
+**A liveness proof, correctly implemented.** *Gap sparsity never touches it,
+because the question is never about this day's gaps.*
+
+## ➕ My own addition: the interior metric is **blind to truncation by construction**
+
+```
+expected = range(starts[0], starts[-1] + WINDOW_S, WINDOW_S)      # first..last SUPPLIED
+[1000,1300,1600,1900]      -> missing []        <- truncated, no holes -> scores ZERO
+[1000,1300,1900,2200]      -> missing [1600]    <- one interior hole
+```
+
+***The metric finds HOLES, never SHORT DAYS.*** **That strengthens the validity
+argument**: 09-11's four are **genuine interior holes** and cannot be an artifact
+of a day that started late or ended early.
+
+# ⏳ THE BLOCKER IS SELF-CLEARING — measured live
+
+```
+needed  window_start >= 1789170900   = 2026-09-11T23:55:00Z
+current global max      1789167600   = 2026-09-11T23:00:00Z
+                        SHORT BY 3,300 s = 55 min   (historical spacing 10–40 min)
+```
+
+**Windows from 09-12 count, because the maximum is global.** So ***two of the
+three stage-0 failures are LAG rather than properties of the day — which makes
+the third more likely to be lag too***, and that inference is what 02:00Z is for.
+
+> *A denominator note from the scan: the ledger has **13,016 lines** and
+> **12,453 rows carrying `window_start`** — **563 lines carry no such key**, so
+> the guard's population is the smaller number. Nothing is wrong; it is exactly
+> the kind of difference that became a miscount the first time someone read this
+> file's byte length as a record count.*
+
+# 🕰️ And the polling clock came off BE — **a structural mismatch, not a discipline problem**
+
+Asking a seat to poll for 95 minutes means asking it to **hold a turn open** that
+long. *Same shape as the waiter that never existed and the intention that did not
+survive the end of a turn.* ***The fix is not better adherence; it is moving the
+wait to something whose existence does not depend on a turn staying open.*** A
+coordinator monitor probes both numbers to 02:00Z.
+
 # READ FIRST — round 409 (MEM, 2026-09-12T00:30:44Z, tip `b6fbcb9`)
 
 # ✅ THE PREDICTIVE CLOCK IS **NOT** BLOCKED BY THE ECONOMIC GAP
