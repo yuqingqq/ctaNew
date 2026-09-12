@@ -1,0 +1,580 @@
+{
+ "protocol": "P003_DA_STEP6_FULL_PIPELINE_FREEZE_V1",
+ "plan": "fair_value_plan.md v1.2",
+ "DRAFT": false,
+ "LANDED_BY": "DA 281",
+ "freeze_is_effective": false,
+ "rev_adjudication": {
+  "present": false,
+  "path": "live/pm_research/declarations/rev_section7_fee_rule_reading_v1.json",
+  "confirms_the_reading": false,
+  "status": "AWAITING_REV_ADJUDICATION",
+  "meaning": "\u00a77's `fee_rule` is read as a RECORDING requirement (DA 294). Until REV confirms that reading independently, the freeze is NOT effective however few gaps remain."
+ },
+ "WHY_A_THIRD_CONDITION": "the last gap closes on an INTERPRETATION of \u00a77, and the parties who made and accepted that interpretation both benefit from it closing. DA 294 attached the guard to its own ruling. Until REV confirms the reading, `freeze_is_effective` stays False no matter how few gaps remain.",
+ "enumeration": {
+  "n_chain_links": 10,
+  "n_required_fields": 14,
+  "n_quote_clauses": 9,
+  "pinned_by": "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md",
+  "plan_commit": "876e435bf67e",
+  "plan_sha256_16": "1606fe8d19124d0f",
+  "clauses_compared_by": "CONTENT",
+  "intact": true
+ },
+ "enumeration_intact": true,
+ "why_not_effective": [],
+ "WHAT_freeze_is_effective_MEANS": "TRUE only when every \u00a77 field resolves and every chain link has an implementation. It is FALSE here. The declaration exists so that \u00a711 step 6 has an artifact and so that what is missing is written down at a ref rather than carried in conversation; it does not assert that the pipeline is frozen.",
+ "executing_refs": {
+  "heads": {
+   "origin/de-freeze-chain-v2": "3dc509d5f83f1670e819f169852763dd8431cb1a",
+   "origin/be-build-runner": "3dc509d5f83f1670e819f169852763dd8431cb1a"
+  },
+  "heads_equal": true,
+  "commits_each_has_that_the_other_does_not": {
+   "origin/de-freeze-chain-v2": 0,
+   "origin/be-build-runner": 0
+  },
+  "n_lane_modules_compared": 10,
+  "all_lane_modules_byte_identical": true,
+  "modules_that_differ": [],
+  "the_rule": "a gate is satisfied by the BLOB on both refs, not by the heads matching; two shas with identical modules blocks nothing"
+ },
+ "market_facts": {
+  "present": true,
+  "path": "live/pm_research/declarations/da_market_facts_v1.json",
+  "sha256": "bffe48169dc767ba1d28c9c58971e864d03b58c9d39890fe509042bd2a972f77",
+  "established": {
+   "legal_tick": true,
+   "maker_fee_rule": false,
+   "initial_inventory": true
+  },
+  "unestablished": [
+   "maker_fee_rule"
+  ],
+  "legal_tick": 0.01,
+  "maker_fee_bps": null,
+  "maker_fee_rule": null,
+  "maker_fee_residual": {
+   "n_charged": 10,
+   "n_maker_legs": 1056,
+   "share": 0.00946969696969697,
+   "all_at_price": 0.99,
+   "implied_rate_median": 0.099,
+   "reconciles_to": "maker_base_fee = 1000 read as BASIS POINTS: fee = 0.10 x size x min(p, 1-p)",
+   "trigger": "IDENTIFIED as an ACCOUNT ATTRIBUTE (DA 288 / REVIEW 249): six accounts charged on 100% of their legs, none mixed. My DA 286 'UNIDENTIFIED' was wrong -- I split by price and by block and never by account.",
+   "THE_DISCRIMINATING_FACT": "25 maker BUY legs at the SAME price 0.9900, interleaved across the SAME block buckets, paid ZERO. This is what makes price-alone insufficient as an explanation, and it is what a later reader needs in order to re-open this question.",
+   "what_would_settle_it": "the published CLOB fee schedule for these condition ids with an effective date; no collector captures it",
+   "hypotheses_refuted_by_driving": {
+    "hypothesis_1_parsing_edge_in_my_own_audit": "REFUTED",
+    "hypothesis_2_not_our_markets": "REFUTED",
+    "hypothesis_3_extreme_price": "REFUTED as a sufficient cause"
+   },
+   "THE_UNKNOWN_CARRIES_ITS_OWN_WEIGHT": "DA 287 requires a \u00a79 fee SENSITIVITY, owned by DE: re-run the economic verdict with EVERY maker fill charged at 10% of size x min(p, 1-p) -- the worst case consistent with what was measured. If the verdict does not flip, this residual is immaterial AS A COMPUTED STATEMENT rather than a hope. If it flips, the economic gate cannot be settled on collected data and must say exactly that. Either way nobody has to trust the zero."
+  },
+  "negative_declaration": {
+   "status": "FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_DATA",
+   "claim": "the maker fee applicable to US cannot be established from any artifact this programme collects. This is a RESOLVED question with a negative answer, not an unexamined one.",
+   "the_five_strands": {
+    "1_account_partition_is_total": "six maker addresses are charged on 100% of their legs and none is mixed; charged-ness is an ACCOUNT attribute",
+    "2_the_RATE_is_an_account_attribute_too": "each charged address carries exactly ONE rate tier -- four at ~0.099 and two at 0.495, never both. So the fee is not a market parameter that could be read off the market; it is a property of the counterparty",
+    "3_the_venue_field_is_populated_but_non_discriminating": "`fee_rate_bps` is present on every trade event and reads zero for ALL SIX charged accounts. It cannot separate the charged from the uncharged, so it cannot be the rule",
+    "4_the_corpus_is_a_sample_not_a_population": "the audit's own limit: 901 receipts bound observed volume only. An absence from the charged set is not membership in the zero class",
+    "5_no_validated_fee_model_exists": "the formula reproduces 110 of 901 taker legs to 1e-6 (12.21%) where the schedule is FULLY observable, with a maximum residual of 0.51 USDC"
+   },
+   "and_the_sixth_which_is_decisive": "WE HAVE NO MAKER ADDRESS. The programme is research-only and has never rested an order on this book, so our own treatment is not merely unobserved -- it does not yet exist to observe. No amount of further collection closes that; only trading does.",
+   "what_would_change_it": [
+    "the published CLOB fee schedule for these condition ids with an effective date, which no collector captures",
+    "or an executing account of our own with observed fills"
+   ]
+  },
+  "legal_tick_caveat": "every market record declares 0.01, uniformly across all coins and both months. The BOOK does not match it exactly: 342 of 4171076 resting levels (0.0082%) sit at 0.001 granularity, in 8 of 24 sampled windows -- and those windows declare 0.01 too. So the tick is the right ROUNDING grid and is NOT a guarantee that no finer price rests on the book.",
+  "initial_inventory": 0.0,
+  "maker_fee_status": "MAKER_FEE_RULE_ESTABLISHED_ZERO_WITH_UNRECONCILED_ONCHAIN_CHARGES",
+  "maker_fee_why_not": null
+ },
+ "unattributed_chain_files": [
+  "live/pm_research/da_fair_value_ledger.py",
+  "live/pm_research/de_fair_value_economic.py",
+  "live/pm_research/de_fair_value_fee_sensitivity.py",
+  "live/pm_research/de_fair_value_plumbing_run.py",
+  "live/pm_research/de_fair_value_predictive.py",
+  "live/pm_research/de_fair_value_rehearsal.py"
+ ],
+ "input_manifest": {
+  "present": true,
+  "path": "live/pm_research/declarations/da_immutable_inputs_manifest_v1.json",
+  "sha256": "6cca4d6515d055c859e04e08706a878a2a6abfd48d82966d076f1727e408c76b",
+  "n_inputs": 7,
+  "days_sealed": [
+   "20260909",
+   "20260910"
+  ],
+  "every_predictive_link_has_a_sealed_input": true,
+  "all_enumerated_inputs_present_and_sealed": true,
+  "predictive_links_not_covered": [],
+  "satisfies_section_7": true,
+  "seal_kinds": [
+   "CONTENT",
+   "PREFIX"
+  ],
+  "WHAT_A_SEAL_DOES_NOT_CLAIM": "it pins the BYTES the chain read. It does not certify they are correct, complete, or free of collector gaps -- gap statuses are a separate predicate and stay one. A seal answers 'is this the same input?', never 'is this a good input?'"
+ },
+ "declared_at_ref": "origin/de-freeze-chain-v2",
+ "ref_head": "3dc509d5f83f1670e819f169852763dd8431cb1a",
+ "chain_in_order": [
+  {
+   "link": "immutable_inputs",
+   "paths": [
+    "live/pm_research/da_immutable_inputs_manifest.py"
+   ],
+   "sha256": {
+    "live/pm_research/da_immutable_inputs_manifest.py": "57befd5776742eb21acc0f4f41ca97a433295d8981d56500632aaca02bce0631"
+   },
+   "implemented": true
+  },
+  {
+   "link": "labels_statuses",
+   "paths": [
+    "live/pm_research/da_fair_value_gate1_labels.py"
+   ],
+   "sha256": {
+    "live/pm_research/da_fair_value_gate1_labels.py": "73dca3620474a3363fb50694a59df5c6b81460bd14f55a234e7f7d30780515b3"
+   },
+   "implemented": true
+  },
+  {
+   "link": "actions",
+   "paths": [
+    "live/pm_research/de_canonical_action_population.py",
+    "live/pm_research/de_fair_value_actions.py"
+   ],
+   "sha256": {
+    "live/pm_research/de_canonical_action_population.py": "76e204a6788218aec19c0ed6951bd5a25b34ff29f51f2fb89e2a886b652967e6",
+    "live/pm_research/de_fair_value_actions.py": "a1affe64504758a7a6a290fe2a21396c01edb21d429e5de420be2be9f2510ba8"
+   },
+   "implemented": true
+  },
+  {
+   "link": "sigma",
+   "paths": [
+    "live/pm_research/be_sigma_30m.py"
+   ],
+   "sha256": {
+    "live/pm_research/be_sigma_30m.py": "8d7a2448937e0fd3bc720ba64fa423fde5e615ad9c1f6b77cff2d4ec159a90c7"
+   },
+   "implemented": true
+  },
+  {
+   "link": "fairprice",
+   "paths": [
+    "live/pm_research/da_fair_price_identity.py",
+    "live/pm_research/de_fair_price_wrapper.py"
+   ],
+   "sha256": {
+    "live/pm_research/da_fair_price_identity.py": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
+    "live/pm_research/de_fair_price_wrapper.py": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0"
+   },
+   "implemented": true
+  },
+  {
+   "link": "fallback",
+   "paths": [
+    "live/pm_research/de_fair_price_wrapper.py",
+    "live/pm_research/de_fair_value_policy_seam.py"
+   ],
+   "sha256": {
+    "live/pm_research/de_fair_price_wrapper.py": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0",
+    "live/pm_research/de_fair_value_policy_seam.py": "36944198cd925bea4c33948683f9f2f373b87ebc553436a6d5b78f80021421c7"
+   },
+   "implemented": true
+  },
+  {
+   "link": "score",
+   "paths": [
+    "live/pm_research/de_fair_value_actions.py"
+   ],
+   "sha256": {
+    "live/pm_research/de_fair_value_actions.py": "a1affe64504758a7a6a290fe2a21396c01edb21d429e5de420be2be9f2510ba8"
+   },
+   "implemented": true
+  },
+  {
+   "link": "quote_mapping",
+   "paths": [
+    "live/pm_research/de_fair_value_policy_seam.py"
+   ],
+   "sha256": {
+    "live/pm_research/de_fair_value_policy_seam.py": "36944198cd925bea4c33948683f9f2f373b87ebc553436a6d5b78f80021421c7"
+   },
+   "implemented": true
+  },
+  {
+   "link": "replay",
+   "paths": [
+    "live/pm_research/de_fair_value_replay_seam.py"
+   ],
+   "sha256": {
+    "live/pm_research/de_fair_value_replay_seam.py": "7842bc6e6f72272d7099e040dc00e5a9cc7a08ed813a48a3076a638a630efbaa"
+   },
+   "implemented": true
+  },
+  {
+   "link": "pnl",
+   "paths": [
+    "live/pm_research/de_fair_value_pnl.py"
+   ],
+   "sha256": {
+    "live/pm_research/de_fair_value_pnl.py": "c643d030fa1614e9a9c4140cc7aa041d6b6b4317ccdcff9e9a70310a3fbea1be"
+   },
+   "implemented": true
+  }
+ ],
+ "fields": {
+  "all_file_hashes": {
+   "live/pm_research/da_immutable_inputs_manifest.py": "57befd5776742eb21acc0f4f41ca97a433295d8981d56500632aaca02bce0631",
+   "live/pm_research/da_fair_value_gate1_labels.py": "73dca3620474a3363fb50694a59df5c6b81460bd14f55a234e7f7d30780515b3",
+   "live/pm_research/de_canonical_action_population.py": "76e204a6788218aec19c0ed6951bd5a25b34ff29f51f2fb89e2a886b652967e6",
+   "live/pm_research/de_fair_value_actions.py": "a1affe64504758a7a6a290fe2a21396c01edb21d429e5de420be2be9f2510ba8",
+   "live/pm_research/be_sigma_30m.py": "8d7a2448937e0fd3bc720ba64fa423fde5e615ad9c1f6b77cff2d4ec159a90c7",
+   "live/pm_research/da_fair_price_identity.py": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
+   "live/pm_research/de_fair_price_wrapper.py": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0",
+   "live/pm_research/de_fair_value_policy_seam.py": "36944198cd925bea4c33948683f9f2f373b87ebc553436a6d5b78f80021421c7",
+   "live/pm_research/de_fair_value_replay_seam.py": "7842bc6e6f72272d7099e040dc00e5a9cc7a08ed813a48a3076a638a630efbaa",
+   "live/pm_research/de_fair_value_pnl.py": "c643d030fa1614e9a9c4140cc7aa041d6b6b4317ccdcff9e9a70310a3fbea1be"
+  },
+  "commit_ref": {
+   "ref": "origin/de-freeze-chain-v2",
+   "head": "3dc509d5f83f1670e819f169852763dd8431cb1a",
+   "mirror": "origin/be-build-runner",
+   "mirror_head": "3dc509d5f83f1670e819f169852763dd8431cb1a"
+  },
+  "candidate_count": {
+   "n": 2,
+   "builders_are_committed_files_not_scratch": true,
+   "WHY_THIS_FIELD_EXISTS": "a scratch-dir builder has voided a freeze in this programme before (rule 12). `identity_of` resolves paths inside a temp worktree, so the recorded paths were /tmp; the digests were always of the same bytes, but no later reader could confirm that without redoing the work by hand. The repo-relative path, the commit ref and a COMPUTED match now sit beside every digest.",
+   "m_for_multiplicity": 2,
+   "M_IS_TWO_FOREVER": "m = 2 is fixed at freeze and does not shrink if a candidate dies, is withdrawn, or fails to produce a value. Holm is across C1 and C2 whatever happens to either; a multiplicity that shrinks after the fact is selection on the outcome.",
+   "identities": {
+    "pm_microprice": {
+     "estimator": "pm_microprice",
+     "model_version": null,
+     "builder_path": "/tmp/da_step6_cabonkvj/live/pm_research/da_fair_price_identity.py",
+     "builder_sha256": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
+     "wrapper_path": "/tmp/da_step6_cabonkvj/live/pm_research/de_fair_price_wrapper.py",
+     "wrapper_sha256": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0",
+     "builder_repo_path": "live/pm_research/da_fair_price_identity.py",
+     "wrapper_repo_path": "live/pm_research/de_fair_price_wrapper.py",
+     "commit_ref": "origin/de-freeze-chain-v2",
+     "commit": "3dc509d5f83f1670e819f169852763dd8431cb1a",
+     "builder_sha256_at_commit": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
+     "wrapper_sha256_at_commit": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0",
+     "scratch_path_recorded_by_identity_of": "/tmp/da_step6_cabonkvj/live/pm_research/da_fair_price_identity.py",
+     "digests_match_the_committed_bytes": true
+    },
+    "bn_bookticker_mid": {
+     "estimator": "bn_bookticker_mid",
+     "model_version": "s60_probability_v1",
+     "builder_path": "/tmp/da_step6_cabonkvj/live/pm_research/da_fair_price_identity.py",
+     "builder_sha256": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
+     "wrapper_path": "/tmp/da_step6_cabonkvj/live/pm_research/de_fair_price_wrapper.py",
+     "wrapper_sha256": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0",
+     "builder_repo_path": "live/pm_research/da_fair_price_identity.py",
+     "wrapper_repo_path": "live/pm_research/de_fair_price_wrapper.py",
+     "commit_ref": "origin/de-freeze-chain-v2",
+     "commit": "3dc509d5f83f1670e819f169852763dd8431cb1a",
+     "builder_sha256_at_commit": "180915d536c77c6821f1e6e25a88e65193bd0225dda6959355da746a072e3c65",
+     "wrapper_sha256_at_commit": "9a895a46bfecb721d35a0e688a075c434b988c57805377ec99c1f169339d7fc0",
+     "scratch_path_recorded_by_identity_of": "/tmp/da_step6_cabonkvj/live/pm_research/da_fair_price_identity.py",
+     "digests_match_the_committed_bytes": true
+    }
+   },
+   "model_version_binds_to": [
+    "bn_bookticker_mid"
+   ],
+   "model_version_is_None_for": [
+    "pm_microprice"
+   ],
+   "MEASURED_CORRECTION": "DA 278 binds both candidates to model_version=s60_probability_v1; the artifact binds it to C2 only and C1 to None, on purpose",
+   "declared_model_version": "s60_probability_v1"
+  },
+  "action_key": "(coin, slug, generation_id, decision_recv_ns)",
+  "epsilon": 1e-06,
+  "status_grammar": {
+   "gate1_label_statuses": [
+    "DISAGREE",
+    "LABEL_ADMISSIBLE",
+    "MARGIN_UNRESOLVABLE",
+    "NOT_IN_CAPTURE",
+    "NO_OFFICIAL",
+    "OUTAGE",
+    "STALE_BOUNDARY"
+   ],
+   "gate1_admitting": [
+    "LABEL_ADMISSIBLE"
+   ],
+   "EXACTLY_ONE_ADMITS": true,
+   "consumer_statuses": [
+    "BOUNDARY_NOT_IN_CAPTURE",
+    "CHAINLINK_UNAVAILABLE",
+    "DISAGREE",
+    "VENUE_UNRESOLVED",
+    "VERIFIED_AGREE"
+   ],
+   "fairprice_statuses": [],
+   "action_exclusion_statuses": [
+    "DUPLICATE_KEY",
+    "FLAG_CONTRADICTS",
+    "NOT_IDENTITY_PATH",
+    "NOT_IN_POPULATION",
+    "NO_DECISION_STAMP",
+    "NO_POPULATION",
+    "NO_PROVENANCE",
+    "OUTCOME_UNKNOWN",
+    "OUT_OF_SCOPE",
+    "PROTOCOL"
+   ]
+  },
+  "source_manifests": {
+   "present": true,
+   "path": "live/pm_research/declarations/da_immutable_inputs_manifest_v1.json",
+   "sha256": "6cca4d6515d055c859e04e08706a878a2a6abfd48d82966d076f1727e408c76b",
+   "n_inputs": 7,
+   "days_sealed": [
+    "20260909",
+    "20260910"
+   ],
+   "every_predictive_link_has_a_sealed_input": true,
+   "all_enumerated_inputs_present_and_sealed": true,
+   "predictive_links_not_covered": [],
+   "satisfies_section_7": true,
+   "seal_kinds": [
+    "CONTENT",
+    "PREFIX"
+   ],
+   "WHAT_A_SEAL_DOES_NOT_CLAIM": "it pins the BYTES the chain read. It does not certify they are correct, complete, or free of collector gaps -- gap statuses are a separate predicate and stay one. A seal answers 'is this the same input?', never 'is this a good input?'"
+  },
+  "source_manifests_probe": {
+   "present": true,
+   "path": "live/pm_research/declarations/da_immutable_inputs_manifest_v1.json",
+   "sha256": "6cca4d6515d055c859e04e08706a878a2a6abfd48d82966d076f1727e408c76b",
+   "n_inputs": 7,
+   "days_sealed": [
+    "20260909",
+    "20260910"
+   ],
+   "every_predictive_link_has_a_sealed_input": true,
+   "all_enumerated_inputs_present_and_sealed": true,
+   "predictive_links_not_covered": [],
+   "satisfies_section_7": true,
+   "seal_kinds": [
+    "CONTENT",
+    "PREFIX"
+   ],
+   "WHAT_A_SEAL_DOES_NOT_CLAIM": "it pins the BYTES the chain read. It does not certify they are correct, complete, or free of collector gaps -- gap statuses are a separate predicate and stay one. A seal answers 'is this the same input?', never 'is this a good input?'"
+  },
+  "initial_inventory": {
+   "value": 0.0,
+   "units": "signed shares of the UP token, per market",
+   "established_by": "live/pm_research/declarations/da_market_facts_v1.json",
+   "sha256": "bffe48169dc767ba1d28c9c58971e864d03b58c9d39890fe509042bd2a972f77"
+  },
+  "tick_rounding": {
+   "legal_tick": 0.01,
+   "rule": "bid rounds DOWN, ask rounds UP, to the legal tick",
+   "established_by": "live/pm_research/declarations/da_market_facts_v1.json",
+   "sha256": "bffe48169dc767ba1d28c9c58971e864d03b58c9d39890fe509042bd2a972f77",
+   "CAVEAT": "every market record declares 0.01, uniformly across all coins and both months. The BOOK does not match it exactly: 342 of 4171076 resting levels (0.0082%) sit at 0.001 granularity, in 8 of 24 sampled windows -- and those windows declare 0.01 too. So the tick is the right ROUNDING grid and is NOT a guarantee that no finer price rests on the book."
+  },
+  "latency": {
+   "placement_latency_ms": 250,
+   "applies_to": "every new generation in BOTH legs",
+   "CLASS": "SIMULATION ASSUMPTION",
+   "is_a_measured_live_end_to_end_latency": false,
+   "must_never_be_described_as_empirical": true,
+   "IS_NOT": "a measured live end-to-end latency. The receipt must never describe this parameter as empirical.",
+   "no_challenger_receives_an_instantaneous_first_placement": true,
+   "required_count_field": "n_fills_removed_before_generation_start_plus_250ms",
+   "bound_in_a_frozen_chain_file": [
+    "live/pm_research/de_fair_value_policy_seam.py",
+    "live/pm_research/de_fair_value_policy_seam.py",
+    "live/pm_research/de_fair_value_replay_seam.py",
+    "live/pm_research/de_fair_value_pnl.py"
+   ],
+   "present_in_the_chain": true,
+   "harmful_flow_cancellation": "DISABLED",
+   "quote_replacement": "ordinary replacement follows one shared, separately declared lifecycle in both legs"
+  },
+  "fee_rule": {
+   "maker_fee_bps": null,
+   "declared_as": "A REASONED NEGATIVE -- THE QUESTION IS ANSWERED, AND THE ANSWER IS THAT IT CANNOT BE ESTABLISHED FROM COLLECTED DATA",
+   "status": "FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_DATA",
+   "evidence": {
+    "status": "FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_DATA",
+    "claim": "the maker fee applicable to US cannot be established from any artifact this programme collects. This is a RESOLVED question with a negative answer, not an unexamined one.",
+    "the_five_strands": {
+     "1_account_partition_is_total": "six maker addresses are charged on 100% of their legs and none is mixed; charged-ness is an ACCOUNT attribute",
+     "2_the_RATE_is_an_account_attribute_too": "each charged address carries exactly ONE rate tier -- four at ~0.099 and two at 0.495, never both. So the fee is not a market parameter that could be read off the market; it is a property of the counterparty",
+     "3_the_venue_field_is_populated_but_non_discriminating": "`fee_rate_bps` is present on every trade event and reads zero for ALL SIX charged accounts. It cannot separate the charged from the uncharged, so it cannot be the rule",
+     "4_the_corpus_is_a_sample_not_a_population": "the audit's own limit: 901 receipts bound observed volume only. An absence from the charged set is not membership in the zero class",
+     "5_no_validated_fee_model_exists": "the formula reproduces 110 of 901 taker legs to 1e-6 (12.21%) where the schedule is FULLY observable, with a maximum residual of 0.51 USDC"
+    },
+    "and_the_sixth_which_is_decisive": "WE HAVE NO MAKER ADDRESS. The programme is research-only and has never rested an order on this book, so our own treatment is not merely unobserved -- it does not yet exist to observe. No amount of further collection closes that; only trading does.",
+    "what_would_change_it": [
+     "the published CLOB fee schedule for these condition ids with an effective date, which no collector captures",
+     "or an executing account of our own with observed fills"
+    ]
+   },
+   "the_recording_requirement_is_met_because": "\u00a77 asks the declaration to RECORD the fee rule; what is recorded here is that no fee rule applicable to us is establishable, with the six strands that establish it. \u00a79 will separately report that it cannot produce an adopted economic verdict without a verified fee -- a true statement about the evidence, not a pipeline failure.",
+   "established_by": "live/pm_research/declarations/da_market_facts_v1.json",
+   "sha256": "bffe48169dc767ba1d28c9c58971e864d03b58c9d39890fe509042bd2a972f77"
+  },
+  "fee_rule_finding": {
+   "status": "MAKER_FEE_RULE_ESTABLISHED_ZERO_WITH_UNRECONCILED_ONCHAIN_CHARGES",
+   "why_not_established": null,
+   "established_by": "live/pm_research/declarations/da_market_facts_v1.json",
+   "sha256": "bffe48169dc767ba1d28c9c58971e864d03b58c9d39890fe509042bd2a972f77"
+  },
+  "quote_parameters": {
+   "driven_against": "live/pm_research/de_fair_value_policy_seam.py",
+   "sha256": "36944198cd925bea4c33948683f9f2f373b87ebc553436a6d5b78f80021421c7",
+   "quote_from_signature": [
+    "value",
+    "slug",
+    "generation_id",
+    "half_spread",
+    "priced_by",
+    "fell_back",
+    "side",
+    "tick",
+    "best_bid",
+    "best_ask",
+    "decision_ms",
+    "latency_ms",
+    "decl_dir"
+   ],
+   "measured": {
+    "UP_0.5237": {
+     "bid": 0.52,
+     "ask": 0.53
+    },
+    "DOWN_p_side": 0.47629999999999995,
+    "ask_at_p_0.999": 1.0,
+    "bid_at_p_0.001": 0.0,
+    "crossing": {
+     "withheld": true,
+     "reason": "MARKETABLE_CROSS"
+    },
+    "latency_ms": 250.0,
+    "effective_minus_decision_ms": 250.0,
+    "tick_read_by_the_seam": 0.01
+   },
+   "properties": {
+    "UP_uses_p": true,
+    "DOWN_uses_1_minus_p": true,
+    "bid_rounds_DOWN_to_the_legal_tick": true,
+    "ask_rounds_UP_to_the_legal_tick": true,
+    "prices_bounded_to_the_legal_binary_range": true,
+    "the_bound_applied_is_RECORDED_not_silent": true,
+    "crossing_quote_emits_PLACE_WITHHELD_MARKETABLE_CROSS": true,
+    "no_zero_latency_privilege_for_candidate_induced_change": true,
+    "the_tick_is_DECLARED_not_invented": true
+   },
+   "n_satisfied": 9,
+   "n_declared": 9,
+   "unsatisfied": [],
+   "THE_TICK_IS_DECLARED_AND_READ": "tick=0.01, read by the seam from DA's landed declaration (`da_market_facts_v1.json`). The seam REFUSES LEGAL_TICK_IS_NOT_DECLARED rather than inventing one, which is why this probe could not run until the tick was established."
+  },
+  "quote_parameters_probe_error": null,
+  "null_predicate": {
+   "primary_null": "median_g(delta_LL_g) = 0",
+   "statistic": "LL_g(estimator) = mean natural-log loss over canonical forecast actions; delta_LL_g(c) = LL_g(Identity) - LL_g(c)",
+   "sign_of_better": "positive delta_LL_g is better",
+   "test": "exact two-sided paired day sign test, enumerating all 2^G day-sign assignments",
+   "G_target": 10,
+   "n_assignments_at_G10": 1024,
+   "above_the_200_null_minimum": true,
+   "smallest_two_sided_p_at_G10": 0.001953125,
+   "multiplicity_m": 2,
+   "correction": "Holm across C1 and C2",
+   "ties": "an exactly zero daily increment is a REPORTED TIE, excluded from the sign count, never silently given a favourable sign",
+   "min_nonzero_portfolio_days": 8,
+   "n_assignments_at_8_nonzero": 256,
+   "below_that": "INSUFFICIENT_EVIDENCE",
+   "summaries_use_all_ten_days_including_zeros": true,
+   "portfolio_day": "BTC+ETH mean giving each coin equal weight; action counts remain reported; no action, fill, market or coin is treated as an independent day"
+  },
+  "success_predicate": {
+   "all_of": {
+    "1_holm_corrected_p": "< 0.05 on the primary log-loss increment",
+    "2_mean_and_median": "both delta_LL_g summaries positive",
+    "3_native_coverage_gate": ">= 95% of Identity-eligible actions for EACH of BTC and ETH",
+    "4_predicates": "all population, timestamp, complement and reconciliation predicates pass"
+   },
+   "cannot_rescue_a_failed_primary": [
+    "Brier",
+    "a favourable coin cell",
+    "a favourable time-to-expiry cell"
+   ],
+   "accrual": {
+    "observe": "the first 14 consecutive calendar days",
+    "require": "the first 10 evaluable complete BTC+ETH UTC days",
+    "failed_data_gate_days": "remain counted, with statuses",
+    "if_fewer_than_10_by_day_14": "INSUFFICIENT_EVIDENCE",
+    "do_not_extend_opportunistically": true,
+    "starts": "the first complete UTC day STRICTLY AFTER this freeze"
+   },
+   "day_eligibility_is_candidate_blind": "resolved by the frozen day/book gate, official resolutions and settlement-verification coverage only. Challenger availability, score, fills or P&L can NEVER remove a day or replace it with a later one.",
+   "all_ten_days_become_consumed_regardless_of_verdict": true
+  }
+ },
+ "abstention_reading_constraint_R924": {
+  "present": true,
+  "path": "live/pm_research/declarations/da_step6_abstention_constraint_v1.json",
+  "sha256": "f044140868c9dbff96e636f622fa9ddf71e14ec03f031c4ae3075090ca549930",
+  "THE_CONSTRAINT_VERBATIM": "\u00a76 scores the policy's Identity fallback wherever a challenger is non-OK, so a challenger that abstains EXACTLY where it would have been wrong still improves the primary statistic; \u00a78's 95% native-coverage gate bounds but does not eliminate this, since selective abstention inside the 5% allowance still flatters.",
+  "mechanism": "a challenger is rewarded for its own silence: it keeps the Identity score on every action it declines, so declining precisely the actions it would have got wrong raises its measured performance above its real performance.",
+  "must_be_reproduced_verbatim_in_this_receipt": true
+ },
+ "required_fields": [
+  "all_file_hashes",
+  "commit_ref",
+  "candidate_count",
+  "action_key",
+  "epsilon",
+  "status_grammar",
+  "source_manifests",
+  "initial_inventory",
+  "tick_rounding",
+  "latency",
+  "fee_rule",
+  "quote_parameters",
+  "null_predicate",
+  "success_predicate"
+ ],
+ "fields_present": [
+  "action_key",
+  "all_file_hashes",
+  "candidate_count",
+  "commit_ref",
+  "epsilon",
+  "fee_rule",
+  "initial_inventory",
+  "latency",
+  "null_predicate",
+  "quote_parameters",
+  "source_manifests",
+  "status_grammar",
+  "success_predicate",
+  "tick_rounding"
+ ],
+ "fields_missing": [],
+ "blocking_gaps": [],
+ "n_blocking_gaps": 0,
+ "rev203_six_of_six": false,
+ "ready_to_land": false,
+ "WHY_NOT_LANDED": "DA 278: draft only until REV 203 returns six of six. `ready_to_land` requires BOTH an empty gap list and that return, and this file cannot measure the second, so it defaults False and must be passed in.",
+ "n_blocking_gaps_without_a_recorded_line": 0,
+ "EVERY_VERDICT_COMPUTED_FROM_ARTIFACT_FIELDS": true,
+ "NO_PROSE_ONLY_PASS": "\u00a77 forbids one. Every predicate above is computed from a blob at the ref or driven against it; none is satisfied by a sentence."
+}

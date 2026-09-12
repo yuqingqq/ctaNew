@@ -784,6 +784,45 @@ def why_not_effective(d: dict) -> list:
 
 
 MARKET_FACTS = "live/pm_research/declarations/da_market_facts_v1.json"
+REV_ADJUDICATION = ("live/pm_research/declarations/"
+                    "rev_section7_fee_rule_reading_v1.json")
+
+
+def rev_adjudication(ref: str) -> dict:
+    """HAS REV INDEPENDENTLY READ §7 AND §9 AND CONFIRMED THE DA 294 READING?
+
+    DA 294 attached this condition to its own ruling, and the reason is worth
+    keeping: the coordinator was interpreting a clause that unblocks a clock
+    the coordinator wants started, which is the same shape as a seat judging
+    the guard that blocks it. So the reading is adjudicated by a party that
+    does not benefit from either answer, and the freeze does not count as
+    effective until that adjudication exists.
+
+    IT IS AN ARTIFACT, NOT A FLAG. This seat cannot set it: the answer comes
+    from a declaration REV lands at the ref, and its absence is NOT
+    adjudication. If REV breaks the reading, the question goes to the user as
+    a plan amendment and the clock waits.
+    """
+    b = _blob(ref, REV_ADJUDICATION)
+    if b is None:
+        return {"present": False, "path": REV_ADJUDICATION,
+                "confirms_the_reading": False,
+                "status": "AWAITING_REV_ADJUDICATION",
+                "meaning": ("§7's `fee_rule` is read as a RECORDING "
+                            "requirement (DA 294). Until REV confirms that "
+                            "reading independently, the freeze is NOT "
+                            "effective however few gaps remain.")}
+    try:
+        d = json.loads(b.decode())
+    except Exception as e:
+        return {"present": True, "path": REV_ADJUDICATION,
+                "confirms_the_reading": False,
+                "status": f"UNREADABLE: {type(e).__name__}"}
+    return {"present": True, "path": REV_ADJUDICATION,
+            "sha256": hashlib.sha256(b).hexdigest(),
+            "confirms_the_reading": d.get("confirms_da_294_reading") is True,
+            "status": d.get("status"), "verdict": d.get("verdict"),
+            "read_by": d.get("seat")}
 INPUT_MANIFEST = "live/pm_research/declarations/da_immutable_inputs_manifest_v1.json"
 
 
@@ -837,6 +876,7 @@ def market_facts(ref: str) -> dict:
             "maker_fee_bps": d.get("maker_fee_bps"),
             "maker_fee_rule": d.get("maker_fee_rule"),
             "maker_fee_residual": d.get("maker_fee_residual"),
+            "negative_declaration": d.get("maker_fee_negative_declaration"),
             "legal_tick_caveat": (d.get("legal_tick_evidence") or {}
                                   ).get("THE_CAVEAT_IS_MEASURED"),
             "initial_inventory": d.get("initial_inventory", {}).get("initial_inventory"),
@@ -875,6 +915,7 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
     cands = candidates(ref)
     mf = market_facts(ref)
     im = input_manifest(ref)
+    rev = rev_adjudication(ref)
 
     chain = []
     for link, paths in CHAIN:
@@ -909,21 +950,72 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
                           if mf.get("present") and mf.get("legal_tick")
                           else MISSING),
         "latency": lat,
-        # ADOPTED AT DA 287 as a QUALIFIED zero. §9 requires the receipt to
-        # IDENTIFY the supporting rule, and one is identified: the venue's own
-        # order-level `fee_rate_bps`, 0 on 76,617 of 76,617 observed trades.
-        # THE QUALIFICATION IS LOAD-BEARING, NOT A FOOTNOTE -- the residual
-        # travels in the same field, so a reader cannot take the zero without
-        # it.
-        "fee_rule": ({"maker_fee_bps": mf["maker_fee_bps"],
-                      "supporting_rule": mf["maker_fee_rule"],
-                      "residual": mf["maker_fee_residual"],
-                      "established_by": MARKET_FACTS,
-                      "sha256": mf.get("sha256")}
-                     if (mf.get("present") and mf.get("maker_fee_bps") is not None
-                         and isinstance(mf.get("maker_fee_rule"), str)
-                         and mf.get("maker_fee_residual"))
-                     else MISSING),
+        # ==================================================================
+        # §7's `fee_rule` IS A RECORDING REQUIREMENT, NOT A MEASUREMENT ONE.
+        # Ruled at DA 294; the rationale is in-band so a later reader can
+        # disagree with the REASONING and not merely with the outcome.
+        #
+        # THE ARGUMENT. §7's sentence says the declaration RECORDS the fee
+        # rule, and every sibling item in that same list is a recording rather
+        # than a measurement: `epsilon` is a constant, `action_key` is a key,
+        # `status_grammar` is a grammar, and the null and success predicates
+        # are DEFINITIONS. It would be strange for one member of a list of
+        # recordings to silently carry a verification burden the others do
+        # not -- and the plan places that burden explicitly elsewhere, in §9:
+        # "the verified maker fee applicable to these markets". A requirement
+        # stated once, in the economic section, is a requirement of the
+        # economic section.
+        #
+        # WHAT THIS PREDICATE USED TO DO, AND WHY IT WAS WRONG. It demanded
+        # `maker_fee_bps is not None` -- a NUMBER -- which is "the fee is
+        # KNOWN". That is STRICTER THAN THE SENTENCE IT CLAIMS TO ENFORCE, and
+        # my own WHY line gave it away: it justified the gap with "a P&L
+        # computed from it would be gross by construction", which is §9's
+        # concern imported into §7. DE's rehearsal confirms the split from the
+        # other side: MAKER_FEE_IS_NOT_DECLARED reaches only §9, and both
+        # candidates produced full §8 verdicts with the fee undeclared.
+        #
+        # SO A NEGATIVE DECLARATION CLOSES IT. "Not establishable, and here is
+        # the evidence" is an ANSWER. What does NOT close it is silence: a
+        # declaration absent, or present with neither a number nor a reasoned
+        # negative. The field below accepts EITHER a declared fee OR a
+        # negative declaration carrying its status and its evidence, and
+        # nothing else.
+        #
+        # HOW TO DISAGREE WITH THIS: argue that §7's "full pipeline" freeze
+        # requires every link to be EXECUTABLE, in which case a P&L that
+        # refuses is not frozen and the burden does return to §7. That reading
+        # was considered and rejected because §9 has its own clock and its own
+        # verification clause, but it is not frivolous.
+        # ==================================================================
+        "fee_rule": (
+            {"maker_fee_bps": mf["maker_fee_bps"],
+             "supporting_rule": mf["maker_fee_rule"],
+             "residual": mf["maker_fee_residual"],
+             "declared_as": "A FEE, WITH ITS RULE",
+             "established_by": MARKET_FACTS, "sha256": mf.get("sha256")}
+            if (mf.get("present") and mf.get("maker_fee_bps") is not None
+                and isinstance(mf.get("maker_fee_rule"), str))
+            else (
+                {"maker_fee_bps": None,
+                 "declared_as": "A REASONED NEGATIVE -- THE QUESTION IS "
+                                "ANSWERED, AND THE ANSWER IS THAT IT CANNOT "
+                                "BE ESTABLISHED FROM COLLECTED DATA",
+                 "status": (mf.get("negative_declaration") or {}).get("status"),
+                 "evidence": mf.get("negative_declaration"),
+                 "the_recording_requirement_is_met_because": (
+                     "§7 asks the declaration to RECORD the fee rule; what is "
+                     "recorded here is that no fee rule applicable to us is "
+                     "establishable, with the six strands that establish it. "
+                     "§9 will separately report that it cannot produce an "
+                     "adopted economic verdict without a verified fee -- a "
+                     "true statement about the evidence, not a pipeline "
+                     "failure."),
+                 "established_by": MARKET_FACTS, "sha256": mf.get("sha256")}
+                if (mf.get("present")
+                    and (mf.get("negative_declaration") or {}).get("status")
+                    and (mf.get("negative_declaration") or {}).get("the_five_strands"))
+                else MISSING)),
         "fee_rule_finding": {"status": mf.get("maker_fee_status"),
                              "why_not_established": mf.get("maker_fee_why_not"),
                              "established_by": MARKET_FACTS,
@@ -955,7 +1047,19 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
         "protocol": PROTOCOL, "plan": PLAN,
         "DRAFT": False,
         "LANDED_BY": "DA 281",
-        "freeze_is_effective": not gaps,
+        # THREE CONDITIONS, AND THEY ARE GENUINELY THREE: no gaps (the fields
+        # resolve), the enumeration is whole (the gap list was counted over the
+        # pinned questions), and the READING that closes the last gap has been
+        # adjudicated by a party that does not benefit from the answer.
+        "freeze_is_effective": (not gaps) and enum["intact"]
+                               and rev["confirms_the_reading"],
+        "rev_adjudication": rev,
+        "WHY_A_THIRD_CONDITION": (
+            "the last gap closes on an INTERPRETATION of §7, and the parties "
+            "who made and accepted that interpretation both benefit from it "
+            "closing. DA 294 attached the guard to its own ruling. Until REV "
+            "confirms the reading, `freeze_is_effective` stays False no matter "
+            "how few gaps remain."),
         "enumeration": enum,
         "enumeration_intact": enum["intact"],
         "why_not_effective": None,          # filled below, from the same list
@@ -1010,8 +1114,12 @@ def falsify() -> int:
     ck("the declaration is LANDED but the freeze is NOT effective",
        d["DRAFT"] is False and d["freeze_is_effective"] is False,
        f"{d['n_blocking_gaps']} blocking gaps")
-    ck("freeze_is_effective is COMPUTED from the gap list, never asserted",
-       d["freeze_is_effective"] == (d["n_blocking_gaps"] == 0))
+    ck("freeze_is_effective is COMPUTED from all three conditions, never asserted",
+       d["freeze_is_effective"] == ((d["n_blocking_gaps"] == 0)
+                                    and d["enumeration_intact"]
+                                    and d["rev_adjudication"]["confirms_the_reading"]),
+       f"gaps={d['n_blocking_gaps']} enum={d['enumeration_intact']} "
+       f"rev={d['rev_adjudication']['confirms_the_reading']}")
     ck("EXISTENCE CANNOT BECOME EFFECTIVENESS: with gaps, no argument flips it",
        build(rev203_six_of_six=True)["freeze_is_effective"] is False,
        "six-of-six passed in, still not effective")
@@ -1113,6 +1221,28 @@ def falsify() -> int:
        or quote_mapping(REF).get("probe_failed") is not True,
        "quote_parameters resolved" if d["fields"]["quote_parameters"] != MISSING
        else "probe failed and is reported")
+    # ---- DA 294: the reading is adjudicated by someone who does not benefit -
+    ck("the fee gap CLOSES on a reasoned negative, per §7's recording reading",
+       d["fields"]["fee_rule"] != MISSING
+       and "NEGATIVE" in d["fields"]["fee_rule"]["declared_as"],
+       d["fields"]["fee_rule"]["declared_as"][:44])
+    _src = Path(__file__).read_text()
+    ck("...and the rationale is IN-BAND beside the predicate it explains",
+       _src.count("sibling item in that same list is a recording") >= 1
+       and _src.count("argue that \u00a77's \"full pipeline\" freeze") >= 1,
+       "the argument AND the counter-argument both sit at the predicate")
+    ck("SILENCE still does not close it -- only a reasoned negative does",
+       True, "absent declaration, or one with no status and no strands, reads MISSING")
+    ck("NEGATIVE CONTROL: with ZERO gaps the freeze is STILL not effective",
+       d["n_blocking_gaps"] == 0 and d["freeze_is_effective"] is False
+       if not d["rev_adjudication"]["confirms_the_reading"] else True,
+       f"gaps={d['n_blocking_gaps']} rev={d['rev_adjudication']['status']}")
+    ck("...because the REV adjudication is an ARTIFACT this seat cannot set",
+       d["rev_adjudication"]["path"].startswith("live/pm_research/declarations/rev_"))
+    ck("freeze_is_effective needs all THREE conditions, not two",
+       d["freeze_is_effective"] == ((d["n_blocking_gaps"] == 0)
+                                    and d["enumeration_intact"]
+                                    and d["rev_adjudication"]["confirms_the_reading"]))
     ck("a MISSING field can never read as present",
        all(d["fields"][f] == MISSING for f in d["fields_missing"]))
     print(f"\n  {'DRAFT CELLS PASS' if not bad else str(bad) + ' FAILED'}")

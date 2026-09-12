@@ -48,12 +48,17 @@
   "status": "FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_DATA",
   "claim": "the maker fee applicable to US cannot be established from any artifact this programme collects. This is a RESOLVED question with a negative answer, not an unexamined one.",
   "the_five_strands": {
+   "0_account_level_incidence": "6 of 218 distinct maker addresses are in the charged class -- 2.75%. That is the rate at which an ACCOUNT is charged, and it is the number that matters, because charged-ness is an account attribute and not a per-fill event. Our own class is UNOBSERVED and unobservable from this corpus.",
    "1_account_partition_is_total": "six maker addresses are charged on 100% of their legs and none is mixed; charged-ness is an ACCOUNT attribute",
    "2_the_RATE_is_an_account_attribute_too": "each charged address carries exactly ONE rate tier -- four at ~0.099 and two at 0.495, never both. So the fee is not a market parameter that could be read off the market; it is a property of the counterparty",
    "3_the_venue_field_is_populated_but_non_discriminating": "`fee_rate_bps` is present on every trade event and reads zero for ALL SIX charged accounts. It cannot separate the charged from the uncharged, so it cannot be the rule",
    "4_the_corpus_is_a_sample_not_a_population": "the audit's own limit: 901 receipts bound observed volume only. An absence from the charged set is not membership in the zero class",
    "5_no_validated_fee_model_exists": "the formula reproduces 110 of 901 taker legs to 1e-6 (12.21%) where the schedule is FULLY observable, with a maximum residual of 0.51 USDC"
   },
+  "n_maker_addresses_total": 218,
+  "n_maker_addresses_charged": 6,
+  "account_level_incidence": 0.0275,
+  "our_class": "UNOBSERVED -- and unobservable from this corpus",
   "and_the_sixth_which_is_decisive": "WE HAVE NO MAKER ADDRESS. The programme is research-only and has never rested an order on this book, so our own treatment is not merely unobserved -- it does not yet exist to observe. No amount of further collection closes that; only trading does.",
   "what_would_change_it": [
    "the published CLOB fee schedule for these condition ids with an effective date, which no collector captures",
@@ -81,7 +86,7 @@
   "established": true,
   "declared_instrument": {
    "field": "markets.jsonl:orderPriceMinTickSize",
-   "n_records": 47140,
+   "n_records": 47147,
    "n_without_the_field": 44,
    "distinct_values": [
     "0.01"
@@ -89,25 +94,25 @@
    "uniform_across_all_coins": true,
    "by_coin": {
     "bnb": {
-     "0.01": 6727
+     "0.01": 6728
     },
     "btc": {
-     "0.01": 6729
+     "0.01": 6730
     },
     "doge": {
-     "0.01": 6726
-    },
-    "eth": {
-     "0.01": 6729
-    },
-    "hype": {
      "0.01": 6727
     },
+    "eth": {
+     "0.01": 6730
+    },
+    "hype": {
+     "0.01": 6728
+    },
     "sol": {
-     "0.01": 6729
+     "0.01": 6730
     },
     "xrp": {
-     "0.01": 6729
+     "0.01": 6730
     }
    },
    "by_month": {
@@ -115,7 +120,7 @@
      "0.01": 24872
     },
     "2026-09": {
-     "0.01": 22224
+     "0.01": 22231
     }
    },
    "uniform_across_the_windows_life": true,
@@ -219,13 +224,13 @@
    {
     "source": "markets.jsonl",
     "searched": "all top-level keys, the `clob` subobject, and the rules text (description/question/outcomes)",
-    "n_records": 47140,
+    "n_records": 47147,
     "fee_fields_found": {
      "maker_base_fee": {
-      "1000": 47080
+      "1000": 47087
      },
      "taker_base_fee": {
-      "1000": 47080
+      "1000": 47087
      }
     },
     "rules_text_fee_language": "NONE",

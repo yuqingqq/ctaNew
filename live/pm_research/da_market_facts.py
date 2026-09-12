@@ -681,6 +681,13 @@ def build() -> dict:
                       "RESOLVED question with a negative answer, not an "
                       "unexamined one."),
             "the_five_strands": {
+                "0_account_level_incidence": (
+                    "6 of 218 distinct maker addresses are in the charged "
+                    "class -- 2.75%. That is the rate at which an ACCOUNT is "
+                    "charged, and it is the number that matters, because "
+                    "charged-ness is an account attribute and not a per-fill "
+                    "event. Our own class is UNOBSERVED and unobservable from "
+                    "this corpus."),
                 "1_account_partition_is_total": (
                     "six maker addresses are charged on 100% of their legs and "
                     "none is mixed; charged-ness is an ACCOUNT attribute"),
@@ -702,6 +709,10 @@ def build() -> dict:
                     "(12.21%) where the schedule is FULLY observable, with a "
                     "maximum residual of 0.51 USDC"),
             },
+            "n_maker_addresses_total": 218,
+            "n_maker_addresses_charged": 6,
+            "account_level_incidence": 0.0275,
+            "our_class": "UNOBSERVED -- and unobservable from this corpus",
             "and_the_sixth_which_is_decisive": (
                 "WE HAVE NO MAKER ADDRESS. The programme is research-only and "
                 "has never rested an order on this book, so our own treatment "
