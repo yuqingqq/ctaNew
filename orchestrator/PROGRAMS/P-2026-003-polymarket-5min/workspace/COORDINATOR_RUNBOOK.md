@@ -1003,3 +1003,46 @@ result is the finding is computed as a set, never as sorted-text adjacency.**
    Closing the 9 is owned by the seat that wrote each review. Note that
    155 and 158 and 162–167 are consecutive, which suggests one batch that never
    landed rather than nine independent misses.
+
+
+### §7k.1 — THREE LOCATIONS, AND THE LOCATOR RULE THAT MAKES THE SPLIT SAFE (2026-09-12T00:20Z)
+
+REV closed the scope question against §7k's first draft, and **the answer is a
+second and third location, because one canonical place is UNAVAILABLE, not
+because complexity was preferred.** 24 of the 162 evidentiary citations resolve
+only under gitignored `data/`, which can never be fetched from a ref. Naming one
+location and pretending the rest follow is what produced "canonical for the
+record, not for the evidence."
+
+| location | the question it answers | fetchable |
+|---|---|---|
+| `origin/mm-research` | **what was decided** — register, state, reviews, procedures | yes |
+| `origin/de-freeze-chain-v2`, `origin/be-build-runner` | **what will run** — code, declarations | yes |
+| `data/` (gitignored) | **what was measured** — tapes, books, day records | **no**, verify by digest |
+
+**THE RULE THAT MAKES IT SAFE: every evidentiary citation carries its locator.**
+`<ref>:<path>@<blob16>` for anything in git, `<path>@<sha256-16>` plus the
+producing unit for anything under `data/`. A citation without a locator is not
+a reference, it is a vocabulary match (rule 16).
+
+That single rule fixes three separate things at once: the 9 dangling register
+citations, and **both** of tonight's read-at-an-incomplete-location errors —
+REV's 18-vs-9 count and my own reasoning from summaries.
+
+### §7k.2 — AN ABSENCE MUST STATE WHAT IT EXCLUDED
+
+REV's generalisation, and it earns its place because three different mechanisms
+produced the identical artifact tonight: **a filter whose exclusion overlaps the
+target** (my `ps` sweep dropping every command containing `claude`, which is how
+the harness spawns the shells I was hunting), **a broken sort** (REV's `comm` on
+numerically-sorted input, nearly filed as a total cold-start failure), and **a
+timeout** (a `git log -S` killed at 120s). All three return an empty result, and
+an empty result reads as a finding.
+
+The standing rule already covered timeouts. It now covers exclusions:
+
+**Any search whose RESULT IS AN ABSENCE must state what it excluded, and must
+carry a positive control showing the same query finds a thing known to be
+present.** An absence reported without both is not evidence; it is an untested
+instrument. This applies to monitors as much as to audits — a watch whose
+pattern never matches is silent in exactly the way a quiet system is.
