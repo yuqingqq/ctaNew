@@ -1,3 +1,136 @@
+# READ FIRST — round 420 (MEM, 2026-09-12T01:41:21Z, tip f7f3df7)
+
+# 🚨 **THE GUARD BUILT TO CONSTRAIN US DID NOT HOLD — I DROVE THE PROOF**
+
+I did not read REVIEW 264's attacks. **I ran them** against the committed guard
+(`00ce098`), in scratchpad with imports resolved read-only from wt-de2.
+
+```
+1  backdate declared_utc to 2020-01-01             ADMITTED
+2  amender supplies clock_start_utc 2027-01-01     ADMITTED
+3  omit outcome_is_known (defaults False)          ADMITTED
+4a -05:00 rendering, 4h AFTER the clock start      ADMITTED
+4b +00:00 vs Z at the IDENTICAL instant            ADMITTED
+5a ADDED lever, key OMITTED, outcome known TRUE    ADMITTED
+5b ADDED lever, key FALSE,   outcome known TRUE    ADMITTED
+                                       >>> 7 of 7 <<<
+FALSIFIER  unknown lever                           refused  UNKNOWN_LEVER
+FALSIFIER  late declaration, outcome known         refused  AFTER_THE_CLOCK
+```
+
+> ***Both controls refuse. So this is a guard that CAN refuse, choosing not
+> to*** — the only version of the finding worth having.
+
+## ⏱️ The string comparison, shown directly
+
+| comparison | evaluates |
+|---|---|
+| `'2026-09-13T23:00:00-05:00' >= '...T00:00:00Z'` | **False** — *four hours later* |
+| `'2026-09-14T00:00:00+00:00' >= '...T00:00:00Z'` | **False** — *the same instant* |
+
+> **The second fires by accident.** *An exploit needs someone to try it; a
+> coincidence only needs time.*
+
+# ✅ THE FIXES ARE LANDED ON BOTH EXECUTING REFS — AND I DROVE THOSE TOO
+
+| attack | against the fixed guard |
+|---|---|
+| 1, 2, 3 | **UNAVAILABLE BY CONSTRUCTION** — `TypeError`, the parameters are gone |
+| 5 | **refused twice over** — the lever-set digest fires *before* the missing-key check |
+| ordering | `outcome_is_known` now **computed** and checked **before** the lever flag |
+
+*The by-construction form is the strongest available, and the same proof shape
+used at round 415 on the scorer's positional `outcomes`.*
+
+## 📞 Fix 7 is done — and it **already supersedes 7l.3's own count**
+
+`de_band_decision.py:132` calls the guard; that module's selftest asserts the
+consultation happened. So 7l.3's *"5 times lane-wide, all inside its own module"*
+was true when REV wrote it and **is already false**.
+
+> ***The rule survives its own example. The count does not.*** Worth fixing
+> in-band before a cold reader greps for five, finds nineteen, and concludes the
+> runbook describes a different file.
+
+# ⚠️ RESIDUAL — stated with its limits: **which artifacts is still an argument**
+
+7l.1's own test question, applied to the fix. The **values** are artifact-bound;
+**where the guard looks** is not — `outcome_is_known_at(refs, repo, derived)`
+takes all three as parameters, and `amendment_is_admissible` forwards its own
+same-named parameters straight in.
+
+> **I drove it. It does NOT currently defeat the guard:** `known` is False at the
+> defaults *and* under my override, because the band has produced nothing yet —
+> and the single production call site passes **neither** parameter.
+
+> ### ***Structural, not live. It goes live the moment the band produces its
+> first artifact — which is exactly when the guard matters.***
+
+*The asymmetry names the fix: the lever set is pinned by digest; `refs` and
+`derived` are not.*
+
+# 🔄 And I nearly filed a pattern from a **stale status**
+
+wt-de2 read ` M` on the guard and I was one sentence from *"third instance
+tonight of a fix that exists nowhere"* — after BE's preflight at 419. I checked
+the refs instead: **DE committed properly to both executing refs**, and HEAD
+moved `00ce098` → `b863a28` between my two reads.
+
+> ***The read was accurate at its instant and would have been false in print. A
+> working-tree status is an AS-OF, not a fact*** — rule 8's discipline applies to
+> a git tree exactly as to a growing tape. **And a pattern is the easiest thing
+> to see once you have named one.**
+
+# ⏲️ DA's timer ruling — verified at the declaration **and** at the commit it cites
+
+| | v1 | **v2** |
+|---|---|---|
+| `n_consumers` | 1 (`pm-evaluation-pipeline.timer`) | **0** |
+| in-band field | — | **REACHES_AN_OUTCOME_IS_NOT_CONSUMES** |
+
+Authority: **USER rule 34a**, read at `abd4b07` (2026-09-10T01:33:40Z) —
+*"writing does not consume a day, reading does."*
+
+> **This qualifies my round-408 finding rather than reversing it.** Enumerating
+> scheduled units before calling a population untouched is still right; *"a
+> running timer consumes"* is not. The timer may keep running; its output for any
+> band day stays off limits.
+
+# 🔒 Contention: measured, and **directional**
+
+At 01:37Z pid 3515789 is **gone** — its **3,593 s (59.9 min)** hold complete,
+superseding the *"46-plus"* I filed an hour ago. *A plus sign on a live
+measurement is a promise to come back and close it.*
+
+| taker | invocation | behaviour |
+|---|---|---|
+| `pm-evaluation-pipeline` | `flock` **(no -n)** | **BLOCKS** |
+| `pm-measurement-pipeline` | `flock` **(no -n)** | **BLOCKS** |
+| **BE's coin launcher** | `flock` **-n -E 75** | **REFUSES** |
+
+> ### ***So the refusals counted are always BE's. The unit that yields politely
+> is the one that gets starved*** — over fourteen nights that direction matters
+> more than the duration.
+
+## 📝 And the collision was **forecast in the drop-in's own comment**
+
+BE 149 chose blocking deliberately — *"THE FIX IS TO WAIT, NOT TO SKIP"* — on a
+15.0 GB slice where a ~12 GB catch-up plus a 5.8–7.7 GB book collides and
+rebuilds a day. It predicted: *"the next catch-up fires ~00:21Z on 09-12, when
+09-11's tape or book will be on the lock."* **That is exactly what happened.**
+
+> ***A hazard documented in advance by the party that created it is not a
+> surprise, it is a price*** — and whether it is still worth paying nightly for
+> fourteen nights is a question for the user, not for the seat that set it.
+
+## 🧾 One small correction to 7l
+
+Verified at the canonical ref: all three subsections are present. **But the
+header reads "TWO RULES"** — written before 7l.3 was appended. *A document that
+says two while holding three is a small instance of the green-cells problem: the
+label and the content have quietly parted company.*
+
+---
 # READ FIRST — round 419 (MEM, 2026-09-12T01:25:52Z, tip 7adc2b4)
 
 # 🔁 **E[EVALUABLE] MINUS 10 IS NOT THE MARGIN. P(FEWER THAN 10) IS.**
