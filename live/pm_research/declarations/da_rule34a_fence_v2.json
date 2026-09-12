@@ -1,0 +1,88 @@
+{
+ "protocol": "P003_DA_RULE34A_FENCE_V1",
+ "as_of_utc": "2026-09-12T01:44:18Z",
+ "rule": "rule 34a (USER, abd4b07): writing does not consume a day, READING does",
+ "floor": {
+  "floor": "2026-09-08",
+  "BINDING": "THE USER RULING COMMIT -- immutable",
+  "bound_to": "abd4b07:orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md",
+  "why_this_is_the_STRONG_binding": "a commit's content cannot change without changing its hash, and the hash is cited by the rule itself. No seat can move this floor -- which is the difference between 'bound to an artifact' and 'bound to an artifact the amender cannot change'. Only the second is a real fence.",
+  "cross_checked_against": [
+   "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/DE_PROCEDURE.md",
+   "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/REV_PROCEDURE.md"
+  ],
+  "the_WEAK_binding_and_why_it_is_only_a_cross_check": "DE_PROCEDURE.md is authored by DE -- 6 of its 12 commits -- and DE is a party rule 34a CONSTRAINS. Parsing the floor from there alone would bind the input to an artifact the constrained party can edit, which buys less than it appears to. It is used to detect DRIFT from the ruling, never as the source.",
+  "restated_floor": [
+   "2026-09-08"
+  ],
+  "restatement_agrees_with_the_ruling": true
+ },
+ "floor_error": null,
+ "protected_root": "data/pm_5min/tier2",
+ "WHAT_THIS_PREDICATE_COVERS_AND_WHAT_IT_CANNOT": {
+  "covered_and_ENFORCED": "a PROGRAM opening a path under `data/pm_5min/tier2/` whose `day=` partition is at or after the floor. This is a pure function of a path string and a date, it is computed here, and it REFUSES.",
+  "NOT_covered_and_UNENFORCEABLE": "the human act the rule actually names -- 'read, summarise, plot, aggregate or quote'. The USER ruling says it in as many words: 'A day is consumed when a PERSON OR SEAT LOOKS at it. The eye is the thing that spends the day.' An eye leaves no artifact. No code in this repository can observe a person reading a number off a terminal, and none is written here that pretends to.",
+  "why_the_uncovered_half_is_stated_rather_than_omitted": "a rule half-enforced and honest about which half is stronger than one claiming full coverage, because a reader then knows exactly where the machine stops and their own discipline begins. An unstated boundary gets assumed in the generous direction.",
+  "the_uncovered_half_is_a_HUMAN_COMMITMENT": "not a guarded property. Nothing here enforces it, nothing here detects its breach, and a seat that looks has consumed the day whatever this module reports.",
+  "what_the_machine_DOES_buy": "it makes the accidental case impossible -- a script that globs a directory and opens what it finds now refuses -- and it makes the deliberate case a decision someone has to take knowingly rather than one they can drift into."
+ },
+ "audit": {
+  "ref": "origin/de-freeze-chain-v2",
+  "n_modules_touching_tier2": 7,
+  "modules": [
+   {
+    "module": "da_rule34a_fence.py",
+    "touches_tier2": true,
+    "has_open_like_call": true,
+    "calls_the_fence": true
+   },
+   {
+    "module": "da_scheduled_units_and_eth_inputs.py",
+    "touches_tier2": true,
+    "has_open_like_call": true,
+    "calls_the_fence": false
+   },
+   {
+    "module": "de_fair_value_plumbing_run.py",
+    "touches_tier2": true,
+    "has_open_like_call": true,
+    "calls_the_fence": false
+   },
+   {
+    "module": "evaluation_pipeline.py",
+    "touches_tier2": true,
+    "has_open_like_call": true,
+    "calls_the_fence": false
+   },
+   {
+    "module": "pm_lane_health.py",
+    "touches_tier2": true,
+    "has_open_like_call": true,
+    "calls_the_fence": false
+   },
+   {
+    "module": "tier1_pipeline.py",
+    "touches_tier2": true,
+    "has_open_like_call": true,
+    "calls_the_fence": false
+   },
+   {
+    "module": "v5_deploy_gates.py",
+    "touches_tier2": true,
+    "has_open_like_call": false,
+    "calls_the_fence": false
+   }
+  ],
+  "unguarded_readers": [
+   "da_scheduled_units_and_eth_inputs.py",
+   "de_fair_value_plumbing_run.py",
+   "evaluation_pipeline.py",
+   "pm_lane_health.py",
+   "tier1_pipeline.py"
+  ],
+  "n_unguarded": 5,
+  "reading": "a module that opens files and touches the protected root without calling the fence is an open gate. This list is the fence's own report on its coverage.",
+  "THE_FENCE_DOES_NOT_CLAIM_TO_COVER": "a human reading a number off a terminal. That leaves no artifact and no code can see it."
+ },
+ "rule_10": "the floor is parsed from the procedures at run time"
+}

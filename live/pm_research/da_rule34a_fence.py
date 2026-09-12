@@ -53,7 +53,17 @@ PROTOCOL = "P003_DA_RULE34A_FENCE_V1"
 PROTECTED_READ = "RULE_34A_PROTECTED_DAY_READ"
 FLOOR_UNPARSEABLE = "RULE_34A_FLOOR_NOT_PARSEABLE_FROM_THE_PROCEDURES"
 
-#: The documents that STATE the rule. This seat authors neither.
+#: THE RULING ITSELF -- an immutable commit object. This is the STRONG
+#: binding: a commit's content cannot change without changing its hash, and the
+#: hash is cited by the rule. No seat can move this floor.
+RULING_COMMIT = "abd4b07"
+RULING_FILE = ("orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/"
+               "SEAT_PROTOCOL.md")
+
+#: The documents that RESTATE the rule. This seat authors neither -- but DE
+#: authors DE_PROCEDURE.md (6 of its 12 commits), and DE is a party rule 34a
+#: CONSTRAINS. So these are the WEAK binding: bound to an artifact, but one the
+#: constrained party can edit. They are used only to CROSS-CHECK the ruling.
 RULE_SOURCES = (
     "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/DE_PROCEDURE.md",
     "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/REV_PROCEDURE.md",
@@ -77,6 +87,18 @@ def _repo() -> Path:
     raise RuntimeError("REFUSED NO_REPOSITORY_RESOLVABLE")
 
 
+def _floor_from_ruling() -> str | None:
+    """The floor as the USER wrote it, read from the immutable commit."""
+    repo = _repo()
+    r = subprocess.run(["git", "-C", str(repo), "show",
+                        f"{RULING_COMMIT}:{RULING_FILE}"],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        return None
+    days = sorted(set(_FLOOR_IN_DOC.findall(r.stdout)))
+    return days[0] if len(days) == 1 else None
+
+
 def protected_floor(sources=RULE_SOURCES) -> dict:
     """THE FLOOR, PARSED FROM THE DOCUMENTS THAT STATE THE RULE (§7l.1).
 
@@ -94,14 +116,41 @@ def protected_floor(sources=RULE_SOURCES) -> dict:
         days = set(_FLOOR_IN_DOC.findall(p.read_text(errors="replace")))
         if days:
             found[rel] = sorted(days)
-    floors = {d for v in found.values() for d in v}
-    if len(floors) != 1:
+    ruling = _floor_from_ruling()
+    restated = {d for v in found.values() for d in v}
+    if ruling is None:
         raise Rule34aRefused(
-            f"REFUSED {FLOOR_UNPARSEABLE}: the procedures state "
-            f"{sorted(floors) or 'no'} protected-day floor(s) {found}. Two "
-            f"floors is not a floor, and none is not a rule.")
-    return {"floor": floors.pop(), "stated_in": sorted(found),
-            "authored_by": "DE and REV, not this seat"}
+            f"REFUSED {FLOOR_UNPARSEABLE}: the USER ruling {RULING_COMMIT} "
+            f"does not state exactly one protected-day floor. The strong "
+            f"binding is unavailable and this fence will not fall back to a "
+            f"restatement a constrained party can edit.")
+    if restated and restated != {ruling}:
+        raise Rule34aRefused(
+            f"REFUSED {FLOOR_UNPARSEABLE}: the USER ruling says {ruling} and "
+            f"the procedures restate {sorted(restated)}. A restatement that "
+            f"has DRIFTED from the ruling is the failure this cross-check "
+            f"exists for -- the ruling wins and the drift is reported rather "
+            f"than silently preferred either way.")
+    return {
+        "floor": ruling,
+        "BINDING": "THE USER RULING COMMIT -- immutable",
+        "bound_to": f"{RULING_COMMIT}:{RULING_FILE}",
+        "why_this_is_the_STRONG_binding": (
+            "a commit's content cannot change without changing its hash, and "
+            "the hash is cited by the rule itself. No seat can move this floor "
+            "-- which is the difference between 'bound to an artifact' and "
+            "'bound to an artifact the amender cannot change'. Only the second "
+            "is a real fence."),
+        "cross_checked_against": sorted(found),
+        "the_WEAK_binding_and_why_it_is_only_a_cross_check": (
+            "DE_PROCEDURE.md is authored by DE -- 6 of its 12 commits -- and "
+            "DE is a party rule 34a CONSTRAINS. Parsing the floor from there "
+            "alone would bind the input to an artifact the constrained party "
+            "can edit, which buys less than it appears to. It is used to "
+            "detect DRIFT from the ruling, never as the source."),
+        "restated_floor": sorted(restated) or None,
+        "restatement_agrees_with_the_ruling": (restated == {ruling}) if restated else None,
+    }
 
 
 def is_protected(path: str, floor: str) -> dict:
@@ -193,12 +242,37 @@ def build() -> dict:
                      "day, READING does"),
             "floor": fl, "floor_error": err,
             "protected_root": PROTECTED_ROOT,
-            "checkable_half": ("a program opening a path under the protected "
-                               "root with a day= partition at or after the "
-                               "floor"),
-            "uncheckable_half": ("the human act of summarising, aggregating or "
-                                 "quoting -- no artifact, no detection, and "
-                                 "this fence does not pretend otherwise"),
+            "WHAT_THIS_PREDICATE_COVERS_AND_WHAT_IT_CANNOT": {
+                "covered_and_ENFORCED": (
+                    "a PROGRAM opening a path under `data/pm_5min/tier2/` "
+                    "whose `day=` partition is at or after the floor. This is "
+                    "a pure function of a path string and a date, it is "
+                    "computed here, and it REFUSES."),
+                "NOT_covered_and_UNENFORCEABLE": (
+                    "the human act the rule actually names -- 'read, "
+                    "summarise, plot, aggregate or quote'. The USER ruling "
+                    "says it in as many words: 'A day is consumed when a "
+                    "PERSON OR SEAT LOOKS at it. The eye is the thing that "
+                    "spends the day.' An eye leaves no artifact. No code in "
+                    "this repository can observe a person reading a number "
+                    "off a terminal, and none is written here that pretends "
+                    "to."),
+                "why_the_uncovered_half_is_stated_rather_than_omitted": (
+                    "a rule half-enforced and honest about which half is "
+                    "stronger than one claiming full coverage, because a "
+                    "reader then knows exactly where the machine stops and "
+                    "their own discipline begins. An unstated boundary gets "
+                    "assumed in the generous direction."),
+                "the_uncovered_half_is_a_HUMAN_COMMITMENT": (
+                    "not a guarded property. Nothing here enforces it, nothing "
+                    "here detects its breach, and a seat that looks has "
+                    "consumed the day whatever this module reports."),
+                "what_the_machine_DOES_buy": (
+                    "it makes the accidental case impossible -- a script that "
+                    "globs a directory and opens what it finds now refuses -- "
+                    "and it makes the deliberate case a decision someone has "
+                    "to take knowingly rather than one they can drift into."),
+            },
             "audit": audit_unguarded_readers(),
             "rule_10": "the floor is parsed from the procedures at run time"}
 
@@ -213,9 +287,23 @@ def falsify() -> int:
             bad += 1
 
     fl = protected_floor()
-    ck("§7l.1 the floor is PARSED from documents this seat does not author",
-       fl["floor"] == "2026-09-08" and len(fl["stated_in"]) >= 1,
-       f"{fl['floor']} from {[Path(x).name for x in fl['stated_in']]}")
+    ck("§7l.1 the floor is bound to the IMMUTABLE USER RULING, not a restatement",
+       fl["floor"] == "2026-09-08" and fl["BINDING"].startswith("THE USER RULING"),
+       fl["bound_to"])
+    ck("...and the WEAK binding is named as weak, with the reason",
+       "DE is a party rule 34a CONSTRAINS"
+       in fl["the_WEAK_binding_and_why_it_is_only_a_cross_check"])
+    ck("...the restatement is CROSS-CHECKED and currently agrees",
+       fl["restatement_agrees_with_the_ruling"] is True,
+       f"ruling {fl['floor']} vs restated {fl['restated_floor']}")
+    _c = build()["WHAT_THIS_PREDICATE_COVERS_AND_WHAT_IT_CANNOT"]
+    ck("the ENFORCED half and the UNENFORCEABLE half are both stated as fields",
+       "REFUSES" in _c["covered_and_ENFORCED"]
+       and "no artifact" in _c["NOT_covered_and_UNENFORCEABLE"].lower())
+    ck("...and the uncovered half is called a HUMAN COMMITMENT, not a guard",
+       "not a guarded property" in _c["the_uncovered_half_is_a_HUMAN_COMMITMENT"])
+    ck("...with the USER's own words for why it cannot be machine-checked",
+       "eye is the thing that spends the day" in _c["NOT_covered_and_UNENFORCEABLE"].lower())
     # ---- BOTH DIRECTIONS. A fence that only refuses is as broken as one
     # ---- that only admits, and tonight produced one of each.
     prot = "data/pm_5min/tier2/calib_panel/day=2026-09-09/coin=btc/part-0.parquet"
@@ -249,8 +337,6 @@ def falsify() -> int:
     ck("...and it NAMES the open gates rather than reporting a bare count",
        all(isinstance(x, str) for x in a["unguarded_readers"]),
        str(a["unguarded_readers"][:4]))
-    ck("the UNCHECKABLE half is declared, not quietly implied covered",
-       "does not pretend otherwise" in build()["uncheckable_half"])
     print(f"\n  {'RULE-34A FENCE CELLS PASS' if not bad else str(bad) + ' FAILED'}")
     return bad
 
