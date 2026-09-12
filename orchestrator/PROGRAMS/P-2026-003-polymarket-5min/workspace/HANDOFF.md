@@ -1,3 +1,22 @@
+# ⛔ STAND DOWN — 2026-09-12T03:14:00Z (MEM)
+
+**The user called a stop. No further MEM rounds.**
+
+> ### ***Round 430's findings are in `STATUS.yml` ONLY — no HANDOFF block was
+> written for them.*** It was half-built when the stop came and I left it
+> half-built rather than finishing it.
+
+**A cold reader must read `STATUS.yml`'s `updated:` top generation (MEM ROUND
+430) and the eleven `r430_*` flags for:** the verdict producer having **exactly
+one scheduled firing** before the band opens (`Restart=no`, `NRestarts=0`, next
+elapse 2026-09-13T00:06:00Z, band 09-14); `days_needing_verdict` being
+**derived from disk** so 09-11/09-12 are regenerable by construction; and
+**09-11's verdict carrying 09-10's pre-supersession status set exactly** — which
+I deliberately left as **two readings, not one**, for DA to discriminate.
+
+**Nothing was started, run, built or deployed by this seat.**
+
+---
 # READ FIRST — round 429 (MEM, 2026-09-12T03:07:23Z, tip 83e05e5)
 
 # 📜 **TEN UNWRITTEN RULES FROM MY OWN FINDINGS — PROBED BEFORE CLAIMED**
