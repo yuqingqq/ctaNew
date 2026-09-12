@@ -67,6 +67,26 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T02:19:40Z (MEM ROUND 424 -- THE GOVERNING QUESTION IS ANSWERED AND IT IS THE GOOD BRANCH:
+  BTC's 09-05 book was built SINGLE-DAY -- both assembly_inputs days read 2026-09-05,
+  no multi-day list -- SO A SINGLE DAY CAN BE BOOKED IN ISOLATION AND EVERY COST FIGURE
+  TONIGHT IS FOR THE RIGHT UNIT OF WORK. The coin difference is A MISSING FILE:
+  day_tape_pin globs be_gate1_state_tape_receipt_DAY_COIN and requires split score; BTC
+  09-05 HAS it (twelve across days), ETH has ZERO. AND I HAVE TO PUSH BACK ON THE
+  SELF-CRITICISM: the sidecar is NOT what the guard reads, and BTC carries the IDENTICAL
+  EMPTY_SCORE sidecar on EIGHT DAYS while its books built -- on 09-05 it has BOTH the
+  empty sidecar AND a 489,434-row score receipt. THE DISCRIMINATOR WAS CORRECT AND
+  SUFFICIENT; recording it as a miss would teach the lane to distrust a working
+  instrument. The receipt says WHY they are orthogonal: on a ruled forward day the WHOLE
+  TAPE IS THE SCORE SPLIT. What remains is narrow: the ETH tape exited rc 0 and published
+  no receipt -- DECLINED or FAILED TO EMIT, one file apart, and if it declined then the
+  ETH book is NOT YET AUTHORISED TO BE MEASURED. ON 0.97: it is the 09-10 pair; THE
+  SAME-DAY PAIR IS 0.985, so the case is STRONGER -- but BTC's OWN peak spans 5.96 to
+  8.80 GiB, A 48 PER CENT SPREAD, so a single-pair ratio cannot separate a coin effect
+  from a day effect, and 09-08 as comparator would have given 0.667 AND THE OPPOSITE
+  DECISION. Two tapes fit on FOUR of five days at 85 to 96 per cent and NOT on 09-08 at
+  105, so NEVER OVERLAP is too strong: the useful form is a rule with a condition.
+  Tip 7b673c7.)
   2026-09-12T02:15:03Z (MEM ROUND 423 -- THE RATIOS RECOMPUTE AND THE ASYMMETRY IS SHARPER THAN STATED:
   size ratios 1.09 PER CENT APART, time ratios 63.1 PER CENT APART, and projecting the
   remaining BOOK stage from the three gives 13.0, 8.8 and 5.4 minutes -- A 142 PER CENT
@@ -106,6 +126,7 @@ updated: >-
   be_call_sites.py -- THE SWEEP INSTRUMENT FAILS THE PROPERTY IT SWEEPS FOR, naming a
   FOURTH property, IS-RECOVERABLE. DE's three rules are NOT in the runbook at the ref.
   Tip 56702b5.)
+previous_updates: >-
   2026-09-12T01:49:37Z (MEM ROUND 421 -- THE CALL-SITE SWEEP, RE-MEASURED, AND ONE GUARD FOLLOWED TO THE
   END. Denominators reproduce IN wt-de2: 17 .sh and 11 units EXACT, 345 .py against 344,
   one file, TIME NOT METHOD. be_reserved_days IS UNSITED AT FUNCTION GRANULARITY -- its
@@ -126,7 +147,6 @@ updated: >-
   ITSELF and answers it correctly -- driven: floor 2026-09-08, a bogus ruling commit
   REFUSES rather than falling back -- though its exposure comment says 6 of 12 where the
   count is 12 OF 13. Tip 858eeee.)
-previous_updates: >-
   2026-09-12T01:39:43Z (MEM ROUND 420 -- THE GUARD BUILT TO CONSTRAIN US DID NOT HOLD, AND I DROVE THE
   PROOF RATHER THAN READING IT: SEVEN OF SEVEN ATTACK VECTORS ADMITTED against the
   committed guard, with both falsifier controls refusing -- so it is a guard that CAN
@@ -1054,6 +1074,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r424_THE_GOVERNING_QUESTION_IS_ANSWERED_BTC_0905_WAS_BUILT_SINGLE_DAY: "Answered from the BTC book's own receipt, not from memory: day 20260905, resources.assembly_inputs.fragment.day 2026-09-05 and resources.assembly_inputs.tape.day 2026-09-05. NO MULTI-DAY LIST ANYWHERE IN IT. So the FIRST branch is closed: A SINGLE DAY CAN BE BOOKED IN ISOLATION, the nightly programme does NOT need more than one day of tape per night, AND EVERY COST FIGURE DERIVED TONIGHT IS FOR THE RIGHT UNIT OF WORK. That was the branch that would have invalidated the night, and it is the one that did not happen."
+  r424_AND_THE_DIFFERENCE_BETWEEN_THE_COINS_IS_A_MISSING_FILE: "So the second branch holds and the difference is nameable. day_tape_pin globs the stem be_gate1_state_tape_receipt_DAY_COIN and requires the field WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY.split to equal score. BTC 09-05 HAS THAT FILE -- and twelve such receipts across days. ETH 09-05 HAS ZERO. The refusal is not a mystery about coins, it is A FILE THAT WAS NEVER WRITTEN, and the guard said so in those words: the assembly binds to the digest the tape builder published."
+  r424_THE_SELF_CRITICISM_IS_WRONG_AND_THE_DISCRIMINATOR_WAS_SUFFICIENT: "This one I have to push back on, because adopting a false lesson is worse than missing a true one. THE SIDECAR IS NOT WHAT THE GUARD READS. day_tape_pin never touches harmful_exposure_rows; it reads the tape builder's receipt. And BTC CARRIES THE IDENTICAL EMPTY_SCORE SIDECAR ON 09-03, 09-04, 09-05, 09-06, 09-07, 09-08, 09-09 AND 09-10 -- EIGHT DAYS -- while its books built. On 09-05 BTC has BOTH the empty sidecar AND a score-split receipt naming 489,434 ROWS. SO THE SIDECAR HAS ZERO PREDICTIVE VALUE FOR THIS REFUSAL, DEMONSTRATED ON EIGHT DAYS. The BTC-has-one-too discriminator was not correct-and-insufficient; IT WAS CORRECT AND SUFFICIENT FOR THE QUESTION IT ANSWERED, and recording it as a miss would teach the lane to distrust a working instrument."
+  r424_THE_TWO_ARTIFACTS_ARE_DIFFERENT_OBJECTS_AND_THE_RECEIPT_SAYS_WHY: "The tape receipt's own WHICH_SPLIT field explains the orthogonality rather than leaving it to inference: a RULED FORWARD DAY is not trained on -- EVERY ROW IS A SCORE ROW that the pinned heads score at their pinned thetas, and NOTHING IS FITTED HERE. So on a ruled forward day the WHOLE TAPE IS THE SCORE SPLIT, and an empty harmful-exposure-rows sidecar is orthogonal BY CONSTRUCTION rather than by coincidence. The two artifacts count different populations: one is rows for a harm measure, the other is the tape the assembly binds to. THE FIX FOR NEXT TIME IS NOT TO TRUST STATUS FILES LESS, IT IS TO ASK WHICH FILE THE GUARD ACTUALLY OPENS."
+  r424_THE_REAL_OPEN_QUESTION_IS_NARROWER_THAN_THE_ONE_ASKED: "What remains is precise and small: THE ETH TAPE STAGE EXITED rc 0 AND PUBLISHED NO SCORE-SPLIT RECEIPT. Either it DECLINED to -- because 09-05 is ruled for BTC and the ruling is per-coin, in which case the refusal is CORRECT and the missing prerequisite is a RULING rather than a build -- or it failed to EMIT one, in which case the tape stage has a silent gap between rc 0 and its contract. THOSE TWO HAVE COMPLETELY DIFFERENT REMEDIES AND ONE FILE SEPARATES THEM. Worth noting which way it falls: if it is the ruling, then the ETH book cost is not merely unmeasured, it is NOT YET AUTHORISED TO BE MEASURED."
+  r424_THE_097_IS_NOT_A_SAME_DAY_RATIO_AND_THE_SAME_DAY_ONE_IS_HIGHER: "I located the 0.97. BTC tape peaks by day are 5.96 GiB on 09-05, 7.62 on 09-07, 8.80 on 09-08, 6.16 on 09-09 and 6.05 on 09-10. ETH's 5.87 against 09-10's 6.05 IS 0.970 -- THE QUOTED FIGURE IS THE 09-10 PAIR. Against 09-05, THE SAME DAY AS THE ETH RUN, IT IS 0.985. So the number is right in substance and computed off the wrong pair, AND THE CORRECT PAIR MAKES THE CASE STRONGER RATHER THAN WEAKER, which is the pleasant version of this correction."
+  r424_AND_BTCS_OWN_PEAK_VARIES_BY_48_PER_CENT_ACROSS_FIVE_DAYS: "The caveat that matters more than the correction: BTC's OWN tape peak ranges 5.96 to 8.80 GiB across five days, A 48 PER CENT SPREAD, so the ETH-over-BTC peak ratio ranges from 0.667 against 09-08 to 0.985 against 09-05. A SINGLE-PAIR CROSS-COIN RATIO CANNOT SEPARATE A COIN EFFECT FROM A DAY EFFECT. Had 09-08 been the comparator the same arithmetic would have concluded that memory scales EXACTLY like size at 0.67 and that the coins overlap comfortably -- the opposite decision, from the same data, by choosing a different day. The same-day pair is the only defensible one and must be named as such wherever the figure is quoted."
+  r424_THE_CONCLUSION_SURVIVES_ON_THE_RIGHT_PAIR_AND_NEVER_OVERLAP_IS_TOO_STRONG: "MEMORY DOES NOT SCALE DOWN WITH THE COIN: CONFIRMED, at 0.985 on the same-day pair, against output at 0.66 and wall-clock at 0.45. But the scheduling conclusion needs a day index. Two tapes against the 14.0 GiB slice: 09-05 11.83 GiB = 85 per cent FITS; 09-10 11.92 = 85 FITS; 09-09 12.03 = 86 FITS; 09-07 13.49 = 96 FITS; 09-08 14.67 = 105 DOES NOT FIT. SO OVERLAP IS FEASIBLE ON FOUR OF FIVE OBSERVED DAYS AND INFEASIBLE ON THE WORST, and infeasible on ANY day beside a catch-up. NEVER is too strong; the useful form is a RULE WITH A CONDITION -- do not overlap when either day's tape is a heavy one, and never beside a catch-up -- which is schedulable, where never is only a veto."
+  r424_THE_GUARD_WORKED_AND_THE_REFUSAL_IS_THE_CHEAPEST_KIND_THERE_IS: "Worth recording as the positive: the refusal is NAMED (BookRefused), SPECIFIC (no SCORE-split builder receipt for 20260905 eth), LOCATED (be_daybook_build.py:417 in assert_day_tape, reached from build at :1516), and it EXPLAINS THE BINDING it is protecting. It cost 2m40s and 1.35 GiB and LEFT NO PARTIAL ARTIFACT BEHIND. A guard that refuses in under three minutes, names the file it wanted, and writes nothing, is the best failure available -- and it is the direct descendant of the same discipline that made a missing key RAISE in the amendment guard two rounds ago."
+  r424_AND_I_COULD_NOT_VERIFY_THE_PEAK_FROM_A_0905_BTC_TAPE_RECORD: "Naming my own substitution rather than letting it pass as equivalence: THERE IS NO be_heavy_run_record FOR A BTC 09-05 TAPE STAGE. The 5.96 GiB I used comes from p003ev210905a, whose args are --day 20260905 --placement-latency, which is the 09-05 EV21 build rather than a stage-labelled tape run. It is the right day and the right coin and I CANNOT PROVE IT IS THE SAME STAGE. The 364 run records in that directory are the positive control that the query fires. If the same-day ratio is going to carry a fourteen-night decision, the comparator should be a stage-labelled record or the figure should say which run it came from."
+  r424_AND_THE_FRAGMENT_AND_TAPE_MEASUREMENTS_SURVIVE_THE_REFUSAL_INTACT: "Confirmed rather than assumed: the ETH fragment and tape both exited rc 0 with final_substate EXITED, at 189 s / 2.09 GiB and 686 s / 5.87 GiB on my launch-to-exit clock, and the book refusal happens in be_daybook_build AFTER both. So the two measured stages are unaffected and only the book stage is NOT MEASURED. No partial book number exists to be quoted by accident, because no book was written -- WHICH IS THE GUARD DOING THE SECOND HALF OF ITS JOB: not merely refusing, but refusing WITHOUT LEAVING SOMETHING A LATER READER COULD MISTAKE FOR A RESULT."
   r423_7L5_IS_AT_THE_REF_7M_IS_NOT_AND_BOTH_WERE_STATED_CORRECTLY: "Checked with the positive control first, 1 hit in 1,203 lines. 7l.5 and THIRD STATE INHERITS return 1 AT THE REF -- landed, as claimed. 7m.1 through 7m.4 return ZERO at the ref and ONE locally, committed at b17388a -- committed and being landed, as claimed. SO THE TWO CLAIMS WERE DIFFERENTIATED CORRECTLY, WHICH IS 7m.1 BEING OBSERVED ONE PARAGRAPH AFTER BEING ADOPTED. Recorded as the POSITIVE case because I have spent the night recording the failures of this and the same author distinguishing DONE from IN FLIGHT in its own next sentence is the behaviour the rule is for. THE NAMED RISK: a local commit under this fork is exactly the state Q-MEM-338 onward has been in for EIGHTY-FIVE ROUNDS, so 7m needs the 7k publication path or it becomes an adoption that stayed local -- the defect it corrects."
   r423_THE_RATIOS_RECOMPUTE_AND_THE_ASYMMETRY_IS_SHARPER_THAN_STATED: "Recomputed from the bytes: fragment 364,601,364 over 545,493,868 is 0.6684 and tape 588,868,676 over 890,640,737 is 0.6612 -- THE TWO SIZE RATIOS ARE 1.09 PER CENT APART. The time ratios are 0.2732 and 0.4458 -- SIXTY-THREE PER CENT APART. And the consequence is bigger than the contrast: projecting the remaining BOOK stage from BTC's 19m45s gives 13.0 MINUTES at the size ratio, 8.8 at the tape time ratio and 5.4 at the fragment time ratio -- A 142 PER CENT RANGE ON THE NUMBER THAT DECIDES WHETHER TWO COINS FIT IN A NIGHT. The choice of ratio is the whole answer, which is why refusing to convert volume into runtime was right."
   r423_A_STABLE_RATIO_IS_NOT_A_USEFUL_RATIO: "The generalisation worth keeping from that arithmetic: THE RATIO THAT IS STABLE IS STABLE ABOUT THE WRONG QUANTITY. Size scales at 0.66 across two stages because bytes are roughly proportional to events; runtime is not, because the stages are bound by different resources -- and a quantity being reproducible tells you it is measuring something real, NEVER that it is measuring the thing you need. A reader who saw only the size column would conclude the scaling question is settled. It is settled for storage and OPEN for time and memory, which are the two that decide the schedule."
@@ -29115,6 +29146,50 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r424_THE_GOVERNING_QUESTION_IS_ANSWERED_BTC_0905_WAS_BUILT_SINGLE_DAY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_daybook_receipt_20260905_btc__L250ms.json
+    said: "the receipt carries day 20260905 and both assembly_inputs days as 2026-09-05, with inputs_pinned.tape.split score."
+  r424_AND_THE_DIFFERENCE_BETWEEN_THE_COINS_IS_A_MISSING_FILE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260905_btc.json
+    said: "ls returns one be_gate1_state_tape_receipt_20260905_btc.json and none for eth, with twelve BTC receipts across days as the control."
+  r424_THE_SELF_CRITICISM_IS_WRONG_AND_THE_DISCRIMINATOR_WAS_SUFFICIENT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260905_btc.EMPTY_SCORE.json
+    said: "eight harmful_exposure_rows_v3_gate1_DAY_btc.EMPTY_SCORE.json files exist for 09-03 through 09-10, and the 09-05 tape receipt carries n_rows 489434."
+  r424_THE_TWO_ARTIFACTS_ARE_DIFFERENT_OBJECTS_AND_THE_RECEIPT_SAYS_WHY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260905_btc.json
+    said: "the receipt's WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY.why field carries the ruled-forward-day explanation verbatim."
+  r424_THE_REAL_OPEN_QUESTION_IS_NARROWER_THAN_THE_ONE_ASKED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be226book0905eth.jsonl
+    said: "the ETH tape record exits rc 0 while no eth state-tape receipt exists on disk."
+  r424_THE_097_IS_NOT_A_SAME_DAY_RATIO_AND_THE_SAME_DAY_ONE_IS_HIGHER:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev210905a.jsonl
+    said: "leaf_peak records across five BTC tape runs give 5.96, 6.05, 6.16, 7.62 and 8.80 GiB against ETH's 5.87."
+  r424_AND_BTCS_OWN_PEAK_VARIES_BY_48_PER_CENT_ACROSS_FIVE_DAYS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev210905a.jsonl
+    said: "the five BTC tape leaf_peak figures span 5.96 to 8.80 GiB, giving ratios 0.667 to 0.985 against ETH's 5.87."
+  r424_THE_CONCLUSION_SURVIVES_ON_THE_RIGHT_PAIR_AND_NEVER_OVERLAP_IS_TOO_STRONG:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev210905a.jsonl
+    said: "peak sums by day against slice_MemoryMax_bytes 15032385536 give 85, 85, 86, 96 and 105 per cent."
+  r424_THE_GUARD_WORKED_AND_THE_REFUSAL_IS_THE_CHEAPEST_KIND_THERE_IS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be226book0905eth.jsonl
+    said: "the ETH book record carries rc 1 at 2m40s with peak 1,451,470,848 B and no book artifact in coin_control."
+  r424_AND_I_COULD_NOT_VERIFY_THE_PEAK_FROM_A_0905_BTC_TAPE_RECORD:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003ev210905a.jsonl
+    said: "no run record matches a btc tape stage for 09-05; p003ev210905a's launch args are --day 20260905 --placement-latency."
+  r424_AND_THE_FRAGMENT_AND_TAPE_MEASUREMENTS_SURVIVE_THE_REFUSAL_INTACT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be226book0905eth.jsonl
+    said: "the fragment and tape records carry rc 0 and final_substate exited; the coin_control directory holds only the BTC control book."
   r423_7L5_IS_AT_THE_REF_7M_IS_NOT_AND_BOTH_WERE_STATED_CORRECTLY:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md

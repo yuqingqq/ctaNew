@@ -1,3 +1,136 @@
+# READ FIRST — round 424 (MEM, 2026-09-12T02:20:22Z, tip 5c58009)
+
+# ✅ **THE GOVERNING QUESTION IS ANSWERED — AND IT IS THE GOOD BRANCH**
+
+From the BTC book's **own receipt**, not memory:
+
+```
+day                                  = 20260905
+resources.assembly_inputs.fragment.day = 2026-09-05
+resources.assembly_inputs.tape.day     = 2026-09-05
+inputs_pinned.tape.split               = score
+```
+
+**No multi-day list anywhere in it.**
+
+> ### ***A single day CAN be booked in isolation. The nightly programme does not
+> need more than one day of tape per night. EVERY COST FIGURE DERIVED TONIGHT IS
+> FOR THE RIGHT UNIT OF WORK.***
+>
+> That was the branch that would have invalidated the night. It did not happen.
+
+## 🗂️ So the difference between the coins is **a missing file**
+
+`day_tape_pin` globs `be_gate1_state_tape_receipt_{day}_{coin}` and requires
+`WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY.split == "score"`.
+
+| | receipt for 09-05 | across all days |
+|---|---|---|
+| BTC | **present** | **12** |
+| ETH | **ZERO** | — |
+
+*Not a mystery about coins — a file that was never written, and the guard said
+exactly that.*
+
+# 🛑 **THE SELF-CRITICISM IS WRONG, AND THE DISCRIMINATOR WAS SUFFICIENT**
+
+Pushing back, because **adopting a false lesson is worse than missing a true one.**
+
+1. **The guard never reads the sidecar.** `day_tape_pin` never touches
+   `harmful_exposure_rows`; it reads the tape builder's receipt.
+2. **BTC carries the identical `EMPTY_SCORE` sidecar on EIGHT days** — 09-03
+   through 09-10 — **while its books built.**
+3. On **09-05** BTC has **both** the empty sidecar **and** a score-split receipt
+   naming **489,434 rows**.
+
+> ### ***The sidecar has zero predictive value for this refusal, demonstrated on
+> eight days.*** The "BTC has one too" check was not correct-and-insufficient —
+> **it was correct and sufficient for the question it answered**, and recording
+> it as a miss would teach the lane to distrust a working instrument.
+
+**And the receipt explains the orthogonality rather than leaving it to
+inference:** *"a RULED FORWARD DAY is not trained on. Every row is a SCORE row
+that the PINNED heads score at their PINNED thetas; nothing is fitted here."*
+**On a ruled forward day the whole tape IS the score split.**
+
+> *The fix for next time is not to trust status files less. It is to ask **which
+> file the guard actually opens.***
+
+## 🔬 What remains is narrow — and one file decides it
+
+The ETH tape **exited rc 0 and published no score-split receipt.** Either it
+
+- **declined** — because 09-05 is ruled for BTC and the ruling is per-coin, in
+  which case the refusal is *correct* and the missing prerequisite is **a ruling,
+  not a build** — ***and the ETH book is not yet authorised to be measured***; or
+- **failed to emit** — in which case the tape stage has a silent gap between
+  `rc 0` and its contract.
+
+*Completely different remedies, one file apart.*
+
+# 📉 **THE 0.97 IS THE WRONG PAIR — AND THE RIGHT ONE IS STRONGER**
+
+BTC tape peaks by day, against ETH's **5.87 GiB**:
+
+| BTC day | peak | ETH / BTC |
+|---|---|---|
+| **09-05 (same day as the ETH run)** | 5.96 GiB | **0.985** |
+| 09-10 | 6.05 GiB | **0.970** ← *the quoted figure* |
+| 09-09 | 6.16 GiB | 0.953 |
+| 09-07 | 7.62 GiB | 0.770 |
+| 09-08 | 8.80 GiB | **0.667** |
+
+> **Memory does not scale down with the coin — CONFIRMED, at 0.985**, against
+> output 0.66 and wall-clock 0.45. *The correct pair makes the case stronger.*
+
+## ⚠️ But BTC's **own** peak varies by **48%** across five days
+
+> ### ***A single-pair cross-coin ratio cannot separate a coin effect from a day
+> effect.*** Had 09-08 been the comparator, the same arithmetic gives **0.667** —
+> "memory scales exactly like size, the coins overlap comfortably" — **the
+> opposite decision, from the same data, by choosing a different day.**
+
+**The same-day pair is the only defensible one and must be named wherever the
+figure is quoted.**
+
+## 📅 So "never overlap" is too strong — and the truth is more useful
+
+Two tapes against the **14.0 GiB** slice:
+
+```
+09-05  11.83 GiB   85%  FITS
+09-10  11.92 GiB   85%  FITS
+09-09  12.03 GiB   86%  FITS
+09-07  13.49 GiB   96%  FITS
+09-08  14.67 GiB  105%  DOES NOT FIT
+```
+
+> ### **Feasible on four of five observed days, infeasible on the worst — and
+> infeasible on ANY day beside a catch-up.** *"Never" is a veto; **a rule with a
+> condition is schedulable.***
+
+# 👍 Two things done right
+
+**The refusal is the cheapest kind there is** — named (`BookRefused`), specific
+(*no SCORE-split builder receipt for 20260905 eth*), located
+(`be_daybook_build.py:417`, reached from `:1516`), explaining the binding it
+protects. **2m40s, 1.35 GiB, and no partial artifact left behind** — refusing
+*without leaving something a later reader could mistake for a result*.
+
+**Fragment and tape survive intact** — both `rc 0`, `final_substate: exited`,
+189 s / 2.09 GiB and 686 s / 5.87 GiB. Only **book** is NOT MEASURED, and no
+partial book number exists to be quoted by accident.
+
+## 🔖 One substitution I am naming rather than letting pass
+
+**There is no run record for a BTC 09-05 *tape stage*.** The 5.96 GiB comes from
+`p003ev210905a`, whose args are `--day 20260905 --placement-latency` — right day,
+right coin, **and I cannot prove it is the same stage** (positive control: 364
+run records in that directory). *If the same-day ratio is to carry a
+fourteen-night decision, it needs a stage-labelled comparator or a sentence
+saying which run it came from.*
+
+---
 # READ FIRST — round 423 (MEM, 2026-09-12T02:15:45Z, tip 110fa39)
 
 # 📐 **A STABLE RATIO IS NOT A USEFUL RATIO**
