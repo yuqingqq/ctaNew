@@ -48,6 +48,45 @@ FEE_NOT_DECLARED = "MAKER_FEE_IS_NOT_DECLARED"
 #: and zero is the value most likely to be supplied by omission, so the
 #: rule is required for every value, not only for zero.
 FEE_RULE_NOT_DECLARED = "FEE_RULE_NOT_DECLARED"
+#: A RULE IS NOT ENOUGH: the rule must rest on an OBSERVATION, and the
+#: tape says in its own status column when it does not. `fee_rate_bps_raw`
+#: sits beside `fee_source_status`, which reads UNPOPULATED_WS_ZERO on
+#: 2,046,973 of 2,046,973 rows across 09-07..09-09, all coins, with
+#: fee_rate_bps_raw = 0.0 and ZERO nulls. A venue-side "zero on every
+#: trade, no exceptions" read off that column is an UNPOPULATED WEBSOCKET
+#: FIELD reported as an observed zero. So a declared fee carries the
+#: STATUS of the observation supporting it, and a fee whose supporting
+#: observation is a NON-OBSERVATION refuses by its own name -- separately
+#: from a missing rule and from a genuine qualified zero.
+FEE_STATUS_NOT_DECLARED = "FEE_OBSERVATION_STATUS_NOT_DECLARED"
+FEE_UNPOPULATED = "FEE_RULE_RESTS_ON_UNPOPULATED_FIELD"
+FEE_STATUS_UNKNOWN = "FEE_OBSERVATION_STATUS_NOT_RECOGNISED"
+
+#: The tape's own vocabulary, in rule 4's form: a status, never a silent
+#: zero. An UNRECOGNISED status is refused rather than assumed to be an
+#: observation -- there is no default-pass branch here.
+OBSERVED_STATUSES = {
+    "OBSERVED", "POPULATED", "OBSERVED_POPULATED", "VENUE_REPORTED",
+    "PUBLISHED_SCHEDULE", "ONCHAIN_RECEIPT",
+}
+NON_OBSERVATION_STATUSES = {
+    "UNPOPULATED_WS_ZERO", "UNPOPULATED", "NOT_OBSERVED", "ABSENT",
+    "DEFAULTED", "SYNTHETIC_ZERO", "MISSING", "NOT_POPULATED",
+}
+#: What the measurement was, carried so the refusal names something
+#: specific rather than a suspicion.
+UNPOPULATED_MEASUREMENT = {
+    "column": "fee_rate_bps_raw",
+    "status_column": "fee_source_status",
+    "status": "UNPOPULATED_WS_ZERO",
+    "rows": 2046973, "of_rows": 2046973,
+    "days": "09-07..09-09", "coins": "all", "nulls": 0,
+    "value_on_every_row": 0.0,
+    "what_it_means":
+        "the venue-side zero is an UNPOPULATED WEBSOCKET FIELD read as an "
+        "observed zero; there was never a venue-side fee observation to "
+        "qualify",
+}
 NO_SETTLEMENT = "TOKEN_HAS_NO_OFFICIAL_SETTLEMENT"
 EARLY_FILL = "FILL_BEFORE_ITS_ORDER_WAS_EFFECTIVE"
 NOT_EVALUABLE = "NOT_EVALUABLE_FOR_EDGE"
@@ -101,7 +140,75 @@ def declared_fee(decl_dir=None) -> dict:
             f"receipt identifies that rule -- and zero is precisely the "
             f"value that arrives by omission, so a number without a rule "
             f"is not a declared fee.")
-    return dict(got, rule=rule)
+    # AND THE RULE MUST REST ON AN OBSERVATION. Checked after the rule so
+    # a bare zero still refuses FEE_RULE_NOT_DECLARED, unchanged.
+    obs = classify_fee_observation(_fee_status(decl_dir, got["declared_by"]),
+                                   declared_by=got["declared_by"])
+    return dict(got, rule=rule, observation_status=obs["status"],
+                observation=obs)
+
+
+def classify_fee_observation(status, *, declared_by: str = "") -> dict:
+    """THE STATUS OF THE OBSERVATION A FEE RESTS ON.
+
+    Three outcomes, and none of them is a silent pass: an observation
+    proceeds, a NON-OBSERVATION refuses by its own name, and a status
+    this file does not recognise refuses rather than being assumed
+    observed.
+    """
+    where = f" in {declared_by}" if declared_by else ""
+    if status is None or not str(status).strip():
+        raise PnLRefused(
+            f"REFUSED {FEE_STATUS_NOT_DECLARED}: a fee{where} with no "
+            f"status for the observation supporting it. A rule naming a "
+            f"column is not the column being populated -- and the "
+            f"difference between those two is the difference between a "
+            f"measured zero and an unpopulated field.")
+    key = str(status).strip().upper()
+    if key in NON_OBSERVATION_STATUSES:
+        raise PnLRefused(
+            f"REFUSED {FEE_UNPOPULATED}: the fee{where} rests on "
+            f"{key}. {UNPOPULATED_MEASUREMENT['status_column']} reads "
+            f"{UNPOPULATED_MEASUREMENT['status']} on "
+            f"{UNPOPULATED_MEASUREMENT['rows']:,} of "
+            f"{UNPOPULATED_MEASUREMENT['of_rows']:,} rows "
+            f"({UNPOPULATED_MEASUREMENT['days']}, "
+            f"{UNPOPULATED_MEASUREMENT['coins']} coins) with "
+            f"{UNPOPULATED_MEASUREMENT['column']} = 0.0 and "
+            f"{UNPOPULATED_MEASUREMENT['nulls']} nulls. "
+            f"{UNPOPULATED_MEASUREMENT['what_it_means']}. This is NOT a "
+            f"qualified zero and NOT a missing declaration: it is a "
+            f"non-observation, and a value cannot be edited back into an "
+            f"observation.")
+    if key not in OBSERVED_STATUSES:
+        raise PnLRefused(
+            f"REFUSED {FEE_STATUS_UNKNOWN}: {key!r}{where} is neither "
+            f"{sorted(OBSERVED_STATUSES)} nor "
+            f"{sorted(NON_OBSERVATION_STATUSES)}. An unrecognised status "
+            f"is not assumed to be an observation.")
+    return {"status": key, "is_an_observation": True,
+            "why_the_status_is_required":
+                "a fee is only as real as the observation under it, and "
+                "the tape reports that as a STATUS rather than as a "
+                "silent zero"}
+
+
+def _fee_status(decl_dir, filename: str):
+    """The observation STATUS beside the fee, in the declaration that
+    supplied it."""
+    d = Path(decl_dir) if decl_dir else HERE / "declarations"
+    f = d / filename
+    if not f.is_file():
+        return None
+    try:
+        doc = json.loads(f.read_text())
+    except Exception:                                       # noqa: BLE001
+        return None
+    names = {"fee_observation_status", "fee_source_status",
+             "maker_fee_observation_status", "fee_status",
+             "maker_fee_source_status"}
+    got = SEAM._walk_for(doc, names)
+    return got if isinstance(got, str) and got.strip() else None
 
 
 def _fee_rule(decl_dir, filename: str):
@@ -310,13 +417,65 @@ def falsify() -> int:
         (D / "fee.json").write_text(json.dumps(
             {"market": {"maker_fee": 0.0},
              "maker_fee_rule": "fixture: PM maker orders pay no fee under "
-                               "the account tier recorded in the receipt"}))
+                               "the account tier recorded in the receipt",
+             "fee_observation_status": "OBSERVED_POPULATED"}))
         fee = declared_fee(D)
-        ck("a declaration carrying a RULE proceeds, and the rule is "
-           "RECORDED in the output",
+        ck("a declaration carrying a RULE AND AN OBSERVATION proceeds, "
+           "and both are RECORDED in the output",
            fee["value"] == 0.0 and fee["declared_by"] == "fee.json"
-           and fee["rule"].startswith("fixture: PM maker orders"),
-           fee["rule"][:52])
+           and fee["rule"].startswith("fixture: PM maker orders")
+           and fee["observation_status"] == "OBSERVED_POPULATED",
+           f"{fee['observation_status']}  {fee['rule'][:40]}")
+
+        # THE CORRECTION, AS A PREDICATE ON PROVENANCE. A later edit to
+        # the VALUE cannot undo it: the code demands the status.
+        unpop = Path(str(D) + "_unpopulated")
+        unpop.mkdir(exist_ok=True)
+        (unpop / "fee.json").write_text(json.dumps(
+            {"maker_fee": 0.0,
+             "maker_fee_rule": "ORDER-LEVEL ZERO from the venue's own "
+                               "field: fee_rate_bps is 0 on all 76,617 "
+                               "observed trades, zero exceptions",
+             "fee_source_status": "UNPOPULATED_WS_ZERO"}))
+        try:
+            declared_fee(unpop)
+            ck("a fee whose supporting observation is UNPOPULATED_WS_ZERO "
+               "REFUSES -- and it is not a qualified zero", False)
+        except PnLRefused as exc:
+            ck("a fee whose supporting observation is UNPOPULATED_WS_ZERO "
+               "REFUSES -- and it is not a qualified zero",
+               FEE_UNPOPULATED in str(exc)
+               and FEE_RULE_NOT_DECLARED not in str(exc)
+               and "2,046,973 of 2,046,973" in str(exc),
+               "the rule reads as a measurement; the status says it is "
+               "an unpopulated field")
+        nostatus = Path(str(D) + "_nostatus")
+        nostatus.mkdir(exist_ok=True)
+        (nostatus / "fee.json").write_text(json.dumps(
+            {"maker_fee": 0.0, "maker_fee_rule": "a rule, and no status"}))
+        try:
+            declared_fee(nostatus)
+            ck("a RULE with no observation status REFUSES by its own "
+               "name", False)
+        except PnLRefused as exc:
+            ck("a RULE with no observation status REFUSES by its own "
+               "name", FEE_STATUS_NOT_DECLARED in str(exc))
+        unknown = Path(str(D) + "_unknown")
+        unknown.mkdir(exist_ok=True)
+        (unknown / "fee.json").write_text(json.dumps(
+            {"maker_fee": 0.0, "maker_fee_rule": "a rule",
+             "fee_observation_status": "PROBABLY_FINE"}))
+        try:
+            declared_fee(unknown)
+            ck("an UNRECOGNISED status refuses -- no default-pass branch",
+               False)
+        except PnLRefused as exc:
+            ck("an UNRECOGNISED status refuses -- no default-pass branch",
+               FEE_STATUS_UNKNOWN in str(exc))
+        ck("the three refusals are DISTINGUISHABLE names",
+           len({FEE_UNPOPULATED, FEE_RULE_NOT_DECLARED,
+                FEE_STATUS_NOT_DECLARED, FEE_STATUS_UNKNOWN,
+                FEE_NOT_DECLARED}) == 5)
         (D / "no_rule.json").write_text(json.dumps({"maker_fee": 0.0}))
         import shutil as _sh
         _only = Path(str(D) + "_onlyvalue")
@@ -341,14 +500,17 @@ def falsify() -> int:
            FEE_NOT_DECLARED in nofee and "gross P&L presented as net" in nofee,
            nofee[:60])
     try:
-        declared_fee()
-        real_fee = "declared"
-    except PnLRefused:
-        real_fee = ("NOT ESTABLISHED on the real declarations -- "
-                    "MAKER_FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_ARTIFACTS")
+        got = declared_fee()
+        real_fee = f"DECLARED value={got['value']} {got['observation_status']}"
+        real_ok = got["observation_status"] in OBSERVED_STATUSES
+    except PnLRefused as exc:
+        head = str(exc).split(":")[0].replace("REFUSED ", "").strip()
+        real_fee = f"REFUSED {head}"
+        real_ok = head in (FEE_NOT_DECLARED, FEE_RULE_NOT_DECLARED,
+                           FEE_STATUS_NOT_DECLARED, FEE_UNPOPULATED,
+                           FEE_STATUS_UNKNOWN)
     ck("  and the REAL declarations are reported as they are",
-       real_fee.startswith("NOT ESTABLISHED") or real_fee == "declared",
-       real_fee[:66])
+       real_ok, real_fee[:78])
 
     fee = {"value": 0.0, "declared_by": "fixture"}
     bought = [f(1000.0, 0.40, +10.0)]

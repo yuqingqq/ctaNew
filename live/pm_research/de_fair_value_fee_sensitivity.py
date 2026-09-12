@@ -356,8 +356,17 @@ def fee_provenance(fee: dict) -> dict:
             f"{fee.get('value')!r} with no supporting rule. §9 permits a "
             f"zero fee only when the receipt identifies the rule, and "
             f"zero is precisely the value that arrives by omission.")
+    # AND THE RULE MUST REST ON AN OBSERVATION. Checked AFTER the rule,
+    # so a bare zero still refuses FEE_RULE_NOT_DECLARED unchanged, and
+    # at this seam too -- a fee dict built by hand does not get to skip
+    # the provenance that `declared_fee` demands.
+    obs = PNL.classify_fee_observation(
+        fee.get("observation_status") or fee.get("fee_observation_status"),
+        declared_by=str(fee.get("declared_by", "")))
     qualified = bool(fee.get("qualification")) or "qualif" in rule.lower()
     return {"value": fee.get("value"),
+            "observation_status": obs["status"],
+            "observation": obs,
             "kind": (QUALIFIED_ZERO if qualified and not fee.get("value")
                      else "QUALIFIED" if qualified else UNQUALIFIED),
             "rule": rule,
@@ -627,9 +636,16 @@ def _decl(tmp, *, rate=0.495, modal=0.099, basis=None, settled=None,
     return str(d)
 
 
+#: A QUALIFIED ZERO RESTING ON AN ACTUAL OBSERVATION. The venue-side
+#: "zero on 76,617 of 76,617" is NOT that: `fee_source_status` reads
+#: UNPOPULATED_WS_ZERO on every row, so it was never an observation. This
+#: fixture rests on per-leg onchain receipts instead, which is what an
+#: admissible qualified zero would have to look like.
 ZERO = {"value": 0.0, "model": PNL.PER_SHARE,
-        "rule": "fee_rate_bps = 0 at order level, 76,617 of 76,617 CLOB "
-                "trades, the venue's own field (QUALIFIED)",
+        "observation_status": "ONCHAIN_RECEIPT",
+        "rule": "fixture: 1,046 of 1,056 onchain maker legs settle at zero "
+                "in the receipts themselves -- QUALIFIED by the 10 that "
+                "do not",
         "qualification": MEASURED}
 
 
@@ -886,8 +902,32 @@ def falsify() -> int:
     except SensitivityRefused as exc:
         ck("a fee with NO RULE still refuses -- unchanged",
            PNL.FEE_RULE_NOT_DECLARED in str(exc))
-    ck("an UNqualified declared fee needs no sensitivity",
+    try:
+        fee_provenance({"value": 0.0, "model": PNL.PER_SHARE,
+                        "rule": "ORDER-LEVEL ZERO, the venue's own field, "
+                                "0 on all 76,617 trades, zero exceptions",
+                        "observation_status": "UNPOPULATED_WS_ZERO"})
+        ck("a fee resting on an UNPOPULATED field refuses AT THIS SEAM "
+           "too", False)
+    except PNL.PnLRefused as exc:
+        ck("a fee resting on an UNPOPULATED field refuses AT THIS SEAM "
+           "too", PNL.FEE_UNPOPULATED in str(exc), str(exc)[9:52])
+    try:
+        fee_provenance({"value": 0.0, "model": PNL.PER_SHARE,
+                        "rule": "a rule and no status"})
+        ck("a rule with NO observation status refuses -- the code demands "
+           "the provenance, not the number", False)
+    except PNL.PnLRefused as exc:
+        ck("a rule with NO observation status refuses -- the code demands "
+           "the provenance, not the number",
+           PNL.FEE_STATUS_NOT_DECLARED in str(exc))
+    ck("a QUALIFIED zero on a REAL observation still proceeds",
+       fee_provenance(ZERO)["observation_status"] == "ONCHAIN_RECEIPT"
+       and fee_provenance(ZERO)["kind"] == QUALIFIED_ZERO)
+    ck("an UNqualified declared fee ON AN OBSERVATION needs no "
+       "sensitivity",
        fee_provenance({"value": 0.0, "model": PNL.PER_SHARE,
+                       "observation_status": "PUBLISHED_SCHEDULE",
                        "rule": "flat schedule, published"}
                       )["sensitivity_required"] is False)
     try:
@@ -912,15 +952,20 @@ def falsify() -> int:
         state = f"DECLARED {prov2['kind']} value={prov2['value']}"
         admissible = True
     except PNL.PnLRefused as exc:
-        head = str(exc).split(":")[0].replace("REFUSED ", "")
+        head = str(exc).split(":")[0].replace("REFUSED ", "").strip()
         state = f"REFUSED {head}"
-        admissible = (PNL.FEE_NOT_DECLARED in str(exc)
-                      or PNL.FEE_RULE_NOT_DECLARED in str(exc))
+        # A NON-OBSERVATION IS ITS OWN OUTCOME, distinguishable from a
+        # missing declaration and from a genuine qualified zero.
+        admissible = head in (PNL.FEE_NOT_DECLARED,
+                              PNL.FEE_RULE_NOT_DECLARED,
+                              PNL.FEE_STATUS_NOT_DECLARED,
+                              PNL.FEE_UNPOPULATED,
+                              PNL.FEE_STATUS_UNKNOWN)
     except SensitivityRefused as exc:
         state = f"REFUSED {str(exc).split(':')[0]}"
         admissible = PNL.FEE_RULE_NOT_DECLARED in str(exc)
-    ck("the real fee is EITHER a ruled declaration OR a named refusal",
-       admissible, state)
+    ck("the real fee is EITHER a declaration resting on an OBSERVATION "
+       "or a named refusal", admissible, state)
     try:
         rp = sensitivity_parameters()
         pstate = (f"DECLARED rate={rp['worst_rate']} basis="
