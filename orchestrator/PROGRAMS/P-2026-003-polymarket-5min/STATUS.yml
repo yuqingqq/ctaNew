@@ -67,6 +67,24 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T01:05:17Z (MEM ROUND 416 -- C2 IS STRUCTURALLY DEAD, SETTLED BY A RANGE: eight days span 0.1768
+  to 0.2707, the sub-second share NEVER below 0.7293, zero of eight reaching the 95 per
+  cent gate. AND THE DECISIVE RATIO IS GAP OVER SWING, NOT GAP OVER LEVEL -- from the BEST
+  day the gap is 0.6793 while the ENTIRE day-to-day variation is 0.0939, so THE GAP IS 7.2
+  TIMES THE WHOLE SWING and no day within the observed variation can close it. (Small
+  note recorded rather than rounded away: 0.95/0.2347 is 4.05, not the reported 4.06.)
+  A HYPOTHESIS WITHDRAWN AND RE-RAISED, recorded AS A SEQUENCE: the gap-ledger check was
+  hypothesised defective at 00:33Z, the reconstruction said otherwise, and THE
+  RECONSTRUCTION WAS WRONG. I MEASURED THE LEDGER MYSELF and it reproduces: 13,023
+  records, last recv_ns 00:51:31Z, distinct window_start UNCHANGED at 2,379 with the
+  maximum still 09-11 23:00Z, five recent records and NOT ONE carrying a window_start, and
+  12,453 window-bearing records -- EXACTLY MY ROUND-410 COUNT, so ZERO NEW WINDOWS SINCE.
+  A 1.9-HOUR LAG while the collector is demonstrably alive. AND MY ROUND-410 ENDORSEMENT
+  IS IMPLICATED: I verified THAT THE CODE DOES WHAT IT SAYS AND NOT THAT WHAT IT SAYS IS
+  TRUE, taking the docstring's account of the predicate's meaning as its meaning. WORSE, I
+  MANUFACTURED A REASON -- I wrote that GAP SPARSITY NEVER TOUCHES IT, and gap sparsity is
+  THE WHOLE PROBLEM. Not yet a finding: the failure is CONSERVATIVE and REV rules, and the
+  named exclusion is that recv_ns may itself be stale-written. Tip 736241f.)
   2026-09-12T00:59:55Z (MEM ROUND 415 -- VALIDATION STARTS NO EARLIER THAN 2026-09-14, RULED TONIGHT BECAUSE
   TOMORROW IT WOULD BE A CHOICE MADE AFTER SEEING, and expressed as a RULE rather than a
   date so it cannot drift: first complete UTC day strictly after the freeze becomes
@@ -106,6 +124,7 @@ updated: >-
   C2 rule but it is ADJACENT, not an answer -- C2's is a COVERAGE failure, not a
   point-in-time one. ETH cost is to be MEASURED on a real 09-05 day, not converted from a
   0.32x ratio. Tip 4864080.)
+previous_updates: >-
   2026-09-12T00:52:32Z (MEM ROUND 413 -- REVIEW 256 INVERTS THE QUESTION AND C1 IS NOT ARITHMETICALLY DEAD.
   The perfect-foresight ceiling is mean 0.0745 nats over 4,973,558 states, p90 0.1335,
   max 0.6931 -- capped at ln 2 = 0.693147. I DERIVED THE INSTRUMENT rather than accept it:
@@ -126,7 +145,6 @@ updated: >-
   position for having seen the ceiling; it belongs to the USER. And DA makes it a
   PREDICATE, not a note: A NOTE CAN BE FORGOTTEN AT DAY ONE, A PREDICATE CANNOT.
   Tip b65101e.)
-previous_updates: >-
   2026-09-12T00:45:15Z (MEM ROUND 412 -- THE IDENTITY-AS-ARTIFACT THREAT IS REFUTED BY ITS OWN AUTHOR,
   MEASURED BEFORE ANY DAY WAS CONSUMED: artifact share 0.17 per cent BTC and 0.58 per cent
   ETH over 9.4 MILLION states, spread ONE TICK at p50 and p90, ZERO one-sided, ZERO
@@ -893,6 +911,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r416_C2_IS_STRUCTURALLY_DEAD_SETTLED_BY_A_RANGE_NOT_A_POOLED_FIGURE: "DE measured frac at or above one second across eight days: span 0.1768 to 0.2707, mean 0.2347, sd 0.0312, range 0.0939. THE SUB-SECOND SHARE NEVER DROPS BELOW 0.7293, so on C2's BEST day nearly three generations in four are gone before it can speak. ZERO of 8 days reach the 95 per cent gate and the best day's shortfall is 0.6793. I checked each figure: the range, the never-below, and the shortfall all reproduce exactly."
+  r416_AND_THE_DECISIVE_RATIO_IS_GAP_OVER_SWING_NOT_GAP_OVER_LEVEL: "Why this is an answer and not an impression, and I can sharpen the form. The conclusion rests on THE SWING BEING TOO SMALL TO CLOSE THE GAP, not on the level being low: 0.234 is far from 0.95 invites maybe a better day exists, and that invitation has to be closed. The reported closure is that reaching 0.95 needs about four times the pooled fraction. THE STRONGER FORM IS THE RATIO OF THE GAP TO THE SWING: from the BEST of eight days the gap is 0.6793 while THE ENTIRE DAY-TO-DAY VARIATION IS 0.0939, so THE GAP IS 7.2 TIMES THE WHOLE SWING. No day within the observed variation can close it, which answers the objection directly rather than by comparison to an average."
+  r416_a_small_arithmetic_note_recorded_rather_than_rounded_to_agreement: "0.95 divided by the reported pooled mean 0.2347 is 4.047, which rounds to 4.05 and not the reported 4.06; 4.06 would follow from a pooled figure near 0.2340. The difference is in the fourth significant figure and is IMMATERIAL TO THE CONCLUSION, which is why it is recorded as a note rather than a correction. Recorded at all because silently rounding my own result to agree with a reported one is how two independent computations stop being independent."
+  r416_THE_09_14_GUARD_IS_DRIVEN_AND_THE_RECORD_IS_EXTENSIBLE: "Two constructions worth keeping. DE added a guard that 09-14 REFUSES with PLUMBING_RUN_TOUCHED_A_PROTECTED_DAY, DRIVEN rather than declared -- the protection of the ruled floor is now a thing that fires rather than a date someone respects. And 09-11 through 09-13 are recorded as NO_DAY_BOOK_FOR_THIS_DAY, which is a STATUS rather than an omission, SO A RE-RUN EXTENDS THE MEASUREMENT WITH NO CODE CHANGE once BE's books land. A measurement that grows when its inputs arrive is worth more than one that has to be re-specified."
+  r416_THE_SEQUENCE_a_hypothesis_WITHDRAWN_and_RE_RAISED_recorded_as_a_sequence: "Recorded as a sequence because that is what it is, and a conclusion would misrepresent it. At 00:33Z the coordinator hypothesised that the preflight's gap-ledger check conflates no-gap-near-day-end with ledger-stopped; reconstructed it per day; found all five days would fail including four that had passed; concluded the reading was wrong and called the check a correctly-implemented liveness proof. THE RECONSTRUCTION WAS WRONG AND THE CONCLUSION WAS TOO COMFORTABLE. The hypothesis is now RE-RAISED on new evidence, with REV adjudicating and EXPLICITLY NOT THE COORDINATOR. NOT YET A FINDING: the failure is CONSERVATIVE, a false REFUSAL rather than a false pass."
+  r416_I_MEASURED_THE_LEDGER_MYSELF_AND_THE_NEW_EVIDENCE_REPRODUCES: "13,023 records; last recv_ns 2026-09-12T00:51:31.316Z; DISTINCT window_start 2,379 with maximum still 1789167600 = 2026-09-11T23:00:00Z. Five records carry a recv_ns since 00:12Z and NOT ONE OF THEM CARRIES A WINDOW_START. And the count of records bearing a window_start is 12,453 -- EXACTLY THE NUMBER I MEASURED AT ROUND 410 -- so ZERO NEW WINDOWS HAVE APPEARED SINCE. THE LAG BETWEEN THE NEWEST recv_ns AND THE NEWEST window_start IS 6,691 SECONDS, 1.9 HOURS. The collector is demonstrably alive and the check's signal has not moved."
+  r416_SO_A_PERFECTLY_RUNNING_COLLECTOR_IS_INDISTINGUISHABLE_FROM_A_DEAD_ONE: "The mechanism, stated as the hypothesis rather than as a finding. window_start ADVANCES ONLY WHEN A GAP OCCURS; recv_ns ADVANCES WHENEVER THE COLLECTOR IS ALIVE; and the check USES THE FORMER TO PROVE THE LATTER. If that reading holds, a perfectly-running collector in a gap-free period is indistinguishable from a dead one, AND THE CLEANER THE PERIOD THE LONGER THE NEWEST DAY STAYS BLOCKED -- the guard punishes exactly the condition it should reward. The earlier within-the-hour estimate came from 09-11's gappy 20:00 to 23:00 stretch GENERALISED TO A QUIET ONE."
+  r416_AND_MY_OWN_ROUND_410_ENDORSEMENT_IS_IMPLICATED: "I seconded the withdrawn conclusion, and my error has a precise shape worth naming. At round 410 I read the check at source, confirmed the maximum is GLOBAL across the file and the test is last at or above d1 minus WINDOW_S, and wrote that it is a LIVENESS PROOF AND IT IS CORRECTLY IMPLEMENTED. I VERIFIED THAT THE CODE DOES WHAT IT SAYS, AND NOT THAT WHAT IT SAYS IS TRUE. Whether the predicate proves liveness depends on whether window_start tracks the collector or tracks gaps -- a question about the DATA, not the code -- and I never asked it. I took the docstring's account of the predicate's meaning as the predicate's meaning."
+  r416_AND_WORSE_I_MANUFACTURED_A_REASON_FOR_IT: "The part I have least excuse for. At round 410 I did not merely agree; I ADDED a supporting argument, writing that GAP SPARSITY NEVER TOUCHES IT, BECAUSE THE QUESTION IS NEVER ABOUT THIS DAY'S GAPS. THAT SENTENCE IS EXACTLY WRONG. Gap sparsity is the whole problem: a gap-only signal in a gap-free period never advances, which is precisely what 1.9 hours of unmoved window_start now shows. I dismissed the mechanism that turns out to be the mechanism, and I did it while agreeing with someone else's withdrawal of the same idea."
+  r416_THE_NAMED_EXCLUSION_recv_ns_may_be_a_worse_signal_than_it_looks: "Named rather than left implicit, and it is the coordinator's own: IT HAS NOT BEEN CHECKED WHETHER recv_ns CAN BE STALE-WRITTEN OR BACKFILLED, which would make it a worse liveness signal than it appears and would weaken the re-raised hypothesis from the other side. That exclusion is why this is a sequence and not a finding: the alternative signal has not been validated either, and a hypothesis that replaces one unvalidated signal with another is not yet an improvement."
+  r416_09_11_MAY_STILL_FAIL_ON_THE_LEDGER_TERM_ALONE: "Probed by me at 01:03Z: the gap-ledger term is STILL FAILING, max window_start 1789167600 against the needed 1789170900, short by 3,300 seconds. The two stage-0 terms are INDEPENDENT, so 09-11 CAN STILL FAIL AT 02:00Z ON THE GAP-LEDGER TERM ALONE EVEN IF THE INTERIOR-WINDOW COUNT COMES DOWN -- AND THAT FAILURE WOULD SAY NOTHING ABOUT THE DAY'S QUALITY. Recorded in advance so that if it happens, nobody reads a liveness-signal artefact as a statement about the data."
   r415_VALIDATION_STARTS_NO_EARLIER_THAN_2026_09_14_expressed_as_a_RULE: "Ruled TONIGHT because tomorrow it would be a choice made after seeing. The form matters as much as the date: the start day is THE FIRST COMPLETE UTC DAY STRICTLY AFTER THE FREEZE BECOMES EFFECTIVE, AND NOT BEFORE 2026-09-14, WHICHEVER IS LATER -- a rule rather than a date, SO IT CANNOT DRIFT, landing as a FIELD in the declaration rather than prose SO THE START DAY FALLS OUT RATHER THAN BEING CHOSEN. A date in prose is a decision someone re-makes; a rule in a field is a decision nobody has to make twice."
   r415_I_COMPUTED_THE_OVERLAP_and_it_is_ONE_DAY_against_ZERO: "The cancellation test's declared population is 2026-09-07 through 2026-09-13, N = 7, so 09-13 IS DAY SEVEN -- THE FINAL DAY. A section 8 window starting 09-13 overlaps that population on EXACTLY ONE DAY, 09-13 itself; a window starting 09-14 overlaps it on NOTHING. So the ruling COSTS ONE DAY OF WALL-CLOCK AND BUYS A POPULATION WITH ZERO OVERLAP. One day of overlap rather than five only because the freeze landed late enough to clear 09-08 through 09-12 -- which is luck, not design, and is exactly why the rule is worth having."
   r415_ALREADY_DECIDED_IS_NOT_UNTOUCHED: "The reason for the record, in the coordinator's words and worth keeping verbatim. 09-13's verdict has been fixed since G = 2, but ALREADY DECIDED IS NOT UNTOUCHED, and section 8's population is later UNTOUCHED days. Taking 09-13 would ENTANGLE TEN PER CENT OF A TEN-DAY POPULATION WITH A CONSUMED DAY TO SAVE ONE DAY OF WALL-CLOCK -- a trade NOBODY WOULD DEFEND IF THE RESULT LATER CAME OUT MARGINAL. The test of a shortcut is not whether it is defensible now but whether it would be defensible against the worst outcome it survives into."
@@ -28864,6 +28893,50 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r416_C2_IS_STRUCTURALLY_DEAD_SETTLED_BY_A_RANGE_NOT_A_POOLED_FIGURE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "recomputed 0.2707 minus 0.1768 = 0.0939, 1 minus 0.2707 = 0.7293 and 0.95 minus 0.2707 = 0.6793, each matching the reported value."
+  r416_AND_THE_DECISIVE_RATIO_IS_GAP_OVER_SWING_NOT_GAP_OVER_LEVEL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "computed 0.6793 divided by 0.0939 = 7.23, the gap from the best observed day expressed in units of the full observed range."
+  r416_a_small_arithmetic_note_recorded_rather_than_rounded_to_agreement:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "0.95/0.2347 = 4.0477 against the reported 4.06; 0.95/0.2340 = 4.0598."
+  r416_THE_09_14_GUARD_IS_DRIVEN_AND_THE_RECORD_IS_EXTENSIBLE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the refusal name, its driven status and the three day statuses are DE's, recorded in the dispatch."
+  r416_THE_SEQUENCE_a_hypothesis_WITHDRAWN_and_RE_RAISED_recorded_as_a_sequence:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "the 00:33Z reconstruction and its result are recorded at round 410, where I seconded the conclusion; the re-raising and the referral to REV are this round's."
+  r416_I_MEASURED_THE_LEDGER_MYSELF_AND_THE_NEW_EVIDENCE_REPRODUCES:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_gaps.jsonl
+    said: "parsed every line of the ledger for window_start and recv_ns, counted distinct windows and records of each kind, and differenced the two maxima."
+  r416_SO_A_PERFECTLY_RUNNING_COLLECTOR_IS_INDISTINGUISHABLE_FROM_A_DEAD_ONE:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "the two fields' update conditions follow from the ledger's contents: 570 records carry no window_start and the five most recent are all of that kind, while recv_ns advanced 1.9 hours past the newest window."
+  r416_AND_MY_OWN_ROUND_410_ENDORSEMENT_IS_IMPLICATED:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "my round-410 flag records reading lines 424 to 430 and concluding the check is a correctly-implemented liveness proof; the ledger measurement above is the question I did not ask then."
+  r416_AND_WORSE_I_MANUFACTURED_A_REASON_FOR_IT:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "the sentence is in my round-410 flag on the liveness proof; the ledger measurement above is its direct refutation."
+  r416_THE_NAMED_EXCLUSION_recv_ns_may_be_a_worse_signal_than_it_looks:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_gaps.jsonl
+    said: "the exclusion is stated in the dispatch; my own measurement reads recv_ns at face value and does not test how it is written."
+  r416_09_11_MAY_STILL_FAIL_ON_THE_LEDGER_TERM_ALONE:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_gaps.jsonl
+    said: "recomputed the maximum window_start at 01:03Z and compared against the threshold; the interior-window term is measured elsewhere and the preflight rows are separate."
   r415_VALIDATION_STARTS_NO_EARLIER_THAN_2026_09_14_expressed_as_a_RULE:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
