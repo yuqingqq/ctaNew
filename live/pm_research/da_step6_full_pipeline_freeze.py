@@ -54,6 +54,7 @@ import json
 import re
 import subprocess
 import sys
+import time
 import tempfile
 from pathlib import Path
 
@@ -98,6 +99,7 @@ REQUIRED_FIELDS = (
     "epsilon", "status_grammar", "source_manifests", "initial_inventory",
     "tick_rounding", "latency", "fee_rule", "quote_parameters",
     "null_predicate", "success_predicate",
+    "minimum_meaningful_delta_LL",
 )
 
 
@@ -227,12 +229,26 @@ CHAIN_LINKS_PINNED = (
 #: that look like chain implementations and that no link claims.
 CHAIN_FILE_RE = r"(fair_value|fair_price|sigma_30m)"
 
+#: ADDITIONS BEYOND §7'S SENTENCE, DECLARED SO THE PIN CAN ALLOW THEM.
+#: The pin exists to stop a list shrinking quietly; it must not also stop the
+#: list GROWING for a stated reason. Each addition names who added it and why,
+#: and `assert_enumerations_intact` compares against (plan fields | additions),
+#: so an UNDECLARED addition still refuses exactly as a shrink does.
+DECLARED_ADDITIONS = {
+    "minimum_meaningful_delta_LL": (
+        "DA 297 / REVIEW 256: §8 declares a minimum SAMPLE and no minimum "
+        "EFFECT, so the exact sign test can pass on an effect of any size "
+        "above zero. Added as a REQUIRED field that is UNSET, so an absent "
+        "value and a satisfied one are distinguishable and the freeze "
+        "computes FALSE until the user supplies one."),
+}
+
 REQUIRED_FIELDS_PINNED = frozenset({
     "all_file_hashes", "commit_ref", "candidate_count", "action_key",
     "epsilon", "status_grammar", "source_manifests", "initial_inventory",
     "tick_rounding", "latency", "fee_rule", "quote_parameters",
     "null_predicate", "success_predicate",
-})
+}) | frozenset(DECLARED_ADDITIONS)
 
 #: §7's quote-mapping clauses. A probe that FAILS leaves ALL of these unmet --
 #: never zero of them, which is what an absent list used to mean.
@@ -272,10 +288,11 @@ def assert_enumerations_intact(chain=None, fields=None, clauses=None) -> dict:
     live = tuple(l for l, _ in chain)
     if live != plan["links"]:
         bad.append(f"chain links {live} != the plan's {plan['links']}")
-    if frozenset(fields) != plan["fields"]:
-        bad.append(f"required fields differ from the plan: missing "
-                   f"{sorted(plan['fields'] - frozenset(fields))}, extra "
-                   f"{sorted(frozenset(fields) - plan['fields'])}")
+    allowed = plan["fields"] | frozenset(DECLARED_ADDITIONS)
+    if frozenset(fields) != allowed:
+        bad.append(f"required fields differ from (plan | declared additions): "
+                   f"missing {sorted(allowed - frozenset(fields))}, "
+                   f"UNDECLARED extra {sorted(frozenset(fields) - allowed)}")
     # CLAUSES ARE COMPARED BY CONTENT, not by count. Swapping a clause for
     # "the seam is written in python" used to read INTACT.
     if tuple(clauses) != QUOTE_CLAUSES_CONTENT:
@@ -980,10 +997,172 @@ def unattributed_chain_files(ref: str) -> list:
     return sorted(out)
 
 
+START_DAY_FLOOR = "2026-09-14"
+
+DAYBOOK_GLOB = "data/pm_5min/derived/be_daybook_*_%s*.pkl"
+LAUNCHER_CONTROL = ("live/pm_research/declarations/"
+                    "be_launcher_btc_byte_identical_control_v1.json")
+
+SECTION_8_BAND = (
+    "observe the first 14 CONSECUTIVE CALENDAR DAYS; require the first 10 "
+    "evaluable complete BTC+ETH UTC days WITHIN THAT BAND; days that fail a "
+    "predeclared data gate remain counted with statuses; if fewer than 10 are "
+    "evaluable by day 14, verdict is INSUFFICIENT_EVIDENCE; do not extend "
+    "opportunistically.")
+
+
+def two_coin_production_ready(ref: str, root=None, control=None) -> dict:
+    """CAN THE §8 POPULATION EXIST AT ALL? (DA 299 / REVIEW 258)
+
+    THE TRAP THIS EXISTS TO CLOSE, and it is triggered by the user doing
+    exactly what we asked. `minimum_meaningful_delta_LL` is the last term
+    holding the freeze; the moment the user sets it, T_eff is that moment and
+    D1 is the next complete UTC day. But §8 says:
+
+        %s
+
+    NO ETH DAY BOOK EXISTS. So if the number is set before two-coin production
+    is actually running, the 14-day band starts BURNING against days that are
+    all COINS_INCOMPLETE, and the test self-destructs into
+    INSUFFICIENT_EVIDENCE having consumed its one band -- which the plan
+    forbids extending to recover. A one-shot, unrecoverable loss.
+
+    A WARNING IN A MESSAGE IS WHAT GETS MISSED by someone answering "what
+    number do you want?" three days from now. So it is a PREDICATE.
+
+    THESE TWO TERMS ARE A SEQUENCE, NOT INDEPENDENT GATES. The second exists
+    to protect the user from an irreversible consequence of satisfying the
+    first, so it must be satisfiable BEFORE the first is asked for -- and the
+    order matters even though `and` is commutative.
+
+    THE BTC CONTROL IS PART OF THE TERM, not decoration: an ETH book produced
+    by a launcher that cannot reproduce BTC byte-identically is a book of
+    unknown provenance, and two coins built by an unvalidated path is a worse
+    population than one coin built by a validated one.
+    """ % SECTION_8_BAND
+    # THE DATA ROOT IS DELEGATED, NEVER THIS MODULE'S GIT ROOT. `_root()`
+    # returns the repo of the file being executed, which from a seat worktree
+    # is the WORKTREE -- whose `data/` does not exist, so every glob returns
+    # zero. The positive control below caught exactly that on the first drive:
+    # btc read 0 when 53 day books were on disk, and an eth count of 0 would
+    # have been a false absence.
+    import glob as _g
+    if root is None:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import da_root as _dr
+        root = _dr.resolve_root()
+    eth = sorted(_g.glob(str(Path(root) / (DAYBOOK_GLOB % "eth"))))
+    btc = sorted(_g.glob(str(Path(root) / (DAYBOOK_GLOB % "btc"))))
+    ctrl_b = (json.dumps(control).encode() if control is not None
+              else _blob(ref, LAUNCHER_CONTROL))
+    ctrl = {"present": ctrl_b is not None}
+    if ctrl_b is not None:
+        try:
+            cd = json.loads(ctrl_b.decode())
+            ctrl.update({"passed": cd.get("btc_rebuild_byte_identical") is True,
+                         "sha256": hashlib.sha256(ctrl_b).hexdigest(),
+                         "declared_by": cd.get("seat")})
+        except Exception as e:
+            ctrl.update({"passed": False, "error": f"{type(e).__name__}: {e}"})
+    else:
+        ctrl["passed"] = False
+    ready = bool(eth) and bool(ctrl.get("passed"))
+    return {
+        "ready": ready,
+        "eth_daybooks_found": len(eth),
+        "eth_example": Path(eth[0]).name if eth else None,
+        "btc_daybooks_found": len(btc),
+        "POSITIVE_CONTROL": (
+            "the SAME glob finds %d btc day books, so an eth count of %d is a "
+            "real absence and not a broken query (runbook 7k.2)"
+            % (len(btc), len(eth))),
+        "control_query_fires": len(btc) > 0,
+        "launcher_btc_byte_identical_control": ctrl,
+        "requires": ("an ETH day book actually PRODUCED by the new launcher, "
+                     "AND that launcher's byte-identical-BTC control PASSED"),
+        "section_8_band_quoted": SECTION_8_BAND,
+        "why_this_blocks": (
+            "if the clock starts before two-coin production runs, the 14-day "
+            "band burns against COINS_INCOMPLETE days and the test ends in "
+            "INSUFFICIENT_EVIDENCE with its one band consumed"),
+        "status": "READY" if ready else "NOT_READY_CLOCK_MUST_NOT_START",
+    }
+
+
+def validation_start_day(effective: bool, floor: str = START_DAY_FLOOR) -> dict:
+    """§8'S START DAY, COMPUTED FROM A RULE AND A FLOOR -- never chosen.
+
+    RULED AT DA 298, and ruled TONIGHT precisely because tomorrow it would be
+    a choice made after seeing. REVIEW found that a freeze going effective
+    today would make §8's day one 2026-09-13 -- day SEVEN, the FINAL day, of
+    the cancellation test's DECLARED population.
+
+    THE RULE: the first complete UTC day strictly after the freeze becomes
+    effective, AND NOT BEFORE the floor, whichever is later.
+
+    WHY THE FLOOR. 09-13's verdict has been fixed since G=2, but "ALREADY
+    DECIDED" IS NOT "UNTOUCHED". Taking it would entangle 10% of a ten-day
+    population with a consumed day to save one day of wall-clock.
+
+    AND WHY NOW. It probably costs nothing -- the freeze computes FALSE on
+    other counts anyway -- and that is the reason to declare it: A RULE
+    ADOPTED WHILE IT IS FREE IS WORTH MORE THAN THE SAME RULE ADOPTED ONCE IT
+    COSTS SOMETHING. A floor set after the first day it would exclude is a
+    floor chosen by its consequence.
+    """
+    today = time.strftime("%Y-%m-%d", time.gmtime())
+    nxt = time.strftime("%Y-%m-%d", time.gmtime(time.time() + 86400))
+    if not effective:
+        start, status = None, "NOT_YET_DETERMINED_FREEZE_IS_NOT_EFFECTIVE"
+    else:
+        start = max(nxt, floor)
+        status = "DETERMINED"
+    return {
+        "rule": ("the first complete UTC day STRICTLY AFTER the freeze becomes "
+                 "effective, AND NOT BEFORE the floor, whichever is later"),
+        "floor_date": floor,
+        "floor_reason": ("2026-09-13 is day SEVEN -- the final day -- of the "
+                         "cancellation test's DECLARED population. Already "
+                         "decided is not untouched."),
+        "freeze_is_effective": effective,
+        "start_day": start, "status": status,
+        "the_day_FALLS_OUT_it_is_not_chosen": True,
+        "declared_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "declared_while_free": ("the freeze computes FALSE on other counts, so "
+                                "this floor costs nothing today; that is why "
+                                "it is declared today"),
+    }
+
+
 def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -> dict:
     if fetch:
         subprocess.run(["git", "-C", _root(), "fetch", "--quiet", "origin"], check=False)
-    enum = assert_enumerations_intact()
+    # "I CANNOT CHECK" AND "I CHECKED AND IT IS MISSING" ARE OPPOSITE FACTS
+    # WITH THE SAME SHAPE. A caller meeting PLAN_ENUMERATION_UNPARSEABLE must
+    # be able to branch on which it is: an unreadable plan is not a gap in the
+    # freeze, it is a failure to verify the freeze. Both BLOCK -- but they
+    # block for different reasons and a reader must not conflate them.
+    try:
+        enum = assert_enumerations_intact()
+        enum_check = {"status": "CHECKED", "can_verify": True,
+                      "intact": enum["intact"], "refusal": None}
+    except RuntimeError as exc:
+        msg = str(exc)
+        cannot = PLAN_PARSE_FAILED in msg
+        enum = {"intact": False, "n_chain_links": None,
+                "n_required_fields": None, "n_quote_clauses": None}
+        enum_check = {
+            "status": "CANNOT_CHECK" if cannot else "CHECKED_AND_MISMATCHED",
+            "can_verify": not cannot,
+            "intact": False, "refusal": msg[:400],
+            "meaning": ("the external pin could not be READ, so the "
+                        "enumeration is unverified -- this is NOT a finding "
+                        "that a field or link is missing"
+                        if cannot else
+                        "the enumeration was read and DOES NOT MATCH its pin "
+                        "-- this IS a finding about the freeze"),
+            "blocks_effectiveness": True,
+        }
     head = _git("rev-parse", ref).stdout.strip()
     hashes = file_hashes(ref)
     qm = quote_mapping(ref)
@@ -994,6 +1173,7 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
     im = input_manifest(ref)
     rev = rev_adjudication(ref)
     mind = minimum_meaningful_delta_ll(ref)
+    twocoin = two_coin_production_ready(ref)
 
     chain = []
     for link, paths in CHAIN:
@@ -1066,6 +1246,12 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
         # was considered and rejected because §9 has its own clock and its own
         # verification clause, but it is not frivolous.
         # ==================================================================
+        "minimum_meaningful_delta_LL": (
+            {"value": mind["value"], "units": mind.get("units"),
+             "declared_by": mind.get("declared_by"),
+             "reasoning": mind.get("reasoning"),
+             "established_by": MIN_DELTA_DECL, "sha256": mind.get("sha256")}
+            if mind["is_set"] else MISSING),
         "fee_rule": (
             {"maker_fee_bps": mf["maker_fee_bps"],
              "supporting_rule": mf["maker_fee_rule"],
@@ -1131,8 +1317,23 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
         # adjudicated by a party that does not benefit from the answer.
         "freeze_is_effective": ((not gaps) and enum["intact"]
                                 and rev["confirms_the_reading"]
-                                and mind["is_set"]),
+                                and mind["is_set"]
+                                and twocoin["ready"]),
+        "two_coin_production_ready": twocoin,
+        "THE_TWO_TERMS_ARE_A_SEQUENCE_NOT_INDEPENDENT_GATES": (
+            "`minimum_meaningful_delta_LL` is the user's to set and "
+            "`two_coin_production_ready` protects the user from an "
+            "IRREVERSIBLE consequence of setting it: once T_eff exists the "
+            "14-day band starts, and §8 forbids extending it. So the second "
+            "term must be satisfied BEFORE the first is asked for. `and` is "
+            "commutative; the sequence is not."),
+        # REQUIRED AND UNSET. It sits in `fields` so it appears in
+        # `fields_missing` and in the gap list like any other unmet §7 field --
+        # an absent required field and a satisfied one MUST be distinguishable.
         "minimum_meaningful_delta_LL": mind,
+        "validation_start_day": validation_start_day(
+            (not gaps) and enum["intact"] and rev["confirms_the_reading"]
+            and mind["is_set"] and twocoin["ready"]),
         "additions_beyond_section_7": [
             "minimum_meaningful_delta_LL -- §8 declares a minimum SAMPLE and no "
             "minimum EFFECT, so the sign test can pass on an effect of any size "
@@ -1147,6 +1348,7 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
             "how few gaps remain."),
         "enumeration": enum,
         "enumeration_intact": enum["intact"],
+        "enumeration_check": enum_check,
         "why_not_effective": None,          # filled below, from the same list
         "WHAT_freeze_is_effective_MEANS": (
             "TRUE only when every §7 field resolves and every chain link has an "
@@ -1333,20 +1535,64 @@ def falsify() -> int:
     ck("minimum_meaningful_delta_LL is UNSET and BLOCKING",
        md["is_set"] is False and md["status"] == "UNSET_AND_BLOCKING",
        md["status"])
-    ck("...and UNSET alone makes the freeze ineffective, gaps or no gaps",
-       (d["n_blocking_gaps"] == 0) and d["freeze_is_effective"] is False)
+    ck("...and UNSET shows up AS A GAP, so absent and satisfied differ",
+       "minimum_meaningful_delta_LL" in d["fields_missing"]
+       and "minimum_meaningful_delta_LL" in d["blocking_gaps"]
+       and d["freeze_is_effective"] is False,
+       f"missing={d['fields_missing']}")
     ck("...the value is NOT chosen by this seat -- it reads a USER artifact",
        md["path"].startswith("live/pm_research/declarations/user_")
        and "USER" in md["owner"])
     ck("the addition beyond §7 is DECLARED, not smuggled",
        any("minimum_meaningful_delta_LL" in x
            for x in d["additions_beyond_section_7"]))
-    ck("...and REQUIRED_FIELDS is UNCHANGED, so the plan pin still holds",
-       d["enumeration_intact"] is True and len(REQUIRED_FIELDS) == 14,
-       f"{len(REQUIRED_FIELDS)} §7 fields, pin intact")
+    ck("...the pin ALLOWS a declared addition and still refuses an undeclared one",
+       d["enumeration_intact"] is True
+       and len(REQUIRED_FIELDS) == 14 + len(DECLARED_ADDITIONS),
+       f"{len(REQUIRED_FIELDS)} = 14 §7 fields + "
+       f"{len(DECLARED_ADDITIONS)} declared addition(s)")
+    try:
+        assert_enumerations_intact(fields=tuple(REQUIRED_FIELDS) + ("smuggled_in",))
+        _fired = False
+    except RuntimeError:
+        _fired = True
+    ck("NEGATIVE CONTROL: an UNDECLARED extra field still REFUSES", _fired)
     ck("REV 256's M=2 caveat is transcribed with C2 EXEMPT",
        "ONE book" in d["fields"]["candidate_count"]["M_IS_TWO_FOREVER_CAVEAT"]
        and "C2 IS EXPLICITLY EXEMPT" in d["fields"]["candidate_count"]["M_IS_TWO_FOREVER_CAVEAT"])
+    # ---- DA 299: the clock cannot start before the population can exist ----
+    tc = d["two_coin_production_ready"]
+    ck("POSITIVE CONTROL: the day-book glob finds BTC, so the query fires",
+       tc["control_query_fires"] and tc["btc_daybooks_found"] > 0,
+       f"{tc['btc_daybooks_found']} btc day books")
+    ck("with NO eth day book the term is FALSE and the freeze REFUSES",
+       tc["ready"] is False and tc["eth_daybooks_found"] == 0
+       and d["freeze_is_effective"] is False, tc["status"])
+    import tempfile as _tf
+    _fake = _tf.mkdtemp(prefix="da299_")
+    _dd = Path(_fake) / "data" / "pm_5min" / "derived"
+    _dd.mkdir(parents=True)
+    (_dd / "be_daybook_20260914_eth__L250ms.pkl").write_bytes(b"x")
+    (_dd / "be_daybook_20260914_btc__L250ms.pkl").write_bytes(b"x")
+    _t2 = two_coin_production_ready(
+        REF, root=_fake, control={"btc_rebuild_byte_identical": True, "seat": "BE"})
+    ck("DRIVEN: an eth book PLUS a passed BTC control makes the term TRUE",
+       _t2["ready"] is True and _t2["eth_daybooks_found"] == 1, _t2["status"])
+    _t3 = two_coin_production_ready(
+        REF, root=_fake, control={"btc_rebuild_byte_identical": False})
+    ck("...but an eth book with a FAILED BTC control is still FALSE",
+       _t3["ready"] is False,
+       "a book from a launcher that cannot reproduce BTC is unknown provenance")
+    _t4 = two_coin_production_ready(REF, root=_fake, control=None)
+    ck("...and an eth book with NO control artifact is FALSE, not assumed",
+       _t4["ready"] is False)
+    import shutil as _sh
+    _sh.rmtree(_fake, ignore_errors=True)
+    ck("the §8 band is quoted IN-BAND as the rationale",
+       "do not extend" in tc["section_8_band_quoted"].lower()
+       and "14" in tc["section_8_band_quoted"])
+    ck("the two terms are recorded as a SEQUENCE, not independent gates",
+       "IRREVERSIBLE" in d["THE_TWO_TERMS_ARE_A_SEQUENCE_NOT_INDEPENDENT_GATES"])
     ck("a MISSING field can never read as present",
        all(d["fields"][f] == MISSING for f in d["fields_missing"]))
     print(f"\n  {'DRAFT CELLS PASS' if not bad else str(bad) + ' FAILED'}")

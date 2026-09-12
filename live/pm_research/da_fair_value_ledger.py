@@ -775,6 +775,48 @@ def assert_output_fields_present(out: dict) -> dict:
 
 UNPROBED = "PROPERTIES_NOT_PROBED"
 
+CANNOT_COMPUTE = "CANNOT_COMPUTE_SCORE_PERMISSION"
+
+
+def score_permission(gates_satisfied, n_gates, step6) -> dict:
+    """A GATE ON A LABELLED SCORE MUST NEVER BE `None`. (DA 298)
+
+    This is the two-fields-one-bit failure in a third costume: not a WRONG
+    value but a value that is NEITHER -- and nobody may read an absence as
+    permission. `None` is falsey in Python and truthy to a careless reader,
+    and a key that is simply absent yields `None` from `.get()` without any
+    error at all, which is how a caller reading the wrong artifact could come
+    to believe a labelled score was permitted.
+
+    SO: the answer is ALWAYS a bool, it FAILS CLOSED, and when it cannot be
+    computed it SAYS SO in a companion status rather than going quiet. A
+    refusal is not returned as a string in the boolean's place, because a
+    non-empty string is TRUTHY and that would be the same bug wearing a
+    warning label.
+    """
+    problems = []
+    if not isinstance(gates_satisfied, int) or isinstance(gates_satisfied, bool):
+        problems.append(f"gates_satisfied is {gates_satisfied!r}, not an int")
+    if not isinstance(n_gates, int) or n_gates <= 0:
+        problems.append(f"n_gates is {n_gates!r}")
+    if not isinstance(step6, dict):
+        problems.append(f"step6 is {type(step6).__name__}, not a dict")
+    elif not isinstance(step6.get("satisfied"), bool):
+        problems.append(f"step6['satisfied'] is {step6.get('satisfied')!r}, "
+                        f"not a bool")
+    if problems:
+        return {"permitted": False, "status": CANNOT_COMPUTE,
+                "why": "; ".join(problems),
+                "reading": ("the inputs to this predicate were unavailable or "
+                            "the wrong type. It FAILS CLOSED: not permitted, "
+                            "and the reason is stated rather than left as an "
+                            "absence a reader could mistake for permission."),
+                "computed": False}
+    ok = (gates_satisfied >= n_gates) and step6["satisfied"] is True
+    return {"permitted": bool(ok), "status": "COMPUTED", "computed": True,
+            "why": (f"gates_satisfied {gates_satisfied}/{n_gates}; "
+                    f"step 6 satisfied {step6['satisfied']}")}
+
 
 def row_status(present_on, beh, props) -> str:
     """THE STATUS DECISION, as one testable function.
@@ -888,6 +930,7 @@ def build(fetch: bool = True, drive: bool = True, ref: str = EXECUTING_REFS[0]) 
             "status": status,
         })
     step6 = step11_step6_freeze()
+    _perm = score_permission(satisfied, N_GATES, step6)
     if wt:
         _git("worktree", "remove", "--force", wt)
         shutil.rmtree(wt, ignore_errors=True)
@@ -911,7 +954,10 @@ def build(fetch: bool = True, drive: bool = True, ref: str = EXECUTING_REFS[0]) 
             "evidence -- see `step11_step6_freeze` and "
             "`score_is_evidence_permitted` below.",
         "step11_step6_freeze": step6,
-        "score_is_evidence_permitted": (satisfied >= N_GATES) and step6["satisfied"],
+        # ALWAYS A BOOL, NEVER None, FAIL-CLOSED (DA 298).
+        "score_is_evidence_permitted": _perm["permitted"],
+        "score_is_evidence_permitted_status": _perm["status"],
+        "score_is_evidence_permitted_why": _perm["why"],
         "WHY_TWO_PREDICATES":
             "with all six build gates green the §5 barrier is down, and §11's "
             "sentence 'No fair-value score is evidence before step 6' is still "
@@ -1066,6 +1112,27 @@ def falsify() -> int:
        (led["step11_step6_freeze"]["satisfied"] is False),
        f"exists={led['step11_step6_freeze']['a_declaration_exists']} "
        f"satisfied={led['step11_step6_freeze']['satisfied']}")
+    ck("score_is_evidence_permitted is a BOOL, never None",
+       isinstance(led["score_is_evidence_permitted"], bool),
+       f"{led['score_is_evidence_permitted']!r} "
+       f"({type(led['score_is_evidence_permitted']).__name__})")
+    ck("...and it carries a STATUS saying whether it could be computed",
+       led["score_is_evidence_permitted_status"] in ("COMPUTED", CANNOT_COMPUTE))
+    for _bad, _lbl in ((None, "gates_satisfied is None"),
+                       ("6", "gates_satisfied is a string")):
+        _r = score_permission(_bad, N_GATES, {"satisfied": True})
+        ck(f"NEGATIVE CONTROL: {_lbl} -> refusal, FALSE, never None",
+           _r["permitted"] is False and _r["status"] == CANNOT_COMPUTE
+           and isinstance(_r["permitted"], bool), _r["status"])
+    _r = score_permission(6, N_GATES, {"satisfied": None})
+    ck("NEGATIVE CONTROL: step6['satisfied'] is None -> refusal, not silence",
+       _r["permitted"] is False and _r["status"] == CANNOT_COMPUTE
+       and "not a bool" in _r["why"])
+    _r = score_permission(6, N_GATES, {})
+    ck("NEGATIVE CONTROL: step6 missing its key -> refusal, never None",
+       _r["permitted"] is False and _r["status"] == CANNOT_COMPUTE)
+    ck("POSITIVE CONTROL: a well-formed permitted state still computes True",
+       score_permission(N_GATES, N_GATES, {"satisfied": True})["permitted"] is True)
     ck("a freeze declaration that is NOT effective does NOT satisfy step 6",
        not (led["step11_step6_freeze"]["a_declaration_exists"]
             and led["step11_step6_freeze"]["satisfied"]
