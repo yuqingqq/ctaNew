@@ -63,11 +63,14 @@
     "THESE_ARE_OBSERVATIONS_OF_A_REFUSED_RUN": "a refused run's wall-clock and peak are not the stage's COST; the book stage's cost is NOT MEASURED and must stay labelled so"
   },
   "MECHANISM": {
-    "claim": "peak RSS is set by the largest in-memory structure -- the day's WINDOW INDEX -- and both coins have exactly 288 windows. Volume scales with the coin; the index does not.",
-    "explains": "output bytes scale ~0.66 while peak barely moves; wall-clock sits between them because it is driven partly by volume and partly by per-window work",
-    "reported_peak_ratio": 0.97,
+    "STATUS": "HYPOTHESIS -- NOT ESTABLISHED",
+    "hypothesis": "peak RSS may be set by the largest in-memory structure, the day's window index, which is 288 windows for both coins. If so, volume scales with the coin and the index does not.",
+    "evidence_base": "ONE day of ONE coin pair (09-05, eth vs btc). One prediction is not evidence.",
+    "proposed_by": "the coordinator. BE, which took the measurement, DECLINED to propose it for exactly this reason -- and BE's restraint is the correct read, not a gap.",
+    "would_explain": "output bytes scaling ~0.66 while peak barely moves, with wall-clock between them",
     "FALSIFIER": "a coin or day with a DIFFERENT window count must break it: if peak still fails to scale when the index size changes, the index is not what sets the peak",
-    "why_the_mechanism_matters_more_than_the_numbers": "three ratios are a curiosity; a constant index PREDICTS the next case, which is what a fourteen-night plan needs"
+    "WHAT_DEPENDS_ON_IT": "NOTHING in this artifact. The do-not-overlap decision rests on the MEASUREMENT -- 11.92 GiB of peak against a 12 GiB soft limit, 0.7% headroom, single observations -- and would stand unchanged if the mechanism were refuted tomorrow.",
+    "why_it_is_carried_at_all": "a mechanism predicts the next case, which a fourteen-night plan needs; carrying it as a HYPOTHESIS with its falsifier costs nothing, and carrying it as a finding would put weight on one day"
   },
   "THE_CONCLUSION_HOLDS_WITHOUT_THE_BOOK_STAGE": "the overlap verdict is decided by the TAPE stage peaks, which are measured. The book stage refused and is not measured, and the verdict does not depend on it -- a conclusion that survives a missing input is not provisional."
 }

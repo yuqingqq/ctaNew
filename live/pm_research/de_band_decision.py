@@ -1360,9 +1360,15 @@ def falsify() -> int:
        and ov["per_stage"]["book"]["verdict"] == "UNRESOLVED",
        "a stage with no peak is unresolved, not assumed")
     mech = bc["MECHANISM"]
-    ck("the MECHANISM travels beside the numbers and is FALSIFIABLE",
-       bool(mech.get("claim")) and bool(mech.get("FALSIFIER")),
-       "a coin or day with a different window count must break it")
+    ck("the MECHANISM is carried as a HYPOTHESIS, not as a finding",
+       mech.get("STATUS", "").startswith("HYPOTHESIS")
+       and bool(mech.get("evidence_base"))
+       and bool(mech.get("FALSIFIER")),
+       "one day of one coin pair -- one prediction is not evidence")
+    ck("  and NOTHING in the artifact depends on it",
+       bool(mech.get("WHAT_DEPENDS_ON_IT")),
+       "the do-not-overlap decision rests on the measurement and the "
+       "0.7% headroom, and stands if the mechanism is refuted")
     ck("the conclusion is stated as holding WITHOUT the book stage",
        bool(bc["THE_CONCLUSION_HOLDS_WITHOUT_THE_BOOK_STAGE"]))
     ck("  and the refused book run is NOT counted as the stage's cost",
