@@ -67,6 +67,27 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T00:41:33Z (MEM ROUND 411 -- NO ETH DAY BOOK EXISTS, AND IT BLOCKS THE SECTION 8 CLOCK MORE
+  FUNDAMENTALLY THAN THE FEE OR THE FREEZE EVER DID. I counted with controls: 26 day books
+  on disk, TWENTY-SIX BTC, ZERO ETH, zero non-btc tokens of any kind, days 09-03 through
+  09-11 -- nine, not eight, since 09-11's landed. The plan wants the first 10 evaluable
+  COMPLETE BTC+ETH days with each coin EQUALLY WEIGHTED, so EVERY REAL DAY IS
+  COINS_INCOMPLETE as declared. IT IS A DATA BLOCKER, NOT A CODE ONE -- the fee and the
+  freeze were definitions; this is an ABSENT HALF OF THE POPULATION. And synthetic data
+  could never have produced it: a fixture supplies whatever coins it is asked for. BE's
+  three facts diverge enormously -- buildable at the code (filenames are SUGGESTIVE BUT
+  NOT PROOF), data exists or is an unrecoverable collection gap, and cost per day: ONE IS
+  A NIGHT OF BUILDING, THE OTHER MEANS THE POPULATION CAN ONLY EVER BE FORWARD-LOOKING.
+  C2 COVERS 0.234 AGAINST A 95 PER CENT GATE AND THE REASON IS STRUCTURAL: it needs a
+  second to form an opinion and MOST GENERATIONS LIVE UNDER A SECOND -- a challenger whose
+  TIME RESOLUTION IS COARSER THAN THE DECISION RATE cannot cover the decisions, so it
+  cannot approach 95 per cent ON ANY DAY EVER. FIXING EITHER IS FORBIDDEN, and worse here
+  than for BE's threshold because C2 sits in a FROZEN CLOSED FAMILY at m = 2 forever:
+  re-specifying a member changes WHICH CANDIDATES THE TEST IS ABOUT while keeping the
+  multiplicity declared for the originals. The plumbing numbers reproduce exactly -- 1 of
+  8 gives 2*9/256 = 0.0703125, and 0.2891 is 2*37/256, the TWO-of-eight rung -- and they
+  are PLUMBING, NOT EVIDENCE, carried as A FIELD IN THE SAME BLOCK rather than a caveat in
+  a message. Tip 8593491.)
   2026-09-12T00:35:39Z (MEM ROUND 410 -- 09-11 IS SHOWN BUT NOT COUNTED, AND THE REASON WAS CORRECTED FROM
   PROCEDURE TO VALIDITY. Stage 0 fails it on MANY_MISSING_WINDOWS(4) against <= 1, where
   the four built days scored 0, 0, 0 and 1. The first reason given was rule 11 -- moving a
@@ -106,6 +127,7 @@ updated: >-
   before a day is consumed. And C1 reads the SAME book event as Identity -- the code says
   so twice, unprompted -- so m=2 counts as two what may be one-and-a-bit; m is NOT changed
   because shrinking it after the fact is selection on the outcome. Tip f478a49.)
+previous_updates: >-
   2026-09-12T00:24:52Z (MEM ROUND 408 -- SIX TIMERS RUN ON THIS MACHINE AND THEY BLOCK THE SECTION 8 CLOCK.
   A TIMER THAT EVALUATES OR MEASURES A DAY CONSUMES IT, and NO REVIEW OF WHAT ANY SEAT DID
   WILL EVER FIND IT BECAUSE NO SEAT DID IT. THIS IS A RECURRENCE -- the same lesson is on
@@ -124,7 +146,6 @@ updated: >-
   Both pipeline timers are Persistent=yes, so DISABLING DEFERS RATHER THAN SKIPS and
   fencing must MASK. UNKNOWN is treated as a CONSUMER: absence of evidence is not a
   producer. Tip e414b9e.)
-previous_updates: >-
   2026-09-12T00:19:56Z (MEM ROUND 407 -- DA WITHDREW THE QUALIFIED ZERO BEFORE IT LANDED, verified:
   maker_fee_bps None, maker_fee_rule None, established.maker_fee_rule False, sensitivity
   fields absent. So the ordering hazard I flagged at 405 resolved by DA REMOVING THE
@@ -792,6 +813,15 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r411_NO_ETH_DAY_BOOK_EXISTS_AND_I_COUNTED_IT_WITH_CONTROLS: "Twenty-six day books on disk. TWENTY-SIX ARE BTC. ZERO ARE ETH, and zero carry any non-btc coin token at all. Controls ran first: the pattern finds 26 books so it can speak, and an impossible coin token returns 0. The days present are 09-03 through 09-11 -- NINE, not the eight in the dispatch, because 09-11's book has landed since it was written. This was found by running the section 8 path on REAL books rather than synthetic ones, and SYNTHETIC DATA COULD NEVER HAVE PRODUCED IT: a fixture supplies whatever coins it is asked for."
+  r411_SO_EVERY_REAL_DAY_IS_COINS_INCOMPLETE_AND_IT_IS_A_DATA_BLOCKER: "The plan requires the first 10 evaluable COMPLETE BTC+ETH UTC days and scores a BTC+ETH portfolio day with EACH COIN EQUALLY WEIGHTED. With no ETH book for any day, EVERY REAL DAY IS COINS_INCOMPLETE AS DECLARED, and the clock cannot start on btc-only books. That is a DATA blocker and not a code one -- nothing in the scorer, the seams or the freeze can be fixed to make it go away, which is why it blocks the section 8 clock more fundamentally than the fee or the freeze ever did. Those two were definitions and declarations; this is an absent half of the population."
+  r411_THE_THREE_FACTS_BE_IS_ESTABLISHING_AND_WHY_THEY_DIVERGE_ENORMOUSLY: "Before anything is built: (i) whether an ETH day book is BUILDABLE with the current pipeline at all, CHECKED AT THE CODE -- because every book being named ..._btc__L250ms__FWD1.pkl is SUGGESTIVE BUT NOT PROOF, which is the right standard and the one I would have been tempted to skip; (ii) whether the underlying ETH DATA EXISTS for those days, or whether this is a collection gap that CAN NEVER BE RETRO-COLLECTED; (iii) what one ETH day costs in wall-clock, peak memory and lock time. THE ANSWERS DIVERGE ENORMOUSLY: one is a night of building, the other means THE SECTION 8 POPULATION CAN ONLY EVER BE FORWARD-LOOKING."
+  r411_C2_COVERS_0_234_AGAINST_A_95_PERCENT_GATE_AND_THE_REASON_IS_STRUCTURAL: "Coverage as measured: C1 btc 1.000 PASS, eth None FAIL, conjunction FAILS; C2 btc 0.234 FAIL, eth None FAIL. And C2's number is not a tuning gap. C2 is bn_bookticker_mid bound to s60_probability_v1, IT NEEDS A SECOND TO FORM AN OPINION, AND MOST GENERATIONS LIVE UNDER A SECOND. A CHALLENGER WHOSE TIME RESOLUTION IS COARSER THAN THE DECISION RATE CANNOT COVER THE DECISIONS -- it is a mismatch between the candidate's clock and the estimand's clock. On these numbers C2 cannot approach 95 per cent ON ANY DAY EVER."
+  r411_FIXING_EITHER_IS_FORBIDDEN_AND_IT_IS_WORSE_HERE_THAN_FOR_BEs_THRESHOLD: "Loosening the 95 per cent gate or re-specifying C2's window AFTER SEEING 23.4 per cent is choosing after seeing -- the same thing refused for BE's interior-window threshold two rounds ago. AND IT IS WORSE HERE, because C2 sits in a FROZEN CLOSED FAMILY WITH m = 2 FOREVER: re-specifying a member of a closed family is not adjusting a parameter, it is changing WHICH CANDIDATES THE TEST IS ABOUT while keeping the multiplicity that was declared for the originals. Both facts are to be recorded as COMPUTED FIELDS WITH THE ARITHMETIC SHOWN, NEVER REPAIRED."
+  r411_THE_PLUMBING_NUMBERS_REPRODUCE_EXACTLY_AND_THEY_ARE_NOT_EVIDENCE: "I recomputed both from the design rather than reading them. C1 p 0.0703: one of eight days positive gives a two-sided tail of 2*9/256 = 0.0703125 -- exact. C2 p 0.2891: that is 2*37/256 = 0.2890625, THE TWO-OF-EIGHT RUNG, so C2 had two positive days. Holm at m = 2, both STOP_FOR_FUTILITY. AND THEY ARE PLUMBING, NOT EVIDENCE: the days are SPENT, Identity is a PROXY, and the candidates ESTIMATE NOTHING. Recomputing them is worth doing precisely because a number that reproduces is the kind a later reader will trust."
+  r411_THE_CAVEAT_IS_A_FIELD_IN_THE_SAME_BLOCK_AND_THAT_IS_THE_WHOLE_POINT: "DE carried the plumbing-not-evidence sentence AS A FIELD IN THE SAME BLOCK as the numbers, rather than as a caveat in a message. THAT IS THE DIFFERENCE BETWEEN A NUMBER A LATER READER CAN MISUSE AND ONE THEY CANNOT: a message is read once by one person, and a field travels with the value into every reader, every parser and every quotation of it. This programme has spent the night correcting numbers that travelled without their qualifications -- a byte length, a status label, a median blind to its own upper tier -- and every one of them would have been safe in this construction."
+  r411_A_NOTE_FOR_DE_the_unclamped_two_sided_formula_exceeds_1_at_the_centre: "Found while recomputing the ladder, offered as an observation rather than a defect since I have not read the scorer. The unclamped two-sided sign-test expression 2 * tail(max(k, N-k)) EXCEEDS 1 AT THE CENTRE: 1.2734 at four of eight, and 1.2461 at five of ten -- the section 8 design's own N. The standard fix is min(1, 2*tail). Worth confirming DE clamps, because a p greater than 1 has twice been the tell in this programme, most recently the 1.078 from the 69-fold product."
+  r411_THE_OPEN_QUESTION_THAT_DECIDES_WHETHER_C2_IS_DEAD_OR_MERELY_NARROW: "IS THE SUB-ONE-SECOND SHARE STABLE ACROSS DAYS AND COINS, OR IS 09-03..09-10 UNREPRESENTATIVE? If stable, C2 is structurally dead and the closed family is effectively a family of one, which the m = 2 caveat from round 409 then compounds. If the window is unrepresentative, C2 is narrow rather than dead. The question is answerable from collected data WITHOUT consuming a validation day, which puts it in the same class as REV's Identity-artifact measurement: a validity question that can be settled before the clock rather than after."
   r410_09_11_IS_RULED_SHOWN_BUT_NOT_COUNTED: "Stage 0 fails 09-11 on MANY_MISSING_WINDOWS(4) against a threshold of <= 1, where the four built days scored 0, 0, 0 and 1. The ruling: if the count holds at 02:00Z, BE builds 09-11 IN FULL and records ADMISSIBLE false with the status, n_missing_interior_windows 4, the threshold, and the gap-window comparison -- 66 for 09-11 against 39, 47, 51 and 52 -- carried IN THE RECORD beside the D values. Descriptive only, G stays at 4, no tally, threshold untouched. AND NO SUBSTITUTION: the verdict has been fixed since G=2, so 09-11 is not a slot needing filling and 09-12 and 09-13 are not replacements."
   r410_THE_REASON_WAS_CORRECTED_FROM_PROCEDURE_TO_VALIDITY_and_that_is_the_finding: "The first reason given for refusing to relax the threshold was rule 11 -- moving be_build_preflight.py:360 after seeing that 09-11 scores 4 is choosing after seeing. True, and it was CORRECTED to the primary reason: VALIDITY. Four missing interior windows means the reference-generation population is INCOMPLETE, so any D computed on it is WRONG IN AN UNKNOWN DIRECTION rather than merely noisier. AND ONCE THE REASON IS VALIDITY RATHER THAN PROCEDURE, THE GOALS STOP COMPETING: a day can be SHOWN without being COUNTED. A procedural reason forces a choice between honesty and completeness; a validity reason dissolves it."
   r410_THE_NEAR_MISS_a_guard_that_blocks_you_is_the_one_you_are_least_equipped_to_judge: "A false defect was nearly filed against the guard that was doing the blocking. The preflight's gap-ledger check reads max(window_start) with WINDOW_S 300, and gap windows are SPARSE -- emitted only on gaps, at irregular 300 to 2400 second spacings -- so it LOOKED like the check conflates no-gap-near-day-end with ledger-stopped, meaning a CLEANER day would fail more easily. A real-sounding defect, and CONVENIENTLY ONE THAT WOULD HAVE UNBLOCKED THE DAY BEING SOUGHT. It was stopped by reconstructing the predicate against THE FOUR DAYS THAT HAD ALREADY PASSED: the reconstruction said all five fail, including those four, so the reading was wrong. THE RULE: A GUARD THAT BLOCKS THE THING YOU WANT IS THE GUARD YOU ARE LEAST EQUIPPED TO JUDGE -- reconstruct it against cases that already passed before calling it broken."
@@ -28718,6 +28748,42 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r411_NO_ETH_DAY_BOOK_EXISTS_AND_I_COUNTED_IT_WITH_CONTROLS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    said: "find over data/pm_5min/derived for be_daybook_*.pkl gave 26; the same pattern restricted to _btc gave 26 and to _eth gave 0; a grep -vc for _btc over the filenames returned 0."
+  r411_SO_EVERY_REAL_DAY_IS_COINS_INCOMPLETE_AND_IT_IS_A_DATA_BLOCKER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "the BTC+ETH scope and the equal-weighting of the portfolio day are the frozen plan's own; the absent ETH books are the count above."
+  r411_THE_THREE_FACTS_BE_IS_ESTABLISHING_AND_WHY_THEY_DIVERGE_ENORMOUSLY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    said: "the three questions are BE's brief; the naming observation is checkable and I confirmed it -- all 26 filenames carry _btc and none carries another coin."
+  r411_C2_COVERS_0_234_AGAINST_A_95_PERCENT_GATE_AND_THE_REASON_IS_STRUCTURAL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "the coverage figures are DE's from the real-book run; the mechanism follows from C2's binding to a one-second probability and the generation rate."
+  r411_FIXING_EITHER_IS_FORBIDDEN_AND_IT_IS_WORSE_HERE_THAN_FOR_BEs_THRESHOLD:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "the closed-family and m = 2 forever clauses are section 4's; the parallel refusal for BE's threshold is at be_build_preflight.py's interior-window row, recorded at round 410."
+  r411_THE_PLUMBING_NUMBERS_REPRODUCE_EXACTLY_AND_THEY_ARE_NOT_EVIDENCE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "computed the two-sided sign-test ladder over 2^8 with math.comb: 0.0078125, 0.0703125, 0.2890625, 0.7265625, and matched both reported values to their rungs."
+  r411_THE_CAVEAT_IS_A_FIELD_IN_THE_SAME_BLOCK_AND_THAT_IS_THE_WHOLE_POINT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the construction is DE's; the failures it would have prevented are the ones recorded at rounds 400, 405 and 406 in this same file."
+  r411_A_NOTE_FOR_DE_the_unclamped_two_sided_formula_exceeds_1_at_the_centre:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "computed the unclamped values for every k at N = 8 and N = 10 and listed those above 1: exactly one at each N, both at the centre."
+  r411_THE_OPEN_QUESTION_THAT_DECIDES_WHETHER_C2_IS_DEAD_OR_MERELY_NARROW:
+    prov: CHECKED
+    artifact: data/pm_5min/derived
+    said: "the question is the coordinator's; its answerability without a validation day follows from the generation timestamps already being on disk for the built days."
   r410_09_11_IS_RULED_SHOWN_BUT_NOT_COUNTED:
     prov: CHECKED
     artifact: live/pm_research/be_build_preflight.py
