@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T00:55:43Z (MEM ROUND 414 -- THE TWO-COIN CLAUSE IS IN THE PLAN THREE TIMES AND I READ ALL
+  THREE. Lines 91-93: PER-COIN TABLES ARE DIAGNOSTICS AND CANNOT AUTHORIZE A COIN-SPECIFIC
+  DEPLOYMENT; a coin-specific decision requires A NEW FAMILY AND NEW MULTIPLICITY
+  ARITHMETIC. Line 43 says a composition is a new family; line 403 says a changed
+  candidate is VOIDED into a new family/clock, never amended in place. THE PLAN
+  ANTICIPATED THIS EXACT SHORTCUT AND FORBADE IT IN THREE SECTIONS: start-with-btc-and-
+  add-eth-later is NOT a reduced plan, it is a different family with an undeclared m.
+  AND READING SECTION 8 I FOUND THE CLAUSE THAT MAKES IT BITE, which nobody had recorded:
+  a HARD 14-DAY BAND -- observe 14 consecutive calendar days, require the first 10
+  evaluable BTC+ETH days WITHIN IT, DAYS THAT FAIL A DATA GATE REMAIN COUNTED, and fewer
+  than 10 by day 14 is INSUFFICIENT_EVIDENCE with DO NOT EXTEND OPPORTUNISTICALLY. So
+  there are AT MOST FOUR SPARE DAYS, an unready day BURNS ONE OF THE FOURTEEN WITHOUT
+  CONTRIBUTING TO THE TEN, and the fifth forces INSUFFICIENT_EVIDENCE. THE CLOCK CANNOT BE
+  STARTED AND CAUGHT UP -- which turns the nightly two-coin build from a SCHEDULING
+  question into a PRECONDITION. Day eligibility is CANDIDATE-BLIND, so the clause that
+  prevents cheating is the same one that prevents rescue. The plan already carries a STOP
+  C2 rule but it is ADJACENT, not an answer -- C2's is a COVERAGE failure, not a
+  point-in-time one. ETH cost is to be MEASURED on a real 09-05 day, not converted from a
+  0.32x ratio. Tip 4864080.)
   2026-09-12T00:52:32Z (MEM ROUND 413 -- REVIEW 256 INVERTS THE QUESTION AND C1 IS NOT ARITHMETICALLY DEAD.
   The perfect-foresight ceiling is mean 0.0745 nats over 4,973,558 states, p90 0.1335,
   max 0.6931 -- capped at ln 2 = 0.693147. I DERIVED THE INSTRUMENT rather than accept it:
@@ -108,6 +127,7 @@ updated: >-
   producing a positive result for someone else. And DA turned a procedural guard into a
   third condition INSIDE the predicate: A PROCEDURE I HAVE TO REMEMBER IS ONE I CAN
   FORGET. Tip 845d780.)
+previous_updates: >-
   2026-09-12T00:41:33Z (MEM ROUND 411 -- NO ETH DAY BOOK EXISTS, AND IT BLOCKS THE SECTION 8 CLOCK MORE
   FUNDAMENTALLY THAN THE FEE OR THE FREEZE EVER DID. I counted with controls: 26 day books
   on disk, TWENTY-SIX BTC, ZERO ETH, zero non-btc tokens of any kind, days 09-03 through
@@ -129,7 +149,6 @@ updated: >-
   8 gives 2*9/256 = 0.0703125, and 0.2891 is 2*37/256, the TWO-of-eight rung -- and they
   are PLUMBING, NOT EVIDENCE, carried as A FIELD IN THE SAME BLOCK rather than a caveat in
   a message. Tip 8593491.)
-previous_updates: >-
   2026-09-12T00:35:39Z (MEM ROUND 410 -- 09-11 IS SHOWN BUT NOT COUNTED, AND THE REASON WAS CORRECTED FROM
   PROCEDURE TO VALIDITY. Stage 0 fails it on MANY_MISSING_WINDOWS(4) against <= 1, where
   the four built days scored 0, 0, 0 and 1. The first reason given was rule 11 -- moving a
@@ -854,6 +873,15 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r414_THE_CLAUSE_IS_IN_THE_PLAN_THREE_TIMES_and_I_read_all_three: "Verified at the text rather than relayed, which is the round's own discipline turned on the round. Lines 91-93: the primary unit is the combined BTC+ETH UTC day, PER-COIN TABLES ARE DIAGNOSTICS AND CANNOT AUTHORIZE A COIN-SPECIFIC DEPLOYMENT, A COIN-SPECIFIC DECISION REQUIRES A NEW FAMILY AND NEW MULTIPLICITY ARITHMETIC. Line 43: a later fair-value times harmful-flow composition IS A NEW EXPERIMENT AND A NEW MULTIPLICITY FAMILY. Line 403: a candidate changed after a labelled score is VOIDED and starts A NEW FAMILY/CLOCK, NEVER AMENDED IN PLACE. THE PLAN ANTICIPATED THIS EXACT SHORTCUT AND FORBADE IT IN THREE SECTIONS."
+  r414_RUNNING_SECTION_8_ON_BTC_ALONE_IS_A_DIFFERENT_FAMILY_NOT_A_REDUCED_PLAN: "The closed door and its reason, recorded because it is EXACTLY THE KIND OF SHORTCUT SOMEONE REACHES FOR AT DAY ONE WHEN THE BOOKS ARE NOT READY. Start with btc and add eth later is not available without A NEW FREEZE AND A NEW m: a btc-only run is not a smaller version of the declared test, it is a different family whose multiplicity has never been declared. ETH IS LOAD-BEARING, which makes BE's MEASURED cost for one ETH day the number that decides how long the whole section 8 programme takes."
+  r414_AND_I_FOUND_THE_CLAUSE_THAT_MAKES_THE_CLOSED_DOOR_BITE: "Reading section 8 for the two-coin requirement I found the accrual rule, which nobody has recorded and which changes what the ETH blocker COSTS. It is a HARD 14-DAY BAND: observe the first 14 CONSECUTIVE CALENDAR DAYS; require the first 10 evaluable complete BTC+ETH UTC days WITHIN THAT BAND; DAYS THAT FAIL A PREDECLARED DATA GATE REMAIN COUNTED WITH STATUSES; and IF FEWER THAN 10 ARE EVALUABLE BY DAY 14 THE VERDICT IS INSUFFICIENT_EVIDENCE, DO NOT EXTEND OPPORTUNISTICALLY. So the band has AT MOST FOUR SPARE DAYS and the escape hatch is explicitly closed."
+  r414_SO_AN_UNREADY_DAY_BURNS_A_SLOT_AND_ETH_MUST_PRODUCE_BEFORE_DAY_ONE: "The consequence follows from two clauses read together. A day with no ETH book is COINS_INCOMPLETE, and days that fail a predeclared data gate REMAIN COUNTED. So an unready day CONSUMES ONE OF THE FOURTEEN WITHOUT CONTRIBUTING TO THE TEN, and the FIFTH unready day forces INSUFFICIENT_EVIDENCE. THE CLOCK CANNOT BE STARTED AND CAUGHT UP. That converts the nightly two-coin build from a SCHEDULING question into a PRECONDITION: the two-coin pipeline must be producing BEFORE day one, not during it."
+  r414_DAY_ELIGIBILITY_IS_CANDIDATE_BLIND_AND_THAT_CUTS_BOTH_WAYS: "Section 8: day eligibility is resolved BY CANDIDATE-BLIND INPUTS ONLY -- the frozen day/book gate, official resolutions and settlement-verification coverage -- and CHALLENGER AVAILABILITY, SCORE, FILLS OR P&L CAN NEVER REMOVE A DAY OR REPLACE IT WITH A LATER ONE. That protects the test from the obvious abuse, and it also means C2's coverage failure CANNOT be used to drop days, and a day lost to a missing ETH book cannot be swapped for a later one. The clause that prevents cheating is the same clause that prevents rescue."
+  r414_THE_PLAN_ALREADY_CONTAINS_A_STOP_RULE_FOR_C2_and_it_is_ADJACENT_not_an_answer: "Section 10 carries: if the sigma producer, typed timestamp seam or source identities CANNOT BE MADE POINT-IN-TIME, STOP C2 with an explicit unavailable status. That is adjacent to the third user question -- whether C2 stays in the family -- but it is NOT an answer to it: C2's problem is a COVERAGE failure at 0.234 against a 95 per cent gate, which is not the same condition as an input that cannot be made point-in-time. Recorded as adjacent so the user sees the existing rule alongside the question, and NOT as though the plan already decided it."
+  r414_AND_THE_ETH_COST_IS_TO_BE_MEASURED_NOT_CONVERTED: "BE is to measure ONE REAL ETH DAY on 09-05 rather than convert a 0.32x volume ratio into an estimate. That is the right call for the same reason the whole night has been the right call: a ratio converts a quantity that was measured for one purpose into a quantity nobody measured, and the conversion carries none of the original's limits. The programme has spent tonight correcting three numbers that travelled that way -- a byte length read as a count, a status label read as coverage, a median blind to its own upper tier."
+  r414_THE_THREE_THINGS_AWAITING_THE_USER_none_of_which_blocks_tonight: "One: the MINIMUM MEANINGFUL delta_LL, which neither REV nor the coordinator may choose having seen the 0.06 to 0.08 ceiling; DA is landing it as a required, currently-unset field so the freeze computes false until it is set. Two: whether a roughly two-week NIGHTLY TWO-COIN BUILD PROGRAMME is acceptable, to be re-costed once BE measures a real ETH day. Three: whether C2 STAYS IN THE FAMILY AT ALL, if its coverage range confirms it can never reach 95 per cent. NONE OF THE THREE BLOCKS TONIGHT'S WORK, which is worth stating because a list of open user decisions reads like a stop order unless it says otherwise."
+  r414_WHAT_BLOCKS_THE_FREEZE_is_now_a_list_of_THREE: "REV's section 7 versus section 9 adjudication, where DA's predicate computes FALSE until A PARTY THAT DOES NOT BENEFIT HAS RULED; the UNSET EFFECT FLOOR; and the FEE DECLARATION. All three are conditions INSIDE the predicate rather than notes beside it, which is the pattern this programme converged on tonight. The first is the sharpest: it is not enough for the question to be answered, it must be answered by a party WITH NO STAKE IN THE ANSWER -- a structural requirement on the answerer, not on the answer."
   r413_C1_IS_NOT_ARITHMETICALLY_DEAD_and_I_reproduced_the_instrument: "The perfect-foresight ceiling on C1's per-day delta_LL: mean 0.0745 nats per action pooled over 4,973,558 states, BTC 0.0823 over 2,544,510 and ETH 0.0584 over 808,372, p50 0.0202, p90 0.1335, max 0.6931 -- structurally capped at ln 2 = 0.693147 and holding exactly on every state. I DERIVED THE INSTRUMENT FROM ITS CONSTRUCTION rather than accept the numbers: perfect foresight moves all the way to the favourable touch, so the ceiling is max(ln(a/mid), ln((1-b)/(1-mid))), which tends to ln(1/0.5) = ln 2 as the ask approaches 1 with the midpoint at a half. THE CAP IS ALGEBRAIC."
   r413_THE_POSITIVE_CONTROLS_RAN_BEFORE_THE_MEASUREMENT_AND_I_REPRODUCED_BOTH: "REV ran controls BEFORE measuring, which is the ordering that makes them controls rather than rationalisations. The 0.01/0.99 artifact book gives 0.683 and the tight 0.495/0.505 book gives 0.00995, so the measure demonstrably separates the case where the bound MUST be large from the one where it MUST be tiny. I recomputed both from the construction: 0.683097 and 0.009950. BOTH MATCH. Exclusions were stated rather than left implicit -- every coin but BTC and ETH, non price_change events, unparseable sides, and states with min(p, 1-p) = 0, OF WHICH THERE WERE NONE, 0 of 4,973,558 -- and it was measured on price_change best_bid/best_ask, never book snapshots, which are p90 6.2 s stale."
   r413_THE_RELATIVE_SCALE_IS_ABOUT_TEN_PER_CENT_AND_THAT_IS_NOT_SMALL: "Against a log loss of ln 2 = 0.693147 at p = 0.5, the pooled mean ceiling of 0.0745 nats is 10.75 PER CENT RELATIVE; BTC 11.87, ETH 8.43, the p50 2.91 and the p90 19.26. So the ceiling is not a small number, and the worry I carried from rounds 411 and 412 -- that C1's half-tick deviations might be too small to matter -- WAS THE WRONG AXIS. A half-tick perturbation of a two-price book can still move a log loss by a tenth of its value, because the loss is steep where the book is wide."
@@ -28807,6 +28835,42 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r414_THE_CLAUSE_IS_IN_THE_PLAN_THREE_TIMES_and_I_read_all_three:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "read lines 91-93, 41-45 and 400-405 of the plan directly; section 8 line 298 requires the first 10 evaluable COMPLETE BTC+ETH UTC days and section 7 line 250 gives each coin equal weight, adding that no action, fill, market or coin is treated as an independent day."
+  r414_RUNNING_SECTION_8_ON_BTC_ALONE_IS_A_DIFFERENT_FAMILY_NOT_A_REDUCED_PLAN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "the per-coin-diagnostics clause at lines 91-93 is what makes a btc-only result unable to authorize anything; the equal-weight portfolio day at line 250 is what makes it a different statistic."
+  r414_AND_I_FOUND_THE_CLAUSE_THAT_MAKES_THE_CLOSED_DOOR_BITE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "read the accrual rule at lines 296-302 of the plan verbatim, including the do-not-extend-opportunistically clause."
+  r414_SO_AN_UNREADY_DAY_BURNS_A_SLOT_AND_ETH_MUST_PRODUCE_BEFORE_DAY_ONE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "the remain-counted clause and the fewer-than-10-by-day-14 clause are adjacent in the same list at lines 299-302; COINS_INCOMPLETE is the status DE's real-book run produced for every day at round 411."
+  r414_DAY_ELIGIBILITY_IS_CANDIDATE_BLIND_AND_THAT_CUTS_BOTH_WAYS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "read the candidate-blind eligibility paragraph immediately following the accrual rule, at lines 304-307."
+  r414_THE_PLAN_ALREADY_CONTAINS_A_STOP_RULE_FOR_C2_and_it_is_ADJACENT_not_an_answer:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "read the three stop-rules at lines 400-405: the C2 point-in-time rule, the void-and-new-family rule for a changed candidate, and the no-economic-rescue rule for a failed predictive validation."
+  r414_AND_THE_ETH_COST_IS_TO_BE_MEASURED_NOT_CONVERTED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the 0.32x ratio and the 09-05 measurement plan are BE's brief as recorded in the dispatch."
+  r414_THE_THREE_THINGS_AWAITING_THE_USER_none_of_which_blocks_tonight:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the three questions and the no-blocking note are the coordinator's; the ceiling figures are REVIEW 256's, which I reproduced at round 413."
+  r414_WHAT_BLOCKS_THE_FREEZE_is_now_a_list_of_THREE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the three blocking conditions are DA's predicate as described; the does-not-benefit requirement on the adjudicator is the coordinator's formulation."
   r413_C1_IS_NOT_ARITHMETICALLY_DEAD_and_I_reproduced_the_instrument:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
