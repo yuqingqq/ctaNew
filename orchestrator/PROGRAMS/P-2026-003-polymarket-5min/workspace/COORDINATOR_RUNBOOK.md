@@ -1201,3 +1201,49 @@ what forces *"is this actually that?"* at the point of use, rather than after
 five repetitions have turned a lens into a law. **When a frame of mine starts
 fitting everything, that is the signal to have someone test it against cases I
 did not choose.**
+
+## §7m — DEFERRED AUTHORISATION, AND THE QUESTION THAT UNIFIES THE NIGHT (2026-09-12T02:00Z)
+
+**Written because MEM caught me not writing it.** I told two seats I was
+adopting these "runbook-wide" and then did not add them. MEM checked at the ref
+with a positive control first (1 hit in 1,164 lines, so the query fires):
+`AUTHORISED IS NOT NOW` — **0**; `RE-LIST` — **0**; and the ten `re-arm`
+hits all concern session monitors, not units. **A stated adoption is not an
+adoption.** Same shape as a seat reporting "starting the measurement now" with
+nothing running — my own instance, an hour after I named theirs.
+
+### §7m.1 — AUTHORISED IS NOT NOW (DE's clause)
+
+I hand out deferred authorisations constantly — a launcher edit, a fence, a
+fourteen-night build programme. **Every one can reasonably read as permission to
+start.** An authorisation carries its *when*, or it does not carry anything.
+
+### §7m.2 — RE-LIST IMMEDIATELY BEFORE THE EDIT (DE's clause)
+
+For any stop → edit → re-arm on units: **a unit starting between the listing and
+the edit is exactly the hazard the listing exists to bound.** A listing taken
+five minutes early is a listing of the past. Re-list at the moment of the edit,
+and report **both** lists — stopped and restarted. **The restarted list is the
+one that gets forgotten.**
+
+### §7m.3 — A STOPPED UNIT AND AN UNWANTED UNIT LOOK IDENTICAL (DE's clause)
+
+**A unit stopped for an edit and never re-armed is indistinguishable from one
+that was never meant to run.** The third state, on an object class that is not
+code — which is why §7l.5's classification step has to run before the frame is
+applied to it.
+
+### §7m.4 — THE QUESTION THAT ACTUALLY UNIFIES THESE (MEM's reframing)
+
+MEM's, and better than mine. I had been asking **"who supplies its inputs?"**,
+which is right for guards and silent about everything else. The wider question:
+
+> **Could a reader tomorrow find this without asking anyone?**
+
+It covers what the narrower one misses: a guard cited in three declarations and
+called by nothing; a rule I said I adopted and did not write down; a freeze
+recording builder paths under `/tmp` that no later reader can resolve; a
+register citing reviews that have no file; a `blocking_gaps` list a careful
+reader takes as exhaustive. **In each case the fact existed somewhere and was
+unreachable from the artifact — which is the same as not existing, for anyone
+who was not in the room.**
