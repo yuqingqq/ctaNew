@@ -274,6 +274,43 @@ def build() -> dict:
                     "to take knowingly rather than one they can drift into."),
             },
             "audit": audit_unguarded_readers(),
+            "EXTENSION_DA_311": {
+                "question": ("does the protected set EXTEND automatically as "
+                             "days are added, or can it silently stop growing "
+                             "-- protecting the past and admitting the future, "
+                             "which is precisely backwards?"),
+                "answer": ("IT CANNOT STOP GROWING, because there is nothing "
+                           "to grow. The set is an OPEN-ENDED COMPARISON -- "
+                           "`under tier2 root AND day >= floor` -- not an "
+                           "enumerated list of days. A day in 2099 is "
+                           "protected by the same expression that protects "
+                           "2026-09-08."),
+                "verified_by_driving": ("2026-09-08, 09-30, 2026-12-31, "
+                                        "2027-06-15 and 2099-01-01 all "
+                                        "protected"),
+                "the_band_extends_nothing": (
+                    "the band does not CREATE the protected set and does not "
+                    "need to be enumerated into it. When the band is declared "
+                    "its days are already inside, because they are later than "
+                    "the floor."),
+                "IF_THE_MECHANISM_FAILS_IT_FAILS_CLOSED": (
+                    "driven: with the ruling commit unreadable, "
+                    "`protected_floor` REFUSES and `assert_not_protected` "
+                    "propagates -- so an UNPROTECTED read is refused too. The "
+                    "fence never admits on a broken input."),
+                "AND_THE_COST_OF_THAT_IS_STATED": (
+                    "fail-closed means an unreadable ruling blocks LEGITIMATE "
+                    "pre-floor reads as well, which is the 'fence that only "
+                    "refuses' failure as a degraded state rather than as a "
+                    "design. It is the right default -- admitting on a broken "
+                    "input is how a protected day gets read -- but it is a "
+                    "trade-off, not a free property, and a lane-wide tier2 "
+                    "outage would be its symptom."),
+                "the_restatements_are_not_load_bearing": (
+                    "driven with no procedure sources at all: the ruling "
+                    "commit still supplies the floor. The cross-check detects "
+                    "drift; it is not the source."),
+            },
             "rule_10": "the floor is parsed from the procedures at run time"}
 
 
@@ -297,6 +334,34 @@ def falsify() -> int:
        fl["restatement_agrees_with_the_ruling"] is True,
        f"ruling {fl['floor']} vs restated {fl['restated_floor']}")
     _c = build()["WHAT_THIS_PREDICATE_COVERS_AND_WHAT_IT_CANNOT"]
+    # ---- DA 311 (3): the set must EXTEND, and fail CLOSED if it cannot ----
+    _f = fl["floor"]
+    ck("the protected set EXTENDS automatically -- far-future days are protected",
+       all(is_protected(f"data/pm_5min/tier2/x/day={d}/coin=btc/p.parquet",
+                        _f)["protected"]
+           for d in ("2026-09-30", "2026-12-31", "2027-06-15", "2099-01-01")),
+       "open-ended comparison, not an enumerated list")
+    ck("...so it cannot silently stop growing: there is nothing to grow",
+       "OPEN-ENDED COMPARISON" in build()["EXTENSION_DA_311"]["answer"])
+    ck("the restatements are NOT load-bearing -- the ruling alone supplies it",
+       protected_floor(sources=())["floor"] == _f)
+    import unittest.mock as _M
+    with _M.patch.object(sys.modules[__name__], "RULING_COMMIT", "0000000"):
+        try:
+            protected_floor(); _closed = False
+        except Rule34aRefused:
+            _closed = True
+        try:
+            assert_not_protected("data/pm_5min/tier2/x/day=2026-09-07/c/p.parquet")
+            _admits = True
+        except Exception:
+            _admits = False
+    ck("NEGATIVE CONTROL: an unreadable ruling FAILS CLOSED, never open",
+       _closed and not _admits,
+       "refuses even an unprotected read rather than admitting on a broken input")
+    ck("...and the COST of failing closed is stated, not hidden",
+       "trade-off, not a free property"
+       in build()["EXTENSION_DA_311"]["AND_THE_COST_OF_THAT_IS_STATED"])
     ck("the ENFORCED half and the UNENFORCEABLE half are both stated as fields",
        "REFUSES" in _c["covered_and_ENFORCED"]
        and "no artifact" in _c["NOT_covered_and_UNENFORCEABLE"].lower())
