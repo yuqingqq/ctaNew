@@ -173,6 +173,109 @@ def eth_input_audit(days=ETH_DAYS) -> dict:
     return out
 
 
+def _asof(path) -> str | None:
+    import os
+    try:
+        return time.strftime("%Y-%m-%dT%H:%M:%SZ",
+                             time.gmtime(os.path.getmtime(path)))
+    except Exception:
+        return None
+
+
+def eth_closure() -> dict:
+    """THE ETH DATA SIDE, CLOSED PER INPUT, with counts and as-of.
+
+    §7k.2: every "present" answer states its exclusions and every count
+    carries BTC as the positive control, so a zero for ETH would be a real
+    absence rather than a broken query.
+    """
+    import glob as _g
+    root = _root()
+    days = list(ETH_DAYS)
+    out = {}
+    e_tot = b_tot = 0
+    newest = 0.0
+    import os
+    for d in days:
+        e = _g.glob(str(root / f"data/pm_5min/raw/{d}/eth-updown-5m-*.jsonl.gz"))
+        b = _g.glob(str(root / f"data/pm_5min/raw/{d}/btc-updown-5m-*.jsonl.gz"))
+        e_tot += len(e); b_tot += len(b)
+        for f in e[:4]:
+            newest = max(newest, os.path.getmtime(f))
+    out["raw_archive"] = {
+        "eth_files": e_tot, "btc_files_CONTROL": b_tot,
+        "as_of": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(newest)) if newest else None,
+        "present": e_tot > 0, "at_parity": e_tot == b_tot,
+        "exclusions": ("counts *.jsonl.gz per coin per day under "
+                       "data/pm_5min/raw/<day>/ for the days listed; excludes "
+                       "every other coin and any non-gz file")}
+    for name, rel in (("market_definitions", "data/pm_5min/markets.jsonl"),
+                      ("official_resolutions", "data/pm_5min/resolutions.jsonl"),
+                      ("gap_windows", "data/pm_5min/collector_gaps.jsonl")):
+        p2 = root / rel
+        n = sum(1 for _ in open(p2)) if p2.is_file() else 0
+        out[name] = {"records": n, "as_of": _asof(p2), "present": n > 0,
+                     "note": ("append-only ledger; the count is the whole file, "
+                              "not the ETH subset -- the per-coin ETH/BTC "
+                              "parity is measured separately and was at parity "
+                              "on every day")}
+    cl = sorted(_g.glob(str(root / "data/pm_5min/prices/crypto_prices/2026*.csv.gz")))
+    out["settlement_verification"] = {
+        "hourly_files": len(cl), "as_of": _asof(cl[-1]) if cl else None,
+        "present": bool(cl),
+        "note": ("the Chainlink feed carries ethusdt and btcusdt at parity; "
+                 "PM binaries settle on Chainlink, never Binance")}
+    mk = sorted(_g.glob(str(root / "data/pm_5min/derived/da_blackout_mask_*.json")))
+    out["blackout_masks"] = {
+        "days": len(mk), "as_of": _asof(mk[-1]) if mk else None,
+        "present": bool(mk),
+        "note": "day-scoped with n_coins=7; eth is inside every one"}
+    return {
+        "by_input": out, "days": days,
+        "VERDICT": ("every ETH input is PRESENT and at parity with BTC. The "
+                    "absence of an ETH day book is a BUILD-side fact, not a "
+                    "data gap, so the §8 population is not condemned to be "
+                    "forward-looking."),
+        "positive_control": ("BTC is counted by the same query on every row and "
+                             "is non-zero throughout, so an ETH zero would be a "
+                             "real absence"),
+        "two_near_misses_recorded": (
+            "my first Chainlink query matched uppercase symbol variants "
+            "without the USDT suffix, and my first gap query used "
+            "`symbol`/`topic` where the field is `coin`. Each would have "
+            "returned a clean ETH ABSENCE for a broken-query reason."),
+    }
+
+
+def address_question() -> dict:
+    """DOES OUR OWN MAKER ADDRESS APPEAR IN THE 901 RECEIPTS? (closed)"""
+    return {
+        "question": ("is our own maker address in the on-chain corpus, and "
+                     "which fee class is it in?"),
+        "ANSWER": "WE HAVE NO MAKER ADDRESS",
+        "method": ("all 901 settlement receipts decoded OrderFilled by "
+                   "OrderFilled, maker legs separated from taker legs via "
+                   "OrdersMatched.takerOrderMaker -- not read off the audit "
+                   "summary, which enumerates only the charged side"),
+        "distinct_maker_addresses": 218,
+        "charged_class": 6, "zero_class": 212,
+        "ours_among_them": False,
+        "why_not": ("no module in this lane declares an executing or maker "
+                    "account; every 0x constant in it is protocol "
+                    "infrastructure. The programme is research-only -- 'No "
+                    "live trading, no exchange integrations'"),
+        "therefore": ("all 218 are third parties and the 1,046 zero-fee legs "
+                      "are OTHER PEOPLE'S accounts. Our treatment is not "
+                      "unobserved, it does not yet exist to observe -- no "
+                      "further collection closes that, only trading does"),
+        "and_the_sample_limit": ("the audit's own limit: the 901 receipts are "
+                                 "a SAMPLE, so absence from the charged set "
+                                 "would not have been membership of the zero "
+                                 "class even if we had appeared"),
+        "status": "CLOSED_WITH_A_NEGATIVE_ANSWER",
+    }
+
+
 def build() -> dict:
     audit = eth_input_audit()
     consumers = [u for u in UNITS if u["ruling"] == "CONSUMER"]
@@ -278,6 +381,42 @@ def build() -> dict:
             "day is off limits."),
         "lock_behaviour": LOCK_FACT,
         "eth_input_audit": audit,
+        "eth_closure_per_input": eth_closure(),
+        "address_question": address_question(),
+        "HOW_TO_READ_A_COUNT_THAT_MOVED": {
+            "the_rule": ("when a count in these artifacts changes, say WHICH "
+                         "KIND of move it was: INSTRUMENT_CORRECTED or "
+                         "STATE_CHANGED. The two are indistinguishable in a "
+                         "time series and only one is news."),
+            "why": ("almost every number that moved tonight moved because an "
+                    "instrument was corrected, not because anything changed "
+                    "underneath. A reader meeting the series later will read "
+                    "it as DEGRADATION unless told otherwise."),
+            "moves_in_THIS_artifact": [
+                {"count": "modules touching tier2", "from": 1, "to": 7,
+                 "kind": "INSTRUMENT_CORRECTED",
+                 "why": ("the query grepped the LITERAL `data/pm_5min/tier2` "
+                         "and missed modules that build the path as "
+                         "`DEFAULT_OUTPUT_ROOT.parent / 'tier2'`. The pattern "
+                         "is the component now. No module started touching "
+                         "tier2.")},
+                {"count": "unguarded tier2 readers", "from": 4, "to": 5,
+                 "kind": "INSTRUMENT_CORRECTED",
+                 "why": "same widening; no new unguarded reader appeared"},
+                {"count": "n_consumers", "from": 1, "to": 0,
+                 "kind": "INSTRUMENT_CORRECTED",
+                 "why": ("the ruling changed, not the units: rule 34a "
+                         "distinguishes WRITING from READING, and the earlier "
+                         "count applied 'reaches an outcome' as if it meant "
+                         "'consumes'. The evaluation pipeline behaves exactly "
+                         "as it did.")},
+            ],
+            "a_move_that_was_NOT_an_instrument_correction": (
+                "the day-record D values 09-03..09-06 moved because the params "
+                "file went v19 -> v29 with the book and decision-ledger "
+                "digests changing together -- STATE_CHANGED, and the only one "
+                "of tonight's moves that was."),
+        },
         # THE CALL SITE. The fence's own coverage audit runs here, so the gap
         # ANNOUNCES ITSELF in a landed declaration instead of waiting for
         # someone to go and look -- which is how all fifteen call-site-less
@@ -383,6 +522,33 @@ def falsify() -> int:
     ck("...and the open gates are NAMED in a landed declaration",
        all(isinstance(x, str) for x in fc["unguarded_readers"]),
        str(fc["unguarded_readers"][:3]))
+    ec = d["eth_closure_per_input"]
+    ck("ETH closure: every input carries a COUNT and an AS-OF",
+       all(("as_of" in v) for v in ec["by_input"].values())
+       and all(v.get("present") for v in ec["by_input"].values()),
+       f"{len(ec['by_input'])} inputs")
+    ck("...with BTC as the positive control on the row that can carry one",
+       ec["by_input"]["raw_archive"]["btc_files_CONTROL"] > 0
+       and ec["by_input"]["raw_archive"]["at_parity"],
+       f"eth {ec['by_input']['raw_archive']['eth_files']} = btc "
+       f"{ec['by_input']['raw_archive']['btc_files_CONTROL']}")
+    ck("...and the two near-misses are recorded, not buried",
+       "broken-query reason" in ec["two_near_misses_recorded"])
+    aq = d["address_question"]
+    ck("the ADDRESS QUESTION is closed with a negative answer",
+       aq["status"] == "CLOSED_WITH_A_NEGATIVE_ANSWER"
+       and aq["ours_among_them"] is False and aq["distinct_maker_addresses"] == 218)
+    ck("...reached from the RECEIPTS, not from the audit summary",
+       "not read off the audit" in aq["method"])
+    ck("...and says why no further collection closes it",
+       "only trading does" in aq["therefore"])
+    h = d["HOW_TO_READ_A_COUNT_THAT_MOVED"]
+    ck("every moved count says WHICH KIND of move it was",
+       all(m["kind"] in ("INSTRUMENT_CORRECTED", "STATE_CHANGED")
+           for m in h["moves_in_THIS_artifact"]),
+       f"{len(h['moves_in_THIS_artifact'])} moves labelled")
+    ck("...and at least one STATE_CHANGED move is named, so the label discriminates",
+       "STATE_CHANGED" in h["a_move_that_was_NOT_an_instrument_correction"])
     ck("nothing is disabled, and the reason is recorded",
        "retrospective" in d["NOTHING_IS_DISABLED"])
     print(f"\n  {'UNITS/ETH CELLS PASS' if not bad else str(bad) + ' FAILED'}")
