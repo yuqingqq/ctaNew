@@ -442,6 +442,24 @@ def candidates(ref: str) -> dict:
             "without redoing the work by hand. The repo-relative path, the "
             "commit ref and a COMPUTED match now sit beside every digest."),
         "m_for_multiplicity": 2,
+        #: REVIEW 256's caveat, transcribed. The counts are REV's measurements,
+        #: attributed as REV's and not re-derived here.
+        "M_IS_TWO_FOREVER_CAVEAT": (
+            "m stays 2, and it is worth saying what those two ARE. C1 is not an "
+            "independent second estimator of the same quantity: it is a BOUNDED "
+            "PERTURBATION OF THE BASELINE. The wrapper says so in its own "
+            "words -- `book.value` is `(best_bid, best_ask, bid_size, "
+            "ask_size)` -- ONE book event, so C1 cannot read a different event "
+            "from Identity by construction -- and the bound follows: "
+            "|C1 - Identity| <= spread/2, measured by REVIEW 256 at 0.005 at "
+            "p90 over 9.4M book states, with the attainable increment "
+            "structurally capped at ln 2. So the multiplicity of 2 counts a "
+            "baseline and a bounded perturbation of it, NOT two independent "
+            "candidates, and Holm across them is conservative in a way a reader "
+            "should know about rather than discover. C2 IS EXPLICITLY EXEMPT "
+            "from this caveat: it is cross-venue (Binance bookTicker), so it is "
+            "not a perturbation of the PM book and is free to differ from "
+            "Identity by more than the spread."),
         "M_IS_TWO_FOREVER": ("m = 2 is fixed at freeze and does not shrink if a "
                              "candidate dies, is withdrawn, or fails to produce "
                              "a value. Holm is across C1 and C2 whatever happens "
@@ -786,6 +804,65 @@ def why_not_effective(d: dict) -> list:
 MARKET_FACTS = "live/pm_research/declarations/da_market_facts_v1.json"
 REV_ADJUDICATION = ("live/pm_research/declarations/"
                     "rev_section7_fee_rule_reading_v1.json")
+MIN_DELTA_DECL = ("live/pm_research/declarations/"
+                  "user_minimum_meaningful_delta_ll_v1.json")
+
+
+def minimum_meaningful_delta_ll(ref: str) -> dict:
+    """§8 DECLARES A MINIMUM SAMPLE AND NO MINIMUM EFFECT. (DA 297 / REVIEW 256)
+
+    THE HOLE. The exact paired sign test has NO MAGNITUDE RESOLUTION: it tests
+    the SIGN of `delta_LL_g`, never its size. A candidate positive on ten of ten
+    days by 1e-9 nats yields p = 0.001953125 and PASSES, exactly as one positive
+    by 0.08 nats would. REVIEW 256 checked all four §8 adoption conditions and
+    none carries a magnitude floor -- Holm p is sign-driven, mean/median
+    positive is sign not size, the 95% gate is coverage, the fourth is
+    structural. So a candidate can pass §8 on an effect of ANY size above zero
+    and be carried into §9's economic clock on something economically
+    indistinguishable from nothing.
+
+    Rule 6 binds the null and its SAMPLE; nothing binds the ALTERNATIVE.
+
+    THIS FIELD IS AN ADDITION BEYOND §7'S SENTENCE, DELIBERATELY. It is NOT in
+    `REQUIRED_FIELDS`, because that tuple is pinned to §7's own list and a
+    fifteenth member would make `assert_enumerations_intact` refuse -- the pin
+    is doing its job. It is a separate blocking CONDITION instead, in the same
+    construction as the adjudication gate, and it is recorded as an addition so
+    a reader sees it was added rather than smuggled in.
+
+    THE VALUE IS NOT CHOSEN HERE, AND NOT BY THIS SEAT. It belongs to whoever
+    owns the estimand. REV refused to pick it and the coordinator refused after
+    seeing the 0.06-0.08 ceiling, because a threshold chosen after seeing the
+    attainable effect is rule 11's failure with a number instead of a feature
+    subset. So this reads an artifact the USER lands; its absence is UNSET, and
+    UNSET BLOCKS.
+    """
+    b = _blob(ref, MIN_DELTA_DECL)
+    if b is None:
+        return {"present": False, "path": MIN_DELTA_DECL, "is_set": False,
+                "value": None, "status": "UNSET_AND_BLOCKING",
+                "owner": "the USER -- whoever owns the estimand",
+                "why_blocking": (
+                    "a note at day one can be forgotten by day ten; a predicate "
+                    "cannot. The freeze does not go effective without a "
+                    "declared minimum meaningful effect."),
+                "what_it_must_carry": (
+                    "a minimum meaningful `delta_LL` in NATS PER ACTION, with "
+                    "the reasoning for that magnitude, declared BEFORE any "
+                    "§8 day is scored")}
+    try:
+        d = json.loads(b.decode())
+    except Exception as e:
+        return {"present": True, "path": MIN_DELTA_DECL, "is_set": False,
+                "value": None, "status": f"UNREADABLE: {type(e).__name__}"}
+    v = d.get("minimum_meaningful_delta_LL")
+    ok = isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0
+    return {"present": True, "path": MIN_DELTA_DECL,
+            "sha256": hashlib.sha256(b).hexdigest(),
+            "is_set": ok, "value": v if ok else None,
+            "units": d.get("units"), "declared_by": d.get("declared_by"),
+            "reasoning": d.get("reasoning"),
+            "status": "SET" if ok else "PRESENT_BUT_NOT_A_POSITIVE_NUMBER"}
 
 
 def rev_adjudication(ref: str) -> dict:
@@ -916,6 +993,7 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
     mf = market_facts(ref)
     im = input_manifest(ref)
     rev = rev_adjudication(ref)
+    mind = minimum_meaningful_delta_ll(ref)
 
     chain = []
     for link, paths in CHAIN:
@@ -1051,8 +1129,15 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
         # resolve), the enumeration is whole (the gap list was counted over the
         # pinned questions), and the READING that closes the last gap has been
         # adjudicated by a party that does not benefit from the answer.
-        "freeze_is_effective": (not gaps) and enum["intact"]
-                               and rev["confirms_the_reading"],
+        "freeze_is_effective": ((not gaps) and enum["intact"]
+                                and rev["confirms_the_reading"]
+                                and mind["is_set"]),
+        "minimum_meaningful_delta_LL": mind,
+        "additions_beyond_section_7": [
+            "minimum_meaningful_delta_LL -- §8 declares a minimum SAMPLE and no "
+            "minimum EFFECT, so the sign test can pass on an effect of any size "
+            "above zero (REVIEW 256). Added as a blocking CONDITION rather than "
+            "a §7 field, because REQUIRED_FIELDS is pinned to §7's own sentence."],
         "rev_adjudication": rev,
         "WHY_A_THIRD_CONDITION": (
             "the last gap closes on an INTERPRETATION of §7, and the parties "
@@ -1243,6 +1328,25 @@ def falsify() -> int:
        d["freeze_is_effective"] == ((d["n_blocking_gaps"] == 0)
                                     and d["enumeration_intact"]
                                     and d["rev_adjudication"]["confirms_the_reading"]))
+    # ---- DA 297 / REVIEW 256: a minimum EFFECT, not just a minimum SAMPLE ---
+    md = d["minimum_meaningful_delta_LL"]
+    ck("minimum_meaningful_delta_LL is UNSET and BLOCKING",
+       md["is_set"] is False and md["status"] == "UNSET_AND_BLOCKING",
+       md["status"])
+    ck("...and UNSET alone makes the freeze ineffective, gaps or no gaps",
+       (d["n_blocking_gaps"] == 0) and d["freeze_is_effective"] is False)
+    ck("...the value is NOT chosen by this seat -- it reads a USER artifact",
+       md["path"].startswith("live/pm_research/declarations/user_")
+       and "USER" in md["owner"])
+    ck("the addition beyond §7 is DECLARED, not smuggled",
+       any("minimum_meaningful_delta_LL" in x
+           for x in d["additions_beyond_section_7"]))
+    ck("...and REQUIRED_FIELDS is UNCHANGED, so the plan pin still holds",
+       d["enumeration_intact"] is True and len(REQUIRED_FIELDS) == 14,
+       f"{len(REQUIRED_FIELDS)} §7 fields, pin intact")
+    ck("REV 256's M=2 caveat is transcribed with C2 EXEMPT",
+       "ONE book" in d["fields"]["candidate_count"]["M_IS_TWO_FOREVER_CAVEAT"]
+       and "C2 IS EXPLICITLY EXEMPT" in d["fields"]["candidate_count"]["M_IS_TWO_FOREVER_CAVEAT"])
     ck("a MISSING field can never read as present",
        all(d["fields"][f] == MISSING for f in d["fields_missing"]))
     print(f"\n  {'DRAFT CELLS PASS' if not bad else str(bad) + ' FAILED'}")

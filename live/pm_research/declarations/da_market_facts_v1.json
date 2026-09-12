@@ -60,6 +60,8 @@
   "account_level_incidence": 0.0275,
   "our_class": "UNOBSERVED -- and unobservable from this corpus",
   "and_the_sixth_which_is_decisive": "WE HAVE NO MAKER ADDRESS. The programme is research-only and has never rested an order on this book, so our own treatment is not merely unobserved -- it does not yet exist to observe. No amount of further collection closes that; only trading does.",
+  "REVIEW_256_SENTENCE_TRANSCRIBED": "`fee_rate_bps` HAS NEVER BEEN OBSERVED ON A CHARGED FILL. The field is populated and constant -- REVIEW 256 measures it at 1,881,868 of 1,881,868 trade events carrying the same value -- and every fill the chain actually charged sits OUTSIDE that set, because the charged fills are identified on chain by the OrderFilled fee word and never by this field. A constant observed only where the answer is always the same is not evidence about the case where it differs. The positive controls are what make that statement safe to make rather than merely plausible: the extractor was shown to separate a large value from a tiny one before it was pointed at the question.",
+  "REVIEW_256_COUNTS_ARE_REVS_MEASUREMENT": "the 1,881,868 constancy and the control counts are REVIEW 256's, transcribed here rather than re-derived. DA's own independent sweep found the same constancy over a smaller window: 76,617 of 76,617 trade events across 8 UTC days.",
   "what_would_change_it": [
    "the published CLOB fee schedule for these condition ids with an effective date, which no collector captures",
    "or an executing account of our own with observed fills"
@@ -86,7 +88,7 @@
   "established": true,
   "declared_instrument": {
    "field": "markets.jsonl:orderPriceMinTickSize",
-   "n_records": 47147,
+   "n_records": 47168,
    "n_without_the_field": 44,
    "distinct_values": [
     "0.01"
@@ -94,25 +96,25 @@
    "uniform_across_all_coins": true,
    "by_coin": {
     "bnb": {
-     "0.01": 6728
+     "0.01": 6731
     },
     "btc": {
-     "0.01": 6730
+     "0.01": 6733
     },
     "doge": {
-     "0.01": 6727
+     "0.01": 6730
     },
     "eth": {
-     "0.01": 6730
+     "0.01": 6733
     },
     "hype": {
-     "0.01": 6728
+     "0.01": 6731
     },
     "sol": {
-     "0.01": 6730
+     "0.01": 6733
     },
     "xrp": {
-     "0.01": 6730
+     "0.01": 6733
     }
    },
    "by_month": {
@@ -120,7 +122,7 @@
      "0.01": 24872
     },
     "2026-09": {
-     "0.01": 22231
+     "0.01": 22252
     }
    },
    "uniform_across_the_windows_life": true,
@@ -224,13 +226,13 @@
    {
     "source": "markets.jsonl",
     "searched": "all top-level keys, the `clob` subobject, and the rules text (description/question/outcomes)",
-    "n_records": 47147,
+    "n_records": 47168,
     "fee_fields_found": {
      "maker_base_fee": {
-      "1000": 47087
+      "1000": 47108
      },
      "taker_base_fee": {
-      "1000": 47087
+      "1000": 47108
      }
     },
     "rules_text_fee_language": "NONE",

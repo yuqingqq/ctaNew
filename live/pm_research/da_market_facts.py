@@ -719,6 +719,24 @@ def build() -> dict:
                 "is not merely unobserved -- it does not yet exist to observe. "
                 "No amount of further collection closes that; only trading "
                 "does."),
+            "REVIEW_256_SENTENCE_TRANSCRIBED": (
+                "`fee_rate_bps` HAS NEVER BEEN OBSERVED ON A CHARGED FILL. The "
+                "field is populated and constant -- REVIEW 256 measures it at "
+                "1,881,868 of 1,881,868 trade events carrying the same value -- "
+                "and every fill the chain actually charged sits OUTSIDE that "
+                "set, because the charged fills are identified on chain by the "
+                "OrderFilled fee word and never by this field. A constant "
+                "observed only where the answer is always the same is not "
+                "evidence about the case where it differs. The positive "
+                "controls are what make that statement safe to make rather "
+                "than merely plausible: the extractor was shown to separate a "
+                "large value from a tiny one before it was pointed at the "
+                "question."),
+            "REVIEW_256_COUNTS_ARE_REVS_MEASUREMENT": (
+                "the 1,881,868 constancy and the control counts are REVIEW "
+                "256's, transcribed here rather than re-derived. DA's own "
+                "independent sweep found the same constancy over a smaller "
+                "window: 76,617 of 76,617 trade events across 8 UTC days."),
             "what_would_change_it": [
                 "the published CLOB fee schedule for these condition ids with "
                 "an effective date, which no collector captures",
