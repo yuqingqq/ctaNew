@@ -1,3 +1,107 @@
+# READ FIRST — round 418 (MEM, 2026-09-12T01:17:53Z, tip `c54edbd`)
+
+> ## ⏸️ ALL OF THIS IS **PENDING REV's CONFIRMATION** — not settled.
+
+# 🔀 A CROSS-SEAT CORRECTION THAT MAY HALVE THE BAND MARGIN
+
+REV's **90.9%** joint pass rate looks like a **file-presence** measure, while BE's
+stage 0 failed 09-11 on **interior windows** — ***a different criterion***. So
+whichever day REV counted as its single failure, **the other criterion's failure
+is uncounted.**
+
+> ### ***Either way there are TWO failing days in eleven, not one.***
+> DE's one-line discriminating question is with REV.
+
+*Worth naming as a class: **arithmetic on another seat's number is the hardest
+kind to go looking for.** Nothing in DE's own task required it to examine how REV
+counted days — the second time tonight a **cross-seat** read produced the sharpest
+finding of its hour.*
+
+# 🎲 I COMPUTED THE CONSEQUENCE
+
+| scenario | joint | expected | margin | **P(no verdict)** | sd |
+|---|---|---|---|---|---|
+| REV 10/11 | 0.9091 | 12.73 | 2.73 | **0.6%** | 1.08 |
+| **DE union 9/11** | 0.8182 | 11.45 | 1.45 | **9.4%** | 1.44 |
+| × ETH 95% | 0.7773 | 10.88 | 0.88 | **18.3%** | 1.56 |
+| × ETH 90% | 0.7364 | 10.31 | **0.31** | ### **30.0%** | 1.65 |
+
+> ***The correction plus a 90% ETH build rate moves the chance of NO VERDICT from
+> 0.6% to THIRTY PER CENT — a fifty-fold increase.***
+
+## 📐 And the headline is **understated**, not overstated
+
+At the worst case the margin is **0.31 days** against a binomial **sd of 1.65
+days** — ***the margin is 0.19 SD, and a single lost night is 3.2× the entire
+margin.***
+
+> **So the honest statement is stronger than "one bad night from no verdict":
+> at 90% ETH nightly the test returns no verdict roughly 30% of the time** —
+> *before any of the qualifications that make 81.8% itself an upper bound.*
+
+# 📊 EVERY ONE OF THE ELEVEN DAYS CARRIES GAPS — I censused it
+
+```
+per-day gap events, sorted:  30  48  98  132  138  138  164  210 | 608  740  847
+days with ZERO events: 0 of 11
+```
+
+> ***"Clean day" is a THRESHOLD OWNED BY BE'S GATE, not a binary property of a
+> day*** — so the pass rate is a **function of where that threshold sits**, and
+> **quoting the rate without the threshold is quoting half a statistic.**
+
+## 🎚️ The rate is steep in the threshold — I swept it
+
+```
+threshold   <=25   <=50  <=100  <=150  <=200  <=400  <=800
+pass         0/11   2/11   3/11   6/11   7/11   8/11  10/11
+P(no verdict) 100%  100%  99.9%  84.1%  61.9%  32.8%   0.6%
+```
+
+> ***The entire band-risk conclusion is recoverable from the threshold alone***,
+> so the margin is at least as much a property of **one number at
+> `be_build_preflight.py:360`** as of the data.
+
+### ➕ But it is NOT uniformly steep — and that sharpens the question
+
+**Eight days sit at or below 210; three outliers at 608, 740, 847.** So *any*
+threshold between **210 and 608** gives the same 8/11 — ***a wide plateau*** —
+while thresholds below 150 or above 608 move it sharply.
+
+> ### The sensitivity question is not *how steep* — it is ***WHERE THE GATE SITS RELATIVE TO THE PLATEAU.***
+> Inside it, the margin is robust to a step. At an edge, it is not. **Answerable
+> from the gate's current value.**
+
+# 🔃 AND THE QUALITY SIGNAL **INVERTS** AGAINST THE VERDICT
+
+The gap ledger is collector-written and can be stale — **09-11 is mid-pack in my
+census (134 events, range 30–847) while FAILING stage 0.** So any rate from the
+ledger or from file presence is **an upper bound**, and that is **at least one
+ranking inversion in eleven days.**
+
+> ***A quality signal that inverts against actual verdicts should stop being used
+> for band planning*** — the same lesson as the liveness check one level out:
+> **the signal being read is not the signal that decides.**
+
+## ⚠️ Two failures in **my own** census, stated
+
+- My **symbol filter kept records with no symbol field** → counts are an **upper
+  bound**, not btc-specific *(mine 30–847 vs the reported btc 14–376)*.
+- My **duration key missed entirely** → ***I quote no seconds at all.***
+
+*Neither is a finding about the data; both are my checker.* **Stated because a
+zero from a key that does not exist reads exactly like a measured zero — this
+session's most repeated failure, and I have now produced it twice.** *The
+qualitative result — no day with zero events — does not depend on either.*
+
+# 🙋 THE USER MUST BE TOLD **BEFORE** COMMITTING
+
+They are being asked to commit to **exactly the two weeks** this bears on.
+
+> ***Correcting a number already given — before being asked, and before the
+> corrected version is final — is what makes the first number worth having given
+> at all.***
+
 # READ FIRST — round 417 (MEM, 2026-09-12T01:12:46Z, tip `d8f7b08`)
 
 # 🔕 **AN EXCEPTION LOG IS SILENT EXACTLY WHEN THINGS ARE HEALTHY**
