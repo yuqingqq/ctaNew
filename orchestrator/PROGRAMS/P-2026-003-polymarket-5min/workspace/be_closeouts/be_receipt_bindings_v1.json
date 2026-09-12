@@ -1,0 +1,90 @@
+{
+ "contract": "BE_RECEIPT_BINDINGS_V1",
+ "as_of_utc": "2026-09-12T03:06:50Z",
+ "day": "20260905",
+ "builder": "/home/yuqing/ctaNew-wt-fwd/live/pm_research/be_daybook_build.py",
+ "THE_SET_IS_CLOSED_AT_TWO": "day_tape_pin and day_fragment_pin. Every other assert reachable from build() -- assert_rule20, assert_pool_equality, assert_coverage, assert_index_released, assert_artifacts_absent -- binds to a COMPUTED property, not to a producer's receipt.",
+ "call_sites_in_build": [
+  {
+   "line": 1516,
+   "call": "assert_day_tape",
+   "kind": null
+  },
+  {
+   "line": 1532,
+   "call": "day_tape_pin",
+   "kind": null
+  },
+  {
+   "line": 1533,
+   "call": "day_fragment_pin",
+   "kind": null
+  },
+  {
+   "line": 1535,
+   "call": "assert_input_matches_its_receipt",
+   "kind": "tape"
+  },
+  {
+   "line": 1536,
+   "call": "assert_input_matches_its_receipt",
+   "kind": "fragment"
+  }
+ ],
+ "state_by_coin": {
+  "btc": {
+   "day_tape_pin": {
+    "present": true,
+    "receipt": "be_gate1_state_tape_receipt_20260905_btc.json",
+    "split": "score",
+    "n_rows": 489434
+   },
+   "day_fragment_pin": {
+    "present": true,
+    "receipt": "be_gate1_fragment_receipt_20260905_btc.json",
+    "sha256": "50318a3a7c011739eed25f2bf1db656a38f4e7c46d10487ea419bcef82f1dfe6"
+   }
+  },
+  "eth": {
+   "day_tape_pin": {
+    "present": true,
+    "receipt": "be_gate1_state_tape_receipt_20260905_eth.json",
+    "split": "score",
+    "n_rows": 334336
+   },
+   "day_fragment_pin": {
+    "present": false,
+    "receipt": null,
+    "sha256": null
+   }
+  }
+ },
+ "missing_by_coin": {
+  "btc": [],
+  "eth": [
+   "day_fragment_pin"
+  ]
+ },
+ "WHY_ETH_IS_MISSING_ANY": "Neither producer writes its receipt from build(); only main() does, at a path composed from the module's COIN constant. A caller using the library published none -- for ANY coin, which the BTC control run confirms: it too wrote no receipt.",
+ "COST_TO_CLOSE": {
+  "fragment_rebuild_minutes": 3.33,
+  "basis": "the measured 09-05 ETH fragment wall clock, 3m20s",
+  "one_off_per_coin": true,
+  "why": "once a coin's receipts exist, later days publish on the first pass through the fixed launcher"
+ },
+ "PENDING_TEST_peak_ratio_mechanism": {
+  "measurement": {
+   "peak_ratio": 0.97,
+   "size_ratio": 0.66,
+   "time_ratio": [
+    0.27,
+    0.45
+   ],
+   "basis": "MEASURED, single observations"
+  },
+  "mechanism": "peak set by the per-day window index (288 for both coins), so memory does not scale with volume",
+  "status": "INFERRED, UNREPRODUCED -- from a count, not from the allocator; two stages of one day of one coin pair",
+  "what_would_settle_it": "the next ETH or third-coin build: the peak ratio reproduces or it does not",
+  "the_decision_does_NOT_rest_on_it": "do-not-overlap rests on the measurement plus 0.7% of soft-limit headroom over single observations"
+ }
+}

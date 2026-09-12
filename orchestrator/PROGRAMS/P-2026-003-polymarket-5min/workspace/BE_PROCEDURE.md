@@ -996,3 +996,63 @@ The cell that would have caught the original: *the path resolved is referenced
 by more than one pipeline instrument; the path previously probed by none.*
 Generalise it — **a path an instrument reads should be reachable from the code
 that writes it.** A path only this seat names is a path only this seat believes.
+
+## §12. BE 235 — rules from tonight that were not written anywhere
+
+Probed before claiming, per §7k.2: three phrasings each against
+COORDINATOR_RUNBOOK.md, BE_PROCEDURE.md and CLAUDE.md; positive controls
+(rules 10, 11, 15) returned hits, a nonsense string returned none, and every
+apparent hit was read in context — which killed four (`NOT_YET` matched "the
+open day's mask"; `found state` matched "fixture"; `vacuous` matched a
+commit-pathspec note; `heartbeat` matched a process listing).
+
+1. **A status meaning "not ready" must refuse at the component that takes the
+   resource, not merely be reported by the component that computes it.**
+   *Confidence: the failure is measured — `be_build_preflight` returns
+   `1 if fails else 0`, so a NOT_YET row left rc 0 and the launcher printed
+   WOULD LAUNCH for an OPEN day at 20:29Z. I am LEAST sure this generalises
+   beyond this launcher/preflight pair. I keep it anyway because the failure
+   recurs wherever a COMPUTING twin and a RAISING twin are split, and this
+   programme already has at least two such pairs (`be_offpath_guards`'
+   `assert_settlement_day_admissible` beside
+   `de_multiday_gate1_runner.settlement_admissibility`).*
+2. **A control that asserts "nothing changed" is vacuous unless it first
+   proves the run wrote something; assert the post-condition, never the
+   absence of a difference.** Driven: the gap-windows stage "reproduced the
+   landed artifact byte-for-byte" — because the producer refused to overwrite
+   and wrote nothing.
+3. **Choose a falsifier's fixture by a predicate, never by a state found on
+   disk — a pipeline consumes its own controls.** Three launcher cells went
+   red the moment this programme built the days they named.
+4. **A close-out must be COMPUTED from the artifacts it reports on**; a number
+   retyped from a message inherits that message's errors and agrees with it
+   for the wrong reason.
+5. **In a call-site sweep, distinguish an IMPORT from a name inside a
+   STRING.** `be_reserved_days.py:70` contains "called ONLY from selftest
+   (be_offpath_guards_v1.json)" — a sentence saying the guard is UNCALLED,
+   which a name-grep scores as a call.
+6. **Measure each quantity you intend to plan on.** For one stage pair, wall
+   clock, output size and peak RSS moved at 0.27–0.45, 0.66 and 0.97: none
+   predicted another. The ratio prohibition is the special case.
+7. **State a landing, an arming or a launch only after printing the pid and
+   elapsed time of the process doing it.** Four sequence stalls in one night,
+   each an intention read as an act.
+8. **When a guard refuses on the FIRST missing binding, enumerate the whole
+   binding set from the code before spending a second run to find the next.**
+   Two rebuilds found two bindings; an AST walk found the set is closed at
+   two, in milliseconds. See `be_receipt_bindings_v1.json`.
+9. **An artifact embedding wall clocks or resource telemetry cannot be
+   compared by digest**; compare content leaf-by-leaf against an allowed set
+   declared BEFORE the comparison.
+
+### §12a. NOT a rule — a hypothesis with a pending test
+
+**Peak RSS is set by the per-day window index, not by data volume.** It
+predicted the 0.97 peak ratio well. It is INFERRED FROM A COUNT (288 windows
+in both coins), not from reading the allocator, and rests on two stages of ONE
+day of ONE coin pair. One prediction is not evidence. **The next ETH or
+third-coin build reproduces the ratio or kills it.** Until then the decision
+it appears to support — do not overlap coins in a night — rests on the
+MEASUREMENT and on 0.7% of soft-limit headroom over single observations, not
+on the mechanism. Recorded so it cannot drift into being treated as
+established, which is how tonight's mislabels got their authority.
