@@ -1,3 +1,95 @@
+# READ FIRST — round 414 (MEM, 2026-09-12T00:56:26Z, tip `8c4c1ea`)
+
+# 🚪 THE BTC-ONLY SHORTCUT IS CLOSED — **and the plan says so in three places**
+
+I read all three at the text rather than repeat the relay:
+
+| line | the plan's own words |
+|---|---|
+| **91–93** | *"**Per-coin tables are diagnostics and cannot authorize a coin-specific deployment. A coin-specific decision requires a new family and new multiplicity arithmetic.**"* |
+| **43** | *"A later fair-value × harmful-flow composition **is a new experiment and a new multiplicity family**."* |
+| **403** | *"Candidate is changed after a labelled score: **void that candidate** and start a new family/clock; **never amend it in place**."* |
+
+Plus **§8 line 298** — the first **10 evaluable complete BTC+ETH UTC days** — and
+**§7 line 250**, equal weight per coin, *"No action, fill, market or coin is
+treated as an independent day."*
+
+> ### ***The plan anticipated this exact shortcut and forbade it in three sections.***
+> **Start-with-btc-and-add-eth-later is not a reduced plan — it is a different
+> family with an undeclared `m`.** ***ETH is load-bearing***, which makes BE's
+> **measured** cost for one ETH day the number that decides the whole programme's
+> length.
+
+# ⏳ AND READING §8 I FOUND THE CLAUSE THAT MAKES IT BITE — **nobody had recorded it**
+
+```
+- observe the first 14 CONSECUTIVE CALENDAR DAYS
+- require the first 10 evaluable complete BTC+ETH UTC days WITHIN THAT BAND
+- days that fail a predeclared data gate REMAIN COUNTED with statuses
+- fewer than 10 evaluable by day 14  ->  INSUFFICIENT_EVIDENCE
+                                        "do not extend opportunistically"
+```
+
+***A hard band with at most FOUR spare days, and the escape hatch explicitly
+closed.***
+
+## 🔥 So an unready day **burns a slot** — and ETH must produce **before** day one
+
+A day with no ETH book is `COINS_INCOMPLETE`, and **days that fail a gate remain
+counted.** So ***an unready day consumes one of the fourteen without contributing
+to the ten, and the fifth forces `INSUFFICIENT_EVIDENCE`.***
+
+> ### ***The clock cannot be started and caught up.***
+> **That converts the nightly two-coin build from a SCHEDULING question into a
+> PRECONDITION:** the pipeline must be producing **before** day one, not during
+> it.
+
+**And day eligibility is CANDIDATE-BLIND** — *challenger availability, score,
+fills or P&L can never remove a day or replace it with a later one.* ***The
+clause that prevents cheating is the same clause that prevents rescue:*** C2's
+coverage failure cannot drop days, and a day lost to a missing ETH book cannot be
+swapped for a later one.
+
+# 📎 The plan already carries a STOP-C2 rule — **adjacent, not an answer**
+
+§10: *if the sigma producer, typed timestamp seam or source identities **cannot
+be made point-in-time**, **stop C2** with an explicit unavailable status.*
+
+> **C2's problem is a COVERAGE failure at 0.234 against a 95% gate — not an input
+> that cannot be made point-in-time.** *Recorded as adjacent so the user sees the
+> existing rule beside the question, and **not** as though the plan already
+> decided it.*
+
+# 📏 And the ETH cost is to be **measured, not converted**
+
+BE measures **one real ETH day on 09-05** rather than converting a **0.32×**
+volume ratio. ***A ratio converts a quantity measured for one purpose into one
+nobody measured, and carries none of the original's limits*** — tonight already
+corrected three numbers that travelled that way: a byte length read as a count, a
+status label read as coverage, a median blind to its own upper tier.
+
+# 🙋 THREE THINGS AWAITING THE USER — **none of which blocks tonight**
+
+1. **The minimum meaningful `delta_LL`** — *neither REV nor the coordinator may
+   choose it, having seen the 0.06–0.08 ceiling.* DA lands it as a **required,
+   unset** field so the freeze computes **false** until it is set.
+2. **Whether a ~two-week nightly two-coin build programme is acceptable** —
+   to be **re-costed** once BE measures a real ETH day.
+3. **Whether C2 stays in the family at all**, if its coverage range confirms it
+   can never reach 95%.
+
+*(Stated explicitly, because a list of open user decisions reads like a stop
+order unless it says otherwise.)*
+
+# 🔒 WHAT BLOCKS THE FREEZE — now three, all **inside the predicate**
+
+**REV's §7-vs-§9 adjudication** *(false until **a party that does not benefit**
+has ruled)* · **the unset effect floor** · **the fee declaration.**
+
+> **The first is the sharpest:** ***it is not enough for the question to be
+> answered — it must be answered by a party with no stake in the answer.*** **A
+> structural requirement on the answerer, not on the answer.**
+
 # READ FIRST — round 413 (MEM, 2026-09-12T00:53:17Z, tip `9e3cf6b`)
 
 # 🔄 REVIEW 256 **INVERTS THE QUESTION** — and C1 is not arithmetically dead
