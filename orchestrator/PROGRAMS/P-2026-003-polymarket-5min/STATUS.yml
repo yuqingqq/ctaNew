@@ -67,6 +67,24 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T00:24:52Z (MEM ROUND 408 -- SIX TIMERS RUN ON THIS MACHINE AND THEY BLOCK THE SECTION 8 CLOCK.
+  A TIMER THAT EVALUATES OR MEASURES A DAY CONSUMES IT, and NO REVIEW OF WHAT ANY SEAT DID
+  WILL EVER FIND IT BECAUSE NO SEAT DID IT. THIS IS A RECURRENCE -- the same lesson is on
+  my standing record from an earlier session, learned as a fact about one incident and
+  never made a STEP in declaring a population clean. I enumerated all six myself at
+  00:23:08Z: pm-research-guard EVERY MINUTE; pm-lane-health ~15 min; pm-evaluation-pipeline
+  last 21:52:58Z NEXT 03:52:27Z; da-midnight-verify daily, ran 00:06Z;
+  pm-measurement-pipeline ran 00:20:42Z with NO NEXT while active; plus an OS cache job.
+  AND A SCHEDULED UNIT HELD THE HEAVY LOCK AS I READ IT: pids 3507151/3507157 in
+  pm-measurement-pipeline.service, flock on data/.heavy_run.lock wrapping measurement_batch
+  --catch-up --since 2026-08-20 --max-days 1 -- walking ONE DAY PER RUN from 08-20,
+  straight across 09-07..09-13 and on into the validation window. I QUERIED THE SEVEN DAYS
+  WITH A CONTROL: 09-07, 09-08, 09-09, 09-12, 09-13 show ZERO files modified since 21:52Z;
+  09-10 shows 66 and 09-11 shows 17 -- AND I DO NOT ATTRIBUTE THOSE TO THE TIMER, because
+  those are exactly BE's active build days and AN MTIME IDENTIFIES A WRITE, NEVER A WRITER.
+  Both pipeline timers are Persistent=yes, so DISABLING DEFERS RATHER THAN SKIPS and
+  fencing must MASK. UNKNOWN is treated as a CONSUMER: absence of evidence is not a
+  producer. Tip e414b9e.)
   2026-09-12T00:19:56Z (MEM ROUND 407 -- DA WITHDREW THE QUALIFIED ZERO BEFORE IT LANDED, verified:
   maker_fee_bps None, maker_fee_rule None, established.maker_fee_rule False, sensitivity
   fields absent. So the ordering hazard I flagged at 405 resolved by DA REMOVING THE
@@ -104,6 +122,7 @@ updated: >-
   fee schedule. The waiter withdrawal is the same shape one layer out: a ps filter
   excluding 'claude' DELETED THE CLASS BEING HUNTED. The conclusion survives, the
   diagnosis does not. Tip c10f4bc.)
+previous_updates: >-
   2026-09-12T00:08:42Z (MEM ROUND 405 -- THE VENUE-SIDE FEE OBSERVATION DOES NOT EXIST, AND I MEASURED THE
   TAPE MYSELF. Twenty-one part files across 09-07, 09-08 and 09-09, all coins:
   2,046,973 rows, fee_source_status = UNPOPULATED_WS_ZERO on 2,046,973 of 2,046,973,
@@ -123,7 +142,6 @@ updated: >-
   rate'. DE'S MEDIAN IS BLIND BY CONSTRUCTION: with 7 of 10 in the lower tier both middle
   order statistics are lower-tier, so it would take FIVE of ten in the upper tier to move
   the median at all; the mean is 2.20x it and the max 5.00x. Tip 6b0fd8a.)
-previous_updates: >-
   2026-09-12T00:01:55Z (MEM ROUND 404 -- THE FEE RULING IS REVERSED, AND I VERIFIED THE CAUSE AT DA'S OWN
   FILE. The premise was that the trigger was unidentifiable; it is FALSE. CHARGING
   PARTITIONS BY ACCOUNT, TOTALLY: six maker addresses, each charged on 100 per cent of
@@ -735,6 +753,14 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r408_THIS_BLOCKS_THE_SECTION_8_CLOCK_and_it_is_a_RECURRENCE: "Recorded as BLOCKING. Section 8 requires validation on LATER UNTOUCHED DAYS and rule 11 says choosing after seeing voids the test; A TIMER THAT EVALUATES OR MEASURES A DAY CONSUMES IT, silently and on a schedule, and NO REVIEW OF WHAT ANY SEAT DID WILL EVER FIND IT BECAUSE NO SEAT DID IT. This programme has paid for this exact lesson once already -- it is on my standing record as timers consume held-out populations, enumerate what runs on a schedule before calling a population untouched. The recurrence is the finding: the lesson was learned as a fact about one incident and not as a step in the procedure for declaring a population clean."
+  r408_I_ENUMERATED_THE_SIX_TIMERS_MYSELF_AT_00_23Z: "Read from systemctl --user list-timers rather than relayed. pm-research-guard.timer fired 44 seconds before I read it and fires EVERY MINUTE. pm-lane-health.timer last 00:15:08Z, next 00:30:00Z, about every fifteen minutes. pm-evaluation-pipeline.timer last 2026-09-11T21:52:58Z, NEXT 2026-09-12T03:52:27Z -- three hours twenty-nine minutes from my read. da-midnight-verify.timer daily, ran 00:06:00Z, next 2026-09-13T00:06:00Z. pm-measurement-pipeline.timer ran 00:20:42Z and shows NO NEXT WHILE IT RUNS. launchpadlib-cache-clean.timer is an OS cache job and unrelated."
+  r408_A_SCHEDULED_UNIT_HELD_THE_HEAVY_LOCK_AS_I_READ_IT: "Not a hypothetical contention. pids 3507151 and 3507157 held data/.heavy_run.lock, both in pm-measurement-pipeline.service, running /usr/bin/flock on that lock wrapping measurement_batch --catch-up --since 2026-08-20 --lane measurement --max-days 1 --scheduled --json. So a TIMER takes the same lock BE's book builds take, and BE is mid-sequence on 09-11. That is the never-refresh-a-worktree-under-a-running-unit failure in a new costume: a scheduled process reaching into a resource a seat is using, with no seat aware of it."
+  r408_THE_CATCH_UP_WINDOW_RUNS_STRAIGHT_ACROSS_THE_REPORTED_DAYS: "--since 2026-08-20 with --max-days 1 means the unit walks FORWARD ONE DAY PER RUN from 08-20, so its path crosses 09-07 through 09-13 -- the days the cancellation test already reported on -- and then continues into the section-8 validation window. Two distinct exposures from one unit: results already published, and a population not yet started. DA 291 is to say plainly whether it has written into those days rather than quietly."
+  r408_I_QUERIED_THE_WINDOW_DAYS_WITH_A_CONTROL_AND_ATTRIBUTION_IS_THE_GAP: "Ran it with a positive control first, per runbook 7k.2. CONTROL: three paths under derived changed tonight, so the query can speak. RESULT, files modified since the last evaluation run at 21:52:58Z: day=2026-09-07 ZERO, 09-08 ZERO, 09-09 ZERO, 09-12 ZERO, 09-13 ZERO -- and day=2026-09-10 SIXTY-SIX, day=2026-09-11 SEVENTEEN. I DO NOT ATTRIBUTE THOSE 83 FILES TO THE TIMER: 09-10 and 09-11 are exactly the days BE has been building tonight, and an mtime identifies a write, never a writer. So the query narrows DA 291's question and cannot answer it; the attribution needs the units' own records, not the filesystem."
+  r408_PERSISTENT_yes_MEANS_DISABLING_DEFERS_RATHER_THAN_SKIPS: "Both pipeline timers report Persistent=yes. That matters for how they are fenced: a persistent timer that misses a firing RUNS IT ON NEXT ACTIVATION rather than skipping it, so stopping the machine or disabling the timer DEFERS the consumption instead of preventing it, and the deferred run then lands at an unpredictable moment -- possibly inside the validation window it was stopped to protect. Fencing has to MASK or otherwise make the run impossible, not merely stop the schedule. Recorded because disable and mask read as the same action and are not."
+  r408_UNKNOWN_IS_TREATED_AS_A_CONSUMER_and_that_is_the_right_default: "DA 291's classification is PRODUCER-ONLY, CONSUMER, or UNKNOWN -- with UNKNOWN treated as a CONSUMER until proven otherwise, because ABSENCE OF EVIDENCE IS NOT A PRODUCER. That default is the whole safeguard: the cheap error is fencing a harmless timer, and the expensive one is admitting a day that a timer already saw. And per 7k.2 any conclusion of the form this touches nothing must state what was EXCLUDED and carry a POSITIVE CONTROL showing the same query finds a timer that DOES touch something -- which is the rule that would have caught my own round-405 inference and the ps sweep before it."
+  r408_pm_evaluation_pipeline_IS_THE_FIRST_SUSPECT_AND_IT_FIRES_IN_HOURS: "On its name alone it is the unit most likely to CONSUME rather than produce, and my read puts its next firing at 2026-09-12T03:52:27Z. So the window in which to classify it before it acts again is measured in hours, not days. Recorded with the timestamp rather than a duration because a duration written into a state file is wrong the moment it is read."
   r407_DA_WITHDREW_THE_QUALIFIED_ZERO_BEFORE_IT_LANDED: "Verified at the declaration: maker_fee_bps is None, maker_fee_rule is None, established.maker_fee_rule is False, and the sensitivity fields are not present at all. So the ordering hazard I flagged at round 405 -- the declaration landing at 23:57Z one minute ahead of the reversal -- resolved itself by DA REMOVING THE VALUE rather than by anyone superseding the document. My round-405 reading of maker_fee_bps 0 with established.maker_fee_rule True was ACCURATE AS OF THAT MOMENT and is superseded by DA's own withdrawal, not by a correction to me. Recorded that way because the two are different and only one of them is a defect in my work."
   r407_NO_SUPERSEDING_vN_PLUS_1_IS_NEEDED_FOR_A_VALUE_THAT_NEVER_LANDED: "A useful precision about rule 13, and it is the coordinator's. Supersession exists so that a reader who RELIED on an artifact can resolve what replaced it; a value withdrawn before anything could read it leaves nobody to resolve anything. So the test for whether a vN+1 is owed is not whether the file changed but WHETHER THE OLD CONTENT WAS AVAILABLE TO BE RELIED UPON. That keeps rule 13 from degenerating into version-bumping every edit, which would make the supersession chain useless for the cases it exists for."
   r407_THE_HONEST_STATE_OF_THE_FEE_IS_UNDECLARED_AND_REFUSING_and_I_WATCHED_IT_REFUSE: "Not merely specified as refusing -- I drove it. de_fair_value_fee_sensitivity.py from wt-de2 reports 53 of 53 cells passing, and the last cell visible in its output is 'the real RATE and BASIS are declared at or above the worst observed tier, or refuse by name' -> REFUSED SENSITIVITY_RATE_NOT_DECLARED. de_fair_value_pnl.py reports 28 of 28, its last visible cell refusing TOKEN_HAS_NO_OFFICIAL_SETTLEMENT. So the undeclared state is enforced by a refusal that FIRES, which is the difference between a gap that is recorded and a gap that is protected."
@@ -28636,6 +28662,38 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r408_THIS_BLOCKS_THE_SECTION_8_CLOCK_and_it_is_a_RECURRENCE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the prior instance is on my own memory record from an earlier session; the section-8 requirement and rule 11 are the programme's own, and the mechanism is identical in both cases."
+  r408_I_ENUMERATED_THE_SIX_TIMERS_MYSELF_AT_00_23Z:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    said: "systemctl --user list-timers --all read at 2026-09-12T00:23:08Z; the NEXT column for pm-measurement-pipeline is a dash because the unit was active at read time."
+  r408_A_SCHEDULED_UNIT_HELD_THE_HEAVY_LOCK_AS_I_READ_IT:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    said: "fuser on the lock gave the two pids; /proc/<pid>/cgroup resolved both to pm-measurement-pipeline.service; /proc/<pid>/cmdline gave the full command including --since 2026-08-20."
+  r408_THE_CATCH_UP_WINDOW_RUNS_STRAIGHT_ACROSS_THE_REPORTED_DAYS:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    said: "the --since and --max-days arguments are read verbatim from /proc/3507157/cmdline; the reported days are 09-07 to 09-10 and the section-8 window follows the full-pipeline freeze."
+  r408_I_QUERIED_THE_WINDOW_DAYS_WITH_A_CONTROL_AND_ATTRIBUTION_IS_THE_GAP:
+    prov: CHECKED
+    artifact: data/pm_5min
+    said: "find over data for paths containing day=<d> with -newermt 2026-09-11 21:52:58 for each of the seven days, preceded by a control find under data/pm_5min/derived that returned three changed paths."
+  r408_PERSISTENT_yes_MEANS_DISABLING_DEFERS_RATHER_THAN_SKIPS:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    said: "systemctl --user show on both pm-measurement-pipeline.timer and pm-evaluation-pipeline.timer returned Persistent=yes."
+  r408_UNKNOWN_IS_TREATED_AS_A_CONSUMER_and_that_is_the_right_default:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "the three-way classification and the 7k.2 control requirement are the coordinator's; the per-timer ruling owes unit, schedule, exact command, what it READS, what it WRITES, and whether it touches any day in the validation window."
+  r408_pm_evaluation_pipeline_IS_THE_FIRST_SUSPECT_AND_IT_FIRES_IN_HOURS:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    said: "systemctl --user list-timers at 00:23:08Z shows pm-evaluation-pipeline.timer with last 2026-09-11T21:52:58Z and next 2026-09-12T03:52:27Z."
   r407_DA_WITHDREW_THE_QUALIFIED_ZERO_BEFORE_IT_LANDED:
     prov: CHECKED
     artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/da_market_facts_v1.json
