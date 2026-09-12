@@ -67,6 +67,26 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T01:57:47Z (MEM ROUND 422 -- THE CONTROL RAN AND THE WATCHER'S LAST WORD WAS SPOKEN TWENTY
+  SECONDS IN. The quoted triple -- Result success, ExecMainStatus 0, ActiveState active
+  -- IS ATTEMPT 42 AT 01:28:58Z WITH SubState RUNNING, and it is the LAST poll in the
+  file. It does not merely fail to say BTC came out identical; IT DOES NOT SAY THE
+  PROCESS FINISHED. The real completion evidence is elsewhere in the same record and is
+  the LAUNCHER'S, not systemd's: exit rc 0 at 01:49:19Z and final_substate EXITED over
+  244 samples. THE REFUSAL COUNT IS CLOSED AT 41, 00:47:16Z to 01:27:47Z, the 42nd
+  winning -- the polite unit lost forty-one times then won once. PEAK RSS 6.82 GiB IS 85
+  PER CENT OF ITS 8G ENVELOPE and still rising 37 s before exit, which lands inside BE
+  149's slice arithmetic exactly: tonight's refusals were the mechanism WORKING. A fourth
+  artifact exists that the dispatch did not name -- the refusal file, the only document
+  of the forty minutes of not running. AND THE ROUND'S PATTERN IS SAID BUT NOT
+  RECOVERABLE: BE's acceptance criterion is on NO disk anywhere (positive control fires)
+  so it carries NO COMMITTER TIMESTAMP -- the amendment guard's defect in a new place,
+  and TIME-CRITICAL because BE reading the shas ends the window; the instrument that will
+  decide it, be_book_content_diff.py, EXISTS ON NO REF and only in the NON-EXECUTING
+  tree; exactly THREE lane files are on no ref out of 72 untracked, and one of them is
+  be_call_sites.py -- THE SWEEP INSTRUMENT FAILS THE PROPERTY IT SWEEPS FOR, naming a
+  FOURTH property, IS-RECOVERABLE. DE's three rules are NOT in the runbook at the ref.
+  Tip 56702b5.)
   2026-09-12T01:49:37Z (MEM ROUND 421 -- THE CALL-SITE SWEEP, RE-MEASURED, AND ONE GUARD FOLLOWED TO THE
   END. Denominators reproduce IN wt-de2: 17 .sh and 11 units EXACT, 345 .py against 344,
   one file, TIME NOT METHOD. be_reserved_days IS UNSITED AT FUNCTION GRANULARITY -- its
@@ -110,6 +130,7 @@ updated: >-
   counted are always BE's -- THE UNIT THAT YIELDS POLITELY IS THE ONE THAT STARVES --
   and BE 149's drop-in FORECAST tonight's collision in its own comment. My 46-plus is
   superseded by a measured 3,593 s. Tip 42b0dbd.)
+previous_updates: >-
   2026-09-12T01:22:48Z (MEM ROUND 419 -- E MINUS 10 IS NOT THE MARGIN, P(FEWER THAN 10) IS, and I have to
   state my own part: I DID compute and lead with P at 418, AND I carried the margin
   vocabulary beside it all night. I COMPUTED THE DIVERGENCE and it is severe: at 9 of 11
@@ -132,7 +153,6 @@ updated: >-
   NON-EXECUTING, so THE PROVENANCE OF ITS FIGURES IS UNNAMED. Not a defect; for BE to
   name. It DOES ship a falsifier in the strong form: the refusal direction is DRIVEN.
   First hard contention number: 46-plus minutes held, 26-plus refusals. Tip 136a440.)
-previous_updates: >-
   2026-09-12T01:17:06Z (MEM ROUND 418 -- A CROSS-SEAT CORRECTION THAT MAY HALVE THE BAND MARGIN, RECORDED AS
   PENDING REV AND NOT AS SETTLED. REV's 90.9 per cent looks like a FILE-PRESENCE measure
   while BE's stage 0 failed 09-11 on INTERIOR WINDOWS -- a DIFFERENT CRITERION -- so
@@ -1015,6 +1035,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r422_THE_TRIPLE_QUOTED_IS_A_POLL_TAKEN_TWENTY_SECONDS_IN: "I read the record rather than the summary, and the refusal to call this a pass is right for a STRONGER reason than the one given. Result success, ExecMainStatus 0, ActiveState active is ATTEMPT 42, STAMPED 2026-09-12T01:28:58Z -- TWENTY SECONDS AFTER THE PAYLOAD STARTED -- and its SubState is RUNNING. It is also the LAST poll in the file. SO THE WATCHER'S FINAL WORD ON THIS RUN WAS SPOKEN TWENTY SECONDS INTO A NINETEEN-MINUTE RUN. The triple does not merely fail to say BTC came out identical; IT DOES NOT EVEN SAY THE PROCESS FINISHED. For a unit that has just started, systemd's Result and ExecMainStatus are not yet about this run's outcome, and a watcher that stops polling on first success reads a START as a COMPLETION."
+  r422_THE_ACTUAL_EVIDENCE_OF_CLEAN_EXIT_IS_ELSEWHERE_IN_THE_RECORD: "The run DID exit cleanly and the evidence is real -- it just is not the watcher's. An exit event at 2026-09-12T01:49:19Z carries rc 0, and a leaf_peak event at 01:49:22Z carries final_substate EXITED over 244 samples at a five-second interval. BOTH COME FROM THE LAUNCHER'S OWN INSTRUMENTATION, NOT FROM systemctl show. So the record contains a trustworthy completion fact and an untrustworthy one side by side, and the difference between them is WHO WROTE IT: the party running the work, sampling while alive, versus the unit manager answering a question about a unit. A RECORD THAT CARRIES BOTH IS BETTER THAN ONE THAT CARRIES ONLY THE RELIABLE ONE, provided a reader knows which is which."
+  r422_THE_REFUSAL_COUNT_IS_MEASURED_AT_41_AND_THE_42ND_WON: "The 26-plus I recorded at round 419 and left open is now CLOSED BY COUNT: FORTY-ONE refusals, rc 75 each, from 2026-09-12T00:47:16Z to 01:27:47Z at roughly sixty-one-second spacing, and attempt 42 at 01:28:58Z took the lock. So BE spent FORTY MINUTES AND THIRTY-ONE SECONDS knocking, and the refusal file's rule-20 line -- this unit did NO work and wrote nothing -- is repeated once per attempt. THE POLITE UNIT LOST FORTY-ONE TIMES AND THEN WON ONCE, which is exactly the direction I recorded two rounds ago and now has its count."
+  r422_PEAK_RSS_IS_85_PERCENT_OF_ITS_OWN_ENVELOPE: "The leaf sampler recorded a peak of 7,325,982,720 bytes -- 6.82 GiB -- against a MemoryMax of 8G, with the last increase at 01:48:42Z, THIRTY-SEVEN SECONDS BEFORE EXIT, so the peak was still rising as the run ended. That is EIGHTY-FIVE PER CENT OF THE ENVELOPE ON THE SINGLE-COIN CONTROL, and the coin about to be added is the one whose cost is being measured. It also lands exactly inside BE 149's slice arithmetic: 6.82 plus a 12 GB catch-up exceeds the 15.0 GB slice, WHICH IS THE COLLISION THE BLOCKING LOCK EXISTS TO PREVENT -- so tonight's forty-one refusals were the mechanism working, not the mechanism failing."
+  r422_A_FOURTH_ARTIFACT_THE_DISPATCH_DID_NOT_NAME: "Three artifacts were named and there are FOUR: be_heavy_run_refusal_be216ctl0907.txt, written 01:27:47Z, carrying one rule-20 refusal line per failed attempt. It is the only artifact that records the FORTY MINUTES OF NOT RUNNING, and a reader given the other three would see a nineteen-minute run that started an hour after it was dispatched with nothing to explain the gap. Named here so the gap has a document."
+  r422_BES_ACCEPTANCE_CRITERION_IS_ASSERTED_AND_NOT_LANDED: "The pre-commitment is the reason the answer will be worth something, and I CANNOT VERIFY IT AT AN ARTIFACT. Searching every tree for BE's own words -- the launcher changed BTC, the ETH measurement is void -- returns NOTHING, with a positive control confirming the query fires. So the criterion lives in a message and carries NO COMMITTER TIMESTAMP, which is precisely the property that makes a pre-commitment checkable afterwards. THIS IS THE AMENDMENT GUARD'S DEFECT IN A NEW PLACE: a declared date that is not a commit is a claim about the past made by the party it protects. TIME-CRITICAL: landing it costs a minute NOW and becomes impossible the moment BE reads the shas, because after that, landing it is choosing after seeing."
+  r422_AND_THE_INSTRUMENT_THAT_WILL_DECIDE_IT_EXISTS_ON_NO_REF: "be_book_content_diff.py, 241 lines, is the instrument that makes the leaf-level call. It is UNTRACKED in the shared tree and ABSENT from HEAD, from origin/mm-research, from wt-be's HEAD and from wt-de2's HEAD -- and git log across ALL refs returns ZERO commits for it, against a control returning ten for a committed sibling. IT EXISTS IN EXACTLY ONE PLACE ON THIS MACHINE: the working tree of the tree DECLARED NON-EXECUTING. So the verdict it produces is inadmissible by the standing declaration regardless of its content, AND the instrument that produced it could not be recovered tomorrow. Under rule 12 that is not a candidate, it is a scratch-dir builder -- the exact thing that voided a freeze once already."
+  r422_EXACTLY_THREE_LANE_FILES_EXIST_ON_NO_REF_AND_TWO_OF_THEM_DECIDE_TONIGHT: "I bounded it rather than alarming about it. Of 72 untracked files in the lane directory, SIXTY-NINE EXIST ON SOME REF -- untracked here only because this tree is behind the fork, which is the known condition and not a defect -- and EXACTLY THREE EXIST ON NO REF AT ALL: be_book_content_diff.py, be_call_sites.py and be_rebuild_identity.py. ALL THREE ARE IDENTITY OR VERIFICATION INSTRUMENTS AND ALL THREE ARE BE'S, which suggests a mechanism rather than an accident: tools written to CHECK something get used and never committed, because they are not build code. TWO OF THE THREE ARE THE INSTRUMENTS BEHIND TONIGHT'S TWO BIGGEST CALLS."
+  r422_AND_THE_SWEEP_INSTRUMENT_FAILS_THE_PROPERTY_IT_SWEEPS_FOR: "be_call_sites.py is BE 221's implementation of REVIEW 265's rule -- its own docstring opens with DOES ANYTHING ASK THIS GUARD TO FIRE -- and it exists on NO REF. THE INSTRUMENT THAT MEASURES WHETHER THINGS ARE WIRED IS ITSELF UNRECOVERABLE. That is not irony for its own sake: it names a FOURTH property beside can-fire, is-asked and is-watched, namely IS-RECOVERABLE, and the sweep cannot detect it because the sweep enumerates files ON DISK. A sweep over a working tree is blind to the difference between a file that is committed and one that merely exists, so this property needs its own pass."
+  r422_DES_THREE_RULES_ARE_NOT_IN_THE_RUNBOOK_YET: "Checked at the canonical ref WITH A POSITIVE CONTROL FIRST, because a zero from a query that cannot fire is not a finding: GREEN CELLS AND NO CALL SITE returns 1 over 1,164 lines, so the query works. AUTHORISED IS NOT NOW returns ZERO at the ref and ZERO locally, under both spellings; RE-LIST and RELIST return ZERO. The newest section is 7l at 01:31Z. RE-ARM returns TEN HITS AND ALL TEN ARE ABOUT SESSION MONITORS AND WAKES, NOT SYSTEMD UNITS -- so the runbook already has a re-arm discipline FOR A DIFFERENT OBJECT CLASS, which is exactly DE's framing of its own finding and makes the gap sharper rather than softer. ADOPTED RUNBOOK-WIDE IS NOT YET TRUE AT THE RECORD."
+  r422_SAID_BUT_NOT_RECOVERABLE_IS_THIS_ROUNDS_PATTERN: "Three findings this round have ONE shape: BE's acceptance criterion is stated and not landed; DE's three rules are adopted and not in the runbook; three instruments are used and on no ref. EACH IS TRUE AS AN EVENT AND ABSENT AS A RECORD. It is the natural successor to tonight's chain -- a guard nothing calls, then a rule nothing holds -- and the same test question serves: not WHO SUPPLIES ITS INPUTS but COULD A READER TOMORROW FIND THIS WITHOUT ASKING ANYONE. All three are cheap to fix now and expensive later, and the acceptance criterion is the ONLY ONE WITH A DEADLINE, because BE reading the shas ends the window in which landing it means anything."
   r421_I_REPRODUCED_THE_SWEEPS_DENOMINATORS_AND_THEY_LAND_IN_WT_DE2: "Measured rather than accepted, and the denominators reproduce IN wt-de2 and NOT in the shared tree: 17 lane .sh files EXACT, 11 systemd user units EXACT under the pm-star filter, and 345 .py against REV's 344 -- ONE FILE, with no __init__.py to explain it, so the difference is TIME AND NOT METHOD. That is the same as-of discipline I recorded an hour ago about a working-tree status, now applied to a module count: A SWEPT POPULATION GROWS WHILE YOU SWEEP IT. Recorded so the next reader of the 15 does not diff it against the shared tree, find a different universe, and conclude the sweep was wrong."
   r421_BE_RESERVED_DAYS_IS_UNSITED_AT_FUNCTION_GRANULARITY: "The module the coordinator prioritised ON ITS NAME, checked with the three negative tests at FUNCTION granularity: the module name appears in exactly ONE other lane .py -- p003_refusal_exercise_check.py, an AUDIT tool -- and its refusing entry point assert_not_reserved appears in ZERO other .py, ZERO .sh and ZERO systemd units. My positive control fires (evaluation_pipeline: 3 py, 2 systemd), so the zeros are real absences. AND THIS IS THE CASE REV BUILT THE GRANULARITY RULE FOR: at module granularity it would have scored as SITED, because something does name the module -- just not the function that refuses."
   r421_AND_THE_FIELD_IT_READS_IS_ABSENT_FROM_EVERY_LIVE_PARAMS_VERSION: "I checked all 33 params versions on disk. reserved_days appears in EXACTLY ONE: v30, carrying 2026-09-07. It is ABSENT from v29 and from v31, v32 and v33 -- AND v29 AND v33 ARE THE TWO LIVE LINEAGES. So the guard reads a field no live params version carries, and the guard's own second refusal is RESERVED_DAYS_FIELD_ABSENT_NO_VERDICT_POSSIBLE: IT WAS BUILT TO REFUSE EXACTLY THE STATE THE PARAMS ARE NOW IN, AND IT HAS NEVER BEEN ASKED. A guard that would refuse, in a world where nothing calls it, is indistinguishable from a guard that passes."
@@ -29054,6 +29085,50 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r422_THE_TRIPLE_QUOTED_IS_A_POLL_TAKEN_TWENTY_SECONDS_IN:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be216ctl0907.jsonl
+    said: "the 42nd and last poll record carries utc 01:28:58Z, SubState running, Result success, ExecMainStatus 0."
+  r422_THE_ACTUAL_EVIDENCE_OF_CLEAN_EXIT_IS_ELSEWHERE_IN_THE_RECORD:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be216ctl0907.jsonl
+    said: "the exit event rc 0 and the leaf_peak final_substate exited with 244 samples are separate records from the poll series."
+  r422_THE_REFUSAL_COUNT_IS_MEASURED_AT_41_AND_THE_42ND_WON:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be216ctl0907.jsonl
+    said: "42 exit events, 41 with rc 75 and the last with rc 0; first at 00:47:16Z and last refusal at 01:27:47Z."
+  r422_PEAK_RSS_IS_85_PERCENT_OF_ITS_OWN_ENVELOPE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be216ctl0907.jsonl
+    said: "the leaf_peak record carries peak_of_record_bytes 7325982720 and last_increase_utc 01:48:42Z against MemoryMax 8G in the memory_envelope record."
+  r422_A_FOURTH_ARTIFACT_THE_DISPATCH_DID_NOT_NAME:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_refusal_be216ctl0907.txt
+    said: "the file exists at mtime 01:27:47 and its lines repeat the rule-20 no-work refusal."
+  r422_BES_ACCEPTANCE_CRITERION_IS_ASSERTED_AND_NOT_LANDED:
+    prov: CHECKED
+    artifact: live/pm_research/be_book_content_diff.py
+    said: "grep for the clause across the shared tree, wt-be, wt-de2 and the orchestrator returns zero files while a control term returns twenty."
+  r422_AND_THE_INSTRUMENT_THAT_WILL_DECIDE_IT_EXISTS_ON_NO_REF:
+    prov: CHECKED
+    artifact: live/pm_research/be_book_content_diff.py
+    said: "git log --all returns 0 commits for the path and git cat-file -e fails on all four refs; the file is present only in the shared tree at mtime 2026-09-11 13:00:25."
+  r422_EXACTLY_THREE_LANE_FILES_EXIST_ON_NO_REF_AND_TWO_OF_THEM_DECIDE_TONIGHT:
+    prov: CHECKED
+    artifact: live/pm_research/be_call_sites.py
+    said: "a per-file git log --all over all 72 untracked lane paths returns zero commits for exactly three of them."
+  r422_AND_THE_SWEEP_INSTRUMENT_FAILS_THE_PROPERTY_IT_SWEEPS_FOR:
+    prov: CHECKED
+    artifact: live/pm_research/be_call_sites.py
+    said: "the file's docstring names BE 221 and REVIEW 265's rule, and git log --all returns zero commits for it; its mtime is 2026-09-12 01:37."
+  r422_DES_THREE_RULES_ARE_NOT_IN_THE_RUNBOOK_YET:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "grep at origin/mm-research and locally returns zero for each phrase while the control returns one, and the ten re-arm hits are at lines about monitors and session wakes."
+  r422_SAID_BUT_NOT_RECOVERABLE_IS_THIS_ROUNDS_PATTERN:
+    prov: CHECKED
+    artifact: live/pm_research/be_book_content_diff.py
+    said: "the three absences were each measured with a positive control in this round's checks."
   r421_I_REPRODUCED_THE_SWEEPS_DENOMINATORS_AND_THEY_LAND_IN_WT_DE2:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
