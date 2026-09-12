@@ -343,7 +343,16 @@ def plumbing_run(days=CONSUMED_DAYS, outdir=None, scope_override=None) -> dict:
         got = score_real_day(dd, outs)
         prim = got["C1"]["PRIMARY_fallback_scored"]
         prim2 = got["C2"]["PRIMARY_fallback_scored"]
+        prof = duration_profile(dd["generation_life_s"], dd["identity"])
+        cov_c2_day = (prim2["n_native"] / prim2["n"]) if prim2["n"] else None
         row = {"day": day, "book": dd["book"], "coins_with_books": coins,
+               "generation_duration_profile": prof,
+               "fraction_at_or_over_one_second":
+                   prof.get("fraction_at_or_over_one_second"),
+               "n_generations_under_one_second":
+                   prof.get("n_under_one_second"),
+               "C2_measured_coverage": cov_c2_day,
+               "C2_coverage_ceiling": coverage_ceiling(prof, cov_c2_day),
                "n_actions": got["n_actions"],
                "actions_without_a_resolution":
                    got["actions_without_a_resolution"],
@@ -393,6 +402,17 @@ def plumbing_run(days=CONSUMED_DAYS, outdir=None, scope_override=None) -> dict:
         "candidates_are_plumbing": {"C1": "shrink 10% toward 0.5",
                                     "C2": "+0.02, clipped"},
         "days": list(days), "per_day": per_day,
+        "THE_TWO_BLOCKERS": {
+            "eth_has_no_day_book_on_any_day": {
+                "coins_with_books_per_day":
+                    {r["day"]: list(r["coins_with_books"])
+                     for r in per_day},
+                "declared_scope": list(PRED.COINS),
+                "every_day_is": "COINS_INCOMPLETE",
+                "n_evaluable_days": 0,
+                "THE_CLOCK_CANNOT_START": True,
+                "this_is_a_DATA_blocker_not_a_code_one": True},
+            "C2_coverage_is_unreachable": None},
         "eligibility_as_declared": elig, "accrual_as_declared": acc,
         "coverage_gate": coverage,
         "coverage_gate_C2": coverage_c2,
@@ -402,12 +422,81 @@ def plumbing_run(days=CONSUMED_DAYS, outdir=None, scope_override=None) -> dict:
             f"{SHORT_GENERATION_S}s, so its coverage is a MEASURED share "
             "of the real rows",
         "real_exclusion_statuses": dict(statuses),
-        "increments": incs, "p_values": pvals, "holm": holm,
-        "exact_sign_test": {c: PRED.exact_sign_p(v)
-                            for c, v in incs.items()},
-        "futility": {c: PRED.futility(v) for c, v in incs.items()},
+        # THE NUMBERS AND THEIR LIMIT IN ONE BLOCK. A reader resolves
+        # fields; a caveat in a covering message does not travel with the
+        # number it qualifies (rule 35).
+        "plumbing_numbers": {
+            "NOT_EVIDENCE": VERDICT,
+            "these_are_plumbing_not_evidence":
+                "the days are spent, Identity is a proxy, the candidates "
+                "estimate nothing",
+            "population_is_consumed": True,
+            "identity_is_a_proxy": "mid of the neutral reference's "
+                                   "BUY_UP and SELL_UP levels",
+            "candidates_are_plumbing": {"C1": "shrink 10% toward 0.5",
+                                        "C2": "+0.02, clipped, abstaining "
+                                              "under 1s"},
+            "increments": incs, "p_values": pvals, "holm": holm,
+            "exact_sign_test": {c: PRED.exact_sign_p(v)
+                                for c, v in incs.items()},
+            "futility": {c: PRED.futility(v) for c, v in incs.items()}},
         "refusals_encountered": refusals,
     }
+    # THE SECOND BLOCKER, COMPUTED OVER THE WHOLE RUN.
+    pooled_n = sum(r["generation_duration_profile"].get(
+        "n_identity_eligible_generations", 0) for r in per_day)
+    pooled_k = sum(r["generation_duration_profile"].get(
+        "n_at_or_over_one_second", 0) for r in per_day)
+    pooled = {"n_identity_eligible_generations": pooled_n,
+              "n_at_or_over_one_second": pooled_k,
+              "n_under_one_second": pooled_n - pooled_k,
+              "fraction_at_or_over_one_second":
+                  (pooled_k / pooled_n) if pooled_n else None}
+    out["THE_TWO_BLOCKERS"]["C2_coverage_is_unreachable"] = {
+        "measured_coverage_btc": coverage["per_coin"]["btc"]["coverage"],
+        "measured_coverage_C2_btc":
+            coverage_c2["per_coin"]["btc"]["coverage"],
+        "pooled_duration": pooled,
+        "ceiling": coverage_ceiling(
+            pooled, coverage_c2["per_coin"]["btc"]["coverage"]),
+        "stability_of_the_fraction_across_days":
+            stability(per_day, "fraction_at_or_over_one_second"),
+        # DEAD OR MERELY NARROW -- the question decided by arithmetic
+        # rather than by a word. The day-to-day swing is real; what
+        # matters is whether any of it reaches the gate.
+        "reachability_per_day": [
+            {"day": r["day"],
+             "fraction_at_or_over_one_second":
+                 r["fraction_at_or_over_one_second"],
+             "reaches_the_gate": (r["fraction_at_or_over_one_second"]
+                                  or 0.0) >= PRED.COVERAGE_MIN}
+            for r in per_day],
+        "n_days_reaching_the_gate": sum(
+            1 for r in per_day
+            if (r["fraction_at_or_over_one_second"] or 0.0)
+            >= PRED.COVERAGE_MIN),
+        "best_day": max((r["fraction_at_or_over_one_second"] or 0.0)
+                        for r in per_day),
+        "gap_on_the_best_day": PRED.COVERAGE_MIN - max(
+            (r["fraction_at_or_over_one_second"] or 0.0)
+            for r in per_day),
+        "multiple_of_the_pooled_fraction_the_gate_requires":
+            (PRED.COVERAGE_MIN / pooled["fraction_at_or_over_one_second"])
+            if pooled["fraction_at_or_over_one_second"] else None,
+        "THE_SWING_IS_REAL_AND_IRRELEVANT_TO_REACHABILITY":
+            "the fraction is NOT stable within 5 points across these "
+            "days, and the gate still needs several times the best day, "
+            "so the variation does not decide the question -- but the "
+            "days after 09-10 are unread, so this is a statement about "
+            "09-03..09-10 and nothing later",
+        "structural_or_incidental":
+            "STRUCTURAL if the fraction is stable across the days "
+            "measured: the candidate's clock is coarser than the "
+            "decision rate, and that is a property of the estimand",
+        "NOT_A_TUNING_GAP": True,
+        "nothing_here_was_changed_after_seeing_it":
+            "the gate is 0.95 as declared and C2's threshold is 1s as "
+            "declared; recording is not repairing"}
     out["comparison_to_synthetic"] = compare_to_synthetic(out, outdir)
     REH.write_artifact(outdir / "plumbing_run_section8.json", out)
     return out
@@ -450,6 +539,102 @@ def compare_to_synthetic(real: dict, outdir: Path) -> dict:
             "synthetic_inventory_size": inv["n_refusals_scanned"]}
 
 
+#: The buckets the distribution is reported in. Declared before it is
+#: measured, so the shape is not chosen around the answer.
+DURATION_BUCKETS = (0.1, 0.25, 0.5, 1.0, 2.0, 5.0, 30.0, 300.0)
+
+
+def duration_profile(life: dict, identity: dict) -> dict:
+    """HOW LONG A REAL GENERATION LIVES, on the SCORED population.
+
+    The coverage denominator is Identity-eligible actions, so the profile
+    is taken over exactly those -- a distribution over a different
+    population would not explain the coverage it is offered to explain.
+    """
+    xs = sorted(v for k, v in life.items()
+                if identity.get(k) is not None
+                and identity[k].status == FP.OK)
+    n = len(xs)
+    if not n:
+        return {"n": 0, "status": "NO_IDENTITY_ELIGIBLE_GENERATIONS"}
+
+    def q(f):
+        return xs[min(n - 1, max(0, int(f * n)))]
+
+    hist, prev = {}, 0.0
+    for b in DURATION_BUCKETS:
+        c = sum(1 for x in xs if prev <= x < b)
+        hist[f"[{prev},{b})"] = c
+        prev = b
+    hist[f"[{prev},inf)"] = sum(1 for x in xs if x >= prev)
+    n_ge_1 = sum(1 for x in xs if x >= SHORT_GENERATION_S)
+    return {"n_identity_eligible_generations": n,
+            "seconds": {"p01": q(0.01), "p10": q(0.10), "p25": q(0.25),
+                        "p50": q(0.50), "p75": q(0.75), "p90": q(0.90),
+                        "p99": q(0.99), "max": xs[-1], "min": xs[0]},
+            "histogram_seconds": hist,
+            "n_under_one_second": n - n_ge_1,
+            "n_at_or_over_one_second": n_ge_1,
+            "fraction_at_or_over_one_second": n_ge_1 / n,
+            "threshold_s": SHORT_GENERATION_S}
+
+
+def coverage_ceiling(profile: dict, measured: float = None) -> dict:
+    """THE ARITHMETIC, SHOWN. A candidate that cannot form an opinion in
+    under `threshold_s` can cover AT MOST the generations that live that
+    long -- so its ceiling is a property of the DATA, not of tuning."""
+    if profile.get("n_identity_eligible_generations", 0) == 0:
+        return {"status": "NOT_MEASURABLE"}
+    n = profile["n_identity_eligible_generations"]
+    k = profile["n_at_or_over_one_second"]
+    ceiling = k / n
+    gate = PRED.COVERAGE_MIN
+    out = {"ceiling": ceiling,
+           "arithmetic": f"{k} generations >= {SHORT_GENERATION_S}s of "
+                         f"{n} Identity-eligible = {ceiling:.6f}",
+           "gate_minimum": gate,
+           "shortfall_against_the_gate": gate - ceiling,
+           "gate_is_unreachable_at_this_threshold": ceiling < gate,
+           "why": (f"a challenger needing {SHORT_GENERATION_S}s to form "
+                   f"an opinion cannot cover a decision that no longer "
+                   f"exists: the ceiling is the share of generations that "
+                   f"live that long, and no tuning of the candidate "
+                   f"raises it"),
+           "computed_not_asserted": True}
+    if measured is not None:
+        out["measured_coverage"] = measured
+        out["measured_equals_the_ceiling"] = abs(measured - ceiling) < 1e-9
+        out["mechanism_confirmed_not_assumed"] = (
+            "the measured coverage EQUALS the ceiling, so the shortfall "
+            "is the duration distribution and nothing else"
+            if abs(measured - ceiling) < 1e-9 else
+            "the measured coverage differs from the ceiling, so something "
+            "besides duration is also removing actions")
+    return out
+
+
+def stability(per_day, key: str) -> dict:
+    """IS IT THE DAYS, OR IS IT THE SHAPE? Computed across the days
+    available -- and the days NOT available are named."""
+    xs = [r[key] for r in per_day if r.get(key) is not None]
+    if len(xs) < 2:
+        return {"status": PRED.INSUFFICIENT, "n_days": len(xs)}
+    lo, hi = min(xs), max(xs)
+    mean = sum(xs) / len(xs)
+    sd = (sum((x - mean) ** 2 for x in xs) / (len(xs) - 1)) ** 0.5
+    return {"n_days": len(xs), "per_day": xs, "min": lo, "max": hi,
+            "mean": mean, "stdev": sd, "range": hi - lo,
+            "relative_range": (hi - lo) / mean if mean else None,
+            "STABLE_WITHIN_5_POINTS": (hi - lo) <= 0.05,
+            "days_measured": [r["day"] for r in per_day],
+            "days_not_measurable":
+                "2026-09-11 onward are protected and were not read, so "
+                "stability beyond 09-10 is UNTESTED",
+            "coins_not_measurable":
+                "eth has no day book on any day, so the distribution "
+                "cannot be measured for it from existing artifacts"}
+
+
 def falsify() -> int:
     import tempfile
     n = ok = 0
@@ -483,10 +668,14 @@ def falsify() -> int:
                           )["rows"][0]["status"])
 
     print("== a real day, driven end to end ==")
-    got = plumbing_run(("20260907",), outdir=out)
+    got = plumbing_run(("20260907", "20260910"), outdir=out)
     r = got["per_day"][0]
     ck("real actions were built and scored",
        r["n_actions"] > 10000, f"{r['n_actions']} actions on 09-07")
+    ck("  and a ONE-DAY stability question answers INSUFFICIENT, never "
+       "with a number",
+       stability(got["per_day"][:1], "fraction_at_or_over_one_second"
+                 )["status"] == PRED.INSUFFICIENT)
     ck("  and REAL exclusions arrived as STATUSES with counts",
        bool(got["real_exclusion_statuses"]),
        str(got["real_exclusion_statuses"]))
@@ -513,6 +702,49 @@ def falsify() -> int:
        and got["coverage_gate"]["passes"] is False,
        f"btc {got['coverage_gate']['per_coin']['btc']['coverage']}, "
        f"eth {got['coverage_gate']['per_coin']['eth']['coverage']}")
+
+    print("== the two blockers are COMPUTED FIELDS ==")
+    b = got["THE_TWO_BLOCKERS"]
+    ck("blocker 1 carries the per-day coins and the consequence",
+       b["eth_has_no_day_book_on_any_day"]["THE_CLOCK_CANNOT_START"] is True
+       and b["eth_has_no_day_book_on_any_day"]["n_evaluable_days"] == 0)
+    c2 = b["C2_coverage_is_unreachable"]
+    ck("blocker 2 shows the ARITHMETIC, not an assertion",
+       "generations >=" in c2["ceiling"]["arithmetic"],
+       c2["ceiling"]["arithmetic"])
+    ck("  and the measured coverage EQUALS the computed ceiling",
+       c2["ceiling"]["measured_equals_the_ceiling"] is True,
+       f"measured {c2['measured_coverage_C2_btc']:.6f} vs ceiling "
+       f"{c2['ceiling']['ceiling']:.6f}")
+    ck("  and the gate is stated UNREACHABLE as a predicate",
+       c2["ceiling"]["gate_is_unreachable_at_this_threshold"] is True,
+       f"shortfall {c2['ceiling']['shortfall_against_the_gate']:.4f}")
+    ck("the duration distribution is reported, in declared buckets",
+       "histogram_seconds" in got["per_day"][0][
+           "generation_duration_profile"])
+    ck("the stability of the fraction is computed across days",
+       "STABLE_WITHIN_5_POINTS" in c2["stability_of_the_fraction_across_days"]
+       or c2["stability_of_the_fraction_across_days"].get("status"))
+    ck("the plumbing numbers carry their limit IN THE SAME BLOCK",
+       got["plumbing_numbers"]["NOT_EVIDENCE"] == VERDICT
+       and set(got["plumbing_numbers"]) >= {"p_values", "futility",
+                                            "population_is_consumed"})
+    ck("dead-or-narrow is decided by ARITHMETIC: no day reaches the "
+       "gate, and the multiple is reported",
+       c2["n_days_reaching_the_gate"] == 0
+       and c2["multiple_of_the_pooled_fraction_the_gate_requires"] > 1,
+       f"best day {c2['best_day']:.4f}, gap "
+       f"{c2['gap_on_the_best_day']:.4f}, gate needs "
+       f"{c2['multiple_of_the_pooled_fraction_the_gate_requires']:.2f}x")
+    st = c2["stability_of_the_fraction_across_days"]
+    ck("  and the stability PREDICATE agrees with its own arithmetic "
+       "on whatever the days happen to be",
+       st["STABLE_WITHIN_5_POINTS"] == (st["range"] <= 0.05)
+       and st["per_day"] and st["max"] >= st["min"],
+       f"range {st['range']:.4f} -> {st['STABLE_WITHIN_5_POINTS']}")
+    ck("nothing was tuned after seeing it: the gate and the threshold "
+       "are as declared",
+       PRED.COVERAGE_MIN == 0.95 and SHORT_GENERATION_S == 1.0)
 
     print(f"\n{ok}/{n} cells pass")
     return 0 if ok == n else 1
