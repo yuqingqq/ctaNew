@@ -103,6 +103,52 @@ def assert_attributed(doc, path: str = "$") -> int:
     return n
 
 
+#: THE AMENDMENT DECLARATIONS this artifact expects, by lever. Naming
+#: them here is what gives the guard something to date: an amendment is
+#: dated by the COMMIT that lands its file, so the file must be named
+#: before it can be dated.
+AMENDMENT_FILES = {
+    "iii_longer_band":
+        "live/pm_research/declarations/de_amendment_longer_band_v1.json",
+    "iv_fewer_required_days":
+        "live/pm_research/declarations/de_amendment_fewer_days_v1.json",
+    "v_start_after_a_clean_run":
+        "live/pm_research/declarations/de_amendment_clean_start_v1.json",
+}
+
+
+def amendment_status() -> dict:
+    """THE CALL SITE (REVIEW 264 fix 7).
+
+    The guard is consulted HERE, in the document a person decides on, for
+    every lever that must be declared before the clock -- so its verdict
+    is a field of the decision rather than a function nobody calls. Today
+    every one of them refuses, because no validation window is declared:
+    there is no clock to be before.
+    """
+    out = {}
+    for lever, path in AMENDMENT_FILES.items():
+        try:
+            got = HZ.amendment_is_admissible(lever, amendment_path=path)
+            out[lever] = {"admissible": True,
+                          "declared_utc": got["declared_utc"],
+                          "clock_start_utc": got["clock_start_utc"],
+                          "clock_read_from": got["clock_read_from"],
+                          "expected_declaration": path}
+        except HZ.BandHazardRefused as exc:
+            head = str(exc).split(":")[0].replace("REFUSED ", "").strip()
+            out[lever] = {"admissible": False, "refusal": head,
+                          "expected_declaration": path,
+                          "detail": str(exc)[:200]}
+    return {"consulted": "de_band_hazard.amendment_is_admissible",
+            "when": "every time this artifact is emitted",
+            "per_lever": out,
+            "why_this_is_here":
+                "REVIEW 264: a guard with cells and no call site "
+                "constrains nothing; its verdict now travels in the "
+                "document the decision is made from"}
+
+
 def decision_artifact(as_of: str) -> dict:
     pair = HZ.forward_rate_pair()
     via = HZ.viability_table()
@@ -302,6 +348,8 @@ def decision_artifact(as_of: str) -> dict:
                            "selection"},
         },
 
+        "AMENDMENT_ADMISSIBILITY_NOW": amendment_status(),
+
         "THE_TRAP": {
             "which_levers": ["iii_longer_band", "iv_fewer_required_days"],
             "why": "both are what a disappointed operator reaches for "
@@ -371,6 +419,19 @@ def falsify() -> int:
     ck("  and REV's search and what it did NOT read are recorded",
        "did NOT read" in tr["THE_REGIME_QUESTION"][
            "REV_searched_and_found_none"])
+
+    print("== THE CALL SITE (REVIEW 264 fix 7) ==")
+    st = doc["AMENDMENT_ADMISSIBILITY_NOW"]
+    ck("the guard is consulted from ANOTHER module, in the emitted "
+       "artifact",
+       st["consulted"] == "de_band_hazard.amendment_is_admissible"
+       and set(st["per_lever"]) == set(AMENDMENT_FILES))
+    ck("  and today every amendment lever REFUSES -- no clock exists yet",
+       all(not v["admissible"] for v in st["per_lever"].values()),
+       str(sorted({v["refusal"] for v in st["per_lever"].values()})))
+    ck("  each naming the declaration file that would date it",
+       all(v["expected_declaration"].endswith(".json")
+           for v in st["per_lever"].values()))
 
     print("== viability, the floor, and the levers ==")
     v = doc["IS_IT_VIABLE"]["minimum_daily_joint_rate"]
