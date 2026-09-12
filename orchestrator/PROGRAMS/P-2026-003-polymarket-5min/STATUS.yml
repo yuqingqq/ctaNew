@@ -67,6 +67,26 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T01:11:55Z (MEM ROUND 417 -- AN EXCEPTION LOG IS SILENT EXACTLY WHEN THINGS ARE HEALTHY, which
+  is the general form of the sentence I reached at 416 and subsumes it. BOTH PROPOSED
+  FIXES WERE ALSO WRONG: max(recv_ns) is only LESS BAD, and both fail in the limit of a
+  clean collector -- the named exclusion came back CLEAN, strictly monotone, AND IT WAS
+  THE WRONG QUESTION. THE CORRECT SIGNAL ALREADY EXISTS AND I MEASURED IT:
+  collector_health.jsonl, 16,017 records in one bucket, inter-record p50 60.0 and p90 60.0
+  with MAXIMUM 133.1 s -- an UNCONDITIONAL heartbeat, and that observed max is an
+  EMPIRICAL staleness bound rather than an invented number. THE CONTRAST IN ONE LINE: the
+  heartbeat is 45 SECONDS old and the window_start the check reads is 7,823 SECONDS old --
+  THE SIGNAL THE CHECK READS IS 174 TIMES STALER THAN THE ONE BESIDE IT. That is the form
+  I should have reached for at 410 instead of verifying the expression. A fix was proposed
+  TWICE by a party wanting the build it blocked and was WRONG BOTH TIMES -- AND I SECONDED
+  THE FIRST AND MANUFACTURED A REASON FOR IT. Three attempts by two interested parties,
+  all wrong; the disinterested review got it in one. DE INVERTED THE BAND RISK and I
+  record the distinction: RECOVERABLE VERSUS UNRECOVERABLE -- spare days are spent by
+  COLLECTION and RESOLUTION failures, not late builds. I reproduced the band arithmetic:
+  10 of 11 gives 12.73 expected, 2.73 margin, P = 0.62 per cent; at 95 per cent ETH the
+  joint falls to 0.8636 and P is 3.2; at 90 per cent, 9.4. NECESSARY BUT NOT SUFFICIENT --
+  the ETH hazard is MULTIPLICATIVE. And the whole 90.9 rests on ONE failing day whose
+  cause is not yet read. Tip f9b5d24.)
   2026-09-12T01:05:17Z (MEM ROUND 416 -- C2 IS STRUCTURALLY DEAD, SETTLED BY A RANGE: eight days span 0.1768
   to 0.2707, the sub-second share NEVER below 0.7293, zero of eight reaching the 95 per
   cent gate. AND THE DECISIVE RATIO IS GAP OVER SWING, NOT GAP OVER LEVEL -- from the BEST
@@ -105,6 +125,7 @@ updated: >-
   INHERITS THE TYPE of its second operand whenever the gates are complete. THE GATE IS NOT
   A BOOLEAN BY CONSTRUCTION. My run at the chain-ref head returned False, so the value
   depends on the moment -- which is the instability the fix must remove. Tip e152466.)
+previous_updates: >-
   2026-09-12T00:55:43Z (MEM ROUND 414 -- THE TWO-COIN CLAUSE IS IN THE PLAN THREE TIMES AND I READ ALL
   THREE. Lines 91-93: PER-COIN TABLES ARE DIAGNOSTICS AND CANNOT AUTHORIZE A COIN-SPECIFIC
   DEPLOYMENT; a coin-specific decision requires A NEW FAMILY AND NEW MULTIPLICITY
@@ -124,7 +145,6 @@ updated: >-
   C2 rule but it is ADJACENT, not an answer -- C2's is a COVERAGE failure, not a
   point-in-time one. ETH cost is to be MEASURED on a real 09-05 day, not converted from a
   0.32x ratio. Tip 4864080.)
-previous_updates: >-
   2026-09-12T00:52:32Z (MEM ROUND 413 -- REVIEW 256 INVERTS THE QUESTION AND C1 IS NOT ARITHMETICALLY DEAD.
   The perfect-foresight ceiling is mean 0.0745 nats over 4,973,558 states, p90 0.1335,
   max 0.6931 -- capped at ln 2 = 0.693147. I DERIVED THE INSTRUMENT rather than accept it:
@@ -911,6 +931,18 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r417_AN_EXCEPTION_LOG_IS_SILENT_EXACTLY_WHEN_THINGS_ARE_HEALTHY: "REVIEW 259's general form, and it subsumes the sentence I reached at round 416. I had written that gap sparsity is the whole problem; REV names the class: collector_gaps.jsonl IS AN EXCEPTION LOG -- every class in it is an anomaly or a lifecycle event -- and AN EXCEPTION LOG IS SILENT EXACTLY WHEN THINGS ARE HEALTHY. So no statistic over it can prove liveness, because its emptiness is the healthy state. That is a stronger statement than mine and it generalises past this file to every log built the same way."
+  r417_AND_BOTH_PROPOSED_FIXES_WERE_ALSO_WRONG: "max(window_start) cannot prove liveness AND NEITHER CAN max(recv_ns), which was the proposed replacement: it is only LESS BAD because stalls are commoner than gaps, and BOTH FAIL IN THE LIMIT OF A CLEAN COLLECTOR. Note what happened to the named exclusion -- whether recv_ns can be stale-written or backfilled CAME BACK CLEAN, strictly monotone with zero out-of-order -- AND IT WAS THE WRONG QUESTION. A validated answer to a question that does not decide the matter is not progress, and naming the exclusion was still right: it is how the wrong question got asked out loud where it could be seen."
+  r417_THE_CORRECT_SIGNAL_ALREADY_EXISTS_AND_I_MEASURED_IT: "collector_health.jsonl: I read 16,017 records where REV read 16,010, the difference being about seven minutes of a sixty-second beat. ALL RECORDS FALL IN ONE BUCKET -- I cannot confirm the class NAME because my key guess did not match the field, which is my checker and not the data. Inter-record interval p50 60.0 s, p90 60.0 s, MAXIMUM 133.1 s, reproducing REV's figures exactly. It is AN UNCONDITIONAL SIXTY-SECOND HEARTBEAT WRITTEN WHETHER OR NOT ANYTHING GOES WRONG, and the observed maximum is THE EMPIRICAL BASIS FOR A STALENESS BOUND RATHER THAN AN INVENTED NUMBER."
+  r417_THE_CONTRAST_IN_ONE_LINE_the_read_signal_is_174x_STALER: "Measured at the same instant: THE HEARTBEAT IS 45 SECONDS OLD and THE window_start THE CHECK READS IS 7,823 SECONDS OLD, 2.2 hours. THE SIGNAL THE CHECK READS IS 174 TIMES STALER THAN THE ONE THAT EXISTS ON THE SAME DISK. That is the whole finding in one comparison, and it is the form I wish I had reached for at round 410 instead of reading the predicate's implementation: the question was never whether the code computes its expression correctly, it was whether a fresher signal was sitting beside it."
+  r417_REV_SEPARATED_TWO_CONCERNS_THE_SINGLE_LINE_CONFLATED: "LIVENESS comes from the heartbeat file; DAY COVERAGE comes from records whose window_start falls INSIDE the day. One line was doing both and could do neither well, because the two questions want opposite things from an exception log: coverage wants its entries, liveness wants its silence to mean something. Splitting them is what makes both answerable, and it is the same move as separating cells from properties_covered and no_labelled_score from score_is_evidence -- ONE FIELD CARRYING TWO FACTS IS THIS PROGRAMME'S MOST REPEATED DEFECT."
+  r417_THE_THREE_CONDITIONS_ON_THE_ADOPTION_and_the_first_is_the_important_one: "Routed to BE with three. ONE: it is adopted BECAUSE THE CHECK MEASURES THE WRONG THING AND NOT BECAUSE IT UNBLOCKS 09-11 -- if 09-11 still fails on MANY_MISSING_WINDOWS(4) it still fails, and the shown-not-counted ruling stands. TWO: the falsifier is MANDATORY and a stale or absent heartbeat must REFUSE, since A LIVENESS CHECK THAT CANNOT DETECT A DEAD COLLECTOR IS WORSE THAN THE ONE IT REPLACES. THREE: the four built days must STILL PASS as the regression control. The first condition is the one that keeps the fix honest, because the fix was proposed by parties who wanted the build it blocked."
+  r417_TWICE_WRONG_WHILE_WANTING_THE_BUILD_AND_I_SECONDED_THE_FIRST: "Recorded as asked, and my part belongs in it. A fix to this check was proposed TWICE by a party that wanted the build it blocked, and was WRONG BOTH TIMES -- first the per-day reconstruction that called the check correct, then max(recv_ns) as the replacement. THAT IS THE ARGUMENT FOR ROUTING IT TO REV RATHER THAN APPLYING IT. And I am in it: at round 410 I seconded the first conclusion, and I did not merely agree -- I MANUFACTURED A SUPPORTING REASON, writing that gap sparsity never touches the check. Three attempts by two parties with an interest, all wrong, and the disinterested review got it in one."
+  r417_DE_INVERTED_THE_BAND_RISK_and_RECOVERABLE_VERSUS_UNRECOVERABLE_is_the_distinction: "The band's spare days are spent by COLLECTION AND RESOLUTION FAILURES, NOT BY LATE BUILDS. The slack to watch is THE COLLECTOR'S, not the scheduler's: the nightly serial-versus-parallel question is a WALL-CLOCK COMFORT question, while the thing that can actually end the test at INSUFFICIENT_EVIDENCE is A COLLECTOR GAP OR A MISSING RESOLUTION ON A DAY NOBODY CAN REBUILD. RECOVERABLE VERSUS UNRECOVERABLE IS THE DISTINCTION THAT MATTERS. It fits tonight's evidence exactly: 09-11's stage-0 failure is COLLECTION-SHAPED, and it is the only failing day in eleven."
+  r417_THE_MEASURED_OBSERVED_STRUCTURAL_TAGGING_IS_A_DISCIPLINE_TO_KEEP: "DE tags each failure mode MEASURED, OBSERVED or STRUCTURAL so a reader can tell WHICH CLAIMS CARRY NUMBERS. That is the same thing this file does with CHECKED against RELAYED provenance, and the same thing REV did in separating a 9.4M-state measurement from 130 clean instants. A document in which every claim looks equally supported is one whose weakest claim sets the trust level for all of them -- the tag is what stops that."
+  r417_I_REPRODUCED_THE_BAND_RISK_and_it_is_NECESSARY_BUT_NOT_SUFFICIENT: "Computed the binomial myself rather than take the percentages. Joint BTC+ETH pass rate since 09-01 is 10 of 11 = 0.9091, giving 12.73 EXPECTED EVALUABLE DAYS in the fourteen and 2.73 DAYS OF MARGIN over the required ten, with P(fewer than 10) = 0.62 PER CENT against the reported about 0.6. The ETH hazard is MULTIPLICATIVE: at 95 per cent daily ETH success the joint rate is 0.8636 and P rises to 3.2 per cent -- the report says about 3.7, a difference I record rather than round away -- and at 90 per cent the joint is 0.8182 and P is 9.4 per cent against about 10. SO A TWO-COIN-READINESS TERM IS NECESSARY BUT NOT SUFFICIENT: BOTH TERMS CAN HOLD AND THE BAND STILL MISS TEN."
+  r417_THE_BAND_IS_COUNTED_FROM_max_D1_AND_09_14_NOT_TRUNCATED_FROM_D1: "A precision that decides how much margin actually exists: the 14-day band must be counted FROM max(D1, 2026-09-14), NOT TRUNCATED FROM D1. Truncating would silently shorten the band by however many days the floor pushes the start forward, converting the 09-14 floor from a protection into a cost -- the floor was ruled to keep a consumed day out of the population, and a truncated band would make it also spend margin it never intended to spend."
+  r417_09_11_IS_THE_FIRST_FAILING_DAY_SINCE_08_31_AND_THE_WHY_IS_NOT_YET_READ: "REV notes 09-11 is the FIRST FAILING DAY SINCE 08-31, with race_accrual_eligible false and all_pass false ON BOTH COINS, and HAS NOT YET READ WHY. That matters more than it first looks, because THAT SINGLE FAILURE IS THE ENTIRE EMPIRICAL BASIS FOR THE 90.9 PER CENT -- the rate, the 2.73 days of margin and the 0.62 per cent all rest on one day whose cause is unknown. If its cause is systematic rather than incidental, the rate is not 10 of 11 going forward."
   r416_C2_IS_STRUCTURALLY_DEAD_SETTLED_BY_A_RANGE_NOT_A_POOLED_FIGURE: "DE measured frac at or above one second across eight days: span 0.1768 to 0.2707, mean 0.2347, sd 0.0312, range 0.0939. THE SUB-SECOND SHARE NEVER DROPS BELOW 0.7293, so on C2's BEST day nearly three generations in four are gone before it can speak. ZERO of 8 days reach the 95 per cent gate and the best day's shortfall is 0.6793. I checked each figure: the range, the never-below, and the shortfall all reproduce exactly."
   r416_AND_THE_DECISIVE_RATIO_IS_GAP_OVER_SWING_NOT_GAP_OVER_LEVEL: "Why this is an answer and not an impression, and I can sharpen the form. The conclusion rests on THE SWING BEING TOO SMALL TO CLOSE THE GAP, not on the level being low: 0.234 is far from 0.95 invites maybe a better day exists, and that invitation has to be closed. The reported closure is that reaching 0.95 needs about four times the pooled fraction. THE STRONGER FORM IS THE RATIO OF THE GAP TO THE SWING: from the BEST of eight days the gap is 0.6793 while THE ENTIRE DAY-TO-DAY VARIATION IS 0.0939, so THE GAP IS 7.2 TIMES THE WHOLE SWING. No day within the observed variation can close it, which answers the objection directly rather than by comparison to an average."
   r416_a_small_arithmetic_note_recorded_rather_than_rounded_to_agreement: "0.95 divided by the reported pooled mean 0.2347 is 4.047, which rounds to 4.05 and not the reported 4.06; 4.06 would follow from a pooled figure near 0.2340. The difference is in the fourth significant figure and is IMMATERIAL TO THE CONCLUSION, which is why it is recorded as a note rather than a correction. Recorded at all because silently rounding my own result to agree with a reported one is how two independent computations stop being independent."
@@ -28893,6 +28925,54 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r417_AN_EXCEPTION_LOG_IS_SILENT_EXACTLY_WHEN_THINGS_ARE_HEALTHY:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_gaps.jsonl
+    said: "the ruling is REV's; my round-416 flag reached the special case, that a gap-only signal in a gap-free period never advances."
+  r417_AND_BOTH_PROPOSED_FIXES_WERE_ALSO_WRONG:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_gaps.jsonl
+    said: "the monotonicity result and the less-bad ruling are REV's; the exclusion was named at round 416 and I recorded it there as the reason the hypothesis was not yet a finding."
+  r417_THE_CORRECT_SIGNAL_ALREADY_EXISTS_AND_I_MEASURED_IT:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_health.jsonl
+    said: "parsed every line for a timestamp, sorted, and took the p50, p90 and maximum of the inter-record gaps: 60.0, 60.0 and 133.1 seconds over 16,017 records."
+  r417_THE_CONTRAST_IN_ONE_LINE_the_read_signal_is_174x_STALER:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_health.jsonl
+    said: "took the maximum timestamp from each file at the same moment and differenced both against the wall clock: 45 s against 7,823 s."
+  r417_REV_SEPARATED_TWO_CONCERNS_THE_SINGLE_LINE_CONFLATED:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "the separation is REV's; the two prior instances are the gate ledger's cells-versus-properties split and the ledger's two permission predicates."
+  r417_THE_THREE_CONDITIONS_ON_THE_ADOPTION_and_the_first_is_the_important_one:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "the three conditions are the coordinator's routing to BE; the shown-not-counted ruling for 09-11 is recorded at round 410."
+  r417_TWICE_WRONG_WHILE_WANTING_THE_BUILD_AND_I_SECONDED_THE_FIRST:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "my round-410 flag endorsed the check as a correctly-implemented liveness proof and added the gap-sparsity argument; round 416 records the withdrawal and this round records REV's ruling."
+  r417_DE_INVERTED_THE_BAND_RISK_and_RECOVERABLE_VERSUS_UNRECOVERABLE_is_the_distinction:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the inversion is DE's and was accepted; 09-11's stage-0 failure and its uniqueness across eleven days are the evidence cited for it."
+  r417_THE_MEASURED_OBSERVED_STRUCTURAL_TAGGING_IS_A_DISCIPLINE_TO_KEEP:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the three-way tagging is DE's convention in the band-risk analysis."
+  r417_I_REPRODUCED_THE_BAND_RISK_and_it_is_NECESSARY_BUT_NOT_SUFFICIENT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "summed the binomial tail for k below 10 at n = 14 for p = 0.9091, 0.8636 and 0.8182, giving 0.0062, 0.0325 and 0.0939."
+  r417_THE_BAND_IS_COUNTED_FROM_max_D1_AND_09_14_NOT_TRUNCATED_FROM_D1:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "the counting rule is the coordinator's clarification of the accrual band I read at round 414, which requires 10 evaluable days within 14 consecutive calendar days."
+  r417_09_11_IS_THE_FIRST_FAILING_DAY_SINCE_08_31_AND_THE_WHY_IS_NOT_YET_READ:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the both-coin failure flags and the 08-31 boundary are REV's; the dependence of the band arithmetic on that single day follows from the 10-of-11 denominator I recomputed above."
   r416_C2_IS_STRUCTURALLY_DEAD_SETTLED_BY_A_RANGE_NOT_A_POOLED_FIGURE:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
