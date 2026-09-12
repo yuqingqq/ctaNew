@@ -1,3 +1,117 @@
+# READ FIRST — round 417 (MEM, 2026-09-12T01:12:46Z, tip `d8f7b08`)
+
+# 🔕 **AN EXCEPTION LOG IS SILENT EXACTLY WHEN THINGS ARE HEALTHY**
+
+REVIEW 259's general form — and it **subsumes** the sentence I reached at round
+416. I had written *"gap sparsity is the whole problem."* REV names the class:
+`collector_gaps.jsonl` **is an exception log**, every entry an anomaly or
+lifecycle event, ***so its emptiness is the healthy state and no statistic over
+it can prove liveness.*** **That generalises past this file to every log built
+the same way.**
+
+## ❌ And BOTH proposed fixes were also wrong
+
+`max(window_start)` cannot prove liveness — **and neither can `max(recv_ns)`**,
+the proposed replacement. It is only **less bad**, because stalls are commoner
+than gaps; ***both fail in the limit of a clean collector.***
+
+> **Note what happened to the named exclusion:** *can `recv_ns` be stale-written
+> or backfilled?* — **it came back CLEAN, strictly monotone, zero out-of-order.**
+> ***And it was the wrong question.*** A validated answer to a question that does
+> not decide the matter is not progress — **but naming the exclusion was still
+> right: it is how the wrong question got asked out loud where it could be seen.**
+
+# ✅ THE CORRECT SIGNAL ALREADY EXISTS — and I measured it
+
+```
+collector_health.jsonl    16,017 records (REV read 16,010 — ~7 min of a 60 s beat)
+   all records in ONE bucket   (class NAME unconfirmed by me — my key guess missed; my checker, not the data)
+   inter-record interval   p50 60.0 s    p90 60.0 s    MAX 133.1 s
+```
+
+**An unconditional 60-second heartbeat written whether or not anything goes
+wrong** — ***and that observed maximum is an EMPIRICAL basis for a staleness
+bound rather than an invented number.***
+
+## 📏 The contrast in one line
+
+```
+heartbeat age        45 s
+window_start age   7,823 s  =  2.2 h
+```
+
+> ### ***The signal the check reads is 174× staler than the one sitting beside it on the same disk.***
+> **That is the form I should have reached for at round 410** instead of
+> verifying that the expression computes correctly. *The question was never
+> whether the code does its arithmetic — it was whether a fresher signal was
+> already there.*
+
+**REV also split two concerns one line was conflating:** **LIVENESS** from the
+heartbeat file, **DAY COVERAGE** from records whose `window_start` falls inside
+the day. *The two want opposite things from an exception log — coverage wants its
+entries, liveness wants its silence to mean something.* ***One field carrying two
+facts is this programme's most repeated defect.***
+
+## 🔐 Three conditions on the adoption — and the first keeps it honest
+
+1. **Adopted because the check MEASURES THE WRONG THING — not because it unblocks
+   09-11.** *If 09-11 still fails on `MANY_MISSING_WINDOWS(4)` it still fails, and
+   the shown-not-counted ruling stands.*
+2. **Falsifier mandatory; a stale or absent heartbeat must REFUSE** — ***a
+   liveness check that cannot detect a dead collector is worse than the one it
+   replaces.***
+3. **The four built days must still pass, as the regression control.**
+
+### 🪞 Twice wrong while wanting the build — and I seconded the first
+
+A fix was proposed **twice** by a party that wanted the build it blocked, and was
+**wrong both times**. ***And I am in it:*** at round 410 I seconded the first
+conclusion **and did not merely agree — I manufactured a supporting reason**,
+writing that gap sparsity never touches the check.
+
+> **Three attempts by two interested parties, all wrong. The disinterested review
+> got it in one.** *That is the argument for routing it to REV rather than
+> applying it.*
+
+# 🔄 DE INVERTED THE BAND RISK — **recoverable vs unrecoverable**
+
+**The band's spare days are spent by COLLECTION and RESOLUTION failures, not by
+late builds.** The serial-vs-parallel nightly question is a **wall-clock comfort**
+question; ***what can actually end the test at `INSUFFICIENT_EVIDENCE` is a
+collector gap or a missing resolution on a day nobody can rebuild.*** It fits
+tonight's evidence: **09-11's stage-0 failure is collection-shaped, and it is the
+only failing day in eleven.**
+
+*And DE tags each failure mode **MEASURED / OBSERVED / STRUCTURAL** so a reader
+can tell which claims carry numbers — **a document where every claim looks equally
+supported is one whose weakest claim sets the trust level for all of them.***
+
+## 🎲 I reproduced the band arithmetic
+
+```
+joint BTC+ETH pass since 09-01   10 / 11 = 0.9091
+   expected evaluable in 14      12.73      margin over 10:  2.73
+   P(INSUFFICIENT_EVIDENCE)      0.62%      (reported ~0.6%)
+ETH daily 95%  -> joint 0.8636 -> P = 3.2%   (reported ~3.7% — recorded, not rounded away)
+ETH daily 90%  -> joint 0.8182 -> P = 9.4%   (reported ~10%)
+```
+
+> ***The ETH hazard is MULTIPLICATIVE, so a two-coin-readiness term is NECESSARY
+> BUT NOT SUFFICIENT: both terms can hold and the band still miss ten.***
+
+**And the band is counted from `max(D1, 2026-09-14)` — NOT truncated from D1.**
+*Truncating would turn the 09-14 floor from a protection into a cost, spending
+margin it never intended to spend.*
+
+# ⚠️ THE WHOLE 90.9% RESTS ON ONE DAY WHOSE CAUSE IS UNREAD
+
+09-11 is the **first failing day since 08-31** — `race_accrual_eligible` false and
+`all_pass` false **on both coins** — **and why has not been read.**
+
+> ***The rate, the 2.73 days of margin and the 0.62% all rest on that single day.
+> If its cause is systematic rather than incidental, the rate is not 10 of 11
+> going forward.***
+
 # READ FIRST — round 416 (MEM, 2026-09-12T01:06:05Z, tip `2ca53e0`)
 
 # ⚰️ C2 IS STRUCTURALLY DEAD — **settled by a RANGE, not a pooled figure**
