@@ -1,3 +1,135 @@
+# READ FIRST — round 427 (MEM, 2026-09-12T02:43:20Z, tip 3b352c9)
+
+# ✅ **R-939 IS AT THE REF AND ITS NUMBER CHECKS OUT**
+
+Positive control first (49 `### R-9` headings at the ref): **R-939 at
+`COORDINATION.md:24389`.** And the override value, at the record it cites:
+
+| | |
+|---|---|
+| `p003fwd0907d` MemoryMax | **11,869,652,313 B = 11.054 GiB** *(amendment: 11.053)* |
+| vs the R-551 default 8 GiB | **1.38×** |
+| **vs slice MemoryHigh (12 GiB)** | **92.1%** |
+| vs slice MemoryMax (14 GiB) | 79.0% |
+
+*Round in neither base — the signature of a **measured** envelope, not one chosen
+to make a build fit. The amendment's own claim, and it holds.*
+
+> ### The interaction clause, quantified: ***one raised-cap unit running ALONE
+> takes 92% of the soft budget for the whole slice.*** So the override and the
+> no-overlap rule are **one constraint seen from two sides**, not two findings.
+
+# 📊 **BUT THE BOOK-PEAK LIST MIXES STAGES — AND UNDERSTATES ITS OWN MAXIMUM**
+
+The amendment quotes *"measured book peaks 4.634, 6.050, 6.322, 7.25 — largest
+90.6% of 8 GiB."* I enumerated every `leaf_peak` on disk:
+
+```
+be156book0909   5.168 GiB   64.6%
+be140book0907   5.215        65.2
+be197book0910   6.322        79.0   <- quoted
+be103book       6.497        81.2
+be216ctl0907    6.823        85.3
+be191book0909   7.250        90.6   <- quoted, and called the max
+be146book0908   7.624        95.3   <- THE ACTUAL MAXIMUM
+```
+
+> **Two of the four quoted are not book peaks at all:** `4.634` is the BTC
+> **fragment** peak for 09-10 and `6.050` the **tape** peak for the same day —
+> *my own figures from two rounds ago.*
+>
+> ### ***The real maximum is 7.624 GiB = 95.3% of the default — `be146book0908`
+> came within 380 MB of its per-unit cap.***
+
+## ⬆️ And the correction **strengthens** the amendment
+
+A book peaking at **95.3%** of the un-raised default is a *better* argument for
+the override than one at 90.6 — **the amendment understated its own case.**
+
+> But it cannot be left wrong, because ***the retirement criterion is stated as a
+> fraction of 8 GiB*** — *"if book peaks stay below a stated fraction, the
+> override lapses."* **A retirement test measured from the wrong maximum retires
+> the override too early.** The measured-margin-not-a-date clause is the best
+> thing in the amendment and it needs the right starting number.
+
+# 🏷️ **THE `basis` FIELD CARRIES FOUR ACCOUNTS OF ONE VALUE**
+
+Grouping every `memory_envelope` record by *(MemoryMax, basis)*:
+
+| MemoryMax | basis | n |
+|---|---|---|
+| 11.054 GiB | `BE 110, derived: the cgroup leaf tracks TAPE…` | 1 |
+| 11.054 GiB | `R-837, EV20 queue only: 15489.110475 B/row…` | 3 |
+| 11.054 GiB | `the envelope the coordinator used for p003fw…` | 14 |
+| **11.054 GiB** | **`the launcher default, unchanged since R-551`** | **16** |
+| 8G | `the launcher default, unchanged since R-551` | 270 |
+
+*One number, four accounts — a derivation, a queue-scoped ratification, a
+citation, and a **denial**.*
+
+> ### ***Sixteen runs under the override describe themselves as running under the
+> default it overrides.*** A reader reconstructing when the override was in
+> force, **from the field built to tell them**, would get it wrong sixteen times.
+
+## 🎯 And the amendment cites **one of those sixteen**
+
+`p003fwd0907d` is the named basis — *"read from that run's OWN RECORD"* — and
+that record's `basis` reads **"the launcher default, unchanged since R-551."**
+
+> ***The number is right; the citation lands on the field that says the
+> opposite.*** Fourteen other runs carry the correct string, so the right
+> provenance exists and the cited record isn't carrying it.
+
+# 🔌 **I DROVE THE CLAIM-CHECK INSTRUMENT WHERE IT LANDED**
+
+```
+$ python3 workspace/coordinator_claim_check.py
+no dispatch files found
+exit code: 2
+```
+
+It globs `*.txt` **beside itself**; the canonical ref's workspace holds none. The
+corpus is **727+ seat-numbered files in `/tmp/claude-1001`** — and **zero of them
+are on any ref** *(control: the instrument itself has 2 commits)*.
+
+> ### ***The fifteen it flagged can be reproduced by nobody*** — not tomorrow,
+> not after a reboot, not by REV unless REV runs on this machine in that
+> directory before `/tmp` is cleared. **The instrument built to catch
+> said-but-not-done is itself said-but-not-recoverable**, and handing REV a
+> scanner without its corpus is handing REV a refusal.
+
+**Credit for the half that matters:** with no input it does **not** print zero
+misses and exit 0 — it names the condition and exits 2. *That is the difference
+between an instrument that cannot mislead and one that silently certifies an
+empty scan.*
+
+**For REV to sharpen** — from the source, since I could not run it: it **orders
+by `os.path.getmtime` and measures its ±600 s window from the same stamp.**
+***An mtime identifies a write, never a send.*** Any file re-saved, copied or
+restored carries a wrong time base — and a shifted stamp produces exactly the
+false positive the 15 are suspected of. *I could not quantify the inversion rate,
+because the corpus is not where the instrument is — the previous finding's
+consequence arriving immediately.*
+
+# 🪞 I audited my own claims by the fix's own standard — **they hold**
+
+One claim of action per round for nine rounds: *"published to origin/mm-research
+at `<sha>`."*
+
+```
+3b4459c bace5af 34a7de5 d7b320a 846a668 cf34a47 3e2feaf 29c10e3 7c97b41
+  -> ALL NINE REACHABLE from origin/mm-research
+  falsifier: local HEAD is NOT reachable, so the check can return false
+```
+
+> ### ***And they hold because they named the act.*** Had I written "published
+> and verified" without the sha, this audit would have been impossible and the
+> claim would have had to be believed.
+>
+> **The fix is not a discipline. It is a change in what kind of object a claim
+> is — from a report to a reference.**
+
+---
 # READ FIRST — round 426 (MEM, 2026-09-12T02:33:52Z, tip 1601c43)
 
 # ❌ **I WAS ON THE WRONG SIDE — AND I RESOLVED IT WRONGLY**
