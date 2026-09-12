@@ -61,15 +61,32 @@ P_8 = "09-04..09-11, 8 consecutive UTC days"
 P_BAND = "a hypothetical 14-day band, 10 evaluable required"
 
 
+#: WHERE THE ETH MEASUREMENT WILL LAND. Read by identity, newest version
+#: first; absent means PROJECTED, never a quiet default.
+ETH_DECL_GLOB = "be_eth_build_cost_v*.json"
+ETH_RATE_KEYS = ("eth_day_success_rate", "eth_pass_rate",
+                 "eth_build_success_rate")
+ETH_SECONDS_KEYS = ("eth_book_stage_seconds", "eth_build_seconds",
+                    "eth_stage_s", "eth_wall_s")
+#: The two scenarios the coordinator has been pricing. They are
+#: ASSUMPTIONS, and nothing measured stands behind them.
+PROJECTED_ETH_RATES = (0.95, 0.90)
+UNLABELLED_ETH = "ETH_DEPENDENT_FIGURE_IS_UNLABELLED"
+PROJECTED = "PROJECTED"
+MEASURED = "MEASURED"
+
+
 class DecisionRefused(ValueError):
     """The artifact cannot be emitted as declared."""
 
 
 def M(value, *, population: str, criterion: str, source: str,
-      as_of: str = None, note: str = None) -> dict:
+      as_of: str = None, note: str = None, provenance: str = None) -> dict:
     """ONE NUMBER, WITH THE TWO THINGS THAT GIVE IT MEANING."""
     out = {"value": value, "population": population,
            "criterion": criterion, "source": source}
+    if provenance:
+        out["provenance"] = provenance
     if as_of:
         out["as_of"] = as_of
     if note:
@@ -128,6 +145,157 @@ AMENDMENT_FILES = {
 #: rule is not a read). Named explicitly so the coverage figure is not
 #: quietly flattered, and so the list itself is auditable.
 TIER2_PROSE_ONLY = ("de_fair_value_plumbing_run.py",)
+
+
+def eth_measurement(decl_dir: Path = None) -> dict:
+    """THE ETH COST AS A PARAMETER, NOT A LITERAL.
+
+    Read from BE's measurement when it lands; PROJECTED until then, and
+    the difference is carried on every figure that depends on it. A
+    projected number sitting unlabelled among measured ones is the worst
+    place for it.
+    """
+    d = Path(decl_dir or (HERE / "declarations"))
+    got = {}
+    for f in sorted(d.glob(ETH_DECL_GLOB), reverse=True):
+        try:
+            doc = json.loads(f.read_text())
+        except Exception:                                   # noqa: BLE001
+            continue
+        flat = json.dumps(doc)
+        for keys, name in ((ETH_RATE_KEYS, "rate"),
+                           (ETH_SECONDS_KEYS, "seconds")):
+            for k in keys:
+                if f'"{k}"' in flat:
+                    node, stack = None, [doc]
+                    while stack:
+                        cur = stack.pop()
+                        if isinstance(cur, dict):
+                            if k in cur and isinstance(cur[k], (int, float)):
+                                node = cur[k]
+                                break
+                            stack.extend(v for v in cur.values()
+                                         if isinstance(v, (dict, list)))
+                        elif isinstance(cur, list):
+                            stack.extend(cur)
+                    if node is not None:
+                        got[name] = {"value": float(node),
+                                     "declared_by": f.name, "key": k}
+                        break
+        if got:
+            break
+    if got:
+        return {"provenance": MEASURED, "measured": got,
+                "scenarios": [got["rate"]["value"]] if "rate" in got
+                else list(PROJECTED_ETH_RATES),
+                "why": "read from BE's landed measurement"}
+    return {"provenance": PROJECTED, "measured": None,
+            "scenarios": list(PROJECTED_ETH_RATES),
+            "expected_at": str((Path(decl_dir or (HERE / "declarations"))
+                                / ETH_DECL_GLOB)),
+            "why": "no ETH build-cost measurement has landed; these are "
+                   "ASSUMPTIONS and nothing measured stands behind them",
+            "what_is_measured_about_eth_today":
+                "its INPUTS are at parity with btc and its data quality "
+                "is better (DA's eth_input_audit); the BUILD cost and the "
+                "build success rate are not measured"}
+
+
+def eth_dependent_block(as_of: str, decl_dir: Path = None) -> dict:
+    """EVERY ETH-DEPENDENT FIGURE, EACH CARRYING ITS PROVENANCE."""
+    eth = eth_measurement(decl_dir)
+    prov = eth["provenance"]
+    pair = HZ.forward_rate_pair()
+    src = "de_band_hazard x the ETH parameter"
+    rows = []
+    for base_name, base in (("planning_rate", pair["planning_rate"]["p"]),
+                            ("optimistic_bound",
+                             pair["optimistic_bound"]["p"])):
+        for e in eth["scenarios"]:
+            joint = base * e
+            ok = HZ.p_at_least(joint)
+            pop = (P_11 if base_name == "planning_rate" else P_8)
+            rows.append({
+                "base_rate": base_name,
+                "eth_rate": M(e, population="eth day builds",
+                              criterion=(C_GATE if prov == MEASURED
+                                         else "ASSUMPTION -- no ETH build "
+                                              "measurement has landed"),
+                              source=src, provenance=prov),
+                "joint_rate": M(joint, population=f"{pop} x eth",
+                                criterion=C_BINOMIAL, source=src,
+                                provenance=prov),
+                "expected_evaluable": M(HZ.BAND_DAYS * joint,
+                                        population=P_BAND,
+                                        criterion=C_BINOMIAL, source=src,
+                                        provenance=prov),
+                "P_NO_VERDICT": M(1 - ok, population=P_BAND,
+                                  criterion=C_BINOMIAL, source=src,
+                                  provenance=prov)})
+    param = {k: v for k, v in eth.items()
+             if k not in ("scenarios", "measured")}
+    param["scenarios"] = [
+        M(e, population="eth day builds",
+          criterion=(C_GATE if prov == MEASURED
+                     else "ASSUMPTION -- no ETH build measurement has "
+                          "landed"),
+          source=src, provenance=prov) for e in eth["scenarios"]]
+    if eth.get("measured"):
+        param["measured"] = {
+            k: M(v["value"], population="eth day builds",
+                 criterion=f"{C_GATE} -- key {v['key']}",
+                 source=v["declared_by"], provenance=MEASURED)
+            for k, v in eth["measured"].items()}
+    return {"ETH_COST_PROVENANCE": prov,
+            "eth_parameter": param,
+            "rows": rows,
+            "recomputes_when_the_measurement_lands": True,
+            "IF_PROJECTED_NOTHING_HERE_IS_MEASURED":
+                prov == PROJECTED}
+
+
+def assert_eth_labelled(block: dict) -> int:
+    """NO ETH-DEPENDENT FIGURE TRAVELS WITHOUT ITS PROVENANCE."""
+    n = 0
+    for row in block.get("rows", []):
+        for k, v in row.items():
+            if _is_measure(v):
+                if not v.get("provenance"):
+                    raise DecisionRefused(
+                        f"REFUSED {UNLABELLED_ETH}: {k} in the "
+                        f"{row.get('base_rate')} row carries no "
+                        f"provenance. A PROJECTED number sitting "
+                        f"unlabelled among measured ones is the worst "
+                        f"place for it.")
+                n += 1
+    return n
+
+
+def eth_provenance_transition(out_dir: Path, current: str,
+                              as_of: str) -> dict:
+    """PROJECTED -> MEASURED IS AN INSTRUMENT CORRECTION, NOT A STATE
+    CHANGE, and a reader must be able to tell. The ledger beside the
+    artifact is what makes the transition visible at all."""
+    led = Path(out_dir) / "eth_cost_provenance_ledger.jsonl"
+    prior = None
+    if led.is_file():
+        for line in led.read_text().splitlines():
+            try:
+                prior = json.loads(line).get("provenance") or prior
+            except Exception:                               # noqa: BLE001
+                continue
+    led.parent.mkdir(parents=True, exist_ok=True)
+    with led.open("a") as fh:
+        fh.write(json.dumps({"as_of": as_of, "provenance": current}) + "\n")
+    changed = prior is not None and prior != current
+    return {"prior": prior, "current": current, "changed": changed,
+            "CHANGED_FROM_PROJECTED_TO_MEASURED":
+                changed and prior == PROJECTED and current == MEASURED,
+            "this_is_an_INSTRUMENT_CORRECTION_not_a_state_change":
+                "the world did not change when the measurement landed; "
+                "what changed is what we know, and a reader must be able "
+                "to tell those apart (DA's rule tonight)",
+            "ledger": str(led)}
 
 
 def rule34a_prerequisite(root: Path = None) -> dict:
@@ -425,6 +593,7 @@ def decision_artifact(as_of: str) -> dict:
         "AMENDMENT_ADMISSIBILITY_NOW": amendment_status(),
         "BLOCKING_PREREQUISITES": {
             "rule_34a_fence": rule34a_prerequisite()},
+        "ETH_DEPENDENT_FIGURES": eth_dependent_block(as_of),
 
         "THE_TRAP": {
             "which_levers": ["iii_longer_band", "iv_fewer_required_days"],
@@ -446,6 +615,13 @@ def emit(path=None, as_of: str = None) -> dict:
     as_of = as_of or dt.datetime.now(dt.UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     doc = decision_artifact(as_of)
     n = assert_attributed(doc)
+    assert_eth_labelled(doc["ETH_DEPENDENT_FIGURES"])
+    if path:
+        doc["ETH_DEPENDENT_FIGURES"]["provenance_transition"] = (
+            eth_provenance_transition(
+                Path(path).parent,
+                doc["ETH_DEPENDENT_FIGURES"]["ETH_COST_PROVENANCE"],
+                as_of))
     doc["n_attributed_measures"] = M(
         n, population="this artifact", criterion="assert_attributed walk",
         source="de_band_decision")
@@ -508,6 +684,63 @@ def falsify() -> int:
     ck("  each naming the declaration file that would date it",
        all(v["expected_declaration"].endswith(".json")
            for v in st["per_lever"].values()))
+
+    print("== the ETH cost is a PARAMETER, and it is labelled ==")
+    eb = doc["ETH_DEPENDENT_FIGURES"]
+    ck("today it reads PROJECTED -- no ETH build measurement has landed",
+       eb["ETH_COST_PROVENANCE"] == PROJECTED
+       and eb["IF_PROJECTED_NOTHING_HERE_IS_MEASURED"] is True,
+       eb["eth_parameter"]["why"][:70])
+    ck("  and it names what IS measured about eth today, so the gap is "
+       "specific",
+       "INPUTS are at parity" in
+       eb["eth_parameter"]["what_is_measured_about_eth_today"])
+    ck("every ETH-dependent figure carries its provenance",
+       assert_eth_labelled(eb) >= 8,
+       f"{assert_eth_labelled(eb)} labelled figures")
+    stripped = json.loads(json.dumps(eb))
+    stripped["rows"][0]["joint_rate"].pop("provenance")
+    try:
+        assert_eth_labelled(stripped)
+        ck("  and a figure with the label REMOVED refuses -- positive "
+           "control", False)
+    except DecisionRefused as exc:
+        ck("  and a figure with the label REMOVED refuses -- positive "
+           "control", UNLABELLED_ETH in str(exc))
+    rates = {r["eth_rate"]["value"] for r in eb["rows"]}
+    ck("the projected rates are marked ASSUMPTION in the criterion, not "
+       "in prose",
+       all("ASSUMPTION" in r["eth_rate"]["criterion"] for r in eb["rows"]),
+       str(sorted(rates)))
+    import tempfile
+    td = Path(tempfile.mkdtemp(prefix="de_eth_"))
+    (td / "declarations").mkdir()
+    (td / "declarations" / "be_eth_build_cost_v1.json").write_text(
+        json.dumps({"eth_day_success_rate": 0.97,
+                    "eth_book_stage_seconds": 1400}))
+    got = eth_measurement(td / "declarations")
+    ck("WHEN THE MEASUREMENT LANDS it is read, not re-derived by hand",
+       got["provenance"] == MEASURED
+       and got["measured"]["rate"]["value"] == 0.97
+       and got["measured"]["seconds"]["value"] == 1400.0,
+       f"rate {got['measured']['rate']['value']} from "
+       f"{got['measured']['rate']['declared_by']}")
+    blk = eth_dependent_block("2026-09-12T00:00:00Z", td / "declarations")
+    ck("  and every figure recomputes against it, now marked MEASURED",
+       blk["ETH_COST_PROVENANCE"] == MEASURED
+       and all(r["eth_rate"]["value"] == 0.97 for r in blk["rows"])
+       and all(r["joint_rate"]["provenance"] == MEASURED
+               for r in blk["rows"]),
+       f"{len(blk['rows'])} rows recomputed")
+    t1 = eth_provenance_transition(td, PROJECTED, "t1")
+    t2 = eth_provenance_transition(td, MEASURED, "t2")
+    ck("the transition PROJECTED -> MEASURED is RECORDED as an "
+       "instrument correction",
+       t1["changed"] is False
+       and t2["CHANGED_FROM_PROJECTED_TO_MEASURED"] is True
+       and t2["prior"] == PROJECTED and t2["current"] == MEASURED
+       and any("INSTRUMENT_CORRECTION" in k for k in t2),
+       "the world did not change; what we know did")
 
     print("== rule 34a's fence as a BLOCKING prerequisite ==")
     pr = doc["BLOCKING_PREREQUISITES"]["rule_34a_fence"]
