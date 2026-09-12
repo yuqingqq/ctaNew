@@ -1,0 +1,80 @@
+{
+ "protocol": "P003_DA_WINDOW_CONTENT_STATUS_V1",
+ "day": "20260911",
+ "as_of_utc": "2026-09-12T01:18:55Z",
+ "statuses": [
+  "COVERAGE_ABSENT",
+  "EMPTY_SHELL",
+  "BLACKOUT_MASKED",
+  "PRESENT"
+ ],
+ "thresholds": {
+  "shell_fraction": 0.01,
+  "quiet_fraction": 0.25,
+  "scale": "the day's MEDIAN window size FOR THAT COIN"
+ },
+ "why_three_not_two": "an EMPTY SHELL is present and empty. Classed as BLACKOUT_MASKED it reads as EXPLAINED; classed as COVERAGE_ABSENT it would read as a collection hole the archive could not fill. It is neither, and a status that is neither resolves toward permission.",
+ "why_the_median_and_not_a_byte_floor": "a fixed floor cannot separate 'the feed stopped' from 'this coin is thin'. hype trades a fraction of btc's volume, so the only scale that travels across coins and days is the day's own median for that coin.",
+ "by_coin": {
+  "btc": {
+   "n_windows": 288,
+   "median_bytes": 8770745.5,
+   "counts": {
+    "PRESENT": 282,
+    "BLACKOUT_MASKED": 3,
+    "EMPTY_SHELL": 3
+   },
+   "empty_shells": [
+    {
+     "window": 1789144200,
+     "utc": "16:30",
+     "bytes": 1235,
+     "fraction_of_median": 0.000141
+    },
+    {
+     "window": 1789144500,
+     "utc": "16:35",
+     "bytes": 1238,
+     "fraction_of_median": 0.000141
+    },
+    {
+     "window": 1789144800,
+     "utc": "16:40",
+     "bytes": 4271,
+     "fraction_of_median": 0.000487
+    }
+   ]
+  },
+  "eth": {
+   "n_windows": 288,
+   "median_bytes": 3032596.5,
+   "counts": {
+    "PRESENT": 283,
+    "BLACKOUT_MASKED": 2,
+    "EMPTY_SHELL": 3
+   },
+   "empty_shells": [
+    {
+     "window": 1789144200,
+     "utc": "16:30",
+     "bytes": 1196,
+     "fraction_of_median": 0.000394
+    },
+    {
+     "window": 1789144500,
+     "utc": "16:35",
+     "bytes": 1130,
+     "fraction_of_median": 0.000373
+    },
+    {
+     "window": 1789144800,
+     "utc": "16:40",
+     "bytes": 1437,
+     "fraction_of_median": 0.000474
+    }
+   ]
+  }
+ },
+ "NOT_YET_WIRED_INTO_THE_MASK_PRODUCER": "`da_blackout_mask.py` still emits the two-status split. Wiring this in changes a producer that is under the deploy pin, and that deploy is currently blocked by 71 untracked lane files -- a tree-state question that is not this seat's to clear. So the classifier and its threshold are landed and driveable now, and the producer adopts them when the deploy question is resolved.",
+ "rule_10": "the counts and the median are computed from the archive"
+}

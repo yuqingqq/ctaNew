@@ -93,7 +93,8 @@ def stall_incidence(since="2026-09-01") -> dict:
 def build() -> dict:
     inc = stall_incidence()
     return {
-        "protocol": PROTOCOL,
+        "protocol": PROTOCOL, "version": 2,
+        "supersedes": "da_why_0911_failed_v1.json",
         "as_of_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "reached": "independently; REV's filing was not read before this",
         "question": "why did 2026-09-11 fail?",
@@ -134,22 +135,66 @@ def build() -> dict:
                 "we have measured, and two bad days inside one 14-day band "
                 "would cost more margin than the point estimate suggests."),
         },
+        "CORRECTION_TO_V1_THE_HOST_DID_NOT_REBOOT": {
+            "what_v1_said": ("that the host rebooted about two hours after the "
+                             "stall, inferred from `journalctl --list-boots` "
+                             "reporting a first entry of 2026-09-11T18:49:08Z"),
+            "what_is_true": ("the host has been continuously up since "
+                             "2026-08-26T04:37:59Z -- `uptime -s`, `who -b` "
+                             "and `last reboot` all agree, 2 weeks 2 days. "
+                             "There was NO reboot on 09-11."),
+            "what_18_49_actually_is": (
+                "journald VACUUMING. Storage is persistent and the journals "
+                "total 185.4 MB; `--list-boots` reports the earliest RETAINED "
+                "entry for a boot, not the boot time. The logs for 16:25 were "
+                "rotated away, not lost to a restart."),
+            "how_the_error_was_made": (
+                "I read a first-entry timestamp as a boot time and did not run "
+                "the one command that refutes it. It is the same failure I "
+                "have been naming in other instruments all night -- reading a "
+                "label as a measurement -- and it reached a coordinator who "
+                "was about to add HOST REBOOT to the enumerated band hazards "
+                "on the strength of it."),
+            "consequence": ("reboots are NOT evidenced as a band hazard by this "
+                            "day. Nothing here supports putting them in the "
+                            "hazard multiplication."),
+            "and_the_archive_question_is_still_answered": (
+                "windows around 18:49 are 85-157% of median with ZERO missing, "
+                "so whatever happened at 18:49 cost no windows at all."),
+        },
         "WHAT_IS_NOT_DETERMINABLE_FROM_COLLECTED_DATA": {
             "the_root_cause": (
-                "whether the stall was upstream (the venue), network, or host "
-                "cannot be determined. The system journal retains only the "
-                "CURRENT boot, whose first entry is 2026-09-11T18:49:08Z -- "
-                "the host rebooted about two hours AFTER the stall, and the "
-                "system-level evidence for 16:25 is gone."),
+                "whether the stall was upstream, network or host cannot be "
+                "determined: journald had vacuumed the 16:25 window before it "
+                "could be read, so no system-level context survives."),
             "what_that_leaves": (
                 "90.9% stands as a BARE RATE with a NAMED UNKNOWN, which is "
                 "usable. A guessed mechanism would not be."),
             "what_would_determine_it": (
-                "persistent journald (Storage=persistent) so a future stall "
-                "keeps its system-level context, and a collector health check "
-                "that fires on ZERO AGGREGATE THROUGHPUT rather than on "
-                "connection state -- the present one reported health_err=0 "
-                "through a total outage because the sockets were open"),
+                "a larger journal retention (SystemMaxUse) so a stall keeps "
+                "its system-level context, and a collector health check that "
+                "fires on ZERO AGGREGATE THROUGHPUT rather than on connection "
+                "state"),
+        },
+        "THE_GAP_LEDGER_IS_BLIND_TO_THIS_BY_CONSTRUCTION": {
+            "measured": ("09-11 ranks SEVENTH of nine days by total gap "
+                         "records (164). Days with far MORE gap records "
+                         "PASSED: 09-03 had 847 and 09-04 had 210."),
+            "why": ("the ledger counts NOTICED disconnects. This failure mode "
+                    "is UNNOTICED silence -- five of seven coins produced NO "
+                    "gap record during a total outage, because the collector "
+                    "never saw a disconnect to record. A noisy day with many "
+                    "brief reconnects therefore scores WORSE than a day with "
+                    "a twenty-one minute blackout."),
+            "the_stronger_statement": (
+                "this is not 'the ledger can be stale'. The ledger CANNOT SEE "
+                "this failure mode at all: the quantity it counts is "
+                "anti-correlated with the quantity that matters. A day can be "
+                "silent and score clean."),
+            "what_would_see_it": ("the EMPTY_SHELL count from "
+                                  "`da_window_content_status`, which is "
+                                  "computed from content rather than from "
+                                  "events the collector managed to notice"),
         },
         "THE_ACTIONABLE_DEFECT": (
             "the collector's health instrumentation cannot see this failure. "
@@ -202,9 +247,23 @@ def falsify() -> int:
        and "588736548" in d["mechanism"]["evidence_it_did_not_restart"])
     ck("health_err was ZERO through a total outage",
        d["mechanism"]["health_err_during_stall"] == 0)
-    ck("the ROOT CAUSE is stated as NOT DETERMINABLE, with the exclusion named",
-       "cannot be determined" in d["WHAT_IS_NOT_DETERMINABLE_FROM_COLLECTED_DATA"]["the_root_cause"]
-       and "18:49:08Z" in d["WHAT_IS_NOT_DETERMINABLE_FROM_COLLECTED_DATA"]["the_root_cause"])
+    ck("the ROOT CAUSE is stated as NOT DETERMINABLE",
+       "cannot be "
+       "determined" in d["WHAT_IS_NOT_DETERMINABLE_FROM_COLLECTED_DATA"]["the_root_cause"])
+    c = d["CORRECTION_TO_V1_THE_HOST_DID_NOT_REBOOT"]
+    ck("v1's REBOOT claim is CORRECTED in-band, not quietly dropped",
+       "NO reboot on 09-11" in c["what_is_true"]
+       and "2026-08-26" in c["what_is_true"])
+    ck("...and the correction names how the error was made",
+       "label as a measurement" in c["how_the_error_was_made"])
+    ck("...and withdraws the hazard it would have created",
+       "NOT evidenced as a band hazard" in c["consequence"])
+    g = d["THE_GAP_LEDGER_IS_BLIND_TO_THIS_BY_CONSTRUCTION"]
+    ck("the gap ledger ranked the FAILING day mid-pack, and the numbers are given",
+       "SEVENTH of nine" in g["measured"] and "847" in g["measured"])
+    ck("...and the statement is BLINDNESS, not staleness",
+       "CANNOT SEE" in g["the_stronger_statement"]
+       and "anti-correlated" in g["the_stronger_statement"])
     ck("...and what that leaves is stated plainly rather than guessed",
        "BARE RATE" in d["WHAT_IS_NOT_DETERMINABLE_FROM_COLLECTED_DATA"]["what_that_leaves"])
     print(f"\n  {'0911 CELLS PASS' if not bad else str(bad) + ' FAILED'}")

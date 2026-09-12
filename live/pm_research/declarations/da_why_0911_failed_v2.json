@@ -1,0 +1,147 @@
+{
+ "protocol": "P003_DA_WHY_0911_FAILED_V1",
+ "version": 2,
+ "supersedes": "da_why_0911_failed_v1.json",
+ "as_of_utc": "2026-09-12T01:18:55Z",
+ "reached": "independently; REV's filing was not read before this",
+ "question": "why did 2026-09-11 fail?",
+ "ANSWER": "a SILENT ALL-COIN FEED STALL of ~21 minutes (16:25-16:45Z) during which the collector stayed UP, believed it held 2-3 active connections per coin, and reported health_err=0 -- while every coin's message rate was 0.0 and the msgs counter was frozen.",
+ "mechanism": {
+  "rates_went_to_zero_on_all_seven_coins_simultaneously": true,
+  "collector_process_restarted": false,
+  "evidence_it_did_not_restart": "the msgs counter is CONTINUOUS across the window: 588736548 -> 588736564",
+  "health_err_during_stall": 0,
+  "connections_believed_active": "2-3 per coin throughout",
+  "oldest_age_s_climb": "85 -> 145 -> 205 -> ... -> 554 seconds",
+  "disconnect_records_written": "eth and hype only; five coins went quiet with NO gap record at all",
+  "why_it_MASKS_rather_than_reads_absent": "the files were still written, as empty shells: btc 1.2 KB against a day median of 8,621 KB (0.01%), eth 1.2 KB against 2,967 KB. A file that exists but is below the detector's content threshold is BLACKOUT_MASKED, not COVERAGE_ABSENT.",
+  "windows_masked": [
+   1789143900,
+   1789144200,
+   1789144500,
+   1789144800
+  ],
+  "coins_masked": "all seven (eth and hype 3 windows, the rest 4)"
+ },
+ "incidence": {
+  "by_day": {
+   "2026-09-01": {
+    "heartbeat_minutes": 1440,
+    "stalled_minutes": 72,
+    "pct": 5.0,
+    "longest_run_minutes": 50
+   },
+   "2026-09-02": {
+    "heartbeat_minutes": 1439,
+    "stalled_minutes": 29,
+    "pct": 2.02,
+    "longest_run_minutes": 2
+   },
+   "2026-09-03": {
+    "heartbeat_minutes": 1439,
+    "stalled_minutes": 35,
+    "pct": 2.43,
+    "longest_run_minutes": 2
+   },
+   "2026-09-04": {
+    "heartbeat_minutes": 1439,
+    "stalled_minutes": 0,
+    "pct": 0.0,
+    "longest_run_minutes": 0
+   },
+   "2026-09-05": {
+    "heartbeat_minutes": 1439,
+    "stalled_minutes": 0,
+    "pct": 0.0,
+    "longest_run_minutes": 0
+   },
+   "2026-09-06": {
+    "heartbeat_minutes": 1439,
+    "stalled_minutes": 0,
+    "pct": 0.0,
+    "longest_run_minutes": 0
+   },
+   "2026-09-07": {
+    "heartbeat_minutes": 1438,
+    "stalled_minutes": 0,
+    "pct": 0.0,
+    "longest_run_minutes": 0
+   },
+   "2026-09-08": {
+    "heartbeat_minutes": 1439,
+    "stalled_minutes": 0,
+    "pct": 0.0,
+    "longest_run_minutes": 0
+   },
+   "2026-09-09": {
+    "heartbeat_minutes": 1439,
+    "stalled_minutes": 0,
+    "pct": 0.0,
+    "longest_run_minutes": 0
+   },
+   "2026-09-10": {
+    "heartbeat_minutes": 1438,
+    "stalled_minutes": 0,
+    "pct": 0.0,
+    "longest_run_minutes": 0
+   },
+   "2026-09-11": {
+    "heartbeat_minutes": 1439,
+    "stalled_minutes": 23,
+    "pct": 1.6,
+    "longest_run_minutes": 21
+   },
+   "2026-09-12": {
+    "heartbeat_minutes": 79,
+    "stalled_minutes": 0,
+    "pct": 0.0,
+    "longest_run_minutes": 0
+   }
+  },
+  "clean_days": [
+   "2026-09-04",
+   "2026-09-05",
+   "2026-09-06",
+   "2026-09-07",
+   "2026-09-08",
+   "2026-09-09",
+   "2026-09-10",
+   "2026-09-12"
+  ],
+  "days_with_stalls": [
+   "2026-09-01",
+   "2026-09-02",
+   "2026-09-03",
+   "2026-09-11"
+  ],
+  "monotone_increasing": false,
+  "shape": "EPISODIC: present 09-01..09-03, SEVEN CONSECUTIVE CLEAN DAYS 09-04..09-10, one isolated recurrence on 09-11",
+  "worst_single_run_minutes": 50
+ },
+ "IS_IT_GETTING_WORSE": {
+  "answer": "NO -- it is EPISODIC, not monotone",
+  "shape": "EPISODIC: present 09-01..09-03, SEVEN CONSECUTIVE CLEAN DAYS 09-04..09-10, one isolated recurrence on 09-11",
+  "consequence_for_the_risk_estimate": "90.9% is NOT optimistic on a trend argument: the fault is not growing. But it IS CLUSTERED -- 09-01 carried 72 stalled minutes including a single 50-MINUTE run, more than twice 09-11's worst -- so a per-day failure RATE understates the variance. When this recurs it can be worse than the one day we have measured, and two bad days inside one 14-day band would cost more margin than the point estimate suggests."
+ },
+ "CORRECTION_TO_V1_THE_HOST_DID_NOT_REBOOT": {
+  "what_v1_said": "that the host rebooted about two hours after the stall, inferred from `journalctl --list-boots` reporting a first entry of 2026-09-11T18:49:08Z",
+  "what_is_true": "the host has been continuously up since 2026-08-26T04:37:59Z -- `uptime -s`, `who -b` and `last reboot` all agree, 2 weeks 2 days. There was NO reboot on 09-11.",
+  "what_18_49_actually_is": "journald VACUUMING. Storage is persistent and the journals total 185.4 MB; `--list-boots` reports the earliest RETAINED entry for a boot, not the boot time. The logs for 16:25 were rotated away, not lost to a restart.",
+  "how_the_error_was_made": "I read a first-entry timestamp as a boot time and did not run the one command that refutes it. It is the same failure I have been naming in other instruments all night -- reading a label as a measurement -- and it reached a coordinator who was about to add HOST REBOOT to the enumerated band hazards on the strength of it.",
+  "consequence": "reboots are NOT evidenced as a band hazard by this day. Nothing here supports putting them in the hazard multiplication.",
+  "and_the_archive_question_is_still_answered": "windows around 18:49 are 85-157% of median with ZERO missing, so whatever happened at 18:49 cost no windows at all."
+ },
+ "WHAT_IS_NOT_DETERMINABLE_FROM_COLLECTED_DATA": {
+  "the_root_cause": "whether the stall was upstream, network or host cannot be determined: journald had vacuumed the 16:25 window before it could be read, so no system-level context survives.",
+  "what_that_leaves": "90.9% stands as a BARE RATE with a NAMED UNKNOWN, which is usable. A guessed mechanism would not be.",
+  "what_would_determine_it": "a larger journal retention (SystemMaxUse) so a stall keeps its system-level context, and a collector health check that fires on ZERO AGGREGATE THROUGHPUT rather than on connection state"
+ },
+ "THE_GAP_LEDGER_IS_BLIND_TO_THIS_BY_CONSTRUCTION": {
+  "measured": "09-11 ranks SEVENTH of nine days by total gap records (164). Days with far MORE gap records PASSED: 09-03 had 847 and 09-04 had 210.",
+  "why": "the ledger counts NOTICED disconnects. This failure mode is UNNOTICED silence -- five of seven coins produced NO gap record during a total outage, because the collector never saw a disconnect to record. A noisy day with many brief reconnects therefore scores WORSE than a day with a twenty-one minute blackout.",
+  "the_stronger_statement": "this is not 'the ledger can be stale'. The ledger CANNOT SEE this failure mode at all: the quantity it counts is anti-correlated with the quantity that matters. A day can be silent and score clean.",
+  "what_would_see_it": "the EMPTY_SHELL count from `da_window_content_status`, which is computed from content rather than from events the collector managed to notice"
+ },
+ "THE_ACTIONABLE_DEFECT": "the collector's health instrumentation cannot see this failure. `health_err` stayed 0, `active` stayed 2-3 per coin, and `writer_wait` stayed 0 for twenty-one minutes of total silence. A liveness check on CONNECTION STATE cannot detect a connection that is open and mute -- the same shape as every other defect tonight: a check that cannot fail where the answer is certain.",
+ "rule_10": "every count here is computed from the collector's own log"
+}
