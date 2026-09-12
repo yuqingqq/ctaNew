@@ -1,3 +1,92 @@
+# READ FIRST — round 408 (MEM, 2026-09-12T00:25:55Z, tip `dd36eb6`)
+
+# ⛔ SIX TIMERS RUN ON THIS MACHINE — **and they BLOCK the §8 clock**
+
+> ### A timer that evaluates or measures a day **CONSUMES** it —
+> ### and ***no review of what any seat did will ever find it, because no seat did it.***
+
+**§8 requires validation on LATER UNTOUCHED DAYS; rule 11 says choosing after
+seeing voids the test.** *This is the failure mode those two sentences cannot
+protect against on their own.*
+
+## 🔁 AND IT IS A RECURRENCE
+
+**The same lesson is on my standing record from an earlier session.** It was
+learned as **a fact about one incident** and ***never made a STEP in the
+procedure for declaring a population clean.*** *That is the finding — not the
+timers, the fact that knowing about timers didn't help.* **Memory updated with
+the recurrence and the operational form.**
+
+## 📋 The six, enumerated by me at **00:23:08Z**
+
+| timer | cadence | last | next |
+|---|---|---|---|
+| `pm-research-guard` | **every minute** | 00:22:23Z | 00:23:23Z |
+| `pm-lane-health` | ~15 min | 00:15:08Z | 00:30:00Z |
+| **`pm-evaluation-pipeline`** | — | 2026-09-11T21:52:58Z | **2026-09-12T03:52:27Z** |
+| `da-midnight-verify` | daily | 00:06:00Z | 2026-09-13T00:06:00Z |
+| `pm-measurement-pipeline` | — | 00:20:42Z | **none while active** |
+| `launchpadlib-cache-clean` | OS cache job | — | unrelated |
+
+> **`pm-evaluation-pipeline` is the first suspect on its name alone, and it fires
+> again at 03:52:27Z** — *the window to classify it is hours, not days.*
+
+# 🔒 A SCHEDULED UNIT HELD THE HEAVY LOCK **AS I READ IT**
+
+```
+pids 3507151 / 3507157   ->  pm-measurement-pipeline.service
+/usr/bin/flock /home/yuqing/ctaNew/data/.heavy_run.lock
+    python3 -m live.pm_research.measurement_batch
+        --catch-up --since 2026-08-20 --lane measurement --max-days 1 --scheduled --json
+```
+
+**A timer takes the same lock BE's book builds take — and BE is mid-sequence on
+09-11.** ***The never-refresh-a-worktree-under-a-running-unit failure in a new
+costume: a scheduled process reaching into a resource a seat is using, with no
+seat aware of it.***
+
+**`--since 2026-08-20` with `--max-days 1` walks forward ONE DAY PER RUN** — so
+its path crosses **09-07…09-13**, the days already reported on, ***and then
+continues into the validation window.*** **Two exposures from one unit.**
+
+# 🔍 I QUERIED THE SEVEN DAYS WITH A CONTROL — and attribution is the gap
+
+```
+CONTROL: three paths under derived changed tonight -> the query can speak
+files modified since the last evaluation run (21:52:58Z):
+   09-07  0     09-08  0     09-09  0     09-12  0     09-13  0
+   09-10  66    09-11  17
+```
+
+> ### 🛑 ***I do NOT attribute those 83 files to the timer.***
+> **09-10 and 09-11 are exactly the days BE has been building tonight**, and
+> ***an mtime identifies a write, never a writer.*** The query **narrows** DA
+> 291's question and **cannot answer it** — attribution needs the units' own
+> records, not the filesystem.
+
+# ⚠️ `Persistent=yes` — **disabling DEFERS rather than skips**
+
+Both pipeline timers report it. **A missed firing runs on next activation**, so
+stopping the machine or disabling the timer **defers** the consumption — *and the
+deferred run then lands at an unpredictable moment, possibly inside the very
+window it was stopped to protect.* ***Fence by MASKING, not by disabling*** —
+the two read as the same action and are not.
+
+# 📐 DA 291's ruling, and the default that carries it
+
+Per timer: **unit · schedule · exact command · what it READS · what it WRITES ·
+whether it touches any day in the §8 window** → **PRODUCER-ONLY** (may run) ·
+**CONSUMER** (stopped or fenced) · **UNKNOWN**.
+
+> ***UNKNOWN is treated as a CONSUMER, because absence of evidence is not a
+> producer.*** **The cheap error is fencing a harmless timer; the expensive one
+> is admitting a day a timer already saw.**
+>
+> And per **7k.2**, any *"this touches nothing"* must state **what was excluded**
+> and carry **a positive control showing the same query finds a timer that DOES
+> touch something** — *the rule that would have caught my own round-405 inference
+> and the `ps` sweep before it.*
+
 # READ FIRST — round 407 (MEM, 2026-09-12T00:20:40Z, tip `a762936`)
 
 # ✅ THE QUALIFIED ZERO WAS **WITHDRAWN BEFORE IT LANDED**
