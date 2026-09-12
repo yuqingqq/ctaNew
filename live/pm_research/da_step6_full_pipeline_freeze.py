@@ -818,7 +818,11 @@ def why_not_effective(d: dict) -> list:
 
 
 
-MARKET_FACTS = "live/pm_research/declarations/da_market_facts_v1.json"
+#: v2 SUPERSEDES v1 (rule 13). The rename of the fee status landed in v2 while
+#: this constant still named v1, so the freeze went on citing the superseded
+#: string -- a rename that does not move its consumer has not propagated, it
+#: has only forked. v1 stays on disk as provenance and is not read here.
+MARKET_FACTS = "live/pm_research/declarations/da_market_facts_v2.json"
 REV_ADJUDICATION = ("live/pm_research/declarations/"
                     "rev_section7_fee_rule_reading_v1.json")
 MIN_DELTA_DECL = ("live/pm_research/declarations/"
@@ -1384,7 +1388,15 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
                  "established_by": MARKET_FACTS, "sha256": mf.get("sha256")}
                 if (mf.get("present")
                     and (mf.get("negative_declaration") or {}).get("status")
-                    and (mf.get("negative_declaration") or {}).get("the_five_strands"))
+                    # ACCEPT EITHER KEY. DA 313 renamed `the_five_strands` to
+                # `the_strands` in the producer -- the name asserted a count
+                # its content contradicted -- and this consumer still looked
+                # for the old one, so the check fell through to MISSING and
+                # re-blocked `fee_rule`. It failed CLOSED, so it over-blocked
+                # rather than admitting, but a rename that silently moves a
+                # predicate is the defect whether it errs safe or not.
+                and ((mf.get("negative_declaration") or {}).get("the_strands")
+                     or (mf.get("negative_declaration") or {}).get("the_five_strands")))
                 else MISSING)),
         "fee_rule_finding": {"status": mf.get("maker_fee_status"),
                              "why_not_established": mf.get("maker_fee_why_not"),
@@ -1797,6 +1809,22 @@ def falsify() -> int:
        f"at 0.80 eth: P={_alt['by_assumed_eth_reliability']['eth_daily_success=0.8']['P_INSUFFICIENT_EVIDENCE']}")
     ck("the honest reading is recorded: NECESSARY, NOT SUFFICIENT",
        "NECESSARY, NOT SUFFICIENT" in _r["THE_HONEST_READING"])
+    ck("the freeze cites the CURRENT market-facts declaration, not a superseded one",
+       MARKET_FACTS.endswith("_v2.json")
+       and d["market_facts"]["present"] is True,
+       MARKET_FACTS.split("/")[-1])
+    ck("...and the fee status it cites reads as NOT established, alone",
+       str(d["market_facts"].get("maker_fee_status", "")).startswith(
+           "MAKER_FEE_RULE_NOT_ESTABLISHED"),
+       d["market_facts"].get("maker_fee_status"))
+    ck("a PRODUCER KEY RENAME does not silently move this predicate",
+       bool((market_facts(REF).get("negative_declaration") or {}).get("the_strands")
+            or (market_facts(REF).get("negative_declaration") or {}).get("the_five_strands")),
+       "the consumer accepts either key name")
+    ck("the FEE IS NOT A BLOCKING GAP -- the rename moved no predicate",
+       "fee_rule" not in d["blocking_gaps"]
+       and "fee_rule" not in d["fields_missing"],
+       f"blocking_gaps={d['blocking_gaps']}")
     ck("a MISSING field can never read as present",
        all(d["fields"][f] == MISSING for f in d["fields_missing"]))
     print(f"\n  {'DRAFT CELLS PASS' if not bad else str(bad) + ' FAILED'}")

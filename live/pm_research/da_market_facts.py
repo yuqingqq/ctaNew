@@ -816,6 +816,49 @@ def _build_inner() -> dict:
                 "256's, transcribed here rather than re-derived. DA's own "
                 "independent sweep found the same constancy over a smaller "
                 "window: 76,617 of 76,617 trade events across 8 UTC days."),
+            "SECTION_9_READING_CONSTRAINT__WHAT_IT_CAN_AND_CANNOT_CONCLUDE": {
+                "class": ("a READING CONSTRAINT of the same kind as R-924's "
+                          "abstention finding -- it belongs BESIDE the §9 "
+                          "number, not in a review"),
+                "the_fact_it_rests_on": (
+                    "THIS LANE DOES NOT TRADE. No module declares an executing "
+                    "or maker address, the programme is research-only, and no "
+                    "order of ours has ever rested on this book."),
+                "so_the_fee_is_not_UNMEASURED_it_is_UNDEFINED": (
+                    "a maker fee applicable to US is not a quantity we failed "
+                    "to observe. It is not defined for a lane that does not "
+                    "trade. The 218 addresses in the corpus are third parties, "
+                    "and 6 of them (2.75%) are in a charged class whose "
+                    "membership rule is unknown."),
+                "WHAT_SECTION_9_CAN_CONCLUDE": [
+                    "a GROSS economic increment -- trade cash flow plus "
+                    "residual settlement -- computed with no fee at all, "
+                    "labelled gross and never presented as net",
+                    "the SENSITIVITY of that increment to an assumed fee, "
+                    "using the measured tiers (worst 0.495, modal 0.099) "
+                    "applied per fill at each fill's own price",
+                    "and a statement of which assumption was used",
+                ],
+                "WHAT_SECTION_9_CANNOT_CONCLUDE": [
+                    "an ADOPTED net economic verdict, because §9 requires the "
+                    "VERIFIED maker fee applicable to these markets and there "
+                    "is none applicable to a lane with no account",
+                    "that a zero fee is correct FOR US -- the zero belongs to "
+                    "other people's accounts",
+                    "nor that the charged class does not apply to us, since "
+                    "nothing determines which class an account of ours would "
+                    "join",
+                ],
+                "WHAT_ANY_SECTION_9_NUMBER_MUST_SAY_BESIDE_IT": (
+                    "which fee it assumed for a HYPOTHETICAL account, and that "
+                    "the assumption is about an account that does not exist. A "
+                    "net figure that does not name its assumed account is "
+                    "asserting a fee nobody has verified."),
+                "how_it_would_become_defined": (
+                    "only by trading -- an executing account with observed "
+                    "fills. No further collection closes it, which is what "
+                    "makes this terminal rather than pending."),
+            },
             "what_would_change_it": [
                 "the published CLOB fee schedule for these condition ids with "
                 "an effective date, which no collector captures",
