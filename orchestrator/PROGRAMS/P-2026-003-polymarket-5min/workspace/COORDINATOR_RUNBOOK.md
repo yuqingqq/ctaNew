@@ -1039,7 +1039,23 @@ numerically-sorted input, nearly filed as a total cold-start failure), and **a
 timeout** (a `git log -S` killed at 120s). All three return an empty result, and
 an empty result reads as a finding.
 
-The standing rule already covered timeouts. It now covers exclusions:
+**A FOURTH MECHANISM, found within the hour and new: THE COMMAND ITSELF
+ERRORED AND ITS STDERR WAS SWALLOWED BY A PIPE.** Checking whether any timer had
+rewritten a reported day, I ran `find ... -newermt '-3 hours' ... | sort | tail`.
+`find` on this machine is **`bfs`**, which rejects relative timestamps —
+*"Invalid timestamp"* — so the command failed outright. The error went to stderr,
+the pipeline delivered empty stdout, and **an empty result here means "no day was
+rewritten", which is precisely the reassuring answer.** A positive control (the
+query must find a re-emit I knew existed) caught it; without one I would have
+reported that nothing touched the published days, and been wrong by luck rather
+than by evidence.
+
+Two consequences: **assume nothing about which `find`, `grep` or `sed` is on the
+path** — GNU syntax is not guaranteed — and **never let a check's stderr die in a
+pipe when an empty stdout is the answer you are hoping for.** Redirect `2>&1`, or
+run the command bare before piping it.
+
+The standing rule already covered timeouts. It now covers exclusions and errors:
 
 **Any search whose RESULT IS AN ABSENCE must state what it excluded, and must
 carry a positive control showing the same query finds a thing known to be
