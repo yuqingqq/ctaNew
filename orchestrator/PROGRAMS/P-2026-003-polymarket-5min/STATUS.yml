@@ -67,6 +67,26 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T03:13:25Z (MEM ROUND 430 -- THE VERDICT PRODUCER: THE WINDOW IS NOT TWENTY HOURS, IT IS ONE
+  FIRING. Restart=no, NRestarts=0, next elapse 2026-09-13T00:06:00Z, band starts 09-14 --
+  EXACTLY ONE SCHEDULED ATTEMPT BEFORE IT OPENS, and the next lands SIX MINUTES INSIDE.
+  The refusal is a model of its kind: REFUSE_TIER_DRIFT, rc 7, the bytes this unit would
+  execute are NOT the bytes it was deployed with, with a FIX line and a named recovery --
+  and THE RECOVERY IS REAL: days_needing_verdict is DERIVED FROM DISK, floored at the
+  earliest existing, always including the day that just began, so 09-11 and 09-12 are
+  REGENERABLE BY CONSTRUCTION. 09-11'S VERDICT CARRIES 09-10'S PRE-SUPERSESSION STATUS SET
+  EXACTLY -- MASK_REFUSED, NOT_WRITTEN, UNJUDGEABLE, NO_REFERENCE, 42,574 B against
+  42,573 -- where 09-10's final reads REPORTED, WRITTEN, CONTENT_LIVE. The two 09-10 files
+  are 144 ms apart INSIDE ONE RUN, so a supersession would have arrived within the second.
+  I WILL NOT SAY WHICH OF TWO READINGS IT IS: an unfinished write, meaning the producer
+  failed QUIETLY on 09-11 a day before it failed LOUDLY; or UNJUDGEABLE being the CORRECT
+  verdict for the one day BE's stage 0 refuses. DA's to decide, and the discriminator is
+  whether phase two is unconditional. EITHER WAY IT IS THE NIGHT'S SHAPE AGAIN: a value
+  that is neither a pass nor a measured fail, feeding candidate-blind day eligibility.
+  09-12 has ZERO verdict files; the deploy blocker is EXACTLY 73 under live/pm_research
+  of 91 tree-wide. AND ON THE DEMONSTRATION: I will not take credit for virtue -- my
+  default output IS the durable file, so it happened BY CONSTRUCTION. The transferable
+  fix is a DURABLE DEFAULT FOR THE OTHER SEATS, not more care. Tip aa3be57.)
   2026-09-12T03:06:41Z (MEM ROUND 429 -- TEN UNWRITTEN RULES FROM MY OWN FINDINGS, PROBED BEFORE CLAIMED.
   Four surfaces at the ref, five positive controls all hitting, a negative control absent,
   twelve candidates at six to eight phrasings each, and EVERY APPARENT HIT INSPECTED:
@@ -101,6 +121,7 @@ updated: >-
   status and the class guard check out and I COUNTED the statuses rather than trusting
   n_statuses. The six tiers are BIMODAL, 4 at ~0.099 and 2 at 0.495, so a pooled 0.23097
   WOULD HAVE BEEN WRONG FOR EVERY ADDRESS BY OVER A FACTOR OF TWO. Tip d8cbc7c.)
+previous_updates: >-
   2026-09-12T02:42:35Z (MEM ROUND 427 -- R-939 IS AT THE REF AND ITS NUMBER CHECKS: 11,869,652,313 B =
   11.054 GiB, 1.38x the R-551 default, round in neither base, which is the signature of a
   MEASURED envelope. Interaction quantified: ONE unit alone is 92.1 PER CENT OF THE 12
@@ -120,7 +141,6 @@ updated: >-
   time base is an MTIME, which identifies a write and never a send. AND I AUDITED MY OWN
   NINE PUBLICATION CLAIMS BY THE FIX'S OWN STANDARD: ALL NINE SHAS REACHABLE, falsifier
   fires -- AND THEY HOLD BECAUSE THEY NAMED THE ACT. Tip e5420d5.)
-previous_updates: >-
   2026-09-12T02:33:09Z (MEM ROUND 426 -- I WAS ON THE WRONG SIDE AND I RESOLVED IT WRONGLY. Measured at
   systemd: research.slice MemoryHigh is 12,884,901,888 = 12.000 GiB EXACTLY and
   MemoryMax 15,032,385,536 = 14.000 GiB EXACTLY -- both land on 2^30, which a decimal
@@ -1166,6 +1186,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r430_ONE_SCHEDULED_ATTEMPT_REMAINS_BEFORE_THE_BAND_OPENS: "THE FRAMING IS NOT TWENTY HOURS OF TIME, IT IS ONE FIRING. Measured at systemd: da-midnight-verify.service is failed with ExecMainStatus 7, exited 2026-09-12T00:06:00Z, AND Restart=no WITH NRestarts=0, so the service will never retry itself. Its timer is active with NextElapse 2026-09-13T00:06:00Z. THE BAND STARTS 2026-09-14. SO THERE IS EXACTLY ONE SCHEDULED ATTEMPT BEFORE THE BAND OPENS, and the one after it lands SIX MINUTES INSIDE the band. If tomorrow's firing exits 7 again -- and nothing in the unit changes that by itself -- THE VERDICT PRODUCER IS STILL FAILED WHEN THE BAND BEGINS. That is the number to plan against, not the hours."
+  r430_THE_REFUSAL_IS_A_MODEL_OF_ITS_KIND_AND_THE_GUARD_HELD: "Read at the journal rather than taken on report: DEPLOY_DRIFT (REFUSE_TIER_DRIFT), rc 7 -- the bytes this unit would execute are NOT the bytes it was deployed with -- with sha256sum reporting one computed checksum that did not match, AND A FIX LINE NAMING THE REMEDY: re-run da_deploy_midnight.sh. IT REFUSED RATHER THAN RUNNING DRIFTED BYTES ON A NIGHT THAT FEEDS DAY ELIGIBILITY. A named refusal, a stated cause, a named fix and a named recovery in four lines of journal. THE GUARD BLOCKING THE FIX IS THE SAME GUARD THAT MAKES THE BLOCK SAFE, and the cost of it holding is one night of verdicts, which is the cheaper side of that trade."
+  r430_AND_THE_RECOVERY_MECHANISM_IS_REAL_AND_DERIVED_FROM_DISK: "The refusal's own recovery claim is not a phrase: days_needing_verdict is DERIVED FROM DISK, FLOORED AT THE EARLIEST EXISTING day, and its comment states it ALWAYS INCLUDES THE DAY THAT JUST BEGAN. So a night missed by a refusal is picked up as a catch-up day by construction rather than by anyone remembering. THAT IS WHAT MAKES 09-11 AND 09-12 REGENERABLE IN THE SENSE THE RULING REQUIRES -- not a promise to redo them, but a producer whose input set is computed from what is missing. Verified because a recovery mechanism named inside the failure it recovers from is exactly the kind of claim that is easiest to assume and cheapest to check."
+  r430_09_11S_VERDICT_CARRIES_THE_PRE_SUPERSESSION_STATUS_SET_EXACTLY: "Checked by PROPERTY and not by size, then by size as corroboration. 09-10 has TWO files: a superseded one at 42,573 B and a final at 61,858 B. THE SUPERSEDED ONE READS MASK_REFUSED, NOT_WRITTEN, CONTENT_LIVENESS_UNJUDGEABLE, CONTENT_LIVENESS_NO_REFERENCE. THE FINAL ONE READS REPORTED, WRITTEN, CONTENT_LIVE, CONTENT_LIVE. AND 09-11'S SINGLE FILE, 42,574 B, CARRIES THE SUPERSEDED SET EXACTLY -- every status that turned live for 09-10 is still unjudgeable for 09-11. So 09-11's verdict is in the state 09-10's was in BEFORE it was superseded, and no supersession followed."
+  r430_AND_THE_TWO_PHASE_WRITE_IS_144_MILLISECONDS_APART: "The corroborating detail: 09-10's superseded file is stamped 00:06:34.705 and its final 00:06:34.849 -- ONE HUNDRED AND FORTY-FOUR MILLISECONDS APART, INSIDE THE SAME RUN. So supersession is not a later repair, it is the second phase of a single execution. 09-11's file is stamped 00:06:41.503 and stands alone. THAT IS WHAT MAKES THE ABSENCE OF A SECOND FILE INFORMATIVE RATHER THAN AMBIGUOUS IN ITS TIMING: if a supersession were coming it would have arrived within the same second, over a day ago."
+  r430_AND_I_WILL_NOT_SAY_WHICH_OF_TWO_READINGS_IT_IS: "The evidence fits BOTH and the difference matters, so I am naming both rather than picking. READING ONE: the second phase did not run, and 09-11's verdict is an unfinished write -- in which case the producer was already failing QUIETLY on 09-11, a full day before it began failing LOUDLY with rc 7 on 09-12. READING TWO: UNJUDGEABLE IS THE CORRECT VERDICT FOR 09-11, which is precisely the day whose four missing interior windows BE's stage 0 refuses -- in which case the single file is a true finding and nothing is wrong. THE DISCRIMINATOR IS WHETHER THE SECOND PHASE IS UNCONDITIONAL OR CONDITIONAL ON THE FIRST'S RESULT, which is one read of the script and DA's to make."
+  r430_WHICH_MAKES_IT_THE_SAME_SHAPE_AS_EVERYTHING_ELSE_TONIGHT: "Whichever reading holds, the object is the night's recurring one: A VALUE THAT IS NEITHER A PASS NOR A MEASURED FAIL. If CONTENT_LIVENESS_UNJUDGEABLE is a STATUS then it is a legitimate exclusion under rule 4 and travels with its count; if it is an UNFINISHED WRITE then it is a false exclusion wearing a status's clothes. AND DAY ELIGIBILITY RESOLVES FROM CANDIDATE-BLIND INPUTS OF WHICH THE DAY VERDICT IS ONE -- so the difference between those two is the difference between a day correctly excluded and a day silently lost, decided by a field that reads the same either way."
+  r430_09_12_HAS_ZERO_VERDICT_FILES_AND_THE_73_IS_EXACT: "Counted rather than relayed: 09-10 has two verdict files, 09-11 has ONE, 09-12 HAS ZERO. And the deploy guard's blocker is EXACTLY 73 uncommitted entries under live/pm_research, against 91 tree-wide -- so eighteen of the tree's uncommitted entries are outside the lane directory. THE GUARD IS CORRECT TO HOLD: a hand-copy would deploy the right content with the wrong provenance, which is the failure mode that leaves a unit running bytes no ref can produce -- the same property I have flagged three times tonight in instruments, now in a deployed unit where it would be worse."
+  r430_THE_DEMONSTRATION_IS_RECORDED_AS_ASKED_AND_I_WILL_NOT_TAKE_CREDIT_FOR_VIRTUE: "Recorded because it was asked for: the answer refused to commit the error it described rather than arguing against it. BUT THE HONEST ACCOUNT IS STRUCTURAL, NOT MORAL. My default output IS the state files; writing durably first is what my procedure already does every round, so the durable write happened first BY CONSTRUCTION rather than by discipline. A seat whose default output is a dispatch would have had to REMEMBER, and remembering is exactly what fails. THE TRANSFERABLE FORM IS THEREFORE NOT BE MORE CAREFUL BUT GIVE THE OTHER SEATS A DURABLE DEFAULT, because the only reason I noticed is that I could not have done otherwise."
+  r430_AND_THE_COORDINATORS_OWN_GAP_IS_THE_SAME_GAP_ONE_LEVEL_UP: "Every seat answers the coordinator in dispatches, and dispatches are the surface the audit says does not survive. NINE OF FIFTEEN CANDIDATE RULES EXISTED ONLY BECAUSE REV WENT LOOKING IN FILINGS; the rest of tonight's reasoning lives in a channel that dies with the session. That is not a discipline problem either -- IT IS A DEFAULT PROBLEM AT THE LEVEL ABOVE THE SEATS. The cheapest fix is the one already proven tonight: a seat's ANSWER lands in its own durable file and the dispatch carries the pointer, so the reply is a REFERENCE rather than the only copy -- the same change in kind as a claim naming its act."
+  r430_AND_THE_WRITE_ONCE_CRITERION_IS_WORTH_RECORDING_AS_A_RULE_CANDIDATE: "Declared in advance and worth keeping: the combined section is written ONCE after all four seats report, NOT incrementally as they arrive, BECAUSE A SECTION ASSEMBLED IN FIVE PASSES IS A SECTION WHOSE SCOPE CREPT IN FOUR OF THEM. That is a stop-rule on the author rather than on the input, which is the rarer and more useful kind, and it pairs with REV declaring its audit criteria BEFORE the section exists. Both are rule 11 applied to writing rather than to data: CHOOSING THE SHAPE AFTER SEEING THE CONTENT IS THE SAME ERROR AS CHOOSING A THRESHOLD AFTER SEEING THE RESULT."
   r429_TEN_UNWRITTEN_RULES_FROM_MY_OWN_FINDINGS_PROBED_BEFORE_CLAIMED: "Answering the narrow question with the probe run first. FOUR SURFACES loaded at the canonical ref -- COORDINATOR_RUNBOOK 1,255 lines, SEAT_PROTOCOL 706, MEM_PROCEDURE 220, CLAUDE.md 214 -- with FIVE POSITIVE CONTROLS that all HIT and a negative control absent everywhere, so the probe can both fire and miss. Twelve candidate rules, six to eight phrasings each, then EVERY APPARENT HIT INSPECTED IN CONTEXT. FOUR APPARENT HITS WERE INCIDENTAL: ratio matched requirements.txt, GiB matched a CPU-and-memory note, fails-more-often matched rule 41 on instrument selection, and replicate matched R-495's non-independence error. RESULT: TWO COVERED, TEN NOT WRITTEN, of which I would codify FIVE and flag FIVE."
   r429_THE_FIVE_I_WOULD_WRITE: "In the imperative, one line each, verbatim-writable. ONE: Report P(failure), never expected-count-minus-threshold, whenever the rate is uncertain -- a positive margin is not a probability. TWO: Every instrument whose result is quoted must exist on a ref before the result is quoted, not only builders inside a freeze. THREE: Resolve a unit at the quantity it belongs to, never by a convention inferred from a neighbouring number. FOUR: Before reporting a value as wrong, identify which field the consuming guard actually reads. FIVE: A resource peak carries its n -- a single observation is a property of a run, not of the workload."
   r429_AND_WHY_THOSE_FIVE_SURVIVE_A_SECOND_SESSION: "Each has MORE THAN ONE INDEPENDENT INSTANCE TONIGHT, which is REV's own bar. Rule four fired TWICE in my hands alone -- at round 405 I read fee_source_status as evidence and withdrew it, and at round 428 a reported sha turned out to be inputs.score_split.sha256 rather than the binding's tape.sha256. Rule two has THREE instances: the claim-check instrument, be_book_content_diff and be_call_sites, all on no ref. Rule five now has a DIRECT REPLICATE, 5.87 against 5.67 GiB on the same day and coin, 2.5 times the headroom it decides. Rule one changed a decision tonight. Rule three cost me the wrong side of a two-seat dispute."
@@ -29288,6 +29319,50 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r430_ONE_SCHEDULED_ATTEMPT_REMAINS_BEFORE_THE_BAND_OPENS:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/da-midnight-verify.timer
+    said: "systemctl show returns Restart no, NRestarts 0, ExecMainExitTimestamp 2026-09-12 00:06:00 UTC and NextElapseUSecRealtime 2026-09-13 00:06:00 UTC."
+  r430_THE_REFUSAL_IS_A_MODEL_OF_ITS_KIND_AND_THE_GUARD_HELD:
+    prov: CHECKED
+    artifact: live/pm_research/da_midnight_verify.sh
+    said: "the journal for 2026-09-12T00:06:00Z carries the REFUSE_TIER_DRIFT line, the checksum warning and the FIX line."
+  r430_AND_THE_RECOVERY_MECHANISM_IS_REAL_AND_DERIVED_FROM_DISK:
+    prov: CHECKED
+    artifact: live/pm_research/da_midnight_verify.sh
+    said: "the script carries DERIVED FROM DISK (days_needing_verdict), floored at the earliest existing, and the comment that it always includes the day that just began."
+  r430_09_11S_VERDICT_CARRIES_THE_PRE_SUPERSESSION_STATUS_SET_EXACTLY:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/da_dayverdict_20260911.json
+    said: "the three files' status fields and byte sizes, read directly."
+  r430_AND_THE_TWO_PHASE_WRITE_IS_144_MILLISECONDS_APART:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/da_dayverdict_20260910.json
+    said: "the two 09-10 files are stamped 00:06:34.705 and 00:06:34.849; the 09-11 file is stamped 00:06:41.503."
+  r430_AND_I_WILL_NOT_SAY_WHICH_OF_TWO_READINGS_IT_IS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/da_dayverdict_20260911.json
+    said: "both readings are consistent with the status sets, the timestamps and 09-11's known four missing windows."
+  r430_WHICH_MAKES_IT_THE_SAME_SHAPE_AS_EVERYTHING_ELSE_TONIGHT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/da_dayverdict_20260911.json
+    said: "the status strings are identical between 09-10's superseded file and 09-11's only file."
+  r430_09_12_HAS_ZERO_VERDICT_FILES_AND_THE_73_IS_EXACT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/da_dayverdict_20260911.json
+    said: "find returns 2, 1 and 0 verdict-named files for the three days; git status returns 73 entries under live/pm_research and 91 tree-wide."
+  r430_THE_DEMONSTRATION_IS_RECORDED_AS_ASKED_AND_I_WILL_NOT_TAKE_CREDIT_FOR_VIRTUE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "my procedure file's per-round sequence writes STATUS.yml and HANDOFF before the report, every round."
+  r430_AND_THE_COORDINATORS_OWN_GAP_IS_THE_SAME_GAP_ONE_LEVEL_UP:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "the audit's own count of nine rules recovered from filings, as relayed, against the fifteen enumerated."
+  r430_AND_THE_WRITE_ONCE_CRITERION_IS_WORTH_RECORDING_AS_A_RULE_CANDIDATE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "the criterion and REV's seven pre-declared audit criteria are the coordinator's, recorded here as stated."
   r429_TEN_UNWRITTEN_RULES_FROM_MY_OWN_FINDINGS_PROBED_BEFORE_CLAIMED:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
