@@ -1062,3 +1062,58 @@ carry a positive control showing the same query finds a thing known to be
 present.** An absence reported without both is not evidence; it is an untested
 instrument. This applies to monitors as much as to audits — a watch whose
 pattern never matches is silent in exactly the way a quiet system is.
+
+## §7l — TWO RULES THAT EACH APPEARED TWICE IN ONE NIGHT (2026-09-12T01:31Z)
+
+Both were found by REV, in different seats' work, hours apart. Two independent
+instances of one principle is a rule, not a coincidence.
+
+### §7l.1 — BIND EVERY INPUT TO AN ARTIFACT, NEVER TO AN ARGUMENT
+
+**First instance:** DA's tamper-check pinned its own enumerations from lists
+sitting ten lines above the pin, in the same file. REV: *"a pin in the same file
+as the thing it pins is a copy, not a check."*
+
+**Second instance:** the anti-amendment guard took `declared_utc` and
+`clock_start_utc` as **parameters**, so backdating and clock-supply were the
+same defect twice. REV: **"the amender writes both sides of the inequality."**
+
+The fix is identical in both: the input comes from an artifact the constrained
+party does not author — a fetched ref, a committer timestamp, a separate
+declaration — or the check is decoration. **Ask of every guard: who supplies its
+inputs? If the answer is "whoever the guard constrains", it is not a guard.**
+
+And its corollary, from the same review: **a predicate whose truth cannot be
+computed must be COMPUTED ANYWAY from evidence, not asserted.**
+`outcome_is_known` as a caller-supplied boolean is opt-in self-incrimination;
+`outcome_is_known` derived from "does any band-day score or verdict artifact
+exist at the ref" is a fact.
+
+### §7l.2 — ORDERING IS PART OF A PREDICATE'S MEANING
+
+The guard read:
+
+    if not spec.get("must_be_declared_before_the_clock"):
+        return {"admissible": True}      # <-- returns FIRST
+    if outcome_is_known:
+        raise ...                        # <-- the strongest clause, never reached
+
+**The weakest check, with a permissive default, gated the strongest clause.** A
+lever registered without that key was admitted *even with*
+`outcome_is_known=True`. **A conjunction whose cheapest term can short-circuit
+past its most important one is not the conjunction it appears to be.**
+
+Put the strongest, least-evadable clause FIRST. Use `spec["key"]`, never
+`.get("key")`, wherever a missing key would mean "unconstrained".
+
+### §7l.3 — GREEN CELLS AND NO CALL SITE
+
+`amendment_is_admissible` appeared **5 times lane-wide, all inside its own
+module** — definition, one prose mention, three calls from its own falsifier —
+and **zero occurrences anywhere else**, with a positive control confirming the
+query fires. **A guard with cells and no site constrains nothing**, and its
+green falsifier makes it look done.
+
+**Standing sweep:** any module whose cells pass must be checked for a production
+call site. Green cells on code nothing runs measure the quality of an unused
+artifact. This is now a property to sweep for lane-wide, not a bug in one file.
