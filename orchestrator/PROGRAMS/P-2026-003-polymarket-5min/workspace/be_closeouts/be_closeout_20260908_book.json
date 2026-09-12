@@ -1,0 +1,54 @@
+{
+ "contract": "BE_STAGE_CLOSEOUT_V1",
+ "day": "20260908",
+ "stage": "book",
+ "as_of_utc": "2026-09-11T23:33:36Z",
+ "unit": {
+  "status": "NO_UNIT_NAMED"
+ },
+ "artifact": {
+  "status": "PRESENT",
+  "path": "data/pm_5min/derived/be_daybook_20260908_btc__L250ms__FWD1.pkl",
+  "bytes": 390041103,
+  "sha256": "41d22f964ff6fb876c0190b37e9ccf7cc27b26c0e119d1e0e7890435d45798da"
+ },
+ "receipt": {
+  "status": "PRESENT",
+  "path": "data/pm_5min/derived/be_daybook_receipt_20260908_btc__L250ms__FWD1.json",
+  "bytes": 78898,
+  "sha256": "34d4c32a8964680f32f50d8f2e17af1f08f90e294350467d9e50065f137d372d"
+ },
+ "book": {
+  "era": "clob_v4_1",
+  "builder_commit": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+  "head_unchanged_during_the_run": true,
+  "closure_unchanged_during_the_run": true,
+  "runner_closure_sha256": "157413f6562cf5bd06d84b29ddb7748a2cd96e8d978cc3f28e3552232be831b6",
+  "n_windows": 288,
+  "state_join_failed": 0,
+  "kept_by_coin": {
+   "btc": 608357
+  },
+  "ROW_ACCOUNTING": {
+   "accounted": 647129,
+   "by_reason": {
+    "fine": 0,
+    "gap_at_cutoff_excluded": 43,
+    "no_archive": 0,
+    "no_level_history_excluded": 37,
+    "pm": 0,
+    "pre_window_excluded": 38692,
+    "state_join_failed": 0
+   },
+   "dropped": 38772,
+   "if_they_do_not_close": "the residual is UNEXPLAINED and is reported as such rather than absorbed. Both sides are ROW counts and the total comes from round 58's receipt, not from this function -- so a mismatch is a real disagreement between producers, not a unit error",
+   "kept": 608357,
+   "population": "FRAGMENT ROWS -- the rows phase2_arms reads from the day's fragment with status OK",
+   "residual": 0,
+   "rows_accounted_for": true,
+   "rows_pin_receipt": "be_gate1_state_tape_receipt_20260908_btc.json",
+   "rows_published_by_the_tape_receipt": 647129
+  },
+  "readback_matches": true
+ }
+}
