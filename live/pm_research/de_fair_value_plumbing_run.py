@@ -17,8 +17,20 @@ in prose does not bind the reader, so it is a required field.
   * THE CANDIDATES ARE DETERMINISTIC PLUMBING -- a shrink toward 0.5 and
     a constant offset. They estimate nothing.
 
-Days from 2026-09-11 on are REFUSED by name: they are live, and the eye
-is the thing that spends the day.
+WHAT THIS FENCE DOES AND DOES NOT COVER -- corrected at DE 395, because
+the overstating document was THIS ONE. `assert_day_is_consumed` refuses a
+day outside READABLE_DAYS for reads MADE THROUGH THIS MODULE, and the
+artifacts it fences are BE's DAY BOOKS. Rule 34a names
+`data/pm_5min/tier2/**/day=2026-09-08/` and later; of the five lane
+modules that touch tier2, NONE calls any 34a guard (DA's fence audit,
+da_scheduled_units_and_eth_inputs_v3). So this is a fence beside an open
+gate, and quoting rule 34a beside it -- as this docstring did -- reads
+as an enforcement claim the code does not make.
+
+It gates NOTHING outside its own reads. No document should cite it as
+the enforcing predicate for rule 34a, and the protected set here is a
+module LITERAL rather than an artifact-derived one, so it will not learn
+the validation band when the band is declared.
 
 Usage:  de_fair_value_plumbing_run.py --falsify
         de_fair_value_plumbing_run.py --run [--days 20260907,...] [--out DIR]
@@ -28,7 +40,8 @@ from __future__ import annotations
 CALL_SITE = {
     "kind": "DELIBERATE_INVOCATION",
     "by": "a person, with --run",
-    "gates": "NOTHING -- a diagnostic that must be invoked. Its day guard protects ITS OWN reads and nothing else, so no declaration may cite it as an enforcement mechanism (REVIEW 265, DE 394).",
+    "gates": "NOTHING outside its own reads. Its day fence covers reads THIS module makes of BE's day books; it is NOT rule 34a's fence, which names data/pm_5min/tier2/**, and no document may cite it as one (DE 395).",
+    "protected_set_is_a_literal": "READABLE_DAYS is module-level, not artifact-derived, so it will not learn the validation band when the band is declared (DA's fence audit, test 1)",
 }
 
 import json
@@ -107,7 +120,9 @@ class PlumbingRefused(ValueError):
 
 
 def assert_day_is_consumed(day: str) -> None:
-    """THE EYE IS THE THING THAT SPENDS THE DAY (rule 34a)."""
+    """THE EYE IS THE THING THAT SPENDS THE DAY -- for THIS module's
+    reads of BE's day books, which is not the artifact class rule 34a
+    names. See the module docstring: this is not 34a's fence."""
     if day not in READABLE_DAYS:
         raise PlumbingRefused(
             f"REFUSED {PROTECTED_DAY}: {day} is in neither the consumed "
