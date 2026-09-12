@@ -73,6 +73,22 @@ DAYS = {
 }
 
 
+#: THE RECENT WINDOW, named rather than chosen: it is the days AFTER the
+#: three whose classification is open. Naming it does not license using
+#: it -- see `exclusion_is_licensed`.
+RECENT_WINDOW = ("20260904", "20260905", "20260906", "20260907",
+                 "20260908", "20260909", "20260910", "20260911")
+OPEN_DAYS = ("20260901", "20260902", "20260903")
+EXCLUSION_NOT_LICENSED = "RATE_EXCLUSION_NOT_LICENSED"
+
+#: WHICH RATE IS THE FORWARD RATE IS UNRESOLVED, and a single number here
+#: would be a false precision that costs fourteen nights. The planning
+#: rate is the FULL window until a since-changed CONDITION is named
+#: independently of the excluded days' outcomes.
+PLANNING_RATE = "full_window"
+OPTIMISTIC_BOUND = "recent_window"
+
+
 class BandHazardRefused(ValueError):
     """The hazard cannot be computed as declared."""
 
@@ -176,6 +192,83 @@ def band_table(rates: dict = None, n: int = BAND_DAYS) -> list:
     return out
 
 
+def exclusion_is_licensed(condition: str = None,
+                          evidence_independent_of_outcomes: bool = False,
+                          names_days_by_outcome: bool = True) -> dict:
+    """MAY 09-01..09-03 BE EXCLUDED? Only on a NAMED CONDITION.
+
+    Dropping days because they look different is choosing after seeing,
+    and it is the mechanism by which a rate gets flattered. The exclusion
+    is licensed only when a since-changed condition is identified
+    INDEPENDENTLY of those days' outcomes -- REV is on the window-supply
+    break, DA has the mask and reboot evidence. Until one of them names
+    it, the full-window rate is the planning rate and the recent-window
+    rate is the OPTIMISTIC BOUND, never the other way round.
+    """
+    if not (isinstance(condition, str) and condition.strip()):
+        raise BandHazardRefused(
+            f"REFUSED {EXCLUSION_NOT_LICENSED}: no since-changed "
+            f"CONDITION is named for {list(OPEN_DAYS)}. 'They look "
+            f"different' is the observation being explained, not an "
+            f"explanation, and excluding on it flatters the rate by "
+            f"exactly the amount in question.")
+    if not evidence_independent_of_outcomes or names_days_by_outcome:
+        raise BandHazardRefused(
+            f"REFUSED {EXCLUSION_NOT_LICENSED}: the condition "
+            f"{condition!r} is supported only by the outcomes of the days "
+            f"it would remove. The evidence must identify the condition "
+            f"WITHOUT reference to which days failed.")
+    return {"licensed": True, "condition": condition,
+            "excluded": list(OPEN_DAYS),
+            "planning_rate_becomes": OPTIMISTIC_BOUND}
+
+
+def forward_rate_pair(days: dict = None) -> dict:
+    """BOTH RATES, PERMANENTLY, WITH THE REGIME QUESTION NAMED."""
+    days = days or DAYS
+    full = {d: v for d, v in days.items()}
+    recent = {d: v for d, v in days.items() if d in RECENT_WINDOW}
+    rf, rr = rate_at(GATE_MAX_MISSING_INTERIOR, full), rate_at(
+        GATE_MAX_MISSING_INTERIOR, recent)
+    pf, pr = p_at_least(rf["rate"]), p_at_least(rr["rate"])
+    return {
+        "FORWARD_RATE_IS_UNRESOLVED": True,
+        "planning_rate": {
+            "which": PLANNING_RATE, "window": "09-01..09-11",
+            "n_pass": rf["n_pass"], "n_days": rf["n_days"],
+            "p": rf["rate"], "expected_evaluable": BAND_DAYS * rf["rate"],
+            "P_at_least_10": pf, "P_NO_VERDICT": 1 - pf,
+            "failing_days": rf["failing_days"]},
+        "optimistic_bound": {
+            "which": OPTIMISTIC_BOUND, "window": "09-04..09-11",
+            "n_pass": rr["n_pass"], "n_days": rr["n_days"],
+            "p": rr["rate"], "expected_evaluable": BAND_DAYS * rr["rate"],
+            "P_at_least_10": pr, "P_NO_VERDICT": 1 - pr,
+            "failing_days": rr["failing_days"]},
+        "factor_between_their_failure_probabilities":
+            (1 - pf) / (1 - pr) if pr < 1 else None,
+        "the_same_seven_days_pass_in_BOTH":
+            "the windows share their numerator; the entire disagreement "
+            "is whether 09-01..09-03 count",
+        "WHICH_APPLIES_IS_UNRESOLVED": {
+            "open_days": list(OPEN_DAYS),
+            "settled_by": "classify 09-11: was it the LAST of the old "
+                          "failures or the FIRST of a new one",
+            "exclusion_requires": "a since-changed CONDITION named "
+                                  "independently of these days' outcomes "
+                                  "(REV: the window-supply break; DA: the "
+                                  "mask and reboot evidence)",
+            "until_then": "the full window is the PLANNING rate and the "
+                          "recent window is the OPTIMISTIC BOUND, never "
+                          "the other way round"},
+        "a_single_number_here_would_be_false_precision":
+            "the two differ by a factor of "
+            f"{((1 - pf) / (1 - pr)):.1f} in failure probability, and "
+            f"choosing between them on how the days LOOK is the "
+            f"mechanism that flatters a rate",
+    }
+
+
 def report() -> dict:
     return {
         "protocol": PROTOCOL,
@@ -197,6 +290,7 @@ def report() -> dict:
                 "than any scheduling change"},
         "threshold_sensitivity": threshold_sensitivity(),
         "ledger_rank_test": ledger_rank_test(),
+        "FORWARD_RATE_PAIR": forward_rate_pair(),
         "band_probabilities": band_table(),
         "one_fewer_night": {
             "n": BAND_DAYS - 1,
@@ -265,6 +359,42 @@ def falsify() -> int:
        "fails than passes",
        measured["P_NO_VERDICT"] > 0.5,
        f"P(no verdict) {measured['P_NO_VERDICT']:.4f}")
+
+    print("== both rates, reported as a PAIR ==")
+    fp = forward_rate_pair()
+    ck("the planning rate is the FULL window, not the recent one",
+       fp["planning_rate"]["which"] == PLANNING_RATE
+       and fp["planning_rate"]["n_days"] == 11,
+       f"p={fp['planning_rate']['p']:.6f} "
+       f"P(no verdict)={fp['planning_rate']['P_NO_VERDICT']:.6f}")
+    ck("  and the recent window is labelled the OPTIMISTIC BOUND",
+       fp["optimistic_bound"]["which"] == OPTIMISTIC_BOUND,
+       f"p={fp['optimistic_bound']['p']:.6f} "
+       f"P(no verdict)={fp['optimistic_bound']['P_NO_VERDICT']:.6f}")
+    ck("  and both travel together with the regime question named",
+       fp["FORWARD_RATE_IS_UNRESOLVED"] is True
+       and "settled_by" in fp["WHICH_APPLIES_IS_UNRESOLVED"])
+    ck("the same seven days pass in both windows",
+       fp["planning_rate"]["n_pass"] == fp["optimistic_bound"]["n_pass"]
+       == 7)
+    ck("the factor between their failure probabilities is reported",
+       fp["factor_between_their_failure_probabilities"] > 20,
+       f"{fp['factor_between_their_failure_probabilities']:.2f}x")
+
+    print("== excluding the open days requires a NAMED CONDITION ==")
+    for args, why in (((None, False, True), "no condition named"),
+                      (("they look different", False, True),
+                       "supported only by the outcomes"),
+                      (("a window-supply break", True, True),
+                       "still names the days by outcome")):
+        try:
+            exclusion_is_licensed(*args)
+            ck(f"refuses: {why}", False)
+        except BandHazardRefused as exc:
+            ck(f"refuses: {why}", EXCLUSION_NOT_LICENSED in str(exc))
+    ck("  and an independently-evidenced condition IS licensed",
+       exclusion_is_licensed("collector mask changed 09-03T18:00Z, from "
+                             "the run ledger", True, False)["licensed"])
 
     print(f"\n{ok}/{n} cells pass")
     return 0 if ok == n else 1
