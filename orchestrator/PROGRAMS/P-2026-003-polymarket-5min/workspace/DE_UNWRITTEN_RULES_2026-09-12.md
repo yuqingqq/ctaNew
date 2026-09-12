@@ -175,3 +175,50 @@ module being retired. Entry 5 has no instrument at all. Entry 9 is DA's and I
 have described it from its source rather than from memory. **Nothing here is a
 finding about another seat's work except entry 9, which is a credit, not a
 criticism.**
+
+---
+
+# ADDENDUM — probed against the four rule documents, 2026-09-12T03:03Z
+
+Queried `COORDINATOR_RUNBOOK.md`, `DE_PROCEDURE.md`, `SEAT_PROTOCOL.md` and
+`CLAUDE.md`, several phrasings each, **with positive controls** (§7k.2).
+
+**The controls earned the zeros.** Five known-written rules returned hits
+(exclusions-are-statuses, choosing-after-seeing, checker-ships-a-falsifier,
+§17's both-lists, §18's wording rule). **One control returned ZERO on the first
+pass — my own §17 — because the pattern spanned a line break; the query was
+broken, not the rule missing.** Nothing below is claimed from that pass.
+
+**Two apparent hits were incidental and are NOT the rule:** the OOM section
+mentions `MemoryHigh 12.88 GB` (candidate 4) but states no rule about reading a
+threshold from its enforcer — and it *renders a GiB value as GB*, which is the
+confusion propagating inside the record; and a stage-0 narrative containing
+"REFUSED RUN" matched candidate 6's pattern.
+
+## The rules, one line each, imperative, verbatim-ready
+
+1. **Report P(fewer than k), never the expectation minus k — the two diverge exactly where the rate is uncertain.**
+2. **Every rate carries the population AND the criterion that produced it, in the same field.**
+3. **A verdict boolean carries its basis, its n, and the KIND of limit it was judged against; where a state needs three values, two is a defect whichever is true.**
+4. **Read a threshold from the system that enforces it before comparing anything to it, and never settle a comparison whose answer flips on a unit by picking a reading.**
+5. **Run the consumer's path before reporting, not only the cells — a falsifier proves the pieces, the emit proves the artifact.**
+6. **Observations of a refusal are not measurements of the thing that refused: a refused stage is NOT_MEASURED and contributes no cost.**
+7. **A guard is unproven until it has refused something its own author wrote.**
+8. **Write the time from the clock, never from an estimate — read `date` at the moment of writing.**
+
+## Flagged as probably NOT durable — do not write these
+
+- *"Say when a conclusion survives a missing input."* True tonight, but it is a
+  special case of rule 35 (a limit that lives only in prose does not bind) and I
+  do not expect a second session to reach for it as a rule.
+- *"Name a seam's sign convention once and drive both directions."* **Half
+  written already** — `DE_PROCEDURE` line 268 says a sign convention must travel
+  with the artifact. Only the *drive-both-ways* half is missing, and that is
+  arguably just rule 15 at a seam. Write it only if REV sees it independently.
+
+## Routed, not claimed
+
+- **A content threshold must be relative to the population's own scale, and
+  presence is three states, not two** — DA's, `da_window_content_status.py`
+  (`2af783e`). Unwritten, general far past window files, and REV should take it
+  from DA rather than from me.
