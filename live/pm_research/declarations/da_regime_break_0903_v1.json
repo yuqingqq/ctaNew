@@ -1,0 +1,41 @@
+{
+ "protocol": "P003_DA_REGIME_BREAK_0903_V1",
+ "as_of_utc": "2026-09-12T01:25:10Z",
+ "question": "why did the mask collapse after 09-03? (DA 304 / REVIEW)",
+ "VERDICT": "NOT DETERMINABLE FROM WHAT WAS COLLECTED",
+ "consequence": "no exclusion of 09-01..09-03 is licensed, so 0.636 remains the planning rate and 0.875 the optimistic bound, in that order",
+ "FIRST_THE_PREMISE_IS_CORRECTED": {
+  "what_was_reported": "a step change in WINDOW SUPPLY -- 247-265 windows on 09-01..09-03 against 284 on 09-11",
+  "what_is_true": "window SUPPLY is FLAT at 288 files/day for btc AND eth on every day 09-01..09-11. The archive never varied.",
+  "what_247_265_actually_is": "the count of windows with PRESENT content. The difference is EMPTY SHELLS, not missing files: btc carried 22 shells on 09-01, 40 on 09-02, 39 on 09-03, then 0,0,0,1,0,0,0 and 3 on 09-11.",
+  "why_it_matters": "supply and content are different quantities with different causes. A supply break would point at the market or the subscription list; a content break points at the feed. Only the second happened."
+ },
+ "CONDITIONS_TESTED_AND_RULED_OUT": {
+  "collector_version": "clob_v4_1 on EVERY day 09-01..09-12. No version change at the boundary.",
+  "window_supply": "288/day both coins, every day. No change.",
+  "collector_process_restart": "NONE since 09-01 -- the msgs counter never goes backwards. The process that produced the shells is the same process that stopped producing them.",
+  "markets_tracked": "monotone growth 168 -> 22,343, ~2,016/day, with no break at 09-03/04.",
+  "collector_code": "the only commits are 2026-09-01T02:16 and 02:23 (restoring deployed collector bytes). They PRECEDE the shell-heavy days rather than ending them.",
+  "unit_configuration": "pm-collector-clob.service.d and v41.conf last modified 2026-08-31T21:50 -- again before, not at, the boundary.",
+  "host_event": "no reboot: continuously up since 2026-08-26T04:37:59Z. And journald had vacuumed anything from that period, so system-level evidence does not exist to test."
+ },
+ "THE_ONE_NEARBY_CONDITION_AND_WHY_IT_IS_NOT_AN_ANSWER": "a collector deploy/restore landed 2026-09-01T02:16-02:23, immediately before the three shell-heavy days. That is a real condition, independently evidenced by git log and unit mtimes, and it does not identify the days by outcome. BUT IT EXPLAINS THE WRONG END: it precedes the shell period and says nothing about why shells STOPPED on 09-04. Nothing found explains the STOP, and a condition that accounts for the start while leaving the end unexplained is not a licence to exclude the days.",
+ "WHY_THIS_IS_NOT_ONE_OF_THE_THREE_ILLEGITIMATE_ANSWERS": {
+  "not_(i)_no_condition_named": "conditions were named and TESTED -- version, supply, restart, code, unit, host -- and each was ruled out on its own evidence rather than left unexamined",
+  "not_(ii)_supported_by_the_outcomes": "every quantity checked is recorded continuously and independently of whether a day passed: version strings, file counts, a monotone message counter, commit timestamps, file mtimes",
+  "not_(iii)_identifies_days_by_outcome": "no condition was found at all, so none is proposed; the days are not being identified by anything"
+ },
+ "WHAT_WOULD_DETERMINE_IT": [
+  "journald retention covering 09-01..09-03, which was vacuumed",
+  "a collector-side counter for subscription churn or resubscribe events, which is not recorded",
+  "the venue's own status history for that period, which is not collected"
+ ],
+ "THE_SHELLS_AND_THE_STALLS_ARE_THE_SAME_PHENOMENON": "all-coin zero-rate minutes per day run 72/29/35 on 09-01..09-03, ZERO on 09-04..09-10, and 23 on 09-11 -- the same shape as the shell counts. So there is ONE mechanism across the whole period, not a 09-01..09-03 regime and a separate 09-11 event.",
+ "DE_GUARD_VERIFIED_BY_DRIVING": {
+  "claim": "the instrument will not let a later reader quietly exclude those days",
+  "verified": true,
+  "how": "drove de_band_hazard.py --falsify: 20/20 cells, including `exclusion_is_licensed` refusing (a) no condition named, (b) a condition supported only by the outcomes, (c) a condition that still names the days by outcome -- and licensing an independently-evidenced one",
+  "so": "the guard can fire and can also admit, which is what makes it a guard rather than a refusal"
+ },
+ "rule_10": "every condition above was measured, not recalled"
+}
