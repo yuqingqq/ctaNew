@@ -67,6 +67,24 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T01:22:48Z (MEM ROUND 419 -- E MINUS 10 IS NOT THE MARGIN, P(FEWER THAN 10) IS, and I have to
+  state my own part: I DID compute and lead with P at 418, AND I carried the margin
+  vocabulary beside it all night. I COMPUTED THE DIVERGENCE and it is severe: at 9 of 11
+  the margin is PLUS 1.45 DAYS and P(fail) is 9.4 per cent; at 8 of 11 the margin is PLUS
+  0.18 -- NOMINALLY POSITIVE -- and P(fail) is 32.8; and P crosses FIFTY PER CENT at a
+  MINUS 0.56 margin. A positive margin guarantees nothing, because E IGNORES THE VARIANCE
+  THAT P INTEGRATES. AT 7 OF 11 THE TEST FAILS 61.9 PER CENT OF THE TIME. I also caught my
+  own summary line conflating two rows AND FIXED IT BEFORE IT REACHED A FLAG. DE FRAMED
+  THE QUESTION BETTER: not whether the band is tight but WHICH RATE IS THE FORWARD RATE,
+  settled by fixing 09-11's population and seeing whether it was THE LAST OF THE OLD
+  FAILURES OR THE FIRST OF A NEW ONE. TWO SEATS CONVERGED ON THE SAME THREE DAYS THROUGH
+  DIFFERENT MEASURES -- REV on window supply, DE on population shortfalls -- and THAT DOES
+  NOT LICENSE DROPPING THEM: the 11-day rate is the PLANNING rate and recent-8 is the
+  OPTIMISTIC BOUND, reported as a PAIR. AND BE'S LIVENESS FIX PROVED ITSELF BY NOT
+  HELPING -- n_would_fail drops to ONE and 09-11 still fails, which is the condition set
+  IN ADVANCE at 417 and now met. It also shows the collector was healthy right across
+  09-11: A LIVE COLLECTOR WRITING HOLLOW FILES IS A DIFFERENT FAILURE FROM A DEAD ONE.
+  First hard contention number: 46-plus minutes held, 26-plus refusals. Tip 136a440.)
   2026-09-12T01:17:06Z (MEM ROUND 418 -- A CROSS-SEAT CORRECTION THAT MAY HALVE THE BAND MARGIN, RECORDED AS
   PENDING REV AND NOT AS SETTLED. REV's 90.9 per cent looks like a FILE-PRESENCE measure
   while BE's stage 0 failed 09-11 on INTERIOR WINDOWS -- a DIFFERENT CRITERION -- so
@@ -106,6 +124,7 @@ updated: >-
   joint falls to 0.8636 and P is 3.2; at 90 per cent, 9.4. NECESSARY BUT NOT SUFFICIENT --
   the ETH hazard is MULTIPLICATIVE. And the whole 90.9 rests on ONE failing day whose
   cause is not yet read. Tip f9b5d24.)
+previous_updates: >-
   2026-09-12T01:05:17Z (MEM ROUND 416 -- C2 IS STRUCTURALLY DEAD, SETTLED BY A RANGE: eight days span 0.1768
   to 0.2707, the sub-second share NEVER below 0.7293, zero of eight reaching the 95 per
   cent gate. AND THE DECISIVE RATIO IS GAP OVER SWING, NOT GAP OVER LEVEL -- from the BEST
@@ -124,7 +143,6 @@ updated: >-
   MANUFACTURED A REASON -- I wrote that GAP SPARSITY NEVER TOUCHES IT, and gap sparsity is
   THE WHOLE PROBLEM. Not yet a finding: the failure is CONSERVATIVE and REV rules, and the
   named exclusion is that recv_ns may itself be stale-written. Tip 736241f.)
-previous_updates: >-
   2026-09-12T00:59:55Z (MEM ROUND 415 -- VALIDATION STARTS NO EARLIER THAN 2026-09-14, RULED TONIGHT BECAUSE
   TOMORROW IT WOULD BE A CHOICE MADE AFTER SEEING, and expressed as a RULE rather than a
   date so it cannot drift: first complete UTC day strictly after the freeze becomes
@@ -950,6 +968,16 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r419_E_MINUS_10_IS_NOT_THE_MARGIN_P_FEWER_THAN_10_IS: "DE's correction to a framing the coordinator repeated to the user all night, and I have to state my own part precisely. I DID compute and report P(fewer than 10) at rounds 417 and 418, and at 418 I LED with it -- the thirty per cent was my headline, not the 0.31 days. BUT I ADOPTED THE MARGIN VOCABULARY THROUGHOUT AND GAVE IT EQUAL BILLING, tabling E minus 10 as a column beside P and writing that the margin is 0.19 standard deviations. So I did not make the error in its pure form and I did carry it alongside. THE TWO DIVERGE EXACTLY WHERE THE RATE IS UNCERTAIN, WHICH IS THE REGIME WE ARE IN."
+  r419_I_COMPUTED_THE_DIVERGENCE_AND_IT_IS_SEVERE: "At 9 of 11 the margin is PLUS 1.45 DAYS and P(fail) is 9.4 PER CENT -- a day and a half of margin is a one-in-eleven chance of returning nothing. At 8 of 11 the margin is PLUS 0.18 DAYS, NOMINALLY POSITIVE, and P(fail) is 32.8 PER CENT -- A POSITIVE MARGIN COEXISTING WITH A ONE-IN-THREE FAILURE. And P(fail) crosses fifty per cent at a rate of 0.6742, where the expected count is 9.44 and the margin is MINUS 0.56. So a positive margin guarantees nothing and margins under half a day are one-in-three propositions, because E IGNORES THE VARIANCE THAT P INTEGRATES."
+  r419_AND_I_CAUGHT_MY_OWN_SUMMARY_LINE_MIS_STATING_IT_BEFORE_FILING: "My computation printed a closing line reading that a POSITIVE margin of nearly a day and a half still loses the coin flip. THAT CONFLATES TWO ROWS: the day-and-a-half margin sits at 9.4 per cent, and the fifty-per-cent crossing sits at a NEGATIVE margin of 0.56. I caught it in my own output and corrected it before any of it reached a flag. Recorded because I have twice tonight had to write the opposite sentence -- that a wrong reading reached the file -- and the difference between the two cases is only that this time I read my own output before trusting it."
+  r419_AT_THE_GATES_MEASURED_11_DAY_RATE_THE_TEST_FAILS_MORE_OFTEN_THAN_IT_PASSES: "Reproduced: recent-8 at 7 of 8 = 0.8750 gives expected 12.25 with P(pass) 0.9770 and P(fail) 0.0230, EXACTLY as reported; recent-8 times ETH at 95 per cent gives 7.2 per cent; a joint of 0.736 gives 29.9 per cent, three times in ten. AND AT 7 OF 11 = 0.6364 THE TEST FAILS 61.9 PER CENT OF THE TIME. The coordinator has asked DE for that eleven-day row EXACTLY BEFORE QUOTING IT FURTHER, which is the right order: a number that decides fourteen nights should be someone's measurement before it is anyone's sentence."
+  r419_DE_FRAMED_THE_QUESTION_BETTER_WHICH_RATE_IS_THE_FORWARD_RATE: "The decision is EMPIRICALLY SETTLEABLE and the framing matters more than the arithmetic: the question is NOT whether the band is tight but WHICH RATE IS THE FORWARD RATE, and it is settled by FIXING 09-11'S POPULATION AND SEEING WHETHER IT WAS THE LAST OF THE OLD FAILURES OR THE FIRST OF A NEW ONE. That converts an argument about which days to count into an experiment with an outcome, which is the only form in which it can be settled rather than negotiated."
+  r419_TWO_SEATS_CONVERGED_ON_THE_SAME_THREE_DAYS_THROUGH_DIFFERENT_MEASURES: "REV flagged 09-01 through 09-03 as an unexplained WINDOW-SUPPLY break -- 247 to 265 windows against 09-11's 284 -- and DE INDEPENDENTLY identified THE SAME THREE DAYS by POPULATION SHORTFALLS of 10, 40 and 41 missing. Two measures, two seats, one set of days. That convergence is worth more than either measure alone, and it is the same standard applied at round 412 to the sigma verification: agreement counts when the instruments differ."
+  r419_AND_EXCLUDING_THEM_ON_THE_STRENGTH_OF_LOOKING_DIFFERENT_IS_FORBIDDEN: "Convergence identifies days; it does not license dropping them. EXCLUDING 09-01 THROUGH 09-03 BECAUSE THEY LOOK DIFFERENT IS CHOOSING AFTER SEEING, AND IT IS THE MECHANISM BY WHICH A RATE GETS FLATTERED. The exclusion is legitimate ONLY IF A SINCE-CHANGED CONDITION IS IDENTIFIED INDEPENDENTLY OF THOSE DAYS' OUTCOMES. Until REV or DA names it, THE 11-DAY RATE IS WHAT WE PLAN AGAINST AND THE RECENT-8 RATE IS THE OPTIMISTIC BOUND, NOT THE OTHER WAY ROUND -- and both are to be reported AS A PAIR with the regime question named, because a single number here would be false precision costing fourteen nights."
+  r419_THE_LIVENESS_FIX_PROVED_ITSELF_BY_NOT_HELPING: "BE's fix landed: heartbeat read from collector_health.jsonl at n = 16,026 -- I measured 16,017 an hour ago, consistent with a sixty-second beat -- worst gap across 09-11 of 66.6 s against a 270 s bound DERIVED FROM THE FILE'S OWN 133.1 s MAXIMUM, gap records inside the day REPORTED NOT GATED at n = 164, and n_would_fail DROPS TO ONE, MANY_MISSING_WINDOWS(4). THE FIX REMOVED A FALSE BLOCKER AND DID NOT UNBLOCK THE DAY, WHICH IS WHAT MAKES IT CREDIBLE. Had 09-11 cleared as a side effect the whole change would have needed re-examination -- and that condition was set IN ADVANCE at round 417 and has now been met. A closed loop."
+  r419_A_LIVE_COLLECTOR_WRITING_HOLLOW_FILES_IS_A_DIFFERENT_FAILURE_FROM_A_DEAD_ONE: "The fix also establishes that THE COLLECTOR WAS HEALTHY RIGHT ACROSS 09-11, so the four missing windows were NEVER A LIVENESS FAILURE -- which fits DA's reboot-and-empty-shells finding exactly. A LIVE COLLECTOR WRITING HOLLOW FILES IS A DIFFERENT FAILURE FROM A DEAD ONE, AND ONLY SEPARATING THE TWO SIGNALS MAKES IT VISIBLE. That is the payoff from REV's split of liveness and day coverage: a single conflated line could not have told these apart, and would have attributed a content failure to an availability one."
+  r419_THE_FIRST_HARD_LOCK_CONTENTION_NUMBER: "evaluation_pipeline, pid 3515789, held the heavy lock FORTY-SIX PLUS MINUTES tonight and BE's ETH control took TWENTY-SIX PLUS REFUSALS behind it. BE DID NOT RACE IT, as instructed. This is the first hard number on the contention I recorded as a hazard at round 408, when I found a scheduled unit holding the same lock BE's builds take -- it is no longer a hazard, it is a measured cost, and it lands in the same week a nightly two-coin build programme is being costed."
   r418_RECORDED_AS_PENDING_REVS_CONFIRMATION_NOT_AS_SETTLED: "The whole of this round is recorded as PENDING. DE noticed that REV's 90.9 per cent joint pass rate looks like a FILE-PRESENCE measure while BE's stage 0 failed 09-11 on INTERIOR WINDOWS -- A DIFFERENT CRITERION -- so whichever day REV counted as its single failure, THE OTHER CRITERION'S FAILURE IS UNCOUNTED. If REV counted 09-03 the interior hazard is uncounted; if it counted 09-11 the missing-window hazard is. EITHER WAY THERE ARE TWO FAILING DAYS IN ELEVEN, NOT ONE. DE's one-line discriminating question is with REV and nothing here is settled until it answers."
   r418_ARITHMETIC_ON_ANOTHER_SEATS_NUMBER_IS_THE_HARDEST_KIND_TO_GO_LOOKING_FOR: "Worth recording as a class. A seat checking its own arithmetic is routine and a reviewer checking a seat's arithmetic is the job; a seat noticing that ANOTHER seat's number answers a DIFFERENT QUESTION than the one it is being used for has no natural trigger -- nothing in DE's own work required it to look at how REV counted days. This is the second time tonight a cross-seat read produced the sharpest finding of its hour, the first being REV noticing that the sigma module it was auditing was the audited seat's own."
   r418_I_COMPUTED_THE_CONSEQUENCE_AND_P_GOES_FROM_0_6_TO_30_PER_CENT: "The binomial tail, computed by me for each scenario, P being the chance of fewer than 10 evaluable days in 14. REV's 10 of 11 at 0.9091: 12.73 expected, 2.73 margin, P = 0.6 per cent. DE's union at 9 of 11 = 0.8182: 11.45 expected, 1.45 margin, P = 9.4 PER CENT. Times ETH at 95 per cent, joint 0.7773: 10.88 expected, 0.88 margin, P = 18.3 PER CENT. Times ETH at 90 per cent, joint 0.7364: 10.31 expected, 0.31 margin, P = 30.0 PER CENT. THE CORRECTION PLUS A 90 PER CENT ETH BUILD RATE MOVES THE CHANCE OF NO VERDICT FROM 0.6 PER CENT TO THIRTY PER CENT -- A FIFTY-FOLD INCREASE."
@@ -28954,6 +28982,46 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r419_E_MINUS_10_IS_NOT_THE_MARGIN_P_FEWER_THAN_10_IS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "my round-417 and round-418 flags each carry both an E-minus-10 column and a P column; the 418 headline is the P figure."
+  r419_I_COMPUTED_THE_DIVERGENCE_AND_IT_IS_SEVERE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "summed the binomial tail below 10 at n = 14 for each rate and bisected for the rate at which the tail reaches 0.5: p = 0.6742, expected 9.44."
+  r419_AND_I_CAUGHT_MY_OWN_SUMMARY_LINE_MIS_STATING_IT_BEFORE_FILING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the two rows are 9/11 giving margin 1.45 and P 9.4 per cent, and the crossing at p 0.6742 giving margin minus 0.56 and P 50 per cent."
+  r419_AT_THE_GATES_MEASURED_11_DAY_RATE_THE_TEST_FAILS_MORE_OFTEN_THAN_IT_PASSES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "computed each row's binomial tail; 7/8 gives 0.0230 against the reported 0.0230 and 7/11 gives 0.619."
+  r419_DE_FRAMED_THE_QUESTION_BETTER_WHICH_RATE_IS_THE_FORWARD_RATE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the framing is DE's; the 09-11 population fix is the same work BE's stage-0 failure already requires."
+  r419_TWO_SEATS_CONVERGED_ON_THE_SAME_THREE_DAYS_THROUGH_DIFFERENT_MEASURES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the window counts are REV's and the shortfalls are DE's, arrived at without reference to each other."
+  r419_AND_EXCLUDING_THEM_ON_THE_STRENGTH_OF_LOOKING_DIFFERENT_IS_FORBIDDEN:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the ruling is the coordinator's; the direction of the default -- pessimistic as the plan, optimistic as the bound -- is what distinguishes it from an exclusion made for convenience."
+  r419_THE_LIVENESS_FIX_PROVED_ITSELF_BY_NOT_HELPING:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_health.jsonl
+    said: "the 133.1 s maximum is the figure I measured myself at round 417 over 16,017 records; condition one of the routing was that the fix be adopted because the check measures the wrong thing and not because it unblocks 09-11."
+  r419_A_LIVE_COLLECTOR_WRITING_HOLLOW_FILES_IS_A_DIFFERENT_FAILURE_FROM_A_DEAD_ONE:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_health.jsonl
+    said: "the worst heartbeat gap across 09-11 is 66.6 s against a 270 s bound, so the collector was live throughout while the day still lacks four interior windows."
+  r419_THE_FIRST_HARD_LOCK_CONTENTION_NUMBER:
+    prov: CHECKED
+    artifact: data/.heavy_run.lock
+    said: "the pid, the hold duration and the refusal count are the coordinator's measurement; the round-408 finding recorded pm-measurement-pipeline holding the same lock mid-build."
   r418_RECORDED_AS_PENDING_REVS_CONFIRMATION_NOT_AS_SETTLED:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
