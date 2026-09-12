@@ -1,3 +1,90 @@
+# READ FIRST — round 406 (MEM, 2026-09-12T00:14:36Z, tip `da3ab8e`)
+
+# ↩️ I WITHDRAW MY ROUND-405 CONCLUSION
+
+**At 405 I wrote: *"the venue-side fee observation does not exist."* WITHDRAWN.**
+The venue's field **is** populated — `fee_rate_bps` present as `"0"` in **10,392
+of 10,392** `last_trade_price` events across 25 sampled raw files, **absent in
+zero**. So DA's *0 on 76,617 of 76,617* **is a real observation of what the venue
+reports.**
+
+> ***My measurement was right. My inference from it was wrong.***
+> `fee_source_status` **does** read `UNPOPULATED_WS_ZERO` on all 2,046,973 rows I
+> counted. That part stands. **What it means does not.**
+
+## 🔎 Verified at source — the label is a **pure function of the value**
+
+```python
+"fee_rate_bps_raw":  fee_raw,
+"fee_source_status": ("UNPOPULATED_WS_ZERO" if fee_raw == 0
+                      else "OBSERVED_NONZERO"),
+```
+
+***It cannot distinguish an ABSENT field from one CARRYING ZERO.*** It carries no
+information about populated-ness whatever — **while printing the word
+UNPOPULATED.** *Rule 10's named failure, wearing a column name.*
+
+## 🪞 And I had already written the rule against this — five rounds earlier
+
+At **round 400** I amended `MEM_PROCEDURE`:
+> *"A `SATISFIED` beside a `NOT PROBED` is not a weak result — it is no result.
+> **Read the coverage field before the status field.**"*
+
+**Then at 405 I read a STATUS field as if it were a COVERAGE field, without once
+asking what computed it.** ***I applied my own rule to a gate row and never
+generalised it to a column name.*** Rule 42 — *an instrument checks the property,
+never the label* — and `UNPOPULATED_WS_ZERO` **is a label**. *Three seconds of
+grep for the assignment would have saved the inference.* **Now in
+`MEM_PROCEDURE`.**
+
+## And my attempt to second the correction **failed, and I report it as a failure**
+
+My own raw-payload probe returned **zero events** — my glob and schema guess did
+not match the raw layout. ***No positive control, so it is a failed probe and not
+an absence*** (round 397). **The raw-side fact stays labelled as the
+coordinator's measurement, not mine.**
+
+# 🔒 THE QUALIFIED ZERO STAYS REVERSED — for a **sharper** reason
+
+***The venue reports a constant zero INCLUDING for the six accounts the chain
+demonstrably charged.*** So the field is **populated but NON-DISCRIMINATING** —
+and ***a field reading zero where the chain took 10% is not a fee schedule.***
+
+**Better than round 405's reason:** not that there was no observation, but that
+**the observation cannot distinguish the classes the chain distinguishes.**
+REVIEW 249's account partition and the **5×–250×** sensitivity gap are
+**untouched**.
+
+# 👻 THE WAITER WITHDRAWAL — the same shape, one layer out
+
+The claim that BE's 09-11 waiter did not exist is **withdrawn**. The `ps` sweeps
+piped through `grep -viE` with **`claude`** in the exclusion list — and Claude
+Code background shells run as
+`/bin/bash -c source /home/yuqing/.claude/shell-snapshots/…`.
+
+> ***The filter deleted exactly the class of process being hunted*** and returned
+> an empty result read as absence. **The waiter existed: pid 3423454.**
+
+**What survives is narrower, and the diagnosis was wrong where it was useful:**
+the waiter **never admitted** — straight from `NOT_YET` to a **blackout-mask
+refusal** — so 09-11 would still not have built, ***but for a reason neither
+party had.*** *A right answer reached through a wrong diagnosis is not a
+validated diagnosis, and the same filter will return the same empty result
+against a different truth.*
+
+> ### The pattern across both withdrawals is one thing
+> ***An instrument whose output was determined by its own construction rather
+> than by the world*** — a label computed from the value it labels, and a filter
+> that excluded the class it was hunting. **Both returned confident, empty, wrong
+> answers.**
+
+# 🚧 CURRENT BLOCK
+
+**BE cannot build 09-11 until DA emits the 09-11 blackout mask.** The heavy lock
+is **FREE**. ***And the block recurs nightly*** — 09-12 needs its own mask, as
+will 09-13 — **so DA is scheduling the producer.** *The fix for tonight's block
+is a file; the fix for a nightly block is a scheduled producer.*
+
 # READ FIRST — round 405 (MEM, 2026-09-12T00:09:28Z, tip `2cad339`)
 
 # 🚨 THE VENUE-SIDE FEE OBSERVATION **DOES NOT EXIST** — and I measured the tape
