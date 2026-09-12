@@ -1,3 +1,96 @@
+# READ FIRST — round 413 (MEM, 2026-09-12T00:53:17Z, tip `9e3cf6b`)
+
+# 🔄 REVIEW 256 **INVERTS THE QUESTION** — and C1 is not arithmetically dead
+
+```
+perfect-foresight ceiling on C1's per-day delta_LL
+   pooled mean 0.0745 nats / action over 4,973,558 states
+   BTC 0.0823 (2,544,510)   ETH 0.0584 (808,372)
+   p50 0.0202    p90 0.1335    max 0.6931  = ln 2 = 0.693147, EXACT on every state
+```
+
+**I derived the instrument rather than accept the numbers.** Perfect foresight
+moves all the way to the favourable touch, so the ceiling is
+`max( ln(a/mid), ln((1−b)/(1−mid)) )` → **ln(1/0.5) = ln 2** as the ask
+approaches 1 with the midpoint at a half. ***The cap is algebraic.***
+
+**Both positive controls reproduce exactly** — *and they ran BEFORE the
+measurement, which is what makes them controls rather than rationalisations:*
+
+| book | REV | mine |
+|---|---|---|
+| 0.01 / 0.99 *(artifact)* | 0.683 | **0.683097** |
+| 0.495 / 0.505 *(tight)* | 0.00995 | **0.009950** |
+
+*Exclusions stated, not implicit — non-BTC/ETH coins, non-`price_change` events,
+unparseable sides, and `min(p,1−p) = 0` of which there were **none, 0 of
+4,973,558**. Measured on `price_change` best_bid/best_ask, **never** book
+snapshots (p90 6.2 s stale).*
+
+> **Relative to a log loss of ln 2 at p = 0.5, that mean is 10.75%** — BTC 11.87,
+> ETH 8.43, p50 2.91, p90 19.26. ***Not a small number. My rounds-411/412 worry
+> about C1's magnitude was the wrong axis*** — a half-tick perturbation can move
+> a log loss by a tenth of its value, because the loss is steep where the book is
+> wide.
+
+# 🎯 THE REAL FINDING: **the exact sign test has NO magnitude resolution at all**
+
+***The comparison I was sharpening cannot be made.*** The test resolves the
+**sign** of `delta_LL_g`, never its size:
+
+> **A candidate positive on ten of ten days by `1e-9` nats yields
+> `p = 2/2¹⁰ = 0.001953125` and PASSES — exactly as one positive by 0.08 nats
+> would.** *There is no scale at which the test begins to care.*
+
+**No magnitude floor exists in ANY of §8's four adoption conditions:** Holm p is
+**sign-driven**; mean and median positive is **sign, not size**; the 95%
+native-coverage gate is about **coverage**; the fourth is **structural**.
+***That is not a threshold set too low — there is no threshold.***
+
+## 🪞 And I had the observation, one step short of its consequence
+
+At round 412 I offered that the sign test is magnitude-blind and concluded **the
+binding constraint on C1 is the nonzero-increment count**. *Same premise.*
+
+> ***I framed magnitude-blindness as a constraint on the candidate. REV framed it
+> as a hole in what a pass MEANS.*** **REV's reading is the one that matters, and
+> mine was a smaller true statement standing in front of a larger one.**
+
+**And the tie rule — the only magnitude-sensitive clause anywhere — CANNOT BE
+MEASURED:** exactly-zero needs `bid_size == ask_size` at *every* action, and
+`price_change` carries `best_bid`/`best_ask` but **not the sizes at the touch**.
+***So my 412 suggestion rests on a quantity nobody can measure from this data —
+and REV surfaced that, naming the limit rather than estimating around it.***
+
+# ⚖️ CONSEQUENCE: C1 can pass §8 on an effect of **any size above zero**
+
+Its deviations are **half a tick, 0.005 at p90 — tiny but not zero** — so daily
+increments will be **signed and nonzero**, and ten favourable signs pass,
+***carrying C1 into §9's economic clock on an effect that may be economically
+indistinguishable from nothing.***
+
+> **The plan declares a minimum SAMPLE (200 minimum, satisfied at 1,024) and NO
+> MINIMUM EFFECT.** ***Rule 6 binds the null and its sample; nothing requires the
+> ALTERNATIVE to be large enough to matter.*** **That is a gap in the programme's
+> own rule set, not only in this plan.**
+
+# 🙅 THE FIX — and who owns it
+
+**REV refused** to propose a minimum meaningful `delta_LL`: choosing after seeing
+tonight's numbers is rule 11. **The coordinator refused too — and stated it is in
+a *worse* position than REV, having now seen the 0.06–0.08 ceiling.**
+
+> ***Two parties declined the same task, and one said explicitly that its own
+> exposure to the data made it LESS qualified, not more.*** **The value belongs
+> to whoever owns the estimand — the USER — and it has been put to them.**
+
+**DA is adding `minimum_meaningful_delta_LL` as a REQUIRED, currently-UNSET
+field, so `freeze_is_effective` computes FALSE until it carries a value.**
+
+> ### ***A note can be forgotten at day one. A predicate cannot.***
+> Second time in two rounds a requirement moved from a person into a thing that
+> refuses — **the single most reliable repair pattern found tonight.**
+
 # READ FIRST — round 412 (MEM, 2026-09-12T00:45:57Z, tip `44e7567`)
 
 # ✅ THE IDENTITY-AS-ARTIFACT THREAT IS **REFUTED — by its own author**
