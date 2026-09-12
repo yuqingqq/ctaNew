@@ -1,0 +1,142 @@
+{
+ "protocol": "P003_DA_SCHEDULED_UNITS_AND_ETH_INPUTS_V1",
+ "as_of_utc": "2026-09-12T01:28:17Z",
+ "dispatch": "DA 291-296",
+ "THE_SEPARATING_QUESTION": "does the unit's work reach an OUTCOME -- a score, a valuation, a P&L -- or is it coverage/quality/price infrastructure? Only the first consumes. UNKNOWN is treated as consuming.",
+ "units": [
+  {
+   "unit": "pm-research-guard.timer",
+   "schedule": "every minute",
+   "command": "python3 live/pm_research/ops/pm_research_guard.py",
+   "reads": "the process table",
+   "writes": "stdout JSON only -- no files",
+   "reaches_an_outcome": false,
+   "ruling": "INFRASTRUCTURE",
+   "why": "a process guard; it scans and prints, and writes nothing"
+  },
+  {
+   "unit": "pm-lane-health.timer",
+   "schedule": "*:00/15 (every 15 min)",
+   "command": "python3 live/pm_research/ops/pm_lane_health.py",
+   "reads": "lane state",
+   "writes": "an alert file",
+   "reaches_an_outcome": false,
+   "ruling": "INFRASTRUCTURE",
+   "why": "health reporting; no score, valuation or P&L"
+  },
+  {
+   "unit": "pm-evaluation-pipeline.timer",
+   "schedule": "03,09,15,21:50 UTC (4x daily), HOLDS THE HEAVY LOCK",
+   "command": "flock data/.heavy_run.lock python3 -m live.pm_research.evaluation_pipeline --catch-up --since 2026-08-20 --max-days 1 --scheduled --json",
+   "reads": "tier1, markets.jsonl, resolutions.jsonl",
+   "writes": "tier2 calib_panel, markout_events",
+   "reaches_an_outcome": true,
+   "ruling": "INFRASTRUCTURE_BY_WRITING__OUTPUT_IS_PROTECTED",
+   "RULED_AT_DA_305": "IT DOES NOT CONSUME A BAND DAY BY RUNNING, AND ITS OUTPUT MAY NOT BE READ. Both halves are the USER's ruling, not mine -- rule 34a (`abd4b07`): WRITING DOES NOT CONSUME A DAY, READING DOES.",
+   "the_reasoning": "rule 11's concern is SELECTION -- choosing after seeing. This unit FITS NOTHING, PICKS NO THRESHOLD AND COMPUTES NO INTERVAL (REV_PROCEDURE's words), so it makes no selection and its running cannot void the test. What WOULD void it is a human reading the output, because the output carries the realised outcome: markout_events schema holds `winner_up` (bool) and `outcome_up` (float) beside `price_up`, `q_up` and `size`, and the module computes `edge = q_up * (price_up - outcome_up)` per fill. That is a per-trade signed settlement edge for a band day -- exactly the thing that must not be looked at before the band closes.",
+   "the_sharp_question_answered": "IS A BAND DAY STILL UNTOUCHED IF THIS HAS WRITTEN CALIBRATION FOR IT? YES -- by USER ruling, provided nobody reads it. Existence is not permission.",
+   "and_there_IS_a_live_selection_hazard_it_would_feed": "`minimum_meaningful_delta_LL` is UNSET and belongs to the USER, and whether C2 stays in the family is also open. A number chosen after seeing outcome-derived statistics from band days is rule 11's failure exactly -- which is why the READ prohibition, not the write, is the operative half.",
+   "the_fence_already_exists_and_already_covers_the_band": "rule 34a protects `data/pm_5min/tier2/**/day=2026-09-08/` AND ANY LATER DAY, so every future band day is already inside it. No new fence is needed; what is needed is that it stop being PROSE.",
+   "THE_GAP_BY_TONIGHTS_OWN_STANDARD": "rule 34a lives in two procedure files as a sentence. Every other guard tonight was moved from a sentence into a predicate because a note can be forgotten and a predicate cannot. A read-prohibition that depends on each seat remembering it is the weakest guard in the lane, and it guards the single thing that would void the test.",
+   "operationally": "NOTHING IS DISABLED. The finding is retrospective and killing a timer that has already run saves nothing and may destroy the day-quality record. The remedy is a fence declared BEFORE the band, which rule 34a already is.",
+   "why": "it JOINS THE SETTLED OUTCOME and values against it: `winner_up` -> `outcome_up` -> `edge = q_up * (price_up - outcome_up)`, written into markout_events. That is a valuation, not coverage.",
+   "days_written_in_window": "tier2 day partitions 2026-09-05..2026-09-09"
+  },
+  {
+   "unit": "da-midnight-verify.timer",
+   "schedule": "00:06 UTC daily",
+   "command": "live/pm_research/da_midnight_verify.sh",
+   "reads": "raw tape, collector gaps",
+   "writes": "the day verdict and the blackout mask, paired",
+   "reaches_an_outcome": false,
+   "ruling": "INFRASTRUCTURE",
+   "why": "day-quality and candidate-blind; \u00a78 resolves day eligibility FROM this, which makes it an input to the test rather than a consumer of it",
+   "state": "REFUSING since the 09-11 script change: DEPLOY_DRIFT (REFUSE_TIER_DRIFT) rc 7, because da_midnight_verify.sh was edited after the 09-07 deploy record and never re-deployed"
+  },
+  {
+   "unit": "pm-measurement-pipeline.timer",
+   "schedule": "*:20 UTC (hourly), HOLDS THE HEAVY LOCK",
+   "command": "flock data/.heavy_run.lock python3 -m live.pm_research.measurement_batch --catch-up --since 2026-08-20 --lane measurement --max-days 1 --scheduled --json",
+   "reads": "raw / tier0",
+   "writes": "tier1 coverage, twap",
+   "reaches_an_outcome": false,
+   "ruling": "INFRASTRUCTURE",
+   "why": "coverage and TWAP. It looked like a consumer on a loose grep (44 hits) but its ONLY two `winner_up` references are `bool(index % 2)` -- synthetic fixtures in a test builder, not a settled outcome",
+   "days_written_in_window": "tier1 day partitions 2026-09-05..2026-09-11"
+  },
+  {
+   "unit": "launchpadlib-cache-clean.timer",
+   "schedule": "daily",
+   "command": "OS cache clean",
+   "reads": "OS cache",
+   "writes": "OS cache",
+   "reaches_an_outcome": false,
+   "ruling": "INFRASTRUCTURE (out of programme)",
+   "why": "touches nothing under data/pm_5min"
+  }
+ ],
+ "n_units": 6,
+ "n_consumers": 0,
+ "n_unknown": 0,
+ "consumers": [],
+ "REACHES_AN_OUTCOME_IS_NOT_CONSUMES": "one unit reaches an outcome (pm-evaluation-pipeline) and NO unit consumes a day by running. Rule 34a (USER, abd4b07): writing does not consume a day, READING does. The distinction is the whole ruling: the timer may keep running, and its output for any band day is off limits.",
+ "lock_behaviour": {
+  "both_heavy_units_block_rather_than_yield": true,
+  "mechanism": "ExecStart uses plain `flock <file>` with NO `-n`, so a unit WAITS for the lock rather than failing fast",
+  "consequence": "BE queues behind them rather than being refused, and the measurement unit fires HOURLY at :20. Over a fourteen-night build programme that is fourteen nights of contention, not one",
+  "observed": "2026-09-12T00:22Z the lock was held by pid 3507151 (measurement_batch, 162s elapsed) while BE was mid-sequence on 09-11"
+ },
+ "eth_input_audit": {
+  "raw_archive": {
+   "by_day": {
+    "20260903": {
+     "eth_files": 287,
+     "btc_files": 287,
+     "parity": true
+    },
+    "20260904": {
+     "eth_files": 288,
+     "btc_files": 288,
+     "parity": true
+    },
+    "20260905": {
+     "eth_files": 288,
+     "btc_files": 288,
+     "parity": true
+    },
+    "20260906": {
+     "eth_files": 288,
+     "btc_files": 288,
+     "parity": true
+    },
+    "20260907": {
+     "eth_files": 288,
+     "btc_files": 288,
+     "parity": true
+    },
+    "20260908": {
+     "eth_files": 288,
+     "btc_files": 288,
+     "parity": true
+    },
+    "20260909": {
+     "eth_files": 288,
+     "btc_files": 288,
+     "parity": true
+    },
+    "20260910": {
+     "eth_files": 288,
+     "btc_files": 288,
+     "parity": true
+    }
+   },
+   "eth_present": true,
+   "at_parity_with_btc": true,
+   "exclusions": "counts .jsonl.gz per coin per day under data/pm_5min/raw/<day>/; excludes any other coin and any non-gz file",
+   "positive_control": "btc counted by the same query, non-zero every day"
+  }
+ },
+ "ETH_VERDICT": "every ETH input is present at parity with BTC for the days that matter, and on data QUALITY eth is better -- fewer gap windows than btc on every day. So 'no ETH day book exists' is a BUILD-side fact, not a data gap, and the \u00a78 population is not condemned to be forward-looking.",
+ "NOTHING_IS_DISABLED": "the finding is retrospective. Killing a timer that has already run saves nothing and may destroy the day-quality record the test depends on.",
+ "rule_10": "the counts here are computed at run time from the artifacts"
+}

@@ -49,7 +49,48 @@ UNITS = (
                  "--since 2026-08-20 --max-days 1 --scheduled --json"),
      "reads": "tier1, markets.jsonl, resolutions.jsonl",
      "writes": "tier2 calib_panel, markout_events",
-     "reaches_an_outcome": True, "ruling": "CONSUMER",
+     "reaches_an_outcome": True,
+     "ruling": "INFRASTRUCTURE_BY_WRITING__OUTPUT_IS_PROTECTED",
+     "RULED_AT_DA_305": (
+         "IT DOES NOT CONSUME A BAND DAY BY RUNNING, AND ITS OUTPUT MAY NOT BE "
+         "READ. Both halves are the USER's ruling, not mine -- rule 34a "
+         "(`abd4b07`): WRITING DOES NOT CONSUME A DAY, READING DOES."),
+     "the_reasoning": (
+         "rule 11's concern is SELECTION -- choosing after seeing. This unit "
+         "FITS NOTHING, PICKS NO THRESHOLD AND COMPUTES NO INTERVAL (REV_"
+         "PROCEDURE's words), so it makes no selection and its running cannot "
+         "void the test. What WOULD void it is a human reading the output, "
+         "because the output carries the realised outcome: markout_events "
+         "schema holds `winner_up` (bool) and `outcome_up` (float) beside "
+         "`price_up`, `q_up` and `size`, and the module computes "
+         "`edge = q_up * (price_up - outcome_up)` per fill. That is a "
+         "per-trade signed settlement edge for a band day -- exactly the "
+         "thing that must not be looked at before the band closes."),
+     "the_sharp_question_answered": (
+         "IS A BAND DAY STILL UNTOUCHED IF THIS HAS WRITTEN CALIBRATION FOR "
+         "IT? YES -- by USER ruling, provided nobody reads it. Existence is "
+         "not permission."),
+     "and_there_IS_a_live_selection_hazard_it_would_feed": (
+         "`minimum_meaningful_delta_LL` is UNSET and belongs to the USER, and "
+         "whether C2 stays in the family is also open. A number chosen after "
+         "seeing outcome-derived statistics from band days is rule 11's "
+         "failure exactly -- which is why the READ prohibition, not the write, "
+         "is the operative half."),
+     "the_fence_already_exists_and_already_covers_the_band": (
+         "rule 34a protects `data/pm_5min/tier2/**/day=2026-09-08/` AND ANY "
+         "LATER DAY, so every future band day is already inside it. No new "
+         "fence is needed; what is needed is that it stop being PROSE."),
+     "THE_GAP_BY_TONIGHTS_OWN_STANDARD": (
+         "rule 34a lives in two procedure files as a sentence. Every other "
+         "guard tonight was moved from a sentence into a predicate because a "
+         "note can be forgotten and a predicate cannot. A read-prohibition "
+         "that depends on each seat remembering it is the weakest guard in the "
+         "lane, and it guards the single thing that would void the test."),
+     "operationally": (
+         "NOTHING IS DISABLED. The finding is retrospective and killing a "
+         "timer that has already run saves nothing and may destroy the "
+         "day-quality record. The remedy is a fence declared BEFORE the band, "
+         "which rule 34a already is."),
      "why": ("it JOINS THE SETTLED OUTCOME and values against it: "
              "`winner_up` -> `outcome_up` -> `edge = q_up * (price_up - "
              "outcome_up)`, written into markout_events. That is a valuation, "
@@ -146,6 +187,12 @@ def build() -> dict:
         "units": list(UNITS), "n_units": len(UNITS),
         "n_consumers": len(consumers), "n_unknown": len(unknown),
         "consumers": [u["unit"] for u in consumers],
+        "REACHES_AN_OUTCOME_IS_NOT_CONSUMES": (
+            "one unit reaches an outcome (pm-evaluation-pipeline) and NO unit "
+            "consumes a day by running. Rule 34a (USER, abd4b07): writing does "
+            "not consume a day, READING does. The distinction is the whole "
+            "ruling: the timer may keep running, and its output for any band "
+            "day is off limits."),
         "lock_behaviour": LOCK_FACT,
         "eth_input_audit": audit,
         "ETH_VERDICT": (
@@ -177,13 +224,32 @@ def falsify() -> int:
     ck("every ruling names WHY, so it can be disagreed with",
        all(u.get("why") for u in d["units"]))
     ck("exactly ONE unit reaches an outcome, and it is the evaluation pipeline",
-       d["n_consumers"] == 1 and d["consumers"] == ["pm-evaluation-pipeline.timer"],
-       str(d["consumers"]))
-    ck("...and its reason is the OUTCOME JOIN, not its name",
-       "winner_up" in [u for u in d["units"]
-                       if u["ruling"] == "CONSUMER"][0]["why"])
+       sum(1 for u in d["units"] if u["reaches_an_outcome"]) == 1
+       and [u["unit"] for u in d["units"] if u["reaches_an_outcome"]]
+       == ["pm-evaluation-pipeline.timer"])
+    _ep = [u for u in d["units"] if u["reaches_an_outcome"]][0]
+    ck("...and it is ruled by the USER's rule 34a, not by this seat",
+       "abc"[:0] == "" and "34a" in _ep["RULED_AT_DA_305"]
+       and "WRITING DOES NOT CONSUME" in _ep["RULED_AT_DA_305"])
+    ck("...reaching an outcome is NOT the same as consuming a day",
+       _ep["reaches_an_outcome"] is True
+       and "DOES NOT CONSUME A BAND DAY BY RUNNING" in _ep["RULED_AT_DA_305"])
+    ck("...the SELECTION argument is what carries it (rule 11)",
+       "FITS NOTHING" in _ep["the_reasoning"]
+       and "outcome_up" in _ep["the_reasoning"])
+    ck("...the live selection hazard the READ would feed is named",
+       "minimum_meaningful_delta_LL" in _ep["and_there_IS_a_live_selection_hazard_it_would_feed"])
+    ck("...and the fence is identified as already covering every later day",
+       "ANY LATER DAY" in _ep["the_fence_already_exists_and_already_covers_the_band"])
+    ck("THE GAP IS NAMED: the fence is PROSE, not a predicate",
+       "stop being PROSE" in _ep["the_fence_already_exists_and_already_covers_the_band"]
+       or "PROSE" in _ep["THE_GAP_BY_TONIGHTS_OWN_STANDARD"])
     ck("no unit is left UNKNOWN (which would count as consuming)",
        d["n_unknown"] == 0)
+    ck("NO unit consumes a day by RUNNING, and the rule is cited",
+       d["n_consumers"] == 0
+       and "writing does not consume a day" in d["REACHES_AN_OUTCOME_IS_NOT_CONSUMES"].lower(),
+       f"consumers={d['consumers']}")
     ck("the lock fact is recorded: they BLOCK, they do not yield",
        d["lock_behaviour"]["both_heavy_units_block_rather_than_yield"] is True
        and "NO `-n`" in d["lock_behaviour"]["mechanism"])
