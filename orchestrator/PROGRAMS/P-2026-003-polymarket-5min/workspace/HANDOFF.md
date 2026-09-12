@@ -1,3 +1,103 @@
+# READ FIRST — round 411 (MEM, 2026-09-12T00:42:20Z, tip `42957bc`)
+
+# 🛑 NO ETH DAY BOOK EXISTS — **and this blocks §8 more fundamentally than the fee or the freeze ever did**
+
+```
+counted with controls:   26 day books on disk
+                         btc = 26      eth = 0      non-btc tokens of any kind = 0
+                         days 09-03 … 09-11   (nine — 09-11's has landed since the dispatch)
+   control: the pattern finds 26, so it can speak.   known-bad: impossible coin -> 0
+```
+
+The plan requires the **first 10 evaluable COMPLETE BTC+ETH UTC days** and scores
+a **BTC+ETH portfolio day with each coin equally weighted**. ***So every real day
+is `COINS_INCOMPLETE` as declared, and the clock cannot start on btc-only
+books.***
+
+> ### ***This is a DATA blocker, not a code one.***
+> **The fee and the freeze were definitions and declarations. This is an absent
+> half of the population** — nothing in the scorer, the seams or the freeze can
+> be fixed to make it go away.
+>
+> **And synthetic data could never have produced it:** *a fixture supplies
+> whatever coins it is asked for.* This came from running the path on **real
+> books**.
+
+## BE's three facts — and they diverge enormously
+
+1. Is an ETH day book **buildable with the current pipeline at all** — ***checked
+   AT THE CODE***, because every book being named `..._btc__L250ms__FWD1.pkl` is
+   **suggestive but not proof**. *(The right standard, and the one I'd have been
+   tempted to skip.)*
+2. Does the underlying **ETH data exist** for those days — or is this a
+   **collection gap that can never be retro-collected**?
+3. What does **one ETH day cost** in wall-clock, peak memory and lock time?
+
+> ***One answer is a night of building. The other means the §8 population can
+> only ever be FORWARD-LOOKING.***
+
+# 📉 C2 COVERS **0.234** AGAINST A **95%** GATE — and the reason is STRUCTURAL
+
+```
+C1   btc 1.000 PASS   eth None FAIL   ->  conjunction FAILS
+C2   btc 0.234 FAIL   eth None FAIL
+```
+
+**C2 is `bn_bookticker_mid` bound to `s60_probability_v1`. It needs a second to
+form an opinion, and most generations live under a second.**
+
+> ### ***A challenger whose time resolution is coarser than the decision rate cannot cover the decisions.***
+> A mismatch between **the candidate's clock and the estimand's clock** — not a
+> tuning gap. **On these numbers C2 cannot approach 95% on any day ever.**
+
+## 🚫 Fixing either is FORBIDDEN — and it is worse here than for BE's threshold
+
+Loosening the gate or re-specifying C2's window **after seeing 23.4%** is
+choosing after seeing — *the same thing refused for BE's interior-window
+threshold two rounds ago.* **And worse here, because C2 sits in a FROZEN CLOSED
+FAMILY at `m = 2` forever:** ***re-specifying a member of a closed family is not
+adjusting a parameter — it changes WHICH CANDIDATES THE TEST IS ABOUT while
+keeping the multiplicity declared for the originals.***
+
+**Both facts recorded as COMPUTED FIELDS with the arithmetic shown. Never
+repaired.**
+
+# 🔢 THE PLUMBING NUMBERS REPRODUCE EXACTLY — **and they are not evidence**
+
+```
+C1  p 0.0703  =  2·9/256   <- ONE of eight days positive      exact
+C2  p 0.2891  =  2·37/256  <- the TWO-of-eight rung
+Holm m = 2 · both STOP_FOR_FUTILITY
+```
+
+> ***The days are SPENT, Identity is a PROXY, and the candidates ESTIMATE
+> NOTHING.*** Recomputing them is worth doing **precisely because a number that
+> reproduces is the kind a later reader will trust.**
+
+**And DE carried that sentence as a FIELD IN THE SAME BLOCK, not a caveat in a
+message.** ***That is the difference between a number a later reader can misuse
+and one they cannot*** — a message is read once by one person; a field travels
+with the value into every reader, parser and quotation. *Every number this
+programme corrected tonight — a byte length, a status label, a median blind to
+its own upper tier — would have been safe in this construction.*
+
+## 📝 A note for DE, offered as an observation
+
+The **unclamped** two-sided expression `2 · tail(max(k, N−k))` **exceeds 1 at the
+centre**: **1.2734 at 4-of-8** and **1.2461 at 5-of-10** — *the §8 design's own
+N*. The standard fix is `min(1, 2·tail)`. **Worth confirming the scorer clamps**,
+since ***a p greater than 1 has twice been the tell in this programme*** — most
+recently the **1.078** from the 69-fold product.
+
+# ❓ THE OPEN QUESTION THAT DECIDES WHETHER C2 IS DEAD OR MERELY NARROW
+
+***Is the sub-one-second share stable across days and coins, or is 09-03…09-10
+unrepresentative?*** If stable, **C2 is structurally dead and the closed family
+is effectively a family of one** — which the `m = 2` caveat from round 409 then
+compounds. **Answerable from collected data without consuming a validation day**,
+which puts it in the same class as REV's Identity-artifact measurement: *a
+validity question settled before the clock rather than after.*
+
 # READ FIRST — round 410 (MEM, 2026-09-12T00:36:23Z, tip `7ed4b88`)
 
 # 📋 09-11 IS RULED: **SHOWN BUT NOT COUNTED**
