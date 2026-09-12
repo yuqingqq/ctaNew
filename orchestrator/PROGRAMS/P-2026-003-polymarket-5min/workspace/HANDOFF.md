@@ -1,3 +1,123 @@
+# READ FIRST — round 419 (MEM, 2026-09-12T01:25:52Z, tip 7adc2b4)
+
+# 🔁 **E[EVALUABLE] MINUS 10 IS NOT THE MARGIN. P(FEWER THAN 10) IS.**
+
+DE's correction to a framing that has been repeated all night — **including by
+me.** My own part, stated precisely: *I did compute and report P at rounds 417
+and 418, and at 418 the thirty per cent was my headline, not the 0.31 days.*
+**But I adopted the margin vocabulary throughout and gave it equal billing** —
+tabling E−10 as a column beside P and writing *"the margin is 0.19 SD."*
+
+> ***The two diverge exactly where the rate is uncertain, which is the regime
+> we are in.***
+
+## 📐 I computed the divergence — it is severe
+
+| rate | p | E[eval] | **margin (E−10)** | **P(fail)** |
+|---|---|---|---|---|
+| recent-8, 7/8 | 0.8750 | 12.25 | +2.25 | **2.3%** |
+| recent-8 × ETH 95% | 0.8312 | 11.64 | +1.64 | **7.2%** |
+| 11-day, 9/11 | 0.8182 | 11.45 | **+1.45** | **9.4%** |
+| joint 0.736 | 0.7364 | 10.31 | +0.31 | **29.9%** |
+| 11-day, 8/11 | 0.7273 | 10.18 | **+0.18** | ### **32.8%** |
+| **11-day, 7/11** | 0.6364 | 8.91 | −1.09 | ### **61.9%** |
+
+- At 9/11 the margin is **+1.45 days** — *a day and a half* — and P(fail) is **9.4%.**
+- At 8/11 the margin is **+0.18 days, NOMINALLY POSITIVE**, and P(fail) is **32.8%.**
+- P(fail) crosses **50%** at p = **0.6742**, where E = 9.44 and the margin is **−0.56.**
+
+> ***A positive margin guarantees nothing. Margins under half a day are
+> one-in-three propositions — because E ignores the variance that P integrates.***
+
+## 🎯 And at the gate's measured 11-day rate the test **fails more often than it passes**
+
+Every reported row reproduces: 7/8 → **0.0230** exactly; × ETH 95% → **7.2%**;
+joint 0.736 → **29.9%**, *three times in ten.* And **7/11 → 61.9%.**
+
+> The coordinator has asked DE for that eleven-day row **exactly, before quoting
+> it further** — the right order: *a number that decides fourteen nights should
+> be someone's measurement before it is anyone's sentence.*
+
+## ✅ I caught my own summary line mis-stating it — **before it reached a flag**
+
+My computation printed a closing line reading that *a positive margin of nearly
+a day and a half still loses the coin flip.* **That conflates two rows**: the
+day-and-a-half margin sits at 9.4%, and the 50% crossing sits at a **negative**
+margin of 0.56. *Recorded because I have twice tonight written the opposite
+sentence — and the difference is only that this time I read my own output
+before trusting it.*
+
+# 🧭 **DE FRAMED THE QUESTION BETTER: WHICH RATE IS THE FORWARD RATE?**
+
+The decision is **empirically settleable**, and the framing matters more than
+the arithmetic:
+
+> ***The question is not whether the band is tight. It is which rate is the
+> forward rate — and it is settled by fixing 09-11's population and seeing
+> whether it was THE LAST OF THE OLD FAILURES OR THE FIRST OF A NEW ONE.***
+
+That converts an argument about which days to count into **an experiment with an
+outcome** — the only form in which it can be settled rather than negotiated.
+
+## 🔗 Two seats converged on the same three days through **different measures**
+
+| seat | measure | 09-01..09-03 | reference |
+|---|---|---|---|
+| REV | window **supply** | 247–265 windows | 09-11: 284 |
+| DE | population **shortfall** | 10, 40, 41 missing | — |
+
+*Two measures, two seats, one set of days — worth more than either alone.*
+
+## 🚫 And that does **NOT** license dropping them
+
+> # ***Excluding 09-01..09-03 because they look different is CHOOSING AFTER
+> SEEING, and it is the mechanism by which a rate gets flattered.***
+
+Legitimate **only** if a since-changed **condition** is identified *independently
+of those days' outcomes.* Until REV or DA names one:
+
+> ### **The 11-day rate is what we plan against. The recent-8 rate is the
+> OPTIMISTIC BOUND — not the other way round.** Both are reported **as a pair**,
+> with the regime question named. *A single number here is false precision
+> costing fourteen nights.*
+
+# 🩺 **BE'S LIVENESS FIX LANDED — AND PROVED ITSELF BY NOT HELPING**
+
+| what | value |
+|---|---|
+| heartbeat source | collector_health.jsonl, n = **16,026** *(I measured 16,017 an hour ago — consistent with a 60 s beat)* |
+| worst gap across 09-11 | **66.6 s** against a **270 s** bound *(derived from the file's own 133.1 s max — my figure)* |
+| gap records inside the day | n = 164, **reported NOT gated** |
+| **n_would_fail** | drops to **ONE** — MANY_MISSING_WINDOWS(4) |
+
+> ## ***The fix removed a false blocker and did NOT unblock the day, which is
+> what makes it credible.***
+
+Had 09-11 cleared as a side effect, the whole change would have needed
+re-examination — **and that condition was set IN ADVANCE at round 417 and has
+now been met.** *A closed loop.*
+
+## 🕳️ A live collector writing hollow files is a different failure from a dead one
+
+The fix also establishes the collector was **healthy right across 09-11**, so the
+four missing windows were **never a liveness failure** — which fits DA's
+reboot-and-empty-shells finding exactly.
+
+> ***Only separating the two signals makes it visible.*** That is the payoff from
+> REV's split of liveness and day coverage: a single conflated line would have
+> attributed a **content** failure to an **availability** one.
+
+# 🔒 First hard lock-contention number
+
+**evaluation_pipeline (pid 3515789) held the heavy lock 46+ MINUTES tonight**, and
+BE's ETH control took **26+ refusals** behind it. **BE did not race it**, as
+instructed.
+
+> This is the first hard number on the contention recorded as a hazard at round
+> 408. ***It is no longer a hazard, it is a measured cost*** — and it lands in the
+> same week a nightly two-coin build programme is being costed.
+
+---
 # READ FIRST — round 418 (MEM, 2026-09-12T01:17:53Z, tip `c54edbd`)
 
 > ## ⏸️ ALL OF THIS IS **PENDING REV's CONFIRMATION** — not settled.
