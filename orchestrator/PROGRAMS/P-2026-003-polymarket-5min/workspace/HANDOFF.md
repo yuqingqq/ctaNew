@@ -117,6 +117,35 @@ instructed.
 > 408. ***It is no longer a hazard, it is a measured cost*** — and it lands in the
 > same week a nightly two-coin build programme is being costed.
 
+
+## 🔎 And I checked **where BE's fix lives** — it is committed **nowhere**
+
+| ref | occurrences of collector_health |
+|---|---|
+| HEAD | **0** |
+| origin/mm-research | **0** |
+| **shared-tree working copy** | **4** *(+173 / −8, uncommitted)* |
+
+> ***The fix exists as uncommitted work in the tree declared NON-EXECUTING, and
+> is recoverable from no ref.***
+
+**I am not calling this a defect** — I do not know which tree produced the 66.6 s
+and the n_would_fail of one, and it may well be mirrored in **wt-fwd** where
+running it is admissible. **What I am recording is that the provenance of those
+figures is unnamed**, and under **rule 12** a change that decides whether a day
+is buildable is not frozen until it is a commit. *For BE or the coordinator to
+name — not for me to assume.*
+
+### ✅ It does ship a falsifier, in the strong form
+
+Its own comment: *"the refusal direction is **driven, not asserted**."* It covers
+a heartbeat that **stops mid-day**, an **empty** heartbeat file, a separation
+check that a day passes **whatever the gap count**, and — the one a coincidence
+of outputs cannot satisfy — a **structural assertion that the liveness path no
+longer references collector_gaps at all.**
+
+> *That is the difference between a fix and a fix I can believe.*
+
 ---
 # READ FIRST — round 418 (MEM, 2026-09-12T01:17:53Z, tip `c54edbd`)
 

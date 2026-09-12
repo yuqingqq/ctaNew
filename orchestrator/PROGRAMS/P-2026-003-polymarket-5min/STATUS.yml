@@ -84,6 +84,10 @@ updated: >-
   HELPING -- n_would_fail drops to ONE and 09-11 still fails, which is the condition set
   IN ADVANCE at 417 and now met. It also shows the collector was healthy right across
   09-11: A LIVE COLLECTOR WRITING HOLLOW FILES IS A DIFFERENT FAILURE FROM A DEAD ONE.
+  AND I CHECKED WHERE THE FIX LIVES: collector_health occurs 4x in the working copy
+  and ZERO TIMES AT HEAD OR AT origin/mm-research -- uncommitted, in the tree declared
+  NON-EXECUTING, so THE PROVENANCE OF ITS FIGURES IS UNNAMED. Not a defect; for BE to
+  name. It DOES ship a falsifier in the strong form: the refusal direction is DRIVEN.
   First hard contention number: 46-plus minutes held, 26-plus refusals. Tip 136a440.)
   2026-09-12T01:17:06Z (MEM ROUND 418 -- A CROSS-SEAT CORRECTION THAT MAY HALVE THE BAND MARGIN, RECORDED AS
   PENDING REV AND NOT AS SETTLED. REV's 90.9 per cent looks like a FILE-PRESENCE measure
@@ -968,6 +972,9 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r419_AND_MY_OWN_EDIT_FAILED_OPEN_INTO_A_COMMIT: "My HANDOFF append asserted a marker, the assertion FAILED, AND THE COMMIT IN THE SAME BLOCK RAN ANYWAY -- committing a correct STATUS.yml beside an unchanged HANDOFF. Nothing wrong landed and I caught it in the same breath, but THE SHAPE IS THE ROUND-393 SHAPE EXACTLY: an edit whose failure nothing branches on. At 393 I made the AUDIT gate the commit; I never generalised the rule from the audit to the edit, WHICH IS THE SAME FAILURE TO GENERALISE THAT COST ME ROUND 405. The rule is now general: ANY STEP WHOSE FAILURE SHOULD STOP A PUBLICATION MUST BE CHAINED TO IT, and the cheap enforcement is set -e at the top of the block, which is what caught it here on the retry. The marker was off by ONE NEWLINE -- the smallest possible mismatch, and it still returned zero."
+  r419_AND_I_CHECKED_WHERE_BES_FIX_LIVES_IT_IS_NOT_COMMITTED_ANYWHERE: "I was told the fix LANDED and I checked what that means at the artifact. The string collector_health occurs FOUR times in the shared tree's working copy of be_build_preflight.py and ZERO TIMES AT HEAD AND ZERO TIMES AT origin/mm-research. So the fix exists as UNCOMMITTED WORK IN THE TREE THAT IS DECLARED NON-EXECUTING, and is recoverable from no ref. I am NOT calling this a defect -- I do not know which tree produced the 66.6 s and the n_would_fail of ONE, and it may well be mirrored in wt-fwd where running it would be admissible. WHAT I AM RECORDING IS THAT THE PROVENANCE OF THOSE FIGURES IS UNNAMED, and under rule 12 a change that decides whether a day is buildable is not frozen until it is a commit. FOR BE OR THE COORDINATOR TO NAME, NOT FOR ME TO ASSUME."
+  r419_AND_THE_FIX_SHIPS_A_FALSIFIER_IN_THE_STRONG_FORM: "Credit where the artifact earns it: the fix carries selftests that DRIVE the refusal rather than assert it -- its own comment says the refusal direction is driven, not asserted -- covering a heartbeat that STOPS MID-DAY, an EMPTY heartbeat file that refuses by its own name, and a separation check that a day's PASS holds WHATEVER THE GAP COUNT. It also asserts STRUCTURALLY that the liveness path no longer references collector_gaps at all, which is the one check that cannot be satisfied by a coincidence of outputs. That is rule 15 in its strong form -- a positive control it must flag AND a known-bad input it must refuse -- and it is the difference between a fix and a fix I can believe."
   r419_E_MINUS_10_IS_NOT_THE_MARGIN_P_FEWER_THAN_10_IS: "DE's correction to a framing the coordinator repeated to the user all night, and I have to state my own part precisely. I DID compute and report P(fewer than 10) at rounds 417 and 418, and at 418 I LED with it -- the thirty per cent was my headline, not the 0.31 days. BUT I ADOPTED THE MARGIN VOCABULARY THROUGHOUT AND GAVE IT EQUAL BILLING, tabling E minus 10 as a column beside P and writing that the margin is 0.19 standard deviations. So I did not make the error in its pure form and I did carry it alongside. THE TWO DIVERGE EXACTLY WHERE THE RATE IS UNCERTAIN, WHICH IS THE REGIME WE ARE IN."
   r419_I_COMPUTED_THE_DIVERGENCE_AND_IT_IS_SEVERE: "At 9 of 11 the margin is PLUS 1.45 DAYS and P(fail) is 9.4 PER CENT -- a day and a half of margin is a one-in-eleven chance of returning nothing. At 8 of 11 the margin is PLUS 0.18 DAYS, NOMINALLY POSITIVE, and P(fail) is 32.8 PER CENT -- A POSITIVE MARGIN COEXISTING WITH A ONE-IN-THREE FAILURE. And P(fail) crosses fifty per cent at a rate of 0.6742, where the expected count is 9.44 and the margin is MINUS 0.56. So a positive margin guarantees nothing and margins under half a day are one-in-three propositions, because E IGNORES THE VARIANCE THAT P INTEGRATES."
   r419_AND_I_CAUGHT_MY_OWN_SUMMARY_LINE_MIS_STATING_IT_BEFORE_FILING: "My computation printed a closing line reading that a POSITIVE margin of nearly a day and a half still loses the coin flip. THAT CONFLATES TWO ROWS: the day-and-a-half margin sits at 9.4 per cent, and the fifty-per-cent crossing sits at a NEGATIVE margin of 0.56. I caught it in my own output and corrected it before any of it reached a flag. Recorded because I have twice tonight had to write the opposite sentence -- that a wrong reading reached the file -- and the difference between the two cases is only that this time I read my own output before trusting it."
@@ -28982,6 +28989,18 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r419_AND_MY_OWN_EDIT_FAILED_OPEN_INTO_A_COMMIT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
+    said: "the first append printed AssertionError: 0 and the following git commit still reported a new commit hash; cat -A showed the boundary is one newline before the round-418 header, not two."
+  r419_AND_I_CHECKED_WHERE_BES_FIX_LIVES_IT_IS_NOT_COMMITTED_ANYWHERE:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "git show HEAD:B and git show origin/mm-research:B each return 0 occurrences of collector_health; the working tree returns 4; git diff --stat reports 173 insertions and 8 deletions uncommitted."
+  r419_AND_THE_FIX_SHIPS_A_FALSIFIER_IN_THE_STRONG_FORM:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "the selftest block builds heartbeat files in a tempdir and asserts both a spanning PASS and two refusals, plus an inspect-getsource assertion that collector_health is present and collector_gaps absent."
   r419_E_MINUS_10_IS_NOT_THE_MARGIN_P_FEWER_THAN_10_IS:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
