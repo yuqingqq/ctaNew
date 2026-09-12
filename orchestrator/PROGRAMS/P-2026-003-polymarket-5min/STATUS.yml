@@ -67,6 +67,29 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T01:39:43Z (MEM ROUND 420 -- THE GUARD BUILT TO CONSTRAIN US DID NOT HOLD, AND I DROVE THE
+  PROOF RATHER THAN READING IT: SEVEN OF SEVEN ATTACK VECTORS ADMITTED against the
+  committed guard, with both falsifier controls refusing -- so it is a guard that CAN
+  refuse choosing not to. The lexicographic pair shown directly, and the plus-00:00
+  versus Z one FIRES BY ACCIDENT: an exploit needs an attacker, a coincidence only needs
+  time. THE FIXES ARE LANDED ON BOTH EXECUTING REFS AND I DROVE THOSE TOO -- attacks 1,
+  2 and 3 are UNAVAILABLE BY CONSTRUCTION (TypeError, the parameters are gone) and
+  attack 5 is refused TWICE, the lever-set pin firing before the missing-key check.
+  FIX 7 IS DONE, which ALREADY SUPERSEDES 7l.3's own count: the rule survives its
+  example, the count does not. RESIDUAL, STATED WITH ITS LIMITS: which artifacts the
+  guard looks at is STILL an argument (refs, repo, derived, forwarded straight through)
+  -- I drove it and it does NOT currently defeat the guard, because the band has
+  produced nothing; IT GOES LIVE THE MOMENT IT DOES, which is exactly when the guard
+  matters. AND I NEARLY FILED A PATTERN FROM A STALE STATUS: wt-de2 read M, I was one
+  sentence from THIRD INSTANCE TONIGHT, and the refs say DE committed properly -- HEAD
+  moved between my two reads. A WORKING-TREE STATUS IS AN AS-OF, NOT A FACT. DA's timer
+  ruling verified at the declaration AND at the commit it cites: n_consumers 1 to 0,
+  superseding in-band, on USER rule 34a -- writing does not consume, READING does --
+  which QUALIFIES my round-408 finding rather than reversing it. Contention measured and
+  DIRECTIONAL: the pipelines BLOCK by design, BE's launcher REFUSES, so the refusals
+  counted are always BE's -- THE UNIT THAT YIELDS POLITELY IS THE ONE THAT STARVES --
+  and BE 149's drop-in FORECAST tonight's collision in its own comment. My 46-plus is
+  superseded by a measured 3,593 s. Tip 42b0dbd.)
   2026-09-12T01:22:48Z (MEM ROUND 419 -- E MINUS 10 IS NOT THE MARGIN, P(FEWER THAN 10) IS, and I have to
   state my own part: I DID compute and lead with P at 418, AND I carried the margin
   vocabulary beside it all night. I COMPUTED THE DIVERGENCE and it is severe: at 9 of 11
@@ -108,6 +131,7 @@ updated: >-
   CENSUS CARRIES TWO FAILURES I STATE: my symbol filter kept unsymboled records so the
   counts are an upper bound, and my duration key missed entirely so I QUOTE NO SECONDS.
   Tip 7f0e74b.)
+previous_updates: >-
   2026-09-12T01:11:55Z (MEM ROUND 417 -- AN EXCEPTION LOG IS SILENT EXACTLY WHEN THINGS ARE HEALTHY, which
   is the general form of the sentence I reached at 416 and subsumes it. BOTH PROPOSED
   FIXES WERE ALSO WRONG: max(recv_ns) is only LESS BAD, and both fail in the limit of a
@@ -128,7 +152,6 @@ updated: >-
   joint falls to 0.8636 and P is 3.2; at 90 per cent, 9.4. NECESSARY BUT NOT SUFFICIENT --
   the ETH hazard is MULTIPLICATIVE. And the whole 90.9 rests on ONE failing day whose
   cause is not yet read. Tip f9b5d24.)
-previous_updates: >-
   2026-09-12T01:05:17Z (MEM ROUND 416 -- C2 IS STRUCTURALLY DEAD, SETTLED BY A RANGE: eight days span 0.1768
   to 0.2707, the sub-second share NEVER below 0.7293, zero of eight reaching the 95 per
   cent gate. AND THE DECISIVE RATIO IS GAP OVER SWING, NOT GAP OVER LEVEL -- from the BEST
@@ -972,6 +995,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r420_I_DROVE_ALL_SEVEN_ATTACK_VECTORS_AND_ALL_SEVEN_ARE_ADMITTED: "I did not read REVIEW 264's attacks, I RAN them against the committed guard at 00ce098, in my scratchpad with imports resolved read-only from wt-de2. SEVEN OF SEVEN ADMITTED: backdate to 2020-01-01; caller-supplied clock of 2027-01-01; outcome_is_known omitted; a minus-05:00 rendering four hours AFTER the clock start; plus-00:00 against Z at the IDENTICAL instant; and two ADDED levers -- one with the key omitted, one with it False -- both admitted WITH outcome_is_known TRUE, each returning the words not an amendment requiring pre-declaration. AND THE FALSIFIER FIRES: an unknown lever refuses with UNKNOWN_LEVER and a genuinely-late declaration with the outcome known refuses with AMENDMENT_CHOSEN_AFTER_THE_CLOCK_STARTED. SO THE SEVEN ADMISSIONS ARE A GUARD THAT CAN REFUSE CHOOSING NOT TO, which is the only version of this finding worth having."
+  r420_THE_LEXICOGRAPHIC_COMPARISON_SHOWN_DIRECTLY: "The comparison was declared_utc >= clock_start_utc ON STRINGS. Driven: 2026-09-13T23:00:00-05:00 >= 2026-09-14T00:00:00Z evaluates FALSE although it is FOUR HOURS LATER, and 2026-09-14T00:00:00+00:00 >= 2026-09-14T00:00:00Z evaluates FALSE at the SAME INSTANT because the plus sign sorts below Z. THE SECOND ONE FIRES BY ACCIDENT -- no bad faith, no attacker, just a different renderer -- WHICH MAKES IT THE MORE DANGEROUS OF THE PAIR: an exploit needs someone to try it, a coincidence only needs time."
+  r420_AND_THE_FIXES_ARE_LANDED_I_DROVE_THOSE_TOO: "All six code fixes are on BOTH executing refs (origin/de-freeze-chain-v2, origin/be-build-runner) and I drove them: attacks 1, 2 and 3 are now UNAVAILABLE BY CONSTRUCTION -- passing declared_utc, clock_start_utc or outcome_is_known raises TypeError because THE PARAMETERS NO LONGER EXIST, which is the strongest form of a fix and the same by-construction proof I used at round 415 on the scorer's positional outcomes. Attack 5 is refused TWICE OVER: the lever-set digest fires LEVER_SET_MOVED_SINCE_THE_PIN before the missing-key check is even reached, so two independent barriers now stand where a permissive default stood. The reorder is in place: outcome_is_known is COMPUTED and checked BEFORE the lever flag."
+  r420_FIX_SEVEN_IS_DONE_AND_IT_ALREADY_SUPERSEDES_7L3S_COUNT: "The guard now HAS a production call site: de_band_decision.py line 132 calls it, and that module's own selftest asserts the consultation happened. So runbook 7l.3's statement that the function appears FIVE TIMES LANE-WIDE, ALL INSIDE ITS OWN MODULE was true when REV wrote it AND IS ALREADY FALSE -- the fix it prompted invalidated its count within the hour. THE RULE SURVIVES ITS OWN EXAMPLE; THE COUNT DOES NOT. Worth fixing in-band before a cold reader greps for five occurrences, finds nineteen, and concludes the runbook is describing a different file."
+  r420_THE_RESIDUAL_WHICH_ARTIFACTS_IS_STILL_AN_ARGUMENT: "Applying 7l.1's own test question to the fix: the VALUES are now artifact-bound, but WHICH ARTIFACTS is still a parameter. outcome_is_known_at takes refs, repo and derived as arguments, and amendment_is_admissible FORWARDS its own same-named parameters into it -- so a caller can choose where the guard looks for evidence that the outcome is known. I DROVE IT AND IT DOES NOT CURRENTLY DEFEAT THE GUARD: known is False at the defaults AND under my override, because the band has produced nothing yet, and the only production call site passes NEITHER parameter. SO THIS IS STRUCTURAL, NOT LIVE -- AND IT GOES LIVE THE MOMENT THE BAND PRODUCES ITS FIRST ARTIFACT, WHICH IS EXACTLY WHEN THE GUARD MATTERS. The asymmetry names the fix: the lever set is pinned by digest, refs and derived are not."
+  r420_AND_I_NEARLY_REPORTED_A_PATTERN_FROM_A_STALE_STATUS: "My first read of wt-de2 printed M on de_band_hazard.py and I was one sentence from filing THIRD INSTANCE TONIGHT OF A FIX THAT EXISTS NOWHERE, after BE's preflight at round 419. I checked the refs instead and DE'S FIXES ARE PROPERLY COMMITTED ON BOTH EXECUTING REFS; the tree was mid-commit when I looked and HEAD moved 00ce098 to b863a28 between my two reads. THE READ WAS ACCURATE AT ITS INSTANT AND WOULD HAVE BEEN FALSE IN PRINT. A working-tree status is an AS-OF, NOT A FACT -- rule 8's as-of discipline applies to a git tree exactly as it applies to a growing tape, AND A PATTERN IS THE EASIEST THING TO SEE ONCE YOU HAVE NAMED ONE."
+  r420_DAS_TIMER_RULING_VERIFIED_AND_IT_QUALIFIES_MY_OWN_STANDING_NOTE: "Verified at the declaration, not the report: v1 said n_consumers 1, naming pm-evaluation-pipeline.timer; V2 SAYS 0 WITH consumers EMPTY, superseding IN-BAND per rule 13, and carrying REACHES_AN_OUTCOME_IS_NOT_CONSUMES as a named field so a reader cannot collapse the two. Its authority is USER rule 34a, which I read AT THE COMMIT DA NAMES (abd4b07, 2026-09-10T01:33:40Z): writing does not consume a day, READING does -- the pipeline fits nothing and picks nothing, so rule 11's hazard is not engaged. THIS QUALIFIES MY OWN ROUND-408 FINDING RATHER THAN REVERSING IT: enumerating scheduled units before calling a population untouched is still right; the conclusion that a running timer consumes is not, and the timer may keep running while its output for any band day stays off limits."
+  r420_THE_CONTENTION_IS_DIRECTIONAL_AND_THE_YIELDING_PARTY_IS_THE_STARVED_ONE: "I measured the lock at 01:37Z. Pid 3515789 is GONE, its 3,593 s hold complete. THE LOCK IS NOW HELD BY BE'S OWN COIN LAUNCHER building 09-07 btc, 531 s in, INVOKED AS flock MINUS-n MINUS-E 75 -- NON-BLOCKING, SO IT REFUSES RATHER THAN QUEUES. Both systemd pipelines, by contrast, are dropped-in with flock and NO minus-n, so THEY BLOCK. That refines the night's claim: the pair named do block, and the third heavy taker refuses -- WHICH MEANS THE REFUSALS COUNTED ARE ALWAYS BE'S. THE UNIT THAT YIELDS POLITELY IS THE ONE THAT GETS STARVED, and over fourteen nights that direction matters more than the duration."
+  r420_AND_THE_CONTENTION_WAS_FORECAST_IN_THE_DROP_INS_OWN_COMMENT: "The blocking is DELIBERATE and reasoned, not an oversight: BE 149's drop-in says THE FIX IS TO WAIT, NOT TO SKIP, because both pipelines run in a 15.0 GB slice, a catch-up takes about 12 GB for about 56 minutes and a BE tape or book peaks 5.8 to 7.7 GB, so colliding kills one and rebuilds a day. AND IT PREDICTED TONIGHT: the next catch-up fires about 00:21Z on 09-12, when 09-11's tape or book will be on the lock. THAT IS EXACTLY WHAT HAPPENED. A HAZARD DOCUMENTED IN ADVANCE BY THE PARTY THAT CREATED IT IS NOT A SURPRISE, IT IS A PRICE -- and the thing to decide is whether the price is still worth paying nightly for fourteen nights, which is a question for the user and not for the seat that set it."
+  r420_THE_46_MINUTE_FIGURE_I_FLAGGED_AN_HOUR_AGO_IS_SUPERSEDED: "At round 419 I recorded 46-PLUS MINUTES held and 26-PLUS refusals, correctly marked as in-flight. The hold is now complete and MEASURED AT 3,593 s, 59.9 MINUTES. The earlier figure was not wrong, it was UNFINISHED, and the difference is thirteen minutes on a number used to price fourteen nights. Recorded as a supersession in the rule-13 form rather than left as two numbers in the file, BECAUSE A PLUS SIGN ON A LIVE MEASUREMENT IS A PROMISE TO COME BACK AND CLOSE IT."
+  r420_7L_HEADER_SAYS_TWO_RULES_AND_THE_SECTION_CONTAINS_THREE: "Verified 7l at the canonical ref d1fbcd6 and all three subsections are there -- 7l.1 bind inputs to artifacts with its test question, 7l.2 ordering is part of a predicate's meaning, 7l.3 green cells and no call site. BUT THE SECTION HEADER READS TWO RULES THAT EACH APPEARED TWICE IN ONE NIGHT, written before 7l.3 was appended. A cold reader counting rules gets two and stops. Cheap to fix and worth fixing, FOR THE SAME REASON 7L.3 ITSELF EXISTS: a document that says two while holding three is a small instance of the green-cells problem, where the label and the content have quietly parted company."
   r419_AND_MY_OWN_EDIT_FAILED_OPEN_INTO_A_COMMIT: "My HANDOFF append asserted a marker, the assertion FAILED, AND THE COMMIT IN THE SAME BLOCK RAN ANYWAY -- committing a correct STATUS.yml beside an unchanged HANDOFF. Nothing wrong landed and I caught it in the same breath, but THE SHAPE IS THE ROUND-393 SHAPE EXACTLY: an edit whose failure nothing branches on. At 393 I made the AUDIT gate the commit; I never generalised the rule from the audit to the edit, WHICH IS THE SAME FAILURE TO GENERALISE THAT COST ME ROUND 405. The rule is now general: ANY STEP WHOSE FAILURE SHOULD STOP A PUBLICATION MUST BE CHAINED TO IT, and the cheap enforcement is set -e at the top of the block, which is what caught it here on the retry. The marker was off by ONE NEWLINE -- the smallest possible mismatch, and it still returned zero."
   r419_AND_I_CHECKED_WHERE_BES_FIX_LIVES_IT_IS_NOT_COMMITTED_ANYWHERE: "I was told the fix LANDED and I checked what that means at the artifact. The string collector_health occurs FOUR times in the shared tree's working copy of be_build_preflight.py and ZERO TIMES AT HEAD AND ZERO TIMES AT origin/mm-research. So the fix exists as UNCOMMITTED WORK IN THE TREE THAT IS DECLARED NON-EXECUTING, and is recoverable from no ref. I am NOT calling this a defect -- I do not know which tree produced the 66.6 s and the n_would_fail of ONE, and it may well be mirrored in wt-fwd where running it would be admissible. WHAT I AM RECORDING IS THAT THE PROVENANCE OF THOSE FIGURES IS UNNAMED, and under rule 12 a change that decides whether a day is buildable is not frozen until it is a commit. FOR BE OR THE COORDINATOR TO NAME, NOT FOR ME TO ASSUME."
   r419_AND_THE_FIX_SHIPS_A_FALSIFIER_IN_THE_STRONG_FORM: "Credit where the artifact earns it: the fix carries selftests that DRIVE the refusal rather than assert it -- its own comment says the refusal direction is driven, not asserted -- covering a heartbeat that STOPS MID-DAY, an EMPTY heartbeat file that refuses by its own name, and a separation check that a day's PASS holds WHATEVER THE GAP COUNT. It also asserts STRUCTURALLY that the liveness path no longer references collector_gaps at all, which is the one check that cannot be satisfied by a coincidence of outputs. That is rule 15 in its strong form -- a positive control it must flag AND a known-bad input it must refuse -- and it is the difference between a fix and a fix I can believe."
@@ -28989,6 +29023,50 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r420_I_DROVE_ALL_SEVEN_ATTACK_VECTORS_AND_ALL_SEVEN_ARE_ADMITTED:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/de_band_hazard.py
+    said: "seven calls to amendment_is_admissible returned admissible dicts and two control calls raised BandHazardRefused, in one driven run."
+  r420_THE_LEXICOGRAPHIC_COMPARISON_SHOWN_DIRECTLY:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/de_band_hazard.py
+    said: "both comparisons evaluated in plain Python and printed False."
+  r420_AND_THE_FIXES_ARE_LANDED_I_DROVE_THOSE_TOO:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/de_band_hazard.py
+    said: "three TypeErrors and one BandHazardRefused, driven against the current module; git show confirms both executing refs carry every_input_is_bound_to_an_artifact."
+  r420_FIX_SEVEN_IS_DONE_AND_IT_ALREADY_SUPERSEDES_7L3S_COUNT:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/de_band_decision.py
+    said: "grep across both trees returns a call at de_band_decision.py:132 and an assertion at :427; the runbook at origin/mm-research still reads 5 times lane-wide."
+  r420_THE_RESIDUAL_WHICH_ARTIFACTS_IS_STILL_AN_ARGUMENT:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/de_band_hazard.py
+    said: "outcome_is_known_at() returned known False both at defaults and with refs=() and an empty derived dir; grep shows the single call site passes only lever and amendment_path."
+  r420_AND_I_NEARLY_REPORTED_A_PATTERN_FROM_A_STALE_STATUS:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/de_band_hazard.py
+    said: "git status printed M at 01:34Z and clean at 01:36Z with HEAD moved; git show on both executing refs returns the fixed source."
+  r420_DAS_TIMER_RULING_VERIFIED_AND_IT_QUALIFIES_MY_OWN_STANDING_NOTE:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/da_scheduled_units_and_eth_inputs_v2.json
+    said: "v1 and v2 of the declaration differ in n_consumers 1 versus 0; the commit abd4b07 subject line is SEAT_PROTOCOL 34a (USER ruling): writing does not consume a day, reading does."
+  r420_THE_CONTENTION_IS_DIRECTIONAL_AND_THE_YIELDING_PARTY_IS_THE_STARVED_ONE:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-evaluation-pipeline.service.d/heavy-lock.conf
+    said: "lsof shows pid 3606860 holding the lock as flock -n -E 75 on be_coin_launcher.py; both drop-in ExecStart lines invoke /usr/bin/flock with no -n."
+  r420_AND_THE_CONTENTION_WAS_FORECAST_IN_THE_DROP_INS_OWN_COMMENT:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-evaluation-pipeline.service.d/heavy-lock.conf
+    said: "the drop-in comment carries the slice arithmetic, the wait-not-skip rationale and the 00:21Z 09-12 prediction verbatim."
+  r420_THE_46_MINUTE_FIGURE_I_FLAGGED_AN_HOUR_AGO_IS_SUPERSEDED:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-evaluation-pipeline.service.d/heavy-lock.conf
+    said: "the round-419 flag reads 46-plus minutes; the completed hold is 3,593 s and pid 3515789 is no longer running."
+  r420_7L_HEADER_SAYS_TWO_RULES_AND_THE_SECTION_CONTAINS_THREE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "the header at line 1066 reads TWO RULES and subsections 7l.1, 7l.2 and 7l.3 follow it at 1071, 1092 and 1109."
   r419_AND_MY_OWN_EDIT_FAILED_OPEN_INTO_A_COMMIT:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/HANDOFF.md
