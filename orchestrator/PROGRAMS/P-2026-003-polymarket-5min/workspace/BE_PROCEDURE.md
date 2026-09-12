@@ -935,3 +935,124 @@ could never clear while the lock sat FREE — two waiters, an idle box. Gate on
 the LOCK, and launch through `--poll`, which refuses-and-retries (rc 75) if
 someone else takes it first. That makes the race safe instead of needing to
 be won.
+
+## §11. BE 188/189 — TWO INSTRUMENTS FOUND BY REHEARSING, NOT BY RUNNING
+
+The 09-09 dry-run BE 188 asked for was a rehearsal of a build that never ran.
+It surfaced two live instrument defects, one of them mine, in ten minutes.
+
+### 11a. A PIN HELD AS AN EQUALITY IS A LITERAL THAT MUST TRACK A MOVING THING
+
+`launch_stage2.sh` asserted `HEAD == 7ed5a90` four lines below a preflight
+that BE 163 had already re-ruled to DESCENDANT + five digests. The tree has
+advanced **112 commits** since the pin. Result: the preflight admitted
+20260909 with 25/25 rows and the launcher refused it, `rc=4`.
+
+The tell was available and unread: the launcher's own falsifier had been
+**4-of-12 RED since the first fast-forward** — and all four failures were its
+ADMIT cells. *A falsifier that is only run when its file is edited is a
+falsifier that reports on the day it is written.* Re-run every instrument's
+falsifier after the TREE moves, not only after the FILE moves.
+
+Fix: `be_tree_pin_guard.sh`, the ruled predicate in one place, falsifier 8/8,
+both directions driven on real commits of this repo (no tree moved, no
+worktree created): `origin/mm-research` → `PIN_NOT_ANCESTOR`, ancestor
+`5df2f46` → `PINNED_DIGEST_MOVED`, with a cell proving that commit really is
+an ancestor so it tests the digest half and not the ancestry half.
+
+**The same shape is live in `de_valuation_launch.sh:29`** (`[ "$HEAD" != "$PIN" ]`,
+then six module digests). Measured 2026-09-11: it refuses **every tree on this
+box** — wt-deval `b8d82d4`, wt-fwd `b34ed9f`, shared `223f352` — and 4 of its 6
+module digests differ from the pin *by design*, because the freeze moved the
+evaluator and the runner. It is inert rather than protective: the valuation
+units on this box run `be_heavy_run.sh` from wt-deval directly, not through it.
+DE's file, DE's fix — recorded here, filed to the register, not edited by BE.
+
+### 11b. §10f SAID "GATE ON THE LOCK". I THEN READ THE WRONG LOCK.
+
+Every `lock: FREE` line this seat reported came from `flock -n` on
+`data/pm_5min/.heavy.lock`. The lock the units take is
+`data/.heavy_run.lock` (`be_heavy_run.sh:35`, 52 files reference it). The path
+I probed is referenced by **nothing** in the repository, and `flock` CREATED it
+on first use — `mtime 15:51:15.427Z`, the second of my first probe. A lock file
+nobody contends **always reads FREE**: it could not say HELD, so it had never
+proved it could fire (rule 15), and it reported anyway.
+
+No build was mis-gated — the launcher offers through `be_heavy_run.sh --poll`,
+which takes the real lock — so the damage is confined to what this seat *said*.
+That is the exact failure mode of a quiet instrument: the reports were wrong
+while the machinery was right, and nothing in the machinery could contradict it.
+
+Fix: `be_lock_state.sh`, falsifier 10/10. Two design rules it obeys:
+- **It does not retype the path.** It reads `LOCK="${BE_HEAVY_LOCK:-...}"` out
+  of `be_heavy_run.sh` and REFUSES (exit 3) if that read fails. A second
+  literal would be 11a one file further on, and a silent fallback is how the
+  first one survived.
+- **Its falsifier holds the lock** in another process and requires the reader
+  to say HELD, then FREE again. A lock reader that has never been driven
+  against a held lock is a constant.
+
+The cell that would have caught the original: *the path resolved is referenced
+by more than one pipeline instrument; the path previously probed by none.*
+Generalise it — **a path an instrument reads should be reachable from the code
+that writes it.** A path only this seat names is a path only this seat believes.
+
+## §12. BE 235 — rules from tonight that were not written anywhere
+
+Probed before claiming, per §7k.2: three phrasings each against
+COORDINATOR_RUNBOOK.md, BE_PROCEDURE.md and CLAUDE.md; positive controls
+(rules 10, 11, 15) returned hits, a nonsense string returned none, and every
+apparent hit was read in context — which killed four (`NOT_YET` matched "the
+open day's mask"; `found state` matched "fixture"; `vacuous` matched a
+commit-pathspec note; `heartbeat` matched a process listing).
+
+1. **A status meaning "not ready" must refuse at the component that takes the
+   resource, not merely be reported by the component that computes it.**
+   *Confidence: the failure is measured — `be_build_preflight` returns
+   `1 if fails else 0`, so a NOT_YET row left rc 0 and the launcher printed
+   WOULD LAUNCH for an OPEN day at 20:29Z. I am LEAST sure this generalises
+   beyond this launcher/preflight pair. I keep it anyway because the failure
+   recurs wherever a COMPUTING twin and a RAISING twin are split, and this
+   programme already has at least two such pairs (`be_offpath_guards`'
+   `assert_settlement_day_admissible` beside
+   `de_multiday_gate1_runner.settlement_admissibility`).*
+2. **A control that asserts "nothing changed" is vacuous unless it first
+   proves the run wrote something; assert the post-condition, never the
+   absence of a difference.** Driven: the gap-windows stage "reproduced the
+   landed artifact byte-for-byte" — because the producer refused to overwrite
+   and wrote nothing.
+3. **Choose a falsifier's fixture by a predicate, never by a state found on
+   disk — a pipeline consumes its own controls.** Three launcher cells went
+   red the moment this programme built the days they named.
+4. **A close-out must be COMPUTED from the artifacts it reports on**; a number
+   retyped from a message inherits that message's errors and agrees with it
+   for the wrong reason.
+5. **In a call-site sweep, distinguish an IMPORT from a name inside a
+   STRING.** `be_reserved_days.py:70` contains "called ONLY from selftest
+   (be_offpath_guards_v1.json)" — a sentence saying the guard is UNCALLED,
+   which a name-grep scores as a call.
+6. **Measure each quantity you intend to plan on.** For one stage pair, wall
+   clock, output size and peak RSS moved at 0.27–0.45, 0.66 and 0.97: none
+   predicted another. The ratio prohibition is the special case.
+7. **State a landing, an arming or a launch only after printing the pid and
+   elapsed time of the process doing it.** Four sequence stalls in one night,
+   each an intention read as an act.
+8. **When a guard refuses on the FIRST missing binding, enumerate the whole
+   binding set from the code before spending a second run to find the next.**
+   Two rebuilds found two bindings; an AST walk found the set is closed at
+   two, in milliseconds. See `be_receipt_bindings_v1.json`.
+9. **An artifact embedding wall clocks or resource telemetry cannot be
+   compared by digest**; compare content leaf-by-leaf against an allowed set
+   declared BEFORE the comparison.
+
+### §12a. NOT a rule — a hypothesis with a pending test
+
+**Peak RSS is set by the per-day window index, not by data volume.** It
+predicted the 0.97 peak ratio well. It is INFERRED FROM A COUNT (288 windows
+in both coins), not from reading the allocator, and rests on two stages of ONE
+day of ONE coin pair. One prediction is not evidence. **The next ETH or
+third-coin build reproduces the ratio or kills it.** Until then the decision
+it appears to support — do not overlap coins in a night — rests on the
+MEASUREMENT and on 0.7% of soft-limit headroom over single observations, not
+on the mechanism. Recorded so it cannot drift into being treated as
+established, which is how tonight's mislabels got their authority.
