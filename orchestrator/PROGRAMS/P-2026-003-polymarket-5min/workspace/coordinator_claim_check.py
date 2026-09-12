@@ -1,5 +1,32 @@
 #!/usr/bin/env python3
-"""Did I do what I said I did? Scan my outbound dispatches for claims that a
+"""RETIRED 2026-09-12 by REVIEW ruling — kept as provenance, do not rely on it.
+
+WHY IT IS RETIRED, not improved: the discriminator this needs is UNAVAILABLE IN
+PRINCIPLE from the prose. It cannot separate
+    (a) "I have already routed this"   -- past reference, legitimate
+    (b) "I am routing this"            -- the actual act-claim, the real failure
+    (c) "this is that seat's to handle"-- an assignment, not a claim of action
+so its 15 flags are an UPPER BOUND with an unknown false-positive rate, and at
+least one (`da163`, "has ALREADY been routed to BE") is confirmed spurious.
+
+TWO CONCRETE DEFECTS, both found by the reviewer, both instructive:
+  * `getmtime` IS NOT A DISPATCH TIME. Any copy or checkout moves it, and the
+    whole +/-10-minute window rests on that one field.
+  * The report looks only FORWARD, so a claim honoured 11 minutes EARLIER
+    prints as "NEVER dispatched".
+
+AND IT FAILED THE TEST THIS PROGRAMME SET TONIGHT -- "could a reader tomorrow
+find this without asking anyone?" The script landed in the repo while its input
+population (803 dispatch files) sat in a scratch directory no reviewer could
+reach, so the numbers it produced could be neither reproduced nor falsified.
+
+THE RULE THAT REPLACES IT: **a claim of action names the act** -- "routed to DA
+(DA 313)", "filed (R-939)", "landed (count 1 at the fetched ref)". Checkable when
+written, with no prose parsing at all. And the exposure is the ACT CLASS -- an act
+whose only trace is the sentence announcing it -- NOT a role.
+"""
+
+_ORIGINAL_DOCSTRING = """Did I do what I said I did? Scan my outbound dispatches for claims that a
 thing was ROUTED/SENT to a seat, and check a dispatch to that seat actually
 followed. Positive control required: it must catch the known miss."""
 import os, re, sys, glob
