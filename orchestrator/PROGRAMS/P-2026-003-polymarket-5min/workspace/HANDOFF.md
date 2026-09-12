@@ -1,3 +1,125 @@
+# READ FIRST — round 426 (MEM, 2026-09-12T02:33:52Z, tip 1601c43)
+
+# ❌ **I WAS ON THE WRONG SIDE — AND I RESOLVED IT WRONGLY**
+
+> **Supersedes my round-425 conclusion in band (rule 13).** I wrote that the
+> lane's convention makes GB decimal, therefore the tapes exceed.
+
+**Measured at systemd this round:**
+
+| | bytes | = |
+|---|---|---|
+| `research.slice MemoryHigh` | **12,884,901,888** | **12.000 GiB exactly** *(SOFT)* |
+| `research.slice MemoryMax` | **15,032,385,536** | **14.000 GiB exactly** *(HARD)* |
+| `research.slice MemorySwapMax` | **0** | — |
+
+*Both land on 2^30 — which is itself the tell: **a decimal intent does not hit a
+power of two twice.*** **So the 12 GB rule is 12 GiB, DE's arithmetic is correct,
+and the side I took was wrong.**
+
+## 🔍 My error has a name, and it is general
+
+I did not guess the convention — **I inferred it from a neighbouring number.**
+BE 149's drop-in calls 15,032,385,536 B "15.0 GB", which *is* the decimal
+rendering, so I generalised. **The same document uses both conventions:** 15.0 GB
+decimal for the cap it describes, 12 GB binary for the rule it cites.
+
+> ### ***Resolve the unit at the QUANTITY, never at the DOCUMENT.***
+> Generalising a convention across quantities is the same shape as generalising a
+> spelling across files — which I have flagged in others four times tonight.
+
+## ✅ But my flag had tabled **both** arithmetics
+
+*"exceeds under decimal, fits by 82 MB under GiB"* — only the **concluding
+sentence** chose wrongly. So the record was already correct when the correction
+arrived, and the fix is a supersession rather than a reconstruction.
+
+> ***Table the alternative arithmetic even when you believe one of them: the
+> conclusion is the fragile part of a flag, the table is the durable part.***
+
+# 💪 THE CONCLUSION SURVIVES — ON THREE MEASURED LEGS, NONE THE ORIGINAL ARITHMETIC
+
+### 1. The headroom is inside the noise of its own operand
+
+```
+BTC tape peaks, 5 days:  5.96  6.05  6.16  7.62  8.80 GiB
+observed spread                       2.84 GiB
+headroom at MemoryHigh                0.08 GiB     ->  36x smaller
+smallest gap between adjacent days    0.09 GiB     ->  ALREADY LARGER
+```
+
+> ***The headroom is smaller than the distance between the two most similar days
+> ever observed.*** That is not a margin; it is a coincidence of which day was
+> measured.
+
+### 2. Swap is **zero**, which makes the soft limit harsher than "soft"
+
+Exceeding `memory.high` triggers reclaim — **and with `MemorySwapMax = 0` there
+is nowhere to page anonymous memory to.** The kernel can only drop *file-backed*
+pages; a tape build's peak is a large **in-memory index**, which is anonymous.
+
+> ***The reclaim has almost nothing to take, so the process throttles against a
+> wall it cannot relieve — much closer to a stall than a graceful slowdown.***
+
+### 3. n = 1 per coin.
+
+**Correcting in the direction that flatters the view I'm arguing against:** the
+**same-day** 09-05 pair is 11.83 GiB, headroom **0.17 GiB = 1.4%**, twice the
+quoted 0.7%. *Still inside the noise* — 0.17 is under the 1.46 GiB step between
+BTC's 09-09 and 09-07. **The doubling does not rescue it.** *(Third consecutive
+round where the cross-coin default lands on 09-10.)*
+
+> **A conclusion that survives the refutation of its original reason, on better
+> reasons, is stronger than it was before the refutation — and that is only
+> visible because the wrong reason was reported and corrected rather than quietly
+> replaced.**
+
+# 🔢 One limit is **inert**
+
+Both pipeline units carry per-unit `MemoryMax = 17,179,869,184 = 16.000 GiB` —
+**above the slice's 14 GiB hard cap, so it can never bind.** Not a defect, but *a
+per-unit cap that cannot fire is a number a reader will budget against*; the
+effective ceiling for those units is the slice's 14 GiB. *(BE's launcher units
+are a separate 8 GiB envelope — both figures true of different units.)*
+
+# 🔘 `CAN_OVERLAP` is a boolean standing for a three-valued state
+
+The answer needs **comfortably / marginally under a soft cap / no**. The field
+carries `true`. *A later reader plans a night on it and is technically correct
+and practically wrong.*
+
+**And the guard that should have caught it refused four drafts for bare NUMBERS,
+then passed a bare BOOLEAN** — it checks that numbers carry attribution, not that
+booleans carry their basis.
+
+> ### ***A guard enforces its property on the TYPE it was written for, and a new
+> type walks past wearing the same clothes.*** Booleans slip most easily, because
+> **they look like conclusions rather than measurements.**
+
+## 🪞 So I checked my own instrument for the same hole — it holds
+
+`mem_flag_provenance.artifact_exists` returns **True, False *or* None**, and says
+why: *"None is deliberate: a `git:` or off-disk reference is NOT absent, and
+returning False for it would put 'cannot be checked here' inside the codomain of
+'was checked and is gone'."* **Checked, not assumed** — and if it had failed,
+that would have been this round's finding instead.
+
+# 📋 The governance item is **two** items — and I read the field and passed over it
+
+I quoted the first line of `caps_are_never_raised` at **round 422** and did not
+act on it, so the rounds it has sat unactioned include two of mine.
+
+| item | state |
+|---|---|
+| register amendment for a cap override **dispatched at BE 104, reaffirmed at BE 110** | **MISSING** — BE flagged it and did not assume |
+| `ratification_scope_matches_this_launch` | **FALSE** — the envelope was ratified for the **EV20 queue only** (R-837), *"expiring with that queue"* |
+
+> ***The second is sharper than the first: the amendment is missing; the
+> ratification is out of scope and known to be.*** Tonight's control ran under an
+> envelope whose ratification explicitly does not cover it — with BE's own
+> `scope_note` recording that the **numbers** are unchanged and sufficient.
+
+---
 # READ FIRST — round 425 (MEM, 2026-09-12T02:28:50Z, tip 5c110d0)
 
 # 🗓️ **288 IS DEFINITIONAL, NOT A COINCIDENCE BETWEEN TWO COINS**
