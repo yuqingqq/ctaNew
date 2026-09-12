@@ -1,5 +1,94 @@
 # Handoff — 2026-05-09
 
+---
+
+# P-2026-003 Polymarket 5-min — handoff 2026-09-12T03:26Z
+
+Full results: `docs/P003_FAIR_VALUE_SESSION_2026-09-12.md`. Audit trail:
+`orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md`
+R-928..R-940. Programme state (MEM-owned, current): that programme's
+`STATUS.yml` and `workspace/HANDOFF.md`. Canonical ref `origin/mm-research`.
+
+**State:** cancellation forward test CLOSED (4 days, both arms futile, verdict
+fixed since G=2). Fair-value lane BUILT, rehearsed end-to-end, and blocked.
+Nothing is running; heavy lock free; all coordinator authorisations withdrawn at
+stand-down.
+
+## Plan 1 — unblock the day-verdict producer (DO FIRST; time-critical)
+
+`da-midnight-verify.service` has been failed (`ExecMainStatus=7`) since
+2026-09-12T00:06:00Z. `da_dayverdict_20260911` is placeholder-only,
+`20260912` is empty, and nothing retries for ~20h. **Day verdicts are
+candidate-blind inputs to §8 eligibility**, so days cannot be marked evaluable
+going into a band that starts 2026-09-14. Each further day adds one.
+
+- Cause: `da_midnight_verify.sh` modified 2026-09-11T10:31Z; the deploy
+  (`da_deploy_midnight.sh`) has not been re-run since 2026-09-07, so the unit
+  runs a stale copy.
+- **DO NOT clean `live/pm_research` to satisfy the deploy's dirty-tree guard.**
+  Of the 70 files, **63 are tracked at `origin/de-freeze-chain-v2`**; only 7 are
+  new. They are the lane's own declarations and modules. The tree reads dirty
+  because the **shared working tree is on a diverged local branch — 305 behind,
+  275 ahead of `origin/mm-research`** — so files tracked at the canonical and
+  executing refs are absent from *its* HEAD. Put the tree on the right ref; do
+  not delete the content. (REVIEW 277.)
+- Regenerability is already built (`days_needing_verdict` fires with a late
+  `as_of` and a catch-up reason), so 09-11/09-12 should regenerate rather than
+  stay placeholders — **verify by driving it, not by trusting the comment.**
+- Cost ≈ 10 minutes. DA has the mechanism; it was unauthorised at stand-down.
+
+## Plan 2 — the three decisions that are the user's, in order
+
+1. **`minimum_meaningful_delta_LL`.** A required, currently-unset field; the
+   freeze computes `freeze_is_effective: False` on it *alone*. §8's exact sign
+   test has **no magnitude resolution**, so without a floor a candidate passes on
+   an effect of any size above zero. Neither the reviewer nor the coordinator may
+   set it, having seen the 0.0745-nat ceiling — choosing after seeing voids it.
+2. **Whether to commit ~14 nights** of *serial* two-coin builds. At the planning
+   rate (0.636, union of criteria) the band yields **under 9 evaluable days
+   against 10 required**; at the optimistic rate (0.875) it clears comfortably,
+   and no exclusion of the early days is licensed.
+3. **Whether C2 stays in the frozen family** — 0 of 8 days reach its 95% coverage
+   gate and it needs 4.06×.
+
+**A guard already prevents (1) from backfiring:** `two_coin_production_ready` is
+a second blocking term, false until an ETH book is produced by the new launcher
+*and* its byte-identical-BTC control passes. Setting the floor before two-coin
+production runs would burn the 14-day band against `COINS_INCOMPLETE` days, which
+§8 forbids recovering from. Start day = first complete UTC day strictly after the
+freeze becomes effective **and not before 2026-09-14**, whichever is later.
+
+## Plan 3 — finish the ETH chain, then write the unwritten rules
+
+- **ETH book**: two named refusals so far, a *chain* of missing producer receipts
+  rather than one gap. The tape's score-split receipt is fixed and verified
+  (`split "score"`, `n_rows 334,336`); the fragment's builder-receipt pin is
+  outstanding, priced at ~3m20s. **Enumerate the full set of receipt bindings
+  from the code before spending another rebuild** — discovering them one at a
+  time costs up to 11 minutes each (BE 234).
+- **09-11** is ruled *shown but not counted*: build it `ADMISSIBLE: false` with
+  `n_missing_interior_windows = 4`, the `<= 1` threshold and the gap-window
+  comparison carried **in the record beside the D values**. It decides nothing;
+  G stays 4; the `be_build_preflight.py:360` threshold is untouched.
+- **~15 rules the session produced remain unwritten** (REVIEW 272; a floor, since
+  it covers only the reviewer's own filings). All five seats have culled their
+  own candidates. The reviewer has declared its audit criteria *in advance*
+  (REVIEW 276) — including that the section must state which rules are
+  **predictions** rather than established.
+
+## Standing cautions
+
+- Six systemd timers remain **active by decision**. `n_consumers = 0`; the
+  finding is retrospective, and killing a timer that has already run saves
+  nothing and may destroy the day-quality record.
+- Two coins are **serial by memory**: 11.92 GiB against a 12 GiB *soft* cap
+  (0.7% headroom, single observations, and a soft cap throttles rather than
+  kills). Nightly cost is the sum, not the max.
+- The memory *mechanism* ("peak is set by the per-day window index") is a
+  **hypothesis that held once**, not a rule. A second coin or second day settles
+  it. The do-not-overlap decision rests on the measurement, not the mechanism.
+
+
 ## Active program: xyz US-equity v7 alpha-residual
 
 **Where it is**: shadow harness fully built and tested end-to-end. Awaiting cron
