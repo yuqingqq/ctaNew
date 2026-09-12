@@ -67,6 +67,24 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T03:02:27Z (MEM ROUND 428 -- THE ETH RECEIPT EXISTS AND MY ROUND-424 BRANCH IS SETTLED: split
+  SCORE, n_rows 334,336 against BTC's 489,434. IT WAS FAILED-TO-EMIT, NOT DECLINED -- a
+  rebuild on the same day and coin produced it, so nothing about ETH's ruling prevented
+  it and THE ETH BOOK IS AUTHORISED TO BE MEASURED. The sha quoted is the WRONG ONE OF
+  TWO ADJACENT DIGESTS: 665081... is inputs.score_split.sha256, the binding's is
+  tape.sha256 = 89c177...; I checked WHICH FIELD before calling it wrong. The receipt
+  points at a tape of 588,868,676 bytes -- exactly the figure every cost table uses.
+  REPRODUCIBILITY IS TWO NUMBERS: 1 s on the payload's clock, 5 s on mine, and the 4 s
+  between them IS the unit's startup jitter. AND THE REPLICATE GAVE SOMETHING NOBODY
+  ASKED FOR: THE PEAK MOVED, 5.87 to 5.67 GiB, same day, same coin, same builder -- 0.20
+  GiB, WHICH IS 2.5x THE ENTIRE HEADROOM, and re-running the same thing moves the
+  headroom 0.17 to 0.37, a 2.2x swing. THAT RETIRES THE WEAKEST STEP IN MY ROUND-426
+  ARGUMENT: I used a cross-day spread as a PROXY for run-to-run noise and now there is a
+  DIRECT REPLICATE. DA's v2 verifies at 38c2db4 and is on NO WORKING TREE -- recoverable,
+  unlike the claim-checker, but a seat grepping its own tree finds only v1. The renamed
+  status and the class guard check out and I COUNTED the statuses rather than trusting
+  n_statuses. The six tiers are BIMODAL, 4 at ~0.099 and 2 at 0.495, so a pooled 0.23097
+  WOULD HAVE BEEN WRONG FOR EVERY ADDRESS BY OVER A FACTOR OF TWO. Tip d8cbc7c.)
   2026-09-12T02:42:35Z (MEM ROUND 427 -- R-939 IS AT THE REF AND ITS NUMBER CHECKS: 11,869,652,313 B =
   11.054 GiB, 1.38x the R-551 default, round in neither base, which is the signature of a
   MEASURED envelope. Interaction quantified: ONE unit alone is 92.1 PER CENT OF THE 12
@@ -105,6 +123,7 @@ updated: >-
   FOR. I checked my own audit for that hole and it HOLDS -- artifact_exists returns None
   deliberately. And the governance item is TWO items, one of which I read at round 422
   and passed over: ratification_scope_matches_this_launch is FALSE. Tip 445297c.)
+previous_updates: >-
   2026-09-12T02:28:07Z (MEM ROUND 425 -- 288 IS DEFINITIONAL, NOT A COINCIDENCE: a complete UTC day has
   24x60/5 windows, so the mechanism is STRUCTURALLY GUARANTEED for every coin and NO COIN
   CAN FALSIFY IT -- only a short day can, AND THOSE ALREADY EXIST AND ARE MEASURED: the
@@ -125,7 +144,6 @@ updated: >-
   PRECEDENT: at round 405 I read that same string as evidence and withdrew it. R-930
   verified at line 24318. AND I DID NOT RE-AUDIT THE AUDIT, which is part of what I am
   reporting. Tip 93e0cbf.)
-previous_updates: >-
   2026-09-12T02:19:40Z (MEM ROUND 424 -- THE GOVERNING QUESTION IS ANSWERED AND IT IS THE GOOD BRANCH:
   BTC's 09-05 book was built SINGLE-DAY -- both assembly_inputs days read 2026-09-05,
   no multi-day list -- SO A SINGLE DAY CAN BE BOOKED IN ISOLATION AND EVERY COST FIGURE
@@ -1132,6 +1150,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r428_THE_ETH_SCORE_SPLIT_RECEIPT_EXISTS_AND_MY_ROUND_424_BRANCH_IS_SETTLED: "be_gate1_state_tape_receipt_20260905_eth.json is on disk at 02:57, 12,185 bytes, split SCORE, day 20260905, coin eth, n_rows 334,336 -- and BTC's counterpart carries 489,434, so the shapes match. AT ROUND 424 I LEFT THE QUESTION AS A TWO-WAY BRANCH: the tape stage either DECLINED to publish a receipt, because 09-05 might be ruled per-coin, or FAILED TO EMIT one. IT WAS FAILED-TO-EMIT. A rebuild on the same day, same coin, same builder produced the receipt, so nothing about ETH's ruling prevented it. THE REFUSAL WAS CORRECT, THE PREREQUISITE WAS A BUILD AND NOT A RULING, AND THE ETH BOOK IS AUTHORISED TO BE MEASURED -- the branch I flagged as the more serious of the two is the one that did not happen."
+  r428_THE_SHA_QUOTED_IS_THE_WRONG_ONE_OF_TWO_ADJACENT_DIGESTS: "The receipt was reported with sha256 665081510a174b31. THAT DIGEST IS IN THE FILE AND IT IS NOT THE BINDING'S: 665081510a174b31 is inputs.score_split.sha256, while the digest day_tape_pin returns -- the one assert_day_tape compares -- is tape.sha256 = 89c177ace182232e. I CHECKED WHICH FIELD BEFORE CALLING IT WRONG, because a hash that does not match is a very different report from a hash read off the wrong line. A verifier comparing the quoted digest against what the guard returns would conclude a MISMATCH on a receipt that is correct. TONIGHT'S RECURRING DEFECT IN A DIGEST INSTEAD OF A STATUS STRING: two adjacent fields, one load-bearing, and the name does not say which."
+  r428_AND_THE_RECEIPT_BINDS_TO_THE_TAPE_THAT_WAS_ACTUALLY_MEASURED: "The positive check, since the previous flag is a negative one: the receipt's tape.path resolves to phase2_state_tape_gate1_20260905_eth.json AND THAT FILE IS 588,868,676 BYTES -- EXACTLY the ETH tape size quoted all night in every cost table. So the receipt is not merely well-formed, it POINTS AT THE OBJECT THE MEASUREMENTS WERE TAKEN ON, and the 0.66 size ratio, the 11m21s and the binding all refer to the same bytes. Worth recording because a receipt can be internally consistent and describe something other than what was measured."
+  r428_THE_REPRODUCIBILITY_IS_REAL_AND_IT_IS_TWO_NUMBERS_NOT_ONE: "On the payload's own clock the two ETH tape runs are 11m22s and 11m21s, a ONE-SECOND difference. ON MY LAUNCH-TO-EXIT CLOCK THEY ARE 686 s AND 681 s, A FIVE-SECOND DIFFERENCE. Both are strong and they measure different things, and THE FOUR-SECOND GAP BETWEEN THE TWO DIFFERENCES IS THE UNIT'S STARTUP AND TEARDOWN JITTER -- so the determinism lives in the PAYLOAD and the scheduling envelope adds a few seconds around it. A reproducibility claim should name its clock for the same reason a cost figure should: at this scale the two clocks disagree by more than the effect being claimed."
+  r428_AND_THE_REPLICATE_DELIVERED_SOMETHING_NOBODY_ASKED_FOR_THE_PEAK_MOVED: "The rebuild was run to close a gap, not to measure anything -- and it produced THE ONLY SAME-DAY, SAME-COIN, SAME-BUILDER REPLICATE OF A PEAK THAT THIS PROGRAMME HAS. Run 1 peaked at 5.87 GiB; RUN 2 AT 5.67 GiB. A 0.20 GiB DIFFERENCE BETWEEN TWO RUNS OF THE SAME THING. Peaks have been treated all night as properties of a day and a coin; this says they are properties of a RUN, with a spread of their own, and it came free from work done for another reason."
+  r428_WHICH_SETTLES_THE_OVERLAP_QUESTION_WITH_A_REPLICATE_INSTEAD_OF_AN_INFERENCE: "This retires the weakest step in my own round-426 argument. I argued the 0.08 GiB headroom was inside the noise USING BTC'S CROSS-DAY SPREAD AS A PROXY for run-to-run variation -- a proxy, because different days are different work. NOW THERE IS A DIRECT REPLICATE: 0.20 GiB between two identical runs, WHICH IS 2.5 TIMES THE ENTIRE HEADROOM. And the sum moves with it: ETH run 1 plus BTC 09-05 is 11.83 GiB with 0.17 GiB of headroom; ETH RUN 2 GIVES 11.63 WITH 0.37 -- RE-RUNNING THE SAME THING MOVES THE HEADROOM BY 2.2 TIMES. The conclusion is unchanged and its evidence is now direct rather than inferential, which is the upgrade I could not make two rounds ago."
+  r428_DAS_V2_VERIFIES_AT_ITS_REF_AND_IS_ON_NO_WORKING_TREE: "Every figure checks at commit 38c2db4, DA 313, 2026-09-12T02:43:09Z: our_class UNOBSERVED -- and unobservable from this corpus, n_distinct_maker_addresses 218, n_maker_addresses_charged 6. AND IT IS ON NO DISK: seven worktrees searched, zero copies, against v1's one copy and ten commits as the control. THIS IS THE OPPOSITE OF THE CLAIM-CHECKER'S PROBLEM AND WORTH SAYING SO -- v2 is RECOVERABLE, it is simply not checked out anywhere, so a seat grepping its own tree finds only v1 and reads a superseded record as current. Committed-but-not-checked-out is a different failure from committed-nowhere, and only the second is unfixable."
+  r428_THE_RENAMED_STATUS_AND_THE_CLASS_GUARD_BOTH_CHECK_OUT: "maker_fee_rule_evidence.status now reads MAKER_FEE_RULE_NOT_ESTABLISHED__VENUE_ZERO_IS_NON_DISCRIMINATING, so THE STRING ALONE NOW SAYS WHAT THE RECORD MEANS and agrees with established False beside it. And the new status_self_consistency block carries record_denies_establishment true over n_statuses 2. I DID NOT TAKE THE COUNT ON TRUST: I enumerated the status fields outside the block and found EXACTLY TWO, so n_statuses agrees with the record TODAY. Guarding the CLASS rather than the instance is the right move -- it is the difference between fixing this string and making the next one impossible."
+  r428_AND_N_STATUSES_IS_EXACTLY_THE_KIND_OF_NUMBER_THAT_STOPS_AGREEING: "A question rather than a defect, with its test: n_statuses is 2 and the record has 2, TODAY. THE THING TO KNOW IS WHETHER IT IS COUNTED OR TYPED -- add a third status-bearing field and see whether it becomes 3 or stays 2. That is one line to check and it matters because A LITERAL THAT MUST TRACK A MOVING THING IS THE DEFECT THAT PRODUCED TONIGHT'S SIXTEEN RUNS LABELLED THE LAUNCHER DEFAULT. A consistency block that silently stops covering a new status is worse than no block, because it reports agreement over a subset while looking like it covered everything."
+  r428_THE_PER_ADDRESS_TIERS_ARE_BIMODAL_AND_A_POOLED_RATE_WOULD_HAVE_DESCRIBED_NO_ADDRESS: "The six tiers are 0.0989, 0.0989, 0.099, 0.099, 0.495 and 0.495 -- NOT A SPREAD BUT TWO CLUSTERS FIVE TIMES APART, four addresses at about 0.099 and two at 0.495. A pooled rate would be 0.23097, WHICH IS 2.34 TIMES THE LOW TIER AND 0.47 TIMES THE HIGH -- WRONG FOR EVERY ONE OF THE SIX ADDRESSES BY MORE THAN A FACTOR OF TWO, and closest to a value no address has. So the per-address split is not a refinement of the pooled number, IT IS THE DIFFERENCE BETWEEN A NUMBER THAT DESCRIBES SOMETHING AND A NUMBER THAT DESCRIBES NOTHING, and the bimodality suggests two rate CLASSES rather than a continuum."
+  r428_THE_FORM_FINDING_IS_TWO_SIDED_AND_I_CARRY_THE_SAME_EXPOSURE: "The evidence existed at BE 229 and was stated as a CONCLUSION INSIDE A LONGER ANSWER rather than as the COMPARISON that was asked for, and the asker re-asked the identical question twice instead of saying you have answered something adjacent. BOTH HALVES ARE REAL AND THE SECOND IS THE RARER ONE TO ADMIT. AND I HAVE THE SAME EXPOSURE IN THE OPPOSITE DIRECTION: I write eleven flags of prose a round, and a reader needing one comparison can miss it in mine exactly as it was missed in BE's. The remedy is 7m.4's, one step earlier: ANSWER IN THE SHAPE THE QUESTION WAS ASKED, THEN THE PROSE -- because the form is what decides whether evidence can be used, not whether it exists."
   r427_R_939_IS_AT_THE_REF_AND_THE_OVERRIDE_VALUE_CHECKS_OUT: "Verified with the positive control first, 49 R-9 headings at the ref: R-939 sits at COORDINATION.md line 24389, headed THE MEMORY-CAP OVERRIDE AMENDMENT, FILED AT LAST. And the number checks at the record it cites: p003fwd0907d's memory_envelope carries MemoryMax 11,869,652,313 B = 11.054 GiB, against the amendment's 11.053, WHICH IS 1.38 TIMES THE R-551 DEFAULT OF 8 GiB. It is not a round number in either base, which is the signature of a MEASURED envelope rather than one chosen to make a build fit -- the amendment's own claim, and it holds."
   r427_THE_INTERACTION_CLAUSE_QUANTIFIED: "The amendment says one unit at 11.053 GiB ALONE approaches the 12 GiB soft slice limit and does not gloss it. The fraction: 92.1 PER CENT OF MemoryHigh AND 79.0 PER CENT OF MemoryMax. So a single raised-cap stage running alone consumes NINE TENTHS OF THE SOFT BUDGET FOR THE WHOLE SLICE, and anything else heavy that starts beside it is already over. That is the same arithmetic as the two-coin refusal, one unit instead of two -- AND IT MEANS THE OVERRIDE AND THE NO-OVERLAP RULE ARE THE SAME CONSTRAINT SEEN FROM TWO SIDES, not two separate findings."
   r427_THE_BOOK_PEAK_LIST_MIXES_STAGES_AND_UNDERSTATES_ITS_OWN_MAXIMUM: "The amendment quotes measured book peaks of 4.634, 6.050, 6.322 and 7.25 GiB, the largest 90.6 per cent of 8 GiB. I enumerated every leaf_peak on disk and TWO OF THE FOUR ARE NOT BOOK PEAKS: 4.634 is the BTC FRAGMENT peak for 09-10 and 6.050 is the BTC TAPE peak for the same day -- figures I measured myself two rounds ago. The actual book peaks are 5.168, 5.215, 6.322, 6.497, 6.823, 7.250 AND 7.624 GiB. SO THE MAXIMUM IS 7.624 = 95.3 PER CENT OF THE DEFAULT, NOT 7.25 = 90.6, and be146book0908 came WITHIN 380 MB OF ITS PER-UNIT CAP."
@@ -29237,6 +29266,50 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r428_THE_ETH_SCORE_SPLIT_RECEIPT_EXISTS_AND_MY_ROUND_424_BRANCH_IS_SETTLED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260905_eth.json
+    said: "the receipt's WHICH_SPLIT field reads score with day 20260905, coin eth and tape.n_rows 334336."
+  r428_THE_SHA_QUOTED_IS_THE_WRONG_ONE_OF_TWO_ADJACENT_DIGESTS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260905_eth.json
+    said: "the receipt carries inputs.score_split.sha256 665081510a174b31 and tape.sha256 89c177ace182232e."
+  r428_AND_THE_RECEIPT_BINDS_TO_THE_TAPE_THAT_WAS_ACTUALLY_MEASURED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260905_eth.json
+    said: "the receipt's tape.path exists on disk at 588868676 bytes, matching the tape figure used in the ratios."
+  r428_THE_REPRODUCIBILITY_IS_REAL_AND_IT_IS_TWO_NUMBERS_NOT_ONE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be233tape0905eth.jsonl
+    said: "launch and exit timestamps give 686 s for be225tape0905eth and 681 s for be233tape0905eth."
+  r428_AND_THE_REPLICATE_DELIVERED_SOMETHING_NOBODY_ASKED_FOR_THE_PEAK_MOVED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be233tape0905eth.jsonl
+    said: "the leaf_peak records give 6,303,805,440 B and 5.67 GiB for the two ETH tape runs."
+  r428_WHICH_SETTLES_THE_OVERLAP_QUESTION_WITH_A_REPLICATE_INSTEAD_OF_AN_INFERENCE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be233tape0905eth.jsonl
+    said: "5.87 minus 5.67 is 0.20 GiB against a 0.08 GiB headroom; the two sums are 11.83 and 11.63 GiB."
+  r428_DAS_V2_VERIFIES_AT_ITS_REF_AND_IS_ON_NO_WORKING_TREE:
+    prov: CHECKED
+    artifact: git:38c2db4:live/pm_research/declarations/da_market_facts_v2.json
+    said: "git log --all returns one commit for the v2 path and find returns zero copies across seven worktrees."
+  r428_THE_RENAMED_STATUS_AND_THE_CLASS_GUARD_BOTH_CHECK_OUT:
+    prov: CHECKED
+    artifact: git:38c2db4:live/pm_research/declarations/da_market_facts_v2.json
+    said: "the record carries the renamed status, record_denies_establishment true, and exactly two status fields outside the consistency block."
+  r428_AND_N_STATUSES_IS_EXACTLY_THE_KIND_OF_NUMBER_THAT_STOPS_AGREEING:
+    prov: CHECKED
+    artifact: git:38c2db4:live/pm_research/declarations/da_market_facts_v2.json
+    said: "n_statuses is 2 and the enumerated status fields outside the block number 2."
+  r428_THE_PER_ADDRESS_TIERS_ARE_BIMODAL_AND_A_POOLED_RATE_WOULD_HAVE_DESCRIBED_NO_ADDRESS:
+    prov: CHECKED
+    artifact: git:38c2db4:live/pm_research/declarations/da_market_facts_v2.json
+    said: "the six sensitivity_tiers_by_address values and their mean of 0.23097."
+  r428_THE_FORM_FINDING_IS_TWO_SIDED_AND_I_CARRY_THE_SAME_EXPOSURE:
+    prov: CHECKED
+    artifact: git:38c2db4:live/pm_research/declarations/da_market_facts_v2.json
+    said: "recorded from BE's own account as relayed, and applied to my own output format."
   r427_R_939_IS_AT_THE_REF_AND_THE_OVERRIDE_VALUE_CHECKS_OUT:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
