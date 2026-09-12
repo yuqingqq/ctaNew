@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T02:33:09Z (MEM ROUND 426 -- I WAS ON THE WRONG SIDE AND I RESOLVED IT WRONGLY. Measured at
+  systemd: research.slice MemoryHigh is 12,884,901,888 = 12.000 GiB EXACTLY and
+  MemoryMax 15,032,385,536 = 14.000 GiB EXACTLY -- both land on 2^30, which a decimal
+  intent does not do twice. SO THE 12 GB RULE IS 12 GiB AND DE IS RIGHT. My error has a
+  name: I INFERRED THE CONVENTION FROM A NEIGHBOURING NUMBER, and the same document uses
+  BOTH -- 15.0 GB decimal for the cap, 12 GB binary for the rule. RESOLVE THE UNIT AT THE
+  QUANTITY, NEVER AT THE DOCUMENT. My flag had tabled BOTH arithmetics, so the record was
+  already correct when the correction arrived -- the conclusion is the fragile part of a
+  flag and the table is the durable part. AND THE CONCLUSION SURVIVES ON THREE MEASURED
+  LEGS, none of them the original arithmetic: the 0.08 GiB headroom is THIRTY-SIX TIMES
+  SMALLER THAN BTC'S OWN 2.84 GiB SPREAD and SMALLER THAN THE GAP BETWEEN ITS TWO MOST
+  SIMILAR DAYS (0.09); MemorySwapMax IS ZERO, so exceeding a SOFT cap has NOWHERE TO
+  RECLAIM ANONYMOUS MEMORY TO and throttles into a stall rather than a slowdown; and n=1
+  per coin. Same-day gives 1.4 per cent not 0.7 -- twice, still noise. CAN_OVERLAP is a
+  BOOLEAN FOR A THREE-VALUED STATE, and the guard that refused four drafts for bare
+  NUMBERS passed a bare BOOLEAN: A GUARD ENFORCES ITS PROPERTY ON THE TYPE IT WAS WRITTEN
+  FOR. I checked my own audit for that hole and it HOLDS -- artifact_exists returns None
+  deliberately. And the governance item is TWO items, one of which I read at round 422
+  and passed over: ratification_scope_matches_this_launch is FALSE. Tip 445297c.)
   2026-09-12T02:28:07Z (MEM ROUND 425 -- 288 IS DEFINITIONAL, NOT A COINCIDENCE: a complete UTC day has
   24x60/5 windows, so the mechanism is STRUCTURALLY GUARANTEED for every coin and NO COIN
   CAN FALSIFY IT -- only a short day can, AND THOSE ALREADY EXIST AND ARE MEASURED: the
@@ -107,6 +126,7 @@ updated: >-
   DECISION. Two tapes fit on FOUR of five days at 85 to 96 per cent and NOT on 09-08 at
   105, so NEVER OVERLAP is too strong: the useful form is a rule with a condition.
   Tip 7b673c7.)
+previous_updates: >-
   2026-09-12T02:15:03Z (MEM ROUND 423 -- THE RATIOS RECOMPUTE AND THE ASYMMETRY IS SHARPER THAN STATED:
   size ratios 1.09 PER CENT APART, time ratios 63.1 PER CENT APART, and projecting the
   remaining BOOK stage from the three gives 13.0, 8.8 and 5.4 minutes -- A 142 PER CENT
@@ -126,7 +146,6 @@ updated: >-
   and were stated as being landed -- 7m.1 OBSERVED ONE PARAGRAPH AFTER BEING ADOPTED.
   REV falsified the frame at its author's request, fit rate ZERO, and I WAS A CONSUMER
   OF THAT FRAME so the narrowing applies to me. Tip b17388a.)
-previous_updates: >-
   2026-09-12T01:57:47Z (MEM ROUND 422 -- THE CONTROL RAN AND THE WATCHER'S LAST WORD WAS SPOKEN TWENTY
   SECONDS IN. The quoted triple -- Result success, ExecMainStatus 0, ActiveState active
   -- IS ATTEMPT 42 AT 01:28:58Z WITH SubState RUNNING, and it is the LAST poll in the
@@ -1094,6 +1113,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r426_I_WAS_ON_THE_WRONG_SIDE_AND_I_RESOLVED_IT_WRONGLY: "SUPERSEDES MY ROUND-425 CONCLUSION IN BAND, rule 13. I wrote that the lane's convention makes GB decimal and therefore the tapes exceed. I MEASURED IT AT systemd THIS ROUND: research.slice MemoryHigh is 12,884,901,888 bytes, WHICH IS 12.000 GiB EXACTLY, and MemoryMax is 15,032,385,536, WHICH IS 14.000 GiB EXACTLY. Both are round binary values, which is itself the tell -- a decimal intent does not land on 2^30 twice. SO THE 12 GB RULE IS 12 GiB, DE'S ARITHMETIC IS THE CORRECT ONE, AND THE SIDE I TOOK WAS WRONG. The earlier flag stays as provenance; this one is the operative reading."
+  r426_AND_THE_MECHANISM_OF_MY_ERROR_IS_NAMEABLE_AND_GENERAL: "I did not guess the convention, I INFERRED IT FROM A NEIGHBOURING NUMBER: BE 149's drop-in calls 15,032,385,536 bytes 15.0 GB, which IS the decimal rendering, so I concluded GB means decimal lane-wide and applied it to the 12 GB rule. THE SAME DOCUMENT USES BOTH CONVENTIONS -- 15.0 GB decimal for the cap it describes, 12 GB binary for the rule it cites. GENERALISING A CONVENTION ACROSS QUANTITIES IS THE SAME SHAPE AS GENERALISING A SPELLING ACROSS FILES, which I have flagged in others four times tonight, and the remedy is identical: RESOLVE THE UNIT AT THE QUANTITY, NEVER AT THE DOCUMENT."
+  r426_MY_FLAG_CARRIED_BOTH_ARITHMETICS_WHICH_IS_WHY_THE_FACT_SURVIVED_MY_WRONG_SENTENCE: "Worth keeping as a practice rather than a consolation: my round-425 flag TABLED BOTH READINGS -- exceeds under decimal, fits by 82 MB under GiB -- and only the concluding sentence chose wrongly. So THE RECORD WAS ALREADY CORRECT WHEN THE CORRECTION ARRIVED and the fix is a supersession rather than a reconstruction. TABLE THE ALTERNATIVE ARITHMETIC EVEN WHEN YOU BELIEVE ONE OF THEM; THE CONCLUSION IS THE FRAGILE PART OF A FLAG AND THE TABLE IS THE DURABLE PART."
+  r426_THE_LIMITS_AS_MEASURED_AND_ONE_OF_THEM_IS_INERT: "Read from systemd, not from either seat: research.slice MemoryHigh 12.000 GiB SOFT, MemoryMax 14.000 GiB HARD, MemorySwapMax ZERO. And the two pipeline units carry a per-unit MemoryMax of 17,179,869,184 = 16.000 GiB, WHICH IS ABOVE THE SLICE'S 14 GiB HARD CAP AND THEREFORE CAN NEVER BIND -- the slice binds first, always. Not a defect, but a per-unit cap that cannot fire is a NUMBER A READER WILL BUDGET AGAINST, and the effective per-unit ceiling for those two units is the slice's 14 GiB. BE's launcher units are a separate 8 GiB envelope and both figures are true of different units."
+  r426_SWAP_IS_ZERO_WHICH_MAKES_THE_SOFT_LIMIT_HARSHER_THAN_SOFT: "The reason MemoryHigh is worse here than the word soft suggests, and it is a mechanism rather than a caution: MemorySwapMax IS 0. Under cgroup v2, exceeding memory.high triggers reclaim -- and with swap at zero there is NOWHERE TO PAGE ANONYMOUS MEMORY TO, so the kernel can only drop FILE-BACKED pages. A tape build's peak is a large in-memory index, which is ANONYMOUS. SO THE RECLAIM HAS ALMOST NOTHING TO TAKE AND THE PROCESS IS THROTTLED AGAINST A WALL IT CANNOT RELIEVE -- much closer to a stall than to a graceful slowdown. That strengthens the recommendation with a measured mechanism instead of a judgement."
+  r426_THE_HEADROOM_IS_SMALLER_THAN_THE_GAP_BETWEEN_THE_TWO_MOST_SIMILAR_DAYS: "The noise claim, measured rather than asserted. BTC's tape peak across five days is 5.96, 6.05, 6.16, 7.62 and 8.80 GiB -- AN OBSERVED SPREAD OF 2.84 GiB, WHICH IS THIRTY-SIX TIMES THE 0.08 GiB HEADROOM. And the smallest gap between any two adjacent days is 0.09 GiB, SO THE HEADROOM IS SMALLER THAN THE DISTANCE BETWEEN THE TWO MOST SIMILAR DAYS EVER OBSERVED. A margin inside the noise of the quantity it is a margin on is not a margin; it is a coincidence of which day was measured."
+  r426_AND_THE_SAME_DAY_PAIR_GIVES_1_4_PER_CENT_NOT_0_7: "Correcting in the direction that would flatter the conclusion I am arguing against, because that is the only honest way to do it: on the SAME-DAY 09-05 pair the sum is 11.83 GiB and the headroom is 0.17 GiB, 1.4 PER CENT -- twice the 0.7 per cent quoted from the 09-10 pair. IT IS STILL INSIDE THE NOISE, since 0.17 is under the 1.46 GiB step between BTC's 09-09 and 09-07, SO THE DOUBLING DOES NOT RESCUE IT. Third consecutive round in which the cross-coin default lands on the 09-10 comparator."
+  r426_THE_RECOMMENDATION_IS_UNCHANGED_AND_NOW_RESTS_ON_THREE_MEASURED_REASONS: "DO NOT PLAN TO OVERLAP now stands on three legs, NONE OF WHICH IS THE ORIGINAL ARITHMETIC: the headroom is 36 times smaller than the observed spread of one of its own operands; the cap it clears is SOFT and unrelievable because swap is zero, so the failure mode is a stall rather than a refusal; and the peaks are SINGLE OBSERVATIONS, n=1 per coin. A conclusion that survives the refutation of its original reason, on better reasons, IS STRONGER THAN IT WAS BEFORE THE REFUTATION -- and that is only visible because the wrong reason was reported and corrected rather than quietly replaced."
+  r426_CAN_OVERLAP_IS_A_BOOLEAN_STANDING_FOR_A_THREE_VALUED_STATE: "The defect underneath, and it is tonight's shape on a new type: the answer needs COMFORTABLY, MARGINALLY UNDER A SOFT CAP, or NO, and the field carries TRUE. A later reader plans a night on it and is technically correct and practically wrong. AND THE GUARD THAT SHOULD HAVE CAUGHT IT REFUSED FOUR DRAFTS FOR BARE NUMBERS AND THEN PASSED A BARE BOOLEAN, because it checks that NUMBERS carry attribution and not that BOOLEANS carry their BASIS. THE GENERALISATION: A GUARD ENFORCES ITS PROPERTY ON THE TYPE IT WAS WRITTEN FOR, and a new type walks past it wearing the same clothes. Booleans are the type most likely to slip, because they look like conclusions rather than measurements."
+  r426_AND_I_CHECKED_MY_OWN_INSTRUMENT_FOR_THE_SAME_HOLE: "Rather than nodding at someone else's type-blind guard I checked mine. mem_flag_provenance's artifact_exists returns True, False OR None, and its docstring states the reason: None is deliberate, a git-colon or off-disk reference is NOT ABSENT, and returning False for it would put cannot-be-checked-here inside the codomain of was-checked-and-is-gone. SO MY AUDIT ALREADY DISTINGUISHES THE THIRD STATE IT COULD HAVE COLLAPSED, and it does so on the exact axis that bit DE. Checked, not assumed -- and if it had failed this would have been the round's finding instead."
+  r426_THE_GOVERNANCE_ITEM_IS_TWO_ITEMS_AND_I_READ_THE_FIELD_AND_PASSED_OVER_IT: "I quoted the first line of caps_are_never_raised at round 422 and did not act on it, so the four rounds it has sat unactioned include two of mine. IN FULL IT CARRIES TWO SEPARATE ITEMS: the unfiled register amendment for a cap override DISPATCHED at BE 104 and reaffirmed at BE 110, WHICH BE FLAGGED AND DID NOT ASSUME; AND ratification_scope_matches_this_launch FALSE, because the envelope was ratified for the EV20 QUEUE ONLY at R-837 and expires with that queue. So tonight's control ran under an envelope whose ratification EXPLICITLY DOES NOT COVER IT -- and BE recorded that rather than assuming, with a scope_note saying the NUMBERS are unchanged and sufficient. THE SECOND ITEM IS SHARPER THAN THE FIRST: the amendment is MISSING, the ratification is OUT OF SCOPE AND KNOWN TO BE."
   r425_288_IS_DEFINITIONAL_NOT_A_COINCIDENCE_BETWEEN_TWO_COINS: "A COMPLETE UTC DAY HAS 24 TIMES 60 DIVIDED BY 5 = 288 FIVE-MINUTE WINDOWS. So both coins having exactly 288 is not an empirical agreement that happened to hold, it is a CALENDAR CONSTANT, and the mechanism is therefore STRUCTURALLY GUARANTEED FOR EVERY COIN rather than measured on two. That makes the mechanism STRONGER than presented -- it will hold for the third coin without checking -- AND IT CHANGES THE FALSIFIER COMPLETELY: no coin can break it, because no coin changes the calendar. Only a day with INCOMPLETE window coverage can."
   r425_AND_THE_FALSIFIER_ALREADY_HAS_ITS_DATA: "The test the mechanism needs requires NO NEW RUNS, because short days already exist and are already measured. The BTC control's own stdout carries n_windows 287 for 09-07 -- not 288 -- and mentions a 247-WINDOW case; my round-418 census gave 284 for 09-11 and 247 to 265 for 09-01 through 09-03. IF PEAK IS SET BY THE WINDOW INDEX, A 247-WINDOW DAY SHOULD PEAK ABOUT FOURTEEN PER CENT BELOW A 288-WINDOW ONE, and every one of those days has a tape on disk. A mechanism that is falsifiable in principle and untestable in practice is a story; THIS ONE IS TESTABLE TONIGHT FROM ARTIFACTS THAT ALREADY EXIST."
   r425_BUT_THE_MECHANISM_IS_STAGE_SPECIFIC_AND_THE_FRAGMENT_STAGE_REFUTES_THE_UNQUALIFIED_FORM: "Measured across every stage record on disk: TAPE gives ETH 5.87 GiB against BTC 5.96 to 8.80, a same-day ratio of 0.985 -- INDEX-BOUND, exactly as the mechanism says. FRAGMENT gives ETH 2.09 GiB against BTC 3.84 to 5.31, A RATIO OF 0.394 TO 0.545 -- AT OR BELOW THE 0.66 SIZE RATIO, so the fragment stage's peak SCALES WITH THE COIN. If peak were set by the 288-window index at every stage the fragment ratio would also be near one. IT IS NEAR 0.44. So MEMORY DOES NOT SCALE WITH THE COIN is true of TAPE and FALSE OF FRAGMENT, and the unqualified sentence generalises from one stage to three."
@@ -29177,6 +29207,50 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r426_I_WAS_ON_THE_WRONG_SIDE_AND_I_RESOLVED_IT_WRONGLY:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-evaluation-pipeline.service.d/heavy-lock.conf
+    said: "systemctl --user show research.slice returns MemoryHigh 12884901888 and MemoryMax 15032385536, exactly 12 and 14 GiB."
+  r426_AND_THE_MECHANISM_OF_MY_ERROR_IS_NAMEABLE_AND_GENERAL:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-evaluation-pipeline.service.d/heavy-lock.conf
+    said: "the drop-in names the slice 15.0 GB for 15032385536 bytes while the rule it cites resolves to 12 GiB at systemd."
+  r426_MY_FLAG_CARRIED_BOTH_ARITHMETICS_WHICH_IS_WHY_THE_FACT_SURVIVED_MY_WRONG_SENTENCE:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-evaluation-pipeline.service.d/heavy-lock.conf
+    said: "the round-425 flag text carries both the 12.80 GB decimal comparison and the 82 MB GiB headroom."
+  r426_THE_LIMITS_AS_MEASURED_AND_ONE_OF_THEM_IS_INERT:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-evaluation-pipeline.service.d/heavy-lock.conf
+    said: "systemctl --user show returns MemoryMax 17179869184 for both pipeline services against the slice's 15032385536."
+  r426_SWAP_IS_ZERO_WHICH_MAKES_THE_SOFT_LIMIT_HARSHER_THAN_SOFT:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-evaluation-pipeline.service.d/heavy-lock.conf
+    said: "systemctl --user show research.slice returns MemorySwapMax 0."
+  r426_THE_HEADROOM_IS_SMALLER_THAN_THE_GAP_BETWEEN_THE_TWO_MOST_SIMILAR_DAYS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be192frag0910.jsonl
+    said: "five BTC tape leaf_peak records give the spread 2.84 GiB and adjacent gaps 0.09, 0.11, 1.46 and 1.18."
+  r426_AND_THE_SAME_DAY_PAIR_GIVES_1_4_PER_CENT_NOT_0_7:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be192frag0910.jsonl
+    said: "ETH tape 5.87 GiB plus BTC 09-05's 5.96 is 11.83, leaving 0.17 GiB under a 12.000 GiB soft cap."
+  r426_THE_RECOMMENDATION_IS_UNCHANGED_AND_NOW_RESTS_ON_THREE_MEASURED_REASONS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be192frag0910.jsonl
+    said: "the three figures are the 36x spread ratio, MemorySwapMax 0 and the single leaf_peak record per coin."
+  r426_CAN_OVERLAP_IS_A_BOOLEAN_STANDING_FOR_A_THREE_VALUED_STATE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be216ctl0907.jsonl
+    said: "reported by the coordinator from DE's own account of four refusals followed by a pass."
+  r426_AND_I_CHECKED_MY_OWN_INSTRUMENT_FOR_THE_SAME_HOLE:
+    prov: CHECKED
+    artifact: live/pm_research/mem_flag_provenance.py
+    said: "the function's docstring and its three-valued return are in the source, verified this session at round 420."
+  r426_THE_GOVERNANCE_ITEM_IS_TWO_ITEMS_AND_I_READ_THE_FIELD_AND_PASSED_OVER_IT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be216ctl0907.jsonl
+    said: "the memory_envelope record carries caps_are_never_raised, envelope_ratified_for EV20 queue only, ratification_scope_matches_this_launch False and the scope_note verbatim."
   r425_288_IS_DEFINITIONAL_NOT_A_COINCIDENCE_BETWEEN_TWO_COINS:
     prov: CHECKED
     artifact: data/pm_5min/derived/be_heavy_run_stdout_be216ctl0907.log
