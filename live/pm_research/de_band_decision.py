@@ -124,6 +124,73 @@ AMENDMENT_FILES = {
 }
 
 
+#: Modules that MENTION tier2 but do not read it (a docstring naming the
+#: rule is not a read). Named explicitly so the coverage figure is not
+#: quietly flattered, and so the list itself is auditable.
+TIER2_PROSE_ONLY = ("de_fair_value_plumbing_run.py",)
+
+
+def rule34a_prerequisite(root: Path = None) -> dict:
+    """RULE 34a's FENCE, AS A BLOCKING PREREQUISITE WITH A COMPUTED STATE.
+
+    The coordinator ruled the fence is due against THE BAND, not the
+    morning. So the gap is declared now and its state is RECOMPUTED on
+    every emit: when the call sites land, this flips to met without
+    anyone editing a sentence.
+
+    The three properties are DA's, from their fence audit. Property 1 is
+    already met by da_rule34a_fence (DA 307); what is open is property 2.
+    """
+    root = Path(root or HERE)
+    touch, guarded = [], []
+    for f in sorted(root.glob("*.py")):
+        src = f.read_text()
+        if "tier2" not in src:
+            continue
+        touch.append(f.name)
+        if ("da_rule34a_fence" in src or "is_protected" in src
+                or "assert_not_protected" in src):
+            guarded.append(f.name)
+    reads = [f for f in touch if f not in TIER2_PROSE_ONLY]
+    unguarded = [f for f in reads if f not in guarded]
+    fence_exists = (root / "da_rule34a_fence.py").is_file()
+    return {
+        "prerequisite": "RULE 34a MUST BE ENFORCED BEFORE THE BAND OPENS",
+        "due_against": "the band, not the morning -- the rule exists to "
+                       "protect the validation population, and the band "
+                       "cannot start until the effect floor is set and "
+                       "two-coin production is demonstrated",
+        "BLOCKING": True,
+        "met": bool(fence_exists and not unguarded),
+        "properties": {
+            "1_protected_set_derived_from_an_artifact": {
+                "met": fence_exists,
+                "by": "da_rule34a_fence parses the floor from the "
+                      "procedure documents (DA 307)"},
+            "2_a_call_site_on_every_tier2_read_path": {
+                "met": not unguarded,
+                "modules_touching_tier2": touch,
+                "prose_mention_only": list(TIER2_PROSE_ONLY),
+                "read_paths": reads,
+                "guarded": guarded,
+                "UNGUARDED": unguarded},
+            "3_falsifier_refuses_a_protected_read_AND_admits_an_"
+            "unprotected_one": {
+                "met": fence_exists,
+                "by": "da_rule34a_fence.is_protected / "
+                      "assert_not_protected, both driven"},
+        },
+        "state": ("THE FENCE EXISTS AND IS SOUND; IT IS UNWIRED ON THE "
+                  "READ PATHS" if fence_exists and unguarded else
+                  "ENFORCED" if fence_exists else "NO FENCE EXISTS"),
+        "recomputed_on_every_emit": True,
+        "why_not_built_tonight":
+            "a fence built hastily to guard a population that does not "
+            "yet exist is how a guard acquires the defects this "
+            "programme spent the night removing",
+    }
+
+
 def amendment_status() -> dict:
     """THE CALL SITE (REVIEW 264 fix 7).
 
@@ -356,6 +423,8 @@ def decision_artifact(as_of: str) -> dict:
         },
 
         "AMENDMENT_ADMISSIBILITY_NOW": amendment_status(),
+        "BLOCKING_PREREQUISITES": {
+            "rule_34a_fence": rule34a_prerequisite()},
 
         "THE_TRAP": {
             "which_levers": ["iii_longer_band", "iv_fewer_required_days"],
@@ -440,7 +509,23 @@ def falsify() -> int:
        all(v["expected_declaration"].endswith(".json")
            for v in st["per_lever"].values()))
 
-    print("== viability, the floor, and the levers ==")
+    print("== rule 34a's fence as a BLOCKING prerequisite ==")
+    pr = doc["BLOCKING_PREREQUISITES"]["rule_34a_fence"]
+    ck("it is declared BLOCKING and its state is COMPUTED, not written",
+       pr["BLOCKING"] is True and pr["recomputed_on_every_emit"] is True)
+    ck("property 1 is MET -- the set is artifact-derived (DA 307)",
+       pr["properties"]["1_protected_set_derived_from_an_artifact"]["met"]
+       is True)
+    p2 = pr["properties"]["2_a_call_site_on_every_tier2_read_path"]
+    ck("property 2 is OPEN and NAMES the unguarded read paths",
+       p2["met"] is False and len(p2["UNGUARDED"]) >= 1,
+       str(p2["UNGUARDED"]))
+    ck("  and a PROSE mention is not counted as a read path",
+       set(p2["prose_mention_only"]) <= set(p2["modules_touching_tier2"])
+       and not set(p2["prose_mention_only"]) & set(p2["read_paths"]),
+       "a docstring naming the rule is not a read")
+    ck("the prerequisite is NOT met while a read path is unguarded",
+       pr["met"] is False, pr["state"])
     v = doc["IS_IT_VIABLE"]["minimum_daily_joint_rate"]
     ck("three confidences, each with both gaps",
        len(v) == 3 and all("gap_from_the_planning_rate" in r for r in v))

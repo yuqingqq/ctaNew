@@ -969,3 +969,27 @@ chain runs from; a refusal read in the wrong tree is not a refusal.
 - **stop → re-arm, never in place.** A script under a running unit is frozen
   bytes; list executing units before any fast-forward.
 - Land from a tree no unit executes from; `wt-deval` is the chain's tree.
+
+## §17 — stopping units: report BOTH lists, and the second one is the one that gets forgotten
+
+A launcher or script under a running unit is frozen bytes (§15). When an edit
+to one is authorised, the sequence is **list, stop, edit, re-arm, report** —
+and the report carries **two** lists:
+
+1. the units **stopped**, and
+2. the units **restarted**.
+
+The second is the one that gets forgotten, and a unit stopped for an edit and
+never re-armed is indistinguishable from one that was never meant to run. List
+the executing units FIRST (`systemctl --user list-units --state=running`, plus
+`ps` for anything launched outside systemd) — a unit that starts between the
+listing and the edit is the hazard the listing exists to bound, so re-list
+immediately before the edit as well.
+
+**This is the never-refresh-a-worktree-under-a-running-unit failure wearing a
+different hat**, and the programme has already paid for that one (1h20m).
+
+**Deferred work stays deferred until the lock is quiet.** "Authorised" is not
+"now": an authorisation to edit a launcher is an authorisation to do it at a
+moment when nothing may execute it, and choosing that moment is part of the
+task rather than a preliminary to it.
