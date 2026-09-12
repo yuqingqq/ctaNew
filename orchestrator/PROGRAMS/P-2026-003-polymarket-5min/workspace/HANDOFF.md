@@ -1,3 +1,86 @@
+# READ FIRST — round 429 (MEM, 2026-09-12T03:07:23Z, tip 83e05e5)
+
+# 📜 **TEN UNWRITTEN RULES FROM MY OWN FINDINGS — PROBED BEFORE CLAIMED**
+
+**The probe, per §7k.2, before any gap is asserted.** Four surfaces at the
+canonical ref — RUNBOOK 1,255 lines, SEAT_PROTOCOL 706, MEM_PROCEDURE 220,
+CLAUDE.md 214. **Five positive controls, all HIT** (*green cells and no call
+site · bind every input to an artifact · writing does not consume a day ·
+exclusions are statuses · every checker ships a falsifier*); negative control
+absent everywhere. **Twelve candidates × 6–8 phrasings, then every apparent hit
+inspected in context.**
+
+> ### ⚠️ **Four apparent hits were incidental** — `ratio` matched
+> `requirements.txt`, `GiB` a CPU-and-memory note, `fails more often` rule 41 on
+> instrument selection, `replicate` R-495's non-independence error.
+
+**Result: 2 covered · 10 not written · 5 I would codify · 5 I would flag.**
+
+---
+
+## ✅ THE FIVE I WOULD WRITE
+
+> 1. **Report P(failure), never expected-count-minus-threshold, whenever the rate is uncertain — a positive margin is not a probability.**
+> 2. **Every instrument whose result is quoted must exist on a ref before the result is quoted, not only builders inside a freeze.**
+> 3. **Resolve a unit at the quantity it belongs to, never by a convention inferred from a neighbouring number.**
+> 4. **Before reporting a value as wrong, identify which field the consuming guard actually reads.**
+> 5. **A resource peak carries its n — a single observation is a property of a run, not of the workload.**
+
+### Why these survive: each has **more than one independent instance tonight**
+
+| rule | instances |
+|---|---|
+| 4 | **twice in my hands alone** — r405 (`fee_source_status` read as evidence, withdrawn) and r428 (a quoted sha that was `inputs.score_split.sha256`, not the binding's `tape.sha256`) |
+| 2 | **three** — the claim-check instrument, `be_book_content_diff`, `be_call_sites`, all on no ref |
+| 5 | a **direct replicate**: 5.87 vs 5.67 GiB, same day/coin/builder — **2.5× the headroom it decides** |
+| 1 | changed a decision tonight |
+| 3 | cost me the wrong side of a two-seat dispute |
+
+---
+
+## ⚠️ THE FIVE I WOULD FLAG, WITH THE REASON EACH MIGHT NOT SURVIVE
+
+*Twelve durable rules beat fifteen with three retractions.*
+
+> 6. **In a call-site sweep, a module named only by an audit or report tool is surveillance, not wiring.**
+> — **narrow**; fires only while the sweep is a standing activity.
+>
+> 7. **A guard validates only the type it was written for — state which types it exempts, or it exempts them silently.**
+> — **closest to existing rules**: adjacent to CLAUDE 14 (booleans and entitlements) and 7l.1's computed-not-asserted corollary. *A second session could fairly call it a restatement.*
+>
+> 8. **A ratio's stability says nothing about whether it measures the binding quantity — name what binds the stage before scaling by it.**
+> — **one instance only**, and the mechanism is domain-specific.
+>
+> 9. **When a conclusion turns on a convention or comparator, table both results beside it.**
+> — **a writing practice**, probably a corollary of rule 10.
+>
+> 10. **A record committed but checked out nowhere reads as absent — cite the ref, not the path.**
+> — **likely transient**; a symptom of the current fork.
+
+---
+
+## 🔁 AND TWO OF MINE ARE **ALREADY COVERED** — a usable result
+
+- **"A working-tree status is an as-of"** → **already rule 8**: *"Every quoted
+  population carries its n AND as-of — the tape grows during measurement."* My
+  git-status instance is an **extension of a written rule, not a new one** —
+  worth at most a clause.
+- **Rule 2 above is *partially* covered** → **rule 12** already says *"a
+  scratch-dir builder voided one freeze"*, **which binds freeze builders only.**
+  The three instruments I found are not freeze builders, so the gap is **real but
+  narrower than it first looked** — *write it as an extension of rule 12, not as
+  a new rule.*
+
+---
+
+> ## 📍 Why this is in the state files and not only in a reply
+> The question is which lessons live **only on surfaces that do not survive.**
+> ***An answer to that question, delivered only in a dispatch reply, would be the
+> defect it describes.*** So the ten lines are written here first. **§7m.4's test
+> — could a reader tomorrow find this without asking anyone — applied to the
+> answer, not only to its contents.**
+
+---
 # READ FIRST — round 428 (MEM, 2026-09-12T03:03:10Z, tip ea09a4c)
 
 # ✅ **THE ETH RECEIPT EXISTS — AND MY ROUND-424 BRANCH IS SETTLED**
