@@ -31,6 +31,12 @@ from __future__ import annotations
 import json
 import sys
 from math import comb
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
+import de_fair_value_predictive as PRED                # noqa: E402
 
 PROTOCOL = "P003_DE_BAND_HAZARD_V1"
 
@@ -269,6 +275,224 @@ def forward_rate_pair(days: dict = None) -> dict:
     }
 
 
+AMENDMENT_AFTER_SEEING = "AMENDMENT_CHOSEN_AFTER_THE_CLOCK_STARTED"
+
+
+def required_rate(confidence: float, n: int = BAND_DAYS,
+                  k: int = NEED_EVALUABLE) -> float:
+    """THE MINIMUM DAILY JOINT RATE at which the band reaches a stated
+    confidence. Solved, not tabulated -- the caller picks its own
+    tolerance rather than inheriting one."""
+    if not 0.0 < confidence < 1.0:
+        raise BandHazardRefused(
+            f"REFUSED CONFIDENCE_IS_NOT_A_PROBABILITY: {confidence!r}.")
+    lo, hi = 0.0, 1.0
+    for _ in range(200):
+        mid = (lo + hi) / 2.0
+        if p_at_least(mid, n, k) >= confidence:
+            hi = mid
+        else:
+            lo = mid
+    return hi
+
+
+def viability_table(confidences=(0.80, 0.90, 0.95)) -> dict:
+    """WHAT WOULD HAVE TO BE TRUE for the test to be viable."""
+    pair = forward_rate_pair()
+    planning = pair["planning_rate"]["p"]
+    optimistic = pair["optimistic_bound"]["p"]
+    rows = []
+    for c in confidences:
+        need = required_rate(c)
+        rows.append({
+            "confidence": c, "required_daily_joint_rate": need,
+            "gap_from_the_planning_rate": need - planning,
+            "planning_rate_clears_it": planning >= need,
+            "gap_from_the_optimistic_bound": need - optimistic,
+            "optimistic_bound_clears_it": optimistic >= need})
+    return {"band": {"n": BAND_DAYS, "k": NEED_EVALUABLE},
+            "planning_rate": planning, "optimistic_bound": optimistic,
+            "rows": rows,
+            "reading":
+                "the collector-plus-population path must run at the "
+                "required rate or the test cannot reach that confidence; "
+                "this is a statement about the INPUT, not about the "
+                "candidates"}
+
+
+def g_floor() -> dict:
+    """HOW FAR k CAN FALL BEFORE THE TEST STOPS EXISTING.
+
+    Read from the frozen predictive module's OWN ladder, never restated:
+    below MIN_NONZERO the exact sign test returns INSUFFICIENT and no p
+    exists at all, and just above it the candidate must be PERFECT.
+    """
+    rows = []
+    for g in range(NEED_EVALUABLE + 2, 4, -1):
+        lad = PRED.ladder(g)
+        clears = [r for r in lad if r.get("clears_holm_step_one")]
+        best = lad[0].get("attainable_p") if lad else None
+        rows.append({"G": g, "smallest_attainable_two_sided_p": best,
+                     "passing_rungs": len(clears),
+                     "computable": best is not None,
+                     "requires_a_perfect_run": len(clears) == 1})
+    floor = min((r["G"] for r in rows if r["computable"]), default=None)
+    return {"rows": rows, "min_nonzero_declared": PRED.MIN_NONZERO,
+            "lowest_G_with_any_test": floor,
+            "at_the_floor_the_candidate_must_be_perfect":
+                any(r["G"] == floor and r["requires_a_perfect_run"]
+                    for r in rows),
+            "reading":
+                f"below G={floor} the exact test returns "
+                f"{PRED.INSUFFICIENT} and there is no p to correct; at "
+                f"G={floor} and G={floor + 1} exactly one rung passes, so "
+                f"the candidate must be positive on EVERY day"}
+
+
+def min_band_for(p: float, confidence: float,
+                 k: int = NEED_EVALUABLE) -> int:
+    n = k
+    while n < 400 and p_at_least(p, n, k) < confidence:
+        n += 1
+    return n
+
+
+def max_k_for(p: float, confidence: float, n: int = BAND_DAYS) -> int:
+    k = n
+    while k > 0 and p_at_least(p, n, k) < confidence:
+        k -= 1
+    return k
+
+
+def levers(confidence: float = 0.90) -> dict:
+    """THE LEVERS, PRICED. No recommendation is made here: several are
+    amendments to a user-authored plan and none of them is this seat's
+    to choose."""
+    pair = forward_rate_pair()
+    pl = pair["planning_rate"]["p"]
+    op = pair["optimistic_bound"]["p"]
+    floor = g_floor()
+    k_pl = max_k_for(pl, confidence)
+    k_op = max_k_for(op, confidence)
+    return {
+        "confidence_used": confidence,
+        "i_accept_the_risk": {
+            "lever": "do nothing and accept P(no verdict)",
+            "cost": {"at_the_planning_rate":
+                         1 - p_at_least(pl),
+                     "at_the_optimistic_bound": 1 - p_at_least(op)},
+            "weakens": "nothing -- the test stays as declared",
+            "is_an_amendment": False,
+            "must_be_declared_before_the_clock": False},
+        "ii_improve_the_input": {
+            "lever": "raise the collection/population success rate",
+            "required_rate_at_this_confidence": required_rate(confidence),
+            "gap_from_the_planning_rate":
+                required_rate(confidence) - pl,
+            "cost": "unknown until the mask-collapse cause is named; may "
+                    "be unavailable",
+            "weakens": "nothing -- it changes the INPUT, not the test",
+            "is_an_amendment": False,
+            "must_be_declared_before_the_clock": False,
+            "note": "the only lever that does not trade the test's "
+                    "strength for its feasibility"},
+        "iii_longer_band": {
+            "lever": "more calendar days in the band",
+            "n_required_at_the_planning_rate":
+                min_band_for(pl, confidence),
+            "n_required_at_the_optimistic_bound":
+                min_band_for(op, confidence),
+            "cost": "calendar time, and every added day is a day the "
+                    "candidates are not yet judged",
+            "weakens": "nothing statistically -- k is unchanged",
+            "is_an_amendment": True,
+            "must_be_declared_before_the_clock": True,
+            "why": "§8 says do not extend opportunistically; extending "
+                   "after a shortfall is choosing after seeing"},
+        "iv_fewer_required_days": {
+            "lever": "lower k below 10",
+            "max_k_at_the_planning_rate": k_pl,
+            "max_k_at_the_optimistic_bound": k_op,
+            "lowest_k_the_TEST_can_compute": floor["lowest_G_with_any_test"],
+            "AVAILABLE_AT_THE_PLANNING_RATE":
+                k_pl >= floor["lowest_G_with_any_test"],
+            "AVAILABLE_AT_THE_OPTIMISTIC_BOUND":
+                k_op >= floor["lowest_G_with_any_test"],
+            "cost": "the exact test's resolution: at G=10 two rungs pass "
+                    "(0 or 1 non-positive day); at G=9 and G=8 exactly "
+                    "ONE does, so the candidate must be positive on "
+                    "EVERY day",
+            "weakens": "the test itself, and the multiplicity arithmetic "
+                       "with it -- Holm's threshold does not move, so a "
+                       "smaller G spends the same alpha on a coarser "
+                       "ladder",
+            "is_an_amendment": True,
+            "must_be_declared_before_the_clock": True},
+        "v_start_after_a_clean_run": {
+            "lever": "begin the band only after N demonstrated clean days",
+            "cost": "calendar time, and the clean run itself consumes "
+                    "days that cannot later be in the band",
+            "weakens": "nothing in the test; it buys the RATE by "
+                       "selecting when to start, not what to count",
+            "is_an_amendment": False,
+            "must_be_declared_before_the_clock": True,
+            "caution": "the start condition must be declared as a "
+                       "predicate, or 'it looked clean' becomes the "
+                       "selection"},
+        "THE_TRAP": {
+            "which_levers": ["iii_longer_band", "iv_fewer_required_days"],
+            "why": "both are what a disappointed operator reaches for "
+                   "AFTER a band falls short, and at that point they are "
+                   "choosing after seeing: the shortfall itself is the "
+                   "information being used",
+            "therefore": "if either is to be available at all it must be "
+                         "DECLARED NOW, while the outcome is unknown",
+            "enforced_by": "amendment_is_admissible -- a declaration "
+                           "timestamped after the clock starts REFUSES "
+                           f"{AMENDMENT_AFTER_SEEING}",
+            "this_is_a_field_not_advice": True},
+    }
+
+
+def amendment_is_admissible(lever: str, declared_utc: str = None,
+                            clock_start_utc: str = None,
+                            outcome_is_known: bool = False) -> dict:
+    """AN AMENDMENT IS ADMISSIBLE ONLY BEFORE THE CLOCK, and this refuses
+    rather than notes -- the same construction that made the effect floor
+    blocking."""
+    lv = levers()
+    spec = lv.get(lever)
+    if spec is None:
+        raise BandHazardRefused(
+            f"REFUSED UNKNOWN_LEVER: {lever!r} is not one of "
+            f"{[k for k in lv if k != 'THE_TRAP']}.")
+    if not spec.get("must_be_declared_before_the_clock"):
+        return {"admissible": True, "lever": lever,
+                "why": "not an amendment requiring pre-declaration"}
+    if outcome_is_known:
+        raise BandHazardRefused(
+            f"REFUSED {AMENDMENT_AFTER_SEEING}: {lever} is being "
+            f"considered with the band's outcome already known. The "
+            f"shortfall is the information being used, and that is "
+            f"choosing after seeing.")
+    if not declared_utc or not clock_start_utc:
+        raise BandHazardRefused(
+            f"REFUSED {AMENDMENT_AFTER_SEEING}: {lever} carries no "
+            f"declaration timestamp against a clock start. An amendment "
+            f"with no before-ness is indistinguishable from one made "
+            f"afterwards.")
+    if declared_utc >= clock_start_utc:
+        raise BandHazardRefused(
+            f"REFUSED {AMENDMENT_AFTER_SEEING}: {lever} declared "
+            f"{declared_utc} against a clock that started "
+            f"{clock_start_utc}.")
+    return {"admissible": True, "lever": lever,
+            "declared_utc": declared_utc,
+            "clock_start_utc": clock_start_utc,
+            "is_an_amendment_to_a_user_authored_plan":
+                spec.get("is_an_amendment", False)}
+
+
 def report() -> dict:
     return {
         "protocol": PROTOCOL,
@@ -291,6 +515,9 @@ def report() -> dict:
         "threshold_sensitivity": threshold_sensitivity(),
         "ledger_rank_test": ledger_rank_test(),
         "FORWARD_RATE_PAIR": forward_rate_pair(),
+        "IS_THIS_TEST_RUNNABLE_AT_ALL": viability_table(),
+        "G_FLOOR": g_floor(),
+        "LEVERS": levers(),
         "band_probabilities": band_table(),
         "one_fewer_night": {
             "n": BAND_DAYS - 1,
@@ -381,6 +608,71 @@ def falsify() -> int:
        fp["factor_between_their_failure_probabilities"] > 20,
        f"{fp['factor_between_their_failure_probabilities']:.2f}x")
 
+    print("== what would have to be TRUE for the test to be viable ==")
+    vt = viability_table()
+    for r in vt["rows"]:
+        ck(f"required rate at {r['confidence']:.2f} confidence is "
+           f"computed, not tabulated",
+           0.7 < r["required_daily_joint_rate"] < 0.9,
+           f"p >= {r['required_daily_joint_rate']:.4f}  gap from "
+           f"planning {r['gap_from_the_planning_rate']:+.4f}, from "
+           f"optimistic {r['gap_from_the_optimistic_bound']:+.4f}")
+    ck("the PLANNING rate clears NONE of the three confidences",
+       not any(r["planning_rate_clears_it"] for r in vt["rows"]))
+    ck("  while the optimistic bound clears all three",
+       all(r["optimistic_bound_clears_it"] for r in vt["rows"]))
+
+    print("== the floor under k, from the frozen module's own ladder ==")
+    gf = g_floor()
+    ck("below the declared minimum there is NO test, not a weak one",
+       gf["lowest_G_with_any_test"] == PRED.MIN_NONZERO,
+       f"G floor = {gf['lowest_G_with_any_test']} "
+       f"(MIN_NONZERO={PRED.MIN_NONZERO})")
+    ck("  and at the floor exactly ONE rung passes: a perfect run",
+       gf["at_the_floor_the_candidate_must_be_perfect"] is True)
+    lv = levers()
+    ck("LEVER (iv) IS UNAVAILABLE AT THE PLANNING RATE -- the k it needs "
+       "is below the k the test can compute",
+       lv["iv_fewer_required_days"]["AVAILABLE_AT_THE_PLANNING_RATE"]
+       is False,
+       f"max k {lv['iv_fewer_required_days']['max_k_at_the_planning_rate']}"
+       f" < floor {gf['lowest_G_with_any_test']}")
+    ck("  and it is unnecessary at the optimistic bound",
+       lv["iv_fewer_required_days"]["max_k_at_the_optimistic_bound"]
+       >= NEED_EVALUABLE)
+    ck("lever (iii) is priced in days at both rates",
+       lv["iii_longer_band"]["n_required_at_the_planning_rate"] > BAND_DAYS,
+       f"n >= {lv['iii_longer_band']['n_required_at_the_planning_rate']} "
+       f"at the planning rate, "
+       f"{lv['iii_longer_band']['n_required_at_the_optimistic_bound']} at "
+       f"the bound")
+    ck("the amendments are MARKED as amendments",
+       lv["iii_longer_band"]["is_an_amendment"]
+       and lv["iv_fewer_required_days"]["is_an_amendment"]
+       and not lv["ii_improve_the_input"]["is_an_amendment"])
+
+    print("== the trap is a FIELD, and it REFUSES ==")
+    ck("the trap names the two levers and why",
+       lv["THE_TRAP"]["which_levers"] == ["iii_longer_band",
+                                          "iv_fewer_required_days"]
+       and lv["THE_TRAP"]["this_is_a_field_not_advice"] is True)
+    for args, why in (
+            (("iii_longer_band", None, None, False), "no timestamps"),
+            (("iv_fewer_required_days", "2026-09-20T00:00:00Z",
+              "2026-09-14T00:00:00Z", False), "declared after the clock"),
+            (("iii_longer_band", "2026-09-10T00:00:00Z",
+              "2026-09-14T00:00:00Z", True), "the outcome is known")):
+        try:
+            amendment_is_admissible(*args)
+            ck(f"refuses: {why}", False)
+        except BandHazardRefused as exc:
+            ck(f"refuses: {why}", AMENDMENT_AFTER_SEEING in str(exc))
+    ck("  and a pre-clock declaration IS admissible",
+       amendment_is_admissible("iii_longer_band", "2026-09-12T01:00:00Z",
+                               "2026-09-14T00:00:00Z")["admissible"])
+    ck("an unknown lever refuses rather than passing",
+       _unknown_lever_refuses())
+
     print("== excluding the open days requires a NAMED CONDITION ==")
     for args, why in (((None, False, True), "no condition named"),
                       (("they look different", False, True),
@@ -398,6 +690,14 @@ def falsify() -> int:
 
     print(f"\n{ok}/{n} cells pass")
     return 0 if ok == n else 1
+
+
+def _unknown_lever_refuses() -> bool:
+    try:
+        amendment_is_admissible("vi_wishful_thinking")
+        return False
+    except BandHazardRefused as exc:
+        return "UNKNOWN_LEVER" in str(exc)
 
 
 def _no_pairs_refuses() -> bool:
