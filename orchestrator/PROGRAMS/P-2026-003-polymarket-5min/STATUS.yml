@@ -67,6 +67,22 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T03:06:41Z (MEM ROUND 429 -- TEN UNWRITTEN RULES FROM MY OWN FINDINGS, PROBED BEFORE CLAIMED.
+  Four surfaces at the ref, five positive controls all hitting, a negative control absent,
+  twelve candidates at six to eight phrasings each, and EVERY APPARENT HIT INSPECTED:
+  FOUR WERE INCIDENTAL -- ratio matched requirements.txt, GiB a CPU note, fails-more-often
+  rule 41, replicate R-495. TWO COVERED, TEN NOT WRITTEN, FIVE I WOULD CODIFY AND FIVE I
+  WOULD FLAG. The five: report P(failure) never expected-minus-threshold; every instrument
+  whose result is quoted must exist on a ref; resolve a unit at the QUANTITY not by a
+  neighbouring number; identify which field the consuming guard READS before calling a
+  value wrong; a resource peak carries its n. EACH HAS TWO OR MORE INDEPENDENT INSTANCES
+  TONIGHT -- the field rule fired twice in my hands alone, r405 and r428. The flagged five
+  carry their own weakness: narrow, adjacent to CLAUDE 14, one instance only, a writing
+  practice, and likely transient. AND TWO OF MINE ARE ALREADY COVERED: a working-tree
+  status IS rule 8's as-of, and the instrument rule is PARTIALLY rule 12 -- freeze builders
+  only -- so it should be written as an EXTENSION rather than as new. The answer is written
+  here before it is reported, because AN ANSWER ABOUT SURFACES THAT DO NOT SURVIVE, GIVEN
+  ONLY IN A REPLY, WOULD BE THE DEFECT IT DESCRIBES. Tip 9ff2cfe.)
   2026-09-12T03:02:27Z (MEM ROUND 428 -- THE ETH RECEIPT EXISTS AND MY ROUND-424 BRANCH IS SETTLED: split
   SCORE, n_rows 334,336 against BTC's 489,434. IT WAS FAILED-TO-EMIT, NOT DECLINED -- a
   rebuild on the same day and coin produced it, so nothing about ETH's ruling prevented
@@ -104,6 +120,7 @@ updated: >-
   time base is an MTIME, which identifies a write and never a send. AND I AUDITED MY OWN
   NINE PUBLICATION CLAIMS BY THE FIX'S OWN STANDARD: ALL NINE SHAS REACHABLE, falsifier
   fires -- AND THEY HOLD BECAUSE THEY NAMED THE ACT. Tip e5420d5.)
+previous_updates: >-
   2026-09-12T02:33:09Z (MEM ROUND 426 -- I WAS ON THE WRONG SIDE AND I RESOLVED IT WRONGLY. Measured at
   systemd: research.slice MemoryHigh is 12,884,901,888 = 12.000 GiB EXACTLY and
   MemoryMax 15,032,385,536 = 14.000 GiB EXACTLY -- both land on 2^30, which a decimal
@@ -123,7 +140,6 @@ updated: >-
   FOR. I checked my own audit for that hole and it HOLDS -- artifact_exists returns None
   deliberately. And the governance item is TWO items, one of which I read at round 422
   and passed over: ratification_scope_matches_this_launch is FALSE. Tip 445297c.)
-previous_updates: >-
   2026-09-12T02:28:07Z (MEM ROUND 425 -- 288 IS DEFINITIONAL, NOT A COINCIDENCE: a complete UTC day has
   24x60/5 windows, so the mechanism is STRUCTURALLY GUARANTEED for every coin and NO COIN
   CAN FALSIFY IT -- only a short day can, AND THOSE ALREADY EXIST AND ARE MEASURED: the
@@ -1150,6 +1166,12 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r429_TEN_UNWRITTEN_RULES_FROM_MY_OWN_FINDINGS_PROBED_BEFORE_CLAIMED: "Answering the narrow question with the probe run first. FOUR SURFACES loaded at the canonical ref -- COORDINATOR_RUNBOOK 1,255 lines, SEAT_PROTOCOL 706, MEM_PROCEDURE 220, CLAUDE.md 214 -- with FIVE POSITIVE CONTROLS that all HIT and a negative control absent everywhere, so the probe can both fire and miss. Twelve candidate rules, six to eight phrasings each, then EVERY APPARENT HIT INSPECTED IN CONTEXT. FOUR APPARENT HITS WERE INCIDENTAL: ratio matched requirements.txt, GiB matched a CPU-and-memory note, fails-more-often matched rule 41 on instrument selection, and replicate matched R-495's non-independence error. RESULT: TWO COVERED, TEN NOT WRITTEN, of which I would codify FIVE and flag FIVE."
+  r429_THE_FIVE_I_WOULD_WRITE: "In the imperative, one line each, verbatim-writable. ONE: Report P(failure), never expected-count-minus-threshold, whenever the rate is uncertain -- a positive margin is not a probability. TWO: Every instrument whose result is quoted must exist on a ref before the result is quoted, not only builders inside a freeze. THREE: Resolve a unit at the quantity it belongs to, never by a convention inferred from a neighbouring number. FOUR: Before reporting a value as wrong, identify which field the consuming guard actually reads. FIVE: A resource peak carries its n -- a single observation is a property of a run, not of the workload."
+  r429_AND_WHY_THOSE_FIVE_SURVIVE_A_SECOND_SESSION: "Each has MORE THAN ONE INDEPENDENT INSTANCE TONIGHT, which is REV's own bar. Rule four fired TWICE in my hands alone -- at round 405 I read fee_source_status as evidence and withdrew it, and at round 428 a reported sha turned out to be inputs.score_split.sha256 rather than the binding's tape.sha256. Rule two has THREE instances: the claim-check instrument, be_book_content_diff and be_call_sites, all on no ref. Rule five now has a DIRECT REPLICATE, 5.87 against 5.67 GiB on the same day and coin, 2.5 times the headroom it decides. Rule one changed a decision tonight. Rule three cost me the wrong side of a two-seat dispute."
+  r429_THE_FIVE_I_WOULD_FLAG_RATHER_THAN_CODIFY: "Offered with the reason each might not survive, because twelve durable rules beat fifteen with three retractions. SIX: In a call-site sweep, a module named only by an audit or report tool is surveillance, not wiring -- NARROW, and it only fires while the sweep is a standing activity. SEVEN: A guard validates only the type it was written for; state which types it exempts or it exempts them silently -- CLOSEST TO EXISTING RULES, adjacent to CLAUDE 14 on booleans and to 7l.1's computed-not-asserted corollary, so a second session could fairly call it a restatement. EIGHT: A ratio's stability says nothing about whether it measures the binding quantity -- ONE INSTANCE ONLY and the mechanism is domain-specific. NINE: When a conclusion turns on a convention or comparator, table both results beside it -- A WRITING PRACTICE, probably a corollary of rule 10. TEN: A record committed but checked out nowhere reads as absent, so cite the ref and not the path -- LIKELY TRANSIENT, a symptom of the current fork."
+  r429_AND_TWO_OF_MINE_ARE_ALREADY_COVERED_WHICH_IS_A_USABLE_RESULT: "Reporting the covered ones as plainly as the gaps. A WORKING-TREE STATUS IS AN AS-OF is ALREADY WRITTEN, as rule 8's every quoted population carries its n AND as-of -- my git-status instance is an EXTENSION OF A WRITTEN RULE, NOT A NEW ONE, and is worth at most a clause. And the instrument-on-a-ref rule is PARTIALLY covered: rule 12 already says a scratch-dir builder voided one freeze, WHICH BINDS FREEZE BUILDERS ONLY -- the three instruments I found tonight are not freeze builders, so the gap is REAL BUT NARROWER THAN IT FIRST LOOKED, and the rule should be written as an EXTENSION OF RULE 12 rather than as a new one."
+  r429_THE_ANSWER_ITSELF_HAD_TO_LAND_ON_A_SURVIVING_SURFACE: "The question is which lessons live only on surfaces that do not survive. AN ANSWER TO THAT QUESTION, DELIVERED ONLY IN A REPLY, WOULD BE THE DEFECT IT DESCRIBES. So the ten lines are written here and in HANDOFF before they are reported, and this flag exists to say why: a list of unwritten rules is itself a finding, and a finding that lives in a dispatch is exactly what the audit found fifteen of. THE TEST IS THE ONE ALREADY WRITTEN AS 7m.4 -- could a reader tomorrow find this without asking anyone -- APPLIED TO THE ANSWER AND NOT ONLY TO ITS CONTENTS."
   r428_THE_ETH_SCORE_SPLIT_RECEIPT_EXISTS_AND_MY_ROUND_424_BRANCH_IS_SETTLED: "be_gate1_state_tape_receipt_20260905_eth.json is on disk at 02:57, 12,185 bytes, split SCORE, day 20260905, coin eth, n_rows 334,336 -- and BTC's counterpart carries 489,434, so the shapes match. AT ROUND 424 I LEFT THE QUESTION AS A TWO-WAY BRANCH: the tape stage either DECLINED to publish a receipt, because 09-05 might be ruled per-coin, or FAILED TO EMIT one. IT WAS FAILED-TO-EMIT. A rebuild on the same day, same coin, same builder produced the receipt, so nothing about ETH's ruling prevented it. THE REFUSAL WAS CORRECT, THE PREREQUISITE WAS A BUILD AND NOT A RULING, AND THE ETH BOOK IS AUTHORISED TO BE MEASURED -- the branch I flagged as the more serious of the two is the one that did not happen."
   r428_THE_SHA_QUOTED_IS_THE_WRONG_ONE_OF_TWO_ADJACENT_DIGESTS: "The receipt was reported with sha256 665081510a174b31. THAT DIGEST IS IN THE FILE AND IT IS NOT THE BINDING'S: 665081510a174b31 is inputs.score_split.sha256, while the digest day_tape_pin returns -- the one assert_day_tape compares -- is tape.sha256 = 89c177ace182232e. I CHECKED WHICH FIELD BEFORE CALLING IT WRONG, because a hash that does not match is a very different report from a hash read off the wrong line. A verifier comparing the quoted digest against what the guard returns would conclude a MISMATCH on a receipt that is correct. TONIGHT'S RECURRING DEFECT IN A DIGEST INSTEAD OF A STATUS STRING: two adjacent fields, one load-bearing, and the name does not say which."
   r428_AND_THE_RECEIPT_BINDS_TO_THE_TAPE_THAT_WAS_ACTUALLY_MEASURED: "The positive check, since the previous flag is a negative one: the receipt's tape.path resolves to phase2_state_tape_gate1_20260905_eth.json AND THAT FILE IS 588,868,676 BYTES -- EXACTLY the ETH tape size quoted all night in every cost table. So the receipt is not merely well-formed, it POINTS AT THE OBJECT THE MEASUREMENTS WERE TAKEN ON, and the 0.66 size ratio, the 11m21s and the binding all refer to the same bytes. Worth recording because a receipt can be internally consistent and describe something other than what was measured."
@@ -29266,6 +29288,30 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r429_TEN_UNWRITTEN_RULES_FROM_MY_OWN_FINDINGS_PROBED_BEFORE_CLAIMED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "the probe's controls, phrasings and context inspections were all run this round against files fetched from origin/mm-research."
+  r429_THE_FIVE_I_WOULD_WRITE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "each of the five returned no hit across four surfaces on six to eight phrasings with the controls firing."
+  r429_AND_WHY_THOSE_FIVE_SURVIVE_A_SECOND_SESSION:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "the instances are recorded in my own r405, r422, r426, r427 and r428 flags."
+  r429_THE_FIVE_I_WOULD_FLAG_RATHER_THAN_CODIFY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "each of the five also returned no hit, and each carries the specific weakness stated."
+  r429_AND_TWO_OF_MINE_ARE_ALREADY_COVERED_WHICH_IS_A_USABLE_RESULT:
+    prov: CHECKED
+    artifact: CLAUDE.md
+    said: "the as-of hit resolves to CLAUDE rule 8 and the scratch-dir hit to rule 12, both inspected in context."
+  r429_THE_ANSWER_ITSELF_HAD_TO_LAND_ON_A_SURVIVING_SURFACE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "7m.4's test question is at the canonical ref; this flag and the HANDOFF block carry the ten lines."
   r428_THE_ETH_SCORE_SPLIT_RECEIPT_EXISTS_AND_MY_ROUND_424_BRANCH_IS_SETTLED:
     prov: CHECKED
     artifact: data/pm_5min/derived/be_gate1_state_tape_receipt_20260905_eth.json
