@@ -1131,9 +1131,15 @@ call site anywhere**.
 
 | | |
 |---|---|
-| lane `.py` modules | 344 |
+| lane `.py` modules **(as measured 2026-09-12T01:3xZ; 346 by 02:25Z)** | 344 |
 | carrying a falsifier (`def falsify`) | 53 |
 | with **no production call site** | **15** |
+
+**As-of matters here and the table lacked one.** REV re-measured at 02:25Z and
+the module count is **346** — the table is a record of what was measured *then*,
+not a live count, and it is quoted with its as-of rather than silently refreshed.
+Every population this programme quotes carries its n AND its as-of; a doctrine
+surface is the last place to drop that.
 
 "No call site" = three negative tests: no other lane `.py` names it; not named
 in any of the 17 lane `.sh` files or launchers; not named in any of the 11
