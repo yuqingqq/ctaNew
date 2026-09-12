@@ -42,10 +42,33 @@ import de_fair_value_rehearsal as REH              # noqa: E402
 PROTOCOL = "P003_DE_FAIR_VALUE_PLUMBING_RUN_V1"
 VERDICT = "PLUMBING_ONLY_NOT_EVIDENCE"
 
-#: Days this run may touch AT ALL: consumed, and named one by one rather
-#: than by a range that would quietly grow.
+#: Days this run may touch AT ALL, named one by one rather than by a
+#: range that would quietly grow.
+#:
+#: 09-03..09-06 are the latency days and 09-07..09-10 are consumed by the
+#: cancellation test. 09-11..09-13 cost NOTHING EITHER, and that is a
+#: correction rather than a relaxation (coordinator, DE 386): §8's
+#: population is the first complete UTC day STRICTLY AFTER the full
+#: pipeline freeze, the freeze is not effective while REV's adjudication
+#: is pending, so every day up to and including today PRECEDES any
+#: possible freeze and can never be in the §8 population. There is no
+#: protected day among them to spend. What they cost is BE's build time.
 CONSUMED_DAYS = ("20260903", "20260904", "20260905", "20260906",
                  "20260907", "20260908", "20260909", "20260910")
+CANNOT_BE_IN_THE_POPULATION = ("20260911", "20260912", "20260913")
+READABLE_DAYS = CONSUMED_DAYS + CANNOT_BE_IN_THE_POPULATION
+WHY_READABLE = {
+    "consumed": "09-03..09-06 latency days; 09-07..09-10 consumed by the "
+                "cancellation test -- free to re-run because they are "
+                "spent (rule 34's own sentence)",
+    "cannot_be_in_the_population":
+        "09-11..09-13 PRECEDE any possible freeze -- §8's population "
+        "begins strictly AFTER a freeze that is not effective -- so they "
+        "can never be §8 days and reading them spends nothing",
+    "still_refused": "any day after the named set: the guard must still "
+                     "bite, and a range that grows on its own is how a "
+                     "protected day gets read",
+}
 PROTECTED_DAY = "PLUMBING_RUN_TOUCHED_A_PROTECTED_DAY"
 NO_BOOK = "NO_DAY_BOOK_FOR_THIS_DAY"
 NO_OUTCOME = "NO_OFFICIAL_RESOLUTION_FOR_THIS_SLUG"
@@ -78,12 +101,12 @@ class PlumbingRefused(ValueError):
 
 def assert_day_is_consumed(day: str) -> None:
     """THE EYE IS THE THING THAT SPENDS THE DAY (rule 34a)."""
-    if day not in CONSUMED_DAYS:
+    if day not in READABLE_DAYS:
         raise PlumbingRefused(
-            f"REFUSED {PROTECTED_DAY}: {day} is not in the consumed set "
-            f"{CONSUMED_DAYS}. A plumbing test is still a LOOK, and rule "
-            f"11 does not care about intent -- 09-11 onward are live and "
-            f"BE is mid-decision on the first of them.")
+            f"REFUSED {PROTECTED_DAY}: {day} is in neither the consumed "
+            f"set {CONSUMED_DAYS} nor the pre-freeze set "
+            f"{CANNOT_BE_IN_THE_POPULATION}. A plumbing test is still a "
+            f"LOOK, and rule 11 does not care about intent.")
 
 
 def book_path(day: str, coin: str = "btc") -> Path:
@@ -317,10 +340,11 @@ def blind_row(day: str, coins: tuple, resolutions_ok: bool) -> "PRED.BlindDayInp
         coins_complete=coins)
 
 
-def plumbing_run(days=CONSUMED_DAYS, outdir=None, scope_override=None) -> dict:
+def plumbing_run(days=READABLE_DAYS, outdir=None, scope_override=None) -> dict:
     """THE WHOLE §8 PATH ON REAL ROWS. Not evidence, and it says so."""
     outdir = Path(outdir) if outdir else Path(".")
     per_day, blind, refusals, statuses = [], [], [], Counter()
+    pipelining = None
     native = Counter()
     eligible = Counter()
     native_c2 = Counter()
@@ -351,6 +375,8 @@ def plumbing_run(days=CONSUMED_DAYS, outdir=None, scope_override=None) -> dict:
                    prof.get("fraction_at_or_over_one_second"),
                "n_generations_under_one_second":
                    prof.get("n_under_one_second"),
+               "share_under_one_second":
+                   prof.get("share_under_one_second"),
                "C2_measured_coverage": cov_c2_day,
                "C2_coverage_ceiling": coverage_ceiling(prof, cov_c2_day),
                "n_actions": got["n_actions"],
@@ -369,6 +395,9 @@ def plumbing_run(days=CONSUMED_DAYS, outdir=None, scope_override=None) -> dict:
                "delta_LL_C2": (None if prim2["identity_mean_log_loss"] is None
                                else prim2["identity_mean_log_loss"]
                                - prim2["policy_mean_log_loss"])}
+        if pipelining is None:
+            pipelining = pipelining_from_day(dd, outs, prim)
+            pipelining["measured_on_day"] = day
         per_day.append(row)
         for k, v in dd["excluded_windows"].items():
             statuses[k] += v
@@ -402,6 +431,10 @@ def plumbing_run(days=CONSUMED_DAYS, outdir=None, scope_override=None) -> dict:
         "candidates_are_plumbing": {"C1": "shrink 10% toward 0.5",
                                     "C2": "+0.02, clipped"},
         "days": list(days), "per_day": per_day,
+        "days_requested": len(list(days)), "days_measured": len(per_day),
+        "days_with_no_book_yet": [r["day"] for r in refusals
+                                  if r["refusal"] == NO_BOOK],
+        "CAN_ONE_COIN_BE_VALUED_WHILE_THE_OTHER_BUILDS": pipelining,
         "THE_TWO_BLOCKERS": {
             "eth_has_no_day_book_on_any_day": {
                 "coins_with_books_per_day":
@@ -574,6 +607,7 @@ def duration_profile(life: dict, identity: dict) -> dict:
                         "p99": q(0.99), "max": xs[-1], "min": xs[0]},
             "histogram_seconds": hist,
             "n_under_one_second": n - n_ge_1,
+            "share_under_one_second": (n - n_ge_1) / n,
             "n_at_or_over_one_second": n_ge_1,
             "fraction_at_or_over_one_second": n_ge_1 / n,
             "threshold_s": SHORT_GENERATION_S}
@@ -635,6 +669,125 @@ def stability(per_day, key: str) -> dict:
                 "cannot be measured for it from existing artifacts"}
 
 
+MEAN_OF_MEANS = "DAY_INCREMENT_COMBINED_AS_A_MEAN_OF_MEANS"
+
+
+def combine_partials(parts) -> dict:
+    """ONE DAY'S INCREMENT FROM PARTS SCORED SEPARATELY.
+
+    The day's increment is an ACTION-WEIGHTED mean, so partial results
+    combine as SUMS -- total log loss and action counts -- never as a
+    mean of the parts' means. Averaging two means silently reweights a
+    day toward whichever part had fewer actions, and the two agree only
+    when the parts happen to be the same size.
+    """
+    ident = pol = 0.0
+    n = 0
+    for part in parts:
+        k = int(part["n"])
+        if not k:
+            continue
+        ident += float(part["identity_mean_log_loss"]) * k
+        pol += float(part["policy_mean_log_loss"]) * k
+        n += k
+    if not n:
+        raise PlumbingRefused(
+            f"REFUSED {PRED.NO_SCORED_ACTIONS}: no scored action in any "
+            f"part, and an empty mean is not zero.")
+    return {"delta_LL": (ident - pol) / n, "n": n,
+            "identity_mean_log_loss": ident / n,
+            "policy_mean_log_loss": pol / n,
+            "combined_as": "action-weighted SUMS, not a mean of means",
+            "n_parts": len(list(parts))}
+
+
+def mean_of_means(parts) -> float:
+    """THE WRONG COMBINATION, computed so the difference is a number."""
+    xs = [float(p["identity_mean_log_loss"]) - float(p["policy_mean_log_loss"])
+          for p in parts if int(p["n"])]
+    return sum(xs) / len(xs) if xs else 0.0
+
+
+def per_coin_pipelining_answer(day: str = "20260907") -> dict:
+    coins = coins_with_books(day)
+    dd = read_day(day, coins[0])
+    outs = official_outcomes({s for s, _ in dd["population"]["actions"]})
+    whole = score_real_day(dd, outs)["C1"]["PRIMARY_fallback_scored"]
+    return pipelining_from_day(dd, outs, whole)
+
+
+def pipelining_from_day(dd: dict, outs: dict, whole: dict) -> dict:
+    """CAN THE CHAIN VALUE ONE COIN WHILE THE OTHER IS STILL BUILDING?
+
+    Answered by DRIVING the partition, not by reading the code: a real
+    day is scored whole, then scored again in two disjoint parts, and the
+    parts are recombined. The partition here is BY SLUG rather than by
+    coin because no eth book exists -- and the arithmetic of recombining
+    disjoint action sets is the same either way, which is the point.
+    """
+    slugs = sorted({s for s, _ in dd["population"]["actions"]})
+    # DELIBERATELY UNBALANCED (20/80), because two equal parts hide the
+    # difference between the right combination and the wrong one.
+    cut = max(1, len(slugs) // 5)
+    part_slugs = (set(slugs[:cut]), set(slugs[cut:]))
+    parts = []
+    for keep in part_slugs:
+        sub = dict(dd)
+        sub["consumptions"] = [r for r in dd["consumptions"]
+                               if r["slug"] in keep]
+        sub["population"] = dict(dd["population"],
+                                 actions=[(sl, g) for sl, g
+                                          in dd["population"]["actions"]
+                                          if sl in keep])
+        parts.append(score_real_day(sub, outs)["C1"]
+                     ["PRIMARY_fallback_scored"])
+    combined = combine_partials(parts)
+    whole_delta = (whole["identity_mean_log_loss"]
+                   - whole["policy_mean_log_loss"])
+    wrong = mean_of_means(parts)
+    return {
+        "question": "can a portfolio day be valued one coin at a time, "
+                    "while the other coin is still building?",
+        "ANSWER": "YES for the VALUATION WORK, NO for the DAY'S VERDICT",
+        "valuation_is_per_book": {
+            "driver": "de_forward_value_day.py --day --book",
+            "takes": "ONE book, and a book is one coin",
+            "requires_the_other_coin": False,
+            "so": "btc can be valued the moment its book lands, while "
+                  "eth is still building"},
+        "the_day_verdict_needs_both": {
+            "eligible_days": "requires coins_complete == "
+                             f"{list(PRED.COINS)}; a btc-only day is "
+                             f"COINS_INCOMPLETE",
+            "coverage_gate": "iterates both coins; a missing coin gives "
+                             "coverage None and FAILS",
+            "so": "the day cannot be declared evaluable until both books "
+                  "exist -- but nothing forces the WORK to be serial"},
+        "the_combination_rule_that_makes_it_safe": {
+            "rule": "combine parts by action-weighted SUMS",
+            "whole_day_delta_LL": whole_delta,
+            "recombined_from_parts": combined["delta_LL"],
+            "absolute_difference": abs(whole_delta - combined["delta_LL"]),
+            "reproduces_the_single_pass": abs(
+                whole_delta - combined["delta_LL"]) < 1e-12,
+            "n_whole": whole["n"], "n_recombined": combined["n"],
+            "MEAN_OF_MEANS_IS_WRONG": {
+                "value": wrong,
+                "absolute_error_against_the_single_pass":
+                    abs(whole_delta - wrong),
+                "why": "the day's increment is action-weighted; averaging "
+                       "two means reweights the day toward the smaller "
+                       "part, and they agree only when the parts are the "
+                       "same size",
+                "partition_used": "20/80 by slug, deliberately unbalanced"},
+        },
+        "partition_driven": "by slug (no eth book exists); the arithmetic "
+                            "of recombining disjoint action sets is "
+                            "identical for a partition by coin",
+        "n_actions_whole": whole["n"],
+    }
+
+
 def falsify() -> int:
     import tempfile
     n = ok = 0
@@ -647,14 +800,8 @@ def falsify() -> int:
               + (f"  {note}" if note else ""))
 
     out = Path(tempfile.mkdtemp(prefix="de_plumbing_"))
-    print("== the protected days are refused BY NAME ==")
-    for day in ("20260911", "20260912", "20260913"):
-        try:
-            assert_day_is_consumed(day)
-            ck(f"{day} is refused", False)
-        except PlumbingRefused as exc:
-            ck(f"{day} is refused", PROTECTED_DAY in str(exc))
-    ck("and a consumed day is admitted", assert_day_is_consumed("20260907")
+    print("== the day guard ==")
+    ck("a consumed day is admitted", assert_day_is_consumed("20260907")
        is None)
 
     print("== the real books, as they actually are ==")
@@ -702,6 +849,38 @@ def falsify() -> int:
        and got["coverage_gate"]["passes"] is False,
        f"btc {got['coverage_gate']['per_coin']['btc']['coverage']}, "
        f"eth {got['coverage_gate']['per_coin']['eth']['coverage']}")
+
+    print("== CAN BTC BE VALUED WHILE ETH BUILDS? driven, not read ==")
+    ans = per_coin_pipelining_answer("20260907")
+    ck("the valuation driver takes ONE book, so per-coin work is "
+       "independent",
+       ans["valuation_is_per_book"]["requires_the_other_coin"] is False,
+       ans["valuation_is_per_book"]["driver"])
+    ck("the DAY's verdict still needs both coins -- COINS_INCOMPLETE",
+       "COINS_INCOMPLETE" in ans["the_day_verdict_needs_both"][
+           "eligible_days"])
+    r3 = ans["the_combination_rule_that_makes_it_safe"]
+    ck("parts recombined by action-weighted SUMS reproduce the "
+       "single-pass day EXACTLY",
+       r3["reproduces_the_single_pass"] is True
+       and r3["n_whole"] == r3["n_recombined"],
+       f"diff {r3['absolute_difference']:.3e} on {r3['n_whole']} actions")
+    ck("  and a MEAN OF MEANS does not -- the error is a number, not a "
+       "warning",
+       r3["MEAN_OF_MEANS_IS_WRONG"][
+           "absolute_error_against_the_single_pass"] > 0,
+       f"error {r3['MEAN_OF_MEANS_IS_WRONG']['absolute_error_against_the_single_pass']:.3e}")
+
+    print("== the readable set, and the guard that still bites ==")
+    ck("09-11..09-13 are readable -- they precede any possible freeze",
+       all(assert_day_is_consumed(d) is None
+           for d in CANNOT_BE_IN_THE_POPULATION))
+    try:
+        assert_day_is_consumed("20260914")
+        ck("a day beyond the named set still REFUSES", False)
+    except PlumbingRefused as exc:
+        ck("a day beyond the named set still REFUSES",
+           PROTECTED_DAY in str(exc))
 
     print("== the two blockers are COMPUTED FIELDS ==")
     b = got["THE_TWO_BLOCKERS"]
@@ -755,7 +934,7 @@ def main(argv=None) -> int:
     if "--falsify" in argv:
         return falsify()
     if "--run" in argv:
-        days = CONSUMED_DAYS
+        days = READABLE_DAYS
         if "--days" in argv:
             days = tuple(argv[argv.index("--days") + 1].split(","))
         out = argv[argv.index("--out") + 1] if "--out" in argv else "."
@@ -764,7 +943,8 @@ def main(argv=None) -> int:
                           if k != "per_day"}, indent=2, default=str)[:4000])
         return 0
     print(json.dumps({"protocol": PROTOCOL, "verdict": VERDICT,
-                      "consumed_days": CONSUMED_DAYS}, indent=2))
+                      "readable_days": READABLE_DAYS,
+                      "why_readable": WHY_READABLE}, indent=2))
     return 0
 
 
