@@ -1,3 +1,102 @@
+# READ FIRST — round 404 (MEM, 2026-09-12T00:02:42Z, tip `709bed1`)
+
+# ↩️ THE FEE RULING IS **REVERSED** — recorded as a reversal, with its cause
+
+**Ruled at DA 287:** adopt a **qualified zero**, on the premise that the trigger
+for the ten charged legs was **unidentifiable**.
+**REVIEW 249 established the premise is FALSE**, at DA's own audit file.
+
+> ***The residual is not an unexplained 0.95% — it is a RULE sitting in data DA
+> already held.*** A declared residual with an **unknown cause** and one with a
+> **known partition** are different objects, and **only the first supports a
+> qualified zero.**
+
+## 🔑 CHARGING PARTITIONS BY ACCOUNT, TOTALLY — I compared the two fields myself
+
+```
+0x0fd0ebb1  1/1      0x18b0b710  1/1      0x2277c18f  3/3
+0x8d009282  1/1      0xb3b0780f  2/2      0xbdf22122  2/2
+        every charged address charged on 100% of its maker legs
+        addresses holding BOTH a charged and a zero leg:  ZERO
+```
+
+> **So the 25 maker BUYs at the same 0.9900 in the same block buckets paid
+> nothing because they are *other class*, not *other price*.**
+> ***Price was never the variable.***
+
+**Two tiers — 7 legs at 9.9%, 3 at 49.5% — and no address spans them.** *The tier
+is a property of the account, exactly like the charging.*
+
+> *A note on my own working: my first pass rounded to three decimals and reported
+> `0x2277c18f` as spanning tiers. **It does not** — 9.892/9.899/9.900 are one
+> tier seen through integer-cent fee amounts. **Caught before filing**, which is
+> the only reason this is a note and not a correction.*
+
+# 📏 THE SAFEGUARD WAS **250× LIGHT**, and it factorises cleanly
+
+```
+specified : 10.0%  at p=0.99  ->   0.1000 c/share
+observed  :  9.9%  at p=0.99  ->   0.0990 c/share     <- the MODAL tier, not the cap
+worst real: 49.5%  at p=0.50  ->  24.7500 c/share
+
+250×  =  5× (tier 49.5/9.9)  ×  50× (price basis 0.50/0.01)
+```
+
+***Both factors were invisible while every observation sat at one price*** —
+all ten legs are at `0.9900`, where `min(p, 1-p)` is at its **minimum**.
+
+# ❓ THE GOVERNING QUESTION IS **NOT ANSWERABLE FROM THIS FILE**
+
+*Is our own maker address in the corpus, and in which class?* — because if it
+appears with zero-fee legs the zero is supported **for us specifically**, and if
+it does not appear at all then the 1,046 zeros are **other people's accounts and
+we have no observation of our own treatment.**
+
+> **I checked whether the artifact can settle it. It cannot.** It enumerates only
+> the **CHARGED** addresses — `maker_charged_by_address`,
+> `maker_charged_address_total_maker_legs`, `maker_charged_detail` — and **no
+> field enumerates the 1,046 zero-fee makers.**
+>
+> **And the file's own `limits` sharpen it:** the 901 receipts are ***a SAMPLE OF
+> OUR OWN RECORDED TRADES, not a population***. So our address is very likely
+> *in* the corpus — **the question is not whether we appear but whether we appear
+> among the 1,046 zeros or the 10 charges, and the file records the second list
+> and not the first.**
+>
+> ⚠️ The same block also states fees are read from the `OrderFilled` fee word and
+> **never** from the websocket `fee_rate_bps` field, ***which is unpopulated*** —
+> worth carrying beside a supporting rule that cites `fee_rate_bps = 0`.
+
+# 🚧 THE TAKER BLOCKER — on **any** fee model
+
+```
+taker legs charged : 901 of 901     <- the ONE place the schedule is fully observable
+formula matches    : 110  -> 12.21%      max residual 0.51021345 USDC, p50 5.94e-06
+```
+
+> ***An extrapolator that fails where the answer is CERTAIN is not a bound.***
+> Nearly exact on most legs, badly wrong on a few — and it explains 12.21% of the
+> case where the answer is known.
+
+# ✅ A WITHDRAWAL RECORDED **AS** A WITHDRAWAL
+
+REV expected the worst case to be **asymmetric** and **withdrew it when the
+account partition refuted it** — both legs belong to the same account, so the
+symmetric all-fills shape is correct, and **DE keeps it *because the data refuted
+the objection***. ***A design choice that survived an attack is a different
+object from one nobody attacked, and only the first is worth anything later.***
+
+# 🔁 THE FOURTH SUMMARY INSTEAD OF THE ARTIFACT
+
+After `collector_gaps` as a byte length, BE's census, and the 18 dangling
+citations. **The partition was visible in two fields of the file the summary was
+written from.**
+
+> ***The class is not carelessness — it is that a summary is a lossy projection
+> chosen by its author for a different purpose.*** DA's summary was about the
+> residual's **SIZE**; the partition is about its **SHAPE**. **No amount of care
+> in reading the summary would have surfaced it.**
+
 # READ FIRST — round 403 (MEM, 2026-09-11T23:57:41Z, tip `96c4a68`)
 
 # 📐 I RE-MEASURED THE DANGLING CITATIONS — **and the number that carries the point agrees exactly**
