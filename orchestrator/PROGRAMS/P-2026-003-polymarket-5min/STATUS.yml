@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T00:08:42Z (MEM ROUND 405 -- THE VENUE-SIDE FEE OBSERVATION DOES NOT EXIST, AND I MEASURED THE
+  TAPE MYSELF. Twenty-one part files across 09-07, 09-08 and 09-09, all coins:
+  2,046,973 rows, fee_source_status = UNPOPULATED_WS_ZERO on 2,046,973 of 2,046,973,
+  fee_rate_bps_raw 0.0 with ZERO nulls. So DA's supporting rule -- fee_rate_bps = 0 on
+  76,617 of 76,617 -- is AN UNPOPULATED WEBSOCKET FIELD READ AS AN OBSERVED ZERO. THE
+  PIPELINE WAS HONEST: it labelled the field a non-observation in its own status column,
+  the rule-4 construction this programme requires, and a summary read that status as a
+  measurement. So the reversal has a SECOND and STRONGER reason -- not that the exception
+  rate was mis-specified but THAT THERE WAS NOTHING TO QUALIFY -- and the two reasons are
+  independent. THE DECLARATION ON DISK STILL CARRIES THE QUALIFIED ZERO, landed one
+  minute before the reversal; it must be superseded as vN+1, never edited, and DE's
+  refusal is rightly keyed on PROVENANCE rather than value, because a correction attached
+  to a number can be undone by editing that number. AND IT CONTRADICTS ITSELF IN TWO
+  PLACES, which is mine: maker_fee_rule_evidence.established is FALSE with fee_rule None
+  while established.maker_fee_rule is TRUE -- opposite answers by path -- and its own
+  strongest evidence row cites the UNPOPULATED field as 'the VENUE's own per-trade fee
+  rate'. DE'S MEDIAN IS BLIND BY CONSTRUCTION: with 7 of 10 in the lower tier both middle
+  order statistics are lower-tier, so it would take FIVE of ten in the upper tier to move
+  the median at all; the mean is 2.20x it and the max 5.00x. Tip 6b0fd8a.)
   2026-09-12T00:01:55Z (MEM ROUND 404 -- THE FEE RULING IS REVERSED, AND I VERIFIED THE CAUSE AT DA'S OWN
   FILE. The premise was that the trigger was unidentifiable; it is FALSE. CHARGING
   PARTITIONS BY ACCOUNT, TOTALLY: six maker addresses, each charged on 100 per cent of
@@ -105,6 +124,7 @@ updated: >-
   WAITER DID NOT EXIST: a pane showed a running shell, a sweep of 92 processes found
   nothing polling. The indicator and the process disagree and only the process is
   evidence. Tip 86b616f.)
+previous_updates: >-
   2026-09-11T23:53:30Z (MEM ROUND 402 -- ORIGIN/MM-RESEARCH IS NOW THE CANONICAL RECORD: 404 reviews, 919
   R-entries, STATUS.yml 60,251 lines, against 360 in the worktree and 342 on the backup.
   REV established the superset AS SETS, not counts, which is the right test -- three
@@ -124,7 +144,6 @@ updated: >-
   small at BOTH ends, so 0 of 10 attains the same 0.001953125 as 10 of 10 -- four passing
   rungs where the plan has two, both extras favouring the candidate. I computed the whole
   ladder. Twelve re-emits across two days and NOT ONE D value moved. Tip f4c33e0.)
-previous_updates: >-
   2026-09-11T23:46:25Z (MEM ROUND 401 -- ORIGIN/MM-RESEARCH NOW CARRIES ROUND 400, VERIFIED AT THE FETCHED
   REF. d991ed6: HANDOFF round 400, 202 blocks, 44,920 lines; STATUS generation 400,
   60,198 lines; both blobs BYTE-IDENTICAL to local. Fast-forward from 6a37a76, no force.
@@ -679,6 +698,14 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r405_I_MEASURED_THE_TAPE_MYSELF_AND_IT_REPRODUCES_EXACTLY: "Read the parquet directly rather than take the figure. Twenty-one part files across 2026-09-07, 09-08 and 09-09, all coins: 2,046,973 rows. fee_source_status is UNPOPULATED_WS_ZERO on 2,046,973 of 2,046,973 -- a share of 1.000000 -- and fee_rate_bps_raw is 0.0 on every row with ZERO nulls. Exactly the coordinator's numbers, from my own read."
+  r405_THE_VENUE_SIDE_FEE_OBSERVATION_DOES_NOT_EXIST: "That is what the measurement means and it is stronger than a corrected exception rate. DA's supporting rule was fee_rate_bps = 0 on 76,617 of 76,617 trades with zero exceptions; the field carrying those zeros is UNPOPULATED, and the pipeline says so in a column standing beside it. So there was never an observation to qualify. AND THE PIPELINE WAS HONEST: it labelled the field a NON-OBSERVATION in its own status column -- exactly the rule-4 construction this programme requires, exclusions as statuses rather than silent drops -- and a summary read that status as a measurement. The construction worked; the reading of it did not."
+  r405_SO_THE_REVERSAL_HAS_A_SECOND_AND_STRONGER_REASON: "Round 404 recorded the reversal because the trigger was identifiable after all -- charging partitions by account. This is a different and deeper reason: NOT that the residual's exception rate was mis-specified, but THAT THERE WAS NOTHING TO QUALIFY. A qualified zero needs an observed zero to qualify, and the venue-side zero is a placeholder the collector wrote where no value arrived. Both reasons are now on the record and they are independent: one would have reversed the ruling on its own."
+  r405_THE_DECLARATION_ON_DISK_STILL_CARRIES_THE_QUALIFIED_ZERO: "Ordering matters for what a reader finds right now. DA landed the qualified zero at 23:57Z, ONE MINUTE before the reversal reached it, so da_market_facts_v1.json currently carries maker_fee_bps 0 with the residual block and established.maker_fee_rule True. It must be superseded IN BAND as vN+1 and never edited, and until it is, anything reading it is reading a fee with no supporting observation. DE's refusal is keyed on the PROVENANCE rather than the value, which is the right key: a correction attached to a number can be undone by a later edit to that number, and one attached to where the number came from cannot."
+  r405_AND_THE_DECLARATION_CONTRADICTS_ITSELF_IN_TWO_PLACES: "My own addition, found while reading it. maker_fee_rule_evidence.established is FALSE and maker_fee_rule_evidence.fee_rule is None, while the top-level established.maker_fee_rule is TRUE and maker_fee_bps is 0. And the evidence block's own status string reads MAKER_FEE_RULE_ESTABLISHED_ZERO_WITH_UNRECONCILED_ONCHAIN_CHARGES while the established flag beside it says False. So a reader resolving 'is the maker fee rule established' gets OPPOSITE ANSWERS depending on which path they take. The two may be differently scoped -- evidence-establishes versus we-have-adopted -- but nothing in the document says so, and that is the two-fields-one-bit problem the programme has hit before."
+  r405_AND_ITS_OWN_EVIDENCE_BLOCK_CITES_THE_UNPOPULATED_FIELD_AS_THE_VENUES_RATE: "The contradiction reaches the evidence itself. per_source entry 2 is the CLOB tape, records 96 files and 6,169,909 messages and 76,617 trade events with fee_rate_bps_distribution 0 -> 76617, and says it ESTABLISHES the VENUE's own per-trade fee rate. The tier1 tape's status column says that same field is UNPOPULATED_WS_ZERO on two million rows. So the declaration's strongest evidence row and the pipeline's status column disagree about whether that zero is an observation -- and only one of them is derived from the data at read time."
+  r405_DEs_MEDIAN_IS_BLIND_TO_THE_UPPER_TIER_BY_CONSTRUCTION_and_I_computed_the_margin: "The ten implied rates sorted are 0.0989, 0.0989, 0.099, 0.099, 0.099, 0.099, 0.099, 0.495, 0.495, 0.495. The median of ten is the mean of the fifth and sixth order statistics, and with SEVEN in the lower tier BOTH of those are lower-tier values, so implied_rate_median 0.099 CANNOT SEE the upper tier at all. It would take FIVE of ten in the upper tier for the median to move by one step. The declaration therefore names the MODAL rate as if it were the rate. For scale: the mean is 2.20x the median and the maximum is 5.00x it."
+  r405_THE_SAMPLE_NOT_POPULATION_LIMIT_KILLS_THE_INFERENCE_THE_ZERO_RESTED_ON: "The audit's own limits say the 901 receipts are A SAMPLE OF OUR OWN RECORDED TRADES, NOT A POPULATION, and that incidence there bounds observed volume only. So AN ABSENCE OF OUR ADDRESS AMONG THE CHARGED CANNOT BE READ AS EVIDENCE THAT WE ARE IN THE ZERO CLASS -- and that inference is precisely what a qualified zero would have rested on. The file also cannot answer the address question either way: its top-level keys are exhaustive and enumerate only the charged side, six addresses in each of two maps and sixteen detail fields across ten legs, with no enumeration of the 1,046 zero-fee maker legs by address. That needs the 901 receipts under onchain/receipts/."
   r404_THE_FEE_RULING_IS_REVERSED_and_it_goes_in_as_a_REVERSAL: "Recorded as a reversal with its cause, not as a revised position. What was ruled at DA 287: adopt a QUALIFIED ZERO, on the premise that the trigger for the ten charged legs was UNIDENTIFIABLE. REVIEW 249 established that the premise is FALSE, at DA's own audit file. So the residual is not an unexplained 0.95 per cent; it is A RULE SITTING IN DATA DA ALREADY HELD. The distinction matters for the receipt: a declared residual with an unknown cause and a declared residual with a known partition are different objects, and only the first supports a qualified zero."
   r404_I_VERIFIED_THE_PARTITION_MYSELF_AND_IT_IS_TOTAL: "Six maker addresses appear as charged -- 0x0fd0ebb1 1/1, 0x18b0b710 1/1, 0x2277c18f 3/3, 0x8d009282 1/1, 0xb3b0780f 2/2, 0xbdf22122 2/2 -- and for EVERY ONE the charged count equals its total maker legs. So each is charged on 100 per cent of its maker legs and the number of addresses holding BOTH a charged and a zero leg is ZERO. CHARGING PARTITIONS BY ACCOUNT, TOTALLY. That is why the 25 maker BUYs at the same 0.9900 in the same block buckets paid nothing: OTHER CLASS, not other price. Price was never the variable."
   r404_THE_TIERS_ARE_TWO_AND_NO_ADDRESS_SPANS_THEM: "Computed from each leg's own fee_cents_per_share divided by min(p, 1-p): SEVEN legs at 9.9 per cent and THREE at 49.5 per cent, and no address appears in both tiers -- the tier is a property of the account, exactly like the charging itself. A NOTE ON MY OWN WORKING: my first pass rounded the rate to three decimals and reported 0x2277c18f as spanning tiers. It does not. The 9.892, 9.899 and 9.900 are one tier seen through integer-cent fee amounts, and the spread is rounding noise. I caught it before filing, which is the only reason it is a note and not a correction."
@@ -28556,6 +28583,38 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r405_I_MEASURED_THE_TAPE_MYSELF_AND_IT_REPRODUCES_EXACTLY:
+    prov: CHECKED
+    artifact: data/pm_5min/tier1/trades
+    said: "globbed day=2026-09-0{7,8,9}/coin=*/distiller=*/part-*.parquet, read the two fee columns with pandas, and counted value frequencies and nulls across all 21 files."
+  r405_THE_VENUE_SIDE_FEE_OBSERVATION_DOES_NOT_EXIST:
+    prov: CHECKED
+    artifact: data/pm_5min/tier1/trades
+    said: "the status value is the literal string UNPOPULATED_WS_ZERO on every one of the 2,046,973 rows, and it sits in a column named fee_source_status beside fee_rate_bps_raw."
+  r405_SO_THE_REVERSAL_HAS_A_SECOND_AND_STRONGER_REASON:
+    prov: CHECKED
+    artifact: data/pm_5min/tier1/trades
+    said: "the two reasons rest on different artifacts -- the account partition in the onchain audit, and the status column in the tier1 trades tape -- and neither depends on the other."
+  r405_THE_DECLARATION_ON_DISK_STILL_CARRIES_THE_QUALIFIED_ZERO:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/da_market_facts_v1.json
+    said: "read the declaration in wt-de2: maker_fee_bps 0, maker_fee_residual with n_charged 10 of 1056 and implied_rate_median 0.099, and established.maker_fee_rule True."
+  r405_AND_THE_DECLARATION_CONTRADICTS_ITSELF_IN_TWO_PLACES:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/da_market_facts_v1.json
+    said: "walked the declaration to leaves: maker_fee_rule_evidence.established False, maker_fee_rule_evidence.fee_rule None, maker_fee_rule_evidence.status the ESTABLISHED_ZERO string, and established.maker_fee_rule True."
+  r405_AND_ITS_OWN_EVIDENCE_BLOCK_CITES_THE_UNPOPULATED_FIELD_AS_THE_VENUES_RATE:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/da_market_facts_v1.json
+    said: "read per_source[2] in full: source, n_files 96, n_messages 6169909, n_trade_events 76617, fee_rate_bps_distribution.0 76617, and its establishes clause naming it the venue's own per-trade fee rate."
+  r405_DEs_MEDIAN_IS_BLIND_TO_THE_UPPER_TIER_BY_CONSTRUCTION_and_I_computed_the_margin:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_onchain_fee_audit__20260905T155346Z.json
+    said: "computed each leg's implied rate as fee_cents_per_share / (min(p,1-p)*100), sorted them, took the median, mean and max, and counted how many upper-tier values would be needed to reach the fifth order statistic."
+  r405_THE_SAMPLE_NOT_POPULATION_LIMIT_KILLS_THE_INFERENCE_THE_ZERO_RESTED_ON:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_onchain_fee_audit__20260905T155346Z.json
+    said: "read the three-item limits list and enumerated every top-level key; the three maker_charged_* structures are the only address-bearing fields and none covers the zero side, which I also established independently at round 404."
   r404_THE_FEE_RULING_IS_REVERSED_and_it_goes_in_as_a_REVERSAL:
     prov: CHECKED
     artifact: data/pm_5min/derived/p003_da_onchain_fee_audit__20260905T155346Z.json

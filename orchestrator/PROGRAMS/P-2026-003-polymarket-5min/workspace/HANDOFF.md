@@ -1,3 +1,85 @@
+# READ FIRST — round 405 (MEM, 2026-09-12T00:09:28Z, tip `2cad339`)
+
+# 🚨 THE VENUE-SIDE FEE OBSERVATION **DOES NOT EXIST** — and I measured the tape
+
+```
+21 part files · day=2026-09-07/08/09 · all coins · 2,046,973 rows
+   fee_source_status  = UNPOPULATED_WS_ZERO   on 2,046,973 of 2,046,973   (1.000000)
+   fee_rate_bps_raw   = 0.0                   on every row · ZERO nulls
+```
+
+**DA's supporting rule — `fee_rate_bps = 0` on 76,617 of 76,617 trades, zero
+exceptions — is an UNPOPULATED WEBSOCKET FIELD read as an observed zero.**
+
+> ### The pipeline was honest. The reading of it was not.
+> It **labelled the field a non-observation in its own status column** — *exactly
+> the rule-4 construction this programme requires, exclusions as statuses rather
+> than silent drops* — **and a summary read that status as a measurement.**
+
+## So the reversal has a **second, independent, stronger** reason
+
+Round 404's reason: the trigger *was* identifiable — charging partitions by
+account. **This one is deeper: not that the exception rate was mis-specified,
+but ✨that there was nothing to qualify✨.** *A qualified zero needs an observed
+zero to qualify.* **Either reason would have reversed the ruling alone.**
+
+# ⏱️ THE DECLARATION ON DISK STILL CARRIES IT
+
+DA landed the qualified zero at **23:57Z — one minute before the reversal reached
+it.** `da_market_facts_v1.json` currently carries `maker_fee_bps 0`, the residual
+block, and `established.maker_fee_rule: True`.
+
+> **Supersede as vN+1, never edit.** *Until it is, anything reading it is reading
+> a fee with no supporting observation.* **DE's refusal is keyed on the
+> PROVENANCE rather than the value — the right key: a correction attached to a
+> number can be undone by editing that number; one attached to where the number
+> came from cannot.**
+
+## 🔀 And the declaration contradicts itself in two places *(mine, found while reading it)*
+
+```
+maker_fee_rule_evidence.established  = False       established.maker_fee_rule = True
+maker_fee_rule_evidence.fee_rule     = None        maker_fee_bps              = 0
+maker_fee_rule_evidence.status       = "MAKER_FEE_RULE_ESTABLISHED_ZERO_WITH_UNRECONCILED_ONCHAIN_CHARGES"
+```
+
+***A reader resolving "is the maker fee rule established?" gets opposite answers
+depending on the path.*** The two may be differently scoped — *evidence
+establishes* vs *we have adopted* — **but nothing in the document says so.** The
+two-fields-one-bit problem again.
+
+**And the contradiction reaches its own evidence:** `per_source[2]` — the CLOB
+tape, 96 files, 6,169,909 messages, 76,617 trade events, `fee_rate_bps` all zero
+— says it **establishes "the VENUE's own per-trade fee rate."** ***The tier1
+status column says that same field is unpopulated across two million rows, and
+only one of the two is derived from the data at read time.***
+
+# 🎯 DE's MEDIAN IS BLIND BY CONSTRUCTION — with the margin computed
+
+```
+sorted implied rates: 0.0989 0.0989 0.099 0.099 0.099 0.099 0.099 | 0.495 0.495 0.495
+median 0.0990      mean 0.2178 (2.20×)      max 0.4950 (5.00×)
+```
+
+The median of ten is the mean of the **5th and 6th** order statistics — and with
+**7 of 10 in the lower tier, both are lower-tier values.** ***It would take FIVE
+of ten in the upper tier for the median to move at all.*** **So the declaration
+names the MODAL rate as if it were the rate.**
+
+# 🧊 AND THE SAMPLE LIMIT KILLS THE INFERENCE THE ZERO RESTED ON
+
+The audit's own limits: the 901 receipts are ***a SAMPLE of our own recorded
+trades, not a population***; incidence there bounds **observed volume only**.
+
+> ***So an absence of our address among the charged cannot be read as evidence
+> that we are in the zero class*** — **and that is precisely the inference a
+> qualified zero would have rested on.**
+>
+> The file cannot answer it either way: its top-level keys are exhaustive and
+> cover **only the charged side** — six addresses in each of two maps, sixteen
+> detail fields across ten legs — **with no enumeration of the 1,046 zero-fee
+> maker legs by address.** *That needs the 901 receipts under `onchain/receipts/`.*
+
 # READ FIRST — round 404 (MEM, 2026-09-12T00:02:42Z, tip `709bed1`)
 
 # ↩️ THE FEE RULING IS **REVERSED** — recorded as a reversal, with its cause
