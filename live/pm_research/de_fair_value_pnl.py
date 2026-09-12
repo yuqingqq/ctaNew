@@ -48,45 +48,56 @@ FEE_NOT_DECLARED = "MAKER_FEE_IS_NOT_DECLARED"
 #: and zero is the value most likely to be supplied by omission, so the
 #: rule is required for every value, not only for zero.
 FEE_RULE_NOT_DECLARED = "FEE_RULE_NOT_DECLARED"
-#: A RULE IS NOT ENOUGH: the rule must rest on an OBSERVATION, and the
-#: tape says in its own status column when it does not. `fee_rate_bps_raw`
-#: sits beside `fee_source_status`, which reads UNPOPULATED_WS_ZERO on
-#: 2,046,973 of 2,046,973 rows across 09-07..09-09, all coins, with
-#: fee_rate_bps_raw = 0.0 and ZERO nulls. A venue-side "zero on every
-#: trade, no exceptions" read off that column is an UNPOPULATED WEBSOCKET
-#: FIELD reported as an observed zero. So a declared fee carries the
-#: STATUS of the observation supporting it, and a fee whose supporting
-#: observation is a NON-OBSERVATION refuses by its own name -- separately
-#: from a missing rule and from a genuine qualified zero.
-FEE_STATUS_NOT_DECLARED = "FEE_OBSERVATION_STATUS_NOT_DECLARED"
-FEE_UNPOPULATED = "FEE_RULE_RESTS_ON_UNPOPULATED_FIELD"
-FEE_STATUS_UNKNOWN = "FEE_OBSERVATION_STATUS_NOT_RECOGNISED"
+#: A RULE IS NOT ENOUGH, AND NEITHER IS A STATUS STRING. What
+#: disqualifies a fee source is not that a field was absent -- the
+#: websocket field is PRESENT: `"fee_rate_bps": "0"` appears in 10,392 of
+#: 10,392 `last_trade_price` events across 25 randomly sampled raw files,
+#: absent in ZERO, always the string "0". The status that reads
+#: UNPOPULATED_WS_ZERO is set at tier1_pipeline.py:1221-1223 as
+#: `UNPOPULATED_WS_ZERO if fee_raw == 0 else OBSERVED_NONZERO` -- a pure
+#: function of the VALUE, carrying no information about populated-ness
+#: while printing the word UNPOPULATED. Keying a refusal on that string
+#: is keying it on a mislabel, and a relabelling would undo it.
+#:
+#: THE PROPERTY THAT MATTERS IS DISCRIMINATION. The venue reports zero
+#: INCLUDING for the six addresses the chain demonstrably charged, each
+#: on 100% of its maker legs. A source that reports zero where the chain
+#: took 9.9% or 49.5% has no discriminating power, and that -- not
+#: absence -- is why it cannot support a fee rule. So a fee source
+#: qualifies only by being DRIVEN on both classes: it must report a
+#: charge for every known-charged address and none for the uncharged
+#: controls. That test survives relabelling; a string key does not.
+FEE_SOURCE_NOT_PROBEABLE = "FEE_SOURCE_NOT_PROBEABLE"
+FEE_SOURCE_NOT_DISCRIMINATING = (
+    "FEE_SOURCE_CANNOT_DISTINGUISH_CHARGED_FROM_UNCHARGED")
+FEE_SOURCE_FALSE_POSITIVE = "FEE_SOURCE_REPORTS_CHARGES_ON_UNCHARGED_LEGS"
+FEE_SOURCE_NO_CONTROL = "FEE_SOURCE_PROBE_HAS_NO_UNCHARGED_CONTROL"
 
-#: The tape's own vocabulary, in rule 4's form: a status, never a silent
-#: zero. An UNRECOGNISED status is refused rather than assumed to be an
-#: observation -- there is no default-pass branch here.
-OBSERVED_STATUSES = {
-    "OBSERVED", "POPULATED", "OBSERVED_POPULATED", "VENUE_REPORTED",
-    "PUBLISHED_SCHEDULE", "ONCHAIN_RECEIPT",
+#: THE FALSIFIER, AND IT IS DATA: six addresses the chain charged, each
+#: on 100% of its maker legs. Any source claiming to carry the fee must
+#: return a charge for all six or it is not measuring the fee.
+KNOWN_CHARGED_ADDRESSES = (
+    "0x0fd0ebb1", "0x18b0b710", "0x2277c18f",
+    "0x8d009282", "0xb3b0780f", "0xbdf22122",
+)
+
+#: The websocket field, as measured -- populated, constant, and blind.
+WS_FEE_FIELD = {
+    "field": "fee_rate_bps",
+    "present_in": 10392, "of_events": 10392, "absent_in": 0,
+    "event": "last_trade_price", "files_sampled": 25,
+    "value_always": "0",
+    "status_derivation": "tier1_pipeline.py:1221-1223 -- "
+                         "UNPOPULATED_WS_ZERO if fee_raw == 0 else "
+                         "OBSERVED_NONZERO",
+    "what_is_true":
+        "the field is POPULATED and NON-DISCRIMINATING: it reports zero "
+        "including for the six addresses the chain charged, so it is an "
+        "observation of a constant",
+    "what_is_not_true":
+        "that it was never an observation, or that it was absent",
 }
-NON_OBSERVATION_STATUSES = {
-    "UNPOPULATED_WS_ZERO", "UNPOPULATED", "NOT_OBSERVED", "ABSENT",
-    "DEFAULTED", "SYNTHETIC_ZERO", "MISSING", "NOT_POPULATED",
-}
-#: What the measurement was, carried so the refusal names something
-#: specific rather than a suspicion.
-UNPOPULATED_MEASUREMENT = {
-    "column": "fee_rate_bps_raw",
-    "status_column": "fee_source_status",
-    "status": "UNPOPULATED_WS_ZERO",
-    "rows": 2046973, "of_rows": 2046973,
-    "days": "09-07..09-09", "coins": "all", "nulls": 0,
-    "value_on_every_row": 0.0,
-    "what_it_means":
-        "the venue-side zero is an UNPOPULATED WEBSOCKET FIELD read as an "
-        "observed zero; there was never a venue-side fee observation to "
-        "qualify",
-}
+
 NO_SETTLEMENT = "TOKEN_HAS_NO_OFFICIAL_SETTLEMENT"
 EARLY_FILL = "FILL_BEFORE_ITS_ORDER_WAS_EFFECTIVE"
 NOT_EVALUABLE = "NOT_EVALUABLE_FOR_EDGE"
@@ -112,7 +123,8 @@ class Fill:
         return asdict(self)
 
 
-def declared_fee(decl_dir=None) -> dict:
+def declared_fee(decl_dir=None, *, source=None,
+                 uncharged_controls=()) -> dict:
     """THE MAKER FEE, from a declaration, or a refusal.
 
     §9: "the verified maker fee applicable to these markets. A zero fee is
@@ -140,57 +152,93 @@ def declared_fee(decl_dir=None) -> dict:
             f"receipt identifies that rule -- and zero is precisely the "
             f"value that arrives by omission, so a number without a rule "
             f"is not a declared fee.")
-    # AND THE RULE MUST REST ON AN OBSERVATION. Checked after the rule so
-    # a bare zero still refuses FEE_RULE_NOT_DECLARED, unchanged.
-    obs = classify_fee_observation(_fee_status(decl_dir, got["declared_by"]),
-                                   declared_by=got["declared_by"])
-    return dict(got, rule=rule, observation_status=obs["status"],
-                observation=obs)
+    # AND THE SOURCE MUST DISCRIMINATE. Driven after the rule, so a bare
+    # zero still refuses FEE_RULE_NOT_DECLARED, unchanged. The status
+    # string beside the fee is recorded as metadata and qualifies
+    # NOTHING: it is a pure function of the value.
+    probe = probe_fee_source(source, uncharged=uncharged_controls,
+                             name=got["declared_by"])
+    return dict(got, rule=rule,
+                recorded_status_not_load_bearing=_fee_status(
+                    decl_dir, got["declared_by"]),
+                source_probe=probe)
 
 
-def classify_fee_observation(status, *, declared_by: str = "") -> dict:
-    """THE STATUS OF THE OBSERVATION A FEE RESTS ON.
+def probe_fee_source(source, *, charged=KNOWN_CHARGED_ADDRESSES,
+                     uncharged=(), name: str = "") -> dict:
+    """DRIVE the source on both classes. Nothing here reads a word.
 
-    Three outcomes, and none of them is a silent pass: an observation
-    proceeds, a NON-OBSERVATION refuses by its own name, and a status
-    this file does not recognise refuses rather than being assumed
-    observed.
+    `source` is a callable address -> fee (any non-negative number; 0
+    means "this source says nothing was charged"). It is driven on every
+    known-charged address and on the uncharged controls, and it qualifies
+    only if it separates them.
     """
-    where = f" in {declared_by}" if declared_by else ""
-    if status is None or not str(status).strip():
+    where = f" ({name})" if name else ""
+    if not callable(source):
         raise PnLRefused(
-            f"REFUSED {FEE_STATUS_NOT_DECLARED}: a fee{where} with no "
-            f"status for the observation supporting it. A rule naming a "
-            f"column is not the column being populated -- and the "
-            f"difference between those two is the difference between a "
-            f"measured zero and an unpopulated field.")
-    key = str(status).strip().upper()
-    if key in NON_OBSERVATION_STATUSES:
+            f"REFUSED {FEE_SOURCE_NOT_PROBEABLE}{where}: a fee source "
+            f"that cannot be DRIVEN cannot be shown to discriminate, and "
+            f"a status string is a claim about a source, not a "
+            f"demonstration by it. Supply a reader this file can call on "
+            f"an address.")
+    if not uncharged:
         raise PnLRefused(
-            f"REFUSED {FEE_UNPOPULATED}: the fee{where} rests on "
-            f"{key}. {UNPOPULATED_MEASUREMENT['status_column']} reads "
-            f"{UNPOPULATED_MEASUREMENT['status']} on "
-            f"{UNPOPULATED_MEASUREMENT['rows']:,} of "
-            f"{UNPOPULATED_MEASUREMENT['of_rows']:,} rows "
-            f"({UNPOPULATED_MEASUREMENT['days']}, "
-            f"{UNPOPULATED_MEASUREMENT['coins']} coins) with "
-            f"{UNPOPULATED_MEASUREMENT['column']} = 0.0 and "
-            f"{UNPOPULATED_MEASUREMENT['nulls']} nulls. "
-            f"{UNPOPULATED_MEASUREMENT['what_it_means']}. This is NOT a "
-            f"qualified zero and NOT a missing declaration: it is a "
-            f"non-observation, and a value cannot be edited back into an "
-            f"observation.")
-    if key not in OBSERVED_STATUSES:
+            f"REFUSED {FEE_SOURCE_NO_CONTROL}{where}: the probe was given "
+            f"{len(charged)} known-charged addresses and NO uncharged "
+            f"control. A source that returns a charge for everyone "
+            f"separates nothing, and without the other class the probe "
+            f"cannot tell that apart from discrimination.")
+
+    def read(addr):
+        try:
+            v = source(addr)
+        except Exception as exc:                            # noqa: BLE001
+            raise PnLRefused(
+                f"REFUSED {FEE_SOURCE_NOT_PROBEABLE}{where}: the source "
+                f"raised on {addr}: {exc!r}.") from None
+        try:
+            return float(v or 0.0)
+        except (TypeError, ValueError):
+            raise PnLRefused(
+                f"REFUSED {FEE_SOURCE_NOT_PROBEABLE}{where}: the source "
+                f"returned {v!r} for {addr}, which is not a fee.") from None
+
+    charged_reads = {a: read(a) for a in charged}
+    control_reads = {a: read(a) for a in uncharged}
+    missed = sorted(a for a, v in charged_reads.items() if v == 0.0)
+    false_pos = sorted(a for a, v in control_reads.items() if v != 0.0)
+    if missed:
         raise PnLRefused(
-            f"REFUSED {FEE_STATUS_UNKNOWN}: {key!r}{where} is neither "
-            f"{sorted(OBSERVED_STATUSES)} nor "
-            f"{sorted(NON_OBSERVATION_STATUSES)}. An unrecognised status "
-            f"is not assumed to be an observation.")
-    return {"status": key, "is_an_observation": True,
-            "why_the_status_is_required":
-                "a fee is only as real as the observation under it, and "
-                "the tape reports that as a STATUS rather than as a "
-                "silent zero"}
+            f"REFUSED {FEE_SOURCE_NOT_DISCRIMINATING}{where}: the source "
+            f"reports NO charge for {len(missed)} of {len(charged_reads)} "
+            f"addresses the chain demonstrably charged, each on 100% of "
+            f"its maker legs: {missed}. A source that reports zero where "
+            f"the chain took 9.9% or 49.5% has no discriminating power. "
+            f"This is not absence -- {WS_FEE_FIELD['field']} is present "
+            f"in {WS_FEE_FIELD['present_in']:,} of "
+            f"{WS_FEE_FIELD['of_events']:,} {WS_FEE_FIELD['event']} "
+            f"events and absent in {WS_FEE_FIELD['absent_in']} -- it is "
+            f"an observation of a CONSTANT, and a constant cannot support "
+            f"a fee rule.")
+    if false_pos:
+        raise PnLRefused(
+            f"REFUSED {FEE_SOURCE_FALSE_POSITIVE}{where}: the source "
+            f"reports a charge on {len(false_pos)} uncharged control(s) "
+            f"{false_pos}. Separating both ways is the whole property; a "
+            f"source that charges everyone discriminates no better than "
+            f"one that charges no one.")
+    return {"qualifies": True, "source_name": name,
+            "n_charged_probed": len(charged_reads),
+            "n_charged_detected": len(charged_reads),
+            "n_uncharged_probed": len(control_reads),
+            "charged_reads": charged_reads,
+            "control_reads": control_reads,
+            "discriminates_both_ways": True,
+            "why_this_and_not_a_status":
+                "the disqualifying property is DISCRIMINATION, not "
+                "presence; a status string is a label and relabelling "
+                "would undo a check keyed on it, while the six charged "
+                "addresses are data"}
 
 
 def _fee_status(decl_dir, filename: str):
@@ -416,78 +464,113 @@ def falsify() -> int:
         D = Path(td)
         (D / "fee.json").write_text(json.dumps(
             {"market": {"maker_fee": 0.0},
-             "maker_fee_rule": "fixture: PM maker orders pay no fee under "
-                               "the account tier recorded in the receipt",
-             "fee_observation_status": "OBSERVED_POPULATED"}))
-        fee = declared_fee(D)
-        ck("a declaration carrying a RULE AND AN OBSERVATION proceeds, "
-           "and both are RECORDED in the output",
-           fee["value"] == 0.0 and fee["declared_by"] == "fee.json"
-           and fee["rule"].startswith("fixture: PM maker orders")
-           and fee["observation_status"] == "OBSERVED_POPULATED",
-           f"{fee['observation_status']}  {fee['rule'][:40]}")
-
-        # THE CORRECTION, AS A PREDICATE ON PROVENANCE. A later edit to
-        # the VALUE cannot undo it: the code demands the status.
-        unpop = Path(str(D) + "_unpopulated")
-        unpop.mkdir(exist_ok=True)
-        (unpop / "fee.json").write_text(json.dumps(
-            {"maker_fee": 0.0,
-             "maker_fee_rule": "ORDER-LEVEL ZERO from the venue's own "
-                               "field: fee_rate_bps is 0 on all 76,617 "
-                               "observed trades, zero exceptions",
+             "maker_fee_rule": "fixture: per-leg onchain receipts, which "
+                               "carry the charge where it happened",
              "fee_source_status": "UNPOPULATED_WS_ZERO"}))
+
+        # THE TWO SOURCE SHAPES, AS CALLABLES THIS CODE DRIVES.
+        CONTROLS = ("0xc0ffee01", "0xc0ffee02", "0xc0ffee03")
+
+        def ws_source(addr):
+            """The websocket field: POPULATED, constant, blind. It
+            reports zero for the six the chain charged as readily as for
+            anyone else."""
+            return 0.0
+
+        def receipt_source(addr):
+            """Per-leg onchain receipts: they carry the charge where it
+            happened."""
+            return 0.099 if addr in KNOWN_CHARGED_ADDRESSES else 0.0
+
+        def charges_everyone(addr):
+            return 0.099
+
+        def misses_one(addr):
+            return (0.0 if addr == KNOWN_CHARGED_ADDRESSES[3]
+                    else receipt_source(addr))
+
+        fee = declared_fee(D, source=receipt_source,
+                           uncharged_controls=CONTROLS)
+        ck("a DISCRIMINATING source proceeds -- driven, not read",
+           fee["value"] == 0.0 and fee["declared_by"] == "fee.json"
+           and fee["source_probe"]["n_charged_detected"] == 6
+           and fee["source_probe"]["n_uncharged_probed"] == 3,
+           f"6/6 charged detected, {len(CONTROLS)} controls clean")
+        ck("  and the STATUS STRING beside it is recorded, load-bearing "
+           "for NOTHING",
+           fee["recorded_status_not_load_bearing"] == "UNPOPULATED_WS_ZERO"
+           and fee["source_probe"]["qualifies"] is True,
+           "the same declaration passes with the word UNPOPULATED on it")
         try:
-            declared_fee(unpop)
-            ck("a fee whose supporting observation is UNPOPULATED_WS_ZERO "
-               "REFUSES -- and it is not a qualified zero", False)
+            declared_fee(D, source=ws_source, uncharged_controls=CONTROLS)
+            ck("THE FALSIFIER: a source blind to the six charged "
+               "addresses REFUSES", False)
         except PnLRefused as exc:
-            ck("a fee whose supporting observation is UNPOPULATED_WS_ZERO "
-               "REFUSES -- and it is not a qualified zero",
-               FEE_UNPOPULATED in str(exc)
-               and FEE_RULE_NOT_DECLARED not in str(exc)
-               and "2,046,973 of 2,046,973" in str(exc),
-               "the rule reads as a measurement; the status says it is "
-               "an unpopulated field")
-        nostatus = Path(str(D) + "_nostatus")
-        nostatus.mkdir(exist_ok=True)
-        (nostatus / "fee.json").write_text(json.dumps(
-            {"maker_fee": 0.0, "maker_fee_rule": "a rule, and no status"}))
+            ck("THE FALSIFIER: a source blind to the six charged "
+               "addresses REFUSES",
+               FEE_SOURCE_NOT_DISCRIMINATING in str(exc)
+               and all(a in str(exc) for a in KNOWN_CHARGED_ADDRESSES),
+               "names all six")
         try:
-            declared_fee(nostatus)
-            ck("a RULE with no observation status REFUSES by its own "
-               "name", False)
+            declared_fee(D, source=ws_source, uncharged_controls=CONTROLS)
         except PnLRefused as exc:
-            ck("a RULE with no observation status REFUSES by its own "
-               "name", FEE_STATUS_NOT_DECLARED in str(exc))
-        unknown = Path(str(D) + "_unknown")
-        unknown.mkdir(exist_ok=True)
-        (unknown / "fee.json").write_text(json.dumps(
-            {"maker_fee": 0.0, "maker_fee_rule": "a rule",
-             "fee_observation_status": "PROBABLY_FINE"}))
+            ck("  and it refuses for NON-DISCRIMINATION, never for "
+               "absence -- the field is present in 10,392 of 10,392",
+               "10,392 of 10,392" in str(exc)
+               and "observation of a CONSTANT" in str(exc))
         try:
-            declared_fee(unknown)
-            ck("an UNRECOGNISED status refuses -- no default-pass branch",
-               False)
+            declared_fee(D, source=misses_one, uncharged_controls=CONTROLS)
+            ck("a source that misses ONE of the six still refuses, naming "
+               "it", False)
         except PnLRefused as exc:
-            ck("an UNRECOGNISED status refuses -- no default-pass branch",
-               FEE_STATUS_UNKNOWN in str(exc))
-        ck("the three refusals are DISTINGUISHABLE names",
-           len({FEE_UNPOPULATED, FEE_RULE_NOT_DECLARED,
-                FEE_STATUS_NOT_DECLARED, FEE_STATUS_UNKNOWN,
-                FEE_NOT_DECLARED}) == 5)
+            ck("a source that misses ONE of the six still refuses, naming "
+               "it",
+               FEE_SOURCE_NOT_DISCRIMINATING in str(exc)
+               and KNOWN_CHARGED_ADDRESSES[3] in str(exc)
+               and "1 of 6" in str(exc))
+        try:
+            declared_fee(D, source=charges_everyone,
+                         uncharged_controls=CONTROLS)
+            ck("a source that charges EVERYONE refuses -- separating both "
+               "ways is the property", False)
+        except PnLRefused as exc:
+            ck("a source that charges EVERYONE refuses -- separating both "
+               "ways is the property", FEE_SOURCE_FALSE_POSITIVE in str(exc))
+        try:
+            declared_fee(D, source=receipt_source)
+            ck("a probe with NO uncharged control refuses", False)
+        except PnLRefused as exc:
+            ck("a probe with NO uncharged control refuses",
+               FEE_SOURCE_NO_CONTROL in str(exc))
+        try:
+            declared_fee(D, source="OBSERVED_POPULATED",
+                         uncharged_controls=CONTROLS)
+            ck("a STATUS STRING in place of a source refuses -- a claim "
+               "is not a demonstration", False)
+        except PnLRefused as exc:
+            ck("a STATUS STRING in place of a source refuses -- a claim "
+               "is not a demonstration", FEE_SOURCE_NOT_PROBEABLE in str(exc))
+        ck("the six charged addresses are the chain's, carried as DATA",
+           KNOWN_CHARGED_ADDRESSES == ("0x0fd0ebb1", "0x18b0b710",
+                                       "0x2277c18f", "0x8d009282",
+                                       "0xb3b0780f", "0xbdf22122"))
+        ck("the refusals are distinguishable names",
+           len({FEE_SOURCE_NOT_DISCRIMINATING, FEE_SOURCE_FALSE_POSITIVE,
+                FEE_SOURCE_NOT_PROBEABLE, FEE_SOURCE_NO_CONTROL,
+                FEE_RULE_NOT_DECLARED, FEE_NOT_DECLARED}) == 6)
         (D / "no_rule.json").write_text(json.dumps({"maker_fee": 0.0}))
         import shutil as _sh
         _only = Path(str(D) + "_onlyvalue")
         _only.mkdir(exist_ok=True)
         (_only / "no_rule.json").write_text(json.dumps({"maker_fee": 0.0}))
         try:
-            declared_fee(_only)
+            declared_fee(_only, source=receipt_source,
+                         uncharged_controls=CONTROLS)
             norule = ""
         except PnLRefused as exc:
             norule = str(exc)
-        ck("  and a fee NUMBER with NO supporting rule REFUSES -- zero is "
-           "the value that arrives by omission",
+        ck("  and a fee NUMBER with NO supporting rule REFUSES -- unchanged, "
+           "and it fires BEFORE the probe",
            FEE_RULE_NOT_DECLARED in norule,
            norule[:58] or "ACCEPTED A NUMBER WITH NO RULE")
     with tempfile.TemporaryDirectory() as td2:
@@ -501,14 +584,17 @@ def falsify() -> int:
            nofee[:60])
     try:
         got = declared_fee()
-        real_fee = f"DECLARED value={got['value']} {got['observation_status']}"
-        real_ok = got["observation_status"] in OBSERVED_STATUSES
+        real_fee = f"DECLARED value={got['value']} probed"
+        real_ok = bool(got["source_probe"]["qualifies"])
     except PnLRefused as exc:
-        head = str(exc).split(":")[0].replace("REFUSED ", "").strip()
+        head = str(exc).split(":")[0].split("(")[0]
+        head = head.replace("REFUSED ", "").strip()
         real_fee = f"REFUSED {head}"
         real_ok = head in (FEE_NOT_DECLARED, FEE_RULE_NOT_DECLARED,
-                           FEE_STATUS_NOT_DECLARED, FEE_UNPOPULATED,
-                           FEE_STATUS_UNKNOWN)
+                           FEE_SOURCE_NOT_PROBEABLE,
+                           FEE_SOURCE_NOT_DISCRIMINATING,
+                           FEE_SOURCE_FALSE_POSITIVE,
+                           FEE_SOURCE_NO_CONTROL)
     ck("  and the REAL declarations are reported as they are",
        real_ok, real_fee[:78])
 

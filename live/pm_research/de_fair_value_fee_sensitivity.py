@@ -1,12 +1,22 @@
 """§9's FEE SENSITIVITY: the qualified zero, carrying its own weight.
 
-DA's ruling declares a QUALIFIED ZERO. The supporting rule exists --
-`fee_rate_bps = 0` at order level on 76,617 of 76,617 CLOB trades, the
-venue's own field -- and the qualification is a residual: 10 of 1,056
-onchain maker legs charged, TRIGGER UNIDENTIFIED. 25 maker BUY legs at
-the same 0.9900, interleaved across the same block buckets, paid ZERO,
-so price alone does not predict the charge and nothing collected
-distinguishes the two groups.
+THE VENUE-SIDE ZERO DOES NOT SUPPORT A FEE RULE, and the reason is
+DISCRIMINATION rather than absence. `fee_rate_bps` IS populated -- it
+appears in 10,392 of 10,392 `last_trade_price` events across 25 randomly
+sampled raw files, absent in zero, always the string "0". It is an
+observation OF A CONSTANT: it reports zero including for the six
+addresses the chain demonstrably charged, each on 100% of its maker
+legs. A source that reports zero where the chain took 9.9% or 49.5%
+separates nothing, and that is what disqualifies it. The status column
+reading UNPOPULATED_WS_ZERO is set as a pure function of the value
+(tier1_pipeline.py:1221-1223) and carries no information about
+populated-ness, so no check here is keyed on that string.
+
+The per-leg onchain RECEIPTS do discriminate -- 1,046 of 1,056 maker
+legs at zero, qualified by the 10 that are not -- so they are the only
+admissible fee source here, and a qualified zero resting on them carries
+a residual whose TRIGGER is UNIDENTIFIED: 25 maker BUY legs at the same
+0.9900, interleaved across the same block buckets, paid ZERO.
 
 TWO THINGS DECIDE WHETHER THIS BOUNDS ANYTHING, and REVIEW 249 measured
 both:
@@ -356,17 +366,20 @@ def fee_provenance(fee: dict) -> dict:
             f"{fee.get('value')!r} with no supporting rule. §9 permits a "
             f"zero fee only when the receipt identifies the rule, and "
             f"zero is precisely the value that arrives by omission.")
-    # AND THE RULE MUST REST ON AN OBSERVATION. Checked AFTER the rule,
-    # so a bare zero still refuses FEE_RULE_NOT_DECLARED unchanged, and
-    # at this seam too -- a fee dict built by hand does not get to skip
-    # the provenance that `declared_fee` demands.
-    obs = PNL.classify_fee_observation(
-        fee.get("observation_status") or fee.get("fee_observation_status"),
-        declared_by=str(fee.get("declared_by", "")))
+    # AND THE SOURCE MUST DISCRIMINATE. Driven AFTER the rule, so a bare
+    # zero still refuses FEE_RULE_NOT_DECLARED unchanged, and driven at
+    # this seam too -- a fee dict built by hand does not get to skip the
+    # probe that `declared_fee` runs. The probe is DRIVEN here rather
+    # than read from a recorded result, because a recorded result is a
+    # claim about a source and the point is a demonstration by it.
+    obs = PNL.probe_fee_source(fee.get("source"),
+                               uncharged=fee.get("uncharged_controls", ()),
+                               name=str(fee.get("declared_by", "")))
     qualified = bool(fee.get("qualification")) or "qualif" in rule.lower()
     return {"value": fee.get("value"),
-            "observation_status": obs["status"],
-            "observation": obs,
+            "source_probe": obs,
+            "recorded_status_not_load_bearing":
+                fee.get("observation_status"),
             "kind": (QUALIFIED_ZERO if qualified and not fee.get("value")
                      else "QUALIFIED" if qualified else UNQUALIFIED),
             "rule": rule,
@@ -636,13 +649,29 @@ def _decl(tmp, *, rate=0.495, modal=0.099, basis=None, settled=None,
     return str(d)
 
 
-#: A QUALIFIED ZERO RESTING ON AN ACTUAL OBSERVATION. The venue-side
-#: "zero on 76,617 of 76,617" is NOT that: `fee_source_status` reads
-#: UNPOPULATED_WS_ZERO on every row, so it was never an observation. This
-#: fixture rests on per-leg onchain receipts instead, which is what an
-#: admissible qualified zero would have to look like.
+#: A QUALIFIED ZERO RESTING ON A DISCRIMINATING SOURCE. The venue-side
+#: "zero on 76,617 of 76,617" is not one: that field is POPULATED and
+#: NON-DISCRIMINATING -- it reports zero for the six addresses the chain
+#: charged too. The per-leg onchain receipts do separate the classes, so
+#: this fixture rests on them, and the probe below is DRIVEN on both.
+CONTROLS = ("0xc0ffee01", "0xc0ffee02", "0xc0ffee03")
+
+
+def _receipt_source(addr):
+    """Per-leg onchain receipts: the charge is recorded where it
+    happened, so the six charged addresses come back nonzero."""
+    return 0.099 if addr in PNL.KNOWN_CHARGED_ADDRESSES else 0.0
+
+
+def _ws_source(addr):
+    """The websocket field: populated, constant, and blind to the six."""
+    return 0.0
+
+
 ZERO = {"value": 0.0, "model": PNL.PER_SHARE,
-        "observation_status": "ONCHAIN_RECEIPT",
+        "source": _receipt_source,
+        "uncharged_controls": CONTROLS,
+        "observation_status": "UNPOPULATED_WS_ZERO",
         "rule": "fixture: 1,046 of 1,056 onchain maker legs settle at zero "
                 "in the receipts themselves -- QUALIFIED by the 10 that "
                 "do not",
@@ -906,28 +935,36 @@ def falsify() -> int:
         fee_provenance({"value": 0.0, "model": PNL.PER_SHARE,
                         "rule": "ORDER-LEVEL ZERO, the venue's own field, "
                                 "0 on all 76,617 trades, zero exceptions",
-                        "observation_status": "UNPOPULATED_WS_ZERO"})
-        ck("a fee resting on an UNPOPULATED field refuses AT THIS SEAM "
-           "too", False)
+                        "source": _ws_source,
+                        "uncharged_controls": CONTROLS})
+        ck("a NON-DISCRIMINATING source refuses AT THIS SEAM too", False)
     except PNL.PnLRefused as exc:
-        ck("a fee resting on an UNPOPULATED field refuses AT THIS SEAM "
-           "too", PNL.FEE_UNPOPULATED in str(exc), str(exc)[9:52])
+        ck("a NON-DISCRIMINATING source refuses AT THIS SEAM too",
+           PNL.FEE_SOURCE_NOT_DISCRIMINATING in str(exc)
+           and all(a in str(exc) for a in PNL.KNOWN_CHARGED_ADDRESSES),
+           "blind to all six charged addresses")
     try:
         fee_provenance({"value": 0.0, "model": PNL.PER_SHARE,
-                        "rule": "a rule and no status"})
-        ck("a rule with NO observation status refuses -- the code demands "
-           "the provenance, not the number", False)
+                        "rule": "a rule and no source"})
+        ck("a rule with NO PROBEABLE source refuses -- the code demands a "
+           "demonstration, not a claim", False)
     except PNL.PnLRefused as exc:
-        ck("a rule with NO observation status refuses -- the code demands "
-           "the provenance, not the number",
-           PNL.FEE_STATUS_NOT_DECLARED in str(exc))
-    ck("a QUALIFIED zero on a REAL observation still proceeds",
-       fee_provenance(ZERO)["observation_status"] == "ONCHAIN_RECEIPT"
+        ck("a rule with NO PROBEABLE source refuses -- the code demands a "
+           "demonstration, not a claim",
+           PNL.FEE_SOURCE_NOT_PROBEABLE in str(exc))
+    ck("a QUALIFIED zero on a DISCRIMINATING source still proceeds",
+       fee_provenance(ZERO)["source_probe"]["n_charged_detected"] == 6
        and fee_provenance(ZERO)["kind"] == QUALIFIED_ZERO)
-    ck("an UNqualified declared fee ON AN OBSERVATION needs no "
+    ck("  and it proceeds with the word UNPOPULATED on it -- the string "
+       "is load-bearing for NOTHING",
+       fee_provenance(ZERO)["recorded_status_not_load_bearing"]
+       == "UNPOPULATED_WS_ZERO",
+       "re-keyed on the property, durable against relabelling")
+    ck("an UNqualified fee on a DISCRIMINATING source needs no "
        "sensitivity",
        fee_provenance({"value": 0.0, "model": PNL.PER_SHARE,
-                       "observation_status": "PUBLISHED_SCHEDULE",
+                       "source": _receipt_source,
+                       "uncharged_controls": CONTROLS,
                        "rule": "flat schedule, published"}
                       )["sensitivity_required"] is False)
     try:
@@ -956,15 +993,15 @@ def falsify() -> int:
         state = f"REFUSED {head}"
         # A NON-OBSERVATION IS ITS OWN OUTCOME, distinguishable from a
         # missing declaration and from a genuine qualified zero.
-        admissible = head in (PNL.FEE_NOT_DECLARED,
-                              PNL.FEE_RULE_NOT_DECLARED,
-                              PNL.FEE_STATUS_NOT_DECLARED,
-                              PNL.FEE_UNPOPULATED,
-                              PNL.FEE_STATUS_UNKNOWN)
+        admissible = head.split("(")[0].strip() in (
+            PNL.FEE_NOT_DECLARED, PNL.FEE_RULE_NOT_DECLARED,
+            PNL.FEE_SOURCE_NOT_PROBEABLE,
+            PNL.FEE_SOURCE_NOT_DISCRIMINATING,
+            PNL.FEE_SOURCE_FALSE_POSITIVE, PNL.FEE_SOURCE_NO_CONTROL)
     except SensitivityRefused as exc:
         state = f"REFUSED {str(exc).split(':')[0]}"
         admissible = PNL.FEE_RULE_NOT_DECLARED in str(exc)
-    ck("the real fee is EITHER a declaration resting on an OBSERVATION "
+    ck("the real fee is EITHER a declaration on a DISCRIMINATING source "
        "or a named refusal", admissible, state)
     try:
         rp = sensitivity_parameters()
