@@ -50,6 +50,11 @@ COINS = ("btc", "eth")
 INSUFFICIENT = "INSUFFICIENT_EVIDENCE"
 CANDIDATE_VISIBLE = "DAY_ELIGIBILITY_SAW_CANDIDATE_OUTPUT"
 BAND_NOT_MET = "FEWER_THAN_TEN_EVALUABLE_DAYS_IN_THE_BAND"
+#: NAMED because the rehearsal found them unnamed: an anonymous refusal
+#: cannot be inventoried, and a run that aborts on one leaves a reader
+#: grepping prose to find out what stopped it.
+NO_SCORED_ACTIONS = "DAY_HAS_NO_SCORED_ACTIONS"
+POPULATION_MOVED = "DAY_POPULATION_MOVED_UNDER_THE_LADDER"
 
 
 class PredictiveRefused(ValueError):
@@ -221,8 +226,9 @@ def futility(increments_so_far, *, g_declared: int = G_REQUIRED,
     remaining = g_declared - len(seen)
     if remaining < 0:
         raise PredictiveRefused(
-            f"REFUSED: {len(seen)} days scored against a declared "
-            f"G={g_declared}; the population moved and the ladder with it.")
+            f"REFUSED {POPULATION_MOVED}: {len(seen)} days scored against "
+            f"a declared G={g_declared}; the population moved and the "
+            f"ladder with it.")
     # THE BEST CASE FROM HERE: every remaining day positive.
     best = exact_sign_p([1.0] * (g_declared - n_bad) + [-1.0] * n_bad,
                         sided=sided)
@@ -283,8 +289,8 @@ def day_log_loss(rows) -> dict:
         n += 1
     if not n:
         raise PredictiveRefused(
-            "REFUSED: a day with no scored actions has no log loss; an "
-            "empty mean is not zero.")
+            f"REFUSED {NO_SCORED_ACTIONS}: a day with no scored actions "
+            f"has no log loss; an empty mean is not zero.")
     return {"ll": tot / n, "n_actions": n}
 
 

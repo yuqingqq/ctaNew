@@ -55,6 +55,9 @@ INSUFFICIENT = PRED.INSUFFICIENT
 NOT_EVALUABLE = PNL.NOT_EVALUABLE
 WRONG_RESAMPLE_UNIT = "INTERVALS_MUST_RESAMPLE_UTC_DAYS_ONLY"
 DAY_REPLACED = "A_NOT_EVALUABLE_DAY_MAY_NOT_BE_REPLACED"
+#: NAMED because the rehearsal's scan found it anonymous: a refusal with
+#: no name cannot be inventoried before a run that cannot be re-taken.
+PAIR_SPANS_TWO_DAYS = "A_PAIR_SPANS_TWO_PORTFOLIO_DAYS"
 
 #: The activity ratio below which an edge improvement is attributed to
 #: trading less rather than to pricing better. Declared here, not tuned.
@@ -77,7 +80,8 @@ def day_increment(candidate: DayLeg, identity: DayLeg) -> dict:
     """One day's two increments, with the legs reported separately."""
     if candidate.day != identity.day:
         raise EconomicRefused(
-            f"REFUSED: a pair spans {identity.day} and {candidate.day}; "
+            f"REFUSED {PAIR_SPANS_TWO_DAYS}: a pair spans "
+            f"{identity.day} and {candidate.day}; "
             f"the increment is per PORTFOLIO DAY and a pair across two "
             f"days is not one.")
     einc = PNL.edge_increment(candidate.edge, identity.edge)
@@ -191,7 +195,8 @@ def evaluate(name: str, rows, *, holm_pnl: dict, holm_edge: dict,
     rows = list(rows)
     if len(rows) > g_declared:
         raise EconomicRefused(
-            f"REFUSED: {len(rows)} portfolio days against a declared "
+            f"REFUSED {DAY_REPLACED}: {len(rows)} portfolio days "
+            f"against a declared "
             f"G={g_declared}. The population is fixed; a NOT_EVALUABLE "
             f"day does not permit replacing that day ({DAY_REPLACED}).")
     pnl_inc = [r["delta_pnl"] for r in rows]

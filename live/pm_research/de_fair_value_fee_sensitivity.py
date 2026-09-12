@@ -555,22 +555,30 @@ def run(name: str, pairs, *, declared_fee: dict, latency_ms: float,
     modal = None if mf is None else _verdict(
         name, _arm(list(pairs), fee_candidate=mf, fee_identity=mf,
                    latency_ms=latency_ms), g_declared=g_declared)
+    # THE DAY CHECK RUNS FIRST, and that ordering is load-bearing: the
+    # fills digest INCLUDES the day, so a day-population difference also
+    # moves the digest. Checking fills first made WRONG_DAYS unreachable
+    # -- a refusal that can never fire is not a check (found by the
+    # end-to-end rehearsal's inventory, which drives every name).
+    if worst["days"] != primary["days"]:
+        raise SensitivityRefused(
+            f"REFUSED {WRONG_DAYS}: {primary['days']} against "
+            f"{worst['days']}. The sensitivity is the same days priced "
+            f"differently, or it is a different experiment.")
     if worst["fills_sha256"] != primary["fills_sha256"]:
         raise SensitivityRefused(
             f"REFUSED {WRONG_FILLS}: the primary consumed "
             f"{primary['fills_sha256']} and the sensitivity "
             f"{worst['fills_sha256']}. A worst case computed on other "
             f"fills bounds another population's fee.")
-    if worst["days"] != primary["days"]:
-        raise SensitivityRefused(
-            f"REFUSED {WRONG_DAYS}: {primary['days']} against "
-            f"{worst['days']}. The sensitivity is the same days priced "
-            f"differently, or it is a different experiment.")
     for arm, label in ((modal, "modal"),):
         if arm is None:
             continue
-        if (arm["fills_sha256"] != primary["fills_sha256"]
-                or arm["days"] != primary["days"]):
+        if arm["days"] != primary["days"]:
+            raise SensitivityRefused(
+                f"REFUSED {WRONG_DAYS}: the {label} arm priced "
+                f"{arm['days']} against the primary's {primary['days']}.")
+        if arm["fills_sha256"] != primary["fills_sha256"]:
             raise SensitivityRefused(
                 f"REFUSED {WRONG_FILLS}: the {label} arm consumed "
                 f"{arm['fills_sha256']} / {len(arm['days'])} days against "
