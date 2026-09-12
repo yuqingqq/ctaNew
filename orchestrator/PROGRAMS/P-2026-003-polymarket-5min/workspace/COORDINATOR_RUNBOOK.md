@@ -1117,3 +1117,48 @@ green falsifier makes it look done.
 **Standing sweep:** any module whose cells pass must be checked for a production
 call site. Green cells on code nothing runs measure the quality of an unused
 artifact. This is now a property to sweep for lane-wide, not a bug in one file.
+
+
+### §7l.4 — A FALSIFIER PROVES A MODULE *CAN* FIRE; IT SAYS NOTHING ABOUT
+### WHETHER ANYTHING ASKS IT TO (2026-09-12T01:36Z)
+
+REV's rule, adopted lane-wide after §7l.3's single instance turned out to be a
+population. **Two independent properties, and we had been measuring only the
+first.** That is how the anti-amendment guard came out **green at 37/37 with no
+call site anywhere**.
+
+**The sweep, REVIEW 265:**
+
+| | |
+|---|---|
+| lane `.py` modules | 344 |
+| carrying a falsifier (`def falsify`) | 53 |
+| with **no production call site** | **15** |
+
+"No call site" = three negative tests: no other lane `.py` names it; not named
+in any of the 17 lane `.sh` files or launchers; not named in any of the 11
+systemd user units.
+
+**Most orphans are not defects, and the discriminator is what makes the number
+usable:** a module meant to be run by a person and read has no importer *by
+design*. The defect shape is **(raises a named refusal) × (cited in a
+declaration or workspace doc as an enforcement mechanism)** — something in the
+record *expects it to fire*. Three modules sit in that intersection;
+three more raise refusals but are cited nowhere; **nine are audit/report tools
+where no importer is normal**, and one of those (`da_step6_full_pipeline_freeze`)
+is wired through its **output artifact**, which is correct — REV named counting
+it as an orphan as its own false positive.
+
+**When a guard has no site, rule ONE WAY, never split the difference:**
+either it should run and gets a site, **or the declarations citing it OVERSTATE
+it and THEY are the defect.** The second is the *more* serious case: a receipt
+asserting a guard that never runs is paper protection.
+
+**Three implementation clauses:**
+1. every refusal-raising module declares its **call site as a checkable field**;
+2. the sweep is **standing**, and runs at **function granularity** — module
+   granularity would have missed `amendment_is_admissible` entirely, because its
+   module *is* named elsewhere. **The defect that inspired the sweep would not
+   have been caught by it.**
+3. **artifact-mediated wiring counts as a site**, or the sweep false-positives
+   against nine of its own fifteen.
