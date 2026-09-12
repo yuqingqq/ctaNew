@@ -1,0 +1,30 @@
+{
+  "protocol": "P003_DE_ETH_STAGE_COSTS_V1",
+  "what_this_is": "per-stage BUILD COST measurements for the eth day, ingested by DE from BE's run as reported by the coordinator. It is a COST measurement, not a result, and it says nothing about any day's outcome.",
+  "reported_by": "the coordinator, from BE's eth run",
+  "not_measured_by_this_seat": true,
+  "superseded_when": "BE lands its own be_eth_build_cost_v* declaration",
+  "day": "20260905",
+  "DAY_IS_CONSUMED_AND_THIS_IS_NOT_A_FINDING_ABOUT_IT": "09-05 is a consumed day; these are wall-clock and byte costs of BUILDING it. No figure here is an eth RESULT for that day, and nothing downstream may read it as one.",
+  "quantities_do_not_travel_together": "size scales at ~0.66 on both stages, time at 0.27 then 0.45, and the archive-volume ratio is 0.32. Three stable-looking ratios for three different quantities, and the most stable one does not predict runtime. They are carried separately and never collapsed.",
+  "stages": {
+    "fragment": {
+      "eth": {"wall_s": 200, "output_bytes": 364601364, "peak_rss_bytes": null},
+      "btc": {"wall_s": 732, "output_bytes": 545493868, "peak_rss_bytes": null}
+    },
+    "tape": {
+      "eth": {"wall_s": 682, "output_bytes": 588868676, "peak_rss_bytes": null},
+      "btc": {"wall_s": 1530, "output_bytes": 890640737, "peak_rss_bytes": null}
+    },
+    "book": {
+      "eth": {"wall_s": null, "output_bytes": null, "peak_rss_bytes": null},
+      "btc": {"wall_s": null, "output_bytes": null, "peak_rss_bytes": null}
+    }
+  },
+  "archive_volume_ratio_reported": 0.32,
+  "archive_volume_ratio_note": "reported by the coordinator; NOT recomputed by this seat",
+  "btc_comparators_as_of": "2026-09-06",
+  "COMPARATORS_MAY_BE_STALE": "the btc comparators are dated 2026-09-06. If the builder generation has moved, every eth:btc ratio here is APPROXIMATE. BE is confirming.",
+  "peak_rss_is_owed": "peak RSS per stage is not supplied. It matters MORE than wall-clock for the fourteen-night question, because the 12 GB rule decides whether the two coins can overlap in a night or must run serially.",
+  "book_stage": "RUNNING at the time of writing (pid 3669604); it is the last stage and is not measured here."
+}

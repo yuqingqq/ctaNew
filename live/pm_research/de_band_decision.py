@@ -72,6 +72,16 @@ ETH_SECONDS_KEYS = ("eth_book_stage_seconds", "eth_build_seconds",
 #: ASSUMPTIONS, and nothing measured stands behind them.
 PROJECTED_ETH_RATES = (0.95, 0.90)
 UNLABELLED_ETH = "ETH_DEPENDENT_FIGURE_IS_UNLABELLED"
+COLLAPSED_RATIO = "ETH_COST_COLLAPSED_INTO_ONE_RATIO"
+COST_AS_RATE = "A_BUILD_COST_IS_NOT_A_SUCCESS_RATE"
+PARTIAL = "PARTIALLY_MEASURED"
+OWED = "OWED"
+ETH_STAGE_DECL = "de_eth_stage_costs_v*.json"
+#: THE THREE QUANTITIES, kept apart on purpose. The finding is that they
+#: do NOT travel together -- size scales at ~0.66 on both stages, time at
+#: 0.27 then 0.45 -- so a single "eth is X% of btc" figure would erase
+#: the finding it summarises.
+QUANTITIES = ("wall_s", "peak_rss_bytes", "output_bytes")
 PROJECTED = "PROJECTED"
 MEASURED = "MEASURED"
 
@@ -201,6 +211,155 @@ def eth_measurement(decl_dir: Path = None) -> dict:
                 "build success rate are not measured"}
 
 
+def eth_stage_costs(decl_dir: Path = None) -> dict:
+    """THE BUILD COST, PER STAGE, PER QUANTITY -- three series, never one.
+
+    A stage may be measured on one quantity and not another, and a run
+    may have two stages measured and one still running. Both partial
+    states are representable, because both are true right now.
+    """
+    d = Path(decl_dir or (HERE / "declarations"))
+    docs = sorted(d.glob(ETH_STAGE_DECL), reverse=True)
+    if not docs:
+        return {"provenance": PROJECTED, "stages": {},
+                "why": "no per-stage cost declaration has landed"}
+    doc = json.loads(docs[0].read_text())
+    src = docs[0].name
+    stages = {}
+    for stage, legs in (doc.get("stages") or {}).items():
+        row = {}
+        for q in QUANTITIES:
+            e = (legs.get("eth") or {}).get(q)
+            b = (legs.get("btc") or {}).get(q)
+            prov = (MEASURED if e is not None else
+                    OWED if q == "peak_rss_bytes" else PROJECTED)
+            cell = {"eth": M(e, population=f"eth {stage} stage",
+                             criterion=f"measured wall/bytes, {src}",
+                             source=src, provenance=prov) if e is not None
+                    else {"value": None, "provenance": prov,
+                          "population": f"eth {stage} stage",
+                          "criterion": "not supplied"},
+                    "btc": M(b, population=f"btc {stage} stage",
+                             criterion=f"comparator, as_of "
+                                       f"{doc.get('btc_comparators_as_of')}",
+                             source=src, provenance=prov)
+                    if b is not None else
+                    {"value": None, "provenance": prov,
+                     "population": f"btc {stage} stage",
+                     "criterion": "not supplied"}}
+            if e is not None and b:
+                cell["ratio_eth_over_btc"] = M(
+                    e / b, population=f"{stage} stage",
+                    criterion=f"eth/btc on {q} ONLY -- APPROXIMATE, the "
+                              f"btc comparator is as_of "
+                              f"{doc.get('btc_comparators_as_of')}",
+                    source=src, provenance=prov)
+            row[q] = cell
+        stages[stage] = row
+    measured = [st for st, r in stages.items()
+                if r["wall_s"]["eth"].get("value") is not None]
+    prov = (MEASURED if len(measured) == len(stages) else
+            PARTIAL if measured else PROJECTED)
+    return {
+        "provenance": prov,
+        "stages_measured": measured,
+        "stages_not_measured": [st for st in stages if st not in measured],
+        "stages": stages,
+        "THE_QUANTITIES_DO_NOT_TRAVEL_TOGETHER":
+            doc.get("quantities_do_not_travel_together"),
+        "archive_volume_ratio_reported": M(
+            doc.get("archive_volume_ratio_reported"),
+            population="archive volume", criterion="REPORTED by the "
+            "coordinator, not recomputed by this seat", source=src,
+            provenance=MEASURED),
+        "COMPARATORS_MAY_BE_STALE": doc.get("COMPARATORS_MAY_BE_STALE"),
+        "btc_comparators_as_of": doc.get("btc_comparators_as_of"),
+        "peak_rss_is_owed": doc.get("peak_rss_is_owed"),
+        "DAY_IS_CONSUMED_AND_THIS_IS_NOT_A_FINDING_ABOUT_IT":
+            doc.get("DAY_IS_CONSUMED_AND_THIS_IS_NOT_A_FINDING_ABOUT_IT"),
+        "declared_by": src,
+    }
+
+
+def night_budget(costs: dict) -> dict:
+    """WALL-CLOCK ONLY, summed per coin, with the unmeasured stage named."""
+    out, total = {}, {}
+    for coin in ("eth", "btc"):
+        secs, missing = 0.0, []
+        for stage, row in costs.get("stages", {}).items():
+            v = row["wall_s"][coin].get("value")
+            if v is None:
+                missing.append(stage)
+            else:
+                secs += float(v)
+        out[coin] = {"measured_stage_seconds": M(
+            secs, population=f"{coin} day build",
+            criterion="sum of MEASURED stage wall-clock only",
+            source=costs.get("declared_by", "?"),
+            provenance=MEASURED if not missing else PARTIAL),
+            "stages_missing": missing}
+        total[coin] = secs
+    serial = total["eth"] + total["btc"]
+    return {"per_coin": out,
+            "serial_seconds_measured_stages_only": M(
+                serial, population="one night, both coins",
+                criterion="SERIAL sum of measured stages only; the "
+                          "unmeasured stage is not estimated",
+                source=costs.get("declared_by", "?"),
+                provenance=PARTIAL if any(
+                    o["stages_missing"] for o in out.values()) else MEASURED),
+            "IS_NOT_A_TOTAL": "stages that have not finished are absent, "
+                              "not zero and not projected"}
+
+
+def overlap_question(costs: dict) -> dict:
+    """CAN THE TWO COINS SHARE A NIGHT? Unresolved without peak RSS."""
+    peaks = []
+    for stage, row in costs.get("stages", {}).items():
+        for coin in ("eth", "btc"):
+            peaks.append(row["peak_rss_bytes"][coin].get("value"))
+    have = [p for p in peaks if p is not None]
+    return {"resolved": bool(have) and len(have) == len(peaks),
+            "verdict": "UNRESOLVED" if not have else "SEE_PEAKS",
+            "why": "the 12 GB rule decides whether the coins can overlap "
+                   "in a night, and it is decided by PEAK RSS, which is "
+                   "not supplied. Absent it, this is UNRESOLVED -- "
+                   "assuming serial would be an answer nobody measured",
+            "n_peaks_supplied": M(len(have), population="stage x coin",
+                                  criterion="count of supplied peak RSS "
+                                            "figures", source="this audit",
+                                  provenance=MEASURED),
+            "n_peaks_expected": M(len(peaks), population="stage x coin",
+                                  criterion="stages x coins",
+                                  source="this audit",
+                                  provenance=MEASURED)}
+
+
+def assert_no_collapsed_ratio(block: dict) -> int:
+    """NO SINGLE ETH:BTC FIGURE. The whole finding is that the three
+    quantities disagree, and a collapsed ratio would erase it."""
+    flat = json.dumps(block)
+    for bad in ("eth_fraction_of_btc", "eth_vs_btc_ratio",
+                "overall_ratio", "eth_is_x_percent"):
+        if bad in flat:
+            raise DecisionRefused(
+                f"REFUSED {COLLAPSED_RATIO}: the block carries {bad!r}. "
+                f"Size scales at ~0.66 on both stages and time at 0.27 "
+                f"then 0.45 -- one figure for three quantities erases the "
+                f"finding it claims to summarise.")
+    n = 0
+    for stage, row in block.get("stages", {}).items():
+        for q, cell in row.items():
+            if "ratio_eth_over_btc" in cell:
+                crit = cell["ratio_eth_over_btc"]["criterion"]
+                if q not in crit:
+                    raise DecisionRefused(
+                        f"REFUSED {COLLAPSED_RATIO}: a ratio in {stage} "
+                        f"does not name the quantity it is a ratio OF.")
+                n += 1
+    return n
+
+
 def eth_dependent_block(as_of: str, decl_dir: Path = None) -> dict:
     """EVERY ETH-DEPENDENT FIGURE, EACH CARRYING ITS PROVENANCE."""
     eth = eth_measurement(decl_dir)
@@ -246,7 +405,24 @@ def eth_dependent_block(as_of: str, decl_dir: Path = None) -> dict:
                  criterion=f"{C_GATE} -- key {v['key']}",
                  source=v["declared_by"], provenance=MEASURED)
             for k, v in eth["measured"].items()}
+    costs = eth_stage_costs(decl_dir)
     return {"ETH_COST_PROVENANCE": prov,
+            "TWO_SEPARATE_ETH_PARAMETERS": {
+                "day_success_rate": {
+                    "provenance": prov,
+                    "used_for": "the joint rate, the minimum viable daily "
+                                "rate and P(fewer than 10)"},
+                "build_cost": {
+                    "provenance": costs.get("provenance"),
+                    "used_for": "the night budget and the overlap "
+                                "question"},
+                "A_BUILD_COST_IS_NOT_A_SUCCESS_RATE":
+                    "measuring what a build COSTS says nothing about how "
+                    "often it SUCCEEDS, so a measured cost does not move "
+                    "any rate figure on this page"},
+            "BUILD_COST": costs,
+            "NIGHT_BUDGET": night_budget(costs),
+            "CAN_THE_COINS_SHARE_A_NIGHT": overlap_question(costs),
             "eth_parameter": param,
             "rows": rows,
             "recomputes_when_the_measurement_lands": True,
@@ -271,26 +447,40 @@ def assert_eth_labelled(block: dict) -> int:
     return n
 
 
-def eth_provenance_transition(out_dir: Path, current: str,
-                              as_of: str) -> dict:
+def eth_provenance_transition(out_dir: Path, current, as_of: str) -> dict:
     """PROJECTED -> MEASURED IS AN INSTRUMENT CORRECTION, NOT A STATE
     CHANGE, and a reader must be able to tell. The ledger beside the
     artifact is what makes the transition visible at all."""
+    # TWO SERIES, because the two eth parameters move independently: the
+    # build COST can become measured while the success RATE stays
+    # projected, and a single ledger line would hide that.
+    cur = current if isinstance(current, dict) else {"rate": current}
     led = Path(out_dir) / "eth_cost_provenance_ledger.jsonl"
-    prior = None
+    prior = {}
     if led.is_file():
         for line in led.read_text().splitlines():
             try:
-                prior = json.loads(line).get("provenance") or prior
+                rec = json.loads(line)
             except Exception:                               # noqa: BLE001
                 continue
+            for k in cur:
+                if rec.get(k) is not None:
+                    prior[k] = rec[k]
+                elif rec.get("provenance") is not None and k == "rate":
+                    prior[k] = rec["provenance"]
     led.parent.mkdir(parents=True, exist_ok=True)
     with led.open("a") as fh:
-        fh.write(json.dumps({"as_of": as_of, "provenance": current}) + "\n")
-    changed = prior is not None and prior != current
-    return {"prior": prior, "current": current, "changed": changed,
-            "CHANGED_FROM_PROJECTED_TO_MEASURED":
-                changed and prior == PROJECTED and current == MEASURED,
+        fh.write(json.dumps(dict(cur, as_of=as_of)) + "\n")
+    moved = {k: {"prior": prior.get(k), "current": v,
+                 "changed": prior.get(k) is not None and prior[k] != v}
+             for k, v in cur.items()}
+    changed = any(m["changed"] for m in moved.values())
+    return {"series": moved, "changed": changed,
+            "prior": prior.get("rate"), "current": cur.get("rate"),
+            "CHANGED_FROM_PROJECTED_TO_MEASURED": any(
+                m["changed"] and m["prior"] == PROJECTED
+                and m["current"] in (MEASURED, PARTIAL)
+                for m in moved.values()),
             "this_is_an_INSTRUMENT_CORRECTION_not_a_state_change":
                 "the world did not change when the measurement landed; "
                 "what changed is what we know, and a reader must be able "
@@ -616,11 +806,15 @@ def emit(path=None, as_of: str = None) -> dict:
     doc = decision_artifact(as_of)
     n = assert_attributed(doc)
     assert_eth_labelled(doc["ETH_DEPENDENT_FIGURES"])
+    assert_no_collapsed_ratio(doc["ETH_DEPENDENT_FIGURES"]["BUILD_COST"])
     if path:
         doc["ETH_DEPENDENT_FIGURES"]["provenance_transition"] = (
             eth_provenance_transition(
                 Path(path).parent,
-                doc["ETH_DEPENDENT_FIGURES"]["ETH_COST_PROVENANCE"],
+                {"rate": doc["ETH_DEPENDENT_FIGURES"][
+                    "ETH_COST_PROVENANCE"],
+                 "cost": doc["ETH_DEPENDENT_FIGURES"]["BUILD_COST"][
+                     "provenance"]},
                 as_of))
     doc["n_attributed_measures"] = M(
         n, population="this artifact", criterion="assert_attributed walk",
@@ -737,15 +931,85 @@ def falsify() -> int:
        and all(r["joint_rate"]["provenance"] == MEASURED
                for r in blk["rows"]),
        f"{len(blk['rows'])} rows recomputed")
-    t1 = eth_provenance_transition(td, PROJECTED, "t1")
-    t2 = eth_provenance_transition(td, MEASURED, "t2")
+    t1 = eth_provenance_transition(td, {"rate": PROJECTED,
+                                        "cost": PROJECTED}, "t1")
+    t2 = eth_provenance_transition(td, {"rate": PROJECTED,
+                                        "cost": PARTIAL}, "t2")
     ck("the transition PROJECTED -> MEASURED is RECORDED as an "
        "instrument correction",
        t1["changed"] is False
        and t2["CHANGED_FROM_PROJECTED_TO_MEASURED"] is True
-       and t2["prior"] == PROJECTED and t2["current"] == MEASURED
+       and t2["series"]["cost"]["changed"] is True
+       and t2["series"]["rate"]["changed"] is False
        and any("INSTRUMENT_CORRECTION" in k for k in t2),
-       "the world did not change; what we know did")
+       "the COST moved and the RATE did not -- two series, one ledger")
+
+    print("== the BUILD COST, ingested per stage, three series ==")
+    bc = eb["BUILD_COST"]
+    ck("the state is PARTIALLY measured -- two stages in, one running",
+       bc["provenance"] == PARTIAL
+       and set(bc["stages_measured"]) == {"fragment", "tape"}
+       and bc["stages_not_measured"] == ["book"],
+       f"measured {bc['stages_measured']}, open "
+       f"{bc['stages_not_measured']}")
+    ck("  so a partial state is REPRESENTABLE, not rounded to one of the "
+       "two ends",
+       bc["provenance"] not in (MEASURED, PROJECTED))
+    ratios = {(st, q): row[q]["ratio_eth_over_btc"]["value"]
+              for st, row in bc["stages"].items() for q in row
+              if "ratio_eth_over_btc" in row[q]}
+    ck("THE FINDING SURVIVES INGESTION: time and size ratios DISAGREE",
+       abs(ratios[("fragment", "wall_s")] - 0.273) < 0.01
+       and abs(ratios[("tape", "wall_s")] - 0.446) < 0.01
+       and abs(ratios[("fragment", "output_bytes")] - 0.668) < 0.01
+       and abs(ratios[("tape", "output_bytes")] - 0.661) < 0.01,
+       f"time {ratios[('fragment','wall_s')]:.3f}/"
+       f"{ratios[('tape','wall_s')]:.3f} vs bytes "
+       f"{ratios[('fragment','output_bytes')]:.3f}/"
+       f"{ratios[('tape','output_bytes')]:.3f}")
+    ck("  and every ratio NAMES the quantity it is a ratio OF",
+       assert_no_collapsed_ratio(bc) >= 4,
+       f"{assert_no_collapsed_ratio(bc)} per-quantity ratios")
+    planted = json.loads(json.dumps(bc))
+    planted["eth_fraction_of_btc"] = 0.66
+    try:
+        assert_no_collapsed_ratio(planted)
+        ck("  and a single collapsed figure REFUSES -- positive control",
+           False)
+    except DecisionRefused as exc:
+        ck("  and a single collapsed figure REFUSES -- positive control",
+           COLLAPSED_RATIO in str(exc))
+    ck("the stale-comparator caveat travels with every ratio",
+       all("APPROXIMATE" in row[q]["ratio_eth_over_btc"]["criterion"]
+           for st, row in bc["stages"].items() for q in row
+           if "ratio_eth_over_btc" in row[q]),
+       bc["btc_comparators_as_of"])
+    ck("PEAK RSS is OWED, and the overlap question is UNRESOLVED rather "
+       "than assumed serial",
+       eb["CAN_THE_COINS_SHARE_A_NIGHT"]["resolved"] is False
+       and eb["CAN_THE_COINS_SHARE_A_NIGHT"]["verdict"] == "UNRESOLVED",
+       f"{eb['CAN_THE_COINS_SHARE_A_NIGHT']['n_peaks_supplied']['value']} "
+       f"of {eb['CAN_THE_COINS_SHARE_A_NIGHT']['n_peaks_expected']['value']}"
+       f" peaks supplied")
+    nb = eb["NIGHT_BUDGET"]
+    ck("the night budget sums MEASURED stages only and names what is "
+       "missing",
+       nb["per_coin"]["eth"]["stages_missing"] == ["book"]
+       and nb["serial_seconds_measured_stages_only"]["provenance"]
+       == PARTIAL,
+       f"eth {nb['per_coin']['eth']['measured_stage_seconds']['value']:.0f}s"
+       f" + btc "
+       f"{nb['per_coin']['btc']['measured_stage_seconds']['value']:.0f}s")
+    ck("A BUILD COST IS NOT A SUCCESS RATE: the rate stays PROJECTED "
+       "while the cost is measured",
+       eb["TWO_SEPARATE_ETH_PARAMETERS"]["day_success_rate"]["provenance"]
+       == PROJECTED
+       and eb["TWO_SEPARATE_ETH_PARAMETERS"]["build_cost"]["provenance"]
+       == PARTIAL,
+       "measuring what a build costs says nothing about how often it "
+       "succeeds")
+    ck("nothing here can read as an eth FINDING about the consumed day",
+       bool(bc["DAY_IS_CONSUMED_AND_THIS_IS_NOT_A_FINDING_ABOUT_IT"]))
 
     print("== rule 34a's fence as a BLOCKING prerequisite ==")
     pr = doc["BLOCKING_PREREQUISITES"]["rule_34a_fence"]
