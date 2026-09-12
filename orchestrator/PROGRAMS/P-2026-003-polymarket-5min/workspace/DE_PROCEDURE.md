@@ -993,3 +993,36 @@ different hat**, and the programme has already paid for that one (1h20m).
 "now": an authorisation to edit a launcher is an authorisation to do it at a
 moment when nothing may execute it, and choosing that moment is part of the
 task rather than a preliminary to it.
+
+## §18 — a cell that asserts WORDING is not testing the property
+
+Rule 10 at cell granularity. Three instances in one session, all mine, all the
+same shape.
+
+**THE TEST, applied mechanically before landing any cell:**
+
+> If every string in the artifact were reworded without changing its meaning,
+> would this cell still pass?
+
+If not, it is testing prose. Such a cell **passes until someone improves a
+sentence**, then fails for a reason unrelated to correctness — and, far worse,
+**it passes while the property is broken** so long as the sentence survives.
+
+The line is drawable mechanically, and `de_cell_prose_audit.py` draws it:
+
+| asserted against | verdict |
+|---|---|
+| `AMENDMENT_CHOSEN_AFTER_THE_CLOCK_STARTED`, `PROJECTED` | fine — an UPPER_SNAKE token is an identifier the code also uses |
+| `rows`, `planning_rate`, `de_band_hazard.py` | fine — a key or a file name is structure |
+| `"the world did not change"`, `"did NOT read"` | **PROSE** — reword it and the cell breaks while the property stands |
+
+**The corrections are always the same two moves:** assert that the FIELD is
+present and non-empty rather than what it says; or promote the status string to
+a CONSTANT so both sides move together when the wording improves.
+
+**A string PASSED AS AN ARGUMENT is an input, not an assertion** — a fixture's
+source text or a call's parameter is not the cell claiming anything about
+wording. The first version of the auditor flagged those and fired on its own
+fixtures, which is the false-positive shape this lane keeps finding.
+
+Run it over your own cells before landing: `de_cell_prose_audit.py --audit`.

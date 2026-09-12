@@ -669,8 +669,11 @@ def falsify() -> int:
        tr["FORWARD_RATE_IS_UNRESOLVED"] is True
        and tr["THE_REGIME_QUESTION"]["exclusion_status"].startswith("NO"))
     ck("  and REV's search and what it did NOT read are recorded",
-       "did NOT read" in tr["THE_REGIME_QUESTION"][
-           "REV_searched_and_found_none"])
+       bool(tr["THE_REGIME_QUESTION"].get("REV_searched_and_found_none",
+                                          "").strip())
+       and "DA_holds_those_residuals_and_is_looking"
+       in tr["THE_REGIME_QUESTION"],
+       "the FIELDS are present; their wording is free to change")
 
     print("== THE CALL SITE (REVIEW 264 fix 7) ==")
     st = doc["AMENDMENT_ADMISSIBILITY_NOW"]
@@ -693,8 +696,10 @@ def falsify() -> int:
        eb["eth_parameter"]["why"][:70])
     ck("  and it names what IS measured about eth today, so the gap is "
        "specific",
-       "INPUTS are at parity" in
-       eb["eth_parameter"]["what_is_measured_about_eth_today"])
+       bool(eb["eth_parameter"].get("what_is_measured_about_eth_today",
+                                    "").strip())
+       and eb["eth_parameter"]["provenance"] == PROJECTED,
+       "the field is present and the provenance agrees with it")
     ck("every ETH-dependent figure carries its provenance",
        assert_eth_labelled(eb) >= 8,
        f"{assert_eth_labelled(eb)} labelled figures")

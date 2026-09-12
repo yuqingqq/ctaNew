@@ -69,6 +69,10 @@ PATH_MODULES = ("de_fair_value_actions", "de_fair_value_predictive",
                 "de_fair_value_pnl", "de_fair_value_economic",
                 "de_fair_value_fee_sensitivity")
 
+#: The inventory's verdict strings, as CONSTANTS. A cell comparing
+#: against the literal would be testing wording; comparing against the
+#: constant moves both sides together when the wording improves.
+NOT_DRIVEN = "NOT DRIVEN HERE"
 ORDINARY = "ORDINARY"          # something a normal day can contain
 TODAY = "TODAY"                # fires right now, BEFORE a leg starts
 DEFECT = "DEFECT"              # a build/wiring fault, not ordinary data
@@ -559,7 +563,7 @@ def inventory(outdir: Path) -> dict:
         hits = by_name.get(name, [])
         kinds = {h["kind"] for h in hits}
         if not hits:
-            normal = "NOT DRIVEN HERE"
+            normal = NOT_DRIVEN
         elif ORDINARY in kinds:
             normal = "YES -- LANDMINE (fires mid-run)"
         elif TODAY in kinds:
@@ -736,7 +740,7 @@ def falsify() -> int:
            for r in inv["legitimate_stops"]),
        f"stops: {[r['refusal'] for r in inv['legitimate_stops']]}")
     ck("undriven refusals are REPORTED as undriven, never as safe",
-       all(r["fires_on_a_normal_day"] == "NOT DRIVEN HERE"
+       all(r["fires_on_a_normal_day"] == NOT_DRIVEN
            for r in inv["table"] if not r["driven_here"]),
        f"{inv['n_not_driven']} not driven")
     ck("the inventory artifact is on disk",
