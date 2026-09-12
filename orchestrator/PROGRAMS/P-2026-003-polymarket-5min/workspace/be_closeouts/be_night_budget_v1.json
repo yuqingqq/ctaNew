@@ -1,0 +1,114 @@
+{
+ "contract": "BE_NIGHT_BUDGET_V1",
+ "as_of_utc": "2026-09-12T01:29:14Z",
+ "WHAT_IS_MEASURED_AND_WHAT_IS_NOT": "Every field carries `basis`. MEASURED means derived from a committed close-out's systemd start/exit stamps and run record. PROJECTED means it has not been built yet. The ETH build cost is the only hole, and the night total inherits it.",
+ "btc_per_stage": {
+  "fragment": {
+   "basis": "MEASURED",
+   "day": "20260910",
+   "stage": "fragment",
+   "lock_minutes": 12.2,
+   "peak_gib": 4.634,
+   "peak_of_record_bytes": 4975345664,
+   "unit": "be192frag0910",
+   "exec_main_status": "0",
+   "source": "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/be_closeouts/be_closeout_20260910_fragment.json"
+  },
+  "tape": {
+   "basis": "MEASURED",
+   "day": "20260910",
+   "stage": "tape",
+   "lock_minutes": 25.5,
+   "peak_gib": 6.05,
+   "peak_of_record_bytes": 6496137216,
+   "unit": "be192tape0910",
+   "exec_main_status": "0",
+   "source": "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/be_closeouts/be_closeout_20260910_tape.json"
+  },
+  "book": {
+   "basis": "MEASURED",
+   "day": "20260910",
+   "stage": "book",
+   "lock_minutes": 22.3,
+   "peak_gib": 6.322,
+   "peak_of_record_bytes": 6788284416,
+   "unit": "be197book0910",
+   "exec_main_status": "0",
+   "source": "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/be_closeouts/be_closeout_20260910_book.json"
+  }
+ },
+ "btc_lock_minutes_total": {
+  "basis": "MEASURED",
+  "value": 60.0,
+  "day": "2026-09-10",
+  "note": "fragment + tape + book, one coin"
+ },
+ "btc_book_second_observation": {
+  "basis": "MEASURED",
+  "day": "20260909",
+  "stage": "book",
+  "lock_minutes": 22.7,
+  "peak_gib": 7.25,
+  "peak_of_record_bytes": 7784624128,
+  "unit": "be191book0909",
+  "exec_main_status": "0",
+  "source": "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/be_closeouts/be_closeout_20260909_book.json"
+ },
+ "eth_build_cost": {
+  "basis": "PROJECTED",
+  "value_minutes": null,
+  "why_no_number": "No ETH stage has ever been built. Declining to convert the archive-volume ratio into a runtime is deliberate: the relationship between archive bytes and wall clock has not been measured.",
+  "the_only_evidence": {
+   "eth_archive_bytes_20260905": 560123827,
+   "btc_archive_bytes_20260905": 1763415549,
+   "ratio": 0.318,
+   "windows_each": 288,
+   "what_it_does_NOT_establish": "that runtime or peak RSS scale with archive bytes"
+  },
+  "how_to_close_it": "one ETH day on 09-05 -- consumed, 288 windows, mask present, archives complete"
+ },
+ "de_valuation": {
+  "basis": "MEASURED",
+  "lock_minutes": 78.0,
+  "day": "2026-09-09",
+  "coin": "btc",
+  "how_measured": "the heavy lock was held from 17:15:44Z to 18:33:44Z while be192tape0910 offered and was refused 77 times; the 78th attempt took it",
+  "source": "be_heavy_run_record_be192tape0910.jsonl",
+  "OPEN_QUESTION_THAT_DECIDES_FEASIBILITY": "whether a valuation needs BOTH coins. If it does, the night is build-then-value serial; if it does not, the critical path roughly halves. Asked of DE, unanswered."
+ },
+ "scheduled_units": {
+  "basis": "MEASURED",
+  "how_measured": "Starting/Finished pairs in the user journal",
+  "pm_evaluation_pipeline": {
+   "runs": 6,
+   "median_s": 9.5,
+   "p90_s": 9.7,
+   "max_min": 0.3
+  },
+  "pm_measurement_pipeline": {
+   "runs": 6,
+   "median_s": 23.6,
+   "p90_s": 336.8,
+   "max_min": 36.5
+  },
+  "pm_lane_health": {
+   "runs": 26,
+   "median_s": 0.7,
+   "p90_s": 0.9
+  },
+  "THE_SHAPE_THAT_MATTERS": "The recurring scheduled load is SECONDS per hour. The long holds are CATCH-UP runs, which appear only when a day was missed -- `evaluation_pipeline --catch-up --since ... --max-days 1` held the lock 54:45 and counting at 01:21Z, against a median of 9.5s for the same unit idle. So the hazard is a backlog, not the clock."
+ },
+ "NIGHT_BUDGET": {
+  "basis": "MEASURED where btc, PROJECTED where eth",
+  "fits": "two coins (~60 measured btc + eth projected) plus ONE valuation (78 measured)",
+  "does_not_fit": "two valuations plus a catch-up run",
+  "decided_by": "whether the valuation needs both coins",
+  "recurring_scheduled_load": "negligible -- seconds per hour"
+ },
+ "RECOVERABILITY": {
+  "basis": "MEASURED",
+  "can_lock_contention_lose_a_day": false,
+  "why": "no retention or prune policy exists over the raw archive (flow_intensity.py and be_gate1_fragment.py carry no RETENTION/retention_days/max_age; daily_pipeline.py's only unlinks are a temporary and a missing-marker). A delayed build reads identical bytes.",
+  "what_IS_unrecoverable": "a day the collector never wrote properly -- 09-11's four hollow windows from the 18:49:08Z reboot are gone regardless of build timing. Contention delays; collection failure destroys."
+ }
+}
