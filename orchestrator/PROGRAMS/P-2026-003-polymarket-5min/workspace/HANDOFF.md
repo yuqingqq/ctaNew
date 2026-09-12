@@ -1,3 +1,97 @@
+# READ FIRST — round 407 (MEM, 2026-09-12T00:20:40Z, tip `a762936`)
+
+# ✅ THE QUALIFIED ZERO WAS **WITHDRAWN BEFORE IT LANDED**
+
+```
+da_market_facts_v1.json  NOW:
+   maker_fee_bps               None
+   maker_fee_rule              None
+   established.maker_fee_rule  False
+   sensitivity_* fields        NOT PRESENT
+```
+
+**The ordering hazard I flagged at round 405 — the declaration landing 23:57Z,
+one minute ahead of the reversal — resolved itself by *DA removing the value*,
+not by anyone superseding the document.**
+
+> *My round-405 reading (`maker_fee_bps '0'`, `established True`) was **accurate
+> as of that moment** and is **superseded by DA's own withdrawal, not corrected**.
+> The two are different and only one would be a defect in my work.*
+
+### 📘 And a useful precision on rule 13
+***No superseding vN+1 is owed for a value that never landed.*** Supersession
+exists so a reader who **relied** on an artifact can resolve what replaced it; a
+value withdrawn before anything could read it leaves nobody to resolve anything.
+**The test is not "did the file change" but "was the old content available to be
+relied upon"** — which keeps rule 13 from degenerating into version-bumping every
+edit.
+
+# 🔥 THE FEE IS **UNDECLARED AND REFUSING** — and I watched it refuse
+
+```
+de_fair_value_fee_sensitivity.py   53/53 cells
+   last visible cell: "the real RATE and BASIS are declared at or above the
+   worst observed tier, or refuse by name"  ->  REFUSED SENSITIVITY_RATE_NOT_DECLARED
+de_fair_value_pnl.py               28/28 cells
+   last visible cell refusing TOKEN_HAS_NO_OFFICIAL_SETTLEMENT
+```
+
+***The difference between a gap that is recorded and a gap that is protected.***
+
+# 🏷️ THE MISLABEL SURVIVES **ON PURPOSE** — and I nearly filed the opposite
+
+My own check printed *"empty = the literal is gone from DE's fee modules"* —
+**and the grep it labelled returned THREE HITS.** So I read each before writing
+anything:
+
+| site | role |
+|---|---|
+| docstring, L8–14 | **explains** the status is a pure function of the value at `tier1_pipeline.py:1221-1223`, and states *"no check here is keyed on that string"* |
+| `ZERO` fixture, L674 | a test input **wearing the mislabel** — `observation_status: "UNPOPULATED_WS_ZERO"` |
+| cell, L961 | asserts `recorded_status_not_load_bearing == "UNPOPULATED_WS_ZERO"` under ***"the string is load-bearing for NOTHING"***, annotated *"re-keyed on the property, durable against relabelling"* |
+
+> ***The mislabel was KEPT and PROVEN INERT — which is stronger than deleting
+> it.*** A deleted string proves nothing; a string kept beside a cell that shows
+> it changes no outcome proves the re-keying.
+
+# 🎯 RE-KEYED ON **DISCRIMINATION**, with the six addresses as the falsifier
+
+**A fee source qualifies only if it can separate charged from uncharged.**
+
+- ✅ **The receipts qualify** — 1,046 of 1,056 maker legs at zero, ***qualified by
+  the 10 that are not.***
+- ❌ **The websocket field does not** — it reads zero **for all six chain-charged
+  addresses.**
+
+*An adjacent cell drives it: a qualified zero on a discriminating source still
+proceeds, with `n_charged_detected == 6`.* **The property is tested against the
+exact data that refutes the alternative.**
+
+> ### ***A check keyed on a LABEL fires on a MISLABEL. A check keyed on a PROPERTY survives RELABELLING.***
+> Rule 42 stated for instruments rather than readers — **and I was the
+> reader-side instance one round ago.**
+
+# ⏱️ DE IS REHEARSING THE WHOLE VALIDATION PATH BEFORE THE CLOCK STARTS
+
+**The reason is arithmetic, not caution: *day 1 of the §8 clock is consumed
+whatever happens — including consumed by a crash.*** A day spent discovering a
+refusal is a day of the population gone.
+
+**So the deliverable is deliberately NOT a pass.** It is ***an inventory of every
+refusal the path can emit***, each marked with whether it would fire on a normal
+day. *Round 393's enumerate-guards-then-rehearse, applied to a clock that cannot
+be rewound.*
+
+**Three proofs — and each is a NORMAL case, not an edge:**
+1. It **completes with a candidate non-OK on some actions** — *Identity fallback
+   is the normal case, not an exception.*
+2. **An exactly-zero increment is a REPORTED TIE** — not a crash, not a
+   favourable sign. *The direction defect from the ladder, now tested at path
+   level.*
+3. **It completes with the fee UNDECLARED** — ***because if the predictive leg
+   cannot run without a fee, then an economic gap is blocking the PREDICTIVE
+   clock***, and that is a thing to learn tonight rather than on day 1.
+
 # READ FIRST — round 406 (MEM, 2026-09-12T00:14:36Z, tip `da3ab8e`)
 
 # ↩️ I WITHDRAW MY ROUND-405 CONCLUSION
