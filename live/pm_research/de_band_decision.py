@@ -228,6 +228,13 @@ def eth_stage_costs(decl_dir: Path = None) -> dict:
     stages = {}
     for stage, legs in (doc.get("stages") or {}).items():
         row = {}
+        if legs.get("peak_rss_sum_bytes") is not None:
+            row.setdefault("peak_rss_bytes", {})["sum"] = M(
+                legs["peak_rss_sum_bytes"],
+                population=f"{stage} stage, both coins",
+                criterion="peak RSS SUM as reported; the per-leg split "
+                          "was not supplied and is not derived here",
+                source=src, provenance=MEASURED)
         for q in QUANTITIES:
             e = (legs.get("eth") or {}).get(q)
             b = (legs.get("btc") or {}).get(q)
@@ -254,10 +261,20 @@ def eth_stage_costs(decl_dir: Path = None) -> dict:
                               f"btc comparator is as_of "
                               f"{doc.get('btc_comparators_as_of')}",
                     source=src, provenance=prov)
+            if q in row and isinstance(row[q], dict):
+                cell.update(row[q])
             row[q] = cell
         stages[stage] = row
+    # A REFUSED RUN IS NOT A MEASURED STAGE. Its wall-clock and peak are
+    # observations OF the refusal, and counting them would report a cost
+    # for a stage that produced nothing.
+    refused = set()
+    outcome = doc.get("book_stage_outcome") or {}
+    if outcome.get("status") == "REFUSED":
+        refused.add(outcome.get("stage", "book"))
     measured = [st for st, r in stages.items()
-                if r["wall_s"]["eth"].get("value") is not None]
+                if r["output_bytes"]["eth"].get("value") is not None
+                and st not in refused]
     prov = (MEASURED if len(measured) == len(stages) else
             PARTIAL if measured else PROJECTED)
     return {
@@ -272,6 +289,35 @@ def eth_stage_costs(decl_dir: Path = None) -> dict:
             population="archive volume", criterion="REPORTED by the "
             "coordinator, not recomputed by this seat", source=src,
             provenance=MEASURED),
+        "MECHANISM": (lambda m: dict(
+            m, reported_peak_ratio=M(
+                m.get("reported_peak_ratio"),
+                population="peak RSS, eth vs btc as reported",
+                criterion="REPORTED by the coordinator; the stage it "
+                          "belongs to is not stated, and the supplied "
+                          "fragment pair 2.09/4.63 GiB gives 0.451, so "
+                          "0.97 cannot be the fragment stage",
+                source=src, provenance=MEASURED))
+            if isinstance(m, dict) else m)(doc.get("MECHANISM")),
+        "THE_CONCLUSION_HOLDS_WITHOUT_THE_BOOK_STAGE":
+            doc.get("THE_CONCLUSION_HOLDS_WITHOUT_THE_BOOK_STAGE"),
+        "book_stage_outcome": (lambda b: dict(
+            {k: v for k, v in b.items()
+             if not isinstance(v, (int, float)) or isinstance(v, bool)},
+            rc=M(b.get("rc"), population="the eth book run on 09-05",
+                 criterion="process exit code of a run that REFUSED",
+                 source=src, provenance=MEASURED),
+            wall_s=M(b.get("wall_s"),
+                     population="the eth book run on 09-05",
+                     criterion="wall-clock of a REFUSED run -- not the "
+                               "stage's cost", source=src,
+                     provenance=MEASURED),
+            peak_rss_bytes=M(b.get("peak_rss_bytes"),
+                             population="the eth book run on 09-05",
+                             criterion="peak RSS of a REFUSED run -- not "
+                                       "the stage's cost", source=src,
+                             provenance=MEASURED))
+            if isinstance(b, dict) else b)(doc.get("book_stage_outcome")),
         "COMPARATORS_MAY_BE_STALE": doc.get("COMPARATORS_MAY_BE_STALE"),
         "btc_comparators_as_of": doc.get("btc_comparators_as_of"),
         "peak_rss_is_owed": doc.get("peak_rss_is_owed"),
@@ -286,9 +332,12 @@ def night_budget(costs: dict) -> dict:
     out, total = {}, {}
     for coin in ("eth", "btc"):
         secs, missing = 0.0, []
+        ok_stages = set(costs.get("stages_measured") or [])
         for stage, row in costs.get("stages", {}).items():
             v = row["wall_s"][coin].get("value")
-            if v is None:
+            # A stage that REFUSED contributes no cost, even though its
+            # run has a wall-clock: the stage did not happen.
+            if v is None or stage not in ok_stages:
                 missing.append(stage)
             else:
                 secs += float(v)
@@ -300,7 +349,30 @@ def night_budget(costs: dict) -> dict:
             "stages_missing": missing}
         total[coin] = secs
     serial = total["eth"] + total["btc"]
+    missing = sorted({st for o in out.values() for st in o["stages_missing"]})
     return {"per_coin": out,
+            "BUDGET_IS_A_RANGE_NOT_A_POINT": {
+                "lower_bound_seconds": M(
+                    serial, population="one night, both coins",
+                    criterion="SERIAL sum of MEASURED stages -- a LOWER "
+                              "BOUND, because the unmeasured stage adds "
+                              "to it and cannot subtract",
+                    source=costs.get("declared_by", "?"),
+                    provenance=PARTIAL),
+                "upper_bound_seconds": None,
+                "unmeasured_stages": missing,
+                "why_no_upper_bound":
+                    "the book stage is not measured, so no upper bound "
+                    "exists that is not an estimate; naming the hole "
+                    "beats filling it with a guess",
+                "and_it_is_the_largest_stage":
+                    "the night budget has its hole in the stage that "
+                    "historically costs the most, so the lower bound is "
+                    "not close to the answer"},
+            "SERIAL_BY_MEMORY_NOT_ONLY_BY_LOCK":
+                "if the tape peaks cannot share the slice, stages cannot "
+                "be interleaved to shorten a night: the nightly cost is "
+                "the SUM of the coins, not the MAX",
             "serial_seconds_measured_stages_only": M(
                 serial, population="one night, both coins",
                 criterion="SERIAL sum of measured stages only; the "
@@ -312,27 +384,133 @@ def night_budget(costs: dict) -> dict:
                               "not zero and not projected"}
 
 
-def overlap_question(costs: dict) -> dict:
-    """CAN THE TWO COINS SHARE A NIGHT? Unresolved without peak RSS."""
-    peaks = []
-    for stage, row in costs.get("stages", {}).items():
-        for coin in ("eth", "btc"):
-            peaks.append(row["peak_rss_bytes"][coin].get("value"))
-    have = [p for p in peaks if p is not None]
-    return {"resolved": bool(have) and len(have) == len(peaks),
-            "verdict": "UNRESOLVED" if not have else "SEE_PEAKS",
-            "why": "the 12 GB rule decides whether the coins can overlap "
-                   "in a night, and it is decided by PEAK RSS, which is "
-                   "not supplied. Absent it, this is UNRESOLVED -- "
-                   "assuming serial would be an answer nobody measured",
-            "n_peaks_supplied": M(len(have), population="stage x coin",
-                                  criterion="count of supplied peak RSS "
-                                            "figures", source="this audit",
+GIB = 1024 ** 3
+
+
+def memory_threshold() -> dict:
+    """THE THRESHOLD, READ FROM THE SYSTEM, not from a remembered
+    constant. "The 12 GB rule" is a phrase; systemd holds a number."""
+    import subprocess
+    out = subprocess.run(
+        ["systemctl", "--user", "show", "research.slice",
+         "-p", "MemoryHigh", "-p", "MemoryMax"],
+        capture_output=True, text=True).stdout
+    got = {}
+    for line in out.splitlines():
+        if "=" in line:
+            k, v = line.split("=", 1)
+            try:
+                got[k] = int(v)
+            except ValueError:
+                got[k] = None
+    crit = "read live from systemd, not a remembered constant"
+    pop = "research.slice"
+    return {"MemoryHigh_bytes": M(got.get("MemoryHigh"), population=pop,
+                                  criterion=crit, source="systemctl",
                                   provenance=MEASURED),
-            "n_peaks_expected": M(len(peaks), population="stage x coin",
-                                  criterion="stages x coins",
-                                  source="this audit",
-                                  provenance=MEASURED)}
+            "MemoryMax_bytes": M(got.get("MemoryMax"), population=pop,
+                                 criterion=crit, source="systemctl",
+                                 provenance=MEASURED),
+            "MemoryHigh_GiB": M((got["MemoryHigh"] / GIB
+                                 if got.get("MemoryHigh") else None),
+                                population=pop, criterion=crit,
+                                source="systemctl", provenance=MEASURED),
+            "MemoryMax_GiB": M((got["MemoryMax"] / GIB
+                                if got.get("MemoryMax") else None),
+                               population=pop, criterion=crit,
+                               source="systemctl", provenance=MEASURED),
+            "read_from": "systemctl --user show research.slice",
+            "MemoryHigh_is_a_throttle_MemoryMax_is_the_kill": True}
+
+
+def overlap_question(costs: dict) -> dict:
+    """CAN THE TWO COINS SHARE A NIGHT? Decided by PEAK RSS against the
+    threshold the system actually holds -- and the UNIT decides it."""
+    thr = memory_threshold()
+    stages = costs.get("stages", {})
+    rows = {}
+    for stage, row in stages.items():
+        cell = row.get("peak_rss_bytes", {})
+        e = cell.get("eth", {}).get("value")
+        b = cell.get("btc", {}).get("value")
+        total = cell.get("sum", {}).get("value")
+        if total is None and e is not None and b is not None:
+            total = e + b
+        if total is None:
+            rows[stage] = {"verdict": "UNRESOLVED",
+                           "why": "no peak supplied for this stage"}
+            continue
+        high = (thr.get("MemoryHigh_bytes") or {}).get("value")
+        rows[stage] = {
+            "both_coins_peak_sum_bytes": M(
+                total, population=f"{stage} stage, both coins",
+                criterion="sum of peak RSS; two units in one slice share "
+                          "its threshold", source=costs.get("declared_by"),
+                provenance=MEASURED),
+            "fits_under_MemoryHigh": (total <= high) if high else None,
+            "headroom_bytes": M((high - total) if high else None,
+                                population=f"{stage}, both coins",
+                                criterion="MemoryHigh minus the peak sum",
+                                source="systemctl x the declaration",
+                                provenance=MEASURED),
+            "headroom_fraction_of_threshold": M(
+                ((high - total) / high if high else None),
+                population=f"{stage}, both coins",
+                criterion="headroom as a fraction of MemoryHigh",
+                source="systemctl x the declaration",
+                provenance=MEASURED),
+            "verdict": ("CAN_OVERLAP" if high and total <= high
+                        else "CANNOT_OVERLAP" if high else "UNRESOLVED"),
+        }
+    # THE UNIT DECIDES IT, so both readings are shown rather than one
+    # chosen silently.
+    tape = rows.get("tape", {})
+    tape_total = (tape.get("both_coins_peak_sum_bytes") or {}).get("value")
+    unit = None
+    if tape_total is not None:
+        unit = {
+            "the_phrase": "the 12 GB rule",
+            "as_12_GiB_which_is_what_systemd_holds": {
+                "threshold_bytes": M(12 * GIB, population="the rule",
+                                     criterion="12 GiB, binary",
+                                     source="systemd holds this exact "
+                                            "value", provenance=MEASURED),
+                "fits": tape_total <= 12 * GIB,
+                "headroom_GiB": M((12 * GIB - tape_total) / GIB,
+                                  population="tape, both coins",
+                                  criterion="12 GiB minus the peak sum",
+                                  source="arithmetic",
+                                  provenance=MEASURED)},
+            "as_12_GB_decimal": {
+                "threshold_bytes": M(12_000_000_000, population="the rule",
+                                     criterion="12 GB, decimal",
+                                     source="the phrase taken literally",
+                                     provenance=PROJECTED),
+                "fits": tape_total <= 12_000_000_000,
+                "headroom_GiB": M((12_000_000_000 - tape_total) / GIB,
+                                  population="tape, both coins",
+                                  criterion="12 GB minus the peak sum",
+                                  source="arithmetic",
+                                  provenance=MEASURED)},
+            "THE_ANSWER_FLIPS_ON_THE_UNIT": (
+                (tape_total <= 12 * GIB)
+                != (tape_total <= 12_000_000_000)),
+            "what_the_system_holds": thr.get("MemoryHigh_GiB"),
+            "and_MemoryMax_is": thr.get("MemoryMax_GiB"),
+            "and_the_margin_either_way":
+                "under the GiB reading the pair fits by 0.7% of the "
+                "threshold, which is inside measurement noise and is not "
+                "a margin to plan a night on; MemoryHigh THROTTLES rather "
+                "than kills, and MemoryMax is the kill",
+        }
+    resolved = all(r.get("verdict") != "UNRESOLVED" for r in rows.values())
+    return {"threshold": thr, "per_stage": rows,
+            "UNIT_AMBIGUITY": unit,
+            "resolved": resolved,
+            "verdict": ("SEE_PER_STAGE" if resolved else "UNRESOLVED"),
+            "why": "the overlap question is decided by PEAK RSS against "
+                   "the slice threshold; peaks that are absent leave the "
+                   "stage UNRESOLVED rather than assumed serial"}
 
 
 def assert_no_collapsed_ratio(block: dict) -> int:
@@ -984,13 +1162,11 @@ def falsify() -> int:
            for st, row in bc["stages"].items() for q in row
            if "ratio_eth_over_btc" in row[q]),
        bc["btc_comparators_as_of"])
-    ck("PEAK RSS is OWED, and the overlap question is UNRESOLVED rather "
-       "than assumed serial",
+    ck("a stage with NO peak stays UNRESOLVED rather than assumed serial",
        eb["CAN_THE_COINS_SHARE_A_NIGHT"]["resolved"] is False
-       and eb["CAN_THE_COINS_SHARE_A_NIGHT"]["verdict"] == "UNRESOLVED",
-       f"{eb['CAN_THE_COINS_SHARE_A_NIGHT']['n_peaks_supplied']['value']} "
-       f"of {eb['CAN_THE_COINS_SHARE_A_NIGHT']['n_peaks_expected']['value']}"
-       f" peaks supplied")
+       and eb["CAN_THE_COINS_SHARE_A_NIGHT"]["per_stage"]["book"][
+           "verdict"] == "UNRESOLVED",
+       "the book stage has no peak, so it is not answered")
     nb = eb["NIGHT_BUDGET"]
     ck("the night budget sums MEASURED stages only and names what is "
        "missing",
@@ -1010,6 +1186,49 @@ def falsify() -> int:
        "succeeds")
     ck("nothing here can read as an eth FINDING about the consumed day",
        bool(bc["DAY_IS_CONSUMED_AND_THIS_IS_NOT_A_FINDING_ABOUT_IT"]))
+
+    print("== peaks, the mechanism, and the unit that decides it ==")
+    ov = eb["CAN_THE_COINS_SHARE_A_NIGHT"]
+    ck("the threshold is READ FROM THE SYSTEM, not remembered",
+       ov["threshold"]["MemoryHigh_GiB"]["value"] == 12.0
+       and ov["threshold"]["MemoryMax_GiB"]["value"] == 14.0,
+       "research.slice MemoryHigh 12 GiB, MemoryMax 14 GiB")
+    u = ov["UNIT_AMBIGUITY"]
+    ck("THE ANSWER FLIPS ON THE UNIT and both readings are shown",
+       u["THE_ANSWER_FLIPS_ON_THE_UNIT"] is True
+       and u["as_12_GiB_which_is_what_systemd_holds"]["fits"] is True
+       and u["as_12_GB_decimal"]["fits"] is False,
+       "11.92 GiB = 12.799 GB: under 12 GiB, over 12 GB")
+    ck("  and the margin under the favourable reading is reported, not "
+       "hidden",
+       0 < u["as_12_GiB_which_is_what_systemd_holds"]["headroom_GiB"][
+           "value"] < 0.1,
+       f"{u['as_12_GiB_which_is_what_systemd_holds']['headroom_GiB']['value']:.3f} "
+       f"GiB, 0.7% of the threshold")
+    ck("the fragment stage resolves and the book stage does NOT",
+       ov["per_stage"]["fragment"]["verdict"] != "UNRESOLVED"
+       and ov["per_stage"]["book"]["verdict"] == "UNRESOLVED",
+       "a stage with no peak is unresolved, not assumed")
+    mech = bc["MECHANISM"]
+    ck("the MECHANISM travels beside the numbers and is FALSIFIABLE",
+       bool(mech.get("claim")) and bool(mech.get("FALSIFIER")),
+       "a coin or day with a different window count must break it")
+    ck("the conclusion is stated as holding WITHOUT the book stage",
+       bool(bc["THE_CONCLUSION_HOLDS_WITHOUT_THE_BOOK_STAGE"]))
+    ck("  and the refused book run is NOT counted as the stage's cost",
+       bc["book_stage_outcome"]["status"] == "REFUSED"
+       and bc["book_stage_outcome"]["book_written"] is False
+       and "book" in bc["stages_not_measured"],
+       "rc=1, no book written")
+    nbr = nb["BUDGET_IS_A_RANGE_NOT_A_POINT"]
+    ck("the night budget is a RANGE with the hole named, not a point",
+       nbr["upper_bound_seconds"] is None
+       and nbr["unmeasured_stages"] == ["book"]
+       and nbr["lower_bound_seconds"]["provenance"] == PARTIAL,
+       f"lower bound {nbr['lower_bound_seconds']['value']:.0f}s, book "
+       f"unmeasured")
+    ck("  and the sum-not-max consequence is carried",
+       bool(nb["SERIAL_BY_MEMORY_NOT_ONLY_BY_LOCK"]))
 
     print("== rule 34a's fence as a BLOCKING prerequisite ==")
     pr = doc["BLOCKING_PREREQUISITES"]["rule_34a_fence"]

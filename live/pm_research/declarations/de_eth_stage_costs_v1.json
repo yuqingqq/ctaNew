@@ -9,16 +9,42 @@
   "quantities_do_not_travel_together": "size scales at ~0.66 on both stages, time at 0.27 then 0.45, and the archive-volume ratio is 0.32. Three stable-looking ratios for three different quantities, and the most stable one does not predict runtime. They are carried separately and never collapsed.",
   "stages": {
     "fragment": {
-      "eth": {"wall_s": 200, "output_bytes": 364601364, "peak_rss_bytes": null},
-      "btc": {"wall_s": 732, "output_bytes": 545493868, "peak_rss_bytes": null}
+      "eth": {
+        "wall_s": 200,
+        "output_bytes": 364601364,
+        "peak_rss_bytes": 2244120412
+      },
+      "btc": {
+        "wall_s": 732,
+        "output_bytes": 545493868,
+        "peak_rss_bytes": 4971424645
+      }
     },
     "tape": {
-      "eth": {"wall_s": 682, "output_bytes": 588868676, "peak_rss_bytes": null},
-      "btc": {"wall_s": 1530, "output_bytes": 890640737, "peak_rss_bytes": null}
+      "eth": {
+        "wall_s": 682,
+        "output_bytes": 588868676,
+        "peak_rss_bytes": null
+      },
+      "btc": {
+        "wall_s": 1530,
+        "output_bytes": 890640737,
+        "peak_rss_bytes": null
+      },
+      "peak_rss_sum_bytes": 12799002542,
+      "peak_rss_per_leg": "NOT SUPPLIED -- only the SUM 11.92 GiB was reported; this seat does not split a sum it was not given"
     },
     "book": {
-      "eth": {"wall_s": null, "output_bytes": null, "peak_rss_bytes": null},
-      "btc": {"wall_s": null, "output_bytes": null, "peak_rss_bytes": null}
+      "eth": {
+        "wall_s": 160,
+        "output_bytes": null,
+        "peak_rss_bytes": 1449551462
+      },
+      "btc": {
+        "wall_s": null,
+        "output_bytes": null,
+        "peak_rss_bytes": null
+      }
     }
   },
   "archive_volume_ratio_reported": 0.32,
@@ -26,5 +52,22 @@
   "btc_comparators_as_of": "2026-09-06",
   "COMPARATORS_MAY_BE_STALE": "the btc comparators are dated 2026-09-06. If the builder generation has moved, every eth:btc ratio here is APPROXIMATE. BE is confirming.",
   "peak_rss_is_owed": "peak RSS per stage is not supplied. It matters MORE than wall-clock for the fourteen-night question, because the 12 GB rule decides whether the two coins can overlap in a night or must run serially.",
-  "book_stage": "RUNNING at the time of writing (pid 3669604); it is the last stage and is not measured here."
+  "book_stage": "RUNNING at the time of writing (pid 3669604); it is the last stage and is not measured here.",
+  "book_stage_outcome": {
+    "status": "REFUSED",
+    "error": "be_daybook_build.BookRefused: no SCORE-split builder receipt for 20260905 eth",
+    "rc": 1,
+    "wall_s": 160,
+    "peak_rss_bytes": 1449551462,
+    "book_written": false,
+    "THESE_ARE_OBSERVATIONS_OF_A_REFUSED_RUN": "a refused run's wall-clock and peak are not the stage's COST; the book stage's cost is NOT MEASURED and must stay labelled so"
+  },
+  "MECHANISM": {
+    "claim": "peak RSS is set by the largest in-memory structure -- the day's WINDOW INDEX -- and both coins have exactly 288 windows. Volume scales with the coin; the index does not.",
+    "explains": "output bytes scale ~0.66 while peak barely moves; wall-clock sits between them because it is driven partly by volume and partly by per-window work",
+    "reported_peak_ratio": 0.97,
+    "FALSIFIER": "a coin or day with a DIFFERENT window count must break it: if peak still fails to scale when the index size changes, the index is not what sets the peak",
+    "why_the_mechanism_matters_more_than_the_numbers": "three ratios are a curiosity; a constant index PREDICTS the next case, which is what a fourteen-night plan needs"
+  },
+  "THE_CONCLUSION_HOLDS_WITHOUT_THE_BOOK_STAGE": "the overlap verdict is decided by the TAPE stage peaks, which are measured. The book stage refused and is not measured, and the verdict does not depend on it -- a conclusion that survives a missing input is not provisional."
 }
