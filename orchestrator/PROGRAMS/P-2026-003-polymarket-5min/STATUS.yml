@@ -67,6 +67,26 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T00:52:32Z (MEM ROUND 413 -- REVIEW 256 INVERTS THE QUESTION AND C1 IS NOT ARITHMETICALLY DEAD.
+  The perfect-foresight ceiling is mean 0.0745 nats over 4,973,558 states, p90 0.1335,
+  max 0.6931 -- capped at ln 2 = 0.693147. I DERIVED THE INSTRUMENT rather than accept it:
+  the ceiling is max(ln(a/mid), ln((1-b)/(1-mid))), which tends to ln 2, and I reproduced
+  BOTH positive controls exactly -- 0.683097 against REV's 0.683, 0.009950 against
+  0.00995. Against ln 2 that mean is 10.75 PER CENT RELATIVE, so the ceiling is NOT small
+  and my rounds-411/412 worry about C1's magnitude WAS THE WRONG AXIS. THE REAL FINDING:
+  THE COMPARISON I WAS SHARPENING CANNOT BE MADE, because THE EXACT SIGN TEST HAS NO
+  MAGNITUDE RESOLUTION AT ALL -- ten of ten by 1e-9 nats gives 0.001953125 and PASSES
+  exactly as 0.08 nats would. AND I HAD THE OBSERVATION AND STOPPED ONE STEP SHORT: at 412
+  I called magnitude-blindness a constraint on C1's ability to PASS; REV called it a hole
+  in WHAT A PASS MEANS. Same premise, and REV's reading is the one that matters. No
+  magnitude floor exists in ANY of the four adoption conditions -- not a threshold set too
+  low, THERE IS NO THRESHOLD -- and the one magnitude-sensitive clause, the tie rule,
+  CANNOT BE MEASURED because price_change carries no sizes at the touch, which undercuts
+  my own 412 suggestion. REV NAMED THAT LIMIT RATHER THAN ESTIMATING AROUND IT. Both REV
+  and the coordinator refused to set the value, the coordinator stating it is in a WORSE
+  position for having seen the ceiling; it belongs to the USER. And DA makes it a
+  PREDICATE, not a note: A NOTE CAN BE FORGOTTEN AT DAY ONE, A PREDICATE CANNOT.
+  Tip b65101e.)
   2026-09-12T00:45:15Z (MEM ROUND 412 -- THE IDENTITY-AS-ARTIFACT THREAT IS REFUTED BY ITS OWN AUTHOR,
   MEASURED BEFORE ANY DAY WAS CONSUMED: artifact share 0.17 per cent BTC and 0.58 per cent
   ETH over 9.4 MILLION states, spread ONE TICK at p50 and p90, ZERO one-sided, ZERO
@@ -109,6 +129,7 @@ updated: >-
   8 gives 2*9/256 = 0.0703125, and 0.2891 is 2*37/256, the TWO-of-eight rung -- and they
   are PLUMBING, NOT EVIDENCE, carried as A FIELD IN THE SAME BLOCK rather than a caveat in
   a message. Tip 8593491.)
+previous_updates: >-
   2026-09-12T00:35:39Z (MEM ROUND 410 -- 09-11 IS SHOWN BUT NOT COUNTED, AND THE REASON WAS CORRECTED FROM
   PROCEDURE TO VALIDITY. Stage 0 fails it on MANY_MISSING_WINDOWS(4) against <= 1, where
   the four built days scored 0, 0, 0 and 1. The first reason given was rule 11 -- moving a
@@ -128,7 +149,6 @@ updated: >-
   DAYS, which STRENGTHENS the validity case. And I measured the self-clearing live: max
   1789167600 = 23:00:00Z against the needed 1789170900 = 23:55:00Z, SHORT BY 55 MINUTES
   against 10-40 minute spacing. Tip f774d2b.)
-previous_updates: >-
   2026-09-12T00:29:58Z (MEM ROUND 409 -- THE PREDICTIVE CLOCK IS NOT BLOCKED BY THE ECONOMIC GAP, PROVED BY
   REHEARSAL: the whole path ran with the fee UNDECLARED and both candidates produced full
   verdicts; MAKER_FEE_IS_NOT_DECLARED reaches only section 9. That is round 407's third
@@ -834,6 +854,16 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r413_C1_IS_NOT_ARITHMETICALLY_DEAD_and_I_reproduced_the_instrument: "The perfect-foresight ceiling on C1's per-day delta_LL: mean 0.0745 nats per action pooled over 4,973,558 states, BTC 0.0823 over 2,544,510 and ETH 0.0584 over 808,372, p50 0.0202, p90 0.1335, max 0.6931 -- structurally capped at ln 2 = 0.693147 and holding exactly on every state. I DERIVED THE INSTRUMENT FROM ITS CONSTRUCTION rather than accept the numbers: perfect foresight moves all the way to the favourable touch, so the ceiling is max(ln(a/mid), ln((1-b)/(1-mid))), which tends to ln(1/0.5) = ln 2 as the ask approaches 1 with the midpoint at a half. THE CAP IS ALGEBRAIC."
+  r413_THE_POSITIVE_CONTROLS_RAN_BEFORE_THE_MEASUREMENT_AND_I_REPRODUCED_BOTH: "REV ran controls BEFORE measuring, which is the ordering that makes them controls rather than rationalisations. The 0.01/0.99 artifact book gives 0.683 and the tight 0.495/0.505 book gives 0.00995, so the measure demonstrably separates the case where the bound MUST be large from the one where it MUST be tiny. I recomputed both from the construction: 0.683097 and 0.009950. BOTH MATCH. Exclusions were stated rather than left implicit -- every coin but BTC and ETH, non price_change events, unparseable sides, and states with min(p, 1-p) = 0, OF WHICH THERE WERE NONE, 0 of 4,973,558 -- and it was measured on price_change best_bid/best_ask, never book snapshots, which are p90 6.2 s stale."
+  r413_THE_RELATIVE_SCALE_IS_ABOUT_TEN_PER_CENT_AND_THAT_IS_NOT_SMALL: "Against a log loss of ln 2 = 0.693147 at p = 0.5, the pooled mean ceiling of 0.0745 nats is 10.75 PER CENT RELATIVE; BTC 11.87, ETH 8.43, the p50 2.91 and the p90 19.26. So the ceiling is not a small number, and the worry I carried from rounds 411 and 412 -- that C1's half-tick deviations might be too small to matter -- WAS THE WRONG AXIS. A half-tick perturbation of a two-price book can still move a log loss by a tenth of its value, because the loss is steep where the book is wide."
+  r413_THE_EXACT_SIGN_TEST_HAS_NO_MAGNITUDE_RESOLUTION_AT_ALL: "The real finding, and it INVERTS the question that was asked. The comparison between a perfect-foresight magnitude bound and what the sign test can detect CANNOT BE MADE, because the test does not resolve magnitude at any scale. It tests the SIGN of delta_LL_g and never its size: a candidate positive on ten of ten days BY 1e-9 NATS yields p = 2/2^10 = 0.001953125 and PASSES, exactly as one positive by 0.08 nats would. There is no scale at which the test starts to care."
+  r413_I_HAD_THE_OBSERVATION_AND_STOPPED_ONE_STEP_SHORT_OF_ITS_CONSEQUENCE: "At round 412 I offered that the sign test is MAGNITUDE-BLIND and concluded that the binding constraint on C1 is therefore the NONZERO-INCREMENT COUNT. Same fact, and REV drew the consequence I did not: the defect is not in C1's ability to PASS, it is in WHAT A PASS MEANS. I framed magnitude-blindness as a constraint on the candidate; REV framed it as a hole in the adoption criterion. REV'S READING IS THE ONE THAT MATTERS, and mine was a smaller true statement standing in front of a larger one."
+  r413_NO_MAGNITUDE_FLOOR_EXISTS_IN_ANY_OF_THE_FOUR_ADOPTION_CONDITIONS: "REV checked all four of section 8's adoption conditions for a magnitude floor and found NONE. The Holm p is SIGN-DRIVEN. Mean and median positive is SIGN, NOT SIZE. The 95 per cent native-coverage gate is about COVERAGE, not effect. The fourth is structural. So nothing anywhere in the criterion requires the effect to be large enough to matter -- which is a different failure from a threshold set too low: THERE IS NO THRESHOLD."
+  r413_AND_THE_ONLY_MAGNITUDE_SENSITIVE_CLAUSE_CANNOT_BE_MEASURED_which_undercuts_MY_412_suggestion: "The tie rule is the single magnitude-sensitive clause anywhere, and exactly zero requires bid_size == ask_size AT EVERY ACTION OF THE DAY. REV names that it CANNOT MEASURE how often that holds, because price_change entries carry best_bid and best_ask but NOT THE SIZES AT THE TOUCH -- AND IT NAMED THE LIMIT RATHER THAN ESTIMATING AROUND IT. That matters to me directly: my round-412 suggestion was that the binding constraint is the nonzero-increment count, and the tie rate that would determine it RESTS ON A QUANTITY NOBODY CAN MEASURE FROM THIS DATA. REV surfaced that, not I."
+  r413_THE_PLAN_DECLARES_A_MINIMUM_SAMPLE_AND_NO_MINIMUM_EFFECT: "So C1 CAN PASS SECTION 8 ON AN EFFECT OF ANY SIZE ABOVE ZERO. Its deviations are half a tick, 0.005 at p90, TINY BUT NOT ZERO, so its daily increments will be signed and nonzero, and ten favourable signs pass -- carrying C1 into section 9's economic clock on an effect that may be ECONOMICALLY INDISTINGUISHABLE FROM NOTHING. The plan declares a minimum SAMPLE, 200 minimum and satisfied at 1,024, and NO MINIMUM EFFECT. RULE 6 BINDS THE NULL AND ITS SAMPLE; NOTHING REQUIRES THE ALTERNATIVE TO BE LARGE ENOUGH TO MATTER. That is a gap in the programme's own rule set and not only in this plan."
+  r413_BOTH_REV_AND_THE_COORDINATOR_REFUSED_TO_SET_THE_VALUE_and_the_asymmetry_is_recorded: "REV REFUSED to propose a minimum meaningful delta_LL because choosing after seeing tonight's numbers would be rule 11. The coordinator refused too, AND STATED BEING IN A WORSE POSITION THAN REV, having now seen the 0.06 to 0.08 ceiling. That self-assessment is the part worth keeping: two parties declined the same task and one of them said explicitly that its own exposure to the data made it LESS qualified, not more. THE VALUE BELONGS TO WHOEVER OWNS THE ESTIMAND, WHICH IS THE USER, and it has been put to them."
+  r413_AND_THE_FIELD_IS_A_PREDICATE_RATHER_THAN_A_NOTE: "DA is adding minimum_meaningful_delta_LL as a REQUIRED, currently-UNSET field, so freeze_is_effective computes FALSE until it carries a value. A NOTE CAN BE FORGOTTEN AT DAY ONE, A PREDICATE CANNOT. That is the second time in two rounds that a requirement has been moved from a person into a thing that refuses -- the first being the section 7 versus section 9 adjudication becoming a third condition inside the same predicate -- and it is the single most reliable repair pattern this programme has found tonight."
   r412_THE_IDENTITY_AS_ARTIFACT_HYPOTHESIS_IS_REFUTED_BY_ITS_OWN_AUTHOR: "Measured and dismissed BEFORE any day was consumed, which is the outcome raising a threat is for. Artifact share 0.17 per cent BTC and 0.58 per cent ETH over 9.4 MILLION price_change states; spread is ONE TICK at both p50 and p90; ZERO one-sided books; ZERO crossed. So Identity is a REAL COMPARATOR at the decision instants, and the concern is QUANTIFIED rather than argued away -- the difference being that a quantified threat can be revisited if the rate moves, and an argued-away one cannot."
   r412_AND_REV_REFUSED_TO_LEAN_ON_ITS_OWN_130_OF_130_which_I_verified_was_RIGHT: "REV explicitly refused to cite its 130-of-130 clean decision instants, naming their LOW POWER at a 0.2 to 0.6 per cent rate and pointing instead at the 9.4M all-states figure. I computed whether that refusal was justified rather than praising it: at 0.17 per cent, P(zero artifacts in 130 draws) = 0.80; at 0.58 per cent it is 0.47. SO SEEING 130 CLEAN INSTANTS IS THE EXPECTED OUTCOME EVEN IF THE ARTIFACT IS ENTIRELY REAL -- it would take 516 draws for a clean run to be surprising at 0.58 per cent. The refusal was not modesty. THE WEAKER EVIDENCE POINTED THE SAME WAY AND WOULD HAVE BEEN EASY TO CITE, AND CITING IT WOULD HAVE BEEN CITING NOISE THAT HAPPENED TO AGREE."
   r412_THE_C1_BOUND_IS_ALGEBRAIC_NOT_EMPIRICAL_AND_I_PROVED_IT: "|C1 - Identity| <= spread/2 EXACT AND BY CONSTRUCTION, because C1 is a convex combination of the same two prices of which Identity is the midpoint. The algebra: |w*a + (1-w)*b - (a+b)/2| = |w - 1/2| * (a-b) <= (a-b)/2, for any weight w in [0,1]. I also checked it numerically over 200,000 random books and the ratio to spread/2 maxes at 0.999992, approaching but never exceeding 1 exactly as the algebra requires. At the measured p90 spread of 0.005 that is |C1 - Identity| <= 0.0025, and on a one-tick spread it is 0.0005. C1 IS A HALF-TICK PERTURBATION OF THE BASELINE."
@@ -28777,6 +28807,46 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r413_C1_IS_NOT_ARITHMETICALLY_DEAD_and_I_reproduced_the_instrument:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "computed max(ln(a/mid), ln((1-b)/(1-mid))) for the reported control books and took the limit as a approaches 1 with mid at 0.5, giving ln 2 = 0.693147 exactly as reported."
+  r413_THE_POSITIVE_CONTROLS_RAN_BEFORE_THE_MEASUREMENT_AND_I_REPRODUCED_BOTH:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "ln(0.99/0.5) = 0.683097 and ln(0.505/0.5) = 0.009950, against REV's reported 0.683 and 0.00995."
+  r413_THE_RELATIVE_SCALE_IS_ABOUT_TEN_PER_CENT_AND_THAT_IS_NOT_SMALL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "divided each reported ceiling statistic by ln 2 = 0.693147: 10.75, 11.87, 8.43, 2.91 and 19.26 per cent."
+  r413_THE_EXACT_SIGN_TEST_HAS_NO_MAGNITUDE_RESOLUTION_AT_ALL:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "the ten-of-ten rung is 2/1024 = 0.001953125, which I computed at round 402 and again at 412; the sign test's statistic is the count of positive nonzero increments and carries no magnitude term."
+  r413_I_HAD_THE_OBSERVATION_AND_STOPPED_ONE_STEP_SHORT_OF_ITS_CONSEQUENCE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "my round-412 flag records the magnitude-blindness observation and the nonzero-count conclusion; REVIEW 256 draws the adoption-criterion consequence from the same premise."
+  r413_NO_MAGNITUDE_FLOOR_EXISTS_IN_ANY_OF_THE_FOUR_ADOPTION_CONDITIONS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "the four conditions are section 8's own; REV's check is of each in turn for any term in the magnitude of delta_LL."
+  r413_AND_THE_ONLY_MAGNITUDE_SENSITIVE_CLAUSE_CANNOT_BE_MEASURED_which_undercuts_MY_412_suggestion:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "the tie rule's exact-zero condition and the absence of touch sizes in price_change are REV's; my round-412 flag proposed the nonzero-count framing that depends on them."
+  r413_THE_PLAN_DECLARES_A_MINIMUM_SAMPLE_AND_NO_MINIMUM_EFFECT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
+    said: "the 200-minimum and the 2^10 = 1,024 assignment count are section 8's; the half-tick bound is the algebraic one I proved at round 412."
+  r413_BOTH_REV_AND_THE_COORDINATOR_REFUSED_TO_SET_THE_VALUE_and_the_asymmetry_is_recorded:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "both refusals are recorded in the dispatch, with the coordinator's statement that having seen the ceiling puts it in a worse position than REV to choose the threshold."
+  r413_AND_THE_FIELD_IS_A_PREDICATE_RATHER_THAN_A_NOTE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the field and its unset-blocks-the-freeze behaviour are DA's; the prior instance is the adjudication condition recorded at round 412."
   r412_THE_IDENTITY_AS_ARTIFACT_HYPOTHESIS_IS_REFUTED_BY_ITS_OWN_AUTHOR:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
