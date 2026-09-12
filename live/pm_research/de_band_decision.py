@@ -33,6 +33,7 @@ CALL_SITE = {
 }
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -73,6 +74,15 @@ ETH_SECONDS_KEYS = ("eth_book_stage_seconds", "eth_build_seconds",
 PROJECTED_ETH_RATES = (0.95, 0.90)
 UNLABELLED_ETH = "ETH_DEPENDENT_FIGURE_IS_UNLABELLED"
 COLLAPSED_RATIO = "ETH_COST_COLLAPSED_INTO_ONE_RATIO"
+BARE_BOOLEAN = "A_VERDICT_BOOLEAN_WITHOUT_ITS_BASIS"
+#: A headroom smaller than this fraction of the limit is NOISE, not a
+#: margin. Declared before the measurement was read, not chosen around it.
+MARGIN_IS_NOISE_BELOW = 0.10
+#: Verdict keys must carry a basis. A bare boolean in one of these
+#: positions is a two-valued field standing in for a state that needs
+#: three -- comfortably, marginally under a soft cap, no.
+VERDICT_KEY = re.compile(
+    r"^(fits|can_|could_|is_safe|safe_to)|(_passes|_clears|_is_ok)$")
 COST_AS_RATE = "A_BUILD_COST_IS_NOT_A_SUCCESS_RATE"
 PARTIAL = "PARTIALLY_MEASURED"
 OWED = "OWED"
@@ -102,6 +112,52 @@ def M(value, *, population: str, criterion: str, source: str,
     if note:
         out["note"] = note
     return out
+
+
+def V(value: bool, *, basis: str, n_observations, limit_kind: str = None,
+      source: str = "") -> dict:
+    """A VERDICT, WITH THE BASIS THAT MAKES IT READABLE.
+
+    `fits: true` is a bare boolean: it cannot say whether it fits
+    comfortably or by less than the noise, nor whether the limit it fits
+    under KILLS or merely throttles. A later reader finds the true and
+    plans a night on it.
+    """
+    return {"verdict": bool(value), "basis": basis,
+            "n_observations": n_observations,
+            "limit_kind": limit_kind, "source": source,
+            "A_BOOLEAN_WITHOUT_THIS_IS_NOT_READABLE": True}
+
+
+def _is_verdict(node) -> bool:
+    return (isinstance(node, dict)
+            and {"verdict", "basis", "n_observations"} <= set(node))
+
+
+def assert_verdicts_carry_their_basis(doc, path: str = "$") -> int:
+    """EVERY VERDICT BOOLEAN CARRIES ITS BASIS, or this refuses.
+
+    The attribution guard checked that NUMBERS carry their population and
+    criterion and let a bare `fits: true` through -- the same damage in a
+    different type (DE 401).
+    """
+    n = 0
+    if _is_verdict(doc):
+        return 1
+    if isinstance(doc, dict):
+        for k, v in doc.items():
+            if isinstance(v, bool) and VERDICT_KEY.search(k):
+                raise DecisionRefused(
+                    f"REFUSED {BARE_BOOLEAN}: {path}.{k} = {v} is a "
+                    f"verdict with no basis. Two values cannot express "
+                    f"comfortably / marginally-under-a-soft-limit / no, "
+                    f"and a reader who finds the true will plan on it.")
+            n += assert_verdicts_carry_their_basis(v, f"{path}.{k}")
+        return n
+    if isinstance(doc, (list, tuple)):
+        for i, v in enumerate(doc):
+            n += assert_verdicts_carry_their_basis(v, f"{path}[{i}]")
+    return n
 
 
 def _is_measure(node) -> bool:
@@ -387,6 +443,19 @@ def night_budget(costs: dict) -> dict:
 GIB = 1024 ** 3
 
 
+def _three_state(total: int, high: int) -> str:
+    """THREE STATES, because two cannot say what this one needs to."""
+    if not high:
+        return "UNRESOLVED"
+    if total > high:
+        return "OVER_THE_SOFT_LIMIT"
+    frac = (high - total) / high
+    if frac >= MARGIN_IS_NOISE_BELOW:
+        return f"COMFORTABLY_UNDER_BY_{frac * 100:.1f}_PERCENT"
+    return (f"FITS_SOFT_LIMIT_BY_{frac * 100:.1f}_PERCENT_ON_SINGLE_"
+            f"OBSERVATIONS")
+
+
 def memory_threshold() -> dict:
     """THE THRESHOLD, READ FROM THE SYSTEM, not from a remembered
     constant. "The 12 GB rule" is a phrase; systemd holds a number."""
@@ -447,7 +516,17 @@ def overlap_question(costs: dict) -> dict:
                 criterion="sum of peak RSS; two units in one slice share "
                           "its threshold", source=costs.get("declared_by"),
                 provenance=MEASURED),
-            "fits_under_MemoryHigh": (total <= high) if high else None,
+            "fits_under_MemoryHigh": V(
+                (total <= high) if high else False,
+                basis=("MemoryHigh is a SOFT limit: it throttles through "
+                       "reclaim, it does not kill. The hard kill is "
+                       "MemoryMax at 14 GiB, and each unit is separately "
+                       "capped at 8 GiB"),
+                n_observations="1 day per coin -- single observations, so "
+                               "the interval on this headroom is wider "
+                               "than the headroom",
+                limit_kind="SOFT_THROTTLE",
+                source="systemctl x the declaration"),
             "headroom_bytes": M((high - total) if high else None,
                                 population=f"{stage}, both coins",
                                 criterion="MemoryHigh minus the peak sum",
@@ -459,8 +538,27 @@ def overlap_question(costs: dict) -> dict:
                 criterion="headroom as a fraction of MemoryHigh",
                 source="systemctl x the declaration",
                 provenance=MEASURED),
-            "verdict": ("CAN_OVERLAP" if high and total <= high
-                        else "CANNOT_OVERLAP" if high else "UNRESOLVED"),
+            "verdict": _three_state(total, high),
+            "RECOMMENDATION": (
+                "DO NOT PLAN TO OVERLAP" if high and total <= high
+                and (high - total) / high < MARGIN_IS_NOISE_BELOW
+                else "DO NOT PLAN TO OVERLAP" if high and total > high
+                else "no objection on memory" if high else "UNRESOLVED"),
+            "why_the_recommendation": (
+                "the headroom is inside measurement noise and the limit "
+                "it fits under THROTTLES rather than refuses -- NOT "
+                "because it exceeds the cap"
+                if high and total <= high
+                and (high - total) / high < MARGIN_IS_NOISE_BELOW else
+                "it exceeds the soft limit" if high and total > high else
+                "headroom is comfortable" if high else
+                "no peak supplied"),
+            "THE_FAILURE_MODE_IS_THE_ARGUMENT": (
+                "a throttled night looks like a SLOW night rather than a "
+                "broken one. For a fourteen-night band where a lost day "
+                "costs a band day, silent slowdown is worse than a clean "
+                "refusal: a refusal we would notice, a throttle we would "
+                "attribute to load and re-plan around"),
         }
     # THE UNIT DECIDES IT, so both readings are shown rather than one
     # chosen silently.
@@ -985,6 +1083,7 @@ def emit(path=None, as_of: str = None) -> dict:
     n = assert_attributed(doc)
     assert_eth_labelled(doc["ETH_DEPENDENT_FIGURES"])
     assert_no_collapsed_ratio(doc["ETH_DEPENDENT_FIGURES"]["BUILD_COST"])
+    assert_verdicts_carry_their_basis(doc)
     if path:
         doc["ETH_DEPENDENT_FIGURES"]["provenance_transition"] = (
             eth_provenance_transition(
@@ -1205,6 +1304,38 @@ def falsify() -> int:
            "value"] < 0.1,
        f"{u['as_12_GiB_which_is_what_systemd_holds']['headroom_GiB']['value']:.3f} "
        f"GiB, 0.7% of the threshold")
+    ck("THE VERDICT IS THREE-STATE, and the tape stage names its margin "
+       "and its n in the verdict itself",
+       ov["per_stage"]["tape"]["verdict"].startswith("FITS_SOFT_LIMIT_BY")
+       and "SINGLE_OBSERVATIONS" in ov["per_stage"]["tape"]["verdict"]
+       and ov["per_stage"]["fragment"]["verdict"].startswith(
+           "COMFORTABLY_UNDER"),
+       ov["per_stage"]["tape"]["verdict"])
+    ck("  and the RECOMMENDATION is DO NOT PLAN TO OVERLAP for the "
+       "margin, NOT for exceeding the cap",
+       ov["per_stage"]["tape"]["RECOMMENDATION"] == "DO NOT PLAN TO "
+                                                    "OVERLAP"
+       and "NOT" in ov["per_stage"]["tape"]["why_the_recommendation"],
+       "headroom-within-noise and soft-limit throttling")
+    ck("  and the failure mode is stated: a throttled night looks SLOW, "
+       "not broken",
+       bool(ov["per_stage"]["tape"]["THE_FAILURE_MODE_IS_THE_ARGUMENT"]))
+    fits = ov["per_stage"]["tape"]["fits_under_MemoryHigh"]
+    ck("the boolean carries its BASIS, its n and the limit KIND",
+       fits["limit_kind"] == "SOFT_THROTTLE"
+       and "single observations" in fits["n_observations"]
+       and "does not kill" in fits["basis"],
+       "soft throttle, n=1 per coin")
+    try:
+        assert_verdicts_carry_their_basis({"memory": {"fits_cap": True}})
+        ck("  and a BARE verdict boolean refuses -- the shape the "
+           "attribution guard let through", False)
+    except DecisionRefused as exc:
+        ck("  and a BARE verdict boolean refuses -- the shape the "
+           "attribution guard let through", BARE_BOOLEAN in str(exc))
+    ck("  while a non-verdict flag is still allowed",
+       assert_verdicts_carry_their_basis(
+           {"computed_not_printed": True, "n": 1}) == 0)
     ck("the fragment stage resolves and the book stage does NOT",
        ov["per_stage"]["fragment"]["verdict"] != "UNRESOLVED"
        and ov["per_stage"]["book"]["verdict"] == "UNRESOLVED",
