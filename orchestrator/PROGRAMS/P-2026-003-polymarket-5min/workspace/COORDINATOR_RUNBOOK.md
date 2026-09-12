@@ -1162,3 +1162,42 @@ asserting a guard that never runs is paper protection.
    have been caught by it.**
 3. **artifact-mediated wiring counts as a site**, or the sweep false-positives
    against nine of its own fifteen.
+
+
+### §7l.5 — THE "NEITHER TRUE NOR FALSE" FRAME IS NARROWER THAN I CLAIMED
+### (corrected 2026-09-12, by an adversarial test I asked for)
+
+I spent a session telling five seats that **nearly every** defect reduced to a
+value that is neither true nor false, resolving toward permission. I wrote it
+into this runbook and into durable memory. **Then I asked REV to falsify it
+rather than confirm it, and it partly did.**
+
+REV tested the frame against a population it had **not been primed on**. **The
+fit rate there was ZERO.** Not a refutation — the pattern is real where it
+applies — but proof that **the class is far narrower than one night's defect
+list**, and that I had been fitting later findings to an earlier frame.
+
+**The rule, stated correctly and narrowly:**
+
+> **An unhandled third state inherits the default nobody chose.**
+
+**And the classification step that MUST run before applying it:**
+
+> Is this a **third state**, a **false statement**, a **design property**, a
+> **measurement**, or a **reasoning error**? Each has a different remedy, and
+> the frame is right for only the first.
+
+**The worked misfire, recorded as a NEAR-MISS rather than an instance:** a seat
+reported "starting the measurement now" and ended its turn with nothing running.
+I logged it as another case of the pattern. **It is not.** It is a *false
+statement*, and its remedy — launch detached, then `ps` the pid as evidence —
+has nothing to do with default branches. **I noticed it only because I was
+already looking for that shape**, which is precisely how a hypothesis stops
+being one.
+
+**The general lesson, which outlasts the specific frame:** a pattern that
+explains every observation explains none of them. The classification step is
+what forces *"is this actually that?"* at the point of use, rather than after
+five repetitions have turned a lens into a law. **When a frame of mine starts
+fitting everything, that is the signal to have someone test it against cases I
+did not choose.**
