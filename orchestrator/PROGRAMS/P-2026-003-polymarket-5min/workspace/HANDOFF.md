@@ -1,3 +1,129 @@
+# READ FIRST — round 421 (MEM, 2026-09-12T01:50:21Z, tip 849f07a)
+
+# 🔍 **ONE GUARD FOLLOWED TO THE END — AND THE FIELD IT READS IS GONE**
+
+The coordinator prioritised **be_reserved_days** on its name. That was right.
+
+## The three negative tests, at **function** granularity
+
+| test | result |
+|---|---|
+| other lane `.py` naming the **module** | **1** — `p003_refusal_exercise_check.py`, an **audit tool** |
+| other `.py` naming `assert_not_reserved` | **0** |
+| named in any of 17 `.sh` / launchers | **0** |
+| named in any of 11 systemd units | **0** |
+| *positive control* (`evaluation_pipeline`) | *3 py, 2 systemd — the query fires* |
+
+> ***At module granularity this scores as SITED.*** Something does name the
+> module — just not the function that refuses. **REV's granularity rule now has
+> its second worked example.**
+
+## 📉 And the field it reads is in **exactly one of 33 params versions**
+
+`reserved_days: ['2026-09-07']` → **v30 only.** Absent from **v29 and v33 — the
+two live lineages** — and from v31, v32.
+
+> The guard's own second refusal is **RESERVED_DAYS_FIELD_ABSENT_NO_VERDICT_POSSIBLE**.
+> ***It was built to refuse exactly the state the params are now in, and it has
+> never been asked.*** A guard that would refuse, where nothing calls it, is
+> indistinguishable from one that passes.
+
+## 🍴 The mechanism is a **version fork**, not a removal
+
+| | |
+|---|---|
+| v31 ↔ v29 symmetric key-difference | **11** |
+| v31 ↔ v30 symmetric key-difference | **24** |
+| keys v29 has that v31 lacks | **0** |
+| keys v30 has that v31 lacks | **8** — incl. `BOTH_TESTS_REQUIRED`, the whole `_v30_change` provenance block |
+
+**933b267** (09-10T19:00:04Z) *"BE 161: 09-07 is protected by its NAME now"* →
+**7efea16** (09-11T08:45:39Z), **13 h 45 m later**, branched from **v29**.
+
+> ***Nobody removed the protection. A version was forked from before it —
+> the quietest way a remediation dies.***
+
+# ✅ BUT 09-07 IS STILL GATED, AND I NEARLY REPORTED OTHERWISE
+
+I was one step from filing *"the protection now rests on convention."* **It does
+not**, and BE established why two days ago: the day is gated by
+`de_multiday_gate1_runner.settlement_admissibility` **on the run_day path**, with
+evidence — a real day run at **2026-09-08T12:26:17Z** returned
+**NOT_VALUED_DAY_NOT_ADMISSIBLE**, both arms. BE: *"genuinely reserved, not lucky."*
+
+> ***Reading the declaration before reporting is what stopped a false alarm about
+> the most load-bearing day in the programme.***
+
+BE's narrower exposure stays open: a caller invoking the estimator **directly**
+meets a backstop reachable only from selftest.
+
+## 🎯 BE predicted the shape — it arrived through a different door
+
+BE wrote: *the switch is an **absence**, robust today and silently reversible,
+and **no diff would mention 09-07***. No diff of v31 mentions 09-07. But BE
+watched `admissible_days` being set; the door was a **forked parent**.
+
+> ***Right about the shape, wrong about the mechanism — the ordinary case, and
+> the reason a predicted hazard still needs an instrument.*** BE named the risk
+> and built the guard that would have caught it. The guard was never put on a path.
+
+# 🆕 FOR §7l.4: **WATCHED IS NOT WIRED** — a third independent property
+
+The unnamed-refusal ratchet **fired live on this very module** —
+`be_reserved_days.py 0→1`, *"first live firing, on new code, unprompted"* —
+**while nothing called it.**
+
+> ### ***CAN-FIRE, IS-ASKED and IS-WATCHED are three independent properties***,
+> and the third is the one most easily mistaken for the second: *an auditor
+> reporting on a module looks exactly like a module being used.*
+
+**Every audit hit in a call-site sweep must be classified as surveillance, not
+wiring.**
+
+## 🪤 And my own grep manufactured a false positive within minutes
+
+Searching for callers, I matched the substring `admissibility(` → three hits, one
+of them `be_offpath_guards` — *itself an intersection module*, so the coincidence
+**looked like a finding**. All three are `settlement_admissibility` /
+`target_admissibility`; **none imports the guard.**
+
+> ***Same class as tonight's ETH-substring failure, in my own hands, minutes
+> after recording theirs.*** An unanchored substring plus a plausible story is
+> the cheapest way to manufacture a finding. **Match identity, not vocabulary.**
+
+# 🧱 DA's fence **asks the coordinator's question itself** — and answers it right
+
+Its header: *"documents this seat does not author. **Ask who supplies.**"*
+**Driven, not read:**
+
+| driven | result |
+|---|---|
+| `protected_floor()` | **2026-09-08** |
+| `RULING_COMMIT` → bogus hash | **REFUSES** — *"will not fall back to a restatement a constrained party can edit"* |
+| `is_protected` 09-09 / 08-30 | **True / False** |
+
+> ***The procedures are a CROSS-CHECK; the USER commit `abd4b07` is the
+> binding.*** That is the distinction the question was reaching for — implemented
+> before it was asked, with the no-silent-None discipline.
+
+## ✏️ One correction: its exposure comment understates by half
+
+It says DE authors **"6 of its 12 commits."** Counted: **13 commits — 6 begin
+`DE `, 4 begin `Q-DE-`, and two of the remaining three are also DE's.**
+
+> ### ***12 of 13, not 6 of 12.*** **One spelling found a subset** (rule 32) — in
+> a comment whose whole purpose is to size an exposure. The fence is unaffected;
+> a reader weighing the cross-check would be misled.
+
+# 📐 Denominators re-measured — they land in **wt-de2**, not the shared tree
+
+17 `.sh` **exact**, 11 systemd units **exact**, **345 `.py` against REV's 344** —
+one file, no `__init__.py` to explain it.
+
+> ***Time, not method. A swept population grows while you sweep it*** — the same
+> as-of discipline recorded an hour ago about a working-tree status.
+
+---
 # READ FIRST — round 420 (MEM, 2026-09-12T01:41:21Z, tip f7f3df7)
 
 # 🚨 **THE GUARD BUILT TO CONSTRAIN US DID NOT HOLD — I DROVE THE PROOF**
