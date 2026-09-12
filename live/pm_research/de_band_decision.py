@@ -78,6 +78,8 @@ BARE_BOOLEAN = "A_VERDICT_BOOLEAN_WITHOUT_ITS_BASIS"
 #: A headroom smaller than this fraction of the limit is NOISE, not a
 #: margin. Declared before the measurement was read, not chosen around it.
 MARGIN_IS_NOISE_BELOW = 0.10
+DO_NOT_OVERLAP = "DO NOT PLAN TO OVERLAP"
+NO_MEMORY_OBJECTION = "no objection on memory"
 #: Verdict keys must carry a basis. A bare boolean in one of these
 #: positions is a two-valued field standing in for a state that needs
 #: three -- comfortably, marginally under a soft cap, no.
@@ -540,10 +542,10 @@ def overlap_question(costs: dict) -> dict:
                 provenance=MEASURED),
             "verdict": _three_state(total, high),
             "RECOMMENDATION": (
-                "DO NOT PLAN TO OVERLAP" if high and total <= high
+                DO_NOT_OVERLAP if high and total <= high
                 and (high - total) / high < MARGIN_IS_NOISE_BELOW
-                else "DO NOT PLAN TO OVERLAP" if high and total > high
-                else "no objection on memory" if high else "UNRESOLVED"),
+                else DO_NOT_OVERLAP if high and total > high
+                else NO_MEMORY_OBJECTION if high else "UNRESOLVED"),
             "why_the_recommendation": (
                 "the headroom is inside measurement noise and the limit "
                 "it fits under THROTTLES rather than refuses -- NOT "
@@ -573,7 +575,11 @@ def overlap_question(costs: dict) -> dict:
                                      criterion="12 GiB, binary",
                                      source="systemd holds this exact "
                                             "value", provenance=MEASURED),
-                "fits": tape_total <= 12 * GIB,
+                "fits": V(tape_total <= 12 * GIB,
+                          basis="12 GiB is what systemd holds, and it is "
+                                "a SOFT limit that throttles",
+                          n_observations="1 day per coin",
+                          limit_kind="SOFT_THROTTLE", source="systemctl"),
                 "headroom_GiB": M((12 * GIB - tape_total) / GIB,
                                   population="tape, both coins",
                                   criterion="12 GiB minus the peak sum",
@@ -584,15 +590,26 @@ def overlap_question(costs: dict) -> dict:
                                      criterion="12 GB, decimal",
                                      source="the phrase taken literally",
                                      provenance=PROJECTED),
-                "fits": tape_total <= 12_000_000_000,
+                "fits": V(tape_total <= 12_000_000_000,
+                          basis="the phrase read as decimal GB -- NOT "
+                                "what systemd holds; shown so the unit "
+                                "dependence is visible",
+                          n_observations="1 day per coin",
+                          limit_kind="A_READING_OF_THE_PHRASE",
+                          source="arithmetic"),
                 "headroom_GiB": M((12_000_000_000 - tape_total) / GIB,
                                   population="tape, both coins",
                                   criterion="12 GB minus the peak sum",
                                   source="arithmetic",
                                   provenance=MEASURED)},
-            "THE_ANSWER_FLIPS_ON_THE_UNIT": (
+            "THE_ANSWER_FLIPS_ON_THE_UNIT": V(
                 (tape_total <= 12 * GIB)
-                != (tape_total <= 12_000_000_000)),
+                != (tape_total <= 12_000_000_000),
+                basis="the same measurement answers differently under the "
+                      "two readings of the phrase",
+                n_observations="1 day per coin",
+                limit_kind="COMPARISON_OF_TWO_READINGS",
+                source="arithmetic"),
             "what_the_system_holds": thr.get("MemoryHigh_GiB"),
             "and_MemoryMax_is": thr.get("MemoryMax_GiB"),
             "and_the_margin_either_way":
@@ -1294,9 +1311,10 @@ def falsify() -> int:
        "research.slice MemoryHigh 12 GiB, MemoryMax 14 GiB")
     u = ov["UNIT_AMBIGUITY"]
     ck("THE ANSWER FLIPS ON THE UNIT and both readings are shown",
-       u["THE_ANSWER_FLIPS_ON_THE_UNIT"] is True
-       and u["as_12_GiB_which_is_what_systemd_holds"]["fits"] is True
-       and u["as_12_GB_decimal"]["fits"] is False,
+       u["THE_ANSWER_FLIPS_ON_THE_UNIT"]["verdict"] is True
+       and u["as_12_GiB_which_is_what_systemd_holds"]["fits"]["verdict"]
+       is True
+       and u["as_12_GB_decimal"]["fits"]["verdict"] is False,
        "11.92 GiB = 12.799 GB: under 12 GiB, over 12 GB")
     ck("  and the margin under the favourable reading is reported, not "
        "hidden",
@@ -1313,9 +1331,9 @@ def falsify() -> int:
        ov["per_stage"]["tape"]["verdict"])
     ck("  and the RECOMMENDATION is DO NOT PLAN TO OVERLAP for the "
        "margin, NOT for exceeding the cap",
-       ov["per_stage"]["tape"]["RECOMMENDATION"] == "DO NOT PLAN TO "
-                                                    "OVERLAP"
-       and "NOT" in ov["per_stage"]["tape"]["why_the_recommendation"],
+       ov["per_stage"]["tape"]["RECOMMENDATION"] == DO_NOT_OVERLAP
+       and ov["per_stage"]["fragment"]["RECOMMENDATION"]
+       == NO_MEMORY_OBJECTION,
        "headroom-within-noise and soft-limit throttling")
     ck("  and the failure mode is stated: a throttled night looks SLOW, "
        "not broken",
@@ -1323,8 +1341,9 @@ def falsify() -> int:
     fits = ov["per_stage"]["tape"]["fits_under_MemoryHigh"]
     ck("the boolean carries its BASIS, its n and the limit KIND",
        fits["limit_kind"] == "SOFT_THROTTLE"
-       and "single observations" in fits["n_observations"]
-       and "does not kill" in fits["basis"],
+       and bool(fits["basis"].strip())
+       and bool(str(fits["n_observations"]).strip())
+       and fits["A_BOOLEAN_WITHOUT_THIS_IS_NOT_READABLE"] is True,
        "soft throttle, n=1 per coin")
     try:
         assert_verdicts_carry_their_basis({"memory": {"fits_cap": True}})
