@@ -670,6 +670,66 @@ def build() -> dict:
         "maker_fee_rule": None,
         "maker_fee_residual": RESIDUAL,
         "maker_fee_account_partition": ACCOUNT_PARTITION,
+
+        #: THE NEGATIVE DECLARATION (DA 293). Written on its own merits: it is
+        #: the honest state of the evidence whatever the ledger decides to do
+        #: with it. A question answered NEGATIVELY is still answered.
+        "maker_fee_negative_declaration": {
+            "status": "FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_DATA",
+            "claim": ("the maker fee applicable to US cannot be established "
+                      "from any artifact this programme collects. This is a "
+                      "RESOLVED question with a negative answer, not an "
+                      "unexamined one."),
+            "the_five_strands": {
+                "1_account_partition_is_total": (
+                    "six maker addresses are charged on 100% of their legs and "
+                    "none is mixed; charged-ness is an ACCOUNT attribute"),
+                "2_the_RATE_is_an_account_attribute_too": (
+                    "each charged address carries exactly ONE rate tier -- "
+                    "four at ~0.099 and two at 0.495, never both. So the fee "
+                    "is not a market parameter that could be read off the "
+                    "market; it is a property of the counterparty"),
+                "3_the_venue_field_is_populated_but_non_discriminating": (
+                    "`fee_rate_bps` is present on every trade event and reads "
+                    "zero for ALL SIX charged accounts. It cannot separate the "
+                    "charged from the uncharged, so it cannot be the rule"),
+                "4_the_corpus_is_a_sample_not_a_population": (
+                    "the audit's own limit: 901 receipts bound observed volume "
+                    "only. An absence from the charged set is not membership "
+                    "in the zero class"),
+                "5_no_validated_fee_model_exists": (
+                    "the formula reproduces 110 of 901 taker legs to 1e-6 "
+                    "(12.21%) where the schedule is FULLY observable, with a "
+                    "maximum residual of 0.51 USDC"),
+            },
+            "and_the_sixth_which_is_decisive": (
+                "WE HAVE NO MAKER ADDRESS. The programme is research-only and "
+                "has never rested an order on this book, so our own treatment "
+                "is not merely unobserved -- it does not yet exist to observe. "
+                "No amount of further collection closes that; only trading "
+                "does."),
+            "what_would_change_it": [
+                "the published CLOB fee schedule for these condition ids with "
+                "an effective date, which no collector captures",
+                "or an executing account of our own with observed fills",
+            ],
+        },
+
+        #: FOR DE'S §9 SENSITIVITY. Measured, not quoted.
+        "sensitivity_rate_worst_observed": 0.495,
+        "sensitivity_rate_modal": 0.099,
+        "sensitivity_price_basis": "min_p_at_each_fill_own_price",
+        "sensitivity_basis_note": (
+            "rate = fee / (size x min(p, 1-p)) evaluated at EACH FILL'S OWN "
+            "price, never at a portfolio or day average -- min(p, 1-p) is "
+            "convex in p and an average price understates the charge at the "
+            "extremes where every observed charge actually fell. The two tiers "
+            "are per-address and disjoint: 0.0989/0.0990 on four addresses, "
+            "0.4950 on two, one tier per address with no address in both."),
+        "sensitivity_tiers_by_address": {
+            "0x0fd0ebb1ba": 0.495, "0x18b0b71054": 0.0989,
+            "0x2277c18fb7": 0.099, "0x8d009282a7": 0.0989,
+            "0xb3b0780f28": 0.099, "0xbdf221228d": 0.495},
         "dispatch_note": ("DA 287 ruled ADOPT the qualified zero; DA 288 "
                           "REVERSED it on REVIEW 249's account partition, "
                           "before it landed."),
@@ -750,6 +810,24 @@ def falsify() -> int:
        and "six accounts" in src["BUT_IT_IS_NON_DISCRIMINATING_AND_THAT_IS_WHY_IT_IS_NOT_A_RULE"])
     ck("...the durable test is DISCRIMINATION, not presence",
        "DISCRIMINATION" in src["THE_LESSON_THAT_OUTLIVES_THE_FEE"])
+    nd = d["maker_fee_negative_declaration"]
+    ck("the NEGATIVE DECLARATION is written, with a named status",
+       nd["status"] == "FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_DATA")
+    ck("...and it carries FIVE independent strands plus the decisive sixth",
+       len(nd["the_five_strands"]) == 5 and "NO MAKER ADDRESS" in
+       nd["and_the_sixth_which_is_decisive"])
+    ck("...and says plainly that further collection cannot close it",
+       "only trading does" in nd["and_the_sixth_which_is_decisive"])
+    ck("the RATE is an account attribute: one tier per address, none in both",
+       len(set(d["sensitivity_tiers_by_address"].values())) == 3
+       and len(d["sensitivity_tiers_by_address"]) == 6,
+       str(sorted(set(d["sensitivity_tiers_by_address"].values()))))
+    ck("DE's sensitivity fields are present and MEASURED",
+       d["sensitivity_rate_worst_observed"] == 0.495
+       and d["sensitivity_rate_modal"] == 0.099
+       and d["sensitivity_price_basis"] == "min_p_at_each_fill_own_price")
+    ck("...and the price basis warns against averaging a CONVEX function",
+       "convex in p" in d["sensitivity_basis_note"])
     ck("so NO FEE RULE APPLICABLE TO US EXISTS is stated plainly",
        "does not exist" in f["NO_FEE_RULE_APPLICABLE_TO_US_EXISTS"])
     ck("but the on-chain residual is NOT swept under it",

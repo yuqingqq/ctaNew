@@ -44,6 +44,34 @@
    "so_the_receipt_must_say": "the fee applicable to US is UNOBSERVED BY CONSTRUCTION. A zero taken from other accounts' fills is not our fee; 6 of 218 observed accounts (2.8%) are in a charged class, and nothing determines which class an account of ours would join."
   }
  },
+ "maker_fee_negative_declaration": {
+  "status": "FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_DATA",
+  "claim": "the maker fee applicable to US cannot be established from any artifact this programme collects. This is a RESOLVED question with a negative answer, not an unexamined one.",
+  "the_five_strands": {
+   "1_account_partition_is_total": "six maker addresses are charged on 100% of their legs and none is mixed; charged-ness is an ACCOUNT attribute",
+   "2_the_RATE_is_an_account_attribute_too": "each charged address carries exactly ONE rate tier -- four at ~0.099 and two at 0.495, never both. So the fee is not a market parameter that could be read off the market; it is a property of the counterparty",
+   "3_the_venue_field_is_populated_but_non_discriminating": "`fee_rate_bps` is present on every trade event and reads zero for ALL SIX charged accounts. It cannot separate the charged from the uncharged, so it cannot be the rule",
+   "4_the_corpus_is_a_sample_not_a_population": "the audit's own limit: 901 receipts bound observed volume only. An absence from the charged set is not membership in the zero class",
+   "5_no_validated_fee_model_exists": "the formula reproduces 110 of 901 taker legs to 1e-6 (12.21%) where the schedule is FULLY observable, with a maximum residual of 0.51 USDC"
+  },
+  "and_the_sixth_which_is_decisive": "WE HAVE NO MAKER ADDRESS. The programme is research-only and has never rested an order on this book, so our own treatment is not merely unobserved -- it does not yet exist to observe. No amount of further collection closes that; only trading does.",
+  "what_would_change_it": [
+   "the published CLOB fee schedule for these condition ids with an effective date, which no collector captures",
+   "or an executing account of our own with observed fills"
+  ]
+ },
+ "sensitivity_rate_worst_observed": 0.495,
+ "sensitivity_rate_modal": 0.099,
+ "sensitivity_price_basis": "min_p_at_each_fill_own_price",
+ "sensitivity_basis_note": "rate = fee / (size x min(p, 1-p)) evaluated at EACH FILL'S OWN price, never at a portfolio or day average -- min(p, 1-p) is convex in p and an average price understates the charge at the extremes where every observed charge actually fell. The two tiers are per-address and disjoint: 0.0989/0.0990 on four addresses, 0.4950 on two, one tier per address with no address in both.",
+ "sensitivity_tiers_by_address": {
+  "0x0fd0ebb1ba": 0.495,
+  "0x18b0b71054": 0.0989,
+  "0x2277c18fb7": 0.099,
+  "0x8d009282a7": 0.0989,
+  "0xb3b0780f28": 0.099,
+  "0xbdf221228d": 0.495
+ },
  "dispatch_note": "DA 287 ruled ADOPT the qualified zero; DA 288 REVERSED it on REVIEW 249's account partition, before it landed.",
  "legal_tick": 0.01,
  "legal_tick_units": "USDC per share of a binary outcome token",
@@ -53,7 +81,7 @@
   "established": true,
   "declared_instrument": {
    "field": "markets.jsonl:orderPriceMinTickSize",
-   "n_records": 47119,
+   "n_records": 47140,
    "n_without_the_field": 44,
    "distinct_values": [
     "0.01"
@@ -61,25 +89,25 @@
    "uniform_across_all_coins": true,
    "by_coin": {
     "bnb": {
-     "0.01": 6724
+     "0.01": 6727
     },
     "btc": {
-     "0.01": 6726
+     "0.01": 6729
     },
     "doge": {
-     "0.01": 6723
+     "0.01": 6726
     },
     "eth": {
-     "0.01": 6726
+     "0.01": 6729
     },
     "hype": {
-     "0.01": 6724
+     "0.01": 6727
     },
     "sol": {
-     "0.01": 6726
+     "0.01": 6729
     },
     "xrp": {
-     "0.01": 6726
+     "0.01": 6729
     }
    },
    "by_month": {
@@ -87,7 +115,7 @@
      "0.01": 24872
     },
     "2026-09": {
-     "0.01": 22203
+     "0.01": 22224
     }
    },
    "uniform_across_the_windows_life": true,
@@ -169,9 +197,9 @@
   "THE_SUB_TICK_PRICES_ARE_EXPLAINED": {
    "cause": "the VENUE NARROWS THE GRID IN-WINDOW, and the tape says so",
    "tick_size_change_events": {
-    "0.01->0.001": 272
+    "0.01->0.001": 284
    },
-   "n_changes_observed": 272,
+   "n_changes_observed": 284,
    "reading": "every observed change is 0.01 -> 0.001. So the 0.001 levels are not a violation of the declared tick: they are the tick AFTER a `tick_size_change` event the market published. `orderPriceMinTickSize` is the tick at market creation, not for the window's life -- which is exactly the question DA 283 asked and answered too narrowly from the market record alone.",
    "consequence_for_the_freeze": "rounding to 0.01 stays LEGAL at all times, because 0.01 is a multiple of 0.001. It is not always the FINEST legal grid, so a quote on it can be improvable after a narrowing event."
   },
@@ -185,19 +213,19 @@
   "status": "MAKER_FEE_RULE_ESTABLISHED_ZERO_WITH_UNRECONCILED_ONCHAIN_CHARGES",
   "fee_rule": null,
   "NO_FEE_RULE_APPLICABLE_TO_US_EXISTS": "a venue-side observation DOES exist and is populated, but it is non-discriminating: it reports zero for accounts the chain charged. The only source that reflects what was actually charged is the on-chain OrderFilled fee word, and that records OTHER PEOPLE'S accounts -- we have no maker address. So \u00a79's supporting rule for a zero applicable to US does not exist.",
-  "THE_SUPPORTING_RULE_SECTION_9_ASKS_FOR_DOES_NOT_EXIST": "WITHDRAWN. It read: the venue's own `fee_rate_bps` field, carried on every trade event in the CLOB tape and equal to 0 on 70971 observed trades across 8 days, BTC and ETH. That is a market rule stated by the market, not an assumption.",
+  "THE_SUPPORTING_RULE_SECTION_9_ASKS_FOR_DOES_NOT_EXIST": "WITHDRAWN. It read: the venue's own `fee_rate_bps` field, carried on every trade event in the CLOB tape and equal to 0 on 75160 observed trades across 8 days, BTC and ETH. That is a market rule stated by the market, not an assumption.",
   "THE_RESIDUAL_THAT_STOPS_IT_BEING_FINAL": "10 of 1056 maker legs in the SAME markets carry a non-zero on-chain fee, all at price 0.99, in 5 transactions. 0 bps on the tape and a charge on chain cannot both be the whole story, and no collected source explains the difference. Until it is reconciled a zero fee is SUPPORTED but not SETTLED, so this module still supplies no number for \u00a79.",
   "per_source": [
    {
     "source": "markets.jsonl",
     "searched": "all top-level keys, the `clob` subobject, and the rules text (description/question/outcomes)",
-    "n_records": 47119,
+    "n_records": 47140,
     "fee_fields_found": {
      "maker_base_fee": {
-      "1000": 47059
+      "1000": 47080
      },
      "taker_base_fee": {
-      "1000": 47059
+      "1000": 47080
      }
     },
     "rules_text_fee_language": "NONE",
@@ -217,11 +245,11 @@
    {
     "source": "the CLOB tape (data/pm_5min/raw/<day>/<slug>.jsonl.gz)",
     "searched": "every payload field on every message in the sample",
-    "n_files": 90,
-    "n_messages": 5761453,
-    "n_trade_events": 70971,
+    "n_files": 96,
+    "n_messages": 6135485,
+    "n_trade_events": 75160,
     "fee_rate_bps_distribution": {
-     "0": 70971
+     "0": 75160
     },
     "fee_rate_bps_dtype": "str (the literal '0'), never numeric",
     "fee_rate_bps_present_on": "last_trade_price events only",
