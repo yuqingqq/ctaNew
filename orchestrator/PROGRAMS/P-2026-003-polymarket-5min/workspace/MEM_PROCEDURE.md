@@ -438,3 +438,47 @@ terms to its own shell.**
 > ***The failure was visible*** — round 397's rule paying out in my favour for
 > once. **Quote every heredoc that carries prose; substitute the clock with
 > `sed` afterwards.** (Amended 2026-09-11T23:35:50Z.)
+---
+
+## Round 406 — **a status column is not a coverage field until you read what computes it**
+
+At round 400 I amended this file with *"a SATISFIED beside a NOT PROBED is not a
+weak result — it is no result. **Read the coverage field before the status
+field.**"*
+
+**Five rounds later I broke it.** I measured `fee_source_status =
+UNPOPULATED_WS_ZERO` across 2,046,973 rows and concluded *the venue-side fee
+observation does not exist.* The measurement was right. **The inference was
+wrong**, because the column is:
+
+    "fee_source_status": ("UNPOPULATED_WS_ZERO" if fee_raw == 0
+                          else "OBSERVED_NONZERO")
+
+***A pure function of the value.*** It cannot tell an **absent** field from one
+**carrying zero**, and it prints the word UNPOPULATED while knowing nothing about
+populated-ness.
+
+> **I applied my own rule to a gate row and never generalised it to a column
+> name.** *Rule 42 — an instrument checks the property, never the label — and
+> `UNPOPULATED_WS_ZERO` is a label.*
+
+**Required from now on:** before any status, flag or `*_status` column is used as
+evidence **about the thing its name describes**, read the code that assigns it
+and confirm it is computed from that thing. *A name is a claim by its author; the
+assignment is the only statement of fact.* **Three seconds of `grep` for the
+assignment would have saved the inference.**
+
+### And an absence from an unproven probe is still not an absence
+
+Trying to second the correction at the raw payload, my own probe returned **zero
+events** — because my glob and my schema guess did not match the raw layout.
+**I reported it as a failed probe, not as evidence**, per round 397. *The rule
+held where I invoked it and failed where I did not think to.*
+
+> **The pattern across both halves of this round is one thing:** ***an
+> instrument's output was determined by its own construction rather than by the
+> world*** — a label computed from the value it labels, and a `ps` filter that
+> excluded the class it was hunting. **Both returned confident, empty, wrong
+> answers.**
+
+> *(Amended 2026-09-12T00:14:01Z.)*
