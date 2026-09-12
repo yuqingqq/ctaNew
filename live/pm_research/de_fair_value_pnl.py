@@ -120,6 +120,53 @@ def _fee_rule(decl_dir, filename: str):
     return found if isinstance(found, str) and found.strip() else None
 
 
+#: Fee models. `per_share` is a flat rate times shares -- the shape a
+#: declared schedule takes. `rate_x_min_p` is §9's SENSITIVITY model:
+#: rate x size x min(p, 1-p) EVALUATED AT EACH FILL'S OWN PRICE. The
+#: price basis is the whole of the model: every charged leg DA observed
+#: sits at 0.9900, where min(p, 1-p) = 0.01 is at its MINIMUM, so the
+#: same rate at a price this strategy actually quotes is up to 50x the
+#: observed magnitude. A model pinned to the observed price bounds
+#: nothing, and is refused by name.
+PER_SHARE = "per_share"
+WORST_CASE = "rate_x_size_x_min_p_at_each_fill_own_price"
+OWN_PRICE_BASIS = "min_p_at_each_fill_own_price"
+BASIS_BOUNDS_NOTHING = "PRICE_BASIS_AT_A_CONSTANT_BOUNDS_NOTHING"
+FEE_MODELS = (PER_SHARE, WORST_CASE)
+UNKNOWN_MODEL = "FEE_MODEL_NOT_RECOGNISED"
+MAKER_LEGS_ONLY = "FEE_MODEL_COVERS_MAKER_LEGS_ONLY"
+
+
+def fee_for(f, fee: dict) -> float:
+    """One fill's fee under the declared model."""
+    model = fee.get("model", PER_SHARE)
+    if model == PER_SHARE:
+        return abs(f.dq) * float(fee["value"])
+    if model == WORST_CASE:
+        basis = fee.get("price_basis", OWN_PRICE_BASIS)
+        if basis != OWN_PRICE_BASIS:
+            raise PnLRefused(
+                f"REFUSED {BASIS_BOUNDS_NOTHING}: price basis {basis!r}. "
+                f"Every charged leg observed sits at 0.9900, the CHEAPEST "
+                f"point of min(p, 1-p); the same rate at p=0.50 is 50x "
+                f"that magnitude. A sensitivity evaluated anywhere but "
+                f"EACH FILL'S OWN PRICE is a rounding error wearing a "
+                f"bound's name.")
+        if not f.maker:
+            raise PnLRefused(
+                f"REFUSED {MAKER_LEGS_ONLY}: the worst case is 10% of "
+                f"size x min(p, 1-p) because that is what DA MEASURED on "
+                f"10 of 1,056 onchain MAKER legs. A taker leg was not in "
+                f"that measurement, so charging it this way would be "
+                f"inventing a schedule, not bounding an unknown.")
+        return (float(fee["value"]) * abs(f.dq)
+                * min(f.q, 1.0 - f.q))
+    raise PnLRefused(
+        f"REFUSED {UNKNOWN_MODEL}: {model!r} is not one of {FEE_MODELS}. "
+        f"A fee model this file does not implement cannot be applied by "
+        f"guessing what it meant.")
+
+
 def pnl(fills, *, settlement: dict, fee: dict,
         placement_latency_ms: float, quote_active_ms: float = None,
         initial_inventory: dict = None) -> dict:
@@ -145,7 +192,7 @@ def pnl(fills, *, settlement: dict, fee: dict,
                 f"zero-latency privilege, least of all a candidate's.")
         # BUYING SHARES SPENDS CASH; selling receives it.
         cash -= f.dq * f.q
-        fees += abs(f.dq) * float(fee["value"])
+        fees += fee_for(f, fee)
         inv[f.token] = inv.get(f.token, 0.0) + f.dq
         n_fills += 1
         filled_shares += abs(f.dq)
