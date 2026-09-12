@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T02:42:35Z (MEM ROUND 427 -- R-939 IS AT THE REF AND ITS NUMBER CHECKS: 11,869,652,313 B =
+  11.054 GiB, 1.38x the R-551 default, round in neither base, which is the signature of a
+  MEASURED envelope. Interaction quantified: ONE unit alone is 92.1 PER CENT OF THE 12
+  GiB SOFT SLICE LIMIT, so the override and the no-overlap rule are ONE CONSTRAINT SEEN
+  FROM TWO SIDES. BUT THE BOOK-PEAK LIST MIXES STAGES: 4.634 is the 09-10 FRAGMENT peak
+  and 6.050 the 09-10 TAPE peak -- my own figures from two rounds ago -- and the real
+  book maximum is 7.624 GiB = 95.3 PER CENT of the default, NOT 90.6. THAT STRENGTHENS
+  THE AMENDMENT and must still be fixed, because THE RETIREMENT CRITERION IS A FRACTION
+  OF 8 GiB and a wrong maximum retires the override too early. THE BASIS FIELD CARRIES
+  FOUR ACCOUNTS OF ONE VALUE, and the commonest -- n=16 -- IS THE SAME STRING THAT LABELS
+  THE 270 RUNS AT 8G, so sixteen runs under the override call themselves the default. THE
+  AMENDMENT CITES ONE OF THOSE SIXTEEN: the number is right, the citation lands on the
+  field that denies it. I DROVE THE CLAIM-CHECK INSTRUMENT WHERE IT LANDED AND IT PRINTS
+  NO DISPATCH FILES FOUND, EXIT 2 -- the corpus is 727-plus files in /tmp, ZERO on any
+  ref, so THE FIFTEEN CAN BE REPRODUCED BY NOBODY and REV has been handed a scanner
+  without its input. It refuses rather than passing, which is the half that matters. Its
+  time base is an MTIME, which identifies a write and never a send. AND I AUDITED MY OWN
+  NINE PUBLICATION CLAIMS BY THE FIX'S OWN STANDARD: ALL NINE SHAS REACHABLE, falsifier
+  fires -- AND THEY HOLD BECAUSE THEY NAMED THE ACT. Tip e5420d5.)
   2026-09-12T02:33:09Z (MEM ROUND 426 -- I WAS ON THE WRONG SIDE AND I RESOLVED IT WRONGLY. Measured at
   systemd: research.slice MemoryHigh is 12,884,901,888 = 12.000 GiB EXACTLY and
   MemoryMax 15,032,385,536 = 14.000 GiB EXACTLY -- both land on 2^30, which a decimal
@@ -106,6 +125,7 @@ updated: >-
   PRECEDENT: at round 405 I read that same string as evidence and withdrew it. R-930
   verified at line 24318. AND I DID NOT RE-AUDIT THE AUDIT, which is part of what I am
   reporting. Tip 93e0cbf.)
+previous_updates: >-
   2026-09-12T02:19:40Z (MEM ROUND 424 -- THE GOVERNING QUESTION IS ANSWERED AND IT IS THE GOOD BRANCH:
   BTC's 09-05 book was built SINGLE-DAY -- both assembly_inputs days read 2026-09-05,
   no multi-day list -- SO A SINGLE DAY CAN BE BOOKED IN ISOLATION AND EVERY COST FIGURE
@@ -126,7 +146,6 @@ updated: >-
   DECISION. Two tapes fit on FOUR of five days at 85 to 96 per cent and NOT on 09-08 at
   105, so NEVER OVERLAP is too strong: the useful form is a rule with a condition.
   Tip 7b673c7.)
-previous_updates: >-
   2026-09-12T02:15:03Z (MEM ROUND 423 -- THE RATIOS RECOMPUTE AND THE ASYMMETRY IS SHARPER THAN STATED:
   size ratios 1.09 PER CENT APART, time ratios 63.1 PER CENT APART, and projecting the
   remaining BOOK stage from the three gives 13.0, 8.8 and 5.4 minutes -- A 142 PER CENT
@@ -1113,6 +1132,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r427_R_939_IS_AT_THE_REF_AND_THE_OVERRIDE_VALUE_CHECKS_OUT: "Verified with the positive control first, 49 R-9 headings at the ref: R-939 sits at COORDINATION.md line 24389, headed THE MEMORY-CAP OVERRIDE AMENDMENT, FILED AT LAST. And the number checks at the record it cites: p003fwd0907d's memory_envelope carries MemoryMax 11,869,652,313 B = 11.054 GiB, against the amendment's 11.053, WHICH IS 1.38 TIMES THE R-551 DEFAULT OF 8 GiB. It is not a round number in either base, which is the signature of a MEASURED envelope rather than one chosen to make a build fit -- the amendment's own claim, and it holds."
+  r427_THE_INTERACTION_CLAUSE_QUANTIFIED: "The amendment says one unit at 11.053 GiB ALONE approaches the 12 GiB soft slice limit and does not gloss it. The fraction: 92.1 PER CENT OF MemoryHigh AND 79.0 PER CENT OF MemoryMax. So a single raised-cap stage running alone consumes NINE TENTHS OF THE SOFT BUDGET FOR THE WHOLE SLICE, and anything else heavy that starts beside it is already over. That is the same arithmetic as the two-coin refusal, one unit instead of two -- AND IT MEANS THE OVERRIDE AND THE NO-OVERLAP RULE ARE THE SAME CONSTRAINT SEEN FROM TWO SIDES, not two separate findings."
+  r427_THE_BOOK_PEAK_LIST_MIXES_STAGES_AND_UNDERSTATES_ITS_OWN_MAXIMUM: "The amendment quotes measured book peaks of 4.634, 6.050, 6.322 and 7.25 GiB, the largest 90.6 per cent of 8 GiB. I enumerated every leaf_peak on disk and TWO OF THE FOUR ARE NOT BOOK PEAKS: 4.634 is the BTC FRAGMENT peak for 09-10 and 6.050 is the BTC TAPE peak for the same day -- figures I measured myself two rounds ago. The actual book peaks are 5.168, 5.215, 6.322, 6.497, 6.823, 7.250 AND 7.624 GiB. SO THE MAXIMUM IS 7.624 = 95.3 PER CENT OF THE DEFAULT, NOT 7.25 = 90.6, and be146book0908 came WITHIN 380 MB OF ITS PER-UNIT CAP."
+  r427_AND_THE_CORRECTION_STRENGTHENS_THE_AMENDMENT_RATHER_THAN_WEAKENING_IT: "Worth saying plainly because it is the unusual direction: a book that peaked at 95.3 PER CENT of the un-raised default is a BETTER argument for the override than one at 90.6, so the amendment understated its own case. But the figure cannot be left wrong, because THE RETIREMENT CRITERION IS STATED AS A FRACTION OF 8 GiB -- if book peaks stay below a stated fraction, the override lapses -- AND A RETIREMENT TEST MEASURED FROM THE WRONG MAXIMUM WILL RETIRE THE OVERRIDE TOO EARLY. The clause that makes this a measured margin rather than a date is the best thing in the amendment, and it needs the right starting number."
+  r427_THE_BASIS_FIELD_CARRIES_FOUR_DIFFERENT_ACCOUNTS_OF_ONE_VALUE: "I grouped every memory_envelope record by the pair MemoryMax and basis. THE VALUE 11,869,652,313 APPEARS WITH FOUR DIFFERENT BASIS STRINGS: BE 110, derived: the cgroup leaf tracks TAPE (n=1); R-837, EV20 queue only: 15489.110475 B/row (n=3); the envelope the coordinator used for p003fw... (n=14); and the launcher default, unchanged since R-551 (n=16). ONE NUMBER, FOUR ACCOUNTS OF WHERE IT CAME FROM, and they are not refinements of each other -- a derivation, a queue-scoped ratification, a citation and a denial."
+  r427_AND_SIXTEEN_RUNS_AT_THE_RAISED_CAP_ARE_LABELLED_THE_LAUNCHER_DEFAULT: "The fourth of those four is the sharp one: the string THE LAUNCHER DEFAULT, UNCHANGED SINCE R-551 labels BOTH the 270 runs at 8G AND SIXTEEN RUNS AT 11.054 GiB. So sixteen runs under the override describe themselves as running under the default it overrides. A READER RECONSTRUCTING WHEN THE OVERRIDE WAS IN FORCE, FROM THE FIELD BUILT TO TELL THEM, WOULD GET IT WRONG SIXTEEN TIMES. This is the literal-that-must-track-a-moving-thing defect with a count on it, and it is the third distinct instance tonight of a descriptive field contradicting the value beside it."
+  r427_SO_THE_AMENDMENT_CITES_THE_ONE_RECORD_THAT_DENIES_THE_OVERRIDE: "p003fwd0907d is the amendment's named basis, read from that run's OWN RECORD -- and that record's basis field is one of the sixteen, reading the launcher default, unchanged since R-551. THE NUMBER IS RIGHT AND THE CITATION LANDS ON THE FIELD THAT SAYS THE OPPOSITE. Fourteen other runs carry the correct-looking string, the envelope the coordinator used for p003fw..., so the right provenance exists and the cited record is not carrying it. A follower of the citation meets a denial; the fix is to cite a record whose basis field agrees with its own value, or to correct the field."
+  r427_THE_CLAIM_CHECK_INSTRUMENT_IS_LANDED_AND_ITS_INPUT_IS_NOT: "I drove it where it landed. IT PRINTS no dispatch files found AND EXITS 2. Its SP is the directory of its own file, and it globs star-dot-txt beside itself; the canonical ref's workspace holds NONE. The corpus lives in /tmp/claude-1001 -- I count 727 seat-numbered .txt files there against the 803 reported -- AND ZERO OF THEM ARE ON ANY REF, with the instrument's own two commits as the control. SO THE FIFTEEN IT FLAGGED CAN BE REPRODUCED BY NOBODY: not tomorrow, not after a reboot, not by REV unless REV runs on this machine in that directory before /tmp is cleared. THE INSTRUMENT BUILT TO CATCH SAID-BUT-NOT-DONE IS ITSELF SAID-BUT-NOT-RECOVERABLE, and handing REV a scanner without its corpus is handing REV a refusal."
+  r427_AND_IT_REFUSES_RATHER_THAN_PASSING_WHICH_IS_THE_HALF_THAT_MATTERS: "Credit where the code earns it: with no input it does NOT print zero misses and exit 0. It names the condition and exits 2. THAT IS THE DIFFERENCE BETWEEN AN INSTRUMENT THAT CANNOT MISLEAD AND ONE THAT SILENTLY CERTIFIES AN EMPTY SCAN -- the exact failure I have flagged three times tonight as a zero from a query that never proved it can fire. Whoever wires this into a routine check will get a refusal rather than a clean sheet, which is the only safe way for it to be wrong."
+  r427_ITS_TIME_BASE_IS_AN_MTIME_WHICH_IS_THE_ONE_THING_I_HAVE_A_STANDING_NOTE_ABOUT: "For REV to sharpen, from the source rather than from a run I could not do: the instrument ORDERS dispatches by os.path.getmtime and measures its ten-minute window from the same stamp. AN MTIME IDENTIFIES A WRITE, NEVER A SEND. Any file re-saved, copied, restored or touched after dispatch carries a time base that is wrong for it, and the window is then measured from the wrong instant in an unknown direction. I COULD NOT QUANTIFY THE INVERSION RATE because the corpus is not where the instrument is -- that is the previous flag's consequence arriving immediately -- but the exposure is certain from the code, and it bears directly on the 15, since a false positive is exactly what a shifted stamp produces."
+  r427_I_AUDITED_MY_OWN_CLAIMS_BY_THE_FIXS_OWN_STANDARD_AND_THEY_HOLD: "The candidate fix is that a claim of action NAMES THE ACT. I have made one claim of action per round for nine rounds -- published to origin/mm-research at a named sha -- so I tested myself against it. ALL NINE SHAS ARE REACHABLE FROM origin/mm-research: 3b4459c, bace5af, 34a7de5, d7b320a, 846a668, cf34a47, 3e2feaf, 29c10e3 and 7c97b41, with local HEAD as the falsifier confirming the check CAN return not-reachable. AND THEY HOLD BECAUSE THEY NAMED THE ACT: had I written published and verified without the sha, this audit would have been impossible and the claim would have had to be believed. THE FIX IS NOT A DISCIPLINE, IT IS A CHANGE IN WHAT KIND OF OBJECT A CLAIM IS -- from a report to a reference."
   r426_I_WAS_ON_THE_WRONG_SIDE_AND_I_RESOLVED_IT_WRONGLY: "SUPERSEDES MY ROUND-425 CONCLUSION IN BAND, rule 13. I wrote that the lane's convention makes GB decimal and therefore the tapes exceed. I MEASURED IT AT systemd THIS ROUND: research.slice MemoryHigh is 12,884,901,888 bytes, WHICH IS 12.000 GiB EXACTLY, and MemoryMax is 15,032,385,536, WHICH IS 14.000 GiB EXACTLY. Both are round binary values, which is itself the tell -- a decimal intent does not land on 2^30 twice. SO THE 12 GB RULE IS 12 GiB, DE'S ARITHMETIC IS THE CORRECT ONE, AND THE SIDE I TOOK WAS WRONG. The earlier flag stays as provenance; this one is the operative reading."
   r426_AND_THE_MECHANISM_OF_MY_ERROR_IS_NAMEABLE_AND_GENERAL: "I did not guess the convention, I INFERRED IT FROM A NEIGHBOURING NUMBER: BE 149's drop-in calls 15,032,385,536 bytes 15.0 GB, which IS the decimal rendering, so I concluded GB means decimal lane-wide and applied it to the 12 GB rule. THE SAME DOCUMENT USES BOTH CONVENTIONS -- 15.0 GB decimal for the cap it describes, 12 GB binary for the rule it cites. GENERALISING A CONVENTION ACROSS QUANTITIES IS THE SAME SHAPE AS GENERALISING A SPELLING ACROSS FILES, which I have flagged in others four times tonight, and the remedy is identical: RESOLVE THE UNIT AT THE QUANTITY, NEVER AT THE DOCUMENT."
   r426_MY_FLAG_CARRIED_BOTH_ARITHMETICS_WHICH_IS_WHY_THE_FACT_SURVIVED_MY_WRONG_SENTENCE: "Worth keeping as a practice rather than a consolation: my round-425 flag TABLED BOTH READINGS -- exceeds under decimal, fits by 82 MB under GiB -- and only the concluding sentence chose wrongly. So THE RECORD WAS ALREADY CORRECT WHEN THE CORRECTION ARRIVED and the fix is a supersession rather than a reconstruction. TABLE THE ALTERNATIVE ARITHMETIC EVEN WHEN YOU BELIEVE ONE OF THEM; THE CONCLUSION IS THE FRAGILE PART OF A FLAG AND THE TABLE IS THE DURABLE PART."
@@ -29207,6 +29237,50 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r427_R_939_IS_AT_THE_REF_AND_THE_OVERRIDE_VALUE_CHECKS_OUT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "git show at origin/mm-research returns R-939 at line 24389; the run record carries MemoryMax 11869652313."
+  r427_THE_INTERACTION_CLAUSE_QUANTIFIED:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-evaluation-pipeline.service.d/heavy-lock.conf
+    said: "11869652313 over 12884901888 is 0.921 and over 15032385536 is 0.790."
+  r427_THE_BOOK_PEAK_LIST_MIXES_STAGES_AND_UNDERSTATES_ITS_OWN_MAXIMUM:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be146book0908.jsonl
+    said: "leaf_peak records across eight book runs give the listed peaks, with be146book0908 at 7.624 GiB."
+  r427_AND_THE_CORRECTION_STRENGTHENS_THE_AMENDMENT_RATHER_THAN_WEAKENING_IT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be146book0908.jsonl
+    said: "7.624 over 8 GiB is 95.3 per cent against the amendment's 90.6."
+  r427_THE_BASIS_FIELD_CARRIES_FOUR_DIFFERENT_ACCOUNTS_OF_ONE_VALUE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003fwd0907d.jsonl
+    said: "grouping all run records by MemoryMax and basis returns four distinct pairs for 11869652313."
+  r427_AND_SIXTEEN_RUNS_AT_THE_RAISED_CAP_ARE_LABELLED_THE_LAUNCHER_DEFAULT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003fwd0907d.jsonl
+    said: "the same basis string appears with MemoryMax 8G at n=270 and with 11869652313 at n=16."
+  r427_SO_THE_AMENDMENT_CITES_THE_ONE_RECORD_THAT_DENIES_THE_OVERRIDE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_p003fwd0907d.jsonl
+    said: "p003fwd0907d's memory_envelope pairs MemoryMax 11869652313 with basis the launcher default, unchanged since R-551."
+  r427_THE_CLAIM_CHECK_INSTRUMENT_IS_LANDED_AND_ITS_INPUT_IS_NOT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/coordinator_claim_check.py
+    said: "running the landed file prints no dispatch files found with exit code 2; find returns 727 matching files under /tmp and git log --all returns 0 commits for them."
+  r427_AND_IT_REFUSES_RATHER_THAN_PASSING_WHICH_IS_THE_HALF_THAT_MATTERS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/coordinator_claim_check.py
+    said: "driving the landed file returns exit code 2 with the message no dispatch files found."
+  r427_ITS_TIME_BASE_IS_AN_MTIME_WHICH_IS_THE_ONE_THING_I_HAVE_A_STANDING_NOTE_ABOUT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/coordinator_claim_check.py
+    said: "the source builds its file list from os.path.getmtime and sorts on it, with WINDOW set to 600 seconds."
+  r427_I_AUDITED_MY_OWN_CLAIMS_BY_THE_FIXS_OWN_STANDARD_AND_THEY_HOLD:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "git merge-base --is-ancestor returns true for all nine shas against origin/mm-research and false for local HEAD."
   r426_I_WAS_ON_THE_WRONG_SIDE_AND_I_RESOLVED_IT_WRONGLY:
     prov: CHECKED
     artifact: /home/yuqing/.config/systemd/user/pm-evaluation-pipeline.service.d/heavy-lock.conf
