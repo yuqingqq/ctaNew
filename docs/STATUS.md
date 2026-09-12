@@ -1,5 +1,33 @@
 # Status — 2026-05-09
 
+## P-2026-003 Polymarket 5-min — session 2026-09-12 (see docs/P003_FAIR_VALUE_SESSION_2026-09-12.md)
+
+**Cancellation forward test CLOSED** — 4 days valued, both arms futile, verdict
+fixed since G=2; all 30 record versions carry one distinct D per arm. The design
+had exactly one passing configuration (7 of 7), so both arms were already
+unrecoverable when ruled.
+
+**Fair-value lane BUILT and BLOCKED.** Comparator sound (artifact share 0.17%/
+0.58% over 9.46M states). C1 is provably within half a tick of it; ceiling
+0.0745 nats. **The test has NO minimum-effect floor, so a candidate can pass on
+any effect above zero.** C2 reaches its 95% coverage gate on 0 of 8 days and
+needs 4.06×. No ETH books existed (buildable; data healthy). Two coins are
+**serial by memory** — 11.92 GiB against a 12 GiB soft cap, 0.7% headroom. At
+the planning rate (0.636, union of criteria) a 14-day band yields **under 9
+evaluable days against 10 required**.
+
+**BLOCKING:** `da-midnight-verify` failed since 2026-09-12T00:06Z (exit 7); 09-11
+placeholder-only, 09-12 empty; nothing retries for ~20h. Day verdicts are
+candidate-blind inputs to eligibility. **Do NOT clean `live/pm_research` to
+unblock the deploy** — 63 of 70 "untracked" files are tracked at
+`origin/de-freeze-chain-v2`; the shared tree is on a diverged branch (305 behind,
+275 ahead of `origin/mm-research`).
+
+**Awaiting the user:** the minimum meaningful `delta_LL` (a required unset field;
+the freeze blocks on it alone and it must not be chosen after seeing the
+ceiling); whether to commit ~14 nights; whether C2 stays in the frozen family.
+
+
 ## Convexity v1 FROZEN (2026-06-04) — see docs/convexity_v1_FROZEN.md
 **Book-B-only** (low-vol; drop alpha-barren high-vol book A) + **resid_rev** long-ranker overlay.
 Universe = exclude top ~46% by trailing-30d rvol (percentile), K=3 L/S beta-neutral, 24h/6-sleeve, regime gate.
