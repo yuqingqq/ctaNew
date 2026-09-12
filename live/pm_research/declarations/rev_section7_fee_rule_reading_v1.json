@@ -1,0 +1,74 @@
+{
+  "declaration": "REV_SECTION_7_FEE_RULE_READING",
+  "version": 1,
+  "seat": "REV",
+  "dispatch": "REV 218 / REV 220",
+  "as_of_utc": "2026-09-12T00:52:09Z",
+  "adjudicated_at_ref": "origin/de-freeze-chain-v2",
+  "ref_head": "686a1ee597f6",
+
+  "question": "Does `fee rule` in fair_value_plan.md v1.2 §7's declaration list mean DECLARED (recorded) or KNOWN (verified)?",
+  "verdict": "DECLARED",
+  "confirms_da_294_reading": true,
+  "status": "CONFIRMED",
+
+  "WHY_THIS_SEAT": "the reading unblocks a clock the coordinator wants started, which is the same shape as a seat judging the guard that blocks it. REV benefits from neither answer. This declaration exists because the freeze predicate cannot read a review file: REV files land at origin/mm-research (the canonical record) and this predicate reads the executing ref, so the ruling was delivered three times in REVIEW 255 and REVIEW 256 and was invisible to the instrument blocking on it. That is the two-location split REVIEW 250 argued for, meeting its first real cost.",
+
+  "prior_filings_carrying_the_same_ruling": [
+    "origin/mm-research:orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_255_THE_FEE_READING_CONFIRMED_2026-09-12.md",
+    "origin/mm-research:orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/reviews/REVIEW_256_THE_BOUND_IS_LARGE_AND_THE_TEST_HAS_NO_FLOOR_2026-09-12.md"
+  ],
+
+  "break_attempt_a_full_pipeline_is_broader_than_the_chain": {
+    "result": "FAILS",
+    "measured": "the strings `full pipeline` / `full-pipeline` occur exactly three times in fair_value_plan.md",
+    "occurrences": [
+      "§7 line 254 -- 'Before validation, freeze as one commit:' immediately followed by the chain",
+      "§6 line 208 -- 'Every day ending before the full-pipeline freeze is development/consumed'",
+      "§11 line 419 -- 'Freeze the full pipeline and both candidate identities'"
+    ],
+    "n_occurrences": 3,
+    "neither_other_occurrence_is_broader": true,
+    "and_11_argues_the_other_way": "§11 adds 'and both candidate identities' -- if 'full pipeline' already meant everything in §7's declaration list, the candidate identities would not need naming separately"
+  },
+
+  "break_attempt_b_a_negative_declaration_is_an_absence": {
+    "result": "FAILS",
+    "textual": "§7's verb is `records`, and every sibling in the list is a recording: file hashes, commit ref, candidate count, action key, epsilon, status grammar, source manifests, initial inventory, tick rounding, latency, quote parameters, null and success predicates",
+    "structural_and_decisive": "the negative record is LOAD-BEARING at the code, not a costume for an absence. de_fair_value_pnl.declared_fee() raises PnLRefused when no fee is declared, citing MAKER_FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_ARTIFACTS, and raises FEE_RULE_NOT_DECLARED when a value is declared with no supporting rule, on the stated ground that 'zero is precisely the value that arrives by omission, so a number without a rule is not a declared fee'",
+    "so_the_record_halts_the_economic_leg": true,
+    "and_the_status_string_is_marked_non_load_bearing": "declared_fee returns recorded_status_not_load_bearing -- the UNPOPULATED_WS_ZERO lesson applied one file over"
+  },
+
+  "break_attempt_c_not_establishable_cannot_be_computable_fields": {
+    "result": "FAILS -- REFUTED BY EXAMPLE AT THE REF",
+    "checked_at_the_artifact_not_at_the_request": true,
+    "fee_rule_field_type": "dict",
+    "maker_fee_bps": null,
+    "no_numeric_fee_anywhere_in_the_record": true,
+    "status_field": "FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_DATA",
+    "carries_structured_evidence": true,
+    "the_five_strands_present": true,
+    "the_gap_cleared_because_the_field_RESOLVED_not_because_the_requirement_left": {
+      "n_blocking_gaps": 0,
+      "enumeration_intact": true,
+      "n_required_fields": 14,
+      "note": "14 is the pinned count; had fee_rule been dropped from REQUIRED_FIELDS the count would read 13 and the enumeration guard would refuse. It does not."
+    }
+  },
+
+  "break_attempt_d_REVs_own_fourth": {
+    "attempt": "`fee rule` is not a link because it is not a stage -- it is an INPUT to the last stage. §9 defines P&L as including 'the verified maker fee', so freezing a P&L implementation that computes GROSS P&L would freeze a different function than §9 defines, making 'there is no fee link' true and irrelevant.",
+    "result": "FAILS",
+    "why": "there is no gross-P&L function to freeze by mistake. de_fair_value_pnl.py refuses rather than computing gross, and its own header states it will not 'invent a fee'."
+  },
+
+  "what_the_confirmation_costs_and_must_be_recorded_with_it": "the freeze becomes effective with a chain whose last link CANNOT EXECUTE. That is legitimate -- §7 freezes code as one commit before validation, and §8's log loss never calls P&L -- but 'the pipeline is frozen' must not be readable as 'the pipeline can run end to end'. §9's economic clock cannot start until a maker fee is declared AS A VALUE WITH A SUPPORTING MARKET/ACCOUNT RULE, and de_fair_value_pnl.declared_fee enforces that and refuses today.",
+
+  "a_guard_that_should_not_be_relaxed": "probe_fee_source drives any claimed fee source against KNOWN_CHARGED_ADDRESSES -- the six -- plus uncharged controls, and rejects it as FEE_SOURCE_NOT_DISCRIMINATING unless it separates them. A source that returns zero for all six is not a fee source, whatever it is called.",
+
+  "scope_of_this_ruling": "this adjudicates ONLY the reading of §7's `fee rule` item. It does not assert that the maker fee is zero, does not permit a zero fee in §9, and does not bear on minimum_meaningful_delta_LL, which is a separate required field and separately unset.",
+
+  "EVERY_CLAIM_HERE_WAS_READ_AT_AN_ARTIFACT": true,
+  "NO_PROSE_ONLY_PASS": "each break attempt records a computed result and the measurement behind it; none is satisfied by a sentence."
+}
