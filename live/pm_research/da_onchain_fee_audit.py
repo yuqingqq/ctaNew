@@ -294,7 +294,23 @@ def audit(root: Path | None = None, limit: int | None = None) -> dict:
             "leg roles come from OrdersMatched.takerOrderMaker; a transaction "
             "carrying fills with no OrdersMatched is counted and reported",
             "fees are read from the OrderFilled fee word, never from the "
-            "websocket fee_rate_bps field, which is unpopulated",
+            "websocket fee_rate_bps field, which is POPULATED BUT "
+            "NON-DISCRIMINATING -- corrected at DA 290. THE OLD WORDING "
+            "SAID 'unpopulated' AND WAS WRONG, and it propagated: it is "
+            "the line that led a reviewer and the coordinator to doubt a "
+            "real observation, and it cost a ruling and a reversal. "
+            "Measured at the raw tape: the field is PRESENT in every "
+            "last_trade_price event sampled -- 10,392 of 10,392 across 25 "
+            "raw files, and 76,617 of 76,617 in a wider sweep -- absent in "
+            "none, always the string zero. The reason this audit reads the "
+            "OrderFilled fee word instead is NOT that the field is missing: "
+            "it is that the field reports a constant zero INCLUDING for the "
+            "six accounts the chain demonstrably charged, so it does not "
+            "reflect what is actually charged. A field that reports zero "
+            "where the chain took 10 percent is not a fee schedule. THE "
+            "DURABLE REASON IS DISCRIMINATION, NOT PRESENCE -- keying this "
+            "limit on presence stated a property claim about a source as a "
+            "fact about a field",
         ],
     }
 

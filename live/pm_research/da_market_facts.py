@@ -333,24 +333,36 @@ def maker_fee_rule() -> dict:
         "fee_rate_bps_distribution": tape["fee_rate_bps_distribution"],
         "fee_rate_bps_dtype": "str (the literal '0'), never numeric",
         "fee_rate_bps_present_on": "last_trade_price events only",
-        "establishes": "NOTHING. THE FIELD IS A PLACEHOLDER, NOT A MEASUREMENT.",
-        "RETRACTION": (
-            "DA 286 reported `fee_rate_bps = 0` on all observed trades as the "
-            "venue's own per-trade fee rate, and DA 287 ruled on it. IT IS NOT "
-            "AN OBSERVATION. The value is the STRING '0' on every one of its "
-            "occurrences -- never a number, never any other value -- and it "
-            "appears ONLY on `last_trade_price` events, absent from book, "
-            "price_change and tick_size_change. My own on-chain audit's limits "
-            "said so in a line I did not read back: 'fees are read from the "
-            "OrderFilled fee word, never from the websocket fee_rate_bps "
-            "field, which is unpopulated.'"),
-        "THE_DECISIVE_CONTRADICTION": (
-            "the chain charged 901 of 901 TAKER legs in these same markets over "
-            "the same period while the tape reads 0 on every trade. If the "
-            "field measured the applied fee it could not read zero where the "
-            "fee is certain. A field that is constant, string-typed and present "
-            "on one event type is a rule-4 STATUS -- absent -- not a zero."),
-        "does_not_establish": ("any venue-side fee observation whatever"),
+        "establishes": ("that the venue REPORTS a constant zero. The field is "
+                        "POPULATED -- it is an observation of what the venue "
+                        "says, and it is not a placeholder."),
+        "CORRECTION_HISTORY_DA_286_TO_DA_290": (
+            "DA 286 reported `fee_rate_bps = 0` on every observed trade as the "
+            "venue's own per-trade fee rate. DA 289 doubted it, on the strength "
+            "of this programme's own on-chain audit whose `limits` said the "
+            "field 'is unpopulated'. DA 290 settled it AT THE RAW TAPE: the "
+            "field is PRESENT in 10,392 of 10,392 last_trade_price events "
+            "across 25 raw files and 76,617 of 76,617 in a wider sweep, absent "
+            "in none. THE OBSERVATION WAS REAL; the doubt came from a wrong "
+            "word in an artifact, and I had propagated that word by not "
+            "checking the raw payload when I first read the limits line."),
+        "BUT_IT_IS_NON_DISCRIMINATING_AND_THAT_IS_WHY_IT_IS_NOT_A_RULE": (
+            "the venue reports the SAME constant zero for the six accounts the "
+            "chain demonstrably charged. A field that reports zero where the "
+            "chain took 10% of size x min(p, 1-p) does not reflect what is "
+            "actually charged, and cannot be the 'verified maker fee "
+            "applicable to these markets' §9 asks for. Populated is not the "
+            "same as informative: the durable test of a fee source is whether "
+            "it can SEPARATE the charged accounts from the rest, and this one "
+            "cannot."),
+        "THE_LESSON_THAT_OUTLIVES_THE_FEE": (
+            "key a check on a PROPERTY, not on a WORD. 'Unpopulated' was a "
+            "label two artifacts asserted and neither measured; the property "
+            "that actually decides the question is DISCRIMINATION. A refusal "
+            "keyed on the label would have flipped twice in two dispatches; "
+            "one keyed on discrimination would not have moved."),
+        "does_not_establish": ("what is actually charged to anyone, and so no "
+                               "fee rule applicable to us"),
     })
 
     # D. on-chain settlement receipts.
@@ -401,12 +413,13 @@ def maker_fee_rule() -> dict:
                    else ("MAKER_FEE_RULE_ESTABLISHED_ZERO" if established
                          else FEE_UNESTABLISHABLE)),
         "fee_rule": None if not established else {"maker_fee_bps": 0},
-        "NO_VENUE_SIDE_FEE_OBSERVATION_EXISTS": (
-            "the only venue-side field that looked like one is a placeholder "
-            "(see the CLOB tape source). So §9's supporting rule is not merely "
-            "unpublished -- there is no observation of an applied fee rate "
-            "anywhere in the collected data except the on-chain fee word, "
-            "which records what WAS charged to OTHER accounts."),
+        "NO_FEE_RULE_APPLICABLE_TO_US_EXISTS": (
+            "a venue-side observation DOES exist and is populated, but it is "
+            "non-discriminating: it reports zero for accounts the chain "
+            "charged. The only source that reflects what was actually charged "
+            "is the on-chain OrderFilled fee word, and that records OTHER "
+            "PEOPLE'S accounts -- we have no maker address. So §9's supporting "
+            "rule for a zero applicable to US does not exist."),
         "THE_SUPPORTING_RULE_SECTION_9_ASKS_FOR_DOES_NOT_EXIST": (
             "WITHDRAWN. It read: the venue's own `fee_rate_bps` field, "
             "carried on every trade event in the CLOB tape and equal to 0 on "
@@ -726,19 +739,19 @@ def falsify() -> int:
     ck("...and DA 283's 'no fee field' was a SEARCH failure, now named",
        "unfinished search" in f["CORRECTION_TO_DA_283"])
     src = f["per_source"][2]
-    ck("the tape's `fee_rate_bps` is a PLACEHOLDER, and says so",
-       src["establishes"].startswith("NOTHING"), src["fee_rate_bps_dtype"])
-    ck("...it is STRING-typed and single-valued, never numeric",
-       "str" in src["fee_rate_bps_dtype"] and "never numeric" in src["fee_rate_bps_dtype"])
-    ck("...and present on ONE event type only, absent elsewhere",
-       "last_trade_price" in src["fee_rate_bps_present_on"])
-    ck("the DECISIVE CONTRADICTION is carried: 901/901 takers charged on chain",
-       "901 of 901" in src["THE_DECISIVE_CONTRADICTION"])
-    ck("the DA 286 claim is RETRACTED in the artifact, not just dropped",
-       "IT IS NOT AN OBSERVATION" in src["RETRACTION"]
-       and "unpopulated" in src["RETRACTION"])
-    ck("so NO VENUE-SIDE FEE OBSERVATION EXISTS is stated plainly",
-       "no observation of an applied fee rate" in f["NO_VENUE_SIDE_FEE_OBSERVATION_EXISTS"])
+    src = f["per_source"][2]
+    ck("the tape's `fee_rate_bps` is POPULATED -- the observation is real",
+       src["establishes"].startswith("that the venue REPORTS"),
+       src["fee_rate_bps_dtype"])
+    ck("...and the DA 286 -> 289 -> 290 correction history is carried",
+       "THE OBSERVATION WAS REAL" in src["CORRECTION_HISTORY_DA_286_TO_DA_290"])
+    ck("but it is NON-DISCRIMINATING, and that is why it is not a rule",
+       "cannot" in src["BUT_IT_IS_NON_DISCRIMINATING_AND_THAT_IS_WHY_IT_IS_NOT_A_RULE"]
+       and "six accounts" in src["BUT_IT_IS_NON_DISCRIMINATING_AND_THAT_IS_WHY_IT_IS_NOT_A_RULE"])
+    ck("...the durable test is DISCRIMINATION, not presence",
+       "DISCRIMINATION" in src["THE_LESSON_THAT_OUTLIVES_THE_FEE"])
+    ck("so NO FEE RULE APPLICABLE TO US EXISTS is stated plainly",
+       "does not exist" in f["NO_FEE_RULE_APPLICABLE_TO_US_EXISTS"])
     ck("but the on-chain residual is NOT swept under it",
        (f["per_source"][3]["n_maker_legs_charged"] or 0) > 0
        and "cannot both be the whole story" in f["THE_RESIDUAL_THAT_STOPS_IT_BEING_FINAL"],

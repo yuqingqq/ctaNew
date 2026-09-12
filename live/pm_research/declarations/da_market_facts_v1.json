@@ -53,7 +53,7 @@
   "established": true,
   "declared_instrument": {
    "field": "markets.jsonl:orderPriceMinTickSize",
-   "n_records": 47105,
+   "n_records": 47119,
    "n_without_the_field": 44,
    "distinct_values": [
     "0.01"
@@ -61,25 +61,25 @@
    "uniform_across_all_coins": true,
    "by_coin": {
     "bnb": {
-     "0.01": 6722
+     "0.01": 6724
     },
     "btc": {
-     "0.01": 6724
+     "0.01": 6726
     },
     "doge": {
-     "0.01": 6721
+     "0.01": 6723
     },
     "eth": {
-     "0.01": 6724
+     "0.01": 6726
     },
     "hype": {
-     "0.01": 6722
+     "0.01": 6724
     },
     "sol": {
-     "0.01": 6724
+     "0.01": 6726
     },
     "xrp": {
-     "0.01": 6724
+     "0.01": 6726
     }
    },
    "by_month": {
@@ -87,7 +87,7 @@
      "0.01": 24872
     },
     "2026-09": {
-     "0.01": 22189
+     "0.01": 22203
     }
    },
    "uniform_across_the_windows_life": true,
@@ -169,9 +169,9 @@
   "THE_SUB_TICK_PRICES_ARE_EXPLAINED": {
    "cause": "the VENUE NARROWS THE GRID IN-WINDOW, and the tape says so",
    "tick_size_change_events": {
-    "0.01->0.001": 252
+    "0.01->0.001": 272
    },
-   "n_changes_observed": 252,
+   "n_changes_observed": 272,
    "reading": "every observed change is 0.01 -> 0.001. So the 0.001 levels are not a violation of the declared tick: they are the tick AFTER a `tick_size_change` event the market published. `orderPriceMinTickSize` is the tick at market creation, not for the window's life -- which is exactly the question DA 283 asked and answered too narrowly from the market record alone.",
    "consequence_for_the_freeze": "rounding to 0.01 stays LEGAL at all times, because 0.01 is a multiple of 0.001. It is not always the FINEST legal grid, so a quote on it can be improvable after a narrowing event."
   },
@@ -184,20 +184,20 @@
   "established": false,
   "status": "MAKER_FEE_RULE_ESTABLISHED_ZERO_WITH_UNRECONCILED_ONCHAIN_CHARGES",
   "fee_rule": null,
-  "NO_VENUE_SIDE_FEE_OBSERVATION_EXISTS": "the only venue-side field that looked like one is a placeholder (see the CLOB tape source). So \u00a79's supporting rule is not merely unpublished -- there is no observation of an applied fee rate anywhere in the collected data except the on-chain fee word, which records what WAS charged to OTHER accounts.",
-  "THE_SUPPORTING_RULE_SECTION_9_ASKS_FOR_DOES_NOT_EXIST": "WITHDRAWN. It read: the venue's own `fee_rate_bps` field, carried on every trade event in the CLOB tape and equal to 0 on 68458 observed trades across 8 days, BTC and ETH. That is a market rule stated by the market, not an assumption.",
+  "NO_FEE_RULE_APPLICABLE_TO_US_EXISTS": "a venue-side observation DOES exist and is populated, but it is non-discriminating: it reports zero for accounts the chain charged. The only source that reflects what was actually charged is the on-chain OrderFilled fee word, and that records OTHER PEOPLE'S accounts -- we have no maker address. So \u00a79's supporting rule for a zero applicable to US does not exist.",
+  "THE_SUPPORTING_RULE_SECTION_9_ASKS_FOR_DOES_NOT_EXIST": "WITHDRAWN. It read: the venue's own `fee_rate_bps` field, carried on every trade event in the CLOB tape and equal to 0 on 70971 observed trades across 8 days, BTC and ETH. That is a market rule stated by the market, not an assumption.",
   "THE_RESIDUAL_THAT_STOPS_IT_BEING_FINAL": "10 of 1056 maker legs in the SAME markets carry a non-zero on-chain fee, all at price 0.99, in 5 transactions. 0 bps on the tape and a charge on chain cannot both be the whole story, and no collected source explains the difference. Until it is reconciled a zero fee is SUPPORTED but not SETTLED, so this module still supplies no number for \u00a79.",
   "per_source": [
    {
     "source": "markets.jsonl",
     "searched": "all top-level keys, the `clob` subobject, and the rules text (description/question/outcomes)",
-    "n_records": 47105,
+    "n_records": 47119,
     "fee_fields_found": {
      "maker_base_fee": {
-      "1000": 47045
+      "1000": 47059
      },
      "taker_base_fee": {
-      "1000": 47045
+      "1000": 47059
      }
     },
     "rules_text_fee_language": "NONE",
@@ -217,18 +217,19 @@
    {
     "source": "the CLOB tape (data/pm_5min/raw/<day>/<slug>.jsonl.gz)",
     "searched": "every payload field on every message in the sample",
-    "n_files": 86,
-    "n_messages": 5544586,
-    "n_trade_events": 68458,
+    "n_files": 90,
+    "n_messages": 5761453,
+    "n_trade_events": 70971,
     "fee_rate_bps_distribution": {
-     "0": 68458
+     "0": 70971
     },
     "fee_rate_bps_dtype": "str (the literal '0'), never numeric",
     "fee_rate_bps_present_on": "last_trade_price events only",
-    "establishes": "NOTHING. THE FIELD IS A PLACEHOLDER, NOT A MEASUREMENT.",
-    "RETRACTION": "DA 286 reported `fee_rate_bps = 0` on all observed trades as the venue's own per-trade fee rate, and DA 287 ruled on it. IT IS NOT AN OBSERVATION. The value is the STRING '0' on every one of its occurrences -- never a number, never any other value -- and it appears ONLY on `last_trade_price` events, absent from book, price_change and tick_size_change. My own on-chain audit's limits said so in a line I did not read back: 'fees are read from the OrderFilled fee word, never from the websocket fee_rate_bps field, which is unpopulated.'",
-    "THE_DECISIVE_CONTRADICTION": "the chain charged 901 of 901 TAKER legs in these same markets over the same period while the tape reads 0 on every trade. If the field measured the applied fee it could not read zero where the fee is certain. A field that is constant, string-typed and present on one event type is a rule-4 STATUS -- absent -- not a zero.",
-    "does_not_establish": "any venue-side fee observation whatever"
+    "establishes": "that the venue REPORTS a constant zero. The field is POPULATED -- it is an observation of what the venue says, and it is not a placeholder.",
+    "CORRECTION_HISTORY_DA_286_TO_DA_290": "DA 286 reported `fee_rate_bps = 0` on every observed trade as the venue's own per-trade fee rate. DA 289 doubted it, on the strength of this programme's own on-chain audit whose `limits` said the field 'is unpopulated'. DA 290 settled it AT THE RAW TAPE: the field is PRESENT in 10,392 of 10,392 last_trade_price events across 25 raw files and 76,617 of 76,617 in a wider sweep, absent in none. THE OBSERVATION WAS REAL; the doubt came from a wrong word in an artifact, and I had propagated that word by not checking the raw payload when I first read the limits line.",
+    "BUT_IT_IS_NON_DISCRIMINATING_AND_THAT_IS_WHY_IT_IS_NOT_A_RULE": "the venue reports the SAME constant zero for the six accounts the chain demonstrably charged. A field that reports zero where the chain took 10% of size x min(p, 1-p) does not reflect what is actually charged, and cannot be the 'verified maker fee applicable to these markets' \u00a79 asks for. Populated is not the same as informative: the durable test of a fee source is whether it can SEPARATE the charged accounts from the rest, and this one cannot.",
+    "THE_LESSON_THAT_OUTLIVES_THE_FEE": "key a check on a PROPERTY, not on a WORD. 'Unpopulated' was a label two artifacts asserted and neither measured; the property that actually decides the question is DISCRIMINATION. A refusal keyed on the label would have flipped twice in two dispatches; one keyed on discrimination would not have moved.",
+    "does_not_establish": "what is actually charged to anyone, and so no fee rule applicable to us"
    },
    {
     "source": "onchain/receipts (via p003_da_onchain_fee_audit)",
