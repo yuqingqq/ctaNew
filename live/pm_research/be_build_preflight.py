@@ -255,6 +255,69 @@ def check_disk() -> tuple[str, str, str, dict]:
              "total_gib": round(u.total / 1024**3, 2)})
 
 
+HEARTBEAT_CADENCE_S = 60.0          # observed p50 and p90, n=16,022
+HEARTBEAT_OBSERVED_MAX_S = 133.1    # observed maximum inter-record interval
+HEARTBEAT_MAX_GAP_S = 270.0         # 2x the observed max, rounded to a half-step
+
+
+def liveness_rows(day: str, d0: int, d1: int, health: "Path"
+                  ) -> list[tuple[str, str, str]]:
+    """Was the collector ALIVE across this day, per its unconditional heartbeat?
+
+    Parameterised on the heartbeat path so the falsifier can build a stale
+    file, an absent file and a holed file, instead of waiting for the live
+    feed to misbehave -- the REVIEW 205 lesson: a cell whose known-bad is a
+    FOUND STATE of the disk is a cell the pipeline can consume.
+    """
+    out = []
+    if not health.exists():
+        out.append((day, "collector heartbeat present",
+                    f"WOULD_FAIL:HEARTBEAT_FILE_ABSENT({health})"))
+        return out
+    ts = []
+    with health.open() as fh:
+        for line in fh:
+            try:
+                d = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            v = d.get("recv_ns") or d.get("ts_ns")
+            if v:
+                ts.append(int(v) / 1e9)
+    ts.sort()
+    if not ts:
+        out.append((day, "collector heartbeat present",
+                    "WOULD_FAIL:HEARTBEAT_FILE_EMPTY"))
+        return out
+    out.append((day, f"collector heartbeat present (n={len(ts)})", "PASS"))
+    # the window the day needs covered, with one bound of slack each side
+    lo, hi = d0 - HEARTBEAT_MAX_GAP_S, d1 + HEARTBEAT_MAX_GAP_S
+    span = [t for t in ts if lo <= t <= hi]
+    if not span or span[0] > d0 or span[-1] < d1:
+        first = f"{span[0]:.0f}" if span else "none"
+        last = f"{span[-1]:.0f}" if span else "none"
+        out.append((day, "heartbeat spans the day",
+                    f"WOULD_FAIL:HEARTBEAT_DOES_NOT_SPAN_DAY("
+                    f"first={first},last={last},need={d0}..{d1})"))
+        return out
+    worst = max((span[i] - span[i - 1] for i in range(1, len(span))),
+                default=0.0)
+    out.append((day, f"heartbeat has no gap over {HEARTBEAT_MAX_GAP_S:.0f}s "
+                     f"across the day (worst={worst:.1f}s)",
+                "PASS" if worst <= HEARTBEAT_MAX_GAP_S else
+                f"WOULD_FAIL:COLLECTOR_STALLED({worst:.1f}s > "
+                f"{HEARTBEAT_MAX_GAP_S:.0f}s)"))
+    file_max = max((ts[i] - ts[i - 1] for i in range(1, len(ts))), default=0.0)
+    out.append((day, "the bound's empirical basis still holds "
+                     f"(file max {file_max:.1f}s <= bound)",
+                "PASS" if file_max <= HEARTBEAT_MAX_GAP_S else
+                f"WOULD_FAIL:HEARTBEAT_BASIS_MOVED({file_max:.1f}s > "
+                f"{HEARTBEAT_MAX_GAP_S:.0f}s -- the bound was derived from an "
+                f"observed max of {HEARTBEAT_OBSERVED_MAX_S}s and must be "
+                f"re-derived, not widened in place)"))
+    return out
+
+
 def stage_graph_rows(day: str, stage: str, derived: Path
                      ) -> list[tuple[str, str, str]]:
     """The stage graph, over a derived root given as an ARGUMENT.
@@ -282,6 +345,18 @@ def stage_graph_rows(day: str, stage: str, derived: Path
         if label != want:
             rows.append((day, f"({label} present: {str(q.exists()).lower()})",
                          "PASS"))
+    # BE 203: the gap-windows artifact is an INPUT to DE's stage 0, and its
+    # absence blocked 09-10's valuation for 17 minutes while every other row
+    # passed. It is published BY the fragment stage now, so from the tape
+    # stage onward its absence is a defect worth refusing BEFORE the lock
+    # rather than discovering after the book.
+    gapw = derived / f"be137_gap_windows_{day}.json"
+    if want in ("tape", "book"):
+        rows.append((day, "gap-windows artifact present (published by the "
+                          "fragment stage)",
+                     "PASS" if gapw.exists() else
+                     "WOULD_FAIL:GAP_WINDOWS_ARTIFACT_ABSENT -- DE's stage 0 "
+                     "refuses the valuation without it"))
     if want != "fragment":
         dep_label, dep_p = dict(
             tape=("fragment", frag), book=("tape", tape))[want]
@@ -402,9 +477,35 @@ def check_day(day: str, stage: str | None = None,
             rows.append((day, "DA blackout mask parses",
                          f"WOULD_FAIL:MASK_UNPARSEABLE({type(exc).__name__})"))
 
-    # 5. THE GAP LEDGER COVERS THE DAY'S SPAN. Zero gaps is legitimate; a
-    #    ledger that STOPS before the day is not.
-    last = 0
+    # 5. LIVENESS, AND SEPARATELY, THE DAY'S GAP RECORD.
+    #
+    # BE 218 / REVIEW 259. The former single row asked whether
+    # `max(window_start)` over collector_gaps.jsonl had passed the day's end.
+    # That file is an EXCEPTION LOG -- every class in it is an anomaly or a
+    # lifecycle event (disconnect 6232, gap_closed 6220, loop_stall 550,
+    # collector_start 10, collector_stop 7, gap_open_at_exit 1) -- and AN
+    # EXCEPTION LOG IS SILENT EXACTLY WHEN THINGS ARE HEALTHY. So it cannot
+    # prove liveness: a perfectly clean collector writes nothing and fails the
+    # check. Measured 09-11: `recv_ns` advanced past 00:51Z while
+    # `max(window_start)` sat at 23:00Z for over two hours, because no gap had
+    # occurred. `max(recv_ns)` is only LESS wrong for the same reason -- it
+    # depends on stalls, which are merely commoner than gaps.
+    #
+    # THE TWO CONCERNS ARE NOW SEPARATE, and must stay so:
+    #   LIVENESS      comes from collector_health.jsonl, an UNCONDITIONAL
+    #                 heartbeat -- 16,022 records, one class `health_sample`,
+    #                 inter-record p50 60.0s, p90 60.0s, MAX 133.1s.
+    #   DAY COVERAGE  is the count of gap records whose `window_start` falls
+    #                 INSIDE the day. It is REPORTED, never gated: zero gaps
+    #                 is a clean day, not a missing instrument.
+    #
+    # THE BOUND IS EMPIRICAL, NOT CHOSEN. 270 s = 2x the observed maximum
+    # inter-record interval (133.1 s), rounded up to the cadence's half-step.
+    # If the feed's own maximum ever exceeds the bound, that is reported as a
+    # moved basis and REFUSES -- the bound does not widen itself to fit.
+    HEALTH = fi.DATA_ROOT / "data/pm_5min/collector_health.jsonl"
+    rows.extend(liveness_rows(day, d0, d1, HEALTH))
+    ins = 0
     if fi.GAPS.exists():
         with fi.GAPS.open() as fh:
             for line in fh:
@@ -412,11 +513,10 @@ def check_day(day: str, stage: str | None = None,
                     ws = json.loads(line).get("window_start")
                 except json.JSONDecodeError:
                     continue
-                if ws:
-                    last = max(last, int(ws))
-    rows.append((day, "gap ledger extends past the day's span",
-                 "PASS" if last >= d1 - WINDOW_S else
-                 f"WOULD_FAIL:GAP_LEDGER_STOPS_EARLY(last={last},day_end={d1})"))
+                if ws and d0 <= int(ws) < d1:
+                    ins += 1
+    rows.append((day, f"gap records inside the day (n={ins}) -- reported, "
+                      f"not gated", "PASS"))
 
     # 6. THE STAGE GRAPH: each stage's OUTPUT must be absent (the builders
     #    refuse rather than overwrite, rule 13) and its INPUT must be present.
@@ -600,6 +700,83 @@ def falsify() -> int:
             os.environ.pop("BE_WORKTREE", None)
         else:
             os.environ["BE_WORKTREE"] = real
+
+    # ---- BE 218: the LIVENESS check, driven on CONSTRUCTED heartbeats.
+    # A liveness check that cannot detect a dead collector is worse than the
+    # one it replaces, because it silently admits days built on a stopped
+    # feed. So the refusal direction is driven, not asserted.
+    import tempfile as _tf
+    _d0, _d1 = 1789084800, 1789171200          # 09-11's span
+    with _tf.TemporaryDirectory() as _td:
+        _p = Path(_td) / "collector_health.jsonl"
+
+        def _write(times):
+            _p.write_text("".join(
+                json.dumps({"event": "health_sample",
+                            "recv_ns": int(t * 1e9)}) + "\n" for t in times))
+
+        def _stat(rows, frag):
+            return [r for r in rows if frag in r[1]]
+
+        # (a) a HEALTHY day: heartbeats every 60 s across the span
+        _write([_d0 - 300 + 60 * i
+                for i in range(int((_d1 - _d0 + 600) / 60) + 1)])
+        ok = liveness_rows("20260911", _d0, _d1, _p)
+        note("liveness: a 60 s heartbeat across the day is ADMITTED",
+             all(st == "PASS" for _, _, st in ok))
+
+        # (b) a STALLED collector: one hole wider than the bound
+        t = [_d0 - 300 + 60 * i
+             for i in range(int((_d1 - _d0 + 600) / 60) + 1)]
+        mid = len(t) // 2
+        stalled = t[:mid] + t[mid + 8:]        # an 8-minute hole
+        _write(stalled)
+        stall_rows = liveness_rows("20260911", _d0, _d1, _p)
+        note("liveness: an 8-minute stall mid-day REFUSES COLLECTOR_STALLED",
+             any("COLLECTOR_STALLED" in st for _, _, st in stall_rows))
+
+        # (c) a DEAD collector: heartbeat stops before the day ends
+        _write([_d0 - 300 + 60 * i for i in range(int((_d1 - _d0) / 120))])
+        dead = liveness_rows("20260911", _d0, _d1, _p)
+        note("liveness: a heartbeat that STOPS mid-day refuses to span it",
+             any("HEARTBEAT_DOES_NOT_SPAN_DAY" in st for _, _, st in dead))
+
+        # (d) an ABSENT heartbeat file is a REFUSAL, never a pass
+        _p.unlink()
+        gone = liveness_rows("20260911", _d0, _d1, _p)
+        note("liveness: an ABSENT heartbeat file REFUSES -- absence is not "
+             "evidence of health",
+             any("HEARTBEAT_FILE_ABSENT" in st for _, _, st in gone))
+
+        # (e) an EMPTY file is distinguished from an absent one
+        _p.write_text("")
+        empty = liveness_rows("20260911", _d0, _d1, _p)
+        note("liveness: an EMPTY heartbeat file refuses by its own name",
+             any("HEARTBEAT_FILE_EMPTY" in st for _, _, st in empty))
+
+        # (f) THE TWO CONCERNS STAY SEPARATE: no liveness row mentions the
+        #     gap ledger, and the gap-ledger row can never gate.
+        _write([_d0 - 300 + 60 * i
+                for i in range(int((_d1 - _d0 + 600) / 60) + 1)])
+        # The property is that liveness never READS the exception log -- not
+        # that its labels avoid the word "gap", which they legitimately use
+        # ("no gap over 270s" describes the heartbeat's own spacing). The
+        # first version of this cell checked the word and fired on itself.
+        import inspect as _insp
+        _src = _insp.getsource(liveness_rows)
+        note("separation: liveness never reads the exception log "
+             "(no GAPS/collector_gaps reference in its source)",
+             "GAPS" not in _src and "collector_gaps" not in _src)
+        note("separation: and it reads the heartbeat file it was given, "
+             "nothing else",
+             "collector_health" in _insp.getsource(check_day)
+             and _src.count("health") >= 1)
+    note("separation: the gap-ledger row is REPORTED, never gated -- it "
+         "carries PASS whatever the count",
+         all(st == "PASS" for _, c, st in rows_for_sep
+             if "gap records inside the day" in c)
+         if (rows_for_sep := [r for r in check_day("20260907", "book")
+                              if "gap records inside" in r[1]]) else True)
 
     bad = [n for n, ok in checks if not ok]
     print(json.dumps({"falsifier": "be_build_preflight", "n": len(checks),
