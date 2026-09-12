@@ -36,6 +36,7 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 import da_fair_price_identity as FP                # noqa: E402
 import de_fair_value_actions as ACT                # noqa: E402
+import de_fair_value_pnl as PNL                    # noqa: E402
 import de_fair_value_predictive as PRED            # noqa: E402
 import de_fair_value_rehearsal as REH              # noqa: E402
 
@@ -435,6 +436,7 @@ def plumbing_run(days=READABLE_DAYS, outdir=None, scope_override=None) -> dict:
         "days_with_no_book_yet": [r["day"] for r in refusals
                                   if r["refusal"] == NO_BOOK],
         "CAN_ONE_COIN_BE_VALUED_WHILE_THE_OTHER_BUILDS": pipelining,
+        "WHAT_SPENDS_A_BAND_DAY": band_slack(),
         "THE_TWO_BLOCKERS": {
             "eth_has_no_day_book_on_any_day": {
                 "coins_with_books_per_day":
@@ -670,6 +672,27 @@ def stability(per_day, key: str) -> dict:
 
 
 MEAN_OF_MEANS = "DAY_INCREMENT_COMBINED_AS_A_MEAN_OF_MEANS"
+INCOMPLETE_COIN_SET = "PORTFOLIO_DAY_VALUED_ON_AN_INCOMPLETE_COIN_SET"
+
+
+def assert_day_is_complete(coins_present, declared=None) -> dict:
+    """A COIN MAY BE VALUED EARLY; A DAY MAY NOT BE PUBLISHED EARLY.
+
+    Per-coin valuation is independent work. The portfolio day's number is
+    an action-weighted mean over the DECLARED coin set, so a number
+    computed while a coin is still building is a different estimand
+    wearing the day's name.
+    """
+    declared = tuple(declared or PRED.COINS)
+    present = tuple(sorted(set(coins_present)))
+    missing = [c for c in declared if c not in present]
+    if missing:
+        raise PlumbingRefused(
+            f"REFUSED {INCOMPLETE_COIN_SET}: the day declares "
+            f"{list(declared)} and {present} is present; {missing} is "
+            f"still building. The per-coin WORK may proceed -- this "
+            f"refuses only the publication of a partial day AS the day.")
+    return {"complete": True, "coins": present, "declared": list(declared)}
 
 
 def combine_partials(parts) -> dict:
@@ -781,10 +804,164 @@ def pipelining_from_day(dd: dict, outs: dict, whole: dict) -> dict:
                        "same size",
                 "partition_used": "20/80 by slug, deliberately unbalanced"},
         },
+        "valuing_a_day_on_a_partial_coin_set": {
+            "part_A_alone_as_if_it_were_the_day": (
+                (parts[0]["identity_mean_log_loss"]
+                 - parts[0]["policy_mean_log_loss"])
+                if parts[0]["n"] else None),
+            "the_whole_day": whole_delta,
+            "absolute_error_if_published_early": (
+                abs((parts[0]["identity_mean_log_loss"]
+                     - parts[0]["policy_mean_log_loss"]) - whole_delta)
+                if parts[0]["n"] else None),
+            "refusal_if_attempted": INCOMPLETE_COIN_SET,
+            "so": "value btc the moment its book lands; do NOT let that "
+                  "number be read as the day's"},
         "partition_driven": "by slug (no eth book exists); the arithmetic "
                             "of recombining disjoint action sets is "
                             "identical for a partition by coin",
         "n_actions_whole": whole["n"],
+    }
+
+
+def tape_retention() -> dict:
+    """HOW LONG A DAY CAN STILL BE REBUILT -- measured, not assumed."""
+    raw = ROOT / "raw"
+    days = sorted(d.name for d in raw.iterdir() if d.is_dir())
+    sizes = {}
+    for d in days[-6:]:
+        sizes[d] = sum(f.stat().st_size for f in (raw / d).iterdir())
+    import shutil
+    free = shutil.disk_usage(str(raw)).free
+    mean_day = (sum(sizes.values()) / len(sizes)) if sizes else 0
+    return {"days_of_tape_on_disk": len(days),
+            "oldest_day": days[0] if days else None,
+            "newest_day": days[-1] if days else None,
+            "mean_recent_day_bytes": mean_day,
+            "free_bytes": free,
+            "headroom_days_at_the_recent_rate":
+                (free / mean_day) if mean_day else None,
+            "why_it_matters":
+                "a book is built FROM the tape, so a night that slips is "
+                "recoverable for as long as its tape survives"}
+
+
+def book_build_lag() -> dict:
+    """WERE BOOKS BUILT ON THE NIGHT, OR AFTERWARDS? Measured from the
+    files themselves -- retrospective builds are the evidence that a
+    slipped night is not automatically a lost day."""
+    import datetime as dt
+    rows = []
+    for day in CONSUMED_DAYS:
+        try:
+            p = book_path(day)
+        except PlumbingRefused:
+            continue
+        built = dt.datetime.utcfromtimestamp(p.stat().st_mtime)
+        day_end = dt.datetime.strptime(day, "%Y%m%d") + dt.timedelta(days=1)
+        rows.append({"day": day, "book": p.name,
+                     "built_utc": built.isoformat() + "Z",
+                     "days_after_the_day_closed":
+                         round((built - day_end).total_seconds() / 86400, 2)})
+    return {"rows": rows,
+            "n_built_after_the_next_day": sum(
+                1 for r in rows if r["days_after_the_day_closed"] > 1.0),
+            "reading": "books built days after their day prove the build "
+                       "is retrospective: the tape, not the night, is the "
+                       "thing that must survive"}
+
+
+def band_slack() -> dict:
+    """WHAT ACTUALLY SPENDS ONE OF THE BAND'S FOUR SPARE DAYS.
+
+    §8's band is 14 consecutive calendar days needing 10 evaluable, and
+    extension is forbidden -- so the question is not "what makes a night
+    late" but "what makes a DAY permanently non-evaluable". Those are
+    different lists, and conflating them prices the slack wrong.
+    """
+    tape = tape_retention()
+    lag = book_build_lag()
+    costs_a_day = [
+        {"mode": "no book is ever built for a coin on that day",
+         "status": "COINS_INCOMPLETE", "evidence":
+             "MEASURED: 0 eth books exist across 25 days of tape",
+         "recoverable_from_tape": True,
+         "why_it_still_costs_a_day": "only if it is never built; the tape "
+                                     "is there, so this is a BUILD "
+                                     "decision, not a data loss"},
+        {"mode": "collector gap inside the day fails the book gate",
+         "status": "BINANCE_GAP_EXCLUDED / census gap_seconds",
+         "evidence": "MEASURED: 09-07 census gap_seconds = 136.05 over "
+                     "287 windows -- small, but the failure mode is real",
+         "recoverable_from_tape": False,
+         "why_it_still_costs_a_day": "the rows were never collected; no "
+                                     "rebuild recovers them"},
+        {"mode": "official resolutions never arrive for the day's slugs",
+         "status": NO_OUTCOME, "evidence":
+             "MEASURED: 0 unresolved actions across all 8 days",
+         "recoverable_from_tape": False,
+         "why_it_still_costs_a_day": "an action with no outcome cannot "
+                                     "be scored at any later time"},
+        {"mode": "settlement verification does not cover the day",
+         "status": "SETTLEMENT_VERIFICATION_NOT_COVERED",
+         "evidence": "STRUCTURAL: eligible_days requires it",
+         "recoverable_from_tape": False,
+         "why_it_still_costs_a_day": "eligibility is a per-day predicate"},
+        {"mode": "the day's tape is lost or truncated before the rebuild",
+         "status": "NO_TAPE", "evidence":
+             f"MEASURED: {tape['days_of_tape_on_disk']} days on disk, "
+             f"oldest {tape['oldest_day']}, headroom "
+             f"{tape['headroom_days_at_the_recent_rate']:.0f} days at the "
+             f"recent rate -- NOT a binding risk over a 14-day band",
+         "recoverable_from_tape": False,
+         "why_it_still_costs_a_day": "the source is gone"},
+    ]
+    costs_wall_clock_only = [
+        {"mode": "a build fails or is refused at the emit",
+         "evidence": "OBSERVED this programme: a day-run guard refused at "
+                     "the emit and 1h20m was lost",
+         "cost": "hours", "recovers_by": "rebuild from the tape"},
+        {"mode": "a worktree is refreshed under a running unit",
+         "evidence": "OBSERVED: wt_refresh.sh has no in-flight guard",
+         "cost": "hours", "recovers_by": "re-arm and rerun"},
+        {"mode": "a scheduled unit holds the heavy-run lock",
+         "evidence": "STRUCTURAL: scheduled units BLOCK rather than yield",
+         "cost": "hours", "recovers_by": "run after it releases"},
+        {"mode": "the chain refuses at stage 0 on a declaration or pin",
+         "evidence": "OBSERVED repeatedly this programme",
+         "cost": "minutes", "recovers_by": "land the declaration, re-arm"},
+        {"mode": "a valuation crashes mid-run",
+         "evidence": "the landmine found by the rehearsal: "
+                     f"{PNL.NO_SETTLEMENT} raises mid-valuation",
+         "cost": "hours", "recovers_by": "the book persists; rerun the "
+                                         "valuation"},
+        {"mode": "a unit is garbage-collected so its failure reads as "
+                 "success",
+         "evidence": "OBSERVED: systemctl show on a collected unit "
+                     "returns Result=success; read LoadState first",
+         "cost": "a night, if unnoticed", "recovers_by": "rebuild"},
+    ]
+    return {
+        "the_question_restated":
+            "a night that slips costs WALL CLOCK; a day is spent only "
+            "when it can never become evaluable",
+        "THE_CORRECTION":
+            "books are built retrospectively from the tape -- measured "
+            f"below -- so lateness alone does NOT spend a band day. "
+            f"{lag['n_built_after_the_next_day']} of {len(lag['rows'])} "
+            f"books on disk were built more than a day after their day "
+            f"closed.",
+        "tape_retention": tape,
+        "book_build_lag": lag,
+        "COSTS_A_BAND_DAY": costs_a_day,
+        "COSTS_WALL_CLOCK_ONLY": costs_wall_clock_only,
+        "n_modes_that_cost_a_day": len(costs_a_day),
+        "n_modes_that_cost_only_time": len(costs_wall_clock_only),
+        "what_this_prices":
+            "the band's four spare days are spent by COLLECTION and "
+            "RESOLUTION failures, not by late builds -- so the slack to "
+            "watch is the collector's, and the nightly schedule buys "
+            "wall clock rather than band days",
     }
 
 
@@ -870,6 +1047,37 @@ def falsify() -> int:
        r3["MEAN_OF_MEANS_IS_WRONG"][
            "absolute_error_against_the_single_pass"] > 0,
        f"error {r3['MEAN_OF_MEANS_IS_WRONG']['absolute_error_against_the_single_pass']:.3e}")
+
+    print("== a coin may be valued early; a DAY may not be published "
+          "early ==")
+    pv = ans["valuing_a_day_on_a_partial_coin_set"]
+    ck("valuing the day on a PARTIAL coin set gives a different number",
+       pv["absolute_error_if_published_early"] > 0,
+       f"part alone {pv['part_A_alone_as_if_it_were_the_day']:+.6f} vs "
+       f"whole {pv['the_whole_day']:+.6f}")
+    try:
+        assert_day_is_complete(("btc",))
+        ck("  and publishing it AS the day refuses by name", False)
+    except PlumbingRefused as exc:
+        ck("  and publishing it AS the day refuses by name",
+           INCOMPLETE_COIN_SET in str(exc) and "eth" in str(exc))
+    ck("  while the complete set proceeds",
+       assert_day_is_complete(("btc", "eth"))["complete"] is True)
+
+    print("== what actually spends a band day ==")
+    bs = band_slack()
+    ck("the correction is MEASURED: books are built retrospectively",
+       bs["book_build_lag"]["n_built_after_the_next_day"] > 0,
+       f"{bs['book_build_lag']['n_built_after_the_next_day']} of "
+       f"{len(bs['book_build_lag']['rows'])} built >1 day late")
+    ck("  and the tape that makes that possible is measured, not assumed",
+       bs["tape_retention"]["days_of_tape_on_disk"] >= 14,
+       f"{bs['tape_retention']['days_of_tape_on_disk']} days on disk, "
+       f"headroom "
+       f"{bs['tape_retention']['headroom_days_at_the_recent_rate']:.0f}d")
+    ck("the two lists are SEPARATE and both non-empty",
+       bs["n_modes_that_cost_a_day"] >= 5
+       and bs["n_modes_that_cost_only_time"] >= 5)
 
     print("== the readable set, and the guard that still bites ==")
     ck("09-11..09-13 are readable -- they precede any possible freeze",
