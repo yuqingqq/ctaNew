@@ -331,11 +331,26 @@ def maker_fee_rule() -> dict:
         "n_files": tape["n_files"], "n_messages": tape["n_messages"],
         "n_trade_events": tape["n_trade_events_carrying_fee_rate_bps"],
         "fee_rate_bps_distribution": tape["fee_rate_bps_distribution"],
-        "establishes": ("the VENUE's own per-trade fee rate: `fee_rate_bps`, "
-                        "uniformly 0 on every observed trade in these markets"),
-        "does_not_establish": ("what would happen at a different rate; it is a "
-                               "record of what WAS charged, not a published "
-                               "schedule with an effective date"),
+        "fee_rate_bps_dtype": "str (the literal '0'), never numeric",
+        "fee_rate_bps_present_on": "last_trade_price events only",
+        "establishes": "NOTHING. THE FIELD IS A PLACEHOLDER, NOT A MEASUREMENT.",
+        "RETRACTION": (
+            "DA 286 reported `fee_rate_bps = 0` on all observed trades as the "
+            "venue's own per-trade fee rate, and DA 287 ruled on it. IT IS NOT "
+            "AN OBSERVATION. The value is the STRING '0' on every one of its "
+            "occurrences -- never a number, never any other value -- and it "
+            "appears ONLY on `last_trade_price` events, absent from book, "
+            "price_change and tick_size_change. My own on-chain audit's limits "
+            "said so in a line I did not read back: 'fees are read from the "
+            "OrderFilled fee word, never from the websocket fee_rate_bps "
+            "field, which is unpopulated.'"),
+        "THE_DECISIVE_CONTRADICTION": (
+            "the chain charged 901 of 901 TAKER legs in these same markets over "
+            "the same period while the tape reads 0 on every trade. If the "
+            "field measured the applied fee it could not read zero where the "
+            "fee is certain. A field that is constant, string-typed and present "
+            "on one event type is a rule-4 STATUS -- absent -- not a zero."),
+        "does_not_establish": ("any venue-side fee observation whatever"),
     })
 
     # D. on-chain settlement receipts.
@@ -386,9 +401,15 @@ def maker_fee_rule() -> dict:
                    else ("MAKER_FEE_RULE_ESTABLISHED_ZERO" if established
                          else FEE_UNESTABLISHABLE)),
         "fee_rule": None if not established else {"maker_fee_bps": 0},
-        "THE_SUPPORTING_RULE_SECTION_9_ASKS_FOR": (
-            "the venue's own `fee_rate_bps` field, carried on every trade event "
-            "in the CLOB tape and equal to 0 on all "
+        "NO_VENUE_SIDE_FEE_OBSERVATION_EXISTS": (
+            "the only venue-side field that looked like one is a placeholder "
+            "(see the CLOB tape source). So §9's supporting rule is not merely "
+            "unpublished -- there is no observation of an applied fee rate "
+            "anywhere in the collected data except the on-chain fee word, "
+            "which records what WAS charged to OTHER accounts."),
+        "THE_SUPPORTING_RULE_SECTION_9_ASKS_FOR_DOES_NOT_EXIST": (
+            "WITHDRAWN. It read: the venue's own `fee_rate_bps` field, "
+            "carried on every trade event in the CLOB tape and equal to 0 on "
             f"{tape['n_trade_events_carrying_fee_rate_bps']} observed trades "
             f"across {len(tape['days'])} days, BTC and ETH. That is a market "
             "rule stated by the market, not an assumption."),
@@ -448,6 +469,26 @@ def maker_fee_rule() -> dict:
                 "unqualified zero would be asserting something the chain "
                 "contradicts 0.95% of the time."),
         },
+        "THE_AUDITS_FORMULA_FAILS_ITS_OWN_POSITIVE_CONTROL": {
+            "where": "taker legs -- 901 of 901 charged, the one place the "
+                     "schedule is fully observable",
+            "match_share_to_1e-6": 0.1220865704772475,
+            "n_matching": 110, "n_taker_legs": 901,
+            "residual_usdc": {"p50": 5.94e-06, "max": 0.51021345},
+            "the_fair_reading": (
+                "'reproduces 12%' is true AT A 1e-6 THRESHOLD and understates "
+                "the median: half the legs are within six MICRODOLLARS, so the "
+                "formula is nearly exact for most fills. But the TAIL is what a "
+                "bound depends on, and the maximum residual is 0.51 USDC. An "
+                "instrument that can be half a dollar wrong where the answer is "
+                "certain cannot bound maker exposure where it is not."),
+            "consequence": (
+                "NO VALIDATED FEE MODEL EXISTS. The sensitivity DA 287 asked "
+                "DE to run -- charge every maker fill at 10% of "
+                "size x min(p, 1-p) -- would be computed with this formula, so "
+                "it would inherit that tail. It must be fixed or replaced "
+                "before it can be called a worst case."),
+        },
         "WHAT_WOULD_SETTLE_IT": [
             "a reconciliation of the 10 charged legs: whether they are "
             "taker-side fees attributed to a maker address, a different fee "
@@ -502,7 +543,9 @@ def build() -> dict:
     # as a QUALIFIED zero whose qualification travels with it, never as a clean
     # one. `established` here means "§9's requirement is met", not "no residual".
     established = {"legal_tick": tick["established"],
-                   "maker_fee_rule": True,
+                   # WITHDRAWN at DA 288: the rule identified at DA 287 was a
+                   # zero observed on OTHER accounts, and we have none.
+                   "maker_fee_rule": False,
                    "initial_inventory": inv["established"]}
     #: THE TICK IS PUBLISHED AS A NUMBER UNDER THE NAME DE'S READER SEARCHES.
     #: `de_fair_value_policy_seam._declared` walks declarations for
@@ -515,13 +558,72 @@ def build() -> dict:
     tick_number = float(tick["legal_tick"]) if tick["established"] else None
     ev = fee["per_source"]
     chase = fee["THE_CHASE_DA_286"]
+    ACCOUNT_PARTITION = {
+        "finding": "REVIEW 249, verified here from the audit's own two fields",
+        "the_trigger_is_NOT_unidentified": (
+            "charged-ness PARTITIONS BY ACCOUNT, totally. Six maker addresses "
+            "are each charged on 100% of their maker legs, and the number of "
+            "addresses holding BOTH a charged and a zero maker leg is ZERO."),
+        "charged_class": {"0x0fd0ebb1ba": "1/1", "0x18b0b71054": "1/1",
+                          "0x2277c18fb7": "3/3", "0x8d009282a7": "1/1",
+                          "0xb3b0780f28": "2/2", "0xbdf221228d": "2/2"},
+        "HOW_THE_CLASSES_WERE_ENUMERATED": (
+            "the audit SUMMARY enumerates only the CHARGED side -- "
+            "`maker_charged_by_address` and its companion hold the same six "
+            "addresses, and there is no listing of the 1,046 zero-fee legs by "
+            "address. The 218 below were decoded from the 901 RECEIPTS "
+            "directly, OrderFilled by OrderFilled, not read off the summary."),
+        "n_distinct_maker_addresses": 218,
+        "n_in_the_charged_class": 6,
+        "n_in_the_zero_class": 212,
+        "why_the_25_zero_legs_at_0.99_paid_nothing": (
+            "they belong to accounts in the OTHER CLASS. My DA 286 chase "
+            "treated that as evidence the trigger was unidentifiable; it was "
+            "evidence the trigger is not PRICE. The partition was visible in "
+            "two fields of a file I already held, and I did not split by "
+            "account."),
+        "THE_SAMPLE_LIMIT_THAT_BOUNDS_EVERY_INFERENCE_HERE": (
+            "the audit's own limits: 'the 901 receipts are a SAMPLE of our own "
+            "recorded trades, not a population; incidence here bounds observed "
+            "volume only.' SO AN ABSENCE FROM THE CHARGED SET IS NOT EVIDENCE "
+            "OF MEMBERSHIP IN THE ZERO CLASS. That is precisely the inference a "
+            "qualified zero would have rested on, and it does not hold: 6 of "
+            "218 observed accounts are charged, and the next receipt could "
+            "carry a seventh."),
+        "OUR_OWN_ADDRESS": {
+            "question": "is our maker address in this corpus, and which class?",
+            "answer": "WE HAVE NO MAKER ADDRESS. Neither this lane nor any "
+                      "module in it declares an executing or maker account; "
+                      "every 0x constant in the lane is protocol "
+                      "infrastructure (the exchange, USDC, event topics, the "
+                      "rewards asset). The programme is research-only -- "
+                      "'No live trading, no exchange integrations' -- so no "
+                      "order of ours has ever rested on this book.",
+            "therefore": (
+                "all 218 maker addresses are third parties, and the 1,046 "
+                "zero-fee legs are OTHER PEOPLE'S ACCOUNTS. We have NO "
+                "observation of our own treatment, and cannot have one from "
+                "collected data: the observation does not exist yet rather "
+                "than being missing from what we gathered."),
+            "so_the_receipt_must_say": (
+                "the fee applicable to US is UNOBSERVED BY CONSTRUCTION. A "
+                "zero taken from other accounts' fills is not our fee; 6 of "
+                "218 observed accounts (2.8%) are in a charged class, and "
+                "nothing determines which class an account of ours would "
+                "join."),
+        },
+    }
+
     RESIDUAL = {
         "n_charged": 10, "n_maker_legs": 1056, "share": 0.00946969696969697,
         "all_at_price": 0.99,
         "implied_rate_median": 0.0990,
         "reconciles_to": ("maker_base_fee = 1000 read as BASIS POINTS: "
                           "fee = 0.10 x size x min(p, 1-p)"),
-        "trigger": "UNIDENTIFIED",
+        "trigger": ("IDENTIFIED as an ACCOUNT ATTRIBUTE (DA 288 / REVIEW 249): "
+                    "six accounts charged on 100% of their legs, none mixed. "
+                    "My DA 286 'UNIDENTIFIED' was wrong -- I split by price and "
+                    "by block and never by account."),
         "THE_DISCRIMINATING_FACT": (
             "25 maker BUY legs at the SAME price 0.9900, interleaved across the "
             "SAME block buckets, paid ZERO. This is what makes price-alone "
@@ -546,29 +648,18 @@ def build() -> dict:
         "protocol": PROTOCOL,
         "dispatch": "DA 283, ruled at DA 287",
 
-        #: THE QUALIFIED ZERO, ADOPTED (DA 287). Shaped for its consumer:
-        #: `de_fair_value_pnl.declared_fee` needs a NUMBER under one of
-        #: {maker_fee, maker_fee_bps, fee_bps, maker_fee_rate} and a STRING
-        #: under one of {maker_fee_rule, fee_rule, supporting_rule, ...} in the
-        #: SAME file. My previous version carried `maker_fee_rule` as a DICT, so
-        #: the rule read as absent and the P&L refused -- the same
-        #: coordinate-with-the-consumer lesson the legal tick taught, repeated.
-        "maker_fee_bps": 0,
-        "maker_fee_bps_units": "basis points applied to the fill, order level",
-        "maker_fee_rule": (
-            "ORDER-LEVEL ZERO, IDENTIFIED FROM THE VENUE'S OWN FIELD: the CLOB "
-            "tape carries `fee_rate_bps` on every trade event and it is 0 on "
-            "all 76,617 observed trades across 8 UTC days, BTC and ETH, with "
-            "zero exceptions. That is a market rule stated by the market, not "
-            "an assumption. IT IS QUALIFIED, NOT CLEAN: 10 of 1,056 on-chain "
-            "maker legs (0.95%) WERE charged, at the market base rate "
-            "`maker_base_fee = 1000` read as basis points (10% of "
-            "size x min(p, 1-p), implied rate median 0.0990). The TRIGGER for "
-            "those 10 is UNIDENTIFIED, and price alone does not explain it: 25 "
-            "maker BUY legs at the SAME price 0.9900, interleaved across the "
-            "SAME block buckets, paid zero. Any user of this zero inherits that "
-            "0.95% contradiction and must carry it."),
+        #: THE QUALIFIED ZERO IS WITHDRAWN (DA 288). NO NUMBER AND NO RULE
+        #: STRING ARE PUBLISHED, so `de_fair_value_pnl.declared_fee` refuses
+        #: again -- deliberately. The reversal is not a retreat to the old
+        #: uncertainty; it rests on a SHARPER fact that makes the zero
+        #: inapplicable to us rather than merely qualified.
+        "maker_fee_bps": None,
+        "maker_fee_rule": None,
         "maker_fee_residual": RESIDUAL,
+        "maker_fee_account_partition": ACCOUNT_PARTITION,
+        "dispatch_note": ("DA 287 ruled ADOPT the qualified zero; DA 288 "
+                          "REVERSED it on REVIEW 249's account partition, "
+                          "before it landed."),
         "legal_tick": tick_number,
         "legal_tick_units": "USDC per share of a binary outcome token",
         "legal_tick_consumer": ("de_fair_value_policy_seam.legal_tick() reads "
@@ -634,34 +725,58 @@ def falsify() -> int:
        str(f["per_source"][0]["fee_fields_found"]))
     ck("...and DA 283's 'no fee field' was a SEARCH failure, now named",
        "unfinished search" in f["CORRECTION_TO_DA_283"])
-    ck("the CLOB tape's own per-trade fee rate is uniformly ZERO",
-       set(f["per_source"][2]["fee_rate_bps_distribution"]) <= {"0", "0.0"},
-       str(f["per_source"][2]["fee_rate_bps_distribution"]))
-    ck("...over a real sample, not one file",
-       f["per_source"][2]["n_trade_events"] > 10000,
-       f"{f['per_source'][2]['n_trade_events']} trade events")
-    ck("the SUPPORTING RULE §9 asks for is now NAMED",
-       "fee_rate_bps" in f["THE_SUPPORTING_RULE_SECTION_9_ASKS_FOR"])
+    src = f["per_source"][2]
+    ck("the tape's `fee_rate_bps` is a PLACEHOLDER, and says so",
+       src["establishes"].startswith("NOTHING"), src["fee_rate_bps_dtype"])
+    ck("...it is STRING-typed and single-valued, never numeric",
+       "str" in src["fee_rate_bps_dtype"] and "never numeric" in src["fee_rate_bps_dtype"])
+    ck("...and present on ONE event type only, absent elsewhere",
+       "last_trade_price" in src["fee_rate_bps_present_on"])
+    ck("the DECISIVE CONTRADICTION is carried: 901/901 takers charged on chain",
+       "901 of 901" in src["THE_DECISIVE_CONTRADICTION"])
+    ck("the DA 286 claim is RETRACTED in the artifact, not just dropped",
+       "IT IS NOT AN OBSERVATION" in src["RETRACTION"]
+       and "unpopulated" in src["RETRACTION"])
+    ck("so NO VENUE-SIDE FEE OBSERVATION EXISTS is stated plainly",
+       "no observation of an applied fee rate" in f["NO_VENUE_SIDE_FEE_OBSERVATION_EXISTS"])
     ck("but the on-chain residual is NOT swept under it",
        (f["per_source"][3]["n_maker_legs_charged"] or 0) > 0
        and "cannot both be the whole story" in f["THE_RESIDUAL_THAT_STOPS_IT_BEING_FINAL"],
        f"{f['per_source'][3]['n_maker_legs_charged']} charged legs unreconciled")
-    ck("THE QUALIFIED ZERO IS ADOPTED, and shaped for its consumer (DA 287)",
-       d["maker_fee_bps"] == 0 and isinstance(d["maker_fee_rule"], str),
-       "maker_fee_bps=0 (number) + maker_fee_rule (string)")
-    ck("...the RULE half names the venue field and its count",
-       "fee_rate_bps" in d["maker_fee_rule"] and "76,617" in d["maker_fee_rule"])
-    ck("...the RESIDUAL half travels WITH it, not as a footnote",
-       d["maker_fee_residual"]["n_charged"] == 10
-       and d["maker_fee_residual"]["trigger"] == "UNIDENTIFIED")
-    ck("...and the DISCRIMINATING FACT is carried, so this can be re-opened",
-       "25 maker BUY legs" in d["maker_fee_residual"]["THE_DISCRIMINATING_FACT"]
-       and "SAME block buckets" in d["maker_fee_residual"]["THE_DISCRIMINATING_FACT"])
-    ck("...and the zero is never presented as CLEAN",
-       "QUALIFIED, NOT CLEAN" in d["maker_fee_rule"])
-    ck("the §9 fee SENSITIVITY is recorded as a required condition",
-       "sensitivity" in d["maker_fee_residual"]["THE_UNKNOWN_CARRIES_ITS_OWN_WEIGHT"].lower()
-       or "SENSITIVITY" in d["maker_fee_residual"]["THE_UNKNOWN_CARRIES_ITS_OWN_WEIGHT"])
+    ap = d["maker_fee_account_partition"]
+    ck("THE QUALIFIED ZERO IS WITHDRAWN -- no number and no rule are published",
+       d["maker_fee_bps"] is None and d["maker_fee_rule"] is None,
+       "so de_fair_value_pnl.declared_fee refuses again, deliberately")
+    ck("the TRIGGER is IDENTIFIED: charged-ness partitions BY ACCOUNT, totally",
+       ap["n_in_the_charged_class"] == 6 and ap["n_in_the_zero_class"] == 212,
+       f"{ap['n_in_the_charged_class']} charged / {ap['n_in_the_zero_class']} "
+       f"zero of {ap['n_distinct_maker_addresses']} addresses")
+    ck("...every charged address is charged on ALL of its legs",
+       all(n.split("/")[0] == n.split("/")[1]
+           for n in ap["charged_class"].values()),
+       str(ap["charged_class"]))
+    ck("...so the 25 zero legs at 0.9900 are explained by CLASS, not price",
+       "OTHER CLASS" in ap["why_the_25_zero_legs_at_0.99_paid_nothing"])
+    ck("WE HAVE NO MAKER ADDRESS, so we have no observation of our own fee",
+       "WE HAVE NO MAKER ADDRESS" in ap["OUR_OWN_ADDRESS"]["answer"]
+       and "UNOBSERVED BY CONSTRUCTION" in ap["OUR_OWN_ADDRESS"]["so_the_receipt_must_say"])
+    ck("...and the zeros are named as OTHER PEOPLE'S accounts",
+       "OTHER PEOPLE'S ACCOUNTS" in ap["OUR_OWN_ADDRESS"]["therefore"])
+    ck("the SAMPLE limit is carried: absence from the charged set proves nothing",
+       "NOT EVIDENCE" in ap["THE_SAMPLE_LIMIT_THAT_BOUNDS_EVERY_INFERENCE_HERE"]
+       and "SAMPLE" in ap["THE_SAMPLE_LIMIT_THAT_BOUNDS_EVERY_INFERENCE_HERE"])
+    ck("...and the classes were decoded from the RECEIPTS, not the summary",
+       "not read off the summary" in ap["HOW_THE_CLASSES_WERE_ENUMERATED"])
+    tf = d["maker_fee_rule_evidence"]["THE_AUDITS_FORMULA_FAILS_ITS_OWN_POSITIVE_CONTROL"]
+    ck("the audit's formula FAILS its own positive control, and by how much",
+       tf["n_matching"] == 110 and tf["n_taker_legs"] == 901
+       and tf["residual_usdc"]["max"] > 0.5,
+       f"{tf['n_matching']}/{tf['n_taker_legs']} to 1e-6, max residual "
+       f"{tf['residual_usdc']['max']} USDC")
+    ck("...stated FAIRLY: the median is near-exact, the TAIL is what fails",
+       "MICRODOLLARS" in tf["the_fair_reading"] and "TAIL" in tf["the_fair_reading"])
+    ck("...so NO VALIDATED FEE MODEL EXISTS is said plainly",
+       "NO VALIDATED FEE MODEL EXISTS" in tf["consequence"])
     i = d["initial_inventory"]
     ck("initial inventory is FROZEN at a stated value", i["initial_inventory"] == 0.0)
     ck("...and is declared a CHOICE, not a measurement",
@@ -679,7 +794,7 @@ def falsify() -> int:
     ck("...and rounding to 0.01 stays LEGAL because 0.01 is a multiple of 0.001",
        "stays LEGAL" in t["THE_SUB_TICK_PRICES_ARE_EXPLAINED"]["consequence_for_the_freeze"])
     ck("the summary counts what is established WITHOUT rounding it up",
-       d["n_established"] == 3 and d["unestablished"] == [],
+       d["n_established"] == 2 and d["unestablished"] == ["maker_fee_rule"],
        f"{d['n_established']}/{d['n_requested']}")
     print(f"\n  {'MARKET-FACTS CELLS PASS' if not bad else str(bad) + ' FAILED'}")
     return bad

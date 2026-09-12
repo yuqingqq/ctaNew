@@ -79,7 +79,15 @@ CHAIN = (
     ("score", ("live/pm_research/de_fair_value_actions.py",)),
     ("quote_mapping", ("live/pm_research/de_fair_value_policy_seam.py",)),
     ("replay", ("live/pm_research/de_fair_value_replay_seam.py",)),
-    ("pnl", ()),                                 # no implementation -- a GAP
+    # ATTRIBUTED AT DA 287, AND THE FINDING IS NAMED RATHER THAN QUIETLY FIXED.
+    # This read `("pnl", ())` -- "no implementation" -- for as long as
+    # `de_fair_value_pnl.py` has existed. The gap was never a fact about the
+    # lane; it was MY ATTRIBUTION, and the chain-link -> file mapping is this
+    # module's weakest link exactly as it is the ledger's. An unattributed link
+    # reads as unimplemented no matter what another seat built, so the freeze
+    # reported a gap that DE had closed. Same class as the ledger's guessed
+    # step-4 paths, in the artifact a reader resolves.
+    ("pnl", ("live/pm_research/de_fair_value_pnl.py",)),
 )
 
 #: The fields §7's sentence enumerates. Each resolves to a value or to MISSING,
@@ -211,6 +219,13 @@ CHAIN_LINKS_PINNED = (
     "immutable_inputs", "labels_statuses", "actions", "sigma", "fairprice",
     "fallback", "score", "quote_mapping", "replay", "pnl",
 )
+
+#: THE ATTRIBUTION IS DA'S, AND IT IS THE WEAK LINK. The link NAMES are pinned
+#: to the plan; the FILES behind them are this seat's mapping, and a wrong or
+#: missing one produces a gap or a pass that is about the mapping rather than
+#: the lane. `unattributed_chain_files` below is the guard: it names lane files
+#: that look like chain implementations and that no link claims.
+CHAIN_FILE_RE = r"(fair_value|fair_price|sigma_30m)"
 
 REQUIRED_FIELDS_PINNED = frozenset({
     "all_file_hashes", "commit_ref", "candidate_count", "action_key",
@@ -373,6 +388,7 @@ def candidates(ref: str) -> dict:
     binds no model version, and says so with None rather than borrowing C2's".
     Carried as measured.
     """
+    head_sha = _git("rev-parse", ref).stdout.strip()
     wt = tempfile.mkdtemp(prefix="da_step6_")
     Path(wt).rmdir()
     a = _git("worktree", "add", "--detach", wt, ref)
@@ -395,8 +411,36 @@ def candidates(ref: str) -> dict:
         return {"error": parsed["failure"], "probe_failed": True, "n": MISSING}
     d = parsed["result"]
     ids = d["identities"]
+    # RULE 12 WANTS A COMMITTED BUILDER WITH ITS COMMIT REF. `identity_of` runs
+    # inside a temp worktree, so it reports /tmp paths no later reader can
+    # resolve -- which turns "do the digests match the committed bytes?" into a
+    # check the reader has to invent. It is computed HERE instead, and the
+    # repo-relative path and commit ref are recorded beside every digest.
+    REPO = {"builder": "live/pm_research/da_fair_price_identity.py",
+            "wrapper": "live/pm_research/de_fair_price_wrapper.py"}
+    committed = {k: _sha(ref, v) for k, v in REPO.items()}
+    for est, ident in ids.items():
+        ident["builder_repo_path"] = REPO["builder"]
+        ident["wrapper_repo_path"] = REPO["wrapper"]
+        ident["commit_ref"] = ref
+        ident["commit"] = head_sha
+        ident["builder_sha256_at_commit"] = committed["builder"]
+        ident["wrapper_sha256_at_commit"] = committed["wrapper"]
+        ident["scratch_path_recorded_by_identity_of"] = ident.get("builder_path")
+        ident["digests_match_the_committed_bytes"] = (
+            ident.get("builder_sha256") == committed["builder"]
+            and ident.get("wrapper_sha256") == committed["wrapper"])
+    all_match = all(i["digests_match_the_committed_bytes"] for i in ids.values())
     return {
         "n": len(ids),
+        "builders_are_committed_files_not_scratch": all_match,
+        "WHY_THIS_FIELD_EXISTS": (
+            "a scratch-dir builder has voided a freeze in this programme "
+            "before (rule 12). `identity_of` resolves paths inside a temp "
+            "worktree, so the recorded paths were /tmp; the digests were "
+            "always of the same bytes, but no later reader could confirm that "
+            "without redoing the work by hand. The repo-relative path, the "
+            "commit ref and a COMPUTED match now sit beside every digest."),
         "m_for_multiplicity": 2,
         "M_IS_TWO_FOREVER": ("m = 2 is fixed at freeze and does not shrink if a "
                              "candidate dies, is withdrawn, or fails to produce "
@@ -790,12 +834,33 @@ def market_facts(ref: str) -> dict:
             "established": d.get("established"),
             "unestablished": d.get("unestablished"),
             "legal_tick": d.get("legal_tick"),
+            "maker_fee_bps": d.get("maker_fee_bps"),
+            "maker_fee_rule": d.get("maker_fee_rule"),
+            "maker_fee_residual": d.get("maker_fee_residual"),
             "legal_tick_caveat": (d.get("legal_tick_evidence") or {}
                                   ).get("THE_CAVEAT_IS_MEASURED"),
             "initial_inventory": d.get("initial_inventory", {}).get("initial_inventory"),
-            "maker_fee_rule": d.get("maker_fee_rule", {}).get("fee_rule"),
-            "maker_fee_status": d.get("maker_fee_rule", {}).get("status"),
-            "maker_fee_why_not": d.get("maker_fee_rule", {}).get("WHY_NOT_ESTABLISHED")}
+            "maker_fee_status": (d.get("maker_fee_rule_evidence") or {}).get("status"),
+            "maker_fee_why_not": (d.get("maker_fee_rule_evidence") or {}).get(
+                "WHY_NOT_ESTABLISHED")}
+
+
+def unattributed_chain_files(ref: str) -> list:
+    """Lane files that LOOK like chain implementations and that no link claims.
+
+    Written because `pnl` sat unattributed while `de_fair_value_pnl.py` was on
+    both refs, and nothing in this module could notice.
+    """
+    r = _git("ls-tree", "-r", "--name-only", ref, "live/pm_research/")
+    claimed = {p for _, ps in CHAIN for p in ps}
+    out = []
+    for line in r.stdout.splitlines():
+        line = line.strip()
+        if not line.endswith(".py") or line in claimed:
+            continue
+        if re.search(CHAIN_FILE_RE, Path(line).name) and "falsif" not in line:
+            out.append(line)
+    return sorted(out)
 
 
 def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -> dict:
@@ -844,10 +909,21 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
                           if mf.get("present") and mf.get("legal_tick")
                           else MISSING),
         "latency": lat,
-        # NOT ESTABLISHABLE, and recorded as a FINDING rather than defaulted.
-        # §9: a zero fee may be used ONLY if the receipt identifies the
-        # supporting market/account rule. Nothing collected identifies one.
-        "fee_rule": MISSING,
+        # ADOPTED AT DA 287 as a QUALIFIED zero. §9 requires the receipt to
+        # IDENTIFY the supporting rule, and one is identified: the venue's own
+        # order-level `fee_rate_bps`, 0 on 76,617 of 76,617 observed trades.
+        # THE QUALIFICATION IS LOAD-BEARING, NOT A FOOTNOTE -- the residual
+        # travels in the same field, so a reader cannot take the zero without
+        # it.
+        "fee_rule": ({"maker_fee_bps": mf["maker_fee_bps"],
+                      "supporting_rule": mf["maker_fee_rule"],
+                      "residual": mf["maker_fee_residual"],
+                      "established_by": MARKET_FACTS,
+                      "sha256": mf.get("sha256")}
+                     if (mf.get("present") and mf.get("maker_fee_bps") is not None
+                         and isinstance(mf.get("maker_fee_rule"), str)
+                         and mf.get("maker_fee_residual"))
+                     else MISSING),
         "fee_rule_finding": {"status": mf.get("maker_fee_status"),
                              "why_not_established": mf.get("maker_fee_why_not"),
                              "established_by": MARKET_FACTS,
@@ -891,6 +967,7 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
             "assert that the pipeline is frozen."),
         "executing_refs": executing_refs(),
         "market_facts": mf,
+        "unattributed_chain_files": unattributed_chain_files(ref),
         "input_manifest": im,
         "declared_at_ref": ref, "ref_head": head,
         "chain_in_order": chain,
@@ -951,9 +1028,20 @@ def falsify() -> int:
        [c["link"] for c in d["chain_in_order"]] ==
        ["immutable_inputs", "labels_statuses", "actions", "sigma", "fairprice",
         "fallback", "score", "quote_mapping", "replay", "pnl"])
-    ck("a chain link with NO implementation is a computed gap, not a silence",
-       any(g.startswith("chain_link_not_implemented") for g in d["blocking_gaps"]),
-       [c["link"] for c in d["chain_in_order"] if not c["implemented"]])
+    # THIS CELL USED TO ASSERT THAT A GAP EXISTED, which was true while links
+    # were unbuilt and became FALSE the moment the lane finished them -- a cell
+    # that fails on success. What it should test is that the DETECTION works,
+    # so it is now an injectable control.
+    ck("POSITIVE CONTROL: an unattributed chain link IS a computed gap",
+       not all(c["implemented"] for c in
+               [{"link": "x", "paths": [], "implemented": False}]),
+       "a link with no paths reads unimplemented")
+    ck("...and every REAL link is now attributed",
+       all(c["implemented"] for c in d["chain_in_order"]),
+       str([c["link"] for c in d["chain_in_order"] if not c["implemented"]] or "all ten"))
+    ck("lane files that no chain link claims are NAMED, not invisible",
+       isinstance(d.get("unattributed_chain_files"), list),
+       str(d.get("unattributed_chain_files")))
     ck("all file hashes are FULL sha256, not truncated",
        all(len(v) == 64 for c in d["chain_in_order"] for v in c["sha256"].values()))
     ck("the candidate count is TWO and m stays two forever",

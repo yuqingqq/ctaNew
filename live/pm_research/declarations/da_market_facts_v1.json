@@ -1,9 +1,8 @@
 {
  "protocol": "P003_DA_MARKET_FACTS_V1",
  "dispatch": "DA 283, ruled at DA 287",
- "maker_fee_bps": 0,
- "maker_fee_bps_units": "basis points applied to the fill, order level",
- "maker_fee_rule": "ORDER-LEVEL ZERO, IDENTIFIED FROM THE VENUE'S OWN FIELD: the CLOB tape carries `fee_rate_bps` on every trade event and it is 0 on all 76,617 observed trades across 8 UTC days, BTC and ETH, with zero exceptions. That is a market rule stated by the market, not an assumption. IT IS QUALIFIED, NOT CLEAN: 10 of 1,056 on-chain maker legs (0.95%) WERE charged, at the market base rate `maker_base_fee = 1000` read as basis points (10% of size x min(p, 1-p), implied rate median 0.0990). The TRIGGER for those 10 is UNIDENTIFIED, and price alone does not explain it: 25 maker BUY legs at the SAME price 0.9900, interleaved across the SAME block buckets, paid zero. Any user of this zero inherits that 0.95% contradiction and must carry it.",
+ "maker_fee_bps": null,
+ "maker_fee_rule": null,
  "maker_fee_residual": {
   "n_charged": 10,
   "n_maker_legs": 1056,
@@ -11,7 +10,7 @@
   "all_at_price": 0.99,
   "implied_rate_median": 0.099,
   "reconciles_to": "maker_base_fee = 1000 read as BASIS POINTS: fee = 0.10 x size x min(p, 1-p)",
-  "trigger": "UNIDENTIFIED",
+  "trigger": "IDENTIFIED as an ACCOUNT ATTRIBUTE (DA 288 / REVIEW 249): six accounts charged on 100% of their legs, none mixed. My DA 286 'UNIDENTIFIED' was wrong -- I split by price and by block and never by account.",
   "THE_DISCRIMINATING_FACT": "25 maker BUY legs at the SAME price 0.9900, interleaved across the SAME block buckets, paid ZERO. This is what makes price-alone insufficient as an explanation, and it is what a later reader needs in order to re-open this question.",
   "what_would_settle_it": "the published CLOB fee schedule for these condition ids with an effective date; no collector captures it",
   "hypotheses_refuted_by_driving": {
@@ -21,6 +20,31 @@
   },
   "THE_UNKNOWN_CARRIES_ITS_OWN_WEIGHT": "DA 287 requires a \u00a79 fee SENSITIVITY, owned by DE: re-run the economic verdict with EVERY maker fill charged at 10% of size x min(p, 1-p) -- the worst case consistent with what was measured. If the verdict does not flip, this residual is immaterial AS A COMPUTED STATEMENT rather than a hope. If it flips, the economic gate cannot be settled on collected data and must say exactly that. Either way nobody has to trust the zero."
  },
+ "maker_fee_account_partition": {
+  "finding": "REVIEW 249, verified here from the audit's own two fields",
+  "the_trigger_is_NOT_unidentified": "charged-ness PARTITIONS BY ACCOUNT, totally. Six maker addresses are each charged on 100% of their maker legs, and the number of addresses holding BOTH a charged and a zero maker leg is ZERO.",
+  "charged_class": {
+   "0x0fd0ebb1ba": "1/1",
+   "0x18b0b71054": "1/1",
+   "0x2277c18fb7": "3/3",
+   "0x8d009282a7": "1/1",
+   "0xb3b0780f28": "2/2",
+   "0xbdf221228d": "2/2"
+  },
+  "HOW_THE_CLASSES_WERE_ENUMERATED": "the audit SUMMARY enumerates only the CHARGED side -- `maker_charged_by_address` and its companion hold the same six addresses, and there is no listing of the 1,046 zero-fee legs by address. The 218 below were decoded from the 901 RECEIPTS directly, OrderFilled by OrderFilled, not read off the summary.",
+  "n_distinct_maker_addresses": 218,
+  "n_in_the_charged_class": 6,
+  "n_in_the_zero_class": 212,
+  "why_the_25_zero_legs_at_0.99_paid_nothing": "they belong to accounts in the OTHER CLASS. My DA 286 chase treated that as evidence the trigger was unidentifiable; it was evidence the trigger is not PRICE. The partition was visible in two fields of a file I already held, and I did not split by account.",
+  "THE_SAMPLE_LIMIT_THAT_BOUNDS_EVERY_INFERENCE_HERE": "the audit's own limits: 'the 901 receipts are a SAMPLE of our own recorded trades, not a population; incidence here bounds observed volume only.' SO AN ABSENCE FROM THE CHARGED SET IS NOT EVIDENCE OF MEMBERSHIP IN THE ZERO CLASS. That is precisely the inference a qualified zero would have rested on, and it does not hold: 6 of 218 observed accounts are charged, and the next receipt could carry a seventh.",
+  "OUR_OWN_ADDRESS": {
+   "question": "is our maker address in this corpus, and which class?",
+   "answer": "WE HAVE NO MAKER ADDRESS. Neither this lane nor any module in it declares an executing or maker account; every 0x constant in the lane is protocol infrastructure (the exchange, USDC, event topics, the rewards asset). The programme is research-only -- 'No live trading, no exchange integrations' -- so no order of ours has ever rested on this book.",
+   "therefore": "all 218 maker addresses are third parties, and the 1,046 zero-fee legs are OTHER PEOPLE'S ACCOUNTS. We have NO observation of our own treatment, and cannot have one from collected data: the observation does not exist yet rather than being missing from what we gathered.",
+   "so_the_receipt_must_say": "the fee applicable to US is UNOBSERVED BY CONSTRUCTION. A zero taken from other accounts' fills is not our fee; 6 of 218 observed accounts (2.8%) are in a charged class, and nothing determines which class an account of ours would join."
+  }
+ },
+ "dispatch_note": "DA 287 ruled ADOPT the qualified zero; DA 288 REVERSED it on REVIEW 249's account partition, before it landed.",
  "legal_tick": 0.01,
  "legal_tick_units": "USDC per share of a binary outcome token",
  "legal_tick_consumer": "de_fair_value_policy_seam.legal_tick() reads this key as a number; the evidence is under `legal_tick_evidence`",
@@ -29,7 +53,7 @@
   "established": true,
   "declared_instrument": {
    "field": "markets.jsonl:orderPriceMinTickSize",
-   "n_records": 47084,
+   "n_records": 47105,
    "n_without_the_field": 44,
    "distinct_values": [
     "0.01"
@@ -37,25 +61,25 @@
    "uniform_across_all_coins": true,
    "by_coin": {
     "bnb": {
-     "0.01": 6719
+     "0.01": 6722
     },
     "btc": {
-     "0.01": 6721
+     "0.01": 6724
     },
     "doge": {
-     "0.01": 6718
+     "0.01": 6721
     },
     "eth": {
-     "0.01": 6721
+     "0.01": 6724
     },
     "hype": {
-     "0.01": 6719
+     "0.01": 6722
     },
     "sol": {
-     "0.01": 6721
+     "0.01": 6724
     },
     "xrp": {
-     "0.01": 6721
+     "0.01": 6724
     }
    },
    "by_month": {
@@ -63,7 +87,7 @@
      "0.01": 24872
     },
     "2026-09": {
-     "0.01": 22168
+     "0.01": 22189
     }
    },
    "uniform_across_the_windows_life": true,
@@ -145,9 +169,9 @@
   "THE_SUB_TICK_PRICES_ARE_EXPLAINED": {
    "cause": "the VENUE NARROWS THE GRID IN-WINDOW, and the tape says so",
    "tick_size_change_events": {
-    "0.01->0.001": 284
+    "0.01->0.001": 252
    },
-   "n_changes_observed": 284,
+   "n_changes_observed": 252,
    "reading": "every observed change is 0.01 -> 0.001. So the 0.001 levels are not a violation of the declared tick: they are the tick AFTER a `tick_size_change` event the market published. `orderPriceMinTickSize` is the tick at market creation, not for the window's life -- which is exactly the question DA 283 asked and answered too narrowly from the market record alone.",
    "consequence_for_the_freeze": "rounding to 0.01 stays LEGAL at all times, because 0.01 is a multiple of 0.001. It is not always the FINEST legal grid, so a quote on it can be improvable after a narrowing event."
   },
@@ -160,19 +184,20 @@
   "established": false,
   "status": "MAKER_FEE_RULE_ESTABLISHED_ZERO_WITH_UNRECONCILED_ONCHAIN_CHARGES",
   "fee_rule": null,
-  "THE_SUPPORTING_RULE_SECTION_9_ASKS_FOR": "the venue's own `fee_rate_bps` field, carried on every trade event in the CLOB tape and equal to 0 on all 76617 observed trades across 8 days, BTC and ETH. That is a market rule stated by the market, not an assumption.",
+  "NO_VENUE_SIDE_FEE_OBSERVATION_EXISTS": "the only venue-side field that looked like one is a placeholder (see the CLOB tape source). So \u00a79's supporting rule is not merely unpublished -- there is no observation of an applied fee rate anywhere in the collected data except the on-chain fee word, which records what WAS charged to OTHER accounts.",
+  "THE_SUPPORTING_RULE_SECTION_9_ASKS_FOR_DOES_NOT_EXIST": "WITHDRAWN. It read: the venue's own `fee_rate_bps` field, carried on every trade event in the CLOB tape and equal to 0 on 68458 observed trades across 8 days, BTC and ETH. That is a market rule stated by the market, not an assumption.",
   "THE_RESIDUAL_THAT_STOPS_IT_BEING_FINAL": "10 of 1056 maker legs in the SAME markets carry a non-zero on-chain fee, all at price 0.99, in 5 transactions. 0 bps on the tape and a charge on chain cannot both be the whole story, and no collected source explains the difference. Until it is reconciled a zero fee is SUPPORTED but not SETTLED, so this module still supplies no number for \u00a79.",
   "per_source": [
    {
     "source": "markets.jsonl",
     "searched": "all top-level keys, the `clob` subobject, and the rules text (description/question/outcomes)",
-    "n_records": 47084,
+    "n_records": 47105,
     "fee_fields_found": {
      "maker_base_fee": {
-      "1000": 47024
+      "1000": 47045
      },
      "taker_base_fee": {
-      "1000": 47024
+      "1000": 47045
      }
     },
     "rules_text_fee_language": "NONE",
@@ -192,14 +217,18 @@
    {
     "source": "the CLOB tape (data/pm_5min/raw/<day>/<slug>.jsonl.gz)",
     "searched": "every payload field on every message in the sample",
-    "n_files": 96,
-    "n_messages": 6169909,
-    "n_trade_events": 76617,
+    "n_files": 86,
+    "n_messages": 5544586,
+    "n_trade_events": 68458,
     "fee_rate_bps_distribution": {
-     "0": 76617
+     "0": 68458
     },
-    "establishes": "the VENUE's own per-trade fee rate: `fee_rate_bps`, uniformly 0 on every observed trade in these markets",
-    "does_not_establish": "what would happen at a different rate; it is a record of what WAS charged, not a published schedule with an effective date"
+    "fee_rate_bps_dtype": "str (the literal '0'), never numeric",
+    "fee_rate_bps_present_on": "last_trade_price events only",
+    "establishes": "NOTHING. THE FIELD IS A PLACEHOLDER, NOT A MEASUREMENT.",
+    "RETRACTION": "DA 286 reported `fee_rate_bps = 0` on all observed trades as the venue's own per-trade fee rate, and DA 287 ruled on it. IT IS NOT AN OBSERVATION. The value is the STRING '0' on every one of its occurrences -- never a number, never any other value -- and it appears ONLY on `last_trade_price` events, absent from book, price_change and tick_size_change. My own on-chain audit's limits said so in a line I did not read back: 'fees are read from the OrderFilled fee word, never from the websocket fee_rate_bps field, which is unpopulated.'",
+    "THE_DECISIVE_CONTRADICTION": "the chain charged 901 of 901 TAKER legs in these same markets over the same period while the tape reads 0 on every trade. If the field measured the applied fee it could not read zero where the fee is certain. A field that is constant, string-typed and present on one event type is a rule-4 STATUS -- absent -- not a zero.",
+    "does_not_establish": "any venue-side fee observation whatever"
    },
    {
     "source": "onchain/receipts (via p003_da_onchain_fee_audit)",
@@ -239,6 +268,18 @@
    },
    "THE_ANSWER_TO_SECTION_9": "the supporting rule for a ZERO maker fee is the venue's own order-level `fee_rate_bps`, which is 0 on all 76,617 observed trades. It is a rule stated by the market. But it is not a CLEAN zero: 10 of 1,056 maker legs (0.95%) were charged at the market base rate. A receipt may therefore use zero ONLY if it also carries that exception rate; a receipt claiming an unqualified zero would be asserting something the chain contradicts 0.95% of the time."
   },
+  "THE_AUDITS_FORMULA_FAILS_ITS_OWN_POSITIVE_CONTROL": {
+   "where": "taker legs -- 901 of 901 charged, the one place the schedule is fully observable",
+   "match_share_to_1e-6": 0.1220865704772475,
+   "n_matching": 110,
+   "n_taker_legs": 901,
+   "residual_usdc": {
+    "p50": 5.94e-06,
+    "max": 0.51021345
+   },
+   "the_fair_reading": "'reproduces 12%' is true AT A 1e-6 THRESHOLD and understates the median: half the legs are within six MICRODOLLARS, so the formula is nearly exact for most fills. But the TAIL is what a bound depends on, and the maximum residual is 0.51 USDC. An instrument that can be half a dollar wrong where the answer is certain cannot bound maker exposure where it is not.",
+   "consequence": "NO VALIDATED FEE MODEL EXISTS. The sensitivity DA 287 asked DE to run -- charge every maker fill at 10% of size x min(p, 1-p) -- would be computed with this formula, so it would inherit that tail. It must be fixed or replaced before it can be called a worst case."
+  },
   "WHAT_WOULD_SETTLE_IT": [
    "a reconciliation of the 10 charged legs: whether they are taker-side fees attributed to a maker address, a different fee path, or a parsing edge in the audit",
    "the published CLOB fee schedule for these condition ids with an effective date, which no collector currently captures -- it is now the ONLY open question, since the rate itself is reconciled"
@@ -256,12 +297,14 @@
  },
  "established": {
   "legal_tick": true,
-  "maker_fee_rule": true,
+  "maker_fee_rule": false,
   "initial_inventory": true
  },
- "n_established": 3,
+ "n_established": 2,
  "n_requested": 3,
- "unestablished": [],
+ "unestablished": [
+  "maker_fee_rule"
+ ],
  "AN_UNESTABLISHABLE_INPUT_IS_A_FINDING": "two of three are established from artifacts and one is not. The one that is not is reported as a finding with the evidence that proves it unestablishable, never filled in with a plausible default.",
  "rule_10": "every number here is computed from an artifact at run time",
  "data_root": "/home/yuqing/ctaNew",
