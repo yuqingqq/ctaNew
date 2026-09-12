@@ -28,6 +28,7 @@ _HERE = Path(__file__).resolve().parent
 if str(_HERE) not in sys.path:
     sys.path.insert(0, str(_HERE))
 import da_root                                            # noqa: E402
+import da_rule34a_fence as FENCE                          # noqa: E402
 
 #: Measured 2026-09-12T00:22-00:40Z from `systemctl --user list-timers --all`,
 #: `systemctl --user show <unit> -p ExecStart`, and the modules' own source.
@@ -277,6 +278,11 @@ def build() -> dict:
             "day is off limits."),
         "lock_behaviour": LOCK_FACT,
         "eth_input_audit": audit,
+        # THE CALL SITE. The fence's own coverage audit runs here, so the gap
+        # ANNOUNCES ITSELF in a landed declaration instead of waiting for
+        # someone to go and look -- which is how all fifteen call-site-less
+        # guards in this lane were found.
+        "rule_34a_fence_coverage": FENCE.audit_unguarded_readers(),
         "ETH_VERDICT": (
             "every ETH input is present at parity with BTC for the days that "
             "matter, and on data QUALITY eth is better -- fewer gap windows "
@@ -369,6 +375,14 @@ def falsify() -> int:
        bool(a["exclusions"]) and bool(a["positive_control"]))
     ck("the ETH verdict is BUILD-side, stated plainly",
        "BUILD-side fact, not a data gap" in d["ETH_VERDICT"])
+    fc = d["rule_34a_fence_coverage"]
+    ck("THE FENCE IS CALLED FROM HERE -- the gap announces itself",
+       isinstance(fc.get("unguarded_readers"), list)
+       and fc["n_modules_touching_tier2"] > 0,
+       f"{fc['n_unguarded']} unguarded of {fc['n_modules_touching_tier2']}")
+    ck("...and the open gates are NAMED in a landed declaration",
+       all(isinstance(x, str) for x in fc["unguarded_readers"]),
+       str(fc["unguarded_readers"][:3]))
     ck("nothing is disabled, and the reason is recorded",
        "retrospective" in d["NOTHING_IS_DISABLED"])
     print(f"\n  {'UNITS/ETH CELLS PASS' if not bad else str(bad) + ' FAILED'}")
