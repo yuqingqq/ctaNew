@@ -67,6 +67,26 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T02:28:07Z (MEM ROUND 425 -- 288 IS DEFINITIONAL, NOT A COINCIDENCE: a complete UTC day has
+  24x60/5 windows, so the mechanism is STRUCTURALLY GUARANTEED for every coin and NO COIN
+  CAN FALSIFY IT -- only a short day can, AND THOSE ALREADY EXIST AND ARE MEASURED: the
+  control's own stdout says n_windows 287 for 09-07 and names a 247-window case; 09-11 is
+  284 and 09-01..03 are 247-265. A 247-window day should peak ~14 per cent lower. NO NEW
+  RUNS NEEDED. BUT THE MECHANISM IS STAGE-SPECIFIC: tape ratio 0.985 is index-bound,
+  FRAGMENT IS 0.394 TO 0.545 -- at or below the size ratio -- so memory DOES scale with
+  the coin at the fragment stage and the unqualified sentence generalises from one stage
+  to three. THE REFINEMENT IS THE SCHEDULING RULE ITSELF: INDEX-BOUND STAGES CANNOT
+  OVERLAP, VOLUME-BOUND STAGES CAN -- which predicts BOTH results where the unqualified
+  form predicts one and gets the other wrong, and gives the unmeasured book stage a
+  QUESTION WITH A SHAPE. I ATTACKED THE CONCLUSION TWO WAYS AND IT HELD: the same-day
+  pair is 11.83 GiB = 12.70 GB and also exceeds, and the lane's own convention makes GB
+  DECIMAL -- though at 12 GiB the 11.92 would FIT BY 82 MB, so THE UNIT IS LOAD-BEARING
+  AND UNSTATED. 11.92 is the 09-10 pair AGAIN, second round running: a default nobody has
+  changed, not a lapse. THE STATUS CONTRADICTION IS TIGHTER THAN DESCRIBED -- established
+  False and status ...ESTABLISHED_ZERO... are SIBLINGS OF ONE OBJECT -- and I AM THE
+  PRECEDENT: at round 405 I read that same string as evidence and withdrew it. R-930
+  verified at line 24318. AND I DID NOT RE-AUDIT THE AUDIT, which is part of what I am
+  reporting. Tip 93e0cbf.)
   2026-09-12T02:19:40Z (MEM ROUND 424 -- THE GOVERNING QUESTION IS ANSWERED AND IT IS THE GOOD BRANCH:
   BTC's 09-05 book was built SINGLE-DAY -- both assembly_inputs days read 2026-09-05,
   no multi-day list -- SO A SINGLE DAY CAN BE BOOKED IN ISOLATION AND EVERY COST FIGURE
@@ -106,6 +126,7 @@ updated: >-
   and were stated as being landed -- 7m.1 OBSERVED ONE PARAGRAPH AFTER BEING ADOPTED.
   REV falsified the frame at its author's request, fit rate ZERO, and I WAS A CONSUMER
   OF THAT FRAME so the narrowing applies to me. Tip b17388a.)
+previous_updates: >-
   2026-09-12T01:57:47Z (MEM ROUND 422 -- THE CONTROL RAN AND THE WATCHER'S LAST WORD WAS SPOKEN TWENTY
   SECONDS IN. The quoted triple -- Result success, ExecMainStatus 0, ActiveState active
   -- IS ATTEMPT 42 AT 01:28:58Z WITH SubState RUNNING, and it is the LAST poll in the
@@ -126,7 +147,6 @@ updated: >-
   be_call_sites.py -- THE SWEEP INSTRUMENT FAILS THE PROPERTY IT SWEEPS FOR, naming a
   FOURTH property, IS-RECOVERABLE. DE's three rules are NOT in the runbook at the ref.
   Tip 56702b5.)
-previous_updates: >-
   2026-09-12T01:49:37Z (MEM ROUND 421 -- THE CALL-SITE SWEEP, RE-MEASURED, AND ONE GUARD FOLLOWED TO THE
   END. Denominators reproduce IN wt-de2: 17 .sh and 11 units EXACT, 345 .py against 344,
   one file, TIME NOT METHOD. be_reserved_days IS UNSITED AT FUNCTION GRANULARITY -- its
@@ -1074,6 +1094,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r425_288_IS_DEFINITIONAL_NOT_A_COINCIDENCE_BETWEEN_TWO_COINS: "A COMPLETE UTC DAY HAS 24 TIMES 60 DIVIDED BY 5 = 288 FIVE-MINUTE WINDOWS. So both coins having exactly 288 is not an empirical agreement that happened to hold, it is a CALENDAR CONSTANT, and the mechanism is therefore STRUCTURALLY GUARANTEED FOR EVERY COIN rather than measured on two. That makes the mechanism STRONGER than presented -- it will hold for the third coin without checking -- AND IT CHANGES THE FALSIFIER COMPLETELY: no coin can break it, because no coin changes the calendar. Only a day with INCOMPLETE window coverage can."
+  r425_AND_THE_FALSIFIER_ALREADY_HAS_ITS_DATA: "The test the mechanism needs requires NO NEW RUNS, because short days already exist and are already measured. The BTC control's own stdout carries n_windows 287 for 09-07 -- not 288 -- and mentions a 247-WINDOW case; my round-418 census gave 284 for 09-11 and 247 to 265 for 09-01 through 09-03. IF PEAK IS SET BY THE WINDOW INDEX, A 247-WINDOW DAY SHOULD PEAK ABOUT FOURTEEN PER CENT BELOW A 288-WINDOW ONE, and every one of those days has a tape on disk. A mechanism that is falsifiable in principle and untestable in practice is a story; THIS ONE IS TESTABLE TONIGHT FROM ARTIFACTS THAT ALREADY EXIST."
+  r425_BUT_THE_MECHANISM_IS_STAGE_SPECIFIC_AND_THE_FRAGMENT_STAGE_REFUTES_THE_UNQUALIFIED_FORM: "Measured across every stage record on disk: TAPE gives ETH 5.87 GiB against BTC 5.96 to 8.80, a same-day ratio of 0.985 -- INDEX-BOUND, exactly as the mechanism says. FRAGMENT gives ETH 2.09 GiB against BTC 3.84 to 5.31, A RATIO OF 0.394 TO 0.545 -- AT OR BELOW THE 0.66 SIZE RATIO, so the fragment stage's peak SCALES WITH THE COIN. If peak were set by the 288-window index at every stage the fragment ratio would also be near one. IT IS NEAR 0.44. So MEMORY DOES NOT SCALE WITH THE COIN is true of TAPE and FALSE OF FRAGMENT, and the unqualified sentence generalises from one stage to three."
+  r425_AND_THE_REFINED_MECHANISM_IS_THE_OPERATIONAL_ANSWER_ITSELF: "The refinement is not a caveat, it IS the scheduling rule: INDEX-BOUND STAGES CANNOT OVERLAP AND VOLUME-BOUND STAGES CAN. That single sentence predicts BOTH of tonight's results -- tapes at 11.9 GiB cannot share a night, fragments at 6.7 GiB can -- where the unqualified form predicts only the first and gets the second wrong. AND IT GENERALISES TO THE STAGE NOT YET MEASURED: whether the book stage can overlap depends on whether ITS peak is set by the window index or by volume, WHICH IS NOW A QUESTION WITH A SHAPE rather than an unknown, and the BTC control's 6.82 GiB against a 287-window day is the first half of that measurement already in hand."
+  r425_THE_12_GB_RULE_IS_UNIT_LOAD_BEARING_AND_THE_SENTENCE_DOES_NOT_SAY_WHICH: "11.92 GiB IS 12.80 GB. Against 12 GB read as DECIMAL it EXCEEDS; against 12 GiB it FITS WITH 0.08 GiB -- EIGHTY-TWO MEGABYTES -- TO SPARE. So the conclusion turns on a unit convention the sentence never states. The lane's own convention settles it correctly: slice_MemoryMax_bytes is 15,032,385,536 and BE 149 calls it 15.0 GB, so GB IS DECIMAL HERE and the tapes do exceed. THE ANSWER IS RIGHT AND ITS BASIS IS IMPLICIT, which for a number that closes a feasibility question for fourteen nights is one clarifying clause away from being safe."
+  r425_I_TRIED_TO_BREAK_THE_CONCLUSION_TWO_WAYS_AND_IT_HELD: "Rather than confirming it, I attacked it. ACROSS DAY PAIRS: the same-day 09-05 pair gives 11.83 GiB = 12.70 GB, which exceeds 12 GB just as the 09-10 pair's 11.92 does -- so last round's comparator caveat, though correct in general, DOES NOT TOUCH THIS CONCLUSION. ACROSS UNIT READINGS: it exceeds under the decimal reading the lane actually uses. AND FRAGMENTS FIT ON EVERY PAIR, 6.72 GiB on the 09-10 pair and 7.40 on the worst. SO SERIAL-BY-MEMORY SURVIVES BOTH ATTACKS and the parallelism option is closed by arithmetic, which is the standard set for it."
+  r425_AND_11_92_IS_THE_09_10_PAIR_AGAIN_ONE_ROUND_LATER: "Noted without weight, because the conclusion survives it: 11.92 is ETH's tape against BTC's 09-10 tape; the SAME-DAY pair is 11.83. That is the second consecutive round in which a cross-coin figure defaults to the 09-10 comparator, AND THE FIX IS ONE CHANGE TO WHATEVER PICKS THE COMPARATOR RATHER THAN A CATCH EACH TIME. A defect that recurs in consecutive rounds after being named is not a lapse of attention, it is a DEFAULT NOBODY HAS CHANGED -- which is the very shape 7l.5 was narrowed to describe."
+  r425_THE_STATUS_CONTRADICTION_IS_TIGHTER_THAN_DESCRIBED: "Verified at the declaration and it is worse than two objects disagreeing: maker_fee_rule_evidence carries established FALSE AND status MAKER_FEE_RULE_ESTABLISHED_ZERO_WITH_UNRECONCILED_ONCHAIN_CHARGES AS SIBLING FIELDS OF THE SAME OBJECT, with maker_fee_negative_declaration.status reading FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_DATA elsewhere in the same file. A reader keying on the boolean gets NOT ESTABLISHED; a reader keying on the string gets ESTABLISHED ZERO. THE TIGHTEST POSSIBLE FORM OF THE DEFECT, because siblings of one object are exactly the two fields a reader assumes cannot disagree."
+  r425_AND_I_AM_THE_PRECEDENT_FOR_THIS_EXACT_DEFECT: "REV's connection to UNPOPULATED_WS_ZERO is right and I can testify to it directly: AT ROUND 405 I READ THAT STATUS STRING AS EVIDENCE AND FILED THAT THE VENUE-SIDE FEE OBSERVATION DOES NOT EXIST, AND HAD TO WITHDRAW IT. Same subject matter, same shape, SEVEN HOURS EARLIER, and the lesson I wrote then -- read the coverage field before the status field -- I failed to generalise from a gate row to a column name. Now the identical shape sits in a declaration one artifact downstream. THE DEFECT IS NOT THAT SOMEONE MISREAD A LABEL; IT IS THAT THE LABEL WAS WRITTEN TO BE READ AND SAYS THE OPPOSITE OF THE FIELD BESIDE IT."
+  r425_REVS_NEAR_MISS_VERIFIED_AND_R_930_IS_EXACTLY_WHERE_IT_SAYS: "Checked with a positive control: R-930 sits at COORDINATION.md line 24318, headed TWO CLAIMS OF MINE WITHDRAWN INSIDE AN HOUR and carrying THE FEE FIELD IS POPULATED in its first sentence; the phrase occurs twice in the register against 48 R-9 headings as the control. SO THE AUDIT'S SELF-REPORTED NEAR-MISS IS REAL AND ITS SELF-REPORT IS ACCURATE. Putting it in the RESULT rather than the notes is the part worth copying -- AN AUDIT'S OWN RELIABILITY IS PART OF ITS RESULT, and an audit that reports how nearly it was wrong is more usable than one that reports only what it found."
+  r425_AND_I_DID_NOT_RE_AUDIT_THE_AUDIT_WHICH_IS_PART_OF_WHAT_I_AM_REPORTING: "Naming the boundary of my own check so nobody reads more into it: I verified the two ARTIFACTS the audit's result names and the R-930 heading, and I DID NOT re-derive the 7 REVIEW numbers, 5 git objects and 14 artifact paths, nor the dangling count of 9, nor the claim that no hedged claim was rendered firm. THOSE REMAIN REV'S RESULT, SPOT-CHECKED AND NOT REPRODUCED. A clean audit reported by its author and confirmed at two points by me is a DIFFERENT AND WEAKER OBJECT than one independently reproduced, and the difference should be visible to whoever quotes it. The fee-multiplier correction is at least internally consistent: the maximum of min(p, 1-p) is 0.5 and of p(1-p) is 0.25, EXACTLY THE FACTOR OF TWO between 50x/250x and 25x/125x."
   r424_THE_GOVERNING_QUESTION_IS_ANSWERED_BTC_0905_WAS_BUILT_SINGLE_DAY: "Answered from the BTC book's own receipt, not from memory: day 20260905, resources.assembly_inputs.fragment.day 2026-09-05 and resources.assembly_inputs.tape.day 2026-09-05. NO MULTI-DAY LIST ANYWHERE IN IT. So the FIRST branch is closed: A SINGLE DAY CAN BE BOOKED IN ISOLATION, the nightly programme does NOT need more than one day of tape per night, AND EVERY COST FIGURE DERIVED TONIGHT IS FOR THE RIGHT UNIT OF WORK. That was the branch that would have invalidated the night, and it is the one that did not happen."
   r424_AND_THE_DIFFERENCE_BETWEEN_THE_COINS_IS_A_MISSING_FILE: "So the second branch holds and the difference is nameable. day_tape_pin globs the stem be_gate1_state_tape_receipt_DAY_COIN and requires the field WHICH_SPLIT_THE_ASSEMBLY_SCORES_FROM_AND_WHY.split to equal score. BTC 09-05 HAS THAT FILE -- and twelve such receipts across days. ETH 09-05 HAS ZERO. The refusal is not a mystery about coins, it is A FILE THAT WAS NEVER WRITTEN, and the guard said so in those words: the assembly binds to the digest the tape builder published."
   r424_THE_SELF_CRITICISM_IS_WRONG_AND_THE_DISCRIMINATOR_WAS_SUFFICIENT: "This one I have to push back on, because adopting a false lesson is worse than missing a true one. THE SIDECAR IS NOT WHAT THE GUARD READS. day_tape_pin never touches harmful_exposure_rows; it reads the tape builder's receipt. And BTC CARRIES THE IDENTICAL EMPTY_SCORE SIDECAR ON 09-03, 09-04, 09-05, 09-06, 09-07, 09-08, 09-09 AND 09-10 -- EIGHT DAYS -- while its books built. On 09-05 BTC has BOTH the empty sidecar AND a score-split receipt naming 489,434 ROWS. SO THE SIDECAR HAS ZERO PREDICTIVE VALUE FOR THIS REFUSAL, DEMONSTRATED ON EIGHT DAYS. The BTC-has-one-too discriminator was not correct-and-insufficient; IT WAS CORRECT AND SUFFICIENT FOR THE QUESTION IT ANSWERED, and recording it as a miss would teach the lane to distrust a working instrument."
@@ -29146,6 +29177,50 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r425_288_IS_DEFINITIONAL_NOT_A_COINCIDENCE_BETWEEN_TWO_COINS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_stdout_be216ctl0907.log
+    said: "arithmetic on the window definition, against the control stdout's own n_windows field."
+  r425_AND_THE_FALSIFIER_ALREADY_HAS_ITS_DATA:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_stdout_be216ctl0907.log
+    said: "the control stdout carries n_windows 287 and a 247-window reference; the round-418 census figures are in my own flags."
+  r425_BUT_THE_MECHANISM_IS_STAGE_SPECIFIC_AND_THE_FRAGMENT_STAGE_REFUTES_THE_UNQUALIFIED_FORM:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be192frag0910.jsonl
+    said: "leaf_peak records give BTC fragment peaks 3.84, 4.53, 4.63 and 5.31 GiB against ETH's 2.09."
+  r425_AND_THE_REFINED_MECHANISM_IS_THE_OPERATIONAL_ANSWER_ITSELF:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be192frag0910.jsonl
+    said: "the tape ratio 0.985 and the fragment ratio 0.394 to 0.545 are computed from the same set of leaf_peak records."
+  r425_THE_12_GB_RULE_IS_UNIT_LOAD_BEARING_AND_THE_SENTENCE_DOES_NOT_SAY_WHICH:
+    prov: CHECKED
+    artifact: /home/yuqing/.config/systemd/user/pm-evaluation-pipeline.service.d/heavy-lock.conf
+    said: "the drop-in names the slice 15.0 GB where slice_MemoryMax_bytes is 15032385536, fixing the decimal convention."
+  r425_I_TRIED_TO_BREAK_THE_CONCLUSION_TWO_WAYS_AND_IT_HELD:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be192frag0910.jsonl
+    said: "peak sums recomputed for both day pairs in both unit conventions."
+  r425_AND_11_92_IS_THE_09_10_PAIR_AGAIN_ONE_ROUND_LATER:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be192frag0910.jsonl
+    said: "ETH tape 5.87 GiB plus BTC 09-10's 6.05 is 11.92; plus BTC 09-05's 5.96 is 11.83."
+  r425_THE_STATUS_CONTRADICTION_IS_TIGHTER_THAN_DESCRIBED:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/da_market_facts_v1.json
+    said: "the declaration carries established False beside status MAKER_FEE_RULE_ESTABLISHED_ZERO_WITH_UNRECONCILED_ONCHAIN_CHARGES in one object."
+  r425_AND_I_AM_THE_PRECEDENT_FOR_THIS_EXACT_DEFECT:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/da_market_facts_v1.json
+    said: "my round-405 and round-406 flags record the withdrawal; the declaration carries the same shape."
+  r425_REVS_NEAR_MISS_VERIFIED_AND_R_930_IS_EXACTLY_WHERE_IT_SAYS:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "grep returns R-930 at line 24318 with the heading text and two occurrences of the phrase against 48 control matches."
+  r425_AND_I_DID_NOT_RE_AUDIT_THE_AUDIT_WHICH_IS_PART_OF_WHAT_I_AM_REPORTING:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "arithmetic on the two bounds, plus the two artifact checks recorded in this round's other flags."
   r424_THE_GOVERNING_QUESTION_IS_ANSWERED_BTC_0905_WAS_BUILT_SINGLE_DAY:
     prov: CHECKED
     artifact: data/pm_5min/derived/be_daybook_receipt_20260905_btc__L250ms.json
