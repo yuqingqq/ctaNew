@@ -67,6 +67,26 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T00:59:55Z (MEM ROUND 415 -- VALIDATION STARTS NO EARLIER THAN 2026-09-14, RULED TONIGHT BECAUSE
+  TOMORROW IT WOULD BE A CHOICE MADE AFTER SEEING, and expressed as a RULE rather than a
+  date so it cannot drift: first complete UTC day strictly after the freeze becomes
+  effective, AND NOT BEFORE 09-14, whichever is later -- a FIELD, so the start day FALLS
+  OUT rather than being chosen. I COMPUTED THE OVERLAP: 09-13 is day SEVEN of the
+  cancellation test's declared seven, a window starting 09-13 overlaps on EXACTLY ONE DAY
+  and one starting 09-14 on NOTHING -- so the ruling costs ONE DAY OF WALL-CLOCK AND BUYS
+  ZERO OVERLAP. ALREADY DECIDED IS NOT UNTOUCHED. And the argument for declaring it now is
+  the part to keep: it very likely costs NOTHING, since the freeze computes FALSE on three
+  counts -- A RULE ADOPTED WHILE IT IS FREE IS WORTH MORE THAN THE SAME RULE ADOPTED ONCE
+  IT COSTS SOMETHING, because the second is indistinguishable from one adopted to reach a
+  result. THE PATTERN: TONIGHT'S DEFECTS ARE VALUES THAT ARE NEITHER TRUE NOR FALSE --
+  a permission gate computing None, a required field ABSENT rather than PRESENT-AND-UNSET,
+  and a refusal a caller cannot tell from a gap, though I CANNOT CHECK and I CHECKED AND
+  IT IS MISSING are OPPOSITE FACTS WITH THE SAME SHAPE. ALL THREE READ AS PERMISSION IF
+  NOBODY LOOKS CLOSELY. AND I FOUND THE MECHANISM: line 914 is (satisfied >= N_GATES) and
+  step6['satisfied'] -- in Python x and y RETURNS AN OPERAND, NOT A BOOLEAN, so it
+  INHERITS THE TYPE of its second operand whenever the gates are complete. THE GATE IS NOT
+  A BOOLEAN BY CONSTRUCTION. My run at the chain-ref head returned False, so the value
+  depends on the moment -- which is the instability the fix must remove. Tip e152466.)
   2026-09-12T00:55:43Z (MEM ROUND 414 -- THE TWO-COIN CLAUSE IS IN THE PLAN THREE TIMES AND I READ ALL
   THREE. Lines 91-93: PER-COIN TABLES ARE DIAGNOSTICS AND CANNOT AUTHORIZE A COIN-SPECIFIC
   DEPLOYMENT; a coin-specific decision requires A NEW FAMILY AND NEW MULTIPLICITY
@@ -106,6 +126,7 @@ updated: >-
   position for having seen the ceiling; it belongs to the USER. And DA makes it a
   PREDICATE, not a note: A NOTE CAN BE FORGOTTEN AT DAY ONE, A PREDICATE CANNOT.
   Tip b65101e.)
+previous_updates: >-
   2026-09-12T00:45:15Z (MEM ROUND 412 -- THE IDENTITY-AS-ARTIFACT THREAT IS REFUTED BY ITS OWN AUTHOR,
   MEASURED BEFORE ANY DAY WAS CONSUMED: artifact share 0.17 per cent BTC and 0.58 per cent
   ETH over 9.4 MILLION states, spread ONE TICK at p50 and p90, ZERO one-sided, ZERO
@@ -127,7 +148,6 @@ updated: >-
   producing a positive result for someone else. And DA turned a procedural guard into a
   third condition INSIDE the predicate: A PROCEDURE I HAVE TO REMEMBER IS ONE I CAN
   FORGET. Tip 845d780.)
-previous_updates: >-
   2026-09-12T00:41:33Z (MEM ROUND 411 -- NO ETH DAY BOOK EXISTS, AND IT BLOCKS THE SECTION 8 CLOCK MORE
   FUNDAMENTALLY THAN THE FEE OR THE FREEZE EVER DID. I counted with controls: 26 day books
   on disk, TWENTY-SIX BTC, ZERO ETH, zero non-btc tokens of any kind, days 09-03 through
@@ -873,6 +893,15 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r415_VALIDATION_STARTS_NO_EARLIER_THAN_2026_09_14_expressed_as_a_RULE: "Ruled TONIGHT because tomorrow it would be a choice made after seeing. The form matters as much as the date: the start day is THE FIRST COMPLETE UTC DAY STRICTLY AFTER THE FREEZE BECOMES EFFECTIVE, AND NOT BEFORE 2026-09-14, WHICHEVER IS LATER -- a rule rather than a date, SO IT CANNOT DRIFT, landing as a FIELD in the declaration rather than prose SO THE START DAY FALLS OUT RATHER THAN BEING CHOSEN. A date in prose is a decision someone re-makes; a rule in a field is a decision nobody has to make twice."
+  r415_I_COMPUTED_THE_OVERLAP_and_it_is_ONE_DAY_against_ZERO: "The cancellation test's declared population is 2026-09-07 through 2026-09-13, N = 7, so 09-13 IS DAY SEVEN -- THE FINAL DAY. A section 8 window starting 09-13 overlaps that population on EXACTLY ONE DAY, 09-13 itself; a window starting 09-14 overlaps it on NOTHING. So the ruling COSTS ONE DAY OF WALL-CLOCK AND BUYS A POPULATION WITH ZERO OVERLAP. One day of overlap rather than five only because the freeze landed late enough to clear 09-08 through 09-12 -- which is luck, not design, and is exactly why the rule is worth having."
+  r415_ALREADY_DECIDED_IS_NOT_UNTOUCHED: "The reason for the record, in the coordinator's words and worth keeping verbatim. 09-13's verdict has been fixed since G = 2, but ALREADY DECIDED IS NOT UNTOUCHED, and section 8's population is later UNTOUCHED days. Taking 09-13 would ENTANGLE TEN PER CENT OF A TEN-DAY POPULATION WITH A CONSUMED DAY TO SAVE ONE DAY OF WALL-CLOCK -- a trade NOBODY WOULD DEFEND IF THE RESULT LATER CAME OUT MARGINAL. The test of a shortcut is not whether it is defensible now but whether it would be defensible against the worst outcome it survives into."
+  r415_A_RULE_ADOPTED_WHILE_IT_IS_FREE_IS_WORTH_MORE_THAN_THE_SAME_RULE_LATER: "The argument for declaring it now rather than the date itself, and it is the part to record. The rule VERY LIKELY COSTS NOTHING, because the freeze computes FALSE TODAY ON THREE SEPARATE COUNTS -- REV's pending section 7 versus section 9 adjudication, the unset minimum_meaningful_delta_LL, and the fee declaration. THAT IS PRECISELY WHY IT SHOULD BE DECLARED NOW: a rule adopted while it is free is worth more than the same rule adopted once it costs something, because the second is indistinguishable from a rule adopted to reach a result."
+  r415_REV_LAID_OUT_TWO_OPTIONS_AND_REFUSED_TO_CHOOSE: "REV presented both options and declined to pick, saying correctly that IT HAD TO BE SETTLED NOW. That is the second time tonight REV has refused a choice that was properly someone else's -- the first being the minimum meaningful delta_LL -- and both refusals came with the reason and the deadline rather than a shrug. A reviewer that declines to decide but insists on WHEN the decision must happen is doing the harder half of the job."
+  r415_THE_PATTERN_tonights_defects_are_VALUES_THAT_ARE_NEITHER_TRUE_NOR_FALSE: "Three instances in one hour, and they will recur. score_is_evidence_permitted computing None where it was False -- A PREDICATE GATING A LABELLED SCORE, and AN ABSENCE MUST NEVER READ AS PERMISSION. minimum_meaningful_delta_LL simply ABSENT from the field set rather than PRESENT-AND-UNSET. And build()'s PLAN_ENUMERATION_UNPARSEABLE refusal -- correct behaviour, DA implementing REVIEW 246 section 1.3's external pin -- which A CALLER CANNOT DISTINGUISH FROM A GAP, though I CANNOT CHECK and I CHECKED AND IT IS MISSING ARE OPPOSITE FACTS WITH THE SAME SHAPE. ALL THREE READ AS PERMISSION IF NOBODY LOOKS CLOSELY. It is the two-fields-one-bit failure in three new costumes."
+  r415_AND_I_FOUND_THE_MECHANISM_FOR_THE_None_it_is_ANDs_RETURN_VALUE: "Read at source rather than accepted. Line 914: score_is_evidence_permitted is (satisfied >= N_GATES) and step6['satisfied']. IN PYTHON THE EXPRESSION x and y RETURNS AN OPERAND, NOT A BOOLEAN -- when the left side is truthy the expression IS the right side -- so THE GATE INHERITS THE TYPE OF step6['satisfied'] WHENEVER THE GATES ARE COMPLETE. With 6 of 6 satisfied, a step-6 field holding None makes the gate None. THE GATE IS NOT A BOOLEAN BY CONSTRUCTION, and that is the whole defect in one line. My own run from wt-de2 returned False rather than None -- and wt-de2 is AT the chain ref head 2753b10, zero commits behind -- so the value depends on what step6['satisfied'] holds at the moment, which is exactly the instability the fix must remove."
+  r415_THE_FREEZE_ALREADY_CARRIES_THE_MACHINERY_FOR_PRESENT_AND_UNSET: "A practical note for the fix. The freeze declaration already has required_fields with 14 entries, fields_present with 13, and fields_missing with exactly one -- fee_rule. So the distinction between ABSENT and REQUIRED-BUT-MISSING is already expressible in that document: adding minimum_meaningful_delta_LL to required_fields makes it appear in fields_missing, which is PRESENT-AND-UNSET rather than ABSENT, and the freeze's own arithmetic then blocks without any new mechanism. THE FIX HAS A NATURAL HOME AND THE PRESCRIPTION MATCHES THE EXISTING STRUCTURE EXACTLY."
+  r415_AND_THE_THREE_FIXES_ARE_PREDICATES_WITH_FALSIFIERS_NOT_NOTES: "Each is being fixed the way this programme converged on tonight: an ABSENT REQUIRED FIELD AND A SATISFIED ONE MUST BE DISTINGUISHABLE; A GATE MUST BE A BOOLEAN OR AN EXPLICIT REFUSAL; AND A REFUSAL MUST SAY WHICH OF THE TWO FACTS IT REPRESENTS. That third one is the sharpest and the least obvious: a refusal is usually treated as self-explanatory, and PLAN_ENUMERATION_UNPARSEABLE shows it is not -- I cannot check and I checked and it is missing need different names, because a caller acts differently on each."
   r414_THE_CLAUSE_IS_IN_THE_PLAN_THREE_TIMES_and_I_read_all_three: "Verified at the text rather than relayed, which is the round's own discipline turned on the round. Lines 91-93: the primary unit is the combined BTC+ETH UTC day, PER-COIN TABLES ARE DIAGNOSTICS AND CANNOT AUTHORIZE A COIN-SPECIFIC DEPLOYMENT, A COIN-SPECIFIC DECISION REQUIRES A NEW FAMILY AND NEW MULTIPLICITY ARITHMETIC. Line 43: a later fair-value times harmful-flow composition IS A NEW EXPERIMENT AND A NEW MULTIPLICITY FAMILY. Line 403: a candidate changed after a labelled score is VOIDED and starts A NEW FAMILY/CLOCK, NEVER AMENDED IN PLACE. THE PLAN ANTICIPATED THIS EXACT SHORTCUT AND FORBADE IT IN THREE SECTIONS."
   r414_RUNNING_SECTION_8_ON_BTC_ALONE_IS_A_DIFFERENT_FAMILY_NOT_A_REDUCED_PLAN: "The closed door and its reason, recorded because it is EXACTLY THE KIND OF SHORTCUT SOMEONE REACHES FOR AT DAY ONE WHEN THE BOOKS ARE NOT READY. Start with btc and add eth later is not available without A NEW FREEZE AND A NEW m: a btc-only run is not a smaller version of the declared test, it is a different family whose multiplicity has never been declared. ETH IS LOAD-BEARING, which makes BE's MEASURED cost for one ETH day the number that decides how long the whole section 8 programme takes."
   r414_AND_I_FOUND_THE_CLAUSE_THAT_MAKES_THE_CLOSED_DOOR_BITE: "Reading section 8 for the two-coin requirement I found the accrual rule, which nobody has recorded and which changes what the ETH blocker COSTS. It is a HARD 14-DAY BAND: observe the first 14 CONSECUTIVE CALENDAR DAYS; require the first 10 evaluable complete BTC+ETH UTC days WITHIN THAT BAND; DAYS THAT FAIL A PREDECLARED DATA GATE REMAIN COUNTED WITH STATUSES; and IF FEWER THAN 10 ARE EVALUABLE BY DAY 14 THE VERDICT IS INSUFFICIENT_EVIDENCE, DO NOT EXTEND OPPORTUNISTICALLY. So the band has AT MOST FOUR SPARE DAYS and the escape hatch is explicitly closed."
@@ -28835,6 +28864,42 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r415_VALIDATION_STARTS_NO_EARLIER_THAN_2026_09_14_expressed_as_a_RULE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the ruling and its two-clause form are the coordinator's; the field-not-prose requirement is the same construction DA applied to the unset effect floor."
+  r415_I_COMPUTED_THE_OVERLAP_and_it_is_ONE_DAY_against_ZERO:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "enumerated the declared population 09-07..09-13 and intersected it with windows starting 09-13 and 09-14: one day and none respectively."
+  r415_ALREADY_DECIDED_IS_NOT_UNTOUCHED:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the distinction is between a day whose verdict is settled and a day that has never been looked at; section 8's requirement is the second, not the first."
+  r415_A_RULE_ADOPTED_WHILE_IT_IS_FREE_IS_WORTH_MORE_THAN_THE_SAME_RULE_LATER:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the three blocking conditions are the ones I recorded at round 414 as sitting inside DA's predicate rather than beside it."
+  r415_REV_LAID_OUT_TWO_OPTIONS_AND_REFUSED_TO_CHOOSE:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "REV's two options and its insistence on settling tonight are recorded in the dispatch; the earlier refusal is REVIEW 256's, recorded at round 413."
+  r415_THE_PATTERN_tonights_defects_are_VALUES_THAT_ARE_NEITHER_TRUE_NOR_FALSE:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_value_ledger.py
+    said: "the constant PLAN_PARSE_FAILED = PLAN_ENUMERATION_UNPARSEABLE is at da_step6_full_pipeline_freeze.py:134; the ledger's gate expression is at da_fair_value_ledger.py:914."
+  r415_AND_I_FOUND_THE_MECHANISM_FOR_THE_None_it_is_ANDs_RETURN_VALUE:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_value_ledger.py
+    said: "read line 914 and ran the ledger from wt-de2, whose HEAD equals origin/de-freeze-chain-v2 at 2753b10 with zero commits behind, getting gates_satisfied 6 of 6 and both permission booleans False."
+  r415_THE_FREEZE_ALREADY_CARRIES_THE_MACHINERY_FOR_PRESENT_AND_UNSET:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/declarations/da_step6_full_pipeline_freeze_v1.json
+    said: "read required_fields (14 entries), fields_present (13) and fields_missing (['fee_rule']) from the declaration at the chain ref."
+  r415_AND_THE_THREE_FIXES_ARE_PREDICATES_WITH_FALSIFIERS_NOT_NOTES:
+    prov: CHECKED
+    artifact: git:origin/de-freeze-chain-v2:live/pm_research/da_fair_value_ledger.py
+    said: "the three prescriptions are the coordinator's; each maps to one of the three instances, and each is a predicate rather than a note, which is the repair pattern recorded at rounds 412 and 413."
   r414_THE_CLAUSE_IS_IN_THE_PLAN_THREE_TIMES_and_I_read_all_three:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md
