@@ -1134,6 +1134,112 @@ def validation_start_day(effective: bool, floor: str = START_DAY_FLOOR) -> dict:
     }
 
 
+
+BAND_DAYS = 14
+DAYS_REQUIRED = 10
+#: REVIEW's measured joint BTC+ETH pass rate since 2026-09-01: 10 of 11.
+JOINT_PASS_OBSERVED = (10, 11)
+
+
+def band_arithmetic(start_day: str | None, floor: str = START_DAY_FLOOR) -> dict:
+    """THE 14-DAY BAND IS COUNTED FROM `max(D1, floor)`, NEVER TRUNCATED FROM D1.
+
+    (DA 301) Easy to get wrong and expensive if we do: if the floor pushes D1
+    later and the band is still measured from the ORIGINAL D1, days are lost
+    silently off the END of a window that already has little slack. The band
+    is 14 days counted FORWARD from the day the clock actually starts.
+    """
+    import datetime as _dt
+    if not start_day:
+        return {"band_start": None, "band_end": None,
+                "status": "NOT_YET_DETERMINED",
+                "rule": (f"the band is {BAND_DAYS} consecutive calendar days "
+                         f"counted FORWARD from max(D1, {floor}) -- NOT "
+                         f"truncated from D1"),
+                "why": ("truncating from an earlier D1 silently shortens the "
+                        "band, and §8 forbids extending to recover")}
+    d0 = _dt.date.fromisoformat(max(start_day, floor))
+    d1 = d0 + _dt.timedelta(days=BAND_DAYS - 1)
+    return {"band_start": d0.isoformat(), "band_end": d1.isoformat(),
+            "band_days": BAND_DAYS, "days_required": DAYS_REQUIRED,
+            "counted_from": "max(D1, floor)", "status": "DETERMINED",
+            "rule": (f"{BAND_DAYS} consecutive calendar days counted FORWARD "
+                     f"from max(D1, {floor}), NOT truncated from D1")}
+
+
+def band_risk(eth_daily_success=(1.0, 0.95, 0.90),
+              observed=JOINT_PASS_OBSERVED) -> dict:
+    """THE BAND'S SLACK, COMPUTED -- so it UPDATES rather than ages. (DA 301)
+
+    A NIGHTLY ETH BUILD IS A MULTIPLICATIVE HAZARD on top of the observed
+    joint rate, so BOTH freeze terms can hold and the band can STILL miss ten.
+    The sequencing fix is NECESSARY, NOT SUFFICIENT, and 2.73 days of slack
+    stand against at least three independent hazards.
+
+    When BE's real reliability figure arrives, pass it as `eth_daily_success`
+    and the risk RECOMPUTES instead of being re-argued.
+    """
+    from math import comb
+    k, n = observed
+    base = k / n
+    rows = {}
+    for pe in eth_daily_success:
+        p = base * pe
+        pi = sum(comb(BAND_DAYS, i) * p ** i * (1 - p) ** (BAND_DAYS - i)
+                 for i in range(0, DAYS_REQUIRED))
+        rows[f"eth_daily_success={pe}"] = {
+            "joint_rate": round(p, 4),
+            "expected_evaluable_days": round(BAND_DAYS * p, 2),
+            "margin_days": round(BAND_DAYS * p - DAYS_REQUIRED, 2),
+            "P_INSUFFICIENT_EVIDENCE": round(pi, 4)}
+    return {
+        "observed_joint_btc_eth": f"{k} of {n}",
+        "observed_joint_rate": round(base, 4),
+        "observed_joint_rate_exact": base,
+        "observed_since": "2026-09-01",
+        "the_one_failure": "2026-09-11",
+        "model": (f"X ~ Binomial({BAND_DAYS}, joint_rate); "
+                  f"INSUFFICIENT_EVIDENCE iff X < {DAYS_REQUIRED}"),
+        "eth_is_a_MULTIPLICATIVE_hazard": (
+            "joint_rate = observed_joint_rate x eth_daily_success, because a "
+            "nightly ETH build is an additional independent way for a day to "
+            "fail"),
+        "by_assumed_eth_reliability": rows,
+        "THE_HONEST_READING": (
+            "BOTH freeze terms can hold and the band can still miss ten. The "
+            "sequencing fix is NECESSARY, NOT SUFFICIENT: it stops the clock "
+            "starting before the population CAN exist; it does not make the "
+            "population reliable once it does."),
+        "recomputes_when": ("BE's measured ETH daily reliability is passed as "
+                            "`eth_daily_success` -- the risk updates rather "
+                            "than being re-argued"),
+    }
+
+
+def freeze_effective(gaps, enum, rev, mind, twocoin) -> dict:
+    """THE CONJUNCTION, AS ONE DRIVEABLE FUNCTION. (DA 300)
+
+    Extracted so both directions can be DRIVEN rather than described, and
+    without a test-only escape hatch in the production path -- an
+    `_internal=True` bypass is the thing this lane has criticised elsewhere.
+
+    FIVE TERMS, and `blocking_gaps` carries only the FIRST of them. That is
+    why `blocking_terms` exists beside it: a reader who treats `blocking_gaps`
+    as the exhaustive answer to "what stops this" will miss four terms, and
+    the coordinator did exactly that twenty minutes after the term landed.
+    """
+    terms = {
+        "no_field_gaps": (not gaps),
+        "enumeration_intact": bool(enum.get("intact")),
+        "rev_confirms_the_reading": bool(rev.get("confirms_the_reading")),
+        "minimum_meaningful_delta_LL_is_set": bool(mind.get("is_set")),
+        "two_coin_production_ready": bool(twocoin.get("ready")),
+    }
+    return {"effective": all(terms.values()), "terms": terms,
+            "unmet": sorted(k for k, v in terms.items() if not v),
+            "n_terms": len(terms)}
+
+
 def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -> dict:
     if fetch:
         subprocess.run(["git", "-C", _root(), "fetch", "--quiet", "origin"], check=False)
@@ -1307,6 +1413,7 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
     if not lat["present_in_the_chain"]:
         gaps.append("latency:placement_latency_ms_not_bound_in_any_frozen_chain_file")
 
+    _eff = freeze_effective(gaps, enum, rev, mind, twocoin)
     out = {
         "protocol": PROTOCOL, "plan": PLAN,
         "DRAFT": False,
@@ -1315,10 +1422,17 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
         # resolve), the enumeration is whole (the gap list was counted over the
         # pinned questions), and the READING that closes the last gap has been
         # adjudicated by a party that does not benefit from the answer.
-        "freeze_is_effective": ((not gaps) and enum["intact"]
-                                and rev["confirms_the_reading"]
-                                and mind["is_set"]
-                                and twocoin["ready"]),
+        "freeze_is_effective": _eff["effective"],
+        # `blocking_gaps` IS NOT EXHAUSTIVE -- it lists FIELD gaps only. This
+        # is the exhaustive answer to "what stops this".
+        "blocking_terms": _eff["unmet"],
+        "n_blocking_terms": len(_eff["unmet"]),
+        "freeze_terms": _eff["terms"],
+        "BLOCKING_GAPS_IS_FIELD_GAPS_ONLY": (
+            "`blocking_gaps` lists unmet §7 FIELDS. `freeze_is_effective` has "
+            "FIVE conjuncts and only the first is that list, so a reader "
+            "treating `blocking_gaps` as exhaustive will miss four terms -- "
+            "read `blocking_terms` for the full answer."),
         "two_coin_production_ready": twocoin,
         "THE_TWO_TERMS_ARE_A_SEQUENCE_NOT_INDEPENDENT_GATES": (
             "`minimum_meaningful_delta_LL` is the user's to set and "
@@ -1331,9 +1445,10 @@ def build(ref: str = REF, rev203_six_of_six: bool = False, fetch: bool = True) -
         # `fields_missing` and in the gap list like any other unmet §7 field --
         # an absent required field and a satisfied one MUST be distinguishable.
         "minimum_meaningful_delta_LL": mind,
-        "validation_start_day": validation_start_day(
-            (not gaps) and enum["intact"] and rev["confirms_the_reading"]
-            and mind["is_set"] and twocoin["ready"]),
+        "validation_start_day": validation_start_day(_eff["effective"]),
+        "band_arithmetic": band_arithmetic(
+            validation_start_day(_eff["effective"])["start_day"]),
+        "band_risk": band_risk(),
         "additions_beyond_section_7": [
             "minimum_meaningful_delta_LL -- §8 declares a minimum SAMPLE and no "
             "minimum EFFECT, so the sign test can pass on an effect of any size "
@@ -1593,6 +1708,95 @@ def falsify() -> int:
        and "14" in tc["section_8_band_quoted"])
     ck("the two terms are recorded as a SEQUENCE, not independent gates",
        "IRREVERSIBLE" in d["THE_TWO_TERMS_ARE_A_SEQUENCE_NOT_INDEPENDENT_GATES"])
+    # ---- DA 300: IS two_coin_production_ready A CONJUNCT? DRIVE BOTH WAYS --
+    _ENUM_OK = {"intact": True}
+    _REV_OK = {"confirms_the_reading": True}
+    _MIND_SET = {"is_set": True, "value": 0.01}
+    import tempfile as _tf, shutil as _sh
+    # (A) THE TRAP: the user answers the one question we asked, ETH still absent.
+    _bare = _tf.mkdtemp(prefix="da300_bare_")
+    (Path(_bare) / "data" / "pm_5min" / "derived").mkdir(parents=True)
+    _tc_absent = two_coin_production_ready(REF, root=_bare, control=None)
+    _A = freeze_effective([], _ENUM_OK, _REV_OK, _MIND_SET, _tc_absent)
+    ck("DRIVEN (A): floor SET but ETH ABSENT -> freeze_is_effective FALSE",
+       _A["effective"] is False
+       and "two_coin_production_ready" in _A["unmet"],
+       f"unmet={_A['unmet']}")
+    ck("...so the term is a REAL CONJUNCT, not decoration",
+       _A["effective"] is False and _tc_absent["ready"] is False
+       and _MIND_SET["is_set"] is True)
+    # (B) THE COMPLEMENT: floor set, an eth book present, BTC control passed.
+    _full = _tf.mkdtemp(prefix="da300_full_")
+    _fd = Path(_full) / "data" / "pm_5min" / "derived"
+    _fd.mkdir(parents=True)
+    (_fd / "be_daybook_20260914_eth__L250ms.pkl").write_bytes(b"x")
+    (_fd / "be_daybook_20260914_btc__L250ms.pkl").write_bytes(b"x")
+    _tc_ready = two_coin_production_ready(
+        REF, root=_full, control={"btc_rebuild_byte_identical": True, "seat": "BE"})
+    _B = freeze_effective([], _ENUM_OK, _REV_OK, _MIND_SET, _tc_ready)
+    ck("DRIVEN (B): floor SET, eth book PRESENT, BTC control PASSED -> TRUE",
+       _B["effective"] is True and _B["unmet"] == [],
+       f"terms={_B['terms']}")
+    ck("...so the gate is SATISFIABLE -- a trap has not been swapped for a deadlock",
+       _B["effective"] is True and _A["effective"] is False)
+    _sh.rmtree(_bare, ignore_errors=True); _sh.rmtree(_full, ignore_errors=True)
+    # ---- and blocking_gaps is NOT the exhaustive answer -------------------
+    ck("`blocking_gaps` is FIELD gaps only, and says so",
+       "field gaps only" in d["BLOCKING_GAPS_IS_FIELD_GAPS_ONLY"].lower()
+       or "FIELDS" in d["BLOCKING_GAPS_IS_FIELD_GAPS_ONLY"])
+    ck("`blocking_terms` IS exhaustive over the conjunction",
+       set(d["blocking_terms"]) == {k for k, v in d["freeze_terms"].items() if not v}
+       and len(d["freeze_terms"]) == 5,
+       f"{len(d['freeze_terms'])} terms, {len(d['blocking_terms'])} unmet")
+    ck("...and a term outside blocking_gaps appears in blocking_terms",
+       "two_coin_production_ready" in d["blocking_terms"]
+       and "two_coin_production_ready" not in d["blocking_gaps"])
+    # ---- DA 301: the band is counted FROM the floor, not truncated to it ---
+    import datetime as _dt
+    _early = band_arithmetic("2026-09-13")
+    ck("the floor MOVES the band start rather than truncating the band",
+       _early["band_start"] == START_DAY_FLOOR,
+       f"D1 2026-09-13 -> band starts {_early['band_start']}")
+    _len = (_dt.date.fromisoformat(_early["band_end"])
+            - _dt.date.fromisoformat(_early["band_start"])).days + 1
+    ck("...and the band is still a FULL 14 days, none lost off the end",
+       _len == BAND_DAYS, f"{_early['band_start']} .. {_early['band_end']} = {_len} days")
+    _late = band_arithmetic("2026-09-20")
+    ck("a D1 AFTER the floor is used as-is (the floor is a floor, not a start)",
+       _late["band_start"] == "2026-09-20")
+    ck("NEGATIVE CONTROL: truncating from D1 would have LOST a day",
+       (_dt.date.fromisoformat("2026-09-13")
+        + _dt.timedelta(days=BAND_DAYS - 1)).isoformat() < _early["band_end"],
+       "09-13+13 = 2026-09-26, one day short of 2026-09-27")
+    # ---- the risk is COMPUTED and RECOMPUTES ------------------------------
+    _r = d["band_risk"]
+    ck("the observed joint rate is carried with its numerator and denominator",
+       _r["observed_joint_btc_eth"] == "10 of 11"
+       and abs(_r["observed_joint_rate_exact"] - 10 / 11) < 1e-12
+       and abs(_r["observed_joint_rate"] - 10 / 11) < 1e-4,
+       f"{_r['observed_joint_btc_eth']} = {_r['observed_joint_rate']} "
+       f"(exact {_r['observed_joint_rate_exact']:.6f})")
+    ck("eth is modelled as a MULTIPLICATIVE hazard, not an additive one",
+       "x eth_daily_success" in _r["eth_is_a_MULTIPLICATIVE_hazard"])
+    _rows = _r["by_assumed_eth_reliability"]
+    ck("P(INSUFFICIENT_EVIDENCE) RISES as assumed eth reliability falls",
+       (_rows["eth_daily_success=1.0"]["P_INSUFFICIENT_EVIDENCE"]
+        < _rows["eth_daily_success=0.95"]["P_INSUFFICIENT_EVIDENCE"]
+        < _rows["eth_daily_success=0.9"]["P_INSUFFICIENT_EVIDENCE"]),
+       " -> ".join(str(_rows[k]["P_INSUFFICIENT_EVIDENCE"])
+                   for k in ("eth_daily_success=1.0", "eth_daily_success=0.95",
+                             "eth_daily_success=0.9")))
+    ck("...and the margin SHRINKS with it",
+       _rows["eth_daily_success=0.9"]["margin_days"]
+       < _rows["eth_daily_success=1.0"]["margin_days"])
+    _alt = band_risk(eth_daily_success=(0.80,))
+    ck("RECOMPUTES: a different assumed reliability gives a different risk",
+       _alt["by_assumed_eth_reliability"]["eth_daily_success=0.8"][
+           "P_INSUFFICIENT_EVIDENCE"]
+       > _rows["eth_daily_success=0.9"]["P_INSUFFICIENT_EVIDENCE"],
+       f"at 0.80 eth: P={_alt['by_assumed_eth_reliability']['eth_daily_success=0.8']['P_INSUFFICIENT_EVIDENCE']}")
+    ck("the honest reading is recorded: NECESSARY, NOT SUFFICIENT",
+       "NECESSARY, NOT SUFFICIENT" in _r["THE_HONEST_READING"])
     ck("a MISSING field can never read as present",
        all(d["fields"][f] == MISSING for f in d["fields_missing"]))
     print(f"\n  {'DRAFT CELLS PASS' if not bad else str(bad) + ' FAILED'}")
