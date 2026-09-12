@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T00:35:39Z (MEM ROUND 410 -- 09-11 IS SHOWN BUT NOT COUNTED, AND THE REASON WAS CORRECTED FROM
+  PROCEDURE TO VALIDITY. Stage 0 fails it on MANY_MISSING_WINDOWS(4) against <= 1, where
+  the four built days scored 0, 0, 0 and 1. The first reason given was rule 11 -- moving a
+  threshold after seeing the score -- and it was corrected to the primary one: four
+  missing INTERIOR windows means the reference-generation population is INCOMPLETE, so any
+  D on it is WRONG IN AN UNKNOWN DIRECTION rather than noisier. ONCE THE REASON IS
+  VALIDITY RATHER THAN PROCEDURE THE GOALS STOP COMPETING: a day can be SHOWN without
+  being COUNTED. G stays 4, no tally, threshold untouched, NO SUBSTITUTION. THE NEAR-MISS
+  IS WORTH MORE THAN THE FINDING: a false defect was nearly filed against the guard doing
+  the blocking -- real-sounding, and CONVENIENTLY ONE THAT WOULD HAVE UNBLOCKED THE DAY
+  BEING SOUGHT -- stopped only by reconstructing it against THE FOUR DAYS THAT HAD ALREADY
+  PASSED, which the reconstruction wrongly said would fail. A GUARD THAT BLOCKS THE THING
+  YOU WANT IS THE GUARD YOU ARE LEAST EQUIPPED TO JUDGE. I verified it at source: the max
+  is GLOBAL across the file and the test is last >= d1 - WINDOW_S, a LIVENESS PROOF,
+  correctly implemented. MY OWN ADDITION: the interior metric is BLIND TO TRUNCATION by
+  construction -- expected spans first-to-last SUPPLIED -- so it finds HOLES, never SHORT
+  DAYS, which STRENGTHENS the validity case. And I measured the self-clearing live: max
+  1789167600 = 23:00:00Z against the needed 1789170900 = 23:55:00Z, SHORT BY 55 MINUTES
+  against 10-40 minute spacing. Tip f774d2b.)
   2026-09-12T00:29:58Z (MEM ROUND 409 -- THE PREDICTIVE CLOCK IS NOT BLOCKED BY THE ECONOMIC GAP, PROVED BY
   REHEARSAL: the whole path ran with the fee UNDECLARED and both candidates produced full
   verdicts; MAKER_FEE_IS_NOT_DECLARED reaches only section 9. That is round 407's third
@@ -105,6 +124,7 @@ updated: >-
   Both pipeline timers are Persistent=yes, so DISABLING DEFERS RATHER THAN SKIPS and
   fencing must MASK. UNKNOWN is treated as a CONSUMER: absence of evidence is not a
   producer. Tip e414b9e.)
+previous_updates: >-
   2026-09-12T00:19:56Z (MEM ROUND 407 -- DA WITHDREW THE QUALIFIED ZERO BEFORE IT LANDED, verified:
   maker_fee_bps None, maker_fee_rule None, established.maker_fee_rule False, sensitivity
   fields absent. So the ordering hazard I flagged at 405 resolved by DA REMOVING THE
@@ -123,7 +143,6 @@ updated: >-
   the websocket field does not, because it reads zero for all six. A CHECK KEYED ON A
   LABEL FIRES ON A MISLABEL; A CHECK KEYED ON A PROPERTY SURVIVES RELABELLING -- rule 42
   stated for instruments, and I was the reader-side instance one round ago. Tip 577d14f.)
-previous_updates: >-
   2026-09-12T00:13:31Z (MEM ROUND 406 -- I WITHDRAW MY ROUND-405 CONCLUSION, AND THE CAUSE IS THE FAILURE I
   HAD ALREADY WRITTEN A RULE AGAINST. The venue's field IS populated; DA's zero on 76,617
   of 76,617 IS a real observation. MY MEASUREMENT WAS RIGHT -- fee_source_status does read
@@ -773,6 +792,14 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r410_09_11_IS_RULED_SHOWN_BUT_NOT_COUNTED: "Stage 0 fails 09-11 on MANY_MISSING_WINDOWS(4) against a threshold of <= 1, where the four built days scored 0, 0, 0 and 1. The ruling: if the count holds at 02:00Z, BE builds 09-11 IN FULL and records ADMISSIBLE false with the status, n_missing_interior_windows 4, the threshold, and the gap-window comparison -- 66 for 09-11 against 39, 47, 51 and 52 -- carried IN THE RECORD beside the D values. Descriptive only, G stays at 4, no tally, threshold untouched. AND NO SUBSTITUTION: the verdict has been fixed since G=2, so 09-11 is not a slot needing filling and 09-12 and 09-13 are not replacements."
+  r410_THE_REASON_WAS_CORRECTED_FROM_PROCEDURE_TO_VALIDITY_and_that_is_the_finding: "The first reason given for refusing to relax the threshold was rule 11 -- moving be_build_preflight.py:360 after seeing that 09-11 scores 4 is choosing after seeing. True, and it was CORRECTED to the primary reason: VALIDITY. Four missing interior windows means the reference-generation population is INCOMPLETE, so any D computed on it is WRONG IN AN UNKNOWN DIRECTION rather than merely noisier. AND ONCE THE REASON IS VALIDITY RATHER THAN PROCEDURE, THE GOALS STOP COMPETING: a day can be SHOWN without being COUNTED. A procedural reason forces a choice between honesty and completeness; a validity reason dissolves it."
+  r410_THE_NEAR_MISS_a_guard_that_blocks_you_is_the_one_you_are_least_equipped_to_judge: "A false defect was nearly filed against the guard that was doing the blocking. The preflight's gap-ledger check reads max(window_start) with WINDOW_S 300, and gap windows are SPARSE -- emitted only on gaps, at irregular 300 to 2400 second spacings -- so it LOOKED like the check conflates no-gap-near-day-end with ledger-stopped, meaning a CLEANER day would fail more easily. A real-sounding defect, and CONVENIENTLY ONE THAT WOULD HAVE UNBLOCKED THE DAY BEING SOUGHT. It was stopped by reconstructing the predicate against THE FOUR DAYS THAT HAD ALREADY PASSED: the reconstruction said all five fail, including those four, so the reading was wrong. THE RULE: A GUARD THAT BLOCKS THE THING YOU WANT IS THE GUARD YOU ARE LEAST EQUIPPED TO JUDGE -- reconstruct it against cases that already passed before calling it broken."
+  r410_AND_I_VERIFIED_THE_GUARD_AT_SOURCE_IT_IS_A_LIVENESS_PROOF: "Read the lines myself rather than accept the conclusion. The accumulator is last = max(last, int(ws)) over EVERY LINE OF THE FILE -- a GLOBAL maximum, not the day's -- and the test is last >= d1 - WINDOW_S. So it asks WHETHER THE LEDGER SHOWS THE COLLECTOR RUNNING PAST THIS DAY'S END: trivially true for any past day, and false for the newest until newer data lands. It is a LIVENESS proof and it is correctly implemented. Nothing about gap sparsity touches it, because the question is never about this day's gaps."
+  r410_THE_INTERIOR_METRIC_IS_BLIND_TO_TRUNCATION_BY_CONSTRUCTION: "My own addition, demonstrated rather than asserted. expected = range(starts[0], starts[-1] + WINDOW_S, WINDOW_S) spans FROM THE FIRST SUPPLIED WINDOW TO THE LAST, so a day truncated at either end scores ZERO missing: I ran it on [1000,1300,1600,1900] and got an empty missing set, and on [1000,1300,1900,2200] got exactly [1600]. THE METRIC FINDS HOLES, NEVER SHORT DAYS. That STRENGTHENS the validity argument rather than weakening it: 09-11's four are genuine INTERIOR holes and cannot be an artifact of a day that started late or ended early."
+  r410_THE_BLOCKER_IS_SELF_CLEARING_AND_I_MEASURED_IT_LIVE: "09-11 needs any gap window with window_start >= 1789170900, which is 2026-09-11T23:55:00Z, and windows from 09-12 COUNT because the maximum is global. I scanned the ledger myself: the current global max is 1789167600 = 2026-09-11T23:00:00Z, SHORT BY 3,300 SECONDS, 55 MINUTES, against a historical spacing of 10 to 40 minutes. So two of the three stage-0 failures are LAG rather than properties of the day -- WHICH MAKES THE THIRD MORE LIKELY TO BE LAG TOO, and that inference is worth stating because it changes what 02:00Z is for."
+  r410_AND_THE_LEDGERS_POPULATION_IS_NOT_ITS_LINE_COUNT: "A denominator note found while scanning. The file has 13,016 LINES -- which I measured at round 400 -- and 12,453 ROWS CARRYING window_start. So 563 lines carry no such key, and the guard's population is the smaller number. Nothing here is wrong; it is the kind of difference that turns into a miscount the first time someone quotes the file's length as the number of windows, which is exactly what happened to collector_gaps once already tonight when a byte length was read as a record count."
+  r410_THE_POLLING_CLOCK_CAME_OFF_BE_and_the_reason_is_structural: "Asking a seat to poll for 95 minutes means asking it to HOLD A TURN OPEN that long, which is a STRUCTURAL MISMATCH RATHER THAN A DISCIPLINE PROBLEM -- the same shape as the waiter that never existed and the intention that did not survive the end of a turn. The clock now sits with a coordinator monitor probing both numbers to 02:00Z. Recorded because the fix is not better adherence; it is moving the wait to something whose existence does not depend on a turn staying open."
   r409_THE_PREDICTIVE_CLOCK_IS_NOT_BLOCKED_BY_THE_ECONOMIC_GAP: "The most consequential result of the hour, and it was PROVED BY REHEARSAL rather than argued. DE ran the whole section 8 path with the fee UNDECLARED and BOTH candidates produced full verdicts; MAKER_FEE_IS_NOT_DECLARED reaches only section 9. That is round 407's third proof coming back the GOOD way -- the one designed to discover whether an economic gap was silently blocking the predictive clock. It was not, and the answer arrived tonight rather than on day 1, which is the entire point of rehearsing a clock that cannot be rewound."
   r409_THE_REHEARSALS_THREE_NUMBERS_ARE_RELAYED_AND_I_SAY_SO: "Candidate non-OK on 44 of 156 actions, so Identity fallback is exercised as THE NORMAL CASE; an exactly-zero day completes as a REPORTED TIE NAMED BY DAY with n_ties_excluded 1 and n_nonzero 9, never given the candidate's sign. I searched for the rehearsal's own artifacts under controls -- 333 files written since 00:00Z so the search could speak, an impossible name returning zero -- and MY QUERY DID NOT LOCATE THEM; it was also bounded, capped at the first 300 files and 4 MB each, so it is not a clean absence either. These three numbers stay labelled as DE's, seconded by nothing of mine."
   r409_AN_ANONYMOUS_REFUSAL_CANNOT_BE_INVENTORIED_SO_IT_CANNOT_BE_CLEARED: "Three refusals on the path were ANONYMOUS and are now named. The reasoning is exactly why the rehearsal's deliverable is an inventory: a refusal with no name cannot appear in a list, so it cannot be marked would-fire or would-not before a run, so it is guaranteed to be discovered by firing -- on the one day that cannot be spent. And the fix has the right shape: a SCANNER that refuses to admit a new anonymous refusal, with a positive control that sees a PLANTED one and does not flag a FORWARDED message. Both halves matter -- the control proves it can fire, and the forwarded-message case proves it is not just matching the word REFUSED."
@@ -28691,6 +28718,38 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r410_09_11_IS_RULED_SHOWN_BUT_NOT_COUNTED:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "read the threshold at the preflight's interior-windows row: PASS if len(missing) <= 1 else WOULD_FAIL:MANY_MISSING_WINDOWS(len)."
+  r410_THE_REASON_WAS_CORRECTED_FROM_PROCEDURE_TO_VALIDITY_and_that_is_the_finding:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "the correction is the coordinator's own, made before the ruling landed; the distinction is between a rule about how a threshold may be changed and a statement about what an incomplete population does to an estimate."
+  r410_THE_NEAR_MISS_a_guard_that_blocks_you_is_the_one_you_are_least_equipped_to_judge:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "the reconstruction and its result are the coordinator's; the four already-passing days are the control that refuted the reading, which is the same shape as a positive control on an absence."
+  r410_AND_I_VERIFIED_THE_GUARD_AT_SOURCE_IT_IS_A_LIVENESS_PROOF:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "read lines 424 to 430 of be_build_preflight.py: the json parse of window_start, the running max over the whole file, and the comparison against d1 minus WINDOW_S."
+  r410_THE_INTERIOR_METRIC_IS_BLIND_TO_TRUNCATION_BY_CONSTRUCTION:
+    prov: CHECKED
+    artifact: live/pm_research/be_build_preflight.py
+    said: "constructed both cases in python against the preflight's own expression and printed the expected and missing sets."
+  r410_THE_BLOCKER_IS_SELF_CLEARING_AND_I_MEASURED_IT_LIVE:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_gaps.jsonl
+    said: "parsed every line of data/pm_5min/collector_gaps.jsonl for window_start and took the maximum: 1789167600, decoded to 2026-09-11T23:00:00Z, against the required 1789170900."
+  r410_AND_THE_LEDGERS_POPULATION_IS_NOT_ITS_LINE_COUNT:
+    prov: CHECKED
+    artifact: data/pm_5min/collector_gaps.jsonl
+    said: "counted lines parsed with a window_start key during the maximum scan: 12,453, against the 13,016 lines I measured with wc -l at round 400."
+  r410_THE_POLLING_CLOCK_CAME_OFF_BE_and_the_reason_is_structural:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
+    said: "the reassignment is the coordinator's; the prior instances are the 09-11 waiter withdrawn at round 406 and rule 37's intention-is-not-a-mechanism finding."
   r409_THE_PREDICTIVE_CLOCK_IS_NOT_BLOCKED_BY_THE_ECONOMIC_GAP:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
