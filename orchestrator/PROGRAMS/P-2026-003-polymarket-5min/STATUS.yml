@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T00:01:55Z (MEM ROUND 404 -- THE FEE RULING IS REVERSED, AND I VERIFIED THE CAUSE AT DA'S OWN
+  FILE. The premise was that the trigger was unidentifiable; it is FALSE. CHARGING
+  PARTITIONS BY ACCOUNT, TOTALLY: six maker addresses, each charged on 100 per cent of
+  its maker legs, and ZERO addresses holding both a charged and a zero leg -- I compared
+  the two fields key by key. So the 25 maker BUYs at the same 0.9900 in the same block
+  buckets paid nothing because they are OTHER CLASS, not other price. Price was never the
+  variable. TWO TIERS, seven legs at 9.9 per cent and three at 49.5, and NO ADDRESS SPANS
+  THEM -- the tier is a property of the account, like the charging. (My first pass
+  reported one address spanning tiers; that was 3-decimal rounding noise on integer-cent
+  fees, caught before filing.) THE SAFEGUARD WAS 250x LIGHT AND IT FACTORISES: 5x from
+  the TIER, since 10 per cent was the MODAL tier and not the cap, times 50x from the
+  PRICE BASIS, since every observation sits at 0.9900 where min(p,1-p) is at its MINIMUM.
+  THE GOVERNING QUESTION IS NOT ANSWERABLE FROM THIS FILE: it enumerates only the CHARGED
+  addresses, and NO field lists the 1,046 zero-fee ones -- and the limits say the 901
+  receipts are A SAMPLE OF OUR OWN TRADES, which makes the question narrower and more
+  urgent, not less. THE TAKER BLOCKER: 901 of 901 charged, formula matching 110, share
+  0.1221 -- an extrapolator that fails where the answer is CERTAIN is not a bound. And a
+  withdrawal recorded AS a withdrawal: REV's asymmetry expectation died on the partition,
+  so DE keeps the symmetric shape BECAUSE the data refuted the objection. Tip 6c67863.)
   2026-09-11T23:56:59Z (MEM ROUND 403 -- I RE-MEASURED THE DANGLING CITATIONS AND THE NUMBER THAT CARRIES
   THE POINT AGREES EXACTLY. 8 dangling at the canonical ref, 21 against the working tree,
   DIFFERENCE 13 -- the coordinator's figure to the unit, and 13 is the whole finding:
@@ -105,6 +124,7 @@ updated: >-
   small at BOTH ends, so 0 of 10 attains the same 0.001953125 as 10 of 10 -- four passing
   rungs where the plan has two, both extras favouring the candidate. I computed the whole
   ladder. Twelve re-emits across two days and NOT ONE D value moved. Tip f4c33e0.)
+previous_updates: >-
   2026-09-11T23:46:25Z (MEM ROUND 401 -- ORIGIN/MM-RESEARCH NOW CARRIES ROUND 400, VERIFIED AT THE FETCHED
   REF. d991ed6: HANDOFF round 400, 202 blocks, 44,920 lines; STATUS generation 400,
   60,198 lines; both blobs BYTE-IDENTICAL to local. Fast-forward from 6a37a76, no force.
@@ -123,7 +143,6 @@ updated: >-
   0.6x, 5.0x, 18.1x, 40x the threshold, so EXACTLY ONE passing configuration and NO RUNG
   between the first two. One non-positive day ended an arm irrecoverably. My cap movement
   is real and immaterial: 5x to 18x, futile to more futile. Tip bb9b80c.)
-previous_updates: >-
   2026-09-11T23:34:12Z (MEM ROUND 400 -- THE ADJUDICATION, AND IT GOES AGAINST ME. GATE 6 WAS THE FAILING
   ROW AND THERE IS NO WHEN: REV and I measured THE SAME HEAD, f31dff0. BOTH LEDGER ROWS
   WERE FALSE IN OPPOSITE DIRECTIONS -- gate 4's failure was DA's own FIXTURE (a bare list
@@ -660,6 +679,15 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r404_THE_FEE_RULING_IS_REVERSED_and_it_goes_in_as_a_REVERSAL: "Recorded as a reversal with its cause, not as a revised position. What was ruled at DA 287: adopt a QUALIFIED ZERO, on the premise that the trigger for the ten charged legs was UNIDENTIFIABLE. REVIEW 249 established that the premise is FALSE, at DA's own audit file. So the residual is not an unexplained 0.95 per cent; it is A RULE SITTING IN DATA DA ALREADY HELD. The distinction matters for the receipt: a declared residual with an unknown cause and a declared residual with a known partition are different objects, and only the first supports a qualified zero."
+  r404_I_VERIFIED_THE_PARTITION_MYSELF_AND_IT_IS_TOTAL: "Six maker addresses appear as charged -- 0x0fd0ebb1 1/1, 0x18b0b710 1/1, 0x2277c18f 3/3, 0x8d009282 1/1, 0xb3b0780f 2/2, 0xbdf22122 2/2 -- and for EVERY ONE the charged count equals its total maker legs. So each is charged on 100 per cent of its maker legs and the number of addresses holding BOTH a charged and a zero leg is ZERO. CHARGING PARTITIONS BY ACCOUNT, TOTALLY. That is why the 25 maker BUYs at the same 0.9900 in the same block buckets paid nothing: OTHER CLASS, not other price. Price was never the variable."
+  r404_THE_TIERS_ARE_TWO_AND_NO_ADDRESS_SPANS_THEM: "Computed from each leg's own fee_cents_per_share divided by min(p, 1-p): SEVEN legs at 9.9 per cent and THREE at 49.5 per cent, and no address appears in both tiers -- the tier is a property of the account, exactly like the charging itself. A NOTE ON MY OWN WORKING: my first pass rounded the rate to three decimals and reported 0x2277c18f as spanning tiers. It does not. The 9.892, 9.899 and 9.900 are one tier seen through integer-cent fee amounts, and the spread is rounding noise. I caught it before filing, which is the only reason it is a note and not a correction."
+  r404_THE_250x_DECOMPOSES_AS_5x_TIER_TIMES_50x_PRICE_BASIS: "The safeguard was specified at 10 per cent charged at the observed price, which is 0.1000 cents per share. The worst real case is the 49.5 per cent tier at p = 0.50, which is 24.75 cents per share. The ratio to the observed modal tier is 250x, and it factorises cleanly: 5x from the TIER (49.5 over 9.9, because 10 per cent was the MODAL tier and not the cap) times 50x from the PRICE BASIS (min(p,1-p) is 0.50 at the money against 0.01 at the observed 0.9900, where it is at its MINIMUM). Both factors were invisible while every observation sat at one price."
+  r404_THE_GOVERNING_QUESTION_IS_NOT_ANSWERABLE_FROM_THIS_FILE: "The question is whether OUR OWN maker address is in the corpus and in which class, and the answer decides the receipt: if it appears with zero-fee legs the zero is supported FOR US SPECIFICALLY, and if it does not appear at all then the 1,046 zeros are other people's accounts and we have NO OBSERVATION OF OUR OWN TREATMENT. I checked whether this artifact can settle it: it CANNOT. The file enumerates only the CHARGED addresses -- maker_charged_by_address, maker_charged_address_total_maker_legs and maker_charged_detail -- and NO field enumerates the 1,046 zero-fee maker addresses. The question is answerable from the receipts; it is not answerable from this file."
+  r404_AND_THE_LIMITS_BLOCK_SHARPENS_THAT_QUESTION: "The file's own limits say the 901 receipts are A SAMPLE OF OUR OWN RECORDED TRADES, NOT A POPULATION, and that incidence here bounds observed volume only. So our address is very likely IN the corpus -- these are our trades -- which makes the governing question narrower and more urgent than it first reads: not whether we appear, but whether we appear among the 1,046 zeros or the 10 charges, and the file records the second list and not the first. The limits also state fees are read from the OrderFilled fee word and NEVER from the websocket fee_rate_bps field, WHICH IS UNPOPULATED -- worth carrying beside the supporting rule, since that rule cites fee_rate_bps = 0 on 76,617 CLOB trades."
+  r404_THE_TAKER_BLOCKER_an_extrapolator_that_fails_where_the_answer_is_certain: "Taker legs are 901 of 901 charged -- the one place the schedule is FULLY OBSERVABLE -- and the audit's formula reproduces 110 of them to 1e-6, a match share of 0.1221, with a maximum residual of 0.51021345 USDC against a median of 5.94e-06. So the formula is nearly exact on most legs and badly wrong on a few, and it explains 12.21 per cent of the case where the answer is known. AN EXTRAPOLATOR THAT FAILS WHERE THE ANSWER IS CERTAIN IS NOT A BOUND, and that blocks any fee MODEL, not merely this one."
+  r404_A_WITHDRAWAL_RECORDED_AS_A_WITHDRAWAL: "REV expected the worst case to be ASYMMETRIC and withdrew that expectation when the account partition refuted it: both legs belong to the same account, so the symmetric all-fills shape is correct, and DE keeps it BECAUSE THE DATA REFUTED THE OBJECTION rather than because the objection was never raised. Recorded in that form deliberately -- a design choice that survived an attack is a different object from one nobody attacked, and only the first is worth anything later."
+  r404_THE_FOURTH_SUMMARY_INSTEAD_OF_THE_ARTIFACT: "The coordinator ruled from DA's DA 286 SUMMARY without opening the audit file, and the partition was visible in two of its fields. That is the fourth time tonight the same thing happened: collector_gaps read as a record count when it was a byte length, BE's census re-asked for material already sent, the 18 dangling citations taken from REV, and now this. THE CLASS IS NOT CARELESSNESS, IT IS THAT A SUMMARY IS A LOSSY PROJECTION CHOSEN BY ITS AUTHOR FOR A DIFFERENT PURPOSE -- DA's summary was about the residual's SIZE, and the partition is about its SHAPE, so no amount of care in reading the summary would have surfaced it."
   r403_I_MEASURED_THE_DANGLING_CITATIONS_MYSELF_AND_THE_KEY_NUMBER_AGREES: "Re-measured independently with controls rather than relayed. Against the CANONICAL ref I find 8 cited review numbers with no file -- 86, 155, 158, 162, 163, 164, 166, 167 -- and against the working tree 21. THE DIFFERENCE IS 13, exactly the coordinator's figure, and 13 is the number that carries the point: those are reviews that exist at origin and not in the tree, ten of them REV's own recent filings. Controls ran first: REVIEW 206, 221 and 246 are each cited, each have a file at the ref, and none is flagged; a review numbered 999 has no file. So the instrument can both find and fail to find."
   r403_REVIEW_104_EXISTS_AS_104A_AND_104B_which_resolves_9_versus_8: "The one substantive difference between the coordinator's nine and my eight is REVIEW 104, and it is not a missing review. TWO files exist at the canonical ref: REVIEW_104A_E1R_E2R_NOGO_2026-09-07.md and REVIEW_104B_DE136_DE137_SETTLEMENT_2026-09-07.md. My matcher required REVIEW_<digits>_ and so missed the lettered parts; a matcher that found no REVIEW_104_ would call it dangling for the same reason. So BOTH instruments mishandled the same naming variant, in opposite directions -- mine by excluding it from the file set, the coordinator's by flagging it. The count is 8 missing reviews and one split filing."
   r403_THE_CITATION_COUNT_DEPENDS_ON_AN_UNDECLARED_NAMESPACE: "My first pass found 79 cited review numbers where the coordinator found 106, and the reason is not arithmetic. Counting by spelling at the canonical ref: REVIEW n gives 79, REV n gives 146, review n and reviews n give 0, and the union is 174. But most REV n references are DISPATCH NUMBERS -- a seat's nth instruction -- and not filed review documents, so lumping them would manufacture danglers wholesale. THE TWO NAMESPACES SHARE A PREFIX AND NOBODY HAS DECLARED THE DISTINCTION, so any dangling count is a count of one reading of one spelling until it is. And my own 79 was exactly rule 32's failure applied to myself: a search for any one spelling finds a subset."
@@ -28528,6 +28556,42 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r404_THE_FEE_RULING_IS_REVERSED_and_it_goes_in_as_a_REVERSAL:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_onchain_fee_audit__20260905T155346Z.json
+    said: "the audit file p003_da_onchain_fee_audit__20260905T155346Z.json carries the partition in two of its own fields, maker_charged_by_address and maker_charged_address_total_maker_legs; I opened it and computed the partition rather than reading the ruling."
+  r404_I_VERIFIED_THE_PARTITION_MYSELF_AND_IT_IS_TOTAL:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_onchain_fee_audit__20260905T155346Z.json
+    said: "compared maker_charged_by_address against maker_charged_address_total_maker_legs key by key: six addresses, equal in every case, and zero addresses with a mixed record."
+  r404_THE_TIERS_ARE_TWO_AND_NO_ADDRESS_SPANS_THEM:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_onchain_fee_audit__20260905T155346Z.json
+    said: "computed the rate per leg as fee_cents_per_share / (min(p,1-p)*100) and banded them: 7 below 0.25 and 3 at 0.495, with each address confined to one band."
+  r404_THE_250x_DECOMPOSES_AS_5x_TIER_TIMES_50x_PRICE_BASIS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_onchain_fee_audit__20260905T155346Z.json
+    said: "every one of the ten charged legs has price 0.9900 in the file; computed 0.099*0.01*100 = 0.0990 c/share observed against 0.495*0.50*100 = 24.75 c/share and factorised the ratio."
+  r404_THE_GOVERNING_QUESTION_IS_NOT_ANSWERABLE_FROM_THIS_FILE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_onchain_fee_audit__20260905T155346Z.json
+    said: "listed every field whose name contains address or maker: all six concern the charged legs only; searched for any field enumerating zero-fee addresses and found none."
+  r404_AND_THE_LIMITS_BLOCK_SHARPENS_THAT_QUESTION:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_onchain_fee_audit__20260905T155346Z.json
+    said: "read the three-item limits list verbatim from the file: the sample-not-population clause, the leg-role derivation from OrdersMatched.takerOrderMaker, and the statement that the websocket fee_rate_bps field is unpopulated."
+  r404_THE_TAKER_BLOCKER_an_extrapolator_that_fails_where_the_answer_is_certain:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_onchain_fee_audit__20260905T155346Z.json
+    said: "read n_taker_legs 901, n_taker_legs_charged 901, n_taker_charged_matching_formula_to_1e6 110, taker_formula_match_share 0.1220865704772475, and the residual max and p50."
+  r404_A_WITHDRAWAL_RECORDED_AS_A_WITHDRAWAL:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_onchain_fee_audit__20260905T155346Z.json
+    said: "the partition I computed above is what refutes the asymmetry: charging is a property of the account, and both legs of a fill sit with the same account."
+  r404_THE_FOURTH_SUMMARY_INSTEAD_OF_THE_ARTIFACT:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/p003_da_onchain_fee_audit__20260905T155346Z.json
+    said: "the two fields carrying the partition are maker_charged_by_address and maker_charged_address_total_maker_legs, both present in the file the summary was written from."
   r403_I_MEASURED_THE_DANGLING_CITATIONS_MYSELF_AND_THE_KEY_NUMBER_AGREES:
     prov: CHECKED
     artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATION.md
