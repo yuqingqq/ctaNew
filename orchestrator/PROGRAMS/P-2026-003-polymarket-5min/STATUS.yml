@@ -67,6 +67,25 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T02:15:03Z (MEM ROUND 423 -- THE RATIOS RECOMPUTE AND THE ASYMMETRY IS SHARPER THAN STATED:
+  size ratios 1.09 PER CENT APART, time ratios 63.1 PER CENT APART, and projecting the
+  remaining BOOK stage from the three gives 13.0, 8.8 and 5.4 minutes -- A 142 PER CENT
+  RANGE ON THE NUMBER THAT DECIDES THE NIGHT. The keeper: A STABLE RATIO IS NOT A USEFUL
+  RATIO -- the stable one is stable about the wrong quantity. THE APPROXIMATE CAVEAT
+  RESOLVES TO TRUE: 39 commits to the builder since 09-06, one named ACCELERATE DAYBOOK
+  FRAGMENT CHUNKING on 09-10, targeting BY NAME the stage whose time ratio is the
+  outlier -- a testable candidate, not a causal claim. And the mixing is TWO-DIMENSIONAL:
+  days AND generations, with no pairing on disk holding both fixed. THE PEAKS ARE NOT
+  OWED, THEY ARE RECORDED -- ETH fragment 2.09 GiB, ETH tape 5.87 GiB, BTC book 6.82 GiB,
+  all in the launcher's own run records -- and the overlap question they were wanted for
+  is ALREADY DECIDABLE: 91 per cent of the 14.0 GiB slice for tape-beside-book, 81 for
+  two books, BOTH FIT AND NEITHER LEAVES ROOM, and a catch-up alone needs 11.2 GiB. So
+  the scheduling question is about the TIMER CALENDAR, not the coins. The control ran
+  BOOK ONLY, so the shortcut I looked for does not exist -- but the remaining stage is
+  the ONLY one with a same-generation comparator. 7l.5 IS at the ref; 7m.1-7m.4 are NOT
+  and were stated as being landed -- 7m.1 OBSERVED ONE PARAGRAPH AFTER BEING ADOPTED.
+  REV falsified the frame at its author's request, fit rate ZERO, and I WAS A CONSUMER
+  OF THAT FRAME so the narrowing applies to me. Tip b17388a.)
   2026-09-12T01:57:47Z (MEM ROUND 422 -- THE CONTROL RAN AND THE WATCHER'S LAST WORD WAS SPOKEN TWENTY
   SECONDS IN. The quoted triple -- Result success, ExecMainStatus 0, ActiveState active
   -- IS ATTEMPT 42 AT 01:28:58Z WITH SubState RUNNING, and it is the LAST poll in the
@@ -107,6 +126,7 @@ updated: >-
   ITSELF and answers it correctly -- driven: floor 2026-09-08, a bogus ruling commit
   REFUSES rather than falling back -- though its exposure comment says 6 of 12 where the
   count is 12 OF 13. Tip 858eeee.)
+previous_updates: >-
   2026-09-12T01:39:43Z (MEM ROUND 420 -- THE GUARD BUILT TO CONSTRAIN US DID NOT HOLD, AND I DROVE THE
   PROOF RATHER THAN READING IT: SEVEN OF SEVEN ATTACK VECTORS ADMITTED against the
   committed guard, with both falsifier controls refusing -- so it is a guard that CAN
@@ -130,7 +150,6 @@ updated: >-
   counted are always BE's -- THE UNIT THAT YIELDS POLITELY IS THE ONE THAT STARVES --
   and BE 149's drop-in FORECAST tonight's collision in its own comment. My 46-plus is
   superseded by a measured 3,593 s. Tip 42b0dbd.)
-previous_updates: >-
   2026-09-12T01:22:48Z (MEM ROUND 419 -- E MINUS 10 IS NOT THE MARGIN, P(FEWER THAN 10) IS, and I have to
   state my own part: I DID compute and lead with P at 418, AND I carried the margin
   vocabulary beside it all night. I COMPUTED THE DIVERGENCE and it is severe: at 9 of 11
@@ -1035,6 +1054,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r423_7L5_IS_AT_THE_REF_7M_IS_NOT_AND_BOTH_WERE_STATED_CORRECTLY: "Checked with the positive control first, 1 hit in 1,203 lines. 7l.5 and THIRD STATE INHERITS return 1 AT THE REF -- landed, as claimed. 7m.1 through 7m.4 return ZERO at the ref and ONE locally, committed at b17388a -- committed and being landed, as claimed. SO THE TWO CLAIMS WERE DIFFERENTIATED CORRECTLY, WHICH IS 7m.1 BEING OBSERVED ONE PARAGRAPH AFTER BEING ADOPTED. Recorded as the POSITIVE case because I have spent the night recording the failures of this and the same author distinguishing DONE from IN FLIGHT in its own next sentence is the behaviour the rule is for. THE NAMED RISK: a local commit under this fork is exactly the state Q-MEM-338 onward has been in for EIGHTY-FIVE ROUNDS, so 7m needs the 7k publication path or it becomes an adoption that stayed local -- the defect it corrects."
+  r423_THE_RATIOS_RECOMPUTE_AND_THE_ASYMMETRY_IS_SHARPER_THAN_STATED: "Recomputed from the bytes: fragment 364,601,364 over 545,493,868 is 0.6684 and tape 588,868,676 over 890,640,737 is 0.6612 -- THE TWO SIZE RATIOS ARE 1.09 PER CENT APART. The time ratios are 0.2732 and 0.4458 -- SIXTY-THREE PER CENT APART. And the consequence is bigger than the contrast: projecting the remaining BOOK stage from BTC's 19m45s gives 13.0 MINUTES at the size ratio, 8.8 at the tape time ratio and 5.4 at the fragment time ratio -- A 142 PER CENT RANGE ON THE NUMBER THAT DECIDES WHETHER TWO COINS FIT IN A NIGHT. The choice of ratio is the whole answer, which is why refusing to convert volume into runtime was right."
+  r423_A_STABLE_RATIO_IS_NOT_A_USEFUL_RATIO: "The generalisation worth keeping from that arithmetic: THE RATIO THAT IS STABLE IS STABLE ABOUT THE WRONG QUANTITY. Size scales at 0.66 across two stages because bytes are roughly proportional to events; runtime is not, because the stages are bound by different resources -- and a quantity being reproducible tells you it is measuring something real, NEVER that it is measuring the thing you need. A reader who saw only the size column would conclude the scaling question is settled. It is settled for storage and OPEN for time and memory, which are the two that decide the schedule."
+  r423_THE_APPROXIMATE_CAVEAT_RESOLVES_TO_TRUE: "The condition was IF THE BUILDER GENERATION HAS MOVED. IT HAS: be_daybook_build.py carries THIRTY-NINE commits on some ref since 2026-09-06 and be_coin_launcher.py two, both tonight at 01:29. AND ONE OF THE THIRTY-NINE IS NAMED accelerate daybook fragment chunking, landed 2026-09-10T03:43:22Z -- IT TARGETS THE FRAGMENT STAGE BY NAME, AND THE FRAGMENT STAGE IS THE ONE WHOSE TIME RATIO IS THE OUTLIER. I am NOT asserting causation, I have not measured what that commit did. I AM SAYING THE ANOMALY NOW HAS A SPECIFIC, TESTABLE CANDIDATE that is cheaper to check than to argue about, and that if it holds, the time instability is an artifact of comparing ACROSS BUILDER GENERATIONS rather than a property of the coins -- which is a different conclusion with a different remedy."
+  r423_AND_THE_MIXING_IS_TWO_DIMENSIONAL_NOT_ONE: "The comparison mixes DAYS as well as GENERATIONS and only one was named. ETH is 09-05; the fragment and tape comparators are 09-06; tonight's BTC book control is 09-07. Same-day BTC 09-05 books DO exist on disk -- be_daybook_20260905_btc__L250ms at 259,013,815 B built Sep 7 and __EV21 at 295,157,948 B built Sep 9 -- SO THE SAME-DAY COMPARATOR IS AVAILABLE AND IS ITSELF CROSS-GENERATION. There is no pairing on this disk that holds both day and generation fixed, so EVERY ratio is approximate in TWO dimensions, and a receipt quoting one should say which two."
+  r423_THE_PEAKS_ARE_NOT_OWED_THEY_ARE_ALREADY_RECORDED: "Per-stage peaks were described as still owed. THEY ARE IN THE RUN RECORDS THE LAUNCHER ALREADY WRITES: ETH fragment 2,248,228,864 B = 2.09 GiB over 36 samples, ETH tape 6,303,805,440 B = 5.87 GiB over 135 samples, both final_substate EXITED; and BTC's 09-07 book control 7,325,982,720 B = 6.82 GiB over 244. NOBODY NEEDS TO RE-RUN ANYTHING TO HAVE THEM. This is the same shape as last round's completion evidence: the fact was in the record and the question was asked of the wrong surface. THE ETH BOOK STAGE LAUNCHED AT 02:10:44Z AND ITS PEAK WILL APPEAR IN ITS OWN RECORD THE SAME WAY."
+  r423_AND_THE_OVERLAP_QUESTION_IS_ALREADY_DECIDABLE_FROM_THEM: "The question those peaks were wanted for can be answered NOW, against the slice's 15,032,385,536 B = 14.0 GiB. ETH tape at 5.87 GiB beside BTC book at 6.82 is 12.69 GiB = 91 PER CENT OF THE SLICE. Two books, if ETH's scales at the size ratio, is 11.36 GiB = 81 PER CENT. BOTH FIT AND NEITHER LEAVES ROOM FOR ANYTHING ELSE -- and BE 149's catch-up alone needs about 11.2 GiB, so NOTHING HEAVY FITS BESIDE IT. So the honest answer to can the two coins overlap is YES ON MEMORY, ALONE, AND NOT WHILE A CATCH-UP IS DUE, which makes the scheduling question about the TIMER CALENDAR rather than about the coins."
+  r423_MY_CLOCK_AND_THE_DISPATCHS_DIFFER_AND_THE_FINDING_SURVIVES_BOTH: "Measured launch-to-exit from the records I get 189 s for fragment and 686 s for tape, against the dispatch's 200 s and 682 s -- MINE INCLUDE UNIT STARTUP AND THE DISPATCH'S LOOK LIKE THE PAYLOAD'S OWN. The ratios move from 0.273 to 0.258 and from 0.446 to 0.448, SO THE QUALITATIVE FINDING IS UNCHANGED ON EITHER CLOCK. Recorded not as a correction but because a cost parameter that will be quoted for fourteen nights should name WHICH CLOCK IT IS ON, and an eleven-second difference at the fragment stage is 5.5 per cent of that stage."
+  r423_THE_CONTROL_RAN_BOOK_ONLY_SO_THE_SHORTCUT_I_HOPED_FOR_DOES_NOT_EXIST: "I went looking for a free same-generation fragment and tape comparator in tonight's BTC control and THERE ISN'T ONE: its stdout carries stage BOOK only, run from /home/yuqing/ctaNew-wt-fwd, the declared executing build tree. Recorded because a shortcut I looked for and did not find is worth as much to the next reader as one I did. WHAT IT DOES GIVE IS THE ONE THAT MATTERS MOST: the remaining stage, BOOK, now HAS a same-generation BTC comparator at 358,259,004 B in 19m45s -- so of the three stages, the only one still to be measured is the ONLY ONE whose ratio can be computed within a single builder generation."
+  r423_AN_EMPTY_RESULT_THAT_SAYS_WHY_AND_WHOSE_CALL_IT_IS: "A 234-byte ETH artifact landed at 01:58 named EMPTY_SCORE, and it is a model of the form rather than a problem: rows empty, n_windows 0, and a WHY_EMPTY field saying a one-day Gate-1 tape has ONE population, that build_state_tape_v2 maps two inputs onto two splits, and that WHICH SPLIT A DAY BELONGS TO IS DE'S DECLARATION, NOT THIS SEAT'S. That is rule 4 and rule 14 in one small file -- an exclusion carried as a STATUS with its reason, and a boundary named rather than crossed. Recorded as a positive example because the night's findings have all been about absences, and this is what the presence looks like."
+  r423_REV_FALSIFIED_THE_FRAME_AT_ITS_AUTHORS_REQUEST_AND_I_WAS_A_CONSUMER_OF_IT: "The unifying frame was tested against a population it had NOT been primed on and the fit rate was ZERO -- not a refutation but proof the class is far narrower than a night's defect list, and that later findings were being fitted to an earlier frame. The corrected form with its MANDATORY CLASSIFICATION STEP -- third state, false statement, design property, measurement, or reasoning error, each with its own remedy and the frame right only for the first -- is 7l.5 and I confirmed it at the ref. I HAVE TO RECORD MY OWN PART: that frame is one of my durable notes and I have reached for it repeatedly tonight, so the narrowing applies to me too, and the discipline worth copying is the one that produced it -- ASKING FOR THE TEST AGAINST AN UNPRIMED POPULATION, WHICH IS THE ONLY KIND THAT CAN COME BACK ZERO."
   r422_THE_TRIPLE_QUOTED_IS_A_POLL_TAKEN_TWENTY_SECONDS_IN: "I read the record rather than the summary, and the refusal to call this a pass is right for a STRONGER reason than the one given. Result success, ExecMainStatus 0, ActiveState active is ATTEMPT 42, STAMPED 2026-09-12T01:28:58Z -- TWENTY SECONDS AFTER THE PAYLOAD STARTED -- and its SubState is RUNNING. It is also the LAST poll in the file. SO THE WATCHER'S FINAL WORD ON THIS RUN WAS SPOKEN TWENTY SECONDS INTO A NINETEEN-MINUTE RUN. The triple does not merely fail to say BTC came out identical; IT DOES NOT EVEN SAY THE PROCESS FINISHED. For a unit that has just started, systemd's Result and ExecMainStatus are not yet about this run's outcome, and a watcher that stops polling on first success reads a START as a COMPLETION."
   r422_THE_ACTUAL_EVIDENCE_OF_CLEAN_EXIT_IS_ELSEWHERE_IN_THE_RECORD: "The run DID exit cleanly and the evidence is real -- it just is not the watcher's. An exit event at 2026-09-12T01:49:19Z carries rc 0, and a leaf_peak event at 01:49:22Z carries final_substate EXITED over 244 samples at a five-second interval. BOTH COME FROM THE LAUNCHER'S OWN INSTRUMENTATION, NOT FROM systemctl show. So the record contains a trustworthy completion fact and an untrustworthy one side by side, and the difference between them is WHO WROTE IT: the party running the work, sampling while alive, versus the unit manager answering a question about a unit. A RECORD THAT CARRIES BOTH IS BETTER THAN ONE THAT CARRIES ONLY THE RELIABLE ONE, provided a reader knows which is which."
   r422_THE_REFUSAL_COUNT_IS_MEASURED_AT_41_AND_THE_42ND_WON: "The 26-plus I recorded at round 419 and left open is now CLOSED BY COUNT: FORTY-ONE refusals, rc 75 each, from 2026-09-12T00:47:16Z to 01:27:47Z at roughly sixty-one-second spacing, and attempt 42 at 01:28:58Z took the lock. So BE spent FORTY MINUTES AND THIRTY-ONE SECONDS knocking, and the refusal file's rule-20 line -- this unit did NO work and wrote nothing -- is repeated once per attempt. THE POLITE UNIT LOST FORTY-ONE TIMES AND THEN WON ONCE, which is exactly the direction I recorded two rounds ago and now has its count."
@@ -29085,6 +29115,50 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r423_7L5_IS_AT_THE_REF_7M_IS_NOT_AND_BOTH_WERE_STATED_CORRECTLY:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "grep at origin/mm-research returns 0 for each 7m clause and 1 for 7l.5, with the local file returning 1 each and git log showing b17388a."
+  r423_THE_RATIOS_RECOMPUTE_AND_THE_ASYMMETRY_IS_SHARPER_THAN_STATED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be216ctl0907.jsonl
+    said: "arithmetic over the four figures in the dispatch plus BTC's 19m45s book from tonight's control record."
+  r423_A_STABLE_RATIO_IS_NOT_A_USEFUL_RATIO:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be216ctl0907.jsonl
+    said: "the same four figures: 1.09 per cent agreement on size against 63.1 per cent disagreement on time."
+  r423_THE_APPROXIMATE_CAVEAT_RESOLVES_TO_TRUE:
+    prov: CHECKED
+    artifact: live/pm_research/be_daybook_build.py
+    said: "git log --all --since=2026-09-06 returns 39 commits for the builder and 2 for the launcher, one titled accelerate daybook fragment chunking at 2026-09-10T03:43:22Z."
+  r423_AND_THE_MIXING_IS_TWO_DIMENSIONAL_NOT_ONE:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be216ctl0907.jsonl
+    said: "ls of the derived directory returns 09-05 BTC books dated Sep 6, Sep 7 and Sep 9 against the 09-06 comparators and tonight's 09-07 control."
+  r423_THE_PEAKS_ARE_NOT_OWED_THEY_ARE_ALREADY_RECORDED:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be225tape0905eth.jsonl
+    said: "the leaf_peak records in the fragment, tape and control jsonl files carry peak_of_record_bytes, n_samples and final_substate."
+  r423_AND_THE_OVERLAP_QUESTION_IS_ALREADY_DECIDABLE_FROM_THEM:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be216ctl0907.jsonl
+    said: "peak sums against slice_MemoryMax_bytes 15032385536 from the memory_envelope record and the 12 GB catch-up figure in BE 149's drop-in."
+  r423_MY_CLOCK_AND_THE_DISPATCHS_DIFFER_AND_THE_FINDING_SURVIVES_BOTH:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be224frag0905eth.jsonl
+    said: "launch and exit event timestamps in the two ETH run records give 189 s and 686 s."
+  r423_THE_CONTROL_RAN_BOOK_ONLY_SO_THE_SHORTCUT_I_HOPED_FOR_DOES_NOT_EXIST:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/be_heavy_run_record_be216ctl0907.jsonl
+    said: "the control's stdout carries stage book and module_file under wt-fwd, with book bytes 358259004."
+  r423_AN_EMPTY_RESULT_THAT_SAYS_WHY_AND_WHOSE_CALL_IT_IS:
+    prov: CHECKED
+    artifact: data/pm_5min/derived/harmful_exposure_rows_v3_gate1_20260905_eth.EMPTY_SCORE.json
+    said: "the file's WHY_EMPTY field carries the one-population explanation and names R-574 as DE's declaration."
+  r423_REV_FALSIFIED_THE_FRAME_AT_ITS_AUTHORS_REQUEST_AND_I_WAS_A_CONSUMER_OF_IT:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "7l.5 and THIRD STATE INHERITS each return 1 at the canonical ref."
   r422_THE_TRIPLE_QUOTED_IS_A_POLL_TAKEN_TWENTY_SECONDS_IN:
     prov: CHECKED
     artifact: data/pm_5min/derived/be_heavy_run_record_be216ctl0907.jsonl
