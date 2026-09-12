@@ -25,6 +25,12 @@ Usage:  de_fair_value_plumbing_run.py --falsify
 """
 from __future__ import annotations
 
+CALL_SITE = {
+    "kind": "DELIBERATE_INVOCATION",
+    "by": "a person, with --run",
+    "gates": "NOTHING -- a diagnostic that must be invoked. Its day guard protects ITS OWN reads and nothing else, so no declaration may cite it as an enforcement mechanism (REVIEW 265, DE 394).",
+}
+
 import json
 import pickle
 import sys

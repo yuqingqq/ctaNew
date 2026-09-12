@@ -41,6 +41,13 @@ Usage:  de_unit_verdict.py --falsify
 """
 from __future__ import annotations
 
+CALL_SITE = {
+    "kind": "REQUIRED_BUT_ABSENT",
+    "by": "the chain launcher's watcher, which today reads Result and ExecMainStatus directly",
+    "why": "OPEN: this exists to stop a collected failure reading as success, and nothing calls it yet",
+    "gates": "the verdict a watcher draws from a finished unit",
+}
+
 import json
 import subprocess
 import sys

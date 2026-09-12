@@ -25,6 +25,13 @@ Usage:  de_band_decision.py --falsify
 """
 from __future__ import annotations
 
+CALL_SITE = {
+    "kind": "ARTIFACT_MEDIATED",
+    "by": "the decision is read from the artifact this emits",
+    "artifact": "band_decision.json",
+    "gates": "its own emit -- assert_attributed refuses a bare number, so an unattributed rate cannot reach the artifact a person decides from",
+}
+
 import json
 import sys
 from pathlib import Path

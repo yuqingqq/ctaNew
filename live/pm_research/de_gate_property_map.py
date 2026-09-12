@@ -24,6 +24,13 @@ Exit:   0 every property covered, 3 a refusal, 4 a falsifier absent.
 """
 from __future__ import annotations
 
+CALL_SITE = {
+    "kind": "REQUIRED_BUT_ABSENT",
+    "by": "whatever certifies the fair-value gates",
+    "why": "OPEN: it resolves properties to cells and nothing invokes it",
+    "gates": "the claim that each declared gate property has a cell",
+}
+
 import json
 import re
 import subprocess

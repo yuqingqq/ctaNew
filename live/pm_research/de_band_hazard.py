@@ -28,6 +28,12 @@ Usage:  de_band_hazard.py --falsify
 """
 from __future__ import annotations
 
+CALL_SITE = {
+    "kind": "IMPORTED_BY",
+    "by": "de_band_decision.py",
+    "gates": "amendment admissibility, consulted on every emit",
+}
+
 import json
 import sys
 from math import comb
