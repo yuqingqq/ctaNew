@@ -142,6 +142,38 @@ def protected_floor(sources=RULE_SOURCES) -> dict:
             "'bound to an artifact the amender cannot change'. Only the second "
             "is a real fence."),
         "cross_checked_against": sorted(found),
+        "WOULD_A_COMMITTED_PROCEDURE_FILE_HAVE_BEEN_ENOUGH__STATED_CONCLUSION": {
+            "the_question": ("a floor in a committed, reviewed procedure file "
+                             "is meaningfully harder to move than a function "
+                             "argument, and moving it leaves a commit. Is that "
+                             "enough to call it a fence?"),
+            "CONCLUSION": "NO -- it is a DETERRENT AND AN AUDIT TRAIL, NOT A FENCE",
+            "the_reasoning": (
+                "the fence reads the CURRENT file, so an edit takes effect "
+                "IMMEDIATELY and the fence cannot tell that the floor it just "
+                "read is not the floor the USER set. The commit is left behind "
+                "-- but a commit is discovered by a PERSON going to look, "
+                "which is detection after the fact by a human, not prevention "
+                "by the machine. That is the same prose-versus-predicate "
+                "distinction this lane spent the night on: an audit trail is a "
+                "HUMAN COMMITMENT, a refusal is a GUARDED PROPERTY."),
+            "and_the_constrained_party_authors_it": (
+                "DE writes 6 of DE_PROCEDURE.md's 12 commits and DE is a party "
+                "rule 34a constrains. §7l.1's test -- who supplies the input? "
+                "-- answers 'the constrained party', which is the definition "
+                "of not-a-fence."),
+            "why_it_is_MOOT_rather_than_merely_answered": (
+                "the floor now comes from `abd4b07`, an immutable commit "
+                "object. A restatement that drifts from it makes the fence "
+                "REFUSE and report the drift. So the weaker binding is no "
+                "longer load-bearing -- driven with no procedure sources at "
+                "all, the ruling alone still supplies the floor."),
+            "what_the_procedure_files_ARE_good_for": (
+                "detecting drift. If DE edits the restatement away from the "
+                "ruling, the cross-check fires. That is a real use for a "
+                "weaker artifact: not as the source of truth, but as a second "
+                "copy whose disagreement is informative."),
+        },
         "the_WEAK_binding_and_why_it_is_only_a_cross_check": (
             "DE_PROCEDURE.md is authored by DE -- 6 of its 12 commits -- and "
             "DE is a party rule 34a CONSTRAINS. Parsing the floor from there "
@@ -327,6 +359,16 @@ def falsify() -> int:
     ck("§7l.1 the floor is bound to the IMMUTABLE USER RULING, not a restatement",
        fl["floor"] == "2026-09-08" and fl["BINDING"].startswith("THE USER RULING"),
        fl["bound_to"])
+    _w = fl["WOULD_A_COMMITTED_PROCEDURE_FILE_HAVE_BEEN_ENOUGH__STATED_CONCLUSION"]
+    ck("the ownership question has a STATED CONCLUSION, not an assumption",
+       _w["CONCLUSION"].startswith("NO"), _w["CONCLUSION"])
+    ck("...with the reasoning: an audit trail is detection, not prevention",
+       "not prevention" in _w["the_reasoning"]
+       and "HUMAN COMMITMENT" in _w["the_reasoning"])
+    ck("...and it is MOOT because the binding moved to the immutable ruling",
+       "no longer load-bearing" in _w["why_it_is_MOOT_rather_than_merely_answered"])
+    ck("...and the weaker artifact is given the job it IS good for",
+       "detecting drift" in _w["what_the_procedure_files_ARE_good_for"])
     ck("...and the WEAK binding is named as weak, with the reason",
        "DE is a party rule 34a CONSTRAINS"
        in fl["the_WEAK_binding_and_why_it_is_only_a_cross_check"])
