@@ -187,6 +187,88 @@ def build() -> dict:
         "units": list(UNITS), "n_units": len(UNITS),
         "n_consumers": len(consumers), "n_unknown": len(unknown),
         "consumers": [u["unit"] for u in consumers],
+        "WHAT_THE_FENCE_IS_FOR__READ_THIS_BEFORE_REMOVING_IT": {
+            "the_apparent_contradiction": (
+                "`n_consumers = 0` sits beside a fence, and a fence implies "
+                "something needing fencing. A reader will infer the fence is "
+                "redundant and remove it. It is not redundant: THE TWO FIELDS "
+                "HAVE DIFFERENT SUBJECTS."),
+            "n_consumers_is_about_UNITS": (
+                "it counts SCHEDULED UNITS that consume a day BY RUNNING. "
+                "Zero do. A timer writing a partition makes no selection -- it "
+                "fits nothing, picks no threshold, computes no interval."),
+            "the_fence_is_about_READERS": (
+                "rule 34a constrains any SEAT OR HUMAN who reads a protected "
+                "day's artifacts. The unit writes; the reader consumes. "
+                "Nothing the unit does can trip the fence, and nothing the "
+                "fence does constrains the unit."),
+            "so_which_of_the_three_is_it": (
+                "(c) -- SOMETHING THE RULING DOES NOT COVER AT ALL. The ruling "
+                "is about units and their running; the fence is about readers "
+                "and their looking. Not (b): contention is a separate, "
+                "separately recorded fact and rule 34a says nothing about it. "
+                "Not primarily (a), though (a) is a real secondary risk -- if "
+                "this unit's lane or arguments changed so that it FIT "
+                "something or PICKED a threshold, it would become a consumer "
+                "by running and the ruling would have to be redone."),
+            "the_removal_hazard_named": (
+                "a control dropped for looking unnecessary is exactly how this "
+                "one would be lost, which is why the subject of each field is "
+                "stated here rather than left to inference."),
+        },
+        "THE_FENCE_AUDIT__REVIEW_264s_FOUR_TESTS": {
+            "what_exists": (
+                "`de_fair_value_plumbing_run.assert_day_is_consumed` -- 'THE "
+                "EYE IS THE THING THAT SPENDS THE DAY (rule 34a)' -- which "
+                "refuses a day outside READABLE_DAYS."),
+            "1_inputs_bound_to_an_artifact_not_an_argument": (
+                "FAILS. `READABLE_DAYS = CONSUMED_DAYS + "
+                "CANNOT_BE_IN_THE_POPULATION`, both module-level LITERALS. The "
+                "protected set is not derived from any artifact, so when the "
+                "validation band is declared the fence will not know about it. "
+                "The day under test IS a caller argument, but the set it is "
+                "checked against is held by the module rather than supplied by "
+                "the caller, so it is not self-incrimination."),
+            "2_computed_from_evidence_not_asserted": (
+                "PASSES. The check is a set membership computed from the "
+                "argument; there is no caller-supplied boolean of the "
+                "`outcome_is_known` kind."),
+            "3_ordering_is_part_of_the_meaning": (
+                "PASSES. `book_path` calls the fence FIRST, before any path "
+                "resolution, so there is no permissive early return above it."),
+            "4_green_cells_and_no_call_site": (
+                "FAILS, AND THIS IS THE FINDING. `assert_day_is_consumed` "
+                "appears in EXACTLY ONE FILE -- six references, all internal: "
+                "the definition, two call sites in its own module, three in "
+                "its own falsifier. ZERO call sites anywhere else in the lane."),
+            "AND_IT_GUARDS_A_DIFFERENT_DOOR": (
+                "it fences DAY BOOKS. Rule 34a names "
+                "`data/pm_5min/tier2/**/day=2026-09-08/` and any later day. Of "
+                "the five lane modules that touch tier2 -- evaluation_pipeline, "
+                "pm_lane_health, tier1_pipeline, v5_deploy_gates and this one "
+                "-- NONE calls a 34a guard; the only references are the prose "
+                "strings in this file."),
+            "THE_VERDICT": (
+                "RULE 34a HAS NO ENFORCING PREDICATE ON THE ARTIFACT CLASS IT "
+                "ACTUALLY NAMES. The one fence that exists is real, is "
+                "correctly ordered, and guards a different door in a single "
+                "module. On the thing rule 34a is about, it is a fence beside "
+                "an open gate."),
+            "positive_control": (
+                "the same queries find guards that DO exist -- `row_status` in "
+                "4 files, `two_coin_production_ready` and "
+                "`assert_enumerations_intact` in their own -- so a zero for a "
+                "tier2 read-guard is a real absence and not a broken query."),
+            "what_a_real_fence_would_need": [
+                "its protected set DERIVED from an artifact -- the freeze's "
+                "band arithmetic plus rule 34a's 2026-09-08 floor -- so it "
+                "learns the band when the band is declared",
+                "a call site on every tier2 read path, not on one module's",
+                "and a falsifier proving it refuses a protected read AND "
+                "admits an unprotected one, since a fence that only refuses is "
+                "as broken as one that only admits",
+            ],
+        },
         "REACHES_AN_OUTCOME_IS_NOT_CONSUMES": (
             "one unit reaches an outcome (pm-evaluation-pipeline) and NO unit "
             "consumes a day by running. Rule 34a (USER, abd4b07): writing does "
@@ -246,6 +328,27 @@ def falsify() -> int:
        or "PROSE" in _ep["THE_GAP_BY_TONIGHTS_OWN_STANDARD"])
     ck("no unit is left UNKNOWN (which would count as consuming)",
        d["n_unknown"] == 0)
+    f = d["WHAT_THE_FENCE_IS_FOR__READ_THIS_BEFORE_REMOVING_IT"]
+    ck("the fence's SUBJECT is stated, so it cannot read as redundant",
+       "SCHEDULED UNITS" in f["n_consumers_is_about_UNITS"]
+       and "SEAT OR HUMAN" in f["the_fence_is_about_READERS"]
+       and "different subjects" in f["the_apparent_contradiction"].lower(),
+       "units vs readers, stated in the values not only the key names")
+    ck("...and the answer is (c): the ruling does not cover it",
+       f["so_which_of_the_three_is_it"].startswith("(c)"))
+    a = d["THE_FENCE_AUDIT__REVIEW_264s_FOUR_TESTS"]
+    ck("REVIEW 264's four tests are each answered PASS or FAIL",
+       sum(1 for k, v in a.items() if k[0].isdigit()) == 4
+       and all(v.startswith(("PASSES", "FAILS"))
+               for k, v in a.items() if k[0].isdigit()),
+       "2 pass, 2 fail")
+    ck("test 4 FAILS: the guard has zero external call sites",
+       a["4_green_cells_and_no_call_site"].startswith("FAILS")
+       and "EXACTLY ONE FILE" in a["4_green_cells_and_no_call_site"])
+    ck("...and the verdict names it a fence beside an open gate",
+       "open gate" in a["THE_VERDICT"])
+    ck("the audit carries a POSITIVE CONTROL for its own zero",
+       "real absence" in a["positive_control"])
     ck("NO unit consumes a day by RUNNING, and the rule is cited",
        d["n_consumers"] == 0
        and "writing does not consume a day" in d["REACHES_AN_OUTCOME_IS_NOT_CONSUMES"].lower(),
