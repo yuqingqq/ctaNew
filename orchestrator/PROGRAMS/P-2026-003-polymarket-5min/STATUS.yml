@@ -67,6 +67,26 @@ branch: mm-research            # THE V2 LINE IS COMMITTED AND STILL NOT FROZEN -
                                # the USER's session wrote it at 09:57Z, false
                                # from 9b37088 onward.
 updated: >-
+  2026-09-12T01:49:37Z (MEM ROUND 421 -- THE CALL-SITE SWEEP, RE-MEASURED, AND ONE GUARD FOLLOWED TO THE
+  END. Denominators reproduce IN wt-de2: 17 .sh and 11 units EXACT, 345 .py against 344,
+  one file, TIME NOT METHOD. be_reserved_days IS UNSITED AT FUNCTION GRANULARITY -- its
+  module is named by one AUDIT tool, its refusing entry point by NOTHING -- and it is
+  REV's granularity rule's second worked example. AND THE FIELD IT READS IS IN EXACTLY
+  ONE OF 33 PARAMS VERSIONS: v30. v29 and v33, the two LIVE lineages, lack it. The guard
+  was built to refuse exactly that state and HAS NEVER BEEN ASKED. THE MECHANISM IS A
+  VERSION FORK: v31 descends from v29, not v30 -- 13h45m after BE 161 landed 09-07 IS
+  PROTECTED BY ITS NAME NOW, a version was branched from before it, dropping
+  reserved_days, BOTH_TESTS_REQUIRED and the provenance block that would have shown it.
+  BUT 09-07 IS STILL GATED AND I NEARLY REPORTED OTHERWISE: BE established two days ago
+  that run_day's settlement_admissibility declined to value it on 09-08, with evidence.
+  READING THE DECLARATION BEFORE REPORTING STOPPED A FALSE ALARM ON THE MOST LOAD-BEARING
+  DAY IN THE PROGRAMME. NEW FOR 7l.4: WATCHED IS NOT WIRED -- the unnamed-refusal ratchet
+  fired live on this module while nothing called it, so CAN-FIRE, IS-ASKED and IS-WATCHED
+  are THREE properties. My own grep manufactured a false positive within minutes, same
+  substring class as tonight's ETH watch. DA's fence ASKS THE COORDINATOR'S QUESTION
+  ITSELF and answers it correctly -- driven: floor 2026-09-08, a bogus ruling commit
+  REFUSES rather than falling back -- though its exposure comment says 6 of 12 where the
+  count is 12 OF 13. Tip 858eeee.)
   2026-09-12T01:39:43Z (MEM ROUND 420 -- THE GUARD BUILT TO CONSTRAIN US DID NOT HOLD, AND I DROVE THE
   PROOF RATHER THAN READING IT: SEVEN OF SEVEN ATTACK VECTORS ADMITTED against the
   committed guard, with both falsifier controls refusing -- so it is a guard that CAN
@@ -112,6 +132,7 @@ updated: >-
   NON-EXECUTING, so THE PROVENANCE OF ITS FIGURES IS UNNAMED. Not a defect; for BE to
   name. It DOES ship a falsifier in the strong form: the refusal direction is DRIVEN.
   First hard contention number: 46-plus minutes held, 26-plus refusals. Tip 136a440.)
+previous_updates: >-
   2026-09-12T01:17:06Z (MEM ROUND 418 -- A CROSS-SEAT CORRECTION THAT MAY HALVE THE BAND MARGIN, RECORDED AS
   PENDING REV AND NOT AS SETTLED. REV's 90.9 per cent looks like a FILE-PRESENCE measure
   while BE's stage 0 failed 09-11 on INTERIOR WINDOWS -- a DIFFERENT CRITERION -- so
@@ -131,7 +152,6 @@ updated: >-
   CENSUS CARRIES TWO FAILURES I STATE: my symbol filter kept unsymboled records so the
   counts are an upper bound, and my duration key missed entirely so I QUOTE NO SECONDS.
   Tip 7f0e74b.)
-previous_updates: >-
   2026-09-12T01:11:55Z (MEM ROUND 417 -- AN EXCEPTION LOG IS SILENT EXACTLY WHEN THINGS ARE HEALTHY, which
   is the general form of the sentence I reached at 416 and subsumes it. BOTH PROPOSED
   FIXES WERE ALSO WRONG: max(recv_ns) is only LESS BAD, and both fail in the limit of a
@@ -995,6 +1015,17 @@ previous_updates: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  r421_I_REPRODUCED_THE_SWEEPS_DENOMINATORS_AND_THEY_LAND_IN_WT_DE2: "Measured rather than accepted, and the denominators reproduce IN wt-de2 and NOT in the shared tree: 17 lane .sh files EXACT, 11 systemd user units EXACT under the pm-star filter, and 345 .py against REV's 344 -- ONE FILE, with no __init__.py to explain it, so the difference is TIME AND NOT METHOD. That is the same as-of discipline I recorded an hour ago about a working-tree status, now applied to a module count: A SWEPT POPULATION GROWS WHILE YOU SWEEP IT. Recorded so the next reader of the 15 does not diff it against the shared tree, find a different universe, and conclude the sweep was wrong."
+  r421_BE_RESERVED_DAYS_IS_UNSITED_AT_FUNCTION_GRANULARITY: "The module the coordinator prioritised ON ITS NAME, checked with the three negative tests at FUNCTION granularity: the module name appears in exactly ONE other lane .py -- p003_refusal_exercise_check.py, an AUDIT tool -- and its refusing entry point assert_not_reserved appears in ZERO other .py, ZERO .sh and ZERO systemd units. My positive control fires (evaluation_pipeline: 3 py, 2 systemd), so the zeros are real absences. AND THIS IS THE CASE REV BUILT THE GRANULARITY RULE FOR: at module granularity it would have scored as SITED, because something does name the module -- just not the function that refuses."
+  r421_AND_THE_FIELD_IT_READS_IS_ABSENT_FROM_EVERY_LIVE_PARAMS_VERSION: "I checked all 33 params versions on disk. reserved_days appears in EXACTLY ONE: v30, carrying 2026-09-07. It is ABSENT from v29 and from v31, v32 and v33 -- AND v29 AND v33 ARE THE TWO LIVE LINEAGES. So the guard reads a field no live params version carries, and the guard's own second refusal is RESERVED_DAYS_FIELD_ABSENT_NO_VERDICT_POSSIBLE: IT WAS BUILT TO REFUSE EXACTLY THE STATE THE PARAMS ARE NOW IN, AND IT HAS NEVER BEEN ASKED. A guard that would refuse, in a world where nothing calls it, is indistinguishable from a guard that passes."
+  r421_THE_PROTECTION_REGRESSED_THROUGH_A_VERSION_FORK: "The mechanism, measured: v31 is a descendant of v29, NOT of v30. Symmetric key-difference v31 to v29 is 11 and v31 to v30 is 24, and v29 has ZERO keys v31 lacks while v30 has eight v31 lacks -- including settlement_endpoint.BOTH_TESTS_REQUIRED and the whole _v30_change provenance block. So BE 161's landing at 933b267, 2026-09-10T19:00:04Z, titled 09-07 IS PROTECTED BY ITS NAME NOW, was superseded 13 HOURS 45 MINUTES LATER by 7efea16 branching from the wrong parent. NOBODY REMOVED THE PROTECTION; A VERSION WAS FORKED FROM BEFORE IT, which is the quietest way a remediation dies."
+  r421_BUT_09_07_IS_STILL_GATED_AND_I_NEARLY_REPORTED_OTHERWISE: "I was one step from filing that 09-07's protection now rests on convention. IT DOES NOT, AND BE HAD ALREADY ESTABLISHED WHY two days ago: the day is gated by de_multiday_gate1_runner.settlement_admissibility ON THE run_day PATH, with EVIDENCE -- a real day run on 2026-09-08T12:26:17Z produced NOT_VALUED_DAY_NOT_ADMISSIBLE for both arms. BE's own words: 09-07 is genuinely reserved, not lucky. READING THE DECLARATION BEFORE REPORTING IS WHAT STOPPED A FALSE ALARM ABOUT THE MOST LOAD-BEARING DAY IN THE PROGRAMME. The exposure BE named is narrower and still open: a caller invoking the estimator DIRECTLY meets a backstop reachable only from selftest."
+  r421_BE_PREDICTED_THE_SHAPE_AND_IT_ARRIVED_THROUGH_A_DIFFERENT_DOOR: "BE's finding predicted the failure in terms: the switch is an ABSENCE, robust today and SILENTLY REVERSIBLE, and NO DIFF WOULD MENTION 09-07. That is exactly what happened -- no diff of v31 mentions 09-07 -- BUT NOT THROUGH THE DOOR BE WATCHED. BE expected admissible_days to be set for an unrelated reason; instead a params version was forked from a parent that predated the fix. THE PREDICTION WAS RIGHT ABOUT THE SHAPE AND WRONG ABOUT THE MECHANISM, WHICH IS THE ORDINARY CASE AND THE REASON A PREDICTED HAZARD STILL NEEDS AN INSTRUMENT: BE named the risk precisely and then built the guard that would have caught it, and the guard was never put on a path."
+  r421_WATCHED_IS_NOT_WIRED_AND_IT_IS_A_THIRD_INDEPENDENT_PROPERTY: "A finding for 7l.4 that the two-property framing does not cover. The unnamed-refusal ratchet FIRED LIVE on this very module -- be_reserved_days.py 0 to 1, recorded as FIRST LIVE FIRING, on new code, unprompted, hours after it was built. So the module is UNDER ACTIVE SURVEILLANCE BY AN AUDITOR AND CALLED BY NOTHING. CAN-FIRE, IS-ASKED and IS-WATCHED are THREE independent properties, and the third is the one most easily mistaken for the second, because an auditor reporting on a module looks exactly like a module being used. Every audit hit in a call-site sweep must be classified as surveillance, not wiring."
+  r421_AND_MY_OWN_GREP_MANUFACTURED_A_FALSE_POSITIVE_WITHIN_MINUTES: "Searching for callers I matched the substring admissibility-open-paren and got three hits, one of them be_offpath_guards -- itself an intersection module, so the coincidence LOOKED like a finding. ALL THREE ARE settlement_admissibility OR target_admissibility, DIFFERENT FUNCTIONS, AND NONE IMPORTS THE GUARD. Caught by checking the import rather than the name. THIS IS THE SAME CLASS AS TONIGHT'S ETH-SUBSTRING FAILURE, IN MY OWN HANDS, MINUTES AFTER RECORDING THEIRS -- an unanchored substring plus a plausible story is the cheapest way to manufacture a finding, and the check that kills it is always the same: match IDENTITY, not vocabulary."
+  r421_DAS_FENCE_ASKS_THE_COORDINATORS_QUESTION_ITSELF_AND_ANSWERS_IT_CORRECTLY: "The follow-up WHO CAN EDIT THOSE FILES is already inside the instrument: the fence's own header says the procedure documents are ones this seat does not author and then says ASK WHO SUPPLIES. Its answer is structural, and I DROVE IT: the floor is read from the USER ruling commit abd4b07 as the authority and CROSS-CHECKED against the procedures; protected_floor returns 2026-09-08; pointing RULING_COMMIT at a bogus hash REFUSES with RULE_34A_FLOOR_NOT_PARSEABLE and the words THIS FENCE WILL NOT FALL BACK TO A RESTATEMENT A CONSTRAINED PARTY CAN EDIT. SO THE PROCEDURES ARE A CROSS-CHECK AND THE USER COMMIT IS THE BINDING -- which is the distinction the coordinator's question was reaching for, implemented before it was asked, with the no-silent-None discipline I have been pressing for all night."
+  r421_AND_THE_FENCES_OWN_EXPOSURE_COMMENT_UNDERSTATES_ITSELF_BY_HALF: "The one correction: the fence's comment says DE authors DE_PROCEDURE.md, 6 OF ITS 12 COMMITS. I counted 13 commits, of which 6 begin DE-space, 4 begin Q-DE-dash, and of the remaining three TWO ARE ALSO DE'S -- one titled DE 164's four lessons and one written at the DE seat reset. SO IT IS 12 OF 13, NOT 6 OF 12. ONE SPELLING FOUND A SUBSET, rule 32, in a comment whose whole purpose is to size an exposure. The fence is UNAFFECTED because it never trusts the restatement alone -- but the comment makes the procedures look half-independent when they are barely independent at all, and a reader deciding how much weight to put on the cross-check would be misled by it."
+  r421_7L4_VERIFIED_AT_THE_CANONICAL_REF_WITH_ITS_FIGURES: "Read at the ref, not the report: 7l.4 is landed with the table carrying 344 modules, 53 with a falsifier and 15 with no production call site, the three negative tests spelled out, the discriminator as the product of RAISES A NAMED REFUSAL and CITED AS AN ENFORCEMENT MECHANISM, and REV's own false positive named in-band. The clause I most want kept is the one about granularity, because THE DEFECT THAT INSPIRED THE SWEEP WOULD NOT HAVE BEEN CAUGHT BY THE SWEEP AT MODULE GRANULARITY -- and be_reserved_days is now the second instance of exactly that, which turns one worked example into a population."
   r420_I_DROVE_ALL_SEVEN_ATTACK_VECTORS_AND_ALL_SEVEN_ARE_ADMITTED: "I did not read REVIEW 264's attacks, I RAN them against the committed guard at 00ce098, in my scratchpad with imports resolved read-only from wt-de2. SEVEN OF SEVEN ADMITTED: backdate to 2020-01-01; caller-supplied clock of 2027-01-01; outcome_is_known omitted; a minus-05:00 rendering four hours AFTER the clock start; plus-00:00 against Z at the IDENTICAL instant; and two ADDED levers -- one with the key omitted, one with it False -- both admitted WITH outcome_is_known TRUE, each returning the words not an amendment requiring pre-declaration. AND THE FALSIFIER FIRES: an unknown lever refuses with UNKNOWN_LEVER and a genuinely-late declaration with the outcome known refuses with AMENDMENT_CHOSEN_AFTER_THE_CLOCK_STARTED. SO THE SEVEN ADMISSIONS ARE A GUARD THAT CAN REFUSE CHOOSING NOT TO, which is the only version of this finding worth having."
   r420_THE_LEXICOGRAPHIC_COMPARISON_SHOWN_DIRECTLY: "The comparison was declared_utc >= clock_start_utc ON STRINGS. Driven: 2026-09-13T23:00:00-05:00 >= 2026-09-14T00:00:00Z evaluates FALSE although it is FOUR HOURS LATER, and 2026-09-14T00:00:00+00:00 >= 2026-09-14T00:00:00Z evaluates FALSE at the SAME INSTANT because the plus sign sorts below Z. THE SECOND ONE FIRES BY ACCIDENT -- no bad faith, no attacker, just a different renderer -- WHICH MAKES IT THE MORE DANGEROUS OF THE PAIR: an exploit needs someone to try it, a coincidence only needs time."
   r420_AND_THE_FIXES_ARE_LANDED_I_DROVE_THOSE_TOO: "All six code fixes are on BOTH executing refs (origin/de-freeze-chain-v2, origin/be-build-runner) and I drove them: attacks 1, 2 and 3 are now UNAVAILABLE BY CONSTRUCTION -- passing declared_utc, clock_start_utc or outcome_is_known raises TypeError because THE PARAMETERS NO LONGER EXIST, which is the strongest form of a fix and the same by-construction proof I used at round 415 on the scorer's positional outcomes. Attack 5 is refused TWICE OVER: the lever-set digest fires LEVER_SET_MOVED_SINCE_THE_PIN before the missing-key check is even reached, so two independent barriers now stand where a permissive default stood. The reorder is in place: outcome_is_known is COMPUTED and checked BEFORE the lever flag."
@@ -29023,6 +29054,50 @@ focus: >
 # RELAYED is, and kept distinct only so the unassessed backlog stays countable.
 # Absence of an entry is the honest default and is NEVER a pass.
 flag_provenance:
+  r421_I_REPRODUCED_THE_SWEEPS_DENOMINATORS_AND_THEY_LAND_IN_WT_DE2:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "find and ls counts in wt-de2 return 17 .sh, 11 pm-star units and 345 .py; the shared tree returns 14, 20 and 320."
+  r421_BE_RESERVED_DAYS_IS_UNSITED_AT_FUNCTION_GRANULARITY:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/be_reserved_days.py
+    said: "grep across wt-de2 returns one non-self .py naming the module and none naming assert_not_reserved, with a control returning 3 and 2 for a wired module."
+  r421_AND_THE_FIELD_IT_READS_IS_ABSENT_FROM_EVERY_LIVE_PARAMS_VERSION:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/de_multiday_gate1_params_v30.json
+    said: "a walk over all 33 de_multiday_gate1_params_v*.json returns reserved_days only in v30."
+  r421_THE_PROTECTION_REGRESSED_THROUGH_A_VERSION_FORK:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/de_multiday_gate1_params_v30.json
+    said: "key-set comparison across v29, v30 and v31 plus the two commit timestamps from git log."
+  r421_BUT_09_07_IS_STILL_GATED_AND_I_NEARLY_REPORTED_OTHERWISE:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/be_0907_reservation_finding_v1.json
+    said: "the declaration carries the run timestamp, the refusal name SETTLEMENT_DAY_NOT_ADMISSIBLE and both_arms true."
+  r421_BE_PREDICTED_THE_SHAPE_AND_IT_ARRIVED_THROUGH_A_DIFFERENT_DOOR:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/be_0907_reservation_finding_v1.json
+    said: "the declaration's THE_SWITCH_IS_AN_ABSENCE.consequence states the no-diff-would-mention prediction verbatim."
+  r421_WATCHED_IS_NOT_WIRED_AND_IT_IS_A_THIRD_INDEPENDENT_PROPERTY:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/declarations/p003_unnamed_refusal_baseline_v1.json
+    said: "the baseline declaration records the ratchet firing on be_reserved_days.py 0 to 1 while my three negative tests return zero callers."
+  r421_AND_MY_OWN_GREP_MANUFACTURED_A_FALSE_POSITIVE_WITHIN_MINUTES:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/be_reserved_days.py
+    said: "grep for the substring returns three files defining settlement_admissibility or target_admissibility, none of which imports be_reserved_days."
+  r421_DAS_FENCE_ASKS_THE_COORDINATORS_QUESTION_ITSELF_AND_ANSWERS_IT_CORRECTLY:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/da_rule34a_fence.py
+    said: "driven: protected_floor returned 2026-09-08, a bogus ruling commit raised Rule34aRefused, and is_protected returned True for 09-09 and False for 08-30."
+  r421_AND_THE_FENCES_OWN_EXPOSURE_COMMENT_UNDERSTATES_ITSELF_BY_HALF:
+    prov: CHECKED
+    artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/da_rule34a_fence.py
+    said: "git log over DE_PROCEDURE.md returns 13 commits, 6 matching caret-DE-space and 4 matching caret-Q-DE-dash, with two of the remaining three naming DE in their subject."
+  r421_7L4_VERIFIED_AT_THE_CANONICAL_REF_WITH_ITS_FIGURES:
+    prov: CHECKED
+    artifact: orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/COORDINATOR_RUNBOOK.md
+    said: "the section at the canonical ref carries all three figures and the three negative tests verbatim."
   r420_I_DROVE_ALL_SEVEN_ATTACK_VECTORS_AND_ALL_SEVEN_ARE_ADMITTED:
     prov: CHECKED
     artifact: /home/yuqing/ctaNew-wt-de2/live/pm_research/de_band_hazard.py
