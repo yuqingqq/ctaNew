@@ -1,0 +1,370 @@
+{
+ "protocol": "P003_DA_MARKET_FACTS_V1",
+ "dispatch": "DA 283, ruled at DA 287",
+ "maker_fee_bps": null,
+ "maker_fee_rule": null,
+ "maker_fee_residual": {
+  "n_charged": 10,
+  "n_maker_legs": 1056,
+  "share": 0.00946969696969697,
+  "all_at_price": 0.99,
+  "implied_rate_median": 0.099,
+  "reconciles_to": "maker_base_fee = 1000 read as BASIS POINTS: fee = 0.10 x size x min(p, 1-p)",
+  "trigger": "IDENTIFIED as an ACCOUNT ATTRIBUTE (DA 288 / REVIEW 249): six accounts charged on 100% of their legs, none mixed. My DA 286 'UNIDENTIFIED' was wrong -- I split by price and by block and never by account.",
+  "THE_DISCRIMINATING_FACT": "25 maker BUY legs at the SAME price 0.9900, interleaved across the SAME block buckets, paid ZERO. This is what makes price-alone insufficient as an explanation, and it is what a later reader needs in order to re-open this question.",
+  "what_would_settle_it": "the published CLOB fee schedule for these condition ids with an effective date; no collector captures it",
+  "hypotheses_refuted_by_driving": {
+   "hypothesis_1_parsing_edge_in_my_own_audit": "REFUTED",
+   "hypothesis_2_not_our_markets": "REFUTED",
+   "hypothesis_3_extreme_price": "REFUTED as a sufficient cause"
+  },
+  "THE_UNKNOWN_CARRIES_ITS_OWN_WEIGHT": "DA 287 requires a \u00a79 fee SENSITIVITY, owned by DE: re-run the economic verdict with EVERY maker fill charged at 10% of size x min(p, 1-p) -- the worst case consistent with what was measured. If the verdict does not flip, this residual is immaterial AS A COMPUTED STATEMENT rather than a hope. If it flips, the economic gate cannot be settled on collected data and must say exactly that. Either way nobody has to trust the zero."
+ },
+ "maker_fee_account_partition": {
+  "finding": "REVIEW 249, verified here from the audit's own two fields",
+  "the_trigger_is_NOT_unidentified": "charged-ness PARTITIONS BY ACCOUNT, totally. Six maker addresses are each charged on 100% of their maker legs, and the number of addresses holding BOTH a charged and a zero maker leg is ZERO.",
+  "charged_class": {
+   "0x0fd0ebb1ba": "1/1",
+   "0x18b0b71054": "1/1",
+   "0x2277c18fb7": "3/3",
+   "0x8d009282a7": "1/1",
+   "0xb3b0780f28": "2/2",
+   "0xbdf221228d": "2/2"
+  },
+  "HOW_THE_CLASSES_WERE_ENUMERATED": "the audit SUMMARY enumerates only the CHARGED side -- `maker_charged_by_address` and its companion hold the same six addresses, and there is no listing of the 1,046 zero-fee legs by address. The 218 below were decoded from the 901 RECEIPTS directly, OrderFilled by OrderFilled, not read off the summary.",
+  "n_distinct_maker_addresses": 218,
+  "n_in_the_charged_class": 6,
+  "n_in_the_zero_class": 212,
+  "why_the_25_zero_legs_at_0.99_paid_nothing": "they belong to accounts in the OTHER CLASS. My DA 286 chase treated that as evidence the trigger was unidentifiable; it was evidence the trigger is not PRICE. The partition was visible in two fields of a file I already held, and I did not split by account.",
+  "THE_SAMPLE_LIMIT_THAT_BOUNDS_EVERY_INFERENCE_HERE": "the audit's own limits: 'the 901 receipts are a SAMPLE of our own recorded trades, not a population; incidence here bounds observed volume only.' SO AN ABSENCE FROM THE CHARGED SET IS NOT EVIDENCE OF MEMBERSHIP IN THE ZERO CLASS. That is precisely the inference a qualified zero would have rested on, and it does not hold: 6 of 218 observed accounts are charged, and the next receipt could carry a seventh.",
+  "OUR_OWN_ADDRESS": {
+   "question": "is our maker address in this corpus, and which class?",
+   "answer": "WE HAVE NO MAKER ADDRESS. Neither this lane nor any module in it declares an executing or maker account; every 0x constant in the lane is protocol infrastructure (the exchange, USDC, event topics, the rewards asset). The programme is research-only -- 'No live trading, no exchange integrations' -- so no order of ours has ever rested on this book.",
+   "therefore": "all 218 maker addresses are third parties, and the 1,046 zero-fee legs are OTHER PEOPLE'S ACCOUNTS. We have NO observation of our own treatment, and cannot have one from collected data: the observation does not exist yet rather than being missing from what we gathered.",
+   "so_the_receipt_must_say": "the fee applicable to US is UNOBSERVED BY CONSTRUCTION. A zero taken from other accounts' fills is not our fee; 6 of 218 observed accounts (2.8%) are in a charged class, and nothing determines which class an account of ours would join."
+  }
+ },
+ "maker_fee_negative_declaration": {
+  "status": "FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_DATA",
+  "claim": "the maker fee applicable to US cannot be established from any artifact this programme collects. This is a RESOLVED question with a negative answer, not an unexamined one.",
+  "the_strands": {
+   "0_account_level_incidence": "6 of 218 distinct maker addresses are in the charged class -- 2.75%. That is the rate at which an ACCOUNT is charged, and it is the number that matters, because charged-ness is an account attribute and not a per-fill event. Our own class is UNOBSERVED and unobservable from this corpus.",
+   "1_account_partition_is_total": "six maker addresses are charged on 100% of their legs and none is mixed; charged-ness is an ACCOUNT attribute",
+   "2_the_RATE_is_an_account_attribute_too": "each charged address carries exactly ONE rate tier -- four at ~0.099 and two at 0.495, never both. So the fee is not a market parameter that could be read off the market; it is a property of the counterparty",
+   "3_the_venue_field_is_populated_but_non_discriminating": "`fee_rate_bps` is present on every trade event and reads zero for ALL SIX charged accounts. It cannot separate the charged from the uncharged, so it cannot be the rule",
+   "4_the_corpus_is_a_sample_not_a_population": "the audit's own limit: 901 receipts bound observed volume only. An absence from the charged set is not membership in the zero class",
+   "5_no_validated_fee_model_exists": "the formula reproduces 110 of 901 taker legs to 1e-6 (12.21%) where the schedule is FULLY observable, with a maximum residual of 0.51 USDC"
+  },
+  "n_maker_addresses_total": 218,
+  "n_maker_addresses_charged": 6,
+  "account_level_incidence": 0.0275,
+  "our_class": "UNOBSERVED -- and unobservable from this corpus",
+  "and_the_decisive_one": "WE HAVE NO MAKER ADDRESS. The programme is research-only and has never rested an order on this book, so our own treatment is not merely unobserved -- it does not yet exist to observe. No amount of further collection closes that; only trading does.",
+  "REVIEW_256_SENTENCE_TRANSCRIBED": "`fee_rate_bps` HAS NEVER BEEN OBSERVED ON A CHARGED FILL. The field is populated and constant -- REVIEW 256 measures it at 1,881,868 of 1,881,868 trade events carrying the same value -- and every fill the chain actually charged sits OUTSIDE that set, because the charged fills are identified on chain by the OrderFilled fee word and never by this field. A constant observed only where the answer is always the same is not evidence about the case where it differs. The positive controls are what make that statement safe to make rather than merely plausible: the extractor was shown to separate a large value from a tiny one before it was pointed at the question.",
+  "REVIEW_256_COUNTS_ARE_REVS_MEASUREMENT": "the 1,881,868 constancy and the control counts are REVIEW 256's, transcribed here rather than re-derived. DA's own independent sweep found the same constancy over a smaller window: 76,617 of 76,617 trade events across 8 UTC days.",
+  "what_would_change_it": [
+   "the published CLOB fee schedule for these condition ids with an effective date, which no collector captures",
+   "or an executing account of our own with observed fills"
+  ]
+ },
+ "sensitivity_rate_worst_observed": 0.495,
+ "sensitivity_rate_modal": 0.099,
+ "sensitivity_price_basis": "min_p_at_each_fill_own_price",
+ "sensitivity_basis_note": "rate = fee / (size x min(p, 1-p)) evaluated at EACH FILL'S OWN price, never at a portfolio or day average -- min(p, 1-p) is convex in p and an average price understates the charge at the extremes where every observed charge actually fell. The two tiers are per-address and disjoint: 0.0989/0.0990 on four addresses, 0.4950 on two, one tier per address with no address in both.",
+ "sensitivity_tiers_by_address": {
+  "0x0fd0ebb1ba": 0.495,
+  "0x18b0b71054": 0.0989,
+  "0x2277c18fb7": 0.099,
+  "0x8d009282a7": 0.0989,
+  "0xb3b0780f28": 0.099,
+  "0xbdf221228d": 0.495
+ },
+ "dispatch_note": "DA 287 ruled ADOPT the qualified zero; DA 288 REVERSED it on REVIEW 249's account partition, before it landed.",
+ "legal_tick": 0.01,
+ "legal_tick_units": "USDC per share of a binary outcome token",
+ "legal_tick_consumer": "de_fair_value_policy_seam.legal_tick() reads this key as a number; the evidence is under `legal_tick_evidence`",
+ "legal_tick_evidence": {
+  "legal_tick": "0.01",
+  "established": true,
+  "declared_instrument": {
+   "field": "markets.jsonl:orderPriceMinTickSize",
+   "n_records": 47322,
+   "n_without_the_field": 44,
+   "distinct_values": [
+    "0.01"
+   ],
+   "uniform_across_all_coins": true,
+   "by_coin": {
+    "bnb": {
+     "0.01": 6753
+    },
+    "btc": {
+     "0.01": 6755
+    },
+    "doge": {
+     "0.01": 6752
+    },
+    "eth": {
+     "0.01": 6755
+    },
+    "hype": {
+     "0.01": 6753
+    },
+    "sol": {
+     "0.01": 6755
+    },
+    "xrp": {
+     "0.01": 6755
+    }
+   },
+   "by_month": {
+    "2026-08": {
+     "0.01": 24872
+    },
+    "2026-09": {
+     "0.01": 22406
+    }
+   },
+   "uniform_across_the_windows_life": true,
+   "scope_coins_present": true
+  },
+  "observed_instrument": {
+   "source": "data/pm_5min/raw/<day>/<coin>-updown-5m-*.jsonl.gz",
+   "days": [
+    "20260906",
+    "20260907",
+    "20260908"
+   ],
+   "coins": [
+    "btc",
+    "eth"
+   ],
+   "n_files": 24,
+   "n_price_levels": 4171076,
+   "decimal_places_observed": {
+    "1": 379442,
+    "2": 3791292,
+    "3": 342
+   },
+   "n_levels_not_a_multiple_of_0.01": 342,
+   "share_not_a_multiple": 8.199323148271573e-05,
+   "sub_tick_values": {
+    "0.001": 45,
+    "0.002": 12,
+    "0.003": 9,
+    "0.004": 10,
+    "0.005": 14,
+    "0.006": 1,
+    "0.007": 7,
+    "0.008": 7,
+    "0.009": 25,
+    "0.024": 2,
+    "0.025": 4,
+    "0.026": 8,
+    "0.032": 5,
+    "0.057": 2,
+    "0.059": 3,
+    "0.079": 3,
+    "0.109": 3,
+    "0.159": 3,
+    "0.201": 3,
+    "0.226": 1,
+    "0.227": 2,
+    "0.237": 1,
+    "0.238": 1,
+    "0.762": 1,
+    "0.763": 1,
+    "0.773": 2,
+    "0.774": 1,
+    "0.799": 3,
+    "0.841": 3,
+    "0.891": 3,
+    "0.921": 3,
+    "0.941": 3,
+    "0.943": 2,
+    "0.968": 5,
+    "0.974": 8,
+    "0.975": 4,
+    "0.976": 2,
+    "0.991": 25,
+    "0.992": 7,
+    "0.993": 7,
+    "0.994": 1,
+    "0.995": 14,
+    "0.996": 10,
+    "0.997": 9,
+    "0.998": 12,
+    "0.999": 45
+   },
+   "n_windows_with_sub_tick_levels": 8,
+   "windows_sampled": 24,
+   "every_level_is_a_multiple_of_0.01": false
+  },
+  "instruments_agree": false,
+  "THE_SUB_TICK_PRICES_ARE_EXPLAINED": {
+   "cause": "the VENUE NARROWS THE GRID IN-WINDOW, and the tape says so",
+   "tick_size_change_events": {
+    "0.01->0.001": 284
+   },
+   "n_changes_observed": 284,
+   "reading": "every observed change is 0.01 -> 0.001. So the 0.001 levels are not a violation of the declared tick: they are the tick AFTER a `tick_size_change` event the market published. `orderPriceMinTickSize` is the tick at market creation, not for the window's life -- which is exactly the question DA 283 asked and answered too narrowly from the market record alone.",
+   "consequence_for_the_freeze": "rounding to 0.01 stays LEGAL at all times, because 0.01 is a multiple of 0.001. It is not always the FINEST legal grid, so a quote on it can be improvable after a narrowing event."
+  },
+  "THE_CAVEAT_IS_MEASURED": "every market record declares 0.01, uniformly across all coins and both months. The BOOK does not match it exactly: 342 of 4171076 resting levels (0.0082%) sit at 0.001 granularity, in 8 of 24 sampled windows -- and those windows declare 0.01 too. So the tick is the right ROUNDING grid and is NOT a guarantee that no finer price rests on the book.",
+  "what_may_be_frozen_on_this": "bid rounds DOWN and ask rounds UP to 0.01. A quote on that grid is legal; it is not necessarily the best price available.",
+  "uniform_across_btc_and_eth": true,
+  "uniform_across_the_windows_life": true
+ },
+ "maker_fee_rule_evidence": {
+  "established": false,
+  "status": "MAKER_FEE_RULE_NOT_ESTABLISHED__VENUE_ZERO_IS_NON_DISCRIMINATING",
+  "fee_rule": null,
+  "NO_FEE_RULE_APPLICABLE_TO_US_EXISTS": "a venue-side observation DOES exist and is populated, but it is non-discriminating: it reports zero for accounts the chain charged. The only source that reflects what was actually charged is the on-chain OrderFilled fee word, and that records OTHER PEOPLE'S accounts -- we have no maker address. So \u00a79's supporting rule for a zero applicable to US does not exist.",
+  "THE_SUPPORTING_RULE_SECTION_9_ASKS_FOR_DOES_NOT_EXIST": "WITHDRAWN. It read: the venue's own `fee_rate_bps` field, carried on every trade event in the CLOB tape and equal to 0 on 75160 observed trades across 8 days, BTC and ETH. That is a market rule stated by the market, not an assumption.",
+  "THE_RESIDUAL_THAT_STOPS_IT_BEING_FINAL": "10 of 1056 maker legs in the SAME markets carry a non-zero on-chain fee, all at price 0.99, in 5 transactions. 0 bps on the tape and a charge on chain cannot both be the whole story, and no collected source explains the difference. Until it is reconciled a zero fee is SUPPORTED but not SETTLED, so this module still supplies no number for \u00a79.",
+  "per_source": [
+   {
+    "source": "markets.jsonl",
+    "searched": "all top-level keys, the `clob` subobject, and the rules text (description/question/outcomes)",
+    "n_records": 47322,
+    "fee_fields_found": {
+     "maker_base_fee": {
+      "1000": 47262
+     },
+     "taker_base_fee": {
+      "1000": 47262
+     }
+    },
+    "rules_text_fee_language": "NONE",
+    "establishes": "a per-market fee SCHEDULE field: maker_base_fee and taker_base_fee, uniform across every record",
+    "does_not_establish": "the UNITS of that field, nor the rate actually applied to a fill"
+   },
+   {
+    "source": "rewards_registry.jsonl",
+    "searched": "every field",
+    "fields": [
+     "n",
+     "recv_ns"
+    ],
+    "establishes": "NOTHING about fees",
+    "does_not_establish": "it is collected as a COUNT -- recv_ns and n -- so the registry's contents were never captured"
+   },
+   {
+    "source": "the CLOB tape (data/pm_5min/raw/<day>/<slug>.jsonl.gz)",
+    "searched": "every payload field on every message in the sample",
+    "n_files": 96,
+    "n_messages": 6135485,
+    "n_trade_events": 75160,
+    "fee_rate_bps_distribution": {
+     "0": 75160
+    },
+    "fee_rate_bps_dtype": "str (the literal '0'), never numeric",
+    "fee_rate_bps_present_on": "last_trade_price events only",
+    "establishes": "that the venue REPORTS a constant zero. The field is POPULATED -- it is an observation of what the venue says, and it is not a placeholder.",
+    "CORRECTION_HISTORY_DA_286_TO_DA_290": "DA 286 reported `fee_rate_bps = 0` on every observed trade as the venue's own per-trade fee rate. DA 289 doubted it, on the strength of this programme's own on-chain audit whose `limits` said the field 'is unpopulated'. DA 290 settled it AT THE RAW TAPE: the field is PRESENT in 10,392 of 10,392 last_trade_price events across 25 raw files and 76,617 of 76,617 in a wider sweep, absent in none. THE OBSERVATION WAS REAL; the doubt came from a wrong word in an artifact, and I had propagated that word by not checking the raw payload when I first read the limits line.",
+    "BUT_IT_IS_NON_DISCRIMINATING_AND_THAT_IS_WHY_IT_IS_NOT_A_RULE": "the venue reports the SAME constant zero for the six accounts the chain demonstrably charged. A field that reports zero where the chain took 10% of size x min(p, 1-p) does not reflect what is actually charged, and cannot be the 'verified maker fee applicable to these markets' \u00a79 asks for. Populated is not the same as informative: the durable test of a fee source is whether it can SEPARATE the charged accounts from the rest, and this one cannot.",
+    "THE_LESSON_THAT_OUTLIVES_THE_FEE": "key a check on a PROPERTY, not on a WORD. 'Unpopulated' was a label two artifacts asserted and neither measured; the property that actually decides the question is DISCRIMINATION. A refusal keyed on the label would have flipped twice in two dispatches; one keyed on discrimination would not have moved.",
+    "does_not_establish": "what is actually charged to anyone, and so no fee rule applicable to us"
+   },
+   {
+    "source": "onchain/receipts (via p003_da_onchain_fee_audit)",
+    "searched": "901 settlement receipts, 1957 legs",
+    "n_maker_legs": 1056,
+    "n_maker_legs_zero": 1046,
+    "n_maker_legs_charged": 10,
+    "charged_leg_prices": [
+     "0.99"
+    ],
+    "establishes": "that maker fills are overwhelmingly zero-fee on chain: 1046 of 1056",
+    "does_not_establish": "why the remaining 10 legs WERE charged; the audit's own role is REPORTED, NOT ENFORCED"
+   },
+   {
+    "source": "collector metadata (runs, provenance)",
+    "searched": "every line for fee/maker/taker/rebate",
+    "matches": 0,
+    "establishes": "NOTHING -- no collector names a fee schedule"
+   }
+  ],
+  "THE_CHASE_DA_286": {
+   "hypothesis_1_parsing_edge_in_my_own_audit": {
+    "tested": "decoded all 5 transactions with the audit's own OrderFilled/OrdersMatched topic constants",
+    "result": "REFUTED. Each tx carries exactly ONE OrdersMatched with the normal 3-topic shape, and NO charged leg's maker address is that tx's takerOrderMaker. The maker/taker split is correct; these are genuine resting maker legs."
+   },
+   "hypothesis_2_not_our_markets": {
+    "tested": "matched each charged leg's asset ids against the 94,112 clobTokenIds in markets.jsonl",
+    "result": "REFUTED. All 10 are in OUR markets -- takerAssetId is one of our 5-min tokens in every case, and makerAssetId is 0 (USDC), so all ten are maker BUY legs."
+   },
+   "hypothesis_3_extreme_price": {
+    "tested": "counted zero-fee maker BUY legs at the SAME price",
+    "result": "REFUTED as a sufficient cause. All 10 charged legs are at EXACTLY 0.9900 -- but 25 maker BUY legs at exactly 0.9900, interleaved across the same block buckets, paid ZERO. Price alone does not decide it."
+   },
+   "WHAT_THE_CHASE_DID_SETTLE": {
+    "the_RATE_is_identified": "implied rate = fee / (size x min(p, 1-p)) has median 0.0990 over the charged legs, which is `maker_base_fee = 1000` read as BASIS POINTS: 1000 bps = 10%. So the charge reconciles to the schedule field in markets.jsonl by the standard formula fee = 0.10 x size x min(p, 1-p).",
+    "the_TRIGGER_is_not": "nothing in the collected data distinguishes the 10 charged legs from 25 otherwise-identical zero-fee legs at the same price in the same blocks. The rate is known; WHEN it applies is not."
+   },
+   "THE_ANSWER_TO_SECTION_9": "the supporting rule for a ZERO maker fee is the venue's own order-level `fee_rate_bps`, which is 0 on all 76,617 observed trades. It is a rule stated by the market. But it is not a CLEAN zero: 10 of 1,056 maker legs (0.95%) were charged at the market base rate. A receipt may therefore use zero ONLY if it also carries that exception rate; a receipt claiming an unqualified zero would be asserting something the chain contradicts 0.95% of the time."
+  },
+  "THE_AUDITS_FORMULA_FAILS_ITS_OWN_POSITIVE_CONTROL": {
+   "where": "taker legs -- 901 of 901 charged, the one place the schedule is fully observable",
+   "match_share_to_1e-6": 0.1220865704772475,
+   "n_matching": 110,
+   "n_taker_legs": 901,
+   "residual_usdc": {
+    "p50": 5.94e-06,
+    "max": 0.51021345
+   },
+   "the_fair_reading": "'reproduces 12%' is true AT A 1e-6 THRESHOLD and understates the median: half the legs are within six MICRODOLLARS, so the formula is nearly exact for most fills. But the TAIL is what a bound depends on, and the maximum residual is 0.51 USDC. An instrument that can be half a dollar wrong where the answer is certain cannot bound maker exposure where it is not.",
+   "consequence": "NO VALIDATED FEE MODEL EXISTS. The sensitivity DA 287 asked DE to run -- charge every maker fill at 10% of size x min(p, 1-p) -- would be computed with this formula, so it would inherit that tail. It must be fixed or replaced before it can be called a worst case."
+  },
+  "WHAT_WOULD_SETTLE_IT": [
+   "a reconciliation of the 10 charged legs: whether they are taker-side fees attributed to a maker address, a different fee path, or a parsing edge in the audit",
+   "the published CLOB fee schedule for these condition ids with an effective date, which no collector currently captures -- it is now the ONLY open question, since the rate itself is reconciled"
+  ],
+  "CORRECTION_TO_DA_283": "DA 283 reported this input NOT ESTABLISHABLE. That was wrong, and wrong in a way worth naming: I searched the TOP-LEVEL keys of markets.jsonl and the rewards registry and stopped. The fee was in the `clob` SUBOBJECT of every market record and in the tape's own `fee_rate_bps` on every trade. An unobtainable verdict reached by an unfinished search is a finding about the search."
+ },
+ "initial_inventory": {
+  "initial_inventory": 0.0,
+  "units": "signed shares of the UP token, per market",
+  "established": true,
+  "frozen_choice_not_a_measurement": true,
+  "why_zero": "both arms must start from the SAME state (\u00a75 gate 6, \u00a79's 'identical external snapshot and starting state'), and any non-zero start is a position neither arm chose. It would be carried into P&L as settlement value under \u00a79's 'remaining inventory valued at the official settlement outcome', crediting or debiting both arms for a trade neither made.",
+  "where_it_currently_lives": "de_fair_value_replay_seam.replay() reads `initial_state.get('inventory', 0.0)` -- a caller-supplied value with a permissive default. Freezing it here makes the default unnecessary rather than merely convenient.",
+  "the_seam_already_enforces_sharing": "initial_state is a field of ReplayInputs, so two arms starting from different inventories REFUSE REPLAY_ARMS_DO_NOT_SHARE_THEIR_INPUTS -- driven in gate 6's property cells"
+ },
+ "established": {
+  "legal_tick": true,
+  "maker_fee_rule": false,
+  "initial_inventory": true
+ },
+ "n_established": 2,
+ "n_requested": 3,
+ "unestablished": [
+  "maker_fee_rule"
+ ],
+ "AN_UNESTABLISHABLE_INPUT_IS_A_FINDING": "two of three are established from artifacts and one is not. The one that is not is reported as a finding with the evidence that proves it unestablishable, never filled in with a plausible default.",
+ "rule_10": "every number here is computed from an artifact at run time",
+ "status_self_consistency": {
+  "record_denies_establishment": true,
+  "n_statuses": 2,
+  "statuses": [
+   {
+    "path": ".maker_fee_negative_declaration.status",
+    "status": "FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_DATA",
+    "reads_as_an_establishment": false,
+    "contradicts_the_record": false
+   },
+   {
+    "path": ".maker_fee_rule_evidence.status",
+    "status": "MAKER_FEE_RULE_NOT_ESTABLISHED__VENUE_ZERO_IS_NON_DISCRIMINATING",
+    "reads_as_an_establishment": false,
+    "contradicts_the_record": false
+   }
+  ],
+  "contradicting": [],
+  "n_contradicting": 0,
+  "clean": true,
+  "the_test": "read each status ALONE, with no siblings and no context, and ask whether it states what the record means. If a reader keying only on `status` would draw the wrong conclusion, THE STRING IS THE DEFECT -- not the reader."
+ },
+ "data_root": "/home/yuqing/ctaNew",
+ "data_root_is_delegated_to": "da_root.resolve_root (the resolver of record)"
+}

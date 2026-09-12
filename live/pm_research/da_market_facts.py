@@ -408,7 +408,7 @@ def maker_fee_rule() -> dict:
     established = bool(zero_on_tape) and charged == 0
     return {
         "established": established,
-        "status": ("MAKER_FEE_RULE_ESTABLISHED_ZERO_WITH_UNRECONCILED_ONCHAIN_CHARGES"
+        "status": ("MAKER_FEE_RULE_NOT_ESTABLISHED__VENUE_ZERO_IS_NON_DISCRIMINATING"
                    if zero_on_tape and charged
                    else ("MAKER_FEE_RULE_ESTABLISHED_ZERO" if established
                          else FEE_UNESTABLISHABLE)),
@@ -548,7 +548,86 @@ def initial_inventory() -> dict:
     }
 
 
+
+#: A STATUS STRING MUST CARRY ITS MEANING ALONE. (DA 313 / REVIEW 270e)
+#:
+#: THE CLASS, not the instance: "a status whose NAME asserts something its own
+#: siblings contradict". Two instances from different producers make it a class
+#: -- `UNPOPULATED_WS_ZERO` (a label that was a pure function of the value and
+#: said nothing about populated-ness) cost a ruling and a reversal, and
+#: `..._ESTABLISHED_ZERO_WITH_...` is the same defect one artifact downstream:
+#: `established: False` sits beside it, but a reader keying on `status` alone
+#: sees ESTABLISHED_ZERO.
+#:
+#: THE TEST IS CHEAP AND IS NOW A CELL: read each status with no siblings and
+#: no context, and ask whether it states what the record means.
+_ASSERTS_ESTABLISHED = re.compile(
+    r"(?<!NOT_)(?<!NOT)(ESTABLISHED|CONFIRMED|SATISFIED|VERIFIED|RESOLVED)")
+
+
+def status_strings(doc) -> list:
+    """Every enum-style status/verdict in a document, with its path."""
+    out = []
+
+    def walk(o, path=""):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if (k.lower() in ("status", "verdict")
+                        and isinstance(v, str)
+                        and re.fullmatch(r"[A-Z][A-Z0-9_]{6,}", v)):
+                    out.append((path + "." + k, v))
+                walk(v, path + "." + k)
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                walk(v, path + "[%d]" % i)
+    walk(doc)
+    return out
+
+
+def status_self_consistency(doc) -> dict:
+    """REFUSE a status whose NAME asserts an establishment the record denies.
+
+    Computed from the document, not asserted about it: if `established` is
+    False anywhere in the doc, no status may READ as an establishment unless
+    it is explicitly negated.
+    """
+    est = []
+
+    def find_est(o):
+        if isinstance(o, dict):
+            if o.get("established") is False:
+                est.append(True)
+            for v in o.values():
+                find_est(v)
+        elif isinstance(o, list):
+            for v in o:
+                find_est(v)
+    find_est(doc)
+    denies = bool(est)
+    rows = []
+    for path, val in status_strings(doc):
+        asserts = bool(_ASSERTS_ESTABLISHED.search(val)) and "NOT_" not in val
+        rows.append({"path": path, "status": val,
+                     "reads_as_an_establishment": asserts,
+                     "contradicts_the_record": bool(asserts and denies)})
+    bad = [r for r in rows if r["contradicts_the_record"]]
+    return {"record_denies_establishment": denies, "n_statuses": len(rows),
+            "statuses": rows, "contradicting": bad, "n_contradicting": len(bad),
+            "clean": not bad,
+            "the_test": ("read each status ALONE, with no siblings and no "
+                         "context, and ask whether it states what the record "
+                         "means. If a reader keying only on `status` would "
+                         "draw the wrong conclusion, THE STRING IS THE DEFECT "
+                         "-- not the reader.")}
+
+
 def build() -> dict:
+    out = _build_inner()
+    out["status_self_consistency"] = status_self_consistency(out)
+    return out
+
+
+def _build_inner() -> dict:
     tick = legal_tick()
     inv = initial_inventory()
     fee = maker_fee_rule()
@@ -680,7 +759,7 @@ def build() -> dict:
                       "from any artifact this programme collects. This is a "
                       "RESOLVED question with a negative answer, not an "
                       "unexamined one."),
-            "the_five_strands": {
+            "the_strands": {
                 "0_account_level_incidence": (
                     "6 of 218 distinct maker addresses are in the charged "
                     "class -- 2.75%. That is the rate at which an ACCOUNT is "
@@ -713,7 +792,7 @@ def build() -> dict:
             "n_maker_addresses_charged": 6,
             "account_level_incidence": 0.0275,
             "our_class": "UNOBSERVED -- and unobservable from this corpus",
-            "and_the_sixth_which_is_decisive": (
+            "and_the_decisive_one": (
                 "WE HAVE NO MAKER ADDRESS. The programme is research-only and "
                 "has never rested an order on this book, so our own treatment "
                 "is not merely unobserved -- it does not yet exist to observe. "
@@ -780,6 +859,7 @@ def build() -> dict:
             "proves it unestablishable, never filled in with a plausible "
             "default."),
         "rule_10": "every number here is computed from an artifact at run time",
+        "status_self_consistency": None,   # filled below from the built doc
         "data_root": str(da_root.resolve_root()),
         "data_root_is_delegated_to": "da_root.resolve_root (the resolver of record)",
     }
@@ -842,11 +922,14 @@ def falsify() -> int:
     nd = d["maker_fee_negative_declaration"]
     ck("the NEGATIVE DECLARATION is written, with a named status",
        nd["status"] == "FEE_RULE_NOT_ESTABLISHABLE_FROM_COLLECTED_DATA")
-    ck("...and it carries FIVE independent strands plus the decisive sixth",
-       len(nd["the_five_strands"]) == 5 and "NO MAKER ADDRESS" in
-       nd["and_the_sixth_which_is_decisive"])
+    ck("...and it carries its strands plus the decisive one",
+       len(nd["the_strands"]) == 6 and "NO MAKER ADDRESS" in
+       nd["and_the_decisive_one"],
+       f"{len(nd['the_strands'])} strands, renamed from `the_five_strands` "
+       f"because the NAME asserted a count its content contradicted -- the "
+       f"same class as the status string")
     ck("...and says plainly that further collection cannot close it",
-       "only trading does" in nd["and_the_sixth_which_is_decisive"])
+       "only trading does" in nd["and_the_decisive_one"])
     ck("the RATE is an account attribute: one tier per address, none in both",
        len(set(d["sensitivity_tiers_by_address"].values())) == 3
        and len(d["sensitivity_tiers_by_address"]) == 6,
@@ -913,6 +996,24 @@ def falsify() -> int:
        str(t["THE_SUB_TICK_PRICES_ARE_EXPLAINED"]["tick_size_change_events"]))
     ck("...and rounding to 0.01 stays LEGAL because 0.01 is a multiple of 0.001",
        "stays LEGAL" in t["THE_SUB_TICK_PRICES_ARE_EXPLAINED"]["consequence_for_the_freeze"])
+    sc = d["status_self_consistency"]
+    ck("EVERY status string is tested ALONE against what the record means",
+       sc["n_statuses"] > 0 and isinstance(sc["statuses"], list),
+       f"{sc['n_statuses']} status strings")
+    ck("NO status NAME asserts an establishment the record denies",
+       sc["clean"] is True,
+       str([r["status"] for r in sc["contradicting"]]) if sc["contradicting"]
+       else "none contradicting")
+    ck("...and the record DOES deny one, so the check is not vacuous",
+       sc["record_denies_establishment"] is True,
+       "established: False is present, so an ESTABLISHED_* status would fire")
+    _fake = {"established": False, "a": {"status": "MAKER_FEE_RULE_ESTABLISHED_ZERO"}}
+    ck("NEGATIVE CONTROL: the OLD string would have been caught",
+       status_self_consistency(_fake)["n_contradicting"] == 1,
+       "MAKER_FEE_RULE_ESTABLISHED_ZERO flagged")
+    _ok = {"established": False, "a": {"status": "MAKER_FEE_RULE_NOT_ESTABLISHED__X"}}
+    ck("POSITIVE CONTROL: an explicitly negated status is NOT flagged",
+       status_self_consistency(_ok)["n_contradicting"] == 0)
     ck("the summary counts what is established WITHOUT rounding it up",
        d["n_established"] == 2 and d["unestablished"] == ["maker_fee_rule"],
        f"{d['n_established']}/{d['n_requested']}")
