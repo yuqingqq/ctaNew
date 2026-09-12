@@ -482,3 +482,38 @@ held where I invoked it and failed where I did not think to.*
 > answers.**
 
 > *(Amended 2026-09-12T00:14:01Z.)*
+---
+
+## Round 415 — **the heredoc ate a code span AGAIN, five rounds after I ruled against it**
+
+Round 400's amendment says: *quote every heredoc that carries prose; substitute
+the clock with sed afterwards.* **At round 415 I used an unquoted heredoc anyway
+— because I wanted `${CLOCK}` and `${TIP}` interpolated — and wrote a backticked
+code span into it.** It was executed and replaced by empty output, so the flag
+landed reading:
+
+    IN PYTHON,  RETURNS AN OPERAND, NOT A BOOLEAN
+
+***The operand expression was gone, and the sentence still parsed as English.***
+That is the dangerous part: the previous instance left obvious gaps mid-sentence;
+this one left a sentence a reader would accept.
+
+> ### ***The rule was right and I traded it away for two substitutions.***
+
+**Required from now on, and stated so there is no judgement call left:**
+
+1. **Never write a backtick inside any heredoc**, quoted or not. Use an indented
+   code block or plain words — `x and y` becomes *the expression x and y*.
+2. If a variable must reach the file, use a **quoted** heredoc with a literal
+   placeholder and `sed` it afterwards. **Two substitutions are not worth an
+   unquoted heredoc.**
+3. **Verify the key term survived** before committing: `grep -c` for a distinctive
+   phrase from the block and assert it is non-zero. *The failure is silent when
+   the surrounding prose still reads.*
+
+*Both instances were caught only because bash printed `command not found`. A
+backticked span containing something bash CAN run would have been executed
+silently — which is the same class as an instrument whose output is determined
+by its own construction, the pattern this whole session has been cataloguing.*
+
+> *(Amended 2026-09-12T01:01:04Z.)*
