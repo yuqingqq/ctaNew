@@ -1,5 +1,35 @@
 # Handoff — 2026-05-09
 
+## P003 — 2026-09-17: read the nested repo
+
+This programme's current work is in **`fv-pnl-integration/`, a separate git
+repo** nested in this tree. Start at `fv-pnl-integration/docs/HANDOFF.md`.
+
+**Where it stands.** `A1_ALL_SIDE` at 50 ms placement is -39.95$ over five
+consumed BTC days (-0.018 c/share), from a -3,224$ / -1.260 c/share baseline.
+Two levers compose: latency 200 -> 50 ms, and an adverse-Binance shock guard
+that withholds the risk-increasing side. Committed as `d1bdfb8` in that repo.
+
+**The instrument worth reusing** is `de_participation_screen.py`: it splits a
+withholding arm's P&L change into *participation* (traded less) and *selection*
+(chose better). The one-lot latch A2 posted +440$ yet its selection was
+**-1,599$** — random withholding of the same size would have earned +2,039$.
+Every A1 variant is the reverse. It replaces a control costing 369 CPU-hours
+and is validated against oracle/random/anti-oracle.
+
+**Ranked next steps** (detail in the nested handoff):
+1. Measure whether 100 ms total event-to-effective is achievable in production.
+   Every L50 number is conditional on an assumption nobody has tested.
+2. Read >=5 untouched BTC days once, against the frozen candidate.
+3. Placement-kind study at L50 — the arm still leaves about half the available
+   half-spread unclaimed.
+4. Taker-delay / `seconds_delay` (P-M7c). Note it does NOT change the measured
+   numbers — the tape records match times, so any venue bump is already priced
+   in — but it sets the speed target for (1).
+
+**Do not** re-run A2 or A3: A2's selection is -1,599$, and the plan licenses A3
+only if both components pass their controls.
+
 ---
 
 # P-2026-003 Polymarket 5-min — handoff 2026-09-12T03:26Z

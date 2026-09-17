@@ -1,5 +1,34 @@
 # Status — 2026-05-09
 
+## P003 Polymarket 5-min — queue fidelity + arm sequencing — 2026-09-17
+
+**The work lives in the NESTED repo `fv-pnl-integration/`, which is its own git
+repository** (branch `codex/p003-latency-transport-20260914`, ~4,400 tracked
+files). The outer repo sees it as one untracked entry; that is expected, not a
+problem. Read its docs, not this file, for detail:
+
+- `fv-pnl-integration/docs/HANDOFF.md` — full session handoff, read this first
+- `fv-pnl-integration/docs/STATUS.md` — state and blockers
+- `fv-pnl-integration/docs/P003_L50_ARM_FAMILY_RESULTS_2026-09-17.md` — results
+- plan: `fv-pnl-integration/live/pm_research/plans/QUEUE_FIDELITY_AND_ARM_SEQUENCING_PLAN.md` (v0.2)
+- freeze commit: `d1bdfb8` in that nested repo (21 files, pipeline + docs)
+
+**One-line state.** Work Sequence steps 1-8 complete on the five consumed BTC
+days. Best measured arm is `A1_ALL_SIDE` at 50 ms placement: **-39.95$ gross
+over five days (-0.018 c/share)** against a -3,224$ / -1.260 c/share baseline —
+essentially flat. Latency (200 -> 50 ms) and the adverse-Binance shock guard
+compose; neither alone gets close.
+
+**Not decision-eligible.** All five days were consumed before the thresholds
+were chosen (rule 11), so this selects at most one candidate for a freeze and
+validates nothing. Gross, BTC-only, no interval. Step 10 — a single read of >=5
+untouched days — has no data yet.
+
+**Carry these caveats.** `STRESS_UNAVAILABLE` (the tape has no sequence field);
+the matched-participation control costs 369 CPU-hours and is unrun; arm
+isolation is approximate at 0.024%/day; 50 ms placement is simulated, not a
+measured capability, and every L50 number is conditional on it.
+
 ## P-2026-003 Polymarket 5-min — session 2026-09-12 (see docs/P003_FAIR_VALUE_SESSION_2026-09-12.md)
 
 **Cancellation forward test CLOSED** — 4 days valued, both arms futile, verdict
