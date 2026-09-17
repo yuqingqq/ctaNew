@@ -2,6 +2,10 @@
 
 ## P003 — 2026-09-17: read the nested repo
 
+**2026-09-17 (later):** the exit-urgency plan (`fv-pnl-integration/live/pm_research/plans/EXIT_URGENCY_CONTROLLER_PLAN.md`)
+was reviewed — neither arm is reachable as specified; see
+`fv-pnl-integration/docs/P003_EXIT_URGENCY_PLAN_REVIEW_2026-09-17.md`. No freeze.
+
 This programme's current work is in **`fv-pnl-integration/`, a separate git
 repo** nested in this tree. Start at `fv-pnl-integration/docs/HANDOFF.md`.
 

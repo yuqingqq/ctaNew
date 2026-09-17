@@ -2,6 +2,10 @@
 
 ## P003 Polymarket 5-min — queue fidelity + arm sequencing — 2026-09-17
 
+**2026-09-17 (later):** the exit-urgency plan (`fv-pnl-integration/live/pm_research/plans/EXIT_URGENCY_CONTROLLER_PLAN.md`)
+was reviewed — neither arm is reachable as specified; see
+`fv-pnl-integration/docs/P003_EXIT_URGENCY_PLAN_REVIEW_2026-09-17.md`. No freeze.
+
 **The work lives in the NESTED repo `fv-pnl-integration/`, which is its own git
 repository** (branch `codex/p003-latency-transport-20260914`, ~4,400 tracked
 files). The outer repo sees it as one untracked entry; that is expected, not a
