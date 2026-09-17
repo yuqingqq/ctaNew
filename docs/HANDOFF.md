@@ -8,7 +8,14 @@ repo** nested in this tree. Start at `fv-pnl-integration/docs/HANDOFF.md`.
 **Where it stands.** `A1_ALL_SIDE` at 50 ms placement is -39.95$ over five
 consumed BTC days (-0.018 c/share), from a -3,224$ / -1.260 c/share baseline.
 Two levers compose: latency 200 -> 50 ms, and an adverse-Binance shock guard
-that withholds the risk-increasing side. Committed as `d1bdfb8` in that repo.
+that withholds the risk-increasing side. Commits in that repo: `d1bdfb8`
+pipeline, `9c03a65` exit arm, `df3a500` docs.
+
+**The arm family is closed at five candidates.** The last, `A1_ALL_SIDE_EXIT`,
+landed 2026-09-17 08:24Z and is rejected (-412.68$): it halves unmatched
+inventory but pays 1.84$ of spread per 1.00$ of inventory risk removed.
+Ranking the five by how much each changes beyond *when* to quote is monotone
+decreasing. Do not read a sixth arm off these five consumed days.
 
 **The instrument worth reusing** is `de_participation_screen.py`: it splits a
 withholding arm's P&L change into *participation* (traded less) and *selection*

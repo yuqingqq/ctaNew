@@ -11,13 +11,18 @@ problem. Read its docs, not this file, for detail:
 - `fv-pnl-integration/docs/STATUS.md` — state and blockers
 - `fv-pnl-integration/docs/P003_L50_ARM_FAMILY_RESULTS_2026-09-17.md` — results
 - plan: `fv-pnl-integration/live/pm_research/plans/QUEUE_FIDELITY_AND_ARM_SEQUENCING_PLAN.md` (v0.2)
-- freeze commit: `d1bdfb8` in that nested repo (21 files, pipeline + docs)
+- commits in that nested repo: `d1bdfb8` pipeline, `9c03a65` exit arm, `df3a500` docs
 
 **One-line state.** Work Sequence steps 1-8 complete on the five consumed BTC
 days. Best measured arm is `A1_ALL_SIDE` at 50 ms placement: **-39.95$ gross
 over five days (-0.018 c/share)** against a -3,224$ / -1.260 c/share baseline —
 essentially flat. Latency (200 -> 50 ms) and the adverse-Binance shock guard
 compose; neither alone gets close.
+
+**The arm family is closed at five candidates** (A2, A1, A1_NO_CROSS,
+A1_ALL_SIDE, A1_ALL_SIDE_EXIT). The last of them, `A1_ALL_SIDE_EXIT`, landed
+2026-09-17 08:24Z and is rejected. Ranking them by how much each changes beyond
+*when* to quote is monotone decreasing. Do not read a sixth arm off these days.
 
 **Not decision-eligible.** All five days were consumed before the thresholds
 were chosen (rule 11), so this selects at most one candidate for a freeze and
