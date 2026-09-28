@@ -174,6 +174,8 @@ checkable requirements, not style.
   orchestrator, basis-risk diagnostics, Binance-train / Hyperliquid-execute
   pipeline. Not production-grade; this is the forward-test layer that
   validates v6_clean predictions transport from backtest data to real-time.
+- `movewatch/` (P-2026-004, added 2026-09-28) — multi-exchange sudden-move
+  detection + Telegram alerts. Public market data only; no order placement.
 
 **Out of scope** (don't add):
 - Live trading code, exchange adapters, execution servers
@@ -189,6 +191,10 @@ completed step update that program's `STATUS.yml` (task statuses + flags) and
 `workspace/HANDOFF.md` (done / in-progress / next / watch-out-for)**. State
 lives there, not in conversation history — write it before context runs long,
 not after.
+
+**P-2026-004 movewatch** is a self-contained project folder, single seat: its
+state is `movewatch/STATUS.yml` + `movewatch/HANDOFF.md` — read that HANDOFF at
+session start too, and update both after each completed step.
 
 **Exception — P-2026-003 is multi-seat and its state files have ONE writer.**
 Read `orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md`

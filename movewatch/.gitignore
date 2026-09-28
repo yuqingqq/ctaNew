@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+# All data (history caches, replay panels, live state, alert records, logs)
+data/
+!data/.gitkeep

@@ -1,0 +1,33 @@
+[Unit]
+Description=P-2026-004 movewatch - multi-exchange sudden-move alerts (Telegram)
+Documentation=file:///home/yuqing/ctaNew/movewatch/README.md
+After=network-online.target
+# Restart forever: a live alerter that gives up is worse than one that retries.
+StartLimitIntervalSec=0
+
+[Service]
+WorkingDirectory=/home/yuqing/ctaNew/movewatch
+# TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID (or MOVEWATCH_TELEGRAM_*) come from here.
+EnvironmentFile=/home/yuqing/ctaNew/.env
+ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 -m movewatch run
+Restart=always
+RestartSec=10
+# Daily clean restart: feeds discover instruments at start, so this picks up new
+# listings; SIGTERM is handled (state + episodes saved, queued alerts flushed).
+RuntimeMaxSec=86400
+TimeoutStopSec=30
+# Never compete with the tape collectors (collectors.slice, CPUWeight 500).
+Nice=5
+CPUWeight=50
+# Measured 2026-09-28 (12 venues, ~5.8k instruments): RSS ~300 MB, peak ~335 MB.
+# MemoryHigh applies reclaim pressure first; MemoryMax is the hard cap (~4.5x peak).
+MemoryHigh=1G
+MemoryMax=1536M
+# MemoryMax caps RAM only; swap is separate and the box swapfile runs ~80% full with other
+# services' idle pages, so bound ours too (2026-09-28: it held 112 MiB of swap).
+MemorySwapMax=256M
+StandardOutput=append:/home/yuqing/ctaNew/movewatch/data/movewatch.log
+StandardError=append:/home/yuqing/ctaNew/movewatch/data/movewatch.log
+
+[Install]
+WantedBy=default.target

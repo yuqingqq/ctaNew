@@ -1,0 +1,68 @@
+# movewatch live configuration.
+# Thresholds are the calibrated defaults from research/replay.py (see docs/CALIBRATION.md);
+# change them there first, then here, and record the change in STATUS.yml.
+
+data_dir: data
+baseline_refresh_min: 15      # same cadence as the replay (parity)
+fresh_s: 120                  # an instrument with no print for this long is excluded
+warmup_s: 90                  # no evaluation for the first seconds after start
+alias_max_log_dev: 0.4        # |log(USD price)| gap that splits a ticker into separate assets
+mem_warn_mb: 768              # one Telegram warning above this RSS (systemd MemoryMax=1536M is the hard cap)
+
+rules:                        # from data/replay/cal_v4: floor x3.0, z x1.25, v x1.0, liq >= $5M (pick on calibration only; docs/CALIBRATION.md)
+  liq_min_usd: 5000000
+  market_liq_usd: 5000000     # instruments counted in the market median
+  horizons:                   # floor_pct: |move net of market| ; zmin: |z| ; vmin: volume multiple
+    1m:  {floor_pct: 9.00, zmin: 7.50, vmin: 5.00}
+    5m:  {floor_pct: 15.00, zmin: 7.50, vmin: 4.00}
+    15m: {floor_pct: 21.00, zmin: 6.25, vmin: 3.00}
+    1h:  {floor_pct: 30.00, zmin: 6.25, vmin: 3.00}
+    4h:  {floor_pct: 45.00, zmin: 5.00, vmin: 2.50}
+    24h: {floor_pct: 75.00, zmin: 5.00, vmin: 2.00}
+  market_floor_pct: {15m: 2.5, 1h: 4.0, 4h: 6.0}
+
+burst:                        # market-wide days: > max_new NEW alerts per window -> one digest
+  window_s: 600
+  max_new: 6
+  digest_every_s: 300
+
+alerts:
+  min_gap_s: 180
+  asset_gap_s: 900            # a NEW needs 15 min since the coin's last message of any kind
+  asset_max_new_per_day: 4    # NEW alerts per coin per 24h (escalations/reversals never capped)
+  min_life_s: 7200
+  new_margin: 1.25
+  ttl_s: 86400
+  new_cooldown_s: 3600
+  reversal_frac: 0.25
+  reversal_min_pct: 8.0
+  reversal_max_pct: 20.0
+  reversal_eligible_pct: 15.0
+
+notify:
+  telegram: true              # needs TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID (or MOVEWATCH_*)
+  dry_run: false
+  batch_s: 2.0
+  max_per_batch: 4
+  min_interval_s: 3.0
+
+watchers:
+  enabled: true
+  interval_s: 60
+  flag_cooldown_s: 21600
+  korea_quotes: [KRW]           # Upbit/Bithumb listings + flags on KRW markets only
+  upbit_flags: [PRICE_FLUCTUATIONS, DEPOSIT_AMOUNT_SOARING, GLOBAL_PRICE_DIFFERENCES, WARNING]
+
+venues:
+  binance_usdm: {enabled: true, min_quote_volume_24h: 100000}
+  binance_spot: {enabled: true, min_quote_volume_24h: 100000, quotes: [USDT, USDC]}
+  bybit_linear: {enabled: true}
+  bybit_spot:   {enabled: true}
+  okx_swap:     {enabled: true, min_quote_volume_24h: 100000}
+  okx_spot:     {enabled: true, min_quote_volume_24h: 100000}
+  coinbase:     {enabled: true, quotes: [USD, USDT, USDC]}
+  upbit:        {enabled: true}
+  bithumb:      {enabled: true}
+  bitget_fut:   {enabled: true, min_quote_volume_24h: 250000}
+  bitget_spot:  {enabled: true, min_quote_volume_24h: 250000}
+  hyperliquid:  {enabled: true, min_quote_volume_24h: 100000}
