@@ -5,13 +5,13 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
-  2026-09-28 10:40Z (session 1). Built, calibrated, deployed. movewatch.service
-  (user systemd) started 10:37:06Z with the STRICT preset (logic v4, cal_v4 pick:
-  floor x3.0, z x1.25, v x1.0, liq >= $5M): replay 9.7 NEW/day, 38.4 msgs/day on
-  August; 7.7 / 31.5 on 09-01..09-19 (third look). Telegram test message sent.
-  Memory measured under the user's directive (never break the limit, keep a
-  buffer): replay peak 0.815 GiB RSS at the default 4 GiB slot cap; live 332 MB
-  peak vs MemoryMax 1536M. The clean test of logic v4 is the forward live log.
+  2026-09-28 16:00Z (session 1, continued). Forward test FROZEN at commit 1536a86 and
+  STARTED: movewatch.service restarted 15:54:06Z on the frozen code; FU_START logged
+  15:54:35Z with fingerprint 65c7c892..., admitted by research/forward_eval.py (1/1 runs).
+  Same commit: breadth line on NEW alerts, +4h volume check for messaged pumps, TradFi
+  exclusion (228 stock/ETF/commodity clusters), bitget_spot min volume $1M, and the
+  store.load fix (restore was ~20 min at 100% CPU; now 0.24 s for 4,246 instruments).
+  46 tests pass; falsifiers mutation-checked. Research fixes + reruns committed in bf94a99.
 
 memory:   # user directive 2026-09-28: never break the limit, keep a buffer (measured, not estimated)
   replay:
@@ -22,16 +22,28 @@ memory:   # user directive 2026-09-28: never break the limit, keep a buffer (mea
              with other services' idle pages); Telegram warning above mem_warn_mb 768"
     measured_2026-09-28: "12 venues, 5,890 instruments: RSS max 322 MB, peak 332 MB, vsize 551 MB (4 min);
                           earlier 7.5-min run with 4x larger WS queues: peak 358 MB"
+    measured_after_freeze: "15:55Z: cgroup MemoryCurrent 304 MB, MemoryPeak 356 MB, swap 0; restart rehearsal
+                            (production config, dry run, restored history + follow-ups) peak RSS 368 MB"
 
 flags:
   telegram_path_verified: 2026-09-28        # `python3 -m movewatch test-telegram` -> sent
   service_installed: "2026-09-28 10:37:06Z" # ~/.config/systemd/user/movewatch.service, enabled
+  service_running_code: "1536a86 (restarted 2026-09-28 15:54:06Z)"
   calibrated: cal_v4                        # strict preset = declared budget pick (docs/CALIBRATION.md 2c)
-  preset: strict_le40                       # switch: apply_pick ... --budget 80, restart
+  preset: strict_le40                       # switching presets now ENDS the forward test (config change)
   validated_on_untouched: >-
     logic v2 clean read on 09-01..09-19 (cal_v2); v3/v4 are second/third looks at that window.
     Clean test of v4 = forward live data from 2026-09-28 10:37Z.
-  consumed_windows: "2026-09-20..09-27 (QNT; seen in development)"
+  consumed_windows: "2026-09-20..09-27 (QNT; seen in development); Apr-Jul holdout (persistence study)"
+  forward_test:
+    declaration: docs/FORWARD_TEST.md
+    freeze_commit: 1536a86ffa73a15415cbfde569d528a3f328e08a
+    fingerprint: 65c7c89213387e8484579f24a12e3b426b3fee23d7b9c2f85ac417678242361c
+    started: "2026-09-28 15:54:35Z (first FU_START with the frozen fingerprint)"
+    hypotheses: "H1 heavy post-alert volume -> pumps fade (+4h->+72h); H2 breadth -> fade (alert->+4h); B1 base rate"
+    minimum: "H1/B1 >= 200 complete pump rows, H2 >= 300 rows, >= 5 complete ISO weeks (earliest 2026-11-09)"
+    reading_rule: "counts only (python3 -m research.forward_eval) until the minimum; --final once"
+    ends_if: "any code or config change reaches the service (fingerprint changes at the next start)"
 
 tasks:
   M0_case_study:            {status: done, artifact: docs/QNT_2026-09_CASE_STUDY.md}
@@ -39,14 +51,17 @@ tasks:
   M2_detector_core:         {status: done, artifact: movewatch/signals.py + movewatch/store.py}
   M3_episodes_and_messages: {status: done, artifact: "movewatch/alerts.py (logic v4) + engine.format_alert"}
   M4_notifier:              {status: done, artifact: movewatch/notify.py, note: "test message delivered 2026-09-28"}
-  M5_listing_flag_watcher:  {status: live, artifact: movewatch/watchers.py, pending: "first real listing/flag diff"}
+  M5_listing_flag_watcher:  {status: live, artifact: movewatch/watchers.py,
+                             note: "first real diffs 2026-09-28: Upbit flags (MANTRA, LSK), OKX XDP listings"}
   M6_calibration_replay:    {status: done, artifact: "research/replay.py; data/replay/cal_v1..cal_v4; docs/CALIBRATION.md"}
   M7_deploy_systemd:        {status: done, artifact: deploy/movewatch.service}
   M8_forward_log_review:    {status: pending, due: 2026-10-05,
-                             note: "7 days live: count by kind/day, misses vs ex-post big moves, false alarms, memory"}
+                             note: "7 days live: count by kind/day, misses vs ex-post big moves, false alarms, memory.
+                                    READ-ONLY while the forward test runs: a threshold change ends it (weigh that first)"}
   M9_z_weighted_path:       {status: measured-not-deployed, artifact: "research/wake_path.py; data/replay/wake_path/summary.json",
                              note: "wake path 1h >=5% z>=6 v>=8 catches QNT 09-24 14:09 $80.18 (in-sample: designed on QNT)
-                                    but ~3.6x NEW/day (9.7 -> 35.0 Aug; 7.7 -> 34.7 09-01..19); user decision pending"}
+                                    but ~3.6x NEW/day (9.7 -> 35.0 Aug; 7.7 -> 34.7 09-01..19); user decision pending;
+                                    deploying it ends the forward test"}
   M10_post_signal_study:    {status: done, artifact: "research/post_signal.py; data/replay/post_signal/",
                              note: "v2 (bug-fixed): the TYPICAL pump fades (24h median -11.2% Aug, -7.2% Sep1-19) but the MEAN is
                                     not reliably negative (Aug -5.4% [-11.0,+0.9], Sep +8.3% [-4.8,+24.0]); the v1 'CI excl 0' fade
@@ -56,9 +71,17 @@ tasks:
                                     broad market moves fade more over 4h (Aug -0.121, Sep -0.090). OI build-up / top-trader adds pass
                                     Aug only. Everything else: nothing."}
   M12_persistence_study:    {status: done, artifact: "research/persistence_study.py; docs/PERSISTENCE_STUDY.md",
-                             note: "v3 bug-fixed rerun: no feature validated; vol_persist best candidate (holdout -0.242, top-bottom
-                                    -7.9% [-12.6,-2.9]; discovery means opposite sign). Pumps 72h vs market: median -7.5/-8.7%,
-                                    mean -1.3/-1.2% vs random ~0/+1. Fixes done; commit pending user OK."}
+                             note: "v3 bug-fixed rerun (committed bf94a99): no feature validated; vol_persist best candidate (holdout
+                                    -0.242, top-bottom -7.9% [-12.6,-2.9]; discovery means opposite sign). Pumps 72h vs market:
+                                    median -7.5/-8.7%, mean -1.3/-1.2% vs random ~0/+1."}
+  M13_forward_test:         {status: running, artifact: "docs/FORWARD_TEST.md; research/forward_eval.py; movewatch/followup.py",
+                             note: "started 2026-09-28 15:54:35Z at 1536a86; records data/alerts/followups-*.jsonl; read counts only"}
+  M14_tradfi_exclusion:     {status: done, artifact: "movewatch/tradfi.py; venues/bitget.py",
+                             note: "live leak found 2026-09-28 (Bitget stock perps, Bitget tokenized 'r' stocks); 228 clusters excluded
+                                    at the 15:54 start, e.g. ON@bybit $75.08 = ON Semiconductor; QNT and META@upbit stay crypto"}
+  M15_restart_path:         {status: done, artifact: "movewatch/store.py load(); tests/test_core.py restore regression",
+                             note: "restore decompressed full npz arrays per instrument (~20 min, 100% CPU, detection dead) - never
+                                    hit because the 10:37 start had no state file; found by the restart rehearsal; now 0.24 s"}
 
 decisions:
   - {date: 2026-09-28, what: "detection = nowcasting (catch the move early, escalate, flag reversal), NOT prediction",
@@ -73,3 +96,11 @@ decisions:
      why: "user directive: never break the memory limit, keep a buffer"}
   - {date: 2026-09-28, what: "Telegram via the existing ctaNew/.env credentials; MOVEWATCH_TELEGRAM_* override",
      why: "already configured for this box's other notifiers"}
+  - {date: 2026-09-28, what: "forward-test market adjustment = snapshot medians (replay mkt_median), not a live index",
+     why: "the daily restart (RuntimeMaxSec) broke a cumulative index at every start: no 72h row could have counted"}
+  - {date: 2026-09-28, what: "forward test admits runs by code fingerprint, not by date",
+     why: "CLAUDE.md rules 12/16: verify at the artifact; dry runs or edited code must not enter the sample silently"}
+  - {date: 2026-09-28, what: "+4h Telegram check only for pumps whose NEW was messaged; dumps and digest-held alerts recorded silently",
+     why: "held alerts were never seen individually; a burst day would otherwise send a burst of checks 4h later"}
+  - {date: 2026-09-28, what: "TradFi (stocks/ETFs/commodities) excluded from detection, market median and breadth",
+     why: "not crypto; the research excluded them too; they leaked live via Bitget RWA perps and tokenized stocks"}

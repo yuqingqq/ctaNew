@@ -1,99 +1,115 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-09-28 10:40Z (end of session 1). Single-seat project: this file and
+Updated: 2026-09-28 16:00Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
 
-**Live.** `movewatch.service` (user systemd, enabled) streams ~5,900 markets on 12 venue
-feeds and sends Telegram alerts using the **strict preset** (logic v4, `cal_v4` pick:
-floor ×3.0, z ×1.25, v ×1.0, liquidity ≥ $5M → replay 9.7 NEW / 38.4 messages per day on
-Binance USDM in August; live volume will be higher — more venues and assets). Memory is
-capped and measured (replay 0.815 GiB peak at the default 4 GiB slot cap; service 332 MB
-peak vs `MemoryMax=1536M`). The clean test of the final logic is the forward live log.
+**Live, and a forward test is running.** `movewatch.service` (user systemd, enabled) streams
+~4,500–5,900 markets on 12 venues and sends Telegram alerts with the **strict preset** (logic v4,
+`cal_v4`: floor ×3.0, z ×1.25, v ×1.0, liquidity ≥ $5M). The replay rate on Binance USDM was
+9.7 NEW / 38.4 messages per day in August; live counts will differ because it covers more venues
+and assets. Since **15:54Z the service runs the frozen commit `1536a86`**, which adds:
+- a breadth line on NEW alerts;
+- a +4 h volume check message for pumps;
+- stock/ETF/commodity exclusion;
+- silent +4/+24/+72 h follow-up records for the forward test declared in
+  `docs/FORWARD_TEST.md`.
+
+Memory is measured: service 308 MB RSS, 356 MB peak vs `MemoryHigh=1G` / `MemoryMax=1536M`,
+swap 0.
 
 ## Done (session 1)
 
-- **QNT case study** — `docs/QNT_2026-09_CASE_STUDY.md` (every number from
-  `research/qnt_case_study.py`): $66.87 → $374.50 (5.6×), peak 09-27 22:56 UTC; catalyst
-  09-24 (The Clearing House + UK Finance); perps 88% of volume; all venues in lockstep at
-  1m; squeeze signature (OI $4.0M → $56.6M, funding negative on each leg).
-- **Live system** — 12 feeds, 1 s engine, shared `signals.py` / `alerts.py` (same code in
-  the replay), Telegram + JSONL notifier, burst digest, listing + Upbit-flag watcher,
-  Binance funding in messages, state snapshot + graceful SIGTERM, `status` command.
-- **Calibration** — `docs/CALIBRATION.md`: protocol declared before results; grid 1
-  failed the budget (best 39.9 NEW/day) → pre-declared grid 2; logic iterated v2 → v4 on
-  the QNT failure modes (each change recorded with what had been seen). Frontier (2d)
-  and QNT-per-preset (2e) tables for choosing noise vs earliness.
-- **Tests** — `tests/test_core.py`, 18/18 pass, each with a falsifier.
-- **Deploy** — Telegram test message delivered; service installed 10:37:06Z.
+- **QNT case study**: `docs/QNT_2026-09_CASE_STUDY.md`. $66.87 → $374.50 (5.6×), peak 09-27
+  22:56 UTC; catalyst 09-24; perps were 88% of volume; squeeze signature.
+- **Live system**: 12 feeds, 1 s engine, shared `signals.py` / `alerts.py` (the replay runs
+  the same code), Telegram + JSONL, burst digest, listing + Upbit-flag watcher, funding line,
+  state snapshot, `status` command.
+- **Calibration**: `docs/CALIBRATION.md`. The protocol was declared first; noise-vs-earliness
+  frontier in 2d, QNT per preset in 2e.
+- **Research, reviewed and bug-fixed** (commit `bf94a99`):
+  - Typical pumps fade (24 h median −11.2% Aug / −7.2% Sep), but the mean is not reliably
+    negative.
+  - Signals predict size, not direction.
+  - Market breadth passes its declared 4 h test narrowly.
+  - Nothing validates for 72 h persistence. Heavy post-alert volume is the best candidate
+    (holdout heavy − quiet −7.9% [−12.6, −2.9]; discovery means have the opposite sign).
+- **Forward test** (commit `1536a86`, the freeze): declaration, recorder (`movewatch/followup.py`
+  and engine), evaluator `research/forward_eval.py`.
+  - Market adjustment uses price snapshots of the liquid universe: the replays' `mkt_median`,
+    and restarts don't affect it.
+  - Every start logs a code fingerprint. The evaluator admits only runs of the frozen code and
+    gives every excluded row a status per hypothesis.
+- **TradFi exclusion** (`movewatch/tradfi.py`): 228 stock/ETF/commodity clusters excluded,
+  matched by price against labelled Bitget RWA and OKX stock/commodity instruments, plus Bitget
+  tokenized "r" stocks. `bitget_spot` minimum volume is now $1M.
+- **Restart path fixed**: `store.load` decompressed the full npz arrays once per instrument,
+  ~20 min at 100% CPU, and detection is dead during load. The 10:37 start had no state file, so
+  it never showed. Every daily restart would have hit it. Now 0.24 s; the regression test fails
+  on the old code.
+- **Tests**: 46 pass. Every falsifier was mutation-checked (a deliberately broken instrument
+  must fail its test).
 
 ## Next (ranked)
 
-1. **Watch the first live day.** `python3 -m movewatch status`; `tail -f data/movewatch.log`
-   (HEALTH every minute: `rss_mb`, feeds up/shards, reconnects). Expect ~40–70 messages/day.
-2. **Preset choice is the user's.** Strict (default) caught QNT's run first at $177.55 and
-   the blow-off at $308.82; the ≤80 preset at $147.67 and $237.04 (1.5 h before the top)
-   for ~2× the messages. Switch: `python3 -m research.apply_pick data/replay/cal_v4/summary.json
-   --budget 80 && systemctl --user restart movewatch`.
-3. **7-day forward review (due 2026-10-05, STATUS M8):** messages by kind/day, misses vs
-   ex-post big moves (same event definition as the replay), false alarms, memory trend.
-   Any threshold change is picked on those days and validated on LATER days.
-4. **Wake path for calm names (M9, measured, NOT deployed):** QNT 09-24 was +8.3% / 1h at
-   z 8.8, volume 20× (raw) — blocked only by the size floor (strict 1h = 30%). Added as an
-   OR path `1h ≥5%, z ≥6, vol ≥8×` it fires 09-24 14:09 at $80.18 (in-sample: designed on
-   QNT) but NEW/day 9.7 → 35.0 (Aug), 7.7 → 34.7 (09-01..19); `research/wake_path.py`.
-   Next: a targeted version (calm-for-days + both 15m and 1h unusual) on a fresh window.
-5. **Post-signal behaviour (bug-fixed v2, `research/post_signal.py`):** the typical pump fades
-   (24h median −11.2% Aug / −7.2% Sep 1–19; 40% higher after 1h) but the mean is NOT reliably
-   negative (a few explode) — v1's significant average fade was a log-averaging artifact. Pump REVERSAL alerts preceded further falls in 2 of 3 windows
-   (not significant in 09-01..19). Any trade rule (e.g. short after REVERSAL) must be declared
-   first, costed (fees + slippage + funding), tested vs a matched null, then run forward —
-   and prior repo work (pump→dump thread) found that pattern not monetizable on free data.
-6. **Signal metrics (done, `docs/SIGNAL_FEATURES.md`):** OI, positioning, premium, breadth, detection
-   latency etc. — none replicates; weak consistent tendencies only (broad-market moves, retail
-   crowding, OI build-up and extended moves fade more; liquid coins fade less). Use them as context
-   lines in alerts, log them, and test the squeeze-vs-flush interaction on forward data.
-7. **Persistence study (`docs/PERSISTENCE_STUDY.md`) — reviewed, bugs fixed, rerun (v3):** nothing
-   validates under the declared protocol; heavy post-alert volume is the best candidate (holdout
-   −7.9% [−12.6, −2.9] heavy vs quiet third; discovery means opposite sign). Market breadth passes
-   the 4h study's declared test narrowly (`docs/SIGNAL_FEATURES.md`). Both need forward data. Next: a +4 h follow-up message carrying this bucket's historical base rate; the April–
-   July holdout is now CONSUMED — any new idea needs forward data.
-8. Roadmap: OI lines (Bybit tickers / HL ctx), Upbit/Bithumb announcement feeds (listing
-   notices precede the market), MEXC/Gate/KuCoin feeds (early small-cap listings),
-   sub-second lead-lag from exchange timestamps, periodic re-discovery instead of the
-   daily restart.
+1. **Let the forward test run; read counts only.** `python3 -m research.forward_eval` prints
+   counts and statuses. It is allowed any time. Statistics come once, with `--final`, at the
+   minimum: H1/B1 ≥ 200 complete pumps, H2 ≥ 300, ≥ 5 complete ISO weeks (earliest
+   2026-11-09; likely late Nov–Dec at the replay rate).
+2. **7-day live review (due 2026-10-05, STATUS M8)**: messages by kind/day, misses vs ex-post
+   big moves, false alarms, memory trend, follow-up statuses (share `VOL_GAP` / `LATE`).
+   **Read-only.** Any code or config change ends the forward test, so weigh that before
+   touching thresholds.
+3. **Preset choice is the user's**, but switching now ends the forward test. Strict caught
+   QNT at $177.55 and the blow-off at $308.82; the ≤80 preset caught $147.67 and $237.04, for
+   ~2× the messages.
+4. **Wake path for calm names (M9, measured, NOT deployed)**: catches QNT 09-24 at $80.18
+   (in-sample) but NEW/day 9.7 → 35.0. It needs a fresh window, and deploying it ends the test.
+5. Roadmap, after the test or as a declared new test:
+   - OI lines;
+   - Upbit/Bithumb announcement feeds;
+   - MEXC/Gate/KuCoin feeds;
+   - sub-second lead-lag;
+   - periodic re-discovery instead of the daily restart.
 
 ## Watch out for
 
-- **Same ticker ≠ same asset.** OKX lists equity perps/spot under crypto tickers
-  (`QNT-USDT-SWAP` ≈ $48); Binance/Bitget `METAUSDT` is a stock perp; Upbit/Bithumb
-  `KRW-META` is Metadium; `KRW-EDGE` ≠ global EDGE. Handled by `instCategory` filtering +
-  runtime price clusters (`store.refresh_consistency`, names like `META@upbit`).
-- **Geo-blocks from this box:** api/fapi.binance.com → 451, api.bybit.com → 403. Use
-  data-api / data-stream .binance.vision, fstream `/market/` path (kline / miniTicker /
-  markPrice are silent on bare `/stream`), Bybit WS with one topic per subscribe.
-- **Consumed windows:** 2026-09-20..09-27 (QNT) was seen in development; 09-01..09-19 has
-  been read three times (v2 clean, v3/v4 second/third looks). Neither is out-of-sample
-  for logic v4 — only forward data is.
-- **Memory budgets (user directive 2026-09-28: never break the limit, keep a buffer).**
-  - Replay: run at the DEFAULT slot cap (4 GiB address space), never raise
-    `RESEARCH_MEM_GIB`; launch with `MALLOC_ARENA_MAX=2`; `research/replay.py` keeps the
-    (n × T) panel in disk memmaps, logs `[mem]` per stage and aborts above 2.0 GiB RSS.
-  - Service: `MemoryHigh=1G` / `MemoryMax=1536M`, one Telegram warning above 768 MB; float32
-    rings, 25% growth, chunked baselines, WS queues ≤ 1,024 messages.
-  - Check `free -g` before starting a second heavy job; the box runs tape collectors.
-- **Cold start:** Bitget backfills ~500 minutes, so the first evaluation can alert on a move
-  already in progress; 24h volumes are normalized by observed minutes until a day accrues.
-- **Replay vs live:** replay evaluates minute closes → detection times are an upper bound.
-- `pgrep -f`/`pkill -f` with a pattern that appears in your own command line matches your
-  own shell; anchor with `^python3` or bracket a letter (`[m]ovewatch`).
+- **Frozen code.** The forward test ends at the first service start whose code/config
+  fingerprint differs from `1536a86`'s (`movewatch/**/*.py` + `config/movewatch.yaml`). Docs,
+  research and tests can change freely.
+- **Never run a second engine on `data/`.** Smoke tests and rehearsals use `--data-dir <scratch>`
+  (or a scratch `data_dir`), otherwise they write into the live state and follow-up files.
+  Dry runs are ignored by the evaluator, but they would still corrupt state.
+- **Restart rehearsal recipe** (it found the restore bug): production config, dry run, a
+  scratch data dir seeded with a copy of `data/state/store.npz`, ~150 s live. Then run
+  synthetic alerts through `_schedule_followup` / `_process_followups`. The script from
+  2026-09-28 lived in the session scratchpad; recreate it from this description.
+- **SIGTERM during startup** only sets the stop flag; the process stops once discovery ends.
+  systemd's `TimeoutStopSec=30` bounds it.
+- **Same ticker ≠ same asset.** OKX lists equity instruments under crypto tickers (QNT ≈ $48
+  stock); `METAUSDT` perps are the Meta stock; Upbit `KRW-META` is Metadium; `ON@bybit` is ON
+  Semiconductor. Handled by price clusters plus the TradFi price match.
+- **Geo-blocks from this box**: api/fapi.binance.com → 451, api.bybit.com → 403. Use
+  `*.binance.vision` and fstream `/market/`, and Bybit WS with one topic per subscribe.
+- **Consumed windows**: 09-20..27 (QNT) and 09-01..19 (three looks), plus the Apr–Jul holdout
+  (persistence). Only forward data is out-of-sample.
+- **Memory** (user directive: never break the limit, keep a buffer):
+  - Research: `.worktrees/research_slot.sh` at the default 4 GiB cap, `MALLOC_ARENA_MAX=2`, and
+    the 2 GiB self-guard.
+  - Service: systemd limits above.
+  - Check `free -g` before a second heavy job.
+- **Cold start**: Bitget backfills ~500 min. A complete volume window needs ≥ 7 h of history,
+  which the restore provides after restarts.
+- `pgrep -f` / `pkill -f` patterns match your own shell. Anchor with `^python3` or bracket a
+  letter.
 
 ## Resume
 
 ```bash
 cd ~/ctaNew/movewatch && cat STATUS.yml HANDOFF.md
-python3 -m pytest -q tests/                 # 18 tests
+python3 -m pytest -q tests/                 # 46 tests
 python3 -m movewatch status                 # live health + last alerts
+python3 -m research.forward_eval            # forward-test counts (reading rule: counts only)
 systemctl --user status movewatch           # memory current / high / max
 ```
