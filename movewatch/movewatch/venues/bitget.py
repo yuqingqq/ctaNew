@@ -40,6 +40,8 @@ class _Bitget(Feed):
             for s in syms:
                 if s.get("status") != "online" or s["quoteCoin"] not in ("USDT", "USDC"):
                     continue
+                if s["baseCoin"][:1] == "r" and s["baseCoin"][1:2].isupper():
+                    continue          # Bitget tokenized stocks (rNKE, rTSLA ...): 2,811 of 3,322 pairs, 2026-09-28
                 if qv.get(s["symbol"], 0.0) < min_qv:
                     continue
                 i = make(self.venue, s["symbol"], s["baseCoin"], s["quoteCoin"], "spot")
@@ -52,7 +54,7 @@ class _Bitget(Feed):
                                   params={"productType": "USDT-FUTURES"}))["data"]
             qv = {t["symbol"]: float(t.get("usdtVolume") or t.get("quoteVolume") or 0) for t in tk}
             for c in cs:
-                if c.get("symbolStatus") != "normal":
+                if c.get("symbolStatus") != "normal" or c.get("isRwa") == "YES":   # stock/ETF/commodity perps
                     continue
                 if qv.get(c["symbol"], 0.0) < min_qv:
                     continue

@@ -323,3 +323,46 @@ def test_cli_status_runs_without_config(capsys):
     from movewatch.__main__ import main
     assert main(["status", "--n", "1"]) == 0
     assert "alerts" in capsys.readouterr().out
+
+
+def test_store_restore_reads_each_array_once_and_restores_pending(tmp_path, monkeypatch):
+    """Regression: z[...] inside the per-key loop decompressed the whole array per instrument
+    (~20 min at 100% CPU for 4.4k instruments; found by the 2026-09-28 restart rehearsal)."""
+    import movewatch.store as store_mod
+    from movewatch.instruments import FX, make
+    from movewatch.store import BarStore
+    t = 1_790_000_000
+    s1 = BarStore(FX(), min_len=100)
+    for k in range(40):
+        s1.register(make("binance_usdm", f"C{k}USDT", f"C{k}", "USDT", "perp"))
+    s1.t = t
+    s1.min_px[:40, :] = np.arange(40, dtype=np.float32)[:, None] + 1.0
+    s1.min_qv[:40, :] = 7.0
+    s1.save(tmp_path / "store.npz")
+    s2 = BarStore(FX(), min_len=100)
+    for k in range(30):                               # C30..C39 register later (lazy venue)
+        s2.register(make("binance_usdm", f"C{k}USDT", f"C{k}", "USDT", "perp"))
+    s2.t = t + 120
+    reads, real = [], np.load
+
+    class Counting:
+        def __init__(self, z):
+            self.z = z
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            self.z.close()
+
+        def __getitem__(self, k):
+            reads.append(k)
+            return self.z[k]
+    monkeypatch.setattr(store_mod.np, "load", lambda *a, **kw: Counting(real(*a, **kw)))
+    assert s2.load(tmp_path / "store.npz") == 30
+    assert len(reads) <= 4                            # t, keys, min_px, min_qv: once each
+    m = (t + 1) // 60 - 1                             # the last whole minute before the save
+    assert s2.min_px[5, m % 100] == 6.0 and s2.min_qv[5, m % 100] == 7.0
+    j = s2.register(make("binance_usdm", "C35USDT", "C35", "USDT", "perp"))
+    assert s2.min_px[j, m % 100] == 36.0              # pending restore applied at registration
+    assert np.isnan(s2.min_px[5, ((s2.t + 1) // 60 - 1) % 100])   # minutes after the save stay empty

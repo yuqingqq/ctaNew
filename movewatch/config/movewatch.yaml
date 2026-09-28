@@ -26,6 +26,17 @@ burst:                        # market-wide days: > max_new NEW alerts per windo
   max_new: 6
   digest_every_s: 300
 
+breadth:                      # share of liquid coins moving >= 2% the same way (docs/SIGNAL_FEATURES.md);
+  coin_specific_max: 0.0051   # cutoffs = Aug 4h-study terciles; passed its declared test narrowly
+  market_wide_min: 0.0468
+
+followup:                     # forward test, docs/FORWARD_TEST.md (do not change during the test)
+  enabled: true
+  message_pumps: true         # +4h Telegram check for pump alerts; dumps are recorded silently
+  record_horizons_h: [4, 24, 72]
+  vol_quiet_max: 0.94         # post-alert volume ratio: Apr-Jul holdout pump terciles
+  vol_heavy_min: 2.26         # (docs/PERSISTENCE_STUDY.md; an UNVALIDATED candidate)
+
 alerts:
   min_gap_s: 180
   asset_gap_s: 900            # a NEW needs 15 min since the coin's last message of any kind
@@ -64,5 +75,5 @@ venues:
   upbit:        {enabled: true}
   bithumb:      {enabled: true}
   bitget_fut:   {enabled: true, min_quote_volume_24h: 250000}
-  bitget_spot:  {enabled: true, min_quote_volume_24h: 250000}
+  bitget_spot:  {enabled: true, min_quote_volume_24h: 1000000}   # Bitget spot volumes are unreliable (2,902 pairs >= $250k on 2026-09-28)
   hyperliquid:  {enabled: true, min_quote_volume_24h: 100000}

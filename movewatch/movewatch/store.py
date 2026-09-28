@@ -290,22 +290,25 @@ class BarStore:
         from < M minutes ago lines up without shifting; the gap is NaN."""
         if not path.exists() or self.t is None:
             return 0
-        z = np.load(path, allow_pickle=False)
-        t_saved = int(z["t"][0])
-        if self.t - t_saved > max_age_s:
-            return 0
+        with np.load(path, allow_pickle=False) as z:
+            t_saved = int(z["t"][0])
+            if self.t - t_saved > max_age_s:
+                return 0
+            # read each array ONCE: every z[...] access decompresses the whole array again
+            # (inside the per-key loop that was ~20 min at 100% CPU for 4.4k instruments)
+            keys, min_px, min_qv = z["keys"], z["min_px"], z["min_qv"]
         restored = 0
         cur_m = (self.t + 1) // 60
         saved_m = (t_saved + 1) // 60
         valid_ms = np.arange(max(saved_m - self.M + 1, cur_m - self.M + 1), saved_m)
         vpos = valid_ms % self.M
-        for j, key in enumerate(z["keys"]):
+        for j, key in enumerate(keys):
             i = self.index.get(str(key))
             if i is None:  # registered later (lazy venues): applied in register()
-                self.pending_restore[str(key)] = (vpos, z["min_px"][j, vpos], z["min_qv"][j, vpos])
+                self.pending_restore[str(key)] = (vpos, min_px[j, vpos], min_qv[j, vpos])
                 continue
-            self.min_px[i, vpos] = z["min_px"][j, vpos]
-            self.min_qv[i, vpos] = z["min_qv"][j, vpos]
+            self.min_px[i, vpos] = min_px[j, vpos]
+            self.min_qv[i, vpos] = min_qv[j, vpos]
             restored += 1
         return restored
 

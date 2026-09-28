@@ -24,6 +24,7 @@ import asyncio
 import json
 import logging
 import math
+import os
 import signal
 import time
 from pathlib import Path
@@ -32,6 +33,9 @@ import aiohttp
 import numpy as np
 
 from .alerts import Alert, AlertCfg, AlertEngine, BurstGovernor
+from .followup import (GAP_TOL_MIN, breadth, breadth_label, code_fingerprint, coverage, gap_minutes, hold,
+                       volume_label, volume_ratio)
+from .tradfi import fetch_reference, is_tradfi
 from .instruments import FX
 from .notify import Notifier, esc, fmt_pct, fmt_px, fmt_usd, hhmm
 from .signals import DEFAULT_RULES, H_NAME, HORIZONS, Rules, fire, market_median, pct
@@ -44,6 +48,7 @@ log = logging.getLogger("movewatch.engine")
 
 class Engine:
     def __init__(self, cfg: dict, root: Path):
+        self.code_sha = code_fingerprint(cfg)          # before anything can touch cfg
         self.cfg = cfg
         self.root = root
         self.fx = FX()
@@ -72,6 +77,22 @@ class Engine:
         self.venue_down_after_s = float(cfg.get("venue_down_alert_s", 600))
         self.mem_warn_mb = float(cfg.get("mem_warn_mb", 1024))
         self.mem_warned = False
+        # forward test (docs/FORWARD_TEST.md): breadth at alert + follow-ups at +4h/+24h/+72h
+        fcfg, bcfg = cfg.get("followup") or {}, cfg.get("breadth") or {}
+        self.fu_enabled = bool(fcfg.get("enabled", True))
+        self.fu_message_pumps = bool(fcfg.get("message_pumps", True))
+        self.fu_hours = [float(h) for h in fcfg.get("record_horizons_h", [4, 24, 72])]
+        self.vol_quiet_max = float(fcfg.get("vol_quiet_max", 0.94))
+        self.vol_heavy_min = float(fcfg.get("vol_heavy_min", 2.26))
+        self.b_coin_max = float(bcfg.get("coin_specific_max", 0.0051))
+        self.b_wide_min = float(bcfg.get("market_wide_min", 0.0468))
+        self.followups: list[dict] = []
+        self.fu_path = self.state_path.parent / "followups.json"
+        self.fu_dir = data_dir / "alerts"
+        self.dry_run = bool((cfg.get("notify") or {}).get("dry_run", False))
+        self.run_id = f"{int(time.time())}-{os.getpid()}"
+        self.tradfi_ref: dict[str, list[float]] = {}
+        self.tradfi_assets: set[str] = set()
 
     # ------------------------------------------------------------------ lifecycle
     async def run(self, duration_s: float | None = None) -> None:
@@ -94,11 +115,18 @@ class Engine:
                     self.notifier.emit(f"⚠️ movewatch: {esc(f.venue)} discovery failed: {esc(str(e)[:150])}",
                                        {"kind": "FEED", "venue": f.venue})
                 await asyncio.sleep(0.5)
+            self.tradfi_ref = await fetch_reference(session)     # before any classification
+            log.info("tradfi reference: %d labelled bases", len(self.tradfi_ref))
             restored = self.store.load(self.state_path)
             n_ep = self.alerts.load(self.alert_state_path, time.time())
-            log.info("restored minute history for %d instruments (+%d pending), %d active episodes",
-                     restored, len(self.store.pending_restore), n_ep)
+            n_fu = self._load_followups(time.time())
+            log.info("restored minute history for %d instruments (+%d pending), %d active episodes, %d follow-ups",
+                     restored, len(self.store.pending_restore), n_ep, n_fu)
+            if self.fu_enabled:          # the evaluator admits only runs of the frozen code
+                self._fu_log({"kind": "FU_START", "t": time.time(), "code_sha": self.code_sha,
+                              "dry_run": self.dry_run, "open_followups": n_fu})
             tasks.append(asyncio.create_task(self.notifier.run(session), name="notifier"))
+            tasks.append(asyncio.create_task(self._tradfi_loop(session), name="tradfi"))
             if self.cfg.get("watchers", {}).get("enabled", True):
                 w = ListingWatcher(self.cfg.get("watchers", {}), self)
                 tasks.append(asyncio.create_task(w.run(session), name="watchers"))
@@ -108,6 +136,7 @@ class Engine:
             finally:
                 self.store.save(self.state_path)
                 self.alerts.save(self.alert_state_path)
+                self._save_followups()
                 log.info("state saved; stopping")
                 for t in tasks:
                     t.cancel()
@@ -116,6 +145,13 @@ class Engine:
                     await asyncio.wait_for(self._drain(session), timeout=10)
                 except asyncio.TimeoutError:
                     pass
+
+    async def _tradfi_loop(self, session) -> None:
+        while True:
+            await asyncio.sleep(900)
+            ref = await fetch_reference(session)
+            if ref:                                   # keep the last good reference on a failed fetch
+                self.tradfi_ref = ref
 
     async def _drain(self, session) -> None:
         while not self.notifier.q.empty():
@@ -146,9 +182,15 @@ class Engine:
             held = self.governor.flush(now)
             if held:
                 self._digest(held, now)
+            if self.fu_enabled and int(now) % 10 == 0 and self.members:
+                try:
+                    self._process_followups(now)
+                except Exception:  # noqa: BLE001 -- a follow-up failure must not stop detection
+                    log.exception("follow-up processing failed")
             if now - last_save >= 300:
                 self.store.save(self.state_path)
                 self.alerts.save(self.alert_state_path)
+                self._save_followups()
                 last_save = now
             if now - last_health >= 60:
                 self._health(now)
@@ -164,7 +206,19 @@ class Engine:
         names = st.asset_of
         for i, ins in enumerate(st.insts[: st.n]):
             by.setdefault(names[i] if i < len(names) else ins.base, []).append(i)
-        self.members = {b: np.array(ids) for b, ids in by.items()}
+        tradfi = set()
+        for name, ids in by.items():
+            px = [st.usd_px[i] for i in ids if st.usd_px[i] == st.usd_px[i] and st.usd_px[i] > 0]
+            if not px:
+                continue
+            base = st.insts[ids[0]].base
+            if is_tradfi(base, float(np.median(px)), self.tradfi_ref,
+                         any(st.insts[i].venue == "binance_usdm" for i in ids)):
+                tradfi.add(name)
+        if tradfi != self.tradfi_assets:
+            log.info("TRADFI excluded assets: %d (%s)", len(tradfi), ", ".join(sorted(tradfi)[:25]))
+        self.tradfi_assets = tradfi
+        self.members = {b: np.array(ids) for b, ids in by.items() if b not in tradfi}
         vol = st.vol24h[: st.n]
         self.primary = {b: int(ids[np.argmax(vol[ids])]) for b, ids in self.members.items()}
 
@@ -210,7 +264,9 @@ class Engine:
         R = st.returns(list(HORIZONS))
         now_ms = now * 1000
         ok = ((now_ms - st.last_ms[:n]) < self.fresh_ms) & ~st.alias_bad[:n] & ~st.down[:n]
-        prim = np.array([i for i in self.primary.values() if i < n])
+        pitems = [(a, i) for a, i in self.primary.items() if i < n]
+        prim = np.array([i for _, i in pitems])
+        prim_names = np.array([a for a, _ in pitems])
         liq_prim = st.vol24h[prim]
         m = {h: market_median(np.where(ok[prim], R[h][prim], np.nan), liq_prim, self.rules.market_liq_usd)
              for h in HORIZONS}
@@ -221,7 +277,9 @@ class Engine:
                 hit = np.flatnonzero(ok & (np.abs(R[h] - m[h]) >= rule.floor))
             names = st.asset_of
             for i in hit:
-                cand.add(names[i] if i < len(names) else st.insts[i].base)
+                nm = names[i] if i < len(names) else st.insts[i].base
+                if nm in self.members:                 # TradFi clusters are not in members
+                    cand.add(nm)
         for asset in cand:
             a = self._asset(asset, R, m, ok)
             if a is None or not a["fired"]:
@@ -229,6 +287,10 @@ class Engine:
             h, r, e, z, vm = max(a["fired"], key=lambda x: abs(x[1]))
             self.n_triggers += 1
             metrics = dict(a, horizon=H_NAME[h], e=e, z=z, vm=vm, mkt=m, fired=[H_NAME[x[0]] for x in a["fired"]])
+            b = breadth(np.where(ok[prim], R[h][prim], np.nan), liq_prim, ok[prim], int(np.sign(e)),
+                        prim_names == asset, liq_min=self.rules.market_liq_usd)
+            metrics["breadth"] = b
+            metrics["breadth_label"] = breadth_label(b, self.b_coin_max, self.b_wide_min)
             for al in self.alerts.on_trigger(asset, now, a["ref_usd"], int(np.sign(e)), r, H_NAME[h],
                                              metrics=metrics, ref_key=a["ref_key"]):
                 self._deliver(al)
@@ -314,15 +376,23 @@ class Engine:
         return None
 
     def _ref_price(self, asset: str, ref_key: str | None, ok: np.ndarray) -> float | None:
+        return self._ref_price_key(asset, ref_key, ok)[0]
+
+    def _ref_price_key(self, asset: str, ref_key: str | None, ok: np.ndarray) -> tuple[float | None, str | None]:
+        """USD price of the episode's reference instrument, else of the asset's primary; and
+        the key of the instrument that priced it."""
         st = self.store
         i = st.index.get(ref_key) if ref_key else None
-        if i is None or not ok[i]:
+        if i is None or i >= st.n or not ok[i]:
             i = self.primary.get(asset)
             if i is None or i >= st.n or not ok[i]:
-                return None
-        ins = st.insts[i]
-        px = st.last_px[i] / ins.mult * self.fx.to_usd(ins.quote)
-        return float(px) if px > 0 else None
+                return None, None
+        px = self._usd(i)
+        return (px, st.insts[i].key) if px > 0 else (None, None)
+
+    def _usd(self, i: int) -> float:
+        ins = self.store.insts[i]
+        return float(self.store.last_px[i] / ins.mult * self.fx.to_usd(ins.quote))
 
     def _market(self, now: float, m: dict, R: dict, ok: np.ndarray) -> None:
         for h, floor_pct in self.rules.market_floor_pct.items():
@@ -368,10 +438,131 @@ class Engine:
     # ------------------------------------------------------------------ messages
     def _deliver(self, al: Alert) -> None:
         rec = {"kind": al.kind, "alert": al}
-        if self.governor.admit(al):
+        messaged = self.governor.admit(al)
+        if messaged:
             self.notifier.emit(format_alert(al), rec)
         else:
             self.notifier.record_only(format_alert(al), dict(rec, held_for_digest=True))
+        if al.kind == "NEW" and self.fu_enabled:
+            self._schedule_followup(al, messaged)
+
+    # ------------------------------------------------------------------ forward test
+    # docs/FORWARD_TEST.md. Market adjustment = median return of the liquid-primary universe
+    # between two price snapshots (the replays' definition), so restarts never break it.
+    def _fu_log(self, rec: dict) -> None:
+        self.fu_dir.mkdir(parents=True, exist_ok=True)
+        path = self.fu_dir / f"followups-{time.strftime('%Y%m%d', time.gmtime())}.jsonl"
+        with open(path, "a") as f:
+            f.write(json.dumps(dict(rec, run=self.run_id), default=float) + "\n")
+
+    def _ok_mask(self, now: float) -> np.ndarray:
+        st = self.store
+        n = st.n
+        return ((now * 1000 - st.last_ms[:n]) < self.fresh_ms) & ~st.alias_bad[:n] & ~st.down[:n]
+
+    def _mkt_universe(self, ok: np.ndarray, exclude: str) -> list[str]:
+        """Keys of the market median's universe now: fresh primaries with >= $5M/day, the
+        alerted asset excluded (research/common.py mkt_median, liquidity point-in-time)."""
+        st = self.store
+        return sorted(st.insts[i].key for a, i in self.primary.items()
+                      if a != exclude and i < st.n and ok[i] and st.vol24h[i] >= self.rules.market_liq_usd)
+
+    def _mkt_prices(self, keys, ok: np.ndarray) -> dict[str, float]:
+        st = self.store
+        out = {}
+        for k in keys:
+            i = st.index.get(k)
+            if i is not None and i < st.n and ok[i]:
+                p = self._usd(i)
+                if p > 0:
+                    out[k] = float(f"{p:.7g}")
+        return out
+
+    def _schedule_followup(self, al: Alert, messaged: bool) -> None:
+        ok = self._ok_mask(al.ts)
+        keys0 = self._mkt_universe(ok, al.asset)
+        ids = self.members.get(al.asset, np.array([], dtype=int))
+        fu = {"id": al.episode_id, "asset": al.asset, "dir": int(al.direction), "alert_ts": float(al.ts),
+              "alert_px": float(al.price), "ref_key": al.metrics.get("ref_key"), "horizon": al.horizon,
+              "breadth": al.metrics.get("breadth"), "breadth_label": al.metrics.get("breadth_label"),
+              "alert_minute": int(al.ts // 60), "messaged": bool(messaged),
+              "member_keys": [self.store.insts[i].key for i in ids if i < self.store.n]}
+        self._fu_log(dict(fu, kind="FU_OPEN", t=float(al.ts), mkt_px=self._mkt_prices(keys0, ok)))
+        self.followups.append(dict(fu, done=[], mkt_keys0=keys0))
+        self._save_followups()
+
+    def _fu_volume(self, fu: dict, late: bool) -> dict:
+        """Post-alert volume ratio over the alert-time instruments that have prices in >= 90% of
+        both windows (a venue listing mid-window would otherwise inflate it), + completeness."""
+        if late:                              # the minute ring may have wrapped past the windows
+            return {"vol_ratio": None, "vol_label": "late"}
+        st = self.store
+        n = st.n
+        m_a = fu["alert_minute"]
+        ids = np.array([st.index[k] for k in fu.get("member_keys", []) if k in st.index and st.index[k] < n], dtype=int)
+        if ids.size:
+            ids = ids[(coverage(st.min_px[:n], st.M, ids, m_a - 180, m_a) >= 0.9)
+                      & (coverage(st.min_px[:n], st.M, ids, m_a + 60, m_a + 240) >= 0.9)]
+        if not ids.size:
+            return {"vol_ratio": None, "vol_label": "incomplete", "n_inst_used": 0,
+                    "n_inst_alert": len(fu.get("member_keys", []))}
+        ratio, after, before = volume_ratio(st.min_qv[:n], st.M, ids, m_a)
+        bn = ids[[st.insts[i].venue == "binance_usdm" for i in ids]]
+        ratio_bn = volume_ratio(st.min_qv[:n], st.M, bn, m_a)[0] if bn.size else float("nan")
+        gb = gap_minutes(st.min_px[:n], st.M, ids, m_a - 180, m_a)
+        ga = gap_minutes(st.min_px[:n], st.M, ids, m_a + 60, m_a + 240)
+        label = volume_label(ratio, self.vol_quiet_max, self.vol_heavy_min)
+        if max(gb, ga) > GAP_TOL_MIN:
+            label = "incomplete"
+        return {"vol_ratio": ratio, "vol_after_usd": after, "vol_before_usd": before,
+                "vol_ratio_binance_usdm": ratio_bn, "vol_label": label, "gap_min_before": gb, "gap_min_after": ga,
+                "n_inst_used": int(ids.size), "n_inst_alert": len(fu.get("member_keys", []))}
+
+    def _process_followups(self, now: float) -> None:
+        ok = self._ok_mask(now)
+        keep, wrote = [], False
+        for fu in self.followups:
+            for H in self.fu_hours:
+                if H in fu["done"]:
+                    continue
+                due = ((fu["alert_minute"] + 240) * 60 + 5) if H == 4 else fu["alert_ts"] + H * 3600
+                if now < due:
+                    continue
+                px, px_key = self._ref_price_key(fu["asset"], fu.get("ref_key"), ok)
+                rec = {"kind": f"FU_{int(H)}H", "id": fu["id"], "asset": fu["asset"], "dir": fu["dir"], "t": now,
+                       "late_s": round(now - due, 1), "px": px, "px_key": px_key,
+                       "hold": hold(fu["dir"], fu["alert_px"], px) if px else None}
+                late = rec["late_s"] > (600 if H == 4 else 3600)
+                if H == 4:
+                    fu["mkt_keys4"] = self._mkt_universe(ok, fu["asset"])
+                    rec["mkt_liq"] = fu["mkt_keys4"]
+                    rec.update(self._fu_volume(fu, late))
+                rec["mkt_px"] = self._mkt_prices(set(fu["mkt_keys0"]) | set(fu.get("mkt_keys4", [])), ok)
+                self._fu_log(rec)
+                fu["done"].append(H)
+                wrote = True
+                if H == 4 and fu["dir"] > 0 and fu.get("messaged") and self.fu_message_pumps and not late:
+                    self.notifier.emit(format_followup(fu, rec),
+                                       {"kind": "FOLLOWUP", "followup": {k: v for k, v in rec.items()
+                                                                         if k not in ("mkt_px", "mkt_liq")}})
+            if len(fu["done"]) < len(self.fu_hours) and now - fu["alert_ts"] < (max(self.fu_hours) + 6) * 3600:
+                keep.append(fu)
+        self.followups = keep
+        if wrote:
+            self._save_followups()
+
+    def _save_followups(self) -> None:
+        tmp = self.fu_path.with_suffix(".tmp")
+        tmp.write_text(json.dumps({"followups": self.followups}, default=float))
+        os.replace(tmp, self.fu_path)
+
+    def _load_followups(self, now: float) -> int:
+        if not self.fu_path.exists():
+            return 0
+        d = json.loads(self.fu_path.read_text())
+        self.followups = [f for f in d.get("followups", [])
+                          if "mkt_keys0" in f and now - f["alert_ts"] < (max(self.fu_hours) + 6) * 3600]
+        return len(self.followups)
 
     def _digest(self, held: list, now: float) -> None:
         """One message for NEW alerts held by the burst governor (market-wide days)."""
@@ -437,6 +628,10 @@ def format_alert(al: Alert) -> str:
     if vparts:
         lines.append(" · ".join(vparts))
     tail = []
+    if al.kind == "NEW" and m.get("breadth") is not None and m.get("breadth") == m.get("breadth"):
+        lab = m.get("breadth_label", "")
+        note = {"coin-specific": "held up better in replays", "market-wide": "faded more in replays"}.get(lab, "")
+        tail.append(f"breadth {m['breadth'] * 100:.1f}% · {esc(lab)}" + (f" ({note})" if note else ""))
     if mk1h == mk1h:
         tail.append(f"mkt 1h {fmt_pct(mk1h)}")
     fr = m.get("funding")
@@ -444,4 +639,28 @@ def format_alert(al: Alert) -> str:
         tail.append(f"Binance funding {fr * 100:+.4f}%" + (" (shorts paying)" if fr < 0 else ""))
     if tail:
         lines.append(" · ".join(tail))
+    return "\n".join(lines)
+
+
+
+def format_followup(fu: dict, rec: dict) -> str:
+    """+4 h check for a pump alert. Wording is fixed by docs/FORWARD_TEST.md: a CANDIDATE, not a rule."""
+    h = rec.get("hold")
+    move = f"{(math.exp(h) - 1) * 100:+.1f}%" if h is not None and h == h else "n/a"
+    px = f"{fmt_px(fu['alert_px'])} → {fmt_px(rec['px'])}" if rec.get("px") else ""
+    lab = rec.get("vol_label", "unknown")
+    ratio = rec.get("vol_ratio")
+    lines = [f"⏱ <b>{esc(fu['asset'])}</b> 4h check: {move} since the alert {px}".rstrip()]
+    if lab == "incomplete":
+        gaps = max(rec.get("gap_min_before") or 0, rec.get("gap_min_after") or 0)
+        lines.append(f"volume ratio unreliable: price data missing ({gaps} min gap or no venue with full coverage)")
+    elif ratio is not None and ratio == ratio:
+        lines.append(f"volume hours 1–4: {ratio:.1f}× the pre-alert pace → {lab.upper()}")
+    else:
+        lines.append("volume ratio unavailable")
+    if lab == "heavy":
+        lines.append("candidate, unvalidated: in Apr–Jul replays heavy-volume pumps did ~8% worse over the next "
+                     "3 days than quiet ones · live test running")
+    elif lab == "quiet":
+        lines.append("candidate, unvalidated: quiet-volume pumps held up better in Apr–Jul replays · live test running")
     return "\n".join(lines)
