@@ -62,3 +62,19 @@ against the median liquid coin, which is not tradable. BTC is.
   - Four horizons are examined; requiring both windows is the replication bar.
 - Memory: default slot cap (4 GiB AS), `MALLOC_ARENA_MAX=2`, abort above 2.0 GiB RSS; panels
   are disk memmaps.
+
+## Corrections before the first result (2026-10-02, committed before the run)
+No hedge statistic had been computed when these were made. The first run stopped at the
+reconciliation self-test.
+1. **Trigger minute.** The alert `time` stamps the close of trigger minute t, so
+   t = (time − panel start) − 1. With it, the recomputed 0→72 h market-adjusted return equals
+   the persistence study's `x72h` exactly (spot check on 4 events; the full selftest runs on
+   every row and aborts above 1% mismatch). The first run, with t off by one, mismatched
+   2,729 / 2,729.
+2. **Stocks.** The persistence study's filter was a 37-ticker static list, and ON Semiconductor
+   (ONUSDT) was among its events.
+   - Events and random draws now also drop any symbol whose base a venue labels as a stock or
+     commodity (`movewatch.tradfi.fetch_reference`, snapshot `data/replay/btc_hedge/tradfi_ref.json`)
+     and whose price is within 2× of that label. The windows are months old, while a same-ticker
+     crypto sits orders of magnitude away.
+   - Status `TRADFI_PRICE`, counted.
