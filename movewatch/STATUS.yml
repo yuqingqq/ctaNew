@@ -79,6 +79,10 @@ tasks:
   M14_tradfi_exclusion:     {status: done, artifact: "movewatch/tradfi.py; venues/bitget.py",
                              note: "live leak found 2026-09-28 (Bitget stock perps, Bitget tokenized 'r' stocks); 228 clusters excluded
                                     at the 15:54 start, e.g. ON@bybit $75.08 = ON Semiconductor; QNT and META@upbit stay crypto"}
+  M16_live_check_1002:      {status: done, date: "2026-10-02 14:16Z",
+                             note: "healthy, 8.4 NEW/day, counts H2 30 / H1 2 / B1 2. Found: Binance USDM discovery bug (6 s miniTicker
+                                    window, 347-574 instruments per restart; AIOT lost at a restart -> 72H_NO_PRICE); 龙虾/LONGXIA
+                                    same token on two tickers (duplicate rows). Fix ends the test - user decision pending"}
   M15_restart_path:         {status: done, artifact: "movewatch/store.py load(); tests/test_core.py restore regression",
                              note: "restore decompressed full npz arrays per instrument (~20 min, 100% CPU, detection dead) - never
                                     hit because the 10:37 start had no state file; found by the restart rehearsal; now 0.24 s"}

@@ -51,6 +51,27 @@ swap 0.
 - **Tests**: 46 pass. Every falsifier was mutation-checked (a deliberately broken instrument
   must fail its test).
 
+## Live check 2026-10-02 14:16Z (4.0 days into the forward test; counts only, no outcome read)
+
+- Healthy: 4 admitted runs (daily restarts, all fingerprint 65c7c892), restore ~0.2 s each,
+  0 ERROR lines, max RSS 320–363 MB/day, swap 104 MB (cap 256M), 12/12 feeds up.
+- 33 NEW (17 pumps / 16 dumps) = 8.4/day vs replay 7.4–9.7. NEW+ESC+REV 51 (09-30), 47 (10-01)
+  vs replay 31–38; Upbit flags add 11–26/day.
+- Test counts: H2 30/300, H1 2/200, B1 2/200, complete weeks 0/5. 30/30 4h checks on time
+  (max 5 s), 0 gap minutes, 0 price-source changes; 1 row `72H_NO_PRICE` (AIOT).
+- **BUG — Binance USDM discovery** (`venues/binance.py` `BinanceUsdm.discover`): it reads
+  `!miniTicker@arr` for only 6 s, and that stream carries only symbols that ticked that second.
+  Coverage per restart: 574 / 470 / 435 / 347 instruments. Perps that miss the window are
+  invisible on Binance for the whole day. AIOT (still trading: $2.2M on 09-30, $1.0M on 10-01)
+  dropped at the 09-29 restart, so its 24h/72h records have no price. Fixing it changes code
+  and ends the test: **user decision**.
+- **Same token, two tickers**: `龙虾` (binance_usdm, bitget_fut) and `LONGXIA` (bybit_linear)
+  are one token. 6 NEW between them, one exact duplicate pair (09-30 20:36). This duplicates
+  rows (rule 2). An evaluator-side de-dup can be declared before any outcome is read; the
+  alert side needs a code change.
+- Minor: OKX `ZEC-USD` candle subscribe fails (24× per day); ESCALATE text shows
+  "0/6 venues agree" (cosmetic).
+
 ## Next (ranked)
 
 1. **Let the forward test run; read counts only.** `python3 -m research.forward_eval` prints
