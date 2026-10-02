@@ -33,10 +33,10 @@ import aiohttp
 import numpy as np
 
 from .alerts import Alert, AlertCfg, AlertEngine, BurstGovernor
-from .followup import (GAP_TOL_MIN, breadth, breadth_label, code_fingerprint, coverage, gap_minutes, hold,
-                       volume_label, volume_ratio)
+from .followup import (GAP_TOL_MIN, beta_to, breadth, breadth_label, code_fingerprint, coverage, gap_minutes,
+                       hold, volume_label, volume_ratio)
 from .tradfi import fetch_reference, is_tradfi
-from .instruments import FX
+from .instruments import FX, set_aliases
 from .notify import Notifier, esc, fmt_pct, fmt_px, fmt_usd, hhmm
 from .signals import DEFAULT_RULES, H_NAME, HORIZONS, Rules, fire, market_median, pct
 from .store import BarStore
@@ -44,11 +44,13 @@ from .venues import build_feeds
 from .watchers import ListingWatcher
 
 log = logging.getLogger("movewatch.engine")
+ENTRY_DELAY_S = 60      # FU_ENTRY: the price a person acting on the message could get (docs/FORWARD_TEST_v2.md)
 
 
 class Engine:
     def __init__(self, cfg: dict, root: Path):
         self.code_sha = code_fingerprint(cfg)          # before anything can touch cfg
+        set_aliases(cfg.get("aliases"))                # before any venue builds instruments
         self.cfg = cfg
         self.root = root
         self.fx = FX()
@@ -213,7 +215,8 @@ class Engine:
                 continue
             base = st.insts[ids[0]].base
             if is_tradfi(base, float(np.median(px)), self.tradfi_ref,
-                         any(st.insts[i].venue == "binance_usdm" for i in ids)):
+                         any(st.insts[i].venue == "binance_usdm" for i in ids),
+                         any(st.insts[i].venue == "binance_spot" for i in ids)):
                 tradfi.add(name)
         if tradfi != self.tradfi_assets:
             log.info("TRADFI excluded assets: %d (%s)", len(tradfi), ", ".join(sorted(tradfi)[:25]))
@@ -478,15 +481,37 @@ class Engine:
                     out[k] = float(f"{p:.7g}")
         return out
 
+    def _btc(self, ok: np.ndarray, btc_key: str | None) -> dict:
+        """BTC USD price from the same instrument for the whole follow-up (hedge leg)."""
+        px, key = self._ref_price_key("BTC", btc_key, ok)
+        return {"btc_px": px, "btc_key": key}
+
+    def _beta_btc(self, ref_key: str | None, btc_key: str | None, alert_minute: int) -> dict:
+        """OLS beta + correlation of 5-min log returns, coin reference instrument on BTC, minutes
+        [m_a-1440, m_a-60): the day before the alert, without the hour that holds the move."""
+        st = self.store
+        i, j = st.index.get(ref_key or ""), st.index.get(btc_key or "")
+        if i is None or j is None or i >= st.n or j >= st.n:
+            return {"beta_btc": None, "corr_btc": None, "n_beta": 0}
+        cur_m = (st.t + 1) // 60 if st.t is not None else alert_minute
+        m0 = max(alert_minute - 1440, cur_m - st.M + 1)   # never read ring slots that wrapped past the window
+        pos = [m % st.M for m in range(m0, alert_minute - 60)]
+        if len(pos) < 2:
+            return {"beta_btc": None, "corr_btc": None, "n_beta": 0}
+        b, c, n = beta_to(st.min_px[i, pos].astype(np.float64), st.min_px[j, pos].astype(np.float64))
+        return {"beta_btc": b, "corr_btc": c, "n_beta": n}
+
     def _schedule_followup(self, al: Alert, messaged: bool) -> None:
         ok = self._ok_mask(al.ts)
         keys0 = self._mkt_universe(ok, al.asset)
         ids = self.members.get(al.asset, np.array([], dtype=int))
+        btc = self._btc(ok, None) if al.asset != "BTC" else {"btc_px": None, "btc_key": None}
         fu = {"id": al.episode_id, "asset": al.asset, "dir": int(al.direction), "alert_ts": float(al.ts),
               "alert_px": float(al.price), "ref_key": al.metrics.get("ref_key"), "horizon": al.horizon,
               "breadth": al.metrics.get("breadth"), "breadth_label": al.metrics.get("breadth_label"),
               "alert_minute": int(al.ts // 60), "messaged": bool(messaged),
-              "member_keys": [self.store.insts[i].key for i in ids if i < self.store.n]}
+              "member_keys": [self.store.insts[i].key for i in ids if i < self.store.n], **btc,
+              **self._beta_btc(al.metrics.get("ref_key"), btc["btc_key"], int(al.ts // 60))}
         self._fu_log(dict(fu, kind="FU_OPEN", t=float(al.ts), mkt_px=self._mkt_prices(keys0, ok)))
         self.followups.append(dict(fu, done=[], mkt_keys0=keys0))
         self._save_followups()
@@ -522,6 +547,13 @@ class Engine:
         ok = self._ok_mask(now)
         keep, wrote = [], False
         for fu in self.followups:
+            if "entry" not in fu["done"] and now >= fu["alert_ts"] + ENTRY_DELAY_S:
+                px, px_key = self._ref_price_key(fu["asset"], fu.get("ref_key"), ok)
+                self._fu_log({"kind": "FU_ENTRY", "id": fu["id"], "asset": fu["asset"], "dir": fu["dir"], "t": now,
+                              "late_s": round(now - fu["alert_ts"] - ENTRY_DELAY_S, 1), "px": px, "px_key": px_key,
+                              **self._btc(ok, fu.get("btc_key"))})
+                fu["done"].append("entry")
+                wrote = True
             for H in self.fu_hours:
                 if H in fu["done"]:
                     continue
@@ -531,7 +563,8 @@ class Engine:
                 px, px_key = self._ref_price_key(fu["asset"], fu.get("ref_key"), ok)
                 rec = {"kind": f"FU_{int(H)}H", "id": fu["id"], "asset": fu["asset"], "dir": fu["dir"], "t": now,
                        "late_s": round(now - due, 1), "px": px, "px_key": px_key,
-                       "hold": hold(fu["dir"], fu["alert_px"], px) if px else None}
+                       "hold": hold(fu["dir"], fu["alert_px"], px) if px else None,
+                       **self._btc(ok, fu.get("btc_key"))}
                 late = rec["late_s"] > (600 if H == 4 else 3600)
                 if H == 4:
                     fu["mkt_keys4"] = self._mkt_universe(ok, fu["asset"])
@@ -545,7 +578,7 @@ class Engine:
                     self.notifier.emit(format_followup(fu, rec),
                                        {"kind": "FOLLOWUP", "followup": {k: v for k, v in rec.items()
                                                                          if k not in ("mkt_px", "mkt_liq")}})
-            if len(fu["done"]) < len(self.fu_hours) and now - fu["alert_ts"] < (max(self.fu_hours) + 6) * 3600:
+            if not all(H in fu["done"] for H in self.fu_hours) and now - fu["alert_ts"] < (max(self.fu_hours) + 6) * 3600:
                 keep.append(fu)
         self.followups = keep
         if wrote:
@@ -619,7 +652,7 @@ def format_alert(al: Alert) -> str:
     if line_r:
         lines.append(esc(line_r))
     vparts = []
-    if venues:
+    if venues and al.kind == "NEW":
         vparts.append(f"{agree}/{len(venues)} venues agree")
         if lead:
             vparts.append(f"lead {esc(lead[0])} {fmt_pct(pct(lead[1]))} ({esc(m.get('hb', ''))})")

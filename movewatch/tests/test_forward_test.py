@@ -148,6 +148,8 @@ def test_fingerprint_matches_the_commit_and_catches_an_edit(tmp_path):
     (pkg / "venues").mkdir(parents=True)
     (pkg / "a.py").write_text("A = 1\n")
     (pkg / "venues" / "b.py").write_text("B = 2\n")
+    real_followup = (Path(__file__).resolve().parents[1] / "movewatch" / "followup.py").read_text()
+    (pkg / "followup.py").write_text(real_followup)            # the evaluator runs the frozen copy
     (tmp_path / "config").mkdir()
     (tmp_path / "config" / "movewatch.yaml").write_text("rules: {x: 1}\nalerts: {y: [1, 2]}\n")
     git = ["git", "-c", "user.email=t@t", "-c", "user.name=t"]
@@ -161,6 +163,10 @@ def test_fingerprint_matches_the_commit_and_catches_an_edit(tmp_path):
     assert code_fingerprint(dict(cfg, rules={"x": 2}), pkg=pkg) != frozen  # a config change: caught
     (pkg / "venues" / "b.py").write_text("B = 3\n")
     assert code_fingerprint(cfg, pkg=pkg) != frozen                        # a code change: caught
+    (pkg / "venues" / "b.py").write_text("B = 2\n")
+    (pkg / "followup.py").write_text(real_followup.replace('FINGERPRINT_SKIP_CFG = {"watchers", "notify"}',
+                                                           'FINGERPRINT_SKIP_CFG = {"watchers", "notify", "rules"}'))
+    assert fe.fingerprint_at(commit, root=tmp_path) == frozen               # identity uses the frozen function
 
 
 # ---------------------------------------------------------------- engine follow-up path
@@ -289,3 +295,104 @@ def test_followup_state_roundtrip(tmp_path):
     eng._save_followups()
     eng2 = _engine(tmp_path)
     assert eng2._load_followups(now) == 1 and eng2.followups[0]["done"] == [4]
+
+
+def test_engine_v2_records_entry_btc_leg_and_beta(tmp_path):
+    eng = _engine(tmp_path)
+    alert_minute = int(time.time() // 60) - 300
+    a, b, coins = _market(eng, alert_minute, alert_minute + 300)
+    st = eng.store
+    btc = st.register(make("binance_usdm", "BTCUSDT", "BTC", "USDT", "perp"))
+    rng = np.random.default_rng(3)
+    rb = rng.normal(0, 0.002, 1500)
+    ra = 1.5 * rb + rng.normal(0, 0.0005, 1500)
+    for k, m in enumerate(range(alert_minute - 1450, alert_minute + 50)):    # a day of history before the alert
+        st.min_px[btc, m % st.M] = 80000 * math.exp(rb[: k + 1].sum())
+        st.min_px[a, m % st.M] = math.exp(ra[: k + 1].sum())
+    st.last_px[btc], st.vol24h[btc], st.last_ms[btc] = 80000.0, 5e9, int(time.time() * 1000)
+    eng.members["BTC"], eng.primary["BTC"] = np.array([btc]), btc
+    st.t = alert_minute * 60 + 29                                            # scheduled at alert time, as live
+    eng._schedule_followup(_alert("XYZ", alert_minute), messaged=True)
+    st.t = (alert_minute + 300) * 60
+    eng._process_followups(alert_minute * 60 + 30 + 61)                      # +61 s: entry only
+    recs = _fu_records(tmp_path)
+    op = next(r for r in recs if r["kind"] == "FU_OPEN")
+    assert op["btc_key"] == "binance_usdm:BTCUSDT" and op["btc_px"] == pytest.approx(80000.0)
+    assert op["beta_btc"] == pytest.approx(1.5, abs=0.1) and op["n_beta"] >= 270
+    ent = [r for r in recs if r["kind"] == "FU_ENTRY"]
+    assert len(ent) == 1 and ent[0]["late_s"] == pytest.approx(1.0) and ent[0]["btc_px"] == pytest.approx(80000.0)
+    assert not [r for r in recs if r["kind"] == "FU_4H"]
+    eng._process_followups((alert_minute + 240) * 60 + 6)
+    recs = _fu_records(tmp_path)
+    assert len([r for r in recs if r["kind"] == "FU_ENTRY"]) == 1                  # once
+    fu4 = next(r for r in recs if r["kind"] == "FU_4H")
+    assert fu4["btc_key"] == "binance_usdm:BTCUSDT" and fu4["btc_px"] == pytest.approx(80000.0)
+    assert eng.followups and "entry" in eng.followups[0]["done"]                   # still open until 72h
+
+
+def test_escalate_message_has_no_venue_agreement_line():
+    from movewatch.engine import format_alert
+    m = {"venues": [("binance_usdm", 0.15), ("bybit_linear", 0.14)], "rets": {"1h": 0.15}, "hb": "1h"}
+    esc_ = Alert(kind="ESCALATE", asset="ENJ", direction=-1, ts=1.79e9, price=0.0365, anchor_px=0.0407,
+                 anchor_ts=1.79e9 - 1000, move_pct=-10.0, seq=2, metrics=m)
+    assert "venues agree" not in format_alert(esc_)
+    new = Alert(kind="NEW", asset="ENJ", direction=1, ts=1.79e9, price=0.0365, anchor_px=0.03, anchor_ts=1.79e9 - 60,
+                move_pct=20.0, horizon="1h", metrics=dict(m, z=5.0, vm=10.0))
+    assert "2/2 venues agree" in format_alert(new)
+
+
+def test_duplicate_tickers_count_once():
+    recs = _records(n=12, seed=5)
+    by = {(r["kind"], r.get("id")): r for r in recs}
+    o0 = by[("FU_OPEN", "a0")]
+    twin = dict(o0, id="twin", asset="Y", t=o0["t"] + 120, alert_px=o0["alert_px"] * 1.006)   # same move, other ticker
+    late = dict(o0, id="late", asset="Z", t=o0["t"] + 900)                                    # 15 min later: a new move
+    other = dict(o0, id="flip", asset="W", t=o0["t"] + 60, dir=-1)                            # opposite direction
+    far = dict(o0, id="far", asset="V", t=o0["t"] + 60, alert_px=o0["alert_px"] * 1.05)       # 5% away: another coin
+    d = _outcomes(recs + [twin, late, other, far]).set_index("id")
+    assert d.loc["twin", "st_H2"] == d.loc["twin", "st_B1"] == "DUPLICATE"
+    assert d.loc["a0", "st_H2"] != "DUPLICATE"                                  # the first one counts
+    for k in ("late", "flip", "far"):
+        assert d.loc[k, "st_H2"] != "DUPLICATE"
+
+
+def test_frozen_identity_uses_the_committed_fingerprint_function(tmp_path):
+    from movewatch.followup import fingerprint as current
+    pkg = tmp_path / "movewatch"
+    pkg.mkdir()
+    real = (Path(__file__).resolve().parents[1] / "movewatch" / "followup.py").read_text()
+    frozen_src = real.replace('FINGERPRINT_SKIP_CFG = {"watchers", "notify"}', 'FINGERPRINT_SKIP_CFG = {"watchers", "notify", "rules"}')
+    assert frozen_src != real
+    (pkg / "followup.py").write_text(frozen_src)              # the commit's function differs from today's
+    (pkg / "engine.py").write_text("E = 1\n")
+    (tmp_path / "config").mkdir()
+    (tmp_path / "config" / "movewatch.yaml").write_text("rules: {x: 1}\n")
+    git = ["git", "-c", "user.email=t@t", "-c", "user.name=t"]
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    subprocess.run(git + ["add", "."], cwd=tmp_path, check=True)
+    subprocess.run(git + ["commit", "-qm", "freeze"], cwd=tmp_path, check=True)
+    commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=tmp_path, capture_output=True, text=True).stdout.strip()
+    files = [("engine.py", b"E = 1\n"), ("followup.py", frozen_src.encode())]
+    ns: dict = {}
+    exec(compile(frozen_src, "f.py", "exec"), ns)
+    assert fe.fingerprint_at(commit, root=tmp_path) == ns["fingerprint"](files, {"rules": {"x": 1}})
+    assert fe.fingerprint_at(commit, root=tmp_path) != current(files, {"rules": {"x": 1}})
+
+
+def test_beta_never_reads_wrapped_ring_slots(tmp_path):
+    eng = _engine(tmp_path)
+    st = eng.store
+    a = st.register(make("binance_usdm", "XYZUSDT", "XYZ", "USDT", "perp"))
+    btc = st.register(make("binance_usdm", "BTCUSDT", "BTC", "USDT", "perp"))
+    now_m = 1_790_000_000 // 60
+    st.t = now_m * 60 - 1
+    rng = np.random.default_rng(11)
+    rb = rng.normal(0, 0.002, st.M)
+    for k, m in enumerate(range(now_m - st.M + 1, now_m + 1)):       # the ring holds exactly M minutes
+        st.min_px[btc, m % st.M] = 80000 * math.exp(rb[: k + 1].sum())
+        st.min_px[a, m % st.M] = math.exp(1.5 * rb[: k + 1].sum())
+    for m in range(now_m - 180, now_m + 1):                            # recent minutes: a different regime
+        st.min_px[a, m % st.M] = st.min_px[a, (now_m - 181) % st.M] * math.exp(-0.01 * (m - now_m + 181))
+    old = eng._beta_btc("binance_usdm:XYZUSDT", "binance_usdm:BTCUSDT", now_m - 241)   # window starts 181 min before the ring
+    assert old["n_beta"] < 1380 // 5 - 30                              # clipped to the ring, never wrapped
+    assert old["beta_btc"] == pytest.approx(1.5, abs=0.15)             # recent slots did not leak in

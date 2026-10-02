@@ -68,3 +68,28 @@ def test_followup_message_says_candidate():
     quiet = format_followup(fu, {"hold": 0.0, "px": 1.0, "vol_ratio": 0.5, "vol_label": "quiet"})
     assert "HEAVY" in heavy and "unvalidated" in heavy and "+5.0%" in heavy
     assert "QUIET" in quiet and "unvalidated" in quiet
+
+
+def test_beta_to_recovers_a_planted_beta_and_refuses_thin_data():
+    from movewatch.followup import beta_to
+    rng = np.random.default_rng(7)
+    rb = rng.normal(0, 0.002, 1380)
+    ra = 1.8 * rb + rng.normal(0, 0.001, 1380)
+    btc, coin = 80000 * np.exp(np.cumsum(rb)), 2.0 * np.exp(np.cumsum(ra))
+    b, c, n = beta_to(coin, btc, step=1)
+    assert b == pytest.approx(1.8, abs=0.1) and c > 0.9 and n == 1379
+    coin[100:] = np.nan                                            # mostly missing -> no estimate
+    b, c, n = beta_to(coin, btc, step=1)
+    assert np.isnan(b) and n < 100
+
+
+def test_fingerprint_ignores_watcher_and_notify_but_not_detection():
+    from movewatch.followup import fingerprint
+    files = [("engine.py", b"E"), ("watchers.py", b"W")]
+    cfg = {"rules": {"x": 1}, "watchers": {"upbit_flags": ["A"]}, "notify": {"telegram": True}}
+    f0 = fingerprint(files, cfg)
+    assert fingerprint([("engine.py", b"E"), ("watchers.py", b"W2")], cfg) == f0
+    assert fingerprint(files, dict(cfg, watchers={"upbit_flags": []}, notify={"telegram": False})) == f0
+    assert fingerprint([("engine.py", b"E2"), ("watchers.py", b"W")], cfg) != f0
+    assert fingerprint(files, dict(cfg, rules={"x": 2})) != f0
+    assert fingerprint(files, dict(cfg, aliases={"A": "B"})) != f0

@@ -4,10 +4,11 @@
   python3 -m research.forward_eval --final    # the one look; refuses below the minimum or a second time
 
 Reads data/alerts/followups-*.jsonl written by the live engine. Admits only records written by
-production runs (not dry runs) whose code fingerprint equals the freeze commit's; the test starts
-at the first such run and ends at the first later production run with other code. Every row
-that does not count carries a status, per hypothesis. --final writes a receipt with the commit
-hashes to data/forward_test/.
+production runs (not dry runs) whose code fingerprint equals the freeze commit's (computed with
+the fingerprint function AS OF that commit); the test starts at the first such run and ends at
+the first later production run with other code. Every row that does not count carries a status,
+per hypothesis. --final writes a receipt with the commit hashes to data/forward_test/.
+Declaration: docs/FORWARD_TEST_v2.md (v1, docs/FORWARD_TEST.md, was superseded unread).
 """
 from __future__ import annotations
 
@@ -25,9 +26,10 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from movewatch.followup import GAP_TOL_MIN, fingerprint  # noqa: E402
+from movewatch.followup import GAP_TOL_MIN  # noqa: E402
 
-DECLARATION = "docs/FORWARD_TEST.md"
+DECLARATION = "docs/FORWARD_TEST_v2.md"
+DUP_S, DUP_LOG_PX = 300, 0.01      # same move under two tickers: same direction, <= 5 min, price within 1%
 MIN = {"H1": 200, "H2": 300, "B1": 200, "weeks": 5}
 LATE = {"FU_4H": 600, "FU_72H": 3600}
 MIN_COINS = 10
@@ -50,11 +52,14 @@ def freeze_commit(root: Path = ROOT) -> str:
 
 
 def fingerprint_at(commit: str, root: Path = ROOT) -> str:
-    """movewatch.followup.code_fingerprint recomputed from the commit's tree."""
+    """movewatch.followup.code_fingerprint recomputed from the commit's tree, with the
+    fingerprint() function of that commit (so a later edit to it cannot move the identity)."""
     names = _git(root, "ls-tree", "-r", "--name-only", commit, "--", "movewatch").decode().split("\n")
     files = [(n[len("movewatch/"):], _git(root, "show", f"{commit}:./{n}")) for n in names if n.endswith(".py")]
     cfg = yaml.safe_load(_git(root, "show", f"{commit}:./config/movewatch.yaml")) or {}
-    return fingerprint(files, cfg)
+    ns: dict = {"__name__": "frozen_followup"}
+    exec(compile(dict(files)["followup.py"], "frozen_followup.py", "exec"), ns)  # noqa: S102 -- our own committed file
+    return ns["fingerprint"](files, cfg)
 
 
 # ---------------------------------------------------------------- records
@@ -81,6 +86,22 @@ def first_by_id(recs: list[dict], kind: str) -> dict[str, dict]:
     out: dict[str, dict] = {}
     for r in sorted((r for r in recs if r.get("kind") == kind), key=lambda r: r.get("t", 0.0)):
         out.setdefault(r["id"], r)            # a re-written record after a crash keeps the first
+    return out
+
+
+def duplicates(opens: dict[str, dict], runs: set) -> set[str]:
+    """Rows = actions (CLAUDE.md rule 2): one move alerted under two tickers (e.g. 龙虾 / LONGXIA
+    before the alias map) is one row. A later admitted FU_OPEN with another asset name, the same
+    direction, <= 5 min after and an alert price within 1% of an earlier one is a DUPLICATE."""
+    rows = sorted((o for o in opens.values() if o.get("run") in runs), key=lambda o: (o["t"], o["id"]))
+    out: set[str] = set()
+    for k, o in enumerate(rows):
+        for p in rows[:k]:
+            if (p["id"] not in out and p["asset"] != o["asset"] and p["dir"] == o["dir"]
+                    and o["t"] - p["t"] <= DUP_S and p["alert_px"] > 0 and o["alert_px"] > 0
+                    and abs(math.log(o["alert_px"] / p["alert_px"])) <= DUP_LOG_PX):
+                out.add(o["id"])
+                break
     return out
 
 
@@ -128,6 +149,7 @@ def _first_fail(conds: list[tuple[str, bool]]) -> str:
 
 def outcomes(recs: list[dict], runs: set, start: float | None, end: float | None) -> pd.DataFrame:
     opens, f4, f72 = (first_by_id(recs, k) for k in ("FU_OPEN", "FU_4H", "FU_72H"))
+    dup = duplicates(opens, runs)
     rows = []
     for i, o in opens.items():
         a4, a72 = f4.get(i) or {}, f72.get(i) or {}
@@ -144,11 +166,11 @@ def outcomes(recs: list[dict], runs: set, start: float | None, end: float | None
         vr = a4.get("vol_ratio")
         gaps = max(a4.get("gap_min_before", math.inf), a4.get("gap_min_after", math.inf))
         vol_bad = not (_fin(vr) and vr > 0 and gaps <= GAP_TOL_MIN)
-        st_h2 = _first_fail([("OTHER_RUN", not in_test), ("NO_BREADTH", not _fin(o.get("breadth"))),
+        st_h2 = _first_fail([("OTHER_RUN", not in_test), ("DUPLICATE", i in dup), ("NO_BREADTH", not _fin(o.get("breadth"))),
                              (f"4H_{s4}", s4 != "OK"), ("NO_MARKET", not _fin(m04))])
-        st_h1 = _first_fail([("OTHER_RUN", not in_test), (f"4H_{s4}", s4 != "OK"), (f"72H_{s72}", s72 != "OK"),
+        st_h1 = _first_fail([("OTHER_RUN", not in_test), ("DUPLICATE", i in dup), (f"4H_{s4}", s4 != "OK"), (f"72H_{s72}", s72 != "OK"),
                              ("VOL_GAP", vol_bad), ("NO_MARKET", not _fin(m472))])
-        st_b1 = _first_fail([("OTHER_RUN", not in_test), (f"72H_{s72}", s72 != "OK"), ("NO_MARKET", not _fin(m072))])
+        st_b1 = _first_fail([("OTHER_RUN", not in_test), ("DUPLICATE", i in dup), (f"72H_{s72}", s72 != "OK"), ("NO_MARKET", not _fin(m072))])
         vbn = a4.get("vol_ratio_binance_usdm")
         rows.append({
             "id": i, "asset": o["asset"], "dir": d, "alert_ts": o["t"], "breadth": o.get("breadth"),

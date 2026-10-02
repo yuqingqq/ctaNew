@@ -64,6 +64,15 @@ watchers:
   korea_quotes: [KRW]           # Upbit/Bithumb listings + flags on KRW markets only
   upbit_flags: [PRICE_FLUCTUATIONS, DEPOSIT_AMOUNT_SOARING, GLOBAL_PRICE_DIFFERENCES, WARNING]
 
+aliases:                      # same token, different tickers (alias -> canonical). Evidence 2026-10-02:
+  PUMPFUN: PUMP               # same USD price AND 1-min return corr over a day; 0.991 (bybit vs binance/okx/hl)
+  LONGXIA: 龙虾                # bybit_linear vs binance_usdm/bitget_fut, corr 0.988 (duplicate NEWs 09-30 20:36)
+  NIULAI: 牛来                 # bybit_linear vs binance, corr 0.946 at $0.099 (牛来 = niulai)
+  QUANT: QNT                  # okx_swap QUANT-USDT-SWAP is Quant (OKX's QNT is the stock), corr 0.984
+  RAYSOL: RAY                 # binance_usdm vs bybit RAYDIUM, corr 0.965
+  RAYDIUM: RAY
+  PROS: PHAROS                # coinbase/upbit/bithumb/bitget PROS vs binance/bybit PHAROS, corr 0.961 at 0.70
+
 venues:
   binance_usdm: {enabled: true, min_quote_volume_24h: 100000}
   binance_spot: {enabled: true, min_quote_volume_24h: 100000, quotes: [USDT, USDC]}

@@ -71,6 +71,21 @@ def hold(direction: int, px_alert: float, px_now: float) -> float:
     return direction * math.log(px_now / px_alert) if px_alert > 0 and px_now > 0 else float("nan")
 
 
+def beta_to(px: np.ndarray, px_btc: np.ndarray, step: int = 5, min_n: int = 100) -> tuple[float, float, int]:
+    """(OLS beta, correlation, n) of `step`-minute log returns of px on px_btc (minute closes)."""
+    ra, rb = np.diff(np.log(px[::step])), np.diff(np.log(px_btc[::step]))
+    ok = np.isfinite(ra) & np.isfinite(rb)
+    n = int(ok.sum())
+    if n < min_n:
+        return float("nan"), float("nan"), n
+    ra, rb = ra[ok] - ra[ok].mean(), rb[ok] - rb[ok].mean()
+    vb, va = float((rb * rb).mean()), float((ra * ra).mean())
+    if vb <= 0 or va <= 0:
+        return float("nan"), float("nan"), n
+    cov = float((ra * rb).mean())
+    return cov / vb, cov / math.sqrt(va * vb), n
+
+
 def _positions(M: int, m0: int, m1: int) -> list[int]:
     return [m % M for m in range(m0, m1)]
 
@@ -85,12 +100,21 @@ def gap_minutes(min_px: np.ndarray, M: int, ids: np.ndarray, m0: int, m1: int) -
     return int((~np.isfinite(min_px[np.ix_(ids, _positions(M, m0, m1))])).all(axis=0).sum())
 
 
+# Outside the forward test's identity: the listing/flag watcher and the notifier settings change
+# messages, never the alert or follow-up records (docs/FORWARD_TEST_v2.md).
+FINGERPRINT_SKIP_FILES = {"watchers.py"}
+FINGERPRINT_SKIP_CFG = {"watchers", "notify"}
+
+
 def fingerprint(files: list[tuple[str, bytes]], cfg: dict) -> str:
     """sha256 over (relative path, bytes) of the package sources and the loaded config."""
     h = hashlib.sha256()
     for rel, data in sorted(files):
+        if rel.rsplit("/", 1)[-1] in FINGERPRINT_SKIP_FILES:
+            continue
         h.update(rel.encode() + b"\0" + data + b"\0")
-    h.update(json.dumps(cfg, sort_keys=True, default=str).encode())
+    h.update(json.dumps({k: v for k, v in cfg.items() if k not in FINGERPRINT_SKIP_CFG},
+                        sort_keys=True, default=str).encode())
     return h.hexdigest()
 
 

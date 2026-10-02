@@ -366,3 +366,36 @@ def test_store_restore_reads_each_array_once_and_restores_pending(tmp_path, monk
     j = s2.register(make("binance_usdm", "C35USDT", "C35", "USDT", "perp"))
     assert s2.min_px[j, m % 100] == 36.0              # pending restore applied at registration
     assert np.isnan(s2.min_px[5, ((s2.t + 1) // 60 - 1) % 100])   # minutes after the save stay empty
+
+
+def test_aliases_merge_tickers_of_one_token():
+    from movewatch.instruments import set_aliases
+    set_aliases({"LONGXIA": "龙虾", "PUMPFUN": "PUMP"})
+    try:
+        assert make("bybit_linear", "LONGXIAUSDT", "LONGXIA", "USDT", "perp").base == "龙虾"
+        assert make("binance_usdm", "龙虾USDT", "龙虾", "USDT", "perp").base == "龙虾"
+        assert make("bybit_linear", "1000PUMPFUNUSDT", "1000PUMPFUN", "USDT", "perp").base == "PUMP"   # after the multiplier
+        assert make("bybit_linear", "PUMPUSDT", "PUMP", "USDT", "perp").base == "PUMP"
+    finally:
+        set_aliases({})
+    assert make("bybit_linear", "LONGXIAUSDT", "LONGXIA", "USDT", "perp").base == "LONGXIA"
+
+
+def test_binance_usdm_universe_keeps_symbols_missing_from_the_ticker_window(monkeypatch):
+    import asyncio
+    import movewatch.venues.binance as bn
+    live = {"p": "1.01", "i": "1.00", "r": "0.0001", "T": 1790956800000}
+    mark = {s: dict(live, s=s) for s in ("AAAUSDT", "BBBUSDT", "CCCUSDT", "DDDUSDC", "EEE_251226")}
+    mark["OLDUSDT"] = {"s": "OLDUSDT", "p": "0.5", "i": "0.5", "r": "0.00000000", "T": 1790956800000}  # delisted
+    mark["NOFUNDUSDT"] = dict(live, s="NOFUNDUSDT", T=0)
+    tick = {"AAAUSDT": {"q": "5000000"}, "BBBUSDT": {"q": "50000"},       # CCC/DDD did not tick in the window
+            "TRADEDUSDT": {"q": "200000"}}                                  # ticked: kept even though mark == index
+    mark["TRADEDUSDT"] = {"s": "TRADEDUSDT", "p": "2", "i": "2", "r": "0", "T": 1790956800000}
+
+    async def fake(url, secs):
+        return mark if "markPrice" in url else tick
+    monkeypatch.setattr(bn, "_collect", fake)
+    f = bn.BinanceUsdm.__new__(bn.BinanceUsdm)
+    f.cfg, f.venue = {"min_quote_volume_24h": 100_000}, "binance_usdm"
+    got = sorted(i.symbol for i in asyncio.run(f.discover(None)))
+    assert got == ["AAAUSDT", "CCCUSDT", "DDDUSDC", "TRADEDUSDT"]          # BBB low; OLD/NOFUND settled; dated skipped

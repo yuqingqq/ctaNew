@@ -37,6 +37,18 @@ _MULT = {"1000000": 1e6, "100000": 1e5, "10000": 1e4, "1000": 1e3, "1M": 1e6}
 _DIGIT_BASES = {"1INCH", "1000SATS", "1MBABYDOGE"}
 
 
+# Same token, different tickers across venues (config `aliases`, alias -> canonical), applied
+# after the multiplier split. Each entry needs evidence: same USD price (within 1%) AND 1-min return
+# correlation 0.946-0.991 over a day (2026-10-02 scan; unrelated coins in a market-wide move reach
+# ~0.6-0.8). The price clusters still split a wrong alias (> 40% apart).
+_ALIASES: dict[str, str] = {}
+
+
+def set_aliases(aliases: dict | None) -> None:
+    _ALIASES.clear()
+    _ALIASES.update({str(k).upper(): str(v).upper() for k, v in (aliases or {}).items()})
+
+
 @dataclass(frozen=True)
 class Instrument:
     venue: str          # binance_spot, binance_usdm, bybit_linear, bybit_spot, okx_spot, okx_swap,
@@ -89,6 +101,7 @@ def make(venue: str, symbol: str, raw_base: str, quote: str, kind: str) -> Instr
         return None
     base, mult = split_multiplier(raw_base)
     base = base.upper()
+    base = _ALIASES.get(base, base)
     if not base or base in STABLE_BASES:
         return None
     return Instrument(venue=venue, symbol=symbol, base=base, quote=quote, kind=kind, mult=mult)

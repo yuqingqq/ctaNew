@@ -26,3 +26,12 @@ def test_static_binance_list_is_a_fallback_only_without_a_reference():
     assert is_tradfi("MSTR", 127.0, {}, has_binance_usdm=True)           # verified Binance stock perp
     assert not is_tradfi("MSTR", 127.0, {}, has_binance_usdm=False)      # no Binance instrument: no fallback
     assert not is_tradfi("META", 0.0086, REF, has_binance_usdm=True)     # a reference exists and disagrees
+
+
+def test_binance_spot_tokenized_stock_b_suffix_matched_by_price():
+    ref = {"NVDA": [237.6], "MU": [1096.0]}
+    assert is_tradfi("NVDAB", 237.6, ref, False, has_binance_spot=True)      # Binance spot NVDAB = Nvidia
+    assert is_tradfi("MUB", 1097.0, ref, False, has_binance_spot=True)
+    assert not is_tradfi("NVDAB", 237.6, ref, False, has_binance_spot=False)  # the B rule is Binance spot only
+    assert not is_tradfi("MUB", 0.42, ref, False, has_binance_spot=True)      # a crypto "MUB" far from the stock
+    assert not is_tradfi("B", 1.0, {"": [1.0]}, False, has_binance_spot=True)  # never strip to an empty ticker

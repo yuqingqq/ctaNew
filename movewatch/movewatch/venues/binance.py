@@ -7,9 +7,10 @@ Endpoints verified from this box 2026-09-28 (api/fapi REST return HTTP 451 here)
               Market-category streams (kline, !miniTicker@arr, !markPrice@arr@1s) push
               ONLY on the routed /market/ path; bare /stream?streams= ACKs and stays
               silent for them (same pitfall as data_collectors/binance_ws_collector.py).
-USDM universe: fapi exchangeInfo is geo-blocked, so symbols come from the
-!miniTicker@arr stream (every symbol that traded in a ~5 s window, with 24h quote
-volume for the liquidity filter).
+USDM universe: fapi exchangeInfo is geo-blocked. !markPrice@arr@1s carries EVERY perp
+each second, so it is the universe; !miniTicker@arr carries only symbols that ticked in
+that second, so it can only DROP a symbol it shows below the volume floor. (Universe from a
+6 s miniTicker window alone: 347-574 instruments per restart, 2026-09-28..10-01.)
 """
 from __future__ import annotations
 
@@ -28,6 +29,33 @@ log = logging.getLogger("movewatch.binance")
 SPOT_REST = "https://data-api.binance.vision/api/v3"
 SPOT_WS = "wss://data-stream.binance.vision/stream?streams="
 USDM_WS = "wss://fstream.binance.com/market/stream?streams="
+
+
+async def _collect(url: str, secs: float) -> dict[str, dict]:
+    """{symbol: last record} from an array stream (one dict per symbol per frame) for `secs`."""
+    seen: dict[str, dict] = {}
+    t_end = time.time() + secs
+    async with websockets.connect(url, open_timeout=15, max_size=2 ** 24) as ws:
+        while time.time() < t_end:
+            try:
+                raw = await asyncio.wait_for(ws.recv(), timeout=max(0.1, t_end - time.time()))
+            except asyncio.TimeoutError:
+                break
+            for x in json.loads(raw).get("data", []):
+                seen[x["s"]] = x
+    return seen
+
+
+def _settled(x: dict | None) -> bool:
+    """markPrice keeps publishing delisted contracts: mark == index exactly and funding exactly 0
+    (AGIX, AMB, ALPHA, BADGER on 2026-10-02), or no next funding time. Live perps carry a
+    mark/index gap and nonzero funding. Applied only to symbols that did not trade in the window."""
+    if not x:
+        return True
+    try:
+        return int(x.get("T") or 0) == 0 or (float(x["r"]) == 0.0 and float(x["p"]) == float(x["i"]))
+    except (KeyError, ValueError):
+        return False
 
 
 class _BinanceKline(Feed):
@@ -111,24 +139,26 @@ class BinanceUsdm(_BinanceKline):
 
     async def discover(self, session):
         min_qv = float(self.cfg.get("min_quote_volume_24h", 100_000))
-        seen: dict[str, float] = {}
-        t_end = time.time() + 6
-        async with websockets.connect(USDM_WS + "!miniTicker@arr", open_timeout=15, max_size=2 ** 24) as ws:
-            while time.time() < t_end:
-                try:
-                    raw = await asyncio.wait_for(ws.recv(), timeout=max(0.1, t_end - time.time()))
-                except asyncio.TimeoutError:
-                    break
-                for t in json.loads(raw).get("data", []):
-                    seen[t["s"]] = float(t.get("q") or 0)
-        out = []
-        for sym, q in sorted(seen.items()):
+        mark, vol = await asyncio.gather(_collect(USDM_WS + "!markPrice@arr@1s", 6.0),
+                                         _collect(USDM_WS + "!miniTicker@arr", 10.0))
+        if not mark:
+            raise RuntimeError("binance_usdm discovery saw no symbols on !markPrice@arr@1s")
+        out, low, unseen, dead = [], 0, 0, 0
+        for sym in sorted(set(mark) | set(vol)):
             sp = split_concat_symbol(sym, quotes=("USDT", "USDC"))
-            if not sp or q < min_qv:
+            if not sp:
                 continue
+            q = vol.get(sym)
+            if q is not None and float(q.get("q") or 0) < min_qv:
+                low += 1
+                continue
+            if q is None and _settled(mark.get(sym)):
+                dead += 1
+                continue
+            unseen += q is None
             ins = make(self.venue, sym, sp[0], sp[1], "perp")
             if ins:
                 out.append(ins)
-        if not out:
-            raise RuntimeError("binance_usdm discovery saw no symbols on !miniTicker@arr")
+        log.info("binance_usdm universe: %d on markPrice, %d kept (%d not in the 10s ticker window), %d below $%.0f, "
+                 "%d settled", len(mark), len(out), unseen, low, min_qv, dead)
         return out

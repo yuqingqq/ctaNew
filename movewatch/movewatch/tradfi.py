@@ -8,7 +8,10 @@ Venues label them differently:
 So the rule is price-based, reusing the same-ticker price clusters: an asset cluster is TradFi
 if a LABELLED instrument with the same base trades within 25% (log 0.25) of the cluster's USD
 price. Ticker collisions stay crypto (OKX's QNT stock ~$48 vs Quant ~$230; Upbit's Metadium
-"META" ~$0.009 vs the Meta stock perp ~$729). Fallback: the Binance tickers verified by price
+"META" ~$0.009 vs the Meta stock perp ~$729). Binance spot lists tokenized stocks as the
+stock ticker + "B" (NVDAB, TSLAB, MSTRB: 71 pairs on 2026-10-02, every one within 1% of its
+stock); for clusters with a binance_spot instrument the ticker without the "B" is matched too,
+by price only. Fallback: the Binance tickers verified by price
 level in research/common.py, applied only to clusters that contain a binance_usdm instrument.
 """
 from __future__ import annotations
@@ -63,11 +66,14 @@ async def fetch_reference(session) -> dict[str, list[float]]:
     return ref
 
 
-def is_tradfi(base: str, usd_px: float, ref: dict[str, list[float]], has_binance_usdm: bool) -> bool:
+def is_tradfi(base: str, usd_px: float, ref: dict[str, list[float]], has_binance_usdm: bool,
+              has_binance_spot: bool = False) -> bool:
     """base: the instrument ticker base (not the cluster name); usd_px: the cluster's USD price."""
     b = base.upper()
-    prices = ref.get(b)
-    if prices and usd_px == usd_px and usd_px > 0:
-        if min(abs(math.log(usd_px / p)) for p in prices) <= MAX_LOG_DEV:
-            return True
-    return has_binance_usdm and b in STATIC_BINANCE and not prices
+    cands = [b] + ([b[:-1]] if has_binance_spot and b.endswith("B") and len(b) > 2 else [])
+    if usd_px == usd_px and usd_px > 0:
+        for c in cands:
+            prices = ref.get(c)
+            if prices and min(abs(math.log(usd_px / p)) for p in prices) <= MAX_LOG_DEV:
+                return True
+    return has_binance_usdm and b in STATIC_BINANCE and not ref.get(b)
