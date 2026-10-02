@@ -123,8 +123,10 @@ reconciliation self-test.
   - Even the untradable market-median hedge (`M` gross) leaves only −1.7% to +1.9% gross,
     inside that drag.
 - **The random baseline is negative** (−0.2% to −1.8%): shorting a random alt against BTC loses
-  its costs. Pump fades beat it by 1–3 pp at short horizons, but `Hb` itself is never above 0
-  with its CI.
+  its costs.
+  - Only one cell beats random with a CI above 0: Aug–Sep 0→4 h, +1.55 pp [+0.20, +2.91]. The
+    same cell in Apr–Jul is +0.00 pp [−0.90, +0.95].
+  - Every other `Hb` − random CI spans 0, and `Hb` itself is never above 0 with its CI.
 - **Subgroups are inconsistent across windows**, so there is nothing to carry forward:
   - Breadth thirds: market-wide pumps 0→4 h −0.47% / +1.53%.
   - Heavy post-alert volume 4→72 h: +4.17% [−2.71, +9.52] vs −5.19% [−10.98, +1.67]. The sign
