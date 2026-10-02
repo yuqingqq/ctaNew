@@ -78,3 +78,61 @@ reconciliation self-test.
      and whose price is within 2× of that label. The windows are months old, while a same-ticker
      crypto sits orders of magnitude away.
    - Status `TRADFI_PRICE`, counted.
+
+## Results (2026-10-02; script at 5ddbb87; `data/replay/btc_hedge/results.json`, `events.parquet`)
+
+**Run quality:**
+- Reconciliation vs the persistence study's `x72h`: 2,610 rows, 0 mismatches.
+- Statuses:
+  - `TRADFI_PRICE` 39 holdout / 80 discovery. One is a false positive: a holdout QNT event at
+    $63.78 is Quant, caught by the 2× rule against OKX's QNT stock at $48.40. It is 1 row of
+    1,029 and was not rerun.
+  - `SELF` 1; `NO_PRICE_OR_STALE` ≤ 18; `NO_BETA` ≤ 1; `NO_FUNDING` 0.
+- Peak RSS 0.72 GiB.
+- Note: 80 of 967 events in the Aug–Sep window were stock or pre-IPO perps that the persistence
+  study's static filter missed.
+
+**Pumps, BTC-hedged fade (`Hb`, net): mean [95% CI], median, win rate, 5th percentile.**
+
+| window | horizon | n | Hb net mean | median | win | p5 | random Hb | M gross (untradable) |
+|---|---|---:|---|---:|---:|---:|---|---|
+| Apr–Jul | 0→4 h | 1,039 | −0.59% [−1.51, +0.36] | +2.04% | 60% | −23.0% | −0.59% [−0.78, −0.40] | −0.00% |
+| Apr–Jul | 0→24 h | 1,036 | −0.41% [−1.92, +1.07] | +4.69% | 64% | −41.0% | −0.26% | +0.17% |
+| Apr–Jul | 0→72 h | 1,029 | +0.61% [−2.58, +3.29] | +7.86% | 68% | −50.9% | −0.26% [−1.32, +0.67] | +1.22% |
+| Apr–Jul | 4→72 h | 1,028 | +0.52% [−1.95, +2.83] | +5.06% | 64% | −46.1% | −0.19% | +1.03% |
+| Aug–Sep | 0→4 h | 458 | +0.91% [−0.42, +2.22] | +2.54% | 61% | −18.7% | −0.64% [−0.85, −0.40] | +1.52% |
+| Aug–Sep | 0→24 h | 458 | +1.22% [−2.12, +4.52] | +6.01% | 69% | −34.4% | −1.17% | +1.92% |
+| Aug–Sep | 0→72 h | 455 | −0.68% [−4.24, +3.00] | +6.49% | 68% | −53.4% | −1.79% [−4.04, +0.43] | +0.87% |
+| Aug–Sep | 4→72 h | 453 | −2.99% [−5.87, +0.19] | +3.46% | 60% | −52.2% | −1.84% | −1.65% |
+
+**Candidate predicate (computed): false at all four horizons.**
+
+**What it says:**
+- **BTC does not hedge these trades.**
+  - Coin–BTC return correlation over the hold is 0.00–0.09.
+  - var(`Hb` gross) / var(`U` gross) is 0.97–1.00, so the hedge removes ≤ 3% of the variance.
+  - The median pre-alert beta is 0.60 / 0.72.
+  - After an alert the coin moves on its own; the BTC leg adds cost, not protection.
+- **The fade wins often and small, and loses rarely and big.**
+  - Median +2% (4 h) to +8% (72 h), with 60–69% winners.
+  - 7–13% of trades lose more than 20%, and the 5th percentile is −19% to −53%.
+  - The mean is about zero.
+- **Costs + funding take what is left.**
+  - Mean drag per trade: 0.6–0.7% at 4 h; 1.6–1.7% at 72 h, of which 1.0–1.1% is funding paid by
+    the short (pumped coins carry negative funding).
+  - Even the untradable market-median hedge (`M` gross) leaves only −1.7% to +1.9% gross,
+    inside that drag.
+- **The random baseline is negative** (−0.2% to −1.8%): shorting a random alt against BTC loses
+  its costs. Pump fades beat it by 1–3 pp at short horizons, but `Hb` itself is never above 0
+  with its CI.
+- **Subgroups are inconsistent across windows**, so there is nothing to carry forward:
+  - Breadth thirds: market-wide pumps 0→4 h −0.47% / +1.53%.
+  - Heavy post-alert volume 4→72 h: +4.17% [−2.71, +9.52] vs −5.19% [−10.98, +1.67]. The sign
+    flips, as in the persistence study.
+  - Dumps (long coin, short BTC): +0.13% / +1.58% at 4 h, CIs span 0.
+
+**Consequence:** no amendment to `docs/FORWARD_TEST_v2.md`; the predicate passed nowhere. The
+BTC fields stay recorded live (descriptive). Changing the hedge instrument cannot fix it,
+because even the ideal market hedge sits inside the cost + funding drag. The left tail is the
+problem: a different exit rule, such as a stop, would be a new hypothesis, would need a fresh
+declaration, and could only be validated forward.
