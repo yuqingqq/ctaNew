@@ -78,8 +78,14 @@ User approved fixing the 10-02 findings, which ended v1 unread. Fixed: Binance U
 comes from markPrice (786 instruments vs 347; settled contracts dropped), config aliases (one
 token, several tickers), 71 Binance spot tokenized stocks excluded, venue line on NEW only, BTC
 leg + `FU_ENTRY` recorded, fingerprint excludes watcher/notify. Declaration
-`docs/FORWARD_TEST_v2.md`; admitted 1/1. Next: BTC-hedge study (`docs/BTC_HEDGE_STUDY.md`,
-declared) on the consumed replay windows; any candidate goes in as v2 amendment 1.
+`docs/FORWARD_TEST_v2.md`; admitted 1/1.
+
+**BTC-hedge study (done, `docs/BTC_HEDGE_STUDY.md`):** no candidate at any horizon. BTC does not
+hedge post-alert moves (hold correlation 0.00–0.09; the hedge removes ≤ 3% of variance). Fading
+pumps wins 60–69% of the time (median +2% at 4 h to +8% at 72 h), but 7–13% of trades lose
+> 20%, so the mean is ~0, and costs + funding (shorts pay ~1% per 72 h) make it negative-to-zero.
+Even the untradable market hedge sits inside that drag. No forward amendment. The open lever
+would be an exit rule for the left tail (a stop): a new hypothesis, forward-only.
 
 ## Next (ranked)
 
