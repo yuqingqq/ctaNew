@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-09-28 16:00Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-02 14:45Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -71,6 +71,15 @@ swap 0.
   alert side needs a code change.
 - Minor: OKX `ZEC-USD` candle subscribe fails (24× per day); ESCALATE text shows
   "0/6 venues agree" (cosmetic).
+
+## Forward test v2 (2026-10-02 14:40Z, commit 55ae98d)
+
+User approved fixing the 10-02 findings, which ended v1 unread. Fixed: Binance USDM universe now
+comes from markPrice (786 instruments vs 347; settled contracts dropped), config aliases (one
+token, several tickers), 71 Binance spot tokenized stocks excluded, venue line on NEW only, BTC
+leg + `FU_ENTRY` recorded, fingerprint excludes watcher/notify. Declaration
+`docs/FORWARD_TEST_v2.md`; admitted 1/1. Next: BTC-hedge study (`docs/BTC_HEDGE_STUDY.md`,
+declared) on the consumed replay windows; any candidate goes in as v2 amendment 1.
 
 ## Next (ranked)
 

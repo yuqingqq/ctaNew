@@ -5,7 +5,7 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
-  2026-09-28 16:00Z (session 1, continued). Forward test FROZEN at commit 1536a86 and
+  2026-10-02 14:45Z: forward test v2 frozen at 55ae98d and running (see M16/M17). Earlier, 2026-09-28 16:00Z (session 1, continued). Forward test FROZEN at commit 1536a86 and
   STARTED: movewatch.service restarted 15:54:06Z on the frozen code; FU_START logged
   15:54:35Z with fingerprint 65c7c892..., admitted by research/forward_eval.py (1/1 runs).
   Same commit: breadth line on NEW alerts, +4h volume check for messaged pumps, TradFi
@@ -28,7 +28,7 @@ memory:   # user directive 2026-09-28: never break the limit, keep a buffer (mea
 flags:
   telegram_path_verified: 2026-09-28        # `python3 -m movewatch test-telegram` -> sent
   service_installed: "2026-09-28 10:37:06Z" # ~/.config/systemd/user/movewatch.service, enabled
-  service_running_code: "1536a86 (restarted 2026-09-28 15:54:06Z)"
+  service_running_code: "55ae98d (forward test v2; restarted 2026-10-02 14:40:23Z)"
   calibrated: cal_v4                        # strict preset = declared budget pick (docs/CALIBRATION.md 2c)
   preset: strict_le40                       # switching presets now ENDS the forward test (config change)
   validated_on_untouched: >-
@@ -36,14 +36,15 @@ flags:
     Clean test of v4 = forward live data from 2026-09-28 10:37Z.
   consumed_windows: "2026-09-20..09-27 (QNT; seen in development); Apr-Jul holdout (persistence study)"
   forward_test:
-    declaration: docs/FORWARD_TEST.md
-    freeze_commit: 1536a86ffa73a15415cbfde569d528a3f328e08a
-    fingerprint: 65c7c89213387e8484579f24a12e3b426b3fee23d7b9c2f85ac417678242361c
-    started: "2026-09-28 15:54:35Z (first FU_START with the frozen fingerprint)"
-    hypotheses: "H1 heavy post-alert volume -> pumps fade (+4h->+72h); H2 breadth -> fade (alert->+4h); B1 base rate"
+    declaration: "docs/FORWARD_TEST_v2.md (supersedes docs/FORWARD_TEST.md; v1 stopped unread at 33 alerts)"
+    freeze_commit: 55ae98d69a65f2ccef1a666b2446118b4bc5d583
+    fingerprint: 2375f81d463303ac (full hash recomputed by research/forward_eval.py)
+    started: "2026-10-02 14:40:59Z (first FU_START with the v2 fingerprint)"
+    hypotheses: "H1 heavy post-alert volume -> pumps fade (+4h->+72h); H2 breadth -> fade (alert->+4h); B1 base rate;
+                 amendments may ADD hypotheses before the first read (BTC hedge expected as amendment 1)"
     minimum: "H1/B1 >= 200 complete pump rows, H2 >= 300 rows, >= 5 complete ISO weeks (earliest 2026-11-09)"
     reading_rule: "counts only (python3 -m research.forward_eval) until the minimum; --final once"
-    ends_if: "any code or config change reaches the service (fingerprint changes at the next start)"
+    ends_if: "a code/config change reaches the service (watchers.py and watchers/notify config are outside the identity)"
 
 tasks:
   M0_case_study:            {status: done, artifact: docs/QNT_2026-09_CASE_STUDY.md}
@@ -83,6 +84,10 @@ tasks:
                              note: "healthy, 8.4 NEW/day, counts H2 30 / H1 2 / B1 2. Found: Binance USDM discovery bug (6 s miniTicker
                                     window, 347-574 instruments per restart; AIOT lost at a restart -> 72H_NO_PRICE); 龙虾/LONGXIA
                                     same token on two tickers (duplicate rows). Fix ends the test - user decision pending"}
+  M17_forward_test_v2:      {status: running, artifact: "docs/FORWARD_TEST_v2.md; commit 55ae98d",
+                             note: "Binance USDM 786 instruments (was 347); aliases; 71 tokenized stocks out; BTC leg + FU_ENTRY
+                                    recorded; restarted 2026-10-02 14:40:23Z, admitted 1/1"}
+  M18_btc_hedge_study:      {status: active, artifact: docs/BTC_HEDGE_STUDY.md (declared, committed 55ae98d)}
   M15_restart_path:         {status: done, artifact: "movewatch/store.py load(); tests/test_core.py restore regression",
                              note: "restore decompressed full npz arrays per instrument (~20 min, 100% CPU, detection dead) - never
                                     hit because the 10:37 start had no state file; found by the restart rehearsal; now 0.24 s"}
