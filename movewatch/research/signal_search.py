@@ -532,7 +532,7 @@ def load_rows(windows) -> pd.DataFrame:
 def screen() -> None:
     df = load_rows(SCREEN)
     res: dict = {"declaration": "docs/SIGNAL_SEARCH.md", "declaration_commit": DECLARATION_COMMIT,
-                 "rows": df.groupby(["window", "dir"]).size().rename(lambda x: str(x)).to_dict()}
+                 "rows": {f"{w}|{d}": int(n) for (w, d), n in df.groupby(["window", "dir"]).size().items()}}
     rec = reconcile(df)
     rec["premium_h4"] = reconcile_premium(df)
     res["reconciliation"] = rec
@@ -615,7 +615,7 @@ def validate() -> None:
     k = fz["k"]
     rec = {"freeze": fz, "freeze_file_commit": _git("log", "-1", "--format=%H", "--", str(FREEZE.relative_to(ROOT))).stdout.strip(),
            "script_commit_at_validation": head(), "run_utc": pd.Timestamp.now(tz="UTC").isoformat(),
-           "rows": v.groupby("dir").size().rename(lambda x: str(x)).to_dict(), "SEAM_DUPLICATE": seam,
+           "rows": {str(d): int(n) for d, n in v.groupby("dir").size().items()}, "SEAM_DUPLICATE": seam,
            "weeks": int(v["week"].nunique()), "flag": "A6/A7 overlap thematically with the pump->dump thread's era reads"}
     S = load_rows(SCREEN)
     results = []
