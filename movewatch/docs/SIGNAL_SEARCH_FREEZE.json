@@ -1,0 +1,185 @@
+{
+ "declaration": "docs/SIGNAL_SEARCH.md",
+ "declaration_commit": "2e49375",
+ "script_commit": "01419c74583e65aac9c34c04124b758d18177a0e",
+ "created_utc": "2026-10-08T15:28:56.642429+00:00",
+ "k": 17,
+ "base_rate": {
+  "id": "A8",
+  "pop": "pumps",
+  "outcome": "x72h",
+  "sign": -1
+ },
+ "cells": [
+  {
+   "id": "A1",
+   "feature": "mkt_breadth",
+   "pop": "all",
+   "outcome": "x4h",
+   "sign": -1,
+   "cuts": [
+    0.004273504273504274,
+    0.04529616724738676
+   ]
+  },
+  {
+   "id": "A2",
+   "feature": "vol_persist",
+   "pop": "pumps",
+   "outcome": "x4_72",
+   "sign": -1,
+   "cuts": [
+    -0.032281008203529214,
+    0.3525880735492562
+   ]
+  },
+  {
+   "id": "A3",
+   "feature": "premium_h4",
+   "pop": "pumps",
+   "outcome": "x4_72",
+   "sign": 1,
+   "cuts": [
+    -0.0006240066111111108,
+    0.0001925872222222222
+   ]
+  },
+  {
+   "id": "A4",
+   "feature": "taker_ls_4h",
+   "pop": "pumps",
+   "outcome": "x4_72",
+   "sign": 1,
+   "cuts": [
+    0.9996319375,
+    1.0565501597222222
+   ]
+  },
+  {
+   "id": "A5",
+   "feature": "has_spot",
+   "pop": "pumps",
+   "outcome": "x72h",
+   "sign": -1,
+   "cuts": null
+  },
+  {
+   "id": "A6",
+   "feature": "age_days",
+   "pop": "pumps",
+   "outcome": "x72h",
+   "sign": -1,
+   "cuts": [
+    2.4618979461848203,
+    2.72235896748676
+   ]
+  },
+  {
+   "id": "A7",
+   "feature": "calm_7d",
+   "pop": "pumps",
+   "outcome": "x72h",
+   "sign": 1,
+   "cuts": [
+    -2.8534373303125196,
+    -2.5872857328153223
+   ]
+  },
+  {
+   "id": "B3.pumps.x4h",
+   "feature": "hi7",
+   "pop": "pumps",
+   "outcome": "x4h",
+   "sign": -1,
+   "cuts": [
+    -0.09660915398303628,
+    0.06991750513707883
+   ]
+  },
+  {
+   "id": "B3.pumps.x72h",
+   "feature": "hi7",
+   "pop": "pumps",
+   "outcome": "x72h",
+   "sign": -1,
+   "cuts": [
+    -0.09660915398303628,
+    0.06991750513707883
+   ]
+  },
+  {
+   "id": "B3.dumps.x72h",
+   "feature": "hi7",
+   "pop": "dumps",
+   "outcome": "x72h",
+   "sign": -1,
+   "cuts": [
+    -0.239089492648679,
+    -0.07507486821041179
+   ]
+  },
+  {
+   "id": "B7.pumps.x4h",
+   "feature": "upbit_listed",
+   "pop": "pumps",
+   "outcome": "x4h",
+   "sign": -1,
+   "cuts": null
+  },
+  {
+   "id": "B8.pumps.x72h",
+   "feature": "kimchi",
+   "pop": "pumps",
+   "outcome": "x72h",
+   "sign": -1,
+   "cuts": [
+    0.0023456542141393477,
+    0.01671283913714694
+   ]
+  },
+  {
+   "id": "B10.pumps.x4h",
+   "feature": "oi_chg_1h",
+   "pop": "pumps",
+   "outcome": "x4h",
+   "sign": -1,
+   "cuts": [
+    0.007803714047976289,
+    0.07374678412623656
+   ]
+  },
+  {
+   "id": "B10.pumps.x72h",
+   "feature": "oi_chg_1h",
+   "pop": "pumps",
+   "outcome": "x72h",
+   "sign": -1,
+   "cuts": [
+    0.007803714047976289,
+    0.07374678412623656
+   ]
+  },
+  {
+   "id": "B10.dumps.x4h",
+   "feature": "oi_chg_1h",
+   "pop": "dumps",
+   "outcome": "x4h",
+   "sign": 1,
+   "cuts": [
+    -0.0038383375101190952,
+    0.015389684838864926
+   ]
+  },
+  {
+   "id": "B10.dumps.x72h",
+   "feature": "oi_chg_1h",
+   "pop": "dumps",
+   "outcome": "x72h",
+   "sign": 1,
+   "cuts": [
+    -0.0038383375101190952,
+    0.015389684838864926
+   ]
+  }
+ ]
+}

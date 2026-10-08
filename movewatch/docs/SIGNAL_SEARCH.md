@@ -138,3 +138,73 @@ Descriptive in V only, no test:
 
 Memory: `.worktrees/research_slot.sh` at the default 4 GiB cap, `MALLOC_ARENA_MAX=2`, abort
 above 2.0 GiB RSS; panels are disk memmaps.
+
+## Screen results (2026-10-08; S1/S2 only, script 01419c7; `data/replay/signal_search/screen_results.json`)
+
+**Run quality:**
+- Rows: S2 1,747 (1,041 pumps / 706 dumps) and S1 886 (459 / 427), after these statuses:
+  - stock-price matches 39 / 80;
+  - BTC 0 / 1.
+- Trigger-minute price vs the alert price: 0 mismatches.
+- Reconciliation:
+  - `x72h` matches the persistence study 1,747/1,747 and 886/886;
+  - `premium_h4` matches the runners study 1,415/1,415.
+- Falsifiers:
+  - the planted feature (IC 0.152) passes and validates;
+  - noise (IC 0.026) fails;
+  - all-missing comes back `INSUFFICIENT`.
+- Upbit: 80% of events have no queryable KRW market (`UPBIT_NO_DATA` 1,389 / 645). `kimchi` and
+  `upbit_share` have n ≈ 320 pumps and ≈ 180 dumps; S2 dumps fall below the minimum.
+
+**Passing cells (computed), 9 of 40.** IC S1 / S2 / pooled [CI]:
+
+| cell | S1 | S2 | pooled [95% CI] | both windows |
+|---|---:|---:|---|---|
+| `hi7` pumps x4h | −0.097 | −0.097 | −0.100 [−0.137, −0.053] | yes |
+| `hi7` pumps x72h | −0.119 | −0.085 | −0.091 [−0.133, −0.041] | yes |
+| `hi7` dumps x72h | −0.139 | −0.086 | −0.108 [−0.174, −0.037] | no |
+| `upbit_listed` pumps x4h | −0.027 | −0.079 | −0.065 [−0.106, −0.021] | no |
+| `kimchi` pumps x72h | −0.181 | −0.096 | −0.143 [−0.266, −0.005] | no |
+| `oi_chg_1h` pumps x4h | −0.177 | −0.078 | −0.108 [−0.162, −0.044] | no |
+| `oi_chg_1h` pumps x72h | −0.145 | −0.078 | −0.096 [−0.140, −0.050] | yes |
+| `oi_chg_1h` dumps x4h | +0.108 | +0.110 | +0.112 [+0.055, +0.169] | no (S1 CI) |
+| `oi_chg_1h` dumps x72h | +0.089 | +0.094 | +0.094 [+0.049, +0.135] | no |
+
+**Nothing passed:**
+- trade size, wick, BTC 24 h, Asia hours and weekend;
+- Upbit volume share (a large S1 IC for dumps, +0.35, but S2 is `INSUFFICIENT`).
+
+**Look-ahead review (the declared step for `SUSPICIOUS` cells, |IC| > 0.10).** Each feature was
+recomputed from data ending one bar earlier (scratch script, S data only). IC as built →
+one bar earlier:
+
+| feature | cell | as built | one bar earlier |
+|---|---|---:|---:|
+| `oi_chg_1h` (OI 5 min earlier) | pumps x4h | −0.108 | −0.096 |
+| | dumps x4h | +0.112 | +0.127 |
+| | pumps x72h | −0.096 | −0.081 |
+| | dumps x72h | +0.094 | +0.089 |
+| `hi7` (close at t − 1) | dumps x72h | −0.108 | −0.091 |
+| | pumps x4h | −0.100 | −0.094 |
+| | pumps x72h | −0.091 | −0.095 |
+
+- No effect depends on the last bar.
+- `kimchi` was reviewed in code: Upbit's `to` is exclusive on the candle start (verified: `to`
+  12:00 → last candle 11:59), so it uses the Upbit close of minute t, the same minute as the perp
+  close.
+- Verdict: not look-ahead.
+
+**Group A on S, for context only** (these leads were chosen on these windows):
+- A1 −0.094 [−0.147, −0.034]
+- A2 −0.201 [−0.263, −0.139]
+- A3 +0.100 [+0.036, +0.167]
+- A4 +0.109 [+0.062, +0.156]
+- A5 −0.046 [−0.099, +0.008]
+- A6 −0.037 [−0.080, +0.012]
+- A7 −0.005 [−0.069, +0.052]
+- A8 median −8.6% [−9.8, −7.5]
+
+**Freeze:** `docs/SIGNAL_SEARCH_FREEZE.json`.
+- Carried: 16 IC cells (A1–A7 plus the 9 above) and the A8 base rate, so **k = 17**.
+- Bonferroni bar: one-sided p ≤ 0.0029.
+- The same feature at two horizons counts twice, which is conservative.
