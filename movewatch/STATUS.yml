@@ -5,7 +5,7 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
-  2026-10-02 15:40Z: BTC-hedge study done, no candidate (M18). Forward test v2 frozen at 55ae98d and running (M16/M17). Earlier, 2026-09-28 16:00Z (session 1, continued). Forward test FROZEN at commit 1536a86 and
+  2026-10-08 06:00Z: runners study done (M19); forward test v2 healthy (6 runs admitted, 0 errors). 2026-10-02 15:40Z: BTC-hedge study done, no candidate (M18). Forward test v2 frozen at 55ae98d and running (M16/M17). Earlier, 2026-09-28 16:00Z (session 1, continued). Forward test FROZEN at commit 1536a86 and
   STARTED: movewatch.service restarted 15:54:06Z on the frozen code; FU_START logged
   15:54:35Z with fingerprint 65c7c892..., admitted by research/forward_eval.py (1/1 runs).
   Same commit: breadth line on NEW alerts, +4h volume check for messaged pumps, TradFi
@@ -91,6 +91,11 @@ tasks:
                              note: "NO candidate at any horizon (computed). BTC does not hedge post-alert moves: hold corr 0.00-0.09,
                                     var(Hb)/var(U) 0.97-1.00. Fade median +2..+8% (60-69% win) but p5 -19..-53%; mean ~0;
                                     drag 0.6-1.7%/trade (funding paid by the short ~1%/72h). No forward amendment."}
+  M19_runners_study:        {status: done, artifact: "docs/RUNNERS_STUDY.md; research/runners.py; data/replay/runners/",
+                             note: "why some pumps keep running (exploratory, consumed windows). News (blind, 30 vs 30): no
+                                    difference (pre-alert 9/30 vs 7/30, p 0.77; ~half have no findable catalyst). Listings after the
+                                    alert 2.8% vs 0.3% of runners/faders (rare). Consistent small tilts: no Binance spot market,
+                                    younger, perp premium > 0 + taker buying at +4h (runner rate ~15% vs ~9%). Nothing separates well."}
   M15_restart_path:         {status: done, artifact: "movewatch/store.py load(); tests/test_core.py restore regression",
                              note: "restore decompressed full npz arrays per instrument (~20 min, 100% CPU, detection dead) - never
                                     hit because the 10:37 start had no state file; found by the restart rehearsal; now 0.24 s"}

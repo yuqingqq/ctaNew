@@ -87,6 +87,14 @@ pumps wins 60–69% of the time (median +2% at 4 h to +8% at 72 h), but 7–13% 
 Even the untradable market hedge sits inside that drag. No forward amendment. The open lever
 would be an exit rule for the left tail (a stop): a new hypothesis, forward-only.
 
+**Runners study (done 2026-10-08, `docs/RUNNERS_STUDY.md`):** why ~30% of pumps keep going.
+Blind news search (30 runners vs 30 time-matched faders): no difference. 9/30 vs 7/30 had news
+before the alert, and about half of all pumps have no findable catalyst. Listings within 3 days
+after the pump: 2.8% of runners vs 0.3% of faders, so real but rare. Small consistent tilts:
+runners are more often futures-only (no Binance spot), a bit younger, and at +4 h the perp is
+still at a premium with more taker buying (runner rate ~15% vs ~9%). Candidates to record live
+later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decision.
+
 ## Next (ranked)
 
 1. **Let the forward test run; read counts only.** `python3 -m research.forward_eval` prints
