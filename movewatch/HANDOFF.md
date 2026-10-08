@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-02 14:45Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-08 16:19Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -95,6 +95,24 @@ runners are more often futures-only (no Binance spot), a bit younger, and at +4 
 still at a premium with more taker buying (runner rate ~15% vs ~9%). Candidates to record live
 later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decision.
 
+**Signal search (done 2026-10-08, `docs/SIGNAL_SEARCH.md`):** a careful look for any signal.
+- Protocol: declared first, screened on Apr–Sep 2026, frozen, then read once on an UNTOUCHED
+  window (Oct 2025–Mar 2026, 3,005 events, downloaded after the declaration).
+- **Validated** (Bonferroni, k = 17):
+  - market breadth → 4 h fade (IC −0.137);
+  - heavy post-alert volume → 4–72 h fade (−0.202);
+  - perp premium at +4 h → less fade (+0.121);
+  - pumps' median 72 h fade −6.8%.
+  - Breadth and post-alert volume are forward-test v2 H2 and H1, which is good news for the live
+    test.
+- **Every new feature failed or is only suggestive:** OI change 1 h (liquidation flush), distance
+  from the 7-day extreme, Korean premium, Upbit listing, trade size, wick, BTC 24 h,
+  session/weekend.
+- **Economics:** only the breadth fade passes the declared tradable predicate, and 93% of its V P&L
+  is one day (2025-10-10 crash). Without it: +1.3% per 4 h trade [+0.07, +2.34]; the S window shows
+  the same shape (one flush week).
+- No clean trade. Oct 2025–Mar 2026 is now consumed.
+
 ## Next (ranked)
 
 1. **Let the forward test run; read counts only.** `python3 -m research.forward_eval` prints
@@ -137,7 +155,7 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
 - **Geo-blocks from this box**: api/fapi.binance.com → 451, api.bybit.com → 403. Use
   `*.binance.vision` and fstream `/market/`, and Bybit WS with one topic per subscribe.
 - **Consumed windows**: 09-20..27 (QNT) and 09-01..19 (three looks), plus the Apr–Jul holdout
-  (persistence). Only forward data is out-of-sample.
+  (persistence) and Oct 2025–Mar 2026 (signal search V, read once). Only forward data is out-of-sample.
 - **Memory** (user directive: never break the limit, keep a buffer):
   - Research: `.worktrees/research_slot.sh` at the default 4 GiB cap, `MALLOC_ARENA_MAX=2`, and
     the 2 GiB self-guard.
