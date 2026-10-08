@@ -516,6 +516,7 @@ def reconcile(df: pd.DataFrame) -> dict:
 def reconcile_premium(df: pd.DataFrame) -> dict:
     """premium_h4 here vs the runners study's value (same function, same Vision files)."""
     pop = pd.read_parquet(rp.OUT_DIR / "runners" / "pumps.parquet")
+    pop["time"] = pd.to_datetime(pop["time"], utc=True)          # stored as text there
     m = df[["window", "asset", "time", "premium_h4"]].merge(pop[["window", "asset", "time", "premium_h4"]],
                                                            on=["window", "asset", "time"], suffixes=("", "_ref"))
     both = m["premium_h4"].notna() & m["premium_h4_ref"].notna()
