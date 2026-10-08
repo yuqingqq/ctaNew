@@ -208,3 +208,87 @@ one bar earlier:
 - Carried: 16 IC cells (A1–A7 plus the 9 above) and the A8 base rate, so **k = 17**.
 - Bonferroni bar: one-sided p ≤ 0.0029.
 - The same feature at two horizons counts twice, which is conservative.
+
+## Validation results (2026-10-08, the one read; `data/replay/signal_search/validation_receipt.json`)
+
+**V window and run:**
+- Signals 2025-10-01 → 2026-03-29: 1,791 pumps and 1,214 dumps, 26 weeks.
+- Seam duplicates 8.
+- Trigger-price reconciliation 0 mismatches; stock-price matches 1 + 1.
+- `UPBIT_NO_DATA` 1,432 / 853; `PRICE_MISMATCH` 16 / 2.
+- Freeze 406e7d8; script 01419c7; k = 17; Bonferroni bar one-sided p ≤ 0.0029.
+- Before the read, the validate code was rehearsed on the S rows (scratch receipt) so that a crash
+  could not force a second look.
+
+| id | cell | declared | V IC [95% CI] | n | verdict (computed) |
+|---|---|---|---|---:|---|
+| A1 | `mkt_breadth` all x4h | − | −0.137 [−0.202, −0.046], p 0.0007 | 3,002 | **VALIDATED** |
+| A2 | `vol_persist` pumps x4_72 | − | −0.202 [−0.235, −0.167], p 0.0002 | 1,773 | **VALIDATED** |
+| A3 | `premium_h4` pumps x4_72 | + | +0.121 [+0.059, +0.190], p 0.0002 | 1,755 | **VALIDATED** |
+| A4 | `taker_ls_4h` pumps x4_72 | + | +0.054 [−0.007, +0.128] | 1,775 | FAILED |
+| A5 | `has_spot` pumps x72h | − | −0.067 [−0.104, −0.018] | 1,775 | SUGGESTIVE |
+| A6 | `age_days` pumps x72h | − | −0.030 [−0.069, +0.025] | 1,775 | FAILED |
+| A7 | `calm_7d` pumps x72h | + | +0.048 [−0.013, +0.104] | 1,692 | FAILED |
+| A8 | pumps median x72h | < 0 | **−6.8% [−7.8, −5.4]**, p 0.0002 | 1,775 | **VALIDATED** |
+| B3 | `hi7` pumps x4h | − | −0.017 [−0.121, +0.083] | 1,718 | FAILED |
+| B3 | `hi7` pumps x72h | − | −0.086 [−0.178, −0.002] | 1,703 | SUGGESTIVE |
+| B3 | `hi7` dumps x72h | − | −0.227 [−0.369, +0.017] | 1,156 | FAILED |
+| B7 | `upbit_listed` pumps x4h | − | −0.024 [−0.058, +0.016] | 1,790 | FAILED |
+| B8 | `kimchi` pumps x72h | − | −0.023 [−0.147, +0.070] | 397 | FAILED |
+| B10 | `oi_chg_1h` pumps x4h | − | −0.028 [−0.118, +0.059] | 1,788 | FAILED |
+| B10 | `oi_chg_1h` pumps x72h | − | −0.059 [−0.143, +0.022] | 1,773 | FAILED |
+| B10 | `oi_chg_1h` dumps x4h | + | +0.126 [−0.008, +0.181] | 1,212 | FAILED |
+| B10 | `oi_chg_1h` dumps x72h | + | +0.148 [+0.013, +0.208] | 1,205 | SUGGESTIVE |
+
+**Partial IC in V**, controlling for liq_pre, breadth and calm_7d: A1 −0.120, A2 −0.201, A3 +0.136.
+The three ranking signals are not proxies for liquidity, breadth or volatility.
+
+**Economics of the VALIDATED cells**: net of taker fees, tiered slippage and actual funding; coin
+leg only.
+
+| cell | trade | S1 ∪ S2 mean [CI] | V mean [CI] | V median / win / p5 | TRADABLE (declared predicate) |
+|---|---|---|---|---|---|
+| A1 | fade, top breadth tercile, 4 h | +1.51% [−0.25, +3.33] | +12.51% [+0.43, +23.84] | +4.1% / 64% / −23.7% | **true** (see post-hoc) |
+| A1 | follow, bottom tercile, 4 h | −0.56% | −0.25% [−0.81, +0.23] | | |
+| A2 | follow, quiet tercile, 4→72 h | +0.60% | +4.45% [−0.37, +8.79] | +0.8% / 52% / −22.2% | false |
+| A2 | fade, heavy tercile, 4→72 h | +2.00% | −0.45% [−4.54, +2.88] | +6.3% / 66% / −39.5% | false |
+| A3 | fade, premium < 0 tercile, 4→72 h | +2.72% [+0.90, +4.69] | −0.84% [−5.04, +2.75] | +3.5% / 61% / −38.2% | false |
+
+**Descriptive (V):**
+- The unconditional pump fade nets −1.09% [−3.65, +0.80] at 4 h and −2.78% [−8.31, +2.02] at
+  72 h.
+- Its medians are +1.4% / +4.4%, with p5 −28% / −56%.
+- Dumps' median x72h is −0.6% [−3.4, +2.5], so dumps do not reliably rebound.
+
+### Post-hoc (after the read; descriptive, decides nothing): `research/signal_search_posthoc.py`
+- **A1's V fade mean is one day.**
+  - 93% of the fade group's total P&L comes from the week of 2025-10-06. On 2025-10-10 alone:
+    296 trades, mean +39.7%. That was the liquidation crash, and fading dumps there means buying
+    alts at the wick.
+  - Without that week: +1.33% [+0.07, +2.34], median +2.2%, win 61%, n 687.
+  - Pumps alone +1.13% [−0.25, +2.36]; dumps alone +1.90% [−1.12, +4.27].
+- **S shows the same shape.** 76% of the S fade P&L is the week of 2026-08-17 (2026-08-22: 105
+  trades, mean +8.4%).
+- Execution in a crash is the open question. The cost model (5–40 bp slippage) is a calm-market
+  model, and on 2025-10-10 venues were stressed.
+
+### What it says
+- **Three ranking signals and the base rate replicate on untouched data.** All are knowable live:
+  - **Breadth.** Moves during broad market moves fade more over 4 h. This is forward test v2 H2.
+  - **Post-alert volume.** Heavy volume in hours 1–4 means more fade over 4→72 h; IC −0.20, the
+    strongest. This is forward test v2 H1.
+  - **Perp premium at +4 h.** A premium still positive means less fade over 4→72 h.
+  - **Base rate.** The typical pump fades: median −6.8% at 72 h.
+- **None is a clean trade.**
+  - The only predicate pass (the A1 fade) comes from two liquidation flushes.
+  - Outside them, the fade earns about +1% per 4 h trade, with a CI barely above zero in V and
+    spanning zero in S.
+  - A2 and A3 rank outcomes, but no tercile trade clears costs in V.
+- **Every new feature failed or is only suggestive.** Those are the open-interest flush, the
+  distance from the 7-day extreme, the Korean premium and Upbit listing. Their screen passes did
+  not survive the untouched window.
+- **Candidates, forward only:**
+  1. H1 and H2 are already running in forward test v2.
+  2. A "buy market-wide liquidation flushes" rule would be a new, declared hypothesis with crash-
+     specific execution assumptions. It cannot be validated on these windows, whose crash days have
+     now been read.
