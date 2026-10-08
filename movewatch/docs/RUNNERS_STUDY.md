@@ -65,3 +65,14 @@ candidate to record live and validate forward; nothing is adopted from it.
   - With 30 vs 30, only a difference of roughly 35 percentage points or more is detectable.
   - Coverage after the alert partly reflects the outcome, since big moves attract articles.
     That is why the primary comparison uses news published before the alert.
+
+## Corrections after the first run (2026-10-08; the first run's table HAD been seen)
+1. **Instrument bug.** `age_days` is log10(days), and `new_perp_14d` compared it to 14 directly,
+   giving 100% for everyone. It now uses 10^age ≤ 14.
+2. **Tautology (rule 9).** The first-4h features were compared on the 0→72 h outcome, which
+   contains those 4 h.
+   - The first run showed `hold_4h` p 1.8e-28 and `oi_chg_4h` p 2e-14: mostly the shared 0–4 h
+     move.
+   - They are now compared on the **4→72 h** outcome, with groups re-cut on it (`group4`:
+     y4 ≥ +20% / ≤ −10%). This is the same split the persistence study used (`x4_72`).
+   - Listings and pre-alert features stay on 0→72 h.
