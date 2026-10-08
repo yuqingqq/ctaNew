@@ -1,0 +1,140 @@
+# Signal search: what, at the alert or 4 h later, predicts where a detected move goes? (declared before results, 2026-10-08)
+
+**Question.** The earlier studies found no reliable signal. They are listed in the table below.
+This search does two things:
+1. It gives the earlier leads a clean test on an **untouched** window.
+2. It screens a list of **new**, mechanism-motivated features, then validates the survivors on
+   the same untouched window.
+
+Scope: event-level signals around detected moves (the movewatch domain). The repo's
+cross-sectional and time-series alpha research on free data is closed (repo `docs/CONCLUSION_2026-08-03.md`,
+memory) and is not reopened here.
+
+| study | status of its windows | lead carried here |
+|---|---|---|
+| signal_features (Aug, Sep 1–19 2026) | consumed | breadth → 4 h fade |
+| persistence (Apr–Jul, Aug–Sep 2026) | consumed | vol_persist (sign flipped across windows) |
+| btc_hedge, runners (same windows) | consumed | premium_h4, taker_ls_4h, has_spot, age, calm_7d |
+
+## Windows
+- **Screen** (consumed; generates hypotheses only):
+  - S1 = Aug 2–Sep 24 2026;
+  - S2 = Apr 2–Jul 28 2026.
+- **Validation V** (UNTOUCHED by movewatch; downloaded only after this file is committed):
+  - signals 2025-10-01 → 2026-03-29, from two Binance-USDM 1m panels: `val_a` 2025-09-01 → 2026-01-01
+    (signals to 2025-12-29) and `val_b` 2025-12-01 → 2026-04-01 (signals from 2025-12-29);
+  - each panel starts ≥ 30 days before its signals, so the lookbacks are inside it;
+  - rows are de-duplicated per coin across the seam (72 h).
+  - **Read once.** The validate step refuses unless the freeze file is committed, and refuses a
+    second run.
+  - Deviation stated: rule 11 prefers a LATER window. The only later data is the live forward
+    test, which is reserved, so an EARLIER window is used.
+  - Other repo programs read this period for different questions: cross-sectional alpha, and
+    the pump→dump thread with rvol/age/funding on parabolic run-ups. For A6/A7 below, the V read
+    is therefore not perfectly clean; this is flagged in the receipt.
+- **Live forward test v2:** untouched. Nothing here reads its outcomes.
+
+## Events (rows are actions)
+- Replay NEW alerts with the ≤120-msgs/day preset (size ×1.5, z ×1.0, volume ×1.0, liquidity
+  ≥ $5M, alert logic v4). These are the same thresholds as S1/S2 (`study120`, `holdout120`);
+  nothing is tuned on V.
+- Exclusions, each a counted status:
+  - stocks and commodities (static list, plus the venue-labelled price match from `btc_hedge.stock_like`);
+  - BTC itself;
+  - one alert per coin per 72 h;
+  - frozen or delisted bars.
+- Populations: **pumps** (dir +1) and **dumps** (dir −1), analysed separately.
+
+## Outcomes
+Direction-adjusted log return minus the median liquid coin (≥ $5M/day, the coin excluded), so
+**+ = the move continued**. Entry is the alert minute close + 1 min (t + 1).
+- `x4h`: t + 1 → t + 241.
+- `x72h`: t + 1 → t + 4,321.
+- `x4_72`: t + 241 → t + 4,321 (from the +4 h check).
+
+Features knowable only at +4 h are tested on `x4_72` only (rule 9: no shared span).
+
+## Group A: carried leads (straight to V; sign declared from the earlier studies)
+| id | feature | pop | outcome | declared sign | source |
+|---|---|---|---|---|---|
+| A1 | `mkt_breadth` | pumps + dumps | x4h | − | signal_features |
+| A2 | `vol_persist` (log10 vol h1–4 ÷ vol h−3–0) | pumps | x4_72 | − | persistence holdout; forward H1 |
+| A3 | `premium_h4` (mean perp premium, hours 3–4) | pumps | x4_72 | + | runners |
+| A4 | `taker_ls_4h` (mean taker long/short vol ratio 0–4 h) | pumps | x4_72 | + | runners |
+| A5 | `has_spot` (Binance spot market exists, point in time) | pumps | x72h | − | runners |
+| A6 | `age_days` (log10) | pumps | x72h | − | runners |
+| A7 | `calm_7d` (log10 RMS 1m return, alert − 8 d … − 1 d) | pumps | x72h | + | runners |
+| A8 | base rate: median `x72h` of pumps | pumps | x72h | < 0 | persistence, btc_hedge |
+
+Descriptive in V only, no test:
+- the dumps' median `x72h`;
+- the unconditional pump-fade P&L net of costs and funding at 0→4 h and 0→72 h.
+
+## Group B: new features (screened on S1/S2, alert-time data only, through minute t)
+± = direction-adjusted (multiplied by dir).
+
+| id | feature | definition | mechanism |
+|---|---|---|---|
+| B1 | `trade_size` | log10 (USD per trade over [t−59, t] ÷ USD per trade over [t−7 d−60, t−60]); 1m `trades` | whale-driven vs retail-driven move |
+| B2 | `wick15` | pumps: (max high [t−14, t] − close t) ÷ (max high − min low over [t−59, t]); dumps mirrored with the low | rejection at the alert |
+| B3 | `hi7` ± | pumps: log(close t ÷ max close [t−7 d, t−60]); dumps: −log(close t ÷ min close) | breakout to a new 7 d extreme |
+| B4 | `btc_24h` ± | log BTC return over [t−1,440, t] | market regime behind the move |
+| B5 | `asia` | alert hour in 00–07 UTC (0/1) | session liquidity |
+| B6 | `weekend` | Saturday or Sunday UTC (0/1) | thin weekend books |
+| B7 | `upbit_listed` | the Upbit KRW market had traded within the 24 h before the alert (0/1) | Korean retail access |
+| B8 | `kimchi` ± | log(Upbit KRW close ÷ KRW-USDT close) − log(perp close ÷ multiplier) at t; Upbit-listed only; \|·\| > 0.5 → status `PRICE_MISMATCH` | Korea leading the move |
+| B9 | `upbit_share` | Upbit USD volume over [t−59, t] ÷ (Upbit + Binance perp) | Korean-retail-led move |
+| B10 | `oi_chg_1h` | log OI(t) ÷ OI(t − 60 min), Vision metrics point in time | leverage added vs liquidated (flush) |
+
+- Cells: 10 features × 2 populations × 2 outcomes (`x4h`, `x72h`) = **40 cells**.
+- **Upbit caveat:** markets Upbit has since delisted cannot be queried. They read as "not listed"
+  (B7) or missing (B8/B9), with status `UPBIT_NO_DATA`. This is survivorship on the Upbit side and
+  is reported with the counts.
+
+## Statistics
+- **IC:** Spearman between feature and outcome.
+  - 95% CI: ISO-week block bootstrap, 4,000 draws; weeks with < 3 signal days are merged.
+  - One-sided p = (1 + draws on the wrong side of 0) ÷ (draws + 1).
+- **Minimum per cell:** n ≥ 100 non-missing rows and ≥ 5 weeks. Otherwise `INSUFFICIENT`, which
+  never passes.
+- **Screen pass**, computed:
+  - the IC has the same sign in S1 and S2; and
+  - the pooled S1 ∪ S2 CI excludes 0.
+  - `both_windows` is also recorded: each window's own CI excludes 0.
+- **Freeze**, computed by the screen step:
+  - the carried list is A1–A8 plus every screen-passing B cell, with its pooled sign;
+  - k = the list length;
+  - tercile cut points from S1 ∪ S2.
+  - Written to `docs/SIGNAL_SEARCH_FREEZE.json`, committed before V is built.
+- **Validation** on V, per carried cell:
+  - **VALIDATED** = declared sign, 95% CI excludes 0, and one-sided p ≤ 0.05 / k (Bonferroni).
+  - **SUGGESTIVE** = declared sign and CI excludes 0, but p > 0.05 / k.
+  - **FAILED** otherwise.
+- **Economics**, for VALIDATED cells, reported for S1 ∪ S2 and V:
+  - The trades:
+    - fade (side = −dir) in the tercile with the lowest predicted continuation;
+    - follow (side = +dir) in the highest tercile;
+    - for binary features, the two values in place of the terciles.
+  - Hold = the cell's outcome span; coin leg only (BTC does not hedge, `BTC_HEDGE_STUDY.md`).
+  - Costs: taker 5 bp per side plus slippage tiered by 24 h volume (5/10/20/40 bp); actual
+    Binance funding.
+  - Report: mean net with week-block CI, median, win rate, p5, n, and the difference vs the
+    same trade on all events.
+  - **TRADABLE** = mean net CI > 0 in V, with the same sign of the mean in S1 ∪ S2.
+- **Robustness**, for VALIDATED cells, descriptive: partial IC controlling for `liq_pre`,
+  `mkt_breadth`, `calm_7d`.
+
+## Self-tests (abort on failure)
+1. **Reconciliation:**
+   - S1/S2 rows rebuilt by this script match `data/replay/persistence/features_*.parquet` on
+     `x72h` (0 mismatches allowed);
+   - `premium_h4` matches `data/replay/runners/pumps.parquet`.
+2. **Falsifiers for the screen and validation instrument:**
+   - a planted feature (outcome rank + noise, IC ≈ 0.15) must pass;
+   - a shuffled feature must not pass;
+   - an all-missing feature must come back `INSUFFICIENT`.
+3. **Look-ahead flag:** any screen |IC| > 0.10 is marked `SUSPICIOUS` and its code is reviewed
+   before the freeze.
+
+Memory: `.worktrees/research_slot.sh` at the default 4 GiB cap, `MALLOC_ARENA_MAX=2`, abort
+above 2.0 GiB RSS; panels are disk memmaps.
