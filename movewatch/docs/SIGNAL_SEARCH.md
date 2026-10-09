@@ -359,4 +359,12 @@ Every window used was already read. Nets are the signal search's (x4_72, stress 
 - other venues' premium;
 - market-hedged legs.
 
+**Does the ranking itself hold in 2020–25?** (2026-10-09 12:07Z, the same cached premium, raw coin return
++4 h → +72 h, no CI computed)
+- Weakly: Spearman +0.043 over 4,707 pumps, against +0.10 / +0.12 in S / V.
+- By year it is −0.03 to −0.05 in 2020–22 and +0.05 to +0.10 in 2023–25.
+- Median coin return: discount −3.6%, middle −2.2%, premium −1.7%.
+
 **Verdict:** signal 3 is not tradable from any angle examined.
+- As a ranking it is real on the declared untouched window and strongest in 2025–26.
+- About a third as strong over 2020–25, and reversed in 2020–22.
