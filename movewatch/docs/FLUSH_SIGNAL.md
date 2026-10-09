@@ -138,3 +138,70 @@ market (M) or the hardest-hit coins (H) pays net of crash-stressed costs.
 - **Nothing in the design was changed after the rehearsal.** Re-tuning on one consumed event is
   what the freeze exists to prevent. Entry timing in cascades is the known weak point; the test
   measures it.
+
+## Results: test window H, read once (2026-10-09 04:31Z, `data/replay/flush_signal/receipt_hist.json`)
+- **Build:**
+  - 545 symbols (541 after exclusions), 15 quarterly panels.
+  - All self-tests OK: the detector matched the naive recompute on every trigger plus 200 random
+    minutes per panel, and 3 baskets reconciled against the parquet files.
+  - E2 timeouts 0; missing entry or exit prices 0; peak RSS 1.34 GiB.
+- **Fires:** WATCH 156, **FLUSH 49 (41 weeks)**, EXTREME 15. Plateau variants: D4 84, D6 35,
+  S25 73, S75 34.
+- **Falsifiers:** planted VALIDATED, null-as-events FAILED, empty INSUFFICIENT, in all four cells.
+
+| cell (4 h, stress 3) | mean net [95% CI] | p (bar 0.0125) | median | win | random-time null, p_null | best event left out | verdict |
+|---|---|---|---|---|---|---|---|
+| E1-M | +0.51% [−0.72, +1.78] | 0.21 | +0.58% | 55% | −0.80%, 0.0005 | +0.19% | FAILED |
+| E1-H | +1.28% [−0.21, +2.87] | 0.048 | +1.53% | 63% | −0.73%, 0.0005 | +0.88% | FAILED |
+| E2-M | −0.07% [−1.25, +0.94] | 0.54 | +0.63% | 59% | −0.80%, 0.0005 | −0.25% | FAILED |
+| E2-H | +0.40% [−1.09, +1.85] | 0.30 | +0.77% | 59% | −0.73%, 0.0005 | −0.00% | FAILED |
+
+- **0 / 4 VALIDATED.** Every cell fails on its CI.
+- E1-H is the closest: it beats random times (whose mean is just the cost), and its plateau
+  variants and best-event-left-out mean are all positive. But +1.3% per flush after 3× costs is
+  not distinguishable from zero over 49 events.
+
+### Descriptive (declared as descriptive; decides nothing)
+- **Worst-hit beat the market** (H − M, E1): +0.77% [+0.33, +1.32]. The original A1 effect shows
+  on untouched data, but it is small.
+- **The bounce grows with severity.** E1-M mean, 4 h, stress 3:
+
+  | trigger | mean |
+  |---|---|
+  | WATCH (−3%) | −0.03% |
+  | FLUSH (−5%) | +0.51% |
+  | FLUSH_D6 (−6%) | +1.94% |
+  | EXTREME (−10%) | +6.66% |
+
+- **EXTREME (n 15):**
+  - E1-M +6.66% [+4.03, +9.09]; E1-H +9.33% [+5.59, +12.77]; E2-H +4.45% [+1.75, +7.16].
+  - E1-H wins 13 of 15. With the best event left out: +8.60%. At stress 5: +8.93%.
+  - It would take about 5% extra slippage per side to erase E1-H's gross +10.0%.
+  - In the rehearsal year both EXTREME fires were positive for H (+5.1% on 2025-10-10 21:15,
+    +4.7% on 2026-08-22).
+- **Why FLUSH loses where EXTREME wins.** The FLUSH losers are first legs of multi-leg cascades;
+  EXTREME fires later, deeper into the same cascade:
+
+  | cascade | FLUSH (E1-M) | EXTREME fired | EXTREME (E1-M) |
+  |---|---|---|---|
+  | 2022-11-08 (FTX) | −9.1% | 84 min later | +11.1% |
+  | 2025-02-02 | −14.5% | 195 min later | +1.5% |
+  | 2024-04-12 | −7.2% | 67 min later | +4.3% |
+  | 2024-12-09 | −3.6% | 14 min later | +14.3% |
+
+- **E2 (wait for the turn)** is worse than E1 in every cell: the snap-back comes first.
+- **Per year, E1-H:** 2022 +1.10% (n 14), 2023 +2.58% (17), 2024 +1.38% (15), 2025 −5.74% (3).
+
+### What it says
+- **As declared, the flush trade does not validate.** Buying the first minute half the market is
+  down ≥ 5% in 15 minutes earns about +0.5% (market) to +1.3% (worst-hit) per flush after
+  stressed costs. That is better than random times, but not distinguishable from zero.
+- **The candidate is EXTREME**: the median coin down ≥ 10% in 15 minutes, about 4 per year.
+  - Its threshold was fixed in this declaration before the data, but it was a descriptive tier,
+    not a test cell. It is therefore NOT validated: k would have been 8, and n = 15 is exactly
+    the minimum.
+  - Crash-time execution is the real unknown. The margin is wide (about 5% per side for H), but
+    so are spreads at those minutes.
+- **Next, if pursued:** a forward-only declaration with EXTREME as the primary cell (E1, M and H,
+  4 h). It would be read only after enough new EXTREME fires (≥ 10). At about 4 per year that
+  takes years, so the realistic use is as a rare, pre-committed rule, not a validated edge.

@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-09 03:16Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-09 04:32Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -113,16 +113,21 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
   the same shape (one flush week).
 - No clean trade. Oct 2025–Mar 2026 is now consumed.
 
-**Flush signal (IN PROGRESS 2026-10-09, `docs/FLUSH_SIGNAL.md`, freeze cb690cd):** the breadth
-lead restated at market level.
+**Flush signal (done 2026-10-09, `docs/FLUSH_SIGNAL.md`, freeze cb690cd, receipt
+`data/replay/flush_signal/receipt_hist.json`):** the breadth lead restated at market level.
 - Signal: half the liquid market (≥ $5M/day) down ≥ 5% within 15 min. Trades: buy the market (M)
   or the hardest-hit fifth (H); E1 = +1 min, E2 = wait for the turn; 4 h hold, 3× slippage; k = 4.
-- Post-hoc findings that motivated it: alert breadth is partly alert speed (pumps: nothing left
-  after the speed control); dumps bounce on all 6 flush days of the consumed year.
-- Rehearsal on the consumed year: 8 fires, INSUFFICIENT by design. 2025-10-10 fired before the
-  bottom and E1-M lost 17%.
-- Test: Binance Vision 1m for 2022-01 → 2025-08 (`data/hist/usdm_1m_hist`), build, then
-  `validate --window hist` ONCE (it refuses a second read).
+- **Untouched 2022-01 → 2025-08, read once: 49 flushes, 0 / 4 VALIDATED.** The best is E1-H at
+  +1.28% [−0.21, +2.87] per flush. It beats random times (p_null 0.0005) and the plateau holds,
+  but the CI crosses 0. E2 is worse than E1 everywhere.
+- **Candidate (descriptive tier, declared in advance but not a test cell): EXTREME**, the median
+  coin down ≥ 10% in 15 min.
+  - 15 fires; E1-H +9.33% [+5.59, +12.77]; 13/15 wins; the rehearsal year was 2/2.
+  - It fires later in the cascade, where FLUSH buys the first leg (FTX, 2025-02-02).
+  - NOT validated: k would have been 8, n = 15, and crash execution is unknown.
+  - It is a forward-only candidate at about 4 fires per year.
+- Hist window 2022-01 → 2025-08 is now consumed for this question. Data: `data/hist/usdm_1m_hist`
+  (11 GB) and panels `data/replay/panel_2022-*`–`panel_2025-*` (~10 GB, re-buildable caches).
 
 ## Next (ranked)
 
@@ -166,7 +171,8 @@ lead restated at market level.
 - **Geo-blocks from this box**: api/fapi.binance.com → 451, api.bybit.com → 403. Use
   `*.binance.vision` and fstream `/market/`, and Bybit WS with one topic per subscribe.
 - **Consumed windows**: 09-20..27 (QNT) and 09-01..19 (three looks), plus the Apr–Jul holdout
-  (persistence) and Oct 2025–Mar 2026 (signal search V, read once). Only forward data is out-of-sample.
+  (persistence), Oct 2025–Mar 2026 (signal search V, read once) and, for the flush question,
+  2022-01 → 2025-08 (flush signal, read once). Only forward data is out-of-sample.
 - **Memory** (user directive: never break the limit, keep a buffer):
   - Research: `.worktrees/research_slot.sh` at the default 4 GiB cap, `MALLOC_ARENA_MAX=2`, and
     the 2 GiB self-guard.
