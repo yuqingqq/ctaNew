@@ -5,6 +5,8 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-09 08:12Z: heavy-volume pump short CLOSED (M26): v1 screen k=0 (stops do not cut the tail); v2 (heavy & futures discount, 24h)
+  FAILED on untouched 2020-25 (n548, -0.63% [-2.28,+1.01]); A2 ranking replicates at half strength (Spearman -0.11).
   2026-10-09 06:34Z: idea checks — extreme-pump mirror: no independent market-wide pump (M24, docs/EXTREME_PUMP.md); Upbit listing
   announcements: pop done inside the notice minute (+13.5% median), no tradable cell, k=0 (M25, docs/UPBIT_LISTINGS.md).
   2026-10-09 06:20Z: extreme-crash LIVE ALERT deployed (M23, 3a82553; watchers.py, outside the v2 fingerprint; restarted run admitted, sha 2375f81d).
@@ -107,6 +109,11 @@ tasks:
                                     difference (pre-alert 9/30 vs 7/30, p 0.77; ~half have no findable catalyst). Listings after the
                                     alert 2.8% vs 0.3% of runners/faders (rare). Consistent small tilts: no Binance spot market,
                                     younger, perp premium > 0 + taker buying at +4h (runner rate ~15% vs ~9%). Nothing separates well."}
+  M26_heavy_fade:           {status: done, artifact: "docs/HEAVY_FADE.md; docs/HEAVY_FADE_V2.md; research/heavy_fade*.py; data/replay/heavy_fade/",
+                             note: "short heavy post-alert-volume pumps at +4h. v1 (24/72h x stop 25%) screen k=0, rows reconciled exactly to the
+                                    signal search; v2 heavy & premium_h4 discount, S24, k=1, untouched replays 2020-01..2025-08 (6,988 rows):
+                                    n548 -0.63% [-2.28,+1.01] FAILED. All heavy S24 -0.44%, median +2.5%, worst -542%. A2 ranking holds
+                                    (Spearman -0.107 vs -0.221), shorts lose to the runner tail. 2020-25 consumed for alert-level pump questions."}
   M25_upbit_listings:       {status: done, artifact: "docs/UPBIT_LISTINGS.md; docs/UPBIT_LISTINGS_FREEZE.json; research/upbit_listings.py",
                              note: "Upbit KRW listing notices -> Binance perp: +13.5% median within the notice minute, flat to 4h, +5.5% at 24h;
                                     no long cell pays; 24h fade +2.3..2.7% but CI crosses 0; screen carried nothing (k=0), so the

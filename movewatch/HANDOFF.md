@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-09 06:34Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-09 08:12Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -155,6 +155,14 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
   (median) inside the notice minute, flat to 4 h, +5.5% at 24 h. No long cell pays. The 24 h fade
   is +2–3% but noisy. k = 0, so the 2020–25 window is unread. Bithumb's notice feed is
   Cloudflare-blocked from this box.
+- **Short heavy-volume pumps** (`docs/HEAVY_FADE.md`, `docs/HEAVY_FADE_V2.md`): CLOSED.
+  - v1: stops did not cut the tail (screen k = 0).
+  - v2 (heavy & futures discount, 4 h → 24 h) FAILED on the untouched 2020–25 replays: n 548,
+    −0.63% [−2.28, +1.01].
+  - The post-alert volume ranking replicates at half strength (Spearman −0.11). Shorts lose to the
+    runners (worst −175% to −900%).
+  - Replays `data/replay/hfv_*` (23 panels, 2020-01 → 2025-08) are now consumed for alert-level
+    pump questions.
 - 2020–21 is now consumed for this question. Next: a forward declaration for crashes after
   2026-09-27, evaluated offline from Vision data; no service change.
 
