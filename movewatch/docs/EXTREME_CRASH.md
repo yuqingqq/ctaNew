@@ -169,3 +169,23 @@ Same code and definition as the test.
   - **Venue:** Binance only. Funding is excluded.
 - **Forward:** new crashes after 2026-09-27 are the remaining check, to be added by a later
   declaration. Nothing reaches the live service.
+
+## Execution stress test (declared before computing, 2026-10-09)
+Real crash fills are the main unknown. Every window is consumed, so this test measures how
+sensitive the result is to execution; it selects nothing.
+- **Events:** all 31 EXTREME fires (2020–21 test 14, 2022–25 discovery 15, 2025–26 rehearsal 2).
+- **Basket:** the hardest-hit fifth at t, as in the primary.
+- **Costs:** 2 × (5 bp + 3 × slippage tier), on top of every stress.
+- **Stresses:**
+  - **Worst fill:** buy at the HIGH of entry minute t + 1 and sell at the LOW of exit minute
+    t + 241. Both come from the per-symbol 1m parquet files; if the exit minute is missing, use
+    the last low in [entry, exit].
+  - **Latency:** buy at the close of t + 2, t + 3, t + 5 or t + 10; hold 4 h from entry.
+    t + 10 is descriptive.
+- **Statistics:** mean net with a 95% ISO-week block CI (`flush_signal.cell_stats`, minimum 10).
+- **Self-test:** the t + 1 latency row must reproduce the recorded E1-H 4 h net (1e-6).
+- **ROBUST**, computed: mean > 0 and CI excludes 0 for the worst fill and for latencies t + 2,
+  t + 3 and t + 5, both on the 14 test events and on all 31. Otherwise **FRAGILE**, with the
+  failing cases listed.
+- Code: `research/extreme_crash_exec.py`. Receipt:
+  `data/replay/flush_signal/exec_stress_extreme.json`.
