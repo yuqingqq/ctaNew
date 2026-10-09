@@ -94,3 +94,29 @@ Shorting each tercile for 72 h in C: quiet −1.03%, middle −1.41%, heavy −0
 - **Quiet pumps still drift down** (median −0.9%), so "buy the quiet pumps" has no basis either.
 - **The short-the-pump line is closed on free data:** its left tail is structural.
 - 2020-01 → 2025-08 is now consumed for alert-level pump questions.
+
+### Post-read descriptive: what kind of coin runs? (both windows already read; `research/runner_profile.py`)
+- **Data:** 8,114 pumps (2020-25 C, plus the 2025-26 screen).
+- **Meme flag:** CoinGecko `meme-token` category fetched 2026-10-09, market-cap rank ≤ 1500: 171
+  symbols (`docs/coingecko_meme_rank1500_2026-10-09.json`). It is a current snapshot, applied
+  retroactively.
+- **Runner:** coin return from +4 h to +72 h of +50% or more.
+
+| group | share of pumps | runner rate | doubled | short S24, heavy pumps (2020-25 / 2025-26) |
+|---|---|---|---|---|
+| meme | 10% | 5.5% | 2.2% | −7.19% / −2.50% |
+| non-meme | 90% | 2.7% | 0.6% | +0.14% [−0.66, +0.90] / +1.45% [+0.16, +2.76] |
+| non-meme, ≥ $20M/day, listed ≥ 180 d | 32% | 2.2% | 0.4% | +0.38% [−0.96, +1.67] / +3.57% [+0.42, +6.57] |
+
+- **Runners by liquidity at the alert:**
+  - < $20M: 2.7%;
+  - $20–100M: 2.8%;
+  - ≥ $100M: 3.7%.
+  - Runners are NOT concentrated in thin coins. The largest (MYX +835%, AIA, TNSR, RAVE, POWER)
+    were liquid, non-meme, narrative small caps.
+- **Runners by age on Binance futures:** < 30 d 4.5%; ≥ 1 y 2.3%.
+- **Reading:**
+  - Memes are the worst shorts.
+  - Without them, the heavy-pump short is flat in 2020-25 and positive only in 2025-26.
+  - The filters were chosen after seeing both windows, so nothing here is evidence. Only forward
+    alerts can test it.
