@@ -210,3 +210,27 @@ Mean net, 4 h, stress 3 (95% CI; wins):
   t + 5 the edge is about half. Execution must be automated.
 - **The worst fill inside the minute still leaves +4.6% to +5.4%.** The stress does not cover
   depth beyond the printed range or outages. On 2025-10-10 the worst fill was −8.2%.
+
+## Live alert (deployed 2026-10-09 06:16Z, commit 3a82553)
+- **Code:** `movewatch/watchers.py` `CrashWatcher` and `CrashDetector`; config `watchers.crash`.
+  Alert only, never trades.
+- **Data:** Binance USDM `!miniTicker@arr`. Closes are the last price before each minute boundary;
+  the universe is 24 h quote volume ≥ $5M plus a trade in the last 15 minutes.
+- **Exclusions:** stables, index perps, dated contracts and stock/commodity perps. Stock perps are
+  caught by the static list, the engine's cluster verdict, or the engine's reference-price rule
+  on the symbol's own price; 88 liquid ones are excluded today.
+- **Message:** the share and median drop, the hardest-hit fifth with each coin's 15-minute drop,
+  and the 4 h exit time. A follow-up 4 h later gives the basket's gross return since the
+  1-minute entry.
+- **Checks before deploying:**
+  - 7 unit tests (`tests/test_crash_watcher.py`), including replaying the research panel through
+    the live detector: it fires on 2024-03-05 19:56 exactly, with the research basket.
+  - Two live rehearsals with the trigger forced: 245–302 liquid crypto perps; peak 58 MB
+    standalone.
+- **Forward test v2 untouched:** `watchers.py` and `watchers.*` are outside its fingerprint. The
+  restarted run's FU_START carries 2375f81d463303ac, the freeze.
+- **Limits:**
+  - The 24 h refractory is not persisted across restarts.
+  - After a restart or reconnect, the trigger is blind for 15 minutes (status `NO_HISTORY`).
+  - Liquidity is the rolling 24 h volume, not the 24 h before the 15-minute block (a tiny
+    difference).

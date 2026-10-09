@@ -5,6 +5,7 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-09 06:22Z: extreme-crash LIVE ALERT deployed (M23, 3a82553; watchers.py, outside the v2 fingerprint; restarted run admitted, sha 2375f81d).
   2026-10-09 05:56Z: extreme-crash execution stress ROBUST (worst in-minute fill +5.4% test / +4.6% all; latency t+5 +3.9% test).
   2026-10-09 05:50Z: extreme-crash strategy VALIDATED (M22) on untouched 2020-21: 14 crashes, +8.56% [+4.35,+12.40] per 4h trade
   (buy the hardest-hit fifth after the median coin falls >=10% in 15 min); 31 crashes in all, 27 wins; intra-hold drawdowns to -52%.
@@ -104,6 +105,10 @@ tasks:
                                     difference (pre-alert 9/30 vs 7/30, p 0.77; ~half have no findable catalyst). Listings after the
                                     alert 2.8% vs 0.3% of runners/faders (rare). Consistent small tilts: no Binance spot market,
                                     younger, perp premium > 0 + taker buying at +4h (runner rate ~15% vs ~9%). Nothing separates well."}
+  M23_crash_alert:          {status: done, artifact: "movewatch/watchers.py CrashWatcher; config watchers.crash; tests/test_crash_watcher.py",
+                             note: "live alert-only extreme-crash trigger since 2026-10-09 06:16Z; reproduces the research fire on 2024-03-05
+                                    19:56 with the same basket; stock perps excluded (88 today); service RSS 312 MB after restart;
+                                    forward test v2 run admitted (FU_START sha 2375f81d)."}
   M22_extreme_crash:        {status: done, artifact: "docs/EXTREME_CRASH.md; research/extreme_crash.py; tests/test_extreme_crash.py; data/replay/flush_signal/receipt_extreme_early.json",
                              note: "EXTREME (median liquid coin <= -10% in 15 min) -> buy hardest-hit fifth at t+1, sell 4h, stress 3, k=1.
                                     Discovery 2022-01..2025-08 (consumed) +9.33% n15; frozen 4c6a16e; confirmation on untouched

@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-09 05:56Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-09 06:22Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -143,6 +143,10 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
   and selling at the exit minute's low leaves +5.4% (test) / +4.6% (all). Each minute of entry
   delay costs about 1–2 points (t + 5: +3.9% on the test). It must be automated; depth beyond the
   printed range and outages are untested.
+- **LIVE ALERT since 2026-10-09 06:16Z** (3a82553): `watchers.py` CrashWatcher on Binance USDM
+  `!miniTicker@arr` sends 🚨 EXTREME CRASH with the basket and exit time, plus a 4 h follow-up.
+  Alert only. It is outside the forward-test fingerprint; the restarted run carries 2375f81d. Logs:
+  `crash watcher health` hourly, and `crash watch` when share_3% ≥ 50%.
 - 2020–21 is now consumed for this question. Next: a forward declaration for crashes after
   2026-09-27, evaluated offline from Vision data; no service change.
 
