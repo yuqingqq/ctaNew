@@ -110,3 +110,62 @@ Same code and definition as the test.
 - Same structure as the flush study: quarterly float32 memmap panels, 5,000-minute chunks,
   `replay.mem` guard at 2.0 GiB, `research_slot.sh` at the default 4 GiB cap.
 - Measured on 2022–2025: peak 1.34 GiB.
+
+## Result: confirmation test, window C read once (2026-10-09 05:50Z, `data/replay/flush_signal/receipt_extreme_early.json`)
+- **Build:**
+  - 140 symbols with data; 0 download errors.
+  - All self-tests passed (detector, parquet price reconciliation, 14 / 14 basket paths). The
+    falsifiers behaved. Peak RSS 0.72 GiB.
+  - 417,570 of 1,048,320 owned minutes were `THIN_UNIVERSE` (< 50 liquid coins), nearly all
+    before 2020-11. The effective window is about Nov 2020 → Dec 2021.
+- **Fires:** EXTREME 14 (12 weeks). Plateau variants: D8 16, D12 8, S25 15, S75 8; all required.
+
+| primary: EXTREME, E1-H, 4 h, stress 3 | value |
+|---|---|
+| mean net [95% CI] | **+8.56% [+4.35, +12.40]** |
+| one-sided p (bar 0.05) | 0.0002 |
+| median, wins | +8.91%, 12 / 14 |
+| random-time null mean, p_null | −0.45%, 0.0005 |
+| best event left out | +7.75% (top event = 16% of the total) |
+| plateau D8 / D12 / S25 / S75 | +5.96% / +10.49% / +6.91% / +8.63% |
+| **verdict** | **VALIDATED** |
+
+- **Descriptive:**
+  - E1-M (whole market) +5.21% [+1.73, +8.37]; E2-H +3.16% [−0.68, +6.63]; E2-M +1.69%.
+    Buying 1 minute after the trigger beats waiting for the turn again.
+  - E1-H at stress 1 / 3 / 5: +8.89% / +8.56% / +8.23%.
+  - E1-H by hold: 1 h +9.30%, 24 h +13.29%.
+  - The FLUSH (5%) tier in this window: E1-H +3.08%.
+- **Drawdown during the hold:** 4 of 14 baskets fell 17–40% before recovering:
+  - 2021-05-19 −39.8% (ended −2.4%);
+  - 2021-12-04 −19.8%;
+  - 2021-04-18 −18.9%;
+  - 2021-09-07 −17.3%.
+
+### Across all periods (descriptive): 31 extreme crashes, 2020-11 → 2026-09
+
+| period | crashes | mean, E1-H 4 h, stress 3 | wins |
+|---|---|---|---|
+| 2020–21 (test) | 14 | +8.56% | 12 |
+| 2022–25 (discovery) | 15 | +9.33% | 13 |
+| 2025–26 (rehearsal) | 2 | +4.89% | 2 |
+| **all** | **31** | **+8.70% (median +8.11%)** | **27** |
+
+- Worst trade −3.94%; best +19.57%.
+- **Drawdown during the hold:** 7 of 31 baskets fell ≥ 10% at some point before the exit; the
+  worst were −52.3% (2025-10-10) and −39.8% (2021-05-19).
+- **No leverage, no stop.** A stop or 2× leverage turns those baskets into the realised losses.
+
+### What it says
+- **The strategy is validated on untouched data**, the first result in this project to pass a
+  confirmation test. After the median liquid coin falls ≥ 10% in 15 minutes, buying the
+  hardest-hit fifth for 4 hours earned about +8–9% per crash after 3× normal slippage, in two
+  separate periods, with 27 of 31 trades positive.
+- **What is still unknown:**
+  - **Real fills.** These are the worst minutes to trade: thin books, exchange lag and outages
+    (Binance had them on 2021-05-19 and 2025-10-10). The test assumed 3× normal slippage. The
+    edge survives about 5% per side of extra cost, but real crash fills were never measured.
+  - **Frequency:** about 4–7 crashes per year (2021 had 12), so returns come in rare bursts.
+  - **Venue:** Binance only. Funding is excluded.
+- **Forward:** new crashes after 2026-09-27 are the remaining check, to be added by a later
+  declaration. Nothing reaches the live service.

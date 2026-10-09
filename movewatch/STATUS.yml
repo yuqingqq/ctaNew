@@ -5,6 +5,8 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-09 05:50Z: extreme-crash strategy VALIDATED (M22) on untouched 2020-21: 14 crashes, +8.56% [+4.35,+12.40] per 4h trade
+  (buy the hardest-hit fifth after the median coin falls >=10% in 15 min); 31 crashes in all, 27 wins; intra-hold drawdowns to -52%.
   2026-10-09 04:32Z: flush signal done (M21): 0/4 cells VALIDATED on untouched 2022-01..2025-08 (49 flushes; best E1-H +1.28%
   [-0.21,+2.87]); descriptive EXTREME tier (median coin <= -10%/15min, n15) +9.3%/4h for the worst-hit, forward-only candidate.
   2026-10-09 03:16Z: flush signal declared + frozen (M21, cb690cd); hist 2022-01..2025-08 downloading, read once next.
@@ -101,6 +103,12 @@ tasks:
                                     difference (pre-alert 9/30 vs 7/30, p 0.77; ~half have no findable catalyst). Listings after the
                                     alert 2.8% vs 0.3% of runners/faders (rare). Consistent small tilts: no Binance spot market,
                                     younger, perp premium > 0 + taker buying at +4h (runner rate ~15% vs ~9%). Nothing separates well."}
+  M22_extreme_crash:        {status: done, artifact: "docs/EXTREME_CRASH.md; research/extreme_crash.py; tests/test_extreme_crash.py; data/replay/flush_signal/receipt_extreme_early.json",
+                             note: "EXTREME (median liquid coin <= -10% in 15 min) -> buy hardest-hit fifth at t+1, sell 4h, stress 3, k=1.
+                                    Discovery 2022-01..2025-08 (consumed) +9.33% n15; frozen 4c6a16e; confirmation on untouched
+                                    2020-01..2021-12 (effective Nov20-Dec21) read once 05:50Z: n14 +8.56% [+4.35,+12.40] p 0.0002,
+                                    12/14 wins, p_null 0.0005, plateau 4/4 > 0 -> VALIDATED. Intra-hold drawdowns to -52% (no leverage,
+                                    no stop). Crash fills untested. Next: forward declaration (offline, no service change)."}
   M21_flush_signal:         {status: done, artifact: "docs/FLUSH_SIGNAL.md; research/flush_signal.py; tests/test_flush_signal.py; data/replay/flush_signal/receipt_hist.json",
                              note: "market-level flush (>=50% of liquid coins down >=5% in 15 min); buy M/H, E1/E2, 4h, stress 3, k=4.
                                     Frozen cb690cd after a rehearsal (consumed year, 8 fires). Hist 2022-01..2025-08 read once

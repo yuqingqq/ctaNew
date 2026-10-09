@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-09 04:32Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-09 05:50Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -129,6 +129,20 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
 - Hist window 2022-01 → 2025-08 is now consumed for this question. Data: `data/hist/usdm_1m_hist`
   (11 GB) and panels `data/replay/panel_2022-*`–`panel_2025-*` (~10 GB, re-buildable caches).
 
+**Extreme-crash strategy (VALIDATED 2026-10-09, `docs/EXTREME_CRASH.md`, freeze 4c6a16e, receipt
+`data/replay/flush_signal/receipt_extreme_early.json`):**
+- **Rule:**
+  - trigger when the median liquid Binance perp (≥ $5M/day, ≥ 50 coins) falls ≥ 10% in 15 min;
+  - buy the hardest-hit fifth 1 minute later, equal weight, no leverage;
+  - sell 4 h later, no stop.
+- **Confirmation on untouched 2020–21** (effective Nov 2020 → Dec 2021): 14 crashes,
+  **+8.56% [+4.35, +12.40]**, 12 / 14 wins, beats random times, plateau holds, k = 1 → VALIDATED.
+- **All periods (descriptive):** 31 crashes, +8.70% mean, 27 / 31 wins, worst −3.9%. But 7 / 31
+  baskets fell ≥ 10% during the hold (worst −52% on 2025-10-10, −40% on 2021-05-19).
+- **Unknown:** real crash fills (the edge survives about 5% per side of extra cost).
+- 2020–21 is now consumed for this question. Next: a forward declaration for crashes after
+  2026-09-27, evaluated offline from Vision data; no service change.
+
 ## Next (ranked)
 
 1. **Let the forward test run; read counts only.** `python3 -m research.forward_eval` prints
@@ -172,7 +186,8 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
   `*.binance.vision` and fstream `/market/`, and Bybit WS with one topic per subscribe.
 - **Consumed windows**: 09-20..27 (QNT) and 09-01..19 (three looks), plus the Apr–Jul holdout
   (persistence), Oct 2025–Mar 2026 (signal search V, read once) and, for the flush question,
-  2022-01 → 2025-08 (flush signal, read once). Only forward data is out-of-sample.
+  2022-01 → 2025-08 (flush signal, read once) and 2020-01 → 2021-12 (extreme crash, read once).
+  Only forward data is out-of-sample.
 - **Memory** (user directive: never break the limit, keep a buffer):
   - Research: `.worktrees/research_slot.sh` at the default 4 GiB cap, `MALLOC_ARENA_MAX=2`, and
     the 2 GiB self-guard.
