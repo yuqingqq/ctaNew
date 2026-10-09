@@ -5,6 +5,8 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-09 11:27Z: signal 3 angle sweep (M27): 77 angles on S/V, only 2 hold (both losing longs); 16 positive-in-both carried to 2020-25 pumps: 3 stay
+  positive, none CI>0; discount shorts turn negative (deepest 10% short 24h -4.2%). Not tradable from any angle examined.
   2026-10-09 11:06Z: signal 3 (perp premium at +4h) CLOSED as a trade (M27, descriptive on consumed S/V): pumps rank (IC +0.10/+0.12, partial
   +0.07/+0.09 given volume) but no tercile trade keeps its sign; dumps no ranking (IC -0.01); nothing declared, 2020-25 dumps unread.
   2026-10-09 08:12Z: heavy-volume pump short CLOSED (M26): v1 screen k=0 (stops do not cut the tail); v2 (heavy & futures discount, 24h)
@@ -116,7 +118,8 @@ tasks:
                                     +0.070/+0.092; short discount +2.72%/-0.80% (and -0.63% heavy-discount 2020-25), long premium
                                     -0.60%/+0.83%, median coin still -5%; long middle +1.5/+2.7% mean, negative median (runner tail,
                                     forward-only). Dumps: IC -0.009/-0.006; V buy-dump mean is the 2025-10-10 crash week. No test
-                                    declared; 2020-25 dump replays stay unread."}
+                                    declared; 2020-25 dump replays stay unread. Angle sweep (research/premium_angles.py --conf): 77 S/V angles, 2 hold
+                                    (both losing longs); 16 carried to 2020-25 pumps, 3 stay positive (none CI>0), discount shorts negative."}
   M26_heavy_fade:           {status: done, artifact: "docs/HEAVY_FADE.md; docs/HEAVY_FADE_V2.md; research/heavy_fade*.py; data/replay/heavy_fade/",
                              note: "short heavy post-alert-volume pumps at +4h. v1 (24/72h x stop 25%) screen k=0, rows reconciled exactly to the
                                     signal search; v2 heavy & premium_h4 discount, S24, k=1, untouched replays 2020-01..2025-08 (6,988 rows):

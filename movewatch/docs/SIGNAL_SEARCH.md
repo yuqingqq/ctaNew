@@ -320,3 +320,43 @@ Every window used was already read. Nets are the signal search's (x4_72, stress 
   - Crash buying is already covered by `EXTREME_CRASH.md`.
 - **Verdict:** signal 3 ranks pumps, but it is not a trade on either side, so no test is declared.
   - The 2020–25 dump replays stay unread for alert-level questions.
+
+### Post-hoc: signal 3 from more angles (2026-10-09 11:27Z; `research/premium_angles.py --conf`; descriptive)
+**Angles:**
+- Pumps: 13 groups × (short / long × 24 h / 72 h, plus short 24 h with a +25% stop). The groups
+  are terciles, the extreme deciles (cuts from the S feature distribution), premium × post-alert
+  volume, non-meme, and meme.
+- Dumps: 6 groups × buy / short, 4 → 72 h.
+
+**Rules, stated before the run:**
+- An angle holds if it has the same sign in S and V and both CIs exclude 0.
+- Every pump angle with a positive mean in S and V gets a third look on the 2020-01 → 2025-08
+  replay pumps. That window was consumed for pump questions but was never split by premium this
+  way. 4,823 pumps; premium missing 101.
+- The 2020-25 dumps stay unread.
+
+**Results:**
+- **S and V:** 77 angles. Only 2 hold, and both are losers (buying discount pumps at 24 h loses in
+  both windows). The mirror short does not clear in V.
+- **Dumps:** nothing holds. V's means swing on the 2025-10-10 crash week.
+- **2020–25 third look:** 16 angles carried; 3 stay positive, none with CI > 0.
+  - The short-the-discount family turns negative:
+    - discount tercile short 24 h: −1.23% [−2.31, −0.25];
+    - deepest 10% (≤ −95 bp) short 24 h: −4.23% [−8.75, −0.05];
+    - heavy & discount: −0.63% / −0.81%.
+  - In 2020-25 the deeper the discount, the worse the short — the opposite of 2025-26.
+  - Survivors:
+    - buy the highest-premium 10% (> +14 bp) for 72 h: +2.86 / +2.61 / +1.42% in S / V / C,
+      medians −7.3 / −5.9 / −3.9%, every CI spans 0;
+    - quiet & premium long 72 h: +0.92%;
+    - heavy & premium short 24 h: +0.18%.
+  - One survivor in 16 is what chance gives. The buy-high-premium idea is a runner lottery with a
+    negative median and stays forward-only.
+
+**Not examined:**
+- premium as an exit or stop rule (needs the premium path after +4 h);
+- the premium at other hours, or its change;
+- other venues' premium;
+- market-hedged legs.
+
+**Verdict:** signal 3 is not tradable from any angle examined.

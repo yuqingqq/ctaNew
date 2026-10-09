@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-09 11:06Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-09 11:27Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -168,6 +168,9 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
   - It ranks pumps (IC +0.10 / +0.12; +0.07 / +0.09 given post-alert volume), but no tercile
     trade keeps its sign across S and V. Shorting discount pumps was negative in 2 of 3 reads.
   - Mirrored on dumps there is no ranking.
+  - Angle sweep (`research/premium_angles.py --conf`): 77 angles on S/V, and only 2 hold, both
+    losing longs. 16 angles positive in both were carried to the 2020–25 pumps: 3 stay positive
+    and none has CI > 0. Discount shorts turn negative there (deepest 10%: −4.2% at 24 h).
   - Nothing was declared. The 2020–25 dump replays stay unread and are available for a future
     dump-side question.
 - 2020–21 is now consumed for this question. Next: a forward declaration for crashes after
