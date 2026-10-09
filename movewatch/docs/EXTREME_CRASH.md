@@ -189,3 +189,24 @@ sensitive the result is to execution; it selects nothing.
   failing cases listed.
 - Code: `research/extreme_crash_exec.py`. Receipt:
   `data/replay/flush_signal/exec_stress_extreme.json`.
+
+### Result: execution stress (2026-10-09 05:55Z, `exec_stress_extreme.json`): **ROBUST**
+- Self-test OK: the t + 1 row reproduces the recorded E1-H on all 31 events. Peak RSS 0.38 GiB.
+
+Mean net, 4 h, stress 3 (95% CI; wins):
+
+| entry | 2020–21 test (14) | all 31 |
+|---|---|---|
+| t + 1 (the rule) | +8.56% [+4.35, +12.40]; 12 | +8.70% [+6.05, +11.22]; 27 |
+| t + 2 | +6.65% [+2.17, +10.70]; 11 | +7.75% [+4.88, +10.66]; 27 |
+| t + 3 | +4.79% [+0.44, +8.66]; 10 | +7.27% [+3.84, +11.23]; 25 |
+| t + 5 | +3.93% [+0.08, +7.41]; 11 | +8.87% [+2.96, +18.73]; 27 * |
+| t + 10 (descriptive) | +2.96% [+0.05, +5.73]; 11 | +6.42% [+1.98, +13.46]; 24 |
+| worst fill (high in, low out) | +5.39% [+1.10, +9.22]; 11 | +4.61% [+2.08, +7.00]; 24 |
+
+\* Inflated by 2025-10-10: entering at t + 5 bought the wick bottom (+136%).
+
+- **Speed matters.** In the test period each minute of delay costs about 1–2 points, and by
+  t + 5 the edge is about half. Execution must be automated.
+- **The worst fill inside the minute still leaves +4.6% to +5.4%.** The stress does not cover
+  depth beyond the printed range or outages. On 2025-10-10 the worst fill was −8.2%.

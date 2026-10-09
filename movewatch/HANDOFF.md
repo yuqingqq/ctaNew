@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-09 05:50Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-09 05:56Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -139,7 +139,10 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
   **+8.56% [+4.35, +12.40]**, 12 / 14 wins, beats random times, plateau holds, k = 1 → VALIDATED.
 - **All periods (descriptive):** 31 crashes, +8.70% mean, 27 / 31 wins, worst −3.9%. But 7 / 31
   baskets fell ≥ 10% during the hold (worst −52% on 2025-10-10, −40% on 2021-05-19).
-- **Unknown:** real crash fills (the edge survives about 5% per side of extra cost).
+- **Execution stress: ROBUST** (`exec_stress_extreme.json`). Buying at the entry minute's high
+  and selling at the exit minute's low leaves +5.4% (test) / +4.6% (all). Each minute of entry
+  delay costs about 1–2 points (t + 5: +3.9% on the test). It must be automated; depth beyond the
+  printed range and outages are untested.
 - 2020–21 is now consumed for this question. Next: a forward declaration for crashes after
   2026-09-27, evaluated offline from Vision data; no service change.
 
