@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-09 12:17Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-09 13:24Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -179,6 +179,14 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
   - The ranking is negative in every class, strongest in thin, unpopular and old coins.
   - Thin coins with both legs pooled (picked after seeing): +0.94% [−0.21, +1.98] on C at stress
     1 and +0.14% at stress 3. Forward-only at best.
+- **Signal 2, regime and book view** (`research/regime_split.py`, `research/fade_portfolio.py`):
+  - The fade works in bear and pump-heavy regimes, but that combination is essentially only the
+    last year. Alt-bear periods in 2020–25 gave +0.08%.
+  - Non-meme heavy-short book at 1% per trade:
+    - last year about +14%/yr, Sharpe about 2, max DD −3.3%;
+    - 2020–25 +0.3%/yr;
+    - stress 3: about +7.5%/yr recent, −1.0%/yr over 2020–25.
+  - Scaling multiplies the drawdowns and the runner hit.
   - Nothing was declared. The 2020–25 dump replays stay unread and are available for a future
     dump-side question.
 - 2020–21 is now consumed for this question. Next: a forward declaration for crashes after

@@ -5,6 +5,8 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-09 13:24Z: signal 2 regime + book view: bear/pump-heavy fade +1.05% but that regime is ~only the last year (2020-25 alt-bear +0.08%);
+  non-meme heavy-short book at 1%/trade: last year ~+14%/yr (Sharpe ~2), 2020-25 +0.3%/yr; stress 3 halves recent, negative 2020-25.
   2026-10-09 12:17Z: signal 3 marked DEAD (user decision). Signal 2 by coin class: 0/30 work across S/V/C; ranking negative in every class
   (strongest thin/unpopular/old coins); thin-coin two-leg book +0.94% on C at stress 1, +0.14% at stress 3 (post-hoc, forward-only).
   2026-10-09 12:13Z: signal 3 by coin class (M27): 15 classes x 2 trades, none works across S/V/C; FOLLOW (buy premium 72h) pays in 2020-25 for

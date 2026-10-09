@@ -152,3 +152,38 @@ Shorting each tercile for 72 h in C: quiet −1.03%, middle −1.41%, heavy −0
   - Stress 3: C +0.14%.
   - The 2021 fade leg was −4.1%.
   - This is a forward-only candidate at best, and slippage in thin coins decides it.
+
+### Post-read descriptive: regimes and the book view (2026-10-09 13:24Z; `research/regime_split.py`, `research/fade_portfolio.py`)
+**Regime at the alert.** Gauges were fixed before the run and use closes through the day before:
+- alt bear: more than half of liquid alts below their price 90 days earlier;
+- BTC bear: BTC below its price 90 days earlier;
+- pump-heavy: trailing-90-day pump rows per liquid coin above the median, 6.9 a year.
+
+**Short heavy pumps 24 h, pooled 2020–26:**
+
+| gauge | bear (or pump-heavy) | bull (or pump-light) |
+|---|---|---|
+| alt | +0.73% [−0.31, +1.68] | −0.86% |
+| BTC | +0.80% | −0.43% |
+| pump intensity | +0.68% | −0.56% |
+| alt bear & pump-heavy | +1.05% [−0.52, +2.43], n 890 | |
+
+- Within 2020–25, the alt-bear periods gave **+0.08%** (n 749).
+- The bear-period gain is V (+1.38%) and S (+0.99%).
+- The pump-heavy regime existed only in 2021 (a bull) and in 2025–26. So "bear & pump-heavy" is
+  essentially the last year: one occurrence, nothing to test it on.
+
+**Book:** 1% of capital per trade, booked on the exit day, no compounding; heavy pumps; S24.
+
+| book | 2020-01 → 2026-09 | 2020–25 (C) | V (Oct 25–Mar 26) | S (Apr–Sep 26) | 2021 | max DD | max open |
+|---|---|---|---|---|---|---|---|
+| all, stress 1 | +0.8%/yr, Sharpe 0.18 | −1.3%/yr | +15.9%/yr, Sharpe 2.7 | +7.2%/yr | −8.4% | −9.9% | 12 |
+| non-meme, stress 1 | +2.5%/yr, Sharpe 0.71 | +0.3%/yr | +15.3%/yr, Sharpe 2.8 | +13.7%/yr, Sharpe 1.9 | −1.8% | −4.8% | 11 |
+| all, stress 3 | −1.5%/yr | −2.6%/yr | +7.7%/yr | +0.1%/yr | −9.3% | −15.2% | 12 |
+| non-meme, stress 3 | +0.4%/yr | −1.0%/yr | +7.8%/yr | +7.4%/yr | −2.7% | −6.6% | 11 |
+
+- Rolling 90-day P&L is negative in 40–50% of windows.
+- The aggregate is meaningful only in the last year: about +14%/yr per 1% risked per trade at
+  stress 1, and about +7.5% at stress 3. Over 2020–25 it is flat to negative.
+- P&L scales linearly with size, and so do drawdowns, the runner hit (worst 24 h trade −183% of
+  its notional) and gross exposure (up to 11–12 positions open at once).
