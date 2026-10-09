@@ -5,6 +5,7 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-09 03:16Z: flush signal declared + frozen (M21, cb690cd); hist 2022-01..2025-08 downloading, read once next.
   2026-10-08 16:19Z: signal search done (M20): breadth, post-alert volume, +4h premium and the pump-fade base rate VALIDATE on
   untouched Oct 2025-Mar 2026; no new feature does; the only 'tradable' pass (breadth fade) is two liquidation-crash days.
   2026-10-08 06:00Z: runners study done (M19); forward test v2 healthy (6 runs admitted, 0 errors). 2026-10-02 15:40Z: BTC-hedge study done, no candidate (M18). Forward test v2 frozen at 55ae98d and running (M16/M17). Earlier, 2026-09-28 16:00Z (session 1, continued). Forward test FROZEN at commit 1536a86 and
@@ -98,6 +99,10 @@ tasks:
                                     difference (pre-alert 9/30 vs 7/30, p 0.77; ~half have no findable catalyst). Listings after the
                                     alert 2.8% vs 0.3% of runners/faders (rare). Consistent small tilts: no Binance spot market,
                                     younger, perp premium > 0 + taker buying at +4h (runner rate ~15% vs ~9%). Nothing separates well."}
+  M21_flush_signal:         {status: in_progress, artifact: "docs/FLUSH_SIGNAL.md; research/flush_signal.py; tests/test_flush_signal.py; data/replay/flush_signal/",
+                             note: "market-level flush (>=50% of liquid coins down >=5% in 15 min); buy M/H, E1/E2, 4h, stress 3, k=4.
+                                    Frozen cb690cd after a rehearsal on the consumed year (8 fires, INSUFFICIENT; 2025-10-10 fired
+                                    before the bottom). Test window 2022-01..2025-08 (Vision 1m), read once."}
   M20_signal_search:        {status: done, artifact: "docs/SIGNAL_SEARCH.md; docs/SIGNAL_SEARCH_FREEZE.json; research/signal_search.py; data/replay/signal_search/",
                              note: "declared 2e49375, freeze 406e7d8, one V read (receipt validation_receipt.json). Screen 9/40 new cells pass on
                                     S1/S2; on untouched V (Oct25-Mar26, 3,005 rows) VALIDATED: breadth->4h fade (IC -0.137), vol_persist->4-72h

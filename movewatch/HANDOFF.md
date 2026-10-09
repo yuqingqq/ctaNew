@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-08 16:19Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-09 03:16Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -112,6 +112,17 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
   is one day (2025-10-10 crash). Without it: +1.3% per 4 h trade [+0.07, +2.34]; the S window shows
   the same shape (one flush week).
 - No clean trade. Oct 2025–Mar 2026 is now consumed.
+
+**Flush signal (IN PROGRESS 2026-10-09, `docs/FLUSH_SIGNAL.md`, freeze cb690cd):** the breadth
+lead restated at market level.
+- Signal: half the liquid market (≥ $5M/day) down ≥ 5% within 15 min. Trades: buy the market (M)
+  or the hardest-hit fifth (H); E1 = +1 min, E2 = wait for the turn; 4 h hold, 3× slippage; k = 4.
+- Post-hoc findings that motivated it: alert breadth is partly alert speed (pumps: nothing left
+  after the speed control); dumps bounce on all 6 flush days of the consumed year.
+- Rehearsal on the consumed year: 8 fires, INSUFFICIENT by design. 2025-10-10 fired before the
+  bottom and E1-M lost 17%.
+- Test: Binance Vision 1m for 2022-01 → 2025-08 (`data/hist/usdm_1m_hist`), build, then
+  `validate --window hist` ONCE (it refuses a second read).
 
 ## Next (ranked)
 
