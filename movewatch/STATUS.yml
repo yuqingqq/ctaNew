@@ -5,7 +5,7 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
-  2026-10-09 06:41Z: idea checks — extreme-pump mirror: no independent market-wide pump (M24, docs/EXTREME_PUMP.md); Upbit listing
+  2026-10-09 06:34Z: idea checks — extreme-pump mirror: no independent market-wide pump (M24, docs/EXTREME_PUMP.md); Upbit listing
   announcements: pop done inside the notice minute (+13.5% median), no tradable cell, k=0 (M25, docs/UPBIT_LISTINGS.md).
   2026-10-09 06:20Z: extreme-crash LIVE ALERT deployed (M23, 3a82553; watchers.py, outside the v2 fingerprint; restarted run admitted, sha 2375f81d).
   2026-10-09 05:56Z: extreme-crash execution stress ROBUST (worst in-minute fill +5.4% test / +4.6% all; latency t+5 +3.9% test).
