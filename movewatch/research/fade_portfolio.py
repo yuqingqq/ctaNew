@@ -12,7 +12,9 @@ Book, fixed before the run:
   daily Sharpe (annualised, sqrt 365), max drawdown, worst day, and the most trades open at
   once (= gross exposure in % of capital).
 Variants: all heavy pumps; non-meme heavy pumps (CoinGecko meme list, retroactive).
-`--stress 3` triples the slippage tiers (descriptive cost check)."""
+`--stress 3` triples the slippage tiers (descriptive cost check).
+`--trades` prints per-year trade statistics instead: win rate, median win and loss, the share of trades losing
+> 25% / > 50%, p5, worst, and how much of the gross wins the losers took back."""
 import sys
 import numpy as np, pandas as pd
 sys.path.insert(0, "/home/yuqing/ctaNew/movewatch")
@@ -58,8 +60,24 @@ def show(lab: str, s: dict) -> str:
             f"| annual {s['annual']:+6.1f}% | Sharpe {s['sharpe']:+5.2f} | max DD {s['maxdd']:+6.1f}% | worst day {s['worst_day']:+5.1f}% | max open {s['max_open']}")
 
 
+def trade_table(x: pd.DataFrame, label: str) -> None:
+    print(f"\n== {label}: per-trade statistics by year (short +4h -> +24h, stress {STRESS} + funding)")
+    print(f"{'year':6} {'n':>5} {'win':>5} {'med win':>8} {'med loss':>9} {'lose>25%':>9} {'lose>50%':>9} {'p5':>7} {'worst':>7} {'mean':>7} {'losses/wins':>11}")
+    for y, g in list(x.groupby(x["time"].dt.year)) + [("all", x)]:
+        v = g["net"].to_numpy()
+        w, l = v[v > 0], v[v <= 0]
+        print(f"{str(y):6} {len(v):5d} {100 * (v > 0).mean():4.0f}% {100 * np.median(w):+7.1f}% {100 * np.median(l):+8.1f}% "
+              f"{100 * (v < -0.25).mean():8.1f}% {100 * (v < -0.5).mean():8.1f}% {100 * np.percentile(v, 5):+6.1f}% {100 * v.min():+6.0f}% "
+              f"{100 * v.mean():+6.2f}% {-l.sum() / w.sum():10.2f}")
+
+
 if __name__ == "__main__":
     p = pc.frame(require="vol_persist")
+    if "--trades" in sys.argv:
+        heavy = p[p["vol_persist"] > hf.HEAVY]
+        for vname, v in (("ALL HEAVY PUMPS", heavy), ("NON-MEME HEAVY PUMPS", heavy[~heavy["meme"]])):
+            trade_table(book(v, covered_days(p))[1], vname)
+        sys.exit(0)
     days = covered_days(p)
     heavy = p[p["vol_persist"] > hf.HEAVY]
     for vname, v in (("ALL HEAVY PUMPS", heavy), ("NON-MEME HEAVY PUMPS", heavy[~heavy["meme"]])):

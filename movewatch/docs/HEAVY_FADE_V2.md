@@ -187,3 +187,21 @@ Shorting each tercile for 72 h in C: quiet −1.03%, middle −1.41%, heavy −0
   stress 1, and about +7.5% at stress 3. Over 2020–25 it is flat to negative.
 - P&L scales linearly with size, and so do drawdowns, the runner hit (worst 24 h trade −183% of
   its notional) and gross exposure (up to 11–12 positions open at once).
+
+**Per-trade by year** (2026-10-09 13:40Z; `research/fade_portfolio.py --trades`; non-meme heavy short 24 h, stress 1)
+
+| year | n | win rate | median win / loss | lose > 50% | losses ÷ wins | mean |
+|---|---|---|---|---|---|---|
+| 2021 | 211 | 58% | +6.3 / −6.4% | 1.9% | 1.16 | −0.78% |
+| 2022 | 145 | 66% | +6.8 / −5.3% | 1.4% | 0.88 | +0.58% |
+| 2023 | 204 | 61% | +6.1 / −5.2% | 1.5% | 0.87 | +0.60% |
+| 2024 | 282 | 60% | +6.4 / −5.6% | 1.4% | 0.90 | +0.43% |
+| 2025 | 729 | 64% | +7.8 / −7.8% | 2.2% | 0.91 | +0.57% |
+| 2026 | 688 | 63% | +9.8 / −10.4% | 2.2% | 0.81 | +1.49% |
+
+- **The win rate is stable** (58–66%).
+- **Losers take back 81–91% of the gross wins every year except 2021**, when they took back 116%
+  (and 180% with memes).
+- **The recent gain is bigger moves, not more wins.** Median wins and losses both grew from
+  about ±6% to about ±10%, with a slightly better ratio.
+- So the edge is the thin remainder after losses, and a few extra runners erase it.
