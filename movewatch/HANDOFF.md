@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-09 12:13Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-09 12:17Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -163,7 +163,7 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
     runners (worst −175% to −900%).
   - Replays `data/replay/hfv_*` (23 panels, 2020-01 → 2025-08) are now consumed for alert-level
     pump questions.
-- **Signal 3, perp premium at +4 h** (`docs/SIGNAL_SEARCH.md` post-hoc, `research/premium_posthoc.py`):
+- **Signal 3, perp premium at +4 h — DEAD (user decision 2026-10-09)** (`docs/SIGNAL_SEARCH.md` post-hoc, `research/premium_posthoc.py`):
   CLOSED as a trade.
   - It ranks pumps (IC +0.10 / +0.12; +0.07 / +0.09 given post-alert volume), but no tercile
     trade keeps its sign across S and V. Shorting discount pumps was negative in 2 of 3 reads.
@@ -174,6 +174,11 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
   - By coin class (`research/premium_classes.py`; meme, sectors, liquidity, popularity, age):
     none of 30 tries works. The trade direction follows the alt regime: buying premium pumps of
     layer-1 / top-50 coins paid in 2021/23/24, and shorting discount pumps paid in 2025–26.
+- **Signal 2 by coin class** (`research/volume_classes.py`, `docs/HEAVY_FADE_V2.md`): none of 30
+  tries works.
+  - The ranking is negative in every class, strongest in thin, unpopular and old coins.
+  - Thin coins with both legs pooled (picked after seeing): +0.94% [−0.21, +1.98] on C at stress
+    1 and +0.14% at stress 3. Forward-only at best.
   - Nothing was declared. The 2020–25 dump replays stay unread and are available for a future
     dump-side question.
 - 2020–21 is now consumed for this question. Next: a forward declaration for crashes after

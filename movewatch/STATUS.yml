@@ -5,6 +5,8 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-09 12:17Z: signal 3 marked DEAD (user decision). Signal 2 by coin class: 0/30 work across S/V/C; ranking negative in every class
+  (strongest thin/unpopular/old coins); thin-coin two-leg book +0.94% on C at stress 1, +0.14% at stress 3 (post-hoc, forward-only).
   2026-10-09 12:13Z: signal 3 by coin class (M27): 15 classes x 2 trades, none works across S/V/C; FOLLOW (buy premium 72h) pays in 2020-25 for
   layer-1/top-50/meme/gaming but is regime-made (2021/23/24 up, 2022/25 down); FADE negative on C for all but DeFi (CI spans 0).
   2026-10-09 11:27Z: signal 3 angle sweep (M27): 77 angles on S/V, only 2 hold (both losing longs); 16 positive-in-both carried to 2020-25 pumps: 3 stay
@@ -115,14 +117,16 @@ tasks:
                                     difference (pre-alert 9/30 vs 7/30, p 0.77; ~half have no findable catalyst). Listings after the
                                     alert 2.8% vs 0.3% of runners/faders (rare). Consistent small tilts: no Binance spot market,
                                     younger, perp premium > 0 + taker buying at +4h (runner rate ~15% vs ~9%). Nothing separates well."}
-  M27_premium_signal:       {status: done, artifact: "research/premium_posthoc.py; docs/SIGNAL_SEARCH.md post-hoc section",
+  M27_premium_signal:       {status: dead, artifact: "research/premium_posthoc.py; docs/SIGNAL_SEARCH.md post-hoc section",
                              note: "A3 premium_h4 as a trade, descriptive on consumed S/V. Pumps: IC +0.100/+0.121, given vol_persist
                                     +0.070/+0.092; short discount +2.72%/-0.80% (and -0.63% heavy-discount 2020-25), long premium
                                     -0.60%/+0.83%, median coin still -5%; long middle +1.5/+2.7% mean, negative median (runner tail,
                                     forward-only). Dumps: IC -0.009/-0.006; V buy-dump mean is the 2025-10-10 crash week. No test
                                     declared; 2020-25 dump replays stay unread. Angle sweep (research/premium_angles.py --conf): 77 S/V angles, 2 hold
                                     (both losing longs); 16 carried to 2020-25 pumps, 3 stay positive (none CI>0), discount shorts negative. By class (premium_classes.py): 0/30;
-                                    trade direction follows the alt regime (follow in alt-bull years, fade in the 2025-26 bear)."}
+                                    trade direction follows the alt regime (follow in alt-bull years, fade in the 2025-26 bear). Marked DEAD 2026-10-09.
+                                    Signal 2 by class (volume_classes.py): 0/30; ranking negative in every class; thin-coin both-legs book
+                                    +0.94% [-0.21,+1.98] C stress 1, +0.14% stress 3 (post-hoc, forward-only)."}
   M26_heavy_fade:           {status: done, artifact: "docs/HEAVY_FADE.md; docs/HEAVY_FADE_V2.md; research/heavy_fade*.py; data/replay/heavy_fade/",
                              note: "short heavy post-alert-volume pumps at +4h. v1 (24/72h x stop 25%) screen k=0, rows reconciled exactly to the
                                     signal search; v2 heavy & premium_h4 discount, S24, k=1, untouched replays 2020-01..2025-08 (6,988 rows):

@@ -120,3 +120,35 @@ Shorting each tercile for 72 h in C: quiet −1.03%, middle −1.41%, heavy −0
   - Without them, the heavy-pump short is flat in 2020-25 and positive only in 2025-26.
   - The filters were chosen after seeing both windows, so nothing here is evidence. Only forward
     alerts can test it.
+
+### Post-read descriptive: signal 2 by class of coin (2026-10-09 12:17Z; `research/volume_classes.py`)
+**Setup:**
+- Classes: the same 15 as signal 3 (`research/premium_classes.py`).
+- Windows: S, V and C (2020–25).
+- Trades (A2 cuts): FADE = short heavy pumps, 4 → 24 h; FOLLOW = buy quiet pumps, 4 → 72 h.
+- Rule, stated before the run: the ranking is < 0 in all three windows, the trade's mean is > 0
+  in all three (n ≥ 100), and C's CI excludes 0.
+- Control: all pumps reproduce the ranking (−0.195 / −0.247 / −0.107) and the v2 receipt's C
+  heavy S24 (−0.44%, n 1,385).
+
+**Result: none of 30 tries works.**
+- **The ranking is robust across classes.** It is negative in every class and window except
+  liquidity ≥ $100M in S (+0.016). It is strongest in the thin, unpopular and old coins:
+  - liquidity < $20M: −0.26 / −0.26 / −0.21;
+  - popularity rank > 150: −0.26 / −0.30 / −0.18;
+  - age ≥ 1 y: −0.22 / −0.34 / −0.14.
+- **Near misses** (positive in all three windows, C's CI spans 0):
+  - FADE:
+    - liquidity < $20M: +1.31 / +0.80 / +0.67%;
+    - popularity 51–150: +0.73 / +0.70 / +0.67%;
+    - age ≥ 1 y: +0.77 / +0.50 / +0.59%;
+    - non-meme: +1.64 / +1.30 / +0.14%.
+  - FOLLOW:
+    - liquidity < $20M: +2.40 / +4.52 / +1.30%;
+    - age 90 d–1 y: +3.50 / +1.87 / +1.65%;
+    - popularity > 150: +0.27 / +5.25 / +1.15%.
+- **Post-hoc (picked after seeing): thin coins, both legs pooled.**
+  - Stress 1: S +1.84% [+0.20, +3.46], V +2.55% [−0.14, +5.28], C +0.94% [−0.21, +1.98].
+  - Stress 3: C +0.14%.
+  - The 2021 fade leg was −4.1%.
+  - This is a forward-only candidate at best, and slippage in thin coins decides it.

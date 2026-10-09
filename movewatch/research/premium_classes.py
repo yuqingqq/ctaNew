@@ -69,12 +69,12 @@ def fetch_sectors() -> dict:
     return out
 
 
-def frame() -> pd.DataFrame:
+def frame(require: str | None = "premium_h4") -> pd.DataFrame:
     sv = pa.load()
     sv = sv[sv["dir"] == 1]
     c = pa.conf_pumps(sv)
     p = pd.concat([sv, c], ignore_index=True)
-    p = p[p["premium_h4"].notna()].copy()
+    p = (p[p[require].notna()] if require else p).copy()
     dv = pd.read_parquet(hf.OUT / "daily_volume.parquet")
     dv = dv[[k for k in dv.columns if not is_tradfi(k)]]
     rank = dv.rolling(30, min_periods=20).mean().shift(1).rank(axis=1, ascending=False)
