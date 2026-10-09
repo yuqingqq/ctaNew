@@ -5,6 +5,8 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-09 06:41Z: idea checks — extreme-pump mirror: no independent market-wide pump (M24, docs/EXTREME_PUMP.md); Upbit listing
+  announcements: pop done inside the notice minute (+13.5% median), no tradable cell, k=0 (M25, docs/UPBIT_LISTINGS.md).
   2026-10-09 06:20Z: extreme-crash LIVE ALERT deployed (M23, 3a82553; watchers.py, outside the v2 fingerprint; restarted run admitted, sha 2375f81d).
   2026-10-09 05:56Z: extreme-crash execution stress ROBUST (worst in-minute fill +5.4% test / +4.6% all; latency t+5 +3.9% test).
   2026-10-09 05:50Z: extreme-crash strategy VALIDATED (M22) on untouched 2020-21: 14 crashes, +8.56% [+4.35,+12.40] per 4h trade
@@ -105,6 +107,13 @@ tasks:
                                     difference (pre-alert 9/30 vs 7/30, p 0.77; ~half have no findable catalyst). Listings after the
                                     alert 2.8% vs 0.3% of runners/faders (rare). Consistent small tilts: no Binance spot market,
                                     younger, perp premium > 0 + taker buying at +4h (runner rate ~15% vs ~9%). Nothing separates well."}
+  M25_upbit_listings:       {status: done, artifact: "docs/UPBIT_LISTINGS.md; docs/UPBIT_LISTINGS_FREEZE.json; research/upbit_listings.py",
+                             note: "Upbit KRW listing notices -> Binance perp: +13.5% median within the notice minute, flat to 4h, +5.5% at 24h;
+                                    no long cell pays; 24h fade +2.3..2.7% but CI crosses 0; screen carried nothing (k=0), so the
+                                    untouched 2020..2025-08 window (73 events) stays unread. Announcement alert not tradable from here."}
+  M24_extreme_pump:         {status: done, artifact: "docs/EXTREME_PUMP.md; research/extreme_pump.py",
+                             note: "outcome-blind calibration 2022-25: every >=7% half-the-market pump is a crash rebound (0 independent);
+                                    no separate pump strategy; no outcome read."}
   M23_crash_alert:          {status: done, artifact: "movewatch/watchers.py CrashWatcher; config watchers.crash; tests/test_crash_watcher.py",
                              note: "live alert-only extreme-crash trigger since 2026-10-09 06:16Z; reproduces the research fire on 2024-03-05
                                     19:56 with the same basket; stock perps excluded (88 today); service RSS 312 MB after restart;

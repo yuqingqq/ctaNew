@@ -65,3 +65,46 @@ event per draw.
   few seconds later; entry at a + 1 is about 60–120 s after the notice.
 - The 1m data cannot resolve the first seconds, where much of a listing pop may already happen.
 - Binance tickers can differ from Upbit's (e.g. BEAMX); unmatched tickers are a counted status.
+
+## Result: discovery screen (2026-10-09; `docs/UPBIT_LISTINGS_FREEZE.json`, k = 0)
+- 66 events (2025-09 → 2026-08): 65 OK, 1 `NO_24H_DATA`; 1,220 same-coin null rows.
+- **Path, median / mean vs the close before the notice:**
+
+  | minutes after | median | mean |
+  |---|---|---|
+  | 0 (same minute) | **+13.5%** | +17.9% |
+  | 1 | +12.0% | +17.7% |
+  | 5 | +12.7% | +17.8% |
+  | 15 | +12.6% | +18.6% |
+  | 60 | +13.9% | +18.8% |
+  | 240 | +12.7% | +18.2% |
+  | 1440 | **+5.5%** | +13.7% |
+
+  The 60 minutes before the notice: −0.07% median, so no leak.
+- **Cells**, mean net at stress 3 [95% CI], win rate:
+
+  | cell | mean net [95% CI] | win |
+  |---|---|---|
+  | long_5 | −0.99% [−1.82, −0.14] | 35% |
+  | long_15 | −0.56% [−1.69, +0.63] | 37% |
+  | long_60 | +0.05% [−1.67, +1.90] | 45% |
+  | long_240 | −0.20% [−3.83, +3.68] | 37% |
+  | short_15_1440 | +2.29% [−4.02, +8.43] | 65% |
+  | short_60_1440 | +2.72% [−3.08, +8.53] | 66% |
+  | short_240_1440 | +2.36% [−2.77, +7.49] | 66% |
+
+  The same-coin random-time null is −1.1% to −2.3% (costs). **No cell passes the screen: k = 0.**
+  The confirmation window (2020 → 2025-08) stays unread.
+
+### What it says
+- **The listing pop is complete within the announcement minute.** The median is already +13.5% by
+  that minute's close, then flat for 4 h.
+- **A live Upbit announcement alert cannot be traded on Binance perps from this box.** Polling
+  every few seconds plus a human reaction is too slow; the first seconds go to bots.
+- **As information, the alert would only explain a pump after the fact.** It is not worth a
+  roadmap slot as a trading signal.
+- **Fading the pop over 24 h** (median give-back about 7 points from +4 h to +24 h) is positive but
+  noisy at n = 65.
+  - A dedicated, declared fade test on the untouched 2020 → 2025-08 window (73 events, k = 1) is
+    possible.
+  - It was not run: the screen did not carry it.

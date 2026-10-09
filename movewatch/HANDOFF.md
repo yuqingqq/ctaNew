@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-09 06:20Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-09 06:41Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -147,6 +147,14 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
   `!miniTicker@arr` sends 🚨 EXTREME CRASH with the basket and exit time, plus a 4 h follow-up.
   Alert only. It is outside the forward-test fingerprint; the restarted run carries 2375f81d. Logs:
   `crash watcher health` hourly, and `crash watch` when share_3% ≥ 50%.
+
+**Idea checks (2026-10-09):**
+- **Extreme-pump mirror** (`docs/EXTREME_PUMP.md`): every ≥ 7% half-the-market pump in 2022–25
+  was a crash rebound, so there is nothing independent to fade. Closed; no outcome read.
+- **Upbit listing announcements** (`docs/UPBIT_LISTINGS.md`): the Binance perp pop is +13.5%
+  (median) inside the notice minute, flat to 4 h, +5.5% at 24 h. No long cell pays. The 24 h fade
+  is +2–3% but noisy. k = 0, so the 2020–25 window is unread. Bithumb's notice feed is
+  Cloudflare-blocked from this box.
 - 2020–21 is now consumed for this question. Next: a forward declaration for crashes after
   2026-09-27, evaluated offline from Vision data; no service change.
 
