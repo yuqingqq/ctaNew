@@ -5,6 +5,8 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-09 12:13Z: signal 3 by coin class (M27): 15 classes x 2 trades, none works across S/V/C; FOLLOW (buy premium 72h) pays in 2020-25 for
+  layer-1/top-50/meme/gaming but is regime-made (2021/23/24 up, 2022/25 down); FADE negative on C for all but DeFi (CI spans 0).
   2026-10-09 11:27Z: signal 3 angle sweep (M27): 77 angles on S/V, only 2 hold (both losing longs); 16 positive-in-both carried to 2020-25 pumps: 3 stay
   positive, none CI>0; discount shorts turn negative (deepest 10% short 24h -4.2%). Not tradable from any angle examined.
   2026-10-09 11:06Z: signal 3 (perp premium at +4h) CLOSED as a trade (M27, descriptive on consumed S/V): pumps rank (IC +0.10/+0.12, partial
@@ -119,7 +121,8 @@ tasks:
                                     -0.60%/+0.83%, median coin still -5%; long middle +1.5/+2.7% mean, negative median (runner tail,
                                     forward-only). Dumps: IC -0.009/-0.006; V buy-dump mean is the 2025-10-10 crash week. No test
                                     declared; 2020-25 dump replays stay unread. Angle sweep (research/premium_angles.py --conf): 77 S/V angles, 2 hold
-                                    (both losing longs); 16 carried to 2020-25 pumps, 3 stay positive (none CI>0), discount shorts negative."}
+                                    (both losing longs); 16 carried to 2020-25 pumps, 3 stay positive (none CI>0), discount shorts negative. By class (premium_classes.py): 0/30;
+                                    trade direction follows the alt regime (follow in alt-bull years, fade in the 2025-26 bear)."}
   M26_heavy_fade:           {status: done, artifact: "docs/HEAVY_FADE.md; docs/HEAVY_FADE_V2.md; research/heavy_fade*.py; data/replay/heavy_fade/",
                              note: "short heavy post-alert-volume pumps at +4h. v1 (24/72h x stop 25%) screen k=0, rows reconciled exactly to the
                                     signal search; v2 heavy & premium_h4 discount, S24, k=1, untouched replays 2020-01..2025-08 (6,988 rows):

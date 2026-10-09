@@ -368,3 +368,42 @@ Every window used was already read. Nets are the signal search's (x4_72, stress 
 **Verdict:** signal 3 is not tradable from any angle examined.
 - As a ranking it is real on the declared untouched window and strongest in 2025–26.
 - About a third as strong over 2020–25, and reversed in 2020–22.
+
+### Post-hoc: signal 3 by class of coin (2026-10-09 12:13Z; `research/premium_classes.py`; descriptive)
+**Classes (15, fixed before the run):**
+- meme / non-meme;
+- sector: AI, layer-1, DeFi, gaming (CoinGecko rank ≤ 1500, today's snapshot,
+  `docs/coingecko_sectors_rank1500_2026-10-09.json`);
+- liquidity at the alert;
+- point-in-time popularity rank;
+- age on Binance futures.
+
+**Trades** (A3 cuts): FADE = short discount pumps, 24 h; FOLLOW = buy premium pumps, 72 h.
+
+**Rule:** the ranking is > 0 in S, V and C; the trade's mean is > 0 in all three (n ≥ 100); and
+C's CI excludes 0.
+
+**Control:** all pumps reproduce the earlier ranking (+0.095 / +0.097 / +0.043; raw coin return).
+
+**Result: none of 30 tries works.**
+- **The ranking is more consistent inside some classes:**
+  - layer-1 +0.31 / +0.18 / +0.11;
+  - DeFi +0.15 / +0.15 / +0.10;
+  - liquidity < $20M +0.13 / +0.11 / +0.10;
+  - age ≥ 1 y +0.12 / +0.26 / +0.09.
+- **FADE is negative on C for every class but DeFi.** DeFi: +2.02 / +1.99 / +0.56%, C CI
+  [−0.93, +1.94], S/V n 110 / 150. It is the closest cell and still fails.
+- **FOLLOW is positive on C with CI > 0 for:**
+  - meme +8.0%;
+  - layer-1 +4.8%;
+  - gaming +5.0%;
+  - popularity top 50 +4.0%.
+- **But FOLLOW can't be checked in S/V** (n < 100 there), and it is regime-made:
+  - 51–71% of the layer-1 / top-50 / gaming P&L is 2021;
+  - it was positive in the rising-alt years (2021, 2023, 2024) and negative or flat in 2022 and
+    2025.
+
+**Reading:** the premium's trade direction follows the alt regime.
+- In alt bull years, buying established coins' premium pumps paid.
+- In the 2025–26 alt bear, shorting discount pumps paid.
+- Neither is stable without a regime gauge chosen in advance.
