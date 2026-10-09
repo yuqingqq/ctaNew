@@ -292,3 +292,31 @@ leg only.
   2. A "buy market-wide liquidation flushes" rule would be a new, declared hypothesis with crash-
      specific execution assumptions. It cannot be validated on these windows, whose crash days have
      now been read.
+
+### Post-hoc: signal 3 (perp premium at +4 h) as a trade (2026-10-09 11:06Z; `research/premium_posthoc.py`; descriptive, decides nothing)
+Every window used was already read. Nets are the signal search's (x4_72, stress 1, funding).
+- **Pumps, frozen A3 terciles:** the ranking holds, but it is not monotone and no tercile trade
+  has the same sign in S and V.
+
+  | window | IC | IC given vol_persist | vol_persist IC given premium | short discount | long premium | long middle (median) |
+  |---|---|---|---|---|---|---|
+  | S | +0.100 | +0.070 | −0.190 | +2.72% | −0.60% | +1.54% (−2.95%) |
+  | V | +0.121 | +0.092 | −0.183 | −0.80% | +0.83% | +2.70% (−0.50%) |
+
+  - The discount tercile fades most (coin median −8.3% / −6.8% from +4 h to +72 h).
+  - The middle tercile holds best (−2.7% / −0.1%).
+  - The premium tercile has the most +50% runners (6.6% / 4.2% vs 2–4%), but its median coin
+    still falls 5.2% / 3.7%.
+  - Premium adds a little beyond post-alert volume (partial IC +0.07 / +0.09); volume stays the
+    stronger signal.
+  - The 2020–25 read of heavy & discount shorts (24 h) was −0.63% (`HEAVY_FADE_V2.md`).
+  - So shorting discount pumps was negative in two of three reads.
+  - The long-middle mean is positive in both windows, but its median is negative (runner tail),
+    and it was noticed after seeing. No untouched pump window is left, so it is forward-only.
+- **Dumps, mirror (outcome-blind S terciles −0.57 / +3.83 bp):** no ranking (IC −0.009 S,
+  −0.006 V).
+  - V's buy-the-discount-dump +6.98% is the 2025-10-10 crash week (25% of V dumps). Without that
+    week it is −1.55%, and the group signs flip between S and V.
+  - Crash buying is already covered by `EXTREME_CRASH.md`.
+- **Verdict:** signal 3 ranks pumps, but it is not a trade on either side, so no test is declared.
+  - The 2020–25 dump replays stay unread for alert-level questions.

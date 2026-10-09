@@ -5,6 +5,8 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-09 11:06Z: signal 3 (perp premium at +4h) CLOSED as a trade (M27, descriptive on consumed S/V): pumps rank (IC +0.10/+0.12, partial
+  +0.07/+0.09 given volume) but no tercile trade keeps its sign; dumps no ranking (IC -0.01); nothing declared, 2020-25 dumps unread.
   2026-10-09 08:12Z: heavy-volume pump short CLOSED (M26): v1 screen k=0 (stops do not cut the tail); v2 (heavy & futures discount, 24h)
   FAILED on untouched 2020-25 (n548, -0.63% [-2.28,+1.01]); A2 ranking replicates at half strength (Spearman -0.11).
   2026-10-09 06:34Z: idea checks — extreme-pump mirror: no independent market-wide pump (M24, docs/EXTREME_PUMP.md); Upbit listing
@@ -109,6 +111,12 @@ tasks:
                                     difference (pre-alert 9/30 vs 7/30, p 0.77; ~half have no findable catalyst). Listings after the
                                     alert 2.8% vs 0.3% of runners/faders (rare). Consistent small tilts: no Binance spot market,
                                     younger, perp premium > 0 + taker buying at +4h (runner rate ~15% vs ~9%). Nothing separates well."}
+  M27_premium_signal:       {status: done, artifact: "research/premium_posthoc.py; docs/SIGNAL_SEARCH.md post-hoc section",
+                             note: "A3 premium_h4 as a trade, descriptive on consumed S/V. Pumps: IC +0.100/+0.121, given vol_persist
+                                    +0.070/+0.092; short discount +2.72%/-0.80% (and -0.63% heavy-discount 2020-25), long premium
+                                    -0.60%/+0.83%, median coin still -5%; long middle +1.5/+2.7% mean, negative median (runner tail,
+                                    forward-only). Dumps: IC -0.009/-0.006; V buy-dump mean is the 2025-10-10 crash week. No test
+                                    declared; 2020-25 dump replays stay unread."}
   M26_heavy_fade:           {status: done, artifact: "docs/HEAVY_FADE.md; docs/HEAVY_FADE_V2.md; research/heavy_fade*.py; data/replay/heavy_fade/",
                              note: "short heavy post-alert-volume pumps at +4h. v1 (24/72h x stop 25%) screen k=0, rows reconciled exactly to the
                                     signal search; v2 heavy & premium_h4 discount, S24, k=1, untouched replays 2020-01..2025-08 (6,988 rows):
