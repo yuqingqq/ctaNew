@@ -5,7 +5,7 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
-  2026-10-09 06:22Z: extreme-crash LIVE ALERT deployed (M23, 3a82553; watchers.py, outside the v2 fingerprint; restarted run admitted, sha 2375f81d).
+  2026-10-09 06:20Z: extreme-crash LIVE ALERT deployed (M23, 3a82553; watchers.py, outside the v2 fingerprint; restarted run admitted, sha 2375f81d).
   2026-10-09 05:56Z: extreme-crash execution stress ROBUST (worst in-minute fill +5.4% test / +4.6% all; latency t+5 +3.9% test).
   2026-10-09 05:50Z: extreme-crash strategy VALIDATED (M22) on untouched 2020-21: 14 crashes, +8.56% [+4.35,+12.40] per 4h trade
   (buy the hardest-hit fifth after the median coin falls >=10% in 15 min); 31 crashes in all, 27 wins; intra-hold drawdowns to -52%.
