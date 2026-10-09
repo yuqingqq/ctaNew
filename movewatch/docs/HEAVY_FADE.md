@@ -81,3 +81,29 @@ so the mean was about zero.
 ## Memory
 - One panel at a time, with float32 memmaps; `replay.mem` guard at 2.0 GiB.
 - The replays measured 1.17 GiB peak on 4-month panels.
+
+## Result: screen (2026-10-09; `docs/HEAVY_FADE_FREEZE.json`, k = 0)
+- **Reconciliation exact:** 3,291 pumps; the event set equal; 0 `vol_persist` mismatches; 0 S72
+  net mismatches against `signal_search.net`. 1,108 heavy pumps.
+- **Cells** (stress 1, with funding; pooled S ∪ V):
+
+  | cell | mean [95% CI] | median | wins | p5 | worst | mean S / V |
+  |---|---|---|---|---|---|---|
+  | S24 | +1.05% [−0.47, +2.50] | +4.49% | 63% | −34.1% | −183% | +0.83% / +1.23% |
+  | S72 | +0.66% [−2.52, +3.43] | +7.15% | 68% | −45.9% | −675% | +2.00% / −0.45% |
+  | S24_stop25 | +0.29% [−0.72, +1.29] | +3.80% | 60% | −28.1% | −41% | +0.40% / +0.20% |
+  | S72_stop25 | +0.31% [−0.90, +1.49] | +4.51% | 59% | −29.3% | −41% | +0.38% / +0.26% |
+
+- **Descriptive stops:**
+  - 15%: S24 +0.65%, S72 +0.75%;
+  - 40%: S24 +0.61%, S72 +0.98%.
+  - Stopped share at 25%: 19% (24 h) and 29% (72 h).
+- **No cell passes (k = 0).** Under this declaration the confirmation window is not read.
+
+### What it says
+- **A stop does not cut the tail usefully.** About a fifth to a quarter of heavy pumps rise
+  another 25% within a day, and many then fade anyway. The stop locks in the loss and gives up the
+  fade.
+- The 24 h hold beats 72 h, but +1% per trade is not distinguishable from zero at n = 1,108.
+- A follow-up with one exploratory filter (signal 3) is declared separately in
+  `docs/HEAVY_FADE_V2.md`.
