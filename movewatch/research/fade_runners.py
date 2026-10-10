@@ -26,7 +26,8 @@ Features, each known at entry (t = alert minute; entry = close of minute t+241):
   premium_h4  perp premium over hour 4 (signal 3; missing where Vision had no premium file)
   rank        30-day volume rank (1 = most traded)
   age_d       days since listing
-Missing values are a status per feature and era, never a silent drop.
+Missing values are a status per feature and era, never a silent drop; rows whose hold has no
+funding archive are status NO_FUNDING (as in the research, which counts 2,271 trades).
 Cuts: quintiles of each feature on C 2020-25 only, applied unchanged to S+V 2025-26.
 
 Per feature and tail (bottom fifth Q1 <= the 20% cut, top fifth Q5 > the 80% cut), per era
@@ -187,8 +188,12 @@ if __name__ == "__main__":
     x["ORACLE"] = x["r_S24"]
     x["NOISE"] = np.random.default_rng(SEED).uniform(size=len(x))
     net = hf.net(x, "S24", 1)
-    if not np.isfinite(net).all():
-        raise SystemExit(f"REFUSED: {int((~np.isfinite(net)).sum())} rows without a net")
+    no_fund = ~np.isfinite(net)                     # funding archive missing: a status, as the research (n 2,271)
+    print(f"status NO_FUNDING (no Vision funding archive for the hold): {int(no_fund.sum())} rows: "
+          f"{list(zip(x.loc[no_fund, 'asset'], x.loc[no_fund, 'time'].astype(str)))}")
+    x, net = x[~no_fund].reset_index(drop=True), net[~no_fund]
+    if len(x) != int(np.isfinite(hf.net(fet.population(), "S24", 1)).sum()):
+        raise SystemExit("REFUSED: population differs from the research S24 rows")
     x["net"] = net
     x["big_loss"], x["big_win"] = net <= -BIG, net >= BIG
     x["spike"] = x["stopped_S24_stop25"].astype(bool)
