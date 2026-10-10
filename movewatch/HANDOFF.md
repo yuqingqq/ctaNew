@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-10 00:59Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-10 01:17Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -195,8 +195,20 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
 - 2020–21 is now consumed for this question. Next: a forward declaration for crashes after
   2026-09-27, evaluated offline from Vision data; no service change.
 
+**Forward test F1 (declared 2026-10-10 01:17Z, `docs/FORWARD_FADE_F1.md`, user request):** short non-meme
+heavy-volume Binance pumps from +4 h to +24 h, paper only.
+- It reads v2's frozen records (identity 2375f81d, unchanged) and covers v2's whole window, since no outcome had been read.
+- Net = gross − 0.40% flat + exchange funding (fetched at the read). Pass = mean > 0 with week-CI > 0.
+- Read once at ≥ 400 complete rows and ≥ 12 ISO weeks: about June 2027 at ~1.6 rows/day.
+  Power is 43% if the 2026 effect holds, 9% at the 2022–25 effect.
+- `FadeCostWatcher` (watchers.py, outside the identity) snapshots the order book and funding at each entry and exit.
+  It is live from the next service start. `python3 -m research.forward_fade --cost` prints cost fields only and may be
+  read any time; the raw `fadecost-*.jsonl` files carry prices, so do not read them before the final read.
+- Correction: in the research, shorts paid −0.78% funding per trade, more than the slippage (0.145%/side).
+
 ## Next (ranked)
 
+0. **F1: counts only** (`python3 -m research.forward_fade`); cost fields any time (`--cost`).
 1. **Let the forward test run; read counts only.** `python3 -m research.forward_eval` prints
    counts and statuses. It is allowed any time. Statistics come once, with `--final`, at the
    minimum: H1/B1 ≥ 200 complete pumps, H2 ≥ 300, ≥ 5 complete ISO weeks (earliest

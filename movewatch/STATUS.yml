@@ -5,6 +5,10 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-10 01:17Z: forward test F1 declared (docs/FORWARD_FADE_F1.md, user request): short non-meme heavy Binance pumps +4h->+24h, flat 0.40%
+  cost + exchange funding, pass = mean > 0 with week-CI > 0, read once at >= 400 rows & >= 12 weeks (~Jun 2027; power 43% at the 2026 effect).
+  Reads v2's frozen records (identity 2375f81d unchanged); FadeCostWatcher (watchers.py) snapshots order books, live from the next start.
+  Correction: funding (shorts paid -0.78%/trade in research) is a bigger cost than slippage (0.145%/side).
   2026-10-10 00:59Z: signal 2 per year with CIs: non-meme heavy short 24h positive every year but 2021 at stress 1 (+0.43..+0.60% 2022-25,
   +1.49% 2026) yet no year's CI excludes 0; tripled slippage (~0.5-0.6%/trade) erases 2022-25 (pooled +0.54% -> -0.01%); only 2026 survives.
   2026-10-09 13:24Z: signal 2 regime + book view: bear/pump-heavy fade +1.05% but that regime is ~only the last year (2020-25 alt-bear +0.08%);
@@ -121,6 +125,10 @@ tasks:
                                     difference (pre-alert 9/30 vs 7/30, p 0.77; ~half have no findable catalyst). Listings after the
                                     alert 2.8% vs 0.3% of runners/faders (rare). Consistent small tilts: no Binance spot market,
                                     younger, perp premium > 0 + taker buying at +4h (runner rate ~15% vs ~9%). Nothing separates well."}
+  M28_forward_fade_F1:      {status: running, artifact: "docs/FORWARD_FADE_F1.md; research/forward_fade.py; tests/test_forward_fade.py;
+                                    research/fade_forward_design.py; movewatch/watchers.py FadeCostWatcher",
+                             note: "declared 2026-10-10 01:17Z over v2's whole window (no outcome read). Counts only until >= 400 complete rows
+                                    and >= 12 ISO weeks; --final once. --cost prints cost fields (no prices) any time. Ends with v2's identity."}
   M27_premium_signal:       {status: dead, artifact: "research/premium_posthoc.py; docs/SIGNAL_SEARCH.md post-hoc section",
                              note: "A3 premium_h4 as a trade, descriptive on consumed S/V. Pumps: IC +0.100/+0.121, given vol_persist
                                     +0.070/+0.092; short discount +2.72%/-0.80% (and -0.63% heavy-discount 2020-25), long premium

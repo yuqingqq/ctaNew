@@ -7,6 +7,9 @@ baseline, so a restart never floods old markets as "new".
 
 Also the extreme-crash trigger (docs/EXTREME_CRASH.md, validated 2026-10-09): CrashWatcher reads
 Binance USDM !miniTicker@arr and alerts when >= half the liquid perps fell >= 10% in 15 minutes.
+Also FadeCostWatcher (docs/FORWARD_FADE_F1.md, descriptive): at each Binance-priced pump's +4 h and
++24 h follow-up record it snapshots the public order book and funding, so forward test F1 can
+compare the assumed cost with the book. Silent: its own records, no messages.
 This file is outside the forward-test fingerprint (followup.FINGERPRINT_SKIP_FILES).
 
 Sources (all reachable from this box, 2026-09-28):
@@ -24,6 +27,7 @@ import logging
 import math
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 
 import websockets
 
@@ -60,6 +64,9 @@ class ListingWatcher:
         crash = self.cfg.get("crash", {})
         if crash.get("enabled", False):                     # own task; a failure there never stops listings
             self._crash_task = asyncio.create_task(CrashWatcher(crash, self.engine).run(), name="crash_watcher")
+        fade = self.cfg.get("fade_cost", {})
+        if fade.get("enabled", False):
+            self._fade_task = asyncio.create_task(FadeCostWatcher(fade, self.engine).run(session), name="fade_cost")
         while True:
             for name, fn in (("upbit", self._upbit), ("bithumb", self._bithumb), ("coinbase", self._coinbase),
                              ("binance_spot", self._binance), ("okx", self._okx)):
@@ -330,6 +337,129 @@ class CrashWatcher:
         text = (f"🚨 EXTREME CRASH follow-up ({_hhmm(p['minute'])} trigger): the basket is {100 * g:+.1f}% gross "
                 f"since the 1-minute entry ({len(rs)} coins). Rule: sell now.")
         self.engine.notifier.emit(text, {"kind": "CRASH_FOLLOWUP", "minute": p["minute"], "gross": g, "coins": len(rs)})
+
+
+FAPI = "https://fapi.binance.com/fapi/v1"
+
+
+def book_cost(bids: list, asks: list, notionals: list[float]) -> dict:
+    """Spread and walk-the-book cost vs mid, in bps, for a market SELL (into bids) and BUY (into
+    asks) of each USD notional. None where the snapshot's book is too thin to fill it. Also the
+    USD depth within 0.5 / 1 / 2% of mid on each side."""
+    b = [(float(p), float(q)) for p, q in bids if float(q) > 0]
+    a = [(float(p), float(q)) for p, q in asks if float(q) > 0]
+    if not b or not a or b[0][0] >= a[0][0]:
+        raise ValueError("empty or crossed book")
+    mid = (b[0][0] + a[0][0]) / 2
+
+    def walk(levels, usd):
+        got_usd = got_qty = 0.0
+        for p, q in levels:
+            take = min(q, (usd - got_usd) / p)
+            got_usd += take * p
+            got_qty += take
+            if got_usd >= usd * (1 - 1e-9):
+                return got_usd / got_qty
+        return None
+
+    out = {"mid": mid, "spread_bps": 1e4 * (a[0][0] - b[0][0]) / mid, "sell_bps": {}, "buy_bps": {}}
+    for n in notionals:
+        vs, vb = walk(b, n), walk(a, n)
+        out["sell_bps"][str(int(n))] = None if vs is None else 1e4 * (mid - vs) / mid
+        out["buy_bps"][str(int(n))] = None if vb is None else 1e4 * (vb - mid) / mid
+    for pct in (0.5, 1.0, 2.0):
+        out[f"bid_usd_{pct}"] = sum(p * q for p, q in b if p >= mid * (1 - pct / 100))
+        out[f"ask_usd_{pct}"] = sum(p * q for p, q in a if p <= mid * (1 + pct / 100))
+    return out
+
+
+class FadeCostWatcher:
+    """Tails the engine's follow-up log. For every pump whose FU_4H (entry) or FU_24H (exit) record
+    was priced on a Binance USDM perp, it fetches that perp's order book and premium index right
+    away and writes one FADE_COST record to data/alerts/fadecost-YYYYMMDD.jsonl. It starts at the
+    end of the current files, so a restart never snapshots old records."""
+
+    def __init__(self, cfg: dict, engine):
+        self.cfg, self.engine = cfg or {}, engine
+        self.poll = float(self.cfg.get("poll_s", 10))
+        self.limit = int(self.cfg.get("depth_limit", 500))
+        self.notionals = [float(x) for x in self.cfg.get("notionals_usd", [1000, 10000, 50000, 100000])]
+        self.heavy_ratio = float(self.cfg.get("heavy_ratio", 2.2525))
+        self.dir = Path(getattr(engine, "fu_dir", "data/alerts"))
+        self.pos: dict[str, int] = {}
+        self.started = False
+
+    def new_records(self, now: float | None = None) -> list[dict]:
+        now = time.time() if now is None else now
+        out = []
+        for day in sorted({time.strftime("%Y%m%d", time.gmtime(now - 86400)), time.strftime("%Y%m%d", time.gmtime(now))}):
+            p = self.dir / f"followups-{day}.jsonl"
+            if not p.exists():
+                continue
+            size = p.stat().st_size
+            if str(p) not in self.pos:
+                self.pos[str(p)] = size if not self.started else 0
+            with open(p, "rb") as f:
+                f.seek(self.pos[str(p)])
+                chunk = f.read(max(0, size - self.pos[str(p)]))
+            end = chunk.rfind(b"\n") + 1                   # complete lines only
+            self.pos[str(p)] += end
+            for line in chunk[:end].splitlines():
+                try:
+                    out.append(json.loads(line))
+                except ValueError:
+                    continue
+        self.started = True
+        return out
+
+    def wanted(self, rec: dict) -> dict | None:
+        leg = {"FU_4H": "entry", "FU_24H": "exit"}.get(rec.get("kind"))
+        key = rec.get("px_key") or ""
+        if leg is None or (rec.get("dir") or 0) <= 0 or not key.startswith("binance_usdm:"):
+            return None
+        out = {"kind": "FADE_COST", "leg": leg, "id": rec.get("id"), "asset": rec.get("asset"), "symbol": key.split(":", 1)[1],
+               "t_rec": rec.get("t"), "late_s_rec": rec.get("late_s"), "px_rec": rec.get("px")}
+        if leg == "entry":
+            vr = rec.get("vol_ratio_binance_usdm")
+            ok = isinstance(vr, (int, float)) and math.isfinite(vr)
+            out.update(vol_ratio_bn=vr if ok else None, heavy=bool(ok and vr > self.heavy_ratio))
+        return out
+
+    async def snapshot(self, session, out: dict) -> dict:
+        try:
+            book = await http_json(session, "GET", f"{FAPI}/depth", params={"symbol": out["symbol"], "limit": self.limit})
+            out.update(t=time.time(), **book_cost(book.get("bids", []), book.get("asks", []), self.notionals))
+            pi = await http_json(session, "GET", f"{FAPI}/premiumIndex", params={"symbol": out["symbol"]})
+            out.update(funding_rate=float(pi["lastFundingRate"]), next_funding_ms=int(pi["nextFundingTime"]),
+                       mark=float(pi["markPrice"]), index=float(pi["indexPrice"]))
+        except Exception as e:  # noqa: BLE001 -- a failed snapshot is a record with an error, never fatal
+            out.update(t=out.get("t", time.time()), error=str(e)[:200])
+        return out
+
+    def write(self, rec: dict) -> None:
+        self.dir.mkdir(parents=True, exist_ok=True)
+        with open(self.dir / f"fadecost-{time.strftime('%Y%m%d', time.gmtime())}.jsonl", "a") as f:
+            f.write(json.dumps(rec, default=float) + "\n")
+
+    async def run(self, session) -> None:
+        log.info("fade cost watcher: started (%s)", self.dir)
+        while True:
+            try:
+                for rec in self.new_records():
+                    want = self.wanted(rec)
+                    if want is None:
+                        continue
+                    r = await self.snapshot(session, want)
+                    self.write(r)
+                    log.info("fade cost %s %s %s: spread %s bps, 10k sell %s bps%s", r["leg"], r["asset"], r["symbol"],
+                             f"{r['spread_bps']:.1f}" if "spread_bps" in r else "-",
+                             f"{r['sell_bps']['10000']:.1f}" if r.get("sell_bps", {}).get("10000") is not None else "-",
+                             f" ERROR {r['error']}" if "error" in r else "")
+            except asyncio.CancelledError:
+                raise
+            except Exception as e:  # noqa: BLE001 -- the watcher never stops the service
+                log.warning("fade cost watcher: %s", str(e)[:200])
+            await asyncio.sleep(self.poll)
 
 
 def _hhmm(minute: int) -> str:
