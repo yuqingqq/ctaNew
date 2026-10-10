@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-10 03:11Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-10 03:14Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -223,6 +223,9 @@ heavy-volume Binance pumps from +4 h to +24 h, paper only.
 - **Stops (2026-10-10 03:11Z, `research/fade_stops.py`, descriptive):** every stop lowers F1's mean (none +0.72%, +15% +0.48%,
   +25% +0.23%, +40% +0.39%), but caps the worst trade (−175% → −40 / −48 / −62%). Picked after seeing, so forward-only;
   F1 itself has no stop.
+- **Entry timing (2026-10-10 03:14Z, `research/fade_entry_timing.py`, descriptive):** +4 h is the best entry (+0.72%). Delays give
+  up the fade (+6 h +0.47% … +24 h −0.38%) without shrinking the tail. Confirmation entries don't help: wait-for-weakness
+  misses the first leg; sell-the-next-spike picks runners.
 
 ## Next (ranked)
 

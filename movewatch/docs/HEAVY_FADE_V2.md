@@ -249,3 +249,29 @@ close at or above entry × (1 + stop), so a jump through the level fills beyond 
 - **+15% costs the least mean** (−0.24 points) and also tightens p5 (−28.5% → −17.8%). It is the
   only stop that improves the worst case per unit of mean: about 4× smaller worst loss for a
   third less mean. The level was picked after seeing this table, so it is a forward-only candidate.
+
+**Entry timing for the F1 trade** (2026-10-10 03:14Z; `research/fade_entry_timing.py`; descriptive, consumed;
+non-meme heavy pumps, every trade held 20 h, stress 1 + funding; E4 reproduces the research S24
+net exactly: n 2,271, max difference 0)
+
+| entry | trades | mean | 95% CI | median | worst | E4 on the same rows |
+|---|---|---|---|---|---|---|
+| **E4: +4 h (F1)** | 2,271 | **+0.72%** | [+0.02, +1.44] | +3.5% | −175% | |
+| E6: +6 h | 2,271 | +0.47% | [−0.22, +1.16] | +3.2% | −205% | |
+| E8: +8 h | 2,271 | +0.42% | [−0.42, +1.17] | +2.6% | −471% | |
+| E12: +12 h | 2,271 | +0.41% | [−0.34, +1.11] | +2.2% | −286% | |
+| E24: +24 h | 2,271 | −0.38% | [−1.03, +0.24] | +0.9% | −231% | |
+| WEAK3: 3% below the +4 h price | 1,859 | +0.49% | [−0.41, +1.39] | +3.0% | −311% | +3.87% |
+| SPIKE10: 10% above the +4 h price | 856 | −0.22% | [−1.87, +1.36] | +4.6% | −282% | −10.60% |
+| OFFPEAK10: 10% off the post-alert high | 2,055 | +0.68% | [−0.17, +1.51] | +3.1% | −339% | +1.36% |
+
+- **Entering at +4 h is the best of these, in 2020–25 and in 2025–26 alike.** Each delay gives
+  up part of the fade (the median falls from +3.5% to +0.9% by +24 h), and the tail does not
+  shrink: later runners make the worst trades worse.
+- **Waiting for the fade to start (WEAK3, median trigger +5.5 h)** misses the first leg. The same
+  trades entered at +4 h made +3.87%.
+- **Selling the next leg up (SPIKE10)** picks the runners: the 38% of pumps that rise another
+  10% lost −10.6% when shorted at +4 h. Shorting them at the spike instead still averages
+  −0.2%.
+- The signal is only known at +4 h (it needs hours 1–4 volume), so entering earlier is not an
+  option with this rule.
