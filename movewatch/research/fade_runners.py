@@ -42,7 +42,13 @@ Controls: ORACLE (the trade's own +4h->+24h move: look-ahead) must pass SEPARATE
 Q5, else the run stops; NOISE (seeded uniform) is reported beside the features.
 Reconciliation (the run stops on failure): every population row joins the premium/rank/age frame
 once; r_S24 and vol_persist recomputed from the panels equal the rows'.
-Also printed: medians of each feature for big losers vs the rest, and the 20 worst trades."""
+Also printed: medians of each feature for big losers vs the rest, and the 20 worst trades.
+
+--posthoc (added 2026-10-10 AFTER reading the run above, so it is selected on seen data and decides
+nothing): 5 of the 20 worst trades had funding <= -50 bp in the 8 h before entry. Shows how much of
+the big losses is funding paid by the short during the hold, whether pre-entry funding persists
+into the hold, and the trades with fund_pre <= -50 / -100 bp per era (n, big loss / big win share,
+mean net, pooled CI)."""
 import json
 import math
 import sys
@@ -165,7 +171,39 @@ def show_tail(res: dict, cut: float) -> str:
             f"pooled {100 * p['mean']:+6.2f}% {ci:15} rest {100 * res['rest_pooled']:+5.2f}% {flags}")
 
 
-if __name__ == "__main__":
+def posthoc() -> None:
+    f = pd.read_parquet(hf.OUT / "runner_features.parquet")
+    pop = fet.population()[["asset", "time", "r_S24", "fund_S24", "liq"]]
+    x = f.merge(pop, on=["asset", "time"], how="left", validate="one_to_one")
+    if x["r_S24"].isna().any() or len(x) != len(f):
+        raise SystemExit("REFUSED: post-hoc join")
+    cost = np.array([2 * (bh.FEE + bh.slip(v)) for v in x["liq"]])
+    if np.abs(-x["r_S24"] - cost + x["fund_S24"] - x["net"]).max() > 1e-12:
+        raise SystemExit("REFUSED: net does not split into price + cost + funding")
+    bl = x[x["big_loss"]]
+    print(f"big losers {len(bl)}: summed loss split: price {100 * (-bl['r_S24']).sum() / len(bl):+.1f}%, "
+          f"funding {100 * bl['fund_S24'].sum() / len(bl):+.1f}%, cost {-100 * cost[x['big_loss']].mean():+.2f}% per trade; "
+          f"funding alone <= -5%: {int((bl['fund_S24'] <= -0.05).sum())}")
+    ok = x["fund_pre"].notna()
+    print(f"pre-entry funding vs funding over the hold: Spearman {x.loc[ok, 'fund_pre'].corr(x.loc[ok, 'fund_S24'], method='spearman'):+.2f}")
+    for cut in (-0.005, -0.01):
+        m = (x["fund_pre"] <= cut).to_numpy()
+        parts = []
+        for era in ("C", "SV"):
+            e = (x["era"] == era).to_numpy()
+            a, b = m & e, ~m & e
+            parts.append(f"{era} n {int(a.sum())} big loss {100 * x['big_loss'][a].mean():.0f}% (rest {100 * x['big_loss'][b].mean():.0f}%) "
+                         f"big win {100 * x['big_win'][a].mean():.0f}% (rest {100 * x['big_win'][b].mean():.0f}%) "
+                         f"mean {100 * x['net'][a].mean():+.2f}% (price {100 * -x['r_S24'][a].mean():+.2f}%, funding {100 * x['fund_S24'][a].mean():+.2f}%)")
+        s_ = hf.stats(x["net"].to_numpy()[m], x["time"][m])
+        ci = f"[{100 * s_['ci'][0]:+.2f}, {100 * s_['ci'][1]:+.2f}]" if s_["status"] == "OK" else f"({s_['status']})"
+        print(f"fund_pre <= {1e4 * cut:.0f} bp: " + " | ".join(parts) + f" | pooled mean {100 * s_['mean']:+.2f}% {ci}; "
+              f"all others {100 * x['net'][~m].mean():+.2f}%")
+
+
+if __name__ == "__main__" and "--posthoc" in sys.argv:
+    posthoc()
+elif __name__ == "__main__":
     x = fet.population()
     fr = pc.frame(require="vol_persist")[["asset", "time", "premium_h4", "rank", "age_d"]].drop_duplicates(["asset", "time"])
     x = x.merge(fr, on=["asset", "time"], how="left", indicator=True)
