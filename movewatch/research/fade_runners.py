@@ -173,7 +173,7 @@ def show_tail(res: dict, cut: float) -> str:
 
 def posthoc() -> None:
     f = pd.read_parquet(hf.OUT / "runner_features.parquet")
-    pop = fet.population()[["asset", "time", "r_S24", "fund_S24", "liq"]]
+    pop = fet.population()[["asset", "time", "r_S24", "fund_S24"]]
     x = f.merge(pop, on=["asset", "time"], how="left", validate="one_to_one")
     if x["r_S24"].isna().any() or len(x) != len(f):
         raise SystemExit("REFUSED: post-hoc join")
