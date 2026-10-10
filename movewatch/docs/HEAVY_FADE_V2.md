@@ -230,3 +230,22 @@ year; non-meme heavy short 24 h; "2022–25" is pooled after 2021 was seen to lo
   stress 3.
 - Reading: the sign is consistent across years, but the size is about the same as the cost
   uncertainty. Before 2025 it is a slight edge before costs, not a tradable one.
+
+**Stop-loss on the F1 trade** (2026-10-10 03:11Z; `research/fade_stops.py`; descriptive, all windows consumed;
+non-meme heavy pumps, short +4 h → +24 h, funding included; a stop covers at the first minute
+close at or above entry × (1 + stop), so a jump through the level fills beyond it)
+
+| stop | mean, stress 1 | 95% CI | mean, stress 3 | win | p5 | worst | stopped |
+|---|---|---|---|---|---|---|---|
+| none | +0.72% | [+0.02, +1.44] | +0.14% | 62% | −28.5% | −175% | 0% |
+| +15% | +0.48% | [−0.12, +1.08] | −0.10% | 57% | −17.8% | −40% | 26% |
+| +25% | +0.23% | [−0.38, +0.86] | −0.35% | 60% | −27.2% | −48% | 15% |
+| +40% | +0.39% | [−0.26, +1.07] | −0.18% | 62% | −41.3% | −62% | 7% |
+
+- **Every stop lowers the mean**, in 2020–25 and in 2025–26 alike. Stopped pumps often fade
+  anyway, so the stop locks in a loss the hold would have recovered.
+- **What a stop buys is the tail.** The worst trade goes from −175% to −40% / −48% / −62%;
+  overshoot past the level is 15–25 points.
+- **+15% costs the least mean** (−0.24 points) and also tightens p5 (−28.5% → −17.8%). It is the
+  only stop that improves the worst case per unit of mean: about 4× smaller worst loss for a
+  third less mean. The level was picked after seeing this table, so it is a forward-only candidate.

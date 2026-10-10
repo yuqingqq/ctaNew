@@ -5,6 +5,8 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-10 03:11Z: stops on the F1 trade (fade_stops.py, descriptive, consumed): every stop lowers the mean (none +0.72%, 15% +0.48%,
+  25% +0.23%, 40% +0.39%); they cap the worst trade (-175% -> -40/-48/-62%). Any stop is forward-only; F1 unchanged.
   2026-10-10 02:31Z: F1 + v2-H1 UNBLINDED by user decision (docs/FORWARD_UNBLIND_2026-10-10.md): live paper book (watchers.py PaperBook,
   data/alerts/fadebook.jsonl, backfilled since 10-02: dry run = evaluator's 12 entered / 11 complete ids exactly), COVER shows the result,
   daily summary 00:05 UTC, funding polled every 10 min then exact from Vision; reads/pass rules LOCKED; receipts carry the note.

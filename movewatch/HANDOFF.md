@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-10 02:31Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-10 03:11Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -220,6 +220,9 @@ heavy-volume Binance pumps from +4 h to +24 h, paper only.
   - Funding is polled every 10 min while a short is open, then replaced by Vision's exact rates once published.
   - LOCKED: both tests' hypotheses, minimums and single `--final` reads are unchanged; no early stop or tweak.
     Receipts carry the note.
+- **Stops (2026-10-10 03:11Z, `research/fade_stops.py`, descriptive):** every stop lowers F1's mean (none +0.72%, +15% +0.48%,
+  +25% +0.23%, +40% +0.39%), but caps the worst trade (−175% → −40 / −48 / −62%). Picked after seeing, so forward-only;
+  F1 itself has no stop.
 
 ## Next (ranked)
 
