@@ -386,7 +386,11 @@ def test_paper_book_net_uses_exact_then_estimate_then_pending():
     assert s["closed"] == 3 and s["void"] == 1 and s["pending"] == 1 and s["wins"] == 2
     assert s["net_avg"] == pytest.approx((0.086 + 0.042) / 2)
     assert s["total_capital"] == pytest.approx(0.01 * (0.086 + (-0.1 - 0.004) + 0.042))      # pending counted at 0 funding
-    assert "1 with funding pending" in b.line()
+    assert "1 with funding pending" in b.line() and "net +6.4% (funding known on 2)" in b.line()
+    p = PaperBook()                                                        # nothing known yet: no "net ?" anywhere
+    p.apply({"ev": "open", "id": "x", "asset": "X", "symbol": "XUSDT", "alert_t": 0.0, "t4": 0.0, "px4": 1.0})
+    p.apply({"ev": "close", "id": "x", "t24": 9e4, "px24": 0.9, "fund_ok": False})
+    assert "after cost +9.6%" in p.line() and "net" not in p.line().split("·")[2] and "?" not in p.line()
 
 
 def _write_followups(tmp_path, recs):

@@ -497,9 +497,11 @@ class PaperBook:
         s = self.summary()
         if not s["closed"]:
             return f"Paper book: no closed trade yet · {s['open']} open"
-        out = (f"Paper book: {s['closed']} closed · {s['wins']} won · per trade gross {_pct(s['gross_avg'])}, "
-               f"net {_pct(s['net_avg'])}" + (f" (on {s['fund_known']})" if s["pending"] else "")
-               + f" · worst {_pct(s['worst'], 0)} · total {_pct(s['total_capital'], 2)} of capital at 1%/trade")
+        per = f"per trade gross {_pct(s['gross_avg'])}, after cost {_pct(s['gross_avg'] - F1_COST)}"
+        if s["fund_known"]:
+            per += f", net {_pct(s['net_avg'])}" + (f" (funding known on {s['fund_known']})" if s["pending"] else "")
+        out = (f"Paper book: {s['closed']} closed · {s['wins']} won · {per}"
+               f" · worst {_pct(s['worst'], 0)} · total {_pct(s['total_capital'], 2)} of capital at 1%/trade")
         if s["pending"]:
             out += f" · {s['pending']} with funding pending (counted at 0; research average −0.78%)"
         return out
@@ -804,8 +806,9 @@ class FadeCostWatcher:
         f, how = self.book.funding(tr)
         fund = f"funding {_pct(f, 2)} ({how}, {tr.get('fund_n', 0)} settlements)" if f is not None else "funding pending"
         net = self.book.net(tr)
+        res = f"net {_pct(net, 2)}" if net is not None else f"after cost {_pct(self.book.gross(tr) - F1_COST, 2)}, before funding"
         return (head + f"\nPaper: short ${_px(tr['px4'])} → cover ${_px(tr['px24'])} = {_pct(self.book.gross(tr), 2)} gross · "
-                f"cost −0.40% · {fund} → net {_pct(net, 2) if net is not None else '?'}\n" + self.book.line())
+                f"cost −0.40% · {fund} → {res}\n" + self.book.line())
 
     def summary_text(self, now: float) -> str:
         lines = ["📊 <b>FADE paper book</b> (F1 since 10-02, 1% of capital per trade)", self.book.line()]
