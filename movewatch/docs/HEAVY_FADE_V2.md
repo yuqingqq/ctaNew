@@ -205,3 +205,28 @@ Shorting each tercile for 72 h in C: quiet −1.03%, middle −1.41%, heavy −0
 - **The recent gain is bigger moves, not more wins.** Median wins and losses both grew from
   about ±6% to about ±10%, with a slightly better ratio.
 - So the edge is the thin remainder after losses, and a few extra runners erase it.
+
+**Is every year after 2021 positive?** (2026-10-10 00:59Z; same script with a cluster-week bootstrap 95% CI per
+year; non-meme heavy short 24 h; "2022–25" is pooled after 2021 was seen to lose, so post-hoc)
+
+| year | mean, stress 1 | 95% CI | mean, stress 3 | 95% CI |
+|---|---|---|---|---|
+| 2021 | −0.78% | [−3.02, +1.23] | −1.21% | [−3.45, +0.80] |
+| 2022 | +0.58% | [−1.32, +2.45] | +0.12% | [−1.79, +2.01] |
+| 2023 | +0.60% | [−1.06, +2.24] | +0.14% | [−1.50, +1.77] |
+| 2024 | +0.43% | [−1.15, +1.97] | −0.07% | [−1.64, +1.48] |
+| 2025 | +0.57% | [−0.75, +1.83] | −0.05% | [−1.37, +1.21] |
+| 2026 | +1.49% | [−0.10, +3.05] | +0.80% | [−0.78, +2.37] |
+| 2022–25 pooled | +0.54% | [−0.30, +1.36] | −0.01% | [−0.85, +0.81] |
+| all 2020–26 | +0.72% | [+0.02, +1.44] | +0.14% | [−0.56, +0.86] |
+
+- At stress 1 every year except 2021 has a positive mean (2020 has only 12 trades). **No single
+  year's CI excludes 0** (computed in the script, at both stresses).
+- Tripling slippage costs about 0.5–0.6% per trade. That is the whole 2022–25 edge: pooled
+  +0.54% becomes −0.01%. Only 2026 stays positive at stress 3.
+- The all-years CI just excludes 0 at stress 1 (+0.02%), but the meme exclusion was chosen
+  after seeing, and the bound is gone at stress 3.
+- All heavy pumps (memes kept): 2022–25 pooled +0.48% [−0.35, +1.28] at stress 1, −0.06% at
+  stress 3.
+- Reading: the sign is consistent across years, but the size is about the same as the cost
+  uncertainty. Before 2025 it is a slight edge before costs, not a tradable one.

@@ -14,7 +14,8 @@ Book, fixed before the run:
 Variants: all heavy pumps; non-meme heavy pumps (CoinGecko meme list, retroactive).
 `--stress 3` triples the slippage tiers (descriptive cost check).
 `--trades` prints per-year trade statistics instead: win rate, median win and loss, the share of trades losing
-> 25% / > 50%, p5, worst, and how much of the gross wins the losers took back."""
+> 25% / > 50%, p5, worst, how much of the gross wins the losers took back, and the mean's 95% CI
+(cluster-week bootstrap). It also pools 2022-25 (post-hoc: 2021 dropped after it was seen to lose)."""
 import sys
 import numpy as np, pandas as pd
 sys.path.insert(0, "/home/yuqing/ctaNew/movewatch")
@@ -62,13 +63,22 @@ def show(lab: str, s: dict) -> str:
 
 def trade_table(x: pd.DataFrame, label: str) -> None:
     print(f"\n== {label}: per-trade statistics by year (short +4h -> +24h, stress {STRESS} + funding)")
-    print(f"{'year':6} {'n':>5} {'win':>5} {'med win':>8} {'med loss':>9} {'lose>25%':>9} {'lose>50%':>9} {'p5':>7} {'worst':>7} {'mean':>7} {'losses/wins':>11}")
-    for y, g in list(x.groupby(x["time"].dt.year)) + [("all", x)]:
+    print(f"{'year':7} {'n':>5} {'win':>5} {'med win':>8} {'med loss':>9} {'lose>25%':>9} {'lose>50%':>9} {'p5':>7} {'worst':>7} {'mean':>7} {'losses/wins':>11}  95% CI of mean")
+    yrs = x["time"].dt.year
+    rows = list(x.groupby(yrs)) + [("2022-25", x[(yrs >= 2022) & (yrs <= 2025)]), ("all", x)]
+    pos, excl = [], []
+    for y, g in rows:
         v = g["net"].to_numpy()
         w, l = v[v > 0], v[v <= 0]
-        print(f"{str(y):6} {len(v):5d} {100 * (v > 0).mean():4.0f}% {100 * np.median(w):+7.1f}% {100 * np.median(l):+8.1f}% "
+        s = hf.stats(v, g["time"])
+        ci = f"[{100 * s['ci'][0]:+.2f}, {100 * s['ci'][1]:+.2f}]" if s["status"] == "OK" else "(too few)"
+        if isinstance(y, (int, np.integer)):
+            pos += [int(y)] if v.mean() > 0 else []
+            excl += [int(y)] if s["status"] == "OK" and s["ci"][0] > 0 else []
+        print(f"{str(y):7} {len(v):5d} {100 * (v > 0).mean():4.0f}% {100 * np.median(w):+7.1f}% {100 * np.median(l):+8.1f}% "
               f"{100 * (v < -0.25).mean():8.1f}% {100 * (v < -0.5).mean():8.1f}% {100 * np.percentile(v, 5):+6.1f}% {100 * v.min():+6.0f}% "
-              f"{100 * v.mean():+6.2f}% {-l.sum() / w.sum():10.2f}")
+              f"{100 * v.mean():+6.2f}% {-l.sum() / w.sum():10.2f}  {ci}")
+    print(f"years with mean > 0: {pos}; years whose CI excludes 0: {excl if excl else 'none'}")
 
 
 if __name__ == "__main__":

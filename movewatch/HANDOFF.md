@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-09 13:24Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-10 00:59Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -187,6 +187,9 @@ later (`premium_h4`, `has_spot`) would end test v2, so they wait for a v3 decisi
     - 2020–25 +0.3%/yr;
     - stress 3: about +7.5%/yr recent, −1.0%/yr over 2020–25.
   - Scaling multiplies the drawdowns and the runner hit.
+  - Per year with CIs: positive every year except 2021 at stress 1, but no year's CI excludes 0,
+    and tripled slippage (about 0.5–0.6% per trade) erases 2022–25 (pooled +0.54% → −0.01%).
+    Only 2026 survives stress 3.
   - Nothing was declared. The 2020–25 dump replays stay unread and are available for a future
     dump-side question.
 - 2020–21 is now consumed for this question. Next: a forward declaration for crashes after

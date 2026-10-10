@@ -5,6 +5,8 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-10 00:59Z: signal 2 per year with CIs: non-meme heavy short 24h positive every year but 2021 at stress 1 (+0.43..+0.60% 2022-25,
+  +1.49% 2026) yet no year's CI excludes 0; tripled slippage (~0.5-0.6%/trade) erases 2022-25 (pooled +0.54% -> -0.01%); only 2026 survives.
   2026-10-09 13:24Z: signal 2 regime + book view: bear/pump-heavy fade +1.05% but that regime is ~only the last year (2020-25 alt-bear +0.08%);
   non-meme heavy-short book at 1%/trade: last year ~+14%/yr (Sharpe ~2), 2020-25 +0.3%/yr; stress 3 halves recent, negative 2020-25.
   2026-10-09 12:17Z: signal 3 marked DEAD (user decision). Signal 2 by coin class: 0/30 work across S/V/C; ranking negative in every class
