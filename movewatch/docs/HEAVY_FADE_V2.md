@@ -296,7 +296,7 @@ research; reconciliation r_S24 / vol_persist recomputed from the panels: max dif
 - **Tails that look bad in one era flip in the other:** funding before entry (bottom fifth ≤ −18.5 bp:
   C −2.44%, S+V +2.27%), perp premium (≤ −36 bp: −1.74% / +2.61%), liquidity > $90M (−0.78% / +2.33%).
 - **The 20 worst trades:** 18 are from 2025 onward; all touched +25% during the hold; 10 were listed
-  under 200 days; 7 had risen > +24% from alert to entry.
+  under 200 days; 8 had risen > +24% from alert to entry.
 - **Post-hoc** (`--posthoc`, selected after seeing the worst list: 5 of the 20 had funding ≤ −50 bp
   in the 8 h before entry): pre-entry funding persists (Spearman +0.81 with funding over the hold)
   and costs the short about −2.9% per trade at ≤ −50 bp in both eras, but the price outcome flips:
