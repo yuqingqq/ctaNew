@@ -226,6 +226,10 @@ heavy-volume Binance pumps from +4 h to +24 h, paper only.
 - **Entry timing (2026-10-10 03:14Z, `research/fade_entry_timing.py`, descriptive):** +4 h is the best entry (+0.72%). Delays give
   up the fade (+6 h +0.47% … +24 h −0.38%) without shrinking the tail. Confirmation entries don't help: wait-for-weakness
   misses the first leg; sell-the-next-spike picks runners.
+- **Runners (2026-10-10 05:26Z, `research/fade_runners.py`, declared 49e27eb, descriptive):** 198 of 2,271 trades lose ≥ 20% and cost
+  3.54%/trade. At entry they look like the big winners: of 15 features × 2 tails, 0 tails lose money in both eras with
+  CI < 0. Funding / premium / liquidity tails flip between eras. Post-hoc funding ≤ −50 bp flips too (it is a predictable
+  ~−3% funding cost, Spearman +0.81). No filter; the tail levers are size and stops.
 
 ## Next (ranked)
 

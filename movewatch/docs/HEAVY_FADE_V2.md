@@ -275,3 +275,33 @@ net exactly: n 2,271, max difference 0)
   −0.2%.
 - The signal is only known at +4 h (it needs hours 1–4 volume), so entering earlier is not an
   option with this rule.
+
+**What the runners have in common at entry** (2026-10-10 05:26Z; `research/fade_runners.py`, declared in 49e27eb
+before the run; descriptive, consumed; F1 population, stress 1 + funding; 2 rows NO_FUNDING as the
+research; reconciliation r_S24 / vol_persist recomputed from the panels: max difference 0)
+
+- **The runners are the whole tail.** Big losses (net ≤ −20%): 198 of 2,271 trades (C 95 of 1,275,
+  S+V 103 of 996). They cost 3.54% per trade averaged over all trades; the mean of all trades is
+  +0.72%. Their loss is price, not funding: −38.1% price, −2.2% funding, −0.37% cost per big loser.
+- **At entry they look like the big winners.** Big losers had risen more from the alert to entry
+  (median +8.1% vs +3.1% in C, +7.7% vs +3.8% in S+V) and were more volatile, but those features
+  raise the big-win share as much: the top fifth of alert→entry rise (> +12.4%) has big losses
+  12.2% vs 6.3% (C) and 15.3% vs 8.7% (S+V), and big wins 12.5% vs 2.4% and 20.1% vs 5.1%. Mean
+  −0.86% (C), +3.34% (S+V).
+- **Computed predicates, 15 features × 2 tails = 30 looks (cuts = C quintiles):** SEPARATES (big-loss
+  share ≥ 1.5 × the rest in both eras) 2: alert→entry rise Q5, liquidity Q5 (> $90M; S+V n 72);
+  SKIP PAYS (tail mean < 0 in both eras, pooled CI < 0) **0**; ALSO WINS 6 (alert→entry rise,
+  last-hour rise, 4 h volatility, vol_persist, hour-4 volume, listing age < 65 d). Controls: ORACLE
+  (look-ahead) fired; NOISE flagged nothing.
+- **Tails that look bad in one era flip in the other:** funding before entry (bottom fifth ≤ −18.5 bp:
+  C −2.44%, S+V +2.27%), perp premium (≤ −36 bp: −1.74% / +2.61%), liquidity > $90M (−0.78% / +2.33%).
+- **The 20 worst trades:** 18 are from 2025 onward; all touched +25% during the hold; 10 were listed
+  under 200 days; 7 had risen > +24% from alert to entry.
+- **Post-hoc** (`--posthoc`, selected after seeing the worst list: 5 of the 20 had funding ≤ −50 bp
+  in the 8 h before entry): pre-entry funding persists (Spearman +0.81 with funding over the hold)
+  and costs the short about −2.9% per trade at ≤ −50 bp in both eras, but the price outcome flips:
+  C n 148, big losses 14% vs 7%, mean −4.57%; S+V n 276, big losses 8% vs 11%, mean +2.39%; pooled
+  −0.04% [−2.05, +1.70]. Not a filter.
+- **Reading:** these entry-time features predict how far the coin moves, not which way. No filter
+  separates the runners from the winners on this data. The tail levers stay size and stops; F1 is
+  unchanged.

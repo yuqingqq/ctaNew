@@ -5,6 +5,9 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-10 05:26Z: F1 runner study (fade_runners.py, declared 49e27eb, descriptive, consumed): 198/2,271 big losses (net <= -20%) cost 3.54%/trade;
+  at entry they look like the big winners (rise since alert, volatility, young age raise both); 30 looks: SEPARATES 2, SKIP PAYS 0,
+  ALSO WINS 6; funding/premium/liquidity tails flip between 2020-25 and 2025-26; post-hoc funding <= -50 bp flips too. No filter; F1 unchanged.
   2026-10-10 03:14Z: F1 entry timing (fade_entry_timing.py, descriptive): +4 h is best (+0.72%); +6/8/12 h +0.41..0.47%, +24 h -0.38%;
   waiting for the fade (WEAK3) misses the first leg; selling the next +10% leg picks runners (-0.2%). No change to F1.
   2026-10-10 03:11Z: stops on the F1 trade (fade_stops.py, descriptive, consumed): every stop lowers the mean (none +0.72%, 15% +0.48%,
