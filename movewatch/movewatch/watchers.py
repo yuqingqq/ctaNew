@@ -382,21 +382,72 @@ def book_cost(bids: list, asks: list, notionals: list[float]) -> dict:
     return out
 
 
+PKG_ROOT = Path(__file__).resolve().parents[1]
+F1_MEME = PKG_ROOT / "docs" / "coingecko_meme_rank1500_2026-10-09.json"      # frozen with F1
+F1_CUTS = PKG_ROOT / "docs" / "SIGNAL_SEARCH_FREEZE.json"                    # A2 heavy cut (log10 volume ratio)
+F1_LATE_4H, F1_GAP_MIN, F1_REPEAT_S, F1_DUP_S, F1_DUP_LOG_PX = 600, 5, 72 * 3600, 300, 0.01
+
+
+def _base(asset: str) -> str:
+    """research/premium_angles.py::base (live asset names carry no quote suffix)."""
+    s = asset.removesuffix("USDT")
+    for pre in ("1000000", "1000", "1M"):
+        if s.startswith(pre) and len(s) > len(pre) + 1:
+            return s[len(pre):]
+    return s
+
+
+def _px(x: float) -> str:
+    return f"{x:.5g}" if x and x == x else "?"
+
+
 class FadeCostWatcher:
-    """Tails the engine's follow-up log. For every pump whose FU_4H (entry) or FU_24H (exit) record
-    was priced on a Binance USDM perp, it takes that perp's first 20-level partial-depth and
-    markPrice websocket messages right away and writes one FADE_COST record to
-    data/alerts/fadecost-YYYYMMDD.jsonl. It starts at the end of the current files, so a restart
-    never snapshots old records."""
+    """Forward test F1's live companion (docs/FORWARD_FADE_F1_v2.md). Tails the engine's follow-up
+    log.
+    - Cost: for every pump whose FU_4H (entry) or FU_24H (exit) record was priced on a Binance USDM
+      perp, it takes that perp's first 20-level partial-depth and markPrice websocket messages and
+      writes one FADE_COST record to data/alerts/fadecost-YYYYMMDD.jsonl.
+    - Signals (config `signals`, user request 2026-10-10): when an FU_4H record meets F1's entry
+      rules (the evaluator's population, research/forward_fade.py), it sends a SHORT message with the
+      cover time; at that row's FU_24H record it sends COVER. The cover message carries no result:
+      F1 is read once, at its minimum. The evaluator, not this message, decides what counts.
+    Fail closed: if the meme list or the cut cannot be read, no signal is sent (cost records go on)."""
 
     def __init__(self, cfg: dict, engine):
         self.cfg, self.engine = cfg or {}, engine
         self.poll = float(self.cfg.get("poll_s", 10))
         self.notionals = [float(x) for x in self.cfg.get("notionals_usd", [1000, 10000, 50000, 100000])]
-        self.heavy_ratio = float(self.cfg.get("heavy_ratio", 2.2525))
         self.dir = Path(getattr(engine, "fu_dir", "data/alerts"))
         self.pos: dict[str, int] = {}
         self.started = False
+        self.signals = bool(self.cfg.get("signals", True))
+        try:
+            self.meme = set(json.loads(Path(self.cfg.get("meme_file", F1_MEME)).read_text())["symbols"])
+            cells = json.loads(Path(self.cfg.get("cuts_file", F1_CUTS)).read_text())["cells"]
+            self.heavy_log = float(next(c for c in cells if c["id"] == "A2")["cuts"][1])
+        except Exception as e:  # noqa: BLE001 -- no reference data, no signals
+            log.warning("fade watcher: signals OFF, reference data unreadable: %s", str(e)[:150])
+            self.meme, self.heavy_log, self.signals = None, float("inf"), False
+        self.opens: dict[str, dict] = {}        # FU_OPEN by id
+        self.kept_t: dict[str, float] = {}      # asset -> time of the last alert kept by the 72 h rule
+        self.excluded: set[str] = set()         # DUPLICATE or REPEAT_72H ids
+        self.recent: list[dict] = []            # kept opens of the last 5 min (duplicate check)
+        self.open_sig: dict[str, dict] = {}     # signalled entries waiting for their cover
+
+    # ------------------------------------------------------------------ records
+    def _read(self, p: Path, start: int) -> tuple[list[dict], int]:
+        size = p.stat().st_size
+        with open(p, "rb") as f:
+            f.seek(start)
+            chunk = f.read(max(0, size - start))
+        end = chunk.rfind(b"\n") + 1                       # complete lines only
+        out = []
+        for line in chunk[:end].splitlines():
+            try:
+                out.append(json.loads(line))
+            except ValueError:
+                continue
+        return out, start + end
 
     def new_records(self, now: float | None = None) -> list[dict]:
         now = time.time() if now is None else now
@@ -405,21 +456,63 @@ class FadeCostWatcher:
             p = self.dir / f"followups-{day}.jsonl"
             if not p.exists():
                 continue
-            size = p.stat().st_size
             if str(p) not in self.pos:
-                self.pos[str(p)] = size if not self.started else 0
-            with open(p, "rb") as f:
-                f.seek(self.pos[str(p)])
-                chunk = f.read(max(0, size - self.pos[str(p)]))
-            end = chunk.rfind(b"\n") + 1                   # complete lines only
-            self.pos[str(p)] += end
-            for line in chunk[:end].splitlines():
-                try:
-                    out.append(json.loads(line))
-                except ValueError:
-                    continue
+                self.pos[str(p)] = p.stat().st_size if not self.started else 0
+            recs, self.pos[str(p)] = self._read(p, self.pos[str(p)])
+            out += recs
         self.started = True
         return out
+
+    def prime(self, now: float | None = None) -> None:
+        """Rebuild the alert history (72 h rule, duplicates) from the last 4 days of follow-up records
+        and the open signals from the last 2 days of cost records; continue the tail from there."""
+        now = time.time() if now is None else now
+        for k in (4, 3, 2, 1, 0):
+            p = self.dir / f"followups-{time.strftime('%Y%m%d', time.gmtime(now - k * 86400))}.jsonl"
+            if p.exists():
+                recs, self.pos[str(p)] = self._read(p, 0)
+                for r in recs:
+                    if r.get("kind") == "FU_OPEN":
+                        self.on_open(r)
+        for k in (2, 1, 0):
+            p = self.dir / f"fadecost-{time.strftime('%Y%m%d', time.gmtime(now - k * 86400))}.jsonl"
+            if p.exists():
+                for r in self._read(p, 0)[0]:
+                    if r.get("signal") and r.get("leg") == "entry":
+                        self.open_sig[r["id"]] = r
+                    elif r.get("signal") and r.get("leg") == "exit":
+                        self.open_sig.pop(r.get("id"), None)
+        self.started = True
+
+    def on_open(self, o: dict) -> None:
+        """F1 rows are actions: the v2 DUPLICATE rule, then the first alert per asset in any 72 h."""
+        t = float(o.get("t", 0.0))
+        self.opens[o["id"]] = o
+        self.recent = [p for p in self.recent if t - p["t"] <= F1_DUP_S]
+        for p in self.recent:
+            if (p["asset"] != o.get("asset") and p.get("dir") == o.get("dir") and (p.get("alert_px") or 0) > 0
+                    and (o.get("alert_px") or 0) > 0 and abs(math.log(o["alert_px"] / p["alert_px"])) <= F1_DUP_LOG_PX):
+                self.excluded.add(o["id"])
+                return
+        self.recent.append(o)
+        lt = self.kept_t.get(o.get("asset"))
+        if lt is not None and t - lt < F1_REPEAT_S:
+            self.excluded.add(o["id"])
+            return
+        self.kept_t[o.get("asset")] = t
+
+    def entry_ok(self, rec: dict) -> bool:
+        """F1's entry rules on an FU_4H record (research/forward_fade.rows up to the 4 h checks)."""
+        o = self.opens.get(rec.get("id"))
+        if not self.signals or o is None or rec.get("kind") != "FU_4H" or (o.get("dir") or 0) <= 0:
+            return False
+        ref = o.get("ref_key") or ""
+        vr = rec.get("vol_ratio_binance_usdm")
+        gaps = max(rec.get("gap_min_before", math.inf), rec.get("gap_min_after", math.inf))
+        return (rec["id"] not in self.excluded and ref.startswith("binance_usdm:") and _base(o.get("asset", "")) not in self.meme
+                and (rec.get("late_s") or 0) <= F1_LATE_4H and (rec.get("px") or 0) > 0 and rec.get("px_key") == ref
+                and isinstance(vr, (int, float)) and math.isfinite(vr) and vr > 0 and gaps <= F1_GAP_MIN
+                and math.log10(vr) > self.heavy_log)
 
     def wanted(self, rec: dict) -> dict | None:
         leg = {"FU_4H": "entry", "FU_24H": "exit"}.get(rec.get("kind"))
@@ -430,8 +523,8 @@ class FadeCostWatcher:
                "t_rec": rec.get("t"), "late_s_rec": rec.get("late_s"), "px_rec": rec.get("px")}
         if leg == "entry":
             vr = rec.get("vol_ratio_binance_usdm")
-            ok = isinstance(vr, (int, float)) and math.isfinite(vr)
-            out.update(vol_ratio_bn=vr if ok else None, heavy=bool(ok and vr > self.heavy_ratio))
+            ok = isinstance(vr, (int, float)) and math.isfinite(vr) and vr > 0
+            out.update(vol_ratio_bn=vr if ok else None, heavy=bool(ok and math.log10(vr) > self.heavy_log))
         return out
 
     async def snapshot(self, session, out: dict) -> dict:
@@ -450,20 +543,70 @@ class FadeCostWatcher:
         with open(self.dir / f"fadecost-{time.strftime('%Y%m%d', time.gmtime())}.jsonl", "a") as f:
             f.write(json.dumps(rec, default=float) + "\n")
 
+    # ------------------------------------------------------------------ messages
+    def entry_text(self, rec: dict, snap: dict) -> str:
+        o = self.opens[rec["id"]]
+        cover = _hhmm(int((float(o["t"]) + 86400) // 60))
+        a, sym = esc(o["asset"]), snap["symbol"]
+        lines = [f"📉 <b>FADE: SHORT {a}</b> · paper test F1, NOT validated",
+                 f"Volume kept up: hours 1–4 ran {rec['vol_ratio_binance_usdm']:.1f}× the pre-alert pace (heavy).",
+                 f"Rule: SHORT {sym} perp now (~${_px(rec.get('px'))}), 1% of capital, no stop. "
+                 f"COVER at {cover} UTC (alert + 24 h)."]
+        cost = []
+        if "spread_bps" in snap:
+            s10 = snap.get("sell_bps", {}).get("10000")
+            cost.append(f"spread {snap['spread_bps']:.0f} bps" + (f", $10k sell {s10:.0f} bps" if s10 is not None else ", $10k beyond 20 levels"))
+        if "funding_rate" in snap:
+            fr = snap["funding_rate"]
+            cost.append(f"funding {100 * fr:+.3f}%/period ({'short pays' if fr < 0 else 'short receives'})")
+        if cost:
+            lines.append("Now: " + " · ".join(cost))
+        lines.append("History after costs + funding: +0.5%/trade 2022–25, +1.5% in 2026; ~62% win; "
+                     "~2% of trades lose > 50% (runners). Funding is the biggest cost.")
+        return "\n".join(lines)
+
+    def exit_text(self, entry: dict) -> str:
+        return (f"📉 <b>FADE: COVER {esc(entry.get('asset', '?'))}</b> now · paper test F1 "
+                f"(short opened {_hhmm(int(float(entry.get('t_rec', 0)) // 60))} UTC)\n"
+                "Result not shown: F1 is read once, at ≥ 400 trades.")
+
+    async def handle(self, session, rec: dict) -> None:
+        if rec.get("kind") == "FU_OPEN":
+            self.on_open(rec)
+            return
+        want = self.wanted(rec)
+        if want is None:
+            return
+        sig_in = want["leg"] == "entry" and self.entry_ok(rec)
+        sig_out = want["leg"] == "exit" and want["id"] in self.open_sig
+        r = await self.snapshot(session, want)
+        if sig_in or sig_out:
+            r["signal"] = True
+        self.write(r)
+        log.info("fade cost %s %s %s: spread %s bps, 10k sell %s bps%s%s", r["leg"], r["asset"], r["symbol"],
+                 f"{r['spread_bps']:.1f}" if "spread_bps" in r else "-",
+                 f"{r['sell_bps']['10000']:.1f}" if (r.get("sell_bps") or {}).get("10000") is not None else "-",
+                 " SIGNAL" if r.get("signal") else "", f" ERROR {r['error']}" if "error" in r else "")
+        if sig_in:
+            self.open_sig[r["id"]] = r
+            self.engine.notifier.emit(self.entry_text(rec, r), {"kind": "FADE_SHORT", "id": r["id"], "asset": r["asset"],
+                                                                "symbol": r["symbol"], "vol_ratio_bn": r.get("vol_ratio_bn")})
+        elif sig_out:
+            entry = self.open_sig.pop(r["id"])
+            self.engine.notifier.emit(self.exit_text(entry), {"kind": "FADE_COVER", "id": r["id"], "asset": r["asset"]})
+
     async def run(self, session) -> None:
-        log.info("fade cost watcher: started (%s)", self.dir)
+        try:
+            self.prime()
+        except Exception as e:  # noqa: BLE001
+            log.warning("fade watcher: prime failed, signals OFF: %s", str(e)[:200])
+            self.signals = False
+        log.info("fade watcher: started (%s), signals %s, %d alerts primed, %d open shorts",
+                 self.dir, "ON" if self.signals else "OFF", len(self.opens), len(self.open_sig))
         while True:
             try:
                 for rec in self.new_records():
-                    want = self.wanted(rec)
-                    if want is None:
-                        continue
-                    r = await self.snapshot(session, want)
-                    self.write(r)
-                    log.info("fade cost %s %s %s: spread %s bps, 10k sell %s bps%s", r["leg"], r["asset"], r["symbol"],
-                             f"{r['spread_bps']:.1f}" if "spread_bps" in r else "-",
-                             f"{r['sell_bps']['10000']:.1f}" if r.get("sell_bps", {}).get("10000") is not None else "-",
-                             f" ERROR {r['error']}" if "error" in r else "")
+                    await self.handle(session, rec)
             except asyncio.CancelledError:
                 raise
             except Exception as e:  # noqa: BLE001 -- the watcher never stops the service

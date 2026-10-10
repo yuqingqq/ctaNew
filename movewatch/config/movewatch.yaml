@@ -71,11 +71,11 @@ watchers:
     liq_min: 5000000            # 24 h quote volume
     n_min: 50
     hold_min: 240               # follow-up message at the 4 h exit
-  fade_cost:                    # forward test F1 (docs/FORWARD_FADE_F1.md): order book + funding at each
-    enabled: true               # Binance-priced pump's +4 h / +24 h record; silent, descriptive
+  fade_cost:                    # forward test F1 (docs/FORWARD_FADE_F1_v2.md): order book + funding at each
+    enabled: true               # Binance-priced pump's +4 h / +24 h record (descriptive)
     poll_s: 10
     notionals_usd: [1000, 10000, 50000, 100000]
-    heavy_ratio: 2.2525         # label only (A2 heavy cut 10^0.35259); the evaluator applies its own
+    signals: true               # SHORT / COVER messages for F1 entries (user request 2026-10-10); no result shown
 
 aliases:                      # same token, different tickers (alias -> canonical). Evidence 2026-10-02:
   PUMPFUN: PUMP               # same USD price AND 1-min return corr over a day; 0.991 (bybit vs binance/okx/hl)

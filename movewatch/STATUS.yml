@@ -5,6 +5,10 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-10 02:14Z: F1 live SHORT/COVER Telegram messages (user request): watchers.py FadeCostWatcher sends SHORT at an F1 entry
+  (same rules as the evaluator, a test checks the same rows) with the cover time, and COVER at +24 h without any result.
+  Fail closed without reference data. Identity 2375f81d unchanged; 122 tests pass. Heavy cut is A2's 0.3525881 (2.2521x;
+  the F1 docs round it to 2.2525x, the evaluator reads the exact value).
   2026-10-10 01:23Z: F1 v2 supersedes v1 before any read: Binance futures REST (fapi) answers HTTP 451 from this box, so funding now
   comes from Vision monthly archives (new status FUNDING_PENDING until the month is published) and cost snapshots from websockets
   (20-level depth on /public, markPrice on /market). Identity 2375f81d unchanged; 118 tests pass.

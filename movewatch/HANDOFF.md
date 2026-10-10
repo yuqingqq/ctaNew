@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-10 01:23Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-10 02:14Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -208,6 +208,11 @@ heavy-volume Binance pumps from +4 h to +24 h, paper only.
   It is live from the next service start. `python3 -m research.forward_fade --cost` prints cost fields only and may be
   read any time; the raw `fadecost-*.jsonl` files carry prices, so do not read them before the final read.
 - Correction: in the research, shorts paid −0.78% funding per trade, more than the slippage (0.145%/side).
+- **Live F1 messages (2026-10-10 02:14Z, user request):** 📉 FADE: SHORT at each F1 entry (+4 h), with price, cover time,
+  live spread / $10k cost and funding; 📉 FADE: COVER at +24 h, with no result. They fire on the evaluator's rows (a test
+  checks the same ids) and fail closed without the meme list or cut. The F1 declaration said the watcher sends no
+  messages; messages change no record, so the test is unaffected. Turn off with `watchers.fade_cost.signals: false`.
+- Heavy cut = A2's 0.3525881 (2.2521×); the F1 docs round it to 2.2525×. The evaluator and watcher read the exact value.
 
 ## Next (ranked)
 

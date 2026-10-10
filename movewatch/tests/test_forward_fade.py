@@ -281,3 +281,100 @@ def test_a_hold_across_months_with_one_archive_missing_is_nan_not_partial(tmp_pa
         status_code = 404
     assert ff.months(t0, t0 + 72000) == ["2026-09", "2026-10"]
     assert math.isnan(ff.funding_sum("XUSDT", t0, t0 + 72000, get=lambda *a, **k: R()))
+
+
+# ---------------------------------------------------------------- live SHORT / COVER messages
+class _Notifier:
+    def __init__(self):
+        self.sent = []
+
+    def emit(self, text, record=None):
+        self.sent.append((text, record or {}))
+
+
+class _EngN(_Eng):
+    def __init__(self, d):
+        super().__init__(d)
+        self.notifier = _Notifier()
+
+
+def _mixed_records():
+    """Every F1 entry exclusion plus a cross-ticker duplicate, in one stream."""
+    recs = _records(n=40, planted=False, seed=6)
+    by = {(r["kind"], r.get("id")): r for r in recs}
+    by[("FU_OPEN", "a1")]["ref_key"] = "bybit_linear:C1USDT"
+    for k in ("FU_4H", "FU_24H"):
+        by[(k, "a1")]["px_key"] = "bybit_linear:C1USDT"
+    for k in ("FU_OPEN", "FU_4H", "FU_24H"):
+        by[(k, "a2")]["asset"] = "1000PEPE"
+        by[(k, "a10")]["asset"] = by[(k, "a9")]["asset"]
+    by[("FU_4H", "a3")]["vol_ratio_binance_usdm"] = 10 ** ff.HEAVY        # exactly at the cut: not heavy
+    by[("FU_4H", "a4")]["gap_min_after"] = 6
+    by[("FU_4H", "a5")]["late_s"] = 601
+    by[("FU_4H", "a6")]["px_key"] = "binance_usdm:OTHERUSDT"
+    by[("FU_OPEN", "a8")]["dir"] = -1
+    for k in ("FU_OPEN", "FU_4H", "FU_24H"):                                # a12 = a11 under another ticker, 2 min later
+        by[(k, "a12")]["t"] = by[(k, "a11")]["t"] + 120
+        by[(k, "a12")]["alert_px"] = by[("FU_OPEN", "a11")]["alert_px"]
+    return sorted(recs, key=lambda r: r["t"])
+
+
+def test_live_entry_signals_are_exactly_the_evaluators_population(tmp_path):
+    recs = _mixed_records()
+    d = _rows(recs).set_index("id")
+    entered = {i for i, s in d["status"].items() if s == "OK" or s == "FUNDING_PENDING" or s.startswith("24H_")}
+    w = FadeCostWatcher({}, _EngN(tmp_path))
+    sig = set()
+    for r in recs:
+        if r["kind"] == "FU_OPEN":
+            w.on_open(r)
+        elif r["kind"] == "FU_4H" and w.entry_ok(r):
+            sig.add(r["id"])
+    assert d.loc["a12", "status"] == "DUPLICATE" and d.loc["a3", "status"] == "NOT_HEAVY"
+    assert sig == entered and len(sig) >= 25                              # same rows, not just the same count
+
+
+def test_signals_fail_closed_without_reference_data(tmp_path):
+    w = FadeCostWatcher({"meme_file": str(tmp_path / "missing.json")}, _EngN(tmp_path))
+    recs = _records(n=3)
+    for r in recs:
+        if r["kind"] == "FU_OPEN":
+            w.on_open(r)
+    assert w.signals is False and not any(w.entry_ok(r) for r in recs if r["kind"] == "FU_4H")
+
+
+def test_handle_sends_short_then_cover_and_never_a_result(tmp_path, monkeypatch):
+    import movewatch.watchers as mw
+
+    async def fake(url, timeout=10.0):
+        if "@depth20" in url:
+            return {"b": [["0.999", "1e6"]], "a": [["1.001", "1e6"]]}
+        return {"p": "1.0", "i": "1.0", "r": "-0.0015", "T": 1791619200000}
+    monkeypatch.setattr(mw, "_first", fake)
+    eng = _EngN(tmp_path)
+    w = FadeCostWatcher({}, eng)
+    recs = _records(n=2, planted=True)
+    recs[3 + 2]["vol_ratio_binance_usdm"] = QUIET_RATIO                   # a1's FU_4H: not heavy
+    for r in sorted(recs, key=lambda r: r["t"]):
+        if r["kind"] != "FU_START":
+            asyncio.run(w.handle(None, r))
+    kinds = [rec["kind"] for _, rec in eng.notifier.sent]
+    assert kinds == ["FADE_SHORT", "FADE_COVER"] and eng.notifier.sent[0][1]["id"] == "a0"
+    short, cover = eng.notifier.sent[0][0], eng.notifier.sent[1][0]
+    assert "SHORT C0USDT perp now" in short and "NOT validated" in short and "short pays" in short
+    assert mw._hhmm(int((T0 + 86400) // 60)) in short                       # cover time = alert + 24 h
+    assert "COVER" in cover and "Result not shown" in cover and "$" not in cover and "%" not in cover
+    logged = [json.loads(x) for f in tmp_path.glob("fadecost-*.jsonl") for x in f.read_text().splitlines()]
+    assert len(logged) == 4 and sum(1 for r in logged if r.get("signal")) == 2   # cost for every leg, signal on a0 only
+
+
+def test_prime_rebuilds_history_and_open_shorts_after_a_restart(tmp_path):
+    now = T0 + 5 * 3600
+    day = __import__("time").strftime("%Y%m%d", __import__("time").gmtime(now))
+    opens = [r for r in _records(n=3, asset=lambda i: "X") if r["kind"] == "FU_OPEN"]      # X three times in 12 h
+    (tmp_path / f"followups-{day}.jsonl").write_text("".join(json.dumps(r) + "\n" for r in opens))
+    (tmp_path / f"fadecost-{day}.jsonl").write_text(json.dumps({"leg": "entry", "id": "a0", "signal": True, "asset": "X", "t_rec": T0}) + "\n")
+    w = FadeCostWatcher({}, _EngN(tmp_path))
+    w.prime(now)
+    assert w.excluded == {"a1", "a2"} and set(w.open_sig) == {"a0"}
+    assert w.new_records(now) == []                                       # the tail continues after the primed lines
