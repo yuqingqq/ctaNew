@@ -285,6 +285,8 @@ def main(argv=None) -> None:
     if list(out.glob("receipt_*.json")):
         raise SystemExit(f"refused: a receipt already exists in {out}; the test is read once")
     res = {"freeze_commit": commit, "freeze_sha": sha,
+           "notes": ["2026-10-10 02:30Z: H1 partly unblinded: forward test F1's paper P&L (heavy pumps, raw +4h->+24h) shown live "
+                     "by user decision (docs/FORWARD_UNBLIND_2026-10-10.md); hypotheses, minimum and read unchanged"],
            "evaluator_head": _git(ROOT, "rev-parse", "HEAD").decode().strip(),
            "counts": c, **final_stats(d)}
     out.mkdir(parents=True, exist_ok=True)

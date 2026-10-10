@@ -5,6 +5,9 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-10 02:31Z: F1 + v2-H1 UNBLINDED by user decision (docs/FORWARD_UNBLIND_2026-10-10.md): live paper book (watchers.py PaperBook,
+  data/alerts/fadebook.jsonl, backfilled since 10-02: dry run = evaluator's 12 entered / 11 complete ids exactly), COVER shows the result,
+  daily summary 00:05 UTC, funding polled every 10 min then exact from Vision; reads/pass rules LOCKED; receipts carry the note.
   2026-10-10 02:14Z: F1 live SHORT/COVER Telegram messages (user request): watchers.py FadeCostWatcher sends SHORT at an F1 entry
   (same rules as the evaluator, a test checks the same rows) with the cover time, and COVER at +24 h without any result.
   Fail closed without reference data. Identity 2375f81d unchanged; 122 tests pass. Heavy cut is A2's 0.3525881 (2.2521x;
@@ -134,7 +137,7 @@ tasks:
                                     younger, perp premium > 0 + taker buying at +4h (runner rate ~15% vs ~9%). Nothing separates well."}
   M28_forward_fade_F1:      {status: running, artifact: "docs/FORWARD_FADE_F1_v2.md (supersedes v1 unread); research/forward_fade.py; tests/test_forward_fade.py;
                                     research/fade_forward_design.py; movewatch/watchers.py FadeCostWatcher",
-                             note: "declared 2026-10-10 01:17Z over v2's whole window (no outcome read). Counts only until >= 400 complete rows
+                             note: "UNBLINDED 2026-10-10 02:31Z (user): paper P&L live, read unchanged. Declared 2026-10-10 01:17Z over v2's whole window (no outcome read). Counts only until >= 400 complete rows
                                     and >= 12 ISO weeks; --final once. --cost prints cost fields (no prices) any time. Ends with v2's identity."}
   M27_premium_signal:       {status: dead, artifact: "research/premium_posthoc.py; docs/SIGNAL_SEARCH.md post-hoc section",
                              note: "A3 premium_h4 as a trade, descriptive on consumed S/V. Pumps: IC +0.100/+0.121, given vol_persist

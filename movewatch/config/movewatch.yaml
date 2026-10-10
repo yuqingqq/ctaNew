@@ -75,7 +75,8 @@ watchers:
     enabled: true               # Binance-priced pump's +4 h / +24 h record (descriptive)
     poll_s: 10
     notionals_usd: [1000, 10000, 50000, 100000]
-    signals: true               # SHORT / COVER messages for F1 entries (user request 2026-10-10); no result shown
+    signals: true               # SHORT / COVER messages for F1 entries; COVER shows the paper result (user decision 2026-10-10)
+    summary_utc_min: 5          # daily paper-book summary at 00:05 UTC
 
 aliases:                      # same token, different tickers (alias -> canonical). Evidence 2026-10-02:
   PUMPFUN: PUMP               # same USD price AND 1-min return corr over a day; 0.991 (bybit vs binance/okx/hl)

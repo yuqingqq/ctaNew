@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-004 movewatch
 
-Updated: 2026-10-10 02:14Z (session 1, continued). Single-seat project: this file and
+Updated: 2026-10-10 02:31Z (session 1, continued). Single-seat project: this file and
 `STATUS.yml` are the state; update both after every completed step.
 
 ## State in one paragraph
@@ -213,6 +213,13 @@ heavy-volume Binance pumps from +4 h to +24 h, paper only.
   checks the same ids) and fail closed without the meme list or cut. The F1 declaration said the watcher sends no
   messages; messages change no record, so the test is unaffected. Turn off with `watchers.fade_cost.signals: false`.
 - Heavy cut = A2's 0.3525881 (2.2521×); the F1 docs round it to 2.2525×. The evaluator and watcher read the exact value.
+- **UNBLINDED (2026-10-10 02:31Z, user decision, `docs/FORWARD_UNBLIND_2026-10-10.md`):** F1's paper P&L is live, and so,
+  partly, is v2's H1 (heavy pumps, raw +4→24 h).
+  - Ledger `data/alerts/fadebook.jsonl` (PaperBook), backfilled since 10-02. COVER shows the result; daily summary at
+    00:05 UTC; `python3 -m research.forward_fade --paper` prints the table and cross-checks it with the evaluator.
+  - Funding is polled every 10 min while a short is open, then replaced by Vision's exact rates once published.
+  - LOCKED: both tests' hypotheses, minimums and single `--final` reads are unchanged; no early stop or tweak.
+    Receipts carry the note.
 
 ## Next (ranked)
 

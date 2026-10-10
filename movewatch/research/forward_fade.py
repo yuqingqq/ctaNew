@@ -3,6 +3,7 @@
   python3 -m research.forward_fade            # counts + statuses only (allowed any time)
   python3 -m research.forward_fade --final    # the one look; refuses below the minimum or a second time
   python3 -m research.forward_fade --cost     # cost fields of the order-book snapshots, no prices (any time)
+  python3 -m research.forward_fade --paper    # the live paper ledger + a cross-check with the evaluator's rows
 
 Reads the records of the live recorder frozen for forward test v2 (data/alerts/followups-*.jsonl)
 and admits only runs of that frozen code, exactly as research/forward_eval.py does. Funding over
@@ -43,6 +44,8 @@ DRAWS, SEED = 4000, 20261010
 VISION = "https://data.binance.vision/data/futures/um/monthly/fundingRate/{s}/{s}-fundingRate-{m}.zip"
 _PUBLISHED: dict[str, bool] = {}
 NAN = float("nan")
+UNBLINDED = "2026-10-10 02:30Z: paper P&L shown live by user decision (docs/FORWARD_UNBLIND_2026-10-10.md); read and pass rule unchanged"
+BOOK = "data/alerts/fadebook.jsonl"
 
 
 def base(asset: str) -> str:
@@ -234,6 +237,38 @@ def cost_counts() -> dict:
     return cost_summary(recs)
 
 
+def paper_report(d: pd.DataFrame | None = None) -> dict:
+    """The live paper ledger (shown by user decision, docs/FORWARD_UNBLIND_2026-10-10.md), checked
+    against the evaluator's rows when `d` is given."""
+    from movewatch.watchers import PaperBook
+    b = PaperBook()
+    p = ROOT / BOOK
+    for line in (p.read_text().splitlines() if p.exists() else []):
+        b.apply(json.loads(line))
+    print(f"{'entered (UTC)':17} {'asset':10} {'src':8} {'entry':>11} {'exit':>11} {'gross':>8} {'funding':>16} {'net':>8}")
+    for t in sorted(b.tr.values(), key=lambda t: t["t4"]):
+        when = pd.Timestamp(t["t4"], unit="s").strftime("%m-%d %H:%M")
+        if t.get("t24") is None:
+            print(f"{when:17} {t['asset'][:10]:10} {t['src']:8} {t['px4']:11.5g} {'open':>11}")
+            continue
+        if t.get("void"):
+            print(f"{when:17} {t['asset'][:10]:10} {t['src']:8} {t['px4']:11.5g} {'void':>11}  ({t['void']})")
+            continue
+        f, how = b.funding(t)
+        net = b.net(t)
+        print(f"{when:17} {t['asset'][:10]:10} {t['src']:8} {t['px4']:11.5g} {t['px24']:11.5g} {100 * b.gross(t):+7.2f}% "
+              f"{(f'{100 * f:+.3f}% ' + how) if f is not None else 'pending':>16} {(f'{100 * net:+7.2f}%') if net is not None else '      ?':>8}")
+    s = b.summary()
+    print(b.line())
+    if d is not None and len(d):
+        ev = set(d.loc[d["status"].isin(["OK", "FUNDING_PENDING"]), "id"])
+        bk = {t["id"] for t in b.closed()}
+        s["evaluator_check"] = {"evaluator_complete": len(ev), "book_closed": len(bk),
+                                "only_in_book": sorted(bk - ev), "only_in_evaluator": sorted(ev - bk)}
+        print("cross-check:", s["evaluator_check"])
+    return s
+
+
 def declaration_commit() -> str:
     """The commit that added the declaration (CLAUDE.md rule 12: a freeze is a commit)."""
     out = fe._git(ROOT, "log", "--diff-filter=A", "--format=%H", "--", DECLARATION).decode().split()
@@ -246,6 +281,7 @@ def main(argv=None) -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--final", action="store_true")
     ap.add_argument("--cost", action="store_true")
+    ap.add_argument("--paper", action="store_true")
     args = ap.parse_args(argv)
     if args.cost:
         print(json.dumps(cost_counts(), indent=1))
@@ -260,6 +296,9 @@ def main(argv=None) -> None:
     c = counts(d, start, end, now)
     c.update(declaration_commit=decl, recorder_freeze_commit=commit, recorder_sha=sha, admitted_runs=len(runs), minimum=MIN)
     print(json.dumps(c, indent=1, default=str))
+    if args.paper:
+        paper_report(d)
+        return
     ok = ready(c)
     if not args.final:
         print("counts only (reading rule). minimum met." if ok else "counts only (reading rule). minimum NOT met yet.")
@@ -270,7 +309,7 @@ def main(argv=None) -> None:
     if list(out.glob("receipt_*.json")):
         raise SystemExit(f"refused: a receipt already exists in {out}; the test is read once")
     x = trades(d)
-    res = {"declaration_commit": decl, "recorder_freeze_commit": commit, "recorder_sha": sha,
+    res = {"declaration_commit": decl, "recorder_freeze_commit": commit, "recorder_sha": sha, "unblinded": UNBLINDED,
            "evaluator_head": fe._git(ROOT, "rev-parse", "HEAD").decode().strip(), "counts": c, **final_stats(x)}
     out.mkdir(parents=True, exist_ok=True)
     path = out / f"receipt_{pd.Timestamp.utcnow():%Y%m%dT%H%M%SZ}.json"

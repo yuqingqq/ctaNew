@@ -14,7 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import research.forward_eval as fe  # noqa: E402
 import research.forward_fade as ff  # noqa: E402
-from movewatch.watchers import FadeCostWatcher, book_cost  # noqa: E402
+from movewatch.watchers import FadeCostWatcher, PaperBook, book_cost, funding_from_polls  # noqa: E402
 
 T0 = 1_790_000_000.0          # 2026-09-21 12:13 UTC
 HEAVY_RATIO = 3.0             # log10 0.477 > the A2 heavy cut 0.35259
@@ -283,7 +283,10 @@ def test_a_hold_across_months_with_one_archive_missing_is_nan_not_partial(tmp_pa
     assert math.isnan(ff.funding_sum("XUSDT", t0, t0 + 72000, get=lambda *a, **k: R()))
 
 
-# ---------------------------------------------------------------- live SHORT / COVER messages
+# ---------------------------------------------------------------- live SHORT / COVER messages + paper book
+CFG = {"f1_identity": "FROZEN", "f1_start": T0 - 120}
+
+
 class _Notifier:
     def __init__(self):
         self.sent = []
@@ -299,7 +302,7 @@ class _EngN(_Eng):
 
 
 def _mixed_records():
-    """Every F1 entry exclusion plus a cross-ticker duplicate, in one stream."""
+    """Every F1 exclusion and every exit status, plus a cross-ticker duplicate, in one stream."""
     recs = _records(n=40, planted=False, seed=6)
     by = {(r["kind"], r.get("id")): r for r in recs}
     by[("FU_OPEN", "a1")]["ref_key"] = "bybit_linear:C1USDT"
@@ -312,38 +315,142 @@ def _mixed_records():
     by[("FU_4H", "a4")]["gap_min_after"] = 6
     by[("FU_4H", "a5")]["late_s"] = 601
     by[("FU_4H", "a6")]["px_key"] = "binance_usdm:OTHERUSDT"
+    by[("FU_OPEN", "a7")]["run"] = "DRY"
     by[("FU_OPEN", "a8")]["dir"] = -1
     for k in ("FU_OPEN", "FU_4H", "FU_24H"):                                # a12 = a11 under another ticker, 2 min later
         by[(k, "a12")]["t"] = by[(k, "a11")]["t"] + 120
         by[(k, "a12")]["alert_px"] = by[("FU_OPEN", "a11")]["alert_px"]
+    by[("FU_24H", "a13")]["late_s"] = 3601                                  # exit check late: void
+    by[("FU_24H", "a14")]["px_key"] = "binance_usdm:OTHERUSDT"              # exit priced elsewhere: void
+    recs = [r for r in recs if not (r["kind"] == "FU_24H" and r.get("id") == "a15")]   # exit never written: stays open
+    recs.insert(1, {"kind": "FU_START", "t": T0 - 50, "code_sha": "OTHER", "dry_run": True, "run": "DRY"})
     return sorted(recs, key=lambda r: r["t"])
 
 
-def test_live_entry_signals_are_exactly_the_evaluators_population(tmp_path):
+def _book(tmp_path, recs, cfg=CFG):
+    w = FadeCostWatcher(cfg, _EngN(tmp_path))
+    for r in recs:
+        w.step(r, live=False)
+    return w
+
+
+def test_paper_book_trades_are_exactly_the_evaluators_rows(tmp_path):
     recs = _mixed_records()
     d = _rows(recs).set_index("id")
-    entered = {i for i, s in d["status"].items() if s == "OK" or s == "FUNDING_PENDING" or s.startswith("24H_")}
-    w = FadeCostWatcher({}, _EngN(tmp_path))
-    sig = set()
+    st = d["status"]
+    w = _book(tmp_path, recs)
+    tr = w.book.tr
+    assert set(tr) == {i for i, v in st.items() if v in ("OK", "FUNDING_PENDING") or v.startswith("24H_")}
+    assert {t["id"] for t in w.book.closed()} == {i for i, v in st.items() if v in ("OK", "FUNDING_PENDING")}
+    assert {i for i, t in tr.items() if t.get("void")} == {i for i, v in st.items() if v.startswith("24H_") and v != "24H_MISSING"}
+    assert {t["id"] for t in w.book.open_trades()} == {i for i, v in st.items() if v == "24H_MISSING"}
+    for t in w.book.closed():                                             # the same gross as the evaluator's trade
+        assert PaperBook.gross(t) == pytest.approx(-(d.loc[t["id"], "px24"] / d.loc[t["id"], "px4"] - 1.0))
+    assert st["a7"] == "OTHER_RUN" and st["a12"] == "DUPLICATE" and st["a3"] == "NOT_HEAVY" and len(w.book.closed()) >= 20
+
+
+def test_book_and_signals_fail_closed_without_reference_data(tmp_path):
+    w = FadeCostWatcher(dict(CFG, meme_file=str(tmp_path / "missing.json")), _EngN(tmp_path))
+    assert w.ready is False and w.signals is False
+    for r in _records(n=3):
+        w.step(r, live=False)
+    assert w.book.tr == {}
+
+
+def test_funding_from_polls_takes_the_last_rate_before_each_settlement():
+    t4, t24 = 1000.0, 1000.0 + 20 * 3600
+    T1, T2, T3 = (t4 + 3600) * 1000, (t4 + 9 * 3600) * 1000, (t24 + 3600) * 1000      # T3 settles after the cover
+    polls = [(t4 + k * 600, -0.001 if k < 6 else (-0.002 if k < 54 else -0.003), T1 if k < 6 else (T2 if k < 54 else T3))
+             for k in range(0, 121)]
+    polls[3] = (polls[3][0], -0.0005, T1)                                   # a later reading before T1 wins over earlier ones
+    polls[5] = (polls[5][0], -0.0009, T1)
+    est, n, ok = funding_from_polls(polls, t4, t24)
+    assert ok and n == 2 and est == pytest.approx(-0.0009 - 0.002)
+    gap = [p for p in polls if not (t4 + 7200 < p[0] < t4 + 7200 + 3600)]     # one 60-min hole: a settlement may be missed
+    assert funding_from_polls(gap, t4, t24) == (None, 2, False)
+    assert funding_from_polls(polls[:60], t4, t24)[2] is False              # polls stop 10 h before the cover
+
+
+def test_paper_book_net_uses_exact_then_estimate_then_pending():
+    b = PaperBook()
+    for i, (px24, est, ok) in enumerate(((0.9, -0.01, True), (1.1, None, False), (0.95, -0.002, True))):
+        b.apply({"ev": "open", "id": f"t{i}", "asset": "X", "symbol": "XUSDT", "alert_t": 0.0, "t4": float(i), "px4": 1.0})
+        b.apply({"ev": "close", "id": f"t{i}", "t24": 86400.0 + i, "px24": px24, "fund_est": est, "fund_ok": ok, "fund_n": 3})
+    b.apply({"ev": "open", "id": "v", "asset": "V", "symbol": "VUSDT", "alert_t": 0.0, "t4": 9.0, "px4": 1.0})
+    b.apply({"ev": "close", "id": "v", "t24": 9e4, "px24": 0.5, "void": "late"})
+    b.apply({"ev": "fund_exact", "id": "t2", "funding": -0.004})
+    assert b.net(b.tr["t0"]) == pytest.approx(0.1 - 0.004 - 0.01)
+    assert b.net(b.tr["t1"]) is None and b.funding(b.tr["t1"]) == (None, "pending")
+    assert b.funding(b.tr["t2"]) == (-0.004, "exact") and b.net(b.tr["t2"]) == pytest.approx(0.05 - 0.004 - 0.004)
+    s = b.summary()
+    assert s["closed"] == 3 and s["void"] == 1 and s["pending"] == 1 and s["wins"] == 2
+    assert s["net_avg"] == pytest.approx((0.086 + 0.042) / 2)
+    assert s["total_capital"] == pytest.approx(0.01 * (0.086 + (-0.1 - 0.004) + 0.042))      # pending counted at 0 funding
+    assert "1 with funding pending" in b.line()
+
+
+def _write_followups(tmp_path, recs):
+    import time as _t
+    by_day = {}
     for r in recs:
-        if r["kind"] == "FU_OPEN":
-            w.on_open(r)
-        elif r["kind"] == "FU_4H" and w.entry_ok(r):
-            sig.add(r["id"])
-    assert d.loc["a12", "status"] == "DUPLICATE" and d.loc["a3", "status"] == "NOT_HEAVY"
-    assert sig == entered and len(sig) >= 25                              # same rows, not just the same count
+        by_day.setdefault(_t.strftime("%Y%m%d", _t.gmtime(r["t"])), []).append(r)
+    for day, rs in by_day.items():
+        (tmp_path / f"followups-{day}.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rs))
 
 
-def test_signals_fail_closed_without_reference_data(tmp_path):
-    w = FadeCostWatcher({"meme_file": str(tmp_path / "missing.json")}, _EngN(tmp_path))
-    recs = _records(n=3)
+def test_prime_backfills_history_once_and_never_double_books(tmp_path):
+    recs = _mixed_records()
+    _write_followups(tmp_path, recs)
+    now = max(r["t"] for r in recs) + 600
+    w = FadeCostWatcher(CFG, _EngN(tmp_path))
+    w.prime(now)
+    ref = _book(tmp_path / "x" if (tmp_path / "x").mkdir() is None else None, recs)
+    assert set(w.book.tr) == set(ref.book.tr) and all(t["src"] == "history" for t in w.book.tr.values())
+    lines = (tmp_path / "fadebook.jsonl").read_text().splitlines()
+    w2 = FadeCostWatcher(CFG, _EngN(tmp_path))                             # a restart: the ledger exists now
+    w2.prime(now)
+    assert (tmp_path / "fadebook.jsonl").read_text().splitlines() == lines
+    assert set(w2.book.tr) == set(w.book.tr) and w2.new_records(now) == []
+    import time as _t
+    oldest = min(Path(p).name for p in w2.pos)                            # a restart replays 6 days, not all history
+    assert oldest >= f"followups-{_t.strftime('%Y%m%d', _t.gmtime(now - 6 * 86400))}.jsonl"
+    assert min(Path(p).name for p in w.pos) < oldest                       # (the first start did read further back)
+
+
+def test_prime_books_an_exit_missed_while_down(tmp_path):
+    recs = _records(n=1)
+    _write_followups(tmp_path, [r for r in recs if r["kind"] != "FU_24H"])
+    w = FadeCostWatcher(CFG, _EngN(tmp_path))
+    w.prime(T0 + 6 * 3600)
+    assert [t["id"] for t in w.book.open_trades()] == ["a0"]
+    _write_followups(tmp_path, recs)                                       # the exit was written while the service was down
+    w2 = FadeCostWatcher(CFG, _EngN(tmp_path))
+    w2.prime(T0 + 30 * 3600)
+    assert [t["id"] for t in w2.book.closed()] == ["a0"] and w2.book.open_trades() == []
+
+
+def test_a_start_with_other_code_ends_f1_and_stops_signals(tmp_path, monkeypatch):
+    import movewatch.watchers as mw
+
+    async def fake(url, timeout=10.0):
+        return {"b": [["0.999", "1e6"]], "a": [["1.001", "1e6"]]} if "@depth20" in url else {"p": "1", "i": "1", "r": "0", "T": 1}
+    monkeypatch.setattr(mw, "_first", fake)
+    eng = _EngN(tmp_path)
+    w = FadeCostWatcher(CFG, eng)
+    recs = _records(n=3)                                                   # a0 enters at +4 h; the code changes at +5 h
+    t_end = T0 + 5 * 3600
     for r in recs:
-        if r["kind"] == "FU_OPEN":
-            w.on_open(r)
-    assert w.signals is False and not any(w.entry_ok(r) for r in recs if r["kind"] == "FU_4H")
+        if r["kind"] != "FU_START" and r["t"] > t_end:
+            r["run"] = "B"
+    recs.append({"kind": "FU_START", "t": t_end, "code_sha": "CHANGED", "dry_run": False, "run": "B"})
+    for r in sorted(recs, key=lambda r: r["t"]):
+        asyncio.run(w.handle(None, r))
+    kinds = [x[1]["kind"] for x in eng.notifier.sent]
+    assert w.ended_at == t_end and kinds.count("FADE_ENDED") == 1 and kinds.count("FADE_SHORT") == 1
+    assert set(w.book.tr) == {"a0"} and w.book.tr["a0"]["void"]            # its exit came from the new code: void, as in the test
 
 
-def test_handle_sends_short_then_cover_and_never_a_result(tmp_path, monkeypatch):
+def test_handle_sends_short_then_cover_with_the_paper_result(tmp_path, monkeypatch):
     import movewatch.watchers as mw
 
     async def fake(url, timeout=10.0):
@@ -352,29 +459,82 @@ def test_handle_sends_short_then_cover_and_never_a_result(tmp_path, monkeypatch)
         return {"p": "1.0", "i": "1.0", "r": "-0.0015", "T": 1791619200000}
     monkeypatch.setattr(mw, "_first", fake)
     eng = _EngN(tmp_path)
-    w = FadeCostWatcher({}, eng)
+    w = FadeCostWatcher(CFG, eng)
     recs = _records(n=2, planted=True)
     recs[3 + 2]["vol_ratio_binance_usdm"] = QUIET_RATIO                   # a1's FU_4H: not heavy
     for r in sorted(recs, key=lambda r: r["t"]):
-        if r["kind"] != "FU_START":
-            asyncio.run(w.handle(None, r))
+        asyncio.run(w.handle(None, r))
     kinds = [rec["kind"] for _, rec in eng.notifier.sent]
     assert kinds == ["FADE_SHORT", "FADE_COVER"] and eng.notifier.sent[0][1]["id"] == "a0"
     short, cover = eng.notifier.sent[0][0], eng.notifier.sent[1][0]
     assert "SHORT C0USDT perp now" in short and "NOT validated" in short and "short pays" in short
     assert mw._hhmm(int((T0 + 86400) // 60)) in short                       # cover time = alert + 24 h
-    assert "COVER" in cover and "Result not shown" in cover and "$" not in cover and "%" not in cover
+    tr = w.book.tr["a0"]
+    assert f"= {100 * PaperBook.gross(tr):+.2f}% gross" in cover and "cost −0.40%" in cover and "Paper book: 1 closed" in cover
+    assert eng.notifier.sent[1][1]["gross"] == pytest.approx(PaperBook.gross(tr))
     logged = [json.loads(x) for f in tmp_path.glob("fadecost-*.jsonl") for x in f.read_text().splitlines()]
     assert len(logged) == 4 and sum(1 for r in logged if r.get("signal")) == 2   # cost for every leg, signal on a0 only
 
 
-def test_prime_rebuilds_history_and_open_shorts_after_a_restart(tmp_path):
-    now = T0 + 5 * 3600
-    day = __import__("time").strftime("%Y%m%d", __import__("time").gmtime(now))
-    opens = [r for r in _records(n=3, asset=lambda i: "X") if r["kind"] == "FU_OPEN"]      # X three times in 12 h
-    (tmp_path / f"followups-{day}.jsonl").write_text("".join(json.dumps(r) + "\n" for r in opens))
-    (tmp_path / f"fadecost-{day}.jsonl").write_text(json.dumps({"leg": "entry", "id": "a0", "signal": True, "asset": "X", "t_rec": T0}) + "\n")
-    w = FadeCostWatcher({}, _EngN(tmp_path))
-    w.prime(now)
-    assert w.excluded == {"a1", "a2"} and set(w.open_sig) == {"a0"}
-    assert w.new_records(now) == []                                       # the tail continues after the primed lines
+def test_summary_lists_open_shorts_with_their_cover_time(tmp_path):
+    w = _book(tmp_path, [r for r in _records(n=2) if not (r["kind"] == "FU_24H" and r["id"] == "a1")])
+    w.marks["a1"] = (T0 + 10 * 3600, w.book.tr["a1"]["px4"] * 0.97)
+    txt = w.summary_text(T0 + 10 * 3600)
+    assert "Paper book: 1 closed" in txt and "open: C1 short" in txt and "now +3.0% gross" in txt
+    assert __import__("movewatch.watchers", fromlist=["_hhmm"])._hhmm(int((w.book.tr["a1"]["alert_t"] + 86400) // 60)) in txt
+
+
+class _Resp:
+    def __init__(self, status, data=b""):
+        self.status, self.data = status, data
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, *a):
+        return False
+
+    def raise_for_status(self):
+        if self.status >= 400:
+            raise RuntimeError(self.status)
+
+    async def read(self):
+        return self.data
+
+
+class _Session:
+    def __init__(self, files):
+        self.files, self.calls = files, []
+
+    def head(self, url, **k):
+        self.calls.append(("HEAD", url))
+        return _Resp(200 if any(m in url for m in self.files.get("published", [])) else 404)
+
+    def get(self, url, **k):
+        self.calls.append(("GET", url))
+        for key, data in self.files.items():
+            if key != "published" and key in url:
+                return _Resp(200, data)
+        return _Resp(404)
+
+
+def _zip(csv_text):
+    import io, zipfile
+    b = io.BytesIO()
+    with zipfile.ZipFile(b, "w") as z:
+        z.writestr("x.csv", csv_text)
+    return b.getvalue()
+
+
+def test_exact_funding_replaces_the_estimate_once_vision_publishes(tmp_path):
+    w = _book(tmp_path, _records(n=2), cfg=dict(CFG, funding_cache=str(tmp_path / "fund")))
+    a0, a1 = w.book.tr["a0"], w.book.tr["a1"]
+    ms = lambda t: int(t * 1000)  # noqa: E731
+    csv0 = ("calc_time,funding_interval_hours,last_funding_rate\n"
+            f"{ms(a0['t4'])},8,0.5\n{ms(a0['t4']) + 1},8,-0.003\n{ms(a0['t24'])},8,-0.004\n{ms(a0['t24']) + 1},8,0.5\n")
+    sess = _Session({"published": ["2026-09"], "C0USDT": _zip(csv0)})       # C1's archive is missing (404)
+    assert asyncio.run(w.exact_funding(sess)) == 2
+    assert w.book.funding(a0) == (pytest.approx(-0.007), "exact") and a1["fund_exact"] is None and a1["fund_exact_done"]
+    assert asyncio.run(w.exact_funding(sess)) == 0                          # booked once
+    w2 = _book(tmp_path / "y" if (tmp_path / "y").mkdir() is None else None, _records(n=1), cfg=dict(CFG, funding_cache=str(tmp_path / "f2")))
+    assert asyncio.run(w2.exact_funding(_Session({"published": []}))) == 0  # month not published: wait, keep the estimate
