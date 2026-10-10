@@ -41,51 +41,55 @@ def _records(n=500, planted=True, seed=1, run="A", asset=lambda i: f"C{i}", rati
     return recs
 
 
-def _rows(recs):
+def _rows(recs, published=lambda m: True):
     runs, start, end = fe.admission(recs, "FROZEN")
-    return ff.rows(recs, runs, start, end)
-
-
-class _Resp:
-    def __init__(self, data):
-        self.data = data
-
-    def raise_for_status(self):
-        pass
-
-    def json(self):
-        return self.data
+    return ff.rows(recs, runs, start, end, published=published)
 
 
 def _funding(rate):
-    """Fake GET: one settlement of `rate` inside every hold, one outside it."""
-    def get(url, params, timeout):
-        t0, t1 = params["startTime"], params["endTime"]
-        return _Resp([{"fundingTime": (t0 + t1) // 2, "fundingRate": str(rate)}, {"fundingTime": t1 + 3_600_000, "fundingRate": "0.5"}])
-    return get
+    return lambda symbol, t0, t1: rate
 
 
 # ---------------------------------------------------------------- evaluator
 def test_detects_a_planted_short_edge_and_not_noise():
-    s1 = ff.final_stats(ff.trades(_rows(_records(planted=True)), get=_funding(0.0)))
-    s0 = ff.final_stats(ff.trades(_rows(_records(planted=False)), get=_funding(0.0)))
+    s1 = ff.final_stats(ff.trades(_rows(_records(planted=True)), fund=_funding(0.0)))
+    s0 = ff.final_stats(ff.trades(_rows(_records(planted=False)), fund=_funding(0.0)))
     assert s1["H3_net"]["pass"] is True                     # positive control
     assert s0["H3_net"]["pass"] is False                    # known-null input
     assert s1["H3_net"]["mean"] == pytest.approx(s1["gross"]["mean"] - ff.COST, abs=1e-12)
 
 
-def test_funding_is_charged_to_the_short_and_only_inside_the_hold():
+def test_funding_is_charged_to_the_short():
     d = _rows(_records(n=50, planted=False))
-    x0, x1 = ff.trades(d, get=_funding(0.0)), ff.trades(d, get=_funding(-0.01))
-    assert np.allclose(x1["funding"], -0.01)                 # the 0.5 settlement after the exit is not counted
+    x0, x1 = ff.trades(d, fund=_funding(0.0)), ff.trades(d, fund=_funding(-0.01))
     assert np.allclose(x1["net"], x0["net"] - 0.01)          # negative funding: the short pays
 
 
-def test_unavailable_funding_is_a_status_not_a_zero():
-    def broken(url, params, timeout):
-        raise RuntimeError("down")
-    x = ff.trades(_rows(_records(n=20)), get=broken)
+def test_archive_funding_sums_only_settlements_inside_the_hold(tmp_path, monkeypatch):
+    monkeypatch.setattr(ff, "ROOT", tmp_path)
+    d = tmp_path / "data" / "forward_fade" / "funding"
+    d.mkdir(parents=True)
+    t0, t1 = T0, T0 + 20 * 3600                                   # 2026-09-21 12:13 -> 09-22 08:13
+    ms = lambda t: int(t * 1000)  # noqa: E731
+    (d / "XUSDT_2026-09.csv").write_text("calc_time,funding_interval_hours,last_funding_rate\n"
+                                         f"{ms(t0)},8,0.5\n{ms(t0) + 1},8,-0.004\n{ms(t1)},8,-0.006\n{ms(t1) + 1},8,0.5\n")
+    assert ff.funding_sum("XUSDT", t0, t1, get=lambda *a, **k: pytest.fail("cached")) == pytest.approx(-0.010)
+
+
+def test_missing_archive_funding_is_a_status_not_a_zero(tmp_path, monkeypatch):
+    monkeypatch.setattr(ff, "ROOT", tmp_path)
+
+    class R:
+        status_code = 404
+    assert math.isnan(ff.funding_sum("XUSDT", T0, T0 + 72000, get=lambda *a, **k: R()))
+    x = ff.trades(_rows(_records(n=20)), fund=_funding(float("nan")))
     assert (x["status"] == "NO_FUNDING").all() and x["net"].isna().all()
+
+
+def test_unpublished_funding_month_is_pending_not_complete():
+    d = _rows(_records(n=20, seed=5), published=lambda m: False)
+    assert (d["status"] == "FUNDING_PENDING").all()
+    assert ff.months(T0, T0 + 20 * 86400) == ["2026-09", "2026-10"]
 
 
 def test_every_exclusion_is_a_status():
@@ -136,6 +140,7 @@ def test_meme_rule_matches_the_research_base():
 
 def _patch(monkeypatch, tmp_path, recs):
     monkeypatch.setattr(ff, "ROOT", tmp_path)
+    monkeypatch.setattr(ff, "published_month", lambda m: True)
     monkeypatch.setattr(ff, "declaration_commit", lambda: "d3c1")
     monkeypatch.setattr(fe, "freeze_commit", lambda root=None: "c0ffee")
     monkeypatch.setattr(fe, "fingerprint_at", lambda commit, root=None: "FROZEN")
@@ -177,6 +182,7 @@ def test_book_cost_walks_the_book():
     assert c["buy_bps"]["1000"] == pytest.approx(1e4 * (1000 / (1000 / 101) - 100.5) / 100.5)
     assert c["sell_bps"]["5000"] is None and c["buy_bps"]["5000"] is None          # the book holds < $2.1k a side
     assert c["bid_usd_1.0"] == pytest.approx(1000) and c["bid_usd_2.0"] == pytest.approx(1990)
+    assert c["levels"] == 2 and c["bid_usd_book"] == pytest.approx(1990) and c["ask_usd_book"] == pytest.approx(2030)
 
 
 def test_book_cost_refuses_empty_or_crossed_books():
@@ -221,22 +227,29 @@ def test_watcher_wants_binance_pump_entries_and_exits_only():
     assert w.wanted(dict(base, kind="FU_4H", px_key="okx_swap:X-USDT-SWAP")) is None
 
 
-def test_watcher_records_an_error_instead_of_raising(tmp_path):
-    w = FadeCostWatcher({}, _Eng(tmp_path))
+def test_watcher_records_an_error_instead_of_raising(tmp_path, monkeypatch):
+    import movewatch.watchers as mw
 
-    async def run():
-        import movewatch.watchers as mw
-        orig = mw.http_json
+    async def boom(*a, **k):
+        raise RuntimeError("HTTP 451")
+    monkeypatch.setattr(mw, "_first", boom)
+    r = asyncio.run(FadeCostWatcher({}, _Eng(tmp_path)).snapshot(None, {"symbol": "XUSDT", "leg": "entry"}))
+    assert "error" in r and "HTTP 451" in r["error"] and "spread_bps" not in r
 
-        async def boom(*a, **k):
-            raise RuntimeError("HTTP 400")
-        mw.http_json = boom
-        try:
-            return await w.snapshot(None, {"symbol": "XUSDT", "leg": "entry"})
-        finally:
-            mw.http_json = orig
-    r = asyncio.run(run())
-    assert "error" in r and "HTTP 400" in r["error"] and "spread_bps" not in r
+
+def test_watcher_snapshot_reads_depth_and_mark_streams(tmp_path, monkeypatch):
+    import movewatch.watchers as mw
+    seen = []
+
+    async def fake(url, timeout=10.0):
+        seen.append(url)
+        if "@depth20" in url:
+            return {"e": "depthUpdate", "b": [["100", "10"], ["99", "10"]], "a": [["101", "10"], ["102", "10"]]}
+        return {"e": "markPriceUpdate", "p": "100.4", "i": "100.3", "r": "-0.0021", "T": 1791619200000}
+    monkeypatch.setattr(mw, "_first", fake)
+    r = asyncio.run(FadeCostWatcher({"notionals_usd": [1000]}, _Eng(tmp_path)).snapshot(None, {"symbol": "XUSDT", "leg": "entry"}))
+    assert seen == [mw.WS_PUBLIC + "xusdt@depth20@100ms", mw.WS_MARKET + "xusdt@markPrice@1s"]
+    assert r["sell_bps"]["1000"] == pytest.approx(1e4 * 0.5 / 100.5) and r["funding_rate"] == -0.0021 and "error" not in r
 
 
 def test_cost_summary_prints_no_price_and_labels_exits_by_their_entry():
@@ -255,3 +268,16 @@ def test_cost_summary_prints_no_price_and_labels_exits_by_their_entry():
     assert s["entry_heavy"]["spread_bps_median"] == 10 and s["exit_heavy"]["spread_bps_median"] == 20
     assert s["exit_all"]["1000_usd"]["median_bps"] == 15 and s["exit_all"]["100000_usd"]["book_too_thin"] == 2
     assert "123." not in json.dumps(s)                                   # no price of any kind leaks
+
+
+def test_a_hold_across_months_with_one_archive_missing_is_nan_not_partial(tmp_path, monkeypatch):
+    monkeypatch.setattr(ff, "ROOT", tmp_path)
+    d = tmp_path / "data" / "forward_fade" / "funding"
+    d.mkdir(parents=True)
+    t0 = 1_790_805_600.0                                          # 2026-09-30 22:00 -> 10-01 18:00
+    (d / "XUSDT_2026-09.csv").write_text(f"calc_time,funding_interval_hours,last_funding_rate\n{int(t0 * 1000) + 1},8,-0.004\n")
+
+    class R:
+        status_code = 404
+    assert ff.months(t0, t0 + 72000) == ["2026-09", "2026-10"]
+    assert math.isnan(ff.funding_sum("XUSDT", t0, t0 + 72000, get=lambda *a, **k: R()))

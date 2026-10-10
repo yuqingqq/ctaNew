@@ -5,6 +5,9 @@ status: live            # not-started / active / blocked / live / stopped
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 
 updated: >-
+  2026-10-10 01:23Z: F1 v2 supersedes v1 before any read: Binance futures REST (fapi) answers HTTP 451 from this box, so funding now
+  comes from Vision monthly archives (new status FUNDING_PENDING until the month is published) and cost snapshots from websockets
+  (20-level depth on /public, markPrice on /market). Identity 2375f81d unchanged; 118 tests pass.
   2026-10-10 01:17Z: forward test F1 declared (docs/FORWARD_FADE_F1.md, user request): short non-meme heavy Binance pumps +4h->+24h, flat 0.40%
   cost + exchange funding, pass = mean > 0 with week-CI > 0, read once at >= 400 rows & >= 12 weeks (~Jun 2027; power 43% at the 2026 effect).
   Reads v2's frozen records (identity 2375f81d unchanged); FadeCostWatcher (watchers.py) snapshots order books, live from the next start.
@@ -125,7 +128,7 @@ tasks:
                                     difference (pre-alert 9/30 vs 7/30, p 0.77; ~half have no findable catalyst). Listings after the
                                     alert 2.8% vs 0.3% of runners/faders (rare). Consistent small tilts: no Binance spot market,
                                     younger, perp premium > 0 + taker buying at +4h (runner rate ~15% vs ~9%). Nothing separates well."}
-  M28_forward_fade_F1:      {status: running, artifact: "docs/FORWARD_FADE_F1.md; research/forward_fade.py; tests/test_forward_fade.py;
+  M28_forward_fade_F1:      {status: running, artifact: "docs/FORWARD_FADE_F1_v2.md (supersedes v1 unread); research/forward_fade.py; tests/test_forward_fade.py;
                                     research/fade_forward_design.py; movewatch/watchers.py FadeCostWatcher",
                              note: "declared 2026-10-10 01:17Z over v2's whole window (no outcome read). Counts only until >= 400 complete rows
                                     and >= 12 ISO weeks; --final once. --cost prints cost fields (no prices) any time. Ends with v2's identity."}

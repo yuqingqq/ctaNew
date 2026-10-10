@@ -1,21 +1,24 @@
-"""Forward test F1: short heavy-volume pumps +4 h -> +24 h (docs/FORWARD_FADE_F1.md).
+"""Forward test F1: short heavy-volume pumps +4 h -> +24 h (docs/FORWARD_FADE_F1_v2.md, superseding v1).
 
   python3 -m research.forward_fade            # counts + statuses only (allowed any time)
   python3 -m research.forward_fade --final    # the one look; refuses below the minimum or a second time
-  python3 -m research.forward_fade --cost     # counts of the order-book cost snapshots (descriptive, any time)
+  python3 -m research.forward_fade --cost     # cost fields of the order-book snapshots, no prices (any time)
 
 Reads the records of the live recorder frozen for forward test v2 (data/alerts/followups-*.jsonl)
 and admits only runs of that frozen code, exactly as research/forward_eval.py does. Funding over
-each hold is fetched at the read from Binance's public funding-rate history. Every pump that does
-not count carries its first failing status.
+each hold comes from Binance Vision's monthly fundingRate archives (the research source; Binance's
+futures REST API answers HTTP 451 from this box); a row whose hold touches a month not yet
+published is FUNDING_PENDING. Every pump that does not count carries its first failing status.
 """
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import math
 import sys
 import time
+import zipfile
 from pathlib import Path
 
 import numpy as np
@@ -26,7 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 import research.forward_eval as fe  # noqa: E402
 
-DECLARATION = "docs/FORWARD_FADE_F1.md"
+DECLARATION = "docs/FORWARD_FADE_F1_v2.md"
 _A2 = next(c for c in json.loads((ROOT / "docs" / "SIGNAL_SEARCH_FREEZE.json").read_text())["cells"] if c["id"] == "A2")
 HEAVY = float(_A2["cuts"][1])                      # log10 volume ratio; 0.35259 -> 2.2525x
 MEME = set(json.loads((ROOT / "docs" / "coingecko_meme_rank1500_2026-10-09.json").read_text())["symbols"])
@@ -37,7 +40,8 @@ LATE = {"FU_4H": 600, "FU_24H": 3600}
 DEDUP_S = 72 * 3600
 MIN = {"rows": 400, "weeks": 12}
 DRAWS, SEED = 4000, 20261010
-FAPI = "https://fapi.binance.com/fapi/v1/fundingRate"
+VISION = "https://data.binance.vision/data/futures/um/monthly/fundingRate/{s}/{s}-fundingRate-{m}.zip"
+_PUBLISHED: dict[str, bool] = {}
 NAN = float("nan")
 
 
@@ -77,7 +81,27 @@ def repeats_72h(opens: dict[str, dict], keep: set[str]) -> set[str]:
     return out
 
 
-def rows(recs: list[dict], runs: set, start: float | None, end: float | None) -> pd.DataFrame:
+def months(t0: float, t1: float) -> list[str]:
+    a, b = (pd.Timestamp(t, unit="s").to_period("M") for t in (t0, t1))
+    return [str(p) for p in pd.period_range(a, b, freq="M")]
+
+
+def published_month(month: str, head=requests.head) -> bool:
+    """A month's funding archives are out once BTCUSDT's is (Binance publishes them together).
+    Checks existence only; reads no rate."""
+    if month not in _PUBLISHED:
+        try:
+            ok = head(VISION.format(s="BTCUSDT", m=month), timeout=20, allow_redirects=True).status_code == 200
+        except Exception:  # noqa: BLE001 -- unreachable reads as not yet published
+            return False
+        if not ok:
+            return False                              # re-checked next time
+        _PUBLISHED[month] = True
+    return _PUBLISHED[month]
+
+
+def rows(recs: list[dict], runs: set, start: float | None, end: float | None, published=None) -> pd.DataFrame:
+    published = published or published_month
     opens, f4, f24 = (fe.first_by_id(recs, k) for k in ("FU_OPEN", "FU_4H", "FU_24H"))
     in_test = {i for i, o in opens.items() if o.get("run") in runs and start is not None and o["t"] >= start
                and (end is None or o["t"] < end)}
@@ -94,10 +118,12 @@ def rows(recs: list[dict], runs: set, start: float | None, end: float | None) ->
         vbn = a4.get("vol_ratio_binance_usdm")
         gaps = max(a4.get("gap_min_before", math.inf), a4.get("gap_min_after", math.inf))
         vol_ok = fe._fin(vbn) and vbn > 0 and gaps <= fe.GAP_TOL_MIN
+        pend = s24 == "OK" and s4 == "OK" and not all(published(m) for m in months(a4["t"], a24["t"]))
         st = fe._first_fail([("OTHER_RUN", i not in in_test), ("DUPLICATE", i in dup), ("REPEAT_72H", i in rep),
                              ("NOT_BINANCE_USDM", not ref.startswith("binance_usdm:")), ("MEME", base(o["asset"]) in MEME),
                              (f"4H_{s4}", s4 != "OK"), ("VOL_GAP", not vol_ok),
-                             ("NOT_HEAVY", vol_ok and math.log10(vbn) <= HEAVY), (f"24H_{s24}", s24 != "OK")])
+                             ("NOT_HEAVY", vol_ok and math.log10(vbn) <= HEAVY), (f"24H_{s24}", s24 != "OK"),
+                             ("FUNDING_PENDING", pend)])
         out.append({"id": i, "asset": o["asset"], "symbol": ref.split(":", 1)[-1], "alert_ts": o["t"], "status": st,
                     "t4": a4.get("t"), "t24": a24.get("t"), "px4": a4.get("px"), "px24": a24.get("px"),
                     "lvr_bn": math.log10(vbn) if vol_ok else NAN})
@@ -107,21 +133,37 @@ def rows(recs: list[dict], runs: set, start: float | None, end: float | None) ->
     return d
 
 
-def funding_sum(symbol: str, t0: float, t1: float, get=requests.get) -> float:
-    """Sum of settled funding rates with fundingTime in (t0, t1] (seconds); NaN when unavailable."""
-    try:
-        r = get(FAPI, params={"symbol": symbol, "startTime": int(t0 * 1000) + 1, "endTime": int(t1 * 1000), "limit": 1000},
-                timeout=20)
+def _month_csv(symbol: str, month: str, get=requests.get) -> pd.DataFrame | None:
+    p = ROOT / "data" / "forward_fade" / "funding" / f"{symbol}_{month}.csv"
+    if not p.exists():
+        r = get(VISION.format(s=symbol, m=month), timeout=30)
+        if r.status_code == 404:
+            return None
         r.raise_for_status()
-        return float(sum(float(x["fundingRate"]) for x in r.json() if t0 * 1000 < x["fundingTime"] <= t1 * 1000))
+        p.parent.mkdir(parents=True, exist_ok=True)
+        z = zipfile.ZipFile(io.BytesIO(r.content))
+        p.write_bytes(z.open(z.namelist()[0]).read())
+    return pd.read_csv(p)
+
+
+def funding_sum(symbol: str, t0: float, t1: float, get=requests.get) -> float:
+    """Sum of settled funding rates (Vision `last_funding_rate`) with calc_time in (t0, t1] (seconds),
+    as research/btc_hedge.Funding.total; NaN when an archive is missing or unreadable."""
+    try:
+        parts = [_month_csv(symbol, m, get) for m in months(t0, t1)]
+        if any(p is None for p in parts):
+            return NAN
+        df = pd.concat(parts)
+        sel = (df["calc_time"] > t0 * 1000) & (df["calc_time"] <= t1 * 1000)
+        return float(df.loc[sel, "last_funding_rate"].sum())
     except Exception:  # noqa: BLE001 -- unavailable funding is a status, never a zero
         return NAN
 
 
-def trades(d: pd.DataFrame, get=requests.get) -> pd.DataFrame:
+def trades(d: pd.DataFrame, fund=funding_sum) -> pd.DataFrame:
     x = d[d["status"] == "OK"].copy()
     x["gross"] = -(x["px24"] / x["px4"] - 1.0)
-    x["funding"] = [funding_sum(s, a, b, get) for s, a, b in zip(x["symbol"], x["t4"], x["t24"])]
+    x["funding"] = [fund(s, a, b) for s, a, b in zip(x["symbol"], x["t4"], x["t24"])]
     x.loc[x["funding"].isna(), "status"] = "NO_FUNDING"
     x["net"] = x["gross"] - COST + x["funding"]
     x["net_stress"] = x["gross"] - COST_STRESS + x["funding"]

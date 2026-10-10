@@ -74,7 +74,6 @@ watchers:
   fade_cost:                    # forward test F1 (docs/FORWARD_FADE_F1.md): order book + funding at each
     enabled: true               # Binance-priced pump's +4 h / +24 h record; silent, descriptive
     poll_s: 10
-    depth_limit: 500
     notionals_usd: [1000, 10000, 50000, 100000]
     heavy_ratio: 2.2525         # label only (A2 heavy cut 10^0.35259); the evaluator applies its own
 

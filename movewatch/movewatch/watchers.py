@@ -339,7 +339,15 @@ class CrashWatcher:
         self.engine.notifier.emit(text, {"kind": "CRASH_FOLLOWUP", "minute": p["minute"], "gross": g, "coins": len(rs)})
 
 
-FAPI = "https://fapi.binance.com/fapi/v1"
+WS_PUBLIC = "wss://fstream.binance.com/public/stream?streams="    # partial depth (fapi REST answers 451 here)
+WS_MARKET = "wss://fstream.binance.com/market/stream?streams="    # markPrice: mark, index, funding rate
+
+
+async def _first(url: str, timeout: float = 10.0) -> dict:
+    """The payload of the first message on a stream."""
+    async with websockets.connect(url, open_timeout=timeout) as ws:
+        m = json.loads(await asyncio.wait_for(ws.recv(), timeout=timeout))
+    return m.get("data", m)
 
 
 def book_cost(bids: list, asks: list, notionals: list[float]) -> dict:
@@ -362,7 +370,8 @@ def book_cost(bids: list, asks: list, notionals: list[float]) -> dict:
                 return got_usd / got_qty
         return None
 
-    out = {"mid": mid, "spread_bps": 1e4 * (a[0][0] - b[0][0]) / mid, "sell_bps": {}, "buy_bps": {}}
+    out = {"mid": mid, "spread_bps": 1e4 * (a[0][0] - b[0][0]) / mid, "sell_bps": {}, "buy_bps": {},
+           "levels": min(len(b), len(a)), "bid_usd_book": sum(p * q for p, q in b), "ask_usd_book": sum(p * q for p, q in a)}
     for n in notionals:
         vs, vb = walk(b, n), walk(a, n)
         out["sell_bps"][str(int(n))] = None if vs is None else 1e4 * (mid - vs) / mid
@@ -375,14 +384,14 @@ def book_cost(bids: list, asks: list, notionals: list[float]) -> dict:
 
 class FadeCostWatcher:
     """Tails the engine's follow-up log. For every pump whose FU_4H (entry) or FU_24H (exit) record
-    was priced on a Binance USDM perp, it fetches that perp's order book and premium index right
-    away and writes one FADE_COST record to data/alerts/fadecost-YYYYMMDD.jsonl. It starts at the
-    end of the current files, so a restart never snapshots old records."""
+    was priced on a Binance USDM perp, it takes that perp's first 20-level partial-depth and
+    markPrice websocket messages right away and writes one FADE_COST record to
+    data/alerts/fadecost-YYYYMMDD.jsonl. It starts at the end of the current files, so a restart
+    never snapshots old records."""
 
     def __init__(self, cfg: dict, engine):
         self.cfg, self.engine = cfg or {}, engine
         self.poll = float(self.cfg.get("poll_s", 10))
-        self.limit = int(self.cfg.get("depth_limit", 500))
         self.notionals = [float(x) for x in self.cfg.get("notionals_usd", [1000, 10000, 50000, 100000])]
         self.heavy_ratio = float(self.cfg.get("heavy_ratio", 2.2525))
         self.dir = Path(getattr(engine, "fu_dir", "data/alerts"))
@@ -427,11 +436,11 @@ class FadeCostWatcher:
 
     async def snapshot(self, session, out: dict) -> dict:
         try:
-            book = await http_json(session, "GET", f"{FAPI}/depth", params={"symbol": out["symbol"], "limit": self.limit})
-            out.update(t=time.time(), **book_cost(book.get("bids", []), book.get("asks", []), self.notionals))
-            pi = await http_json(session, "GET", f"{FAPI}/premiumIndex", params={"symbol": out["symbol"]})
-            out.update(funding_rate=float(pi["lastFundingRate"]), next_funding_ms=int(pi["nextFundingTime"]),
-                       mark=float(pi["markPrice"]), index=float(pi["indexPrice"]))
+            sym = out["symbol"].lower()
+            book = await _first(f"{WS_PUBLIC}{sym}@depth20@100ms")
+            out.update(t=time.time(), **book_cost(book.get("b", []), book.get("a", []), self.notionals))
+            mp = await _first(f"{WS_MARKET}{sym}@markPrice@1s")
+            out.update(funding_rate=float(mp["r"]), next_funding_ms=int(mp["T"]), mark=float(mp["p"]), index=float(mp["i"]))
         except Exception as e:  # noqa: BLE001 -- a failed snapshot is a record with an error, never fatal
             out.update(t=out.get("t", time.time()), error=str(e)[:200])
         return out
