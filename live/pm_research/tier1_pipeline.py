@@ -42,6 +42,8 @@ import hashlib
 import json
 import math
 import os
+import re
+import sys
 import tempfile
 from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
@@ -79,7 +81,28 @@ DEFAULT_OUTPUT_ROOT = PM / "tier1"
 #: five days are expected to be content-identical -- a 0.0/1.0 print would have
 #: crashed their build too, and none crashed -- but the guard is on CODE BYTES,
 #: not on content, and that is the correct thing for it to bind.
-DISTILLER_VERSION = "tier1_v4_r13"
+#: r14 (2026-10-21): `load_market_metadata` skips the structural placeholder
+#: `{}` that the USER-authorized 10-18 in-place repair wrote over the one
+#: markets.jsonl line the 10-16 disk fill truncated (a same-length overwrite,
+#: so no byte outside the fragment moved). This loader refused it as "market
+#: row has no slug" and stopped the measurement and evaluation lanes from
+#: 10-17. Only an exactly empty object is skipped, and the count goes to
+#: stderr; a non-empty row without a slug still raises. No distilled row can
+#: change: a placeholder carries no market, and every coin's market for that
+#: window is present elsewhere in the ledger. Same root cause, second ledger:
+#: `CollectorLedger` keeps the record that the collector appended onto a cut
+#: collector_start write (prices/collector_gaps.jsonl lines 12690 and 12729,
+#: left unrepaired because the forward block pins that ledger's prefix) and
+#: skips the pid-less fragment, which no era or gap can read; see
+#: `_after_collector_fragment`. The address is versioned for the
+#: r13 reason: the next catch-up re-writes twap partitions of r13-built days
+#: (twap_prev/twap_next), which would raise merge-never-overwrite at a fixed
+#: address.
+#: Consequence: completed batches stay completed (their receipts carry no
+#: distiller version), so only days distilled from now on are written under
+#: r14, and a consumer that reads an r13-built day at the current version
+#: (Tier-2 on 09-16, its next day) finds no r14 partition there.
+DISTILLER_VERSION = "tier1_v4_r14"
 PRICE_SCALE = 1_000_000
 ROW_GROUP_SIZE = 65_536
 MAX_NS = (1 << 63) - 1
@@ -339,6 +362,44 @@ class GapInterval:
         return (self.end_ns - self.start_ns) / 1e6
 
 
+def _after_collector_fragment(line: bytes) -> dict[str, Any] | None:
+    """The record after a disk-fill write fragment on the same line (r14), or None.
+
+    The 10-16 disk fill cut two collector_start writes of a restart loop, and
+    the next record was appended onto each fragment. Accepted only when the
+    trailing record parses, the fragment's cut `event` can only be
+    collector_start/collector_stop, it carries no `pid`, and its version equals
+    the trailing record's. `_build_eras` skips pid-less rows and `_build_gaps`
+    reads gap events only, so skipping such a fragment changes neither.
+    Anything else stays a malformed line.
+    """
+    cut = line.rfind(b'{"recv_ns":')
+    if cut <= 0:
+        return None
+    try:
+        row = json.loads(line[cut:])
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(row, dict):
+        return None
+    fragment = line[:cut].decode("utf-8", "replace")
+    event = re.search(r'"event":"([a-z_]*)$', fragment)
+    version = re.search(r'"collector_version":"([^"]*)"', fragment)
+    if (
+        event is None
+        or len(event.group(1)) < len("collect")
+        or not any(
+            name.startswith(event.group(1))
+            for name in ("collector_start", "collector_stop")
+        )
+        or '"pid"' in fragment
+        or version is None
+        or version.group(1) != row.get("collector_version")
+    ):
+        return None
+    return row
+
+
 class CollectorLedger:
     """Byte-snapshotted collector versions and cause-aware gap intervals."""
 
@@ -348,18 +409,28 @@ class CollectorLedger:
         self.snapshot = snapshot_file(path, raw=raw)
         self.subject_field = subject_field
         self.events: list[dict[str, Any]] = []
+        self.fragment_lines: list[int] = []
         for line_number, line in enumerate(raw.splitlines(), 1):
             if not line.strip():
                 continue
             try:
                 row = json.loads(line)
             except json.JSONDecodeError as exc:
-                raise ValueError(
-                    f"malformed ledger JSON {path}:{line_number}"
-                ) from exc
+                row = _after_collector_fragment(line)
+                if row is None:
+                    raise ValueError(
+                        f"malformed ledger JSON {path}:{line_number}"
+                    ) from exc
+                self.fragment_lines.append(line_number)
             if not isinstance(row, dict):
                 raise ValueError(f"non-object ledger row {path}:{line_number}")
             self.events.append(row)
+        if self.fragment_lines:
+            print(
+                f"LEDGER_FRAGMENT_SKIPPED n={len(self.fragment_lines)} "
+                f"source={self.snapshot.path} lines={self.fragment_lines}",
+                file=sys.stderr,
+            )
         self.events.sort(key=lambda row: int(row.get("recv_ns", 0)))
         self.snapshot_ns = max(
             (int(row.get("recv_ns", 0)) for row in self.events), default=0
@@ -523,7 +594,11 @@ def load_market_metadata(
     market_snapshot = snapshot_file(markets_path, raw=markets_raw)
     resolution_snapshot = snapshot_file(resolutions_path, raw=resolutions_raw)
     markets: dict[str, MarketInfo] = {}
+    placeholders = 0
     for row in _jsonl_rows(markets_raw, str(markets_path)):
+        if row == {}:
+            placeholders += 1  # structural repair placeholder (r14): no market
+            continue
         slug = str(row.get("slug", ""))
         if not slug:
             raise ValueError("market row has no slug")
@@ -547,6 +622,11 @@ def load_market_metadata(
             down_asset=str(tokens[1]),
             market_known_ns=_plain_int(row["recv_ns"], "market.recv_ns"),
             source_file_id=market_snapshot.sha256[:16],
+        )
+    if placeholders:
+        print(
+            f"MARKET_PLACEHOLDER_SKIPPED n={placeholders} source={market_snapshot.path}",
+            file=sys.stderr,
         )
     resolutions: dict[str, ResolutionInfo] = {}
     for row in _jsonl_rows(resolutions_raw, str(resolutions_path)):
