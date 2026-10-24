@@ -259,9 +259,22 @@ def _raw_days() -> list[date]:
     return sorted(days)
 
 
+def _tier1_generation() -> str:
+    """R-942: Tier-1 commits a day under `generation=<pipeline>+<distiller>`, and
+    a marker from another generation does not commit it.  Imported from the
+    pipeline, never copied here, so the two cannot drift apart."""
+    import sys
+    if str(REPO) not in sys.path:
+        sys.path.insert(0, str(REPO))
+    from live.pm_research.daily_pipeline import RUN_GENERATION
+    return RUN_GENERATION
+
+
 def _committed_days(root: Path, lane: str | None) -> set[date]:
     """Days with a committed receipt. Tier-1 commits the batch last, so its
-    presence is the only honest signal that a day is done."""
+    presence is the only honest signal that a day is done -- in the CURRENT
+    generation (R-942): a pre-r14 marker kept a day "done" that was never
+    rebuilt, which is how the evaluation lane stalled on 09-16."""
     found: set[date] = set()
     base = root / ("batches" if lane else "runs")
     if not base.is_dir():
@@ -271,7 +284,10 @@ def _committed_days(root: Path, lane: str | None) -> set[date]:
             day = date.fromisoformat(day_dir.name.split("=", 1)[1])
         except ValueError:
             continue
-        pattern = f"lane={lane}/universe=*/batch.json" if lane else "universe=*/run.json"
+        pattern = (
+            f"lane={lane}/universe=*/generation={_tier1_generation()}/batch.json"
+            if lane else "universe=*/run.json"
+        )
         if any(day_dir.glob(pattern)):
             found.add(day)
     return found
@@ -308,8 +324,8 @@ def check_lane_progress() -> dict[str, Any]:
             # lane inherit the `measurement` lane's commit age and read OK while
             # it had never committed anything at all.
             pattern = (
-                f"day=*/lane={lane}/universe=*/batch.json" if lane
-                else "day=*/universe=*/run.json"
+                f"day=*/lane={lane}/universe=*/generation={_tier1_generation()}/batch.json"
+                if lane else "day=*/universe=*/run.json"
             )
             ages = [a for a in (_age(p) for p in base.glob(pattern)) if a is not None]
             if ages:
@@ -991,6 +1007,17 @@ def selftest() -> int:
             "r7_canary_amendment": {"reclassified_coin_days": ["2026-08-20/doge"],
                                     "drift_check": {"verdict": "WITHIN_LICENCE"}}}))
         expect("R7_PROVISIONAL/vacated-licence-cited", check_r7_provisional()["level"], WARN)
+        # LANE_PROGRESS (R-942): only a marker of the current generation commits
+        # a day.  The legacy marker written above sits at universe=x/batch.json.
+        expect("LANE_PROGRESS/legacy-marker-not-committed",
+               str(sorted(_committed_days(TIER1, "measurement"))), "[]")
+        gd = bd / f"generation={_tier1_generation()}"
+        gd.mkdir(parents=True, exist_ok=True)
+        (gd / "batch.json").write_text(json.dumps({"target_day": "2026-08-20", "lane": "measurement"}))
+        expect("LANE_PROGRESS/current-marker-committed",
+               str(sorted(_committed_days(TIER1, "measurement"))), str([date(2026, 8, 20)]))
+        expect("LANE_PROGRESS/other-lane-not-committed",
+               str(sorted(_committed_days(TIER1, "full"))), "[]")
         TIER1 = saved_t1
 
         # MONITOR_LIVENESS: a ledger whose last run is far older than two periods

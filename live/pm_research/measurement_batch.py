@@ -34,6 +34,7 @@ from live.pm_research.coverage_ledger import (
 )
 from live.pm_research.daily_pipeline import (
     PIPELINE_VERSION,
+    RUN_GENERATION,
     DailyPlan,
     ReadinessCheck,
     execute_plan,
@@ -50,6 +51,7 @@ from live.pm_research.replay_canary import (
 from live.pm_research.tier1_pipeline import (
     COIN_SYMBOL,
     DEFAULT_OUTPUT_ROOT,
+    DISTILLER_VERSION,
     MarketInfo,
     ResolutionInfo,
     load_market_metadata,
@@ -318,7 +320,7 @@ def _load_hashed_json(path: Path, *, hash_field: str) -> dict[str, Any]:
 def _run_path(root: Path, day: date, coin: str, lane: str) -> Path:
     """Resolve the run record for the CURRENT pipeline generation.
 
-    R-10: the address is now `pipeline=<version>/run=<hash>.json`, so the reader
+    R-10: the address is now `pipeline=<generation>/run=<hash>.json`, so the reader
     cannot construct it -- it globs the generation and expects exactly one
     content hash inside it.  Two hashes under one generation would mean the same
     code produced different content for the same key, which is a real
@@ -332,7 +334,7 @@ def _run_path(root: Path, day: date, coin: str, lane: str) -> Path:
         / f"day={day.isoformat()}"
         / f"coin={coin}"
         / f"lane={lane}"
-        / f"pipeline={PIPELINE_VERSION}"
+        / f"pipeline={RUN_GENERATION}"
     )
     matches = sorted(directory.glob("run=*.json"))
     if len(matches) > 1:
@@ -392,12 +394,21 @@ def _universe_id(coins: Sequence[str]) -> str:
 
 
 def _batch_path(root: Path, day: date, lane: str, coins: Sequence[str]) -> Path:
+    """The batch commit marker for the CURRENT run generation (R-942).
+
+    Before R-942 the marker sat at `universe=<id>/batch.json` and carried no
+    distiller version, so it kept a day "complete" across a distiller bump and
+    the catch-up never rebuilt it.  The marker now lives under the generation
+    that wrote it, and a marker from another generation is simply not this
+    one's: the old ones stay in place as provenance (R-13) and are never read.
+    """
     return (
         root
         / "batches"
         / f"day={day.isoformat()}"
         / f"lane={lane}"
         / f"universe={_universe_id(coins)}"
+        / f"generation={RUN_GENERATION}"
         / "batch.json"
     )
 
@@ -680,7 +691,19 @@ def _r7_arms(
         reports = sorted(directory.glob("report=*.json"))
         if not reports:
             continue
-        item = json.loads(reports[-1].read_text()).get("canary", {})
+        # R-942: a rebuild under a new distiller adds a second report for the
+        # same coin-day (different input manifests).  `reports[-1]` picked one by
+        # hash order; they must agree, and a disagreement is raised, not chosen.
+        flags = {
+            bool(json.loads(r.read_text()).get("canary", {}).get("r7_reclassified"))
+            for r in reports
+        }
+        if len(flags) != 1:
+            raise RuntimeError(
+                f"canary reports disagree on r7_reclassified for "
+                f"{plan.target_day}/{coin}"
+            )
+        item = {"r7_reclassified": flags.pop()}
         if item.get("r7_reclassified"):
             reclassified.append(f"{plan.target_day}/{coin}")
         else:
@@ -693,7 +716,12 @@ def _r7_arms(
     # (days <= target) rather than "all days on disk" keeps each receipt
     # reproducible: rebuilding day D later must not consult days that came after
     # it, or D's batch_hash would drift with the calendar.
-    observations: list[dict[str, Any]] = []
+    # R-942: ONE observation per coin-day.  Each distiller generation leaves its
+    # own canary report for a coin-day, so the r12->r13 rebuild already counted
+    # 36 coin-days twice here and an r14 rebuild would have doubled nearly all
+    # of them.  Reports of one coin-day must agree on every observed field (the
+    # distillers change no row the canary reads); a disagreement is raised.
+    by_coin_day: dict[str, dict[str, Any]] = {}
     canary_root = output_root / "canary"
     if canary_root.is_dir():
         for day_dir in sorted(canary_root.glob("day=*")):
@@ -708,17 +736,21 @@ def _r7_arms(
             ):
                 coin = report.parent.parent.name.split("=", 1)[1]
                 item = json.loads(report.read_text()).get("canary", {})
-                observations.append(
-                    {
-                        "coin_day": f"{seen_day.isoformat()}/{coin}",
-                        "decision_disagreements": item.get(
-                            "decision_disagreements", 0
-                        ),
-                        "delta": item.get("delta", 0.0),
-                        "r7_reclassified": bool(item.get("r7_reclassified")),
-                        "status": item.get("status"),
-                    }
-                )
+                observation = {
+                    "coin_day": f"{seen_day.isoformat()}/{coin}",
+                    "decision_disagreements": item.get(
+                        "decision_disagreements", 0
+                    ),
+                    "delta": item.get("delta", 0.0),
+                    "r7_reclassified": bool(item.get("r7_reclassified")),
+                    "status": item.get("status"),
+                }
+                seen = by_coin_day.setdefault(observation["coin_day"], observation)
+                if seen != observation:
+                    raise RuntimeError(
+                        f"canary reports disagree for {observation['coin_day']}"
+                    )
+    observations = [by_coin_day[key] for key in sorted(by_coin_day)]
     return {
         "ruling": "R-7",
         "reclassified_coin_days": reclassified,
@@ -738,6 +770,9 @@ def _batch_payload(
         "batch_version": BATCH_VERSION,
         "batch_code_sha256": _sha256_file(Path(__file__)),
         "validator_version": VALIDATOR_VERSION,
+        "pipeline_version": PIPELINE_VERSION,
+        "distiller_version": DISTILLER_VERSION,
+        "run_generation": RUN_GENERATION,
         "target_day": plan.target_day,
         "lane": plan.lane,
         "coins": list(plan.coins),
@@ -817,6 +852,14 @@ def load_completed_batch(
         batch.get("per_coin_health_hashes", {})
     ) != set(coins):
         raise RuntimeError(f"batch coin bindings mismatch at {path}")
+    # R-942: a marker at this generation's address that names another
+    # generation is a contradiction, raised rather than read as complete.
+    if (
+        batch.get("run_generation") != RUN_GENERATION
+        or batch.get("distiller_version") != DISTILLER_VERSION
+        or batch.get("pipeline_version") != PIPELINE_VERSION
+    ):
+        raise RuntimeError(f"batch generation mismatch at {path}")
     validator_version = str(batch.get("validator_version", ""))
     if not validator_version:
         raise RuntimeError(f"batch has no validator version at {path}")
@@ -977,6 +1020,7 @@ def _synthetic_metadata(
 
 
 def selftest() -> None:
+    global RUN_GENERATION, DISTILLER_VERSION
     target = date(2026, 1, 2)
     coins = ("btc", "eth")
     markets, resolutions = _synthetic_metadata(target, coins)
@@ -1212,6 +1256,93 @@ def selftest() -> None:
         )
         assert loaded == receipt
         print("  PASS  bundle health and batch commit marker bind every artifact")
+
+        # --- R-942 falsifiers: a marker counts only for its own generation ---
+        marker = _batch_path(root, selected_day, "measurement", ("btc",))
+        assert marker.parent.name == f"generation={RUN_GENERATION}"
+        marker_bytes = marker.read_bytes()
+
+        def _load() -> dict[str, Any] | None:
+            return load_completed_batch(
+                output_root=root, day=selected_day, lane="measurement",
+                coins=("btc",),
+            )
+
+        # (1) the pre-R-942 marker: no generation in its address or payload.
+        held = marker.with_name("held.json")
+        marker.rename(held)
+        legacy = marker.parent.parent / "batch.json"
+        legacy_doc = {
+            key: value for key, value in receipt.items()
+            if key not in (
+                "pipeline_version", "distiller_version", "run_generation",
+                "batch_hash",
+            )
+        }
+        legacy_doc["batch_hash"] = _content_hash(legacy_doc)
+        legacy.write_text(json.dumps(legacy_doc))
+        assert _load() is None, "a pre-R-942 marker still reads as complete"
+        held.rename(marker)
+        assert _load() == receipt
+        print("  PASS  R-942: a marker without a generation no longer completes a day")
+
+        # (2) a marker at this generation's address naming another distiller.
+        forged = {
+            key: value for key, value in receipt.items() if key != "batch_hash"
+        }
+        forged["distiller_version"] = "tier1_v4_r13"
+        forged["batch_hash"] = _content_hash(forged)
+        marker.write_text(json.dumps(forged))
+        try:
+            _load()
+        except RuntimeError as exc:
+            assert "generation mismatch" in str(exc), exc
+        else:
+            raise AssertionError("a marker naming another distiller was accepted")
+        marker.write_bytes(marker_bytes)
+        print("  PASS  R-942: a marker naming another generation is refused")
+
+        # (3) the next distiller bump: the same day must be selected again.
+        saved_generation, saved_distiller = RUN_GENERATION, DISTILLER_VERSION
+        RUN_GENERATION = f"{PIPELINE_VERSION}+tier1_selftest_next"
+        DISTILLER_VERSION = "tier1_selftest_next"
+        try:
+            assert _load() is None, "a bumped distiller still reads the old marker"
+        finally:
+            RUN_GENERATION, DISTILLER_VERSION = saved_generation, saved_distiller
+        assert _load() == receipt and marker.read_bytes() == marker_bytes
+        assert legacy.read_text() == json.dumps(legacy_doc)
+        print("  PASS  R-942: a distiller bump re-opens the day; old markers kept byte for byte")
+
+        # (4) R-7 arms: one observation per coin-day, agreement enforced.
+        arms = _r7_arms(root, batch_plan)
+        assert arms["drift_check"]["n_coin_days"] == 1, arms["drift_check"]
+        write_report(
+            output_root=root,
+            day=selected_day,
+            coin="btc",
+            canary=canary,
+            input_manifests=[*input_hashes[:-1], "next-generation-coverage"],
+            source_profile_hash=registry.registry_hash,
+        )
+        arms = _r7_arms(root, batch_plan)
+        assert arms["drift_check"]["n_coin_days"] == 1, arms["drift_check"]
+        print("  PASS  R-942: a second generation's canary report is not a second coin-day")
+        write_report(
+            output_root=root,
+            day=selected_day,
+            coin="btc",
+            canary=LeakCanary(**{**asdict(canary), "decision_disagreements": 4}),
+            input_manifests=[*input_hashes[:-1], "disagreeing-coverage"],
+            source_profile_hash=registry.registry_hash,
+        )
+        try:
+            _r7_arms(root, batch_plan)
+        except RuntimeError as exc:
+            assert "disagree" in str(exc), exc
+        else:
+            raise AssertionError("disagreeing canary reports were absorbed")
+        print("  PASS  R-942: disagreeing canary reports for one coin-day are raised")
 
 
 def _print_plan(plan: BatchPlan) -> None:

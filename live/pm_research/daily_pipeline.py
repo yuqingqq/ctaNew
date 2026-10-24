@@ -49,6 +49,16 @@ from live.pm_research.tier1_pipeline import (
 
 
 PIPELINE_VERSION = "measurement_daily_v2_r7"
+#: R-942 (2026-10-24): a run record's generation is the pipeline version AND the
+#: distiller version.  tier1 r14 (0f38b8a) moved every partition to a new
+#: `distiller=` address, but run records and batch receipts were addressed by
+#: `pipeline=` alone, so an r13-built day still read as complete and never
+#: rebuilt: Tier-2 on 09-16 found its batch and no r14 quotes.  Had it rebuilt,
+#: the second content hash under the unchanged `pipeline=` directory would have
+#: raised `ambiguous run records` instead.  With both versions in the address a
+#: distiller bump opens a new generation by itself, and the superseded records
+#: stay where they are (R-10).  Consequence, as for r13: every day rebuilds.
+RUN_GENERATION = f"{PIPELINE_VERSION}+{DISTILLER_VERSION}"
 TWAP_TOPICS = (
     "crypto_prices_twap_thirty",
     "crypto_prices_twap_sixty",
@@ -481,6 +491,7 @@ def execute_plan(plan: DailyPlan, *, output_root: Path) -> dict[str, Any]:
     canary = run_from_partitions(output_root=output_root, day=day, coin=coin)
     result = {
         "pipeline_version": PIPELINE_VERSION,
+        "distiller_version": DISTILLER_VERSION,
         "pipeline_code_sha256": _sha256_file(Path(__file__)),
         "plan_hash": plan.plan_hash,
         "target_day": plan.target_day,
@@ -506,7 +517,7 @@ def _run_dir(output_root: Path, target_day: str, coin: str, lane: str) -> Path:
 def prior_run_records(
     output_root: Path, target_day: str, coin: str, lane: str
 ) -> list[dict[str, str]]:
-    """Records for this key written by a DIFFERENT pipeline generation.
+    """Records for this key written by a DIFFERENT run generation.
 
     Deliberately excludes the current generation, so a re-run at the same
     version computes the same list, hashes to the same address and is a genuine
@@ -529,7 +540,7 @@ def prior_run_records(
             }
         )
     for directory in sorted(base.glob("pipeline=*")):
-        if directory.name == f"pipeline={PIPELINE_VERSION}":
+        if directory.name == f"pipeline={RUN_GENERATION}":
             continue
         for record in sorted(directory.glob("run=*.json")):
             try:
@@ -571,11 +582,17 @@ def write_run_record(
     if superseded:
         # R-10 (3): the superseding record names what superseded it, so the pair
         # is readable from the artifacts alone without the coordination ledger.
+        # R-942: the reason is stated from the addresses, not as a fixed string.
+        # The fixed "R-7 amended the canary bar" was true only of r6->r7 and
+        # would have been written into every r14 record as a false statement.
         payload["supersedes"] = {
-            "ruling": "R-7",
+            "ruling": "R-942",
             "why": (
-                "R-7 amended the leak-canary status bar, so canary_report_hash "
-                "changed and this record's content changed with it"
+                f"run generation {RUN_GENERATION} supersedes records written "
+                "under another generation; each keeps its own address"
+            ),
+            "superseded_generations": sorted(
+                {str(item["address"]).split("/", 1)[0] for item in superseded}
             ),
             "records": superseded,
         }
@@ -585,7 +602,7 @@ def write_run_record(
             output_root, str(payload["target_day"]), str(payload["coin"]),
             str(payload["lane"]),
         )
-        / f"pipeline={PIPELINE_VERSION}"
+        / f"pipeline={RUN_GENERATION}"
         / f"run={payload['run_hash']}.json"
     )
     if path.exists():
@@ -618,6 +635,7 @@ def write_run_record(
 
 
 def selftest() -> None:
+    global RUN_GENERATION
     target = date(2026, 1, 2)
     start_s, _ = _day_bounds(target)
     markets: dict[str, MarketInfo] = {}
@@ -723,7 +741,7 @@ def selftest() -> None:
             q.relative_to(run_dir).as_posix() for q in run_dir.rglob("run=*.json")
         )
         assert len(addresses) == 1, addresses
-        assert addresses[0].startswith(f"pipeline={PIPELINE_VERSION}/run="), addresses
+        assert addresses[0].startswith(f"pipeline={RUN_GENERATION}/run="), addresses
         assert "supersedes" not in first
         print("  PASS  a run record is versioned AND content-addressed")
 
@@ -736,11 +754,12 @@ def selftest() -> None:
             output_root=root, result={**receipt, "canary_report_hash": "canary-r7"}
         )
         assert legacy.exists(), "R-10: the superseded record must NOT be removed"
-        assert amended["supersedes"]["ruling"] == "R-7"
+        assert amended["supersedes"]["ruling"] == "R-942"
+        assert amended["supersedes"]["superseded_generations"] == ["run.json"]
         assert amended["supersedes"]["records"][0]["run_hash"] == "old-hash"
         assert amended["run_hash"] != first["run_hash"]
         print("  PASS  R-10: amended content lands at a NEW address, old one kept")
-        print("  PASS  R-10: the superseding record names R-7 and the record it supersedes")
+        print("  PASS  R-10: the superseding record names the record it supersedes")
 
         # Re-running the amended record must be a no-op, not a third artifact.
         again = write_run_record(
@@ -750,6 +769,35 @@ def selftest() -> None:
         minted = sorted(q.name for q in run_dir.rglob("run=*.json"))
         assert len(minted) == 2, minted
         print("  PASS  R-10: re-running an amended record mints nothing new")
+
+        # --- R-942: a distiller bump opens a new run generation ---------------
+        # Falsifier for the defect: under the old address a new distiller wrote
+        # its record beside the old one in the SAME directory, which the reader
+        # refuses as ambiguous.  Simulate the next bump on the same content.
+        current_generation = RUN_GENERATION
+        before = {
+            q: q.read_bytes() for q in run_dir.rglob("*.json")
+        }
+        RUN_GENERATION = f"{PIPELINE_VERSION}+tier1_selftest_next"
+        try:
+            bumped = write_run_record(
+                output_root=root,
+                result={**receipt, "canary_report_hash": "canary-r7"},
+            )
+            by_dir = {}
+            for q in run_dir.rglob("run=*.json"):
+                by_dir.setdefault(q.parent.name, []).append(q.name)
+            assert by_dir.get(f"pipeline={RUN_GENERATION}") == [
+                f"run={bumped['run_hash']}.json"
+            ], by_dir
+            assert bumped["supersedes"]["superseded_generations"] == sorted(
+                ["run.json", f"pipeline={current_generation}"]
+            ), bumped["supersedes"]
+            assert all(q.read_bytes() == raw for q, raw in before.items())
+        finally:
+            RUN_GENERATION = current_generation
+        print("  PASS  R-942: a distiller bump lands alone in its own generation directory")
+        print("  PASS  R-942: every record of the old generation is kept byte for byte")
 
 
 def _print_plan(plan: DailyPlan) -> None:
