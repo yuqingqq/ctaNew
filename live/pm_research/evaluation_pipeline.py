@@ -26,7 +26,9 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable, Iterator, Mapping, Sequence
 
+import numpy as np
 import pyarrow as pa
+import pyarrow.compute as pc
 import pyarrow.parquet as pq
 
 from live.pm_research.coverage_ledger import canonical_json
@@ -42,6 +44,7 @@ from live.pm_research.tier1_pipeline import (
     COIN_SYMBOL,
     DEFAULT_OUTPUT_ROOT,
     PM,
+    _partition_dir,
     load_market_metadata,
     read_partition,
 )
@@ -53,6 +56,27 @@ DEFAULT_TIER2_ROOT = DEFAULT_OUTPUT_ROOT.parent / "tier2"
 DEFAULT_SIDE_EVIDENCE = PM / "derived" / "gff1_side_v3.json"
 R_HORIZONS_S = (270, 240, 180, 120, 60, 30, 10, 5, 2)
 ROW_GROUP_SIZE = 65_536
+
+#: R-943 (2026-10-24): ``build_calibration_rows`` uses at most one quote per
+#: (slug, r_s) -- under 2,592 of a btc day's ~7 M -- but the whole quotes
+#: partition was turned into Python rows first.  For 09-16 that took 13.5 GB and
+#: was killed at the 14 GiB research-slice cap.  ``select_calibration_quotes``
+#: now picks those quotes columnar by the builder's own rule and only they reach
+#: the unchanged builder.
+CALIB_QUOTE_KEYS = ("slug", "t_known_ns", "t_known_err_ns", "t_event_ms", "seq")
+#: Partitions bind this file's bytes, so the R-943 edit alone would make every
+#: completed day raise ``code hash mismatch``.  ``--prove-equivalence`` re-derives
+#: each partition written under another code hash with THIS code from the exact
+#: Tier-1 inputs its manifest names, and lists those whose bytes come out
+#: identical in a receipt named by this file's hash.  The validator accepts an
+#: old code hash only for a partition listed there with the same manifest and
+#: output hashes; any further edit needs a new receipt.
+EQUIVALENCE_DIR = Path(__file__).resolve().parent / "tier2_equivalence"
+EQUIVALENCE_VERSION = "tier2_code_equivalence_v1"
+DATASET_INPUTS = {
+    "markout_events": ("trades", "windows"),
+    "calib_panel": ("quotes", "windows", "coverage"),
+}
 
 
 MARKOUT_SCHEMA = pa.schema(
@@ -475,6 +499,74 @@ def _quote_status(quote: Mapping[str, Any]) -> tuple[str, dict[str, float | bool
     return "AVAILABLE", values
 
 
+def select_calibration_quotes(
+    source: pq.ParquetFile, window_by_slug: Mapping[str, Mapping[str, Any]]
+) -> list[dict[str, Any]]:
+    """Return, in file order, every quote ``build_calibration_rows`` can pick.
+
+    The builder admits a quote at ``decision_ns`` iff ``t_known_ns +
+    t_known_err_ns <= decision_ns`` and picks the newest by ``(t_event_ms,
+    t_known_ns, seq)``; on a full tie the earliest row in file order wins.  The
+    union of those picks over every (slug, r_s) is returned, so the builder's
+    choice over this subset equals its choice over the whole partition.
+    """
+    keys = source.read(columns=list(CALIB_QUOTE_KEYS))
+    for name in CALIB_QUOTE_KEYS:
+        expected = pa.string() if name == "slug" else pa.int64()
+        if keys.schema.field(name).type != expected:
+            raise RuntimeError(f"quote column {name} is not {expected}")
+        if keys[name].null_count:
+            raise RuntimeError(f"quote column {name} has nulls")
+    slugs = sorted(window_by_slug)
+    codes = pc.index_in(keys["slug"], value_set=pa.array(slugs, pa.string()))
+    if codes.null_count:
+        first = pc.index(pc.is_null(codes), True).as_py()
+        raise RuntimeError(
+            f"quote references unknown window {keys['slug'][first].as_py()!r}"
+        )
+    code = codes.to_numpy().astype(np.int64)
+    known = keys["t_known_ns"].to_numpy()
+    error = keys["t_known_err_ns"].to_numpy()
+    event = keys["t_event_ms"].to_numpy()
+    seq = keys["seq"].to_numpy()
+    del keys, codes
+    bound = np.iinfo(np.int64)
+    if np.any((error > 0) & (known > bound.max - error)) or np.any(
+        (error < 0) & (known < bound.min - error)
+    ):
+        raise RuntimeError("quote admission time overflows int64")
+    admitted_at = known + error
+    order = np.argsort(code, kind="stable")
+    bounds = np.searchsorted(code[order], np.arange(len(slugs) + 1))
+    selected: set[int] = set()
+    for position, slug in enumerate(slugs):
+        rows = order[bounds[position] : bounds[position + 1]]
+        if not len(rows):
+            continue
+        # Ascending by the builder's max() key; -rows puts the earliest row
+        # last among full ties, so the last admitted entry is the builder's pick.
+        ranked = rows[np.lexsort((-rows, seq[rows], known[rows], event[rows]))]
+        admitted = admitted_at[ranked]
+        end_s = int(window_by_slug[slug]["window_end_s"])
+        for r_s in R_HORIZONS_S:
+            hits = np.flatnonzero(admitted <= (end_s - r_s) * 1_000_000_000)
+            if len(hits):
+                selected.add(int(ranked[hits[-1]]))
+    wanted = np.array(sorted(selected), dtype=np.int64)
+    quotes: list[dict[str, Any]] = []
+    start = 0
+    for group in range(source.metadata.num_row_groups):
+        size = source.metadata.row_group(group).num_rows
+        local = wanted[(wanted >= start) & (wanted < start + size)] - start
+        if len(local):
+            table = source.read_row_group(group)
+            quotes.extend(table.take(pa.array(local)).to_pylist())
+        start += size
+    if start != len(code) or len(quotes) != len(wanted):
+        raise RuntimeError("quote row-group accounting mismatch")
+    return quotes
+
+
 def build_calibration_rows(
     *,
     day: date,
@@ -747,13 +839,60 @@ def _validate_derived_manifest(
         raise RuntimeError(f"Tier-2 consumer refuses partial partition {partition}")
     if manifest.get("distiller_version") != DERIVER_VERSION:
         raise RuntimeError(f"Tier-2 version mismatch at {partition}")
-    if manifest.get("distiller_code_sha256") != _sha256_file(Path(__file__)):
-        raise RuntimeError(f"Tier-2 code hash mismatch at {partition}")
+    code_sha = _sha256_file(Path(__file__))
+    if manifest.get("distiller_code_sha256") != code_sha:
+        receipt = _load_equivalence(code_sha) or {}
+        entry = receipt.get("partitions", {}).get(_equivalence_key(dataset, day, coin))
+        if entry != {
+            "code_sha256": manifest.get("distiller_code_sha256"),
+            "manifest_hash": declared,
+            "output_sha256": manifest.get("output_sha256"),
+        }:
+            raise RuntimeError(f"Tier-2 code hash mismatch at {partition}")
     if manifest.get("schema_sha256") != _schema_hash(SCHEMAS[dataset]):
         raise RuntimeError(f"Tier-2 schema hash mismatch at {partition}")
     if manifest.get("output_sha256") != _sha256_file(output_path):
         raise RuntimeError(f"Tier-2 output hash mismatch at {output_path}")
     return manifest
+
+
+def _equivalence_key(dataset: str, day: date, coin: str) -> str:
+    return f"{dataset}/{day.isoformat()}/{coin}"
+
+
+def _load_equivalence(code_sha: str) -> dict[str, Any] | None:
+    path = EQUIVALENCE_DIR / f"{code_sha}.json"
+    if not path.exists():
+        return None
+    receipt = _load_hashed_json(path, "receipt_hash")
+    if (
+        receipt.get("receipt_version") != EQUIVALENCE_VERSION
+        or receipt.get("deriver_version") != DERIVER_VERSION
+        or receipt.get("rederived_by_code_sha256") != code_sha
+    ):
+        raise RuntimeError(f"Tier-2 equivalence receipt does not bind this code at {path}")
+    return receipt
+
+
+def _encode_partition(
+    rows: Sequence[Mapping[str, Any]], dataset: str, input_batch_hash: str, path: Path
+) -> None:
+    table = pa.Table.from_pylist(list(rows), schema=SCHEMAS[dataset])
+    table = table.replace_schema_metadata(
+        {
+            b"distiller_version": DERIVER_VERSION.encode(),
+            b"input_batch_hash": input_batch_hash.encode(),
+            b"partial": b"false",
+        }
+    )
+    pq.write_table(
+        table,
+        path,
+        compression="zstd",
+        row_group_size=ROW_GROUP_SIZE,
+        use_dictionary=True,
+        write_statistics=True,
+    )
 
 
 def write_derived_partition(
@@ -801,27 +940,12 @@ def write_derived_partition(
         return existing
 
     partition.parent.mkdir(parents=True, exist_ok=True)
-    table = pa.Table.from_pylist(list(rows), schema=SCHEMAS[dataset])
-    table = table.replace_schema_metadata(
-        {
-            b"distiller_version": DERIVER_VERSION.encode(),
-            b"input_batch_hash": input_batch_hash.encode(),
-            b"partial": b"false",
-        }
-    )
     staging = Path(
         tempfile.mkdtemp(prefix=f".{partition.name}-", dir=partition.parent)
     )
     try:
         staged_output = staging / "part-0.parquet"
-        pq.write_table(
-            table,
-            staged_output,
-            compression="zstd",
-            row_group_size=ROW_GROUP_SIZE,
-            use_dictionary=True,
-            write_statistics=True,
-        )
+        _encode_partition(rows, dataset, input_batch_hash, staged_output)
         manifest = _manifest_payload(
             dataset=dataset,
             day=day,
@@ -955,6 +1079,147 @@ def _tier1_manifests(
     return result
 
 
+def _quote_source(
+    tier1_root: Path, day: date, coin: str, manifest: Mapping[str, Any]
+) -> pq.ParquetFile:
+    """The validated quotes file, opened for column and row-group reads."""
+    path = _partition_dir(tier1_root, "quotes", day, coin) / "part-0.parquet"
+    if _sha256_file(path) != manifest.get("output_sha256"):
+        raise RuntimeError(f"partition digest mismatch {path}")
+    return pq.ParquetFile(path)
+
+
+def _tier1_input(
+    tier1_root: Path, dataset: str, day: date, coin: str, manifest_hash: str
+) -> Path | None:
+    """The one complete Tier-1 file, of any generation, with this manifest hash."""
+    matches: list[Path] = []
+    folder = tier1_root / dataset / f"day={day.isoformat()}" / f"coin={coin}"
+    for manifest_path in sorted(folder.glob("distiller=*/manifest.json")):
+        manifest = json.loads(manifest_path.read_text())
+        payload = dict(manifest)
+        if str(payload.pop("manifest_hash", "")) != manifest_hash:
+            continue
+        output = manifest_path.with_name("part-0.parquet")
+        if (
+            _content_hash(payload) == manifest_hash
+            and manifest.get("partial") is False
+            and output.exists()
+            and manifest.get("output_sha256") == _sha256_file(output)
+        ):
+            matches.append(output)
+    return matches[0] if len(matches) == 1 else None
+
+
+def prove_equivalence(
+    *, tier1_root: Path, tier2_root: Path, side_evidence_path: Path
+) -> dict[str, Any]:
+    """R-943: re-derive every partition written under another code hash.
+
+    Each is rebuilt by this code from the Tier-1 files its manifest names and
+    encoded by the production writer in a scratch directory.  Only partitions
+    whose bytes, row count and diagnostics all come out identical are listed;
+    the rest are recorded with their reason and stay refused.
+    """
+    code_sha = _sha256_file(Path(__file__))
+    side_evidence = load_side_evidence(side_evidence_path)
+    partitions: dict[str, dict[str, str]] = {}
+    refused: dict[str, str] = {}
+    with evaluation_lock(tier2_root):
+        for dataset, input_names in DATASET_INPUTS.items():
+            for partition in sorted((tier2_root / dataset).glob("day=*/coin=*")):
+                day = date.fromisoformat(partition.parent.name.removeprefix("day="))
+                coin = partition.name.removeprefix("coin=")
+                key = _equivalence_key(dataset, day, coin)
+                manifest = json.loads((partition / "manifest.json").read_text())
+                payload = dict(manifest)
+                declared = str(payload.pop("manifest_hash", ""))
+                if (
+                    declared != _content_hash(payload)
+                    or manifest.get("partial") is not False
+                    or manifest.get("distiller_version") != DERIVER_VERSION
+                    or manifest.get("schema_sha256") != _schema_hash(SCHEMAS[dataset])
+                    or manifest.get("output_sha256")
+                    != _sha256_file(partition / "part-0.parquet")
+                ):
+                    refused[key] = "STORED_PARTITION_INVALID"
+                    continue
+                if manifest.get("distiller_code_sha256") == code_sha:
+                    continue
+                digests = list(manifest.get("inputs", []))
+                sources = (
+                    [
+                        _tier1_input(tier1_root, name, day, coin, str(digest))
+                        for name, digest in zip(input_names, digests)
+                    ]
+                    if len(digests) == len(input_names)
+                    else [None]
+                )
+                if any(source is None for source in sources):
+                    refused[key] = "INPUT_NOT_FOUND"
+                    continue
+                inputs = dict(zip(input_names, sources))
+                windows = pq.ParquetFile(inputs["windows"]).read().to_pylist()
+                if dataset == "markout_events":
+                    if manifest.get("side_evidence_sha256") != side_evidence.artifact_sha256:
+                        refused[key] = "SIDE_EVIDENCE_CHANGED"
+                        continue
+                    rows, diagnostics = build_markout_rows(
+                        day=day,
+                        coin=coin,
+                        trades=pq.ParquetFile(inputs["trades"]).read().to_pylist(),
+                        windows=windows,
+                        side_evidence=side_evidence,
+                    )
+                else:
+                    rows, diagnostics = build_calibration_rows(
+                        day=day,
+                        coin=coin,
+                        quotes=select_calibration_quotes(
+                            pq.ParquetFile(inputs["quotes"]),
+                            _window_index(windows, day=day, coin=coin),
+                        ),
+                        windows=windows,
+                        coverage=pq.ParquetFile(inputs["coverage"]).read().to_pylist(),
+                    )
+                with tempfile.TemporaryDirectory(prefix="pm-tier2-equivalence-") as tmp:
+                    output = Path(tmp) / "part-0.parquet"
+                    _encode_partition(rows, dataset, str(manifest["input_batch_hash"]), output)
+                    digest = _sha256_file(output)
+                if digest != manifest["output_sha256"]:
+                    refused[key] = "BYTES_DIFFER"
+                elif len(rows) != manifest.get("rows"):
+                    refused[key] = "ROWS_DIFFER"
+                elif json.loads(json.dumps(diagnostics)) != manifest.get("diagnostics"):
+                    refused[key] = "DIAGNOSTICS_DIFFER"
+                else:
+                    partitions[key] = {
+                        "code_sha256": str(manifest["distiller_code_sha256"]),
+                        "manifest_hash": declared,
+                        "output_sha256": str(manifest["output_sha256"]),
+                    }
+    receipt: dict[str, Any] = {
+        "receipt_version": EQUIVALENCE_VERSION,
+        "ruling": "R-943",
+        "deriver_version": DERIVER_VERSION,
+        "rederived_by_code_sha256": code_sha,
+        "tier2_root": str(tier2_root),
+        "side_evidence_sha256": side_evidence.artifact_sha256,
+        "counts": _counts(["EQUAL"] * len(partitions) + list(refused.values())),
+        "partitions": partitions,
+        "refused": refused,
+    }
+    receipt["receipt_hash"] = _content_hash(receipt)
+    path = EQUIVALENCE_DIR / f"{code_sha}.json"
+    if path.exists():
+        existing = _load_hashed_json(path, "receipt_hash")
+        if existing != receipt:
+            raise RuntimeError(f"Tier-2 equivalence receipt merge-never-overwrite at {path}")
+        return existing
+    _atomic_json(path, receipt)
+    return receipt
+
+
 def execute_evaluation(
     *,
     day: date,
@@ -993,7 +1258,10 @@ def execute_evaluation(
             )
             windows = read_partition(tier1_root, "windows", day, coin).to_pylist()
             trades = read_partition(tier1_root, "trades", day, coin).to_pylist()
-            quotes = read_partition(tier1_root, "quotes", day, coin).to_pylist()
+            quotes = select_calibration_quotes(
+                _quote_source(tier1_root, day, coin, manifests["quotes"]),
+                _window_index(windows, day=day, coin=coin),
+            )
             coverage = read_partition(tier1_root, "coverage", day, coin).to_pylist()
             markout_rows, markout_diagnostics = build_markout_rows(
                 day=day,
@@ -1159,7 +1427,52 @@ def _synthetic_rows(
     return windows, trades, quotes, coverage
 
 
+def _adversarial_quotes(target: date) -> tuple[str, list[dict[str, Any]]]:
+    """R-943 fixture: boundary admission, seq and full ties, late knowledge."""
+    start_s = int(
+        datetime(target.year, target.month, target.day, tzinfo=timezone.utc).timestamp()
+    )
+    ws = start_s + 3 * 300
+    end = ws + 300
+    slug = f"btc-updown-5m-{ws}"
+    decision_60 = (end - 60) * 1_000_000_000
+
+    def quote(
+        known: int, error: int, event_s: int, seq: int, bid: float
+    ) -> dict[str, Any]:
+        return {
+            "t_known_ns": known,
+            "t_known_err_ns": error,
+            "t_known_prov": "OBSERVED",
+            "t_event_ms": event_s * 1000,
+            "slug": slug,
+            "coin": "btc",
+            "bid_up": bid,
+            "ask_up": bid + 0.02,
+            "spread": 0.02,
+            "tick_size": 0.01,
+            "pair_consistent": True,
+            "seq": seq,
+        }
+
+    return slug, [
+        # newer event, admitted one ns too late for r=60, in time for r=30
+        quote(decision_60 - 999_999, 1_000_000, end - 59, 20_001, 0.50),
+        # known later than the r=60 pick but an older event: loses on t_event_ms
+        quote(decision_60 - 500_000, 0, end - 100, 20_002, 0.20),
+        # same event and knowledge time, lower seq: loses on seq
+        quote(decision_60 - 1_000_000, 1_000_000, end - 61, 19_999, 0.31),
+        # the r=60 pick: admitted exactly at the decision time
+        quote(decision_60 - 1_000_000, 1_000_000, end - 61, 20_000, 0.30),
+        # known after every decision time: never admitted
+        quote((end + 5) * 1_000_000_000, 1_000_000, ws + 5, 20_003, 0.90),
+        # full tie with the pick, later in file order: the earlier row wins
+        quote(decision_60 - 1_000_000, 1_000_000, end - 61, 20_000, 0.40),
+    ]
+
+
 def selftest() -> None:
+    global EQUIVALENCE_DIR
     target = date(1970, 1, 2)
     with tempfile.TemporaryDirectory(prefix="pm-evaluation-test-") as tmp:
         root = Path(tmp)
@@ -1283,6 +1596,180 @@ def selftest() -> None:
             raise AssertionError("Tier-2 derivation accepted no full batch")
         print("  PASS  Tier-2 derivation refuses without a completed full batch")
 
+        tied_slug, adversarial = _adversarial_quotes(target)
+        full_quotes = quotes + adversarial
+        quote_file = root / "quotes.parquet"
+        pq.write_table(pa.Table.from_pylist(full_quotes), quote_file, row_group_size=97)
+        window_by_slug = _window_index(windows, day=target, coin="btc")
+        chosen = select_calibration_quotes(pq.ParquetFile(quote_file), window_by_slug)
+        reference, reference_diag = build_calibration_rows(
+            day=target,
+            coin="btc",
+            quotes=pq.ParquetFile(quote_file).read().to_pylist(),
+            windows=windows,
+            coverage=coverage,
+        )
+        reduced, reduced_diag = build_calibration_rows(
+            day=target, coin="btc", quotes=chosen, windows=windows, coverage=coverage
+        )
+        assert reduced == reference and reduced_diag == reference_diag
+        assert len(chosen) < len(full_quotes)
+        picked = {
+            row["r_s"]: row["bid_up"] for row in reference if row["slug"] == tied_slug
+        }
+        assert picked[60] == 0.30 and picked[30] == 0.50 and picked[120] == 0.49
+        without_pick = [
+            row
+            for row in chosen
+            if not (row["slug"] == tied_slug and row["bid_up"] == 0.30)
+        ]
+        control_rows, control_diag = build_calibration_rows(
+            day=target, coin="btc", quotes=without_pick, windows=windows, coverage=coverage
+        )
+        assert control_rows != reference
+        print(
+            "  PASS  R-943: columnar quote selection equals the full-row builder "
+            "(boundary, seq and full ties, row groups); dropping one pick is seen"
+        )
+
+        for label, extra, needle in (
+            ("unknown slug", {"slug": "btc-updown-5m-1"}, "unknown window"),
+            ("null seq", {"seq": None}, "has nulls"),
+        ):
+            bad_file = root / f"bad-{label.replace(' ', '-')}.parquet"
+            pq.write_table(
+                pa.Table.from_pylist(full_quotes + [{**quotes[0], **extra}]), bad_file
+            )
+            try:
+                select_calibration_quotes(pq.ParquetFile(bad_file), window_by_slug)
+            except RuntimeError as exc:
+                assert needle in str(exc), exc
+            else:
+                raise AssertionError(f"quote selection accepted {label}")
+        print("  PASS  R-943: an unknown window or a null key refuses the selection")
+
+        def as_old_code(base: Path, dataset: str) -> None:
+            path = _partition_path(base, dataset, target, "btc") / "manifest.json"
+            manifest = json.loads(path.read_text())
+            manifest.pop("manifest_hash")
+            manifest["distiller_code_sha256"] = "0" * 64
+            manifest["manifest_hash"] = _content_hash(manifest)
+            _atomic_json(path, manifest)
+
+        def refused(base: Path, dataset: str, needle: str) -> None:
+            try:
+                _validate_derived_manifest(base, dataset, target, "btc")
+            except RuntimeError as exc:
+                assert needle in str(exc), exc
+            else:
+                raise AssertionError(f"{dataset} accepted without proof")
+
+        saved_equivalence_dir = EQUIVALENCE_DIR
+        EQUIVALENCE_DIR = root / "equivalence"
+        try:
+            tier1 = root / "eq-tier1"
+            digests: dict[str, str] = {}
+            for name, fixture in (
+                ("quotes", full_quotes),
+                ("windows", windows),
+                ("coverage", coverage),
+                ("trades", trades),
+            ):
+                folder = (
+                    tier1 / name / f"day={target.isoformat()}" / "coin=btc"
+                    / "distiller=selftest"
+                )
+                folder.mkdir(parents=True)
+                pq.write_table(
+                    pa.Table.from_pylist(fixture),
+                    folder / "part-0.parquet",
+                    row_group_size=97,
+                )
+                body = {
+                    "partial": False,
+                    "output_sha256": _sha256_file(folder / "part-0.parquet"),
+                }
+                digests[name] = _content_hash(body)
+                _atomic_json(folder / "manifest.json", {**body, "manifest_hash": digests[name]})
+            tier2 = root / "eq-tier2"
+            for dataset, rows, diagnostics, side in (
+                ("markout_events", markout, markout_diag, evidence.artifact_sha256),
+                ("calib_panel", reference, reference_diag, None),
+            ):
+                write_derived_partition(
+                    root=tier2,
+                    dataset=dataset,
+                    day=target,
+                    coin="btc",
+                    rows=rows,
+                    input_batch_hash="batch-test",
+                    input_manifest_hashes=tuple(
+                        digests[name] for name in DATASET_INPUTS[dataset]
+                    ),
+                    side_evidence_sha256=side,
+                    diagnostics=diagnostics,
+                )
+                as_old_code(tier2, dataset)
+                refused(tier2, dataset, "code hash mismatch")
+            receipt = prove_equivalence(
+                tier1_root=tier1, tier2_root=tier2, side_evidence_path=evidence_path
+            )
+            assert receipt["counts"] == {"EQUAL": 2}, receipt["counts"]
+            for dataset in DATASET_INPUTS:
+                assert _validate_derived_manifest(tier2, dataset, target, "btc")
+            assert prove_equivalence(
+                tier1_root=tier1, tier2_root=tier2, side_evidence_path=evidence_path
+            ) == receipt
+            print(
+                "  PASS  R-943: an old code hash is accepted only for partitions "
+                "this code re-derives byte for byte"
+            )
+
+            receipt_path = EQUIVALENCE_DIR / f"{receipt['rederived_by_code_sha256']}.json"
+            calib_key = _equivalence_key("calib_panel", target, "btc")
+            for change, needle in (
+                ({"output_sha256": "f" * 64}, "code hash mismatch"),
+                ({"rederived_by_code_sha256": "1" * 64}, "does not bind this code"),
+                ({"receipt_hash": "2" * 64}, "receipt_hash mismatch"),
+            ):
+                forged = json.loads(json.dumps(receipt))
+                forged.pop("receipt_hash")
+                if "output_sha256" in change:
+                    forged["partitions"][calib_key].update(change)
+                else:
+                    forged.update(change)
+                forged.setdefault("receipt_hash", _content_hash(forged))
+                _atomic_json(receipt_path, forged)
+                refused(tier2, "calib_panel", needle)
+            receipt_path.unlink()
+
+            control = root / "eq-tier2-control"
+            write_derived_partition(
+                root=control,
+                dataset="calib_panel",
+                day=target,
+                coin="btc",
+                rows=control_rows,
+                input_batch_hash="batch-test",
+                input_manifest_hashes=tuple(
+                    digests[name] for name in DATASET_INPUTS["calib_panel"]
+                ),
+                side_evidence_sha256=None,
+                diagnostics=control_diag,
+            )
+            as_old_code(control, "calib_panel")
+            unproven = prove_equivalence(
+                tier1_root=tier1, tier2_root=control, side_evidence_path=evidence_path
+            )
+            assert unproven["counts"] == {"BYTES_DIFFER": 1} and not unproven["partitions"]
+            refused(control, "calib_panel", "code hash mismatch")
+            print(
+                "  PASS  R-943: forged, foreign and tampered receipts and an "
+                "unreproduced partition are refused"
+            )
+        finally:
+            EQUIVALENCE_DIR = saved_equivalence_dir
+
         evidence_payload["verdict"] = "INSUFFICIENT_EVIDENCE"
         _atomic_json(evidence_path, evidence_payload)
         try:
@@ -1333,9 +1820,31 @@ def main() -> None:
     )
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--selftest", action="store_true")
+    parser.add_argument(
+        "--prove-equivalence",
+        action="store_true",
+        help="R-943: re-derive partitions written under another code hash "
+        "and write the equivalence receipt for this code",
+    )
     args = parser.parse_args()
     if args.selftest:
         selftest()
+    if args.prove_equivalence:
+        receipt = prove_equivalence(
+            tier1_root=args.tier1_root,
+            tier2_root=args.tier2_root,
+            side_evidence_path=args.side_evidence,
+        )
+        print(
+            json.dumps(
+                {
+                    key: receipt[key]
+                    for key in ("counts", "receipt_hash", "rederived_by_code_sha256")
+                },
+                sort_keys=True,
+            )
+        )
+        return
     if not (args.day or args.latest or args.catch_up):
         if args.selftest:
             return

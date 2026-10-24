@@ -1,0 +1,1695 @@
+{
+  "counts": {
+    "EQUAL": 336
+  },
+  "deriver_version": "evaluation_tier2_v1",
+  "partitions": {
+    "calib_panel/2026-08-20/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "691a770382e7e5c701100c21fa3e96522594566217c7c6e8320c462dd2dc4600",
+      "output_sha256": "5334504877b0d8544cafd78f9b711feb1f53c6d22bed0550bb46e204d828c317"
+    },
+    "calib_panel/2026-08-20/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "2e7f8f638f8dc897cdf3e44c3fd411aad6c1baeaf8dab7845dbd015230801740",
+      "output_sha256": "ca282571a3d118d84316479f45f5b6d6b100108d99b3d15f0cbd6e4f79b44363"
+    },
+    "calib_panel/2026-08-20/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "1b12e78cf1deccf174f44efcf9e2426a9da7ecb66311bf99c83d034ba6a0f6e1",
+      "output_sha256": "c2337438d7dd0072c619d6633b67cf45a951faad0b02c3af49391f50bf7039c4"
+    },
+    "calib_panel/2026-08-20/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7a15ed23258ef5bef4ea2dcbd5c7c0c489bb9b5fead8771b7a5a95c893ef8d62",
+      "output_sha256": "5e373b289d2593af8fee9280d65bc8a622a05c4e60e12202c377d8b5fb22180d"
+    },
+    "calib_panel/2026-08-20/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "1e9a42f99375862298e98c642bcc5865edf82422f87d839f3d2f57ca4e521123",
+      "output_sha256": "c41955f16cd209b2a5b55e13e40bd253020ef680e9ec029a722eedbee5646e43"
+    },
+    "calib_panel/2026-08-20/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7823f30c74746f98b51ce6a31edeac584b8087b31e8acd12ae634fe4ce056d06",
+      "output_sha256": "de34419d02e37829cf6733a8dd7d9b8c8526fb4ee489ac94d7c345bf2b6e29ec"
+    },
+    "calib_panel/2026-08-20/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "fe6d79683cbe91a9ece6f826f1a2535d353e1ee4c87c24c9da8f6f45e22d652c",
+      "output_sha256": "1a796c6199988bf36d621dee21cf5010697bd771e630c977dfdaa41c7b0f73e1"
+    },
+    "calib_panel/2026-08-21/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "484ae9f861c21d1d0f3bdcd396f1efbcbf0a971b860311eed4402c6364724851",
+      "output_sha256": "8bb9b63fc237bd50e1b05db3e01d890fc5209e7ad4be279621fda05b5b1bda56"
+    },
+    "calib_panel/2026-08-21/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "944dea39d262061cfbae78c328992651a9e2a18b7539fc401d4b4e7138981a9e",
+      "output_sha256": "ca24c0623a977a224ceece41ffc5bb08ad3c5129ba3e051cec5674b7facaf6b6"
+    },
+    "calib_panel/2026-08-21/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "9b13340105db6cfd603a94738dac519a9e258139fe27583c78ad254ebbf4fbf0",
+      "output_sha256": "1893fbb1fb2839481674a8f3fe72c1cd76f5357dfe63edf76862652b126f95aa"
+    },
+    "calib_panel/2026-08-21/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e91ee84ce62dfc16a409c17c639fe92492acc7cacf5733c8f563ef40f561b9b9",
+      "output_sha256": "040609aae086d5ea0f94335026b81cd0b27bd8d9f8d3dbae0a4394f486bc5fe3"
+    },
+    "calib_panel/2026-08-21/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "adea4009356bd95920558908af276828428dc4c84179739bb537181d28e3176b",
+      "output_sha256": "836b180af9224b40231697a845f961a6705f9aeae0464ce73049dba39f5543d7"
+    },
+    "calib_panel/2026-08-21/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "df7ed43334140436f1326a158677e55ed0314a907a0afd531ac7493bad43b1f7",
+      "output_sha256": "57425bd4401b67f337f448e9840a22b5e5843604c8bb7c34a869a37802601a7c"
+    },
+    "calib_panel/2026-08-21/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "774cf2d821d3e4ad0e9c279fd170528bf94a006e3576a44cff45f84a1d98dddb",
+      "output_sha256": "02952726d9a40c9958c2109a10401d4af3e2ef420c76648a1172017edf322fc3"
+    },
+    "calib_panel/2026-08-22/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "502e5e69dbe07da4532acd89ba3f3fd2f3eeadaad7268af14423d094fb9bc5f9",
+      "output_sha256": "42a4cd00b6f7ae194dbb9b81a884eab17f0760fe0af399c11a1830a7e1e60863"
+    },
+    "calib_panel/2026-08-22/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "3d6453d9bffab9190667e61bcfe588828258fc62346c63d329b4849968229d85",
+      "output_sha256": "1916c7f00871e378653538a0eaf7ca15f9c00ca3c51638c8b2d867d20fb9b716"
+    },
+    "calib_panel/2026-08-22/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "8b342905ef94f8de83d526c71502580e6608a13035d62f181aa1167d3ce50faa",
+      "output_sha256": "a9ee42bf78f14db2db39f003296b49d81c7425bf7f527d9daddfe1a160ba7e9c"
+    },
+    "calib_panel/2026-08-22/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c471b8f5a1938ffcf680ad6e8936c276b2c6d9354d15c31c5505b07486bb43af",
+      "output_sha256": "cbd82fa04754d96ea3c59a4d662bc2bc47a1298be97b65a0c94bb82e9875e958"
+    },
+    "calib_panel/2026-08-22/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d40f77712aefe9c2ec3775416eb7bd62c62046db0804fb5d2519a1e05b13687b",
+      "output_sha256": "950264af01c4a90738757cc1b28d59fca03918af6197f22484dc0647c43fa4d7"
+    },
+    "calib_panel/2026-08-22/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "524d0bc03a50352313c761590c7436d54e8e10f102f9bcb66bcb2af81d8ed458",
+      "output_sha256": "4f11887faf0fe5030ad17fe0f3d9fce3d4f3e8269be596870e5edd93667176c1"
+    },
+    "calib_panel/2026-08-22/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c56a94cdf9306ad90f766cc6140875ac6158400c1b3710ab1fec19a3cd60a0ef",
+      "output_sha256": "1411ba2fa4488537b2692478c108f2faabf124c771605aa4324bcacdc42a4fb3"
+    },
+    "calib_panel/2026-08-23/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e3ebbcf75d36696c990030858e891f5e1d0099b8d1c7fadf1d14e6c997d45415",
+      "output_sha256": "954f1ec6dfb186428d26280ade22057c3ce9e331b82e0701b5a984b958d401a8"
+    },
+    "calib_panel/2026-08-23/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "bb698a4a97a27c69f5fc9eeb9c5afa21030909e8f387aa12b8ceeb573b80f3b2",
+      "output_sha256": "9392c15ef84c2752b6da6ac16662b499dc4ee2c31cbd5e147c9f121cf47a9bea"
+    },
+    "calib_panel/2026-08-23/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "add3f086e4c3c6d46547c5a0bac53199d40ff0f4461759e717ccc526ed733164",
+      "output_sha256": "9a781a2247f3f691ba3392c1e938419a00ab9b82846ebc1d94b48918f91c561b"
+    },
+    "calib_panel/2026-08-23/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "48dca3e59ba87bf926ff50c61932a08a8153d2af1a9fe771eb4ed8d9a0887685",
+      "output_sha256": "6c0be87db2262354293a64ec5bea17d08a83c9ee0d742239c47d629563eda95f"
+    },
+    "calib_panel/2026-08-23/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "827b31a2b2f2eddcd43a4ed9cf773ba96f55e7ae2739a608ae463dc7ee012c63",
+      "output_sha256": "ae9f0ac122a9dd46e2278859949ecc683ccc1f4912850e5a8a4ad3f1ff01e5f0"
+    },
+    "calib_panel/2026-08-23/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "664aeb419e2511afb699e3c9a5944b360b269f11eb90f9bd54f69f012b4eceaf",
+      "output_sha256": "622b7cd40ae623d647e42bd1961d026fa1aa91db5a12bd6080110db633d9002e"
+    },
+    "calib_panel/2026-08-23/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c9155b0c0fc1a6b785ebb2d669759be119573840209aab2f0c23748efb616d6a",
+      "output_sha256": "5ac9fd8105ab74a6cdffd2ccfa9616a08e3536c3f090bdb1886667dbb79862e6"
+    },
+    "calib_panel/2026-08-24/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "335de540e16c2b2a1922c21ec566686903cf268b4294d6ff2753930d1e3aa59c",
+      "output_sha256": "c37dd06d85180bc61172e2e7e31ddaa280f306a2e1d85fc43a4a57b9e3d2a812"
+    },
+    "calib_panel/2026-08-24/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "6a336bf09ce274e09953669636fd5c864f746e6f4c4bc70731046fefd69efca7",
+      "output_sha256": "1cc618d257f8cfe08c004d47edfe3b3d2d636ccad3399cb9c2af0ef7b0656f17"
+    },
+    "calib_panel/2026-08-24/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "9dec353fce5878f6f7ce4be7f09185c8b3b11da24f1c4c51c0255aa70b6da889",
+      "output_sha256": "3f34531c9b895684d8d050e37e112ea48933cd37b07d2e9fc83c0f5f9ce1d128"
+    },
+    "calib_panel/2026-08-24/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "04158dd2cacc09f0db2c4ab0d564f1d54ed4a7ae684bd42568144b33421a6e57",
+      "output_sha256": "3323bef4484c53b840d8af746a8919bcdde0c00e8cdbee39936e7a87fcc21ba3"
+    },
+    "calib_panel/2026-08-24/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "5bc94072d90daf5ccfabb4af4f60f9cd47326e30576cb41f7961ecb887dbf089",
+      "output_sha256": "fbe5ea7f731eb6ee2df1ec28bde5d6cf72bca1efff0ad0ba1877ed7f865acf74"
+    },
+    "calib_panel/2026-08-24/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "75eaf57cd24e4473fb830f326783ef2d594fa8f8a6badc18793bb29b10d76bad",
+      "output_sha256": "fa5d6379ea9b678b1e9a3fd977f84bdd51191b9d64b50190ab680ba62ce46311"
+    },
+    "calib_panel/2026-08-24/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "85223629f9d18e92127d51f99997385240d05adc65490884aaf020bb95baf7a3",
+      "output_sha256": "cf729cbe28b2cf9284ca1f3927142e53b552e7cdf257aa4f28ec4e19d125f757"
+    },
+    "calib_panel/2026-08-25/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "af8d936d2369d6726002d8536464b8643b8fbf9c8688afa18111bd316a87fdda",
+      "output_sha256": "9da8164c6ff6696a1705e08adf022e2ce28d3d47a76b1be555fc33a674edc3d9"
+    },
+    "calib_panel/2026-08-25/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "9a14e1e91ce11bc9b12040314a35ff0b6f7b6aa3f479471a7e74b7bd8bd3adc3",
+      "output_sha256": "9db3fd1ef26ae158af67c6167ce0e99f1529bbcadb559f5e7950a0bd258b7005"
+    },
+    "calib_panel/2026-08-25/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "52d967fe3ce763d3b0f4e53aad905eb13ce9eca11a041649742361b45c75a6a4",
+      "output_sha256": "9b59479dcf90b2f8add00940708fa5938f1e5a9b69560bad5d59c9bf695c9027"
+    },
+    "calib_panel/2026-08-25/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ab1cf6ca9c6f0a608d5dac645fdab84c3d407bcf07eef90e13e70b0bbe531b66",
+      "output_sha256": "a9f996d9d61d40b58db373ded5576ed733d02b21ccbf2ba4ac6011f6b3d8fabe"
+    },
+    "calib_panel/2026-08-25/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "4a70659ea167b919d3ff99fe50bea0b8478f5ee95ada9adf8c24c6a378a00d43",
+      "output_sha256": "bf921c4da9a31ce523468b3c1ba0573abe6ce3fb8cdf92a7274d70391ea18527"
+    },
+    "calib_panel/2026-08-25/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e3fcf28e287f60545aa0ab37c295599669a2dbfcb3a95df91017e2781733bef2",
+      "output_sha256": "ac22b91ef267022a2e0121d9eb5b7deea997541c3839a6c6d6d18bc44bd7ddac"
+    },
+    "calib_panel/2026-08-25/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "758d084b2d8c6a119a72a93c22f93134a4db1292df18e01cc6dc47b970043251",
+      "output_sha256": "1dd110019152cd0bc200372b7485d6e8b404949b3ebb403dd97d89ba630f4bf0"
+    },
+    "calib_panel/2026-08-27/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "154d1c832e2c7f3b7fd0de85b8f93910eb5005f06ab31596b2f435a4d6df0220",
+      "output_sha256": "1cc0634b9fcd888d0688a98100b96922fefe72163bf6f96e50926321969db1d6"
+    },
+    "calib_panel/2026-08-27/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "b9f9330023bd3b5a4a645e11748976100f0208a820fe5e4288bbe44894b3d812",
+      "output_sha256": "96709fcea4c55a66d917ae22171ff5fd5bf7e6ab22da9b7aee1ba2a2781e58d6"
+    },
+    "calib_panel/2026-08-27/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e4997a468a58ac1ef9ecf612ec6156bef52b4519ededb1bd0f81a2a2caf2804c",
+      "output_sha256": "9b4076bb39181b46ca65b0e97b8d2b706569f52f439623f3260ed2d3879ebc0a"
+    },
+    "calib_panel/2026-08-27/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "86ae7bc9c0395c741de90e29406fa15d7719470ea330462886352c4ef46ec3de",
+      "output_sha256": "e84635fc1c6b261acf46e2bda1273c10fff7406f6f6b81c87a3171a3149b0cc6"
+    },
+    "calib_panel/2026-08-27/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "0847c078bc10994a5505b05b754c59bcc5a25aad59c8a6fbf7205cdb52edfe30",
+      "output_sha256": "ca3ccd428bd03467881db6ae8b372e5143d8f8cd0b2bec5d0fa450ed6de113a2"
+    },
+    "calib_panel/2026-08-27/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "3496f9357eb771a2449c5b58b1c9005d2f40b23bb3d0b70904cabfa0cf635ec5",
+      "output_sha256": "9bbc8fa7aae55f2f6398236f37cdf269c0f89e56778bb870f11abbdeea31148f"
+    },
+    "calib_panel/2026-08-27/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d120a8a5b38e35e6d27862ad441cc2b3075bf04abe59815ac8f5d6e6129c32f6",
+      "output_sha256": "f3f386ee7f089286469e77ea40919335d5baf9552cd93025875a15fd465677fd"
+    },
+    "calib_panel/2026-08-28/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "34be8d4b877f81c5181284b6b06aedfc135353297517f0bb51ed70eb9ebf71b1",
+      "output_sha256": "2b5d8cbf4e17b18cc153aa43ab8ce90b957feb41e1a42a26827c737a58ff2ad3"
+    },
+    "calib_panel/2026-08-28/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f58ba16e14ba6d41636b31bc058b5e00c50be8cb502703025ff1b00c21bcead4",
+      "output_sha256": "4b9d56a83081ed79b79c90c9f194ab43395a60dbd404b9a7eb33a553fbfc0ad5"
+    },
+    "calib_panel/2026-08-28/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "0731caa8b65e1a8c04e02137598cd15048e463b9f36238106a89b54c230e8dcf",
+      "output_sha256": "72ca32d2efd6ac3e23b6aaf677fd80fe3e59770557cae4c9726565f444d0e8a2"
+    },
+    "calib_panel/2026-08-28/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "35773e42b3bda9701e6898c102249bea4d33b6586d30118e1a105e2acf861291",
+      "output_sha256": "4d0be470aa1032ea6c8201742ea8815a9b0ba06e9fdab37357036ab65f4ce83e"
+    },
+    "calib_panel/2026-08-28/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "0a8ede7c58713ce578cd1544ee05b14f9c619165bc89d7adb1fd67bb6a864cc6",
+      "output_sha256": "7f0e8120646bf5a702826df0f5e3f4f2f3b968d4e3f76a55ede5f5f17173d61b"
+    },
+    "calib_panel/2026-08-28/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "5e7839c6935d553b5324940f9efb3a238a1a1e2efd21164e2120b0267346999c",
+      "output_sha256": "1d0f167bdf203055147a91596f24bbc6c16b7b14510e73a7e661e42a46a096a2"
+    },
+    "calib_panel/2026-08-28/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "546747a94b5ed3cc61c88ee4840331b8ca42ad90a293fe43c51503ef084332e3",
+      "output_sha256": "2c32f91e387263aedef5e19d991fefb957dd22080bfb962ff66355d7f06b9269"
+    },
+    "calib_panel/2026-08-29/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "1b72ce4a9aa9c16620a7ea1f98018ae4e9899bac4380d0e302ad8dab12ad62c1",
+      "output_sha256": "56b171b87d13b988decd93f0edb9a5dd5a67e38c7c95843589df69502d651cbe"
+    },
+    "calib_panel/2026-08-29/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "34862afb9bbf39a13f132b899fae2dfdc858ba123de79ae51cb1f4f63d01790d",
+      "output_sha256": "918689c6cfac71427023765a3776c8f9e84927d2b38cae9af082f351e25b2013"
+    },
+    "calib_panel/2026-08-29/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "14672cfff80b483f435631e4b5218c8e439d7dfc3e240e481b7516b3c9c7125a",
+      "output_sha256": "e50f2ea4dc599f7b8b94d936c66f11b3ce25e578e618ec7d5adca0608e2ff973"
+    },
+    "calib_panel/2026-08-29/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f4476de680950fd0f5f84bd95d3a44b3f6b136dfe9ee7e7091eaecd27ae82db2",
+      "output_sha256": "67e3b834558260618235a8eabec684d5e443c0b85345b8058f9d58f18802c57b"
+    },
+    "calib_panel/2026-08-29/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7536ae534b9953283a5b4445348622bf4f4ffb131bf67681d462d9d2f987a239",
+      "output_sha256": "61b966f1874e8fe0edc0f8accd5e24d51017a17b33e99cdacc5d20466e84ab7b"
+    },
+    "calib_panel/2026-08-29/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "61cc0ec253b0892e466bda03a80b0fb425a9f3295373a96ec4873860b369cfe3",
+      "output_sha256": "42e1cf0c50c210f48cb5457e432296d8691bc6cb4e61f2e3f78dd7056a4f43a8"
+    },
+    "calib_panel/2026-08-29/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "85aaeef5649d0215c5db151f4241ed07f81551d6aea84bc0604991488069a205",
+      "output_sha256": "c08d44ca144c9f884173db3725afbc35e9d489f845268bb0fdf0f906e425ddca"
+    },
+    "calib_panel/2026-08-30/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "30b1c4708b14fda701c6fec073038d7c04f8828b3895fed535687cdcd8325f59",
+      "output_sha256": "c52ff95a143f32c2f174b1f50bd9c73401e96148e2d1e0fbb15313ca7a7ec99f"
+    },
+    "calib_panel/2026-08-30/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c6b902bda34b7b694fdc08595e256fc27c712c58d6589472cd5482024bb8c08e",
+      "output_sha256": "0a378687a4d820a965d4479edf58e34525938332d3b8e1931d33821998c2aa88"
+    },
+    "calib_panel/2026-08-30/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "343dab2c156c937ce8055ffc6c6915a643f35109337dd3caf928193704dc46e6",
+      "output_sha256": "256e9008d9fa4d1c43a4231601a624466267e77012f0033b986373aabb0d20e8"
+    },
+    "calib_panel/2026-08-30/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "3f8e4e1b2a050d8c17b9fecd2363ace47085ac4a6a596b13d9ef2491157d38d2",
+      "output_sha256": "ff44ac5eb1985ed5c842a2eed4b201d559b6e34295835e4dfa4e97d2d24ce635"
+    },
+    "calib_panel/2026-08-30/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e0e14d5716435baef9513aeda36b0b4d4405f8c9f6e04b1f125d721616d03ff2",
+      "output_sha256": "ae0ecf8cb1b4ea93522cce63534fa3ffaa28fa4eca2d5fcc903e2d608f90d446"
+    },
+    "calib_panel/2026-08-30/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "22bc4c95ebfa5f1902a2963be40b058dd2725a2aa418aab09a5271c4be957d26",
+      "output_sha256": "d885ca13c37b01c41ae4fdca0074841350ce9f59161fc9b5762c1efd35a1f529"
+    },
+    "calib_panel/2026-08-30/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f59d68954e20199a5ea93bfbf57d7dc8004fee2af57ec3815dca0c244302cab5",
+      "output_sha256": "9e91854f2be331b96e60d2c944464422a35e0aaeeabe54d784f04b07a6ca2a5b"
+    },
+    "calib_panel/2026-08-31/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "2e2dad6aa5bdbafa7d7def39f574ff9e83d09a78eba71f418ae8531f5d866c42",
+      "output_sha256": "26f7f484752e49fb655bb80d044a45816915fe686b70558adb5385fec1c995e4"
+    },
+    "calib_panel/2026-08-31/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "2b4dd42756a47a7a15c32f5fea31495cdecd4877a6446487c1d014494c3cf446",
+      "output_sha256": "9f00c0420305b6acae0f4b8ca84ddf8050b315b408244497ac9410ebe1152b9f"
+    },
+    "calib_panel/2026-08-31/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "40cd2371d70436eb6a113303ecd65344dd7cc669d874fae53171f359cdd44dcc",
+      "output_sha256": "866e727d7f1d45fd5a44a4bb84a7643c7b61dff6680381f84bf6624f250d4552"
+    },
+    "calib_panel/2026-08-31/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "a09c9d601264c8d41b1e3790b103374c4236982472050955c931280d0f2cbe5d",
+      "output_sha256": "492c2887ee267459ef576ed72ce7c6d25f187c2e7a7fa5ccac1346efadf311fd"
+    },
+    "calib_panel/2026-08-31/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "2b6df1283ab88f1ac27e69355a14c4c5c61a9d23974fa15af01d8a0736b969df",
+      "output_sha256": "c736899140bda6efef9a572093a1c5fb7eb5367b64ab23dac3169ebbd45e09eb"
+    },
+    "calib_panel/2026-08-31/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "a6eb6607a182bb440c8833d40755c8f4d78e691491c83b6b087fc854f849a725",
+      "output_sha256": "8fce46fe4b2af8d0027e83ab9f336561c334a1f62c020374cdf4fb6bf68e64d3"
+    },
+    "calib_panel/2026-08-31/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c759c884370799fc1caba248a20b733c4a5eaa61e8a0f89a47d8cca6ed5372e7",
+      "output_sha256": "e0b8a581cd688246ef0d0872c36038f42b9c713ffbaaee51e7c89cb17f3d32d0"
+    },
+    "calib_panel/2026-09-01/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ca2fb86abd2c237733b3b8e992f9ccb9ff01f998b20e9f1350c22b953b902267",
+      "output_sha256": "9626624e327c7c08ceaa9dba29b9d5a36caefcaa2acf05fbe249f50f0aaf3f6e"
+    },
+    "calib_panel/2026-09-01/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "10c58709d3c87bede00e30b3176618e9a6bffe081f9e9cc44a15d276cff15a9d",
+      "output_sha256": "2cc7048cadacd18a419a4c076dba7877a260f4c330143f8236fe5b027a349104"
+    },
+    "calib_panel/2026-09-01/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "dec4333aa16b5e27fde1cc542b62d76a93cf3fef490027e3973d1fce5ca9234f",
+      "output_sha256": "c6c196c355423bbbed420858de9a485b49091cfe7d54682803252774cd0f62ad"
+    },
+    "calib_panel/2026-09-01/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "13050cb95599a84eb2fa7227d03d33c0b6f5e221ede346ee14f529c7ffb211a3",
+      "output_sha256": "073796fa5584d1a06ac061d66d0ee8c677f8eb5931ea4402ddbcde8ef2f9919a"
+    },
+    "calib_panel/2026-09-01/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "8bc4f0b47c4d0268853beea6ecd97ab0576176f2debc25ed5800e8c3dcfd57b9",
+      "output_sha256": "e68aac1112b024c9155c4c11e04d0ec2cb1323d7be83a7bea21277f0974bb0b8"
+    },
+    "calib_panel/2026-09-01/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "505a27534ae619b28966a8ab7251739fe0f4e9e45a186ee2c36f0f1770c3de3a",
+      "output_sha256": "77527c2f9cd8ed32785a3e118dc4aae0d60b520f1076b85ed53ac50aa4cf8f5e"
+    },
+    "calib_panel/2026-09-01/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d296decc973404e658ec28cc1b3b786087208477774132581a7fb2a6c1031080",
+      "output_sha256": "9ceff086a1ce8ed88699f117ac153afc7df74632ca30407e1b31a4ae4f157447"
+    },
+    "calib_panel/2026-09-02/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "6298d8a9cbf9bb49b7f0748d51687349cd85f925b19751c19cc6efef4a2a6468",
+      "output_sha256": "37a2e5e3ad071094a3be1dc720a84bc6bebf0489a64593a4c3c640cb3dc8ce0c"
+    },
+    "calib_panel/2026-09-02/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c73972d98f3a4df0cec9563f2c019c982eda7af468611d4551bec2bde683a2f6",
+      "output_sha256": "8118aa17cc2dffb7ed688618d55643b63cd3b378061119248edeffcb87de161a"
+    },
+    "calib_panel/2026-09-02/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "1067cf52028b2b6092de7cd26a09e96992bec37cf09e09fe47a75bc1972cb5d8",
+      "output_sha256": "aecf26914e658a78ae7863eec804664ad2726be00156caa66705ccbaf48539a5"
+    },
+    "calib_panel/2026-09-02/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "8ce487b31e3885758fe63d0db1af1216023befc42b655cafaf4e322345418f21",
+      "output_sha256": "9327966a0e2c4bc7681db47222265412e3ba11abefb6abd1a04d125b9261b68e"
+    },
+    "calib_panel/2026-09-02/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "341865978a48739abf90c383d3c348ffec07ea7bd7f28599494e759db8afe03c",
+      "output_sha256": "d98769b9c8969eb1e4349200d23ef711fbaffbaa0af5821a287e6c12003edf85"
+    },
+    "calib_panel/2026-09-02/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ebeac78f37feb57333003877d723dbaac877a7360b4965421f572fc96360bbfb",
+      "output_sha256": "782b8c5add995aad24c19c3876b8c38955ffa81ab3e2c4d830e7e1daeba73413"
+    },
+    "calib_panel/2026-09-02/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f2c994729ca8b8abbb684aa21e4e79c7cca39e4712900e6134c129d3599bc85c",
+      "output_sha256": "f2c619575ba50e9e0c411794bcce2dcef225872865f782da4994fe9406007223"
+    },
+    "calib_panel/2026-09-05/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "8cd8d805ad7c4a65228aedbf34e98842e21b416f5e293f628380f393196c3230",
+      "output_sha256": "c8e10df96062f55571aeb4cd59b8c861817e1c1ce463ca784d85f030ceb68e3e"
+    },
+    "calib_panel/2026-09-05/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7c888200791f1172aabb3c766b034e33f14d45f2caad7e79c36c7aaf27416607",
+      "output_sha256": "b3eb4d2f964642b3c8771cecafff11cb314df130fe62a16fd91c8dd36efae8e7"
+    },
+    "calib_panel/2026-09-05/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ec9e3b1af412008991afe6cf315ac8d3852d36bedeb183a58e3962df3ec7908a",
+      "output_sha256": "b2edc500a35e1443b6aeeb0b40cecdaa6e5d11c817c8a11ca0d7e04d0db157db"
+    },
+    "calib_panel/2026-09-05/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "10b44da35da37cd6311cb42a334d6946a73da9214191d426838a292ab1e701f6",
+      "output_sha256": "12f81a05e1f6a912a07e0f8a8ad8bff8230f9fb02119909e62a71cb400fa088d"
+    },
+    "calib_panel/2026-09-05/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "fd846a8e795774cf273f2715d6cf45db2842dc6615c76903586a6e1ca2e9ba43",
+      "output_sha256": "0197a88c78ebb7f47b3dc1bf41cf9758d7e0c74da178401b167f6e5cf9f25a25"
+    },
+    "calib_panel/2026-09-05/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f56c1ab23f9061596dc043bcdf6aa6cd7269dfb85c603ff7e0ab395430897d26",
+      "output_sha256": "991bb30303032809c17db8e667d9e0bf5dd0e1336b11691cb9b4589da1ed1a1d"
+    },
+    "calib_panel/2026-09-05/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "acc11801221a0d32e62afe158d7a12e07b80285ba0e666a4822ad570c9a8b69f",
+      "output_sha256": "c701f5622b47132f2eea6af2acbcf24af229d8c8fba303dbfcdfcc3e664af84d"
+    },
+    "calib_panel/2026-09-06/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "613b47463dd3f32d2517bacd26d20a40bf34c994446b1f2a6cbdcd3d229e382e",
+      "output_sha256": "6d112086d77308a10fbf8d4817b6d56503610c59cd16a4ec3efe24f050145412"
+    },
+    "calib_panel/2026-09-06/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "1769a5d8d45cacbd8a8673f6e256374e30907b7d58d2018a59fad8376318199e",
+      "output_sha256": "9e8aa93e4caf77cc4fe21f6213fcfd0e09647caee6175c4bd8499bbb58e0a882"
+    },
+    "calib_panel/2026-09-06/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "9395a3ef3cd22f49017d870ea6593a3d545a1eee7703793afc3baf95ce02f179",
+      "output_sha256": "9b06946d4aa2dc25ccb33db9084b7f59afcd1d24dc1b9d595c29ae43eee332d0"
+    },
+    "calib_panel/2026-09-06/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f3dc1cefbaf83768ab4203459ac85e1fa0e0d98dfc63ccbf8a0eed35e6e9c290",
+      "output_sha256": "c7434305b8c4a4b1456ca00a6514d58f4be35c12c707b244b82e6e8435df6cef"
+    },
+    "calib_panel/2026-09-06/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "41f9e1dabdd4ef3aa57e17df8cfc7a6134530f21107963cacf0095109e235576",
+      "output_sha256": "5d4bf506b204b7c5518b65c6a0a1567173bed783559a26c4cf56242b7a8f4137"
+    },
+    "calib_panel/2026-09-06/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "bba0a4aa4aa40526cb8b788377c0172eb58dc46a79349661823a7d27d498f688",
+      "output_sha256": "33f71510944578fd51fdf0ed39de107eb8642e611af46281b43283c615a9ee6a"
+    },
+    "calib_panel/2026-09-06/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "57ffec97fe1f1ac25555544ed60e95943f4754c9704b147dfb4bcb2e6d28fcfc",
+      "output_sha256": "470dcfcc5dafab02181464cdc673a9d5ccb024043573a020ac22f198861208f9"
+    },
+    "calib_panel/2026-09-07/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "1ecc09cab8f988e5fd2dd9a48c4081aba5a8dd92aee5146fbcb29b62f907c665",
+      "output_sha256": "345a42980bdff9a442be3f50905b902d518a0badee3f849b66e2242b8a03c763"
+    },
+    "calib_panel/2026-09-07/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e378e8327d18d21bc1d2fd1e3cd1de7a87d7d7c793d03a1985915a92ea197545",
+      "output_sha256": "4d907b12b7b0cc76076c057d890d6eb12d0c1ea139b66dc1b217a4f21b3802f0"
+    },
+    "calib_panel/2026-09-07/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d27d35829e22819caa325db115d187d7b6a84c97f18e07cf49d852d05e1285c5",
+      "output_sha256": "2191c5f66759e61258df20bd15acb51c5f1b316da8527dfc971ccb149487c2de"
+    },
+    "calib_panel/2026-09-07/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7f7fa60661c9695e96a5e0497bbdd1accccb5c8c2ac158c1e26b71adb5cb15d8",
+      "output_sha256": "0ee41d9c4b5c998f54ccdeb882c093e987cec363935c4f6bc79aaeec5efef5de"
+    },
+    "calib_panel/2026-09-07/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "74b21d2f3d7afb51338b8a9cb0897a25e1cea168cf25b1a63e33a9167cd65123",
+      "output_sha256": "b99f3331465aaddbab758e27ece708bbb445ccd11ba7423c4baf3306061028a7"
+    },
+    "calib_panel/2026-09-07/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f6f1508ce6c6f157a74f715ed047f0b052fc0eb36dbbb32fbb53f171601f1c92",
+      "output_sha256": "537e4e9d8eeb21623df940c01265ae526832e8de8ff9ab050204f3ad0663d38b"
+    },
+    "calib_panel/2026-09-07/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e3bd8b11bbc0c1fdca5e33c05ca5ca08b7781227f336a8c2f291a80cb4c5947e",
+      "output_sha256": "91f1728b0b2e375675dccc87d67a75ccd260887ad14b3dd5dff87beab15dcebe"
+    },
+    "calib_panel/2026-09-08/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "bf0cb3ffdd1800bb9ee2718a5b5994468bc24f3c63f9007a6f9817ae940a7acd",
+      "output_sha256": "35607fb8fe8f98b9b3263f0b43fdbd4db8440d28439759f3bad31fd29de5f4f5"
+    },
+    "calib_panel/2026-09-08/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c24001d6f0f96e74a9368b9b1c8dac9dd2b8d382c47bfd3f0021b463af3cb258",
+      "output_sha256": "a7bfb4abd15b4342c214b80bba88a5c68e8f282df0254dc3d3c364e2683cae7c"
+    },
+    "calib_panel/2026-09-08/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "acf6b8e731445afc7bd4ba2756d6229922a35a7e1daf3867fdfec24247023dd4",
+      "output_sha256": "8f5a85244736df2e78a599a92414d0a7126b0d1ec82c442fee6f62f3cee71f5e"
+    },
+    "calib_panel/2026-09-08/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "0debb9216787f2855504c2751517ab4aa83c1107e0e3278c0c37825ab7dc0cfa",
+      "output_sha256": "a7129bdfbebe354cf0985d28ca7095b1b94c8aee821458b26d32a290f951e3b7"
+    },
+    "calib_panel/2026-09-08/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "12c867225afe17504386424d93b1364a4da4bb3f64c8d973f7da2497a0e64f24",
+      "output_sha256": "9fc63f0dffadff4782ac488169068cbf7dcd0d3d5126fc7d5024378f5a306df7"
+    },
+    "calib_panel/2026-09-08/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d4c930827aaf92289a3251a45e4c9600d1cd649ef52b77cd71002228006183ce",
+      "output_sha256": "6fe611105a1a8f0477ceb4b9611586959190a209752da2f51b4492eaf9b35cbb"
+    },
+    "calib_panel/2026-09-08/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "acbf70d2ef96b5b4972beaeffd53ebafa2e880545917be6609037e96183147ab",
+      "output_sha256": "3006105c725c2c2cd4a5fa69c294c259201a2039045cd37f24b6590c4cc2d8af"
+    },
+    "calib_panel/2026-09-09/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "1a42e6ba357f3e6c8b273cf22bfcf71fbadde0355aebc86015d48703c1ac1078",
+      "output_sha256": "61c07f2bc209d8a60378e03c45d2e324f63b712afa5c7dc0d238833e14fda849"
+    },
+    "calib_panel/2026-09-09/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "11067f6ab8d8ba169a46f006dcdb42e7f844b729da5350e9a1a39dfb353c49ce",
+      "output_sha256": "7f478a651bf483713158336c126aa136188c84c9dab9e645c9107434c8b7765d"
+    },
+    "calib_panel/2026-09-09/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7213c0b85e563a09117b279fe20ae17994194ce0a7f94202ab59727b4c2e3504",
+      "output_sha256": "7374090aba1a80e3004e86372cf84231827e98db2d077c1aa0717038768ca40c"
+    },
+    "calib_panel/2026-09-09/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f64b2c8a82e7a6bef8bbcac8a32c1138919f68ac609ded0c950583ec5b3fc7cd",
+      "output_sha256": "dde31f3f55c563571923810a426b51fcadb586008a7aa478fb83b26d7f09ca9d"
+    },
+    "calib_panel/2026-09-09/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7c1e808e03549e19e3b81e0b892071a33bd2029482799c95699aac7f5ebc0b35",
+      "output_sha256": "46b66874d20c87c03560b58d80f6b81f8e274de2c8303133c2f599b1257bdc9c"
+    },
+    "calib_panel/2026-09-09/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "b145cb6af282b0dbc8db06fdef8824019417c6d6e10da188c18e4997614c6b70",
+      "output_sha256": "b109ad4ab2e070ae97804ee6ad8c9fbf1d5178a8a58fb1f92ac86bb099abb1a5"
+    },
+    "calib_panel/2026-09-09/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ba36bad39a98112b8d6b59da384aabb1bc30e1132ded664d55fa182c9b06e83d",
+      "output_sha256": "f03824e64befcaaec6a868e0c8297866312b091a4ea8f92f10a111c7f039dc45"
+    },
+    "calib_panel/2026-09-10/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "0452d6a21b326e0f6c7c067fabe586763d31c3316fa3d167e0d0589fe9c14bd7",
+      "output_sha256": "d191ab794b13f80a04b1c973aa9228bf1d0ef56c3621be470ac668a7ae8bf7ac"
+    },
+    "calib_panel/2026-09-10/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ff288c8d6cdc8d8d8f541bd470e4d1677829b730d1c54ec41232697aa93a0f57",
+      "output_sha256": "603abfda3ed1ed3e8e453be9549f63fee25ff76aab01677e12c00d08604b507e"
+    },
+    "calib_panel/2026-09-10/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f3b1a8b86a039abeed67180856e61123c1eaf1a80cf6786c9ae8ff9d8687caa9",
+      "output_sha256": "10e6c53196f66facfbdd6679cb96563a309a7fc221b18ca3fb2702fa841c96b3"
+    },
+    "calib_panel/2026-09-10/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "aa21a1941800899ec05ac92051a144284fbd3a41010b896e9befb6c63fc66189",
+      "output_sha256": "b28a2dd6f8501d02bd3ba7493b350cf7c8fc600d481f5dd95609c919e0f2eb40"
+    },
+    "calib_panel/2026-09-10/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "a3b5c0d6db0a231b878c6db9a1a542f11d931b6271880e2472b6ef6b4e6a8506",
+      "output_sha256": "311baab2f6cc4b4721f1a0cd12793f5aef6cf3b00677610edf2f77957e82ac4b"
+    },
+    "calib_panel/2026-09-10/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ab85d4317aa3a34ac77cc0c4d28e6c9e5a797b29ce64fd7599da195783e4347e",
+      "output_sha256": "fbe7d34519b3dc48a1917b0473ddbade3d4d77fef1e6527d20e6c5837469e449"
+    },
+    "calib_panel/2026-09-10/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ac9c05dd5dfec6cdd93382afb467c879f8458d9ce861d2441eb91e6b67016a17",
+      "output_sha256": "92d19157e5a8f34e49b083382af6c86caaaf0dc98e1683003baafde635ffb728"
+    },
+    "calib_panel/2026-09-11/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "4bdd32e325529f834dec3d872c297608df8d651777af91abe7bcab57672bd5ac",
+      "output_sha256": "8aba07a96e65b4ce386fbe057f27c380977dd7fe778d6fa2698afef4ad4669d6"
+    },
+    "calib_panel/2026-09-11/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "410f552d55f1b2ec1b0505c81c47018e8a4334be19ab9091ff668168ce74af08",
+      "output_sha256": "7ef512d866e64550fddc20de426267e97a46beeb10baff5cdd2529846239f2c6"
+    },
+    "calib_panel/2026-09-11/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "65526d9d6baec464fe38912f7cfdd050169bf08277be9232e5be0c2b509debd7",
+      "output_sha256": "88954c3b17cd4a2e3af776319fce3350595249a01a8e36481ae3cd2bb895d198"
+    },
+    "calib_panel/2026-09-11/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "16f47f7414822a1fcc673741fb69ae0235e2d89179de3947bc1ab302431d6ad2",
+      "output_sha256": "7788aa88c85fafe1f1b8f11a12296a35b5f3bb7f831a4df2e98a32b2c579d5f4"
+    },
+    "calib_panel/2026-09-11/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f0505babeb87df1bb4c75a13da7ec1249162d8ece5960f7f39a1f39b86e743a0",
+      "output_sha256": "88d92cca791405121001c39ffc7c30b57f4147fec51c06b04d7028ce37e2ce56"
+    },
+    "calib_panel/2026-09-11/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "1bf3d39b00eaab1a38b38f35a2be095e5b5a512dcdfd0e4da89cc0cf467640cd",
+      "output_sha256": "578ccb6bfad1d09d190b0c693b4600beea0b603bfab8a42e28866b2086a02caa"
+    },
+    "calib_panel/2026-09-11/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "8d6536817b257490c32d7a59bf3bde6098a5774ce6507be40f8f6350836f8a1c",
+      "output_sha256": "b21c273d93854606ea759f30489c17087c54abf3e74c7897bc5b0bf1a8a1751d"
+    },
+    "calib_panel/2026-09-12/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "50cfb23fb1461f57b54ec04df8916a8ccfcbb5b4771bb374094cc521d3db27d2",
+      "output_sha256": "dcc22b8011c06a0f5b13c5c123ad9f3d7153ff36ed46ffd2ba5ba4a745c74363"
+    },
+    "calib_panel/2026-09-12/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "822c2aa5792bfd1bf60cc29f4cea2fc21ac4c72b124b5b55150524c04a5b0a57",
+      "output_sha256": "c23ca2f1f82424bc7982e7a001264360163fe1e0b579a9485b3579895909d27e"
+    },
+    "calib_panel/2026-09-12/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "66254b0caa6289f03d7333a0c1baf0f35622f0b76b26a6719f3f20cb3ae3caa6",
+      "output_sha256": "cba0fc4e925ef9692eb9e7fa083a35234d1cd3c805f415d7e70da682b6507341"
+    },
+    "calib_panel/2026-09-12/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7f88f46a6212956f734a7b11d44ba63f09aa5ab3eb6aebc7aa5fdc7069a7ddc8",
+      "output_sha256": "33dd443aee052bc88c6f2c27226066bfe567774a509cbb8d21bd46e4ff9c0c58"
+    },
+    "calib_panel/2026-09-12/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "792261cec00ffa0c02719303171ad02fc3dae7fa26d4b02a1b69847cb8175444",
+      "output_sha256": "fd8721c1d938e5c99faa2d805a859d77d145ff54c7e10ea9887dba6c00cfecee"
+    },
+    "calib_panel/2026-09-12/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e7aa5080c987ca84b455fe3d83fb847fca7933ceb3d70c4b4bc54680938e77b5",
+      "output_sha256": "38e4b85b43f7297c057dade4cdf2377a3dbe7905016927cb0e89968be9587886"
+    },
+    "calib_panel/2026-09-12/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ff2070c9b77fabf83cd462833cdcc4adaa2a735fdd5f40d9fab306497d66ed72",
+      "output_sha256": "4672385451d99994fd9317c220265854bf99143931add005d01602e40f6efd3f"
+    },
+    "calib_panel/2026-09-13/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "0282b8afc6383eca8517c31cb72ac0e1711a8287b9b221a781262a5eb90ecc0c",
+      "output_sha256": "befec32e813bc0b185b78de89b018e6b60bbfbe09ebc63c7fc7fafbd6ba577ea"
+    },
+    "calib_panel/2026-09-13/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "a99e18b084383f27533b6fb5936496b8585ec1b88c562750429e62978245eb9a",
+      "output_sha256": "dae8722158946b04e4a83a1de0f68d18fa448f2c0875b8de13e83d36a0c543c6"
+    },
+    "calib_panel/2026-09-13/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "5ea184d8356be1624fbf7983fede6bcfda3bd57a66516879e639f4d2967c7fed",
+      "output_sha256": "454016e66b1d5a7f4cb340914903e9985c0dcfc9a5a1215849f529d7ee22c715"
+    },
+    "calib_panel/2026-09-13/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "710462e379092a30e9d1c2965f8cdcd0b3d4eadbf351b925870a53f60769ad41",
+      "output_sha256": "8b57632c704fd4ca46a964ead34d9fc8d541ae209eabc7090bcbab8b64650f56"
+    },
+    "calib_panel/2026-09-13/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "04bc53e098e55e5f75ecce3bf733eb514fb062a2b778c6aa4f51b0fc09861fe1",
+      "output_sha256": "f6c87ea6610c60bd3789c2b6030e605db3f3cef6db37639a0988f98309d67b74"
+    },
+    "calib_panel/2026-09-13/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "1a2125657a9bd70587dfb2459ece37754e3a2c8d73002f84352d61bea84468a1",
+      "output_sha256": "eff5e344033f08403657c5ba951f44aa322d9494925c004cba1ed2e93f2487d4"
+    },
+    "calib_panel/2026-09-13/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "8f6c16ee21153d9c8a292cd14ed732665dbd44508b7e437870811142cc4f4f5e",
+      "output_sha256": "fb888e4c79625636b5a4ddf90704dc60d28f87ae069a9ac7540a56696d3e54ca"
+    },
+    "calib_panel/2026-09-14/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "037db05aea72218891c944526c85c269b60afb165ed7f5de2f0e06264a2ca254",
+      "output_sha256": "aa20e601e94e777c542c5ea377c4584cf225dee1fbd2710fdddc43f012705028"
+    },
+    "calib_panel/2026-09-14/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "25be49697429c3b2ec36edfde4cd74372929155110ea087ed0ceeb0a43f857d5",
+      "output_sha256": "6542651f975ee3af00e75329ff31d6b4b7b210edd208d228c3e7444f2612827e"
+    },
+    "calib_panel/2026-09-14/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "8c090c5c100a90abc04450761746a011da067006eff696c1af16ccb9376ac4a6",
+      "output_sha256": "abbd3469e47538c6dc4ef1bf744feba4921df96643b35e34f59b041cab3c8929"
+    },
+    "calib_panel/2026-09-14/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "73ba441734b228dcf317e7478cb1d670202e56e3d6a1a7898db9c784d5c16e99",
+      "output_sha256": "cc9f949fc002631838ea6f5e50171814ae37d733bdee86710a6a36615fdba115"
+    },
+    "calib_panel/2026-09-14/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "fde57c4b291ff06b29aee91506e6d0193069802776079ff2eebdeb3f61cde15d",
+      "output_sha256": "cf702403610ace5d145a91d954f5ff7519b729003a9b8b16f44abddcff49bb6c"
+    },
+    "calib_panel/2026-09-14/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "52a912d6c3d1ab908b9455a87b3ff4cc2627d94f52bb1d60517b76f31d0d5758",
+      "output_sha256": "9a921a2cf43a1a35229584044285b7c5a86879f840b7bf07b8cd2e2035a2191b"
+    },
+    "calib_panel/2026-09-14/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "27e2cf6ee2338037da6dfb96e19b6b9aa19b63cbd84bbb2acfd369aa64a4db2d",
+      "output_sha256": "c956c4888032be0253695be8eb01220d6c1d5562d0fc07d878500207414fb16c"
+    },
+    "calib_panel/2026-09-15/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f73970441042f241c84168c12c819582929d089c58adf2af2d9e0c4261a48265",
+      "output_sha256": "310fa3f9cfde37dbafc56f0fa7c1ac1097ccb3940d2b658c860bd25982e012ec"
+    },
+    "calib_panel/2026-09-15/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "eeaad4181f755d303939fa5501255d1507c027da3e2ca9c69e51a7c839c3d236",
+      "output_sha256": "e1df95186f218d759f6e652e50b9b38412edf794a789340a3f4fe8804eb9dd6e"
+    },
+    "calib_panel/2026-09-15/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "9510a70f9ea5ab3d815e459a0b3dc6481a08e3741ee8cdeb8ed68f70d892deb0",
+      "output_sha256": "5888fc7ddfc371a079d476b90389433083070eee9e5a583468ccd2df297dfb13"
+    },
+    "calib_panel/2026-09-15/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "6d651df36fb624186b8751c32798d59dcbc23005af71b180e2aff78ac601e29c",
+      "output_sha256": "715edc93e003bd1c01807bf40d4cc4a1acdc8487f69c1f9d23691b9d2fd629d3"
+    },
+    "calib_panel/2026-09-15/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "44e0b2d1cdf2bce3b2c6266454f25483b96421464b12c54017be378be983c7a0",
+      "output_sha256": "d95909f96710e9188e3026931b9f2a7bbc214bb23bb199117960ddcf91da30db"
+    },
+    "calib_panel/2026-09-15/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "2c062fd0eb7dbd105fe7aebd759bb35c4ec031c2287ced76d5919c1db8171e9e",
+      "output_sha256": "86938c306a295a4635bd2db46522ab29a0f8a564c0aec5c42136673da2ffa499"
+    },
+    "calib_panel/2026-09-15/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d1efa6d1e71be073c24f54ae3754d97a7d49f7007a3e40a4870c41ded787198a",
+      "output_sha256": "7f7b50a7484dfa32c23571cfd9384679a04e3bb11100caa9bd436b91ba1c31fa"
+    },
+    "markout_events/2026-08-20/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "fe9a309b62aa95ff8245fe35e7e1064d40ad2bd455725a4cd8e2128a4fcf1d5d",
+      "output_sha256": "fc0b66b530e8b419db6757e44f3eab1aeaa0fdff7c9b34a3a5449dc657df229a"
+    },
+    "markout_events/2026-08-20/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "682c0cd2bc713d7ebe49b40cef193f028d7e7ad792e64c545fe68eb3e52f4a30",
+      "output_sha256": "5fc58f3ef440a61f8622836d49eb05ff2ae758f897e644d592f305e514b73d87"
+    },
+    "markout_events/2026-08-20/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e6abfaae9a272bfba82c84d3c3551a31e826c640d9d1cc5640da3ab80d1ba157",
+      "output_sha256": "e9b44ae386ad88c0c85065f6d17f620a87628bca65d090b4928716e1336d5f95"
+    },
+    "markout_events/2026-08-20/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7baa6cf3f332ed1f8b4ae996f467d32f43949dfe4b2373c25922d1fbd5b42674",
+      "output_sha256": "659fb9bcb2bf7dedff89d70fcb06dbaa6229045c0a8d4c69439dd86055a7ff65"
+    },
+    "markout_events/2026-08-20/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e57e6f0efee41c8b2ae2c5115c17cf01d80c7ea71a81878d3d36ee062cd1a334",
+      "output_sha256": "b58c011b7e8e91833952637a0b0235e3dd6161dc461362a14e056225d6b86813"
+    },
+    "markout_events/2026-08-20/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ed5b7f87a3d71190045902f9f21e53be0ace3af089abad1fc46602a840320d39",
+      "output_sha256": "0f7403b7b437af40325c3426f457ab45f94fb85900ccee1163e3ca364eeb7598"
+    },
+    "markout_events/2026-08-20/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f4e02e8eadfceb880a598d6dad8991a248ad098565c058a701f226b8aa1fda64",
+      "output_sha256": "f29cd735027ebc7832651c64422b3bd358073ea740f5a6e24ba75beb0e33b84f"
+    },
+    "markout_events/2026-08-21/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "5a28ef344e696ee9b966ee99ff93895e576cce6a735c7789028da6647b6c1de3",
+      "output_sha256": "cd7b4c3c4c1a9862da5f4d92bc003eaba3169acb15623cd5ddcfc5a308f8796a"
+    },
+    "markout_events/2026-08-21/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "049bd391a50c300bd0d34f5e0e3fa9e44f5b5ca461c0b3c6dede746337ec78f1",
+      "output_sha256": "a3630d4a4c405d5818ec2af2c7b96d18f60afc9216cc2a79df9d50b5f41fdb82"
+    },
+    "markout_events/2026-08-21/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "dd838ff8d0dddb6b909425ff2c58cc655a1bad22a12c595797f9ba8420752e91",
+      "output_sha256": "82f1a598a60ca78d070f38a4885ff7c7371fac32c874049ee9a4893970cfcccc"
+    },
+    "markout_events/2026-08-21/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e0eaf64d9d1e0f44d7ff6e14334ed5fe4f226fa9fb802400f515ee74a7475b5c",
+      "output_sha256": "ffe5c5542704bce764d168a49e87952ffc65a768479acec96795aad8b0e60a13"
+    },
+    "markout_events/2026-08-21/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "23630e0b0cc8929adafd9add67e59d41bafa2957195738b455895bec63bf55c4",
+      "output_sha256": "be698a7016db931fe2739790814e10a0daa6d9b3405ec0b88e8612f99cdd99de"
+    },
+    "markout_events/2026-08-21/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "252d9e06390046f24b3900a8f18e1719f7f9527ec2173b65c6f98dadcec4a9ea",
+      "output_sha256": "c90b2989c1d3b16363482171db2cdcb1a21f118fefca9c5e1029cc8e893835d8"
+    },
+    "markout_events/2026-08-21/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "19a93217e91b2a28d5d77a09c04b3ba9eb61d2d596a56ceab2b5dbe2e100e968",
+      "output_sha256": "a78be4f068d9763dd626a638afa17db6672e2eef6e8ecc6dc635629c4b79bc1b"
+    },
+    "markout_events/2026-08-22/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7646b6e2132071c7a285ed70a98dce26531496b7109eaeb75b95ef411ba1993d",
+      "output_sha256": "a4ab200badf103035c879582d5d968fb10e08a3a133ebad97a8198932b053976"
+    },
+    "markout_events/2026-08-22/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "61be9de4403fa453066adbf052a1d9a7d96257bbaf47215bf922dec5aeaea61c",
+      "output_sha256": "86f8788dccb884607f9cb112961eeb021b7f13f7e575a1508940ab860a661508"
+    },
+    "markout_events/2026-08-22/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ec017a3eacf72a77c7f3f077841a13d6fb98c82b86865d5c75730fe1fc4397fc",
+      "output_sha256": "0406b5193576901f14e6f0370a6efeb22ddcce88811ddacb567664585d5c156b"
+    },
+    "markout_events/2026-08-22/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "63fd1b715ec281bdaeff51fefcc5806d412074152bb6a040a59c6c19ff269e24",
+      "output_sha256": "da9ece5778c67ec8d125a52bd011e9660952526ad244d2da1c5f1e4c9a37f587"
+    },
+    "markout_events/2026-08-22/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "acd1c99773ce9c319bb0ec2e349585b77daf7b59a51d055efa7ef70727e29a28",
+      "output_sha256": "b36708a08341a3b7fe60170e4be7fe2a650b701547d927eaa97cd2bb33075688"
+    },
+    "markout_events/2026-08-22/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d52a4453278e0b0793e7418bc509f0ea3e4cd9535a5a6d167015735c5166e51b",
+      "output_sha256": "5b245416a9105b7d241329cb2f8ffa83e69268c3bbcf88b92ff34083d3172d2a"
+    },
+    "markout_events/2026-08-22/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "bdd092d7890fd67d4a49aedba483d09d52bb61a7a68b890e133c89c4eb108c0c",
+      "output_sha256": "615a3a9f5d182e50b034f28ce1033de69fd2b337ebd7ae1261521b71bd19ea55"
+    },
+    "markout_events/2026-08-23/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "8eefeaad60e93e49aa94222e1ace5680933a7ffba31f5c5e97f965ce2cb0e90c",
+      "output_sha256": "6c87efb4e2122349b87fd8f676d30b4d086c21f08e76049d248aca23e82201b9"
+    },
+    "markout_events/2026-08-23/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "aa0f78e71edf8ca73085d8935b70d1f2e54b4caf4ff8cceaa441ec7194156a75",
+      "output_sha256": "8a79c1c70fe372e2c0a5bcc0a95c602dc8936d5156f122584522652d02e93f33"
+    },
+    "markout_events/2026-08-23/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "b08608fe1993cd593f464a7493ec0d7529f038446ae16f670e92512b38f2f655",
+      "output_sha256": "86e1e4e0b09c5f1695ace3427b7519754f3247d1b187d7c52d4efe74a3dd49e4"
+    },
+    "markout_events/2026-08-23/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f20e6ee1aa1f6fde877de1e21aa9fe4532a2f25424e230c4f5211dc1ec34cbd1",
+      "output_sha256": "6c85e91617ee6f0485f2b1181b54bbe492dd6e36eda9662a4af7b9b01c0e4f5b"
+    },
+    "markout_events/2026-08-23/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "266b34f1e75727598caccc0684bda6b5b215ec6a887952ff1a88efa8a9c9361a",
+      "output_sha256": "0d5d29f06b0c968243c250ce334f3988558833b3e702b06437de9bb939740fdc"
+    },
+    "markout_events/2026-08-23/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "78ccef5947ac58509e78eed237ba9759f8cc01e5c034d6885522ba56619d027b",
+      "output_sha256": "caa7539f8f82e88d060a29f9d534928814831c1120e33e49611aa14b9d10629d"
+    },
+    "markout_events/2026-08-23/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "06e3f5d026a6abacf2ab9af472b9fa6d29537cd9eb62e67f8504e2a52557f09a",
+      "output_sha256": "fda7489a222986fcf87f6e0d7038c78abc775f5be3abeb1ee8d0bae097252846"
+    },
+    "markout_events/2026-08-24/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7c734aa0957cc8a611879f5771e03d50a2de23d53bb624e987d27fb0a51f5ef0",
+      "output_sha256": "f9a9d31a10fe800e15d67b2685276f54d53aeb212c06a3d94d6ac2d81e521c1f"
+    },
+    "markout_events/2026-08-24/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "35f8b2607df6a947bb980cd252df3bd7d5a4fb953d4a765f5d499c7225ba2579",
+      "output_sha256": "3a04f8e9d053f28ff4b689c70846097b21b2664a26884e22cabd975e7b9f58fb"
+    },
+    "markout_events/2026-08-24/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "6bbcc14b3f80018dee7aacd191edb5b1e2dd877723484e6f9c7ad9633593daf0",
+      "output_sha256": "5dc731ef123c4d8057f459a48eaa993f57f49f1d41ae21feb0f1ef80d2c73465"
+    },
+    "markout_events/2026-08-24/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "bc5132e8b1ce27a4af61636c7404ec97d48af262962f663b85509b2b71ff0bca",
+      "output_sha256": "4dd49fdaed87f5dabf58466a7b5c61e6d7f249701dd2910542cc89e8042f4832"
+    },
+    "markout_events/2026-08-24/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "3463b7f7bb25f9cb17e0e663e8cd901314744f595c2b23a625b4fbb03af5b00b",
+      "output_sha256": "3e62c82f873bffaefb3f90fba06a5a9adcca4ac13d2fec804b081130ab71d2a4"
+    },
+    "markout_events/2026-08-24/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d247e3b78cfa7b676b6a4c531b18ec90aa8d7cec38d619fbbff565f23e6e63d6",
+      "output_sha256": "82f54146cb6f727b54ec1ea7717611eee916c81dd57c408fc56df422748a10f0"
+    },
+    "markout_events/2026-08-24/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ae91b6e5083556f453bd6343acd9979b639413e35e75973f0d1a7ad0057013d5",
+      "output_sha256": "a0b414e9322379e989782b060261b6ebce2e4d5ddc8a66ad7fd30fb99877c9e4"
+    },
+    "markout_events/2026-08-25/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ebc5a4b7f9587cf7cc32a636a8927f6b4c920f4a550f4e1d1ee8251ece2b4b49",
+      "output_sha256": "d3c8f1b7035982d16153accc0c05ffad228fbecb3ae858d0e2961c3bc6d1373e"
+    },
+    "markout_events/2026-08-25/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "b01616fc83eb5a7f51ce03c3a1e25576441207c7e10b442e98c95b5c7d0ea524",
+      "output_sha256": "c8e445fdf779e439fc115d7540f1478b6c3942995a231d023c6600dca30999ca"
+    },
+    "markout_events/2026-08-25/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d3d9f3084a80a0d70294abcd5d52a7f8ecd3aaedbcbbd5f43922db242cb8dab0",
+      "output_sha256": "3a65554ad921ac129155c15373df968526cd428065ec1b2bd8c640479b799b49"
+    },
+    "markout_events/2026-08-25/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d33ea15e6ec49b169dbc82ea8654c7df2e804311030f765359cbb5659d32499b",
+      "output_sha256": "ee86b7da994e51dd0416ad0233089cc7d4690beaba69f948ee32cb7b841aef45"
+    },
+    "markout_events/2026-08-25/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "bc93a2569d38c7e0489a6bdd8f10e5e88790c3105f12e791b1168069683f1e82",
+      "output_sha256": "1f0508867fd7377ba2f93a7355e6134c5d2eac0b4fe6129ab451d570de6233e7"
+    },
+    "markout_events/2026-08-25/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "8d63813207f897e48fffa674cc14a55e0ac743aafde0f9241bb3e2c5fc850768",
+      "output_sha256": "bb385f69e1c7d3f7cdc14a7282791e5f6efa861a2a10ba34579aac5d451b43a4"
+    },
+    "markout_events/2026-08-25/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "363720b6e4a9630b9fa853d463a6f30caf2a26a0419b5e5ce8d648479176ea3e",
+      "output_sha256": "5e0b2fa36fe1a3b49f02f7b171977b28e32b3147b87812e46587e70c40d16c60"
+    },
+    "markout_events/2026-08-27/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c6d41ec56b8f81fc03b88c55d5c761535200dc48d74a34d990347793e4ae5e7f",
+      "output_sha256": "34387147f660b59ee675e850ef754807dc2f98edc23d4bdf3cca07ffbf4dc0ca"
+    },
+    "markout_events/2026-08-27/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "56028bdd4d4d3961784ce6a58ca95cb7dba8cb2feb2cf98f8145bf049b014cfe",
+      "output_sha256": "e9301f4a9153a6c6784a50fba46a1635a6ae6e19dc34247b03770e714b9b2fc0"
+    },
+    "markout_events/2026-08-27/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "0c1b96ff970a1ca345af43c8ee526b0bd13973bb6555ced325ceca1950b0275c",
+      "output_sha256": "63505dd836df4352789c7531c5ce5a589f299c76b88ebf2298720e636c41f249"
+    },
+    "markout_events/2026-08-27/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "9e9e0abd519084f7594fadbdbc20408ef3f4096e7e004ac1035e315776a92ac0",
+      "output_sha256": "08509a71593f5a554cc08d115fb799c0c0027ca18cdcdd2b364d542f5baacb57"
+    },
+    "markout_events/2026-08-27/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "b07dcff3076ee98550c892aea7aac7959942690c29675dc2e9c15c7fc96b1492",
+      "output_sha256": "7992bd3ff70f06dff09d22fa2eda53be66f2691c80f31571f06e8023fbd0edfb"
+    },
+    "markout_events/2026-08-27/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "8ee177ee4f7a8f77974c907ac06f5ddc695a77a9ce5bed2522e09731799e0dfb",
+      "output_sha256": "ab1fd8676482c9ccf58a2496fc951288a39b5b4da4290c436996ae7018f335e0"
+    },
+    "markout_events/2026-08-27/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "4cfbc9897998612c3379003e858bbd1217b09f99b841ef423d8645b2e6302161",
+      "output_sha256": "6c84d983c792a64ed4a6639536413d93bc178b564ebb69f63cd5e498807142fd"
+    },
+    "markout_events/2026-08-28/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "920d6d5287e5b4a7a254279fd747bbe7289b1cbd20dc46e78be2e6b0b50cef51",
+      "output_sha256": "07dd398483cd21b6d9038a31020c0ecff962eef4d802939221c50bc5c46c9d8c"
+    },
+    "markout_events/2026-08-28/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "9fb03c058c9c90070be62faabeb519d50b5acff0107b3bd0d3357aa402e5b709",
+      "output_sha256": "fd469423034463830893c263c61c0cd0084ecc168a9ed0733879f48feb59bad4"
+    },
+    "markout_events/2026-08-28/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "80437304f5385289991b3597582f28af9d58d2d722eab79721323a0016875f26",
+      "output_sha256": "398dcff1b7544a50560c4263cce39a4cee1e667dd80fc206d9365cfe576fcf90"
+    },
+    "markout_events/2026-08-28/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "5ef330a1f0133aa1b138024531a6b67078d885e801500a950a9c21474b974803",
+      "output_sha256": "495bb65783baf0c23370d6445a383e72fed0c1e62d08ea26450ef10979c74fb4"
+    },
+    "markout_events/2026-08-28/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "460b8a3816f90d66ca2bc185e91fc2ea9be2bddd7dee6a302670e585a15def75",
+      "output_sha256": "e8fcb723969690463213be050f90e8df8e862e2512fbea60ab40cf9d98afcd5e"
+    },
+    "markout_events/2026-08-28/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ea1e19fee321809c9b02946e63873a477cdabf33e4ee5eaed2a5796190c00499",
+      "output_sha256": "87a37f14cba44152c9611cd4c0ce30946707a715273168ed4e467729e4e56443"
+    },
+    "markout_events/2026-08-28/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "3bd16bf59ebbaacb65377f6778f1b0286dbfa4df3bbe1195e31155e1b3158357",
+      "output_sha256": "c4c8ae9335b8d1243dc437cae15a9f8ea2936bd1df659ed0306979e66e975cb4"
+    },
+    "markout_events/2026-08-29/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f967e3137a5a441259de32b5c436a07b9a973b4ad56fd28424c76c2aa504e89c",
+      "output_sha256": "90a97b7394575b7bb75b29a834c5182146767e0cde58c745d57a746f8b64e7fe"
+    },
+    "markout_events/2026-08-29/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "923843e996ad4124efbf5eb12d188459516734a401d5c42ff842104d588a217d",
+      "output_sha256": "bb371fa718035f87a2f3a1b6242b2c9a10e8d1981b84a9da403d672d2dff96b4"
+    },
+    "markout_events/2026-08-29/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ae3fc7f9dc89d9063d480fbe3cab6094079e417ed8db2304846589c26484bcc3",
+      "output_sha256": "5830ec24715640fbfd785e5579d2e4d26b4a17c26195c17f86a3c84702423dc1"
+    },
+    "markout_events/2026-08-29/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7dc683124f96f8a70fc2d66514701d2db226e9c6a422aacb541ec6c00384372b",
+      "output_sha256": "ed7752226afcac2835e2661f05e344fe3ab462a26ae7907b5bbe63f3a6e69eeb"
+    },
+    "markout_events/2026-08-29/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "56bed1c02333a9eae9e3f40c9a5c8bfeafc54910f2b8fd4367d56407b03a58b7",
+      "output_sha256": "92d2f8a04c32c2d19a3e13c98c6054a80dd28d5fb8e6d4aee16ae25dd9282bcf"
+    },
+    "markout_events/2026-08-29/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "655ca00df7a274cf878740eb76d228bc6895b5cf8bb9a1a013b5f57a856697d3",
+      "output_sha256": "f2d07bfd35d5fb10f59204eea82faa199c489940c7b7940a300389e5c03e1a67"
+    },
+    "markout_events/2026-08-29/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "b47ffe2664f6a115211c7fcaddd3d055a4226ba520c9378746670857d0f6f737",
+      "output_sha256": "75b8c68ed741d66e87cef40d95c01b473d9e69b5136d7881634d8047dd920193"
+    },
+    "markout_events/2026-08-30/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "324856289c4f4978588edcf028edd65e21e7ac982af0705aa3507eff1bddb174",
+      "output_sha256": "abb0a34dc25f82710fded5fdb646a5937cc1b0d3433ea0b2fbb1609f56ad88e8"
+    },
+    "markout_events/2026-08-30/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "a5c7507703e3360cea34007a0e29ddc3ba0e1317e918d0f9977e538a5aee8c02",
+      "output_sha256": "e67660c69c3d94c91ee93fbcc1d6997cd485cdcbe532f7912be237a05af8ba81"
+    },
+    "markout_events/2026-08-30/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f0d28ee5ba7ad6300308be5be72395e8f86de1314864f83ca5cf6ada6355f87c",
+      "output_sha256": "9d45251962fbe586958a540bd67b838f6662bf80b4b53051f8886b46e4274916"
+    },
+    "markout_events/2026-08-30/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "8d7489c3fec36ea0b975bf2b0ee4ef2f193c91558f70fb0c4e3d39efbd098295",
+      "output_sha256": "7b72f41f0318036bd31412069ff64c247f2bebe7a284b530ce5917d305c89349"
+    },
+    "markout_events/2026-08-30/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "a8fa11f5127c26d45291ca99ad275528650fa06ceaaedf5983b8756051641fd3",
+      "output_sha256": "d3018770e0359fad4b55cce590a0e149d4c2e683d80047983cdde627e8b63fab"
+    },
+    "markout_events/2026-08-30/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "11fb5770f23aea66c4ee8c9198c104c83bfa8f20a286896a5de351726fb52135",
+      "output_sha256": "eade70877d5997018a4fd1c91a33d6741415615817524eb27ab3c12607aaa4a3"
+    },
+    "markout_events/2026-08-30/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "334bf48353cc43e5bc49e0b44d9a4341f32c82e40083e4b52b958d3f91e0f3ac",
+      "output_sha256": "878a1b59e54a8791686a438df1cb4a9214f876638473f5885f701b1ff933fb94"
+    },
+    "markout_events/2026-08-31/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "fc8661699b87673b0ecbde9035c1c770b6ae962115b4e235781c28f7a8812e08",
+      "output_sha256": "280ffa95bb47c169b6034dc1c213e6c68b47ee06da8a92b26a8f847b582e9842"
+    },
+    "markout_events/2026-08-31/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "62f3573455f63d3d7f612294ccc150d40dacb14bc5c4b4df2530d76852ad7a09",
+      "output_sha256": "6f85562627296d4ece0a01ee8dd12f8e54f8d2d3f54883c969b30b61fe78f424"
+    },
+    "markout_events/2026-08-31/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "b049288124c0847ba118573419233831fc84db4b9a3b29432a858c5507f7aaa3",
+      "output_sha256": "9a10c174c7d9c8e2d0302561bf7112e73bfedd61af64c3bbe91ca0a8cff19f8f"
+    },
+    "markout_events/2026-08-31/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "923dcf2268c717f90d5230688f38ea4bbc67b3f3fea73cc16aade32c8cda4ee4",
+      "output_sha256": "7f88b4272e12ab42fadad4ee96993b5469ac71a3ff78b157a8d30c5f75da5277"
+    },
+    "markout_events/2026-08-31/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "13f0341645599e067d01338ee7d879afea17f1e20d1c4b9ef9542b40ce819b93",
+      "output_sha256": "b6f5473262bfd3fae10604ce9f52978dc30429908d6046a3101cdf9fe7a029e8"
+    },
+    "markout_events/2026-08-31/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "967009af9cf574e6034721eaa8ab1465c395a2b82c3d40f41d189ca28979debb",
+      "output_sha256": "945f9d60b7cdc23c451bd6d830b3c8b87ce4eb508f72a22df55d29a911a5cdba"
+    },
+    "markout_events/2026-08-31/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7e8d9fc9c65972769a094f26b1ddc766f749b79bf8dbbd4ab45b34e61144aaaf",
+      "output_sha256": "cbe67463d30c4357f2f2613cfefc2c563d99b51988ff2fa4e65882a88ba44ed0"
+    },
+    "markout_events/2026-09-01/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c390de6b032bbf138d2a514bb6bb0c4be323a7b6c80283f74696253311b77a42",
+      "output_sha256": "7ef4443442f4826bb1ff83e2203d4a0a9c3157e2b8bcc7582ed29fd2fe826e71"
+    },
+    "markout_events/2026-09-01/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "88a533b69b378f2e10e1af7b5a5d671b81a8b53cc0804e363603df5b8ad9ff46",
+      "output_sha256": "1fc713550486ff1c72dde93ba2433c7a236c4d4e043da0328cfe94295be4bf8b"
+    },
+    "markout_events/2026-09-01/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7b9f3c3f5ee10ef5bd669a6409608b4c8054bf09c8cdac9012ee788e5b460015",
+      "output_sha256": "83bc2bb38cb918ff9e06a921d35b290ebb364be83a50a5ddc35ae934e314eafb"
+    },
+    "markout_events/2026-09-01/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "74329267532571f677ae7eb8692102b98ca84b91a9658a8f3676dcf00c588d75",
+      "output_sha256": "40067cb376bbbe6903a7435bfc50dee850dcc52174e2f84b09d014e5f1f92b96"
+    },
+    "markout_events/2026-09-01/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d4b8a6d900b3af00dc0000531699044313bcf2f09646e7cfa2a2b52e9b692b83",
+      "output_sha256": "44384fb178f765f6f9f95662603fe2d826bd513b33a69291007db5d39b5c2e57"
+    },
+    "markout_events/2026-09-01/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "4a6282c57b4f8447475dce0bbc6bb910f0fb26824c76a95614daaf7d014a5921",
+      "output_sha256": "acdd067924d6271b846de309e748bb5d98da4b6806fa1c4f004bf79a534d6d3c"
+    },
+    "markout_events/2026-09-01/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "9b44413fd4748c4c32886cfb0e747f381c6bdcd55a54ce6e093ad7ef260d22e2",
+      "output_sha256": "1f6459566acbb911babd082fee9513692150f284aecb5ebf72361190cc3541ae"
+    },
+    "markout_events/2026-09-02/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d26ae54706724bb9bcff8ff1315c2146ba06cd8424f3f3a04199b54d329e041a",
+      "output_sha256": "d80010210dd7deaca989a6469a80a2edbc1858aad07bed58bc7196d361f84f35"
+    },
+    "markout_events/2026-09-02/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d3e2a5ef5bfbf0b68a4d5e444e68012806316cb4212bd253fa0d8622e84bba7e",
+      "output_sha256": "b40097b491ae18021f96dec47d0d990b346b318aaa7c61afe4b42dbe663c1913"
+    },
+    "markout_events/2026-09-02/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "9c5979752d61e0a7f55ec0774370941ef2a9b6989c9fe0918bd0fcfa9179cb37",
+      "output_sha256": "f0226f0befb834f3fbf14c78f01103704481f3e35074c7b5939a736e7a0a7776"
+    },
+    "markout_events/2026-09-02/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "9e133a0723a1f9f1d9e6e91b38ac7a7bf2ceff1683d482ea91ddd6bd86f2aac3",
+      "output_sha256": "8d238cdba7ec889dd5ee194a3cb84bbc13be595600437c6ca6052325cb5188b9"
+    },
+    "markout_events/2026-09-02/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "3916125c93ea2e22b6fec00165eb085e37d9cd009181d8426e24c32eadd79fbe",
+      "output_sha256": "cbee7444dec73d233fe59d19ee21f85b10395c20715796e67cb635b5baec7a8f"
+    },
+    "markout_events/2026-09-02/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "03a9b1afbd82f2e10f2675565a63d3d0154c9dea73c9e7bc85aea96800614a11",
+      "output_sha256": "a7edcb90cb92621ce2fc76dfbfda5c1edc92e7d7979363de0a52fa8c474180e5"
+    },
+    "markout_events/2026-09-02/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f1794a367219ecd8022eaf71fb4a4ea2f13f54e9f8b1c2af19b03b9df6fa6eb7",
+      "output_sha256": "33959bfd9fab1399764bdccd8149d89cd8f3f2e55f9ce9deadd7fbe923c8a859"
+    },
+    "markout_events/2026-09-05/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "286d17539179c6cac6c743e4080e725bacf28a2c1276429b6288c8792983d1a6",
+      "output_sha256": "0e0fab3de4dc183237e49969744042487868012c9b06d44a9191024f018fcad9"
+    },
+    "markout_events/2026-09-05/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c88a028a94ea6aff57bc4a0eb68913476160ca660d1b4d829ee65b11a2a98f0c",
+      "output_sha256": "5115dea398e879344f740c89470020443b8d5ce3693023539203d877f5219b19"
+    },
+    "markout_events/2026-09-05/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "a9e3473c5b97cb4d72129df7118b9a4183b7c4d62a645f38fe6b89c6079303e2",
+      "output_sha256": "902e1704b6a996abffda41a2d945368e4fc8464c0f675e32e62d1909e7d1d0fa"
+    },
+    "markout_events/2026-09-05/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "53f90446512f7e3b3c6afbc1f31e692a7b92ce97e0fe69fc5e1dfe882c822a39",
+      "output_sha256": "6d600eb6710cd1f6c16ee52b2da40b6f6d3e5deaf8e10024c7cb0adddd8044c1"
+    },
+    "markout_events/2026-09-05/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "b6cb57747463503407b09d81350eeff8eb7b59e324871b54d37f0f882e04172b",
+      "output_sha256": "6a31ce25c58f56e1a14b593033853b1926c501dc0373229a33135d8df21011fe"
+    },
+    "markout_events/2026-09-05/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "babc84ed4f53b9d92d82c691b8efc52403c914f5d043b5f3a65f635ff1838655",
+      "output_sha256": "a2ccf3dedcc74ce80b07e9065e4674e8dca7ee0dcfcd51391fd6884ed90663ee"
+    },
+    "markout_events/2026-09-05/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "db5ce48ed165e08842fcd749762d771bdfc059d7335b7f67ae60c434b7764cd6",
+      "output_sha256": "1f5c0f2d6200f42337fba5169200727dc40bdac40e4e16c71c6023d5cdc2fe30"
+    },
+    "markout_events/2026-09-06/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "a2228ad59383ba2efe64547718df24c86d09e207b9a585bab336002628e4ef24",
+      "output_sha256": "40bb3d2271a2a4a37b32c977054c5372430f705a8c189bd4ff16378e09b6bc8d"
+    },
+    "markout_events/2026-09-06/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e59fda892d269d335b5704f3a80b53f3a43cd92a7b03f98b6d59e75a35ebb20c",
+      "output_sha256": "721fb66c9527a4fa0a4f7ab10427b682057c75e9f13adf9a63fb4bfe16915298"
+    },
+    "markout_events/2026-09-06/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "1bfa51fc0e495b20cf17e53e8a0df66632f6720db385b7df558c5dde697dd5bd",
+      "output_sha256": "6e4ac186ea4b7dcaaeaf758ddff8138f87f68ad94f09222e2a38460d2cef7ffe"
+    },
+    "markout_events/2026-09-06/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "1426f42f79aa1c4224595793f9181a332e318c95d15523a7d41fa7d9fb13ef15",
+      "output_sha256": "fa810dd086598034a741610a723e88ca917cb508a4410b19acd65073a99101f4"
+    },
+    "markout_events/2026-09-06/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "5358183b8498199200c6d149e372b7caab3730672b9c3795b5f9726ebd91c63a",
+      "output_sha256": "b7db5839bb367f11cc0eebc683fa32b426323d4d17831bcbba3c847e0372e7d0"
+    },
+    "markout_events/2026-09-06/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "21a9f1227e79cab1f95d614c87a534a31a4cd6233a488d763f63a32ff28bbacf",
+      "output_sha256": "856e4ffb20ba02329d695cb4f18cb54708e91f8bf66d4b055bd01cee498e602a"
+    },
+    "markout_events/2026-09-06/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "b2cbe35fb62cfa1c78016ba395f78bcd292f3714a4d397f481a757a3fd47afd3",
+      "output_sha256": "ded302d5e51437b74c346fe50207ebdf16f5fbbfdb61a9ac25bb630e7162454c"
+    },
+    "markout_events/2026-09-07/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c225a81e4496208ec67aa5da5ad2840719ebe6ecc88245dba67ce5c58191c42b",
+      "output_sha256": "915a1e24e951bb9657098e412ef9d69977220fda7cf4804a66aa09390876a898"
+    },
+    "markout_events/2026-09-07/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "a462a7682e6b80d153385c1037731a5c47930a192cbfba178ed9d12fc8fb7bc9",
+      "output_sha256": "8d318fd729619ff2a3630032af49dada6ccc02fa3652a02d88d1682b6959a426"
+    },
+    "markout_events/2026-09-07/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "88db443145e0c5cb74a7bf2a4ead97e2f45cbaba860e169ecda3f83dfce39b49",
+      "output_sha256": "6dea17220de318ae103984e716a29a2d51637a1d2e1acf013a2954fcd6935a83"
+    },
+    "markout_events/2026-09-07/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "18f069870b20537560bfdddceb183fc93c6ed1d651715ea179841513812c4f8f",
+      "output_sha256": "3aed95fb505f504379924524ebe0bb604467bf415f999d9aa3adc91c5d9a105d"
+    },
+    "markout_events/2026-09-07/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ebebd60c29952ff86e448de58faf1437b212c193bca9bb94ec4c5a36bd29db1e",
+      "output_sha256": "1ab17a292a6434aaedf18ca444b351ffc47e0b551374dc65ee94ff4ad0611cb9"
+    },
+    "markout_events/2026-09-07/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f8b9c938fb75e27c459d800a40e5e220be1a9f1dd946f274c248dca060a35f2f",
+      "output_sha256": "cad82fb8009665e3a63656ea3ffec930f2bee5de572c565f71c2c84d3dec87c3"
+    },
+    "markout_events/2026-09-07/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f43bb55aed3d84d8e2f3b3a2d9bfb545bee6b5e861c0b57b14825993a76b3731",
+      "output_sha256": "dd38138911e2d7848e620c6265c7055d1a8498e032eceb0e1f98c9a4cc309e46"
+    },
+    "markout_events/2026-09-08/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "b702d917b9ffa19c2a5cdc3622c67b34ee1f56bc60c0ad2ae4469cd3c59fa99d",
+      "output_sha256": "d053614caeb09da24043f54b64b906a79686f74e794d3892744cf5c0c65235f9"
+    },
+    "markout_events/2026-09-08/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "807852eac80274d0c71e461e73b3aec8584af5532e4f00f8da3a8d976df666b6",
+      "output_sha256": "5275ebbce375a01e124aac47c23566bc7d5896cb56d466e1f2f279f67d4164fb"
+    },
+    "markout_events/2026-09-08/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "6c13cceb6ba1d939411b9ace2397b1b70254952826c6a3f624a6d326033714db",
+      "output_sha256": "83f3261557a5e5f4b62b227f369e93fd0603c978d70738a76cc325e9fab4d96c"
+    },
+    "markout_events/2026-09-08/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "848d52d93a6f3229fe616ea465052b35d5f86aef3773a0724aad288a338ecf19",
+      "output_sha256": "5de98ea42867f680f54ea478774fc8cc250a39e5a693af19fd847117d3da6744"
+    },
+    "markout_events/2026-09-08/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e075e8c334c8506a265b65c7a1c9dba12cd8f96f0a8b005b31de66e1e5fa15ba",
+      "output_sha256": "d3e6b78487134edd1c0f4959e3ca8d68e90bca667e3d6b5801412585dea632f8"
+    },
+    "markout_events/2026-09-08/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "72c6c6e30e561f84a7ec21f2153f489e11eb47e7775b8636ebcaecbd27cac3ce",
+      "output_sha256": "b81183176bc7a75a0f244763524d432f673170663453c91447866616d006d58c"
+    },
+    "markout_events/2026-09-08/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ba0d8eba3a42c41a96710d8b9e44cba817542e80d3c709da51931b6f608f045a",
+      "output_sha256": "327870f8936ca2d7c4c40eb41886ebe0c207e84443a4e76c3d3555c6a63cfbd1"
+    },
+    "markout_events/2026-09-09/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "6990048035f73cebdf25214fef7d1f065087862c0ec78cad631a7ad6def2e742",
+      "output_sha256": "890dc09757598350ef9680448aec20bc044b4541f3096c9c1bb85616213f5456"
+    },
+    "markout_events/2026-09-09/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f0a99d450d45318cb6c8b8ac801cef230b82d2bc9eda38e5b40feb9a78c3c01a",
+      "output_sha256": "b089c938cbac5d7cb037a74e28a8ad12558a848017c8751396b486d160617986"
+    },
+    "markout_events/2026-09-09/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "9f52a016b8019d8e305336825fb2b1e9a65a085f145159e4e34eef3086ba9d7b",
+      "output_sha256": "6443fa0ebccc26f5e4b2c0f9f9eea5248ceac82c0dd24064de4b24ff19dc9440"
+    },
+    "markout_events/2026-09-09/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "99da7b740dc509df647603eda30f419e906cd3e5055ead0491977ead448b9156",
+      "output_sha256": "fe10c77989cd9615f6521a2f97981b443849b7238e341d074be2f01ca91e9b65"
+    },
+    "markout_events/2026-09-09/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "b2c34e156fe4521b81345beebd0a252eb2f4fc24877909896bf34f8425615a25",
+      "output_sha256": "5af4b4ed7388f048e46a950ebb519b0e39bd3cce3baf910c76d94deb525a1deb"
+    },
+    "markout_events/2026-09-09/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c9db177d315da21918745ab2426a9d58f9fb6b8bab5a43db6c7ee16c6dbf4c82",
+      "output_sha256": "a227931efbd893628fec763340950710fff1429309d2e4a36586ba7f1f9cf0bf"
+    },
+    "markout_events/2026-09-09/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d2298c4b7601c8c83693738b8f1c99a39a9ab9efaf04c15a8ea01e743694628e",
+      "output_sha256": "a9ef888a77b6f1fc931e6aade67963b167529227261e95e8166c431de9e0be5f"
+    },
+    "markout_events/2026-09-10/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c26a20823be407157da1b0a1ef0582e2cb72a518049a9ffd58bc91676cfc3163",
+      "output_sha256": "ed26304a2fffae4168815117afb9240157533e165225bd993ad189c2ea8c5c61"
+    },
+    "markout_events/2026-09-10/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "299bb35434ec1b62b7e0289627c5ce48e9fbfd66e76140fa01fd598a585cf4e0",
+      "output_sha256": "3690691842b9c9dc91a9b8b407f32f986e7e962b81e4d58a7b9af9e6a4666f37"
+    },
+    "markout_events/2026-09-10/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ea9089da01b2b5620239f97aeed64a6e85697321930f9d5ed21e32005835711d",
+      "output_sha256": "4c600a35137f521a5ed78c40b25a8f15e3bae94c7139bf3c160c8f77c9da6e7b"
+    },
+    "markout_events/2026-09-10/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "96b7585ce2468a7055234503362327d226636df96010811ce6bb5ea0d41c16a3",
+      "output_sha256": "9d02b4dbd6e7cb06ea84c6d3aaf8005948c9c2b8f7667af0587a0b32c5600277"
+    },
+    "markout_events/2026-09-10/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "4b7e0e915968d91775bfd414c95527efa05ad5551afde0fcb6136f8989e48df7",
+      "output_sha256": "6eb49d96d5e99f8f928c39d9b2f33ce605b2538380eccc55882665478249afeb"
+    },
+    "markout_events/2026-09-10/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c76c6ee3a570835663331f4741aa0e2ff8ad2ffc663c758e52aec774380910ad",
+      "output_sha256": "40c87084444eab705d2fd247f304aa76c9efda24f8602d94df6c2d82ffce4fd4"
+    },
+    "markout_events/2026-09-10/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "009259990381ac7b7bafc614e7a863d57ecb1950646351aeec4ca1547d3ba9bb",
+      "output_sha256": "2b41d389dcf0b2ff8dc63d19d007f571b5ac331111b1d3d571d7a9377c4baf7b"
+    },
+    "markout_events/2026-09-11/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "0f037511083fb3c88e4ee5b304a6a0677a670e43b5e90ee4fb18eb2d3aea3520",
+      "output_sha256": "f507197a1185f290e6c8f5ee107eeaa808f3b38c417bbfad1f14534ee8918b6a"
+    },
+    "markout_events/2026-09-11/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "a2089ff3354a982cb65bceeae3bd7dc30a59fbcb304bbb78398c1f4428af923e",
+      "output_sha256": "0f84108878b24b67c570702a3e5c1afc4d73af00220f585585c0f9201a5d47bb"
+    },
+    "markout_events/2026-09-11/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "5a3b18ab973fac9110a5cdb58e81630d7557d5b61321e7971e96fd7ee9414603",
+      "output_sha256": "b1f3d4b9575d7f670e5a9f111b55de138df6dd502f58e41fd088d35f0438a71e"
+    },
+    "markout_events/2026-09-11/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "05d779aab1615a714df9f2b6fd71933ee031ceed12da06b6477dd135cd2b6801",
+      "output_sha256": "3d226c61b4bbe481c7ecbdf5454122562c7ce0102eb0ae219e4b2f39d317f49a"
+    },
+    "markout_events/2026-09-11/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ebdb5d39ecf6b03853e779f943aa7e297e61eb791aa7107b62838da7447086c2",
+      "output_sha256": "4dce3abad2287e26979cc72277d2057b746a1d83c67756244d5fd2635f9cdc67"
+    },
+    "markout_events/2026-09-11/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c0589a181563df945950de296fd19a06eaeba081f9d41c4e6574cc85e5785bf1",
+      "output_sha256": "998da75a789b26bc8b8395346b52d7beaa4d2823cb799a999d2df46410d63c4f"
+    },
+    "markout_events/2026-09-11/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d3308369453a77a7e44ad4473c105ee1717d1efe36e60a3a1e3aec37a2c7d463",
+      "output_sha256": "22b1b648187227022eff8cf7be374c510906db1ce70bb93d6b7dc98edde7b815"
+    },
+    "markout_events/2026-09-12/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "5efb21b6eb6d827054d78ed9ab631440edaefc39b3afc3e94a72958efe738f06",
+      "output_sha256": "ff5309b897779c18d4576c7e1be5070df13d050cb113f6debc813f73dacd3554"
+    },
+    "markout_events/2026-09-12/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "182d6b22b7368070229b758ad6717380bdf315ee2bd4e5c8b406c85ff8263004",
+      "output_sha256": "9ecbe5d099d9cda7d2b101d550fdaac4a3761fa53d9ca8dd62ea278180cb618c"
+    },
+    "markout_events/2026-09-12/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "844186c02c588a16ce84df5dd12844b6ddc1ed9475f529e6807d17b24390ac36",
+      "output_sha256": "9c54066ee53811b20e7d81dd81b985cfeb128ba32548a1d9137763f7b5732258"
+    },
+    "markout_events/2026-09-12/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "8324abd0201f6452fa9c1f775c3022ad0180e9f5796452833792984bf5a9d1bb",
+      "output_sha256": "ee459b128e5aba67a3fe870d52290a3a78c16f0501412f840c4e8a97d0b2e11f"
+    },
+    "markout_events/2026-09-12/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "94fb2f73bfa0904d296b2868e463f8420edc0a8bd15cfb5fc1a97f10838b7067",
+      "output_sha256": "2681e352350b044a976312438801b26cfe408a7894a507cf9e3b95892d298fd6"
+    },
+    "markout_events/2026-09-12/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "74052528670766906e6a47953d793666241fea1f8b6d99e1ea58442dd42ff7e9",
+      "output_sha256": "15ddc08c7810ecc79b530be7c00ff5416cb54a7dbd29af93868383f8007940b3"
+    },
+    "markout_events/2026-09-12/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "680460524bca04ea60f7cbf1cb8a0cfafa1f9a3a9a74045b9055f3e9f684e6c6",
+      "output_sha256": "167a321c51ae98c9a949d900b2b80c98473c01cdf0b019bbd96fc82fdeafdfdf"
+    },
+    "markout_events/2026-09-13/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e0b5969ac66aa91a1408b0807be1fece6f2878d0b357356768407f0637fe6ced",
+      "output_sha256": "e624df8559221a51bb63db329c0d8dbb5e37aefa74558792df4be9c2c8c290f3"
+    },
+    "markout_events/2026-09-13/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "b23cf9e4b9a7d3bd45dd972c04edc04e036b5efd7093810e6d64a4b2e0d8f00d",
+      "output_sha256": "878f5e209a80990385d8fb4c27345d4fcbd11f1ffe38ddd318006ed26c36b326"
+    },
+    "markout_events/2026-09-13/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "19f30de69a7edd4694884f2097df15e2704e416a63196260d6bc96de679306b0",
+      "output_sha256": "ba3d7660925dcbcf63e92cdec701d543ac330e8a7a23fcf496096c95d858695a"
+    },
+    "markout_events/2026-09-13/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "82a503705385e123073ede6d05844ede7abc5b946bbe54c78e08be9cb8fe76af",
+      "output_sha256": "0bccf3217fbe652f833b706c986d234e45ee32359a725cf2530ac83a65144b31"
+    },
+    "markout_events/2026-09-13/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "54cf7ec7b4d3b7152436a954d1367cacc581c8f0e576b45f55b5d2ef51c78fa0",
+      "output_sha256": "d337b71d19fe9db3f15c7ee8c9dacb54339b908e9f3bcffcabe08d984465a3b8"
+    },
+    "markout_events/2026-09-13/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "ad7f310dbdfe1179b886c432a485724cc7ec5f312bad376594ae9d4dbbe11d9d",
+      "output_sha256": "d0796da503681e9f0c3399c67efe2e148a31d9ca0da1b669646446ec3607e487"
+    },
+    "markout_events/2026-09-13/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "612ac290dd4bae7790b4f1b0af8b5c3521417a030cf961977cd7631a5f82e998",
+      "output_sha256": "689d197c58a0a1b2d7c0d8771cf15d4821b27b156b4b5bac82842c468e20b561"
+    },
+    "markout_events/2026-09-14/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c7f17e3619d10f36e2f2f3f9ab47d39262543ea281ebb69535819f60656f23d8",
+      "output_sha256": "f00791e3dcff2443a5df750c7303891dcc7d1281a306a8ff7f1322592cf3aa18"
+    },
+    "markout_events/2026-09-14/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "64b5563afa79216d6ab70bcf7bc8f8a7b5050a699df6ae9a02fa4d5ba200c985",
+      "output_sha256": "5721f82c635097c78749b6c08eea638736acb61987d3b0da82bfe6512a75d40f"
+    },
+    "markout_events/2026-09-14/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "e2adf9c16ad9b839f8964b9adecf11e08e93ddd334eabd3249b1d25130d6af5e",
+      "output_sha256": "4a09021e1e725636b6d95e6e281503e04f5942166f4058e3968113d06f9e2464"
+    },
+    "markout_events/2026-09-14/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "4d1950d2ff82e6f08a87a7b911acae97436d9309a5fc207ac73d8e8a1a177b02",
+      "output_sha256": "8c2e075e46fd318cbb307aff620d8e16cdf4d94482d07f2e57b48bbbb266c1f1"
+    },
+    "markout_events/2026-09-14/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f76aac88716a40de700b68a3bfe4cca6b4a655f9bf3cc8e4c2f568245af7e986",
+      "output_sha256": "8630a3d28f8ad25ec8fde91347c83bf9b6d2cf81b8a149308dad54d43d692dd2"
+    },
+    "markout_events/2026-09-14/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f4807d1cf6ecf909d70f94358178651e3e52667dc3dc5678476426092bc8c5bf",
+      "output_sha256": "b6934be1578498e94be0ab67d5fda457d244d90718ef2a6f996dd4b8aa0bce25"
+    },
+    "markout_events/2026-09-14/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "61f9021f8a9d691e873c540760a4e523ec7ab99c4a911a1d5451add82d095490",
+      "output_sha256": "e1d5a8b389f68314675c332903db70853ca4c2b3f6155450f08ed457137b2537"
+    },
+    "markout_events/2026-09-15/bnb": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "f62f3cf54ee04d9aae96dd9ca5410a28693560253fc2bd96b6ccbd2f50edc395",
+      "output_sha256": "7e54e1fb8cde5cc8dd3da27d9fd62f06b7e5528b5a04e4ee90b22cb888b395c6"
+    },
+    "markout_events/2026-09-15/btc": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "22ef06c5268605405e656de385ec54bb2da6648c5a07a8f90e58e57408e9efef",
+      "output_sha256": "fe4c72c8f4a4b542eb42e919792e1eb86d9755872f102b015feab27918d4e260"
+    },
+    "markout_events/2026-09-15/doge": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "d62dd5de2f845f81e497867bc590ebc358a79e18741d5c3cad4a74ae32125d2a",
+      "output_sha256": "cc05aa236c77fc29179ce76ed1878738bd45737bdb1e6de9582857bb3d68065f"
+    },
+    "markout_events/2026-09-15/eth": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "53a1f86b6f6f21a2d4583277fa0e8d95e2b42bf74a96cbfb9a051a13a91ac193",
+      "output_sha256": "72683cfd47ca353e4a96fb276fe95141d7986713ea797a69b73c044add8eb0b3"
+    },
+    "markout_events/2026-09-15/hype": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "4902d6c4003d194cdb3653e09ca809c9a81165a496fef20cfd14f2a03030f20f",
+      "output_sha256": "31ef3c85990edf6738344a4641855fdabacdefd163d6c35ffaf5a36f6b3d0b82"
+    },
+    "markout_events/2026-09-15/sol": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "7c938042ffdd224c17d80b6d9a36868288073294ed50566cfcdd005f5a2e5fb3",
+      "output_sha256": "d5f413b1cb666769b8a6fb55d851cbe0e5642cfc7e48a5a38a8610fb670f4d8c"
+    },
+    "markout_events/2026-09-15/xrp": {
+      "code_sha256": "34edb807415dfdc94cafbee216b1d004cc8c7437c934420619ead9ae20538b22",
+      "manifest_hash": "c077f05a631863db7383f1639a48613e4ea84f13bd702a2949e3ee0ff59bb9e5",
+      "output_sha256": "36d1555f5dd03ac16720b0ec7a104f5200c7971685a01c48e5a61e808538f15e"
+    }
+  },
+  "receipt_hash": "c5880b7954bb0287d5221a62b0957bc3704b29522dd126ffde62d6b8f0f5619c",
+  "receipt_version": "tier2_code_equivalence_v1",
+  "rederived_by_code_sha256": "bed1bf7ac3919907fea739405b25efc1ff23cee15c54abccd5ec70f38151e02c",
+  "refused": {},
+  "ruling": "R-943",
+  "side_evidence_sha256": "8ca5ad249d582d31dd41b3d33777708afbe7a1533eb50a378cd9ecd8fc1e422b",
+  "tier2_root": "/home/yuqing/ctaNew/data/pm_5min/tier2"
+}
