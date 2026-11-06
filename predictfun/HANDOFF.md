@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-06 15:23Z (session 62f3ce33) - $150 loss cap vs round-i simulation (read-only)
+
+- Frozen v1 replay has no loss cap; the live $150 cap binds (refuses places) within 1 day from ~54% of simulated starts and the
+  uncapped path reaches the port halt within 1 day from 27% (J) / 10% (X). Report step4/report_cap150_round_i.json; STATUS 15:23Z.
+- Open (user decision): capped replay of v1 on the 9 round-i days with the port's halt rule, to price the cap. Needs a generated
+  engine variant (frozen engine untouched).
+
 ## 2026-11-06 09:23Z (session 62f3ce33) - FROZEN pm_ladder_v2; forward race v1 + v2 declared
 
 - Receipts: predictfun/freeze/pm_ladder_v2/RECEIPT.md, predictfun/freeze/forward_20261104_08/RECEIPT.md (supersedes v1's forward
