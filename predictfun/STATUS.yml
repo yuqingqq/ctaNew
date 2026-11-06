@@ -6,6 +6,14 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-06 06:09Z: FROZEN pm_ladder_v1 (USER: "we freeze and tell the coding session to implement this version"). Receipt
+  predictfun/freeze/pm_ladder_v1/RECEIPT.md; code commit 8d5b02a0 (predictfun added to git with the two Predict recorders); artifacts
+  built from it by pf_freeze_pm_ladder_v1.py (guard_bid / guard_ask LightGBM fit on the 8 read days, thresholds c60 = round i's 11-03 fit,
+  parity: reproduces the 11-03 guard values of every round-i replay exactly on 1,728,000 rows; falsifier fired). Candidate
+  MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+XNA+XMIN1+XV+S60|mid|AM:5:25:95 on pf_step4_ladder.py (c682229e); control today (V0+GS AV 5/25 S60).
+  Declared forward check 11-04..11-08 (5 complete UTC days): PASS iff candidate 5-day mark@stop sum > 0 at J and X AND candidate - control
+  sum > 0 at J and X. 11-04 step1 / step5 written 11-05 02:20Z by the stopped C2 job; no replay or report has read 11-04+. Handed to the
+  exec-port coding session (ctanew-5c) to implement; live go = user's decision.
   2026-11-06 05:09Z: REFRESH DECOMPOSITION + ROUND-i SUMMARY DONE (docs sections 59, 60; step4/report_mm_decomp_fw.json, logs/mm_decomp_fw.log).
   Checks PASS: reconciliation on every arm-day F and G (845,103 fills), falsifier fired, grid = report_mm_decomp.json in 112/112 cells
   (perturbed copy refused), makers = section 57. Refresh at 5/25 gives up spread (8/8 points, 5 intervals below 0) for less adverse
