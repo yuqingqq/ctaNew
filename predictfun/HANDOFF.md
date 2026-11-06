@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-06 06:26Z (session 62f3ce33) - lockstep trace for the exec port DONE
+
+- data/predict_fun/research/step4/trace_pm_ladder_v1/README.md: 9 traced windows (8 x 11-03 J, 1 x 10-25 X own-cross), byte-identity with
+  round i PASS. Regenerate: pf_ladder_trace_build.py, then pf_step4_ladder_trace.py with PF_TRACE_DIR / PF_TRACE_MIDS; check with
+  pf_ladder_trace_check.py. The port session (ctanew-5c) builds model / feature parity itself; it may ask for more windows or fixtures.
+- The 377-share queue figure was not live (replay definition, void L2c arm). No live queue measurement exists.
+
 ## 2026-11-06 06:09Z (session 62f3ce33) - FROZEN pm_ladder_v1; handed to the exec-port coding session
 
 - Receipt predictfun/freeze/pm_ladder_v1/RECEIPT.md (never edit; changes = v2 receipt). Code commit 8d5b02a0; artifacts + receipt in the
