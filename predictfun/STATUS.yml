@@ -6,6 +6,31 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-06 09:38Z: ORDER-CHANGE CAUSES of frozen v1 (user: "check if we also replace / cancel / change orders if the prediction does
+  not change"; docs section 62; step4/report_causes_v1.json; tooling in 4dee5c19). Checks PASS (byte-identical to round i, all requests
+  attributed, selftests incl. flip-back controls). Read days J: 269.7 requests / window (first 60 s); guard bucket changed 74.1%, best
+  price moved 21.7%, best sizes only 3.1%, Binance guard 0.8%, rest < 0.4%; 97% of decisions keep. Reversals within 1 s: 50.6 / window
+  bucket-driven (15.7..85.4), 0.9 book-driven; most cancels within 100 ms of activation. X within 1%. CORRECTION in-run: the first
+  reversal counter tested a repeat and read 0; fixed with a positive control before any number was reported. Untested implication:
+  a dead band / minimum hold on the lines would remove most flicker (new version if pursued).
+  2026-11-06 09:23Z: FROZEN pm_ladder_v2 + FORWARD RACE DECLARED (user: "Yes we can test this"). Code 4dee5c19, receipts 636450b5:
+  predictfun/freeze/pm_ladder_v2/RECEIPT.md (v1 + daily refit of guard models / c60 / lines on the last 7 admissible days; window set
+  a priori, no other length run) and predictfun/freeze/forward_20261104_08/RECEIPT.md (v1 + v2 + control on 11-04..11-08, multiplicity 2;
+  rules: v1 PASS unchanged, v2 PASS same form, ROLLING ADOPTED iff v2 PASS and sum(v2 - v1) > 0 at J and X). The forward receipt
+  SUPERSEDES the procedure lines of v1's declared check: the frozen engine and pf_txmap refuse days >= 11-04 (FORWARD) and
+  pf_step5_guard_preds cannot apply frozen models; fixed by generated pf_step4_ladder_fwd.py (FORWARD from PF_FORWARD; byte-identical to
+  round i on 11-03 default and on 11-02 with PF_FORWARD=20261109), pf_v1_apply.py (frozen models; equals 11-03 preds_t60), pf_txmap env.
+  All v2 parity checks PASS (fold, lines, start-known mask, per-day grid 10-31 / 11-02, v2 engine). REHEARSAL (in-sample, 4 week-2 days,
+  not like-for-like: v1 LODO models saw later days): J v2 +131.8 / v1 +33.5 / control -15.2 (v2 > v1 4/4 days); X +8.4 / -1.4 / -63.5
+  (v2 - v1 +0.0, +6.2, -6.0, +9.5). Run: predictfun/research/run_forward.sh after 2026-11-09 02:00Z (refuses earlier); no timer.
+  2026-11-06 08:14Z: LINE STABILITY (user: "it may need to update given a window"; read-only, consumed days only, no forward read).
+  Share of minute-0 rows with v above the frozen pull line 0.0492, bid / ask: weekdays 10-23, 10-26, 10-27, 11-02, 11-03 = 0.060-0.080;
+  weekends 10-24 / 10-25 = 0.089-0.115, 10-31 / 11-01 = 0.144-0.180 (read days out-of-fold v; 11-03 frozen model). Pooled 8-day p90 /
+  p95 reproduce the lines (0.0492 / 0.0698). WEEK SPLIT of report_ladder2_i.json (mark@stop $/day, same weekday mix, point estimates,
+  no interval: 5 and 4 days): candidate (pm+ladder) J wk1 10-23..27 mean +92.6, wk2 10-31..11-03 +8.4; X +76.9 / -0.4; control
+  (today) J +74.2 / -3.8, X +39.7 / -15.9. A trailing-window refit cannot be tested on the 9 days held (the 10-28..30 gap makes
+  week-2 trailing windows mostly week 1). Proposal to the user: v2 = daily refit on trailing days, declared before the forward read,
+  raced beside v1. Nothing run, nothing frozen.
   2026-11-06 07:04Z: PORT REPORT (ctanew-5c, pmmmrust 5087d6f): lockstep equal on all 9 trace windows (51,548 decision times, 3,521 requests).
   Guard values end to end on 11-03 (their features + the frozen models): 1,727,227 of 1,728,000 rows bit-equal. The 773 others differ
   only in bn_flow250 / 1000 / 5000 by ~1e-14: research builds the flows as a per-hour cumsum with a 10 s carry, live over the whole tape,
