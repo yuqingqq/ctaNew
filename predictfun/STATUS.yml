@@ -6,6 +6,14 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-06 07:04Z: PORT REPORT (ctanew-5c, pmmmrust 5087d6f): lockstep equal on all 9 trace windows (51,548 decision times, 3,521 requests).
+  Guard values end to end on 11-03 (their features + the frozen models): 1,727,227 of 1,728,000 rows bit-equal. The 773 others differ
+  only in bn_flow250 / 1000 / 5000 by ~1e-14: research builds the flows as a per-hour cumsum with a 10 s carry, live over the whole tape,
+  so the residuals of near-zero windows differ. Python lightgbm on their features reproduces their values. 225 of the 773 are in the
+  quoting minute; none crosses the pull / rung line, 2 cross the size line. VERIFIED here: guard_bid has 15 bn_flow250 splits at |thr| <
+  1e-9 (-5.33e-15 and 0.0), guard_ask 5 at 0.0, bn_flow5000 1 / 2 at 0.0: the models split on floating-point noise. v1 KNOWN ISSUE (not
+  changed: frozen): live keeps research-sized residuals and records the 773. The forward check is unaffected (research pipeline, same
+  cumsum). v2 item: round or integerise the flow features before training.
   2026-11-06 06:26Z: LOCKSTEP TRACE for the exec port DONE (request from ctanew-5c after it verified the receipt and started the port).
   pf_ladder_trace_build.py generates pf_step4_ladder_trace.py from the frozen engine (refuses unless sha256 c682229e; 21 anchored
   insertions, each exactly once) with read-only hooks (pf_ladder_tracer.py); the frozen file is unchanged. Byte-identity: candidate fills /
