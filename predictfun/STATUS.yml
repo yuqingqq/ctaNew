@@ -6,6 +6,12 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-06 15:39Z: WHERE THE SETTLE VARIANCE COMES FROM (user: "is it because we don't set limit / don't reduce after 60s"; read-only,
+  round-i v1 win files; pnl = mtm_stop + carry_stop exactly). Carry of shares held at the 60 s stop to settlement = 89% of per-window
+  settle variance at J and X (corr with mark@stop 0.05 / 0.04). Per-day sd J settle 201.7 = trading 47.8 + carry 177.9; X 154.5 / 51.6 /
+  133.5. Held at 60 s (windows with fills): median 15 sh, p90 50 (= the soft cap), max 98. 9-day carry sum J +142.6, X -13.1. Section 56
+  (control arm, not v1): CAP25 / reduce-only 60 s cut carry sd on 8/8 days in 40/40 comparisons, mark@stop change not resolved. Not
+  tested on v1; would be a new version.
   2026-11-06 15:23Z: LOSS CAP vs SIMULATION (user: "Do we have any cap loss in simulation"; read-only, round-i outputs, no replay,
   no forward read; pf_cap_check.py, step4/report_cap150_round_i.json). The frozen v1 replay has NO loss cap; the port adds $150 total
   live-only (pmmmrust PREDICT_FUN_PLAN; live test from 11-06 13:35Z). The cap counts settlement P&L (carry included), not mark@stop.
