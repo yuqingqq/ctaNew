@@ -6,6 +6,12 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-06 15:52Z: INVENTORY RISK MODEL vs v1 (user: "we had a risk model before to control our inventory right?"; code read only).
+  D1 (P-2026-003) inventory rules: size 5, skew past 5 sh, soft 10 / hard 25 sh, $ risk limit 1.86 (|q| x E|60 s move|), reduce-only
+  + stop. Ported to Predict.fun: only G6 share caps, scaled 2x / 5x the large size (v1: 50 / 125 sh). Skew and the $ risk limit were
+  never ported. G6's final reduce-only starts at the stop, where G5 already returns no quotes (desired(), l. 688-689): inert under S60.
+  Fixed-engine tests of inventory limits: only section 56 (control arm). The ladder engine refuses CAP<n> / RO with LD / PM rules
+  (l. 510-511), so testing them on v1 needs a generated engine variant with never-trigger controls. Nothing run.
   2026-11-06 15:39Z: WHERE THE SETTLE VARIANCE COMES FROM (user: "is it because we don't set limit / don't reduce after 60s"; read-only,
   round-i v1 win files; pnl = mtm_stop + carry_stop exactly). Carry of shares held at the 60 s stop to settlement = 89% of per-window
   settle variance at J and X (corr with mark@stop 0.05 / 0.04). Per-day sd J settle 201.7 = trading 47.8 + carry 177.9; X 154.5 / 51.6 /
