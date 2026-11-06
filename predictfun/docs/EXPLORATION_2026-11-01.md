@@ -2256,3 +2256,73 @@ What the round says (each line from the cited section's report):
 Standing candidate (not frozen): 5/25, S60, per-minute lines + ladder (+ improve: central only), V0 + GS guard on the 50 ms grid; today S60
 as the control. No longer windows; no 20/100 until own impact is modelled; no whole-window refresh. The open check is a forward replay
 of a frozen version on days after 11-03, since all of the above is in-sample.
+
+## 61. Fixed lines, the week split, and pm_ladder_v2 (daily 7-day refit) (as of 2026-11-06T09:38Z)
+
+User question: are the pull / size percentiles updated? In v1 they are not. The models, c60 and lines were fitted once on the 8 read days.
+
+Line stability (read days, out-of-fold v; 11-03 frozen model): the share of minute-0 time each side's v is above v1's pull line 0.0492:
+- weekdays (10-23, 10-26, 10-27, 11-02, 11-03): 6-8%;
+- weekends: 9-12% on 10-24 / 25 and 14-18% on 10-31 / 11-01.
+
+Week split of round i (mark@stop $ / day; point estimates; 5 and 4 days; same weekdays, Sat-Tue plus a Friday in week 1):
+
+| | week 1, 10-23..27 | week 2, 10-31..11-03 |
+|---|---|---|
+| candidate, J | +92.6 | +8.4 |
+| candidate, X | +76.9 | -0.4 |
+| control, J | +74.2 | -3.8 |
+| control, X | +39.7 | -15.9 |
+
+v2 (frozen 2026-11-06T09:23Z; predictfun/freeze/pm_ladder_v2/RECEIPT.md):
+- v1's arm and rules, with the guard models, c60 and lines refit every day on the last 7 admissible days, using v1's own fit and line
+  rules.
+- 7 = one weekly cycle, set before any result.
+- All parity checks pass: fold, lines, start-known mask, per-day grid, engine.
+
+Rehearsal on week 2 (step4/report_v2_rehearsal.json; in-sample, not like-for-like: v1's values there come from leave-one-day-out
+models that saw later days):
+- J: v2 +131.8, v1 +33.5, control -15.2 over 4 days; v2 > v1 on 4 of 4 days.
+- X: +8.4, -1.4, -63.5; v2 - v1 by day +0.0, +6.2, -6.0, +9.5.
+- Only 11-02 / 11-03 have full 7-day windows. There: J v2 +30.0 vs v1 -14.5; X -68.0 vs -71.5.
+
+Forward race declared (predictfun/freeze/forward_20261104_08/RECEIPT.md): v1 + v2 + control on 11-04..11-08.
+- Rules: v1 PASS (unchanged), v2 PASS, ROLLING ADOPTED iff v2 PASS and sum (v2 - v1) > 0 at J and X.
+- That receipt also repairs v1's procedure: the frozen engine refused every day >= 11-04. The repair is a generated forward-enabled
+  engine, byte-identical to round i, plus frozen-model apply.
+
+## 62. Order changes of the frozen candidate: what triggers them (as of 2026-11-06T09:38Z)
+
+User question: do we cancel / replace / change orders when the prediction does not change?
+
+Method: pf_ladder_causes.py, hooked read-only into the frozen engine; outputs byte-identical to round i; every request attributed
+(report_causes_v1.json).
+
+The engine reads a side's v only through its bucket:
+- none (missing / stale);
+- <= pull line;
+- between the lines;
+- >= size line.
+
+Each lane change is classified against the previous decision. Rows are the 8 read days at J; X is within 1%.
+
+| cause | requests / window (first 60 s) | share |
+|---|---|---|
+| guard bucket changed | 199.8 (143.8..255.8) | 74.1% |
+| best bid / ask price moved | 58.6 (47.8..69.4) | 21.7% |
+| best-level sizes only (micro price flip at the same prices) | 8.4 | 3.1% |
+| Binance guard | 2.1 | 0.8% |
+| stop at 60 s, inventory, re-place after fill / refusal, other | < 1 | < 0.4% |
+| total | 269.7 (223.0..316.4) | |
+
+- 97% of the ~5,800 decisions per window change nothing: an unchanged price and size is kept, never re-sent.
+- So 26% of requests come without a prediction change. They follow the book: the touch is pulled when the micro price falls behind the
+  best (G4), and the rung is moved when the best moves more than 2 ticks away. These rarely undo themselves: 0.9 reversals within 1 s
+  per window.
+- The churn is the prediction itself. 50.6 reversals per window (15.7..85.4; touch 30.1, rung 20.5) are a bucket change undone within
+  1 s, against about 195 bucket-driven changes. Most cancelled orders were cancelled within 100 ms of going live, or before.
+- A reversal counter that tested a repeat instead of a reversal first read 0 everywhere. It was fixed, with a selftest that rejects the
+  old rule, before these numbers.
+
+Implication, not tested: a dead band on the lines (enter above line + d, leave below line - d) or a minimum hold would remove most
+flicker and free throttle tokens (about 5,000 throttled places / day). Whether it adds P&L is unknown. It would be a new version.

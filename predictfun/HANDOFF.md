@@ -1,5 +1,19 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-06 09:23Z (session 62f3ce33) - FROZEN pm_ladder_v2; forward race v1 + v2 declared
+
+- Receipts: predictfun/freeze/pm_ladder_v2/RECEIPT.md, predictfun/freeze/forward_20261104_08/RECEIPT.md (supersedes v1's forward
+  procedure; v1 rule unchanged). Never edit either; changes = new version.
+- NEXT: after 2026-11-09 02:00Z run predictfun/research/run_forward.sh (sequential run_light jobs; ~2-3 h), then read
+  step4/report_forward_20261104_08.json. Nothing may read 11-04+ before that. The +1 s vs top-5 comparison is computed after the rule.
+- Live port: v2 would need a daily refit on this box + daily delivery of 2 models + 1 lines file; not in scope until the user decides.
+
+## 2026-11-06 08:14Z (session 62f3ce33) - line stability + week split (read-only)
+
+- Fixed pull line quotes 6-8% of minute-0 time on weekdays, 9-18% on weekends. Both arms earned far less in week 2 (10-31..11-03)
+  than week 1 (10-23..27), same weekdays: candidate J +92.6 -> +8.4, X +76.9 -> -0.4 $/day. v1 may fail its forward check if this
+  persists. Open user decision: a rolling-refit v2 raced beside v1 (must be frozen before any 11-04+ read).
+
 ## 2026-11-06 07:04Z (session 62f3ce33) - port: lockstep equal; guard values 1,727,227 / 1,728,000 bit-equal
 
 - v1 known issue: the guard models split on bn_flow noise (|thr| < 1e-9); the 773 rows differ by cumsum residuals only. v2 item: round
