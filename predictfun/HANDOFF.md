@@ -1,5 +1,10 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-06 07:04Z (session 62f3ce33) - port: lockstep equal; guard values 1,727,227 / 1,728,000 bit-equal
+
+- v1 known issue: the guard models split on bn_flow noise (|thr| < 1e-9); the 773 rows differ by cumsum residuals only. v2 item: round
+  the flow features before training. Nothing to change in v1. Port next: live wiring (pfmm feedback, holds, shadow).
+
 ## 2026-11-06 06:26Z (session 62f3ce33) - lockstep trace for the exec port DONE
 
 - data/predict_fun/research/step4/trace_pm_ladder_v1/README.md: 9 traced windows (8 x 11-03 J, 1 x 10-25 X own-cross), byte-identity with
