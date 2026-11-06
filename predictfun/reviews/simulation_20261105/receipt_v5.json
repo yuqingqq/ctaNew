@@ -1,0 +1,135 @@
+{
+  "version": 5,
+  "supersedes": "predictfun/reviews/simulation_20261105/receipt_v4.json",
+  "kind": "repair_and_verification",
+  "as_of_utc": "2026-11-05T15:15:01Z",
+  "status": "ALL_REPORTED_ISSUES_CLEARED_BY_TARGETED_GATES",
+  "scope": "Research simulator fixes and checker hardening. No live order code, fee changes, model tuning, cache deletion, or forward-day reads. This is implementation verification, not profitability validation.",
+  "reproduce": "predictfun/research/run_simulation_checks.sh",
+  "code_sha256": {
+    "predictfun/research/pf_step4_live.py": "742637b9a2d5bd6d53c7538f78b2277412aff6b5c40dec05e4d6d2ee68a4884f",
+    "predictfun/research/pf_step4_ladder.py": "c682229e4fbe606b217cfa633816bcba67bce701c7e690b4cb8be9aa7ff6e37f",
+    "predictfun/research/pf_view_check.py": "844420a112f42e199d14759f09585bc8312bdfad1d888b13c30e7ea863b03b8d",
+    "predictfun/research/tests/test_simulation_causality.py": "420e54d9ed8c12f3ae5483438448a2a04645946e6e6ff783d0c2739571d9de4b",
+    "predictfun/research/run_simulation_checks.sh": "39aa68d7a2ac18275f7b6a4cb0056f444b342686adeb7785274111a8b10cf0e4"
+  },
+  "changes": [
+    {
+      "issue": "R7 (residual R6)",
+      "status": "FIXED_IN_BOTH_ENGINES",
+      "details": "Client-visible cancellation reservations are stored independently of physical fillable orders. They release on observable cancellation/rejection/fill acknowledgements; cancel-pending creates are carried through activation by stable object identity. Throttling never counts hidden physical remaining quantity in the known policy view. The explicit physical regression mode preserves the falsifier."
+    },
+    {
+      "issue": "Policy loss-cap information boundary",
+      "status": "FIXED_IN_BOTH_ENGINES",
+      "details": "Loss-cap decisions use notified cash/inventory, pending placements and client-visible open/cancel-pending quantities. Matching accounting still uses physical fills."
+    },
+    {
+      "issue": "R8",
+      "status": "FIXED",
+      "details": "Checker validates summary/day/arm identities; complete matching fills, requests, and window artifacts; manifest counts; window cohorts; event references, lane/status/time validity and positive finite delays. Missing/empty/mismatched inputs return REFUSED (exit 2). Valid zero-fill known arms are accepted as observations only when complete."
+    }
+  ],
+  "prior_findings": [
+    {
+      "issue": "R1 price priority",
+      "status": "FIXED_CONTROLS_PASS"
+    },
+    {
+      "issue": "R2 own crossing",
+      "status": "FIXED_CONTROLS_PASS"
+    },
+    {
+      "issue": "R3 strict guard",
+      "status": "FIXED_CONTROLS_PASS"
+    },
+    {
+      "issue": "R4 atomic sweep ordering",
+      "status": "FIXED_CONTROLS_PASS"
+    },
+    {
+      "issue": "R5 rejection recovery",
+      "status": "FIXED_CONTROLS_PASS"
+    },
+    {
+      "issue": "R6 direct rung timing",
+      "status": "FIXED_CONTROLS_PASS"
+    }
+  ],
+  "verification": {
+    "loop": "repair -> check -> review -> repair fixture -> check -> integration smoke",
+    "attempts": [
+      {
+        "tag": "simulation_repair_pass1",
+        "passed": 143,
+        "failed": 2,
+        "reason": "Own-cross fixture reached venue-book rejection before the intended branch; corrected the fixture, with no relaxation of assertions."
+      },
+      {
+        "tag": "simulation_repair_pass2",
+        "passed": 145,
+        "failed": 0
+      },
+      {
+        "tag": "simulation_repair_pass3",
+        "passed": 145,
+        "failed": 0,
+        "reason": "Final engine changes include terminal rejection reservation release."
+      }
+    ],
+    "targeted": {
+      "tests": 145,
+      "failed": 0,
+      "causal_parameter_combinations": 96,
+      "description": "Both engine sources, both sides, partial/full fills, varied message spacing and fill-notification delays; paired whole request streams; loss-cap/sequential variants; live/ladder base parity; all earlier positive/regression controls; 12 malformed/missing artifact cases and invalid-delay refusals."
+    },
+    "integration": {
+      "day": "20261024",
+      "scope": "integration smoke only, not performance evaluation",
+      "live": {
+        "windows": 8,
+        "fills": 19,
+        "requests": 1841,
+        "code_sha256": "742637b9a2d5bd6d53c7538f78b2277412aff6b5c40dec05e4d6d2ee68a4884f",
+        "artifact": "data/predict_fun/research/step4/live_tokyoreal_custom_e2_preds_t60k_repairloop_v5/20261024"
+      },
+      "ladder_base": {
+        "windows": 8,
+        "fills": 19,
+        "requests": 1841,
+        "code_sha256": "c682229e4fbe606b217cfa633816bcba67bce701c7e690b4cb8be9aa7ff6e37f",
+        "artifact": "data/predict_fun/research/step4/ladder_tokyoreal_custom_e2_preds_t60k_repairloop_v5/20261024"
+      },
+      "ladder_engaged": {
+        "windows": 8,
+        "fills": 26,
+        "requests": 3071,
+        "code_sha256": "c682229e4fbe606b217cfa633816bcba67bce701c7e690b4cb8be9aa7ff6e37f",
+        "artifact": "data/predict_fun/research/step4/ladder_tokyoreal_custom_e2_preds_t60k_repairloop_v5/20261024"
+      },
+      "parity": "PASS",
+      "corruption_control": "PASS",
+      "missing_run_refusal": "PASS",
+      "checker_runs_validated": 2
+    },
+    "resources": {
+      "synthetic_peak_rss_mib": 134,
+      "integration_peak_rss_mib": 1432,
+      "launcher_address_space_gib": 4,
+      "self_guard_mib": 2048,
+      "launcher_disk_free_gib": 502
+    }
+  },
+  "read_record": {
+    "day": "20261024",
+    "windows_per_arm": 8,
+    "selection": "First eight windows for integration mechanics only; this day was already consumed. Binance padding uses other already-read adjacent hours. No sealed or forward day read.",
+    "outputs_tag": "repairloop_v5"
+  },
+  "limitations": [
+    "No historical profitability or full parameter-grid rerun was performed; prior economics are not automatically revalidated by these code checks.",
+    "Causality suite targets the active split-latency known-policy configuration; explicit legacy physical mode remains intentionally noncausal as a falsifier.",
+    "Replay fill timing/queue assumptions and own market impact remain calibration limits."
+  ],
+  "open_confirmed_findings": []
+}

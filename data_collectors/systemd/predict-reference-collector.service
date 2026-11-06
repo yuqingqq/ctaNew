@@ -1,0 +1,21 @@
+[Unit]
+Description=Predict reference-price relay read-only recorder
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=/home/yuqing/ctaNew
+EnvironmentFile=%h/.config/predict-fun/collector.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 -m data_collectors.predict_reference_recorder --reference /home/yuqing/ctaNew/data/predict_fun/oracle_alternatives/relay_reference.json
+Slice=collectors.slice
+KillSignal=SIGTERM
+TimeoutStopSec=120
+Restart=on-failure
+RestartPreventExitStatus=2 78
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,20 @@
+[Unit]
+Description=Predict.fun read-only market-data collector
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=/home/yuqing/ctaNew
+EnvironmentFile=%h/.config/predict-fun/collector.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 -m data_collectors.predict_fun_recorder --coins btc --intervals 5 --no-binance --root /home/yuqing/ctaNew/data/predict_fun
+Slice=collectors.slice
+KillSignal=SIGTERM
+TimeoutStopSec=120
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

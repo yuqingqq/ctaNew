@@ -1,0 +1,165 @@
+{
+  "as_of_utc": "2026-11-05T11:12:07Z",
+  "scope": "Synthetic code review; no market data read by the reproducer. Historical frequency and P&L impact not measured. Simulator source unchanged.",
+  "reproduce": "predictfun/research/run_light.sh review_synthetic_20261105 -- python3 predictfun/reviews/simulation_20261105/check_engine.py",
+  "interpretation": "A successful run confirms the documented defects reproduce, not that the simulator is correct.",
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "P1",
+      "issue": "Cancel-pending orders are matched before better-priced replacements.",
+      "witness": "Old bid 49 live at 40 ms, replacement bid 50 live at 50 ms, old cancel effective at 95 ms. A 5-share sell through both at 60 ms fills 49, violating the intended price priority.",
+      "fix": "Sort every fillable order by price, then activation time, including all cancel-pending orders; preserve shared trade-volume accounting."
+    },
+    {
+      "id": "R2",
+      "severity": "P1",
+      "issue": "The new ladder engine ignores cancel-pending orders in post-only checks and own-cross diagnostics.",
+      "witness": "At 50 ms, live bid 51 and cancel-pending ask 51 coexist; reported own_cross remains 0.",
+      "fix": "Include every fillable own order in activation checks and crossing diagnostics, and refuse invalid paths."
+    },
+    {
+      "id": "R3",
+      "severity": "P2",
+      "issue": "Policy risk: missing or stale V0 guard predictions permit quoting; whether this is a defect depends on the intended fallback.",
+      "witness": "One fill with a missing market guard, zero with an adverse fresh guard, one again after that adverse guard becomes stale.",
+      "fix": "Report unavailable guard inputs explicitly; withhold the affected side if guard coverage is required."
+    }
+  ],
+  "controls": "Unchanged-price and older-better-price controls pass; fresh adverse guard prevents fills; unsupported split/amend configuration is refused.",
+  "results": {
+    "pf_step4_live.py": {
+      "sha256": "7b0265394382098db910aa1fa585b1c22ffcedf726ef14c9725fabfc23b1cde3",
+      "older_worse_bid_first": [
+        [
+          1,
+          0.06,
+          0,
+          49,
+          5,
+          true,
+          true,
+          2.55,
+          0.1,
+          0.1,
+          0.01225,
+          5,
+          true
+        ]
+      ],
+      "older_better_bid_control": [
+        [
+          1,
+          0.06,
+          0,
+          50,
+          5,
+          true,
+          true,
+          2.5,
+          0.025,
+          0.025,
+          0.0125,
+          5,
+          true
+        ]
+      ],
+      "unchanged_bid_control": [
+        [
+          1,
+          0.06,
+          0,
+          50,
+          5,
+          true,
+          true,
+          2.5,
+          0.05,
+          0.05,
+          0.0125,
+          5,
+          false
+        ]
+      ],
+      "missing_guard_fills": 1,
+      "negative_guard_control_fills": 0,
+      "stale_negative_guard_fills": 1,
+      "known_bad_split_without_XNA_refused": true
+    },
+    "pf_step4_ladder.py": {
+      "sha256": "524a05035ae82cc5f59044c8bf4607f29edd690e675154973ae1596d36a44519",
+      "older_worse_bid_first": [
+        [
+          1,
+          0.06,
+          0,
+          49,
+          5,
+          true,
+          true,
+          2.55,
+          0.1,
+          0.1,
+          0.01225,
+          5,
+          true,
+          0,
+          0,
+          20
+        ]
+      ],
+      "older_better_bid_control": [
+        [
+          1,
+          0.06,
+          0,
+          50,
+          5,
+          true,
+          true,
+          2.5,
+          0.025,
+          0.025,
+          0.0125,
+          5,
+          true,
+          0,
+          0,
+          20
+        ]
+      ],
+      "unchanged_bid_control": [
+        [
+          1,
+          0.06,
+          0,
+          50,
+          5,
+          true,
+          true,
+          2.5,
+          0.05,
+          0.05,
+          0.0125,
+          5,
+          false,
+          0,
+          0,
+          20
+        ]
+      ],
+      "missing_guard_fills": 1,
+      "negative_guard_control_fills": 0,
+      "stale_negative_guard_fills": 1,
+      "known_bad_split_without_XNA_refused": true,
+      "actual_cross_witness": [
+        [
+          50,
+          51,
+          51
+        ]
+      ],
+      "reported_own_cross": 0
+    }
+  }
+}

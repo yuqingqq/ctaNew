@@ -1,0 +1,1200 @@
+{
+  "version": 4,
+  "supersedes": "predictfun/reviews/simulation_20261105/receipt_v3.json",
+  "as_of_utc": "2026-11-05T14:45:10Z",
+  "scope": "Synthetic review of current source; no market data read. Checker creates and deletes tiny synthetic parquet fixtures in a temporary directory. No engine changes by reviewer; historical frequency and P&L impact unmeasured.",
+  "reproduce": "predictfun/research/run_light.sh review4_throttle_synthetic_20261105 -- python3 predictfun/reviews/simulation_20261105/check_v4.py",
+  "interpretation": "Success confirms earlier fixed controls and reproduces the remaining throttle leak and checker input-refusal defect; it is not a clean-engine verdict.",
+  "prior_findings": [
+    {
+      "id": "R1",
+      "status": "PRIOR_COUNTEREXAMPLE_FIXED",
+      "evidence": "Price-priority fixed/off control passes in both engines."
+    },
+    {
+      "id": "R2",
+      "status": "PRIOR_COUNTEREXAMPLE_FIXED",
+      "evidence": "Own-cross protection and disabled-check control pass in the ladder."
+    },
+    {
+      "id": "R3",
+      "status": "GS_STRICT_POLICY_CHECKED",
+      "evidence": "Missing/stale guard withholding passes in both engines when GS is selected."
+    },
+    {
+      "id": "R4",
+      "status": "PRIOR_COUNTEREXAMPLE_FIXED",
+      "evidence": "Atomic sweep fills correct 5; old leg ordering still reproduces 10. Mirrored/aggregated controls pass."
+    },
+    {
+      "id": "R5",
+      "status": "PRIOR_COUNTEREXAMPLE_FIXED",
+      "evidence": "Post-only refusal retries at 100 ms; disabled reset control suppresses recovery."
+    },
+    {
+      "id": "R6",
+      "status": "ORIGINAL_RUNG_COUNTEREXAMPLE_FIXED_RESIDUAL_R7_OPEN",
+      "evidence": "Known view sends no requests before the 190 ms fill notification; physical-view control still sends at 100 ms. Full active rung guard stack passes. Request throttling still reads physical cancel-pending state (R7)."
+    }
+  ],
+  "findings": [
+    {
+      "id": "R7",
+      "related_to": "R6",
+      "severity": "P1",
+      "issue": "Request throttling still uses unreported fills of cancel-pending orders in both engines.",
+      "locations": [
+        "predictfun/research/pf_step4_live.py:817",
+        "predictfun/research/pf_step4_ladder.py:936"
+      ],
+      "witness": "Under the default known policy view and XV, a cancel-pending order fills at 343 ms, with notification due 443 ms. With identical public frames/predictions, the filled branch sends a placement at 353 ms and the no-fill branch does not. The public frames received after the fill carry pre-fill timestamps 309/320/331/342 ms. Cancel-effect time for the filled order is 380 ms, also after the divergent request.",
+      "configuration": "MICRO / AV:5:25:0.06 / G1+G2+G3+G4+G5+G6+V0+GS+XNA+XMIN1+XV+S60; flat Binance; positive depth; actual 44 ms unanswered-request cap and default token budget; no artificial budget overrides.",
+      "cause": "open_n counts cancel-pending orders using true z['rem'] > 0 and physical expiry. Filling such an order removes it from the reservation count before the client observes any resulting acknowledgement, lowering the placement threshold.",
+      "controls": "With XV omitted, requests before the fill-notification boundary are identical. Prior rung-known/physical controls still pass. One paired synthetic scenario per engine.",
+      "fix": "Make request authorization and reservation release depend only on policy-visible lifecycle/acknowledgement state. Include cancel-pending orders in causal tests; compare complete pre-information request streams, including cancels and throttled placements.",
+      "limits": "This proves remaining anticipatory request behavior, not its historical P&L sign or size."
+    },
+    {
+      "id": "R8",
+      "severity": "P2",
+      "issue": "The policy-view checker accepts a missing known-run directory as a measured zero and reports PASS.",
+      "locations": [
+        "predictfun/research/pf_view_check.py:18",
+        "predictfun/research/pf_view_check.py:46"
+      ],
+      "witness": "Executing the actual checker main block with one synthetic early replacement in the physical run and a nonexistent known-run directory prints VIEW CHECK PASS and exits 0. An existing known-bad run with the same early replacement correctly exits 1.",
+      "cause": "A missing fills directory makes glob return no files; early() returns {}, nb becomes 0, and na > 0 and nb == 0 passes without validating the compared artifact.",
+      "fix": "Refuse missing/empty runs and incomplete or mismatched day/arm sets before counting. Add malformed/missing-input refusal controls and causal request-stream checks covering cancel-pending fills.",
+      "fixture_population": "One synthetic fill and one placement per existing fixture run; two existing fixtures plus one absent path. No real data."
+    }
+  ],
+  "results": {
+    "pf_step4_live.py": {
+      "sha256": "38f6b73ac54510fe0dec72dde2edfde8eb2df78c7d8a82f64c332bd3fec03d93",
+      "earlier_price_priority_fix": {
+        "fixed_pt": 50,
+        "regression_pt": 49
+      },
+      "atomic_sweep": {
+        "observed_bid_fill": 5,
+        "expected_bid_fill": 5,
+        "better_leg_earlier_control": 5,
+        "single_aggregate_leg_control": 5,
+        "mirrored_ask_control": 5,
+        "fills": [
+          [
+            1,
+            0.06,
+            0,
+            50,
+            5,
+            true,
+            true,
+            2.5,
+            0.025,
+            0.025,
+            0.0125,
+            10,
+            false
+          ]
+        ]
+      },
+      "postonly_retry": {
+        "refusals": 1,
+        "bid_places": [
+          [
+            0,
+            0,
+            "place"
+          ],
+          [
+            100,
+            0,
+            "place"
+          ],
+          [
+            260,
+            0,
+            "place"
+          ]
+        ],
+        "fills_after_recovery": 1,
+        "no_refusal_control_fills": 1,
+        "off_control_fills": 0
+      },
+      "GS_fix": {
+        "missing_fills": 0,
+        "stale_fills": 0
+      },
+      "throttle_knowledge_leak": {
+        "fill_ms": 343,
+        "fill_notification_ms": 443,
+        "first_divergent_place_ms": 353,
+        "public_frame_stamps_after_fill": [
+          309,
+          320,
+          331,
+          342
+        ],
+        "filled_branch_requests": [
+          [
+            0,
+            0,
+            "place"
+          ],
+          [
+            19,
+            0,
+            "cancel"
+          ],
+          [
+            19,
+            0,
+            "place"
+          ],
+          [
+            38,
+            0,
+            "cancel"
+          ],
+          [
+            38,
+            0,
+            "place"
+          ],
+          [
+            57,
+            0,
+            "cancel"
+          ],
+          [
+            57,
+            0,
+            "place"
+          ],
+          [
+            76,
+            0,
+            "cancel"
+          ],
+          [
+            76,
+            0,
+            "place"
+          ],
+          [
+            95,
+            0,
+            "cancel"
+          ],
+          [
+            95,
+            0,
+            "place"
+          ],
+          [
+            114,
+            0,
+            "cancel"
+          ],
+          [
+            114,
+            0,
+            "place"
+          ],
+          [
+            133,
+            0,
+            "cancel"
+          ],
+          [
+            133,
+            0,
+            "place"
+          ],
+          [
+            152,
+            0,
+            "cancel"
+          ],
+          [
+            152,
+            0,
+            "place"
+          ],
+          [
+            171,
+            0,
+            "cancel"
+          ],
+          [
+            171,
+            0,
+            "place"
+          ],
+          [
+            190,
+            0,
+            "cancel"
+          ],
+          [
+            190,
+            0,
+            "place"
+          ],
+          [
+            209,
+            0,
+            "cancel"
+          ],
+          [
+            209,
+            0,
+            "place"
+          ],
+          [
+            228,
+            0,
+            "cancel"
+          ],
+          [
+            228,
+            0,
+            "place"
+          ],
+          [
+            247,
+            0,
+            "cancel"
+          ],
+          [
+            247,
+            0,
+            "place"
+          ],
+          [
+            266,
+            0,
+            "cancel"
+          ],
+          [
+            266,
+            0,
+            "place"
+          ],
+          [
+            285,
+            0,
+            "cancel"
+          ],
+          [
+            285,
+            0,
+            "place"
+          ],
+          [
+            304,
+            0,
+            "cancel"
+          ],
+          [
+            304,
+            0,
+            "place"
+          ],
+          [
+            323,
+            0,
+            "cancel"
+          ],
+          [
+            323,
+            0,
+            "place"
+          ],
+          [
+            348,
+            0,
+            "cancel"
+          ],
+          [
+            348,
+            0,
+            "place"
+          ],
+          [
+            353,
+            0,
+            "cancel"
+          ],
+          [
+            353,
+            0,
+            "place"
+          ],
+          [
+            358,
+            0,
+            "cancel"
+          ]
+        ],
+        "no_fill_control_requests": [
+          [
+            0,
+            0,
+            "place"
+          ],
+          [
+            19,
+            0,
+            "cancel"
+          ],
+          [
+            19,
+            0,
+            "place"
+          ],
+          [
+            38,
+            0,
+            "cancel"
+          ],
+          [
+            38,
+            0,
+            "place"
+          ],
+          [
+            57,
+            0,
+            "cancel"
+          ],
+          [
+            57,
+            0,
+            "place"
+          ],
+          [
+            76,
+            0,
+            "cancel"
+          ],
+          [
+            76,
+            0,
+            "place"
+          ],
+          [
+            95,
+            0,
+            "cancel"
+          ],
+          [
+            95,
+            0,
+            "place"
+          ],
+          [
+            114,
+            0,
+            "cancel"
+          ],
+          [
+            114,
+            0,
+            "place"
+          ],
+          [
+            133,
+            0,
+            "cancel"
+          ],
+          [
+            133,
+            0,
+            "place"
+          ],
+          [
+            152,
+            0,
+            "cancel"
+          ],
+          [
+            152,
+            0,
+            "place"
+          ],
+          [
+            171,
+            0,
+            "cancel"
+          ],
+          [
+            171,
+            0,
+            "place"
+          ],
+          [
+            190,
+            0,
+            "cancel"
+          ],
+          [
+            190,
+            0,
+            "place"
+          ],
+          [
+            209,
+            0,
+            "cancel"
+          ],
+          [
+            209,
+            0,
+            "place"
+          ],
+          [
+            228,
+            0,
+            "cancel"
+          ],
+          [
+            228,
+            0,
+            "place"
+          ],
+          [
+            247,
+            0,
+            "cancel"
+          ],
+          [
+            247,
+            0,
+            "place"
+          ],
+          [
+            266,
+            0,
+            "cancel"
+          ],
+          [
+            266,
+            0,
+            "place"
+          ],
+          [
+            285,
+            0,
+            "cancel"
+          ],
+          [
+            285,
+            0,
+            "place"
+          ],
+          [
+            304,
+            0,
+            "cancel"
+          ],
+          [
+            304,
+            0,
+            "place"
+          ],
+          [
+            323,
+            0,
+            "cancel"
+          ],
+          [
+            323,
+            0,
+            "place"
+          ],
+          [
+            348,
+            0,
+            "cancel"
+          ],
+          [
+            348,
+            0,
+            "place"
+          ],
+          [
+            353,
+            0,
+            "cancel"
+          ],
+          [
+            363,
+            0,
+            "place"
+          ]
+        ],
+        "without_XV_pre_notification_requests_equal": true
+      },
+      "known_bad_input_refused": true
+    },
+    "pf_step4_ladder.py": {
+      "sha256": "68478b491d7a4c2bc0a410a0a06d127ba0efd416d35f4a3451c8a828712e6ad1",
+      "earlier_price_priority_fix": {
+        "fixed_pt": 50,
+        "regression_pt": 49
+      },
+      "atomic_sweep": {
+        "observed_bid_fill": 5,
+        "expected_bid_fill": 5,
+        "better_leg_earlier_control": 5,
+        "single_aggregate_leg_control": 5,
+        "mirrored_ask_control": 5,
+        "fills": [
+          [
+            1,
+            0.06,
+            0,
+            50,
+            5,
+            true,
+            true,
+            2.5,
+            0.025,
+            0.025,
+            0.0125,
+            10,
+            false,
+            0,
+            100,
+            20
+          ]
+        ]
+      },
+      "postonly_retry": {
+        "refusals": 1,
+        "bid_places": [
+          [
+            0,
+            0,
+            "place",
+            0
+          ],
+          [
+            100,
+            0,
+            "place",
+            0
+          ],
+          [
+            260,
+            0,
+            "place",
+            0
+          ]
+        ],
+        "fills_after_recovery": 1,
+        "no_refusal_control_fills": 1,
+        "off_control_fills": 0
+      },
+      "GS_fix": {
+        "missing_fills": 0,
+        "stale_fills": 0
+      },
+      "earlier_own_cross_fix": {
+        "fixed_cross": 0,
+        "refusals": 1,
+        "off_control_crosses": 2
+      },
+      "fill_knowledge_leak": {
+        "actual_fill_ms": 90,
+        "configured_fill_known_ms": 190,
+        "frame_causing_decision_stamped_ms": 85,
+        "new_places_before_fill_known": [],
+        "identical_public_inputs_no_fill_control_places": [],
+        "L_FILL_1000_control_early_places": [],
+        "physical_regression_control": [
+          [
+            100,
+            0,
+            "place",
+            0
+          ],
+          [
+            100,
+            0,
+            "place",
+            2
+          ]
+        ],
+        "all_requests": [
+          [
+            0,
+            0,
+            "place",
+            0
+          ],
+          [
+            0,
+            0,
+            "place",
+            2
+          ],
+          [
+            60,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            190,
+            0,
+            "place",
+            0
+          ],
+          [
+            190,
+            0,
+            "place",
+            2
+          ],
+          [
+            250.001,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            250.001,
+            0,
+            "cancel",
+            2
+          ]
+        ]
+      },
+      "full_stack_fill_knowledge_leak": {
+        "new_places_before_fill_known": [],
+        "no_fill_control_places": [],
+        "fills": [
+          [
+            1,
+            0.09,
+            0,
+            49,
+            5,
+            false,
+            true,
+            2.55,
+            0.075,
+            0.075,
+            0.01225,
+            5,
+            false,
+            2,
+            10,
+            50
+          ]
+        ]
+      },
+      "throttle_knowledge_leak": {
+        "fill_ms": 343,
+        "fill_notification_ms": 443,
+        "first_divergent_place_ms": 353,
+        "public_frame_stamps_after_fill": [
+          309,
+          320,
+          331,
+          342
+        ],
+        "filled_branch_requests": [
+          [
+            0,
+            0,
+            "place",
+            0
+          ],
+          [
+            19,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            19,
+            0,
+            "place",
+            0
+          ],
+          [
+            38,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            38,
+            0,
+            "place",
+            0
+          ],
+          [
+            57,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            57,
+            0,
+            "place",
+            0
+          ],
+          [
+            76,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            76,
+            0,
+            "place",
+            0
+          ],
+          [
+            95,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            95,
+            0,
+            "place",
+            0
+          ],
+          [
+            114,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            114,
+            0,
+            "place",
+            0
+          ],
+          [
+            133,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            133,
+            0,
+            "place",
+            0
+          ],
+          [
+            152,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            152,
+            0,
+            "place",
+            0
+          ],
+          [
+            171,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            171,
+            0,
+            "place",
+            0
+          ],
+          [
+            190,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            190,
+            0,
+            "place",
+            0
+          ],
+          [
+            209,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            209,
+            0,
+            "place",
+            0
+          ],
+          [
+            228,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            228,
+            0,
+            "place",
+            0
+          ],
+          [
+            247,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            247,
+            0,
+            "place",
+            0
+          ],
+          [
+            266,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            266,
+            0,
+            "place",
+            0
+          ],
+          [
+            285,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            285,
+            0,
+            "place",
+            0
+          ],
+          [
+            304,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            304,
+            0,
+            "place",
+            0
+          ],
+          [
+            323,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            323,
+            0,
+            "place",
+            0
+          ],
+          [
+            348,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            348,
+            0,
+            "place",
+            0
+          ],
+          [
+            353,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            353,
+            0,
+            "place",
+            0
+          ],
+          [
+            358,
+            0,
+            "cancel",
+            0
+          ]
+        ],
+        "no_fill_control_requests": [
+          [
+            0,
+            0,
+            "place",
+            0
+          ],
+          [
+            19,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            19,
+            0,
+            "place",
+            0
+          ],
+          [
+            38,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            38,
+            0,
+            "place",
+            0
+          ],
+          [
+            57,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            57,
+            0,
+            "place",
+            0
+          ],
+          [
+            76,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            76,
+            0,
+            "place",
+            0
+          ],
+          [
+            95,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            95,
+            0,
+            "place",
+            0
+          ],
+          [
+            114,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            114,
+            0,
+            "place",
+            0
+          ],
+          [
+            133,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            133,
+            0,
+            "place",
+            0
+          ],
+          [
+            152,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            152,
+            0,
+            "place",
+            0
+          ],
+          [
+            171,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            171,
+            0,
+            "place",
+            0
+          ],
+          [
+            190,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            190,
+            0,
+            "place",
+            0
+          ],
+          [
+            209,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            209,
+            0,
+            "place",
+            0
+          ],
+          [
+            228,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            228,
+            0,
+            "place",
+            0
+          ],
+          [
+            247,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            247,
+            0,
+            "place",
+            0
+          ],
+          [
+            266,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            266,
+            0,
+            "place",
+            0
+          ],
+          [
+            285,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            285,
+            0,
+            "place",
+            0
+          ],
+          [
+            304,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            304,
+            0,
+            "place",
+            0
+          ],
+          [
+            323,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            323,
+            0,
+            "place",
+            0
+          ],
+          [
+            348,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            348,
+            0,
+            "place",
+            0
+          ],
+          [
+            353,
+            0,
+            "cancel",
+            0
+          ],
+          [
+            363,
+            0,
+            "place",
+            0
+          ]
+        ],
+        "without_XV_pre_notification_requests_equal": true
+      },
+      "known_bad_input_refused": true
+    },
+    "pf_view_check.py": {
+      "sha256": "da3697dc27a4299a21098416a96f91f72263ffc6725cba4609502f8add59a754",
+      "missing_known_run_exit_code": 0,
+      "known_bad_existing_run_control_exit_code": 1,
+      "fixture_fill_rows_per_existing_run": 1,
+      "fixture_place_rows_per_existing_run": 1
+    }
+  }
+}

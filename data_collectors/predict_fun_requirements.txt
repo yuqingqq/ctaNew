@@ -1,0 +1,2 @@
+# Isolated dependencies for the read-only Predict.fun recorder.
+aiohttp>=3.10,<4

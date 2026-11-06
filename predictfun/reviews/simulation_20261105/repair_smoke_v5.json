@@ -1,0 +1,29 @@
+{
+  "day": "20261024",
+  "scope": "integration smoke only, not performance evaluation",
+  "live": {
+    "windows": 8,
+    "fills": 19,
+    "requests": 1841,
+    "code_sha256": "742637b9a2d5bd6d53c7538f78b2277412aff6b5c40dec05e4d6d2ee68a4884f",
+    "artifact": "data/predict_fun/research/step4/live_tokyoreal_custom_e2_preds_t60k_repairloop_v5/20261024"
+  },
+  "ladder_base": {
+    "windows": 8,
+    "fills": 19,
+    "requests": 1841,
+    "code_sha256": "c682229e4fbe606b217cfa633816bcba67bce701c7e690b4cb8be9aa7ff6e37f",
+    "artifact": "data/predict_fun/research/step4/ladder_tokyoreal_custom_e2_preds_t60k_repairloop_v5/20261024"
+  },
+  "ladder_engaged": {
+    "windows": 8,
+    "fills": 26,
+    "requests": 3071,
+    "code_sha256": "c682229e4fbe606b217cfa633816bcba67bce701c7e690b4cb8be9aa7ff6e37f",
+    "artifact": "data/predict_fun/research/step4/ladder_tokyoreal_custom_e2_preds_t60k_repairloop_v5/20261024"
+  },
+  "parity": "PASS",
+  "corruption_control": "PASS",
+  "missing_run_refusal": "PASS",
+  "checker_runs_validated": 2
+}

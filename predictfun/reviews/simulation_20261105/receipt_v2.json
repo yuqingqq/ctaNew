@@ -1,0 +1,191 @@
+{
+  "version": 2,
+  "supersedes": "predictfun/reviews/simulation_20261105/receipt.json",
+  "as_of_utc": "2026-11-05T11:38:03Z",
+  "scope": "Follow-up synthetic review of both fixed engines. No market data read by the checker; simulator source unchanged by reviewer. Historical frequency and economic impact unmeasured.",
+  "reproduce": "predictfun/research/run_light.sh review2_synthetic_20261105 -- python3 predictfun/reviews/simulation_20261105/check_remaining.py",
+  "interpretation": "A successful checker run confirms that the prior fixes pass their controls and the two remaining defects reproduce; it is not an engine correctness certificate.",
+  "prior_findings": [
+    {
+      "id": "R1",
+      "status": "RESOLVED_FOR_PRIOR_COUNTEREXAMPLE",
+      "evidence": "Fixed priority fills 50; PF_FILLPRIO=old positive control fills 49, in both engines."
+    },
+    {
+      "id": "R2",
+      "status": "RESOLVED_FOR_PRIOR_COUNTEREXAMPLE",
+      "evidence": "Fixed ladder rejects the own-crossing order; PF_OWNCROSS=off positive control records crossings."
+    },
+    {
+      "id": "R3",
+      "status": "STRICT_POLICY_AVAILABLE_OPT_IN",
+      "evidence": "V0+GS withholds on missing and stale guard coverage in both engines. Arms without GS retain their stated fallback."
+    }
+  ],
+  "findings": [
+    {
+      "id": "R4",
+      "severity": "P1",
+      "issue": "Atomic sell sweeps are replayed worst price first, overstating bid fills.",
+      "locations": [
+        "predictfun/research/pf_step4_live.py:466",
+        "predictfun/research/pf_step4_ladder.py:522"
+      ],
+      "witness": "One sell order prints 100 shares at 50 then 5 at 49, at the same transaction time. Our 10-share bid at 50 has 100 ahead. Both engines fill all 10 rather than at most 5. Ascending tuple sorting replays 49 first, clears ahead, then the 50 leg fills us again.",
+      "controls": "Better-priced leg at an earlier timestamp, one aggregated 105-share leg, and the mirrored ask sweep each correctly fill 5.",
+      "fix": "Retain taker-order identity in events; replay each atomic sweep in matching price order (bids descending, asks ascending), with consistent volume/queue accounting. Add transaction-level conservation controls and rerun affected comparisons."
+    },
+    {
+      "id": "R5",
+      "severity": "P2",
+      "issue": "Venue-book post-only rejection leaves a rejected intent installed, suppressing re-placement.",
+      "locations": [
+        "predictfun/research/pf_step4_live.py:809",
+        "predictfun/research/pf_step4_ladder.py:928"
+      ],
+      "witness": "Bid sent at 0 ms is refused at 40 ms against the venue book. At 100 ms a batch of known frames ends with the original desired bid again. No retry is sent because the old intent still matches; a later sell yields no fill. The no-refusal control fills.",
+      "fix": "Reconcile the rejected request with its intent and retry state, at the appropriate acknowledgement time; do not overwrite a newer request. Apply recovery handling to venue-book refusals as well as own-cross refusals."
+    }
+  ],
+  "controls": "Prior fixed/off controls, bid/ask sweep controls, GS missing/stale checks, and unsupported split/amend refusal all passed.",
+  "results": {
+    "pf_step4_live.py": {
+      "sha256": "7d28ed34ffc6678c632ade0fcff0e3ea85f04cbb66b2f3f0474a467eff3c97b9",
+      "earlier_price_priority_fix": {
+        "fixed_pt": 50,
+        "regression_pt": 49
+      },
+      "atomic_sweep": {
+        "observed_bid_fill": 10,
+        "expected_bid_fill": 5,
+        "better_leg_earlier_control": 5,
+        "single_aggregate_leg_control": 5,
+        "mirrored_ask_control": 5,
+        "fills": [
+          [
+            1,
+            0.06,
+            0,
+            50,
+            5,
+            true,
+            true,
+            2.5,
+            0.025,
+            0.025,
+            0.0125,
+            10,
+            false
+          ],
+          [
+            1,
+            0.06,
+            0,
+            50,
+            5,
+            false,
+            true,
+            2.5,
+            0.025,
+            0.025,
+            0.0125,
+            10,
+            false
+          ]
+        ]
+      },
+      "postonly_retry": {
+        "refusals": 1,
+        "bid_places": [
+          [
+            0,
+            0,
+            "place"
+          ]
+        ],
+        "fills_after_recovery": 0,
+        "no_refusal_control_fills": 1
+      },
+      "GS_fix": {
+        "missing_fills": 0,
+        "stale_fills": 0
+      },
+      "known_bad_input_refused": true
+    },
+    "pf_step4_ladder.py": {
+      "sha256": "ceb61c4660beffca85449dab038dc0f77e0d13cef8277833eba6ce58f9fc2b94",
+      "earlier_price_priority_fix": {
+        "fixed_pt": 50,
+        "regression_pt": 49
+      },
+      "atomic_sweep": {
+        "observed_bid_fill": 10,
+        "expected_bid_fill": 5,
+        "better_leg_earlier_control": 5,
+        "single_aggregate_leg_control": 5,
+        "mirrored_ask_control": 5,
+        "fills": [
+          [
+            1,
+            0.06,
+            0,
+            50,
+            5,
+            true,
+            true,
+            2.5,
+            0.025,
+            0.025,
+            0.0125,
+            10,
+            false,
+            0,
+            100,
+            20
+          ],
+          [
+            1,
+            0.06,
+            0,
+            50,
+            5,
+            false,
+            true,
+            2.5,
+            0.025,
+            0.025,
+            0.0125,
+            10,
+            false,
+            0,
+            100,
+            20
+          ]
+        ]
+      },
+      "postonly_retry": {
+        "refusals": 1,
+        "bid_places": [
+          [
+            0,
+            0,
+            "place",
+            0
+          ]
+        ],
+        "fills_after_recovery": 0,
+        "no_refusal_control_fills": 1
+      },
+      "GS_fix": {
+        "missing_fills": 0,
+        "stale_fills": 0
+      },
+      "earlier_own_cross_fix": {
+        "fixed_cross": 0,
+        "refusals": 1,
+        "off_control_crosses": 2
+      },
+      "known_bad_input_refused": true
+    }
+  }
+}

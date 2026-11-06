@@ -1,0 +1,950 @@
+program: P-2026-005-predict-fun
+name: Predict.fun BTC 5m market making (D1 transfer research)
+phase: explore          # explore / build / validate / review
+status: active
+owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
+mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
+
+updated: >-
+  2026-11-06 05:09Z: REFRESH DECOMPOSITION + ROUND-i SUMMARY DONE (docs sections 59, 60; step4/report_mm_decomp_fw.json, logs/mm_decomp_fw.log).
+  Checks PASS: reconciliation on every arm-day F and G (845,103 fills), falsifier fired, grid = report_mm_decomp.json in 112/112 cells
+  (perturbed copy refused), makers = section 57. Refresh at 5/25 gives up spread (8/8 points, 5 intervals below 0) for less adverse
+  selection (8/8 points, 2 above 0); MM / carry / settle 1/16 each; ranking vs top 5 unchanged (same cells exclude 0); last-minute post-1 s
+  < 0 for every maker band and all 8 of our runs, refresh 0/4 last-minute cells. Section 60 summary: MM money = spread - 1 s adverse
+  selection at 5/25 in the first minute; settlement = outcome noise (4/88 carry, 0/88 settle intervals); only the ladder on per-minute
+  lines is above 0 at both timings; standing (unfrozen) candidate 5/25 S60 pm + ladder, control today S60; forward replay is the open check.
+  2026-11-06 05:04Z: DECLARED (before any run) - MM / SETTLEMENT DECOMPOSITION AND +1 s vs TOP MAKERS FOR THE WHOLE-WINDOW REFRESH, THEN AN OVERALL
+  SUMMARY (USER: "measure the +1s gain and compare with top makers, together with settlement pnl; then over all these comparisons reach some
+  summary"). Reads only existing fills: refreshed runs fwJ / fwX (preds_t60kF) and grid runs iw (preds_t60k), arms S60..S240 x s5 / s20, J / X;
+  no replay. Script research/pf_mm_decomp_fw.py (helpers of pf_mm_decomp) -> step4/report_mm_decomp_fw.json. Same per-fill terms as section
+  57 (spread / informed / drift / carry), reconciliation against the engine on every arm-day (fails the run; falsifier must fire); grid
+  configs must reproduce report_mm_decomp.json and maker band x minute +1 s must reproduce it (refused otherwise). Tables: per config F and
+  G; refreshed minus grid per term (day-clustered t interval, 7 df, 8 read days, 11-03 beside); +1 s and post-1 s c/sh per minute for
+  top 5 / all makers / ours F / ours G (S240 arm), ours minus top 5 per minute (t interval). Descriptive, in-sample.
+  2026-11-06 04:17Z: WHOLE-WINDOW FEED REFRESH DONE (docs section 58; step4/report_fresh240.json, logs/fw_report.log). Inputs parity PASS
+  9/9 days (first 65 s = preds_t60kE row for row; thresholds = t_60's), gate PASS (S60 refreshed-240 = refreshed-65 both sizes, S240 differs
+  from grid). Refreshed minus grid, 8 read days, in-sample: ADDS_BOTH 0/8, ADDS_J 0/8, ADDS_X 1/8 (s5/S60 = the first-65 s result of section
+  55, reproduced: +12.3 (+0.9..+23.6) 7/8). MM intervals excluding 0 1/16, +1 s $ 0/16, settle 1/16 (s20/S180 X -139.3, negative); per-minute
+  +1 s c/sh 1 of 16 distinct cells (s5 J 180-240 +0.19, lower end +0.00). Direction only: 5/25 +1 s c/sh above grid in 8/8 minute cells,
+  MM point estimate > 0 in 7/8 (20/100: 5/8); shares / day lower in 14/16; 11-03 MM diff < 0 in 14/16. Not adopted.
+  2026-11-06 02:38Z: DECLARED (before any run) - PER-MARKET FEED REFRESH OVER THE WHOLE WINDOW (USER: "yes we can also test that", after: the
+  every-frame guard refresh was only built for the first 65 s). Inputs: every-frame feature rows over [ws, ws + 240 s)
+  (pf_step5_features_rl PF_GRID_EV=1 PF_EV_SPAN_S=240 -> rows_rl_d2_pk_ev240), the same guard models (PF_PSTEM=tf, k 60, thresholds must
+  equal t_60's), start-known withhold, merged with the 50 ms grid -> preds_t60kF (pf_preds_merge_ev, parametrized; defaults unchanged).
+  Input parity (refuses): preds_t60kF restricted to [ws, ws + 65 s) = preds_t60kE row for row. Replays: fixed live engine round i (sha
+  742637b9a2d5bd6d), tokyoreal clock as run_invwin.sh, arms MICRO + D1 stack + V0 + GS + XNA + XMIN1 + XV + S60 / S120 / S180 / S240 at
+  AV:5:25:0.06 and A1:20:100:0, 9 days, central J and bound X timing (tags fwJ / fwX). Gate first (10-24, 11-01, J): S60 on preds_t60kF
+  must equal S60 on preds_t60kE (both sizes; summary + per-window: the refresh after 65 s is engaged but cannot act), falsifier S240 on
+  preds_t60kF must differ from S240 on the grid (invwin). Comparison: refreshed minus grid (the invwin runs, same arm names) per arm,
+  day-clustered mean difference over the 8 read days (t interval, 7 df; 11-03 beside) of MM (mark@stop), +1 s $, settle, and +1 s c/sh per
+  minute of the window; ADDS_BOTH = MM interval above 0 at J and X. 8 comparisons per timing; in-sample (guard fit on the same days).
+  Driver research/run_fresh240.sh, report research/pf_fresh240_report.py -> step4/report_fresh240.json.
+  2026-11-06 02:33Z: CORRECTION to the 17:35Z (11-05) entry and docs section 55: fresh refresh vs 50 ms grid = 2 of 18 comparisons exclude 0
+  (not 1): today arm at bound timing, without GS +12.0 (+0.7..+23.3) and with GS +12.3 (+0.9..+23.6), 7/8 days, 11-03 +1.4; same arm
+  at central timing +4.6 / +4.8 spans 0; every per-minute-line / ladder arm spans 0 (-7.2 .. +9.4). Source report_ladder2_i.json fresh_minus_grid.
+  2026-11-06 02:11Z: MM vs SETTLEMENT / TOP MAKERS / WINDOW DIAGNOSIS DONE (docs section 57; step4/report_mm_decomp.json, logs/mm_decomp.log).
+  Reconciliation with the engine PASS on every arm-day (1,378,386 fills; falsifier fires); maker positive control = report_maker_bad_fills
+  (diff 0); S240 fills before 60 s = S60's 36 / 36. Spread > 0 and informed < 0 in all 56 configs; MM (mark@stop) interval above 0 only
+  for S60 / S60+CAP25 at 5/25 central; carry (settlement) daily sd 45-180 $ (5/25) / 236-965 $ (20/100), 2 of 56 carry intervals exclude 0,
+  no settle interval does. +1 s c/sh, top-5 makers +0.43 -> +0.20 over the four minutes; ours 5/25 central +0.76 / +0.44 / +0.79 / +0.76
+  (above top 5 every minute; interval above 0 in 180-240 s only); 20/100 bound below top 5 in 0-120 s. Longer windows: spread up 16 / 16,
+  informed down 12 / 16, drift down (points), MM change 0 in 16 / 16; in 180-240 s every maker band and every quoting arm of ours loses after
+  the first second (ours -1.5 .. -4.2 c/sh, top 5 -0.79). Descriptive, in-sample.
+  2026-11-06 02:06Z: PRE-FIX LOGS DELETED (USER: "2 first"): 914 logs (3.7 MB) in data/predict_fun/research/logs from pre-fix replay runs, their
+  reports / checks / drivers and the void C2 chain (list: session scratchpad prefix_log_delete_list.txt). Kept 289: every round-i / invwin /
+  repair_smoke_v5 log (149) and 140 data / feature / model / guard-prediction / on-chain / market-only logs (no replay-result text, checked).
+  2026-11-06 02:06Z: DECLARED (before any run) - MM vs SETTLEMENT P&L, +1 s vs TOP MAKERS, WHY LONGER WINDOWS FAIL (USER: "more metrics: the
+  1 s gain compared with top makers and settlement pnl given different configs; check the mm performance and settlement pnl separately, and
+  why longer windows don't work"). Reads only the round-i invwin fills (pf_step4_live.py sha 742637b9a2d5bd6d; 14 configs x 2 sizes x J / X
+  x 9 days) and the step-1 legs / books of the same days; no new replay. Per fill (side s, shares q, price p; m0 = venue mid before the fill,
+  m1 = mid at +1 s, mS = mid at the arm's stop + 100 ms, y = outcome 0 / 100): spread s(m0-p), informed s(m1-m0), drift s(mS-m1), carry
+  s(y-mS). MM P&L = spread + informed + drift (= mark@stop); settlement P&L = carry; total = settle. Reconciliation fails the run: per
+  arm-day sum of settle = engine gross, spread + informed = engine mo1, spread + informed + drift = engine mtm_stop (|diff| <= $0.01);
+  falsifier: a corrupted copy (one fill's shares doubled) must fail it. Makers: real legs, same timing anchor as the engine (tx ws +
+  taker-order key; retimed-leg count must equal the engine's per day), bands top 5 / 6-20 / rest by live-window volume per day, plus all;
+  same terms, post-1 s part s(y-m1). Positive control: the legs_timed2-timed maker +1 s c/sh reproduces report_maker_bad_fills.json
+  (8 read days, first 60 s and 0-240 s, per band, |diff| <= 0.01 c/sh). By fill time 0-60 / 60-120 / 120-180 / 180-240 s: shares / day,
+  spread / informed / +1 s / post-1 s / settle c/sh, mean |m0-50|, for each arm and maker band. Why longer windows: S120 / S180 / S240
+  minus S60 per size and timing, day-clustered mean difference of each component (t interval, 7 df, 8 read days; 11-03 beside); invariant
+  reported: the S240 arm's fills before 60 s equal the S60 arm's. Ours minus top 5 +1 s c/sh per bucket (S240 arm), day-clustered.
+  Descriptive, in-sample; nothing is adopted from it. Script research/pf_mm_decomp.py -> step4/report_mm_decomp.json.
+  2026-11-05 21:52Z: INVENTORY x WINDOW DONE (chain 17:35Z -> 21:50Z, rc 0; docs section 56; step4/report_invwin.json, logs/iw_report2.log).
+  Gate PASS (CAP1000 / RO300 on S60 = S60 on 10-24 / 11-01, falsifier CAP5 differs both days); every CAP / RO arm engaged; no missing
+  day-runs; s5 S60 = ladder engine today (V0 + GS) on 9 / 9 days at J and X. RESULT: 36 comparisons per timing (correction: the 17:20Z
+  declaration said 26), ADDS_J 0, ADDS_X 0, ADDS_BOTH 0; no mark@stop or settle interval excludes 0 in either direction. CAP / reduce-only
+  cut carry sd on 8 / 8 days in all 40 inventory comparisons (risk down, no detectable money change); longer windows raise settle point
+  estimates only (carry), wide intervals; bound timing 20/100: +1 s markout negative in every arm with W >= 120 s. Base S60 8 read days
+  $ / day mark@stop J | X: 5/25 +45.5 | +17.7, 20/100 +139.6 | +19.9. In-sample. Neither lever adopted.
+  2026-11-05 17:35Z: ROUND-i LADDER CHAIN DONE (17:34Z, rc 0; docs section 55). Gates PASS: fix1 regression (old switches = pre-review
+  outputs), view check physical 117 / known 0, parity pari + never-trigger controls, ownoffi own_cross 1, report cross-check ladder
+  today(no GS) = kJi C4 9/9 days, recon 0. In-sample, 8 read days $ / day (J | X), 50 ms preds: today +45.5 | +17.7, pm +45.5 | +28.2,
+  pm+ladder +63.6 | +52.0, pm+improve +70.8 | +39.8, pm+both +83.9 | +56.0, today+ladder +48.8 | +31.9, pm+ladder 20/100 +156.1 |
+  +116.4, hold +17.6 | -5.8. Differences: ladder on pm J +18.1 (+9.4..+26.9) 8/8, X +23.8 (+9.9..+37.8) 7/8 (above 0 both); both on
+  pm J +38.4, X +27.8 (above 0 both); improve on pm X spans 0; ladder on today spans 0; 20/100 vs 5/25 above 0 both (no own impact);
+  hold rejected (0/8). Fresh refresh: 1 of 18 comparisons excludes 0 (chance level). 11-03 (beside) negative in nearly every arm at
+  both timings (pm+ladder -12.2 | -33.1). Inventory x window chain: first launch failed at 17:35Z (run_invwin.sh not executable,
+  nothing ran); relaunched.
+  2026-11-05 17:20Z: DECLARED (before any run) - INVENTORY REDUCTION x QUOTING WINDOW on the FIXED live engine (USER: "we need the data after
+  fixing the bugs"; question: reduce inventory, longer quoting window). Engine pf_step4_live.py round i (sha 742637b9a2d5bd6d), tokyoreal
+  clock as run_ladder2.sh, preds_t60k, every arm MICRO + G4,G2,G6,G5,G3,G1 + V0 + GS + XNA + XMIN1 + XV. Two sizes: AV:5:25:0.06 (C4)
+  and A1:20:100:0 (C2); hi = 25 / 100. Per size: normal quoting for W s then {stop (carry all) | CAP<hi> | reduce-only W -> W+60
+  (RO<W>+S<W+60>) | CAP + reduce-only}, W = 60 / 120 / 180; W = 240 stop / CAP only (predictions end 239.95 s). 14 arms x 2 sizes x 9
+  days (8 read + 11-03 beside) x central (PF_TXJIT=frame) and bound (PF_TXSHIFT=-50 PF_QACT=max) timing. Gate first (stage ctrl,
+  10-24 / 11-01): CAP1000 and RO300 on S60 must equal S60 (summary + per-window), S60+CAP5 must differ (falsifier). Report
+  pf_invwin_report.py -> step4/report_invwin.json: per arm mark@stop / settle $ / day, days > 0, 11-03, carry sd, |inv| at stop,
+  +1 s c/sh; arms whose CAP / RO never engaged are REFUSED; comparisons inventory (CAP / RO / both vs plain stop at the same W) and
+  window (S120 / S180 / S240 vs S60; same with CAP; CAP+RO at W 120 / 180 vs W 60): day-clustered mean difference, t interval 7 df;
+  ADDS_BOTH = mark@stop interval above 0 at BOTH timings (computed). IN-SAMPLE (guard fit on the 8 days); multiplicity 28 arms / 26
+  comparisons per timing, so a single ADDS is weak. Driver run_invwin.sh ctrl -> fullJ -> fullX, after the round-i ladder chain.
+  2026-11-05 17:17Z: PRE-FIX RESULTS CLEARED (USER: "clear the results before fix, they are not reliable numbers"; "we need the results with
+  the good engine, don't mix the old results into current version"). Deleted permanently (user's choice): 163 entries, 4.8 GB - every
+  replay output of pf_step4.py / pf_step4_live.py / pf_step4_ladder.py / pf_ladder.py before round i (step4 live_* / tokyo20_* / ladder_*
+  / tape_ends, step3, c2/, their report_*.json, and the analyses built on replay fills: speed_race, fill_mix, maker_behavior, match_type,
+  big_prints, cross_venue, repost_anatomy, sweep_precursor, minute_pnl, toxicity, pnl_decomp, anchor report ...). Kept: round-i outputs
+  (kJi / kXi / lJi / lXi / smki / pari + controls ownoffi / viewi_*), the user's post-fix repairloop_v5 runs, inputs (badfill grids,
+  minute_lines_t60k.json, step1 / step2 / step5, onchain, ext) and market-only analyses (hold_check, queue_priority, queue_origin,
+  anchor_eval, badfill_info*, maker_bad_fills, skip_match, vacate_gap). C2 driver STOPPED 17:15Z (pf_step4.py never got the fixes; same
+  ascending-price sweep sort) -> C2 VOID. docs/EXPLORATION: banner + 33 sections VOID, 12 PARTLY VOID. EVERY replay number in the
+  entries below dated before 2026-11-05 15:30Z is VOID - do not quote it; valid replay numbers start with round i (docs section 55).
+  Logs (data/predict_fun/research/logs) still hold pre-fix printouts: not results, never read them as such.
+  2026-11-05 15:30Z: REVIEW-4 FIXES VERIFIED (user fixed R7 / R8, asked for a final review then the tests). Diff vs the 14:53Z pre-fix copies
+  (/tmp/predictfun-repair-loop-20261105/*.before): both engines reserve request capacity by policy_open() - known orders, uncancelled
+  in-flight creates, and cancel_wait (cancel-pending orders and creates held until the cancel answer time or a notified full fill;
+  a create rejection releases at its answer); the loss cap reads notified kcash / knet + policy-visible opens. Split path (all planned
+  runs: tokyoreal, L_PLACE 40) - no physical read left on a decision path in either engine (own_open / matcher / own_cross diagnostic
+  stay physical by design). pf_view_check refuses missing / empty / mismatched runs. Check reviews/simulation_20261105/check_fixes_v4.py
+  (synthetic, run_light tag fixcheck_v4) PASS: every check_v4 earlier control passes on both engines; R7 case hit == no-fill requests
+  before 443 ms (38 requests, no place at 353), unthrottled equal, physical view diverges (positive control), the pre-fix engines
+  diverge with a place at 353 (falsifier); view checker exits missing / empty / other-arm / no-summary / no-fills 2, known-bad 1,
+  silent physical 1, clean pair 0; pre-fix checker gives 0 on a missing run (falsifier). Engine sha256 live 742637b9a2d5bd6d, ladder
+  c682229e4fbe606b, view check 844420a112f42e19. Minor, not blocking (no planned run reaches it): the live engine's NON-split 'A' path
+  now counts zombies with t_end > t_dec (was > t), so PF_POLICYVIEW=physical no longer reproduces old non-split + lock + throttle arms
+  (11-02 livedev); known-mode non-split calls policy_open(t) in worst_case before policy_open(t_dec), so reservations acked in
+  (t_dec, t] are already dropped. Tags bumped to round i (run_ladder2.sh R=${PF_LAD2_ROUND:-i}; pf_ladder2_report RND, LIVEKJ = kJ<RND>,
+  output report_ladder2_i.json); round-3 outputs untouched. Chain fix1 -> view -> fix2 -> par -> smoke -> fullJ -> fullX launched.
+  2026-11-05 14:59Z: ROUND-3 CHAIN DONE BUT SUPERSEDED (review 4, HANDOFF 14:45Z) + HOLD. Chain br79kqi74 on the round-3 engines finished 14:49Z rc 0:
+  kJh / kXh (C1-C4, 9 days), parh PARITY PASS (10-24 / 11-01; controls PMzero / AMc006 / LDinf / IMinf equal; invariants 0),
+  ownoffh falsifier own_cross 1 (fires), smoke, ladder lJ / lX on preds_t60k + preds_t60kE -> step4/report_ladder2.json (recon 0 of
+  324 day-arm checks mismatched; cross-check 'today (no GS)' lJ == kJh C4 on all 9 days; own_dup_price / own_cross asserted 0).
+  ALL of it is superseded before use by review-4 R7: every arm uses the XV throttle, whose open_n counts cancel-pending orders by
+  the matcher's remaining size (a hidden fill frees a request slot before its notification; user's synthetic case: fill 343 ms,
+  notified 443 ms, place at 353 ms). kJh / kXh vs kJ / kX not read. Provenance only, do not quote: lJ preds_t60k $ / day (8 read
+  days) today 45.2, pm 45.5, pm+ladder 63.4, pm+improve 70.8, pm+both 84.0, pm+ladder 20/100 155.3, pm+ladder hold 17.7 (log
+  logs/lad2_report_JX.log). R8: pf_view_check.py passes when the known run is missing (absent files read as zero violations).
+  USER: do not run tests now; the user clears R7 / R8, then hands back for the reruns. Code pointers (pf_step4_live.py; the ladder
+  engine has the same code at other lines): :817 split-path open_n counts zombies by z['rem']; :899 non-split open_n reads
+  orders[] and z['rem'] (both physical); :952 zombies pruned on physical rem (a known-view count must keep them until notified or
+  cancel-effective); :718-720 worst-case settlement reads o_['rem'] (not yet checked whether it is on a decision path); :594
+  own_open is the venue's post-only / self-cross check and stays physical.
+  2026-11-05 12:51Z: REVIEW ROUND 3 (user-reported look-ahead, reproduced on synthetic inputs) + FIX. The strategy read the matcher's order
+  state: a fully filled order left its slot at once, so quote decisions (the ladder's cur_order, the inventory caps' open size,
+  the request handler's cancel decision) reacted before the fill notification (rung filled 90 ms, replaced 100 ms, notified
+  190 ms). Fixed in both engines: a policy view updated by acknowledgements (activation, our own cancels, fill notifications);
+  partial fills reduce the open size seen by the caps only when notified (PF_POLICYVIEW=known default, 'physical' = regression;
+  counters acted_on_unknown_fill, view_filled_unknown). Gates: regression PASS (all five switches old -> earlier kJ outputs
+  exactly, C1-C4, 10-24 / 11-01); look-ahead check pf_view_check.py (places within 100 ms of a live order's fill with no cancel
+  between; 10-24, 100 windows, 3 arms): physical 117, known 0 -> PASS. Round-2 runs (kJg / kXg / parg / ownoffg, ladder lJ
+  partial) are superseded; chain rerunning with tags kJh / kXh / parh / ownoffh -> smoke -> lJ / lX.
+  2026-11-05 11:51Z: REVIEW BUGS ROUND 2 (user-reported, reproduced by the user in both engines) + FIXES. (A) High: legs at one time on
+  one side ran by ascending price; on the bid side the worse leg's through-fill cleared our queue ahead before the better leg ran
+  (100 sh at 50 + 5 at 49, 100 ahead of our 10-share bid -> 10 filled, valid max 5); fixed: the maker side's best price first
+  (PF_LEGORDER=price default, 'old' = regression; counter leg_groups_reordered). (B) Medium: a post-only rejection against the
+  venue book left the intent installed, so the same quote was never re-sent; fixed: intent cleared as in the own-cross branch
+  (PF_REJRESET=on default, 'off' = regression; counter rej_reset). Regression gate PASS (all four switches old -> earlier kJ
+  outputs exactly, C1-C4, 10-24 / 11-01). Round-1-only impact (kJf / kXf vs kJ / kX, 8 read days, $ / day): kJ C1 49.5 -> 49.3,
+  C2 155.1 -> 154.1, C3 106.2 -> 105.3, C4 45.9 -> 45.8; kX -0.4 -> -0.5, 27.7 -> 26.5, 32.1 -> 30.9, 18.4 -> 18.3 (fills
+  +-5; prio_reordered 532-1,197, postonly_refused_own 1-3). Ownoff falsifier (round 1, 100 windows, ladder arm, OWNCROSS=off):
+  own_cross 1 (fires). Chain rerunning on both fixes: kJg / kXg -> parg -> ownoffg -> smoke -> lJ / lX.
+  2026-11-05 11:22Z: REVIEW BUGS (user-reported, reproduced by the user on synthetic inputs with passing controls; confirmed here in the
+  code) + FIXES. (1) Fill priority: both engines filled our cancel-pending orders before our live ones regardless of price
+  (book_ = zombies + live), so an old 49 c bid could fill before its live 50 c replacement - overstates P&L; fixed: best price
+  first, then oldest (PF_FILLPRIO=price default, 'old' = regression; counter prio_reordered). (2) Own crossing: post-only at
+  activation checked the venue book only, not our own resting opposite orders (live or cancel-pending), and the ladder's
+  own_cross ignored cancel-pending orders; fixed: post-only also refuses against our own resting orders (PF_OWNCROSS=on default,
+  counter postonly_refused_own; refused order re-placed at the next decision), own_cross counts cancel-pending. (3) Policy:
+  missing / stale (> 100 ms) guard values quoted (fail-open); new token GS withholds the side (counter GS_nocover); the ladder-2
+  arms use it. Regression gate PASS: fixed pf_step4_live with PF_FILLPRIO=old PF_OWNCROSS=off reproduces the earlier kJ outputs
+  exactly (C1-C4, 10-24 / 11-01). EVERY earlier pf_step4_live / pf_step4_ladder number (rebuild 3, docs 52-54, per-minute P&L,
+  queue reads that use replay fills) carries bug (1): impact measured by the fixed reruns kJf / kXf (C1-C4, 9 days). The stopped
+  ladder-2 runs (tags par, smk) used the unfixed engine: provenance only.
+  2026-11-05 11:00Z: DECLARED (before any result) - LADDER 2 / IMPROVE / PER-MINUTE LINES / FRESH REFRESH (user: "we need to use ladder ...
+  explore to post a new price ... check to post at 52c ... test these ideas"; "use the latest feed to refresh the prediction").
+  Exploratory, IN-SAMPLE (lines + guard fit on the 8 read days; 11-03 beside); prior negative ladder test docs 36-38 (band of
+  3-6 levels, re-centring, 1 s near-guard) differs from this one (single sticky rung, trained per-side guard, per-minute lines,
+  real-key + within-frame timing). Engine pf_step4_ladder.py (copy of pf_step4_live.py; tokens PM<key>, AM:lo:hi:<key>, IM<key>,
+  LD<K>, LL<key>; lines step4/minute_lines_t60k.json). Fresh refresh: rows at every Predict frame's known time in 0-65 s
+  (pf_step5_features_rl PF_GRID_EV=1, default output byte-equal on 10-24), same guard models (PF_NOSRC=1), start-known, merged
+  with the 50 ms rows (pf_preds_merge_ev -> preds_t60kE). Arms (S60, C4 sizes unless noted): today (V0, AV 0.06), pm (PM90 +
+  AM 95), pm+ladder (LD2), pm+improve (IM95), pm+both, today+ladder, pm+ladder 20/100; x 50 ms / fresh predictions; central
+  timing lJ (= kJ) and bound lX (= kX). Gates before the run: parity with the live engine (off) and never-trigger controls
+  (pf_ladder_parity.py, falsifier included). Report pf_ladder2_report.py: $ / day mark@stop, days > 0, 11-03, per-lane P&L /
+  swept share / queue ahead, requests and throttle, day-clustered differences (computed). run_ladder.sh restored (it was
+  overwritten by mistake at 10:58Z and recovered verbatim from the 11-03 transcript); the new driver is run_ladder2.sh.
+  2026-11-05 10:29Z: QUEUE ORIGIN (descriptive; pf_queue_origin.py with selftest, step4/report_queue_origin.json, queue_origin_events.parquet).
+  317,334 best-price changes in 0-60 s (8 read days, venue frames): 52% a new price inside the spread, 46% a deeper level becomes the
+  best, 1% from beyond 5 levels; 27% are no longer the best 100 ms later. Deeper level: shown for a median 2.0 s before (p25 0.6 s,
+  p75 5.1 s) with a median 167 sh; queue at +100 ms (a touch-join) median 133, 86% of it resting before the change (0.85-0.90 every
+  day); an order resting since the start of the level's run would have a median 40 ahead (since 1 s before: 100). New price: first
+  frame median 47 sh, 145 by +100 ms (65% added within 100 ms). Fill value of a resting level-2 order not measured (needs an
+  engine arm with two orders per side).
+  2026-11-05 09:51Z: QUEUE MAKERS + CARRY (descriptive; pf_maker_ladder.py, run_light tag maker_ladder). Legs of real taker orders, live phase, 8 read
+  days: ~1,265 maker signers / day, top 1 / 5 / 10 = 9% / 30% / 42% of maker shares; a taker order's fill at one price splits over 1.4
+  makers on average (>= 3 in 7%). Ladders: in sweeps through >= 2 prices (16.4k / day) one maker filled at >= 2 prices in 42%
+  (signer-shuffled control 17%). After the S60 stop the candidates quote nothing (G5 returns no quotes, so G6's reduce-only never
+  applies) and carry to settlement: mark@stop / held-to-settle $ / day C1 49.5 / 89.4, C2 155.1 / 226.7, C3 106.2 / 37.6, C4 45.9 /
+  58.7; carry day range C2 -873..+2247, C4 -165..+381; mean |inventory| at stop 21.5 / 68.8 / 34.6 / 11.8 sh.
+  2026-11-05 08:33Z: PER-MINUTE PERCENTILE P&L (descriptive, in-sample, no new replay; pf_minute_pnl.py, step4/report_minute_pnl.json,
+  step4/minute_pnl_fills_kJ.parquet, log minute_pnl.log). kJ fills split by the side's guard percentile at fill time within the fill's
+  minute; each fill carries its share of mark@stop (sum == window mtm_stop on 13,203 windows, 0 mismatches; a one-tick-off control
+  flags all 12,741 windows holding inventory); 6 of 114,501 fills no guard row (excluded). Minute 1, S60 arms, $ / day 8 read days
+  (all / >=p90 / p70-p90 / below line): C1 +49.5 / +70.1 (8/8) / -10.6 / -10.0; C2 +155.0 / +184.4 (7/8) / -9.4 / -19.9; C4 +45.9 /
+  +50.0 (8/8) / +0.5 / -4.5; C3 +106.2 / +115.0 (7/8) / -1.5 / -7.3; >=p90 holds 37-57% of shares; 11-03 >=p90 -7 / +65 / -3 / +29
+  (all -74 / -65 / -6 / +12). +1 s c/sh is > 0 only from ~p90 up in every minute (S240 arms); mark@stop of S240 fills is dominated by
+  carry to 240 s. Fill-level slices ignore path effects (re-joining the queue later after a pull); the p90 cut was read off this table,
+  so it is a hypothesis for a forward test, not a result. Nothing selected; no engine change.
+  2026-11-05 08:23Z: QUEUE AHEAD (received from the exec-port session, read-only on our data; copied to data/predict_fun/research/ext/
+  queue_ahead_execport_20261105/, scripts + json). L2c main run, C2-P concurrent unthrottled arm, 1,000,314 places, six read days
+  (10-23..27, 10-31; own-date book parts; day list checked here). Joined at the best price (98%): queue at our price median 314 sh in
+  the decision frame, 377 at go-live (p25-p75 209-587; go-live frame median 109 ms after the decision frame); 79% of it already there
+  at the decision, 21% added in the gap; still best at go-live 89%. Level age at decision p25 145 ms / p50 1.2 s / p75 4.2 s; a new
+  level shows median 68 sh; median queue by age <100 ms 129, 100-250 ms 302, 1-5 s 391 -> most of the queue forms in the first ~250 ms.
+  Improve-price places (2%): someone else there by go-live 66%, still best 17%. Not re-run here; no engine change.
+  2026-11-05 07:27Z: PER-MINUTE GUARD PERCENTILES (descriptive, pf_minute_pct.py, log minute_pct.log; user: "we just need some historical
+  percentile values"). Out-of-fold guard value v (c above the global 60% pull line), 8 read days, bid + ask pooled: v rises through the
+  window - today's pull line v = 0 sits at the 70th / 62nd / 58th / 54th percentile of minutes 1-4, the size-up line v = 0.06 at the
+  93rd / 90th / 84th / 77th. Realized sweep label (value of keeping an order at the best through the next 500 ms when swept through;
+  excludes non-sweep fills, so not P&L) is monotone in the percentile in every minute and > 0 only in each minute's top 5%. Nothing
+  selected; no engine change.
+  2026-11-05 06:21Z: REBUILD 3 RESULT (pf_review3_report, step4/report_review3.json, docs section 54; $ / day mark@stop WITHOUT rebate,
+  8 read days, in-sample screens). Central kJ (real taker-order key + within-frame time, jitter mean 26-28 ms): C1 50, C2 155, C3 106,
+  C4 46 (+1 s c/sh +0.27 / +0.31 / +0.58 / +0.76; days > 0 5 / 6 / 5 / 6 of 8). Bound kX (one frame early + pessimistic queue): -0 / 28 /
+  32 / 18. kE (E2-only -300 ms): -160 / -406 / -172 / -52. kM: 47 / 155 / 99 / 43. PREDICATES: none passes ALL; C4 fails only P_E2;
+  C3 fails P_DAYS (5/8) + P_E2; C2 fails P_E2 + P_TOP5; C1 passes only P_MIN. Context (after the result, descriptive): E2 - WS signed
+  error median 0, mean -30 ms (10-24, 11-01) - kE is a far-tail bound. Latest four days (10-31..11-03) at kJ: mean C1 -42, C2 -62,
+  C3 -23, C4 -3, positive on 1/4 each (old rbtx showed C3 / C4 4/4); 10-23..27 mean +98 / +285 / +191 / +74. WINDOW x SIZE: no longer
+  stop and no bigger size adds (all CIs span 0); S240 worst days -338..-2,507; per-share quality past 60 s stays above the top 5,
+  inventory carry is the cost. The §53 freeze recommendation (C3) is withdrawn; no freeze / commit / implementation message.
+  2026-11-05 03:15Z: REHEARSAL PASSED, REBUILD 3 LAUNCHED (run_review3.sh, log run_review3.out). pf_txmap 10-24: 93.6% of legs / 96.8%
+  of shares mapped to a taker order (status 0 613,080; 5 = refined by maker signer 24,592, signer index agrees on 100% of status-0
+  legs; 3 = still ambiguous 43,728, keep own time); old key merges orders in 85,488 / 211,748 keys (40%); invariant 0 violations,
+  shuffled 99.998% (both selftests fire as required). Engine off-parity (flags off, 10-24, 4 arms): mark, settle, fills, rebate equal
+  to rbtx to the cent. Engaged (tk + jitter, C3 10-24): jitter mean 27.1 ms / p50 25.3; tk groups 453,163 vs 215,059 old-key groups;
+  C3 mark 61.15 -> 20.27 $, fills 1,481 -> 1,721 (one rehearsal day, not a result). Input bounds engaged on 11-03: 19 book frames of
+  11-04 dropped (and Binance 11-04 00Z skipped); C3 11-03 unchanged (2.00 $, 947 fills), so the padding reads never moved a number.
+  2026-11-05 03:01Z: SECOND REVIEW FOUND TIMING DEFECTS; GRID STOPPED; REBUILD 3 DECLARED. Review agent (read-only, scratch
+  scratchpad/review2/) findings verified here at the artifact: (1) the transaction key mid / exec_s / first_recv_ns / taker_index /
+  taker_quote / price_executed merges different taker orders - reviewer's REST map of 10-24 12-18Z: 42.2% of keys hold > 1 real taker
+  order (tx hash + taker hash), 47.5% of shares, up to 61 orders / key; the engine's tx_multi_time_after check is 0 by construction
+  (not evidence; only _before can fire). (2) Trades sit at the stamp of the frame that shows them; Predict publishes every ~50 ms
+  (gaps 40-60 ms 61%) and our latencies are HTTP-measured, so matches happen up to one frame earlier (reviewer: random within-frame
+  time cuts the 1 s markout 18-32% on 10-24, ~ the 25 ms shift). (3) pf_step4_live padded Binance +-1 h with no filter. READ RECORD:
+  every earlier replay of 11-03 (rv*, rb*, incl. today's rbtxE / rbtxS50) loaded the Binance tape of 11-04 00Z and step1 book frames to
+  11-04 00:00:05 (forward day; Binance / last-window post-close frames only; no Predict 11-04 trade or window); the reviewer's 3 scratch
+  replays of 11-03 (01:55-01:59Z) the same; reviewer's 2 text-only python calls at 02:07Z fell in the C2 window (no data). Not yet
+  re-checked here, carried as stress: (4) ws anchor later than earlier book evidence (PF_TXTIME=min = low end); (5) E2 search window
+  starts at executedAt - 600 ms, ~5% of matches earlier; (6) pred_1000 (A1 sizing, C1 / C2 only) still from constant-55 ms pending rows.
+  (7) No untouched day: pull, stop, sizes, AV par, V0 and guard stack were chosen on the 8 read days, 11-03 consulted (section 51 / 52)
+  -> every predicate below is a screen, not a validation (rule 11); multiplicity across rounds was not recorded.
+  STOPPED at 02:56Z: run_review2.sh after rbtxE / rbtxS50 (done, old key) and rbw 10-23 (done) / 10-24 (killed); the window-size report
+  was not run; rbw / rbwX are superseded. FIXES (opt-in, defaults reproduce old runs): pf_txmap.py (new) - REST taker order per leg
+  (step1/<d>/legs_tk.parquet, statuses 0 mapped / 1 absent / 2 count mismatch / 3 ambiguous equal-content / 4 no taker hash; selftests:
+  old key must merge > 0 orders, one order = one market + second with <= 0.1% violations, shuffled orders must violate >= 50%; reads no
+  sealed or forward hour); engine PF_TXKEY=tk (group by taker order, unmapped legs keep own time), PF_TXJIT=frame (each transaction back
+  by U(0,1) x gap to its market's previous frame, cap 100 ms, one draw per transaction, seed = day); engine always drops input from
+  sealed / forward days (books by t_ms, Binance by hour; bounds in summary.input_bounds) and writes code_sha256 + PF_* env to summary;
+  pf_badfill_grid_tx PF_TXKEY=tk -> badfill_info_tx_tk (labels on frame stamps = what a live fit sees), drops sealed / forward frames.
+  REBUILD 3 (run_review3.sh): txmap 9 days -> grid_tk -> guard refit (PF_PSTEM=t, k 60, preds_t60) -> start withhold (preds_t60k) ->
+  replays, all PF_TXKEY=tk PF_TXTIME=ws XV V0 pull 60%, Tokyo clock: kJ (central: PF_TXJIT=frame) and kX (bound: PF_TXSHIFT=-50 +
+  PF_QACT=max) on 14 arms = C1 A1:5:25:0, C2 A1:20:100:0 at S60 + AV:5:25 / 20:100 / 40:200 (par 0.06) x S60 / 120 / 180 / 240 (C3 =
+  AV:20:100 S60, C4 = AV:5:25 S60); kS (stamps, no jitter: the old timing on the real key), kE (jitter + PF_TXSHIFT_E2=-300), kM
+  (PF_TXTIME=min + jitter) on C1-C4. PREDICATES (pf_review3_report computes them; money = mark@stop $ / day WITHOUT rebate; 8 read days;
+  11-03 beside, not a test): per candidate P_DAYS = kJ mark > 0 on >= 6/8 days AND every leave-one-day-out mean > 0; P_BOUND = kX 8-day
+  sum > 0; P_E2 = kE sum > 0; P_MIN = kM sum > 0; P_TOP5 = kJ +1 s c/sh >= top 5's in 0-60 s (replay vs real fills, not like-for-like);
+  ALL. Longer stop (vs S60, same size) / bigger size (vs next smaller, same stop) ADDS iff the day-clustered 95% CI (G = 8, t 2.365) of
+  its kJ delta excludes 0 AND its kX delta > 0. Reported beside: key effect (kS vs rbtx), jitter effect (kJ vs kS), tk mapping shares,
+  jitter mean, per-segment quality vs the top 5. Validation only on >= 5 complete untouched days (11-04..11-08) of a frozen committed
+  version; no freeze before the user chooses.
+  2026-11-05 01:49Z: SECOND REVIEW + WINDOW / SIZE GRID DECLARED (user: "review again to make sure the results are reliable, then check if
+  we can quote in longer windows and larger dynamic sizes"). Second independent read-only code review (agent) running. Fix checks here:
+  start withhold - 0 fills before the start price is known in rbtx (control, unrestricted run: 39-106 fills / day); pending fix - only
+  pf_pend_* change (1-7% of rows) plus a few day-edge rows from the padding guard; transaction timing - new engine instrument
+  (tx_multi_time_before / _after; REFUSED if any transaction keeps > 1 time): 11-01 39,351 -> 0. New option PF_TXSHIFT_E2 (E2-only
+  transactions shifted). Runs (run_review2.sh, after C2 has processed 11-04): (A) S60 C1-C4, preds_h60k, tx ws, XV: rbtxE
+  (PF_TXSHIFT_E2=-300, ~p75 of E2's error), rbtxS50 (PF_TXSHIFT=-50, one frame). R_E2 / R_S50 = 8-day mark@stop (no rebate) > 0, per
+  candidate. (B) stop 60 / 120 / 180 / 240 x AV:5:25:0.06, AV:20:100:0.06, AV:40:200:0.06 (hi 200 = ~70% of the touch), same base (tag
+  rbw), and the same 12 arms under combined stress PF_QACT=max + PF_TXSHIFT=-25 (rbwX). A longer stop / bigger size "adds" only if the
+  day-clustered 95% CI of its delta (no rebate) excludes 0 AND the stress delta is > 0; 11-03 reported beside. Days: 8 read + 11-03;
+  11-04+ not read (forward days, no freeze yet).
+  2026-11-04 15:39Z: REBUILD RESULT (pf_rebuild_report, report_rebuild.json; 8 read days, mark@stop $ / day WITHOUT rebate): guard refit on
+  the corrected grid (pending known per frame, transaction-timed labels: 1% of labels changed, bad share 4.17 -> 3.97%) changes little.
+  rbtx (tx timing + start withhold + XV): C1 61 (+0.43 c/sh, 7/8), C2 180 (+0.41, 7/8, worst day -165), C3 138 (+0.76, 8/8, LOO min 111),
+  C4 AV:5:25:0.06 45 (+0.93, 8/8). Pessimistic queue: 47 / 122 / 124 / 40; trade times 25 ms earlier: 42 / 150 / 99 / 31. Predicates
+  (P_DAYS, P_QUEUE, P_SHIFT, P_TOP5): C1, C3, C4 all pass; C2 fails P_TOP5 (+0.409 vs top 5 +0.422). 11-03 (past-only fit, the one day
+  not used for any choice): mark ~0 for all (C1 -4, C2 -4, C3 +2, C4 +2; settle positive from carry), and -16..-47 with the 25 ms shift.
+  C3 / C4 request rate p99 506-507 per quoting minute (at Predict's 500 / min; XV throttles ~1.0-1.1k times / day). Freeze builder
+  pf_guard_freeze.py now fits on badfill_info_tx / rows_rl_d2_pk and selftests against preds_h60 of 11-03. Freeze waits for the user's
+  choice of version.
+  2026-11-04 14:47Z: PADDING GUARD in pf_step5_features_rl (always on from now): the +-1 h padding hours skip sealed days (10-28..30) and
+  any day after the built day (forward days untouched); a sealed day itself is REFUSED. Caught before the rebuild reached 10-27 / 10-31
+  (chain paused, restarted from 10-23 with the guard; 10-23 now 25 of 26 hours). RECORDED READ: the 11-03 build at 04:30Z (feat_1103)
+  read Binance (and relay) 2026-11-04 00Z as padding for 11-03's last windows' features - no decision used 11-04; 11-04 is still the
+  first forward day, with this read recorded (rule 34a / 10-22 qualification: record, never drop the date).
+  2026-11-04 14:45Z: REVIEW RESULT (pf_review_report, report_review.json; 8 read days, $ / day mark@stop WITHOUT rebate): all six declared
+  predicates pass for C1 / C2 / C3, but the corrections roughly halve the money. C1 5/25: 104 (orig) -> 84 (start withhold) -> 63 (one
+  time per transaction) -> 48 (+ pessimistic queue); C2 20/100: 292 -> 236 -> 161 -> 105; C3 AV 20/100: 232 -> 205 -> 125 -> 113. +1 s
+  c/sh with tx timing C1 +0.48 / C2 +0.47 / C3 +0.78 (top 5 +0.42; under the queue bound C2 +0.39). XV costs ~0; walk-forward keeps
+  103-123% of LODO; latency tails ~no loss; 'min' timing pessimistic (C2 148). 11-03 (tx): C1 -2, C2 +4, C3 +41. C3 request rate p99
+  507 / quoting minute (throttled ~1.5k / day). C3 positive 8/8 days in tx, txL and txQ.
+  REBUILD DECLARED (before any freeze; run_rebuild.sh): features with pending increments known per frame (pf_step5_features_rl
+  PF_PEND_KNOWN=frame -> rows_rl_d2_pk), guard grid on transaction times (pf_badfill_grid_tx -> step4/badfill_info_tx/grid.parquet),
+  guard refit (pf_step5_guard_preds PF_GRID / PF_ROWS / PF_PSTEM=h -> preds_h60, 11-03 from the all-8-day fit), start withhold
+  (preds_h60k), replays C1-C3 + C4 = AV:5:25:0.06 (small live-start size), all V0 + XV + S60, PF_TXTIME=ws: tags rbtx, rbtxQ
+  (PF_QACT=max), rbtxS (PF_TXSHIFT=-25: matches 25 ms before the frame). Old outputs untouched (new names).
+  2026-11-04 14:05Z: QUEUE CHECK: the reviewer's "every displayed-size drop counts as ahead of us" does not hold - after activation the
+  engine sets ahead = min(ahead, displayed), i.e. cancels are attributed behind us first (the pessimistic attribution within the
+  hard bound ahead <= displayed). The activation half holds: added PF_QACT=max (default off) = queue at activation max(frame before,
+  first frame after if <= 100 ms). Runs rvtxQ (tx timing + QACT, 9 days, run_review_q.sh, then pf_review_report). R_QUEUE = rvtxQ
+  mark@stop (no rebate) sum over 8 days > 0. Declared before any result is read.
+  2026-11-04 14:02Z: INDEPENDENT REVIEW (code-review agent, read-only) -> NOT READY TO FREEZE until re-run. Main finding, verified here: one
+  taker transaction's maker legs carry different replay times (WS-matched legs vs E2 book-time estimates), so the engine sees the book
+  move and acts BETWEEN the legs of one trade (look-ahead in our favour). 0-60 s, legs_timed2: in mixed WS+E2 transactions (39-49% of
+  volume) the legs spread p50 300-360 ms (>100 ms in 71-77%); all-WS transactions p75 200-300 ms. Reviewer: on 10-23 C2's settle comes
+  almost all from fills on such late legs. Other findings: no untouched days left (11-03 used for the pull choice); the unverified
+  rebate sat inside the pass rules; queue-ahead at activation from the frame before (optimistic); trade times = frame times (match up to
+  ~50 ms earlier); pf_pend_* features use a constant 53.1 ms delay, not the per-frame known time (look-ahead in slow frames); LODO uses
+  later days; realised pull share varies 47-71% at nominal 60%; latencies without tails. Start-price check: every window from the WS
+  patch, 0 price mismatches, known p50 2.3-2.6 s / p90 3.2-3.5 s (matches the exec port's F1 measurement).
+  DECLARED: engine option PF_TXTIME (default off, existing runs unchanged): 'ws' = every leg of a transaction (key mid, exec_s,
+  first_recv_ns, taker_index, taker_quote, price_executed) at its earliest WS-timed leg, else earliest E2 leg; 'min' = earliest leg of
+  either kind. Runs (run_review_tx.sh, after run_review.sh): C1-C3 + start withhold + XV with PF_TXTIME=ws (tag rvtx), + latency tails
+  cancel 34 ms / fills known 287 ms (rvtxL), PF_TXTIME=min (rvtxm); 9 days. Pass rules restated BEFORE any result is read: money
+  WITHOUT the rebate (rebate a separate line); final variant = rvtx; R_DAYS / R_TOP5 on it; R_TAIL = rvtxL mark@stop sum over 8 days > 0;
+  R_START and R_WF as declared (no rebate). If rvtx passes, the guard label (pf_badfill_info grid) is rebuilt on transaction times and
+  the guard refit before any freeze; pf_pend_* known-time fix also needed before a freeze (feature rebuild).
+  2026-11-04 13:41Z: RELIABILITY REVIEW DECLARED (user: "review if the above result is reliable, then freeze a version"). 50 / 70 size chain
+  stopped (finished day-runs kept). Candidates (pull 60%, S60, V0 withhold): C1 A1:5:25:0, C2 A1:20:100:0, C3 AV:20:100:0.06. Checks:
+  (1) start price: both sides withheld until the start price is known live (first predictMarketChanged patch with startPrice, venue
+  tsMs on the measured Tokyo clock pf_clock_rl.pf_known; no patch -> registry start_seen_ns, a status) - the exec port's F1;
+  (2) venue request throttle XV (40/s, 500/min shared, concurrent replace) on top of (1); (3) walk-forward guard (fit only on read days
+  before d) for 10-27 / 10-31 / 11-01 / 11-02 (11-03's fit already uses past days only) with (1) + (2); (4) day jackknife.
+  Predicates (pf_review_report.py computes them): R_START = (1) keeps >= 70% of the unrestricted mark@stop + rebate over 8 days;
+  R_WF = (3) keeps >= 50% of LODO's mark@stop + rebate on its 4 days; R_DAYS = final variant (1)+(2) mark@stop + rebate > 0 on >= 6/8
+  days and the leave-one-day-out mean > 0 for every day dropped; R_TOP5 = final variant +1 s c/sh >= top 5's (+0.42). Not testable
+  here and reported as such: own price impact of large orders, the fill model against our own live fills (none exist yet).
+  2026-11-04 12:07Z: SIZE / STOP / DYNAMIC SIZE RESULT, pull 60% (docs §52; 8 read days, parity 8/8; $ / day incl. UNVERIFIED rebate):
+  size is the reliable lever in the replay - S60 A1 5/25 -> 10/50 -> 20/100 mark@stop 125 -> 210 -> 355 (+84 / +229, CI > 0, 8/8),
+  per-share quality unchanged (+0.52 c, bad 10.3 -> 8.8%); worst day -84 -> -636. Longer stops: mark@stop +32..+325, CI spans 0
+  (4-6/8), weakest segment 60-120 s (+0.27 c vs top 5 +0.33), 11-03 worse at every longer stop. A1 = fixed size at the same shares
+  (99% of fill shares from hi orders). AV (guard-value size) better per share (+0.68..+0.91 c/sh, ratio 29-34%) and beats fixed at
+  the same shares at v >= 0.06 (+86, +17..+154, 7/8) but fills less, so less $ than fixed 100 (262-292 vs 360). A3 depth sizing
+  rejected (+0.20 c/sh). Touch median 260-335 sh: 100-share orders = 37% of it, no own impact in the fill model -> optimistic.
+  Report bug fixed (registry ws in s, not ms; rerun 12:06Z). Chain continues with pull 50 / 70.
+  2026-11-04 10:41Z: AV ENGINE FIX + CONTROLS: the first AV refusal check indexed the arm tuple at [4] (size is [3]) -> gz60_20261024 failed
+  at load (rc 1, no output); 10-23's gz run predates the edit (parity with gd exact). Fixed; falsifiers: an AV arm on preds_c3 (no v
+  columns, no V token) is REFUSED by the new check; engaged-but-never-triggered AV:25:25:0.03 = fixed 25 to the cent on 40 windows of
+  10-23 (-28.66, 162 fills). Chain restarted 10:41Z.
+  2026-11-04 10:37Z: DYNAMIC SIZE ARMS DECLARED (user: "also try bigger ordersize + dynamic size"). New engine size kind AV:lo:hi:par (hi when the
+  side's trained-guard value v_bid / v_ask >= par c, fresh <= 100 ms; decisions at its crossings; refused without v columns; additive,
+  other arms unchanged - the gz parity check covers it). Arms on the same base (V0 withhold, k = 60 then 50 / 70), stop 60 and 240 s x size:
+  fixed 25 / 50 / 100 (bigger, not dynamic: controls), AV:10:50:0.03, AV:20:100:0.03, AV:20:100:0.06 (par from the prediction
+  distribution only: v >= 0.03 on ~20-35% of live rows, >= 0.06 on ~10-20%), A3:5:100:0.2 (20% of the displayed size at our price, also
+  bounds own impact); tag gzd. Compared with A1 at the same lo / hi (gz) and with fixed sizes at similar shares. run_size_dyn.sh takes over
+  from run_size_stop.sh (stopped after its first day-run; finished day-runs skipped).
+  2026-11-04 10:32Z: SIZE x STOP GRID DECLARED (user: "check if we can increase size and quote beyond 60s"). Trained guard V0 (withhold), pull k =
+  60 first, then 50 / 70; arms MICRO+G4+G2+G6+G5+G3+G1+V0+XNA+XMIN1+S<stop>, stop 60 / 120 / 180 / 240 s x size A1:5:25:0 / A1:10:50:0 /
+  A1:20:100:0 (inventory caps scale with hi as before: soft 2x, hard 5x); 8 read days + 11-03 (seen once, for the pull result), tag gz
+  (run_size_stop.sh). Parity: S60 A1:5:25:0 must equal its gd run. Report (pf_size_stop_report.py): per arm and per 60 s segment of fill time,
+  shares, +1 s c/sh, rebate, bad %, bad$/good$, mark@stop, carry sd; top makers per the same segments; our order size vs the displayed touch
+  size (no own-impact in the fill model: large sizes optimistic). Descriptive; 11-04 kept untouched for confirmation.
+  2026-11-04 09:23Z: REBATE + TOP-MAKER COMPARISON (docs §51): rebate (25% of the 2% taker fee, UNVERIFIED) ~0.19 c/sh for all. Per share at 1 s + rebate:
+  ours 50% +0.53, 60% +0.72, 70% +0.98 vs top 5 +0.61; bad / ratio 60% 10.3% / 42% vs top 5 9.0% / 40%. Volume 8-14k shares / day vs
+  ~170k / day per top-5 maker; ours ~$76-81 / day at 1 s with rebate (mark@stop $110-143). Replay (modelled fills) vs real fills.
+  2026-11-04 09:13Z: PREDICTION-PRICED STEP-BACK RESULT (docs §50): better than one tick back (+1 s -0.35 -> -0.20 c/sh at 50%) but far below withholding
+  (+0.34): 199k shares, bad 18.3%, ratio 94%; 11-03 the same order. With M025 kept it equals one tick back by construction (deeper prices only
+  where M025 withholds). Keep withholding. Next: 11-04 unseen check after C2 processes it.
+  2026-11-04 08:49Z: ONE-TICK STEP-BACK RESULT (docs §50): much worse than withholding at every pull (50%: -221 / -192, -0.35 c/sh, bad 20.3%, ratio 110%,
+  217k shares vs withhold +719 / +201, +0.34, 11.6%, 51%); 11-03 the same. Parity passed. Prediction-priced step-back (SBP) running.
+  2026-11-04 08:22Z: PULL SWEEP 10-70% RESULT (docs §50): trained guard 50%: 115k sh, mark@stop +920 / 8 d, +0.34 c/sh, bad 11.6%, ratio 51%; 60%: 90k,
+  +832, +0.53, 10.3%, 42%; 70%: 66k, +759, +0.79, 9.1%, 33% (top-maker quality reached at 60-70%; dollar peak at 50%); current +355,
+  -0.03, 15.5%, 78%. Base-ranked at the same pull far behind (70%: ratio 60%). 11-03 unseen: -224 -> -61 / -18 / -1 at 50 / 60 / 70%.
+  Choice of pull made on the 8 read days: confirm on 11-04+. Step-back and prediction-priced arms queued.
+  2026-11-04 08:07Z: PREDICTION-PRICED STEP-BACK DECLARED (user: "pull and repost at a price based on prediction not just 1 tick"). Engine token SBP (with
+  V0): a flagged side is re-priced from the 1 s prediction p (model_value, fresh <= 100 ms): bid min(b1 - 1, floor(m + p - 0.5)), ask
+  max(a1 + 1, ceil(m + p + 0.5)), m = known mid, at most 5 ticks behind the best; no fresh prediction -> one tick. Arms V0+SBP and
+  M025+V0+SBP at k = 50 / 60 / 70, 8 days + 11-03, tag gdp; reported beside withhold (gd) and one-tick step-back (gds). Runs after the
+  one-tick chain.
+  2026-11-04 08:05Z: STEP-BACK ARM DECLARED (user: "send pull and post at the same time ... Queue it"). New engine token SBV (with V0): a side flagged
+  by the trained guard is re-priced one tick behind the best (cancel + new order sent together, the parallel replace already in use)
+  instead of withheld; when the flag clears it returns to the best; other guards still withhold. Arms 'instead' (V0+SBV) and 'added'
+  (M025+V0+SBV) at k = 50 / 60 / 70 on preds_g<k>, 8 days + 11-03, tag gds; compared with the withhold arms (tag gd) at the same k.
+  Arms without SBV unchanged (parity: a V0 arm rerun must equal its gd run). Runs after the 60 / 70% chain.
+  2026-11-04 07:41Z: LONG-LOOKBACK SCREEN RESULT (docs §50): M6 = M1 + 5-60 s windows: net vs M1 +0.0..+0.2% (CI excludes 0 at 1 of 4 pulls), AUC 0.827
+  -> 0.830; top new input 60 s Binance volatility (4.2% of gain). No replay (pre-declared rule). Pull 60 / 70% chain running.
+  2026-11-04 07:27Z: PULL 40 / 50% RESULT (summaries; full report after the look-back screen): new guard 40% +703 / +121, +0.22 c/sh, 140k shares; 50%
+  +719 / +201, +0.34 c/sh, 115k shares; 11-03 (unseen) +0.18 / +0.36 c/sh; base-ranked at 50% +0.02. Run-script bug (helper overwrote the tag
+  variable) put 32 of 36 outputs in misnamed folders; moved into place, one summary checked, helper fixed (local tag). PULL 60 / 70% DECLARED
+  (user: "test 60%-70% as well"): same method (KS 60,70; preds_g / preds_b; instead / added; 8 days + 11-03); control report extended to
+  k 10..70. Runs after pf_badfill_info4.
+  2026-11-04 06:42Z: PULL 40 / 50% + LONG-LOOKBACK SCREEN DECLARED (user: "we can do 1 now, besides ... test a longer look back window").
+  (1) pf_step5_guard_preds with KS 40 / 50 (same method: M1 LODO, in-sample quantile thresholds; one fit on 8 days for 11-03) ->
+  preds_g40 / g50; preds_b40 / b50 (matched-pull control); replay arms 'instead' and 'added' on both, 8 days + 11-03, tags gd / gdb;
+  report adds k = 40 / 50 to the stage-3 tables. (2) pf_badfill_info4.py on the neutral grid: M6 = M1 + longer-lookback inputs known at
+  tau: Binance log-mid return over 5 / 10 / 30 / 60 s, realised 1 s volatility over 10 / 60 s, largest |1 s move| in the last 10 s,
+  aggressor flow over 10 / 30 s; Predict known mid change over 10 / 30 / 60 s, best-price changes in the last 10 / 60 s, sweeps (best 2+
+  ticks against the side between known frames) in the last 30 / 60 s per side. Same LODO, metrics and rule as pf_badfill_info3 (replay
+  only if M6 beats M1 with CI excluding 0 at >= 3 of 4 pulls). Runs after (1). Nothing selected here.
+  2026-11-04 05:59Z: LATENCY-AWARE GUARD SCREEN RESULT (docs §50): M5 = M1 (net vs M1 within +-0.1%, 0 of 4 pulls better; AUC 0.827 both). No replay
+  (pre-declared rule). The guard already captures the Binance-led lag. Open: higher pull rates for M1 (30% is the grid edge), the
+  lead-adjusted anchor as the quote centre, more unseen days (11-04+).
+  2026-11-04 05:47Z: MATCHED-PULL CONTROL RESULT (docs §50): at the same pull quantile, the trained guard beats the current guard's input ranked the same
+  way: +1 s +0.034 / +0.077 / +0.154 c/sh at 10 / 20 / 30% (8 days), +0.295 at 30% on 11-03 (unseen); ratio -13 (8 days) / -24 (11-03) points.
+  The shares it gives up average ~-1.1 c/sh: selection, not just volume. Latency-aware screen (pf_badfill_info3) running.
+  2026-11-04 05:32Z: LATENCY-AWARE GUARD SCREEN DECLARED (user: "take latency into account and use the above new guard model"). pf_badfill_info3.py on
+  the neutral grid of pf_badfill_info (same rows, labels, LODO, metrics, pulls 5-30%): M1 (refit, same seed) vs M5 = M1 + latency-aware
+  inputs from the lead-anchor rows (step4/anchor_eval/rows_lead.parquet, joined on day / mid / tau): age_f (ms since the known Predict frame
+  was stamped), dbn_bp (Binance move since that frame), dp (its implied change in Predict's price). Rows the join misses are a status.
+  If M5 beats M1 (net CI excluding 0 on most pulls), step 2 = its predictions on every 50 ms row and a replay against the matched-pull
+  control. Runs after run_guard_matched.sh. Nothing selected here.
+  2026-11-04 05:25Z: LEAD-ADJUSTED ANCHOR RESULT (docs §50): PASSES the gate. A6 = Predict mid (late) + dp (Binance-implied change since the known
+  frame, median 81 ms old): Brier better on 8/8 days (-0.00004); Predict makes 1.12x the adjustment within 1 s (CI 1.03..1.21), keeps it at
+  10 s / 60 s; learned A8: 1.19x, R^2 0.109 at 1 s, 0.083 of the not-yet-received move. Beta 1.09-1.14 on every held-out day. Matched-pull
+  guard control running; next candidate: dp / A8 as guard inputs and as the quote centre.
+  2026-11-04 05:21Z: STAGE 3 CONTROL RESULT: the current guard at stricter thresholds (M015 / M010 / M005) only reaches 178k shares (new guard 20-30%:
+  159-174k), so shares cannot be matched; +1 s -0.030 -> +0.007 at M005. INCONCLUSIVE as a control. MATCHED-PULL CONTROL DECLARED (rule 7):
+  preds_b<k> = the current guard's input (s * pred_1000 per side) shifted by its k-quantile on the training days' grid rows (k 10 / 20 / 30%),
+  run through the same V0 mechanism (instead of M025, and added to it), 8 days + 11-03, tag gdb; the new guard's gain = new minus base-ranked
+  at the same k. Runs after the lead-anchor test.
+  2026-11-04 05:16Z: LEAD-ADJUSTED ANCHOR DECLARED (user: "predict price + binance move makes sense, it should be more fresh without that 50ms
+  latency"). pf_anchor_lead.py on the stage-1 rows: t_f = venue time of the Predict frame known at tau; dp = p_bn(tau) - p_bn(t_f) with
+  S = Binance mid (E clock) known at tau - 3.5 ms and at t_f, same basis / K / sigma, tau_rem at each time. A6 = A0 + dp (full
+  pass-through); A7 = A0 + beta dp, beta fitted leave one day out on Predict's +1 s change; A8 = A0 + LightGBM (pinned PARAMS / ROUNDS,
+  LODO) of Predict's +1 s change on [dp, Binance move since t_f in bp, bn_r25..bn_r1000, tau - t_f, tau_rem, sigma sqrt(tau_rem)].
+  Measures and gate as the redeclared stage 1 (Brier vs A0 within +0.005 on >= 6/8 days AND +10 s slope >= 0.3, CI excluding 0), plus
+  the nowcast slope (unseen move) and the +1 s slope. Runs after the stage-3 control.
+  2026-11-04 05:12Z: FITTED ANCHOR RESULT (docs §50): Binance-only fit of Predict's current mid is 3.67 c off on average (p_bn 4.62; the late Predict
+  mid 0.074); Brier 0.1774 vs 0.1747 (better 1/8); gap closes 4-6% (R^2 <= 0.007). Gate: not a good anchor. Matched control for stage 3
+  running.
+  2026-11-04 05:10Z: STAGE 3 RESULT (docs §50): new guard (30% pull) +648..+665 read / +89..+95 11-01/02 mark-at-stop, +0.14 c/sh, bad 13.5%,
+  ratio 64% vs current +380 / -25, -0.03, 15.5%, 78%; 11-03 (unseen) +1 s -0.31 -> 0.00, ratio 105% -> 80%. CONTROL DECLARED (rule 7: matched
+  on the decision variable): the current guard at stricter thresholds M015 / M010 / M005 (pred_1000 >= 0.15 / 0.10 / 0.05 c against the
+  side) on the same files, 8 days + 11-03, tag gdc; the new guard's gain counts only where it beats the current guard at matched shares.
+  2026-11-04 04:30Z: FITTED ANCHOR DECLARED (user: "use Binance market to fit the [Predict.fun] price ... to get a better anchor"; runs after stage 3).
+  pf_anchor_fit.py: A5 = LightGBM (pinned PARAMS / ROUNDS), leave one day out over the 8 read days, predicting Predict's CURRENT venue
+  mid at tau (not the late known one) from fresh Binance-side inputs only: z = ln(S (1 + basis) / K) / (sigma sqrt(tau_rem)), ln(S (1 +
+  basis) / K) in bp, sigma sqrt(tau_rem), tau_rem, basis_bps, bn_r25..bn_r3000, bn_imb, bn_flow250 / 1000 / 5000, bn_ntr1000, bn_age (no
+  Predict input). Same rows, measures and gate as the redeclared stage 1 (settlement Brier vs A0 within +0.005 on >= 6/8 days AND
+  +10 s convergence slope >= 0.3 with CI excluding 0), plus nowcast accuracy (A5 - A0 vs the unseen move).
+  2026-11-04 04:28Z: STAGE 3 DECLARED (user: "run test to check how the better gate predictor works, then ... use Binance market to fit the
+  [Predict] price ... a better anchor"). Guard = M1 of pf_badfill_info (LightGBM, pinned PARAMS/ROUNDS, current features pf_model_spec ALL)
+  for v per side, LODO over the 8 read days (predicting every 50 ms row of the held-out day), and one fit on all 8 days for 11-03.
+  Pull thresholds c(k) = the k-quantile (k 10 / 20 / 30%) of the model's in-sample predictions on its training days, per side; the
+  engine gets per-side values shifted by c(k) (preds_g10/20/30; pred_1000 / pred_250 copied unchanged for sizing and M025). New engine
+  token V0 in pf_step4_live (per-side pull when the shifted value <= 0; existing arms unchanged, parity checked on an existing run).
+  Arms (P60 base = MICRO|G4+G2+G6+G5+G3+G1+M025+XNA+XMIN1+S60|mid|A1:5:25:0, parallel replace, no limit): ref = base; R_k = base with V0
+  instead of M025; U_k = base + V0 (union). Same clock as the anchor test. Reported vs the target (bad <= ~10%, bad$/good$ <= ~45-50%,
+  +0.3 c/sh): mark-at-stop, +1 s c/sh, bad share, bad$/good$, shares. Pick k and R/U on the 8 days (exploratory), then confirm on 11-03
+  (features_rl_d2 + preds_c3 built for it now; C2 has admitted 11-03 and its arms are frozen; recorded as read here).
+  2026-11-04 04:22Z: STAGE 1 RESULT (docs §50): no good fresh anchor. Brier: Predict mid (late) 0.1747, p_bn 0.1782 (better on 1/8 days),
+  recalibration 0.1787 (0/8); Predict does not move toward p_bn (slope +0.02 at 1 s / 10 s, R^2 <= 0.003; unseen-move slope +0.003).
+  Gate: leads False -> Predict's own price stays the anchor. Together with stage 2 (AUC 0.78 -> 0.83 with all features): current
+  information cannot by itself get the guard to the top makers' level.
+  2026-11-04 04:21Z: STAGE 2 SCREEN RESULT (docs §50): Predict book signals over M1 +0.2..+0.6% of the bad value (AUC 0.827 -> 0.830); all
+  features (M4) +0.4..+1.1% over M1, AUC 0.831; vs the current guard input +2.2..+4.0%. Most-used signals are Binance's 100-250 ms
+  return and imbalance and the p_bn gap. Current information is near its ceiling (~0.83 vs ideal 0.999). Stage 1 running.
+  2026-11-04 04:01Z: STAGE 1 REDECLARED before any run, superseding the 03:5xZ stage-1 design (user: "we can't use predict mid since ... mid is 50ms
+  late when we get that"). Candidates are fresh Binance-based only: A2 p_bn, A4 Binance-only logistic recalibration fitted LODO on
+  [z = ln(S basis / K) / (sigma sqrt(tau_rem)), sigma sqrt(tau_rem), basis_bps, tau_rem]. A0 (Predict mid as known, ~50 ms late) is
+  the benchmark only; A1 / A3 dropped (built from the late feed). Measures: settlement Brier by day and time left; convergence of A - A0
+  to Predict's mid change at +1 / +10 / +60 s; NEW nowcast: A - A0 vs the venue mid at tau (the move we have not yet received) minus A0.
+  Gate (computed): good anchor if the +10 s slope >= 0.3 with CI excluding 0 AND Brier <= A0's + 0.005 on >= 6/8 days.
+  2026-11-04 03:59Z: FLOW + STAGE 1 DECLARED (user: "design the flow properly, if we need a good anchor first, then ... a good predictor"; docs §50).
+  Stage 1 anchor test (pf_anchor_eval.py, runs after pf_badfill_info2): A0 Predict mid, A1 microprice, A2 p_bn, A3 LODO logistic blend
+  of A1 + A2 (+ tau_rem, sigma sqrt(tau_rem), basis); 8 read days, live 0-240 s, every 500 ms; settlement Brier by time left and
+  convergence of A - Predict mid to Predict's mid change at +1 / +10 / +60 s. Gate: Brier better than A0 on >= 6/8 days, or the gap
+  closes >= 30% within 10 s (slope CI excludes 0). Stage 2 = adverse-fill predictor given the anchor; stage 3 = combined replay vs the
+  top-maker target, then 11-03+.
+  2026-11-04 03:53Z: GUARD TARGET + PREDICT-FEATURE TEST DECLARED (user: "we don't have to chase 100%, we chase top makers performance"). Target, in the
+  replay (P60, our real-latency clock): bad fills (<= -2 c/sh at 1 s) <= ~10% of shares and bad $ <= ~45-50% of good $ (top 5: 9.0%, 40%;
+  ours now 15.5%, 78%), net at 1 s ~ +0.3 c/sh. Step 1 (this test, pf_badfill_info2.py): on the neutral grid of pf_badfill_info (same
+  rows, labels, LODO, metrics), M3 = M1 + Predict-native features known at tau: best size ratio and best price change over 250 / 1000 ms
+  per side, depth of levels 1-3 per side and its ratio over 250 / 1000 ms, resting order count change over 250 / 1000 ms, price gaps level
+  1-2 and 2-3 per side, sweeps inferred from the book (best moving 2+ ticks between known frames) in 1 s / 5 s per side and time since
+  the last, tau_rem, p_bn, pf_onesided; M4 = M3 + the outside-venue features of M2. Compared with base and M1 (refit, same seed) at
+  5-30% pulls. Features chosen on these 8 days; any adoption needs days the model never saw (11-03+). Nothing selected here.
+  2026-11-04 03:03Z: BIG ORDERS ON 10 VENUES (docs §49): just before our bad fills (in time to cancel) 8.9% have a big adverse order on some venue vs
+  2.2% of good fills and 1.9% of random times; 4.9% of bad fills flagged only by non-Binance venues. Rough value of a pull rule: ~+$84 /
+  8 days (P60). For our bad fills big orders elsewhere come more at the same moment / just after (5.2% / 15.9%). Side checks 81-99% on all
+  venues (first run's ~50% on Coinbase / Kraken / Deribit sells was our row order, fixed). Descriptive; nothing selected.
+  2026-11-04 02:59Z: INFORMATION TEST RESULT (docs §48): on the neutral exposure grid (1.07M per side) the current guard input ranks bad exposures
+  with AUC 0.784; M1 (same features, trained for v) 0.827, +1.1..+3.6% of the bad value net vs base, 8/8 days, CIs exclude 0; M2 (+ spot,
+  Hyperliquid, Chainlink relay) +0.2..+0.5% over M1; ideal 0.999 (87% of bad value avoided for 4% of good at a 10% pull). Current
+  information is near its ceiling; the gap needs new information. Part C (big orders on 10 venues) running.
+  2026-11-04 02:41Z: QUALITY SWEEP CUT at its declared calibration check: the R^2 0.15 synthetic anchor (same R^2 as the real model) gives P60 +826 /
+  +62, 8/8, +0.60 c/sh at 1 s and P240 +1,446 / +448, 7/8, +0.66, against the real model's +380 / -25, -0.03 and -77 / -841, -0.16.
+  R^2 does not map synthetic anchors to real ones (evenly spread noise still sees big moves; the real model does not), so the levels
+  0.3..0.9 were dropped as uninformative (0.30 had 4 of 8 days run; outputs kept, unused). Part B runs next (run_badfill2.sh), then C.
+  2026-11-04 02:36Z: OKX GAPS CLOSED (user: "we can still extract the data right?"): fetched OKX perp + spot files 10-28, 10-31 (again) and 11-03; the
+  loader (pf_big_prints.okx) cuts each file to the read days as it is read (the hour before a day only when that day is a read day), so
+  no row of 10-28..30 or 11-03 is kept. Rationale recorded: the 10-28..30 seal is P-2026-003's Binance tape (its sealed test read 11-01,
+  arms frozen) and C2 does not use OKX data. Coinbase / Kraken / Deribit fetched for all 8 days. C2 11-03 ran (rc 0, 02:27Z).
+  2026-11-04 02:20Z: PART C VENUES EXTENDED (user: "we pull data from more exchanges"). Pulled public BTC trades for the 8 read days into
+  data/exchange_public/ (README there): Bybit perp + spot and OKX perp + spot daily archives (integrity checked), Coinbase spot,
+  Kraken spot, Deribit perp from their public APIs (data_collectors/fetch_public_trades.py; run niced, 1 GiB cap, outside the research
+  slot: network-bound). OKX files run 16:00-16:00 UTC, so the two OKX 10-31 files (holding 10-30 16:00-24:00, inside the seal) were
+  deleted unread and OKX files for 10-28..30 / 11-03 not fetched: OKX coverage misses 10-27 after 16:00, 10-31 before 16:00, 11-02 after
+  16:00 (events there are a status). pf_big_prints.py now covers 10 venues with a per-venue taker-side check (uptick / downtick).
+  No numbers from the new venues seen yet.
+  2026-11-04 02:06Z: PART C ADDED to the 01:57Z declaration (user: "check if there are any big fill happens from other exchanges"): pf_big_prints.py.
+  Big order on another venue = trades with one timestamp and aggressor side summed (Binance perp, Binance spot, Hyperliquid), >= the
+  day's 99th (99.9th) percentile; adverse direction vs the swept makers; windows [-1000,-250), [-250,-25.5), [-25.5,+25], (+25,+250] ms
+  around our P60 real-model fills (bad <= -2 c/sh), market sweeps (bad / good) and controls. Declared after a one-day smoke run on
+  11-01 (code check; nothing changed after it). Runs after the 01:57Z chain.
+  2026-11-04 01:57Z: ANCHOR QUALITY SWEEP + BAD-FILL INFORMATION TEST DECLARED (user: "check how do we further reduce bad fills, do we need more
+  information or we can do better with current information"). Descriptive, 8 read days, nothing selected; runs only after C2's 11-03 run.
+  (A) Degraded anchors: pred = beta (y + e), e = 1 s moving average of white noise per market (lag-1 0.95, lag-5 0.75, lag-20 0 vs
+  the real model's error 0.97 / 0.80 / 0.07), beta = var(y) / (var(y) + var(e)), so R^2 = rho^2 in {0.15, 0.3, 0.5, 0.7, 0.9} (pred_1000
+  and pred_250, seed fixed); arms P60 and P240 as the anchor test; 0.15 is the calibration check against the real model (R^2 0.11-0.20).
+  Reported per level: mark-at-stop, +1 s c/sh, bad-fill share (<= -2 c/sh at 1 s), bad $ / good $.
+  (B) Neutral exposure grid (no own orders; rows every 500 ms, live 0-240 s, both sides): v = s (m(t_sw + 1 s) - p) if the known best p is
+  swept through within (tau + 22, tau + 522] ms, else 0. Scores ranked lowest first and pulled at 5/10/20/30% of exposures: baseline =
+  the current guard input s * pred_1000 (rule 9: skill reported incremental to it); M1 = LightGBM on the current features (pf_model_spec
+  ALL, pinned PARAMS/ROUNDS) for v per side; M2 = M1 + Binance spot, Hyperliquid and Chainlink-relay features; positive control s * y1000,
+  falsifier random. LODO by day; per-day gains and day-clustered intervals (G = 8). Metrics: bad $ avoided, good $ lost, net per exposure.
+  2026-11-04 01:52Z: MAKER BAD FILLS (docs §47): bad (<= -2 c/sh at 1 s) share of shares, first 60 s: top 5 9.0%, 6-20 9.6%, rest 18.1%, ours P60
+  15.5% (ideal anchor 0.3%); good $ per share filled the same as ours (1.01 vs 0.95 c). The gap is the bad share alone; halving our bad
+  fills ~ +$620 / 8 days at 1 s if no good fills are lost.
+  2026-11-04 01:48Z: ANCHOR TEST bad fills (docs §46): bad fills (<= -2 c/sh at 1 s) 15.5% of P60 shares (-$1,374 / 8 d) with the real model vs 0.3%
+  (-$10) with the ideal anchor; good fills +$1,751 vs +$2,042. The edge is dodging ~15% of volume.
+  2026-11-04 01:29Z: ANCHOR TEST RESULT (docs §46): ideal 1 s anchor (realised moves): P60 mark-at-stop +1,816 read / +533 fresh, 8/8 days, +1.61
+  c/sh at 1 s; P240 +4,757 / +1,466, 8/8, +1.71. Real model (R^2 0.11-0.20): P60 +380 / -25 (+1 s -0.03), P240 -77 / -841 (-0.16).
+  Same mechanics, so the lever is the anchor's quality; break-even quality not measured yet. Upper bound only; nothing selected.
+  2026-11-04 01:10Z: ANCHOR TEST DECLARED (user: "if we have the anchor price, does it work"). Upper bound, not a candidate: the model's
+  predictions replaced by the realised moves (preds_oracle: pred_1000 = y1000, pred_250 = y250 from rows_rl_d2, i.e. the venue mid 1 s /
+  250 ms after our knowledge time minus the known mid), everything else unchanged (pf_step4_live, Tokyo clock, decision 2 ms, order
+  live 40 / cancel 22 / pending 95 / fills known 100 ms, e2 timing, v2 fill model). Arms, with the oracle and with the real predictions
+  (preds_o3 read days, preds_c3 11-01/02) in the same code: P60 = MICRO|G4+G2+G6+G5+G3+G1+M025+XNA+XMIN1+S60|mid|A1:5:25:0 (parallel
+  replace, no request limit, user: ignore it), P60Q = P60 + Q025 (250 ms guard), P240 = P60 without S60. 8 days (read). Reported:
+  mark-at-stop, +1 s mark-out, swept share and their split, shares, gross. Nothing selected.
+  2026-11-04 01:00Z: REPLACE COMPARE (docs §45, L2c outputs): parallel replace improves the +1 s mark-out (-0.17 -> -0.10 c/sh) but every arm stays
+  ~65% swept through (-0.41..-0.75) vs +0.38..+0.47 at our own price; break-even needs swept < ~47% (top makers 19%). Parallel arms:
+  17.6% of shares fill on an order whose cancel was already sent (-0.57). Replace speed is second-order; queue position and the late
+  feed are the cause.
+  2026-11-04 00:54Z: REQUEST LIMIT VERIFIED (docs §44, from the exec port's probe headers): create/remove "rps";q=40;w=1 + "rpm";q=500;w=60, reads
+  500/min, account/positions 250/min; one shared budget per key (reads count). Behaviour at the limit and any higher maker limit
+  untested; pmmmrust's plan still cites 240/min (not edited from here).
+  2026-11-04 00:28Z: RE-POST ANATOMY (docs §43; user: "do they send cancel and repost together?"): Predict publishes the book ~every 50 ms (61% of
+  gaps 40-60 ms); one API call cannot cancel and create (create 1 order/call, remove <= 100), so same-update re-posts are parallel
+  sends. Of 346,605 prices taken in the update that freed them: old order pulled 61.2% (new size = old 1.6%), lifted 25.0%; order
+  count moves >= 3 in most (ladders shifted at once). Aggressive-order remainders: 1-2% of maker volume, 5-10% of first fills.
+  2026-11-03 23:58Z: CROSS-VENUE RESULT (docs §42): no recorded feed leads bad sweeps by much. Presence before bad sweeps vs controls: Binance perp
+  flow 18.0% vs 10%, spot flow 16.4%, spot price 14.8%, Binance perp mid 8.8% vs 3.1%; Hyperliquid and Predict's Chainlink relay ~
+  controls. Bad sweeps without a Binance perp move (73%): every feed near its control rate. Binance perp leads Hyperliquid (62%,
+  145 ms); spot = perp. Makers pull on Binance perp moves (21%; 35% with others) not on other venues alone (14% vs 12%). Bad sweeps
+  last (96% of the 1 s move at 60 s): informed, source unseen. Not checked: Coinbase/OKX/Bybit, Chainlink direct, Polymarket.
+  2026-11-03 23:51Z: READ RECORD (found while writing the cross-venue check): research loaders pad each day by 1 h (io.hours_of(day, 1, 1));
+  for 10-27 and 10-31 that loads the Binance tape (bookTicker; trade where used) of 10-28 00Z and 10-30 23Z, inside the 10-28..30
+  seal (P-2026-003 order-flow test). Since the start of the project (pf_step1/2/4/5, pf_step4_live, pf_ladder and today's
+  pf_maker_behavior / pf_speed_race / pf_sweep_precursor; pf_step1 / pf_match_type pad Predict REST / WS hours the same way).
+  P-2026-003 read that sealed test on 11-01 with frozen, committed arms (see confirmation_C2.reservation_check), so under the user
+  rule of 2026-10-22 this does no harm: recorded, nothing dropped. Only boundary seconds of the last 10-27 / first 10-31 windows can
+  use those hours. The same padding loads the Binance tape of 11-03 00Z for 11-02 (C2's next fresh day; C2 arms frozen, so recorded
+  the same way). pf_io (a C2 dependency) is not changed while C2 runs; new scripts skip sealed hours and hours after 11-02.
+  2026-11-03 23:49Z: CROSS-VENUE CHECK DECLARED (user: "check if others see the flow in other exchanges or perps/spot flows").
+  Descriptive, the 8 read days, nothing selected. Market sweeps over 2+ prices (pf_sweep_precursor set; bad = informed <= -2 c/sh,
+  good >= 0) and all our replay swept fills; signals in the windows before each, signed against the swept makers: Binance USD-M
+  BTCUSDT mid (bookTicker) and aggressor volume (trade stream), Hyperliquid BTC perp mid (bbo) and aggressor volume (trades),
+  Binance spot BTCUSDT mid proxy and aggressor volume (public data.binance.vision aggTrades, downloaded to
+  data/binance_spot_vision/, checksums verified), Predict's Chainlink relay (settlement reference; second publish times, recv
+  stamped). Exchange clocks (Binance E/T, HL time, spot transact time) vs Predict venue time; lags under 10 ms not resolved.
+  Reported: bad vs good, the no-Binance-trigger subset, and which feed moves first.
+  2026-11-03 23:31Z: SPEED-RACE RESULT (docs §41). Bad fills: our Binance cancel (E + 25.5 ms) beats most of the market (it pulls 12.5% /
+  50% of at-risk size by 25 / 100 ms); but 90-97% of our swept fills have no 0.5 bp Binance move before them, and warnings visible
+  by t - 75 ms do not separate our bad fills from the rest (ladder 31.2% vs 31.1%). Avoidable with a wider Binance pull: ~9% of
+  ladder swept fills. Front: spread 1 tick 96.5% of the time; the freed price is re-posted in the same book update 61.8%, after
+  our 93 ms reach only 13.6%; first fills at new prices top 5 40-46% (volume 32%). Descriptive; nothing selected.
+  2026-11-03 23:14Z: SPEED-RACE CHECK DECLARED (user: "check how do we avoid bad fills like top makers, and how do we become the
+  first/front in the queue"; rewards out of scope). Descriptive, 8 read days, nothing selected. Lag = time since BTCUSDT (Binance
+  E clock) crossed X bp from its current mid in the relevant direction, within 1 s (X 0.5 and 1.0 bp), vs Predict venue time (two
+  venue clocks; classes under 10 ms are not resolved). Our reach: Binance known E + 3.5 ms (1.5 feed + 2 decision); cancel lands
+  + 22 ms (E + 25.5); a new order is live + 40 ms (E + 43.5). Part 1 spread width (time share). Part 2 new best prices (the best
+  improves to a price not the best in the frame before): lag class, first fill at that price (who, how soon), share created
+  later than E + 43.5 ms. Part 3 fills by adverse-move lag class per group (top 5 / 6-20 / rest, ours ladder / single quote):
+  volume share and net 1 s, swept-through fills separately (transaction rule; ours = replay through); our swept fills split
+  into no Binance trigger / trigger within 25.5 ms (too fast for our cancel) / trigger earlier (our cancel could have landed).
+  2026-11-03 23:05Z: FILL MIX (docs §40; user: main difference vs the top makers): like for like (transaction rule = the replay's
+  through rule) our volume is 64-73% swept through vs 18-21% for the market; at our own price we do as well as the top 5 (single
+  quote at best +0.49 vs +0.27 c/sh; ladder behind +0.86 vs +0.69), but our swept fills are far worse (behind -0.93 vs +0.83).
+  Difference = queue position + sweep selection (speed), not quoting. Checks: mint 86% of maker volume; skip-matches <= 5.3%.
+  CORRECTION to §38: its 22-28% vs our 74% mixed two rules; book rule under-counts sweeps (re-posts within one update).
+  2026-11-03 22:26Z: MAKER BEHAVIOUR RESULT (docs §39): no queue is held from listing (fills at levels resting since listing 0-1%);
+  fills come at levels formed in the last 0.1-10 s; 70-79% of at-best fills at a level born as the best; first trade at a new
+  level within 1 s in 55-72%. Top 5 are at the front no more than their volume share (30.7% vs 32.0%; ranks 6-20 38.1% vs 30.7%);
+  they fill more behind the best (39%), lose less when picked off after >= 2 bp Binance moves (-2.05 vs -3.8 c/sh), end windows
+  nearly flat (leftover 11% of gross vs rest 58%); P&L marked at window end +0.10 c/sh, carry -0.06. Descriptive; nothing selected.
+  2026-11-03 22:22Z: MAKER BEHAVIOUR CHECK DECLARED (user: "we check their behavior first"). Descriptive, 8 read days, no selection,
+  no thresholds tuned. Makers ranked per day by live-window volume (ids are per-day: pf_step1 assigns them per run); bands top 5 /
+  6-20 / rest, compared with our replay fills (ladder lad1q arm; single quote S60 + CAP10, round LC). Measured per fill: depth
+  behind the best; age of the price level (time since that price last had no resting size on that side; censored when the price
+  left the 5 shown levels); for at-best fills whether the level was created as a new best (price improvement) or posted behind
+  and reached by depletion; Binance move in the 1 s before the fill, signed for the maker (adverse >= 2 bps = picked off);
+  net at 1 s (spread + informed). Per maker-window: leftover |net| / gross and P&L split into mark at window end vs carry.
+  2026-11-03 22:12Z: HOLD CHECK (docs §38; user: "do others hold through the early window?"): mostly not. Lower bound of the
+  open's queue cancelled (slack 1 s / 30 s): levels 2-5 >= 64-71% / 53-60% within 10 s, >= 66-78% / 50-61% before the level
+  becomes the best, >= 74-82% / 57-66% before it is swept. Top-20 makers: 22-23% of volume in level-clearing trades (rest 28%,
+  our ladder 74%). CORRECTION to §37 / 21:48Z entry: its "since listing" figures are an UPPER bound on size resting
+  continuously, not a lower bound; "the queue at the open was built at listing" is unsupported. Replay queue position is
+  pessimistic for orders that stay (cancels ahead hidden by joins behind); size unknown. Read days only; nothing selected.
+  2026-11-03 21:48Z: QUEUE PRIORITY (docs §37; user: "why are we still in the back?"). Market: the book is full at first sight
+  (283 s before the open: 376 orders, mid 50.5), most is pulled in the last 2 s; the queue at the open (levels 2-5) has been
+  resting since listing (>= 87-95% lower bound). A never-moved order joined at the open fills from the queue 19-29% (front of
+  queue 29-59%). Our ladder (lad1q order log, parity with lad1): median order life 0.76 s, 95% end in our own cancels, 280-367
+  shares ahead of our 5 at activation, 12% reach the front, 74% of filled shares swept. Read days only; nothing selected.
+  2026-11-03 16:36Z: LADDER TEST RESULT (docs §36): negative. All 14 arms lose on mark-at-stop (best K3 z5 S60: read -407, fresh -172);
+  spread 2.0-2.25 c/sh but informed -2.4..-3.2; 70-78% of fills swept through our level; requests far beyond the venue limit.
+  §32 corrected: with all market fills, at-best maker net ~0, deep levels +0.2..+0.7 c/sh; our deep orders queue behind the
+  established ladders, so we get the swept fills. No arm eligible; nothing promising.
+  2026-11-03 15:55Z: LADDER TEST DECLARED (user: "reformulate the logic ..., check it carefully, then go ahead to test"; logic in docs
+  §35). Engine pf_ladder.py (selftest 6/6, identities checked). Tokyo clock, decision 2 ms, fills known 100 ms, venue throttle.
+  Fixed: CAP 50, BUD 75 per side, RF 1000 ms, THIN 30, CD 500, big guard 2 bps / 2 c. Grid A (TH 0.5): K 3 / 6 x z 5 / 10 / 25
+  (K 6 with z 25 dropped: budget-bound) x S 60 / 240 = 10 arms; grid B (K 3, z 10): TH 0.25 / 1.0 x S 60 / 240 = 4 arms.
+  Rule: on the 6 read days pick the arm with the largest mark-at-stop sum among arms with mark-at-stop > 0 on >= 4/6 read days;
+  it is called promising only if its mark-at-stop sum on 11-01 + 11-02 is > 0. Reported: fill mix (queue vs swept-through),
+  spread and informed cost per share, leftover sd, requests, vs the single-quote reference (S60 + CAP10).
+  2026-11-03 13:24Z: ROUND LC RESULT (docs §28): S60's spread capture (mark-at-stop) +236 / 8 d (t 0.99); 80% of its gross is carry.
+  Caps halve leftover risk (CAP10 carry sd 15.9 -> 8.5 $/window) with spread capture +265 (t 1.88); nothing adopted by the
+  rule (CAP25 best sum, 5/8 days). Fresh days negative on mark-at-stop in every capped arm.
+  2026-11-03 13:10Z: ROUND LC DECLARED (user: capture spread, keep leftovers small; their settlement carry has EV ~0 but adds
+  risk). Measured first: S60 P&L = +444 edge vs mid at +60 s (t 1.4) + 725 carry (t 1.0); carry sd per window $3.8 (<= 10 sh
+  left) .. $26.3 (> 50 sh). New metric recorded per window: mtm_stop = P&L marked to the venue mid at stop + 100 ms (spread
+  minus adverse selection, no outcome), carry_stop = net x (outcome - mid). Base = O3 base + S60 (sequential, venue throttle,
+  Tokyo clock, decision 2 ms), all 8 days (read preds_o3, fresh preds_c3). Variants: CAP10, CAP25 (inventory caps), RO45, RO50
+  (reduce-only from 45 / 50 s), RO45 + CAP25, size A1:5:10:0, size fixed 5. Rule: adopt the best 8-day mtm_stop sum only if
+  it beats base on mtm_stop in sum AND on >= 6/8 days; carry sd and settlement P&L reported (risk), not deciding.
+  2026-11-03 12:20Z: RE-SPLIT (docs §27; train 10-25..27, 10-31, 11-01, 11-02; validate 10-23, 10-24): stage 1 adopts only S60;
+  BKA / Q025 / B2W100 fail (3/6). Validation: base + S60 +314.65 (+150 / +164, +1 s +0.09 c/sh) vs base +134.09. 8 days: base + S60
+  +1,169, 7/8 days positive (-618 on 11-02). Only the first-60-s rule survives both splits.
+  2026-11-03 11:20Z: ROUND O4 RESULT (docs §26, all 8 days): no variant adopted. P3 +1,462 (6/8 days, read +1,617, fresh -156),
+  +1 s mark -0.025 c/sh. S90 +1,996 (7/8 better) fails the mark-out rule; CD500 most consistent (7/8 days > 0, fresh +75) but
+  sum below P3; BKD2 best mark (+0.22) but +866. Within-family tuning is at the noise floor.
+  2026-11-03 10:49Z: ROUND O4 DECLARED (user: "we don't wait for new days, we can optimize the strategy based on current data
+  first"; exploratory; NO hold-out: all 8 days 10-23..27, 10-31, 11-01, 11-02 are used; days from 11-03 are the later check).
+  Diagnosis: queue fills keep +0.30..+0.65 c/sh at 1 s on every day; sweep fills lose -0.87..-1.24 c/sh on 10-31, 11-01,
+  11-02 (quiet, low-volume days on two of them) vs -0.25..-0.37 elsewhere. Base P3 (full combined, sequential + XV), Tokyo
+  clock (order 40 / cancel 22 / pending 95 / fills 100 / decision 2 ms); preds: read days preds_o3 (out of day), fresh days
+  preds_c3 (fit on the six read days). Families: F7 stand back 2 ticks (BKD2); F8 touch cooldown CD250 / CD500 / CD1000;
+  F9 fill cooldown FC500 / FC2000; F10 stop S30 / S45 / S90 (replacing S60); F11 size fixed 5 / A1:5:10:0; F12 M015 (for
+  M025), Q015 / Q05 (for Q025). Adoption per family: the best 8-day-sum variant only if sum > P3 AND better than P3 on >= 6
+  of 8 days AND 8-day +1 s mark c/sh >= P3's. Adopted changes combined and reported per day. Multiplicity 14 (+19 in O3).
+  2026-11-03 10:39Z: C3 ON 11-01 + 11-02 (2 days, point estimates, docs §25): P3 primary -155.55 (+38.77 / -194.32), concurrent +6.37,
+  simplified -79.79, S60 only -499.44, base -1,009.96, P3 at 300/min +48.90; +1 s mark -0.41..-0.53 c/sh in every arm (read days
+  combined +0.12 / +0.20). The read-day edge does not appear; O3 cuts the loss by trading less. Capped arm stuck at -149.08
+  (simulator lacks the exec port's halt fix). 0 invariant violations.
+  2026-11-03 10:32Z: CONFIRMATION C3 DECLARED before any O3-arm result on these days was read (user: "use existing days to test
+  first", primary = "Full combined"). Days: 20261101, 20261102 (the complete fresh days now; 2 days < 5 -> point estimates, no
+  verdict; more days can be added later). 11-01's C2 interim (tokyo20 arms) was seen; no O3 arm was ever run on it.
+  Clock = Tokyo measured, order live 40 / resting cancel 22 / pending cancel 95 after create / fills known 100 / decision 2 ms.
+  Models fit on the six read days only, applied unchanged: pred_1000 = model_c2_y1000 (sha be6e916e), pred_250 =
+  model_c3_y250 (sha e5cf2fe6) on rows_rl_d2. Arms: P3 primary = D1 stack + M025 + XNA + XMIN1 + XS0 + XV + B2W100 + Q025 +
+  BKA + S60, A1 5..25; references: P3 concurrent; simplified (BKA + S60); S60 only; base (O3 base); P3 at 300/min (XV300); P3
+  with the 150$ loss cap (XCAP150, carried 11-01 -> 11-02). Rule for when >= 5 fresh days exist: P3 sum > 0 AND >= 4/5 days
+  > 0 AND +1 s mark c/sh > 0; P3 - base > 0 in sum and on >= 4/5 days. Code sha256: pf_step4_live 052bc4e4, features_rl
+  82152c3b, clock_rl 0a1ce1e1, c3_preds 8d06904b, check_fills b4d20450, pf_io 057fb052.
+  2026-11-03 09:59Z: ROUND O3 RESULT (docs §24): adopted by the declared rule B2W100 (+2$, noise), Q025 (+40$), BKA (+153$), S60
+  (+371$ dev); F6 dead-band rejected. Combined (sequential / concurrent): dev +1,140 / +1,169 (3/3), second look +477 / +637
+  (2/3), six days +1,617 / +1,806 (5/6), +1 s mark +0.12 / +0.20 c/sh (base -0.04). S60 alone +1,669 (6/6). Base = L2c to the
+  cent. Not a confirmation (chosen on dev, multiplicity 19): fresh-day test C3 next, declared before reading.
+  2026-11-03 08:47Z: ROUND O3 DECLARED (user: "we test the optimizations and check the result"; exploratory). Clock = measured Tokyo
+  (L2c main) with decision 2 ms (exec-port config): order live 40, resting cancel 22, pending cancel 95 after create, fills known
+  100 ms. Base = live-like C2-P sequential + venue throttle XV (MICRO + D1 stack + M025 + A1 5..25, XNA, XMIN1). Predictions
+  preds_o3 = model A pred_1000 + a y250 model refit on Tokyo-clock rows (out of day). Families: F2 Binance guard (B1T03, B2T03,
+  B2W100, B2W100T03); F3 model guard (M015, M05 replacing M025; Q025, Q05, Q10 = 250 ms guard added); F4 stand back (BKA, BK60,
+  BKM); F5 time (S60, S120, S180, size A7:5:25:60); F6 reprice dead-band (HY50, HY100, HY250). 19 variants + base.
+  Adoption per family: the variant with the largest dev-day (10-23..25) sum is adopted only if it beats base in sum AND on >= 2/3
+  dev days AND its dev +1 s mark c/sh >= base's. Adopted changes are combined into one arm, run sequential + XV and as a
+  concurrent twin, reported on dev and 10-26/27/31 (second look, seen). A fresh-day confirmation (>= 5 days from 11-06, after
+  C2's days) is declared separately before reading. Multiplicity 19.
+  2026-11-03 08:05Z: LATENCY TEST L2c RESULT (docs §23): on the measured path (order live 40, cancel 22, pending cancel 95 after
+  the create, fills known 100, decision 10 ms) every unthrottled / venue-throttled live-like C2-P arm loses (-288..-514$ / 6 d);
+  order live 22 ms or decision 2 ms bring some back to about +200..+530. Frozen v6 (sequential, 1 place/s) +795..+1,126 in
+  every column but +1 s mark -0.30..-0.37 c/sh and model-sensitive (L1 model B +290): not an edge.
+  2026-11-03 07:04Z: L2b SUPERSEDED by L2c before any result was read (exec-port message superseding both earlier latency notes;
+  verified here on our clock only: resting-order remove answered 22-34 ms after send (p50 28, n 5); a remove reaching Predict
+  before the order exists is held, answered 95-135 ms after the create's send (29-76 after its answer, p50 54, n 7); account
+  read 10.5 min / 13.6 p50 ms through Cloudflare; wallet events lag the HTTP answers). Partial L2b outputs deleted unread.
+  L2c grid (order live / cancel resting / pending cancel after create / own fill known / decision): main 40 / 22 / 95 / 100 / 10;
+  order 22 instead of 40; fills known 30 instead of 100; decision 2 instead of 10. Same five arms; model A.
+  2026-11-03 06:49Z: L2 SUPERSEDED by L2b before any result was read (exec-port correction, verified here: in 11 of 12 trials
+  Predict's 'Accepted' stamp is later than our receipt of the create's OK answer, so it lags acceptance; order live is
+  between ~2 and ~44 ms after sending, central 22 ms; 'Cancelled' stamps precede the remove answer, so cancels ~37 ms stand,
+  lower bound 25). Partial L2 outputs (58/37, 46/25) deleted unread; the decision-2 ms features + model-A predictions
+  (rows_rl_d2, preds_rl_a_d2) are kept. L2b grid: (order, cancel, decision) = (22, 37, 10) central, (22, 25, 10), (40, 37, 10),
+  (22, 37, 2); same five arms; model A.
+  2026-11-03 06:00Z: LATENCY TEST L2 DECLARED (exec-port correction, verified here from the probe's wallet-event stamps: order live
+  after sending min 42 / p50 58 / max 83 ms, cancel effective 32-40 ms for accepted orders, 104-135 ms when sent before the
+  create is live; Predict's clock may lead ours by <= ~12 ms -> lower bounds 46 / 25). Split-latency handler in pf_step4_live
+  (parity with it off: L1 to the cent). Grid: (order, cancel) = (58, 37) and (46, 25) ms x decision 10 / 2 ms x live-like
+  C2-P concurrent / sequential x throttle none / venue XV, plus sequential 1 place/s (the frozen v6 config); model A
+  (frozen spec, out of day; decision 2 ms gets its own features + model-A predictions). Descriptive; live choice is the user's.
+  2026-11-03 05:51Z: LATENCY TEST L1 RESULT (docs §22): at the measured Tokyo clock live-like C2-P keeps +$240-600 of +$1.9-3.1k
+  (unthrottled / venue throttle, models A and B), +1 s mark ~0 or negative everywhere; D1 alone -596 (0/6 d); 1 place/s arms
+  noisy (+941/+1,126 model A vs +316/+290 model B). Models fine (R2 0.13-0.20). The tokyo20 edge does not survive ~45 ms more
+  latency. C2's verdict (tokyo20 clock) would not establish live profitability.
+  2026-11-03 04:21Z: LATENCY TEST L1 DECLARED (user: "do the tests according to real latency values"; exploratory, six read days):
+  clock pf_clock_rl = Tokyo measured (Predict per frame at 53.1 ms median, >= update + 13.2, + 10 ms decision; Binance E +
+  11.5; orders/cancels +22 ms; own fills +30 ms). Features recomputed on that clock (pf_step5_features_rl, rows_rl); LODO models
+  A (tokyo20-trained = frozen live spec) and B (refit on the Tokyo clock), both out of day (pf_step5_lodo_rl). Arms (live-like
+  C2-P): concurrent and sequential x throttle none / 1 / 2 places/s / venue-sized XV (40 per s, 500 per min), plus D1 alone and
+  D1 + M025 at 5 sh; tokyo20 references (parity arms must equal round 2 to the cent). Reported: latency cost (tokyo20 -> A),
+  refit recovery (A -> B), best design x throttle under the Tokyo clock. Descriptive; the live choice is the user's.
+  2026-11-03 03:58Z: TOKYO PROBE (pmmmrust fe073d1, read here; docs §21): NO removal lock (null; first removal succeeds; 12/12
+  immediate trials) -> lambda 0. Rate limits create/remove 40/s + 500/min (our unthrottled demand > 500/min in 4-5% of quoting
+  minutes) -> the 1 place/s throttle is far tighter than needed. NEW deviation: Predict feed p50 53 ms (p99 115) + ~10 ms
+  decision + ~22 ms create vs the replay's 20 + 0 + 20 -> latency replay needed before live. C2 day 2 (11-02) admitted.
+  2026-11-02 13:20Z: exec port tag pfmm-c2p-tokyo-v3 (b40ae6d): trading code = v2 (0 diff lines under bins/ crates/, checked
+  here), adds the Tokyo runbook + helper scripts/pf_tokyo.sh; its lock step interpolates the §19 sequential 1 place/s grid
+  (958 / 592 / 522 / 71 / -5,672 / -13,608 at 0 / 50 / 100 / 200 / 500 / 1000 ms; break-even 204) - values checked = §19.
+  2026-11-02 12:55Z: exec port froze pmmmrust tag pfmm-c2p-tokyo-v2 (code e77a376; tag 38d4dfe adds only the receipt
+  docs/receipts/20261102_pfmm_c2p_tokyo_freeze_v2.json; verified here read-only): sequential replace (= XP rule) + 1 place/s
+  throttle; two noted differences both let live re-place sooner than the replay (conservative replay). Next: user's probe.
+  2026-11-02 12:35Z: USER DECISION ("Yes do the changes"): live version switches from concurrent to SEQUENTIAL replace, keeps the
+  1 place/s throttle; probe (lock + rate headers) next. Relayed to the pmmmrust exec-port session (owner of the code and its
+  freeze) with the rule = replay token XP<lambda>; reference pf_step4_live.py sha256 c0b2ba80e9e29621. No pmmmrust edits here.
+  2026-11-02 11:55Z: CONCURRENT vs SEQUENTIAL, placement-relative lock (docs §20): break-even lambda concurrent 202 / 138 / 195 ms
+  (none / 1 / 2 places/s), sequential 163 / 204 / 180. At 1 place/s (exec-port throttle) sequential beats concurrent at every
+  lambda <= 200 ms; unthrottled concurrent is better up to 200 ms. Concurrent breaks G6 hard cap only unthrottled at >= 200 ms.
+  2026-11-02 11:12Z: PLACEMENT-RELATIVE LOCK GRID (docs §19; Predict's removalLockedUntil counts from placement; supersedes
+  §18 for reading the probe): live-like C2-P sequential, lambda 50 / 100 / 200 ms = +1,940 / +1,471 / -868$ unthrottled,
+  +592 / +522 / +71 at 1 place/s, +1,854 / +1,100 / -284 at 2/s; 500 ms all negative. Break-even 163 / 204 / 180 ms.
+  Median order age at cancel 69 ms (34% of cancels held at 50 ms, 69% at 200). XP0 = XS0 to the cent.
+  2026-11-02 10:30Z: LOCK GRID 0-200 ms (docs §18, sequential, live-like C2-P, six read days): L 50 ms +1,059 / +667 / +966$
+  (none / 1 / 2 places/s), 100 ms -996 / -790 / -773 (2/6 d), 150 ms all days negative. Break-even 73-78 ms from the decision.
+  2026-11-02 09:37Z: LIVE ROUND 2 (docs §17): live-like C2-P (no amend + min 1 USD) +3,067$/6 d; sequential lock L = 0 /
+  200 / 500 / 1000 ms +1,906 / -8,218 / -16,047 / -20,856 (concurrent 200 ms -6,735); exec-port throttle at L = 0: 1 place/s
+  +958 (5/6 d, 61% of place intents never placed), 2/s +2,056 (4/6 d); at L = 500 ms with throttle -12.2k / -16.0k.
+  G6 holds under sequential. Removal lock >= 200 ms = strategy loses in either design.
+  2026-11-02 09:02Z: LIVE-DEVIATION TESTS for the pmmmrust execution port (docs §16; read days only, pf_step4_live.py copy,
+  parity to the cent; pf_step4.py unchanged). No amend -12$/6 d (nothing). Removal lock = dominant risk: P lock 500 ms on
+  every cancel -21.9k$ (vs +2,974), 1000 ms -42.6k$, A1-shrink-only 500/1000 ms -5.2k/-11.8k$; locked fills -1.5..-1.7 c/sh,
+  break G6 (|net| to 212). Min order 1 USD: 1.4% of shares, withholding +87..+105$. Requests: P 290/min mean, 67% of
+  quoting minutes > 240/min. Loss cap 150$: live-like P -31.67$; amend P stuck at -149.96 for 5+ days (no order fits, no
+  halt); binds within a day from 30% of start windows; max drawdown -329$. C2 unaffected (runs pf_step4.py).
+  2026-11-02 02:25Z: C2 DAY 1 (20261101) ADMITTED 288/288, 0 invariant violations; interim read (shown to user, decides
+  nothing): P +409.18, R2 +523.13 (P-R2 -113.95), R4 +432.33, R1-R0 +31.79, C1c-R0 +43.22, S +340.62, S-R3 +112.11,
+  S-P -68.56; +1 s mark ~0 for P (-0.02 c/sh) vs 0.30-0.39 on read days; model R2 0.107, |pred| >= 0.25 c 46% of the time.
+  2026-11-02 02:01Z: CONFIRMATION C2 DECLARED (user: "we test on new days next") before any content of 11-01 or later was
+  read; see confirmation_C2. Model pf_step5_c2 fit on the six read days (sha be6e916e). Driver run_c2_auto.sh runs each
+  day after the next day's 01Z hour closes; report when 5 days are admitted (earliest ~11-06 02:30Z).
+  2026-11-01 15:58Z: V2 RERUN DONE (docs §15; 102 arms, 0 invariant violations). C1 under v2: +158.36, candidate - D1 =
+  +50/+50/+63 -> still passes (margin ~half of v1). O1 combo 5 sh +576 / +729. B2 D1+M025 + A1 model-sized 5..25 +1,910 / +1,065
+  (still adopted vs fixed 25 +1,660 / +961); B1 + A6 no longer adopted. +1 s edge 0.17-0.38 c/sh (A1 >= 0.25: 0.57).
+  2026-11-01 15:20Z: CODE REVIEW (independent reviewer + invariant checks pf_check_fills.py). Verified material defects:
+  (1) queue double-count: the frame stamped at a trade's own ms already shows that trade (75% of WS-timed legs, 10-23), v1
+  capped the queue with it and then subtracted the trade again -> fills ahead of our true queue place; (2) predictions end
+  at 239.95 s, so S270/S300 ran without the model guard after 240 s -> O1 stop-time comparison INVALID. Smaller: queue cap
+  only at our-side trades, sweep left queue stale, own fills known instantly, missing-prediction gaps, reduce-only not
+  capped, A1 threshold without decision event; G6 hard cap never binds. Fixed as fill model v2 (pf_step4.py sha256 5d9bdf872199;
+  PF_FILLMODEL=v1 reproduces O2 exactly on 10-25). 10-25: v2 fills ~15% fewer shares, +1 s mark ~20% lower. Not fixed
+  (noted): start price used ~0-1.6 s before known (features), trades matched in the last ~0.5 s dropped (arms quoting to
+  300 s only), crossed-book fills without a trade, hour-boundary ordering. Rerun of key arms: run_v2.sh.
+  2026-11-01 14:45Z: ROUND O2 DONE (docs §14). Loop fix restated: C1 candidate +191.99 (still passes), O1 combo +484.6/+688.4.
+  Adaptive size adopted by the declared rule: B1 combo + A6 (25 sh first 120 s) +1,991 dev / +3,241 2nd look; B2 D1+M025 + A1
+  (25 sh when model favours the side) +2,020 / +1,297 vs fixed 25 +1,764 / +862. A1 raises +1 s edge to 0.38-0.67 c/sh;
+  A3 (depth) worse; A4 (inventory) halves P&L. Next: C2 fresh-day confirmation (11-01+), check P-2026-003 reservations first.
+  2026-11-01 14:06Z: REPLAY FIX + ROUND O2 DECLARED (user: "adaptive size"). Fix: after a full fill the old loop reset the side's intent
+  even with a replacement in flight, so that replacement could stay live when the policy wanted no quote; the new loop
+  cancels it. Shown: PF_LEGACY_INTENT=1 reproduces the old 10-25 numbers exactly (246.18 / 773.10); fixed code 238.43 / 788.16.
+  All earlier step-4 numbers carry this small error; C1 candidate and O1 arms are restated with the fixed code in O2.
+  O2 (pf_step4.py sha256 f41da27a382f, preds_lodo6, tokyo20, E2, mid, 6 days): bases B1 = combo MICRO+G1+G5+M025 and B2 = D1+M025;
+  sizes fixed 5, fixed 25, A1:5:25:0, A1:5:25:0.25, A3:5:25:0.1, A3:5:25:0.25, A4:5:25:0, A6:5:25:120 (+ D1+M05 fixed 5).
+  Adopt an adaptive rule for a base only if it beats that base's fixed 25 on 10-23..25 in sum AND on >= 2/3 days AND its +1 s
+  mark c/sh >= fixed 25's; 10-26/27/31 reported as a second look. Multiplicity 12 adaptive arms.
+  2026-11-01 13:26Z: ROUND O1 DONE (docs §13). Size (D1+M05): 5/25/100 sh = +237/+1,137/+5,031 dev, +191/+780/+3,899 2nd look;
+  +1 s edge flat ~0.25 c/sh at all sizes (extra c/sh at size = carried inventory); no own impact -> large sizes optimistic.
+  6-day LODO model: R2 up slightly, P&L not. Adopted: theta 0.25, drop G2/G3/G4/G6. Declared combo MICRO+G1+G5+M025:
+  +496.7 dev (3/3, +284 vs base), +679.8 2nd look (2/3, +491); inventory p95 66 sh (no caps). Not a confirmation:
+  2nd-look days seen by C1. First combo run invalid (custom armset skipped predictions) -> fixed + refusal guard, rerun.
+  2026-11-01 11:46Z: ROUND O1 DECLARED before any result (user: optimise strategy/model + test larger size; no latency test now).
+  Code: pf_step4.py sha256 f58cf9343e4a, pf_step5_lodo6.py 4307d5a9a649. Scenario tokyo20, E2 timing, MICRO. Days read before: 10-23..27, 10-31.
+  (a) SIZE: D1 stack and D1 stack + M05 (C1 preds) at 5/10/25/50/100 sh, caps scaled (soft 2x, hard 5x size), 6 days.
+      Pick = largest dev-day (10-23..25) gross with >= 2/3 dev days > 0; reported on 10-26/27/31 (second look, not fresh).
+  (b) MODEL: LODO over the 6 days (5 training days per fold, pinned params, y250 + y1000) -> preds_lodo6.
+  (c) VARIANTS on preds_lodo6, size 5, mid: theta M025/M075/M10; 250 ms guard M05+Q025, M05+Q05, Q05 alone;
+      stop S270, S300; drop one of G1/G2/G3/G4/G6. Per family adopt the best dev-day sum only if it beats D1+M05 in sum
+      AND on >= 2/3 dev days; adopted changes are combined into one arm, then reported on dev and 10-26/27/31.
+  Multiplicity: 15 arms + 5 sizes. 10-26/27/31 are seen (C1); a real confirmation needs fresh days from 11-01 on.
+  2026-11-01 10:51Z: ON-CHAIN RECONCILIATION (BNB Chain, docs §12): 6 slices of 10-23 (14:00-14:15 + 5 suspect windows) =
+  25,641 maker fills / 18,096 taker orders, REST = chain one-to-one, shares identical, 0 missing, 0 extra -> REST COMPLETE.
+  executedAt = floor(settlement block time) (100%), match precedes block p50 ~0.47 s. Orphans = WS pending listing the
+  taker's order at its signed limit price (66% of takers have slippage room); 5.5% of orphan USD unexplained (14:00 slice).
+  2026-11-01 10:05Z: orphan follow-up (docs §11): the worked orphan is a 2nd pending entry for a REST trade (same shares, 98c asks,
+  alongside the exact 99c match); 24% of orphan USD equals a REST taker fill's size within +-1 s; 76% unexplained. REST
+  completeness still OPEN; on-chain reconciliation remains the test.
+  2026-11-01 09:39Z: WS-vs-REST check (10-23, docs §11): WS settlementsPending is a per-price aggregate of unsettled trades,
+  not a trade list (increase -> settle p50 376 ms; 74% of trading seconds have 2+ prices) -> exact ms timing limited to
+  50-58% of volume by netting/merging. REST trades seen in WS: 77.5% fully, 22.2% partly, 0.27% not. WS increases = 115% of
+  REST USD; 8.2% of WS increases ($572k) have no REST trade at that price within +-1 s (91% bid side; taker-limit-price
+  explanation rejected, $18k); 0.8% of REST volume has no REST trade in that market at all. REST completeness OPEN
+  (upper bound 9.4%); test = on-chain fill reconciliation. step-1 recon.live_ws_inc_shares is USD (mislabel).
+  2026-11-01 06:26Z: CONFIRMATION C1 PASSES its declared rule (10-26, 10-27, 10-31; one model fit on 10-23..25, unchanged):
+  candidate MICRO + D1 stack + model guard th 0.5c = +196/+110/-115 -> sum +190.67$ (mid; early +148, late +226) > 0;
+  candidate - D1 stack = +101.7/+86.1/+87.0 (3/3 > 0). D1 stack alone -84$ (+94/+24/-202). Model out-of-sample R2 (1 s)
+  0.189/0.191/0.121. Small: ~70k shares, +0.27 c/sh, ~0.22$/window at 5 shares; rebate (unverified) +115$.
+  Data note 10-31: 29% of trade volume has neither a WS time nor an E2 book-drop time (others ~1%); schema, maker-amount
+  semantics (18,258/18,259 equal) and WS-vs-REST offsets (median +59 ms) unchanged; 68% of those trades sit inside the visible
+  top-5 with no size drop within +-600 ms (likely refilled within a frame). Its early/late range is only +-30$ per arm.
+  2026-11-01 05:40Z: model-guard replay on dev days 10-23..25 (E2 timing, tokyo20, out-of-day LODO preds): D1 stack -45/-5/+36$
+  (early/mid/late), D1 + model guard th 0.5c +186/+237/+290$ (3/3 days, +0.24 c/sh, 100k sh), model replacing G1/G2 +145/+189/
+  +238$, th 1.0c weaker. th 0.5 picked from two values on these days -> CONFIRMATION declared below before reading fresh days.
+  2026-11-01 05:29Z: T6 model (LightGBM, pinned params, leave-one-day-out over 10-23..25, 50 ms Tokyo-clock grid, t < 240 s):
+  out-of-day R2 for the Predict mid move y250 ALL 0.38-0.48 (BN 0.23-0.31, PF 0.17-0.27), y1000 ALL 0.14-0.18 (BN 0.08-0.11,
+  PF 0.08-0.12), 3/3 folds. At ~9% of time flagged (th 1.0c) the realised 1 s move is 2.2-2.5c vs 1.0-1.2c for G1/G2's
+  flags (6-13% of time). Top gain: Predict L1-3 imbalance 22-25%, Binance 250 ms return 15%. Model-guard replay running.
+  2026-11-01 05:06Z: T4 timing refinement DONE: book-drop estimator E2 (frame whose size drop at the
+  trade's price best matches its volume, +-600 ms) adopted by the declared rule on 3/3 days (median |err| 0-49 ms vs 249-255 ms
+  for S; within 100 ms 57-62% vs 20%; p90 551-589 ms = fat tail). Three timing models agree: MICRO + full D1 stack (tokyo20)
+  = BREAK-EVEN gross: E2 -5$ (-45..+36), v1 +6$ (-1060..+747), E4 +1$ (-856..+553) over 3 days, ~100-116k shares.
+  MICRO base -6.1..-7.7k$. Rebate (unverified) ~+160$. Single rules: every D1 rule helps alone 3/3 days.
+  Next: T6 model (pf_step5_features.py / pf_step5_model.py, LODO across the 3 days) running.
+  2026-11-01 04:01Z: user: Tokyo host (~20 ms to Predict) -> plan = latency re-timing, then D1 rules one at a time, then a
+  prediction model. Latency census (this US host): Binance recv-E 77 ms median (floor 71), Predict recv-update 130-136 ms
+  (floor 90); TCP RTT ~148 ms to both fstream.binance.com and ws.predict.fun -> both ~74 ms one way; Predict timestamps
+  arrive ~56 ms later than Binance's over the same path (Predict-side publish delay or clock offset). Scenarios:
+  tokyo20 (Predict t+20, Binance E+5, orders +20 ms; MAIN, user figure) and tape (recv-72 ms both, orders +20; stress).
+  pf_step4.py parity: base arm reproduces step 3 at 40 ms within 0.3-8% (window-edge decisions). 10-23 singles (tokyo20):
+  every D1 rule helps alone (JOIN base -2.4k$: G1 +1.4k, G2 +1.4k, G3 +0.8k; MICRO base -1.5k$: G1 +0.9k, G4 +1.0k).
+  Campaign (singles 10-24/25, stack 3 days, tape ends, step-2 tokyo clock) running.
+  2026-11-01 03:32Z: T3 DONE - plain baseline loses on 3/3 days in every cell (JOIN/MICRO x early/mid/late timing x
+  272/50 ms delay): JOIN/mid -13.4k$ / -1.57 c/sh at 272 ms, MICRO/mid -7.0k$ at 50 ms. Loss = stale quotes swept
+  (swept-through fills ~half the volume, -1.7..-2.1 c/sh at 1 s). Fills under D1's 1 s guard condition = 13-20% of
+  volume, 34-51% of the loss; neutral fills still lose. Write-up: predictfun/docs/EXPLORATION_2026-11-01.md.
+  2026-11-01 03:21Z: T1 DONE on 10-23..25 (864 windows, all with books/outcome/start price). Trade timing: WS
+  settlementsPending value = USD at the YES price; exact-value match times 52-58% of maker-leg volume to the ms;
+  executedAt = true time ROUNDED to the second (offset median +26..36 ms, IQR +-265 ms). Structure: 17.6 frames/s,
+  1-tick spread 87% (44% in the last minute), touch ~240 sh, gap-behind 3.4%/side, ~35k sh/window live, ~120 makers.
+  T2 running. Report: data/predict_fun/research/step1/report_20261023_20261024_20261025.json
+  2026-11-01 ~02:46Z: project created (user request; dir mtime). Sample days 10-23, 10-24, 10-25.
+
+resources:
+  rule: "one light process at a time (user 2026-11-01: allow a light process, watch memory and disk)"
+  launcher: predictfun/research/run_light.sh   # core 8, 4 GiB AS cap, refuses <8 GiB avail / <100 GiB disk
+  log: predictfun/research/run_light.log
+  shares_box_with: P-2026-003 of-model step-3 queues (4 processes, cores 2-5)
+
+days_read:
+  - {day: "20261026", scope: "C1 confirmation (step 1, timing, features, replay)"}
+  - {day: "20261027", scope: "C1 confirmation"}
+  - {day: "20261031", scope: "C1 confirmation"}
+  - {day: "20261022", scope: "14Z hour only: fee formula, maker sizes, fill-channel probe (engineering)"}
+  - {day: "20261023", scope: "14Z hour semantics probe; steps 1-3 full day (incl. outcomes)"}
+  - {day: "20261024", scope: "steps 1-3 full day (incl. outcomes)"}
+  - {day: "20261025", scope: "steps 1-3 full day (incl. outcomes)"}
+  - {day: "20261101..", scope: "C2 confirmation (declared 11-02 02:01Z): each C2 day d is read with d+1 00-01Z; started 11-02"}
+  # Binance tape directory listings (file counts only, no content) were made for 10-22..10-31.
+
+tasks:
+  - id: T1
+    name: reconcile sources + book structure (3 days)
+    status: done
+    result: "fill model = REST volumes; ~55% of volume ms-timed via WS pending USD match, rest bounded +-0.5 s" 
+  - id: T2
+    name: signal checks (Binance 1 s guard premise, Predict reprice lag, tick leg with tau = 300 - t)
+    status: done
+    result: >-
+      Guard premise HOLDS (3/3 days): Binance 1 s <= -0.5 bps (3-7% of time) -> Predict mid -1.4..-1.9c by +1 s
+      (half spread ~0.5c), 0.25 s leg -3.3..-4.7c; no reversal by 30 s. Predict reprices ~0.3 s behind Binance
+      (>=1 bps moves: 0 at 0.1 s, ~47% at 0.3 s, ~80% at 1 s). Tick-leg LEVEL (p_bn, tau=300-t, basis-corrected)
+      is worse calibrated than the Predict mid (esp. t=290) and its gap predicts ~nothing; basis relay-futures
+      +4.4..+4.6 bps median. Summaries: data/predict_fun/research/step2/<day>/summary.json
+  - id: T3
+    name: plain baseline replay (no D1 rules), bounded fill model from second-precision trades
+    status: done
+    result: "VOID 2026-11-05 (pre-fix replay, outputs deleted)"
+  - id: T4
+    name: Tokyo latency re-timing + D1 rules one at a time and stacked (pf_step4.py, scenarios tokyo20 / tape)
+    status: done
+    result: "VOID 2026-11-05 (pre-fix replay, outputs deleted)"
+  - id: T6
+    name: prediction model (short-horizon Predict mid move / adverse-fill probability) after T4
+    status: done
+    result: "LODO R2 (1 s) 0.14-0.18 dev, 0.12-0.19 fresh (model, stands); its replay $ / C1 pass VOID 2026-11-05"
+  - id: T7
+    name: confirmation C2 on fresh days (11-01+), candidates P (D1 + M025 + A1) and S (combo + A1)
+    status: stopped
+    result: "VOID (2026-11-05 17:15Z): pre-fix engine; driver stopped, outputs deleted"
+  - id: T5
+    name: verify liquidity-reward terms (hourlyRate 3000, 6c / 100 sh) - could change the economics
+    status: proposed
+
+confirmation_C1:
+  declared: "2026-11-01 05:40Z, before any content of 10-26, 10-27, 10-31 was read for this project"
+  candidate: "MICRO + G4,G2,G6,G5,G3,G1 + M05 (model guard th 0.5 c), tokyo20 latency, E2 timing, 5 shares"
+  model: "pf_step5_apply.py: ONE LightGBM fit on 10-23..25 (ALL features, y1000, pf_model_spec.py PARAMS/ROUNDS), applied unchanged"
+  days: [20261026, 20261027, 20261031]   # 10-28..30 excluded: Binance tape sealed for P-2026-003's order-flow test
+  pass_rule: "sum over the 3 days of candidate gross (mid timing) > 0 AND candidate - D1 stack > 0 on >= 2 of 3 days; early/late reported"
+  reported_not_deciding: [early/late timing, rebate, other arms of the 'model' armset, out-of-sample R2/corr]
+  code_sha256_prefix: {pf_model_spec: ede27dafd28766d4, pf_step5_apply: df3d89c7b9aca542, pf_step4: d7835670f919415d}
+  multiplicity: "candidates tried on dev days: M05/M10 x {with, without} G1/G2 = 4 model arms; 1 carried forward"
+  result: "VOID 2026-11-05 (pre-fix engine pf_step4.py; outputs deleted). Was reported PASS on 11-01."
+
+confirmation_C2:
+  declared: "2026-11-02 02:01Z (clock), before any content of 20261101 or later was read for this project"
+  reservation_check: >-
+    P-2026-003 has no reservation on 11-01+: its register ends 09-12; of-model step 4 used pool days between its v4 train
+    and tune ranges; its sealed test (10-28..30) was read 11-01; its arms are frozen + committed (3684ee63, ecbd6e7f), so a
+    read here does it no harm (user rule 2026-10-22) -> recorded under days_read, nothing dropped.
+  candidates:
+    P: "primary: MICRO + D1 stack G4,G2,G6,G5,G3,G1 + M025 (1 s model guard th 0.25 c), adaptive A1:5:25:0 (25 sh on the side the 1 s prediction favours, else 5)"
+    S: "secondary: MICRO + G1 + G5 + M025 (combo), adaptive A1:5:25:0"
+  references: {R2: "D1 stack + M025 fixed 25", R3: "combo fixed 25", R1: "D1 stack + M025 fixed 5", R0: "D1 stack fixed 5",
+               R4: "D1 stack fixed 25", C1c: "D1 stack + M05 fixed 5 (C1 candidate, C2 model)", R5: "combo fixed 5 (descriptive)"}
+  also_run: [P early, P late, S early, S late]
+  settings: "tokyo20 latency, E2 timing, fill model v2, mid timing decides, gross USD, settlement P&L"
+  model: >-
+    pf_step5_c2.py fit: ONE LightGBM on the six read days 10-23..27, 10-31 (spec = preds_lodo6: ALL features, y1000 clip
+    +-5 c, every 2nd valid row t < 240 s, pinned PARAMS/ROUNDS), 4,024,444 rows, model sha256 be6e916e04e7852f; applied
+    unchanged (apply refuses if the model file's sha differs).
+  days: >-
+    the first 5 ADMITTED complete UTC days from 20261101, in date order; a day runs after the next day's 01Z hour closes
+    (+10 min). Admission is outcome-independent: every source hour file d-1 23Z..d+1 01Z present (Predict WS + REST,
+    reference relay raw_ws + reference_prices, Binance bookTicker), >= 270 of 288 windows with live frames + outcome +
+    start price (step 1), fill invariants 0 violations (pf_check_fills). Otherwise the day gets a status (SOURCE_GAP /
+    WINDOW_GAP / FILL_INVARIANT) and the next day replaces it; a failed step stops the driver (status FAILED). Give up
+    after 20261110 -> INSUFFICIENT_DAYS, point estimates only, every predicate None.
+  pass_rule: "each predicate: sum over the 5 days > 0 AND > 0 on >= 4 of 5 days (pf_c2_report.py computes them)"
+  predicates:
+    P_POSITIVE: P
+    P_ADAPTIVE_BEATS_FIXED: P - R2
+    MODEL_ADDS_AT_SIZE: P - R4
+    MODEL_GUARD_ADDS_5: R1 - R0
+    C1_REPLICATES: C1c - R0
+    S_POSITIVE: S
+    S_ADAPTIVE_BEATS_FIXED: S - R3
+    S_BEATS_P: S - P
+  decisions: {P_CONFIRMED: "P_POSITIVE and P_ADAPTIVE_BEATS_FIXED", S_REPLACES_P: "S_POSITIVE and S_BEATS_P"}
+  null_design: "none: 5 day-level deltas allow only 32 sign-flip draws (< 200), so the rule is a count rule; 90% t-interval of the per-day mean is descriptive"
+  reported_not_deciding: [early/late timing, +1 s mark c/sh, inventory p95, rebate (unverified), model R2/corr per day, admission statuses, windows per arm]
+  multiplicity: "2 candidates, 8 predicates; P and S were chosen on the six read days from O1 (15 arms + 5 sizes) and O2 (12 adaptive arms)"
+  interim: >-
+    per-day numbers may be shown as days arrive; nothing (arms, rules, code, model, days, pass rule) changes after the
+    first C2 read. A code fix forced by a FAILED step = superseding declaration C2 v2 in band, the original kept.
+  caveats: >-
+    25-share sizes optimistic (no own price impact; 25 sh ~10% of the touch); features use the start price ~0-1.6 s before
+    it is known; trades matched in the last ~0.5 s before 300 s are dropped; book crossings without a trade give no fill.
+  code_sha256_prefix: {pf_step4: 5d9bdf8721991d77, pf_step5_c2: c662c1800f7e8258, pf_step5_features: d345469db55258b9,
+                       pf_model_spec: ede27dafd28766d4, pf_step1: fa03ee189a587207, pf_step1_timing: 0e669a7c63890270,
+                       pf_step1_booktime: 3e0d2969b744a29f, pf_check_fills: b4d20450c1a4041b, pf_c2_report: 0406c9edda94680d,
+                       run_c2_day: 0bfbd7bc2b41bb1a, run_c2_auto: c472c9722b47e067, pf_io: 057fb052683b7150}
+  rehearsal: >-
+    10-31 (read day, tag c2reh, preds_lodo6): 13 arms, 0 invariant violations, overlapping arms equal the v2 run to the
+    cent; report refuses wrong settings and gives INSUFFICIENT_DAYS / None on 1 day; selftest controls pass; day and
+    model refusals fire on 10-31.
+  driver: "predictfun/research/run_c2_auto.sh (setsid nohup); data/predict_fun/research/c2/{auto.pid, auto.heartbeat, auto.log, admission.jsonl, report_c2.json}"
+  result: "VOID - driver STOPPED 2026-11-05 17:15Z by user decision (engine pf_step4.py never got the 11-05 fixes); 11-01..11-04 had been admitted; c2/ and its replay outputs deleted"
+
+flags:
+  prefix_results: "VOID + DELETED 2026-11-05 17:17Z (user): every replay result before round i; see updated 17:17Z"
+  fill_timing: "RESOLVED (T1): REST = volumes; WS pending increments (USD at YES price) time ~55% of volume to the ms; rest +-0.5 s (executedAt rounded)"
+  futures_spot_basis: "Binance futures mid ~ -3.9 bps vs relay at 10-23 00:00Z (one sample); tick leg must correct"
+  rewards: "per-window liquidity reward schedule hourlyRate 3000 (eligibility 6c / 100 sh); payout unverified"
+  rebate: "25% taker-fee rebate advertised, unverified -> 0 in base case"
+  simulation_review_20261105: "R7 / R8 FIXED by the user, verified 15:30Z (check_fixes_v4.py PASS with pre-fix falsifiers; see updated 15:30Z). Reruns (round i) in progress; every number before round i is provenance only."

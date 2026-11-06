@@ -1,0 +1,133 @@
+{
+  "pf_step4_live.py": {
+    "sha256": "742637b9a2d5bd6d53c7538f78b2277412aff6b5c40dec05e4d6d2ee68a4884f",
+    "prior_controls": {
+      "price_priority": {
+        "fixed_pt": 50,
+        "regression_pt": 49
+      },
+      "atomic_sweep": {
+        "bid": 5.0,
+        "controls": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "regression_bid": 10
+      },
+      "postonly_retry": {
+        "refusals": 1,
+        "fills_after_recovery": 1,
+        "off_control_fills": 0
+      },
+      "GS": {
+        "missing_fills": 0,
+        "stale_fills": 0
+      },
+      "known_bad_input_refused": true
+    },
+    "R7": {
+      "known_hit_eq_quiet_before_443ms": true,
+      "n_requests_before_443ms": 38,
+      "place_at_353": false,
+      "unthrottled_equal": true,
+      "physical_control_diverges": true,
+      "prefix_falsifier": {
+        "sha256": "38f6b73ac54510fe0dec72dde2edfde8eb2df78c7d8a82f64c332bd3fec03d93",
+        "diverges": true,
+        "place_at_353": true,
+        "first_divergence": [
+          [
+            353.0,
+            0,
+            "place"
+          ],
+          [
+            363.0,
+            0,
+            "place"
+          ]
+        ]
+      }
+    }
+  },
+  "pf_step4_ladder.py": {
+    "sha256": "c682229e4fbe606b217cfa633816bcba67bce701c7e690b4cb8be9aa7ff6e37f",
+    "prior_controls": {
+      "price_priority": {
+        "fixed_pt": 50,
+        "regression_pt": 49
+      },
+      "atomic_sweep": {
+        "bid": 5.0,
+        "controls": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "regression_bid": 10
+      },
+      "postonly_retry": {
+        "refusals": 1,
+        "fills_after_recovery": 1,
+        "off_control_fills": 0
+      },
+      "GS": {
+        "missing_fills": 0,
+        "stale_fills": 0
+      },
+      "own_cross": {
+        "fixed": 0,
+        "off_control": 2
+      },
+      "R6_rung_leak": {
+        "known_early": 0,
+        "physical_early": 2,
+        "full_stack_early": 0
+      },
+      "known_bad_input_refused": true
+    },
+    "R7": {
+      "known_hit_eq_quiet_before_443ms": true,
+      "n_requests_before_443ms": 38,
+      "place_at_353": false,
+      "unthrottled_equal": true,
+      "physical_control_diverges": true,
+      "prefix_falsifier": {
+        "sha256": "68478b491d7a4c2bc0a410a0a06d127ba0efd416d35f4a3451c8a828712e6ad1",
+        "diverges": true,
+        "place_at_353": true,
+        "first_divergence": [
+          [
+            353.0,
+            0,
+            "place",
+            0
+          ],
+          [
+            363.0,
+            0,
+            "place",
+            0
+          ]
+        ]
+      }
+    }
+  },
+  "pf_view_check.py": {
+    "sha256": "844420a112f42e199d14759f09585bc8312bdfad1d888b13c30e7ea863b03b8d",
+    "exit_codes": {
+      "missing_known": 2,
+      "known_empty": 2,
+      "known_other_arm": 2,
+      "known_no_summary": 2,
+      "known_no_fills": 2,
+      "known_bad": 1,
+      "known_good": 0,
+      "physical_silent": 1,
+      "physical_missing": 2
+    },
+    "prefix_falsifier_missing_known_exit": 0
+  },
+  "verdict": "PASS"
+}
