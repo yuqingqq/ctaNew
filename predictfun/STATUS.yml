@@ -6,6 +6,9 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-06 06:09Z: HAND-OFF SENT to the exec-port coding session ctanew-5c (SendMessage msg_id 4cd86163-1719-4f01-8126-cc60817f4cfc, delivered to
+  its inbox, not yet read): implement pm_ladder_v1 per RECEIPT.md (commits 8d5b02a0 + 38535aed); all pre-fix research numbers VOID (C1-C4,
+  C2-P, v6, L2c, O3); parity fixtures offered on request; queue-ahead / request-rate / clock numbers to compare; live go = user's decision.
   2026-11-06 06:09Z: FROZEN pm_ladder_v1 (USER: "we freeze and tell the coding session to implement this version"). Receipt
   predictfun/freeze/pm_ladder_v1/RECEIPT.md; code commit 8d5b02a0 (predictfun added to git with the two Predict recorders); artifacts
   built from it by pf_freeze_pm_ladder_v1.py (guard_bid / guard_ask LightGBM fit on the 8 read days, thresholds c60 = round i's 11-03 fit,
