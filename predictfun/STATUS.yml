@@ -6,6 +6,19 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-06 17:15Z: RESULT: D1 INVENTORY MECHANISMS ON v1 (run_inv.sh ALL DONE 17:14Z; inv_check PASS: never-trigger arms equal v1
+  10/10, falsifier SK5+RX5 differs 2/2, v1 byte-identical to round i 18/18, every mechanism engaged at J and X; report
+  step4/report_inv_v1.json). IN-SAMPLE, the 9 round-i days. No difference vs v1 (settle or mark@stop, per-day t, 8 df) excludes 0 for
+  any of the 10 arms at J or X. J / X, $ over 9 days: v1 settle 639 / 370, mark 497 / 383, day sd 202 / 155, worst day -166 / -153,
+  max dd -457 / -403, $150 halt within 1 day 26.9 / 9.8%. CAP10: settle 815 / 462, mark 501 / 379 (vs v1 +0.5 / -0.5 $/day, +-12..15),
+  day sd 155 / 103, worst -89 / -55, max dd -234 / -182, halt 11.2 / 2.8%, fills -16 / -12%, +1 s 1.47 / 1.37 c/sh (v1 1.50 / 1.32);
+  its settle gain is carry (+314 / +83 vs v1 +143 / -13). CAP25: day sd 158 / 132, max dd -268 / -300. RX5: day sd 149 / 109, mark
+  -2.7 / -3.1 $/day. SK5 and RL ~ v1 (SK5 fills +3%; RL engaged on 7.6k / 8.2k decisions). RO60-120 / RO60-240 (marked at 120 / 240 s,
+  not like-for-like): |net| at stop J 9.3 / 8.4 (v1 10.6), day sd x0.87 / x0.81. RO60-240+RX5 and D1ALL: |net| at stop J 3.5 / 2.9,
+  carry sd 1.8 / 1.6 (v1 8.6), day sd x0.52 / x0.46, halt J 3.8 / 1.9%; fills x2, +1 s 0.79 / 0.76 c/sh, settle J 398 / 387, X 245 /
+  186 (-27 / -28 $/day J, -14 / -21 X, intervals span 0). Selling down after 60 s halves the variance and pays for it in adverse
+  reducing fills; CAP10 cuts tails at an unresolved mark cost. Picked after seeing among 10 arms x 2 timings: a candidate needs the
+  forward race (superseding receipt before the 11-04..11-08 read). Frozen v1, the race and the live port unchanged.
   2026-11-06 15:57Z: DECLARED + LAUNCHING: D1 INVENTORY MECHANISMS ON v1 (user: "We test these mechanisms like skewing, reducing only
   after the end, etc, run v1 with these to check the result"). IN-SAMPLE, exploratory, the 9 round-i days; no forward read. Engine
   pf_step4_ladder_inv.py generated from the frozen engine (pf_ladder_inv_build.py): SK<n> D1 skew band (reducing side one tick toward

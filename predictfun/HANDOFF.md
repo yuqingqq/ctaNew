@@ -1,5 +1,15 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-06 17:15Z (session 62f3ce33) - D1 inventory mechanisms on v1 (in-sample)
+
+- Engine pf_step4_ladder_inv.py (generated, pf_ladder_inv_build.py; frozen engine untouched), runner run_inv.sh, checks
+  pf_inv_check.py (PASS), report step4/report_inv_v1.json; STATUS 17:15Z has the table. No arm beats v1 with an interval excluding 0.
+- CAP10 (stop adding at 10 sh) halves max drawdown and cuts $150-cap halts 27 -> 11% (J), 10 -> 3% (X); mark@stop about equal.
+  Selling down after 60 s with the line exempted (RO60-240+RX5, D1ALL) halves day sd but loses 35-50% of settle; skew and the $ limit do
+  ~nothing.
+- Open (user): add CAP10 (or another arm) to the forward race as a declared candidate (superseding race receipt) before the
+  11-04..11-08 read; capped replay with the port's halt rule; run_forward.sh after 11-09 02:00Z.
+
 ## 2026-11-06 15:23Z (session 62f3ce33) - $150 loss cap vs round-i simulation (read-only)
 
 - Frozen v1 replay has no loss cap; the live $150 cap binds (refuses places) within 1 day from ~54% of simulated starts and the
