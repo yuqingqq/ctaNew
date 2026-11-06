@@ -1,0 +1,189 @@
+{
+ "candidate": "pm_ladder_v1",
+ "engine": "predictfun/research/pf_step4_ladder.py",
+ "arm": "MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+XNA+XMIN1+XV+S60|mid|AM:5:25:95",
+ "control": "MICRO|G4+G2+G6+G5+G3+G1+V0+GS+XNA+XMIN1+XV+S60|mid|AV:5:25:0.06",
+ "guard": {
+  "models": {
+   "bid": "guard_bid.txt",
+   "ask": "guard_ask.txt"
+  },
+  "model_sha256": {
+   "bid": "0dc09d84bb28e0c0cafac99ee0fa8ff1140cb97ca70571526469f3b42f345e39",
+   "ask": "6d2d7149e6c556c6a2a63dad89e68ce4ea6113c76400edf9bd4f7a345ea9fade"
+  },
+  "features": [
+   "bn_r25",
+   "bn_r50",
+   "bn_r100",
+   "bn_r250",
+   "bn_r500",
+   "bn_r1000",
+   "bn_r3000",
+   "bn_imb",
+   "bn_age",
+   "bn_flow250",
+   "bn_flow1000",
+   "bn_flow5000",
+   "bn_ntr1000",
+   "pf_spread",
+   "pf_mid",
+   "pf_micro_dev",
+   "pf_imb1",
+   "pf_imb3",
+   "pf_lbs",
+   "pf_las",
+   "pf_age",
+   "pf_nfr1000",
+   "pf_dm250",
+   "pf_dm1000",
+   "pf_dm5000",
+   "pf_pend_bid1000",
+   "pf_pend_ask1000",
+   "pf_pend_tot5000",
+   "t_rel",
+   "sigma",
+   "basis_bps",
+   "gap"
+  ],
+  "feature_names_in_model": {
+   "bid": [
+    "Column_0",
+    "Column_1",
+    "Column_2",
+    "Column_3",
+    "Column_4",
+    "Column_5",
+    "Column_6",
+    "Column_7",
+    "Column_8",
+    "Column_9",
+    "Column_10",
+    "Column_11",
+    "Column_12",
+    "Column_13",
+    "Column_14",
+    "Column_15",
+    "Column_16",
+    "Column_17",
+    "Column_18",
+    "Column_19",
+    "Column_20",
+    "Column_21",
+    "Column_22",
+    "Column_23",
+    "Column_24",
+    "Column_25",
+    "Column_26",
+    "Column_27",
+    "Column_28",
+    "Column_29",
+    "Column_30",
+    "Column_31"
+   ],
+   "ask": [
+    "Column_0",
+    "Column_1",
+    "Column_2",
+    "Column_3",
+    "Column_4",
+    "Column_5",
+    "Column_6",
+    "Column_7",
+    "Column_8",
+    "Column_9",
+    "Column_10",
+    "Column_11",
+    "Column_12",
+    "Column_13",
+    "Column_14",
+    "Column_15",
+    "Column_16",
+    "Column_17",
+    "Column_18",
+    "Column_19",
+    "Column_20",
+    "Column_21",
+    "Column_22",
+    "Column_23",
+    "Column_24",
+    "Column_25",
+    "Column_26",
+    "Column_27",
+    "Column_28",
+    "Column_29",
+    "Column_30",
+    "Column_31"
+   ]
+  },
+  "threshold_c60": {
+   "bid": -0.08573863448914996,
+   "ask": -0.08373751096122671
+  },
+  "value": "v_side = model_side(features) - threshold_c60[side]; live rows only (t_rel < 240 s and a known Predict mid); stale after 100 ms; rows before the window start price is known: v = -1 (pf_preds_startknown)",
+  "lgb_params": {
+   "objective": "regression",
+   "learning_rate": 0.05,
+   "num_leaves": 31,
+   "min_data_in_leaf": 500,
+   "feature_fraction": 0.8,
+   "bagging_fraction": 0.8,
+   "bagging_freq": 1,
+   "lambda_l2": 1.0,
+   "num_threads": 1,
+   "verbose": -1,
+   "seed": 7
+  },
+  "rounds": 300,
+  "target": "v per side clipped +-10",
+  "train_rows": 1071151,
+  "train_days": [
+   "20261023",
+   "20261024",
+   "20261025",
+   "20261026",
+   "20261027",
+   "20261031",
+   "20261101",
+   "20261102"
+  ]
+ },
+ "minute_lines": {
+  "source": "/home/yuqing/ctaNew/data/predict_fun/research/step4/minute_lines_t60k.json",
+  "sha256": "3852fec9e0fa36d164c5482688574663bc4230033911ce0d47049e04ac87735d",
+  "source_note": "step4/report_minute_pnl.json cuts: out-of-fold guard value v of preds_t60k, 8 read days, bid + ask pooled, within each minute of 0-240 s (IN-SAMPLE)",
+  "minutes": [
+   "0-60",
+   "60-120",
+   "120-180",
+   "180-240"
+  ],
+  "pull_and_ladder_line_90": [
+   0.0492,
+   0.0623,
+   0.0789,
+   0.0917
+  ],
+  "size_line_95": [
+   0.0698,
+   0.0841,
+   0.1009,
+   0.1094
+  ]
+ },
+ "inputs_sha256": {
+  "grid": "58ab6907d6619d74c844042570686bc37f05c914e165bdc79e371bfe1e673dcc"
+ },
+ "parity": {
+  "day": "20261103",
+  "rows": 1728000,
+  "live_rows": 1324002,
+  "equal": true,
+  "falsifier_fired": {
+   "bid": {
+    "nan_equal": true,
+    "max_abs": 1.9073486328125e-06
+   }
+  }
+ }
+}

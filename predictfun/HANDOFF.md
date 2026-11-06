@@ -1,5 +1,15 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-06 06:09Z (session 62f3ce33) - FROZEN pm_ladder_v1; handed to the exec-port coding session
+
+- Receipt predictfun/freeze/pm_ladder_v1/RECEIPT.md (never edit; changes = v2 receipt). Code commit 8d5b02a0; artifacts + receipt in the
+  next commit. Builder pf_freeze_pm_ladder_v1.py (guard models saved; parity with round i exact).
+- Forward check declared in the receipt: 11-04..11-08, PASS iff candidate sum > 0 at J and X and candidate - control > 0 at J and X.
+  Needs: step1 / features / guard values for those days rebuilt with the frozen commit (frozen models, no refit), then ladder replays.
+  11-08 completes 11-09 00Z. Not started.
+- Hand-off message to the coding session ctanew-5c (tmux rust): implement pm_ladder_v1; earlier research numbers VOID (sent after
+  the freeze commit; the send is recorded in STATUS).
+
 ## 2026-11-06 05:09Z (session 62f3ce33) - refresh decomposition (section 59) + ROUND-i SUMMARY (section 60)
 
 - pf_mm_decomp_fw.py: section 57's decomposition on the refreshed (fwJ / fwX) and grid runs; all checks PASS. Refresh trades a little

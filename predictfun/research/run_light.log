@@ -1321,3 +1321,4 @@
 2026-11-06T04:14:57Z tag=fw_report rc=0 peak_rss_mib=114 wall_s=1.30 cpu_user_s=0.72 memavail_start_gib=23 disk_free_gib=496->496
 2026-11-06T05:05:15Z tag=mm_decomp_fw rc=0 peak_rss_mib=462 wall_s=16.86 cpu_user_s=14.79 memavail_start_gib=23 disk_free_gib=496->496
 2026-11-06T06:03:17Z tag=freeze_v1_dry rc=0 peak_rss_mib=1195 wall_s=94.14 cpu_user_s=92.21 memavail_start_gib=23 disk_free_gib=495->495
+2026-11-06T06:05:27Z tag=freeze_v1 rc=0 peak_rss_mib=1065 wall_s=91.71 cpu_user_s=90.97 memavail_start_gib=23 disk_free_gib=495->495
