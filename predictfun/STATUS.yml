@@ -6,7 +6,7 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
-  2026-11-06 15:52Z: INVENTORY RISK MODEL vs v1 (user: "we had a risk model before to control our inventory right?"; code read only).
+  2026-11-06 15:43Z: INVENTORY RISK MODEL vs v1 (user: "we had a risk model before to control our inventory right?"; code read only).
   D1 (P-2026-003) inventory rules: size 5, skew past 5 sh, soft 10 / hard 25 sh, $ risk limit 1.86 (|q| x E|60 s move|), reduce-only
   + stop. Ported to Predict.fun: only G6 share caps, scaled 2x / 5x the large size (v1: 50 / 125 sh). Skew and the $ risk limit were
   never ported. G6's final reduce-only starts at the stop, where G5 already returns no quotes (desired(), l. 688-689): inert under S60.
