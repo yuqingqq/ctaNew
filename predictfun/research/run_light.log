@@ -1322,3 +1322,7 @@
 2026-11-06T05:05:15Z tag=mm_decomp_fw rc=0 peak_rss_mib=462 wall_s=16.86 cpu_user_s=14.79 memavail_start_gib=23 disk_free_gib=496->496
 2026-11-06T06:03:17Z tag=freeze_v1_dry rc=0 peak_rss_mib=1195 wall_s=94.14 cpu_user_s=92.21 memavail_start_gib=23 disk_free_gib=495->495
 2026-11-06T06:05:27Z tag=freeze_v1 rc=0 peak_rss_mib=1065 wall_s=91.71 cpu_user_s=90.97 memavail_start_gib=23 disk_free_gib=495->495
+2026-11-06T06:20:35Z tag=trace_pass1 rc=0 peak_rss_mib=1306 wall_s=58.67 cpu_user_s=54.36 memavail_start_gib=23 disk_free_gib=495->495
+2026-11-06T06:22:06Z tag=trace_pass2 rc=0 peak_rss_mib=1293 wall_s=65.08 cpu_user_s=60.72 memavail_start_gib=23 disk_free_gib=495->495
+2026-11-06T06:23:44Z tag=trace_X1 rc=0 peak_rss_mib=1207 wall_s=51.70 cpu_user_s=49.50 memavail_start_gib=23 disk_free_gib=495->495
+2026-11-06T06:24:36Z tag=trace_X2 rc=0 peak_rss_mib=1238 wall_s=52.97 cpu_user_s=50.51 memavail_start_gib=23 disk_free_gib=495->495

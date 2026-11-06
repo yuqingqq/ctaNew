@@ -6,6 +6,16 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-06 06:26Z: LOCKSTEP TRACE for the exec port DONE (request from ctanew-5c after it verified the receipt and started the port).
+  pf_ladder_trace_build.py generates pf_step4_ladder_trace.py from the frozen engine (refuses unless sha256 c682229e; 21 anchored
+  insertions, each exactly once) with read-only hooks (pf_ladder_tracer.py); the frozen file is unchanged. Byte-identity: candidate fills /
+  win / requests parquet of traced runs = round-i lJi (11-03) / lXi (10-25) files, falsifier (pm arm) differs; per-window requests / fills /
+  end reconcile (pf_ladder_trace_check.py PASS). Traces: data/predict_fun/research/step4/trace_pm_ladder_v1/ (README.md): 8 windows 11-03 J
+  by greedy coverage + 10-25 X 3769199 (the candidate's only own-cross refusal in 18 day x timing runs). G6 hard unreachable by construction
+  (|net| < 50, live <= 50, new <= 25 < 125); no minute boundary inside quoting at S60. Answered the port's questions: predictions = 50 ms grid
+  only (preds_t60k, no every-frame merge); lifecycle mapping confirmed with specifics. CORRECTION to the 06:09Z hand-off message: the 377-share
+  queue figure was the replay's own definition over the void L2c arm's places, not a live measurement (the port session's correction); no
+  live order has measured queue position yet.
   2026-11-06 06:09Z: HAND-OFF SENT to the exec-port coding session ctanew-5c (SendMessage msg_id 4cd86163-1719-4f01-8126-cc60817f4cfc, delivered to
   its inbox, not yet read): implement pm_ladder_v1 per RECEIPT.md (commits 8d5b02a0 + 38535aed); all pre-fix research numbers VOID (C1-C4,
   C2-P, v6, L2c, O3); parity fixtures offered on request; queue-ahead / request-rate / clock numbers to compare; live go = user's decision.
