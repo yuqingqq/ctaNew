@@ -6,6 +6,14 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-06 15:23Z: LOSS CAP vs SIMULATION (user: "Do we have any cap loss in simulation"; read-only, round-i outputs, no replay,
+  no forward read; pf_cap_check.py, step4/report_cap150_round_i.json). The frozen v1 replay has NO loss cap; the port adds $150 total
+  live-only (pmmmrust PREDICT_FUN_PLAN; live test from 11-06 13:35Z). The cap counts settlement P&L (carry included), not mark@stop.
+  Round i, 9 days in order, J / X: settle +639.2 / +370.0 (mark@stop +496.6 / +383.1); max drawdown -457.4 / -402.6; intraday drawdown
+  down to -229.2 / -218.6. Window worst case (open buys on the losing side) p50 -60, p10 -82, min -125, so a place is refused once
+  realised is about -40..-90. From each start window with a full day after it (2,305): cap refuses within 1 day 53.3% / 55.2%; uncapped
+  path reaches the port halt (realised <= -149) within 1 day 26.9% / 9.8%. From 00Z: 7 / 8 of 9 days refuse, mostly the same day. Exact
+  up to the first refusal; the P&L cost after it needs a capped replay with the port's halt rule (not run; sim XCAP lacks the halt fix).
   2026-11-06 09:38Z: ORDER-CHANGE CAUSES of frozen v1 (user: "check if we also replace / cancel / change orders if the prediction does
   not change"; docs section 62; step4/report_causes_v1.json; tooling in 4dee5c19). Checks PASS (byte-identical to round i, all requests
   attributed, selftests incl. flip-back controls). Read days J: 269.7 requests / window (first 60 s); guard bucket changed 74.1%, best
