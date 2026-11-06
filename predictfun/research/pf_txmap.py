@@ -14,12 +14,13 @@ must fire (>= 50%).
 Writes step1/<day>/legs_tk.parquet (tk, tk_status) + txmap.json.
 Usage: python3 -m predictfun.research.pf_txmap 20261024
 """
-import sys, collections
+import sys, os, collections
 import numpy as np, pandas as pd
 from . import pf_io as io
 
 day = sys.argv[1]
-SEALED = ('20261028', '20261029', '20261030'); FORWARD = '20261104'
+SEALED = ('20261028', '20261029', '20261030'); FORWARD = os.environ.get('PF_FORWARD', '20261104')   # 2026-11-06: env for the declared forward check
+assert len(FORWARD) == 8 and FORWARD.isdigit() and FORWARD >= '20261104', f'PF_FORWARD {FORWARD}'
 if day in SEALED or day >= FORWARD:
     sys.exit(f'REFUSED: {day} is sealed or a forward day')
 S1 = f'{io.OUT}/step1/{day}'
