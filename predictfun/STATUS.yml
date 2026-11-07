@@ -6,6 +6,13 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-07 03:02Z: DECLARED + LAUNCHING: SPREAD CAPTURE BY ARM (user: "What about capture spread for different methods, I think this will
+  be critical to compare different mm strategies"). pf_spread_capture.py, read-only on the 9 consumed days, the 11 ivJ / ivX arms; no
+  replay, no forward read. Per fill, c / share: spread vs the mid at the fill, adverse = mid move within 1 s, +1 s, drift to the stop,
+  mark; half-spread of the venue book at the fill and capture = spread / half-spread; splits reducing / increasing shares, touch / rung,
+  t < 60 / >= 60 s; real makers (top 5 / 6-20 / rest / all, first 60 s and 0-240 s) as benchmark. Reconciled to the engine per arm-day
+  (pf_mm_decomp) with a corrupted-fill falsifier; frame-map and m0 controls. Descriptive: no null, no selection; vs v1 day t (8 df),
+  unadjusted. Output step4/report_spread_capture_v1.json.
   2026-11-07 02:56Z: CAP10 ATTRIBUTION (Codex, read-only on the 9 consumed ivJ / ivX days; verified here). Code 96d97a31
   pf_cap10_attribution.py, receipt 13e36621 predictfun/reviews/cap10_attribution_20261107/results.json, report
   step4/cap10_attribution_20261107/report.json sha256 347c7815... (matches); declaration 02:51:40.59Z, same second as the run start
