@@ -1,5 +1,14 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-07 03:04Z (session 62f3ce33) - spread capture by arm
+
+- pf_spread_capture.py -> step4/report_spread_capture_v1.json (STATUS 03:04Z). All arms capture the same ~1.2 c/sh spread; the pull
+  line is the edge (1 s move +0.28 / +0.09 c/sh vs real top-5 makers -0.85). Arms that let the reducing side ignore the line lose
+  that edge on those fills. RO60-240 (sell down to 240 s, line kept) is the only arm adding +1 s $ at both timings after the 20-way
+  adjustment (+10.1 / +6.0 $/day). CAP10 cuts risk but costs +1 s volume.
+- Open (user): which arm, if any, to freeze for untouched days or declare into the 11-04..11-08 race before 11-09 02:00Z
+  (candidates by this view: RO60-240; by risk: CAP10).
+
 ## 2026-11-07 02:56Z (session 62f3ce33) - CAP10 attribution (Codex), verified
 
 - Commits 96d97a31 / 13e36621; report step4/cap10_attribution_20261107/report.json. Totals, robustness stats and p-values recomputed

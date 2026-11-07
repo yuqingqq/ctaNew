@@ -129,11 +129,11 @@ def main():
                 m0_max_err = max(m0_max_err, err)
                 st['fills'] += len(D); st['no_m0'] += int(D.spread.isna().sum()); st['no_m1'] += int(D.plus1.isna().sum())
                 st['no_mS'] += int(D.mark.isna().sum()); st['no_hs'] += int(np.isnan(hs).sum())
-                hsq = hs * D.q.values
+                hsq = hs * D.q.values / 100.0          # $ like the other terms (hs is in cents)
                 R[(tm, lab, d)] = {g: sums(D, W[g], hsq) for g in GROUPS}
         L = maker_legs(d, sJ['tx_timing']['legs_retimed']); st['maker_legs'] += len(L)
         t = L.t_eng.values.astype(float); Dm, unt = maker_terms(L, t, BY, reg); st['maker_untimed'] += unt
-        ok = np.isfinite(t); hm = lookup(HS, L.mid.values[ok], t[ok], 'left'); Dm = Dm.assign(hsq=hm * Dm.q.values)
+        ok = np.isfinite(t); hm = lookup(HS, L.mid.values[ok], t[ok], 'left'); Dm = Dm.assign(hsq=hm * Dm.q.values / 100.0)
         st['maker_no_m0'] += int(Dm.spread.isna().sum()); st['maker_no_m1'] += int(Dm.plus1.isna().sum()); st['maker_no_hs'] += int(np.isnan(hm).sum())
         for part, msk in (('first 60 s', Dm.w60.values), ('0-240 s', np.ones(len(Dm), bool))):
             for bd in ('top 5', '6-20', 'rest', 'all makers'):
@@ -169,8 +169,18 @@ def main():
                 row['vs_v1'] = dict(spread_usd_day=ci(dd('spread')), plus1_usd_day=ci(dd('plus1')), mark_usd_day=ci(dd('mark')),
                                     spread_c_day=ci(dc('spread')), plus1_c_day=ci(dc('plus1')), adverse_1s_c_day=ci(dc('informed')))
             row['per_day_plus1_c'] = {d: round(cps(R[(tm, lab, d)]['all'], 'plus1'), 3) for d in DAYS}
+            row['per_day_plus1_usd'] = {d: round(R[(tm, lab, d)]['all']['plus1'], 2) for d in DAYS}
             T[lab] = row
         out['timings'][tm] = T
+    # added after the first read (multiplicity companion to the +1 s intervals): exact 512 whole-day sign flips of the +1 s $ / day
+    # difference vs v1; raw p per comparison and max-|t| over the 10 arms x 2 timings (pf_cap10_attribution.signflip, its controls run first)
+    from .pf_cap10_attribution import signflip, controls
+    controls()
+    fam = [(tm, lab) for tm in ('J', 'X') for lab in MAIN if lab != 'v1']
+    Mx = np.array([[R[(tm, lab, d)]['all']['plus1'] - R[(tm, 'v1', d)]['all']['plus1'] for (tm, lab) in fam] for d in DAYS])
+    tt, praw, padj = signflip(Mx)
+    out['plus1_signflip'] = {f'{tm} {lab}': dict(t=round(float(tt[i]), 2), p_raw=round(float(praw[i]), 4), p_maxt_20=round(float(padj[i]), 4))
+                             for i, (tm, lab) in enumerate(fam)}
     for part in ('first 60 s', '0-240 s'):
         for bd in ('top 5', '6-20', 'rest', 'all makers'):
             P = pool([MK[(part, bd, d)] for d in DAYS])
@@ -191,6 +201,9 @@ def main():
                   f"{r['retained_1s']:5.2f} {r['drift_c']:+7.3f} {r['mark_c']:6.3f} | {100 * g['red']['share_of_q']:5.1f} {g['red']['plus1_c']:6.3f} {g['inc']['plus1_c']:6.3f} "
                   f"{100 * g['t>=60']['share_of_q']:6.1f} {g['t>=60']['plus1_c']:7.3f}"
                   + (f" | {v['plus1_usd_day']['mean']:+6.2f} ({v['plus1_usd_day']['lo']:+.2f}..{v['plus1_usd_day']['hi']:+.2f})" if v else ''))
+    print('\n== +1 s $ / day vs v1: exact sign-flip p (raw / max-|t| over 10 arms x 2 timings)')
+    for k, r in out['plus1_signflip'].items():
+        print(f"{k:16s} t {r['t']:+6.2f}  p_raw {r['p_raw']:.4f}  p_maxt {r['p_maxt_20']:.4f}")
     print('\n== real makers, same 9 days (engine tx timing): c / share')
     for k, r in out['makers'].items():
         print(f"{k:24s} sh/day {r['shares_day']:8.0f} spread {r['spread_c']:6.3f} h-sprd {r['half_spread_c']:6.3f} capt {r['capture']:5.2f} "

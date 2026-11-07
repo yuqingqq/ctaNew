@@ -6,6 +6,20 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-07 03:04Z: RESULT: SPREAD CAPTURE BY ARM (pf_spread_capture.py, step4/report_spread_capture_v1.json; 137,749 fills, 0 missing
+  mids; reconciliation PASS every arm-day, falsifier fired, map and m0 controls PASS). Two changes after the first run, both in the
+  commit: (1) half-spread units fix (hs x q was in cent-shares, read as $; printed 60 c, true ~0.6 c; no other column touched);
+  (2) ADDED AFTER SEEING: exact 512 sign flips of the +1 s $ / day difference vs v1, raw p and max-|t| over 10 arms x 2 timings.
+  J / X, c / share: v1 spread 1.213 / 1.224 (venue half-spread 0.603 / 0.597, capture 2.0x), 1 s move +0.282 / +0.094 (in our favour),
+  +1 s 1.495 / 1.318. Real makers same days, first 60 s: top 5 spread 1.270, 1 s move -0.850, +1 s 0.420; all makers 1.090 / -0.975 /
+  0.116. Spread per share is the same in every arm (0.96-1.23); arms differ in the 1 s move and in volume. Line-exempt reducing fills
+  (RX) earn ~0 at 1 s (J -0.038, X -0.012 c/sh; RO60-240+RX5 -0.252 / -0.436): +1 s $ / day vs v1 RX5 -5.5 / -4.0, D1ALL -11.9 / -13.0
+  (max-|t| p <= 0.008 except J SK5+RX5 0.078). RO60-240 (line kept, sell-down only to 240 s) adds sell-down fills after 60 s at +1.476 /
+  +1.191 c/sh: +1 s +10.09 / +6.01 $ / day (9/9, 8/9 days; p_raw 0.004 / 0.008, max-|t| 0.035 / 0.047); +1 s c/sh unchanged. CAP10:
+  same +1 s c/sh, fewer shares, +1 s -11.0 / -4.9 $ / day (max-|t| 0.11 / 0.52); its skipped fills had adverse drift (drift +0.158 vs
+  -0.149 c/sh J). SK5 +2.3 / +1.6 (max-|t| 0.11 / 0.07); RL ~0. Caveats: in-sample, selection among 10 arms (family-adjusted only within
+  it); our fills are simulated (fill model), makers' are real, so the 1 s gap to makers is partly a model claim (J vs X shows timing
+  sensitivity); RO arms' drift / mark run to 120 / 240 s (+1 s is like-for-like).
   2026-11-07 03:02Z: DECLARED + LAUNCHING: SPREAD CAPTURE BY ARM (user: "What about capture spread for different methods, I think this will
   be critical to compare different mm strategies"). pf_spread_capture.py, read-only on the 9 consumed days, the 11 ivJ / ivX arms; no
   replay, no forward read. Per fill, c / share: spread vs the mid at the fill, adverse = mid move within 1 s, +1 s, drift to the stop,
