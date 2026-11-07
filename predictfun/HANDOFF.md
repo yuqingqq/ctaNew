@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-07 02:56Z (session 62f3ce33) - CAP10 attribution (Codex), verified
+
+- Commits 96d97a31 / 13e36621; report step4/cap10_attribution_20261107/report.json. Totals, robustness stats and p-values recomputed
+  here and equal. CAP10's mark@stop equals v1's because less spread is offset by less adverse drift; its settle gain is carry, last 4
+  days only, p 0.42 / 0.65 raw, ~1.0 after selection. Risk lower 9/9 days. STATUS 02:56Z.
+- Open (user): freeze CAP10 for untouched days, or declare it into the 11-04..11-08 race before the 11-09 02:00Z run, or neither.
+
 ## 2026-11-07 02:37Z (session 62f3ce33) - INCSIZE 2-day check DONE (Codex), verified
 
 - Committed 73ba8594 / 2dcb5985 / 4c84e17c; report step4/incremental_20261107/report.json. v1 parity 4/4 byte-identical, totals

@@ -6,6 +6,19 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-07 02:56Z: CAP10 ATTRIBUTION (Codex, read-only on the 9 consumed ivJ / ivX days; verified here). Code 96d97a31
+  pf_cap10_attribution.py, receipt 13e36621 predictfun/reviews/cap10_attribution_20261107/results.json, report
+  step4/cap10_attribution_20261107/report.json sha256 347c7815... (matches); declaration 02:51:40.59Z, same second as the run start
+  (post-hoc on seen data either way); days = the 9 consumed only; frozen engine c682229e..., run_forward.sh and the inv engine unchanged.
+  CAP10 - v1, J / X $: spread -75.03 / -51.24, first second -24.11 / +6.82, drift to 60.1 s +103.45 / +40.04, mark@stop +4.31 / -4.38,
+  carry +171.78 / +95.96, settle +176.09 / +91.58. Recomputed here: the sums tie to report_inv_v1 (mark, carry, settle) and the three
+  parts add to mark@stop; first 5 days -120.8 / -132.5, last 4 +296.7 / +223.9; without the best day +29.1 / -6.8; 95% day t interval
+  [-29.2, 68.2] / [-38.8, 59.1]; exact 512 sign flips p 0.422 / 0.652; max-|t| over 10 arms x 2 timings p 0.996 / 1.000 (all equal
+  Codex to rounding). Not recomputed here: the spread / first-second / drift split itself and the 120-299 s marks (1969 / 2592 books
+  stale > 1 s at 299 s). Reading: CAP10 skips fills that earn spread but lose on the next 60 s, so mark@stop is unchanged; the settle
+  gain is carry, concentrated in the last 4 days, not significant after selection. Risk cut 9/9 days (|net| at stop 10.61 -> 8.56 /
+  8.94 -> 7.32). Next test, if wanted: a separately frozen CAP10 on untouched days, or a declared addition to the 11-04..11-08 race
+  before its read (user's call); never added silently.
   2026-11-07 02:37Z: INCSIZE RESULT (Codex, run 02:30-02:35Z; verified here). Code commits 73ba8594 / 2dcb5985 (declaration records
   2dcb5985, declared 02:30:07Z before the smoke and all 4 full runs, sequential run_light); result receipt 4c84e17c
   predictfun/reviews/incremental_size_20261107/results.json; report data/predict_fun/research/step4/incremental_20261107/report.json
