@@ -6,7 +6,7 @@
   worst day and max drawdown about a third of v1's, $150-cap halts 2 / 0%. Settle +$25-30/day vs v1, not resolved.
 - RO60+S290 with the line is not runnable (no guard values after 240 s); would need a model refit to 300 s.
 - Open (user): freeze CAP10+RO60-240 for untouched days or declare it into the 11-04..11-08 race before the 11-09 02:00Z run; live
-  port would need CAP10 and the RO phase with the minute 1-3 lines (the port has the lines file, engine tokens differ).
+  port would need CAP10 and the 60-240 s reduce-only phase with the minute 1-3 lines (port not checked here).
 
 ## 2026-11-07 03:40Z (session 62f3ce33) - taker hedge of the leftover
 
