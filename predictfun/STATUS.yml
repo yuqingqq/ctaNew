@@ -6,6 +6,13 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-07 08:20Z: CODEX v3 PORT REVIEW COMPLETE (pasted), VERIFIED here: pmmmrust 3366e61 adds only docs/receipts/20261107_pfmm_ladder_v3_review.json
+  on tested code 173f53c (diff 173f53c..3366e61 = that file); receipt cites research code 4ecaca69, receipt b261091d with sha256 442e0ccd...
+  (= RECEIPT.md on disk; freeze folder unchanged since b261091d), engine d678e7c3...; live_launch / deployment / tag / forward_data_read
+  all false. Its inventory audit (step4/trace_pm_ladder_v3_port/inventory_review.json; positive and zero controls true) = my count: flip
+  windows 4 / 3 of 2592, max |net| after flip 5.0 / 5.04 sh. Its check.sh claim (exit 0, 1,329 test executions, 14 ignored) is read
+  from the receipt, not rerun here. No cargo / research process running at this time. Open (user): Tokyo shadow of v3 (not done);
+  correcting receipt for the no-flip sentence and / or v4 with a hard guard; live = user's call.
   2026-11-07 08:02Z: CODEX HANDOFF (pasted): pm_ladder_v3 ported to pmmmrust (b85a401, ab40361); no live launch, no forward read. VERIFIED here:
   commits exist; trace artifacts step4/trace_pm_ladder_v3_port/{J,X}_20261103/check.json hashes = i2J / i2X v3 fills / win / requests
   (6/6); counterexample test pf-engine ladder/tests.rs::frozen_v3_concurrent_reduce_quotes_can_flip_after_delayed_fills present (not

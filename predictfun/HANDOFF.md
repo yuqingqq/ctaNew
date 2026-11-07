@@ -1,5 +1,11 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-07 08:20Z (session 62f3ce33) - Codex v3 port review complete (verified)
+
+- pmmmrust 3366e61 (receipt docs/receipts/20261107_pfmm_ladder_v3_review.json; tested code 173f53c). It names our receipt by its
+  current hash; its flip audit equals ours (4 / 3 of 2592 windows, <= 5.04 sh). No launch, deployment, tag or forward read.
+- Not done yet: Tokyo shadow / real-venue test of v3. Live = user's call. Forward block 11-09..11-13 still pending (after 11-14 02Z).
+
 ## 2026-11-07 08:02Z (session 62f3ce33) - Codex v3 port verified; v3 receipt's no-flip sentence is wrong
 
 - Codex ported v3 (pmmmrust b85a401, ab40361); 11-03 J / X trace hashes = i2J / i2X (checked here). Port fixes (min 1 sh with the
