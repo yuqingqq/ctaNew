@@ -6,6 +6,17 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-07 06:18Z: FROZEN pm_ladder_v3 (user: "Go ahead to freeze") = v1 + CAP10 + RO60 + S240, arm
+  MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240|mid|AM:5:25:95; v1's models, thresholds, lines, clock unchanged.
+  Receipt predictfun/freeze/pm_ladder_v3/RECEIPT.md; code commit 4ecaca69 (pf_ladder_v3_build.py -> pf_step4_ladder_v3.py sha256
+  d678e7c3... = frozen engine + inv patches + FORWARD patch; params.json). Checks PASS (step4/v3_engine_check.json): byte-identical
+  to i2J / i2X on 11-03 J, 11-03 X and 11-02 J with PF_FORWARD=20261114, no PF_R60_FILE; falsifier (vs its parents) fired 2/2; report
+  rehearsal on 5 read days (code path only): 5/5 rule controls, forward env checks refuse in-sample runs (71). Declared forward check:
+  own block 11-09..11-13, run_forward_v3.sh by hand after 2026-11-14 02:00Z (refuses earlier; no timer); v1 + control via
+  pf_step4_ladder_fwd, v3 via pf_step4_ladder_v3, J and X. Metric settle $ (stops differ: mark@stop not like-for-like). v3 PASS iff
+  sum v3 > 0 and sum (v3 - control) > 0 at J and X; PREFERRED iff PASS and sum (v3 - v1) > 0 and day sd v3 < v1 at J and X. Power
+  from in-sample days: (a) ~0.96, (c) ~0.7 per timing, (d) ~0.95. Multiplicity: 1 candidate in its block; the 11-04..11-08 race
+  (v1, v2, control) unchanged, v3 not in it.
   2026-11-07 04:34Z: RESULT: CAP10 + RO60-240 (run_inv2.sh ALL DONE 04:34Z; inv2_check PASS: parity 54/54 byte-identical (v1 = lJi / lXi,
   CAP10 and RO60-240 = ivJ / ivX), new arm differs from both parents 9/9 days per timing, CAPN and RO counters engaged; report
   step4/report_inv2.json). J / X, $ over 9 days: settle 905.9 (8/9 days > 0) / 592.9 (7/9) vs v1 639.2 / 370.0; +1 s 541.1 / 409.2 vs v1

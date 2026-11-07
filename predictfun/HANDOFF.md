@@ -1,5 +1,13 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-07 06:18Z (session 62f3ce33) - pm_ladder_v3 FROZEN (v1 + CAP10 + RO60 + S240)
+
+- Receipt predictfun/freeze/pm_ladder_v3/RECEIPT.md, code commit 4ecaca69; engine parity PASS (STATUS 06:18Z).
+- Forward check: own block 11-09..11-13; run `predictfun/research/run_forward_v3.sh` by hand after 2026-11-14 02:00Z (no timer).
+  The 11-04..11-08 race (run_forward.sh after 11-09 02:00Z) is unchanged; v3 is not in it.
+- Live port would need: 10-share add limit on known net (touch and rung), 60-240 s reduce-only phase (reducing side only, size <=
+  |known net|, no rung, minute 1-3 lines, all guards), stop at 240 s, guard values to 240 s (port not checked here). Live = user's call.
+
 ## 2026-11-07 04:34Z (session 62f3ce33) - CAP10 + RO60-240 tested (in-sample)
 
 - pf_inv2.py / run_inv2.sh -> step4/report_inv2.json, checks PASS (STATUS 04:34Z). Same +1 s trading profit as v1; day sd -37 / -48%,
