@@ -6,6 +6,16 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-07 03:40Z: RESULT: TAKER HEDGE OF THE LEFTOVER (pf_hedge_check.py, step4/report_hedge_v1.json; controls PASS: unhedged =
+  report_inv_v1 6/6, 14,345 fully hedged windows settle = cash - fees, flipped-leg falsifier fired; 0 missing frames, 0 book-order
+  faults; 36 fills after the stop, all <= 0.074 s after it, inside the 0.5 s decision delay). Taking costs spread + fee per share:
+  at 60 s 0.58-0.62 + 0.62-0.65 c (~1.2 c), at 240 s 0.63-0.68 + 0.27 c (fee lower: prices far from 50). $ / day, day sd (J; X):
+  v1 none 71.0, 201.7; 41.1, 154.5 | H25 62.2, 141.1; 41.8, 99.9 | H10 39.6, 87.1; 27.3, 67.2 | HF 17.5, 44.9; 8.5, 48.5 (worst day
+  -57 / -69, max dd -165 / -199, $150 halt 0 / 0%). CAP10 + H25 75.8, 121.9; 54.8, 76.2 (worst -42 / -19, dd -224 / -151) | CAP10 + HF
+  26.9, 33.8; 15.2, 33.3. RO60-240 (hedge at 240 s) + H25 93.6, 136.3; 62.7, 113.4 | + HF 66.9, 100.6; 37.6, 89.7. Full hedge cost
+  $ / day: v1 37.4 / 31.8, CAP10 29.7 / 25.9, RO60-240 22.7 / 19.2. Hedge 2 s later instead of 0.5 s: costs within 0.05 c. No settle
+  difference vs v1 or vs the same arm unhedged excludes 0 (carry is noise). Assumes the visible book is there 40 ms later, full fee,
+  no rebate; in-sample.
   2026-11-07 03:39Z: DECLARED + LAUNCHING: TAKER HEDGE OF THE LEFTOVER (user: "can we still keep the line for sell-down? ... can we also
   buy down to hedge our up position, buy up to hedge our down position, check how it performs"). Answers first: RO60-240 already keeps
   the line; on Predict.fun buying Down = selling Up (one book, pf_io.yes_side), and our asks are Down buys, so passive sell-down is
