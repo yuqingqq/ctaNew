@@ -1,5 +1,15 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-07 02:27Z (session 62f3ce33) - Codex handoff: INCSIZE variant (running elsewhere)
+
+- Codex built an opt-in INCSIZE order-management variant (pf_step4_ladder_incremental.py, builder pf_ladder_incremental_build.py,
+  planner pf_incremental_size.py; receipt predictfun/reviews/incremental_size_20261106/receipt.json, 192 source-only tests). Hashes
+  verified 02:27Z; frozen engine and race files unchanged. Details: STATUS 02:27Z.
+- IN PROGRESS (Codex, not this seat): v1 vs v1+INCSIZE on 10-24 and 11-01, J and X, one run_light job at a time. Do not launch
+  duplicate jobs or edit the 6 Codex files until Codex sends the result artifact.
+- Watch out: the Codex files are untracked; commit them (with the result's run tags) before citing any number. Two consumed days =
+  point estimates, no interval. Entering the forward race would need a superseding race receipt before the 11-09 02:00Z run.
+
 ## 2026-11-06 17:15Z (session 62f3ce33) - D1 inventory mechanisms on v1 (in-sample)
 
 - Engine pf_step4_ladder_inv.py (generated, pf_ladder_inv_build.py; frozen engine untouched), runner run_inv.sh, checks
