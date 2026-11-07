@@ -1,0 +1,24 @@
+{
+  "as_of": "2026-11-06T17:14:49.702394+00:00",
+  "scope": "source-only synthetic implementation checks",
+  "market_data_read": false,
+  "forward_data_read": false,
+  "profitability_tested": false,
+  "pytest_exit": 0,
+  "tests": {
+    "passed": 192
+  },
+  "source_unchanged_during_checks": true,
+  "code_sha256": {
+    "predictfun/research/pf_step4_ladder.py": "c682229e4fbe606b217cfa633816bcba67bce701c7e690b4cb8be9aa7ff6e37f",
+    "predictfun/research/pf_step4_ladder_incremental.py": "fa3c44eed40a327b06a52751407df6301b5fd56b8d9f84f2f64d5aeac608eb84",
+    "predictfun/research/pf_incremental_size.py": "3eb41fb20af3894380dad7dde883907594399d92013ae1b0d10faf29ed16928c",
+    "predictfun/research/pf_ladder_incremental_build.py": "349d52e961d2c9f556ef89ae77157e28938bd6cc81f7d41cd3e8a73e5cf73130",
+    "predictfun/research/pf_ladder_inv_build.py": "e6f37a43bcb268ec300a69a050273db94fec14df747e4040c4c0d27f7c162461",
+    "predictfun/research/pf_ladder_fwd_build.py": "b78fd0e2003ffb2a102f0cd0ea0e5c128b10b8def5392d96ac07782d60c68ea1",
+    "predictfun/research/pf_incremental_checks.py": "3f7226daee4e54f2baf4cc4d6c142a632cd9749ec8c5d95f3198ca882d8d02a0",
+    "predictfun/research/tests/test_incremental_size.py": "995d0e1765b250a1fb0c2eac1769313ea3a42dc880a8b73d67bc6887bd3a9374",
+    "predictfun/research/tests/test_simulation_causality.py": "420e54d9ed8c12f3ae5483438448a2a04645946e6e6ff783d0c2739571d9de4b"
+  },
+  "passed": true
+}
