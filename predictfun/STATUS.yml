@@ -6,6 +6,14 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-07 03:56Z: DECLARED + LAUNCHING: CAP10 + RO60-240 (user: "I don't mean to take, still reduce by posting orders" -> that is
+  RO60-240, already tested (posted Down bid = posted Up ask, one book); then "Go test" on CAP10 + RO60-240 and a sell-down to 290 s).
+  pf_inv2.py + run_inv2.sh (tags i2J / i2X): arms v1, CAP10, RO60-240 (controls, must be byte-identical to lJi / lXi and ivJ / ivX) and
+  CAP10+RO60-240 (new), 9 consumed days, J and X, engine pf_step4_ladder_inv.py unchanged. Check: parity 54 runs, new arm differs from
+  both parents (falsifier), CAPN and RO counters engaged. Report step4/report_inv2.json: settle, +1 s $, day sd, worst day, max dd,
+  $150 cap, |net| at stop; new vs v1 / CAP10 / RO60-240 with day t and 512 sign flips (raw). In-sample; both parents were picked on
+  these days. NOT RUN: RO60+S290 with the line - preds_t60k has no guard value at t >= 240 s (0 rows; max 239.95 s), so GS withholds
+  every quote after 240 s; with the line it equals RO60-240.
   2026-11-07 03:40Z: RESULT: TAKER HEDGE OF THE LEFTOVER (pf_hedge_check.py, step4/report_hedge_v1.json; controls PASS: unhedged =
   report_inv_v1 6/6, 14,345 fully hedged windows settle = cash - fees, flipped-leg falsifier fired; 0 missing frames, 0 book-order
   faults; 36 fills after the stop, all <= 0.074 s after it, inside the 0.5 s decision delay). Taking costs spread + fee per share:
