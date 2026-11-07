@@ -6,6 +6,19 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-07 08:02Z: CODEX HANDOFF (pasted): pm_ladder_v3 ported to pmmmrust (b85a401, ab40361); no live launch, no forward read. VERIFIED here:
+  commits exist; trace artifacts step4/trace_pm_ladder_v3_port/{J,X}_20261103/check.json hashes = i2J / i2X v3 fills / win / requests
+  (6/6); counterexample test pf-engine ladder/tests.rs::frozen_v3_concurrent_reduce_quotes_can_flip_after_delayed_fills present (not
+  run here: Codex's cargo checks were running). Venue rules (dev.predict.fun/trading/place-orders, read now): a buy is worth >= 1 USDT;
+  expiration >= 2 minutes away. So Codex's port fixes match the docs: min size 1 sh + 1 USDT check (research's XMIN1 = 1 USD, RO sizes
+  can be < 5 sh: 115 such places in 8 J trace windows) and signed-expiry grace +120 s (research never modelled expiry; with expiry at
+  300 s every place after 180 s would be refused). CORRECTION to the v3 receipt (file not edited): 'size min(size rule, |known net|),
+  so the position never flips' is wrong. RO caps each new order at |known net| at decision time; it does not net out other live or
+  cancel-pending reducing orders, and known net lags fills by 100 ms. The research replay has such flips (i2J / i2X fills, 9 days, flip
+  = a fill at t >= 60 s that crosses net through zero): v3 4 / 2592 windows J (4 fills, all cancel-pending), 3 / 2592 X (2 cancel-
+  pending); |net| after the flip <= 5.04 sh; 0 on 11-03 (Codex: 0). RO60-240 alone: 7 / 2 windows, up to 19.95 sh. They are inside the
+  in-sample numbers and the forward check (engine unchanged). Candidate, engine, rules, days unchanged. CAP10 being soft is already in the
+  receipt. A hard no-flip guard (reserve outstanding reducing size) is a policy change: new version + replay + own forward days (user).
   2026-11-07 06:18Z: FROZEN pm_ladder_v3 (user: "Go ahead to freeze") = v1 + CAP10 + RO60 + S240, arm
   MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240|mid|AM:5:25:95; v1's models, thresholds, lines, clock unchanged.
   Receipt predictfun/freeze/pm_ladder_v3/RECEIPT.md; code commit 4ecaca69 (pf_ladder_v3_build.py -> pf_step4_ladder_v3.py sha256

@@ -1,5 +1,13 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-07 08:02Z (session 62f3ce33) - Codex v3 port verified; v3 receipt's no-flip sentence is wrong
+
+- Codex ported v3 (pmmmrust b85a401, ab40361); 11-03 J / X trace hashes = i2J / i2X (checked here). Port fixes (min 1 sh with the
+  1 USDT check; expiry +120 s grace) match dev.predict.fun's place-orders rules (read here). No live launch.
+- v3 receipt's 'the position never flips' is wrong (STATUS same time): flips occur in the replay in 4 / 3 of 2592 windows (J / X),
+  <= 5 sh, mostly via cancel-pending orders; already inside the in-sample and forward numbers. Receipt not edited.
+- Open (user): a correcting receipt for the description only, and/or a v4 with a hard no-flip guard (new replay + freeze + days).
+
 ## 2026-11-07 06:18Z (session 62f3ce33) - pm_ladder_v3 FROZEN (v1 + CAP10 + RO60 + S240)
 
 - Receipt predictfun/freeze/pm_ladder_v3/RECEIPT.md, code commit 4ecaca69; engine parity PASS (STATUS 06:18Z).
