@@ -6,6 +6,14 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-07 03:39Z: DECLARED + LAUNCHING: TAKER HEDGE OF THE LEFTOVER (user: "can we still keep the line for sell-down? ... can we also
+  buy down to hedge our up position, buy up to hedge our down position, check how it performs"). Answers first: RO60-240 already keeps
+  the line; on Predict.fun buying Down = selling Up (one book, pf_io.yes_side), and our asks are Down buys, so passive sell-down is
+  already "buy Down". New test pf_hedge_check.py: at the stop, TAKE to cut the leftover (sell into bids / buy asks, up to 5 levels;
+  decision stop + 0.5 s, sensitivity 2.0 s, +40 ms place), rules HF (to 0) / H10 (to 10 sh) / H25 (to 25 sh), arms v1, CAP10 (stop
+  60 s) and RO60-240 (stop 240 s), J and X; taker fee 0.02 x min(p, 1 - p) / share, no rebate. Read-only, exact without replay (no
+  fills after the stop). Controls: unhedged totals = report_inv_v1; fully hedged windows settle = cash - fees; flipped-leg falsifier.
+  In-sample, descriptive; vs unhedged and vs v1 day t (8 df). Output step4/report_hedge_v1.json.
   2026-11-07 03:04Z: RESULT: SPREAD CAPTURE BY ARM (pf_spread_capture.py, step4/report_spread_capture_v1.json; 137,749 fills, 0 missing
   mids; reconciliation PASS every arm-day, falsifier fired, map and m0 controls PASS). Two changes after the first run, both in the
   commit: (1) half-spread units fix (hs x q was in cent-shares, read as $; printed 60 c, true ~0.6 c; no other column touched);
