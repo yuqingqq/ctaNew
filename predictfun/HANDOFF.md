@@ -1,5 +1,13 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-07 03:40Z (session 62f3ce33) - taker hedge of the leftover
+
+- pf_hedge_check.py -> step4/report_hedge_v1.json (STATUS 03:40Z). Buying Down = selling Up on Predict (one book); passive sell-down
+  already does it. Taking at the stop costs ~1.2 c/sh at 60 s, ~0.95 c/sh at 240 s; a full hedge removes most of the risk and about
+  two thirds of v1's 60 s trading profit. Partial (cut to 25 sh) costs little; CAP10 + H25 and RO60-240 + H25 are the in-sample sweet
+  spots. Not tested: a hedge during the window (changes later decisions: needs an engine token and a replay).
+- Open (user): candidate(s) to freeze / declare before the 11-09 02:00Z forward run.
+
 ## 2026-11-07 03:04Z (session 62f3ce33) - spread capture by arm
 
 - pf_spread_capture.py -> step4/report_spread_capture_v1.json (STATUS 03:04Z). All arms capture the same ~1.2 c/sh spread; the pull
