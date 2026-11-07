@@ -1,0 +1,60 @@
+{
+  "as_of": "2026-11-07T02:35:04.030912+00:00",
+  "report": "data/predict_fun/research/step4/incremental_20261107/report.json",
+  "report_sha256": "85c82801a5a7be838180a071c7328990ae9ceec2e26b5ce56dce629d6c563f13",
+  "implementation_commit": "2dcb59856ada777d2beaa9b3b60a005326a9809f",
+  "days": [
+    "20261024",
+    "20261101"
+  ],
+  "n_days": 2,
+  "full_replays": 4,
+  "checks_passed": true,
+  "baseline_parity_runs": 4,
+  "invalid_summary_controls_refused": 16,
+  "summary": {
+    "J": {
+      "windows_per_arm": 576,
+      "requests_v1": 172217,
+      "requests_incremental": 164583,
+      "requests_change_pct": -4.43277957460646,
+      "shares_change_pct": -7.961566579149393,
+      "mark_60s_v1": 127.43971129694411,
+      "mark_60s_incremental": 133.412572693941,
+      "settle_v1": -4.232117027584394,
+      "settle_incremental": 82.22399098572252,
+      "delta": {
+        "settle": 86.45610801330692,
+        "mark_60s": 5.9728613969968904,
+        "carry": 80.48324661631005,
+        "fills": -66,
+        "shares": -634.5601380309963
+      }
+    },
+    "X": {
+      "windows_per_arm": 576,
+      "requests_v1": 173547,
+      "requests_incremental": 165343,
+      "requests_change_pct": -4.727249678761369,
+      "shares_change_pct": -7.210061200308271,
+      "mark_60s_v1": 95.25015425314372,
+      "mark_60s_incremental": 94.77244375532041,
+      "settle_v1": 13.25033604630191,
+      "settle_incremental": 69.61930714479118,
+      "delta": {
+        "settle": 56.36897109848927,
+        "mark_60s": -0.47771049782330977,
+        "carry": 56.84668159631251,
+        "fills": -29,
+        "shares": -471.5074425452067
+      }
+    }
+  },
+  "requests_lower_both_timings": true,
+  "mark_60s_improves_both_timings": false,
+  "inference": "Two consumed days: descriptive only, no confidence interval or adoption decision.",
+  "attribution": "Full order-management variant, including cancellation reservations and quantity limits; not an isolated resizing effect.",
+  "diagnostic_caveat": "Do not compare place_never between modes: INCSIZE clears cancelled unsent intentions without incrementing that frozen-engine counter. Request logs and P&L reconciliation were checked independently.",
+  "forward_data_read": false,
+  "live_strategy_changed": false
+}
