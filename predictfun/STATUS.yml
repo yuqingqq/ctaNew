@@ -6,6 +6,15 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-07 04:34Z: RESULT: CAP10 + RO60-240 (run_inv2.sh ALL DONE 04:34Z; inv2_check PASS: parity 54/54 byte-identical (v1 = lJi / lXi,
+  CAP10 and RO60-240 = ivJ / ivX), new arm differs from both parents 9/9 days per timing, CAPN and RO counters engaged; report
+  step4/report_inv2.json). J / X, $ over 9 days: settle 905.9 (8/9 days > 0) / 592.9 (7/9) vs v1 639.2 / 370.0; +1 s 541.1 / 409.2 vs v1
+  551.5 / 398.7; day sd 126.4 / 80.8 vs 201.7 / 154.5; worst day -52.3 / -44.5 vs -166.3 / -152.9; max dd -169.3 / -138.6 vs -457.4 /
+  -402.6; $150 halt within 1 day 2.0 / 0.0% vs 26.9 / 9.8%; refusal 30.6 / 22.5% vs 53.3 / 55.2%; |net| at stop 6.66 / 5.93 vs 10.61 /
+  8.94. Differences per day (t 8 df; 512 sign flips raw p): vs v1 settle +29.6 / +24.8 (p 0.40 / 0.46), +1 s -1.2 / +1.2 (p 0.65 /
+  0.59); vs CAP10 +1 s +9.9 / +6.1 (p 0.004 / 0.008); vs RO60-240 +1 s -11.2 / -4.8 (p 0.035 / 0.16). Reading: trading profit at 1 s
+  equals v1's (the sell-down wins back CAP10's lost volume); every risk number is the lowest of all arms tested; the settle gain is
+  not resolved. In-sample, both parents picked on these days; mark here is at 240 s (not like-for-like).
   2026-11-07 03:56Z: DECLARED + LAUNCHING: CAP10 + RO60-240 (user: "I don't mean to take, still reduce by posting orders" -> that is
   RO60-240, already tested (posted Down bid = posted Up ask, one book); then "Go test" on CAP10 + RO60-240 and a sell-down to 290 s).
   pf_inv2.py + run_inv2.sh (tags i2J / i2X): arms v1, CAP10, RO60-240 (controls, must be byte-identical to lJi / lXi and ivJ / ivX) and
