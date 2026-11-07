@@ -9,6 +9,7 @@ import copy
 import hashlib
 import json
 from pathlib import Path
+import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -56,7 +57,8 @@ def declare():
     if not prior['passed'] or any(hashlib.sha256((ROOT / p).read_bytes()).hexdigest() != h for p, h in prior['code_sha256'].items()):
         raise ValueError('REFUSED: source-only validation receipt does not match current implementation')
     DEST.mkdir(parents=True)
-    manifest = dict(declared_at=datetime.now(timezone.utc).isoformat(), days=DAYS, timings=['J', 'X'], arms=ARMS,
+    commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
+    manifest = dict(declared_at=datetime.now(timezone.utc).isoformat(), code_commit=commit, days=DAYS, timings=['J', 'X'], arms=ARMS,
                     smoke=dict(day=DAYS[0], timing='J', first_windows=8), code_sha256=hashes(),
                     scope='exploratory in-sample, consumed days; no tuning or adoption',
                     inference='point estimates only; two days, no intervals or hypothesis test',
