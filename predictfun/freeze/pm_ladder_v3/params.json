@@ -1,0 +1,99 @@
+{
+ "candidate": "pm_ladder_v3",
+ "arm": "MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240|mid|AM:5:25:95",
+ "differs_from_v1": [
+  "CAP10",
+  "RO60",
+  "S240 (v1: S60)"
+ ],
+ "v1_arm": "MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+XNA+XMIN1+XV+S60|mid|AM:5:25:95",
+ "control": "MICRO|G4+G2+G6+G5+G3+G1+V0+GS+XNA+XMIN1+XV+S60|mid|AV:5:25:0.06",
+ "engine": {
+  "file": "predictfun/research/pf_step4_ladder_v3.py",
+  "sha256": "d678e7c3c4e47c6d60ebc031edf8d7fc7317210d5e58ff301d92d7ae0ece5f17",
+  "source": "predictfun/research/pf_step4_ladder.py",
+  "source_sha256": "c682229e4fbe606b217cfa633816bcba67bce701c7e690b4cb8be9aa7ff6e37f",
+  "builder": "predictfun/research/pf_ladder_v3_build.py",
+  "builder_sha256": "8c0ea4c4f0b7e2a47de91babd772aaf92b84bcbe3deb389f61eaffda55e92b38",
+  "inv_patches_sha256": "e6f37a43bcb268ec300a69a050273db94fec14df747e4040c4c0d27f7c162461",
+  "fwd_patch_sha256": "b78fd0e2003ffb2a102f0cd0ea0e5c128b10b8def5392d96ac07782d60c68ea1"
+ },
+ "guard": {
+  "from_freeze": "predictfun/freeze/pm_ladder_v1",
+  "models": {
+   "bid": "guard_bid.txt",
+   "ask": "guard_ask.txt"
+  },
+  "model_sha256": {
+   "bid": "0dc09d84bb28e0c0cafac99ee0fa8ff1140cb97ca70571526469f3b42f345e39",
+   "ask": "6d2d7149e6c556c6a2a63dad89e68ce4ea6113c76400edf9bd4f7a345ea9fade"
+  },
+  "threshold_c60": {
+   "bid": -0.08573863448914996,
+   "ask": -0.08373751096122671
+  },
+  "features": [
+   "bn_r25",
+   "bn_r50",
+   "bn_r100",
+   "bn_r250",
+   "bn_r500",
+   "bn_r1000",
+   "bn_r3000",
+   "bn_imb",
+   "bn_age",
+   "bn_flow250",
+   "bn_flow1000",
+   "bn_flow5000",
+   "bn_ntr1000",
+   "pf_spread",
+   "pf_mid",
+   "pf_micro_dev",
+   "pf_imb1",
+   "pf_imb3",
+   "pf_lbs",
+   "pf_las",
+   "pf_age",
+   "pf_nfr1000",
+   "pf_dm250",
+   "pf_dm1000",
+   "pf_dm5000",
+   "pf_pend_bid1000",
+   "pf_pend_ask1000",
+   "pf_pend_tot5000",
+   "t_rel",
+   "sigma",
+   "basis_bps",
+   "gap"
+  ],
+  "value": "v_side = model_side(features) - threshold_c60[side]; live rows only (t_rel < 240 s and a known Predict mid); stale after 100 ms; rows before the window start price is known: v = -1 (pf_preds_startknown)"
+ },
+ "minute_lines": {
+  "source": "/home/yuqing/ctaNew/data/predict_fun/research/step4/minute_lines_t60k.json",
+  "sha256": "3852fec9e0fa36d164c5482688574663bc4230033911ce0d47049e04ac87735d",
+  "source_note": "step4/report_minute_pnl.json cuts: out-of-fold guard value v of preds_t60k, 8 read days, bid + ask pooled, within each minute of 0-240 s (IN-SAMPLE)",
+  "minutes": [
+   "0-60",
+   "60-120",
+   "120-180",
+   "180-240"
+  ],
+  "pull_and_ladder_line_90": [
+   0.0492,
+   0.0623,
+   0.0789,
+   0.0917
+  ],
+  "size_line_95": [
+   0.0698,
+   0.0841,
+   0.1009,
+   0.1094
+  ]
+ },
+ "rules_added": {
+  "CAP10": "a side (touch and rung) that does not reduce |known net| is withheld at |known net| >= 10 shares",
+  "RO60": "from 60 s only the side that reduces |known net| is quoted, sized min(size rule, |known net|); no rung",
+  "S240": "stop at 240 s; cancel all; the rest is carried to settlement; per-minute lines of minutes 1-3 apply in 60-240 s"
+ }
+}
