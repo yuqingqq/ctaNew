@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-07 02:37Z (session 62f3ce33) - INCSIZE 2-day check DONE (Codex), verified
+
+- Committed 73ba8594 / 2dcb5985 / 4c84e17c; report step4/incremental_20261107/report.json. v1 parity 4/4 byte-identical, totals
+  recomputed here. Requests -4.4 / -4.7%, mark@60 s +6.0 / -0.5 $ (J / X, 2 days), settle gain is carry. Nothing to adopt; the slot is
+  free (no Codex job running). STATUS 02:37Z.
+- Supersedes the 02:27Z "in progress" note: the Codex files may now be edited normally (commit the change; the result cites 2dcb5985).
+
 ## 2026-11-07 02:27Z (session 62f3ce33) - Codex handoff: INCSIZE variant (running elsewhere)
 
 - Codex built an opt-in INCSIZE order-management variant (pf_step4_ladder_incremental.py, builder pf_ladder_incremental_build.py,

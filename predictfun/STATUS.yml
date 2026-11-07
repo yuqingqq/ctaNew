@@ -6,6 +6,17 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-07 02:37Z: INCSIZE RESULT (Codex, run 02:30-02:35Z; verified here). Code commits 73ba8594 / 2dcb5985 (declaration records
+  2dcb5985, declared 02:30:07Z before the smoke and all 4 full runs, sequential run_light); result receipt 4c84e17c
+  predictfun/reviews/incremental_size_20261107/results.json; report data/predict_fun/research/step4/incremental_20261107/report.json
+  sha256 85c82801... (matches). Tags incsz_20261107_J / _X, consumed days 10-24 and 11-01, 576 windows per arm per timing. Verified
+  here: hashes of the frozen engine, variant, planner, builders and run_forward.sh unchanged; v1 fills / win / requests byte-identical
+  to lJi / lXi and summary arm equal on 4/4 runs (explicit PF_FILLPRIO / OWNCROSS / LEGORDER / REJRESET / POLICYVIEW flags = defaults);
+  totals recomputed from the win / fills / requests files match the receipt. INCSIZE - v1, J / X: requests -4.43 / -4.73%, shares
+  -7.96 / -7.21%, fills -66 / -29, mark@60 s +5.97 / -0.48 $ (per day J +6.91, -0.94; X -13.12, +12.65), settle +86.46 / +56.37, of
+  which carry +80.48 / +56.85, all from the 132 / 101 windows whose stop inventory differs; |net| at stop 10.21 -> 9.18 / 8.91 -> 8.30.
+  v1's carry on these 2 days was -131.7 / -82.0. Two consumed days: point estimates, no interval, no adoption; full order-management
+  variant, not a size-only ablation; place_never not comparable between modes. Forward race unchanged; INCSIZE is not in it.
   2026-11-07 02:29Z: WHAT CAP<n> LIMITS (user: "10 limit is the most holding inventory or per order size"; read-only, ivJ / ivX fills).
   Neither strictly: CAP<n> withholds the |net|-increasing side (touch and rung) once the KNOWN net |knet| >= n (engine l. 837, 875); order
   sizes stay 5 / 25 (fill size max 25) and resting / in-flight orders are not counted, so holdings pass n. Peak |net| per window
