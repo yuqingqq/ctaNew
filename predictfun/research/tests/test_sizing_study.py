@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from predictfun.research.pf_sizing_engine import lots, headroom, size_state, source
+from predictfun.research.pf_sizing_engine import lots, headroom, size_state, source, cap_cannot_bind
 from predictfun.research.pf_sizing_features import source as features
 
 class SizingControls(unittest.TestCase):
@@ -28,6 +28,13 @@ class SizingControls(unittest.TestCase):
         self.assertEqual(lots(5.22),5.22)
         with self.assertRaises(ValueError):lots(float('nan'))
         with self.assertRaises(ValueError):headroom(0,2,[])
+
+    def test_cap_reuse_refuses_binding_and_halted_paths(self):
+        r=dict(min_worst=-180.,requests=[1])
+        self.assertTrue(cap_cannot_bind(r,31.,150.,False))
+        self.assertFalse(cap_cannot_bind(r,29.,150.,False))
+        self.assertFalse(cap_cannot_bind(r,31.,150.,True))
+        self.assertFalse(cap_cannot_bind(dict(min_worst=float('nan'),requests=[1]),0,150,False))
 
     def test_pinned_builders_and_known_bad_refusal(self):
         compile(source(),'engine','exec');compile(features(),'features','exec')

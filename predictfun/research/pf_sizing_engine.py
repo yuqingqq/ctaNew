@@ -24,6 +24,13 @@ def size_state(high,v,line,margin=MARGIN):
     if v is None:return False
     return v>=line-margin if high else v>=line+margin
 
+def cap_cannot_bind(result,realised,budget,halted):
+    """Sufficient condition for exact path reuse; never relax a binding cap."""
+    if halted or realised<=-budget:return False
+    worst=result['min_worst']
+    if not math.isfinite(worst):return not result['requests']
+    return realised+worst>=-budget
+
 def replace(s,a,b,count=1):
     if s.count(a)!=count:raise ValueError('engine anchor mismatch: '+a[:60])
     return s.replace(a,b,1)
@@ -83,6 +90,27 @@ def source():
     s=replace(s,old,new)
     s=replace(s,"                refill(t); key = (p, zsz)",
       "                refill(t); key = (p, wanted_size if STUDY_EXEC else zsz)")
+    s=replace(s,"BASE = {'JOIN': [], 'MICRO': []}","""_raw_run_window = run_window
+_cap_cache = {}; _cap_market = None; _cap_reused = 0
+def run_window(mid, F, kf, rules, policy, mode, size=SIZE, cap_state=None):
+    global _cap_market, _cap_reused
+    if mid != _cap_market:
+        _cap_cache.clear(); _cap_market = mid
+    budget = live_opts(rules)['losscap']
+    key = (frozenset(r for r in rules if not r.startswith('XCAP')), policy, mode, size)
+    old = _cap_cache.get(key)
+    if CAP_CACHE and budget is not None and old is not None and cap_cannot_bind(old,cap_state['realised'],budget,cap_state['halted']):
+        import copy
+        _cap_reused += 1
+        return copy.deepcopy(old)
+    result = _raw_run_window(mid,F,kf,rules,policy,mode,size,cap_state)
+    if budget is None and result is not None:
+        _cap_cache[key] = result
+    return result
+
+BASE = {'JOIN': [], 'MICRO': []}""")
+    s=replace(s,"    _FLIP_CACHE.clear()", "    _FLIP_CACHE.clear()\n    if nw % 48 == 0: print('[study progress]', day, nw, 'windows; cap-equivalent reuses', _cap_reused, flush=True)")
+    s += "\nio.write_json(f'{OUT}/study_execution.json',dict(cap_cache=CAP_CACHE,cap_reused=_cap_reused,adapter_sha=STUDY_SHA))\n"
     return s
 
 def main():
@@ -91,6 +119,7 @@ def main():
     if enabled not in ('0','1'):raise ValueError('invalid execution mode')
     exec(compile(source(),str(HERE/'pf_step4_ladder_v3.py'),'exec'),
       dict(__name__='__main__',__package__=__package__,__file__=str(HERE/'pf_step4_ladder_v3.py'),
-           lots=lots,headroom=headroom,size_state=size_state,MARGIN=MARGIN,STUDY_EXEC=enabled=='1'))
+           lots=lots,headroom=headroom,size_state=size_state,MARGIN=MARGIN,STUDY_EXEC=enabled=='1',
+           cap_cannot_bind=cap_cannot_bind,CAP_CACHE=os.environ.get('PF_CAP_CACHE','0')=='1',STUDY_SHA=sha(__file__)))
 
 if __name__=='__main__':main()
