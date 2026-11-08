@@ -40,10 +40,13 @@ def run(day,tm,smoke=False):
     env=dict(os.environ,**COMMON,PF_PREDS='preds_t60k' if smoke else 'preds_basis_study',
       PF_TAG='sst_smoke' if smoke else 'sst_'+tm,PF_MAX_WINDOWS='8' if smoke else '0',
       PF_ARMS=BASE if smoke else ';'.join(specs().values()),PF_STUDY_EXEC='0' if smoke else '1',
+      PF_CAP_CACHE='0' if smoke else '1',
       PF_TXJIT='frame' if tm=='J' else '',PF_TXSHIFT='0' if tm=='J' else '-50',PF_QACT='' if tm=='J' else 'max')
     if smoke:
         p=DATA/'step5'/day/'preds_t60k.parquet'
         if not p.exists():p.symlink_to(OLD/'step5'/day/'preds_t60k.parquet')
+    elif not (DEST/'cap_reuse_control.json').exists():
+        raise ValueError('missing direct cap-path control')
     elif DAYS.index(day)>0:
         env['PF_LIVE_CAPSTATE_IN']=str(folder(DAYS[DAYS.index(day)-1],tm)/'capstate.json')
     cmd=[sys.executable,'-m','predictfun.research.pf_sizing_engine',day,'tokyoreal','custom']
