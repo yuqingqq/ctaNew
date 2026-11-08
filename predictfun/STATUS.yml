@@ -6,6 +6,13 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-08 13:04Z: CONTINUOUS BASIS PARITY (user-authorized captured Tokyo diagnostic): source 4f7cf752 adds a separate
+  continuous Python sample/feature builder; original frozen files unchanged. 105 complete Nov 7 17:40Z–Nov 8 02:25Z windows:
+  all 32 features match Rust on 494,637 rows; all 498,422 guard keys and 537,056 conditional quote decisions match, including
+  12,189 model rows / 12,558 decisions in the first 70 s after UTC hours. Frozen Python control differs on 2,198 feature rows
+  and 72 quote decisions, all at boundaries. Receipt reviews/continuous_basis_20261108/receipt.json; Rust tooling 4d757be,
+  runtime unchanged from pfmm-ladder-v3-basis-tokyo-1. Full changed-state fills/PnL are not evaluated. Nov 7–8 consumed;
+  Nov 9–13 untouched, no new freeze/forward-race entry/deployment. New research rows are explicit *_basis_v1 outputs.
   2026-11-07 08:20Z: CODEX v3 PORT REVIEW COMPLETE (pasted), VERIFIED here: pmmmrust 3366e61 adds only docs/receipts/20261107_pfmm_ladder_v3_review.json
   on tested code 173f53c (diff 173f53c..3366e61 = that file); receipt cites research code 4ecaca69, receipt b261091d with sha256 442e0ccd...
   (= RECEIPT.md on disk; freeze folder unchanged since b261091d), engine d678e7c3...; live_launch / deployment / tag / forward_data_read
