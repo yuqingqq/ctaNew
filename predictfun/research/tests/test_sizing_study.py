@@ -78,7 +78,7 @@ class SizingControls(unittest.TestCase):
     def test_day_null_detects_signal_and_refuses_bad_populations(self):
         import numpy as np
         from predictfun.research.pf_settlement_study import paired_inference
-        a=np.column_stack([np.ones(6),np.tile([-1.,1.],3)])
+        a=np.column_stack([np.ones(8),np.tile([-1.,1.],4)])
         result=paired_inference(a)
         self.assertLess(result[0]['p_max_t_family'],.05)
         self.assertEqual(result[1]['p_two_sided'],1.)
