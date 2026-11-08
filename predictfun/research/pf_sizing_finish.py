@@ -86,6 +86,8 @@ def main():
             execution[f'{tm}/{day}'] = read(meta) if meta.exists() else dict(
                 cap_cache=False, metadata_predates_instrumentation=True,
                 control='cache_full_replay_control.json' if day=='20261023' else 'cap_reuse_control.json')
+            if execution[f'{tm}/{day}'].get('cancel_ack_ms',0) != 0:
+                raise ValueError('stress delay leaked into main replay')
             for variant in ARMS:
                 for kind in ['win','fills','requests']:
                     a = path/kind/stem(specs()[variant+'_off'])
@@ -105,6 +107,7 @@ def main():
     artifacts = ['declaration.json','declaration_v2.json','declaration_v3.json',
         'nonlinear_declaration.json','nonlinear_declaration_v2.json',
         'cancel_tail_declaration.json','cancel_tail_declaration_v2.json',
+        'code_identity.json','code_identity_v2.json','code_identity_v3.json',
         'engine_parity.json','cap_reuse_control.json','capacity_reuse_control.json',
         'cache_full_replay_control.json','strategy_report.json','settlement_report.json',
         'settlement_nonlinear_report.json','inventory_shadow_report.json',
@@ -133,7 +136,7 @@ def main():
         execution_metadata=execution, cache_control=checks,
         forecast_results=nonlinear, inventory_shadow=shadow, cancellation_stress=stress_report,
         predicates=dict(
-            fitted_forecast_brier_improvement={m:s['brier'] < nonlinear['overall']['market_mid']['brier']
+            forecast_brier_improvement={m:s['brier'] < nonlinear['overall']['market_mid']['brier']
                 for m,s in nonlinear['overall'].items() if m!='market_mid'},
             sizing_settlement_improvement_both_timings={v:all(indexed[(tm,v+'_off')]['settle'] > indexed[(tm,'baseline_off')]['settle'] for tm in ['J','X']) for v in ARMS if v!='baseline'}),
         limitations=[
