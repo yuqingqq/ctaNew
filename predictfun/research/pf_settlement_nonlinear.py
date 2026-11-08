@@ -64,4 +64,18 @@ def main():
     out.to_parquet(DEST/'settlement_predictions_v2.parquet',index=False)
     write(DEST/'settlement_nonlinear_report.json',result);print(result['overall'])
 
-if __name__=='__main__':main()
+def shadow():
+    import shutil
+    from . import pf_settlement_inventory as inv
+    target=DEST/'nonlinear_inventory'
+    target.mkdir()
+    shutil.copy2(DEST/'settlement_predictions_v2.parquet',target/'settlement_predictions.parquet')
+    inv.DEST=target
+    inv.MODELS=inv.MODELS+['market_residual_lgbm']
+    inv.main()
+
+if __name__=='__main__':
+    import sys
+    if sys.argv[1:] == ['shadow']:shadow()
+    elif not sys.argv[1:]:main()
+    else:raise ValueError('unknown mode')
