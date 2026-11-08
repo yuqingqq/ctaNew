@@ -29,6 +29,9 @@ def controls():
 
 def matched_random(g,draws=500):
     """Match hedge counts within day/hour/anchor/side/market-probability bin."""
+    if (g.executable & (g.status!='eligible')).any():raise ValueError('ineligible hedge marked executed')
+    if not np.allclose(g.delta_vs_hold,np.where(g.executable,g.potential_delta,0),rtol=0,atol=1e-9):
+        raise ValueError('shadow value does not reconcile to action')
     rng=np.random.default_rng(20261108);totals=np.zeros(draws);eligible=g[g.status=='eligible']
     for _,x in eligible.groupby(['day','hour','anchor','side','market_bin'],sort=True):
         k=int(x.executable.sum());v=x.potential_delta.to_numpy()
