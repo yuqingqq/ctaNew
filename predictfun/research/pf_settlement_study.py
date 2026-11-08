@@ -75,11 +75,14 @@ def controls():
 
 def paired_inference(deltas):
     a=np.asarray(deltas,float)
+    if a.ndim!=2 or not np.isfinite(a).all():raise ValueError('invalid day differences')
     if a.shape[0]<5:raise ValueError('insufficient complete day clusters')
     rng=np.random.default_rng(20261108)
     signs=rng.choice([-1,1],size=(2000,len(a)))
     null=(signs@a)/len(a);obs=a.mean(axis=0)
-    sd=a.std(axis=0,ddof=1)/np.sqrt(len(a));sd=np.maximum(sd,1e-12)
+    # A common fixed scale for each column must be invariant to sign flips.
+    # Centred SD depends on the observed sign pattern and can distort max-T.
+    sd=np.sqrt(np.mean(a*a,axis=0)/len(a));sd=np.maximum(sd,1e-12)
     maxt=np.max(np.abs(null/sd),axis=1)
     boot=np.array([a[rng.integers(0,len(a),size=len(a))].mean(axis=0) for _ in range(2000)])
     return [dict(mean=float(v),interval_95=np.quantile(boot[:,i],[.025,.975]).tolist(),

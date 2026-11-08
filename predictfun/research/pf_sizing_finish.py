@@ -105,7 +105,7 @@ def main():
     sources += [HERE/'pf_model_spec.py', HERE/'pf_step4_ladder_v3.py', HERE/'pf_step5_features_rl.py',
                 HERE/'pf_clock_rl.py', HERE/'pf_io.py']
     artifacts = ['declaration.json','declaration_v2.json','declaration_v3.json',
-        'nonlinear_declaration.json','nonlinear_declaration_v2.json',
+        'nonlinear_declaration.json','nonlinear_declaration_v2.json','nonlinear_declaration_v3.json',
         'cancel_tail_declaration.json','cancel_tail_declaration_v2.json',
         'code_identity.json','code_identity_v2.json','code_identity_v3.json',
         'engine_parity.json','cap_reuse_control.json','capacity_reuse_control.json',
@@ -147,6 +147,7 @@ def main():
             'Loss budget carries realised PnL across studied dates but skips unstudied gaps; no continuous live-path claim.',
             'Cancellation stress is one day at a uniform completed-cancel p99, not an empirical latency replay; missing acknowledgements remain censored.',
             'Nonlinear and cancellation stress extensions were declared after initial results; both explicitly exploratory.',
+            'Expanded forecast and inventory reports supersede initial inference, correcting max-T to use a sign-invariant scale; original point forecasts and valuations are unchanged.',
             'Paired uncertainty clusters by day; six forecast test days give weak inference. Matched random controls are conditional nulls, not performance intervals.',
             'Rebates excluded from trading PnL and the loss budget; $150 remains a test scenario, independent of the 150-share exposure cap.'
         ], forward_data_read=False, live_strategy_changed=False, live_limit_changed=False,
