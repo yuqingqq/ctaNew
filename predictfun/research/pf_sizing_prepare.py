@@ -19,8 +19,11 @@ def prepare(day):
         if n:
             differences[c]=n
             if c not in ['basis_bps','gap','p_bn']:raise ValueError('unrelated feature changed: '+c)
-            # Carry duplication affects only the first 70 seconds after an hour.
-            if ((b.loc[~same,'tau']%3600000)>=70000).any():raise ValueError('unexpected nonboundary change: '+c)
+            # The old full-day concatenation also duplicates the preceding
+            # hour's last 10s retrospectively (from next hour's carry). Live
+            # guards stop at t=240, so that preboundary tail never quotes.
+            phase=b.loc[~same,'tau']%3600000
+            if ((phase>=70000)&(phase<3590000)).any():raise ValueError('unexpected nonboundary change: '+c)
     del a
     cfg=json.loads((HERE.parent/'freeze/pm_ladder_v1/params.json').read_text())
     feats=cfg['guard']['features'];models={s:lgb.Booster(model_file=str(HERE.parent/'freeze/pm_ladder_v1'/f'guard_{s}.txt')) for s in ['bid','ask']}
