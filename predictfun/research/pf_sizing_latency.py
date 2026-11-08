@@ -44,13 +44,13 @@ def measure():
       controls=dict(known_delay_detected=True,negative_delay_refused=True),
       source_sha={p:sha(p) for p in [CAP+'inputs.jsonl.gz',CAP+'outputs.jsonl.gz',SCOPE]},
       interpretation='request to strategy-visible cancellation confirmation; completed cancels only, not physical venue removal',
-      stress='all cancellations reserve until the measured p90; physical removal remains original 22ms/pending95ms; diagnostic not calibrated simulation')
+      stress='all cancellations reserve until the measured p99; physical removal remains original 22ms/pending95ms; diagnostic not calibrated simulation')
     write(DEST/'cancel_ack_latency.json',report);print(report)
 
 def stress(tm):
     if tm not in ['J','X']:raise ValueError('timing')
-    ack=json.load(open(DEST/'cancel_ack_latency.json'))['quantiles_ms']['p90']
-    day='20261103';tag='sst_ack90_'+tm
+    ack=json.load(open(DEST/'cancel_ack_latency.json'))['quantiles_ms']['p99']
+    day='20261103';tag='sst_ack99_'+tm
     out=DATA/'step4'/f'ladder_tokyoreal_custom_e2_preds_basis_study_{tag}'/day
     if out.exists():raise ValueError('refuse overwrite')
     env=dict(os.environ,**COMMON,PF_PREDS='preds_basis_study',PF_TAG=tag,PF_MAX_WINDOWS='0',
