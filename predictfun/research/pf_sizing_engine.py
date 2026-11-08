@@ -43,6 +43,8 @@ def source():
     p=HERE/'pf_step4_ladder_v3.py'
     if sha(p)!=BASE_SHA:raise ValueError('wrong frozen v3 source')
     s=p.read_text()
+    s=replace(s,"            cancel_wait.setdefault(id(o_), (o_, ack))",
+      "            cancel_wait.setdefault(id(o_), (o_, max(ack, t + STUDY_ACK_MS)))")
     s=replace(s,'    net = 0.0; knet = 0.0; cash = 0.0; kcash = 0.0; fills = []; withheld = collections.Counter()',
       '    size_high = [False, False]\n    net = 0.0; knet = 0.0; cash = 0.0; kcash = 0.0; fills = []; withheld = collections.Counter()')
     old="            return hi if (v is not None and v >= minute_line(par, rel)) else lo"
@@ -126,17 +128,19 @@ def run_window(mid, F, kf, rules, policy, mode, size=SIZE, cap_state=None):
 
 BASE = {'JOIN': [], 'MICRO': []}""")
     s=replace(s,"    _FLIP_CACHE.clear()", "    _FLIP_CACHE.clear()\n    if nw % 48 == 0: print('[study progress]', day, nw, 'windows; cap-equivalent reuses', _cap_reused, flush=True)")
-    s += "\nio.write_json(f'{OUT}/study_execution.json',dict(cap_cache=CAP_CACHE,cap_reused=_cap_reused,capacity_reused=_capacity_reused,adapter_sha=STUDY_SHA))\n"
+    s += "\nio.write_json(f'{OUT}/study_execution.json',dict(cap_cache=CAP_CACHE,cap_reused=_cap_reused,capacity_reused=_capacity_reused,cancel_ack_ms=STUDY_ACK_MS,adapter_sha=STUDY_SHA))\n"
     return s
 
 def main():
     context()
     enabled=os.environ.get('PF_STUDY_EXEC','1')
     if enabled not in ('0','1'):raise ValueError('invalid execution mode')
+    ack=float(os.environ.get('PF_STUDY_CANCEL_ACK_MS','0'))
+    if not math.isfinite(ack) or ack<0:raise ValueError('invalid cancel acknowledgement delay')
     exec(compile(source(),str(HERE/'pf_step4_ladder_v3.py'),'exec'),
       dict(__name__='__main__',__package__=__package__,__file__=str(HERE/'pf_step4_ladder_v3.py'),
            lots=lots,headroom=headroom,size_state=size_state,MARGIN=MARGIN,STUDY_EXEC=enabled=='1',
            cap_cannot_bind=cap_cannot_bind,capacity_cannot_clip=capacity_cannot_clip,
-           CAP_CACHE=os.environ.get('PF_CAP_CACHE','0')=='1',STUDY_SHA=sha(__file__)))
+           CAP_CACHE=os.environ.get('PF_CAP_CACHE','0')=='1',STUDY_SHA=sha(__file__),STUDY_ACK_MS=ack))
 
 if __name__=='__main__':main()
