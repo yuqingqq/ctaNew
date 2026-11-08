@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from predictfun.research.pf_sizing_engine import lots, headroom, size_state, source, cap_cannot_bind
+from predictfun.research.pf_sizing_engine import lots, headroom, size_state, source, cap_cannot_bind,capacity_cannot_clip
 from predictfun.research.pf_sizing_features import source as features
 
 class SizingControls(unittest.TestCase):
@@ -35,6 +35,9 @@ class SizingControls(unittest.TestCase):
         self.assertFalse(cap_cannot_bind(r,29.,150.,False))
         self.assertFalse(cap_cannot_bind(r,31.,150.,True))
         self.assertFalse(cap_cannot_bind(dict(min_worst=float('nan'),requests=[1]),0,150,False))
+        self.assertTrue(capacity_cannot_clip(dict(live_ctr=dict(capacity_checks=3,would_clip_capacity=0),requests=[1])))
+        self.assertFalse(capacity_cannot_clip(dict(live_ctr=dict(capacity_checks=3,would_clip_capacity=1),requests=[1])))
+        self.assertFalse(capacity_cannot_clip(dict(live_ctr={},requests=[1])))
 
     def test_pinned_builders_and_known_bad_refusal(self):
         compile(source(),'engine','exec');compile(features(),'features','exec')
