@@ -71,10 +71,15 @@ def main():
                     days_settlement_worse=sum(d< -1e-8 for d in daydelta),
                     days_settlement_equal=sum(abs(d)<=1e-8 for d in daydelta)))
     budget_checks = []
-    execution = {}
+    execution = {}; unique_markets = set()
     for tm in ['J','X']:
         for day in DAYS:
             path = folder(day,tm)
+            if tm == 'J':
+                mids = pd.read_parquet(path/'win'/stem(specs()['baseline_off']), columns=['mid']).mid
+                if unique_markets.intersection(mids):
+                    raise ValueError('market repeated across replay dates')
+                unique_markets.update(mids)
             # Earliest uncached runs predate execution metadata; their source is
             # separately pinned, and the full cached control compares all arms.
             meta = path/'study_execution.json'
@@ -95,22 +100,31 @@ def main():
     write(DEST/'cancel_stress_report.json',stress_report)
     sources = list(HERE.glob('pf_sizing*.py')) + list(HERE.glob('pf_settlement*.py'))
     sources += [HERE/'tests/test_sizing_study.py', HERE/'run_sizing_study.sh', HERE/'run_sizing_followups.sh']
+    sources += [HERE/'pf_model_spec.py', HERE/'pf_step4_ladder_v3.py', HERE/'pf_step5_features_rl.py',
+                HERE/'pf_clock_rl.py', HERE/'pf_io.py']
     artifacts = ['declaration.json','declaration_v2.json','declaration_v3.json',
         'nonlinear_declaration.json','nonlinear_declaration_v2.json',
         'cancel_tail_declaration.json','cancel_tail_declaration_v2.json',
-        'prepare.json','engine_parity.json','cap_reuse_control.json','capacity_reuse_control.json',
+        'engine_parity.json','cap_reuse_control.json','capacity_reuse_control.json',
         'cache_full_replay_control.json','strategy_report.json','settlement_report.json',
         'settlement_nonlinear_report.json','inventory_shadow_report.json',
         'nonlinear_inventory/inventory_shadow_report.json','cancel_ack_latency.json','cancel_stress_report.json']
+    artifacts += [f'research/step5/{d}/prepare.json' for d in DAYS]
+    fixed_inputs = [HERE.parent/'freeze/pm_ladder_v1'/f for f in ['params.json','guard_bid.txt','guard_ask.txt']]
+    fixed_inputs += [DATA/'step4'/f for f in ['minute_lines_t60k.json','inv_r60.json']]
+    test_log=(DEST/'logs/sizing_source_tests.log').read_text()
+    if '\nOK\n' not in test_log or 'rc=0 ' not in test_log:
+        raise ValueError('source controls did not pass')
     receipt = dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),
         source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=HERE,text=True).strip(),
         branch='research/predict-sizing-settlement-20261108', artifact_root=str(DEST),
         source_sha256={str(p.relative_to(HERE.parents[1])):sha(p) for p in sources},
+        fixed_input_sha256={str(p):sha(p) for p in fixed_inputs},
         artifact_sha256={p:sha(DEST/p) for p in artifacts},
         declarations={p:read(DEST/p) for p in artifacts if 'declaration' in p},
         source_controls_log_sha=sha(DEST/'logs/sizing_source_tests.log'),
-        source_controls_log=(DEST/'logs/sizing_source_tests.log').read_text(),
-        population=dict(strategy_days=DAYS, windows_per_arm_timing=2592, unique_market_outcomes=2592,
+        source_controls_log=test_log,
+        population=dict(strategy_days=DAYS, windows_per_arm_timing=2592, unique_market_outcomes=len(unique_markets),
             strategy_variants=4, loss_budget_scenarios=2, timings=2,
             forecast_test_days=DAYS[3:], forecast_markets=nonlinear['n_markets'],
             forecast_actions=nonlinear['n_actions'], forecast_statuses=probability['statuses']),
