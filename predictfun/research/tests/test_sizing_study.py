@@ -55,4 +55,14 @@ class SizingControls(unittest.TestCase):
         np.testing.assert_array_equal(a,matrix(r,False))
         self.assertEqual(len(causal_train(r,'20261025')),1)
 
+    def test_shadow_matched_control_can_detect_and_refuse(self):
+        import pandas as pd
+        from predictfun.research.pf_settlement_inventory import matched_random
+        g=pd.DataFrame(dict(day=['20261101']*4,hour=[1]*4,anchor=[60]*4,side=[0]*4,
+          market_bin=[2]*4,status=['eligible']*4,executable=[False,False,False,True],
+          potential_delta=[-2.,-1.,1.,2.],delta_vs_hold=[0.,0.,0.,2.]))
+        self.assertGreater(matched_random(g)['excess_vs_random'],.4)
+        g.loc[3,'delta_vs_hold']=3.
+        with self.assertRaises(ValueError):matched_random(g)
+
 if __name__=='__main__':unittest.main()
