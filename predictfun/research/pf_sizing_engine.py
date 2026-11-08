@@ -31,6 +31,10 @@ def cap_cannot_bind(result,realised,budget,halted):
     if not math.isfinite(worst):return not result['requests']
     return realised+worst>=-budget
 
+def capacity_cannot_clip(result):
+    c=result['live_ctr']
+    return (c.get('capacity_checks',0)>0 and c.get('would_clip_capacity',1)==0) or not result['requests']
+
 def replace(s,a,b,count=1):
     if s.count(a)!=count:raise ValueError('engine anchor mismatch: '+a[:60])
     return s.replace(a,b,1)
@@ -65,6 +69,9 @@ def source():
     old="            wc = worst_case(dict(side=side, pt=p, rem=zsz))"
     new="""            wanted_size = zsz
             room = headroom(knet, side, policy_open(t)) if STUDY_EXEC else float('inf')
+            if STUDY_EXEC:
+                live_ctr['capacity_checks'] += 1
+                live_ctr['would_clip_capacity'] += int(zsz > room)
             if STUDY_EXEC and 'HCAP' in rules:
                 zsz = min(zsz, room)
                 live_ctr['capacity_clipped'] += int(zsz < wanted_size - 1e-9)
@@ -91,14 +98,23 @@ def source():
     s=replace(s,"                refill(t); key = (p, zsz)",
       "                refill(t); key = (p, wanted_size if STUDY_EXEC else zsz)")
     s=replace(s,"BASE = {'JOIN': [], 'MICRO': []}","""_raw_run_window = run_window
-_cap_cache = {}; _cap_market = None; _cap_reused = 0
+_cap_cache = {}; _cap_market = None; _cap_reused = 0; _capacity_reused = 0
 def run_window(mid, F, kf, rules, policy, mode, size=SIZE, cap_state=None):
-    global _cap_market, _cap_reused
+    global _cap_market, _cap_reused, _capacity_reused
     if mid != _cap_market:
         _cap_cache.clear(); _cap_market = mid
     budget = live_opts(rules)['losscap']
     key = (frozenset(r for r in rules if not r.startswith('XCAP')), policy, mode, size)
     old = _cap_cache.get(key)
+    if CAP_CACHE and budget is None and 'HCAP' in rules:
+        parent_key = (key[0] - {'HCAP'}, policy, mode, size)
+        parent = _cap_cache.get(parent_key)
+        if parent is not None and capacity_cannot_clip(parent):
+            import copy
+            result = copy.deepcopy(parent)
+            if result['live_ctr'].get('capacity_checks',0):result['live_ctr']['capacity_clipped'] = 0
+            _cap_cache[key] = result; _capacity_reused += 1
+            return result
     if CAP_CACHE and budget is not None and old is not None and cap_cannot_bind(old,cap_state['realised'],budget,cap_state['halted']):
         import copy
         _cap_reused += 1
@@ -110,7 +126,7 @@ def run_window(mid, F, kf, rules, policy, mode, size=SIZE, cap_state=None):
 
 BASE = {'JOIN': [], 'MICRO': []}""")
     s=replace(s,"    _FLIP_CACHE.clear()", "    _FLIP_CACHE.clear()\n    if nw % 48 == 0: print('[study progress]', day, nw, 'windows; cap-equivalent reuses', _cap_reused, flush=True)")
-    s += "\nio.write_json(f'{OUT}/study_execution.json',dict(cap_cache=CAP_CACHE,cap_reused=_cap_reused,adapter_sha=STUDY_SHA))\n"
+    s += "\nio.write_json(f'{OUT}/study_execution.json',dict(cap_cache=CAP_CACHE,cap_reused=_cap_reused,capacity_reused=_capacity_reused,adapter_sha=STUDY_SHA))\n"
     return s
 
 def main():
@@ -120,6 +136,7 @@ def main():
     exec(compile(source(),str(HERE/'pf_step4_ladder_v3.py'),'exec'),
       dict(__name__='__main__',__package__=__package__,__file__=str(HERE/'pf_step4_ladder_v3.py'),
            lots=lots,headroom=headroom,size_state=size_state,MARGIN=MARGIN,STUDY_EXEC=enabled=='1',
-           cap_cannot_bind=cap_cannot_bind,CAP_CACHE=os.environ.get('PF_CAP_CACHE','0')=='1',STUDY_SHA=sha(__file__)))
+           cap_cannot_bind=cap_cannot_bind,capacity_cannot_clip=capacity_cannot_clip,
+           CAP_CACHE=os.environ.get('PF_CAP_CACHE','0')=='1',STUDY_SHA=sha(__file__)))
 
 if __name__=='__main__':main()
