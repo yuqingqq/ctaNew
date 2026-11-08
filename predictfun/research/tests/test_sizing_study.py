@@ -36,4 +36,23 @@ class SizingControls(unittest.TestCase):
         with patch('predictfun.research.pf_sizing_features.sha',return_value='wrong'):
             with self.assertRaises(ValueError):features()
 
+    def test_reconciliation_fires_on_wrong_market_even_when_totals_equal(self):
+        import pandas as pd
+        from predictfun.research.pf_sizing_run import reconcile
+        w=pd.DataFrame(dict(mid=[1,2],pnl=[1.,-1.]))
+        f=pd.DataFrame(dict(mid=[1,2],settle=[1.,-1.]))
+        reconcile(w,f)
+        f['mid']=[2,1]
+        with self.assertRaises(ValueError):reconcile(w,f)
+
+    def test_probability_inputs_ignore_future_columns(self):
+        import pandas as pd
+        import numpy as np
+        from predictfun.research.pf_settlement_study import matrix,causal_train
+        r=pd.DataFrame(dict(day=['20261023','20261024'],outcome_seen_ns=[0,9999999999999999999],
+          pf_mid=[50.,60.],t_rel=[60.,120.],y=[0.,1.],end_price=[2.,3.]))
+        a=matrix(r,False);r['end_price']=1e15;r['y']=1-r.y
+        np.testing.assert_array_equal(a,matrix(r,False))
+        self.assertEqual(len(causal_train(r,'20261025')),1)
+
 if __name__=='__main__':unittest.main()

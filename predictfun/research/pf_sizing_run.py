@@ -23,6 +23,11 @@ def name(spec):
 
 def stem(spec):return name(spec).replace('/','__').replace('+','_').replace('@','_sz').replace(':','-')+'.parquet'
 
+def reconcile(w,f):
+    if w.mid.duplicated().any():raise ValueError('duplicate window')
+    sums=f.groupby('mid').settle.sum().reindex(w.mid,fill_value=0).to_numpy()
+    if not np.allclose(w.pnl.to_numpy(),sums,rtol=0,atol=1e-7):raise ValueError('settlement reconciliation')
+
 def folder(day,tm,smoke=False):
     pred='preds_t60k' if smoke else 'preds_basis_study'
     tag='sst_smoke' if smoke else 'sst_'+tm
@@ -63,7 +68,7 @@ def report():
                 if s['env']['PF_ARMS']!=';'.join(specs().values()) or s['env']['PF_STUDY_EXEC']!='1':raise ValueError('run identity')
                 w=pd.read_parquet(path/'win'/stem(spec));f=pd.read_parquet(path/'fills'/stem(spec));q=pd.read_parquet(path/'requests'/stem(spec))
                 if w.mid.duplicated().any() or len(w)!=288:raise ValueError('window coverage')
-                if abs(w.pnl.sum()-f.settle.sum())>1e-7:raise ValueError('settlement reconciliation')
+                reconcile(w,f)
                 for k,v in s['arms'][name(spec)]['live']['counters'].items():ctr[k]=ctr.get(k,0)+v
                 dayrows.append(dict(day=day,settle=float(w.pnl.sum()),plus1=float(f.mo1.sum()),shares=float(w.shares.sum())))
                 wins.append(w);fills.append(f);req.append(q)
