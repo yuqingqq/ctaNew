@@ -62,6 +62,7 @@ def main():
                 if r['windows'] != 2592:
                     raise ValueError('incomplete main replay')
                 daydelta = [x['settle']-y['settle'] for x,y in zip(r['per_day'], b['per_day'])]
+                leave_one_out = [sum(daydelta)-d for d in daydelta]
                 comparisons.append(dict(timing=tm, variant=variant, budget=budget,
                     settlement_delta=r['settle']-b['settle'], plus1_delta=r['plus1']-b['plus1'],
                     mark_stop_delta=r['mark_stop']-b['mark_stop'], carry_delta=r['carry']-b['carry'],
@@ -69,7 +70,9 @@ def main():
                     cancel_request_change_pct=100*(r['requests'].get('cancel',0)/b['requests']['cancel']-1),
                     days_settlement_better=sum(d>1e-8 for d in daydelta),
                     days_settlement_worse=sum(d< -1e-8 for d in daydelta),
-                    days_settlement_equal=sum(abs(d)<=1e-8 for d in daydelta)))
+                    days_settlement_equal=sum(abs(d)<=1e-8 for d in daydelta),
+                    leave_one_day_out_delta_range=[min(leave_one_out),max(leave_one_out)],
+                    gain_survives_any_one_day_removed=all(d>1e-8 for d in leave_one_out)))
     budget_checks = []
     execution = {}; unique_markets = set()
     for tm in ['J','X']:
