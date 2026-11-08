@@ -137,7 +137,9 @@ def main():
         strategy_results=strategy['results'], strategy_comparisons=comparisons,
         budget_path_checks=budget_checks, budget_paths_all_equal=all(r['exact'] for r in budget_checks),
         execution_metadata=execution, cache_control=checks,
-        forecast_results=nonlinear, inventory_shadow=shadow, cancellation_stress=stress_report,
+        forecast_results=nonlinear, forecast_split_audit=probability['folds'],
+        forecast_controls=probability['controls'], forecast_input_sha256=probability['source_sha'],
+        inventory_shadow=shadow, cancellation_stress=stress_report,
         predicates=dict(
             forecast_brier_improvement={m:s['brier'] < nonlinear['overall']['market_mid']['brier']
                 for m,s in nonlinear['overall'].items() if m!='market_mid'},
@@ -148,6 +150,7 @@ def main():
             'Neutral scheduled inventory opportunities, not selected fills; shadow dollar values are per opportunity, not summed strategy PnL.',
             'Fixed delays and execution approximation omit full live OMS/watchdog parity and own market impact.',
             'Loss budget carries realised PnL across studied dates but skips unstudied gaps; no continuous live-path claim.',
+            'Budget state credits simulated settlement at window completion, without a separate venue settlement-confirmation delay.',
             'Cancellation stress is one day at a uniform completed-cancel p99, not an empirical latency replay; missing acknowledgements remain censored.',
             'Nonlinear and cancellation stress extensions were declared after initial results; both explicitly exploratory.',
             'Expanded forecast and inventory reports supersede initial inference, correcting max-T to use a sign-invariant scale; original point forecasts and valuations are unchanged.',
