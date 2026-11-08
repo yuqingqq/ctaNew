@@ -27,6 +27,21 @@ def controls():
     assert decide(.8,1,49,51,.02)
     return dict(bad_up_hedged=True,good_up_kept=True,market_spread_fee_respected=True,symmetric=True)
 
+def matched_random(g,draws=500):
+    """Match hedge counts within day/hour/anchor/side/market-probability bin."""
+    rng=np.random.default_rng(20261108);totals=np.zeros(draws);eligible=g[g.status=='eligible']
+    for _,x in eligible.groupby(['day','hour','anchor','side','market_bin'],sort=True):
+        k=int(x.executable.sum());v=x.potential_delta.to_numpy()
+        if k==0:continue
+        if k==len(v):totals+=v.sum();continue
+        for j in range(draws):totals[j]+=rng.choice(v,k,replace=False).sum()
+    totals/=len(g)
+    actual=float(g.delta_vs_hold.mean())
+    return dict(draws=draws,matched_on=['day','hour','anchor','side','market_probability_20pct_bin'],
+      actual=actual,random_mean=float(totals.mean()),excess_vs_random=float(actual-totals.mean()),
+      random_interval_95=np.quantile(totals,[.025,.975]).tolist(),
+      p_random_at_least_actual=float((1+np.sum(totals>=actual))/ (draws+1)))
+
 def main():
     checked=controls();pr=pd.read_parquet(DEST/'settlement_predictions.parquet');rows=[];sources={}
     for day in DAYS[3:]:
@@ -63,13 +78,15 @@ def main():
                         hedge=decide(getattr(r,m),side,known.b1_p,known.a1_p,rate)
                         executed=hedge and status=='eligible'
                         rows.append(dict(day=day,mid=mid,anchor=r.t_rel,side=side,model=m,status=status,
+                          hour=int((r.tau//3600000)%24),market_bin=min(int(r.pf_mid//20),4),
+                          potential_delta=Q*(locked-payout) if status=='eligible' else 0.,
                           wanted_hedge=hedge,executable=executed,delta_vs_hold=Q*(locked-payout) if executed else 0.))
         del books,groups
     a=pd.DataFrame(rows);summaries={}
     for m,g in a.groupby('model'):
         summaries[m]=dict(actions=len(g),wanted_hedges=int(g.wanted_hedge.sum()),executable_hedges=int(g.executable.sum()),
           statuses=g.status.value_counts().to_dict(),mean_dollars_per_25share_action=float(g.delta_vs_hold.mean()),
-          per_day=g.groupby('day').delta_vs_hold.mean().to_dict(),
+          per_day=g.groupby('day').delta_vs_hold.mean().to_dict(),matched_random=matched_random(g),
           per_anchor={str(k):dict(actions=len(v),mean_delta=float(v.delta_vs_hold.mean()),hedges=int(v.executable.sum())) for k,v in g.groupby('anchor')})
     delta=np.array([[summaries[m]['per_day'][d]-summaries['market_mid']['per_day'][d] for m in MODELS[1:]] for d in DAYS[3:]])
     result=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),controls=checked,n_days=6,n_markets=int(a.mid.nunique()),
