@@ -75,4 +75,15 @@ class SizingControls(unittest.TestCase):
         g.loc[3,'delta_vs_hold']=3.
         with self.assertRaises(ValueError):matched_random(g)
 
+    def test_day_null_detects_signal_and_refuses_bad_populations(self):
+        import numpy as np
+        from predictfun.research.pf_settlement_study import paired_inference
+        a=np.column_stack([np.ones(6),np.tile([-1.,1.],3)])
+        result=paired_inference(a)
+        self.assertLess(result[0]['p_max_t_family'],.05)
+        self.assertEqual(result[1]['p_two_sided'],1.)
+        with self.assertRaises(ValueError):paired_inference(a[:4])
+        a[0,0]=np.nan
+        with self.assertRaises(ValueError):paired_inference(a)
+
 if __name__=='__main__':unittest.main()
