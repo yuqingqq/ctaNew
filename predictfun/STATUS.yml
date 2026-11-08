@@ -6,6 +6,15 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-08 17:11Z: SIZING / SETTLEMENT STUDY COMPLETE, no live changes. Nine consumed days / 2592 markets per arm;
+  J/X baseline settlement $514.06/$317.63, hysteresis $550.54/$339.75 with 7.75%/7.34% fewer places. +1s and
+  mark-at-stop value fall; uplift comes from carry and disappears without Nov 2. Capacity adds no PnL in ordinary
+  or one-day cancel-p99 stress. $150/uncapped main paths exact (216 comparisons); fresh stress budgets can bind.
+  Forecasts: six chronological consumed test days, 1728 markets / 13352 neutral decisions; market Brier .189047,
+  all four alternatives worse (.189106 to .195683). Cost-aware inventory shadow has no reliable gain.
+  Ten tests, frozen/cached replay controls and per-market reconciliation pass. Source beccfc63; receipt
+  predictfun/reviews/sizing_settlement_20261108/receipt.json on research/predict-sizing-settlement-20261108.
+  No adoption, deployment, frozen-race change or Nov 9–13 data read. Full findings and limitations in HANDOFF.md.
   2026-11-08 13:04Z: CONTINUOUS BASIS PARITY (user-authorized captured Tokyo diagnostic): source 4f7cf752 adds a separate
   continuous Python sample/feature builder; original frozen files unchanged. 105 complete Nov 7 17:40Z–Nov 8 02:25Z windows:
   all 32 features match Rust on 494,637 rows; all 498,422 guard keys and 537,056 conditional quote decisions match, including

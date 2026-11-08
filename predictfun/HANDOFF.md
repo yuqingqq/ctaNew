@@ -1,5 +1,50 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-08 — sizing and settlement probability study COMPLETE
+
+- As-of **2026-11-08 17:11:07Z**. All declared jobs and controls finished; no research job left running. Isolated branch
+  `research/predict-sizing-settlement-20261108`, checkout `/tmp/cta-sizing-settlement-20261108`, tested source `beccfc63`.
+  Full receipt: `predictfun/reviews/sizing_settlement_20261108/receipt.json`; retained inputs/outputs and logs under
+  `/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/`. This entry supersedes earlier running statuses.
+- Main experiment: nine consumed days (Oct 23–27, Oct 31–Nov 3), 2,592 markets per arm/timing; baseline, capacity clipping,
+  size hysteresis, combined; J/X; $150/uncapped total-loss budget. Fixed deployed guards were trained on eight of these days:
+  **in-sample strategy comparison**, not a live-profit estimate. Continuous historical-clock basis, lot/notional checks,
+  known-state reservations and refusal backoff are shared. No missing +1s or stop valuations in these results.
+- Main settlement $ J/X: baseline **514.0559 / 317.6259**, capacity identical; hysteresis/combined **550.5360 / 339.7488**.
+  Hysteresis place requests fall **7.7464% / 7.3397%**. +1s value changes **-10.9858 / -8.8662**; mark-at-240s changes
+  **-68.4191 / -94.4639**; carry improves **104.8992 / 116.5868**. Thus settlement gains are from leftover inventory,
+  not improved measured short-term value. Only 4/9 days improve at each timing; excluding Nov 2 changes the gain to
+  **-92.5270 / -73.4372**. Observed drawdown falls, but no robust PnL benefit established and no candidate adopted.
+- $150 is explicitly a **test scenario**, not a permanent user constraint. All 216 main capped/uncapped win/fill/request
+  comparisons are exact. The separate 150-share exposure cap stays in both. Budget credits simulated window-end settlement
+  and skips unstudied gaps; no live path/settlement-confirmation parity claim. Rebates excluded and never replenish budget.
+- Cancellation diagnostic: same 105 Tokyo-5 windows, 13,775 cancels, 13,766 matched acknowledgements / 9 missing; completed
+  delay p50 20.67 ms, p99 143.35 ms, max 14.97 s. Uniform-p99 reservation stress on Nov 3, 288 markets per arm, keeps original
+  physical removal timing; fresh zero-PnL budget. Capacity lowers refusals but adds no PnL: uncapped baseline/capacity J
+  -45.1963/-45.2518, X both -11.7216. With hysteresis, capacity J -45.2269 -> -49.6016, X unchanged -68.7496.
+  The $150 budget changes some stress paths (both beneficial and detrimental). One day, no interval; sensitivity only,
+  not calibrated OMS simulation. Rare longer/missing acknowledgements and full watchdog/OMS behavior remain unmodelled.
+- Settlement forecast feasibility: initial train Oct 23–25; six chronological consumed test days, **1,728 markets /
+  13,352 eligible neutral decisions**. Excluded: 453 missing market prices, 19 start-price-not-known. Each fit uses earlier
+  venue outcomes known before the test day; no fill-selected population. Day-balanced Brier (lower better): market
+  **0.189047**, Brownian/basis **0.192590**, calibrated market **0.189106**, market+physical logistic **0.190309**,
+  fixed market-residual LightGBM **0.195683**. No alternative beats the market; nonlinear is worse on every test day.
+  Added nonlinear family is explicitly post-initial-result exploration, not an untouched test or tuning search.
+- Cost-aware shadow: 26,704 hypothetical 25-share Up/Down opportunities per model (separate alternatives, not strategy PnL).
+  24,398 eligible; 1,854 insufficient arrival depth; 442 below notional; 6 stale; 4 invalid books. Calibrated-market mean by day
+  +$0.01275 per opportunity, day bootstrap interval [-$0.11371,+$0.13730]; other models negative. No reliable value gain.
+  500 matched action randomizations and 2,000 day null/bootstrap draws. Expanded reports supersede initial inference:
+  max-T now uses sign-invariant RMS scaling; original point forecasts/valuations retained unchanged. See declaration v3
+  and nonlinear_declaration_v3.json; five probability models / ten forecast comparisons, four shadow comparisons.
+- Controls passed: 10 source tests (positive/refusal controls); eight-window exact frozen-engine parity; full 288-window,
+  eight-arm cached/direct comparison exact across 24 artifacts; per-market fill-to-settlement reconciliation throughout;
+  source/input hashes, label causality, probability oracle/anti-oracle, prior-offset and inventory-value controls.
+  Peak observed replay/control RSS about 1.6 GiB, one core; ~499 GiB free disk. No large data added to git.
+- Next: treat hysteresis as an efficiency candidate only; probability forecasts remain research outputs. Keep short-term
+  adverse-selection guards separate from settlement valuation. Compare expected payout against executable exit value and
+  inventory risk, not merely P(settle=1)>0.5. More independent future data and full execution calibration are needed before
+  adopting a new controller. Live code/settings, frozen artifacts and the Nov 9–13 forward race are unchanged/unread.
+
 ## 2026-11-08 — continuous basis agrees with Rust on captured Tokyo inputs
 
 - User requested the missing research-side boundary check. Source commit `4f7cf752` adds
