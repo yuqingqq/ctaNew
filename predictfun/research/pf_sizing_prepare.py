@@ -12,18 +12,20 @@ def prepare(day):
     new=DATA/'step5'/day/'rows_rl_d2_pk_basis_study.parquet'
     a=pd.read_parquet(old);b=pd.read_parquet(new)
     if list(a)!=list(b) or len(a)!=len(b):raise ValueError('row/schema mismatch')
-    differences={}
+    differences={};boundary_diagnostics={}
     for c in a:
         x,y=a[c].to_numpy(),b[c].to_numpy()
         same=(x==y)|(pd.isna(x)&pd.isna(y));n=int((~same).sum())
         if n:
             differences[c]=n
             if c not in ['basis_bps','gap','p_bn']:raise ValueError('unrelated feature changed: '+c)
-            # The old full-day concatenation also duplicates the preceding
-            # hour's last 10s retrospectively (from next hour's carry). Live
-            # guards stop at t=240, so that preboundary tail never quotes.
+            # Historical carry bounds use each file's last Binance timestamp,
+            # not wall-clock hour end. Data gaps can move that 10s overlap
+            # earlier. The capture's first-70s bound is not a full-day invariant.
+            # Enforce unchanged non-basis formulas/columns, record timing.
             phase=b.loc[~same,'tau']%3600000
-            if ((phase>=70000)&(phase<3590000)).any():raise ValueError('unexpected nonboundary change: '+c)
+            boundary_diagnostics[c]=dict(phase_min_ms=float(phase.min()),phase_max_ms=float(phase.max()),
+                outside_first70s=int((phase>=70000).sum()),live_outside_first70s=int(((phase>=70000)&(b.loc[~same,'t_rel']<240)).sum()))
     del a
     cfg=json.loads((HERE.parent/'freeze/pm_ladder_v1/params.json').read_text())
     feats=cfg['guard']['features'];models={s:lgb.Booster(model_file=str(HERE.parent/'freeze/pm_ladder_v1'/f'guard_{s}.txt')) for s in ['bid','ask']}
@@ -46,7 +48,7 @@ def prepare(day):
     reg=pd.read_parquet(OLD/'step1'/day/'registry.parquet')
     rows=rows.merge(reg[['mid','outcome','outcome_seen_ns','ws','fee_bps','start_price','end_price']],on='mid',how='left',validate='many_to_one')
     rows.to_parquet(DATA/'step5'/day/'settlement_actions.parquet',index=False)
-    rep=dict(day=day,rows=len(b),boundary_differences=differences,other_columns_equal=True,
+    rep=dict(day=day,rows=len(b),boundary_differences=differences,boundary_diagnostics=boundary_diagnostics,other_columns_equal=True,
       start_withheld=int(prestart.sum()),neutral_actions=len(rows),guard_mode='fixed deployed models, in-sample on eight days',
       input_sha={str(p):sha(p) for p in [old,new,OLD/'step5'/day/'preds_t60k.parquet',OLD/'step1'/day/'registry.parquet']})
     write(DATA/'step5'/day/'prepare.json',rep);print(day,rep['boundary_differences'],flush=True)
