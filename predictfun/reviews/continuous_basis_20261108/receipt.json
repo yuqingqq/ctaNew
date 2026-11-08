@@ -1,0 +1,718 @@
+{
+  "protocol": "PFMM_CONTINUOUS_RESEARCH_PARITY_20261108_V3",
+  "as_of_utc": "2026-11-08T13:09:04.221892+00:00",
+  "scope": "Versioned continuous research vs deployed-capable Rust library on the retained Tokyo-5 known-time input stream and fixed captured legacy decision states; not a full independent request scheduler or counterfactual fill/PnL run.",
+  "supersedes": [
+    {
+      "path": "docs/receipts/20261108_pfmm_continuous_basis_v1.json",
+      "sha256": "3120ce10b85fdb5f342b4160a96f4477ca9513d285132b5bf3857ac614a0628a",
+      "scope": "Matching research feature/guard/conditional-quote comparison is now completed on this declared cohort. Software deployment status and unmeasured strategy/PnL effects remain as stated."
+    },
+    {
+      "path": "docs/receipts/20261108_pfmm_continuous_basis_deployment_v2.json",
+      "sha256": "b7712c6fc2b01a92c278e7664f22f7d8cdbe5a17d73c492c74419bf08064b201",
+      "scope": "Matching research feature/guard/conditional-quote comparison is now completed on this declared cohort. Software deployment status and unmeasured strategy/PnL effects remain as stated."
+    }
+  ],
+  "runtime_release_tag": "pfmm-ladder-v3-basis-tokyo-1",
+  "runtime_release_commit": "3c724fe2e6a66a68dd7dac4cccac667f3a1a3b3b",
+  "runtime_source_trees_unchanged": {
+    "crates/pf-engine/src": "9da5c6248198437760cef993a9f248abcc13e05f",
+    "crates/pf-features/src": "940d45fc3240d8659afed55e649e2fb6d38d2fa6",
+    "crates/pf-model/src": "5d2ead4f4c04f31b02d19a3884c6da645ad4bff8",
+    "crates/pf-strategy/src": "97b2bd39d04a5dfbbd077616f47ee59dbe6eff33",
+    "bins/pfmm/src": "042d0c4cd64926582f8b46d9c848711816050756"
+  },
+  "rust_tooling_commit": "4d757beb0895a07d8cdbbff9eecd0e5fbdd2a0b4",
+  "rust_branch": "review/pfmm-continuous-research-parity-20261108",
+  "research_builder_commit": "4f7cf75218754b961a7203310f1423629d4d040f",
+  "research_branch": "review/predict-continuous-basis-20261108",
+  "research_variant": {
+    "sample_builder": "predictfun/research/pf_basis_continuous.py",
+    "features": "predictfun/research/pf_step5_features_continuous.py",
+    "output_suffix": "_basis_v1",
+    "mode": "continuous_v1",
+    "activation": "Explicit versioned builder and PF_BASIS_SAMPLES artifact; original modules/default rows/freeze unchanged."
+  },
+  "population": {
+    "scope_sha256": "970971277b03fe0f7dc3d6d3309c6d4577f09ab04850ef08a8484ec62d6c4209",
+    "windows": 105,
+    "window_start_utc": "2026-11-07T17:40:00+00:00",
+    "window_end_utc": "2026-11-08T02:25:00+00:00",
+    "consumed_days": [
+      "20261107",
+      "20261108"
+    ],
+    "new_forward_days_read": [],
+    "boundary": "0 <= tau mod 3600000 < 70000 ms; same definition fixed before results"
+  },
+  "capture": {
+    "inputs_sha256": "3c22fc15c68512cf0cdaae6d98e51599c997d8ce0dc3ab42e9c02ef430fb15ba",
+    "first_known_ms": 1794071211629.4426,
+    "last_known_ms": 1794108425629.0742,
+    "input_events": 6112166,
+    "sample_counts": {
+      "inputs": 6112166,
+      "relay_events": 37946,
+      "no_binance": 1,
+      "sampled": 37945
+    }
+  },
+  "comparisons": {
+    "continuous_reference": {
+      "protocol": "PF_CONTINUOUS_RESEARCH_PARITY_V1",
+      "as_of_utc": "2026-11-08T13:01:50.268272+00:00",
+      "python_mode": "continuous_v1",
+      "rust_mode": "continuous_v1",
+      "scope_sha256": "970971277b03fe0f7dc3d6d3309c6d4577f09ab04850ef08a8484ec62d6c4209",
+      "windows": 105,
+      "days_consumed": [
+        "20261107",
+        "20261108"
+      ],
+      "boundary_definition": "first 70 seconds after each UTC hour",
+      "counts": {
+        "guard_values": 498422,
+        "start_withhold_values": 3785,
+        "model_rows": 494637,
+        "boundary_model_rows": 12189,
+        "feature_rows_different": 0,
+        "boundary_feature_rows_different": 0,
+        "guard_rows_different": 0,
+        "boundary_guard_rows_different": 0,
+        "native_model_rows_different": 0,
+        "guard_rows_changed_from_legacy": 1961,
+        "values_outside_cohort": 58232,
+        "expected_guard_values": 498422,
+        "missing_guard_keys": 0,
+        "unexpected_guard_keys": 0,
+        "decisions": 537056,
+        "boundary_decisions": 12558,
+        "rust_quotes_changed_from_legacy": 104,
+        "decisions_outside_cohort": 65180,
+        "start_withhold_status_different": 0,
+        "start_withhold_value_different": 0,
+        "decision_guard_reads_different": 0,
+        "quote_decisions_different": 0,
+        "boundary_quote_decisions_different": 0
+      },
+      "per_feature": {
+        "bn_r25": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_r50": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_r100": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_r250": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_r500": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_r1000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_r3000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_imb": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_age": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_flow250": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_flow1000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_flow5000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_ntr1000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_spread": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_mid": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_micro_dev": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_imb1": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_imb3": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_lbs": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_las": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_age": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_nfr1000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_dm250": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_dm1000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_dm5000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_pend_bid1000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_pend_ask1000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_pend_tot5000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "t_rel": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "sigma": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "basis_bps": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "gap": {
+          "bits_different": 0,
+          "numeric_different": 0
+        }
+      },
+      "first_feature": null,
+      "first_guard": null,
+      "first_quote": null,
+      "missing_keys_sample": [],
+      "unexpected_keys_sample": [],
+      "controls": {
+        "positive": true,
+        "changed_size_refused": true,
+        "fractional_inventory": true,
+        "hold": true
+      },
+      "parity_passed": true,
+      "python_feature_sha256": {
+        "/home/yuqing/pmmm-data/review-exports/continuous-parity-20261108/captured/research/step5/20261107/rows_rl_d2_pk_basis_v1.parquet": "13f7cddf4c8ffcc9cc64bde528cfe35669125afafb659f583e2cd32ce4830cd4",
+        "/home/yuqing/pmmm-data/review-exports/continuous-parity-20261108/captured/research/step5/20261108/rows_rl_d2_pk_basis_v1.parquet": "ff0e5dca11d22fed42bfb966a8bafc5c367bdc9e85a0cfb1b7f1d774b1d7953a"
+      },
+      "limitation": "Same captured input/known-state path. Quotes are pure policy calls with changed guards, not a rescheduled OMS or counterfactual fill/PnL evaluation."
+    },
+    "frozen_reference_control": {
+      "protocol": "PF_CONTINUOUS_RESEARCH_PARITY_V1",
+      "as_of_utc": "2026-11-08T13:04:44.482356+00:00",
+      "python_mode": "frozen_hour_files",
+      "rust_mode": "continuous_v1",
+      "scope_sha256": "970971277b03fe0f7dc3d6d3309c6d4577f09ab04850ef08a8484ec62d6c4209",
+      "windows": 105,
+      "days_consumed": [
+        "20261107",
+        "20261108"
+      ],
+      "boundary_definition": "first 70 seconds after each UTC hour",
+      "counts": {
+        "guard_values": 498422,
+        "start_withhold_values": 3785,
+        "model_rows": 494637,
+        "boundary_model_rows": 12189,
+        "feature_rows_different": 2198,
+        "boundary_feature_rows_different": 2198,
+        "guard_rows_different": 2018,
+        "boundary_guard_rows_different": 2018,
+        "native_model_rows_different": 0,
+        "guard_rows_changed_from_legacy": 1961,
+        "values_outside_cohort": 58232,
+        "expected_guard_values": 498422,
+        "missing_guard_keys": 0,
+        "unexpected_guard_keys": 0,
+        "decisions": 537056,
+        "boundary_decisions": 12558,
+        "decision_guard_reads_different": 2131,
+        "quote_decisions_different": 72,
+        "boundary_quote_decisions_different": 72,
+        "rust_quotes_changed_from_legacy": 104,
+        "decisions_outside_cohort": 65180,
+        "start_withhold_status_different": 0,
+        "start_withhold_value_different": 0
+      },
+      "per_feature": {
+        "bn_r25": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_r50": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_r100": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_r250": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_r500": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_r1000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_r3000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_imb": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_age": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_flow250": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_flow1000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_flow5000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "bn_ntr1000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_spread": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_mid": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_micro_dev": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_imb1": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_imb3": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_lbs": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_las": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_age": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_nfr1000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_dm250": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_dm1000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_dm5000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_pend_bid1000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_pend_ask1000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "pf_pend_tot5000": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "t_rel": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "sigma": {
+          "bits_different": 0,
+          "numeric_different": 0
+        },
+        "basis_bps": {
+          "bits_different": 2198,
+          "numeric_different": 2198
+        },
+        "gap": {
+          "bits_different": 2198,
+          "numeric_different": 2198
+        }
+      },
+      "first_feature": {
+        "market": 4318840,
+        "t": 1794074403450.0,
+        "feature": "basis_bps",
+        "python": 5.019829273223877,
+        "rust": 5.020488739013672
+      },
+      "first_guard": {
+        "market": 4318840,
+        "t": 1794074438150.0,
+        "python": [
+          0.0764545127749443,
+          -0.42090335488319397
+        ],
+        "rust": [
+          0.07430779188871384,
+          -0.4244045615196228
+        ]
+      },
+      "first_quote": {
+        "rust": {
+          "binance": [
+            false,
+            false
+          ],
+          "book": {
+            "asks": [
+              [
+                38,
+                101.00348921428571
+              ],
+              [
+                39,
+                14.0
+              ],
+              [
+                40,
+                160.0
+              ],
+              [
+                41,
+                230.98
+              ],
+              [
+                42,
+                139.0
+              ]
+            ],
+            "bids": [
+              [
+                37,
+                500.9379
+              ],
+              [
+                36,
+                352.73670000000004
+              ],
+              [
+                35,
+                256.0
+              ],
+              [
+                34,
+                322.42
+              ],
+              [
+                33,
+                280.0
+              ]
+            ]
+          },
+          "held": false,
+          "input_index": 345901,
+          "lanes": [
+            [
+              37,
+              5.0
+            ],
+            [
+              null,
+              0.0
+            ],
+            [
+              35,
+              25.0
+            ],
+            [
+              null,
+              0.0
+            ]
+          ],
+          "legacy_lanes": [
+            [
+              37,
+              25.0
+            ],
+            [
+              null,
+              0.0
+            ],
+            [
+              35,
+              25.0
+            ],
+            [
+              null,
+              0.0
+            ]
+          ],
+          "legacy_v": [
+            0.06984370201826096,
+            -0.4552437365055084
+          ],
+          "live": [
+            25.0,
+            0.0
+          ],
+          "market": 4318840,
+          "net": 0.0,
+          "rel_s": 39.44422729492187,
+          "rung_cur": [
+            [
+              35,
+              25.0
+            ],
+            null
+          ],
+          "t": 1794074439444.2273,
+          "v": [
+            0.06739828735589981,
+            -0.4604264795780182
+          ]
+        },
+        "python_guard": [
+          0.06984370201826096,
+          -0.4552437365055084
+        ],
+        "python_lanes": [
+          [
+            37,
+            25.0
+          ],
+          [
+            null,
+            0.0
+          ],
+          [
+            35,
+            25.0
+          ],
+          [
+            null,
+            0.0
+          ]
+        ]
+      },
+      "missing_keys_sample": [],
+      "unexpected_keys_sample": [],
+      "controls": {
+        "positive": true,
+        "changed_size_refused": true,
+        "fractional_inventory": true,
+        "hold": true
+      },
+      "parity_passed": false,
+      "python_feature_sha256": {
+        "/home/yuqing/pmmm-data/review-exports/continuous-parity-20261108/captured/research/step5/20261107/rows_rl_d2_pk.parquet": "42ebf1a626b5fc1ae36176c05856aea74340af968866b2cc48efec0eb26dc4ba",
+        "/home/yuqing/pmmm-data/review-exports/continuous-parity-20261108/captured/research/step5/20261108/rows_rl_d2_pk.parquet": "c5b198a3c5f9fb4f78f60a4fa42e1385be3af0246946e9599f4088322e5a5f39"
+      },
+      "limitation": "Same captured input/known-state path. Quotes are pure policy calls with changed guards, not a rescheduled OMS or counterfactual fill/PnL evaluation."
+    },
+    "legacy_exact_replay": {
+      "basis_mode": "continuous_v1",
+      "decisions": 602236,
+      "guard_values": 556654,
+      "header": {
+        "build": "9a7e615905c0",
+        "ladder": {
+          "guard_ask": {
+            "path": "config/predict/pm_ladder_v1/guard_ask.txt",
+            "sha256": "6d2d7149e6c556c6a2a63dad89e68ce4ea6113c76400edf9bd4f7a345ea9fade"
+          },
+          "guard_bid": {
+            "path": "config/predict/pm_ladder_v1/guard_bid.txt",
+            "sha256": "0dc09d84bb28e0c0cafac99ee0fa8ff1140cb97ca70571526469f3b42f345e39"
+          },
+          "params": {
+            "path": "config/predict/pm_ladder_v3/params.json",
+            "sha256": "486b9152bc5187e19bb73bbc54af0c758112fb6b54d3c6f7ddd9463efbbea801"
+          },
+          "policy": "MICRO",
+          "rules": [
+            "G4",
+            "G2",
+            "G6",
+            "G5",
+            "G3",
+            "G1",
+            "PM90",
+            "GS",
+            "LD2",
+            "CAP10",
+            "XNA",
+            "XMIN1",
+            "XV",
+            "RO60",
+            "S240"
+          ],
+          "size": "AM:5:25:95",
+          "version": "pm_ladder_v3"
+        },
+        "protocol": "PFMM_LADDER_JOURNAL_V3",
+        "started_unix_ms": 1794071211506
+      },
+      "inputs": 6112166,
+      "legacy_outputs_exact": true,
+      "outputs_compared": 637754,
+      "scope": "conditional features/guards/quotes on captured legacy state; no counterfactual fills or PnL",
+      "truncated": false
+    }
+  },
+  "interpretation": {
+    "paired_continuous_checks_passed": true,
+    "frozen_control_detected": true,
+    "feature_equality": "float32 bits, treating NaNs as the same missing value; all 32 columns checked",
+    "guard_equality": "float32 bits after native LightGBM minus unchanged thresholds",
+    "quote_equality": "all four lane prices exactly and sizes within 1e-9 shares; state/decision times held at captured legacy values",
+    "coverage": "Independent Python registry/start-known/mid-valid grid predicts all 498422 eligible guard keys; no missing/extra/duplicate Rust keys; 3785 start-withhold values and 494637 model rows."
+  },
+  "controls": {
+    "python_basis_tests": 4,
+    "python_comparator_tests": 3,
+    "rust_exporter_tests": 3,
+    "existing_analysis_tests": 8,
+    "existing_ledger_tests": 7,
+    "examples": [
+      "equal timestamp causality and distinct same-price events",
+      "chunk/hour-translation invariance",
+      "wrong sample/source hashes, out-of-order and precomputed evidence refused",
+      "one-bit feature corruption, dropped/duplicate grids, failed equality and silent controls refused",
+      "changed order size and truncated gzip footer detected",
+      "captured fills mapped to clock-only events in continuous core; no feedback to altered requests",
+      "normal frozen policy positive/changed-size/fractional-reduce/hold controls"
+    ]
+  },
+  "limitations": [
+    "Zero mismatches apply to this captured known-time stream and the independently reconstructed continuous research variant. The original frozen research still has hourly duplication and deliberately fails against the new mode.",
+    "The CSV adapter groups by captured UTC known hour and preserves original known_ms. Different research latency assumptions, input histories or collector grouping are different inputs; this is not certification of every such reconstruction. Hourly trade-prefix arithmetic is unchanged.",
+    "No fills, inventory trajectory, request schedule or PnL under the new quote path were simulated. The 104 conditional quote changes from legacy are not a realised trading-performance estimate.",
+    "Models, thresholds, risk budget and research freeze are unchanged. No retraining, new research freeze, forward-race addition, read of 11-09..13 or Tokyo deployment/restart occurred."
+  ],
+  "frozen_artifacts_unchanged_sha256": {
+    "predictfun/research/pf_step4_ladder_v3.py": "d678e7c3c4e47c6d60ebc031edf8d7fc7317210d5e58ff301d92d7ae0ece5f17",
+    "predictfun/research/pf_step5_features_rl.py": "8bb95a0090f03196169d62e92a66b8a01bbdb3845021793655b08b4c0555d553",
+    "predictfun/freeze/pm_ladder_v3/params.json": "486b9152bc5187e19bb73bbc54af0c758112fb6b54d3c6f7ddd9463efbbea801",
+    "predictfun/freeze/pm_ladder_v1/guard_bid.txt": "0dc09d84bb28e0c0cafac99ee0fa8ff1140cb97ca70571526469f3b42f345e39",
+    "predictfun/freeze/pm_ladder_v1/guard_ask.txt": "6d2d7149e6c556c6a2a63dad89e68ce4ea6113c76400edf9bd4f7a345ea9fade"
+  },
+  "implementation_sha256": {
+    "cta-continuous-basis-20261108/predictfun/research/pf_basis_continuous.py": "268ac93d84cb7c848bddfc7750435549ba8d1ddb7dc7c802fe1f67349b058715",
+    "cta-continuous-basis-20261108/predictfun/research/pf_step5_features_continuous.py": "33179ff69c7a785861acd321f275722c22db7ba05f2acf26fad80045522db6dd",
+    "cta-continuous-basis-20261108/predictfun/research/tests/test_continuous_basis.py": "ef991650dc00762591fba7c7e5de5cc60ee289f970dc5d3265bcc240af804aa7",
+    "pmmmrust-continuous-parity-20261108/crates/pf-engine/examples/continuous_evidence.rs": "57b6c8389dffc99d3a3d54ed412ea7ea2d8f9fec2ababc0f4ec99d597cec7a6b",
+    "pmmmrust-continuous-parity-20261108/scripts/pf_captured_features.py": "f6fa06ac710c4a3e83335c5a0cb557eb0a254d346d2415e893af7cf4aa5c31ba",
+    "pmmmrust-continuous-parity-20261108/scripts/pf_continuous_comparison.py": "3ec23206a5bee9b03075a150a5b34a0cd2333616314fdbda3fa1c9b08c6032fd",
+    "pmmmrust-continuous-parity-20261108/scripts/test_pf_continuous_comparison.py": "6b5ff37963c4b2ce762ebd8b887a34d3991e2d9adb50b706fc3742895a1e188a"
+  },
+  "evidence_dir": "/home/yuqing/pmmm-data/review-exports/continuous-parity-20261108",
+  "evidence_sha256": {
+    "scope.json": "970971277b03fe0f7dc3d6d3309c6d4577f09ab04850ef08a8484ec62d6c4209",
+    "comparison.json": "107248b7995975af589a8002e47710016556ca03f0f68b727f6c6a6dc8da166c",
+    "frozen_control.json": "1d6d048d957ef49c6850eb0a57f3224e5141a03c1b016e614d86ed2095618196",
+    "python-samples/manifest.json": "8c847fd497fdf2ff8b83f38946bb4b7f02db024d84da88cdaf95d8b6b3986f30",
+    "python-samples/samples.npz": "2ea334e19db5c328b202cf3ae0f53ecf26e97d81deb8aad443ba858ce29ba1c7",
+    "rust-evidence/replay.json": "2ae48b5950ea59c53845acf9fb5330c872abaa0163ecea264141464bc8e268fb",
+    "rust-evidence/values.jsonl.gz": "b226a083ef215df68ed72e78fcd032848fbf4b1bd3e6d65a359515b4aa98500a",
+    "rust-evidence/decisions.jsonl.gz": "66b766f11ddee376aca2eceaea0b150f8b5ddfab770d684255bdcf868400694b",
+    "logs/compare.log": "a340cdc9d68ec347de332377b6f21455fbf7fe7baf63940fc6ac195a4e0362e4",
+    "logs/comparison_controls.log": "5279d1fc9a1ced44f9c96da1414ef59e4676f963fbad52e7a1a2903538819b0d",
+    "logs/features_20261107.log": "0e4257a702d4d35e4d07087beceb93b24a82d02ec9812631d7c987cbde00e508",
+    "logs/features_20261108.log": "3cac199dc5669b3508ad812d98bb3693709309c39b1ae1d89005325f5e3d910e",
+    "logs/frozen_control.log": "a4ce4ee7df619ed41da9ac04f918892234b4c7c7e1490cb1fcc1284828ef55ed",
+    "logs/ledger_controls.log": "68f4b1f788a98e8eb535f4566a771b4b93f9655130f632c900ecd99cf568a26f",
+    "logs/legacy_analysis_controls.log": "b1fba19fa7c2e766f92eb19116b71f536c723e53439b4e8fc2fe204fc4aafe2f",
+    "logs/research_controls.log": "293c3a7977f88d2e3d5b9363981caab94243c3a0d31f3385bdc4a858ce5e8a09",
+    "logs/rust-evidence.log": "577e11a7c2e092b6a49af4c2d46d2dbce4eb201d5cb2b559972b83b8a2d2d595",
+    "logs/rust_build.log": "65b940ab1c6023d954e7bce83996049e448deb245569c32b37332d57a1378607",
+    "logs/rust_clippy.log": "aa6488824c5317059d7df088824f1f5bced91241ec506fc1824ba743bcc41734",
+    "logs/rust_controls.log": "25dcf6fe1afc0ae0c6e7bf592337e1169a891cc30913406a95c1beb65970b3c5",
+    "logs/samples.log": "a17e3c8e1011bf1dea0669cb7a6e7afc97a98fcfc3b3906a446cbfbb0d7d1acc",
+    "logs/samples_v2.log": "dbc58df2183d20b4819c9b2f2a9fb935b18b84afe0cca5fb13b62fa052ae2594"
+  },
+  "reproduction": [
+    "Check out both source commits above; prepare the original captured known-time data via scripts/pf_captured_features.py using the prior same-window scope (parent source at c5cc565).",
+    "python3 scripts/pf_continuous_comparison.py prepare --out NEW_OUT --parent ORIGINAL_COMPARISON --research RESEARCH_REPO",
+    "In RESEARCH_REPO: python3 -m predictfun.research.pf_basis_continuous --inputs CAPTURE/live/run-1794071211506/inputs.jsonl.gz --sha256 3c22fc15c68512cf0cdaae6d98e51599c997d8ce0dc3ab42e9c02ef430fb15ba --out NEW_OUT/python-samples",
+    "python3 scripts/pf_continuous_comparison.py features --out NEW_OUT --day 20261107; repeat for 20261108 only",
+    "cargo test -p pf-engine --example continuous_evidence; cargo clippy -p pf-engine --example continuous_evidence -- -D warnings",
+    "cargo build --release -p pf-engine --example continuous_evidence",
+    "target/release/examples/continuous_evidence RUST_REPO CAPTURE/live/run-1794071211506 NEW_OUT/rust-evidence",
+    "python3 scripts/pf_continuous_comparison.py compare --out NEW_OUT",
+    "python3 scripts/pf_continuous_comparison.py compare --out NEW_OUT --frozen-control",
+    "Run data jobs sequentially via predictfun/research/run_light.sh (one CPU, 4 GiB address-space cap)."
+  ]
+}

@@ -1,5 +1,25 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-08 — continuous basis agrees with Rust on captured Tokyo inputs
+
+- User requested the missing research-side boundary check. Source commit `4f7cf752` adds
+  `pf_basis_continuous.py` (one sample per ordered raw reference event) and
+  `pf_step5_features_continuous.py` (pinned original feature formulas, separate `_basis_v1` rows).
+  `PF_BASIS_SAMPLES` must name the verified sample artifact. Original feature/strategy/freeze files are unchanged.
+- All 105 complete Tokyo-5 windows, Nov 7 17:40Z to Nov 8 02:25Z: zero feature differences on 494,637 rows,
+  zero guard differences (498,422 eligible keys including 3,785 start-withholds), zero conditional quote differences
+  on 537,056 decisions. First 70 s after UTC hours: 12,189 model rows and 12,558 decisions, all equal.
+  Original frozen research is a deliberate control: 2,198 differing feature rows and 72 differing quote decisions,
+  all in that boundary interval. As-of 2026-11-08 13:04:44Z; receipt `reviews/continuous_basis_20261108/receipt.json`.
+- Rust tools: pmmmrust branch `review/pfmm-continuous-research-parity-20261108`, source `4d757be`;
+  continuous runtime is unchanged from `pfmm-ladder-v3-basis-tokyo-1`. Legacy replay still matches all 637,754 outputs.
+  Evidence: `/home/yuqing/pmmm-data/review-exports/continuous-parity-20261108/` (bounded sequential jobs, peak 807 MiB).
+- Scope: same captured known-time input stream and captured legacy inventory/reservations. No changed-request
+  OMS/fill/PnL simulation, model refit, research freeze or deployment. UTC known-hour CSV adapter; other clocks/groupings
+  are different inputs. Next: explicitly select these new rows for continuous-version research; full strategy effects remain unmeasured.
+- Nov 7–8 are consumed diagnostic days (including the earlier live comparison); Nov 9–13 remains untouched and
+  the already frozen v3 forward procedure remains unchanged. The original frozen v3 is NOT the new continuous variant.
+
 ## 2026-11-07 08:20Z (session 62f3ce33) - Codex v3 port review complete (verified)
 
 - pmmmrust 3366e61 (receipt docs/receipts/20261107_pfmm_ladder_v3_review.json; tested code 173f53c). It names our receipt by its
