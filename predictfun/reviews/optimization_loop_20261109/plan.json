@@ -1,5 +1,5 @@
 {
-  "status": "native_latency_in_progress",
+  "status": "active_between_passes",
   "authorization": "User: Launch a loop to proceed the optimizations, keep the findings tracked",
   "objective": "Preserve original desired-price quote coverage while reducing unnecessary requests and additional inventory exposure; economic conclusions require calibrated fills",
   "baseline_commit": "691f80c1",
@@ -37,6 +37,13 @@
       "receipt": "native_a2_v2/receipt.json",
       "verification": "native_a2_v2/verification.json",
       "finding": "Current native A2 preserves the quote-continuity benefit under base latency, with higher active exposure. No economic promotion. Input normalization refusal superseded before outcomes."
+    },
+    {
+      "round": "native_latency",
+      "status": "complete",
+      "receipt": "native_latency/receipt.json",
+      "verification": "native_latency/verification.json",
+      "finding": "Native base exact parity; faster/slower execution sensitivity completed. Full table and computed predicates in findings_v4; exposure costs remain explicit."
     }
   ],
   "per_round": [
@@ -57,17 +64,16 @@
   ],
   "end_of_pass": "Complete native latency sensitivity with exact base parity, verify all saved artifacts, publish findings and preserve full B4/timer/economic limitations.",
   "report_note": "Two-round findings.json and handoff were written after successful checks; the final mutable-plan update used an exclusive-create helper and failed. Plan update is corrected; round artifacts and reported numbers are unaffected. A combined v2 report will supersede this subset report.",
-  "as_of": "2026-11-09T17:07:39.812735+00:00",
-  "findings": "findings_v3.json",
+  "as_of": "2026-11-09T17:15:06.600749+00:00",
+  "findings": "findings_v4.json",
   "next_evidence": [
-    "Repeat the native comparison under the already specified faster/slower latency assumptions, with exact base replay parity.",
-    "Full B4 generated research-engine integration, including fills and paired-order traces, remains separate.",
-    "Actual timer scheduling and calibrated fills/authorized forward evidence are still required for economic promotion."
+    "B4 generated research-engine integration of native paired-order semantics, with frozen no-token parity and synthetic native differential traces.",
+    "Actual timer scheduling and calibrated fills/authorized forward evidence before valuing profits or inventory variance."
   ],
   "next_pass": {
-    "status": "controls_passed",
-    "focus": "Repeat the native comparison under the already specified faster/slower latency assumptions, with exact base replay parity.",
-    "data_constraint": "same consumed bounded Nov8 only; protected Nov9\u201313 remain unread",
+    "status": "planned",
+    "focus": "B4 generated research-engine integration of native paired-order semantics, with frozen no-token parity and synthetic native differential traces.",
+    "data_constraint": "synthetic controls and already consumed bounded inputs only; protected Nov9\u201313 remain unread",
     "economic_gate": "no profit/variance promotion without calibrated fills or authorized forward evidence"
   }
 }

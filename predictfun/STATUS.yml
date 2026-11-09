@@ -6,6 +6,12 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09 17:15Z: OPTIMIZATION LOOP fifth/native-latency pass VERIFIED; same220 Nov8 windows per profile.
+  Base output byte-identical, all base metrics exact.50ms grace across faster/base/slower: venue requests-5.35/-5.33/-3.72%,
+  aligned+2.94/+4.17/+4.37%, active exposure+3.97/+4.10/+2.58%; off-target+71.76/+28.36/+5.61%. No PnL/variance claim.
+  9 Rust adapter +4 Python controls;1980 window-arm-profile/117693 action-arm-profile rows verified. Sources75bf977e,
+  declarationb1441503; findings_v4.json/handoffs/20261109_optimization_loop_v4.md. All numeric jobs finished17:15Z,
+  375MiB peak/19MiB new data; slot free now (recheck). Next full B4/native differential parity; economic evidence gated.
   2026-11-09 17:08Z: OPTIMIZATION LOOP fourth/native A2 pass VERIFIED; same220 Nov8 windows/279059 decisions.
   Pinned f20fdb1 mapper, throttle and retry methods; targets/guards/inventory factual, no hypothetical fills.
   Updates-first50ms: venue requests-5.33%, aligned+4.17%, coverage73.85->76.93%; off-target+28.36%, active+4.10%.
