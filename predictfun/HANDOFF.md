@@ -1,5 +1,21 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 — closing-liquidity experiment RUNNING
+
+- User objective: preserve trading value while reducing inventory. Two fixed late-only hypotheses: retain safe,
+  same-price guard-eligible closing orders above the AM target (`exit_keep`); additionally size new closing orders
+  up to25 available shares (`exit_close25`). Apply target before minimum-notional checks; no price/guard changes.
+- Baseline and `late_reserved` references; exact pre60 fills/requests required, nine consumed dates Oct23–27 and
+  Oct31–Nov3, J/X. Aggregate reservations and fill-report grace unchanged; no new adding orders after60.
+  Thirty comparisons,2000 day sign-flips/bootstraps, no outcome-driven retuning. Forty-seven controls passed.
+- New live/replay review questions short-lived/cancel-pending replay fills. This is a conditional engineering
+  experiment under the existing fill model, NOT evidence of live-achievable gains or a calibrated timing fix.
+  Live total order lifetime and replay fill age differ; nearest pending-message matches are not exact trade identity.
+- Isolated branch `research/predict-exit-liquidity-20261109`, checkout `/tmp/cta-exit-liquidity-20261109`;
+  code `pf_exit_{study,engine,run,report}.py`, runner `run_exit_liquidity.sh`, outputs
+  `data/predict_fun/research/exit_liquidity_20261109/`. One resource-capped process; queued around other research.
+  No live/frozen/forward changes or protected Nov9–13 reads. Results pending.
+
 ## 2026-11-09 — late reduction experiment COMPLETE
 
 - As-of **2026-11-09 10:23:48Z**, nine consumed dates Oct23–27 and Oct31–Nov3, **2592 markets per arm/timing**,

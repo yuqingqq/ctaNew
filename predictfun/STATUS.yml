@@ -6,6 +6,10 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09 10:53Z: CLOSING-LIQUIDITY STUDY STARTING: safe existing exit retention and new closing size up to25,
+  preserving pre60/price/guards, nine consumed dates,J/X.47 controls pass. Fill-model optimism flagged by latest
+  live/replay analysis: conditional engineering only, no live-profit claim. Branch research/predict-exit-liquidity-20261109;
+  one capped process, no live/forward changes. See HANDOFF.md.
   2026-11-09 10:23Z: LATE REDUCTION STUDY COMPLETE,9 consumed days/2592 markets per arm/timing,J/X.
   Pre60 baseline exact for both variants; late reservation reduces exit flow and increases leftover inventory.
   Taper final PnL $508.54/$353.45 versus baseline $514.06/$317.63, but residual inventory rises2.98%/5.24%,
