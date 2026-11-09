@@ -89,6 +89,7 @@ for h in HOURS_META:
                     merge_leg(old,row)
                     continue
                 legs[k] = row
+                status['price_grid_'+row['price_grid_status']] += 1
     io.mem_check(f'AB {h}')
     print(f'[AB] {h} registry {len(reg)} legs {len(legs)} [mem] {io.rss_mib()} MiB', flush=True)
 mids = set(reg)

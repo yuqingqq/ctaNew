@@ -40,12 +40,12 @@ def rest_leg(trade, maker, recv_ns):
     if amount <= 0 or not 0 < price < E18 or type(recv_ns) is not int or recv_ns <= 0:
         raise ValueError('invalid trade amount, price or receipt')
     yes_price = price if index == 1 else E18 - price
-    if yes_price % (E18 // 100):
-        raise ValueError('maker price is not on the supported cent grid')
+    on_grid = yes_price % (E18 // 100) == 0
     side = 0 if (index == 1) == (quote == 'Bid') else 1
     return dict(schema=SCHEMA, leg_id=tx+'|'+taker+'|'+order, transaction_hash=tx,
         taker_order_hash=taker, maker_order_hash=order, settlement_id=trade.get('settlementId'),
-        mid=int(trade['market']['id']), side=side, ptick=yes_price//(E18//100),
+        mid=int(trade['market']['id']), side=side, ptick=yes_price//(E18//100) if on_grid else None,
+        yes_price_wei=str(yes_price),price_grid_status='cent_grid' if on_grid else 'off_cent_grid',
         shares=amount/E18, amount_wei=str(amount), token_price_wei=str(price),
         price_executed=int(trade['priceExecuted'])/E18, maker_signer=maker['signer'].lower(),
         taker_index=int(trade['taker']['outcome']['indexSet']),
@@ -154,6 +154,8 @@ def replay_times(frame):
     bad=frame.clock_status!='matching_engine_event'
     if bad.any():
         raise ValueError('point replay requires match-event timestamps; unresolved population '+str(frame.loc[bad,'clock_status'].value_counts().to_dict()))
+    if 'price_grid_status' not in frame or (frame.price_grid_status!='cent_grid').any() or frame.ptick.isna().any():
+        raise ValueError('point replay cannot round off-grid prices')
     required={'match_time_ns','match_precision_ns','match_event_id','match_source_sha256'}
     if not required<=set(frame.columns):raise ValueError('match event provenance/precision is absent')
     for x in frame.itertuples():
