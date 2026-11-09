@@ -17,7 +17,7 @@ def folder(day,tm,mode='main'):
 
 def require_prephase_equal(b,c,kind,ws):
     if kind=='fills':
-        x=b[b.t_rel<60].reset_index(drop=True);y=c[c.t_rel<60].reset_index(drop=True)
+        x=b[b.t<60].reset_index(drop=True);y=c[c.t<60].reset_index(drop=True)
     elif kind=='requests':
         x=b[b.t_ms<b.mid.map(ws)+60000].reset_index(drop=True)
         y=c[c.t_ms<c.mid.map(ws)+60000].reset_index(drop=True)
