@@ -74,6 +74,10 @@ def run(day,tm,mode):
         write(out/'baseline_reference.json',dict(summary_path=str(ref/'summary.json'),summary_sha=sha(ref/'summary.json'),
             artifacts=paths,reason='unchanged baseline; direct full-day control rerun on first date at each timing'))
     check(day,tm,mode)
+    if mode!='smoke':
+        from .pf_passive_report import summarize
+        for label,spec in ARMS.items():summarize(day,tm,mode,label,spec)
+        print('METRICS RECONCILED',day,tm,mode,flush=True)
 
 
 if __name__=='__main__':
