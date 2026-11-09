@@ -1,0 +1,19 @@
+{
+  "as_of": "2026-11-09T16:02:15.184683+00:00",
+  "source_commit": "8c63cf7a4caab4c106a0a345360729684592e684",
+  "verifier_sha256": "97c5916c7fb06a4208e256d3343b202e853ccd1d90453c1577dadc5d76e75942",
+  "receipt_sha256": "75d24e56fe1280ddc1f9d6886f105ee109648c076d5dab01d61fcd61ae99367c",
+  "rows": {
+    "window_arm": 1100,
+    "action_arm": 65385,
+    "neutral_pull_actions": 13077
+  },
+  "original_targets_and_baseline_reconciled": true,
+  "saved_price_labels_reconciled": true,
+  "matched_draws_reconciled": 500,
+  "controls": {
+    "valid_artifacts_accepted": true,
+    "corrupt_request_count_refused": true
+  },
+  "limitation": "artifact and mechanical checks; not economic validation"
+}

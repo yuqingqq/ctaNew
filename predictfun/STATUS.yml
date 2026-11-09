@@ -6,8 +6,15 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
-  2026-11-09: NATIVE GUARD / SOFT-PULL STUDY RUNNING; exact factual input replay first, same220 Nov8 windows.
-  Recover exact guard inputs/reasons before selective retention; both basis modes, bounded prefixes, no live/protected changes.
+  2026-11-09 16:02Z: BOUNDED SOFT-PULL COMPLETE;220 consumed Nov8 windows/279059 decisions/13077 touch pulls.
+  Exact native replay1262612 outputs; all decisions match, native guard contradictions0/137325; due-event observer
+  preserves original outputs/books. Primary0.01c/max100ms accepted-small-touch retention: requests-6.99%, original
+  aligned time+2.65%, off-target+33.87%, active share-time+3.40%, reserved share-time-2.42%; both runs same direction.
+  Future midpoint drift positive but below matched controls; no PnL or lower-inventory-risk claim.26 controls pass;
+  1100 window-arm/65385 action-arm rows verified. All jobs done,1134MiB peakRSS,~694MiB artifacts including native
+  build/prefixes. No protected Nov9–13, frozen/live change or clock bypass. Rust A2 70b965b not modeled; B4 remains.
+  Branch research/predict-soft-pull-20261109; handoff handoffs/20261109_soft_pull_results.md. B3 mechanical candidate,
+  not promotion; symmetric/size-line hysteresis/EMA and inventory-aware retention remain open.
   2026-11-09 15:04Z: PULL/REENTRY STUDY COMPLETE,220 consumed Nov8 windows/279,059 decisions/30,796 opportunities.
   Fixed incremental sizing; no fills. Cancel-ack requests-0.22%/aligned time-0.14%; reentry25 -8.46%/-8.19%,50 -13.80%/-11.19%,
   100 -19.49%/-15.84%; all-entry50 -43.15%/-27.06%. No tested delay preserves coverage; both runs show the tradeoff.
