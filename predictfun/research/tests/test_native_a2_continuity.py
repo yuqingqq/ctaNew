@@ -1,8 +1,16 @@
 import copy
 import unittest
-from predictfun.research.pf_native_a2_continuity import measure,verify_arm,instrument,ROOT,REL,command
+from predictfun.research.pf_native_a2_continuity import measure,verify_arm,instrument,ROOT,REL,command,quote
 
 class NativeA2Controls(unittest.TestCase):
+    def test_native_off_sentinel_and_invalid_quote_refusal(self):
+        row={f'raw_{k}{l}':(-1 if k=='tick' else 0.) for l in range(4) for k in ['tick','size']}
+        self.assertEqual(quote(row,'raw'),[[None,0.]]*4)
+        row.update(raw_tick0=50,raw_size0=5.)
+        self.assertEqual(quote(row,'raw')[0],[50,5.])
+        row['raw_tick0']=-1
+        with self.assertRaises(ValueError):quote(row,'raw')
+
     def test_source_anchor_positive_and_changed_refusal(self):
         source=command(['git','show',f'HEAD:{REL}'],cwd=ROOT)+'\n'
         self.assertIn('pub fn diagnostic_wants',instrument(source))
