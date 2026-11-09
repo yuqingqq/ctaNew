@@ -6,6 +6,14 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09 17:39Z (session 62f3ce33): A6 / A3 / A4b ON PMMMRUST MAIN 79a05d3 (pushed; not deployed). A6 wallet liveness: pings
+  every 10 s (first at once), any frame counts; no ack 30 s after subscribing ends a session; a live session silent 30 s ends;
+  a silent session without its own heartbeat / pong lapses the source (no cancel-all loop on a venue without liveness). A3: each
+  run writes decision_reasons.jsonl.gz (reading, wants, research withheld keys, GS no-cover, held). A4b: wallet_events.jsonl.gz
+  (each wallet event with receipt ns: our fills' venue ms stamps, the own-fill match clocks B1 needs; session marks). Four
+  independent review rounds (2 Medium + 4 Low, 2 Medium, 1 Low-Medium + reset, 1 Low; all fixed), 22 mutations caught, check.sh OK
+  (1,394 tests); a pre-existing accounting-test temp-dir collision fixed. B4 is being built by the optimization-loop session
+  (opt-b4-dev-controls 17:25Z); C1 still not run (slot shared with that loop; run_forward.sh stops at its first refusal).
   2026-11-09 16:37Z: A2 INCREMENTAL ON MAIN (USER "Go" after research's quote-mechanics study): pmmmrust f20fdb1 (main, pushed).
   size_layering = "incremental_v1" in both v3 examples: a new quote is one order; a second only when the want grows at the same
   tick past a resting order (5 -> 25 keeps the 5's place, +20); a size-down below a resting order's open size still replaces it
@@ -19,11 +27,28 @@ updated: >-
   every 15.000 s), A3 (decisions.jsonl.gz) and A4b (wallet_events.jsonl.gz) in code on one pmmmrust branch; review + check next.
   C1 (run_forward.sh) not started: the research slot is in use by the optimization loop, and run_forward.sh stops at its first
   slot refusal (frozen, no resume).
-  2026-11-09: OPTIMIZATION LOOP RUNNING (user authorized): inventory-aware grace, then duration/latency sensitivity.
-  Same220 consumed Nov8 windows; tracked in reviews/optimization_loop_20261109/plan.json on research/predict-opt-loop-20261109.
-  Serial capped jobs, committed declarations and verified receipts; no deployment, protected-date or fill-clock bypass.
-  Round1 verified16:25Z: individual/reserved-room grace retains4.86%/0.68% of unrestricted coverage gain (208/29 admissions),
-  no added non-reducing exposure in this conditional replay. Round2 shorter-grace/latency comparison running.
+  2026-11-09 17:15Z: OPTIMIZATION LOOP fifth/native-latency pass VERIFIED; same220 Nov8 windows per profile.
+  Base output byte-identical, all base metrics exact.50ms grace across faster/base/slower: venue requests-5.35/-5.33/-3.72%,
+  aligned+2.94/+4.17/+4.37%, active exposure+3.97/+4.10/+2.58%; off-target+71.76/+28.36/+5.61%. No PnL/variance claim.
+  9 Rust adapter +4 Python controls;1980 window-arm-profile/117693 action-arm-profile rows verified. Sources75bf977e,
+  declarationb1441503; findings_v4.json/handoffs/20261109_optimization_loop_v4.md. All numeric jobs finished17:15Z,
+  375MiB peak/19MiB new data; slot free now (recheck). Next full B4/native differential parity; economic evidence gated.
+  2026-11-09 17:08Z: OPTIMIZATION LOOP fourth/native A2 pass VERIFIED; same220 Nov8 windows/279059 decisions.
+  Pinned f20fdb1 mapper, throttle and retry methods; targets/guards/inventory factual, no hypothetical fills.
+  Updates-first50ms: venue requests-5.33%, aligned+4.17%, coverage73.85->76.93%; off-target+28.36%, active+4.10%.
+  Active range expansion+4.16%, reservations-1.22%; no inventory-risk reduction or PnL claim. Keeps94.43% of100ms
+  coverage gain with22.96% less added off-target time.51 native/7 adapter/4 Python checks;660 window-arm/39231 action-arm
+  artifacts verified. Sentinel preparation refusal superseded BEFORE outcomes (native_a2_v2). Sources4776d822,
+  declaration8274fc63; findings_v3.json/handoffs/20261109_optimization_loop_v3.md. All numeric jobs finished17:08Z,
+  new-pass peak758MiB; slot now free (recheck). Next native latency sensitivity; full B4/timer/economic checks remain.
+  2026-11-09 16:40Z: OPTIMIZATION LOOP first3 rounds VERIFIED; same220 consumed Nov8 windows/279059 decisions.
+  Inventory-only grace sacrifices most coverage gain; shorter-grace test exposed equal-clock timeout priority.
+  Updates-first50ms: requests-6.98%, original aligned time+2.37%, off-target+25.66%,
+  active share-time+2.74%. Retains89.44% of100ms coverage gain with24.23% less added off-target time.
+  Same direction across3 assumed latency scenarios;37 controls and artifact checks pass,6160 window-arm/366156
+  action-arm rows. No PnL/variance or deployment claim. All jobs done,1434MiB peak. findings_v2.json supersedes
+  two-round findings; handoffs/20261109_optimization_loop_v2.md. Next integration pass: current Rust A2/B4 parity,
+  actual timer scheduling and calibrated fills. No protected Nov9–13/live/frozen/loss-budget/fill-clock changes.
   2026-11-09 15:45Z: A2 IMPLEMENTED: pmmmrust 70b965b on fix/pfmm-layered-size-20261109 (on A1 366d419); main fast-forwarded 366d419..70b965b
   and pushed. [ladder] size_layering = "base_topup_v1" (v3 / v3_basis_v1 examples; absent = single, byte-identical, trace parity
   OK): each policy lane's want is one logical order (tick, total) sent as base + top-up (lanes L, L+4); target open = new total on a
