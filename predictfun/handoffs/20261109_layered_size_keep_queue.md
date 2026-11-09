@@ -48,9 +48,24 @@ Split each lane's quantity into a base order and a top-up order at the same pric
 - A replay result for `LZ` is only meaningful after the fill model is calibrated on live queue outcomes (STATUS 2026-11-09). The
   current replay overstates fills for short-lived orders, which is where the effect sits.
 
+## Update 2026-11-09: incremental is the examples' setting (USER "Go")
+
+After research's quote-mechanics study (handoffs/20261109_incremental_capture_results.md), the user approved switching the
+default: pmmmrust `size_layering = "incremental_v1"` in both v3 examples; `base_topup_v1` (this spec) stays selectable.
+- A new quote is ONE order of the whole size. A second order is added only when the want grows at the same tick past a resting
+  order (5 -> 25: the 5 keeps its place, +20 beside it); a size-down back cancels only that second order.
+- A size-down below a resting order's open size (25 quoted first, then 5) still cancels and re-places it (no amend). The study:
+  1,104 resize cancels left vs 6,008 with one order per lane; requests -4.5% vs single (always split: +10.8%). A size-down that
+  only follows the order's own fills (reduce-only) keeps it, where research's handler re-places at each.
+- Rungs never grow (research's rung rule keeps a resting rung at its own size), so they stay one order.
+- Everything else in this spec (logical order, target, front kept, member fills absorbed, pending members active) is unchanged.
+- B4 (research token) must copy the incremental rule for a new quote.
+
 ## Verify live
 
-- Base orders survive size switches: count base cancels caused by resizes; expected 0 outside reduce-only sizing.
+- Base orders survive size switches: count front-order cancels caused by resizes. Under `incremental_v1` they remain only for
+  size-downs below a resting order's open size (expected well under the 11-08 count of 4,389); under `base_topup_v1`, 0 outside
+  reduce-only sizing.
 - Requests per window, and NetCap / in-flight refusals before and after.
 - Queue-miss share of first-minute touch trades (6% on 11-08) and live fill counts, with `pf_live_vs_replay` on the new capture.
 
