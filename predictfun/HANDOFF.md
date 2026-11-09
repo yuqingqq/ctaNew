@@ -1,5 +1,665 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 12:55Z (session 62f3ce33) - to-do list after the live vs replay review
+
+- predictfun/handoffs/20261109_TODO.md: live fixes for the port (A1 NetCap 1 s window and A2 layered size, both user-approved; A3
+  decision reasons in the capture; A4 fill-notice latency; A5 watch items), research (B1 fill-model calibration first, B2 re-run v1/v3,
+  B3 pull / size line buffer approved for testing, B4-B8), scheduled forward runs (C1 due now, C2 after 11-14 02Z), decisions (D1-D3).
+
+## 2026-11-09 — exact-order fill-clock audit COMPLETE; replay timing fails lifecycle checks
+
+- User requested continued testing toward preserving trading value with lower inventory. Clock audit as-of
+  **2026-11-09 12:24:00Z**, timestamp follow-up **12:36:36Z**; **220 consumed Nov8 windows**, 42,064 order actions.
+  No protected Nov9–13 data read. Branch `research/predict-fill-clock-20261109`, worktree `/tmp/cta-fill-clock-20261109`.
+- Exact Signed order hash + settlement/trade identity reconciles all99 confirmed REST maker legs (86 orders) to
+  kernel notices. Seven failed trades remain statuses. All30,413 signed-order quantities agree within one microshare;
+  no missing confirmed trade. This is a timing defect, not evidence of missing live quantity.
+- Necessary match interval is `[Control Place, min(confirmed cancel, first positive fill notice)]`.
+  Acceptance is NOT a lower bound. Original pinned engine clocks reproduce the original diagnostics exactly.
+  Full9-field leg joins identify93 clocks across83 orders;6 ambiguous clocks are retained, not guessed.
+
+| Clock, tolerance10ms | Eligible legs / orders | Before placement | After terminal / notice | Violating orders |
+|---|---:|---:|---:|---:|
+| J | 93 /83 | 11 | 7 | 16 |
+| X | 93 /83 | 12 | 3 | 12 |
+
+- No fixed earlier shift0/50/100/200/400/800ms passes. In fact **no constant offset of either sign** fits either run:
+  basis35 legs/32 orders needs an earlier shift at least10,138.41ms AND at most-923.62ms;
+  v6 58 legs/51 orders needs at least556.22ms AND at most-975.23ms. Still impossible allowing10ms tolerance.
+- Follow-up on all99 exact legs: REST `executedAt` equals the **Confirmed** reported second in99/99,
+  whereas it equals the first **Matched** second in49/99. Differences:49 zero,49 +1s,1 +10s.
+  All99 raw REST stamps have zero fractional milliseconds. `pf-exec/user.rs` derives each status's `matchtime`
+  independently from that status event's timestamp, truncated to seconds; this is not an immutable matching clock.
+  The Matched floor-second interval overlaps lifecycle bounds99/99; REST floor interval misses39/99 and even a
+  rounded-second assumption misses5/99. These are necessary consistency checks, not precise match-time validation.
+- Exact witnesses (full identities in `semantics_receipt.json`): basis CID1794147344754480 was placed21:55:57.104,
+  canceled21:55:57.320, first Matched receipt21:55:57.482. REST reports21:56:07; E2 selects a book drop21:56:07.458.
+  Thus a book change10s after the possible fill is assigned as its trade time. V6 CID1794108465178750 was placed
+  07:15:35.551 and canceled35.859. Its own pending-cell estimate35.710 fits, but transaction grouping chooses another
+  leg's earliest pending-increment estimate34.576 across37 legs. That anchor predates submission by975ms.
+  Public pending increments lack signed-order identity; amount/price proximity does not establish exact trade linkage.
+- 500 predeclared within-run/hour/side permutations on83 order actions (77 permutable) produce compatibility
+  mean0.4157/max0.5422 vs observed0.7831. Instrument diagnostic ONLY; one partial day, no CI/profit/strategy inference.
+- **No new strategy sweep or calibrated-PnL claim.** The earlier inventory comparisons remain conditional on a
+  replay clock that now fails an exact-identity test; this audit does not measure the dollar correction to those results.
+  Do not fix this by fitting a delay/minimum resting age or clipping estimated times to our observed lifecycle.
+  Next implementation must retain full order/transaction/settlement identities and separate match-status, confirmation,
+  exchange-source, and local-receipt timestamps; preserve uncertainty when public data cannot identify actual match time.
+  Reconcile both filled AND unfilled order actions before reusing the simulator to rank quote retention/inventory rules.
+- Sources `pf_fill_clock.py`, `pf_fill_clock_semantics.py`, `pf_fill_clock_verify.py`; immutable receipts under
+  `reviews/fill_clock_20261109/`; local data `data/predict_fun/research/fill_clock_20261109/`.
+  Original source freeze80387e6e (v3), follow-up d0b4ca1f, independent verifier861935a5.
+  13 positive/refusal controls pass. Artifact verifier independently checks16 clock/tolerance results,42,064 actions,
+  all99 status histories and7 artifact hashes; a deliberately corrupted report is refused.
+- Instrument corrections preserved in superseding declarations: v2 canonicalizes integer JSON dictionary keys;
+  v3 corrects THIS auditor's Down-price conversion (Control price is Up-space on both sides). No result-bearing clock
+  receipt existed before v3. Frozen extraction's derived `yes_tick` is deprecated; v3 recomputes coordinates from raw
+  Control price. Earlier economic studies and live code were not changed. Failed logs/declarations remain provenance.
+  All our jobs complete. No live changes, deployment, strategy tuning, or forward-data consumption.
+
+## 2026-11-09 12:11Z (session 62f3ce33) - cancel churn; layered size spec
+
+- 89% of live cancels are pulls / resizes at unchanged best prices that mostly reverse within 1 s (guard value jitter at the lines).
+- USER asked for size changes that keep queue position: spec predictfun/handoffs/20261109_layered_size_keep_queue.md (base + top-up
+  order; port session live, research engine token LZ with parity). Pull hysteresis = strategy change, not done.
+
+## 2026-11-09 — closing-liquidity experiment COMPLETE
+
+- As-of **2026-11-09 11:43:41Z**, nine consumed dates Oct23–27 and Oct31–Nov3, **2592 markets per arm/timing**,
+  J/X, zero exclusions/missing valuations. Guards trained on eight dates: conditional historical engineering study,
+  not independent validation. Declared source `62b2c98e`, declaration-copy commit `d6c44362`, report/verifier head
+  `61d727da`; branch `research/predict-exit-liquidity-20261109`, checkout `/tmp/cta-exit-liquidity-20261109`.
+- `exit_keep` retains a same-price guard-eligible closing order whose known remainder fits aggregate closing room,
+  even above the AM target. `exit_close25` also sizes new closing orders up to25 available shares instead of AM low5.
+  Targets apply before minimum-notional checks; existing partial orders retain original size identity without top-ups.
+  Original prices/guards/RO60/S240, pending create/resting/cancel reservations, acknowledgement+100ms grace+.001ms,
+  and submission checks retained. All pre60 fills AND requests exactly match baseline. No new adding orders from60
+  or orders from240. Loss budget uncapped,150-share backstop unchanged, rebates excluded. No price concessions.
+
+| Timing / arm | Settlement $ | +1s markout $ | FIFO matched $ | Mark at240 $ | Carry $ | Mean residual shares | Daily PnL SD $ |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| J baseline | 514.06 | 602.83 | 134.02 | 677.12 | -163.06 | 6.56 | 134.51 |
+| J late_reserved | 502.04 | 557.97 | 99.78 | 658.36 | -156.32 | 7.12 | 137.60 |
+| J exit_keep | 491.08 | 564.19 | 156.66 | 668.44 | -177.36 | 6.97 | 135.65 |
+| J exit_close25 | 508.39 | 553.33 | 168.95 | 660.14 | -151.75 | 6.73 | 131.55 |
+| X baseline | 317.63 | 463.56 | 173.54 | 431.16 | -113.54 | 5.72 | 103.09 |
+| X late_reserved | 309.94 | 440.54 | 133.41 | 385.42 | -75.48 | 6.15 | 103.12 |
+| X exit_keep | 303.22 | 440.88 | 159.20 | 380.12 | -76.90 | 6.02 | 103.30 |
+| X exit_close25 | 317.20 | 435.68 | 110.81 | 365.51 | -48.31 | 5.77 | 100.57 |
+
+- **Objective not achieved versus baseline.** Keep changes residual inventory **+6.35/+5.27%**
+  and +1s value **-6.41/-4.89%** J/X. Close25 changes inventory
+  **+2.58/+0.80%**, +1s **-8.21/-6.01%**,
+  and mark-at240 **-2.51/-15.23%**. Both leave more terminal inventory at both timings.
+- Relative to `late_reserved`, keep raises actual reducing flow **+12.01/+13.94%**,
+  reduces residual inventory **-2.07/-2.15%**, and changes +1s value by
+  **$+6.22/+0.35**. Close25 raises reducing flow
+  **+32.16/+40.84%**, reduces residual inventory
+  **-5.55/-6.31%**, but changes +1s value
+  **$-4.63/-4.86**. The mechanism repairs part of the reservation control's lost exit liquidity.
+- Close25 still executes **-12.89/-5.00%** less reducing quantity than baseline.
+  Its settlement delta is **$-5.67/-0.42**. X near-equality masks **$65.65 worse mark-at240
+  offset by $65.23 better carry**; it does not demonstrate preserved trading value. FIFO changes
+  **$+34.93/-62.72**; FIFO includes drift, not just spread capture.
+  Baseline late fills include198.11/63.97 inventory-increasing shares, which are not equivalent to safe exits.
+- Close25 daily PnL SD changes **-2.20/-2.44%**, but integrated inventory-square
+  changes **+0.87/-0.30%**. This is not a proven variance benefit;
+  inventory-square is an exposure proxy, not settlement variance adjusted for probability.
+- Thirty predeclared comparisons,2000 shared UTC-day sign flips and2000 paired day bootstrap draws. Every settlement
+  difference interval includes zero. Close25-baseline mean daily settlement intervals: **[-$14.42,+$16.60] J**,
+  **[-$21.27,+$23.18] X**, family p=1. Versus late_reserved, inventory-square reductions have family p=.03348 for
+  keep and .00600 for close25 at both timings. Neither establishes the objective versus baseline; all remain exploratory.
+- Engagement: keep retains above-AM-target orders on13,865/12,261 J/X quote decisions. Close25 raises its size target
+  on62,547/51,569 decisions. These are decisions, not distinct orders or extra fills. Use pre-retarget counters;
+  the later planner sees the already-adjusted target, so its generic above-target counters are zero by construction.
+- Provenance: **19,435 candidate fill rows**; no new post60 order adds economic inventory within1e-7. The13.67/0 late
+  opening shares J/X come from inherited pre60 orders. Last fill240.029s precedes the240.1s carry valuation.
+  Inherited-opening positive control and new-opening/missing-provenance/post-mark-fill refusals pass.
+- **47 controls, eight-market smoke,18 full-day reconciliations PASS**. Fresh first-day baseline AND late_reserved J/X
+  reproduce exact win/fill/request artifacts. Verified21 sources,216 result artifacts,18 new and18 reference metadata
+  sets, declaration/receipt copies. Peak RSS1.6GiB;482GiB disk free and24GiB RAM available at completion. All our jobs finished.
+- **Fill-model warning measured on THIS baseline:** age<100ms OR cancel-pending fills account for84.49%/81.70% of
+  shares and **84.44%/78.46% of +1s value** J/X. New Nov8 live/replay evidence questions many such fills. Its frozen-v3
+  baseline differs from this continuous/execution-adapted baseline; do not substitute its percentages. Live total order
+  lifetime differs from replay fill age; nearest pending-message matching is not exact trade identity. Removing those
+  fills from reported PnL is not a corrected counterfactual: inventory and future orders would change too.
+- Conclusion: safe exit retention helps relative to strict reservations; neither candidate solves the baseline objective.
+  Calibrate trade/order timing and cancellation lifecycle against exact live identities before another PnL search.
+  Future inventory controls should price closing cost separately from entry edge, preserve early quoting, and use
+  later independent validation. A better settlement forecast is needed to justify directional holdings, not to reduce risk.
+- Reproduce from this branch: `pf_exit_study`, `bash predictfun/research/run_exit_liquidity.sh`, then
+  `pf_verify_exit_liquidity`. Receipts: `reviews/exit_liquidity_20261109/`; data, evidence snapshots and complete
+  `comparison.csv`: `data/predict_fun/research/exit_liquidity_20261109/`. Receipt SHA256
+  `fbd470a772be94076adb0bad12114105b54d5484da8f2cdb3f3167d3d1f534a7`. No live/frozen/forward changes or protected Nov9–13 reads.
+
+## 2026-11-09 10:32Z (session 62f3ce33) - short-lived fills are replay timing; NetCap window approved
+
+- Live places / cancels as fast as the replay assumes; the fills it misses were matched before its order reached the book (feed
+  pending messages for them arrive around or before live's acceptance). Replay fill model needs an earlier trade anchor / minimum
+  resting time calibrated on live before any edge claim (user's call).
+- NetCap 1 s late-fill window approved by the user: spec in predictfun/handoffs/20261109_cancel_late_fill_window.md, for the port session.
+
+## 2026-11-09 10:19Z (session 62f3ce33) - short-lived fills are the replay's edge; NetCap fix options
+
+- Replay +1 s profit is ~85% from fills on orders < 100 ms old or cancel-pending; live gets none of those; its fills are -0.84 c/sh at
+  1 s. The v1 / v3 backtest edge is likely overstated until the fill model is calibrated on live outcomes (user's call).
+- NetCap phantom: proposed live fix = count a cancelled order for a 1 s late-fill window after the cancel is confirmed, not until the
+  5 s REST audit (audit stays as backstop): 11-08 refusals -95%, 0 of 71 late fills missed. Alternative: net_shares 300. For the port
+  session (pmmmrust OMS unbooked_exposure / exec CANCEL_AUDIT_GRACE_MS); not implemented here.
+
+## 2026-11-09 09:50Z (session 62f3ce33) - Tokyo live vs replay on the same 11-08 windows
+
+- Live fills 36-46% of the replay's shares on 220 windows (STATUS same time). The same decisions are made at the same times.
+- Two causes: (1) the replay fills very short-lived orders (live lifetime < 100 ms) that live almost never gets (2-6%);
+  (2) live kernel NetCap refuses places because cancelled orders count at full size for ~5 s until the REST audit.
+- Fix options, all the user's call: live: clear cancelled orders' exposure fast (fast reconcile for every cancel, or a shorter late-fill
+  window, or a NetCap above the phantom level); replay: calibrate the fill model on live outcomes (minimum resting time / earlier
+  trade anchor) and re-run v1 / v3 in-sample; strategy: hysteresis / minimum order life to cut the ~50 ms place-cancel churn (new
+  version). Not replayed: the basis run's 11-09 windows (v3 block). Outputs outside git: pmmm-data/review-exports/live-samewindow-20261108.
+
+## 2026-11-09 — late reduction experiment COMPLETE
+
+- As-of **2026-11-09 10:23:48Z**, nine consumed dates Oct23–27 and Oct31–Nov3, **2592 markets per arm/timing**,
+  J/X, zero exclusions/missing valuations. Fixed guards trained on eight dates: exploratory historical comparison.
+  Branch `research/predict-late-reduction-20261109`, checkout `/tmp/cta-late-reduction-20261109`.
+  Declared policy/source `8c8ee4d4`, report source/declaration-copy commit `b3cbbbd7`; data under
+  `/home/yuqing/ctaNew/data/predict_fun/research/late_reduction_20261109/`.
+- Two fixed candidates, no post-result tuning: `late_reserved` applies aggregate reducing reservations and eligible
+  remaining-quantity retention only from60; it refuses retries that now increase inventory or fall beyond240.
+  `late_taper1` adds exactly one tick of passive improvement when inventory exceeds a target declining linearly
+  from10 at60 to0 at240, only strictly inside the known spread. This is an urgency trigger, NOT a hard bound or
+  guaranteed liquidation. Original guards/AM5/25/RO60/S240/minimums and execution timings retained.
+- Exact original pre60 fills AND requests match for every market in both variants at J/X. Cancellation history is
+  retained through acknowledgement +100ms fill-report grace +.001ms, while exposing original lifecycle before60.
+  This conservative simulator treatment combines reservation, retention, grace and late retry checks; their individual
+  contributions are not isolated. Uncapped loss budget,150-share backstop unchanged, rebates excluded.
+
+| Timing / arm | Settlement $ | +1s markout $ | FIFO matched $ | Mark at240 $ | Carry $ | Mean residual shares | Daily PnL SD $ |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| J baseline | 514.06 | 602.83 | 134.02 | 677.12 | -163.06 | 6.557 | 134.51 |
+| J late_reserved | 502.04 | 557.97 | 99.78 | 658.36 | -156.32 | 7.121 | 137.60 |
+| J late_taper1 | 508.54 | 573.72 | 57.30 | 637.89 | -129.35 | 6.752 | 130.63 |
+| X baseline | 317.63 | 463.56 | 173.54 | 431.16 | -113.54 | 5.720 | 103.09 |
+| X late_reserved | 309.94 | 440.54 | 133.41 | 385.42 | -75.48 | 6.154 | 103.12 |
+| X late_taper1 | 353.45 | 441.25 | 131.08 | 404.01 | -50.57 | 6.020 | 109.06 |
+
+- **Objective not achieved versus baseline.** Late_reserved raises mean terminal inventory8.60%/7.58% J/X and
+  lowers actual reducing flow34.09%/32.55%. Taper recovers30.02%/14.09% reducing flow versus that control and lowers
+  its inventory5.18%/2.18%, but still leaves **2.98%/5.24% MORE inventory than baseline**. Its late time-weighted
+  absolute inventory rises1.99%/3.51%, total q² rises0.16%/2.57%. It reduces less economic inventory than baseline
+  by14.30%/23.05%. Tightening the urgency trigger alone does not force an executable exit.
+- Taper's settlement delta versus baseline is **-$5.52/+$35.82**; +1s value falls **$29.11/$22.31** (~4.8% each),
+  matched FIFO profit falls **$76.72/$42.46**, and mark-at240 falls **$39.22/$27.15**. Carry improves$33.71/$62.97.
+  Thus the positive X final PnL is outcome carry, not improved trading value or less exposure. FIFO includes price drift;
+  mark-at240 is a valuation, not an executable midpoint exit. Alternative FIFO residual PnL is$451.24/$222.37 for taper.
+- Exact originating intent-decision, submission and fill records preserve attribution across throttled retries.
+  Taper executes **1769.16/981.16 shares at a one-cent concession**, all economically reducing: **$17.69/$9.81**
+  quoted concession on that filled quantity. Already included in cash PnL; never subtract twice. This same-fill price
+  difference does not assume the unshifted order would have filled, and is not a causal explanation of the whole PnL delta.
+- All newly submitted post60 orders have zero economic reverse-opening quantity within1e-7. The remaining13.67/0
+  opening shares J/X are inherited orders submitted before60, for both candidates. Independent provenance audit:
+  19,549 candidate fill rows; max fill second239.787126, all before the240.1 midpoint used for carry attribution.
+- Taper beats baseline on3/9 J and5/9 X days; leave-one-day-out total delta spans **[-$59.03,+$29.97] J** and
+  **[-$24.47,+$95.44] X**. Nov2 contributes+$60.29 X; excluding it descriptively turns pooled X uplift into-$24.47.
+  This is a post-hoc concentration check, not a separate validation set.
+- Predeclared2000 shared UTC-day sign flips and2000 paired day bootstrap draws,18 comparisons. All settlement
+  difference intervals cross zero. Taper-baseline mean daily intervals **[-$14.48,+$15.03] / [-$21.28,+$29.58]**, family
+  p=1 both. Reservation-only q² increase and taper-versus-reservation q² decrease have family p=.0105 both timings;
+  taper has no family-significant improvement versus baseline on primary metrics. SD/tails/carry remain descriptive.
+- **39 controls, eight-market smoke and all18 full-day reconciliations PASS**. Fresh first-day baseline J/X is exact;
+  other references hash-verified. All17 source files,162 result artifacts,18 per-run metadata sets, declaration and
+  receipt copies verified. Supplemental overfill positive/missing-identity refusal controls pass. Peak RSS1.6GiB;
+  ~483GiB disk free,24GiB RAM available; no experiment job remains.
+- Reproduction: `pf_late_study` declaration then `bash predictfun/research/run_late_reduction.sh`. Receipt and declaration
+  under `reviews/late_reduction_20261109/`, plus `verification.json`. Data directory also has `comparison.csv`.
+  Receipt SHA256 `b723eb053e79399cdb615bff975f62267ca0dba9c963a6c1fa4bf7a192447202`.
+- Conclusion: do not adopt these variants as a solution to preserving trading gains while reducing inventory. The
+  constrained exit treatment removes too much effective reducing liquidity; one-tick urgency only partly repairs it.
+  Further work should isolate exit availability/retention/grace before adding stronger price concessions; any change to
+  lifecycle assumptions needs supporting execution evidence. No live code/settings, frozen candidate/forward race,
+  or protected Nov9–13 data changed/read. All work is historical research.
+
+## 2026-11-09 — allowed inventory-range experiment COMPLETE
+
+- As-of **2026-11-09 08:19:39Z**. All nine consumed dates (Oct23–27, Oct31–Nov3), **2,592 markets per arm/timing**,
+  J/X. Fixed guard models trained on eight dates: exploratory historical policy comparison, not independent validation.
+  Branch `research/predict-inventory-range-20261109`, checkout `/tmp/cta-inventory-range-20261109`; declared source
+  `6d9369a5`, tested source/state `2b33793b`. Data/declaration/logs:
+  `/home/yuqing/ctaNew/data/predict_fun/research/inventory_range_20261109/`.
+- One new candidate `range10`: shared [-10,+10] inventory range for ALL orders, remaining room =
+  max(0,10 - signed known net - all same-side known remaining reservations). At +10 with no pending sells, up to20
+  total sell shares are allowed. Existing sell orders consume that allowance. Resting/pending-create/pending-cancel
+  quantities count, with no opposite-side credit. Same retention, lot/notional checks, submission recheck and conservative
+  cancel-confirmation +100ms fill-report grace +.001ms as strict both_reserved. No price/threshold/delay/model sweep.
+- Only the aggregate reducing allowance differs from strict both_reserved. Original price guards, AM5/25 desired
+  sizing, per-order RO60 clipping/rung withdrawal and S240 remain. No restart of MM cycles after60. Outstanding
+  orders can collectively reverse within the range, including late; this is intentional bounded exposure.
+  Total-loss budget uncapped,150-share backstop unchanged,rebates excluded.
+
+| Timing / arm | Settlement $ | +1s markout $ | Daily PnL SD $ | Mean residual shares | Peak absolute shares |
+|---|---:|---:|---:|---:|---:|
+| J baseline | 514.06 | 602.83 | 134.51 | 6.557 | 75 |
+| J adding-only reserved10 | 309.74 | 237.96 | 41.74 | 2.515 | 80 |
+| J strict both_reserved | 149.35 | 101.40 | 33.50 | 1.803 | 10 |
+| J allowed range10 | 147.09 | 121.83 | 36.98 | 1.667 | 10 |
+| X baseline | 317.63 | 463.56 | 103.09 | 5.720 | 65 |
+| X adding-only reserved10 | 253.05 | 176.21 | 43.28 | 2.252 | 48.5 |
+| X strict both_reserved | 119.34 | 73.63 | 35.30 | 1.657 | 10 |
+| X allowed range10 | 111.24 | 93.28 | 40.52 | 1.578 | 10 |
+
+- **Mechanism works:** 56/46 direct sign-crossing fills J/X (2/1 after60), versus zero in the strict control. Every
+  physical fill and independently reconstructed path remains inside +/-10 (tolerance1e-7); zero time above10.
+  Thus this is an engaged reversal policy with a real aggregate bound, not a no-op or the previous soft CAP10.
+- Versus strict both_reserved J/X: filled volume **+16.8%/+13.7%**, FIFO paired shares **+50.3%/+42.0%**,
+  total +1s value **+20.1%/+26.7%**. +1s per100 filled shares rises **1.2571->1.2934 / 1.0382->1.1569**
+  (+2.9%/+11.4%). Average residual inventory falls **7.5%/4.8%**, time-weighted mean absolute inventory
+  **4.6%/2.1%**, inventory-square **4.3%/1.6%**. Volume differs; no matched-turnover execution-quality claim.
+- **No observed settlement or PnL-variance improvement versus strict control:** total delta **-$2.2565/-$8.1008**
+  (-1.5%/-6.8%), daily PnL SD **+10.4%/+14.8%**, worst day **-$42.09/-$62.11** versus **-$33.79/-$46.44**.
+  Max drawdown **-$45.92/-$68.69** versus **-$45.93/-$53.70**. Lower average inventory alone does not establish
+  lower realized PnL variance. All SD/tail/drawdown figures are descriptive on these nine dates.
+- FIFO matched-trade PnL improves **-$78.66->-$66.07 J**, **-$62.24->-$47.17 X**, but remains negative.
+  Residual FIFO PnL is **$213.17/$158.41**, summing with matched PnL to settlement totals. FIFO includes price drift
+  between fills and is not pure spread. Mark-at240/carry is a different attribution: range **$118.02/+$29.07 J**,
+  **$94.42/+$16.82 X**, versus strict **$154.72/-$5.37 J**, **$105.81/+$13.53 X**.
+- Day concentration check versus strict control: settlement improves on **3/9 J**, **5/9 X**. Leaving one day out
+  changes the total delta across **[-$38.25,+$11.13] J**, **[-$16.32,+$7.57] X**. Oct24 contributes +$36.00 J;
+  Nov2 contributes -$15.68 X. No stable profit gain, and no parameter changes after these outcomes.
+- Declared inference: 2,000 shared UTC-day sign flips +2,000 paired day bootstrap draws;18 comparisons (range vs3
+  fixed references x J/X x settlement/+1s/inventory-square). Settlement mean-difference intervals versus strict:
+  **[-$8.39,+$10.06] / [-$5.97,+$3.37] per day**, family p=1.0 both. All settlement intervals versus other controls
+  also cross zero. +1s improvement versus strict has family p=.022 J/.064 X; q² reduction p=.059 J/.993 X.
+  These are exploratory conditional comparisons after prior candidate selection, not untouched validation.
+- Compared with prior adding-only reserved10, range keeps the hard bound and lowers mean residual inventory
+  33.7%/29.9%, but observed settlement is 52.5%/56.0% lower and +1s value 48.8%/47.1% lower. Adding-only's larger
+  profits came with peak positions80/48.5; allowed bounded reversals do not recover that whole profit difference.
+- **36 preflight controls PASS**, eight-market smoke and all18 full day/timing reconciliations PASS. Fresh first-day
+  baseline, adding-only and strict-control fills/requests/windows match prior artifacts exactly at J/X; remaining
+  references checked by hash. Zero excluded markets, missing valuations or missing bounded Binance hours. All source
+  and result artifact hashes, every per-run adapter hash, and identical data/review receipt copies verified.
+  Peak replay RSS ~1.6GiB, one core;~490GiB disk free. All jobs complete.
+- Receipt `reviews/inventory_range_20261109/receipt.json`; reproduce via `run_inventory_range.sh` after declaration.
+  Conclusion: the allowed range restores some turnover and short-term value while enforcing the ceiling; it has
+  not improved settlement PnL or daily PnL variance over strict closure in this sample. No live code/settings,
+  new freeze, forward-race change, or protected Nov9–13 data read. Keep the result as research, not a live PnL claim.
+
+## 2026-11-09 — inflight inventory-reservation experiment COMPLETE
+
+- Main as-of **2026-11-09 07:39:37Z**, exact intent diagnostic **07:43:24Z**. All nine consumed dates
+  (Oct23–27, Oct31–Nov3), **2,592 markets per arm/timing**, J/X. Fixed guards trained on eight dates:
+  exploratory historical comparison, not independent validation. Uncapped loss budget, existing 150-share backstop,
+  rebates excluded. Branch `research/predict-inflight-budget-20261109`, checkout `/tmp/cta-inflight-budget-20261109`;
+  declared source `f0e15415`, main report source/state `26908059`, exact tie diagnostic `91f769dc`.
+  Data/declaration/logs: `/home/yuqing/ctaNew/data/predict_fun/research/inflight_budget_20261109/`.
+- Two new arms: `reduce_reserved` preserves original adding rules and caps combined reducing orders to
+  max(0, |known inventory| minus all same-side known remaining reservations). `both_reserved` also applies the
+  previous aggregate 10-share adding budget. Resting orders, pending creates and pending cancels count across lanes;
+  no credit for opposite-side orders or unreported physical fills. Desired and submission quantities both checked.
+- Both new arms retain eligible same-price reducing orders based on remaining quantity; both_reserved also retains
+  adding orders this way. Existing lots/notional/price guards/RO60/S240 retained. Reservations persist through cancel
+  confirmation plus the fixed 100ms fill-report delay +.001ms, because this simulator does not provide cumulative fills
+  in the cancel acknowledgement. This is a conservative treatment component, not a verified live-OMS delay rule.
+
+| Timing / arm | Settlement $ | +1s markout $ | Daily PnL SD $ | Mean residual shares | Peak absolute shares |
+|---|---:|---:|---:|---:|---:|
+| J baseline | 514.06 | 602.83 | 134.51 | 6.557 | 75 |
+| J prior adding-only reserved10 | 309.74 | 237.96 | 41.74 | 2.515 | 80 |
+| J reduce_reserved | 453.23 | 492.12 | 149.62 | 6.835 | 75 |
+| J both_reserved | 149.35 | 101.40 | 33.50 | 1.803 | 10 |
+| X baseline | 317.63 | 463.56 | 103.09 | 5.720 | 65 |
+| X prior adding-only reserved10 | 253.05 | 176.21 | 43.28 | 2.252 | 48.5 |
+| X reduce_reserved | 150.44 | 377.89 | 98.93 | 5.958 | 65 |
+| X both_reserved | 119.34 | 73.63 | 35.30 | 1.657 | 10 |
+
+- **Mechanism confirmed:** reducing-at-send orders that subsequently open reverse exposure fall to **zero** for both
+  new arms at J/X, including the case where one fill reaches flat and a later fill opens the reverse position.
+  Original baseline has 2,978.12 / 2,274.68 such opening shares in 171 / 129 markets J/X; prior adding-only reserved10
+  has 3,410.20 / 2,548.06 in 179 / 132 markets. These are cumulative opening quantities, not peak positions.
+- The initial diagnostic bounded same-time notification ambiguity. All nine uncertain fill tranches are in two Oct26
+  markets. Instrumented replays at both timings match original windows/fills/requests exactly; exact known inventory
+  at each of their order submissions is zero. They are intentional new entries, not excess reducing orders.
+  `overshoot_diagnostic_v2.json` supersedes v1 in-band; both retained. Zero direct sign-crossing fills also observed
+  in new arms, but that narrower metric alone would not establish the full mechanism.
+- **Exit reservations alone do not reduce overall inventory risk here.** Versus baseline J/X: settlement -11.8%/-52.6%,
+  filled shares -18.8%/-17.2%, residual inventory +4.2%/+4.2%, inventory-square +2.6%/+1.1%.
+  Daily SD +11.2%/-4.0%. Peak exposure unchanged at 75/65 because original adding rules still permit those positions.
+  Worst day -$117.26/-$90.17 versus baseline -$53.12/-$128.60. Thus some downside improves, other downside worsens.
+- **Combined entry/exit reservations enforce the simulated 10-share bound**, checked on every fill and independently
+  from saved paths (floating tolerance 1e-7). Zero time above10. Versus prior adding-only budget J/X:
+  inventory-square -52.7%/-49.8%, residual -28.3%/-26.4%, daily SD -19.8%/-18.4%, but settlement
+  **-51.8%/-52.8%**, filled volume -51.4%/-47.0%, +1s value -57.4%/-58.2%.
+  Maximum drawdown improves from -$79.60/-$77.39 to -$45.93/-$53.70; worst day is slightly worse
+  (-$33.79/-$46.44 versus -$30.04/-$45.96). No single uniformly dominant risk/profit result.
+- Spread/trading value not improved: FIFO matched-trade profit J/X baseline $134.02/$173.54, prior reserved10
+  -$33.20/$24.31, reduce_reserved $56.43/$40.38, both_reserved **-$78.66/-$62.24**.
+  +1s per 100 filled shares baseline 1.7246/1.6162, reduce_reserved 1.7331/1.5905;
+  prior reserved10 1.4324/1.3178, both_reserved 1.2571/1.0382. FIFO includes intervening price drift, not pure spread;
+  total volume differs, so this is not an execution-quality comparison at matched turnover.
+- Declared 2,000 shared UTC-day sign flips + 2,000 day bootstrap draws; 18 comparisons (three pairs x J/X x
+  settlement/+1s/inventory-square). All settlement mean-difference intervals cross zero. Exit-only +1s losses have
+  family p=.022/.045; combined versus prior adding-only q² decreases p=.016/.020 and +1s losses p=.006/.024.
+  These are conditional exploratory comparisons on consumed dates; SD/tails/drawdowns descriptive, no live-return claim.
+- **31 preflight controls PASS**, eight-market smoke and all 18 full checks PASS. First-date baseline and reserved10
+  replays exactly match prior windows/fills/requests; remaining references verified by hash. Zero excluded markets,
+  missing valuations, or missing bounded Binance hours. All result artifact/source hashes and receipt copies verified.
+  Supplemental flat-then-reverse / event-tie positive controls and missing/shifted-event refusals pass; exact tie replay
+  parity passes at J/X. Peak RSS ~1.6GiB, one core, ~490GiB disk free. No job remains running.
+- Receipts under `reviews/inflight_budget_20261109/`: main `receipt.json`, initial `overshoot_diagnostic.json`, final
+  `overshoot_diagnostic_v2.json`. Reproduction: `run_inflight_budget.sh`, then `pf_inflight_overshoot`, `pf_inflight_ties`.
+  Conclusion: count outstanding quantities to control unintended reversals, but do not adopt strict zero-crossing
+  reduction caps as a PnL improvement. A separate next experiment could allow an explicit bounded reverse inventory
+  budget while still reserving all orders; not run here. No live settings/code, freezes, forward-race changes, or
+  protected Nov9–13 data reads.
+
+## 2026-11-09 — entry inventory-budget experiment COMPLETE
+
+- As-of **2026-11-09 06:12:40Z**; supplemental peak trace **06:18:57Z**. Nine consumed dates (Oct23–27,
+  Oct31–Nov3), **2,592 markets per arm/timing**, all J/X runs complete. Guards trained on eight dates:
+  exploratory in-sample, not independent validation. Uncapped total-loss budget, existing 150-share exposure backstop,
+  rebates excluded. Branch `research/predict-entry-budget-20261109`, checkout `/tmp/cta-entry-budget-20261109`;
+  declared source `f7fc7162`, tested source/state `f2867829`. Data/logs:
+  `/home/yuqing/ctaNew/data/predict_fun/research/entry_budget_20261109/`.
+- `uniform10` caps new inventory-adding orders at 10 shares per order (existing 5-share targets remain 5).
+  `reserved10` caps adding orders to the remaining 10-share same-side budget after known inventory and all known
+  outstanding reservations, across all lanes. Adding means side-sign times known net >=0. Reducing sizes/guards
+  unchanged, even if an order could cross zero. Both new arms keep eligible same-price adding orders when known
+  remainder fits desired size/room, without upsizing; pending creates/cancels reserve capacity until terminal knowledge.
+  Lots/minimum notional and a submission-time budget invariant apply. Baseline unchanged. No urgency/top-up/restart.
+
+| Timing / arm | Settlement $ | +1s markout $ | Daily PnL SD $ | Mean residual shares | Mean time-weighted inventory squared |
+|---|---:|---:|---:|---:|---:|
+| J baseline | 514.06 | 602.83 | 134.51 | 6.557 | 168.162 |
+| J uniform10 | 425.59 | 395.52 | 74.58 | 4.025 | 58.855 |
+| J reserved10 | 309.74 | 237.96 | 41.74 | 2.515 | 30.388 |
+| X baseline | 317.63 | 463.56 | 103.09 | 5.720 | 144.533 |
+| X uniform10 | 281.63 | 292.05 | 64.93 | 3.475 | 46.731 |
+| X reserved10 | 253.05 | 176.21 | 43.28 | 2.252 | 25.295 |
+
+- Uniform cap retains **82.8% / 88.7% J/X** of observed settlement profit, with daily SD **44.6% / 37.0% lower**,
+  mean residual inventory **38.6% / 39.2% lower**, and filled volume **29.7% / 32.0% lower**.
+  Reserved budget retains **60.3% / 79.7%**, with SD **69.0% / 58.0% lower**, residual **61.6% / 60.6% lower**,
+  volume **52.5% / 53.4% lower**. Inventory-square falls 65.0%/67.7% uniform, 81.9%/82.5% reserved.
+  These describe the risk/volume tradeoff, not improved execution at matched activity or calibrated outcome variance.
+- Both new arms reduce inventory-square AND total +1s value on every day at both timings. Paired day inference:
+  2,000 shared sign flips + 2,000 day bootstrap draws; 18 comparisons (three arm pairs x J/X x settlement/+1s/q²).
+  Settlement mean-difference intervals all cross zero; no reliable expected-profit ordering. All q²/+1s comparisons
+  have max-T p=0.005997, conditional on these consumed days. Daily SD/tail/drawdown figures are descriptive.
+- J/X maximum drawdown: baseline **-$293.73 / -$249.33**, uniform **-$148.76 / -$119.37**, reserved
+  **-$79.60 / -$77.39**. Worst day: **-$53.12 / -$128.60**, **-$27.31 / -$59.83**, **-$30.04 / -$45.96**.
+  Reserved is not uniformly better on every tail metric (J worst day worse than uniform).
+- Spread capture has NOT improved: +1s value per 100 filled shares J/X falls from **1.7246 / 1.6162** to
+  **1.6088 / 1.4964** uniform and **1.4324 / 1.3178** reserved. FIFO matched-trade profit J/X is
+  **$134.02 / $173.54** baseline, **-$8.48 / $24.64** uniform, **-$33.20 / $24.31** reserved.
+  FIFO matching includes intervening price drift, not pure spread; residual FIFO attribution is not carry-at-240.
+  Both new arms share queue retention, so their comparison with baseline combines retention and size effects;
+  reserved-versus-uniform isolates reservation sizing with common mechanics, but is not turnover matched.
+- **Not a hard 10-share limit:** instantaneous peak absolute inventory J/X is **75 / 65** baseline,
+  **80 / 48.5** for BOTH new arms. Post-hoc trace covers both tied global peaks (2 paths / 15,552 total paths,
+  no exclusions): Oct26 J market 3818191, initial +10 inventory, then 90 sell shares filled through 10.546209s,
+  reaching -80. Every sell order was submitted while known inventory was +10 (therefore classified reducing);
+  50 sell shares filled while cancellation was pending. Send times match exact placement events; known inventory
+  reconstructed with the recorded 100ms fill delay, no event-priority ties. Terminal inventory is flat.
+  This confirms the remaining exposure route: unchanged reducing orders can reverse inventory, with several
+  outstanding/cancel-pending orders across lanes. A hard limit must budget those zero-crossing portions too.
+- **25 preflight controls PASS**; eight-market baseline smoke and all 18 full day/timing reconciliation checks PASS.
+  Fresh Oct23 baseline at both timings exactly matches reference fills/requests/windows; other baselines reused
+  with hashes. Zero excluded markets, missing valuations, or missing bounded Binance hour files. All input/source
+  and per-run adapter identities verified. Peak diagnostic also passes positive cross-zero and known-bad missing-event /
+  wrong-peak refusal controls. Peak replay RSS ~1.6 GiB, one core; no jobs remain running.
+- Main receipt `reviews/entry_budget_20261109/receipt.json`; supplemental explanatory receipt
+  `reviews/entry_budget_20261109/peak_diagnostic.json` (main receipt unchanged), reproduced by `pf_entry_peak.py`.
+  Simplest per-order cap offers better observed profit retention; reservation budget offers greater average risk
+  reduction. Neither establishes improved spread capture or a safe hard position ceiling. Next narrow experiment:
+  reserve full potential exposure including reducing-order zero crossings while retaining useful reduction liquidity.
+  No live code/settings, frozen artifacts, forward-race changes, or protected Nov9–13 data reads.
+
+## 2026-11-09 — spread capture / inventory-risk review
+
+- User asks how to improve spread capture while lowering inventory variance. Post-hoc descriptive risk calculation from
+  the completed receipts (data as-of 04:15:18Z), nine consumed days / 2,592 markets per arm/timing, no exclusions/missing values:
+  daily settlement PnL sample SD baseline -> urgency **134.5108 -> 127.9100 J**, **103.0877 -> 97.8480 X** (~5% lower).
+  Worst day **-53.1211 -> -53.2061 J**, **-128.5982 -> -99.4829 X**. J also cuts a large winning day; X improvement remains
+  concentrated on Nov2. No interval or significance claim. Receipt: `reviews/urgency_history_20261109/risk_diagnostic.json`.
+- Code review: CAP10 is a threshold on current known net, not a reservation-aware 10-share bound on the next order.
+  If |known net| <10, a 25-share adding order can still pass, and each ladder lane checks the same pre-fill position.
+  Previously tested HCAP clips against the separate 150-share backstop; it did not test a strategic 10-share risk budget.
+- Priorities to investigate: size/withhold inventory-increasing quotes against potential same-side fills across all lanes
+  (including pending creates/cancels); retain effective, executable reduction sizes; isolate queue retention at matched
+  target exposure; then test selective new MM cycles after returning near flat (RO60 currently prevents them after 60s).
+  Budget any price concession for reduction against the risk removed; existing guards remain, no blanket late aggression.
+- Evaluation should separate matched-pair trading value, adverse-selection markout, unpaired carry, and downside risk.
+  Compare at matched trading activity where possible so merely trading less is not called better execution. No new variant,
+  threshold sweep, live change or forward data read launched in this review.
+
+## 2026-11-09 — earlier urgency check COMPLETE
+
+- As-of **2026-11-09 04:15:18Z**. All four earlier complete compatible dates (Oct 23–26), **1,152 markets per arm/timing**,
+  replayed at J/X; baseline versus the exact previous RPRICE rule. Branch `research/predict-urgency-history-20261109`,
+  checkout `/tmp/cta-urgency-history-20261109`, declared source `10893e49`, tested source/state `a94a0dd7`.
+  Receipt: `predictfun/reviews/urgency_history_20261109/receipt.json`; data/logs under
+  `/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/`. No study job remains running.
+- These are previously consumed guard-training days. Urgency was selected after the prior four-candidate comparison;
+  this is an earlier historical consistency check, not independent validation. Exact policy source remains `f014efbe...`:
+  one-cent reducing-side improvement into the spread, 180<=t<240, |known inventory| >=10, original guards retained.
+  Uncapped total-loss budget; existing 150-share exposure cap; rebates excluded. No parameter/model changes.
+
+| Settlement PnL change versus baseline ($) | J | X |
+|---|---:|---:|
+| Oct 23 | +1.3408 | +3.4780 |
+| Oct 24 | +6.0191 | -0.4361 |
+| Oct 25 | -27.0320 | +0.3366 |
+| Oct 26 | -1.0178 | -0.4778 |
+| Earlier four days | -20.6899 | +2.9007 |
+| Previous five days | +10.9085 | +25.7631 |
+| All nine days, descriptive | -9.7814 | +28.6638 |
+
+- Earlier baseline -> urgency settlement: **$691.6287 -> $670.9389 J**, **$433.5722 -> $436.4729 X**. Both timings
+  improve on only 2/4 earlier days. Earlier +1s changes **-$0.0742 / -$0.6977**. Mark-at-240 changes
+  **-$6.6740 / -$2.4265**; carry changes **-$14.0159 / +$5.3272**. Thus the small positive X result comes from carry,
+  while both measured short-term and stop-mark value decline on these earlier days.
+- Mean residual inventory falls **6.9581 -> 6.8818 shares J**, **6.2460 -> 6.2148 X**. Economically reducing volume rises
+  **87.8751 / 35.9633 shares** over all 1,152 earlier markets. Time-weighted absolute inventory over 60–300s falls
+  **7.5130 -> 7.4737 J**, **6.7139 -> 6.6960 X**. The reduction is real but small and not a reliable PnL gain.
+- Combined nine days / **2,592 markets per arm/timing**: baseline -> urgency **$514.0559 -> $504.2745 J**,
+  **$317.6259 -> $346.2897 X**. +1s delta **-$2.0719 / +$0.1535**; carry delta **-$12.7697 / +$25.0251**.
+  J improves 6/9 days but Oct25 dominates the losses. X improves only 3/9 (one unchanged); remove Nov2's +$29.1153
+  and its pooled gain becomes **-$0.4515**. The sign and concentration depend on timing and individual settlement days.
+- Earlier inference: 2,000 predeclared shared UTC-day sign flips, four comparisons (J/X x settlement/+1s); all max-T
+  family p values 1.0. **No confidence intervals on four days**; nine-day pooled points are descriptive after candidate
+  selection, with no pooled significance claim. Prior four candidates / 16 comparisons retained in the declaration.
+- All **22 controls pass**, including positive/refusal controls for scope, source identity, event identity and day nulls.
+  Fresh Oct23 baseline parity exact at J/X; other baseline artifacts copied from the prior verified study with hashes.
+  All eight day/timing runs have exact pre-180 fills/requests and per-market settlement/carry/inventory reconciliation.
+  Zero excluded markets or missing valuations, zero missing bounded Binance hour files, zero ambiguous filled-order keys.
+  Final receipt copy and source hashes verified. Peak replay RSS ~1.6 GiB on one core; ~493 GiB disk free.
+- Clarification of previous stress interpretation, retained in this declaration: Nov3 urgency's settlement delta is
+  identical with/without p99 cancel reservations at each timing. That negative day does not show incremental sensitivity
+  to this delay stress. No additional stress sweep was used here.
+- Conclusion: earlier data weakens the case for a general urgency PnL improvement. Keep this rule as research; do not
+  enable it globally from these results. It slightly reduces inventory but can surrender favorable subsequent price moves
+  and settlement carry. No live change, new freeze, forward-race change, or protected Nov9–13 data read.
+
+## 2026-11-09 — passive inventory experiment COMPLETE
+
+- As-of **2026-11-09 03:53:11Z**. All declared replays, reconciliation and 18 source controls passed. Isolated branch
+  `research/predict-passive-inventory-20261109`, checkout `/tmp/cta-passive-inventory-20261109`, tested source `983a3b4f`.
+  Receipt: `predictfun/reviews/passive_inventory_20261109/receipt.json`; retained data/logs under
+  `/home/yuqing/ctaNew/data/predict_fun/research/passive_inventory_20261109/`. No study job remains running.
+- Five consumed dates: Oct 27, Oct 31, Nov 1–3, **1,440 markets per arm/timing**; same fixed guards, trained on four of
+  these five dates. This is in-sample policy feasibility, not independent validation or a live-return estimate. J uses
+  transaction-frame jitter; X uses transactions shifted -50 ms and max activation queue. Main total-loss budget uncapped;
+  separate 150-share exposure cap unchanged, rebates excluded. Baseline settlement **-$177.5728 / -$115.9463 J/X**;
+  baseline +1s markout **$261.9645 / $183.1157** (a diagnostic, not realized spread PnL).
+- Same-price queue retention after 60s keeps an eligible order only when its known remainder plus other reducing-side
+  reservations fits known inventory. It can also retain a smaller order instead of upsizing. Small reduction caps desired
+  size at 5 shares; combined may preserve an older larger original order whose remaining quantity fits 5. Urgency improves
+  the reducing quote one cent into the spread during 180–240s for |known net| >=10. Existing guards must admit the original
+  quote; their score is not claimed calibrated to the improved price. Price concession enters actual fill PnL.
+
+| Change | Settlement delta J / X ($) | +1s delta J / X ($) | Mean residual shares J / X |
+|---|---:|---:|---:|
+| Baseline | 0 / 0 | 0 / 0 | 6.2363 / 5.2992 |
+| Keep queue | -10.7803 / +11.1000 | -0.3580 / +0.1500 | 6.1357 / 5.2506 |
+| Five-share reduction | -22.1177 / +17.7284 | -25.9673 / -21.8333 | 6.8862 / 5.8172 |
+| Late urgency | +10.9085 / +25.7631 | -1.9977 / +0.8512 | 6.2272 / 5.2945 |
+| Combined | -21.0283 / +19.2284 | -26.1020 / -22.3833 | 6.8674 / 5.8172 |
+
+- Queue retention lowers place requests **2.5687% / 1.9782%**, and residual inventory **1.61% / 0.92%**, but settlement
+  improves only 1/5 J and 2/5 X days. It remains an operational-efficiency candidate, not demonstrated PnL improvement.
+- Five-share reduction cuts economically reducing volume **45.94% / 50.72%** and raises mean residual inventory
+  **10.42% / 9.77%**. MIN_USD withholding decisions rise **81,403 -> 91,065 J**, **76,790 -> 86,246 X**; these are repeated
+  decisions, not distinct orders. Both smaller fills and the existing $1 minimum limit reduction; no causal attribution
+  of the full loss to either mechanism. Among the same pre-60 inventory population (674 J / 579 X markets), the fraction
+  ending below one share falls **16.32% -> 9.35% J**, **12.95% -> 6.56% X**. Do not adopt a blanket five-share cap.
+- Urgency improves 4/5 J days but only 1/5 X days (one unchanged). Its X gain disappears without Nov 2: **-$3.3522**.
+  J gain decomposes to mark-at-240 **+$9.6623** / carry **+$1.2462**; X **+$6.0652 / +$19.6979**. Mean residual inventory
+  falls only **0.0091 / 0.0048 shares**. It does not establish stronger spread capture or materially better inventory control.
+- Declared 2,000 shared UTC-day sign flips + 2,000 day bootstraps, 16 comparisons. Urgency settlement family-adjusted p
+  **0.5727 J / 1.0 X**. J pointwise bootstrap mean/day interval is positive, but coarse five-day randomization and family
+  inference do not support a robust positive. No new parameter sweep or candidate adoption after outcomes.
+- One-day Nov 3 stress: **288 markets per arm/timing**, cancel reservations delayed to at least measured p99 **143.3536 ms**,
+  physical removal unchanged. Settlement deltas J/X: queue **+6.2466 / +0.3500**, small **+0.6981 / -8.5854**, urgency
+  **-0.0850 / -2.9689**, combined **+1.8131 / -10.3354**. No interval; reservation sensitivity, not calibrated full OMS.
+- Checks: exact baseline J/X smoke and fresh first-day baseline parity (also fresh Oct31 J); remaining main baseline
+  artifacts reused with hashes/origin recorded; stress baseline always fresh. All pre-60 fill/request traces equal across
+  arms; fill/settlement/carry and inventory paths reconcile per market. Zero excluded markets/missing valuations; no missing
+  bounded Binance hour files. Guard withdrawals, pending reservations, lot/notional checks and stop remain active.
+- Declaration v3 supersedes v2's filled-order diagnostic assumption: legitimate duplicate creation timestamps caused a
+  checker stop. PnL/policies unchanged; counts now use immutable price/size lower bounds and sent-request/tranche upper
+  bounds. Final observed bounds collapse: one duplicate create key per main arm/timing, zero ambiguous filled keys. Original
+  failure log/declarations retained. Synthetic ambiguous-order positive and corrupted-identity refusal controls pass.
+- All source/input/artifact identities recorded; receipt copy and source hashes verified. Peak replay RSS about 1.3 GiB,
+  one core, ~493 GiB disk free. Frozen artifacts, live code/settings and protected Nov 9–13 forward dates unchanged/unread.
+- Next: avoid the blanket five-share cap. Queue retention merits efficiency work; urgency needs independent evidence.
+  Any further size policy should explicitly account for executable minimum notional and reduction throughput before a new
+  predeclared test. Current results do not justify promoting any candidate to live.
+
+## 2026-11-08 — sizing and settlement probability study COMPLETE
+
+- As-of **2026-11-08 17:11:07Z**. All declared jobs and controls finished; no research job left running. Isolated branch
+  `research/predict-sizing-settlement-20261108`, checkout `/tmp/cta-sizing-settlement-20261108`, tested source `beccfc63`.
+  Full receipt: `predictfun/reviews/sizing_settlement_20261108/receipt.json`; retained inputs/outputs and logs under
+  `/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/`. This entry supersedes earlier running statuses.
+- Main experiment: nine consumed days (Oct 23–27, Oct 31–Nov 3), 2,592 markets per arm/timing; baseline, capacity clipping,
+  size hysteresis, combined; J/X; $150/uncapped total-loss budget. Fixed deployed guards were trained on eight of these days:
+  **in-sample strategy comparison**, not a live-profit estimate. Continuous historical-clock basis, lot/notional checks,
+  known-state reservations and refusal backoff are shared. No missing +1s or stop valuations in these results.
+- Main settlement $ J/X: baseline **514.0559 / 317.6259**, capacity identical; hysteresis/combined **550.5360 / 339.7488**.
+  Hysteresis place requests fall **7.7464% / 7.3397%**. +1s value changes **-10.9858 / -8.8662**; mark-at-240s changes
+  **-68.4191 / -94.4639**; carry improves **104.8992 / 116.5868**. Thus settlement gains are from leftover inventory,
+  not improved measured short-term value. Only 4/9 days improve at each timing; excluding Nov 2 changes the gain to
+  **-92.5270 / -73.4372**. Observed drawdown falls, but no robust PnL benefit established and no candidate adopted.
+- $150 is explicitly a **test scenario**, not a permanent user constraint. All 216 main capped/uncapped win/fill/request
+  comparisons are exact. The separate 150-share exposure cap stays in both. Budget credits simulated window-end settlement
+  and skips unstudied gaps; no live path/settlement-confirmation parity claim. Rebates excluded and never replenish budget.
+- Cancellation diagnostic: same 105 Tokyo-5 windows, 13,775 cancels, 13,766 matched acknowledgements / 9 missing; completed
+  delay p50 20.67 ms, p99 143.35 ms, max 14.97 s. Uniform-p99 reservation stress on Nov 3, 288 markets per arm, keeps original
+  physical removal timing; fresh zero-PnL budget. Capacity lowers refusals but adds no PnL: uncapped baseline/capacity J
+  -45.1963/-45.2518, X both -11.7216. With hysteresis, capacity J -45.2269 -> -49.6016, X unchanged -68.7496.
+  The $150 budget changes some stress paths (both beneficial and detrimental). One day, no interval; sensitivity only,
+  not calibrated OMS simulation. Rare longer/missing acknowledgements and full watchdog/OMS behavior remain unmodelled.
+- Settlement forecast feasibility: initial train Oct 23–25; six chronological consumed test days, **1,728 markets /
+  13,352 eligible neutral decisions**. Excluded: 453 missing market prices, 19 start-price-not-known. Each fit uses earlier
+  venue outcomes known before the test day; no fill-selected population. Day-balanced Brier (lower better): market
+  **0.189047**, Brownian/basis **0.192590**, calibrated market **0.189106**, market+physical logistic **0.190309**,
+  fixed market-residual LightGBM **0.195683**. No alternative beats the market; nonlinear is worse on every test day.
+  Added nonlinear family is explicitly post-initial-result exploration, not an untouched test or tuning search.
+- Cost-aware shadow: 26,704 hypothetical 25-share Up/Down opportunities per model (separate alternatives, not strategy PnL).
+  24,398 eligible; 1,854 insufficient arrival depth; 442 below notional; 6 stale; 4 invalid books. Calibrated-market mean by day
+  +$0.01275 per opportunity, day bootstrap interval [-$0.11371,+$0.13730]; other models negative. No reliable value gain.
+  500 matched action randomizations and 2,000 day null/bootstrap draws. Expanded reports supersede initial inference:
+  max-T now uses sign-invariant RMS scaling; original point forecasts/valuations retained unchanged. See declaration v3
+  and nonlinear_declaration_v3.json; five probability models / ten forecast comparisons, four shadow comparisons.
+- Controls passed: 10 source tests (positive/refusal controls); eight-window exact frozen-engine parity; full 288-window,
+  eight-arm cached/direct comparison exact across 24 artifacts; per-market fill-to-settlement reconciliation throughout;
+  source/input hashes, label causality, probability oracle/anti-oracle, prior-offset and inventory-value controls.
+  Peak observed replay/control RSS about 1.6 GiB, one core; ~499 GiB free disk. No large data added to git.
+- Next: treat hysteresis as an efficiency candidate only; probability forecasts remain research outputs. Keep short-term
+  adverse-selection guards separate from settlement valuation. Compare expected payout against executable exit value and
+  inventory risk, not merely P(settle=1)>0.5. More independent future data and full execution calibration are needed before
+  adopting a new controller. Live code/settings, frozen artifacts and the Nov 9–13 forward race are unchanged/unread.
+
+## 2026-11-08 — sizing proposals and settlement probability study running
+
+- Update as-of 17:02Z: all nine historical days complete at J and X. Baseline settlement $514.06 / $317.63;
+  size hysteresis $550.54 / $339.75. The increase is carry-to-settlement: +1s value falls $10.99 / $8.87,
+  mark-at-stop falls $68.42 / $94.46. Requests fall about 7–8%; capacity clipping leaves fills/PnL unchanged
+  at ordinary timing. All are fixed-model in-sample results, not live return estimates. Full cache check,
+  nonlinear forecast/inventory extension and cancel-tail stress are running sequentially; do not adopt yet.
+- Update as-of 16:21Z: initial probability and inventory-shadow stages complete. Six chronological consumed test days,
+  1,728 markets / 13,352 eligible neutral decisions: day-balanced Brier market 0.189047, Brownian 0.192590,
+  calibrated market 0.189106, market+physical logistic 0.190309. No fitted model improves the market baseline.
+  Cost-aware 25-share hypothetical inventory opportunities: physical/model extensions negative mean exit value; calibrated
+  market +$0.0128 per opportunity by day, day interval spans zero. Not actual strategy PnL; see settlement_report.json and
+  inventory_shadow_report.json for statuses, matched controls and source hashes. Eight-window frozen-engine exact parity passes.
+  Full sizing replays running sequentially. One additional fixed-parameter market-residual LightGBM is declared separately
+  AFTER these results (nonlinear_declaration_v2.json); not tuned/validated on unseen data, and not run yet.
+- User clarified $150 is the current test setting, not a permanent strategy constraint; authorized testing sizing proposals
+  and settlement probabilities. Live settings remain unchanged; research compares $150 and uncapped total-loss scenarios.
+- Isolated checkout `/tmp/cta-sizing-settlement-20261108`, branch `research/predict-sizing-settlement-20261108`.
+  Declaration and artifacts: `data/predict_fun/research/sizing_settlement_20261108/` (`declaration_v2.json` supersedes v1).
+  Source commits start `fe41ccb4`; current pipeline through `48bda856`. No frozen files or Nov 9–13 inputs changed/read.
+- Nine consumed days (Oct 23–27, Oct 31–Nov 3): baseline / capacity clipping / size hysteresis / combined, J and X, both loss
+  budgets. Common 150-share backstop, known-state reservations, 0.01-share floor, minimum notional and risk retry backoff.
+  Fixed measured timing approximation; not a full independent OMS/live parity claim. Fixed deployed guard models mean these
+  strategy replays are in-sample. Continuous historical-clock feature rebuild finished; prediction preparation running.
+- Settlement study: initial train Oct 23–25, expanding earlier-only training and six later consumed test days. Neutral
+  market/time actions; market price, existing Brownian/basis probability, calibrated market logistic, full logistic.
+  Labels must be venue outcomes and known before the next test day. Day-unit uncertainty, 2,000 null/bootstrap draws,
+  matched market/calibrated-market baselines. Separate cost-aware hypothetical inventory test; not strategy PnL.
+- Seven source/control tests pass; full engine parity and replay reconciliation still pending. Run only one research job
+  through run_light at a time. Do not launch a duplicate study or treat pending experiments as approved strategy changes.
+
+## 2026-11-08 — strategy PnL optimization review and cancellation audit
+
+- Reviewed latest local `pm_ladder_v3_basis_v1` strategy/OMS/risk code (basis-tokyo-1 runtime; review checkout
+  `109fa4a`) and existing spread, inventory, hedge, incremental-size and same-window reports. Tokyo's installed version
+  was not observed. Continuous feature/quote parity is established; changed-state continuous PnL and full OMS parity are not.
+- New descriptive audit as-of **2026-11-08 15:51:46Z**, same 105 Tokyo-5 markets (Nov 7 17:40Z–Nov 8 02:25Z):
+  17,913 place requests, 13,775 cancels, 537,056 decisions, reconciled with the prior ledger/decision counts. Cancel reasons:
+  11,043 withdraw quote; 1,019 same-price size increase; 584 same-price size decrease; 931 price only; 198 price and size.
+  Size-only cancels are 11.637%; this is request attribution, not avoidable cancellations or a PnL estimate. Withdrawals pool
+  model/book/inventory/stop/watchdog reasons. No missing same-time decisions. Excluded explicitly: 65,180 noncohort decisions,
+  2,232 places and 1,598 cancels. Two partial days only, no confidence interval or inference.
+- Evidence/code/declaration/controls: `/home/yuqing/pmmm-data/review-exports/strategy-opportunities-20261108/`.
+  `quote_churn.py` detects synthetic size changes/withdrawals and refuses wrong identities/unchanged intents; all four controls
+  passed. Run via run_light, one process, 30 MiB RSS, 2.13 s. Full input/code SHA256s in result.json.
+- Recommended sequence (hypotheses, no adoption): execution-realistic baseline with continuous features + actual latency/caps;
+  capacity-aware sizing and queue preservation; calibrated quote value by lane/price/time; separate settlement-value/exit-cost
+  inventory controller. Current model predicts sweep-weighted 1s value, not settlement probability. CAP10 is a soft threshold,
+  not a 10-share position guarantee; 5/25 sizing can overshoot. Keep guarded passive reduction and the $150 budget.
+- Existing nine-day results remain selected in-sample / legacy basis. V3 retains roughly v1's +1s PnL and lowers measured risk;
+  settlement uplift is unresolved. Prior INCSIZE two-day test did not establish PnL improvement; blanket taker flattening is costly.
+  Preserve separate rebate reporting. No runtime/frozen artifact/forward race changed; Nov 9–13 remain untouched.
+
+## 2026-11-08 — continuous research/Rust boundary parity completed
+
+- Explicit continuous research variant and receipt pushed on `review/predict-continuous-basis-20261108` at `d65686b5`
+  (source `4f7cf752`; isolated checkout `/tmp/cta-continuous-basis-20261108`). Current frozen/default modules are unchanged.
+- On the same 105 complete Tokyo windows (Nov 7 17:40Z–Nov 8 02:25Z), all 32 features match on 494,637 rows;
+  all 498,422 guard values and 537,056 conditional quote decisions match. Hour-boundary subset: 12,189 feature rows /
+  12,558 decisions, zero mismatches. Frozen-research control detects 2,198 feature-row / 72 quote differences at boundaries.
+- pmmmrust tools/report pushed at `109fa4a`, branch `review/pfmm-continuous-research-parity-20261108`;
+  receipt `docs/receipts/20261108_pfmm_continuous_research_parity_v3.json`. Runtime remains the already tagged basis correction.
+- As-of 2026-11-08 13:04:44Z; evidence `/home/yuqing/pmmm-data/review-exports/continuous-parity-20261108/`.
+  Captured known-time inputs/legacy state only: no changed-state fill/PnL evaluation or deployment. Nov 7–8 consumed;
+  Nov 9–13 untouched, no freeze/forward-race change. Research must explicitly select the separate `_basis_v1` rows.
+
+## 2026-11-08 — Tokyo-5 same-window diagnostic (user-authorized)
+
+- **Data consumption:** 2026-11-07 and 2026-11-08 have been read for the live comparison, including required warm-up and
+  finalization hours. They must not be called untouched validation in the older 11-04..11-08 v1/v2 race. The v3 11-09..11-13
+  block remains untouched. No frozen engine/model/receipt was edited and no fitting or strategy selection was performed.
+- Compared all 105 complete Tokyo-5 windows, 11-07 17:40Z through 11-08 02:25Z. Live PnL excluding rebates -7.0128;
+  frozen v3 J -57.7727, X -19.8598; shares 293.635 / 556.753 / 459.065. Two partial days, descriptive only.
+- Conditional original-Python quote logic matches 537,056 live decisions; native LightGBM matches 494,637 Rust feature rows.
+  Independent feature reconstruction finds basis/gap differences at hourly boundaries, changing 42 conditional quote decisions.
+  Full independent request/OMS scheduling remains unrun; this is not an overall parity or live-readiness pass.
+- Code and superseding receipt: pmmmrust branch `review/pfmm-same-window-local-20261108`,
+  `docs/PREDICT_SAME_WINDOW_LOCAL_COMPARISON_20261108.md` and
+  `docs/receipts/20261108_pfmm_same_window_local_comparison_v1.json`.
+  Full local evidence: `/home/yuqing/pmmm-data/review-exports/tokyo5-local-comparison-20261108/`.
+
 ## 2026-11-07 08:20Z (session 62f3ce33) - Codex v3 port review complete (verified)
 
 - pmmmrust 3366e61 (receipt docs/receipts/20261107_pfmm_ladder_v3_review.json; tested code 173f53c). It names our receipt by its

@@ -6,6 +6,190 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09 12:20Z: GUARD FLICKER (pf_guard_flicker.py; 9 consumed days, 0-60 s, minute-0 line 0.0492 c). |v - line| p50 0.103 c; |dv| per
+  50 ms step p50 0.0185, p75 0.049, p90 0.133 c (a step is often as large as the line). Side flips per window: 51.4 at delta 0 (frozen
+  rule), 36.3 at 0.005, 28.2 at 0.01, 20.4 at 0.02, 13.5 at 0.04. Quoting spells p50 100 ms; pulled spells p50 250 ms, 38% <= 100 ms.
+  Reading: the decision rule acts on a value that jumps by about a line's worth every 50 ms; the PM90 tuning chose the line LEVEL under
+  the replay fill model that credits flicker fills, and never tested hysteresis / smoothing. Descriptive; no P&L claim.
+  2026-11-09 12:37Z: EXACT-ORDER CLOCK AUDIT COMPLETE,220 consumed Nov8 windows/42,064 actions. All99 confirmed
+  fills reconcile by full signed hash+trade identity; quantities agree within1 microshare/order.93 identifiable clocks:
+  J18/X15 legs violate order lifecycle bounds even at10ms tolerance;6 ambiguous clocks retained. No constant offset
+  can fit either run. REST timestamp equals confirmation second99/99, differs from first Matched in50 (49 +1s,1 +10s).
+  E2 witness assigns a book drop10s late; transaction earliest-anchor witness overwrites a feasible own estimate with
+  another leg's estimate975ms before submission. No calibrated PnL or new strategy sweep.13 controls and artifact checks pass.
+  Receipts reviews/fill_clock_20261109/, branch research/predict-fill-clock-20261109. Jobs complete; no live/forward changes.
+  2026-11-09 12:11Z: CANCEL CHURN (pf_live_vs_replay churn; 30,572 live cancels, 220 windows). Pull 74.6% (order life p50 68 ms; best prices
+  unchanged since the place 85%; lane wanted again within 100 ms 47.8%, 300 ms 63.8%, 1 s 74.9%; back at the same price 76.6%);
+  resize 14.4% (best prices unchanged 97%; back to the old size within 100 ms 41.7%, 1 s 62.5%); re-price 11.0% (best prices changed
+  99.9%; returns 1.2% within 1 s); same price and size 17. Own-order feedback ruled out as the main driver: of touch pulls at
+  unchanged best prices, our order the only top change 186, ours + others 143, others changed the top 10,149. Reading: no replace
+  without a reason, but ~89% of cancels come from the guard value crossing the pull / size line at unchanged prices and mostly reverse
+  within a second. USER: update size logic to keep queue position -> spec predictfun/handoffs/20261109_layered_size_keep_queue.md.
+  2026-11-09 12:01Z: SIZE SWITCH + OUR HISTORY AT THE MISSED PRICES. Size change = cancel + new at the back in both directions (engine split
+  handler keeps an order only at the same price AND size, pf_step4_ladder.py l. 934-936; live port the same, trace ids 18 -> 20 -> 21);
+  not an append. pf_live_vs_replay history (2,189 queue misses; from the level's appearance, max 10 s, 100 ms samples): level age at
+  the trade p50 2.8 s (p25 0.9, p75 6.9); our time share: side pulled by the prediction line 47.5%, resting there 29.2% (short orders,
+  re-placed), wanted there but no live order 13.2% (re-place gaps / refused / in flight), other guards 4.1%, other prices 4.2%. Resting
+  within the level's first 500 ms: 397 yes, 1,427 no, 365 level younger than 0.5 s.
+  2026-11-09 11:43Z: CLOSING-LIQUIDITY STUDY COMPLETE,9 consumed days/2592 markets per arm/timing,J/X.
+  Safe retention and up-to25 closing size improve exits versus strict late reservations; neither meets baseline objective.
+  Close25 leaves2.58%/0.80% MORE inventory; +1s falls8.21%/6.01%; final PnL $508.39/$317.20 versus $514.06/$317.63.
+  X final near-equality masks $65.65 weaker stop mark offset by $65.23 better carry. All settlement intervals cross zero.
+  THIS baseline derives84.44%/78.46% of +1s value from young/cancel-pending fills; live calibration needed before adoption.
+  47 controls,smoke,18 reconciliations and provenance checks pass;21 sources/216 results/36 metadata sets verified.
+  Branch research/predict-exit-liquidity-20261109, declared source62b2c98e; reviews/exit_liquidity_20261109/receipt.json.
+  All our jobs finished. No live/forward changes. See HANDOFF.md.
+  2026-11-09 11:47Z: FRONT-OF-QUEUE AGE (pf_live_vs_replay frontage; lower bound: displayed size at the price stayed above the volume traded
+  there since, no front cancels assumed). Queue misses (2,189): front orders resting >= p25 0.5 s, p50 2 s, p75 5 s, p90 10 s; >= 2 s
+  in 53%, >= 10 s 12%. 5 s markout by front age: <= 0.5 s +1.33, 1-2 s +2.17, 3-10 s +1.93, > 10 s -0.04 c/sh. Other 0-60 s touch
+  trades (3,000 sample): front p50 1 s; 5 s markout <= 0.5 s +0.22, 1-2 s -0.03, 3-10 s -0.72, > 10 s -0.42. Reading: the good fills
+  we miss go to orders resting ~0.5-10 s; resting that long is adverse on average, good at the moments our guard is on.
+  2026-11-09 11:38Z: QUEUE MISSES (pf_live_vs_replay queue; the 2,189 touch trades where our order rested at the price, unfilled; +1.74 c/sh at
+  5 s). Not the ladder: 2,170 are touch orders (rungs 19). Cause = queue depth: displayed size ahead of us at our join p50 354 sh
+  (p25 261, p75 472); volume traded at the price from our join to the trade p50 11 sh (p75 40); trade at the price p50 9 sh; queue
+  ahead > 10x the trade in 85%; reached-but-unfilled 64 (timing). Our order age at the trade p50 94 ms. 1,402 (64%) were the latest
+  of an unbroken run of our orders at that price (p50 4 orders, run p50 937 ms) that lost its place by cancel + re-place: cancels in
+  those runs = prediction pull 2,776, resize 5 <-> 25 2,205 (AM size rule, no amend), other guards 769. Keeping the run's first order
+  would have been reached in 94 of 1,402 (queue at run start p50 300 sh vs 25 sh traded since). Resident makers' size ahead dominates.
+  2026-11-09 11:29Z: WHY WE MISS TOUCH TRADES (pf_live_vs_replay reasons; 220 windows, every real trade at the pre-trade best price, 0-240 s;
+  136,552 trades, 3,966 untimed; status at live receipt of the WS pending message - 50 ms, 96.8% unchanged at 0 / 100 ms; prediction
+  split uses research-recomputed guard values). Maker markouts c/sh (1 s / 5 s / 60 s / settle), share of touch volume. 0-60 s (all
+  +0.03 / -0.09 / -0.35 / -0.84): side pulled by the prediction line 75.5% (-0.11 / -0.41 / -0.74 / -1.26); our order there cancelled
+  <= 500 ms before by the prediction 6.7% (+0.22 / +0.25 / +0.10 / -6.07); resting, not filled (queue) 6.1% (+0.67 / +1.79 / +2.68 /
+  +3.93); CAP10 2.5%; NetCap refused 2.4% (+1.09 / +2.23); other guards 2.9%; re-priced 1.1%; in flight 0.6% (+1.74 at 1 s); we
+  filled 1.8%. 60-240 s: reduce-only with nothing to reduce 88.7%, prediction 9.0%. Reading: the prediction pulls us out of most
+  touch flow and that flow is mildly adverse (worse than average by ~0.3 c at 5 s); the favorable trades we miss are queue / NetCap /
+  in-flight, ~9% of 0-60 s volume. One day.
+  2026-11-09 10:45Z: LADDER + WHO FILLS (pf_live_vs_replay who; 11-08 REST matches, cohort hours / markets). Live ladder (rung) orders do fill:
+  29 orders / 312 sh = 37% of live shares; per accepted order 2.2-2.8 / 1000 (touch 2.7-3.4); but also short-lived (life p50 84-85 ms,
+  p90 ~390; touch 49-55 ms) because LD2 holds a rung only while the side is quoted, and ~30% of rung places were NetCap-refused.
+  Our address 0xba14..ced8 (99 maker legs = live fills); 0.023% of maker volume 0-240 s (743 makers, 3,549 takers). In the trades the
+  replay credited to us but live missed (J): 74 makers filled at our price, market top-10 makers 46% of it (largest makers overall
+  0x22ee..e61a, 0x5986..56be, 0x5e49..377e among the top); 280 takers, one (0x545d..1768) 14.6%, also among the takers hitting our
+  live orders. Reading: resident makers already queued at the price take those sweeps; our orders arrive after or rest too briefly.
+  2026-11-09 10:32Z: SHORT-LIVED FILLS: NOT A LIVE INFRA / CODE ISSUE (pf_live_vs_replay feedtiming). Live latency is at or better than the
+  replay's: decision -> accepted p50 33.6 / 35.3 ms (p90 46 / 51; replay 40), cancel -> done p50 19 / 21 ms (replay 22), signing 0.2 ms.
+  Live's own fills: the WS pending (settlementsPending) message reached live p50 +172 ms after acceptance; for 21 of 84 cancelled
+  filled orders it came after the cancel was done (the feed lags the match). Replay fills where live held the same order resting:
+  missed by live (190): pending message p50 +36 ms after live's acceptance, p25 -83 ms (before it); 85.8% within 60 ms of
+  acceptance or after the order was gone; also filled live (119): p50 +162 ms, 24.4%. Reading: the missed trades matched before the
+  order reached the book; the replay times trades at the pending message (minus jitter / 50 ms) and its order is 'live' 40 ms after
+  the decision, so it credits them. Replay-side timing (look-ahead), not fixable by infra. USER approved the 1 s late-fill window for
+  NetCap: spec predictfun/handoffs/20261109_cancel_late_fill_window.md for the port session (not implemented here).
+  2026-11-09 10:19Z: SHORT-LIVED FILLS + NetCap FIX OPTIONS (pf_live_vs_replay markout / phantom; same 11-08 cohort, + the 9 consumed days).
+  Replay v3 fills on young (< 100 ms since activation) or cancel-pending orders are NOT losers: 9 days, they are ~80% of replay volume
+  and 85% / 83% (J / X) of its +1 s $; +1 s: < 50 ms +1.98 / +1.86 c/sh, cancel-pending +1.16 / +1.05, > 500 ms -0.46 / -0.52.
+  On the 220 live windows: replay young / cancel-pending +1.0..+1.2 (J), +0.4 (X) c/sh; replay >= 100 ms -0.4..+0.1. Live booked fills:
+  0 from orders living < 100 ms; all live fills -0.84 c/sh at 1 s (100-500 ms -0.78, 0.5-2 s -0.61). Reading: the replay's +1 s
+  edge comes mostly from fills live does not get; where replay and live overlap (>= 100 ms orders) both are about flat-to-adverse at
+  1 s. One live day; the timing mechanism is inferred. NetCap: first fill notice after a confirmed cancel arrives within 593 / 534 ms
+  (71 cases, p50 ~320 ms); counting a cancelled order only 1 s after its cancel confirmation leaves 212 / 334 of 4,430 / 6,017 NetCap
+  refusals and misses 0 late fills (2 s: 495 / 866); net_shares 300 leaves 2 / 0. Fast cancel reconcile is budgeted burst 4, 1/s
+  (47% coverage); Predict default REST budget 240 / min (plan doc). No live change made.
+  2026-11-09 09:50Z: LIVE vs REPLAY, SAME WINDOWS (user: pull live, replay locally, main discrepancy, cause, fix). Live data branch
+  data/tokyo-live-20261109 e41bb5c (checksums OK) + review c54df1f; cohort = 220 complete 11-08 windows (tokyo-6 122, pm_ladder_v3;
+  basis-tokyo-1 98 up to 23:00Z, continuous basis); hours 11-08 02-23Z only: the basis run's 11-09 windows NOT replayed (v3 block
+  11-09..13 unread). 11-08 consumed (already consumed by the tokyo-5 diagnosis). Replay = frozen v3 engine d678e7c3 via
+  pf_live_samewindow.py (sandboxed copy of Codex's tool; outputs /home/yuqing/pmmm-data/review-exports/live-samewindow-20261108).
+  Live vs J / X: P&L +2.90 vs -10.92 / -19.75; windows with fills 52 vs 104 / 89; shares 850 vs 2343 / 1841 (live 36% / 46%).
+  Policy agrees: replay and live place times match (first place per market/lane IQR 0..2.5 ms); after fixing my Down-price map, 0
+  replay fills fall where live wanted another price. Replay fill shares by live state (J / X): live resting same price, no fill
+  46 / 48%; live refused NetCap 24 / 18%; live resting and filled 15 / 21%; live quoting nothing on that side 15 / 11% (mostly
+  60-240 s and cancel-pending: downstream inventory divergence); other < 2%. Cause 1 (replay optimism on short-lived orders): where
+  live held the same order resting at the replay's trade time, live's fill share by that order's lifetime is <50 ms 2.3%, 50-100
+  6.1%, 100-200 32%, 200-500 51%, >500 78% (increasing: true); missed ones are 79% through-fills on orders aged ~34 ms and cancelled
+  ~35 ms later. Cause 2 (live only): kernel NetCap (150 sh) counts cancelled orders at full size until the 5 s REST cancel audit
+  (CANCEL_AUDIT_GRACE_MS; fast reconcile clears 47% at median ~0.8 s); rebuilt at each refusal: audit-pending ~140 of ~160 sh, real
+  net + live orders < 10; without audit-pending 2 of 10,447 refusals remain (rebuild over cap on 90-93%). Reverse: ~400 of live's
+  850 filled shares have a replay fill (same side/price within 1.5 s). Replay fills live missed on short-lived orders settle -142 /
+  -125 $ in the replay. One day, descriptive; no fix applied; code pf_live_samewindow.py, run_live_samewindow.sh, pf_live_vs_replay.py.
+  2026-11-09 10:23Z: LATE REDUCTION STUDY COMPLETE,9 consumed days/2592 markets per arm/timing,J/X.
+  Pre60 baseline exact for both variants; late reservation reduces exit flow and increases leftover inventory.
+  Taper final PnL $508.54/$353.45 versus baseline $514.06/$317.63, but residual inventory rises2.98%/5.24%,
+  +1s falls4.8%, FIFO matched profit falls; X uplift comes from settlement carry and depends on Nov2.
+  Objective not achieved; all settlement mean-difference intervals cross zero.39 controls,smoke,18 full checks pass;
+  source/artifact hashes verified. Branch research/predict-late-reduction-20261109, declared source8c8ee4d4,
+  receipt reviews/late_reduction_20261109/receipt.json. No jobs/live/forward/frozen changes. See HANDOFF.md.
+  2026-11-09 08:20Z: ALLOWED INVENTORY RANGE STUDY COMPLETE, nine consumed days/2592 markets per arm/timing,J/X.
+  Shared +/-10 permits56/46 direct crossing fills while every actual path stays within10. Range settlement $147.09/$111.24
+  versus strict $149.35/$119.34; +1s improves20.1%/26.7%, volume16.8%/13.7%, residual inventory falls7.5%/4.8%.
+  Daily PnL SD rises10.4%/14.8%; worse worst days. More trading activity, no proven settlement/variance improvement.
+  36 controls, smoke, all18 reconciliations pass; zero missing markets/valuations; sources/artifacts/receipt copies verified.
+  Source2b33793b, branch research/predict-inventory-range-20261109; receipt reviews/inventory_range_20261109/receipt.json.
+  No live/frozen/forward changes; all jobs complete. Full results and inference in HANDOFF.md.
+  2026-11-09 07:44Z: INFLIGHT RESERVATION STUDY COMPLETE, nine consumed days / 2592 markets per arm/timing, J/X.
+  Both new arms eliminate reverse-opening fills from reducing-at-send orders; nine same-time ambiguities resolved by
+  exact two-market replays with identical fills/requests. Combined entry/exit budget holds actual |inventory|<=10.
+  Settlement baseline $514.06/$317.63; exit-only reservations $453.23/$150.44; combined $149.35/$119.34.
+  Exit-only residual inventory rises ~4%; combined reduces inventory-square ~50% versus prior adding-only budget,
+  but also halves observed settlement profit. No spread-capture improvement or deployment. All settlement intervals cross zero.
+  31 controls, smoke, 18 reconciliations and supplemental positive/refusal/tie-parity checks pass; zero missing valuations.
+  Receipts reviews/inflight_budget_20261109/, main source 26908059, tie source 91f769dc; branch research/predict-inflight-budget-20261109.
+  No live/forward changes; all jobs complete. Full findings and limits in HANDOFF.md.
+  2026-11-09 06:19Z: ENTRY INVENTORY-BUDGET STUDY COMPLETE, nine consumed days / 2592 markets per arm/timing, J/X.
+  Baseline settlement $514.06/$317.63; uniform10 $425.59/$281.63; reserved10 $309.74/$253.05.
+  Daily SD falls 44.6%/37.0% uniform, 69.0%/58.0% reserved; mean residual inventory falls 38.6%/39.2%, 61.6%/60.6%.
+  Volume and per-share +1s value also fall: risk-control tradeoff, no improved spread capture. Settlement intervals cross zero.
+  Both new arms still reach 80-share J peak: known +10 reducing sells fill 90 shares, including 50 cancel-pending, before
+  the position reaches -80. Not a hard 10-share bound; budget zero-crossing reducing exposure in a separate next experiment.
+  25 controls, smoke and 18 full reconciliations pass; no missing markets/valuations. Peak trace positive/refusal checks pass.
+  In-sample, source f2867829; branch research/predict-entry-budget-20261109. Receipts reviews/entry_budget_20261109/.
+  No live/forward changes; all jobs complete. Details and limitations in HANDOFF.md.
+  2026-11-09: RISK OBJECTIVE REVIEW, nine-day post-hoc daily PnL SD ~5% lower with urgency; J worst day does not improve,
+  X benefit still Nov2-dependent. Prioritize reservation-aware strategic inventory sizing, matched-exposure queue tests,
+  then selective flat-inventory MM cycles. Suggestions only; no new simulation or live/forward change. Details in HANDOFF.
+  2026-11-09 04:15Z: EARLIER URGENCY CHECK COMPLETE, Oct23–26 / 1152 markets per arm/timing, unchanged rule.
+  Settlement delta $ J/X -20.6899/+2.9007; +1s -0.0742/-0.6977. Nine-day pooled delta -9.7814/+28.6638,
+  with X turning -0.4515 excluding Nov2. Inventory falls slightly; timing/day dependence defeats a robust PnL claim.
+  All 22 controls and eight pre-180/per-market checks pass; no missing markets/valuations. Consumed training dates,
+  four-day no-interval result; pooled totals descriptive after selection. Receipt reviews/urgency_history_20261109/receipt.json,
+  source a94a0dd7 on research/predict-urgency-history-20261109. No live/forward changes; all jobs complete.
+  2026-11-09 03:53Z: PASSIVE INVENTORY STUDY COMPLETE; 5 consumed days / 1440 markets per arm/timing, J/X.
+  Settlement deltas $ J/X: queue -10.7803/+11.1000; five-share -22.1177/+17.7284; urgency +10.9085/+25.7631;
+  combined -21.0283/+19.2284. Queue cuts places 2.57%/1.98%; five-share raises residual inventory 10.42%/9.77%
+  and loses +1s value. Urgency X benefit disappears without Nov2 and loses in one-day cancel-p99 stress at J/X.
+  No robust PnL gain/adoption. All 18 controls and per-market checks pass; declaration v3 bounds ambiguous fill
+  identities (observed bounds collapse). Uncapped loss budget, 150-share exposure cap, rebates excluded.
+  Source 983a3b4f; receipt predictfun/reviews/passive_inventory_20261109/receipt.json. No live/forward changes.
+  2026-11-08 17:11Z: SIZING / SETTLEMENT STUDY COMPLETE, no live changes. Nine consumed days / 2592 markets per arm;
+  J/X baseline settlement $514.06/$317.63, hysteresis $550.54/$339.75 with 7.75%/7.34% fewer places. +1s and
+  mark-at-stop value fall; uplift comes from carry and disappears without Nov 2. Capacity adds no PnL in ordinary
+  or one-day cancel-p99 stress. $150/uncapped main paths exact (216 comparisons); fresh stress budgets can bind.
+  Forecasts: six chronological consumed test days, 1728 markets / 13352 neutral decisions; market Brier .189047,
+  all four alternatives worse (.189106 to .195683). Cost-aware inventory shadow has no reliable gain.
+  Ten tests, frozen/cached replay controls and per-market reconciliation pass. Source beccfc63; receipt
+  predictfun/reviews/sizing_settlement_20261108/receipt.json on research/predict-sizing-settlement-20261108.
+  No adoption, deployment, frozen-race change or Nov 9–13 data read. Full findings and limitations in HANDOFF.md.
+  2026-11-08 17:02Z: Nine-day J/X sizing batch complete. Hysteresis lowers requests and raises settlement PnL
+  but lowers +1s and mark-at-stop value; uplift comes from carry. Followup controls, nonlinear forecast and
+  cancellation-tail stress still running. No adoption/deployment or forward-data read. See HANDOFF.md.
+  2026-11-08 16:21Z: Initial settlement feasibility complete (6 later consumed days, 1728 markets, 13352 neutral decisions).
+  Brier market .189047, Brownian .192590, market calibration .189106, full logistic .190309; no improvement over market.
+  Inventory shadow gains unresolved/negative; not strategy PnL. Frozen engine control exact on eight windows.
+  Full sizing batch still running. One fixed nonlinear residual model added as an explicitly post-result exploratory
+  extension with expanded multiplicity; not yet run. Artifacts/limitations in HANDOFF.md and sizing_settlement_20261108/.
+  2026-11-08: USER AUTHORIZED sizing/settlement study; $150 clarified as current test setting, not permanent strategy limit.
+  Running isolated research/predict-sizing-settlement-20261108 in /tmp/cta-sizing-settlement-20261108; source through 48bda856.
+  Declarations/artifacts data/predict_fun/research/sizing_settlement_20261108 (v2 declaration); nine consumed days only.
+  Four sizing variants x J/X x $150/uncapped loss budgets; separate earlier-only settlement probabilities and cost-aware
+  inventory shadow. Continuous historical features rebuilt; prediction preparation running. Seven source controls pass;
+  full parity/replay/model results pending. No live limit/strategy/frozen race changed, Nov 9–13 untouched. See HANDOFF.md.
+  2026-11-08 15:51Z: STRATEGY OPTIMIZATION REVIEW: latest local v3 continuous candidate reviewed against existing reports.
+  New Tokyo-5 cancellation attribution on the same 105 complete markets (Nov 7 17:40Z–Nov 8 02:25Z), two partial days:
+  17,913 places / 13,775 cancels / 537,056 decisions reconcile with prior evidence. Cancels: 11,043 withdrawals,
+  1,019 same-price size increases, 584 same-price decreases, 931 price only, 198 price+size. Size-only share 11.637%;
+  not a counterfactual PnL or avoidability estimate. Explicit noncohort exclusions and four passing positive/refusal controls
+  in /home/yuqing/pmmm-data/review-exports/strategy-opportunities-20261108/result.json; script/declaration alongside.
+  Proposed work: continuous execution-realistic baseline, capacity-aware sizing/queue preservation, calibrated quote-value
+  allocation, separate settlement/exit-cost inventory control. No strategy selected or changed. Retain $150 budget,
+  separate rebates, and guarded passive reduction. Nov 9–13 untouched; see HANDOFF.md for limitations and source identities.
+  2026-11-08 13:04Z: CONTINUOUS BASIS PARITY complete on the retained 105 Tokyo windows (Nov 7 17:40Z–Nov 8 02:25Z):
+  zero differences across 494,637 feature rows, 498,422 guard values and 537,056 conditional quote decisions; first-70s hourly
+  subset 12,189 rows / 12,558 decisions also exact. Frozen-reference control detects 2,198 row / 72 quote differences, all at
+  boundaries. Research source/receipt pushed on review/predict-continuous-basis-20261108 (d65686b5; source 4f7cf752);
+  Rust tooling/report 109fa4a on review/pfmm-continuous-research-parity-20261108. These are explicit versioned outputs in a
+  separate checkout; current frozen/default modules are unchanged. No changed-state PnL, deployment or forward-race change.
+  Nov 7–8 consumed diagnostic days; Nov 9–13 remains untouched. Details: HANDOFF.md and the committed parity receipt.
   2026-11-07 08:20Z: CODEX v3 PORT REVIEW COMPLETE (pasted), VERIFIED here: pmmmrust 3366e61 adds only docs/receipts/20261107_pfmm_ladder_v3_review.json
   on tested code 173f53c (diff 173f53c..3366e61 = that file); receipt cites research code 4ecaca69, receipt b261091d with sha256 442e0ccd...
   (= RECEIPT.md on disk; freeze folder unchanged since b261091d), engine d678e7c3...; live_launch / deployment / tag / forward_data_read
