@@ -118,7 +118,7 @@ class QuotePlanner:
                 slot=(lane,o.slot)
                 desired=target.get(o.slot)
                 compatible=(desired is not None and o.tick==tick and slot not in kept and
-                            (abs(o.size-desired)<1e-9 or o.rem<=desired+1e-9))
+                            (abs(o.size-desired)<1e-9 or (self.layered and o.size>desired and o.rem<=desired+1e-9)))
                 if compatible:kept[slot]=o
                 else:
                     reason='pull' if not target else 'reprice' if o.tick!=tick else 'resize'

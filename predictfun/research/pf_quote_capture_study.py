@@ -84,7 +84,7 @@ def declare():
 
 
 def verify_inputs():
-    d=json.loads((DEST/'declaration.json').read_text())
+    d=json.loads((DEST/('declaration_v2.json' if (DEST/'declaration_v2.json').exists() else 'declaration.json')).read_text())
     for p,h in d['sources'].items():
         if a.sha(a.HERE/p)!=h:raise ValueError('source changed')
     for p,h in d['inputs'].items():
@@ -118,8 +118,9 @@ def extract():
 
 
 def run():
-    if (DEST/'receipt.json').exists() or (DEST/'window_metrics.parquet').exists():raise ValueError('refuse overwrite')
-    d=verify_inputs();controls=(DEST/'logs/controls.log').read_text()
+    d=verify_inputs();suffix='_v2' if d.get('version')==2 else ''
+    if (DEST/f'receipt{suffix}.json').exists() or (DEST/f'window_metrics{suffix}.parquet').exists():raise ValueError('refuse overwrite')
+    controls=(DEST/f'logs/controls{suffix}.log').read_text()
     if '\nOK\n' not in controls or 'rc=0 ' not in controls:raise ValueError('missing passing controls')
     extracted=json.loads((DEST/'extraction.json').read_text())
     if a.sha(DEST/'decisions.parquet')!=extracted['decisions_sha256']:raise ValueError('decision artifact changed')
@@ -163,8 +164,8 @@ def run():
                 reconstructed_score_missing=score_bad,reconstructed_score_vs_live_conflict=score_conflict,
                 zero_delta_parity=parity,target_subset=subset))
         if (wi+1)%20==0:print('DONE',wi+1,'windows',flush=True)
-    R=pd.DataFrame(results);R.to_parquet(DEST/'window_metrics.parquet',index=False)
-    pd.DataFrame(statuses).to_parquet(DEST/'window_status.parquet',index=False)
+    R=pd.DataFrame(results);R.to_parquet(DEST/f'window_metrics{suffix}.parquet',index=False)
+    pd.DataFrame(statuses).to_parquet(DEST/f'window_status{suffix}.parquet',index=False)
     summary={}
     for arm,q in R.groupby('arm',sort=False):
         totals={c:float(q[c].sum()) for c in ['places','cancels','base_resize_cancels','kept_base_size_switches','share_ms','quoted_lane_ms','desired_lane_ms','oldest_lane_age_ms2','reserved_share_ms','refused_capacity','refused_inflight']}
@@ -190,8 +191,20 @@ def run():
             'no fill/PnL/variance estimate, queue rank proof, confidence interval or deployment claim',
             'modelled acknowledgements and1s reservation grace; no venue throttling/backoff/post-only rejection model',
             'buffer results depend on reconstructed scores; missing/conflicting scores reported separately'])
-    a.write(DEST/'receipt.json',out);a.write(REVIEW/'receipt.json',out)
+    if suffix:out.update(supersedes_receipt_sha256=a.sha(DEST/'receipt.json'),correction=d['correction'],prior_receipt_valid=False)
+    a.write(DEST/f'receipt{suffix}.json',out);a.write(REVIEW/f'receipt{suffix}.json',out)
     print(json.dumps(dict(population=out['population'],summary=summary,predicates=out['predicates']),indent=2))
 
 
-if __name__=='__main__':{'declare':declare,'extract':extract,'run':run}[sys.argv[1]]()
+def amend():
+    old=json.loads((DEST/'declaration.json').read_text())
+    d=dict(old,version=2,as_of=dt.datetime.now(dt.timezone.utc).isoformat(),
+        supersedes_declaration_sha256=a.sha(DEST/'declaration.json'),prior_receipt_sha256=a.sha(DEST/'receipt.json'),
+        correction='single-order reference must cancel/repost on target-size increases and decreases; prior generic rem<=target check accidentally retained the smaller order on increases. Layered partial retention applies only when nominal size decreases. No arm/threshold/latency/data change.',
+        source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=a.HERE,text=True).strip(),
+        sources={p:a.sha(a.HERE/p) for p in SOURCE},inherited_decisions_sha256=a.sha(DEST/'decisions.parquet'))
+    a.write(DEST/'declaration_v2.json',d);a.write(REVIEW/'declaration_v2.json',d)
+    print('DECLARED v2 reference resize correction; prior result invalid')
+
+
+if __name__=='__main__':{'declare':declare,'extract':extract,'run':run,'amend':amend}[sys.argv[1]]()

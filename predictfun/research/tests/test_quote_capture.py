@@ -8,6 +8,14 @@ def target(size,tick=50,lane=0):
 
 
 class QuoteControls(unittest.TestCase):
+    def test_single_order_reference_resizes_both_ways(self):
+        p=QuotePlanner(layered=False,grace_ms=0)
+        p.plan(0,target(5));p.plan(100,target(25));p.plan(200,target(5))
+        self.assertEqual([c['size'] for c in p.commands if c['kind']=='place'],[5,25,5])
+        self.assertEqual(p.stats['cancels'],2)
+        p.fill(p.orders[-1].id,3);p.plan(300,target(5))
+        self.assertEqual(p.stats['places'],3)
+
     def test_size_switch_keeps_base_identity(self):
         p=QuotePlanner(grace_ms=0)
         p.plan(0,target(5));base=p.orders[0].id
