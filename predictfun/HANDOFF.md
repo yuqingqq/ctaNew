@@ -1,5 +1,25 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 — allowed inventory-range experiment RUNNING
+
+- User authorized testing an allowed inventory range. One new candidate `range10`: shared [-10,+10] position
+  envelope for ALL orders, room=max(0,10-signed known net-all same-side known remaining reservations). At +10 and
+  no pending sells, permit up to20 total sells; crossing zero is allowed inside the range. Pending creates, resting,
+  pending cancels and the same conservative post-cancel fill-report grace as strict both_reserved all count.
+- Candidate changes only the aggregate reducing allowance versus strict both_reserved; retention, guards, AM sizing,
+  original per-order RO60 clipping/rung withdrawal and S240 stay. No new cycle restart after60. Outstanding quotes
+  can still reverse within the envelope, including during the late phase; no strict no-reversal promise.
+- Branch `research/predict-inventory-range-20261109`, checkout `/tmp/cta-inventory-range-20261109`, declared source
+  `6d9369a5`. Data/declaration/logs `/home/yuqing/ctaNew/data/predict_fun/research/inventory_range_20261109/`.
+- Nine consumed days /2592 markets per arm/timing, J/X; baseline, previous adding-only reserved10, strict both_reserved
+  controls. Fresh first-day references at both timings plus eight-market smoke; other references reused by hash.
+  Fixed guards trained on eight dates: exploratory only. Uncapped loss budget,150-share backstop,rebates excluded.
+- 36 preflight controls PASS. Every actual range10 fill asserts |inventory|<=10; independent path reconstruction,
+  settlement/carry reconciliation, zero-crossing engagement, FIFO/markout/volume/risk metrics. Declared 2000 shared
+  day sign flips and 2000 day bootstrap draws;18 comparisons (range vs3 controls x J/X x settlement/+1s/q²).
+- Batch starts07:52Z. Single light process/core,4GiB address-space limit. No live/frozen/forward changes;
+  protected Nov9–13 data untouched. No results yet.
+
 ## 2026-11-09 — inflight inventory-reservation experiment COMPLETE
 
 - Main as-of **2026-11-09 07:39:37Z**, exact intent diagnostic **07:43:24Z**. All nine consumed dates
