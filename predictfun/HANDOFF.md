@@ -1,5 +1,20 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 — exact-order fill-clock audit RUNNING
+
+- User requested continued testing toward preserving trading value with lower inventory. Prerequisite: check whether
+  replay transaction clocks fit exact live order identities, before another strategy PnL search.
+- Fixed scope:220 complete Nov8 windows already consumed by the same-window review; no protected Nov9–13 reads.
+  Full Signed order hashes link kernel CIDs to REST maker legs; all cohort actions and unmatched statuses retained.
+  Hard timing interval starts at Control Place and ends at the earlier of confirmed cancel and first positive fill notice.
+  Acceptance is NOT a lower match bound. REST executedAt seconds are checked as an assumption, not declared ground truth.
+- Pinned engine prefix reproduces J/X clocks and original timing diagnostics; six additional fixed earlier shifts
+  0/50/100/200/400/800ms, tolerances0/10ms. Exact first-receipt/content leg joins; conflicting clocks remain ambiguous.
+ 500 matched run/hour/side action permutations are an instrument diagnostic only; one day, no CI or profit inference.
+- Branch `research/predict-fill-clock-20261109`, checkout `/tmp/cta-fill-clock-20261109`, source `pf_fill_clock.py`.
+  Outputs `data/predict_fun/research/fill_clock_20261109/`. Source/control freeze before declaration and results.
+  One capped research process, queued around other work. No live code/settings or original frozen artifacts changed.
+
 ## 2026-11-09 — closing-liquidity experiment COMPLETE
 
 - As-of **2026-11-09 11:43:41Z**, nine consumed dates Oct23–27 and Oct31–Nov3, **2592 markets per arm/timing**,

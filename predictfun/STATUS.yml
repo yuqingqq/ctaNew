@@ -6,6 +6,9 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09 12:10Z: EXACT-ORDER CLOCK AUDIT STARTING on220 consumed Nov8 windows. Signed hashes -> exact REST
+  maker legs; necessary Control Place/cancel/fill-notice bounds; pinned J/X and six fixed earlier shifts, no PnL tuning.
+  Branch research/predict-fill-clock-20261109. Shared one-process slot; no live/forward changes. See HANDOFF.md.
   2026-11-09 11:43Z: CLOSING-LIQUIDITY STUDY COMPLETE,9 consumed days/2592 markets per arm/timing,J/X.
   Safe retention and up-to25 closing size improve exits versus strict late reservations; neither meets baseline objective.
   Close25 leaves2.58%/0.80% MORE inventory; +1s falls8.21%/6.01%; final PnL $508.39/$317.20 versus $514.06/$317.63.
