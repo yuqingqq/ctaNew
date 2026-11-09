@@ -16,7 +16,8 @@ journal exports (pmmm-tools journal-export at c54df1f), and the replay of pf_liv
   who       touch vs ladder lanes live; makers / takers (REST matches) in the trades the replay credited to us but live missed.
   reasons   every real touch trade 0-240 s: maker markouts and why we were not filled (cancelled / pulled by prediction / ...).
   queue     touch trades we rested at but missed: queue ahead vs traded volume, places lost by cancel + re-place and why.
-Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom | feedtiming | who | reasons | queue
+  frontage  lower bound on how long the front-of-queue orders that took touch trades had been resting.
+Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom | feedtiming | who | reasons | queue | frontage
 """
 import collections, gzip, json, os, re, sys
 import numpy as np, pandas as pd
@@ -771,5 +772,57 @@ def main_queue():
     return 0
 
 
+def main_frontage():
+    """How long had the orders that took the trades been resting? For each touch trade (time = live receipt of the pending message
+    - 50 ms), the front of the queue was already resting D seconds earlier if, at every grid step back to D, the displayed size at the
+    price (live frame) exceeded the volume traded at the price since then (REST matches, exec-second resolution). Lower bound on
+    the front orders' age, assuming no cancels at the front. Queue misses vs a sample of other 0-60 s touch trades."""
+    sc = json.load(open(f'{RP}/scope.json')); coh = {w['market']: w['ws'] * 1000.0 for w in sc['windows']}
+    R = pd.read_parquet(f'{OUT}/touch_trade_reasons.parquet'); R = R[R.status != 'untimed']
+    Qm = R[R.status == 'resting_not_filled (queue)']
+    oth = R[(R.status != 'resting_not_filled (queue)') & (R.t_in < 60)].sample(n=3000, random_state=7)
+    S = pd.concat([Qm.assign(grp='queue_miss'), oth.assign(grp='other_0_60s')])
+    M = pd.read_parquet(f'{OUT}/matches_20261108.parquet')
+    GRID = [0.1, 0.25, 0.5, 1, 2, 3, 5, 10, 20, 30, 60]
+    rows = []
+    for run, rid in RUNS:
+        sub = S[S.run == run]; mk = set(sub.mid)
+        books = collections.defaultdict(list)
+        for l in lines(f'{CAP}/{run}/run-{rid}/inputs.jsonl.gz', skip_header=True):
+            if l.startswith('{"Advance"'):
+                if float(l[21:l.index('}', 21)]) > CUTOFF_MS + 120_000:
+                    break
+            elif l.startswith('{"Frame"'):
+                m = int(l[19:l.index(',', 19)])
+                if m in mk:
+                    d = json.loads(l)['Frame']; books[m].append((d['known_ms'], dict(d['bids']), dict(d['asks'])))
+        BT = {m: np.array([x[0] for x in v]) for m, v in books.items()}
+        for e in sub.itertuples():
+            m = e.mid; W = coh[m] + e.t_in * 1000.0 - 50.0; side = 'bid' if e.up else 'ask'
+            mm = M[(M.mid == m) & (M.yes_side == side) & (M.ptick == e.ptick)]
+            age = 0.0
+            for D in GRID:
+                i = np.searchsorted(BT[m], W - D * 1000.0, side='right') - 1
+                if i < 0:
+                    break
+                size = books[m][i][1 if e.up else 2].get(e.ptick, 0.0)
+                traded = float(mm[(mm.exec_s >= np.floor((W - D * 1000.0) / 1000.0)) & (mm.exec_s <= np.floor(W / 1000.0))].shares.sum())
+                if size > traded:
+                    age = D
+                else:
+                    break
+            rows.append(dict(grp=e.grp, front_age_s=age, mo5=e.mo5, shares=e.shares))
+    X = pd.DataFrame(rows)
+    out = {}
+    for g, d in X.groupby('grp'):
+        out[g] = dict(n=len(d), front_age_s={q: float(d.front_age_s.quantile(q)) for q in (0.1, 0.25, 0.5, 0.75, 0.9)},
+                      share_front_resting_ge_2s=round(float((d.front_age_s >= 2).mean()), 3), share_ge_10s=round(float((d.front_age_s >= 10).mean()), 3),
+                      mo5_by_front_age={k: round(float((v.shares * v.mo5).sum() / v.shares[v.mo5.notna()].sum()), 2)
+                                        for k, v in d.groupby(pd.cut(d.front_age_s, [-1, 0.5, 2, 10, 1e9], labels=['<=0.5s', '1-2s', '3-10s', '>10s']), observed=True)})
+    json.dump(out, open(f'{OUT}/front_age.json', 'w'), indent=1)
+    print(json.dumps(out, indent=1))
+    return 0
+
+
 if __name__ == '__main__':
-    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom, 'feedtiming': main_feedtiming, 'who': main_who, 'reasons': main_reasons, 'queue': main_queue}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
+    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom, 'feedtiming': main_feedtiming, 'who': main_who, 'reasons': main_reasons, 'queue': main_queue, 'frontage': main_frontage}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
