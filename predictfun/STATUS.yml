@@ -6,6 +6,11 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09 05:37Z: ENTRY INVENTORY-BUDGET STUDY RUNNING, user-authorized; nine consumed days / 2592 markets per arm.
+  Baseline / uniform10 adding order cap / reserved10 adding-side aggregate budget at J/X; reduction rules unchanged.
+  Common remaining-quantity retention for new arms, outstanding reservations counted, submission invariant. 25 controls pass.
+  Full inventory-path/FIFO attribution and day risk metrics; 2000 day null/bootstrap draws, 18 comparisons. Source f7fc7162,
+  branch research/predict-entry-budget-20261109. No live/forward changes; details in HANDOFF.md.
   2026-11-09: RISK OBJECTIVE REVIEW, nine-day post-hoc daily PnL SD ~5% lower with urgency; J worst day does not improve,
   X benefit still Nov2-dependent. Prioritize reservation-aware strategic inventory sizing, matched-exposure queue tests,
   then selective flat-inventory MM cycles. Suggestions only; no new simulation or live/forward change. Details in HANDOFF.
