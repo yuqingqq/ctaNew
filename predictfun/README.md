@@ -7,6 +7,34 @@ order placement. Execution work belongs to a separate project.
 State: `STATUS.yml` + `HANDOFF.md` in this folder (single seat, one writer).
 Background on the venue and collectors: `docs/PREDICT_FUN_RESEARCH.md` (repo root).
 
+## Replay timing repair (2026-11-09)
+
+The exact-order audit found that the J/X trade clocks can fall outside an order's
+possible lifetime. REST `executedAt` follows confirmation; anonymous pending
+increments and book drops cannot identify an exact matching time. Previous PnL
+comparisons remain conditional on that failed clock model.
+
+The current input path preserves full transaction, taker, maker and settlement
+identities. `pf_trade_tape_build` rebuilds the already-consumed Nov8 audit cohort
+into a separate directory, retaining every unresolved trade as a status.
+Matched-status timestamps remain one-second intervals, separate from confirmation
+and local receipt times. No delay fitting, lifecycle clipping, cross-leg clock
+substitution, price rounding or confirmation-time fallback is allowed.
+
+`pf_step4_ladder_identity DAY SCENARIO ARMSET` is the replacement replay entrypoint;
+`PF_TRADE_TAPE` names its manifest directory. It checks the complete identity and
+clock population before touching strategy inputs/output. It currently **refuses
+the available historical tape**, which lacks precise match events. An actual
+matching-event source and validation of both filled and unfilled actions are
+needed before resuming strategy/PnL ranking. A filled-order interval check alone
+does not calibrate queue placement or fill probability.
+
+The old timing estimators and forward drivers now stop with an explicit reason.
+Frozen engine files and previous receipts remain unchanged; historical reproduction
+belongs on the earlier commit. Do not consume the protected forward days under
+the superseded timing assumptions. Repair evidence is under
+`reviews/trade_timing_fix_20261109/`; details are in `HANDOFF.md`.
+
 ## Mode
 
 **Exploratory** (user, 2026-11-01): no held-out split, freeze or forward rules yet.
