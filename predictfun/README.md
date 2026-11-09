@@ -7,6 +7,16 @@ order placement. Execution work belongs to a separate project.
 State: `STATUS.yml` + `HANDOFF.md` in this folder (single seat, one writer).
 Background on the venue and collectors: `docs/PREDICT_FUN_RESEARCH.md` (repo root).
 
+## Pull/re-entry study (2026-11-09)
+
+With sizing held fixed, cancel-ack gating and 25/50/100 ms rapid-reentry confirmation
+were tested on 220 consumed Nov8 first-minute windows (as-of 14:59:08 UTC). Every
+variant lost aligned quote time; the 25 ms rule cut requests 8.46% and coverage
+8.19%. No tested variant preserved capture coverage while reducing requests.
+See [the re-entry comparison](handoffs/20261109_reentry_results.md) for timing,
+population controls and limits. These are no-fill engineering results; the next
+pull-rule study needs exact soft/hard guard attribution, already requested in A3.
+
 ## Capture mechanics study (2026-11-09)
 
 The research quote planner tests retaining a small order and appending a top-up

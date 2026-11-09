@@ -1,15 +1,33 @@
 # P-2026-005 HANDOFF
 
-## 2026-11-09 — pull/re-entry study IN PROGRESS (separate from A2 sizing)
+## 2026-11-09 — pull/re-entry study COMPLETE; no coverage-preserving improvement
 
-- User requested the next focus: prediction-driven pulls and rapid same-price reposting. Branch
-  `research/predict-reentry-churn-20261109`, checkout `/tmp/cta-reentry-churn-20261109`.
-- Reuse only the already-extracted220 Nov8 first-minute windows. Fixed incremental sizing across all arms;
-  no new size policy. Baseline pass-through versus waiting for an existing cancellation acknowledgement,
-  rapid same-price re-entry confirmation25/50/100ms, and all-entry confirmation50ms as a cost control.
-- No relaxed exit/hold rule: every recorded pull/reprice remains immediate. Exact pull reasons are absent;
-  reconstructed prediction attribution remains a diagnostic, not a live guard identity. No fills/PnL,
-  protected data, live changes or fill-clock bypass. Declare/freeze sources and controls before results.
+- User requested moving beyond the existing A2 sizing task to prediction-driven pull/repost behavior. Branch
+  `research/predict-reentry-churn-20261109`, checkout `/tmp/cta-reentry-churn-20261109`. Producer as-of
+  **2026-11-09 14:59:08Z**, verification**14:59:57Z**. **220 consumed Nov8 windows**, first60s/four lanes,
+  **279,059 recorded decisions**, **30,796 reference quote opportunities**, zero excluded windows. No fills/PnL.
+- Hold incremental sizing fixed. Every original pull/reprice cancels immediately. Rapid re-entry means same price
+  within100ms of a recorded pull. Compare cancel-ack wait, continuous eligibility25/50/100ms, and all-entry50 control.
+- Relative to the fixed-sizing reference65,211 requests: cancel-ack **requests-0.22%, aligned quote time-0.14%**;
+  re-entry25 **-8.46%/-8.19%**; re-entry50 **-13.80%/-11.19%**; re-entry100 **-19.49%/-15.84%**;
+  all-entry50 **-43.15%/-27.06%**. All lose original desired-price coverage; same tradeoff direction in both runs.
+  Off-target time also falls for confirmation variants; this tradeoff has no economic valuation here.
+- Minimum delays are checked at original decision events, not a new timer. Diagnostics as-of15:04:07Z:
+  actual delay median46.93ms for25ms (n7792 delayed admissions),75.84ms for50ms(n5976),125.15ms for100ms(n4101).
+  Completed raw opportunities have median100ms (n30699);97 window-censored. Older average surviving quotes do not
+  establish better capture: all-entry50 raises oldest age515->643ms while losing27.06% aligned time.
+- **30 controls pass**; reference exactly matches prior incremental outputs on18 metrics for220 windows.
+  Artifact verifier reconciles1320 window-arm rows and184776 action-arm rows, unchanged reference identities,
+  admitted/withheld/censored statuses, lost/gained coverage and all ratios. Corrupt counts/negative waits refused.
+- Six arms/five new policies; cumulative multiplicity12 including prior capture study. Producer freeze dfbe5ddf,
+  declaration252bd26f. Receipts `reviews/reentry_churn_20261109/`; data/logs under matching research directory.
+  All jobs finished, producer peakRSS294MiB/48.66s, output1.5MiB. No live code, protected Nov9–13, fill-clock bypass
+  or frozen-engine change. One consumed partial day, no confidence interval, PnL, queue-rank or inventory-risk claim.
+- **Do not promote these re-entry delays on current evidence.** Existing B3 symmetric/exit-band and model-stability
+  questions remain open. Investigate unnecessary pulls themselves using exact guard values/reasons (existing A3),
+  or an exact native-input replay with decision parity. Reconstructed scores cannot identify soft versus hard pulls
+  reliably. No claim that all observed pulls are prediction-driven. Detailed results and limitations:
+  `handoffs/20261109_reentry_results.md`. Venue throttling and independent timer-driven admission remain unmodeled.
 
 ## 2026-11-09 — quote capture mechanics COMPLETE; incremental sizing candidate
 
