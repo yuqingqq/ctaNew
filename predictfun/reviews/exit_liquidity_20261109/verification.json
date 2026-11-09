@@ -1,0 +1,54 @@
+{
+  "as_of": "2026-11-09T11:44:01.908219+00:00",
+  "report_as_of": "2026-11-09T11:43:41.601151+00:00",
+  "report_sha": "fbd470a772be94076adb0bad12114105b54d5484da8f2cdb3f3167d3d1f534a7",
+  "verifier_sha": "6433dbf149bfaa1added84441f9bf51bbbe263cc56657e41e7023dade7da5a54",
+  "source_commit": "61d727daf4570730fcf1a89084e83ffe1263c4f4",
+  "population": {
+    "days_per_timing": 9,
+    "markets_per_arm_timing": 2592,
+    "candidate_fill_rows": 19435
+  },
+  "verified_sources": 21,
+  "verified_result_artifacts": 216,
+  "verified_metadata_sets": 18,
+  "verified_reference_metadata_sets": 18,
+  "controls": {
+    "inherited_opening_detected": true,
+    "new_opening_refused": true,
+    "late_valuation_refused": true,
+    "missing_provenance_refused": true
+  },
+  "inherited_vs_new_late_opening": {
+    "J/exit_keep": {
+      "inherited_opening": 13.669999999999996,
+      "new_opening": 1.1546319456101628e-14,
+      "fills": 4947,
+      "max_fill_second": 239.78712573242188
+    },
+    "J/exit_close25": {
+      "inherited_opening": 13.669999999999996,
+      "new_opening": 1.1546319456101628e-14,
+      "fills": 4922,
+      "max_fill_second": 239.78712573242188
+    },
+    "X/exit_keep": {
+      "inherited_opening": 0.0,
+      "new_opening": 1.4210854715202004e-14,
+      "fills": 4782,
+      "max_fill_second": 239.668
+    },
+    "X/exit_close25": {
+      "inherited_opening": 0.0,
+      "new_opening": 1.4210854715202004e-14,
+      "fills": 4784,
+      "max_fill_second": 240.029
+    }
+  },
+  "predicates": {
+    "no_late_new_order_opens_reverse": true,
+    "all_fills_before_stop_mark": true
+  },
+  "comparison_csv_sha": "7d4cfad2ddf051d8bc98594c099fb1759b0575816722ae5e4cc6924d6e034aa8",
+  "scope": "provenance and accounting verification; no additional hypothesis selection"
+}
