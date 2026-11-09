@@ -1,0 +1,39 @@
+{
+  "as_of": "2026-11-09T10:26:05.500589+00:00",
+  "report_as_of": "2026-11-09T10:23:48.021679+00:00",
+  "report_sha": "b723eb053e79399cdb615bff975f62267ca0dba9c963a6c1fa4bf7a192447202",
+  "population": {
+    "days_per_timing": 9,
+    "markets_per_arm_timing": 2592,
+    "candidate_fill_rows": 19549
+  },
+  "inherited_vs_new_late_opening": {
+    "J/late_reserved": {
+      "inherited_opening": 13.669999999999996,
+      "new_opening": 1.1546319456101628e-14,
+      "fills": 4903
+    },
+    "J/late_taper1": {
+      "inherited_opening": 13.669999999999996,
+      "new_opening": 1.092459456231154e-13,
+      "fills": 5086
+    },
+    "X/late_reserved": {
+      "inherited_opening": 0.0,
+      "new_opening": 1.4210854715202004e-14,
+      "fills": 4733
+    },
+    "X/late_taper1": {
+      "inherited_opening": 0.0,
+      "new_opening": 1.4210854715202004e-14,
+      "fills": 4827
+    }
+  },
+  "max_fill_second": 239.78712573242188,
+  "predicates": {
+    "no_late_new_order_opens_reverse": true,
+    "all_fills_before_stop_mark": true
+  },
+  "comparison_csv_sha": "d63935f5c1d7f437d17ed636ada2ed89a5647aa84eea709ed71918ba4c933ffa",
+  "scope": "descriptive provenance audit using originating order metadata; no new hypothesis test"
+}
