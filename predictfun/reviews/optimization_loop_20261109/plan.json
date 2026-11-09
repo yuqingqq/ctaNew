@@ -1,5 +1,5 @@
 {
-  "status": "active_between_passes",
+  "status": "native_latency_in_progress",
   "authorization": "User: Launch a loop to proceed the optimizations, keep the findings tracked",
   "objective": "Preserve original desired-price quote coverage while reducing unnecessary requests and additional inventory exposure; economic conclusions require calibrated fills",
   "baseline_commit": "691f80c1",
@@ -55,7 +55,7 @@
     "preserve existing receipts",
     "one research process, one core, 4GiB cap"
   ],
-  "end_of_pass": "Complete the declared equal-clock follow-up, publish superseding combined findings, and retain economic/fill-model and A2 integration limits.",
+  "end_of_pass": "Complete native latency sensitivity with exact base parity, verify all saved artifacts, publish findings and preserve full B4/timer/economic limitations.",
   "report_note": "Two-round findings.json and handoff were written after successful checks; the final mutable-plan update used an exclusive-create helper and failed. Plan update is corrected; round artifacts and reported numbers are unaffected. A combined v2 report will supersede this subset report.",
   "as_of": "2026-11-09T17:07:39.812735+00:00",
   "findings": "findings_v3.json",
@@ -65,7 +65,7 @@
     "Actual timer scheduling and calibrated fills/authorized forward evidence are still required for economic promotion."
   ],
   "next_pass": {
-    "status": "planned",
+    "status": "controls_passed",
     "focus": "Repeat the native comparison under the already specified faster/slower latency assumptions, with exact base replay parity.",
     "data_constraint": "same consumed bounded Nov8 only; protected Nov9\u201313 remain unread",
     "economic_gate": "no profit/variance promotion without calibrated fills or authorized forward evidence"
