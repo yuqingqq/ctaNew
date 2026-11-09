@@ -39,12 +39,12 @@ def plan(net, wants, currents, opens, mode, rel):
 def admission(net, side, size, opens, mode, rel):
     if not active(mode,rel):
         return size
-    return 0. if prior.entry.adding(net,side) else prior.admission(net,side,size,opens,'reduce_reserved')
+    return 0. if rel>=240 or prior.entry.adding(net,side) else prior.admission(net,side,size,opens,'reduce_reserved')
 
 
 def assert_admission(net, side, size, opens, mode, rel):
     if active(mode,rel):
-        if prior.entry.adding(net,side) and size>0:
+        if (rel>=240 or prior.entry.adding(net,side)) and size>0:
             raise ValueError('late submission would increase inventory')
         prior.assert_admission(net,side,size,opens,'reduce_reserved')
 

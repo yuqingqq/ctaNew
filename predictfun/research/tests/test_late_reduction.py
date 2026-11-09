@@ -13,6 +13,7 @@ class LateControls(unittest.TestCase):
         with self.assertRaises(ValueError):e.assert_admission(10,1,11,[],'late_reserved',60)
         self.assertEqual(e.admission(10,1,25,[],'late_reserved',59.99),25)
         self.assertEqual(e.admission(-1,1,25,[],'late_reserved',60),0)
+        self.assertEqual(e.admission(10,1,25,[],'late_reserved',240),0)
         with self.assertRaises(ValueError):e.assert_admission(-1,1,1,[],'late_reserved',60)
 
     def test_pending_cancels_and_retention(self):
