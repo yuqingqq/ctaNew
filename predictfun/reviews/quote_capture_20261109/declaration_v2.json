@@ -1,0 +1,73 @@
+{
+  "as_of": "2026-11-09T14:26:02.559362+00:00",
+  "population": "220 consumed Nov8 windows, first60 seconds, four lanes; all recorded desired decisions, never fill-selected",
+  "estimand": "paired fixed-intent no-fill engineering workload; order requests, oldest active quote age, quoting time and pending exposure; no PnL or fill-rate estimate",
+  "baseline": "single-order cancel/repost versus base5+topup; same recorded target prices/sizes/hard-guard pulls",
+  "arms": {
+    "single": [
+      false,
+      0.0
+    ],
+    "layered": [
+      true,
+      0.0
+    ],
+    "layered_entry_0.005": [
+      true,
+      0.005
+    ],
+    "layered_entry_0.01": [
+      true,
+      0.01
+    ],
+    "layered_entry_0.02": [
+      true,
+      0.02
+    ],
+    "layered_entry_0.04": [
+      true,
+      0.04
+    ]
+  },
+  "primary": "layered without buffer; layered_entry_0.01 is a predeclared shadow candidate, not an economic winner",
+  "gate": "entry only: v>original minute0 PM90 line+delta; keep only while v>original line and score age<=100ms; reset on hard pull/reprice; original desired target is never enlarged",
+  "order_model": {
+    "place_ms": 40,
+    "cancel_ms": 22,
+    "pending_cancel_ms": 95,
+    "cancel_reserve_grace_ms": 1000,
+    "side_cap_shares": 150,
+    "creates_inflight_per_side": 3,
+    "minimum_notional_usd": 1
+  },
+  "sizing": "do not refill partial components; fall back to one order when either split ticket is below minimum; global pending reservations and reduce-only room shared across lanes",
+  "signal_limitation": "buffer uses precomputed reconstructed research scores; these are not captured exact live guard values",
+  "null": "deterministic mechanical workload test; no statistical hypothesis, confidence interval, predictive-skill claim or profit-based selection",
+  "multiplicity": 6,
+  "validation": "positive/refusal controls, zero-buffer exact target parity, all-arm target subset, action/budget checks; fresh-day strategy validation not attempted",
+  "source_commit": "bbb760c1a018022ac5a29e6bc1beac0137d410ea",
+  "sources": {
+    "pf_quote_capture.py": "b3e5c188e56074124a442b1202c844ac4faf3ef45042c476959824411908301f",
+    "pf_quote_capture_study.py": "619bc0b368c8b4fe487fa5fe905af15e5236ae05fd57b181e56d749b8e05ab03",
+    "tests/test_quote_capture.py": "ac8d50ef11ca19f97a6ab66fb04cff725641754339b79248be27430c7ce92330",
+    "tests/test_quote_capture_study.py": "9bbc7fe2676280b843493db085b912c35d8578d41f8414114f4053ef227174e1"
+  },
+  "inputs": {
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/scope.json": "0fdb454efec919ab03b2e44fddef154c5e9964c65d1ab3cf10828eabf0dc58b6",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/research/step5/20261108/preds_t60k.parquet": "afac922009cf8e9df6787625e86c661a8dba0b1d968cfbbce0f1e79665001a82",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step4/minute_lines_t60k.json": "3852fec9e0fa36d164c5482688574663bc4230033911ce0d47049e04ac87735d"
+  },
+  "raw_inputs": {
+    "v6": "/home/yuqing/pmmm-data/tokyo-live-data-20261109/tokyo-live-20261109/v6/run-1794108465172/outputs.jsonl.gz",
+    "basis": "/home/yuqing/pmmm-data/tokyo-live-data-20261109/tokyo-live-20261109/basis/run-1794147344737/outputs.jsonl.gz"
+  },
+  "raw_boundary": "hash/read only decompressed prefix before Nov8 23:02; future payload not decoded",
+  "no_live_change": true,
+  "no_fill_clock_bypass": true,
+  "protected_dates_read": false,
+  "version": 2,
+  "supersedes_declaration_sha256": "44f01edc6121a260df1e356dbd19f8f81425df3d7e437dfe3c702fe7f9765465",
+  "prior_receipt_sha256": "0b8ee1ca1a42c74c2e3c903c7be60913216e4d41b17b31cde4035c1e51562d50",
+  "correction": "single-order reference must cancel/repost on target-size increases and decreases; prior generic rem<=target check accidentally retained the smaller order on increases. Layered partial retention applies only when nominal size decreases. No arm/threshold/latency/data change.",
+  "inherited_decisions_sha256": "b775757c56a470b2b512fca15965e78dc8ec426817857107152278bc12d9335f"
+}
