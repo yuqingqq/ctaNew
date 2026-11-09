@@ -28,6 +28,27 @@ C=['mid','exec_s','first_recv_ns','side','ptick','shares','price_executed','take
 PREFIX=re.compile(rb'^\{"frame":\{"at":([0-9]+),')
 
 
+def new_paths(*names):
+    if any((DEST/n).exists() for n in names):raise ValueError('refuse overwriting audit artifacts')
+
+
+def verify_clock_stats(actual,expected):
+    if json.loads(json.dumps(actual,allow_nan=False))!=expected:raise ValueError('original engine clock diagnostics differ')
+
+
+def amendment():
+    old=json.loads((DEST/'declaration.json').read_text())
+    revised=dict(old,version=2,as_of=dt.datetime.now(dt.timezone.utc).isoformat(),
+        original_as_of=old['as_of'],supersedes_declaration_sha=sha(DEST/'declaration.json'),
+        correction='canonicalize integer dictionary keys through JSON before exact clock diagnostics comparison; add no-overwrite guards and corresponding controls; no timing/data/selection rule change',
+        failed_anchor_log_sha=sha(DEST/'logs/fill_clock_anchors.log'),
+        source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=HERE,text=True).strip(),
+        source_sha={p:sha(HERE.parents[1]/p) for p in old['source_sha']},
+        inherited_extraction_sha={f:sha(DEST/f) for f in ['orders.parquet','fill_events.parquet','own_rest_legs.parquet','kernel_prefixes.json']})
+    write(DEST/'declaration_v2.json',revised)
+    print('DECLARED v2 instrument correction; no clock comparison result read',flush=True)
+
+
 def hex_id(value):
     if not isinstance(value,list) or len(value)!=32 or any(type(x)!=int or not 0<=x<=255 for x in value):
         raise ValueError('invalid signed order hash')
@@ -123,6 +144,7 @@ def setup():
 
 
 def extract():
+    new_paths('orders.parquet','fill_events.parquet','own_rest_legs.parquet','kernel_prefixes.json')
     scope=json.loads((RP/'scope.json').read_text());reg=pd.read_parquet(RP/'research/step1'/DAY/'registry.parquet').set_index('mid')
     orders=[];events=[];reads={}
     for run in RUNS:
@@ -194,6 +216,7 @@ def extract():
 
 
 def anchors():
+    new_paths('engine_anchors.parquet')
     from . import pf_io as io
     io.OUT=str(DATA);oldargv=sys.argv;oldenv=dict(os.environ);out={};src=source_prefix()
     try:
@@ -206,7 +229,7 @@ def anchors():
             sys.argv=['clock_audit',DAY,'tokyoreal','custom']
             ns=dict(__name__='clock_audit',__package__=__package__,__file__=str(HERE/'pf_step4_ladder_v3.py'))
             exec(compile(src,'pinned_clock_prefix','exec'),ns)
-            if tm in ['J','X'] and ns['TXSTAT']!=meta['tx_timing']:raise ValueError('original engine clock diagnostics differ')
+            if tm in ['J','X']:verify_clock_stats(ns['TXSTAT'],meta['tx_timing'])
             f=ns['LT'];out[tm]=np.where(f.how.to_numpy()>0,f.t_ms.to_numpy(),f.exec_s.to_numpy()*1000.).copy()
             del ns,f;gc.collect()
     finally:
@@ -228,6 +251,18 @@ def dedup_events(e):
 
 
 def report():
+    new_paths('clock_cases.parquet','confirmed_without_rest.parquet','report.json')
+    declaration_path=DEST/('declaration_v2.json' if (DEST/'declaration_v2.json').exists() else 'declaration.json')
+    declaration=json.loads(declaration_path.read_text())
+    for p,h in declaration['source_sha'].items():
+        if sha(HERE.parents[1]/p)!=h:raise ValueError('declared source changed')
+    for p,h in declaration['input_sha'].items():
+        if sha(p)!=h:raise ValueError('declared input changed')
+    for p,h in declaration.get('inherited_extraction_sha',{}).items():
+        if sha(DEST/p)!=h:raise ValueError('inherited extraction changed')
+    control_path=DEST/'logs'/('fill_clock_controls_v2.log' if declaration.get('version')==2 else 'fill_clock_controls.log')
+    controls=control_path.read_text()
+    if '\nOK\n' not in controls or 'rc=0 ' not in controls:raise ValueError('missing controls')
     O=pd.read_parquet(DEST/'orders.parquet');E=dedup_events(pd.read_parquet(DEST/'fill_events.parquet'))
     M=pd.read_parquet(DEST/'own_rest_legs.parquet');A=pd.read_parquet(DEST/'engine_anchors.parquet')
     L=pd.read_parquet(DATA/'step1'/DAY/'legs_timed2.parquet',columns=C)
@@ -287,15 +322,10 @@ def report():
     rest_keys=set(zip(M.order_hash,M.trade_id))
     missing=E[(E.final_status=='Confirmed')&~pd.Series(list(zip(E.order_hash,E.trade_id))).isin(rest_keys)]
     missing.to_parquet(DEST/'confirmed_without_rest.parquet',index=False)
-    declaration=json.loads((DEST/'declaration.json').read_text())
-    for p,h in declaration['source_sha'].items():
-        if sha(HERE.parents[1]/p)!=h:raise ValueError('declared source changed')
-    for p,h in declaration['input_sha'].items():
-        if sha(p)!=h:raise ValueError('declared input changed')
     null_out=dict(draws=500,order_actions=len(per_order),permutable_actions=sum(len(ix) for ix in groups if len(ix)>1),
         observed_compatible=float(((z>=l)&(z<=u)).mean()),null_mean=float(np.mean(null)),null_max=float(max(null)),
         interpretation='matched action diagnostic; no day-level CI or profitability inference')
-    out=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),declaration=declaration,declaration_sha=sha(DEST/'declaration.json'),
+    out=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),declaration=declaration,declaration_sha=sha(declaration_path),source_controls=controls,
         source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=HERE,text=True).strip(),
         population=dict(day=DAY,markets=220,order_actions=len(O),by_action_status=O.action_status.value_counts().to_dict(),
             raw_fill_notices=len(pd.read_parquet(DEST/'fill_events.parquet')),unique_kernel_trades=len(E),rest_maker_legs=len(R),
@@ -321,4 +351,4 @@ def report():
 
 
 if __name__=='__main__':
-    {'declare':setup,'extract':extract,'anchors':anchors,'report':report}[sys.argv[1]]()
+    {'declare':setup,'amend':amendment,'extract':extract,'anchors':anchors,'report':report}[sys.argv[1]]()

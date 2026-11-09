@@ -8,6 +8,15 @@ from predictfun.research import pf_fill_clock as c
 
 
 class ClockControls(unittest.TestCase):
+    def test_serialized_clock_identity(self):
+        c.verify_clock_stats({'counts':{1:10}},{'counts':{'1':10}})
+        with self.assertRaises(ValueError):c.verify_clock_stats({'counts':{1:11}},{'counts':{'1':10}})
+
+    def test_no_overwrite(self):
+        with tempfile.TemporaryDirectory() as d,patch.object(c,'DEST',Path(d)):
+            c.new_paths('x');(Path(d)/'x').write_text('existing')
+            with self.assertRaises(ValueError):c.new_paths('x')
+
     def test_hash_identity(self):
         self.assertEqual(c.hex_id([1]*32),'0x'+'01'*32)
         for v in [[1]*31,[256]*32,['1']*32]:
