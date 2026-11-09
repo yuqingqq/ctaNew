@@ -1,5 +1,19 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 — quote capture optimization IN PROGRESS
+
+- User authorized improving strategy capture after the timing repair. Research branch
+  `research/predict-quote-capture-20261109`, checkout `/tmp/cta-quote-capture-20261109`.
+- Primary change: preserve base order identity through5/25 size changes, separate top-up, no partial-component refill,
+  minimum-notional fallback, shared pending-cancel/create reservations and reduce-only room. Existing guards pull
+  immediately. Entry-only buffers0.005/0.01/0.02/0.04c are separate opt-in candidates; no relaxed exit threshold.
+- Predeclared paired workload:220 consumed Nov8 windows, first60s, four lanes; recorded desired quotes fixed across
+  arms, no simulated fills. Same40/22/95ms acknowledgements,1s cancellation reserve grace,150-share side cap,3
+  pending creates/side. Measure requests, oldest-quote age, quoted time and reservations, not PnL/variance/fill rate.
+- Buffer scores are reconstructed research scores; missing/disagreeing values are counted. No claim that the fixed
+  factual inventory-dependent desired path is a counterfactual inventory path. No protected Nov9–13 data, live code,
+  strategy deployment, or fill-clock bypass. One capped process at a time; source/control freeze before results.
+
 ## 2026-11-09 — trade timing repair COMPLETE; precise replay remains data-limited
 
 - User requested fixing the replay timing defects. Producer receipt as-of **2026-11-09 13:53:36Z**, final runtime

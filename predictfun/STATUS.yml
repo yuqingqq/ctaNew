@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09: QUOTE CAPTURE STUDY RUNNING, layered base/top-up plus entry-only buffers on220 consumed Nov8 windows.
+  Fixed desired-quote workload, no fills/PnL; guards and reservations retained. Source branch research/predict-quote-capture-20261109.
   2026-11-09 13:56Z: TRADE TIMING REPAIR COMPLETE on fix/predict-trade-timing-20261109. Full trade identities,
   separate status/confirmation/receipt clocks; no heuristic fallback or other-leg substitution.375,569 retained legs,
   99 exact own identities/consistent coarse intervals,375,470 missing clocks;42,064 actions reconcile within1 microshare.
