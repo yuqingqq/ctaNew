@@ -10,7 +10,9 @@ journal exports (pmmm-tools journal-export at c54df1f), and the replay of pf_liv
   compare live vs replay per window and in total (P&L, fills, shares, by phase / lane), and for every replay fill whether live
           held an order on that side at that price then (+-250 ms), was refused there, or wanted no order (live decision).
   lifetime  live's fill share of the replay fills it held resting, by the live order's lifetime; live fills with a replay fill.
-Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime
+  markout   replay fills by order age / cancel-pending (9 consumed days and the 220 windows) and live fills by lifetime: markouts.
+  phantom   NetCap refusals left under a late-fill window W or a higher net_shares; late fills a window would miss.
+Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom
 """
 import collections, gzip, json, os, re, sys
 import numpy as np, pandas as pd
@@ -311,5 +313,85 @@ def main_lifetime():
     return 0
 
 
+def main_markout():
+    """Replay fills by order state at the fill (cancel-pending, else age since activation): shares, settle, +1 s / +60 s markout per
+    share, on the 9 consumed in-sample days (i2J / i2X, v3 arm) and on the 220 live windows; live booked fills by live order lifetime."""
+    from .pf_inv_report import stem, run_dir, DAYS
+    from .pf_ladder_v3_build import ARM
+    def prof(f, edges, labels):
+        b = np.where(f.zombie, 'cancel-pending', pd.cut(f.age_ms, edges, labels=labels).astype(str))
+        g = f.assign(b=b).groupby('b').agg(fills=('q', 'size'), shares=('q', 'sum'), settle=('settle', 'sum'), mo1=('mo1', 'sum'), mo60=('mo60', 'sum'))
+        return {k: dict(fills=int(v.fills), shares=round(float(v.shares), 1), share_pct=round(float(100 * v.shares / g.shares.sum()), 1),
+                        settle_usd=round(float(v.settle), 2), settle_c_sh=round(float(100 * v.settle / v.shares), 2),
+                        mo1_usd=round(float(v.mo1), 2), mo1_c_sh=round(float(100 * v.mo1 / v.shares), 2), mo60_c_sh=round(float(100 * v.mo60 / v.shares), 2))
+                for k, v in g.iterrows()}
+    out = dict(in_sample_9d={}, live_windows={}, live_fills={})
+    for tm in ('J', 'X'):
+        F = pd.concat([pd.read_parquet(f"{run_dir('i2' + tm, d)}/fills/{stem(ARM)}.parquet") for d in DAYS])
+        out['in_sample_9d'][tm] = prof(F, [-1, 50, 100, 200, 500, 1e12], ['<50ms', '50-100ms', '100-200ms', '200-500ms', '>500ms'])
+        y = F[F.zombie | (F.age_ms < 100)]
+        out['in_sample_9d'][tm + '_young_or_cancel_pending_share_of_mo1'] = round(float(y.mo1.sum() / F.mo1.sum()), 3)
+        C = pd.read_parquet(f'{OUT}/replay_fill_attribution.parquet')
+        out['live_windows'][tm] = prof(C[C.timing == tm], [-1, 100, 500, 1e12], ['<100ms', '100-500ms', '>500ms'])
+    coh = cohort(); rows = []
+    for run, _ in RUNS:
+        P = pd.read_parquet(f'{OUT}/core_orders_{run}.parquet').set_index('cid')
+        for f in json.load(open(f'{CAP}/{run}/stageA/ledger.json'))['fills']:
+            if f['market'] in coh and f['booked'] and f['cid'] in P.index:
+                p = P.loc[f['cid']]
+                rows.append(dict(sh=f['shares'], m1=f['markout_1s'] if f['markout_1s_status'] == 'ok' else np.nan,
+                                 m60=f['markout_60s'] if f['markout_60s_status'] == 'ok' else np.nan, pnl=f['shares'] * (f['payout'] - f['price']),
+                                 life=np.nanmax([p.t_CancelDone, p.t_Filled_last]) - p.t_Accepted))
+    R = pd.DataFrame(rows); R['b'] = pd.cut(R.life, [-1e9, 100, 500, 2000, 1e12], labels=['<100ms', '100-500ms', '0.5-2s', '>2s'])
+    for k, d in R.groupby('b', observed=False):
+        out['live_fills'][str(k)] = dict(fills=len(d), shares=round(float(d.sh.sum()), 1),
+                                        mo1_c_sh=round(float(100 * (d.sh * d.m1).sum() / d.sh[d.m1.notna()].sum()), 2) if len(d) else None,
+                                        settle_usd=round(float(d.pnl.sum()), 2))
+    out['live_fills']['all_mo1_c_sh'] = round(float(100 * (R.sh * R.m1).sum() / R.sh[R.m1.notna()].sum()), 2)
+    json.dump(out, open(f'{OUT}/markout_by_age.json', 'w'), indent=1)
+    print(json.dumps(out, indent=1))
+    return 0
+
+
+def main_phantom():
+    """NetCap fix options on the 11-08 refusals: refusals left if a cancelled order counted only for W ms after its cancel was
+    confirmed (the 5 s REST audit stays the backstop), or with a higher net_shares; and late fills (first fill notice after the
+    cancel confirmation) a window W would not have covered."""
+    res = {}
+    for run, _ in RUNS:
+        D = pd.read_parquet(f'{OUT}/kernel_orders_{run}.parquet'); F = pd.read_parquet(f'{OUT}/kernel_fills_{run}.parquet')
+        ok = F[F.status != 'Failed']
+        D['filled'] = D.cid.map(ok.groupby('cid')['size'].max()).fillna(0.0); D['t_first_fill'] = D.cid.map(ok.groupby('cid')['at'].min())
+        D['t_live_end'] = D[['t_UserCancel', 't_CancelPendingAudit']].min(axis=1)
+        D['t_rec'] = D[['t_CancelQuantityReconciled', 't_CancelAuditComplete']].min(axis=1)
+        late = D[D.t_first_fill.notna() & D.t_live_end.notna() & (D.t_first_fill > D.t_live_end)]; dl = late.t_first_fill - late.t_live_end
+        ref = D[D.refused == 'risk NetCap']; by_m = {k: g for k, g in D[D.refused.isna()].groupby(['market', 'up'])}
+        fo = ok.merge(D[['cid', 'market', 'up']], on='cid')
+        def worst(r, W=None):
+            g = by_m.get((r.market, r.up))
+            if g is None:
+                return r['size']
+            g = g[g.t_place < r.t_place]
+            live = g[g.t_live_end.isna() | (g.t_live_end > r.t_place)]
+            aud = g[(g.t_live_end <= r.t_place) & (g.t_rec.isna() | (g.t_rec > r.t_place))]
+            if W is not None:
+                aud = aud[(r.t_place - aud.t_live_end) < W]
+            fl = fo[(fo.market == r.market) & (fo['at'] <= r.t_place)]
+            return (fl[fl.up == r.up]['size'].sum() - fl[fl.up != r.up]['size'].sum() + (live['size'] - live.filled).clip(lower=0).sum()
+                    + (aud['size'] - aud.filled).clip(lower=0).sum() + r['size'])
+        base = np.array([worst(r) for _, r in ref.iterrows()])
+        o = dict(netcap_refusals=len(ref), rebuilt_over_cap_now=int((base > NET_CAP).sum()), late_first_fill_notices=len(late),
+                 late_notice_after_cancel_ms=dict(p50=round(float(dl.median()), 0), p90=round(float(dl.quantile(0.9)), 0), max=round(float(dl.max()), 0)))
+        for W in (500, 1000, 2000, 3000, 5000):
+            w = np.array([worst(r, W) for _, r in ref.iterrows()])
+            o[f'window_{W}ms'] = dict(refusals_left=int((w > NET_CAP).sum()), late_fills_uncovered=int((dl > W).sum()))
+        for cap in (200, 300, 400):
+            o[f'net_shares_{cap}'] = dict(refusals_left=int((base > cap).sum()))
+        res[run] = o
+    json.dump(res, open(f'{OUT}/phantom_fix_options.json', 'w'), indent=1)
+    print(json.dumps(res, indent=1))
+    return 0
+
+
 if __name__ == '__main__':
-    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
+    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
