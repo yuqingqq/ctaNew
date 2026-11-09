@@ -1,0 +1,15 @@
+{
+  "status": "running",
+  "authorization": "User: Launch a loop to proceed the optimizations, keep the findings tracked",
+  "objective": "Preserve original desired-price quote coverage while reducing unnecessary requests and additional inventory exposure; economic conclusions require calibrated fills",
+  "baseline_commit": "691f80c1",
+  "branch": "research/predict-opt-loop-20261109",
+  "data": "220 consumed Nov8 windows, first60s; exact native decisions and due-event probes from the previous verified study",
+  "loop": [
+    {"round": "inventory", "status": "in_progress", "hypothesis": "Limit soft-exit grace to inventory-reducing accepted small orders; compare individual no-flip and aggregate reservation-room checks against unconditional grace"},
+    {"round": "duration_latency", "status": "planned", "hypothesis": "Measure shorter grace periods and latency sensitivity using paired baselines; do not select a policy from a PnL proxy"}
+  ],
+  "per_round": ["implement policy and positive/refusal controls", "commit sources and declaration before results", "run serially under run_light.sh", "verify saved artifacts and baseline parity", "record gains, costs, exclusions, multiplicity and limitations", "review and commit/push"],
+  "constraints": ["no live deployment", "no protected Nov9-13 reads", "no historical fill-clock bypass", "no changes to the frozen engine or cost/loss settings", "preserve existing receipts", "one research process, one core, 4GiB cap"],
+  "end_of_pass": "Complete inventory and duration/latency rounds, publish the comparison and next evidence needed; no automatic trading promotion. Further policy or data expansion gets a new declaration."
+}
