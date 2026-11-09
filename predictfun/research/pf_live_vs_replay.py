@@ -12,7 +12,8 @@ journal exports (pmmm-tools journal-export at c54df1f), and the replay of pf_liv
   lifetime  live's fill share of the replay fills it held resting, by the live order's lifetime; live fills with a replay fill.
   markout   replay fills by order age / cancel-pending (9 consumed days and the 220 windows) and live fills by lifetime: markouts.
   phantom   NetCap refusals left under a late-fill window W or a higher net_shares; late fills a window would miss.
-Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom
+  feedtiming live latency vs the replay's; WS pending-message timing of live fills and of replay fills live missed / also got.
+Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom | feedtiming
 """
 import collections, gzip, json, os, re, sys
 import numpy as np, pandas as pd
@@ -393,5 +394,62 @@ def main_phantom():
     return 0
 
 
+def pending_increments(run, rid, markets):
+    """Positive changes of the Predict WS 'pending' (settlementsPending, summed over makers per price) per (market, price tick), at the
+    live bot's receipt time. A sweep's legs at one price arrive as one increment."""
+    inc = collections.defaultdict(list); last = {}
+    for l in lines(f'{CAP}/{run}/run-{rid}/inputs.jsonl.gz', skip_header=True):
+        if l.startswith('{"Frame"'):
+            m = int(l[19:l.index(',', 19)])
+            if m not in markets:
+                continue
+            d = json.loads(l)['Frame']; cur = {(a, b): v for a, b, v in d['pending']}; prev = last.get(m, {})
+            for k, v in cur.items():
+                if v - prev.get(k, 0.0) > 1e-9:
+                    inc[(m, k[1])].append((d['known_ms'], v - prev.get(k, 0.0)))
+            last[m] = cur
+    return inc
+
+
+def main_feedtiming():
+    """Is the short-lived-fill gap live infrastructure or the replay? (1) live latency vs the replay's (decision -> accepted 40 ms,
+    cancel 22 ms); (2) live's own fills: when the WS pending message for the fill reached live, relative to the order's acceptance /
+    cancel; (3) replay fills where live held the same order resting: when the pending message for the replay's trade (our price or
+    through it, nearest to the replay time within 400 ms) reached live, relative to that live order, missed vs also-filled."""
+    out = dict(latency={}, live_fills={}, replay_fills={})
+    C = pd.read_parquet(f'{OUT}/replay_fill_attribution.parquet'); R1 = []; R2 = []
+    for run, rid in RUNS:
+        P = pd.read_parquet(f'{OUT}/core_orders_{run}.parquet'); mk = set(P.market)
+        a = (P.t_Accepted - P.t_req).dropna(); c = (P.t_CancelDone - P.t_cancel).dropna()
+        out['latency'][run] = dict(decision_to_accepted_ms={q: round(float(a.quantile(q)), 1) for q in (0.1, 0.5, 0.9, 0.99)},
+                                   cancel_to_done_ms={q: round(float(c.quantile(q)), 1) for q in (0.5, 0.9)})
+        inc = pending_increments(run, rid, mk)
+        for m, i, kn, q in [(r.market, r.id, r.t_Filled, r.filled) for r in P[P.filled > 0].itertuples()]:
+            o = P[(P.market == m) & (P.id == i)].iloc[0]; val = q * o.tick / 100.0
+            cand = [t for t, dv in inc.get((m, o.tick), []) if dv >= val - max(0.011 * val, 0.01) and o.t_req - 200 <= t <= kn + 3000]
+            if cand:
+                W = min(cand); R1.append(dict(W_A=W - o.t_Accepted, W_C=W - o.t_CancelDone))
+        for r in C[(C.run == run) & C.why.isin(['live_rested_no_fill', 'live_rested_and_filled'])].itertuples():
+            T = r.ws_ms + r.t * 1000.0
+            o = P[(P.market == r.mid) & (P.lane.isin([0, 2] if r.side == 0 else [1, 3])) & (P.tick == r.pt) & P.t_Accepted.notna()].copy()
+            o['end'] = o[['t_CancelDone', 't_Filled_last']].max(axis=1).fillna(r.ws_ms + 300_000.0)
+            ins = o[(o.t_Accepted <= T) & (o.end >= T)]
+            ticks = [r.pt - k for k in range(6)] if r.side == 0 else [r.pt + k for k in range(6)]
+            ws = [t for tk in ticks for t, _ in inc.get((r.mid, tk), []) if T - 400 <= t <= T + 400]
+            if len(ins) and ws:
+                A = ins.t_Accepted.max(); E = ins.loc[ins.t_Accepted.idxmax(), 'end']; W = min(ws, key=lambda t: abs(t - T))
+                R2.append(dict(filled=r.why == 'live_rested_and_filled', W_A=W - A, W_E=W - E))
+    R1 = pd.DataFrame(R1); R2 = pd.DataFrame(R2); cc = R1[R1.W_C.notna()]
+    out['live_fills'] = dict(n=len(R1), pending_minus_accepted_ms={q: round(float(R1.W_A.quantile(q)), 0) for q in (0.1, 0.5, 0.9)},
+                             cancelled_n=len(cc), pending_after_cancel_done=int((cc.W_C > 0).sum()))
+    for f, lab in ((False, 'live_missed'), (True, 'live_also_filled')):
+        x = R2[R2.filled == f]
+        out['replay_fills'][lab] = dict(n=len(x), pending_minus_live_accepted_ms={q: round(float(x.W_A.quantile(q)), 0) for q in (0.1, 0.25, 0.5, 0.75)},
+                                        within_60ms_of_accept_or_after_gone=round(float(((x.W_A < 60) | (x.W_E > 0)).mean()), 3))
+    json.dump(out, open(f'{OUT}/feed_timing.json', 'w'), indent=1)
+    print(json.dumps(out, indent=1))
+    return 0
+
+
 if __name__ == '__main__':
-    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
+    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom, 'feedtiming': main_feedtiming}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
