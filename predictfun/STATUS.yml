@@ -6,6 +6,23 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09 14:24Z: A1 IMPLEMENTED (user: "start doing the fix ... review, then commit/push", "also merge into main"). pmmmrust 366d419
+  on branch fix/pfmm-late-fill-window-20261109 (from 109fa4a = live release 3c724fe + parity reviews), main fast-forwarded
+  a3c3589..366d419 and pushed. [live] cancel_late_fill_window_ms (examples 1000): exec reports CancelLateFillWindowElapsed
+  once the window passed, a wallet frame arrived after its due time, no new fill evidence, same epoch / confirmation, audits
+  healthy, audit pending; OMS then reserves booked / owed only; later fill re-reserves + alerts, no halt. Two independent
+  reviews (first: WS-liveness hole + reopen double window, fixed; second: monitoring false positives, fixed); check.sh OK
+  (1,335 Rust test runs, clippy -D warnings, no-std, MSRV 1.88; Tokyo render guard updated for the new [live] key).
+  Not deployed (user's call). Follow-up A6: wallet socket inactivity timeout.
+  2026-11-09: QUOTE CAPTURE STUDY RUNNING, layered base/top-up plus entry-only buffers on220 consumed Nov8 windows.
+  Fixed desired-quote workload, no fills/PnL; guards and reservations retained. Source branch research/predict-quote-capture-20261109.
+  2026-11-09 13:56Z: TRADE TIMING REPAIR COMPLETE on fix/predict-trade-timing-20261109. Full trade identities,
+  separate status/confirmation/receipt clocks; no heuristic fallback or other-leg substitution.375,569 retained legs,
+  99 exact own identities/consistent coarse intervals,375,470 missing clocks;42,064 actions reconcile within1 microshare.
+  80 off-grid prices retained without rounding.14 controls and artifact/real-CLI checks pass. Point replay correctly
+  refuses the insufficient historical clocks; no corrected PnL or calibration claim. Legacy forward/C2 drivers guarded
+  on the fix branch; frozen engines unchanged. All jobs done,109MiB output, no live or protected-forward changes.
+  Receipts reviews/trade_timing_fix_20261109/; final verification_v3.json. See HANDOFF.md and README.md.
   2026-11-09 12:20Z: GUARD FLICKER (pf_guard_flicker.py; 9 consumed days, 0-60 s, minute-0 line 0.0492 c). |v - line| p50 0.103 c; |dv| per
   50 ms step p50 0.0185, p75 0.049, p90 0.133 c (a step is often as large as the line). Side flips per window: 51.4 at delta 0 (frozen
   rule), 36.3 at 0.005, 28.2 at 0.01, 20.4 at 0.02, 13.5 at 0.04. Quoting spells p50 100 ms; pulled spells p50 250 ms, 38% <= 100 ms.

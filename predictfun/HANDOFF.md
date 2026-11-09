@@ -1,5 +1,67 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 14:24Z (session 62f3ce33) - A1 NetCap late-fill window implemented (pmmmrust main 366d419)
+
+- Code, two reviews and check.sh done; main fast-forwarded and pushed. Not deployed: Tokyo needs a new release tag and a
+  re-rendered config (`cancel_late_fill_window_ms = 1000`). Next: A2 layered size (same workflow).
+
+## 2026-11-09 — quote capture optimization IN PROGRESS
+
+- User authorized improving strategy capture after the timing repair. Research branch
+  `research/predict-quote-capture-20261109`, checkout `/tmp/cta-quote-capture-20261109`.
+- Primary change: preserve base order identity through5/25 size changes, separate top-up, no partial-component refill,
+  minimum-notional fallback, shared pending-cancel/create reservations and reduce-only room. Existing guards pull
+  immediately. Entry-only buffers0.005/0.01/0.02/0.04c are separate opt-in candidates; no relaxed exit threshold.
+- Predeclared paired workload:220 consumed Nov8 windows, first60s, four lanes; recorded desired quotes fixed across
+  arms, no simulated fills. Same40/22/95ms acknowledgements,1s cancellation reserve grace,150-share side cap,3
+  pending creates/side. Measure requests, oldest-quote age, quoted time and reservations, not PnL/variance/fill rate.
+- Buffer scores are reconstructed research scores; missing/disagreeing values are counted. No claim that the fixed
+  factual inventory-dependent desired path is a counterfactual inventory path. No protected Nov9–13 data, live code,
+  strategy deployment, or fill-clock bypass. One capped process at a time; source/control freeze before results.
+
+## 2026-11-09 — trade timing repair COMPLETE; precise replay remains data-limited
+
+- User requested fixing the replay timing defects. Producer receipt as-of **2026-11-09 13:53:36Z**, final runtime
+  verification **13:56:39Z**. Same220 consumed Nov8 windows; branch `fix/predict-trade-timing-20261109`, checkout
+  `/tmp/cta-trade-timing-20261109`. No protected Nov9–13 read, strategy ranking, or live code/settings change.
+- `pf_trade_tape.py` preserves full transaction/taker/maker hashes, settlement ID, exact wei prices/amounts, and
+  integer local receipts. Repeated pages deduplicate by exact identity; conflicting economics/identities are refused.
+  `pf_step1.py` now retains those fields; its old `exec_s`/phase summaries are explicitly confirmation-time descriptions.
+  `pf_txmap.py` groups full identities directly, with a separately named identity artifact; no price/time/rank join.
+- Matched and Confirmed status clocks remain separate. A first Matched floor-second stays an interval; confirmation
+  never overwrites it. Missing/conflicting/failed events remain statuses. No E2, anonymous-increment association,
+  earliest-leg substitution, fixed-delay fitting, or clipping to our observed lifetime supplies a fill time.
+- Rebuilt **375,569 REST maker legs**, retaining pre/post confirmation records and all220 markets. **375,470** have
+  no exact matched-event attachment; **99** own legs have matched-status intervals, **zero** exact subsecond match
+  clocks. All99 map unambiguously to the prior exact own identities; **99/99 intervals overlap independently checked
+  lifetimes**, without clipping. All**42,064 order actions** retained; zero quantity differences above1 microshare.
+  Seven failed trades remain unmatched status histories. This is an engineering reconciliation, not fill-model validation.
+- Preserve **80 off-cent-grid prices** as raw wei + explicit `off_cent_grid` status / nullable tick. Do not round
+  them or drop their trades. Remaining375,489 legs are on the cent grid. Original build stopped at the first off-grid
+  record; v2 declaration records this correction and preserves the failed log. No result-bearing v1 receipt existed.
+- `pf_step4_ladder_identity.py` is the replacement replay entrypoint, using `PF_TRADE_TAPE=<manifest directory>`.
+  It requires matching-event clocks with provenance and suitable precision for the full declared population;
+  rejects legacy jitter/shift options; removes confirmation fallback and earliest-leg retiming from the pinned engine.
+  Transaction clock disagreements are refused. Actual match time, not confirmation time, partitions market windows;
+  before/in/after counts remain in the timing summary. Registry/tape market populations must match.
+- Current historical tape is correctly **refused before strategy data or output**. The99 consistent one-second
+  intervals are not exact matching times, and other public trades have unknown clocks. No corrected PnL is claimed.
+  Full matching-event evidence (or a separately specified and validated uncertainty-aware simulator) and reconciliation
+  of filled AND unfilled actions are still needed before inventory/quote-retention rankings can resume.
+- Old `pf_step1_timing`/`pf_step1_booktime` and forward/C2 drivers refuse the invalid clock pipeline on this fix branch
+  before further data consumption. Frozen engine files and earlier artifacts remain byte-identical. Historical reproduction
+  uses the earlier commit; do not bypass the new guard for a new validation claim. These are isolated branch changes,
+  not changes to the live bot or the other session's working engine.
+- **14 regression controls pass**, including hash-prefix collision, exact grouping, duplicate/conflicting observations,
+  confirmation drift, missing/foreign clock refusal, price preservation, transaction clock disagreement, market boundaries,
+  and actual script refusal. Independent verifier checks5 artifact hashes,375,569 exact rows,42,064 actions,99 clocks,
+  absence of invented timestamps on375,470 rows, and the actual replay CLI refusal. Corrupted receipts are refused.
+- Source producer freeze `6d6ca8b2`, final replay-window source `301bb625`; receipts in
+  `reviews/trade_timing_fix_20261109/`. `verification_v3.json` supersedes the initial verifier in-band for the later
+  replay-window adapter check; producer receipt/data unchanged. Output directory
+  `data/predict_fun/research/trade_timing_fix_20261109/` is109MiB; rebuild peakRSS1374MiB, one capped job at a time.
+  All our jobs finished. README describes the replacement path and remaining data limitation.
+
 ## 2026-11-09 12:55Z (session 62f3ce33) - to-do list after the live vs replay review
 
 - predictfun/handoffs/20261109_TODO.md: live fixes for the port (A1 NetCap 1 s window and A2 layered size, both user-approved; A3
