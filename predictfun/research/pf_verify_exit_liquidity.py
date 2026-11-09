@@ -5,7 +5,7 @@ import subprocess
 from pathlib import Path
 import numpy as np
 import pandas as pd
-from .pf_exit_study import HERE,DEST,DAYS,ARMS,sha,write
+from .pf_exit_study import HERE,DEST,PRIOR,DAYS,ARMS,sha,write
 from .pf_exit_run import folder
 
 
@@ -44,6 +44,15 @@ def main():
         raise ValueError('declaration copies differ')
     for p,h in r['source_sha'].items():
         if sha(HERE.parents[1]/p)!=h:raise ValueError('source changed')
+    if sha(PRIOR/'report.json')!=r['declaration']['prior_receipt_sha']:
+        raise ValueError('reference receipt changed')
+    prior=json.loads((PRIOR/'report.json').read_text())
+    for tm in ['J','X']:
+        for day in DAYS:
+            key=f'{tm}/{day}'
+            loc=Path(prior['artifacts'][key+'/late_reserved']['fills']['path']).parent.parent
+            if sha(loc/'late_fills.parquet')!=prior['execution_inputs'][key]['late_fills_sha']:
+                raise ValueError('reference fill metadata changed')
     count=0
     for item in r['artifacts'].values():
         for v in item.values():
@@ -79,6 +88,7 @@ def main():
         verifier_sha=sha(__file__),source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=HERE,text=True).strip(),
         population=dict(days_per_timing=9,markets_per_arm_timing=2592,candidate_fill_rows=rows),
         verified_sources=len(r['source_sha']),verified_result_artifacts=count,verified_metadata_sets=len(r['checks']),
+        verified_reference_metadata_sets=len(DAYS)*2,
         controls=checked,inherited_vs_new_late_opening=audit,
         predicates=dict(no_late_new_order_opens_reverse=all(a['new_opening']<=1e-7 for a in audit.values()),
                         all_fills_before_stop_mark=all(a['max_fill_second']<=240.1 for a in audit.values())),
