@@ -1,5 +1,32 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 16:37Z (session 62f3ce33) - A2 incremental on pmmmrust main (f20fdb1); A4 checked; A6 / A3 / A4b in code
+
+- pmmmrust f20fdb1 (main, pushed): `size_layering = "incremental_v1"` in both v3 examples (USER "Go"); base_topup_v1 (70b965b)
+  stays selectable. Spec: handoffs/20261109_layered_size_keep_queue.md, section "Update 2026-11-09". Not deployed: a Tokyo release
+  needs a new tag and a re-rendered config (user's call).
+- A4: the public book's pending increase at our price comes p50 435 ms before our fill notice (98% of 98 live fills, 11-08), but
+  it is per price; the wallet event's ms stamp is not kept (cut to the second for the kernel). A4b records it.
+- In code on pmmmrust branch fix/pfmm-wallet-read-timeout-20261109 (local until reviewed): A6 (30 s read limit), A3
+  (decisions.jsonl.gz), A4b (wallet_events.jsonl.gz). Next: rebase on f20fdb1, build, tests, independent review, check.sh, merge.
+  Exports from the deployment host should then include both new files.
+- C1 waits for a quiet research slot: do not start run_forward.sh while another session's run_light jobs run (it stops at the
+  first refusal and has no resume; it is frozen, so it cannot be changed).
+- B4 must also copy the incremental rule.
+
+## 2026-11-09 — optimization loop RUNNING
+
+- User authorized an optimization loop with tracked findings. Branch `research/predict-opt-loop-20261109`,
+  checkout `/tmp/cta-opt-loop-20261109`, from691f80c1. Loop register `reviews/optimization_loop_20261109/plan.json`.
+- Round1: inventory-aware soft grace, comparing an individually reducing order with aggregate room after all
+  same-side reservations (including pending creates/cancels and grace). Round2: shorter grace and latency sensitivity.
+- Same220 consumed Nov8 first-minute windows; exact native inputs. Commit/declaration -> controls -> paired run ->
+  artifact verification -> findings for each round. No PnL/variance claim without fills, no live or protected-date changes.
+- Round1 verified16:25:55Z: individual reducing grace retains4.86% of unrestricted coverage gain (208 retained
+  actions); full reservation-room grace0.68% (29). No added non-reducing share-time/active range expansion in this
+  conditional replay.32 controls pass; native fill-notice supplement has93 observations with exact original parity.
+  Round2 (shorter grace and three latency scenarios) is now running; no economic promotion.
+
 ## 2026-11-09 15:45Z (session 62f3ce33) - A2 size layering implemented (pmmmrust main 70b965b)
 
 - A1 (366d419) and A2 (70b965b) are on pmmmrust main; neither is deployed. A Tokyo release needs a new tag and a re-rendered config:
@@ -7,16 +34,30 @@
 - Next on the to-do list: A3 (decision reasons in captures), A4 (fill-notice latency), A6 (wallet socket inactivity timeout),
   B1 (fill-model calibration) before B3 (pull / size line buffer), B4 (research LZ token).
 
-## 2026-11-09 — native guard / selective soft-pull study IN PROGRESS
+## 2026-11-09 — native guard / bounded soft-pull study COMPLETE
 
-- User requested the next step after negative re-entry results. Branch `research/predict-soft-pull-20261109`,
-  checkout `/tmp/cta-soft-pull-20261109`; isolated native source `/tmp/pf-native-guard-20261109` at366d419.
-- Stage1: bound captured inputs/outputs before Nov8 23:02, preserve original model/config hashes and both basis
-  modes, replay factual inputs exactly, export guard/hard-guard/inventory/book state for the same220 consumed
-  Nov8 windows. Every applied-input output must match, then all279059 first-minute recorded decisions reconcile.
-- Conditional relaxed pure quotes change only pull/rung lines0.005/0.01/0.02/0.04c; no changed OMS consumes actual
-  fills. Selective retention study comes only after parity. No live code, protected Nov9–13 or fill-clock bypass.
-  All substantive jobs remain serial and capped; original native/research engines remain unchanged.
+- As-of **16:01:32Z**, verified **16:02:15Z**: same220 consumed Nov8 windows /279059 first-minute decisions /
+  13077 neutral touch-pull actions, zero excluded windows. Exact native replay reproduces1262612 outputs across
+  both modes and all prior decisions; native wanted-guard contradiction0/137325. Old reconstructed8.77% mismatch
+  is resolved for attribution by exact inputs, not by assuming reconstructed scores correct. A read-only observer
+  adds1249610 due-event probes (0–65s) with original decisions/books byte-identical; no live source changed.
+- Fixed incremental research planner; retain only accepted small touch<=5 when v is narrowly below the pull line,
+  native hard/price/size predicates still permit it, no rung duplicate; no new guard-off order. Maximum100ms,
+  early cancel at lower-line/hard changes including intervening native probes; no rung retention.
+- Predeclared primary0.01c: requests65211->60651 (**-6.99%**), original-price aligned time**+2.65%**,
+  coverage76.17->78.18%. Both v6/basis same direction. Off-target time**+33.87%**, active share-time**+3.40%**,
+  reserved share-time**-2.42%**; no inventory-risk reduction claim.4783 retained pulls,2376 same-price reopens,
+  790 cancellations at extra probes. Wider bands give smaller additional coverage gains with more exposure.
+- Primary future signed midpoint drift+0.361c at1s(n4766,17 stale),+0.638c at5s(n4759,24 stale), below matched
+  controls+0.387/+0.671c from500 declared draws. Action diagnostic only, no fill markout/PnL/predictive-skill claim.
+- 26 controls pass;1100 window-arm/65385 action-arm rows reconciled, prior baseline parity, corrupt-count refusal.
+  Four new policies, cumulative16; source2d235fd4/declaration4c69c4d1. All jobs done; study1134MiB/67.93s,
+  verifier401MiB/8.78s. Native artifacts693MiB plus study1.2MiB. No protected Nov9–13, fill-clock bypass or deployment.
+- Branch research/predict-soft-pull-20261109; detailed handoff `handoffs/20261109_soft_pull_results.md`, receipts
+  `reviews/native_guard_20261109/` and `reviews/soft_pull_20261109/`. Mechanical candidate only: one consumed partial
+  day, factual inventory/order state, modeled latency, no changed fills/throttle/rejections. New Rust A2 70b965b
+  was not the counterfactual OMS; B4 parity and calibrated fills/forward evidence still needed. Symmetric/EMA,
+  size-line and inventory-aware exit variants remain open. Keep primary band for research, no live promotion.
 
 ## 2026-11-09 — pull/re-entry study COMPLETE; no coverage-preserving improvement
 
