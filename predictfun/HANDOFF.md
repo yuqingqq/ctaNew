@@ -1,5 +1,26 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 17:08Z — optimization loop: native A2 pass VERIFIED
+
+- Fourth pass uses pinned Rust f20fdb1 incremental pair/request/throttle/retry methods directly, with factual quote
+  targets and assumed venue feedback. Same220 consumed Nov8 windows/279059 decisions/13077 neutral pulls per arm;
+  zero exclusions, one partial day. No hypothetical fills, PnL, realized inventory variance or full B4 claim.
+- Updates-first50ms versus native reference: venue requests62788->59444 (-5.33%), aligned time+4.17%, coverage
+  73.85->76.93%. Off-target time+28.36%, active share-time+4.10%, active range expansion+4.16%; reservations-1.22%.
+  Keeps94.43% of100ms coverage gain with22.96% less added off-target time. Both captured modes share the direction.
+- Native throttle attempts2237->1262; local capacity refusals2795->2851. Capacity is150 shares, not the dollar loss budget.
+  Counts include native outputs and actual modeled venue sends separately. Timing40/22/95ms +1s reservation grace.
+- 51 native tests,7 adapter controls,4 Python checks and positive/refusal report binding pass. Saved660 window-arm/
+  39231 action-arm rows reconcile action identity, order lifecycles, capacity and independently rebuilt coverage.
+- Input preparation first refused a -1/no-quote sentinel translation bug before any native outcome run. Corrected
+  source4776d822 and declaration8274fc63 precede results; failed artifacts retained and superseded by native_a2_v2.
+- Combined findings_v3.json supersedes v2 by adding the native model; earlier model results retain their assumptions.
+  Full comparison: handoffs/20261109_optimization_loop_v3.md. Sources/checks on research/predict-opt-loop-20261109
+  in /tmp/cta-opt-loop-20261109. Largest successful new job758MiB RSS. All numeric jobs finished17:08Z; slot free now,
+  recheck before C1 or another job. No protected Nov9–13, live/frozen engine, loss-budget or fill-clock changes.
+- Loop stays active. Next: native faster/slower latency sensitivity with exact base replay parity. Full B4 generated
+  engine integration, actual timer scheduling and calibrated fills/forward evidence remain before economic promotion.
+
 ## 2026-11-09 — optimization loop: first three rounds VERIFIED; next integration pass
 
 - User authorized a continuing optimization loop with tracked findings. Branch `research/predict-opt-loop-20261109`,
