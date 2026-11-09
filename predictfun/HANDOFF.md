@@ -1,21 +1,66 @@
 # P-2026-005 HANDOFF
 
-## 2026-11-09 — late reduction experiment RUNNING
+## 2026-11-09 — late reduction experiment COMPLETE
 
-- User authorized preserving baseline early trading and reducing late inventory. Isolated branch
-  `research/predict-late-reduction-20261109`, checkout `/tmp/cta-late-reduction-20261109`.
-- Two fixed candidates: `late_reserved` applies aggregate reducing reservations and remainder retention only
-  from60s; `late_taper1` adds a one-tick passive improvement when inventory exceeds a target declining linearly
-  from10 at60s to0 at240s. Target is an urgency trigger, not a guaranteed liquidation or hard inventory bound.
-- All original guards, early sizing, RO60, S240 and execution timing retained. Exact pre60 fills/requests must match
-  baseline. Inherited cancels retain fill-report grace without changing the client-visible pre60 policy.
-- Nine consumed days Oct23–27 and Oct31–Nov3, J/X,2592 markets per arm/timing. Uncapped loss budget,
- 150-share backstop unchanged, rebates excluded. No forward Nov9–13 reads or live/frozen changes.
-- Full pipeline in `pf_late_{study,engine,run,report}.py`, `run_late_reduction.sh`, and `tests/test_late_reduction.py`.
-  39 preflight controls pass; declaration/source commit and full replay next. Concession attribution uses exact
-  originating order metadata for every fill; already included in cash PnL, never subtracted twice.
-- Three pairs x J/X x settlement/+1s/inventory-square =18 predeclared comparisons,2000 day sign flips and2000
-  day bootstrap draws. Source and fixed input hashes recorded before outcome replay. No threshold sweep.
+- As-of **2026-11-09 10:23:48Z**, nine consumed dates Oct23–27 and Oct31–Nov3, **2592 markets per arm/timing**,
+  J/X, zero exclusions/missing valuations. Fixed guards trained on eight dates: exploratory historical comparison.
+  Branch `research/predict-late-reduction-20261109`, checkout `/tmp/cta-late-reduction-20261109`.
+  Declared policy/source `8c8ee4d4`, report source/declaration-copy commit `b3cbbbd7`; data under
+  `/home/yuqing/ctaNew/data/predict_fun/research/late_reduction_20261109/`.
+- Two fixed candidates, no post-result tuning: `late_reserved` applies aggregate reducing reservations and eligible
+  remaining-quantity retention only from60; it refuses retries that now increase inventory or fall beyond240.
+  `late_taper1` adds exactly one tick of passive improvement when inventory exceeds a target declining linearly
+  from10 at60 to0 at240, only strictly inside the known spread. This is an urgency trigger, NOT a hard bound or
+  guaranteed liquidation. Original guards/AM5/25/RO60/S240/minimums and execution timings retained.
+- Exact original pre60 fills AND requests match for every market in both variants at J/X. Cancellation history is
+  retained through acknowledgement +100ms fill-report grace +.001ms, while exposing original lifecycle before60.
+  This conservative simulator treatment combines reservation, retention, grace and late retry checks; their individual
+  contributions are not isolated. Uncapped loss budget,150-share backstop unchanged, rebates excluded.
+
+| Timing / arm | Settlement $ | +1s markout $ | FIFO matched $ | Mark at240 $ | Carry $ | Mean residual shares | Daily PnL SD $ |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| J baseline | 514.06 | 602.83 | 134.02 | 677.12 | -163.06 | 6.557 | 134.51 |
+| J late_reserved | 502.04 | 557.97 | 99.78 | 658.36 | -156.32 | 7.121 | 137.60 |
+| J late_taper1 | 508.54 | 573.72 | 57.30 | 637.89 | -129.35 | 6.752 | 130.63 |
+| X baseline | 317.63 | 463.56 | 173.54 | 431.16 | -113.54 | 5.720 | 103.09 |
+| X late_reserved | 309.94 | 440.54 | 133.41 | 385.42 | -75.48 | 6.154 | 103.12 |
+| X late_taper1 | 353.45 | 441.25 | 131.08 | 404.01 | -50.57 | 6.020 | 109.06 |
+
+- **Objective not achieved versus baseline.** Late_reserved raises mean terminal inventory8.60%/7.58% J/X and
+  lowers actual reducing flow34.09%/32.55%. Taper recovers30.02%/14.09% reducing flow versus that control and lowers
+  its inventory5.18%/2.18%, but still leaves **2.98%/5.24% MORE inventory than baseline**. Its late time-weighted
+  absolute inventory rises1.99%/3.51%, total q² rises0.16%/2.57%. It reduces less economic inventory than baseline
+  by14.30%/23.05%. Tightening the urgency trigger alone does not force an executable exit.
+- Taper's settlement delta versus baseline is **-$5.52/+$35.82**; +1s value falls **$29.11/$22.31** (~4.8% each),
+  matched FIFO profit falls **$76.72/$42.46**, and mark-at240 falls **$39.22/$27.15**. Carry improves$33.71/$62.97.
+  Thus the positive X final PnL is outcome carry, not improved trading value or less exposure. FIFO includes price drift;
+  mark-at240 is a valuation, not an executable midpoint exit. Alternative FIFO residual PnL is$451.24/$222.37 for taper.
+- Exact originating intent-decision, submission and fill records preserve attribution across throttled retries.
+  Taper executes **1769.16/981.16 shares at a one-cent concession**, all economically reducing: **$17.69/$9.81**
+  quoted concession on that filled quantity. Already included in cash PnL; never subtract twice. This same-fill price
+  difference does not assume the unshifted order would have filled, and is not a causal explanation of the whole PnL delta.
+- All newly submitted post60 orders have zero economic reverse-opening quantity within1e-7. The remaining13.67/0
+  opening shares J/X are inherited orders submitted before60, for both candidates. Independent provenance audit:
+  19,549 candidate fill rows; max fill second239.787126, all before the240.1 midpoint used for carry attribution.
+- Taper beats baseline on3/9 J and5/9 X days; leave-one-day-out total delta spans **[-$59.03,+$29.97] J** and
+  **[-$24.47,+$95.44] X**. Nov2 contributes+$60.29 X; excluding it descriptively turns pooled X uplift into-$24.47.
+  This is a post-hoc concentration check, not a separate validation set.
+- Predeclared2000 shared UTC-day sign flips and2000 paired day bootstrap draws,18 comparisons. All settlement
+  difference intervals cross zero. Taper-baseline mean daily intervals **[-$14.48,+$15.03] / [-$21.28,+$29.58]**, family
+  p=1 both. Reservation-only q² increase and taper-versus-reservation q² decrease have family p=.0105 both timings;
+  taper has no family-significant improvement versus baseline on primary metrics. SD/tails/carry remain descriptive.
+- **39 controls, eight-market smoke and all18 full-day reconciliations PASS**. Fresh first-day baseline J/X is exact;
+  other references hash-verified. All17 source files,162 result artifacts,18 per-run metadata sets, declaration and
+  receipt copies verified. Supplemental overfill positive/missing-identity refusal controls pass. Peak RSS1.6GiB;
+  ~483GiB disk free,24GiB RAM available; no experiment job remains.
+- Reproduction: `pf_late_study` declaration then `bash predictfun/research/run_late_reduction.sh`. Receipt and declaration
+  under `reviews/late_reduction_20261109/`, plus `verification.json`. Data directory also has `comparison.csv`.
+  Receipt SHA256 `b723eb053e79399cdb615bff975f62267ca0dba9c963a6c1fa4bf7a192447202`.
+- Conclusion: do not adopt these variants as a solution to preserving trading gains while reducing inventory. The
+  constrained exit treatment removes too much effective reducing liquidity; one-tick urgency only partly repairs it.
+  Further work should isolate exit availability/retention/grace before adding stronger price concessions; any change to
+  lifecycle assumptions needs supporting execution evidence. No live code/settings, frozen candidate/forward race,
+  or protected Nov9–13 data changed/read. All work is historical research.
 
 ## 2026-11-09 — allowed inventory-range experiment COMPLETE
 
