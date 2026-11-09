@@ -7,6 +7,18 @@ order placement. Execution work belongs to a separate project.
 State: `STATUS.yml` + `HANDOFF.md` in this folder (single seat, one writer).
 Background on the venue and collectors: `docs/PREDICT_FUN_RESEARCH.md` (repo root).
 
+## Capture mechanics study (2026-11-09)
+
+The research quote planner tests retaining a small order and appending a top-up
+when size grows. A paired no-fill workload on 220 consumed Nov8 windows found
+incremental sizing reduced requests 4.52% and increased active time at intended
+prices 3.90%, as-of 2026-11-09 14:42:01 UTC. Always splitting orders increased
+requests; entry buffers removed substantial desired quote time. These results
+describe order mechanics, not validated fills, PnL or inventory variance.
+See [the comparison and port handoff](handoffs/20261109_incremental_capture_results.md)
+for controls, limitations, reproduction and immutable receipts. Live code and
+frozen fill engines were not changed.
+
 ## Replay timing repair (2026-11-09)
 
 The exact-order audit found that the J/X trade clocks can fall outside an order's

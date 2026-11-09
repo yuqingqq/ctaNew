@@ -6,8 +6,14 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
-  2026-11-09: QUOTE CAPTURE STUDY RUNNING, layered base/top-up plus entry-only buffers on220 consumed Nov8 windows.
-  Fixed desired-quote workload, no fills/PnL; guards and reservations retained. Source branch research/predict-quote-capture-20261109.
+  2026-11-09 14:42Z: QUOTE CAPTURE MECHANICS COMPLETE,220 consumed Nov8 windows/279,059 decisions, first60s, no exclusions.
+  Incremental top-ups preserve the small order: requests-4.52%, active time at desired prices+3.90%, oldest quote399->515ms,
+  reserved share-time-3.57%; active share-time+2.94%, off-target time+0.82%, so no inventory-risk/PnL claim. Always splitting
+  increases requests10.78%; entry buffers sacrifice desired quoting time.20 controls and artifact checks pass;440 old-arm
+  rows reproduce exactly. Initial reference bug corrected in superseding v2 receipt; follow-up is candidate7, not validation.
+  Research branch research/predict-quote-capture-20261109. Handoff handoffs/20261109_incremental_capture_results.md; receipts
+  reviews/quote_capture_20261109/receipt_v2.json and reviews/quote_incremental_20261109/. All jobs done; no live changes,
+  clock bypass or protected Nov9-13 read. Guard-score disagreement8.77% limits buffered variants. See HANDOFF.md.
   2026-11-09 13:56Z: TRADE TIMING REPAIR COMPLETE on fix/predict-trade-timing-20261109. Full trade identities,
   separate status/confirmation/receipt clocks; no heuristic fallback or other-leg substitution.375,569 retained legs,
   99 exact own identities/consistent coarse intervals,375,470 missing clocks;42,064 actions reconcile within1 microshare.

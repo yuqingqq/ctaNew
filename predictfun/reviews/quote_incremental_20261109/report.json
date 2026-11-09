@@ -1,0 +1,61 @@
+{
+  "as_of": "2026-11-09T14:42:01.611011+00:00",
+  "source_commit": "79ceb6dc38e52113c1b64b85a3646081001873d0",
+  "report_source_sha256": "20d6af9da0b73c474f456c2a4212fe70fed02377153ab8223e2e241c64779355",
+  "receipt_sha256": "225a85d58115f0c6ef42c9e4ab7cc54fc197e8849016370fa1e052e4330d9933",
+  "coverage_receipt_sha256": "c383b3bed5600abaff872f6b47160608a8d2ccdf19599e064ef7a2b3df581b4a",
+  "population": {
+    "day": "20261108",
+    "declared_markets": 220,
+    "present_markets": 220,
+    "decision_rows": 279059,
+    "window_status": {
+      "present": 220
+    },
+    "markets_per_arm": {
+      "incremental": 220,
+      "layered": 220,
+      "single": 220
+    }
+  },
+  "all_windows": {
+    "windows": 220,
+    "requests_pct": -4.521296065828196,
+    "aligned_quote_time_pct": 3.8973162111542337,
+    "active_share_time_pct": 2.944837917453258,
+    "mean_oldest_quote_age_pct": 28.96687892253029,
+    "reserved_share_time_pct": -3.572821105896673,
+    "off_target_quote_time_pct": 0.8245095306475658
+  },
+  "by_run": {
+    "basis": {
+      "windows": 98,
+      "requests_pct": -3.6617395553383836,
+      "aligned_quote_time_pct": 3.479046393300367,
+      "active_share_time_pct": 2.2660030377592566,
+      "mean_oldest_quote_age_pct": 20.82653542916697,
+      "reserved_share_time_pct": -2.898039196193447,
+      "off_target_quote_time_pct": 0.9587437415057964
+    },
+    "v6": {
+      "windows": 122,
+      "requests_pct": -5.312895513992411,
+      "aligned_quote_time_pct": 4.270421701806515,
+      "active_share_time_pct": 3.7214930490284237,
+      "mean_oldest_quote_age_pct": 33.776605792223414,
+      "reserved_share_time_pct": -4.364096386769778,
+      "off_target_quote_time_pct": 0.6973271338795328
+    }
+  },
+  "incremental_request_windows": {
+    "fewer": 188,
+    "equal": 25,
+    "more": 7
+  },
+  "controls": {
+    "saved_summaries_reconciled": true,
+    "coverage_identities_reconciled": true,
+    "corrupt_coverage_refused": true
+  },
+  "limitation": "same consumed partial day, engineering workload only; no economic validation or uncertainty interval"
+}
