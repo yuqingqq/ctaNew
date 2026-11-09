@@ -1,5 +1,5 @@
 {
-  "status": "paired_engine_validation_in_progress",
+  "status": "active_between_passes",
   "authorization": "User: Launch a loop to proceed the optimizations, keep the findings tracked",
   "objective": "Preserve original desired-price quote coverage while reducing unnecessary requests and additional inventory exposure; economic conclusions require calibrated fills",
   "baseline_commit": "691f80c1",
@@ -44,6 +44,13 @@
       "receipt": "native_latency/receipt.json",
       "verification": "native_latency/verification.json",
       "finding": "Native base exact parity; faster/slower execution sensitivity completed. Full table and computed predicates in findings_v4; exposure costs remain explicit."
+    },
+    {
+      "round": "paired_engine",
+      "status": "implemented_with_explicit_parity_exception",
+      "receipt": "paired_engine_v2/receipt.json",
+      "verification": "paired_engine_v2/verification.json",
+      "finding": "Native synthetic mapping/lifecycle parity passes after correcting rejected-create slot release underLZ. No-token outputs exact; blanket fixed-size parity contradicted by that correction; historical output-file and economic validation remain."
     }
   ],
   "per_round": [
@@ -64,16 +71,16 @@
   ],
   "end_of_pass": "Verify generated paired-order engine, frozen/no-token and fixed-size parity, native synthetic request/state parity; record remaining calibration and scheduling limits.",
   "report_note": "Two-round findings.json and handoff were written after successful checks; the final mutable-plan update used an exclusive-create helper and failed. Plan update is corrected; round artifacts and reported numbers are unaffected. A combined v2 report will supersede this subset report.",
-  "as_of": "2026-11-09T17:15:06.600749+00:00",
-  "findings": "findings_v4.json",
+  "as_of": "2026-11-09T17:42:57.198365+00:00",
+  "findings": "findings_v5.json",
   "next_evidence": [
-    "B4 generated research-engine integration of native paired-order semantics, with frozen no-token parity and synthetic native differential traces.",
-    "Actual timer scheduling and calibrated fills/authorized forward evidence before valuing profits or inventory variance."
+    "Verify integration of bounded quote continuity with paired fills and inventory changes using synthetic cases before economic use.",
+    "Full historical output-file parity and deployed timer behavior remain unverified; fill calibration still gates PnL/variance claims."
   ],
   "next_pass": {
-    "status": "implemented_initial_controls_passed",
-    "focus": "B4 generated research-engine integration of native paired-order semantics, with frozen no-token parity and synthetic native differential traces.",
-    "data_constraint": "synthetic controls and already consumed bounded inputs only; protected Nov9\u201313 remain unread",
-    "economic_gate": "no profit/variance promotion without calibrated fills or authorized forward evidence"
+    "status": "planned",
+    "focus": "Verify integration of bounded quote continuity with paired fills and inventory changes using synthetic cases before economic use.",
+    "data_constraint": "synthetic controls only unless separately declared consumed-data work; protected Nov9\u201313 unread",
+    "economic_gate": "no PnL/variance claim without calibrated fills or authorized forward evidence"
   }
 }
