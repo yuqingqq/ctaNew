@@ -17,7 +17,8 @@ journal exports (pmmm-tools journal-export at c54df1f), and the replay of pf_liv
   reasons   every real touch trade 0-240 s: maker markouts and why we were not filled (cancelled / pulled by prediction / ...).
   queue     touch trades we rested at but missed: queue ahead vs traded volume, places lost by cancel + re-place and why.
   frontage  lower bound on how long the front-of-queue orders that took touch trades had been resting.
-Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom | feedtiming | who | reasons | queue | frontage
+  history   queue misses: our state at the price from when the level appeared (resting / re-place gap / pulled / elsewhere).
+Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom | feedtiming | who | reasons | queue | frontage | history
 """
 import collections, gzip, json, os, re, sys
 import numpy as np, pandas as pd
@@ -824,5 +825,79 @@ def main_frontage():
     return 0
 
 
+def main_history():
+    """For the queue misses: our state at that price from when the price level appeared (continuously present among the 5 displayed
+    levels of that side, live frames) up to the trade, sampled every 100 ms over at most the last 10 s. States: resting there (any
+    lane); wanted there by our decision but no live order (cancel + re-place gap, refused, in flight); side pulled (both lanes empty:
+    prediction line / other guards / CAP10 / reduce-only); quoting other prices on the side. Plus: was our order resting there within
+    the level's first 500 ms (could have been at the front), and the level's age at the trade."""
+    sc = json.load(open(f'{RP}/scope.json')); coh = {w['market']: w['ws'] * 1000.0 for w in sc['windows']}
+    R = pd.read_parquet(f'{OUT}/touch_trade_reasons.parquet'); Qm = R[R.status == 'resting_not_filled (queue)']
+    pv = pd.read_parquet(f'{RP}/research/step5/20261108/preds_t60k.parquet', columns=['mid', 'tau', 'v_bid', 'v_ask'])
+    PV = {m: (g.tau.values.astype(float), g.v_bid.values, g.v_ask.values) for m, g in pv.groupby('mid')}
+    LINE = json.load(open(f'{RP}/research/step4/minute_lines_t60k.json'))['lines']['90']
+    rows = []; tally = collections.Counter()
+    for run, rid in RUNS:
+        q = Qm[Qm.run == run]; mk = set(q.mid)
+        P, _ = core_orders(run, rid, mk)
+        dec = collections.defaultdict(list); books = collections.defaultdict(list); fills = collections.defaultdict(list)
+        for l in lines(f'{CAP}/{run}/run-{rid}/outputs.jsonl.gz'):
+            if l.startswith('{"Decision"'):
+                m = int(l[22:l.index(',', 22)])
+                if m in mk:
+                    d = json.loads(l)['Decision']; dec[m].append((d['t'], [x[0] for x in d['lanes']]))
+        for l in lines(f'{CAP}/{run}/run-{rid}/inputs.jsonl.gz', skip_header=True):
+            if l.startswith('{"Advance"'):
+                if float(l[21:l.index('}', 21)]) > CUTOFF_MS + 120_000:
+                    break
+            elif l.startswith('{"Frame"'):
+                m = int(l[19:l.index(',', 19)])
+                if m in mk:
+                    d = json.loads(l)['Frame']; books[m].append((d['known_ms'], {x[0] for x in d['bids']}, {x[0] for x in d['asks']}))
+            elif l.startswith('{"Filled"'):
+                v = json.loads(l)['Filled']
+                if v['market'] in mk:
+                    fills[v['market']].append((v['known_ms'], v['id'], v['qty']))
+        DT = {m: np.array([x[0] for x in v]) for m, v in dec.items()}; BT = {m: np.array([x[0] for x in v]) for m, v in books.items()}
+        Dsimple = {m: (DT[m], [x[1] for x in dec[m]]) for m in dec}
+        lane_of = {(a, b): c for a, b, c in zip(P.market, P.id, P.lane)}
+        Pend = P[['t_CancelDone', 't_Filled_last']].max(axis=1)
+        for e in q.itertuples():
+            m = e.mid; ws = coh[m]; W = ws + e.t_in * 1000.0 - 50.0; up = e.up; si = 1 if up else 2
+            i = np.searchsorted(BT[m], W, side='right') - 1; j = i
+            while j >= 0 and e.ptick in books[m][j][si] and BT[m][j] >= ws - 60_000:
+                j -= 1
+            lvl_start = BT[m][j + 1] if j + 1 <= i else W
+            o = P[(P.market == m) & P.lane.isin((0, 2) if up else (1, 3)) & (P.tick == e.ptick) & P.t_Accepted.notna()]
+            oe = Pend[o.index].fillna(ws + 300_000.0)
+            front_ok = bool(((o.t_Accepted <= lvl_start + 500.0) & (oe >= lvl_start + 500.0)).any()) if W - lvl_start > 500 else None
+            n = 0; cnt = collections.Counter()
+            for k in range(1, 101):
+                t = W - 100.0 * k
+                if t < lvl_start or t < ws:
+                    break
+                n += 1
+                if ((o.t_Accepted <= t) & (oe >= t)).any():
+                    cnt['resting there'] += 1; continue
+                ii = np.searchsorted(DT[m], t, side='right') - 1
+                ln = dec[m][ii][1] if ii >= 0 else [None] * 4
+                want = [ln[0], ln[2]] if up else [ln[1], ln[3]]
+                if e.ptick in want:
+                    cnt['wanted there, no live order (re-place gap / refused / in flight)'] += 1
+                elif all(x is None for x in want):
+                    cnt['side pulled: ' + why_none(e, m, ws, t, up, Dsimple, fills, {}, lane_of, PV, LINE)] += 1
+                else:
+                    cnt['quoting other prices on the side'] += 1
+            rows.append(dict(level_age_s=(W - lvl_start) / 1000.0, samples=n, front_ok=front_ok, **{k: v / n for k, v in cnt.items()} if n else {}))
+            tally.update({k: v for k, v in cnt.items()})
+    X = pd.DataFrame(rows).fillna({c: 0.0 for c in tally})
+    out = dict(queue_misses=len(X), level_age_s={q: round(float(X.level_age_s.quantile(q)), 2) for q in (0.25, 0.5, 0.75, 0.9)},
+               time_share_over_lookback={k: round(float(X[k].mean()), 3) for k in sorted(tally, key=lambda k: -tally[k])},
+               resting_within_first_500ms_of_level=dict(collections.Counter(X.front_ok.map({True: 'yes', False: 'no', None: 'level < 0.5 s old'}))))
+    json.dump(out, open(f'{OUT}/queue_history.json', 'w'), indent=1)
+    print(json.dumps(out, indent=1))
+    return 0
+
+
 if __name__ == '__main__':
-    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom, 'feedtiming': main_feedtiming, 'who': main_who, 'reasons': main_reasons, 'queue': main_queue, 'frontage': main_frontage}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
+    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom, 'feedtiming': main_feedtiming, 'who': main_who, 'reasons': main_reasons, 'queue': main_queue, 'frontage': main_frontage, 'history': main_history}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
