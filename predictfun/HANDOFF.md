@@ -1,5 +1,16 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 — native guard / selective soft-pull study IN PROGRESS
+
+- User requested the next step after negative re-entry results. Branch `research/predict-soft-pull-20261109`,
+  checkout `/tmp/cta-soft-pull-20261109`; isolated native source `/tmp/pf-native-guard-20261109` at366d419.
+- Stage1: bound captured inputs/outputs before Nov8 23:02, preserve original model/config hashes and both basis
+  modes, replay factual inputs exactly, export guard/hard-guard/inventory/book state for the same220 consumed
+  Nov8 windows. Every applied-input output must match, then all279059 first-minute recorded decisions reconcile.
+- Conditional relaxed pure quotes change only pull/rung lines0.005/0.01/0.02/0.04c; no changed OMS consumes actual
+  fills. Selective retention study comes only after parity. No live code, protected Nov9–13 or fill-clock bypass.
+  All substantive jobs remain serial and capped; original native/research engines remain unchanged.
+
 ## 2026-11-09 — pull/re-entry study COMPLETE; no coverage-preserving improvement
 
 - User requested moving beyond the existing A2 sizing task to prediction-driven pull/repost behavior. Branch
