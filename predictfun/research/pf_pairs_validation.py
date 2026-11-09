@@ -11,8 +11,9 @@ from . import pf_native_a2_continuity as s
 from . import pf_ladder_pairs_build as builder
 
 NATIVE=Path('/tmp/pf-b4-parity-20261109')
-DEST=s.DEST.parent/'paired_engine'
-REVIEW=s.REVIEW.parent/'paired_engine'
+FAILED=s.DEST.parent/'paired_engine'
+DEST=s.DEST.parent/'paired_engine_v2'
+REVIEW=s.REVIEW.parent/'paired_engine_v2'
 NAME='native_pairs_oracle'
 SOURCES=['pf_ladder_pairs.py','pf_ladder_pairs_build.py','pf_step4_ladder_pairs.py','tests/test_ladder_pairs.py',
          'native_pairs_oracle.rs','pf_pairs_validation.py','tests/test_simulation_causality.py','pf_native_a2_continuity.py']
@@ -44,7 +45,7 @@ def build():
 def declare():
     d=dict(as_of=s.now(),source_commit=s.command(['git','rev-parse','HEAD'],cwd=s.a.HERE),sources={p:s.sha(s.a.HERE/p) for p in SOURCES},
         build=json.loads((DEST/'build.json').read_text()),frozen_v3=builder.FROZEN,
-        design='Implementation validation only: generated LZ copies incremental_v1 logical pairs. No-token full returned outputs byte-exact to frozen v3; fixed-size paired/nonpaired full outputs exact; variable-v3 resize positive and differing outputs; synthetic native differential traces compare each physical request, pair totals/fills, and full-fill decision obligations.',
+        design='Implementation validation only: generated LZ copies incremental_v1 logical pairs. No-token full returned outputs byte-exact to frozen v3; fixed-size paired/nonpaired full outputs exact in the unchanged-lifecycle matrix; variable-v3 resize positive and differing outputs; synthetic native differential traces compare each physical request, pair totals/fills, and full-fill decision obligations.',
         population='Predetermined32 explicit differential scenarios plus200 seeded synthetic scenarios, all generated without reading market data; unit test matrix separately. No exclusions permitted.',
         seed=20261109,random_scenarios=200,
         controls='No-token and fixed-size positive parity; variable resize must fire and differ; partial/full/late fill, front rotation, pending retry, minimum-value/rounding, concurrent cancel/create, chronological paired fill order, unsupported modes, read-only tracing, corrupt native request and pair-state refusal.',
@@ -52,10 +53,14 @@ def declare():
         scope='Pair mapping, logical rung identity, known fill accounting and the research split request handler. Synthetic market trades only exercise lifecycle. Native oracle consumes generated quote decisions/feedback; does not independently recompute model predictions or prove live scheduling/venue behavior.',
         limitations=['Current historical fill model remains uncalibrated. No LZ economic promotion.',
             'No-token parity is checked on a declared synthetic matrix, not a fresh historical/protected replay.',
+            'Blanket fixed-size parity is not claimed: a pre-existing frozen create-rejection/unanswered-slot bug conflicts with native parity. LZ corrects it; fixed-size rejection-stress controls intentionally differ from frozen, while normal fixed-size controls remain exact.',
             'Native kernel/local refusal, wallet, venue throttles across markets and reservation1s deployment integration are outside this mapper validation.',
             'Frozen simulator fill/venue assumptions remain unless required for paired FIFO; their simulated PnL is never reported as evidence.'],
         no_market_data_read=True,no_protected_dates_read=True,no_live_change=True,no_fill_clock_bypass=True,
-        multiplicity=dict(policy_settings_added=0,implementation_token='LZ',cumulative_strategy_settings=21))
+        multiplicity=dict(policy_settings_added=0,implementation_token='LZ',cumulative_strategy_settings=21),
+        supersedes=dict(declaration=str(FAILED/'declaration.json'),declaration_sha256=s.sha(FAILED/'declaration.json'),
+            failed_output_sha256=s.sha(FAILED/'native.jsonl'),failed_log_sha256=s.sha(FAILED/'logs/oracle.log'),
+            reason='Native differential comparison refused random/46 after78 matching traces. A rejected create retained an unanswered slot until44ms in frozen Python, but native rejected() releases it at the40ms rejection. Correct only LZ; retain all no-token outputs. Two explicit fixed-size stress controls demonstrate the necessary exception.'))
     s.write(DEST/'declaration.json',d);s.write(REVIEW/'declaration.json',d)
 
 def check():
