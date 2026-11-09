@@ -6,6 +6,14 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09 17:08Z: OPTIMIZATION LOOP fourth/native A2 pass VERIFIED; same220 Nov8 windows/279059 decisions.
+  Pinned f20fdb1 mapper, throttle and retry methods; targets/guards/inventory factual, no hypothetical fills.
+  Updates-first50ms: venue requests-5.33%, aligned+4.17%, coverage73.85->76.93%; off-target+28.36%, active+4.10%.
+  Active range expansion+4.16%, reservations-1.22%; no inventory-risk reduction or PnL claim. Keeps94.43% of100ms
+  coverage gain with22.96% less added off-target time.51 native/7 adapter/4 Python checks;660 window-arm/39231 action-arm
+  artifacts verified. Sentinel preparation refusal superseded BEFORE outcomes (native_a2_v2). Sources4776d822,
+  declaration8274fc63; findings_v3.json/handoffs/20261109_optimization_loop_v3.md. All numeric jobs finished17:08Z,
+  new-pass peak758MiB; slot now free (recheck). Next native latency sensitivity; full B4/timer/economic checks remain.
   2026-11-09 16:40Z: OPTIMIZATION LOOP first3 rounds VERIFIED; same220 consumed Nov8 windows/279059 decisions.
   Inventory-only grace sacrifices most coverage gain; shorter-grace test exposed equal-clock timeout priority.
   Updates-first50ms: requests-6.98%, original aligned time+2.37%, off-target+25.66%,
