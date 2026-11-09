@@ -1,0 +1,270 @@
+{
+  "as_of": "2026-11-09T14:27:13.008140+00:00",
+  "declaration": {
+    "as_of": "2026-11-09T14:26:02.559362+00:00",
+    "population": "220 consumed Nov8 windows, first60 seconds, four lanes; all recorded desired decisions, never fill-selected",
+    "estimand": "paired fixed-intent no-fill engineering workload; order requests, oldest active quote age, quoting time and pending exposure; no PnL or fill-rate estimate",
+    "baseline": "single-order cancel/repost versus base5+topup; same recorded target prices/sizes/hard-guard pulls",
+    "arms": {
+      "single": [
+        false,
+        0.0
+      ],
+      "layered": [
+        true,
+        0.0
+      ],
+      "layered_entry_0.005": [
+        true,
+        0.005
+      ],
+      "layered_entry_0.01": [
+        true,
+        0.01
+      ],
+      "layered_entry_0.02": [
+        true,
+        0.02
+      ],
+      "layered_entry_0.04": [
+        true,
+        0.04
+      ]
+    },
+    "primary": "layered without buffer; layered_entry_0.01 is a predeclared shadow candidate, not an economic winner",
+    "gate": "entry only: v>original minute0 PM90 line+delta; keep only while v>original line and score age<=100ms; reset on hard pull/reprice; original desired target is never enlarged",
+    "order_model": {
+      "place_ms": 40,
+      "cancel_ms": 22,
+      "pending_cancel_ms": 95,
+      "cancel_reserve_grace_ms": 1000,
+      "side_cap_shares": 150,
+      "creates_inflight_per_side": 3,
+      "minimum_notional_usd": 1
+    },
+    "sizing": "do not refill partial components; fall back to one order when either split ticket is below minimum; global pending reservations and reduce-only room shared across lanes",
+    "signal_limitation": "buffer uses precomputed reconstructed research scores; these are not captured exact live guard values",
+    "null": "deterministic mechanical workload test; no statistical hypothesis, confidence interval, predictive-skill claim or profit-based selection",
+    "multiplicity": 6,
+    "validation": "positive/refusal controls, zero-buffer exact target parity, all-arm target subset, action/budget checks; fresh-day strategy validation not attempted",
+    "source_commit": "bbb760c1a018022ac5a29e6bc1beac0137d410ea",
+    "sources": {
+      "pf_quote_capture.py": "b3e5c188e56074124a442b1202c844ac4faf3ef45042c476959824411908301f",
+      "pf_quote_capture_study.py": "619bc0b368c8b4fe487fa5fe905af15e5236ae05fd57b181e56d749b8e05ab03",
+      "tests/test_quote_capture.py": "ac8d50ef11ca19f97a6ab66fb04cff725641754339b79248be27430c7ce92330",
+      "tests/test_quote_capture_study.py": "9bbc7fe2676280b843493db085b912c35d8578d41f8414114f4053ef227174e1"
+    },
+    "inputs": {
+      "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/scope.json": "0fdb454efec919ab03b2e44fddef154c5e9964c65d1ab3cf10828eabf0dc58b6",
+      "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/research/step5/20261108/preds_t60k.parquet": "afac922009cf8e9df6787625e86c661a8dba0b1d968cfbbce0f1e79665001a82",
+      "/home/yuqing/ctaNew/data/predict_fun/research/step4/minute_lines_t60k.json": "3852fec9e0fa36d164c5482688574663bc4230033911ce0d47049e04ac87735d"
+    },
+    "raw_inputs": {
+      "v6": "/home/yuqing/pmmm-data/tokyo-live-data-20261109/tokyo-live-20261109/v6/run-1794108465172/outputs.jsonl.gz",
+      "basis": "/home/yuqing/pmmm-data/tokyo-live-data-20261109/tokyo-live-20261109/basis/run-1794147344737/outputs.jsonl.gz"
+    },
+    "raw_boundary": "hash/read only decompressed prefix before Nov8 23:02; future payload not decoded",
+    "no_live_change": true,
+    "no_fill_clock_bypass": true,
+    "protected_dates_read": false,
+    "version": 2,
+    "supersedes_declaration_sha256": "44f01edc6121a260df1e356dbd19f8f81425df3d7e437dfe3c702fe7f9765465",
+    "prior_receipt_sha256": "0b8ee1ca1a42c74c2e3c903c7be60913216e4d41b17b31cde4035c1e51562d50",
+    "correction": "single-order reference must cancel/repost on target-size increases and decreases; prior generic rem<=target check accidentally retained the smaller order on increases. Layered partial retention applies only when nominal size decreases. No arm/threshold/latency/data change.",
+    "inherited_decisions_sha256": "b775757c56a470b2b512fca15965e78dc8ec426817857107152278bc12d9335f"
+  },
+  "source_controls": "..............\n----------------------------------------------------------------------\nRan 14 tests in 0.003s\n\nOK\n2026-11-09T14:26:39Z tag=quote_controls_v2 rc=0 peak_rss_mib=101 wall_s=0.31 cpu_user_s=0.25 memavail_start_gib=24 disk_free_gib=451->451\n",
+  "line_cents": 0.0492,
+  "population": {
+    "day": "20261108",
+    "declared_markets": 220,
+    "present_markets": 220,
+    "decision_rows": 279059,
+    "window_status": {
+      "present": 220
+    },
+    "markets_per_arm": {
+      "layered": 220,
+      "layered_entry_0.005": 220,
+      "layered_entry_0.01": 220,
+      "layered_entry_0.02": 220,
+      "layered_entry_0.04": 220,
+      "single": 220
+    }
+  },
+  "summary": {
+    "single": {
+      "places": 34195.0,
+      "cancels": 34104.0,
+      "base_resize_cancels": 6008.0,
+      "kept_base_size_switches": 0.0,
+      "share_ms": 51135611.696777344,
+      "quoted_lane_ms": 4697889.59765625,
+      "desired_lane_ms": 5467926.7568359375,
+      "oldest_lane_age_ms2": 1875048377.0160336,
+      "reserved_share_ms": 428496765.7421875,
+      "refused_capacity": 8413.0,
+      "refused_inflight": 180.0,
+      "windows": 220,
+      "requests": 68299,
+      "mean_oldest_active_quote_ms": 399.1256793159815,
+      "mean_reserved_shares_both_sides": 32.46187619258996,
+      "peak_reserved_side": 150.0,
+      "requests_change_vs_single_pct": 0.0,
+      "desired_time_retained_vs_single_pct": 100.0,
+      "quoted_time_retained_vs_single_pct": 100.0
+    },
+    "layered": {
+      "places": 37890.0,
+      "cancels": 37770.0,
+      "base_resize_cancels": 0.0,
+      "kept_base_size_switches": 6652.0,
+      "share_ms": 51352980.71777344,
+      "quoted_lane_ms": 4974340.85546875,
+      "desired_lane_ms": 5467926.7568359375,
+      "oldest_lane_age_ms2": 2597437751.345742,
+      "reserved_share_ms": 394639274.7363281,
+      "refused_capacity": 6840.0,
+      "refused_inflight": 3780.0,
+      "windows": 220,
+      "requests": 75660,
+      "mean_oldest_active_quote_ms": 522.167223118645,
+      "mean_reserved_shares_both_sides": 29.89691475275213,
+      "peak_reserved_side": 150.0,
+      "requests_change_vs_single_pct": 10.777610213912347,
+      "desired_time_retained_vs_single_pct": 100.0,
+      "quoted_time_retained_vs_single_pct": 105.88458396192239
+    },
+    "layered_entry_0.005": {
+      "places": 28844.0,
+      "cancels": 28740.0,
+      "base_resize_cancels": 0.0,
+      "kept_base_size_switches": 5938.0,
+      "share_ms": 45790093.48388672,
+      "quoted_lane_ms": 4042591.9990234375,
+      "desired_lane_ms": 4364630.149658203,
+      "oldest_lane_age_ms2": 2332348486.950962,
+      "reserved_share_ms": 335599375.8117676,
+      "refused_capacity": 6021.0,
+      "refused_inflight": 3606.0,
+      "windows": 220,
+      "requests": 57584,
+      "mean_oldest_active_quote_ms": 576.9438240402158,
+      "mean_reserved_shares_both_sides": 25.42419513725512,
+      "peak_reserved_side": 150.0,
+      "requests_change_vs_single_pct": -15.688370254322903,
+      "desired_time_retained_vs_single_pct": 79.82239601511841,
+      "quoted_time_retained_vs_single_pct": 86.05123460202776
+    },
+    "layered_entry_0.01": {
+      "places": 23431.0,
+      "cancels": 23347.0,
+      "base_resize_cancels": 0.0,
+      "kept_base_size_switches": 5682.0,
+      "share_ms": 42594680.25268555,
+      "quoted_lane_ms": 3432370.897705078,
+      "desired_lane_ms": 3676662.0524902344,
+      "oldest_lane_age_ms2": 2221071932.3222427,
+      "reserved_share_ms": 303214176.09375,
+      "refused_capacity": 5775.0,
+      "refused_inflight": 3663.0,
+      "windows": 220,
+      "requests": 46778,
+      "mean_oldest_active_quote_ms": 647.0955495535976,
+      "mean_reserved_shares_both_sides": 22.97077091619318,
+      "peak_reserved_side": 150.0,
+      "requests_change_vs_single_pct": -31.509978184160826,
+      "desired_time_retained_vs_single_pct": 67.24051392776458,
+      "quoted_time_retained_vs_single_pct": 73.06197445375192
+    },
+    "layered_entry_0.02": {
+      "places": 18002.0,
+      "cancels": 17934.0,
+      "base_resize_cancels": 0.0,
+      "kept_base_size_switches": 4706.0,
+      "share_ms": 37094486.75048828,
+      "quoted_lane_ms": 2463766.5307617188,
+      "desired_lane_ms": 2642748.4399414062,
+      "oldest_lane_age_ms2": 1863156701.0641565,
+      "reserved_share_ms": 262945443.60961914,
+      "refused_capacity": 5166.0,
+      "refused_inflight": 3800.0,
+      "windows": 220,
+      "requests": 35936,
+      "mean_oldest_active_quote_ms": 756.222912277377,
+      "mean_reserved_shares_both_sides": 19.920109364365086,
+      "peak_reserved_side": 150.0,
+      "requests_change_vs_single_pct": -47.38429552409259,
+      "desired_time_retained_vs_single_pct": 48.33181857524835,
+      "quoted_time_retained_vs_single_pct": 52.44411303302823
+    },
+    "layered_entry_0.04": {
+      "places": 10194.0,
+      "cancels": 10154.0,
+      "base_resize_cancels": 0.0,
+      "kept_base_size_switches": 1211.0,
+      "share_ms": 20036303.682861328,
+      "quoted_lane_ms": 1097387.1154785156,
+      "desired_lane_ms": 1197332.5380859375,
+      "oldest_lane_age_ms2": 682512744.7422042,
+      "reserved_share_ms": 146986254.08691406,
+      "refused_capacity": 3166.0,
+      "refused_inflight": 2563.0,
+      "windows": 220,
+      "requests": 20348,
+      "mean_oldest_active_quote_ms": 621.9434647221956,
+      "mean_reserved_shares_both_sides": 11.135322279311671,
+      "peak_reserved_side": 150.0,
+      "requests_change_vs_single_pct": -70.20747009473052,
+      "desired_time_retained_vs_single_pct": 21.89737703763216,
+      "quoted_time_retained_vs_single_pct": 23.35915079881817
+    }
+  },
+  "source_score_diagnostics": {
+    "reconstructed_score_missing": 0,
+    "reconstructed_score_vs_live_conflict": 12044
+  },
+  "predicates": {
+    "zero_buffer_targets_exact": true,
+    "all_targets_subset": true,
+    "all_side_caps_hold": true,
+    "layered_fewer_requests": false,
+    "layered_equal_desired_time": true
+  },
+  "artifacts": {
+    "window_metrics.parquet": "e35a21a7a42ddbb93c68b286ddc7de461d12dc6d080ba8a77d733f8efc16b7c3",
+    "window_status.parquet": "943eae89c5decc007b04828b477d7daf62f082b57b9596a321a1864bb5bf8ffc",
+    "window_metrics_v2.parquet": "047bd423325d695cdaa8fc94e6d7444b1b84939190094e498d1dfc84af05ed55",
+    "window_status_v2.parquet": "943eae89c5decc007b04828b477d7daf62f082b57b9596a321a1864bb5bf8ffc",
+    "decisions.parquet": "b775757c56a470b2b512fca15965e78dc8ec426817857107152278bc12d9335f"
+  },
+  "extraction": {
+    "as_of": "2026-11-09T14:23:45.349603+00:00",
+    "decisions": 279059,
+    "markets": 220,
+    "decisions_sha256": "b775757c56a470b2b512fca15965e78dc8ec426817857107152278bc12d9335f",
+    "prefixes": {
+      "v6": {
+        "prefix_sha256": "9633a0e4b4d0bdd98b10b260694e464b09129ddc6c150a3ccf65f6a5016b5304",
+        "lines": 679873,
+        "cutoff_ms": 1794178920000
+      },
+      "basis": {
+        "stopped_before_future_payload": true,
+        "prefix_sha256": "638ed4b0f85ac4b656dfc0e8096bea17555d2c9e4aee2a5caa09551886b4bada",
+        "lines": 582739,
+        "cutoff_ms": 1794178920000
+      }
+    }
+  },
+  "limitations": [
+    "one consumed partial day; fixed factual desired path with no simulated fills; no counterfactual inventory feedback",
+    "first60 seconds only; no ladder price adaptation to counterfactual order residency",
+    "no fill/PnL/variance estimate, queue rank proof, confidence interval or deployment claim",
+    "modelled acknowledgements and1s reservation grace; no venue throttling/backoff/post-only rejection model",
+    "buffer results depend on reconstructed scores; missing/conflicting scores reported separately"
+  ],
+  "supersedes_receipt_sha256": "0b8ee1ca1a42c74c2e3c903c7be60913216e4d41b17b31cde4035c1e51562d50",
+  "correction": "single-order reference must cancel/repost on target-size increases and decreases; prior generic rem<=target check accidentally retained the smaller order on increases. Layered partial retention applies only when nominal size decreases. No arm/threshold/latency/data change.",
+  "prior_receipt_valid": false
+}

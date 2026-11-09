@@ -8,6 +8,41 @@ def target(size,tick=50,lane=0):
 
 
 class QuoteControls(unittest.TestCase):
+    def test_reduce_only_retention_counts_cancel_reservations(self):
+        p=QuotePlanner(incremental=True,grace_ms=1000)
+        w=target(5,lane=1);w[3]=(51,5)
+        p.plan(0,w)
+        p.plan(100,target(5,lane=1),known_net=5,reduce_only=True)
+        self.assertTrue(all(o.cancel_at is not None for o in p.orders))
+        self.assertEqual(p.reserved(1),10)
+        p.plan(1122,target(5,lane=1),known_net=5,reduce_only=True)
+        self.assertEqual(p.reserved(1),5)
+        self.assertEqual(sum(o.cancel_at is None for o in p.orders),1)
+
+    def test_incremental_starts_with_one_ticket_and_splits_only_growth(self):
+        p=QuotePlanner(incremental=True,grace_ms=0)
+        p.plan(0,target(25));self.assertEqual(p.stats['places'],1)
+        p.plan(100,target(5));small=next(o for o in p.orders if o.cancel_at is None)
+        p.plan(200,target(25));p.plan(300,target(5))
+        self.assertIsNone(small.cancel_at)
+        self.assertEqual([c['size'] for c in p.commands if c['kind']=='place'],[25,5,20])
+        p.plan(400,target(25,51))
+        self.assertEqual([c['size'] for c in p.commands if c['kind']=='place'][-1],25)
+        self.assertEqual(sum(o.tick==51 and o.cancel_at is None for o in p.orders),1)
+
+    def test_incremental_partial_base_is_not_refilled(self):
+        p=QuotePlanner(incremental=True,grace_ms=0);p.plan(0,target(5));base=p.orders[0]
+        p.fill(base.id,3);p.plan(100,target(25))
+        self.assertEqual(base.rem,2)
+        self.assertEqual([c['size'] for c in p.commands if c['kind']=='place'],[5,20])
+        p.plan(200,target(25));self.assertEqual(p.stats['places'],2)
+
+    def test_reduction_can_override_retention_counter(self):
+        p=QuotePlanner(grace_ms=0);p.plan(0,target(5,lane=1))
+        p.plan(100,target(25,lane=1),known_net=3,reduce_only=True)
+        self.assertEqual(p.stats['kept_base_size_switches'],0)
+        self.assertTrue(all(o.cancel_at is not None for o in p.orders))
+
     def test_single_order_reference_resizes_both_ways(self):
         p=QuotePlanner(layered=False,grace_ms=0)
         p.plan(0,target(5));p.plan(100,target(25));p.plan(200,target(5))

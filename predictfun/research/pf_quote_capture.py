@@ -65,9 +65,10 @@ class EntryGate:
 
 
 class QuotePlanner:
-    def __init__(self,layered=True,base=5.,cap=150.,inflight=3,place_ms=40.,cancel_ms=22.,pending_cancel_ms=95.,grace_ms=1000.):
+    def __init__(self,layered=True,base=5.,cap=150.,inflight=3,place_ms=40.,cancel_ms=22.,pending_cancel_ms=95.,grace_ms=1000.,incremental=False):
         if base<=0 or cap<=0 or inflight<1 or min(place_ms,cancel_ms,pending_cancel_ms,grace_ms)<0:raise ValueError('invalid planner limits')
-        self.layered=layered;self.base=base;self.cap=cap;self.inflight=inflight
+        if incremental and not layered:raise ValueError('incremental mode requires retention')
+        self.layered=layered;self.incremental=incremental;self.base=base;self.cap=cap;self.inflight=inflight
         self.place_ms=place_ms;self.cancel_ms=cancel_ms;self.pending_cancel_ms=pending_cancel_ms;self.grace_ms=grace_ms
         self.orders=[];self.next_id=0;self.now=-math.inf;self.commands=[]
         self.refused={'capacity':0,'inflight':0,'minimum':0}
@@ -104,7 +105,10 @@ class QuotePlanner:
         for lane,(tick,size) in enumerate(lanes):
             if not math.isfinite(size) or size<0 or (tick is not None and int(tick)!=tick):raise ValueError('bad desired quote')
             if tick is None or size==0:targets.append({});continue
-            target=components(lane,int(tick),size,self.base,self.layered)
+            split=self.layered
+            if self.incremental:
+                split=any(o.lane==lane and o.slot=='base' and o.tick==tick and o.cancel_at is None and o.size<=self.base for o in self.orders)
+            target=components(lane,int(tick),size,self.base,split)
             if not target:self.refused['minimum']+=1
             targets.append(target)
         kept={};switches=[]
@@ -129,12 +133,15 @@ class QuotePlanner:
         for side in (0,1):
             if reduce_only:
                 budget=abs(known_net) if (side==0 and known_net<0) or (side==1 and known_net>0) else 0.
+                # A previously cancelled ticket can still fill or report a late fill.
+                # Do not retain a new reducing ticket against the same inventory.
+                budget=max(0.,budget-sum(o.rem for o in self.orders if o.lane%2==side and o.cancel_at is not None))
                 active=sorted([o for o in self.orders if o.lane%2==side and o.cancel_at is None],key=lambda o:(o.slot!='extra',-o.sent))
                 future=sum(o.rem for o in active)
                 for o in active:
                     if future<=budget+1e-9:break
                     self.cancel(o,now,'reduce_only');future-=o.rem;kept.pop((o.lane,o.slot),None)
-        self.stats['kept_base_size_switches']+=len(switches)
+        self.stats['kept_base_size_switches']+=sum((lane,'base') in kept for lane in switches)
         # Touch before ladder; base before top-up. Each new order passes the same side budget.
         for lane,target in enumerate(targets):
             for slot,size in target.items():
