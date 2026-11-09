@@ -1,5 +1,23 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 — spread capture / inventory-risk review
+
+- User asks how to improve spread capture while lowering inventory variance. Post-hoc descriptive risk calculation from
+  the completed receipts (data as-of 04:15:18Z), nine consumed days / 2,592 markets per arm/timing, no exclusions/missing values:
+  daily settlement PnL sample SD baseline -> urgency **134.5108 -> 127.9100 J**, **103.0877 -> 97.8480 X** (~5% lower).
+  Worst day **-53.1211 -> -53.2061 J**, **-128.5982 -> -99.4829 X**. J also cuts a large winning day; X improvement remains
+  concentrated on Nov2. No interval or significance claim. Receipt: `reviews/urgency_history_20261109/risk_diagnostic.json`.
+- Code review: CAP10 is a threshold on current known net, not a reservation-aware 10-share bound on the next order.
+  If |known net| <10, a 25-share adding order can still pass, and each ladder lane checks the same pre-fill position.
+  Previously tested HCAP clips against the separate 150-share backstop; it did not test a strategic 10-share risk budget.
+- Priorities to investigate: size/withhold inventory-increasing quotes against potential same-side fills across all lanes
+  (including pending creates/cancels); retain effective, executable reduction sizes; isolate queue retention at matched
+  target exposure; then test selective new MM cycles after returning near flat (RO60 currently prevents them after 60s).
+  Budget any price concession for reduction against the risk removed; existing guards remain, no blanket late aggression.
+- Evaluation should separate matched-pair trading value, adverse-selection markout, unpaired carry, and downside risk.
+  Compare at matched trading activity where possible so merely trading less is not called better execution. No new variant,
+  threshold sweep, live change or forward data read launched in this review.
+
 ## 2026-11-09 — earlier urgency check COMPLETE
 
 - As-of **2026-11-09 04:15:18Z**. All four earlier complete compatible dates (Oct 23–26), **1,152 markets per arm/timing**,

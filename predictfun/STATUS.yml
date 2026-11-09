@@ -6,6 +6,9 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09: RISK OBJECTIVE REVIEW, nine-day post-hoc daily PnL SD ~5% lower with urgency; J worst day does not improve,
+  X benefit still Nov2-dependent. Prioritize reservation-aware strategic inventory sizing, matched-exposure queue tests,
+  then selective flat-inventory MM cycles. Suggestions only; no new simulation or live/forward change. Details in HANDOFF.
   2026-11-09 04:15Z: EARLIER URGENCY CHECK COMPLETE, Oct23–26 / 1152 markets per arm/timing, unchanged rule.
   Settlement delta $ J/X -20.6899/+2.9007; +1s -0.0742/-0.6977. Nine-day pooled delta -9.7814/+28.6638,
   with X turning -0.4515 excluding Nov2. Inventory falls slightly; timing/day dependence defeats a robust PnL claim.
