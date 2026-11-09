@@ -1,5 +1,18 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 18:04Z — optimization loop: paired-fill bounded continuity verified
+
+- Seventh engineering pass: opt-in LC50 on LZ;228 synthetic traces (28 explicit/200 seeded),33 Python checks +1 Rust control.
+  Native f20fdb1 matches3701 requests/16628 effective pair decisions/801 fills/5 retries/73 cancellation-only probes.
+- All172 holds close<=50ms; no off-guard replenishment. Checks cover partial/full fills, late-cancelled fill activating CAP10,
+  RO/stop/price/lower-line preemption, exact-deadline recovery and stale timers. Native artifact replay byte-identical;
+  saved accepted identities, quantities, lifecycles, counts and known-fill ledgers reconcile; corrupt controls refused.
+- Oracle consumes effective Python wants/pulls, not an independent native LC50 policy. No actual scheduler or economic claim.
+  Zero create rejections in this population; B4's separate rejection suite/explicit frozen parity exception still apply.
+- Sourcea565e3f6/declarationb3a52e2c; findings_v7 supersedesv6. Report handoffs/20261109_optimization_loop_v7.md.
+  No market/protected data/live/frozen/loss changes. Numeric jobs finished18:04:26Z;4.5MiB data/228MiB peak buildRSS.
+  Slot free now (recheck before C1). Next audit remaining optimization/promotion gates; prioritize economically useful evidence.
+
 ## 2026-11-09 17:52Z — optimization loop: paired research engine verified with explicit exception
 
 - Opt-in LZ generated from frozen v3 matches pinned native f20fdb1 incremental pairs on238 synthetic traces:
