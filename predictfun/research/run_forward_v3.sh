@@ -4,6 +4,7 @@
 # at the first failure. Inputs (A) are run_forward.sh's per-day commands without v2. Replays: v1 + control with pf_step4_ladder_fwd.py
 # (the race's forward-enabled frozen engine), v3 with pf_step4_ladder_v3.py (parity: pf_v3_engine_check.py), timings J and X.
 set -u
+python3 -m predictfun.research.pf_clock_preflight || exit 2
 cd /home/yuqing/ctaNew
 FWD=20261114; DAYS="20261109 20261110 20261111 20261112 20261113"
 R=predictfun/research/run_light.sh; LG=data/predict_fun/research/logs/forward_v3; S4=data/predict_fun/research/step4; S5=data/predict_fun/research/step5

@@ -10,6 +10,8 @@ Usage: python3 -m predictfun.research.pf_step1_timing 20261023
 Writes step1/<day>/legs_timed.parquet (t_ms = matched WS source time or NaN) + timing.json.
 """
 import sys, bisect, collections
+from .pf_trade_tape import refuse_legacy_clock
+refuse_legacy_clock()  # Superseded: nearby anonymous increments cannot establish exact fill timing.
 import numpy as np, pandas as pd
 from . import pf_io as io
 

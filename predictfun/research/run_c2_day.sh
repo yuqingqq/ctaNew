@@ -3,6 +3,7 @@
 # Exit 0 = chain ran and an admission record was appended; 75 = launcher busy/low memory/low disk (retry later);
 # anything else = a step failed (a FAILED admission record is appended).
 set -u
+python3 -m predictfun.research.pf_clock_preflight || exit 2
 cd /home/yuqing/ctaNew
 D=${1:?day}; R=predictfun/research/run_light.sh; L=data/predict_fun/research/logs; A=data/predict_fun/research/c2/admission.jsonl
 mkdir -p "$L" data/predict_fun/research/c2

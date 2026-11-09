@@ -1,5 +1,17 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 — trade timing repair IN PROGRESS
+
+- User requested fixing the exact-identity clock defects. Branch `fix/predict-trade-timing-20261109`, checkout
+  `/tmp/cta-trade-timing-20261109`. Preserve frozen engines/receipts. New tape keeps full transaction/taker/maker
+  identities and separate confirmation/status/receipt clocks; no nearest-increment, E2, earliest-leg or delay fitting.
+- Coarse matched-status timestamps remain intervals, never clipped to our lifecycle. Unknown public clocks stay rows.
+  New replay entrypoint refuses incomplete/coarse clocks before other data/output. Legacy J/X data/replay drivers are
+  guarded in this fix branch so they cannot consume protected days under the superseded clock assumption.
+- Regression tests and same220 consumed Nov8 windows only. All42,064 order actions retained; compare independent
+  lifecycle bounds and exact quantities. No PnL ranking/live change. One capped job at a time. New data require exact
+  matching-event provenance before point replay can resume; repair cannot recover absent historical precision.
+
 ## 2026-11-09 — exact-order fill-clock audit COMPLETE; replay timing fails lifecycle checks
 
 - User requested continued testing toward preserving trading value with lower inventory. Clock audit as-of
