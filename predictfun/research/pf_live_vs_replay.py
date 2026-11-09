@@ -15,7 +15,8 @@ journal exports (pmmm-tools journal-export at c54df1f), and the replay of pf_liv
   feedtiming live latency vs the replay's; WS pending-message timing of live fills and of replay fills live missed / also got.
   who       touch vs ladder lanes live; makers / takers (REST matches) in the trades the replay credited to us but live missed.
   reasons   every real touch trade 0-240 s: maker markouts and why we were not filled (cancelled / pulled by prediction / ...).
-Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom | feedtiming | who | reasons
+  queue     touch trades we rested at but missed: queue ahead vs traded volume, places lost by cancel + re-place and why.
+Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom | feedtiming | who | reasons | queue
 """
 import collections, gzip, json, os, re, sys
 import numpy as np, pandas as pd
@@ -666,5 +667,109 @@ def why_none(e, m, ws, t, up, D, FL, HO, lane_of, PV, LINE):
     return 'other guards (Binance move / book checks)'
 
 
+def main_queue():
+    """The touch trades where our order rested at the price but was not filled ('reasons' status queue): queue ahead at our join
+    (displayed size at the price in the last live frame before our acceptance) vs the volume traded at the price from our join to the
+    trade (REST matches, all makers, exec second >= join second); our order's age; whether we had held the price earlier in an unbroken
+    run of our orders (gaps <= 500 ms) and lost the place by cancel + re-place, the reason of each such cancel (our decision at the cancel
+    request: side pulled by the prediction line / other guards / inventory, re-priced, resized 5 <-> 25, or kept tick and size), and
+    whether the run's first order would have been reached (its displayed queue <= the volume traded at the price since then)."""
+    sc = json.load(open(f'{RP}/scope.json')); coh = {w['market']: w['ws'] * 1000.0 for w in sc['windows']}
+    R = pd.read_parquet(f'{OUT}/touch_trade_reasons.parquet'); Qm = R[R.status == 'resting_not_filled (queue)']
+    M = pd.read_parquet(f'{OUT}/matches_20261108.parquet')
+    pv = pd.read_parquet(f'{RP}/research/step5/20261108/preds_t60k.parquet', columns=['mid', 'tau', 'v_bid', 'v_ask'])
+    PV = {m: (g.tau.values.astype(float), g.v_bid.values, g.v_ask.values) for m, g in pv.groupby('mid')}
+    LINE = json.load(open(f'{RP}/research/step4/minute_lines_t60k.json'))['lines']['90']
+    rows = []
+    for run, rid in RUNS:
+        q = Qm[Qm.run == run]; mk = set(q.mid)
+        if not mk:
+            continue
+        P, _ = core_orders(run, rid, mk)
+        dec = collections.defaultdict(list); books = collections.defaultdict(list); fills = collections.defaultdict(list); holds = collections.defaultdict(list)
+        for l in lines(f'{CAP}/{run}/run-{rid}/outputs.jsonl.gz'):
+            if l.startswith('{"Decision"'):
+                m = int(l[22:l.index(',', 22)])
+                if m in mk:
+                    d = json.loads(l)['Decision']; dec[m].append((d['t'], d['lanes']))
+        for l in lines(f'{CAP}/{run}/run-{rid}/inputs.jsonl.gz', skip_header=True):
+            if l.startswith('{"Advance"'):
+                if float(l[21:l.index('}', 21)]) > CUTOFF_MS + 120_000:
+                    break
+            elif l.startswith('{"Frame"'):
+                m = int(l[19:l.index(',', 19)])
+                if m in mk:
+                    d = json.loads(l)['Frame']; books[m].append((d['known_ms'], dict(d['bids']), dict(d['asks'])))
+            elif l.startswith('{"Filled"'):
+                v = json.loads(l)['Filled']
+                if v['market'] in mk:
+                    fills[v['market']].append((v['known_ms'], v['id'], v['qty']))
+        DT = {m: np.array([x[0] for x in v]) for m, v in dec.items()}; BT = {m: np.array([x[0] for x in v]) for m, v in books.items()}
+        lane_of = {(a, b): c for a, b, c in zip(P.market, P.id, P.lane)}
+        Dsimple = {m: (DT[m], [[x[0] for x in ln] for _, ln in dec[m]]) for m in dec}
+        def size_at(m, t, up, tick):
+            i = np.searchsorted(BT[m], t, side='left') - 1
+            return float(books[m][i][1 if up else 2].get(tick, 0.0)) if i >= 0 else np.nan
+        def lanes_at(m, t):
+            i = np.searchsorted(DT[m], t + 0.01, side='right') - 1
+            return dec[m][i][1] if i >= 0 else None
+        for e in q.itertuples():
+            m = e.mid; ws = coh[m]; W = ws + e.t_in * 1000.0; tm = W - 50.0; up = e.up
+            o = P[(P.market == m) & P.lane.isin((0, 2) if up else (1, 3)) & (P.tick == e.ptick) & P.t_Accepted.notna()].sort_values('t_Accepted')
+            end = o[['t_CancelDone', 't_Filled_last']].max(axis=1).fillna(ws + 300_000.0)
+            cur = o[(o.t_Accepted <= tm) & (end >= tm)]
+            if not len(cur):
+                continue
+            c0 = cur.iloc[-1]
+            # unbroken run of our orders at this price before the current one (gap <= 500 ms between one ending and the next accepted)
+            run_ = [c0]; prev = o[o.t_Accepted < c0.t_Accepted]; pend = end[prev.index]
+            t_head = c0.t_Accepted
+            for j in reversed(prev.index.tolist()):
+                if pend[j] >= t_head - 500.0:
+                    run_.append(o.loc[j]); t_head = min(t_head, o.loc[j].t_Accepted)
+                else:
+                    break
+            first = run_[-1]
+            reasons = []
+            for x in run_[1:]:
+                if pd.isna(x.t_cancel):
+                    reasons.append('filled or ended'); continue
+                ln = lanes_at(m, x.t_cancel)
+                if ln is None:
+                    reasons.append('unknown'); continue
+                want = ln[x.lane]
+                if want[0] is None:
+                    reasons.append('pulled: ' + why_none(e, m, ws, x.t_cancel + 0.5, up, Dsimple, fills, holds, lane_of, PV, LINE))
+                elif want[0] != x.tick:
+                    reasons.append('re-priced')
+                elif abs(want[1] - x['size']) > 1e-9:
+                    reasons.append('resized')
+                else:
+                    reasons.append('kept tick and size (other)')
+            vol = lambda t0: float(M[(M.mid == m) & (M.yes_side == ('bid' if up else 'ask')) & (M.ptick == e.ptick)
+                                     & (M.exec_s >= np.floor(t0 / 1000.0)) & (M.exec_s <= np.floor(W / 1000.0))].shares.sum())
+            q_cur = size_at(m, c0.t_Accepted, up, e.ptick); v_cur = vol(c0.t_Accepted)
+            q_first = size_at(m, first.t_Accepted, up, e.ptick); v_first = vol(first.t_Accepted)
+            rows.append(dict(run=run, mid=m, lane=int(c0.lane), size=c0['size'], age_ms=tm - c0.t_Accepted, q_ahead=q_cur, traded_since=v_cur,
+                             trade_shares=e.shares, reached=v_cur >= q_cur, run_len=len(run_), run_age_ms=tm - first.t_Accepted,
+                             q_ahead_first=q_first, traded_since_first=v_first, first_reached=v_first >= q_first,
+                             cancel_reasons='|'.join(reasons), mo1=e.mo1, mo5=e.mo5, settle=e.settle))
+    X = pd.DataFrame(rows); X.to_parquet(f'{OUT}/queue_misses.parquet', index=False)
+    rs = collections.Counter(r for x in X.cancel_reasons for r in x.split('|') if r)
+    out = dict(queue_misses=len(X), shares=round(float(X.trade_shares.sum()), 0),
+               our_order_age_ms={k: round(float(X.age_ms.quantile(k)), 0) for k in (0.25, 0.5, 0.75)},
+               queue_ahead_at_join_sh={k: round(float(X.q_ahead.quantile(k)), 0) for k in (0.25, 0.5, 0.75)},
+               traded_at_price_since_join_sh={k: round(float(X.traded_since.quantile(k)), 0) for k in (0.25, 0.5, 0.75)},
+               reached_but_not_filled=int(X.reached.sum()),
+               lost_an_earlier_place_at_price=int((X.run_len > 1).sum()),
+               run_age_ms_when_lost={k: round(float(X[X.run_len > 1].run_age_ms.quantile(k)), 0) for k in (0.25, 0.5, 0.75)} if (X.run_len > 1).any() else None,
+               first_order_would_be_reached=int((X.run_len > 1).sum() and (X[X.run_len > 1].first_reached).sum()),
+               cancels_in_lost_runs=dict(rs.most_common()), by_lane=X.groupby('lane').size().to_dict(),
+               mo5_c_sh=round(float((X.trade_shares * X.mo5).sum() / X.trade_shares[X.mo5.notna()].sum()), 2))
+    json.dump(out, open(f'{OUT}/queue_misses.json', 'w'), indent=1, default=str)
+    print(json.dumps(out, indent=1, default=str))
+    return 0
+
+
 if __name__ == '__main__':
-    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom, 'feedtiming': main_feedtiming, 'who': main_who, 'reasons': main_reasons}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
+    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom, 'feedtiming': main_feedtiming, 'who': main_who, 'reasons': main_reasons, 'queue': main_queue}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
