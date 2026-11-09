@@ -1,5 +1,25 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 — inflight inventory-reservation experiment RUNNING
+
+- User authorized testing all in-flight quantities to avoid unintended reverse exposure. Branch
+  `research/predict-inflight-budget-20261109`, checkout `/tmp/cta-inflight-budget-20261109`, declared source `f0e15415`.
+  Data/declaration/logs: `/home/yuqing/ctaNew/data/predict_fun/research/inflight_budget_20261109/`.
+- Two new arms: `reduce_reserved` preserves original adding policy and caps aggregate reducing reservations to known
+  inventory; `both_reserved` adds the prior aggregate 10-share adding budget. Resting, pending-create and pending-cancel
+  remaining quantities counted across all lanes, no opposite-side credit. Keep eligible same-price partial orders.
+  Submission recheck and minimum lots/notional apply. Original guards/RO60/S240/latencies unchanged.
+- New-arm cancellation reservations persist through confirmation plus the simulated 100ms fill-report delay +.001ms:
+  no cumulative execution quantity is provided with simulator cancel confirmations, so early release could reuse room
+  before a late fill is reported. Original reference arms retain their exact behavior; this grace is part of the treatment.
+- All nine consumed dates / 2592 markets per arm/timing, J/X. Controls: baseline and prior reserved10. Fresh first-date
+  references plus eight-market smoke; hash-checked prior references on other days. Fixed guards trained on eight dates:
+  exploratory in-sample. Uncapped loss budget, 150-share backstop, rebates excluded. No forward/live changes.
+- 31 preflight controls pass. Declared 2000 day null + 2000 day bootstrap draws, 18 comparisons: reduce_reserved-baseline,
+  both_reserved-reserved10, both_reserved-reduce_reserved x J/X x settlement/+1s/inventory-square. All-market full-path
+  inventory, zero crossings, FIFO matched/residual PnL and volume metrics. Each both_reserved fill asserts |actual net|<=10.
+- Batch started 07:01Z; single light process/core, 4GiB address-space cap. No findings yet. Protected Nov9–13 untouched.
+
 ## 2026-11-09 — entry inventory-budget experiment COMPLETE
 
 - As-of **2026-11-09 06:12:40Z**; supplemental peak trace **06:18:57Z**. Nine consumed dates (Oct23–27,
