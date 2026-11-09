@@ -6,11 +6,15 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
-  2026-11-09 05:37Z: ENTRY INVENTORY-BUDGET STUDY RUNNING, user-authorized; nine consumed days / 2592 markets per arm.
-  Baseline / uniform10 adding order cap / reserved10 adding-side aggregate budget at J/X; reduction rules unchanged.
-  Common remaining-quantity retention for new arms, outstanding reservations counted, submission invariant. 25 controls pass.
-  Full inventory-path/FIFO attribution and day risk metrics; 2000 day null/bootstrap draws, 18 comparisons. Source f7fc7162,
-  branch research/predict-entry-budget-20261109. No live/forward changes; details in HANDOFF.md.
+  2026-11-09 06:19Z: ENTRY INVENTORY-BUDGET STUDY COMPLETE, nine consumed days / 2592 markets per arm/timing, J/X.
+  Baseline settlement $514.06/$317.63; uniform10 $425.59/$281.63; reserved10 $309.74/$253.05.
+  Daily SD falls 44.6%/37.0% uniform, 69.0%/58.0% reserved; mean residual inventory falls 38.6%/39.2%, 61.6%/60.6%.
+  Volume and per-share +1s value also fall: risk-control tradeoff, no improved spread capture. Settlement intervals cross zero.
+  Both new arms still reach 80-share J peak: known +10 reducing sells fill 90 shares, including 50 cancel-pending, before
+  the position reaches -80. Not a hard 10-share bound; budget zero-crossing reducing exposure in a separate next experiment.
+  25 controls, smoke and 18 full reconciliations pass; no missing markets/valuations. Peak trace positive/refusal checks pass.
+  In-sample, source f2867829; branch research/predict-entry-budget-20261109. Receipts reviews/entry_budget_20261109/.
+  No live/forward changes; all jobs complete. Details and limitations in HANDOFF.md.
   2026-11-09: RISK OBJECTIVE REVIEW, nine-day post-hoc daily PnL SD ~5% lower with urgency; J worst day does not improve,
   X benefit still Nov2-dependent. Prioritize reservation-aware strategic inventory sizing, matched-exposure queue tests,
   then selective flat-inventory MM cycles. Suggestions only; no new simulation or live/forward change. Details in HANDOFF.
