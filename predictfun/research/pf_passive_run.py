@@ -61,7 +61,8 @@ def run(day,tm,mode):
     if out.exists():raise ValueError('refuse overwrite')
     reuse=mode=='main' and day!=DAYS[0]
     run_arms={k:v for k,v in ARMS.items() if not reuse or k!='baseline'}
-    env=dict(os.environ,**COMMON,PF_PREDS='preds_basis_study',PF_TAG=f'passive_{mode}_{tm}',
+    inherited={k:v for k,v in os.environ.items() if not k.startswith('PF_')}
+    env=dict(inherited,**COMMON,PF_FORWARD='20261104',PF_PREDS='preds_basis_study',PF_TAG=f'passive_{mode}_{tm}',
         PF_MAX_WINDOWS='8' if mode=='smoke' else '0',PF_ARMS=ARMS['baseline'] if mode=='smoke' else ';'.join(run_arms.values()),
         PF_STUDY_EXEC='1',PF_CAP_CACHE='0',PF_STUDY_CANCEL_ACK_MS=str(ACK_MS if mode=='stress' else 0),
         PF_TXJIT='frame' if tm=='J' else '',PF_TXSHIFT='0' if tm=='J' else '-50',PF_QACT='' if tm=='J' else 'max')
