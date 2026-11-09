@@ -28,6 +28,8 @@ def setup():
         arms=ARMS,loss_budget=None,exposure_cap_shares=150,rebates='excluded',
         keep_queue='after 60s, preserve same-price guard-eligible current order despite size changes only when its known remainder plus all other reducing reservations fits known inventory; combined also limits remainder to 5',
         small_reduce='after 60s, cap the original reduce-only desired size at 5 shares; no new no-flip guarantee',
+        small_order_minimum='five-share orders below the existing 1-USDT minimum are withheld; report MIN_USD decisions',
+        execution_reuse='fresh baseline on first main date at each timing and all stress runs; remaining main baselines reuse prior hash-recorded artifacts',
         urgent_quote='180<=t<240 and abs(known net)>=10: improve reducing quote by one 1-cent tick if strictly passive; original quote must pass all original guards',
         urgency_cost='Deliberately spends 1 cent/share for faster reduction. Original model score is not claimed calibrated to improved price; full price cost enters actual fill PnL.',
         timings=['J','X'],latency_ms=dict(place=40,cancel=22,pending_cancel=95,fill_known=100),

@@ -139,12 +139,21 @@ def main():
                     place_change_pct=100*(a['requests']['place']/b['requests']['place']-1),
                     days_settle_better=int((dd>1e-8).sum()),days_settle_worse=int((dd< -1e-8).sum()),
                     leave_one_out_settle_delta=[float(dd.sum()-dd.max()),float(dd.sum()-dd.min())] if mode=='main' else None))
-    sources=list(HERE.glob('pf_passive*.py'))+[HERE/'run_passive_study.sh',HERE/'tests/test_passive_study.py',HERE/'pf_sizing_engine.py',HERE/'pf_settlement_study.py']
+    sources=list(HERE.glob('pf_passive*.py'))+[HERE/'run_passive_study.sh',HERE/'tests/test_passive_study.py',
+        HERE/'pf_sizing_engine.py',HERE/'pf_step4_ladder_v3.py',HERE/'pf_settlement_study.py',HERE/'pf_clock_rl.py',HERE/'pf_io.py']
+    datafiles=[DATA/'step4'/'minute_lines_t60k.json',DATA/'step4'/'inv_r60.json']
+    for day in DAYS:
+        datafiles += [DATA/'step5'/day/'preds_basis_study.parquet',DATA/'step1'/day/'registry.parquet',
+                      DATA/'step1'/day/'clock_rl_d2.json',DATA/'step1'/day/'legs_timed2.parquet',DATA/'step1'/day/'legs_tk.parquet']
+        datafiles += sorted((DATA/'step1'/day/'books').glob('*.parquet'))
     tests=(DEST/'logs/passive_final_controls.log').read_text()
     if '\nOK\n' not in tests or 'rc=0 ' not in tests:raise ValueError('source controls missing')
-    out=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),declaration=json.loads((DEST/'declaration_v2.json').read_text()),
+    declaration=DEST/('declaration_v2.json' if (DEST/'declaration_v2.json').exists() else 'declaration.json')
+    out=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),declaration=json.loads(declaration.read_text()),
+        declaration_sha={p.name:sha(p) for p in sorted(DEST.glob('declaration*.json'))},
         source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=HERE,text=True).strip(),
-        source_sha={str(p.relative_to(HERE.parents[1])):sha(p) for p in sources},results=results,comparisons=comparisons,
+        source_sha={str(p.relative_to(HERE.parents[1])):sha(p) for p in sources},
+        prepared_input_sha={str(p):sha(p) for p in datafiles},results=results,comparisons=comparisons,
         paired_inference=inference,checks=checks,execution_inputs=inputs,source_controls=tests,
         predicates={v:dict(main_settle_better_both=all(mainrows[t,v]['settle']>mainrows[t,'baseline']['settle'] for t in ['J','X']),
             main_plus1_better_both=all(mainrows[t,v]['plus1']>mainrows[t,'baseline']['plus1'] for t in ['J','X']),
