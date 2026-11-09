@@ -1,0 +1,17 @@
+{
+  "as_of": "2026-11-09T15:46:02.647973+00:00",
+  "native_commit": "366d4192af219eef568ae17c530e4303e6f4ca45",
+  "source_commit": "2d7e96d0b64fea6d0a85569f1c298af1ea070087",
+  "sources": {
+    "pf_native_grid.py": "e6e9e59e641d5ea0a4f1492faf294226f4de417f05d772cb7479de4f51ab9a08",
+    "native_guard_evidence.rs": "e42391b73c4298c95ca095258e3f6cf84d0feefbb17f6c754f4fab973f72e902"
+  },
+  "original_native_sha256": "458776fc587d51f4eee421d5400e00e7d8cc6b9eb8fb9a7840464d3eb361ed3c",
+  "method": "    /// Read-only diagnostic; exact input construction from decide().\n    pub fn diagnostic_inputs(&self, t: f64) -> LadderInputs {\n        let r = self.cfg.rules;\n        let mut live = [0.0, 0.0];\n        for lane in 0..LANES {\n            if let Some(id) = self.known[lane] {\n                live[lane % 2] += self.orders[&id].open();\n            }\n        }\n        let rung_cur = [2, 3].map(|lane| self.cur(lane).map(|id| (self.orders[&id].tick, self.orders[&id].size)));\n        let x = LadderInputs {\n            rel_s: (t - self.ws) / 1000.0,\n            book: self.book,\n            binance: if r.g1 || r.g2 { self.binance.state(t, r.g1, r.g2) } else { [false, false] },\n            v: [self.v[0].value(t), self.v[1].value(t)],\n            net: self.knet,\n            live,\n            rung_cur,\n        };\n        x\n    }\n\n",
+  "scope": "same bounded factual inputs; observe all due events to catch lower-line crossings absent from old decisions",
+  "design": "read-only input accessor; split run_until with inclusive Advance at each next_due strictly before the next captured input; compare every output exactly, preserve original states/books byte-for-byte",
+  "no_changed_order_feedback": true,
+  "no_protected_dates_read": true,
+  "no_live_change": true,
+  "null": "deterministic observer parity and corrupted anchor refusal; no strategy result"
+}
