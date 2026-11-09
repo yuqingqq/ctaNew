@@ -66,8 +66,12 @@ class PassiveControls(unittest.TestCase):
         from predictfun.research.pf_passive_report import generation_counts
         ws=pd.Series({1:1_000_000.})
         q=pd.DataFrame(dict(mid=[1],lane=[0],kind=['place'],t_ms=[1_000_010.]))
-        f=pd.DataFrame(dict(mid=[1,1],lane=[0,0],t=[.1,.2],age_ms=[50.,150.]))
-        self.assertEqual(generation_counts(f,q,ws,{})['filled_generations'],1)
+        f=pd.DataFrame(dict(mid=[1,1],lane=[0,0],t=[.1,.2],age_ms=[50.,150.],pt=[50.,50.],osz=[5.,5.]))
+        self.assertEqual(generation_counts(f,q,ws,{})['filled_generations_lower'],1)
+        ambiguous=generation_counts(f,pd.concat([q,q]),ws,{})
+        self.assertEqual(ambiguous['filled_generations_lower'],1)
+        self.assertEqual(ambiguous['filled_generations_upper'],2)
+        self.assertEqual(ambiguous['ambiguous_filled_keys'],1)
         f.loc[0,'age_ms']=49.
         with self.assertRaises(ValueError):generation_counts(f,q,ws,{})
 
