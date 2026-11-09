@@ -14,7 +14,8 @@ journal exports (pmmm-tools journal-export at c54df1f), and the replay of pf_liv
   phantom   NetCap refusals left under a late-fill window W or a higher net_shares; late fills a window would miss.
   feedtiming live latency vs the replay's; WS pending-message timing of live fills and of replay fills live missed / also got.
   who       touch vs ladder lanes live; makers / takers (REST matches) in the trades the replay credited to us but live missed.
-Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom | feedtiming | who
+  reasons   every real touch trade 0-240 s: maker markouts and why we were not filled (cancelled / pulled by prediction / ...).
+Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom | feedtiming | who | reasons
 """
 import collections, gzip, json, os, re, sys
 import numpy as np, pandas as pd
@@ -509,5 +510,161 @@ def main_who():
     return 0
 
 
+def live_tape(run, rid, markets, stop_ms):
+    """Per cohort market from the live capture (Tokyo receipt clock): frames (t, best bid, best ask), WS pending increments per price,
+    own fill notices (t, id, qty) and holds."""
+    fr = collections.defaultdict(list); inc = collections.defaultdict(list); last = {}; fills = collections.defaultdict(list)
+    holds = collections.defaultdict(list)
+    for l in lines(f'{CAP}/{run}/run-{rid}/inputs.jsonl.gz', skip_header=True):
+        if l.startswith('{"Advance"'):
+            if float(l[21:l.index('}', 21)]) > stop_ms:
+                break
+            continue
+        if l.startswith('{"Frame"'):
+            m = int(l[19:l.index(',', 19)])
+            if m not in markets:
+                continue
+            d = json.loads(l)['Frame']; t = d['known_ms']
+            fr[m].append((t, d['bids'][0][0] if d['bids'] else np.nan, d['asks'][0][0] if d['asks'] else np.nan))
+            cur = {(a, b): v for a, b, v in d['pending']}; prev = last.get(m, {})
+            for k, v in cur.items():
+                if v - prev.get(k, 0.0) > 1e-9:
+                    inc[(m, k[1])].append(t)
+            last[m] = cur
+        elif l.startswith('{"Filled"') or l.startswith('{"Hold"'):
+            k = 'Filled' if l[2] == 'F' else 'Hold'; v = json.loads(l)[k]
+            if v.get('market') in markets:
+                (fills if k == 'Filled' else holds)[v['market']].append((v['known_ms'], v['id'], v['qty']) if k == 'Filled' else (v['known_ms'], v['held']))
+    F = {m: (np.array([x[0] for x in v]), np.array([x[1] for x in v], float), np.array([x[2] for x in v], float)) for m, v in fr.items()}
+    return F, {k: np.array(v) for k, v in inc.items()}, fills, holds
+
+
+def main_reasons():
+    """Every real touch trade (makers filled at the pre-trade best bid / ask) in 0-240 s of the 220 windows: maker markouts and why we
+    were not filled. Time = the live bot's receipt of the WS pending increment at that price (first within exec second -0.5..+1.5 s)
+    minus 50 ms (sensitivity 0 / 100 ms). Status at that time, in order: we were filled in the trade; our order rested at the price
+    (queue); our order there was cancelled <= 500 ms before (re-priced / pulled, by our decision right after the cancel request); an
+    order for the price was in flight / refused; else our decision: other price on that side, or nothing - split into feed hold, stop
+    (>= 240 s), reduce-only (>= 60 s, side does not reduce known net), CAP10 (< 60 s, |known net| >= 10, adding side), prediction
+    (research-recomputed guard value <= the minute's pull line or no fresh value), else other guards (Binance moves, book)."""
+    sc = json.load(open(f'{RP}/scope.json')); coh = {w['market']: w['ws'] * 1000.0 for w in sc['windows']}
+    M = pd.read_parquet(f'{OUT}/matches_20261108.parquet'); ME = json.load(open(f'{OUT}/who.json'))['our_address']
+    reg = pd.read_parquet(f'{RP}/research/step1/20261108/registry.parquet').set_index('mid')
+    y_up = {m: {'Up': 1.0, 'Down': 0.0}.get(reg.outcome[m], np.nan) for m in reg.index}
+    pv = pd.read_parquet(f'{RP}/research/step5/20261108/preds_t60k.parquet', columns=['mid', 'tau', 'v_bid', 'v_ask'])
+    PV = {m: (g.tau.values.astype(float), g.v_bid.values, g.v_ask.values) for m, g in pv.groupby('mid')}
+    LINE = json.load(open(f'{RP}/research/step4/minute_lines_t60k.json'))['lines']['90']
+    rows = []
+    for run, rid in RUNS:
+        P, D = core_orders(run, rid, {m for m, (ws, r) in cohort().items() if r == run})
+        mk = set(P.market)
+        F, INC, FL, HO = live_tape(run, rid, mk, CUTOFF_MS + 120_000)
+        lane_of = {(a, b): c for a, b, c in zip(P.market, P.id, P.lane)}
+        T = M[M.mid.isin(mk)].copy(); T['t_in'] = T.exec_s - (T.mid.map(coh) / 1000.0); T = T[(T.t_in >= 0) & (T.t_in < 240)]
+        T['ours'] = T.maker == ME
+        E = T.groupby(['mid', 'tx', 'yes_side', 'ptick'], as_index=False).agg(exec_s=('exec_s', 'first'), shares=('shares', 'sum'), ours=('ours', 'any'))
+        for e in E.itertuples():
+            m = e.mid; ws = coh[m]; up = e.yes_side == 'bid'
+            w = INC.get((m, e.ptick))
+            if w is None:
+                rows.append(dict(run=run, status='untimed', shares=e.shares)); continue
+            w = w[(w >= e.exec_s * 1000 - 500) & (w <= e.exec_s * 1000 + 1500)]
+            if not len(w):
+                rows.append(dict(run=run, status='untimed', shares=e.shares)); continue
+            W = float(w.min()); ft, fb, fa = F[m]; i = np.searchsorted(ft, W) - 1
+            if i < 0:
+                rows.append(dict(run=run, status='untimed', shares=e.shares)); continue
+            touch = (fb[i] == e.ptick) if up else (fa[i] == e.ptick)
+            if not touch:
+                continue
+            def mid_at(t):
+                j = np.searchsorted(ft, t, side='right') - 1
+                return (fb[j] + fa[j]) / 2.0 if j >= 0 else np.nan
+            sg = 1.0 if up else -1.0
+            mk_ = {h: sg * (mid_at(W + h * 1000) - e.ptick) for h in (1, 5, 60)}
+            st = sg * (100 * y_up.get(m, np.nan) - e.ptick)
+            res = {}
+            for shift in (0, 50, 100):
+                tm = W - shift; res[shift] = status_at(e, m, ws, tm, up, P, D, FL, HO, lane_of, PV, LINE)
+            rows.append(dict(run=run, mid=m, t_in=(W - ws) / 1000.0, up=up, ptick=e.ptick, shares=e.shares, status=res[50], status_0=res[0], status_100=res[100],
+                             mo1=mk_[1], mo5=mk_[5], mo60=mk_[60], settle=st))
+    R = pd.DataFrame(rows); R.to_parquet(f'{OUT}/touch_trade_reasons.parquet', index=False)
+    V = R[R.status != 'untimed']
+    def agg(d):
+        w = d.shares
+        return pd.Series(dict(trades=len(d), shares=w.sum(), mo1_c=(w * d.mo1).sum() / w[d.mo1.notna()].sum(), mo5_c=(w * d.mo5).sum() / w[d.mo5.notna()].sum(),
+                              mo60_c=(w * d.mo60).sum() / w[d.mo60.notna()].sum(), settle_c=(w * d.settle).sum() / w[d.settle.notna()].sum()))
+    G = V.groupby('status').apply(agg, include_groups=False).sort_values('shares', ascending=False)
+    G['share_pct'] = 100 * G.shares / G.shares.sum()
+    out = dict(touch_trades=len(V), untimed=int((R.status == 'untimed').sum()), by_reason={k: {c: round(float(v[c]), 2) for c in G.columns} for k, v in G.iterrows()},
+               stable_across_time_shift=round(float(((V.status == V.status_0) & (V.status == V.status_100)).mean()), 3),
+               all=dict(mo1_c=round(float((V.shares * V.mo1).sum() / V.shares[V.mo1.notna()].sum()), 2), settle_c=round(float((V.shares * V.settle).sum() / V.shares[V.settle.notna()].sum()), 2)))
+    json.dump(out, open(f'{OUT}/touch_trade_reasons.json', 'w'), indent=1)
+    print(json.dumps(out, indent=1))
+    return 0
+
+
+def status_at(e, m, ws, tm, up, P, D, FL, HO, lane_of, PV, LINE):
+    lanes = (0, 2) if up else (1, 3); touch_lane = 0 if up else 1
+    if e.ours:
+        return 'we_were_filled'
+    o = P[(P.market == m) & P.lane.isin(lanes) & (P.tick == e.ptick)]
+    end = o[['t_CancelDone', 't_Filled_last']].max(axis=1).fillna(ws + 300_000.0)
+    if ((o.t_Accepted <= tm) & (end >= tm)).any():
+        return 'resting_not_filled (queue)'
+    c = o[(end < tm) & (end >= tm - 500) & o.t_cancel.notna()]
+    if len(c):
+        tc = float(c.t_cancel.max()); want = decision(D, m, tc + 0.5, touch_lane)
+        if want == 'HOLD':
+            return 'cancelled<=500ms: feed hold'
+        if want is not None:
+            return 'cancelled<=500ms: re-priced'
+        return 'cancelled<=500ms: ' + why_none(e, m, ws, tc + 0.5, up, D, FL, HO, lane_of, PV, LINE)
+    f = o[(o.t_req <= tm) & (o.t_req >= tm - 500)]
+    if len(f):
+        if f.refused.notna().any():
+            return 'refused: ' + f.refused.dropna().iloc[-1].replace('risk ', '')
+        return 'order in flight (placed, not yet live)'
+    want = decision(D, m, tm, touch_lane)
+    if want == 'HOLD':
+        return 'not quoting: feed hold'
+    if want is not None:
+        return 'quoting another price'
+    return 'not quoting: ' + why_none(e, m, ws, tm, up, D, FL, HO, lane_of, PV, LINE)
+
+
+def decision(D, m, t, lane):
+    ts, ln = D.get(m, (np.array([]), []))
+    i = np.searchsorted(ts, t, side='right') - 1
+    while i >= 0:
+        x = ln[i]
+        if isinstance(x, str):
+            if x == 'HOLD':
+                return 'HOLD'
+            i -= 1; continue
+        return x[lane]
+    return None
+
+
+def why_none(e, m, ws, t, up, D, FL, HO, lane_of, PV, LINE):
+    rel = (t - ws) / 1000.0
+    if rel >= 240:
+        return 'stopped (>= 240 s)'
+    net = sum((q if lane_of.get((m, i)) in (0, 2) else -q) for k, i, q in FL.get(m, []) if k <= t)
+    reducing = (up and net < 0) or ((not up) and net > 0)
+    if rel >= 60 and not reducing:
+        return 'reduce-only phase (nothing to reduce on this side)'
+    if rel < 60 and not reducing and abs(net) >= 10 - 1e-9:
+        return 'CAP10 (inventory limit)'
+    tau, vb, va = PV.get(m, (np.array([]), None, None))
+    j = np.searchsorted(tau, t, side='right') - 1
+    if j < 0 or t - tau[j] > 100 or not np.isfinite((vb if up else va)[j]):
+        return 'prediction: no fresh guard value'
+    v = (vb if up else va)[j]
+    if v <= LINE[min(int(rel // 60), 3)]:
+        return 'prediction: guard value below the pull line'
+    return 'other guards (Binance move / book checks)'
+
+
 if __name__ == '__main__':
-    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom, 'feedtiming': main_feedtiming, 'who': main_who}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
+    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom, 'feedtiming': main_feedtiming, 'who': main_who, 'reasons': main_reasons}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
