@@ -1,0 +1,76 @@
+{
+  "as_of": "2026-11-09T14:58:19.466748+00:00",
+  "population": "220 previously consumed Nov8 windows; first60 seconds; all279059 recorded decisions, four lanes; no fill selection",
+  "estimand": "deterministic no-fill order workload conditional on the same factual desired path; no PnL, predictive skill, queue-rank or inventory-variance claim",
+  "arms": {
+    "reference": [
+      "pass",
+      0.0
+    ],
+    "cancel_ack": [
+      "cancel_ack",
+      0.0
+    ],
+    "reentry25": [
+      "reentry",
+      25.0
+    ],
+    "reentry50": [
+      "reentry",
+      50.0
+    ],
+    "reentry100": [
+      "reentry",
+      100.0
+    ],
+    "all_entry50": [
+      "all_entry",
+      50.0
+    ]
+  },
+  "primary": "cancel_ack",
+  "rapid_pull_gap_ms": 100,
+  "policy": "first/new-price entries immediate except all_entry50 control; same-price reopen within100ms waits for outstanding same-lane/tick cancel acknowledgement, or continuous eligibility25/50/100ms. Every original pull/reprice cancels immediately; size changes do not reset the gate.",
+  "cancellation_clock": "ack known by now only; no foresight into remaining latency; reference model40/22/95ms and1s reservation grace as before",
+  "order_model": {
+    "place_ms": 40,
+    "cancel_ms": 22,
+    "pending_cancel_ms": 95,
+    "cancel_reserve_grace_ms": 1000,
+    "side_cap_shares": 150,
+    "creates_inflight_per_side": 3,
+    "minimum_notional_usd": 1
+  },
+  "sizing": "incremental for every arm; no size-policy comparison",
+  "reference": "prior incremental policy reproduced exactly on16 metrics per window; raw desired price/time is the denominator for all arms",
+  "measures": "requests, aligned quote coverage against original target, coverage lost/gained relative to reference, off-target quote time, age, reservations; episodes retained as admitted/withheld with censoring",
+  "attribution": "exact pull reasons absent; no reconstructed score used by the policy; no claim all pulls are prediction-driven",
+  "null": "deterministic mechanical comparison, no statistical hypothesis or economic inference; no permutation test or confidence interval",
+  "multiplicity": {
+    "current_arms": 6,
+    "new_variants": 5,
+    "previous_capture_arms": 7,
+    "cumulative_distinct_policies": 12
+  },
+  "comparisons": "fewer requests with unchanged-or-better aligned time is computed, never an automatic trading/deployment decision",
+  "controls": "zero-delay parity, immediate pulls, same-price eligibility, censoring, cancellation acknowledgement versus reservation grace, malformed inputs, causal prefixes, exact artifact identities and corrupted-count refusal",
+  "source_commit": "dfbe5ddfa1aa4173edaf11d5ebb5af17869ccfa9",
+  "sources": {
+    "pf_reentry.py": "c63d4360bf5ff61787d7dc08bfb4c22ef468dfc0ce8f76fd656eef874cc2173e",
+    "pf_reentry_study.py": "65d9fc720b8e5f7665302d988fc908ec90a1983739a47904660f265f8d772448",
+    "tests/test_reentry.py": "eb53cc604eb53685897dc63a44d00186250104e818ae4df8b2a799d1bc566cb7",
+    "tests/test_reentry_study.py": "ab0a6bee9b0dd325ceaa4be145a5e27b6ef72f49e5ff5d010f8118973411dbc9",
+    "pf_quote_capture.py": "467a0df8d8cee194aa38308ffad62c2d314fa7f2519bb9e618f305b7142103c1",
+    "pf_quote_coverage.py": "3e0012f5b2ee2a2dd0c89812345c58398be0852423feabf8e6c1b2d7c6039bd3"
+  },
+  "inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/quote_incremental_20261109/decisions.parquet": "b775757c56a470b2b512fca15965e78dc8ec426817857107152278bc12d9335f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/quote_incremental_20261109/receipt.json": "225a85d58115f0c6ef42c9e4ab7cc54fc197e8849016370fa1e052e4330d9933",
+    "/home/yuqing/ctaNew/data/predict_fun/research/quote_incremental_20261109/window_metrics.parquet": "6f6530f57715266bf36dace9d806af42dc5e4d7484759ad6bd058197fc39657b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/quote_incremental_20261109/coverage.parquet": "05785dac1d388a649fec43baeb37c3762d93140e45dc8efe241b55f4225e0025",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/scope.json": "0fdb454efec919ab03b2e44fddef154c5e9964c65d1ab3cf10828eabf0dc58b6"
+  },
+  "no_live_change": true,
+  "no_fill_clock_bypass": true,
+  "no_protected_dates_read": true
+}
