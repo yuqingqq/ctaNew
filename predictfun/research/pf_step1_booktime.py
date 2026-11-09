@@ -13,6 +13,8 @@ Usage: python3 -m predictfun.research.pf_step1_booktime 20261023
 Writes step1/<day>/legs_timed2.parquet (t_ms2, how2: 1 WS, 3 book, 0 none) + booktime.json
 """
 import sys, os, collections
+from .pf_trade_tape import refuse_legacy_clock
+refuse_legacy_clock()  # Superseded: executedAt is a confirmation stamp, not a rounded matching stamp.
 import numpy as np, pandas as pd
 from . import pf_io as io
 

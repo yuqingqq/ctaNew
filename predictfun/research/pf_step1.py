@@ -4,7 +4,7 @@ reconciliation and book structure for one UTC day of Predict BTC 5m windows.
 Usage: python3 -m predictfun.research.pf_step1 20261023
 Outputs: data/predict_fun/research/step1/<day>/
   registry.parquet   one row per window (market id, ws, start/end price + first-seen receipt, outcome, fees, rewards)
-  legs.parquet       de-duplicated maker legs (tx, maker hash) with executedAt second, first-seen receipt, YES side/price, shares
+  legs.parquet       full transaction/taker/maker identities, confirmation timestamp, receipts, YES side/price, shares
   books/part_HH.parquet  top-5 book per WS frame, [ws-300 s, we+5 s]
   pend_inc.parquet   positive settlementsPending increments per frame (YES side, price tick, amount)
   windows.parquet    per-window structure + trade stats (live window [ws, we))
@@ -13,6 +13,7 @@ Outputs: data/predict_fun/research/step1/<day>/
 import sys, collections, math, bisect
 import numpy as np, pandas as pd
 from . import pf_io as io
+from .pf_trade_tape import rest_leg, merge_leg
 
 day = sys.argv[1]
 OUT = f'{io.OUT}/step1/{day}'
@@ -77,24 +78,21 @@ for h in HOURS_META:
             except (KeyError, TypeError, ValueError):
                 status['match_bad_time'] += 1
                 continue
-            tx = x['transactionHash'][2:18]
-            t = x['taker']
             for m in x['makers']:
-                k = tx + m['hash'][2:18]
+                row = rest_leg(x, m, int(recv))
+                # exec_s is retained solely for the old descriptive confirmation-time summaries.
+                # It is NOT a matching timestamp and cannot enter a point replay.
+                row.update(exec_s=ts, timestamp_kind='confirmation', signer=signers.setdefault(m['signer'],len(signers)))
+                k = row['leg_id']
                 old = legs.get(k)
                 if old is not None:
-                    if recv < old[2]:
-                        legs[k] = old[:2] + (recv,) + old[3:]
+                    merge_leg(old,row)
                     continue
-                side, py = io.yes_side(m)
-                sg = signers.setdefault(m['signer'], len(signers))
-                legs[k] = (mid, ts, recv, 0 if side == 'bid' else 1, tick(py), int(m['amount']) / io.E18,
-                           int(x['priceExecuted']) / io.E18, sg, t['outcome']['indexSet'], 0 if t['quoteType'] == 'Bid' else 1)
+                legs[k] = row
     io.mem_check(f'AB {h}')
     print(f'[AB] {h} registry {len(reg)} legs {len(legs)} [mem] {io.rss_mib()} MiB', flush=True)
 mids = set(reg)
-L = pd.DataFrame(list(legs.values()), columns=['mid', 'exec_s', 'first_recv_ns', 'side', 'ptick', 'shares', 'price_executed',
-                                                'signer', 'taker_index', 'taker_quote'])
+L = pd.DataFrame(list(legs.values()))
 del legs
 L = L[L.mid.isin(mids)].reset_index(drop=True)
 ws_of = {m: R['ws'] for m, R in reg.items()}

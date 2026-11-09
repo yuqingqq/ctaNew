@@ -6,6 +6,7 @@
 # pf_v2_grid_day (parity on 10-31 / 11-02), pf_v2_refit (fold + line parity), and the generated engines pf_step4_ladder_fwd /
 # pf_step4_ladder_v2 (byte-identical to round i at the default FORWARD; FORWARD only bounds admissible input days).
 set -u
+python3 -m predictfun.research.pf_clock_preflight || exit 2
 cd /home/yuqing/ctaNew
 FWD=20261109; DAYS="20261104 20261105 20261106 20261107 20261108"
 R=predictfun/research/run_light.sh; LG=data/predict_fun/research/logs/forward; S5=data/predict_fun/research/step5; mkdir -p $LG
