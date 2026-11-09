@@ -1,0 +1,26 @@
+{
+  "as_of": "2026-11-09T12:33:10.648705+00:00",
+  "scope": "post-hoc diagnosis after original audit and its two extreme witnesses; same consumed Nov8 cohort",
+  "known_before_declaration": "one trade changes reported match_time by 10s between Matched and Confirmed; other witness Z precedes placement by975ms",
+  "population": "all99 exact confirmed REST/kernel legs, including6 ambiguous engine anchors; clock comparisons on original93 eligible legs",
+  "design": [
+    "compare exact REST executedAt with all per-status reported timestamps, retain unavailable/nonunique statuses",
+    "test floor-second and rounded-second overlap, not equality with actual matching time",
+    "intersect constant-shift feasibility separately per run, no offset selection",
+    "trace two previously reported witnesses through exact original candidate rows and transaction groups"
+  ],
+  "multiplicity": "descriptive forensic follow-up, no profit ranking, significance claim, calibration or new model; original500 null draws unchanged",
+  "data_boundary": "read only original frozen audit artifacts and its declared22 Nov8 REST hours",
+  "source_commit": "d0b4ca1f724b7dcd810174b555e013643b17e98f",
+  "source_sha": {
+    "pf_fill_clock_semantics.py": "93b1e62089b582a23f21bf60ff0c74800f0b8e1a5d4411a737578c6a5fe78927",
+    "tests/test_fill_clock_semantics.py": "1b7c6d6de4f9a82031886c6291b26627cf8b77eb230ad45563d63dceef9df2f2"
+  },
+  "input_sha": {
+    "report.json": "84dce04abc84285e8c354634344e12c3047fa5043682ef392de3959aacbc864e",
+    "clock_cases.parquet": "2f1a580bb6bb3689bf39b52ddbf5a7a443ea004e0d281274510f1193eb108a19",
+    "fill_events.parquet": "3b82661b26a6255612b106807843609dd2e6719fd4c4f56c795f72562c2f9675",
+    "engine_anchors.parquet": "ffc3caa22578c5ef66b3af0a96a564abc2d6fb7a2da7f9b4f23e06f9fc3d07b0",
+    "own_rest_legs.parquet": "118d3f51cf4e67def6088e7b00f56c1439306528cf72ae6f6946c35799edb955"
+  }
+}
