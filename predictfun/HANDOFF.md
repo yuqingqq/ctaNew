@@ -1,20 +1,52 @@
 # P-2026-005 HANDOFF
 
-## 2026-11-09 — earlier urgency check RUNNING
+## 2026-11-09 — earlier urgency check COMPLETE
 
-- User requested an earlier-data check of the same urgency rule. Branch `research/predict-urgency-history-20261109`,
-  checkout `/tmp/cta-urgency-history-20261109`, declared source `10893e49`. All four earlier prepared days (Oct 23–26),
-  1,152 markets per arm/timing; baseline versus unchanged RPRICE at J/X. These are consumed guard-training days.
-- Declaration and bounded outputs: `data/predict_fun/research/urgency_history_20261109/`. One-cent reducing-side
-  improvement into the spread at 180–240s with |known net| >=10; no policy/threshold/model change. Uncapped total-loss
-  budget, existing 150-share exposure cap, rebates excluded. No new stress sweep or forward-data read.
-- Frozen previous policy and metric-source hashes checked. Fresh full-day Oct23 baseline parity at J/X; other baselines
-  copied with hashes. Exact pre-180 fills/requests plus per-market valuation/inventory reconciliation required.
-- Four earlier days reported separately; 2,000 shared day sign flips across J/X x settlement/+1s, no confidence interval.
-  Nine-day pooled points will be explicitly descriptive after candidate selection. Prior four-candidate multiplicity retained.
-- Clarification of previous stress interpretation: Nov3 urgency's settlement delta is identical with/without p99 cancel
-  reservations at each timing. That negative day does not show incremental sensitivity to this delay stress.
-- Sequential batch via run_light launched 04:04Z; controls first, eight earlier day/timing replays, then receipt. No results yet.
+- As-of **2026-11-09 04:15:18Z**. All four earlier complete compatible dates (Oct 23–26), **1,152 markets per arm/timing**,
+  replayed at J/X; baseline versus the exact previous RPRICE rule. Branch `research/predict-urgency-history-20261109`,
+  checkout `/tmp/cta-urgency-history-20261109`, declared source `10893e49`, tested source/state `a94a0dd7`.
+  Receipt: `predictfun/reviews/urgency_history_20261109/receipt.json`; data/logs under
+  `/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/`. No study job remains running.
+- These are previously consumed guard-training days. Urgency was selected after the prior four-candidate comparison;
+  this is an earlier historical consistency check, not independent validation. Exact policy source remains `f014efbe...`:
+  one-cent reducing-side improvement into the spread, 180<=t<240, |known inventory| >=10, original guards retained.
+  Uncapped total-loss budget; existing 150-share exposure cap; rebates excluded. No parameter/model changes.
+
+| Settlement PnL change versus baseline ($) | J | X |
+|---|---:|---:|
+| Oct 23 | +1.3408 | +3.4780 |
+| Oct 24 | +6.0191 | -0.4361 |
+| Oct 25 | -27.0320 | +0.3366 |
+| Oct 26 | -1.0178 | -0.4778 |
+| Earlier four days | -20.6899 | +2.9007 |
+| Previous five days | +10.9085 | +25.7631 |
+| All nine days, descriptive | -9.7814 | +28.6638 |
+
+- Earlier baseline -> urgency settlement: **$691.6287 -> $670.9389 J**, **$433.5722 -> $436.4729 X**. Both timings
+  improve on only 2/4 earlier days. Earlier +1s changes **-$0.0742 / -$0.6977**. Mark-at-240 changes
+  **-$6.6740 / -$2.4265**; carry changes **-$14.0159 / +$5.3272**. Thus the small positive X result comes from carry,
+  while both measured short-term and stop-mark value decline on these earlier days.
+- Mean residual inventory falls **6.9581 -> 6.8818 shares J**, **6.2460 -> 6.2148 X**. Economically reducing volume rises
+  **87.8751 / 35.9633 shares** over all 1,152 earlier markets. Time-weighted absolute inventory over 60–300s falls
+  **7.5130 -> 7.4737 J**, **6.7139 -> 6.6960 X**. The reduction is real but small and not a reliable PnL gain.
+- Combined nine days / **2,592 markets per arm/timing**: baseline -> urgency **$514.0559 -> $504.2745 J**,
+  **$317.6259 -> $346.2897 X**. +1s delta **-$2.0719 / +$0.1535**; carry delta **-$12.7697 / +$25.0251**.
+  J improves 6/9 days but Oct25 dominates the losses. X improves only 3/9 (one unchanged); remove Nov2's +$29.1153
+  and its pooled gain becomes **-$0.4515**. The sign and concentration depend on timing and individual settlement days.
+- Earlier inference: 2,000 predeclared shared UTC-day sign flips, four comparisons (J/X x settlement/+1s); all max-T
+  family p values 1.0. **No confidence intervals on four days**; nine-day pooled points are descriptive after candidate
+  selection, with no pooled significance claim. Prior four candidates / 16 comparisons retained in the declaration.
+- All **22 controls pass**, including positive/refusal controls for scope, source identity, event identity and day nulls.
+  Fresh Oct23 baseline parity exact at J/X; other baseline artifacts copied from the prior verified study with hashes.
+  All eight day/timing runs have exact pre-180 fills/requests and per-market settlement/carry/inventory reconciliation.
+  Zero excluded markets or missing valuations, zero missing bounded Binance hour files, zero ambiguous filled-order keys.
+  Final receipt copy and source hashes verified. Peak replay RSS ~1.6 GiB on one core; ~493 GiB disk free.
+- Clarification of previous stress interpretation, retained in this declaration: Nov3 urgency's settlement delta is
+  identical with/without p99 cancel reservations at each timing. That negative day does not show incremental sensitivity
+  to this delay stress. No additional stress sweep was used here.
+- Conclusion: earlier data weakens the case for a general urgency PnL improvement. Keep this rule as research; do not
+  enable it globally from these results. It slightly reduces inventory but can surrender favorable subsequent price moves
+  and settlement carry. No live change, new freeze, forward-race change, or protected Nov9–13 data read.
 
 ## 2026-11-09 — passive inventory experiment COMPLETE
 
