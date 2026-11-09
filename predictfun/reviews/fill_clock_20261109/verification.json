@@ -1,0 +1,15 @@
+{
+  "as_of": "2026-11-09T12:37:11.328008+00:00",
+  "verifier_sha": "3934f502582f822d041fa4d8d0f4db5e3ed17f79dd075224c60e19f88198abca",
+  "report_sha": "84dce04abc84285e8c354634344e12c3047fa5043682ef392de3959aacbc864e",
+  "semantics_sha": "7cd4615a718e031b5eff962f93d5688aa981cd4da0a72839f1e57a2a0b263344",
+  "artifact_hashes_verified": 7,
+  "clocks_verified": 16,
+  "order_actions_verified": 42064,
+  "exact_status_histories_verified": 99,
+  "controls": {
+    "before_inside_after": true,
+    "nonfinite_refusal": true,
+    "corrupted_report_refusal": true
+  }
+}

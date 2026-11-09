@@ -1,19 +1,55 @@
 # P-2026-005 HANDOFF
 
-## 2026-11-09 — exact-order fill-clock audit RUNNING
+## 2026-11-09 — exact-order fill-clock audit COMPLETE; replay timing fails lifecycle checks
 
-- User requested continued testing toward preserving trading value with lower inventory. Prerequisite: check whether
-  replay transaction clocks fit exact live order identities, before another strategy PnL search.
-- Fixed scope:220 complete Nov8 windows already consumed by the same-window review; no protected Nov9–13 reads.
-  Full Signed order hashes link kernel CIDs to REST maker legs; all cohort actions and unmatched statuses retained.
-  Hard timing interval starts at Control Place and ends at the earlier of confirmed cancel and first positive fill notice.
-  Acceptance is NOT a lower match bound. REST executedAt seconds are checked as an assumption, not declared ground truth.
-- Pinned engine prefix reproduces J/X clocks and original timing diagnostics; six additional fixed earlier shifts
-  0/50/100/200/400/800ms, tolerances0/10ms. Exact first-receipt/content leg joins; conflicting clocks remain ambiguous.
- 500 matched run/hour/side action permutations are an instrument diagnostic only; one day, no CI or profit inference.
-- Branch `research/predict-fill-clock-20261109`, checkout `/tmp/cta-fill-clock-20261109`, source `pf_fill_clock.py`.
-  Outputs `data/predict_fun/research/fill_clock_20261109/`. Source/control freeze before declaration and results.
-  One capped research process, queued around other work. No live code/settings or original frozen artifacts changed.
+- User requested continued testing toward preserving trading value with lower inventory. Clock audit as-of
+  **2026-11-09 12:24:00Z**, timestamp follow-up **12:36:36Z**; **220 consumed Nov8 windows**, 42,064 order actions.
+  No protected Nov9–13 data read. Branch `research/predict-fill-clock-20261109`, worktree `/tmp/cta-fill-clock-20261109`.
+- Exact Signed order hash + settlement/trade identity reconciles all99 confirmed REST maker legs (86 orders) to
+  kernel notices. Seven failed trades remain statuses. All30,413 signed-order quantities agree within one microshare;
+  no missing confirmed trade. This is a timing defect, not evidence of missing live quantity.
+- Necessary match interval is `[Control Place, min(confirmed cancel, first positive fill notice)]`.
+  Acceptance is NOT a lower bound. Original pinned engine clocks reproduce the original diagnostics exactly.
+  Full9-field leg joins identify93 clocks across83 orders;6 ambiguous clocks are retained, not guessed.
+
+| Clock, tolerance10ms | Eligible legs / orders | Before placement | After terminal / notice | Violating orders |
+|---|---:|---:|---:|---:|
+| J | 93 /83 | 11 | 7 | 16 |
+| X | 93 /83 | 12 | 3 | 12 |
+
+- No fixed earlier shift0/50/100/200/400/800ms passes. In fact **no constant offset of either sign** fits either run:
+  basis35 legs/32 orders needs an earlier shift at least10,138.41ms AND at most-923.62ms;
+  v6 58 legs/51 orders needs at least556.22ms AND at most-975.23ms. Still impossible allowing10ms tolerance.
+- Follow-up on all99 exact legs: REST `executedAt` equals the **Confirmed** reported second in99/99,
+  whereas it equals the first **Matched** second in49/99. Differences:49 zero,49 +1s,1 +10s.
+  All99 raw REST stamps have zero fractional milliseconds. `pf-exec/user.rs` derives each status's `matchtime`
+  independently from that status event's timestamp, truncated to seconds; this is not an immutable matching clock.
+  The Matched floor-second interval overlaps lifecycle bounds99/99; REST floor interval misses39/99 and even a
+  rounded-second assumption misses5/99. These are necessary consistency checks, not precise match-time validation.
+- Exact witnesses (full identities in `semantics_receipt.json`): basis CID1794147344754480 was placed21:55:57.104,
+  canceled21:55:57.320, first Matched receipt21:55:57.482. REST reports21:56:07; E2 selects a book drop21:56:07.458.
+  Thus a book change10s after the possible fill is assigned as its trade time. V6 CID1794108465178750 was placed
+  07:15:35.551 and canceled35.859. Its own pending-cell estimate35.710 fits, but transaction grouping chooses another
+  leg's earliest pending-increment estimate34.576 across37 legs. That anchor predates submission by975ms.
+  Public pending increments lack signed-order identity; amount/price proximity does not establish exact trade linkage.
+- 500 predeclared within-run/hour/side permutations on83 order actions (77 permutable) produce compatibility
+  mean0.4157/max0.5422 vs observed0.7831. Instrument diagnostic ONLY; one partial day, no CI/profit/strategy inference.
+- **No new strategy sweep or calibrated-PnL claim.** The earlier inventory comparisons remain conditional on a
+  replay clock that now fails an exact-identity test; this audit does not measure the dollar correction to those results.
+  Do not fix this by fitting a delay/minimum resting age or clipping estimated times to our observed lifecycle.
+  Next implementation must retain full order/transaction/settlement identities and separate match-status, confirmation,
+  exchange-source, and local-receipt timestamps; preserve uncertainty when public data cannot identify actual match time.
+  Reconcile both filled AND unfilled order actions before reusing the simulator to rank quote retention/inventory rules.
+- Sources `pf_fill_clock.py`, `pf_fill_clock_semantics.py`, `pf_fill_clock_verify.py`; immutable receipts under
+  `reviews/fill_clock_20261109/`; local data `data/predict_fun/research/fill_clock_20261109/`.
+  Original source freeze80387e6e (v3), follow-up d0b4ca1f, independent verifier861935a5.
+  13 positive/refusal controls pass. Artifact verifier independently checks16 clock/tolerance results,42,064 actions,
+  all99 status histories and7 artifact hashes; a deliberately corrupted report is refused.
+- Instrument corrections preserved in superseding declarations: v2 canonicalizes integer JSON dictionary keys;
+  v3 corrects THIS auditor's Down-price conversion (Control price is Up-space on both sides). No result-bearing clock
+  receipt existed before v3. Frozen extraction's derived `yes_tick` is deprecated; v3 recomputes coordinates from raw
+  Control price. Earlier economic studies and live code were not changed. Failed logs/declarations remain provenance.
+  All our jobs complete. No live changes, deployment, strategy tuning, or forward-data consumption.
 
 ## 2026-11-09 — closing-liquidity experiment COMPLETE
 

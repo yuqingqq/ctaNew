@@ -1,0 +1,195 @@
+{
+  "as_of": "2026-11-09T12:36:36.420808+00:00",
+  "declaration": {
+    "as_of": "2026-11-09T12:33:10.648705+00:00",
+    "scope": "post-hoc diagnosis after original audit and its two extreme witnesses; same consumed Nov8 cohort",
+    "known_before_declaration": "one trade changes reported match_time by 10s between Matched and Confirmed; other witness Z precedes placement by975ms",
+    "population": "all99 exact confirmed REST/kernel legs, including6 ambiguous engine anchors; clock comparisons on original93 eligible legs",
+    "design": [
+      "compare exact REST executedAt with all per-status reported timestamps, retain unavailable/nonunique statuses",
+      "test floor-second and rounded-second overlap, not equality with actual matching time",
+      "intersect constant-shift feasibility separately per run, no offset selection",
+      "trace two previously reported witnesses through exact original candidate rows and transaction groups"
+    ],
+    "multiplicity": "descriptive forensic follow-up, no profit ranking, significance claim, calibration or new model; original500 null draws unchanged",
+    "data_boundary": "read only original frozen audit artifacts and its declared22 Nov8 REST hours",
+    "source_commit": "d0b4ca1f724b7dcd810174b555e013643b17e98f",
+    "source_sha": {
+      "pf_fill_clock_semantics.py": "93b1e62089b582a23f21bf60ff0c74800f0b8e1a5d4411a737578c6a5fe78927",
+      "tests/test_fill_clock_semantics.py": "1b7c6d6de4f9a82031886c6291b26627cf8b77eb230ad45563d63dceef9df2f2"
+    },
+    "input_sha": {
+      "report.json": "84dce04abc84285e8c354634344e12c3047fa5043682ef392de3959aacbc864e",
+      "clock_cases.parquet": "2f1a580bb6bb3689bf39b52ddbf5a7a443ea004e0d281274510f1193eb108a19",
+      "fill_events.parquet": "3b82661b26a6255612b106807843609dd2e6719fd4c4f56c795f72562c2f9675",
+      "engine_anchors.parquet": "ffc3caa22578c5ef66b3af0a96a564abc2d6fb7a2da7f9b4f23e06f9fc3d07b0",
+      "own_rest_legs.parquet": "118d3f51cf4e67def6088e7b00f56c1439306528cf72ae6f6946c35799edb955"
+    }
+  },
+  "declaration_sha": "d0eec53ca062720410706dde888be86e5cc08c169a1d6364426e2bf9657b62e3",
+  "original_report_sha": "84dce04abc84285e8c354634344e12c3047fa5043682ef392de3959aacbc864e",
+  "controls": ".............\n----------------------------------------------------------------------\nRan 13 tests in 0.021s\n\nOK\n2026-11-09T12:33:02Z tag=fill_clock_semantics_controls rc=0 peak_rss_mib=110 wall_s=0.36 cpu_user_s=0.27 memavail_start_gib=24 disk_free_gib=481->481\n",
+  "population": {
+    "confirmed_legs": 99,
+    "confirmed_orders": 86,
+    "matched_status": {
+      "unique": 99
+    },
+    "confirmed_status": {
+      "unique": 99
+    },
+    "engine_status": {
+      "eligible": 93,
+      "ambiguous_leg_clock": 6
+    }
+  },
+  "timestamp_checks": {
+    "rest_matches_confirmed": 99,
+    "rest_matches_matched": 49,
+    "raw_rest_with_fraction_ms": 0,
+    "rest_minus_matched_ms_histogram": {
+      "0": 49,
+      "1000": 49,
+      "10000": 1
+    },
+    "rest_floor_nonoverlap": 39,
+    "rest_rounded_nonoverlap": 5,
+    "unique_matched_legs": 99,
+    "matched_floor_nonoverlap": 0,
+    "matched_rounded_nonoverlap": 23
+  },
+  "constant_shift_by_run": {
+    "basis": {
+      "n_legs": 35,
+      "n_orders": 32,
+      "lower_ms": 10138.40771484375,
+      "upper_ms": -923.62060546875,
+      "exists": false,
+      "exists_at10ms": false
+    },
+    "v6": {
+      "n_legs": 58,
+      "n_orders": 51,
+      "lower_ms": 556.223388671875,
+      "upper_ms": -975.231689453125,
+      "exists": false,
+      "exists_at10ms": false
+    }
+  },
+  "witnesses": {
+    "lower_witness": {
+      "order_hash": "0xa9cd2f4f3226c63c09b18203d39debcd54c7f87f7ef9c7bef338daec032ef8f7",
+      "trade_id": "01a1bd29-36bc-7bd3-bbbb-240dffdb5c7b",
+      "tx": "0x9b1db535345b0da62fc9e43adae1d8b96daf25ae7611ba06225b54b4a95a487c",
+      "run": "basis",
+      "cid": 1794147344754480,
+      "place_ms": 1794174957103.8958,
+      "last_possible_ms": 1794174957319.5923,
+      "Z_ms": 1794174967458.0,
+      "rest_raw": "2026-11-08T21:56:07.000Z",
+      "notice_history": {
+        "Matched": {
+          "n": 1,
+          "first_receipt": 1794174957481.5122,
+          "stamps": [
+            1794174957000.0
+          ]
+        },
+        "Confirmed": {
+          "n": 2,
+          "first_receipt": 1794174969501.626,
+          "stamps": [
+            1794174967000.0
+          ]
+        },
+        "Failed": {
+          "n": 0,
+          "first_receipt": null,
+          "stamps": []
+        }
+      },
+      "engine_origin": [
+        {
+          "row": 336630,
+          "original_how": 0,
+          "tk_status": 0,
+          "transaction_group_rows": 3,
+          "anchor_origin": "book_drop",
+          "origin_rows": [
+            336630,
+            336631,
+            336632
+          ],
+          "anchor_ms": 1794174967458.0,
+          "origin_leg_how": [
+            0,
+            0,
+            0
+          ],
+          "original_leg_ms": null
+        }
+      ]
+    },
+    "upper_witness": {
+      "order_hash": "0xb7c75b227e911e94b270979e8519d966cc2b67ab9d565642b439765a774959c5",
+      "trade_id": "01a1ba03-3879-7fe1-88c0-f6f4c395258e",
+      "tx": "0xc4d4aacae164cb9ea3189b9fda776c387099df426196af694d7358677eb928fc",
+      "run": "v6",
+      "cid": 1794108465178750,
+      "place_ms": 1794122135551.2317,
+      "last_possible_ms": 1794122135859.3083,
+      "Z_ms": 1794122134576.0,
+      "rest_raw": "2026-11-08T07:15:36.000Z",
+      "notice_history": {
+        "Matched": {
+          "n": 1,
+          "first_receipt": 1794122136189.442,
+          "stamps": [
+            1794122135000.0
+          ]
+        },
+        "Confirmed": {
+          "n": 2,
+          "first_receipt": 1794122137985.5144,
+          "stamps": [
+            1794122136000.0
+          ]
+        },
+        "Failed": {
+          "n": 0,
+          "first_receipt": null,
+          "stamps": []
+        }
+      },
+      "engine_origin": [
+        {
+          "row": 60703,
+          "original_how": 2,
+          "tk_status": 0,
+          "transaction_group_rows": 37,
+          "anchor_origin": "pending_increment",
+          "origin_rows": [
+            60687
+          ],
+          "anchor_ms": 1794122134576.0,
+          "origin_leg_how": [
+            1
+          ],
+          "original_leg_ms": 1794122135710.0
+        }
+      ]
+    }
+  },
+  "artifact_sha": "048d5527c524f27724f3915d956e2cde6bb626534cfc8b28a07a5b5b1cda1fe6",
+  "predicates": {
+    "all_rest_seconds_equal_confirmation": true,
+    "any_changed_timestamp": true,
+    "constant_offset_fails_each_run": true
+  },
+  "limitations": [
+    "post-hoc forensic follow-up on one consumed partial day; no interval or model validation",
+    "a Matched status timestamp is not an exchange matching-engine timestamp; overlap does not prove precise time",
+    "no strategy PnL rerun; clipping fitted clocks to own lifecycle would manufacture a pass",
+    "public pending increments carry no signed-order identity; nearby volume/price association cannot establish exact trade timing"
+  ]
+}
