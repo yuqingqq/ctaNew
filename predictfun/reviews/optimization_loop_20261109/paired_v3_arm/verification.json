@@ -1,0 +1,12 @@
+{
+  "as_of": "2026-11-09T17:52:27.719901+00:00",
+  "receipt_sha256": "d5f7d3baea1782fbf57f50ff7cae17cd4687f7e561da3d97d654305b93f4da7f",
+  "regenerated_outputs_and_traces_exact": true,
+  "native_replay_byte_identical": true,
+  "controls": {
+    "corrupt_name_refused": true,
+    "corrupt_requests_refused": true,
+    "corrupt_known_position_refused": true,
+    "corrupt_output_hash_refused": true
+  }
+}

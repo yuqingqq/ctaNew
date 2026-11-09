@@ -50,7 +50,9 @@
       "status": "implemented_with_explicit_parity_exception",
       "receipt": "paired_engine_v2/receipt.json",
       "verification": "paired_engine_v2/verification.json",
-      "finding": "Native synthetic mapping/lifecycle parity passes after correcting rejected-create slot release underLZ. No-token outputs exact; blanket fixed-size parity contradicted by that correction; historical output-file and economic validation remain."
+      "finding": "Native synthetic mapping/lifecycle parity passes after correcting rejected-create slot release underLZ. No-token outputs exact; blanket fixed-size parity contradicted by that correction; historical output-file and economic validation remain.",
+      "exact_arm_receipt": "paired_v3_arm/receipt.json",
+      "exact_arm_verification": "paired_v3_arm/verification.json"
     }
   ],
   "per_round": [
@@ -71,8 +73,8 @@
   ],
   "end_of_pass": "Verify generated paired-order engine, frozen/no-token and fixed-size parity, native synthetic request/state parity; record remaining calibration and scheduling limits.",
   "report_note": "Two-round findings.json and handoff were written after successful checks; the final mutable-plan update used an exclusive-create helper and failed. Plan update is corrected; round artifacts and reported numbers are unaffected. A combined v2 report will supersede this subset report.",
-  "as_of": "2026-11-09T17:42:57.198365+00:00",
-  "findings": "findings_v5.json",
+  "as_of": "2026-11-09T17:52:27.717211+00:00",
+  "findings": "findings_v6.json",
   "next_evidence": [
     "Verify integration of bounded quote continuity with paired fills and inventory changes using synthetic cases before economic use.",
     "Full historical output-file parity and deployed timer behavior remain unverified; fill calibration still gates PnL/variance claims."
