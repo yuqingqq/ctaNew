@@ -6,6 +6,10 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09 03:11Z: PASSIVE INVENTORY STUDY RUNNING, user-authorized. Five latest modelled consumed days,
+  baseline / queue retention / 5-share reduction / late one-tick urgency / combined at J/X; one-day cancel-p99 stress.
+  Fifteen initial controls and eight-market J baseline parity pass. No findings or adoption yet; live settings and
+  Nov 9–13 forward data unchanged. Branch research/predict-passive-inventory-20261109; details in HANDOFF.md.
   2026-11-08 17:11Z: SIZING / SETTLEMENT STUDY COMPLETE, no live changes. Nine consumed days / 2592 markets per arm;
   J/X baseline settlement $514.06/$317.63, hysteresis $550.54/$339.75 with 7.75%/7.34% fewer places. +1s and
   mark-at-stop value fall; uplift comes from carry and disappears without Nov 2. Capacity adds no PnL in ordinary

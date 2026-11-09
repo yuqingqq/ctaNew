@@ -1,5 +1,23 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 — passive inventory experiment RUNNING
+
+- User authorized testing queue retention, reduction size and urgency. Isolated checkout `/tmp/cta-passive-inventory-20261109`,
+  branch `research/predict-passive-inventory-20261109`; source starts `1c9cff76` (runner through `b7707d0d`).
+- Declaration: `data/predict_fun/research/passive_inventory_20261109/declaration.json`, committed design before outcomes.
+  Five latest previously modelled days: Oct 27, Oct 31, Nov 1–3; all 288 markets/day, baseline + three single changes + combined,
+  J/X; one-day Nov 3 p99 cancel-reservation stress (143.3536 ms). Same fixed models, inputs and guards; in-sample exploration.
+- Queue retention only for same-price eligible reducing orders whose known remainder + other reservations fits inventory.
+  Small reduction: cap new desired reduce size at 5 shares. Urgency: one-cent improvement, strictly passive, from 180–240s
+  for |known net| >=10. Its price concession is charged in fill PnL; guard scores are not claimed recalibrated to that price.
+- Main runs use uncapped total-loss budget; 150-share exposure backstop unchanged. No live settings/deployment/forward-race change.
+  No new market dates read; Nov 9–13 protected. Inputs reused read-only from prior study, outputs isolated.
+- Fifteen initial controls pass; baseline J smoke matches prior win/fill/request artifacts exactly across eight markets.
+  X smoke and full batch running sequentially via run_light (one core, 4 GiB limit). No findings yet.
+- Evaluation: exact pre-60s entry comparison between arms; per-market settlement reconciliation; +1s/mark@stop/carry,
+  inventory trajectory, requests, refusals, and known-state diagnostics. 2,000 paired day null/bootstrap draws, 16-comparison
+  family; no intervals on one-day stress. Five day clusters give weak inference; no untreated future validation claim.
+
 ## 2026-11-08 — sizing and settlement probability study COMPLETE
 
 - As-of **2026-11-08 17:11:07Z**. All declared jobs and controls finished; no research job left running. Isolated branch
