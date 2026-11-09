@@ -133,8 +133,9 @@ def run():
         if g is None:statuses.append(dict(run=key[0],mid=key[1],status='missing_decisions'));continue
         statuses.append(dict(run=key[0],mid=key[1],status='present',n=len(g)))
         arrays=g[['t','score_at','v_bid','v_ask']+[v for lane in range(4) for v in (f'tick{lane}',f'size{lane}')]].to_numpy()
-        for arm,(layered,delta) in ARMS.items():
-            p=QuotePlanner(layered=layered);gate=EntryGate(delta);last=start
+        for arm,config in ARMS.items():
+            layered,delta=config[:2];incremental=bool(config[2]) if len(config)>2 else False
+            p=QuotePlanner(layered=layered,incremental=incremental);gate=EntryGate(delta);last=start
             total=collections.Counter();last_want=OFF=[(None,0.)]*4;peak=0.;min_step=True
             score_bad=score_conflict=0;parity=True;subset=True
             for row in arrays:
@@ -174,6 +175,7 @@ def run():
             mean_reserved_shares_both_sides=totals['reserved_share_ms']/(len(q)*60000),peak_reserved_side=float(q.peak_reserved_side.max()))
         summary[arm]=totals
     baseline=summary['single'];same=summary['layered']
+    primary=summary[d.get('primary_arm','layered')]
     for arm,q in summary.items():
         q['requests_change_vs_single_pct']=100*(q['requests']/baseline['requests']-1)
         q['desired_time_retained_vs_single_pct']=100*q['desired_lane_ms']/baseline['desired_lane_ms']
@@ -184,7 +186,8 @@ def run():
         summary=summary,source_score_diagnostics=R[R.arm=='single'][['reconstructed_score_missing','reconstructed_score_vs_live_conflict']].sum().to_dict(),
         predicates=dict(zero_buffer_targets_exact=bool(R.zero_delta_parity.all()),all_targets_subset=bool(R.target_subset.all()),
             all_side_caps_hold=bool((R.peak_reserved_side<=150+1e-8).all()),
-            layered_fewer_requests=same['requests']<baseline['requests'],layered_equal_desired_time=same['desired_lane_ms']==baseline['desired_lane_ms']),
+            layered_fewer_requests=same['requests']<baseline['requests'],layered_equal_desired_time=same['desired_lane_ms']==baseline['desired_lane_ms'],
+            primary_fewer_requests=primary['requests']<baseline['requests'],primary_equal_desired_time=primary['desired_lane_ms']==baseline['desired_lane_ms']),
         artifacts={p.name:a.sha(p) for p in DEST.glob('*.parquet')},extraction=extracted,
         limitations=['one consumed partial day; fixed factual desired path with no simulated fills; no counterfactual inventory feedback',
             'first60 seconds only; no ladder price adaptation to counterfactual order residency',
