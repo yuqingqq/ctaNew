@@ -3,6 +3,8 @@ preds_t60k, 0-60 s, each market and side: |v - line|, |dv| per 50 ms step, side 
 (on -> off at v <= line - delta, off -> on at v > line + delta; delta 0 = the frozen rule), on / off spell lengths. Descriptive only.
 Usage: python3 -m predictfun.research.pf_guard_flicker
 """
+import json
+import numpy as np, pandas as pd
 from predictfun.research import pf_io as io
 from predictfun.research.pf_inv_report import DAYS
 LINE=json.load(open(f'{io.OUT}/step4/minute_lines_t60k.json'))['lines']['90'][0]
