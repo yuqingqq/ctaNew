@@ -1,5 +1,15 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 17:39Z (session 62f3ce33) - A6 / A3 / A4b on pmmmrust main (79a05d3); nothing deployed
+
+- pmmmrust main 79a05d3 (pushed): A2 incremental (f20fdb1), A6 wallet liveness, A3 decision_reasons.jsonl.gz, A4b
+  wallet_events.jsonl.gz; on A1 (366d419). Plan doc entries at the top of pmmmrust docs/PREDICT_FUN_PLAN.md; the Tokyo runbook
+  lists the two new run files for exports. A Tokyo release needs a new tag and a re-rendered config (user's call).
+- First live run with this build: check wallet_events.jsonl.gz session marks (`live` early in each session and which signal,
+  never `not_live`, why each session ended) - a wallet connection's heartbeats were never measured directly.
+- B1 waits for a live run with A4b (own-fill ms match clocks; the fill-clock audit found no fixed delay fits). B4: the
+  optimization-loop session is building it (pinned f20fdb1). C1: run run_forward.sh only while no other run_light job runs.
+
 ## 2026-11-09 16:37Z (session 62f3ce33) - A2 incremental on pmmmrust main (f20fdb1); A4 checked; A6 / A3 / A4b in code
 
 - pmmmrust f20fdb1 (main, pushed): `size_layering = "incremental_v1"` in both v3 examples (USER "Go"); base_topup_v1 (70b965b)
@@ -14,18 +24,75 @@
   first refusal and has no resume; it is frozen, so it cannot be changed).
 - B4 must also copy the incremental rule.
 
-## 2026-11-09 — optimization loop RUNNING
+## 2026-11-09 17:31Z — paired-engine B4 validation in progress
 
-- User authorized an optimization loop with tracked findings. Branch `research/predict-opt-loop-20261109`,
-  checkout `/tmp/cta-opt-loop-20261109`, from691f80c1. Loop register `reviews/optimization_loop_20261109/plan.json`.
-- Round1: inventory-aware soft grace, comparing an individually reducing order with aggregate room after all
-  same-side reservations (including pending creates/cancels and grace). Round2: shorter grace and latency sensitivity.
-- Same220 consumed Nov8 first-minute windows; exact native inputs. Commit/declaration -> controls -> paired run ->
-  artifact verification -> findings for each round. No PnL/variance claim without fills, no live or protected-date changes.
-- Round1 verified16:25:55Z: individual reducing grace retains4.86% of unrestricted coverage gain (208 retained
-  actions); full reservation-room grace0.68% (29). No added non-reducing share-time/active range expansion in this
-  conditional replay.32 controls pass; native fill-notice supplement has93 observations with exact original parity.
-  Round2 (shorter grace and three latency scenarios) is now running; no economic promotion.
+- Sourcee0ca5df2/declaration80466d55: opt-in LZ generated from frozen v3, native f20fdb1 paired semantics. Initial33 controls pass. Next source-only232 synthetic differential traces and formal parity matrix; no market/protected data. Serial run_light jobs, avoid C1 overlap. Economic validation remains gated.
+
+## 2026-11-09 17:15Z — optimization loop: native latency pass VERIFIED
+
+- Fifth pass, unchanged reference/all100/update_first50, same220 consumed Nov8 windows/279059 decisions per profile/
+  13077 neutral pulls per arm/profile. Zero exclusions, one partial day. Base output byte-identical and all base metrics exact.
+- Updates-first50 versus paired reference, faster/base/slower feedback: venue requests -5.35/-5.33/-3.72%, aligned time
+  +2.94/+4.17/+4.37%, off-target +71.76/+28.36/+5.61%, active share-time +3.97/+4.10/+2.58%.
+  Keeps97.48/94.43/90.34% of100ms coverage gain with22.86/22.96/21.90% less added off-target time.
+  Both captured modes share the request/coverage direction in all profiles. Added active exposure remains; no PnL/variance claim.
+- Assumed create/cancel/pending delays20/10/50,40/22/95,80/50/160ms; not estimated venue quantiles or separate days.
+  Native A2 f20fdb1, retry/throttle methods,150-share cap and1s reservation grace unchanged. No fill-clock bypass.
+- Source75bf977e/declarationb1441503 precede outcomes.9 Rust adapter controls +4 Python checks pass;1980 saved
+  window-arm-profile rows/117693 action-arm-profile rows verify identity/lifecycle/capacity and rebuilt coverage.
+  Findings_v4.json supersedes v3 by adding this pass. Full table: handoffs/20261109_optimization_loop_v4.md.
+- All numeric jobs finished17:15Z,375MiB peak for this pass,19MiB new data. Research slot free now; recheck before C1.
+  Protected Nov9–13, live checkout, frozen engine and dollar loss budget unchanged. No new policy parameters (21 cumulative).
+- Loop stays active: next full B4 paired-order generated-engine integration, no-token frozen parity and synthetic native
+  differential traces. Actual timer scheduling and calibrated fills/forward evidence remain before economic promotion.
+
+## 2026-11-09 17:08Z — optimization loop: native A2 pass VERIFIED
+
+- Fourth pass uses pinned Rust f20fdb1 incremental pair/request/throttle/retry methods directly, with factual quote
+  targets and assumed venue feedback. Same220 consumed Nov8 windows/279059 decisions/13077 neutral pulls per arm;
+  zero exclusions, one partial day. No hypothetical fills, PnL, realized inventory variance or full B4 claim.
+- Updates-first50ms versus native reference: venue requests62788->59444 (-5.33%), aligned time+4.17%, coverage
+  73.85->76.93%. Off-target time+28.36%, active share-time+4.10%, active range expansion+4.16%; reservations-1.22%.
+  Keeps94.43% of100ms coverage gain with22.96% less added off-target time. Both captured modes share the direction.
+- Native throttle attempts2237->1262; local capacity refusals2795->2851. Capacity is150 shares, not the dollar loss budget.
+  Counts include native outputs and actual modeled venue sends separately. Timing40/22/95ms +1s reservation grace.
+- 51 native tests,7 adapter controls,4 Python checks and positive/refusal report binding pass. Saved660 window-arm/
+  39231 action-arm rows reconcile action identity, order lifecycles, capacity and independently rebuilt coverage.
+- Input preparation first refused a -1/no-quote sentinel translation bug before any native outcome run. Corrected
+  source4776d822 and declaration8274fc63 precede results; failed artifacts retained and superseded by native_a2_v2.
+- Combined findings_v3.json supersedes v2 by adding the native model; earlier model results retain their assumptions.
+  Full comparison: handoffs/20261109_optimization_loop_v3.md. Sources/checks on research/predict-opt-loop-20261109
+  in /tmp/cta-opt-loop-20261109. Largest successful new job758MiB RSS. All numeric jobs finished17:08Z; slot free now,
+  recheck before C1 or another job. No protected Nov9–13, live/frozen engine, loss-budget or fill-clock changes.
+- Loop stays active. Next: native faster/slower latency sensitivity with exact base replay parity. Full B4 generated
+  engine integration, actual timer scheduling and calibrated fills/forward evidence remain before economic promotion.
+
+## 2026-11-09 — optimization loop: first three rounds VERIFIED; next integration pass
+
+
+- User authorized a continuing optimization loop with tracked findings. Branch `research/predict-opt-loop-20261109`,
+  checkout `/tmp/cta-opt-loop-20261109`; register `reviews/optimization_loop_20261109/plan.json`, current combined
+  findings `findings_v2.json` (supersedes two-round `findings.json`). As-of **16:40:02Z**: same220 consumed Nov8 windows,
+  279059 decisions /13077 neutral pull actions per arm/scenario, zero excluded windows. One partial day, no CI/PnL.
+- Round1: reducing-only grace retains4.86% of unrestricted coverage gain (208 admissions); aggregate reservation-room
+  grace0.68% (29). Both add no non-reducing share-time at base latency; benefits are small. Exact native supplement
+  captures93 fill-notice states at0–65s, including partial fills without a decision; original outputs remain exact.
+- Round2: timer-first50ms has no same-price bridges;25ms adds exposure with negligible base coverage gain. Round3
+  tests updates stamped exactly at the50ms deadline BEFORE expiry, then cancels still-off orders at the same deadline.
+  No future timestamp or longer grace. Source cb1af0a7, declaration d6f4ce11; exploratory follow-up, cumulative21 policies.
+- Updates-first50ms: requests **-6.98%**, original-price aligned time **+2.37%**,
+  off-target time **+25.66%**, active share-time **+2.74%** versus baseline.
+  Keeps **89.44%** of100ms coverage gain, removes **24.23%** of its added off-target time;
+  all2376 same-price bridges survive. Same direction in faster/base/slower scenarios with paired references.
+- 37 controls pass; saved metrics/actions, old baselines, inventory identities and coverage accounting verify. Across
+  rounds6160 window-arm/366156 action-arm rows; source/receipt hashes and falsifiers retained. Largest job1434MiB RSS;
+  all numeric jobs complete. No protected Nov9–13, frozen/live changes, loss-budget change or fill-clock bypass.
+- Next: A2/B4 paired-order integration/parity and actual timer scheduling; calibrated fills/forward evidence before
+  economic selection. Current shared Rust HEAD was observed at f20fdb1 (incremental sizing default), not used as the
+  counterfactual OMS here. No candidate promoted/deployed. Inventory-range follow-up remains untested.
+- Detailed comparisons, limits and reproduction: `handoffs/20261109_optimization_loop_v2.md`. Original two-round
+  report values were valid; its final mutable-register write used an exclusive-create helper and failed. Corrected
+  publication is recorded in-band by findings_v2; original log/outputs retained. Further rounds need new declarations.
 
 ## 2026-11-09 15:45Z (session 62f3ce33) - A2 size layering implemented (pmmmrust main 70b965b)
 
