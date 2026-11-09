@@ -1,5 +1,22 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 — late reduction experiment RUNNING
+
+- User authorized preserving baseline early trading and reducing late inventory. Isolated branch
+  `research/predict-late-reduction-20261109`, checkout `/tmp/cta-late-reduction-20261109`.
+- Two fixed candidates: `late_reserved` applies aggregate reducing reservations and remainder retention only
+  from60s; `late_taper1` adds a one-tick passive improvement when inventory exceeds a target declining linearly
+  from10 at60s to0 at240s. Target is an urgency trigger, not a guaranteed liquidation or hard inventory bound.
+- All original guards, early sizing, RO60, S240 and execution timing retained. Exact pre60 fills/requests must match
+  baseline. Inherited cancels retain fill-report grace without changing the client-visible pre60 policy.
+- Nine consumed days Oct23–27 and Oct31–Nov3, J/X,2592 markets per arm/timing. Uncapped loss budget,
+ 150-share backstop unchanged, rebates excluded. No forward Nov9–13 reads or live/frozen changes.
+- Full pipeline in `pf_late_{study,engine,run,report}.py`, `run_late_reduction.sh`, and `tests/test_late_reduction.py`.
+  39 preflight controls pass; declaration/source commit and full replay next. Concession attribution uses exact
+  originating order metadata for every fill; already included in cash PnL, never subtracted twice.
+- Three pairs x J/X x settlement/+1s/inventory-square =18 predeclared comparisons,2000 day sign flips and2000
+  day bootstrap draws. Source and fixed input hashes recorded before outcome replay. No threshold sweep.
+
 ## 2026-11-09 — allowed inventory-range experiment COMPLETE
 
 - As-of **2026-11-09 08:19:39Z**. All nine consumed dates (Oct23–27, Oct31–Nov3), **2,592 markets per arm/timing**,
