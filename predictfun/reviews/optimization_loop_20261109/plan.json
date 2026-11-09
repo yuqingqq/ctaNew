@@ -4,7 +4,7 @@
   "objective": "Preserve original desired-price quote coverage while reducing unnecessary requests and additional inventory exposure; economic conclusions require calibrated fills",
   "baseline_commit": "691f80c1",
   "branch": "research/predict-opt-loop-20261109",
-  "data": "220 consumed Nov8 windows, first60s; exact native decisions and due-event probes from the previous verified study",
+  "data": "Rounds1\u20135:220 consumed Nov8 windows, first60s, pinned factual native decisions. B4 and LC50 integration: wholly synthetic inputs only; no additional market/protected data read.",
   "loop": [
     {
       "round": "inventory",
@@ -53,6 +53,13 @@
       "finding": "Native synthetic mapping/lifecycle parity passes after correcting rejected-create slot release underLZ. No-token outputs exact; blanket fixed-size parity contradicted by that correction; historical output-file and economic validation remain.",
       "exact_arm_receipt": "paired_v3_arm/receipt.json",
       "exact_arm_verification": "paired_v3_arm/verification.json"
+    },
+    {
+      "round": "paired_continuity",
+      "status": "synthetic_lifecycle_verified",
+      "receipt": "paired_continuity/receipt.json",
+      "verification": "paired_continuity/verification.json",
+      "finding": "LC50 obeys bounded retention, fill-budget and hard-preemption controls; native effective-want/cancel lifecycle matches. No economics or deployed-timer claim."
     }
   ],
   "per_round": [
@@ -71,17 +78,17 @@
     "preserve existing receipts",
     "one research process, one core, 4GiB cap"
   ],
-  "end_of_pass": "Verify generated paired-order engine, frozen/no-token and fixed-size parity, native synthetic request/state parity; record remaining calibration and scheduling limits.",
+  "end_of_pass": "Audit completion and remaining economic/deployment evidence gates across the bounded loop; all numeric jobs in the seventh pass are complete.",
   "report_note": "Two-round findings.json and handoff were written after successful checks; the final mutable-plan update used an exclusive-create helper and failed. Plan update is corrected; round artifacts and reported numbers are unaffected. A combined v2 report will supersede this subset report.",
-  "as_of": "2026-11-09T17:52:27.717211+00:00",
-  "findings": "findings_v6.json",
+  "as_of": "2026-11-09T18:04:28.592256+00:00",
+  "findings": "findings_v7.json",
   "next_evidence": [
-    "Verify integration of bounded quote continuity with paired fills and inventory changes using synthetic cases before economic use.",
-    "Full historical output-file parity and deployed timer behavior remain unverified; fill calibration still gates PnL/variance claims."
+    "Audit remaining optimization and promotion gates against the completed bounded loop; prioritize evidence that can change the economic decision.",
+    "Historical fill calibration and actual deployed timer behavior remain required before profit or inventory-variance claims."
   ],
   "next_pass": {
     "status": "planned",
-    "focus": "Verify integration of bounded quote continuity with paired fills and inventory changes using synthetic cases before economic use.",
+    "focus": "Audit remaining optimization and promotion gates against the completed bounded loop; prioritize evidence that can change the economic decision.",
     "data_constraint": "synthetic controls only unless separately declared consumed-data work; protected Nov9\u201313 unread",
     "economic_gate": "no PnL/variance claim without calibrated fills or authorized forward evidence"
   }
