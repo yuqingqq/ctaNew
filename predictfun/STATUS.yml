@@ -6,10 +6,12 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
-  2026-11-09 04:04Z: EARLIER URGENCY CHECK RUNNING, unchanged rule on Oct23–26 (1152 markets per arm/timing).
-  Baseline versus urgency at J/X; no tuning or refit. Consumed guard-training dates; four-day point estimates/no interval,
-  pooled nine-day descriptive totals only. Source 10893e49 on research/predict-urgency-history-20261109; declaration/data
-  under urgency_history_20261109. Strict pre-180 trace and per-market checks; no live or protected-forward changes.
+  2026-11-09 04:15Z: EARLIER URGENCY CHECK COMPLETE, Oct23–26 / 1152 markets per arm/timing, unchanged rule.
+  Settlement delta $ J/X -20.6899/+2.9007; +1s -0.0742/-0.6977. Nine-day pooled delta -9.7814/+28.6638,
+  with X turning -0.4515 excluding Nov2. Inventory falls slightly; timing/day dependence defeats a robust PnL claim.
+  All 22 controls and eight pre-180/per-market checks pass; no missing markets/valuations. Consumed training dates,
+  four-day no-interval result; pooled totals descriptive after selection. Receipt reviews/urgency_history_20261109/receipt.json,
+  source a94a0dd7 on research/predict-urgency-history-20261109. No live/forward changes; all jobs complete.
   2026-11-09 03:53Z: PASSIVE INVENTORY STUDY COMPLETE; 5 consumed days / 1440 markets per arm/timing, J/X.
   Settlement deltas $ J/X: queue -10.7803/+11.1000; five-share -22.1177/+17.7284; urgency +10.9085/+25.7631;
   combined -21.0283/+19.2284. Queue cuts places 2.57%/1.98%; five-share raises residual inventory 10.42%/9.77%

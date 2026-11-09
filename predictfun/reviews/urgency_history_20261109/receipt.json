@@ -1,0 +1,2874 @@
+{
+  "as_of": "2026-11-09T04:15:18.236267+00:00",
+  "declaration": {
+    "as_of": "2026-11-09T04:04:25.573510+00:00",
+    "days": [
+      "20261023",
+      "20261024",
+      "20261025",
+      "20261026"
+    ],
+    "population": "all available earlier complete prepared dates; 288 venue-resolved markets per day",
+    "selection": "urgency chosen after the previous four-candidate comparison; no threshold tuning",
+    "arms": {
+      "baseline": "MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240|mid|AM:5:25:95",
+      "urgent_quote": "MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+RPRICE+XNA+XMIN1+XV+RO60+S240|mid|AM:5:25:95"
+    },
+    "prior_receipt_sha": "1db5922d8a793d314916f39fa5abe4ddfed74e13007db4b6244f28db989926d8",
+    "policy_source_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875",
+    "policy": "same one-cent reducing-side improvement into spread; 180<=t<240, abs(known inventory)>=10; original guards",
+    "unchanged": [
+      "fixed guard models",
+      "continuous basis",
+      "known-state reservations",
+      "lot/minimum notional",
+      "stop at 240s"
+    ],
+    "loss_budget": null,
+    "exposure_cap_shares": 150,
+    "rebates": "excluded",
+    "timings": [
+      "J",
+      "X"
+    ],
+    "null": {
+      "design": "2000 shared UTC-day sign flips, sign-invariant RMS max-T",
+      "seed": 20261109,
+      "draws": 2000,
+      "family": "J/X x settlement/+1s = 4",
+      "interval": "none: only four complete earlier days"
+    },
+    "multiplicity": {
+      "prior_candidates": 4,
+      "prior_comparisons": 16,
+      "selected_candidates": 1,
+      "earlier_comparisons": 4,
+      "pooled": "descriptive points only; no pooled significance claim"
+    },
+    "metrics": [
+      "settlement",
+      "+1s markout",
+      "mark at 240s",
+      "carry",
+      "residual inventory",
+      "inventory area",
+      "reducing volume",
+      "requests",
+      "fill-generation bounds",
+      "day concentration"
+    ],
+    "controls": [
+      "unchanged policy/metric source hashes",
+      "fresh first-day baseline parity at J/X",
+      "exact pre-180s fills and requests",
+      "per-market settlement, carry and inventory reconciliation",
+      "positive controls and known-bad refusals"
+    ],
+    "baseline_reuse": "fresh Oct23 J/X baseline; Oct24-26 prior exact baseline artifacts copied with hashes",
+    "earlier_days_in_guard_training": true,
+    "inference": "historical in-sample extension, not untouched validation",
+    "limitations": [
+      "only four day clusters",
+      "candidate selected from prior results",
+      "fixed delays, no own market impact or full OMS",
+      "no new cancellation stress sweep"
+    ],
+    "prior_stress_clarification": "Nov3 urgency delta was identical in ordinary and cancel-p99 runs; the negative day is not evidence of incremental delay sensitivity",
+    "prepared_input_sha": {
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step5/20261023/preds_basis_study.parquet": "99f7382736f0180e953d56d8c70623e8aaa6846f1b516693149a801b9ad4c994",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/registry.parquet": "660d09ea425a4da5bf2b59d87e1d4693a121cfde47b5bfcdda6db6c1a86ce591",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/clock_rl_d2.json": "0f691d78e24f8aaee65a83528d88aebcb9793f7327a96363b4fc5db410b6d0de",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/legs_timed2.parquet": "182edffe2eecb773f9b84769e550bf403e5d77389cde0ceba1582e01bddaa982",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/legs_tk.parquet": "e4feb92877f7fcfdd43975ba683cc6ebcef1aeb58d984ce2890d1ee6173f0e62",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261022_23.parquet": "79cdc4560fb533c5ed09e82afe316777f288d184e38b8d63ec97e703838e1973",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_00.parquet": "63ac47983562be17075a43637c53f0c93564bf358b36206779c8044803e70320",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_01.parquet": "ee7f9ae040cb004c6fcf4313a02ad93c4eee68c1c7a98eeccdf43fb931125b8c",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_02.parquet": "9600952b1caafe39aa61b3eb2e987d97ebae5b0c8503375f43bd7f79d83a0728",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_03.parquet": "489ca7e6acadbd30651ce1af35bb63b33a772e2619a12ab5d0117c25b24e765e",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_04.parquet": "709b88c9c7d53fe6c98517e528a6fd11fd14350c9a20f07b54e0778d15b05e05",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_05.parquet": "017f647a90017ef49c42f5b0bb14f021b55321a4b0fd606d052b9740752f6b57",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_06.parquet": "13c7ce23b286e15561218576f4ae29ff71ed03dd2d20a36bea28cbe5a608d5fa",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_07.parquet": "eba2f613861959ec7dbd1af587403e57228d1801e3fb4b3c4e882108d981c07d",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_08.parquet": "72cef622c93ec4b2af9aaa409d41a38db036adf32bda80fad182cf8a7ddee182",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_09.parquet": "0e9063e70fc2d407763beb4835a9c30dcf7268424511c2e81c9cd9a86af4e9d7",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_10.parquet": "4c5e98fe8a7891c8d510f131df00b6231c3c155db0ab52f602200a7a8c07ee07",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_11.parquet": "5e058fb6cd4b25aa924103c069f8b179d296e9c1185cc47174d6f78f2abb34c9",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_12.parquet": "9a23a0fed3f212db53eabbb54ac1bb20538c315e069188a91c2d42ed3976de02",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_13.parquet": "379a234e7c166d990454399e95a0237a24834e42be6c1aa69a25a2a95732aefa",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_14.parquet": "7bb1d5e461016dd90fe2ff31d1e25ed4b5a773a407084a0ce0eb0672c26944bb",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_15.parquet": "cb6344c3b2a05ea0bf4ab071dbd44798fa72926b51f8f2de531579673658b0a9",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_16.parquet": "f5d07668a3b813e643f0ac13be0c210564b1ea3726ad52257b544826a2b8f684",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_17.parquet": "a6398e91c59c15674e83d6f735f8ed3febdce04c6c4be598579ff6baa9a51052",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_18.parquet": "d395d31bd8e45bb9fd40ed5aeed3eca27e03c9890c4d3437d2640c9a93d9b8b9",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_19.parquet": "32593b5fa927d5c0d2487e4f27221f9bd31394a3ce952d6742d1159888af657b",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_20.parquet": "0ae46e97f2af93c65f14645818b1cd024cd52a325aa407685585b3ccd34f41ad",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_21.parquet": "24db7ae2af9df8444222afe7e822b2c6e6cafff655762b77c4fa9d7fc40426b9",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_22.parquet": "618dd501c3c6293dcee4e95cd9508de3d67188522de8245ef50ffbfa950dc9a7",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261023_23.parquet": "1f6d287f6358399a65a2f0d274a2a97f2a524156443cd384a09683375893a84b",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261023/books/part_20261024_00.parquet": "71f9933df9c7d8540e229ff7f1b655f5ef206dea4feaa097871bb315f71b86d8",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step5/20261024/preds_basis_study.parquet": "0ad5cb593aec04b9bcb999dfd9f62b4b7ca4ebd07c264144b60158b8f5f8abe3",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/registry.parquet": "21482f2cbec32188e80d5f80926f99bf87158507643c307ae4d177cb89e7c9c0",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/clock_rl_d2.json": "9c6aa937d7e4d201706598a163e2b9fa781ba9cc0ce897f87941518c4d4aa6c5",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/legs_timed2.parquet": "b1e9d1b0c446ddcb7abc430d7e578b6c3554d2bcf85032a1b7136e2371b60368",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/legs_tk.parquet": "f1064853457fc6f18b623db1578c6d1843666396ff558b473fa5fdad73dbbc5f",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261023_23.parquet": "899c5bca49667271dc6c39534483a12998c223f6631cf6eecb14ffe59bffcc88",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_00.parquet": "dc5b5d721958ac8bd8596850d1ea7f73c3c8e400de6eaddbf7e1e4ad9d34338d",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_01.parquet": "fa9af3d2363e9265b335f00cf2e66efb923bb2f5e621009d0827354eb9d0427b",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_02.parquet": "b003f7ab3578da0c525be9f9cdcbdb9d5ffd98aad0c7935e8817aa9e19d3bad3",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_03.parquet": "aef6334676ee309a9fd2cfdb62dc860ea4712d96c29412cf02ae09815e0dbbc3",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_04.parquet": "161a43df0dc7b189536ea9871654fcf61c580d6554671a01e0e87fb8cb62a014",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_05.parquet": "e96ba547e412f238ebebbb53a64856b147cf8e83c39757a75cf0848e8e66a057",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_06.parquet": "90367d42af56fa28eb54b6bfa215a532e2c69a3ad7812d51a84e46e115325529",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_07.parquet": "d2b4e72d1f824cbe4a2604fc4ab932cea1bbd18744ff1902e983e72e477f2306",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_08.parquet": "6ee338f8df81f7299a7a250ae5e6c05c193464bf6f350edd99b91905942e8aad",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_09.parquet": "faadff5459fd51a067c222099d19ae87a4bf949611b9aa7173fce86f83d57271",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_10.parquet": "4042eb8bea7cfb474bab215fbe8c3754e52f17011694028f6ee276e19f9ac146",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_11.parquet": "b7edc2812235265375db5902240d4308023507324cfd0032e648acaee449040e",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_12.parquet": "a5f08b666b996adab95022390a9b3be19faa0d2a3266878f608e19d23ce34d77",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_13.parquet": "638dc4d41368b471100b4e591c4d122b130191b9133c3ffbcf3b91eb5ffeb142",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_14.parquet": "dc856fe8199b1fb2adec02d7f71d86ba84480eb2becc5bb8b3b4731e1f54d6c9",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_15.parquet": "18d8b5c3fdb013ca124dfad388ea5e3777176072c0613001b3ead0a18f745c8e",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_16.parquet": "1379cc0faa2d118892fbdfc99826a6c021962fbfc3ac40a964c942b208267b69",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_17.parquet": "613df271276bbc6142514fdb5795d9af1d429a03af277a477cb583d140fa2f47",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_18.parquet": "2de00fa35c1bad57595b4adb5225cf9d23c63faaff07289593e3067fe8fa3c71",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_19.parquet": "26070fb65e0c9eb13830f92ed766e106e6efe6da842fde533cbb8ad8932275fd",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_20.parquet": "18af2e7a3f14055b7296cb6b65818262bc07d83511e93deb115482ef1a4c1a1e",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_21.parquet": "5e5f2a975dedc4b481c99fcd04c09e42f3d223b19679dbdbc7a801ba53260807",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_22.parquet": "bc50e043af9d8b88e797c6db8ca62b5d2b646e3856741fc78c19bc5ce5536fbd",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261024_23.parquet": "c823ef0cbca974119479b603611351f086af408d86bcb3533dc9a169b518aac1",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261024/books/part_20261025_00.parquet": "3212f2851e39ec129b2bead18af637028dc3de996aff06fa2ee5f7d6261754c2",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step5/20261025/preds_basis_study.parquet": "bbbf2b7d7a6e2cadd65c36632789c8c30f21b20b233b3850a6438165f3b52e6c",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/registry.parquet": "f5fec8709ef9868574909ae982ef6bbf851909bb4cd7e1cafadfbc1f7b740f28",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/clock_rl_d2.json": "8c0bc8fe388d064f881b611754db605955ccac4382febe0c48dc31071ee1cd32",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/legs_timed2.parquet": "0334830c2b45cb228d9c30c34cca72a120529c118722bcb3bc948eda7a49403b",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/legs_tk.parquet": "ffa83b2ca697e2c87f40a6dbe91679b2c114c4624dc6118b5c0bd6168bc95f82",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261024_23.parquet": "81a08fd13c0c6c06c9856d888dc30c7922a83192704bc951e03672cda4cf8ff8",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_00.parquet": "bc6be83cf2430edbfe1db9ac3b1ced99e448b998276f3377f32b86747cbeaf54",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_01.parquet": "62188e9e7c26913a877452e53214546f10131eeb89cab79538ba7b2745b12432",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_02.parquet": "31220f358e82197acc715c9a53f53938a84a965b15ab947744b7bc3f188220cf",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_03.parquet": "af87bfa9cb2458370693b2bcc7769689e99c08343065ebc2357c07784999ebbd",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_04.parquet": "b4088263ac298506a6e0a13b99b4df3cfe36a992eca25d9c450cf140514a5e0d",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_05.parquet": "71ce1be288da10e93762ec9cfebfb725b1ed6bd8613b77fac5fbdd90c6ecf21e",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_06.parquet": "6ed926fe04f5a380f9e868e6566899ecec838db14f5c90380b946d3527fd9918",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_07.parquet": "a6c5632d9fd44af60ebb6a1a7e51b80bb47c67ac7fedaddd9a0927ae7011b17a",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_08.parquet": "9d867b883f20d07126a933d36fc9273e3912915f5aa599994bd73fa7dd4ee743",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_09.parquet": "35db307fb278cb4063679e4654e1feb5e15f8c979932082e7045a0fa7e6fe350",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_10.parquet": "e823343dab8f19f33c0d7dce23d6bea323d719653d7cbf6a8ae658089de33b17",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_11.parquet": "819494c28e95139c0cc17c8e5e84a8d604137baae07c05a3eb9d499fc4723e25",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_12.parquet": "e288feab62a0a16dbae1d61fbde62bf347ef9f4a40368f5e45b45fe1fb72dfd7",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_13.parquet": "5ad910af7ed9e957f60e04a2c54024ff615d541d21ccef103adce6efa0769d3f",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_14.parquet": "ee444030e883756c46bcb392d0e83a47b6d31dc9924e721a0e17f2ea1c89a3b1",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_15.parquet": "1d2970913303632d613af4ab33229914972f00dc8b5820159ac63f94af6a01cb",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_16.parquet": "1aa8b6ef3453002b858865d59622e4d235241010daea6e619699a2b4b515bb22",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_17.parquet": "70437f91965c2cf0c9354fb40a41b842e8835332d2c3c58d0ed2960ce4cc558e",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_18.parquet": "067814d281c6bd7ebb7bfe8192ba2ed5242632a858114b37031e379519fc144c",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_19.parquet": "2cc04e27d5b22458c606cf172d12288cb302223dc5a4b9993761053a8be5d0d1",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_20.parquet": "1ae28841c7e5fd959a4cdab095c4269ce11ed5edc2433abd79e5de1bff7104a8",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_21.parquet": "acca61d6ce285b2b003bf659c2b2a17c6fb7f35cd6405b031a3b0a8fa9ee47da",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_22.parquet": "57b5511d13e86e3ebae7f8eb58863b38ca2ab9f90af7ae17b1f6b2f1c131964b",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261025_23.parquet": "629b7a42e77b64a14d63cb92a336552fe3433bb016e6af1d02fd942ab0a20139",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261025/books/part_20261026_00.parquet": "cb601f73c1f2132a9669230a63a8d01841afa737ebe08c21f2c7ce275242a243",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step5/20261026/preds_basis_study.parquet": "68a0f7e7dec21aaf109cc1b900f0c11c056019ff38e071cf65cc81c6cc6ef1ac",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/registry.parquet": "172173018e75a05cb83dd810daf93633fd3f3e2fe91412b760e5ebb0016ea772",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/clock_rl_d2.json": "e12c07574e86481448d3be18eb2286a51b5ba256e1b61e15221706463f0a40fe",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/legs_timed2.parquet": "f7b925de0ef0aaae226f7673d9544f514a4091571be941b5d3ff84c84ca68d21",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/legs_tk.parquet": "ce2c642027b06d18f4d0760ca0e512816836ad55a59608f89b6604e5a0a86c6a",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261025_23.parquet": "29db66fedccd0b94cf62780736d08b9dd1f5626aae4bc0981862ec7eac2ee8c0",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_00.parquet": "bdb2473d99c056aeeffd409721da4020856c03789e5a0ba165379952466ec424",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_01.parquet": "25d3a68c70c1d4f8f55aa2dad27a363d60837571b365b8a45015f05047561918",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_02.parquet": "5c6a55bace4385b32be49f7bdd5bbf179591d27f7ddf2aa50a9fe4967a7525b1",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_03.parquet": "7f4326923dd4b049b2f682f5b5cb94d3a7614b91ed744408dc7c620d4e742e45",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_04.parquet": "93547977c69ab39de29e719bea4309dda0da5ce87c467ca334e70f50a0483f53",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_05.parquet": "5348d3ad84886c85b522049c01c15d8b45bbcf822f4438f4cb0a992f5628bf26",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_06.parquet": "3b5ba42249b2ed0fdb4c4442a5884ad6ced9c12d2c3b1399994b0e0369a66f55",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_07.parquet": "4b942e932a8910a4c39d2d4383d767a69e999147475a2f67660d1645a5551d70",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_08.parquet": "d1da8648102e205736bc00d98abdc1f71cda110b0f85318afc35589c09b7705a",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_09.parquet": "9ca133fe29ef95a6bf0d6175329289dde2ae91f2b2e9d16b78148fb861843549",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_10.parquet": "4d5abf21301231db8d2c84e3ec3e6c94103b66b2ca27018c6249393444452464",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_11.parquet": "f7a176b0c9d83046ce1db46a78b0325a7b8e5c37a02393bb10777a66cad1412c",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_12.parquet": "dfe4e9e36d5a5d5e1f45ea819ddc2faacb02d9f59c372780315cdaf4bafdd310",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_13.parquet": "bf80b4a2654de6facf4d6ff47b3e49338143d95cfd3b13327df7ddbc68f96675",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_14.parquet": "3dcae452fac46bc9a6b03962aba2a9fe7dd0adedf7d3a90659acd3e25b978cee",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_15.parquet": "9598a0bf43d4c8472e389bc709345098e3ca219c5b0b71ddd155d6d111673011",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_16.parquet": "1cd6d10c2da86121c764bf532e91f69e1877dd72e1d675f175b0d203b9f1d783",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_17.parquet": "d50b73c4a57f37081d7f6f21e08283771a2aa552a367b9781ffba78513c40fc8",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_18.parquet": "5d792e2af752eafb869b0f110f34f2bd451bcb4d8bb3c88cbf32fed853b0690d",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_19.parquet": "b7e1ab038e1bf2f31577b58fd9c193d08b727f4741f7197867b749cd109e2b7a",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_20.parquet": "cb490ffd24dacd25ab58291ccb1e6fc52fab1c9027dad0cc9bac051f48c6cbce",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_21.parquet": "5b7abb1f6ad1cfbfe61c541fd3eb965d071dc34f9042d9015fe418952422817e",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_22.parquet": "e6e62cedc77a3aaad6c34970b568cd49ec5da130d98e8d5359a3e43b7fd3cecb",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261026_23.parquet": "35c75d2cfa4e5005623ed399832278d77187da2d193a6c28a19966d66316b4f6",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step1/20261026/books/part_20261027_00.parquet": "259724ca059a4e5dea769fbe3716edb9a10afb106ef2b0ac6516a59386f01cfd",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step4/minute_lines_t60k.json": "3852fec9e0fa36d164c5482688574663bc4230033911ce0d47049e04ac87735d",
+      "/home/yuqing/ctaNew/data/predict_fun/research/urgency_history_20261109/research/step4/inv_r60.json": "813818da42a47d1727d3f713949cb2220863dfe6cc9800ee4837b4d1af8efb8b"
+    },
+    "source_commit": "10893e4979453abce28906155b380c2e6aa473c9",
+    "forward_data_read": false,
+    "live_settings_changed": false
+  },
+  "declaration_sha": "066782a6b03e39fdfbc3ad443f400d58af5d7f02f8395ba875c8a5b4eb368ae5",
+  "prior_receipt_sha": "1db5922d8a793d314916f39fa5abe4ddfed74e13007db4b6244f28db989926d8",
+  "source_commit": "a94a0dd7966781f2994a41c2f526ec6bdbd9617b",
+  "source_sha": {
+    "predictfun/research/pf_urgency_history.py": "a8bb482ab11951cb803071b2622b701484a14cc9a588327e80730701bf6e5764",
+    "predictfun/research/run_urgency_history.sh": "28008619bd855033b2aea5eaa63d308fd74db71b4f2c5d4692ab8d0b33da7827",
+    "predictfun/research/tests/test_urgency_history.py": "3a240f6e92512a72b15afa52b5200a61ba80042523498ffb3bb877a16d88365d",
+    "predictfun/research/pf_passive_engine.py": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875",
+    "predictfun/research/pf_passive_report.py": "fd08d96d2271a4e2bf33e432e4c6ad95e3faea9c20157b990f71412cae3b16b1",
+    "predictfun/research/pf_sizing_engine.py": "95378036e04f8a0e7778063498fe7d94ce6b70276be01d8d74d992a1a13d101a",
+    "predictfun/research/pf_step4_ladder_v3.py": "d678e7c3c4e47c6d60ebc031edf8d7fc7317210d5e58ff301d92d7ae0ece5f17",
+    "predictfun/research/pf_clock_rl.py": "0a1ce1e12e45a73de7a46102385f63be94d065d60ffbcc44aa30b4e1a840bb98",
+    "predictfun/research/pf_io.py": "057fb052683b715084e175304a3c0bdf4dd9262694992d332056bbc6523e9494"
+  },
+  "binance_input_sha": {
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261022_23.csv.gz": "10e48aaf2cbe907493457482c59cee9cd1dca379a2bc984c137ee6347034fff6",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_00.csv.gz": "20087cc14ff83bb3778585742caa22e7815f7a1ffd48d5758dd116ff0e91de40",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_01.csv.gz": "550aa36cfda985ad7f2b49675e3190fac20beed80b03176d2108c1dadf1c1781",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_02.csv.gz": "24f92bd7e2f124654bc0cb8d82cd1144e209a8a85f8e9c16e33a46f1810de15a",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_03.csv.gz": "6129759850d5ba48688792bf1a5bafc22c9326ece79330a260a8a01803f37500",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_04.csv.gz": "98b1f9b62bcd308fb7d7cc57ed40eadf136e5d80013c0591fb93a2a61af9c33e",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_05.csv.gz": "7346913c03fba539c8c874840f0856abae185681d2142f93ef98474aae960cb3",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_06.csv.gz": "bc2b21508f07cf427931626f0fcc7fc3a4e17afe02ee32cf5899089a1729624a",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_07.csv.gz": "8906d710f5a0905f40b5eebe01a8195d00c42e02ab4fea7054b65f6bcfc66f7c",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_08.csv.gz": "0654d6729e1a5441904efe3bf22c7c06f15d1313fdd6f3e96b3ddc8f2cd3d7d0",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_09.csv.gz": "593c70a016673ec06831f1fd01b0f1c1d4bfa7ed488916cddd69349c3b1d64dc",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_10.csv.gz": "7d60fd0cf94368c23ca1dd0ced73e779ba224646154c6396e2b3c8dc82f4e580",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_11.csv.gz": "dd7f780d9789ac8394f87967bccd3e57533b441565eb7ed07522eb21ace6cbf6",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_12.csv.gz": "793dcfee006891259ebcd5ad0984b7b393e50c90f0beb907681f05bb83f78f93",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_13.csv.gz": "f89e75d08941761f9d08646b68c44678c6296434373b1a01caa8692a8d85c1c1",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_14.csv.gz": "5000a8b9d6e7a3304f126e7cb37aab0f0657210ddf2df3366e358d0378a5f55c",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_15.csv.gz": "8a442666e2b21cac72fb5abb051a7f7ce854a9f25ba34b96ad398fe8b0ec3af4",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_16.csv.gz": "04afe737f12f9b1a2cc7e540021d2fb7ff94a8c81ebf2bebbea5a7a1b13271b0",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_17.csv.gz": "80731e6660683c6be1f7e0b75cfd9be55c6c2430f8dbdb6a4db76bb7f02c6c82",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_18.csv.gz": "1a4d08a0e485c1e06b8a6f2acd32e4540ea55ed078f5d4f54bac63e562492cc1",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_19.csv.gz": "17a42e053869b44ad3d1d673cea591e36f1f39ce2f663612ecc8af472da9d4d6",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_20.csv.gz": "78f604017c964bd447ae417b1fc288eff90b0d3c789c711c107f6a0b3539edd5",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_21.csv.gz": "66ac687eb9e8aab2785c5e389119a5cac26399a749842046477904e74feacd46",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_22.csv.gz": "1563097e9428f011a66e4feae285c99aa2fb2d43af564a065782e4bbb26c28d8",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261023_23.csv.gz": "4548530c4a10e5c6e2fc3b52e714b297832dc3401e8e7c1e582c365fa7d4edab",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_00.csv.gz": "d56b7ec4d45ebe5742c174544b3a0199a4f8ded39c1a144ff91e1f1fa074235c",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_01.csv.gz": "bf8e898fccd139635d694de75dbe0687592040081ad37bdbbffb83ec3815359d",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_02.csv.gz": "8efd92a7e8eaa4326577a4007903902cf116c8ad08a52dec39c563198b0d81a8",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_03.csv.gz": "e3f72c2551940353856347481873cf59e722bb3b8d1c5b5c946750a4c5cba8ef",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_04.csv.gz": "c3d2313683aff8e6a945bb6079d446fad58dcbabf3d13fdb3cec6fa656232dc9",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_05.csv.gz": "f7bef7607f53e5c015f50c24d93aa7833bb6d6a5aeb75bc95b2c96337e7855e5",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_06.csv.gz": "3fcadc80b9e387e6ae2823fd4137d8883c8d7d3a8d93524902d837e60718d646",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_07.csv.gz": "507947e55f80117005623bfa13a8f2306e423f1054c9a37133a6ce892526c599",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_08.csv.gz": "637499c6c8410f472bd81e582d7fb79642a9be048d1c160815fecb1b7c27c389",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_09.csv.gz": "ebbe64fb0155e9cf5e0f9a3f2b9e9067d3b2d1f01a0f58457611304d9c249e45",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_10.csv.gz": "50bd4629bd5bdd9680475a10dba71d7e7f297862519139d23e8d9f95839b7057",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_11.csv.gz": "735d40a83e275311bfb0b7bcb883e124242a17998195cea94883224d1eb07a7c",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_12.csv.gz": "5016eb52631a66fe0b3c53387187046c5161a38724debca251240007a1292ff3",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_13.csv.gz": "7f4a0d556ee3d6a6377de87c3a9c292eb80b7d0dcb01142fa5d6fd8a786d57cd",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_14.csv.gz": "4819550caec67aada6139ab8d1db2e57de159c594651a588de3ef068ce7865b1",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_15.csv.gz": "adfd389fc0a75ae7c8cf9bb94459f59c080f539fa3672a97fd0989c28baa7b7c",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_16.csv.gz": "730304b59e1e2fbf56904585e76dacdda5187f6f54650786b7be2600a4149d49",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_17.csv.gz": "278d80a608df10e5ca7c4bf83d5deda611db79820274de4378eb7d33f56e3f54",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_18.csv.gz": "32226d52a4d83d2088917d8daf464392d17ac6f1cedd6bd6cbd419cb3d559636",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_19.csv.gz": "28561d72a42b810930275695aedaa708725e979a848175c99e9bbd0f493406c0",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_20.csv.gz": "0c0bfa0a8e2816002e549544b82a6933ee007fd7c478d6a132ddb22195b08197",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_21.csv.gz": "9ea0d8924e447948a9edda576310b0e4baa33e8d91aa2a62ab47ae239f876af5",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_22.csv.gz": "f74e605d5202e1cb4325b0370c046ed11f28c42fa829e9374c9935514f17d266",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261024_23.csv.gz": "2ed42ebad8b4b5d4510b13a85080f138f4a579960debf86df5d75a2cf62bc1c3",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_00.csv.gz": "1f1381fcaac2ae7768b2aff08600d055560d6f7bdcd9209ca2b63d8a3637267c",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_01.csv.gz": "a0ef0b31a368fb7d92f330b587d96c8208c8e6418e334a7cd1d0b7b313a4f430",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_02.csv.gz": "c31ed210ddfdde691e5de80cade318d5f123d7abe436835cb9e4c9a0fc1eece8",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_03.csv.gz": "a79e318dc3f824e73e64b302a0ffb4391017803138fdb8be97d39283ce39dec2",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_04.csv.gz": "276e11bcd067a66917e4e7d97b5efb6d7a004d7d11d9ea957ac5ffcf5c06ad84",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_05.csv.gz": "a21f4bf6aa668941bb6a49070946a7a559cbb164d5e68e490e59a9275957941f",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_06.csv.gz": "3bb4213c3c1f1dc7b9252aebe82332fafc19c133a55610c8e318abbf49d1b331",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_07.csv.gz": "8846d6b3fac3f4919bf24f8f4c7874baa272cfa2dc8d4a6f4b7530c423eff597",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_08.csv.gz": "60cd7946368da79c5ec61342f01cab97a7e3c56dbee738d9f4994613e34626f4",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_09.csv.gz": "d7cb7865928c79887809a620698d6eaf239b0f2fa84447fc14afa510982be2bf",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_10.csv.gz": "01c4cbf79e30fa6d50883f1df73c68961cb59a949794ca4e069c79d80a4db708",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_11.csv.gz": "976ebe13f86d5b5d1d9bdae51d8964d98441babdf6372e79d057adae372b68d3",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_12.csv.gz": "a277f6cb3c6f7b1be8f199110d037bdacf6a5f6467d262917de4c36ac78d6cf8",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_13.csv.gz": "fae0b40b46c4dde2d0799f6c9be5e19ff5d3d84ec49502c71cf7043791e7eaf3",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_14.csv.gz": "c41dd28b60108dc365a1a23b6c1dc0c54d56b32369bcc9fb3fa316f0eeb16143",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_15.csv.gz": "d3397399391d9014c054e5dae33ee34632643ad09b17655f6747a672b1f94682",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_16.csv.gz": "60c7a3f1e6cfec3d6269b75157df969cdcffc5866796f81a9b97f8b3078d1da5",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_17.csv.gz": "d146cd6807d369d25168c863f4ba7d9811172a74d2a1c2e23a06272704bf7579",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_18.csv.gz": "bae45ff85422b10b890a409a56364197a8d45666f525c1ab49467a3adf63ac7a",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_19.csv.gz": "2c5b94b0d9089a45cbc9acac610f4d239312d29dd2fd77fb65964329e484cf29",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_20.csv.gz": "9e04d8931beff655d6be725cb28f3c5b9d98530c11fd5ffb1773c05ed7df3b80",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_21.csv.gz": "302eca9589e2f55af64969263ce4588bde28e19c3a9948bb662c7d65f9b6a05f",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_22.csv.gz": "49f213b9674eda6d7ce988d6d40aacba13847d917325a82f3a154e7eba084dbc",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261025_23.csv.gz": "528e33f21170b18f536ddc333a40eaf67816550482a20fb8b1db5fc3578fc7da",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_00.csv.gz": "1ab096b655f11bfcbdf813474471723bb8d1ac5e421ced211bb1142d53bd4472",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_01.csv.gz": "fd91114d5391f4b92189ad1fb089ce8255bbab45cf7d17f2fb6cec6c6b6b5966",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_02.csv.gz": "ea17ca9d85f4690990905974a280a84e4492b6cab80b7f88a0f6f4178847af81",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_03.csv.gz": "716bc756840c6999d5e8f4f3a6e1af032d891392c258cde31c90856834f7a444",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_04.csv.gz": "ded9cef2cc5762457e884f2a7c3694873dc2446b52fea10132833d0a9be87c00",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_05.csv.gz": "c69c3d7bec45426c88ba22f12adef6bb3a292b6643b80491d3e3c6c89cb5f70a",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_06.csv.gz": "c0ec009372a6ad50e6b6826a6aa28813fc97f590c5ecfe0631fb02760ba9d399",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_07.csv.gz": "f7ca621857f666a4ba9b12fa5c39af53d9735d3749a5c6deb38b4c8fc9b320d9",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_08.csv.gz": "750b1b4055fbb6d6f4843f413f4730270ca6fd153afacdd65aac6022bb37ea0a",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_09.csv.gz": "706288ae8c0d103de8f88655a646f80aab084fafe4b9f656b800c32eef832635",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_10.csv.gz": "6e07f15d8f4667c57c9c2983edb5612e21f1a5444dafa9ab01978d5924644c1a",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_11.csv.gz": "a329cf6f98922aa010da1b9ee295dac126f06e53cac79febc63ba1573da13303",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_12.csv.gz": "6cfaf43dc177f2c03c1ff196bc87d3eee7ed3704047c6a424fce3fa4629920ea",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_13.csv.gz": "69ebe47fc78379c5a2a9d917e33fc8c82ac6db208de021d7b4b29e305d5dadaf",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_14.csv.gz": "5e1e4665847d5049e35cbcb381718fe43a740d53c0e449a47cd4017866f921ff",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_15.csv.gz": "c7859296c2cdb2b269de62c6f4568445486f07706c8d68fdfc6bfe525b108ae5",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_16.csv.gz": "3ca4a07175b215ed498efd88b13cfaad1a83e97c638608eefe8b4785fa8c1ceb",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_17.csv.gz": "a8cc99ea2a4ca20eb326676cb4a535451916af674502a282cf4de7556e33b6a5",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_18.csv.gz": "734716acc2e7f4e0635ca4de5fa88bea298ea734bd9a29685113df833a7de6c6",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_19.csv.gz": "abc5a333bad6a0a70237c02e719dee353a5964a243adabf854827f5d731f5eab",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_20.csv.gz": "92593451eaac469a05b761958ceee357c03b205f3f2be7d6230f2e7da456c8a8",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_21.csv.gz": "e74cb6f573fa5d42c9648dde1d59a6df86b62c026f4e9c27e5cf597f00094d77",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_22.csv.gz": "21f37c9e21de5c3b64f9c610077524064ec3fd44ec047927a435ad3e663e7bd8",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261026_23.csv.gz": "6a455d4f7ef2fd38c7e4668953148487184585d9089342cd47f695dfedce510f",
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261027_00.csv.gz": "2bad777c823c59f2c496f65027183108c6521a1b9d8b63deb250071fb138f0cc"
+  },
+  "missing_binance_hour_files": [],
+  "daily": [
+    {
+      "day": "20261023",
+      "timing": "J",
+      "mode": "earlier",
+      "variant": "baseline",
+      "markets": 288,
+      "settle": 71.13353348804465,
+      "plus1": 81.89257850896874,
+      "mark_stop": 94.97139886368731,
+      "carry": -23.837865375642693,
+      "shares": 4125.322956685093,
+      "fills": 660,
+      "requests": {
+        "place": 39616,
+        "cancel": 39543
+      },
+      "refusals": 3,
+      "abs_net_end_mean": 6.6631656918630675,
+      "abs_net_end_p95": 25.0,
+      "mean_time_weighted_abs_net_60_300": 7.1058827809354685,
+      "inventory_population": {
+        "markets": 172,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 11.151812321259092,
+        "flat_below_one_share_fraction": 0.1686046511627907
+      },
+      "reducing_shares": 526.045707733208,
+      "opening_shares_after60": 4.71,
+      "zero_crossings_after60": 0,
+      "overshoot_shares": 0.0,
+      "reducing_mo1": 14.183987062395193,
+      "fill_weighted_age_ms": 69.50603761492674,
+      "generations": {
+        "place_attempts": 39616,
+        "accepted_orders": 39549,
+        "filled_generations_lower": 396,
+        "filled_generations_upper": 396,
+        "ambiguous_create_keys": 0,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.010012895395585223,
+        "accepted_order_fill_fraction_upper": 0.010012895395585223,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 11304,
+        "capacity_checks": 40125,
+        "would_clip_capacity": 0,
+        "place_never": 365,
+        "place_immediate": 39532,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "zombies": 39433,
+        "prio_reordered": 286,
+        "zombie_fills": 317,
+        "view_filled_unknown": 347,
+        "acted_on_unknown_fill": 79,
+        "throttled": 506,
+        "postonly_refused": 67,
+        "rej_reset": 36,
+        "place_delayed": 84,
+        "refused": 3,
+        "refused_minimum": 3
+      },
+      "withheld": {
+        "BTC": 1228319,
+        "G4": 1444803,
+        "G3": 38619,
+        "LD_MIN_USD": 1295,
+        "MIN_USD": 25689,
+        "LD_dup_touch": 190,
+        "LD_RO": 190820,
+        "RO": 79224,
+        "LD_CAPN": 12125,
+        "CAPN": 8870,
+        "GS_nocover": 146,
+        "LD_G6_soft": 2232,
+        "G6_soft": 1385
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "ded7fec646b8234b67fe2f5e6956b6311f3314732575ad8b836a6b2be1e833df",
+        "fills": "395362ab08190493d95de02639b3eba40a09af1e23164cab812e3738a543ffd8",
+        "requests": "3c01dff21917321dbeb1a1a730eed75c50be665a24d6d40cc18b96eaebe6a2ad"
+      }
+    },
+    {
+      "day": "20261023",
+      "timing": "J",
+      "mode": "earlier",
+      "variant": "urgent_quote",
+      "markets": 288,
+      "settle": 72.47431920233034,
+      "plus1": 81.50006422325447,
+      "mark_stop": 96.06128457797303,
+      "carry": -23.58696537564269,
+      "shares": 4107.3829566850945,
+      "fills": 660,
+      "requests": {
+        "place": 39617,
+        "cancel": 39540
+      },
+      "refusals": 3,
+      "abs_net_end_mean": 6.725457358529734,
+      "abs_net_end_p95": 25.0,
+      "mean_time_weighted_abs_net_60_300": 7.125087736850143,
+      "inventory_population": {
+        "markets": 172,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 11.256114646840487,
+        "flat_below_one_share_fraction": 0.1686046511627907
+      },
+      "reducing_shares": 508.105707733208,
+      "opening_shares_after60": 4.71,
+      "zero_crossings_after60": 0,
+      "overshoot_shares": 0.0,
+      "reducing_mo1": 13.791472776680905,
+      "fill_weighted_age_ms": 69.71469583292209,
+      "generations": {
+        "place_attempts": 39617,
+        "accepted_orders": 39542,
+        "filled_generations_lower": 397,
+        "filled_generations_upper": 397,
+        "ambiguous_create_keys": 0,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.010039957513529917,
+        "accepted_order_fill_fraction_upper": 0.010039957513529917,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 11304,
+        "capacity_checks": 40126,
+        "would_clip_capacity": 0,
+        "place_never": 365,
+        "place_immediate": 39533,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "zombies": 39425,
+        "prio_reordered": 284,
+        "zombie_fills": 316,
+        "view_filled_unknown": 376,
+        "acted_on_unknown_fill": 80,
+        "throttled": 506,
+        "postonly_refused": 75,
+        "rej_reset": 40,
+        "place_delayed": 84,
+        "reduce_price_shift_decisions": 419,
+        "refused": 3,
+        "refused_minimum": 3
+      },
+      "withheld": {
+        "BTC": 1228319,
+        "G4": 1444803,
+        "G3": 38619,
+        "LD_MIN_USD": 1295,
+        "MIN_USD": 25677,
+        "LD_dup_touch": 190,
+        "LD_RO": 190820,
+        "RO": 79224,
+        "LD_CAPN": 12125,
+        "CAPN": 8870,
+        "GS_nocover": 146,
+        "LD_G6_soft": 2232,
+        "G6_soft": 1385
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "fcdada545a36d816e51cb722258895d840c9953a2bdd43e1fe90fb7e90dd911b",
+        "fills": "eb84d2fe1e8d3bdca1964aa0cbdcb9670bab5ab07f194cdbad65d1ceb3a604b2",
+        "requests": "baf9ae9c4c0f703155859974ef5cb8f309981aadc6566568a883c90d6768f5ee"
+      }
+    },
+    {
+      "day": "20261024",
+      "timing": "J",
+      "mode": "earlier",
+      "variant": "baseline",
+      "markets": 288,
+      "settle": 58.93504507001447,
+      "plus1": 70.03137471060994,
+      "mark_stop": 43.94942844149274,
+      "carry": 14.985616628521727,
+      "shares": 4572.401571630355,
+      "fills": 706,
+      "requests": {
+        "place": 42339,
+        "cancel": 42257
+      },
+      "refusals": 3,
+      "abs_net_end_mean": 6.766430121841093,
+      "abs_net_end_p95": 29.87790697674418,
+      "mean_time_weighted_abs_net_60_300": 7.383890354987044,
+      "inventory_population": {
+        "markets": 147,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 13.254674012599592,
+        "flat_below_one_share_fraction": 0.16326530612244897
+      },
+      "reducing_shares": 687.1516074019041,
+      "opening_shares_after60": 29.125,
+      "zero_crossings_after60": 2,
+      "overshoot_shares": 8.125,
+      "reducing_mo1": 10.569372363540133,
+      "fill_weighted_age_ms": 97.24131223495625,
+      "generations": {
+        "place_attempts": 42339,
+        "accepted_orders": 42230,
+        "filled_generations_lower": 383,
+        "filled_generations_upper": 383,
+        "ambiguous_create_keys": 0,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.009069381955955481,
+        "accepted_order_fill_fraction_upper": 0.009069381955955481,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 14725,
+        "place_never": 952,
+        "place_immediate": 42039,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "zombies": 42100,
+        "prio_reordered": 195,
+        "zombie_fills": 335,
+        "view_filled_unknown": 405,
+        "acted_on_unknown_fill": 99,
+        "postonly_refused": 109,
+        "throttled": 1537,
+        "place_delayed": 300,
+        "rej_reset": 51,
+        "refused": 3,
+        "refused_minimum": 3
+      },
+      "withheld": {
+        "G4": 1428016,
+        "BTC": 1193310,
+        "G3": 32574,
+        "LD_dup_touch": 282,
+        "LD_CAPN": 12678,
+        "CAPN": 9521,
+        "LD_RO": 213531,
+        "RO": 99944,
+        "LD_MIN_USD": 1414,
+        "MIN_USD": 20995,
+        "GS_nocover": 112,
+        "LD_G6_soft": 2891,
+        "G6_soft": 2002
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "379a610b4f888c6381368edc623b86c4b88e2246f4c3c095e008c948e545c8ec",
+        "fills": "d18368f69554b89c95f0d79cdaf01724f90d7a070a77fe5923cbfbb13e5b5ca8",
+        "requests": "f101c149313e2f7cd542f4cd51b9c9a9e12436fb564805ecc8debc77efc6afc6"
+      }
+    },
+    {
+      "day": "20261024",
+      "timing": "J",
+      "mode": "earlier",
+      "variant": "urgent_quote",
+      "markets": 288,
+      "settle": 64.95418840334777,
+      "plus1": 70.11063471060994,
+      "mark_stop": 46.70940510815941,
+      "carry": 18.24478329518839,
+      "shares": 4602.244904963687,
+      "fills": 713,
+      "requests": {
+        "place": 42330,
+        "cancel": 42238
+      },
+      "refusals": 3,
+      "abs_net_end_mean": 6.66280743665591,
+      "abs_net_end_p95": 28.075755813953386,
+      "mean_time_weighted_abs_net_60_300": 7.338361121443207,
+      "inventory_population": {
+        "markets": 147,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 13.051658139583719,
+        "flat_below_one_share_fraction": 0.16326530612244897
+      },
+      "reducing_shares": 716.9949407352375,
+      "opening_shares_after60": 29.125,
+      "zero_crossings_after60": 2,
+      "overshoot_shares": 8.125,
+      "reducing_mo1": 10.648632363540134,
+      "fill_weighted_age_ms": 97.78009046274293,
+      "generations": {
+        "place_attempts": 42330,
+        "accepted_orders": 42201,
+        "filled_generations_lower": 385,
+        "filled_generations_upper": 385,
+        "ambiguous_create_keys": 0,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.009123006563825501,
+        "accepted_order_fill_fraction_upper": 0.009123006563825501,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 14725,
+        "capacity_checks": 43870,
+        "would_clip_capacity": 0,
+        "place_never": 952,
+        "place_immediate": 42030,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "zombies": 42069,
+        "prio_reordered": 195,
+        "zombie_fills": 338,
+        "view_filled_unknown": 444,
+        "acted_on_unknown_fill": 101,
+        "postonly_refused": 129,
+        "reduce_price_shift_decisions": 439,
+        "throttled": 1537,
+        "place_delayed": 300,
+        "rej_reset": 61,
+        "refused": 3,
+        "refused_minimum": 3
+      },
+      "withheld": {
+        "G4": 1428016,
+        "BTC": 1193310,
+        "G3": 32574,
+        "LD_dup_touch": 282,
+        "LD_CAPN": 12678,
+        "CAPN": 9521,
+        "LD_RO": 213531,
+        "RO": 99953,
+        "LD_MIN_USD": 1414,
+        "MIN_USD": 21014,
+        "GS_nocover": 112,
+        "LD_G6_soft": 2891,
+        "G6_soft": 2002
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "41ea17efaef9691f181df9dcbde88dc0a671d867d1dec10831c6ec393901bd9a",
+        "fills": "fa2873d8c4b6a37219462c35421c16f54aaa9360321b8665cc2ea337c44453a6",
+        "requests": "3f879c5e5f74d0b0bac6ca8139b970e5c2fc7263c9e2d50a4c1cc696f2da2692"
+      }
+    },
+    {
+      "day": "20261025",
+      "timing": "J",
+      "mode": "earlier",
+      "variant": "baseline",
+      "markets": 288,
+      "settle": 288.3026704560632,
+      "plus1": 66.55698692944348,
+      "mark_stop": 212.5105945781899,
+      "carry": 75.79207587787323,
+      "shares": 4240.046033593242,
+      "fills": 664,
+      "requests": {
+        "place": 45208,
+        "cancel": 45116
+      },
+      "refusals": 2,
+      "abs_net_end_mean": 6.687234528868429,
+      "abs_net_end_p95": 25.0,
+      "mean_time_weighted_abs_net_60_300": 7.27632539317093,
+      "inventory_population": {
+        "markets": 163,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 11.807015609289005,
+        "flat_below_one_share_fraction": 0.20245398773006135
+      },
+      "reducing_shares": 646.6803683455527,
+      "opening_shares_after60": 65.34669879417278,
+      "zero_crossings_after60": 4,
+      "overshoot_shares": 15.006698794172774,
+      "reducing_mo1": 8.44140895492004,
+      "fill_weighted_age_ms": 127.58603163744903,
+      "generations": {
+        "place_attempts": 45208,
+        "accepted_orders": 45084,
+        "filled_generations_lower": 391,
+        "filled_generations_upper": 391,
+        "ambiguous_create_keys": 1,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.008672699849170438,
+        "accepted_order_fill_fraction_upper": 0.008672699849170438,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 14003,
+        "capacity_checks": 47311,
+        "would_clip_capacity": 1,
+        "place_never": 1277,
+        "place_immediate": 44814,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "zombies": 44940,
+        "prio_reordered": 236,
+        "zombie_fills": 311,
+        "throttled": 2101,
+        "place_delayed": 394,
+        "view_filled_unknown": 431,
+        "acted_on_unknown_fill": 103,
+        "postonly_refused": 124,
+        "rej_reset": 51,
+        "refused": 2,
+        "refused_minimum": 1,
+        "refused_netcap": 1
+      },
+      "withheld": {
+        "BTC": 1116498,
+        "G4": 1389143,
+        "G3": 46557,
+        "LD_RO": 232388,
+        "RO": 111623,
+        "LD_CAPN": 17036,
+        "CAPN": 13280,
+        "MIN_USD": 19121,
+        "LD_dup_touch": 262,
+        "LD_MIN_USD": 1983,
+        "LD_G6_soft": 3045,
+        "G6_soft": 2442,
+        "GS_nocover": 130
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "c2e560398ab9925b8519ff5c8774ed3dce43db47ef771b24bfad956cfca92a4f",
+        "fills": "86dc4279ca216b65dcfebd3c1545a72103663c08b19d73c2f31a7a70d1c3a81e",
+        "requests": "667e03abf2044d4d718f4f9837573d3981b89165bab1043a024476c970aaf25b"
+      }
+    },
+    {
+      "day": "20261025",
+      "timing": "J",
+      "mode": "earlier",
+      "variant": "urgent_quote",
+      "markets": 288,
+      "settle": 261.2707037893965,
+      "plus1": 67.23230359611016,
+      "mark_stop": 202.92147791152328,
+      "carry": 58.34922587787323,
+      "shares": 4310.479366926575,
+      "fills": 672,
+      "requests": {
+        "place": 45153,
+        "cancel": 45055
+      },
+      "refusals": 2,
+      "abs_net_end_mean": 6.442674343683245,
+      "abs_net_end_p95": 25.0,
+      "mean_time_weighted_abs_net_60_300": 7.15415069829712,
+      "inventory_population": {
+        "markets": 163,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 11.374909269820701,
+        "flat_below_one_share_fraction": 0.2147239263803681
+      },
+      "reducing_shares": 717.113701678886,
+      "opening_shares_after60": 65.34669879417278,
+      "zero_crossings_after60": 4,
+      "overshoot_shares": 15.006698794172774,
+      "reducing_mo1": 9.116725621586706,
+      "fill_weighted_age_ms": 126.56109900781732,
+      "generations": {
+        "place_attempts": 45153,
+        "accepted_orders": 45014,
+        "filled_generations_lower": 394,
+        "filled_generations_upper": 394,
+        "ambiguous_create_keys": 1,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.008752832452126005,
+        "accepted_order_fill_fraction_upper": 0.008752832452126005,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 14003,
+        "capacity_checks": 47255,
+        "would_clip_capacity": 1,
+        "place_never": 1276,
+        "place_immediate": 44759,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "zombies": 44869,
+        "prio_reordered": 238,
+        "zombie_fills": 313,
+        "reduce_price_shift_decisions": 688,
+        "postonly_refused": 139,
+        "rej_reset": 57,
+        "throttled": 2100,
+        "place_delayed": 394,
+        "view_filled_unknown": 468,
+        "acted_on_unknown_fill": 104,
+        "refused": 2,
+        "refused_minimum": 1,
+        "refused_netcap": 1
+      },
+      "withheld": {
+        "BTC": 1116498,
+        "G4": 1389143,
+        "G3": 46557,
+        "LD_RO": 232388,
+        "RO": 111860,
+        "LD_CAPN": 17036,
+        "CAPN": 13280,
+        "MIN_USD": 18953,
+        "LD_dup_touch": 262,
+        "LD_MIN_USD": 1983,
+        "LD_G6_soft": 3045,
+        "G6_soft": 2442,
+        "GS_nocover": 130
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "55a66ae7bb7f05fc2523f47f940993569333bd5d953762068726c5acb776fa82",
+        "fills": "f8407fd64df4bd3cfb6d3f2e03d989e27d081752587f0194ecde84f2bccf6ea7",
+        "requests": "33641776a33496cb4f17510e912ebb5880b47e89b3858023aafd8da9892f2ab5"
+      }
+    },
+    {
+      "day": "20261026",
+      "timing": "J",
+      "mode": "earlier",
+      "variant": "baseline",
+      "markets": 288,
+      "settle": 273.25746807923446,
+      "plus1": 122.38594165734223,
+      "mark_stop": 177.79089619017373,
+      "carry": 95.46657188906076,
+      "shares": 5715.44705062139,
+      "fills": 771,
+      "requests": {
+        "place": 41220,
+        "cancel": 41150
+      },
+      "refusals": 5,
+      "abs_net_end_mean": 7.715548241905582,
+      "abs_net_end_p95": 33.807052631578905,
+      "mean_time_weighted_abs_net_60_300": 8.286005508521267,
+      "inventory_population": {
+        "markets": 172,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 12.913462687443234,
+        "flat_below_one_share_fraction": 0.21511627906976744
+      },
+      "reducing_shares": 836.2004491566349,
+      "opening_shares_after60": 46.1875756097561,
+      "zero_crossings_after60": 4,
+      "overshoot_shares": 37.727575609756094,
+      "reducing_mo1": 20.146237093988894,
+      "fill_weighted_age_ms": 57.62683859061858,
+      "generations": {
+        "place_attempts": 41220,
+        "accepted_orders": 41141,
+        "filled_generations_lower": 429,
+        "filled_generations_upper": 429,
+        "ambiguous_create_keys": 0,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.010427554021535694,
+        "accepted_order_fill_fraction_upper": 0.010427554021535694,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 10684,
+        "capacity_checks": 41850,
+        "would_clip_capacity": 0,
+        "place_never": 486,
+        "place_immediate": 41130,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "zombies": 41018,
+        "prio_reordered": 271,
+        "postonly_refused": 79,
+        "rej_reset": 36,
+        "zombie_fills": 362,
+        "view_filled_unknown": 378,
+        "acted_on_unknown_fill": 89,
+        "throttled": 625,
+        "place_delayed": 90,
+        "refused": 5,
+        "refused_minimum": 5
+      },
+      "withheld": {
+        "G4": 1461513,
+        "G3": 23857,
+        "BTC": 1282428,
+        "LD_CAPN": 10061,
+        "CAPN": 7976,
+        "LD_RO": 159427,
+        "RO": 78384,
+        "LD_dup_touch": 169,
+        "LD_MIN_USD": 578,
+        "MIN_USD": 14194,
+        "LD_G6_soft": 2594,
+        "G6_soft": 1905,
+        "GS_nocover": 102
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "62842802c85f4237ade67cdf403f8ed98dba37cb667c28ef28e7ec646fdb7e0d",
+        "fills": "4b347df319c474f90feef9f803c9672032593893b9227ff6c4ac8ac0f6d21d14",
+        "requests": "e7410c80cf0905fb14571307d287c061b00e8ebf537077b0ac6b79c7373fd73e"
+      }
+    },
+    {
+      "day": "20261026",
+      "timing": "J",
+      "mode": "earlier",
+      "variant": "urgent_quote",
+      "markets": 288,
+      "settle": 272.23965061601734,
+      "plus1": 121.94966265566354,
+      "mark_stop": 176.8561556500335,
+      "carry": 95.38349496598383,
+      "shares": 5720.985512159852,
+      "fills": 772,
+      "requests": {
+        "place": 41226,
+        "cancel": 41153
+      },
+      "refusals": 5,
+      "abs_net_end_mean": 7.696317472674813,
+      "abs_net_end_p95": 33.807052631578905,
+      "mean_time_weighted_abs_net_60_300": 8.277322692265257,
+      "inventory_population": {
+        "markets": 172,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 12.881262329661478,
+        "flat_below_one_share_fraction": 0.21511627906976744
+      },
+      "reducing_shares": 841.7389106950966,
+      "opening_shares_after60": 46.1875756097561,
+      "zero_crossings_after60": 4,
+      "overshoot_shares": 37.727575609756094,
+      "reducing_mo1": 19.909958092310212,
+      "fill_weighted_age_ms": 57.61795755783525,
+      "generations": {
+        "place_attempts": 41226,
+        "accepted_orders": 41138,
+        "filled_generations_lower": 430,
+        "filled_generations_upper": 430,
+        "ambiguous_create_keys": 0,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.010452622879089893,
+        "accepted_order_fill_fraction_upper": 0.010452622879089893,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 10684,
+        "capacity_checks": 41856,
+        "would_clip_capacity": 0,
+        "place_never": 486,
+        "place_immediate": 41136,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "zombies": 41015,
+        "prio_reordered": 272,
+        "postonly_refused": 88,
+        "rej_reset": 39,
+        "zombie_fills": 363,
+        "view_filled_unknown": 405,
+        "acted_on_unknown_fill": 89,
+        "throttled": 625,
+        "place_delayed": 90,
+        "reduce_price_shift_decisions": 438,
+        "refused": 5,
+        "refused_minimum": 5
+      },
+      "withheld": {
+        "G4": 1461513,
+        "G3": 23857,
+        "BTC": 1282428,
+        "LD_CAPN": 10061,
+        "CAPN": 7976,
+        "LD_RO": 159427,
+        "RO": 78384,
+        "LD_dup_touch": 169,
+        "LD_MIN_USD": 578,
+        "MIN_USD": 14185,
+        "LD_G6_soft": 2594,
+        "G6_soft": 1905,
+        "GS_nocover": 102
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "d7e03196e4bdfb87e406f0ea8a6016df65c82b026e9c0a47169c1407f03f3bf5",
+        "fills": "13a3adb587fd7cf352212bf1ad3bde0796a8c79bbf5bb175d257275d7fa758fe",
+        "requests": "06cfa5ba2c7d40912f51e04124604547e174f4fbd37d883ac2a29240895c27fc"
+      }
+    },
+    {
+      "day": "20261023",
+      "timing": "X",
+      "mode": "earlier",
+      "variant": "baseline",
+      "markets": 288,
+      "settle": 29.34926168195638,
+      "plus1": 53.92316343106839,
+      "mark_stop": 87.20152097497113,
+      "carry": -57.852259293014754,
+      "shares": 3427.5869168094064,
+      "fills": 599,
+      "requests": {
+        "place": 38804,
+        "cancel": 38745
+      },
+      "refusals": 4,
+      "abs_net_end_mean": 6.124180138813987,
+      "abs_net_end_p95": 25.0,
+      "mean_time_weighted_abs_net_60_300": 6.415479393691369,
+      "inventory_population": {
+        "markets": 142,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 12.40816873819066,
+        "flat_below_one_share_fraction": 0.11971830985915492
+      },
+      "reducing_shares": 377.42569191438173,
+      "opening_shares_after60": 3.552713678800501e-15,
+      "zero_crossings_after60": 0,
+      "overshoot_shares": 0.0,
+      "reducing_mo1": 7.483680103148686,
+      "fill_weighted_age_ms": 84.90567805778379,
+      "generations": {
+        "place_attempts": 38804,
+        "accepted_orders": 38744,
+        "filled_generations_lower": 302,
+        "filled_generations_upper": 302,
+        "ambiguous_create_keys": 0,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.0077947553169523025,
+        "accepted_order_fill_fraction_upper": 0.0077947553169523025,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 20108,
+        "capacity_checks": 39344,
+        "would_clip_capacity": 0,
+        "place_never": 386,
+        "place_immediate": 38720,
+        "qact_raised": 20384,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "zombies": 38659,
+        "prio_reordered": 245,
+        "zombie_fills": 293,
+        "view_filled_unknown": 270,
+        "acted_on_unknown_fill": 61,
+        "throttled": 536,
+        "postonly_refused": 60,
+        "rej_reset": 35,
+        "place_delayed": 84,
+        "refused": 4,
+        "refused_minimum": 4
+      },
+      "withheld": {
+        "BTC": 1228318,
+        "G4": 1444790,
+        "G3": 38619,
+        "LD_MIN_USD": 1696,
+        "MIN_USD": 21209,
+        "LD_dup_touch": 196,
+        "LD_RO": 191930,
+        "RO": 88179,
+        "LD_CAPN": 10625,
+        "CAPN": 7897,
+        "GS_nocover": 146,
+        "LD_G6_soft": 882,
+        "G6_soft": 600
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "4efece650eeecb5808d272c07e99c999183ee5c87e32acabb06671e50335cf38",
+        "fills": "c67d7293a983a66bc3479cb275219e56ed28fd3e11d5683f7b80de7e162a9b71",
+        "requests": "156bb577557727924d1874ab215048832c838cdb73bc8993f3db7af7c8f07c84"
+      }
+    },
+    {
+      "day": "20261023",
+      "timing": "X",
+      "mode": "earlier",
+      "variant": "urgent_quote",
+      "markets": 288,
+      "settle": 32.827260594999856,
+      "plus1": 53.8674536484597,
+      "mark_stop": 89.1219242358407,
+      "carry": -56.29466364084083,
+      "shares": 3431.7338733311453,
+      "fills": 603,
+      "requests": {
+        "place": 38777,
+        "cancel": 38717
+      },
+      "refusals": 4,
+      "abs_net_end_mean": 6.109780984224615,
+      "abs_net_end_p95": 25.0,
+      "mean_time_weighted_abs_net_60_300": 6.4041490076456755,
+      "inventory_population": {
+        "markets": 142,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 12.378964819023484,
+        "flat_below_one_share_fraction": 0.11971830985915492
+      },
+      "reducing_shares": 381.57264843612086,
+      "opening_shares_after60": 3.552713678800501e-15,
+      "zero_crossings_after60": 0,
+      "overshoot_shares": 0.0,
+      "reducing_mo1": 7.42797032053999,
+      "fill_weighted_age_ms": 84.76184231845465,
+      "generations": {
+        "place_attempts": 38777,
+        "accepted_orders": 38714,
+        "filled_generations_lower": 304,
+        "filled_generations_upper": 304,
+        "ambiguous_create_keys": 0,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.007852456475693548,
+        "accepted_order_fill_fraction_upper": 0.007852456475693548,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 20108,
+        "capacity_checks": 39317,
+        "would_clip_capacity": 0,
+        "place_never": 386,
+        "place_immediate": 38693,
+        "qact_raised": 20394,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "zombies": 38628,
+        "prio_reordered": 245,
+        "zombie_fills": 293,
+        "view_filled_unknown": 284,
+        "acted_on_unknown_fill": 62,
+        "throttled": 536,
+        "postonly_refused": 63,
+        "rej_reset": 36,
+        "place_delayed": 84,
+        "reduce_price_shift_decisions": 377,
+        "refused": 4,
+        "refused_minimum": 4
+      },
+      "withheld": {
+        "BTC": 1228318,
+        "G4": 1444790,
+        "G3": 38619,
+        "LD_MIN_USD": 1696,
+        "MIN_USD": 21211,
+        "LD_dup_touch": 196,
+        "LD_RO": 191930,
+        "RO": 88229,
+        "LD_CAPN": 10625,
+        "CAPN": 7897,
+        "GS_nocover": 146,
+        "LD_G6_soft": 882,
+        "G6_soft": 600
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "8c00de0c0f16d342fccc77f52077e6bcb9cdc78cf5e97fd9e47f25478b1a2735",
+        "fills": "e9eb98894c55153f6f714a9e57aac2c392d2cd4ba60ddd4edf73afd903c5e597",
+        "requests": "3b7c73271025c7742aac90e7f67882445786d26686bef23b3e579348eeaec51d"
+      }
+    },
+    {
+      "day": "20261024",
+      "timing": "X",
+      "mode": "earlier",
+      "variant": "baseline",
+      "markets": 288,
+      "settle": 20.180419909039003,
+      "plus1": 61.8005454851083,
+      "mark_stop": 75.01103808111998,
+      "carry": -54.83061817208099,
+      "shares": 4087.1782929767605,
+      "fills": 668,
+      "requests": {
+        "place": 42635,
+        "cancel": 42547
+      },
+      "refusals": 12,
+      "abs_net_end_mean": 6.217841832210141,
+      "abs_net_end_p95": 30.0,
+      "mean_time_weighted_abs_net_60_300": 6.87984447118195,
+      "inventory_population": {
+        "markets": 140,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 12.789288231703038,
+        "flat_below_one_share_fraction": 0.19285714285714287
+      },
+      "reducing_shares": 662.4131162277523,
+      "opening_shares_after60": 19.01181141439209,
+      "zero_crossings_after60": 2,
+      "overshoot_shares": 3.0418114143920896,
+      "reducing_mo1": 7.588631981680325,
+      "fill_weighted_age_ms": 102.11526868914365,
+      "generations": {
+        "place_attempts": 42635,
+        "accepted_orders": 42533,
+        "filled_generations_lower": 332,
+        "filled_generations_upper": 332,
+        "ambiguous_create_keys": 0,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.007805703806456164,
+        "accepted_order_fill_fraction_upper": 0.007805703806456164,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 22907,
+        "capacity_checks": 44467,
+        "would_clip_capacity": 3,
+        "place_never": 1116,
+        "place_immediate": 42285,
+        "qact_raised": 17490,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "zombies": 42394,
+        "prio_reordered": 251,
+        "zombie_fills": 264,
+        "view_filled_unknown": 416,
+        "acted_on_unknown_fill": 95,
+        "postonly_refused": 102,
+        "throttled": 1820,
+        "place_delayed": 350,
+        "rej_reset": 44,
+        "refused": 12,
+        "refused_netcap": 3,
+        "refused_minimum": 9
+      },
+      "withheld": {
+        "G4": 1428029,
+        "BTC": 1193310,
+        "G3": 32574,
+        "LD_dup_touch": 278,
+        "LD_RO": 212384,
+        "RO": 101943,
+        "MIN_USD": 18908,
+        "LD_MIN_USD": 1441,
+        "LD_CAPN": 11276,
+        "CAPN": 8378,
+        "GS_nocover": 112,
+        "LD_G6_soft": 4218,
+        "G6_soft": 3010
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "1787af40c553e11d7f2f134004be93cf062e7f08dd0a570596a12827b2e8c3ad",
+        "fills": "335146544ff14e3bafd905b62534a09033e65f140e8e73f05e1487a5f8295a1a",
+        "requests": "95632aaaea9148957dd55db8b371a5b35484fd61e8f535cb16f0bbced3821dae"
+      }
+    },
+    {
+      "day": "20261024",
+      "timing": "X",
+      "mode": "earlier",
+      "variant": "urgent_quote",
+      "markets": 288,
+      "settle": 19.744334342028694,
+      "plus1": 62.6523954851083,
+      "mark_stop": 72.4710184934911,
+      "carry": -52.72668415146242,
+      "shares": 4099.422932152018,
+      "fills": 675,
+      "requests": {
+        "place": 42628,
+        "cancel": 42534
+      },
+      "refusals": 12,
+      "abs_net_end_mean": 6.175325723962718,
+      "abs_net_end_p95": 30.0,
+      "mean_time_weighted_abs_net_60_300": 6.8499515937403554,
+      "inventory_population": {
+        "markets": 140,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 12.701826523308341,
+        "flat_below_one_share_fraction": 0.18571428571428572
+      },
+      "reducing_shares": 674.65775540301,
+      "opening_shares_after60": 19.01181141439209,
+      "zero_crossings_after60": 2,
+      "overshoot_shares": 3.0418114143920896,
+      "reducing_mo1": 8.440481981680325,
+      "fill_weighted_age_ms": 103.0712310805963,
+      "generations": {
+        "place_attempts": 42628,
+        "accepted_orders": 42512,
+        "filled_generations_lower": 334,
+        "filled_generations_upper": 334,
+        "ambiguous_create_keys": 0,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.007856605193827625,
+        "accepted_order_fill_fraction_upper": 0.007856605193827625,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 22907,
+        "capacity_checks": 44460,
+        "would_clip_capacity": 3,
+        "place_never": 1116,
+        "place_immediate": 42278,
+        "qact_raised": 17504,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "zombies": 42372,
+        "prio_reordered": 251,
+        "zombie_fills": 266,
+        "view_filled_unknown": 457,
+        "acted_on_unknown_fill": 96,
+        "postonly_refused": 116,
+        "reduce_price_shift_decisions": 439,
+        "throttled": 1820,
+        "place_delayed": 350,
+        "rej_reset": 50,
+        "refused": 12,
+        "refused_netcap": 3,
+        "refused_minimum": 9
+      },
+      "withheld": {
+        "G4": 1428029,
+        "BTC": 1193310,
+        "G3": 32574,
+        "LD_dup_touch": 278,
+        "LD_RO": 212384,
+        "RO": 101943,
+        "MIN_USD": 18937,
+        "LD_MIN_USD": 1441,
+        "LD_CAPN": 11276,
+        "CAPN": 8378,
+        "GS_nocover": 112,
+        "LD_G6_soft": 4218,
+        "G6_soft": 3010
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "c6f533b708424e36dce13ced8799ccdd53ddabbc3a6bc505aaebdddbc55adc8b",
+        "fills": "b949a9eb3f30e78c0d22678598651d096c8a9a150475f46a260bba64014161db",
+        "requests": "6b11d0cd37bf7a2f22fcc6eb548ee8b1257e754cdde1db285996df9fae4996f7"
+      }
+    },
+    {
+      "day": "20261025",
+      "timing": "X",
+      "mode": "earlier",
+      "variant": "baseline",
+      "markets": 288,
+      "settle": 228.0474933820102,
+      "plus1": 56.89587718706608,
+      "mark_stop": 122.73996991294109,
+      "carry": 105.3075234690691,
+      "shares": 3483.548315958322,
+      "fills": 586,
+      "requests": {
+        "place": 45483,
+        "cancel": 45388
+      },
+      "refusals": 11,
+      "abs_net_end_mean": 6.164532573355049,
+      "abs_net_end_p95": 26.26749999999996,
+      "mean_time_weighted_abs_net_60_300": 6.548965423491931,
+      "inventory_population": {
+        "markets": 145,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 12.244037111215547,
+        "flat_below_one_share_fraction": 0.1724137931034483
+      },
+      "reducing_shares": 458.7831823550056,
+      "opening_shares_after60": 14.000000000000004,
+      "zero_crossings_after60": 1,
+      "overshoot_shares": 4.0,
+      "reducing_mo1": 5.116566454100001,
+      "fill_weighted_age_ms": 202.28247193029722,
+      "generations": {
+        "place_attempts": 45483,
+        "accepted_orders": 45356,
+        "filled_generations_lower": 311,
+        "filled_generations_upper": 311,
+        "ambiguous_create_keys": 1,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.006856865684804657,
+        "accepted_order_fill_fraction_upper": 0.006856865684804657,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 21916,
+        "capacity_checks": 47829,
+        "would_clip_capacity": 1,
+        "place_never": 1430,
+        "place_immediate": 45060,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "qact_raised": 17472,
+        "zombies": 45230,
+        "prio_reordered": 177,
+        "postonly_refused": 127,
+        "zombie_fills": 246,
+        "view_filled_unknown": 384,
+        "acted_on_unknown_fill": 83,
+        "throttled": 2335,
+        "place_delayed": 423,
+        "rej_reset": 52,
+        "refused": 11,
+        "refused_minimum": 10,
+        "refused_netcap": 1
+      },
+      "withheld": {
+        "BTC": 1116497,
+        "G4": 1389145,
+        "G3": 46557,
+        "LD_RO": 231147,
+        "RO": 112846,
+        "LD_dup_touch": 271,
+        "LD_CAPN": 12790,
+        "CAPN": 9776,
+        "MIN_USD": 19919,
+        "LD_MIN_USD": 2040,
+        "LD_G6_soft": 5284,
+        "G6_soft": 3657,
+        "GS_nocover": 130
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "a06100e1e9c317c2d9fc7579b182cd985219af8cd94cd52a309d739227a0deee",
+        "fills": "c84e43572d0d145dce8e6a0b1d9d5bbfc8edf4b72000b9b217727e56ff453e01",
+        "requests": "93150ab3c6f507f071a2ed62d02a24391a3cf39762a217f0b8dbf5e18e4cc0e2"
+      }
+    },
+    {
+      "day": "20261025",
+      "timing": "X",
+      "mode": "earlier",
+      "variant": "urgent_quote",
+      "markets": 288,
+      "settle": 228.3841013422092,
+      "plus1": 55.31428514726508,
+      "mark_stop": 121.36687787314008,
+      "carry": 107.0172234690691,
+      "shares": 3491.888315958322,
+      "fills": 587,
+      "requests": {
+        "place": 45478,
+        "cancel": 45377
+      },
+      "refusals": 11,
+      "abs_net_end_mean": 6.1355742400217155,
+      "abs_net_end_p95": 26.26749999999996,
+      "mean_time_weighted_abs_net_60_300": 6.536598405262764,
+      "inventory_population": {
+        "markets": 145,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 12.186519869836236,
+        "flat_below_one_share_fraction": 0.1724137931034483
+      },
+      "reducing_shares": 467.12318235500555,
+      "opening_shares_after60": 14.000000000000004,
+      "zero_crossings_after60": 1,
+      "overshoot_shares": 4.0,
+      "reducing_mo1": 3.5349744142990067,
+      "fill_weighted_age_ms": 201.94814070471415,
+      "generations": {
+        "place_attempts": 45478,
+        "accepted_orders": 45337,
+        "filled_generations_lower": 312,
+        "filled_generations_upper": 312,
+        "ambiguous_create_keys": 1,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.006881796325297219,
+        "accepted_order_fill_fraction_upper": 0.006881796325297219,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 21916,
+        "capacity_checks": 47823,
+        "would_clip_capacity": 1,
+        "place_never": 1429,
+        "place_immediate": 45055,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "qact_raised": 17480,
+        "zombies": 45211,
+        "prio_reordered": 178,
+        "postonly_refused": 141,
+        "zombie_fills": 247,
+        "view_filled_unknown": 406,
+        "acted_on_unknown_fill": 83,
+        "reduce_price_shift_decisions": 543,
+        "rej_reset": 58,
+        "throttled": 2334,
+        "place_delayed": 423,
+        "refused": 11,
+        "refused_minimum": 10,
+        "refused_netcap": 1
+      },
+      "withheld": {
+        "BTC": 1116497,
+        "G4": 1389145,
+        "G3": 46557,
+        "LD_RO": 231147,
+        "RO": 112846,
+        "LD_dup_touch": 271,
+        "LD_CAPN": 12790,
+        "CAPN": 9776,
+        "MIN_USD": 19913,
+        "LD_MIN_USD": 2040,
+        "LD_G6_soft": 5284,
+        "G6_soft": 3657,
+        "GS_nocover": 130
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "a152e8c867110db6fe71170f3d51d8fad6e71b4503b7d5bcd5e9445d88fa80a9",
+        "fills": "1b21e1f750eed279349ece6be708ccd9d0cca72f4f3b32024c2195b6bc7a1765",
+        "requests": "5df7d98b78fc314d5da69aaa7ad9ea177f67dc85e2271812c6fad214a552d96c"
+      }
+    },
+    {
+      "day": "20261026",
+      "timing": "X",
+      "mode": "earlier",
+      "variant": "baseline",
+      "markets": 288,
+      "settle": 155.99502257001254,
+      "plus1": 107.8207847132491,
+      "mark_stop": 73.89061134483224,
+      "carry": 82.1044112251803,
+      "shares": 4656.757506175898,
+      "fills": 761,
+      "requests": {
+        "place": 41118,
+        "cancel": 41048
+      },
+      "refusals": 5,
+      "abs_net_end_mean": 6.477489620924988,
+      "abs_net_end_p95": 26.349999999999962,
+      "mean_time_weighted_abs_net_60_300": 7.011196694032318,
+      "inventory_population": {
+        "markets": 149,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 12.51536785789528,
+        "flat_below_one_share_fraction": 0.18120805369127516
+      },
+      "reducing_shares": 657.4119308871922,
+      "opening_shares_after60": 6.0209756097561025,
+      "zero_crossings_after60": 1,
+      "overshoot_shares": 2.560975609756099,
+      "reducing_mo1": 15.036147862703025,
+      "fill_weighted_age_ms": 60.88143667807312,
+      "generations": {
+        "place_attempts": 41118,
+        "accepted_orders": 41043,
+        "filled_generations_lower": 361,
+        "filled_generations_upper": 361,
+        "ambiguous_create_keys": 0,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.00879565333918086,
+        "accepted_order_fill_fraction_upper": 0.00879565333918086,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 19016,
+        "capacity_checks": 41843,
+        "would_clip_capacity": 2,
+        "place_never": 557,
+        "place_immediate": 41015,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "zombies": 40931,
+        "qact_raised": 23880,
+        "prio_reordered": 253,
+        "postonly_refused": 75,
+        "rej_reset": 32,
+        "zombie_fills": 352,
+        "view_filled_unknown": 355,
+        "acted_on_unknown_fill": 74,
+        "throttled": 720,
+        "place_delayed": 103,
+        "refused": 5,
+        "refused_netcap": 2,
+        "refused_minimum": 3
+      },
+      "withheld": {
+        "G4": 1461517,
+        "G3": 23857,
+        "BTC": 1282426,
+        "LD_CAPN": 9256,
+        "CAPN": 7105,
+        "LD_dup_touch": 189,
+        "LD_RO": 160057,
+        "RO": 83240,
+        "LD_MIN_USD": 572,
+        "MIN_USD": 11872,
+        "GS_nocover": 102,
+        "LD_G6_soft": 1613,
+        "G6_soft": 1201
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "913fa96f97471741be22569be7884b52309a73500d62634812aae360d21b36a9",
+        "fills": "c5c8f42e7bb18e40a051f4bb55b58d48ae14dbadacf22930fefca54d2a5ac3bc",
+        "requests": "f11399b80d33e87dcd872c289333a8059badc48d19df8b250d33595dfcd7a85f"
+      }
+    },
+    {
+      "day": "20261026",
+      "timing": "X",
+      "mode": "earlier",
+      "variant": "urgent_quote",
+      "markets": 288,
+      "settle": 155.5171858396697,
+      "plus1": 107.9084945930035,
+      "mark_stop": 73.45685192559294,
+      "carry": 82.06033391407678,
+      "shares": 4667.989171705491,
+      "fills": 762,
+      "requests": {
+        "place": 41121,
+        "cancel": 41047
+      },
+      "refusals": 5,
+      "abs_net_end_mean": 6.438490782280571,
+      "abs_net_end_p95": 25.18571428571428,
+      "mean_time_weighted_abs_net_60_300": 6.993417549752776,
+      "inventory_population": {
+        "markets": 149,
+        "known_entry_min_abs_shares": 1,
+        "mean_abs_net_end": 12.439987552327544,
+        "flat_below_one_share_fraction": 0.18791946308724833
+      },
+      "reducing_shares": 668.6435964167846,
+      "opening_shares_after60": 6.0209756097561025,
+      "zero_crossings_after60": 1,
+      "overshoot_shares": 2.560975609756099,
+      "reducing_mo1": 15.123857742457417,
+      "fill_weighted_age_ms": 60.79019269941864,
+      "generations": {
+        "place_attempts": 41121,
+        "accepted_orders": 41038,
+        "filled_generations_lower": 363,
+        "filled_generations_upper": 363,
+        "ambiguous_create_keys": 0,
+        "ambiguous_filled_keys": 0,
+        "accepted_order_fill_fraction_lower": 0.008845460305083094,
+        "accepted_order_fill_fraction_upper": 0.008845460305083094,
+        "interpretation": "identification bounds, not confidence intervals; repeated identical creation timestamps lack unique order IDs"
+      },
+      "counters": {
+        "leg_groups_reordered": 19016,
+        "capacity_checks": 41846,
+        "would_clip_capacity": 2,
+        "place_never": 557,
+        "place_immediate": 41018,
+        "own_dup_price": 0,
+        "own_cross": 0,
+        "zombies": 40925,
+        "qact_raised": 23906,
+        "prio_reordered": 253,
+        "postonly_refused": 83,
+        "rej_reset": 36,
+        "zombie_fills": 353,
+        "view_filled_unknown": 385,
+        "acted_on_unknown_fill": 75,
+        "throttled": 720,
+        "place_delayed": 103,
+        "reduce_price_shift_decisions": 404,
+        "refused": 5,
+        "refused_netcap": 2,
+        "refused_minimum": 3
+      },
+      "withheld": {
+        "G4": 1461517,
+        "G3": 23857,
+        "BTC": 1282426,
+        "LD_CAPN": 9256,
+        "CAPN": 7105,
+        "LD_dup_touch": 189,
+        "LD_RO": 160057,
+        "RO": 83240,
+        "LD_MIN_USD": 572,
+        "MIN_USD": 11874,
+        "GS_nocover": 102,
+        "LD_G6_soft": 1613,
+        "G6_soft": 1201
+      },
+      "statuses": {
+        "eligible_markets": 288,
+        "excluded_markets": 0,
+        "missing_valuations": {
+          "mo1": 0,
+          "mark_stop": 0
+        }
+      },
+      "artifact_sha": {
+        "win": "a67d757676db987366402a45a88e9f46477f9343b432bc2c8354e29f2a1c9598",
+        "fills": "c04a0af97d75dd2a10d4484d873ce4e34695b6c78ea1308428b3a2904b100d81",
+        "requests": "7f0e220bc9c0c04289a220d86866b9a2b05ccb2f50d1f9b50f9284a34335f675"
+      }
+    }
+  ],
+  "comparisons": {
+    "J": {
+      "earlier": {
+        "days": 4,
+        "markets": 1152,
+        "baseline": {
+          "settle": 691.6287170933567,
+          "plus1": 340.8668818063644,
+          "mark_stop": 529.2223180735436,
+          "carry": 162.40639901981302,
+          "reducing_shares": 2696.0781326373,
+          "reducing_mo1": 53.34100547484426,
+          "shares": 18653.21761253008
+        },
+        "urgency": {
+          "settle": 670.9388620110919,
+          "plus1": 340.7926651856381,
+          "mark_stop": 522.5483232476892,
+          "carry": 148.39053876340276,
+          "reducing_shares": 2783.953260842428,
+          "reducing_mo1": 53.46678885411796,
+          "shares": 18741.092740735206
+        },
+        "delta": {
+          "settle": -20.689855082264785,
+          "plus1": -0.07421662072630397,
+          "mark_stop": -6.673994825854493,
+          "carry": -14.015860256410264,
+          "reducing_shares": 87.87512820512802,
+          "reducing_mo1": 0.12578337927369887,
+          "shares": 87.87512820512711
+        },
+        "mean_abs_net_end": {
+          "baseline": 6.958094646119543,
+          "urgency": 6.881814152885926
+        },
+        "requests": {
+          "baseline": {
+            "place": 168383,
+            "cancel": 168066
+          },
+          "urgency": {
+            "place": 168326,
+            "cancel": 167986
+          }
+        },
+        "days_better": 2,
+        "days_worse": 2,
+        "leave_one_out_delta": [
+          -26.708998415598103,
+          6.342111584401877
+        ],
+        "per_day": [
+          {
+            "day": "20261023",
+            "settle_delta": 1.340785714285687,
+            "plus1_delta": -0.3925142857142703
+          },
+          {
+            "day": "20261024",
+            "settle_delta": 6.019143333333304,
+            "plus1_delta": 0.079260000000005
+          },
+          {
+            "day": "20261025",
+            "settle_delta": -27.031966666666676,
+            "plus1_delta": 0.6753166666666743
+          },
+          {
+            "day": "20261026",
+            "settle_delta": -1.0178174632171135,
+            "plus1_delta": -0.4362790016786846
+          }
+        ]
+      },
+      "previous": {
+        "days": 5,
+        "markets": 1440,
+        "baseline": {
+          "settle": -177.57283408393778,
+          "plus1": 261.96449564194495,
+          "mark_stop": 147.89440556592427,
+          "carry": -325.467239649862,
+          "reducing_shares": 2132.460343976547,
+          "reducing_mo1": 42.51818854904859,
+          "shares": 16301.531841020733
+        },
+        "urgency": {
+          "settle": -166.664374314707,
+          "plus1": 259.9668400265603,
+          "mark_stop": 157.55671148900115,
+          "carry": -324.22108580370815,
+          "reducing_shares": 2145.53726705347,
+          "reducing_mo1": 40.52053293366397,
+          "shares": 16314.608764097657
+        },
+        "delta": {
+          "settle": 10.908459769230774,
+          "plus1": -1.9976556153846445,
+          "mark_stop": 9.662305923076872,
+          "carry": 1.2461538461538453,
+          "reducing_shares": 13.076923076922867,
+          "reducing_mo1": -1.9976556153846161,
+          "shares": 13.076923076923777
+        },
+        "mean_abs_net_end": {
+          "baseline": 6.236294606867846,
+          "urgency": 6.227213410286647
+        },
+        "requests": {
+          "baseline": {
+            "place": 203919,
+            "cancel": 203677
+          },
+          "urgency": {
+            "place": 203917,
+            "cancel": 203651
+          }
+        },
+        "days_better": 4,
+        "days_worse": 1,
+        "leave_one_out_delta": [
+          5.658459769230774,
+          10.993459769230789
+        ],
+        "per_day": [
+          {
+            "day": "20261027",
+            "settle_delta": 3.9764160000000004,
+            "plus1_delta": -0.1735840000000053
+          },
+          {
+            "day": "20261031",
+            "settle_delta": 5.250000000000014,
+            "plus1_delta": 0.12850000000000072
+          },
+          {
+            "day": "20261101",
+            "settle_delta": 0.2499999999999929,
+            "plus1_delta": 0.02500000000000213
+          },
+          {
+            "day": "20261102",
+            "settle_delta": 1.5170437692307814,
+            "plus1_delta": -2.092571615384614
+          },
+          {
+            "day": "20261103",
+            "settle_delta": -0.08500000000000085,
+            "plus1_delta": 0.11500000000000199
+          }
+        ]
+      },
+      "pooled": {
+        "days": 9,
+        "markets": 2592,
+        "baseline": {
+          "settle": 514.055883009419,
+          "plus1": 602.8313774483094,
+          "mark_stop": 677.116723639468,
+          "carry": -163.06084063004897,
+          "reducing_shares": 4828.538476613847,
+          "reducing_mo1": 95.85919402389285,
+          "shares": 34954.749453550816
+        },
+        "urgency": {
+          "settle": 504.274487696385,
+          "plus1": 600.7595052121984,
+          "mark_stop": 680.1050347366903,
+          "carry": -175.83054704030542,
+          "reducing_shares": 4929.490527895898,
+          "reducing_mo1": 93.98732178778192,
+          "shares": 35055.70150483286
+        },
+        "delta": {
+          "settle": -9.781395313033954,
+          "plus1": -2.0718722361109485,
+          "mark_stop": 2.988311097222322,
+          "carry": -12.769706410256447,
+          "reducing_shares": 100.95205128205089,
+          "reducing_mo1": -1.8718722361109315,
+          "shares": 100.95205128204543
+        },
+        "mean_abs_net_end": {
+          "baseline": 6.557094624313043,
+          "urgency": 6.518147073664105
+        },
+        "requests": {
+          "baseline": {
+            "place": 372302,
+            "cancel": 371743
+          },
+          "urgency": {
+            "place": 372243,
+            "cancel": 371637
+          }
+        },
+        "days_better": 6,
+        "days_worse": 3,
+        "leave_one_out_delta": [
+          -15.800538646367315,
+          17.250571353632665
+        ],
+        "per_day": [
+          {
+            "day": "20261023",
+            "settle_delta": 1.340785714285687,
+            "plus1_delta": -0.3925142857142703
+          },
+          {
+            "day": "20261024",
+            "settle_delta": 6.019143333333304,
+            "plus1_delta": 0.079260000000005
+          },
+          {
+            "day": "20261025",
+            "settle_delta": -27.031966666666676,
+            "plus1_delta": 0.6753166666666743
+          },
+          {
+            "day": "20261026",
+            "settle_delta": -1.0178174632171135,
+            "plus1_delta": -0.4362790016786846
+          },
+          {
+            "day": "20261027",
+            "settle_delta": 3.9764160000000004,
+            "plus1_delta": -0.1735840000000053
+          },
+          {
+            "day": "20261031",
+            "settle_delta": 5.250000000000014,
+            "plus1_delta": 0.12850000000000072
+          },
+          {
+            "day": "20261101",
+            "settle_delta": 0.2499999999999929,
+            "plus1_delta": 0.02500000000000213
+          },
+          {
+            "day": "20261102",
+            "settle_delta": 1.5170437692307814,
+            "plus1_delta": -2.092571615384614
+          },
+          {
+            "day": "20261103",
+            "settle_delta": -0.08500000000000085,
+            "plus1_delta": 0.11500000000000199
+          }
+        ]
+      }
+    },
+    "X": {
+      "earlier": {
+        "days": 4,
+        "markets": 1152,
+        "baseline": {
+          "settle": 433.57219754301815,
+          "plus1": 280.44037081649185,
+          "mark_stop": 358.8431403138644,
+          "carry": 74.72905722915365,
+          "reducing_shares": 2156.0339213843317,
+          "reducing_mo1": 35.225026401632036,
+          "shares": 15655.071031920386
+        },
+        "urgency": {
+          "settle": 436.4728821189075,
+          "plus1": 279.74262887383657,
+          "mark_stop": 356.41667252806485,
+          "carry": 80.05620959084263,
+          "reducing_shares": 2191.997182610921,
+          "reducing_mo1": 34.52728445897674,
+          "shares": 15691.034293146975
+        },
+        "delta": {
+          "settle": 2.900684575889329,
+          "plus1": -0.6977419426552842,
+          "mark_stop": -2.4264677857995594,
+          "carry": 5.327152361688974,
+          "reducing_shares": 35.96326122658911,
+          "reducing_mo1": -0.6977419426552984,
+          "shares": 35.963261226588656
+        },
+        "mean_abs_net_end": {
+          "baseline": 6.2460110413260415,
+          "urgency": 6.214792932622405
+        },
+        "requests": {
+          "baseline": {
+            "place": 168040,
+            "cancel": 167728
+          },
+          "urgency": {
+            "place": 168004,
+            "cancel": 167675
+          }
+        },
+        "days_better": 2,
+        "days_worse": 2,
+        "leave_one_out_delta": [
+          -0.5773143371541494,
+          3.3785213062321553
+        ],
+        "per_day": [
+          {
+            "day": "20261023",
+            "settle_delta": 3.477998913043475,
+            "plus1_delta": -0.05570978260868742
+          },
+          {
+            "day": "20261024",
+            "settle_delta": -0.4360855670103092,
+            "plus1_delta": 0.8518499999999989
+          },
+          {
+            "day": "20261025",
+            "settle_delta": 0.33660796019898953,
+            "plus1_delta": -1.581592039800995
+          },
+          {
+            "day": "20261026",
+            "settle_delta": -0.4778367303428297,
+            "plus1_delta": 0.08770987975439937
+          }
+        ]
+      },
+      "previous": {
+        "days": 5,
+        "markets": 1440,
+        "baseline": {
+          "settle": -115.94626871405131,
+          "plus1": 183.11566260841704,
+          "mark_stop": 72.3211630924898,
+          "carry": -188.2674318065411,
+          "reducing_shares": 1495.462882380693,
+          "reducing_mo1": 30.878438997288626,
+          "shares": 13026.73789834032
+        },
+        "urgency": {
+          "settle": -90.18315184392144,
+          "plus1": 183.96691097854688,
+          "mark_stop": 78.3863764626197,
+          "carry": -168.56952830654112,
+          "reducing_shares": 1502.321982380693,
+          "reducing_mo1": 31.729687367418496,
+          "shares": 13033.59699834032
+        },
+        "delta": {
+          "settle": 25.763116870129878,
+          "plus1": 0.8512483701298379,
+          "mark_stop": 6.0652133701298965,
+          "carry": 19.697903499999995,
+          "reducing_shares": 6.859100000000126,
+          "reducing_mo1": 0.8512483701298699,
+          "shares": 6.859099999999671
+        },
+        "mean_abs_net_end": {
+          "baseline": 5.299236063417842,
+          "urgency": 5.294472799528952
+        },
+        "requests": {
+          "baseline": {
+            "place": 203421,
+            "cancel": 203176
+          },
+          "urgency": {
+            "place": 203460,
+            "cancel": 203197
+          }
+        },
+        "days_better": 1,
+        "days_worse": 3,
+        "leave_one_out_delta": [
+          -3.3521861298701268,
+          28.73197300000001
+        ],
+        "per_day": [
+          {
+            "day": "20261027",
+            "settle_delta": -0.25,
+            "plus1_delta": -0.2500000000000142
+          },
+          {
+            "day": "20261031",
+            "settle_delta": -0.13333000000000084,
+            "plus1_delta": -0.13332999999999906
+          },
+          {
+            "day": "20261101",
+            "settle_delta": 0.0,
+            "plus1_delta": 0.0
+          },
+          {
+            "day": "20261102",
+            "settle_delta": 29.11530300000001,
+            "plus1_delta": 1.4705714999999948
+          },
+          {
+            "day": "20261103",
+            "settle_delta": -2.968856129870126,
+            "plus1_delta": -0.23599312987013832
+          }
+        ]
+      },
+      "pooled": {
+        "days": 9,
+        "markets": 2592,
+        "baseline": {
+          "settle": 317.6259288289668,
+          "plus1": 463.5560334249089,
+          "mark_stop": 431.16430340635424,
+          "carry": -113.53837457738746,
+          "reducing_shares": 3651.4968037650247,
+          "reducing_mo1": 66.10346539892066,
+          "shares": 28681.808930260704
+        },
+        "urgency": {
+          "settle": 346.289730274986,
+          "plus1": 463.70953985238344,
+          "mark_stop": 434.8030489906845,
+          "carry": -88.51331871569849,
+          "reducing_shares": 3694.319164991614,
+          "reducing_mo1": 66.25697182639523,
+          "shares": 28724.631291487294
+        },
+        "delta": {
+          "settle": 28.66380144601925,
+          "plus1": 0.15350642747455367,
+          "mark_stop": 3.638745584330252,
+          "carry": 25.02505586168897,
+          "reducing_shares": 42.82236122658924,
+          "reducing_mo1": 0.15350642747456789,
+          "shares": 42.82236122659015
+        },
+        "mean_abs_net_end": {
+          "baseline": 5.720024942488153,
+          "urgency": 5.70350396979271
+        },
+        "requests": {
+          "baseline": {
+            "place": 371461,
+            "cancel": 370904
+          },
+          "urgency": {
+            "place": 371464,
+            "cancel": 370872
+          }
+        },
+        "days_better": 3,
+        "days_worse": 5,
+        "leave_one_out_delta": [
+          -0.45150155398080116,
+          31.632657575889336
+        ],
+        "per_day": [
+          {
+            "day": "20261023",
+            "settle_delta": 3.477998913043475,
+            "plus1_delta": -0.05570978260868742
+          },
+          {
+            "day": "20261024",
+            "settle_delta": -0.4360855670103092,
+            "plus1_delta": 0.8518499999999989
+          },
+          {
+            "day": "20261025",
+            "settle_delta": 0.33660796019898953,
+            "plus1_delta": -1.581592039800995
+          },
+          {
+            "day": "20261026",
+            "settle_delta": -0.4778367303428297,
+            "plus1_delta": 0.08770987975439937
+          },
+          {
+            "day": "20261027",
+            "settle_delta": -0.25,
+            "plus1_delta": -0.2500000000000142
+          },
+          {
+            "day": "20261031",
+            "settle_delta": -0.13333000000000084,
+            "plus1_delta": -0.13332999999999906
+          },
+          {
+            "day": "20261101",
+            "settle_delta": 0.0,
+            "plus1_delta": 0.0
+          },
+          {
+            "day": "20261102",
+            "settle_delta": 29.11530300000001,
+            "plus1_delta": 1.4705714999999948
+          },
+          {
+            "day": "20261103",
+            "settle_delta": -2.968856129870126,
+            "plus1_delta": -0.23599312987013832
+          }
+        ]
+      }
+    }
+  },
+  "earlier_day_null": {
+    "J/settle": {
+      "mean_per_day": -5.1724637705662,
+      "interval": null,
+      "p_two_sided": 0.8680659670164917,
+      "p_max_t_family": 1.0
+    },
+    "J/plus1": {
+      "mean_per_day": -0.018554155181568888,
+      "interval": null,
+      "p_two_sided": 1.0,
+      "p_max_t_family": 1.0
+    },
+    "X/settle": {
+      "mean_per_day": 0.7251711439723314,
+      "interval": null,
+      "p_two_sided": 0.8730634682658671,
+      "p_max_t_family": 1.0
+    },
+    "X/plus1": {
+      "mean_per_day": -0.17443548566382105,
+      "interval": null,
+      "p_two_sided": 0.8780609695152424,
+      "p_max_t_family": 1.0
+    }
+  },
+  "checks": {
+    "J/20261023": {
+      "as_of": "2026-11-09T04:06:27.492628+00:00",
+      "markets": 288,
+      "day": "20261023",
+      "timing": "J",
+      "checks": [
+        {
+          "variant": "baseline",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "baseline",
+          "kind": "requests",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "requests",
+          "pre180_exact": true
+        }
+      ],
+      "baseline_exact": [
+        "win",
+        "fills",
+        "requests"
+      ],
+      "baseline_origin": "fresh replay",
+      "policy_source_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+    },
+    "J/20261024": {
+      "as_of": "2026-11-09T04:07:34.165261+00:00",
+      "markets": 288,
+      "day": "20261024",
+      "timing": "J",
+      "checks": [
+        {
+          "variant": "baseline",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "baseline",
+          "kind": "requests",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "requests",
+          "pre180_exact": true
+        }
+      ],
+      "baseline_exact": [
+        "win",
+        "fills",
+        "requests"
+      ],
+      "baseline_origin": "retained reference",
+      "policy_source_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+    },
+    "J/20261025": {
+      "as_of": "2026-11-09T04:08:35.066646+00:00",
+      "markets": 288,
+      "day": "20261025",
+      "timing": "J",
+      "checks": [
+        {
+          "variant": "baseline",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "baseline",
+          "kind": "requests",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "requests",
+          "pre180_exact": true
+        }
+      ],
+      "baseline_exact": [
+        "win",
+        "fills",
+        "requests"
+      ],
+      "baseline_origin": "retained reference",
+      "policy_source_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+    },
+    "J/20261026": {
+      "as_of": "2026-11-09T04:09:54.743949+00:00",
+      "markets": 288,
+      "day": "20261026",
+      "timing": "J",
+      "checks": [
+        {
+          "variant": "baseline",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "baseline",
+          "kind": "requests",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "requests",
+          "pre180_exact": true
+        }
+      ],
+      "baseline_exact": [
+        "win",
+        "fills",
+        "requests"
+      ],
+      "baseline_origin": "retained reference",
+      "policy_source_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+    },
+    "X/20261023": {
+      "as_of": "2026-11-09T04:11:44.544548+00:00",
+      "markets": 288,
+      "day": "20261023",
+      "timing": "X",
+      "checks": [
+        {
+          "variant": "baseline",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "baseline",
+          "kind": "requests",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "requests",
+          "pre180_exact": true
+        }
+      ],
+      "baseline_exact": [
+        "win",
+        "fills",
+        "requests"
+      ],
+      "baseline_origin": "fresh replay",
+      "policy_source_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+    },
+    "X/20261024": {
+      "as_of": "2026-11-09T04:12:50.485810+00:00",
+      "markets": 288,
+      "day": "20261024",
+      "timing": "X",
+      "checks": [
+        {
+          "variant": "baseline",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "baseline",
+          "kind": "requests",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "requests",
+          "pre180_exact": true
+        }
+      ],
+      "baseline_exact": [
+        "win",
+        "fills",
+        "requests"
+      ],
+      "baseline_origin": "retained reference",
+      "policy_source_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+    },
+    "X/20261025": {
+      "as_of": "2026-11-09T04:13:50.802291+00:00",
+      "markets": 288,
+      "day": "20261025",
+      "timing": "X",
+      "checks": [
+        {
+          "variant": "baseline",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "baseline",
+          "kind": "requests",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "requests",
+          "pre180_exact": true
+        }
+      ],
+      "baseline_exact": [
+        "win",
+        "fills",
+        "requests"
+      ],
+      "baseline_origin": "retained reference",
+      "policy_source_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+    },
+    "X/20261026": {
+      "as_of": "2026-11-09T04:15:10.807066+00:00",
+      "markets": 288,
+      "day": "20261026",
+      "timing": "X",
+      "checks": [
+        {
+          "variant": "baseline",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "baseline",
+          "kind": "requests",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "fills",
+          "pre180_exact": true
+        },
+        {
+          "variant": "urgent_quote",
+          "kind": "requests",
+          "pre180_exact": true
+        }
+      ],
+      "baseline_exact": [
+        "win",
+        "fills",
+        "requests"
+      ],
+      "baseline_origin": "retained reference",
+      "policy_source_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+    }
+  },
+  "execution_inputs": {
+    "J/20261023": {
+      "summary_sha": "3135dec71c4e73c166b4d44f4c532247cc05c82d6f7fad684bae77aeabcbb27c",
+      "execution": {
+        "cap_cache": false,
+        "cap_reused": 0,
+        "capacity_reused": 0,
+        "cancel_ack_ms": 0.0,
+        "adapter_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+      },
+      "baseline_reference": null,
+      "passive_audit_sha": "6e2829d2fa4dcd40b6b93a97b0824184b284418967c2dfd19e8c065eeced4727"
+    },
+    "J/20261024": {
+      "summary_sha": "59a9997406adc381acd06ec859af80b2dba3eda280224e66c74eaaa9b081fb30",
+      "execution": {
+        "cap_cache": false,
+        "cap_reused": 0,
+        "capacity_reused": 0,
+        "cancel_ack_ms": 0.0,
+        "adapter_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+      },
+      "baseline_reference": {
+        "summary_path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_J/20261024/summary.json",
+        "summary_sha": "e921e6d1c90165cef903cf71e714551d7d8f16af14ec2f41362d7c0a2b6a7f6a",
+        "artifacts": {
+          "win": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_J/20261024/win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "379a610b4f888c6381368edc623b86c4b88e2246f4c3c095e008c948e545c8ec"
+          },
+          "fills": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_J/20261024/fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "d18368f69554b89c95f0d79cdaf01724f90d7a070a77fe5923cbfbb13e5b5ca8"
+          },
+          "requests": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_J/20261024/requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "f101c149313e2f7cd542f4cd51b9c9a9e12436fb564805ecc8debc77efc6afc6"
+          }
+        }
+      },
+      "passive_audit_sha": "5a3b964462c00d7b0d33dbb22bc324a5219197edc81865c2b8e5eaf43d6603db"
+    },
+    "J/20261025": {
+      "summary_sha": "4fdbe097dda43b001b036e5e3d263127636a619b22cdbd65ffad7a4fbc5e2609",
+      "execution": {
+        "cap_cache": false,
+        "cap_reused": 0,
+        "capacity_reused": 0,
+        "cancel_ack_ms": 0.0,
+        "adapter_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+      },
+      "baseline_reference": {
+        "summary_path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_J/20261025/summary.json",
+        "summary_sha": "dfd234ab4e7ffb660f10179afa934eee4522fbad59cb684163aafb652cda34db",
+        "artifacts": {
+          "win": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_J/20261025/win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "c2e560398ab9925b8519ff5c8774ed3dce43db47ef771b24bfad956cfca92a4f"
+          },
+          "fills": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_J/20261025/fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "86dc4279ca216b65dcfebd3c1545a72103663c08b19d73c2f31a7a70d1c3a81e"
+          },
+          "requests": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_J/20261025/requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "667e03abf2044d4d718f4f9837573d3981b89165bab1043a024476c970aaf25b"
+          }
+        }
+      },
+      "passive_audit_sha": "59ddc132db0f95d270ac4181a443dff2428d0abb3f84dd5c4a70fbff7dac2eb6"
+    },
+    "J/20261026": {
+      "summary_sha": "1cf1e44850543631f1afeba295b599823d5b26fc73b47792ed215c62ee1bdba0",
+      "execution": {
+        "cap_cache": false,
+        "cap_reused": 0,
+        "capacity_reused": 0,
+        "cancel_ack_ms": 0.0,
+        "adapter_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+      },
+      "baseline_reference": {
+        "summary_path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_J/20261026/summary.json",
+        "summary_sha": "3291beae29b52e12d5eb7030fc6ff600d448550d40039543a749fea75c1ca278",
+        "artifacts": {
+          "win": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_J/20261026/win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "62842802c85f4237ade67cdf403f8ed98dba37cb667c28ef28e7ec646fdb7e0d"
+          },
+          "fills": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_J/20261026/fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "4b347df319c474f90feef9f803c9672032593893b9227ff6c4ac8ac0f6d21d14"
+          },
+          "requests": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_J/20261026/requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "e7410c80cf0905fb14571307d287c061b00e8ebf537077b0ac6b79c7373fd73e"
+          }
+        }
+      },
+      "passive_audit_sha": "e7ba8b71fad2271b821ab0ec777e1b22a2ee837b6aca6ad60e6574a1fcb891a0"
+    },
+    "X/20261023": {
+      "summary_sha": "3f1dffdfba7ec8c079539055370ce5a8cef01ab7c2c23811f735fb5e06ad4b49",
+      "execution": {
+        "cap_cache": false,
+        "cap_reused": 0,
+        "capacity_reused": 0,
+        "cancel_ack_ms": 0.0,
+        "adapter_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+      },
+      "baseline_reference": null,
+      "passive_audit_sha": "ff0e1fe4e365aea9c4a3e203f39d6406fd234e0be24e577679e66977c65bab61"
+    },
+    "X/20261024": {
+      "summary_sha": "9c70a4322eea2d817f04601a79e30f0638ab2fab93d670bde3b754057927de15",
+      "execution": {
+        "cap_cache": false,
+        "cap_reused": 0,
+        "capacity_reused": 0,
+        "cancel_ack_ms": 0.0,
+        "adapter_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+      },
+      "baseline_reference": {
+        "summary_path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_X/20261024/summary.json",
+        "summary_sha": "69d1d541ec9e538d81535836ffc231f46ab3a302ba54ba06a5e1b658aad66502",
+        "artifacts": {
+          "win": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_X/20261024/win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "1787af40c553e11d7f2f134004be93cf062e7f08dd0a570596a12827b2e8c3ad"
+          },
+          "fills": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_X/20261024/fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "335146544ff14e3bafd905b62534a09033e65f140e8e73f05e1487a5f8295a1a"
+          },
+          "requests": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_X/20261024/requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "95632aaaea9148957dd55db8b371a5b35484fd61e8f535cb16f0bbced3821dae"
+          }
+        }
+      },
+      "passive_audit_sha": "7b383a555c9c4f74c0585668da825a5d66c9a27e2a6f9749be8f6c153fe4e2ee"
+    },
+    "X/20261025": {
+      "summary_sha": "9536a14e38b2916342279a86b15ac21615ff3980886d18eeb811429c66e3fa33",
+      "execution": {
+        "cap_cache": false,
+        "cap_reused": 0,
+        "capacity_reused": 0,
+        "cancel_ack_ms": 0.0,
+        "adapter_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+      },
+      "baseline_reference": {
+        "summary_path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_X/20261025/summary.json",
+        "summary_sha": "5bb2602d2ed50b93c87a0352f10bf0ba0d0580c2fe6e1db21a89b138db3ddc89",
+        "artifacts": {
+          "win": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_X/20261025/win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "a06100e1e9c317c2d9fc7579b182cd985219af8cd94cd52a309d739227a0deee"
+          },
+          "fills": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_X/20261025/fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "c84e43572d0d145dce8e6a0b1d9d5bbfc8edf4b72000b9b217727e56ff453e01"
+          },
+          "requests": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_X/20261025/requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "93150ab3c6f507f071a2ed62d02a24391a3cf39762a217f0b8dbf5e18e4cc0e2"
+          }
+        }
+      },
+      "passive_audit_sha": "67a66cdfaf98065e9996aa242f5d72d4bb1d00049e56c99a9643bf28d4d9bd8c"
+    },
+    "X/20261026": {
+      "summary_sha": "ce743b199ca2731d354371ce02eff37191ccdd36db65a60b5614ce0070f93573",
+      "execution": {
+        "cap_cache": false,
+        "cap_reused": 0,
+        "capacity_reused": 0,
+        "cancel_ack_ms": 0.0,
+        "adapter_sha": "f014efbe46653d5d238a3deba81b1cd82810350b12c8426075d371bdd6a02875"
+      },
+      "baseline_reference": {
+        "summary_path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_X/20261026/summary.json",
+        "summary_sha": "d94a484b68f5a853ef439133f5b5f674d41ef64aa85ebfa7db402c374aa41f05",
+        "artifacts": {
+          "win": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_X/20261026/win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "913fa96f97471741be22569be7884b52309a73500d62634812aae360d21b36a9"
+          },
+          "fills": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_X/20261026/fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "c5c8f42e7bb18e40a051f4bb55b58d48ae14dbadacf22930fefca54d2a5ac3bc"
+          },
+          "requests": {
+            "path": "/home/yuqing/ctaNew/data/predict_fun/research/sizing_settlement_20261108/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_sst_X/20261026/requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+            "sha256": "f11399b80d33e87dcd872c289333a8059badc48d19df8b250d33595dfcd7a85f"
+          }
+        }
+      },
+      "passive_audit_sha": "575ede2a89f5d456b30eb5f466be239990271f27c7a4d1bc905483c87238eaac"
+    }
+  },
+  "source_controls": "......................\n----------------------------------------------------------------------\nRan 22 tests in 0.101s\n\nOK\n2026-11-09T04:04:37Z tag=urgency_history_controls rc=0 peak_rss_mib=192 wall_s=0.96 cpu_user_s=0.75 memavail_start_gib=24 disk_free_gib=493->493\n",
+  "intervals": "none on four earlier days; pooled totals descriptive after selection",
+  "predicates": {
+    "J": {
+      "earlier": {
+        "settle_better": false,
+        "plus1_better": false,
+        "lower_inventory": true
+      },
+      "previous": {
+        "settle_better": true,
+        "plus1_better": false,
+        "lower_inventory": true
+      },
+      "pooled": {
+        "settle_better": false,
+        "plus1_better": false,
+        "lower_inventory": true
+      }
+    },
+    "X": {
+      "earlier": {
+        "settle_better": true,
+        "plus1_better": false,
+        "lower_inventory": true
+      },
+      "previous": {
+        "settle_better": true,
+        "plus1_better": true,
+        "lower_inventory": true
+      },
+      "pooled": {
+        "settle_better": true,
+        "plus1_better": true,
+        "lower_inventory": true
+      }
+    }
+  },
+  "interpretation": "selected fixed rule on earlier consumed training days; not independent validation",
+  "forward_data_read": false,
+  "live_settings_changed": false,
+  "deployment": false
+}
