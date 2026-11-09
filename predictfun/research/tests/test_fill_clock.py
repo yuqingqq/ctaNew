@@ -8,6 +8,16 @@ from predictfun.research import pf_fill_clock as c
 
 
 class ClockControls(unittest.TestCase):
+    def test_up_and_down_coordinates(self):
+        self.assertEqual(c.order_coordinates(True,31,1),(0,31,.31))
+        self.assertEqual(c.order_coordinates(False,31,1),(1,31,.69))
+        self.assertEqual(c.order_coordinates(True,31,2),(1,69,.31))
+        self.assertEqual(c.order_coordinates(False,31,2),(0,69,.69))
+        o=dict(up=False,price=31,market=1)
+        self.assertEqual(c.verify_leg_order(o,dict(mid=1,side=1,ptick=31),1),.69)
+        with self.assertRaises(ValueError):c.verify_leg_order(o,dict(mid=1,side=1,ptick=69),1)
+        with self.assertRaises(ValueError):c.order_coordinates(True,31,-1)
+
     def test_serialized_clock_identity(self):
         c.verify_clock_stats({'counts':{1:10}},{'counts':{'1':10}})
         with self.assertRaises(ValueError):c.verify_clock_stats({'counts':{1:11}},{'counts':{'1':10}})
