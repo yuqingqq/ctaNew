@@ -6,6 +6,9 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09 09:35Z: LATE REDUCTION STUDY RUNNING in research/predict-late-reduction-20261109.
+  Two fixed late-only reservation/passive-concession candidates; pre60 exact baseline parity required.
+  39 controls pass; nine consumed days J/X replay pending. No live/forward/frozen changes. See HANDOFF.md.
   2026-11-09 08:20Z: ALLOWED INVENTORY RANGE STUDY COMPLETE, nine consumed days/2592 markets per arm/timing,J/X.
   Shared +/-10 permits56/46 direct crossing fills while every actual path stays within10. Range settlement $147.09/$111.24
   versus strict $149.35/$119.34; +1s improves20.1%/26.7%, volume16.8%/13.7%, residual inventory falls7.5%/4.8%.
