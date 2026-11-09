@@ -49,6 +49,32 @@ def amendment():
     print('DECLARED v2 instrument correction; no clock comparison result read',flush=True)
 
 
+def coordinate_amendment():
+    old=json.loads((DEST/'declaration_v2.json').read_text())
+    revised=dict(old,version=3,as_of=dt.datetime.now(dt.timezone.utc).isoformat(),
+        supersedes_declaration_sha=sha(DEST/'declaration_v2.json'),previous_correction=old['correction'],
+        correction='kernel Control price is Up-space on BOTH sides; derive token price as p for BuyUp and 1-p for BuyDown/SellUp; override deprecated derived yes_tick in inherited orders without rewriting it',
+        failed_identity_log_sha=sha(DEST/'logs/fill_clock_report.log'),
+        source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=HERE,text=True).strip(),
+        source_sha={p:sha(HERE.parents[1]/p) for p in old['source_sha']},
+        inherited_extraction_sha={**old['inherited_extraction_sha'],'engine_anchors.parquet':sha(DEST/'engine_anchors.parquet')})
+    write(DEST/'declaration_v3.json',revised)
+    print('DECLARED v3 coordinate correction; raw identities and engine clocks retained',flush=True)
+
+
+def order_coordinates(up,up_tick,up_index):
+    if up_index not in (1,2) or not math.isfinite(up_tick) or not 0<up_tick<100:raise ValueError('invalid order coordinate')
+    side=0 if bool(up)==(up_index==1) else 1
+    return side,up_tick if up_index==1 else 100-up_tick,(up_tick if up else 100-up_tick)/100
+
+
+def verify_leg_order(order,row,up_index):
+    side,tick,token=order_coordinates(order['up'],order['price'],up_index)
+    if order['market']!=row['mid'] or side!=row['side'] or abs(tick-row['ptick'])>1e-6:
+        raise ValueError('exact REST order identity differs')
+    return token
+
+
 def hex_id(value):
     if not isinstance(value,list) or len(value)!=32 or any(type(x)!=int or not 0<=x<=255 for x in value):
         raise ValueError('invalid signed order hash')
@@ -183,8 +209,7 @@ def extract():
         for cid,o in order.items():
             if not o.get('raw_control_verified'):raise ValueError('cohort action absent from bounded kernel prefix')
             o.update(core_id=int(c.loc[cid,'id']),core_filled=float(c.loc[cid,'filled']))
-            o['yes_side']=0 if bool(o['up'])==(reg.loc[o['market'],'up_index']==1) else 1
-            o['yes_tick']=o['price'] if o['yes_side']==0 else 100-o['price']
+            o['yes_side'],o['yes_tick'],o['token_price']=order_coordinates(o['up'],o['price'],reg.loc[o['market'],'up_index'])
             o['action_status']='accepted' if math.isfinite(o.get('t_accepted',float('nan'))) else 'signed_not_accepted' if 'order_hash' in o else 'not_signed'
         orders.extend(order.values())
     O=pd.DataFrame(orders);E=pd.DataFrame(events)
@@ -252,7 +277,7 @@ def dedup_events(e):
 
 def report():
     new_paths('clock_cases.parquet','confirmed_without_rest.parquet','report.json')
-    declaration_path=DEST/('declaration_v2.json' if (DEST/'declaration_v2.json').exists() else 'declaration.json')
+    declaration_path=next(DEST/n for n in ['declaration_v3.json','declaration_v2.json','declaration.json'] if (DEST/n).exists())
     declaration=json.loads(declaration_path.read_text())
     for p,h in declaration['source_sha'].items():
         if sha(HERE.parents[1]/p)!=h:raise ValueError('declared source changed')
@@ -260,11 +285,13 @@ def report():
         if sha(p)!=h:raise ValueError('declared input changed')
     for p,h in declaration.get('inherited_extraction_sha',{}).items():
         if sha(DEST/p)!=h:raise ValueError('inherited extraction changed')
-    control_path=DEST/'logs'/('fill_clock_controls_v2.log' if declaration.get('version')==2 else 'fill_clock_controls.log')
+    version=declaration.get('version',1)
+    control_path=DEST/'logs'/('fill_clock_controls.log' if version==1 else f'fill_clock_controls_v{version}.log')
     controls=control_path.read_text()
     if '\nOK\n' not in controls or 'rc=0 ' not in controls:raise ValueError('missing controls')
     O=pd.read_parquet(DEST/'orders.parquet');E=dedup_events(pd.read_parquet(DEST/'fill_events.parquet'))
     M=pd.read_parquet(DEST/'own_rest_legs.parquet');A=pd.read_parquet(DEST/'engine_anchors.parquet')
+    reg=pd.read_parquet(DATA/'step1'/DAY/'registry.parquet').set_index('mid')
     L=pd.read_parquet(DATA/'step1'/DAY/'legs_timed2.parquet',columns=C)
     if len(A)!=len(L):raise ValueError('engine anchor row count')
     want={key(x) for x in M.to_dict('records')};matches=collections.defaultdict(list)
@@ -276,13 +303,13 @@ def report():
     for x in M.to_dict('records'):
         o=oi.loc[x['order_hash']];y=dict(x,run=o.run,cid=int(o.cid),action_status=o.action_status,place=float(o.t_place),
             accepted=float(o.t_accepted),cancel=float(o.t_CancelPendingAudit),status='eligible')
-        if o.market!=x['mid'] or o.yes_side!=x['side'] or abs(o.yes_tick-x['ptick'])>1e-6:raise ValueError('exact REST order identity differs')
+        token_price=verify_leg_order(o,x,reg.loc[x['mid'],'up_index'])
         ix=(x['order_hash'],x['trade_id'])
         if ix not in ei.index:y['status']='no_exact_kernel_trade'
         else:
             ev=ei.loc[ix]
             if isinstance(ev,pd.DataFrame):raise ValueError('duplicate fill identity')
-            if abs(ev.q-x['shares'])>1e-6 or abs(ev.price-o['price']/100)>1e-6:raise ValueError('exact fill quantity/price differs')
+            if abs(ev.q-x['shares'])>1e-6 or abs(ev.price-token_price)>1e-6:raise ValueError('exact fill quantity/price differs')
             y.update(final_status=ev.final_status,first_positive_notice=ev.first_positive_notice)
             if ev.final_status!='Confirmed':y['status']='not_confirmed_in_kernel_prefix'
             elif not math.isfinite(ev.first_positive_notice):y['status']='no_positive_notice'
@@ -351,4 +378,4 @@ def report():
 
 
 if __name__=='__main__':
-    {'declare':setup,'amend':amendment,'extract':extract,'anchors':anchors,'report':report}[sys.argv[1]]()
+    {'declare':setup,'amend':amendment,'amend3':coordinate_amendment,'extract':extract,'anchors':anchors,'report':report}[sys.argv[1]]()
