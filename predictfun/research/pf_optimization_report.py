@@ -75,7 +75,8 @@ def main():
     path=a.HERE.parent/'handoffs/20261109_optimization_loop.md';path.write_text('\n'.join(lines)+'\n')
     plan=json.loads((s.REVIEW/'plan.json').read_text());plan['status']='completed_pass';plan['as_of']=out['as_of'];plan['findings']='findings.json'
     for row in plan['loop']:row['status']='complete';row['receipt']=f"{row['round']}/receipt.json";row['verification']=f"{row['round']}/verification.json"
-    a.write(s.REVIEW/'plan.json',plan)
+    # The register is mutable; immutable receipts use a.write(exclusive create).
+    (s.REVIEW/'plan.json').write_text(json.dumps(plan,indent=2)+'\n')
     print(json.dumps(dict(population=out['population'],comparisons=comparisons),indent=2))
 
 

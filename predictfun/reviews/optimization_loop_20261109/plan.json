@@ -18,8 +18,16 @@
     },
     {
       "round": "duration_latency",
+      "status": "complete",
+      "hypothesis": "Measure shorter grace periods and latency sensitivity using paired baselines; do not select a policy from a PnL proxy",
+      "receipt": "duration_latency/receipt.json",
+      "verification": "duration_latency/verification.json",
+      "finding": "Timer-first50ms has zero same-price bridges; timer-first25ms has negligible/negative base coverage gain and added exposure. Investigate equal-clock event ordering separately."
+    },
+    {
+      "round": "deadline_order",
       "status": "in_progress",
-      "hypothesis": "Measure shorter grace periods and latency sensitivity using paired baselines; do not select a policy from a PnL proxy"
+      "hypothesis": "Process all native updates at the exact50ms deadline before expiry; cancel still-off orders at that deadline. No grace extension or future timestamp."
     }
   ],
   "per_round": [
@@ -38,5 +46,6 @@
     "preserve existing receipts",
     "one research process, one core, 4GiB cap"
   ],
-  "end_of_pass": "Complete inventory and duration/latency rounds, publish the comparison and next evidence needed; no automatic trading promotion. Further policy or data expansion gets a new declaration."
+  "end_of_pass": "Complete the declared equal-clock follow-up, publish superseding combined findings, and retain economic/fill-model and A2 integration limits.",
+  "report_note": "Two-round findings.json and handoff were written after successful checks; the final mutable-plan update used an exclusive-create helper and failed. Plan update is corrected; round artifacts and reported numbers are unaffected. A combined v2 report will supersede this subset report."
 }
