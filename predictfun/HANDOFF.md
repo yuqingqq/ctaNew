@@ -1,26 +1,66 @@
 # P-2026-005 HANDOFF
 
-## 2026-11-09 — entry inventory-budget experiment RUNNING
+## 2026-11-09 — entry inventory-budget experiment COMPLETE
 
-- User authorized testing the adding-side inventory budget against baseline and a simple smaller-order control.
-  Branch `research/predict-entry-budget-20261109`, checkout `/tmp/cta-entry-budget-20261109`, declared source `f7fc7162`.
-  Declaration/data/logs: `/home/yuqing/ctaNew/data/predict_fun/research/entry_budget_20261109/`.
-- Nine consumed dates (Oct23–27, Oct31–Nov3), 2,592 markets per arm/timing, J/X. Fixed guards trained on eight dates:
-  exploratory in-sample. Uncapped total-loss budget, existing 150-share exposure backstop, rebates excluded.
-- New arms: `uniform10` caps new inventory-adding orders at 10 shares per order; `reserved10` caps them to the remaining
-  10-share same-side budget after known inventory and all known outstanding reservations, across all lanes. Adding means
-  side-sign times known net >=0. Original reducing sizes/guards remain; reducing orders/delayed fills can still cross zero,
-  so this is not a guaranteed global hard 10-share cap. No urgency, queue-top-up, or post-60 restart variant included.
-- Both new arms share remaining-quantity retention: keep an eligible same-price adding order while its known remainder
-  fits desired size and applicable room; do not upsize it. Old/pending cancels keep reserving capacity. Budget is checked
-  again on submission. Existing lots and notional enforced; no rounding up to bypass the budget. Baseline unchanged.
-- 25 preflight positive/refusal controls PASS; full batch launched sequentially at 05:37Z through run_light. Eight-market
-  baseline smoke first; fresh full Oct23 baseline at J/X, other baseline artifacts reused with hashes. No findings yet.
-- Metrics: settlement/+1s, full-path absolute and squared inventory, time above10/peaks, day SD/worst day/drawdown,
-  FIFO matched-trade PnL versus residual PnL, and activity/requests/refusals. FIFO profits include price drift, not pure spread.
-  Primary paired day null/bootstrap: 2,000 each, 18 comparisons (three arm pairs x J/X x settlement/+1s/inventory-square).
-  All market windows included; no matched post-entry inventory subset, since the treatments change entry behavior.
-- Live code/settings, frozen artifacts and protected Nov9–13 forward days unchanged/unread. Single research job/core.
+- As-of **2026-11-09 06:12:40Z**; supplemental peak trace **06:18:57Z**. Nine consumed dates (Oct23–27,
+  Oct31–Nov3), **2,592 markets per arm/timing**, all J/X runs complete. Guards trained on eight dates:
+  exploratory in-sample, not independent validation. Uncapped total-loss budget, existing 150-share exposure backstop,
+  rebates excluded. Branch `research/predict-entry-budget-20261109`, checkout `/tmp/cta-entry-budget-20261109`;
+  declared source `f7fc7162`, tested source/state `f2867829`. Data/logs:
+  `/home/yuqing/ctaNew/data/predict_fun/research/entry_budget_20261109/`.
+- `uniform10` caps new inventory-adding orders at 10 shares per order (existing 5-share targets remain 5).
+  `reserved10` caps adding orders to the remaining 10-share same-side budget after known inventory and all known
+  outstanding reservations, across all lanes. Adding means side-sign times known net >=0. Reducing sizes/guards
+  unchanged, even if an order could cross zero. Both new arms keep eligible same-price adding orders when known
+  remainder fits desired size/room, without upsizing; pending creates/cancels reserve capacity until terminal knowledge.
+  Lots/minimum notional and a submission-time budget invariant apply. Baseline unchanged. No urgency/top-up/restart.
+
+| Timing / arm | Settlement $ | +1s markout $ | Daily PnL SD $ | Mean residual shares | Mean time-weighted inventory squared |
+|---|---:|---:|---:|---:|---:|
+| J baseline | 514.06 | 602.83 | 134.51 | 6.557 | 168.162 |
+| J uniform10 | 425.59 | 395.52 | 74.58 | 4.025 | 58.855 |
+| J reserved10 | 309.74 | 237.96 | 41.74 | 2.515 | 30.388 |
+| X baseline | 317.63 | 463.56 | 103.09 | 5.720 | 144.533 |
+| X uniform10 | 281.63 | 292.05 | 64.93 | 3.475 | 46.731 |
+| X reserved10 | 253.05 | 176.21 | 43.28 | 2.252 | 25.295 |
+
+- Uniform cap retains **82.8% / 88.7% J/X** of observed settlement profit, with daily SD **44.6% / 37.0% lower**,
+  mean residual inventory **38.6% / 39.2% lower**, and filled volume **29.7% / 32.0% lower**.
+  Reserved budget retains **60.3% / 79.7%**, with SD **69.0% / 58.0% lower**, residual **61.6% / 60.6% lower**,
+  volume **52.5% / 53.4% lower**. Inventory-square falls 65.0%/67.7% uniform, 81.9%/82.5% reserved.
+  These describe the risk/volume tradeoff, not improved execution at matched activity or calibrated outcome variance.
+- Both new arms reduce inventory-square AND total +1s value on every day at both timings. Paired day inference:
+  2,000 shared sign flips + 2,000 day bootstrap draws; 18 comparisons (three arm pairs x J/X x settlement/+1s/q²).
+  Settlement mean-difference intervals all cross zero; no reliable expected-profit ordering. All q²/+1s comparisons
+  have max-T p=0.005997, conditional on these consumed days. Daily SD/tail/drawdown figures are descriptive.
+- J/X maximum drawdown: baseline **-$293.73 / -$249.33**, uniform **-$148.76 / -$119.37**, reserved
+  **-$79.60 / -$77.39**. Worst day: **-$53.12 / -$128.60**, **-$27.31 / -$59.83**, **-$30.04 / -$45.96**.
+  Reserved is not uniformly better on every tail metric (J worst day worse than uniform).
+- Spread capture has NOT improved: +1s value per 100 filled shares J/X falls from **1.7246 / 1.6162** to
+  **1.6088 / 1.4964** uniform and **1.4324 / 1.3178** reserved. FIFO matched-trade profit J/X is
+  **$134.02 / $173.54** baseline, **-$8.48 / $24.64** uniform, **-$33.20 / $24.31** reserved.
+  FIFO matching includes intervening price drift, not pure spread; residual FIFO attribution is not carry-at-240.
+  Both new arms share queue retention, so their comparison with baseline combines retention and size effects;
+  reserved-versus-uniform isolates reservation sizing with common mechanics, but is not turnover matched.
+- **Not a hard 10-share limit:** instantaneous peak absolute inventory J/X is **75 / 65** baseline,
+  **80 / 48.5** for BOTH new arms. Post-hoc trace covers both tied global peaks (2 paths / 15,552 total paths,
+  no exclusions): Oct26 J market 3818191, initial +10 inventory, then 90 sell shares filled through 10.546209s,
+  reaching -80. Every sell order was submitted while known inventory was +10 (therefore classified reducing);
+  50 sell shares filled while cancellation was pending. Send times match exact placement events; known inventory
+  reconstructed with the recorded 100ms fill delay, no event-priority ties. Terminal inventory is flat.
+  This confirms the remaining exposure route: unchanged reducing orders can reverse inventory, with several
+  outstanding/cancel-pending orders across lanes. A hard limit must budget those zero-crossing portions too.
+- **25 preflight controls PASS**; eight-market baseline smoke and all 18 full day/timing reconciliation checks PASS.
+  Fresh Oct23 baseline at both timings exactly matches reference fills/requests/windows; other baselines reused
+  with hashes. Zero excluded markets, missing valuations, or missing bounded Binance hour files. All input/source
+  and per-run adapter identities verified. Peak diagnostic also passes positive cross-zero and known-bad missing-event /
+  wrong-peak refusal controls. Peak replay RSS ~1.6 GiB, one core; no jobs remain running.
+- Main receipt `reviews/entry_budget_20261109/receipt.json`; supplemental explanatory receipt
+  `reviews/entry_budget_20261109/peak_diagnostic.json` (main receipt unchanged), reproduced by `pf_entry_peak.py`.
+  Simplest per-order cap offers better observed profit retention; reservation budget offers greater average risk
+  reduction. Neither establishes improved spread capture or a safe hard position ceiling. Next narrow experiment:
+  reserve full potential exposure including reducing-order zero crossings while retaining useful reduction liquidity.
+  No live code/settings, frozen artifacts, forward-race changes, or protected Nov9–13 data reads.
 
 ## 2026-11-09 — spread capture / inventory-risk review
 
