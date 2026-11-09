@@ -1,5 +1,27 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 — entry inventory-budget experiment RUNNING
+
+- User authorized testing the adding-side inventory budget against baseline and a simple smaller-order control.
+  Branch `research/predict-entry-budget-20261109`, checkout `/tmp/cta-entry-budget-20261109`, declared source `f7fc7162`.
+  Declaration/data/logs: `/home/yuqing/ctaNew/data/predict_fun/research/entry_budget_20261109/`.
+- Nine consumed dates (Oct23–27, Oct31–Nov3), 2,592 markets per arm/timing, J/X. Fixed guards trained on eight dates:
+  exploratory in-sample. Uncapped total-loss budget, existing 150-share exposure backstop, rebates excluded.
+- New arms: `uniform10` caps new inventory-adding orders at 10 shares per order; `reserved10` caps them to the remaining
+  10-share same-side budget after known inventory and all known outstanding reservations, across all lanes. Adding means
+  side-sign times known net >=0. Original reducing sizes/guards remain; reducing orders/delayed fills can still cross zero,
+  so this is not a guaranteed global hard 10-share cap. No urgency, queue-top-up, or post-60 restart variant included.
+- Both new arms share remaining-quantity retention: keep an eligible same-price adding order while its known remainder
+  fits desired size and applicable room; do not upsize it. Old/pending cancels keep reserving capacity. Budget is checked
+  again on submission. Existing lots and notional enforced; no rounding up to bypass the budget. Baseline unchanged.
+- 25 preflight positive/refusal controls PASS; full batch launched sequentially at 05:37Z through run_light. Eight-market
+  baseline smoke first; fresh full Oct23 baseline at J/X, other baseline artifacts reused with hashes. No findings yet.
+- Metrics: settlement/+1s, full-path absolute and squared inventory, time above10/peaks, day SD/worst day/drawdown,
+  FIFO matched-trade PnL versus residual PnL, and activity/requests/refusals. FIFO profits include price drift, not pure spread.
+  Primary paired day null/bootstrap: 2,000 each, 18 comparisons (three arm pairs x J/X x settlement/+1s/inventory-square).
+  All market windows included; no matched post-entry inventory subset, since the treatments change entry behavior.
+- Live code/settings, frozen artifacts and protected Nov9–13 forward days unchanged/unread. Single research job/core.
+
 ## 2026-11-09 — spread capture / inventory-risk review
 
 - User asks how to improve spread capture while lowering inventory variance. Post-hoc descriptive risk calculation from
