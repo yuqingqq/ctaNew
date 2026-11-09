@@ -6,6 +6,24 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09 15:45Z: A2 IMPLEMENTED: pmmmrust 70b965b on fix/pfmm-layered-size-20261109 (on A1 366d419); main fast-forwarded 366d419..70b965b
+  and pushed. [ladder] size_layering = "base_topup_v1" (v3 / v3_basis_v1 examples; absent = single, byte-identical, trace parity
+  OK): each policy lane's want is one logical order (tick, total) sent as base + top-up (lanes L, L+4); target open = new total on a
+  change, total - pair fills while it stands (no refill), total again if nothing active; front order kept, the other lane holds the
+  rest; rests < 1 share or < XMIN (0.01-share lots) not sent; member fills absorbed; fills of cancelled / ended orders excluded;
+  pending retries count as active; rung keep sees the pair; replay refuses a mismatched mode; config refuses it with min_size > 1.
+  Four review rounds (fill semantics, remainder re-sends, ended / pending members, rung keep); 11 mutations caught; check.sh OK
+  (1,381 test runs). Known cost: up to 4 orders a side vs the 3-unanswered rule delays some members by the 250 ms retry
+  (throttled_topup). Not deployed. Research replay has no LZ yet (B4). pf_live_vs_replay.py now maps order lanes by parity / % 4.
+  2026-11-09: NATIVE GUARD / SOFT-PULL STUDY RUNNING; exact factual input replay first, same220 Nov8 windows.
+  Recover exact guard inputs/reasons before selective retention; both basis modes, bounded prefixes, no live/protected changes.
+  2026-11-09 15:04Z: PULL/REENTRY STUDY COMPLETE,220 consumed Nov8 windows/279,059 decisions/30,796 opportunities.
+  Fixed incremental sizing; no fills. Cancel-ack requests-0.22%/aligned time-0.14%; reentry25 -8.46%/-8.19%,50 -13.80%/-11.19%,
+  100 -19.49%/-15.84%; all-entry50 -43.15%/-27.06%. No tested delay preserves coverage; both runs show the tradeoff.
+  Nominal25ms gives46.93ms median actual admission wait at original decision events.30 controls and artifact checks pass;
+  18 baseline metrics/window match exactly, all184776 paired action rows reconcile. No live/protected/fill-clock changes.
+  Branch research/predict-reentry-churn-20261109, receipts reviews/reentry_churn_20261109/, handoff handoffs/20261109_reentry_results.md.
+  All jobs done,294MiB peakRSS,1.5MiB output. B3 pull-rule/model-stability research remains open; exact reasons needed (existing A3).
   2026-11-09 14:24Z: A1 IMPLEMENTED (user: "start doing the fix ... review, then commit/push", "also merge into main"). pmmmrust 366d419
   on branch fix/pfmm-late-fill-window-20261109 (from 109fa4a = live release 3c724fe + parity reviews), main fast-forwarded
   a3c3589..366d419 and pushed. [live] cancel_late_fill_window_ms (examples 1000): exec reports CancelLateFillWindowElapsed
@@ -14,8 +32,14 @@ updated: >-
   reviews (first: WS-liveness hole + reopen double window, fixed; second: monitoring false positives, fixed); check.sh OK
   (1,335 Rust test runs, clippy -D warnings, no-std, MSRV 1.88; Tokyo render guard updated for the new [live] key).
   Not deployed (user's call). Follow-up A6: wallet socket inactivity timeout.
-  2026-11-09: QUOTE CAPTURE STUDY RUNNING, layered base/top-up plus entry-only buffers on220 consumed Nov8 windows.
-  Fixed desired-quote workload, no fills/PnL; guards and reservations retained. Source branch research/predict-quote-capture-20261109.
+  2026-11-09 14:42Z: QUOTE CAPTURE MECHANICS COMPLETE,220 consumed Nov8 windows/279,059 decisions, first60s, no exclusions.
+  Incremental top-ups preserve the small order: requests-4.52%, active time at desired prices+3.90%, oldest quote399->515ms,
+  reserved share-time-3.57%; active share-time+2.94%, off-target time+0.82%, so no inventory-risk/PnL claim. Always splitting
+  increases requests10.78%; entry buffers sacrifice desired quoting time.20 controls and artifact checks pass;440 old-arm
+  rows reproduce exactly. Initial reference bug corrected in superseding v2 receipt; follow-up is candidate7, not validation.
+  Research branch research/predict-quote-capture-20261109. Handoff handoffs/20261109_incremental_capture_results.md; receipts
+  reviews/quote_capture_20261109/receipt_v2.json and reviews/quote_incremental_20261109/. All jobs done; no live changes,
+  clock bypass or protected Nov9-13 read. Guard-score disagreement8.77% limits buffered variants. See HANDOFF.md.
   2026-11-09 13:56Z: TRADE TIMING REPAIR COMPLETE on fix/predict-trade-timing-20261109. Full trade identities,
   separate status/confirmation/receipt clocks; no heuristic fallback or other-leg substitution.375,569 retained legs,
   99 exact own identities/consistent coarse intervals,375,470 missing clocks;42,064 actions reconcile within1 microshare.
