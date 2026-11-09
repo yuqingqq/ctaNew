@@ -1,0 +1,19 @@
+{
+  "as_of": "2026-11-09T16:17:45.649748+00:00",
+  "source_commit": "4666fc52a3ca8729a7c78b0c68f1b3741bc56936",
+  "sources": {
+    "pf_native_inventory_events.py": "76911a873151aaccb051722e46bdd239773f951ebc27a83b977c88e454cd5942",
+    "pf_native_grid.py": "e6e9e59e641d5ea0a4f1492faf294226f4de417f05d772cb7479de4f51ab9a08",
+    "native_guard_evidence.rs": "e42391b73c4298c95ca095258e3f6cf84d0feefbb17f6c754f4fab973f72e902",
+    "pf_native_guard_verify.py": "04b311e06e6de29cda2461f5c2e43264cd4fd138def64e273270c479adb16a32"
+  },
+  "native_commit": "366d4192af219eef568ae17c530e4303e6f4ca45",
+  "native_accessor_sha256": "910fda9ddaf7400782bf815e96a7b4d3b7aebe762d8d77305c3b55db7be7ccf3",
+  "scope": "same bounded Nov8 factual inputs; export read-only state after each Filled knowledge input at0-65s",
+  "motivation": "partial fills change known position without necessarily causing a decision; inventory-dependent exits need this event clock",
+  "design": "unchanged core and existing grid instrumentation; require exact original outputs and byte-identical states/books/grid-probes; extra observations only, no changed OMS feedback",
+  "null": "deterministic identity comparison; positive exact prior stream, corrupted source anchor/input hashes refused",
+  "no_live_change": true,
+  "no_protected_dates_read": true,
+  "no_fill_clock_bypass": true
+}
