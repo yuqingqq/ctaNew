@@ -1,20 +1,73 @@
 # P-2026-005 HANDOFF
 
-## 2026-11-09 — closing-liquidity experiment RUNNING
+## 2026-11-09 — closing-liquidity experiment COMPLETE
 
-- User objective: preserve trading value while reducing inventory. Two fixed late-only hypotheses: retain safe,
-  same-price guard-eligible closing orders above the AM target (`exit_keep`); additionally size new closing orders
-  up to25 available shares (`exit_close25`). Apply target before minimum-notional checks; no price/guard changes.
-- Baseline and `late_reserved` references; exact pre60 fills/requests required, nine consumed dates Oct23–27 and
-  Oct31–Nov3, J/X. Aggregate reservations and fill-report grace unchanged; no new adding orders after60.
-  Thirty comparisons,2000 day sign-flips/bootstraps, no outcome-driven retuning. Forty-seven controls passed.
-- New live/replay review questions short-lived/cancel-pending replay fills. This is a conditional engineering
-  experiment under the existing fill model, NOT evidence of live-achievable gains or a calibrated timing fix.
-  Live total order lifetime and replay fill age differ; nearest pending-message matches are not exact trade identity.
-- Isolated branch `research/predict-exit-liquidity-20261109`, checkout `/tmp/cta-exit-liquidity-20261109`;
-  code `pf_exit_{study,engine,run,report}.py`, runner `run_exit_liquidity.sh`, outputs
-  `data/predict_fun/research/exit_liquidity_20261109/`. One resource-capped process; queued around other research.
-  No live/frozen/forward changes or protected Nov9–13 reads. Results pending.
+- As-of **2026-11-09 11:43:41Z**, nine consumed dates Oct23–27 and Oct31–Nov3, **2592 markets per arm/timing**,
+  J/X, zero exclusions/missing valuations. Guards trained on eight dates: conditional historical engineering study,
+  not independent validation. Declared source `62b2c98e`, declaration-copy commit `d6c44362`, report/verifier head
+  `61d727da`; branch `research/predict-exit-liquidity-20261109`, checkout `/tmp/cta-exit-liquidity-20261109`.
+- `exit_keep` retains a same-price guard-eligible closing order whose known remainder fits aggregate closing room,
+  even above the AM target. `exit_close25` also sizes new closing orders up to25 available shares instead of AM low5.
+  Targets apply before minimum-notional checks; existing partial orders retain original size identity without top-ups.
+  Original prices/guards/RO60/S240, pending create/resting/cancel reservations, acknowledgement+100ms grace+.001ms,
+  and submission checks retained. All pre60 fills AND requests exactly match baseline. No new adding orders from60
+  or orders from240. Loss budget uncapped,150-share backstop unchanged, rebates excluded. No price concessions.
+
+| Timing / arm | Settlement $ | +1s markout $ | FIFO matched $ | Mark at240 $ | Carry $ | Mean residual shares | Daily PnL SD $ |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| J baseline | 514.06 | 602.83 | 134.02 | 677.12 | -163.06 | 6.56 | 134.51 |
+| J late_reserved | 502.04 | 557.97 | 99.78 | 658.36 | -156.32 | 7.12 | 137.60 |
+| J exit_keep | 491.08 | 564.19 | 156.66 | 668.44 | -177.36 | 6.97 | 135.65 |
+| J exit_close25 | 508.39 | 553.33 | 168.95 | 660.14 | -151.75 | 6.73 | 131.55 |
+| X baseline | 317.63 | 463.56 | 173.54 | 431.16 | -113.54 | 5.72 | 103.09 |
+| X late_reserved | 309.94 | 440.54 | 133.41 | 385.42 | -75.48 | 6.15 | 103.12 |
+| X exit_keep | 303.22 | 440.88 | 159.20 | 380.12 | -76.90 | 6.02 | 103.30 |
+| X exit_close25 | 317.20 | 435.68 | 110.81 | 365.51 | -48.31 | 5.77 | 100.57 |
+
+- **Objective not achieved versus baseline.** Keep changes residual inventory **+6.35/+5.27%**
+  and +1s value **-6.41/-4.89%** J/X. Close25 changes inventory
+  **+2.58/+0.80%**, +1s **-8.21/-6.01%**,
+  and mark-at240 **-2.51/-15.23%**. Both leave more terminal inventory at both timings.
+- Relative to `late_reserved`, keep raises actual reducing flow **+12.01/+13.94%**,
+  reduces residual inventory **-2.07/-2.15%**, and changes +1s value by
+  **$+6.22/+0.35**. Close25 raises reducing flow
+  **+32.16/+40.84%**, reduces residual inventory
+  **-5.55/-6.31%**, but changes +1s value
+  **$-4.63/-4.86**. The mechanism repairs part of the reservation control's lost exit liquidity.
+- Close25 still executes **-12.89/-5.00%** less reducing quantity than baseline.
+  Its settlement delta is **$-5.67/-0.42**. X near-equality masks **$65.65 worse mark-at240
+  offset by $65.23 better carry**; it does not demonstrate preserved trading value. FIFO changes
+  **$+34.93/-62.72**; FIFO includes drift, not just spread capture.
+  Baseline late fills include198.11/63.97 inventory-increasing shares, which are not equivalent to safe exits.
+- Close25 daily PnL SD changes **-2.20/-2.44%**, but integrated inventory-square
+  changes **+0.87/-0.30%**. This is not a proven variance benefit;
+  inventory-square is an exposure proxy, not settlement variance adjusted for probability.
+- Thirty predeclared comparisons,2000 shared UTC-day sign flips and2000 paired day bootstrap draws. Every settlement
+  difference interval includes zero. Close25-baseline mean daily settlement intervals: **[-$14.42,+$16.60] J**,
+  **[-$21.27,+$23.18] X**, family p=1. Versus late_reserved, inventory-square reductions have family p=.03348 for
+  keep and .00600 for close25 at both timings. Neither establishes the objective versus baseline; all remain exploratory.
+- Engagement: keep retains above-AM-target orders on13,865/12,261 J/X quote decisions. Close25 raises its size target
+  on62,547/51,569 decisions. These are decisions, not distinct orders or extra fills. Use pre-retarget counters;
+  the later planner sees the already-adjusted target, so its generic above-target counters are zero by construction.
+- Provenance: **19,435 candidate fill rows**; no new post60 order adds economic inventory within1e-7. The13.67/0 late
+  opening shares J/X come from inherited pre60 orders. Last fill240.029s precedes the240.1s carry valuation.
+  Inherited-opening positive control and new-opening/missing-provenance/post-mark-fill refusals pass.
+- **47 controls, eight-market smoke,18 full-day reconciliations PASS**. Fresh first-day baseline AND late_reserved J/X
+  reproduce exact win/fill/request artifacts. Verified21 sources,216 result artifacts,18 new and18 reference metadata
+  sets, declaration/receipt copies. Peak RSS1.6GiB;482GiB disk free and24GiB RAM available at completion. All our jobs finished.
+- **Fill-model warning measured on THIS baseline:** age<100ms OR cancel-pending fills account for84.49%/81.70% of
+  shares and **84.44%/78.46% of +1s value** J/X. New Nov8 live/replay evidence questions many such fills. Its frozen-v3
+  baseline differs from this continuous/execution-adapted baseline; do not substitute its percentages. Live total order
+  lifetime differs from replay fill age; nearest pending-message matching is not exact trade identity. Removing those
+  fills from reported PnL is not a corrected counterfactual: inventory and future orders would change too.
+- Conclusion: safe exit retention helps relative to strict reservations; neither candidate solves the baseline objective.
+  Calibrate trade/order timing and cancellation lifecycle against exact live identities before another PnL search.
+  Future inventory controls should price closing cost separately from entry edge, preserve early quoting, and use
+  later independent validation. A better settlement forecast is needed to justify directional holdings, not to reduce risk.
+- Reproduce from this branch: `pf_exit_study`, `bash predictfun/research/run_exit_liquidity.sh`, then
+  `pf_verify_exit_liquidity`. Receipts: `reviews/exit_liquidity_20261109/`; data, evidence snapshots and complete
+  `comparison.csv`: `data/predict_fun/research/exit_liquidity_20261109/`. Receipt SHA256
+  `fbd470a772be94076adb0bad12114105b54d5484da8f2cdb3f3167d3d1f534a7`. No live/frozen/forward changes or protected Nov9–13 reads.
 
 ## 2026-11-09 — late reduction experiment COMPLETE
 
