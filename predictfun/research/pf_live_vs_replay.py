@@ -194,7 +194,7 @@ def core_orders(run, rid, markets):
     P = P.sort_values(['market', 't_req', 'id'], kind='stable')
     P['k'] = P.groupby('market').cumcount(); K['k'] = K.groupby('market').cumcount()
     P = P.merge(K[['market', 'k', 'cid', 'refused', 'size', 'up']].rename(columns={'size': 'ksize'}), on=['market', 'k'], how='left')
-    bad = ((P.ksize - P['size']).abs() > 1e-6) | (P.up != P.lane.isin([0, 2]))
+    bad = ((P.ksize - P['size']).abs() > 1e-6) | (P.up != (P.lane % 2 == 0))
     P['align_ok'] = ~bad
     D = {m: (np.array([x[0] for x in v]), [x[1] for x in v]) for m, v in dec.items()}
     return P, D
@@ -216,7 +216,7 @@ def live_windows():
 def classify(f, P, D):
     """What live did on the replay fill's side and price around its time."""
     up = f.side == 0; tick = f.pt; T = f.ws_ms + f.t * 1000.0   # the replay's pt is the bought token's own price on both sides (as live)
-    o = P[(P.market == f.mid) & (P.lane.isin([0, 2] if up else [1, 3])) & (P.tick == tick)]
+    o = P[(P.market == f.mid) & ((P.lane % 2 == 0) == up) & (P.tick == tick)]
     end = o[['t_CancelDone', 't_Filled_last']].max(axis=1).fillna(f.ws_ms + 300_000.0)
     rest = o[o.t_Accepted.notna() & (o.t_Accepted <= T + TOL) & (end >= T - TOL)]
     if len(rest):
@@ -292,7 +292,7 @@ def main_lifetime():
     rows = []
     for r in C[C.why.isin(['live_rested_no_fill', 'live_rested_and_filled'])].itertuples():
         p = P[r.run]; T = r.ws_ms + r.t * 1000.0
-        o = p[(p.market == r.mid) & (p.lane.isin([0, 2] if r.side == 0 else [1, 3])) & (p.tick == r.pt) & p.t_Accepted.notna()].copy()
+        o = p[(p.market == r.mid) & ((p.lane % 2) == r.side) & (p.tick == r.pt) & p.t_Accepted.notna()].copy()
         o['end'] = o[['t_CancelDone', 't_Filled_last']].max(axis=1).fillna(r.ws_ms + 300_000.0)
         ins = o[(o.t_Accepted <= T) & (o.end >= T)]
         rows.append(dict(timing=r.timing, filled=r.why == 'live_rested_and_filled', q=r.q, inside=len(ins) > 0,
@@ -308,7 +308,7 @@ def main_lifetime():
         c = C[C.timing == tm]; tot = hit = 0.0
         for run, _ in RUNS:
             for x in P[run][P[run].filled > 0].itertuples():
-                cc = c[(c.mid == x.market) & (c.side == (0 if x.lane in (0, 2) else 1)) & (c.pt == x.tick)]
+                cc = c[(c.mid == x.market) & (c.side == x.lane % 2) & (c.pt == x.tick)]
                 tot += x.filled; hit += x.filled * bool(((cc.ws_ms + cc.t * 1000.0 - x.t_Filled).abs() <= 1500.0).any())
         rev[tm] = dict(live_filled_shares=round(tot, 1), with_replay_fill=round(hit, 1))
     out = dict(by_live_lifetime=tab, live_filled_share_increasing=bool(all(a <= b for a, b in zip(mono, mono[1:]))),
@@ -437,7 +437,7 @@ def main_feedtiming():
                 W = min(cand); R1.append(dict(W_A=W - o.t_Accepted, W_C=W - o.t_CancelDone))
         for r in C[(C.run == run) & C.why.isin(['live_rested_no_fill', 'live_rested_and_filled'])].itertuples():
             T = r.ws_ms + r.t * 1000.0
-            o = P[(P.market == r.mid) & (P.lane.isin([0, 2] if r.side == 0 else [1, 3])) & (P.tick == r.pt) & P.t_Accepted.notna()].copy()
+            o = P[(P.market == r.mid) & ((P.lane % 2) == r.side) & (P.tick == r.pt) & P.t_Accepted.notna()].copy()
             o['end'] = o[['t_CancelDone', 't_Filled_last']].max(axis=1).fillna(r.ws_ms + 300_000.0)
             ins = o[(o.t_Accepted <= T) & (o.end >= T)]
             ticks = [r.pt - k for k in range(6)] if r.side == 0 else [r.pt + k for k in range(6)]
@@ -504,7 +504,7 @@ def main_who():
     out['takers_hitting_our_live_orders'] = top(M[M.maker == ME].groupby('taker').shares.sum())
     P = pd.concat([pd.read_parquet(f'{OUT}/core_orders_{r}.parquet') for r, _ in RUNS])
     P['life'] = P[['t_CancelDone', 't_Filled_last']].max(axis=1) - P.t_Accepted
-    names = {0: 'up_touch', 1: 'down_touch', 2: 'up_rung', 3: 'down_rung'}
+    names = {0: 'up_touch', 1: 'down_touch', 2: 'up_rung', 3: 'down_rung', 4: 'up_touch_topup', 5: 'down_touch_topup', 6: 'up_rung_topup', 7: 'down_rung_topup'}
     out['live_by_lane'] = {names[ln]: dict(places=len(g), refused=int(g.refused.notna().sum()), accepted=int(g.t_Accepted.notna().sum()),
                                           life_ms_p50=round(float(g.life.median()), 0), life_ms_p90=round(float(g.life.quantile(0.9)), 0),
                                           filled_orders=int((g.filled > 0).sum()), filled_shares=round(float(g.filled.sum()), 1))
@@ -609,10 +609,10 @@ def main_reasons():
 
 
 def status_at(e, m, ws, tm, up, P, D, FL, HO, lane_of, PV, LINE):
-    lanes = (0, 2) if up else (1, 3); touch_lane = 0 if up else 1
+    touch_lane = 0 if up else 1
     if e.ours:
         return 'we_were_filled'
-    o = P[(P.market == m) & P.lane.isin(lanes) & (P.tick == e.ptick)]
+    o = P[(P.market == m) & ((P.lane % 2 == 0) == up) & (P.tick == e.ptick)]
     end = o[['t_CancelDone', 't_Filled_last']].max(axis=1).fillna(ws + 300_000.0)
     if ((o.t_Accepted <= tm) & (end >= tm)).any():
         return 'resting_not_filled (queue)'
@@ -654,7 +654,7 @@ def why_none(e, m, ws, t, up, D, FL, HO, lane_of, PV, LINE):
     rel = (t - ws) / 1000.0
     if rel >= 240:
         return 'stopped (>= 240 s)'
-    net = sum((q if lane_of.get((m, i)) in (0, 2) else -q) for k, i, q in FL.get(m, []) if k <= t)
+    net = sum((q if lane_of.get((m, i), 1) % 2 == 0 else -q) for k, i, q in FL.get(m, []) if k <= t)
     reducing = (up and net < 0) or ((not up) and net > 0)
     if rel >= 60 and not reducing:
         return 'reduce-only phase (nothing to reduce on this side)'
@@ -718,7 +718,7 @@ def main_queue():
             return dec[m][i][1] if i >= 0 else None
         for e in q.itertuples():
             m = e.mid; ws = coh[m]; W = ws + e.t_in * 1000.0; tm = W - 50.0; up = e.up
-            o = P[(P.market == m) & P.lane.isin((0, 2) if up else (1, 3)) & (P.tick == e.ptick) & P.t_Accepted.notna()].sort_values('t_Accepted')
+            o = P[(P.market == m) & ((P.lane % 2 == 0) == up) & (P.tick == e.ptick) & P.t_Accepted.notna()].sort_values('t_Accepted')
             end = o[['t_CancelDone', 't_Filled_last']].max(axis=1).fillna(ws + 300_000.0)
             cur = o[(o.t_Accepted <= tm) & (end >= tm)]
             if not len(cur):
@@ -740,12 +740,12 @@ def main_queue():
                 ln = lanes_at(m, x.t_cancel)
                 if ln is None:
                     reasons.append('unknown'); continue
-                want = ln[x.lane]
+                want = ln[x.lane % 4]   # the policy lane (layered top-ups 4-7 follow lane - 4)
                 if want[0] is None:
                     reasons.append('pulled: ' + why_none(e, m, ws, x.t_cancel + 0.5, up, Dsimple, fills, holds, lane_of, PV, LINE))
                 elif want[0] != x.tick:
                     reasons.append('re-priced')
-                elif abs(want[1] - x['size']) > 1e-9:
+                elif x.lane >= 4 or abs(want[1] - x['size']) > 1e-9:
                     reasons.append('resized')
                 else:
                     reasons.append('kept tick and size (other)')
@@ -869,7 +869,7 @@ def main_history():
             while j >= 0 and e.ptick in books[m][j][si] and BT[m][j] >= ws - 60_000:
                 j -= 1
             lvl_start = BT[m][j + 1] if j + 1 <= i else W
-            o = P[(P.market == m) & P.lane.isin((0, 2) if up else (1, 3)) & (P.tick == e.ptick) & P.t_Accepted.notna()]
+            o = P[(P.market == m) & ((P.lane % 2 == 0) == up) & (P.tick == e.ptick) & P.t_Accepted.notna()]
             oe = Pend[o.index].fillna(ws + 300_000.0)
             front_ok = bool(((o.t_Accepted <= lvl_start + 500.0) & (oe >= lvl_start + 500.0)).any()) if W - lvl_start > 500 else None
             n = 0; cnt = collections.Counter()
@@ -948,8 +948,8 @@ def main_churn():
             ln = lanes_at(m, tc)
             if ln is None:
                 continue
-            want = ln[L]
-            trig = 'pull' if want[0] is None else 're-price' if want[0] != o['tick'] else 'resize' if abs(want[1] - o['size']) > 1e-9 else 'same price and size'
+            want = ln[L % 4]   # the policy lane (layered top-ups 4-7 follow lane - 4; their size is the policy total less the base)
+            trig = 'pull' if want[0] is None else 're-price' if want[0] != o['tick'] else ('resize' if L >= 4 or abs(want[1] - o['size']) > 1e-9 else 'same price and size')
             (b0, a0), (b1, a1) = top_at(m, o['t']), top_at(m, tc)
             px_same = b0 is not None and b1 is not None and a0 is not None and a1 is not None and b0[0] == b1[0] and a0[0] == a1[0]
             all_same = px_same and abs(b0[1] - b1[1]) < 1e-9 and abs(a0[1] - a1[1]) < 1e-9

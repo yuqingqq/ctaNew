@@ -1,23 +1,86 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 15:45Z (session 62f3ce33) - A2 size layering implemented (pmmmrust main 70b965b)
+
+- A1 (366d419) and A2 (70b965b) are on pmmmrust main; neither is deployed. A Tokyo release needs a new tag and a re-rendered config:
+  `cancel_late_fill_window_ms = 1000` ([live]) and `size_layering = "base_topup_v1"` ([ladder]) come from the v3 examples.
+- Next on the to-do list: A3 (decision reasons in captures), A4 (fill-notice latency), A6 (wallet socket inactivity timeout),
+  B1 (fill-model calibration) before B3 (pull / size line buffer), B4 (research LZ token).
+
+## 2026-11-09 — native guard / selective soft-pull study IN PROGRESS
+
+- User requested the next step after negative re-entry results. Branch `research/predict-soft-pull-20261109`,
+  checkout `/tmp/cta-soft-pull-20261109`; isolated native source `/tmp/pf-native-guard-20261109` at366d419.
+- Stage1: bound captured inputs/outputs before Nov8 23:02, preserve original model/config hashes and both basis
+  modes, replay factual inputs exactly, export guard/hard-guard/inventory/book state for the same220 consumed
+  Nov8 windows. Every applied-input output must match, then all279059 first-minute recorded decisions reconcile.
+- Conditional relaxed pure quotes change only pull/rung lines0.005/0.01/0.02/0.04c; no changed OMS consumes actual
+  fills. Selective retention study comes only after parity. No live code, protected Nov9–13 or fill-clock bypass.
+  All substantive jobs remain serial and capped; original native/research engines remain unchanged.
+
+## 2026-11-09 — pull/re-entry study COMPLETE; no coverage-preserving improvement
+
+- User requested moving beyond the existing A2 sizing task to prediction-driven pull/repost behavior. Branch
+  `research/predict-reentry-churn-20261109`, checkout `/tmp/cta-reentry-churn-20261109`. Producer as-of
+  **2026-11-09 14:59:08Z**, verification**14:59:57Z**. **220 consumed Nov8 windows**, first60s/four lanes,
+  **279,059 recorded decisions**, **30,796 reference quote opportunities**, zero excluded windows. No fills/PnL.
+- Hold incremental sizing fixed. Every original pull/reprice cancels immediately. Rapid re-entry means same price
+  within100ms of a recorded pull. Compare cancel-ack wait, continuous eligibility25/50/100ms, and all-entry50 control.
+- Relative to the fixed-sizing reference65,211 requests: cancel-ack **requests-0.22%, aligned quote time-0.14%**;
+  re-entry25 **-8.46%/-8.19%**; re-entry50 **-13.80%/-11.19%**; re-entry100 **-19.49%/-15.84%**;
+  all-entry50 **-43.15%/-27.06%**. All lose original desired-price coverage; same tradeoff direction in both runs.
+  Off-target time also falls for confirmation variants; this tradeoff has no economic valuation here.
+- Minimum delays are checked at original decision events, not a new timer. Diagnostics as-of15:04:07Z:
+  actual delay median46.93ms for25ms (n7792 delayed admissions),75.84ms for50ms(n5976),125.15ms for100ms(n4101).
+  Completed raw opportunities have median100ms (n30699);97 window-censored. Older average surviving quotes do not
+  establish better capture: all-entry50 raises oldest age515->643ms while losing27.06% aligned time.
+- **30 controls pass**; reference exactly matches prior incremental outputs on18 metrics for220 windows.
+  Artifact verifier reconciles1320 window-arm rows and184776 action-arm rows, unchanged reference identities,
+  admitted/withheld/censored statuses, lost/gained coverage and all ratios. Corrupt counts/negative waits refused.
+- Six arms/five new policies; cumulative multiplicity12 including prior capture study. Producer freeze dfbe5ddf,
+  declaration252bd26f. Receipts `reviews/reentry_churn_20261109/`; data/logs under matching research directory.
+  All jobs finished, producer peakRSS294MiB/48.66s, output1.5MiB. No live code, protected Nov9–13, fill-clock bypass
+  or frozen-engine change. One consumed partial day, no confidence interval, PnL, queue-rank or inventory-risk claim.
+- **Do not promote these re-entry delays on current evidence.** Existing B3 symmetric/exit-band and model-stability
+  questions remain open. Investigate unnecessary pulls themselves using exact guard values/reasons (existing A3),
+  or an exact native-input replay with decision parity. Reconstructed scores cannot identify soft versus hard pulls
+  reliably. No claim that all observed pulls are prediction-driven. Detailed results and limitations:
+  `handoffs/20261109_reentry_results.md`. Venue throttling and independent timer-driven admission remain unmodeled.
+
 ## 2026-11-09 14:24Z (session 62f3ce33) - A1 NetCap late-fill window implemented (pmmmrust main 366d419)
 
 - Code, two reviews and check.sh done; main fast-forwarded and pushed. Not deployed: Tokyo needs a new release tag and a
   re-rendered config (`cancel_late_fill_window_ms = 1000`). Next: A2 layered size (same workflow).
 
-## 2026-11-09 — quote capture optimization IN PROGRESS
+## 2026-11-09 — quote capture mechanics COMPLETE; incremental sizing candidate
 
-- User authorized improving strategy capture after the timing repair. Research branch
-  `research/predict-quote-capture-20261109`, checkout `/tmp/cta-quote-capture-20261109`.
-- Primary change: preserve base order identity through5/25 size changes, separate top-up, no partial-component refill,
-  minimum-notional fallback, shared pending-cancel/create reservations and reduce-only room. Existing guards pull
-  immediately. Entry-only buffers0.005/0.01/0.02/0.04c are separate opt-in candidates; no relaxed exit threshold.
-- Predeclared paired workload:220 consumed Nov8 windows, first60s, four lanes; recorded desired quotes fixed across
-  arms, no simulated fills. Same40/22/95ms acknowledgements,1s cancellation reserve grace,150-share side cap,3
-  pending creates/side. Measure requests, oldest-quote age, quoted time and reservations, not PnL/variance/fill rate.
-- Buffer scores are reconstructed research scores; missing/disagreeing values are counted. No claim that the fixed
-  factual inventory-dependent desired path is a counterfactual inventory path. No protected Nov9–13 data, live code,
-  strategy deployment, or fill-clock bypass. One capped process at a time; source/control freeze before results.
+- User authorized improving capture after the timing repair. Branch `research/predict-quote-capture-20261109`,
+  checkout `/tmp/cta-quote-capture-20261109`. As-of **2026-11-09 14:42:01Z**, **220 consumed Nov8 windows**, first60s,
+  four lanes, **279,059 recorded decisions**, zero excluded windows. Fixed factual desired path, no simulated fills.
+- Incremental sizing starts with one target-sized order; on same-price small-to-large growth, keep the small base
+  and add20. A later shrink cancels only the top-up. Original whole25 orders still resize when needed. Partial
+  components are not replenished; minimum-notional fallback, hard pulls, side/inflight caps and reservations remain.
+- Versus single-order reference: **requests68,299 ->65,211 (-4.52%)**, time active at desired prices**+3.90%**,
+  oldest active quote**399 ->515ms (+28.97%)**, reserved share-time**-3.57%**. Active share-time**+2.94%** and
+  off-target/cancel-pending quote time**+0.82%**: do not infer reduced inventory risk. Same desired target path100%.
+  Requests lower in188 windows/equal25/higher7; both recorded runs show fewer requests and more aligned quote time.
+- Always splitting gives**75,660 requests (+10.78%)**, despite preserving more quote age. Two tickets cost more on
+  pulls/reprices. Entry buffers0.005/0.01/0.02/0.04c cut requests but retain only79.82/67.24/48.33/21.90% of desired
+  quote time; keep off in the candidate. Reconstructed scores disagree with live quote-on at the pull line on
+  **12,044/137,325 wanted lane updates (8.77%)**; no missing/stale joins. Do not use this as live guard calibration.
+- **20 controls pass**. Follow-up reproduces440 reference/always-layered window-arm rows across23 columns exactly.
+  Independent artifact checks verify hashes, populations, desired-price identity and summaries; corrupt counts
+  refused. Reduce-only retention also subtracts prior cancellation reservations, preventing double-use of room.
+- Six-arm v1 receipt invalid due to a reference-size-increase retention bug; v2 supersedes it in-band and adds
+  a regression control. Only v2 is used. Incremental is one post-screen follow-up (multiplicity7), frozen source
+  `5e651fae`/declaration `f5857810`; price-alignment audit declared separately after initial mechanical results.
+- No PnL/fill-rate/queue-rank/variance claim or fresh-day validation. Same40/22/95ms acknowledgements,1s reserve
+  grace,150-share cap,3 in-flight creates/side; no throttle/backoff/rejection model. No live code, frozen-engine or
+  fill-clock-gate change; protected Nov9–13 remain unread. All jobs done, follow-up peakRSS<200MiB, outputs~8.5MiB.
+- Port/research handoff: `handoffs/20261109_incremental_capture_results.md`; compare incremental with the earlier
+  always-layered A2 spec before implementation selection. Full receipts in `reviews/quote_capture_20261109/`
+  (use receipt_v2.json) and `reviews/quote_incremental_20261109/`; data under corresponding research directories.
+  Next economic comparison requires validated matching-event evidence and filled/unfilled action reconciliation.
 
 ## 2026-11-09 — trade timing repair COMPLETE; precise replay remains data-limited
 
