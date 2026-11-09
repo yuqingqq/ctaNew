@@ -6,6 +6,13 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09 17:52Z: OPTIMIZATION LOOP B4 paired research engine has explicit fixed-size rejection exception.
+  LZ native f20fdb1 parity:238 synthetic traces/8998 requests/14961 pair decisions/2177 fills/219 rejections/683 retries;
+  51 Python checks +1 Rust control test. Exact full-v3 supplement closes JOIN/S1 component coverage wording (v6 supersedes v5).
+  Corrected LZ rejected-create unanswered slot release; frozen/no-token unchanged; ordinary fixed-size exact but rejection-stress
+  differs intentionally. Historical file parity, guard/model equivalence, timer integration and economic calibration remain.
+  findings_v6.json/handoffs/20261109_optimization_loop_v6.md; all jobs done17:52:26Z, slot free (recheck). Next paired-fill
+  and bounded-continuity synthetic integration. No protected data/live/frozen/loss changes; no PnL or variance claim.
   2026-11-09 17:15Z: OPTIMIZATION LOOP fifth/native-latency pass VERIFIED; same220 Nov8 windows per profile.
   Base output byte-identical, all base metrics exact.50ms grace across faster/base/slower: venue requests-5.35/-5.33/-3.72%,
   aligned+2.94/+4.17/+4.37%, active exposure+3.97/+4.10/+2.58%; off-target+71.76/+28.36/+5.61%. No PnL/variance claim.
