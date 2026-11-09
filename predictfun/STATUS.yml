@@ -6,11 +6,15 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
-  2026-11-09 07:01Z: INFLIGHT RESERVATION STUDY RUNNING, user-authorized. Reduce-reserved and both-sides-reserved
-  versus original baseline/prior reserved10, all nine consumed days / 2592 markets per arm/timing, J/X. Pending creates,
-  resting orders, pending cancels and cancel-to-fill-report grace reserved. Both-reserved asserts actual |net|<=10 on fills.
-  31 preflight controls pass, 2000 day null/bootstrap draws and 18 comparisons declared. Source f0e15415,
-  branch research/predict-inflight-budget-20261109. No live/forward changes. Logs/data inflight_budget_20261109; HANDOFF.
+  2026-11-09 07:44Z: INFLIGHT RESERVATION STUDY COMPLETE, nine consumed days / 2592 markets per arm/timing, J/X.
+  Both new arms eliminate reverse-opening fills from reducing-at-send orders; nine same-time ambiguities resolved by
+  exact two-market replays with identical fills/requests. Combined entry/exit budget holds actual |inventory|<=10.
+  Settlement baseline $514.06/$317.63; exit-only reservations $453.23/$150.44; combined $149.35/$119.34.
+  Exit-only residual inventory rises ~4%; combined reduces inventory-square ~50% versus prior adding-only budget,
+  but also halves observed settlement profit. No spread-capture improvement or deployment. All settlement intervals cross zero.
+  31 controls, smoke, 18 reconciliations and supplemental positive/refusal/tie-parity checks pass; zero missing valuations.
+  Receipts reviews/inflight_budget_20261109/, main source 26908059, tie source 91f769dc; branch research/predict-inflight-budget-20261109.
+  No live/forward changes; all jobs complete. Full findings and limits in HANDOFF.md.
   2026-11-09 06:19Z: ENTRY INVENTORY-BUDGET STUDY COMPLETE, nine consumed days / 2592 markets per arm/timing, J/X.
   Baseline settlement $514.06/$317.63; uniform10 $425.59/$281.63; reserved10 $309.74/$253.05.
   Daily SD falls 44.6%/37.0% uniform, 69.0%/58.0% reserved; mean residual inventory falls 38.6%/39.2%, 61.6%/60.6%.
