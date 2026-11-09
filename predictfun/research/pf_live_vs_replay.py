@@ -13,7 +13,8 @@ journal exports (pmmm-tools journal-export at c54df1f), and the replay of pf_liv
   markout   replay fills by order age / cancel-pending (9 consumed days and the 220 windows) and live fills by lifetime: markouts.
   phantom   NetCap refusals left under a late-fill window W or a higher net_shares; late fills a window would miss.
   feedtiming live latency vs the replay's; WS pending-message timing of live fills and of replay fills live missed / also got.
-Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom | feedtiming
+  who       touch vs ladder lanes live; makers / takers (REST matches) in the trades the replay credited to us but live missed.
+Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom | feedtiming | who
 """
 import collections, gzip, json, os, re, sys
 import numpy as np, pandas as pd
@@ -451,5 +452,62 @@ def main_feedtiming():
     return 0
 
 
+def main_who():
+    """Ladder vs touch in live (by lane: places, refusals, lifetime, fills, +1 s markout) and who traded where the replay credited us:
+    REST matches of 2026-11-08 (cohort hours / markets only) -> taker and maker addresses; our address from live fills' order hashes;
+    for J replay fills live missed (resting, no fill), the real trades on our side at our price or through it (exec second T-1.5..T+1)."""
+    from . import pf_io as io
+    sc = json.load(open(f'{RP}/scope.json')); coh = {w['market']: w['ws'] for w in sc['windows']}
+    assert all(h.startswith('20261108_') for h in sc['hours'])
+    legs = {}
+    for h in sc['hours']:
+        for recv, params, path, pl in io.rest_rows(h, ('/v1/orders/matches',)):
+            for x in pl.get('data') or []:
+                mid = (x.get('market') or {}).get('id')
+                if mid not in coh:
+                    continue
+                for m in x['makers']:
+                    k = (x['transactionHash'], m['hash'])
+                    if k not in legs:
+                        side, py = io.yes_side(m)
+                        legs[k] = dict(mid=mid, exec_s=int(io.iso_s(x['executedAt'])), tx=x['transactionHash'], taker=x['taker']['signer'].lower(),
+                                       maker=m['signer'].lower(), maker_hash=m['hash'].lower(), yes_side=side, ptick=int(round(py * 100)),
+                                       shares=int(m['amount']) / io.E18)
+    M = pd.DataFrame(legs.values()); M.to_parquet(f'{OUT}/matches_20261108.parquet', index=False)
+    ours = {f['order'].lower() for run, _ in RUNS for f in json.load(open(f'{CAP}/{run}/stageA/ledger.json'))['fills'] if f['market'] in coh}
+    me = M[M.maker_hash.isin(ours)].maker.value_counts()
+    ME = me.index[0]
+    M['t_in'] = M.exec_s - M.mid.map(coh); W = M[(M.t_in >= 0) & (M.t_in < 240)]
+    def top(g, k=6):
+        v = g.sort_values(ascending=False)
+        return dict(n=len(v), top5_pct=round(float(100 * v.head(5).sum() / v.sum()), 1),
+                    top=[(a[:6] + '..' + a[-4:], round(float(100 * x / v.sum()), 1)) for a, x in v.head(k).items()])
+    out = dict(our_address=ME, our_legs=int(me.iloc[0]), our_share_of_maker_volume_0_240s_pct=round(float(100 * W[W.maker == ME].shares.sum() / W.shares.sum()), 3),
+               market_makers=top(W.groupby('maker').shares.sum()), market_takers=top(W.groupby('taker').shares.sum()))
+    C = pd.read_parquet(f'{OUT}/replay_fill_attribution.parquet'); rows = []
+    for r in C[(C.timing == 'J') & (C.why == 'live_rested_no_fill')].itertuples():
+        T = (r.ws_ms + r.t * 1000.0) / 1000.0; side = 'bid' if r.side == 0 else 'ask'
+        x = M[(M.mid == r.mid) & (M.yes_side == side) & M.exec_s.between(T - 1.5, T + 1.0) & ((M.ptick <= r.pt) if side == 'bid' else (M.ptick >= r.pt))]
+        rows.append(x.assign(at_our_price=x.ptick == r.pt))
+    X = pd.concat(rows).drop_duplicates(['tx', 'maker_hash']); A = X[X.at_our_price]
+    topM = set(W.groupby('maker').shares.sum().sort_values(ascending=False).head(10).index)
+    topT = set(W.groupby('taker').shares.sum().sort_values(ascending=False).head(10).index)
+    out['missed_trades'] = dict(makers_at_our_price=top(A.groupby('maker').shares.sum()), takers=top(X.groupby('taker').shares.sum()),
+                                market_top10_makers_share_at_our_price_pct=round(float(100 * A[A.maker.isin(topM)].shares.sum() / A.shares.sum()), 1),
+                                market_top10_takers_share_pct=round(float(100 * X[X.taker.isin(topT)].shares.sum() / X.shares.sum()), 1),
+                                we_are_maker_legs=int((X.maker == ME).sum()))
+    out['takers_hitting_our_live_orders'] = top(M[M.maker == ME].groupby('taker').shares.sum())
+    P = pd.concat([pd.read_parquet(f'{OUT}/core_orders_{r}.parquet') for r, _ in RUNS])
+    P['life'] = P[['t_CancelDone', 't_Filled_last']].max(axis=1) - P.t_Accepted
+    names = {0: 'up_touch', 1: 'down_touch', 2: 'up_rung', 3: 'down_rung'}
+    out['live_by_lane'] = {names[ln]: dict(places=len(g), refused=int(g.refused.notna().sum()), accepted=int(g.t_Accepted.notna().sum()),
+                                          life_ms_p50=round(float(g.life.median()), 0), life_ms_p90=round(float(g.life.quantile(0.9)), 0),
+                                          filled_orders=int((g.filled > 0).sum()), filled_shares=round(float(g.filled.sum()), 1))
+                           for ln, g in P.groupby('lane')}
+    json.dump(out, open(f'{OUT}/who.json', 'w'), indent=1, default=str)
+    print(json.dumps(out, indent=1, default=str))
+    return 0
+
+
 if __name__ == '__main__':
-    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom, 'feedtiming': main_feedtiming}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
+    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom, 'feedtiming': main_feedtiming, 'who': main_who}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
