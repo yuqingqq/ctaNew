@@ -1,6 +1,7 @@
 """Full-policy comparisons, entry-matched inventory paths and fill attribution."""
 import datetime as dt
 import json
+from pathlib import Path
 import subprocess
 import numpy as np
 import pandas as pd
@@ -53,9 +54,9 @@ def summarize(day,tm,mode,label,spec):
     out=folder(day,tm,mode);checked=json.loads((out/'passive_checks.json').read_text())
     if checked['markets']!=288:raise ValueError('incomplete checker population')
     s=json.loads((out/'summary.json').read_text())
+    if s['env'].get('PF_FORWARD','20261104')!='20261104':raise ValueError('wrong input boundary')
     if label=='baseline' and (out/'baseline_reference.json').exists():
         ref=json.loads((out/'baseline_reference.json').read_text())
-        from pathlib import Path
         src=Path(ref['summary_path'])
         if sha(src)!=ref['summary_sha']:raise ValueError('baseline source changed')
         s=json.loads(src.read_text())
@@ -146,6 +147,10 @@ def main():
         datafiles += [DATA/'step5'/day/'preds_basis_study.parquet',DATA/'step1'/day/'registry.parquet',
                       DATA/'step1'/day/'clock_rl_d2.json',DATA/'step1'/day/'legs_timed2.parquet',DATA/'step1'/day/'legs_tk.parquet']
         datafiles += sorted((DATA/'step1'/day/'books').glob('*.parquet'))
+    from . import pf_io as io
+    rawfiles=sorted({Path(io.BN_DIR)/f'{h}.csv.gz' for day in DAYS
+        for h in io.hours_of(day,extra_before=1,extra_after=1)
+        if h[:8] not in ['20261028','20261029','20261030'] and h[:8]<'20261104'})
     tests=(DEST/'logs/passive_final_controls.log').read_text()
     if '\nOK\n' not in tests or 'rc=0 ' not in tests:raise ValueError('source controls missing')
     declaration=DEST/('declaration_v2.json' if (DEST/'declaration_v2.json').exists() else 'declaration.json')
@@ -154,6 +159,8 @@ def main():
         source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=HERE,text=True).strip(),
         source_sha={str(p.relative_to(HERE.parents[1])):sha(p) for p in sources},
         prepared_input_sha={str(p):sha(p) for p in datafiles},results=results,comparisons=comparisons,
+        binance_input_sha={str(p):sha(p) for p in rawfiles if p.exists()},
+        missing_binance_hour_files=[str(p) for p in rawfiles if not p.exists()],
         paired_inference=inference,checks=checks,execution_inputs=inputs,source_controls=tests,
         predicates={v:dict(main_settle_better_both=all(mainrows[t,v]['settle']>mainrows[t,'baseline']['settle'] for t in ['J','X']),
             main_plus1_better_both=all(mainrows[t,v]['plus1']>mainrows[t,'baseline']['plus1'] for t in ['J','X']),
