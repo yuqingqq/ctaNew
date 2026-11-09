@@ -23,7 +23,9 @@ def check_counts(actual,expected):
 
 
 def main():
-    if (b.DEST/'verification.json').exists():raise ValueError('verification already exists')
+    updated=sys.argv[1:]==['updated']
+    name='verification_v3.json' if updated else 'verification.json'
+    if (b.DEST/name).exists():raise ValueError('verification already exists')
     control=pd.DataFrame(dict(lifecycle_lo_ns=[100,100],lifecycle_hi_ns=[200,200],match_lo_ns=[150,210],match_hi_ns=[160,220]))
     positive=overlap_counts(control)==dict(own_interval_overlaps=1,own_interval_nonoverlap=1)
     bad=False
@@ -31,8 +33,11 @@ def main():
     except ValueError:bad=True
     if not positive or not bad:raise ValueError('verification controls failed')
     r=json.loads((b.DEST/'receipt.json').read_text())
-    for p,h in r['declaration']['sources'].items():
-        if b.audit.sha(b.audit.HERE/p)!=h:raise ValueError('repair source changed')
+    changed=[p for p,h in r['declaration']['sources'].items() if b.audit.sha(b.audit.HERE/p)!=h]
+    if changed!=(['pf_step4_ladder_identity.py'] if updated else []):raise ValueError('unexpected repair source change: '+str(changed))
+    if updated:
+        checks=(b.DEST/'logs/controls_v3.log').read_text()
+        if '\nOK\n' not in checks or 'rc=0 ' not in checks:raise ValueError('missing final controls')
     for p,h in r['artifacts'].items():
         if b.audit.sha(b.DEST/p)!=h:raise ValueError('repair artifact changed')
     if b.audit.sha(b.DEST/'manifest.json')!=r['manifest_sha256']:raise ValueError('manifest changed')
@@ -72,7 +77,13 @@ def main():
         status_intervals_without_clipping=len(m),unknown_rows_without_invented_time=len(unknown),
         engine_cli=dict(returncode=run.returncode,refused=refused,message=run.stderr.strip()),
         controls=dict(overlap_and_nonoverlap=positive,corrupted_receipt_refused=bad))
-    b.audit.write(b.DEST/'verification.json',out);b.audit.write(b.REVIEW/'verification.json',out)
+    if updated:
+        out.update(supersedes_verification_sha256=b.audit.sha(b.DEST/'verification.json'),
+            correction='new replay entrypoint partitions actual match-event times into pre/live/post market windows and records exclusion counts; data producer and its receipt are unchanged',
+            runtime_source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=b.audit.HERE,text=True).strip(),
+            runtime_source_sha256={p:b.audit.sha(b.audit.HERE/p) for p in ['pf_step4_ladder_identity.py','pf_trade_windows.py','tests/test_trade_windows.py']},
+            final_controls=checks)
+    b.audit.write(b.DEST/name,out);b.audit.write(b.REVIEW/name,out)
     print(json.dumps(out,indent=2))
 
 

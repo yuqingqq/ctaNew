@@ -1,0 +1,20 @@
+{
+  "as_of": "2026-11-09T13:54:50.566825+00:00",
+  "verifier_sha256": "fcd6b6833630591bceba6c9e68cd0f11ba31076a9a4ea6120bae5e38f3a08701",
+  "receipt_sha256": "423d61d5a6e8b51e6afa078970cff7bcb4e69c1d2aedff3d65ea7ef1ff7a2633",
+  "artifact_hashes": 5,
+  "exact_trade_rows_verified": 375569,
+  "order_actions_verified": 42064,
+  "own_fills_verified": 99,
+  "status_intervals_without_clipping": 99,
+  "unknown_rows_without_invented_time": 375470,
+  "engine_cli": {
+    "returncode": 1,
+    "refused": true,
+    "message": "REFUSED: point replay requires match-event timestamps; unresolved population {'missing_matched_event': 375470, 'matched_status_interval': 99}"
+  },
+  "controls": {
+    "overlap_and_nonoverlap": true,
+    "corrupted_receipt_refused": true
+  }
+}

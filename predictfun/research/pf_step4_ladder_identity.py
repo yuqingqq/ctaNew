@@ -22,7 +22,9 @@ def engine_source():
     s=s.replace(reg,reg+"\nif set(reg.index) != set(IDENTITY_TAPE[0].mid):\n    raise ValueError('registry and exact trade tape market populations differ')")
     start=s.index("GID = None\nTIMING = ")
     end=s.index('LT_BY = {m: g for m, g in LT.groupby',start)
-    s=s[:start]+"GID = None\nTIMING = 'identity'\nLT, TXSTAT = IDENTITY_TAPE\n"+s[end:]
+    s=s[:start]+("GID = None\nTIMING = 'identity'\nLT, TXSTAT = IDENTITY_TAPE\n"
+        "from .pf_trade_windows import select_trade_windows\n"
+        "LT, TXSTAT['window_population'] = select_trade_windows(LT, reg)\n")+s[end:]
     start=s.index('if TXJIT:                                            # within-frame match time')
     end=s.index('# ---- Binance futures: knowledge time',start)
     s=s[:start]+s[end:]
