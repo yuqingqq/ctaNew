@@ -6,6 +6,13 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09 13:56Z: TRADE TIMING REPAIR COMPLETE on fix/predict-trade-timing-20261109. Full trade identities,
+  separate status/confirmation/receipt clocks; no heuristic fallback or other-leg substitution.375,569 retained legs,
+  99 exact own identities/consistent coarse intervals,375,470 missing clocks;42,064 actions reconcile within1 microshare.
+  80 off-grid prices retained without rounding.14 controls and artifact/real-CLI checks pass. Point replay correctly
+  refuses the insufficient historical clocks; no corrected PnL or calibration claim. Legacy forward/C2 drivers guarded
+  on the fix branch; frozen engines unchanged. All jobs done,109MiB output, no live or protected-forward changes.
+  Receipts reviews/trade_timing_fix_20261109/; final verification_v3.json. See HANDOFF.md and README.md.
   2026-11-09 12:37Z: EXACT-ORDER CLOCK AUDIT COMPLETE,220 consumed Nov8 windows/42,064 actions. All99 confirmed
   fills reconcile by full signed hash+trade identity; quantities agree within1 microshare/order.93 identifiable clocks:
   J18/X15 legs violate order lifecycle bounds even at10ms tolerance;6 ambiguous clocks retained. No constant offset

@@ -1,0 +1,29 @@
+{
+  "as_of": "2026-11-09T13:56:39.259640+00:00",
+  "verifier_sha256": "afd380e607dd945f70e22acc4806977a3ea0896532564e34b6cc366dfa5f2a09",
+  "receipt_sha256": "423d61d5a6e8b51e6afa078970cff7bcb4e69c1d2aedff3d65ea7ef1ff7a2633",
+  "artifact_hashes": 5,
+  "exact_trade_rows_verified": 375569,
+  "order_actions_verified": 42064,
+  "own_fills_verified": 99,
+  "status_intervals_without_clipping": 99,
+  "unknown_rows_without_invented_time": 375470,
+  "engine_cli": {
+    "returncode": 1,
+    "refused": true,
+    "message": "REFUSED: point replay requires match-event timestamps; unresolved population {'missing_matched_event': 375470, 'matched_status_interval': 99}"
+  },
+  "controls": {
+    "overlap_and_nonoverlap": true,
+    "corrupted_receipt_refused": true
+  },
+  "supersedes_verification_sha256": "7decfba7250244d6b57f65e898299d68e806930eec3634359b38da617288fddc",
+  "correction": "new replay entrypoint partitions actual match-event times into pre/live/post market windows and records exclusion counts; data producer and its receipt are unchanged",
+  "runtime_source_commit": "301bb62566ed7a74decb73251a21f710223dc48c",
+  "runtime_source_sha256": {
+    "pf_step4_ladder_identity.py": "d8d90064dfb7f0521f2e33cb0ca6c3108e17c20514b7512face04f82d16584f4",
+    "pf_trade_windows.py": "f5dcb552936d2f81676d37a1f7498407f6fe1e95719f42d66207776f400cd64b",
+    "tests/test_trade_windows.py": "ced7568c4f92c4030a7c4d82251e028f249cbe90ca0e8cc14002e01bb64c7032"
+  },
+  "final_controls": "..............\n----------------------------------------------------------------------\nRan 14 tests in 0.251s\n\nOK\n2026-11-09T13:56:33Z tag=trade_tape_controls_v3 rc=0 peak_rss_mib=123 wall_s=0.60 cpu_user_s=0.45 memavail_start_gib=24 disk_free_gib=457->457\n"
+}
