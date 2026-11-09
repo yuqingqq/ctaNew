@@ -52,7 +52,14 @@ def generation_counts(f,q,ws,counters):
 def summarize(day,tm,mode,label,spec):
     out=folder(day,tm,mode);checked=json.loads((out/'passive_checks.json').read_text())
     if checked['markets']!=288:raise ValueError('incomplete checker population')
-    s=json.loads((out/'summary.json').read_text());a=s['arms'][name(spec)]
+    s=json.loads((out/'summary.json').read_text())
+    if label=='baseline' and (out/'baseline_reference.json').exists():
+        ref=json.loads((out/'baseline_reference.json').read_text())
+        from pathlib import Path
+        src=Path(ref['summary_path'])
+        if sha(src)!=ref['summary_sha']:raise ValueError('baseline source changed')
+        s=json.loads(src.read_text())
+    a=s['arms'][name(spec)]
     w=pd.read_parquet(out/'win'/stem(spec));f=pd.read_parquet(out/'fills'/stem(spec));q=pd.read_parquet(out/'requests'/stem(spec))
     if len(w)!=288 or w.mid.duplicated().any():raise ValueError('market population')
     reconcile(w,f);ws=w.set_index('mid').ws;ctr=a['live']['counters'];groups={m:g for m,g in f.groupby('mid',sort=False)}
@@ -95,6 +102,7 @@ def main():
                     checks[f'{mode}/{tm}/{day}']=json.loads((path/'passive_checks.json').read_text())
                     inputs[f'{mode}/{tm}/{day}']=dict(summary_sha=sha(path/'summary.json'),
                         execution=json.loads((path/'study_execution.json').read_text()),
+                        baseline_reference=json.loads((path/'baseline_reference.json').read_text()) if (path/'baseline_reference.json').exists() else None,
                         passive_audit_sha=sha(path/'passive_audit.json'))
                 w=pd.concat(ws);tr=pd.concat(ts);eq=np.r_[0.,w.pnl.cumsum().to_numpy()];inv=tr[tr.known_net60.abs()>=1]
                 add=lambda k:sum(d[k] for d in ds)
@@ -134,7 +142,7 @@ def main():
     sources=list(HERE.glob('pf_passive*.py'))+[HERE/'run_passive_study.sh',HERE/'tests/test_passive_study.py',HERE/'pf_sizing_engine.py',HERE/'pf_settlement_study.py']
     tests=(DEST/'logs/passive_final_controls.log').read_text()
     if '\nOK\n' not in tests or 'rc=0 ' not in tests:raise ValueError('source controls missing')
-    out=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),declaration=json.loads((DEST/'declaration.json').read_text()),
+    out=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),declaration=json.loads((DEST/'declaration_v2.json').read_text()),
         source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=HERE,text=True).strip(),
         source_sha={str(p.relative_to(HERE.parents[1])):sha(p) for p in sources},results=results,comparisons=comparisons,
         paired_inference=inference,checks=checks,execution_inputs=inputs,source_controls=tests,

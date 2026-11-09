@@ -3,6 +3,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import shutil
 import subprocess
 import sys
 import numpy as np
@@ -47,7 +48,9 @@ def check(day,tm,mode):
             b=b[b.mid.isin(w.mid)].reset_index(drop=True)
             pd.testing.assert_frame_equal(a,b,check_exact=True);parity.append(kind)
     report=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),day=day,timing=tm,mode=mode,
-        markets=len(w),entry_checks=checks,baseline_exact=parity,source_sha=sha(HERE/'pf_passive_engine.py'))
+        markets=len(w),entry_checks=checks,baseline_exact=parity,
+        baseline_origin='retained reference' if (out/'baseline_reference.json').exists() else 'fresh replay',
+        source_sha=sha(HERE/'pf_passive_engine.py'))
     write(out/'passive_checks.json',report);print('CHECKED',day,tm,mode,len(w),'markets',len(checks),'entry comparisons',flush=True)
 
 
@@ -56,12 +59,20 @@ def run(day,tm,mode):
     if mode=='stress' and day!='20261103':raise ValueError('undeclared stress date')
     out=folder(day,tm,mode)
     if out.exists():raise ValueError('refuse overwrite')
+    reuse=mode=='main' and day!=DAYS[0]
+    run_arms={k:v for k,v in ARMS.items() if not reuse or k!='baseline'}
     env=dict(os.environ,**COMMON,PF_PREDS='preds_basis_study',PF_TAG=f'passive_{mode}_{tm}',
-        PF_MAX_WINDOWS='8' if mode=='smoke' else '0',PF_ARMS=ARMS['baseline'] if mode=='smoke' else ';'.join(ARMS.values()),
+        PF_MAX_WINDOWS='8' if mode=='smoke' else '0',PF_ARMS=ARMS['baseline'] if mode=='smoke' else ';'.join(run_arms.values()),
         PF_STUDY_EXEC='1',PF_CAP_CACHE='0',PF_STUDY_CANCEL_ACK_MS=str(ACK_MS if mode=='stress' else 0),
         PF_TXJIT='frame' if tm=='J' else '',PF_TXSHIFT='0' if tm=='J' else '-50',PF_QACT='' if tm=='J' else 'max')
     env.pop('PF_LIVE_CAPSTATE_IN',None)
     subprocess.run([sys.executable,'-m','predictfun.research.pf_passive_engine',day,'tokyoreal','custom'],env=env,cwd=HERE.parents[1],check=True)
+    if reuse:
+        ref=old_folder(day,tm);paths={}
+        for kind in ['win','fills','requests']:
+            src=ref/kind/stem(ARMS['baseline']);shutil.copy2(src,out/kind/src.name);paths[kind]=dict(path=str(src),sha256=sha(src))
+        write(out/'baseline_reference.json',dict(summary_path=str(ref/'summary.json'),summary_sha=sha(ref/'summary.json'),
+            artifacts=paths,reason='unchanged baseline; direct full-day control rerun on first date at each timing'))
     check(day,tm,mode)
 
 
