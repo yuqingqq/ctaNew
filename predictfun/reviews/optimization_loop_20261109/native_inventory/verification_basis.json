@@ -1,0 +1,9 @@
+{
+  "as_of": "2026-11-09T16:23:23.441712+00:00",
+  "run": "basis",
+  "events": 35,
+  "original_artifacts_exact": true,
+  "inventory_sha256": "082e9966d7b70ea866ae5590c3fb257323aa73d77508092b2d3c631c6096ae3b",
+  "replay_sha256": "1be8a67592514f5b81e3423294d1272aadb88cbd39b9852243ad2d6abf6e11b6",
+  "scope": "post-Filled native known position; not match time and not hypothetical fill feedback"
+}
