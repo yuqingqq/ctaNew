@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09: PULL/REENTRY STUDY RUNNING;220 already-consumed Nov8 windows, fixed incremental sizing.
+  Cancel-ack gating and25/50/100ms rapid-reentry confirmation; original pulls immediate, no fills/PnL or protected data.
   2026-11-09 14:42Z: QUOTE CAPTURE MECHANICS COMPLETE,220 consumed Nov8 windows/279,059 decisions, first60s, no exclusions.
   Incremental top-ups preserve the small order: requests-4.52%, active time at desired prices+3.90%, oldest quote399->515ms,
   reserved share-time-3.57%; active share-time+2.94%, off-target time+0.82%, so no inventory-risk/PnL claim. Always splitting
