@@ -1,0 +1,14 @@
+{
+  "as_of": "2026-11-09T14:38:24.811607+00:00",
+  "receipt_sha256": "225a85d58115f0c6ef42c9e4ab7cc54fc197e8849016370fa1e052e4330d9933",
+  "source_commit": "f5857810551a2baf310b48a403b7e7ca891f79db",
+  "baseline_and_layered_window_rows_exact": 440,
+  "incremental_windows": 220,
+  "reference_columns_verified": 23,
+  "controls": {
+    "old_arm_artifact_parity": true,
+    "corrupted_count_refused": true
+  },
+  "input_decisions_sha256": "b775757c56a470b2b512fca15965e78dc8ec426817857107152278bc12d9335f",
+  "limitation": "no fill, queue-rank, profit or variance validation"
+}

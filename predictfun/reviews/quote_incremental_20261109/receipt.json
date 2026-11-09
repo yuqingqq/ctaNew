@@ -1,0 +1,195 @@
+{
+  "as_of": "2026-11-09T14:38:16.301887+00:00",
+  "declaration": {
+    "as_of": "2026-11-09T14:37:56.602278+00:00",
+    "population": "220 consumed Nov8 windows, first60 seconds, four lanes; all recorded desired decisions, never fill-selected",
+    "estimand": "paired fixed-intent no-fill engineering workload; order requests, oldest active quote age, quoting time and pending exposure; no PnL or fill-rate estimate",
+    "baseline": "single-order cancel/repost versus base5+topup; same recorded target prices/sizes/hard-guard pulls",
+    "arms": {
+      "single": [
+        false,
+        0.0,
+        false
+      ],
+      "layered": [
+        true,
+        0.0,
+        false
+      ],
+      "incremental": [
+        true,
+        0.0,
+        true
+      ]
+    },
+    "primary": "one additional post-screen mechanism: start with a whole target-sized order; only split an existing same-price small base on size growth",
+    "gate": "entry only: v>original minute0 PM90 line+delta; keep only while v>original line and score age<=100ms; reset on hard pull/reprice; original desired target is never enlarged",
+    "order_model": {
+      "place_ms": 40,
+      "cancel_ms": 22,
+      "pending_cancel_ms": 95,
+      "cancel_reserve_grace_ms": 1000,
+      "side_cap_shares": 150,
+      "creates_inflight_per_side": 3,
+      "minimum_notional_usd": 1
+    },
+    "sizing": "do not refill partial components; fall back to one order when either split ticket is below minimum; global pending reservations and reduce-only room shared across lanes",
+    "signal_limitation": "buffer uses precomputed reconstructed research scores; these are not captured exact live guard values",
+    "null": "deterministic mechanical workload test; no statistical hypothesis, confidence interval, predictive-skill claim or profit-based selection",
+    "multiplicity": 7,
+    "validation": "prior single and always-layered per-window artifacts must reproduce exactly, then evaluate incremental; unchanged source decisions and parameters",
+    "source_commit": "5e651faea70f3cf1134cf023a77b79b34e9778ac",
+    "sources": {
+      "pf_quote_capture.py": "467a0df8d8cee194aa38308ffad62c2d314fa7f2519bb9e618f305b7142103c1",
+      "pf_quote_capture_study.py": "c94ea82ec5e4c85481dadb53fef0cca1eb31421dc04ec88f31f895f7ab56f252",
+      "tests/test_quote_capture.py": "63a47a1ff677d4073c173da658daf4eb9cd12424a3af3dc91942b4240bfbb421",
+      "tests/test_quote_capture_study.py": "9bbc7fe2676280b843493db085b912c35d8578d41f8414114f4053ef227174e1",
+      "pf_quote_incremental_study.py": "60323f25796a72e8ae603093f5b508a6f9622b8d3d061e718f2f046cfcd36799",
+      "pf_quote_capture_verify.py": "c949e6f994846da82e69a0a3b956b1cb87a63e9dd638462c1bcaaa2aafb91caa"
+    },
+    "inputs": {
+      "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/scope.json": "0fdb454efec919ab03b2e44fddef154c5e9964c65d1ab3cf10828eabf0dc58b6",
+      "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/research/step5/20261108/preds_t60k.parquet": "afac922009cf8e9df6787625e86c661a8dba0b1d968cfbbce0f1e79665001a82",
+      "/home/yuqing/ctaNew/data/predict_fun/research/step4/minute_lines_t60k.json": "3852fec9e0fa36d164c5482688574663bc4230033911ce0d47049e04ac87735d"
+    },
+    "raw_inputs": {
+      "v6": "/home/yuqing/pmmm-data/tokyo-live-data-20261109/tokyo-live-20261109/v6/run-1794108465172/outputs.jsonl.gz",
+      "basis": "/home/yuqing/pmmm-data/tokyo-live-data-20261109/tokyo-live-20261109/basis/run-1794147344737/outputs.jsonl.gz"
+    },
+    "raw_boundary": "hash/read only decompressed prefix before Nov8 23:02; future payload not decoded",
+    "no_live_change": true,
+    "no_fill_clock_bypass": true,
+    "protected_dates_read": false,
+    "version": 3,
+    "inherited_decisions_sha256": "b775757c56a470b2b512fca15965e78dc8ec426817857107152278bc12d9335f",
+    "primary_arm": "incremental",
+    "followup_to_receipt_sha256": "9451b36d7231479949278e50358b7548533f65e642c74d518141fe6122d78eff",
+    "motivation_known_before_followup": "always-layered requests increased10.78% in the engineering workload; entry buffers lost substantial desired quote time; no PnL claim",
+    "inherited_reference_sha256": "047bd423325d695cdaa8fc94e6d7444b1b84939190094e498d1dfc84af05ed55"
+  },
+  "source_controls": "..................\n----------------------------------------------------------------------\nRan 18 tests in 0.003s\n\nOK\n2026-11-09T14:37:56Z tag=quote_incremental_controls rc=0 peak_rss_mib=101 wall_s=0.30 cpu_user_s=0.24 memavail_start_gib=24 disk_free_gib=448->448\n",
+  "line_cents": 0.0492,
+  "population": {
+    "day": "20261108",
+    "declared_markets": 220,
+    "present_markets": 220,
+    "decision_rows": 279059,
+    "window_status": {
+      "present": 220
+    },
+    "markets_per_arm": {
+      "incremental": 220,
+      "layered": 220,
+      "single": 220
+    }
+  },
+  "summary": {
+    "single": {
+      "places": 34195.0,
+      "cancels": 34104.0,
+      "base_resize_cancels": 6008.0,
+      "kept_base_size_switches": 0.0,
+      "share_ms": 51135611.696777344,
+      "quoted_lane_ms": 4697889.59765625,
+      "desired_lane_ms": 5467926.7568359375,
+      "oldest_lane_age_ms2": 1875048377.0160336,
+      "reserved_share_ms": 428496765.7421875,
+      "refused_capacity": 8413.0,
+      "refused_inflight": 180.0,
+      "windows": 220,
+      "requests": 68299,
+      "mean_oldest_active_quote_ms": 399.1256793159815,
+      "mean_reserved_shares_both_sides": 32.46187619258996,
+      "peak_reserved_side": 150.0,
+      "requests_change_vs_single_pct": 0.0,
+      "desired_time_retained_vs_single_pct": 100.0,
+      "quoted_time_retained_vs_single_pct": 100.0
+    },
+    "layered": {
+      "places": 37890.0,
+      "cancels": 37770.0,
+      "base_resize_cancels": 0.0,
+      "kept_base_size_switches": 6652.0,
+      "share_ms": 51352980.71777344,
+      "quoted_lane_ms": 4974340.85546875,
+      "desired_lane_ms": 5467926.7568359375,
+      "oldest_lane_age_ms2": 2597437751.345742,
+      "reserved_share_ms": 394639274.7363281,
+      "refused_capacity": 6840.0,
+      "refused_inflight": 3780.0,
+      "windows": 220,
+      "requests": 75660,
+      "mean_oldest_active_quote_ms": 522.167223118645,
+      "mean_reserved_shares_both_sides": 29.89691475275213,
+      "peak_reserved_side": 150.0,
+      "requests_change_vs_single_pct": 10.777610213912347,
+      "desired_time_retained_vs_single_pct": 100.0,
+      "quoted_time_retained_vs_single_pct": 105.88458396192239
+    },
+    "incremental": {
+      "places": 32656.0,
+      "cancels": 32555.0,
+      "base_resize_cancels": 1104.0,
+      "kept_base_size_switches": 5347.0,
+      "share_ms": 52641472.5793457,
+      "quoted_lane_ms": 4860155.3427734375,
+      "desired_lane_ms": 5467926.7568359375,
+      "oldest_lane_age_ms2": 2501716028.6665106,
+      "reserved_share_ms": 413187342.857666,
+      "refused_capacity": 6889.0,
+      "refused_inflight": 179.0,
+      "windows": 220,
+      "requests": 65211,
+      "mean_oldest_active_quote_ms": 514.7399315921683,
+      "mean_reserved_shares_both_sides": 31.30207142861106,
+      "peak_reserved_side": 150.0,
+      "requests_change_vs_single_pct": -4.521296065828196,
+      "desired_time_retained_vs_single_pct": 100.0,
+      "quoted_time_retained_vs_single_pct": 103.45401358938152
+    }
+  },
+  "source_score_diagnostics": {
+    "reconstructed_score_missing": 0,
+    "reconstructed_score_vs_live_conflict": 12044
+  },
+  "predicates": {
+    "zero_buffer_targets_exact": true,
+    "all_targets_subset": true,
+    "all_side_caps_hold": true,
+    "layered_fewer_requests": false,
+    "layered_equal_desired_time": true,
+    "primary_fewer_requests": true,
+    "primary_equal_desired_time": true
+  },
+  "artifacts": {
+    "window_metrics.parquet": "6f6530f57715266bf36dace9d806af42dc5e4d7484759ad6bd058197fc39657b",
+    "window_status.parquet": "943eae89c5decc007b04828b477d7daf62f082b57b9596a321a1864bb5bf8ffc",
+    "decisions.parquet": "b775757c56a470b2b512fca15965e78dc8ec426817857107152278bc12d9335f"
+  },
+  "extraction": {
+    "as_of": "2026-11-09T14:23:45.349603+00:00",
+    "decisions": 279059,
+    "markets": 220,
+    "decisions_sha256": "b775757c56a470b2b512fca15965e78dc8ec426817857107152278bc12d9335f",
+    "prefixes": {
+      "v6": {
+        "prefix_sha256": "9633a0e4b4d0bdd98b10b260694e464b09129ddc6c150a3ccf65f6a5016b5304",
+        "lines": 679873,
+        "cutoff_ms": 1794178920000
+      },
+      "basis": {
+        "stopped_before_future_payload": true,
+        "prefix_sha256": "638ed4b0f85ac4b656dfc0e8096bea17555d2c9e4aee2a5caa09551886b4bada",
+        "lines": 582739,
+        "cutoff_ms": 1794178920000
+      }
+    }
+  },
+  "limitations": [
+    "one consumed partial day; fixed factual desired path with no simulated fills; no counterfactual inventory feedback",
+    "first60 seconds only; no ladder price adaptation to counterfactual order residency",
+    "no fill/PnL/variance estimate, queue rank proof, confidence interval or deployment claim",
+    "modelled acknowledgements and1s reservation grace; no venue throttling/backoff/post-only rejection model",
+    "buffer results depend on reconstructed scores; missing/conflicting scores reported separately"
+  ]
+}
