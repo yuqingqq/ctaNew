@@ -222,7 +222,7 @@ def dedup_events(e):
         if g.q.nunique()!=1 or g.price.nunique()!=1 or g.cid.nunique()!=1:raise ValueError('fill identity changed')
         positive=g[g.status.isin(['Matched','Confirmed'])]
         rows.append(dict(run=run,order_hash=h,trade_id=tr,cid=int(g.cid.iloc[0]),q=float(g.q.iloc[0]),price=float(g.price.iloc[0]),
-            final_status=g.status.iloc[-1],first_positive_notice=float(positive.at.min()) if len(positive) else float('nan'),
+            final_status=g.status.iloc[-1],first_positive_notice=float(positive['at'].min()) if len(positive) else float('nan'),
             notice_count=len(g),reported_match_ms=float(g.reported_match_ms.iloc[-1])))
     return pd.DataFrame(rows)
 
