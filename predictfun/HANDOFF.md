@@ -1,5 +1,21 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 — earlier urgency check RUNNING
+
+- User requested an earlier-data check of the same urgency rule. Branch `research/predict-urgency-history-20261109`,
+  checkout `/tmp/cta-urgency-history-20261109`, declared source `10893e49`. All four earlier prepared days (Oct 23–26),
+  1,152 markets per arm/timing; baseline versus unchanged RPRICE at J/X. These are consumed guard-training days.
+- Declaration and bounded outputs: `data/predict_fun/research/urgency_history_20261109/`. One-cent reducing-side
+  improvement into the spread at 180–240s with |known net| >=10; no policy/threshold/model change. Uncapped total-loss
+  budget, existing 150-share exposure cap, rebates excluded. No new stress sweep or forward-data read.
+- Frozen previous policy and metric-source hashes checked. Fresh full-day Oct23 baseline parity at J/X; other baselines
+  copied with hashes. Exact pre-180 fills/requests plus per-market valuation/inventory reconciliation required.
+- Four earlier days reported separately; 2,000 shared day sign flips across J/X x settlement/+1s, no confidence interval.
+  Nine-day pooled points will be explicitly descriptive after candidate selection. Prior four-candidate multiplicity retained.
+- Clarification of previous stress interpretation: Nov3 urgency's settlement delta is identical with/without p99 cancel
+  reservations at each timing. That negative day does not show incremental sensitivity to this delay stress.
+- Sequential batch via run_light launched 04:04Z; controls first, eight earlier day/timing replays, then receipt. No results yet.
+
 ## 2026-11-09 — passive inventory experiment COMPLETE
 
 - As-of **2026-11-09 03:53:11Z**. All declared replays, reconciliation and 18 source controls passed. Isolated branch
