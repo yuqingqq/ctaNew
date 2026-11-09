@@ -18,7 +18,12 @@
 - 31 preflight controls pass. Declared 2000 day null + 2000 day bootstrap draws, 18 comparisons: reduce_reserved-baseline,
   both_reserved-reserved10, both_reserved-reduce_reserved x J/X x settlement/+1s/inventory-square. All-market full-path
   inventory, zero crossings, FIFO matched/residual PnL and volume metrics. Each both_reserved fill asserts |actual net|<=10.
-- Batch started 07:01Z; single light process/core, 4GiB address-space cap. No findings yet. Protected Nov9–13 untouched.
+- Batch started 07:01Z; single light process/core, 4GiB address-space cap. Progress 07:21Z: all nine J replays
+  complete, all inventory/path checks passing; X first date starts next. Day-level PnL is mixed; await full report.
+  Protected Nov9–13 untouched.
+- Supplemental mechanism audit prepared 07:31Z after seeing daily PnL: classify reducing intent at exact send timestamps
+  and count any subsequently opening fill quantity, including fills from flat. Bound same-time notification ambiguity;
+  all markets, positive/known-bad controls, separate receipt. No additional policy or inference selection.
 
 ## 2026-11-09 — entry inventory-budget experiment COMPLETE
 
