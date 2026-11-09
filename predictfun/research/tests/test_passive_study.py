@@ -47,5 +47,29 @@ class PassiveControls(unittest.TestCase):
         c=b.copy();c['mid']=[2,1]
         with self.assertRaises(AssertionError):require_prephase_equal(b,c,'fills',None)
 
+    def test_inventory_area_and_crossing_tranches_reconcile(self):
+        import pandas as pd
+        from predictfun.research.pf_passive_report import trajectory
+        f=pd.DataFrame(dict(t=[10.,100.,200.],q=[10.,6.,7.],side=[0,1,1],mo1=[0.,.6,.7]))
+        x=trajectory(f)
+        self.assertEqual(x['known_net60'],10.)
+        self.assertEqual(x['net_end'],-3.)
+        self.assertEqual(x['area_share_seconds'],1100.)
+        self.assertEqual(x['reducing_shares'],10.)
+        self.assertEqual(x['overshoot_shares'],3.)
+        self.assertEqual(x['zero_crossings_after60'],1)
+        self.assertAlmostEqual(x['reducing_mo1'],1.)
+        with self.assertRaises(ValueError):trajectory(f.iloc[::-1])
+
+    def test_fill_generation_identity_and_corruption_refusal(self):
+        import pandas as pd
+        from predictfun.research.pf_passive_report import generation_counts
+        ws=pd.Series({1:1_000_000.})
+        q=pd.DataFrame(dict(mid=[1],lane=[0],kind=['place'],t_ms=[1_000_010.]))
+        f=pd.DataFrame(dict(mid=[1,1],lane=[0,0],t=[.1,.2],age_ms=[50.,150.]))
+        self.assertEqual(generation_counts(f,q,ws,{})['filled_generations'],1)
+        f.loc[0,'age_ms']=49.
+        with self.assertRaises(ValueError):generation_counts(f,q,ws,{})
+
 
 if __name__=='__main__':unittest.main()
