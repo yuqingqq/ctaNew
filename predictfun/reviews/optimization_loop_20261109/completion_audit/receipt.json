@@ -1,0 +1,370 @@
+{
+  "as_of": "2026-11-09T18:09:51.994351+00:00",
+  "audit_source_commit": "a921b70cec25b8538fe2798824678ae7e774a550",
+  "audit_source_sha256": "37ed51a7d64c87cda62825ef8b1dc9e4e9a197438cad12534579a94c21328ad7",
+  "original_plan_commit": "4666fc52",
+  "original_end_of_pass": "Complete inventory and duration/latency rounds, publish the comparison and next evidence needed; no automatic trading promotion. Further policy or data expansion gets a new declaration.",
+  "round_receipt_sets": [
+    {
+      "round": "inventory",
+      "declaration_commit": "7e88255ba4557fdfb97e19f7f1ada0170ebb985c",
+      "source_commit": "6dcd7f534724c2b124ac19bc91e3f689c23680d9",
+      "producer_as_of": "2026-11-09T16:25:20.036818+00:00",
+      "verifier_as_of": "2026-11-09T16:25:55.935073+00:00",
+      "population": {
+        "windows": 220,
+        "decisions": 279059,
+        "neutral_actions": 13077,
+        "excluded_windows": 0
+      },
+      "sources_verified": 9,
+      "inputs_verified": 13,
+      "outputs_verified": 4,
+      "declaration_before_outcomes": true,
+      "receipt_verification_link_exact": true,
+      "tracked": true,
+      "receipt_sha256": "9abc6432415a5524ef017550e74404851ab348e96b01509417b2be4fa8be2062",
+      "verification_sha256": "19791d58625de5ae18242fcc92604d903b9a558c5c62a1c76912fce8acbd9dac"
+    },
+    {
+      "round": "duration_latency",
+      "declaration_commit": "7e88255ba4557fdfb97e19f7f1ada0170ebb985c",
+      "source_commit": "6dcd7f534724c2b124ac19bc91e3f689c23680d9",
+      "producer_as_of": "2026-11-09T16:30:41.447508+00:00",
+      "verifier_as_of": "2026-11-09T16:30:54.998312+00:00",
+      "population": {
+        "windows": 220,
+        "decisions": 279059,
+        "neutral_actions": 13077,
+        "excluded_windows": 0
+      },
+      "sources_verified": 9,
+      "inputs_verified": 13,
+      "outputs_verified": 4,
+      "declaration_before_outcomes": true,
+      "receipt_verification_link_exact": true,
+      "tracked": true,
+      "receipt_sha256": "c709974b35f33ae36eae3ff8092f043fec0838e7188017d5e1a1a4142a3d1013",
+      "verification_sha256": "714adde7d7a8da12ee7e9eeb69701d0f84026fb498860cecd1ec9cbfacb2d933"
+    },
+    {
+      "round": "deadline_order",
+      "declaration_commit": "d6f4ce11e8616ad49381485ab60e400b89bd08fd",
+      "source_commit": "cb1af0a77d34929c501e0a22be7ba9a48424d0c4",
+      "producer_as_of": "2026-11-09T16:38:33.929638+00:00",
+      "verifier_as_of": "2026-11-09T16:38:56.056638+00:00",
+      "population": {
+        "windows": 220,
+        "decisions": 279059,
+        "neutral_actions": 13077,
+        "excluded_windows": 0
+      },
+      "sources_verified": 12,
+      "inputs_verified": 17,
+      "outputs_verified": 4,
+      "declaration_before_outcomes": true,
+      "receipt_verification_link_exact": true,
+      "tracked": true,
+      "receipt_sha256": "af9d541f619d6f3f6b71bc3216c00af4d6545504b6a8a8620aa308b709075374",
+      "verification_sha256": "ed199131fce55ff4c08148feaf34f7b432e992e8d3d9762ae04a26cfe251bfd9"
+    },
+    {
+      "round": "native_a2_v2",
+      "declaration_commit": "8274fc635e81c8961576a736106369ce67dda2f5",
+      "source_commit": "4776d822986af9a5e10a6cdd91e3409a2362a6cf",
+      "producer_as_of": "2026-11-09T17:04:21.628041+00:00",
+      "verifier_as_of": "2026-11-09T17:04:21.652431+00:00",
+      "population": {
+        "windows": 220,
+        "decision_rows": 279059,
+        "neutral_actions_per_arm": 13077,
+        "excluded_windows": 0,
+        "window_arm_rows": 660
+      },
+      "sources_verified": 3,
+      "inputs_verified": 9,
+      "outputs_verified": 5,
+      "declaration_before_outcomes": true,
+      "receipt_verification_link_exact": true,
+      "tracked": true,
+      "receipt_sha256": "e7efeff229ceee250b08e49c66b3609934cd4afdc77cc175c0dd68d3fa47402e",
+      "verification_sha256": "f37af7245e88bb4c18135c8a36d8a898ce5756eeed36b6ffae51be5cdac8cee2"
+    },
+    {
+      "round": "native_latency",
+      "declaration_commit": "b144150348c2784190b92fad6c328c514658d62c",
+      "source_commit": "75bf977e6924d71c9179b2da65b03427316e7a08",
+      "producer_as_of": "2026-11-09T17:14:27.994706+00:00",
+      "verifier_as_of": "2026-11-09T17:14:28.010290+00:00",
+      "population": {
+        "windows_per_profile": 220,
+        "decisions_per_profile": 279059,
+        "neutral_actions_per_arm_profile": 13077,
+        "excluded_windows": 0,
+        "window_arm_profile_rows": 1980
+      },
+      "sources_verified": 5,
+      "inputs_verified": 10,
+      "outputs_verified": 8,
+      "declaration_before_outcomes": true,
+      "receipt_verification_link_exact": true,
+      "tracked": true,
+      "receipt_sha256": "640f84ad490d492cfbb0c46d232fafc427fdd50c63cdb45ef9e20c85d272452f",
+      "verification_sha256": "fb83cbfd1c430c1888e9081232c858b45879633d47c4276c9ef25ea166ed70d2"
+    },
+    {
+      "round": "paired_engine_v2",
+      "declaration_commit": "d0cd457b711a7077e62d50c6484bfb0e20befe25",
+      "source_commit": "805d467af8450218bf2e43a2d4f9064add1b5745",
+      "producer_as_of": "2026-11-09T17:42:57.198365+00:00",
+      "verifier_as_of": "2026-11-09T17:42:57.205594+00:00",
+      "population": {
+        "synthetic_traces": 232,
+        "explicit_traces": 32,
+        "seeded_traces": 200,
+        "excluded_traces": 0,
+        "unit_checks": 35
+      },
+      "sources_verified": 8,
+      "inputs_verified": 0,
+      "outputs_verified": 11,
+      "declaration_before_outcomes": true,
+      "receipt_verification_link_exact": true,
+      "tracked": true,
+      "receipt_sha256": "d86aeccfaf78004ce5e5b76e345e06522cf59566f054e9760802e393cffb2116",
+      "verification_sha256": "82a28796ed9b2fcaa81a3c088d0ea660438227e8f784d28b30d34192b0f7d07f"
+    },
+    {
+      "round": "paired_v3_arm",
+      "declaration_commit": "a638b203f31a971a5a6590add0a3c6dd2d8b980d",
+      "source_commit": "f41943934c0615dfe49e50e6ca3d52158d8837ee",
+      "producer_as_of": "2026-11-09T17:52:27.717211+00:00",
+      "verifier_as_of": "2026-11-09T17:52:27.719901+00:00",
+      "population": {
+        "synthetic_traces": 6,
+        "excluded_traces": 0,
+        "parity_cases": 10,
+        "python_checks": 16
+      },
+      "sources_verified": 2,
+      "inputs_verified": 0,
+      "outputs_verified": 6,
+      "declaration_before_outcomes": true,
+      "receipt_verification_link_exact": true,
+      "tracked": true,
+      "receipt_sha256": "d5f7d3baea1782fbf57f50ff7cae17cd4687f7e561da3d97d654305b93f4da7f",
+      "verification_sha256": "5f3f5956420c2591fbc3f873f06912ddf1fb4780beab28c10ee9a95b30e2ef71"
+    },
+    {
+      "round": "paired_continuity",
+      "declaration_commit": "b3a52e2ce23ab86130da3b679c92ce09d406aade",
+      "source_commit": "a565e3f6f414db242b0e6388a8a9c2f839bb7573",
+      "producer_as_of": "2026-11-09T18:04:28.592256+00:00",
+      "verifier_as_of": "2026-11-09T18:04:28.599416+00:00",
+      "population": {
+        "explicit_synthetic_traces": 28,
+        "seeded_synthetic_traces": 200,
+        "excluded_traces": 0,
+        "python_checks": 33
+      },
+      "sources_verified": 5,
+      "inputs_verified": 0,
+      "outputs_verified": 11,
+      "declaration_before_outcomes": true,
+      "receipt_verification_link_exact": true,
+      "tracked": true,
+      "receipt_sha256": "ebf09d96cc557e65c243ca7845d2d0e189a3a5ec74650ba09b85a4c6737e6b1a",
+      "verification_sha256": "1448b941f0485a37cbca293c452ad0c3d0127ae7fba287e4fcdd7898072d0022"
+    }
+  ],
+  "unique_pinned_artifacts_hashed": 91,
+  "pinned_artifact_hashes": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/inventory/declaration.json": "96ee8609f31534270a653e13cd4063701a224b644e318770ae59b39305639b20",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/inventory/receipt.json": "9abc6432415a5524ef017550e74404851ab348e96b01509417b2be4fa8be2062",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/inventory/verification.json": "19791d58625de5ae18242fcc92604d903b9a558c5c62a1c76912fce8acbd9dac",
+    "/home/yuqing/ctaNew/data/predict_fun/research/soft_pull_20261109/receipt.json": "75d24e56fe1280ddc1f9d6886f105ee109648c076d5dab01d61fcd61ae99367c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/soft_pull_20261109/verification.json": "1a19cf7a065e0993649f397864c3b5027afbfd52605370185d8667a0dcadd818",
+    "/home/yuqing/ctaNew/data/predict_fun/research/soft_pull_20261109/window_metrics.parquet": "972cbe6a1e0e7bc417b14fd001eee557a1ec532216b8ddf85890e4c1163016e3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/soft_pull_20261109/actions.parquet": "b604d5c9eeb30a6218fcca335ae5475657de17207659e05f8570bd40ceabcb60",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/scope.json": "0fdb454efec919ab03b2e44fddef154c5e9964c65d1ab3cf10828eabf0dc58b6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/states_v6.parquet": "ec99d7d2257fc9583cfce2bbb9badc0dae16f3b8f8f56630175dcf0524cf9538",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/states_basis.parquet": "9e31aa2a38073a02193f41ce956cd4e311178b86a4d0c26301807ebc924eab7f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/grid/probes_v6.parquet": "2e96c1b77fcc5d137ff78d30b2543fae0be9a3fdcdb5620837586b922f254605",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/grid/probes_basis.parquet": "4e69fb327483c2e9960c22422a03ec10497b8ef759e9c10da69d35619e68c02f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_inventory/inventory_v6.parquet": "4dae77f2ae630521176b94b715473257aeaba7348e081f17d14f81937299ebf3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_inventory/inventory_basis.parquet": "082e9966d7b70ea866ae5590c3fb257323aa73d77508092b2d3c631c6096ae3b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_inventory/v6/verification.json": "46a6eca98c3302cc3373d57efb34b4daa4ecefa0a798083831f63f6b783ea2df",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_inventory/basis/verification.json": "0a2063cafd4bb91064934497ac25d568e1937dcf6be3254d377f7bab739c96b2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/inventory/window_metrics.parquet": "e63fdba8a7bc1ff14a5ce216ea46e0e530d7599ae746429cddb0cd3453bca847",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/inventory/window_status.parquet": "e7fb311d3d5e7dcec492c465d65c9226e8856103bb3634af9bb77f84d221c425",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/inventory/actions.parquet": "9b3d7a47d377c40bcae37e6e547601f4a42152389534048db31d8f1670600170",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/inventory/checks.parquet": "11697b87e8d9cfe48ba23ea135d2cd7a9a5e58b5349f5b5ceda769a713710335",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/duration_latency/declaration.json": "7dbcb2ea45482062169703f3808258122221c89ee0f19bca70aa6dc7a0c834e5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/duration_latency/receipt.json": "c709974b35f33ae36eae3ff8092f043fec0838e7188017d5e1a1a4142a3d1013",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/duration_latency/verification.json": "714adde7d7a8da12ee7e9eeb69701d0f84026fb498860cecd1ec9cbfacb2d933",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/duration_latency/window_metrics.parquet": "0dab303daf517d018ceee80f259061cd66c2b747a0532d2f95351ffcffbfb218",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/duration_latency/window_status.parquet": "e7fb311d3d5e7dcec492c465d65c9226e8856103bb3634af9bb77f84d221c425",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/duration_latency/actions.parquet": "3825174347f4f1147d01dd4292b1ef2dd3c4ae8566cc5521a91ef27430d56fda",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/duration_latency/checks.parquet": "12d5add8669de03b4c0ce2ee8795eddc3bfbbc6cc7625d403bf73c5770ef9d62",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/deadline_order/declaration.json": "f73cf49d8b57727365749d2df18b3c56a449aeb020d4fc5972d689d4756bb935",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/deadline_order/receipt.json": "af9d541f619d6f3f6b71bc3216c00af4d6545504b6a8a8620aa308b709075374",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/deadline_order/verification.json": "ed199131fce55ff4c08148feaf34f7b432e992e8d3d9762ae04a26cfe251bfd9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/deadline_order/window_metrics.parquet": "19a91ea8c4822dcfb7bdb24ea8382f1ed83e6dd44e356caaeeb4333bd4f74eb4",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/deadline_order/window_status.parquet": "95723238ffc1c36b485ece8c7ec8cffd111b86dade89bba9a523138cc8f5c764",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/deadline_order/actions.parquet": "03f0bff21de94f0c6e734faac2324f1ab8b5eb52245fbcb7b431cf843dc3ee64",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/deadline_order/checks.parquet": "a369aa11bd9b1a10694594000e787bfc83875d16bc707a8e57370d417741818a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/declaration.json": "e490c92feeaf3f43882d34ae78ab7614cb51c80e98333d2b7e845a336dbcd06b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/receipt.json": "e7efeff229ceee250b08e49c66b3609934cd4afdc77cc175c0dd68d3fa47402e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/verification.json": "f37af7245e88bb4c18135c8a36d8a898ce5756eeed36b6ffae51be5cdac8cee2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/build.json": "97acf58969884e3e861b284ee6959360d6d9a5a508fe3c6f5a46faf60d13124d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/findings_v2.json": "705361fafed2a250449af9cfc2ebea2b5685f92b0a0a5ba94105d1aff39dc191",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/input.jsonl.gz": "288a3796431428a6741717fcec5d6b8246c687c70460db1a7b356ce87641dd9a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/output.jsonl.gz": "5e9aa423fc1a647affa7103e87250b4d0007dcdd596dfa4fcf759b749a807fc6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/prepared.json": "f552c61c079854935e5dbcb517adf33b577121bf994d0108f0f3dc117d46de18",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/execution.json": "2257edb810dfa06fda4b4d8bd4814781e3f38c94467e1c05ee77f561267288c5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/window_metrics.parquet": "d597b4a2e9154654331847ee3378c271dec53b0855029e84ee0c8af0bba72739",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_latency/declaration.json": "cfa5905987bb8bd7809f770d8aeb9858b63a039081f604a7414d9223e25ac867",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_latency/receipt.json": "640f84ad490d492cfbb0c46d232fafc427fdd50c63cdb45ef9e20c85d272452f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_latency/verification.json": "fb83cbfd1c430c1888e9081232c858b45879633d47c4276c9ef25ea166ed70d2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_latency/build.json": "226780513104a7ac32761acb7e62bc032ba1209bec2b9daf915b9f028170a4ea",
+    "/tmp/cta-opt-loop-20261109/predictfun/reviews/optimization_loop_20261109/findings_v3.json": "9dea5d406ea6c0084b0061ffb3e0b4fff0e172e5e40bc3f86745663e07891b79",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_latency/base.jsonl.gz": "5e9aa423fc1a647affa7103e87250b4d0007dcdd596dfa4fcf759b749a807fc6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_latency/faster.jsonl.gz": "2484894d992fda5e1994919a85ba299c77a7524b5d1b92849dd5ccec3526bae6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_latency/slower.jsonl.gz": "3baa2b71eb898cebc983a7344ee359e02a6d37011b1b9dfd16df31baaf32527a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_latency/window_metrics.parquet": "f8fe3cb5f99985707291d35df8aac8d61b8357f8fb00012a9774fe2b40e44e74",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_latency/execution.json": "ec1b52c0d704f5a17ec86b5e07175d969c622ae612950c7dc8960557c7078e17",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_latency/logs/controls.log": "1eb1e65dd7c6f679bf6bc3d81f6e2db579090a45dfb3a115b7ca2bb90593da8d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_latency/logs/build.log": "685bf444d32e325b1fdf51a1d818a5322b26d271da4abb1f63f20e00ce9e8b70",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/declaration.json": "f993642d0bf3dabe9da4a1ff8b1531715ccbdb00a9530ff6e245f4b26711e76b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/receipt.json": "d86aeccfaf78004ce5e5b76e345e06522cf59566f054e9760802e393cffb2116",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/verification.json": "82a28796ed9b2fcaa81a3c088d0ea660438227e8f784d28b30d34192b0f7d07f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/synthetic.json": "aa0ef1c480e3ad61bc3b2b3df838d45484147ea3a2d2fdafd4e886825571ab4d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/synthetic.jsonl": "38cb8de339c962d5590072f55155f364cd79e73dddce6b4e64ccb59c6ba5370f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/native.jsonl": "26dea320389ab4f95f95e754d59908fccaec73bfe01aeed8d2c44546f42b1e10",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/native_recheck.jsonl": "26dea320389ab4f95f95e754d59908fccaec73bfe01aeed8d2c44546f42b1e10",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/parity_outputs.json": "42d2dbf512fff8acdc46317de180657b36141fa18c9353b70cdf520ebad724b7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/known_bad.jsonl": "9256a23a8e7095f2e579cfa646e5caedad9077a5c9d100664c8aaf114459d70e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/known_bad_native.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/logs/known_bad.log": "e59155f4afa352fc68a55de21e2036e1716f9850f5a2cb5f3574b5757d370939",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/logs/build.log": "339da6d019be543eead25ac1c11f7bc410bff332d950b04dceca3f4f40d0e42c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/logs/matrix.log": "9ca14df8a854fd223d762e05c4cd9d3587323640e7aa8ea6210810062532301b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/logs/oracle.log": "77ee36d4efc82e4e5492e2c60012615cd7fdbfda400a3e87f3d11154fede75e6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_v3_arm/declaration.json": "3b310bc8c5c27a072eed956cb920bf04f74021b747bd92330af27d3a587aa339",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_v3_arm/receipt.json": "d5f7d3baea1782fbf57f50ff7cae17cd4687f7e561da3d97d654305b93f4da7f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_v3_arm/verification.json": "5f3f5956420c2591fbc3f873f06912ddf1fb4780beab28c10ee9a95b30e2ef71",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_v3_arm/synthetic.jsonl": "745b71a2f7c53f48256c3a5839a80aeba8d349d7d22a58c2a13641ad713b3258",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_v3_arm/native.jsonl": "a75536a3577d2ead239565f752d6beb70016899c193b7109e732a56d3c1fe0f6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_v3_arm/native_recheck.jsonl": "a75536a3577d2ead239565f752d6beb70016899c193b7109e732a56d3c1fe0f6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_v3_arm/parity.json": "e080cfebcd28d07ee12a622355798fa0cd0385e593e42f691ee8f5bf76ce6987",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_v3_arm/logs/checks.log": "5e5c3506cd677be4a5528485a063003fa78bda0610845592171562e1f5b24d59",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/declaration.json": "9c31c7b38d5d4cab4ec5d6c406a45cb417eac19a5773940b2b2b0ee5593a330f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/receipt.json": "ebf09d96cc557e65c243ca7845d2d0e189a3a5ec74650ba09b85a4c6737e6b1a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/verification.json": "1448b941f0485a37cbca293c452ad0c3d0127ae7fba287e4fcdd7898072d0022",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/manifest.json": "72a3493c687fa7f9c42359ecb11ba25906e55c019c007d801bc6c34a5489ff4a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/synthetic.jsonl": "8b2fcee478308bcfbd4af01ac6faa5cfb2f643b041f5ae171aa1c96d448faf54",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/lifecycle.jsonl": "a9f2d80a22a14d3a650b2f0eeae7adde1446a22e5455ce84567e2853a3477d8b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/native.jsonl": "3d0d576664005a21f02a1866eba83cb1bb3accecea2b505d25be962cf429a29b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/native_recheck.jsonl": "3d0d576664005a21f02a1866eba83cb1bb3accecea2b505d25be962cf429a29b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/logs/build.log": "f526c004c4339fd56da0676f0d5590939521355306f12b2f9a4dafba1d0f9d28",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/logs/matrix.log": "b7fa94ebb3db136441c2677194b38153da4c6473219432e6d55015ca5ec6553c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/known_bad.jsonl": "53a5028daf9f91fe50ed981438e07e95ff60ee7247ba9ecd2ff983bc16dd6819",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/known_bad_native.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/logs/known_bad.log": "ea7bcf01248958cc8234d5a73e40750f33f78644cb785767f3ba698690b13d2d"
+  },
+  "controls": {
+    "valid_hash_accepted": true,
+    "changed_hash_refused": true
+  },
+  "frozen_source_sha256": "d678e7c3c4e47c6d60ebc031edf8d7fc7317210d5e58ff301d92d7ae0ece5f17",
+  "tracked_changes_within_predictfun": true,
+  "conclusions": {
+    "inventory": {
+      "individual100": {
+        "aligned_change_pct": 0.1285146023942696,
+        "unrestricted_aligned_gain_retained_pct": 4.858468982485935,
+        "active_share_change_pct": 0.14968647194884,
+        "added_active_range_share_ms": 0.0,
+        "added_off_nonreducing_share_ms": 0.0
+      },
+      "reserved100": {
+        "aligned_change_pct": 0.018007440367395766,
+        "unrestricted_aligned_gain_retained_pct": 0.6807677014833191,
+        "active_share_change_pct": 0.020119361048887008,
+        "added_active_range_share_ms": 0.0,
+        "added_off_nonreducing_share_ms": 0.0
+      }
+    },
+    "native_latency_profiles": {
+      "base": {
+        "venue_requests": -5.3258584442887225,
+        "aligned_lane_ms": 4.16841325542987,
+        "active_share_ms": 4.104817406392569,
+        "active_range_extra_share_ms": 4.164364687119471,
+        "elsewhere_lane_ms": 28.360955765393193,
+        "aligned_gain_vs100_retained_pct": 94.43125632796342
+      },
+      "faster": {
+        "venue_requests": -5.35226044382272,
+        "aligned_lane_ms": 2.941744015365333,
+        "active_share_ms": 3.9668330027029075,
+        "active_range_extra_share_ms": 4.018269749740178,
+        "elsewhere_lane_ms": 71.76404793262994,
+        "aligned_gain_vs100_retained_pct": 97.47862107433102
+      },
+      "slower": {
+        "venue_requests": -3.715449379416924,
+        "aligned_lane_ms": 4.373392128963727,
+        "active_share_ms": 2.5753050173165093,
+        "active_range_extra_share_ms": 2.6234849795965687,
+        "elsewhere_lane_ms": 5.6145707972695025,
+        "aligned_gain_vs100_retained_pct": 90.34116536272202
+      }
+    },
+    "every_profile_fewer_requests_more_aligned": true,
+    "every_profile_more_active_exposure": true
+  },
+  "evidence_scope": "Source pins, predeclaration ancestry/timing, all pinned inputs and saved output hashes, receipt links and arithmetic recomputation. Existing control/lifecycle verifications are referenced, not rerun. No new raw market population, selection, or economics.",
+  "completed_research_requirements": [
+    "Original inventory restrictions and duration/latency comparison",
+    "Declared equal-clock/native execution/latency follow-ups",
+    "Paired engine and bounded-retention synthetic integration, with explicit parity scope/exception",
+    "Tracked immutable failed attempts and superseding findings",
+    "Source/receipt controls, saved-artifact verification and commit/push workflow"
+  ],
+  "unmet_promotion_requirements": [
+    {
+      "requirement": "Higher net trading value / lower realized inventory variance",
+      "status": "not established",
+      "reason": "Quote coverage and exposure proxies are not calibrated fill/PnL outcomes."
+    },
+    {
+      "requirement": "Calibrated own-order filled and unfilled paths",
+      "status": "not established",
+      "reason": "Existing fill-clock audit rejects exact matching-clock use; new own-fill millisecond source/receipt capture is needed."
+    },
+    {
+      "requirement": "Independent validation on at least5 complete untouched days",
+      "status": "not established",
+      "reason": "Only consumed Nov8 partial-day diagnostics used; Nov9\u201313 remain protected."
+    },
+    {
+      "requirement": "Blanket B4 fixed-size parity",
+      "status": "contradicted by explicit correction",
+      "reason": "Native rejected-create slot release differs from the frozen bug; scoped normal controls pass."
+    },
+    {
+      "requirement": "Historical file-output parity",
+      "status": "not established",
+      "reason": "Only complete function-output synthetic parity was run."
+    },
+    {
+      "requirement": "Deployed equal-clock LC50 ordering, native policy/guard equivalence, wallet/kernel integration",
+      "status": "not established",
+      "reason": "Synthetic scheduler and effective-want oracle do not independently verify these."
+    }
+  ],
+  "no_new_market_data_read": true,
+  "no_protected_data_read": true,
+  "no_deployment_performed": true,
+  "promotion_decision": "No strategy promoted. Completed research investigations can have a negative or conditional finding; production and economic gates remain open."
+}
