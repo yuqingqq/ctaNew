@@ -1,5 +1,16 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 — pull/re-entry study IN PROGRESS (separate from A2 sizing)
+
+- User requested the next focus: prediction-driven pulls and rapid same-price reposting. Branch
+  `research/predict-reentry-churn-20261109`, checkout `/tmp/cta-reentry-churn-20261109`.
+- Reuse only the already-extracted220 Nov8 first-minute windows. Fixed incremental sizing across all arms;
+  no new size policy. Baseline pass-through versus waiting for an existing cancellation acknowledgement,
+  rapid same-price re-entry confirmation25/50/100ms, and all-entry confirmation50ms as a cost control.
+- No relaxed exit/hold rule: every recorded pull/reprice remains immediate. Exact pull reasons are absent;
+  reconstructed prediction attribution remains a diagnostic, not a live guard identity. No fills/PnL,
+  protected data, live changes or fill-clock bypass. Declare/freeze sources and controls before results.
+
 ## 2026-11-09 — quote capture mechanics COMPLETE; incremental sizing candidate
 
 - User authorized improving capture after the timing repair. Branch `research/predict-quote-capture-20261109`,
