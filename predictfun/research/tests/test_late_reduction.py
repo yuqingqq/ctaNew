@@ -12,6 +12,8 @@ class LateControls(unittest.TestCase):
         self.assertEqual(e.plan(10,wants,[None]*4,[],'late_reserved',60),((None,0),(51,10),(None,0),(None,0)))
         with self.assertRaises(ValueError):e.assert_admission(10,1,11,[],'late_reserved',60)
         self.assertEqual(e.admission(10,1,25,[],'late_reserved',59.99),25)
+        self.assertEqual(e.admission(-1,1,25,[],'late_reserved',60),0)
+        with self.assertRaises(ValueError):e.assert_admission(-1,1,1,[],'late_reserved',60)
 
     def test_pending_cancels_and_retention(self):
         o=dict(side=1,pt=51,size=10,kq=8,rem=0,cancelled=True)
@@ -62,12 +64,13 @@ class LateControls(unittest.TestCase):
         with self.assertRaises(AssertionError):pre60_equal(q,r,'requests',pd.Series({1:0.}))
 
     def test_exact_fill_concession_and_refusal(self):
-        o={'late_meta':e.order_meta('late_taper1',150000,0,1,51,6,{1:dict(t=150000,price=51,base_price=52)})}
+        intent=e.intent_meta('late_taper1',150000,0,1,(51,6),6,{1:dict(t=150000,price=51,base_price=52)})
+        o={'late_meta':e.order_meta('late_taper1',150250,0,1,51,6,{1:intent})}
         row=e.fill_meta('late_taper1',1,0,151000,0,1,51,4,2,o)
         self.assertAlmostEqual(row['concession'],.04)
         self.assertEqual(row['reducing_q'],4)
         earlier=e.fill_meta('late_taper1',1,0,50000,0,0,50,6,6,
-                            {'late_meta':dict(send_rel=49.,known_net=0.,base_price=50,concession_ticks=0.)})
+                            {'late_meta':dict(send_rel=49.,decision_rel=49.,decision_net=0.,known_net=0.,base_price=50,concession_ticks=0.)})
         row['index']=1
         f=pd.DataFrame([dict(mid=1,t=50.,side=0,pt=50,q=6),dict(mid=1,t=151.,side=1,pt=51,q=4)])
         z=pd.DataFrame([earlier,row]);reconcile_metadata(f,z)
@@ -75,7 +78,8 @@ class LateControls(unittest.TestCase):
         with self.assertRaises(ValueError):reconcile_metadata(f,wrong)
         z.loc[1,'t']+=.001
         with self.assertRaises(AssertionError):reconcile_metadata(f,z)
-        with self.assertRaises(ValueError):e.order_meta('late_taper1',150001,0,1,51,6,{1:dict(t=150000,price=51,base_price=52)})
+        with self.assertRaises(ValueError):e.order_meta('late_taper1',149999,0,1,51,6,{1:intent})
+        with self.assertRaises(ValueError):e.intent_meta('late_taper1',150001,0,1,(51,6),6,{1:intent})
         with self.assertRaises(ValueError):e.fill_meta('late_taper1',1,0,151000,0,1,51,4,2,{})
 
 
