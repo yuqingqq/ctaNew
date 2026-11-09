@@ -9,6 +9,8 @@ updated: >-
   2026-11-09: OPTIMIZATION LOOP RUNNING (user authorized): inventory-aware grace, then duration/latency sensitivity.
   Same220 consumed Nov8 windows; tracked in reviews/optimization_loop_20261109/plan.json on research/predict-opt-loop-20261109.
   Serial capped jobs, committed declarations and verified receipts; no deployment, protected-date or fill-clock bypass.
+  Round1 verified16:25Z: individual/reserved-room grace retains4.86%/0.68% of unrestricted coverage gain (208/29 admissions),
+  no added non-reducing exposure in this conditional replay. Round2 shorter-grace/latency comparison running.
   2026-11-09 16:02Z: BOUNDED SOFT-PULL COMPLETE;220 consumed Nov8 windows/279059 decisions/13077 touch pulls.
   Exact native replay1262612 outputs; all decisions match, native guard contradictions0/137325; due-event observer
   preserves original outputs/books. Primary0.01c/max100ms accepted-small-touch retention: requests-6.99%, original
