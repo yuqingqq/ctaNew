@@ -1,5 +1,14 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 — optimization loop RUNNING
+
+- User authorized an optimization loop with tracked findings. Branch `research/predict-opt-loop-20261109`,
+  checkout `/tmp/cta-opt-loop-20261109`, from691f80c1. Loop register `reviews/optimization_loop_20261109/plan.json`.
+- Round1: inventory-aware soft grace, comparing an individually reducing order with aggregate room after all
+  same-side reservations (including pending creates/cancels and grace). Round2: shorter grace and latency sensitivity.
+- Same220 consumed Nov8 first-minute windows; exact native inputs. Commit/declaration -> controls -> paired run ->
+  artifact verification -> findings for each round. No PnL/variance claim without fills, no live or protected-date changes.
+
 ## 2026-11-09 — native guard / bounded soft-pull study COMPLETE
 
 - As-of **16:01:32Z**, verified **16:02:15Z**: same220 consumed Nov8 windows /279059 first-minute decisions /
