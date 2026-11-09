@@ -29,6 +29,16 @@ HELPERS=dedent('''\
         if callback is not None:
             callback(dict(kind=kind, t=now, **fields))
 
+    def lz_rejected(rec, now):
+        # A terminal create rejection answers that create immediately. The
+        # frozen handler keeps its timestamp until L_ANS and can wrongly block
+        # a new order in that interval. Native rejected() releases the slot.
+        side = rec['side']; stamp = rec['t_send']
+        if now < stamp + L_ANS and stamp in sent[side]:
+            sent[side].remove(stamp)
+            live_ctr['lz_rejection_answer_release'] += 1
+        lz_trace('rejected', now, id=rec['lz_id'])
+
 ''')
 
 PATCHES=[
@@ -68,11 +78,11 @@ PATCHES=[
      "            inflight[lane].append(rec); heapq.heappush(ev, (t + L_PL, 0, seq, 'P', rec)); seq += 1\n"),
     ("                live_ctr['postonly_refused'] += 1\n                cancel_wait.pop(id(rec), None)",
      "                live_ctr['postonly_refused'] += 1\n"
-     "                if LZ: lz_trace('rejected', t, id=rec['lz_id'])\n"
+     "                if LZ: lz_rejected(rec, t)\n"
      "                cancel_wait.pop(id(rec), None)"),
     ("                    live_ctr['postonly_refused_own'] += 1\n                    cancel_wait.pop(id(rec), None)\n",
      "                    live_ctr['postonly_refused_own'] += 1\n"
-     "                    if LZ: lz_trace('rejected', t, id=rec['lz_id'])\n"
+     "                    if LZ: lz_rejected(rec, t)\n"
      "                    cancel_wait.pop(id(rec), None)\n"),
     ("            if id(rec) in cancel_wait:\n",
      "            if LZ:\n"

@@ -132,3 +132,20 @@ def test_ro_quantity_shrink_keeps_partly_filled_whole_order():
     tr=[];ns['_LZ_TRACE']=tr.append
     run(ns,[leg(60,0,49,20),leg(1050,1,53,2)],[frame(-1,50,52,0.,0.)],[0.],{'LZ','XNA','G5','S2','RO1','V0','GS'},'AV:5:25:0.06')
     assert not [r for r in tr if r['kind']=='cancel' and r['lane']==1 and 1060<=r['t']<1100]
+
+@pytest.mark.parametrize('side',[0,1])
+def test_rejection_releases_unanswered_slot_before_answer_timer(side):
+    frames=[frame(-1,50,52,0.,0.),frame(24,51,53,0.,0.),frame(39,48,50,0.,0.)]
+    for f in frames:
+        f.update(b2_p=f['b1_p']-1,a2_p=f['a1_p']+1,b2_s=0.,a2_s=0.)
+        if side:
+            for i in range(1,6):
+                bp,ap=f[f'b{i}_p'],f[f'a{i}_p']
+                f[f'b{i}_p'],f[f'a{i}_p']=(100-ap if ap>=0 else -1),(100-bp if bp>=0 else -1)
+    args=dict(side=side,changes=((0,25),),size=25.,extra={'LD2','XV','XMIN1'},frames=frames,known_times=[0.,25.,40.])
+    paired=scenario(**args);legacy=scenario(**args,paired=False)
+    assert any(t==40. and kind=='place' and lane==side for t,_,kind,lane in paired['requests'])
+    assert not any(t==40. and kind=='place' and lane==side for t,_,kind,lane in legacy['requests'])
+    assert paired['live_ctr']['lz_rejection_answer_release']>0
+    # This known frozen-handler defect is an explicit exception to blanket
+    # fixed-size output parity; suppressing the correction would fail Rust.

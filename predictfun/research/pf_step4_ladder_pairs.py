@@ -726,6 +726,16 @@ def run_window(mid, F, kf, rules, policy, mode, size=SIZE, cap_state=None):
         callback = globals().get('_LZ_TRACE')
         if callback is not None:
             callback(dict(kind=kind, t=now, **fields))
+
+    def lz_rejected(rec, now):
+        # A terminal create rejection answers that create immediately. The
+        # frozen handler keeps its timestamp until L_ANS and can wrongly block
+        # a new order in that interval. Native rejected() releases the slot.
+        side = rec['side']; stamp = rec['t_send']
+        if now < stamp + L_ANS and stamp in sent[side]:
+            sent[side].remove(stamp)
+            live_ctr['lz_rejection_answer_release'] += 1
+        lz_trace('rejected', now, id=rec['lz_id'])
     def desired(t):
         rel = (t - ws) / 1000.0
         if rel >= 300 or ('G5' in rules and rel >= stop):
@@ -1066,7 +1076,7 @@ def run_window(mid, F, kf, rules, policy, mode, size=SIZE, cap_state=None):
             ci = bisect.bisect_left(tf, t) - 1; f = F[ci] if ci >= 0 else None
             if f is not None and ((side == 0 and f['a1_p'] >= 0 and rec['pt'] >= f['a1_p']) or (side == 1 and f['b1_p'] >= 0 and rec['pt'] <= f['b1_p'])):
                 live_ctr['postonly_refused'] += 1
-                if LZ: lz_trace('rejected', t, id=rec['lz_id'])
+                if LZ: lz_rejected(rec, t)
                 cancel_wait.pop(id(rec), None)                # the create rejection is terminal and observable
                 if REJRESET == 'on' and not rec['cancelled']:
                     intent[lane] = None; live_ctr['rej_reset'] += 1   # rejected: the next decision re-sends it if still wanted
@@ -1075,7 +1085,7 @@ def run_window(mid, F, kf, rules, policy, mode, size=SIZE, cap_state=None):
                 op_ = own_open(1 - side, t)
                 if op_ and ((side == 0 and rec['pt'] >= min(x['pt'] for x in op_)) or (side == 1 and rec['pt'] <= max(x['pt'] for x in op_))):
                     live_ctr['postonly_refused_own'] += 1
-                    if LZ: lz_trace('rejected', t, id=rec['lz_id'])
+                    if LZ: lz_rejected(rec, t)
                     cancel_wait.pop(id(rec), None)
                     if not rec['cancelled']:
                         intent[rec['lane']] = None                     # refused: the next decision re-places it if still wanted
