@@ -1,29 +1,72 @@
 # P-2026-005 HANDOFF
 
-## 2026-11-09 — inflight inventory-reservation experiment RUNNING
+## 2026-11-09 — inflight inventory-reservation experiment COMPLETE
 
-- User authorized testing all in-flight quantities to avoid unintended reverse exposure. Branch
-  `research/predict-inflight-budget-20261109`, checkout `/tmp/cta-inflight-budget-20261109`, declared source `f0e15415`.
+- Main as-of **2026-11-09 07:39:37Z**, exact intent diagnostic **07:43:24Z**. All nine consumed dates
+  (Oct23–27, Oct31–Nov3), **2,592 markets per arm/timing**, J/X. Fixed guards trained on eight dates:
+  exploratory historical comparison, not independent validation. Uncapped loss budget, existing 150-share backstop,
+  rebates excluded. Branch `research/predict-inflight-budget-20261109`, checkout `/tmp/cta-inflight-budget-20261109`;
+  declared source `f0e15415`, main report source/state `26908059`, exact tie diagnostic `91f769dc`.
   Data/declaration/logs: `/home/yuqing/ctaNew/data/predict_fun/research/inflight_budget_20261109/`.
-- Two new arms: `reduce_reserved` preserves original adding policy and caps aggregate reducing reservations to known
-  inventory; `both_reserved` adds the prior aggregate 10-share adding budget. Resting, pending-create and pending-cancel
-  remaining quantities counted across all lanes, no opposite-side credit. Keep eligible same-price partial orders.
-  Submission recheck and minimum lots/notional apply. Original guards/RO60/S240/latencies unchanged.
-- New-arm cancellation reservations persist through confirmation plus the simulated 100ms fill-report delay +.001ms:
-  no cumulative execution quantity is provided with simulator cancel confirmations, so early release could reuse room
-  before a late fill is reported. Original reference arms retain their exact behavior; this grace is part of the treatment.
-- All nine consumed dates / 2592 markets per arm/timing, J/X. Controls: baseline and prior reserved10. Fresh first-date
-  references plus eight-market smoke; hash-checked prior references on other days. Fixed guards trained on eight dates:
-  exploratory in-sample. Uncapped loss budget, 150-share backstop, rebates excluded. No forward/live changes.
-- 31 preflight controls pass. Declared 2000 day null + 2000 day bootstrap draws, 18 comparisons: reduce_reserved-baseline,
-  both_reserved-reserved10, both_reserved-reduce_reserved x J/X x settlement/+1s/inventory-square. All-market full-path
-  inventory, zero crossings, FIFO matched/residual PnL and volume metrics. Each both_reserved fill asserts |actual net|<=10.
-- Batch started 07:01Z; single light process/core, 4GiB address-space cap. Progress 07:21Z: all nine J replays
-  complete, all inventory/path checks passing; X first date starts next. Day-level PnL is mixed; await full report.
-  Protected Nov9–13 untouched.
-- Supplemental mechanism audit prepared 07:31Z after seeing daily PnL: classify reducing intent at exact send timestamps
-  and count any subsequently opening fill quantity, including fills from flat. Bound same-time notification ambiguity;
-  all markets, positive/known-bad controls, separate receipt. No additional policy or inference selection.
+- Two new arms: `reduce_reserved` preserves original adding rules and caps combined reducing orders to
+  max(0, |known inventory| minus all same-side known remaining reservations). `both_reserved` also applies the
+  previous aggregate 10-share adding budget. Resting orders, pending creates and pending cancels count across lanes;
+  no credit for opposite-side orders or unreported physical fills. Desired and submission quantities both checked.
+- Both new arms retain eligible same-price reducing orders based on remaining quantity; both_reserved also retains
+  adding orders this way. Existing lots/notional/price guards/RO60/S240 retained. Reservations persist through cancel
+  confirmation plus the fixed 100ms fill-report delay +.001ms, because this simulator does not provide cumulative fills
+  in the cancel acknowledgement. This is a conservative treatment component, not a verified live-OMS delay rule.
+
+| Timing / arm | Settlement $ | +1s markout $ | Daily PnL SD $ | Mean residual shares | Peak absolute shares |
+|---|---:|---:|---:|---:|---:|
+| J baseline | 514.06 | 602.83 | 134.51 | 6.557 | 75 |
+| J prior adding-only reserved10 | 309.74 | 237.96 | 41.74 | 2.515 | 80 |
+| J reduce_reserved | 453.23 | 492.12 | 149.62 | 6.835 | 75 |
+| J both_reserved | 149.35 | 101.40 | 33.50 | 1.803 | 10 |
+| X baseline | 317.63 | 463.56 | 103.09 | 5.720 | 65 |
+| X prior adding-only reserved10 | 253.05 | 176.21 | 43.28 | 2.252 | 48.5 |
+| X reduce_reserved | 150.44 | 377.89 | 98.93 | 5.958 | 65 |
+| X both_reserved | 119.34 | 73.63 | 35.30 | 1.657 | 10 |
+
+- **Mechanism confirmed:** reducing-at-send orders that subsequently open reverse exposure fall to **zero** for both
+  new arms at J/X, including the case where one fill reaches flat and a later fill opens the reverse position.
+  Original baseline has 2,978.12 / 2,274.68 such opening shares in 171 / 129 markets J/X; prior adding-only reserved10
+  has 3,410.20 / 2,548.06 in 179 / 132 markets. These are cumulative opening quantities, not peak positions.
+- The initial diagnostic bounded same-time notification ambiguity. All nine uncertain fill tranches are in two Oct26
+  markets. Instrumented replays at both timings match original windows/fills/requests exactly; exact known inventory
+  at each of their order submissions is zero. They are intentional new entries, not excess reducing orders.
+  `overshoot_diagnostic_v2.json` supersedes v1 in-band; both retained. Zero direct sign-crossing fills also observed
+  in new arms, but that narrower metric alone would not establish the full mechanism.
+- **Exit reservations alone do not reduce overall inventory risk here.** Versus baseline J/X: settlement -11.8%/-52.6%,
+  filled shares -18.8%/-17.2%, residual inventory +4.2%/+4.2%, inventory-square +2.6%/+1.1%.
+  Daily SD +11.2%/-4.0%. Peak exposure unchanged at 75/65 because original adding rules still permit those positions.
+  Worst day -$117.26/-$90.17 versus baseline -$53.12/-$128.60. Thus some downside improves, other downside worsens.
+- **Combined entry/exit reservations enforce the simulated 10-share bound**, checked on every fill and independently
+  from saved paths (floating tolerance 1e-7). Zero time above10. Versus prior adding-only budget J/X:
+  inventory-square -52.7%/-49.8%, residual -28.3%/-26.4%, daily SD -19.8%/-18.4%, but settlement
+  **-51.8%/-52.8%**, filled volume -51.4%/-47.0%, +1s value -57.4%/-58.2%.
+  Maximum drawdown improves from -$79.60/-$77.39 to -$45.93/-$53.70; worst day is slightly worse
+  (-$33.79/-$46.44 versus -$30.04/-$45.96). No single uniformly dominant risk/profit result.
+- Spread/trading value not improved: FIFO matched-trade profit J/X baseline $134.02/$173.54, prior reserved10
+  -$33.20/$24.31, reduce_reserved $56.43/$40.38, both_reserved **-$78.66/-$62.24**.
+  +1s per 100 filled shares baseline 1.7246/1.6162, reduce_reserved 1.7331/1.5905;
+  prior reserved10 1.4324/1.3178, both_reserved 1.2571/1.0382. FIFO includes intervening price drift, not pure spread;
+  total volume differs, so this is not an execution-quality comparison at matched turnover.
+- Declared 2,000 shared UTC-day sign flips + 2,000 day bootstrap draws; 18 comparisons (three pairs x J/X x
+  settlement/+1s/inventory-square). All settlement mean-difference intervals cross zero. Exit-only +1s losses have
+  family p=.022/.045; combined versus prior adding-only q² decreases p=.016/.020 and +1s losses p=.006/.024.
+  These are conditional exploratory comparisons on consumed dates; SD/tails/drawdowns descriptive, no live-return claim.
+- **31 preflight controls PASS**, eight-market smoke and all 18 full checks PASS. First-date baseline and reserved10
+  replays exactly match prior windows/fills/requests; remaining references verified by hash. Zero excluded markets,
+  missing valuations, or missing bounded Binance hours. All result artifact/source hashes and receipt copies verified.
+  Supplemental flat-then-reverse / event-tie positive controls and missing/shifted-event refusals pass; exact tie replay
+  parity passes at J/X. Peak RSS ~1.6GiB, one core, ~490GiB disk free. No job remains running.
+- Receipts under `reviews/inflight_budget_20261109/`: main `receipt.json`, initial `overshoot_diagnostic.json`, final
+  `overshoot_diagnostic_v2.json`. Reproduction: `run_inflight_budget.sh`, then `pf_inflight_overshoot`, `pf_inflight_ties`.
+  Conclusion: count outstanding quantities to control unintended reversals, but do not adopt strict zero-crossing
+  reduction caps as a PnL improvement. A separate next experiment could allow an explicit bounded reverse inventory
+  budget while still reserving all orders; not run here. No live settings/code, freezes, forward-race changes, or
+  protected Nov9–13 data reads.
 
 ## 2026-11-09 — entry inventory-budget experiment COMPLETE
 
