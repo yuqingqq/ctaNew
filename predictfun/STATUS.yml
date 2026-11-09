@@ -6,9 +6,13 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
-  2026-11-09 12:10Z: EXACT-ORDER CLOCK AUDIT STARTING on220 consumed Nov8 windows. Signed hashes -> exact REST
-  maker legs; necessary Control Place/cancel/fill-notice bounds; pinned J/X and six fixed earlier shifts, no PnL tuning.
-  Branch research/predict-fill-clock-20261109. Shared one-process slot; no live/forward changes. See HANDOFF.md.
+  2026-11-09 12:37Z: EXACT-ORDER CLOCK AUDIT COMPLETE,220 consumed Nov8 windows/42,064 actions. All99 confirmed
+  fills reconcile by full signed hash+trade identity; quantities agree within1 microshare/order.93 identifiable clocks:
+  J18/X15 legs violate order lifecycle bounds even at10ms tolerance;6 ambiguous clocks retained. No constant offset
+  can fit either run. REST timestamp equals confirmation second99/99, differs from first Matched in50 (49 +1s,1 +10s).
+  E2 witness assigns a book drop10s late; transaction earliest-anchor witness overwrites a feasible own estimate with
+  another leg's estimate975ms before submission. No calibrated PnL or new strategy sweep.13 controls and artifact checks pass.
+  Receipts reviews/fill_clock_20261109/, branch research/predict-fill-clock-20261109. Jobs complete; no live/forward changes.
   2026-11-09 11:43Z: CLOSING-LIQUIDITY STUDY COMPLETE,9 consumed days/2592 markets per arm/timing,J/X.
   Safe retention and up-to25 closing size improve exits versus strict late reservations; neither meets baseline objective.
   Close25 leaves2.58%/0.80% MORE inventory; +1s falls8.21%/6.01%; final PnL $508.39/$317.20 versus $514.06/$317.63.
