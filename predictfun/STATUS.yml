@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09: NATIVE GUARD / SOFT-PULL STUDY RUNNING; exact factual input replay first, same220 Nov8 windows.
+  Recover exact guard inputs/reasons before selective retention; both basis modes, bounded prefixes, no live/protected changes.
   2026-11-09 15:04Z: PULL/REENTRY STUDY COMPLETE,220 consumed Nov8 windows/279,059 decisions/30,796 opportunities.
   Fixed incremental sizing; no fills. Cancel-ack requests-0.22%/aligned time-0.14%; reentry25 -8.46%/-8.19%,50 -13.80%/-11.19%,
   100 -19.49%/-15.84%; all-entry50 -43.15%/-27.06%. No tested delay preserves coverage; both runs show the tradeoff.
