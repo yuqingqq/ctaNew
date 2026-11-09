@@ -66,9 +66,14 @@ class LateControls(unittest.TestCase):
         row=e.fill_meta('late_taper1',1,0,151000,0,1,51,4,2,o)
         self.assertAlmostEqual(row['concession'],.04)
         self.assertEqual(row['reducing_q'],4)
-        f=pd.DataFrame([dict(mid=1,t=151.,side=1,pt=51,q=4)])
-        z=pd.DataFrame([row]);reconcile_metadata(f,z)
-        z.loc[0,'t']+=.001
+        earlier=e.fill_meta('late_taper1',1,0,50000,0,0,50,6,6,
+                            {'late_meta':dict(send_rel=49.,known_net=0.,base_price=50,concession_ticks=0.)})
+        row['index']=1
+        f=pd.DataFrame([dict(mid=1,t=50.,side=0,pt=50,q=6),dict(mid=1,t=151.,side=1,pt=51,q=4)])
+        z=pd.DataFrame([earlier,row]);reconcile_metadata(f,z)
+        wrong=z.copy();wrong['net_before']+=10;wrong['net_after']+=10
+        with self.assertRaises(ValueError):reconcile_metadata(f,wrong)
+        z.loc[1,'t']+=.001
         with self.assertRaises(AssertionError):reconcile_metadata(f,z)
         with self.assertRaises(ValueError):e.order_meta('late_taper1',150001,0,1,51,6,{1:dict(t=150000,price=51,base_price=52)})
         with self.assertRaises(ValueError):e.fill_meta('late_taper1',1,0,151000,0,1,51,4,2,{})
