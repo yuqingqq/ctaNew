@@ -1,0 +1,18 @@
+{
+  "as_of": "2026-11-09T15:59:29.709210+00:00",
+  "counts": {
+    "v6": 604872,
+    "basis": 644738
+  },
+  "source_commit": "2d235fd45623f418dcacdd876d16fa7a8513dda5",
+  "source_sha256": "dbfcd9a83f1bf09e0cd2f7d83c15faad12243d3cd9adb1770305fee25c62aaa8",
+  "artifacts": {
+    "probes_v6.parquet": "2e96c1b77fcc5d137ff78d30b2543fae0be9a3fdcdb5620837586b922f254605",
+    "probes_basis.parquet": "4e69fb327483c2e9960c22422a03ec10497b8ef759e9c10da69d35619e68c02f"
+  },
+  "controls": {
+    "positive": true,
+    "outside_scope_refused": true
+  },
+  "factual_states_and_books_exact": true
+}

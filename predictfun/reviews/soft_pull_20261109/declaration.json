@@ -1,0 +1,52 @@
+{
+  "as_of": "2026-11-09T15:59:52.864790+00:00",
+  "source_commit": "2d235fd45623f418dcacdd876d16fa7a8513dda5",
+  "sources": {
+    "pf_soft_pull.py": "b232bafd40d8b0c40af42c82103cb6ee9879e9b98e553af73419e16842256faf",
+    "pf_soft_pull_study.py": "b18b3cee9c1d8caa793b6846c84c69f4bd6ca2cf18814fedf564c72e55aac44d",
+    "tests/test_soft_pull.py": "74ebce6cb0d0016720093432558b208fc36b6c8d74348cee5a429499d11446b3",
+    "pf_quote_capture.py": "467a0df8d8cee194aa38308ffad62c2d314fa7f2519bb9e618f305b7142103c1",
+    "pf_quote_coverage.py": "3e0012f5b2ee2a2dd0c89812345c58398be0852423feabf8e6c1b2d7c6039bd3",
+    "pf_reentry_study.py": "65d9fc720b8e5f7665302d988fc908ec90a1983739a47904660f265f8d772448"
+  },
+  "inputs": {
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/scope.json": "0fdb454efec919ab03b2e44fddef154c5e9964c65d1ab3cf10828eabf0dc58b6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/verification.json": "0396f180a7a733011d09974d966a90884113c3ac60c5f5166726ae360998d6e5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/grid/verification.json": "bce5fcc0324f2d09a206bf52caa1f0baf8a006eb58471476d8d90545b1bb86a1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/quote_incremental_20261109/window_metrics.parquet": "6f6530f57715266bf36dace9d806af42dc5e4d7484759ad6bd058197fc39657b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/quote_incremental_20261109/coverage.parquet": "05785dac1d388a649fec43baeb37c3762d93140e45dc8efe241b55f4225e0025",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/states_v6.parquet": "ec99d7d2257fc9583cfce2bbb9badc0dae16f3b8f8f56630175dcf0524cf9538",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/grid/probes_v6.parquet": "2e96c1b77fcc5d137ff78d30b2543fae0be9a3fdcdb5620837586b922f254605",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/v6/evidence/books.jsonl.gz": "b3475042f84ea27cfd18e5f8d99205dae0c26cb6b1b24e3310e9dd54182c85d5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/states_basis.parquet": "9e31aa2a38073a02193f41ce956cd4e311178b86a4d0c26301807ebc924eab7f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/grid/probes_basis.parquet": "4e69fb327483c2e9960c22422a03ec10497b8ef759e9c10da69d35619e68c02f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/basis/evidence/books.jsonl.gz": "1067732e11a73ba25493851afdcc80e9ca119fcda25c1f197d7bcaf4d73d5307"
+  },
+  "population": "220 consumed Nov8 windows, all first60s decisions; actions are every original touch on-to-off transition, never selected on fills; zero unrecorded exclusions",
+  "arms": {
+    "reference": 0.0,
+    "exit005": 0.005,
+    "exit01": 0.01,
+    "exit02": 0.02,
+    "exit04": 0.04
+  },
+  "primary": "exit01",
+  "max_hold_ms": 100,
+  "minute0_line": 0.0492,
+  "policy": "retain accepted uncancelled small base<=5 at original touch price only on original on-to-off event, line-delta<v<=line, native relaxed quote same price and enough size, no original rung duplicate; no fresh order while guard off; all hard predicates conditional on recorded state preserved; expire100ms or earlier on lower-line/hard/price/size change; no rung retention",
+  "timing": "normal quoting at original decisions; only reevaluate/cancel existing retained orders at native due-event probes; exact100ms timer cancellation before integrating spans",
+  "reference": "fixed incremental sizing, old40/22/95ms acknowledgement and1000ms reservation grace; reproduce every old count exactly and integrals atol1e-4/rtol1e-11 per window",
+  "estimand": "conditional no-fill request workload and original-price coverage; separately report extra off-guard exposure, reservations and adverse future midpoint moves; no fill, PnL, inventory variance or deployment decision",
+  "price_diagnostic": "one row per reference touchpull; signed midpoint change excluding initial spread at1s primary and5s secondary; last known native Frame at or before horizon, age<=250ms at start/end; invalid/missing/stale/mismatched-start statuses retained; unweighted action means, never trade returns",
+  "diagnostic_controls": "same selected action count within run,UTC hour,side,guard-depth floor((.0492-v)/.005),10-tick current midpoint bucket,spread bucket1/2/3+; sample with replacement500 times seed20261109 from all reference pull actions with valid same-horizon labels; selected actions remain in pool; no p-value/CI or skill claim; this proxy cannot select a trading policy",
+  "null": "mechanical policy comparison deterministic; descriptive price diagnostic uses500 matched draws declared here, not an independent economic null; one consumed partial day, no confidence interval",
+  "multiplicity": {
+    "new_variants": 4,
+    "current_arms": 5,
+    "cumulative_distinct_policies": 16
+  },
+  "controls": "retention positive; lower-line, hard guard, deadline, new-order, pending-create, duplication refusals; zero-delta parity; price-clock controls; original baseline parity; artifact count/summary corruptions refused",
+  "no_live_change": true,
+  "no_fill_clock_bypass": true,
+  "no_protected_dates_read": true
+}
