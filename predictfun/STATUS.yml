@@ -6,8 +6,13 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
-  2026-11-09: PULL/REENTRY STUDY RUNNING;220 already-consumed Nov8 windows, fixed incremental sizing.
-  Cancel-ack gating and25/50/100ms rapid-reentry confirmation; original pulls immediate, no fills/PnL or protected data.
+  2026-11-09 15:04Z: PULL/REENTRY STUDY COMPLETE,220 consumed Nov8 windows/279,059 decisions/30,796 opportunities.
+  Fixed incremental sizing; no fills. Cancel-ack requests-0.22%/aligned time-0.14%; reentry25 -8.46%/-8.19%,50 -13.80%/-11.19%,
+  100 -19.49%/-15.84%; all-entry50 -43.15%/-27.06%. No tested delay preserves coverage; both runs show the tradeoff.
+  Nominal25ms gives46.93ms median actual admission wait at original decision events.30 controls and artifact checks pass;
+  18 baseline metrics/window match exactly, all184776 paired action rows reconcile. No live/protected/fill-clock changes.
+  Branch research/predict-reentry-churn-20261109, receipts reviews/reentry_churn_20261109/, handoff handoffs/20261109_reentry_results.md.
+  All jobs done,294MiB peakRSS,1.5MiB output. B3 pull-rule/model-stability research remains open; exact reasons needed (existing A3).
   2026-11-09 14:42Z: QUOTE CAPTURE MECHANICS COMPLETE,220 consumed Nov8 windows/279,059 decisions, first60s, no exclusions.
   Incremental top-ups preserve the small order: requests-4.52%, active time at desired prices+3.90%, oldest quote399->515ms,
   reserved share-time-3.57%; active share-time+2.94%, off-target time+0.82%, so no inventory-risk/PnL claim. Always splitting

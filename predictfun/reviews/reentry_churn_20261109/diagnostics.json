@@ -1,0 +1,55 @@
+{
+  "as_of": "2026-11-09T15:04:07.701650+00:00",
+  "source_commit": "0214035e672baf401f69be7e547485949e1a1272",
+  "source_sha256": "54e51a88a719dbf3f2e543ff17d20f07500e069970e2cc7c5cb22ff663ac65b7",
+  "receipt_sha256": "7c6b4241130476eaf15b81fc9e02a16ccea5406a06cc6777b67c99eb14c9dcbe",
+  "controls": {
+    "positive": true,
+    "negative_wait_refused": true
+  },
+  "summary": {
+    "all_entry50": {
+      "actions": 30796,
+      "admitted": 15527,
+      "delayed": 15527,
+      "delay_ms_p50": 68.603271484375,
+      "delay_ms_p90": 99.208740234375
+    },
+    "cancel_ack": {
+      "actions": 30796,
+      "admitted": 30409,
+      "delayed": 257,
+      "delay_ms_p50": 37.650634765625,
+      "delay_ms_p90": 58.993847656250004
+    },
+    "reentry100": {
+      "actions": 30796,
+      "admitted": 23679,
+      "delayed": 4101,
+      "delay_ms_p50": 125.1513671875,
+      "delay_ms_p90": 151.666748046875
+    },
+    "reentry25": {
+      "actions": 30796,
+      "admitted": 27370,
+      "delayed": 7792,
+      "delay_ms_p50": 46.932373046875,
+      "delay_ms_p90": 75.449951171875
+    },
+    "reentry50": {
+      "actions": 30796,
+      "admitted": 25554,
+      "delayed": 5976,
+      "delay_ms_p50": 75.8353271484375,
+      "delay_ms_p90": 100.244873046875
+    },
+    "reference": {
+      "actions": 30796,
+      "admitted": 30796,
+      "delayed": 0,
+      "delay_ms_p50": null,
+      "delay_ms_p90": null
+    }
+  },
+  "interpretation": "minimum elapsed confirmation, evaluated at original decision events; no new timer is introduced. Delay quantiles condition on delayed admissions and are not performance metrics."
+}
