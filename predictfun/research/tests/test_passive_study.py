@@ -39,5 +39,13 @@ class PassiveControls(unittest.TestCase):
         with patch('predictfun.research.pf_passive_engine.sha',return_value='wrong'):
             with self.assertRaises(ValueError):source()
 
+    def test_entry_checker_detects_wrong_market_even_if_totals_equal(self):
+        import pandas as pd
+        from predictfun.research.pf_passive_run import require_prephase_equal
+        b=pd.DataFrame(dict(mid=[1,2],t=[10.,20.],q=[1.,1.]))
+        require_prephase_equal(b,b.copy(),'fills',None)
+        c=b.copy();c['mid']=[2,1]
+        with self.assertRaises(AssertionError):require_prephase_equal(b,c,'fills',None)
+
 
 if __name__=='__main__':unittest.main()
