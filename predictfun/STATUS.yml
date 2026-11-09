@@ -6,11 +6,14 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
-  2026-11-09: OPTIMIZATION LOOP RUNNING (user authorized): inventory-aware grace, then duration/latency sensitivity.
-  Same220 consumed Nov8 windows; tracked in reviews/optimization_loop_20261109/plan.json on research/predict-opt-loop-20261109.
-  Serial capped jobs, committed declarations and verified receipts; no deployment, protected-date or fill-clock bypass.
-  Round1 verified16:25Z: individual/reserved-room grace retains4.86%/0.68% of unrestricted coverage gain (208/29 admissions),
-  no added non-reducing exposure in this conditional replay. Round2 shorter-grace/latency comparison running.
+  2026-11-09 16:40Z: OPTIMIZATION LOOP first3 rounds VERIFIED; same220 consumed Nov8 windows/279059 decisions.
+  Inventory-only grace sacrifices most coverage gain; shorter-grace test exposed equal-clock timeout priority.
+  Updates-first50ms: requests-6.98%, original aligned time+2.37%, off-target+25.66%,
+  active share-time+2.74%. Retains89.44% of100ms coverage gain with24.23% less added off-target time.
+  Same direction across3 assumed latency scenarios;37 controls and artifact checks pass,6160 window-arm/366156
+  action-arm rows. No PnL/variance or deployment claim. All jobs done,1434MiB peak. findings_v2.json supersedes
+  two-round findings; handoffs/20261109_optimization_loop_v2.md. Next integration pass: current Rust A2/B4 parity,
+  actual timer scheduling and calibrated fills. No protected Nov9–13/live/frozen/loss-budget/fill-clock changes.
   2026-11-09 16:02Z: BOUNDED SOFT-PULL COMPLETE;220 consumed Nov8 windows/279059 decisions/13077 touch pulls.
   Exact native replay1262612 outputs; all decisions match, native guard contradictions0/137325; due-event observer
   preserves original outputs/books. Primary0.01c/max100ms accepted-small-touch retention: requests-6.99%, original
