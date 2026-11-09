@@ -19,8 +19,9 @@ from . import pf_native_inventory_events as inventory
 a=native.a
 ROOT=Path('/tmp/pf-a2-parity-20261109')
 PIN='f20fdb1'
-DEST=a.ROOT/'data/predict_fun/research/optimization_loop_20261109/native_a2'
-REVIEW=a.HERE.parent/'reviews/optimization_loop_20261109/native_a2'
+FAILED=a.ROOT/'data/predict_fun/research/optimization_loop_20261109/native_a2'
+DEST=a.ROOT/'data/predict_fun/research/optimization_loop_20261109/native_a2_v2'
+REVIEW=a.HERE.parent/'reviews/optimization_loop_20261109/native_a2_v2'
 TARGET=native.TARGET
 NAME='native_a2_continuity'
 REL='crates/pf-engine/src/ladder.rs'
@@ -109,7 +110,9 @@ def declare():
         timing='all100 deadline before same-clock data; update_first50 after all same-clock source events; feedback before native retries; original decisions alone drive new wants; probes may cancel held pairs only',
         controls='native split/partial-fill/front rotation/retry/rejection; equal-clock positive and later-event refusal; hard probe; reservation boundary; malformed input, instrument anchor and corrupted artifact refusal; independently rebuild coverage from saved order intervals',
         multiplicity=dict(new_policy_parameters=0,existing_policies_retested=3,cumulative_distinct_policies=21,new_execution_model=1,latency_scenarios=1),
-        limitations=LIMITS,no_live_change=True,no_protected_dates_read=True,no_fill_clock_bypass=True)
+        limitations=LIMITS,no_live_change=True,no_protected_dates_read=True,no_fill_clock_bypass=True,
+        supersedes=dict(declaration=str(FAILED/'declaration.json'),declaration_sha256=sha(FAILED/'declaration.json'),
+            failed_input_sha256=sha(FAILED/'input.jsonl.gz'),reason='Preparation refused at the neutral-action count: flat native -1 quote sentinel was not normalized to null. No native experimental run or outcomes occurred. Corrected conversion with a regression control; same policies and cohort.'))
     write(DEST/'declaration.json',d);write(REVIEW/'declaration.json',d)
 
 def check():
@@ -124,7 +127,13 @@ def check():
     return d
 
 def quote(row,prefix):
-    return [[None if pd.isna(row[f'{prefix}_tick{l}']) else int(row[f'{prefix}_tick{l}']),float(row[f'{prefix}_size{l}'])] for l in range(4)]
+    out=[]
+    for l in range(4):
+        p=row[f'{prefix}_tick{l}'];z=float(row[f'{prefix}_size{l}'])
+        p=None if pd.isna(p) or p==-1 else int(p)
+        if not np.isfinite(z) or z<0 or (p is None and z!=0) or (p is not None and not 1<=p<100):raise ValueError('invalid native quote encoding')
+        out.append([p,z])
+    return out
 
 def prepare():
     check();scope=json.loads((a.RP/'scope.json').read_text())
