@@ -44,7 +44,9 @@ class TradeTapeControls(unittest.TestCase):
         self.assertEqual((a['side'],a['ptick']),(1,31))
         self.assertEqual(a['first_recv_ns'],1794174957481512201)
         m['price']=str(691*10**15)
-        with self.assertRaises(ValueError):t.rest_leg(x,m,10**9)
+        off=t.rest_leg(x,m,10**9)
+        self.assertIsNone(off['ptick']);self.assertEqual(off['price_grid_status'],'off_cent_grid')
+        self.assertEqual(off['token_price_wei'],m['price'])
 
     def test_duplicate_pages_do_not_add_fills_or_hide_conflicts(self):
         x,m=fixture();a=t.rest_leg(x,m,20);b=t.rest_leg(x,m,10)
@@ -96,6 +98,9 @@ class TradeTapeControls(unittest.TestCase):
         rows[0].update(clock_status='matching_engine_event',match_time_ns=1500000000,match_precision_ns=1000000,
                        match_event_id='direct-event',match_source_sha256='a'*64)
         self.assertEqual(t.replay_times(pd.DataFrame(rows)).tolist(),[1500.])
+        rows[0]['price_grid_status']='off_cent_grid'
+        with self.assertRaisesRegex(ValueError,'off-grid'):t.replay_times(pd.DataFrame(rows))
+        rows[0]['price_grid_status']='cent_grid'
         rows[0]['match_precision_ns']=10**9
         with self.assertRaises(ValueError):t.replay_times(pd.DataFrame(rows))
 

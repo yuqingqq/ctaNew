@@ -48,12 +48,13 @@ def declare():
 
 def build():
     if (DEST/'legs.parquet').exists() or (DEST/'receipt.json').exists():raise ValueError('refuse overwriting repair artifacts')
-    d=json.loads((DEST/'declaration.json').read_text())
+    declaration_path=DEST/('declaration_v2.json' if (DEST/'declaration_v2.json').exists() else 'declaration.json')
+    d=json.loads(declaration_path.read_text())
     for p,h in d['sources'].items():
         if audit.sha(audit.HERE/p)!=h:raise ValueError('declared source changed: '+p)
     for p,h in d['inputs'].items():
         if audit.sha(p)!=h:raise ValueError('declared input changed: '+p)
-    controls=(DEST/'logs/controls.log').read_text()
+    controls=(DEST/'logs'/('controls_v2.log' if d.get('version')==2 else 'controls.log')).read_text()
     if '\nOK\n' not in controls or 'rc=0 ' not in controls:raise ValueError('missing passing controls')
     scope=json.loads((audit.RP/'scope.json').read_text());mids={w['market'] for w in scope['windows']}
     O=pd.read_parquet(audit.DEST/'orders.parquet');own=set(O.order_hash.dropna());cids=set(map(int,O.cid))
@@ -134,10 +135,11 @@ def build():
     try:tape.load_replay_tape(DEST,audit.DAY)
     except ValueError as e:refusal=str(e)
     if refusal is None:raise ValueError('coarse/unresolved tape was accepted as point clocks')
-    out=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),declaration=d,declaration_sha256=audit.sha(DEST/'declaration.json'),
+    out=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),declaration=d,declaration_sha256=audit.sha(declaration_path),
         population=dict(markets=len(mids),rest_legs=len(L),order_actions=len(O),own_confirmed_legs=len(owned),
             own_filled_orders=int(owned.maker_order_hash.nunique()),raw_status_notices=len(event),
             clock_status=L.clock_status.value_counts().to_dict(),unmatched_status=collections.Counter(x['clock_status'] for x in unmatched)),
+        price_grid_status=L.price_grid_status.value_counts().to_dict(),
         reconciliation=dict(own_exact_identities_equal=actual==expected,ambiguous_own_identities=int(owned.leg_id.duplicated().sum()),
             quantity_mismatches=int((O.quantity_difference>1e-6).sum()),max_quantity_difference=float(O.quantity_difference.max()),
             own_interval_overlaps=int(C.interval_overlaps.sum()),own_interval_nonoverlap=int((~C.interval_overlaps).sum()),
@@ -154,4 +156,16 @@ def build():
     print(json.dumps({k:out[k] for k in ['population','reconciliation','replay_refusal','predicates']},indent=2))
 
 
-if __name__=='__main__':{'declare':declare,'build':build}[sys.argv[1]]()
+def amend():
+    old=json.loads((DEST/'declaration.json').read_text())
+    d=dict(old,version=2,as_of=dt.datetime.now(dt.timezone.utc).isoformat(),
+        supersedes_sha256=audit.sha(DEST/'declaration.json'),
+        correction='retain exact off-cent-grid REST prices with explicit status and nullable ptick; refuse these prices in point replay instead of rounding or dropping trades',
+        failed_build_log_sha256=audit.sha(DEST/'logs/build.log'),
+        source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=audit.HERE,text=True).strip(),
+        sources={p:audit.sha(audit.HERE/p) for p in SOURCES})
+    audit.write(DEST/'declaration_v2.json',d);audit.write(REVIEW/'declaration_v2.json',d)
+    print('DECLARED v2 price-status preservation; no result-bearing v1 receipt')
+
+
+if __name__=='__main__':{'declare':declare,'build':build,'amend':amend}[sys.argv[1]]()
