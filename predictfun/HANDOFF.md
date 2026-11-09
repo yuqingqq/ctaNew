@@ -1,22 +1,59 @@
 # P-2026-005 HANDOFF
 
-## 2026-11-09 — passive inventory experiment RUNNING
+## 2026-11-09 — passive inventory experiment COMPLETE
 
-- User authorized testing queue retention, reduction size and urgency. Isolated checkout `/tmp/cta-passive-inventory-20261109`,
-  branch `research/predict-passive-inventory-20261109`; source starts `1c9cff76` (runner through `b7707d0d`).
-- Declaration: `data/predict_fun/research/passive_inventory_20261109/declaration.json`, committed design before outcomes.
-  Five latest previously modelled days: Oct 27, Oct 31, Nov 1–3; all 288 markets/day, baseline + three single changes + combined,
-  J/X; one-day Nov 3 p99 cancel-reservation stress (143.3536 ms). Same fixed models, inputs and guards; in-sample exploration.
-- Queue retention only for same-price eligible reducing orders whose known remainder + other reservations fits inventory.
-  Small reduction: cap new desired reduce size at 5 shares. Urgency: one-cent improvement, strictly passive, from 180–240s
-  for |known net| >=10. Its price concession is charged in fill PnL; guard scores are not claimed recalibrated to that price.
-- Main runs use uncapped total-loss budget; 150-share exposure backstop unchanged. No live settings/deployment/forward-race change.
-  No new market dates read; Nov 9–13 protected. Inputs reused read-only from prior study, outputs isolated.
-- Fifteen initial controls pass; baseline J smoke matches prior win/fill/request artifacts exactly across eight markets.
-  X smoke and full batch running sequentially via run_light (one core, 4 GiB limit). No findings yet.
-- Evaluation: exact pre-60s entry comparison between arms; per-market settlement reconciliation; +1s/mark@stop/carry,
-  inventory trajectory, requests, refusals, and known-state diagnostics. 2,000 paired day null/bootstrap draws, 16-comparison
-  family; no intervals on one-day stress. Five day clusters give weak inference; no untreated future validation claim.
+- As-of **2026-11-09 03:53:11Z**. All declared replays, reconciliation and 18 source controls passed. Isolated branch
+  `research/predict-passive-inventory-20261109`, checkout `/tmp/cta-passive-inventory-20261109`, tested source `983a3b4f`.
+  Receipt: `predictfun/reviews/passive_inventory_20261109/receipt.json`; retained data/logs under
+  `/home/yuqing/ctaNew/data/predict_fun/research/passive_inventory_20261109/`. No study job remains running.
+- Five consumed dates: Oct 27, Oct 31, Nov 1–3, **1,440 markets per arm/timing**; same fixed guards, trained on four of
+  these five dates. This is in-sample policy feasibility, not independent validation or a live-return estimate. J uses
+  transaction-frame jitter; X uses transactions shifted -50 ms and max activation queue. Main total-loss budget uncapped;
+  separate 150-share exposure cap unchanged, rebates excluded. Baseline settlement **-$177.5728 / -$115.9463 J/X**;
+  baseline +1s markout **$261.9645 / $183.1157** (a diagnostic, not realized spread PnL).
+- Same-price queue retention after 60s keeps an eligible order only when its known remainder plus other reducing-side
+  reservations fits known inventory. It can also retain a smaller order instead of upsizing. Small reduction caps desired
+  size at 5 shares; combined may preserve an older larger original order whose remaining quantity fits 5. Urgency improves
+  the reducing quote one cent into the spread during 180–240s for |known net| >=10. Existing guards must admit the original
+  quote; their score is not claimed calibrated to the improved price. Price concession enters actual fill PnL.
+
+| Change | Settlement delta J / X ($) | +1s delta J / X ($) | Mean residual shares J / X |
+|---|---:|---:|---:|
+| Baseline | 0 / 0 | 0 / 0 | 6.2363 / 5.2992 |
+| Keep queue | -10.7803 / +11.1000 | -0.3580 / +0.1500 | 6.1357 / 5.2506 |
+| Five-share reduction | -22.1177 / +17.7284 | -25.9673 / -21.8333 | 6.8862 / 5.8172 |
+| Late urgency | +10.9085 / +25.7631 | -1.9977 / +0.8512 | 6.2272 / 5.2945 |
+| Combined | -21.0283 / +19.2284 | -26.1020 / -22.3833 | 6.8674 / 5.8172 |
+
+- Queue retention lowers place requests **2.5687% / 1.9782%**, and residual inventory **1.61% / 0.92%**, but settlement
+  improves only 1/5 J and 2/5 X days. It remains an operational-efficiency candidate, not demonstrated PnL improvement.
+- Five-share reduction cuts economically reducing volume **45.94% / 50.72%** and raises mean residual inventory
+  **10.42% / 9.77%**. MIN_USD withholding decisions rise **81,403 -> 91,065 J**, **76,790 -> 86,246 X**; these are repeated
+  decisions, not distinct orders. Both smaller fills and the existing $1 minimum limit reduction; no causal attribution
+  of the full loss to either mechanism. Among the same pre-60 inventory population (674 J / 579 X markets), the fraction
+  ending below one share falls **16.32% -> 9.35% J**, **12.95% -> 6.56% X**. Do not adopt a blanket five-share cap.
+- Urgency improves 4/5 J days but only 1/5 X days (one unchanged). Its X gain disappears without Nov 2: **-$3.3522**.
+  J gain decomposes to mark-at-240 **+$9.6623** / carry **+$1.2462**; X **+$6.0652 / +$19.6979**. Mean residual inventory
+  falls only **0.0091 / 0.0048 shares**. It does not establish stronger spread capture or materially better inventory control.
+- Declared 2,000 shared UTC-day sign flips + 2,000 day bootstraps, 16 comparisons. Urgency settlement family-adjusted p
+  **0.5727 J / 1.0 X**. J pointwise bootstrap mean/day interval is positive, but coarse five-day randomization and family
+  inference do not support a robust positive. No new parameter sweep or candidate adoption after outcomes.
+- One-day Nov 3 stress: **288 markets per arm/timing**, cancel reservations delayed to at least measured p99 **143.3536 ms**,
+  physical removal unchanged. Settlement deltas J/X: queue **+6.2466 / +0.3500**, small **+0.6981 / -8.5854**, urgency
+  **-0.0850 / -2.9689**, combined **+1.8131 / -10.3354**. No interval; reservation sensitivity, not calibrated full OMS.
+- Checks: exact baseline J/X smoke and fresh first-day baseline parity (also fresh Oct31 J); remaining main baseline
+  artifacts reused with hashes/origin recorded; stress baseline always fresh. All pre-60 fill/request traces equal across
+  arms; fill/settlement/carry and inventory paths reconcile per market. Zero excluded markets/missing valuations; no missing
+  bounded Binance hour files. Guard withdrawals, pending reservations, lot/notional checks and stop remain active.
+- Declaration v3 supersedes v2's filled-order diagnostic assumption: legitimate duplicate creation timestamps caused a
+  checker stop. PnL/policies unchanged; counts now use immutable price/size lower bounds and sent-request/tranche upper
+  bounds. Final observed bounds collapse: one duplicate create key per main arm/timing, zero ambiguous filled keys. Original
+  failure log/declarations retained. Synthetic ambiguous-order positive and corrupted-identity refusal controls pass.
+- All source/input/artifact identities recorded; receipt copy and source hashes verified. Peak replay RSS about 1.3 GiB,
+  one core, ~493 GiB disk free. Frozen artifacts, live code/settings and protected Nov 9–13 forward dates unchanged/unread.
+- Next: avoid the blanket five-share cap. Queue retention merits efficiency work; urgency needs independent evidence.
+  Any further size policy should explicitly account for executable minimum notional and reduction throughput before a new
+  predeclared test. Current results do not justify promoting any candidate to live.
 
 ## 2026-11-08 — sizing and settlement probability study COMPLETE
 
