@@ -6,10 +6,13 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
-  2026-11-09 03:11Z: PASSIVE INVENTORY STUDY RUNNING, user-authorized. Five latest modelled consumed days,
-  baseline / queue retention / 5-share reduction / late one-tick urgency / combined at J/X; one-day cancel-p99 stress.
-  Fifteen initial controls and eight-market J baseline parity pass. No findings or adoption yet; live settings and
-  Nov 9–13 forward data unchanged. Branch research/predict-passive-inventory-20261109; details in HANDOFF.md.
+  2026-11-09 03:53Z: PASSIVE INVENTORY STUDY COMPLETE; 5 consumed days / 1440 markets per arm/timing, J/X.
+  Settlement deltas $ J/X: queue -10.7803/+11.1000; five-share -22.1177/+17.7284; urgency +10.9085/+25.7631;
+  combined -21.0283/+19.2284. Queue cuts places 2.57%/1.98%; five-share raises residual inventory 10.42%/9.77%
+  and loses +1s value. Urgency X benefit disappears without Nov2 and loses in one-day cancel-p99 stress at J/X.
+  No robust PnL gain/adoption. All 18 controls and per-market checks pass; declaration v3 bounds ambiguous fill
+  identities (observed bounds collapse). Uncapped loss budget, 150-share exposure cap, rebates excluded.
+  Source 983a3b4f; receipt predictfun/reviews/passive_inventory_20261109/receipt.json. No live/forward changes.
   2026-11-08 17:11Z: SIZING / SETTLEMENT STUDY COMPLETE, no live changes. Nine consumed days / 2592 markets per arm;
   J/X baseline settlement $514.06/$317.63, hysteresis $550.54/$339.75 with 7.75%/7.34% fewer places. +1s and
   mark-at-stop value fall; uplift comes from carry and disappears without Nov 2. Capacity adds no PnL in ordinary
