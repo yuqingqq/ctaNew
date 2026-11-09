@@ -1,0 +1,77 @@
+{
+  "as_of": "2026-11-09T17:12:49.165989+00:00",
+  "source_commit": "75bf977e6924d71c9179b2da65b03427316e7a08",
+  "sources": {
+    "pf_native_a2_latency.py": "90fe1cece47bc69ab8870a6a815cd66a511a30bb42cc52b770e139918d1807e8",
+    "tests/test_native_a2_latency.py": "136a192d3cf3aec417ac9a0ab79b06ca77931497ea812222c018c89f21bf49eb",
+    "pf_native_a2_continuity.py": "6d550db517fb92938d320689b27005e2cfb755244986925ffd0e168cd41c1a56",
+    "native_a2_continuity.rs": "4941b31025bc8176dca4de4ad606e0430cd0152c023662e9ce240d32912e852b",
+    "tests/test_native_a2_continuity.py": "146ed2f8ae940a9c47127d7ed4d0c595801255d399ec415716976a279d00b124"
+  },
+  "inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/declaration.json": "e490c92feeaf3f43882d34ae78ab7614cb51c80e98333d2b7e845a336dbcd06b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/build.json": "97acf58969884e3e861b284ee6959360d6d9a5a508fe3c6f5a46faf60d13124d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/input.jsonl.gz": "288a3796431428a6741717fcec5d6b8246c687c70460db1a7b356ce87641dd9a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/output.jsonl.gz": "5e9aa423fc1a647affa7103e87250b4d0007dcdd596dfa4fcf759b749a807fc6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/receipt.json": "e7efeff229ceee250b08e49c66b3609934cd4afdc77cc175c0dd68d3fa47402e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/verification.json": "f37af7245e88bb4c18135c8a36d8a898ce5756eeed36b6ffae51be5cdac8cee2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/window_metrics.parquet": "d597b4a2e9154654331847ee3378c271dec53b0855029e84ee0c8af0bba72739",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/prepared.json": "f552c61c079854935e5dbcb517adf33b577121bf994d0108f0f3dc117d46de18",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_latency/build.json": "226780513104a7ac32761acb7e62bc032ba1209bec2b9daf915b9f028170a4ea",
+    "/tmp/cta-opt-loop-20261109/predictfun/reviews/optimization_loop_20261109/findings_v3.json": "9dea5d406ea6c0084b0061ffb3e0b4fff0e172e5e40bc3f86745663e07891b79"
+  },
+  "population": {
+    "windows": 220,
+    "decision_rows": 279059,
+    "neutral_actions_per_arm": 13077,
+    "excluded_windows": 0,
+    "window_arm_rows": 660
+  },
+  "arms": [
+    "reference",
+    "all100",
+    "update_first50"
+  ],
+  "latencies": {
+    "base": [
+      40.0,
+      22.0,
+      95.0
+    ],
+    "faster": [
+      20.0,
+      10.0,
+      50.0
+    ],
+    "slower": [
+      80.0,
+      50.0,
+      160.0
+    ]
+  },
+  "hypothesis": "The existing50ms updates-first policy reduces venue requests and increases original-price coverage, while adding less off-target time than100ms, under both earlier declared latency stress cases. Report exposure costs regardless of predicate.",
+  "design": "Each latency has its own reference, all100 and update_first50. No parameter selection. Base output must reproduce native_a2_v2 byte-for-byte before other profiles run.",
+  "null": "Deterministic paired mechanics; no statistical null or draw-based claim, no independent validation, PnL, variance or confidence intervals.",
+  "timing": "Only create/answer, accepted-cancel and pending-create-cancel assumptions change. Native retries, tokens, external cap150shares and1000ms reservation grace unchanged. Events/guards/targets remain factual and fixed.",
+  "controls": "All prior adapter tests plus each profile pending/accepted lifecycle, unknown profile refusal, late reopen refusal; generated-anchor refusal; lifecycle corruption and action identity refusal; byte-exact base output and metric parity.",
+  "multiplicity": {
+    "new_policy_parameters": 0,
+    "cumulative_distinct_policies": 21,
+    "existing_policies": 3,
+    "latency_profiles": 3,
+    "new_latency_profiles_for_native_model": 2
+  },
+  "limitations": [
+    "Consumed partial Nov8 day only; no CI or independent validation.",
+    "Factual quote targets, guards and inventory held fixed; no counterfactual fills or recomputed policy.",
+    "Native f20fdb1 A2 mapping, request throttle and retry code used directly; not a full B4 generated-engine integration.",
+    "External capacity150 shares per side at hypothetical net0; this is not the dollar loss budget. Factual net only conditions exposure measures.",
+    "No post-only/rejection model, wallet/kernel I/O or shared cross-market throttling. Native XV is per-window as coded.",
+    "Equal-clock update priority is a proposed scheduling contract, not demonstrated live processing latency.",
+    "Historical fill timestamps remain uncalibrated; quote coverage and exposure are not PnL or inventory variance.",
+    "Latency profiles are assumed stresses, not estimated venue quantiles or independent days."
+  ],
+  "no_protected_dates_read": true,
+  "no_live_change": true,
+  "no_fill_clock_bypass": true
+}
