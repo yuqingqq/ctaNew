@@ -1,0 +1,46 @@
+{
+  "as_of": "2026-11-09T14:40:33.715953+00:00",
+  "source_commit": "38517ef0c361afd8b9dd2c7cb5f0b04d49d369f1",
+  "sources": {
+    "pf_quote_coverage.py": "3e0012f5b2ee2a2dd0c89812345c58398be0852423feabf8e6c1b2d7c6039bd3",
+    "pf_quote_capture.py": "467a0df8d8cee194aa38308ffad62c2d314fa7f2519bb9e618f305b7142103c1",
+    "pf_quote_incremental_study.py": "60323f25796a72e8ae603093f5b508a6f9622b8d3d061e718f2f046cfcd36799"
+  },
+  "receipt_sha256": "225a85d58115f0c6ef42c9e4ab7cc54fc197e8849016370fa1e052e4330d9933",
+  "decisions_sha256": "b775757c56a470b2b512fca15965e78dc8ec426817857107152278bc12d9335f",
+  "arms": {
+    "single": [
+      false,
+      0.0,
+      false
+    ],
+    "layered": [
+      true,
+      0.0,
+      false
+    ],
+    "incremental": [
+      true,
+      0.0,
+      true
+    ]
+  },
+  "population": {
+    "day": "20261108",
+    "declared_markets": 220,
+    "present_markets": 220,
+    "decision_rows": 279059,
+    "window_status": {
+      "present": 220
+    },
+    "markets_per_arm": {
+      "incremental": 220,
+      "layered": 220,
+      "single": 220
+    }
+  },
+  "multiplicity": 7,
+  "design": "same three sizing policies; union of active intervals at the exact current desired price, versus off-target/pulled occupancy; no new arms or selection threshold",
+  "known_result": "incremental has4.52% fewer requests and3.45% more total quote time; audit tests whether that extra time is aligned with desired prices",
+  "null": "deterministic engineering diagnostic only; no profit/fill model, statistical test or interval"
+}
