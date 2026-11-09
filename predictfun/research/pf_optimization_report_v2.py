@@ -49,7 +49,7 @@ def main():
         all_latencies_fewer_requests_more_aligned_and_less_off_target_than100=all(q['fewer_requests_and_more_aligned'] and q['lower_off_target_than100'] for q in comparisons.values()),
         receipt_sha256=a.sha(t.DEST/'receipt.json'),verification_sha256=a.sha(t.DEST/'verification.json'),
         controls=dict(correct_verification_accepted=True,wrong_receipt_refused=refused),multiplicity=21,
-        limitations=new['limitations'],next=['A2/B4 native paired-order integration and parity','calibrated fills/forward observations for economic valuation','inventory-range follow-up is untested; no live promotion'])
+        limitations=new['limitations']+['nominal native event order is tested; actual wall-clock guard/timer scheduling and A2 interaction are not validated'],next=['A2/B4 native paired-order integration and parity','calibrated fills/forward observations for economic valuation','inventory-range follow-up is untested; no live promotion'])
     a.write(outpath,out);a.write(s.DEST/'findings_v2.json',out)
     q=comparisons['base']
     lines=['# Optimization loop, superseding findings v2 — 2026-11-09','',
@@ -79,6 +79,7 @@ def main():
         '-Artifact checks reconcile prior baselines, all first-two-round overlap, action identities, exact native inventory references, maximum50ms grace, coverage gain/loss and summaries. Corrupted counts and mismatched verification links are refused.',
         '-The factual inventory path is exogenous and historical match timestamps remain inadequate for calibrated fill/P&L tests. Active exposure still increases; this does not prove lower inventory variance, favorable settlement inventory, or preserved trading profits.',
         '-The model uses the earlier research sizing planner, not the new Rust A2 paired-order implementation. A2/B4 integration and calibrated fills/forward evidence remain necessary. No live code/deployment, frozen-engine, loss-budget or protected Nov9–13 changes.',
+        '-A live port must explicitly order guard refresh before the corresponding deadline check. Replay at nominal native ticks does not validate actual wall-clock timer/processing latency.',
         '-Cumulative distinct policies21. The first two rounds were declared before outcomes; deadline ordering was separately declared after observing round2. No candidate is promoted automatically.',
         '-This v2 supersedes the earlier two-round findings. Their numbers remain valid. An exclusive-create helper refused the mutable register update after the first report had been written; that publication issue is corrected here and the old log/outputs remain preserved.','',
         'Register and receipts: `reviews/optimization_loop_20261109/plan.json`, `findings_v2.json`, and `{native_inventory,inventory,duration_latency,deadline_order}/`. Full first-two-round table: `handoffs/20261109_optimization_loop.md`. Research branch: `research/predict-opt-loop-20261109`.']
