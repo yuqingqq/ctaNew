@@ -1,5 +1,23 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 17:15Z — optimization loop: native latency pass VERIFIED
+
+- Fifth pass, unchanged reference/all100/update_first50, same220 consumed Nov8 windows/279059 decisions per profile/
+  13077 neutral pulls per arm/profile. Zero exclusions, one partial day. Base output byte-identical and all base metrics exact.
+- Updates-first50 versus paired reference, faster/base/slower feedback: venue requests -5.35/-5.33/-3.72%, aligned time
+  +2.94/+4.17/+4.37%, off-target +71.76/+28.36/+5.61%, active share-time +3.97/+4.10/+2.58%.
+  Keeps97.48/94.43/90.34% of100ms coverage gain with22.86/22.96/21.90% less added off-target time.
+  Both captured modes share the request/coverage direction in all profiles. Added active exposure remains; no PnL/variance claim.
+- Assumed create/cancel/pending delays20/10/50,40/22/95,80/50/160ms; not estimated venue quantiles or separate days.
+  Native A2 f20fdb1, retry/throttle methods,150-share cap and1s reservation grace unchanged. No fill-clock bypass.
+- Source75bf977e/declarationb1441503 precede outcomes.9 Rust adapter controls +4 Python checks pass;1980 saved
+  window-arm-profile rows/117693 action-arm-profile rows verify identity/lifecycle/capacity and rebuilt coverage.
+  Findings_v4.json supersedes v3 by adding this pass. Full table: handoffs/20261109_optimization_loop_v4.md.
+- All numeric jobs finished17:15Z,375MiB peak for this pass,19MiB new data. Research slot free now; recheck before C1.
+  Protected Nov9–13, live checkout, frozen engine and dollar loss budget unchanged. No new policy parameters (21 cumulative).
+- Loop stays active: next full B4 paired-order generated-engine integration, no-token frozen parity and synthetic native
+  differential traces. Actual timer scheduling and calibrated fills/forward evidence remain before economic promotion.
+
 ## 2026-11-09 17:08Z — optimization loop: native A2 pass VERIFIED
 
 - Fourth pass uses pinned Rust f20fdb1 incremental pair/request/throttle/retry methods directly, with factual quote

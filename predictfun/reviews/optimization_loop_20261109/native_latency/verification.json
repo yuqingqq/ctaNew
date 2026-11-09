@@ -1,0 +1,10 @@
+{
+  "as_of": "2026-11-09T17:14:28.010290+00:00",
+  "receipt_sha256": "640f84ad490d492cfbb0c46d232fafc427fdd50c63cdb45ef9e20c85d272452f",
+  "window_arm_profile_rows": 1980,
+  "action_arm_profile_rows": 117693,
+  "base_output_byte_identical": true,
+  "base_metrics_exact": true,
+  "action_lifecycle_capacity_verified": true,
+  "coverage_rebuilt_from_saved_lifecycles": true
+}
