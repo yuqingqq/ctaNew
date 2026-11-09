@@ -37,11 +37,15 @@ def plan(net, wants, currents, opens, mode, rel):
 
 
 def admission(net, side, size, opens, mode, rel):
-    return prior.admission(net,side,size,opens,'reduce_reserved') if active(mode,rel) else size
+    if not active(mode,rel):
+        return size
+    return 0. if prior.entry.adding(net,side) else prior.admission(net,side,size,opens,'reduce_reserved')
 
 
 def assert_admission(net, side, size, opens, mode, rel):
     if active(mode,rel):
+        if prior.entry.adding(net,side) and size>0:
+            raise ValueError('late submission would increase inventory')
         prior.assert_admission(net,side,size,opens,'reduce_reserved')
 
 
@@ -58,13 +62,25 @@ def visible(ack, now, ws, fill_delay, mode, legacy_ack=None):
     return legacy_ack > now
 
 
-def order_meta(mode, t, ws, lane, p, net, quotes):
-    if mode is None or t-ws < 60000:
-        return dict(send_rel=(t-ws)/1000,known_net=net,base_price=p,concession_ticks=0.)
+def intent_meta(mode,t,ws,lane,want,net,quotes):
+    p=want[0]
+    if p is None:
+        return None
+    if mode is None or t-ws<60000:
+        return dict(t=t,price=p,base_price=p,decision_net=net)
     meta = quotes.get(lane)
     if meta is None or meta['t'] != t or meta['price'] != p:
         raise ValueError('missing exact quote origin')
+    return dict(meta,decision_net=net)
+
+
+def order_meta(mode, t, ws, lane, p, net, quotes):
+    # A rate-limited retry sends the retained intent later. Keep that intent's own price origin.
+    meta=quotes.get(lane)
+    if meta is None or meta['t']>t or meta['price']!=p:
+        raise ValueError('missing exact intent origin')
     return dict(send_rel=(t-ws)/1000,known_net=net,base_price=meta['base_price'],
+                decision_rel=(meta['t']-ws)/1000,decision_net=meta['decision_net'],
                 concession_ticks=(1 if lane%2 == 0 else -1)*(p-meta['base_price']))
 
 
@@ -86,7 +102,9 @@ def source():
     s = prior.source()
     s = parent.replace(s,"    ENTRY_KIND = 'both_reserved' if 'IBOTH' in rules else",
                        "    ENTRY_KIND = 'late_taper1' if 'LTAPER' in rules else 'late_reserved' if 'LRES' in rules else 'both_reserved' if 'IBOTH' in rules else")
-    s = parent.replace(s,'    entry_examples=[]','    entry_examples=[]\n    late_quotes={} ')
+    s = parent.replace(s,'    entry_examples=[]','    entry_examples=[]\n    late_quotes={}\n    late_intents={}')
+    s = parent.replace(s,'                    intent[side] = want[side]',
+                       '                    intent[side] = want[side]\n                    late_intents[side]=late_intent_meta(ENTRY_KIND,t,ws,side,want[side],knet,late_quotes)')
     s = parent.replace(s,'ENTRY_KIND)\n            live_ctr[\'entry_changed_decisions\']',
                        'ENTRY_KIND,rel)\n            live_ctr[\'entry_changed_decisions\']')
     s = parent.replace(s,'zsz=entry_admission(knet,side,zsz,policy_open(t),ENTRY_KIND)',
@@ -108,7 +126,7 @@ def source():
             if LV['capn'] is not None and not red_'''
     s = parent.replace(s,old,new)
     s = parent.replace(s,"            inflight[lane].append(rec); heapq.heappush(ev, (t + L_PL, 0, seq, 'P', rec)); seq += 1",
-                       "            rec['late_meta']=late_order_meta(ENTRY_KIND,t,ws,lane,p,knet,late_quotes)\n            inflight[lane].append(rec); heapq.heappush(ev, (t + L_PL, 0, seq, 'P', rec)); seq += 1")
+                       "            rec['late_meta']=late_order_meta(ENTRY_KIND,t,ws,lane,p,knet,late_intents)\n            inflight[lane].append(rec); heapq.heappush(ev, (t + L_PL, 0, seq, 'P', rec)); seq += 1")
     s = parent.replace(s,'            if id(rec) in cancel_wait:',
                        "            o['late_meta']=rec['late_meta']\n            if 'late_legacy_ack' in rec: o['late_legacy_ack']=rec['late_legacy_ack']\n            if id(rec) in cancel_wait:")
     s = parent.replace(s,"                    live_ctr['zombie_fills'] += int(is_z)",
@@ -127,7 +145,7 @@ def main():
         entry_plan=plan,entry_admission=admission,entry_assert_admission=assert_admission,
         entry_adding=prior.entry.adding,ENTRY_AUDIT=[],ENTRY_PARENT_SHA=prior.ENTRY_SHA,
         inflight_release=release,inflight_assert_path=prior.assert_path,
-        late_visible=visible,late_price=price,late_order_meta=order_meta,late_fill_meta=fill_meta,
+        late_visible=visible,late_price=price,late_intent_meta=intent_meta,late_order_meta=order_meta,late_fill_meta=fill_meta,
         LATE_MODES=MODES,LATE_FILLS=[]))
 
 

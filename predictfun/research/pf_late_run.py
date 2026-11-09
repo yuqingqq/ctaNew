@@ -56,13 +56,13 @@ def reconcile_metadata(f,z):
         raise ValueError('concession accounting')
     if not np.allclose(z.concession_ticks,sg*(z.pt-z.base_price),atol=1e-7,rtol=0):
         raise ValueError('concession tick identity')
-    if not z.concession_ticks.isin([0,1]).all() or not ((z.send_rel<=z.t)&(z.q>0)).all():
+    if not z.concession_ticks.isin([0,1]).all() or not ((z.decision_rel<=z.send_rel)&(z.send_rel<=z.t)&(z.q>0)).all():
         raise ValueError('invalid fill attribution')
     reducing=np.where(z.net_before*sg<0,np.minimum(z.net_before.abs(),z.q),0.)
     if not np.allclose(z.reducing_q,reducing,atol=1e-7,rtol=0):
         raise ValueError('economic reduction attribution')
     shifted=z[z.concession_ticks>0]
-    if not ((shifted.send_rel>=60)&(shifted.send_rel<240)).all():
+    if not ((shifted.decision_rel>=60)&(shifted.decision_rel<240)&(shifted.send_rel<240)).all():
         raise ValueError('concession outside phase')
     if len(shifted) and not (np.where(shifted.side==0,1.,-1.)*shifted.known_net<0).all():
         raise ValueError('concession was not reducing at submission')
