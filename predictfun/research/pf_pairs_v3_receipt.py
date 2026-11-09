@@ -86,7 +86,9 @@ def main():
     totals = reconcile(cases, rows)
     regenerated, traces = regenerate()
     check_parity(parity, regenerated)
-    if cases != traces:
+    # JSON round trips encode tuples as lists. Compare the same canonical
+    # serialization used for output hashes, not Python container types.
+    if digest(cases) != digest(traces):
         raise ValueError('saved traces differ from regenerated engine events')
     controls = {}
     for field, value in [('name', 'wrong-arm'), ('requests', rows[0]['requests'] + 1), ('known_position', [1., 1.])]:
@@ -127,6 +129,8 @@ def main():
                        'Native oracle consumes Python desired quotes; it does not independently recompute the model or all policy guards.',
                        'No native kernel, wallet, venue cross-market limits, deployment scheduling, or economic benefit is verified.'],
                    no_market_data_read=True, no_protected_dates_read=True,
+                   verifier_attempt_superseded=dict(log_sha256=s.sha(dest/'logs/receipt.log'),
+                       reason='First verifier compared reloaded JSON lists with in-memory tuple fields. Canonical JSON comparison fixes only verification; no engine, trace or parity output changed.'),
                    artifacts={str(p): s.sha(p) for p in paths})
     s.write(dest/'receipt.json', receipt)
     s.write(review/'receipt.json', receipt)
