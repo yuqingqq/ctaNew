@@ -75,7 +75,8 @@ def main():
     if s.sha(dest/'native_recheck.jsonl')!=s.sha(dest/'native.jsonl'):raise ValueError('native artifact failed exact reproduction')
     corrupt=copy.deepcopy(cases[0]);corrupt['name']='known_bad_size'
     next(e for e in corrupt['events'] if e['kind']=='place')['size']+=1
-    s.write(dest/'known_bad.jsonl',corrupt)
+    with (dest/'known_bad.jsonl').open('x') as f:
+        f.write(json.dumps(corrupt,separators=(',',':'))+'\n')
     with (dest/'logs/known_bad.log').open('x') as log:
         bad_run=subprocess.run([str(binary),str(dest/'known_bad.jsonl'),str(dest/'known_bad_native.jsonl')],stdout=log,stderr=subprocess.STDOUT)
     bad_log=(dest/'logs/known_bad.log').read_text()
