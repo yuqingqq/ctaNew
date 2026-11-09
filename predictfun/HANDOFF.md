@@ -8,6 +8,10 @@
   same-side reservations (including pending creates/cancels and grace). Round2: shorter grace and latency sensitivity.
 - Same220 consumed Nov8 first-minute windows; exact native inputs. Commit/declaration -> controls -> paired run ->
   artifact verification -> findings for each round. No PnL/variance claim without fills, no live or protected-date changes.
+- Round1 verified16:25:55Z: individual reducing grace retains4.86% of unrestricted coverage gain (208 retained
+  actions); full reservation-room grace0.68% (29). No added non-reducing share-time/active range expansion in this
+  conditional replay.32 controls pass; native fill-notice supplement has93 observations with exact original parity.
+  Round2 (shorter grace and three latency scenarios) is now running; no economic promotion.
 
 ## 2026-11-09 — native guard / bounded soft-pull study COMPLETE
 
