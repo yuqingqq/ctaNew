@@ -1,5 +1,5 @@
 {
-  "status": "active_between_passes",
+  "status": "native_a2_comparison_in_progress",
   "authorization": "User: Launch a loop to proceed the optimizations, keep the findings tracked",
   "objective": "Preserve original desired-price quote coverage while reducing unnecessary requests and additional inventory exposure; economic conclusions require calibrated fills",
   "baseline_commit": "691f80c1",
@@ -58,9 +58,10 @@
     "inventory-range follow-up is untested; no live promotion"
   ],
   "next_pass": {
-    "status": "planned",
-    "focus": "A2/B4 paired-order parity and integration of the verified quote-continuity policy with current native execution semantics",
+    "status": "source_controls_passed",
+    "focus": "Direct current native A2 request/throttle/retry comparison, fixed factual targets; full B4 remains separate",
     "data_constraint": "consumed bounded Nov8 only; protected Nov9-13 remain unread",
-    "economic_gate": "no profit/variance promotion without calibrated fills or authorized forward evidence"
+    "economic_gate": "no profit/variance promotion without calibrated fills or authorized forward evidence",
+    "native_commit": "f20fdb1"
   }
 }
