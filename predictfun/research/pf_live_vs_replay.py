@@ -18,7 +18,8 @@ journal exports (pmmm-tools journal-export at c54df1f), and the replay of pf_liv
   queue     touch trades we rested at but missed: queue ahead vs traded volume, places lost by cancel + re-place and why.
   frontage  lower bound on how long the front-of-queue orders that took touch trades had been resting.
   history   queue misses: our state at the price from when the level appeared (resting / re-place gap / pulled / elsewhere).
-Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom | feedtiming | who | reasons | queue | frontage | history
+  churn     every live cancel: pull / re-price / resize, whether the Predict top of book changed, how fast we come back and where.
+Usage: python3 -m predictfun.research.pf_live_vs_replay kernel | compare | lifetime | markout | phantom | feedtiming | who | reasons | queue | frontage | history | churn
 """
 import collections, gzip, json, os, re, sys
 import numpy as np, pandas as pd
@@ -899,5 +900,89 @@ def main_history():
     return 0
 
 
+def main_churn():
+    """Every live cancel (core request) in the 220 windows: trigger = our decision on that lane at the cancel (nothing: pull; another
+    price: re-price; same price, another size: resize); whether the Predict top of book (best bid / ask prices; prices and sizes)
+    changed between the order's place decision and the cancel; for pulls, time until the lane is wanted again and whether at the same
+    price; for re-prices / resizes, whether the lane returns to the cancelled (price, size) within 1 s."""
+    sc = json.load(open(f'{RP}/scope.json')); coh = {w['market']: w['ws'] * 1000.0 for w in sc['windows']}
+    rows = []
+    for run, rid in RUNS:
+        mk = {m for m, (ws, r) in cohort().items() if r == run}
+        dec = collections.defaultdict(list); pl = {}; cx = []
+        for l in lines(f'{CAP}/{run}/run-{rid}/outputs.jsonl.gz'):
+            if l.startswith('{"Decision"'):
+                m = int(l[22:l.index(',', 22)])
+                if m in mk:
+                    d = json.loads(l)['Decision']; dec[m].append((d['t'], d['lanes']))
+            elif l.startswith('{"Request":{"Place"'):
+                v = json.loads(l)['Request']['Place']
+                if v['market'] in mk:
+                    pl[(v['market'], v['id'])] = v
+            elif l.startswith('{"Request":{"Cancel"'):
+                v = json.loads(l)['Request']['Cancel']
+                if v['market'] in mk:
+                    cx.append(v)
+        top = collections.defaultdict(list)
+        for l in lines(f'{CAP}/{run}/run-{rid}/inputs.jsonl.gz', skip_header=True):
+            if l.startswith('{"Advance"'):
+                if float(l[21:l.index('}', 21)]) > CUTOFF_MS + 120_000:
+                    break
+            elif l.startswith('{"Frame"'):
+                m = int(l[19:l.index(',', 19)])
+                if m in mk:
+                    d = json.loads(l)['Frame']
+                    top[m].append((d['known_ms'], tuple(d['bids'][0]) if d['bids'] else None, tuple(d['asks'][0]) if d['asks'] else None))
+        DT = {m: np.array([x[0] for x in v]) for m, v in dec.items()}; TT = {m: np.array([x[0] for x in v]) for m, v in top.items()}
+        def lanes_at(m, t):
+            i = np.searchsorted(DT[m], t + 0.01, side='right') - 1
+            return dec[m][i][1] if i >= 0 else None
+        def top_at(m, t):
+            i = np.searchsorted(TT[m], t + 0.01, side='right') - 1
+            return top[m][i][1:] if i >= 0 else (None, None)
+        for c in cx:
+            o = pl.get((c['market'], c['id']))
+            if o is None:
+                continue
+            m, L, tc = c['market'], o['lane'], c['t']
+            ln = lanes_at(m, tc)
+            if ln is None:
+                continue
+            want = ln[L]
+            trig = 'pull' if want[0] is None else 're-price' if want[0] != o['tick'] else 'resize' if abs(want[1] - o['size']) > 1e-9 else 'same price and size'
+            (b0, a0), (b1, a1) = top_at(m, o['t']), top_at(m, tc)
+            px_same = b0 is not None and b1 is not None and a0 is not None and a1 is not None and b0[0] == b1[0] and a0[0] == a1[0]
+            all_same = px_same and abs(b0[1] - b1[1]) < 1e-9 and abs(a0[1] - a1[1]) < 1e-9
+            back_ms = np.nan; back_same = None
+            ts = DT[m]; i = np.searchsorted(ts, tc + 0.01, side='right')
+            while i < len(ts) and ts[i] <= tc + 5000:
+                w = dec[m][i][1][L]
+                if trig == 'pull':
+                    if w[0] is not None:
+                        back_ms = ts[i] - tc; back_same = w[0] == o['tick']; break
+                elif w[0] == o['tick'] and abs(w[1] - o['size']) < 1e-9:
+                    back_ms = ts[i] - tc; back_same = True; break
+                i += 1
+            own = None
+            if px_same and L in (0, 1) and o['tick'] == (b0[0] if L == 0 else a0[0]):
+                d_own = (b1[1] - b0[1]) if L == 0 else (a1[1] - a0[1]); d_oth = (a1[1] - a0[1]) if L == 0 else (b1[1] - b0[1])
+                own = 'only our order changed the top' if abs(d_own - o['size']) < 0.5 and abs(d_oth) < 1e-9 else \
+                      'our order + other changes' if abs(d_own - o['size']) < 0.5 else 'others changed the top'
+            rows.append(dict(run=run, lane=L, trig=trig, life=tc - o['t'], top_px_same=px_same, top_all_same=all_same, back_ms=back_ms, back_same=back_same,
+                             t_in=(tc - coh[m]) / 1000.0, own=own))
+    X = pd.DataFrame(rows); X.to_parquet(f'{OUT}/cancel_churn.parquet', index=False)
+    out = dict(cancels=len(X), by_trigger={})
+    for k, g in X.groupby('trig'):
+        b = g.back_ms
+        out['by_trigger'][k] = dict(n=len(g), share=round(len(g) / len(X), 3), order_life_ms_p50=round(float(g.life.median()), 0),
+                                    top_prices_unchanged=round(float(g.top_px_same.mean()), 3), top_prices_and_sizes_unchanged=round(float(g.top_all_same.mean()), 3),
+                                    back_within_ms={w: round(float((b <= w).mean()), 3) for w in (100, 300, 1000, 5000)},
+                                    back_at_same_price=round(float(g.back_same.dropna().astype(bool).mean()), 3) if g.back_same.notna().any() else None,
+                                    touch_at_unchanged_top=dict(collections.Counter(g.own.dropna())))
+    json.dump(out, open(f'{OUT}/cancel_churn.json', 'w'), indent=1)
+    print(json.dumps(out, indent=1))
+    return 0
+
+
 if __name__ == '__main__':
-    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom, 'feedtiming': main_feedtiming, 'who': main_who, 'reasons': main_reasons, 'queue': main_queue, 'frontage': main_frontage, 'history': main_history}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
+    sys.exit({'kernel': main_kernel, 'compare': main_compare, 'lifetime': main_lifetime, 'markout': main_markout, 'phantom': main_phantom, 'feedtiming': main_feedtiming, 'who': main_who, 'reasons': main_reasons, 'queue': main_queue, 'frontage': main_frontage, 'history': main_history, 'churn': main_churn}.get((sys.argv[1:] or [''])[0], lambda: sys.exit('usage: kernel | compare | lifetime'))())
