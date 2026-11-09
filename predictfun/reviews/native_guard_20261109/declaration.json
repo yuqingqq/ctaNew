@@ -1,0 +1,114 @@
+{
+  "as_of": "2026-11-09T15:28:47.077899+00:00",
+  "scope": "exact factual native input replay on220 consumed Nov8 windows; export decision states0-65s and books-1..65s; compare prior279059 first-minute decisions",
+  "native_commit": "366d4192af219eef568ae17c530e4303e6f4ca45",
+  "headers": {
+    "v6": {
+      "protocol": "PFMM_LADDER_JOURNAL_V3",
+      "build": "4d6588422138",
+      "ladder": {
+        "version": "pm_ladder_v3",
+        "policy": "MICRO",
+        "rules": [
+          "G4",
+          "G2",
+          "G6",
+          "G5",
+          "G3",
+          "G1",
+          "PM90",
+          "GS",
+          "LD2",
+          "CAP10",
+          "XNA",
+          "XMIN1",
+          "XV",
+          "RO60",
+          "S240"
+        ],
+        "size": "AM:5:25:95",
+        "params": {
+          "path": "config/predict/pm_ladder_v3/params.json",
+          "sha256": "486b9152bc5187e19bb73bbc54af0c758112fb6b54d3c6f7ddd9463efbbea801"
+        },
+        "guard_bid": {
+          "path": "config/predict/pm_ladder_v1/guard_bid.txt",
+          "sha256": "0dc09d84bb28e0c0cafac99ee0fa8ff1140cb97ca70571526469f3b42f345e39"
+        },
+        "guard_ask": {
+          "path": "config/predict/pm_ladder_v1/guard_ask.txt",
+          "sha256": "6d2d7149e6c556c6a2a63dad89e68ce4ea6113c76400edf9bd4f7a345ea9fade"
+        }
+      },
+      "started_unix_ms": 1794108465172
+    },
+    "basis": {
+      "protocol": "PFMM_LADDER_JOURNAL_V3",
+      "build": "3c724fe2e6a6",
+      "ladder": {
+        "version": "pm_ladder_v3_basis_v1",
+        "basis_mode": "continuous_v1",
+        "policy": "MICRO",
+        "rules": [
+          "G4",
+          "G2",
+          "G6",
+          "G5",
+          "G3",
+          "G1",
+          "PM90",
+          "GS",
+          "LD2",
+          "CAP10",
+          "XNA",
+          "XMIN1",
+          "XV",
+          "RO60",
+          "S240"
+        ],
+        "size": "AM:5:25:95",
+        "params": {
+          "path": "config/predict/pm_ladder_v3_basis_v1/params.json",
+          "sha256": "321dbc6e2663155eff01adaaa03c1aaa3fd99c27585d4560a3ed831d32352793"
+        },
+        "guard_bid": {
+          "path": "config/predict/pm_ladder_v1/guard_bid.txt",
+          "sha256": "0dc09d84bb28e0c0cafac99ee0fa8ff1140cb97ca70571526469f3b42f345e39"
+        },
+        "guard_ask": {
+          "path": "config/predict/pm_ladder_v1/guard_ask.txt",
+          "sha256": "6d2d7149e6c556c6a2a63dad89e68ce4ea6113c76400edf9bd4f7a345ea9fade"
+        }
+      },
+      "started_unix_ms": 1794147344737
+    }
+  },
+  "cutoff_ms": 1794178920000,
+  "boundary": "copy bounded decompressed prefixes; examine timestamp envelope before future payload decode; permit only unprocessed scheduled-output tail after last input and all cohort endpoints",
+  "metrics": [
+    "all applied-input outputs exact",
+    "conditional native quote parity",
+    "all scope decision identities/values",
+    "exact soft-line intervention eligibility at fixed native state"
+  ],
+  "counterfactual": "none in this stage; relaxed pure quotes differ only by pull/rung lines0.005/0.01/0.02/0.04 cents, holding size line and all other native inputs/config fixed; no changed OMS gets captured fills",
+  "null": "deterministic replay identity check; no profit, predictive skill, selection or interval",
+  "controls": "exact output positive/corrupt size refusal; basis/version mismatch refusal; bounded reader future/malformed/unknown timestamp controls",
+  "no_protected_dates_read": true,
+  "no_live_change": true,
+  "no_fill_clock_bypass": true,
+  "source_commit": "0f54176c9af64939ad0a88af7513b0b5e589c566",
+  "sources": {
+    "pf_native_guard.py": "adf47d4d2c645a35bd1ff43693587d0c6d08dea229615fdfbef0764a3093fe83",
+    "native_guard_evidence.rs": "e42391b73c4298c95ca095258e3f6cf84d0feefbb17f6c754f4fab973f72e902",
+    "tests/test_native_guard.py": "da42958ed60e057540bd3ba610a9ec9fbc9954fedae9a25905d5e1d5ab61f9f8"
+  },
+  "inputs": {
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/scope.json": "0fdb454efec919ab03b2e44fddef154c5e9964c65d1ab3cf10828eabf0dc58b6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/quote_capture_20261109/decisions.parquet": "b775757c56a470b2b512fca15965e78dc8ec426817857107152278bc12d9335f",
+    "/tmp/pf-native-guard-20261109/config/predict/pm_ladder_v3/params.json": "486b9152bc5187e19bb73bbc54af0c758112fb6b54d3c6f7ddd9463efbbea801",
+    "/tmp/pf-native-guard-20261109/config/predict/pm_ladder_v1/guard_bid.txt": "0dc09d84bb28e0c0cafac99ee0fa8ff1140cb97ca70571526469f3b42f345e39",
+    "/tmp/pf-native-guard-20261109/config/predict/pm_ladder_v1/guard_ask.txt": "6d2d7149e6c556c6a2a63dad89e68ce4ea6113c76400edf9bd4f7a345ea9fade",
+    "/tmp/pf-native-guard-20261109/config/predict/pm_ladder_v3_basis_v1/params.json": "321dbc6e2663155eff01adaaa03c1aaa3fd99c27585d4560a3ed831d32352793"
+  }
+}
