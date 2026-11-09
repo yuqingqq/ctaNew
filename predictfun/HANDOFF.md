@@ -1,17 +1,30 @@
 # P-2026-005 HANDOFF
 
-## 2026-11-09 — optimization loop RUNNING
+## 2026-11-09 — optimization loop: first three rounds VERIFIED; next integration pass
 
-- User authorized an optimization loop with tracked findings. Branch `research/predict-opt-loop-20261109`,
-  checkout `/tmp/cta-opt-loop-20261109`, from691f80c1. Loop register `reviews/optimization_loop_20261109/plan.json`.
-- Round1: inventory-aware soft grace, comparing an individually reducing order with aggregate room after all
-  same-side reservations (including pending creates/cancels and grace). Round2: shorter grace and latency sensitivity.
-- Same220 consumed Nov8 first-minute windows; exact native inputs. Commit/declaration -> controls -> paired run ->
-  artifact verification -> findings for each round. No PnL/variance claim without fills, no live or protected-date changes.
-- Round1 verified16:25:55Z: individual reducing grace retains4.86% of unrestricted coverage gain (208 retained
-  actions); full reservation-room grace0.68% (29). No added non-reducing share-time/active range expansion in this
-  conditional replay.32 controls pass; native fill-notice supplement has93 observations with exact original parity.
-  Round2 (shorter grace and three latency scenarios) is now running; no economic promotion.
+- User authorized a continuing optimization loop with tracked findings. Branch `research/predict-opt-loop-20261109`,
+  checkout `/tmp/cta-opt-loop-20261109`; register `reviews/optimization_loop_20261109/plan.json`, current combined
+  findings `findings_v2.json` (supersedes two-round `findings.json`). As-of **16:40:02Z**: same220 consumed Nov8 windows,
+  279059 decisions /13077 neutral pull actions per arm/scenario, zero excluded windows. One partial day, no CI/PnL.
+- Round1: reducing-only grace retains4.86% of unrestricted coverage gain (208 admissions); aggregate reservation-room
+  grace0.68% (29). Both add no non-reducing share-time at base latency; benefits are small. Exact native supplement
+  captures93 fill-notice states at0–65s, including partial fills without a decision; original outputs remain exact.
+- Round2: timer-first50ms has no same-price bridges;25ms adds exposure with negligible base coverage gain. Round3
+  tests updates stamped exactly at the50ms deadline BEFORE expiry, then cancels still-off orders at the same deadline.
+  No future timestamp or longer grace. Source cb1af0a7, declaration d6f4ce11; exploratory follow-up, cumulative21 policies.
+- Updates-first50ms: requests **-6.98%**, original-price aligned time **+2.37%**,
+  off-target time **+25.66%**, active share-time **+2.74%** versus baseline.
+  Keeps **89.44%** of100ms coverage gain, removes **24.23%** of its added off-target time;
+  all2376 same-price bridges survive. Same direction in faster/base/slower scenarios with paired references.
+- 37 controls pass; saved metrics/actions, old baselines, inventory identities and coverage accounting verify. Across
+  rounds6160 window-arm/366156 action-arm rows; source/receipt hashes and falsifiers retained. Largest job1434MiB RSS;
+  all numeric jobs complete. No protected Nov9–13, frozen/live changes, loss-budget change or fill-clock bypass.
+- Next: A2/B4 paired-order integration/parity and actual timer scheduling; calibrated fills/forward evidence before
+  economic selection. Current shared Rust HEAD was observed at f20fdb1 (incremental sizing default), not used as the
+  counterfactual OMS here. No candidate promoted/deployed. Inventory-range follow-up remains untested.
+- Detailed comparisons, limits and reproduction: `handoffs/20261109_optimization_loop_v2.md`. Original two-round
+  report values were valid; its final mutable-register write used an exclusive-create helper and failed. Corrected
+  publication is recorded in-band by findings_v2; original log/outputs retained. Further rounds need new declarations.
 
 ## 2026-11-09 — native guard / bounded soft-pull study COMPLETE
 

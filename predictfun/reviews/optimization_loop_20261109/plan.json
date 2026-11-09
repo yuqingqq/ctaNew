@@ -1,5 +1,5 @@
 {
-  "status": "running",
+  "status": "active_between_passes",
   "authorization": "User: Launch a loop to proceed the optimizations, keep the findings tracked",
   "objective": "Preserve original desired-price quote coverage while reducing unnecessary requests and additional inventory exposure; economic conclusions require calibrated fills",
   "baseline_commit": "691f80c1",
@@ -26,8 +26,10 @@
     },
     {
       "round": "deadline_order",
-      "status": "in_progress",
-      "hypothesis": "Process all native updates at the exact50ms deadline before expiry; cancel still-off orders at that deadline. No grace extension or future timestamp."
+      "status": "complete",
+      "hypothesis": "Process all native updates at the exact50ms deadline before expiry; cancel still-off orders at that deadline. No grace extension or future timestamp.",
+      "receipt": "deadline_order/receipt.json",
+      "verification": "deadline_order/verification.json"
     }
   ],
   "per_round": [
@@ -47,5 +49,18 @@
     "one research process, one core, 4GiB cap"
   ],
   "end_of_pass": "Complete the declared equal-clock follow-up, publish superseding combined findings, and retain economic/fill-model and A2 integration limits.",
-  "report_note": "Two-round findings.json and handoff were written after successful checks; the final mutable-plan update used an exclusive-create helper and failed. Plan update is corrected; round artifacts and reported numbers are unaffected. A combined v2 report will supersede this subset report."
+  "report_note": "Two-round findings.json and handoff were written after successful checks; the final mutable-plan update used an exclusive-create helper and failed. Plan update is corrected; round artifacts and reported numbers are unaffected. A combined v2 report will supersede this subset report.",
+  "as_of": "2026-11-09T16:40:02.131643+00:00",
+  "findings": "findings_v2.json",
+  "next_evidence": [
+    "A2/B4 native paired-order integration and parity",
+    "calibrated fills/forward observations for economic valuation",
+    "inventory-range follow-up is untested; no live promotion"
+  ],
+  "next_pass": {
+    "status": "planned",
+    "focus": "A2/B4 paired-order parity and integration of the verified quote-continuity policy with current native execution semantics",
+    "data_constraint": "consumed bounded Nov8 only; protected Nov9-13 remain unread",
+    "economic_gate": "no profit/variance promotion without calibrated fills or authorized forward evidence"
+  }
 }
