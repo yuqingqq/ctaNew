@@ -1,24 +1,68 @@
 # P-2026-005 HANDOFF
 
-## 2026-11-09 — allowed inventory-range experiment RUNNING
+## 2026-11-09 — allowed inventory-range experiment COMPLETE
 
-- User authorized testing an allowed inventory range. One new candidate `range10`: shared [-10,+10] position
-  envelope for ALL orders, room=max(0,10-signed known net-all same-side known remaining reservations). At +10 and
-  no pending sells, permit up to20 total sells; crossing zero is allowed inside the range. Pending creates, resting,
-  pending cancels and the same conservative post-cancel fill-report grace as strict both_reserved all count.
-- Candidate changes only the aggregate reducing allowance versus strict both_reserved; retention, guards, AM sizing,
-  original per-order RO60 clipping/rung withdrawal and S240 stay. No new cycle restart after60. Outstanding quotes
-  can still reverse within the envelope, including during the late phase; no strict no-reversal promise.
-- Branch `research/predict-inventory-range-20261109`, checkout `/tmp/cta-inventory-range-20261109`, declared source
-  `6d9369a5`. Data/declaration/logs `/home/yuqing/ctaNew/data/predict_fun/research/inventory_range_20261109/`.
-- Nine consumed days /2592 markets per arm/timing, J/X; baseline, previous adding-only reserved10, strict both_reserved
-  controls. Fresh first-day references at both timings plus eight-market smoke; other references reused by hash.
-  Fixed guards trained on eight dates: exploratory only. Uncapped loss budget,150-share backstop,rebates excluded.
-- 36 preflight controls PASS. Every actual range10 fill asserts |inventory|<=10; independent path reconstruction,
-  settlement/carry reconciliation, zero-crossing engagement, FIFO/markout/volume/risk metrics. Declared 2000 shared
-  day sign flips and 2000 day bootstrap draws;18 comparisons (range vs3 controls x J/X x settlement/+1s/q²).
-- Batch starts07:52Z. Single light process/core,4GiB address-space limit. No live/frozen/forward changes;
-  protected Nov9–13 data untouched. No results yet.
+- As-of **2026-11-09 08:19:39Z**. All nine consumed dates (Oct23–27, Oct31–Nov3), **2,592 markets per arm/timing**,
+  J/X. Fixed guard models trained on eight dates: exploratory historical policy comparison, not independent validation.
+  Branch `research/predict-inventory-range-20261109`, checkout `/tmp/cta-inventory-range-20261109`; declared source
+  `6d9369a5`, tested source/state `2b33793b`. Data/declaration/logs:
+  `/home/yuqing/ctaNew/data/predict_fun/research/inventory_range_20261109/`.
+- One new candidate `range10`: shared [-10,+10] inventory range for ALL orders, remaining room =
+  max(0,10 - signed known net - all same-side known remaining reservations). At +10 with no pending sells, up to20
+  total sell shares are allowed. Existing sell orders consume that allowance. Resting/pending-create/pending-cancel
+  quantities count, with no opposite-side credit. Same retention, lot/notional checks, submission recheck and conservative
+  cancel-confirmation +100ms fill-report grace +.001ms as strict both_reserved. No price/threshold/delay/model sweep.
+- Only the aggregate reducing allowance differs from strict both_reserved. Original price guards, AM5/25 desired
+  sizing, per-order RO60 clipping/rung withdrawal and S240 remain. No restart of MM cycles after60. Outstanding
+  orders can collectively reverse within the range, including late; this is intentional bounded exposure.
+  Total-loss budget uncapped,150-share backstop unchanged,rebates excluded.
+
+| Timing / arm | Settlement $ | +1s markout $ | Daily PnL SD $ | Mean residual shares | Peak absolute shares |
+|---|---:|---:|---:|---:|---:|
+| J baseline | 514.06 | 602.83 | 134.51 | 6.557 | 75 |
+| J adding-only reserved10 | 309.74 | 237.96 | 41.74 | 2.515 | 80 |
+| J strict both_reserved | 149.35 | 101.40 | 33.50 | 1.803 | 10 |
+| J allowed range10 | 147.09 | 121.83 | 36.98 | 1.667 | 10 |
+| X baseline | 317.63 | 463.56 | 103.09 | 5.720 | 65 |
+| X adding-only reserved10 | 253.05 | 176.21 | 43.28 | 2.252 | 48.5 |
+| X strict both_reserved | 119.34 | 73.63 | 35.30 | 1.657 | 10 |
+| X allowed range10 | 111.24 | 93.28 | 40.52 | 1.578 | 10 |
+
+- **Mechanism works:** 56/46 direct sign-crossing fills J/X (2/1 after60), versus zero in the strict control. Every
+  physical fill and independently reconstructed path remains inside +/-10 (tolerance1e-7); zero time above10.
+  Thus this is an engaged reversal policy with a real aggregate bound, not a no-op or the previous soft CAP10.
+- Versus strict both_reserved J/X: filled volume **+16.8%/+13.7%**, FIFO paired shares **+50.3%/+42.0%**,
+  total +1s value **+20.1%/+26.7%**. +1s per100 filled shares rises **1.2571->1.2934 / 1.0382->1.1569**
+  (+2.9%/+11.4%). Average residual inventory falls **7.5%/4.8%**, time-weighted mean absolute inventory
+  **4.6%/2.1%**, inventory-square **4.3%/1.6%**. Volume differs; no matched-turnover execution-quality claim.
+- **No observed settlement or PnL-variance improvement versus strict control:** total delta **-$2.2565/-$8.1008**
+  (-1.5%/-6.8%), daily PnL SD **+10.4%/+14.8%**, worst day **-$42.09/-$62.11** versus **-$33.79/-$46.44**.
+  Max drawdown **-$45.92/-$68.69** versus **-$45.93/-$53.70**. Lower average inventory alone does not establish
+  lower realized PnL variance. All SD/tail/drawdown figures are descriptive on these nine dates.
+- FIFO matched-trade PnL improves **-$78.66->-$66.07 J**, **-$62.24->-$47.17 X**, but remains negative.
+  Residual FIFO PnL is **$213.17/$158.41**, summing with matched PnL to settlement totals. FIFO includes price drift
+  between fills and is not pure spread. Mark-at240/carry is a different attribution: range **$118.02/+$29.07 J**,
+  **$94.42/+$16.82 X**, versus strict **$154.72/-$5.37 J**, **$105.81/+$13.53 X**.
+- Day concentration check versus strict control: settlement improves on **3/9 J**, **5/9 X**. Leaving one day out
+  changes the total delta across **[-$38.25,+$11.13] J**, **[-$16.32,+$7.57] X**. Oct24 contributes +$36.00 J;
+  Nov2 contributes -$15.68 X. No stable profit gain, and no parameter changes after these outcomes.
+- Declared inference: 2,000 shared UTC-day sign flips +2,000 paired day bootstrap draws;18 comparisons (range vs3
+  fixed references x J/X x settlement/+1s/inventory-square). Settlement mean-difference intervals versus strict:
+  **[-$8.39,+$10.06] / [-$5.97,+$3.37] per day**, family p=1.0 both. All settlement intervals versus other controls
+  also cross zero. +1s improvement versus strict has family p=.022 J/.064 X; q² reduction p=.059 J/.993 X.
+  These are exploratory conditional comparisons after prior candidate selection, not untouched validation.
+- Compared with prior adding-only reserved10, range keeps the hard bound and lowers mean residual inventory
+  33.7%/29.9%, but observed settlement is 52.5%/56.0% lower and +1s value 48.8%/47.1% lower. Adding-only's larger
+  profits came with peak positions80/48.5; allowed bounded reversals do not recover that whole profit difference.
+- **36 preflight controls PASS**, eight-market smoke and all18 full day/timing reconciliations PASS. Fresh first-day
+  baseline, adding-only and strict-control fills/requests/windows match prior artifacts exactly at J/X; remaining
+  references checked by hash. Zero excluded markets, missing valuations or missing bounded Binance hours. All source
+  and result artifact hashes, every per-run adapter hash, and identical data/review receipt copies verified.
+  Peak replay RSS ~1.6GiB, one core;~490GiB disk free. All jobs complete.
+- Receipt `reviews/inventory_range_20261109/receipt.json`; reproduce via `run_inventory_range.sh` after declaration.
+  Conclusion: the allowed range restores some turnover and short-term value while enforcing the ceiling; it has
+  not improved settlement PnL or daily PnL variance over strict closure in this sample. No live code/settings,
+  new freeze, forward-race change, or protected Nov9–13 data read. Keep the result as research, not a live PnL claim.
 
 ## 2026-11-09 — inflight inventory-reservation experiment COMPLETE
 

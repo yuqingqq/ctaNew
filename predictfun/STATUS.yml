@@ -6,11 +6,13 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
-  2026-11-09 07:52Z: ALLOWED INVENTORY RANGE STUDY RUNNING, user-authorized; one fixed +/-10 candidate, all outstanding
-  quantities reserved on both sides, crossing zero permitted within the envelope. Same retention/cancel grace/guards as
-  strict control; no timing or threshold search. Nine consumed days/2592 markets per arm/timing,J/X,three fixed references.
-  36 preflight controls pass;2000 day null/bootstrap draws,18 comparisons declared. Source6d9369a5,
-  branch research/predict-inventory-range-20261109. No live/forward changes; logs inventory_range_20261109; HANDOFF.
+  2026-11-09 08:20Z: ALLOWED INVENTORY RANGE STUDY COMPLETE, nine consumed days/2592 markets per arm/timing,J/X.
+  Shared +/-10 permits56/46 direct crossing fills while every actual path stays within10. Range settlement $147.09/$111.24
+  versus strict $149.35/$119.34; +1s improves20.1%/26.7%, volume16.8%/13.7%, residual inventory falls7.5%/4.8%.
+  Daily PnL SD rises10.4%/14.8%; worse worst days. More trading activity, no proven settlement/variance improvement.
+  36 controls, smoke, all18 reconciliations pass; zero missing markets/valuations; sources/artifacts/receipt copies verified.
+  Source2b33793b, branch research/predict-inventory-range-20261109; receipt reviews/inventory_range_20261109/receipt.json.
+  No live/frozen/forward changes; all jobs complete. Full results and inference in HANDOFF.md.
   2026-11-09 07:44Z: INFLIGHT RESERVATION STUDY COMPLETE, nine consumed days / 2592 markets per arm/timing, J/X.
   Both new arms eliminate reverse-opening fills from reducing-at-send orders; nine same-time ambiguities resolved by
   exact two-market replays with identical fills/requests. Combined entry/exit budget holds actual |inventory|<=10.
