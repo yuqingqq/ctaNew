@@ -47,6 +47,9 @@ def reconcile_metadata(f,z):
     if not np.array_equal(z['index'],f.groupby('mid',sort=False).cumcount()):
         raise ValueError('fill identity index')
     sg=np.where(z.side==0,1.,-1.)
+    expected_net=(f.q*np.where(f.side==0,1.,-1.)).groupby(f.mid,sort=False).cumsum().to_numpy()
+    if not np.allclose(z.net_after,expected_net,atol=1e-7,rtol=0):
+        raise ValueError('independent fill path identity')
     if not np.allclose(z.net_after-z.net_before,sg*z.q,atol=1e-7,rtol=0):
         raise ValueError('fill path metadata')
     if not np.allclose(z.concession,z.q*sg*(z.pt-z.base_price)/100,atol=1e-7,rtol=0):
@@ -55,6 +58,9 @@ def reconcile_metadata(f,z):
         raise ValueError('concession tick identity')
     if not z.concession_ticks.isin([0,1]).all() or not ((z.send_rel<=z.t)&(z.q>0)).all():
         raise ValueError('invalid fill attribution')
+    reducing=np.where(z.net_before*sg<0,np.minimum(z.net_before.abs(),z.q),0.)
+    if not np.allclose(z.reducing_q,reducing,atol=1e-7,rtol=0):
+        raise ValueError('economic reduction attribution')
     shifted=z[z.concession_ticks>0]
     if not ((shifted.send_rel>=60)&(shifted.send_rel<240)).all():
         raise ValueError('concession outside phase')
