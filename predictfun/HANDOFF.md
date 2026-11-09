@@ -1,5 +1,19 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 18:09Z — optimization loop bounded cycle COMPLETE; no economic promotion
+
+- Original two-round scope plus five declared follow-ups completed. Final audit checks8 receipt sets/91 unique pinned
+  artifacts, source freezes, predeclaration timing/ancestry, output/verification links and arithmetic. All jobs finished.
+- Native50ms updates-first: requests-3.72..-5.35%, original-price quote time+2.94..+4.37%, active share-time+2.58..+4.10%
+  across3 assumed latencies on the same220 consumed Nov8 windows. Inventory-restricted grace keeps only4.86%/0.68% of
+  unrestricted gain. Trade-off remains; higher net PnL and lower realized variance are NOT established.
+- LZ/LC50 generated research code delivered with synthetic controls and explicit B4 fixed-size rejection exception.
+  No claim of historical file parity, independent native guards, or deployed timer behavior. No strategy promoted/deployed.
+- Current findings_v8.json; handoffs/20261109_optimization_loop_final.md; completion_audit/receipt.json. Protected Nov9–13,
+  frozen engine and loss budget unchanged. Slot free now (recheck before C1); no background optimization job.
+- Next economically useful evidence: own-fill ms source/receipt capture and filled/unfilled path calibration, then separately
+  declared comparisons and untouched-day validation. Broader B1–B8/forward backlog remains open under existing procedures.
+
 ## 2026-11-09 18:04Z — optimization loop: paired-fill bounded continuity verified
 
 - Seventh engineering pass: opt-in LC50 on LZ;228 synthetic traces (28 explicit/200 seeded),33 Python checks +1 Rust control.

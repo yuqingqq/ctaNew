@@ -1,0 +1,112 @@
+{
+  "as_of": "2026-11-09T18:11:31.114972+00:00",
+  "supersedes": "findings_v7.json",
+  "supersedes_sha256": "d43467354807d0d24ed56a90d5ce6692c14b1f71563e6f6638798712c2b1df52",
+  "status": "bounded_research_cycle_complete",
+  "economic_objective": "not_established",
+  "strategy_promoted": false,
+  "original_scope": {
+    "plan_commit": "4666fc52",
+    "end_of_pass": "Complete inventory and duration/latency rounds, publish the comparison and next evidence needed; no automatic trading promotion. Further policy or data expansion gets a new declaration."
+  },
+  "completion_audit": {
+    "path": "completion_audit/receipt.json",
+    "sha256": "82761b9496ac75ce6e4f1fdb1ebac3b37e4a0a5082fdfa5a03d764c21abbf6b1",
+    "as_of": "2026-11-09T18:09:51.994351+00:00",
+    "receipt_sets": 8,
+    "unique_pinned_artifacts": 91
+  },
+  "conclusions": {
+    "inventory": {
+      "individual100": {
+        "aligned_change_pct": 0.1285146023942696,
+        "unrestricted_aligned_gain_retained_pct": 4.858468982485935,
+        "active_share_change_pct": 0.14968647194884,
+        "added_active_range_share_ms": 0.0,
+        "added_off_nonreducing_share_ms": 0.0
+      },
+      "reserved100": {
+        "aligned_change_pct": 0.018007440367395766,
+        "unrestricted_aligned_gain_retained_pct": 0.6807677014833191,
+        "active_share_change_pct": 0.020119361048887008,
+        "added_active_range_share_ms": 0.0,
+        "added_off_nonreducing_share_ms": 0.0
+      }
+    },
+    "native_latency_profiles": {
+      "base": {
+        "venue_requests": -5.3258584442887225,
+        "aligned_lane_ms": 4.16841325542987,
+        "active_share_ms": 4.104817406392569,
+        "active_range_extra_share_ms": 4.164364687119471,
+        "elsewhere_lane_ms": 28.360955765393193,
+        "aligned_gain_vs100_retained_pct": 94.43125632796342
+      },
+      "faster": {
+        "venue_requests": -5.35226044382272,
+        "aligned_lane_ms": 2.941744015365333,
+        "active_share_ms": 3.9668330027029075,
+        "active_range_extra_share_ms": 4.018269749740178,
+        "elsewhere_lane_ms": 71.76404793262994,
+        "aligned_gain_vs100_retained_pct": 97.47862107433102
+      },
+      "slower": {
+        "venue_requests": -3.715449379416924,
+        "aligned_lane_ms": 4.373392128963727,
+        "active_share_ms": 2.5753050173165093,
+        "active_range_extra_share_ms": 2.6234849795965687,
+        "elsewhere_lane_ms": 5.6145707972695025,
+        "aligned_gain_vs100_retained_pct": 90.34116536272202
+      }
+    },
+    "every_profile_fewer_requests_more_aligned": true,
+    "every_profile_more_active_exposure": true
+  },
+  "completed_research_requirements": [
+    "Original inventory restrictions and duration/latency comparison",
+    "Declared equal-clock/native execution/latency follow-ups",
+    "Paired engine and bounded-retention synthetic integration, with explicit parity scope/exception",
+    "Tracked immutable failed attempts and superseding findings",
+    "Source/receipt controls, saved-artifact verification and commit/push workflow"
+  ],
+  "unmet_promotion_requirements": [
+    {
+      "requirement": "Higher net trading value / lower realized inventory variance",
+      "status": "not established",
+      "reason": "Quote coverage and exposure proxies are not calibrated fill/PnL outcomes."
+    },
+    {
+      "requirement": "Calibrated own-order filled and unfilled paths",
+      "status": "not established",
+      "reason": "Existing fill-clock audit rejects exact matching-clock use; new own-fill millisecond source/receipt capture is needed."
+    },
+    {
+      "requirement": "Independent validation on at least5 complete untouched days",
+      "status": "not established",
+      "reason": "Only consumed Nov8 partial-day diagnostics used; Nov9\u201313 remain protected."
+    },
+    {
+      "requirement": "Blanket B4 fixed-size parity",
+      "status": "contradicted by explicit correction",
+      "reason": "Native rejected-create slot release differs from the frozen bug; scoped normal controls pass."
+    },
+    {
+      "requirement": "Historical file-output parity",
+      "status": "not established",
+      "reason": "Only complete function-output synthetic parity was run."
+    },
+    {
+      "requirement": "Deployed equal-clock LC50 ordering, native policy/guard equivalence, wallet/kernel integration",
+      "status": "not established",
+      "reason": "Synthetic scheduler and effective-want oracle do not independently verify these."
+    }
+  ],
+  "next_evidence": [
+    "Own-order millisecond match-status/confirmation timestamps plus local receipt clocks and decision reasons from a newly authorized capture; reconcile filled and unfilled paths before scoring economic outcomes.",
+    "Verify actual guard-refresh/deadline ordering in an isolated scheduler harness before any LC50 live port.",
+    "Preserve protected Nov9\u201313 for the frozen forward procedure; at least5 complete untouched days are required for independent validation.",
+    "Resolve the documented B4 fixed-size rejection exception and historical file-output parity before claiming full replay/live equivalence."
+  ],
+  "no_deployment": true,
+  "no_new_market_or_protected_data_read": true
+}

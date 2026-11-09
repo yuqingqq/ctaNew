@@ -1,5 +1,5 @@
 {
-  "status": "active_between_passes",
+  "status": "bounded_research_cycle_complete",
   "authorization": "User: Launch a loop to proceed the optimizations, keep the findings tracked",
   "objective": "Preserve original desired-price quote coverage while reducing unnecessary requests and additional inventory exposure; economic conclusions require calibrated fills",
   "baseline_commit": "691f80c1",
@@ -78,18 +78,23 @@
     "preserve existing receipts",
     "one research process, one core, 4GiB cap"
   ],
-  "end_of_pass": "Audit completion and remaining economic/deployment evidence gates across the bounded loop; all numeric jobs in the seventh pass are complete.",
+  "end_of_pass": "Original two-round bounded study and five separately declared follow-ups completed, audited and published; economic and deployment promotion gates remain open.",
   "report_note": "Two-round findings.json and handoff were written after successful checks; the final mutable-plan update used an exclusive-create helper and failed. Plan update is corrected; round artifacts and reported numbers are unaffected. A combined v2 report will supersede this subset report.",
-  "as_of": "2026-11-09T18:04:28.592256+00:00",
-  "findings": "findings_v7.json",
+  "as_of": "2026-11-09T18:11:31.114972+00:00",
+  "findings": "findings_v8.json",
   "next_evidence": [
-    "Audit remaining optimization and promotion gates against the completed bounded loop; prioritize evidence that can change the economic decision.",
-    "Historical fill calibration and actual deployed timer behavior remain required before profit or inventory-variance claims."
+    "Own-order millisecond match-status/confirmation timestamps plus local receipt clocks and decision reasons from a newly authorized capture; reconcile filled and unfilled paths before scoring economic outcomes.",
+    "Verify actual guard-refresh/deadline ordering in an isolated scheduler harness before any LC50 live port.",
+    "Preserve protected Nov9\u201313 for the frozen forward procedure; at least5 complete untouched days are required for independent validation.",
+    "Resolve the documented B4 fixed-size rejection exception and historical file-output parity before claiming full replay/live equivalence."
   ],
   "next_pass": {
-    "status": "planned",
-    "focus": "Audit remaining optimization and promotion gates against the completed bounded loop; prioritize evidence that can change the economic decision.",
-    "data_constraint": "synthetic controls only unless separately declared consumed-data work; protected Nov9\u201313 unread",
-    "economic_gate": "no PnL/variance claim without calibrated fills or authorized forward evidence"
-  }
+    "status": "not_started",
+    "focus": "New economic/calibration work requires the evidence listed above and a new declaration; this bounded cycle is complete.",
+    "data_constraint": "Protected Nov9\u201313 remain unread under their frozen forward procedure",
+    "economic_gate": "No PnL/variance claim without calibrated fills and independent validation"
+  },
+  "economic_objective": "not_established",
+  "strategy_promoted": false,
+  "completion_audit": "completion_audit/receipt.json"
 }
