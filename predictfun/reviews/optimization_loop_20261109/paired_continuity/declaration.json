@@ -1,0 +1,54 @@
+{
+  "as_of": "2026-11-09T18:02:43.153071+00:00",
+  "source_commit": "a565e3f6f414db242b0e6388a8a9c2f839bb7573",
+  "sources": {
+    "pf_ladder_continuity_build.py": "9aaba05208f45fbbc03e7c7fefd1f45cfa301d358e19593dba67a1dad2fbfef0",
+    "pf_step4_ladder_continuity.py": "429037f7fa193a6a1219512c084221f62d8da947b86bbb9447083f3728cab474",
+    "tests/test_ladder_continuity.py": "4b905b75058a9232b7be14ea5126fdb429cc0f5272a86b7a49f11d8413a6babd",
+    "native_continuity_pairs_oracle.rs": "a9e12e8c398e0338f70a67a496c8a0b4f4c67692ad98def72ac38628c3eb7cc1",
+    "pf_continuity_pairs_validation.py": "f967286e785e33a9c638e1f9aacec0ae620a37e08d79a7b239557f3326145d92"
+  },
+  "build": {
+    "as_of": "2026-11-09T18:02:31.842073+00:00",
+    "native_commit": "f20fdb126af38fb3f7bb1284a6cc8dff28d0dff8",
+    "native_instrument_sha256": "3eca34fb418b96f47c3f723f27f0007ad5a478ab571db842396f8b6cab98b42b",
+    "binary_sha256": "9659f22934530029c07e7655ff6440947b6f3c5b3c3489e25920380c9c24d144",
+    "oracle_source_sha256": "a9e12e8c398e0338f70a67a496c8a0b4f4c67692ad98def72ac38628c3eb7cc1"
+  },
+  "parent_declaration_sha256": "f993642d0bf3dabe9da4a1ff8b1531715ccbdb00a9530ff6e245f4b26711e76b",
+  "paired_parent_sha256": "1097826bf128191b4544dd3cc6f92486cc6bc6ff513c99913473b0a28187b41f",
+  "design": "LC50: retain one accepted sent-size<=5 touch member for at most50ms on a PM90-only soft exit, score>line-0.01. Read all same-clock decisions before expiry. No new orders or replenishment while the guard is off. Preserve unchanged fill budget; if a larger logical pair shrinks, target only retained known remainder. Prediction probes and fill notices can cancel, never initiate quotes. Hard guard, changed price/size, full member fill, RO/stop cancel immediately. No timer extension or hold after RO.",
+  "population": {
+    "explicit_synthetic_traces": 28,
+    "seeded_synthetic_traces": 200,
+    "excluded_traces": 0,
+    "python_checks": 33
+  },
+  "seed": 2026110950,
+  "null": "Deterministic engineering assertions and differential replay only; no statistical or economic null.",
+  "controls": [
+    "Exact no-LC parent outputs and native traces",
+    "Same-clock150ms recovery retains;151ms recovery cancels150ms",
+    "Partial/full fills and no off-guard topups",
+    "CAP10 from cancelled-order fill, RO60/stop, lower-line probe and price-change preemption",
+    "Stale timer must not end a later hold",
+    "Unsupported rules refused",
+    "Native corrupt request and pair-state refused",
+    "Saved lifecycle, count and identity corruptions refused"
+  ],
+  "scope": "Generated research simulation with synthetic trades. Native oracle checks effective desired quotes, cancellation-only pulls and feedback lifecycle; it does not independently implement LC50 policy or desired guards.",
+  "limitations": [
+    "No historical/forward data or PnL/variance result.",
+    "Venue/fill/queue model remains uncalibrated.",
+    "All equal-clock events are available in this synthetic scheduler; live timer behavior remains unverified.",
+    "Only the declared MICRO/AM paired rule family is supported. Deployment kernel/wallet/cross-market limits are outside this study."
+  ],
+  "multiplicity": {
+    "policy_settings_added": 0,
+    "cumulative_strategy_settings": 21,
+    "engineering_token": "LC50"
+  },
+  "no_market_data_read": true,
+  "no_protected_dates_read": true,
+  "no_live_change": true
+}
