@@ -1438,6 +1438,7 @@ days_read:
   - {day: "20261024", scope: "steps 1-3 full day (incl. outcomes)"}
   - {day: "20261025", scope: "steps 1-3 full day (incl. outcomes)"}
   - {day: "20261101..", scope: "C2 confirmation (declared 11-02 02:01Z): each C2 day d is read with d+1 00-01Z; started 11-02"}
+  - {day: "20261108", scope: "strategy review revisions 2-3 (session ce68ebe0, read-only): derived outputs and book frames of the 220-window live-samewindow cohort; the day was already consumed by the live diagnosis"}
   # Binance tape directory listings (file counts only, no content) were made for 10-22..10-31.
 
 tasks:
@@ -1473,6 +1474,7 @@ tasks:
   - id: T5
     name: verify liquidity-reward terms (hourlyRate 3000, 6c / 100 sh) - could change the economics
     status: proposed
+    note: "strategy review item 1 (2026-11-10, revisions 2-3): measure the rewards AND the maker rebate on the account (USER data); see handoffs/20261109_TODO.md D3"
 
 confirmation_C1:
   declared: "2026-11-01 05:40Z, before any content of 10-26, 10-27, 10-31 was read for this project"
