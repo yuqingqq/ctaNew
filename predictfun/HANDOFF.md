@@ -1,5 +1,34 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-10 16:50Z (session ce68ebe0) — B12 DONE: the top makers' edge is not in states our guard marks; within a state it is the move after their fills, two thirds behind the best
+
+- Done: B12 (strategy review item 9; USER "Then we check the next"). research/pf_b12_makers.py committed and pushed
+  before its first run (d5f68cf2); output live_vs_replay/b12_20261110/ (16:43Z), copies in reviews/b12_20261110/; post
+  hoc spread / move split research/pf_b12_posthoc.py, written after reading the output. Report
+  handoffs/20261110_b12_profitable_makers.md. Public tape of the 220 consumed 11-08 windows, first minute; point
+  estimates. Controls passed (7 synthetic; K1 tape statuses equal the replay's; K2 own id; K3 line).
+- Input checks: `signer` is the maker's address (on chain maker == signer on all 19,671 orders of the 10-23 14:00-14:15
+  slice; 11,492 of 11,492 REST legs matched); our account is id 200 (99 legs, 849.867 sh). Maker fee in the public
+  match records is 0 on all 87,155 legs read (10-23 14h; 11-08 03h, 15h): no rebate inside the match record.
+- Results: top 5 +0.36 c/sh at 1 s on 462,118 sh a day (+$1,676 a day), ranks 6-20 +0.19, rest -0.33, ours -0.44 (86
+  legs). At the best the top 5's gap over ranks 6+ (+0.20 c/sh) is within the same guard state and trade type (+0.19;
+  null p99 +0.09), not mix (+0.01); post hoc it is the move after the fill (+0.18), not the spread (+0.01). They trade
+  86% of their at-best volume while our guard reads OFF, like everyone. Two thirds of their dollars are behind the best
+  (+1.00 c/sh two or more ticks back; makers below rank 20 lose there). Not faster to new levels (ratio 0.97) or to
+  levels born as best (0.90). Our fills have the worst move in both guard states (ON -0.76 c/sh against the field's
+  +0.07 to +0.42).
+- Readings: R30 TOP-EARNS; R31 WITHIN-STATE at lags 0 / 50 / 250; R32 NO-AVOIDANCE, top-5 OFF value about 0 (its sign
+  flips between lags); R33 DEPTH-FED; R34 / R35 PROPORTIONAL; R36 GUARD-CLOCK-SENSITIVE (only R32's sign); N1
+  WITHIN-REAL.
+- Changes: guard-state selection and speed to new levels are excluded as the top makers' edge. What remains is queue
+  place, cancel timing or information, which the public tape cannot separate. A guard refit (B7) is not the first
+  lever; B1 (live with A4b) is. Depth pays only with its cancel behaviour (B5, after B1). D3: a rebate can only be seen
+  on the account. Strategy review revision 5 points 3.1, item 9 and section 8 to the report.
+- Next: (1) USER D2: a live run with the A4b capture for B1. (2) USER: rebate and rewards on the account. (3) B12b
+  (proposed): within the same cell, split the top 5's and the field's fills by taker-order size and queue-ahead
+  estimate (queue place against cancel timing). (4) B11 after B1. (5) C1 / C2 as declared.
+- Watch out: one consumed Sunday; trade times are the replay's; queue position inside a level is not observed.
+
 ## 2026-11-10 13:24Z (session ce68ebe0) — B1a DONE: the replay's fill model does not reproduce live's fills order by order; no constant trade-time shift fits
 
 - Done: B1a (USER "Yes"; specification 04:56Z). research/pf_b1a_live_orders.py: v1 committed before its first run

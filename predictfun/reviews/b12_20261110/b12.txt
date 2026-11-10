@@ -1,0 +1,71 @@
+B12 what the profitable makers do. point estimates, one consumed partial day (220 windows of 2026-11-08, 0.764 window-days). Own id 200; 742 ranked makers; top 5 ids [30, 48, 661, 40, 51].
+Controls: {"C1_level_cases": true, "C2_guard_lookup": true, "C3_sweep_flag": true, "C4_decomposition": true, "C5_null": true, "C6_refusals": true, "C7_nan_is_na": true}; K1 True; K2 True (shuffled fails True); K3 True. Stat {'windows': 220, 'no_frames': 0, 'no_guard_series': 0}
+
+T1 first minute, all depths (c/sh; sh/day = shares / 0.764)
+group | makers | legs | sh/day | spread | move 1 s | net 1 s | net 5 s | $/day 1 s
+top 5 | 5 | 19430 | 462,118 | +1.33 | -0.96 | +0.36 | +0.27 | +1,675.5
+6-20 | 15 | 32166 | 463,040 | +0.87 | -0.68 | +0.19 | +0.09 | +876.9
+rest | 373 | 43101 | 481,098 | +1.12 | -1.45 | -0.33 | -0.46 | -1,589.5
+O (ranks >= 6) | 388 | 75267 | 944,138 | +1.00 | -1.07 | -0.08 | -0.19 | -712.6
+all others | 393 | 94697 | 1,406,256 | +1.11 | -1.04 | +0.07 | -0.04 | +962.9
+ours | 1 | 86 | 961 | +0.94 | -1.37 | -0.44 | -0.26 | -4.2
+
+Status (no mid before or after): top 5 0 legs / 0.0 sh; 6-20 0 legs / 0.0 sh; rest 0 legs / 0.0 sh; O (ranks >= 6) 0 legs / 0.0 sh; all others 0 legs / 0.0 sh; ours 0 legs / 0.0 sh
+
+T2 depth: share of the group's volume / net 1 s / net 5 s / $/day 1 s
+top 5: at best 59.1% +0.17 +0.09 +458.7; 1 tick behind 19.8% +0.24 +0.24 +218.4; 2+ behind 19.2% +1.00 +0.65 +885.6; inside the spread 1.9% +1.30 +2.16 +112.8; side empty 0.0% n/a n/a +0.0; no frame before 0.0% n/a n/a +0.0
+6-20: at best 73.4% +0.14 +0.06 +477.8; 1 tick behind 15.2% +0.15 -0.04 +108.0; 2+ behind 9.0% +0.51 +0.05 +210.8; inside the spread 2.5% +0.71 +2.03 +80.3; side empty 0.0% n/a n/a +0.0; no frame before 0.0% n/a n/a +0.0
+rest: at best 71.9% -0.28 -0.41 -953.1; 1 tick behind 13.2% -0.56 -0.53 -357.5; 2+ behind 12.8% -0.54 -0.93 -329.8; inside the spread 2.1% +0.50 +1.06 +50.9; side empty 0.0% n/a n/a +0.0; no frame before 0.0% n/a n/a +0.0
+O (ranks >= 6): at best 72.6% -0.07 -0.18 -475.3; 1 tick behind 14.2% -0.19 -0.27 -249.4; 2+ behind 10.9% -0.12 -0.54 -119.0; inside the spread 2.3% +0.61 +1.57 +131.2; side empty 0.0% n/a n/a +0.0; no frame before 0.0% n/a n/a +0.0
+all others: at best 68.2% -0.00 -0.10 -16.6; 1 tick behind 16.0% -0.01 -0.06 -31.1; 2+ behind 13.6% +0.40 +0.01 +766.6; inside the spread 2.2% +0.81 +1.74 +244.1; side empty 0.0% n/a n/a +0.0; no frame before 0.0% n/a n/a +0.0
+ours: at best 62.9% -0.85 -0.79 -5.1; 1 tick behind 33.0% -0.01 +0.02 -0.0; 2+ behind 4.1% +2.50 +5.58 +1.0; inside the spread 0.0% n/a n/a +0.0; side empty 0.0% n/a n/a +0.0; no frame before 0.0% n/a n/a +0.0
+
+T3 at the best, guard at anc - 0 ms x sweep: share / net 1 s
+top 5: ON, not swept 10.2% +1.27; ON, swept 2.3% +0.56; ON, sweep unknown 0.7% +1.07; OFF, not swept 66.8% +0.08; OFF, swept 10.6% -0.52; OFF, sweep unknown 7.5% +0.03; warm-up, not swept 1.4% +1.08; warm-up, swept 0.4% +0.85; warm-up, sweep unknown 0.2% -0.20 | OFF share of guard-known 86.5%, net1 ON +1.14, OFF -0.00
+6-20: ON, not swept 11.6% +0.94; ON, swept 3.4% +0.53; ON, sweep unknown 0.7% +0.81; OFF, not swept 61.9% +0.13; OFF, swept 14.2% -0.42; OFF, sweep unknown 3.6% -0.21; warm-up, not swept 3.6% +0.07; warm-up, swept 0.4% -0.27; warm-up, sweep unknown 0.7% -0.69 | OFF share of guard-known 83.5%, net1 ON +0.85, OFF +0.01
+rest: ON, not swept 8.9% +0.78; ON, swept 1.9% +0.47; ON, sweep unknown 0.5% +0.28; OFF, not swept 65.9% -0.33; OFF, swept 11.5% -0.66; OFF, sweep unknown 6.4% -0.52; warm-up, not swept 3.6% -0.53; warm-up, swept 0.4% -0.77; warm-up, sweep unknown 0.8% -0.50 | OFF share of guard-known 88.1%, net1 ON +0.70, OFF -0.39
+O (ranks >= 6): ON, not swept 10.2% +0.87; ON, swept 2.7% +0.51; ON, sweep unknown 0.6% +0.59; OFF, not swept 63.9% -0.11; OFF, swept 12.9% -0.53; OFF, sweep unknown 5.0% -0.41; warm-up, not swept 3.6% -0.23; warm-up, swept 0.4% -0.54; warm-up, sweep unknown 0.7% -0.58 | OFF share of guard-known 85.8%, net1 ON +0.79, OFF -0.20
+all others: ON, not swept 10.2% +0.98; ON, swept 2.6% +0.52; ON, sweep unknown 0.6% +0.74; OFF, not swept 64.7% -0.06; OFF, swept 12.2% -0.53; OFF, sweep unknown 5.7% -0.25; warm-up, not swept 2.9% -0.06; warm-up, swept 0.4% -0.17; warm-up, sweep unknown 0.6% -0.55 | OFF share of guard-known 86.0%, net1 ON +0.88, OFF -0.14
+ours: ON, not swept 35.0% -0.41; ON, swept 31.4% -0.02; OFF, not swept 25.8% -2.61; OFF, swept 7.7% -0.38 | OFF share of guard-known 33.6%, net1 ON -0.22, OFF -2.10
+
+T3 at the best, guard at anc - 50 ms x sweep: share / net 1 s
+top 5: ON, not swept 10.9% +1.05; ON, swept 2.0% +0.37; ON, sweep unknown 0.7% +0.93; OFF, not swept 66.1% +0.10; OFF, swept 10.9% -0.45; OFF, sweep unknown 7.4% +0.03; warm-up, not swept 1.4% +1.08; warm-up, swept 0.4% +0.85; warm-up, sweep unknown 0.2% +0.26 | OFF share of guard-known 86.1%, net1 ON +0.94, OFF +0.02
+6-20: ON, not swept 11.8% +0.85; ON, swept 3.3% +0.35; ON, sweep unknown 0.8% +0.87; OFF, not swept 61.6% +0.15; OFF, swept 14.4% -0.38; OFF, sweep unknown 3.5% -0.25; warm-up, not swept 3.6% +0.01; warm-up, swept 0.4% -0.27; warm-up, sweep unknown 0.7% -0.73 | OFF share of guard-known 83.3%, net1 ON +0.75, OFF +0.03
+rest: ON, not swept 8.9% +0.69; ON, swept 1.8% +0.41; ON, sweep unknown 0.6% +0.50; OFF, not swept 65.8% -0.32; OFF, swept 11.6% -0.64; OFF, sweep unknown 6.3% -0.55; warm-up, not swept 3.6% -0.59; warm-up, swept 0.4% -0.77; warm-up, sweep unknown 0.8% -0.50; no guard value, not swept 0.0% +5.49 | OFF share of guard-known 88.1%, net1 ON +0.63, OFF -0.38
+O (ranks >= 6): ON, not swept 10.3% +0.78; ON, swept 2.5% +0.37; ON, sweep unknown 0.7% +0.71; OFF, not swept 63.7% -0.10; OFF, swept 13.0% -0.49; OFF, sweep unknown 4.9% -0.44; warm-up, not swept 3.6% -0.29; warm-up, swept 0.4% -0.54; warm-up, sweep unknown 0.7% -0.60; no guard value, not swept 0.0% +5.49 | OFF share of guard-known 85.7%, net1 ON +0.70, OFF -0.18
+all others: ON, not swept 10.5% +0.86; ON, swept 2.4% +0.37; ON, sweep unknown 0.7% +0.78; OFF, not swept 64.4% -0.04; OFF, swept 12.4% -0.48; OFF, sweep unknown 5.6% -0.27; warm-up, not swept 3.0% -0.10; warm-up, swept 0.4% -0.17; warm-up, sweep unknown 0.6% -0.52; no guard value, not swept 0.0% +5.49 | OFF share of guard-known 85.8%, net1 ON +0.77, OFF -0.12
+ours: ON, not swept 35.0% -0.41; ON, swept 30.3% -0.07; OFF, not swept 25.8% -2.61; OFF, swept 8.8% -0.15 | OFF share of guard-known 34.7%, net1 ON -0.25, OFF -1.98
+
+T3 at the best, guard at anc - 250 ms x sweep: share / net 1 s
+top 5: ON, not swept 10.6% +0.52; ON, swept 2.0% +0.28; ON, sweep unknown 0.7% +0.51; OFF, not swept 66.2% +0.19; OFF, swept 10.8% -0.47; OFF, sweep unknown 7.4% +0.06; warm-up, not swept 1.6% +0.95; warm-up, swept 0.4% +1.02; warm-up, sweep unknown 0.3% +0.40; no guard value, not swept 0.0% +2.36; no guard value, swept 0.0% +2.50; no guard value, sweep unknown 0.0% -1.50 | OFF share of guard-known 86.4%, net1 ON +0.48, OFF +0.10
+6-20: ON, not swept 12.0% +0.63; ON, swept 3.4% +0.44; ON, sweep unknown 0.8% +0.42; OFF, not swept 61.2% +0.19; OFF, swept 14.2% -0.43; OFF, sweep unknown 3.4% -0.13; warm-up, not swept 3.7% +0.00; warm-up, swept 0.5% +0.44; warm-up, sweep unknown 0.7% -0.79; no guard value, not swept 0.1% +0.27; no guard value, swept 0.0% +2.50; no guard value, sweep unknown 0.0% +4.59 | OFF share of guard-known 83.0%, net1 ON +0.58, OFF +0.06
+rest: ON, not swept 9.8% +0.34; ON, swept 2.0% +0.43; ON, sweep unknown 0.6% +0.32; OFF, not swept 64.6% -0.28; OFF, swept 11.4% -0.67; OFF, sweep unknown 6.3% -0.53; warm-up, not swept 3.4% -0.61; warm-up, swept 0.5% -0.58; warm-up, sweep unknown 0.8% -0.83; no guard value, not swept 0.6% -0.11; no guard value, swept 0.0% +0.68; no guard value, sweep unknown 0.1% +4.10 | OFF share of guard-known 86.9%, net1 ON +0.35, OFF -0.35
+O (ranks >= 6): ON, not swept 10.9% +0.50; ON, swept 2.7% +0.44; ON, sweep unknown 0.7% +0.38; OFF, not swept 62.9% -0.06; OFF, swept 12.8% -0.54; OFF, sweep unknown 4.8% -0.39; warm-up, not swept 3.5% -0.29; warm-up, swept 0.5% -0.07; warm-up, sweep unknown 0.8% -0.81; no guard value, not swept 0.3% -0.04; no guard value, swept 0.0% +1.09; no guard value, sweep unknown 0.0% +4.24 | OFF share of guard-known 84.9%, net1 ON +0.48, OFF -0.15
+all others: ON, not swept 10.8% +0.51; ON, swept 2.5% +0.40; ON, sweep unknown 0.7% +0.41; OFF, not swept 63.9% +0.02; OFF, swept 12.2% -0.52; OFF, sweep unknown 5.6% -0.22; warm-up, not swept 3.0% -0.10; warm-up, swept 0.4% +0.20; warm-up, sweep unknown 0.6% -0.66; no guard value, not swept 0.3% +0.02; no guard value, swept 0.0% +1.75; no guard value, sweep unknown 0.0% +4.18 | OFF share of guard-known 85.4%, net1 ON +0.48, OFF -0.08
+ours: ON, not swept 31.7% -0.40; ON, swept 29.3% -0.09; OFF, not swept 29.1% -2.37; OFF, swept 9.9% -0.08 | OFF share of guard-known 39.0%, net1 ON -0.25, OFF -1.79
+
+Decomposition (at the best, top 5 against ranks >= 6, c/sh at 1 s): lag | legs | D | MIX | MIX_G | MIX_S | WITHIN
+0 ms | 62950 | +0.20 | +0.01 | -0.00 | +0.01 | +0.19
+   cells: ON, not swept wT 11.4% vT +1.27 wO 11.4% vO +0.87; ON, swept wT 2.6% vT +0.56 wO 3.0% vO +0.51; OFF, not swept wT 74.3% vT +0.08 wO 71.2% vO -0.11; OFF, swept wT 11.8% vT -0.52 wO 14.4% vO -0.53
+50 ms | 62915 | +0.20 | +0.01 | -0.00 | +0.01 | +0.19
+   cells: ON, not swept wT 12.2% vT +1.05 wO 11.5% vO +0.78; ON, swept wT 2.2% vT +0.37 wO 2.8% vO +0.37; OFF, not swept wT 73.5% vT +0.10 wO 71.1% vO -0.10; OFF, swept wT 12.2% vT -0.45 wO 14.5% vO -0.49
+250 ms | 62678 | +0.20 | +0.01 | -0.01 | +0.01 | +0.19
+   cells: ON, not swept wT 11.8% vT +0.52 wO 12.2% vO +0.50; ON, swept wT 2.3% vT +0.28 wO 3.0% vO +0.44; OFF, not swept wT 73.9% vT +0.19 wO 70.5% vO -0.06; OFF, swept wT 12.0% vT -0.47 wO 14.3% vO -0.54
+N1 null: WITHIN observed +0.19, null p50 +0.01, p99 +0.09, 500 draws, share of draws >= observed 0.000
+
+T4 at the best, level age x born / fall-back: share / net 1 s
+top 5: <0.1 s, born as best 2.3% +1.26; <0.1 s, fall-back 0.1% -0.66; 0.1-1 s, born as best 17.6% +0.37; 0.1-1 s, fall-back 1.9% +0.07; 1-10 s, born as best 34.3% +0.26; 1-10 s, fall-back 9.2% -0.01; 10-60 s, born as best 6.9% +0.12; 10-60 s, fall-back 3.2% +0.12; >60 s, born as best 0.0% -0.50; since first sight, born as best 0.0% -0.81; since first sight, fall-back 0.2% +0.26; censored, born as best 5.0% -0.01; censored, fall-back 19.1% -0.14
+6-20: <0.1 s, born as best 2.7% +0.44; <0.1 s, fall-back 0.0% -1.69; 0.1-1 s, born as best 22.9% +0.37; 0.1-1 s, fall-back 1.4% -0.07; 1-10 s, born as best 42.4% +0.17; 1-10 s, fall-back 6.2% -0.11; 10-60 s, born as best 8.4% +0.08; 10-60 s, fall-back 3.7% +0.03; >60 s, born as best 0.1% +0.92; since first sight, born as best 0.1% +0.35; since first sight, fall-back 0.1% -0.80; censored, born as best 2.3% -0.36; censored, fall-back 9.7% -0.19
+rest: <0.1 s, born as best 2.2% +0.68; <0.1 s, fall-back 0.1% -0.44; 0.1-1 s, born as best 19.9% +0.25; 0.1-1 s, fall-back 1.3% -0.66; 1-10 s, born as best 37.7% -0.17; 1-10 s, fall-back 6.5% -0.49; 10-60 s, born as best 8.0% -0.38; 10-60 s, fall-back 3.5% -0.26; >60 s, born as best 0.6% -0.79; >60 s, fall-back 0.0% -3.50; since first sight, born as best 0.3% +0.18; since first sight, fall-back 0.5% -3.76; censored, born as best 5.8% -0.61; censored, fall-back 13.5% -1.00
+O (ranks >= 6): <0.1 s, born as best 2.5% +0.55; <0.1 s, fall-back 0.1% -0.86; 0.1-1 s, born as best 21.4% +0.32; 0.1-1 s, fall-back 1.3% -0.36; 1-10 s, born as best 40.0% +0.01; 1-10 s, fall-back 6.3% -0.31; 10-60 s, born as best 8.2% -0.15; 10-60 s, fall-back 3.6% -0.11; >60 s, born as best 0.3% -0.65; >60 s, fall-back 0.0% -3.50; since first sight, born as best 0.2% +0.21; since first sight, fall-back 0.3% -3.21; censored, born as best 4.1% -0.54; censored, fall-back 11.7% -0.67
+all others: <0.1 s, born as best 2.4% +0.74; <0.1 s, fall-back 0.1% -0.78; 0.1-1 s, born as best 20.3% +0.33; 0.1-1 s, fall-back 1.5% -0.20; 1-10 s, born as best 38.4% +0.07; 1-10 s, fall-back 7.1% -0.20; 10-60 s, born as best 7.9% -0.08; 10-60 s, fall-back 3.5% -0.05; >60 s, born as best 0.3% -0.65; >60 s, fall-back 0.0% -3.50; since first sight, born as best 0.1% +0.17; since first sight, fall-back 0.3% -2.33; censored, born as best 4.4% -0.37; censored, fall-back 13.8% -0.46
+ours: 0.1-1 s, born as best 12.3% -0.59; 0.1-1 s, fall-back 5.4% -6.50; 1-10 s, born as best 47.7% -0.38; 1-10 s, fall-back 10.8% -1.00; 10-60 s, born as best 9.8% -1.39; censored, fall-back 14.1% -0.04
+
+T5 each top-5 maker: sh/day | net 1 s | net 5 s | at best | behind | inside spread | ON at best (lag 50) | swept | born | < 1 s
+30 | 124,036 | +0.32 | +0.33 | 64.3% | 33.8% | 1.9% | 14.1% | 15.9% | 77.9% | 33.9%
+48 | 113,768 | +0.60 | +0.48 | 55.4% | 42.4% | 2.2% | 15.1% | 11.8% | 68.0% | 31.3%
+661 | 109,430 | +0.18 | +0.29 | 57.4% | 40.6% | 2.0% | 15.6% | 9.3% | 56.5% | 29.4%
+40 | 70,266 | +0.12 | -0.25 | 59.7% | 39.3% | 0.9% | 9.5% | 13.5% | 57.1% | 16.9%
+51 | 44,620 | +0.71 | +0.31 | 57.0% | 40.7% | 2.3% | 13.7% | 18.1% | 64.3% | 23.3%
+
+Readings: {"R30": {"label": "TOP-EARNS", "top5_net1": 0.3625695342302278, "O_net1": -0.07547231510514525, "diff": 0.43804184933537305}, "R31": {"0": ["WITHIN-STATE"], "50": ["WITHIN-STATE"], "250": ["WITHIN-STATE"]}, "R32": {"0": ["OFF-ADVERSE-FOR-TOP", "NO-AVOIDANCE"], "50": ["OFF-NOT-ADVERSE", "NO-AVOIDANCE"], "250": ["OFF-NOT-ADVERSE", "NO-AVOIDANCE"]}, "R33": {"label": "DEPTH-FED", "at_best_usd_day": 458.6968873468342, "behind_usd_day": 1103.9548831593727}, "R34": {"label": "PROPORTIONAL", "ratio": 0.9732608301175695, "top5_share_young": 0.2573634943395541, "top5_share_aged": 0.2644342465816329}, "R35": {"label": "PROPORTIONAL", "ratio": 0.8983830487220378, "top5_share_born": 0.255857485914063, "top5_share_classified": 0.2847977666965375}, "R36": "GUARD-CLOCK-SENSITIVE", "N1": "WITHIN-REAL"}
