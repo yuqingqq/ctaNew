@@ -1,0 +1,103 @@
+{
+  "as_of": "2026-11-10T04:24:32.435064+00:00",
+  "kind": "post-hoc descriptive baseline-state intersection audit",
+  "source_commit": "72461f72b39b6cd8706f5f93ddcc1db919b66a06",
+  "source_sha": "84fd45548ae2f39efb35afa1f17c3899247271aa5ad68571db5b47b9485de92b",
+  "report_sha": "9e5415008ab1d7b1d94e1552e8b1e2c050f1af6ac5e74a3ecf714b8d6a499ae4",
+  "controls": {
+    "positive_intersections": true,
+    "positive_duration": true,
+    "known_bad_refusals": 4
+  },
+  "results": [
+    {
+      "timing": "J",
+      "days": 9,
+      "markets": 2592,
+      "active_episodes": 783824,
+      "inventory_seconds": 223649.26983544923,
+      "categories": {
+        "eligible": {
+          "episodes": 61204,
+          "seconds": 2802.307825683597,
+          "percent": 1.252992163911559
+        },
+        "off_touch_only": {
+          "episodes": 27276,
+          "seconds": 3083.9937253418025,
+          "percent": 1.3789420048680965
+        },
+        "other_blockers": {
+          "episodes": 361483,
+          "seconds": 91966.2626982422,
+          "percent": 41.12075249157161
+        },
+        "score_and_off_touch_only": {
+          "episodes": 166613,
+          "seconds": 62528.43888769531,
+          "percent": 27.95825755822983
+        },
+        "score_only": {
+          "episodes": 167248,
+          "seconds": 63268.266698486324,
+          "percent": 28.289055781418906
+        }
+      }
+    },
+    {
+      "timing": "X",
+      "days": 9,
+      "markets": 2592,
+      "active_episodes": 691005,
+      "inventory_seconds": 196431.75057226565,
+      "categories": {
+        "eligible": {
+          "episodes": 53277,
+          "seconds": 2456.9275068359384,
+          "percent": 1.2507792144997734
+        },
+        "off_touch_only": {
+          "episodes": 24050,
+          "seconds": 2710.0803530273474,
+          "percent": 1.3796549412872696
+        },
+        "other_blockers": {
+          "episodes": 316709,
+          "seconds": 80617.60179541016,
+          "percent": 41.04102394879976
+        },
+        "score_and_off_touch_only": {
+          "episodes": 148364,
+          "seconds": 54818.19190600586,
+          "percent": 27.906991484983326
+        },
+        "score_only": {
+          "episodes": 148605,
+          "seconds": 55828.949010986325,
+          "percent": 28.42155041042986
+        }
+      }
+    }
+  ],
+  "input_sha": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_J/20261023/exit_episodes.parquet": "e4465978dab5123c75317333430ab58625e50bc84f354db2d7d4fb6d1e6e70e5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_J/20261024/exit_episodes.parquet": "f62afeb9aac74a4d16941a8580decd0e6776b01ae8a692e0702eb384736a0f17",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_J/20261025/exit_episodes.parquet": "458b97072787ac7920d4197685918759ca149349fe238d5d791b399db9310ad5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_J/20261026/exit_episodes.parquet": "abd5d705442bc7cf243e35e1fcafc34eece24b6ff6ce259c1acb1e1ef89b53fb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_J/20261027/exit_episodes.parquet": "81290c96560cd6631f8fd9fefba128232c41084406f93365f410e357fe394dd7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_J/20261031/exit_episodes.parquet": "76dbe1be26b5e02bf369c3d9b4628339c5c4ae467596cdbb35f8fdeb8715f17d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_J/20261101/exit_episodes.parquet": "07d4aff203967529f68a01b7463e6ae83c5b223857eb62387b70b1487f0995ec",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_J/20261102/exit_episodes.parquet": "d7091aec1e5232a71c9b3f8b2c7f9cddae749e9667e84b0a33bf2c2710e31068",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_J/20261103/exit_episodes.parquet": "7e9019332935fc9b6d7ba5e448e3498ee13f2ef02c3f948da19cc4866611633e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_X/20261023/exit_episodes.parquet": "070e648b9c489b70b658d873e7d8c22f62670ef55263773ecb92148a4d4b8837",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_X/20261024/exit_episodes.parquet": "795d5ccfee041b955adb3f777020ab0964f4b3940854d64c683ce78f5c87b9ce",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_X/20261025/exit_episodes.parquet": "734e1c599114f608d08d8808421af81d270841ca2d986050d764d820beae92e3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_X/20261026/exit_episodes.parquet": "fa49197f0f6141db21b75ce031236b5e41d8159c4705cb51c1c5c397f582dfb3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_X/20261027/exit_episodes.parquet": "4c2a98bd3f1abe8ed990da4d25b13424f476f56ab5fa8beec8658cf0a3bb3c01",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_X/20261031/exit_episodes.parquet": "ca21fa48cfb6cd93d345eba41d34bdd59f60b906ff8fbd10de3d9d2af226bf74",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_X/20261101/exit_episodes.parquet": "bba8383d800747317c2323f81896ee70bcc3b1b646bb1f611eaccd3b15b44f69",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_X/20261102/exit_episodes.parquet": "1fe102a73bc4f4b0fe340bb111d176fa8a48df2b809f51480ded19f502b79046",
+    "/home/yuqing/ctaNew/data/predict_fun/research/inventory_cost_20261110_v2/research/step4/ladder_tokyoreal_custom_e2_preds_basis_study_ic_main_X/20261103/exit_episodes.parquet": "709b354e4d90c8c280f765b103f40a2660050b339cee8808b66025b550d46001"
+  },
+  "limits": "Decision-sampled durations, not independent actions or continuous executable availability; off-touch repair is not replayed; no prediction of added fills/PnL; reserved_room may allow a smaller legal quote."
+}
