@@ -1,0 +1,14 @@
+{
+  "as_of": "2026-11-10T04:22:35.003001+00:00",
+  "source_commit": "daca5b2baaeb031d7f90bee756bee2cad2be8aa3",
+  "verifier_sha": "026f201dd1eecc4e4fac6bd4a19c9f3adc03c5169724cab991b08809e97faceb",
+  "report_sha": "9e5415008ab1d7b1d94e1552e8b1e2c050f1af6ac5e74a3ecf714b8d6a499ae4",
+  "controls": {
+    "positive_payoff_and_inventory": true,
+    "known_bad_refusals": 5
+  },
+  "arm_day_artifacts_verified": 90,
+  "independent_inventory_integrals": true,
+  "comparison_arithmetic_and_predicates": true,
+  "limitation": "artifact verification does not validate historical fill assumptions or independent strategy performance"
+}

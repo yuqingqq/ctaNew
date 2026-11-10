@@ -6,6 +6,17 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-10 04:29Z: INVENTORY-COST COMPLETE; none of3 candidates preserves value and lowers terminal inventory versus
+  baseline across9 consumed days/2592 markets/arm/timing. Marginal entry: inventory-square -14.0/-20.3%, terminal -5.4/-8.6%,
+  +1s value -15.2/-16.8% (J/X); J maximum75->83.74. Settlement gains are unproven drift/carry, not better spread capture.
+  Exit arms include late reservations and remain worse than original baseline; paid concessions <$1 per timing in2592 markets.
+  Full18 main replays +1-day stress pass;90 arm-days independently verified. Corrected report v4 and post-hoc joint audit
+  complete04:24:32Z; source/policy unchanged. Findings handoffs/20261110_inventory_cost_results.md. No promotion/live change,
+  protected dates unread; B1 calibration open. v2 data139MiB, slot free (recheck before new work).
+  2026-11-10 04:16Z: INVENTORY-COST all18 main replays VERIFIED; Nov3 X stress running.
+  Reporting-only adapter78d7a610 fixes aggregation's attempted second exclusive checks.json write through read-only
+  comparison; no policy/calculation changes. Declaration/report v3 and independent verification still pending.
+  Slot occupied, no protected reads or completed economic conclusion.
   2026-11-10 03:36Z: INVENTORY-COST all9 J dates VERIFIED (2592 markets/arm), X running; stress/report/independent
   verification still pending. Source/correction/verifier pushed through deb4ad6e; no parameter changes or completed
   cross-timing economic result. v2 data/logs retained; research slot occupied; protected dates unread.
