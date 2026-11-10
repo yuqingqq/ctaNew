@@ -6,6 +6,10 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-10 07:36Z: POLYMARKET/PREDICT lead-lag RUNNING, user requested. Fixed72 scheduled windows/9 consumed dates,
+  receipt and source clock comparisons plus Binance/Predict-history control;7 controls pass. Sourcee4034cad,
+  declaration966c0faf. Sampled-window diagnostic, no full-day interval or execution/PnL claim. Protected data unread.
+  Branch research/predict-polymarket-leadlag-20261110; numeric slot occupied.
   2026-11-10 04:56Z (session 62f3ce33): REPO + DISK CLEANUP done; B1a APPROVED, NOT STARTED; LIVE NOT RUNNING (USER).
   pmmmrust main 79a05d3 = GitHub (A1, A2 incremental, A3, A4b, A6; no tag, not deployed). ctaNew mm-research joined with
   origin (merge 335d268a; split since 09-11) and pushed; other sessions' notes committed as found. Free disk 437->547 GiB;

@@ -1,5 +1,16 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-10 07:36Z — Polymarket/Predict price lead-lag study RUNNING
+
+- User requested cross-venue price timing. Fixed sampled cohort:8 scheduled BTC5m windows/day across9 consumed
+  dates (Oct23–27,31,Nov1–3),72 expected/71 prestart PM identities. Missing coverage remains a status; no backfill.
+- Source e4034cad/declaration966c0faf;7 planted/falsifier controls pass. Receipt-clock primary, source-clock
+  diagnostic,1s/5s freshness, four window phases, fixed ±0.1..5s lags;500 phase-matched shift nulls and expanding
+  chronological prediction controls against Predict history + Binance. No strategy fills/PnL or full-day intervals.
+- PM historical metadata names BTC/USD TWAP; Predict uses its own round reference. Same window is not equal payoff.
+  Branch research/predict-polymarket-leadlag-20261110; checkout /tmp/cta-pm-leadlag-20261110.
+  Data/logs data/predict_fun/research/polymarket_leadlag_20261110. Numeric slot occupied; protected prices unread.
+
 ## 2026-11-10 04:56Z (session 62f3ce33) — repo/disk cleanup done; B1a approved, not started; live not running
 
 **State**
