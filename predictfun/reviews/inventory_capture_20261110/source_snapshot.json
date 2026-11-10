@@ -1,0 +1,22 @@
+{
+  "as_of": "2026-11-10T02:35:09.598604+00:00",
+  "kind": "source_and_existing_evidence_review_only",
+  "native_commit": "79a05d3617c2f691f5dda03c9339730074335df1",
+  "research_base": "4207218519fb020fd68b097cfd3c4fa8b0381c29",
+  "artifacts": {
+    "/home/yuqing/ctaNew/pmmmrust/crates/pf-strategy/src/ladder.rs": "f467cfdff72d41546883418928cae6acf70fbfe721ac9bf49213c7f4c54ae411",
+    "/home/yuqing/ctaNew/pmmmrust/config/predict/pfmm.ladder_v3_basis_v1.example.toml": "f86beb166012db65f3fff8229455334a5d8c7b266efd3e9f2067617a7d27a347",
+    "/home/yuqing/ctaNew/predictfun/freeze/pm_ladder_v3/params.json": "486b9152bc5187e19bb73bbc54af0c758112fb6b54d3c6f7ddd9463efbbea801",
+    "/home/yuqing/ctaNew/predictfun/research/pf_step5_guard_preds.py": "15d84613d74a9d0f08c501a279ebd28372e501ae5fb057b65162fa159f6e0f56",
+    "/home/yuqing/ctaNew/predictfun/research/pf_badfill_grid_tx.py": "17e9d700142f74e8dbf419e2d2cb36f408e88b2f51fd44a71998aaa68702fbb5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/step4/report_spread_capture_v1.json": "99e517d70dd06ef52b9318a6d1067fb93c070936c83b24cb2b1dbfa3b72124d1",
+    "/home/yuqing/ctaNew/predictfun/reviews/optimization_loop_20261109/findings_v8.json": "1b4f3b50dd096b5876e65d7772508b90d43df8d03096c2f66ded3e8ef7d8d067",
+    "/tmp/cta-exit-liquidity-20261109/predictfun/reviews/exit_liquidity_20261109/receipt.json": "fbd470a772be94076adb0bad12114105b54d5484da8f2cdb3f3167d3d1f534a7",
+    "/tmp/cta-exit-liquidity-20261109/predictfun/reviews/entry_budget_20261109/receipt.json": "b79c878cf567fb8519227743c9dbbae8f1850fec4c5f0f1a53ea16daf1735bee",
+    "/tmp/cta-exit-liquidity-20261109/predictfun/reviews/passive_inventory_20261109/receipt.json": "1db5922d8a793d314916f39fa5abe4ddfed74e13007db4b6244f28db989926d8"
+  },
+  "new_strategy_runs": 0,
+  "new_fill_calibration": false,
+  "protected_data_read": false,
+  "next": "Neutral reference action exit-feasibility audit, then separately declared cost-bounded exit experiment. No live parameter recommendation."
+}
