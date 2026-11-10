@@ -1855,3 +1855,7 @@
 2026-11-09T18:02:43Z tag=opt-continuity-matrix rc=0 peak_rss_mib=141 wall_s=24.62 cpu_user_s=23.59 memavail_start_gib=24 disk_free_gib=440->440
 2026-11-09T18:04:26Z tag=opt-continuity-receipt rc=0 peak_rss_mib=143 wall_s=1.71 cpu_user_s=0.50 memavail_start_gib=24 disk_free_gib=440->440
 2026-11-09T18:09:51Z tag=opt-loop-audit rc=0 peak_rss_mib=21 wall_s=1.32 cpu_user_s=0.60 memavail_start_gib=24 disk_free_gib=440->440
+2026-11-10T02:17:53Z tag=wallet-calibration-controls rc=1 peak_rss_mib=36 wall_s=0.44 cpu_user_s=0.25 memavail_start_gib=24 disk_free_gib=436->436
+2026-11-10T02:18:14Z tag=wallet-calibration-controls-v2 rc=0 peak_rss_mib=35 wall_s=0.46 cpu_user_s=0.29 memavail_start_gib=24 disk_free_gib=436->436
+2026-11-10T02:19:37Z tag=wallet-calibration-controls-v3 rc=0 peak_rss_mib=36 wall_s=0.47 cpu_user_s=0.29 memavail_start_gib=24 disk_free_gib=436->436
+2026-11-10T02:21:12Z tag=wallet-calibration-frozen-controls rc=0 peak_rss_mib=34 wall_s=0.33 cpu_user_s=0.27 memavail_start_gib=24 disk_free_gib=436->436

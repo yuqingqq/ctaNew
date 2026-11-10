@@ -1,5 +1,19 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-10 02:25Z — fill timing/queue calibration prioritized; awaiting updated capture
+
+- User asked to finish calibration before more optimization. Prepared full-action ingestion for the A4b wallet capture
+  and strict kernel journal export; source freeze f22cd1db. All16 synthetic controls pass, including deduplication,
+  separate status clocks, incomplete capture statuses, bad-input refusal and protected-scope refusal.
+- This is ingestion preparation only: no new live capture read, calibrated matching clock, queue fit or economic result.
+  No wallet_events.jsonl.gz found in the searched local export roots; remote Tokyo state has not been inspected.
+- Capture requirements: handoffs/20261110_fill_calibration_request.md. Evidence:
+  reviews/fill_calibration_20261110/preparation_receipt.json. Branch research/predict-fill-calibration-20261110;
+  checkout /tmp/cta-fill-calibration-20261110. Numeric jobs finished; recheck the shared slot before further work.
+- Next: obtain the completed logging-build run ID/path, exact UTC interval and matching public tape. Nov9–13 remain
+  protected by the frozen forward procedure; any use for calibration needs an explicit scope decision first.
+  Millisecond status timestamps alone do not establish matching time. B1 is not complete; B2/B5/B6 still wait for it.
+
 ## 2026-11-09 18:09Z — optimization loop bounded cycle COMPLETE; no economic promotion
 
 - Original two-round scope plus five declared follow-ups completed. Final audit checks8 receipt sets/91 unique pinned
