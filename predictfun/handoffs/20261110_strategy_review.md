@@ -1,6 +1,6 @@
 # Predict.fun MM: strategy review
 
-As of 2026-11-10 13:22Z (session ce68ebe0), revision 4. Scope: pm_ladder_v3 (frozen 2026-11-07, b261091d) and the
+As of 2026-11-10 16:50Z (session ce68ebe0), revision 5. Scope: pm_ladder_v3 (frozen 2026-11-07, b261091d) and the
 work around it.
 
 Questions from the user: (1) does "capture spread from users' trading, control the remaining inventory risk" hold for
@@ -23,6 +23,12 @@ Revision 4 (13:22Z). B1a is done (`handoffs/20261110_b1a_live_orders.md`). On li
 model credits 1.47-1.96 times live's shares under the M and L rules, and 8-25% of them come from the trades that filled
 live. A constant 250 ms trade-time shift is contradicted by live's fills. Section 7 items 2, 3 and 9 now point to it and
 to backlog B11 / B12; nothing else changed.
+
+Revision 5 (16:50Z). B12 is done (`handoffs/20261110_b12_profitable_makers.md`). The top makers' edge is not in states
+our guard marks: at the best it is within the same guard state and trade type, and it is the move after the fill,
+not the spread. Two thirds of their first-minute dollars are behind the best. `signer` is the maker's address
+(checked on chain), and the public match records carry a maker fee of 0. Section 3.1's rebate line, section 7 item 9
+and section 8 point to it; nothing else changed.
 
 ## Evidence labels
 
@@ -91,7 +97,8 @@ First minute, c/sh:
 - Not measured: the maker rebate (25% of the taker fee under Predict's September promotion, unverified for November:
   0.25 x 0.02 x min(p, 1-p), i.e. 0.25 c/sh at 50 c and about 0.19 c/sh averaged over the prices traded) and liquidity
   rewards (listed terms: hourly rate 3000, within 6 c, minimum 100 sh; unit and payout not verified; v3's 5 / 25 sh
-  quotes are below the minimum). Either could exceed the +0.15 c/sh trading edge.
+  quotes are below the minimum). Either could exceed the +0.15 c/sh trading edge. Public match records carry a maker
+  fee of 0 on all 87,155 legs read (revision 5, B12): a rebate, if paid, is not in the match record.
 
 ### 3.2 The guard selects flow, and it does so before the trade (D)
 
@@ -611,7 +618,7 @@ enters only at the step its price becomes the best (section 7, item 4).
 | 6 | Reducing side: solve the line, the legal price and the minimum size together | 3.4: the entry gate blocks the closing side about 86% of inventory time; single relaxations failed (RX5, B9). No exit is clearly cheap: a passive fill from the back of the queue in the band costs 0.32-0.51 c/sh at 1 s and 0.54-1.12 at 5 s (6.3); taking costs about 1.5 c/sh; carrying to settlement cost 0.96 c (J) / 0.77 c (X) per share held at the stop in the replay (arithmetic: $163.06 / (2,592 x 6.56 sh), $113.54 / (2,592 x 5.72 sh); uncalibrated fills, indicative) | The research session's next step. Judge by terminal inventory and daily variance at equal 1 s value, not by the mean alone | B9 follow-up |
 | 7 | Pull buffer: keep as churn control only. Do not widen it into a general two-line gate | Sections 5 and 6.3 | No further tuning | B3 (closed) |
 | 8 | Run C1 as declared; C2 after 2026-11-14 02:00Z | Declared forward races | Read them as replay under an uncalibrated fill model, with the age split | C1, C2 |
-| 9 | Read what the profitable makers do: split each large maker's fills by guard state, by the state of the level (born or by a fall-back, age) and by time since the level was born | 6.5: an always-present order loses in every position, yet the top 5 makers make +0.43 c/sh at 1 s on 859,445 sh a day (P). If their fills sit in states our guard already marks, the gap is speed or queue; if not, it is signal (item 5) | Read-only on the cohort's timed legs, which carry a `signer` column (to be confirmed as the maker's address). Readings declared first; descriptive | B12 |
+| 9 | Read what the profitable makers do: split each large maker's fills by guard state, by the state of the level (born or by a fall-back, age) and by time since the level was born | 6.5: an always-present order loses in every position, yet the top 5 makers make +0.43 c/sh at 1 s on 859,445 sh a day (P). If their fills sit in states our guard already marks, the gap is speed or queue; if not, it is signal (item 5) | B12 DONE (revision 5, `handoffs/20261110_b12_profitable_makers.md`): the edge is not in our guard's states; within a state it is the move after the fill; two thirds behind the best | B12 |
 
 Item 4's two original candidates were measured in 6.5 and are not supported. What remains of item 4 is one arm whose
 declared reading is MIXED, plus a post hoc split. Items 5, 6 and 9 are hypotheses from data already read.
@@ -643,7 +650,7 @@ build is worth more work; item 4 no longer offers a way to the front.
 - The queue rule. 6.3 brackets it (L, M, U); B1a tests it.
 - 6.5 measures new-level entry, the rung and improving as single 5-share orders on one day. Not verified: the same
   rules inside the full engine (the ladder, sizes, Binance guards), on other days, and with our own order in the book.
-- Whether `signer` in the cohort's timed legs is the maker's address (item 9).
+- Resolved in revision 5: `signer` in the cohort's timed legs is the maker's address (checked on chain, B12).
 - 6.3 leaves out the Binance guards, the cap and reduce-only rules, the size-up, the rung and the throttle. Its v3
   price rule is checked against hand-computed cases only.
 - Live fills' 5 s and 60 s markouts. The ledger sits in the raw capture directory, which also holds 11-09 windows; it

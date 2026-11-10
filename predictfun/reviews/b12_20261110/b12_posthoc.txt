@@ -1,0 +1,46 @@
+B12 POST HOC (written after reading b12.txt; descriptive). c/sh; spread + move = net.
+
+P1 at-best WITHIN gap, top 5 against ranks >= 6 (lag 50): net +0.19 = spread +0.01 + move +0.18 (identity True)
+  ON, not swept: wT 12.2%; spread T +0.52 O +0.53; move T +0.53 O +0.25
+  ON, swept: wT 2.2%; spread T +0.51 O +0.51; move T -0.15 O -0.14
+  OFF, not swept: wT 73.5%; spread T +0.53 O +0.52; move T -0.43 O -0.62
+  OFF, swept: wT 12.2%; spread T +0.51 O +0.51; move T -0.97 O -1.01
+
+P2 by depth: group | bucket | sh/day | spread | move 1 s | net 1 s | move 5 s | net 5 s
+top 5 | 1 tick behind | 91,660 | +1.55 | -1.31 | +0.24 | -1.31 | +0.24
+top 5 | 2+ behind | 88,723 | +3.76 | -2.76 | +1.00 | -3.11 | +0.65
+top 5 | inside the spread | 8,688 | -0.99 | +2.29 | +1.30 | +3.16 | +2.16
+top 5 | at best | 273,047 | +0.53 | -0.37 | +0.17 | -0.44 | +0.09
+O (ranks >= 6) | 1 tick behind | 133,697 | +1.54 | -1.73 | -0.19 | -1.81 | -0.27
+O (ranks >= 6) | 2+ behind | 103,196 | +3.77 | -3.89 | -0.12 | -4.31 | -0.54
+O (ranks >= 6) | inside the spread | 21,552 | -0.86 | +1.47 | +0.61 | +2.43 | +1.57
+O (ranks >= 6) | at best | 685,693 | +0.53 | -0.60 | -0.07 | -0.71 | -0.18
+6-20 | 1 tick behind | 70,370 | +1.53 | -1.38 | +0.15 | -1.57 | -0.04
+6-20 | 2+ behind | 41,621 | +3.11 | -2.60 | +0.51 | -3.06 | +0.05
+6-20 | inside the spread | 11,357 | -0.89 | +1.60 | +0.71 | +2.92 | +2.03
+6-20 | at best | 339,693 | +0.52 | -0.38 | +0.14 | -0.46 | +0.06
+rest | 1 tick behind | 63,327 | +1.55 | -2.12 | -0.56 | -2.09 | -0.53
+rest | 2+ behind | 61,575 | +4.22 | -4.76 | -0.54 | -5.15 | -0.93
+rest | inside the spread | 10,196 | -0.83 | +1.33 | +0.50 | +1.89 | +1.06
+rest | at best | 346,000 | +0.55 | -0.83 | -0.28 | -0.96 | -0.41
+ours | 1 tick behind | 317 | +1.51 | -1.52 | -0.01 | -1.49 | +0.02
+ours | 2+ behind | 39 | +2.92 | -0.42 | +2.50 | +2.67 | +5.58
+ours | inside the spread | 0 | n/a | n/a | n/a | n/a | n/a
+ours | at best | 604 | +0.51 | -1.36 | -0.85 | -1.30 | -0.79
+
+P3 at the best by guard state (lag 50): group | state | sh/day | spread | move 1 s | net 1 s | net 5 s
+top 5 | ON | 37,176 | +0.52 | +0.42 | +0.94 | +1.62
+top 5 | OFF | 230,527 | +0.53 | -0.51 | +0.02 | -0.17
+top 5 | warm-up | 5,344 | +0.73 | +0.22 | +0.96 | +0.92
+O (ranks >= 6) | ON | 93,108 | +0.53 | +0.17 | +0.70 | +1.54
+O (ranks >= 6) | OFF | 559,877 | +0.52 | -0.70 | -0.18 | -0.38
+O (ranks >= 6) | warm-up | 32,580 | +0.73 | -1.09 | -0.36 | -1.75
+6-20 | ON | 53,944 | +0.51 | +0.24 | +0.75 | +1.49
+6-20 | OFF | 269,865 | +0.51 | -0.48 | +0.03 | -0.17
+6-20 | warm-up | 15,884 | +0.64 | -0.76 | -0.12 | -0.93
+rest | ON | 39,164 | +0.56 | +0.07 | +0.63 | +1.61
+rest | OFF | 290,012 | +0.53 | -0.92 | -0.38 | -0.57
+rest | warm-up | 16,696 | +0.82 | -1.41 | -0.59 | -2.54
+ours | ON | 395 | +0.51 | -0.76 | -0.25 | +0.48
+ours | OFF | 209 | +0.50 | -2.48 | -1.98 | -3.19
+ours | warm-up | 0 | n/a | n/a | n/a | n/a

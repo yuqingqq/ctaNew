@@ -6,6 +6,16 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-10 16:50Z (session ce68ebe0): B12 DONE (read-only, public tape; USER "Then we check the next"): the top
+  makers' edge is NOT in states our guard marks. research/pf_b12_makers.py d5f68cf2 (committed and pushed before its
+  run); report handoffs/20261110_b12_profitable_makers.md; output live_vs_replay/b12_20261110/, copies in
+  reviews/b12_20261110/. 220 consumed 11-08 windows, first minute; point estimates. Top 5 +0.36 c/sh at 1 s (462,118
+  sh/day), ranks 6+ -0.08; at the best the gap is within guard state and trade type (+0.19 of +0.20; null p99 +0.09)
+  and is the move after the fill, not the spread (post hoc); they trade 86% of their at-best volume with our guard OFF,
+  like everyone; two thirds of their dollars are behind the best; not faster to new levels. Our fills have the worst
+  move in both guard states. signer = maker address (checked on chain); maker fee 0 on 87,155 public match legs.
+  Readings R30 TOP-EARNS, R31 WITHIN-STATE, R32 NO-AVOIDANCE, R33 DEPTH-FED, R34 / R35 PROPORTIONAL, R36
+  GUARD-CLOCK-SENSITIVE (R32's sign only), N1 WITHIN-REAL. Next: USER D2 (B1), rebate / rewards (USER), B12b.
   2026-11-10 13:24Z (session ce68ebe0): B1a DONE (read-only; USER "Yes"): the replay's fill model does NOT reproduce
   live's fills order by order, and no constant trade-time shift fits. research/pf_b1a_live_orders.py v1 7ef3de6e, v2
   1a253a45 (each committed before its run; v2 = identity at the taker order); report handoffs/20261110_b1a_live_orders.md;
@@ -1449,6 +1459,8 @@ days_read:
   - {day: "20261025", scope: "steps 1-3 full day (incl. outcomes)"}
   - {day: "20261101..", scope: "C2 confirmation (declared 11-02 02:01Z): each C2 day d is read with d+1 00-01Z; started 11-02"}
   - {day: "20261108", scope: "strategy review revisions 2-3 (session ce68ebe0, read-only): derived outputs and book frames of the 220-window live-samewindow cohort; the day was already consumed by the live diagnosis"}
+  - {day: "20261108", scope: "B12 (session ce68ebe0, read-only): cohort tape (legs_timed2, legs_tk, books, step5 guard) of the 220 windows and raw REST match pages of hours 03 and 15 (maker fee field); the day was already consumed"}
+  - {day: "20261023", scope: "B12 input check (session ce68ebe0, read-only): on-chain slice 14:00-14:15 calldata and raw REST match pages of hour 14 (signer identity, maker fee); a read day"}
   # Binance tape directory listings (file counts only, no content) were made for 10-22..10-31.
 
 tasks:
@@ -1562,3 +1574,5 @@ flags:
   two_line_touch_gate: "NOT SUPPORTED at the order level (strategy review revision 2, queue_reach.txt 2026-11-10 08:24Z; one consumed partial day, fill rule not validated): fills in the band are adverse for an order at the back of the queue; pull buffer = churn control only; see updated 08:51Z and handoffs/20261110_strategy_review.md section 6"
   queue_priority: "NOT FOUND at the order level (strategy review revision 3, level_birth.txt 2026-11-10 09:47Z; one consumed partial day, fill rule not validated): a 5-sh order goes live behind p50 229-423 sh at a level born as the best; unguarded join / birth / rung / improve lose in 40 of 40 cells; at 250 ms trade-time shift every arm is negative. Candidate for a fresh-day test only: touch order enters at the step its price becomes the best (arm B-g90, reading MIXED); see updated 10:05Z and handoffs/20261110_strategy_review.md section 6.5"
   fill_model_b1a: "NOT VALIDATED at the order level (B1a, 2026-11-10 13:19Z, handoffs/20261110_b1a_live_orders.md): on live's own orders the replay credits 1.47-1.96x live's shares under M / L, precision 0.08-0.25, young-order fills 88-92% not live's; a constant 250 ms trade-time shift is contradicted by live's fills; B1 needs live match clocks (A4b)"
+  profitable_makers_b12: "EDGE NOT IN GUARD STATES (B12, 2026-11-10 16:43Z, handoffs/20261110_b12_profitable_makers.md): top 5 +0.36 c/sh at 1 s; at the best their gap is within the same guard state and trade type and is the move after the fill (same spread); 86% of their at-best volume is with our guard OFF; two thirds of their dollars are behind the best; queue place, cancel timing and information are not separable on the public tape"
+  maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"
