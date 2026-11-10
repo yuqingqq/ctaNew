@@ -52,6 +52,11 @@ def metadata(rows,slugs):
     return result
 
 
+def up_identity(value):
+    a=np.asarray(value)
+    return a.shape in ((),(1,)) and a.dtype.kind in ('i','u') and int(a.item())==1
+
+
 def setup():
     if DEST.exists():raise ValueError('refuse existing study')
     population=[];inputs={}
@@ -61,7 +66,7 @@ def setup():
         if reg.ws.duplicated().any():raise ValueError('duplicated Predict market start')
         for hour in HOURS:
             ws=int(day_ns(day)//10**9+hour*3600);z=reg[reg.ws==ws]
-            if len(z)!=1 or int(z.iloc[0].we)!=ws+300 or list(z.iloc[0].up_index)!=[1]:
+            if len(z)!=1 or int(z.iloc[0].we)!=ws+300 or not up_identity(z.iloc[0].up_index):
                 raise ValueError('Predict market/window identity')
             mid=int(z.iloc[0].mid);slug=f'btc-updown-5m-{ws}'
             paths=dict(pm=str(ROOT/f'data/pm_5min/raw/{day}/{slug}.jsonl.gz'),
@@ -82,6 +87,7 @@ def setup():
     DEST.mkdir(parents=True);write(DEST/'pm_metadata.json',meta);inputs[str(DEST/'pm_metadata.json')]=sha(DEST/'pm_metadata.json')
     sources=[Path(__file__),HERE/'pf_pm_leadlag_stats.py',HERE/'tests/test_pm_leadlag.py']
     d=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=HERE,text=True).strip(),
+        preparation='d45809d8 refused scalar Up-index during declaration, before any output or lead-lag outcome; integer scalar/one-element integer array now validated explicitly, no numeric design change.',
         source_sha={str(p.relative_to(HERE.parents[1])):sha(p) for p in sources},input_sha=inputs,population=population,
         design='72 scheduled BTC windows: first5min of every third UTC hour,9 previously consumed dates. Missing windows remain statuses; no backfill. This samples days, not all288 windows/day.',
         unit='Neutral100ms diagnostic grid, not order actions, fills or independent samples. No execution or PnL claim.',
