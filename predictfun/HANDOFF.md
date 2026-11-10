@@ -1,5 +1,14 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-10 03:36Z — inventory-cost J replay complete; X running
+
+- All nine consumed J dates verified, 2,592 markets per arm. Baseline and late-reservation control exactly
+  reproduce prior artifacts; exit variants preserve pre60 requests/fills. No late reverse-opening or concession
+  budget violation. X dates, Nov3 stress, report and independent saved-artifact verification remain.
+- Frozen sources/correction and supplemental verifier pushed through deb4ad6e on
+  research/predict-inventory-design-20261110. Source parameters unchanged. No completed cross-timing economic result.
+- v2 data/logs retained; research slot occupied. Protected Nov9–13 remain unread; live/native code unchanged.
+
 ## 2026-11-10 02:57Z — inventory-cost audit correction; v2 RUNNING
 
 - First full-day audit refused a quote/submission feasibility mismatch. Raw quote notional and lot-rounded order

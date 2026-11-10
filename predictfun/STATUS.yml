@@ -6,6 +6,9 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-10 03:36Z: INVENTORY-COST all9 J dates VERIFIED (2592 markets/arm), X running; stress/report/independent
+  verification still pending. Source/correction/verifier pushed through deb4ad6e; no parameter changes or completed
+  cross-timing economic result. v2 data/logs retained; research slot occupied; protected dates unread.
   2026-11-10 02:57Z: INVENTORY-COST v2 RUNNING. Quote/submission notional audit distinction fixed; unchanged policies.
   Source542bb9e4/declaration42dfcadf, original failure retained;33 controls and exact8-market smoke pass.
   Data inventory_cost_20261110_v2; research slot occupied. No completed economic comparison.
