@@ -1,0 +1,25 @@
+{
+ "protocol": "P003_DE_ARM_FREEZE_V23_AMENDMENT",
+ "version": 23,
+ "rule": "13 -- superseding receipt; v1..v22 unedited",
+ "frozen_parameters": {
+  "params": {
+   "path": "de_multiday_gate1_params_v33.json",
+   "sha256": "aeeb818f3bb18c3e00a71616738eb3ea445891e01f35a7bce8490796148a2312"
+  }
+ },
+ "code_freeze_declaration": {
+  "path": "da_code_freeze_declaration_v11.json",
+  "sha256": "e024aca3094786d7c36a611f68b8695250df022c6f85a125f7223404572547f9"
+ },
+ "supersedes": {
+  "code_freeze_declaration": {
+   "path": "da_code_freeze_declaration_v10.json"
+  }
+ },
+ "WHY": {
+  "reason": "DA 260 -- reader-fix supersession (Q-DE-343); base unchanged.",
+  "chain": "v14(v2) -> ... -> v22(v10) -> v23(v11)"
+ },
+ "as_of_utc": "2026-09-11T15:50:17Z"
+}

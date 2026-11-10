@@ -1,0 +1,121 @@
+{
+ "declaration": "DA_RECORD_SCHEMA_FOR_THE_LICENSING_READ",
+ "version": 1,
+ "as_of_utc": "2026-09-11T13:20:05Z",
+ "PURPOSE": "REV and any later reader resolve these fields BY DECLARATION, not by search. Every field below was read at its EMITTING SITE at 0bb5f42, not from memory and not from a sample record.",
+ "READ_AT": {
+  "ref": "origin/de-freeze-chain-v2",
+  "commit": "0bb5f4257a3c6e1908f9403c38e0e563824f85bb"
+ },
+ "FIELD_1_admitted_by": {
+  "DISPATCH_SAID": "cells[<arm>].book_receipt.admitted_by",
+  "ACTUAL_PATH": "<de_settle_result_<YYYYMMDD>_<arm>.json>.book_receipt.admitted_by",
+  "CORRECTION": "*** THERE IS NO `cells` CONTAINER CARRYING THIS FIELD, IN ANY FILE. *** `admitted_by` appears ZERO times in de_settlement_control_aggregate.py, de_multiday_gate1_runner.py and de_forward_evaluator.py. It is produced ONLY by de_settlement_control_run.verify_book_receipt and lands at the TOP LEVEL of the per-(day,arm) CELL record under `book_receipt`. A reader looking for `cells[<arm>].book_receipt.admitted_by` finds nothing, everywhere.",
+  "values": [
+   "EXACT",
+   "DESCENDANT",
+   null
+  ],
+  "absent_or_null_means": "REFUSED -- neither arm admitted the builder commit",
+  "produced_by": "de_settlement_control_run._admitting_arm(builder_commit)",
+  "semantics": {
+   "EXACT": "builder_commit == the frozen pipeline commit",
+   "DESCENDANT": "_builder_commit_admissible(builder_commit) is True",
+   "null": "the descendant check refused; the receipt is not admitted"
+  },
+  "NAME_COLLISION_WARNING": "`admitted_by` ALSO exists in an unrelated record with the value \"USER\" -- be_forward_day.py:985,1027 and be_receipt_c1_supersede.py:214. Those are ADMISSION-BY-A-PERSON records, not build licensing. Match the FILE, not the field name."
+ },
+ "FIELD_2_winner_source": {
+  "path": "<de_settle_result_<YYYYMMDD>_<arm>.json>.winner_source",
+  "keys": [
+   "path",
+   "sha256",
+   "n_records",
+   "n_closed_records",
+   "n_slugs",
+   "settle_up_cents",
+   "method",
+   "is_final_for_quotation"
+  ],
+  "dispatch_named": [
+   "sha",
+   "n_records"
+  ],
+  "note": "the key is `sha256`, not `sha`; six further keys travel with it and are listed so a reader does not treat them as optional",
+  "one_per_run": true,
+  "why_one_per_run": "de_forward_value_day.py:327 calls R.winner_source() ONCE, before the first arm (Q-DE-303, `f309602`). de_asymmetry_null_run.py:550 reads it PER ARM, but that function has NO CALLER -- see DA 242 item (5) and the same-name hazard recorded there."
+ },
+ "FIELD_3_run_mode": {
+  "path": "<record>.run_mode  (and <ledger>.header.run_mode)",
+  "values": [
+   "POINT_ESTIMATE",
+   "FULL"
+  ],
+  "THE_500_DRAW_MODE_IS_NAMED_FULL": "the dispatch left it unnamed. Read at de_decision_ledger.py:215 and :221 -- the literals are POINT_ESTIMATE and FULL. It is NOT spelled `FULL_DRAWS`, `DRAWS` or `500`.",
+  "verified_on_a_real_record": {
+   "file": "p003_de_point_estimate_day_20260903_L250ms__20260910T052737Z.json",
+   "run_mode": "POINT_ESTIMATE",
+   "header.run_mode": null,
+   "note": "on that record run_mode is TOP-LEVEL and header.run_mode is absent; de_decision_ledger reads the ledger's header and falls back -- `run_mode_source` records which was used (de_decision_ledger.py:642)"
+  },
+  "same_mode_enforced": "de_decision_ledger.py:224 REFUSES when the arms do not share one run mode"
+ },
+ "FIELD_4_rehearsal_suffix": {
+  "DISPATCH_SAID": "the rehearsal file's `_rehearsal` suffix",
+  "STATUS": "*** NO SUCH SUFFIX EXISTS -- NOT IN THE CODE AND NOT ON DISK ***",
+  "evidence": {
+   "literal_`_rehearsal`_in_live/pm_research": "0 occurrences as a filename token (the only hits are the FIELD name `what_this_rehearsal_found` in de_multiday_gate1_runner.py)",
+   "suffix_argument_in_the_valuation_emitters": "none -- de_settlement_control_run.py, de_forward_value_day.py and de_settlement_control_aggregate.py take no --suffix",
+   "what_is_actually_on_disk": "15 files use `rehearsal` as an INFIX inside the stem, e.g. `p003_da_open_book_rehearsal_20260903__<ts>.json` and `p003_de_gate1_smoke_rehearsal_09_03_v2__<ts>.json` -- ad-hoc stems, not a convention any code applies",
+   "how_rehearsals_are_actually_separated": "da_midnight_verify.sh isolates a rehearsal by OVERRIDING OUTDIR AND THE LOG TOGETHER (it refuses if only one is overridden, :99-109) -- by DIRECTORY, not by filename"
+  },
+  "so_a_reader_MUST_NOT": "detect a rehearsal by a filename suffix. There is nothing to match."
+ },
+ "FIELD_5_file_names_per_day": {
+  "note": "`<c>` is the compact day YYYYMMDD; `<day>` is YYYY-MM-DD; `<arm>` is an ARMS member",
+  "CELL_per_day_and_arm": {
+   "template": "de_settle_result_<c>_<arm>.json",
+   "emitted_by": [
+    "de_forward_value_day.py:363",
+    "de_settlement_control_aggregate.py:376",
+    "de_forward_evaluator.py:894"
+   ],
+   "carries": [
+    "book_receipt.admitted_by",
+    "winner_source",
+    "observed_D_cents",
+    "n_draws"
+   ]
+  },
+  "CELL_CHECKPOINT": {
+   "template": "de_settle_ckpt_<day>_<arm>.jsonl",
+   "note": "the checkpoint uses the HYPHENATED day while the result uses the COMPACT day -- a real inconsistency, recorded so a reader does not normalise one into the other"
+  },
+  "FORWARD_VALUE_per_day": {
+   "template": "p003_de_forward_value_<c>.json",
+   "emitted_by": "de_forward_value_day.py:386"
+  },
+  "POINT_ESTIMATE_per_day": {
+   "template": "p003_de_point_estimate_day_<c>_<revision>__<ts>.json",
+   "read_by": "de_forward_evaluator.py:342"
+  },
+  "DAY_RUN_per_day": {
+   "template": "p003_de_gate1_day_run_<c>_SEALED__<ts>.json",
+   "read_by": "de_early_read.py:450"
+  },
+  "NULL_CONTROL_SET_per_day": {
+   "template": "p003_de_null_control_set_<c>...",
+   "emitted_by": "de_multiday_gate1_runner.py:9463"
+  },
+  "COMBINED_design_family": {
+   "template": "p003_de_multiday_gate1_design_v<N>__<ts>.json",
+   "family_literal": "p003_de_multiday_gate1_design (de_multiday_gate1_runner.py:167)",
+   "cell_keys_inside": "`per_cell_descriptive_only` is keyed \"<day>|<arm>\" -- PIPE-JOINED, not nested, and it carries ONLY D_cents, p_two_sided and n. It does NOT carry book_receipt or winner_source (de_settlement_control_aggregate.py:559)"
+  }
+ },
+ "LIMITS": {
+  "no_cell_or_combined_artifact_exists_yet": "ZERO `de_settle_result_*` files are on disk for any forward day: the run has not produced one. Every field above is declared from the EMITTING CODE, which is the correct source, and is FALSIFIABLE the moment the first cell lands -- if a landed record disagrees with this file, this file is wrong and supersedes.",
+  "rule_34a": "no tier2 day>=2026-09-08 content was read; the one sample record inspected is 2026-09-03.",
+  "what_this_declares": "FIELD LOCATIONS AND VALUE SETS ONLY. It licenses nothing and asserts no number."
+ }
+}

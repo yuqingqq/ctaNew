@@ -1,0 +1,152 @@
+{
+ "protocol": "BE_CASCADE_AT_BUILD_PIN_V1",
+ "as_of_utc": "2026-09-11T07:59:51Z",
+ "why": "day one's V2 re-valuation refused BE_CASCADE_DIFFERS against params v29. The cascade is a BUILD-SIDE fact and the build is mine, so these digests are produced FROM THE PIN and cross-checked against the book's OWN recorded import closure -- the modules that actually computed its scores -- rather than by reading files off a worktree.",
+ "build_pin": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+ "book_cross_checked": {
+  "path": "data/pm_5min/derived/be_daybook_20260907_btc__L250ms__FWD1.pkl",
+  "sha256": "e25471905983e95a8d90cee2048e1e57f546d7326bbfe6735653d687a97470a6"
+ },
+ "n_modules": 10,
+ "n_agreeing_with_v29": 8,
+ "n_differing": 2,
+ "REPRODUCES_DA_8_OF_10": true,
+ "the_two_that_differ": [
+  {
+   "path": "live/pm_research/de_head_scoring.py",
+   "v29_names": "53a406a0ae2a11ff",
+   "the_pin_has": "31c368384770351f"
+  },
+  {
+   "path": "live/pm_research/de_phase4_diag_runner.py",
+   "v29_names": "cb97b94dbd3fc6ca",
+   "the_pin_has": "9e2a0977d8dfc3be"
+  }
+ ],
+ "reading": "v29 names the PRE-optimization versions of exactly the two modules the optimization changed -- de_head_scoring and de_phase4_diag_runner, which are two of the three digests the freeze dispatch itself quotes for 7ed5a90. The book is what the freeze pins; the params' record of the pin is what is stale.",
+ "CASCADE_FOR_V31": [
+  {
+   "path": "live/pm_research/be_cancel_axis_null.py",
+   "sha256": "21f460b1c9d58d37638ff1b5197bec411f8df9dd87e0eb26a2f1e37f7d92c249"
+  },
+  {
+   "path": "live/pm_research/be_data_root.py",
+   "sha256": "c82451a61758f2b1990a11fef06d4fea8e1ef94f70e80c1aaf43d87e4cc5c6bd"
+  },
+  {
+   "path": "live/pm_research/de_head_scoring.py",
+   "sha256": "31c368384770351fdbe5408a0321ee7af89e2eb25fd0d36378f03c9d7b3f03af"
+  },
+  {
+   "path": "live/pm_research/de_matched_random_control.py",
+   "sha256": "f77aaf2bd2f21988fbd9d8b3900d8d5c7f5624618453efbc795e2a3b26eb17fc"
+  },
+  {
+   "path": "live/pm_research/de_phase4_diag_runner.py",
+   "sha256": "9e2a0977d8dfc3be1c90ac87817d732e4ca19b6752f3439dd5e505d771d5a47d"
+  },
+  {
+   "path": "live/pm_research/de_rho_estimator.py",
+   "sha256": "048b8e077c3d37e8d67b9fbc1ed132a28d7a8ea5c1a66a114c2e53db3bd11387"
+  },
+  {
+   "path": "live/pm_research/de_score_stream.py",
+   "sha256": "21ff2fd126624c2f13cb6b95c7d0618f4c58cb844019c6762b076498884c1342"
+  },
+  {
+   "path": "live/pm_research/harmful_stateful_policy.py",
+   "sha256": "65b9fe29aca85a01c0a663e5788b2612daf0c8cd5767d8842fa1706a03246c42"
+  },
+  {
+   "path": "live/pm_research/phase4_generation_tables.py",
+   "sha256": "22ac4efe2014ac952e8813257dd0a4758b26515617a4ac9b1c015fb54b15f680"
+  },
+  {
+   "path": "live/pm_research/pm_tape_density.py",
+   "sha256": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912"
+  }
+ ],
+ "WHAT_MY_CROSS_CHECK_ACTUALLY_EXAMINED": "9 of the 10 cascade modules appear in the BOOK's own import closure and their digests there equal the pin's. The 10th, be_cancel_axis_null.py, is NOT in the book's closure at all -- the cascade is derived from the params/replay entry path, which is a DIFFERENT closure from the book builder's, so its absence is expected and not a defect. But it means the book CANNOT corroborate that one digest: for be_cancel_axis_null.py the only witness is the pin itself. Stated because a check is only as good as the identity between what it examined and what it is cited for.",
+ "table": [
+  {
+   "path": "live/pm_research/be_cancel_axis_null.py",
+   "v29_sha256": "21f460b1c9d58d37638ff1b5197bec411f8df9dd87e0eb26a2f1e37f7d92c249",
+   "sha256_at_build_pin": "21f460b1c9d58d37638ff1b5197bec411f8df9dd87e0eb26a2f1e37f7d92c249",
+   "agrees": true,
+   "in_the_books_own_import_closure": false,
+   "book_closure_sha256": null
+  },
+  {
+   "path": "live/pm_research/be_data_root.py",
+   "v29_sha256": "c82451a61758f2b1990a11fef06d4fea8e1ef94f70e80c1aaf43d87e4cc5c6bd",
+   "sha256_at_build_pin": "c82451a61758f2b1990a11fef06d4fea8e1ef94f70e80c1aaf43d87e4cc5c6bd",
+   "agrees": true,
+   "in_the_books_own_import_closure": true,
+   "book_closure_sha256": "c82451a61758f2b1990a11fef06d4fea8e1ef94f70e80c1aaf43d87e4cc5c6bd"
+  },
+  {
+   "path": "live/pm_research/de_head_scoring.py",
+   "v29_sha256": "53a406a0ae2a11ff7f4d17e4d65c6266d6fe53cce41fb4f8d7f14286a8adec28",
+   "sha256_at_build_pin": "31c368384770351fdbe5408a0321ee7af89e2eb25fd0d36378f03c9d7b3f03af",
+   "agrees": false,
+   "in_the_books_own_import_closure": true,
+   "book_closure_sha256": "31c368384770351fdbe5408a0321ee7af89e2eb25fd0d36378f03c9d7b3f03af"
+  },
+  {
+   "path": "live/pm_research/de_matched_random_control.py",
+   "v29_sha256": "f77aaf2bd2f21988fbd9d8b3900d8d5c7f5624618453efbc795e2a3b26eb17fc",
+   "sha256_at_build_pin": "f77aaf2bd2f21988fbd9d8b3900d8d5c7f5624618453efbc795e2a3b26eb17fc",
+   "agrees": true,
+   "in_the_books_own_import_closure": true,
+   "book_closure_sha256": "f77aaf2bd2f21988fbd9d8b3900d8d5c7f5624618453efbc795e2a3b26eb17fc"
+  },
+  {
+   "path": "live/pm_research/de_phase4_diag_runner.py",
+   "v29_sha256": "cb97b94dbd3fc6ca23487bc5b17d36825b57bd9216809098b0a65decb333e5cc",
+   "sha256_at_build_pin": "9e2a0977d8dfc3be1c90ac87817d732e4ca19b6752f3439dd5e505d771d5a47d",
+   "agrees": false,
+   "in_the_books_own_import_closure": true,
+   "book_closure_sha256": "9e2a0977d8dfc3be1c90ac87817d732e4ca19b6752f3439dd5e505d771d5a47d"
+  },
+  {
+   "path": "live/pm_research/de_rho_estimator.py",
+   "v29_sha256": "048b8e077c3d37e8d67b9fbc1ed132a28d7a8ea5c1a66a114c2e53db3bd11387",
+   "sha256_at_build_pin": "048b8e077c3d37e8d67b9fbc1ed132a28d7a8ea5c1a66a114c2e53db3bd11387",
+   "agrees": true,
+   "in_the_books_own_import_closure": true,
+   "book_closure_sha256": "048b8e077c3d37e8d67b9fbc1ed132a28d7a8ea5c1a66a114c2e53db3bd11387"
+  },
+  {
+   "path": "live/pm_research/de_score_stream.py",
+   "v29_sha256": "21ff2fd126624c2f13cb6b95c7d0618f4c58cb844019c6762b076498884c1342",
+   "sha256_at_build_pin": "21ff2fd126624c2f13cb6b95c7d0618f4c58cb844019c6762b076498884c1342",
+   "agrees": true,
+   "in_the_books_own_import_closure": true,
+   "book_closure_sha256": "21ff2fd126624c2f13cb6b95c7d0618f4c58cb844019c6762b076498884c1342"
+  },
+  {
+   "path": "live/pm_research/harmful_stateful_policy.py",
+   "v29_sha256": "65b9fe29aca85a01c0a663e5788b2612daf0c8cd5767d8842fa1706a03246c42",
+   "sha256_at_build_pin": "65b9fe29aca85a01c0a663e5788b2612daf0c8cd5767d8842fa1706a03246c42",
+   "agrees": true,
+   "in_the_books_own_import_closure": true,
+   "book_closure_sha256": "65b9fe29aca85a01c0a663e5788b2612daf0c8cd5767d8842fa1706a03246c42"
+  },
+  {
+   "path": "live/pm_research/phase4_generation_tables.py",
+   "v29_sha256": "22ac4efe2014ac952e8813257dd0a4758b26515617a4ac9b1c015fb54b15f680",
+   "sha256_at_build_pin": "22ac4efe2014ac952e8813257dd0a4758b26515617a4ac9b1c015fb54b15f680",
+   "agrees": true,
+   "in_the_books_own_import_closure": true,
+   "book_closure_sha256": "22ac4efe2014ac952e8813257dd0a4758b26515617a4ac9b1c015fb54b15f680"
+  },
+  {
+   "path": "live/pm_research/pm_tape_density.py",
+   "v29_sha256": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912",
+   "sha256_at_build_pin": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912",
+   "agrees": true,
+   "in_the_books_own_import_closure": true,
+   "book_closure_sha256": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912"
+  }
+ ]
+}

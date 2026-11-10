@@ -1,0 +1,105 @@
+{
+ "declaration": "DA_DESCRIPTIVE_CONTINUATION_09_09_TO_09_13",
+ "version": 1,
+ "as_of_utc": "2026-09-11T16:38:01Z",
+ "RULING": "R-916 (USER) -- days 09-09..09-13 are built and valued DESCRIPTIVELY under the unchanged design.",
+ "PART_1_THE_CONTINUATION_IS_DESCRIPTIVE": {
+  "what_it_is": "per-day performance, measured under the design exactly as frozen. Nothing about the design changes.",
+  "WHAT_IT_IS_NOT": "it is NOT additional evidence toward the forward test's verdict. The verdict is FIXED AT DAY TWO and no later day can move it -- not because later days are ignored, but because BOTH ARMS ARE ALREADY FUTILE: the design cannot reach its bar with the days it has left.",
+  "the_verdict_it_does_not_touch": {
+   "fixed_at": "day two (2026-09-08)",
+   "authority": [
+    "R-910",
+    "R-914"
+   ],
+   "the_record": {
+    "path": "data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908_v2.json",
+    "sha256": "66d29703094ce36c9791e3b630e1b2160751724260b9f2e65b81543843d97cf2",
+    "STOP_ADVICE": "STOP_FOR_FUTILITY"
+   },
+   "outcome_name": "NOT_ESTABLISHED_AT_THIS_POWER -- never NO_EFFECT (DA 262 / Q-DA-467)"
+  },
+  "EACH_NEW_DAYS_RECORD_STANDS_ON_ITS_OWN_COMPUTED_FIELDS": "a 09-09..09-13 record is read for ITS OWN fields -- per-arm D, p, the cells' guard evidence -- and is NOT pooled into a verdict, NOT compared against the Holm bars, and NOT used to revisit futility. Under record-schema v2/v3 it must still carry every required field to be a RESULT rather than EVIDENCE; descriptive does not mean unverified.",
+  "the_open_ruling_this_does_not_settle": "Q-DA-467 asked whether the forward test's G is the SEVEN-day forward population or the ELEVEN-day ruled set. At G=11 HAZARD_OVER_SKEWED_REF is NOT futile. R-916 rules the continuation descriptive, which is consistent with either answer -- so that question stays open and is NOT closed by this declaration."
+ },
+ "PART_2_MASKS": {
+  "procedure": "DA_PROCEDURE -- verify by DIGEST, never by an expectation that a timer ran.",
+  "09-09": {
+   "status": "EXISTS",
+   "sha256": "acb92468a9b973d456ede4b69b74fb7a2906413ec7107c479072ee568542463e"
+  },
+  "09-10": {
+   "status": "EXISTS",
+   "sha256": "7a4e2b062289a6155b7eb0b8d4319dae885eca4c257687e3c69ee940fc5e4ea6"
+  },
+  "09-11": {
+   "status": "NOT YET",
+   "produced_by": "the 00:06Z timer on 2026-09-12",
+   "verify": "by digest when it lands"
+  },
+  "09-12": {
+   "status": "NOT YET",
+   "produced_by": "the 00:06Z timer on 2026-09-13",
+   "verify": "by digest when it lands"
+  },
+  "09-13": {
+   "status": "NOT YET",
+   "produced_by": "BY HAND at 2026-09-14T00:00Z",
+   "why_by_hand": "the timer fires at 00:06Z, six minutes after the day closes -- the last ruled day would otherwise be masked by a run that starts after the window it must cover"
+  },
+  "measured_now": {
+   "20260909": {
+    "present": true,
+    "sha256": "acb92468a9b973d456ede4b69b74fb7a2906413ec7107c479072ee568542463e"
+   },
+   "20260910": {
+    "present": true,
+    "sha256": "7a4e2b062289a6155b7eb0b8d4319dae885eca4c257687e3c69ee940fc5e4ea6"
+   },
+   "20260911": {
+    "present": false,
+    "sha256": null
+   },
+   "20260912": {
+    "present": false,
+    "sha256": null
+   },
+   "20260913": {
+    "present": false,
+    "sha256": null
+   }
+  }
+ },
+ "PART_3_THE_GUARD_REGISTER_GAP": {
+  "QUESTION_ASKED": "was every guard a real run can reach on the frozen path exercised today?",
+  "ANSWER": "*** THE REGISTER'S PREDICATE CANNOT SAY. IT REFUSES FIRST. I AM NAMING THE GAP. ***",
+  "what_the_predicate_does_now": "guard_gate() REFUSES `GUARD_REGISTER_INCOMPLETE:de_forward_value_day.py:51:VALUATION_COMPUTING_MODULES_ARE_NOT_AT_THE_PIPELINE_COMMIT` -- the completeness join fails before the exercised test is ever reached.",
+  "THE_GAP_MEASURED": {
+   "register_version": "da_guard_register_v2.json",
+   "rows_declared": 167,
+   "sites_enumerated_at_the_rows_refs_now": 183,
+   "enumerated_sites_with_NO_ROW": 102,
+   "declared_rows_naming_sites_that_NO_LONGER_EXIST": 86,
+   "cause": "the frozen path gained and moved refusal sites after v2 was enumerated -- DE 324, 331, 336, 343 each added or moved named refusals in de_forward_value_day.py and de_settlement_control_run.py. The register was enumerated before those landed."
+  },
+  "WHAT_THE_REGISTER_DOES_STILL_SAY_ABOUT_ITS_OWN_167_ROWS": {
+   "exercised": 136,
+   "not_exercised": 31,
+   "by_lane": {
+    "BUILD_BUILDER": "20 of 22 exercised, 2 NOT",
+    "VALUATION": "116 of 145 exercised, 29 NOT"
+   },
+   "the_two_unexercised_BUILD_BUILDER_rows": [
+    "be_daybook_build.py:1357 COVERED_COUNTS_DISAGREE",
+    "be_daybook_build.py:803 PLACEMENT_LATENCY_SPLIT_DOES_NOT_CLOSE"
+   ],
+   "SO_EVEN_ON_ITS_OWN_ROWS_THE_ANSWER_IS_NO": "31 of 167 rows are not exercised, so the claim would fail even if the register were complete."
+  },
+  "WHAT_WOULD_CLOSE_IT": "regenerate the register at the current frozen digests (v3), then re-run the predicate. That is a measurement, not a declaration, and it is not done here -- declaring 'every guard was exercised' from a register that refuses to answer would be the exact failure this register exists to prevent.",
+  "field_name_note": "the row field is `exercised_before_real_run`. My first recount used `exercised` and read 0 of 167 -- the FOURTH wrong-key read of mine today. Caught because 0/167 contradicted the gate's own earlier count. Recorded so the number above is trusted for the right reason."
+ },
+ "LIMITS": {
+  "rule_34a": "mask presence and digests only; no tier2 content read.",
+  "times": "every time in this file was read from `date`."
+ }
+}

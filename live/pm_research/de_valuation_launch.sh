@@ -54,6 +54,15 @@ if [ -n "$WAITFOR" ]; then
   echo "$(date -u +%H:%M:%SZ) $WAITFOR is no longer active"
 fi
 
+# be_heavy_run.sh hardcodes WT=${BE_WORKTREE:-/home/yuqing/ctaNew-wt-be}
+# and cds there, DISCARDING the tree selected above. That silently
+# relocated the whole computation on 09-07 and left no error -- only the
+# ABSENCE of a field in the record. Export both: BE_WORKTREE PREVENTS the
+# relocation, DE_VALUATION_EXPECTED_TREE lets the pre-flight DETECT it if
+# the prevention ever fails. One of these is not enough; a guard that can
+# be bypassed without an error is worse than no guard.
+export BE_WORKTREE="$TREE"
+export DE_VALUATION_EXPECTED_TREE="$TREE"
 cd "$TREE/live/pm_research" || exit 2
 exec bash be_heavy_run.sh "$UNIT" de_forward_value_day.py \
   --day "$DAY" --book "$BOOK" \

@@ -1,0 +1,25 @@
+{
+ "protocol": "P003_DE_ARM_FREEZE_V16_AMENDMENT",
+ "version": 16,
+ "rule": "13 -- superseding receipt; v1..v15 unedited",
+ "frozen_parameters": {
+  "params": {
+   "path": "de_multiday_gate1_params_v33.json",
+   "sha256": "aeeb818f3bb18c3e00a71616738eb3ea445891e01f35a7bce8490796148a2312"
+  }
+ },
+ "code_freeze_declaration": {
+  "path": "da_code_freeze_declaration_v4.json",
+  "sha256": "280e6180636872d4e5cbf95b71e0ae9d123dfda79270f4e44cbd6c47a551e8ae"
+ },
+ "supersedes": {
+  "code_freeze_declaration": {
+   "path": "da_code_freeze_declaration_v3.json"
+  }
+ },
+ "WHY": {
+  "reason": "DA 252 -- the pin lands on v4, whose FREEZE_COMMIT is the walker commit d0bb179.",
+  "chain": "v14 (v2) -> v15 (v3, names v2) -> v16 (v4, names v3)"
+ },
+ "as_of_utc": "2026-09-11T13:36:15Z"
+}

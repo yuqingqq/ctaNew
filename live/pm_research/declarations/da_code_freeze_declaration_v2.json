@@ -1,0 +1,116 @@
+{
+ "declaration": "DA_CODE_FREEZE_VALUATION_AND_BUILD",
+ "version": 2,
+ "as_of_utc": "2026-09-11T13:13:33Z",
+ "FREEZE_COMMIT": "d095c5a89995494194aaf78dd985d8cae05cbf61",
+ "VERIFIED_BY_LS_REMOTE": {
+  "origin/de-freeze-chain-v2": "d095c5a89995494194aaf78dd985d8cae05cbf61",
+  "origin/be-build-runner": "d095c5a89995494194aaf78dd985d8cae05cbf61",
+  "both_refs_identical": true,
+  "method": "git ls-remote -- the remote's answer, not a local ref"
+ },
+ "THE_RULE_FROM_HERE": "only DECLARATIONS and NEW INSTRUMENT FILES may land. Any closure-module drift REFUSES in population freeze v9 as PIPELINE, by filename.",
+ "VALUATION_CLOSURE_DIGESTS_AT_THE_FREEZE": {
+  "de_multiday_gate1_runner.py": "acf911db48d445dd",
+  "de_forward_value_day.py": "d024925c268e84c3",
+  "de_forward_evaluator.py": "6290bb25909817dc",
+  "be_data_root.py": "c82451a61758f2b1",
+  "de_asymmetry_null_run.py": "09581cbfc94e1f2d",
+  "de_revaluation_emit.py": "ABSENT_AT_THIS_COMMIT",
+  "de_settlement_control_run.py": "0ce5f04f0aa1b9ca",
+  "de_settlement_control_aggregate.py": "ce8e4806a48df8c2",
+  "de_matched_cancel_control.py": "dbb37c65f5651ac7",
+  "be_score_neutrality.py": "a455191d6bceec7e"
+ },
+ "VALUATION_COMPUTING_MODULES_AS_THE_CODE_DECLARES_THEM": {
+  "source": "de_forward_value_day.COMPUTING_MODULES (read at the artifact, not assembled by DA)",
+  "modules": [
+   "de_settlement_control_run.py",
+   "de_settlement_control_aggregate.py",
+   "de_forward_evaluator.py",
+   "de_asymmetry_null_run.py",
+   "de_matched_cancel_control.py",
+   "de_multiday_gate1_runner.py"
+  ]
+ },
+ "BUILD_SIDE": {
+  "ref": "origin/be-build-runner",
+  "commit": "8afbd1a7447d74455199015ccedc54810e47176a",
+  "BUILD_PIN_declared_in_v27": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+  "five_pinned_digests": {
+   "be_daybook_build.py": {
+    "pinned": "2d31a80b5ae5c2c62fd4992eedb5d8c5020e66e69f015b1aa475e24d963d7fb3",
+    "at_freeze": "2d31a80b5ae5c2c62fd4992eedb5d8c5020e66e69f015b1aa475e24d963d7fb3",
+    "match": true
+   },
+   "be_gate1_fragment.py": {
+    "pinned": "d87c820872ec32670bd0dc4011d2d0279efeb4bd36f358866b771f2034fc75ed",
+    "at_freeze": "d87c820872ec32670bd0dc4011d2d0279efeb4bd36f358866b771f2034fc75ed",
+    "match": true
+   },
+   "be_gate1_state_tape.py": {
+    "pinned": "7a876f1fe98e938cf474ad14082972c50899400a020ea3547f5a80720abc4589",
+    "at_freeze": "7a876f1fe98e938cf474ad14082972c50899400a020ea3547f5a80720abc4589",
+    "match": true
+   },
+   "de_phase4_diag_runner.py": {
+    "pinned": "9e2a0977d8dfc3be1c90ac87817d732e4ca19b6752f3439dd5e505d771d5a47d",
+    "at_freeze": "9e2a0977d8dfc3be1c90ac87817d732e4ca19b6752f3439dd5e505d771d5a47d",
+    "match": true
+   },
+   "de_head_scoring.py": {
+    "pinned": "31c368384770351fdbe5408a0321ee7af89e2eb25fd0d36378f03c9d7b3f03af",
+    "at_freeze": "31c368384770351fdbe5408a0321ee7af89e2eb25fd0d36378f03c9d7b3f03af",
+    "match": true
+   }
+  },
+  "all_five_match_at_the_freeze": true
+ },
+ "WHY_THIS_FREEZE_EXISTS": {
+  "trigger": "(6) stopped on BOOK_BUILT_BY_DIFFERENT_SCORING_CODE",
+  "cause": "runner commits landed AFTER the build branch was cut, so the book's scoring code and the runner's were different objects while every label still agreed",
+  "the_general_shape": "a LABEL (a branch name, a commit ref, a path) is not an IDENTITY. The freeze converts the label into a digest set so drift refuses by filename instead of being discovered in a valuation's output."
+ },
+ "BLOCKER_FOUND_WHILE_VERIFYING_THIS_FREEZE": {
+  "severity": "THE VALUATION CANNOT RUN AT THE COMMIT BEING FROZEN",
+  "what": "de_forward_value_day.PIPELINE_COMMIT is the LITERAL 7efea16b39b89c2ddececc90b68e2f206d6c3500, 47 commits behind the freeze. Its import-time preflight admits a DESCENDANT only when every computing module is byte-identical to that pin, and TWO are not.",
+  "DRIVEN_AT_8afbd1a": "REFUSED VALUATION_COMPUTING_MODULES_ARE_NOT_AT_THE_PIPELINE_COMMIT: right tree, WRONG BYTES in ['de_settlement_control_run.py', 'de_multiday_gate1_runner.py']",
+  "measured": {
+   "de_settlement_control_run.py": {
+    "at_7efea16": "faeae22f347e2032",
+    "at_freeze": "0ce5f04f0aa1b9ca"
+   },
+   "de_multiday_gate1_runner.py": {
+    "at_7efea16": "157413f6562cf5bd",
+    "at_freeze": "acf911db48d445dd"
+   },
+   "the_other_four": "byte-identical across the 47 commits"
+  },
+  "THIS_IS_ITEM_6_ONE_LAYER_UP": "the same failure the freeze is being declared to prevent -- a commit literal that must track a moving thing and did not. Recorded here rather than repaired: de_forward_value_day.py is DE's module and is inside the frozen closure.",
+  "ROUTED_TO_DE": "move PIPELINE_COMMIT to 8afbd1a7447d74455199015ccedc54810e47176a as the first and only closure edit under this freeze, or the freeze is a commit nothing can run from."
+ },
+ "LIMITS": {
+  "what_DA_verified": "ls-remote identity of both refs; the five build-pinned digests at the freeze commit; the valuation closure digests; and the preflight refusal, DRIVEN in a throwaway worktree checked out at the freeze commit.",
+  "what_DA_did_not_verify": "that the frozen code is CORRECT. A freeze pins identity, not quality."
+ },
+ "SUPERSEDES": "da_code_freeze_declaration_v1.json",
+ "supersedes_sha256": "98213946f0d72761a6e77f19bbcebe1dbc41610b0a42f59de5e75858687507be",
+ "WHY_V2": "DE 324 (`d095c5a`) makes V2 READ FREEZE_COMMIT from this declaration instead of holding a literal -- 'the self-check had TWO sources of truth'. The freeze therefore moves to the commit that made it readable. v1 stays as provenance (rule 13).",
+ "WHAT_MOVED_FROM_v1": {
+  "v1_FREEZE_COMMIT": "8afbd1a7447d74455199015ccedc54810e47176a",
+  "v2_FREEZE_COMMIT": "d095c5a89995494194aaf78dd985d8cae05cbf61",
+  "pipeline_files_changed_between": [
+   "de_forward_value_day.py (V2)",
+   "de_arm_and_readonce_cells.py"
+  ],
+  "computing_modules_changed_between": "NONE -- all six are byte-identical across 8afbd1a..d095c5a"
+ },
+ "BLOCKER_THIS_DECLARATION_CANNOT_FIX_ITSELF": {
+  "severity": "THIS FILE IS INERT UNTIL DE ADDS ONE KEY",
+  "what": "de_multiday_gate1_runner.resolve_declaration_pins carries a FIXED tuple want = (\"day_read_state_attestation\", \"forward_test_declaration\"). `code_freeze_declaration` IS NOT IN IT, so the pin in freeze amendment v14 is never returned, and de_forward_value_day._frozen_commit() falls back to its filename default `da_code_freeze_declaration_v1.json`.",
+  "consequence": "V2 keeps reading v1's FREEZE_COMMIT (8afbd1a) no matter what v2 or v14 say. DRIVEN at d095c5a: _frozen_commit() -> 8afbd1a7447d.",
+  "why_it_is_benign_TODAY": "all six COMPUTING_MODULES are byte-identical between 8afbd1a and d095c5a, so the digest loop passes either way. It stops being benign the moment a computing module moves.",
+  "THE_LITERAL_MOVED_RATHER_THAN_LEFT": "DE 324 replaced a stale COMMIT literal with a declaration read whose fallback is a stale FILENAME literal. Same class, one layer over.",
+  "ROUTED_TO_DE": "add \"code_freeze_declaration\" to resolve_declaration_pins' want tuple -- one string."
+ }
+}

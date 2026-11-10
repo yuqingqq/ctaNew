@@ -1,0 +1,1048 @@
+{
+ "protocol": "P003_DA_POPULATION_FREEZE_V7",
+ "version": 10,
+ "declared_by": "DA 262",
+ "declared_at_utc": "2026-09-11T12:14:41Z",
+ "supersedes": {
+  "file": "declarations/da_population_freeze_v6.json",
+  "rule": "13 -- v1..v6 unedited",
+  "scope": "three PIPELINE rows at the new valuation pin. INSTRUMENT class untouched."
+ },
+ "THE_SPLIT_RULED_AT_R_900_7": {
+  "PIPELINE": "the pinned build modules, the valuation-path modules, the valuation import closure, the certificate, params v31, freeze chain v1..v10, the declarations, the masks and the artifacts. DRIFT REFUSES BY FILENAME.",
+  "INSTRUMENT": "matrices, preflights, launchers, verifiers and the freeze-list generator. DRIFT IS REPORTED as INSTRUMENT_DRIFTED:<file> with old and new digest, EXIT 0 -- until the instrument freeze is called.",
+  "when_the_instrument_freeze_is_called": "the coordinator, after DE 280 and BE 151 land",
+  "why_the_split_is_not_a_weakening": "the two classes answer different questions. A PIPELINE byte changing means the object under test moved. An INSTRUMENT byte changing means the thing MEASURING it improved -- which is what we have been doing all morning, four tip moves' worth. Reporting one and refusing the other is the only way the freeze stays true without freezing our own hands."
+ },
+ "TREE_TIPS_ARE_PROVENANCE_THE_RULE_IS_THE_IDENTITY": {
+  "WHY_NOT_A_TIP_LITERAL": "the wt-deval tip moved FOUR TIMES this morning on instrument landings alone -- 68e7d23 -> d3901f9 -> ... -> 9dca30a. A declaration pinned to a tip literal would have been stale within minutes of every landing, and re-declaring it each time teaches a reader that the number does not matter.",
+  "THE_RULE": {
+   "wt-fwd": "HEAD must be 7ed5a9015f75 or a DESCENDANT of it, AND every PIPELINE digest identical",
+   "wt-deval": "HEAD must be 68e7d2352c7d7aed or a DESCENDANT of it, AND every PIPELINE digest identical"
+  },
+  "IDENTITY_IS_BY_DIGEST_NOT_BY_TIP": "a descendant that leaves every PIPELINE digest alone has changed nothing under test; a tip that matches a literal while a PIPELINE digest moved would pass a literal check and fail the real one. The digests are the identity; the tips are provenance.",
+  "RECORDED_AS_PROVENANCE_AT_DECLARATION_TIME": {
+   "wt-fwd": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+   "wt-deval": "c49b27a4e8d8bb1a701bf3448392b9a60f39d97a",
+   "wt-de2": "80bdca0eac5b5a407a1baf0be8b3631eb2827145",
+   "NOTE_THE_TIP_IS_c49b27a_NOT_621930a": "Q-DE-292's commit 621930a is a DESCENDANT of the wt-deval tip; the tree is still at c49b27a with the two files present as UNCOMMITTED bytes. Both satisfy the rule (descendants of 68e7d23), and the rule is why this declaration does not go stale on that difference."
+  }
+ },
+ "n_files": 67,
+ "n_PIPELINE": 52,
+ "n_INSTRUMENT": 15,
+ "files": [
+  {
+   "root": "main",
+   "path": "data/pm_5min/derived/be137_gap_windows_20260907.json",
+   "role": "ARTIFACT",
+   "sha256": "eebf4f330fcd8b79977272c5d8eb024b55f5556843544cb9cc4a0d7ec2233b96",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "main",
+   "path": "data/pm_5min/derived/be137_gap_windows_20260908.json",
+   "role": "ARTIFACT",
+   "sha256": "97a583386f7242af1a4636c2cc282884132239a61aae0d242004337cec0a5410",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "main",
+   "path": "data/pm_5min/derived/be_score_neutrality_20260903__EV22_vs_NEUTCHK__68e7d23.json",
+   "role": "CERTIFICATE",
+   "sha256": "cceda9855ca6b14c21a4311dfbfd98e8d69e7bf74be160edc392a4f476c876a9",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "main",
+   "path": "data/pm_5min/derived/da_blackout_mask_20260907.json",
+   "role": "MASK",
+   "sha256": "fca5177f252e7431c97d644a06ab4cc5008c6a24fa7f564121cf61e4349d2b6d",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "main",
+   "path": "data/pm_5min/derived/da_blackout_mask_20260908.json",
+   "role": "MASK",
+   "sha256": "f36263aee063f9d79d4e7bee981266bfd7ba5f5c00fa9f0764e4627abbcc4857",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "main",
+   "path": "data/pm_5min/derived/da_blackout_mask_20260909.json",
+   "role": "MASK",
+   "sha256": "acb92468a9b973d456ede4b69b74fb7a2906413ec7107c479072ee568542463e",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "main",
+   "path": "data/pm_5min/derived/da_blackout_mask_20260910.json",
+   "role": "MASK",
+   "sha256": "7a4e2b062289a6155b7eb0b8d4319dae885eca4c257687e3c69ee940fc5e4ea6",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "main",
+   "path": "live/pm_research/be_build_preflight.py",
+   "role": "INSTRUMENT_FILE",
+   "sha256": "06bf6c4809ee935e45fbb540277d7b730688ae0037860d46c687d839b043fa7d",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "INSTRUMENT",
+   "origin_ref": "origin/mm-research"
+  },
+  {
+   "root": "main",
+   "path": "live/pm_research/be_heavy_run.sh",
+   "role": "BUILD_WRAPPER",
+   "CLASS": "INSTRUMENT",
+   "seat": "BE",
+   "origin_ref": "origin/mm-research",
+   "sha256": "5e5645b1060371a999f58fbea9bb8e284b158c9140e05bd1dd184d5bcd83ccd1",
+   "named_by": [
+    "DA"
+   ]
+  },
+  {
+   "root": "main",
+   "path": "live/pm_research/da_population_freeze_verify.py",
+   "role": "INSTRUMENT_FILE",
+   "sha256": "db455033a06875017ca48bbb455e50d67debd3d1ab02a02ab419de645c6d0725",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "INSTRUMENT",
+   "origin_ref": "origin/mm-research"
+  },
+  {
+   "root": "main",
+   "path": "live/pm_research/da_unit_script_drift.py",
+   "role": "INSTRUMENT_FILE",
+   "sha256": "d094f7fbdbbaba952cdfcd42cc50f2f2b1ea94a2c4fc085f1de6096ace08009a",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "INSTRUMENT",
+   "origin_ref": "origin/mm-research"
+  },
+  {
+   "root": "main",
+   "path": "live/pm_research/launch_stage2.sh",
+   "role": "INSTRUMENT_FILE",
+   "sha256": "1dfe7a0e7c818b29717dcd7272e0abdd5ae77decab5c2cc998f53ad88c89e6ff",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "INSTRUMENT",
+   "origin_ref": "origin/mm-research"
+  },
+  {
+   "root": "main",
+   "path": "live/pm_research/systemd/pm-evaluation-pipeline.service.d/heavy-lock.conf",
+   "role": "INSTRUMENT_FILE",
+   "sha256": "35018847c141313becdc97dfa60a32888c6b16425e823a8ac801989581988503",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "INSTRUMENT",
+   "origin_ref": "origin/mm-research"
+  },
+  {
+   "root": "main",
+   "path": "live/pm_research/systemd/pm-measurement-pipeline.service.d/heavy-lock.conf",
+   "role": "INSTRUMENT_FILE",
+   "sha256": "25f841bdc02e8a1b5dc237c3a1dddba7f5aaa0a100f0e4c675f146c2d25c5e5a",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "INSTRUMENT",
+   "origin_ref": "origin/mm-research"
+  },
+  {
+   "root": "wt-de2",
+   "path": "live/pm_research/de_revaluation_emit.py",
+   "role": "POST_PROCESSOR",
+   "CLASS": "PIPELINE",
+   "sha256": "87cd5651cc28446203a5e418a613690e2c9085fb297efc03e3bb5e087106e8c5",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "asserted_against": "origin/mm-research:live/pm_research/de_revaluation_emit.py",
+   "asserted_digest": "87cd5651cc28446203a5e418a613690e2c9085fb297efc03e3bb5e087106e8c5"
+  },
+  {
+   "root": "wt-de2",
+   "path": "live/pm_research/de_window_decomposition.py",
+   "role": "POST_PROCESSOR",
+   "CLASS": "PIPELINE",
+   "sha256": "f00db67d2ef4b42177b38fa19c42860249c46457de7a411c463c4b703b0e1efa",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "asserted_against": "origin/mm-research:live/pm_research/de_window_decomposition.py",
+   "asserted_digest": "f00db67d2ef4b42177b38fa19c42860249c46457de7a411c463c4b703b0e1efa"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/be_heavy_run.sh",
+   "role": "VALUATION_WRAPPER",
+   "CLASS": "INSTRUMENT",
+   "seat": "DE",
+   "origin_ref": "origin/de-freeze-chain-v2",
+   "sha256": "0d72eceea567124c5df5f01de29f074847a4f3965d28d5177436fcf1d4dd3d86",
+   "named_by": [
+    "DA"
+   ]
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/be_score_neutrality.py",
+   "role": "VALUATION_PATH",
+   "sha256": "a455191d6bceec7e20af182243cedfa70373fb29a4d8323b3416f3617ef6c0e9",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/da_asymmetry_null.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "e5651c29e82a2a75424e716c2b908b0f80e8cebedf63d162948093078e48cae0",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/da_root.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "0c0e604bc50693ae66c35d24febae59ceff8b5b5957a089ab97083ba0e3be1f9",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_asymmetry_null_run.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "09581cbfc94e1f2d52f36de5cfd272ff68631e7ee7ff00095e3ee6a68dc58a9e",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_data_root.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "eaffa4f949c7adb81333526a5536785d3d86d675bbd160f934c790a4a91b8619",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_forward_evaluator.py",
+   "role": "VALUATION_PATH",
+   "sha256": "6290bb25909817dcb479732a257621d66f338f24e1133192a0ebb892d10322c7",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_forward_value_day.py",
+   "role": "VALUATION_PATH",
+   "sha256": "e0a677c21b40cb58b44c17ffbc53167a68d88f1d92ba292fd071af501a456859",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_matched_cancel_control.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "dbb37c65f5651ac75b627f074610a3ed34828a054551343286206ae5db0331e8",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_multiday_design_declaration.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "b1005d7f6c5ddabbdc9ca4f5e2ed5d310ada0c3e83753e866a65f3a2eaf73edc",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_multiday_gate1_runner.py",
+   "role": "VALUATION_PATH",
+   "sha256": "acf911db48d445dd166068c74a552a05f23c1bdb6a1a46be7f29156a98af8810",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_population_freeze_list.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "248156e4d92b2971652c9ed23842fe8951aecd26298cde28c5c0db96d452b2b8",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "INSTRUMENT",
+   "origin_ref": "origin/de-freeze-chain-v2"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_preflight_matrix.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "3fc8351c48435b1255cf3a866c5095e0d9d76ee8b0312a5fe2b6776aafb1aa83",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "INSTRUMENT",
+   "origin_ref": "origin/de-freeze-chain-v2"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_settlement_control_aggregate.py",
+   "role": "VALUATION_PATH",
+   "sha256": "ce8e4806a48df8c298e6e59372e41b97d21376ab4d268bd8d7cf4bd1c66355ff",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_settlement_control_run.py",
+   "role": "VALUATION_PATH",
+   "sha256": "0ce5f04f0aa1b9cab3a46ba7c887fb7aa143457036137e63d92925e0b61ef9b3",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/de_snapshot_probe.py",
+   "role": "INSTRUMENT_FILE",
+   "CLASS": "INSTRUMENT",
+   "sha256": "3acd2c2aa56a1a61902906e32efcb987b7c40b528c653ae98efbe3aa203c5f8c",
+   "named_by": [
+    "DA"
+   ],
+   "origin_ref": "origin/de-freeze-chain-v2"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/da_forward_test_declaration_v1.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "00cc0d15808f6f98b97b90070014413b15e6c6afbd2efcb3f35ae32cf999ac53",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/da_forward_test_declaration_v2.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "cffdb53f2d08d2b2be51e5b27e012131d575903db9745d3448c19b0b22e2d852",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/da_forward_test_declaration_v3.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "22dab26acfe78b20c07aa159e60d15ac104701aed812d1174ffa74dfa31b31ed",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/da_forward_test_declaration_v4.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "193bca3d6fb93b0be24fa09f87631d6e0828f91c41ae23f209c60476073f1e0c",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/da_forward_test_declaration_v5.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "49096049ad09d216247b6a35a1f586f8dd81ecef01d6fc2073b7e6f281ca0ee9",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/da_forward_test_declaration_v6.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "d2467e6717ba04d8301853c91cee8126c48e0e442a4b383d904d47ede56a5b1d",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v1.json",
+   "role": "DECLARATION",
+   "sha256": "a4749bc77b6eb3590b880bd8bc58c1e8b8099c35864b448130fbedeac839f1e8",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v10_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "f13c2755a0f9520ba689c199de0a08e950673684c03ef64ff480f7448e20349b",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v2_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "84fbe30927aada09acad652d75bd34e671c1a3dbb54aa81853f4accb379fa4f3",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v3_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "0fe428134dd31c632df04e41f1876cb4a0e9cd25cddc5ffb67d41a484fbc2219",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v4_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "422beed28d7fbe9eef33d2817862600c08e8b7cbbd8e35696e89aeaedde1ac9d",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v5_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "191f176e1bcc3baa198a1b38d149746bb16a32cdb0b6b98c842285f2c24aaaee",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v6_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "ef4b49dae2af7a0b10b3bd2d13067d20228b7f38b9858b79ba11c6a428fb0f76",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v7_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "3d100bad67cfbdf7049a8be0480b3a45ca8d85e8cd396bd1343121bdce5f9b19",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v8_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "f803e22827a8b1efc0e7395dde1bcf426880053578e43a3964adf9776d25f275",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_arm_freeze_v9_amendment.json",
+   "role": "DECLARATION",
+   "sha256": "1efd6e83ff42f1b748b98e40a946d08d8086f5f9e9c4e112856248593716b317",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_multiday_gate1_params_v31.json",
+   "role": "DECLARATION",
+   "sha256": "dd58223c6e3654a20389843eb27027af9053b87cf3f921e6c26454068f9f8995",
+   "named_by": [
+    "DA",
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_settlement_control_declaration_v1.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "810680f10e88cf388dc19780e56d79f54f3184207985bd0f8f6e2495f40d97da",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/declarations/de_settlement_control_declaration_v2.json",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "e55cf55cfdd8ed61040342dbb7c87995a971b00e882217b3affc201f5b8ddbc6",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/launchers/chain_day.sh",
+   "role": "LAUNCHER",
+   "sha256": "7b4aa99809db20e199955a7c5174a5d7fb3c1811aecb507718bab66839306b73",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "INSTRUMENT",
+   "origin_ref": "origin/de-freeze-chain-v2"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/launchers/emit_0908.sh",
+   "role": "LAUNCHER",
+   "sha256": "a295d46ec66a94f20ea5018fdd6879a16a8890dec464613fb8755c07ca7f3762",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "INSTRUMENT",
+   "origin_ref": "origin/de-freeze-chain-v2"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/launchers/emit_wait2.sh",
+   "role": "LAUNCHER",
+   "sha256": "59c049b7cc81deba89bcd294397c521b215548aac657a083decd7284fb2053a8",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "INSTRUMENT",
+   "origin_ref": "origin/de-freeze-chain-v2"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/launchers/preflight_gate.sh",
+   "role": "LAUNCHER",
+   "sha256": "b85dc7cc51de7021cac2a2369625368436537e9620e59b5b4c59545ab48501d5",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "INSTRUMENT",
+   "origin_ref": "origin/de-freeze-chain-v2"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/p003_rule6_floor.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "090d09a43e1dece164d3374135bd22f89f16aa6f1e6b1b7ab10753ae1ba21dbb",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-deval",
+   "path": "live/pm_research/pm_tape_density.py",
+   "role": "VALUATION_IMPORT_CLOSURE",
+   "sha256": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912",
+   "named_by": [
+    "DE"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/be_cancel_axis_null.py",
+   "role": "BUILD_PATH",
+   "sha256": "21f460b1c9d58d37638ff1b5197bec411f8df9dd87e0eb26a2f1e37f7d92c249",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/be_data_root.py",
+   "role": "BUILD_PATH",
+   "sha256": "c82451a61758f2b1990a11fef06d4fea8e1ef94f70e80c1aaf43d87e4cc5c6bd",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/de_head_scoring.py",
+   "role": "BUILD_PATH",
+   "sha256": "31c368384770351fdbe5408a0321ee7af89e2eb25fd0d36378f03c9d7b3f03af",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/de_matched_random_control.py",
+   "role": "BUILD_PATH",
+   "sha256": "f77aaf2bd2f21988fbd9d8b3900d8d5c7f5624618453efbc795e2a3b26eb17fc",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/de_phase4_diag_runner.py",
+   "role": "BUILD_PATH",
+   "sha256": "9e2a0977d8dfc3be1c90ac87817d732e4ca19b6752f3439dd5e505d771d5a47d",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/de_rho_estimator.py",
+   "role": "BUILD_PATH",
+   "sha256": "048b8e077c3d37e8d67b9fbc1ed132a28d7a8ea5c1a66a114c2e53db3bd11387",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/de_score_stream.py",
+   "role": "BUILD_PATH",
+   "sha256": "21ff2fd126624c2f13cb6b95c7d0618f4c58cb844019c6762b076498884c1342",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/harmful_stateful_policy.py",
+   "role": "BUILD_PATH",
+   "sha256": "65b9fe29aca85a01c0a663e5788b2612daf0c8cd5767d8842fa1706a03246c42",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/phase4_generation_tables.py",
+   "role": "BUILD_PATH",
+   "sha256": "22ac4efe2014ac952e8813257dd0a4758b26515617a4ac9b1c015fb54b15f680",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "PIPELINE"
+  },
+  {
+   "root": "wt-fwd",
+   "path": "live/pm_research/pm_tape_density.py",
+   "role": "BUILD_PATH",
+   "sha256": "41b22727aa76ed2646932b359ba12e22427b1585d3d6a768c578e693fb113912",
+   "named_by": [
+    "DA"
+   ],
+   "CLASS": "PIPELINE"
+  }
+ ],
+ "union_taken_from_DISK_not_from_v2": "DE's generator re-run at the current wt-deval tip; BE's be_build_preflight.py and launch_stage2.sh, the two systemd drop-in copies, and DE's launchers/* all read from disk",
+ "verifier": "live/pm_research/da_population_freeze_verify.py",
+ "falsifier": "BOTH branches driven: a PIPELINE byte must REFUSE by filename; an INSTRUMENT byte must REPORT and PASS",
+ "INSTRUMENT_BASELINES_REFRESHED_AT_LANDING": "the 3 INSTRUMENT digests were re-read at commit time so the landed declaration matches disk; drift reported after this point is drift SINCE LANDING. PIPELINE digests were NOT refreshed -- they are the frozen ones, and refreshing them would be the freeze editing itself.",
+ "THE_GAP_IS_CLOSED_AND_THE_PATH_IS_A_FOURTH_WORKTREE": {
+  "what_the_waiter_does": "live/pm_research/launchers/emit_wait2.sh sets SRC=/home/yuqing/ctaNew-wt-de2/live/pm_research, digests both modules there, compares each against `origin/mm-research:live/pm_research/<m>`, and refuses EMIT_MODULE_IS_NOT_THE_LANDED_BYTES if they differ -- then `cd $SRC` and runs them.",
+  "SO_THEY_EXECUTE_FROM_wt_de2_NOT_wt_deval": "a FOURTH worktree. The freeze now spans main, wt-fwd, wt-deval AND wt-de2, which is why classing them by the tree they were absent from would have been wrong.",
+  "wt_de2_HEAD_at_declaration": "b44fda906a9bddd9eb56b45d3092a9143e0e23e4",
+  "I_CORRECT_THE_REF_NAMED_IN_THE_DISPATCH": {
+   "the_dispatch_suggested": "origin/de-reval-emit",
+   "THE_WAITER_ACTUALLY_NAMES": "origin/mm-research",
+   "AND_THE_DIFFERENCE_IS_NOT_COSMETIC": "origin/de-reval-emit carries de_revaluation_emit.py at d3ddf0870bc30084 -- the OLD bytes I checked at v15 against af675ac. origin/mm-research carries 87cd5651cc284462. Had the waiter asserted against de-reval-emit it would have blessed the STALE emit, which is the very thing its docstring says it exists to prevent.",
+   "origin_de_freeze_chain_v2": "does not carry them at all"
+  },
+  "MY_v15_IDENTITY_CHECK_IS_NOW_CONFIRMED_STALE": "v15 verified de_revaluation_emit.py at af675ac = d3ddf0870bc30084 string by string. The executed bytes are 87cd5651cc284462. That check must be re-run against the executed digest before the table is quoted -- I flagged it at Q-DA-440 and this pins the number.",
+  "executed_vs_asserted_AGREE_TODAY": {
+   "de_revaluation_emit.py": {
+    "executed": "87cd5651cc284462",
+    "origin_mm_research": "87cd5651cc284462",
+    "match": true
+   },
+   "de_window_decomposition.py": {
+    "executed": "f00db67d2ef4b421",
+    "origin_mm_research": "f00db67d2ef4b421",
+    "match": true
+   }
+  }
+ },
+ "THE_VERIFIER_NOW_CHECKS_TWO_THINGS_FOR_THESE_ENTRIES": "(a) the EXECUTED path's bytes equal the declared digest -- PIPELINE, refuse by filename; and (b) the declared digest equals what the ASSERTED origin ref carries, refusing EMIT_ASSERTION_DIGEST_MISMATCH by filename. (b) is the waiter's own expectation, checked independently of the waiter.",
+ "PIPELINE_DRIFT_AT_RECOMPUTE": "ZERO -- VERIFIED, NOT ASSUMED. The v4 verifier was run before recomputing and returned POPULATION_FREEZE_HOLDS with all 52 PIPELINE digests intact and 7 INSTRUMENT drifts reported at exit 0.",
+ "INSTRUMENT_REBASELINE": {
+  "n_rebased": 5,
+  "entries": [
+   {
+    "path": "live/pm_research/be_build_preflight.py",
+    "from": "7bf43340166a4de2",
+    "to": "06bf6c4809ee935e",
+    "ref": "origin/mm-research"
+   },
+   {
+    "path": "live/pm_research/da_population_freeze_verify.py",
+    "from": "ead268c1b82dedc3",
+    "to": "db455033a0687501",
+    "ref": "origin/mm-research"
+   },
+   {
+    "path": "live/pm_research/launch_stage2.sh",
+    "from": "eba4c732da3e28c8",
+    "to": "1dfe7a0e7c818b29",
+    "ref": "origin/mm-research"
+   },
+   {
+    "path": "live/pm_research/de_preflight_matrix.py",
+    "from": "066dfad824dbec6d",
+    "to": "3fc8351c48435b12",
+    "ref": "origin/de-freeze-chain-v2"
+   },
+   {
+    "path": "live/pm_research/launchers/chain_day.sh",
+    "from": "be252397283b2ccb",
+    "to": "7b4aa99809db20e1",
+    "ref": "origin/de-freeze-chain-v2"
+   }
+  ],
+  "method": "recomputed FROM THE ORIGIN REF that carries each file -- BE's at bfafdea/origin/mm-research, DE's at the origin/de-freeze-chain-v2 tip -- never from a worktree and never from the dispatch"
+ },
+ "STATUS": "the valuation pin is c853e2d; three PIPELINE rows move",
+ "instrument_freeze_called": {
+  "BE": false,
+  "DE": false
+ },
+ "WHAT_THE_FLAG_IS_FOR": "DE's cell reads instrument_freeze_called to decide whether INSTRUMENT drift REPORTS or FAILS. SPLIT PER SEAT because the two classes settle independently: REVIEW 166 rules BE's freezable after BE 161, while DE's waits for REV's review of the five commits that landed on the chain branch during REV's round (Q-DE-296, 296b, 296c, DA 256, Q-DE-298). A single flag would have forced the slower seat to gate the faster one.",
+ "PIPELINE_UNCHANGED_AND_VERIFIED": "ZERO DRIFT, verified BEFORE rebaselining: the v5 verifier returned POPULATION_FREEZE_HOLDS with all 52 PIPELINE digests intact and 4 INSTRUMENT drifts at exit 0. No PIPELINE entry is touched by v6.",
+ "BEs_INSTRUMENT_SET_IS_THREE_FILES_AND_I_DECLARE_WHICH_COPY": {
+  "1_preflight": {
+   "path": "live/pm_research/be_build_preflight.py",
+   "ref": "origin/mm-research",
+   "sha256": "06bf6c4809ee935e45fbb540277d7b730688ae0037860d46c687d839b043fa7d"
+  },
+  "2_launcher": {
+   "path": "live/pm_research/launch_stage2.sh",
+   "ref": "origin/mm-research",
+   "sha256": "1dfe7a0e7c818b29717dcd7272e0abdd5ae77decab5c2cc998f53ad88c89e6ff"
+  },
+  "3_THE_WRAPPER_AND_WHICH_COPY_MATTERS": {
+   "path": "/home/yuqing/ctaNew/live/pm_research/be_heavy_run.sh -- THE SHARED (main) TREE",
+   "lines": 527,
+   "sha256": "5e5645b1060371a999f58fbea9bb8e284b158c9140e05bd1dd184d5bcd83ccd1",
+   "ref": "origin/mm-research",
+   "NOT_the_wt_fwd_copy": {
+    "path": "/home/yuqing/ctaNew-wt-fwd/...",
+    "lines": 522,
+    "sha256_16": "e00e70f18bbaf674"
+   },
+   "ESTABLISHED_AT_THE_UNITS_NOT_ASSUMED": "I mapped each unit's ExecStart to the copy it runs: be156book0909 (a BOOK BUILD), be134frag0907 and be131occ all execute /home/yuqing/ctaNew/live/pm_research/be_heavy_run.sh. be129probe and be129scored execute the wt-be copy, which is BYTE-IDENTICAL to main (5e5645b1060371a9, 527 lines).",
+   "all_three_verified_at_bfafdea_too": {
+    "be_build_preflight.py": "06bf6c4809ee935e45fbb540277d7b730688ae0037860d46c687d839b043fa7d",
+    "launch_stage2.sh": "1dfe7a0e7c818b29717dcd7272e0abdd5ae77decab5c2cc998f53ad88c89e6ff",
+    "be_heavy_run.sh": "5e5645b1060371a999f58fbea9bb8e284b158c9140e05bd1dd184d5bcd83ccd1"
+   }
+  }
+ },
+ "A_GAP_v6_CLOSES_THAT_NOBODY_HAD_NAMED": {
+  "what": "be_heavy_run.sh was NOT IN THE FREEZE AT ALL -- v5 pinned neither copy",
+  "and_there_are_TWO_EXECUTING_COPIES_WITH_DIFFERENT_BYTES": {
+   "BUILD_wrapper": {
+    "copy": "main / wt-be",
+    "lines": 527,
+    "sha256_16": "5e5645b1060371a9",
+    "who_runs_it": "BE's build units"
+   },
+   "VALUATION_wrapper": {
+    "copy": "wt-deval / wt-de2",
+    "lines": 530,
+    "sha256_16": "0d72eceea567124c",
+    "who_runs_it": "the valuation and chain units",
+    "what_it_adds": "the BE_SNAPSHOT_ROOT opt-in (Q-DE-292)"
+   }
+  },
+  "SO_be_heavy_run_sh_WITHOUT_A_ROOT_IS_AMBIGUOUS": "naming 'the wrapper' pins nothing: two copies execute, they differ by 3 lines and by digest, and each belongs to a different seat's class. v6 pins BOTH, with the role and the seat.",
+  "a_third_and_fourth_copy_exist_and_are_NOT_pinned": "wt-fwd (522 lines) and the wt-be copy, which is byte-identical to main"
+ },
+ "WHAT_AN_INSTRUMENT_DRIFT_REPORT_MEANS_NOW_AND_IT_CHANGED_WITH_v6": "v6's INSTRUMENT baselines are taken FROM THE ORIGIN REFS, while the verifier reads bytes FROM THE WORKTREES. So a reported drift now means 'this worktree's copy differs from the ref it is pinned against' -- which includes the ordinary case of a worktree that has not pulled yet, or one holding an uncommitted edit. It is NOT synonymous with 'someone changed a file since the freeze'. Before v6 the baseline and the check both came from the worktree, so a drift meant an edit. A reader who carries the old meaning across will over-read these reports.",
+ "THE_THREE_DECLARED_MOVERS": [
+  {
+   "path": "live/pm_research/de_forward_value_day.py",
+   "from": "c397537121a29b44",
+   "to": "d024925c268e84c3",
+   "ref": "c853e2d"
+  },
+  {
+   "path": "live/pm_research/de_multiday_gate1_runner.py",
+   "from": "157413f6562cf5bd",
+   "to": "b53848ff1a7564d9",
+   "ref": "c853e2d"
+  },
+  {
+   "path": "live/pm_research/de_settlement_control_run.py",
+   "from": "faeae22f347e2032",
+   "to": "e566134cc1e2d12a",
+   "ref": "c853e2d"
+  }
+ ],
+ "UNDECLARED_MOVERS": [],
+ "PIPELINE_ZERO_DRIFT_CHECK": {
+  "n_PIPELINE": 52,
+  "n_declared_movers": 3,
+  "n_unchanged_verified_at_the_ref": 42,
+  "n_unresolvable_at_a_ref": 7,
+  "unresolvable": [
+   {
+    "root": "main",
+    "path": "data/pm_5min/derived/be_score_neutrality_20260903__EV22_vs_NEUTCHK__68e7d23.json"
+   },
+   {
+    "root": "main",
+    "path": "data/pm_5min/derived/da_blackout_mask_20260907.json"
+   },
+   {
+    "root": "main",
+    "path": "data/pm_5min/derived/da_blackout_mask_20260908.json"
+   },
+   {
+    "root": "main",
+    "path": "data/pm_5min/derived/da_blackout_mask_20260909.json"
+   },
+   {
+    "root": "main",
+    "path": "data/pm_5min/derived/da_blackout_mask_20260910.json"
+   },
+   {
+    "root": "wt-de2",
+    "path": "live/pm_research/de_revaluation_emit.py"
+   },
+   {
+    "root": "wt-de2",
+    "path": "live/pm_research/de_window_decomposition.py"
+   }
+  ],
+  "THE_CONSTRAINT": "49 of 52 must be unchanged. A FOURTH mover means the supersession reached past its three declared hunks -- a finding, not a rebaseline.",
+  "VERDICT": "HOLDS"
+ },
+ "SUPERSEDES": "da_population_freeze_v9.json",
+ "PIPELINE_MOVERS_DECLARED": [
+  {
+   "path": "live/pm_research/de_multiday_gate1_runner.py",
+   "root": "wt-deval",
+   "from": "b53848ff1a7564d9",
+   "to": "acf911db48d445dd"
+  },
+  {
+   "path": "live/pm_research/de_settlement_control_run.py",
+   "root": "wt-deval",
+   "from": "e566134cc1e2d12a",
+   "to": "a166ee3764b037c9"
+  }
+ ],
+ "DRIFT_ACCOUNTING": {
+  "PIPELINE_rows": 52,
+  "PIPELINE_declared_movers": 2,
+  "PIPELINE_unchanged": 50,
+  "undeclared_movers": 0,
+  "reads": "50 of 52 PIPELINE rows unchanged; 2 declared mover(s); zero undeclared."
+ },
+ "WHY_V8": "DA 242(3). MEASURED: the valuation supersession does NOT span three commits. SEVEN commits moved PIPELINE bytes -- f309602, c853e2d, 92e4b7c, 21678a1, eb923d3, 3dbb107, 5efb8f0 -- and the chain advanced again to 1b65b14 during this round. Re-baselining to 92e4b7c as dispatched would have been stale on arrival. v8 pins the chain TIP.",
+ "WHY_be_score_neutrality_IS_NOT_A_MOVER": "It drifted at 3dbb107 (Q-DE-316 carried the declaration identities there) and was RESTORED at 5efb8f0/Q-DE-317, which moved resolve_declaration_pins INTO the runner. Its bytes are back to what v7 declared, so it is correctly NOT in the mover list. A round that had re-baselined on the intermediate commit would have declared a mover that no longer exists.",
+ "INSTRUMENT_BASELINES_NOT_TOUCHED": {
+  "rule": "DA 232 -- leave the instrument baselines until the instrument freeze is called.",
+  "drifted_and_REPORTING_not_refusing": [
+   "be_build_preflight.py",
+   "chain_day.sh",
+   "da_population_freeze_verify.py",
+   "de_preflight_matrix.py",
+   "launch_stage2.sh"
+  ],
+  "note": "da_population_freeze_verify.py is MY OWN change (DECL repoint + guard enumeration). It reporting rather than refusing is the PIPELINE/INSTRUMENT split working."
+ },
+ "A_FREEZE_PINNED_TO_A_MOVING_CHAIN": "The chain advanced five times between 12:36Z and 12:49Z. v8 is true AS OF 1b65b14; the next DE commit touching a PIPELINE file makes it stale BY MEASUREMENT and the verifier REFUSES by filename. Intended behaviour, not a defect in v8.",
+ "as_of_utc": "2026-09-11T13:13:33Z",
+ "MEASURED_AT_PER_ROOT": {
+  "main": {
+   "ref": "0c201c330fde775801391da698dde93091840afe",
+   "short": "0c201c3"
+  },
+  "wt-fwd": {
+   "ref": "dbb11e4fd2867b6114a1624dbf0ee4cd76b3df3a",
+   "short": "dbb11e4"
+  },
+  "wt-deval": {
+   "ref": "5efb8f0368bf04317c9f8b8366edf46c84ea497f",
+   "short": "5efb8f0"
+  },
+  "wt-de2": {
+   "ref": "1b65b14f58337b39d08937cc5f03028f0e314f3e",
+   "short": "1b65b14"
+  }
+ },
+ "VALUATION_PIN": {
+  "root": "wt-deval",
+  "ref": "5efb8f0368bf04317c9f8b8366edf46c84ea497f",
+  "why_not_the_branch_tip": "origin/de-freeze-chain-v2 is at 1b65b14 (Q-DE-318) but wt-deval has NOT pulled it. Every PIPELINE digest in this file is the BYTES ON DISK at the root named in its row, so the pin names the ref those bytes come from. Declaring the branch tip here would have been a label, not an identity -- the verifier reads disk and would have refused every valuation row immediately.",
+  "consequence": "when DE pulls wt-deval to the tip, this freeze goes stale BY MEASUREMENT for any PIPELINE file 1b65b14 or later touched, and the verifier refuses by filename."
+ },
+ "CODE_FREEZE": {
+  "commit": "d095c5a89995494194aaf78dd985d8cae05cbf61",
+  "declared_by": "DA 248",
+  "refs_at_this_commit": [
+   "origin/de-freeze-chain-v2",
+   "origin/be-build-runner"
+  ]
+ },
+ "REBASELINED_AT_THE_FREEZE": [
+  {
+   "file": "de_forward_value_day.py",
+   "from": "d024925c268e84c3",
+   "to": "e0a677c21b40cb58"
+  }
+ ],
+ "ROWS_KEPT_FROM_DISK_NOT_PRESENT_AT_THE_FREEZE_COMMIT": [
+  "be137_gap_windows_20260907.json",
+  "be137_gap_windows_20260908.json",
+  "be_score_neutrality_20260903__EV22_vs_NEUTCHK__68e7d23.json",
+  "da_blackout_mask_20260907.json",
+  "da_blackout_mask_20260908.json",
+  "da_blackout_mask_20260909.json",
+  "da_blackout_mask_20260910.json",
+  "de_revaluation_emit.py",
+  "de_window_decomposition.py"
+ ],
+ "THIS_FREEZE_WILL_REFUSE_UNTIL_THE_WORKTREES_PULL": {
+  "worktree_heads_at_declaration": {
+   "main": "5faf15a",
+   "wt-fwd": "2b27cc1",
+   "wt-deval": "2fff936",
+   "wt-de2": "8afbd1a"
+  },
+  "freeze_commit": "8afbd1a",
+  "reads": "wt-deval and wt-fwd are NOT at the freeze commit. The verifier reads DISK, so it will REFUSE POPULATION_FREEZE_FILE_DRIFTED by filename until they pull. That is the instrument doing its job, not a defect in v9 -- a freeze whose digests were taken from whatever the worktrees happened to hold would not be a freeze."
+ },
+ "MOVERS_ACCOUNTING": "1 PIPELINE mover(s): ['de_forward_value_day.py']",
+ "A_CHANGED_FILE_THE_FREEZE_DOES_NOT_COVER": {
+  "file": "live/pm_research/de_arm_and_readonce_cells.py",
+  "changed_at": "d095c5a",
+  "status": "NOT IN THE FREEZE POPULATION AT ALL -- so it moved without registering as a mover",
+  "note": "recorded rather than added: adding a row is a population change, and the population is the coordinator's to rule. Flagged so 'one mover' is not read as 'one file changed'."
+ },
+ "WT_FWD_PULLS_LAST": {
+  "rule": "wt-fwd pulls only AFTER the identity rebuild exits (DA 248)",
+  "wt_fwd_head_at_declaration": "2b27cc1",
+  "consequence": "the verifier reads DISK, so wt-fwd's rows will REFUSE POPULATION_FREEZE_FILE_DRIFTED until that pull happens. That red is EXPECTED and is not a reason to re-baseline against whatever wt-fwd holds."
+ },
+ "worktree_heads_at_declaration": {
+  "main": "5faf15a",
+  "wt-fwd": "2b27cc1",
+  "wt-deval": "2fff936",
+  "wt-de2": "d095c5a"
+ }
+}

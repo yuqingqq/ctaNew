@@ -1,0 +1,214 @@
+{
+  "protocol": "P003_DE_ARM_FREEZE_V8_AMENDMENT",
+  "version": 8,
+  "amended_at_utc": "2026-09-11T06:50:59.111459+00:00",
+  "amended_by": "DE 250, on the USER's ruling",
+  "rule": "13 -- superseding receipt; v1..v7 unedited",
+  "supersedes": [
+    {
+      "version": "1",
+      "path": "de_arm_freeze_v1.json",
+      "sha256": "a4749bc77b6eb3590b880bd8bc58c1e8b8099c35864b448130fbedeac839f1e8"
+    },
+    {
+      "version": "2",
+      "path": "de_arm_freeze_v2_amendment.json",
+      "sha256": "84fbe30927aada09acad652d75bd34e671c1a3dbb54aa81853f4accb379fa4f3"
+    },
+    {
+      "version": "3",
+      "path": "de_arm_freeze_v3_amendment.json",
+      "sha256": "0fe428134dd31c632df04e41f1876cb4a0e9cd25cddc5ffb67d41a484fbc2219"
+    },
+    {
+      "version": "4",
+      "path": "de_arm_freeze_v4_amendment.json",
+      "sha256": "422beed28d7fbe9eef33d2817862600c08e8b7cbbd8e35696e89aeaedde1ac9d"
+    },
+    {
+      "version": "5",
+      "path": "de_arm_freeze_v5_amendment.json",
+      "sha256": "191f176e1bcc3baa198a1b38d149746bb16a32cdb0b6b98c842285f2c24aaaee"
+    },
+    {
+      "version": "6",
+      "path": "de_arm_freeze_v6_amendment.json",
+      "sha256": "ef4b49dae2af7a0b10b3bd2d13067d20228b7f38b9858b79ba11c6a428fb0f76"
+    },
+    {
+      "version": "7",
+      "path": "de_arm_freeze_v7_amendment.json",
+      "sha256": "3d100bad67cfbdf7049a8be0480b3a45ca8d85e8cd396bd1343121bdce5f9b19"
+    }
+  ],
+  "AMENDMENT_18_TWO_PINS": {
+    "build_commit": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+    "build_commit_status": "UNCHANGED by this amendment",
+    "valuation_commit": "da002209cbfc7ece0721ebbf2b80ea6bdb17db18",
+    "valuation_commit_status": "NEW",
+    "ruled_by": "USER",
+    "THE_REASON_FOR_THE_RECEIPT": "the declaration has required the NO_FILLS_UNTIL_NEXT_GENERATION robustness leg since its v2 (ee1e85d, ~02:24Z, BEFORE any forward datum) and V1 never computed it. THE AMENDMENT CLOSES A GAP THE FREEZE CONTAINED; IT IS NOT A TUNING.",
+    "ancestry_verified": "7ed5a90 is an ancestor of da00220",
+    "and_the_build_side_is_untouched_COMPUTED": true,
+    "adopted_for": "all seven days, INCLUDING a re-valuation of day one. No mixing."
+  },
+  "AMENDMENT_19_THE_TUNING_CLAIM_IS_NOW_A_COMPUTED_PREDICATE": {
+    "what_it_replaces": "NO_PARAMETER_OR_MODULE_IS_TUNED_AFTER_THIS_COMMIT, a typed boolean",
+    "why": "it was true when typed and SILENTLY FALSE from 04:47Z with nothing in the artifact to say so. Rule 10: a hardcoded verdict beside a table has contradicted the table three times in this repo.",
+    "instrument": "de_freeze_predicate.no_module_tuned_between(pin, commit, modules) -- returns the evidence, never a bare boolean",
+    "SCOPED_PER_PIN_because_a_single_boolean_cannot_be_true_of_both": true,
+    "BUILD_SCOPE": {
+      "pin": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+      "commit": "da002209cbfc7ece0721ebbf2b80ea6bdb17db18",
+      "n_modules": 14,
+      "modules": {
+        "be_daybook_build.py": {
+          "at_pin": "2d31a80b5ae5c2c6",
+          "at_commit": "2d31a80b5ae5c2c6",
+          "unchanged": true
+        },
+        "de_data_root.py": {
+          "at_pin": "eaffa4f949c7adb8",
+          "at_commit": "eaffa4f949c7adb8",
+          "unchanged": true
+        },
+        "de_head_scoring.py": {
+          "at_pin": "31c368384770351f",
+          "at_commit": "31c368384770351f",
+          "unchanged": true
+        },
+        "de_phase4_diag_runner.py": {
+          "at_pin": "9e2a0977d8dfc3be",
+          "at_commit": "9e2a0977d8dfc3be",
+          "unchanged": true
+        },
+        "de_score_stream.py": {
+          "at_pin": "21ff2fd126624c2f",
+          "at_commit": "21ff2fd126624c2f",
+          "unchanged": true
+        },
+        "flow_intensity.py": {
+          "at_pin": "e0b0c5787770ba3d",
+          "at_commit": "e0b0c5787770ba3d",
+          "unchanged": true
+        },
+        "harmful_exposure_rows.py": {
+          "at_pin": "57654d0293e57391",
+          "at_commit": "57654d0293e57391",
+          "unchanged": true
+        },
+        "harmful_hazard_model.py": {
+          "at_pin": "58b8a2c08eea3cc9",
+          "at_commit": "58b8a2c08eea3cc9",
+          "unchanged": true
+        },
+        "harmful_stateful_policy.py": {
+          "at_pin": "65b9fe29aca85a01",
+          "at_commit": "65b9fe29aca85a01",
+          "unchanged": true
+        },
+        "phase2_arms.py": {
+          "at_pin": "e8c7134da15112e1",
+          "at_commit": "e8c7134da15112e1",
+          "unchanged": true
+        },
+        "phase2_state_schema_freeze.py": {
+          "at_pin": "fe0236b05bc38861",
+          "at_commit": "fe0236b05bc38861",
+          "unchanged": true
+        },
+        "pm_tape_density.py": {
+          "at_pin": "41b22727aa76ed26",
+          "at_commit": "41b22727aa76ed26",
+          "unchanged": true
+        },
+        "policy_optimizer_cancel_skew.py": {
+          "at_pin": "7ed7b72df65d809c",
+          "at_commit": "7ed7b72df65d809c",
+          "unchanged": true
+        },
+        "policy_optimizer_queue_realistic.py": {
+          "at_pin": "ae13af2931bc33b8",
+          "at_commit": "ae13af2931bc33b8",
+          "unchanged": true
+        }
+      },
+      "moved": [],
+      "NO_MODULE_TUNED_BETWEEN_THESE_COMMITS": true,
+      "computed_not_declared": true
+    },
+    "VALUATION_SCOPE_AT_THE_AMENDED_PIN": {
+      "pin": "da002209cbfc7ece0721ebbf2b80ea6bdb17db18",
+      "commit": "da002209cbfc7ece0721ebbf2b80ea6bdb17db18",
+      "n_modules": 3,
+      "modules": {
+        "de_forward_evaluator.py": {
+          "at_pin": "6290bb25909817dc",
+          "at_commit": "6290bb25909817dc",
+          "unchanged": true
+        },
+        "de_settlement_control_aggregate.py": {
+          "at_pin": "ce8e4806a48df8c2",
+          "at_commit": "ce8e4806a48df8c2",
+          "unchanged": true
+        },
+        "de_settlement_control_run.py": {
+          "at_pin": "faeae22f347e2032",
+          "at_commit": "faeae22f347e2032",
+          "unchanged": true
+        }
+      },
+      "moved": [],
+      "NO_MODULE_TUNED_BETWEEN_THESE_COMMITS": true,
+      "computed_not_declared": true
+    },
+    "VALUATION_SCOPE_AGAINST_THE_OLD_PIN_THE_PRE_AMENDMENT_STATE": {
+      "pin": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+      "commit": "da002209cbfc7ece0721ebbf2b80ea6bdb17db18",
+      "n_modules": 3,
+      "modules": {
+        "de_forward_evaluator.py": {
+          "at_pin": "7c137ddc2d8869b5",
+          "at_commit": "6290bb25909817dc",
+          "unchanged": false
+        },
+        "de_settlement_control_aggregate.py": {
+          "at_pin": "2da90644848ca531",
+          "at_commit": "ce8e4806a48df8c2",
+          "unchanged": false
+        },
+        "de_settlement_control_run.py": {
+          "at_pin": "4ba1177fff3a3bbd",
+          "at_commit": "faeae22f347e2032",
+          "unchanged": false
+        }
+      },
+      "moved": [
+        "de_forward_evaluator.py",
+        "de_settlement_control_aggregate.py",
+        "de_settlement_control_run.py"
+      ],
+      "NO_MODULE_TUNED_BETWEEN_THESE_COMMITS": false,
+      "computed_not_declared": true
+    },
+    "driven": "falsifier 6/6: FALSE on the pre-amendment state naming all three modules, TRUE after; an EMPTY scope REFUSES rather than passing vacuously; a module ABSENT at the pin counts as MOVED."
+  },
+  "AMENDMENT_20_DAY_ONE_IS_SUPERSEDED_ON_TWO_INDEPENDENT_GROUNDS": {
+    "ground_1": "the era rebuild -- 27 of 287 windows were gap-bearing and treated as clean; BE rebuilds the book",
+    "ground_2": "day one carries no robustness leg, and da_forward_result_guard REFUSES that by name (RESULT_DOES_NOT_CARRY_THE_DECLARED_ROBUSTNESS_LEG, driven at Q-DA-421). Day one is NOT QUOTABLE under a guard the declaration already carried.",
+    "both_disclosed": true,
+    "day_ones_numbers_are_not_withdrawn_as_wrong": "its primary observed_D reproduced BIT-IDENTICALLY on an independent re-run (-11017.712006000005 / +5256.176844000004). It is superseded for INCOMPLETENESS and for the era, not for error."
+  },
+  "THE_CONDITION_ON_THIS_AMENDMENT": {
+    "falsifier": "primary observed_D under V2 must equal V1 TO THE CENT",
+    "why_it_must_hold_by_construction": "REFERENCE_FILLS is a PASS-THROUGH -- `if fill_model == 'REFERENCE_FILLS': return module.replay(book, scores, theta)` -- the identical call V1 makes",
+    "status": "RUNNING (deFMP0907wait, armed behind BE's be134frag0907)",
+    "if_it_moves": "STOP -- the movement did not come from the fill model and goes back to the USER"
+  },
+  "UNCHANGED": [
+    "every parameter, threshold, theta, latency, protection mode, repost model",
+    "the decision rule",
+    "N=7 and the population 09-07..09-13",
+    "Holm m=2; selection multiplicity 69"
+  ]
+}
