@@ -1,0 +1,21 @@
+{
+  "as_of": "2026-11-09T16:25:55.935073+00:00",
+  "round": "inventory",
+  "source_commit": "7e88255ba4557fdfb97e19f7f1ada0170ebb985c",
+  "verifier_sha256": "670d9de7557e651a627289ca04090bb756d853c949155a7d7aea84ac61fef21f",
+  "receipt_sha256": "9abc6432415a5524ef017550e74404851ab348e96b01509417b2be4fa8be2062",
+  "rows": {
+    "window_arm": 880,
+    "action_arm": 52308,
+    "inventory_checks": 45122
+  },
+  "old_baseline_and_unrestricted_arm_reconciled": true,
+  "native_inventory_identity_reconciled": true,
+  "repeated_inventory_round": null,
+  "controls": {
+    "reducing_positive": true,
+    "wrong_side_refused": true,
+    "corrupt_count_refused": true
+  },
+  "limitation": "conditional mechanics only; no economic or counterfactual risk validation"
+}

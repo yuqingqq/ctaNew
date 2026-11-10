@@ -1,5 +1,48 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-09 18:09Z — optimization loop bounded cycle COMPLETE; no economic promotion
+
+- Original two-round scope plus five declared follow-ups completed. Final audit checks8 receipt sets/91 unique pinned
+  artifacts, source freezes, predeclaration timing/ancestry, output/verification links and arithmetic. All jobs finished.
+- Native50ms updates-first: requests-3.72..-5.35%, original-price quote time+2.94..+4.37%, active share-time+2.58..+4.10%
+  across3 assumed latencies on the same220 consumed Nov8 windows. Inventory-restricted grace keeps only4.86%/0.68% of
+  unrestricted gain. Trade-off remains; higher net PnL and lower realized variance are NOT established.
+- LZ/LC50 generated research code delivered with synthetic controls and explicit B4 fixed-size rejection exception.
+  No claim of historical file parity, independent native guards, or deployed timer behavior. No strategy promoted/deployed.
+- Current findings_v8.json; handoffs/20261109_optimization_loop_final.md; completion_audit/receipt.json. Protected Nov9–13,
+  frozen engine and loss budget unchanged. Slot free now (recheck before C1); no background optimization job.
+- Next economically useful evidence: own-fill ms source/receipt capture and filled/unfilled path calibration, then separately
+  declared comparisons and untouched-day validation. Broader B1–B8/forward backlog remains open under existing procedures.
+
+## 2026-11-09 18:04Z — optimization loop: paired-fill bounded continuity verified
+
+- Seventh engineering pass: opt-in LC50 on LZ;228 synthetic traces (28 explicit/200 seeded),33 Python checks +1 Rust control.
+  Native f20fdb1 matches3701 requests/16628 effective pair decisions/801 fills/5 retries/73 cancellation-only probes.
+- All172 holds close<=50ms; no off-guard replenishment. Checks cover partial/full fills, late-cancelled fill activating CAP10,
+  RO/stop/price/lower-line preemption, exact-deadline recovery and stale timers. Native artifact replay byte-identical;
+  saved accepted identities, quantities, lifecycles, counts and known-fill ledgers reconcile; corrupt controls refused.
+- Oracle consumes effective Python wants/pulls, not an independent native LC50 policy. No actual scheduler or economic claim.
+  Zero create rejections in this population; B4's separate rejection suite/explicit frozen parity exception still apply.
+- Sourcea565e3f6/declarationb3a52e2c; findings_v7 supersedesv6. Report handoffs/20261109_optimization_loop_v7.md.
+  No market/protected data/live/frozen/loss changes. Numeric jobs finished18:04:26Z;4.5MiB data/228MiB peak buildRSS.
+  Slot free now (recheck before C1). Next audit remaining optimization/promotion gates; prioritize economically useful evidence.
+
+## 2026-11-09 17:52Z — optimization loop: paired research engine verified with explicit exception
+
+- Opt-in LZ generated from frozen v3 matches pinned native f20fdb1 incremental pairs on238 synthetic traces:
+  8,998 requests,14,961 pair decisions,2,177 fill notices,219 rejections,683 retries.51 Python checks +1 Rust control test.
+  Saved counts/ledgers, trace/output regeneration and byte-identical native replays verify; corrupt artifacts/requests refused.
+- Found/fixed LZ-only rejected-create accounting: release unanswered slot at rejection40ms, not nominal answer44ms;
+  avoids an unnecessary250ms retry. Frozen/no-token behavior stays unchanged. Ordinary fixed-size controls exact,
+  but two fixed-size rejection-stress paths intentionally differ. B4 does NOT satisfy blanket fixed-size parity.
+- Exact full-v3 MICRO/G1–G6/PM90/GS/LD2/CAP10/XNA/XMIN1/XV/RO60/S240 AM sizing tested on6 synthetic traces;
+  v6 supersedes v5 wording that called JOIN/S1 component resize tests full v3. Existing results unchanged.
+- Full historical output-file parity, native guard/model equivalence, actual timer scheduling and economic/fill calibration
+  remain unverified. No PnL/variance/promotion claim. Source805d467a/declarationd0cd457b; exact-arm f4194393/a638b203.
+- Full report handoffs/20261109_optimization_loop_v6.md; current register reviews/optimization_loop_20261109/plan.json.
+  Numeric jobs complete17:52:26Z; slot free now (recheck before C1). No protected data read or live/frozen/loss changes.
+- Loop active; next source-only bounded50ms continuity + paired fill/inventory lifecycle controls. No new strategy settings.
+
 ## 2026-11-09 17:39Z (session 62f3ce33) - A6 / A3 / A4b on pmmmrust main (79a05d3); nothing deployed
 
 - pmmmrust main 79a05d3 (pushed): A2 incremental (f20fdb1), A6 wallet liveness, A3 decision_reasons.jsonl.gz, A4b
@@ -23,10 +66,6 @@
 - C1 waits for a quiet research slot: do not start run_forward.sh while another session's run_light jobs run (it stops at the
   first refusal and has no resume; it is frozen, so it cannot be changed).
 - B4 must also copy the incremental rule.
-
-## 2026-11-09 17:31Z — paired-engine B4 validation in progress
-
-- Sourcee0ca5df2/declaration80466d55: opt-in LZ generated from frozen v3, native f20fdb1 paired semantics. Initial33 controls pass. Next source-only232 synthetic differential traces and formal parity matrix; no market/protected data. Serial run_light jobs, avoid C1 overlap. Economic validation remains gated.
 
 ## 2026-11-09 17:15Z — optimization loop: native latency pass VERIFIED
 

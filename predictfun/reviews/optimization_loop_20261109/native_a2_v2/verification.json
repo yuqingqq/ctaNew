@@ -1,0 +1,9 @@
+{
+  "as_of": "2026-11-09T17:04:21.652431+00:00",
+  "receipt_sha256": "e7efeff229ceee250b08e49c66b3609934cd4afdc77cc175c0dd68d3fa47402e",
+  "window_arm_rows": 660,
+  "neutral_action_rows": 39231,
+  "action_identity_exact": true,
+  "lifecycle_and_capacity_exact": true,
+  "coverage_rebuilt_from_saved_lifecycles": true
+}

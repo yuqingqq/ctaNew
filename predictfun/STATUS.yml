@@ -6,6 +6,25 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-09 18:09Z: OPTIMIZATION LOOP bounded research cycle COMPLETE (original2 rounds +5 declared follow-ups).
+  Final audit:8 receipt sets/91 pinned artifacts, source freezes/predeclaration timing/receipt links and arithmetic pass.
+  Native50ms retention reduces requests and increases coverage but raises active exposure in every latency scenario.
+  Higher net PnL/lower realized variance NOT established. No promotion/deployment; B4 fixed-size rejection exception explicit.
+  Current findings_v8.json/handoffs/20261109_optimization_loop_final.md. All jobs complete; slot free (recheck before C1).
+  Broader calibration/historical parity/timer and independent validation gates remain; protected Nov9–13 unread.
+  2026-11-09 18:04Z: OPTIMIZATION LOOP seventh/paired-continuity pass VERIFIED on228 synthetic traces;33 Python checks.
+  Native f20fdb1 matches3701 requests/16628 decisions/801 fills/5 retries/73 cancel-only probes.172 holds stay<=50ms with
+  no off-guard replenishment. CAP10 late-fill, RO/stop/lower-line/price preemption and same-clock/stale-timer controls pass.
+  Artifact hashes/native replay/lifecycles reconcile. Oracle consumes Python effective wants, not independent LC50 policy.
+  No market/protected data/economic or deployment claim. findings_v7.json and handoffs/20261109_optimization_loop_v7.md.
+  Jobs complete18:04:26Z; slot free (recheck before C1). Next audit remaining optimization/promotion evidence gates.
+  2026-11-09 17:52Z: OPTIMIZATION LOOP B4 paired research engine has explicit fixed-size rejection exception.
+  LZ native f20fdb1 parity:238 synthetic traces/8998 requests/14961 pair decisions/2177 fills/219 rejections/683 retries;
+  51 Python checks +1 Rust control test. Exact full-v3 supplement closes JOIN/S1 component coverage wording (v6 supersedes v5).
+  Corrected LZ rejected-create unanswered slot release; frozen/no-token unchanged; ordinary fixed-size exact but rejection-stress
+  differs intentionally. Historical file parity, guard/model equivalence, timer integration and economic calibration remain.
+  findings_v6.json/handoffs/20261109_optimization_loop_v6.md; all jobs done17:52:26Z, slot free (recheck). Next paired-fill
+  and bounded-continuity synthetic integration. No protected data/live/frozen/loss changes; no PnL or variance claim.
   2026-11-09 17:39Z (session 62f3ce33): A6 / A3 / A4b ON PMMMRUST MAIN 79a05d3 (pushed; not deployed). A6 wallet liveness: pings
   every 10 s (first at once), any frame counts; no ack 30 s after subscribing ends a session; a live session silent 30 s ends;
   a silent session without its own heartbeat / pong lapses the source (no cancel-all loop on a venue without liveness). A3: each

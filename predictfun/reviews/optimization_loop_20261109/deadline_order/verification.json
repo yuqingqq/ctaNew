@@ -1,0 +1,30 @@
+{
+  "as_of": "2026-11-09T16:38:56.056638+00:00",
+  "receipt_sha256": "af9d541f619d6f3f6b71bc3216c00af4d6545504b6a8a8620aa308b709075374",
+  "source_sha256": "84f124392a69c5f991e7a41e2428a83bfa3ca8e9cd27adf7960268fc02a8ab59",
+  "source_commit": "4179b621e25cc9e0ca89ded4241116b12e6bbe77",
+  "rows": {
+    "window_arm": 1320,
+    "action_arm": 78462
+  },
+  "original_reference_reconciled_all_latencies": true,
+  "maximum_grace_ms": 50,
+  "equal_clock_reopens": {
+    "base": 2376,
+    "faster": 2392,
+    "slower": 1693
+  },
+  "controls": {
+    "valid_artifacts_accepted": true,
+    "corrupt_count_refused": true
+  },
+  "limitations": [
+    "one consumed partial day; no confidence interval or independent validation",
+    "factual inventory/rung/order-state conditioning; hypothetical fills and feedback absent",
+    "fixed latency assumptions; no venue throttle, post-only rejection or true queue-rank model",
+    "midpoint diagnostic does not measure net trading value or settlement; fill-clock gate remains closed",
+    "Rust A2 paired-order engine not integrated; B4 remains separate",
+    "inventory restriction deliberately prevents some otherwise profitable round trips; no value ranking possible without fills",
+    "policy chosen to investigate a result seen in round2; exploratory only"
+  ]
+}

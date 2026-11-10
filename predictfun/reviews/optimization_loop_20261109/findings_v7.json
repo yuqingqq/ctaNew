@@ -1,0 +1,90 @@
+{
+  "as_of": "2026-11-09T18:04:28.592256+00:00",
+  "supersedes": "findings_v6.json",
+  "supersedes_sha256": "6b61a163cd6feb7d46cada1584200c81f677ba4fb07c691c299daf591bc29d40",
+  "reason": "Add bounded retention plus paired-fill lifecycle verification; no new economic evidence or strategy selection.",
+  "paired_continuity": {
+    "as_of": "2026-11-09T18:04:28.592256+00:00",
+    "declaration_sha256": "9c31c7b38d5d4cab4ec5d6c406a45cb417eac19a5773940b2b2b0ee5593a330f",
+    "source_commit": "a565e3f6f414db242b0e6388a8a9c2f839bb7573",
+    "sources": {
+      "pf_ladder_continuity_build.py": "9aaba05208f45fbbc03e7c7fefd1f45cfa301d358e19593dba67a1dad2fbfef0",
+      "pf_step4_ladder_continuity.py": "429037f7fa193a6a1219512c084221f62d8da947b86bbb9447083f3728cab474",
+      "tests/test_ladder_continuity.py": "4b905b75058a9232b7be14ea5126fdb429cc0f5272a86b7a49f11d8413a6babd",
+      "native_continuity_pairs_oracle.rs": "a9e12e8c398e0338f70a67a496c8a0b4f4c67692ad98def72ac38628c3eb7cc1",
+      "pf_continuity_pairs_validation.py": "f967286e785e33a9c638e1f9aacec0ae620a37e08d79a7b239557f3326145d92"
+    },
+    "checker_source_commit": "c54daff12548f7e6b8efedffccfc2cf7be7b714a",
+    "checker_sha256": "1d9505539dd8bb55be6f23495e712374c91f2a09306bc47e1d90ccc575b216e6",
+    "design": "LC50: retain one accepted sent-size<=5 touch member for at most50ms on a PM90-only soft exit, score>line-0.01. Read all same-clock decisions before expiry. No new orders or replenishment while the guard is off. Preserve unchanged fill budget; if a larger logical pair shrinks, target only retained known remainder. Prediction probes and fill notices can cancel, never initiate quotes. Hard guard, changed price/size, full member fill, RO/stop cancel immediately. No timer extension or hold after RO.",
+    "population": {
+      "explicit_synthetic_traces": 28,
+      "seeded_synthetic_traces": 200,
+      "excluded_traces": 0,
+      "python_checks": 33
+    },
+    "build": {
+      "as_of": "2026-11-09T18:02:31.842073+00:00",
+      "native_commit": "f20fdb126af38fb3f7bb1284a6cc8dff28d0dff8",
+      "native_instrument_sha256": "3eca34fb418b96f47c3f723f27f0007ad5a478ab571db842396f8b6cab98b42b",
+      "binary_sha256": "9659f22934530029c07e7655ff6440947b6f3c5b3c3489e25920380c9c24d144",
+      "oracle_source_sha256": "a9e12e8c398e0338f70a67a496c8a0b4f4c67692ad98def72ac38628c3eb7cc1"
+    },
+    "scope": "Generated research simulation with synthetic trades. Native oracle checks effective desired quotes, cancellation-only pulls and feedback lifecycle; it does not independently implement LC50 policy or desired guards.",
+    "limitations": [
+      "No historical/forward data or PnL/variance result.",
+      "Venue/fill/queue model remains uncalibrated.",
+      "All equal-clock events are available in this synthetic scheduler; live timer behavior remains unverified.",
+      "Only the declared MICRO/AM paired rule family is supported. Deployment kernel/wallet/cross-market limits are outside this study."
+    ],
+    "totals": {
+      "events": 23071,
+      "requests": 3701,
+      "decisions": 16628,
+      "fills": 801,
+      "accepts": 1863,
+      "rejects": 0,
+      "retry_events": 5,
+      "cancellation_only_probes": 73,
+      "holds": 172
+    },
+    "closures": {
+      "same_price_reopen": 87,
+      "deadline": 23,
+      "order_unavailable": 6,
+      "lower_line": 44,
+      "phase_end": 4,
+      "price_size_or_hard_guard": 8
+    },
+    "controls": {
+      "corrupt_name_refused": true,
+      "corrupt_requests_refused": true,
+      "extended_deadline_refused": true,
+      "off_guard_replenishment_refused": true,
+      "native_wrong_request_refused": true
+    },
+    "native_replay_byte_identical": true,
+    "no_off_guard_replenishment": true,
+    "no_hold_deadline_exceeded": true,
+    "no_market_data_read": true,
+    "no_protected_dates_read": true,
+    "artifacts": {
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/declaration.json": "9c31c7b38d5d4cab4ec5d6c406a45cb417eac19a5773940b2b2b0ee5593a330f",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/manifest.json": "72a3493c687fa7f9c42359ecb11ba25906e55c019c007d801bc6c34a5489ff4a",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/synthetic.jsonl": "8b2fcee478308bcfbd4af01ac6faa5cfb2f643b041f5ae171aa1c96d448faf54",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/lifecycle.jsonl": "a9f2d80a22a14d3a650b2f0eeae7adde1446a22e5455ce84567e2853a3477d8b",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/native.jsonl": "3d0d576664005a21f02a1866eba83cb1bb3accecea2b505d25be962cf429a29b",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/native_recheck.jsonl": "3d0d576664005a21f02a1866eba83cb1bb3accecea2b505d25be962cf429a29b",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/logs/build.log": "f526c004c4339fd56da0676f0d5590939521355306f12b2f9a4dafba1d0f9d28",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/logs/matrix.log": "b7fa94ebb3db136441c2677194b38153da4c6473219432e6d55015ca5ec6553c",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/known_bad.jsonl": "53a5028daf9f91fe50ed981438e07e95ff60ee7247ba9ecd2ff983bc16dd6819",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/known_bad_native.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_continuity/logs/known_bad.log": "ea7bcf01248958cc8234d5a73e40750f33f78644cb785767f3ba698690b13d2d"
+    }
+  },
+  "verification_sha256": "1448b941f0485a37cbca293c452ad0c3d0127ae7fba287e4fcdd7898072d0022",
+  "next": [
+    "Audit remaining optimization and promotion gates against the completed bounded loop; prioritize evidence that can change the economic decision.",
+    "Historical fill calibration and actual deployed timer behavior remain required before profit or inventory-variance claims."
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "as_of": "2026-11-09T17:52:27.717211+00:00",
+  "source_commit": "f41943934c0615dfe49e50e6ca3d52158d8837ee",
+  "sources": {
+    "pf_pairs_v3_arm.py": "cbe7faa348d0c2d37646a6e2e214484cdfe464b9955d8c98a41dbfce75a36797",
+    "tests/test_ladder_pairs_v3_arm.py": "4b7ce98b566264c944fc768bac8371ab2d0774bcadb54232d055195c7407813d"
+  },
+  "checker_source_commit": "13de677bf3c406b8934b8164dfe2335cba443051",
+  "checker_sha256": "55a942890b4e560bac648a33e6e1db8b80e7630ba0da0532549dea5436af4710",
+  "declaration_sha256": "3b310bc8c5c27a072eed956cb920bf04f74021b747bd92330af27d3a587aa339",
+  "parent_receipt_sha256": "d86aeccfaf78004ce5e5b76e345e06522cf59566f054e9760802e393cffb2116",
+  "correction": "The earlier component resize controls used AM sizing, PM90 and ladder rules but JOIN policy and a1s stop, not the complete named v3 arm. They remain component evidence. This supplement checks the complete arm; no blanket fixed-size rejection parity claim is added.",
+  "scope": "Exact MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240|mid|AM:5:25:95 on full300s wholly synthetic inputs. No-token frozen parity, fixed-size no-fill parity, variable resize positive, CAP10 and RO60 controls, native request/pair trace replay.",
+  "population": {
+    "synthetic_traces": 6,
+    "excluded_traces": 0,
+    "parity_cases": 10,
+    "python_checks": 16
+  },
+  "totals": {
+    "events": 430,
+    "requests": 62,
+    "decisions": 324,
+    "fills": 10,
+    "accepts": 34,
+    "rejects": 0,
+    "retry_events": 0
+  },
+  "combined_native_totals": {
+    "events": 31424,
+    "requests": 8998,
+    "decisions": 14961,
+    "fills": 2177,
+    "accepts": 4386,
+    "rejects": 219,
+    "retry_events": 683
+  },
+  "combined_synthetic_traces": 238,
+  "combined_python_checks": 51,
+  "parity": [
+    {
+      "side": 0,
+      "kind": "no_trade",
+      "generated_sha256": "ce9f87b475103a733a44bfd906fd855a6d9f9e7135441cd8c11d1df4612e3810",
+      "frozen_sha256": "ce9f87b475103a733a44bfd906fd855a6d9f9e7135441cd8c11d1df4612e3810",
+      "paired_sha256": "a8913478d4403f33b2ca64a71a2057e60bfa6cb647ae1fbb5581066f4540af0f",
+      "no_token_byte_identical": true,
+      "resize_positive": true,
+      "resize_count": 2
+    },
+    {
+      "side": 0,
+      "kind": "reduce_fill",
+      "generated_sha256": "1fc0e4655349b384e578b78ecf276a8b76fc28e575553f4ab0d7481d0c1e2c5e",
+      "frozen_sha256": "1fc0e4655349b384e578b78ecf276a8b76fc28e575553f4ab0d7481d0c1e2c5e",
+      "paired_sha256": "9c5dfeb52c39956780beafbc0156eea59121d30c9ea2f774e86beb8ead714248",
+      "no_token_byte_identical": true,
+      "resize_positive": true,
+      "resize_count": 3
+    },
+    {
+      "side": 0,
+      "kind": "cap_fill",
+      "generated_sha256": "7b3cdc549747a3a450049175045daa913bb63518e2c0ffdc1142ce683e833c3b",
+      "frozen_sha256": "7b3cdc549747a3a450049175045daa913bb63518e2c0ffdc1142ce683e833c3b",
+      "paired_sha256": "36abc77210434cc34fdbf853bd11ef11b4eb0976b41ed35698f5218e7986a5ad",
+      "no_token_byte_identical": true,
+      "resize_positive": true,
+      "resize_count": 2
+    },
+    {
+      "side": 0,
+      "size": 5.0,
+      "kind": "fixed_no_trade",
+      "paired_sha256": "ae26919ee12c11f3b4016daf776a3bc60716d24cbf7bc389e8ec470978325a06",
+      "single_sha256": "ae26919ee12c11f3b4016daf776a3bc60716d24cbf7bc389e8ec470978325a06",
+      "byte_identical": true
+    },
+    {
+      "side": 0,
+      "size": 25.0,
+      "kind": "fixed_no_trade",
+      "paired_sha256": "8f477c00a130d7636f3084ca7f46f643339297b2b7eab2dbc66bc76962e52cac",
+      "single_sha256": "8f477c00a130d7636f3084ca7f46f643339297b2b7eab2dbc66bc76962e52cac",
+      "byte_identical": true
+    },
+    {
+      "side": 1,
+      "kind": "no_trade",
+      "generated_sha256": "e7dcdb8017cfc5d6bf53bd71341ae237b946378d6775e38ee66abe57df901650",
+      "frozen_sha256": "e7dcdb8017cfc5d6bf53bd71341ae237b946378d6775e38ee66abe57df901650",
+      "paired_sha256": "b05eee1886fb14f3758a94940cb33f60c389419c1d9453c94e4c207a547d605f",
+      "no_token_byte_identical": true,
+      "resize_positive": true,
+      "resize_count": 2
+    },
+    {
+      "side": 1,
+      "kind": "reduce_fill",
+      "generated_sha256": "663bcabe607cfa8522a2061b311c9ad5857900f94f3853b8a17a1fb5edda6d33",
+      "frozen_sha256": "663bcabe607cfa8522a2061b311c9ad5857900f94f3853b8a17a1fb5edda6d33",
+      "paired_sha256": "d7de9725b30eeab744b03c9d21d94d175fd77bd8daa05256829b6130aebba63f",
+      "no_token_byte_identical": true,
+      "resize_positive": true,
+      "resize_count": 3
+    },
+    {
+      "side": 1,
+      "kind": "cap_fill",
+      "generated_sha256": "e89e37c75dac66afb1bc43e578ab490760be07588305aa3f98f99f599a989989",
+      "frozen_sha256": "e89e37c75dac66afb1bc43e578ab490760be07588305aa3f98f99f599a989989",
+      "paired_sha256": "c7956e06d973bfe4a3fb9947f3c5c7822507e70b441dad1ee35584930ad726be",
+      "no_token_byte_identical": true,
+      "resize_positive": true,
+      "resize_count": 2
+    },
+    {
+      "side": 1,
+      "size": 5.0,
+      "kind": "fixed_no_trade",
+      "paired_sha256": "346d226f89f14d569fb99ea30c66fc1425ebdd26d5ad18f9491d627f48028b3e",
+      "single_sha256": "346d226f89f14d569fb99ea30c66fc1425ebdd26d5ad18f9491d627f48028b3e",
+      "byte_identical": true
+    },
+    {
+      "side": 1,
+      "size": 25.0,
+      "kind": "fixed_no_trade",
+      "paired_sha256": "a9302e03694b543c126631d461adedab2c1314aee493c87a60aa1c927d2fcd28",
+      "single_sha256": "a9302e03694b543c126631d461adedab2c1314aee493c87a60aa1c927d2fcd28",
+      "byte_identical": true
+    }
+  ],
+  "controls": {
+    "corrupt_name_refused": true,
+    "corrupt_requests_refused": true,
+    "corrupt_known_position_refused": true,
+    "corrupt_output_hash_refused": true
+  },
+  "regenerated_outputs_and_traces_exact": true,
+  "native_replay_byte_identical": true,
+  "limitations": [
+    "Synthetic function outputs only; no historical parquet-output parity or calibrated fill/PnL result.",
+    "Existing LZ rejection-accounting correction intentionally differs from frozen fixed-size rejection-stress paths.",
+    "Native oracle consumes Python desired quotes; it does not independently recompute the model or all policy guards.",
+    "No native kernel, wallet, venue cross-market limits, deployment scheduling, or economic benefit is verified."
+  ],
+  "no_market_data_read": true,
+  "no_protected_dates_read": true,
+  "verifier_attempt_superseded": {
+    "log_sha256": "f2c02d4505cbd15e9bc3ecfdfb7640a07a95139a90afd99800ae60ef82251255",
+    "reason": "First verifier compared reloaded JSON lists with in-memory tuple fields. Canonical JSON comparison fixes only verification; no engine, trace or parity output changed."
+  },
+  "artifacts": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_v3_arm/declaration.json": "3b310bc8c5c27a072eed956cb920bf04f74021b747bd92330af27d3a587aa339",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_v3_arm/synthetic.jsonl": "745b71a2f7c53f48256c3a5839a80aeba8d349d7d22a58c2a13641ad713b3258",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_v3_arm/native.jsonl": "a75536a3577d2ead239565f752d6beb70016899c193b7109e732a56d3c1fe0f6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_v3_arm/native_recheck.jsonl": "a75536a3577d2ead239565f752d6beb70016899c193b7109e732a56d3c1fe0f6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_v3_arm/parity.json": "e080cfebcd28d07ee12a622355798fa0cd0385e593e42f691ee8f5bf76ce6987",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_v3_arm/logs/checks.log": "5e5c3506cd677be4a5528485a063003fa78bda0610845592171562e1f5b24d59"
+  }
+}

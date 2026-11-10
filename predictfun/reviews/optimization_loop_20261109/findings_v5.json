@@ -1,0 +1,480 @@
+{
+  "as_of": "2026-11-09T17:42:57.198365+00:00",
+  "supersedes": "findings_v4.json",
+  "supersedes_sha256": "3a330a291698d8bd54503b3b18991e848c076fa3dcc1f904f9073176cf9172ac",
+  "reason": "Add paired-engine implementation validation; no new economic study, previous quote-mechanics results unchanged.",
+  "paired_engine": {
+    "as_of": "2026-11-09T17:42:57.198365+00:00",
+    "declaration_sha256": "f993642d0bf3dabe9da4a1ff8b1531715ccbdb00a9530ff6e245f4b26711e76b",
+    "sources": {
+      "pf_ladder_pairs.py": "29a70b7a8b821627f711c019c936bb39c10682f5affbddb6caa1b3c2915ca621",
+      "pf_ladder_pairs_build.py": "b0027973920ce76d2a68c2e3b5a92a7f5cd54c9ef54fe3457d44917bfc85c9f6",
+      "pf_step4_ladder_pairs.py": "1097826bf128191b4544dd3cc6f92486cc6bc6ff513c99913473b0a28187b41f",
+      "tests/test_ladder_pairs.py": "d916f0c2b20da14fa4d4343a20834b2e164860a643b095010ab296c6c397aa62",
+      "native_pairs_oracle.rs": "468f05168a3f407561bb860094d7f28ce3f37390969600f87d9217ec7a8d3e04",
+      "pf_pairs_validation.py": "3d9c9d10c02a77ae9d96f9c13fc6575172bc378a626ae49d941e409ddc0e0aae",
+      "tests/test_simulation_causality.py": "420e54d9ed8c12f3ae5483438448a2a04645946e6e6ff783d0c2739571d9de4b",
+      "pf_native_a2_continuity.py": "6d550db517fb92938d320689b27005e2cfb755244986925ffd0e168cd41c1a56"
+    },
+    "source_commit": "805d467af8450218bf2e43a2d4f9064add1b5745",
+    "build": {
+      "as_of": "2026-11-09T17:37:01.227363+00:00",
+      "native_commit": "f20fdb126af38fb3f7bb1284a6cc8dff28d0dff8",
+      "native_instrument_sha256": "3eca34fb418b96f47c3f723f27f0007ad5a478ab571db842396f8b6cab98b42b",
+      "native_original_sha256": "39a808aef2fed7a60c8731dbfdec00cb4380448770f1419589a936bf0d6aca1f",
+      "oracle_source_sha256": "468f05168a3f407561bb860094d7f28ce3f37390969600f87d9217ec7a8d3e04",
+      "binary_sha256": "3ffa3de57e789f93e173e2f3b4a54ba807932f3935e3e03c2852e595b141a30e",
+      "frozen_source_sha256": "d678e7c3c4e47c6d60ebc031edf8d7fc7317210d5e58ff301d92d7ae0ece5f17",
+      "generated_engine_sha256": "1097826bf128191b4544dd3cc6f92486cc6bc6ff513c99913473b0a28187b41f"
+    },
+    "checker_source_commit": "ea0a4425a227666bc702a141f12835580c188d35",
+    "checker_sha256": "2e2fa29595eaf69c222f6bf5b880df68341349fc97b71a2e15b7d121fc6998fb",
+    "scope": "Pair mapping, logical rung identity, known fill accounting and the research split request handler. Synthetic market trades only exercise lifecycle. Native oracle consumes generated quote decisions/feedback; does not independently recompute model predictions or prove live scheduling/venue behavior.",
+    "population": {
+      "synthetic_traces": 232,
+      "explicit_traces": 32,
+      "seeded_traces": 200,
+      "excluded_traces": 0,
+      "unit_checks": 35
+    },
+    "totals": {
+      "events": 30994,
+      "requests": 8936,
+      "decisions": 14637,
+      "fills": 2167,
+      "accepts": 4352,
+      "rejects": 219,
+      "retry_events": 683,
+      "native_throttled": 683,
+      "native_topup_throttled": 70,
+      "native_topup_withheld": 11
+    },
+    "coverage": {
+      "fills": true,
+      "rejects": true,
+      "native_throttled": true,
+      "native_topup_throttled": true,
+      "native_topup_withheld": true
+    },
+    "parity": [
+      {
+        "name": "no_token/0/0",
+        "kind": "no_token",
+        "outputs": [
+          {
+            "sha256": "d8ad0ddde099c52f7f6ff3b160c45492851e424f0b100df53526c2ecdac9d3d9",
+            "requests": 6,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "d8ad0ddde099c52f7f6ff3b160c45492851e424f0b100df53526c2ecdac9d3d9",
+            "requests": 6,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": true
+      },
+      {
+        "name": "no_token/0/1",
+        "kind": "no_token",
+        "outputs": [
+          {
+            "sha256": "d52f1835dbeddb248938768c6efc51750f65137349ff46570b2877f972a97692",
+            "requests": 8,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "d52f1835dbeddb248938768c6efc51750f65137349ff46570b2877f972a97692",
+            "requests": 8,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": true
+      },
+      {
+        "name": "no_token/0/2",
+        "kind": "no_token",
+        "outputs": [
+          {
+            "sha256": "3a52c9a72e00201ea32dd84353c4da4d05227a0d78a19d196b2b6bc9c9606388",
+            "requests": 8,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "3a52c9a72e00201ea32dd84353c4da4d05227a0d78a19d196b2b6bc9c9606388",
+            "requests": 8,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": true
+      },
+      {
+        "name": "fixed/0/5.0/0",
+        "kind": "fixed_size",
+        "outputs": [
+          {
+            "sha256": "820ec6c1316be436586ea3a8629889edff9581281e430d3ed5fae0cbda82c20a",
+            "requests": 3,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "820ec6c1316be436586ea3a8629889edff9581281e430d3ed5fae0cbda82c20a",
+            "requests": 3,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": true
+      },
+      {
+        "name": "fixed/0/5.0/1",
+        "kind": "fixed_size",
+        "outputs": [
+          {
+            "sha256": "474963e4c7765f340695203aee88d0f0b6bf5f9f25713dbdd3d79c9fe423fe55",
+            "requests": 6,
+            "fills": 3,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "474963e4c7765f340695203aee88d0f0b6bf5f9f25713dbdd3d79c9fe423fe55",
+            "requests": 6,
+            "fills": 3,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": true
+      },
+      {
+        "name": "fixed/0/25.0/0",
+        "kind": "fixed_size",
+        "outputs": [
+          {
+            "sha256": "438686411a0e6d36130766c22572efcfc4a7ce4c4c0e961f3d57f8f96b65b0f8",
+            "requests": 3,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "438686411a0e6d36130766c22572efcfc4a7ce4c4c0e961f3d57f8f96b65b0f8",
+            "requests": 3,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": true
+      },
+      {
+        "name": "fixed/0/25.0/1",
+        "kind": "fixed_size",
+        "outputs": [
+          {
+            "sha256": "6dd411176d50ec6c9f9717626c44bf967eb7f9f0f7317712eb86c29f0603bdce",
+            "requests": 6,
+            "fills": 3,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "6dd411176d50ec6c9f9717626c44bf967eb7f9f0f7317712eb86c29f0603bdce",
+            "requests": 6,
+            "fills": 3,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": true
+      },
+      {
+        "name": "variable/0",
+        "kind": "variable_positive",
+        "outputs": [
+          {
+            "sha256": "0e6012ce938763da88f23a9b239842efe3f57b163fabc44f2fc89f032f56926f",
+            "requests": 7,
+            "fills": 1,
+            "resize_count": 2,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "191ef6d4e61973117c29027fd03e3da519005bbba61560d692244bb82e7e33a5",
+            "requests": 9,
+            "fills": 1,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": false
+      },
+      {
+        "name": "rejection/0",
+        "kind": "known_frozen_bug",
+        "outputs": [
+          {
+            "sha256": "0f0e56e3732ab29c60e99f8c2bc6648a76eecd7c739ff7e1e62a19ed85c85d32",
+            "requests": 8,
+            "fills": 0,
+            "resize_count": 0,
+            "rejection_answer_releases": 2
+          },
+          {
+            "sha256": "b1a9ec2162ee2d52ec9fccf03ce3b0439532a101448ee34c4c022d202e3035ff",
+            "requests": 8,
+            "fills": 0,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": false
+      },
+      {
+        "name": "no_token/1/0",
+        "kind": "no_token",
+        "outputs": [
+          {
+            "sha256": "866d2747c8613dcae53ae029d7a33b55f539e8e19779628ece2b6e6c486025e2",
+            "requests": 6,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "866d2747c8613dcae53ae029d7a33b55f539e8e19779628ece2b6e6c486025e2",
+            "requests": 6,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": true
+      },
+      {
+        "name": "no_token/1/1",
+        "kind": "no_token",
+        "outputs": [
+          {
+            "sha256": "a4dab672089fa57b38c3391965946e1435b10a5bb300f97ed8b2956bbcf26b52",
+            "requests": 8,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "a4dab672089fa57b38c3391965946e1435b10a5bb300f97ed8b2956bbcf26b52",
+            "requests": 8,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": true
+      },
+      {
+        "name": "no_token/1/2",
+        "kind": "no_token",
+        "outputs": [
+          {
+            "sha256": "3dec87f9ffdd4f1e294c9f2e9ed5686d3c90326845daec3899a827c7b6a49f3a",
+            "requests": 8,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "3dec87f9ffdd4f1e294c9f2e9ed5686d3c90326845daec3899a827c7b6a49f3a",
+            "requests": 8,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": true
+      },
+      {
+        "name": "fixed/1/5.0/0",
+        "kind": "fixed_size",
+        "outputs": [
+          {
+            "sha256": "a991b0c926e90f90f7d27d60b0c2aede29a50ae7ed591f46d84dfe8cde4bff4f",
+            "requests": 3,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "a991b0c926e90f90f7d27d60b0c2aede29a50ae7ed591f46d84dfe8cde4bff4f",
+            "requests": 3,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": true
+      },
+      {
+        "name": "fixed/1/5.0/1",
+        "kind": "fixed_size",
+        "outputs": [
+          {
+            "sha256": "9d4f849624ca207bfa42f1c52df3fc708fd9bb7438d1a22dd7bf1cdab04ff75c",
+            "requests": 6,
+            "fills": 3,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "9d4f849624ca207bfa42f1c52df3fc708fd9bb7438d1a22dd7bf1cdab04ff75c",
+            "requests": 6,
+            "fills": 3,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": true
+      },
+      {
+        "name": "fixed/1/25.0/0",
+        "kind": "fixed_size",
+        "outputs": [
+          {
+            "sha256": "1bb7546acb6689b2a12a2f9952637c36956e92aebbee5bdb81b0d8a80bcdbef0",
+            "requests": 3,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "1bb7546acb6689b2a12a2f9952637c36956e92aebbee5bdb81b0d8a80bcdbef0",
+            "requests": 3,
+            "fills": 2,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": true
+      },
+      {
+        "name": "fixed/1/25.0/1",
+        "kind": "fixed_size",
+        "outputs": [
+          {
+            "sha256": "b0e4c74d22ee577754835c7f4f013bdc42efb178b51f20d5a9bb6049642993a4",
+            "requests": 6,
+            "fills": 3,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "b0e4c74d22ee577754835c7f4f013bdc42efb178b51f20d5a9bb6049642993a4",
+            "requests": 6,
+            "fills": 3,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": true
+      },
+      {
+        "name": "variable/1",
+        "kind": "variable_positive",
+        "outputs": [
+          {
+            "sha256": "e5b6c0ac3ae9b56f14ecb1ac2f8420210b00738b4b8d8e7c9faa61c085bf398a",
+            "requests": 7,
+            "fills": 1,
+            "resize_count": 2,
+            "rejection_answer_releases": 0
+          },
+          {
+            "sha256": "57c6d054fdd26b5e43db089c493dea7b898bea6057a074e2359a56d5f00e839f",
+            "requests": 9,
+            "fills": 1,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": false
+      },
+      {
+        "name": "rejection/1",
+        "kind": "known_frozen_bug",
+        "outputs": [
+          {
+            "sha256": "bb21a0cb80c6448032088c69b2f28fa77e9281e13834e27c62d96864d1c10715",
+            "requests": 8,
+            "fills": 0,
+            "resize_count": 0,
+            "rejection_answer_releases": 2
+          },
+          {
+            "sha256": "fa0e829b2767ed9d3de7d7436120d935072a8b99170bdb2fb8c4d29dcb184ed3",
+            "requests": 8,
+            "fills": 0,
+            "resize_count": 0,
+            "rejection_answer_releases": 0
+          }
+        ],
+        "byte_identical": false
+      }
+    ],
+    "native_replay_byte_identical": true,
+    "controls": {
+      "saved_counts_refused": true,
+      "saved_identity_refused": true,
+      "native_wrong_request_refused": true
+    },
+    "limitations": [
+      "Current historical fill model remains uncalibrated. No LZ economic promotion.",
+      "No-token parity is checked on a declared synthetic matrix, not a fresh historical/protected replay.",
+      "Blanket fixed-size parity is not claimed: a pre-existing frozen create-rejection/unanswered-slot bug conflicts with native parity. LZ corrects it; fixed-size rejection-stress controls intentionally differ from frozen, while normal fixed-size controls remain exact.",
+      "Native kernel/local refusal, wallet, venue throttles across markets and reservation1s deployment integration are outside this mapper validation.",
+      "Frozen simulator fill/venue assumptions remain unless required for paired FIFO; their simulated PnL is never reported as evidence."
+    ],
+    "supersedes": {
+      "declaration": "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine/declaration.json",
+      "declaration_sha256": "ba8a708401ec5d17b96153219cad55c8d44389a402724c9fff91c56c6fdef6ea",
+      "failed_output_sha256": "a03d29d6e4533bde7ae721ab53032dfda85405015490dbe83e7111c7078a7f6f",
+      "failed_log_sha256": "a04854ebd38cd6d854a79eb5ebcb79658f2a4030e77a2559aae5d095cab01e74",
+      "reason": "Native differential comparison refused random/46 after78 matching traces. A rejected create retained an unanswered slot until44ms in frozen Python, but native rejected() releases it at the40ms rejection. Correct only LZ; retain all no-token outputs. Two explicit fixed-size stress controls demonstrate the necessary exception."
+    },
+    "no_market_data_read": true,
+    "no_protected_dates_read": true,
+    "artifacts": {
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/synthetic.json": "aa0ef1c480e3ad61bc3b2b3df838d45484147ea3a2d2fdafd4e886825571ab4d",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/synthetic.jsonl": "38cb8de339c962d5590072f55155f364cd79e73dddce6b4e64ccb59c6ba5370f",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/native.jsonl": "26dea320389ab4f95f95e754d59908fccaec73bfe01aeed8d2c44546f42b1e10",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/native_recheck.jsonl": "26dea320389ab4f95f95e754d59908fccaec73bfe01aeed8d2c44546f42b1e10",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/parity_outputs.json": "42d2dbf512fff8acdc46317de180657b36141fa18c9353b70cdf520ebad724b7",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/known_bad.jsonl": "9256a23a8e7095f2e579cfa646e5caedad9077a5c9d100664c8aaf114459d70e",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/known_bad_native.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/logs/known_bad.log": "e59155f4afa352fc68a55de21e2036e1716f9850f5a2cb5f3574b5757d370939",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/logs/build.log": "339da6d019be543eead25ac1c11f7bc410bff332d950b04dceca3f4f40d0e42c",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/logs/matrix.log": "9ca14df8a854fd223d762e05c4cd9d3587323640e7aa8ea6210810062532301b",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/paired_engine_v2/logs/oracle.log": "77ee36d4efc82e4e5492e2c60012615cd7fdbfda400a3e87f3d11154fede75e6"
+    }
+  },
+  "verification_sha256": "82a28796ed9b2fcaa81a3c088d0ea660438227e8f784d28b30d34192b0f7d07f",
+  "next": [
+    "Verify integration of bounded quote continuity with paired fills and inventory changes using synthetic cases before economic use.",
+    "Full historical output-file parity and deployed timer behavior remain unverified; fill calibration still gates PnL/variance claims."
+  ]
+}

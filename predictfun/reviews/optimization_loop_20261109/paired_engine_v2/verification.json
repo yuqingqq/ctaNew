@@ -1,0 +1,13 @@
+{
+  "as_of": "2026-11-09T17:42:57.205594+00:00",
+  "receipt_sha256": "d86aeccfaf78004ce5e5b76e345e06522cf59566f054e9760802e393cffb2116",
+  "synthetic_traces": 232,
+  "counts_and_fill_ledger_reconciled": true,
+  "native_replay_byte_identical": true,
+  "parity_output_hashes_saved": true,
+  "controls": {
+    "saved_counts_refused": true,
+    "saved_identity_refused": true,
+    "native_wrong_request_refused": true
+  }
+}

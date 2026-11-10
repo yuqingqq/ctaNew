@@ -1,0 +1,20 @@
+{
+  "as_of": "2026-11-09T17:46:43.999526+00:00",
+  "source_commit": "f41943934c0615dfe49e50e6ca3d52158d8837ee",
+  "sources": {
+    "pf_pairs_v3_arm.py": "cbe7faa348d0c2d37646a6e2e214484cdfe464b9955d8c98a41dbfce75a36797",
+    "tests/test_ladder_pairs_v3_arm.py": "4b7ce98b566264c944fc768bac8371ab2d0774bcadb54232d055195c7407813d"
+  },
+  "parent_receipt_sha256": "d86aeccfaf78004ce5e5b76e345e06522cf59566f054e9760802e393cffb2116",
+  "parent_declaration_sha256": "f993642d0bf3dabe9da4a1ff8b1531715ccbdb00a9530ff6e245f4b26711e76b",
+  "scope": "Exact MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240|mid|AM:5:25:95 on full300s wholly synthetic inputs. No-token frozen parity, fixed-size no-fill parity, variable resize positive, CAP10 and RO60 controls, native request/pair trace replay.",
+  "population": "Six exact-v3 traces (two sides times no_trade/reduce_fill/cap_fill) plus four fixed-size controls;16 explicit Python checks. No market-data reads or exclusions.",
+  "correction": "The earlier component resize controls used AM sizing, PM90 and ladder rules but JOIN policy and a1s stop, not the complete named v3 arm. They remain component evidence. This supplement checks the complete arm; no blanket fixed-size rejection parity claim is added.",
+  "limitations": [
+    "Synthetic function outputs only; no historical parquet-output parity or calibrated fill/PnL result.",
+    "Existing LZ rejection-accounting correction intentionally differs from frozen fixed-size rejection-stress paths."
+  ],
+  "no_market_data_read": true,
+  "no_protected_dates_read": true,
+  "no_live_change": true
+}
