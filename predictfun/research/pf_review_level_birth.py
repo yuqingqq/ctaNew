@@ -67,6 +67,12 @@ sizes, seven rule errors) must each fail at least one synthetic case. On real da
  (ii) the regression must be able to fail: with the cancel latency set to 30 ms the two must differ.
  D-F's own controls against the live bot's touch table cover the valuation path that (i) pins.
 
+Post hoc (added 2026-11-10T09:46Z, AFTER the first table of this script was seen; not declared readings, candidates only):
+fills split by the state of the known best at the order's decision step (origin: born as the best / became the best by a
+fall-back / there since the window start; age; shown size at our price), and the count of positive cells with an
+unverified maker rebate. The instrument that classifies the state must put every lane-B fill at a birth step and every
+lane-L fill on a born level 2 s old, and must not do so for lane J (printed; a failure stops the post-hoc section).
+
 Usage: predictfun/research/run_light.sh review_level_birth -- python3 predictfun/research/pf_review_level_birth.py <out.json>
 """
 import bisect
@@ -496,6 +502,10 @@ def main():
 
             stl = {a: ST[a][side].tolist() for a in ARMS}
             cache = {}; ptl = pt.tolist(); shl = sh.tolist(); par = widx[m] % 2
+            bk = np.asarray(best[side]); pv = np.r_[-1, bk[:-1]]   # post hoc: origin and age of the known best per grid step
+            impk = (pv >= 0) & (bk >= 0) & ((bk > pv) if side == 0 else (bk < pv))
+            lastc = np.maximum.accumulate(np.where(np.r_[True, bk[1:] != bk[:-1]], np.arange(len(bk)), 0))
+            kage_ = tg - tg[lastc]; korg_ = np.where(lastc == 0, 0, np.where(impk[lastc], 1, 2))   # 0 since the start, 1 born, 2 fall-back
             for q, shf in CFG:
                 tt = anc - shf
                 F0, O0 = QR.sim(side, tf, (ba, bb)[side], lev[side][0], lev[side][1], cache, tg, vkl, stl['J-v3'], P90, best[side], tt, ptl, shl, q, te)
@@ -517,16 +527,21 @@ def main():
                         m1, m5, m60 = (sg * (mid_at(t0 + h) - p_) for h in (1000.0, 5000.0, 60000.0))
                         j = np.searchsorted(tf, tt[ix], side='left') - 1; jz = np.maximum(j, 0)
                         dist = np.where((j >= 0) & valid[jz], (tru[jz] - p_) if side == 0 else (p_ - tru[jz]), np.nan)
+                        ts_ = tt[ix] - np.array([f[4] for f in F]) - L_PLACE   # the decision step of the order that was filled
+                        kd = np.searchsorted(tg, ts_ + 0.01, side='right') - 1
+                        if (kd < 0).any() or (np.abs(tg[kd] - ts_) > 0.01).any():
+                            sys.exit('REFUSED: a fill whose order decision time is not a grid step')
+                        ksz = [float(cache[f[1]][ki[kq]]) if ki[kq] >= 0 else float('nan') for f, kq in zip(F, kd)]
                         for n_, f in enumerate(F):
                             rows.append((q, shf, a, m, side, f[2], bool(f[3]), f[4], f[5], bool(e2[ix[n_]]), m1[n_], m5[n_], m60[n_],
-                                         sg * (100.0 * YUP[m] - f[1]), f[6], dist[n_], par))
+                                         sg * (100.0 * YUP[m] - f[1]), f[6], dist[n_], par, int(korg_[kd[n_]]), float(kage_[kd[n_]]), ksz[n_]))
                     L_ = OL[(q, shf, a)]
                     for o in O:
                         if o[3]:
                             L_[2] += 1
                         else:
                             L_[0].append(max(o[1] - o[0], 0.0)); L_[1].append(o[2])
-    FD = pd.DataFrame(rows, columns=['rule', 'shf', 'arm', 'mid', 'side', 'q', 'thr', 'age', 'ph', 'e2', 'mo1', 'mo5', 'mo60', 'st', 'a0', 'dist', 'par'])
+    FD = pd.DataFrame(rows, columns=['rule', 'shf', 'arm', 'mid', 'side', 'q', 'thr', 'age', 'ph', 'e2', 'mo1', 'mo5', 'mo60', 'st', 'a0', 'dist', 'par', 'korg', 'kage', 'ksz'])
     del rows
     report(FD, OL, BR, FL, ARMS, stat, mut, dict(n=reg_n, bad=reg_bad, mut_n=mut_n, mut_dif=mut_dif), nws, days, len(W0), P90, P50)
 
@@ -659,11 +674,50 @@ def report(FD, OL, BR, FL, ARMS, stat, mut, reg, nws, days, nwin, P90, P50):
     print(f'R21 = {R21}')
     print(f'R22 = ' + ' ; '.join(f'{a}: {x["reading"]} ({fp(x["matched_pct"])}%)' for a, x in R22.items()) + f'  (J-v3 {fp(j22)}%)')
     print('R23 (cells of 6 above J-v3: USD/day at 1 s and 5 s, M at 0 / 50 / 250): ' + '; '.join(f'{a} {k_}' for a, k_ in R23.items()))
+    # ---- post hoc (added after the first table of this script was seen; not declared readings) ----
+    PH = {}; lane_of = lambda a: ARMS[a][0] + ('+lag' if ARMS[a][1] else '')
+    at_birth = lambda f: (f.korg == 1) & (f.kage == 0.0)
+    fb_ = FD[FD.arm.map(lane_of) == 'birth']; fl_ = FD[FD.arm.map(lane_of) == 'birth+lag']; fj_ = FD[FD.arm == 'J-none']
+    phc = dict(birth_fills=int(len(fb_)), birth_fills_at_a_birth_step=int(at_birth(fb_).sum()), late_fills=int(len(fl_)),
+               late_fills_on_a_born_level_2s_old=int(((fl_.korg == 1) & ((fl_.kage - LAG_LATE * 50.0).abs() < 1.0)).sum()),
+               join_fills=int(len(fj_)), join_fills_at_a_birth_step=int(at_birth(fj_).sum()))
+    phc['ok'] = bool(phc['birth_fills'] > 0 and phc['birth_fills'] == phc['birth_fills_at_a_birth_step'] and phc['late_fills'] > 0
+                     and phc['late_fills'] == phc['late_fills_on_a_born_level_2s_old'] and 0 < phc['join_fills_at_a_birth_step'] < phc['join_fills'])
+    print('\n==== Post hoc (added after the first table was seen; NOT declared readings; one consumed day -> candidates only) ====')
+    print(f'instrument control: lane-B fills classified as entered at a birth step {phc["birth_fills_at_a_birth_step"]:,} of {phc["birth_fills"]:,}; lane-L fills on a '
+          f'born level 2 s old {phc["late_fills_on_a_born_level_2s_old"]:,} of {phc["late_fills"]:,}; J-none fills at a birth step '
+          f'{phc["join_fills_at_a_birth_step"]:,} of {phc["join_fills"]:,} -> {"PASS" if phc["ok"] else "FAIL"}')
+    RB = {}
+    if phc['ok']:
+        LS = [('entered at the birth step', at_birth), ('born, 50-450 ms old', lambda f: (f.korg == 1) & (f.kage > 0.0) & (f.kage < 500.0)),
+              ('born, 0.5-2 s old', lambda f: (f.korg == 1) & (f.kage >= 500.0) & (f.kage < 2000.0)), ('born, >= 2 s old', lambda f: (f.korg == 1) & (f.kage >= 2000.0)),
+              ('fall-back, < 0.5 s old', lambda f: (f.korg == 2) & (f.kage < 500.0)), ('fall-back, >= 0.5 s old', lambda f: (f.korg == 2) & (f.kage >= 500.0)),
+              ('there since the window start', lambda f: f.korg == 0)]
+        KS = [(f'known size {n_}', (lambda f, lo=lo, hi=hi: (f.ksz >= lo) & (f.ksz < hi))) for n_, lo, hi in QB]
+
+        def ptab(title, cuts, arms):
+            print(f'\nPost hoc, {title}: shares (fills) at M 50 | c/sh at 1 s under M 0 / M 50 / M 250 | c/sh at 5 s at M 50')
+            for a in arms:
+                for name, fn in cuts:
+                    c = {}
+                    for s_ in (0.0, 50.0, 250.0):
+                        f = gf('M', s_, a); c[s_] = cut(f[fn(f)])
+                    PH[f'{title}|{a}|{name}'] = {f'{s_:.0f}': x for s_, x in c.items()}
+                    print(f'  {a:8s} {name:30s} {c[50.0]["shares"]:8.1f} ({c[50.0]["fills"]:4d}) | {fmt(c[0.0]["mo1"]):>7s} / {fmt(c[50.0]["mo1"]):>7s} / '
+                          f'{fmt(c[250.0]["mo1"]):>7s} | {fmt(c[50.0]["mo5"]):>7s}')
+        ptab('state of the known best at the decision step of the order that was filled', LS, ['J-v3', 'J-none'])
+        ptab('shown size at our price in the known book at the decision step', KS, ['J-v3', 'J-none', 'B-none', 'B-g10', 'B-g50', 'B-g90'])
+        for a in ARMS:
+            if ARMS[a][2] != -INF:                          # arms with a guard line
+                v6 = cells(a, C3, ('mo1', 'mo5'))
+                RB[a] = {f'{r:.2f}': int(sum(x + r > 0 for x in v6)) for r in (0.0, 0.19, 0.25)}
+        print('\nPost hoc, cells of 6 above zero (c/sh at 1 s and 5 s, M at 0 / 50 / 250) with a maker rebate of 0 / 0.19 / 0.25 c/sh '
+              '(the rebate formula is not verified on the account): ' + '; '.join(f'{a} {x["0.00"]} / {x["0.19"]} / {x["0.25"]}' for a, x in RB.items()))
     json.dump(dict(as_of=asof, windows=nwin, window_sides=nws, days=days, lines=dict(P90=P90, P50=P50), control=ctl, planted_errors=mut, statuses=stat,
                    arms={a: [x[0], x[1], str(x[2]), str(x[3])] for a, x in ARMS.items()}, births=A, at_best_flow_by_level=FA,
                    metrics={f'{q}|{shf:.0f}|{a}': v_ for (q, shf, a), v_ in M.items()}, splits=SP, r21_table=T21, stability=STB,
                    readings=dict(R15=R15, R16=R16, R16_deltas=d16, R17=R17, R17_deltas=d17, R18=R18, R19=R19, R20=R20, R21=R21, R22=R22,
-                                 R22_J_v3=j22, R23=R23)), open(sys.argv[1], 'w'), indent=1, default=float)
+                                 R22_J_v3=j22, R23=R23), post_hoc=dict(control=phc, splits=PH, rebate_cells=RB)), open(sys.argv[1], 'w'), indent=1, default=float)
 
 
 if __name__ == '__main__':
