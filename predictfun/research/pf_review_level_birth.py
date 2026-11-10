@@ -1,0 +1,670 @@
+"""Review diagnostic D-G (2026-11-10, strategy review follow-up): queue priority at the ORDER level.
+
+Descriptive only; same consumed cohort as D-B..D-F (220 windows of 2026-11-08, cut 23:00Z; one partial Sunday ->
+point estimates, no intervals, no inference). Reads derived cohort outputs only. Changes no strategy code.
+
+D-F (pf_review_queue_reach.py) found that a 5-share touch order that JOINS the back of an established queue (p50 362-391 sh
+ahead) is reached mainly by trades that clear the level, and that the sign of its value is decided by queue position
+(R13 QUEUE-DECISIVE). This replays ONE 5-share order per side under the same clock, fill rule and trade times, with the
+position chosen by three rules that try to buy queue priority, each with and without the guard:
+
+ lane J  (reference)  join the known best whenever there is no order (D-F's JOIN; J-v3 must reproduce D-F's v3 row).
+ lane B  (birth)      enter ONLY at the grid step where the known best on our side has just improved against the previous
+                      grid step (bid higher / ask lower; both steps valid, <= 60 ms apart): a level born as the best.
+                      Keep while our price is the known best, or exactly one tick behind it. Cancel when >= 2 ticks
+                      behind, alone in front, book invalid, or the state is off. A new level born in front while entry is
+                      allowed -> cancel and enter the new level.
+ lane L  (late)       lane B entered 40 grid steps (2 s) after the birth, only if the level was the known best at every step
+                      in between. Control for R21: the same levels, a later place in the queue.
+ lane R  (rung)       an order one tick behind the known best, as the engine's LD2 (pf_step4_ladder.desired): kept while it
+                      is at most 2 ticks behind the best, at the best, or in front of it but below the known opposite best;
+                      otherwise cancelled and placed again one tick behind. R-g90 is v3's rung rule (rung line = pull line).
+ lane I  (improve)    the engine's IM rule: known spread >= 2 ticks -> one tick inside it; if both sides want the one inside
+                      price (spread exactly 2), the side with the higher v takes it (ties: the bid). Kept while it is the
+                      inside price, or while the known best equals our price (others joined); else cancelled.
+ guards               none (state on wherever v is finite), g10 (line -0.10 c), g50 (PM50), g90 (PM90), and for lane B
+                      "90/10" (enter above PM90, leave at -0.10 c). Minute-0 lines; v from preds_t60k (out of fold).
+ queue / trades       as D-F: M = frame cap + trades at our price + a sweep through our level clears it; L = no frame cap;
+                      U = queue ahead 0. Trade time = the taker order's anchor minus SHIFT in {0, 50, 250} ms. Configs:
+                      M 0 / M 50 / M 250 / L 50 / U 50; primary M 50. Queue ahead at activation = shown size at our price,
+                      raised to the next frame's if larger and <= 100 ms later.
+ value                per fill: sg*(mid(anchor+h) - price), h = 1, 5, 60 s (unshifted anchor); settlement.
+Not modelled: Binance / book guards (G1, G2), MICRO side choice, G3 / G4, CAP10 / RO60, sizes above 5 sh, the throttle,
+inventory. The public book does not contain our order: lane I (an order alone at a new price) depends most on that,
+because other makers and takers would have reacted to it. The fill rule is unvalidated until B1a.
+Young orders are the ones most exposed to the unknown match-to-report lag: every lane-B / lane-I cell is read at all
+three shifts, never at one.
+
+Readings DECLARED BEFORE ANY TABLE OF THIS SCRIPT WAS SEEN (2026-11-10T09:20Z..; evaluated in code):
+ R15 BIRTH (B-none and B-g90, each; 8 cells = c/sh at 1 s and at 5 s under M 0, M 50, M 250, L 50; n/a under 50 fills
+     at M 50): BIRTH-PAYS if all 8 > 0; BIRTH-COSTS if all 8 < 0; else MIXED.
+ R16 GUARD at a new level (B-g90 minus B-none, c/sh at 1 s, M at 0 / 50 / 250): GUARD-ADDS if all > 0; GUARD-HURTS if
+     all < 0; else MIXED.
+ R17 RESIDENCE at a born level (B-90/10 minus B-g90, USD/day at 1 s and at 5 s, M at 0 / 50 / 250; 6 deltas):
+     RESIDENCE-PAYS-AT-BIRTH if all > 0; RESIDENCE-COSTS if all < 0; else MIXED.
+ R18 RUNG (R-none and R-g90, each; the 8 cells of R15; n/a under 50 fills): RUNG-PAYS / RUNG-COSTS / MIXED.
+ R19 IMPROVE (I-none and I-g90, each; 6 cells = c/sh at 1 s and at 5 s under M 0 / 50 / 250; n/a under 50 fills):
+     IMPROVE-PAYS / IMPROVE-COSTS / MIXED.
+ R20 QUEUE (B-none and R-none, each; c/sh at 1 s under L 50 against U 50): QUEUE-ROBUST if the signs agree, else
+     QUEUE-DECISIVE.
+ R21 PRIORITY (no guard; M at 0 / 50 / 250): B-none's fills on orders >= 2 s old against L-none's fills (the same
+     levels, entered 2 s after the birth; matched on level and time, not on whether our own order was filled earlier):
+     PRIORITY-PAYS if B-old has more shares AND a higher c/sh at 1 s at all three shifts; else PRIORITY-NOT-SHOWN;
+     n/a under 50 fills in either at M 50.
+ R22 TWO-SIDED (primary config; B-none, R-none, I-none against J-v3): matched share = 1 - sum_w|buys - sells| /
+     sum_w(buys + sells) over windows; MORE-TWO-SIDED if >= J-v3's + 10 points, else NOT-MORE-TWO-SIDED.
+ R23 SCALE (every arm): k of 6 cells (USD/day at 1 s and at 5 s, M at 0 / 50 / 250) above J-v3 (printed).
+ Stability (printed, not a reading): the sign of c/sh at 1 s at M 50 in odd and in even windows.
+Any arm that reads well here is a CANDIDATE for a fresh-day test, nothing more: 11-08 is consumed and every rule above
+was written with the D-F tables in view.
+
+Self-test (falsifier; any failure -> no table): synthetic books with known answers through sim2() for every lane (birth
+against fall-back, one behind, >= 2 behind, alone in front, exit line, the 2 s lag, rung placement / promotion / K = 2,
+improve / re-price / others joining); unsorted frames or trades must be refused; eleven planted errors (four clocks /
+sizes, seven rule errors) must each fail at least one synthetic case. On real data:
+ (i)  regression: lane J with v3's lines must equal pf_review_queue_reach.sim fill for fill on every window-side in all
+      five configs, and reproduce the committed D-F rows (reviews/strategy_review_20261110/queue_reach.json) to 1e-9;
+ (ii) the regression must be able to fail: with the cancel latency set to 30 ms the two must differ.
+ D-F's own controls against the live bot's touch table cover the valuation path that (i) pins.
+
+Usage: predictfun/research/run_light.sh review_level_birth -- python3 predictfun/research/pf_review_level_birth.py <out.json>
+"""
+import bisect
+import glob
+import json
+import os
+import sys
+
+import numpy as np
+import pandas as pd
+
+import pf_review_queue_reach as QR
+from pf_review_gate_bands import capped
+from pf_review_gate_hysteresis import RP
+
+S1 = QR.S1
+INF = float('inf')
+PF_MIN = QR.PF_MIN
+L_PLACE, L_CANCEL, L_PENDCANCEL, L_FILL = QR.L_PLACE, QR.L_CANCEL, QR.L_PENDCANCEL, QR.L_FILL
+SIZE = QR.SIZE
+RUNG_K = 2                                                # frozen v3: LD2
+LAG_LATE = 40                                             # grid steps (2 s)
+CFG = [('M', 0.0), ('M', 50.0), ('M', 250.0), ('L', 50.0), ('U', 50.0)]
+PRIM = ('M', 50.0)
+LANES = ('join', 'birth', 'rung', 'improve')
+MUT_BIRTH_ANY = MUT_KEEP2 = MUT_LAG0 = MUT_RUNG_TOUCH = MUT_IMP_TOUCH = MUT_NO_EXIT = 0   # planted-error switches (self-test only)
+DF_JSON = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'reviews', 'strategy_review_20261110', 'queue_reach.json')
+wmean = QR.wmean
+
+
+def sim2(lane, side, tf, opp, P5, S5, cache, tau, v, s, enter, best, bopp, tt, tp, tq, qrule, t_end, lag=0, aux=None):
+    """One 5-share order on one side of one window; the decision rule is chosen by `lane`.
+    place / cancel / apply and the end of the window are pf_review_queue_reach.sim's (regression control (i)).
+    Returns fills (trade index, price, shares, through, order age ms, phase, queue ahead at activation) and orders
+    (live from, gone at, queue ahead at activation, refused)."""
+    if lane not in LANES:
+        raise ValueError(f'REFUSED: unknown lane {lane}')
+    for a in (tf, tau, tt):
+        if len(a) > 1 and (np.diff(a) < 0).any():
+            raise ValueError('REFUSED: frames, grid or trades not time-sorted')
+    tfl = tf.tolist(); nf = len(tfl); ttl = tt.tolist(); nt = len(ttl); taul = tau.tolist()
+    fills = []; orders = []; live = []; cur = None; it = 0
+    pb = -1; kb = -1; pborn = -1; tprev = None
+    if MUT_LAG0:
+        lag = 0
+
+    def lv(pt):                                           # shown size at pt per frame; nan beyond the 5 levels shown
+        if pt not in cache:
+            last = P5[:, 4]
+            cache[pt] = np.where((last >= 0) & ((pt < last) if side == 0 else (pt > last)), np.nan, (S5 * (P5 == pt)).sum(1))
+        return cache[pt]
+
+    def place(pt, t):
+        ta = t + L_PLACE; fi = bisect.bisect_right(tfl, ta) - 1
+        o = dict(pt=pt, ts=t, ta=ta, tr=INF, tc=INF, rem=SIZE, ahead=0.0, ci=fi, tfill=INF, a0=np.nan, ref=False)
+        if fi < 0 or ((0 <= opp[fi] <= pt) if side == 0 else (opp[fi] >= pt)):
+            o['ref'] = True; o['tr'] = ta                 # post-only refusal: never live
+        else:
+            a = lv(pt)[fi]; a = float(a) if np.isfinite(a) else 0.0
+            if fi + 1 < nf and tfl[fi + 1] - ta <= 100.0:
+                d2 = lv(pt)[fi + 1]
+                if np.isfinite(d2) and d2 > a:
+                    a = float(d2)
+            o['a0'] = a; o['ahead'] = 0.0 if qrule == 'U' else a
+            live.append(o)
+        orders.append(o)
+        return o
+
+    def cancel(o, t):
+        o['tc'] = min(o['tc'], t)
+        o['tr'] = min(o['tr'], max(t + L_CANCEL, o['ts'] + L_PENDCANCEL) if t < o['ta'] else t + L_CANCEL)
+
+    def apply(i):
+        t = ttl[i]; p = tp[i]; left = tq[i]
+        for o in live:
+            if o['rem'] <= 1e-12 or t < o['ta'] or t >= o['tr']:
+                continue
+            if qrule == 'M':                              # shown size at our price caps the queue ahead (frames before the trade)
+                j = bisect.bisect_left(tfl, t) - 1
+                if j > o['ci']:
+                    seg = lv(o['pt'])[o['ci'] + 1:j + 1]; seg = seg[np.isfinite(seg)]
+                    if len(seg) and seg.min() < o['ahead']:
+                        o['ahead'] = float(seg.min())
+                    o['ci'] = j
+            thr = (p < o['pt']) if side == 0 else (p > o['pt'])
+            if p == o['pt']:
+                use = min(left, o['ahead']); o['ahead'] -= use; q = min(left - use, o['rem'])
+            elif thr:
+                q = min(left, o['rem']); o['ahead'] = 0.0
+            else:
+                q = 0.0
+            if q > 1e-12:
+                left -= q; o['rem'] -= q
+                g = bisect.bisect_right(taul, t) - 1
+                ph = 'pend' if t >= o['tc'] else ('above' if g >= 0 and v[g] > enter else 'hold')
+                fills.append((i, o['pt'], q, thr, t - o['ta'], ph, o['a0']))
+                if o['rem'] <= 1e-12:
+                    o['tfill'] = t
+
+    for k, t in enumerate(taul):
+        while it < nt and ttl[it] <= t:                   # trades at t come before the decision at t
+            apply(it); it += 1
+        if cur is not None and ((cur['ref'] and cur['ta'] <= t) or (cur['rem'] <= 1e-12 and cur['tfill'] + L_FILL <= t)):
+            cur = None                                    # refusal / own fill known
+        b = best[k]; ab = v[k] > enter; on = bool(s[k]) or bool(MUT_NO_EXIT)
+        if lane == 'join':                                # pf_review_queue_reach.sim, verbatim
+            if cur is not None:
+                if not on or b < 0:
+                    kill = True
+                elif b != cur['pt']:
+                    kill = ab or ((b - cur['pt']) if side == 0 else (cur['pt'] - b)) != 1
+                else:
+                    kill = False
+                if kill:
+                    cancel(cur, t); cur = None
+            if cur is None and on and ab and b >= 0:
+                cur = place(int(b), t)
+        elif lane == 'birth':
+            gap = tprev is not None and t - tprev > 60.0
+            imp = pb >= 0 and b >= 0 and not gap and (((b > pb) if side == 0 else (b < pb)) or bool(MUT_BIRTH_ANY and b != pb))
+            if imp:
+                kb = k; pborn = b                         # a level born as the best at this step
+            elif b != pborn or gap:
+                kb = -1
+            pb = b
+            trig = kb >= 0 and k - kb == lag
+            if cur is not None:
+                if not on or b < 0:
+                    kill = True
+                else:
+                    d = (b - cur['pt']) if side == 0 else (cur['pt'] - b)   # ticks the known best is better than ours
+                    kill = (trig and ab) if d == 1 else (d != 0 and not (MUT_KEEP2 and d == 2))
+                if kill:
+                    cancel(cur, t); cur = None
+            if cur is None and on and ab and trig:
+                cur = place(int(b), t)
+        elif lane == 'rung':
+            if cur is not None:
+                if not on or b < 0:
+                    kill = True
+                else:
+                    beh = (b - cur['pt']) if side == 0 else (cur['pt'] - b)
+                    kill = beh > RUNG_K or not ((cur['pt'] < bopp[k]) if side == 0 else (cur['pt'] > bopp[k]))
+                if kill:
+                    cancel(cur, t); cur = None
+            if cur is None and on and ab and b >= 0:
+                tgt = b if MUT_RUNG_TOUCH else ((b - 1) if side == 0 else (b + 1))
+                if 1 <= tgt <= 99:
+                    cur = place(int(tgt), t)
+        else:                                             # improve
+            tgt = -1
+            if on and ab and b >= 0 and aux[k]:
+                tgt = b if MUT_IMP_TOUCH else ((b + 1) if side == 0 else (b - 1))
+            if cur is not None:
+                kill = (not on or b < 0) or cur['pt'] != (tgt if tgt >= 0 else b)
+                if kill:
+                    cancel(cur, t); cur = None
+            if cur is None and tgt >= 0:
+                cur = place(int(tgt), t)
+        tprev = t
+        if live and (live[0]['tr'] <= t or live[0]['rem'] <= 1e-12):
+            live[:] = [o for o in live if o['rem'] > 1e-12 and o['tr'] > t]
+    while it < nt and ttl[it] <= t_end:
+        apply(it); it += 1
+    if cur is not None:
+        cancel(cur, t_end)
+    while it < nt and ttl[it] <= t_end + 200.0:
+        apply(it); it += 1
+    return fills, [(o['ta'], min(o['tr'], o['tfill'], t_end + 200.0), o['a0'], o['ref']) for o in orders]
+
+
+def _run2(lane, fr, tr, qrule, v=None, enter=0.0, exitl=None, t_end=600.0, lag=0, rev=False):
+    """Synthetic bid-side case. fr: (t, [(bid price, size), ...] best first, ask price); tr: (t, price, shares).
+    A frame is known at its time."""
+    tf = np.array([f[0] for f in fr], float); n = len(fr)
+    PB = np.full((n, 5), -1); SB = np.zeros((n, 5))
+    for i, f in enumerate(fr):
+        for j, (p, z) in enumerate(f[1][:5]):
+            PB[i, j] = p; SB[i, j] = z
+    bb = PB[:, 0].copy(); ba = np.array([f[2] for f in fr])
+    tau = np.arange(0.0, t_end, 50.0)
+    v = np.ones(len(tau)) if v is None else np.r_[np.asarray(v, float), np.full(len(tau) - len(v), v[-1])]
+    st = capped(tau, v, enter, enter if exitl is None else exitl, INF)[0]
+    ki = np.searchsorted(np.sort(tf), tau, side='right') - 1
+    ok = (ki >= 0) & (bb[ki] >= 0) & (ba[ki] > bb[ki])
+    best = np.where(ok, bb[ki], -1); bo = np.where(ok, ba[ki], -1)
+    tt = np.array([x[0] for x in tr], float)
+    F, O = sim2(lane, 0, tf[::-1] if rev else tf, ba, PB, SB, {}, tau, v.tolist(), st.tolist(), enter, best.tolist(), bo.tolist(), tt,
+                [x[1] for x in tr], [float(x[2]) for x in tr], qrule, t_end, lag=lag, aux=(ok & (ba[ki] - bb[ki] >= 2)).tolist())
+    return [(float(tt[i]), int(pt), float(q), bool(th), ph) for i, pt, q, th, _, ph, _a in F], O
+
+
+def selftest():
+    """Synthetic cases with known answers; returns the list of failed case names."""
+    bad = []
+    def chk(name, got, want):
+        if got != want:
+            bad.append(name)
+    B50 = (-100, [(50, 100)], 52); hold = [1.0, 1.0, 1.0, -0.05]
+    born = [(-100, [(50, 100)], 53), (100, [(51, 20), (50, 100)], 53)]
+    # lane B: no order before a birth; entry at the birth; queue ahead = the born level's shown size
+    fr = [B50, (100, [(51, 20), (50, 100)], 52)]
+    chk('TB1-U', _run2('birth', fr, [(60, 50, 10), (120, 51, 1), (150, 51, 5), (300, 51, 5)], 'U')[0], [(150.0, 51, 5.0, False, 'above')])
+    chk('TB1-M', _run2('birth', fr, [(150, 51, 18), (160, 51, 4), (170, 51, 10)], 'M')[0],
+        [(160.0, 51, 2.0, False, 'above'), (170.0, 51, 3.0, False, 'above')])
+    # a fall-back of the best is not a birth
+    chk('TB2', _run2('birth', [(-100, [(51, 50), (50, 100)], 52), (100, [(50, 100)], 52)], [(200, 50, 10)], 'U')[0], [])
+    # hold band, a new level born in front: stay one behind
+    fr3 = born + [(200, [(52, 10), (51, 20), (50, 100)], 53)]
+    chk('TB3a', _run2('birth', fr3, [(260, 51, 5)], 'U', v=hold, exitl=-0.10)[0], [(260.0, 51, 5.0, False, 'hold')])
+    # above the line, a new level born in front: cancel (22 ms) and enter the new level (40 ms)
+    chk('TB3b', _run2('birth', fr3, [(210, 51, 1), (225, 51, 2), (260, 52, 3)], 'U')[0],
+        [(210.0, 51, 1.0, False, 'pend'), (260.0, 52, 3.0, False, 'above')])
+    # hold band, the best two ticks better: cancel
+    chk('TB4', _run2('birth', born + [(200, [(53, 10), (51, 20)], 54)], [(230, 51, 5)], 'U', v=hold, exitl=-0.10)[0], [])
+    # alone in front: cancel; a trade inside the cancel latency still fills
+    chk('TB5', _run2('birth', born + [(200, [(50, 100)], 53)], [(215, 51, 2), (230, 51, 2)], 'U')[0], [(215.0, 51, 2.0, False, 'pend')])
+    # exit line
+    chk('TB6', _run2('birth', born, [(190, 51, 1), (230, 51, 1)], 'U', v=[1.0, 1.0, 1.0, -0.05, -0.2], exitl=-0.10)[0],
+        [(190.0, 51, 1.0, False, 'hold')])
+    # lane L: entry 2 s after the birth, only if the level is still the best
+    chk('TB7a', _run2('birth', born, [(500, 51, 5), (2200, 51, 3)], 'U', t_end=3000.0, lag=LAG_LATE)[0], [(2200.0, 51, 3.0, False, 'above')])
+    chk('TB7b', _run2('birth', born + [(1000, [(50, 100)], 53)], [(500, 51, 5), (2200, 51, 3)], 'U', t_end=3000.0, lag=LAG_LATE)[0], [])
+    # lane R: one tick behind the best, queue at the rung price, a sweep through it, re-placed after the known fill
+    chk('TR1', _run2('rung', [(-100, [(50, 100), (49, 30)], 51)], [(100, 50, 100), (200, 49, 32), (300, 48, 10), (500, 48, 1)], 'M')[0],
+        [(200.0, 49, 2.0, False, 'above'), (300.0, 49, 3.0, True, 'above'), (500.0, 49, 1.0, True, 'above')])
+    # promoted to the best: keep; two ticks behind: keep (K = 2); three behind: cancel, one tick behind again
+    fr = [(-100, [(50, 100), (49, 30)], 51), (100, [(49, 30)], 51), (200, [(51, 10), (50, 5), (49, 30)], 52),
+          (300, [(52, 10), (51, 10), (50, 5), (49, 30)], 53)]
+    chk('TR2', _run2('rung', fr, [(150, 49, 1), (250, 49, 1), (330, 49, 1), (350, 51, 2)], 'U')[0],
+        [(150.0, 49, 1.0, False, 'above'), (250.0, 49, 1.0, False, 'above'), (350.0, 51, 2.0, False, 'above')])
+    # in front of the best after a fall-back: kept; at or through the known opposite best: cancelled
+    chk('TR3', _run2('rung', [(-100, [(50, 100)], 52), (100, [(48, 50)], 52), (200, [(48, 50)], 49)], [(150, 49, 2), (230, 49, 1)], 'M')[0],
+        [(150.0, 49, 2.0, False, 'above')])
+    # lane I: one tick inside a 2-tick spread, alone (queue 0); others join -> kept; a sweep fills at our price
+    fr = [B50, (200, [(51, 40), (50, 100)], 52), (300, [(50, 100)], 52)]
+    chk('TI1', _run2('improve', fr, [(20, 50, 5), (100, 50, 3), (250, 51, 1), (350, 50, 9)], 'M')[0],
+        [(100.0, 51, 3.0, True, 'above'), (250.0, 51, 1.0, False, 'above'), (350.0, 51, 1.0, True, 'above')])
+    # 1-tick spread: no order; the inside price moves: re-price
+    fr = [(-100, [(50, 100)], 51), (200, [(50, 100)], 53), (300, [(51, 5), (50, 100)], 53)]
+    chk('TI2', _run2('improve', fr, [(100, 50, 10), (310, 50, 1), (330, 51, 1), (350, 51, 2)], 'U')[0],
+        [(310.0, 51, 1.0, True, 'pend'), (350.0, 52, 2.0, True, 'above')])
+    # lane J on D-F's own synthetic case must equal D-F's sim
+    fr = [(-100, [(50, 100)], 51), (250, [(50, 30)], 51)]; tr = [(200, 50, 60), (300, 50, 32), (400, 49, 10)]
+    for q in 'MLU':
+        chk(f'TJ-{q}', _run2('join', fr, tr, q)[0], QR._run([(-100, 50, 100, 51, 100), (250, 50, 30, 51, 100)], tr, q)[0])
+    for name, kw in (('bad-frames', dict(rev=True, tr=tr)), ('bad-trades', dict(tr=tr[::-1]))):
+        try:                                              # known-bad input must be refused
+            _run2('birth', fr, kw['tr'], 'M', rev=kw.get('rev', False)); bad.append(name)
+        except ValueError:
+            pass
+    try:
+        _run2('touch', fr, tr, 'M'); bad.append('bad-lane')
+    except ValueError:
+        pass
+    return bad
+
+
+MUT = (('L_CANCEL', 30.0), ('L_PLACE', 10.0), ('L_FILL', 400.0), ('SIZE', 4.0), ('RUNG_K', 1), ('MUT_BIRTH_ANY', 1), ('MUT_KEEP2', 1),
+       ('MUT_LAG0', 1), ('MUT_RUNG_TOUCH', 1), ('MUT_IMP_TOUCH', 1), ('MUT_NO_EXIT', 1))
+
+
+def mutation_check():
+    """Falsifier for the synthetic cases themselves: each planted error must fail at least one of them."""
+    g = globals(); out = {}
+    for name, val in MUT:
+        old = g[name]; g[name] = val
+        try:
+            out[name] = selftest()
+        finally:
+            g[name] = old
+    return out
+
+
+AGES = [('< 100 ms', 0.0, 100.0), ('100-500 ms', 100.0, 500.0), ('0.5-2 s', 500.0, 2000.0), ('>= 2 s', 2000.0, INF)]
+QB = [('0-25 sh', 0.0, 25.0), ('25-100 sh', 25.0, 100.0), ('100-300 sh', 100.0, 300.0), ('> 300 sh', 300.0, INF)]
+DLT = (100.0, 200.0, 500.0, 1000.0, 2000.0)
+LAGE = [('< 0.5 s', 0.0, 500.0), ('0.5-2 s', 500.0, 2000.0), ('2-10 s', 2000.0, 10000.0), ('>= 10 s', 10000.0, INF)]
+
+
+def cut(f):
+    """Shares, fills and share-weighted values of a slice of the fill table."""
+    w = f.q.values; sh = float(w.sum())
+    return dict(fills=int(len(f)), shares=sh, thr_pct=100.0 * float(w[f.thr.values].sum()) / sh if sh else float('nan'),
+                mo1=wmean(f.mo1.values, w), mo5=wmean(f.mo5.values, w), mo60=wmean(f.mo60.values, w), settle=wmean(f.st.values, w))
+
+
+def met2(f, life, a0, nref, nws, days):
+    """Per-arm summary of a fill table and the order lives / queues ahead (pf_review_queue_reach.met plus extras)."""
+    x = cut(f); w = f.q.values; sh = x['shares']; life = np.asarray(life); a0 = np.asarray(a0)
+    usd = lambda c: float(np.nansum(w * f[c].values)) / 100.0 / days
+    if len(f):
+        g = f.groupby(['mid', 'side']).q.sum().unstack(fill_value=0.0).reindex(columns=[0, 1], fill_value=0.0)
+        matched = 100.0 * (1.0 - float((g[0] - g[1]).abs().sum()) / float((g[0] + g[1]).sum()))
+    else:
+        matched = float('nan')
+    d = f.dist.values
+    x.update(orders=int(len(life)), refused=int(nref), orders_per_side_min=len(life) / nws,
+             life_p50_ms=float(np.median(life)) if len(life) else float('nan'),
+             life_p90_ms=float(np.quantile(life, 0.9)) if len(life) else float('nan'),
+             rest_pct=100.0 * float(life.sum()) / (nws * 60000.0), ahead_p50=float(np.nanmedian(a0)) if np.isfinite(a0).any() else float('nan'),
+             sh_per_window=sh / (nws / 2.0), e2_pct=100.0 * float(w[f.e2.values].sum()) / sh if sh else float('nan'),
+             behind_pct=100.0 * float(w[d >= 1].sum()) / sh if sh else float('nan'),
+             front_pct=100.0 * float(w[d < 0].sum()) / sh if sh else float('nan'),
+             usd1=usd('mo1'), usd5=usd('mo5'), usd60=usd('mo60'), usdst=usd('st'), matched_pct=matched,
+             mo1_odd=wmean(f.mo1.values[f.par.values == 1], w[f.par.values == 1]),
+             mo1_even=wmean(f.mo1.values[f.par.values == 0], w[f.par.values == 0]))
+    return x
+
+
+def main():
+    from array import array
+    bad = selftest()
+    if bad:
+        sys.exit(f'SELFTEST FAILED -> no table: {bad}')
+    mut = mutation_check()
+    if not all(mut.values()) or selftest():
+        sys.exit(f'SELFTEST FAILED -> no table: a planted error passed the synthetic cases, or the constants were not restored: {mut}')
+    sc = json.load(open(f'{RP}/scope.json')); W0 = {int(w['market']): w['ws'] * 1000.0 for w in sc['windows']}
+    days = len(W0) / 288.0
+    LN = json.load(open(f'{RP}/research/step4/minute_lines_t60k.json'))['lines']; P90, P50 = LN['90'][0], LN['50'][0]
+    ARMS = {'J-v3': ('join', 0, P90, P90), 'J-none': ('join', 0, -INF, -INF),
+            'B-none': ('birth', 0, -INF, -INF), 'B-g10': ('birth', 0, -0.10, -0.10), 'B-g50': ('birth', 0, P50, P50),
+            'B-g90': ('birth', 0, P90, P90), 'B-90/10': ('birth', 0, P90, -0.10),
+            'L-none': ('birth', LAG_LATE, -INF, -INF), 'L-g90': ('birth', LAG_LATE, P90, P90),
+            'R-none': ('rung', 0, -INF, -INF), 'R-g10': ('rung', 0, -0.10, -0.10), 'R-g50': ('rung', 0, P50, P50), 'R-g90': ('rung', 0, P90, P90),
+            'I-none': ('improve', 0, -INF, -INF), 'I-g50': ('improve', 0, P50, P50), 'I-g90': ('improve', 0, P90, P90)}
+    ck = json.load(open(f'{S1}/clock_rl_d2.json')); SH, DD = ck['shift_ms'], ck['d_dec']
+    reg = pd.read_parquet(f'{S1}/registry.parquet', columns=['mid', 'outcome'])
+    YUP = {int(m): float(o == 'Up') for m, o in zip(reg.mid, reg.outcome) if o in ('Up', 'Down')}
+    P = pd.read_parquet(f'{RP}/research/step5/20261108/preds_t60k.parquet', columns=['mid', 'tau', 'v_bid', 'v_ask'])
+    G = {int(m): (g.tau.values.astype(float), g.v_bid.values.astype(float), g.v_ask.values.astype(float)) for m, g in P.groupby('mid')}
+    del P
+    cols = ['mid', 't_ms', 'recv_ns'] + [f'{s}{i}_{x}' for s in 'ba' for i in range(1, 6) for x in 'ps']
+    parts = []
+    for fn in sorted(glob.glob(f'{S1}/books/part_*.parquet')):
+        d = pd.read_parquet(fn, columns=cols); d = d[d.mid.isin(W0)]
+        rel = d.t_ms.values - d.mid.map(W0).values
+        parts.append(d[(rel >= -5000.0) & (rel <= 125000.0)])
+    B = pd.concat(parts, ignore_index=True); del parts
+    BI = B.groupby('mid', sort=False).indices
+
+    LT = pd.read_parquet(f'{S1}/legs_timed2.parquet', columns=['mid', 'exec_s', 'side', 'ptick', 'shares', 't_ms', 'how', 't_e2'])
+    tk = pd.read_parquet(f'{S1}/legs_tk.parquet', columns=['tk']).tk.values
+    if len(tk) != len(LT):
+        sys.exit('REFUSED: legs_tk not aligned with legs_timed2')
+    grp = np.where(tk >= 0, tk, -1 - np.arange(len(LT)))   # one time per taker order (as the engine, PF_TXKEY=tk PF_TXTIME=ws)
+    ws_t = np.where(LT.how.values > 0, LT.t_ms.values.astype(float), np.nan)
+    e2_t = np.where((LT.how.values == 0) & np.isfinite(LT.t_e2.values), LT.t_e2.values, np.nan)
+    a_ = pd.Series(ws_t).groupby(grp, sort=False).transform('min').values
+    b_ = pd.Series(e2_t).groupby(grp, sort=False).transform('min').values
+    LT['anc'] = np.where(np.isfinite(a_), a_, b_); LT['e2'] = ~np.isfinite(a_) & np.isfinite(b_)
+    LT = LT[LT.mid.isin(W0)].copy(); LT['ws'] = LT.mid.map(W0)
+    unt = LT[~np.isfinite(LT.anc.values) & (LT.exec_s * 1000.0 >= LT.ws) & (LT.exec_s * 1000.0 < LT.ws + 60000.0)]
+    LT = LT[np.isfinite(LT.anc.values)]
+    in60 = LT[(LT.anc >= LT.ws) & (LT.anc < LT.ws + 60000.0)]
+    stat = dict(untimed_legs=int(len(unt)), untimed_shares=float(unt.shares.sum()), legs_0_60=int(len(in60)),
+                shares_0_60=float(in60.shares.sum()), e2_share_pct=100.0 * float(in60.shares[in60.e2].sum()) / float(in60.shares.sum()),
+                windows=len(W0), no_frames=0, no_outcome=0, grid_steps=0, grid_steps_v_missing=0, grid_gaps=0, fallbacks=0)
+    LT = LT[(LT.anc >= LT.ws - 2000.0) & (LT.anc <= LT.ws + 61000.0)]
+    LI = LT.groupby(['mid', 'side'], sort=False).indices
+
+    norm = lambda O: [(o[0], o[1], -1.0 if o[2] != o[2] else o[2], o[3]) for o in O]
+    rows = []; OL = {(q, shf, a): [array('d'), array('d'), 0] for q, shf in CFG for a in ARMS}
+    BR = []; FL = []; nws = 0; reg_n = reg_bad = mut_n = mut_dif = 0; g_ = globals()
+    order_w = sorted(W0, key=W0.get); widx = {m: i for i, m in enumerate(order_w)}
+    for m in order_w:
+        if m not in BI or m not in G:
+            stat['no_frames'] += 1; continue
+        if m not in YUP:
+            stat['no_outcome'] += 1; continue
+        ws = W0[m]; te = ws + 60000.0
+        b = B.iloc[BI[m]].sort_values('t_ms', kind='stable')
+        tf = b.t_ms.values.astype(float)
+        kf = np.maximum.accumulate(np.maximum(tf + PF_MIN, b.recv_ns.values / 1e6 - SH) + DD)
+        bb = b.b1_p.values.astype('int64'); ba = b.a1_p.values.astype('int64'); valid = (bb >= 0) & (ba > bb)
+        mff = pd.Series(np.where(valid, (ba + bb) / 2.0, np.nan)).ffill().values
+
+        def mid_at(t):
+            i = np.searchsorted(tf, t, side='right') - 1
+            return np.where(i >= 0, mff[np.maximum(i, 0)], np.nan)
+        lev = {0: (b[[f'b{i}_p' for i in range(1, 6)]].values.astype('int64'), b[[f'b{i}_s' for i in range(1, 6)]].values.astype(float)),
+               1: (b[[f'a{i}_p' for i in range(1, 6)]].values.astype('int64'), b[[f'a{i}_s' for i in range(1, 6)]].values.astype(float))}
+        tau, vb, va = G[m]; k = (tau >= ws) & (tau < te); tg = tau[k]
+        ki = np.searchsorted(kf, tg, side='right') - 1; okk = (ki >= 0) & (bb[ki] >= 0) & (ba[ki] > bb[ki])
+        kb_ = np.where(okk, bb[ki], -1); ka_ = np.where(okk, ba[ki], -1); spk = np.where(okk, ka_ - kb_, 0)
+        best = {0: kb_.tolist(), 1: ka_.tolist()}; bopp = {0: best[1], 1: best[0]}; vk = {0: vb[k], 1: va[k]}
+        stat['grid_steps'] += 2 * int(k.sum()); stat['grid_steps_v_missing'] += int((~np.isfinite(vk[0])).sum() + (~np.isfinite(vk[1])).sum())
+        stat['grid_gaps'] += int((np.diff(tg) > 60.0).sum())
+        ST = {a: {s_: capped(tau, (vb, va)[s_], lin, lout, INF)[0][k] for s_ in (0, 1)} for a, (_, _, lin, lout) in ARMS.items()}
+        AUX = {}
+        for a, (lane, _, lin, _) in ARMS.items():
+            if lane == 'improve':                         # the engine's IM: both want the one inside price -> the higher v takes it
+                wb = ST[a][0] & (vk[0] > lin); wa = ST[a][1] & (vk[1] > lin); col = wb & wa & (spk == 2); lt = vk[0] < vk[1]
+                AUX[a] = {0: (wb & (spk >= 2) & ~(col & lt)).tolist(), 1: (wa & (spk >= 2) & ~(col & ~lt)).tolist()}
+        for side in (0, 1):
+            nws += 1; sg = 1.0 if side == 0 else -1.0; v = (vb, va)[side]; vkl = vk[side].tolist(); tru = (bb, ba)[side]
+            if (m, side) in LI:
+                l = LT.iloc[LI[(m, side)]]
+                o_ = np.lexsort(((-l.ptick.values if side == 0 else l.ptick.values), l.anc.values))   # time, then the maker side's best price first
+                anc = l.anc.values[o_]; pt = l.ptick.values[o_].astype('int64'); sh = l.shares.values[o_].astype(float); e2 = l.e2.values[o_]
+            else:
+                anc = np.zeros(0); pt = np.zeros(0, 'int64'); sh = np.zeros(0); e2 = np.zeros(0, bool)
+
+            # Part A (true time): levels born as the best in [ws, ws + 60 s), and at-best flow by the level's age and origin
+            up = (tru[1:] > tru[:-1]) if side == 0 else (tru[1:] < tru[:-1]); both = valid[1:] & valid[:-1]
+            chg = np.r_[True, (tru[1:] != tru[:-1]) | ~valid[1:] | ~valid[:-1]]; ci_ = np.where(chg)[0]
+            isb = np.r_[False, both & up]; inw = (tf >= ws) & (tf < te)
+            nfall = int((np.r_[False, both & ~up & (tru[1:] != tru[:-1])] & inw).sum())
+            S1_ = lev[side][1][:, 0]
+            for j in np.where(isb & inw)[0]:
+                pos = np.searchsorted(ci_, j, side='right'); j2 = int(ci_[pos]) if pos < len(ci_) else len(tf)
+                t0 = tf[j]; end = tf[j2] if j2 < len(tf) else tf[-1]; p = tru[j]
+                ii = np.searchsorted(tf, t0 + np.array(DLT), side='right') - 1; alive = ii < j2
+                kk = (pt == p) & (anc >= t0) & (anc < end)
+                BR.append((side, float(S1_[j]), end - t0, j2 >= len(tf), abs(int(tru[j]) - int(tru[j - 1])))
+                          + tuple(bool(x) for x in alive) + tuple(float(S1_[i]) if a_ else np.nan for i, a_ in zip(ii, alive))
+                          + (float(anc[kk].min() - t0) if kk.any() else np.nan, float(sh[kk].sum())))
+            kk = (anc >= ws) & (anc < te)
+            if kk.any():
+                j = np.searchsorted(tf, anc[kk], side='left') - 1; jz = np.maximum(j, 0)
+                atb = (j >= 0) & valid[jz] & (pt[kk] == tru[jz])
+                st0 = ci_[np.maximum(np.searchsorted(ci_, jz, side='right') - 1, 0)]
+                FL.append(pd.DataFrame(dict(side=side, sh=sh[kk], atb=atb, age=anc[kk] - tf[st0],
+                                            org=np.where(st0 == 0, 'unknown', np.where(isb[st0], 'born', 'fallback')))))
+            stat['fallbacks'] += nfall
+
+            stl = {a: ST[a][side].tolist() for a in ARMS}
+            cache = {}; ptl = pt.tolist(); shl = sh.tolist(); par = widx[m] % 2
+            for q, shf in CFG:
+                tt = anc - shf
+                F0, O0 = QR.sim(side, tf, (ba, bb)[side], lev[side][0], lev[side][1], cache, tg, vkl, stl['J-v3'], P90, best[side], tt, ptl, shl, q, te)
+                for a, (lane, lag, lin, _) in ARMS.items():
+                    F, O = sim2(lane, side, tf, (ba, bb)[side], lev[side][0], lev[side][1], cache, tg, vkl, stl[a], lin, best[side], bopp[side],
+                                tt, ptl, shl, q, te, lag=lag, aux=AUX[a][side] if a in AUX else None)
+                    if a == 'J-v3':                       # control (i): the copied machinery equals D-F's, fill for fill
+                        reg_n += 1; reg_bad += int(F != F0 or norm(O) != norm(O0))
+                        if nws <= 40 and (q, shf) == PRIM:   # control (ii): the comparison must be able to fail
+                            old = g_['L_CANCEL']; g_['L_CANCEL'] = 30.0
+                            try:
+                                Fm, Om = sim2(lane, side, tf, (ba, bb)[side], lev[side][0], lev[side][1], cache, tg, vkl, stl[a], lin, best[side],
+                                              bopp[side], tt, ptl, shl, q, te)
+                            finally:
+                                g_['L_CANCEL'] = old
+                            mut_n += 1; mut_dif += int(Fm != F0 or norm(Om) != norm(O0))
+                    if F:
+                        ix = np.array([f[0] for f in F]); p_ = np.array([f[1] for f in F], float); t0 = anc[ix]
+                        m1, m5, m60 = (sg * (mid_at(t0 + h) - p_) for h in (1000.0, 5000.0, 60000.0))
+                        j = np.searchsorted(tf, tt[ix], side='left') - 1; jz = np.maximum(j, 0)
+                        dist = np.where((j >= 0) & valid[jz], (tru[jz] - p_) if side == 0 else (p_ - tru[jz]), np.nan)
+                        for n_, f in enumerate(F):
+                            rows.append((q, shf, a, m, side, f[2], bool(f[3]), f[4], f[5], bool(e2[ix[n_]]), m1[n_], m5[n_], m60[n_],
+                                         sg * (100.0 * YUP[m] - f[1]), f[6], dist[n_], par))
+                    L_ = OL[(q, shf, a)]
+                    for o in O:
+                        if o[3]:
+                            L_[2] += 1
+                        else:
+                            L_[0].append(max(o[1] - o[0], 0.0)); L_[1].append(o[2])
+    FD = pd.DataFrame(rows, columns=['rule', 'shf', 'arm', 'mid', 'side', 'q', 'thr', 'age', 'ph', 'e2', 'mo1', 'mo5', 'mo60', 'st', 'a0', 'dist', 'par'])
+    del rows
+    report(FD, OL, BR, FL, ARMS, stat, mut, dict(n=reg_n, bad=reg_bad, mut_n=mut_n, mut_dif=mut_dif), nws, days, len(W0), P90, P50)
+
+
+def report(FD, OL, BR, FL, ARMS, stat, mut, reg, nws, days, nwin, P90, P50):
+    asof = f'{pd.Timestamp.now("UTC"):%Y-%m-%dT%H:%M:%SZ}'
+    GF = {k: g for k, g in FD.groupby(['rule', 'shf', 'arm'], sort=False)}; EMPTY = FD.iloc[0:0]
+    gf = lambda q, shf, a: GF.get((q, shf, a), EMPTY)
+    M = {(q, shf, a): met2(gf(q, shf, a), OL[(q, shf, a)][0], OL[(q, shf, a)][1], OL[(q, shf, a)][2], nws, days) for q, shf in CFG for a in ARMS}
+    DF = json.load(open(DF_JSON))['metrics']; jbad = []
+    KEYS = ('orders', 'refused', 'fills', 'shares', 'mo1', 'mo5', 'usd1', 'usd5', 'life_p50_ms', 'ahead_p50', 'thr_pct')
+    for q, shf in CFG:
+        ref = DF[f'{q}|{shf:.0f}|v3 (exit = enter)']; x = M[(q, shf, 'J-v3')]
+        jbad += [f'{q}|{shf:.0f}|{key}' for key in KEYS if not abs(x[key] - ref[key]) <= 1e-9 * max(1.0, abs(ref[key]))]
+    ctl = dict(regression_cells=reg['n'], regression_mismatches=reg['bad'], committed_fields_checked=len(CFG) * len(KEYS), committed_mismatches=jbad,
+               planted_cancel_cells=reg['mut_n'], planted_cancel_differs=reg['mut_dif'])
+    ctl['ok'] = bool(reg['n'] > 0 and reg['bad'] == 0 and not jbad and reg['mut_dif'] > 0)
+    fmt = lambda x, n=3: 'n/a' if x is None or not np.isfinite(x) else f'{x:+.{n}f}'
+    fp = lambda x, n=1: 'n/a' if x is None or not np.isfinite(x) else f'{x:.{n}f}'
+    print(f'D-G level birth / queue priority | as of {asof} | windows {nwin} ({nws} window-sides, {days:.3f} window-days) | cohort 2026-11-08, consumed, first 60 s')
+    print('self-test: synthetic PASS. Planted errors caught: ' + '; '.join(f'{n_} -> {b_}' for n_, b_ in mut.items()))
+    print(f'control (i) regression: lane J-v3 against the D-F sim on {reg["n"]} window-side x config cells: {reg["bad"]} differ; committed D-F rows '
+          f'({len(CFG)} configs x {len(KEYS)} fields): {len(jbad)} differ -> {"PASS" if reg["n"] > 0 and reg["bad"] == 0 and not jbad else "FAIL"}')
+    print(f'control (ii): cancel latency 30 ms on {reg["mut_n"]} window-sides: {reg["mut_dif"]} differ from the D-F sim -> {"PASS" if reg["mut_dif"] > 0 else "FAIL"}')
+    if not ctl['ok']:
+        sys.exit(f'SELFTEST FAILED -> no table: real-data control {jbad[:6]}')
+    print(f'statuses: untimed legs in 0-60 s (excluded) {stat["untimed_legs"]:,} / {stat["untimed_shares"]:,.0f} sh; timed legs in 0-60 s '
+          f'{stat["legs_0_60"]:,} / {stat["shares_0_60"]:,.0f} sh (E2-timed {stat["e2_share_pct"]:.1f}% of shares); windows without frames '
+          f'{stat["no_frames"]}, without outcome {stat["no_outcome"]}; grid steps without a guard value {stat["grid_steps_v_missing"]:,} of '
+          f'{stat["grid_steps"]:,}; grid gaps > 60 ms {stat["grid_gaps"]}')
+
+    # Part A: levels born as the best (true time)
+    BD = pd.DataFrame(BR, columns=['side', 's0', 'life', 'cens', 'jump'] + [f'al{int(d)}' for d in DLT] + [f'sz{int(d)}' for d in DLT] + ['t1', 'vol'])
+    A = dict(births=int(len(BD)), births_per_side_min=len(BD) / nws, fallbacks_per_side_min=stat['fallbacks'] / nws,
+             jump1_pct=100.0 * float((BD.jump == 1).mean()), s0_p50=float(BD.s0.median()), s0_p90=float(BD.s0.quantile(0.9)),
+             life_p50_ms=float(BD.life.median()), life_p90_ms=float(BD.life.quantile(0.9)), censored=int(BD.cens.sum()),
+             traded_pct=100.0 * float(BD.t1.notna().mean()), traded_200ms_pct=100.0 * float((BD.t1 <= 200.0).mean()),
+             traded_1s_pct=100.0 * float((BD.t1 <= 1000.0).mean()), vol_mean=float(BD.vol.mean()), vol_sum=float(BD.vol.sum()),
+             alive_pct={f'{int(d)}': 100.0 * float(BD[f'al{int(d)}'].mean()) for d in DLT},
+             size_p50={f'{int(d)}': float(BD[f'sz{int(d)}'].median()) for d in DLT})
+    print(f'\nPart A (true time, both sides). Levels born as the best in the first 60 s: {A["births"]:,} = {A["births_per_side_min"]:.2f} per side-minute '
+          f'({A["jump1_pct"]:.1f}% by one tick); fall-backs {A["fallbacks_per_side_min"]:.2f} per side-minute')
+    print(f'  shown size at the born level, p50: at birth {A["s0_p50"]:.1f} sh (p90 {A["s0_p90"]:.1f}); ' + '; '.join(
+        f'+{int(d)} ms {A["size_p50"][str(int(d))]:.1f}' for d in DLT) + '  (levels still the best)')
+    print('  still the best after: ' + '; '.join(f'{int(d)} ms {A["alive_pct"][str(int(d))]:.1f}%' for d in DLT)
+          + f'; life p50 {A["life_p50_ms"]:.0f} ms, p90 {A["life_p90_ms"]:.0f} ms ({A["censored"]} censored)')
+    print(f'  traded at the level while it was the best: {A["traded_pct"]:.1f}% of births (first trade within 200 ms {A["traded_200ms_pct"]:.1f}%, '
+          f'within 1 s {A["traded_1s_pct"]:.1f}%); {A["vol_mean"]:.1f} sh per birth, {A["vol_sum"]:,.0f} sh in all')
+    FLd = pd.concat(FL, ignore_index=True); tot = float(FLd.sh.sum()); ab_ = FLd[FLd.atb]; tb = float(ab_.sh.sum()); FA = {}
+    FA['at_best_pct_of_all'] = 100.0 * tb / tot
+    for name, lo, hi in LAGE:
+        FA[f'born {name}'] = 100.0 * float(ab_.sh[(ab_.org == 'born') & (ab_.age >= lo) & (ab_.age < hi)].sum()) / tb
+    for o in ('fallback', 'unknown'):
+        FA[o] = 100.0 * float(ab_.sh[ab_.org == o].sum()) / tb
+    print(f'  at-best maker volume in the first 60 s ({tb:,.0f} sh = {FA["at_best_pct_of_all"]:.1f}% of timed volume) by the level it traded at: born as the best, age '
+          + '; '.join(f'{name} {FA[f"born {name}"]:.1f}%' for name, _, _ in LAGE) + f' | became the best by a fall-back {FA["fallback"]:.1f}% | start not seen {FA["unknown"]:.1f}%')
+
+    print(f'\nPrimary config (queue rule {PRIM[0]}, trade shift {PRIM[1]:.0f} ms). One 5-sh order per side, first 60 s. USD/day = per day of first minutes.')
+    print(f'{"arm":8s} {"ord/s-min":>9s} {"life p50/p90 ms":>16s} {"rest %":>6s} {"ahead p50":>9s} {"refus":>5s} {"fills":>6s} {"sh":>8s} {"thr %":>6s} '
+          f'{"behind %":>8s} {"E2 %":>5s} {"c/sh 1s":>8s} {"5s":>7s} {"60s":>7s} {"settle":>7s} {"USD/d 1s":>9s} {"5s":>8s} {"60s":>8s} {"settle":>8s} {"matched %":>9s}')
+    for a in ARMS:
+        x = M[PRIM + (a,)]
+        print(f'{a:8s} {x["orders_per_side_min"]:9.2f} {x["life_p50_ms"]:7.0f}/{x["life_p90_ms"]:8.0f} {x["rest_pct"]:6.1f} {x["ahead_p50"]:9.1f} {x["refused"]:5d} '
+              f'{x["fills"]:6d} {x["shares"]:8.1f} {fp(x["thr_pct"]):>6s} {fp(x["behind_pct"]):>8s} {fp(x["e2_pct"]):>5s} {fmt(x["mo1"]):>8s} {fmt(x["mo5"]):>7s} '
+              f'{fmt(x["mo60"]):>7s} {fmt(x["settle"]):>7s} {fmt(x["usd1"], 2):>9s} {fmt(x["usd5"], 2):>8s} {fmt(x["usd60"], 2):>8s} {fmt(x["usdst"], 2):>8s} {fp(x["matched_pct"]):>9s}')
+    for title, key, nd in (('filled shares', 'shares', 1), ('c/sh at 1 s', 'mo1', 3), ('c/sh at 5 s', 'mo5', 3), ('USD/day at 1 s', 'usd1', 2),
+                           ('USD/day at 5 s', 'usd5', 2)):
+        print(f'\nAll configs: {title}\n{"arm":8s} ' + ' '.join(f'{q + " " + format(shf, ".0f"):>10s}' for q, shf in CFG))
+        for a in ARMS:
+            print(f'{a:8s} ' + ' '.join(f'{(format(M[(q, shf, a)][key], ".1f") if key == "shares" else fmt(M[(q, shf, a)][key], nd)):>10s}' for q, shf in CFG))
+
+    SP = {}
+    def split(title, cuts, arms):
+        print(f'\nPrimary config, {title}: shares (fills) | c/sh at 1 s | 5 s')
+        for a in arms:
+            f = gf(PRIM[0], PRIM[1], a); cells = []
+            for name, fn in cuts:
+                SP[f'{a}|{name}'] = x = cut(f[fn(f)])
+                cells.append(f'{name}: {x["shares"]:7.1f} ({x["fills"]:4d}) | {fmt(x["mo1"]):>7s} | {fmt(x["mo5"]):>7s}')
+            print(f'  {a:8s} ' + ' || '.join(cells))
+    split('fills by order age', [(f'age {n_}', (lambda f, lo=lo, hi=hi: (f.age >= lo) & (f.age < hi))) for n_, lo, hi in AGES], list(ARMS))
+    split('fills by queue ahead when the order went live', [(f'ahead {n_}', (lambda f, lo=lo, hi=hi: (f.a0 >= lo) & (f.a0 < hi))) for n_, lo, hi in QB],
+          [a for a in ARMS if a[0] in 'JBLR'])
+    split('fills by our price against the true best just before the trade',
+          [('at the best', lambda f: f.dist == 0), ('behind', lambda f: f.dist >= 1), ('in front', lambda f: f.dist < 0)], list(ARMS))
+
+    C3 = [('M', 0.0), ('M', 50.0), ('M', 250.0)]; C8 = C3 + [('L', 50.0)]
+    def verdict(vals, pos, neg):
+        if not all(np.isfinite(x) for x in vals):
+            return 'n/a'
+        return pos if all(x > 0 for x in vals) else neg if all(x < 0 for x in vals) else 'MIXED'
+    cells = lambda a, cfgs, keys: [M[(q, s_, a)][k_] for q, s_ in cfgs for k_ in keys]
+    enough = lambda a: M[PRIM + (a,)]['fills'] >= 50
+    R15 = {a: verdict(cells(a, C8, ('mo1', 'mo5')), 'BIRTH-PAYS', 'BIRTH-COSTS') if enough(a) else 'n/a' for a in ('B-none', 'B-g90')}
+    d16 = [M[c + ('B-g90',)]['mo1'] - M[c + ('B-none',)]['mo1'] for c in C3]; R16 = verdict(d16, 'GUARD-ADDS', 'GUARD-HURTS')
+    d17 = [M[c + ('B-90/10',)][u] - M[c + ('B-g90',)][u] for c in C3 for u in ('usd1', 'usd5')]; R17 = verdict(d17, 'RESIDENCE-PAYS-AT-BIRTH', 'RESIDENCE-COSTS')
+    R18 = {a: verdict(cells(a, C8, ('mo1', 'mo5')), 'RUNG-PAYS', 'RUNG-COSTS') if enough(a) else 'n/a' for a in ('R-none', 'R-g90')}
+    R19 = {a: verdict(cells(a, C3, ('mo1', 'mo5')), 'IMPROVE-PAYS', 'IMPROVE-COSTS') if enough(a) else 'n/a' for a in ('I-none', 'I-g90')}
+    R20 = {}
+    for a in ('B-none', 'R-none'):
+        l1, u1 = M[('L', 50.0, a)]['mo1'], M[('U', 50.0, a)]['mo1']
+        R20[a] = dict(L=l1, U=u1, reading='n/a' if not (np.isfinite(l1) and np.isfinite(u1)) else 'QUEUE-ROBUST' if l1 * u1 > 0 else 'QUEUE-DECISIVE')
+    T21 = {}
+    for q, s_ in C3:
+        fb = gf(q, s_, 'B-none'); T21[f'{s_:.0f}'] = dict(b_old=cut(fb[fb.age >= 2000.0]), late=cut(gf(q, s_, 'L-none')))
+    p21 = T21['50']
+    R21 = ('n/a' if min(p21['b_old']['fills'], p21['late']['fills']) < 50 else 'PRIORITY-PAYS' if all(
+        x['b_old']['shares'] > x['late']['shares'] and x['b_old']['mo1'] > x['late']['mo1'] for x in T21.values()) else 'PRIORITY-NOT-SHOWN')
+    j22 = M[PRIM + ('J-v3',)]['matched_pct']
+    R22 = {a: dict(matched_pct=M[PRIM + (a,)]['matched_pct'], reading='MORE-TWO-SIDED' if M[PRIM + (a,)]['matched_pct'] >= j22 + 10.0 else 'NOT-MORE-TWO-SIDED')
+           for a in ('B-none', 'R-none', 'I-none')}
+    R23 = {a: int(sum(M[c + (a,)][u] > M[c + ('J-v3',)][u] for c in C3 for u in ('usd1', 'usd5'))) for a in ARMS if a != 'J-v3'}
+    STB = {a: dict(odd=M[PRIM + (a,)]['mo1_odd'], even=M[PRIM + (a,)]['mo1_even'],
+                   same_sign=bool(np.isfinite(M[PRIM + (a,)]['mo1_odd']) and np.isfinite(M[PRIM + (a,)]['mo1_even'])
+                                  and M[PRIM + (a,)]['mo1_odd'] * M[PRIM + (a,)]['mo1_even'] > 0)) for a in ARMS}
+
+    print('\nR21 table (rule M): B-none fills on orders >= 2 s old | L-none fills (entered 2 s after the birth): shares (fills) | c/sh at 1 s | 5 s')
+    for s_, x in T21.items():
+        print(f'  shift {s_:>3s} ms   B-old {x["b_old"]["shares"]:7.1f} ({x["b_old"]["fills"]:4d}) | {fmt(x["b_old"]["mo1"]):>7s} | {fmt(x["b_old"]["mo5"]):>7s}'
+              f'   ||   late {x["late"]["shares"]:7.1f} ({x["late"]["fills"]:4d}) | {fmt(x["late"]["mo1"]):>7s} | {fmt(x["late"]["mo5"]):>7s}')
+    print('\nStability (not a reading): c/sh at 1 s at M 50 in odd | even windows | same sign')
+    print('  ' + '; '.join(f'{a} {fmt(x["odd"])} | {fmt(x["even"])} | {x["same_sign"]}' for a, x in STB.items()))
+    print(f'\nR15 = {R15}  (c/sh at 1 s, 5 s under M 0, M 50, M 250, L 50: ' + ' ; '.join(
+        f'{a}: ' + ', '.join(fmt(x) for x in cells(a, C8, ("mo1", "mo5"))) for a in R15) + ')')
+    print(f'R16 = {R16}  (B-g90 minus B-none, c/sh at 1 s, shifts 0 / 50 / 250: ' + ', '.join(fmt(x) for x in d16) + ')')
+    print(f'R17 = {R17}  (B-90/10 minus B-g90, USD/day at 1 s, 5 s, shifts 0 / 50 / 250: ' + ', '.join(fmt(x, 2) for x in d17) + ')')
+    print(f'R18 = {R18}  (' + ' ; '.join(f'{a}: ' + ', '.join(fmt(x) for x in cells(a, C8, ("mo1", "mo5"))) for a in R18) + ')')
+    print(f'R19 = {R19}  (c/sh at 1 s, 5 s under M 0, M 50, M 250: ' + ' ; '.join(f'{a}: ' + ', '.join(fmt(x) for x in cells(a, C3, ("mo1", "mo5"))) for a in R19) + ')')
+    print('R20 = ' + ' ; '.join(f'{a}: {x["reading"]} (rule L {fmt(x["L"])}, rule U {fmt(x["U"])})' for a, x in R20.items()))
+    print(f'R21 = {R21}')
+    print(f'R22 = ' + ' ; '.join(f'{a}: {x["reading"]} ({fp(x["matched_pct"])}%)' for a, x in R22.items()) + f'  (J-v3 {fp(j22)}%)')
+    print('R23 (cells of 6 above J-v3: USD/day at 1 s and 5 s, M at 0 / 50 / 250): ' + '; '.join(f'{a} {k_}' for a, k_ in R23.items()))
+    json.dump(dict(as_of=asof, windows=nwin, window_sides=nws, days=days, lines=dict(P90=P90, P50=P50), control=ctl, planted_errors=mut, statuses=stat,
+                   arms={a: [x[0], x[1], str(x[2]), str(x[3])] for a, x in ARMS.items()}, births=A, at_best_flow_by_level=FA,
+                   metrics={f'{q}|{shf:.0f}|{a}': v_ for (q, shf, a), v_ in M.items()}, splits=SP, r21_table=T21, stability=STB,
+                   readings=dict(R15=R15, R16=R16, R16_deltas=d16, R17=R17, R17_deltas=d17, R18=R18, R19=R19, R20=R20, R21=R21, R22=R22,
+                                 R22_J_v3=j22, R23=R23)), open(sys.argv[1], 'w'), indent=1, default=float)
+
+
+if __name__ == '__main__':
+    main()
