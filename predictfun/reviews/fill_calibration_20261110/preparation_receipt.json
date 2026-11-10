@@ -1,0 +1,47 @@
+{
+  "as_of": "2026-11-10T02:22:23.762713+00:00",
+  "status": "awaiting_capture_and_data_scope",
+  "calibration_complete": false,
+  "source_commit": "f22cd1dbd74fe9dc2a432eac469330977f917e2c",
+  "source_sha256": {
+    "predictfun/research/pf_wallet_calibration.py": "bbb84c986f9401e28f02d114c2ec1643186ac0ea4bb17cbdbe2d226bb3265293",
+    "predictfun/research/tests/test_wallet_calibration.py": "69e803d5af930e8a1e7c04073d90a7a41d363ad373b00962450d7d49913bf8fc"
+  },
+  "native_schema_commit": "79a05d3617c2f691f5dda03c9339730074335df1",
+  "native_schema_sha256": {
+    "bins/pfmm/src/live/wallet_tap.rs": "c227944fd9906bda246f747c87e9a41c9e997f75b5ace4248999153a23beff8d",
+    "bins/pmmm-tools/src/journal_export.rs": "cd438329c2dbf02c828626e0f9a42c5ed85c6e10d658e6e923214c9704be56d6",
+    "crates/pf-venue/src/wallet.rs": "982fca3c62c9d8e760790c7362904dd3f908aa32e1f2931a2e1515912e1800ee",
+    "crates/pf-exec/src/user.rs": "654214a1cdf71cd7c936613f013ade40dc10976dea82bd5c47982e0985042277"
+  },
+  "checks": {
+    "python_checks": 16,
+    "positive_full_action_population": true,
+    "deduplicated_status_clocks": true,
+    "strict_export_and_legacy_envelopes": true,
+    "corrupted_identity_counts_and_timestamps_refused": true,
+    "missing_capture_not_verified_unfilled": true,
+    "protected_scope_refused_before_input_read": true,
+    "out_of_scope_payload_refused_before_decoding": true,
+    "existing_output_refused": true
+  },
+  "controls_log_sha256": "e87b33e13e250e9d718726c6519cd890d6fde58cae49b419298e9972aba789fd",
+  "data_availability": {
+    "local_roots_checked": [
+      "/home/yuqing/pmmm-data",
+      "/home/yuqing/ctaNew/data/predict_fun",
+      "/home/yuqing/pfmm"
+    ],
+    "wallet_event_capture_found": false,
+    "decision_reasons_capture_found": false,
+    "connected_document_sessions": 0,
+    "remote_tokyo_state": "not inspected; no configured endpoint"
+  },
+  "limitations": [
+    "Source-only synthetic ingestion checks, not calibration results.",
+    "No queue model fit, calibrated match clock, or live-order fill-rate validation completed.",
+    "No new market/protected payload read. Nov9\u201313 still protected; new capture scope must be declared before analysis.",
+    "Submitted event timestamp may describe settlement submission; lifecycle compatibility is not proof of match-time semantics."
+  ],
+  "next": "Obtain completed updated-build Tokyo capture and explicit run/time scope; audit exact identities and clocks before fitting queue behavior."
+}
