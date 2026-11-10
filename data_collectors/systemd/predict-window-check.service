@@ -1,0 +1,13 @@
+[Unit]
+Description=Read-only joined BTC five-minute collection window checks
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/yuqing/ctaNew
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 -m data_collectors.predict_window_check --scope-start 2026-10-22T13:29:01Z
+Slice=collectors.slice
+Nice=10
+TimeoutStartSec=300
+StandardOutput=journal
+StandardError=journal

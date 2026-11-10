@@ -1,0 +1,11 @@
+[Unit]
+Description=Check joined Predict and PM window observations every five minutes
+
+[Timer]
+OnCalendar=*-*-* *:02/5:00 UTC
+AccuracySec=10s
+Persistent=true
+Unit=predict-window-check.service
+
+[Install]
+WantedBy=timers.target
