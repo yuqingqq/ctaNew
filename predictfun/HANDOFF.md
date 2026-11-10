@@ -1,5 +1,20 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-10 07:47Z — Polymarket/Predict price lead-lag COMPLETE
+
+- Fixed 72 scheduled windows / 9 consumed dates (Oct 23–27, 31, Nov 1–3); 71 available, missing Nov 1 06:00 stays excluded.
+  As of 07:38:30Z: receipt-clock peaks show Predict first by 100/100/200 ms in phases 5–60/60–180/180–240 s.
+  The 200 ms asymmetry has that direction on all 9 sampled dates in each phase; source-clock diagnostic peaks at -200 ms.
+- Final-minute peak -500 ms is weakly representative: only 6018/39050 scheduled changes (15.4%) have eligible books.
+  This is a partial-day sample, not complete days or independent validation; no intervals, causality or trading claim.
+- Adding PM moves to Predict/Binance controls reduces primary 1 s MSE by 0.395% on 10108 observations / 47 windows /
+  6 chronological test dates (5/6 improve). Small complementary signal; no new fair-value anchor or strategy promoted.
+- Seven controls pass; independent verifier 2b65b516 checks 240 correlations and 30305 prediction rows/targets/MSE.
+  Sources e4034cad, declaration 966c0faf; receipt/verification/summary and chart in reviews/polymarket_leadlag_20261110.
+  Findings: handoffs/20261110_polymarket_leadlag.md. Branch research/predict-polymarket-leadlag-20261110.
+- All jobs complete, presentation finished 07:45:02Z; peak build RSS 227 MiB. Slot released (recheck). Protected data unread;
+  live/native/frozen strategy unchanged; B1 fill/queue calibration remains open. Equal UTC window is not equal payoff.
+
 ## 2026-11-10 07:36Z — Polymarket/Predict price lead-lag study RUNNING
 
 - User requested cross-venue price timing. Fixed sampled cohort:8 scheduled BTC5m windows/day across9 consumed

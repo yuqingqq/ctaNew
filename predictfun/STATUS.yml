@@ -6,6 +6,13 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-10 07:47Z: POLYMARKET/PREDICT lead-lag COMPLETE, 71/72 scheduled windows across9 consumed dates.
+  As-of07:38:30Z, receipt peaks Predict-first100/100/200ms before final minute;200ms asymmetry same direction on9/9
+  sampled dates per phase. Source-clock peak200ms; final-minute500ms peak has only15.4% coverage. No complete-day CI.
+  PM adds0.395% primary1s MSE reduction over Predict/Binance (10108 observations,47 windows,6 test dates,5/6 improve).
+  Seven controls + independent240 correlations/30305 prediction targets and MSE pass. No trading/causality/validation
+  claim or strategy change. Report handoffs/20261110_polymarket_leadlag.md; reviews/polymarket_leadlag_20261110.
+  Jobs done07:45:02Z, slot free (recheck); protected dates unread. B1 remains open.
   2026-11-10 07:36Z: POLYMARKET/PREDICT lead-lag RUNNING, user requested. Fixed72 scheduled windows/9 consumed dates,
   receipt and source clock comparisons plus Binance/Predict-history control;7 controls pass. Sourcee4034cad,
   declaration966c0faf. Sampled-window diagnostic, no full-day interval or execution/PnL claim. Protected data unread.

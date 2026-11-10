@@ -1,0 +1,15 @@
+{
+  "as_of": "2026-11-10T07:39:41.472978+00:00",
+  "source_commit": "2b65b516c58a35da954c3fec52b76b4861a386e8",
+  "verifier_sha": "68ebb2a4d3426235d882bfbd100933c0cdbf142ff0f37d51c7fafc8909d3481f",
+  "report_sha": "c537daecf7f181ee565acf1c390d9600f2a16ca391fe658d2bdd9fdd2c03b8b3",
+  "controls": {
+    "planted_lag_recovered": true,
+    "known_bad_refusals": 2
+  },
+  "matched_windows": 71,
+  "correlations_verified": 240,
+  "prediction_rows_verified": 30305,
+  "targets_and_MSE_verified": true,
+  "limitation": "Arithmetic verification does not establish venue-clock synchronization or tradable performance."
+}
