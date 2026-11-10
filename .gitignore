@@ -71,3 +71,10 @@ live/models/*
 # large regenerable per-decision dumps (feature-window / gate-model audits)
 live/V4_GATE_MODEL_DECISIONS.csv
 live/V4_MODEL_REGIME_EDGE_24H_AUDIT.csv
+
+# Nested repositories and git worktrees kept inside the checkout (each has its own history)
+/pmmmrust/
+/fv-pnl-integration/
+/.snapshots/
+/.worktrees/*
+!/.worktrees/research_slot.sh
