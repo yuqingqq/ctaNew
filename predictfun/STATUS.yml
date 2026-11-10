@@ -6,6 +6,14 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-10 04:56Z (session 62f3ce33): REPO + DISK CLEANUP done; B1a APPROVED, NOT STARTED; LIVE NOT RUNNING (USER).
+  pmmmrust main 79a05d3 = GitHub (A1, A2 incremental, A3, A4b, A6; no tag, not deployed). ctaNew mm-research joined with
+  origin (merge 335d268a; split since 09-11) and pushed; other sessions' notes committed as found. Free disk 437->547 GiB;
+  292 removals + restore steps in ~/cleanup-archives/git-cleanup-20261110 (stale worktrees incl. fv-pnl-integration's 73,
+  review-exports 10-25/26, pmmm-* timers stopped, 45 dead unit files, the validation study's raw/ copy, 11 derived entries).
+  B1a = historical reference for B1 on consumed tokyo-5 (11-07), tokyo-6 + basis-tokyo-1 (11-08, cut 23:00Z): live's own
+  order paths through the research fill model, per-order outcomes, fill bounds, notice lag, late fills, queue fit.
+  Plan and inputs: HANDOFF 2026-11-10 04:56Z. C1 still due; slot free since 04:29Z. D1 recommendation: description-only fix.
   2026-11-10 04:29Z: INVENTORY-COST COMPLETE; none of3 candidates preserves value and lowers terminal inventory versus
   baseline across9 consumed days/2592 markets/arm/timing. Marginal entry: inventory-square -14.0/-20.3%, terminal -5.4/-8.6%,
   +1s value -15.2/-16.8% (J/X); J maximum75->83.74. Settlement gains are unproven drift/carry, not better spread capture.
