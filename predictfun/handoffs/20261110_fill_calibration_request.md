@@ -61,12 +61,10 @@ declared interval. Run from the research checkout:
 
 ```bash
 /home/yuqing/ctaNew/predictfun/research/run_light.sh fill-calibration-ingest -- \
-  python3 -m predictfun.research.pf_wallet_calibration \
-  --scope /absolute/path/declared-scope.json --out /absolute/path/new-output
+  bash -c 'cd /tmp/cta-fill-calibration-20261110 && exec python3 -m predictfun.research.pf_wallet_calibration --scope /absolute/path/declared-scope.json --out /absolute/path/new-output'
 ```
 
-The wrapper changes directory to the shared root. If the code is only in the
-isolated checkout, use `-- bash -c 'cd /tmp/cta-fill-calibration-20261110 && exec python3 -m predictfun.research.pf_wallet_calibration --scope /absolute/path/declared-scope.json --out /absolute/path/new-output'`.
+The explicit checkout change is required because the wrapper starts in the shared root.
 The tool refuses existing destinations, changed input hashes and out-of-scope
 event envelopes before decoding their payload. Output is an ingestion audit,
 **not a calibrated fill model**.
