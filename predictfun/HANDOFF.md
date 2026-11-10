@@ -1,5 +1,68 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-10 04:56Z (session 62f3ce33) — repo/disk cleanup done; B1a approved, not started; live not running
+
+**State**
+- pmmmrust `main` = GitHub at 79a05d3: A1 (366d419), A2 (70b965b + f20fdb1 incremental), A6 (c64fc4e), A3 (c6c0917),
+  A4b (7fd6889) + four review rounds. No tag, not deployed. Local fix/pfmm-*-20261109 branches deleted (on GitHub, merged).
+- ctaNew `mm-research` had been split from GitHub since 2026-09-11 (P-2026-003 seats). Joined by merge 335d268a (6
+  conflicts kept the local side; GitHub's guards in live/pm_research/de_forward_value_day.py, c7ce57ea / dd1c3d85 /
+  3c2bacc7, are in history only), pushed. Leftover files and the other research session's notes committed as found
+  (latest c8f7757a). Local `main` moved to origin/main (its June commits are in mm-research). fv-pnl-integration's
+  working tree committed as found (382a7cd0, local; it has no remote).
+- **USER 2026-11-10: live is not running now.** A restart should be a new Tokyo tag from 79a05d3 + re-rendered config.
+  First run: wallet_events.jsonl.gz session marks (`live` early, never `not_live`). B1 needs that capture; runs on
+  11-09..11-13 stay unread until run_forward_v3.sh (C2, after 11-14 02:00Z).
+
+**Cleanup** (USER: make the repo clean / remove all stale / clear useless only). Free disk 437 -> 547 GiB. Every
+removal (292) with where its commits or bytes live: ~/cleanup-archives/git-cleanup-20261110/ (removed.jsonl,
+branches.jsonl, summary.json incl. restore steps and the derived_rule; tar archives of uncommitted files and evidence;
+two bundles for nested-clone commits; systemd-units/).
+- Removed: all stale worktrees (ctaNew September seats / r942-944 / of-model / workflow / gutted /tmp/codex-*;
+  fv-pnl-integration's 73, 68 locked: D1 done 10-23, P-2026-003 stopped 10-26; 12 HEADs kept under
+  refs/archive/worktree-cleanup-20261110/*; pmmmrust review, Tokyo 11-07/08 and /tmp/pf-*-parity trees; the research
+  session's 15 finished /tmp/cta-* trees, branches kept). review-exports 10-25/26 folders (evidence archived); the three
+  pmmm-* timers stopped + disabled (the efficiency monitor's build FAILED on every revision since 10-28, 4a7023ae); 45
+  dead or stopped user unit files; the locked validation study's raw/ copy (all 1,143 files byte-identical to
+  data/pm_5min/raw); 11 unreferenced stale data/pm_5min/derived entries (13 MB).
+- Kept: data/pm_5min/derived (43 GiB used within 14 d, ~210 GiB named by records), data/ml, the live tapes,
+  pmmmrust/target/debug, review-exports 11-08/09 folders (research reads live-samewindow*), tokyo-live-data-20261109,
+  the R-944-stopped pipeline units (pm-lane-health watches two of them), the research session's two current worktrees.
+
+**Answers given (no code change)**
+- D1: v3's RO60 caps each new reducing order at |known net| at decision time but does not count other live or
+  cancel-pending reducing orders (known net also lags fills ~100 ms). Replay flips 4 / 3 of 2,592 windows (J / X),
+  <= 5.04 sh, already inside v3's numbers. Recommended: a description-only correcting receipt; a hard guard = v4.
+- B3 buffer: not in live code. Replay only (220 consumed 11-08 windows, no fills): post-side re-entry delays lose
+  coverage (50 ms: requests -13.8%, wanted-price time -11.2%); pull-side 0.01 c band, 100 ms hold: requests -7.0%,
+  wanted-price time +2.7%, off-target time +34%; native 50 ms: requests -3.7..-5.4%, exposure +2.6..+4.1%. No P&L claim.
+- B1: not calibrated. The 11-08 audit (fill-clock, trade-timing repair) found no constant offset fits and no exact
+  match clocks for our fills (99 legs, 1 s intervals), so the corrected replay refuses the historical tape.
+
+**B1a (USER "Yes", 2026-11-10) — NOT STARTED; the next session runs it.** A historical reference, not a calibration.
+- Population: live order actions of tokyo-5 (run 1794071211506, pmmm-data/review-exports/tokyo5-import-20261108),
+  tokyo-6 (1794108465172) and basis-tokyo-1 (1794147344737) in pmmm-data/tokyo-live-data-20261109/tokyo-live-20261109.
+  Kernel exports for tokyo-6 / basis: review-exports/live-samewindow-20261108-kernel (tokyo-5: check for an export).
+  Cut at 2026-11-08 23:00Z (pf_live_vs_replay.CUTOFF_MS) so hour padding never reaches 11-09; boundary windows are an
+  excluded status. 11-07 / 11-08 are consumed (recorded); never read 11-04..11-06 (C1) or 11-09..11-13 (C2).
+- Parser: pf_live_vs_replay.kernel() (per cid: place / signed / accepted / cancel stages / fills, second-truncated
+  match_time). Fill model under test: pf_step4.py fill model v2 (queue ahead = displayed size at join, capped by every
+  frame strictly before a trade; trades at our price consume the queue then us; a sweep clears it; fills known 20 ms
+  later).
+- Measures: (1) per order, replay-filled vs live-filled by exact identity, split by order age, queue ahead at join and
+  cancel-pending; (2) each fill's bounds [place, notice receipt]; (3) the notice lag after the public pending increase
+  (A4: p50 435 ms) vs the replay's 100 ms; (4) late fills on cancel-pending orders, live vs replay; (5) a queue fill
+  model fitted on outcomes (displayed size ahead at join vs volume matched at our price while resting).
+- Rules: declare comparisons, null / controls and minimum sample before results; rows = order actions; exclusions are
+  statuses; G < 5 days -> point estimates only; a positive control (planted fill recovered) and a known-bad input
+  refused. Do NOT fit a delay or minimum resting age (fill-clock audit). Jobs via run_light.sh, one at a time.
+- Prior work to reuse: branches research/predict-fill-clock-20261109 (reviews/fill_clock_20261109) and
+  fix/predict-trade-timing-20261109 (pf_trade_tape full identities); research/predict-fill-calibration-20261110
+  (pf_wallet_calibration.py, the A4b ingestion for later).
+
+**Next:** (1) B1a. (2) C1 when the slot can be held ~2-3 h (free since 04:29Z). (3) USER: deploy / restart live.
+(4) USER: D1, D3.
+
 ## 2026-11-10 04:29Z — inventory-cost experiments COMPLETE; no strategy promoted
 
 - Nine consumed days, 2592 markets/arm/J or X, all18 main replays + Nov3 X stress verified. No new policy preserves
