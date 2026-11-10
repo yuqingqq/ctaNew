@@ -6,6 +6,26 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-10 10:05Z (session ce68ebe0): STRATEGY REVIEW revision 3 (read-only): QUEUE PRIORITY BY EARLY ENTRY NOT FOUND;
+  THE FILL CLOCK DECIDES THE SIGN. Diagnostic research/pf_review_level_birth.py (committed before its first run,
+  8f448870; post hoc section marked), output level_birth.txt as of 09:47Z (cohort dir live_vs_replay/review_20261110/,
+  copies in reviews/strategy_review_20261110/), report handoffs/20261110_strategy_review.md section 6.5. One 5-sh order
+  per side, 220 windows of 11-08 (0.764 window-days), first minute, consumed; point estimates only. Controls: join lane
+  = queue replay on 2,200 cells (0 differ), committed rows to 1e-9; 30 ms cancel latency -> 40 of 40 differ.
+  New best levels: 26.09 per side-minute; shown size p50 52 sh at birth, 155 sh at +100 ms; our order goes live behind
+  p50 229 sh (no guard) to 423 sh (PM90), v3 join 363 sh. Readings: R15 B-none BIRTH-COSTS, B-g90 MIXED; R16 GUARD-ADDS;
+  R17 RESIDENCE-COSTS; R18 R-none RUNG-COSTS, R-g90 MIXED; R19 I-none IMPROVE-COSTS, I-g90 n/a (46 fills); R20 B-none
+  QUEUE-DECISIVE, R-none QUEUE-ROBUST; R21 PRIORITY-NOT-SHOWN; R22 two-sided only for always-on arms (which lose 0.93
+  to 1.74 c/sh at 1 s); R23 no arm above the v3 join in all 6 USD/day cells. No guard: 40 of 40 cells negative (-0.84
+  to -2.61 c/sh; no queue ahead -0.96 to +0.30 at 1 s). Clock: at PM90 15 of 16 cells positive at trade-time shifts 0
+  and 50 ms; at 250 ms all 32 cells of the 16 arms negative (best -0.54), also with a 0.25 c/sh rebate.
+  CANDIDATE (declared arm B-g90, reading MIXED; split of the join post hoc): touch order enters only at the grid step
+  where its price becomes the best: 89 fills, 301.7 sh, +0.99 / +0.58 / -1.10 c/sh at 1 s (shifts 0 / 50 / 250 ms),
+  +1.10 at 5 s; the join's other entries (185 fills, 659.1 sh) -0.09 / -0.33 / -1.94. Next: B1a then B1; rebate /
+  rewards on the account (USER); 6.5 on 11-03 and 11-07; birth-step entry in the full engine, then >= 5 untouched UTC
+  days; guard refit with the level's state (B7); what the profitable makers do (timed legs carry signer); reducing
+  side; C1 / C2. Limits: single 5-sh orders, no Binance guards / CAP10 / RO60 / size-up / throttle / inventory, public
+  book without our order, post hoc rows 19-45 fills.
   2026-11-10 08:51Z (session ce68ebe0): STRATEGY REVIEW revision 2 (user request; read-only).
   Report handoffs/20261110_strategy_review.md; six diagnostics research/pf_review_*.py; outputs in the 11-08 cohort dir
   under live_vs_replay/review_20261110/, copies in reviews/strategy_review_20261110/. Population: 220 windows of 11-08, first minute, consumed; point estimates only.
@@ -1528,3 +1548,4 @@ flags:
   rebate: "25% taker-fee rebate advertised, unverified -> 0 in base case"
   simulation_review_20261105: "R7 / R8 FIXED by the user, verified 15:30Z (check_fixes_v4.py PASS with pre-fix falsifiers; see updated 15:30Z). Reruns (round i) in progress; every number before round i is provenance only."
   two_line_touch_gate: "NOT SUPPORTED at the order level (strategy review revision 2, queue_reach.txt 2026-11-10 08:24Z; one consumed partial day, fill rule not validated): fills in the band are adverse for an order at the back of the queue; pull buffer = churn control only; see updated 08:51Z and handoffs/20261110_strategy_review.md section 6"
+  queue_priority: "NOT FOUND at the order level (strategy review revision 3, level_birth.txt 2026-11-10 09:47Z; one consumed partial day, fill rule not validated): a 5-sh order goes live behind p50 229-423 sh at a level born as the best; unguarded join / birth / rung / improve lose in 40 of 40 cells; at 250 ms trade-time shift every arm is negative. Candidate for a fresh-day test only: touch order enters at the step its price becomes the best (arm B-g90, reading MIXED); see updated 10:05Z and handoffs/20261110_strategy_review.md section 6.5"

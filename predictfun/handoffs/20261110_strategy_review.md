@@ -1,6 +1,6 @@
 # Predict.fun MM: strategy review
 
-As of 2026-11-10 08:49Z (session ce68ebe0), revision 2. Scope: pm_ladder_v3 (frozen 2026-11-07, b261091d) and the
+As of 2026-11-10 10:01Z (session ce68ebe0), revision 3. Scope: pm_ladder_v3 (frozen 2026-11-07, b261091d) and the
 work around it.
 
 Questions from the user: (1) does "capture spread from users' trading, control the remaining inventory risk" hold for
@@ -8,12 +8,16 @@ the current strategy; (2) what the live-vs-replay gap on short-lived orders and 
 optimize. Follow-up: do we already have "enter at the line, pull only when the guard is clearly negative", what
 exactly is the proposed mechanism, and what else is worth digging into (sections 6 and 7).
 
-No strategy code, frozen artifact or receipt was changed. Six read-only diagnostics were added (section 10).
+No strategy code, frozen artifact or receipt was changed. Seven read-only diagnostics were added (section 10).
 
 Revision 2. The 06:27Z version recommended a two-line gate for the touch order: enter at the line, leave only when the
 guard is clearly negative. Two further diagnostics, a band sweep and an order-level queue replay (sections 6.2 and
 6.3), do not support it for an order that joins the back of the queue. Sections 1 and 5-10 are corrected. Sections 2-4
 are unchanged apart from two wording fixes (the rebate formula in 3.1, the 42.6% row in 3.3).
+
+Revision 3 (10:01Z). Section 6.5 is new: the queue-priority candidates of section 7, item 4 were measured at the order
+level (`pf_review_level_birth.py`, committed before its first run). Early entry does not earn priority at our latency,
+and no position pays without the guard. Sections 1, 6.4, 7, 8, 9 and 10 are updated; sections 2 to 6.3 are unchanged.
 
 ## Evidence labels
 
@@ -40,7 +44,7 @@ between the enter line and a lower exit line.
 | Live vs replay | The replay's short-lived fills are mostly not opportunities we had. The replay stamps a trade at a late message and credits orders placed after the match. 83-85% of v3's replay value at 1 s is in such orders. |
 | Pull buffer | Sound churn control, no P&L. In form it is already a two-line rule: a band of 0.01 c below the line, at most 100 ms, the touch order of up to 5 sh. It was studied for mechanics only and is not in the live code. In the order-level replay it places 21% fewer orders at about the same value. It cannot close the gap. |
 | Two lines with a wide band (the 06:27Z proposal) | Not supported; withdrawn. A 5-share order that joins the back of the queue and rests through the band is filled on the adverse part of the flow: its fills in the band make -0.32 to -0.51 c/sh at 1 s for bands of 0.08 c and wider, although all makers together make +0.24 to +0.29 there pro rata. Both wide-band arms are below v3 in $/day at every assumed trade time. Same result with v3's own price rule. |
-| How to optimize | Measure rebates and rewards; calibrate fills (B1a, approved); check that 11-08 is typical. Queue position decides the sign of resting: the widest band makes -0.43 c/sh at 1 s with no credit for cancels ahead, -0.24 under the replay's queue rule, +0.73 at the front. The candidates are therefore the ones that earn priority in a level that stays; none is measured yet. Every candidate needs at least 5 untouched UTC days. |
+| How to optimize | Measure rebates and rewards; calibrate fills (B1a, approved); check that 11-08 is typical. Queue position decides the sign of resting: the widest band makes -0.43 c/sh at 1 s with no credit for cancels ahead, -0.24 under the replay's queue rule, +0.73 at the front. No rule tested buys priority at our latency (6.5): a level born as the best shows 52 sh at birth and 155 sh 100 ms later, our order goes live behind 229-423 sh, and without a guard a 5-share order loses 0.8-2.6 c/sh in every position tested (with no queue ahead: -0.96 to +0.30 at 1 s). At the PM90 line the arms are positive if trades happen 0-50 ms before their report (15 of 16 cells) and negative at 250 ms (all cells), so the fill clock comes first. One candidate from 6.5: the touch order enters only at the step its price becomes the best (+0.58 c/sh at 1 s on 89 fills; declared reading MIXED). Every candidate needs at least 5 untouched UTC days. |
 
 ## 2. Development so far
 
@@ -451,23 +455,161 @@ Limits.
   evidence it is not worth building.
 - What pays is priority in a level that stays. The front-of-queue column is an upper bound: +0.73 to +0.96 c/sh at
   1 s for the arms from v3 to H1, against -0.24 to +0.10 at the back.
-- Candidates that could earn priority, none measured at the order level (section 7, items 4 and 5): entering a new
-  level first; rungs behind the best; a guard fitted to the value of the order we can place.
+- Candidates that could earn priority (entering a new level first; rungs behind the best) were measured at the order
+  level in revision 3 (section 6.5): not supported. A guard fitted to the value of the order we can place is still
+  open (section 7, item 5).
+
+### 6.5 Queue priority at the order level: new levels, a rung, improving inside the spread (revision 3)
+
+Script `pf_review_level_birth.py`, committed before its first run (8f448870, 09:42:12Z); output as of 2026-11-10
+09:47Z. Same cohort, clock, fill rule, queue rules and trade times as 6.3: 220 windows, 440 window-sides, 0.764
+window-days, first 60 s, one 5-share order per side. Readings R15-R23 were written in the header before any table and
+are evaluated in code. The cuts under "Post hoc" were added after the first table was seen and are marked.
+
+Controls, evaluated before any table is printed. The join lane with v3's lines equals the 6.3 simulator fill for fill
+on 2,200 window-side x config cells (0 differ) and reproduces the committed 6.3 rows (5 configs x 11 fields, 0
+differ). With the cancel latency set to 30 ms, 40 of 40 window-sides differ, so the regression can fail. Eleven
+planted errors are each caught by a synthetic case. Statuses: 753 untimed legs (9,131 sh) excluded, as in 6.3; 50 of
+528,000 grid steps have no guard value (no order there); no window without frames or outcome.
+
+| Lane | Rule |
+|---|---|
+| J (join) | Join the known best whenever there is no order. J-v3 is 6.3's JOIN v3 arm |
+| B (birth) | Enter only at the grid step where the known best has just improved: a level born as the best. Keep while at the best or one tick behind |
+| L (late) | Lane B's levels, entered 2 s after the birth. Control for R21 |
+| R (rung) | One tick behind the known best, kept by the engine's LD2 rule. R-g90 is v3's rung rule |
+| I (improve) | One tick inside a known spread of two ticks or more, the engine's `IM` rule |
+
+Guards: none (always on), g10 (line -0.10 c), g50 (PM50), g90 (PM90). B-90/10 enters above PM90 and leaves at
+-0.10 c.
+
+**New levels, true time, both sides.** 11,481 levels were born as the best: 26.09 per side-minute, 72.0% of them one
+tick better than the previous best. The best fell back 22.34 times per side-minute.
+
+| | At birth | +100 ms | +200 ms | +500 ms | +1 s | +2 s |
+|---|---|---|---|---|---|---|
+| Shown size at the level, p50, levels still the best (sh) | 52.4 | 154.8 | 228.4 | 242.5 | 226.8 | 225.4 |
+| Still the best (%) | 100 | 71.0 | 55.8 | 40.7 | 29.5 | 18.4 |
+
+Life p50 293 ms, p90 3,553 ms. 40.2% of born levels trade while they are the best (33.7% within 1 s), 25.5 sh per
+birth. Of the at-best maker volume in the first minute (732,649 sh), 50.6% trades at a level born as the best (13.7%
+at a level under 0.5 s old) and 49.3% at a level that became the best by a fall-back.
+
+**Arms.** Queue rule M unless stated; three numbers are trade-time shifts of 0 / 50 / 250 ms. $/day and the matched
+share are at M 50. L-g90 (5 fills) is left out. "-0.00" is a negative number above -0.005.
+
+| Arm | Orders per side-min | Queue ahead when live, p50 (sh) | Fills | Shares | c/sh 1 s, M 0 / 50 / 250 | c/sh 5 s, M 0 / 50 / 250 | c/sh 1 s, L 50 / U 50 | $/day 1 s / 5 s | Matched % |
+|---|---|---|---|---|---|---|---|---|---|
+| J-v3 | 38.4 | 363 | 274 | 960.9 | +0.31 / -0.05 / -1.75 | +0.96 / +0.50 / -1.72 | -0.06 / +0.90 | -0.58 / +6.23 | 33.3 |
+| J-none | 48.8 | 158 | 9,077 | 30,612.9 | -1.20 / -1.32 / -1.67 | -1.45 / -1.60 / -2.01 | -1.62 / -0.07 | -528.80 / -639.92 | 81.6 |
+| B-none | 23.9 | 229 | 3,468 | 11,693.1 | -0.85 / -1.01 / -1.25 | -0.84 / -1.05 / -1.41 | -1.31 / +0.30 | -155.17 / -160.78 | 83.8 |
+| B-g10 | 16.1 | 304 | 928 | 3,299.7 | -0.03 / -0.20 / -1.18 | +0.32 / -0.00 / -1.01 | -0.28 / +0.68 | -8.62 / -0.12 | 51.7 |
+| B-g50 | 14.4 | 325 | 514 | 1,830.9 | +0.18 / -0.01 / -1.26 | +0.49 / +0.02 / -1.31 | -0.05 / +0.79 | -0.16 / +0.47 | 38.6 |
+| B-g90 | 7.2 | 423 | 89 | 301.7 | +0.99 / +0.58 / -1.10 | +1.81 / +1.10 / -1.04 | +0.60 / +1.17 | +2.30 / +4.34 | 25.2 |
+| B-90/10 | 7.2 | 423 | 312 | 1,145.2 | +0.08 / -0.24 / -1.58 | +0.43 / -0.01 / -1.62 | -0.34 / +0.88 | -3.54 / -0.17 | 29.6 |
+| L-none | 4.5 | 235 | 1,218 | 4,163.2 | -1.23 / -1.38 / -1.44 | -1.44 / -1.65 / -1.67 | -1.81 / +0.05 | -75.14 / -89.81 | 66.8 |
+| R-none | 22.7 | 175 | 4,623 | 15,774.0 | -1.61 / -1.74 / -2.17 | -1.96 / -2.09 / -2.61 | -2.13 / -0.96 | -358.97 / -430.92 | 71.9 |
+| R-g10 | 47.9 | 225 | 784 | 3,002.9 | -0.25 / -0.54 / -2.14 | -0.38 / -0.70 / -2.34 | -0.64 / +0.09 | -21.32 / -27.59 | 43.8 |
+| R-g50 | 59.0 | 229 | 468 | 1,849.8 | -0.19 / -0.47 / -2.48 | -0.15 / -0.40 / -2.65 | -0.51 / +0.17 | -11.28 / -9.67 | 36.9 |
+| R-g90 | 34.2 | 291 | 75 | 282.9 | +0.53 / +0.28 / -3.15 | +0.25 / +0.34 / -3.39 | +0.28 / +0.78 | +1.05 / +1.27 | 28.3 |
+| I-none | 9.1 | 117 | 851 | 2,848.6 | -0.84 / -0.93 / -1.15 | -1.06 / -1.29 / -1.51 | -1.19 / +0.17 | -34.72 / -48.11 | 52.5 |
+| I-g50 | 4.6 | 188 | 190 | 712.2 | -0.16 / -0.23 / -0.93 | -0.01 / -0.31 / -0.98 | -0.26 / +0.71 | -2.13 / -2.92 | 25.1 |
+| I-g90 | 3.3 | 211 | 46 | 173.2 | +0.55 / +0.36 / -0.54 | +0.93 / +0.27 / -1.37 | +0.36 / +1.05 | +0.82 / +0.62 | 17.3 |
+
+**Declared readings, as computed.**
+
+| Reading | Result | Numbers |
+|---|---|---|
+| R15 a new level | B-none BIRTH-COSTS; B-g90 MIXED | B-none -0.84 to -1.41 c/sh in 8 of 8 cells. B-g90 +0.58 to +1.81 at shifts 0 and 50 (M and L), -1.10 and -1.04 at 250 ms |
+| R16 guard at a new level | GUARD-ADDS | B-g90 minus B-none at 1 s: +1.84 / +1.60 / +0.14 c/sh |
+| R17 residence at a born level | RESIDENCE-COSTS | B-90/10 minus B-g90: -$2.05 to -$27.41 a day in 6 of 6 cells. Same direction as R11 in 6.3 |
+| R18 rung | R-none RUNG-COSTS; R-g90 MIXED | R-none -1.61 to -2.61 in 8 of 8 cells. R-g90 +0.25 to +0.53 at shifts 0 and 50, -3.15 and -3.39 at 250 ms |
+| R19 improve | I-none IMPROVE-COSTS; I-g90 n/a | I-none -0.84 to -1.51 in 6 of 6 cells. I-g90 has 46 fills, under the declared minimum of 50 |
+| R20 queue rule | B-none QUEUE-DECISIVE; R-none QUEUE-ROBUST | 1 s, L 50 against U 50: B-none -1.31 / +0.30; R-none -2.13 / -0.96 |
+| R21 priority | PRIORITY-NOT-SHOWN | Same levels. B-none's orders 2 s or older: -0.824 / -0.955 / -1.005 c/sh at 1 s on 3,897-3,933 sh. Orders entered 2 s late: -1.227 / -1.379 / -1.437 on 4,007-4,291 sh. The older orders are +0.40 to +0.43 c/sh better on fewer shares, and both lose |
+| R22 two-sided | MORE-TWO-SIDED for B-none, R-none, I-none | Matched share 83.8% / 71.9% / 52.5% against 33.3% for J-v3 |
+| R23 scale | No arm is above J-v3 in all 6 $/day cells | B-g90 4 of 6; B-g50, R-g90, I-g90 3; I-g50 2; B-g10 1; the other arms 0 |
+
+**What it says.**
+
+1. Entering a new level early does not buy priority at our latency. The order goes live 44 ms after a decision made
+   on a book seen 53 ms late, and a born level fills from 52 sh to about 155 sh in its first 100 ms. The queue ahead
+   when the order goes live is p50 229 sh with no guard and 423 sh at PM90, against 363 sh for the v3 join. A short
+   queue at entry does not mark a good fill: with 0-25 sh ahead the fills make -0.64 to -2.32 c/sh at 1 s in all 7
+   arms that have 20 or more of them, and that is the worst bucket in 4 of the 7.
+2. Without a guard every position loses. All 40 cells of the five unguarded arms (1 s and 5 s; M 0, M 50, M 250,
+   L 50) are negative, -0.84 to -2.61 c/sh. With the queue ahead set to zero (U 50) the 1 s value is -0.07 (join),
+   +0.30 (birth), +0.05 (late), +0.17 (improve) and -0.96 (rung) c/sh. Plain spread capture is not available to an
+   always-present 5-share order, the front of the queue included. Fills taken while our price was in front of the
+   true best (the others at the price had left; our cancel was not yet effective, or the rung's rule kept the order)
+   make -3.16 to -3.57 c/sh at 1 s in the unguarded join, birth and rung arms.
+3. The guard is what adds (R16), and holding below the line costs again (R17).
+4. The rung under v3's own rule (R-g90) is the arm most exposed to the assumed trade time: +0.28 c/sh at 1 s at a
+   shift of 50 ms, -3.15 at 250 ms. 87.6% of its filled shares are trades through its price, and its sign differs
+   between odd and even windows (+0.51 | -0.02). Without a guard the rung loses under every queue rule.
+5. Improving inside the spread: 23.3% of the unguarded placements are refused as crossing, the unguarded arm loses,
+   and at PM90 there are 46 fills. This lane depends most on our own order being absent from the public book.
+6. Two-sided flow comes only with the arms that are always on, and those lose 0.93 to 1.74 c/sh at 1 s. The guarded
+   arms have a matched share of 17-52%. Quoting more does not net inventory at an acceptable price.
+7. At the PM90 line 15 of 16 cells are positive at trade-time shifts of 0 and 50 ms (four lanes, 1 s and 5 s). At
+   250 ms all 32 cells of the 16 arms are negative; the best is -0.54 c/sh. The fill clock decides the sign of every
+   arm.
+
+**Post hoc (not declared; candidates only).** Fills were split by the state of the known best at the decision step
+of the order that was filled. The classifier is checked on the lanes: it puts 35,456 of 35,456 lane-B fills at a
+birth step, 7,155 of 7,155 lane-L fills on a born level 2 s old, and 19,942 of 64,690 unguarded join fills at a
+birth step. With exit = enter, arm B-g90 is by construction the part of the v3 join whose orders were entered at a
+birth step, so the first row is a declared arm; the split into the other rows is post hoc.
+
+| J-v3 fills by where the order was entered | Shares (fills), M 50 | c/sh 1 s, M 0 / 50 / 250 | c/sh 5 s, M 50 |
+|---|---|---|---|
+| At the step the level was born (= B-g90) | 301.7 (89) | +0.991 / +0.583 / -1.104 | +1.098 |
+| Level born 50-450 ms before | 154.6 (39) | +0.153 / -0.169 / -0.542 | +0.388 |
+| Level born 0.5-2 s before | 70.7 (19) | +0.765 / -0.387 / -1.790 | +0.131 |
+| Level born 2 s or more before | 138.2 (40) | -0.260 / -0.500 / -2.586 | -0.260 |
+| Best by a fall-back, under 0.5 s before | 156.9 (45) | -0.587 / -0.555 / -2.061 | -0.032 |
+| Best by a fall-back, 0.5 s or more before | 138.9 (42) | -0.216 / -0.073 / -2.310 | +0.839 |
+| All entries not at a birth step | 659.1 (185) | -0.090 / -0.334 / -1.936 | +0.220 |
+
+- At 1 s the join's positive value is in the orders entered at the step a level is born. The other entries
+  together are negative at 1 s at all three shifts; at 5 s they add +0.22 c/sh at M 50.
+- B-g90 against J-v3: above per share in 10 of 10 cells (1 s and 5 s, five configs; arithmetic on two declared arms,
+  not a declared reading). $/day at 1 s for shifts 0 / 50 / 250: +4.73 / +2.30 / -3.92 against +4.01 / -0.58 /
+  -27.75. At 5 s: +8.62 / +4.34 / -3.69 against +12.26 / +6.23 / -27.23. It gives up 5 s value at shifts 0 and 50
+  and removes most of the loss at 250 ms, on 31% of the shares. Same sign in odd and even windows (+0.56 | +0.62).
+- Shown size at our price at the decision step does not order the fills: J-v3 -0.54 / -0.05 / +0.36 / -0.51 c/sh at
+  1 s for 0-25 / 25-100 / 100-300 / over 300 sh. No size filter is supported.
+- With a maker rebate of 0.19 or 0.25 c/sh (the formula; not verified on the account) the cells above zero, of 6,
+  go from 1 to 3 and 4 for B-g10, from 3 to 4 for B-g50 and J-v3, and from 0 to 2 and 3 for I-g50. B-g50 fills 6.1
+  times B-g90's shares at -0.01 c/sh at 1 s. No arm has a positive cell at 250 ms with either rebate.
+
+Limits. One consumed partial Sunday; point estimates only. B-g90 has 89 fills and the post hoc rows 19-45. These are
+single 5-share orders: the Binance and book guards, MICRO, G3 / G4, CAP10 / RO60, the size-up, the throttle and
+inventory are not modelled, and lanes R and I are one order alone, not v3's ladder. The public book does not contain
+our order. The fill rule is unvalidated until B1a. Young orders are the most exposed to the unknown match-to-report
+lag. The 60 s and settlement columns are in the output and are not used in any reading.
+
+What this changes. The two queue-priority candidates of revision 2 (entering a new level first or improving; rungs
+behind the best) are measured and not supported on this day. What separates fills is the guard and, post hoc, the
+state of the level when the order was entered. One candidate goes forward for a fresh-day test: the touch order
+enters only at the step its price becomes the best (section 7, item 4).
 
 ## 7. Recommendations, in order
 
 | # | Action | Why | Test or status | Backlog |
 |---|---|---|---|---|
 | 1 | Measure the maker rebate and the liquidity rewards on the account | By the formula the rebate is 0.19-0.25 c/sh, more than the +0.15 c/sh average trading edge. On 11-08's 849.9 live shares that is about $1.70-2.12 at 0.20-0.25 c/sh (arithmetic), against a P&L of +$2.90. The listed reward terms need 100 sh within 6 c; v3's 5 / 25 sh quotes do not qualify. If rewards pay, the objective moves from fills to resting size | The user's account data; keep out of P&L until measured | T5, D3 |
-| 2 | Calibrate the replay fill model (B1a, then B1). Until then report every replay result split by order age at the fill, and treat value in orders under 100 ms old or being cancelled as unconfirmed. Re-read `LH`, `IM95` and the ladder with that split | Section 4: 83-85% of v3's replay value sits there. Section 6.3: the assumed match time alone moves the same arm from +0.31 to -1.75 c/sh at 1 s (+0.72 to -2.34 with v3's price rule), and the queue rule decides the sign of resting | A reporting rule, not a fitted delay. B1a approved, not started; B1 needs a new live capture | B1, B1a, B2 |
+| 2 | Calibrate the replay fill model (B1a, then B1). Until then report every replay result split by order age at the fill, and treat value in orders under 100 ms old or being cancelled as unconfirmed. Re-read `LH`, `IM95` and the ladder with that split | Section 4: 83-85% of v3's replay value sits there. Section 6.3: the assumed match time alone moves the same arm from +0.31 to -1.75 c/sh at 1 s (+0.72 to -2.34 with v3's price rule), and the queue rule decides the sign of resting. Section 6.5: at a shift of 250 ms all 32 cells of the 16 arms are negative, and v3's rung rule is the most exposed (+0.28 c/sh at 1 s at 50 ms, -3.15 at 250 ms) | A reporting rule, not a fitted delay. B1a approved, not started; B1 needs a new live capture | B1, B1a, B2 |
 | 3 | Run sections 3.2, 6.2 and 6.3 on the other consumed days outside the guard's fit: 11-03 (Tuesday), 11-07 (Saturday) | 11-08 is one Sunday; weekends have more gate-on time (§61); replay value fell from week 1 to week 2 | If the 250 ms on-minus-off difference is absent on 11-03, stop: no execution change can help. Needs guard values and timed legs built for those days | new |
-| 4 | Queue priority, tested at the order level before anything is built. Two candidates: (a) entering a new level first, or improving inside a spread of two ticks or more (`IM`); (b) rungs behind the best that rest through gate-offs and leave on a Binance-led move or in the toxic tail (v more than 0.15 c below the line) | 6.3: the front of the queue makes +0.73 to +0.96 c/sh at 1 s where the back makes -0.24 to +0.10. P: the queue that fills forms in the last 0.1-10 s; the front of a new level is first traded within 1 s in 55-72% of cases; fills behind the best pay +0.44 to +1.06 c/sh against +0.28 at the best. Cautions: `LH` lost in sample; the spread is one tick 96% of the time in minute 0; whether we can be early at our latency (create 44 ms, book seen 53 ms late) is not measured | First, on public data: who creates new best levels, and how much size is ahead 100 ms after a level is born. Then these lanes in `pf_review_queue_reach.py`, arms and readings declared first. Then the full engine with the age split, then at least 5 untouched UTC days | B5, B6 |
-| 5 | Refit the guard on the value of an order we can place: an order placed now at the back of the queue (0 if unfilled; one row per decision) | The present label values every touch trade pro rata. In the band the two differ in sign: +0.24 to +0.29 c/sh pro rata, -0.32 to -0.51 for the order (1 s) | After item 2, because it needs a validated queue rule. It changes the model: flag it against the pinned comparison | B7 |
+| 4 | Queue priority: measured in 6.5 and not found. Entering a new level early, a rung without the guard, improving inside the spread and holding for residence are not supported on this day. One candidate remains: the touch order enters only at the grid step where its price becomes the best (arm B-g90), and does not join a level later or after a fall-back | 6.5: the order goes live behind 229-423 sh, and the unguarded arms lose in 40 of 40 cells. B-g90: +0.58 c/sh at 1 s and +1.10 at 5 s (M 50, 89 fills), above the v3 join per share in 10 of 10 cells, -$3.92 a day at 1 s at 250 ms against -$27.75. Its declared reading is MIXED (negative at 250 ms), and the comparison with the other entries is post hoc | After item 2. First repeat 6.5 on 11-03 and 11-07 (item 3). Then the full engine with an entry condition on the touch order and the age split, then at least 5 untouched UTC days. It changes the frozen rule: a new candidate, to be flagged | B5, B6 |
+| 5 | Refit the guard on the value of an order we can place: an order placed now at the back of the queue (0 if unfilled; one row per decision) | The present label values every touch trade pro rata. In the band the two differ in sign: +0.24 to +0.29 c/sh pro rata, -0.32 to -0.51 for the order (1 s). 6.5, post hoc: the state of the level at the decision (born or by a fall-back, age) separates the join's fills, so it belongs among the inputs | After item 2, because it needs a validated queue rule. It changes the model: flag it against the pinned comparison | B7 |
 | 6 | Reducing side: solve the line, the legal price and the minimum size together | 3.4: the entry gate blocks the closing side about 86% of inventory time; single relaxations failed (RX5, B9). No exit is clearly cheap: a passive fill from the back of the queue in the band costs 0.32-0.51 c/sh at 1 s and 0.54-1.12 at 5 s (6.3); taking costs about 1.5 c/sh; carrying to settlement cost 0.96 c (J) / 0.77 c (X) per share held at the stop in the replay (arithmetic: $163.06 / (2,592 x 6.56 sh), $113.54 / (2,592 x 5.72 sh); uncalibrated fills, indicative) | The research session's next step. Judge by terminal inventory and daily variance at equal 1 s value, not by the mean alone | B9 follow-up |
 | 7 | Pull buffer: keep as churn control only. Do not widen it into a general two-line gate | Sections 5 and 6.3 | No further tuning | B3 (closed) |
 | 8 | Run C1 as declared; C2 after 2026-11-14 02:00Z | Declared forward races | Read them as replay under an uncalibrated fill model, with the age split | C1, C2 |
+| 9 | Read what the profitable makers do: split each large maker's fills by guard state, by the state of the level (born or by a fall-back, age) and by time since the level was born | 6.5: an always-present order loses in every position, yet the top 5 makers make +0.43 c/sh at 1 s on 859,445 sh a day (P). If their fills sit in states our guard already marks, the gap is speed or queue; if not, it is signal (item 5) | Read-only on the cohort's timed legs, which carry a `signer` column (to be confirmed as the maker's address). Readings declared first; descriptive | new |
 
-Items 4-6 are hypotheses from data already read. None is supported at the order level yet.
+Item 4's two original candidates were measured in 6.5 and are not supported. What remains of item 4 is one arm whose
+declared reading is MIXED, plus a post hoc split. Items 5, 6 and 9 are hypotheses from data already read.
 
 Not recommended now: larger sizes before item 2 (20 / 100 sh: J +92.5, X +64.4 $/day in sample, with no own price
 impact in the replay). A Polymarket hedge was not examined here.
@@ -482,16 +624,21 @@ impact in the replay). A Polymarket hedge was not examined here.
   (arithmetic; rate unverified).
 - The same order at the front of the queue: $108-117 per day at 1 s with v3's line, $155-180 with H1's residence. These
   are upper bounds; no rule here gets the order to the front.
+- Section 6.5 confirms that: an order entered at a level's birth still goes live behind p50 229-423 sh. Entering only at
+  the birth step at PM90 makes +$2.30 a day at 1 s and +$4.34 at 5 s (M 50, 5 shares), against -$0.58 and +$6.23 for
+  the join.
 
-At this size the trading edge from the back of the queue is about -$1 to +$7 a day. Items 1, 2 and 4 decide whether
-the build is worth more work.
+At this size the trading edge from the back of the queue is about -$1 to +$7 a day. Items 1 and 2 decide whether the
+build is worth more work; item 4 no longer offers a way to the front.
 
 ## 9. Not verified
 
 - Rebates and liquidity rewards (T5, D3).
 - The match time behind each trade report. The section 4 reading is an inference, and every level in 6.3 depends on it.
 - The queue rule. 6.3 brackets it (L, M, U); B1a tests it.
-- Whether new-level entry or rungs behind the best earn priority at our latency (item 4).
+- 6.5 measures new-level entry, the rung and improving as single 5-share orders on one day. Not verified: the same
+  rules inside the full engine (the ladder, sizes, Binance guards), on other days, and with our own order in the book.
+- Whether `signer` in the cohort's timed legs is the maker's address (item 9).
 - 6.3 leaves out the Binance guards, the cap and reduce-only rules, the size-up, the rung and the throttle. Its v3
   price rule is checked against hand-computed cases only.
 - Live fills' 5 s and 60 s markouts. The ledger sits in the raw capture directory, which also holds 11-09 windows; it
@@ -501,10 +648,10 @@ the build is worth more work.
 
 ## 10. New diagnostics: declared readings, self-tests, reproduce
 
-All six read only derived cohort outputs (`touch_trade_reasons.parquet`, `queue_misses.parquet`,
-`research/step5/20261108/preds_t60k.parquet`, `research/step4/minute_lines_t60k.json`); the queue replay also reads the
+All seven read only derived cohort outputs (`touch_trade_reasons.parquet`, `queue_misses.parquet`,
+`research/step5/20261108/preds_t60k.parquet`, `research/step4/minute_lines_t60k.json`); the queue replay and the level-birth script also read the
 cohort's book frames, registry, clock file and timed maker legs under `research/step1/20261108/`. Readings were written
-in each script's header before its table was seen, except the two cuts marked post hoc. Outputs:
+in each script's header before its table was seen, except the cuts marked post hoc. Outputs:
 `live_vs_replay/review_20261110/` under the cohort directory (`*.json`, `*.txt`).
 
 | Script (`predictfun/research/`) | Question | Declared readings | Self-test |
@@ -515,6 +662,7 @@ in each script's header before its table was seen, except the two cuts marked po
 | `pf_review_gate_hysteresis.py` | Two-line rules, pro rata | R6 HOLD-OK; R7 RESIDENT (74.0%) | PM90 / PM90 reproduces the previous script's gate-on row (85,552.4 sh, +0.421669); +0.043 with shuffled trade times |
 | `pf_review_gate_bands.py` | Band width and clock: residence and pro rata value | R8 BAND-BOUND; R9 0.08 c; R10 TAIL-ADVERSE | Reproduces the hysteresis script's three rows to 6 decimals; a clock of 0 equals no band and an infinite clock equals no clock on every grid point; agrees with a step-by-step state machine on 40 window-sides; +0.016 with shuffled trade times |
 | `pf_review_queue_reach.py` | One 5-share order through each rule, at the order level | R11 RESIDENCE-COSTS; R12 MIXED; R13 QUEUE-DECISIVE; R14 HOLD-FILLS-ADVERSE; R11v, R13v, R14v the same with v3's price rule. Two post hoc cuts, marked | Synthetic books with known answers; v3's price rule against hand-computed cases; unsorted input refused; five planted errors each caught; identity control on 22,363 touch trades (same 1 s value in 95.4%); gate-on control +0.552 against +0.422 (tolerance 0.15). The first version of the second control failed (07:47Z) and is recorded in the header |
+| `pf_review_level_birth.py` | Queue priority at the order level: new levels, a rung, improving (6.5) | R15 B-none BIRTH-COSTS, B-g90 MIXED; R16 GUARD-ADDS; R17 RESIDENCE-COSTS; R18 R-none RUNG-COSTS, R-g90 MIXED; R19 I-none IMPROVE-COSTS, I-g90 n/a; R20 B-none QUEUE-DECISIVE, R-none QUEUE-ROBUST; R21 PRIORITY-NOT-SHOWN; R22 MORE-TWO-SIDED; R23 printed. Post hoc cuts, marked, with their own instrument control | Committed before its first run (8f448870). Synthetic books for every lane; unsorted input refused; eleven planted errors each caught; the join lane equals the queue replay on 2,200 window-side x config cells and reproduces its committed rows to 1e-9; with a 30 ms cancel latency 40 of 40 window-sides differ |
 
 ```bash
 D=/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/live_vs_replay/review_20261110
@@ -525,7 +673,8 @@ $R/run_light.sh review_gate_followup    -- python3 $R/pf_review_gate_followup.py
 $R/run_light.sh review_gate_hysteresis  -- python3 $R/pf_review_gate_hysteresis.py  $D/gate_hysteresis.json $D/gate_followup.json
 $R/run_light.sh review_gate_bands       -- python3 $R/pf_review_gate_bands.py       $D/gate_bands.json $D/gate_hysteresis.json
 $R/run_light.sh review_queue_reach      -- python3 $R/pf_review_queue_reach.py      $D/queue_reach.json
+$R/run_light.sh review_level_birth      -- python3 $R/pf_review_level_birth.py      $D/level_birth.json
 ```
 
-Each run's stdout was saved as `$D/<name>.txt`. Copies of all twelve output files, with their SHA-256 sums, are in
+Each run's stdout was saved as `$D/<name>.txt`. Copies of all fourteen output files, with their SHA-256 sums, are in
 `predictfun/reviews/strategy_review_20261110/`.

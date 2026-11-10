@@ -1,5 +1,38 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-10 10:05Z (session ce68ebe0) — strategy review, revision 3: queue priority by early entry NOT found; the fill clock decides the sign
+
+- Done: diagnostic research/pf_review_level_birth.py (committed before its first run, 8f448870; post hoc section added
+  09:46Z, marked). One 5-sh order per side, 220 windows of 11-08 (440 window-sides, 0.764 window-days), first minute;
+  consumed day; point estimates only (G < 5). Output as of 09:47Z: level_birth.{json,txt} in the 11-08 cohort directory
+  under live_vs_replay/review_20261110/, copies in reviews/strategy_review_20261110/. Report:
+  handoffs/20261110_strategy_review.md revision 3, section 6.5. No strategy code, frozen artifact or receipt changed.
+- Controls: the join lane with v3's lines equals the queue replay on 2,200 window-side x config cells (0 differ) and
+  reproduces its committed rows to 1e-9; with a 30 ms cancel latency 40 of 40 window-sides differ; 11 planted errors
+  caught.
+- New levels: 26.09 per side-minute are born as the best. Shown size p50 52 sh at birth, 155 sh at +100 ms, 228 sh at
+  +200 ms; life p50 293 ms. Our order goes live behind p50 229 sh (no guard) to 423 sh (PM90); the v3 join 363 sh.
+- Declared readings: R15 B-none BIRTH-COSTS, B-g90 MIXED; R16 GUARD-ADDS (+1.84 / +1.60 / +0.14 c/sh at 1 s);
+  R17 RESIDENCE-COSTS (6 of 6 cells); R18 R-none RUNG-COSTS, R-g90 MIXED; R19 I-none IMPROVE-COSTS, I-g90 n/a (46
+  fills); R20 B-none QUEUE-DECISIVE, R-none QUEUE-ROBUST; R21 PRIORITY-NOT-SHOWN; R22 MORE-TWO-SIDED only for the
+  always-on arms, which lose 0.93 to 1.74 c/sh at 1 s; R23 no arm above the v3 join in all 6 $/day cells (B-g90 4).
+- Without a guard every position loses: 40 of 40 cells negative, -0.84 to -2.61 c/sh; with no queue ahead -0.96 to
+  +0.30 at 1 s.
+- Fill clock: at PM90 15 of 16 cells are positive at trade-time shifts of 0 and 50 ms; at 250 ms all 32 cells of the 16
+  arms are negative (best -0.54 c/sh), also with a rebate of 0.25 c/sh.
+- Candidate (declared arm B-g90, reading MIXED; the split of the join is post hoc): the touch order enters only at the
+  grid step where its price becomes the best. 89 fills, 301.7 sh: +0.99 / +0.58 / -1.10 c/sh at 1 s for shifts 0 /
+  50 / 250 ms, +1.10 at 5 s (M 50). The join's other entries, 185 fills, 659.1 sh: -0.09 / -0.33 / -1.94. $/day at 1 s
+  +4.73 / +2.30 / -3.92 against +4.01 / -0.58 / -27.75 for the join.
+- Next (report section 7): (1) B1a, then B1: the clock decides every sign; (2) USER: rebate and rewards on the account
+  (with 0.19-0.25 c/sh the PM50 line fills 6.1 times the shares at about zero trading edge at 1 s); (3) sections 3.2,
+  6.2, 6.3 and 6.5 on 11-03 and 11-07; (4) birth-step entry in the full engine, then at least 5 untouched UTC days;
+  (5) guard refit with the level's state as an input (B7); (6) what the profitable makers do (the timed legs carry
+  `signer`; to be confirmed as the maker's address); (7) reducing side (B9 follow-up); (8) C1 / C2 as declared.
+- Watch out: single 5-sh orders; Binance guards, CAP10 / RO60, size-up, throttle and inventory are not modelled; lanes
+  R and I are one order alone, not v3's ladder; the public book does not contain our order; the post hoc rows have
+  19-45 fills; nothing here is validated. Do not build an early-entry, improve or always-on rung rule on this evidence.
+
 ## 2026-11-10 08:51Z (session ce68ebe0) — strategy review, revision 2: two-line touch gate NOT supported at the order level
 
 - Done: read-only review of pm_ladder_v3 for the user (logic, live vs replay, pull buffer, optimization). Report:
