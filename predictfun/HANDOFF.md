@@ -1,5 +1,15 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-10 04:16Z — all inventory-cost main replays verified; stress/report pending
+
+- All18 main day/timing replays pass (9 consumed dates, J/X, 5 arms, 2592 markets/arm/timing).
+  Nov3 X slower-feedback stress running. No economic aggregate inspected; protected data remain unread.
+- Source review found the original aggregator calls a verifier that exclusively creates checks.json a second time.
+  Reporting-only adapter78d7a610 compares recomputed payloads/hashes read-only, ignoring only as_of; includes four
+  known-bad refusal controls. Original source/artifacts stay unchanged. After the runner's expected report refusal:
+  declare pf_inventory_cost_reporting --declare, commit its declaration, run that module under run_light, then
+  pf_inventory_cost_verify. Compact reporting/verification receipts will be v3. Slot remains occupied.
+
 ## 2026-11-10 03:36Z — inventory-cost J replay complete; X running
 
 - All nine consumed J dates verified, 2,592 markets per arm. Baseline and late-reservation control exactly

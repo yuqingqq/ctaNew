@@ -6,6 +6,10 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-10 04:16Z: INVENTORY-COST all18 main replays VERIFIED; Nov3 X stress running.
+  Reporting-only adapter78d7a610 fixes aggregation's attempted second exclusive checks.json write through read-only
+  comparison; no policy/calculation changes. Declaration/report v3 and independent verification still pending.
+  Slot occupied, no protected reads or completed economic conclusion.
   2026-11-10 03:36Z: INVENTORY-COST all9 J dates VERIFIED (2592 markets/arm), X running; stress/report/independent
   verification still pending. Source/correction/verifier pushed through deb4ad6e; no parameter changes or completed
   cross-timing economic result. v2 data/logs retained; research slot occupied; protected dates unread.
