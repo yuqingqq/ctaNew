@@ -3,7 +3,7 @@
  "day": "20260908",
  "coin": "btc",
  "era": "clob_v4_1",
- "as_of_utc": "2026-09-11T10:41:19Z",
+ "as_of_utc": "2026-09-11T11:56:27Z",
  "inputs": {
   "tape": {
    "path": "data/pm_5min/derived/phase2_state_tape_gate1_20260908_btc.json",
@@ -17,19 +17,34 @@
    "bytes": 390041103
   }
  },
+ "contract_version": 2,
  "n_windows_supplied": 288,
  "n_windows_in_census": 288,
  "windows_not_in_the_supplied_set": [],
  "totals": {
-  "tape_generations": 339448,
+  "reference_generations": 342942,
+  "observed_generations": 339448,
   "book_generations": 342942,
-  "book_minus_tape": 3494,
+  "zero_length_excluded": 1,
+  "n_windows_reference_ne_book": 0,
+  "book_minus_observed": 3494,
   "gap_seconds": 264.750048,
   "tape_rows": 647129,
   "gens_per_row": 0.529944
  },
+ "zero_length_exclusion": {
+  "status": "ZERO_LENGTH_GENERATION_EXCLUDED",
+  "n_excluded": 1,
+  "n_generations_before": 342943,
+  "n_generations_after": 342942,
+  "fraction": 2.9159364675762443e-06,
+  "predicate": "finite(t0) and finite(t1) and t0 == t1 -- FINITENESS BEFORE EQUALITY (REV 138)",
+  "applied_by": "be_daybook_build.exclude_zero_length_generations, imported read-only from the pinned tree, at the same point the builder applies it (be_daybook_build.py:1505)"
+ },
  "DEFINITIONS": {
-  "tape_generations": "distinct (slug, side, gen) among the tape's rows for the window",
+  "reference_generations": "EVERY reference generation for the window under the BUILDER's definition -- the sum of reference list lengths (be_daybook_build.py:1706) -- RECOMPUTED through the pinned constructor de_phase4_diag_runner.build_reference via be_daybook_build.day_selector, imported READ-ONLY from /home/yuqing/ctaNew-wt-fwd at 7ed5a90, mirroring the builder's own call at be_daybook_build.py:1478 including placement_latency_ms=0.0. It is an INDEPENDENT recomputation, not the book's number read back",
+  "observed_generations": "distinct (slug, side, gen) among the tape's rows for the window -- a DIAGNOSTIC. A generation with no tape row is a FACT worth seeing per window, not a fault: measured on 09-07 and 09-08, the book-only generations are all status OK, none zero-length, median lifetime ~37 ms, and most carry no tranches -- they open and close between two of the tape's row instants",
+  "tape_generations": "RENAMED to observed_generations in contract v2; the v1 name is not emitted",
   "book_generations": "generations the book's neutral reference holds for the window",
   "gap_seconds": "summed length of the intervals gaps_by_slug gives the window -- the gaps the REPLAY SEES. Some ledger gaps reach no window at all; see be_gap_census_wallclock.json"
  },
@@ -37,2306 +52,3176 @@
   {
    "t0": 1788825600,
    "t0_utc": "2026-09-08T00:00:00Z",
-   "tape_generations": 1001,
+   "reference_generations": 1001,
+   "observed_generations": 1001,
    "book_generations": 1001,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788825900,
    "t0_utc": "2026-09-08T00:05:00Z",
-   "tape_generations": 2152,
+   "reference_generations": 2159,
+   "observed_generations": 2152,
    "book_generations": 2159,
    "gap_seconds": 1.337253,
-   "book_minus_tape": 7
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 7
   },
   {
    "t0": 1788826200,
    "t0_utc": "2026-09-08T00:10:00Z",
-   "tape_generations": 1618,
+   "reference_generations": 1618,
+   "observed_generations": 1618,
    "book_generations": 1618,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788826500,
    "t0_utc": "2026-09-08T00:15:00Z",
-   "tape_generations": 1403,
+   "reference_generations": 1403,
+   "observed_generations": 1403,
    "book_generations": 1403,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788826800,
    "t0_utc": "2026-09-08T00:20:00Z",
-   "tape_generations": 1095,
+   "reference_generations": 1095,
+   "observed_generations": 1095,
    "book_generations": 1095,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788827100,
    "t0_utc": "2026-09-08T00:25:00Z",
-   "tape_generations": 393,
+   "reference_generations": 1607,
+   "observed_generations": 393,
    "book_generations": 1607,
    "gap_seconds": 0.0,
-   "book_minus_tape": 1214
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 1214
   },
   {
    "t0": 1788827400,
    "t0_utc": "2026-09-08T00:30:00Z",
-   "tape_generations": 708,
+   "reference_generations": 708,
+   "observed_generations": 708,
    "book_generations": 708,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788827700,
    "t0_utc": "2026-09-08T00:35:00Z",
-   "tape_generations": 606,
+   "reference_generations": 606,
+   "observed_generations": 606,
    "book_generations": 606,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788828000,
    "t0_utc": "2026-09-08T00:40:00Z",
-   "tape_generations": 1483,
+   "reference_generations": 1483,
+   "observed_generations": 1483,
    "book_generations": 1483,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788828300,
    "t0_utc": "2026-09-08T00:45:00Z",
-   "tape_generations": 810,
+   "reference_generations": 810,
+   "observed_generations": 810,
    "book_generations": 810,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788828600,
    "t0_utc": "2026-09-08T00:50:00Z",
-   "tape_generations": 1263,
+   "reference_generations": 1263,
+   "observed_generations": 1263,
    "book_generations": 1263,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788828900,
    "t0_utc": "2026-09-08T00:55:00Z",
-   "tape_generations": 505,
+   "reference_generations": 505,
+   "observed_generations": 505,
    "book_generations": 505,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788829200,
    "t0_utc": "2026-09-08T01:00:00Z",
-   "tape_generations": 2317,
+   "reference_generations": 2317,
+   "observed_generations": 2317,
    "book_generations": 2317,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788829500,
    "t0_utc": "2026-09-08T01:05:00Z",
-   "tape_generations": 978,
+   "reference_generations": 978,
+   "observed_generations": 978,
    "book_generations": 978,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788829800,
    "t0_utc": "2026-09-08T01:10:00Z",
-   "tape_generations": 1258,
+   "reference_generations": 1258,
+   "observed_generations": 1258,
    "book_generations": 1258,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788830100,
    "t0_utc": "2026-09-08T01:15:00Z",
-   "tape_generations": 2332,
+   "reference_generations": 2332,
+   "observed_generations": 2332,
    "book_generations": 2332,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788830400,
    "t0_utc": "2026-09-08T01:20:00Z",
-   "tape_generations": 890,
+   "reference_generations": 890,
+   "observed_generations": 890,
    "book_generations": 890,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788830700,
    "t0_utc": "2026-09-08T01:25:00Z",
-   "tape_generations": 2367,
+   "reference_generations": 2367,
+   "observed_generations": 2367,
    "book_generations": 2367,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788831000,
    "t0_utc": "2026-09-08T01:30:00Z",
-   "tape_generations": 2419,
+   "reference_generations": 2419,
+   "observed_generations": 2419,
    "book_generations": 2419,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788831300,
    "t0_utc": "2026-09-08T01:35:00Z",
-   "tape_generations": 2489,
+   "reference_generations": 2489,
+   "observed_generations": 2489,
    "book_generations": 2489,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788831600,
    "t0_utc": "2026-09-08T01:40:00Z",
-   "tape_generations": 1600,
+   "reference_generations": 1600,
+   "observed_generations": 1600,
    "book_generations": 1600,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788831900,
    "t0_utc": "2026-09-08T01:45:00Z",
-   "tape_generations": 1102,
+   "reference_generations": 1104,
+   "observed_generations": 1102,
    "book_generations": 1104,
    "gap_seconds": 1.69452,
-   "book_minus_tape": 2
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 2
   },
   {
    "t0": 1788832200,
    "t0_utc": "2026-09-08T01:50:00Z",
-   "tape_generations": 1305,
+   "reference_generations": 1305,
+   "observed_generations": 1305,
    "book_generations": 1305,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788832500,
    "t0_utc": "2026-09-08T01:55:00Z",
-   "tape_generations": 744,
+   "reference_generations": 744,
+   "observed_generations": 744,
    "book_generations": 744,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788832800,
    "t0_utc": "2026-09-08T02:00:00Z",
-   "tape_generations": 678,
+   "reference_generations": 678,
+   "observed_generations": 678,
    "book_generations": 678,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788833100,
    "t0_utc": "2026-09-08T02:05:00Z",
-   "tape_generations": 498,
+   "reference_generations": 498,
+   "observed_generations": 498,
    "book_generations": 498,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788833400,
    "t0_utc": "2026-09-08T02:10:00Z",
-   "tape_generations": 1445,
+   "reference_generations": 1445,
+   "observed_generations": 1445,
    "book_generations": 1445,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788833700,
    "t0_utc": "2026-09-08T02:15:00Z",
-   "tape_generations": 732,
+   "reference_generations": 732,
+   "observed_generations": 732,
    "book_generations": 732,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788834000,
    "t0_utc": "2026-09-08T02:20:00Z",
-   "tape_generations": 393,
+   "reference_generations": 393,
+   "observed_generations": 393,
    "book_generations": 393,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788834300,
    "t0_utc": "2026-09-08T02:25:00Z",
-   "tape_generations": 538,
+   "reference_generations": 540,
+   "observed_generations": 538,
    "book_generations": 540,
    "gap_seconds": 0.0,
-   "book_minus_tape": 2
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 2
   },
   {
    "t0": 1788834600,
    "t0_utc": "2026-09-08T02:30:00Z",
-   "tape_generations": 920,
+   "reference_generations": 920,
+   "observed_generations": 920,
    "book_generations": 920,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788834900,
    "t0_utc": "2026-09-08T02:35:00Z",
-   "tape_generations": 1728,
+   "reference_generations": 1728,
+   "observed_generations": 1728,
    "book_generations": 1728,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788835200,
    "t0_utc": "2026-09-08T02:40:00Z",
-   "tape_generations": 526,
+   "reference_generations": 526,
+   "observed_generations": 526,
    "book_generations": 526,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788835500,
    "t0_utc": "2026-09-08T02:45:00Z",
-   "tape_generations": 2304,
+   "reference_generations": 2304,
+   "observed_generations": 2304,
    "book_generations": 2304,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788835800,
    "t0_utc": "2026-09-08T02:50:00Z",
-   "tape_generations": 399,
+   "reference_generations": 399,
+   "observed_generations": 399,
    "book_generations": 399,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788836100,
    "t0_utc": "2026-09-08T02:55:00Z",
-   "tape_generations": 1324,
+   "reference_generations": 1324,
+   "observed_generations": 1324,
    "book_generations": 1324,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788836400,
    "t0_utc": "2026-09-08T03:00:00Z",
-   "tape_generations": 2070,
+   "reference_generations": 2070,
+   "observed_generations": 2070,
    "book_generations": 2070,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788836700,
    "t0_utc": "2026-09-08T03:05:00Z",
-   "tape_generations": 1086,
+   "reference_generations": 1086,
+   "observed_generations": 1086,
    "book_generations": 1086,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788837000,
    "t0_utc": "2026-09-08T03:10:00Z",
-   "tape_generations": 593,
+   "reference_generations": 593,
+   "observed_generations": 593,
    "book_generations": 593,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788837300,
    "t0_utc": "2026-09-08T03:15:00Z",
-   "tape_generations": 1761,
+   "reference_generations": 1761,
+   "observed_generations": 1761,
    "book_generations": 1761,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788837600,
    "t0_utc": "2026-09-08T03:20:00Z",
-   "tape_generations": 974,
+   "reference_generations": 974,
+   "observed_generations": 974,
    "book_generations": 974,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788837900,
    "t0_utc": "2026-09-08T03:25:00Z",
-   "tape_generations": 1084,
+   "reference_generations": 1084,
+   "observed_generations": 1084,
    "book_generations": 1084,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788838200,
    "t0_utc": "2026-09-08T03:30:00Z",
-   "tape_generations": 510,
+   "reference_generations": 1013,
+   "observed_generations": 510,
    "book_generations": 1013,
    "gap_seconds": 0.0,
-   "book_minus_tape": 503
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 503
   },
   {
    "t0": 1788838500,
    "t0_utc": "2026-09-08T03:35:00Z",
-   "tape_generations": 1518,
+   "reference_generations": 1518,
+   "observed_generations": 1518,
    "book_generations": 1518,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788838800,
    "t0_utc": "2026-09-08T03:40:00Z",
-   "tape_generations": 1186,
+   "reference_generations": 1186,
+   "observed_generations": 1186,
    "book_generations": 1186,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788839100,
    "t0_utc": "2026-09-08T03:45:00Z",
-   "tape_generations": 601,
+   "reference_generations": 601,
+   "observed_generations": 601,
    "book_generations": 601,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788839400,
    "t0_utc": "2026-09-08T03:50:00Z",
-   "tape_generations": 736,
+   "reference_generations": 736,
+   "observed_generations": 736,
    "book_generations": 736,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788839700,
    "t0_utc": "2026-09-08T03:55:00Z",
-   "tape_generations": 1352,
+   "reference_generations": 1352,
+   "observed_generations": 1352,
    "book_generations": 1352,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788840000,
    "t0_utc": "2026-09-08T04:00:00Z",
-   "tape_generations": 1024,
+   "reference_generations": 1024,
+   "observed_generations": 1024,
    "book_generations": 1024,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788840300,
    "t0_utc": "2026-09-08T04:05:00Z",
-   "tape_generations": 945,
+   "reference_generations": 945,
+   "observed_generations": 945,
    "book_generations": 945,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788840600,
    "t0_utc": "2026-09-08T04:10:00Z",
-   "tape_generations": 1032,
+   "reference_generations": 1032,
+   "observed_generations": 1032,
    "book_generations": 1032,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788840900,
    "t0_utc": "2026-09-08T04:15:00Z",
-   "tape_generations": 1539,
+   "reference_generations": 1539,
+   "observed_generations": 1539,
    "book_generations": 1539,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788841200,
    "t0_utc": "2026-09-08T04:20:00Z",
-   "tape_generations": 674,
+   "reference_generations": 674,
+   "observed_generations": 674,
    "book_generations": 674,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788841500,
    "t0_utc": "2026-09-08T04:25:00Z",
-   "tape_generations": 943,
+   "reference_generations": 943,
+   "observed_generations": 943,
    "book_generations": 943,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788841800,
    "t0_utc": "2026-09-08T04:30:00Z",
-   "tape_generations": 766,
+   "reference_generations": 766,
+   "observed_generations": 766,
    "book_generations": 766,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788842100,
    "t0_utc": "2026-09-08T04:35:00Z",
-   "tape_generations": 508,
+   "reference_generations": 508,
+   "observed_generations": 508,
    "book_generations": 508,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788842400,
    "t0_utc": "2026-09-08T04:40:00Z",
-   "tape_generations": 654,
+   "reference_generations": 658,
+   "observed_generations": 654,
    "book_generations": 658,
    "gap_seconds": 1.956937,
-   "book_minus_tape": 4
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 4
   },
   {
    "t0": 1788842700,
    "t0_utc": "2026-09-08T04:45:00Z",
-   "tape_generations": 726,
+   "reference_generations": 726,
+   "observed_generations": 726,
    "book_generations": 726,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788843000,
    "t0_utc": "2026-09-08T04:50:00Z",
-   "tape_generations": 724,
+   "reference_generations": 724,
+   "observed_generations": 724,
    "book_generations": 724,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788843300,
    "t0_utc": "2026-09-08T04:55:00Z",
-   "tape_generations": 1098,
+   "reference_generations": 1098,
+   "observed_generations": 1098,
    "book_generations": 1098,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788843600,
    "t0_utc": "2026-09-08T05:00:00Z",
-   "tape_generations": 1336,
+   "reference_generations": 1336,
+   "observed_generations": 1336,
    "book_generations": 1336,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788843900,
    "t0_utc": "2026-09-08T05:05:00Z",
-   "tape_generations": 1770,
+   "reference_generations": 1770,
+   "observed_generations": 1770,
    "book_generations": 1770,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788844200,
    "t0_utc": "2026-09-08T05:10:00Z",
-   "tape_generations": 946,
+   "reference_generations": 946,
+   "observed_generations": 946,
    "book_generations": 946,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788844500,
    "t0_utc": "2026-09-08T05:15:00Z",
-   "tape_generations": 1205,
+   "reference_generations": 1205,
+   "observed_generations": 1205,
    "book_generations": 1205,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788844800,
    "t0_utc": "2026-09-08T05:20:00Z",
-   "tape_generations": 2369,
+   "reference_generations": 2369,
+   "observed_generations": 2369,
    "book_generations": 2369,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788845100,
    "t0_utc": "2026-09-08T05:25:00Z",
-   "tape_generations": 1710,
+   "reference_generations": 1711,
+   "observed_generations": 1710,
    "book_generations": 1711,
    "gap_seconds": 2.160329,
-   "book_minus_tape": 1
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 1
   },
   {
    "t0": 1788845400,
    "t0_utc": "2026-09-08T05:30:00Z",
-   "tape_generations": 649,
+   "reference_generations": 649,
+   "observed_generations": 649,
    "book_generations": 649,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788845700,
    "t0_utc": "2026-09-08T05:35:00Z",
-   "tape_generations": 1459,
+   "reference_generations": 1459,
+   "observed_generations": 1459,
    "book_generations": 1459,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788846000,
    "t0_utc": "2026-09-08T05:40:00Z",
-   "tape_generations": 891,
+   "reference_generations": 891,
+   "observed_generations": 891,
    "book_generations": 891,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788846300,
    "t0_utc": "2026-09-08T05:45:00Z",
-   "tape_generations": 1227,
+   "reference_generations": 1227,
+   "observed_generations": 1227,
    "book_generations": 1227,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788846600,
    "t0_utc": "2026-09-08T05:50:00Z",
-   "tape_generations": 1126,
+   "reference_generations": 1126,
+   "observed_generations": 1126,
    "book_generations": 1126,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788846900,
    "t0_utc": "2026-09-08T05:55:00Z",
-   "tape_generations": 1035,
+   "reference_generations": 1035,
+   "observed_generations": 1035,
    "book_generations": 1035,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788847200,
    "t0_utc": "2026-09-08T06:00:00Z",
-   "tape_generations": 3165,
+   "reference_generations": 3165,
+   "observed_generations": 3165,
    "book_generations": 3165,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788847500,
    "t0_utc": "2026-09-08T06:05:00Z",
-   "tape_generations": 1630,
+   "reference_generations": 1630,
+   "observed_generations": 1630,
    "book_generations": 1630,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788847800,
    "t0_utc": "2026-09-08T06:10:00Z",
-   "tape_generations": 693,
+   "reference_generations": 693,
+   "observed_generations": 693,
    "book_generations": 693,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788848100,
    "t0_utc": "2026-09-08T06:15:00Z",
-   "tape_generations": 1228,
+   "reference_generations": 1228,
+   "observed_generations": 1228,
    "book_generations": 1228,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788848400,
    "t0_utc": "2026-09-08T06:20:00Z",
-   "tape_generations": 1752,
+   "reference_generations": 1752,
+   "observed_generations": 1752,
    "book_generations": 1752,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788848700,
    "t0_utc": "2026-09-08T06:25:00Z",
-   "tape_generations": 1701,
+   "reference_generations": 1701,
+   "observed_generations": 1701,
    "book_generations": 1701,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788849000,
    "t0_utc": "2026-09-08T06:30:00Z",
-   "tape_generations": 2220,
+   "reference_generations": 2220,
+   "observed_generations": 2220,
    "book_generations": 2220,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788849300,
    "t0_utc": "2026-09-08T06:35:00Z",
-   "tape_generations": 2055,
+   "reference_generations": 2055,
+   "observed_generations": 2055,
    "book_generations": 2055,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788849600,
    "t0_utc": "2026-09-08T06:40:00Z",
-   "tape_generations": 1997,
+   "reference_generations": 1997,
+   "observed_generations": 1997,
    "book_generations": 1997,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788849900,
    "t0_utc": "2026-09-08T06:45:00Z",
-   "tape_generations": 1478,
+   "reference_generations": 1478,
+   "observed_generations": 1478,
    "book_generations": 1478,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788850200,
    "t0_utc": "2026-09-08T06:50:00Z",
-   "tape_generations": 1324,
+   "reference_generations": 1324,
+   "observed_generations": 1324,
    "book_generations": 1324,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788850500,
    "t0_utc": "2026-09-08T06:55:00Z",
-   "tape_generations": 1354,
+   "reference_generations": 1354,
+   "observed_generations": 1354,
    "book_generations": 1354,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788850800,
    "t0_utc": "2026-09-08T07:00:00Z",
-   "tape_generations": 1484,
+   "reference_generations": 1484,
+   "observed_generations": 1484,
    "book_generations": 1484,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788851100,
    "t0_utc": "2026-09-08T07:05:00Z",
-   "tape_generations": 431,
+   "reference_generations": 431,
+   "observed_generations": 431,
    "book_generations": 431,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788851400,
    "t0_utc": "2026-09-08T07:10:00Z",
-   "tape_generations": 935,
+   "reference_generations": 935,
+   "observed_generations": 935,
    "book_generations": 935,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788851700,
    "t0_utc": "2026-09-08T07:15:00Z",
-   "tape_generations": 984,
+   "reference_generations": 984,
+   "observed_generations": 984,
    "book_generations": 984,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788852000,
    "t0_utc": "2026-09-08T07:20:00Z",
-   "tape_generations": 1114,
+   "reference_generations": 1117,
+   "observed_generations": 1114,
    "book_generations": 1117,
    "gap_seconds": 2.072898,
-   "book_minus_tape": 3
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 3
   },
   {
    "t0": 1788852300,
    "t0_utc": "2026-09-08T07:25:00Z",
-   "tape_generations": 1157,
+   "reference_generations": 1157,
+   "observed_generations": 1157,
    "book_generations": 1157,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788852600,
    "t0_utc": "2026-09-08T07:30:00Z",
-   "tape_generations": 1333,
+   "reference_generations": 1333,
+   "observed_generations": 1333,
    "book_generations": 1333,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788852900,
    "t0_utc": "2026-09-08T07:35:00Z",
-   "tape_generations": 630,
+   "reference_generations": 630,
+   "observed_generations": 630,
    "book_generations": 630,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788853200,
    "t0_utc": "2026-09-08T07:40:00Z",
-   "tape_generations": 1193,
+   "reference_generations": 1193,
+   "observed_generations": 1193,
    "book_generations": 1193,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788853500,
    "t0_utc": "2026-09-08T07:45:00Z",
-   "tape_generations": 368,
+   "reference_generations": 368,
+   "observed_generations": 368,
    "book_generations": 368,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788853800,
    "t0_utc": "2026-09-08T07:50:00Z",
-   "tape_generations": 1513,
+   "reference_generations": 1513,
+   "observed_generations": 1513,
    "book_generations": 1513,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788854100,
    "t0_utc": "2026-09-08T07:55:00Z",
-   "tape_generations": 628,
+   "reference_generations": 628,
+   "observed_generations": 628,
    "book_generations": 628,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788854400,
    "t0_utc": "2026-09-08T08:00:00Z",
-   "tape_generations": 482,
+   "reference_generations": 482,
+   "observed_generations": 482,
    "book_generations": 482,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788854700,
    "t0_utc": "2026-09-08T08:05:00Z",
-   "tape_generations": 1995,
+   "reference_generations": 1995,
+   "observed_generations": 1995,
    "book_generations": 1995,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788855000,
    "t0_utc": "2026-09-08T08:10:00Z",
-   "tape_generations": 1896,
+   "reference_generations": 1896,
+   "observed_generations": 1896,
    "book_generations": 1896,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788855300,
    "t0_utc": "2026-09-08T08:15:00Z",
-   "tape_generations": 1277,
+   "reference_generations": 1277,
+   "observed_generations": 1277,
    "book_generations": 1277,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788855600,
    "t0_utc": "2026-09-08T08:20:00Z",
-   "tape_generations": 3496,
+   "reference_generations": 3496,
+   "observed_generations": 3496,
    "book_generations": 3496,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788855900,
    "t0_utc": "2026-09-08T08:25:00Z",
-   "tape_generations": 709,
+   "reference_generations": 709,
+   "observed_generations": 709,
    "book_generations": 709,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788856200,
    "t0_utc": "2026-09-08T08:30:00Z",
-   "tape_generations": 1450,
+   "reference_generations": 1450,
+   "observed_generations": 1450,
    "book_generations": 1450,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788856500,
    "t0_utc": "2026-09-08T08:35:00Z",
-   "tape_generations": 1016,
+   "reference_generations": 1016,
+   "observed_generations": 1016,
    "book_generations": 1016,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788856800,
    "t0_utc": "2026-09-08T08:40:00Z",
-   "tape_generations": 790,
+   "reference_generations": 795,
+   "observed_generations": 790,
    "book_generations": 795,
    "gap_seconds": 0.0,
-   "book_minus_tape": 5
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 5
   },
   {
    "t0": 1788857100,
    "t0_utc": "2026-09-08T08:45:00Z",
-   "tape_generations": 1881,
+   "reference_generations": 1881,
+   "observed_generations": 1881,
    "book_generations": 1881,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788857400,
    "t0_utc": "2026-09-08T08:50:00Z",
-   "tape_generations": 2468,
+   "reference_generations": 2468,
+   "observed_generations": 2468,
    "book_generations": 2468,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788857700,
    "t0_utc": "2026-09-08T08:55:00Z",
-   "tape_generations": 2258,
+   "reference_generations": 3407,
+   "observed_generations": 2258,
    "book_generations": 3407,
    "gap_seconds": 0.0,
-   "book_minus_tape": 1149
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 1149
   },
   {
    "t0": 1788858000,
    "t0_utc": "2026-09-08T09:00:00Z",
-   "tape_generations": 1241,
+   "reference_generations": 1241,
+   "observed_generations": 1241,
    "book_generations": 1241,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788858300,
    "t0_utc": "2026-09-08T09:05:00Z",
-   "tape_generations": 1154,
+   "reference_generations": 1155,
+   "observed_generations": 1154,
    "book_generations": 1155,
    "gap_seconds": 1.775005,
-   "book_minus_tape": 1
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 1
   },
   {
    "t0": 1788858600,
    "t0_utc": "2026-09-08T09:10:00Z",
-   "tape_generations": 694,
+   "reference_generations": 694,
+   "observed_generations": 694,
    "book_generations": 694,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788858900,
    "t0_utc": "2026-09-08T09:15:00Z",
-   "tape_generations": 1451,
+   "reference_generations": 1451,
+   "observed_generations": 1451,
    "book_generations": 1451,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788859200,
    "t0_utc": "2026-09-08T09:20:00Z",
-   "tape_generations": 1001,
+   "reference_generations": 1001,
+   "observed_generations": 1001,
    "book_generations": 1001,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788859500,
    "t0_utc": "2026-09-08T09:25:00Z",
-   "tape_generations": 617,
+   "reference_generations": 617,
+   "observed_generations": 617,
    "book_generations": 617,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788859800,
    "t0_utc": "2026-09-08T09:30:00Z",
-   "tape_generations": 726,
+   "reference_generations": 726,
+   "observed_generations": 726,
    "book_generations": 726,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788860100,
    "t0_utc": "2026-09-08T09:35:00Z",
-   "tape_generations": 699,
+   "reference_generations": 699,
+   "observed_generations": 699,
    "book_generations": 699,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788860400,
    "t0_utc": "2026-09-08T09:40:00Z",
-   "tape_generations": 1073,
+   "reference_generations": 1073,
+   "observed_generations": 1073,
    "book_generations": 1073,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788860700,
    "t0_utc": "2026-09-08T09:45:00Z",
-   "tape_generations": 1766,
+   "reference_generations": 1766,
+   "observed_generations": 1766,
    "book_generations": 1766,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788861000,
    "t0_utc": "2026-09-08T09:50:00Z",
-   "tape_generations": 1366,
+   "reference_generations": 1368,
+   "observed_generations": 1366,
    "book_generations": 1368,
    "gap_seconds": 1.300289,
-   "book_minus_tape": 2
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 2
   },
   {
    "t0": 1788861300,
    "t0_utc": "2026-09-08T09:55:00Z",
-   "tape_generations": 2083,
+   "reference_generations": 2083,
+   "observed_generations": 2083,
    "book_generations": 2083,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788861600,
    "t0_utc": "2026-09-08T10:00:00Z",
-   "tape_generations": 1023,
+   "reference_generations": 1023,
+   "observed_generations": 1023,
    "book_generations": 1023,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788861900,
    "t0_utc": "2026-09-08T10:05:00Z",
-   "tape_generations": 678,
+   "reference_generations": 683,
+   "observed_generations": 678,
    "book_generations": 683,
    "gap_seconds": 1.63177,
-   "book_minus_tape": 5
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 5
   },
   {
    "t0": 1788862200,
    "t0_utc": "2026-09-08T10:10:00Z",
-   "tape_generations": 858,
+   "reference_generations": 858,
+   "observed_generations": 858,
    "book_generations": 858,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788862500,
    "t0_utc": "2026-09-08T10:15:00Z",
-   "tape_generations": 1035,
+   "reference_generations": 1035,
+   "observed_generations": 1035,
    "book_generations": 1035,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788862800,
    "t0_utc": "2026-09-08T10:20:00Z",
-   "tape_generations": 615,
+   "reference_generations": 615,
+   "observed_generations": 615,
    "book_generations": 615,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788863100,
    "t0_utc": "2026-09-08T10:25:00Z",
-   "tape_generations": 717,
+   "reference_generations": 717,
+   "observed_generations": 717,
    "book_generations": 717,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788863400,
    "t0_utc": "2026-09-08T10:30:00Z",
-   "tape_generations": 941,
+   "reference_generations": 941,
+   "observed_generations": 941,
    "book_generations": 941,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788863700,
    "t0_utc": "2026-09-08T10:35:00Z",
-   "tape_generations": 795,
+   "reference_generations": 795,
+   "observed_generations": 795,
    "book_generations": 795,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788864000,
    "t0_utc": "2026-09-08T10:40:00Z",
-   "tape_generations": 644,
+   "reference_generations": 644,
+   "observed_generations": 644,
    "book_generations": 644,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788864300,
    "t0_utc": "2026-09-08T10:45:00Z",
-   "tape_generations": 1581,
+   "reference_generations": 1581,
+   "observed_generations": 1581,
    "book_generations": 1581,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788864600,
    "t0_utc": "2026-09-08T10:50:00Z",
-   "tape_generations": 509,
+   "reference_generations": 511,
+   "observed_generations": 509,
    "book_generations": 511,
    "gap_seconds": 2.406708,
-   "book_minus_tape": 2
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 2
   },
   {
    "t0": 1788864900,
    "t0_utc": "2026-09-08T10:55:00Z",
-   "tape_generations": 485,
+   "reference_generations": 485,
+   "observed_generations": 485,
    "book_generations": 485,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788865200,
    "t0_utc": "2026-09-08T11:00:00Z",
-   "tape_generations": 739,
+   "reference_generations": 739,
+   "observed_generations": 739,
    "book_generations": 739,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788865500,
    "t0_utc": "2026-09-08T11:05:00Z",
-   "tape_generations": 624,
+   "reference_generations": 624,
+   "observed_generations": 624,
    "book_generations": 624,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788865800,
    "t0_utc": "2026-09-08T11:10:00Z",
-   "tape_generations": 742,
+   "reference_generations": 742,
+   "observed_generations": 742,
    "book_generations": 742,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788866100,
    "t0_utc": "2026-09-08T11:15:00Z",
-   "tape_generations": 1206,
+   "reference_generations": 1206,
+   "observed_generations": 1206,
    "book_generations": 1206,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788866400,
    "t0_utc": "2026-09-08T11:20:00Z",
-   "tape_generations": 622,
+   "reference_generations": 622,
+   "observed_generations": 622,
    "book_generations": 622,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788866700,
    "t0_utc": "2026-09-08T11:25:00Z",
-   "tape_generations": 885,
+   "reference_generations": 885,
+   "observed_generations": 885,
    "book_generations": 885,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788867000,
    "t0_utc": "2026-09-08T11:30:00Z",
-   "tape_generations": 797,
+   "reference_generations": 797,
+   "observed_generations": 797,
    "book_generations": 797,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788867300,
    "t0_utc": "2026-09-08T11:35:00Z",
-   "tape_generations": 869,
+   "reference_generations": 869,
+   "observed_generations": 869,
    "book_generations": 869,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788867600,
    "t0_utc": "2026-09-08T11:40:00Z",
-   "tape_generations": 1909,
+   "reference_generations": 1909,
+   "observed_generations": 1909,
    "book_generations": 1909,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788867900,
    "t0_utc": "2026-09-08T11:45:00Z",
-   "tape_generations": 716,
+   "reference_generations": 716,
+   "observed_generations": 716,
    "book_generations": 716,
    "gap_seconds": 1.23628,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788868200,
    "t0_utc": "2026-09-08T11:50:00Z",
-   "tape_generations": 1738,
+   "reference_generations": 1738,
+   "observed_generations": 1738,
    "book_generations": 1738,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788868500,
    "t0_utc": "2026-09-08T11:55:00Z",
-   "tape_generations": 652,
+   "reference_generations": 652,
+   "observed_generations": 652,
    "book_generations": 652,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788868800,
    "t0_utc": "2026-09-08T12:00:00Z",
-   "tape_generations": 415,
+   "reference_generations": 415,
+   "observed_generations": 415,
    "book_generations": 415,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788869100,
    "t0_utc": "2026-09-08T12:05:00Z",
-   "tape_generations": 820,
+   "reference_generations": 820,
+   "observed_generations": 820,
    "book_generations": 820,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788869400,
    "t0_utc": "2026-09-08T12:10:00Z",
-   "tape_generations": 523,
+   "reference_generations": 523,
+   "observed_generations": 523,
    "book_generations": 523,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788869700,
    "t0_utc": "2026-09-08T12:15:00Z",
-   "tape_generations": 1035,
+   "reference_generations": 1035,
+   "observed_generations": 1035,
    "book_generations": 1035,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788870000,
    "t0_utc": "2026-09-08T12:20:00Z",
-   "tape_generations": 653,
+   "reference_generations": 653,
+   "observed_generations": 653,
    "book_generations": 653,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788870300,
    "t0_utc": "2026-09-08T12:25:00Z",
-   "tape_generations": 1291,
+   "reference_generations": 1291,
+   "observed_generations": 1291,
    "book_generations": 1291,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788870600,
    "t0_utc": "2026-09-08T12:30:00Z",
-   "tape_generations": 820,
+   "reference_generations": 820,
+   "observed_generations": 820,
    "book_generations": 820,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788870900,
    "t0_utc": "2026-09-08T12:35:00Z",
-   "tape_generations": 803,
+   "reference_generations": 803,
+   "observed_generations": 803,
    "book_generations": 803,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788871200,
    "t0_utc": "2026-09-08T12:40:00Z",
-   "tape_generations": 859,
+   "reference_generations": 859,
+   "observed_generations": 859,
    "book_generations": 859,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788871500,
    "t0_utc": "2026-09-08T12:45:00Z",
-   "tape_generations": 1848,
+   "reference_generations": 1848,
+   "observed_generations": 1848,
    "book_generations": 1848,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788871800,
    "t0_utc": "2026-09-08T12:50:00Z",
-   "tape_generations": 1605,
+   "reference_generations": 1605,
+   "observed_generations": 1605,
    "book_generations": 1605,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788872100,
    "t0_utc": "2026-09-08T12:55:00Z",
-   "tape_generations": 2022,
+   "reference_generations": 2022,
+   "observed_generations": 2022,
    "book_generations": 2022,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788872400,
    "t0_utc": "2026-09-08T13:00:00Z",
-   "tape_generations": 884,
+   "reference_generations": 884,
+   "observed_generations": 884,
    "book_generations": 884,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788872700,
    "t0_utc": "2026-09-08T13:05:00Z",
-   "tape_generations": 1813,
+   "reference_generations": 1813,
+   "observed_generations": 1813,
    "book_generations": 1813,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788873000,
    "t0_utc": "2026-09-08T13:10:00Z",
-   "tape_generations": 1223,
+   "reference_generations": 1225,
+   "observed_generations": 1223,
    "book_generations": 1225,
    "gap_seconds": 2.127751,
-   "book_minus_tape": 2
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 2
   },
   {
    "t0": 1788873300,
    "t0_utc": "2026-09-08T13:15:00Z",
-   "tape_generations": 644,
+   "reference_generations": 644,
+   "observed_generations": 644,
    "book_generations": 644,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788873600,
    "t0_utc": "2026-09-08T13:20:00Z",
-   "tape_generations": 728,
+   "reference_generations": 728,
+   "observed_generations": 728,
    "book_generations": 728,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788873900,
    "t0_utc": "2026-09-08T13:25:00Z",
-   "tape_generations": 2118,
+   "reference_generations": 2118,
+   "observed_generations": 2118,
    "book_generations": 2118,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788874200,
    "t0_utc": "2026-09-08T13:30:00Z",
-   "tape_generations": 1087,
+   "reference_generations": 1087,
+   "observed_generations": 1087,
    "book_generations": 1087,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788874500,
    "t0_utc": "2026-09-08T13:35:00Z",
-   "tape_generations": 1966,
+   "reference_generations": 1966,
+   "observed_generations": 1966,
    "book_generations": 1966,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788874800,
    "t0_utc": "2026-09-08T13:40:00Z",
-   "tape_generations": 869,
+   "reference_generations": 869,
+   "observed_generations": 869,
    "book_generations": 869,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788875100,
    "t0_utc": "2026-09-08T13:45:00Z",
-   "tape_generations": 1548,
+   "reference_generations": 1548,
+   "observed_generations": 1548,
    "book_generations": 1548,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788875400,
    "t0_utc": "2026-09-08T13:50:00Z",
-   "tape_generations": 874,
+   "reference_generations": 874,
+   "observed_generations": 874,
    "book_generations": 874,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788875700,
    "t0_utc": "2026-09-08T13:55:00Z",
-   "tape_generations": 352,
+   "reference_generations": 450,
+   "observed_generations": 352,
    "book_generations": 450,
    "gap_seconds": 0.0,
-   "book_minus_tape": 98
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 98
   },
   {
    "t0": 1788876000,
    "t0_utc": "2026-09-08T14:00:00Z",
-   "tape_generations": 2616,
+   "reference_generations": 2620,
+   "observed_generations": 2616,
    "book_generations": 2620,
    "gap_seconds": 6.76249,
-   "book_minus_tape": 4
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 4
   },
   {
    "t0": 1788876300,
    "t0_utc": "2026-09-08T14:05:00Z",
-   "tape_generations": 908,
+   "reference_generations": 908,
+   "observed_generations": 908,
    "book_generations": 908,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788876600,
    "t0_utc": "2026-09-08T14:10:00Z",
-   "tape_generations": 1500,
+   "reference_generations": 1500,
+   "observed_generations": 1500,
    "book_generations": 1500,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788876900,
    "t0_utc": "2026-09-08T14:15:00Z",
-   "tape_generations": 828,
+   "reference_generations": 828,
+   "observed_generations": 828,
    "book_generations": 828,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788877200,
    "t0_utc": "2026-09-08T14:20:00Z",
-   "tape_generations": 1085,
+   "reference_generations": 1085,
+   "observed_generations": 1085,
    "book_generations": 1085,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788877500,
    "t0_utc": "2026-09-08T14:25:00Z",
-   "tape_generations": 1048,
+   "reference_generations": 1048,
+   "observed_generations": 1048,
    "book_generations": 1048,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788877800,
    "t0_utc": "2026-09-08T14:30:00Z",
-   "tape_generations": 1382,
+   "reference_generations": 1382,
+   "observed_generations": 1382,
    "book_generations": 1382,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788878100,
    "t0_utc": "2026-09-08T14:35:00Z",
-   "tape_generations": 2592,
+   "reference_generations": 2592,
+   "observed_generations": 2592,
    "book_generations": 2592,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788878400,
    "t0_utc": "2026-09-08T14:40:00Z",
-   "tape_generations": 1470,
+   "reference_generations": 1476,
+   "observed_generations": 1470,
    "book_generations": 1476,
    "gap_seconds": 3.538929,
-   "book_minus_tape": 6
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 6
   },
   {
    "t0": 1788878700,
    "t0_utc": "2026-09-08T14:45:00Z",
-   "tape_generations": 573,
+   "reference_generations": 576,
+   "observed_generations": 573,
    "book_generations": 576,
    "gap_seconds": 34.870847,
-   "book_minus_tape": 3
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 3
   },
   {
    "t0": 1788879000,
    "t0_utc": "2026-09-08T14:50:00Z",
-   "tape_generations": 1092,
+   "reference_generations": 1092,
+   "observed_generations": 1092,
    "book_generations": 1092,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788879300,
    "t0_utc": "2026-09-08T14:55:00Z",
-   "tape_generations": 925,
+   "reference_generations": 925,
+   "observed_generations": 925,
    "book_generations": 925,
    "gap_seconds": 1.464327,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788879600,
    "t0_utc": "2026-09-08T15:00:00Z",
-   "tape_generations": 1336,
+   "reference_generations": 1336,
+   "observed_generations": 1336,
    "book_generations": 1336,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788879900,
    "t0_utc": "2026-09-08T15:05:00Z",
-   "tape_generations": 1214,
+   "reference_generations": 1217,
+   "observed_generations": 1214,
    "book_generations": 1217,
    "gap_seconds": 1.550219,
-   "book_minus_tape": 3
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 3
   },
   {
    "t0": 1788880200,
    "t0_utc": "2026-09-08T15:10:00Z",
-   "tape_generations": 1111,
+   "reference_generations": 1111,
+   "observed_generations": 1111,
    "book_generations": 1111,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788880500,
    "t0_utc": "2026-09-08T15:15:00Z",
-   "tape_generations": 2816,
+   "reference_generations": 2857,
+   "observed_generations": 2816,
    "book_generations": 2857,
    "gap_seconds": 0.0,
-   "book_minus_tape": 41
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 41
   },
   {
    "t0": 1788880800,
    "t0_utc": "2026-09-08T15:20:00Z",
-   "tape_generations": 500,
+   "reference_generations": 500,
+   "observed_generations": 500,
    "book_generations": 500,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788881100,
    "t0_utc": "2026-09-08T15:25:00Z",
-   "tape_generations": 1162,
+   "reference_generations": 1162,
+   "observed_generations": 1162,
    "book_generations": 1162,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788881400,
    "t0_utc": "2026-09-08T15:30:00Z",
-   "tape_generations": 1362,
+   "reference_generations": 1362,
+   "observed_generations": 1362,
    "book_generations": 1362,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788881700,
    "t0_utc": "2026-09-08T15:35:00Z",
-   "tape_generations": 782,
+   "reference_generations": 782,
+   "observed_generations": 782,
    "book_generations": 782,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788882000,
    "t0_utc": "2026-09-08T15:40:00Z",
-   "tape_generations": 811,
+   "reference_generations": 811,
+   "observed_generations": 811,
    "book_generations": 811,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788882300,
    "t0_utc": "2026-09-08T15:45:00Z",
-   "tape_generations": 1880,
+   "reference_generations": 1880,
+   "observed_generations": 1880,
    "book_generations": 1880,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788882600,
    "t0_utc": "2026-09-08T15:50:00Z",
-   "tape_generations": 1256,
+   "reference_generations": 1260,
+   "observed_generations": 1256,
    "book_generations": 1260,
    "gap_seconds": 1.374174,
-   "book_minus_tape": 4
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 4
   },
   {
    "t0": 1788882900,
    "t0_utc": "2026-09-08T15:55:00Z",
-   "tape_generations": 723,
+   "reference_generations": 726,
+   "observed_generations": 723,
    "book_generations": 726,
    "gap_seconds": 25.661311,
-   "book_minus_tape": 3
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 3
   },
   {
    "t0": 1788883200,
    "t0_utc": "2026-09-08T16:00:00Z",
-   "tape_generations": 531,
+   "reference_generations": 535,
+   "observed_generations": 531,
    "book_generations": 535,
    "gap_seconds": 1.817079,
-   "book_minus_tape": 4
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 4
   },
   {
    "t0": 1788883500,
    "t0_utc": "2026-09-08T16:05:00Z",
-   "tape_generations": 1653,
+   "reference_generations": 1657,
+   "observed_generations": 1653,
    "book_generations": 1657,
    "gap_seconds": 2.124615,
-   "book_minus_tape": 4
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 4
   },
   {
    "t0": 1788883800,
    "t0_utc": "2026-09-08T16:10:00Z",
-   "tape_generations": 280,
+   "reference_generations": 280,
+   "observed_generations": 280,
    "book_generations": 280,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788884100,
    "t0_utc": "2026-09-08T16:15:00Z",
-   "tape_generations": 2119,
+   "reference_generations": 2119,
+   "observed_generations": 2119,
    "book_generations": 2119,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788884400,
    "t0_utc": "2026-09-08T16:20:00Z",
-   "tape_generations": 1311,
+   "reference_generations": 1312,
+   "observed_generations": 1311,
    "book_generations": 1312,
    "gap_seconds": 1.442976,
-   "book_minus_tape": 1
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 1
   },
   {
    "t0": 1788884700,
    "t0_utc": "2026-09-08T16:25:00Z",
-   "tape_generations": 690,
+   "reference_generations": 690,
+   "observed_generations": 690,
    "book_generations": 690,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788885000,
    "t0_utc": "2026-09-08T16:30:00Z",
-   "tape_generations": 781,
+   "reference_generations": 785,
+   "observed_generations": 781,
    "book_generations": 785,
    "gap_seconds": 1.87327,
-   "book_minus_tape": 4
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 4
   },
   {
    "t0": 1788885300,
    "t0_utc": "2026-09-08T16:35:00Z",
-   "tape_generations": 690,
+   "reference_generations": 690,
+   "observed_generations": 690,
    "book_generations": 690,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788885600,
    "t0_utc": "2026-09-08T16:40:00Z",
-   "tape_generations": 1301,
+   "reference_generations": 1306,
+   "observed_generations": 1301,
    "book_generations": 1306,
    "gap_seconds": 11.038526,
-   "book_minus_tape": 5
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 5
   },
   {
    "t0": 1788885900,
    "t0_utc": "2026-09-08T16:45:00Z",
-   "tape_generations": 1706,
+   "reference_generations": 1706,
+   "observed_generations": 1706,
    "book_generations": 1706,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788886200,
    "t0_utc": "2026-09-08T16:50:00Z",
-   "tape_generations": 2376,
+   "reference_generations": 2378,
+   "observed_generations": 2376,
    "book_generations": 2378,
    "gap_seconds": 0.0,
-   "book_minus_tape": 2
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 2
   },
   {
    "t0": 1788886500,
    "t0_utc": "2026-09-08T16:55:00Z",
-   "tape_generations": 461,
+   "reference_generations": 461,
+   "observed_generations": 461,
    "book_generations": 461,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788886800,
    "t0_utc": "2026-09-08T17:00:00Z",
-   "tape_generations": 605,
+   "reference_generations": 605,
+   "observed_generations": 605,
    "book_generations": 605,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788887100,
    "t0_utc": "2026-09-08T17:05:00Z",
-   "tape_generations": 1254,
+   "reference_generations": 1254,
+   "observed_generations": 1254,
    "book_generations": 1254,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788887400,
    "t0_utc": "2026-09-08T17:10:00Z",
-   "tape_generations": 1276,
+   "reference_generations": 1276,
+   "observed_generations": 1276,
    "book_generations": 1276,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788887700,
    "t0_utc": "2026-09-08T17:15:00Z",
-   "tape_generations": 961,
+   "reference_generations": 961,
+   "observed_generations": 961,
    "book_generations": 961,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788888000,
    "t0_utc": "2026-09-08T17:20:00Z",
-   "tape_generations": 870,
+   "reference_generations": 870,
+   "observed_generations": 870,
    "book_generations": 870,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788888300,
    "t0_utc": "2026-09-08T17:25:00Z",
-   "tape_generations": 1368,
+   "reference_generations": 1368,
+   "observed_generations": 1368,
    "book_generations": 1368,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788888600,
    "t0_utc": "2026-09-08T17:30:00Z",
-   "tape_generations": 1865,
+   "reference_generations": 1865,
+   "observed_generations": 1865,
    "book_generations": 1865,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788888900,
    "t0_utc": "2026-09-08T17:35:00Z",
-   "tape_generations": 1681,
+   "reference_generations": 1681,
+   "observed_generations": 1681,
    "book_generations": 1681,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788889200,
    "t0_utc": "2026-09-08T17:40:00Z",
-   "tape_generations": 688,
+   "reference_generations": 689,
+   "observed_generations": 688,
    "book_generations": 689,
    "gap_seconds": 1.645627,
-   "book_minus_tape": 1
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 1
   },
   {
    "t0": 1788889500,
    "t0_utc": "2026-09-08T17:45:00Z",
-   "tape_generations": 1026,
+   "reference_generations": 1032,
+   "observed_generations": 1026,
    "book_generations": 1032,
    "gap_seconds": 3.442122,
-   "book_minus_tape": 6
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 6
   },
   {
    "t0": 1788889800,
    "t0_utc": "2026-09-08T17:50:00Z",
-   "tape_generations": 407,
+   "reference_generations": 407,
+   "observed_generations": 407,
    "book_generations": 407,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788890100,
    "t0_utc": "2026-09-08T17:55:00Z",
-   "tape_generations": 499,
+   "reference_generations": 679,
+   "observed_generations": 499,
    "book_generations": 679,
    "gap_seconds": 0.0,
-   "book_minus_tape": 180
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 180
   },
   {
    "t0": 1788890400,
    "t0_utc": "2026-09-08T18:00:00Z",
-   "tape_generations": 718,
+   "reference_generations": 724,
+   "observed_generations": 718,
    "book_generations": 724,
    "gap_seconds": 11.256079,
-   "book_minus_tape": 6
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 6
   },
   {
    "t0": 1788890700,
    "t0_utc": "2026-09-08T18:05:00Z",
-   "tape_generations": 223,
+   "reference_generations": 224,
+   "observed_generations": 223,
    "book_generations": 224,
    "gap_seconds": 3.162453,
-   "book_minus_tape": 1
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 1
   },
   {
    "t0": 1788891000,
    "t0_utc": "2026-09-08T18:10:00Z",
-   "tape_generations": 1750,
+   "reference_generations": 1750,
+   "observed_generations": 1750,
    "book_generations": 1750,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788891300,
    "t0_utc": "2026-09-08T18:15:00Z",
-   "tape_generations": 567,
+   "reference_generations": 567,
+   "observed_generations": 567,
    "book_generations": 567,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788891600,
    "t0_utc": "2026-09-08T18:20:00Z",
-   "tape_generations": 1166,
+   "reference_generations": 1166,
+   "observed_generations": 1166,
    "book_generations": 1166,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788891900,
    "t0_utc": "2026-09-08T18:25:00Z",
-   "tape_generations": 483,
+   "reference_generations": 483,
+   "observed_generations": 483,
    "book_generations": 483,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788892200,
    "t0_utc": "2026-09-08T18:30:00Z",
-   "tape_generations": 1111,
+   "reference_generations": 1114,
+   "observed_generations": 1111,
    "book_generations": 1114,
    "gap_seconds": 1.13718,
-   "book_minus_tape": 3
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 3
   },
   {
    "t0": 1788892500,
    "t0_utc": "2026-09-08T18:35:00Z",
-   "tape_generations": 309,
+   "reference_generations": 309,
+   "observed_generations": 309,
    "book_generations": 309,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788892800,
    "t0_utc": "2026-09-08T18:40:00Z",
-   "tape_generations": 1577,
+   "reference_generations": 1577,
+   "observed_generations": 1577,
    "book_generations": 1577,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788893100,
    "t0_utc": "2026-09-08T18:45:00Z",
-   "tape_generations": 617,
+   "reference_generations": 620,
+   "observed_generations": 617,
    "book_generations": 620,
    "gap_seconds": 10.916471,
-   "book_minus_tape": 3
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 3
   },
   {
    "t0": 1788893400,
    "t0_utc": "2026-09-08T18:50:00Z",
-   "tape_generations": 2035,
+   "reference_generations": 2035,
+   "observed_generations": 2035,
    "book_generations": 2035,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788893700,
    "t0_utc": "2026-09-08T18:55:00Z",
-   "tape_generations": 901,
+   "reference_generations": 901,
+   "observed_generations": 901,
    "book_generations": 901,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788894000,
    "t0_utc": "2026-09-08T19:00:00Z",
-   "tape_generations": 708,
+   "reference_generations": 714,
+   "observed_generations": 708,
    "book_generations": 714,
    "gap_seconds": 24.292611,
-   "book_minus_tape": 6
+   "zero_length_excluded": 1,
+   "reference_minus_book": 0,
+   "book_minus_observed": 6
   },
   {
    "t0": 1788894300,
    "t0_utc": "2026-09-08T19:05:00Z",
-   "tape_generations": 709,
+   "reference_generations": 709,
+   "observed_generations": 709,
    "book_generations": 709,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788894600,
    "t0_utc": "2026-09-08T19:10:00Z",
-   "tape_generations": 1260,
+   "reference_generations": 1272,
+   "observed_generations": 1260,
    "book_generations": 1272,
    "gap_seconds": 12.691512,
-   "book_minus_tape": 12
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 12
   },
   {
    "t0": 1788894900,
    "t0_utc": "2026-09-08T19:15:00Z",
-   "tape_generations": 1775,
+   "reference_generations": 1778,
+   "observed_generations": 1775,
    "book_generations": 1778,
    "gap_seconds": 10.028023,
-   "book_minus_tape": 3
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 3
   },
   {
    "t0": 1788895200,
    "t0_utc": "2026-09-08T19:20:00Z",
-   "tape_generations": 913,
+   "reference_generations": 913,
+   "observed_generations": 913,
    "book_generations": 913,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788895500,
    "t0_utc": "2026-09-08T19:25:00Z",
-   "tape_generations": 1286,
+   "reference_generations": 1288,
+   "observed_generations": 1286,
    "book_generations": 1288,
    "gap_seconds": 1.551939,
-   "book_minus_tape": 2
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 2
   },
   {
    "t0": 1788895800,
    "t0_utc": "2026-09-08T19:30:00Z",
-   "tape_generations": 1187,
+   "reference_generations": 1187,
+   "observed_generations": 1187,
    "book_generations": 1187,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788896100,
    "t0_utc": "2026-09-08T19:35:00Z",
-   "tape_generations": 697,
+   "reference_generations": 697,
+   "observed_generations": 697,
    "book_generations": 697,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788896400,
    "t0_utc": "2026-09-08T19:40:00Z",
-   "tape_generations": 881,
+   "reference_generations": 884,
+   "observed_generations": 881,
    "book_generations": 884,
    "gap_seconds": 11.170758,
-   "book_minus_tape": 3
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 3
   },
   {
    "t0": 1788896700,
    "t0_utc": "2026-09-08T19:45:00Z",
-   "tape_generations": 1139,
+   "reference_generations": 1139,
+   "observed_generations": 1139,
    "book_generations": 1139,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788897000,
    "t0_utc": "2026-09-08T19:50:00Z",
-   "tape_generations": 1193,
+   "reference_generations": 1193,
+   "observed_generations": 1193,
    "book_generations": 1193,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788897300,
    "t0_utc": "2026-09-08T19:55:00Z",
-   "tape_generations": 1899,
+   "reference_generations": 1899,
+   "observed_generations": 1899,
    "book_generations": 1899,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788897600,
    "t0_utc": "2026-09-08T20:00:00Z",
-   "tape_generations": 467,
+   "reference_generations": 467,
+   "observed_generations": 467,
    "book_generations": 467,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788897900,
    "t0_utc": "2026-09-08T20:05:00Z",
-   "tape_generations": 418,
+   "reference_generations": 418,
+   "observed_generations": 418,
    "book_generations": 418,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788898200,
    "t0_utc": "2026-09-08T20:10:00Z",
-   "tape_generations": 680,
+   "reference_generations": 681,
+   "observed_generations": 680,
    "book_generations": 681,
    "gap_seconds": 1.891237,
-   "book_minus_tape": 1
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 1
   },
   {
    "t0": 1788898500,
    "t0_utc": "2026-09-08T20:15:00Z",
-   "tape_generations": 859,
+   "reference_generations": 863,
+   "observed_generations": 859,
    "book_generations": 863,
    "gap_seconds": 2.185624,
-   "book_minus_tape": 4
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 4
   },
   {
    "t0": 1788898800,
    "t0_utc": "2026-09-08T20:20:00Z",
-   "tape_generations": 968,
+   "reference_generations": 968,
+   "observed_generations": 968,
    "book_generations": 968,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788899100,
    "t0_utc": "2026-09-08T20:25:00Z",
-   "tape_generations": 499,
+   "reference_generations": 499,
+   "observed_generations": 499,
    "book_generations": 499,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788899400,
    "t0_utc": "2026-09-08T20:30:00Z",
-   "tape_generations": 542,
+   "reference_generations": 542,
+   "observed_generations": 542,
    "book_generations": 542,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788899700,
    "t0_utc": "2026-09-08T20:35:00Z",
-   "tape_generations": 783,
+   "reference_generations": 788,
+   "observed_generations": 783,
    "book_generations": 788,
    "gap_seconds": 2.204612,
-   "book_minus_tape": 5
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 5
   },
   {
    "t0": 1788900000,
    "t0_utc": "2026-09-08T20:40:00Z",
-   "tape_generations": 1400,
+   "reference_generations": 1400,
+   "observed_generations": 1400,
    "book_generations": 1400,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788900300,
    "t0_utc": "2026-09-08T20:45:00Z",
-   "tape_generations": 880,
+   "reference_generations": 905,
+   "observed_generations": 880,
    "book_generations": 905,
    "gap_seconds": 44.680826,
-   "book_minus_tape": 25
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 25
   },
   {
    "t0": 1788900600,
    "t0_utc": "2026-09-08T20:50:00Z",
-   "tape_generations": 1493,
+   "reference_generations": 1493,
+   "observed_generations": 1493,
    "book_generations": 1493,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788900900,
    "t0_utc": "2026-09-08T20:55:00Z",
-   "tape_generations": 1167,
+   "reference_generations": 1167,
+   "observed_generations": 1167,
    "book_generations": 1167,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788901200,
    "t0_utc": "2026-09-08T21:00:00Z",
-   "tape_generations": 974,
+   "reference_generations": 974,
+   "observed_generations": 974,
    "book_generations": 974,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788901500,
    "t0_utc": "2026-09-08T21:05:00Z",
-   "tape_generations": 962,
+   "reference_generations": 962,
+   "observed_generations": 962,
    "book_generations": 962,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788901800,
    "t0_utc": "2026-09-08T21:10:00Z",
-   "tape_generations": 829,
+   "reference_generations": 835,
+   "observed_generations": 829,
    "book_generations": 835,
    "gap_seconds": 1.445976,
-   "book_minus_tape": 6
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 6
   },
   {
    "t0": 1788902100,
    "t0_utc": "2026-09-08T21:15:00Z",
-   "tape_generations": 1097,
+   "reference_generations": 1097,
+   "observed_generations": 1097,
    "book_generations": 1097,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788902400,
    "t0_utc": "2026-09-08T21:20:00Z",
-   "tape_generations": 1250,
+   "reference_generations": 1250,
+   "observed_generations": 1250,
    "book_generations": 1250,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788902700,
    "t0_utc": "2026-09-08T21:25:00Z",
-   "tape_generations": 3703,
+   "reference_generations": 3744,
+   "observed_generations": 3703,
    "book_generations": 3744,
    "gap_seconds": 1.232029,
-   "book_minus_tape": 41
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 41
   },
   {
    "t0": 1788903000,
    "t0_utc": "2026-09-08T21:30:00Z",
-   "tape_generations": 741,
+   "reference_generations": 741,
+   "observed_generations": 741,
    "book_generations": 741,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788903300,
    "t0_utc": "2026-09-08T21:35:00Z",
-   "tape_generations": 1221,
+   "reference_generations": 1221,
+   "observed_generations": 1221,
    "book_generations": 1221,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788903600,
    "t0_utc": "2026-09-08T21:40:00Z",
-   "tape_generations": 986,
+   "reference_generations": 986,
+   "observed_generations": 986,
    "book_generations": 986,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788903900,
    "t0_utc": "2026-09-08T21:45:00Z",
-   "tape_generations": 1068,
+   "reference_generations": 1068,
+   "observed_generations": 1068,
    "book_generations": 1068,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788904200,
    "t0_utc": "2026-09-08T21:50:00Z",
-   "tape_generations": 495,
+   "reference_generations": 495,
+   "observed_generations": 495,
    "book_generations": 495,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788904500,
    "t0_utc": "2026-09-08T21:55:00Z",
-   "tape_generations": 468,
+   "reference_generations": 468,
+   "observed_generations": 468,
    "book_generations": 468,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788904800,
    "t0_utc": "2026-09-08T22:00:00Z",
-   "tape_generations": 467,
+   "reference_generations": 467,
+   "observed_generations": 467,
    "book_generations": 467,
    "gap_seconds": 1.673233,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788905100,
    "t0_utc": "2026-09-08T22:05:00Z",
-   "tape_generations": 722,
+   "reference_generations": 755,
+   "observed_generations": 722,
    "book_generations": 755,
    "gap_seconds": 0.0,
-   "book_minus_tape": 33
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 33
   },
   {
    "t0": 1788905400,
    "t0_utc": "2026-09-08T22:10:00Z",
-   "tape_generations": 1149,
+   "reference_generations": 1149,
+   "observed_generations": 1149,
    "book_generations": 1149,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788905700,
    "t0_utc": "2026-09-08T22:15:00Z",
-   "tape_generations": 1090,
+   "reference_generations": 1090,
+   "observed_generations": 1090,
    "book_generations": 1090,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788906000,
    "t0_utc": "2026-09-08T22:20:00Z",
-   "tape_generations": 677,
+   "reference_generations": 677,
+   "observed_generations": 677,
    "book_generations": 677,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788906300,
    "t0_utc": "2026-09-08T22:25:00Z",
-   "tape_generations": 508,
+   "reference_generations": 508,
+   "observed_generations": 508,
    "book_generations": 508,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788906600,
    "t0_utc": "2026-09-08T22:30:00Z",
-   "tape_generations": 1061,
+   "reference_generations": 1061,
+   "observed_generations": 1061,
    "book_generations": 1061,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788906900,
    "t0_utc": "2026-09-08T22:35:00Z",
-   "tape_generations": 1796,
+   "reference_generations": 1796,
+   "observed_generations": 1796,
    "book_generations": 1796,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788907200,
    "t0_utc": "2026-09-08T22:40:00Z",
-   "tape_generations": 1519,
+   "reference_generations": 1519,
+   "observed_generations": 1519,
    "book_generations": 1519,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788907500,
    "t0_utc": "2026-09-08T22:45:00Z",
-   "tape_generations": 725,
+   "reference_generations": 740,
+   "observed_generations": 725,
    "book_generations": 740,
    "gap_seconds": 0.0,
-   "book_minus_tape": 15
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 15
   },
   {
    "t0": 1788907800,
    "t0_utc": "2026-09-08T22:50:00Z",
-   "tape_generations": 2079,
+   "reference_generations": 2079,
+   "observed_generations": 2079,
    "book_generations": 2079,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788908100,
    "t0_utc": "2026-09-08T22:55:00Z",
-   "tape_generations": 1529,
+   "reference_generations": 1529,
+   "observed_generations": 1529,
    "book_generations": 1529,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788908400,
    "t0_utc": "2026-09-08T23:00:00Z",
-   "tape_generations": 1377,
+   "reference_generations": 1377,
+   "observed_generations": 1377,
    "book_generations": 1377,
    "gap_seconds": 1.474141,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788908700,
    "t0_utc": "2026-09-08T23:05:00Z",
-   "tape_generations": 2694,
+   "reference_generations": 2694,
+   "observed_generations": 2694,
    "book_generations": 2694,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788909000,
    "t0_utc": "2026-09-08T23:10:00Z",
-   "tape_generations": 2085,
+   "reference_generations": 2085,
+   "observed_generations": 2085,
    "book_generations": 2085,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788909300,
    "t0_utc": "2026-09-08T23:15:00Z",
-   "tape_generations": 1724,
+   "reference_generations": 1724,
+   "observed_generations": 1724,
    "book_generations": 1724,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788909600,
    "t0_utc": "2026-09-08T23:20:00Z",
-   "tape_generations": 1660,
+   "reference_generations": 1660,
+   "observed_generations": 1660,
    "book_generations": 1660,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788909900,
    "t0_utc": "2026-09-08T23:25:00Z",
-   "tape_generations": 2236,
+   "reference_generations": 2236,
+   "observed_generations": 2236,
    "book_generations": 2236,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788910200,
    "t0_utc": "2026-09-08T23:30:00Z",
-   "tape_generations": 1566,
+   "reference_generations": 1566,
+   "observed_generations": 1566,
    "book_generations": 1566,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788910500,
    "t0_utc": "2026-09-08T23:35:00Z",
-   "tape_generations": 968,
+   "reference_generations": 968,
+   "observed_generations": 968,
    "book_generations": 968,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788910800,
    "t0_utc": "2026-09-08T23:40:00Z",
-   "tape_generations": 2200,
+   "reference_generations": 2200,
+   "observed_generations": 2200,
    "book_generations": 2200,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788911100,
    "t0_utc": "2026-09-08T23:45:00Z",
-   "tape_generations": 3014,
+   "reference_generations": 3068,
+   "observed_generations": 3014,
    "book_generations": 3068,
    "gap_seconds": 3.449092,
-   "book_minus_tape": 54
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 54
   },
   {
    "t0": 1788911400,
    "t0_utc": "2026-09-08T23:50:00Z",
-   "tape_generations": 1030,
+   "reference_generations": 1030,
+   "observed_generations": 1030,
    "book_generations": 1030,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   },
   {
    "t0": 1788911700,
    "t0_utc": "2026-09-08T23:55:00Z",
-   "tape_generations": 861,
+   "reference_generations": 861,
+   "observed_generations": 861,
    "book_generations": 861,
    "gap_seconds": 0.0,
-   "book_minus_tape": 0
+   "zero_length_excluded": 0,
+   "reference_minus_book": 0,
+   "book_minus_observed": 0
   }
- ]
+ ],
+ "supersedes": {
+  "path": "data/pm_5min/derived/be_book_window_census_20260908.superseded_20260911T115633Z.json",
+  "sha256": "75271252542c50f7de852183da816d60e22b10c853a1570f1401597e4275ccf4",
+  "contract_version": 1,
+  "why": "contract v2 (BE 154): reference_generations added as an INDEPENDENT recomputation through the pinned constructor, and v1's tape_generations kept as observed_generations, a diagnostic"
+ }
 }
