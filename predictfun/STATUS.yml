@@ -6,6 +6,11 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-10 02:35Z: INVENTORY/CAPTURE design review complete on native79a05d3 and saved consumed-data receipts.
+  Shared entry/exit profit gate, soft CAP10 and minimum-notional exit constraints confirmed in source. Next specified:
+  neutral-action exit-feasibility audit, then cost-bounded exit objective; marginal entry-risk pricing separate.
+  No new simulations, calibration/PnL claim, live change or protected-data read. See handoffs/20261110_inventory_capture_review.md
+  and reviews/inventory_capture_20261110/source_snapshot.json. B1 remains open; offline design can proceed alongside it.
   2026-11-10 02:25Z: FILL CALIBRATION prioritized; ingestion preparation complete, calibration NOT complete.
   Frozen source f22cd1db:16 synthetic controls pass (full action population, status clocks, duplicate notices,
   incomplete capture, corrupted inputs and protected-scope refusal). No new live/protected payload read or queue fit.
