@@ -1,5 +1,18 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-10 02:35Z — inventory/capture design review complete; next audit specified
+
+- User asked what can improve spread capture and inventory while new live calibration data is pending. Reviewed native
+  main79a05d3, frozen v3 and prior receipts. Same PM90 gate applies to entry/exit; CAP10 is a known-net adding trigger,
+  not an aggregate bound; RO quantity plus XMIN1 can make small residuals impossible to hedge through complement buys.
+- Prior unconditional RX5 relaxation, small entry/exit caps and late concessions do not establish the objective.
+  Proposed next work: neutral-action exit-feasibility audit, then a separately priced and bounded exit-cost experiment;
+  marginal inventory-aware entry admission remains a separate arm. Guard score is not a settlement probability or cash edge.
+- Full rationale/scope: handoffs/20261110_inventory_capture_review.md. Source/evidence hashes:
+  reviews/inventory_capture_20261110/source_snapshot.json. Branch research/predict-inventory-design-20261110.
+- This turn was a source/evidence review, not a new simulation. No new PnL or lower-variance claim, live/frozen changes,
+  or protected Nov9–13 data reads. B1 calibration still pending. Exit-feasibility audit not yet implemented/run.
+
 ## 2026-11-10 02:25Z — fill timing/queue calibration prioritized; awaiting updated capture
 
 - User asked to finish calibration before more optimization. Prepared full-action ingestion for the A4b wallet capture
