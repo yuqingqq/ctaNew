@@ -6,6 +6,16 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-10 13:24Z (session ce68ebe0): B1a DONE (read-only; USER "Yes"): the replay's fill model does NOT reproduce
+  live's fills order by order, and no constant trade-time shift fits. research/pf_b1a_live_orders.py v1 7ef3de6e, v2
+  1a253a45 (each committed before its run; v2 = identity at the taker order); report handoffs/20261110_b1a_live_orders.md;
+  output live_vs_replay/b1a_20261110/, copies in reviews/b1a_20261110/. 30,221 accepted live orders (tokyo-6 +
+  basis-tokyo-1, 220 consumed 11-08 windows, 849.867 sh); point estimates. Live's own fills -0.25 c/sh at 1 s (orders
+  under 100 ms old +0.05, 500 ms or older -0.94). Readings: R24 OVER-CREDITS (1.47-1.96x under M / L); R25 FAILS
+  (precision 0.08-0.25 under M / L); R26 YOUNG-PHANTOM (88-92% of the replay's young-order shares are not live's trades);
+  R27 CONSTANT-250-CONTRADICTED (41.2% of live's fill shares within 250 ms of our decision); R28 per share MATCHES at 0-50
+  ms, UNDERSTATES at 250 ms (-2.36 against -0.25); R29 PEND-OVERCREDITED (2.5x). Next: USER D2, a live run with the A4b
+  capture for B1; rebate / rewards (USER); B12.
   2026-11-10 10:05Z (session ce68ebe0): STRATEGY REVIEW revision 3 (read-only): QUEUE PRIORITY BY EARLY ENTRY NOT FOUND;
   THE FILL CLOCK DECIDES THE SIGN. Diagnostic research/pf_review_level_birth.py (committed before its first run,
   8f448870; post hoc section marked), output level_birth.txt as of 09:47Z (cohort dir live_vs_replay/review_20261110/,
@@ -1551,3 +1561,4 @@ flags:
   simulation_review_20261105: "R7 / R8 FIXED by the user, verified 15:30Z (check_fixes_v4.py PASS with pre-fix falsifiers; see updated 15:30Z). Reruns (round i) in progress; every number before round i is provenance only."
   two_line_touch_gate: "NOT SUPPORTED at the order level (strategy review revision 2, queue_reach.txt 2026-11-10 08:24Z; one consumed partial day, fill rule not validated): fills in the band are adverse for an order at the back of the queue; pull buffer = churn control only; see updated 08:51Z and handoffs/20261110_strategy_review.md section 6"
   queue_priority: "NOT FOUND at the order level (strategy review revision 3, level_birth.txt 2026-11-10 09:47Z; one consumed partial day, fill rule not validated): a 5-sh order goes live behind p50 229-423 sh at a level born as the best; unguarded join / birth / rung / improve lose in 40 of 40 cells; at 250 ms trade-time shift every arm is negative. Candidate for a fresh-day test only: touch order enters at the step its price becomes the best (arm B-g90, reading MIXED); see updated 10:05Z and handoffs/20261110_strategy_review.md section 6.5"
+  fill_model_b1a: "NOT VALIDATED at the order level (B1a, 2026-11-10 13:19Z, handoffs/20261110_b1a_live_orders.md): on live's own orders the replay credits 1.47-1.96x live's shares under M / L, precision 0.08-0.25, young-order fills 88-92% not live's; a constant 250 ms trade-time shift is contradicted by live's fills; B1 needs live match clocks (A4b)"
