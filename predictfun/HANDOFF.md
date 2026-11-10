@@ -1,5 +1,27 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-10 02:57Z — inventory-cost audit correction; v2 RUNNING
+
+- First full-day audit refused a quote/submission feasibility mismatch. Raw quote notional and lot-rounded order
+  notional are now separate predicates; regression control included. Policies and numeric settings unchanged.
+- Source542bb9e4; declaration42dfcadf, superseding d5f43299. Original partial run/logs retained. New destination
+  data/predict_fun/research/inventory_cost_20261110_v2.33 controls and exact8-market baseline/control smoke pass.
+- Full9 consumed days x J/X then Nov3 stress running serially; no completed economic comparison yet. Slot occupied.
+
+## 2026-11-10 02:49Z — authorized inventory-cost experiment RUNNING
+
+- User approved trying the reviewed methods. Source cc109212; pre-outcome declaration d5f43299.
+  Three fixed candidates: narrow reducing-side score relaxation, separate one-tick concession with $0.25/window
+  lifetime submission budget, and separate marginal inventory-radius score premium on entries. No parameter search.
+- 32 synthetic controls and eight-market smoke pass: baseline/control exact, exit pre60 fills/requests exact,
+  cash/carry/provenance and committed-concession checks pass. Full9 consumed days x J/X running serially,
+  then Nov3 slower-create/fill-notice stress. No protected Nov9–13 read or live/frozen change.
+- Sources/runner: pf_inventory_cost_*.py and run_inventory_cost.sh, branch research/predict-inventory-design-20261110,
+  checkout /tmp/cta-inventory-design-20261110. Data/logs inventory_cost_20261110. Research slot occupied.
+- Neutral baseline exit-feasibility episodes cover60–300s; intervals are decision-sampled states, not verified
+  continuous queue observations. Historical single-order simulator remains uncalibrated and differs from native A2.
+  No economic conclusion yet. B1 capture/calibration still pending; budget bounds concessions only, not total losses.
+
 ## 2026-11-10 02:35Z — inventory/capture design review complete; next audit specified
 
 - User asked what can improve spread capture and inventory while new live calibration data is pending. Reviewed native

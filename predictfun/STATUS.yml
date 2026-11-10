@@ -6,6 +6,14 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-10 02:57Z: INVENTORY-COST v2 RUNNING. Quote/submission notional audit distinction fixed; unchanged policies.
+  Source542bb9e4/declaration42dfcadf, original failure retained;33 controls and exact8-market smoke pass.
+  Data inventory_cost_20261110_v2; research slot occupied. No completed economic comparison.
+  2026-11-10 02:49Z: INVENTORY-COST study RUNNING, user authorized. Sourcecc109212/declarationd5f43299;
+  32 controls and8-market smoke pass, baseline/control exact and exit pre60 prefix unchanged. Three fixed policies,
+  9 consumed dates x J/X plus Nov3 slower-feedback stress; no protected read/live change. Slot occupied.
+  Branch research/predict-inventory-design-20261110, logs data/predict_fun/research/inventory_cost_20261110.
+  Historical fill assumptions and non-incremental execution remain limitations. No economic finding yet.
   2026-11-10 02:35Z: INVENTORY/CAPTURE design review complete on native79a05d3 and saved consumed-data receipts.
   Shared entry/exit profit gate, soft CAP10 and minimum-notional exit constraints confirmed in source. Next specified:
   neutral-action exit-feasibility audit, then cost-bounded exit objective; marginal entry-risk pricing separate.
