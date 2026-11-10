@@ -32,6 +32,9 @@
 - Watch out: single 5-sh orders; Binance guards, CAP10 / RO60, size-up, throttle and inventory are not modelled; lanes
   R and I are one order alone, not v3's ladder; the public book does not contain our order; the post hoc rows have
   19-45 fills; nothing here is validated. Do not build an early-entry, improve or always-on rung rule on this evidence.
+- Addendum 12:04Z: backlog brought in line with the review. handoffs/20261109_TODO.md: B5, B6, B7 and D3 updated;
+  B11 (sections 3.2, 6.2, 6.3, 6.5 on 11-03 and 11-07) and B12 (what the profitable makers do) added. STATUS.yml:
+  T5 note (rewards and rebate on the account) and days_read 20261108.
 
 ## 2026-11-10 08:51Z (session ce68ebe0) — strategy review, revision 2: two-line touch gate NOT supported at the order level
 
