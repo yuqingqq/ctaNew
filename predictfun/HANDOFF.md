@@ -1,5 +1,36 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-10 13:24Z (session ce68ebe0) — B1a DONE: the replay's fill model does not reproduce live's fills order by order; no constant trade-time shift fits
+
+- Done: B1a (USER "Yes"; specification 04:56Z). research/pf_b1a_live_orders.py: v1 committed before its first run
+  (7ef3de6e), v2 before its run (1a253a45; identity at the taker order instead of the maker leg row, after v1's post
+  hoc check found 33 of 59 uncredited own legs with a replay fill from the same taker order). Report
+  handoffs/20261110_b1a_live_orders.md; output live_vs_replay/b1a_20261110/ (v1 kept as b1a_v1.*), copies in
+  reviews/b1a_20261110/. 30,221 accepted live orders of tokyo-6 + basis-tokyo-1 in the 220 consumed 11-08 windows
+  (849.867 sh filled); tokyo-5 not covered (no research tape). Point estimates only. Controls: 2,000 fuzz cases equal
+  the committed replay (0 differences), 4 planted errors caught, tape statuses equal the review's, the replay's trade
+  time equals the audit's engine clock on all 92 eligible own legs.
+- Live's own fills (92 legs, 796.9 sh): -0.25 c/sh at 1 s, -0.01 at 5 s; orders under 100 ms old +0.05, 100-500 ms
+  +0.30, 500 ms or older -0.94.
+- Readings: R24 OVER-CREDITS (replay / live 1.47-1.96 under M and L, 13.46 under U); R25 FAILS (precision 0.03-0.25);
+  R26 YOUNG-PHANTOM (orders under 100 ms: 8-12% of the replay's shares are live's trades, 47% at 500 ms or more; null
+  p99 +0.273 against +0.353); R27 CONSTANT-250-CONTRADICTED (41.2% of live's fill shares have a trade time within
+  250 ms of our decision); R28 per-share value MATCHES at M 0 / M 50 / L 50 (-0.37 / -0.66 / -0.70 against live
+  -0.25), UNDERSTATES at M 250 (-2.36), OVERSTATES at U 50; R29 PEND-OVERCREDITED (546.5 against 218.0 sh).
+- Also: 19 own legs (162.5 sh) were filled live with less volume at our price than the replay's queue ahead (the
+  shown-size queue is contradicted for a fifth of live's fills). The tape's trade time is before our decision for 11%
+  of our fill shares and after the order left for 20%. The same orders' replay value changes sign with the order path
+  (ack to cancel ack -0.66, decision to cancel request +0.66 c/sh at 1 s).
+- Changes: no replay number in the review or round i is validated at the order level; the birth-step candidate (6.5)
+  is made of young orders and cannot be ranked by replay. Strategy review revision 4 (13:22Z) points items 2, 3, 9 to
+  this report and to B11 / B12. Backlog B1a: DONE.
+- Next: (1) USER D2: a live run with the A4b wallet capture (new Tokyo tag from pmmmrust main 79a05d3); B1 needs its
+  exact match clocks, and no replay can rank candidates before that. (2) USER: rebate and rewards on the account.
+  (3) B12, what the profitable makers do (public tape; does not use our fill model). (4) B11 after B1. (5) C1 / C2 as
+  declared.
+- Watch out: one consumed Sunday, 86 filled orders; the research book contains live's own orders; the venue's matching
+  rule is unknown; 2,722 untimed legs excluded.
+
 ## 2026-11-10 10:05Z (session ce68ebe0) — strategy review, revision 3: queue priority by early entry NOT found; the fill clock decides the sign
 
 - Done: diagnostic research/pf_review_level_birth.py (committed before its first run, 8f448870; post hoc section added

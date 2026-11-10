@@ -1,0 +1,31 @@
+B1a as of 2026-11-10T13:19:40.437957+00:00: 220 windows (0.764 window-days), consumed day 2026-11-08; point estimates only
+population: 30,221 accepted live orders, 849.867 sh filled; statuses {"no_frame_windows": 0, "untimed_legs_0_300": 2722, "untimed_shares_0_300": 36397.55818896044, "no_rest": {"P1": 0, "P0": 7}, "own_status": {"eligible": 92, "ambiguous clock (audit)": 6, "untimed in the replay": 1}, "own_status_shares": {"ambiguous clock (audit)": 28.0, "eligible": 796.8673227752638, "untimed in the replay": 25.0}, "tokyo5": "excluded: no research tape for 11-07 in this cohort (not read)", "own_legs_M0_P1": {"after the order left": {"legs": 13, "shares": 155.94}, "before activation": {"legs": 11, "shares": 100.0}, "credited (same taker order)": {"legs": 42, "shares": 321.7731087533156}, "not credited; volume at our price < queue ahead": {"legs": 19, "shares": 162.48321402194824}, "not credited; volume at our price >= queue ahead": {"legs": 6, "shares": 51.671}, "order filled earlier by other trades": {"legs": 1, "shares": 5.0}}}
+controls: K1a fuzz 2000 cases, 16226 fills, 0 differences; planted {"cap_off": {"fuzz_diffs": 54, "synth_failed": 1}, "act_plus": {"fuzz_diffs": 1486, "synth_failed": 0}, "thr_off": {"fuzz_diffs": 841, "synth_failed": 1}, "reverse": {"fuzz_diffs": 0, "synth_failed": 1}}; K1b {'untimed_legs': 753, 'untimed_shares': 9131.366331840098, 'legs_0_60': 94783, 'shares_0_60': 1074957.3571880765}; K2 {'hashes_ok': True, 'side_convention': True, 'live_shares': 849.867319, 'live_shares_ok': True, 'own_legs': 99, 'own_shares': 849.8673227752638, 'own_with_rows': 99, 'own_with_order': 99, 'own_side_price_ok': True, 'eligible_legs': 92, 'anc_eq_Z': 92}
+live own legs (eligible): 92 legs, 796.9 sh, c/sh 1 s  -0.25, 5 s  -0.01; by age at P1: < 100 ms 261.4 sh  +0.05; 100-500 ms 237.0 sh  +0.30; >= 500 ms 298.4 sh  -0.94
+lag bound U = anchor - decision (eligible own legs, share-weighted): q0.1 -255 ms, q0.25 84 ms, q0.5 191 ms, q0.75 765 ms, q0.9 3299 ms; U < 0 11.3%, 0-50 ms 5.0%, 0-250 ms 41.2%
+live own legs at M 0 P1 by outcome in the replay (legs / sh): after the order left 13 / 155.9; before activation 11 / 100.0; credited (same taker order) 42 / 321.8; not credited; volume at our price < queue ahead 19 / 162.5; not credited; volume at our price >= queue ahead 6 / 51.7; order filled earlier by other trades 1 / 5.0
+config        orders  fills  replay sh  rho   status  REAL sh (v1 row)  recall  precision  c/sh 1s  5s     REAL  other  $/day1s  thr%  pend rep/own
+M 0 P1        30,221    231     1249.0  1.47     0.0    316.3 ( 47.0)   0.397     0.253   -0.37  +0.73  +0.11  -0.53    -6.05  72.6  438.2/285.9
+M 50 P1       30,221    227     1351.1  1.59     0.0    281.4 (  5.1)   0.353     0.208   -0.66  -0.14  +0.24  -0.89   -11.60  77.7  546.5/218.0
+M 250 P1      30,221    315     1668.9  1.96     0.0    131.6 (  1.9)   0.165     0.079   -2.36  -2.31  +0.32  -2.59   -51.54  78.0  519.5/168.0
+L 50 P1       30,221    214     1297.2  1.53     0.0    271.4 (  4.7)   0.341     0.209   -0.70  -0.12  +0.25  -0.95   -11.83  82.1  532.6/218.0
+U 50 P1       30,221  2,326    11435.7 13.46     1.0    388.8 ( 67.6)   0.488     0.034   +0.90  +1.35  -0.85  +0.96   134.99   4.9 2937.1/218.0
+M 50 P0       30,214    223     1276.9  1.50     0.0    314.3 (159.8)   0.394     0.246   +0.66  +1.07  +0.14  +0.83    10.97  66.9    0.0/218.0
+by age at the replay fill (shares | REAL | precision | c/sh 1 s):
+  M 0 P1       < 100 ms: 758.8 | 62.9 | 0.083 |  -0.42; 100-500 ms: 301.3 | 165.0 | 0.548 |  +0.65; >= 500 ms: 188.9 | 88.4 | 0.468 |  -1.82
+  M 50 P1      < 100 ms: 875.4 | 108.0 | 0.123 |  -0.49; 100-500 ms: 279.9 | 80.0 | 0.286 |  -0.33; >= 500 ms: 195.9 | 93.4 | 0.477 |  -1.84
+  M 250 P1     < 100 ms: 714.7 | 5.0 | 0.007 |  -2.28; 100-500 ms: 583.0 | 45.0 | 0.077 |  -2.53; >= 500 ms: 371.3 | 81.6 | 0.220 |  -2.25
+  L 50 P1      < 100 ms: 852.9 | 108.0 | 0.127 |  -0.51; 100-500 ms: 253.4 | 75.0 | 0.296 |  -0.43; >= 500 ms: 190.9 | 88.4 | 0.463 |  -1.91
+  U 50 P1      < 100 ms: 6636.7 | 161.9 | 0.024 |  +0.98; 100-500 ms: 3711.8 | 101.0 | 0.027 |  +0.90; >= 500 ms: 1086.2 | 125.9 | 0.116 |  +0.43
+  M 50 P0      < 100 ms: 768.8 | 91.9 | 0.120 |  +0.83; 100-500 ms: 375.7 | 140.0 | 0.373 |  +0.48; >= 500 ms: 132.4 | 82.4 | 0.622 |  +0.16
+orders, live vs replay (orders, live sh, replay sh):
+  M 0 P1       both 59 / 531.9 / 490.7; live only 27 / 318.0 / 0.0; replay only 83 / 0.0 / 758.3; neither 30,052 / 0.0 / 0.0
+  M 50 P1      both 58 / 510.0 / 476.2; live only 28 / 339.9 / 0.0; replay only 95 / 0.0 / 875.0; neither 30,040 / 0.0 / 0.0
+  M 250 P1     both 39 / 353.0 / 329.4; live only 47 / 496.8 / 0.0; replay only 163 / 0.0 / 1339.5; neither 29,972 / 0.0 / 0.0
+  L 50 P1      both 57 / 505.0 / 471.2; live only 29 / 344.9 / 0.0; replay only 90 / 0.0 / 826.0; neither 30,045 / 0.0 / 0.0
+  U 50 P1      both 70 / 650.0 / 660.8; live only 16 / 199.8 / 0.0; replay only 1,610 / 0.0 / 10774.9; neither 28,525 / 0.0 / 0.0
+  M 50 P0      both 46 / 484.9 / 437.1; live only 40 / 365.0 / 0.0; replay only 100 / 0.0 / 839.8; neither 30,028 / 0.0 / 0.0
+R26 null (M 50 P1, 500 draws within run x side): observed +0.353, null p95 +0.216, p99 +0.273, share >= observed 0.002
+queue table (P1, shift 0, orders resting >= 500 ms; x = volume at our price while resting - queue ahead at activation): x <= 0: 1,389 orders, live 0.016, replay M 50 0.016; 0 < x <= 25: 4 orders, live 0.750, replay M 50 0.750; x > 25: 8 orders, live 0.875, replay M 50 1.000
+readings: {"R24": {"M 0 P1": "OVER-CREDITS", "M 50 P1": "OVER-CREDITS", "M 250 P1": "OVER-CREDITS", "L 50 P1": "OVER-CREDITS", "U 50 P1": "OVER-CREDITS", "M 50 P0": "OVER-CREDITS"}, "R25": {"M 0 P1": "FAILS", "M 50 P1": "FAILS", "M 250 P1": "FAILS", "L 50 P1": "FAILS", "U 50 P1": "FAILS", "M 50 P0": "FAILS"}, "R26": "YOUNG-PHANTOM", "R27": ["CONSTANT-250-CONTRADICTED"], "R28": {"M 0 P1": "MATCHES", "M 50 P1": "MATCHES", "M 250 P1": "REPLAY-UNDERSTATES", "L 50 P1": "MATCHES", "U 50 P1": "REPLAY-OVERSTATES"}, "R29": "PEND-OVERCREDITED"}
+2026-11-10T13:19:33Z tag=b1a_live_orders_v2 rc=0 peak_rss_mib=703 wall_s=7.28 cpu_user_s=7.00 memavail_start_gib=24 disk_free_gib=540->540
