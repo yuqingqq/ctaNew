@@ -1,0 +1,62 @@
+{
+  "as_of": "2026-11-09T17:01:03.780658+00:00",
+  "source_commit": "4bf38014fbe4f68f0dc68ccf61168415f1ff3eb8",
+  "sources": {
+    "pf_native_a2_continuity.py": "437ce813b1d597e9335cf46ca01d470790aefab7f28a075e981e8b4417f01532",
+    "native_a2_continuity.rs": "4941b31025bc8176dca4de4ad606e0430cd0152c023662e9ce240d32912e852b",
+    "tests/test_native_a2_continuity.py": "1ebc805deb2611bbb90abe0c3a79ba8bcb003fcbe538925267c1df73ceff57db"
+  },
+  "inputs": {
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/scope.json": "0fdb454efec919ab03b2e44fddef154c5e9964c65d1ab3cf10828eabf0dc58b6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2/build.json": "97acf58969884e3e861b284ee6959360d6d9a5a508fe3c6f5a46faf60d13124d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/states_v6.parquet": "ec99d7d2257fc9583cfce2bbb9badc0dae16f3b8f8f56630175dcf0524cf9538",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/grid/probes_v6.parquet": "2e96c1b77fcc5d137ff78d30b2543fae0be9a3fdcdb5620837586b922f254605",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_inventory/inventory_v6.parquet": "4dae77f2ae630521176b94b715473257aeaba7348e081f17d14f81937299ebf3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/states_basis.parquet": "9e31aa2a38073a02193f41ce956cd4e311178b86a4d0c26301807ebc924eab7f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/grid/probes_basis.parquet": "4e69fb327483c2e9960c22422a03ec10497b8ef759e9c10da69d35619e68c02f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_inventory/inventory_basis.parquet": "082e9966d7b70ea866ae5590c3fb257323aa73d77508092b2d3c631c6096ae3b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/findings_v2.json": "705361fafed2a250449af9cfc2ebea2b5685f92b0a0a5ba94105d1aff39dc191"
+  },
+  "build": {
+    "as_of": "2026-11-09T16:59:30.955300+00:00",
+    "native_commit": "f20fdb126af38fb3f7bb1284a6cc8dff28d0dff8",
+    "original_sha256": "39a808aef2fed7a60c8731dbfdec00cb4380448770f1419589a936bf0d6aca1f",
+    "instrumented_sha256": "7b4371b9ad73c2c6dc673bb2684bf9a4bd0fd634699ea1b072553016d7650853",
+    "binary_sha256": "e83d6715206e5d866efe036e8c47831c0eae4b1a7377977b54a4621bfbd9572d",
+    "example_sha256": "4941b31025bc8176dca4de4ad606e0430cd0152c023662e9ce240d32912e852b",
+    "native_request_loop_copied_exactly": true,
+    "accessor_removal_restores_original": true
+  },
+  "arms": [
+    "reference",
+    "all100",
+    "update_first50"
+  ],
+  "primary": "update_first50",
+  "population": "all220 pre-existing consumed Nov8 windows, first60s, all279059 decisions and13077 neutral touch-pull actions per arm; exclusions as statuses",
+  "hypothesis": "Does updates-first50ms retain fewer requests and greater original-price coverage under current native A2 throttle/retry semantics? Report full costs and all arms; do not tune.",
+  "null": "deterministic paired execution mechanics; no statistical null, profit/skill/variance claim or confidence interval",
+  "policy": "same .01-cent band, accepted small touch<=5, hard/native relaxed-price-size checks, no rung duplicate, no new order while guard off; accepted small member may occupy either physical pair member",
+  "timing": "all100 deadline before same-clock data; update_first50 after all same-clock source events; feedback before native retries; original decisions alone drive new wants; probes may cancel held pairs only",
+  "controls": "native split/partial-fill/front rotation/retry/rejection; equal-clock positive and later-event refusal; hard probe; reservation boundary; malformed input, instrument anchor and corrupted artifact refusal; independently rebuild coverage from saved order intervals",
+  "multiplicity": {
+    "new_policy_parameters": 0,
+    "existing_policies_retested": 3,
+    "cumulative_distinct_policies": 21,
+    "new_execution_model": 1,
+    "latency_scenarios": 1
+  },
+  "limitations": [
+    "Consumed partial Nov8 day only; no CI or independent validation.",
+    "Factual quote targets, guards and inventory held fixed; no counterfactual fills or recomputed policy.",
+    "Native f20fdb1 A2 mapping, request throttle and retry code used directly; not a full B4 generated-engine integration.",
+    "Venue assumed create/answer40ms, accepted-cancel22ms, pending-create cancel>=95ms, external reservation grace1000ms.",
+    "External capacity150 shares per side at hypothetical net0; this is not the dollar loss budget. Factual net only conditions exposure measures.",
+    "No post-only/rejection model, wallet/kernel I/O or shared cross-market throttling. Native XV is per-window as coded.",
+    "Equal-clock update priority is a proposed scheduling contract, not demonstrated live processing latency.",
+    "Historical fill timestamps remain uncalibrated; quote coverage and exposure are not PnL or inventory variance."
+  ],
+  "no_live_change": true,
+  "no_protected_dates_read": true,
+  "no_fill_clock_bypass": true
+}

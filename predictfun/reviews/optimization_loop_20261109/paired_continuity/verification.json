@@ -1,0 +1,14 @@
+{
+  "as_of": "2026-11-09T18:04:28.599416+00:00",
+  "receipt_sha256": "ebf09d96cc557e65c243ca7845d2d0e189a3a5ec74650ba09b85a4c6737e6b1a",
+  "native_replay_byte_identical": true,
+  "counts_and_fill_ledger_reconciled": true,
+  "hold_lifecycle_verified": true,
+  "controls": {
+    "corrupt_name_refused": true,
+    "corrupt_requests_refused": true,
+    "extended_deadline_refused": true,
+    "off_guard_replenishment_refused": true,
+    "native_wrong_request_refused": true
+  }
+}

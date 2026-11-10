@@ -1,0 +1,114 @@
+{
+  "as_of": "2026-11-09T16:23:58.107528+00:00",
+  "round": "duration_latency",
+  "source_commit": "6dcd7f534724c2b124ac19bc91e3f689c23680d9",
+  "sources": {
+    "pf_inventory_grace.py": "bcda0d6ddbcd3833faa9864fe2117ee249a339ffff188a53a6def7948d8c015a",
+    "pf_inventory_grace_study.py": "8483453048fccacde6d9497e27630160acb743a3522706f40740da117e7e6c50",
+    "pf_inventory_grace_verify.py": "670d9de7557e651a627289ca04090bb756d853c949155a7d7aea84ac61fef21f",
+    "tests/test_inventory_grace.py": "ed33530f4d70a2015a242bed2c724e2fe04ce4392ac4b0aeeff9d6129ba62763",
+    "pf_soft_pull.py": "b232bafd40d8b0c40af42c82103cb6ee9879e9b98e553af73419e16842256faf",
+    "pf_soft_pull_study.py": "b18b3cee9c1d8caa793b6846c84c69f4bd6ca2cf18814fedf564c72e55aac44d",
+    "pf_quote_capture.py": "467a0df8d8cee194aa38308ffad62c2d314fa7f2519bb9e618f305b7142103c1",
+    "pf_quote_coverage.py": "3e0012f5b2ee2a2dd0c89812345c58398be0852423feabf8e6c1b2d7c6039bd3",
+    "pf_reentry_study.py": "65d9fc720b8e5f7665302d988fc908ec90a1983739a47904660f265f8d772448"
+  },
+  "inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/soft_pull_20261109/receipt.json": "75d24e56fe1280ddc1f9d6886f105ee109648c076d5dab01d61fcd61ae99367c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/soft_pull_20261109/verification.json": "1a19cf7a065e0993649f397864c3b5027afbfd52605370185d8667a0dcadd818",
+    "/home/yuqing/ctaNew/data/predict_fun/research/soft_pull_20261109/window_metrics.parquet": "972cbe6a1e0e7bc417b14fd001eee557a1ec532216b8ddf85890e4c1163016e3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/soft_pull_20261109/actions.parquet": "b604d5c9eeb30a6218fcca335ae5475657de17207659e05f8570bd40ceabcb60",
+    "/home/yuqing/pmmm-data/review-exports/live-samewindow-20261108/scope.json": "0fdb454efec919ab03b2e44fddef154c5e9964c65d1ab3cf10828eabf0dc58b6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/states_v6.parquet": "ec99d7d2257fc9583cfce2bbb9badc0dae16f3b8f8f56630175dcf0524cf9538",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/states_basis.parquet": "9e31aa2a38073a02193f41ce956cd4e311178b86a4d0c26301807ebc924eab7f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/grid/probes_v6.parquet": "2e96c1b77fcc5d137ff78d30b2543fae0be9a3fdcdb5620837586b922f254605",
+    "/home/yuqing/ctaNew/data/predict_fun/research/native_guard_20261109/grid/probes_basis.parquet": "4e69fb327483c2e9960c22422a03ec10497b8ef759e9c10da69d35619e68c02f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_inventory/inventory_v6.parquet": "4dae77f2ae630521176b94b715473257aeaba7348e081f17d14f81937299ebf3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_inventory/inventory_basis.parquet": "082e9966d7b70ea866ae5590c3fb257323aa73d77508092b2d3c631c6096ae3b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_inventory/v6/verification.json": "46a6eca98c3302cc3373d57efb34b4daa4ecefa0a798083831f63f6b783ea2df",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_inventory/basis/verification.json": "0a2063cafd4bb91064934497ac25d568e1937dcf6be3254d377f7bab739c96b2"
+  },
+  "population": {
+    "windows": 220,
+    "decisions": 279059,
+    "actions": 13077,
+    "excluded_windows": 0
+  },
+  "scope": "same220 consumed Nov8 windows, first60s; all original decisions and touch-pull actions, never fill selected",
+  "arms": {
+    "reference": [
+      0.0,
+      "all",
+      100.0
+    ],
+    "all100": [
+      0.01,
+      "all",
+      100.0
+    ],
+    "individual100": [
+      0.01,
+      "individual",
+      100.0
+    ],
+    "reserved100": [
+      0.01,
+      "reserved",
+      100.0
+    ],
+    "all50": [
+      0.01,
+      "all",
+      50.0
+    ],
+    "all25": [
+      0.01,
+      "all",
+      25.0
+    ]
+  },
+  "latencies": {
+    "base": {
+      "place_ms": 40.0,
+      "cancel_ms": 22.0,
+      "pending_cancel_ms": 95.0
+    },
+    "faster": {
+      "place_ms": 20.0,
+      "cancel_ms": 10.0,
+      "pending_cancel_ms": 50.0
+    },
+    "slower": {
+      "place_ms": 80.0,
+      "cancel_ms": 50.0,
+      "pending_cancel_ms": 160.0
+    }
+  },
+  "primary": "all50",
+  "policy": "original .01-cent soft exit and accepted-small-touch conditions unchanged; individual requires reducing side and remaining<=abs(recorded net); reserved additionally requires total same-side planner reservations<=abs(net). Pending creates/cancels and confirmation+1s grace count. Reevaluate during grace and after planning other lanes; refuse at flat. No original quote-on gate or size change.",
+  "duration": "all50/all25 change only maximum grace; all100/individual100/reserved100 remain100ms. Native lower-line/hard changes can cancel sooner.",
+  "inventory": "recorded native net, not simulated inventory; no fills fed to hypothetical orders; standard planner capacity still uses its original baseline assumptions. This tests conditional selection/exposure, not realized risk or no-flip safety.",
+  "reservation": "total own hypothetical same-side remaining shares with sent<=now and release_at>now, including retained ticket once; opposite orders never net against it; expiry filtered before planner cleanup",
+  "measures": "old request and original desired-price coverage metrics; off-target share-time split by current recorded inventory direction; worst-case active/reserved inventory interval expansion integrated exactly at order lifecycle events; never equate these with PnL or variance",
+  "range": "[recorded net - same-side down amount, recorded net + up amount]; metric max(abs(endpoints))-abs(net), floored0; no cross-side netting. First native observation starts the inventory clock; earlier interval has an explicit unknown status.",
+  "probe_clock": "consume native net changes at exact post-Filled knowledge events and every due probe, even without held orders; inventory-aware arms also cancel immediately at these notices; unrestricted reference arms keep their prior decision/grid clock for parity. Exact hold deadline inside event gaps.",
+  "null": "deterministic paired mechanics only, no statistical null/skill/economic claim and no confidence interval; latency grid is assumed stress scenarios, not estimated venue quantiles",
+  "comparisons": "each latency compared with its own reference; base reference and all100 reproduce prior saved artifacts; duration round repeats all inventory base rows; report lower reservation use separately from active exposure",
+  "multiplicity": {
+    "new_variants": 2,
+    "cumulative_distinct_policies": 20,
+    "latency_scenarios": 3
+  },
+  "controls": "reducing positive; flat/wrong-side/overshoot/pending-cancel/new-create refusal; released reservation boundary; inventory reversal during grace; post-plan budget recheck; exact exposure intervals and no opposite-side netting; old-arm parity and corrupt-artifact refusal",
+  "no_live_change": true,
+  "no_protected_dates_read": true,
+  "no_fill_clock_bypass": true,
+  "limitations": [
+    "one consumed partial day; no confidence interval or independent validation",
+    "factual inventory/rung/order-state conditioning; hypothetical fills and feedback absent",
+    "fixed latency assumptions; no venue throttle, post-only rejection or true queue-rank model",
+    "midpoint diagnostic does not measure net trading value or settlement; fill-clock gate remains closed",
+    "Rust A2 paired-order engine not integrated; B4 remains separate",
+    "inventory restriction deliberately prevents some otherwise profitable round trips; no value ranking possible without fills"
+  ]
+}

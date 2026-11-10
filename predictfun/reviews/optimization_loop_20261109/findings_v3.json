@@ -1,0 +1,642 @@
+{
+  "as_of": "2026-11-09T17:07:39.812735+00:00",
+  "source_commit": "67078a272194ca7fd6e105cdd327490c25ed3e28",
+  "source_sha256": "e1bf2c757115ab28d29af4b83ecc7a2d880c9bbe345d68c6336f1c003a966d04",
+  "supersedes": "findings_v2.json",
+  "supersedes_sha256": "705361fafed2a250449af9cfc2ebea2b5685f92b0a0a5ba94105d1aff39dc191",
+  "reason": "Add pinned native A2 execution comparison. Earlier research-model results remain valid within their stated simpler execution assumptions.",
+  "previous_three_rounds": {
+    "as_of": "2026-11-09T16:40:02.131643+00:00",
+    "supersedes": "findings.json",
+    "supersedes_sha256": "92e236fb0e49d7e3effb3f97356d987a2e4a6625c348465369dc80c7c98b54a9",
+    "reason": "add exploratory update-before-expiry round; retain unchanged first-two-round numbers; correct mutable register publication after exclusive-create status-write failure",
+    "source_commit": "9688154d9148249f16f665a2e47e59497bd8e1cd",
+    "source_sha256": "1d0c86f720ee6f4d4722008ed089187ba55a24dfa9d6182fba802ee20f821d31",
+    "population": {
+      "windows": 220,
+      "decisions": 279059,
+      "neutral_actions": 13077,
+      "excluded_windows": 0
+    },
+    "prior_findings": {
+      "reference": {
+        "by_latency": {
+          "base": {
+            "requests": 65211,
+            "request_change_pct": 0.0,
+            "aligned_change_pct": 0.0,
+            "coverage_pct": 76.16513103243312,
+            "aligned_gain_ms": 0.0,
+            "fraction_of_unrestricted_coverage_gain": 0.0,
+            "extra_off_target_lane_ms": 0.0,
+            "off_other_share_ms_change_pct": 0.0,
+            "active_range_extra_share_ms_change_pct": 0.0,
+            "reserved_range_extra_share_ms_change_pct": 0.0,
+            "retained_actions": 0.0,
+            "same_price_reopens": 0.0,
+            "fewer_requests_and_more_aligned": false,
+            "less_off_other_than_unrestricted": true
+          },
+          "faster": {
+            "requests": 65332,
+            "request_change_pct": 0.0,
+            "aligned_change_pct": 0.0,
+            "coverage_pct": 85.92597164375387,
+            "aligned_gain_ms": 0.0,
+            "fraction_of_unrestricted_coverage_gain": 0.0,
+            "extra_off_target_lane_ms": 0.0,
+            "off_other_share_ms_change_pct": 0.0,
+            "active_range_extra_share_ms_change_pct": 0.0,
+            "reserved_range_extra_share_ms_change_pct": 0.0,
+            "retained_actions": 0.0,
+            "same_price_reopens": 0.0,
+            "fewer_requests_and_more_aligned": false,
+            "less_off_other_than_unrestricted": true
+          },
+          "slower": {
+            "requests": 64548,
+            "request_change_pct": 0.0,
+            "aligned_change_pct": 0.0,
+            "coverage_pct": 66.05891906425538,
+            "aligned_gain_ms": 0.0,
+            "fraction_of_unrestricted_coverage_gain": 0.0,
+            "extra_off_target_lane_ms": 0.0,
+            "off_other_share_ms_change_pct": 0.0,
+            "active_range_extra_share_ms_change_pct": 0.0,
+            "reserved_range_extra_share_ms_change_pct": 0.0,
+            "retained_actions": 0.0,
+            "same_price_reopens": 0.0,
+            "fewer_requests_and_more_aligned": false,
+            "less_off_other_than_unrestricted": true
+          }
+        },
+        "all_scenarios_fewer_requests_and_more_aligned": false
+      },
+      "all100": {
+        "by_latency": {
+          "base": {
+            "requests": 60651,
+            "request_change_pct": -6.992685283157751,
+            "aligned_change_pct": 2.645166674060273,
+            "coverage_pct": 78.17982569575739,
+            "aligned_gain_ms": 110162.02856445312,
+            "fraction_of_unrestricted_coverage_gain": 1.0,
+            "extra_off_target_lane_ms": 238785.49975585938,
+            "off_other_share_ms_change_pct": 15.685252531309523,
+            "active_range_extra_share_ms_change_pct": 3.4409694844868666,
+            "reserved_range_extra_share_ms_change_pct": -2.5339929411429263,
+            "retained_actions": 4783.0,
+            "same_price_reopens": 2376.0,
+            "fewer_requests_and_more_aligned": true,
+            "less_off_other_than_unrestricted": false
+          },
+          "faster": {
+            "requests": 60744,
+            "request_change_pct": -7.0225922978019995,
+            "aligned_change_pct": 1.2354834013505123,
+            "coverage_pct": 86.98757276086161,
+            "aligned_gain_ms": 58047.571533203125,
+            "fraction_of_unrestricted_coverage_gain": 1.0,
+            "extra_off_target_lane_ms": 276764.11181640625,
+            "off_other_share_ms_change_pct": 42.22840100282112,
+            "active_range_extra_share_ms_change_pct": 3.260306552887049,
+            "reserved_range_extra_share_ms_change_pct": -2.5357801041183126,
+            "retained_actions": 4826.0,
+            "same_price_reopens": 2392.0,
+            "fewer_requests_and_more_aligned": true,
+            "less_off_other_than_unrestricted": false
+          },
+          "slower": {
+            "requests": 61292,
+            "request_change_pct": -5.044308111792772,
+            "aligned_change_pct": 3.273098311007838,
+            "coverage_pct": 68.22109242841755,
+            "aligned_gain_ms": 118226.05590820312,
+            "fraction_of_unrestricted_coverage_gain": 1.0,
+            "extra_off_target_lane_ms": 90060.9169921875,
+            "off_other_share_ms_change_pct": 2.654543717630675,
+            "active_range_extra_share_ms_change_pct": 1.9550904603117703,
+            "reserved_range_extra_share_ms_change_pct": -1.8459448889173613,
+            "retained_actions": 3093.0,
+            "same_price_reopens": 1693.0,
+            "fewer_requests_and_more_aligned": true,
+            "less_off_other_than_unrestricted": false
+          }
+        },
+        "all_scenarios_fewer_requests_and_more_aligned": true
+      },
+      "individual100": {
+        "by_latency": {
+          "base": {
+            "requests": 64978,
+            "request_change_pct": -0.3573016822315256,
+            "aligned_change_pct": 0.1285146023942696,
+            "coverage_pct": 76.26301434774253,
+            "aligned_gain_ms": 5352.18798828125,
+            "fraction_of_unrestricted_coverage_gain": 0.04858468982485934,
+            "extra_off_target_lane_ms": 9572.89794921875,
+            "off_other_share_ms_change_pct": 0.0,
+            "active_range_extra_share_ms_change_pct": 0.0,
+            "reserved_range_extra_share_ms_change_pct": -0.09592985057111925,
+            "retained_actions": 208.0,
+            "same_price_reopens": 118.0,
+            "fewer_requests_and_more_aligned": true,
+            "less_off_other_than_unrestricted": true
+          },
+          "faster": {
+            "requests": 65099,
+            "request_change_pct": -0.35663993142717176,
+            "aligned_change_pct": 0.061625646489527064,
+            "coverage_pct": 85.97892407928174,
+            "aligned_gain_ms": 2895.400390625,
+            "fraction_of_unrestricted_coverage_gain": 0.04987978504783504,
+            "extra_off_target_lane_ms": 11553.85888671875,
+            "off_other_share_ms_change_pct": 0.0,
+            "active_range_extra_share_ms_change_pct": 0.00021226777431326838,
+            "reserved_range_extra_share_ms_change_pct": -0.0920751095929151,
+            "retained_actions": 213.0,
+            "same_price_reopens": 120.0,
+            "fewer_requests_and_more_aligned": true,
+            "less_off_other_than_unrestricted": true
+          },
+          "slower": {
+            "requests": 64349,
+            "request_change_pct": -0.3082977009357335,
+            "aligned_change_pct": 0.16861626884876468,
+            "coverage_pct": 66.17030514882335,
+            "aligned_gain_ms": 6090.509521484375,
+            "fraction_of_unrestricted_coverage_gain": 0.051515797213207926,
+            "extra_off_target_lane_ms": 3749.721435546875,
+            "off_other_share_ms_change_pct": 0.0,
+            "active_range_extra_share_ms_change_pct": 0.0020475666867136866,
+            "reserved_range_extra_share_ms_change_pct": -0.08644651364464462,
+            "retained_actions": 160.0,
+            "same_price_reopens": 101.0,
+            "fewer_requests_and_more_aligned": true,
+            "less_off_other_than_unrestricted": true
+          }
+        },
+        "all_scenarios_fewer_requests_and_more_aligned": true
+      },
+      "reserved100": {
+        "by_latency": {
+          "base": {
+            "requests": 65177,
+            "request_change_pct": -0.05213844290073988,
+            "aligned_change_pct": 0.018007440367395766,
+            "coverage_pct": 76.17884642298453,
+            "aligned_gain_ms": 749.947509765625,
+            "fraction_of_unrestricted_coverage_gain": 0.006807677014833191,
+            "extra_off_target_lane_ms": 1368.278076171875,
+            "off_other_share_ms_change_pct": 0.0,
+            "active_range_extra_share_ms_change_pct": 0.0,
+            "reserved_range_extra_share_ms_change_pct": -0.007419278008680141,
+            "retained_actions": 29.0,
+            "same_price_reopens": 17.0,
+            "fewer_requests_and_more_aligned": true,
+            "less_off_other_than_unrestricted": true
+          },
+          "faster": {
+            "requests": 65296,
+            "request_change_pct": -0.05510316537071791,
+            "aligned_change_pct": 0.008726432151662245,
+            "coverage_pct": 85.93346991537003,
+            "aligned_gain_ms": 410.0,
+            "fraction_of_unrestricted_coverage_gain": 0.007063172311445977,
+            "extra_off_target_lane_ms": 1681.278076171875,
+            "off_other_share_ms_change_pct": 0.0,
+            "active_range_extra_share_ms_change_pct": 0.0,
+            "reserved_range_extra_share_ms_change_pct": -0.009883642781138846,
+            "retained_actions": 30.0,
+            "same_price_reopens": 18.0,
+            "fewer_requests_and_more_aligned": true,
+            "less_off_other_than_unrestricted": true
+          },
+          "slower": {
+            "requests": 64524,
+            "request_change_pct": -0.0371816322736529,
+            "aligned_change_pct": 0.021748546441724415,
+            "coverage_pct": 66.07328591894695,
+            "aligned_gain_ms": 785.569091796875,
+            "fraction_of_unrestricted_coverage_gain": 0.006644635869497599,
+            "extra_off_target_lane_ms": 521.635009765625,
+            "off_other_share_ms_change_pct": 0.0,
+            "active_range_extra_share_ms_change_pct": 0.0,
+            "reserved_range_extra_share_ms_change_pct": -0.004096475991977044,
+            "retained_actions": 20.0,
+            "same_price_reopens": 12.0,
+            "fewer_requests_and_more_aligned": true,
+            "less_off_other_than_unrestricted": true
+          }
+        },
+        "all_scenarios_fewer_requests_and_more_aligned": true
+      },
+      "all50": {
+        "by_latency": {
+          "base": {
+            "requests": 65203,
+            "request_change_pct": -0.01226786891782572,
+            "aligned_change_pct": 1.2309924538818962,
+            "coverage_pct": 77.10271804793163,
+            "aligned_gain_ms": 51266.5712890625,
+            "fraction_of_unrestricted_coverage_gain": 0.46537424879633255,
+            "extra_off_target_lane_ms": 181801.54223632812,
+            "off_other_share_ms_change_pct": 11.832235007493107,
+            "active_range_extra_share_ms_change_pct": 2.209375783931633,
+            "reserved_range_extra_share_ms_change_pct": 0.25021258182877926,
+            "retained_actions": 4772.0,
+            "same_price_reopens": 0.0,
+            "fewer_requests_and_more_aligned": true,
+            "less_off_other_than_unrestricted": true
+          },
+          "faster": {
+            "requests": 65326,
+            "request_change_pct": -0.009183860895123352,
+            "aligned_change_pct": 0.4962225397326048,
+            "coverage_pct": 86.35235568253442,
+            "aligned_gain_ms": 23314.366943359375,
+            "fraction_of_unrestricted_coverage_gain": 0.40164241720299343,
+            "extra_off_target_lane_ms": 211989.0947265625,
+            "off_other_share_ms_change_pct": 32.249597350470616,
+            "active_range_extra_share_ms_change_pct": 2.1997463479896284,
+            "reserved_range_extra_share_ms_change_pct": 0.2590716980530594,
+            "retained_actions": 4815.0,
+            "same_price_reopens": 0.0,
+            "fewer_requests_and_more_aligned": true,
+            "less_off_other_than_unrestricted": true
+          },
+          "slower": {
+            "requests": 64542,
+            "request_change_pct": -0.009295408068410449,
+            "aligned_change_pct": 1.9883194343899735,
+            "coverage_pct": 67.37238139015791,
+            "aligned_gain_ms": 71819.15795898438,
+            "fraction_of_unrestricted_coverage_gain": 0.6074731784569428,
+            "extra_off_target_lane_ms": 58579.1005859375,
+            "off_other_share_ms_change_pct": 1.7326403204573237,
+            "active_range_extra_share_ms_change_pct": 1.1857614657696525,
+            "reserved_range_extra_share_ms_change_pct": 0.14483716396231916,
+            "retained_actions": 2729.0,
+            "same_price_reopens": 0.0,
+            "fewer_requests_and_more_aligned": true,
+            "less_off_other_than_unrestricted": true
+          }
+        },
+        "all_scenarios_fewer_requests_and_more_aligned": true
+      },
+      "all25": {
+        "by_latency": {
+          "base": {
+            "requests": 65211,
+            "request_change_pct": 0.0,
+            "aligned_change_pct": -0.00043052636431450964,
+            "coverage_pct": 76.1648031214636,
+            "aligned_gain_ms": -17.929931640625,
+            "fraction_of_unrestricted_coverage_gain": -0.00016275963573178604,
+            "extra_off_target_lane_ms": 117852.39868164062,
+            "off_other_share_ms_change_pct": 7.6588980106219395,
+            "active_range_extra_share_ms_change_pct": 1.1272230209443013,
+            "reserved_range_extra_share_ms_change_pct": 0.12935872621981925,
+            "retained_actions": 4772.0,
+            "same_price_reopens": 0.0,
+            "fewer_requests_and_more_aligned": false,
+            "less_off_other_than_unrestricted": true
+          },
+          "faster": {
+            "requests": 65330,
+            "request_change_pct": -0.0030612869650448182,
+            "aligned_change_pct": -0.00248759644045915,
+            "coverage_pct": 85.92383415234183,
+            "aligned_gain_ms": -116.87646484375,
+            "fraction_of_unrestricted_coverage_gain": -0.002013460025229425,
+            "extra_off_target_lane_ms": 119070.41088867188,
+            "off_other_share_ms_change_pct": 18.09471948030661,
+            "active_range_extra_share_ms_change_pct": 1.1262724358180654,
+            "reserved_range_extra_share_ms_change_pct": 0.13736676367159806,
+            "retained_actions": 4815.0,
+            "same_price_reopens": 0.0,
+            "fewer_requests_and_more_aligned": false,
+            "less_off_other_than_unrestricted": true
+          },
+          "slower": {
+            "requests": 64542,
+            "request_change_pct": -0.009295408068410449,
+            "aligned_change_pct": 0.9991058136192832,
+            "coverage_pct": 66.7189175650404,
+            "aligned_gain_ms": 36088.234619140625,
+            "fraction_of_unrestricted_coverage_gain": 0.305247725147504,
+            "extra_off_target_lane_ms": 29552.7890625,
+            "off_other_share_ms_change_pct": 0.8800728309071859,
+            "active_range_extra_share_ms_change_pct": 0.6008847844937382,
+            "reserved_range_extra_share_ms_change_pct": 0.06677519706033141,
+            "retained_actions": 2729.0,
+            "same_price_reopens": 0.0,
+            "fewer_requests_and_more_aligned": true,
+            "less_off_other_than_unrestricted": true
+          }
+        },
+        "all_scenarios_fewer_requests_and_more_aligned": false
+      }
+    },
+    "deadline_order": {
+      "base": {
+        "requests": 60657,
+        "request_change_pct": -6.983484381469385,
+        "aligned_change_pct": 2.3657376118256135,
+        "off_target_change_pct": 25.66372087003248,
+        "active_shares_change_pct": 2.7433380801718643,
+        "reserved_change_pct": -2.4987559685897387,
+        "coverage_gain_retained_vs100_pct": 89.43623987951749,
+        "extra_off_target_reduction_vs100_pct": 24.233008580376058,
+        "equal_clock_reopens": 2376,
+        "same_price_reopens": 2376.0,
+        "retained_actions": 4783.0,
+        "fewer_requests_and_more_aligned": true,
+        "fewer_requests_than_timer_first50": true,
+        "more_aligned_than_timer_first50": true,
+        "lower_off_target_than100": true,
+        "active_range_extra_share_ms_change_pct": 2.7708789171740023
+      },
+      "faster": {
+        "requests": 60750,
+        "request_change_pct": -7.013408436906876,
+        "aligned_change_pct": 1.1230042293502773,
+        "off_target_change_pct": 67.88838510612226,
+        "active_shares_change_pct": 2.5740330276211365,
+        "reserved_change_pct": -2.5032432052790154,
+        "coverage_gain_retained_vs100_pct": 90.8959382313603,
+        "extra_off_target_reduction_vs100_pct": 23.35741710649596,
+        "equal_clock_reopens": 2392,
+        "same_price_reopens": 2392.0,
+        "retained_actions": 4826.0,
+        "fewer_requests_and_more_aligned": true,
+        "fewer_requests_than_timer_first50": true,
+        "more_aligned_than_timer_first50": true,
+        "lower_off_target_than100": true,
+        "active_range_extra_share_ms_change_pct": 2.599291440606355
+      },
+      "slower": {
+        "requests": 61296,
+        "request_change_pct": -5.038111173080495,
+        "aligned_change_pct": 2.788825884285928,
+        "off_target_change_pct": 4.031687305784937,
+        "active_shares_change_pct": 1.567409848365675,
+        "reserved_change_pct": -1.8170123382243442,
+        "coverage_gain_retained_vs100_pct": 85.20446437269456,
+        "extra_off_target_reduction_vs100_pct": 27.502888696896445,
+        "equal_clock_reopens": 1693,
+        "same_price_reopens": 1693.0,
+        "retained_actions": 3093.0,
+        "fewer_requests_and_more_aligned": true,
+        "fewer_requests_than_timer_first50": true,
+        "more_aligned_than_timer_first50": true,
+        "lower_off_target_than100": true,
+        "active_range_extra_share_ms_change_pct": 1.5772373179842036
+      }
+    },
+    "all_latencies_fewer_requests_more_aligned_and_less_off_target_than100": true,
+    "receipt_sha256": "af9d541f619d6f3f6b71bc3216c00af4d6545504b6a8a8620aa308b709075374",
+    "verification_sha256": "ed199131fce55ff4c08148feaf34f7b432e992e8d3d9762ae04a26cfe251bfd9",
+    "controls": {
+      "correct_verification_accepted": true,
+      "wrong_receipt_refused": true
+    },
+    "multiplicity": 21,
+    "limitations": [
+      "one consumed partial day; no confidence interval or independent validation",
+      "factual inventory/rung/order-state conditioning; hypothetical fills and feedback absent",
+      "fixed latency assumptions; no venue throttle, post-only rejection or true queue-rank model",
+      "midpoint diagnostic does not measure net trading value or settlement; fill-clock gate remains closed",
+      "Rust A2 paired-order engine not integrated; B4 remains separate",
+      "inventory restriction deliberately prevents some otherwise profitable round trips; no value ranking possible without fills",
+      "policy chosen to investigate a result seen in round2; exploratory only",
+      "nominal native event order is tested; actual wall-clock guard/timer scheduling and A2 interaction are not validated"
+    ],
+    "next": [
+      "A2/B4 native paired-order integration and parity",
+      "calibrated fills/forward observations for economic valuation",
+      "inventory-range follow-up is untested; no live promotion"
+    ]
+  },
+  "receipt_sha256": "e7efeff229ceee250b08e49c66b3609934cd4afdc77cc175c0dd68d3fa47402e",
+  "verification_sha256": "f37af7245e88bb4c18135c8a36d8a898ce5756eeed36b6ffae51be5cdac8cee2",
+  "native_a2": {
+    "as_of": "2026-11-09T17:04:21.628041+00:00",
+    "declaration_sha256": "e490c92feeaf3f43882d34ae78ab7614cb51c80e98333d2b7e845a336dbcd06b",
+    "source_commit": "4776d822986af9a5e10a6cdd91e3409a2362a6cf",
+    "build": {
+      "as_of": "2026-11-09T16:59:30.955300+00:00",
+      "native_commit": "f20fdb126af38fb3f7bb1284a6cc8dff28d0dff8",
+      "original_sha256": "39a808aef2fed7a60c8731dbfdec00cb4380448770f1419589a936bf0d6aca1f",
+      "instrumented_sha256": "7b4371b9ad73c2c6dc673bb2684bf9a4bd0fd634699ea1b072553016d7650853",
+      "binary_sha256": "e83d6715206e5d866efe036e8c47831c0eae4b1a7377977b54a4621bfbd9572d",
+      "example_sha256": "4941b31025bc8176dca4de4ad606e0430cd0152c023662e9ce240d32912e852b",
+      "native_request_loop_copied_exactly": true,
+      "accessor_removal_restores_original": true
+    },
+    "artifacts": {
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/input.jsonl.gz": "288a3796431428a6741717fcec5d6b8246c687c70460db1a7b356ce87641dd9a",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/output.jsonl.gz": "5e9aa423fc1a647affa7103e87250b4d0007dcdd596dfa4fcf759b749a807fc6",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/prepared.json": "f552c61c079854935e5dbcb517adf33b577121bf994d0108f0f3dc117d46de18",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/execution.json": "2257edb810dfa06fda4b4d8bd4814781e3f38c94467e1c05ee77f561267288c5",
+      "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/window_metrics.parquet": "d597b4a2e9154654331847ee3378c271dec53b0855029e84ee0c8af0bba72739"
+    },
+    "population": {
+      "windows": 220,
+      "decision_rows": 279059,
+      "neutral_actions_per_arm": 13077,
+      "excluded_windows": 0,
+      "window_arm_rows": 660
+    },
+    "totals": {
+      "all100": {
+        "aligned_lane_ms": 4216585.839355469,
+        "elsewhere_lane_ms": 930363.6623535156,
+        "desired_lane_ms": 5467926.7568359375,
+        "active_share_ms": 53408147.45605469,
+        "reserved_share_ms": 393832844.42871094,
+        "active_range_extra_share_ms": 50414430.343757324,
+        "reserved_range_extra_share_ms": 364511304.1580791,
+        "off_reducing_share_ms": 419044.66064453125,
+        "off_other_share_ms": 8309263.460693359,
+        "inventory_unobserved_ms": 0.0,
+        "actions": 13077,
+        "retained_actions": 4768,
+        "same_price_reopens": 2371,
+        "native_requests": 62294,
+        "venue_requests": 59440,
+        "retry_times": 3108,
+        "cancels": 29669,
+        "decisions": 0,
+        "place_delayed": 1415,
+        "place_immediate": 31210,
+        "place_never": 2180,
+        "places": 32625,
+        "rej_reset": 0,
+        "rejected": 0,
+        "throttled": 1285,
+        "throttled_locally": 2854,
+        "throttled_topup": 85,
+        "topup_withheld": 0,
+        "coverage_pct": 77.11489247883475
+      },
+      "reference": {
+        "aligned_lane_ms": 4038324.873779297,
+        "elsewhere_lane_ms": 680026.1687011719,
+        "desired_lane_ms": 5467926.7568359375,
+        "active_share_ms": 50982919.36279297,
+        "reserved_share_ms": 398385662.28515625,
+        "active_range_extra_share_ms": 48091353.89690148,
+        "reserved_range_extra_share_ms": 369145539.3971953,
+        "off_reducing_share_ms": 368835.1708984375,
+        "off_other_share_ms": 7067823.963623047,
+        "inventory_unobserved_ms": 0.0,
+        "actions": 13077,
+        "retained_actions": 0,
+        "same_price_reopens": 0,
+        "native_requests": 65583,
+        "venue_requests": 62788,
+        "retry_times": 3832,
+        "cancels": 31347,
+        "decisions": 0,
+        "place_delayed": 1677,
+        "place_immediate": 32559,
+        "place_never": 2410,
+        "places": 34236,
+        "rej_reset": 0,
+        "rejected": 0,
+        "throttled": 2237,
+        "throttled_locally": 2795,
+        "throttled_topup": 117,
+        "topup_withheld": 0,
+        "coverage_pct": 73.85477262896089
+      },
+      "update_first50": {
+        "aligned_lane_ms": 4206658.943115234,
+        "elsewhere_lane_ms": 872888.0895996094,
+        "desired_lane_ms": 5467926.7568359375,
+        "active_share_ms": 53075675.111083984,
+        "reserved_share_ms": 393514123.1628418,
+        "active_range_extra_share_ms": 50094053.2561417,
+        "reserved_range_extra_share_ms": 364217799.0518779,
+        "off_reducing_share_ms": 409167.4816894531,
+        "off_other_share_ms": 8032321.198730469,
+        "inventory_unobserved_ms": 0.0,
+        "actions": 13077,
+        "retained_actions": 4773,
+        "same_price_reopens": 2371,
+        "native_requests": 62295,
+        "venue_requests": 59444,
+        "retry_times": 3090,
+        "cancels": 29671,
+        "decisions": 0,
+        "place_delayed": 1398,
+        "place_immediate": 31226,
+        "place_never": 2174,
+        "places": 32624,
+        "rej_reset": 0,
+        "rejected": 0,
+        "throttled": 1262,
+        "throttled_locally": 2851,
+        "throttled_topup": 85,
+        "topup_withheld": 0,
+        "coverage_pct": 76.93334476099409
+      }
+    },
+    "change_pct": {
+      "all100": {
+        "native_requests": -5.015019136056598,
+        "venue_requests": -5.33222908836083,
+        "aligned_lane_ms": 4.414230433356514,
+        "elsewhere_lane_ms": 36.81292061605221,
+        "active_share_ms": 4.756942371235873,
+        "reserved_share_ms": -1.1428166943383888,
+        "active_range_extra_share_ms": 4.830549066753398,
+        "reserved_range_extra_share_ms": -1.2553951611290692
+      },
+      "reference": {
+        "native_requests": 0.0,
+        "venue_requests": 0.0,
+        "aligned_lane_ms": 0.0,
+        "elsewhere_lane_ms": 0.0,
+        "active_share_ms": 0.0,
+        "reserved_share_ms": 0.0,
+        "active_range_extra_share_ms": 0.0,
+        "reserved_range_extra_share_ms": 0.0
+      },
+      "update_first50": {
+        "native_requests": -5.013494350670145,
+        "venue_requests": -5.3258584442887225,
+        "aligned_lane_ms": 4.16841325542987,
+        "elsewhere_lane_ms": 28.360955765393193,
+        "active_share_ms": 4.104817406392569,
+        "reserved_share_ms": -1.2228198912508814,
+        "active_range_extra_share_ms": 4.164364687119471,
+        "reserved_range_extra_share_ms": -1.3349044805916477
+      }
+    },
+    "predicate_fewer_venue_requests_more_aligned": {
+      "all100": true,
+      "update_first50": true
+    },
+    "limitations": [
+      "Consumed partial Nov8 day only; no CI or independent validation.",
+      "Factual quote targets, guards and inventory held fixed; no counterfactual fills or recomputed policy.",
+      "Native f20fdb1 A2 mapping, request throttle and retry code used directly; not a full B4 generated-engine integration.",
+      "Venue assumed create/answer40ms, accepted-cancel22ms, pending-create cancel>=95ms, external reservation grace1000ms.",
+      "External capacity150 shares per side at hypothetical net0; this is not the dollar loss budget. Factual net only conditions exposure measures.",
+      "No post-only/rejection model, wallet/kernel I/O or shared cross-market throttling. Native XV is per-window as coded.",
+      "Equal-clock update priority is a proposed scheduling contract, not demonstrated live processing latency.",
+      "Historical fill timestamps remain uncalibrated; quote coverage and exposure are not PnL or inventory variance."
+    ]
+  },
+  "comparisons": {
+    "coverage_gain_retained_vs100_pct": 94.43125632796342,
+    "extra_off_target_removed_vs100_pct": 22.959234717643,
+    "short_fewer_venue_requests_more_aligned": true,
+    "short_less_off_target_than100": true,
+    "short_lower_active_exposure_than_reference": false
+  },
+  "by_run": {
+    "basis": {
+      "coverage_gain_retained_vs100_pct": 95.62013888934186,
+      "extra_off_target_removed_vs100_pct": 22.40202041235111,
+      "short_fewer_venue_requests_more_aligned": true,
+      "short_less_off_target_than100": true,
+      "short_lower_active_exposure_than_reference": false
+    },
+    "v6": {
+      "coverage_gain_retained_vs100_pct": 93.19272424711586,
+      "extra_off_target_removed_vs100_pct": 23.405711634637093,
+      "short_fewer_venue_requests_more_aligned": true,
+      "short_less_off_target_than100": true,
+      "short_lower_active_exposure_than_reference": false
+    }
+  },
+  "controls": {
+    "native_tests": 51,
+    "adapter_tests": 7,
+    "python_tests": 4,
+    "correct_receipt_accepted": true,
+    "wrong_receipt_refused": true
+  },
+  "log_sha256": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/logs/build.log": "d086d4ad93fe47bff79a55870f5e67ecc603d0891836516ed27d2bf7e4b64393",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/logs/controls.log": "c5cfc53ba1bbc8a7819e5ac54df9f6836aa25d054b5428d4153c4211bfd5ed20",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/logs/python-controls.log": "50e239cf167aed48c5f9d38bbc142c32b72d29ce06d8d4048f599b0f5ac6114d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/logs/prepare.log": "e4d7464485d634e714fb082081883a20d921695b03f24dcb23a6ae45d57fe198",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/logs/run.log": "03f293d4430d4f3351cfcb5ac6c9830a5806b54f654086e995a2329a626abe24",
+    "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2_v2/logs/verify.log": "1b23cb74d38c5ee013502d627e8d62aa93f778df542d23c206ad9c654f641df9"
+  },
+  "correction": {
+    "declaration": "/home/yuqing/ctaNew/data/predict_fun/research/optimization_loop_20261109/native_a2/declaration.json",
+    "declaration_sha256": "e5ce7051d4f81c9d0ba8ea38e45f921717def0b6b557ef41c00b693d105575ef",
+    "failed_input_sha256": "487b01da2aa6b187e47127ab14fd465a383727a2668c2497880e071375da4c09",
+    "reason": "Preparation refused at the neutral-action count: flat native -1 quote sentinel was not normalized to null. No native experimental run or outcomes occurred. Corrected conversion with a regression control; same policies and cohort."
+  },
+  "next": [
+    "Repeat the native comparison under the already specified faster/slower latency assumptions, with exact base replay parity.",
+    "Full B4 generated research-engine integration, including fills and paired-order traces, remains separate.",
+    "Actual timer scheduling and calibrated fills/authorized forward evidence are still required for economic promotion."
+  ]
+}
