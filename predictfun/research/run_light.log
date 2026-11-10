@@ -1859,3 +1859,7 @@
 2026-11-10T02:18:14Z tag=wallet-calibration-controls-v2 rc=0 peak_rss_mib=35 wall_s=0.46 cpu_user_s=0.29 memavail_start_gib=24 disk_free_gib=436->436
 2026-11-10T02:19:37Z tag=wallet-calibration-controls-v3 rc=0 peak_rss_mib=36 wall_s=0.47 cpu_user_s=0.29 memavail_start_gib=24 disk_free_gib=436->436
 2026-11-10T02:21:12Z tag=wallet-calibration-frozen-controls rc=0 peak_rss_mib=34 wall_s=0.33 cpu_user_s=0.27 memavail_start_gib=24 disk_free_gib=436->436
+2026-11-10T02:45:46Z tag=ic-dev-controls rc=0 peak_rss_mib=44 wall_s=0.28 cpu_user_s=0.23 memavail_start_gib=24 disk_free_gib=517->517
+2026-11-10T02:46:21Z tag=ic-declare rc=0 peak_rss_mib=21 wall_s=34.32 cpu_user_s=2.56 memavail_start_gib=24 disk_free_gib=517->518
+2026-11-10T02:47:10Z tag=controls rc=0 peak_rss_mib=198 wall_s=2.38 cpu_user_s=1.10 memavail_start_gib=24 disk_free_gib=518->518
+2026-11-10T02:47:12Z tag=smoke rc=0 peak_rss_mib=1493 wall_s=41.77 cpu_user_s=34.74 memavail_start_gib=24 disk_free_gib=518->518
