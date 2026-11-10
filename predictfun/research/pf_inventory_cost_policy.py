@@ -143,16 +143,18 @@ def feasibility(rel, net, frame, values, line, sizes, btc, opens, wants):
             flags.append('missing_score')
         elif values[side] <= line:
             flags.append('score_line')
-        if not old.prior.entry.legal(p, side, old.parent.lots(target)):
+        if (p if side == 0 else 100-p) * target / 100 < 1-1e-9:
             flags.append('minimum_order')
+        if not old.prior.entry.legal(p, side, old.parent.lots(target)):
+            flags.append('rounded_minimum')
         if target > room + 1e-9:
             flags.append('reserved_room')
         if not old.prior.entry.legal(p, side, old.parent.lots(min(target, room))):
             flags.append('room_below_minimum')
     # Reservations are an additional feasibility diagnostic, not baseline quote gates.
-    baseline_blocks = [x for x in flags if x not in ('reserved_room', 'room_below_minimum')]
+    baseline_blocks = [x for x in flags if x not in ('reserved_room', 'room_below_minimum', 'rounded_minimum')]
     if net and rel < 240 and bool(baseline_blocks) == row['actual_quote']:
-        raise ValueError('diagnostic predicates disagree with baseline desired quote')
+        raise ValueError(f'diagnostic predicates disagree: row={row}, flags={flags}, values={values}, line={line}, frame={frame}')
     row['flags'] = tuple(flags)
     row['first_reason'] = baseline_blocks[0] if baseline_blocks else 'quoted'
     return row

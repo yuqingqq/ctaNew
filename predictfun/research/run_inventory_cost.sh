@@ -2,7 +2,7 @@
 set -euo pipefail
 CHECKOUT=$(cd -- "$(dirname -- "$0")/../.." && pwd)
 ROOT=/home/yuqing/ctaNew
-OUT=$ROOT/data/predict_fun/research/inventory_cost_20261110
+OUT=$ROOT/data/predict_fun/research/inventory_cost_20261110_v2
 run() {
   local tag=$1; shift
   "$ROOT/predictfun/research/run_light.sh" "$tag" -- bash -c 'cd "$1"; shift; exec python3 -m "$@"' _ "$CHECKOUT" "$@" > "$OUT/logs/$tag.log" 2>&1 || { tail -30 "$OUT/logs/$tag.log"; return 1; }
