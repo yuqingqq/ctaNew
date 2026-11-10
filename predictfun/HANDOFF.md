@@ -1,5 +1,33 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-10 04:29Z — inventory-cost experiments COMPLETE; no strategy promoted
+
+- Nine consumed days, 2592 markets/arm/J or X, all18 main replays + Nov3 X stress verified. No new policy preserves
+  both +1s value and common-stop mark while reducing terminal inventory versus baseline. Marginal entry cuts terminal
+  inventory5.4/8.6% and square-time14.0/20.3% (J/X), but loses15.2/16.8% of +1s value. J maximum rises75->83.74 shares.
+- Settlement gains for marginal entry (+$79.85/98.36) are later drift/carry, with day intervals including zero.
+  Soft/budget exits recover a little inventory from late_reserved but remain worse than original baseline on the objective.
+  Budget exit fills only$0.798/0.668 of $91.82/80.23 committed lifetime allowance; committed allowance is not cash spent.
+- Neutral-state intersections (post hoc) show off-touch alone blocks1.38% of inventory time, score alone28.3/28.4%,
+  score+off-touch27.96/27.91%; remaining41.1/41.0% have other blockers. Removing one gate alone rarely solves joint constraints.
+- Report-only corrections preserve replay outputs: v3 read-only checks78d7a610, v4 explicit pandas flags column dbb96f30,
+  declaration daca5b2b. Final receipt_v4.json + verification_v4.json; independent90 arm-day inventory/accounting checks,
+  33 policy controls, reporting falsifiers and joint audit controls pass. Original failures/declarations retained.
+- Findings: handoffs/20261110_inventory_cost_results.md. Branch research/predict-inventory-design-20261110.
+  All jobs finished04:24:32Z, v2 data139MiB; slot free (recheck). Protected Nov9–13 unread; live/native/frozen code unchanged.
+- Next research focus: preserve entries; joint exit feasibility and outstanding-cost reservation with defensible release,
+  separately declared/tested. Current settings not adopted. B1 actual own-fill/queue calibration remains open.
+
+## 2026-11-10 04:16Z — all inventory-cost main replays verified; stress/report pending
+
+- All18 main day/timing replays pass (9 consumed dates, J/X, 5 arms, 2592 markets/arm/timing).
+  Nov3 X slower-feedback stress running. No economic aggregate inspected; protected data remain unread.
+- Source review found the original aggregator calls a verifier that exclusively creates checks.json a second time.
+  Reporting-only adapter78d7a610 compares recomputed payloads/hashes read-only, ignoring only as_of; includes four
+  known-bad refusal controls. Original source/artifacts stay unchanged. After the runner's expected report refusal:
+  declare pf_inventory_cost_reporting --declare, commit its declaration, run that module under run_light, then
+  pf_inventory_cost_verify. Compact reporting/verification receipts will be v3. Slot remains occupied.
+
 ## 2026-11-10 03:36Z — inventory-cost J replay complete; X running
 
 - All nine consumed J dates verified, 2,592 markets per arm. Baseline and late-reservation control exactly
