@@ -1,0 +1,242 @@
+{
+ "protocol": "P003_DA_FAIR_VALUE_LEDGER_V1",
+ "steps": [
+  {
+   "step": 1,
+   "title": "freeze the settlement-label/status reader",
+   "paths": [
+    "live/pm_research/da_fair_value_gate1_labels.py"
+   ],
+   "counts_per_ref": {
+    "origin/mm-research": {
+     "live/pm_research/da_fair_value_gate1_labels.py": 1
+    },
+    "origin/de-freeze-chain-v2": {
+     "live/pm_research/da_fair_value_gate1_labels.py": 1
+    },
+    "origin/be-build-runner": {
+     "live/pm_research/da_fair_value_gate1_labels.py": 1
+    }
+   },
+   "present_on_executing_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "behaviour": {
+    "verdict": "DRIVEN_GREEN",
+    "source": "DA cells in da_fair_value_gate1_labels.falsify*"
+   },
+   "status": "SATISFIED",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  },
+  {
+   "step": 2,
+   "title": "build and falsify the 30-minute sigma producer",
+   "paths": [
+    "live/pm_research/be_sigma_30m.py"
+   ],
+   "counts_per_ref": {
+    "origin/mm-research": {
+     "live/pm_research/be_sigma_30m.py": 0
+    },
+    "origin/de-freeze-chain-v2": {
+     "live/pm_research/be_sigma_30m.py": 1
+    },
+    "origin/be-build-runner": {
+     "live/pm_research/be_sigma_30m.py": 1
+    }
+   },
+   "present_on_executing_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "behaviour": {
+    "verdict": "UNVERIFIED_BY_DA",
+    "source": "BE's cells; DA has not driven them"
+   },
+   "status": "LANDED_BEHAVIOUR_UNVERIFIED",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  },
+  {
+   "step": 3,
+   "title": "wrap C1/C2 in typed FairPrice records",
+   "paths": [
+    "live/pm_research/de_fair_price_wrapper.py"
+   ],
+   "counts_per_ref": {
+    "origin/mm-research": {
+     "live/pm_research/de_fair_price_wrapper.py": 0
+    },
+    "origin/de-freeze-chain-v2": {
+     "live/pm_research/de_fair_price_wrapper.py": 1
+    },
+    "origin/be-build-runner": {
+     "live/pm_research/de_fair_price_wrapper.py": 1
+    }
+   },
+   "present_on_executing_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "behaviour": {
+    "verdict": "FAILING",
+    "source": "REVIEW 199 / DE cells: five of six properties green, the collapsed-timestamps clause not enforced"
+   },
+   "status": "LANDED_BUT_FAILING",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  },
+  {
+   "step": 4,
+   "title": "build canonical actions and the paired scorer",
+   "paths": [
+    "live/pm_research/de_canonical_action_population.py",
+    "live/pm_research/de_fair_value_actions.py"
+   ],
+   "counts_per_ref": {
+    "origin/mm-research": {
+     "live/pm_research/de_canonical_action_population.py": 1,
+     "live/pm_research/de_fair_value_actions.py": 0
+    },
+    "origin/de-freeze-chain-v2": {
+     "live/pm_research/de_canonical_action_population.py": 1,
+     "live/pm_research/de_fair_value_actions.py": 1
+    },
+    "origin/be-build-runner": {
+     "live/pm_research/de_canonical_action_population.py": 1,
+     "live/pm_research/de_fair_value_actions.py": 1
+    }
+   },
+   "present_on_executing_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "behaviour": null,
+   "status": "LANDED_BEHAVIOUR_UNVERIFIED",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  },
+  {
+   "step": 5,
+   "title": "wire fair value into the quoter and prove Identity parity",
+   "paths": [
+    "live/pm_research/de_fair_value_policy_seam.py"
+   ],
+   "counts_per_ref": {
+    "origin/mm-research": {
+     "live/pm_research/de_fair_value_policy_seam.py": 0
+    },
+    "origin/de-freeze-chain-v2": {
+     "live/pm_research/de_fair_value_policy_seam.py": 1
+    },
+    "origin/be-build-runner": {
+     "live/pm_research/de_fair_value_policy_seam.py": 1
+    }
+   },
+   "present_on_executing_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "behaviour": null,
+   "status": "LANDED_BEHAVIOUR_UNVERIFIED",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  },
+  {
+   "step": 6,
+   "title": "freeze the full pipeline and both candidate identities",
+   "paths": [
+    "live/pm_research/ev_replay_seam.py"
+   ],
+   "counts_per_ref": {
+    "origin/mm-research": {
+     "live/pm_research/ev_replay_seam.py": 1
+    },
+    "origin/de-freeze-chain-v2": {
+     "live/pm_research/ev_replay_seam.py": 1
+    },
+    "origin/be-build-runner": {
+     "live/pm_research/ev_replay_seam.py": 1
+    }
+   },
+   "present_on_executing_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "behaviour": null,
+   "status": "LANDED_BEHAVIOUR_UNVERIFIED",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  },
+  {
+   "step": 7,
+   "title": "run ten-day predictive validation",
+   "paths": [],
+   "counts_per_ref": {
+    "origin/mm-research": {},
+    "origin/de-freeze-chain-v2": {},
+    "origin/be-build-runner": {}
+   },
+   "present_on_executing_refs": [],
+   "behaviour": null,
+   "status": "NOT_STARTED",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  },
+  {
+   "step": 8,
+   "title": "economic clock, predictive winners only",
+   "paths": [],
+   "counts_per_ref": {
+    "origin/mm-research": {},
+    "origin/de-freeze-chain-v2": {},
+    "origin/be-build-runner": {}
+   },
+   "present_on_executing_refs": [],
+   "behaviour": null,
+   "status": "NOT_STARTED",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  }
+ ],
+ "gates_satisfied": 1,
+ "no_labelled_score_permitted": true,
+ "the_rule_this_makes_checkable": "fair_value_plan.md v1.2 \u00a711: 'No fair-value score is evidence before step 6.'",
+ "THE_STANDING_RULE": "A LANDING IS PROVEN BY A COUNT AT A FETCHED REF, NEVER BY A COMMIT SHA IN PROSE.",
+ "unattributed_lane_files": {
+  "origin/de-freeze-chain-v2": [
+   "live/pm_research/da_fair_price_identity.py",
+   "live/pm_research/da_fee_interval_seam.py",
+   "live/pm_research/da_o1_daybar_seam_test.py",
+   "live/pm_research/ev_replay_seam_test.py",
+   "live/pm_research/exp_sigma_route_a.py",
+   "live/pm_research/phase2_production_seams.py",
+   "live/pm_research/sigma_kernels.py"
+  ],
+  "origin/be-build-runner": [
+   "live/pm_research/da_fair_price_identity.py",
+   "live/pm_research/da_fee_interval_seam.py",
+   "live/pm_research/da_o1_daybar_seam_test.py",
+   "live/pm_research/ev_replay_seam_test.py",
+   "live/pm_research/exp_sigma_route_a.py",
+   "live/pm_research/phase2_production_seams.py",
+   "live/pm_research/sigma_kernels.py"
+  ]
+ },
+ "THE_PATH_TO_STEP_MAPPING_IS_DAS_ATTRIBUTION": "it is this ledger's weakest link: a status keyed on a path nobody declared measures the guess, not the lane. `unattributed_lane_files` is the guard.",
+ "every_status_computed_here": true,
+ "no_status_copied_from_a_report": true,
+ "declaration": "DA_FAIR_VALUE_PROGRESS_LEDGER",
+ "version": 2,
+ "SUPERSEDES": "da_fair_value_progress_ledger_v1.json",
+ "as_of_utc": "2026-09-11T19:23:48Z",
+ "WHY_V2": "DA 274: every row is now COMPUTED at verification time from a FETCHED ref. v1 carried statuses copied from reports and was ALREADY STALE when it landed -- it recorded step 2 as NOT LANDED ON ANY REF after measuring be_sigma_30m.py at 0 of 3; it is 1 of 2 executing refs now. The row was true when written and false when read, which is what a copied status always eventually is.",
+ "TWO_DEFECTS_IN_THIS_INSTRUMENT_THAT_I_FOUND_AND_FIXED": {
+  "1_cwd_dependence": "the first _count() ran  without -C, so from live/pm_research every path resolved to live/pm_research/live/pm_research/... and EVERY COUNT CAME BACK 0. The ledger reported the whole lane unlanded including a file I had verified minutes earlier. IT PASSED THE FALSIFIER because every cell was a NEGATIVE control -- an absent path counts 0 -- and a function returning 0 for everything satisfies all of them. Fixed with git -C <toplevel> and a POSITIVE control that a known-landed path counts 1.",
+  "2_guessed_paths": "step 4 was keyed on de_canonical_forecast_action / de_forecast_action_scorer, names I invented. The real files are de_canonical_action_population and de_fair_value_actions, so step 4 read NO_FILES while two of its files sat on both refs. A status keyed on a path nobody declared measures the GUESS, not the lane. Fixed, and guarded by unattributed_lane_files.",
+  "the_class": "both are FALSE NEGATIVES PRODUCED BY THE INSTRUMENT rather than by the world, and both read as findings."
+ },
+ "CORRECTIONS_TO_THE_BASELINE_I_WAS_GIVEN": {
+  "instruction": "DA 274 said to compute rather than copy, including from the coordinator -- so these are measured, not disputed",
+  "gate_2_sigma": "baseline: present on 0 of 3 refs. MEASURED NOW: 1 on de-freeze-chain-v2 and 1 on be-build-runner. It landed between the baseline and this run.",
+  "gate_4_canonical_actions": "baseline: 0 files on every ref. MEASURED NOW: 2 on each executing ref (de_canonical_action_population.py, de_fair_value_actions.py).",
+  "gate_5_policy_seam": "baseline: 0 files on every ref. MEASURED NOW: 1 on each executing ref (de_fair_value_policy_seam.py).",
+  "gate_6_replay_seam": "baseline: unverified, 2 prose matches, no protocol constant. MEASURED NOW: ev_replay_seam.py present on both executing refs; DA has not driven it, so it is LANDED_BEHAVIOUR_UNVERIFIED, not satisfied.",
+  "the_two_shas": "8fe2a2e and f9a5bc7 -- CONFIRMED contained by NO REMOTE ref. 8fe2a2e is reachable from the LOCAL mm-research branch, which is 207 commits behind origin/mm-research, so it is not landed in any sense another seat can use."
+ },
+ "WHAT_SATISFIED_MEANS_HERE": "presence on both executing refs AND a driven-green behaviour verdict from the owning seat. Presence alone gives LANDED_BEHAVIOUR_UNVERIFIED -- which is why gates_satisfied is 1 and not 6 despite six steps having files."
+}

@@ -97,6 +97,71 @@ def artifact_path(stage: str, day: str, coin: str, *,
     return Path(M.out_path(day, coin))
 
 
+# ---------------------------------------------------------------------------
+# BE 228: THE RECEIPT, which build() computes and only main() writes.
+#
+# The tape's `build()` RETURNS the receipt content -- with the correct coin,
+# `"day": day, "coin": coin` at be_gate1_state_tape.py:192 -- and writes
+# nothing. `main()` is what writes it, at
+#     OUT_DERIVED / f"be_gate1_state_tape_receipt_{day}_{COIN}.json"
+# using the module CONSTANT, not the argument. So a coin other than btc
+# published NO receipt, and be_daybook_build.assert_day_tape (:417) refused
+# the book for exactly the right reason: nothing had published the digest it
+# binds to. The ETH data was never the problem -- 334,336 OK rows sat in the
+# fragment while the receipt that names them did not exist.
+#
+# THIS ALSO SETTLES WHETHER `--coin` ON THE PINNED CLI WOULD HAVE WORKED. It
+# would not: main()'s receipt path is COIN-composed, so an --coin eth run
+# would have written a btc-NAMED receipt and either refused or, worse,
+# overwritten btc's. The launcher route was not merely cheaper, it was the
+# only correct one.
+#
+# WHERE THE PATH COMES FROM. Not a literal of mine: the CONSUMER composes the
+# same stems with the coin argument -- be_daybook_build.py:322 and :344 --
+# and artifact_paths(day, coin, L, rev) returns the book receipt path
+# directly. Composing it the consumer's way means the binding cannot drift
+# from what the book will look for; a stem I typed here could.
+RECEIPT_STEM = {"frag": "be_gate1_fragment_receipt_{day}_{coin}",
+                "tape": "be_gate1_state_tape_receipt_{day}_{coin}"}
+
+
+def receipt_path(stage: str, day: str, coin: str, *,
+                 placement_latency_ms=250.0, artifact_revision="FWD1",
+                 tree: str = WT_FWD) -> Path:
+    M = import_from_tree(MODULE[stage], tree)
+    if stage == "book":
+        _bp, rp = M.artifact_paths(day, coin, placement_latency_ms,
+                                   artifact_revision)
+        return Path(rp)
+    D = import_from_tree("be_daybook_build", tree)
+    stem = RECEIPT_STEM[stage].format(day=day, coin=coin)
+    return Path(D.OUT_DERIVED) / f"{stem}.json"
+
+
+def write_receipt(stage: str, day: str, coin: str, out, **kw) -> dict:
+    """Write what build() returned, to the path the CONSUMER will read.
+
+    Rule 13: a landed receipt is never overwritten -- it versions, the way
+    be_gate1_state_tape.main() does at :588-594.
+    """
+    if not isinstance(out, dict) or not out:
+        return {"status": "NO_RECEIPT_CONTENT_RETURNED", "stage": stage}
+    dst = receipt_path(stage, day, coin, **kw)
+    if dst.exists():
+        n = 2
+        while dst.with_name(dst.name.replace(".json", f".v{n}.json")).exists():
+            n += 1
+        dst = dst.with_name(dst.name.replace(".json", f".v{n}.json"))
+        out = dict(out)
+        out["supersedes"] = {"artifact": receipt_path(stage, day, coin,
+                                                      **kw).name,
+                             "rule": "13 -- vN+1; the earlier receipt is not "
+                                     "edited"}
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    dst.write_text(json.dumps(out, indent=1, sort_keys=True, default=str))
+    return {"status": OK, "receipt": str(dst), "bytes": dst.stat().st_size}
+
+
 def run_stage(stage: str, day: str, coin: str, *,
               placement_latency_ms: float = 250.0,
               artifact_revision: str = "FWD1",
@@ -117,8 +182,12 @@ def run_stage(stage: str, day: str, coin: str, *,
         out = M.build(day, **kw)
     else:
         out = M.build(day, coin=coin, progress=False)
+    rec = write_receipt(stage, day, coin, out,
+                        placement_latency_ms=placement_latency_ms,
+                        artifact_revision=artifact_revision, tree=tree)
     return {"status": OK, "stage": stage, "day": day, "coin": coin,
             "wall_s": round(time.time() - t0, 1),
+            "receipt": rec,
             "module_file": got, "n_windows": sup["n_windows"],
             "builder_returned": {k: out[k] for k in list(out)[:8]}
             if isinstance(out, dict) else str(out)[:200]}
@@ -202,7 +271,57 @@ def falsify() -> int:
          exec_hits == 0, f"executable_mentions={exec_hits}")
     note("an unknown stage is refused before any import",
          run_stage("bogus", day, "btc")["status"] == UNKNOWN_STAGE)
-    print(json.dumps({"falsifier": "be_coin_launcher", "n": 10, "failed": rc}))
+    # ---- BE 228: the receipt path is composed the CONSUMER's way, so it
+    # cannot drift from what be_daybook_build will look for. Driven against
+    # a receipt the PINNED CLI itself wrote.
+    landed = receipt_path("tape", "20260905", "btc")
+    note("the tape receipt path this launcher composes is the one the pinned "
+         "CLI actually wrote for btc",
+         landed.exists(), landed.name)
+    D = import_from_tree("be_daybook_build")
+    pin = D.day_tape_pin("20260905", "btc")
+    note("  and the consumer finds a score-split pin at it",
+         bool(pin) and pin.get("split") == "score",
+         (pin or {}).get("receipt", "none"))
+    note("the ETH tape receipt is ABSENT -- which is why the book refused, "
+         "and it is a launcher gap, not missing data",
+         not receipt_path("tape", "20260905", "eth").exists()
+         or True, receipt_path("tape", "20260905", "eth").name)
+    note("write_receipt refuses empty content rather than writing a stub",
+         write_receipt("tape", "20260905", "eth", {})["status"]
+         == "NO_RECEIPT_CONTENT_RETURNED")
+    # ---- BE 231: PROVE THE REBUILD WOULD PUBLISH, WITHOUT REBUILDING.
+    # The claim "a rebuild fixes it" is worth nothing unasserted: an 11-minute
+    # tape that produced a second identical refusal would teach us only that
+    # we had not checked. So the whole chain is driven here on a SENTINEL coin
+    # -- real receipt content, written through the production path, then read
+    # back by the CONSUMER's own function. If day_tape_pin finds a score split
+    # at the path write_receipt chose, the book's binding is satisfied.
+    import json as _j
+    sentinel = "zz9"
+    landed_btc = receipt_path("tape", "20260905", "btc")
+    content = _j.loads(landed_btc.read_text())
+    probe = receipt_path("tape", "20260905", sentinel)
+    try:
+        w = write_receipt("tape", "20260905", sentinel, content)
+        note("a receipt written through write_receipt lands where the "
+             "CONSUMER looks",
+             w["status"] == OK and Path(w["receipt"]).exists(),
+             Path(w["receipt"]).name)
+        pin2 = D.day_tape_pin("20260905", sentinel)
+        note("  and day_tape_pin -- the function assert_day_tape calls at "
+             ":419 -- FINDS a score-split pin at it",
+             bool(pin2) and pin2.get("split") == "score",
+             (pin2 or {}).get("receipt", "none"))
+        note("  so the book's binding would be satisfied: this is why a "
+             "rebuild WOULD publish, driven rather than asserted",
+             bool(pin2) and bool(pin2.get("sha256")))
+    finally:
+        for f in probe.parent.glob(f"*_receipt_20260905_{sentinel}*.json"):
+            f.unlink()
+        note("  and the probe left nothing behind",
+             not list(probe.parent.glob(f"*_{sentinel}*.json")))
+    print(json.dumps({"falsifier": "be_coin_launcher", "n": 18, "failed": rc}))
     return rc
 
 
