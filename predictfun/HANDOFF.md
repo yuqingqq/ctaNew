@@ -1,5 +1,36 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-10 08:51Z (session ce68ebe0) — strategy review, revision 2: two-line touch gate NOT supported at the order level
+
+- Done: read-only review of pm_ladder_v3 for the user (logic, live vs replay, pull buffer, optimization). Report:
+  handoffs/20261110_strategy_review.md (revision 2). Six read-only diagnostics research/pf_review_*.py; outputs in the
+  11-08 cohort directory under live_vs_replay/review_20261110/, copies in reviews/strategy_review_20261110/. No strategy
+  code, frozen artifact or receipt changed. Population: 220 windows of 11-08, first minute; consumed day; point
+  estimates only (G < 5).
+- Guard (as of 06:26Z): it separates flow before the trade, all makers pro rata: gate on +0.42 c/sh at 1 s against
+  -0.03 off, read 250 ms before the trade report (41,471 touch trades, 640,523 sh).
+- What runs has ONE pull line per side (frozen v3, pmmmrust main 79a05d3). The pull buffer (B3) is a two-line rule in
+  form: band 0.01 c, at most 100 ms, touch order of up to 5 sh; mechanics study only, not in the live code.
+- Wide band, pro rata (gate_bands.txt, 06:44Z): exit at PM50 or -0.10 c raises spell p50 from 100 ms to 800-1,100 ms;
+  band flow +0.24 to +0.29 c/sh at 1 s. Tail (v at least 0.15 c below the line): -0.44 / -0.79 / -1.75 at 1 / 5 / 60 s.
+- Order level (queue_reach.txt, 08:24Z): one 5-sh touch order per side joining the back of the queue (p50 362-391 sh
+  ahead), replay clock and fill rule, trade time shifted 50 ms. $/day at 1 s for v3 / buffer / exit PM50 / exit -0.10:
+  -0.58 / -0.86 / -6.81 / -11.09; with v3's own price rule +0.84 / +0.81 / -1.77 / -3.59. Fills taken in the band:
+  -0.37 to -0.51 c/sh at 1 s. Both wide-band arms are below v3 at trade-time shifts 0 / 50 / 250 ms, at 1 s and 5 s.
+- Queue position decides the sign: exit -0.10 arm at 1 s -0.43 c/sh with no credit for cancels ahead, -0.24 under the
+  replay's rule, +0.73 at the front (upper bound, not a runnable arm). The buffer places 21% fewer orders at about the
+  same value: churn control only.
+- The 06:27Z recommendation (two-line gate for the touch order) is withdrawn in the report.
+- Next (report section 7): (1) USER: rebate and liquidity rewards on the account (T5, D3); (2) B1a, then B1, and report
+  replay results split by order age; (3) the same tables on 11-03 and 11-07; (4) queue-priority candidates at the order
+  level first (new-level entry / improve; rungs behind the best), starting with who creates new best levels and how
+  much size is ahead 100 ms after a level is born; (5) guard refit on the value of an order we can place (B7);
+  (6) reducing side: line, legal price and minimum size together (B9 follow-up); (7) C1 / C2 as declared.
+- Watch out: every level in the order-level test moves with the assumed trade time (v3 arm +0.31 / -0.05 / -1.75 c/sh
+  at 1 s for shifts 0 / 50 / 250 ms); the fill rule is not validated (B1a); Binance guards, CAP10 / RO60, size-up,
+  rung and throttle are not modelled; 60 s and settlement values do not separate the arms. Do not build a band token
+  into the engine on this evidence.
+
 ## 2026-11-10 04:56Z (session 62f3ce33) — repo/disk cleanup done; B1a approved, not started; live not running
 
 **State**

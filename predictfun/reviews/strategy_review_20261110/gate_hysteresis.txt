@@ -1,0 +1,128 @@
+selftest: H0 state-on at lag 250: shares 85552.4, mo1 +0.421669 vs D-C gate-on 85552.4, +0.421669; H1 on-minus-off with trade times shuffled within window +0.043
+
+################ H0: enter v > +0.0492, stay while v > +0.0492
+
+== H0: touch flow by state of the maker side at W - 250 ms (USD = cohort total, pro rata; 0.76 window-days) ==
+                bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+              state on    4320  85552.0      13.36  0.422  1.236  1.353    1.09   361.0  1057.0   1126.0      216
+   on, v > L_in (gate)    4320  85552.0      13.36  0.422  1.236  1.353    1.09   361.0  1057.0   1126.0      216
+  on, v <= L_in (hold)       0      0.0       0.00    NaN    NaN    NaN     NaN     0.0     0.0      0.0        0
+  state off, v > L_out       0      0.0       0.00    NaN    NaN    NaN     NaN     0.0     0.0      0.0        0
+ state off, v <= L_out   36999 552629.0      86.28 -0.027 -0.294 -0.577   -1.15  -150.0 -1625.0  -3167.0      220
+        no fresh value     152   2342.0       0.37  0.257 -1.288 -6.980    2.32     6.0   -30.0   -163.0       77
+
+== H0: state-on touch flow by how long the state has been on (share of state-on volume) ==
+ bucket  trades  shares  share_pct   mo1   mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+< 0.5 s    3066 57666.0      67.40 0.377 1.117  1.947    1.52   217.0   644.0   1098.0      213
+0.5-1 s     545 12575.0      14.70 0.573 0.795 -2.925   -3.78    72.0   100.0   -363.0      111
+  1-2 s     339  7697.0       9.00 0.583 3.096  4.473   -0.19    45.0   238.0    342.0       81
+  2-5 s     270  5871.0       6.86 0.309 1.104  0.510    7.01    18.0    65.0     28.0       43
+ >= 5 s     100  1744.0       2.04 0.487 0.579  1.609    7.76     8.0    10.0     22.0       13
+
+== H0: touch flow by state of the maker side at W - 500 ms (USD = cohort total, pro rata; 0.76 window-days) ==
+                bucket  trades   shares  share_pct   mo1    mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+              state on    4385  82942.0      12.95 0.235  0.721 -0.122   -2.91   195.0   598.0    -98.0      215
+   on, v > L_in (gate)    4385  82942.0      12.95 0.235  0.721 -0.122   -2.91   195.0   598.0    -98.0      215
+  on, v <= L_in (hold)       0      0.0       0.00   NaN    NaN    NaN     NaN     0.0     0.0      0.0        0
+  state off, v > L_out       0      0.0       0.00   NaN    NaN    NaN     NaN     0.0     0.0      0.0        0
+ state off, v <= L_out   36650 552483.0      86.25 0.001 -0.212 -0.335   -0.54     3.0 -1174.0  -1834.0      220
+        no fresh value     436   5099.0       0.80 0.364 -0.434 -5.335    0.36    19.0   -22.0   -272.0      161
+H0 grid 0-60 s: state on 12.5% of side-time; spells per side-minute 31.9; length ms p50 100 p75 250 p90 500; on-time in spells >= 1 s 32.2%, >= 2 s 17.2%, >= 5 s 6.4%; both sides on 0.50% of time = 4.0% of a side's on-time
+
+################ H1: enter v > +0.0492, stay while v > -0.1000
+
+== H1: touch flow by state of the maker side at W - 250 ms (USD = cohort total, pro rata; 0.76 window-days) ==
+                bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+              state on   12527 233901.0      36.52  0.307  0.679  0.270   -1.12   718.0  1588.0    623.0      220
+   on, v > L_in (gate)    4320  85552.0      13.36  0.422  1.236  1.353    1.09   361.0  1057.0   1126.0      216
+  on, v <= L_in (hold)    8207 148348.0      23.16  0.241  0.358 -0.342   -2.40   357.0   531.0   -503.0      220
+  state off, v > L_out   13893 226929.0      35.43  0.083 -0.162  0.052    0.56   187.0  -369.0    118.0      220
+ state off, v <= L_out   14899 177352.0      27.69 -0.392 -1.008 -1.594   -2.31  -694.0 -1788.0  -2781.0      220
+        no fresh value     152   2342.0       0.37  0.257 -1.288 -6.980    2.32     6.0   -30.0   -163.0       77
+
+== H1: state-on touch flow by how long the state has been on (share of state-on volume) ==
+ bucket  trades  shares  share_pct   mo1   mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+< 0.5 s    1986 34183.0      14.61 0.533 1.590  2.948   -0.12   182.0   543.0    998.0      187
+0.5-1 s    1310 26597.0      11.37 0.356 0.664  0.359    4.93    95.0   177.0     92.0      188
+  1-2 s    2085 40213.0      17.19 0.299 1.018 -0.807   -4.72   120.0   409.0   -319.0      216
+  2-5 s    3470 62990.0      26.93 0.371 0.309  0.102   -4.09   234.0   195.0     64.0      216
+ >= 5 s    3676 69917.0      29.89 0.124 0.378 -0.307    0.84    87.0   264.0   -212.0      191
+
+== H1: touch flow by state of the maker side at W - 500 ms (USD = cohort total, pro rata; 0.76 window-days) ==
+                bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+              state on   13128 240637.0      37.57  0.216  0.401 -0.197   -1.87   521.0   966.0   -466.0      220
+   on, v > L_in (gate)    4385  82942.0      12.95  0.235  0.721 -0.122   -2.91   195.0   598.0    -98.0      215
+  on, v <= L_in (hold)    8743 157695.0      24.62  0.206  0.233 -0.237   -1.33   326.0   368.0   -368.0      220
+  state off, v > L_out   14637 232486.0      36.30  0.068 -0.080 -0.066    1.65   157.0  -186.0   -154.0      220
+ state off, v <= L_out   13270 162301.0      25.34 -0.296 -0.835 -0.815   -2.92  -480.0 -1356.0  -1312.0      220
+        no fresh value     436   5099.0       0.80  0.364 -0.434 -5.335    0.36    19.0   -22.0   -272.0      161
+H1 grid 0-60 s: state on 36.1% of side-time; spells per side-minute 7.7; length ms p50 1100 p75 3300 p90 7600; on-time in spells >= 1 s 93.6%, >= 2 s 85.6%, >= 5 s 62.6%; both sides on 4.79% of time = 13.3% of a side's on-time
+
+################ H2: enter v > +0.0492, stay while v > -0.0484
+
+== H2: touch flow by state of the maker side at W - 250 ms (USD = cohort total, pro rata; 0.76 window-days) ==
+                bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+              state on   10067 193431.0      30.20  0.323  0.709  0.970    0.53   626.0  1371.0   1843.0      220
+   on, v > L_in (gate)    4320  85552.0      13.36  0.422  1.236  1.353    1.09   361.0  1057.0   1126.0      216
+  on, v <= L_in (hold)    5747 107879.0      16.84  0.246  0.291  0.671    0.08   265.0   314.0    717.0      220
+  state off, v > L_out   11645 198850.0      31.04  0.121 -0.012 -0.794   -0.12   240.0   -25.0  -1578.0      220
+ state off, v <= L_out   19607 245901.0      38.39 -0.267 -0.778 -0.950   -2.53  -655.0 -1914.0  -2306.0      220
+        no fresh value     152   2342.0       0.37  0.257 -1.288 -6.980    2.32     6.0   -30.0   -163.0       77
+
+== H2: state-on touch flow by how long the state has been on (share of state-on volume) ==
+ bucket  trades  shares  share_pct   mo1   mo5  mo60  settle  usd_1s  usd_5s  usd_60s  windows
+< 0.5 s    2230 39046.0      20.19 0.451 1.276 2.581   -1.94   176.0   498.0    998.0      200
+0.5-1 s    1309 27512.0      14.22 0.384 0.696 0.446    3.62   106.0   192.0    118.0      198
+  1-2 s    1932 37180.0      19.22 0.295 1.036 0.768    1.71   110.0   385.0    281.0      212
+  2-5 s    2581 51032.0      26.38 0.292 0.314 0.269   -0.44   149.0   160.0    137.0      206
+ >= 5 s    2015 38662.0      19.99 0.220 0.353 0.822    0.95    85.0   136.0    310.0      154
+
+== H2: touch flow by state of the maker side at W - 500 ms (USD = cohort total, pro rata; 0.76 window-days) ==
+                bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+              state on   10435 196576.0      30.69  0.260  0.495  0.285   -0.52   511.0   974.0    550.0      220
+   on, v > L_in (gate)    4385  82942.0      12.95  0.235  0.721 -0.122   -2.91   195.0   598.0    -98.0      215
+  on, v <= L_in (hold)    6050 113635.0      17.74  0.278  0.331  0.579    1.22   316.0   376.0    648.0      220
+  state off, v > L_out   12559 205774.0      32.13  0.031 -0.126 -0.373    1.22    65.0  -260.0   -766.0      220
+ state off, v <= L_out   18041 233074.0      36.39 -0.162 -0.553 -0.743   -2.96  -378.0 -1289.0  -1716.0      220
+        no fresh value     436   5099.0       0.80  0.364 -0.434 -5.335    0.36    19.0   -22.0   -272.0      161
+H2 grid 0-60 s: state on 29.0% of side-time; spells per side-minute 9.1; length ms p50 800 p75 2250 p90 4750; on-time in spells >= 1 s 89.4%, >= 2 s 76.8%, >= 5 s 47.3%; both sides on 2.14% of time = 7.4% of a side's on-time
+
+################ H3: enter v > +0.0230, stay while v > -0.1000
+
+== H3: touch flow by state of the maker side at W - 250 ms (USD = cohort total, pro rata; 0.76 window-days) ==
+                bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+              state on   17788 326489.0      50.97  0.228  0.422  0.324   -0.02   744.0  1377.0   1048.0      220
+   on, v > L_in (gate)    9426 183356.0      28.63  0.366  0.854  1.162    1.20   671.0  1565.0   2098.0      220
+  on, v <= L_in (hold)    8362 143132.0      22.35  0.051 -0.132 -0.737   -1.58    73.0  -189.0  -1050.0      220
+  state off, v > L_out    8632 134341.0      20.97  0.120 -0.117 -0.229   -0.95   161.0  -157.0   -307.0      220
+ state off, v <= L_out   14899 177352.0      27.69 -0.392 -1.008 -1.594   -2.31  -694.0 -1788.0  -2781.0      220
+        no fresh value     152   2342.0       0.37  0.257 -1.288 -6.980    2.32     6.0   -30.0   -163.0       77
+
+== H3: state-on touch flow by how long the state has been on (share of state-on volume) ==
+ bucket  trades  shares  share_pct   mo1   mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+< 0.5 s    2674 44717.0      13.70 0.355 0.722  1.115    1.64   159.0   323.0    496.0      208
+0.5-1 s    1899 35546.0      10.89 0.346 0.227  0.147    3.44   123.0    81.0     52.0      209
+  1-2 s    2872 56436.0      17.29 0.121 0.628 -0.962   -3.88    68.0   354.0   -527.0      219
+  2-5 s    5124 90901.0      27.84 0.282 0.152  0.391   -1.40   256.0   138.0    354.0      219
+ >= 5 s    5219 98889.0      30.29 0.140 0.486  0.686    1.46   138.0   481.0    672.0      201
+
+== H3: touch flow by state of the maker side at W - 500 ms (USD = cohort total, pro rata; 0.76 window-days) ==
+                bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+              state on   18619 334898.0      52.29  0.156  0.268  0.048   -0.39   521.0   897.0    159.0      220
+   on, v > L_in (gate)   10047 189694.0      29.62  0.229  0.538  0.493    0.12   434.0  1021.0    921.0      220
+  on, v <= L_in (hold)    8572 145204.0      22.67  0.060 -0.085 -0.532   -1.05    88.0  -124.0   -762.0      220
+  state off, v > L_out    9146 138225.0      21.58  0.113 -0.085 -0.565    0.45   157.0  -117.0   -779.0      220
+ state off, v <= L_out   13270 162301.0      25.34 -0.296 -0.835 -0.815   -2.92  -480.0 -1356.0  -1312.0      220
+        no fresh value     436   5099.0       0.80  0.364 -0.434 -5.335    0.36    19.0   -22.0   -272.0      161
+H3 grid 0-60 s: state on 51.1% of side-time; spells per side-minute 10.5; length ms p50 1250 p75 3400 p90 7700; on-time in spells >= 1 s 94.1%, >= 2 s 86.0%, >= 5 s 61.9%; both sides on 18.79% of time = 36.7% of a side's on-time
+
+R6 (H1 hold state at W - 250): mo1 +0.241, mo5 +0.358 -> HOLD-OK
+R7 (H1 share of state-on volume with the state on >= 1 s): 74.0% -> RESIDENT
+
+per arm, state-on flow at W - 250 (pro rata, whole market; USD per window-day):
+    on_time  on_share  on_mo1  on_mo5  on_mo60  usd_day_1s  usd_day_5s  usd_day_60s  hold_share  hold_mo1  hold_mo5  hold_mo60  age_ge_1s  spells_per_side_min  spell_p50_ms  both_share_of_on
+H0    0.125     0.134   0.422   1.236    1.353     472.252    1384.064     1473.916       0.000       NaN       NaN        NaN      0.179               31.902         100.0             0.040
+H1    0.361     0.365   0.307   0.679    0.270     939.490    2079.288      815.109       0.232     0.241     0.358     -0.342      0.740                7.670        1100.0             0.133
+H2    0.290     0.302   0.323   0.709    0.970     819.152    1794.805     2412.433       0.168     0.246     0.291      0.671      0.656                9.059         800.0             0.074
+H3    0.511     0.510   0.228   0.422    0.324     974.071    1802.054     1371.524       0.223     0.051    -0.132     -0.737      0.754               10.541        1250.0             0.367
+2026-11-10T06:26:15Z tag=review_gate_hysteresis rc=0 peak_rss_mib=317 wall_s=1.66 cpu_user_s=1.43 memavail_start_gib=24 disk_free_gib=546->546

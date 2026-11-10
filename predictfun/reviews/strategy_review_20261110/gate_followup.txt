@@ -1,0 +1,72 @@
+selftest: D(50) +0.762825 vs saved +0.762825; with trade times shuffled within window D = +0.086
+
+== time since the gate was last on, state read at W - 50 ms ==
+                bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+            lag 50: on    4040  82996.0      12.96  0.696  1.534  1.762    1.81   577.0  1273.0   1435.0      214
+ lag 50: off <= 100 ms    1534  28412.0       4.44  0.417  1.101  1.283    4.47   118.0   313.0    348.0      189
+lag 50: off 100-500 ms    3891  62000.0       9.68 -0.174 -0.187 -1.173   -4.74  -108.0  -116.0   -713.0      217
+   lag 50: off 0.5-2 s    8835 130289.0      20.34  0.003 -0.312 -0.365   -1.24     4.0  -406.0   -471.0      219
+     lag 50: off > 2 s   23051 334887.0      52.28 -0.116 -0.488 -0.799   -1.11  -387.0 -1634.0  -2667.0      220
+   within 0.01 c below the line: trades 561, shares 11947 (1.87%), mo1 +0.385, mo5 +1.267, mo60 -1.089
+   within 0.04 c below the line: trades 1129, shares 22283 (3.48%), mo1 +0.334, mo5 +1.070, mo60 +0.678
+
+== time since the gate was last on, state read at W - 150 ms ==
+                 bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+            lag 150: on    4031  82020.0      12.81  0.641  1.552  1.755    1.81   526.0  1273.0   1396.0      214
+ lag 150: off <= 100 ms    1796  33067.0       5.16  0.084  0.408 -0.350    0.83    28.0   135.0   -115.0      206
+lag 150: off 100-500 ms    3907  62433.0       9.75 -0.111  0.060 -0.511   -5.46   -69.0    37.0   -309.0      218
+   lag 150: off 0.5-2 s    8721 126741.0      19.79  0.033 -0.371 -0.224   -0.49    41.0  -471.0   -282.0      220
+     lag 150: off > 2 s   22887 334205.0      52.18 -0.096 -0.462 -0.821   -0.96  -321.0 -1545.0  -2732.0      220
+   within 0.01 c below the line: trades 625, shares 13393 (2.09%), mo1 +0.272, mo5 +1.351, mo60 +2.307
+   within 0.04 c below the line: trades 1184, shares 23615 (3.69%), mo1 +0.227, mo5 +0.847, mo60 +0.824
+
+== time since the gate was last on, state read at W - 250 ms ==
+                 bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+            lag 250: on    4320  85552.0      13.36  0.422  1.236  1.353    1.09   361.0  1057.0   1126.0      216
+ lag 250: off <= 100 ms    1760  29202.0       4.56  0.213  0.997 -0.249   -4.28    62.0   291.0    -71.0      206
+lag 250: off 100-500 ms    3879  65617.0      10.24  0.060 -0.027 -1.154   -2.43    40.0   -18.0   -737.0      216
+   lag 250: off 0.5-2 s    8678 126481.0      19.75  0.026 -0.355  0.180   -0.62    33.0  -448.0    227.0      220
+     lag 250: off > 2 s   22682 331329.0      51.73 -0.086 -0.438 -0.783   -0.83  -285.0 -1450.0  -2585.0      220
+   within 0.01 c below the line: trades 618, shares 11358 (1.77%), mo1 +0.126, mo5 +1.105, mo60 -2.998
+   within 0.04 c below the line: trades 1183, shares 20650 (3.22%), mo1 +0.341, mo5 +1.309, mo60 -0.324
+
+== time since the gate was last on, state read at W - 500 ms ==
+                 bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+            lag 500: on    4385  82942.0      12.95  0.235  0.721 -0.122   -2.91   195.0   598.0    -98.0      215
+ lag 500: off <= 100 ms    1868  34652.0       5.41  0.352  0.868  0.949    2.57   122.0   301.0    315.0      206
+lag 500: off 100-500 ms    3610  59523.0       9.29  0.196  0.135 -0.081    1.29   116.0    80.0    -48.0      218
+   lag 500: off 0.5-2 s    8744 130120.0      20.31 -0.011 -0.292 -0.031   -1.36   -15.0  -380.0    -40.0      220
+     lag 500: off > 2 s   22428 328187.0      51.24 -0.067 -0.358 -0.631   -0.88  -221.0 -1174.0  -2061.0      220
+   within 0.01 c below the line: trades 624, shares 13468 (2.10%), mo1 +0.492, mo5 +0.762, mo60 +2.096
+   within 0.04 c below the line: trades 1310, shares 26488 (4.14%), mo1 +0.457, mo5 +0.937, mo60 +0.838
+
+R2': zone mo1 by lead {50: 0.417, 150: 0.084, 250: 0.213, 500: 0.352} -> reading at 250 = GRACE-FAVOURABLE
+
+== touch flow above each minute-0 line, guard read at W - 250 ms (USD = whole cohort, pro-rata, 220 windows) ==
+                          bucket  trades   shares  share_pct   mo1    mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+              v > PM50 (-0.0484)   21712 392281.0      61.24 0.221  0.343  0.068    0.20   866.0  1346.0    265.0      220
+              v > PM60 (-0.0218)   18384 339841.0      53.06 0.232  0.416  0.267    0.73   787.0  1412.0    898.0      220
+              v > PM70 (+0.0009)   14246 269308.0      42.04 0.263  0.484  0.512    0.77   710.0  1305.0   1361.0      220
+              v > PM80 (+0.0230)    9426 183356.0      28.63 0.366  0.854  1.162    1.20   671.0  1565.0   2098.0      220
+              v > PM90 (+0.0492)    4320  85552.0      13.36 0.422  1.236  1.353    1.09   361.0  1057.0   1126.0      216
+              v > PM95 (+0.0698)    1779  32298.0       5.04 0.507  0.892  0.930   -0.17   164.0   288.0    291.0      162
+v > -0.10 (stay line used in R5)   26420 460829.0      71.95 0.196  0.265  0.162   -0.29   905.0  1220.0    740.0      220
+          all with a fresh value   41319 638182.0      99.63 0.033 -0.089 -0.323   -0.85   211.0  -568.0  -2041.0      220
+
+== touch flow between lines, guard read at W - 250 ms ==
+    bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  usd_1s  usd_5s  usd_60s  windows
+below PM50   19607 245901.0      38.39 -0.267 -0.778 -0.950   -2.53  -655.0 -1914.0  -2306.0      220
+   PM50-60    3328  52441.0       8.19  0.150 -0.126 -1.208   -3.22    79.0   -66.0   -633.0      220
+   PM60-70    4138  70533.0      11.01  0.110  0.153 -0.657    0.54    78.0   108.0   -464.0      219
+   PM70-80    4820  85951.0      13.42  0.045 -0.304 -0.862   -0.14    39.0  -261.0   -737.0      219
+   PM80-90    5106  97804.0      15.27  0.317  0.520  0.999    1.30   310.0   508.0    972.0      217
+   PM90-95    2541  53254.0       8.31  0.370  1.444  1.607    1.86   197.0   769.0    835.0      206
+above PM95    1779  32298.0       5.04  0.507  0.892  0.930   -0.17   164.0   288.0    291.0      162
+
+grid 0-60 s: bid on 12.29%, ask on 12.65%, both on 0.496% of time (independent would be 1.555%); share of a side's on-time with the other side also on 3.98% -> R4 = ONE-SIDED; corr(v_bid, v_ask) = +0.096
+      PM90: on  12.5% of side-time; spells per side-minute  31.9; length ms p50    100 p75    250 p90    500; on-time in spells >= 500 ms  50.3%, >= 2 s  17.2%, >= 5 s   6.4%
+      PM70: on  42.4% of side-time; spells per side-minute  62.8; length ms p50    100 p75    300 p90    900; on-time in spells >= 500 ms  72.7%, >= 2 s  40.4%, >= 5 s  17.1%
+      PM50: on  63.1% of side-time; spells per side-minute  53.0; length ms p50    150 p75    500 p90   1800; on-time in spells >= 500 ms  85.6%, >= 2 s  61.3%, >= 5 s  34.8%
+stay -0.10: on  74.2% of side-time; spells per side-minute  40.4; length ms p50    200 p75    750 p90   2800; on-time in spells >= 500 ms  91.3%, >= 2 s  74.6%, >= 5 s  51.6%
+R5: stay-line on-time in spells >= 2 s 74.6% -> reading = PERSISTENT
+2026-11-10T06:26:13Z tag=review_gate_followup rc=0 peak_rss_mib=310 wall_s=1.44 cpu_user_s=1.23 memavail_start_gib=24 disk_free_gib=546->546

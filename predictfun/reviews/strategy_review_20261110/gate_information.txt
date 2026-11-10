@@ -1,0 +1,84 @@
+rows 140518; untimed 3966; timed 136552; timed 0-60 s 41471 trades, 640523 shares, 220 windows; line 0.0492
+selftest: (a) True; (b) status-pulled trades with gate off at lag 50: 100.00% of 33374; (c) with flipped guard: 42.00%
+
+== 0-60 s by existing status (W - 50 ms), top 12 by shares ==
+                                                       bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  held_1s_pct  windows
+     not quoting: prediction: guard value below the pull line   33374 483747.0      75.52 -0.106 -0.407 -0.743   -1.26         61.1      220
+cancelled<=500ms: prediction: guard value below the pull line    2369  42643.0       6.66  0.217  0.254  0.102   -6.07         71.6      213
+                                   resting_not_filled (queue)    1959  38914.0       6.08  0.668  1.794  2.679    3.93         81.9      206
+                         not quoting: CAP10 (inventory limit)    1012  16217.0       2.53  0.087  0.019  0.104    2.73         67.0       29
+                                              refused: NetCap     644  15223.0       2.38  1.094  2.232  1.473   -3.72         72.6      104
+                                               we_were_filled      45  11343.0       1.77  0.069  1.370  1.824   14.39         42.6       36
+       not quoting: other guards (Binance move / book checks)     742  10999.0       1.72  0.594  0.424  0.792   -4.98         68.3      116
+  cancelled<=500ms: other guards (Binance move / book checks)     530   7329.0       1.14  0.235 -0.662 -1.515    2.70         78.1      122
+                                  cancelled<=500ms: re-priced     353   7196.0       1.12  0.403  0.677  0.923    2.50         86.2       87
+                       order in flight (placed, not yet live)     250   3871.0       0.60  1.737  1.537  0.131    6.05         86.8       82
+                not quoting: prediction: no fresh guard value     120   1939.0       0.30  0.619 -1.422 -7.067    6.58         72.3       65
+                                        quoting another price      43    611.0       0.10 -0.217 -1.159 -4.639    5.96         65.2       19
+
+== gate state of the maker side at W - lag (all touch trades 0-60 s) ==
+                  bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  held_1s_pct  windows
+              lag 50: on    4040  82996.0      12.96  0.696  1.534  1.762    1.81         75.3      214
+             lag 50: off   37311 555588.0      86.74 -0.067 -0.332 -0.636   -1.26         62.3      220
+  lag 50: no fresh value     120   1939.0       0.30  0.619 -1.422 -7.067    6.58         72.3       65
+             lag 250: on    4320  85552.0      13.36  0.422  1.236  1.353    1.09         73.4      216
+            lag 250: off   36999 552629.0      86.28 -0.027 -0.294 -0.577   -1.15         62.5      220
+ lag 250: no fresh value     152   2342.0       0.37  0.257 -1.288 -6.980    2.32         64.6       77
+             lag 500: on    4385  82942.0      12.95  0.235  0.721 -0.122   -2.91         68.8      215
+            lag 500: off   36650 552483.0      86.25  0.001 -0.212 -0.335   -0.54         63.3      220
+ lag 500: no fresh value     436   5099.0       0.80  0.364 -0.434 -5.335    0.36         64.5      161
+            lag 1000: on    4691  84849.0      13.25  0.217  0.607  0.466   -0.93         68.1      218
+           lag 1000: off   36065 547107.0      85.42 -0.002 -0.200 -0.452   -0.88         63.4      220
+lag 1000: no fresh value     715   8567.0       1.34  0.525 -0.204 -1.584    2.48         61.8      199
+D(lag) = mo1(on) - mo1(off): {50: 0.763, 250: 0.449, 500: 0.235, 1000: 0.22}
+R1 reading = PRE-TRADE
+
+== dose response: v - line at W - 250 ms (c) ==
+      bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  held_1s_pct  windows
+      <-0.30    8904  97346.0      15.20 -0.533 -1.263 -2.049   -2.34         50.6      220
+-0.30..-0.15    5955  79266.0      12.38 -0.225 -0.694 -1.127   -2.43         57.9      216
+-0.15..-0.10    4505  65635.0      10.25  0.085 -0.174  0.795   -2.22         64.4      217
+-0.10..-0.05    7382 121553.0      18.98  0.111 -0.001 -0.880   -1.86         63.8      220
+-0.05..-0.02    6463 113933.0      17.79  0.092 -0.175 -0.651   -0.07         67.8      219
+    -0.02..0    3790  74896.0      11.69  0.335  0.627  1.286    2.17         71.2      216
+     0..0.02    2507  52824.0       8.25  0.367  1.436  1.582    1.79         74.0      206
+  0.02..0.05    1121  20148.0       3.15  0.398  1.100 -0.280    1.15         73.9      143
+  0.05..0.10     365   7359.0       1.15  0.692  1.440  5.646   -0.77         74.6       75
+       >0.10     327   5222.0       0.82  0.690 -0.556 -0.878   -3.51         62.5       52
+Spearman(bucket order, mo1) = +0.976 over 10 buckets
+
+== time since the gate was last on (strict 50 ms grid, state at W - 50 ms) ==
+        bucket  trades   shares  share_pct    mo1    mo5   mo60  settle  held_1s_pct  windows
+            on    4040  82996.0      12.96  0.696  1.534  1.762    1.81         75.3      214
+ off <= 100 ms    1534  28412.0       4.44  0.417  1.101  1.283    4.47         75.5      189
+off 100-500 ms    3891  62000.0       9.68 -0.174 -0.187 -1.173   -4.74         62.1      217
+   off 0.5-2 s    8835 130289.0      20.34  0.003 -0.312 -0.365   -1.24         61.6      219
+     off > 2 s   23051 334887.0      52.28 -0.116 -0.488 -0.799   -1.11         61.5      220
+R2: mo1 zone +0.417 | on +0.696 | off > 2 s -0.116 -> reading = BETWEEN
+   band 0.005: trades 327, shares 7080 (1.11% of touch volume), mo1 +0.540, mo5 +1.250, held 1 s 74.8%
+   band 0.01: trades 561, shares 11947 (1.87% of touch volume), mo1 +0.385, mo5 +1.267, held 1 s 77.8%
+   band 0.02: trades 869, shares 16961 (2.65% of touch volume), mo1 +0.415, mo5 +1.463, held 1 s 76.8%
+   band 0.04: trades 1129, shares 22283 (3.48% of touch volume), mo1 +0.334, mo5 +1.070, held 1 s 75.0%
+
+== gate-on touch volume by how long the gate had been on (strict) ==
+       bucket  trades  shares  share_pct   mo1   mo5  mo60  settle  held_1s_pct  windows
+  on < 100 ms    1576 29600.0      35.66 0.593 1.190 0.373   -1.80         70.4      193
+on 100-250 ms     733 17042.0      20.53 1.046 1.800 1.525    3.20         81.1      163
+on 250-500 ms     575 10830.0      13.05 0.670 1.202 4.319   -1.11         77.8      133
+   on 0.5-1 s     494 11055.0      13.32 0.812 1.571 1.150    5.19         78.0      110
+     on 1-2 s     281  5448.0       6.56 0.976 2.218 4.826   22.32         82.9       74
+    on >= 2 s     381  9021.0      10.87 0.091 2.102 2.740   -2.06         69.4       43
+
+== same, gaps <= 100 ms bridged ==
+       bucket  trades  shares  share_pct   mo1   mo5  mo60  settle  held_1s_pct  windows
+  on < 100 ms     536 10526.0      12.68 0.831 0.338 0.657    2.29         76.7      125
+on 100-250 ms     761 13163.0      15.86 1.331 1.716 1.547    3.17         78.7      158
+on 250-500 ms     788 16067.0      19.36 0.472 1.530 3.505   -4.86         70.6      160
+   on 0.5-1 s     728 16849.0      20.30 0.703 2.192 1.718    5.74         77.4      144
+     on 1-2 s     513 10984.0      13.23 0.633 1.232 2.180    5.84         72.9      123
+    on >= 2 s     714 15406.0      18.56 0.330 1.696 0.580    0.09         75.8       86
+R3: share of gate-on touch volume with the gate on >= 500 ms: strict 30.8% (bridged 52.1%) -> reading = BETWEEN
+
+grid 0-60 s: gate-on time share 12.47% of side-time; spells 14037; length ms p50 100 p75 250 p90 500; share of on-time in spells >= 500 ms 50.3%, >= 1 s 32.2%, >= 2 s 17.2%
+gate-on share of touch VOLUME at lag 50: 12.96% (time share above); touch volume per window 0-60 s: 2911 sh; gate-on volume per window: 377 sh
+2026-11-10T06:26:10Z tag=review_gate_information rc=0 peak_rss_mib=415 wall_s=3.04 cpu_user_s=2.78 memavail_start_gib=24 disk_free_gib=546->546
