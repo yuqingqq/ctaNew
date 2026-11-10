@@ -3,6 +3,15 @@ through the research fill model, compared order by order and leg by leg with wha
 reference, not a calibration: no delay, minimum resting age or queue parameter is fitted or selected (fill-clock audit).
 One consumed partial day (the 220 windows of 2026-11-08, cut 23:00Z) -> point estimates only, no intervals (G < 5).
 
+Version 2 (2026-11-10, after v1's output was seen; declared before v2 ran). v1 (7ef3de6e, output kept as b1a_v1.*)
+matched a replay fill to live's own leg by the maker LEG ROW. Within one taker order the replay serves the legs at one
+price in an arbitrary row order, so a replay fill from the same taker order as live's own leg counted as not REAL (post
+hoc check of v1: 33 of 59 uncredited own legs inside their order's interval had a replay fill from the same taker
+order). v2 matches on the TAKER ORDER (the replay's own time unit). Every reading, threshold, control and config is
+unchanged; v1's leg-row numbers are printed beside v2's. Added, descriptive (no reading): live's own legs at M 0 P1 by
+outcome in the replay (before activation / after the order left / credited / order filled earlier / not credited, with
+the volume traded at our price before the leg at least or below the queue ahead at activation).
+
 Population  accepted live orders (core_orders_{v6,basis} of pf_live_vs_replay: t_Accepted present, not refused) of
             tokyo-6 and basis-tokyo-1 in the 220 cohort windows, whole windows (orders are decided 1-240 s in).
             tokyo-5 (11-07) has no research tape in this cohort: a status; nothing of it is read.
@@ -21,9 +30,9 @@ Trades      every maker leg (legs_timed2 + legs_tk), one time per taker order (e
 Configs     M 0 / M 50 / M 250 / L 50 / U 50 on P1; M 50 on P0.
 Identity    live's own legs = the 99 REST maker legs of the fill-clock audit (own_rest_legs / clock_cases; hashes checked
             against its committed receipt), matched to legs_timed2 rows on the nine content keys. Eligible = the audit's
-            unique or identical-clock legs that the replay can time. A replay fill is REAL if its leg row is a candidate
-            of an eligible own leg of the same order (credited up to that leg's shares, in time order). Fills from the
-            candidates of an ineligible own leg of the same order are a status, outside precision.
+            unique or identical-clock legs that the replay can time. A replay fill is REAL if it comes from the taker
+            order of an eligible own leg of the same order (v2; credited up to that leg's shares, in time order). Fills
+            from the taker order of an ineligible own leg of the same order are a status, outside precision.
 Value       per fill sg*(mid(anchor + h) - price), h = 1 s, 5 s, anchor unshifted (as in the review); live's eligible own
             legs are valued the same way at their research anchor.
 
@@ -204,16 +213,17 @@ def fuzz(n_cases, seed=20261110):
     return diff, n_fills
 
 
-def credit(fl, own):
-    """REAL shares per replay fill. fl: replay fills (cid, row, q, t) of one config; own: eligible own legs (cid, leg,
-    shares, rows = set of candidate leg rows). Each own leg is credited up to its shares, in time order."""
+def credit(fl, own, key='grp'):
+    """REAL shares per replay fill. fl: replay fills (cid, row, grp, q) of one config, in time order; own: eligible own
+    legs (cid, leg, shares, rows / grps = sets of candidate leg rows / their taker orders). key 'grp' (v2) matches on
+    the taker order, 'row' (v1) on the maker leg row. Each own leg is credited up to its shares, in time order."""
     cap = {(r.cid, r.leg): r.shares for r in own.itertuples()}
     cand = {}
     for r in own.itertuples():
-        for x in r.rows:
+        for x in getattr(r, key + 's'):
             cand.setdefault((r.cid, x), []).append(r.leg)
     real = np.zeros(len(fl))
-    for n, (c, x, q) in enumerate(zip(fl.cid.values, fl.row.values, fl.q.values)):
+    for n, (c, x, q) in enumerate(zip(fl.cid.values, fl[key].values, fl.q.values)):
         for leg in cand.get((c, x), ()):
             u = min(q - real[n], cap[(c, leg)])
             if u > 1e-12:
@@ -254,7 +264,8 @@ def synth():
         bad.append('S5 through')
     F, _ = _one([o(50, 100, 1000, 10.0)], [(-100, L5, Z5)], [(50, 50, 5), (200, 50, 5), (300, 50, 5)], 'M')
     fl = pd.DataFrame(dict(cid=[7] * len(F), row=[i for _n, i, _q, _t, _a in F], q=[q for _n, _i, q, _t, _a in F]))
-    own = pd.DataFrame(dict(cid=[7, 7], leg=[0, 1], shares=[5.0, 5.0], rows=[{0}, {1}], anc=[50.0, 200.0]))
+    fl['grp'] = fl.row                                    # each synthetic trade is its own taker order
+    own = pd.DataFrame(dict(cid=[7, 7], leg=[0, 1], shares=[5.0, 5.0], rows=[{0}, {1}], grps=[{0}, {1}], anc=[50.0, 200.0]))
     real = credit(fl, own); before = int((own.anc < 100.0).sum())
     if list(fl.row) != [1, 2] or list(real) != [5.0, 0.0] or real.sum() / own.shares.sum() != 0.5 or real.sum() / fl.q.sum() != 0.5 or before != 1:
         bad.append('K3 planted credit')
@@ -332,7 +343,7 @@ def main():
     e2_t = np.where((LTF.how.values == 0) & np.isfinite(LTF.t_e2.values), LTF.t_e2.values, np.nan)
     a_ = pd.Series(ws_t).groupby(grp, sort=False).transform('min').values
     b_ = pd.Series(e2_t).groupby(grp, sort=False).transform('min').values
-    LTF['anc'] = np.where(np.isfinite(a_), a_, b_); LTF['row'] = np.arange(len(LTF))
+    LTF['anc'] = np.where(np.isfinite(a_), a_, b_); LTF['row'] = np.arange(len(LTF)); LTF['grp'] = grp
     L0 = LTF[LTF.mid.isin(W0)].copy(); L0['ws'] = L0.mid.map(W0)
     unt = L0[~np.isfinite(L0.anc.values) & (L0.exec_s * 1000.0 >= L0.ws) & (L0.exec_s * 1000.0 < L0.ws + 60000.0)]
     T0 = L0[np.isfinite(L0.anc.values)]; in60 = T0[(T0.anc >= T0.ws) & (T0.anc < T0.ws + 60000.0)]
@@ -346,6 +357,7 @@ def main():
     j = own[['leg'] + KEYS].merge(LTF[KEYS + ['anc', 'row']], on=KEYS, how='left')
     g = j.groupby('leg').agg(n=('row', 'count'), amin=('anc', 'min'), amax=('anc', 'max'))
     g['rows'] = j.groupby('leg').row.apply(lambda x: set(int(v) for v in x.dropna()))
+    g['grps'] = g.rows.apply(lambda s: set(int(grp[v]) for v in s))
     own = own.join(g, on='leg').merge(core[['cid', 'side', 'tick', 't_req', 't_Accepted', 't_cancel', 'tr_P1', 'ta_P1', 'run']]
                                       .rename(columns={'side': 'o_side', 'run': 'o_run'}), on='cid', how='left')
     k2.update(own_legs=len(own), own_shares=float(own.shares.sum()), own_with_rows=int((own.n > 0).sum()),
@@ -359,7 +371,7 @@ def main():
              and k2['own_with_order'] == len(own) and k2['own_side_price_ok'] and k2['anc_eq_Z'] == len(E))
     if not (k1b_ok and k2_ok):
         sys.exit(f'CONTROL FAILED -> no table: K1b {k1b} ok={k1b_ok}; K2 {k2}')
-    AMB = {(int(r.cid), x) for r in own[own.status != 'eligible'].itertuples() for x in r.rows}
+    AMB = {(int(r.cid), x) for r in own[own.status != 'eligible'].itertuples() for x in r.grps}
 
     cols = ['mid', 't_ms'] + [f'{s}{i}_{x}' for s in 'ba' for i in range(1, 6) for x in 'ps']
     parts = []
@@ -399,8 +411,9 @@ def main():
                 l = LT.iloc[LI[(m, side)]]
                 o_ = np.lexsort(((-l.ptick.values if side == 0 else l.ptick.values), l.anc.values))
                 anc = l.anc.values[o_]; pt = l.ptick.values[o_].astype('int64'); sh = l.shares.values[o_].astype(float); rw = l.row.values[o_]
+                gw = l.grp.values[o_]
             else:
-                anc = np.zeros(0); pt = np.zeros(0, 'int64'); sh = np.zeros(0); rw = np.zeros(0, 'int64')
+                anc = np.zeros(0); pt = np.zeros(0, 'int64'); sh = np.zeros(0); rw = np.zeros(0, 'int64'); gw = np.zeros(0, 'int64')
             ptl = pt.tolist(); shl = sh.tolist(); cache = {}; mid1 = mid_at(anc + 1000.0); mid5 = mid_at(anc + 5000.0)
             for c, (rule, shf, P) in enumerate(CFG):
                 OO = O[(O[f'tr_{P}'] > O[f'ta_{P}']).values]
@@ -409,14 +422,32 @@ def main():
                 F, A0 = sim_orders(side, tf, lev[side][0], lev[side][1], cache, ords, anc - shf, ptl, shl, rule)
                 cid_ = OO.cid.values; tc_ = OO.t_cancel.values; tk_ = OO.tick.values; run_ = OO.run.values
                 for n, i, q, th, age in F:
-                    rows.append((c, run_[n], m, side, int(cid_[n]), int(rw[i]), q, th, age, bool(anc[i] - shf >= tc_[n]),
+                    rows.append((c, run_[n], m, side, int(cid_[n]), int(rw[i]), int(gw[i]), q, th, age, bool(anc[i] - shf >= tc_[n]),
                                  sg * (mid1[i] - tk_[n]), sg * (mid5[i] - tk_[n]), float(anc[i])))
                 if c == 0:
                     for n, (x, a, r_) in enumerate(zip(OO.tick.values, OO.ta_P1.values, OO.tr_P1.values)):
                         k = (pt == x) & (anc >= a) & (anc < r_)
                         qrows.append((int(cid_[n]), float(sh[k].sum()), A0[n], float(r_ - a), float(OO.filled.values[n])))
-    FL = pd.DataFrame(rows, columns=['c', 'run', 'mid', 'side', 'cid', 'row', 'q', 'thr', 'age', 'pend', 'mo1', 'mo5', 'anc'])
+    FL = pd.DataFrame(rows, columns=['c', 'run', 'mid', 'side', 'cid', 'row', 'grp', 'q', 'thr', 'age', 'pend', 'mo1', 'mo5', 'anc'])
     QT = pd.DataFrame(qrows, columns=['cid', 'V', 'a0', 'rest', 'live_filled'])
+    f0 = FL[FL.c == 0]; a0 = QT.set_index('cid').a0; dec = []            # v2, descriptive: own legs at M 0 P1
+    for r in E.merge(core[['cid', 'size', 'market']], on='cid').itertuples():
+        ff = f0[f0.cid == r.cid]
+        if r.anc < r.ta_P1:
+            c = 'before activation'
+        elif r.anc >= r.tr_P1:
+            c = 'after the order left'
+        elif ff.grp.isin(r.grps).any():
+            c = 'credited (same taker order)'
+        elif ff.q[ff.anc < r.anc].sum() >= r.size - 1e-9:
+            c = 'order filled earlier by other trades'
+        else:
+            V = float(LT.shares[(LT.mid == r.market) & (LT.side == r.side) & (LT.ptick == r.ptick) & (LT.anc >= r.ta_P1) & (LT.anc <= r.anc)].sum())
+            c = ('not credited; volume at our price >= queue ahead' if V >= a0.get(r.cid, np.nan)
+                 else 'not credited; volume at our price < queue ahead')
+        dec.append((c, float(r.shares)))
+    D_ = pd.DataFrame(dec, columns=['cat', 'sh'])
+    stat['own_legs_M0_P1'] = {k: dict(legs=int(len(v)), shares=float(v.sh.sum())) for k, v in D_.groupby('cat')}
     report(out, CFG, FL, QT, core, E, AMB, stat, dict(K1a_K3_K4_K5=ksyn, K1b=k1b, K2=k2), days)
 
 
@@ -427,7 +458,8 @@ def report(out, CFG, FL, QT, core, E, AMB, stat, controls, days):
         f = FL[FL.c == c].sort_values(['cid', 'anc', 'row'], kind='stable').reset_index(drop=True)
         rep = core[core[f'tr_{P}'] > core[f'ta_{P}']]; live_sh = float(rep.filled.sum()); e = E[E.cid.isin(rep.cid)]
         f['real'] = credit(f, e) if len(f) else np.zeros(0)
-        f['amb'] = np.array([(a, b) in AMB for a, b in zip(f.cid.values, f.row.values)], bool)
+        f['real_row'] = credit(f, e, 'row') if len(f) else np.zeros(0)
+        f['amb'] = np.array([(a, b) in AMB for a, b in zip(f.cid.values, f.grp.values)], bool)
         x = f[~f.amb]; S = float(f.q.sum()); Sx = float(x.q.sum()); R = float(f.real.sum()); own_sh = float(e.shares.sum())
         ages = {}
         for lab, lo, hi in AGE_B:
@@ -438,7 +470,7 @@ def report(out, CFG, FL, QT, core, E, AMB, stat, controls, days):
                        ('replay only', (lf <= 1e-9) & (rf > 1e-9)), ('neither', (lf <= 1e-9) & (rf <= 1e-9))):
             cells[nm] = dict(orders=int(kk.sum()), live_sh=float(lf[kk].sum()), replay_sh=float(rf[kk].sum()))
         res[label(c)] = dict(orders=int(len(rep)), fills=int(len(f)), replay_sh=S, live_sh=live_sh, rho=S / live_sh, status_sh=S - Sx,
-                             real_sh=R, own_eligible_legs=int(len(e)), own_eligible_sh=own_sh, recall=R / own_sh if own_sh else nan,
+                             real_sh=R, real_row_sh_v1=float(f.real_row.sum()), own_eligible_legs=int(len(e)), own_eligible_sh=own_sh, recall=R / own_sh if own_sh else nan,
                              precision=R / Sx if Sx else nan, mo1=QR.wmean(f.mo1.values, f.q.values), mo5=QR.wmean(f.mo5.values, f.q.values),
                              mo1_real=QR.wmean(f.mo1.values, f.real.values), mo1_other=QR.wmean(f.mo1.values, (f.q - f.real).values),
                              usd1_day=float(np.nansum(f.q.values * f.mo1.values)) / 100.0 / days,
@@ -499,9 +531,11 @@ def report(out, CFG, FL, QT, core, E, AMB, stat, controls, days):
           f'by age at P1: ' + '; '.join(f'{k} {v["shares"]:.1f} sh {f2(v["mo1"])}' for k, v in live['ages'].items()))
     print(f'lag bound U = anchor - decision (eligible own legs, share-weighted): ' + ', '.join(f'q{k} {v:.0f} ms' for k, v in lag['quantiles_ms'].items())
           + f'; U < 0 {100 * lag["share_U_negative"]:.1f}%, 0-50 ms {100 * lag["share_0_50"]:.1f}%, 0-250 ms {100 * lag["share_0_250"]:.1f}%')
-    print('config        orders  fills  replay sh  rho   status  REAL sh  recall  precision  c/sh 1s  5s     REAL  other  $/day1s  thr%  pend rep/own')
+    print('live own legs at M 0 P1 by outcome in the replay (legs / sh): ' + '; '.join(f'{k} {v["legs"]} / {v["shares"]:.1f}'
+                                                                                 for k, v in stat['own_legs_M0_P1'].items()))
+    print('config        orders  fills  replay sh  rho   status  REAL sh (v1 row)  recall  precision  c/sh 1s  5s     REAL  other  $/day1s  thr%  pend rep/own')
     for lab, v in res.items():
-        print(f'{lab:12s} {v["orders"]:7,d} {v["fills"]:6,d} {v["replay_sh"]:10.1f} {v["rho"]:5.2f} {v["status_sh"]:7.1f} {v["real_sh"]:8.1f} '
+        print(f'{lab:12s} {v["orders"]:7,d} {v["fills"]:6,d} {v["replay_sh"]:10.1f} {v["rho"]:5.2f} {v["status_sh"]:7.1f} {v["real_sh"]:8.1f} ({v["real_row_sh_v1"]:5.1f}) '
               f'{v["recall"]:7.3f} {v["precision"]:9.3f}  {f2(v["mo1"])} {f2(v["mo5"])} {f2(v["mo1_real"])} {f2(v["mo1_other"])} {v["usd1_day"]:8.2f} '
               f'{v["thr_pct"]:5.1f} {v["pend_replay_sh"]:6.1f}/{v["pend_own_sh"]:.1f}')
     print('by age at the replay fill (shares | REAL | precision | c/sh 1 s):')
