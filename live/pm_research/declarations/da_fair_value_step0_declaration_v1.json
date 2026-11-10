@@ -1,0 +1,423 @@
+{
+ "declaration": "DA_FAIR_VALUE_STEP_0",
+ "version": 1,
+ "as_of_utc": "2026-09-11T19:18:23Z",
+ "plan": {
+  "file": "fair_value_plan.md",
+  "version_now": "v1.2",
+  "sha256_16": "1606fe8d19124d0f",
+  "note": "DA 266 recorded the file as v1.1 at commit 0575444; it has since been revised to v1.2 (424 lines) and \u00a711 is now the eight-step implementation order. That earlier note is superseded."
+ },
+ "THE_SETTLEMENT_RULE": {
+  "statistic": "X60(T) >= X60(t0), TIES UP",
+  "venue": "Chainlink, not Binance (R-253)",
+  "series": "the 60-second TWAP topic, keyed (symbol, 60) exactly as exp_m6_settlement keys it",
+  "resolved_by": "the SERIES KEY, never by the letter -- the plan writes S60, dispatches write X60"
+ },
+ "THE_GATE_IS_REUSED_NOT_RE_TUNED": {
+  "gate_pooled": 0.99,
+  "gate_big_margin": 0.995,
+  "big_margin_bp": 0.5,
+  "source": "da_settlement_audit_v1, pre-registered at Q-DA-146",
+  "rule_11": "declared before the audit; not chosen after seeing the result"
+ },
+ "THE_FULL_STATUS_GRAMMAR": {
+  "statuses": [
+   "VERIFIED_AGREE",
+   "VERIFIED_DISAGREE",
+   "NO_OFFICIAL_RESOLUTION",
+   "NOT_IN_CAPTURE",
+   "OUTAGE",
+   "STALE_BOUNDARY",
+   "MARGIN_BELOW_RESOLUTION"
+  ],
+  "ADMITTING": [
+   "VERIFIED_AGREE"
+  ],
+  "MARGIN_BELOW_RESOLUTION_is_an_ADDITION_the_plan_did_not_enumerate": {
+   "predicate": "abs(margin_bp) < 0.5 and X60(T) != X60(t0)",
+   "why_separate_from_staleness": "a stale boundary is a read the feed had not refreshed; a thin margin is a comparison the feed cannot resolve at all. Folding them names the wrong cause."
+  }
+ },
+ "THE_AUDIT": {
+  "n_scored": 46612,
+  "n_agree": 46571,
+  "rate": 0.99912,
+  "gate": 0.99,
+  "PASSES": true,
+  "counted_statuses": {
+   "VERIFIED_AGREE": 46571,
+   "DISAGREE": 41,
+   "BOUNDARY_NOT_IN_CAPTURE": 59
+  },
+  "loader_exclusions_counted": {
+   "resolutions_open_or_no_winner": 25
+  },
+  "n_grows_between_runs": "the ledger is append-only: an earlier run of this same audit scored 46,591. n and the rate are AS-OF, and the rate was 0.99912 both times."
+ },
+ "THE_RESIDUAL_41_ROWS_BY_CLASS": {
+  "by_class": {
+   "boundary_read_stale_gt_1s": 31,
+   "margin_below_feed_resolution": 10
+  },
+  "rows": [
+   {
+    "slug": "bnb-updown-5m-1787166300",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.16313,
+    "staleness_T_ms": 21000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   },
+   {
+    "slug": "bnb-updown-5m-1787174100",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": -0.81752,
+    "staleness_T_ms": 6000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   },
+   {
+    "slug": "hype-updown-5m-1787204700",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": -4.9889,
+    "staleness_T_ms": 0,
+    "staleness_t0_ms": 31000,
+    "exact_tie": false
+   },
+   {
+    "slug": "btc-updown-5m-1787354400",
+    "class": "margin_below_feed_resolution",
+    "margin_bp": -0.02062,
+    "staleness_T_ms": 1000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   },
+   {
+    "slug": "doge-updown-5m-1787395800",
+    "class": "margin_below_feed_resolution",
+    "margin_bp": 0.11182,
+    "staleness_T_ms": 0,
+    "staleness_t0_ms": 1000,
+    "exact_tie": false
+   },
+   {
+    "slug": "hype-updown-5m-1787428800",
+    "class": "margin_below_feed_resolution",
+    "margin_bp": -0.21902,
+    "staleness_T_ms": 1000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   },
+   {
+    "slug": "doge-updown-5m-1787431800",
+    "class": "margin_below_feed_resolution",
+    "margin_bp": -0.08477,
+    "staleness_T_ms": 1000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   },
+   {
+    "slug": "eth-updown-5m-1787464200",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.05522,
+    "staleness_T_ms": 1000,
+    "staleness_t0_ms": 6000,
+    "exact_tie": false
+   },
+   {
+    "slug": "eth-updown-5m-1787495700",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.3962,
+    "staleness_T_ms": 2000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   },
+   {
+    "slug": "btc-updown-5m-1787535600",
+    "class": "margin_below_feed_resolution",
+    "margin_bp": 0.09758,
+    "staleness_T_ms": 0,
+    "staleness_t0_ms": 1000,
+    "exact_tie": false
+   },
+   {
+    "slug": "btc-updown-5m-1787716800",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.0,
+    "staleness_T_ms": 538000,
+    "staleness_t0_ms": 238000,
+    "exact_tie": true
+   },
+   {
+    "slug": "eth-updown-5m-1787716800",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.0,
+    "staleness_T_ms": 538000,
+    "staleness_t0_ms": 238000,
+    "exact_tie": true
+   },
+   {
+    "slug": "sol-updown-5m-1787716800",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.0,
+    "staleness_T_ms": 538000,
+    "staleness_t0_ms": 238000,
+    "exact_tie": true
+   },
+   {
+    "slug": "xrp-updown-5m-1787716800",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.0,
+    "staleness_T_ms": 537000,
+    "staleness_t0_ms": 237000,
+    "exact_tie": true
+   },
+   {
+    "slug": "doge-updown-5m-1787716800",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.0,
+    "staleness_T_ms": 538000,
+    "staleness_t0_ms": 238000,
+    "exact_tie": true
+   },
+   {
+    "slug": "bnb-updown-5m-1787716800",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.0,
+    "staleness_T_ms": 538000,
+    "staleness_t0_ms": 238000,
+    "exact_tie": true
+   },
+   {
+    "slug": "hype-updown-5m-1787716800",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.0,
+    "staleness_T_ms": 537000,
+    "staleness_t0_ms": 237000,
+    "exact_tie": true
+   },
+   {
+    "slug": "btc-updown-5m-1787718900",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": -11.97911,
+    "staleness_T_ms": 0,
+    "staleness_t0_ms": 2338000,
+    "exact_tie": false
+   },
+   {
+    "slug": "eth-updown-5m-1787718900",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": -4.6685,
+    "staleness_T_ms": 0,
+    "staleness_t0_ms": 2338000,
+    "exact_tie": false
+   },
+   {
+    "slug": "hype-updown-5m-1787718900",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 26.80897,
+    "staleness_T_ms": 0,
+    "staleness_t0_ms": 2337000,
+    "exact_tie": false
+   },
+   {
+    "slug": "hype-updown-5m-1787839200",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 2.86216,
+    "staleness_T_ms": 0,
+    "staleness_t0_ms": 9000,
+    "exact_tie": false
+   },
+   {
+    "slug": "sol-updown-5m-1788039600",
+    "class": "margin_below_feed_resolution",
+    "margin_bp": -0.0108,
+    "staleness_T_ms": 1000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   },
+   {
+    "slug": "doge-updown-5m-1788179100",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": -0.83918,
+    "staleness_T_ms": 0,
+    "staleness_t0_ms": 4000,
+    "exact_tie": false
+   },
+   {
+    "slug": "doge-updown-5m-1788206400",
+    "class": "margin_below_feed_resolution",
+    "margin_bp": -0.0202,
+    "staleness_T_ms": 1000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   },
+   {
+    "slug": "xrp-updown-5m-1788264300",
+    "class": "margin_below_feed_resolution",
+    "margin_bp": 0.0031,
+    "staleness_T_ms": 0,
+    "staleness_t0_ms": 1000,
+    "exact_tie": false
+   },
+   {
+    "slug": "eth-updown-5m-1788297900",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": -0.05067,
+    "staleness_T_ms": 6000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   },
+   {
+    "slug": "doge-updown-5m-1788394200",
+    "class": "margin_below_feed_resolution",
+    "margin_bp": -0.14271,
+    "staleness_T_ms": 0,
+    "staleness_t0_ms": 1000,
+    "exact_tie": false
+   },
+   {
+    "slug": "btc-updown-5m-1788469500",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": -0.14179,
+    "staleness_T_ms": 2000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   },
+   {
+    "slug": "hype-updown-5m-1788609000",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.86823,
+    "staleness_T_ms": 0,
+    "staleness_t0_ms": 6000,
+    "exact_tie": false
+   },
+   {
+    "slug": "sol-updown-5m-1788868200",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.26717,
+    "staleness_T_ms": 4000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   },
+   {
+    "slug": "doge-updown-5m-1788868200",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.43779,
+    "staleness_T_ms": 4000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   },
+   {
+    "slug": "bnb-updown-5m-1788968100",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 1.63068,
+    "staleness_T_ms": 25000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   },
+   {
+    "slug": "hype-updown-5m-1788968100",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": -1.61494,
+    "staleness_T_ms": 26000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   },
+   {
+    "slug": "hype-updown-5m-1788972000",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": -0.57777,
+    "staleness_T_ms": 7000,
+    "staleness_t0_ms": 1000,
+    "exact_tie": false
+   },
+   {
+    "slug": "xrp-updown-5m-1788972000",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": -1.73654,
+    "staleness_T_ms": 7000,
+    "staleness_t0_ms": 1000,
+    "exact_tie": false
+   },
+   {
+    "slug": "btc-updown-5m-1788972000",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": -3.29872,
+    "staleness_T_ms": 7000,
+    "staleness_t0_ms": 1000,
+    "exact_tie": false
+   },
+   {
+    "slug": "sol-updown-5m-1788972000",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": -1.24394,
+    "staleness_T_ms": 7000,
+    "staleness_t0_ms": 1000,
+    "exact_tie": false
+   },
+   {
+    "slug": "doge-updown-5m-1788972000",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": -1.41285,
+    "staleness_T_ms": 7000,
+    "staleness_t0_ms": 1000,
+    "exact_tie": false
+   },
+   {
+    "slug": "sol-updown-5m-1788972300",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.20883,
+    "staleness_T_ms": 0,
+    "staleness_t0_ms": 7000,
+    "exact_tie": false
+   },
+   {
+    "slug": "bnb-updown-5m-1788980400",
+    "class": "boundary_read_stale_gt_1s",
+    "margin_bp": 0.72671,
+    "staleness_T_ms": 0,
+    "staleness_t0_ms": 35000,
+    "exact_tie": false
+   },
+   {
+    "slug": "doge-updown-5m-1789049400",
+    "class": "margin_below_feed_resolution",
+    "margin_bp": 0.30037,
+    "staleness_T_ms": 1000,
+    "staleness_t0_ms": 0,
+    "exact_tie": false
+   }
+  ]
+ },
+ "THE_ZERO_UNEXPLAINED_PREDICATE_IS_COMPUTED_NOT_PROSE": {
+  "rule": "rule 10 -- compute predicates, never print conclusions",
+  "n_rows": 41,
+  "n_unexplained": 0,
+  "ZERO_UNEXPLAINED": true,
+  "every_row_has_exactly_one_class": true,
+  "classes_sum_to_the_residual": true,
+  "the_decisive_check": {
+   "n_with_no_staleness_not_a_tie_and_margin_ge_0.5bp": 0,
+   "reading": "every mismatch is accounted for by BOUNDARY QUALITY; none is a disagreement about the CONVENTION"
+  }
+ },
+ "THE_CLASSIFIERS_PRECEDENCE_RULE_STATED_EXPLICITLY": {
+  "order": [
+   "boundary_read_stale_gt_1s",
+   "tie",
+   "margin_below_feed_resolution",
+   "oracle_round_timing",
+   "unexplained"
+  ],
+  "STALE_IS_TESTED_BEFORE_TIE_AND_HERE_IS_WHY": "all seven exact ties are THE SAME WINDOW -- *-updown-5m-1787716800 across btc, eth, sol, xrp, doge, bnb and hype -- with T staleness 537-538s and t0 staleness 237-238s. BOTH boundary reads returned THE SAME STALE SAMPLE, which is WHY xT == x0. Testing `tie` first reported them as seven independent ties and INVENTED A CLASS out of one feed outage. My own first split did exactly that (24/10/7) and is corrected here to 31/10.",
+  "n_exact_ties_subsumed_by_stale": 7,
+  "tie_class_is_now_EMPTY": true,
+  "the_general_lesson": "a residual split is only as good as its class PRECEDENCE, and the precedence must be declared, not implied by the order somebody wrote the branches in."
+ },
+ "WHAT_THIS_LICENSES": {
+  "does": "\u00a710 kill criterion 1 is NOT triggered -- the unexplained class is empty",
+  "does_not": "this is the settlement LABEL layer. No fair value, no probability, no score, no evidence."
+ }
+}

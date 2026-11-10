@@ -1,0 +1,329 @@
+{
+ "protocol": "P003_DA_FAIR_VALUE_LEDGER_V1",
+ "steps": [
+  {
+   "step": 1,
+   "title": "freeze the settlement-label/status reader",
+   "paths": [
+    "live/pm_research/da_fair_value_gate1_labels.py"
+   ],
+   "owner": "DA",
+   "required_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "missing_from_required_refs": [],
+   "landed_only_on_the_non_executing_fork": false,
+   "counts_per_ref": {
+    "origin/mm-research": {
+     "live/pm_research/da_fair_value_gate1_labels.py": 1
+    },
+    "origin/de-freeze-chain-v2": {
+     "live/pm_research/da_fair_value_gate1_labels.py": 1
+    },
+    "origin/be-build-runner": {
+     "live/pm_research/da_fair_value_gate1_labels.py": 1
+    }
+   },
+   "present_on_executing_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "behaviour": {
+    "verdict": "DRIVEN_GREEN",
+    "source": "DA cells in da_fair_value_gate1_labels.falsify*"
+   },
+   "status": "SATISFIED",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  },
+  {
+   "step": 2,
+   "title": "build and falsify the 30-minute sigma producer",
+   "paths": [
+    "live/pm_research/be_sigma_30m.py"
+   ],
+   "owner": "BE",
+   "required_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "missing_from_required_refs": [],
+   "landed_only_on_the_non_executing_fork": false,
+   "counts_per_ref": {
+    "origin/mm-research": {
+     "live/pm_research/be_sigma_30m.py": 0
+    },
+    "origin/de-freeze-chain-v2": {
+     "live/pm_research/be_sigma_30m.py": 1
+    },
+    "origin/be-build-runner": {
+     "live/pm_research/be_sigma_30m.py": 1
+    }
+   },
+   "present_on_executing_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "behaviour": {
+    "verdict": "DRIVEN_GREEN",
+    "driven_against_blob_sha256": "8d7a2448937e0fd3",
+    "REVERTS_IF_THE_BLOB_MOVES": true,
+    "source": "BE's 27 cells, RE-DRIVEN BY DA AGAINST THE PUSHED BLOB -- a worktree cut at origin/de-freeze-chain-v2, module resolved from that tree, blob sha256 8d7a2448937e0fd3, falsify() -> {'n': 27, 'failed': 0}. The original green run was against a file in the SHARED tree; its bytes are identical, but identical bytes is a measurement, not an assumption, so it was re-driven."
+   },
+   "status": "SATISFIED",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  },
+  {
+   "step": 3,
+   "title": "wrap C1/C2 in typed FairPrice records",
+   "paths": [
+    "live/pm_research/de_fair_price_wrapper.py"
+   ],
+   "owner": "DE",
+   "required_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "missing_from_required_refs": [],
+   "landed_only_on_the_non_executing_fork": false,
+   "counts_per_ref": {
+    "origin/mm-research": {
+     "live/pm_research/de_fair_price_wrapper.py": 0
+    },
+    "origin/de-freeze-chain-v2": {
+     "live/pm_research/de_fair_price_wrapper.py": 1
+    },
+    "origin/be-build-runner": {
+     "live/pm_research/de_fair_price_wrapper.py": 1
+    }
+   },
+   "present_on_executing_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "behaviour": {
+    "verdict": "FAILING",
+    "source": "REVIEW 199 / DE cells: five of six properties green, the collapsed-timestamps clause not enforced"
+   },
+   "status": "LANDED_BUT_FAILING",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  },
+  {
+   "step": 4,
+   "title": "build canonical actions and the paired scorer",
+   "paths": [
+    "live/pm_research/de_canonical_action_population.py",
+    "live/pm_research/de_fair_value_actions.py"
+   ],
+   "owner": "DE",
+   "required_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "missing_from_required_refs": [],
+   "landed_only_on_the_non_executing_fork": false,
+   "counts_per_ref": {
+    "origin/mm-research": {
+     "live/pm_research/de_canonical_action_population.py": 1,
+     "live/pm_research/de_fair_value_actions.py": 0
+    },
+    "origin/de-freeze-chain-v2": {
+     "live/pm_research/de_canonical_action_population.py": 1,
+     "live/pm_research/de_fair_value_actions.py": 1
+    },
+    "origin/be-build-runner": {
+     "live/pm_research/de_canonical_action_population.py": 1,
+     "live/pm_research/de_fair_value_actions.py": 1
+    }
+   },
+   "present_on_executing_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "behaviour": null,
+   "status": "LANDED_BEHAVIOUR_UNVERIFIED",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  },
+  {
+   "step": 5,
+   "title": "wire fair value into the quoter and prove Identity parity",
+   "paths": [
+    "live/pm_research/de_fair_value_policy_seam.py"
+   ],
+   "owner": "DE",
+   "required_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "missing_from_required_refs": [],
+   "landed_only_on_the_non_executing_fork": false,
+   "counts_per_ref": {
+    "origin/mm-research": {
+     "live/pm_research/de_fair_value_policy_seam.py": 0
+    },
+    "origin/de-freeze-chain-v2": {
+     "live/pm_research/de_fair_value_policy_seam.py": 1
+    },
+    "origin/be-build-runner": {
+     "live/pm_research/de_fair_value_policy_seam.py": 1
+    }
+   },
+   "present_on_executing_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "behaviour": null,
+   "status": "LANDED_BEHAVIOUR_UNVERIFIED",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  },
+  {
+   "step": 6,
+   "title": "freeze the full pipeline and both candidate identities",
+   "paths": [
+    "live/pm_research/ev_replay_seam.py"
+   ],
+   "owner": "DE",
+   "required_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "missing_from_required_refs": [],
+   "landed_only_on_the_non_executing_fork": false,
+   "counts_per_ref": {
+    "origin/mm-research": {
+     "live/pm_research/ev_replay_seam.py": 1
+    },
+    "origin/de-freeze-chain-v2": {
+     "live/pm_research/ev_replay_seam.py": 1
+    },
+    "origin/be-build-runner": {
+     "live/pm_research/ev_replay_seam.py": 1
+    }
+   },
+   "present_on_executing_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "behaviour": null,
+   "status": "LANDED_BEHAVIOUR_UNVERIFIED",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  },
+  {
+   "step": 7,
+   "title": "run ten-day predictive validation",
+   "paths": [],
+   "owner": "DE",
+   "required_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "missing_from_required_refs": [],
+   "landed_only_on_the_non_executing_fork": false,
+   "counts_per_ref": {
+    "origin/mm-research": {},
+    "origin/de-freeze-chain-v2": {},
+    "origin/be-build-runner": {}
+   },
+   "present_on_executing_refs": [],
+   "behaviour": null,
+   "status": "NOT_STARTED",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  },
+  {
+   "step": 8,
+   "title": "economic clock, predictive winners only",
+   "paths": [],
+   "owner": "DE",
+   "required_refs": [
+    "origin/de-freeze-chain-v2",
+    "origin/be-build-runner"
+   ],
+   "missing_from_required_refs": [],
+   "landed_only_on_the_non_executing_fork": false,
+   "counts_per_ref": {
+    "origin/mm-research": {},
+    "origin/de-freeze-chain-v2": {},
+    "origin/be-build-runner": {}
+   },
+   "present_on_executing_refs": [],
+   "behaviour": null,
+   "status": "NOT_STARTED",
+   "measured": "git ls-tree --name-only <ref> <path> | count"
+  }
+ ],
+ "gates_satisfied": 2,
+ "no_labelled_score_permitted": true,
+ "the_rule_this_makes_checkable": "fair_value_plan.md v1.2 \u00a711: 'No fair-value score is evidence before step 6.'",
+ "THE_STANDING_RULE": "A LANDING IS PROVEN BY A COUNT AT A FETCHED REF, NEVER BY A COMMIT SHA IN PROSE.",
+ "owners": {
+  "1": "DA",
+  "2": "BE",
+  "3": "DE",
+  "4": "DE",
+  "5": "DE",
+  "6": "DE",
+  "7": "DE",
+  "8": "DE"
+ },
+ "required_refs": [
+  "origin/de-freeze-chain-v2",
+  "origin/be-build-runner"
+ ],
+ "non_executing_ref": "origin/mm-research",
+ "no_gate_claimed_by_two_seats": true,
+ "unattributed_lane_files": {
+  "origin/de-freeze-chain-v2": [
+   "live/pm_research/da_fair_price_identity.py",
+   "live/pm_research/da_fair_value_ledger.py",
+   "live/pm_research/da_fee_interval_seam.py",
+   "live/pm_research/da_o1_daybar_seam_test.py",
+   "live/pm_research/ev_replay_seam_test.py",
+   "live/pm_research/exp_sigma_route_a.py",
+   "live/pm_research/phase2_production_seams.py",
+   "live/pm_research/sigma_kernels.py"
+  ],
+  "origin/be-build-runner": [
+   "live/pm_research/da_fair_price_identity.py",
+   "live/pm_research/da_fair_value_ledger.py",
+   "live/pm_research/da_fee_interval_seam.py",
+   "live/pm_research/da_o1_daybar_seam_test.py",
+   "live/pm_research/ev_replay_seam_test.py",
+   "live/pm_research/exp_sigma_route_a.py",
+   "live/pm_research/phase2_production_seams.py",
+   "live/pm_research/sigma_kernels.py"
+  ]
+ },
+ "THE_PATH_TO_STEP_MAPPING_IS_DAS_ATTRIBUTION": "it is this ledger's weakest link: a status keyed on a path nobody declared measures the guess, not the lane. `unattributed_lane_files` is the guard.",
+ "every_status_computed_here": true,
+ "no_status_copied_from_a_report": true,
+ "declaration": "DA_FAIR_VALUE_PROGRESS_LEDGER",
+ "version": 4,
+ "SUPERSEDES": "da_fair_value_progress_ledger_v3.json",
+ "as_of_utc": "2026-09-11T19:28:55Z",
+ "WHY_V4": "DA 276: gates 4 and 5 confirmed by count on origin/de-freeze-chain-v2, and a DRIVEN verdict is now PINNED to the blob it was earned against.",
+ "GATE_2_THE_CONDITION_IS_MET_NOT_WAIVED": {
+  "the_instruction": "DA 276 -- gate 2 stays UNSATISFIED until its cells are re-driven against the pushed blob",
+  "the_condition_was_met_at_19:25Z": "re-driven in a worktree cut at origin/de-freeze-chain-v2 (7903630), module resolved from that tree, blob 8d7a2448937e0fd3, falsify() -> 27 cells, 0 failed",
+  "re_verified_now": "the blob on BOTH executing refs is still 8d7a2448937e0fd3 -- unchanged since the drive",
+  "so": "the row reads SATISFIED because the condition is MET, not because it was waived",
+  "AND_IT_CANNOT_GO_STALE_SILENTLY": "the verdict is now PINNED to the digest it was earned against. If the blob moves, the ledger withdraws it to STALE_VERDICT_BLOB_MOVED and the row drops out of SATISFIED automatically -- driven both ways, no one has to remember."
+ },
+ "GATES_4_AND_5_CONFIRMED_BY_COUNT": {
+  "origin/de-freeze-chain-v2": {
+   "de_fair_value_actions.py": 1,
+   "de_fair_value_policy_seam.py": 1,
+   "de_canonical_action_population.py": 1
+  },
+  "origin/be-build-runner": {
+   "de_fair_value_actions.py": 1,
+   "de_fair_value_policy_seam.py": 1,
+   "de_canonical_action_population.py": 1
+  },
+  "status": "LANDED on both executing refs; NOT satisfied -- DA has not driven their cells"
+ },
+ "STEP_6_CARRIES_A_READING_CONSTRAINT": {
+  "declaration": "da_step6_abstention_constraint_v1.json",
+  "summary": "a challenger that abstains exactly where it would have been wrong still improves the primary statistic; the 95% native-coverage gate bounds the quantity of abstention, not its selectivity",
+  "binds": "the first fair-value number that would be evidence"
+ }
+}

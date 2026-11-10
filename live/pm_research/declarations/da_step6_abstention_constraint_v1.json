@@ -1,0 +1,44 @@
+{
+ "declaration": "DA_STEP_6_ABSTENTION_READING_CONSTRAINT",
+ "version": 1,
+ "as_of_utc": "2026-09-11T19:28:23Z",
+ "authority": "DA 276; DE's finding, filed as R-924",
+ "WHY_A_READING_CONSTRAINT_AND_NOT_A_GATE": "no gate can close it. Abstention that is INFORMATIVE and abstention that is HONEST are the same shape in the artifact -- both produce a non-OK challenger and an Identity fallback. The defect is not detectable from the primary number, so it is carried as a constraint on how the number is READ, and carried forward to the receipt so it cannot be lost between now and the score.",
+ "THE_CONSTRAINT_VERBATIM": "\u00a76 scores the policy's Identity fallback wherever a challenger is non-OK, so a challenger that abstains EXACTLY where it would have been wrong still improves the primary statistic; \u00a78's 95% native-coverage gate bounds but does not eliminate this, since selective abstention inside the 5% allowance still flatters.",
+ "THE_MECHANISM_IN_ONE_LINE": "a challenger is rewarded for its own silence: it keeps the Identity score on every action it declines, so declining precisely the actions it would have got wrong raises its measured performance above its real performance.",
+ "REQUIREMENTS_THAT_FOLLOW": {
+  "1_verbatim_in_the_step_6_receipt": {
+   "rule": "the constraint above is reproduced VERBATIM in the step-6 receipt, BESIDE the primary number",
+   "not": "paraphrased, summarised, or referenced by declaration name",
+   "why": "a constraint that travels as a citation is a constraint a reader can skip"
+  },
+  "2_native_OK_intersection_ALONGSIDE_the_primary": {
+   "rule": "the native-OK intersection score is reported ALONGSIDE the primary, NEVER INSTEAD OF IT",
+   "why": "the primary alone hides the abstention advantage; the intersection alone discards the fallback behaviour the policy actually has. THE GAP BETWEEN THEM IS THE QUANTITY OF INTEREST, and it is only visible when both are printed.",
+   "field_shape": {
+    "primary": "<number>",
+    "native_ok_intersection": "<number>",
+    "gap": "primary - native_ok_intersection, COMPUTED in the receipt"
+   }
+  },
+  "3_coverage_and_fallback_counts_are_FIELDS": {
+   "rule": "per-candidate native coverage and the count of fallback-scored actions are FIELDS in the receipt, not prose",
+   "fields": [
+    "per_candidate.<id>.native_coverage",
+    "per_candidate.<id>.n_actions_scored_on_the_Identity_fallback",
+    "per_candidate.<id>.n_actions_scored_natively"
+   ],
+   "why": "prose cannot be compared across candidates or checked by an instrument. A number can. Rule 10: compute predicates, never print conclusions."
+  }
+ },
+ "WHAT_SECTION_8s_GATE_DOES_AND_DOES_NOT_DO": {
+  "does": "bounds the abstention to at most 5% of actions",
+  "does_NOT": "eliminate the flattery. 5% of actions chosen ADVERSARIALLY is not 5% of the effect -- a candidate that abstains on its worst 5% moves its measured score by far more than 5%. The gate caps the QUANTITY of abstention and says nothing about its SELECTIVITY.",
+  "so": "native coverage >= 95% is necessary and not sufficient, and the receipt must show both"
+ },
+ "WHEN_THIS_BINDS": {
+  "step": 6,
+  "status_of_step_6_now": "LANDED_BEHAVIOUR_UNVERIFIED -- not satisfied",
+  "and_before_then": "no fair-value score is evidence at all (\u00a711), so this constraint binds the FIRST number that would be"
+ }
+}
