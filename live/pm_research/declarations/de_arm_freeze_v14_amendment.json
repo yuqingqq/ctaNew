@@ -1,0 +1,22 @@
+{
+ "protocol": "P003_DE_ARM_FREEZE_V14_AMENDMENT",
+ "version": 14,
+ "rule": "13 -- superseding receipt; v1..v13 unedited",
+ "frozen_parameters": {
+  "params": {
+   "path": "de_multiday_gate1_params_v33.json",
+   "sha256": "aeeb818f3bb18c3e00a71616738eb3ea445891e01f35a7bce8490796148a2312"
+  }
+ },
+ "NO_PARAMS_MOVE": "re-pins the SAME params as v12/v13.",
+ "code_freeze_declaration": {
+  "path": "da_code_freeze_declaration_v2.json",
+  "sha256": "f8dd3f431bc68657a1524cdedeaddb67abf7e1b123230ae5f6e3374fdca1cb8b"
+ },
+ "WHY": {
+  "reason": "DA 248 -- pin the code-freeze declaration's identity so V2 resolves it like the other declarations.",
+  "ONLY_A_NEW_KEY_IS_PINNED": "v14 deliberately does NOT re-pin `forward_test_declaration` or `day_read_state_attestation`. resolve_declaration_pins REFUSES DECLARATION_PIN_CONFLICT when the same key is pinned to two identities, and a v14 that moved the forward-test pin to v27 was DRIVEN at DA 245 and BROKE load_params for everyone. v13's pins stand.",
+  "THIS_PIN_IS_NOT_LIVE_YET": "resolve_declaration_pins' want tuple does not contain `code_freeze_declaration`, so this pin is carried by nothing until DE adds the key. Landed now so the identity exists the moment it is read."
+ },
+ "as_of_utc": "2026-09-11T13:13:33Z"
+}

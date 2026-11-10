@@ -1,0 +1,25 @@
+{
+ "protocol": "P003_DE_ARM_FREEZE_V21_AMENDMENT",
+ "version": 21,
+ "rule": "13 -- superseding receipt; v1..v20 unedited",
+ "frozen_parameters": {
+  "params": {
+   "path": "de_multiday_gate1_params_v33.json",
+   "sha256": "aeeb818f3bb18c3e00a71616738eb3ea445891e01f35a7bce8490796148a2312"
+  }
+ },
+ "code_freeze_declaration": {
+  "path": "da_code_freeze_declaration_v9.json",
+  "sha256": "0777b291740b1556e87ca1f0b942012b229639773e6c5dfd7a4d573ea1565555"
+ },
+ "supersedes": {
+  "code_freeze_declaration": {
+   "path": "da_code_freeze_declaration_v8.json"
+  }
+ },
+ "WHY": {
+  "reason": "DA 256 -- the self-vouching residual is closed EXTERNALLY by the stage-0 verifier. NO digest and NO base change.",
+  "chain": "v14(v2) -> ... -> v20(v8) -> v21(v9)"
+ },
+ "as_of_utc": "2026-09-11T13:57:39Z"
+}

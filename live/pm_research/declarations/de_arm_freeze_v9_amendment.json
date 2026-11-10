@@ -1,0 +1,27 @@
+{
+  "protocol": "P003_DE_ARM_FREEZE_V9_AMENDMENT",
+  "version": 9,
+  "amended_at_utc": "2026-09-11T07:27:41.030364+00:00",
+  "amended_by": "DE 258, on DA 237's routing",
+  "rule": "13 -- superseding receipt; v1..v8 unedited",
+  "supersedes": {
+    "version": 8,
+    "path": "de_arm_freeze_v8_amendment.json",
+    "sha256": "f803e22827a8b1efc0e7395dde1bcf426880053578e43a3964adf9776d25f275"
+  },
+  "AMENDMENT_21_THE_FIELD_NAME_I_SUPERSEDED_WAS_NOT_THE_FIELD_NAME": {
+    "what_v8_wrote": "NO_PARAMETER_OR_MODULE_IS_TUNED_AFTER_THIS_COMMIT",
+    "what_the_key_ACTUALLY_IS_read_from_v1": "NO_PARAMETER_OR_MODULE_IS_TUNED AFTER THIS COMMIT",
+    "the_difference": "underscores through TUNED, then SPACES. v8 wrote it all-underscores.",
+    "why_it_matters_and_is_not_cosmetic": "an automated reader resolving the field v8 claims to supersede would find NO SUCH KEY in v1 -- so the supersession would silently not apply, and v1's stale TRUE would keep answering. Rule 16: match identity, not vocabulary.",
+    "and_it_is_the_SAME_SLIP_ONE_LAYER_UP": "the whole point of AMENDMENT_19 was that a typed boolean drifts from the thing it describes. v8 then typed the boolean's NAME wrong. The instrument was right and the reference to it was not.",
+    "THE_SUPERSESSION_NOW_NAMES_THE_KEY_EXACTLY": "NO_PARAMETER_OR_MODULE_IS_TUNED AFTER THIS COMMIT",
+    "verified_at_the_artifact": "read from de_arm_freeze_v1.json by key enumeration, not from memory"
+  },
+  "EVERYTHING_ELSE_IN_V8_STANDS": [
+    "the two pins: build 7ed5a90, valuation da00220",
+    "the computed predicate de_freeze_predicate.no_module_tuned_between, falsifier 6/6",
+    "day one superseded on two disclosed grounds",
+    "N=7, the population, Holm m=2, selection multiplicity 69, every parameter"
+  ]
+}

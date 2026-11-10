@@ -1,0 +1,164 @@
+{
+ "declaration": "DA_FAIR_VALUE_GATE1_SETTLEMENT_LABEL_READER",
+ "version": 2,
+ "as_of_utc": "2026-09-11T18:46:41Z",
+ "protocol": "P003_DA_FAIR_VALUE_GATE1_LABELS_V1",
+ "family": "da_fair_value_gate1_declaration",
+ "AUTHORITY": {
+  "lane": "fair-value, USER-FROZEN",
+  "ruling": "R-917",
+  "dispatch": "DA 266",
+  "plan": {
+   "path": "orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/fair_value_plan.md",
+   "commit": "0575444",
+   "sha256_read": "474528472854cf21",
+   "THE_PLAN_SAYS_v1.1_NOT_v1.2": "the dispatch names v1.2; the file at 0575444 carries `# Fair value plan -- v1.1` on line 1. Recorded, not resolved -- DA does not edit the plan."
+  }
+ },
+ "MODULE": {
+  "path": "live/pm_research/da_fair_value_gate1_labels.py",
+  "sha256": "bfc78098161b061f6ae95d823813b99598855b4013088c90be07c671a66e97bc",
+  "falsifier_cells": 37,
+  "all_pass_where_the_definition_lives": true
+ },
+ "READERS_REUSED_NOT_REIMPLEMENTED": {
+  "boundary_read": "exp_m6_settlement.read_at -- the audited convention reader",
+  "population_load": "da_settlement_audit_v1.load_population -- counted exclusions (rule 4)",
+  "coin_to_symbol": "exp_m6_settlement.COINS",
+  "supersession_head": "declaration_chain.resolve_head -- the one chain implementation (BE 77)",
+  "why": "a second reader is a second convention, and a second convention can drift from the audited one silently."
+ },
+ "THE_STATISTIC_AS_LANDED": {
+  "rule": "X60(T) >= X60(t0), TIES UP",
+  "series": "the 60-second TWAP topic, keyed (symbol, 60) exactly as exp_m6_settlement keys it",
+  "three_spellings_one_statistic": "the plan writes S60, the dispatch writes X60, the code keys (symbol, 60). This module resolves it BY THE SERIES KEY, never by the letter."
+ },
+ "STATUS_GRAMMAR_AS_LANDED": {
+  "statuses": [
+   "VERIFIED_AGREE",
+   "VERIFIED_DISAGREE",
+   "NO_OFFICIAL_RESOLUTION",
+   "NOT_IN_CAPTURE",
+   "OUTAGE",
+   "STALE_BOUNDARY",
+   "MARGIN_BELOW_RESOLUTION"
+  ],
+  "ADMITTING": [
+   "VERIFIED_AGREE"
+  ],
+  "rule": "a window is label-admissible ONLY when an OFFICIAL resolution exists AND the checker reads VERIFIED_AGREE. Every other outcome is a COUNTED STATUS and carries NO label.",
+  "exactly_one_status_admits": true,
+  "margin_awareness": {
+   "eps_bp": 0.5,
+   "declared_before_any_audit": true,
+   "why": "X60(T)-X60(t0) can be smaller than the feed resolves. Scoring those either way would manufacture a verdict out of quantisation, so they are their own status.",
+   "provenance": "0.5bp is the split Q-DA-146 pre-registered; it is REUSED, not re-tuned (rule 11)"
+  },
+  "stale_boundary_ms": 1000
+ },
+ "HOLD_RULE": {
+  "trigger": "any VERIFIED_DISAGREE",
+  "effect": "the LANE is on HOLD (plan \u00a710 kill criterion 1) until a superseding receipt explains it",
+  "lifted_by": "a head in this gate's declaration family naming the disagreeing slugs in `explained_disagreements`",
+  "head_resolution": "declaration_chain.resolve_head(DECL_DIR, family) -- computed, not asserted",
+  "refusal": "FAIR_VALUE_LANE_ON_HOLD_UNTIL_A_SUPERSEDING_RECEIPT"
+ },
+ "FALSIFIERS_18_ALL_PASS": {
+  "positive_exact_endpoint": "VERIFIED_AGREE both directions, and a TIE reads UP as the convention pins it",
+  "known_bad_rolling_as_raw": "REFUSED ROLLING_TWAP_PASSED_WHERE_A_RAW_AGGREGATE_PATH_IS_REQUIRED -- crypto_prices_twap_sixty is the ROLLING statistic; each sample already contains the preceding 60s, so integrating it double-counts. The same topic in its OWN endpoint role is admitted, so the control can fail.",
+  "inverted_mapping": "DETECTED as ['VERIFIED_DISAGREE']",
+  "statuses_never_labels": "NO_OFFICIAL / NOT_IN_CAPTURE / MARGIN_BELOW_RESOLUTION / STALE_BOUNDARY each carry label=None",
+  "hold": "driven on 4 REAL disagreements -> ON_HOLD True; the honest rows do NOT hold the lane",
+  "TWO_CELLS_I_HAD_TO_FIX_AND_WHY_IT_MATTERS": "the first inverted-mapping cell used ONE symbol, so the swap pointed at a series that did not exist and every row returned NOT_IN_CAPTURE -- DETECTION BY ABSENCE, which passes while proving nothing about the mapping. The second wrote every window under the SAME (symbol,60) key so later windows clobbered earlier ones. And the first HOLD cell carried an `or not any(...)` escape that made it pass at n_disagree=0 -- a control that cannot fail. All three are fixed and the comment recording them is in the module. R-229's class, caught in my own first pass."
+ },
+ "NOT_RUN_AND_WHY": {
+  "the_real_population_audit": "NOT RUN",
+  "reason": "plan \u00a711 and the dispatch: no heavy lock, do not starve the 09-09 valuation or the queued 09-10..13 builds. exp_m6_settlement.load_streams() reads ~892MB across crypto_prices_twap_sixty and _thirty. Every falsifier above runs on SYNTHETIC fixtures and touches no bulk data.",
+  "what_that_leaves_open": "the gate is PROVEN on its grammar and its three mandated falsifiers; it has NOT yet been run against resolutions.jsonl. The \u00a75 falsifier -- recompute settlement for the audit population and match winner-for-winner -- is the next step and needs an I/O window that does not compete with the replay."
+ },
+ "LIMITS": {
+  "no_score": "this gate produces labels and statuses only. No fair value, no probability, no evidence.",
+  "cancellation_lane_untouched": "no frozen module moved; the population freeze verifies HOLDS."
+ },
+ "SUPERSEDES": "da_fair_value_gate1_declaration_v1.json",
+ "supersedes_sha256": "a3d727270bba2f39ef5d18312c7f4dff0717aa8f6d3d247256ca98ddb442348b",
+ "THE_RECEIPT_THE_CANCELLATION_LANE_READS": {
+  "consumer": "de_forward_evaluator.settlement_source_disclosure (the :344 guard)",
+  "found_by": "_winner_source_blocks -- recursively, any dict with str `sha256` + dict `chainlink_verification`",
+  "file_name": "p003_de_point_estimate_day_<YYYYMMDD>_<revision>__*.json, revision L250ms",
+  "SHAPE_IS_NOT_INVENTED": "25 receipts for 09-03..09-06 already carry the block; this module matches that landed convention field for field. Its reader_module already names exp_m6_settlement.py -- the same reader this gate imports.",
+  "STATUS_MAP_ACCEPTED_BY_DE": {
+   "VERIFIED_AGREE": "VERIFIED_AGREE",
+   "VERIFIED_DISAGREE": "DISAGREE",
+   "NOT_IN_CAPTURE": "BOUNDARY_NOT_IN_CAPTURE",
+   "OUTAGE": "CHAINLINK_UNAVAILABLE",
+   "NO_OFFICIAL_RESOLUTION": "VENUE_UNRESOLVED",
+   "STALE_BOUNDARY": "BOUNDARY_NOT_IN_CAPTURE",
+   "MARGIN_BELOW_RESOLUTION": "BOUNDARY_NOT_IN_CAPTURE"
+  },
+  "THE_MAPPED_NAME_IS_FINALITY_NOT_CAUSE": "DE's point, adopted: a stale boundary IS in the capture, so BOUNDARY_NOT_IN_CAPTURE read as a CAUSE would be wrong. It is load-bearing for FINALITY only. Cause is `gate1_status` plus the measured verifiability fields, and a consumer that reads the mapped name as a cause is making an error this receipt lets it detect.",
+  "DRIVEN_AGAINST_THE_CONSUMERS_OWN_READER": {
+   "real_guard_on_a_DA_receipt_with_09_09s_REAL_digest": "counts {VERIFIED_AGREE:288, rest 0}, unknown_statuses [], matches_settlement_cells true, is_final_for_quotation true",
+   "negative_1_raw_gate1_name_in_per_slug_status": "unknown_statuses ['STALE_BOUNDARY'], final False",
+   "negative_2_no_receipt": "FORWARD_EVALUATOR_NO_VERIFIED_WINNER_RECEIPT_FOR_A_DAY",
+   "negative_3_wrong_digest": "REFUSED ... has no verification receipt for the winner-source digest used by its settlement cells"
+  }
+ },
+ "DAY_SLICE_ADDRESSING": {
+  "ruling": "DE 357 / DA 269",
+  "field_as_DE_reads_it": "winner_source.day_slice = {sha256, n_day_records}; winner_source.sha256 = whole-file, PROVENANCE ONLY",
+  "refusals": {
+   "no_slice": "RECEIPT_CARRIES_NO_DAY_SLICE_DIGEST",
+   "real_difference": "WINNER_SOURCE_DAY_SLICE_DIFFERS (both digests + the day-record delta)",
+   "definition_unreachable": "DAY_SLICE_DEFINITION_NOT_ON_THIS_TREE"
+  },
+  "THE_DEFINITION_IS_THE_REPOS_ONE": {
+   "function": "de_combine_day_cells.day_subset_digest(ledger, n_records, day_start, day_end)",
+   "form": "first n_records lines; keep those whose slug's trailing epoch is in [day_start, day_end); join SORTED with newline; sha256",
+   "why_sorted": "sorted lines are what make two snapshots agree regardless of arrival order"
+  },
+  "*** DA WROTE A CANONICAL FORM OF ITS OWN AND THREW IT AWAY ***": "my first implementation gave 26f02bdab1814668 for 09-07 where the instrument gives 7eb54006ebfa1029 -- THE SAME 2,016 RECORDS, A DIFFERENT DIGEST. The count is convention-free and matched; the digest cannot match a canonicalisation nobody wrote down. That is exactly the second-convention failure this lane was told to avoid, committed by me and caught by DE naming the existing function. The module now IMPORTS the definition and REFUSES BY NAME where it cannot reach it, rather than restating it.",
+  "VERIFIED_AGAINST_DES_PUBLISHED_NUMBERS": {
+   "2026-09-07": {
+    "slice": "7eb54006ebfa1029",
+    "n_day_records": 2016,
+    "MATCHES": true
+   },
+   "2026-09-09": {
+    "slice": "36da8727d02cfe3d",
+    "n_day_records": 2030,
+    "MATCHES": true
+   }
+  },
+  "THE_RULINGS_CLAIM_PROVEN_ON_REAL_DATA": "09-07's cells recorded THREE different whole-file snapshots -- 45,877 / 45,932 / 46,290 records, whole-file shas 1e9500d0 / 4f0fc39a / 172a9307 -- and ALL THREE give the SAME day slice 7eb54006ebfa1029 over 2,016 records. Day one's two arms disagree on the whole file and agree exactly on the slice. That is the ruling's central claim, measured rather than argued.",
+  "FALSIFIERS_BOTH_WAYS": {
+   "growth_OUTSIDE_the_day": "three snapshots, one slice, compare_day_slice clean",
+   "a_genuinely_different_slice": "REFUSED WINNER_SOURCE_DAY_SLICE_DIFFERS with both digests and delta=14",
+   "no_day_slice_in_the_receipt": "refused BY NAME; a block cannot even be built without one",
+   "whole_file_sha_a_stranger_but_slice_matches": "VERIFIES CLEAN -- the point of the ruling"
+  },
+  "A_STALE_FIXTURE_OF_MINE_THAT_DE_WARNED_ABOUT_AND_THEN_FIRED": "DE warned that a fixture built to the pre-ruling shape keeps passing while production refuses. Mine did exactly that: falsify_receipt's blocks were pre-ruling and the new guard refused them on the next run. Rebuilt to the ruled shape rather than left green."
+ },
+ "THE_STALE_DOC_STRING_FIXED_AND_WHICH_IS_AUTHORITATIVE": {
+  "finding": "the landed 09-06 receipts' `per_slug_status` documents FOUR names while the code counts FIVE and the data IN THE SAME BLOCK uses the fifth (BOUNDARY_NOT_IN_CAPTURE). The prose was stale against the code AND against its own file.",
+  "AUTHORITATIVE": "THE CODE AND THE DATA. The prose described behaviour it does not control.",
+  "fix": "this module's `per_slug_status` is GENERATED from CONSUMER_STATUSES, so it cannot drift again -- a doc string that is typed can go stale, one that is derived cannot.",
+  "not_widened": "DE declined to widen its `names` tuple and DA did not ask it to; no frozen module moves."
+ },
+ "CROSS_REF_DEPENDENCY_DECLARED": {
+  "module": "de_combine_day_cells.py",
+  "present_on": [
+   "origin/de-freeze-chain-v2",
+   "origin/be-build-runner",
+   "wt-deval",
+   "wt-fwd",
+   "wt-de2"
+  ],
+  "ABSENT_ON": [
+   "origin/mm-research",
+   "the main worktree"
+  ],
+  "consequence": "this gate runs where the definition lives; elsewhere it REFUSES BY NAME (DAY_SLICE_DEFINITION_NOT_ON_THIS_TREE) rather than dying on an import",
+  "not_in_the_population_freeze": true
+ }
+}

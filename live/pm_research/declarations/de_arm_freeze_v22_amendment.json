@@ -1,0 +1,25 @@
+{
+ "protocol": "P003_DE_ARM_FREEZE_V22_AMENDMENT",
+ "version": 22,
+ "rule": "13 -- superseding receipt; v1..v21 unedited",
+ "frozen_parameters": {
+  "params": {
+   "path": "de_multiday_gate1_params_v33.json",
+   "sha256": "aeeb818f3bb18c3e00a71616738eb3ea445891e01f35a7bce8490796148a2312"
+  }
+ },
+ "code_freeze_declaration": {
+  "path": "da_code_freeze_declaration_v10.json",
+  "sha256": "b863d6183ce91ee775715c92970aa9d12e3b0182417c84fd4362c4385cba90dc"
+ },
+ "supersedes": {
+  "code_freeze_declaration": {
+   "path": "da_code_freeze_declaration_v9.json"
+  }
+ },
+ "WHY": {
+  "reason": "DA 257 -- Q-DE-336 moved de_settlement_control_run.py; base unchanged.",
+  "chain": "v14(v2) -> ... -> v21(v9) -> v22(v10)"
+ },
+ "as_of_utc": "2026-09-11T14:17:58Z"
+}

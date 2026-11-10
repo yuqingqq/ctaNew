@@ -1,0 +1,169 @@
+{
+ "declaration": "DA_DAY_TWO_RUN_COHORT_20260908",
+ "version": 1,
+ "as_of_utc": "2026-09-11T15:45:26Z",
+ "WHAT_THIS_IS": "the cohort of day two's REAL RUN, declared FROM THE CELLS' OWN FIELDS. Every number below was read from the artifact at the path given, and the p-values were INDEPENDENTLY RECOMPUTED from the raw checkpoint draws -- not taken from the dispatch.",
+ "THE_RUN": {
+  "unit": "deREH0908",
+  "out_dir": "data/pm_5min/derived/fwd_rehearsal_0908",
+  "argv_as_launched": "de_forward_value_day.py --day 2026-09-08 --book <rebuilt 09-08> --n-draws 500 --seed 0 --days-scored 2026-09-08 --n-declared 7",
+  "n_draws": 500,
+  "params": "de_multiday_gate1_params_v33.json",
+  "seed_arg": 0,
+  "THE_REHEARSAL_LABEL_IS_THE_LAUNCHERS": "the out-dir is named `fwd_rehearsal_0908/` and the unit `deREH0908`. THAT LABEL IS THE LAUNCHER'S, NOT A PROPERTY OF THE RUN. The launcher passed `--n-draws 500`, so this is a FULL VALUATION: 500 draws per arm, oracle read once, params v33. The paths are recorded AS THEY ARE and are NOT renamed -- rule 13 keeps the artifact where it was written.",
+  "status_at_write": "both cells COMPLETE; the valuation process was still running (the combined result was not yet on disk)"
+ },
+ "THE_BOOK_IT_VALUED": {
+  "book_sha256": "05144b6fce62e2cc08e8f36613dd477d60511200f59722261affd6d309372fb9",
+  "which_is": "the FREEZE-BUILT 09-08 rebuild, builder_commit b34ed9fdd1e32fe2f29db8f7dda8f56b56742b27",
+  "admitted_by": "DESCENDANT -- the descendant arm, live and admitting",
+  "admissibility": "declared in da_admissible_books_declaration_v1; content-identity to the real-run book verified independently by DA at Q-DA-464"
+ },
+ "THE_ORACLE_READ_ONCE": {
+  "sha256": "455b4132ec1f994cda80757635e752c87759d7ccc5df36a98c6bcddb275aed62",
+  "n_records": 46276,
+  "path": "/home/yuqing/ctaNew-wt-deval/data/pm_5min/resolutions.jsonl",
+  "identical_across_both_cells": true
+ },
+ "CELLS": {
+  "CONDVALUE_X_SKEW": {
+   "cell_path": "data/pm_5min/derived/fwd_rehearsal_0908/de_settle_result_20260908_CONDVALUE_X_SKEW.json",
+   "cell_sha256": "85dab0bd2d4df6ecf7aa5810dd12d0c30a99150388c3a0aa9dda6752e970d1e7",
+   "observed_D_cents": -49303.579891000016,
+   "p_two_sided": 0.07584830339321358,
+   "DA_RECOMPUTED_p": {
+    "n_at_or_beyond": 37,
+    "n_draws": 500,
+    "p": 0.07584830339321358,
+    "formula": "(1 + #{|D_null| >= |D_obs|}) / (1 + n_draws)",
+    "agrees_with_the_recorded_field": true,
+    "cells_own_count": 37
+   },
+   "seed": 1357784335,
+   "seed_derivation": "de_multiday_gate1_runner.seed_for(book_sha, arm)",
+   "n_draws": 500,
+   "resumed_from_draw": 0,
+   "elapsed_s": 2430.3,
+   "baseline_total_cents": 86226.90027440002,
+   "arm_settled_total_cents": 36923.3203834,
+   "n_generations_cancelled_by_the_arm": 28246,
+   "checkpoint": "/home/yuqing/ctaNew/data/pm_5min/derived/fwd_rehearsal_0908/de_settle_ckpt_2026-09-08_CONDVALUE_X_SKEW.jsonl",
+   "checkpoint_sha256": "8b9aecfb2c3633098124617e5c8b21f74d8df23b992815455e69a1b7d1bc9582",
+   "null_summary": {
+    "n": 500,
+    "min_D": -59481.859417000036,
+    "max_D": -13938.333279000013,
+    "mean_D": -40303.27196494002,
+    "n_at_or_beyond_two_sided": 37
+   },
+   "book_sha256": "05144b6fce62e2cc08e8f36613dd477d60511200f59722261affd6d309372fb9",
+   "admitted_by": "DESCENDANT",
+   "builder_commit": "b34ed9fdd1e32fe2f29db8f7dda8f56b56742b27",
+   "book_scoring_code_status": "BOOK_SCORING_CODE_MATCHES_WITH_UNNAMED_MEMBERS",
+   "membership_complete": false,
+   "unnamed_members": [
+    "be_score_neutrality.py",
+    "harmful_hazard_model.py",
+    "phase2_state_schema_freeze.py"
+   ],
+   "producer": {
+    "path": "/home/yuqing/ctaNew-wt-deval/live/pm_research/de_settlement_control_run.py",
+    "sha256": "2a8fb829c452cbd36f46c761fa6ba30c2f8e3feef63b886417c9543d5d211f30"
+   },
+   "params_pin": {
+    "path": "live/pm_research/declarations/de_multiday_gate1_params_v33.json",
+    "sha256": "aeeb818f3bb18c3e00a71616738eb3ea445891e01f35a7bce8490796148a2312"
+   },
+   "winner_source": {
+    "path": "/home/yuqing/ctaNew-wt-deval/data/pm_5min/resolutions.jsonl",
+    "sha256": "455b4132ec1f994cda80757635e752c87759d7ccc5df36a98c6bcddb275aed62",
+    "n_records": 46276,
+    "n_closed_records": 46251,
+    "n_slugs": 46251,
+    "settle_up_cents": 100.0,
+    "method": "BE 98 / Q-BE-341: the `winners` dict on records with `closed: true`; the UP share pays SETTLE_UP_CENTS iff winners['Up'] is True",
+    "is_final_for_quotation": false
+   }
+  },
+  "HAZARD_OVER_SKEWED_REF": {
+   "cell_path": "data/pm_5min/derived/fwd_rehearsal_0908/de_settle_result_20260908_HAZARD_OVER_SKEWED_REF.json",
+   "cell_sha256": "6c6f0bec26dfecd5748ab8d9dc5870a082fd7dbfbe5c3519aaaf08240304310f",
+   "observed_D_cents": -23977.998804000017,
+   "p_two_sided": 1.0,
+   "DA_RECOMPUTED_p": {
+    "n_at_or_beyond": 500,
+    "n_draws": 500,
+    "p": 1.0,
+    "formula": "(1 + #{|D_null| >= |D_obs|}) / (1 + n_draws)",
+    "agrees_with_the_recorded_field": true,
+    "cells_own_count": 500
+   },
+   "seed": 154326921,
+   "seed_derivation": "de_multiday_gate1_runner.seed_for(book_sha, arm)",
+   "n_draws": 500,
+   "resumed_from_draw": 0,
+   "elapsed_s": 2595.2,
+   "baseline_total_cents": 86226.90027440002,
+   "arm_settled_total_cents": 62248.9014704,
+   "n_generations_cancelled_by_the_arm": 29512,
+   "checkpoint": "/home/yuqing/ctaNew/data/pm_5min/derived/fwd_rehearsal_0908/de_settle_ckpt_2026-09-08_HAZARD_OVER_SKEWED_REF.jsonl",
+   "checkpoint_sha256": "9b9dd30f221d8b8e8ba85fba769bf775213affcb8610eaa1885d1b0c1d49485e",
+   "null_summary": {
+    "n": 500,
+    "min_D": -61549.93044300002,
+    "max_D": -24531.637279000017,
+    "mean_D": -43780.58795972802,
+    "n_at_or_beyond_two_sided": 500
+   },
+   "book_sha256": "05144b6fce62e2cc08e8f36613dd477d60511200f59722261affd6d309372fb9",
+   "admitted_by": "DESCENDANT",
+   "builder_commit": "b34ed9fdd1e32fe2f29db8f7dda8f56b56742b27",
+   "book_scoring_code_status": "BOOK_SCORING_CODE_MATCHES_WITH_UNNAMED_MEMBERS",
+   "membership_complete": false,
+   "unnamed_members": [
+    "be_score_neutrality.py",
+    "harmful_hazard_model.py",
+    "phase2_state_schema_freeze.py"
+   ],
+   "producer": {
+    "path": "/home/yuqing/ctaNew-wt-deval/live/pm_research/de_settlement_control_run.py",
+    "sha256": "2a8fb829c452cbd36f46c761fa6ba30c2f8e3feef63b886417c9543d5d211f30"
+   },
+   "params_pin": {
+    "path": "live/pm_research/declarations/de_multiday_gate1_params_v33.json",
+    "sha256": "aeeb818f3bb18c3e00a71616738eb3ea445891e01f35a7bce8490796148a2312"
+   },
+   "winner_source": {
+    "path": "/home/yuqing/ctaNew-wt-deval/data/pm_5min/resolutions.jsonl",
+    "sha256": "455b4132ec1f994cda80757635e752c87759d7ccc5df36a98c6bcddb275aed62",
+    "n_records": 46276,
+    "n_closed_records": 46251,
+    "n_slugs": 46251,
+    "settle_up_cents": 100.0,
+    "method": "BE 98 / Q-BE-341: the `winners` dict on records with `closed: true`; the UP share pays SETTLE_UP_CENTS iff winners['Up'] is True",
+    "is_final_for_quotation": false
+   }
+  }
+ },
+ "THE_COMBINED_RESULT_IS_PRODUCED_FROM_THESE_CELLS": {
+  "rule": "rule 13 provenance -- the combined result under the declared name is produced FROM these cells; the cells are NOT renamed or moved.",
+  "declared_name": "p003_de_forward_value_<YYYYMMDD>.json (de_forward_value_day.py:386)",
+  "status_at_write": "NOT YET ON DISK -- the run had not written it when this was declared",
+  "so": "this declaration fixes the cohort the combined result must be produced from, BEFORE it exists."
+ },
+ "WHAT_DA_VERIFIED_INDEPENDENTLY": {
+  "method": "recomputed p from the raw checkpoint draws with the declared permutation form, per cell",
+  "CONDVALUE_X_SKEW": "37 of 500 at-or-beyond -> p = 38/501 = 0.0758483034; the recorded field AGREES to 1e-12, and the cell's own null.n_at_or_beyond_two_sided is also 37",
+  "HAZARD_OVER_SKEWED_REF": "500 of 500 at-or-beyond -> p = 501/501 = 1.0; the recorded field AGREES",
+  "why_this_matters": "rule 38 -- a recorded p and a recomputation from the draws are two instruments, and they converge."
+ },
+ "A_FACT_WORTH_STATING_PLAINLY": {
+  "HAZARD_p_is_exactly_1.0": "every one of the 500 null draws is at or beyond the observed |D| = 23,977.998804. The observed statistic is the SMALLEST |D| in its own null. That is not a near-miss; it is the opposite end of the distribution.",
+  "CONDVALUE_does_not_clear_either": "p = 0.0758 against a sequential bar of alpha/m = 0.025 and alpha = 0.05. NO VERDICT IS ASSERTED HERE -- this declaration records the cohort and the numbers; the verdict is the pooled arm-level test and nothing else."
+ },
+ "LIMITS": {
+  "rule_34a": "this reads DERIVED cell artifacts for 2026-09-08 under an explicit coordinator dispatch to declare them. No tier2 path was read.",
+  "no_verdict": "the per-cell values carry no verdict; they are descriptive, as the combined record itself states.",
+  "a_probe_error_of_mine": "my first read looked for `result.p_two_sided`; the field is TOP-LEVEL `p_two_sided` and there is no `result` key, so the cell briefly read as having no p-value at all. Caught by a full key scan. THIRD wrong-key read of mine this session -- which is why the recomputation from the draws, not the field read, is what this declaration rests on."
+ }
+}

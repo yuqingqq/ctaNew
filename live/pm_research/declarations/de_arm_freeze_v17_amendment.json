@@ -1,0 +1,25 @@
+{
+ "protocol": "P003_DE_ARM_FREEZE_V17_AMENDMENT",
+ "version": 17,
+ "rule": "13 -- superseding receipt; v1..v16 unedited",
+ "frozen_parameters": {
+  "params": {
+   "path": "de_multiday_gate1_params_v33.json",
+   "sha256": "aeeb818f3bb18c3e00a71616738eb3ea445891e01f35a7bce8490796148a2312"
+  }
+ },
+ "code_freeze_declaration": {
+  "path": "da_code_freeze_declaration_v5.json",
+  "sha256": "83301816bb7dee7f6e706fbb2045758aadeb5b2a4883dad2159e9df69151a7cf"
+ },
+ "supersedes": {
+  "code_freeze_declaration": {
+   "path": "da_code_freeze_declaration_v4.json"
+  }
+ },
+ "WHY": {
+  "reason": "DA 253 -- the freeze commit is b34ed9f (Q-DE-329), which moved a computing module.",
+  "chain": "v14 (v2) -> v15 (v3) -> v16 (v4) -> v17 (v5)"
+ },
+ "as_of_utc": "2026-09-11T13:38:59Z"
+}

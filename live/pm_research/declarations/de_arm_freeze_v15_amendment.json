@@ -1,0 +1,25 @@
+{
+ "protocol": "P003_DE_ARM_FREEZE_V15_AMENDMENT",
+ "version": 15,
+ "rule": "13 -- superseding receipt; v1..v14 unedited",
+ "frozen_parameters": {
+  "params": {
+   "path": "de_multiday_gate1_params_v33.json",
+   "sha256": "aeeb818f3bb18c3e00a71616738eb3ea445891e01f35a7bce8490796148a2312"
+  }
+ },
+ "code_freeze_declaration": {
+  "path": "da_code_freeze_declaration_v3.json",
+  "sha256": "87b0c6a38dab4b04ef27edef278b9e37312e86ea9f1975861279db5cd4a3832e"
+ },
+ "supersedes": {
+  "code_freeze_declaration": {
+   "path": "da_code_freeze_declaration_v2.json"
+  }
+ },
+ "WHY": {
+  "reason": "DA 252 -- moves the code-freeze pin from v2 (v14) to v3 under DE 328's version-ordered supersession.",
+  "names_what_it_replaces": "DE 328 admits a pin move ONLY when the later amendment NAMES the identity it replaces. Plain later-wins still REFUSES. This block is that name."
+ },
+ "as_of_utc": "2026-09-11T13:36:15Z"
+}

@@ -1,0 +1,285 @@
+{
+ "declaration": "DA_RECORD_SCHEMA_FOR_THE_LICENSING_READ",
+ "version": 3,
+ "as_of_utc": "2026-09-11T16:09:46Z",
+ "PURPOSE": "REV and any later reader resolve these fields BY DECLARATION, not by search. Every field below was read at its EMITTING SITE at 0bb5f42, not from memory and not from a sample record.",
+ "READ_AT": {
+  "ref": "origin/de-freeze-chain-v2",
+  "commit": "0bb5f4257a3c6e1908f9403c38e0e563824f85bb"
+ },
+ "FIELD_1_admitted_by": {
+  "DISPATCH_SAID": "cells[<arm>].book_receipt.admitted_by",
+  "ACTUAL_PATH": "<de_settle_result_<YYYYMMDD>_<arm>.json>.book_receipt.admitted_by",
+  "CORRECTION": "*** THERE IS NO `cells` CONTAINER CARRYING THIS FIELD, IN ANY FILE. *** `admitted_by` appears ZERO times in de_settlement_control_aggregate.py, de_multiday_gate1_runner.py and de_forward_evaluator.py. It is produced ONLY by de_settlement_control_run.verify_book_receipt and lands at the TOP LEVEL of the per-(day,arm) CELL record under `book_receipt`. A reader looking for `cells[<arm>].book_receipt.admitted_by` finds nothing, everywhere.",
+  "values": [
+   "EXACT",
+   "DESCENDANT",
+   null
+  ],
+  "absent_or_null_means": "REFUSED -- neither arm admitted the builder commit",
+  "produced_by": "de_settlement_control_run._admitting_arm(builder_commit)",
+  "semantics": {
+   "EXACT": "builder_commit == the frozen pipeline commit",
+   "DESCENDANT": "_builder_commit_admissible(builder_commit) is True",
+   "null": "the descendant check refused; the receipt is not admitted"
+  },
+  "NAME_COLLISION_WARNING": "`admitted_by` ALSO exists in an unrelated record with the value \"USER\" -- be_forward_day.py:985,1027 and be_receipt_c1_supersede.py:214. Those are ADMISSION-BY-A-PERSON records, not build licensing. Match the FILE, not the field name."
+ },
+ "FIELD_2_winner_source": {
+  "path": "<de_settle_result_<YYYYMMDD>_<arm>.json>.winner_source",
+  "keys": [
+   "path",
+   "sha256",
+   "n_records",
+   "n_closed_records",
+   "n_slugs",
+   "settle_up_cents",
+   "method",
+   "is_final_for_quotation"
+  ],
+  "dispatch_named": [
+   "sha",
+   "n_records"
+  ],
+  "note": "the key is `sha256`, not `sha`; six further keys travel with it and are listed so a reader does not treat them as optional",
+  "one_per_run": true,
+  "why_one_per_run": "de_forward_value_day.py:327 calls R.winner_source() ONCE, before the first arm (Q-DE-303, `f309602`). de_asymmetry_null_run.py:550 reads it PER ARM, but that function has NO CALLER -- see DA 242 item (5) and the same-name hazard recorded there."
+ },
+ "FIELD_3_run_mode": {
+  "path": "<record>.run_mode  (and <ledger>.header.run_mode)",
+  "values": [
+   "POINT_ESTIMATE",
+   "FULL"
+  ],
+  "THE_500_DRAW_MODE_IS_NAMED_FULL": "the dispatch left it unnamed. Read at de_decision_ledger.py:215 and :221 -- the literals are POINT_ESTIMATE and FULL. It is NOT spelled `FULL_DRAWS`, `DRAWS` or `500`.",
+  "verified_on_a_real_record": {
+   "file": "p003_de_point_estimate_day_20260903_L250ms__20260910T052737Z.json",
+   "run_mode": "POINT_ESTIMATE",
+   "header.run_mode": null,
+   "note": "on that record run_mode is TOP-LEVEL and header.run_mode is absent; de_decision_ledger reads the ledger's header and falls back -- `run_mode_source` records which was used (de_decision_ledger.py:642)"
+  },
+  "same_mode_enforced": "de_decision_ledger.py:224 REFUSES when the arms do not share one run mode"
+ },
+ "FIELD_4_rehearsal_suffix": {
+  "DISPATCH_SAID": "the rehearsal file's `_rehearsal` suffix",
+  "STATUS": "*** NO SUCH SUFFIX EXISTS -- NOT IN THE CODE AND NOT ON DISK ***",
+  "evidence": {
+   "literal_`_rehearsal`_in_live/pm_research": "0 occurrences as a filename token (the only hits are the FIELD name `what_this_rehearsal_found` in de_multiday_gate1_runner.py)",
+   "suffix_argument_in_the_valuation_emitters": "none -- de_settlement_control_run.py, de_forward_value_day.py and de_settlement_control_aggregate.py take no --suffix",
+   "what_is_actually_on_disk": "15 files use `rehearsal` as an INFIX inside the stem, e.g. `p003_da_open_book_rehearsal_20260903__<ts>.json` and `p003_de_gate1_smoke_rehearsal_09_03_v2__<ts>.json` -- ad-hoc stems, not a convention any code applies",
+   "how_rehearsals_are_actually_separated": "da_midnight_verify.sh isolates a rehearsal by OVERRIDING OUTDIR AND THE LOG TOGETHER (it refuses if only one is overridden, :99-109) -- by DIRECTORY, not by filename"
+  },
+  "so_a_reader_MUST_NOT": "detect a rehearsal by a filename suffix. There is nothing to match."
+ },
+ "FIELD_5_file_names_per_day": {
+  "note": "`<c>` is the compact day YYYYMMDD; `<day>` is YYYY-MM-DD; `<arm>` is an ARMS member",
+  "CELL_per_day_and_arm": {
+   "template": "de_settle_result_<c>_<arm>.json",
+   "emitted_by": [
+    "de_forward_value_day.py:363",
+    "de_settlement_control_aggregate.py:376",
+    "de_forward_evaluator.py:894"
+   ],
+   "carries": [
+    "book_receipt.admitted_by",
+    "winner_source",
+    "observed_D_cents",
+    "n_draws"
+   ]
+  },
+  "CELL_CHECKPOINT": {
+   "template": "de_settle_ckpt_<day>_<arm>.jsonl",
+   "note": "the checkpoint uses the HYPHENATED day while the result uses the COMPACT day -- a real inconsistency, recorded so a reader does not normalise one into the other"
+  },
+  "FORWARD_VALUE_per_day": {
+   "template": "p003_de_forward_value_<c>.json",
+   "emitted_by": "de_forward_value_day.py:386"
+  },
+  "POINT_ESTIMATE_per_day": {
+   "template": "p003_de_point_estimate_day_<c>_<revision>__<ts>.json",
+   "read_by": "de_forward_evaluator.py:342"
+  },
+  "DAY_RUN_per_day": {
+   "template": "p003_de_gate1_day_run_<c>_SEALED__<ts>.json",
+   "read_by": "de_early_read.py:450"
+  },
+  "NULL_CONTROL_SET_per_day": {
+   "template": "p003_de_null_control_set_<c>...",
+   "emitted_by": "de_multiday_gate1_runner.py:9463"
+  },
+  "COMBINED_design_family": {
+   "template": "p003_de_multiday_gate1_design_v<N>__<ts>.json",
+   "family_literal": "p003_de_multiday_gate1_design (de_multiday_gate1_runner.py:167)",
+   "cell_keys_inside": "`per_cell_descriptive_only` is keyed \"<day>|<arm>\" -- PIPE-JOINED, not nested, and it carries ONLY D_cents, p_two_sided and n. It does NOT carry book_receipt or winner_source (de_settlement_control_aggregate.py:559)"
+  }
+ },
+ "LIMITS": {
+  "no_cell_or_combined_artifact_exists_yet": "ZERO `de_settle_result_*` files are on disk for any forward day: the run has not produced one. Every field above is declared from the EMITTING CODE, which is the correct source, and is FALSIFIABLE the moment the first cell lands -- if a landed record disagrees with this file, this file is wrong and supersedes.",
+  "rule_34a": "no tier2 day>=2026-09-08 content was read; the one sample record inspected is 2026-09-03.",
+  "what_this_declares": "FIELD LOCATIONS AND VALUE SETS ONLY. It licenses nothing and asserts no number."
+ },
+ "SUPERSEDES": "da_record_schema_declaration_v2.json",
+ "supersedes_sha256": "96a5bf7e8718f70d4e58dee56b5a72cbf23bcc4d44b15cbd34f72b36f1490df2",
+ "THE_RULE": "A COMBINED DAY RECORD LACKING ANY FIELD BELOW IS **EVIDENCE, NOT A RESULT**. It may be read, cited as provenance and kept; it may NOT be quoted as the day's outcome, pooled, or carried into a verdict. The distinction is the point: an incomplete record is not worthless, it is a DIFFERENT KIND OF THING, and calling it a result is the error this rule exists to prevent.",
+ "REQUIRED_FIELDS_OF_THE_COMBINED_DAY_RECORD": {
+  "emit.futility.<arm>": {
+   "required_subfields": [
+    "FUTILE",
+    "cause",
+    "days_scored",
+    "days_declared",
+    "n_negative",
+    "best_attainable_p_given_what_is_already_seen",
+    "threshold"
+   ],
+   "verified_present_at": "data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json",
+   "for_arms": [
+    "CONDVALUE_X_SKEW",
+    "HAZARD_OVER_SKEWED_REF"
+   ],
+   "also_carries_beyond_the_requirement": [
+    "cause_means",
+    "negative_or_zero_days",
+    "why",
+    "stopping_is_free"
+   ]
+  },
+  "emit.per_arm_D_cents": {
+   "canonical_path": "emit.per_arm_D_cents",
+   "verified": true
+  },
+  "emit.running_tally": {
+   "canonical_path": "emit.running_tally",
+   "verified": true
+  },
+  "admitted_by": {
+   "canonical_path": "admitted_by (TOP LEVEL of the combined record, one entry per arm)",
+   "verified_value": {
+    "CONDVALUE_X_SKEW": "DESCENDANT",
+    "HAZARD_OVER_SKEWED_REF": "DESCENDANT"
+   },
+   "NOT_to_be_confused_with": "cells.<arm>.book_receipt.admitted_by, which is the PER-CELL path declared in record-schema v1. Both exist in this record and they are different locations; the combined record's canonical path is the top-level one."
+  },
+  "winner_source": {
+   "canonical_path": "winner_source (TOP LEVEL)",
+   "one_per_run": true,
+   "verified_sha256_prefix": "455b4132ec1f994c"
+  },
+  "stage0": {
+   "required_subfields": [
+    "verdict",
+    "verifier path+sha",
+    "declaration version",
+    "time",
+    "run-scoped source"
+   ],
+   "verified_keys": [
+    "WHERE_THIS_LIVES",
+    "rows",
+    "source",
+    "structured",
+    "time",
+    "verdict"
+   ],
+   "verdict": "POPULATION_FREEZE_HOLDS",
+   "time": "2026-09-11T14:19:02Z",
+   "THE_SOURCE_IS_NOT_RUN_SCOPED_AND_THE_RECORD_SAYS_SO": {
+    "source_as_written": "/tmp/stage0_freeze_20260908.json",
+    "the_records_own_words": "the launcher wrote the gate's report to /tmp, which is not run-scoped; future launches write it into the launch record before the offer",
+    "DA_reading": "the requirement names a RUN-SCOPED source and this one is /tmp. The record admits it. Under THE_RULE that makes this field present-but-not-yet-conformant: it is recorded here as an OPEN GAP rather than counted as satisfied."
+   }
+  }
+ },
+ "FUTILITY_VERIFIED_INDEPENDENTLY_BY_DA": {
+  "method": "recomputed best_attainable_p from the recorded n_negative and days_declared as a TWO-SIDED BINOMIAL SIGN TEST -- 2 * P(X >= days_declared - n_negative | n = days_declared, p = 0.5) -- not read from the field",
+  "per_arm": {
+   "CONDVALUE_X_SKEW": {
+    "recorded_best_attainable_p": 0.453125,
+    "DA_recomputed": 0.453125,
+    "derivation": "two-sided binomial sign test: 2 * P(X >= 5 | n=7, p=0.5) with the 2 already-negative day(s) unrecoverable",
+    "agrees": true,
+    "threshold": 0.025,
+    "exceeds_threshold": true,
+    "FUTILE_recorded": true,
+    "cause": "KILLED_BY_NEGATIVE_DAYS"
+   },
+   "HAZARD_OVER_SKEWED_REF": {
+    "recorded_best_attainable_p": 0.125,
+    "DA_recomputed": 0.125,
+    "derivation": "two-sided binomial sign test: 2 * P(X >= 6 | n=7, p=0.5) with the 1 already-negative day(s) unrecoverable",
+    "agrees": true,
+    "threshold": 0.025,
+    "exceeds_threshold": true,
+    "FUTILE_recorded": true,
+    "cause": "KILLED_BY_NEGATIVE_DAYS"
+   }
+  },
+  "WHAT_IT_MEANS": "BOTH ARMS ARE FUTILE AT G=7 AFTER TWO SCORED DAYS. Even if every one of the five remaining days went the right way, CONDVALUE_X_SKEW could reach at best p = 0.453125 and HAZARD_OVER_SKEWED_REF at best p = 0.125, against a threshold of 0.025. The floor with all seven unanimous is 0.015625, which WOULD clear -- so the arms are not killed by the design, they are killed by the two negative days already observed.",
+  "NO_VERDICT_IS_ASSERTED_HERE": "this records the COMPUTED futility the record carries and DA's confirmation of its arithmetic. Whether the programme stops is the coordinator's ruling."
+ },
+ "DAY_TWOS_FIRST_COMBINED_RECORD": {
+  "claim_in_the_dispatch": "the 15:52:37Z record lacked the futility block and is superseded in band by DE 346's re-emit",
+  "WHAT_DA_FOUND_AT_THE_ARTIFACT": "*** IT WAS NOT SUPERSEDED IN BAND -- IT WAS OVERWRITTEN IN PLACE. *** Exactly ONE p003_de_forward_value_20260908.json exists, mtime 15:54, and data/ is gitignored, so the 15:52:37Z bytes are GONE. There is no .superseded_<ts>.json copy, although this programme uses that convention elsewhere in the same directory (p003_de_window_decomposition_...superseded_20260911T071439Z.json).",
+  "consequence": "DA CANNOT VERIFY WHAT THE FIRST RECORD LACKED. The claim that it lacked the futility block is recorded as REPORTED, not as measured, because the artifact that would settle it no longer exists.",
+  "the_rule_this_breaks": "rule 13 -- a correction SUPERSEDES, it does not overwrite. The old receipt stays as provenance. An emit that rewrites its own output in place destroys the evidence that the rule exists to keep.",
+  "ROUTED": "emits under fwd_v2/ should write .superseded_<ts>.json before rewriting, as the window-decomposition emitter already does.",
+  "the_surviving_record": {
+   "path": "data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260908.json",
+   "sha256": "51decc84c8b368d857c6cdc5cb3ecb4a27ffced89bff98005e33fcd6295aabac",
+   "mtime_utc": "2026-09-11T15:54:50Z",
+   "futility_block_present": true,
+   "conforms_except": "stage0.source is not run-scoped"
+  }
+ },
+ "NAMING_RULE_FOR_REPRODUCTION_RECORDS": {
+  "RULE": "a reproduction record is named `p003_de_reproduction_*`. It is NEVER named `p003_de_forward_value_*`.",
+  "why": "`p003_de_forward_value_*.json` is the DAY-RESULT GLOB. A reproduction named into that glob is counted as a day until something filters it out, and a filter is a thing that can be wrong. Naming it outside the glob makes the mistake unrepresentable rather than merely caught.",
+  "correct_example": {
+   "path": "data/pm_5min/derived/fwd_v2/p003_de_reproduction_at_the_freeze_20260907.json",
+   "sha256": "82fd37841a13aeb3db49af8911c5dbe514e15a4d43090f0aefab210614c40849",
+   "protocol": "P003_DE_DAY_RECORD_V1_REPRODUCTION",
+   "written_at": "2026-09-11T16:05:59Z"
+  }
+ },
+ "RESIDUE_TWO_MIS_NAMED_REPRODUCTION_RECORDS": {
+  "STATUS": "NOT_A_DAY_RESULT",
+  "KEPT_NOT_DELETED": "artifacts are never deleted; these are provenance of how the naming rule came to exist.",
+  "records": [
+   {
+    "path": "data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260907_reproduction_at_the_freeze.json",
+    "sha256": "0cf2bb7f3bb0a1413272c3b814c576703b4ea8beba161bc0af46cdd63fa57dfb",
+    "protocol": "P003_DE_DAY_RECORD_V1",
+    "day_field": "2026-09-07",
+    "written_at": "2026-09-11T15:54:59Z"
+   },
+   {
+    "path": "data/pm_5min/derived/fwd_v2/p003_de_forward_value_20260907_reproduction_at_the_freeze_v2.json",
+    "sha256": "8d34f8e7142d6a8c76aa1efd07e733b6dd4129131abe46b61555d6e9aa46d2a4",
+    "protocol": "P003_DE_DAY_RECORD_V1",
+    "day_field": "2026-09-07",
+    "written_at": "2026-09-11T16:03:05Z"
+   }
+  ],
+  "EXCLUDED_FROM_EVERY_COUNT_BY": {
+   "mechanism": "de_day_record's day map -- `if d.get(\"reproduction\") or d.get(\"protocol\",\"\").endswith(\"_REPRODUCTION\"): continue`",
+   "THE_REASON_IT_WORKS_IS_WORTH_STATING": "*** THE TWO RESIDUES CARRY `protocol: P003_DE_DAY_RECORD_V1` -- THE SAME PROTOCOL AS A REAL DAY RESULT, NOT THE `_REPRODUCTION` ONE. *** So the protocol half of that test does NOT catch them. They are excluded by the FIRST clause -- the presence of a `reproduction` BLOCK -- which is identity, not vocabulary and not the filename. Had the filter keyed on protocol alone it would have counted both as days.",
+   "DA_RE_DERIVED_THE_MAP_INDEPENDENTLY": {
+    "excluded": [
+     "p003_de_forward_value_20260907_reproduction_at_the_freeze.json",
+     "p003_de_forward_value_20260907_reproduction_at_the_freeze_v2.json"
+    ],
+    "counted": [
+     "p003_de_forward_value_20260907.json",
+     "p003_de_forward_value_20260908.json",
+     "p003_de_forward_value_20260908_v2.json"
+    ],
+    "days_after_filtering": {
+     "2026-09-07": 1,
+     "2026-09-08": 2
+    },
+    "and_the_two_09_08_records_AGREE": "09-08 now has a v1 and a _v2 and BOTH carry the same D for both arms (-49303.579891000016 / -23977.998804000017), so the day map resolves to one day with one value. If they ever disagreed the map would silently take the last by sort order -- recorded as a hazard, not as a defect today."
+   }
+  },
+  "the_falsifier_prints_them": "de_day_record.falsify() reports `[RESIDUE] 2 record(s) under the old name, not deleted: \u2026`"
+ }
+}

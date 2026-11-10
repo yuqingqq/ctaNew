@@ -1,0 +1,392 @@
+{
+  "declaration": "DA_DAY_READ_STATE_ATTESTATION",
+  "version": 2,
+  "as_of_utc": "2026-09-11T12:40:46Z",
+  "WHAT_THIS_IS": "The POSITIVE assertion that 2026-09-09..2026-09-13 were never opened, attested by DA as a FACT with its evidence, for DE to cite as `authority` when it adds the five entries to DESIGN.DAY_READ_STATE. THIS FILE DOES NOT CLEAR THE REFUSAL -- see WHERE_THE_FIELD_ACTUALLY_LIVES.",
+  "WHERE_THE_FIELD_ACTUALLY_LIVES": {
+    "read_from": "live/pm_research/de_multiday_gate1_runner.py::load_params at origin/de-freeze-chain-v2 (b3109159207a37086fd5a20cb619f996ce069ba3), lines 826-840",
+    "params_field": "required_previously_opened_for  (a SCALAR, compared against every day)",
+    "params_field_value_in_v33": "none  -- ALREADY PRESENT AND ALREADY CORRECT",
+    "per_day_field": "DESIGN.DAY_READ_STATE[day]['previously_opened_for']",
+    "per_day_field_module": "live/pm_research/de_multiday_design_declaration.py (DAY_READ_STATE defined at line 296)",
+    "per_day_field_module_CLASS_in_population_freeze_v7": "PIPELINE",
+    "per_day_field_module_owner": "DE",
+    "WHY_A_PARAMS_V34_WOULD_BE_A_NO_OP": "load_params reads per-day state ONLY from DESIGN.DAY_READ_STATE. It never reads a per-day block from the params JSON. A v34 carrying five per-day `previously_opened_for` entries would parse, change nothing, and load_params would refuse with the identical message. Driven, not read -- see DRIVEN_REFUSAL below.",
+    "DRIVEN_REFUSAL": "RunnerRefused: REFUSED: the ruled set contains days whose previously_opened_for is not 'none': {'2026-09-09': 'NO_READ_STATE_RECORDED', '2026-09-10': 'NO_READ_STATE_RECORDED', '2026-09-11': 'NO_READ_STATE_RECORDED', '2026-09-12': 'NO_READ_STATE_RECORDED', '2026-09-13': 'NO_READ_STATE_RECORDED'}. R-555 is untouched days only.",
+    "so_the_cause_is": "NO_READ_STATE_RECORDED -- five ABSENT KEYS in DE's table, not a missing params field."
+  },
+  "ATTESTATION": {
+    "claim": "previously_opened_for == 'none' for each of 2026-09-09..2026-09-13",
+    "scope": "'opened' means the FROZEN CANDIDATE or the ARMS were read/scored on that day, which is the sense DAY_READ_STATE already uses (its 09-01/09-02 entries record what_was_read: 'the FROZEN CANDIDATE, not the arms'). The attestation is scoped BEFORE TODAY'S POPULATION, per the dispatch.",
+    "attestable": true,
+    "per_day": {
+      "2026-09-09": {
+        "previously_opened_for": "none",
+        "basis": "MEASURED -- no row/tape build before today's population",
+        "n_row_or_tape_builds_before_todays_population": 0,
+        "artifact_classes_seen": [
+          "COVERAGE_GAPS",
+          "DA_COVERAGE",
+          "ROW_OR_TAPE_BUILD",
+          "RUN_RECORD",
+          "RUN_REFUSED_NO_WORK"
+        ]
+      },
+      "2026-09-10": {
+        "previously_opened_for": "none",
+        "basis": "MEASURED -- no row/tape build before today's population",
+        "n_row_or_tape_builds_before_todays_population": 0,
+        "artifact_classes_seen": [
+          "DA_COVERAGE",
+          "RUN_RECORD",
+          "RUN_REFUSED_NO_WORK"
+        ]
+      },
+      "2026-09-11": {
+        "previously_opened_for": "none",
+        "basis": "CALENDAR -- the day has not CLOSED; today is 2026-09-11",
+        "n_row_or_tape_builds_before_todays_population": 0,
+        "artifact_classes_seen": [
+          "DA_COVERAGE"
+        ]
+      },
+      "2026-09-12": {
+        "previously_opened_for": "none",
+        "basis": "CALENDAR -- the day has not occurred; today is 2026-09-11",
+        "n_row_or_tape_builds_before_todays_population": 0,
+        "artifact_classes_seen": []
+      },
+      "2026-09-13": {
+        "previously_opened_for": "none",
+        "basis": "CALENDAR -- the day has not occurred; today is 2026-09-11",
+        "n_row_or_tape_builds_before_todays_population": 0,
+        "artifact_classes_seen": []
+      }
+    }
+  },
+  "EVIDENCE": {
+    "2026-09-09": {
+      "n_artifacts": 14,
+      "row_or_tape_builds_before_todays_population": [],
+      "n_row_or_tape_builds_before_todays_population": 0,
+      "classes": [
+        "COVERAGE_GAPS",
+        "DA_COVERAGE",
+        "ROW_OR_TAPE_BUILD",
+        "RUN_RECORD",
+        "RUN_REFUSED_NO_WORK"
+      ],
+      "artifacts": [
+        {
+          "file": "be137_gap_windows_20260909.json",
+          "mtime_utc": "2026-09-11T11:12:31Z",
+          "class": "COVERAGE_GAPS",
+          "before_todays_population": false
+        },
+        {
+          "file": "be_gate1_fragment_receipt_20260909_btc.json",
+          "mtime_utc": "2026-09-11T11:12:21Z",
+          "class": "ROW_OR_TAPE_BUILD",
+          "before_todays_population": false
+        },
+        {
+          "file": "be_gate1_state_tape_receipt_20260909_btc.json",
+          "mtime_utc": "2026-09-11T11:40:46Z",
+          "class": "ROW_OR_TAPE_BUILD",
+          "before_todays_population": false
+        },
+        {
+          "file": "be_heavy_run_record_deRV20260909w1.jsonl",
+          "mtime_utc": "2026-09-11T11:12:17Z",
+          "class": "RUN_RECORD",
+          "before_todays_population": false
+        },
+        {
+          "file": "be_heavy_run_record_deSNAP20260909.jsonl",
+          "mtime_utc": "2026-09-11T11:29:47Z",
+          "class": "RUN_RECORD",
+          "before_todays_population": false
+        },
+        {
+          "file": "be_heavy_run_refusal_deRV20260909w1.txt",
+          "mtime_utc": "2026-09-11T11:12:17Z",
+          "class": "RUN_REFUSED_NO_WORK",
+          "before_todays_population": false
+        },
+        {
+          "file": "be_heavy_run_stdout_deRV20260909w1.log",
+          "mtime_utc": "2026-09-11T11:12:17Z",
+          "class": "RUN_RECORD",
+          "before_todays_population": false
+        },
+        {
+          "file": "be_heavy_run_stdout_deSNAP20260909.log",
+          "mtime_utc": "2026-09-11T11:18:41Z",
+          "class": "RUN_RECORD",
+          "before_todays_population": false
+        },
+        {
+          "file": "da_blackout_mask_20260909.json",
+          "mtime_utc": "2026-09-11T07:20:21Z",
+          "class": "DA_COVERAGE",
+          "before_todays_population": true
+        },
+        {
+          "file": "da_dayverdict_20260909.json",
+          "mtime_utc": "2026-09-10T00:06:33Z",
+          "class": "DA_COVERAGE",
+          "before_todays_population": true
+        },
+        {
+          "file": "da_dayverdict_20260909.superseded_20260909T000638.073779+0000.json",
+          "mtime_utc": "2026-09-10T00:06:33Z",
+          "class": "DA_COVERAGE",
+          "before_todays_population": true
+        },
+        {
+          "file": "harmful_exposure_rows_v3_gate1_20260909_btc.EMPTY_SCORE.json",
+          "mtime_utc": "2026-09-11T11:14:07Z",
+          "class": "ROW_OR_TAPE_BUILD",
+          "before_todays_population": false
+        },
+        {
+          "file": "harmful_exposure_rows_v3_gate1_20260909_btc.json",
+          "mtime_utc": "2026-09-11T11:12:20Z",
+          "class": "ROW_OR_TAPE_BUILD",
+          "before_todays_population": false
+        },
+        {
+          "file": "phase2_state_tape_gate1_20260909_btc.json",
+          "mtime_utc": "2026-09-11T11:40:29Z",
+          "class": "ROW_OR_TAPE_BUILD",
+          "before_todays_population": false
+        }
+      ]
+    },
+    "2026-09-10": {
+      "n_artifacts": 8,
+      "row_or_tape_builds_before_todays_population": [],
+      "n_row_or_tape_builds_before_todays_population": 0,
+      "classes": [
+        "DA_COVERAGE",
+        "RUN_RECORD",
+        "RUN_REFUSED_NO_WORK"
+      ],
+      "artifacts": [
+        {
+          "file": "be_heavy_run_record_deRV20260910w1.jsonl",
+          "mtime_utc": "2026-09-11T11:12:17Z",
+          "class": "RUN_RECORD",
+          "before_todays_population": false
+        },
+        {
+          "file": "be_heavy_run_record_deSNAP20260910.jsonl",
+          "mtime_utc": "2026-09-11T11:29:52Z",
+          "class": "RUN_RECORD",
+          "before_todays_population": false
+        },
+        {
+          "file": "be_heavy_run_refusal_deRV20260910w1.txt",
+          "mtime_utc": "2026-09-11T11:12:17Z",
+          "class": "RUN_REFUSED_NO_WORK",
+          "before_todays_population": false
+        },
+        {
+          "file": "be_heavy_run_stdout_deRV20260910w1.log",
+          "mtime_utc": "2026-09-11T11:12:17Z",
+          "class": "RUN_RECORD",
+          "before_todays_population": false
+        },
+        {
+          "file": "be_heavy_run_stdout_deSNAP20260910.log",
+          "mtime_utc": "2026-09-11T11:18:41Z",
+          "class": "RUN_RECORD",
+          "before_todays_population": false
+        },
+        {
+          "file": "da_blackout_mask_20260910.json",
+          "mtime_utc": "2026-09-11T07:20:21Z",
+          "class": "DA_COVERAGE",
+          "before_todays_population": true
+        },
+        {
+          "file": "da_dayverdict_20260910.json",
+          "mtime_utc": "2026-09-11T00:06:34Z",
+          "class": "DA_COVERAGE",
+          "before_todays_population": true
+        },
+        {
+          "file": "da_dayverdict_20260910.superseded_20260910T000635.496070+0000.json",
+          "mtime_utc": "2026-09-11T00:06:34Z",
+          "class": "DA_COVERAGE",
+          "before_todays_population": true
+        }
+      ]
+    },
+    "2026-09-11": {
+      "n_artifacts": 1,
+      "row_or_tape_builds_before_todays_population": [],
+      "n_row_or_tape_builds_before_todays_population": 0,
+      "classes": [
+        "DA_COVERAGE"
+      ],
+      "artifacts": [
+        {
+          "file": "da_dayverdict_20260911.json",
+          "mtime_utc": "2026-09-11T00:06:41Z",
+          "class": "DA_COVERAGE",
+          "before_todays_population": true
+        }
+      ]
+    },
+    "2026-09-12": {
+      "n_artifacts": 0,
+      "row_or_tape_builds_before_todays_population": [],
+      "n_row_or_tape_builds_before_todays_population": 0,
+      "classes": [],
+      "artifacts": []
+    },
+    "2026-09-13": {
+      "n_artifacts": 0,
+      "row_or_tape_builds_before_todays_population": [],
+      "n_row_or_tape_builds_before_todays_population": 0,
+      "classes": [],
+      "artifacts": []
+    }
+  },
+  "LIMITS": {
+    "rule_34a": "No tier2 day>=2026-09-08 content was read. Evidence is derived-artifact FILENAMES, mtimes, receipt IDENTITY fields and refusal texts only.",
+    "instrument_falsified": "The artifact enumerator was falsified against 2026-09-06 (37 hits) and the first version of this query was WRONG -- it matched the timestamp token 20260911T... as if it were day 2026-09-11, inflating the count to 60. The day regex now excludes a following 'T'. The register reader was ALSO wrong on its first run (returned 0 entries for R-891..R-905 because its split pattern never matched); it was caught by a falsifier, not by the zero looking wrong.",
+    "what_DA_does_not_attest": "Whether 09-09's row/tape build AT 11:12-11:40Z TODAY is itself an 'open'. It is inside today's population window, which the dispatch excludes by its own wording, and the receipts assert no_book_built=true, no_assembly_run=true, decides_nothing. If the coordinator reads that build as an open, 09-09 is NOT attestable and the ruled set is 10 days, not 11."
+  },
+  "REFS_VERIFIED_AT": {
+    "dispatch_named": "b3109159207a37086fd5a20cb619f996ce069ba3",
+    "origin/de-freeze-chain-v2_tip_at_write": "92e4b7c67cd3a175c06963d3a8aaddc2c7a8d528",
+    "the_ref_MOVED_between_read_and_land": true,
+    "re_verified_byte_identical": {
+      "de_multiday_gate1_runner.py": "b53848ff1a7564d9 at BOTH refs",
+      "de_multiday_design_declaration.py": "b1005d7f6c5ddabb at BOTH refs"
+    },
+    "so": "the field reading holds at the current tip; a label is not an identity, so it was re-derived rather than assumed."
+  },
+  "ROUTED_PATCH_FOR_DE": {
+    "file": "live/pm_research/de_multiday_design_declaration.py",
+    "insert_before": "the closing `}` of DAY_READ_STATE (line 329 at 92e4b7c6); DAY_READ_STATE opens at line 296",
+    "owner": "DE -- DA does not edit another seat's module (standing constraint)",
+    "freeze_CLASS": "PIPELINE in da_population_freeze_v7.json -- applying this MOVES a PIPELINE file and needs a declared mover entry in a population freeze v8",
+    "text": "    # --- ROUTED BY DA, NOT APPLIED BY DA (DE owns this module) ---\n    # R-555's ruled set reaches 2026-09-13. The five entries below carry the\n    # same basis the 09-06/07/08 entries already carry, and are attested by\n    # `declarations/da_day_read_state_attestation_v1.json`.\n    \"2026-09-09\": {\"previously_opened_for\": OPENED_NONE,\n                   \"authority\": \"R-555; DA attestation v1 -- MEASURED: no row \"\n                                \"or tape build before today's population\",\n                   \"what_was_read\": None},\n    \"2026-09-10\": {\"previously_opened_for\": OPENED_NONE,\n                   \"authority\": \"R-555; DA attestation v1 -- MEASURED: no row \"\n                                \"or tape build at all\",\n                   \"what_was_read\": None},\n    \"2026-09-11\": {\"previously_opened_for\": OPENED_NONE,\n                   \"authority\": \"R-555; DA attestation v1 -- not closed at \"\n                                \"declaration time\",\n                   \"what_was_read\": None},\n    \"2026-09-12\": {\"previously_opened_for\": OPENED_NONE,\n                   \"authority\": \"R-555; DA attestation v1 -- the day has not \"\n                                \"occurred at declaration time\",\n                   \"what_was_read\": None},\n    \"2026-09-13\": {\"previously_opened_for\": OPENED_NONE,\n                   \"authority\": \"R-555; DA attestation v1 -- the day has not \"\n                                \"occurred at declaration time\",\n                   \"what_was_read\": None},\n",
+    "DRIVEN_PROOF": {
+      "cell_1_baseline_v33": "REFUSES -- five days NO_READ_STATE_RECORDED",
+      "cell_2_params_v34_with_per_day_blocks_DESIGN_untouched": "REFUSES IDENTICALLY -- the dispatch's v34 is a NO-OP",
+      "cell_3_this_patch_with_params_v33_UNCHANGED": "NO REFUSAL, G=11",
+      "cell_4_positive_control_one_day_set_to_development_read": "REFUSES BY NAME: {'2026-09-10': 'development_read'}",
+      "cell_5_restored": "REFUSES again -- the probe left no residue"
+    }
+  },
+  "WHAT_DA_DID_NOT_LAND_AND_WHY": {
+    "params_v34": "NOT LANDED. v33 already carries required_previously_opened_for='none'; the five per-day assertions have no reader in the params file. Landing v34 would have looked like a fix and changed nothing (cell 2).",
+    "freeze_amendment_v13": "NOT LANDED. It would pin a v34 that does not need to exist; de_arm_freeze_v12_amendment.json already pins v33 and nothing supersedes it."
+  },
+  "supersedes": "da_day_read_state_attestation_v1.json",
+  "supersedes_sha256": "a68b4554efaa83461d5f45ece43732f2dc7d2bac41062f2e8e6374bf7bc88328",
+  "WHY_V2": "DA 244: DE 315 makes the untouched-days guard read THIS FILE instead of the module table. v1 carried only the five newly attested days, nested under ATTESTATION.per_day. A guard that swapped source to v1 would have lost the SIX ruled days the module already covers (09-03..09-08) and turned them into NO_READ_STATE_RECORDED. v2 therefore carries a TOP-LEVEL `DAY_READ_STATE` that is a DROP-IN SUPERSET of de_multiday_design_declaration.DAY_READ_STATE: all 9 of its days at their existing values, plus the 5 attested ones, in the IDENTICAL per-day shape.",
+  "DAY_READ_STATE": {
+    "2026-08-29": {
+      "previously_opened_for": "development_read",
+      "authority": "R-500 withdrew it from the race; R-502 ratified ONE development read",
+      "what_was_read": "the FROZEN CANDIDATE, not the arms"
+    },
+    "2026-09-01": {
+      "previously_opened_for": "interim_read_of_frozen_candidate",
+      "authority": "R-549(A); RESULTS.md:681 records it as CONSUMED",
+      "what_was_read": "the FROZEN CANDIDATE, not the arms"
+    },
+    "2026-09-02": {
+      "previously_opened_for": "interim_read_of_frozen_candidate",
+      "authority": "R-549(A); RESULTS.md:681 records it as CONSUMED",
+      "what_was_read": "the FROZEN CANDIDATE, not the arms"
+    },
+    "2026-09-03": {
+      "previously_opened_for": "none",
+      "authority": null,
+      "what_was_read": null
+    },
+    "2026-09-04": {
+      "previously_opened_for": "none",
+      "authority": null,
+      "what_was_read": null
+    },
+    "2026-09-05": {
+      "previously_opened_for": "none",
+      "authority": null,
+      "what_was_read": null
+    },
+    "2026-09-06": {
+      "previously_opened_for": "none",
+      "authority": "R-555; not closed at declaration time",
+      "what_was_read": null
+    },
+    "2026-09-07": {
+      "previously_opened_for": "none",
+      "authority": "R-555; not closed at declaration time",
+      "what_was_read": null
+    },
+    "2026-09-08": {
+      "previously_opened_for": "none",
+      "authority": "R-555; not closed at declaration time",
+      "what_was_read": null
+    },
+    "2026-09-09": {
+      "previously_opened_for": "none",
+      "authority": "R-555; DA attestation -- MEASURED: no row or tape build before today's population window",
+      "what_was_read": null
+    },
+    "2026-09-10": {
+      "previously_opened_for": "none",
+      "authority": "R-555; DA attestation -- MEASURED: no row or tape build at all",
+      "what_was_read": null
+    },
+    "2026-09-11": {
+      "previously_opened_for": "none",
+      "authority": "R-555; DA attestation -- not closed at declaration time",
+      "what_was_read": null
+    },
+    "2026-09-12": {
+      "previously_opened_for": "none",
+      "authority": "R-555; DA attestation -- the day has not occurred at declaration time",
+      "what_was_read": null
+    },
+    "2026-09-13": {
+      "previously_opened_for": "none",
+      "authority": "R-555; DA attestation -- the day has not occurred at declaration time",
+      "what_was_read": null
+    }
+  },
+  "DAY_READ_STATE_SHAPE": {
+    "per_day_key": "a UTC date, YYYY-MM-DD",
+    "per_day_value": {
+      "previously_opened_for": "one of: none | interim_read_of_frozen_candidate | development_read",
+      "authority": "string or null",
+      "what_was_read": "string or null"
+    },
+    "matches": "de_multiday_design_declaration.DAY_READ_STATE exactly, so a guard can read either source with the same accessor: tbl[day]['previously_opened_for']",
+    "covers_every_day_in_the_ruled_set": true,
+    "SCHEMA_NOT_YET_STATED_BY_DE": "DA 244 says DE states the schema it reads and DA conforms. DE 315 is not landed at time of writing, so the shape chosen here is the one that cannot be wrong: identical to the table it replaces. If DE states a different shape, this file supersedes in band (v3) rather than being edited."
+  },
+  "day_read_state_flat": {
+    "2026-08-29": "development_read",
+    "2026-09-01": "interim_read_of_frozen_candidate",
+    "2026-09-02": "interim_read_of_frozen_candidate",
+    "2026-09-03": "none",
+    "2026-09-04": "none",
+    "2026-09-05": "none",
+    "2026-09-06": "none",
+    "2026-09-07": "none",
+    "2026-09-08": "none",
+    "2026-09-09": "none",
+    "2026-09-10": "none",
+    "2026-09-11": "none",
+    "2026-09-12": "none",
+    "2026-09-13": "none"
+  }
+}

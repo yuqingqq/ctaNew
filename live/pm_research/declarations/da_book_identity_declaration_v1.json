@@ -1,0 +1,127 @@
+{
+ "declaration": "DA_BOOK_IDENTITY",
+ "version": 1,
+ "as_of_utc": "2026-09-11T12:56:59Z",
+ "RULING_DECLARED": "BOOK IDENTITY IS *CONTENT* IDENTITY. Two books of the same day are the same book when every DATA table is equal by digest. A BOOK SHA IS DECLARED **NOT** A REPRODUCIBILITY INSTRUMENT FOR THIS BUILDER: the builder embeds non-deterministic runtime measurements inside the artifact, so byte equality can never hold across two runs and its failure carries no information about the data.",
+ "CONTENT_IDENTITY_HOLDS_OVER": {
+  "tables_compared": 20,
+  "tables_equal": 18,
+  "tables_not_equal": 2,
+  "equal": [
+   "asm.by_arm",
+   "asm.split_by_gen",
+   "asm.split_counts",
+   "fr",
+   "fr.n_slugs",
+   "fr.placement_latency",
+   "fr.population",
+   "fr.reference",
+   "fr.rows",
+   "fr.statuses",
+   "fr.terminal_marks",
+   "header",
+   "header.artifact_revision",
+   "header.coin",
+   "header.day",
+   "header.placement_latency",
+   "header.protocol",
+   "header.score_contracts"
+  ],
+  "not_equal": [
+   "asm",
+   "asm.assembly"
+  ],
+  "reads": "every reference generation, per-window reference, scored row, status, terminal mark and split count is EQUAL BY DIGEST between the landed book and the rebuild"
+ },
+ "EXCLUSION_I_RECEIPT_SCHEMA_PROVENANCE": {
+  "set": [
+   "builder_commit",
+   "head_at_import.head",
+   "head_at_emit.head",
+   "import_closure.modules.*"
+  ],
+  "STATUS": "*** DECLARED BUT NOT EXERCISED ***",
+  "evidence": {
+   "provenance_differs": [],
+   "n": 0
+  },
+  "why_this_matters": "NOTHING in this set actually differed -- the rebuild ran from the SAME builder commit (dbb11e4), so provenance matched. The exclusion is declared for the general case; it did no work here, and the 09-08 result does NOT depend on it. Recording that so nobody later cites this measurement as evidence that the exclusion is safe."
+ },
+ "EXCLUSION_II_NON_DETERMINISTIC_RUNTIME_MEASUREMENTS": {
+  "dispatch_wording": "embedded timings asm.assembly.{bn_cache_clear_s, compose_s, feature_pass_s, score_s_by_head, stages}",
+  "DA_NARROWS_IT_AND_HERE_IS_WHY": "(a) it is not only TIMINGS. `stages` also differs in `peak_rss_mb_highwater` -- a MEMORY measurement (3844.6 -> 3835.1 / 3837.0). The honest category is NON-DETERMINISTIC RUNTIME MEASUREMENT, not timing. (b) EXCLUDING `stages` WHOLESALE WOULD EXCLUDE CONTENT. `stages` carries `rows_indexed` (647129 and 0), which is a DATA field and is IDENTICAL in both builds. Excluding the whole key would let a future rebuild with a DIFFERENT `rows_indexed` pass silently. So the exclusion is the MEASUREMENT LEAVES, not the containing key.",
+  "excluded_leaves": [
+   "asm.assembly.bn_cache_clear_s",
+   "asm.assembly.compose_s",
+   "asm.assembly.feature_pass_s",
+   "asm.assembly.score_s_by_head.*",
+   "asm.assembly.stages.*.wall_s",
+   "asm.assembly.stages.*.peak_rss_mb_highwater"
+  ],
+  "NOT_excluded_and_must_stay_compared": [
+   "asm.assembly.stages.*.rows_indexed"
+  ],
+  "measured": {
+   "asm_assembly_keys": 19,
+   "differing": [
+    "bn_cache_clear_s",
+    "compose_s",
+    "feature_pass_s",
+    "score_s_by_head",
+    "stages"
+   ],
+   "identical": [
+    "absorption_bound_scope",
+    "bn_cache_cleared",
+    "chunk_windows",
+    "drops_by_coin",
+    "kept_by_coin",
+    "n_bn_cache_clears",
+    "n_chunks",
+    "n_tape_rows",
+    "partition_by_split",
+    "passes",
+    "ruling",
+    "split_set",
+    "splits",
+    "widths"
+   ],
+   "rows_indexed_landed_vs_rebuilt": {
+    "tape_index[score]": [
+     647129,
+     647129
+    ],
+    "tape_index[train]": [
+     0,
+     0
+    ]
+   }
+  },
+  "why_asm_and_asm_assembly_appear_in_DATA_DIFFERS": "`asm.assembly` differs only in those measurement leaves, and `asm` differs ONLY BECAUSE it contains `asm.assembly`. They are parents of the excluded leaves, not independent content differences. BE's instrument correctly marked both `allowed_to_differ: false` -- under the ORIGINAL definition they were violations."
+ },
+ "FALSIFIER_B_STATUS": {
+  "as_originally_declared_in_v26": "the 09-08 rebuild is BIT-IDENTICAL",
+  "verdict_under_the_original_wording": "*** FAILS *** -- the books are not byte-equal and never can be",
+  "verdict_under_CONTENT_identity": "PASSED",
+  "RULE_11_DISCLOSURE": "THE DEFINITION WAS CHOSEN AFTER SEEING THE DIFF. This is a ruling made with the result in hand, and it is recorded as such so that `(b) PASSED` is never read as a test that was declared in advance and then met. What justifies it is not the outcome but the MECHANISM: the differing leaves are wall-clock and peak-RSS measurements of the build process, which no reproducibility claim about the DATA depends on. What would NOT have justified it is excluding a field merely because it differed.",
+  "rebuild": {
+   "from_commit": "dbb11e4fd2867b6114a1624dbf0ee4cd76b3df3a",
+   "dir": "data/pm_5min/derived/rebuild_identity/",
+   "receipt": "be_daybook_receipt_20260908_btc__L250ms__FWD1.rebuild.json",
+   "receipt_sha256": "0dfa8c8864eed24e1f9ee61f2084fbeaea5efded26bc1294e491d7b5f28de183",
+   "receipt_sha256_matches_dispatch_prefix_0dfa8c88": true,
+   "day": "20260908",
+   "coin": "btc"
+  }
+ },
+ "INCIDENTAL_FACT_RECORDED": {
+  "claim_from_BE": "the gap ledger grew 3849 B between the two builds and the reference was unchanged",
+  "DA_verified": "the REFERENCE-UNCHANGED half INDEPENDENTLY: the gap-derived reference fields are identical in both receipts -- gap_at_cutoff_excluded 43, TERMINAL_MARK_ENDED_IN_GAP 56, BINANCE_GAP_EXCLUDED 0, BINANCE_GAP_EXCLUDED_STATUS NOT_APPLIED_ON_THE_DAY_PATH.",
+  "DA_could_NOT_verify": "the 3849 B figure itself. Neither receipt records a collector_gaps size or digest, so the byte count is BE-REPORTED and is not independently checked here. collector_gaps.jsonl is 6746766 B as of this declaration.",
+  "why_it_matters": "a growing ledger that leaves the reference unchanged is the benign case. It is recorded because the NEXT rebuild may not be so lucky, and then the difference would be CONTENT, not measurement."
+ },
+ "LIMITS": {
+  "rule_34a": "no tier2 day>=2026-09-08 content was read. The books under data/pm_5min/derived/ were opened ONLY to extract asm.assembly's measurement keys; no row, outcome, score or settlement value was read, aggregated or quoted.",
+  "what_this_declaration_does_NOT_license": "it does not make two books interchangeable for any purpose that depends on the artifact bytes -- a pin, a digest-keyed cache, or a receipt that cites a book sha. Those still require the exact artifact."
+ }
+}

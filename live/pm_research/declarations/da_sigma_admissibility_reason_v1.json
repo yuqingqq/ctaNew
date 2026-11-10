@@ -1,0 +1,45 @@
+{
+ "declaration": "DA_SIGMA_ADMISSIBILITY_REASON_CORRECTED",
+ "version": 1,
+ "as_of_utc": "2026-09-11T18:43:59Z",
+ "authority": "DA 268 (coordinator), correcting the reason given to BE 197; REVIEW 194 found the original false",
+ "THE_REASON_THAT_WAS_GIVEN_AND_IS_FALSE": {
+  "claim": "the sigma keeps its own admissibility because widening continuity_from_recv_ns's 1s gap limit would move other consumers",
+  "verdict": "FALSE -- and DA verified each half rather than relaying it",
+  "DA_VERIFIED": {
+   "max_gap_ns_is_a_parameter_default": {
+    "file": "live/pm_research/de_v2_local_selector.py",
+    "line_measured": 31,
+    "line_in_the_dispatch": 28,
+    "text": "max_gap_ns: int = 1_000_000_000",
+    "note": "the dispatch says :28; it is :31 in the current file -- a line-number drift, recorded"
+   },
+   "the_sole_call_site_passes_its_own_value": {
+    "file": "live/pm_research/de_v2_local_selector.py",
+    "line": 130,
+    "text": "max_gap_ns=int(HER.BN_MAX_GAP_S * 1e9)",
+    "BN_MAX_GAP_S": "1.0, at live/pm_research/harmful_exposure_rows.py:80",
+    "consequence": "a 5s call from elsewhere would widen NOTHING for anyone"
+   },
+   "and_frozen_is_not_available_either": {
+    "in_da_population_freeze_v19": false,
+    "checked": "67 rows; no row matches de_v2_local_selector"
+   }
+  }
+ },
+ "THE_CORRECT_REASON": {
+  "what_continuity_from_recv_ns_IS": "an endpoint-coverage / max-gap PREDICATE over sorted receive timestamps",
+  "what_the_sigmas_admissibility_IS": "FOUR clauses, of which the gap is ONE, answered there in a different shape",
+  "why_it_is_not_delegated": "delegating the gap alone would split ONE decision across TWO modules and leave three clauses local. That is the TWO-VALIDATORS HAZARD POINTED THE OTHER WAY: not two modules answering the same question differently, but one question answered half here and half there, where neither half is wrong and the pair is.",
+  "THE_TWO_LIMITS_SIDE_BY_SIDE_SO_DRIFT_CANNOT_BE_READ": {
+   "sigma_admissibility_here": "5 s",
+   "continuity_from_recv_ns_default_there": "1 s",
+   "they_are_not_drift": "different questions. The 1s default is the local selector's own gap limit, passed explicitly by its sole caller; the 5s is the sigma's admissibility clause. Recorded together so a later reader cannot mistake two answers for one that moved."
+  },
+  "THE_TWO_CLAUSES_WITH_NO_EXISTING_OWNER": [
+   "the RETURN COUNT",
+   "the LOCAL-KNOWLEDGE BOUND"
+  ]
+ },
+ "WHY_THIS_CORRECTION_WAS_WORTH_A_ROUND": "a declared reason that a reader can check and disprove poisons the rest of the declaration it sits in. The false reason would have been checkable in two greps, and finding it false would have put every other clause in the same document in doubt."
+}

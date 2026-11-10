@@ -1,0 +1,58 @@
+{
+ "declaration": "DA_SETTLEMENT_RESIDUAL_CHARACTERISED",
+ "version": 1,
+ "as_of_utc": "2026-09-11T19:06:37Z",
+ "authority": "fair-value plan \u00a75 deliverable (1) and its falsifier; DA 271",
+ "WHAT_SECTION_2_SAID_WAS_MISSING": "'the residual ~0.15% of windows the convention does not reproduce has never been characterised (ties? boundary reads? oracle round timing?)'. IT IS CHARACTERISED NOW, and NOTHING IS UNEXPLAINED.",
+ "THE_SECTION_5_FALSIFIER_RAN_AND_PASSED": {
+  "method": "recompute settlement for the whole audit population under the pinned convention X60(T) >= X60(t0), ties UP, and match resolutions.jsonl WINNER-FOR-WINNER",
+  "n_scored": 46591,
+  "n_agree": 46550,
+  "reproduction_rate": 0.99912,
+  "pre_registered_gate": 0.99,
+  "gate_source": "da_settlement_audit_v1.GATE_POOLED, pre-registered at Q-DA-146 -- REUSED, never re-tuned (rule 11)",
+  "PASSES": true,
+  "counted_statuses": {
+   "VERIFIED_AGREE": 46550,
+   "DISAGREE": 41,
+   "BOUNDARY_NOT_IN_CAPTURE": 59
+  },
+  "loader_exclusions_counted_not_dropped": {
+   "resolutions_open_or_no_winner": 25
+  },
+  "population": {
+   "markets": 46678,
+   "resolutions": 46650
+  }
+ },
+ "THE_RESIDUAL_CHARACTERISED": {
+  "n_mismatches": 41,
+  "classes": {
+   "boundary_read_stale_gt_1s": 31,
+   "margin_below_feed_resolution": 10,
+   "oracle_round_timing": 0,
+   "data_gap": 0,
+   "UNEXPLAINED": 0
+  },
+  "*** ZERO UNEXPLAINED ***": true,
+  "the_decisive_check": "mismatches with NO staleness, NOT a tie, and |margin| >= 0.5bp: ZERO. Every one of the 41 is accounted for by boundary quality -- none is a disagreement about the CONVENTION.",
+  "SEVEN_APPARENT_TIES_ARE_ONE_OUTAGE_NOT_SEVEN_TIES": {
+   "what_my_FIRST_split_said": "tie 7, boundary_stale 24, margin 10 -- three disjoint classes",
+   "what_it_actually_is": "all 7 exact ties are the SAME WINDOW -- `*-updown-5m-1787716800` across btc, eth, sol, xrp, doge, bnb and hype -- with T staleness 537-538s and t0 staleness 237-238s. BOTH boundary reads returned THE SAME STALE SAMPLE, which is WHY xT == x0. They are one feed outage at one window, not seven independent ties.",
+   "why_the_first_split_was_wrong": "my classifier tested `tie` BEFORE `stale`, so precedence decided attribution. All 7 ties are ALSO stale>1s. Corrected: 41 = 31 stale + 10 margin, with the 7 as a NAMED SUBSET of the stale class rather than a class of their own.",
+   "the_lesson_recorded": "a residual split is only as good as its class PRECEDENCE. Reporting 24/10/7 would have invented a 'tie' phenomenon out of an outage."
+  }
+ },
+ "WHAT_THIS_DOES_AND_DOES_NOT_LICENSE": {
+  "does": "\u00a710 kill criterion 1 is NOT triggered -- the unexplained class is empty, so the programme does not stop here.",
+  "does_not": "this characterises the RESIDUAL of the settlement convention. It is not a fair value, not a probability, and not evidence for any candidate."
+ },
+ "RESOURCE_DISCIPLINE_AS_ASKED": {
+  "expected_peak_stated_before_starting": "~1.2 GB steady / ~2.4 GB transient, S60 topic only",
+  "actual_peak": "3.10 GB",
+  "I_UNDER_ESTIMATED_BY_ABOUT_30_PERCENT": "stated 2.4 GB transient, measured 3.10 GB. Still inside the ~4 GB bar, but the estimate was optimistic and is recorded as such rather than quietly replaced by the measurement.",
+  "and_an_arithmetic_error_I_caught_first": "my first estimate divided COMPRESSED on-disk bytes by UNCOMPRESSED bytes-per-row and gave 0.3 GB -- an 8x under-count. Caught before stating it, by noticing the ratio was never applied.",
+  "why_S60_only": "the pinned convention needs only the 60-second topic; load_streams() loads the 30-second one too and doubles the peak for nothing this audit uses.",
+  "concurrency": "read-only, no lock taken; the 09-10 state-tape build held the heavy lock throughout and was not starved (elapsed 82s, 23->22 GB available)"
+ }
+}

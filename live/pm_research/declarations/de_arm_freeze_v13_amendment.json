@@ -1,0 +1,26 @@
+{
+ "protocol": "P003_DE_ARM_FREEZE_V13_AMENDMENT",
+ "version": 13,
+ "rule": "13 -- superseding receipt; v1..v12 unedited",
+ "frozen_parameters": {
+  "params": {
+   "path": "de_multiday_gate1_params_v33.json",
+   "sha256": "aeeb818f3bb18c3e00a71616738eb3ea445891e01f35a7bce8490796148a2312"
+  }
+ },
+ "NO_PARAMS_MOVE": "v13 re-pins the SAME params as v12. DA 244 voided params v34; no params version is created.",
+ "day_read_state_attestation": {
+  "path": "da_day_read_state_attestation_v2.json",
+  "sha256": "1bcb91b7c0ba06c27086e0b93b02e623332ad0e450aa0828d4b03229336322ee"
+ },
+ "forward_test_declaration": {
+  "path": "da_forward_test_declaration_v26.json",
+  "sha256": "01afcbd36407883f6e4bf8880f41717cfd918b6a50154accfd6072136aae40c5"
+ },
+ "WHY": {
+  "day_read_state_attestation": "DA 244(2) -- pins the attestation's identity (path + sha) so the untouched-days guard resolves it by declared identity, not by glob.",
+  "forward_test_declaration": "Q-DE-313 asked for exactly this: 'nothing pins the forward-test declaration today -- neither the freeze amendments (v10/v11/v12 carry no forward-test pin) nor params. So the descendant arm REMAINS UNAVAILABLE on real data until DA pins path+sha256.' This is that pin.",
+  "READ_THIS_BEFORE_RELYING_ON_THE_CHAIN": "be_score_neutrality.resolve_frozen_params_pin returns ONLY {'pin','chain'}. It does not propagate any other key from an amendment. So de_settlement_control_run._declaration_pin's FIRST branch -- chain.get('forward_test_declaration') -- CANNOT EVER BE TRUE, and the same will hold for the attestation pin. DRIVEN, see the register row. The two pins above are therefore CORRECTLY DECLARED BUT NOT YET RESOLVABLE THROUGH THE CHAIN; making them resolvable is a change to resolve_frozen_params_pin, which is not DA's module."
+ },
+ "as_of_utc": "2026-09-11T12:40:46Z"
+}

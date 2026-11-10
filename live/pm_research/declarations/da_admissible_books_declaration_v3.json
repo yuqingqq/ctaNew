@@ -1,0 +1,126 @@
+{
+ "declaration": "DA_ADMISSIBLE_BOOKS_UNDER_THE_FREEZE",
+ "version": 3,
+ "as_of_utc": "2026-09-11T16:09:46Z",
+ "READ_AT": {
+  "ref": "origin/de-freeze-chain-v2",
+  "commit": "71440bebf315aa11aff611f4d53f2d544be820bf"
+ },
+ "RULE_1_ADMISSIBILITY": {
+  "statement": "a book is valued ONLY if its recorded scoring closure equals the frozen closure.",
+  "how_it_is_enforced": "de_multiday_gate1_runner.assert_book_scoring_code -- REFUSES BOOK_BUILT_BY_DIFFERENT_SCORING_CODE",
+  "DRIVEN_BY_DA": {
+   "09-08 real run (builder 7ed5a90)": "REFUSED BOOK_BUILT_BY_DIFFERENT_SCORING_CODE -- de_multiday_gate1_runner.py declared 157413f6\u2026 actual 2aa22662\u2026",
+   "09-07 real run (builder 7ed5a90)": "REFUSED BOOK_BUILT_BY_DIFFERENT_SCORING_CODE",
+   "09-08 FREEZE-BUILT rebuild (builder b34ed9f)": "BOOK_SCORING_CODE_MATCHES_WITH_UNNAMED_MEMBERS -- admissible under rule 2 below"
+  }
+ },
+ "RULE_2_PRE_FREEZE_BOOKS_ARE_VALUED_THROUGH_FREEZE_BUILT_REBUILDS": {
+  "statement": "a book built before the freeze is valued through a freeze-built rebuild proven CONTENT-IDENTICAL to it under da_book_identity_declaration_v1.",
+  "09_08": {
+   "rebuild": "data/pm_5min/derived/rebuild_identity/be_daybook_20260908_btc__L250ms__FWD1.rebuild.pkl",
+   "rebuild_book_sha256_prefix": "05144b6fce62e2cc",
+   "rebuild_builder_commit": "b34ed9fdd1e32fe2f29db8f7dda8f56b56742b27",
+   "real_run_book_sha256_prefix": "41d22f964ff6fb87",
+   "real_run_builder_commit": "7ed5a9015f75de64feeeeaad21d97e4eecc2b15c",
+   "CONTENT_IDENTITY_VERIFIED_INDEPENDENTLY_BY_DA": {
+    "method": "DA's own canonical table digests over both pickles -- NOT BE's diff artifact. Rule 38: convergence is evidence only if the instruments differed.",
+    "tables_compared": 19,
+    "identical": 18,
+    "the_single_difference": "asm.assembly -- the container of the excluded measurement leaves",
+    "differing_outside_the_measurement_leaves": [],
+    "cross_checks_that_ISOLATE_the_difference": {
+     "asm.assembly.NON_MEASUREMENT": "IDENTICAL (every asm.assembly key except the five measurement ones)",
+     "asm.assembly.stages.rows_indexed": "IDENTICAL (the content field inside stages)"
+    },
+    "VERDICT": "CONTENT-IDENTICAL under da_book_identity_declaration_v1"
+   }
+  },
+  "09_07": {
+   "status": "REBUILD NOW PRESENT AND VERIFIED -- v1 declared it absent; it landed at 14:28Z",
+   "rebuild": "data/pm_5min/derived/rebuild_identity/be_daybook_20260907_btc__L250ms__FWD1.rebuild.pkl",
+   "rebuild_book_sha256_prefix": "887a97eb41e9f83c",
+   "rebuild_builder_commit": "b34ed9fdd1e32fe2f29db8f7dda8f56b56742b27",
+   "CONTENT_IDENTITY_VERIFIED_INDEPENDENTLY_BY_DA": {
+    "method": "DA's own canonical table digests over both pickles -- the same instrument used for 09-08, not BE's diff",
+    "tables_compared": 19,
+    "identical": 18,
+    "the_single_difference": "asm.assembly -- the container of the excluded measurement leaves",
+    "differing_outside_the_measurement_leaves": [],
+    "VERDICT": "CONTENT-IDENTICAL under da_book_identity_declaration_v1"
+   },
+   "so": "09-07 is now admissible by the rebuild route on the same footing as 09-08."
+  }
+ },
+ "RULE_3_DAY_ONE_STANDS_AS_PROVENANCE": {
+  "statement": "day one's landed result stands as produced UNDER ITS PRIOR PIN. It is provenance, not a freeze-built result, and must never be quoted as one.",
+  "consistency_link": "(a)'s to-the-cent reproduction from the freeze-built book",
+  "STATUS_OF_THAT_LINK": {
+   "was": "PENDING at v1 and v2 -- 'until it is met, rule 3 rests on provenance alone'",
+   "NOW": "*** MET ***",
+   "artifact": {
+    "path": "data/pm_5min/derived/fwd_v2/p003_de_reproduction_at_the_freeze_20260907.json",
+    "sha256": "82fd37841a13aeb3db49af8911c5dbe514e15a4d43090f0aefab210614c40849"
+   },
+   "every_arm_reproduces_to_the_cent": true,
+   "DA_VERIFIED_BY_EXACT_FLOAT_EQUALITY_NOT_BY_THE_FIELD": {
+    "CONDVALUE_X_SKEW": {
+     "landed_D_cents": -14645.078818000005,
+     "reproduced_D_cents": -14645.078818000005,
+     "exact_equality_DA_checked": true,
+     "p_landed": 0.18163672654690619,
+     "p_reproduced": 0.16966067864271456
+    },
+    "HAZARD_OVER_SKEWED_REF": {
+     "landed_D_cents": 4925.363903000005,
+     "reproduced_D_cents": 4925.363903000005,
+     "exact_equality_DA_checked": true,
+     "p_landed": 0.7285429141716567,
+     "p_reproduced": 0.7065868263473054
+    }
+   },
+   "why_p_differs_and_D_does_not": "the seed derives from the BOOK SHA (de_multiday_gate1_runner.seed_for(book_sha, arm)), and the freeze-built rebuild is a different artifact from the landed book even though it is CONTENT-IDENTICAL. So the null draws differ and p moves; D does not, because D is computed from the book's content, which is identical. *** THAT p MOVES WHILE D DOES NOT IS THE EXPECTED SIGNATURE OF THIS LINK, NOT A DISCREPANCY. ***",
+   "so": "day one's landed result now has its consistency link to a freeze-built book, to the cent, on both arms."
+  }
+ },
+ "RULE_4_REPORTABLE_NEVER_REFUSABLE": {
+  "class": "BOOK_SCORING_CODE_MATCHES_WITH_UNNAMED_MEMBERS",
+  "when": "every unnamed member's recorded digest equals the file on disk (DE 336: reportable iff it has not MOVED)",
+  "never_refusable_because": "static reachability OVER-APPROXIMATES the run: a lazily imported module on an untaken branch is in the derived set and legitimately absent from the recording. Bytes that did not run and did not change cannot have changed the scores.",
+  "the_user_ruled_lazy_exemption_is_UNCHANGED": [
+   "harmful_hazard_model.py",
+   "phase2_state_schema_freeze.py"
+  ],
+  "THE_THREE_MEMBERS_NAMED_BY_DIGEST": {
+   "be_score_neutrality.py": {
+    "sha256": "a455191d6bceec7e20af182243cedfa70373fb29a4d8323b3416f3617ef6c0e9",
+    "identical_to_disk": true,
+    "compared_n_hex": 64,
+    "IN_THE_RULED_LAZY_SET": false,
+    "NOTE": "*** THIS ONE IS BEYOND THE RULED LAZY EXEMPTION. *** The exemption has TWO members; the unnamed set has THREE. be_score_neutrality.py is reportable ONLY under DE 336's has-not-MOVED rule, not under the lazy exemption -- and the exemption is NOT widened to include it."
+   },
+   "harmful_hazard_model.py": {
+    "sha256": "58b8a2c08eea3cc9ee9bfd13b3ca5648d65a2947275d1cc5df0ad8e1153ac7ed",
+    "identical_to_disk": true,
+    "compared_n_hex": 64,
+    "IN_THE_RULED_LAZY_SET": true
+   },
+   "phase2_state_schema_freeze.py": {
+    "sha256": "fe0236b05bc388618931120b743967e59c74dcb2d510a194c10f910fe64f91bd",
+    "identical_to_disk": true,
+    "compared_n_hex": 64,
+    "IN_THE_RULED_LAZY_SET": true
+   }
+  },
+  "measured_on": "the FREEZE-BUILT 09-08 rebuild receipt; 3 of 13 scoring modules unnamed; all three identical at FULL 64 hex",
+  "where_the_recorded_digest_came_from": "the receipt's import_closure.modules has NO entry for these three -- they were never imported -- so the digest is read from git at the receipt's builder_commit b34ed9fdd1e3. Recorded because it means the comparison is against the COMMIT, not against anything the run itself observed."
+ },
+ "LIMITS": {
+  "rule_34a": "no tier2 day>=09-08 content read; the books were opened for TABLE DIGESTS and receipt metadata only.",
+  "a_probe_error_of_mine": "my first read of unnamed_member_rows used the key `disk`; the field is `on_disk`, so every row showed None and would have read as a defect in DE's code. Caught by the contradiction (identical=True beside disk=None). Second wrong-key read of mine this session -- the same shape as the guard-register false clean."
+ },
+ "SUPERSEDES": "da_admissible_books_declaration_v2.json",
+ "supersedes_sha256": "1f0146719697c52852995f2e302e92497f9ce8097aa953f164edf69b57105a68",
+ "WHY_V2": "DA 260 -- v1 recorded 09-07's rebuild as ABSENT. It is present and DA has verified its content identity, so the open item v1 declared is CLOSED.",
+ "WHY_V3": "DA 263 -- the to-the-cent reproduction link that v1 and v2 both declared PENDING is now MET and verified by DA at exact float equality."
+}
