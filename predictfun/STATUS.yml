@@ -6,6 +6,21 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-10 08:51Z (session ce68ebe0): STRATEGY REVIEW revision 2 (user request; read-only).
+  Report handoffs/20261110_strategy_review.md; six diagnostics research/pf_review_*.py; outputs in the 11-08 cohort dir
+  under live_vs_replay/review_20261110/, copies in reviews/strategy_review_20261110/. Population: 220 windows of 11-08, first minute, consumed; point estimates only.
+  What runs has ONE pull line per side; the pull buffer (B3) is a two-line rule in form (band 0.01 c, <= 100 ms, touch
+  order <= 5 sh; mechanics only, not in live code). WIDE two-line touch gate (exit PM50 or -0.10 c, no clock): pro rata
+  band flow +0.24..+0.29 c/sh at 1 s, but NOT SUPPORTED at the order level (queue_reach.txt 08:24Z; one 5-sh order at
+  the back of the queue, replay clock + fill rule, trade shift 50 ms): USD/day at 1 s v3 / buffer / exit PM50 / exit
+  -0.10 = -0.58 / -0.86 / -6.81 / -11.09 (v3 price rule: +0.84 / +0.81 / -1.77 / -3.59); band fills -0.37..-0.51 c/sh
+  at 1 s; below v3 at shifts 0 / 50 / 250 ms. Queue position decides the sign (exit -0.10 arm: no cancel credit -0.43,
+  replay rule -0.24, front +0.73 c/sh at 1 s; front = upper bound). Buffer = churn control only (orders -21%, value
+  about equal). The 06:27Z two-line recommendation is WITHDRAWN. Next: rebate / rewards on the account (USER, T5, D3);
+  B1a then B1 with the order-age split; same tables on 11-03 and 11-07; queue-priority candidates at the order level
+  first (new-level entry, rungs behind the best); guard refit (B7); reducing side (B9 follow-up); C1 / C2 as declared.
+  Limits: levels move with the assumed trade time (v3 arm +0.31 / -0.05 / -1.75 c/sh at 1 s for shifts 0 / 50 / 250
+  ms); fill rule not validated (B1a); Binance guards, CAP10 / RO60, size-up, rung, throttle not modelled.
   2026-11-10 04:56Z (session 62f3ce33): REPO + DISK CLEANUP done; B1a APPROVED, NOT STARTED; LIVE NOT RUNNING (USER).
   pmmmrust main 79a05d3 = GitHub (A1, A2 incremental, A3, A4b, A6; no tag, not deployed). ctaNew mm-research joined with
   origin (merge 335d268a; split since 09-11) and pushed; other sessions' notes committed as found. Free disk 437->547 GiB;
@@ -1512,3 +1527,4 @@ flags:
   rewards: "per-window liquidity reward schedule hourlyRate 3000 (eligibility 6c / 100 sh); payout unverified"
   rebate: "25% taker-fee rebate advertised, unverified -> 0 in base case"
   simulation_review_20261105: "R7 / R8 FIXED by the user, verified 15:30Z (check_fixes_v4.py PASS with pre-fix falsifiers; see updated 15:30Z). Reruns (round i) in progress; every number before round i is provenance only."
+  two_line_touch_gate: "NOT SUPPORTED at the order level (strategy review revision 2, queue_reach.txt 2026-11-10 08:24Z; one consumed partial day, fill rule not validated): fills in the band are adverse for an order at the back of the queue; pull buffer = churn control only; see updated 08:51Z and handoffs/20261110_strategy_review.md section 6"
