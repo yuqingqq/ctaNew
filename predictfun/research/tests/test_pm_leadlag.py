@@ -15,6 +15,8 @@ def test_causal_sampling_future_and_bad_book():
 
 
 def test_market_and_token_identity():
+    assert d.up_identity(np.int64(1)) and d.up_identity([1])
+    assert not any(d.up_identity(x) for x in ([1,2],[0],True,'1',1.0))
     row=dict(slug='btc-updown-5m-300',window_start=300,window_end=600,recv_ns=299*10**9,
              outcomes=['Up','Down'],clobTokenIds=['up','down'])
     assert d.metadata([row],{row['slug']})[row['slug']]['up_token']=='up'
