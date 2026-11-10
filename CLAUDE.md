@@ -176,6 +176,8 @@ checkable requirements, not style.
   validates v6_clean predictions transport from backtest data to real-time.
 - `movewatch/` (P-2026-004, added 2026-09-28) — multi-exchange sudden-move
   detection + Telegram alerts. Public market data only; no order placement.
+- `predictfun/` (P-2026-005, added 2026-11-01) — Predict.fun BTC 5m MM research.
+  Public market data only; no order placement.
 
 **Out of scope** (don't add):
 - Live trading code, exchange adapters, execution servers
@@ -195,6 +197,11 @@ not after.
 **P-2026-004 movewatch** is a self-contained project folder, single seat: its
 state is `movewatch/STATUS.yml` + `movewatch/HANDOFF.md` — read that HANDOFF at
 session start too, and update both after each completed step.
+
+**P-2026-005 predictfun** (added 2026-11-01) is the same kind of self-contained,
+single-seat folder: Predict.fun BTC 5m market-making research (D1 transfer), public
+data only. State is `predictfun/STATUS.yml` + `predictfun/HANDOFF.md`. Exploratory mode
+(no held-out rules yet, by user decision); launch jobs via `predictfun/research/run_light.sh`.
 
 **Exception — P-2026-003 is multi-seat and its state files have ONE writer.**
 Read `orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md`
