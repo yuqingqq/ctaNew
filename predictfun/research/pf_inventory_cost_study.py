@@ -6,7 +6,7 @@ import subprocess
 from .pf_sizing_study import ROOT,HERE,BASE,DAYS,sha,write
 from .pf_late_study import DATA as INPUT
 
-DEST=ROOT/'data/predict_fun/research/inventory_cost_20261110'
+DEST=ROOT/'data/predict_fun/research/inventory_cost_20261110_v2'
 DATA=DEST/'research'
 REVIEW=HERE.parent/'reviews/inventory_cost_20261110'
 ARMS={'baseline':BASE,'late_reserved':BASE.replace('+CAP10','+CAP10+LRES'),
@@ -44,6 +44,7 @@ def setup():
     prior=json.loads(PRIOR.read_text())
     files += [Path(p) for p in prior['binance_input_sha']]+[PRIOR]
     d=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),days=DAYS,arms=ARMS,pairs=PAIRS,
+        supersedes=dict(declaration=str(ROOT/'data/predict_fun/research/inventory_cost_20261110/declaration.json'),reason='Audit distinguishes raw quote notional from lot-rounded submission notional; strategy parameters unchanged; original full-day audit refusal retained'),
         source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=HERE,text=True).strip(),
         source_sha={str(p.relative_to(HERE.parents[1])):sha(p) for p in source_files()},
         input_sha={str(p):sha(p) for p in files},
@@ -65,7 +66,7 @@ def setup():
         metrics=['spread','adverse_1s','plus1','mark240','carry','settlement','FIFO matched/residual','concession committed/filled','shares','inventory_square','inventory duration/terminal/peak','requests'],
         limits='historical fill clocks uncalibrated; no independent validation, no market impact/full native OMS, no live-achievable claim',
         loss_budget=None,backstop_shares=150,rebates='excluded',forward_data_read=False,live_changes=False)
-    write(DEST/'declaration.json',d);write(REVIEW/'declaration.json',d)
+    write(DEST/'declaration.json',d);write(REVIEW/'declaration_v2.json',d)
     print('DECLARED',d['population'])
 
 

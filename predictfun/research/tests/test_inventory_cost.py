@@ -89,3 +89,10 @@ def test_generated_source_and_frozen_guard():
     s=source();compile(s,'study','exec')
     assert 'soft_flag(ENTRY_KIND' in s and 'cost_sent(ENTRY_KIND' in s
     with pytest.raises(ValueError):p.old.parent.replace(s,'missing-sentinel','bad')
+
+
+def test_raw_notional_and_lot_submission_are_distinct():
+    frame=dict(b1_p=50,a1_p=52,b1_s=100,a1_s=100,b2_p=49,a2_p=53)
+    r=p.feasibility(100,2.084,frame,[.1,.1],.05,[5,5],(False,False),[],[(None,0),(52,2.084)])
+    assert r['first_reason']=='quoted' and 'rounded_minimum' in r['flags']
+    assert 'minimum_order' not in r['flags']

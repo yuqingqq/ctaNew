@@ -48,7 +48,7 @@ def summarize(day,tm,mode,books,registry):
     for r in active.itertuples():
         for flag in r.flags:
             v=allflags.setdefault(flag,dict(episodes=0,seconds=0.));v['episodes']+=1;v['seconds']+=r.seconds
-    blockers=set(('invalid_price','off_touch','book_gap','binance','missing_score','minimum_order','room_below_minimum','no_book','invalid_book'))
+    blockers=set(('invalid_price','off_touch','book_gap','binance','missing_score','minimum_order','rounded_minimum','room_below_minimum','no_book','invalid_book'))
     score_only=active[active.flags.map(lambda flags:'score_line' in flags and not blockers.intersection(flags))]
     audit=dict(day=day,timing=tm,mode=mode,markets=int(a.mid.nunique()),episodes=len(a),decisions=int(a.decisions.sum()),
         total_seconds=float(a.seconds.sum()),inventory_episode_count=len(active),inventory_seconds=float(active.seconds.sum()),
@@ -105,7 +105,7 @@ def main():
         live_changes=False,protected_data_read=False)
     if 'rc=0 ' not in report['controls'] or 'passed' not in report['controls']:raise ValueError('missing controls')
     if (DEST/'report.json').exists():raise ValueError('refuse report overwrite')
-    write(DEST/'report.json',report);write(HERE.parent/'reviews/inventory_cost_20261110/receipt.json',report)
+    write(DEST/'report.json',report);write(HERE.parent/'reviews/inventory_cost_20261110/receipt_v2.json',report)
     pd.DataFrame(result).drop(columns=['per_day']).to_csv(DEST/'comparison.csv',index=False)
     for r in result:print({k:r[k] for k in ('timing','variant','settle','spread','adverse_1s','plus1','mean_abs_net_end','inventory_square','concession')})
 
