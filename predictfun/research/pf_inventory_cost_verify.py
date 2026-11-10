@@ -97,7 +97,7 @@ def main():
         verifier_sha=sha(__file__),report_sha=sha(path),controls=checks,arm_day_artifacts_verified=verified,
         independent_inventory_integrals=True,comparison_arithmetic_and_predicates=True,
         limitation='artifact verification does not validate historical fill assumptions or independent strategy performance')
-    write(dest,out);write(HERE.parent/'reviews/inventory_cost_20261110/verification_v2.json',out);print(json.dumps(out,indent=2))
+    write(dest,out);write(HERE.parent/'reviews/inventory_cost_20261110/verification_v3.json',out);print(json.dumps(out,indent=2))
 
 
 if __name__=='__main__':main()
