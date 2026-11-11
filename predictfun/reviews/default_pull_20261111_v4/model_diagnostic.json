@@ -1,0 +1,199 @@
+{
+  "as_of": "2026-11-11T21:20:20.215530+00:00",
+  "status": "NEUTRAL_DIAGNOSTIC_ONLY",
+  "source_commit": "e5916b9729c5476262500825a0203423edc3fe9d",
+  "source_sha": "973e510b72ab369edbb8c34328b19b191a94115d8eb3168a18342586546bdc2e",
+  "plan_sha": "09f609a79415770bf73f534590c4502ce45654b71bddbbdd40b779653407624d",
+  "declaration_sha": "27aacbc919b83b5af958f2a527775c2f46a2aae9059d963dd1b54206862d34ea",
+  "fit_sha": "f9e756c5f657f2efc1c8befeeb68b22796cfc5a48b435706cbd73d917d0f90bc",
+  "predictions_sha": "bdde518e37dcad672ac84d59933c6ec9cdf7672c4a5f173df0bcf54932fab1aa",
+  "days": [
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "eligible_actions": 40059,
+  "statuses": [
+    {
+      "day": "20261026",
+      "status": "ended_before_probe_or_unknown",
+      "n": 8527
+    },
+    {
+      "day": "20261026",
+      "status": "eligible",
+      "n": 8112
+    },
+    {
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 2473
+    },
+    {
+      "day": "20261026",
+      "status": "missing_label_mark",
+      "n": 4
+    },
+    {
+      "day": "20261027",
+      "status": "eligible",
+      "n": 7195
+    },
+    {
+      "day": "20261027",
+      "status": "ended_before_probe_or_unknown",
+      "n": 6805
+    },
+    {
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 1992
+    },
+    {
+      "day": "20261031",
+      "status": "eligible",
+      "n": 4933
+    },
+    {
+      "day": "20261031",
+      "status": "ended_before_probe_or_unknown",
+      "n": 3514
+    },
+    {
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 1026
+    },
+    {
+      "day": "20261031",
+      "status": "missing_label_mark",
+      "n": 2
+    },
+    {
+      "day": "20261101",
+      "status": "eligible",
+      "n": 5244
+    },
+    {
+      "day": "20261101",
+      "status": "ended_before_probe_or_unknown",
+      "n": 4077
+    },
+    {
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 1328
+    },
+    {
+      "day": "20261101",
+      "status": "missing_label_mark",
+      "n": 4
+    },
+    {
+      "day": "20261102",
+      "status": "ended_before_probe_or_unknown",
+      "n": 7770
+    },
+    {
+      "day": "20261102",
+      "status": "eligible",
+      "n": 7489
+    },
+    {
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 2683
+    },
+    {
+      "day": "20261102",
+      "status": "missing_label_mark",
+      "n": 2
+    },
+    {
+      "day": "20261103",
+      "status": "ended_before_probe_or_unknown",
+      "n": 7345
+    },
+    {
+      "day": "20261103",
+      "status": "eligible",
+      "n": 7086
+    },
+    {
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 2670
+    },
+    {
+      "day": "20261103",
+      "status": "missing_label_mark",
+      "n": 2
+    }
+  ],
+  "diagnostics": {
+    "market": {
+      "n": 40059,
+      "kept": 30003,
+      "groups": 4844,
+      "shuffleable": 3423,
+      "observed_c": 34013.60297130307,
+      "null_mean_c": 29493.186368013543,
+      "null_p95_c": 30621.99539072631,
+      "p_ge": 0.001996007984031936,
+      "draws": 500,
+      "zero_keep_and_reset": 29224,
+      "keep_all_value_c": -68080.83367747563,
+      "reset_all_value_c": -30572.011757535314,
+      "selected_keep_c": -58191.37985816814,
+      "selected_reset_c": -24177.776886865067
+    },
+    "queue": {
+      "n": 40059,
+      "kept": 30211,
+      "groups": 4844,
+      "shuffleable": 3382,
+      "observed_c": 34585.11730865629,
+      "null_mean_c": 30004.034959444944,
+      "null_p95_c": 31112.307251117032,
+      "p_ge": 0.001996007984031936,
+      "draws": 500,
+      "zero_keep_and_reset": 29224,
+      "keep_all_value_c": -68080.83367747563,
+      "reset_all_value_c": -30572.011757535314,
+      "selected_keep_c": -58437.57106573455,
+      "selected_reset_c": -23852.453757078263
+    },
+    "queue_cost": {
+      "n": 40059,
+      "kept": 29621,
+      "groups": 4844,
+      "shuffleable": 3436,
+      "observed_c": 34052.459604067786,
+      "null_mean_c": 29434.234367016204,
+      "null_p95_c": 30530.72016694272,
+      "p_ge": 0.001996007984031936,
+      "draws": 500,
+      "zero_keep_and_reset": 29224,
+      "keep_all_value_c": -68080.83367747563,
+      "reset_all_value_c": -30572.011757535314,
+      "selected_keep_c": -57696.29560131238,
+      "selected_reset_c": -23643.835997244598
+    }
+  },
+  "predicates": {
+    "market": {
+      "local_value_above_matched_null": true
+    },
+    "queue": {
+      "local_value_above_matched_null": true
+    },
+    "queue_cost": {
+      "local_value_above_matched_null": true
+    }
+  },
+  "interpretation": "Same predeclared 500 matched-count shuffles as the final report, without changing models, thresholds, nulls or selection. These overlapping local keep/reset counterfactuals approximate portfolio responses; sums are not realizable portfolio P&L. Consumed dates and inherited LODO guard caches preclude untouched/full historical validation. Actual sequential trading value, inventory and execution-stress comparisons remain pending.",
+  "controls": "Original matched-null positive and nonfinite-value refusal pass; saved model identities and predictions reconstructed by the frozen report diagnostic."
+}

@@ -1,0 +1,79 @@
+{
+  "as_of": "2026-11-11T21:24:15.371036+00:00",
+  "status": "EARLY_DIAGNOSTIC_PORTFOLIO_STUDY_INCOMPLETE",
+  "diagnostic_sha": "5e2e4a29e27db58d255d6aaa5bb0c47c2540e6b043b320d9974b07733e11955d",
+  "diagnostic_log_sha": "3e44f4f843504adb4950282aa0b4b8de73bd3576d5a5d4761dd7e9ba0c4438ae",
+  "derived": {
+    "market": {
+      "n": 40059,
+      "pulls": 30003,
+      "pull_fraction": 0.7489702688534412,
+      "local_excess_over_null_c": 4520.41660328953,
+      "draws": 500,
+      "conditional_shuffle_p": 0.001996007984031936
+    },
+    "queue": {
+      "n": 40059,
+      "pulls": 30211,
+      "pull_fraction": 0.7541626101500287,
+      "local_excess_over_null_c": 4581.082349211349,
+      "draws": 500,
+      "conditional_shuffle_p": 0.001996007984031936
+    },
+    "queue_cost": {
+      "n": 40059,
+      "pulls": 29621,
+      "pull_fraction": 0.7394343343568237,
+      "local_excess_over_null_c": 4618.225237051582,
+      "draws": 500,
+      "conditional_shuffle_p": 0.001996007984031936
+    }
+  },
+  "first_policy_day": {
+    "day": "20261026",
+    "as_of": "2026-11-11T21:19:57.078885+00:00",
+    "checks_sha": "5566988ae38ddce6f96a82f0dd7fb8f6643fff9b6cf59d6f4d92791a6c413ea6",
+    "feature_sha": "715ca06506ecdecfffa9712a8da82f78f97dd2718da6a3805f70fad34bec4ff0",
+    "summary_sha": "0a58fd0bf0bf1ad2e4bbba486bca0e48fbda069f91a5573fad67e397bf79d211",
+    "feature_decisions": 90294,
+    "settlement": [
+      {
+        "mode": "matched_guard",
+        "windows": 288,
+        "engine_rounded_settlement_usd": 28.06,
+        "fills": 325
+      },
+      {
+        "mode": "pressure",
+        "windows": 288,
+        "engine_rounded_settlement_usd": 6.51,
+        "fills": 264
+      },
+      {
+        "mode": "floor",
+        "windows": 288,
+        "engine_rounded_settlement_usd": -21.93,
+        "fills": 931
+      },
+      {
+        "mode": "market",
+        "windows": 288,
+        "engine_rounded_settlement_usd": -76.96,
+        "fills": 2763
+      },
+      {
+        "mode": "queue",
+        "windows": 288,
+        "engine_rounded_settlement_usd": -131.22,
+        "fills": 2764
+      },
+      {
+        "mode": "queue_cost",
+        "windows": 288,
+        "engine_rounded_settlement_usd": -118.26,
+        "fills": 2784
+      }
+    ]
+  },
+  "interpretation": "Models exceed matched random pulling on the declared local proxy; observed queue features add little descriptive excess over market/age, without a formal paired incremental-queue claim. On one completed policy day all three learned policies have worse engine settlement totals than matched_guard; settlement is not the paired marked trading-value metric. No selection or threshold change. Remaining primary days, stress scenarios and final audit pending."
+}
