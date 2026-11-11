@@ -2,9 +2,9 @@
 
 <!-- DEFAULT_PULL_LOOP -->
 
-## 2026-11-11T23:24:01.983452+00:00 — Quote-default / learned-pull research loop: complete
+## 2026-11-11T23:24:21.343227+00:00 — Quote-default / learned-pull research loop: running
 
-- Stage `eval_20261101`. Recovered missing marker after driver interruption: numeric rc=0, all artifact hashes and 105395 feature identities verified. Original artifacts unchanged.
+- Stage `eval_20261102`. v4: observed empty levels are known, retaining all data and inventory controls.
 - 17 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
 - Prior own-order/calm test remains COMPLETE, no promotion; comparison_v4.json / d475eccb.
 - Branch research/predict-default-pull-20261111; one light numeric process; no live changes/protected-day reads.
