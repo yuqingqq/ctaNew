@@ -1,0 +1,17 @@
+B16 stage 1 (see report.json). Readings: {'R160_qa': 'NO-CHANGE', 'R163_qa': 'KEEPS', 'R161_qa': 'MIXED', 'R162_qa': 'MIXED', 'R160_qb': 'NO-CHANGE', 'R163_qb': 'KEEPS', 'R161_qb': 'MIXED', 'R162_qb': 'BETTER'}  falsifier: WORSE
+qa R160 new label, arm - REF by day: 1023 +0.0008, 1024 -0.0010, 1025 +0.0045, 1026 -0.0039, 1027 +0.0030, 1031 -0.0012, 1101 -0.0024, 1102 -0.0009 | mean -0.0001 [-0.0025, +0.0022]
+qa R163 old label: mean -0.0017 [-0.0038, +0.0004]; 5 s new label: mean +0.0001 [-0.0053, +0.0055]
+qa gross_usd_J: sum +93.03, days > 0 6/9, 11-03 +65.64
+qa gross_usd_X: sum +12.60, days > 0 5/9, 11-03 -15.78
+qa mo1_usd_J: sum +9.12, days > 0 5/9, 11-03 +1.94
+qa mo1_usd_X: sum +14.56, days > 0 7/9, 11-03 +2.34
+qa mo60_usd_J: sum +111.43, days > 0 7/9, 11-03 +55.83
+qa mo60_usd_X: sum +17.54, days > 0 7/9, 11-03 +13.68
+qb R160 new label, arm - REF by day: 1023 +0.0023, 1024 +0.0030, 1025 +0.0181, 1026 -0.0079, 1027 +0.0103, 1031 +0.0036, 1101 +0.0041, 1102 -0.0068 | mean +0.0033 [-0.0037, +0.0104]
+qb R163 old label: mean +0.0018 [-0.0046, +0.0082]; 5 s new label: mean -0.0001 [-0.0113, +0.0111]
+qb gross_usd_J: sum -148.08, days > 0 4/9, 11-03 +27.59
+qb gross_usd_X: sum -182.88, days > 0 4/9, 11-03 +39.14
+qb mo1_usd_J: sum +71.97, days > 0 9/9, 11-03 +3.36
+qb mo1_usd_X: sum +18.55, days > 0 7/9, 11-03 -1.11
+qb mo60_usd_J: sum -66.61, days > 0 4/9, 11-03 -25.66
+qb mo60_usd_X: sum -191.41, days > 0 3/9, 11-03 +14.75

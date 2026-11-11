@@ -1,0 +1,94 @@
+{
+ "statuses": {
+  "rows": 1071151,
+  "no_frame_live": 0,
+  "no_mid_after": 0,
+  "postonly_refused": 65678,
+  "deeper_than_shown": 90903,
+  "legs": 5402711,
+  "legs_untimed_excluded": 50324
+ },
+ "k1": {
+  "20261023": {
+   "rows": 67019,
+   "equal": 67019,
+   "first_diff": null
+  },
+  "20261024": {
+   "rows": 57490,
+   "equal": 57490,
+   "first_diff": null
+  },
+  "20261025": {
+   "rows": 52396,
+   "equal": 52396,
+   "first_diff": null
+  },
+  "20261026": {
+   "rows": 71293,
+   "equal": 71293,
+   "first_diff": null
+  },
+  "20261027": {
+   "rows": 60686,
+   "equal": 60686,
+   "first_diff": null
+  },
+  "20261031": {
+   "rows": 31386,
+   "equal": 31386,
+   "first_diff": null
+  },
+  "20261101": {
+   "rows": 35780,
+   "equal": 35780,
+   "first_diff": null
+  },
+  "20261102": {
+   "rows": 62901,
+   "equal": 62901,
+   "first_diff": null
+  }
+ },
+ "k1_rows": 438951,
+ "k1_equal": 438951,
+ "controls": {
+  "k2": [
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true,
+   true
+  ],
+  "k3": {
+   "no_queue": true,
+   "credit_cancels": true,
+   "no_cap": true
+  }
+ },
+ "fill_share": {
+  "bid": 0.12984443836583265,
+  "ask": 0.1324892568834833
+ },
+ "sweep_share": {
+  "bid": 0.1020397684360095,
+  "ask": 0.10338224956145306
+ },
+ "old_nonzero_share": {
+  "bid": 0.11320719487728621,
+  "ask": 0.1151714370802996
+ },
+ "mean_ql": {
+  "bid": -0.22506726867708984,
+  "ask": -0.2204826218518949
+ },
+ "mean_old": {
+  "bid": -0.22801827193364893,
+  "ask": -0.2242120858777147
+ }
+}
