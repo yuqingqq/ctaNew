@@ -2,9 +2,9 @@
 
 <!-- DEFAULT_PULL_LOOP -->
 
-## 2026-11-11T18:09:49.928582+00:00 — Quote-default / learned-pull research loop: running
+## 2026-11-11T18:28:01.354254+00:00 — Quote-default / learned-pull research loop: running
 
-- Stage `build_20261023`. v2 cancellation reservation correction; serial replay with direct feature identity audit.
+- Stage `build_20261023`. v3 cached observed-depth features; full-day v2 identity required before further tests.
 - 2 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
 - Prior own-order/calm test remains COMPLETE, no promotion; comparison_v4.json / d475eccb.
 - Branch research/predict-default-pull-20261111; one light numeric process; no live changes/protected-day reads.
@@ -2249,3 +2249,12 @@ The driver only uses run_light.sh (core 8, one process); P-2026-003 must not pin
 - Reconstruct actual saved policy scores/actions, all replay/source/input/feature identities and paired report totals.
 - Distinguish union of resting intervals from aggregate order-time, which can overlap during cancellation.
 - PREPARED, not run while the neutral build owns the shared numeric slot. No policy/threshold/null changes.
+
+## 2026-11-11 18:31Z — Default-pull runtime gate and canonical v3 tracking
+
+- Canonical active path: data/predict_fun/research/default_pull_20261111_v3; declaration39c8fa44.
+- Original v2 full day PASS (288 windows x2 paths,7221 feature identities,840.73s). Retained as immutable comparison.
+- Cached feature sourceb3820276:13 original controls, late-fill reservation regressions,9180 original/cache queries and smoke PASS.
+- Full-day exact old/new equality RUNNING; no further day/model fit before it passes. No policy or model-design change.
+- Superseding final auditor: pf_default_pull_completion_v3 (4652b475), queued after all26 stages; v2 audit plan is historical.
+- Read handoffs/20261111_default_pull_v3_plan.md and the auto-updated progress tracker. Live unchanged.
