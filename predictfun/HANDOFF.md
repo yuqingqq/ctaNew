@@ -1,5 +1,16 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 08:33Z (session ce68ebe0) — Fix plan, checked against the code: size by add / remove is already built (IncrementalV1); the pull hysteresis is studied (B3) but not in the engine
+
+- Checked (USER "I remember we have already implemented the size adjustment logic?"): pmmmrust main has
+  SizeLayering::IncrementalV1 (70b965b, f20fdb1, 2026-11-09; v3 examples' setting; never run live, the 11-08 run predates
+  it). The B3 soft pull (handoffs/20261109_soft_pull_results.md; research/pf_soft_pull.py on research/predict-soft-pull-20261109)
+  is not in pmmmrust; its next step is B4, the integration with IncrementalV1 and parity.
+- USER choices (AskUserQuestion, this session): v4 = pull hysteresis + size by add / remove; code in research + a pmmmrust
+  branch (not main, no tag, no deploy), reviewed and deployed by the Tokyo session.
+- Next: implement B3 in pmmmrust on a branch (default off, token), with unit tests mirroring the B3 study's controls and
+  a parity check against pf_soft_pull.py; then the hand-off.
+
 ## 2026-11-11 08:28Z (session ce68ebe0) — B13d diagnosis: the churn is the guard value flickering around the pull line (83.5% of touch withholds) plus same-price size flips; B13c's "not guard decisions" corrected
 
 - Done: read pmmmrust at pfmm-ladder-v3-tokyo-6 (4d65884; read-only, the checkout was clean and unchanged) and attributed

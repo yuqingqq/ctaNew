@@ -6,6 +6,9 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 08:33Z (session ce68ebe0): fix plan checked against the code: size by add / remove is already on pmmmrust main
+  (IncrementalV1, 70b965b / f20fdb1, never live); the B3 soft pull (0.01 c, <= 100 ms) is studied but not in the engine.
+  USER: v4 = soft pull + incremental size, coded in research + a pmmmrust branch (no tag, no deploy).
   2026-11-11 08:28Z (session ce68ebe0): B13d diagnosis (report handoffs/20261111_b13d_churn_diagnosis.md; pmmmrust read at
   pfmm-ladder-v3-tokyo-6, unchanged): 83.5% of v3's touch withholds are the pull line (guard value flickering on the 50 ms
   grid; 53% back within 100 ms), 14.7% G4; 2,622 same-price size flips in the first minute; every change cancels and
