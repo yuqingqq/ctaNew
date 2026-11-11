@@ -1,0 +1,10 @@
+{
+  "as_of": "2026-11-11T17:40:24.680032+00:00",
+  "version": 4,
+  "source_sha": "f8993d51f53a1e6e728d746f2cb4528e6606377d43d6c8a1473d75245112e386",
+  "source_commit": "e3e7276518cc96beb93a12bc97fa07f904b13313",
+  "causal_declaration_sha": "5174ccbc73182b4ac8877204bcbcaebd5edd485d7aefb3ef9d7df83bc1a46001",
+  "failed_output_sha": "4d6cc9ffbed6f26708dad204f86caf95a47780114ee6eae7557cf2e7313fb22f",
+  "supersedes": "Incomplete original comparison.json: NumPy int64 in matched-null group count failed JSON serialization. File preserved; no numerical or policy changes.",
+  "controls": "Native NumPy integer/bool conversion passes; NaN and unsupported-object refusals pass. Serialize completely before exclusive file creation."
+}
