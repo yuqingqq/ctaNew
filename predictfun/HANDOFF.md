@@ -2,10 +2,10 @@
 
 <!-- DEFAULT_PULL_LOOP -->
 
-## 2026-11-11T19:26:48.725116+00:00 — Quote-default / learned-pull research loop: running
+## 2026-11-11T19:35:44.852139+00:00 — Quote-default / learned-pull research loop: running
 
-- Stage `build_20261024`. v4: observed empty levels are known, retaining all data and inventory controls.
-- 3 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
+- Stage `build_20261025`. v4: observed empty levels are known, retaining all data and inventory controls.
+- 4 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
 - Prior own-order/calm test remains COMPLETE, no promotion; comparison_v4.json / d475eccb.
 - Branch research/predict-default-pull-20261111; one light numeric process; no live changes/protected-day reads.
 
