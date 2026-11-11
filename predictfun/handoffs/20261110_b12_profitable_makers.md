@@ -182,6 +182,8 @@ group is 86 legs on one day and has no null.
   and depth alone loses (ranks 21 and below: -0.56 one tick back, -0.54 two or more). A third of our first-minute shares
   fill one tick back (v3 has a rung there): -0.01 c/sh against the top 5's +0.24 and ranks 6 and below -0.19 (27 legs).
   Two of our legs fill two or more back.
+- Superseded in part by B12b (handoffs/20261111_b12b_reason.md, 2026-11-11 03:19Z): our engine sent those pulls in
+  time; 11 of the 25 fills came while the venue took 0.6-5 s to confirm the cancel, and they are the whole loss.
 - Ranking: the first loss to remove is the fills after the guard turns OFF (pull timing), before queue place or a
   deeper layer. B1 (live run with the A4b capture, USER D2) measures it order by order. Proposed, not run: join the 25
   legs to live's order paths (B1a) to count how many came after our cancel request.

@@ -1,0 +1,65 @@
+B12b why the top makers' fills move less, and ours most. point estimates, one consumed partial day (220 windows of 2026-11-08, 0.764 window-days)
+Controls: {"B12_controls": true, "A1_buckets_levels": true, "A2_decomposition": true, "A3_null": true, "B1_flips": true, "B2_exits": true, "C1_late_fills": true, "M1_matching": true, "NA_and_R45": true}
+K0 reconcile with b12.json: True; own OFF legs {'legs': 25, 'shares': 160.0, 'ok': np.True_}
+R42 matching: {'stat': 0.9464946156269324, 'levels': 85711, 'label': 'FIFO-LIKE'}
+
+A queue reach (at best, guard ON / OFF at lag 50, not swept, value known): group | legs | sh | median reach | share reach <= 0.25 | median size | net 1 s | move 1 s
+top 5 | 10656 | 160,597.2 | 0.213 | 55.6% | 38.2 | +0.24 | -0.29
+6-20 | 19965 | 190,416.2 | 0.179 | 59.5% | 30.0 | +0.26 | -0.25
+rest | 24893 | 197,568.3 | 0.183 | 58.3% | 20.0 | -0.20 | -0.74
+O (ranks >= 6) | 44858 | 387,984.6 | 0.181 | 58.9% | 24.0 | +0.02 | -0.50
+ours | 28 | 280.7 | 0.300 | 42.7% | 23.0 | -1.34 | -1.84
+A by reach: group | bucket share / legs / net 1 s / move 1 s
+top 5: <= 0.10 27.7% 6311 +0.47 -0.04; 0.10-0.25 27.9% 2106 +0.32 -0.20; 0.25-0.50 23.0% 1218 +0.15 -0.39; 0.50-1.00 18.6% 888 -0.19 -0.74; > 1.00 2.8% 133 +0.70 +0.02
+6-20: <= 0.10 35.4% 10441 +0.44 -0.07; 0.10-0.25 24.1% 3815 +0.19 -0.32; 0.25-0.50 18.1% 2643 +0.25 -0.27; 0.50-1.00 19.5% 2683 +0.09 -0.42; > 1.00 2.9% 383 -0.15 -0.66
+rest: <= 0.10 35.1% 13059 +0.29 -0.23; 0.10-0.25 23.2% 4666 -0.31 -0.84; 0.25-0.50 18.9% 3224 -0.31 -0.87; 0.50-1.00 20.8% 3541 -0.83 -1.38; > 1.00 2.0% 403 -0.11 -0.64
+O (ranks >= 6): <= 0.10 35.2% 23500 +0.36 -0.15; 0.10-0.25 23.6% 8481 -0.06 -0.58; 0.25-0.50 18.5% 5867 -0.05 -0.58; 0.50-1.00 20.2% 6224 -0.39 -0.93; > 1.00 2.5% 786 -0.13 -0.65
+ours: <= 0.10 32.1% 9 -1.03 -1.53; 0.10-0.25 10.7% 3 -4.50 -5.00; 0.25-0.50 11.0% 4 -1.61 -2.11; 0.50-1.00 43.8% 10 -0.54 -1.04; > 1.00 2.5% 2 -4.85 -5.35
+A decomposition top 5 against O (c/sh at 1 s): cells | D | MIX | WITHIN | X | excluded T / O
+G | +0.21 | +0.00 | +0.21 | nan | 0.0% / 0.0%
+GR | +0.21 | -0.02 | +0.23 | -0.11 | 0.0% / 0.0%
+GS | +0.21 | +0.02 | +0.19 | 0.10 | 0.0% / 0.0%
+GRS | +0.21 | +0.04 | +0.18 | 0.17 | 0.0% / 0.1%
+N2 null (GR): WITHIN observed +0.23, p50 +0.03, p99 +0.10, share >= observed 0.000
+
+B exits: clean ON -> OFF flips (events) 65; all ON -> OFF flips in range 13837. window | Share_T | legs top 5 / O / ours | own sh | net 1 s top 5 / O / ours
+B (-1500.0, -500.0) | 24.1% | 25 / 112 / 1 | 25.0 | +1.09 / +1.22 / +0.50
+L (-500.0, 0.0) | 15.5% | 25 / 95 / 1 | 5.0 | -0.97 / -1.12 / -2.50
+P (0.0, 500.0) | 19.3% | 8 / 64 / 0 | 0.0 | +0.70 / +0.06 / n/a
+N3 after (P vs B): Share_T 19.3% vs 24.1%, rho 0.80, delta -4.8 pp, null p01 -16.7 p50 -3.6 p99 +11.0 pp; 128 taker orders -> n/a
+N3 before (L vs B): Share_T 15.5% vs 24.1%, rho 0.64, delta -8.6 pp, null p01 -13.0 p50 -0.7 p99 +20.6 pp; 146 taker orders -> n/a
+
+C our at-best first-minute legs by guard state (lag 50) against live order paths
+OFF: legs 25, sh 160.0, link {'linked': 25}, side/price ok True, never cancelled 0; shift 0: after cancel 50% (14 legs) MIXED; shift 50: after cancel 50% (14 legs) MIXED; shift 250: after cancel 41% (11 legs) MIXED
+   cancel - trade ms p10/25/50/75/90 [-3742, -1190, -54, 59, 307]; trade - ack [-287, 17, 388, 1203, 3935]
+   OFF run start {'after ON': 23, 'after warm-up or gap': 2}; trade - flip [93, 195, 441, 1220, 2660]; cancel - flip [-3270, -50, 100, 1345, 3332]
+   leg t 35.7 s, 5.0 sh, trade - flip 148, cancel - trade 59, trade - ack 19 ms, swept 1, v1 -2.50
+   leg t 5.2 s, 4.2 sh, trade - flip 1220, cancel - trade 125, trade - ack -46 ms, swept 1, v1 +0.50
+   leg t 5.2 s, 0.8 sh, trade - flip 1220, cancel - trade 125, trade - ack -46 ms, swept 0, v1 +0.50
+   leg t 5.4 s, 5.0 sh, trade - flip 92, cancel - trade 8, trade - ack 171 ms, swept 1, v1 +1.50
+   leg t 59.9 s, 5.0 sh, trade - flip 341, cancel - trade -4141, trade - ack 4180 ms, swept 1, v1 -0.50
+   leg t 42.3 s, 5.0 sh, trade - flip 404, cancel - trade -54, trade - ack 71 ms, swept 1, v1 +0.50
+   leg t 4.5 s, 18.6 sh, trade - flip 1590, cancel - trade 307, trade - ack -287 ms, swept 0, v1 +0.50
+   leg t 4.5 s, 6.4 sh, trade - flip 1590, cancel - trade 307, trade - ack -287 ms, swept 0, v1 +0.50
+   leg t 52.8 s, 5.0 sh, trade - flip 484, cancel - trade -484, trade - ack 497 ms, swept 0, v1 -0.50
+   leg t 45.3 s, 5.0 sh, trade - flip 94, cancel - trade 51, trade - ack 17 ms, swept 1, v1 +0.50
+   leg t 58.8 s, 5.0 sh, trade - flip 388, cancel - trade -4038, trade - ack 4363 ms, swept 0, v1 -14.50
+   leg t 58.9 s, 5.0 sh, trade - flip 441, cancel - trade -4091, trade - ack 4509 ms, swept 0, v1 -13.50
+   leg t 56.5 s, 3.4 sh, trade - flip 1140, cancel - trade -1190, trade - ack 1203 ms, swept 0, v1 -0.50
+   leg t 56.9 s, 1.6 sh, trade - flip 1516, cancel - trade -1566, trade - ack 1579 ms, swept 1, v1 -0.50
+   leg t 49.4 s, 5.0 sh, trade - flip 195, cancel - trade -945, trade - ack 918 ms, swept 0, v1 -0.50
+   leg t 53.0 s, 5.0 sh, trade - flip 125, cancel - trade 19, trade - ack 388 ms, swept 0, v1 -0.50
+   leg t 12.2 s, 5.0 sh, trade - flip 6703, cancel - trade -92, trade - ack 56 ms, swept 0, v1 -6.50
+   leg t 51.3 s, 5.0 sh, trade - flip 50, cancel - trade -50, trade - ack 115 ms, swept 1, v1 -0.50
+   leg t 55.3 s, 5.0 sh, trade - flip 1202, cancel - trade -2602, trade - ack 2718 ms, swept 0, v1 +0.50
+   leg t 29.0 s, 5.0 sh, trade - flip 87, cancel - trade 56, trade - ack 409 ms, swept 1, v1 -0.50
+   leg t 58.4 s, 5.0 sh, trade - flip 598, cancel - trade -3298, trade - ack 3568 ms, swept 0, v1 -1.50
+   leg t 59.2 s, 5.0 sh, trade - flip 346, cancel - trade -346, trade - ack 581 ms, swept 0, v1 -6.50
+   leg t 59.2 s, 20.0 sh, trade - flip 346, cancel - trade -346, trade - ack 581 ms, swept 0, v1 -6.50
+   leg t 37.5 s, 5.0 sh, trade - flip 3373, cancel - trade 916, trade - ack -1030 ms, swept 0, v1 +1.00
+   leg t 37.5 s, 20.0 sh, trade - flip 3373, cancel - trade 916, trade - ack -1030 ms, swept 0, v1 +1.00
+ON: legs 32, sh 301.5, link {'linked': 32}, side/price ok True, never cancelled 0; shift 0: after cancel 20% (4 legs) LATE-DECISION; shift 50: after cancel 2% (1 legs) LATE-DECISION; shift 250: after cancel 2% (1 legs) LATE-DECISION
+   cancel - trade ms p10/25/50/75/90 [-1, 10, 43, 66, 222]; trade - ack [9, 59, 112, 474, 1084]
+Live pull delay after a research ON -> OFF flip (orders live 500 ms before it, first minute): n 4841, status {'orders_flips': 4888, 'never_cancelled': 47}, p10/25/50/75/90 [-450, -426, -350, -150, 0] ms, before the flip 84.9%, 0-50 ms 12.8%, > 250 ms 1.1%
+
+Readings: {"R40": "NOT-QUEUE", "R41": ["SAME-PLACE", "OURS-BEHIND"], "R42": "FIFO-LIKE", "R43_after": "n/a", "R43_before": "n/a", "R44": "MIXED", "R44_shifts": {"0": "MIXED", "50": "MIXED", "250": "MIXED"}, "R45": "OWN-SIGNAL (exits n/a)"}
