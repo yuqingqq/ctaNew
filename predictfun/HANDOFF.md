@@ -1,5 +1,23 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 07:14Z (session ce68ebe0) — B13b / B13c DONE: the pressure model predicts when the top makers take (AUC 0.77) but they do not pull on it; we never hold the queue because our engine cancels at-best orders a median 23-38 ms after they go live
+
+- Done: B13b and B13c (USER: do the features explain the top makers' behaviour; why do they keep the front of the queue).
+  research/pf_b13b_top_behaviour.py and research/pf_b13c_queue_pulls.py committed and pushed before their runs (54dc5df9;
+  outputs 07:10Z, 07:12Z). Report handoffs/20261111_b13bc_behaviour_queue.md; output live_vs_replay/b13_20261111/, copies
+  reviews/b13bc_20261111/. Controls pass; K-checks against B12d / B12e / B1a pass.
+- B13b: R102 FEATURES-EXPLAIN-TAKES (EMPH AUC 0.771; BASE 0.725; R104 EMPH-EXPLAINS-BETTER); R101 NO-PULL-SIGNAL (their
+  share of fills 29.4% -> 27.8% from low to high adverse pressure); R100 / R103 no pressure-driven leaving (re-hit 57.9% ->
+  64.9%). Under adverse pressure top 5 -0.50, ranks 21+ -1.24 c/sh.
+- B13c: 12,240 first-minute pulls at the best; order life p50 23 ms (raw log, all minutes: 26 / 38 ms; 52% < 50 ms; > 10%
+  cancelled before their ack); 82.5% re-placed at the same price within 1 s (R110 CHURN-HEAVY); queue ahead at activation
+  p50 381 sh; 87% of pulls with the research guard ON, after which the flow at our price earned +0.45 c/sh (R112
+  PULLS-COST); would-be fills had we stayed 1,631 sh at +0.04 (R113 STAYING-PAYS); R114 GUARD-PULLS-GOOD-ORDERS.
+- Next: stop the churn (keep an order that is still at the best with the guard ON); measure with the A4b capture (USER
+  D2); use the pressure model to step back from informed takers; churn and slow cancels to the live session.
+- Watch out: would-be fills use the shown queue with FIFO and no cancels ahead; re-hits mix staying with the next order's
+  arrival; 11-08 is descriptive for B13b.
+
 ## 2026-11-11 07:10Z (session ce68ebe0) — B13a DONE: a guard model with 13 engineered pressure features beats the current one on all 9 out-of-sample days (R2 0.18 -> 0.21)
 
 - Done: B13a (USER: train on some days, validate on others, emphasise imbalance and flow). research/pf_b13a_pressure_model.py

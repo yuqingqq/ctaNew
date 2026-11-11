@@ -1,0 +1,11 @@
+B13c does our engine pull at-best orders that should stay, and what does a pull cost in queue place? (11-08, first minute)
+Controls: {"B12b_controls": true, "Q1_would_fill": true, "Q2_queue_at": true, "Q3_replace": true, "Q4_rules": true}; live filled 849.867 sh
+Pulls at the best: 12240; order life p10/50/90 [1, 23, 231] ms; <= 1 s 99%, <= 2 s 100%
+Re-placed at the same price within 1 s: 82.5%; queue lost per re-place p25/50/75 [-2, 0, 20] sh (n 10097); queue ahead at activation p50 381 sh
+
+by the research guard at the pull: pulls | re-placed | flow at our price in the next 2 s: legs, sh, net 1 s | would-be fills had we stayed: sh, net 1 s | queue ahead at activation p50
+ON | 10606 | 84% | 37814, 428,980, +0.45 | 1,630.9, +0.04 | 384
+OFF | 1627 | 73% | 5999, 67,221, +0.31 | 267.2, -0.98 | 358
+n/a | 7 | 100% | 10, 113, +1.08 | 0.0, n/a | 176
+
+Readings: {"R110": "CHURN-HEAVY", "R111": "QUEUE-KEPT", "R112": ["PULLS-COST"], "R113": "STAYING-PAYS", "R114": "GUARD-PULLS-GOOD-ORDERS"}

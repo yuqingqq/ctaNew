@@ -1,0 +1,28 @@
+B13b do the pressure features explain the top makers' behaviour? (11-08; composites from B13a models trained on other days)
+Controls: {"B12e_controls": true, "H1_auc": true, "H2_terciles_sign": true, "H3_rules": true}; events {'SMART': 2491, 'RANDOM': 12455}; re-hit opportunities (top 5 + O) 19018
+
+Taking: AUC, SMART against RANDOM (0.5 = no separation): base 0.725; emph 0.771; pf_imb1 0.669; bn_imb 0.568; bn_flow250 0.590; pf_dm250 0.538; bn_ntr1000 (unsigned) 0.606
+
+Staying after an absorbed fill, by tercile of adverse pressure (low / mid / high): stay rate (n) | high - low | AUC for leaving
+emph | top 5: 57.9% (1569) / 56.5% (1486) / 64.9% (1268) | 7.0% | 0.461
+emph | O (ranks >= 6): 36.7% (4770) / 33.7% (4853) / 44.4% (5072) | 7.7% | 0.457
+base | top 5: 59.0% (1606) / 54.7% (1434) / 65.4% (1283) | 6.4% | 0.463
+base | O (ranks >= 6): 36.6% (4733) / 33.5% (4905) / 44.7% (5057) | 8.1% | 0.458
+pf_imb1 | top 5: 59.4% (1545) / 58.8% (1442) / 60.3% (1336) | 0.8% | 0.490
+pf_imb1 | O (ranks >= 6): 39.5% (4794) / 34.0% (4895) / 41.6% (5005) | 2.1% | 0.483
+bn_imb | top 5: 58.0% (1469) / 58.8% (1349) / 61.5% (1505) | 3.5% | 0.479
+bn_imb | O (ranks >= 6): 36.2% (4870) / 38.9% (4990) / 40.0% (4835) | 3.8% | 0.477
+bn_flow250 | top 5: 55.5% (898) / n/a (0) / 60.5% (3425) | 5.1% | 0.456
+bn_flow250 | O (ranks >= 6): 37.0% (2731) / n/a (0) / 38.7% (11964) | 1.7% | 0.471
+pf_dm250 | top 5: 54.6% (350) / n/a (0) / 59.9% (3973) | 5.3% | 0.458
+pf_dm250 | O (ranks >= 6): 38.7% (1482) / n/a (0) / 38.3% (13213) | -0.4% | 0.493
+
+Presence: the top 5's share of at-best fill shares by tercile of adverse pressure (low / mid / high) | high / low | net 1 s top 5 ; 6-20 ; rest by tercile
+emph: 29.4% / 28.1% / 27.8% | 0.94 | top 5 +0.684/+0.149/-0.498 ; 6-20 +0.552/+0.039/-0.625 ; rest +0.639/+0.124/-1.235
+base: 30.2% / 28.6% / 26.2% | 0.87 | top 5 +0.623/+0.144/-0.467 ; 6-20 +0.547/+0.051/-0.569 ; rest +0.619/+0.071/-1.204
+pf_imb1: 28.6% / 29.1% / 27.7% | 0.97 | top 5 +0.566/+0.102/-0.281 ; 6-20 +0.474/-0.002/-0.312 ; rest +0.462/-0.281/-0.870
+bn_imb: 28.3% / 27.2% / 30.1% | 1.06 | top 5 +0.475/+0.140/-0.131 ; 6-20 +0.386/+0.126/-0.198 ; rest +0.302/-0.144/-0.946
+bn_flow250: 32.2% / n/a / 27.5% | 0.85 | top 5 +0.420/n/a/+0.088 ; 6-20 +0.411/n/a/+0.071 ; rest +0.261/n/a/-0.411
+pf_dm250: 25.7% / n/a / 28.8% | 1.12 | top 5 +0.225/n/a/+0.163 ; 6-20 +0.478/n/a/+0.101 ; rest +0.407/n/a/-0.342
+
+Readings: {"R100": "NO-PRESSURE-STAYING", "R101": "NO-PULL-SIGNAL", "R102": "FEATURES-EXPLAIN-TAKES", "R103": "NOT-PRESSURE-LEAVING", "R104": "EMPH-EXPLAINS-BETTER"}
