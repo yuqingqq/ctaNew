@@ -6,6 +6,9 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 18:31Z: Default-pull loop now uses v3 cached feature calculations;13 original controls plus9180
+  exact feature comparisons and8-window smoke PASS. Full288-window equality against preserved v2 is RUNNING
+  before any further day or fit. Canonical output default_pull_20261111_v3; handoffs/20261111_default_pull_v3_plan.md.
   2026-11-11 18:10Z: Default-quote learned-pull loop RUNNING, research/predict-default-pull-20261111.
   v2 late-fill reservation correction passed8-window exact parity and197 feature identities;9-day neutral build started.
   Live unchanged. Current per-stage state: default_pull_loop below and handoffs/20261111_default_pull_progress.md.
@@ -1706,11 +1709,11 @@ flags:
 
 # DEFAULT_PULL_LOOP
 default_pull_loop:
-  as_of: "2026-11-11T18:09:49.928582+00:00"
+  as_of: "2026-11-11T18:28:01.354254+00:00"
   state: "running"
   stage: "build_20261023"
   completed_stages: 2
-  detail: "v2 cancellation reservation correction; serial replay with direct feature identity audit."
+  detail: "v3 cached observed-depth features; full-day v2 identity required before further tests."
   progress: handoffs/20261111_default_pull_progress.md
   branch: research/predict-default-pull-20261111
 # /DEFAULT_PULL_LOOP
