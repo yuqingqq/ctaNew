@@ -1,0 +1,20 @@
+B13a pressure-emphasised guard model against the current one (y1000), blocked 3-fold CV by day.
+Controls: {"F1_features": true, "F2_folds": true, "F3_pipeline": true, "F4_rules": true}
+
+day | fold | rows | R2 base | R2 emph | dR2 | r base | r emph | pressure rows | R2 base / emph on them | resid corr imb1 base / emph | resid corr bn_imb base / emph
+20261023 | A | 671223 | +0.2128 | +0.2451 | +0.0323 | +0.4616 | +0.4954 | 319291 | +0.3115 / +0.3405 | +0.0265 / +0.0230 | -0.0114 / -0.0074
+20261024 | A | 673358 | +0.1724 | +0.2016 | +0.0292 | +0.4163 | +0.4491 | 317823 | +0.2538 / +0.2809 | -0.0129 / -0.0079 | -0.0565 / -0.0378
+20261025 | A | 665659 | +0.1683 | +0.2035 | +0.0352 | +0.4106 | +0.4515 | 294063 | +0.2612 / +0.2950 | -0.0144 / -0.0009 | -0.0248 / -0.0108
+20261026 | B | 670142 | +0.2080 | +0.2338 | +0.0258 | +0.4563 | +0.4835 | 298112 | +0.3064 / +0.3289 | +0.0104 / +0.0036 | +0.0027 / -0.0043
+20261027 | B | 665549 | +0.2189 | +0.2483 | +0.0294 | +0.4684 | +0.4985 | 281889 | +0.3329 / +0.3592 | +0.0090 / +0.0029 | +0.0135 / +0.0067
+20261031 | B | 678513 | +0.1747 | +0.1894 | +0.0147 | +0.4185 | +0.4356 | 240775 | +0.2994 / +0.3161 | -0.0182 / -0.0224 | +0.0254 / +0.0232
+20261101 | C | 668866 | +0.1551 | +0.1774 | +0.0223 | +0.3937 | +0.4213 | 337188 | +0.2257 / +0.2485 | -0.0267 / -0.0143 | +0.0097 / +0.0243
+20261102 | C | 661248 | +0.1789 | +0.2053 | +0.0264 | +0.4233 | +0.4531 | 357383 | +0.2494 / +0.2728 | -0.0031 / -0.0078 | +0.0250 / +0.0144
+20261103 | C | 661973 | +0.1850 | +0.2134 | +0.0285 | +0.4301 | +0.4621 | 324540 | +0.2671 / +0.2927 | -0.0098 / -0.0150 | +0.0123 / +0.0018
+dR2 all rows: mean +0.0271 [+0.0225, +0.0316], positive days 9/9
+dR2 pressure rows: mean +0.0253 [+0.0216, +0.0289], positive days 9/9
+mean |resid corr|: imb1 base 0.0146 emph 0.0109; bn_imb base 0.0201 emph 0.0145
+gain shares: fold A: BASE pressure features 52.7%, EMPH engineered 26.4% (all pressure 60.7%); fold B: BASE pressure features 54.4%, EMPH engineered 30.8% (all pressure 64.3%); fold C: BASE pressure features 51.6%, EMPH engineered 27.6% (all pressure 60.0%)
+top EMPH engineered features by gain (fold C): d_bnimb_250 16.7%, d_bnimb_1000 4.2%, bn_act_rel 2.6%, bn_press 2.1%, bid_rel 0.7%, flow_press 0.5%
+
+Readings: {"R90": "IMPROVES", "R91": "IMPROVES-UNDER-PRESSURE", "R92": "NOT-ABSORBED"}

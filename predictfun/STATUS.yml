@@ -6,6 +6,10 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 07:10Z (session ce68ebe0): B13a DONE (research/pf_b13a_pressure_model.py 4b98b043 committed before its run;
+  report handoffs/20261111_b13a_pressure_model.md): EMPH (current 32 features + 13 engineered pressure features) beats
+  BASE out of sample on all 9 days by blocked 3-fold CV (R90 IMPROVES, dR2 +0.027 [+0.023, +0.032]; R91 IMPROVES-UNDER-PRESSURE;
+  R92 NOT-ABSORBED). Top new feature: 250 ms change of Binance's top-of-book imbalance.
   2026-11-11 06:48Z (session ce68ebe0): B12f DONE (read-only; research/pf_b12f_activity_imbalance.py 6a51ba39 committed
   before its run; report handoffs/20261111_b12f_activity_imbalance.md): at the top makers' takes Binance is twice as
   busy (R82 BN-ACTIVE) and its top-of-book sizes lean their way (R81 BN-BOOK-LEAD, +0.17 vs +0.04) while its price is
@@ -1501,6 +1505,7 @@ days_read:
   - {day: "20261108", scope: "B12 (session ce68ebe0, read-only): cohort tape (legs_timed2, legs_tk, books, step5 guard) of the 220 windows and raw REST match pages of hours 03 and 15 (maker fee field); the day was already consumed"}
   - {day: "20261108", scope: "B12e v2 (session ce68ebe0, read-only, 2026-11-11): HF collectors' raw Binance BTCUSDT bookTicker hour files (data/mm_hf/raw/bookTicker/BTCUSDT/20261108_HH.csv.gz), first minutes of the 220 cohort windows +/- 3 s"}
   - {day: "20261108", scope: "B12f (session ce68ebe0, read-only, 2026-11-11): HF collectors' raw Binance BTCUSDT trade and bookTicker hour files (data/mm_hf/raw/trade|bookTicker/BTCUSDT/20261108_HH.csv.gz), first minutes of the 220 cohort windows +/- 3 s"}
+  - {day: "20261023-20261103 (10-23..10-27, 10-31, 11-01..11-03)", scope: "B13a (session ce68ebe0, read-only, 2026-11-11): step5 rows of the 9 days for a blocked 3-fold CV of the guard price model (BASE against EMPH)"}
   - {day: "20261023", scope: "B12 input check (session ce68ebe0, read-only): on-chain slice 14:00-14:15 calldata and raw REST match pages of hour 14 (signer identity, maker fee); a read day"}
   # Binance tape directory listings (file counts only, no content) were made for 10-22..10-31.
 
@@ -1621,5 +1626,6 @@ flags:
   model_or_speed_b12c: "PREDICT-LOCAL TIMING (B12c; 05:49Z correction reversed by B12e v2): the top makers' edge is earned within 250 ms of the trade report; our guard value does not account for it (v1); Binance's best bid / ask path accounts for 22% (v2), and the raw stream confirms Binance was quiet (90% of 1 s unchanged); not a trend model"
   smart_takes_b12e: "THIN SIDE + PREDICT MOMENTUM + OUR MODEL SEES (B12e / v2, 2026-11-11): makers 48 / 51 / 661 take the thin side of a lopsided book (84 vs 228 sh) after Predict moved their way (+0.61 c); our 1 s prediction points their way at 81%; 55% in runs within 250 ms; Binance's best price moved >= 1 bp their way before only 4% of them (raw stream)"
   book_pressure_b12f: "BINANCE BOOK + ACTIVITY, PREDICT IMBALANCE (B12f, 2026-11-11 06:46Z, handoffs/20261111_b12f_activity_imbalance.md): at the top makers' takes Binance is 2x as busy and its top-of-book leans their way (+0.17 vs +0.04) with the price still; Predict thin-side fills lose 0.58 c/sh more at the same guard value; we fill at median reach 0.93 on heavy levels (field 0.20)"
+  pressure_model_b13a: "EMPH IMPROVES (B13a, 2026-11-11 07:08Z, handoffs/20261111_b13a_pressure_model.md): + 13 engineered pressure features raise out-of-sample R2 of the 1 s Predict move from ~0.18 to ~0.21 on 9 of 9 days (blocked CV); not yet a guard (needs a value mapping and >= 5 untouched days)"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"
