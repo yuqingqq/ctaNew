@@ -1,5 +1,21 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 08:28Z (session ce68ebe0) — B13d diagnosis: the churn is the guard value flickering around the pull line (83.5% of touch withholds) plus same-price size flips; B13c's "not guard decisions" corrected
+
+- Done: read pmmmrust at pfmm-ladder-v3-tokyo-6 (4d65884; read-only, the checkout was clean and unchanged) and attributed
+  the touch withholds from the Rust engine's own parity decisions of tokyo-5 (105 windows of 11-07 / 11-08). Report
+  handoffs/20261111_b13d_churn_diagnosis.md; scripts research/pf_b13d_withhold_attrib.py, research/pf_b13d_g4_check.py.
+- Code path: pf-strategy ladder.rs:413 (withhold when v <= the pull line, every decision), :278 (size 25 / 5 by the PM95
+  line), :495 (G4); pf-engine ladder.rs:439 and :479-528 (any change of the wanted price or size cancels and re-places).
+- Attribution (6,866 first-minute transitions): pull line 83.5% (53% back within 100 ms), G4 14.7%, other < 2%;
+  same-price size flips 2,622. G4 check on 11-08 live cancels: our side lighter in only 4.1%.
+- Correction: B13c's lag-50 read of the research guard was one grid step before the triggering crossing; the pulls ARE
+  the guard's line crossings (flicker). B13c report and flag annotated in place.
+- Next (USER to confirm the spec): a new candidate with (1) a narrow pull hysteresis for resting touch orders (B3: 0.01 c,
+  <= 100 ms), (2) size changes by adding / removing orders, (3) optionally a G4 hysteresis; in a new research engine file
+  and in pmmmrust behind default-off tokens with parity; then a live run with the A4b capture.
+- Watch out: do not edit predictfun/research/pf_step4_ladder.py (the scheduled v3 forward run depends on it).
+
 ## 2026-11-11 07:14Z (session ce68ebe0) — B13b / B13c DONE: the pressure model predicts when the top makers take (AUC 0.77) but they do not pull on it; we never hold the queue because our engine cancels at-best orders a median 23-38 ms after they go live
 
 - Done: B13b and B13c (USER: do the features explain the top makers' behaviour; why do they keep the front of the queue).
