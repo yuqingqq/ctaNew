@@ -1,0 +1,12 @@
+{
+  "as_of": "2026-11-11T22:10:09.995310+00:00",
+  "status": "PERSISTENT_METADATA_WATCHER_ACTIVE",
+  "watcher_pid": 1763547,
+  "watcher_session": 94120,
+  "driver_pid": 199624,
+  "driver_session": 45627,
+  "source_commit": "457cde03",
+  "source_sha": "530a85da0b9c78d1090f927f79bf465c25820812fb2dc42d046f94ee5dbfa925",
+  "scope": "Metadata only. Observe real driver/jobs; verify and publish completed eval/stress artifacts, primary report, and audited final report/figure. Does not launch or change numeric tests and does not declare the research goal complete. Human final review remains required.",
+  "controls": "Changed-digest/protected-date refusals and positive artifact/cohort controls inherited; valid report population accepted and planted invalid window count refused."
+}
