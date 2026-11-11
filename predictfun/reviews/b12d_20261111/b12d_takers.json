@@ -1,0 +1,105 @@
+{
+ "note": "POST HOC, descriptive; same build and statuses as b12b.json",
+ "controls_ok": true,
+ "K0": true,
+ "stat": {
+  "legs": 94783,
+  "legs_unambiguous": 65382,
+  "share_joined": 0.6898072439150481,
+  "own_address_ok": true,
+  "signer_purity_p10": 1.0
+ },
+ "top5_signers": [
+  30,
+  40,
+  48,
+  51,
+  661
+ ],
+ "top5_as_takers": {
+  "30": {
+   "taker_shares": 0.0,
+   "taker_share_pct": 0.0
+  },
+  "40": {
+   "taker_shares": 0.0,
+   "taker_share_pct": 0.0
+  },
+  "48": {
+   "taker_shares": 12192.368034860901,
+   "taker_share_pct": 1.28114736911574
+  },
+  "51": {
+   "taker_shares": 18066.11246452974,
+   "taker_share_pct": 1.898347588253836
+  },
+  "661": {
+   "taker_shares": 10602.912349648104,
+   "taker_share_pct": 1.1141308417591114
+  }
+ },
+ "value_by_taker": {
+  "top-5 taker": {
+   "legs": 2491,
+   "shares": 30898.23577482647,
+   "net1": -1.2337731192750414,
+   "move1": -1.7659855977341141
+  },
+  "other taker": {
+   "legs": 58015,
+   "shares": 607291.4204949618,
+   "net1": 0.0800010328613686,
+   "move1": -0.45341505365340234
+  }
+ },
+ "partA_gap": {
+  "all part A legs": {
+   "legs": 55514,
+   "WITHIN_G": 0.21102256021460136
+  },
+  "taker known": {
+   "legs": 50676,
+   "WITHIN_G": 0.208892900460673
+  },
+  "taker known, not a top-5 address": {
+   "legs": 48381,
+   "WITHIN_G": 0.16292229318035248
+  },
+  "taker a top-5 address": {
+   "legs": 2295,
+   "WITHIN_G": 0.7924795565927012
+  }
+ },
+ "fills_from_top5_takers": {
+  "top 5": {
+   "legs": 10153,
+   "from_top5_takers_pct": 4.657243124171557,
+   "net1_from_top5": -0.5892082579297778,
+   "net1_from_others": 0.282601042003139
+  },
+  "6-20": {
+   "legs": 17537,
+   "from_top5_takers_pct": 3.065024002349618,
+   "net1_from_top5": -0.7014000360814844,
+   "net1_from_others": 0.34568349597797354
+  },
+  "rest": {
+   "legs": 22986,
+   "from_top5_takers_pct": 8.345233883166316,
+   "net1_from_top5": -1.6103234103520925,
+   "net1_from_others": -0.09684351805036316
+  },
+  "O (ranks >= 6)": {
+   "legs": 40523,
+   "from_top5_takers_pct": 5.849256507540533,
+   "net1_from_top5": -1.3851848192457912,
+   "net1_from_others": 0.11852687442391027
+  },
+  "ours": {
+   "legs": 26,
+   "from_top5_takers_pct": 1.8814845461025316,
+   "net1_from_top5": -1.5,
+   "net1_from_others": -1.1201399393323057
+  }
+ }
+}
