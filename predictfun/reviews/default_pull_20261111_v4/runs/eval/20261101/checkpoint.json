@@ -1,0 +1,27 @@
+{
+  "as_of": "2026-11-11T23:24:01.954469+00:00",
+  "status": "COMPLETED_REPLAY_INTEGRITY_PASS",
+  "group": "eval",
+  "day": "20261101",
+  "windows_per_arm": 288,
+  "arms": [
+    "floor",
+    "market",
+    "matched_guard",
+    "pressure",
+    "queue",
+    "queue_cost"
+  ],
+  "feature_decisions": 105395,
+  "artifacts": {
+    "checks.json": "90fdfa48d3fe11e37e76e94c254abe15cf4ad465616babcd61ca2a580c2378b0",
+    "feature_check.json": "cff2e1f382c6ee21a43b1f6c01f20292be8a83aefb3d550f915af88ea75eb85e",
+    "source.json": "8c260c236431898fbc8948819d15079921287dce5c9b775acad55c9f0b58347c",
+    "summary.json": "ab26b5f790845e83b7f10fcf6a147914e4ecb9c6fb42cab5db2ff6ed04a53ac9"
+  },
+  "log_sha": "48c8cf0b82736003971006c586677b411dc6e82108c8e7e26713a18c14dfc6a8",
+  "source_sha": "4cef4407319a6bc9a970882a44c36ee5b4533e15e10754c58df3bc4c95a4d36e",
+  "source_commit": "0624854d0fa827273a3f1d57a4633ff81ffb3743",
+  "scope": "Integrity of completed per-run checks and actual win/fill/request/generation artifacts. Numeric reconciliation was performed by the frozen run checker; complete comparisons and final independent model/action audit remain required.",
+  "controls": "Correct artifact/cohort accepted; planted changed digest and protected date refused."
+}

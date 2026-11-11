@@ -1,5 +1,5 @@
 # Quote-default / learned-pull research loop
-As of 2026-11-11T23:22:19.557825+00:00. **interrupted: driver**. Driver interrupted; completed stages retained.
+As of 2026-11-11T23:24:01.983452+00:00. **complete: eval_20261101**. Recovered missing marker after driver interruption: numeric rc=0, all artifact hashes and 105395 feature identities verified. Original artifacts unchanged.
 
 Completed prior test: own-order/calm study d475eccb, canonical comparison_v4.json; no promoted variant.
 Current branch: research/predict-default-pull-20261111. One numeric process; consumed dates only; no live changes.
@@ -23,5 +23,5 @@ Plan: controls →8-window parity smoke →9 neutral build days →6 expanding m
 | model_diagnostic | complete | 2026-11-11T21:20:20.421339+00:00 | Frozen neutral-action diagnostic completed; portfolio and stress comparisons remain pending. |
 | eval_20261027 | complete | 2026-11-11T22:01:04.820222+00:00 | Passed; logs/eval_20261027.log plus artifact/feature checks retained. |
 | eval_20261031 | complete | 2026-11-11T22:42:12.791386+00:00 | Passed; logs/eval_20261031.log plus artifact/feature checks retained. |
-| eval_20261101 | running | 2026-11-11T22:42:12.899952+00:00 | v4: observed empty levels are known, retaining all data and inventory controls. |
+| eval_20261101 | complete | 2026-11-11T23:24:01.983452+00:00 | Recovered missing marker after driver interruption: numeric rc=0, all artifact hashes and 105395 feature identities verified. Original artifacts unchanged. |
 | driver | interrupted | 2026-11-11T23:22:19.557825+00:00 | Driver interrupted; completed stages retained. |
