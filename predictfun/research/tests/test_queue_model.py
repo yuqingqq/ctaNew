@@ -4,7 +4,7 @@ import unittest
 import numpy as np
 import pandas as pd
 from predictfun.research.pf_model_spec import SETS
-from predictfun.research.pf_queue_model_sim import Tape, simulate, features, marks, MARKET
+from predictfun.research.pf_queue_model_sim import Tape, simulate, features, marks, MARKET, QUEUE
 from predictfun.research.pf_queue_model_spec import CONFIGS
 from predictfun.research.pf_queue_model_data import admit, load_day
 from predictfun.research.pf_queue_model_fit import fit, choices, rejoin_allowed, null_test
@@ -20,7 +20,7 @@ def tape(trades=(),queue=10.):
                 a[:,0],a[:,1],a[:,2],a[:,3],t.copy(),x,np.ones((n,2)))
 
 
-C=dict(rule='L',shift=0.,place=40.,cancel=22.,notice=100.)
+C=dict(rule='L',shift=0.,place=40.,cancel=22.,cancel_ack=42.,notice=100.)
 
 
 class QueueControls(unittest.TestCase):
@@ -109,6 +109,25 @@ class QueueControls(unittest.TestCase):
         self.assertTrue(admit(5,1,185));self.assertFalse(admit(2,1,185))
         self.assertFalse(admit(-2,0,185));self.assertTrue(admit(-5,0,185))
         self.assertFalse(admit(10,0,5));self.assertTrue(admit(9,0,5))
+
+    def test_pinned_model_finds_planted_queue_value(self):
+        a=pd.DataFrame(np.zeros((4000,len(MARKET+QUEUE))),columns=MARKET+QUEUE)
+        a['day']='20261023';a['episode']=5;a['known_remaining']=5
+        a['queue_progress']=np.repeat([0.,1.],2000)
+        a['keep_utility']=np.repeat([-10.,10.],2000);a['cancel_utility']=0.;a['rejoin_utility']=-1.
+        fitted=fit(a,'20261024',MARKET+QUEUE);acts,_=choices(a,fitted,MARKET+QUEUE)
+        self.assertTrue((acts[:2000]==1).all());self.assertTrue((acts[2000:]==0).all())
+        without=fit(a,'20261024',MARKET);_,scores=choices(a,without,MARKET)
+        self.assertAlmostEqual(float(np.ptp(scores[:,0])),0.)
+
+    def test_action_matched_null_positive_and_refusal(self):
+        a=pd.DataFrame(dict(config=['L50']*40,day=['20261024']*40,side=[0]*40,ws=[0]*40,
+                            decision=[1000]*40,inventory=[0]*40,episode=[5]*40,known_remaining=[5]*40,
+                            keep_utility=[10.,-10.]*20,cancel_utility=[0.]*40,rejoin_utility=[-1.]*40,
+                            queue_action=[0,1]*20,market_action=[1]*40))
+        r=null_test(a);self.assertLess(r['family_p']['L50'],.02)
+        a.loc[0,'queue_action']=3
+        with self.assertRaises(ValueError):null_test(a)
 
     def test_artifact_checker_positive_and_falsifiers(self):
         f=pd.DataFrame([dict(t=1000.,side=0,q=5.,price=49.,id='a',action='keep',fill_index=0,through=False,generation=0,anchor=1000.)])

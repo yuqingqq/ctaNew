@@ -102,8 +102,8 @@ def build(day):
                     if stop<=send:
                         row['status']=row['decision_status']='initial_hard_guard';pair.append((row,None,None));continue
                     potentials={a:simulate(tape,side,p,send,decision,c,a,stop=stop) for a in ACTIONS}
-                    neutral=potentials['keep'];base_prefix=[f for f in neutral['fills'] if f[0]<=decision]
-                    if any([f for f in x['fills'] if f[0]<=decision]!=base_prefix for x in potentials.values()):raise ValueError('neutral prefix changed')
+                    neutral=potentials['keep'];base_prefix=[f for f in neutral['fills'] if f[0]<decision+c['cancel']]
+                    if any([f for f in x['fills'] if f[0]<decision+c['cancel']]!=base_prefix for x in potentials.values()):raise ValueError('unavoidable fill prefix changed')
                     x,status=features(tape,side,p,send,decision,c,neutral,initial_net)
                     row['status']=row['decision_status']=status
                     if x is not None:row.update(x)

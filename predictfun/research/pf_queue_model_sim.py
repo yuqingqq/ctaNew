@@ -95,7 +95,8 @@ def simulate(tape,side,p,send,decision,config,action,stop=None):
     requested=min(stop,decision) if action!='keep' else stop
     remove=max(requested+c['cancel'],send+95.) if requested<at else requested+c['cancel']
     old=order(at,SIZE,remove)
-    new_send=decision+c['cancel']
+    if c['cancel_ack']<c['cancel']:raise ValueError('cancel acknowledged before effective')
+    new_send=decision+c['cancel_ack']
     new_at=new_send+c['place'] if action=='rejoin' and stop>new_send else np.inf
     new_remove=max(stop+c['cancel'],new_send+95.) if stop<new_at else stop+c['cancel']
     ts=tape.tt-c['shift'];lo=np.searchsorted(ts,at);hi=np.searchsorted(ts,send+LEASE+c['cancel'],side='right')
