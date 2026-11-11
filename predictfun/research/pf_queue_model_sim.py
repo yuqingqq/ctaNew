@@ -158,6 +158,21 @@ def features(tape,side,p,send,decision,config,neutral,inventory=0.,other_reserve
     return x,'eligible'
 
 
+def reservation(result,now,config):
+    """Client-side outstanding exposure, including uncertainty until late fills can be reported."""
+    total=0.
+    for k,o in enumerate(result['orders']):
+        sent=o['at']-config['place']
+        if sent>now:continue
+        if o['refused'] and now>=sent+95.:continue
+        # A cancel acknowledgment alone does not reveal a delayed fill notification.
+        resolved=o['remove']+max(config['notice'],config['cancel_ack']-config['cancel'])
+        if now>=resolved:continue
+        notified=sum(q for t,q,_,generation,_ in result['fills'] if generation==k and t+config['notice']<=now)
+        total+=max(0.,o['size']-notified)
+    return total
+
+
 def marks(tape,result,mark_t,outcome):
     m=tape.midpoint(mark_t)
     s=1 if result['side']==0 else -1;p=result['price'];fills=result['fills'];q=sum(f[1] for f in fills)
