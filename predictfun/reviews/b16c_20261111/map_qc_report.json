@@ -1,0 +1,58 @@
+{
+ "arm": "qc",
+ "controls": {
+  "C2_lines": {
+   "equal": true
+  },
+  "C3_mapping": {
+   "20261023": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261024": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261025": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261026": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261027": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261031": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261101": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261102": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261103": {
+    "ok": true,
+    "falsifier_breaks": true
+   }
+  }
+ },
+ "q90": [
+  0.06336205452680588,
+  0.07117245346307755,
+  0.08632299304008484,
+  0.11723539233207703
+ ],
+ "q95": [
+  0.10549488663673401,
+  0.109706349670887,
+  0.12358026206493378,
+  0.17709633708000183
+ ]
+}

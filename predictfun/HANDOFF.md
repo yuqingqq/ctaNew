@@ -1,5 +1,18 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 15:29Z (session ce68ebe0) — B16c / B19a DONE: a combined 1 s / 5 s / 60 s target makes the guard worse; at the back of the queue our fills lose ~1.7 c/sh in EVERY regime (favourable and calm included) - the lever is queue position, not a regime model
+
+- Done: research/pf_b16c_combined_guard.py + run_b16c.sh (5deb1103), research/pf_b19a_regimes.py (4d169c27), committed before their
+  runs. Report handoffs/20261111_b16c_b19a_regimes.md; copies reviews/b16c_20261111/, reviews/b19a_20261111/.
+- B16c (USER: combined windows): R190 WORSE both arms (-0.094 / -0.072 c/sh per quoted moment, 1-2 / 8 days); replay worse at every
+  horizon (settle -517 / -364, +1 s -270 / -272 for qc). The 60 s value dominates a plain average and the model fits drift.
+- B19a regimes (adverse = B18's classes 47%, favourable = their mirrors 33%, calm 20%): our order at the back loses per filled share
+  at 1 s -1.78 (calm), -1.73 (adverse), -1.63 (favourable); the tape's makers earn most in favourable moments (top 5 +0.93, rest
+  +0.67): the benign fills go to the front, the back gets the failed moves. The live guard's quoted moments are ~0 in every regime
+  (vs -0.11..-0.41 skipped); it quotes favourable moments most (50% of its quotes).
+- Next: no regime-aware guard for now (its ceiling is ~0 at the back of the queue); queue position first - the live run with the
+  churn fix, then staying after fills and inside-the-spread entry (B12: 1.9% of the top 5's volume at +1.30 c/sh) as candidates.
+
 ## 2026-11-11 14:09Z (session ce68ebe0) — B18 DONE: top makers do not avoid pressure moments (63% of their fills, base 48%) but break even there; our replay is as exposed (R180 SIMILAR, qb the same) and the replay cannot value those fills
 
 - Done (USER: other days; do we pull when top makers do in imbalance / flow bursts, or still take the bad fills):

@@ -6,6 +6,10 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 15:29Z (session ce68ebe0): B16c / B19a DONE (5deb1103 / 4d169c27; handoffs/20261111_b16c_b19a_regimes.md): the
+  combined 1 s / 5 s / 60 s target is WORSE (R190 both arms, replay worse at every horizon). Regimes: our back-of-queue order loses
+  ~1.7 c/sh per filled share in calm, adverse AND favourable moments, while the tape's makers earn most in favourable ones (top 5 +0.93):
+  we hold the right side but get only the failed moves. The guard's quoted moments are ~0 in each regime. Lever = queue position.
   2026-11-11 14:09Z (session ce68ebe0): B18 DONE (c28f99d5; handoffs/20261111_b18_pressure_fills.md): pressure moments (thin side,
   thinning, Binance burst / book shift against us) = 48% of live moments. Top 5 fills: 63% in them at +0.04 / -0.15 c/sh vs +0.76 /
   +0.63 outside (rest -0.75 / -0.95 inside). Our replay as exposed (REF 61%, qb 63%; R180 SIMILAR, R181 SAME), 50% of our fills while
@@ -1674,5 +1678,6 @@ flags:
   queue_guard_b16: "HORIZON DECIDES (B16, 2026-11-11 13:39Z, handoffs/20261111_b16_queue_guard.md): a guard trained on our resting order's value at the back of the queue (rule M, 1 s) equals the live guard (qa); with the 13 pressure features (qb) it is better at 1 s in the v3 replay (+72 J 9/9 days, +19 X) and worse at 60 s / settlement (-67 / -191, -148 / -183; not inventory); not promoted"
   maker_horizons_b12g: "EDGE HOLDS TO 60 s AND SETTLEMENT (B12g, 2026-11-11 13:59Z): on the 9 replay days the top 5 makers' fills are +0.31 / +0.14 / +0.16 c/sh at 1 s / 60 s / settlement over 0-240 s (+0.42 / +0.36 / +0.41 in the first minute), ranks 6-20 similar, the rest lose more with the horizon; 11-08 alone fades (-0.24 at 60 s); the replay's fills are ~5x the tape's value (not a level)"
   pressure_fills_b18: "TOP MAKERS DO NOT PULL, THEY BREAK EVEN UNDER PRESSURE (B18, 2026-11-11 14:09Z): 63% of the top 5's fills come in pressure moments (48% of time) at +0.04 / -0.15 c/sh vs +0.76 / +0.63 outside; our replay is as exposed (61%, qb 63%), mostly while our level thins (50% vs 37%); the replay values pressure fills like any other, so it cannot reward pulling on pressure"
+  regimes_b19a: "QUEUE POSITION SETS THE SIGN (B19a, 2026-11-11 15:29Z): a 5-sh order of ours at the back loses -1.78 / -1.73 / -1.63 c/sh per filled share at 1 s in calm / adverse / favourable moments; the tape's makers earn in favourable (+0.67..+0.93) and calm moments; the live guard's quoted moments are ~0 in each regime, so a regime-aware gate has a ceiling of ~0; B16c's combined-horizon target is WORSE"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"
