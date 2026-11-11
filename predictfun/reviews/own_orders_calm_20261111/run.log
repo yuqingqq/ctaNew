@@ -1,0 +1,157 @@
+[tx timing] {'mode': 'ws', 'legs': 802157, 'legs_retimed': 42590, 'shares_retimed': 953735.549727249, 'untimed_given_time': 1419, 'abs_shift_ms_p50': 493.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 682499, 3: 76007, 5: 43651}, 'groups_old_key': 234443, 'groups_tk': 560819, 'tx_multi_time_before': 14606, 'tx_multi_time_after': 0}
+[in] 20261023 tokyoreal books 1683528 legs 802157 binance raw 37690415 kept 242178 [mem] 1298 MiB
+[done] 20261023 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (-18.25, 11)}
+VERIFIED_RUN 20261023 smoke
+2026-11-11T16:28:14Z tag=own_orders_smoke rc=0 peak_rss_mib=1611 wall_s=30.52 cpu_user_s=28.46 memavail_start_gib=24 disk_free_gib=516->516
+[tx timing] {'mode': 'ws', 'legs': 802157, 'legs_retimed': 42590, 'shares_retimed': 953735.549727249, 'untimed_given_time': 1419, 'abs_shift_ms_p50': 493.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 682499, 3: 76007, 5: 43651}, 'groups_old_key': 234443, 'groups_tk': 560819, 'tx_multi_time_before': 14606, 'tx_multi_time_after': 0}
+[in] 20261023 tokyoreal books 1683528 legs 802157 binance raw 37690415 kept 242178 [mem] 1358 MiB
+[done] 20261023 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (13.59, 589), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (13.59, 589)}
+VERIFIED_RUN 20261023 build
+2026-11-11T16:28:45Z tag=own_orders_build_20261023 rc=0 peak_rss_mib=1577 wall_s=137.63 cpu_user_s=135.58 memavail_start_gib=24 disk_free_gib=516->516
+[tx timing] {'mode': 'ws', 'legs': 681400, 'legs_retimed': 36074, 'shares_retimed': 673501.3236980787, 'untimed_given_time': 1125, 'abs_shift_ms_p50': 450.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 613080, 3: 43728, 5: 24592}, 'groups_old_key': 215059, 'groups_tk': 453163, 'tx_multi_time_before': 13765, 'tx_multi_time_after': 0}
+[in] 20261024 tokyoreal books 1629949 legs 681400 binance raw 28393730 kept 216718 [mem] 1260 MiB
+[done] 20261024 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (72.41, 696), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (75.96, 691)}
+VERIFIED_RUN 20261024 build
+2026-11-11T16:31:02Z tag=own_orders_build_20261024 rc=0 peak_rss_mib=1450 wall_s=128.77 cpu_user_s=127.42 memavail_start_gib=24 disk_free_gib=516->516
+[tx timing] {'mode': 'ws', 'legs': 689852, 'legs_retimed': 37523, 'shares_retimed': 677340.3738534097, 'untimed_given_time': 1703, 'abs_shift_ms_p50': 489.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 613198, 3: 44772, 5: 31882}, 'groups_old_key': 203017, 'groups_tk': 441726, 'tx_multi_time_before': 13106, 'tx_multi_time_after': 0}
+[in] 20261025 tokyoreal books 1579181 legs 689852 binance raw 23203104 kept 140163 [mem] 1242 MiB
+[done] 20261025 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (182.59, 645), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (184.79, 652)}
+VERIFIED_RUN 20261025 build
+2026-11-11T16:33:11Z tag=own_orders_build_20261025 rc=0 peak_rss_mib=1337 wall_s=125.94 cpu_user_s=124.22 memavail_start_gib=24 disk_free_gib=516->516
+[tx timing] {'mode': 'ws', 'legs': 818939, 'legs_retimed': 42251, 'shares_retimed': 1060953.0354493381, 'untimed_given_time': 1372, 'abs_shift_ms_p50': 451.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 697120, 3: 82106, 5: 39713}, 'groups_old_key': 238329, 'groups_tk': 580259, 'tx_multi_time_before': 14712, 'tx_multi_time_after': 0}
+[in] 20261026 tokyoreal books 1712000 legs 818939 binance raw 44540532 kept 355093 [mem] 1321 MiB
+[done] 20261026 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (189.82, 703), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (188.88, 705)}
+VERIFIED_RUN 20261026 build
+2026-11-11T16:35:17Z tag=own_orders_build_20261026 rc=0 peak_rss_mib=1450 wall_s=144.82 cpu_user_s=142.63 memavail_start_gib=24 disk_free_gib=516->516
+REUSE VERIFIED build 20261023
+REUSE VERIFIED build 20261024
+REUSE VERIFIED build 20261025
+REUSE VERIFIED build 20261026
+[tx timing] {'mode': 'ws', 'legs': 824671, 'legs_retimed': 41373, 'shares_retimed': 920675.1659138113, 'untimed_given_time': 1772, 'abs_shift_ms_p50': 455.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 686404, 1: 18, 3: 95092, 5: 43157}, 'groups_old_key': 226609, 'groups_tk': 573373, 'tx_multi_time_before': 14918, 'tx_multi_time_after': 0}
+[in] 20261027 tokyoreal books 1681582 legs 824671 binance raw 29642870 kept 200381 [mem] 1291 MiB
+[done] 20261027 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (78.7, 610), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (78.7, 610)}
+VERIFIED_RUN 20261027 build
+2026-11-11T16:38:09Z tag=own_orders_v2_build_20261027 rc=0 peak_rss_mib=1342 wall_s=129.32 cpu_user_s=128.08 memavail_start_gib=24 disk_free_gib=516->516
+[tx timing] {'mode': 'ws', 'legs': 446330, 'legs_retimed': 12852, 'shares_retimed': 304656.94282546785, 'untimed_given_time': 814, 'abs_shift_ms_p50': 457.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 375099, 3: 71231}, 'groups_old_key': 139626, 'groups_tk': 338280, 'tx_multi_time_before': 5365, 'tx_multi_time_after': 0}
+[in] 20261031 tokyoreal books 1496395 legs 446330 binance raw 15037345 kept 91084 [mem] 1175 MiB
+[done] 20261031 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (40.9, 459), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (3.6, 447)}
+VERIFIED_RUN 20261031 build
+2026-11-11T16:40:19Z tag=own_orders_v2_build_20261031 rc=0 peak_rss_mib=1220 wall_s=121.51 cpu_user_s=119.98 memavail_start_gib=24 disk_free_gib=516->516
+[tx timing] {'mode': 'ws', 'legs': 479777, 'legs_retimed': 17615, 'shares_retimed': 320184.6718279081, 'untimed_given_time': 945, 'abs_shift_ms_p50': 434.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 410231, 3: 45863, 5: 23683}, 'groups_old_key': 151092, 'groups_tk': 337016, 'tx_multi_time_before': 7681, 'tx_multi_time_after': 0}
+[in] 20261101 tokyoreal books 1440616 legs 479777 binance raw 15279506 kept 87338 [mem] 1139 MiB
+[done] 20261101 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (79.19, 360), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (99.04, 358)}
+VERIFIED_RUN 20261101 build
+2026-11-11T16:42:20Z tag=own_orders_v2_build_20261101 rc=0 peak_rss_mib=1182 wall_s=118.24 cpu_user_s=116.78 memavail_start_gib=24 disk_free_gib=516->516
+[tx timing] {'mode': 'ws', 'legs': 659585, 'legs_retimed': 27632, 'shares_retimed': 644028.0751521892, 'untimed_given_time': 1330, 'abs_shift_ms_p50': 455.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 555610, 3: 70618, 5: 33357}, 'groups_old_key': 204970, 'groups_tk': 480017, 'tx_multi_time_before': 10337, 'tx_multi_time_after': 0}
+[in] 20261102 tokyoreal books 1609063 legs 659585 binance raw 37107185 kept 308946 [mem] 1211 MiB
+[done] 20261102 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (-44.48, 407), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (-44.48, 407)}
+VERIFIED_RUN 20261102 build
+2026-11-11T16:44:18Z tag=own_orders_v2_build_20261102 rc=0 peak_rss_mib=1312 wall_s=132.88 cpu_user_s=131.16 memavail_start_gib=24 disk_free_gib=516->515
+[tx timing] {'mode': 'ws', 'legs': 664637, 'legs_retimed': 24119, 'shares_retimed': 490530.4802384293, 'untimed_given_time': 1051, 'abs_shift_ms_p50': 411.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 533181, 3: 87936, 5: 43520}, 'groups_old_key': 197375, 'groups_tk': 495062, 'tx_multi_time_before': 9833, 'tx_multi_time_after': 0}
+[in] 20261103 tokyoreal books 1603463 legs 664637 binance raw 31506845 kept 246513 [mem] 1266 MiB
+[done] 20261103 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (-19.84, 556), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (-19.84, 556)}
+VERIFIED_RUN 20261103 build
+2026-11-11T16:46:31Z tag=own_orders_v2_build_20261103 rc=0 peak_rss_mib=1370 wall_s=130.80 cpu_user_s=128.75 memavail_start_gib=24 disk_free_gib=515->515
+FOLD 20261026 train 5895 test 2060
+FOLD 20261027 train 6934 test 2562
+FOLD 20261031 train 8220 test 8613
+FOLD 20261101 train 12797 test 7294
+FOLD 20261102 train 16644 test 2028
+FOLD 20261103 train 17659 test 2709
+2026-11-11T16:48:42Z tag=own_orders_v2_fit rc=0 peak_rss_mib=1281 wall_s=10.84 cpu_user_s=9.27 memavail_start_gib=24 disk_free_gib=515->515
+[tx timing] {'mode': 'ws', 'legs': 818939, 'legs_retimed': 42251, 'shares_retimed': 1060953.0354493381, 'untimed_given_time': 1372, 'abs_shift_ms_p50': 451.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 697120, 3: 82106, 5: 39713}, 'groups_old_key': 238329, 'groups_tk': 580259, 'tx_multi_time_before': 14712, 'tx_multi_time_after': 0}
+[in] 20261026 tokyoreal books 1712000 legs 818939 binance raw 44540532 kept 355093 [mem] 1435 MiB
+[done] 20261026 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OHOLD/mid@AM:5:25:95': (191.57, 709), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OLEARN/mid@AM:5:25:95': (187.12, 704), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OFILTER/mid@AM:5:25:95': (0.0, 0), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED+OLEARN/mid@AM:5:25:95': (186.18, 706)}
+VERIFIED_RUN 20261026 eval
+2026-11-11T16:48:53Z tag=own_orders_v2_eval_20261026 rc=0 peak_rss_mib=1625 wall_s=252.65 cpu_user_s=250.63 memavail_start_gib=24 disk_free_gib=515->515
+[tx timing] {'mode': 'ws', 'legs': 824671, 'legs_retimed': 41373, 'shares_retimed': 920675.1659138113, 'untimed_given_time': 1772, 'abs_shift_ms_p50': 455.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 686404, 1: 18, 3: 95092, 5: 43157}, 'groups_old_key': 226609, 'groups_tk': 573373, 'tx_multi_time_before': 14918, 'tx_multi_time_after': 0}
+[in] 20261027 tokyoreal books 1681582 legs 824671 binance raw 29642870 kept 200381 [mem] 1405 MiB
+[done] 20261027 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OHOLD/mid@AM:5:25:95': (76.9, 619), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OLEARN/mid@AM:5:25:95': (75.2, 613), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OFILTER/mid@AM:5:25:95': (-5.61, 13), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED+OLEARN/mid@AM:5:25:95': (75.2, 613)}
+VERIFIED_RUN 20261027 eval
+2026-11-11T16:53:06Z tag=own_orders_v2_eval_20261027 rc=0 peak_rss_mib=1456 wall_s=233.27 cpu_user_s=231.63 memavail_start_gib=24 disk_free_gib=515->515
+[tx timing] {'mode': 'ws', 'legs': 446330, 'legs_retimed': 12852, 'shares_retimed': 304656.94282546785, 'untimed_given_time': 814, 'abs_shift_ms_p50': 457.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 375099, 3: 71231}, 'groups_old_key': 139626, 'groups_tk': 338280, 'tx_multi_time_before': 5365, 'tx_multi_time_after': 0}
+[in] 20261031 tokyoreal books 1496395 legs 446330 binance raw 15037345 kept 91084 [mem] 1241 MiB
+[done] 20261031 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OHOLD/mid@AM:5:25:95': (23.77, 482), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OLEARN/mid@AM:5:25:95': (32.22, 468), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OFILTER/mid@AM:5:25:95': (24.79, 31), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED+OLEARN/mid@AM:5:25:95': (-5.07, 456)}
+VERIFIED_RUN 20261031 eval
+2026-11-11T16:56:59Z tag=own_orders_v2_eval_20261031 rc=0 peak_rss_mib=1296 wall_s=224.60 cpu_user_s=223.61 memavail_start_gib=24 disk_free_gib=515->516
+[tx timing] {'mode': 'ws', 'legs': 479777, 'legs_retimed': 17615, 'shares_retimed': 320184.6718279081, 'untimed_given_time': 945, 'abs_shift_ms_p50': 434.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 410231, 3: 45863, 5: 23683}, 'groups_old_key': 151092, 'groups_tk': 337016, 'tx_multi_time_before': 7681, 'tx_multi_time_after': 0}
+[in] 20261101 tokyoreal books 1440616 legs 479777 binance raw 15279506 kept 87338 [mem] 1215 MiB
+[done] 20261101 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OHOLD/mid@AM:5:25:95': (81.57, 371), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OLEARN/mid@AM:5:25:95': (81.94, 363), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OFILTER/mid@AM:5:25:95': (-0.69, 31), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED+OLEARN/mid@AM:5:25:95': (101.79, 361)}
+VERIFIED_RUN 20261101 eval
+2026-11-11T17:00:44Z tag=own_orders_v2_eval_20261101 rc=0 peak_rss_mib=1268 wall_s=217.31 cpu_user_s=216.26 memavail_start_gib=24 disk_free_gib=516->516
+[tx timing] {'mode': 'ws', 'legs': 659585, 'legs_retimed': 27632, 'shares_retimed': 644028.0751521892, 'untimed_given_time': 1330, 'abs_shift_ms_p50': 455.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 555610, 3: 70618, 5: 33357}, 'groups_old_key': 204970, 'groups_tk': 480017, 'tx_multi_time_before': 10337, 'tx_multi_time_after': 0}
+[in] 20261102 tokyoreal books 1609063 legs 659585 binance raw 37107185 kept 308946 [mem] 1336 MiB
+[done] 20261102 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OHOLD/mid@AM:5:25:95': (-43.93, 414), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OLEARN/mid@AM:5:25:95': (-44.48, 407), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OFILTER/mid@AM:5:25:95': (0.0, 0), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED+OLEARN/mid@AM:5:25:95': (-44.48, 407)}
+VERIFIED_RUN 20261102 eval
+2026-11-11T17:04:21Z tag=own_orders_v2_eval_20261102 rc=0 peak_rss_mib=1437 wall_s=238.24 cpu_user_s=237.01 memavail_start_gib=24 disk_free_gib=516->516
+[tx timing] {'mode': 'ws', 'legs': 664637, 'legs_retimed': 24119, 'shares_retimed': 490530.4802384293, 'untimed_given_time': 1051, 'abs_shift_ms_p50': 411.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 533181, 3: 87936, 5: 43520}, 'groups_old_key': 197375, 'groups_tk': 495062, 'tx_multi_time_before': 9833, 'tx_multi_time_after': 0}
+[in] 20261103 tokyoreal books 1603463 legs 664637 binance raw 31506845 kept 246513 [mem] 1335 MiB
+[done] 20261103 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OHOLD/mid@AM:5:25:95': (-23.1, 569), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OLEARN/mid@AM:5:25:95': (-20.09, 560), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OFILTER/mid@AM:5:25:95': (0.0, 0), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED+OLEARN/mid@AM:5:25:95': (-20.09, 560)}
+VERIFIED_RUN 20261103 eval
+2026-11-11T17:08:19Z tag=own_orders_v2_eval_20261103 rc=0 peak_rss_mib=1438 wall_s=230.79 cpu_user_s=229.43 memavail_start_gib=24 disk_free_gib=516->516
+[tx timing] {'mode': 'ws', 'legs': 818939, 'legs_retimed': 42251, 'shares_retimed': 1060953.0354493381, 'untimed_given_time': 1372, 'abs_shift_ms_p50': 451.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 697120, 3: 82106, 5: 39713}, 'groups_old_key': 238329, 'groups_tk': 580259, 'tx_multi_time_before': 14712, 'tx_multi_time_after': 0}
+[in] 20261026 tokyoreal books 1712000 legs 818939 binance raw 44540532 kept 355093 [mem] 1459 MiB
+[done] 20261026 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (60.88, 693), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OLEARN/mid@AM:5:25:95': (57.08, 696), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (52.63, 687), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED+OLEARN/mid@AM:5:25:95': (48.83, 690)}
+VERIFIED_RUN 20261026 stress
+2026-11-11T17:14:54Z tag=own_orders_v3_stress_20261026 rc=0 peak_rss_mib=1648 wall_s=254.62 cpu_user_s=252.35 memavail_start_gib=24 disk_free_gib=516->516
+[tx timing] {'mode': 'ws', 'legs': 824671, 'legs_retimed': 41373, 'shares_retimed': 920675.1659138113, 'untimed_given_time': 1772, 'abs_shift_ms_p50': 455.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 686404, 1: 18, 3: 95092, 5: 43157}, 'groups_old_key': 226609, 'groups_tk': 573373, 'tx_multi_time_before': 14918, 'tx_multi_time_after': 0}
+[in] 20261027 tokyoreal books 1681582 legs 824671 binance raw 29642870 kept 200381 [mem] 1368 MiB
+[done] 20261027 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (50.75, 625), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OLEARN/mid@AM:5:25:95': (51.13, 629), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (50.75, 625), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED+OLEARN/mid@AM:5:25:95': (51.13, 629)}
+VERIFIED_RUN 20261027 stress
+2026-11-11T17:19:08Z tag=own_orders_v3_stress_20261027 rc=0 peak_rss_mib=1419 wall_s=236.01 cpu_user_s=234.92 memavail_start_gib=24 disk_free_gib=516->515
+[tx timing] {'mode': 'ws', 'legs': 446330, 'legs_retimed': 12852, 'shares_retimed': 304656.94282546785, 'untimed_given_time': 814, 'abs_shift_ms_p50': 457.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 375099, 3: 71231}, 'groups_old_key': 139626, 'groups_tk': 338280, 'tx_multi_time_before': 5365, 'tx_multi_time_after': 0}
+[in] 20261031 tokyoreal books 1496395 legs 446330 binance raw 15037345 kept 91084 [mem] 1307 MiB
+[done] 20261031 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (3.69, 874), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OLEARN/mid@AM:5:25:95': (3.87, 893), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (5.14, 885), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED+OLEARN/mid@AM:5:25:95': (1.67, 905)}
+VERIFIED_RUN 20261031 stress
+2026-11-11T17:23:04Z tag=own_orders_v3_stress_20261031 rc=0 peak_rss_mib=1376 wall_s=225.75 cpu_user_s=224.73 memavail_start_gib=24 disk_free_gib=515->515
+[tx timing] {'mode': 'ws', 'legs': 479777, 'legs_retimed': 17615, 'shares_retimed': 320184.6718279081, 'untimed_given_time': 945, 'abs_shift_ms_p50': 434.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 410231, 3: 45863, 5: 23683}, 'groups_old_key': 151092, 'groups_tk': 337016, 'tx_multi_time_before': 7681, 'tx_multi_time_after': 0}
+[in] 20261101 tokyoreal books 1440616 legs 479777 binance raw 15279506 kept 87338 [mem] 1224 MiB
+[done] 20261101 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (-5.79, 833), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OLEARN/mid@AM:5:25:95': (-1.64, 836), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (-1.42, 847), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED+OLEARN/mid@AM:5:25:95': (2.73, 850)}
+VERIFIED_RUN 20261101 stress
+2026-11-11T17:26:50Z tag=own_orders_v3_stress_20261101 rc=0 peak_rss_mib=1288 wall_s=219.55 cpu_user_s=218.61 memavail_start_gib=24 disk_free_gib=515->515
+[tx timing] {'mode': 'ws', 'legs': 659585, 'legs_retimed': 27632, 'shares_retimed': 644028.0751521892, 'untimed_given_time': 1330, 'abs_shift_ms_p50': 455.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 555610, 3: 70618, 5: 33357}, 'groups_old_key': 204970, 'groups_tk': 480017, 'tx_multi_time_before': 10337, 'tx_multi_time_after': 0}
+[in] 20261102 tokyoreal books 1609063 legs 659585 binance raw 37107185 kept 308946 [mem] 1301 MiB
+[done] 20261102 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (-195.59, 602), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OLEARN/mid@AM:5:25:95': (-195.59, 602), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (-195.59, 602), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED+OLEARN/mid@AM:5:25:95': (-195.59, 602)}
+VERIFIED_RUN 20261102 stress
+2026-11-11T17:30:30Z tag=own_orders_v3_stress_20261102 rc=0 peak_rss_mib=1401 wall_s=236.52 cpu_user_s=235.31 memavail_start_gib=24 disk_free_gib=515->515
+[tx timing] {'mode': 'ws', 'legs': 664637, 'legs_retimed': 24119, 'shares_retimed': 490530.4802384293, 'untimed_given_time': 1051, 'abs_shift_ms_p50': 411.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 533181, 3: 87936, 5: 43520}, 'groups_old_key': 197375, 'groups_tk': 495062, 'tx_multi_time_before': 9833, 'tx_multi_time_after': 0}
+[in] 20261103 tokyoreal books 1603463 legs 664637 binance raw 31506845 kept 246513 [mem] 1332 MiB
+[done] 20261103 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (-134.61, 619), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OLEARN/mid@AM:5:25:95': (-148.46, 622), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED/mid@AM:5:25:95': (-134.61, 619), 'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+OSEED+OLEARN/mid@AM:5:25:95': (-148.46, 622)}
+VERIFIED_RUN 20261103 stress
+2026-11-11T17:34:26Z tag=own_orders_v3_stress_20261103 rc=0 peak_rss_mib=1436 wall_s=233.62 cpu_user_s=232.51 memavail_start_gib=24 disk_free_gib=515->515
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/tmp/cta-own-orders-calm-20261111/predictfun/research/pf_own_order_runner_v3.py", line 89, in <module>
+    elif sys.argv[1]=='report':report()
+                               ^^^^^^^^
+  File "/tmp/cta-own-orders-calm-20261111/predictfun/research/pf_own_order_runner_v3.py", line 71, in report
+    run();mechanism()
+    ^^^^^
+  File "/tmp/cta-own-orders-calm-20261111/predictfun/research/pf_order_policy_report.py", line 115, in run
+    S.write(S.OUT/'comparison.json',result);S.write(S.REVIEW/'comparison.json',result)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/cta-own-orders-calm-20261111/predictfun/research/pf_order_policy_spec.py", line 34, in write
+    with path.open('x') as f:json.dump(obj,f,indent=2,allow_nan=False);f.write('\n')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 179, in dump
+    for chunk in iterable:
+  File "/usr/lib/python3.12/json/encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type int64 is not JSON serializable
+2026-11-11T17:38:20Z tag=own_orders_v3_report rc=1 peak_rss_mib=1144 wall_s=32.42 cpu_user_s=30.45 memavail_start_gib=24 disk_free_gib=515->515
+REPORT /tmp/cta-own-orders-calm-20261111/predictfun/handoffs/20261111_own_orders_calm_results.md
+MECHANISM_VERIFIED 12 saved model artifacts
+CANONICAL_REPORT /tmp/cta-own-orders-calm-20261111/predictfun/handoffs/20261111_own_orders_calm_results_v4.md
+2026-11-11T17:40:24Z tag=own_orders_v4_report rc=0 peak_rss_mib=1068 wall_s=33.86 cpu_user_s=32.36 memavail_start_gib=24 disk_free_gib=515->515

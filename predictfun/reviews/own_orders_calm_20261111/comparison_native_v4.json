@@ -1,0 +1,6043 @@
+{
+  "as_of": "2026-11-11T17:40:25.033365+00:00",
+  "days": [
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "days_consumed": true,
+  "validation": false,
+  "table": [
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "windows": 1728,
+      "marked_windows": 1579,
+      "settlement": 324.2958067398047,
+      "marked": 152.62872931074995,
+      "carry_common": 46.24075795014019,
+      "settlement_common": 198.86948726089014,
+      "markout1_engine": 250.7407557395304,
+      "markout60_engine": 218.25497934760162,
+      "strict_generation_value1": 250.42325916418798,
+      "strict_generation_value5": 212.22091145008943,
+      "generation_mark_known": 251221,
+      "generation_mark_missing": 3,
+      "generations": 251224,
+      "filled_generations": 1497,
+      "fills": 3095,
+      "shares": 18211.588835454477,
+      "inventory_rms": 11.799803953772821,
+      "inventory_square_s": 57767753.90717833,
+      "terminal_abs_mean": 5.737189706386247,
+      "terminal_abs_p95": 25.0,
+      "day_settlement_sd": 83.68262929199466,
+      "places": 251224,
+      "cancels": 250916,
+      "eligible": 12757,
+      "kept": 0,
+      "seeded": 0,
+      "fill_age_median_ms": 38.0
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "windows": 1728,
+      "marked_windows": 1580,
+      "settlement": 306.78868092837723,
+      "marked": 122.29580302303863,
+      "carry_common": 42.300461837621675,
+      "settlement_common": 164.5962648606603,
+      "markout1_engine": 245.67252059041385,
+      "markout60_engine": 204.47833394803345,
+      "strict_generation_value1": 245.3550240150713,
+      "strict_generation_value5": 201.40692510787187,
+      "generation_mark_known": 246902,
+      "generation_mark_missing": 3,
+      "generations": 246905,
+      "filled_generations": 1538,
+      "fills": 3164,
+      "shares": 18401.49899107509,
+      "inventory_rms": 11.819726648346931,
+      "inventory_square_s": 57962987.810723595,
+      "terminal_abs_mean": 5.769892342740769,
+      "terminal_abs_p95": 25.0,
+      "day_settlement_sd": 85.5692402402615,
+      "places": 246905,
+      "cancels": 246583,
+      "eligible": 9202,
+      "kept": 9202,
+      "seeded": 0,
+      "fill_age_median_ms": 39.364990234375
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "windows": 1728,
+      "marked_windows": 1579,
+      "settlement": 311.92202464508,
+      "marked": 133.37505391125057,
+      "carry_common": 37.32065125491491,
+      "settlement_common": 170.69570516616542,
+      "markout1_engine": 250.80018929266868,
+      "markout60_engine": 213.37129527463279,
+      "strict_generation_value1": 250.48269271732622,
+      "strict_generation_value5": 211.71468487134473,
+      "generation_mark_known": 249850,
+      "generation_mark_missing": 3,
+      "generations": 249853,
+      "filled_generations": 1508,
+      "fills": 3115,
+      "shares": 18260.966177580005,
+      "inventory_rms": 11.800215456618886,
+      "inventory_square_s": 57771783.128297344,
+      "terminal_abs_mean": 5.748403446042224,
+      "terminal_abs_p95": 25.0,
+      "day_settlement_sd": 83.17268799011983,
+      "places": 249853,
+      "cancels": 249541,
+      "eligible": 11580,
+      "kept": 3013,
+      "seeded": 0,
+      "fill_age_median_ms": 38.415283203125
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "windows": 1728,
+      "marked_windows": 1722,
+      "settlement": 18.492375663919475,
+      "marked": 10.48747389743161,
+      "carry_common": -1.309706497974945,
+      "settlement_common": 9.177767399456659,
+      "markout1_engine": -0.14496388850139924,
+      "markout60_engine": 19.478821421241783,
+      "strict_generation_value1": -0.14496388850139952,
+      "strict_generation_value5": -1.8801404030137032,
+      "generation_mark_known": 15380,
+      "generation_mark_missing": 0,
+      "generations": 15380,
+      "filled_generations": 44,
+      "fills": 75,
+      "shares": 419.4093594196176,
+      "inventory_rms": 1.7766678517932484,
+      "inventory_square_s": 1309629.310056309,
+      "terminal_abs_mean": 0.18309526814116747,
+      "terminal_abs_p95": 0.0,
+      "day_settlement_sd": 10.857802619085923,
+      "places": 15380,
+      "cancels": 15369,
+      "eligible": 1202,
+      "kept": 0,
+      "seeded": 0,
+      "fill_age_median_ms": 79.0
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "windows": 1728,
+      "marked_windows": 1579,
+      "settlement": 305.9135923278223,
+      "marked": 150.55718071229023,
+      "carry_common": 46.94076905969447,
+      "settlement_common": 197.49794977198474,
+      "markout1_engine": 251.01344583118606,
+      "markout60_engine": 189.99162346874283,
+      "strict_generation_value1": 250.69594925584366,
+      "strict_generation_value5": 213.13830586225794,
+      "generation_mark_known": 252711,
+      "generation_mark_missing": 3,
+      "generations": 252714,
+      "filled_generations": 1501,
+      "fills": 3083,
+      "shares": 18080.381557652952,
+      "inventory_rms": 11.72355829154867,
+      "inventory_square_s": 57023621.12836748,
+      "terminal_abs_mean": 5.677796371357466,
+      "terminal_abs_p95": 25.0,
+      "day_settlement_sd": 87.71215583150513,
+      "places": 252714,
+      "cancels": 252411,
+      "eligible": 12509,
+      "kept": 0,
+      "seeded": 3494,
+      "fill_age_median_ms": 38.0
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "windows": 1728,
+      "marked_windows": 1579,
+      "settlement": 293.5398102330976,
+      "marked": 131.30350531279083,
+      "carry_common": 38.020662364469196,
+      "settlement_common": 169.32416767726002,
+      "markout1_engine": 251.07287938432427,
+      "markout60_engine": 185.107939395774,
+      "strict_generation_value1": 250.7553828089818,
+      "strict_generation_value5": 212.6320792835132,
+      "generation_mark_known": 251375,
+      "generation_mark_missing": 3,
+      "generations": 251378,
+      "filled_generations": 1512,
+      "fills": 3103,
+      "shares": 18129.758899778477,
+      "inventory_rms": 11.723972470561938,
+      "inventory_square_s": 57027650.3494865,
+      "terminal_abs_mean": 5.6890101110134434,
+      "terminal_abs_p95": 25.0,
+      "day_settlement_sd": 88.00801746195852,
+      "places": 251378,
+      "cancels": 251071,
+      "eligible": 11376,
+      "kept": 2993,
+      "seeded": 3464,
+      "fill_age_median_ms": 38.073486328125
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "windows": 1728,
+      "marked_windows": 1559,
+      "settlement": -220.66203527514932,
+      "marked": -161.00054563621734,
+      "carry_common": 43.08662987817033,
+      "settlement_common": -117.91391575804707,
+      "markout1_engine": -412.9531628576778,
+      "markout60_engine": -534.3220251395851,
+      "strict_generation_value1": -413.10005603624927,
+      "strict_generation_value5": -378.8294890046359,
+      "generation_mark_known": 252801,
+      "generation_mark_missing": 2,
+      "generations": 252803,
+      "filled_generations": 2232,
+      "fills": 4246,
+      "shares": 23970.414527034398,
+      "inventory_rms": 13.671259185427349,
+      "inventory_square_s": 77544844.96504858,
+      "terminal_abs_mean": 6.724654901725343,
+      "terminal_abs_p95": 30.0,
+      "day_settlement_sd": 104.48762157432569,
+      "places": 252803,
+      "cancels": 252728,
+      "eligible": 6876,
+      "kept": 0,
+      "seeded": 0,
+      "fill_age_median_ms": 58.0
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "windows": 1728,
+      "marked_windows": 1559,
+      "settlement": -233.6029699396134,
+      "marked": -176.51337871816804,
+      "carry_common": 45.258528295657,
+      "settlement_common": -131.25485042251108,
+      "markout1_engine": -421.5095389978775,
+      "markout60_engine": -556.8231461862944,
+      "strict_generation_value1": -421.6564321764488,
+      "strict_generation_value5": -391.25150293841455,
+      "generation_mark_known": 251589,
+      "generation_mark_missing": 2,
+      "generations": 251591,
+      "filled_generations": 2248,
+      "fills": 4278,
+      "shares": 24125.61910459192,
+      "inventory_rms": 13.729159160686205,
+      "inventory_square_s": 78203065.56490636,
+      "terminal_abs_mean": 6.750814958182241,
+      "terminal_abs_p95": 30.0,
+      "day_settlement_sd": 106.85512095365397,
+      "places": 251591,
+      "cancels": 251511,
+      "eligible": 6330,
+      "kept": 1748,
+      "seeded": 0,
+      "fill_age_median_ms": 58.60302734375
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "windows": 1728,
+      "marked_windows": 1558,
+      "settlement": -223.09255437266387,
+      "marked": -162.47581229521654,
+      "carry_common": 43.29761675589424,
+      "settlement_common": -119.17819553932227,
+      "markout1_engine": -414.0393666109113,
+      "markout60_engine": -536.1987296399886,
+      "strict_generation_value1": -414.18625978948296,
+      "strict_generation_value5": -378.4082774868072,
+      "generation_mark_known": 253952,
+      "generation_mark_missing": 2,
+      "generations": 253954,
+      "filled_generations": 2246,
+      "fills": 4265,
+      "shares": 24014.610726293522,
+      "inventory_rms": 13.672155685356936,
+      "inventory_square_s": 77555015.3855605,
+      "terminal_abs_mean": 6.725329509982662,
+      "terminal_abs_p95": 30.0,
+      "day_settlement_sd": 103.39568208562213,
+      "places": 253954,
+      "cancels": 253876,
+      "eligible": 6761,
+      "kept": 0,
+      "seeded": 3178,
+      "fill_age_median_ms": 58.0
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "windows": 1728,
+      "marked_windows": 1558,
+      "settlement": -239.6834890371279,
+      "marked": -179.88864537716722,
+      "carry_common": 43.7195151733809,
+      "settlement_common": -136.16913020378632,
+      "markout1_engine": -422.2957427511111,
+      "markout60_engine": -560.3498506866979,
+      "strict_generation_value1": -422.4426359296824,
+      "strict_generation_value5": -390.5802914205858,
+      "generation_mark_known": 252885,
+      "generation_mark_missing": 2,
+      "generations": 252887,
+      "filled_generations": 2264,
+      "fills": 4298,
+      "shares": 24179.81530385104,
+      "inventory_rms": 13.72826337585596,
+      "inventory_square_s": 78192860.88541828,
+      "terminal_abs_mean": 6.751489566439558,
+      "terminal_abs_p95": 30.0,
+      "day_settlement_sd": 105.57389329746344,
+      "places": 252887,
+      "cancels": 252804,
+      "eligible": 6233,
+      "kept": 1734,
+      "seeded": 3164,
+      "fill_age_median_ms": 58.0667724609375
+    }
+  ],
+  "comparisons": {
+    "X:hold_rule-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1577,
+      "missing_either_mark": 151,
+      "marked_delta": -18.421432034837775,
+      "marked_day_interval": [
+        -43.87878283383663,
+        -2.4845759337406097
+      ],
+      "marked_daily": {
+        "20261026": -2.0,
+        "20261027": -0.5999999999999988,
+        "20261031": -12.778675399499427,
+        "20261101": -0.4453882142857166,
+        "20261102": 0.4999999999999999,
+        "20261103": -3.0973684210526318
+      },
+      "settlement_delta": -17.507125811427468,
+      "settlement_day_interval": [
+        -54.05469000087683,
+        6.962315058398194
+      ],
+      "settlement_daily": {
+        "20261026": 1.75,
+        "20261027": -1.795397664071189,
+        "20261031": -17.123782094724685,
+        "20261101": 2.3804749999999872,
+        "20261102": 0.5500000000000002,
+        "20261103": -3.268421052631581
+      },
+      "exposure_delta": 195233.9035452742,
+      "exposure_pct": 0.3379634663639122,
+      "terminal_abs_delta": 56.51015562061366
+    },
+    "X:continuation-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1578,
+      "missing_either_mark": 150,
+      "marked_delta": -5.603675399499423,
+      "marked_day_interval": [
+        -10.682975798998845,
+        -1.25
+      ],
+      "marked_daily": {
+        "20261026": -1.975,
+        "20261027": -0.9750000000000001,
+        "20261031": -2.378675399499423,
+        "20261101": -0.0249999999999998,
+        "20261102": 0.0,
+        "20261103": -0.25
+      },
+      "settlement_delta": -12.373782094724692,
+      "settlement_day_interval": [
+        -31.952033826530627,
+        4.499999999999981
+      ],
+      "settlement_daily": {
+        "20261026": -2.7,
+        "20261027": -3.5,
+        "20261031": -8.673782094724684,
+        "20261101": 2.7499999999999942,
+        "20261102": 0.0,
+        "20261103": -0.2500000000000018
+      },
+      "exposure_delta": 4029.221119017826,
+      "exposure_pct": 0.0069748620060458115,
+      "terminal_abs_delta": 19.37734212552823
+    },
+    "X:calm_filter-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1579,
+      "missing_either_mark": 149,
+      "marked_delta": -142.1412554133184,
+      "marked_day_interval": [
+        -407.6495356214522,
+        110.0839089793667
+      ],
+      "marked_daily": {
+        "20261026": -42.54585886931137,
+        "20261027": -101.57705893213067,
+        "20261031": -74.11299335045882,
+        "20261101": 17.878388476254237,
+        "20261102": -3.209817401230975,
+        "20261103": 61.42608466355921
+      },
+      "settlement_delta": -305.8034310758852,
+      "settlement_day_interval": [
+        -709.4020441671114,
+        35.83138092854852
+      ],
+      "settlement_daily": {
+        "20261026": -189.82428830459992,
+        "20261027": -84.30383387546506,
+        "20261031": -16.105525227248357,
+        "20261101": -79.88230651072573,
+        "20261102": 44.4770890740141,
+        "20261103": 19.835433768139744
+      },
+      "exposure_delta": -56458124.59712202,
+      "exposure_pct": -97.73294057414691,
+      "terminal_abs_delta": -9597.475189287497
+    },
+    "X:calm_seed-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1578,
+      "missing_either_mark": 150,
+      "marked_delta": -15.771548598459749,
+      "marked_day_interval": [
+        -62.9971507219973,
+        16.601870648615364
+      ],
+      "marked_daily": {
+        "20261026": -0.919365721997301,
+        "20261027": 0.0,
+        "20261031": -20.692595,
+        "20261101": 5.840412123537555,
+        "20261102": 0.0,
+        "20261103": 0.0
+      },
+      "settlement_delta": -18.382214411982382,
+      "settlement_day_interval": [
+        -112.81840578272605,
+        58.61238332950494
+      ],
+      "settlement_daily": {
+        "20261026": -0.9406207827260458,
+        "20261027": 0.0,
+        "20261031": -37.292595,
+        "20261101": 19.85100137074366,
+        "20261102": 0.0,
+        "20261103": 0.0
+      },
+      "exposure_delta": -744132.7788108387,
+      "exposure_pct": -1.288145597640021,
+      "terminal_abs_delta": -102.63168292973205
+    },
+    "X:calm_seed_continuation-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1577,
+      "missing_either_mark": 151,
+      "marked_delta": -21.37522399795917,
+      "marked_day_interval": [
+        -73.08942692049557,
+        13.594995648615349
+      ],
+      "marked_daily": {
+        "20261026": -2.894365721997301,
+        "20261027": -0.9750000000000001,
+        "20261031": -23.071270399499426,
+        "20261101": 5.8154121235375555,
+        "20261102": 0.0,
+        "20261103": -0.25
+      },
+      "settlement_delta": -30.755996506707078,
+      "settlement_day_interval": [
+        -145.14991232331036,
+        60.66238332950492
+      ],
+      "settlement_daily": {
+        "20261026": -3.640620782726046,
+        "20261027": -3.5,
+        "20261031": -45.966377094724685,
+        "20261101": 22.601001370743656,
+        "20261102": 0.0,
+        "20261103": -0.2500000000000018
+      },
+      "exposure_delta": -740103.5576918208,
+      "exposure_pct": -1.2811707356339745,
+      "terminal_abs_delta": -83.25434080420382
+    },
+    "X:calm_seed_continuation-calm_seed": {
+      "windows": 1728,
+      "common_mark_windows": 1578,
+      "missing_either_mark": 150,
+      "marked_delta": -5.603675399499423,
+      "marked_day_interval": [
+        -10.682975798998845,
+        -1.25
+      ],
+      "marked_daily": {
+        "20261026": -1.975,
+        "20261027": -0.9750000000000001,
+        "20261031": -2.378675399499423,
+        "20261101": -0.0249999999999998,
+        "20261102": 0.0,
+        "20261103": -0.25
+      },
+      "settlement_delta": -12.373782094724692,
+      "settlement_day_interval": [
+        -31.952033826530627,
+        4.499999999999981
+      ],
+      "settlement_daily": {
+        "20261026": -2.7,
+        "20261027": -3.5,
+        "20261031": -8.673782094724684,
+        "20261101": 2.7499999999999942,
+        "20261102": 0.0,
+        "20261103": -0.2500000000000018
+      },
+      "exposure_delta": 4029.221119017826,
+      "exposure_pct": 0.007065880839007983,
+      "terminal_abs_delta": 19.37734212552823
+    },
+    "stress:continuation-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1559,
+      "missing_either_mark": 169,
+      "marked_delta": -15.51283308195073,
+      "marked_day_interval": [
+        -34.33529411764706,
+        1.2468749999999977
+      ],
+      "marked_daily": {
+        "20261026": -2.95,
+        "20261027": 0.4655982905982903,
+        "20261031": -8.478431372549021,
+        "20261101": 1.3999999999999995,
+        "20261102": 0.0,
+        "20261103": -5.9499999999999975
+      },
+      "settlement_delta": -12.940934664464073,
+      "settlement_day_interval": [
+        -44.968945868945866,
+        9.240119466590059
+      ],
+      "settlement_daily": {
+        "20261026": -3.8000000000000003,
+        "20261027": 0.3810541310541309,
+        "20261031": 0.17801120448179475,
+        "20261101": 4.15,
+        "20261102": 0.0,
+        "20261103": -13.85
+      },
+      "exposure_delta": 658220.5998577843,
+      "exposure_pct": 0.8488257345210517,
+      "terminal_abs_delta": 45.20457755751886
+    },
+    "stress:calm_seed-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1558,
+      "missing_either_mark": 170,
+      "marked_delta": -1.4752666589991819,
+      "marked_day_interval": [
+        -19.10480288671307,
+        13.763320245762728
+      ],
+      "marked_daily": {
+        "20261026": -7.625,
+        "20261027": 0.0,
+        "20261031": 2.3429398886198634,
+        "20261101": 3.806793452380955,
+        "20261102": 0.0,
+        "20261103": 0.0
+      },
+      "settlement_delta": -2.43051909751454,
+      "settlement_day_interval": [
+        -21.890736109685225,
+        14.562985603340156
+      ],
+      "settlement_daily": {
+        "20261026": -8.25,
+        "20261027": 0.0,
+        "20261031": 1.4477285520581131,
+        "20261101": 4.3717523504273474,
+        "20261102": 0.0,
+        "20261103": 0.0
+      },
+      "exposure_delta": 10170.420511910605,
+      "exposure_pct": 0.013115534006799124,
+      "terminal_abs_delta": 1.165723068645093
+    },
+    "stress:calm_seed_continuation-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1558,
+      "missing_either_mark": 170,
+      "marked_delta": -18.88809974094991,
+      "marked_day_interval": [
+        -44.79087616118918,
+        8.062127121076943
+      ],
+      "marked_daily": {
+        "20261026": -10.575,
+        "20261027": 0.4655982905982903,
+        "20261031": -8.035491483929158,
+        "20261101": 5.206793452380954,
+        "20261102": 0.0,
+        "20261103": -5.9499999999999975
+      },
+      "settlement_delta": -19.021453761978613,
+      "settlement_day_interval": [
+        -53.85973389018374,
+        20.246535754985732
+      ],
+      "settlement_daily": {
+        "20261026": -12.05,
+        "20261027": 0.3810541310541309,
+        "20261031": -2.024260243460091,
+        "20261101": 8.521752350427347,
+        "20261102": 0.0,
+        "20261103": -13.85
+      },
+      "exposure_delta": 648015.9203696949,
+      "exposure_pct": 0.8356660209479716,
+      "terminal_abs_delta": 46.370300626162134
+    },
+    "stress:calm_seed_continuation-calm_seed": {
+      "windows": 1728,
+      "common_mark_windows": 1558,
+      "missing_either_mark": 170,
+      "marked_delta": -17.41283308195073,
+      "marked_day_interval": [
+        -39.986544117647064,
+        1.2468749999999977
+      ],
+      "marked_daily": {
+        "20261026": -2.95,
+        "20261027": 0.4655982905982903,
+        "20261031": -10.378431372549022,
+        "20261101": 1.3999999999999995,
+        "20261102": 0.0,
+        "20261103": -5.9499999999999975
+      },
+      "settlement_delta": -16.590934664464072,
+      "settlement_day_interval": [
+        -45.00054971988796,
+        9.03105413105413
+      ],
+      "settlement_daily": {
+        "20261026": -3.8000000000000003,
+        "20261027": 0.3810541310541309,
+        "20261031": -3.4719887955182043,
+        "20261101": 4.15,
+        "20261102": 0.0,
+        "20261103": -13.85
+      },
+      "exposure_delta": 637845.4998577845,
+      "exposure_pct": 0.822442619199765,
+      "terminal_abs_delta": 45.20457755751704
+    }
+  },
+  "diagnostics": {
+    "reference:queue": {
+      "n": 12757,
+      "kept": 3689,
+      "groups": 2006,
+      "shuffleable": 1116,
+      "observed_c": -123.7191369832295,
+      "null_mean_c": -89.50780630784736,
+      "null_p95_c": 6.884731097714693,
+      "p_ge": 0.7345309381237525,
+      "draws": 500,
+      "hold_all_value_c": -221.70935681249938,
+      "no_incremental_fill_n": 12665
+    },
+    "reference:market": {
+      "n": 12757,
+      "kept": 3752,
+      "groups": 2006,
+      "shuffleable": 1098,
+      "observed_c": -12.564420507236758,
+      "null_mean_c": -85.29439714169509,
+      "null_p95_c": 5.586124892081826,
+      "p_ge": 0.0998003992015968,
+      "draws": 500,
+      "hold_all_value_c": -221.70935681249938,
+      "no_incremental_fill_n": 12665
+    },
+    "calm_seed:queue": {
+      "n": 12509,
+      "kept": 3645,
+      "groups": 2025,
+      "shuffleable": 1118,
+      "observed_c": -123.7191369832295,
+      "null_mean_c": -89.67655391107712,
+      "null_p95_c": 15.733001037767863,
+      "p_ge": 0.6946107784431138,
+      "draws": 500,
+      "hold_all_value_c": -209.3643837020918,
+      "no_incremental_fill_n": 12418
+    },
+    "calm_seed:market": {
+      "n": 12509,
+      "kept": 3694,
+      "groups": 2025,
+      "shuffleable": 1100,
+      "observed_c": -9.31442050723675,
+      "null_mean_c": -85.99022025324274,
+      "null_p95_c": 8.349311917711312,
+      "p_ge": 0.08582834331337326,
+      "draws": 500,
+      "hold_all_value_c": -209.3643837020918,
+      "no_incremental_fill_n": 12418
+    },
+    "calm_entry_reference": {
+      "n": 183696,
+      "kept": 6858,
+      "groups": 576,
+      "shuffleable": 221,
+      "observed_c": -179.11520661157022,
+      "null_mean_c": -49.17230228385661,
+      "null_p95_c": 410.4570858384542,
+      "p_ge": 0.7465069860279441,
+      "draws": 500,
+      "missing_mark_n": 0,
+      "unfilled_n": 182675
+    }
+  },
+  "predicates": {
+    "continuation": {
+      "primary_improves_trading_reduces_exposure": false,
+      "stress_improves_trading_reduces_exposure": false,
+      "marked_interval_positive": false
+    },
+    "calm_seed": {
+      "primary_improves_trading_reduces_exposure": false,
+      "stress_improves_trading_reduces_exposure": false,
+      "marked_interval_positive": false
+    },
+    "calm_seed_continuation": {
+      "primary_improves_trading_reduces_exposure": false,
+      "stress_improves_trading_reduces_exposure": false,
+      "marked_interval_positive": false
+    }
+  },
+  "statuses": [
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 27
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "eligible",
+      "n": 1032
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "hard_guard_or_outside_band",
+      "n": 4568
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "pending_create_cancel",
+      "n": 8081
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 70
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "replace_or_resize",
+      "n": 8026
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "rung_cancel",
+      "n": 11067
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "size_or_known_fill",
+      "n": 4921
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 32
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "eligible",
+      "n": 1281
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "hard_guard_or_outside_band",
+      "n": 4403
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "pending_create_cancel",
+      "n": 6523
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 59
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "replace_or_resize",
+      "n": 6767
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "rung_cancel",
+      "n": 10121
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "size_or_known_fill",
+      "n": 4079
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 40
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "eligible",
+      "n": 4385
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "hard_guard_or_outside_band",
+      "n": 12394
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "pending_create_cancel",
+      "n": 5575
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 70
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "replace_or_resize",
+      "n": 13907
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "rung_cancel",
+      "n": 17207
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "size_or_known_fill",
+      "n": 4236
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 29
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "eligible",
+      "n": 3690
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "hard_guard_or_outside_band",
+      "n": 11167
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "pending_create_cancel",
+      "n": 4944
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 50
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "replace_or_resize",
+      "n": 10877
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "rung_cancel",
+      "n": 16839
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "size_or_known_fill",
+      "n": 3586
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 17
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "eligible",
+      "n": 1013
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "hard_guard_or_outside_band",
+      "n": 4409
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "pending_create_cancel",
+      "n": 7225
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 58
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "replace_or_resize",
+      "n": 7476
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "rung_cancel",
+      "n": 11140
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "size_or_known_fill",
+      "n": 4769
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 20
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "eligible",
+      "n": 1356
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "hard_guard_or_outside_band",
+      "n": 4538
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "pending_create_cancel",
+      "n": 7045
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 32
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "replace_or_resize",
+      "n": 7248
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "rung_cancel",
+      "n": 10745
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "size_or_known_fill",
+      "n": 4080
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 27
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261026",
+      "status": "eligible",
+      "n": 862
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261026",
+      "status": "hard_guard_or_outside_band",
+      "n": 4469
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261026",
+      "status": "pending_create_cancel",
+      "n": 8069
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 73
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261026",
+      "status": "replace_or_resize",
+      "n": 7967
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261026",
+      "status": "rung_cancel",
+      "n": 11070
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261026",
+      "status": "size_or_known_fill",
+      "n": 4922
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 32
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261027",
+      "status": "eligible",
+      "n": 986
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261027",
+      "status": "hard_guard_or_outside_band",
+      "n": 4293
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261027",
+      "status": "pending_create_cancel",
+      "n": 6520
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 58
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261027",
+      "status": "replace_or_resize",
+      "n": 6712
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261027",
+      "status": "rung_cancel",
+      "n": 10131
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261027",
+      "status": "size_or_known_fill",
+      "n": 4080
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 37
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261031",
+      "status": "eligible",
+      "n": 2877
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261031",
+      "status": "hard_guard_or_outside_band",
+      "n": 11725
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261031",
+      "status": "pending_create_cancel",
+      "n": 5545
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 71
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261031",
+      "status": "replace_or_resize",
+      "n": 13788
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261031",
+      "status": "rung_cancel",
+      "n": 17679
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261031",
+      "status": "size_or_known_fill",
+      "n": 4261
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 26
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261101",
+      "status": "eligible",
+      "n": 2636
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261101",
+      "status": "hard_guard_or_outside_band",
+      "n": 10822
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261101",
+      "status": "pending_create_cancel",
+      "n": 4932
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 51
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261101",
+      "status": "replace_or_resize",
+      "n": 10814
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261101",
+      "status": "rung_cancel",
+      "n": 17323
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261101",
+      "status": "size_or_known_fill",
+      "n": 3601
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 17
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261102",
+      "status": "eligible",
+      "n": 822
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261102",
+      "status": "hard_guard_or_outside_band",
+      "n": 4330
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261102",
+      "status": "pending_create_cancel",
+      "n": 7208
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 56
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261102",
+      "status": "replace_or_resize",
+      "n": 7452
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261102",
+      "status": "rung_cancel",
+      "n": 11156
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261102",
+      "status": "size_or_known_fill",
+      "n": 4770
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 20
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261103",
+      "status": "eligible",
+      "n": 1019
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261103",
+      "status": "hard_guard_or_outside_band",
+      "n": 4474
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261103",
+      "status": "pending_create_cancel",
+      "n": 7043
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 32
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261103",
+      "status": "replace_or_resize",
+      "n": 7200
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261103",
+      "status": "rung_cancel",
+      "n": 10767
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261103",
+      "status": "size_or_known_fill",
+      "n": 4080
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 27
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "eligible",
+      "n": 944
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "hard_guard_or_outside_band",
+      "n": 4519
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "pending_create_cancel",
+      "n": 8077
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 71
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "replace_or_resize",
+      "n": 7992
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "rung_cancel",
+      "n": 11067
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "size_or_known_fill",
+      "n": 4921
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 31
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "eligible",
+      "n": 1178
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "hard_guard_or_outside_band",
+      "n": 4366
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "pending_create_cancel",
+      "n": 6519
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 58
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "replace_or_resize",
+      "n": 6746
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "rung_cancel",
+      "n": 10126
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "size_or_known_fill",
+      "n": 4082
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 39
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "eligible",
+      "n": 3970
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "hard_guard_or_outside_band",
+      "n": 12314
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "pending_create_cancel",
+      "n": 5579
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 70
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "replace_or_resize",
+      "n": 13890
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "rung_cancel",
+      "n": 17355
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "size_or_known_fill",
+      "n": 4242
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 29
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "eligible",
+      "n": 3385
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "hard_guard_or_outside_band",
+      "n": 11059
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "pending_create_cancel",
+      "n": 4910
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 50
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "replace_or_resize",
+      "n": 10871
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "rung_cancel",
+      "n": 16998
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "size_or_known_fill",
+      "n": 3591
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 17
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "eligible",
+      "n": 934
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "hard_guard_or_outside_band",
+      "n": 4378
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "pending_create_cancel",
+      "n": 7217
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 58
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "replace_or_resize",
+      "n": 7469
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "rung_cancel",
+      "n": 11144
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "size_or_known_fill",
+      "n": 4769
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 20
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "eligible",
+      "n": 1169
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "hard_guard_or_outside_band",
+      "n": 4470
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "pending_create_cancel",
+      "n": 7040
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 32
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "replace_or_resize",
+      "n": 7217
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "rung_cancel",
+      "n": 10762
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "size_or_known_fill",
+      "n": 4081
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261026",
+      "status": "eligible",
+      "n": 18
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261026",
+      "status": "hard_guard_or_outside_band",
+      "n": 31
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261026",
+      "status": "pending_create_cancel",
+      "n": 6
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261026",
+      "status": "replace_or_resize",
+      "n": 16
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261026",
+      "status": "rung_cancel",
+      "n": 100
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261026",
+      "status": "size_or_known_fill",
+      "n": 5
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261027",
+      "status": "eligible",
+      "n": 17
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261027",
+      "status": "hard_guard_or_outside_band",
+      "n": 95
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261027",
+      "status": "pending_create_cancel",
+      "n": 83
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261027",
+      "status": "replace_or_resize",
+      "n": 120
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261027",
+      "status": "rung_cancel",
+      "n": 114
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261027",
+      "status": "size_or_known_fill",
+      "n": 64
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 4
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261031",
+      "status": "eligible",
+      "n": 748
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261031",
+      "status": "hard_guard_or_outside_band",
+      "n": 1846
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261031",
+      "status": "pending_create_cancel",
+      "n": 258
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 3
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261031",
+      "status": "replace_or_resize",
+      "n": 1607
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261031",
+      "status": "rung_cancel",
+      "n": 3421
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261031",
+      "status": "size_or_known_fill",
+      "n": 406
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 4
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261101",
+      "status": "eligible",
+      "n": 400
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261101",
+      "status": "hard_guard_or_outside_band",
+      "n": 1429
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261101",
+      "status": "pending_create_cancel",
+      "n": 207
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 3
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261101",
+      "status": "replace_or_resize",
+      "n": 1071
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261101",
+      "status": "rung_cancel",
+      "n": 2649
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261101",
+      "status": "size_or_known_fill",
+      "n": 408
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261102",
+      "status": "eligible",
+      "n": 3
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261102",
+      "status": "hard_guard_or_outside_band",
+      "n": 19
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261102",
+      "status": "pending_create_cancel",
+      "n": 3
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 1
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261102",
+      "status": "replace_or_resize",
+      "n": 10
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261102",
+      "status": "rung_cancel",
+      "n": 38
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261102",
+      "status": "size_or_known_fill",
+      "n": 4
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261103",
+      "status": "eligible",
+      "n": 16
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261103",
+      "status": "hard_guard_or_outside_band",
+      "n": 37
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261103",
+      "status": "pending_create_cancel",
+      "n": 12
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261103",
+      "status": "replace_or_resize",
+      "n": 16
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261103",
+      "status": "rung_cancel",
+      "n": 71
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261103",
+      "status": "size_or_known_fill",
+      "n": 17
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 27
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "eligible",
+      "n": 1028
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "hard_guard_or_outside_band",
+      "n": 4637
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "pending_create_cancel",
+      "n": 8103
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 70
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "replace_or_resize",
+      "n": 8044
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "rung_cancel",
+      "n": 11067
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "size_or_known_fill",
+      "n": 4920
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 32
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "eligible",
+      "n": 1281
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "hard_guard_or_outside_band",
+      "n": 4477
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "pending_create_cancel",
+      "n": 6537
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 59
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "replace_or_resize",
+      "n": 6770
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "rung_cancel",
+      "n": 10120
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "size_or_known_fill",
+      "n": 4079
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 38
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "eligible",
+      "n": 4228
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "hard_guard_or_outside_band",
+      "n": 13491
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "pending_create_cancel",
+      "n": 5710
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 69
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "replace_or_resize",
+      "n": 13859
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "rung_cancel",
+      "n": 17015
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "size_or_known_fill",
+      "n": 4228
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 27
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "eligible",
+      "n": 3604
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "hard_guard_or_outside_band",
+      "n": 11754
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "pending_create_cancel",
+      "n": 5036
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 51
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "replace_or_resize",
+      "n": 10798
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "rung_cancel",
+      "n": 16769
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "size_or_known_fill",
+      "n": 3545
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 17
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "eligible",
+      "n": 1015
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "hard_guard_or_outside_band",
+      "n": 4425
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "pending_create_cancel",
+      "n": 7230
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 57
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "replace_or_resize",
+      "n": 7478
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "rung_cancel",
+      "n": 11142
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "size_or_known_fill",
+      "n": 4769
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 20
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "eligible",
+      "n": 1353
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "hard_guard_or_outside_band",
+      "n": 4574
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "pending_create_cancel",
+      "n": 7051
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 32
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "replace_or_resize",
+      "n": 7250
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "rung_cancel",
+      "n": 10748
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "size_or_known_fill",
+      "n": 4080
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 27
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "eligible",
+      "n": 944
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "hard_guard_or_outside_band",
+      "n": 4588
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "pending_create_cancel",
+      "n": 8099
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 71
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "replace_or_resize",
+      "n": 8010
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "rung_cancel",
+      "n": 11067
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "size_or_known_fill",
+      "n": 4920
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 31
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "eligible",
+      "n": 1178
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "hard_guard_or_outside_band",
+      "n": 4437
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "pending_create_cancel",
+      "n": 6533
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 58
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "replace_or_resize",
+      "n": 6749
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "rung_cancel",
+      "n": 10125
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "size_or_known_fill",
+      "n": 4082
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 37
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "eligible",
+      "n": 3824
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "hard_guard_or_outside_band",
+      "n": 13424
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "pending_create_cancel",
+      "n": 5728
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 69
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "replace_or_resize",
+      "n": 13846
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "rung_cancel",
+      "n": 17146
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "size_or_known_fill",
+      "n": 4230
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 27
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "eligible",
+      "n": 3326
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "hard_guard_or_outside_band",
+      "n": 11654
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "pending_create_cancel",
+      "n": 5003
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 51
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "replace_or_resize",
+      "n": 10785
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "rung_cancel",
+      "n": 16909
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "size_or_known_fill",
+      "n": 3555
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 17
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "eligible",
+      "n": 935
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "hard_guard_or_outside_band",
+      "n": 4393
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "pending_create_cancel",
+      "n": 7221
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 57
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "replace_or_resize",
+      "n": 7472
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "rung_cancel",
+      "n": 11146
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "size_or_known_fill",
+      "n": 4769
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 20
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "eligible",
+      "n": 1169
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "hard_guard_or_outside_band",
+      "n": 4507
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "pending_create_cancel",
+      "n": 7047
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 32
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "replace_or_resize",
+      "n": 7215
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "rung_cancel",
+      "n": 10764
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "size_or_known_fill",
+      "n": 4081
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 1
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "eligible",
+      "n": 407
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "hard_guard_or_outside_band",
+      "n": 1900
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "pending_create_cancel",
+      "n": 22231
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 75
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "replace_or_resize",
+      "n": 3691
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "rung_cancel",
+      "n": 7040
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "size_or_known_fill",
+      "n": 2329
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 3
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "eligible",
+      "n": 662
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "hard_guard_or_outside_band",
+      "n": 1938
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "non_model_pull",
+      "n": 1
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "pending_create_cancel",
+      "n": 18810
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 79
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "replace_or_resize",
+      "n": 3302
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "rung_cancel",
+      "n": 6420
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "size_or_known_fill",
+      "n": 1991
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 19
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "eligible",
+      "n": 2591
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "hard_guard_or_outside_band",
+      "n": 6782
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "pending_create_cancel",
+      "n": 29471
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 69
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "replace_or_resize",
+      "n": 7734
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "rung_cancel",
+      "n": 10116
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "size_or_known_fill",
+      "n": 2270
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 16
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "eligible",
+      "n": 2057
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "hard_guard_or_outside_band",
+      "n": 5691
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "pending_create_cancel",
+      "n": 27033
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 65
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "replace_or_resize",
+      "n": 5954
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "rung_cancel",
+      "n": 9382
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "size_or_known_fill",
+      "n": 2050
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 7
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "eligible",
+      "n": 478
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "hard_guard_or_outside_band",
+      "n": 1695
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "pending_create_cancel",
+      "n": 20862
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 66
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "replace_or_resize",
+      "n": 3463
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "rung_cancel",
+      "n": 6830
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "size_or_known_fill",
+      "n": 2158
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 3
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "eligible",
+      "n": 681
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "hard_guard_or_outside_band",
+      "n": 1990
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "pending_create_cancel",
+      "n": 20180
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 43
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "replace_or_resize",
+      "n": 3572
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "rung_cancel",
+      "n": 6661
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "size_or_known_fill",
+      "n": 1934
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 1
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "eligible",
+      "n": 381
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "hard_guard_or_outside_band",
+      "n": 1905
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "pending_create_cancel",
+      "n": 22221
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 77
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "replace_or_resize",
+      "n": 3685
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "rung_cancel",
+      "n": 7041
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261026",
+      "status": "size_or_known_fill",
+      "n": 2329
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 3
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "eligible",
+      "n": 608
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "hard_guard_or_outside_band",
+      "n": 1922
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "non_model_pull",
+      "n": 1
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "pending_create_cancel",
+      "n": 18806
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 79
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "replace_or_resize",
+      "n": 3303
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "rung_cancel",
+      "n": 6422
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261027",
+      "status": "size_or_known_fill",
+      "n": 1991
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 19
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "eligible",
+      "n": 2389
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "hard_guard_or_outside_band",
+      "n": 6744
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "pending_create_cancel",
+      "n": 29330
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 72
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "replace_or_resize",
+      "n": 7686
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "rung_cancel",
+      "n": 10154
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261031",
+      "status": "size_or_known_fill",
+      "n": 2261
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 16
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "eligible",
+      "n": 1892
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "hard_guard_or_outside_band",
+      "n": 5599
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "pending_create_cancel",
+      "n": 26862
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 64
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "replace_or_resize",
+      "n": 5917
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "rung_cancel",
+      "n": 9427
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261101",
+      "status": "size_or_known_fill",
+      "n": 2050
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 7
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "eligible",
+      "n": 446
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "hard_guard_or_outside_band",
+      "n": 1683
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "pending_create_cancel",
+      "n": 20820
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 66
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "replace_or_resize",
+      "n": 3458
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "rung_cancel",
+      "n": 6831
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261102",
+      "status": "size_or_known_fill",
+      "n": 2158
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 3
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "eligible",
+      "n": 614
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "hard_guard_or_outside_band",
+      "n": 1969
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "pending_create_cancel",
+      "n": 20084
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 43
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "replace_or_resize",
+      "n": 3558
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "rung_cancel",
+      "n": 6661
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261103",
+      "status": "size_or_known_fill",
+      "n": 1933
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 1
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "eligible",
+      "n": 404
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "hard_guard_or_outside_band",
+      "n": 1929
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "pending_create_cancel",
+      "n": 22289
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 75
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "replace_or_resize",
+      "n": 3704
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "rung_cancel",
+      "n": 7051
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "status": "size_or_known_fill",
+      "n": 2329
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 3
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "eligible",
+      "n": 661
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "hard_guard_or_outside_band",
+      "n": 1972
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "non_model_pull",
+      "n": 1
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "pending_create_cancel",
+      "n": 18853
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 79
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "replace_or_resize",
+      "n": 3305
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "rung_cancel",
+      "n": 6420
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "status": "size_or_known_fill",
+      "n": 1991
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 20
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "eligible",
+      "n": 2521
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "hard_guard_or_outside_band",
+      "n": 7419
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "pending_create_cancel",
+      "n": 29626
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 68
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "replace_or_resize",
+      "n": 7701
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "rung_cancel",
+      "n": 10017
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "status": "size_or_known_fill",
+      "n": 2269
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 17
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "eligible",
+      "n": 2017
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "hard_guard_or_outside_band",
+      "n": 5986
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "pending_create_cancel",
+      "n": 27141
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 69
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "replace_or_resize",
+      "n": 5951
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "rung_cancel",
+      "n": 9345
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "status": "size_or_known_fill",
+      "n": 2036
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 7
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "eligible",
+      "n": 480
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "hard_guard_or_outside_band",
+      "n": 1705
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "pending_create_cancel",
+      "n": 20871
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 65
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "replace_or_resize",
+      "n": 3465
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "rung_cancel",
+      "n": 6830
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "status": "size_or_known_fill",
+      "n": 2158
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 3
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "eligible",
+      "n": 678
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "hard_guard_or_outside_band",
+      "n": 2021
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "pending_create_cancel",
+      "n": 20188
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 43
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "replace_or_resize",
+      "n": 3574
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "rung_cancel",
+      "n": 6662
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "status": "size_or_known_fill",
+      "n": 1934
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 1
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "eligible",
+      "n": 380
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "hard_guard_or_outside_band",
+      "n": 1934
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "pending_create_cancel",
+      "n": 22280
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 77
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "replace_or_resize",
+      "n": 3699
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "rung_cancel",
+      "n": 7052
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "status": "size_or_known_fill",
+      "n": 2329
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 3
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "eligible",
+      "n": 607
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "hard_guard_or_outside_band",
+      "n": 1954
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "non_model_pull",
+      "n": 1
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "pending_create_cancel",
+      "n": 18849
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 79
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "replace_or_resize",
+      "n": 3306
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "rung_cancel",
+      "n": 6422
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "status": "size_or_known_fill",
+      "n": 1991
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 20
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "eligible",
+      "n": 2334
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "hard_guard_or_outside_band",
+      "n": 7429
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "pending_create_cancel",
+      "n": 29561
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 71
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "replace_or_resize",
+      "n": 7649
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "rung_cancel",
+      "n": 10059
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "status": "size_or_known_fill",
+      "n": 2261
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 17
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "eligible",
+      "n": 1853
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "hard_guard_or_outside_band",
+      "n": 5898
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "pending_create_cancel",
+      "n": 26977
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 69
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "replace_or_resize",
+      "n": 5915
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "rung_cancel",
+      "n": 9382
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "status": "size_or_known_fill",
+      "n": 2034
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 7
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "eligible",
+      "n": 447
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "hard_guard_or_outside_band",
+      "n": 1693
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "pending_create_cancel",
+      "n": 20828
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 65
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "replace_or_resize",
+      "n": 3460
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "rung_cancel",
+      "n": 6831
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "status": "size_or_known_fill",
+      "n": 2158
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 3
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "eligible",
+      "n": 612
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "hard_guard_or_outside_band",
+      "n": 2002
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "pending_create_cancel",
+      "n": 20090
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 43
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "replace_or_resize",
+      "n": 3560
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "rung_cancel",
+      "n": 6662
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "status": "size_or_known_fill",
+      "n": 1933
+    }
+  ],
+  "fit": {
+    "training_version": 2,
+    "superseding_declaration": {
+      "as_of": "2026-11-11T16:38:09.466973+00:00",
+      "version": 2,
+      "supersedes": "training population of original declaration; no original model was fit",
+      "original_declaration_sha": "5f9c37d050d286449a021f7aaa0fb5bd97e2ca034dda231639b64c32c48b3c13",
+      "source_commit": "f167d50beda7628c6d7fb778080f858bce08f81a",
+      "source_sha": {
+        "predictfun/research/pf_own_order_fit_v2.py": "50aec6efd274596fbcbe445b963ea5ba469425151141bfc913d6c19865786257",
+        "predictfun/research/run_own_order_v2.sh": "324d64c4a1bd6029fa388181cba05ed1c59c288216a7157703163fcbd32300a2",
+        "predictfun/research/tests/test_order_fit_v2.py": "41bf8ca2e3efd3385ba9d46cc514a99d75fbb1c9aa96225b88ccdcf9050854b5"
+      },
+      "method": "Train on unique action identity (day/window/send/activation/first-cancel/initial-size plus all causal observed features), retaining reference when paths agree. Duplicate keys with conflicting labels refuse the fit. Path-specific neutral evaluation remains separate. No threshold, feature, model parameter, policy, label, null or test date changes.",
+      "validation": "Positive duplicate control and known-bad conflicting-label refusal. Full18 original controls retained. Declaration before any model fit or policy evaluation."
+    },
+    "superseding_declaration_sha": "0575db378de8cd047c727082db86b9f4194d1325b28cb3fedf938a402e753a36",
+    "folds": [
+      {
+        "day": "20261026",
+        "train_days": [
+          "20261023",
+          "20261024",
+          "20261025"
+        ],
+        "train_n": 5895,
+        "pooled_train_n": 11489,
+        "duplicate_actions_removed": 5594,
+        "test_n": 2060,
+        "no_incremental_fill_train": 5834,
+        "no_incremental_fill_test": 2051,
+        "importance": {
+          "market": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 0.0,
+            "bn_r250": 0.0,
+            "bn_r500": 0.0,
+            "bn_r1000": 0.0,
+            "bn_r3000": 0.0,
+            "bn_imb": 996.2457465678453,
+            "bn_age": 362.1217380464077,
+            "bn_flow250": 81.49336004257202,
+            "bn_flow1000": 345.81683936715126,
+            "bn_flow5000": 471.66598522663116,
+            "bn_ntr1000": 392.9945591390133,
+            "pf_spread": 0.0,
+            "pf_mid": 188.57775330543518,
+            "pf_micro_dev": 99.35286989808083,
+            "pf_imb1": 131.48683208227158,
+            "pf_imb3": 429.5242269933224,
+            "pf_lbs": 1704.9393389634788,
+            "pf_las": 205.40718914568424,
+            "pf_age": 194.6403864324093,
+            "pf_nfr1000": 74.26418650150299,
+            "pf_dm250": 0.0,
+            "pf_dm1000": 140.4075906276703,
+            "pf_dm5000": 211.44585060328245,
+            "pf_pend_bid1000": 375.84244525432587,
+            "pf_pend_ask1000": 15.051329612731934,
+            "pf_pend_tot5000": 1838.7728749513626,
+            "t_rel": 824.6663910523057,
+            "sigma": 224.49557076953351,
+            "basis_bps": 1006.149348244071,
+            "gap": 307.1749790906906,
+            "side": 0.0,
+            "order_price": 91.73783984035254,
+            "remaining": 0.0,
+            "inventory": 15.958609700202942,
+            "order_age_ms": 111.06730407476425,
+            "other_reserved": 0.0,
+            "guard_v": 110.94175958633423,
+            "guard_margin": 180.46557766199112,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 747.8364949226379,
+            "d_bnimb250": 229.12835200875998,
+            "d_pfimb250": 516.7547486126423
+          },
+          "queue": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 0.0,
+            "bn_r250": 0.0,
+            "bn_r500": 0.0,
+            "bn_r1000": 0.0,
+            "bn_r3000": 0.0,
+            "bn_imb": 939.1169318817556,
+            "bn_age": 356.3312160074711,
+            "bn_flow250": 55.558889865875244,
+            "bn_flow1000": 294.69373691082,
+            "bn_flow5000": 506.91434578597546,
+            "bn_ntr1000": 375.1285077929497,
+            "pf_spread": 0.0,
+            "pf_mid": 132.66896080970764,
+            "pf_micro_dev": 67.6061224937439,
+            "pf_imb1": 80.855856731534,
+            "pf_imb3": 508.9672539588064,
+            "pf_lbs": 1330.1511352658272,
+            "pf_las": 299.54241098463535,
+            "pf_age": 183.66801200062037,
+            "pf_nfr1000": 66.21762797236443,
+            "pf_dm250": 0.0,
+            "pf_dm1000": 112.53078937530518,
+            "pf_dm5000": 228.96417886018753,
+            "pf_pend_bid1000": 373.12388980481774,
+            "pf_pend_ask1000": 9.96603012084961,
+            "pf_pend_tot5000": 1801.5807045400143,
+            "t_rel": 818.4285007640719,
+            "sigma": 268.2034087330103,
+            "basis_bps": 1040.8476897478104,
+            "gap": 270.563459739089,
+            "side": 0.0,
+            "order_price": 122.81415212154388,
+            "remaining": 0.0,
+            "inventory": 7.210319757461548,
+            "order_age_ms": 94.41757100820541,
+            "other_reserved": 0.0,
+            "guard_v": 98.81420475244522,
+            "guard_margin": 170.96797049045563,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 613.7124788761139,
+            "d_bnimb250": 203.26583349704742,
+            "d_pfimb250": 582.6983287683688,
+            "queue_initial": 205.33429484814405,
+            "queue_now": 183.96187994629145,
+            "queue_min": 166.90570771694183,
+            "queue_progress": 12.291379928588867
+          }
+        }
+      },
+      {
+        "day": "20261027",
+        "train_days": [
+          "20261023",
+          "20261024",
+          "20261025",
+          "20261026"
+        ],
+        "train_n": 6934,
+        "pooled_train_n": 13549,
+        "duplicate_actions_removed": 6615,
+        "test_n": 2562,
+        "no_incremental_fill_train": 6868,
+        "no_incremental_fill_test": 2546,
+        "importance": {
+          "market": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 0.0,
+            "bn_r250": 0.0,
+            "bn_r500": 0.0,
+            "bn_r1000": 31.588079929351807,
+            "bn_r3000": 15.191850423812866,
+            "bn_imb": 1127.2992523089051,
+            "bn_age": 288.7138934135437,
+            "bn_flow250": 93.00276839733124,
+            "bn_flow1000": 395.73959347978234,
+            "bn_flow5000": 632.0955715849996,
+            "bn_ntr1000": 349.9211163520813,
+            "pf_spread": 0.0,
+            "pf_mid": 184.34583745896816,
+            "pf_micro_dev": 97.79923571646214,
+            "pf_imb1": 140.44567550718784,
+            "pf_imb3": 424.22399720549583,
+            "pf_lbs": 1365.3738782958826,
+            "pf_las": 223.25858461856842,
+            "pf_age": 224.43514117598534,
+            "pf_nfr1000": 78.75064688920975,
+            "pf_dm250": 0.0,
+            "pf_dm1000": 54.29438227415085,
+            "pf_dm5000": 191.127215385437,
+            "pf_pend_bid1000": 292.9187855133787,
+            "pf_pend_ask1000": 3.2546699047088623,
+            "pf_pend_tot5000": 1732.986745774746,
+            "t_rel": 924.5051037445664,
+            "sigma": 253.40805098600686,
+            "basis_bps": 894.5214252769947,
+            "gap": 346.27432557940483,
+            "side": 0.0,
+            "order_price": 76.5297047495842,
+            "remaining": 0.0,
+            "inventory": 16.03279960155487,
+            "order_age_ms": 119.2203808426857,
+            "other_reserved": 0.0,
+            "guard_v": 142.55116412043571,
+            "guard_margin": 176.95084100961685,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 707.0825137346983,
+            "d_bnimb250": 205.17850676178932,
+            "d_pfimb250": 711.8973174095154
+          },
+          "queue": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 0.0,
+            "bn_r250": 0.0,
+            "bn_r500": 0.0,
+            "bn_r1000": 32.318049907684326,
+            "bn_r3000": 18.785529613494873,
+            "bn_imb": 1004.210708707571,
+            "bn_age": 277.07018642127514,
+            "bn_flow250": 59.12700033187866,
+            "bn_flow1000": 418.50526559352875,
+            "bn_flow5000": 454.41025464236736,
+            "bn_ntr1000": 422.127648383379,
+            "pf_spread": 0.0,
+            "pf_mid": 185.5330706909299,
+            "pf_micro_dev": 83.36200997233391,
+            "pf_imb1": 158.00259611010551,
+            "pf_imb3": 402.83180460333824,
+            "pf_lbs": 1215.6114433296025,
+            "pf_las": 221.90974242985249,
+            "pf_age": 206.75134044885635,
+            "pf_nfr1000": 101.9050507247448,
+            "pf_dm250": 0.0,
+            "pf_dm1000": 55.69137704372406,
+            "pf_dm5000": 202.54349184036255,
+            "pf_pend_bid1000": 298.761928409338,
+            "pf_pend_ask1000": 8.96770977973938,
+            "pf_pend_tot5000": 1645.8690824061632,
+            "t_rel": 853.7491685524583,
+            "sigma": 222.5694639980793,
+            "basis_bps": 958.0708956494927,
+            "gap": 315.13587498664856,
+            "side": 0.0,
+            "order_price": 90.6120190396905,
+            "remaining": 0.0,
+            "inventory": 22.08217090368271,
+            "order_age_ms": 67.6278245151043,
+            "other_reserved": 0.0,
+            "guard_v": 149.0688035339117,
+            "guard_margin": 244.6370033621788,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 760.8224199861288,
+            "d_bnimb250": 186.1977743320167,
+            "d_pfimb250": 642.306227888912,
+            "queue_initial": 239.05564871057868,
+            "queue_now": 223.24490953981876,
+            "queue_min": 259.8749954998493,
+            "queue_progress": 0.0
+          }
+        }
+      },
+      {
+        "day": "20261031",
+        "train_days": [
+          "20261023",
+          "20261024",
+          "20261025",
+          "20261026",
+          "20261027"
+        ],
+        "train_n": 8220,
+        "pooled_train_n": 16111,
+        "duplicate_actions_removed": 7891,
+        "test_n": 8613,
+        "no_incremental_fill_train": 8146,
+        "no_incremental_fill_test": 8549,
+        "importance": {
+          "market": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 0.0,
+            "bn_r250": 0.0,
+            "bn_r500": 0.0,
+            "bn_r1000": 72.37231016159058,
+            "bn_r3000": 34.23689007759094,
+            "bn_imb": 1532.6265990287066,
+            "bn_age": 316.16205698251724,
+            "bn_flow250": 48.27347540855408,
+            "bn_flow1000": 564.4575937893242,
+            "bn_flow5000": 715.4973385259509,
+            "bn_ntr1000": 377.1463728249073,
+            "pf_spread": 0.0,
+            "pf_mid": 217.1900191605091,
+            "pf_micro_dev": 125.60286720469594,
+            "pf_imb1": 171.4394760876894,
+            "pf_imb3": 430.813026599586,
+            "pf_lbs": 1205.4078238640795,
+            "pf_las": 212.8135831124382,
+            "pf_age": 255.33986551314592,
+            "pf_nfr1000": 73.59473583102226,
+            "pf_dm250": 0.0,
+            "pf_dm1000": 98.65742175281048,
+            "pf_dm5000": 197.80505838245153,
+            "pf_pend_bid1000": 353.92595142382197,
+            "pf_pend_ask1000": 13.304280161857605,
+            "pf_pend_tot5000": 1264.2730557098985,
+            "t_rel": 765.1395800709724,
+            "sigma": 418.27385680004954,
+            "basis_bps": 1016.9848662614822,
+            "gap": 343.7277585119009,
+            "side": 0.0,
+            "order_price": 124.51520227268338,
+            "remaining": 0.0,
+            "inventory": 28.887219727039337,
+            "order_age_ms": 121.41153874993324,
+            "other_reserved": 0.0,
+            "guard_v": 163.52896030247211,
+            "guard_margin": 256.5102623552084,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 797.9916440732777,
+            "d_bnimb250": 249.46726678311825,
+            "d_pfimb250": 1024.6022304408252
+          },
+          "queue": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 0.0,
+            "bn_r250": 0.0,
+            "bn_r500": 0.0,
+            "bn_r1000": 77.57833075523376,
+            "bn_r3000": 38.643139600753784,
+            "bn_imb": 1452.5547169335186,
+            "bn_age": 333.3774961680174,
+            "bn_flow250": 49.04494023323059,
+            "bn_flow1000": 557.2518894672394,
+            "bn_flow5000": 540.1234269626439,
+            "bn_ntr1000": 391.8002861738205,
+            "pf_spread": 0.0,
+            "pf_mid": 240.19783866405487,
+            "pf_micro_dev": 114.90531457960606,
+            "pf_imb1": 159.8816202133894,
+            "pf_imb3": 452.89018277451396,
+            "pf_lbs": 961.1436000205576,
+            "pf_las": 189.4714851155877,
+            "pf_age": 209.28773882985115,
+            "pf_nfr1000": 78.94774244725704,
+            "pf_dm250": 0.0,
+            "pf_dm1000": 79.49193000793457,
+            "pf_dm5000": 169.32556119561195,
+            "pf_pend_bid1000": 330.7953730523586,
+            "pf_pend_ask1000": 23.32153022289276,
+            "pf_pend_tot5000": 1158.6833986733109,
+            "t_rel": 924.8786109387875,
+            "sigma": 342.83724792301655,
+            "basis_bps": 927.6353966929018,
+            "gap": 278.17441415786743,
+            "side": 0.0,
+            "order_price": 104.54764790087938,
+            "remaining": 0.0,
+            "inventory": 20.800478100776672,
+            "order_age_ms": 103.35840943455696,
+            "other_reserved": 0.0,
+            "guard_v": 241.25849739834666,
+            "guard_margin": 180.31144547462463,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 850.2534476518631,
+            "d_bnimb250": 239.7813090980053,
+            "d_pfimb250": 936.4887929409742,
+            "queue_initial": 430.6954944226891,
+            "queue_now": 266.47242384031415,
+            "queue_min": 394.2030686587095,
+            "queue_progress": 6.973520040512085
+          }
+        }
+      },
+      {
+        "day": "20261101",
+        "train_days": [
+          "20261023",
+          "20261024",
+          "20261025",
+          "20261026",
+          "20261027",
+          "20261031"
+        ],
+        "train_n": 12797,
+        "pooled_train_n": 24724,
+        "duplicate_actions_removed": 11927,
+        "test_n": 7294,
+        "no_incremental_fill_train": 12690,
+        "no_incremental_fill_test": 7234,
+        "importance": {
+          "market": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 0.0,
+            "bn_r250": 0.0,
+            "bn_r500": 0.0,
+            "bn_r1000": 103.46704959869385,
+            "bn_r3000": 337.1969907283783,
+            "bn_imb": 1804.0191461928189,
+            "bn_age": 398.9971115095541,
+            "bn_flow250": 137.73895728588104,
+            "bn_flow1000": 1081.2368606552482,
+            "bn_flow5000": 859.2642629221082,
+            "bn_ntr1000": 945.5588927194476,
+            "pf_spread": 0.0,
+            "pf_mid": 644.8282787241042,
+            "pf_micro_dev": 264.0943652614951,
+            "pf_imb1": 338.52648801356554,
+            "pf_imb3": 487.2702943608165,
+            "pf_lbs": 2068.590780440718,
+            "pf_las": 1376.3481380073354,
+            "pf_age": 545.2895896807313,
+            "pf_nfr1000": 247.13640488311648,
+            "pf_dm250": 0.0,
+            "pf_dm1000": 165.4579793214798,
+            "pf_dm5000": 718.9286233737366,
+            "pf_pend_bid1000": 933.6244567991234,
+            "pf_pend_ask1000": 60.75067973136902,
+            "pf_pend_tot5000": 2230.689347304404,
+            "t_rel": 1069.0802391953766,
+            "sigma": 1029.7449664683081,
+            "basis_bps": 1284.5883594602346,
+            "gap": 1200.5507965274155,
+            "side": 0.0,
+            "order_price": 834.400947086513,
+            "remaining": 0.0,
+            "inventory": 73.64282393455505,
+            "order_age_ms": 86.83131697773933,
+            "other_reserved": 0.0,
+            "guard_v": 668.383930677548,
+            "guard_margin": 310.0662981271744,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 1402.9743152353913,
+            "d_bnimb250": 541.746497772634,
+            "d_pfimb250": 1203.445537276566
+          },
+          "queue": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 0.0,
+            "bn_r250": 0.0,
+            "bn_r500": 0.0,
+            "bn_r1000": 100.55546975135803,
+            "bn_r3000": 269.19116973876953,
+            "bn_imb": 1902.6190430619754,
+            "bn_age": 448.53471560776234,
+            "bn_flow250": 155.26047277450562,
+            "bn_flow1000": 856.1980699747801,
+            "bn_flow5000": 753.9486257135868,
+            "bn_ntr1000": 742.7280826643109,
+            "pf_spread": 0.0,
+            "pf_mid": 622.0110829994082,
+            "pf_micro_dev": 244.24201515689492,
+            "pf_imb1": 374.6367129506543,
+            "pf_imb3": 493.01706367731094,
+            "pf_lbs": 1891.0980930514634,
+            "pf_las": 1306.8567345924675,
+            "pf_age": 412.12737991660833,
+            "pf_nfr1000": 188.7167707979679,
+            "pf_dm250": 0.0,
+            "pf_dm1000": 152.0816091299057,
+            "pf_dm5000": 642.1184415817261,
+            "pf_pend_bid1000": 962.3814259395003,
+            "pf_pend_ask1000": 78.37952947616577,
+            "pf_pend_tot5000": 1708.1437417622656,
+            "t_rel": 1001.8721186786424,
+            "sigma": 1016.0936443563551,
+            "basis_bps": 1245.8006014264975,
+            "gap": 1047.8179936483502,
+            "side": 0.0,
+            "order_price": 787.9263544231653,
+            "remaining": 0.0,
+            "inventory": 53.27876363694668,
+            "order_age_ms": 141.67551094293594,
+            "other_reserved": 0.0,
+            "guard_v": 726.2563224628102,
+            "guard_margin": 327.4452894087881,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 1465.8063052780926,
+            "d_bnimb250": 551.00429122895,
+            "d_pfimb250": 1326.1991925537586,
+            "queue_initial": 501.83057080954313,
+            "queue_now": 505.97845950350165,
+            "queue_min": 479.3272576481104,
+            "queue_progress": 25.36489999294281
+          }
+        }
+      },
+      {
+        "day": "20261102",
+        "train_days": [
+          "20261023",
+          "20261024",
+          "20261025",
+          "20261026",
+          "20261027",
+          "20261031",
+          "20261101"
+        ],
+        "train_n": 16644,
+        "pooled_train_n": 32018,
+        "duplicate_actions_removed": 15374,
+        "test_n": 2028,
+        "no_incremental_fill_train": 16505,
+        "no_incremental_fill_test": 2014,
+        "importance": {
+          "market": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 0.0,
+            "bn_r250": 0.0,
+            "bn_r500": 0.0,
+            "bn_r1000": 225.46029949188232,
+            "bn_r3000": 630.6661608219147,
+            "bn_imb": 2034.488077536851,
+            "bn_age": 537.7155745369382,
+            "bn_flow250": 285.25309333205223,
+            "bn_flow1000": 961.7392747178674,
+            "bn_flow5000": 1222.0420252769254,
+            "bn_ntr1000": 1076.7736651627347,
+            "pf_spread": 0.0,
+            "pf_mid": 728.1895225681365,
+            "pf_micro_dev": 723.0742499758489,
+            "pf_imb1": 792.7243399191648,
+            "pf_imb3": 755.506076939404,
+            "pf_lbs": 2293.1778430603445,
+            "pf_las": 1560.8874465152621,
+            "pf_age": 714.939241565764,
+            "pf_nfr1000": 402.2852348983288,
+            "pf_dm250": 0.0,
+            "pf_dm1000": 157.4151804447174,
+            "pf_dm5000": 701.8936257362366,
+            "pf_pend_bid1000": 1940.5160365037154,
+            "pf_pend_ask1000": 66.98241019248962,
+            "pf_pend_tot5000": 2905.370509929955,
+            "t_rel": 1091.506416452583,
+            "sigma": 1568.5030620768666,
+            "basis_bps": 1286.332368758507,
+            "gap": 1007.8384269289672,
+            "side": 9.154250144958496,
+            "order_price": 822.4406045302749,
+            "remaining": 0.0,
+            "inventory": 96.97475133370608,
+            "order_age_ms": 129.71007511019707,
+            "other_reserved": 0.0,
+            "guard_v": 945.1734367148019,
+            "guard_margin": 350.4022186174989,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 2736.209721577354,
+            "d_bnimb250": 833.4427856579423,
+            "d_pfimb250": 1465.6825946643949
+          },
+          "queue": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 0.0,
+            "bn_r250": 0.0,
+            "bn_r500": 0.0,
+            "bn_r1000": 245.84550094604492,
+            "bn_r3000": 560.9688937664032,
+            "bn_imb": 2106.1632381944655,
+            "bn_age": 661.8157680919394,
+            "bn_flow250": 232.9709961116314,
+            "bn_flow1000": 953.7404933571815,
+            "bn_flow5000": 1108.818362553604,
+            "bn_ntr1000": 931.9328100075945,
+            "pf_spread": 0.0,
+            "pf_mid": 768.608464114368,
+            "pf_micro_dev": 833.9610875600483,
+            "pf_imb1": 498.3525382010266,
+            "pf_imb3": 744.1662254706025,
+            "pf_lbs": 1892.43098670803,
+            "pf_las": 1504.663647575304,
+            "pf_age": 515.233406778425,
+            "pf_nfr1000": 356.347933113575,
+            "pf_dm250": 5.576099872589111,
+            "pf_dm1000": 105.19094896316528,
+            "pf_dm5000": 757.1497095376253,
+            "pf_pend_bid1000": 1871.0950938146561,
+            "pf_pend_ask1000": 70.41999053955078,
+            "pf_pend_tot5000": 2685.155260985135,
+            "t_rel": 1023.667369825067,
+            "sigma": 1695.850564200431,
+            "basis_bps": 1339.673712613192,
+            "gap": 1154.3677425542846,
+            "side": 0.0,
+            "order_price": 718.4371431469917,
+            "remaining": 0.0,
+            "inventory": 82.9499799311161,
+            "order_age_ms": 133.96955181658268,
+            "other_reserved": 0.0,
+            "guard_v": 793.1087865270674,
+            "guard_margin": 238.1188697591424,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 2615.5738939577714,
+            "d_bnimb250": 777.0779379084706,
+            "d_pfimb250": 1197.9732855036855,
+            "queue_initial": 465.796032756567,
+            "queue_now": 1092.9462313906988,
+            "queue_min": 518.8170423060656,
+            "queue_progress": 164.0022550225258
+          }
+        }
+      },
+      {
+        "day": "20261103",
+        "train_days": [
+          "20261023",
+          "20261024",
+          "20261025",
+          "20261026",
+          "20261027",
+          "20261031",
+          "20261101",
+          "20261102"
+        ],
+        "train_n": 17659,
+        "pooled_train_n": 34046,
+        "duplicate_actions_removed": 16387,
+        "test_n": 2709,
+        "no_incremental_fill_train": 17513,
+        "no_incremental_fill_test": 2689,
+        "importance": {
+          "market": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 0.0,
+            "bn_r250": 0.0,
+            "bn_r500": 0.0,
+            "bn_r1000": 219.38634824752808,
+            "bn_r3000": 807.8177193403244,
+            "bn_imb": 2148.8490919154137,
+            "bn_age": 674.2698987368494,
+            "bn_flow250": 232.1765115633607,
+            "bn_flow1000": 1159.9903711993247,
+            "bn_flow5000": 1139.8482946142321,
+            "bn_ntr1000": 1018.541195422411,
+            "pf_spread": 0.0,
+            "pf_mid": 835.2343667354435,
+            "pf_micro_dev": 494.3566432581283,
+            "pf_imb1": 855.3869488462806,
+            "pf_imb3": 1125.5051336940378,
+            "pf_lbs": 2389.910188678652,
+            "pf_las": 1400.9837232418358,
+            "pf_age": 769.0120360478759,
+            "pf_nfr1000": 405.65060325711966,
+            "pf_dm250": 20.829269886016846,
+            "pf_dm1000": 158.00518894195557,
+            "pf_dm5000": 940.4609327912331,
+            "pf_pend_bid1000": 1992.5288020726293,
+            "pf_pend_ask1000": 90.67223954200745,
+            "pf_pend_tot5000": 2946.4060401767492,
+            "t_rel": 1229.7729340791702,
+            "sigma": 1632.8949875086546,
+            "basis_bps": 1441.9353003017604,
+            "gap": 1083.5142619013786,
+            "side": 0.0,
+            "order_price": 952.5517635310534,
+            "remaining": 0.0,
+            "inventory": 100.39187169075012,
+            "order_age_ms": 94.91022367030382,
+            "other_reserved": 0.0,
+            "guard_v": 657.09585259296,
+            "guard_margin": 370.04204792529345,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 2712.9444227225904,
+            "d_bnimb250": 1014.2951386358181,
+            "d_pfimb250": 1329.1980161741376
+          },
+          "queue": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 0.0,
+            "bn_r250": 0.0,
+            "bn_r500": 0.0,
+            "bn_r1000": 275.4853706359863,
+            "bn_r3000": 686.789801120758,
+            "bn_imb": 1986.8154295291752,
+            "bn_age": 542.5954314065166,
+            "bn_flow250": 239.7360565662384,
+            "bn_flow1000": 1005.6792664825916,
+            "bn_flow5000": 1163.8694767075358,
+            "bn_ntr1000": 1109.1835145214573,
+            "pf_spread": 0.0,
+            "pf_mid": 948.9163753814064,
+            "pf_micro_dev": 366.6836147001013,
+            "pf_imb1": 520.8168593794107,
+            "pf_imb3": 734.8463978697546,
+            "pf_lbs": 2028.0825002682395,
+            "pf_las": 1221.9171362929046,
+            "pf_age": 677.5282486006618,
+            "pf_nfr1000": 312.5463034659624,
+            "pf_dm250": 38.84742975234985,
+            "pf_dm1000": 224.60576152801514,
+            "pf_dm5000": 949.8635248728096,
+            "pf_pend_bid1000": 2059.121064390987,
+            "pf_pend_ask1000": 120.75230932235718,
+            "pf_pend_tot5000": 2596.9897668701014,
+            "t_rel": 1175.8481656294316,
+            "sigma": 1281.8224914167076,
+            "basis_bps": 1452.3176785623655,
+            "gap": 1237.616254542023,
+            "side": 0.0,
+            "order_price": 779.593847265467,
+            "remaining": 0.0,
+            "inventory": 80.53433766122907,
+            "order_age_ms": 174.81935986876488,
+            "other_reserved": 0.0,
+            "guard_v": 682.7711095660925,
+            "guard_margin": 250.59087017178535,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 2703.2671696543694,
+            "d_bnimb250": 939.8490721426497,
+            "d_pfimb250": 1193.6844090372324,
+            "queue_initial": 659.8183233886957,
+            "queue_now": 1219.8043278541882,
+            "queue_min": 693.333259280771,
+            "queue_progress": 190.76129508018494
+          }
+        }
+      }
+    ],
+    "statuses": [
+      {
+        "day": "20261023",
+        "mode": "calm_seed",
+        "status": "rung_cancel",
+        "n": 10847
+      },
+      {
+        "day": "20261023",
+        "mode": "calm_seed",
+        "status": "pending_create_cancel",
+        "n": 7323
+      },
+      {
+        "day": "20261023",
+        "mode": "calm_seed",
+        "status": "replace_or_resize",
+        "n": 6975
+      },
+      {
+        "day": "20261023",
+        "mode": "calm_seed",
+        "status": "size_or_known_fill",
+        "n": 4482
+      },
+      {
+        "day": "20261023",
+        "mode": "calm_seed",
+        "status": "hard_guard_or_outside_band",
+        "n": 4430
+      },
+      {
+        "day": "20261023",
+        "mode": "calm_seed",
+        "status": "eligible",
+        "n": 1174
+      },
+      {
+        "day": "20261023",
+        "mode": "calm_seed",
+        "status": "postonly_refused",
+        "n": 58
+      },
+      {
+        "day": "20261023",
+        "mode": "calm_seed",
+        "status": "accepted_no_cancel",
+        "n": 21
+      },
+      {
+        "day": "20261023",
+        "mode": "reference",
+        "status": "rung_cancel",
+        "n": 10847
+      },
+      {
+        "day": "20261023",
+        "mode": "reference",
+        "status": "pending_create_cancel",
+        "n": 7315
+      },
+      {
+        "day": "20261023",
+        "mode": "reference",
+        "status": "replace_or_resize",
+        "n": 6969
+      },
+      {
+        "day": "20261023",
+        "mode": "reference",
+        "status": "size_or_known_fill",
+        "n": 4482
+      },
+      {
+        "day": "20261023",
+        "mode": "reference",
+        "status": "hard_guard_or_outside_band",
+        "n": 4385
+      },
+      {
+        "day": "20261023",
+        "mode": "reference",
+        "status": "eligible",
+        "n": 1180
+      },
+      {
+        "day": "20261023",
+        "mode": "reference",
+        "status": "postonly_refused",
+        "n": 58
+      },
+      {
+        "day": "20261023",
+        "mode": "reference",
+        "status": "accepted_no_cancel",
+        "n": 21
+      },
+      {
+        "day": "20261024",
+        "mode": "calm_seed",
+        "status": "rung_cancel",
+        "n": 12712
+      },
+      {
+        "day": "20261024",
+        "mode": "calm_seed",
+        "status": "replace_or_resize",
+        "n": 7785
+      },
+      {
+        "day": "20261024",
+        "mode": "calm_seed",
+        "status": "hard_guard_or_outside_band",
+        "n": 6834
+      },
+      {
+        "day": "20261024",
+        "mode": "calm_seed",
+        "status": "pending_create_cancel",
+        "n": 6620
+      },
+      {
+        "day": "20261024",
+        "mode": "calm_seed",
+        "status": "size_or_known_fill",
+        "n": 4532
+      },
+      {
+        "day": "20261024",
+        "mode": "calm_seed",
+        "status": "eligible",
+        "n": 1909
+      },
+      {
+        "day": "20261024",
+        "mode": "calm_seed",
+        "status": "postonly_refused",
+        "n": 98
+      },
+      {
+        "day": "20261024",
+        "mode": "calm_seed",
+        "status": "accepted_no_cancel",
+        "n": 50
+      },
+      {
+        "day": "20261024",
+        "mode": "reference",
+        "status": "rung_cancel",
+        "n": 12719
+      },
+      {
+        "day": "20261024",
+        "mode": "reference",
+        "status": "replace_or_resize",
+        "n": 7782
+      },
+      {
+        "day": "20261024",
+        "mode": "reference",
+        "status": "pending_create_cancel",
+        "n": 6587
+      },
+      {
+        "day": "20261024",
+        "mode": "reference",
+        "status": "hard_guard_or_outside_band",
+        "n": 6583
+      },
+      {
+        "day": "20261024",
+        "mode": "reference",
+        "status": "size_or_known_fill",
+        "n": 4531
+      },
+      {
+        "day": "20261024",
+        "mode": "reference",
+        "status": "eligible",
+        "n": 1917
+      },
+      {
+        "day": "20261024",
+        "mode": "reference",
+        "status": "postonly_refused",
+        "n": 98
+      },
+      {
+        "day": "20261024",
+        "mode": "reference",
+        "status": "accepted_no_cancel",
+        "n": 50
+      },
+      {
+        "day": "20261025",
+        "mode": "calm_seed",
+        "status": "rung_cancel",
+        "n": 14385
+      },
+      {
+        "day": "20261025",
+        "mode": "calm_seed",
+        "status": "replace_or_resize",
+        "n": 9714
+      },
+      {
+        "day": "20261025",
+        "mode": "calm_seed",
+        "status": "hard_guard_or_outside_band",
+        "n": 9065
+      },
+      {
+        "day": "20261025",
+        "mode": "calm_seed",
+        "status": "pending_create_cancel",
+        "n": 6726
+      },
+      {
+        "day": "20261025",
+        "mode": "calm_seed",
+        "status": "size_or_known_fill",
+        "n": 4212
+      },
+      {
+        "day": "20261025",
+        "mode": "calm_seed",
+        "status": "eligible",
+        "n": 2637
+      },
+      {
+        "day": "20261025",
+        "mode": "calm_seed",
+        "status": "postonly_refused",
+        "n": 132
+      },
+      {
+        "day": "20261025",
+        "mode": "calm_seed",
+        "status": "accepted_no_cancel",
+        "n": 53
+      },
+      {
+        "day": "20261025",
+        "mode": "reference",
+        "status": "rung_cancel",
+        "n": 14403
+      },
+      {
+        "day": "20261025",
+        "mode": "reference",
+        "status": "replace_or_resize",
+        "n": 9728
+      },
+      {
+        "day": "20261025",
+        "mode": "reference",
+        "status": "hard_guard_or_outside_band",
+        "n": 8654
+      },
+      {
+        "day": "20261025",
+        "mode": "reference",
+        "status": "pending_create_cancel",
+        "n": 6694
+      },
+      {
+        "day": "20261025",
+        "mode": "reference",
+        "status": "size_or_known_fill",
+        "n": 4228
+      },
+      {
+        "day": "20261025",
+        "mode": "reference",
+        "status": "eligible",
+        "n": 2672
+      },
+      {
+        "day": "20261025",
+        "mode": "reference",
+        "status": "postonly_refused",
+        "n": 132
+      },
+      {
+        "day": "20261025",
+        "mode": "reference",
+        "status": "accepted_no_cancel",
+        "n": 52
+      },
+      {
+        "day": "20261026",
+        "mode": "calm_seed",
+        "status": "rung_cancel",
+        "n": 11067
+      },
+      {
+        "day": "20261026",
+        "mode": "calm_seed",
+        "status": "pending_create_cancel",
+        "n": 8103
+      },
+      {
+        "day": "20261026",
+        "mode": "calm_seed",
+        "status": "replace_or_resize",
+        "n": 8044
+      },
+      {
+        "day": "20261026",
+        "mode": "calm_seed",
+        "status": "size_or_known_fill",
+        "n": 4920
+      },
+      {
+        "day": "20261026",
+        "mode": "calm_seed",
+        "status": "hard_guard_or_outside_band",
+        "n": 4637
+      },
+      {
+        "day": "20261026",
+        "mode": "calm_seed",
+        "status": "eligible",
+        "n": 1028
+      },
+      {
+        "day": "20261026",
+        "mode": "calm_seed",
+        "status": "postonly_refused",
+        "n": 70
+      },
+      {
+        "day": "20261026",
+        "mode": "calm_seed",
+        "status": "accepted_no_cancel",
+        "n": 27
+      },
+      {
+        "day": "20261026",
+        "mode": "reference",
+        "status": "rung_cancel",
+        "n": 11067
+      },
+      {
+        "day": "20261026",
+        "mode": "reference",
+        "status": "pending_create_cancel",
+        "n": 8081
+      },
+      {
+        "day": "20261026",
+        "mode": "reference",
+        "status": "replace_or_resize",
+        "n": 8026
+      },
+      {
+        "day": "20261026",
+        "mode": "reference",
+        "status": "size_or_known_fill",
+        "n": 4921
+      },
+      {
+        "day": "20261026",
+        "mode": "reference",
+        "status": "hard_guard_or_outside_band",
+        "n": 4568
+      },
+      {
+        "day": "20261026",
+        "mode": "reference",
+        "status": "eligible",
+        "n": 1032
+      },
+      {
+        "day": "20261026",
+        "mode": "reference",
+        "status": "postonly_refused",
+        "n": 70
+      },
+      {
+        "day": "20261026",
+        "mode": "reference",
+        "status": "accepted_no_cancel",
+        "n": 27
+      },
+      {
+        "day": "20261027",
+        "mode": "calm_seed",
+        "status": "rung_cancel",
+        "n": 10120
+      },
+      {
+        "day": "20261027",
+        "mode": "calm_seed",
+        "status": "replace_or_resize",
+        "n": 6770
+      },
+      {
+        "day": "20261027",
+        "mode": "calm_seed",
+        "status": "pending_create_cancel",
+        "n": 6537
+      },
+      {
+        "day": "20261027",
+        "mode": "calm_seed",
+        "status": "hard_guard_or_outside_band",
+        "n": 4477
+      },
+      {
+        "day": "20261027",
+        "mode": "calm_seed",
+        "status": "size_or_known_fill",
+        "n": 4079
+      },
+      {
+        "day": "20261027",
+        "mode": "calm_seed",
+        "status": "eligible",
+        "n": 1281
+      },
+      {
+        "day": "20261027",
+        "mode": "calm_seed",
+        "status": "postonly_refused",
+        "n": 59
+      },
+      {
+        "day": "20261027",
+        "mode": "calm_seed",
+        "status": "accepted_no_cancel",
+        "n": 32
+      },
+      {
+        "day": "20261027",
+        "mode": "reference",
+        "status": "rung_cancel",
+        "n": 10121
+      },
+      {
+        "day": "20261027",
+        "mode": "reference",
+        "status": "replace_or_resize",
+        "n": 6767
+      },
+      {
+        "day": "20261027",
+        "mode": "reference",
+        "status": "pending_create_cancel",
+        "n": 6523
+      },
+      {
+        "day": "20261027",
+        "mode": "reference",
+        "status": "hard_guard_or_outside_band",
+        "n": 4403
+      },
+      {
+        "day": "20261027",
+        "mode": "reference",
+        "status": "size_or_known_fill",
+        "n": 4079
+      },
+      {
+        "day": "20261027",
+        "mode": "reference",
+        "status": "eligible",
+        "n": 1281
+      },
+      {
+        "day": "20261027",
+        "mode": "reference",
+        "status": "postonly_refused",
+        "n": 59
+      },
+      {
+        "day": "20261027",
+        "mode": "reference",
+        "status": "accepted_no_cancel",
+        "n": 32
+      },
+      {
+        "day": "20261031",
+        "mode": "calm_seed",
+        "status": "rung_cancel",
+        "n": 17015
+      },
+      {
+        "day": "20261031",
+        "mode": "calm_seed",
+        "status": "replace_or_resize",
+        "n": 13859
+      },
+      {
+        "day": "20261031",
+        "mode": "calm_seed",
+        "status": "hard_guard_or_outside_band",
+        "n": 13491
+      },
+      {
+        "day": "20261031",
+        "mode": "calm_seed",
+        "status": "pending_create_cancel",
+        "n": 5710
+      },
+      {
+        "day": "20261031",
+        "mode": "calm_seed",
+        "status": "size_or_known_fill",
+        "n": 4228
+      },
+      {
+        "day": "20261031",
+        "mode": "calm_seed",
+        "status": "eligible",
+        "n": 4228
+      },
+      {
+        "day": "20261031",
+        "mode": "calm_seed",
+        "status": "postonly_refused",
+        "n": 69
+      },
+      {
+        "day": "20261031",
+        "mode": "calm_seed",
+        "status": "accepted_no_cancel",
+        "n": 38
+      },
+      {
+        "day": "20261031",
+        "mode": "reference",
+        "status": "rung_cancel",
+        "n": 17207
+      },
+      {
+        "day": "20261031",
+        "mode": "reference",
+        "status": "replace_or_resize",
+        "n": 13907
+      },
+      {
+        "day": "20261031",
+        "mode": "reference",
+        "status": "hard_guard_or_outside_band",
+        "n": 12394
+      },
+      {
+        "day": "20261031",
+        "mode": "reference",
+        "status": "pending_create_cancel",
+        "n": 5575
+      },
+      {
+        "day": "20261031",
+        "mode": "reference",
+        "status": "eligible",
+        "n": 4385
+      },
+      {
+        "day": "20261031",
+        "mode": "reference",
+        "status": "size_or_known_fill",
+        "n": 4236
+      },
+      {
+        "day": "20261031",
+        "mode": "reference",
+        "status": "postonly_refused",
+        "n": 70
+      },
+      {
+        "day": "20261031",
+        "mode": "reference",
+        "status": "accepted_no_cancel",
+        "n": 40
+      },
+      {
+        "day": "20261101",
+        "mode": "calm_seed",
+        "status": "rung_cancel",
+        "n": 16769
+      },
+      {
+        "day": "20261101",
+        "mode": "calm_seed",
+        "status": "hard_guard_or_outside_band",
+        "n": 11754
+      },
+      {
+        "day": "20261101",
+        "mode": "calm_seed",
+        "status": "replace_or_resize",
+        "n": 10798
+      },
+      {
+        "day": "20261101",
+        "mode": "calm_seed",
+        "status": "pending_create_cancel",
+        "n": 5036
+      },
+      {
+        "day": "20261101",
+        "mode": "calm_seed",
+        "status": "eligible",
+        "n": 3604
+      },
+      {
+        "day": "20261101",
+        "mode": "calm_seed",
+        "status": "size_or_known_fill",
+        "n": 3545
+      },
+      {
+        "day": "20261101",
+        "mode": "calm_seed",
+        "status": "postonly_refused",
+        "n": 51
+      },
+      {
+        "day": "20261101",
+        "mode": "calm_seed",
+        "status": "accepted_no_cancel",
+        "n": 27
+      },
+      {
+        "day": "20261101",
+        "mode": "reference",
+        "status": "rung_cancel",
+        "n": 16839
+      },
+      {
+        "day": "20261101",
+        "mode": "reference",
+        "status": "hard_guard_or_outside_band",
+        "n": 11167
+      },
+      {
+        "day": "20261101",
+        "mode": "reference",
+        "status": "replace_or_resize",
+        "n": 10877
+      },
+      {
+        "day": "20261101",
+        "mode": "reference",
+        "status": "pending_create_cancel",
+        "n": 4944
+      },
+      {
+        "day": "20261101",
+        "mode": "reference",
+        "status": "eligible",
+        "n": 3690
+      },
+      {
+        "day": "20261101",
+        "mode": "reference",
+        "status": "size_or_known_fill",
+        "n": 3586
+      },
+      {
+        "day": "20261101",
+        "mode": "reference",
+        "status": "postonly_refused",
+        "n": 50
+      },
+      {
+        "day": "20261101",
+        "mode": "reference",
+        "status": "accepted_no_cancel",
+        "n": 29
+      },
+      {
+        "day": "20261102",
+        "mode": "calm_seed",
+        "status": "rung_cancel",
+        "n": 11142
+      },
+      {
+        "day": "20261102",
+        "mode": "calm_seed",
+        "status": "replace_or_resize",
+        "n": 7478
+      },
+      {
+        "day": "20261102",
+        "mode": "calm_seed",
+        "status": "pending_create_cancel",
+        "n": 7230
+      },
+      {
+        "day": "20261102",
+        "mode": "calm_seed",
+        "status": "size_or_known_fill",
+        "n": 4769
+      },
+      {
+        "day": "20261102",
+        "mode": "calm_seed",
+        "status": "hard_guard_or_outside_band",
+        "n": 4425
+      },
+      {
+        "day": "20261102",
+        "mode": "calm_seed",
+        "status": "eligible",
+        "n": 1015
+      },
+      {
+        "day": "20261102",
+        "mode": "calm_seed",
+        "status": "postonly_refused",
+        "n": 57
+      },
+      {
+        "day": "20261102",
+        "mode": "calm_seed",
+        "status": "accepted_no_cancel",
+        "n": 17
+      },
+      {
+        "day": "20261102",
+        "mode": "reference",
+        "status": "rung_cancel",
+        "n": 11140
+      },
+      {
+        "day": "20261102",
+        "mode": "reference",
+        "status": "replace_or_resize",
+        "n": 7476
+      },
+      {
+        "day": "20261102",
+        "mode": "reference",
+        "status": "pending_create_cancel",
+        "n": 7225
+      },
+      {
+        "day": "20261102",
+        "mode": "reference",
+        "status": "size_or_known_fill",
+        "n": 4769
+      },
+      {
+        "day": "20261102",
+        "mode": "reference",
+        "status": "hard_guard_or_outside_band",
+        "n": 4409
+      },
+      {
+        "day": "20261102",
+        "mode": "reference",
+        "status": "eligible",
+        "n": 1013
+      },
+      {
+        "day": "20261102",
+        "mode": "reference",
+        "status": "postonly_refused",
+        "n": 58
+      },
+      {
+        "day": "20261102",
+        "mode": "reference",
+        "status": "accepted_no_cancel",
+        "n": 17
+      },
+      {
+        "day": "20261103",
+        "mode": "calm_seed",
+        "status": "rung_cancel",
+        "n": 10748
+      },
+      {
+        "day": "20261103",
+        "mode": "calm_seed",
+        "status": "replace_or_resize",
+        "n": 7250
+      },
+      {
+        "day": "20261103",
+        "mode": "calm_seed",
+        "status": "pending_create_cancel",
+        "n": 7051
+      },
+      {
+        "day": "20261103",
+        "mode": "calm_seed",
+        "status": "hard_guard_or_outside_band",
+        "n": 4574
+      },
+      {
+        "day": "20261103",
+        "mode": "calm_seed",
+        "status": "size_or_known_fill",
+        "n": 4080
+      },
+      {
+        "day": "20261103",
+        "mode": "calm_seed",
+        "status": "eligible",
+        "n": 1353
+      },
+      {
+        "day": "20261103",
+        "mode": "calm_seed",
+        "status": "postonly_refused",
+        "n": 32
+      },
+      {
+        "day": "20261103",
+        "mode": "calm_seed",
+        "status": "accepted_no_cancel",
+        "n": 20
+      },
+      {
+        "day": "20261103",
+        "mode": "reference",
+        "status": "rung_cancel",
+        "n": 10745
+      },
+      {
+        "day": "20261103",
+        "mode": "reference",
+        "status": "replace_or_resize",
+        "n": 7248
+      },
+      {
+        "day": "20261103",
+        "mode": "reference",
+        "status": "pending_create_cancel",
+        "n": 7045
+      },
+      {
+        "day": "20261103",
+        "mode": "reference",
+        "status": "hard_guard_or_outside_band",
+        "n": 4538
+      },
+      {
+        "day": "20261103",
+        "mode": "reference",
+        "status": "size_or_known_fill",
+        "n": 4080
+      },
+      {
+        "day": "20261103",
+        "mode": "reference",
+        "status": "eligible",
+        "n": 1356
+      },
+      {
+        "day": "20261103",
+        "mode": "reference",
+        "status": "postonly_refused",
+        "n": 32
+      },
+      {
+        "day": "20261103",
+        "mode": "reference",
+        "status": "accepted_no_cancel",
+        "n": 20
+      }
+    ],
+    "predictions_sha": "3a8f3342ac34778fa5700a0d27cb5fa1193971cde597e6499d57b7e2f5df3c70",
+    "generation_rows": 748799,
+    "eligible_rows": 36755
+  },
+  "receipts": [
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261026",
+      "checks_sha": "574aab9f7c5cb0ce704bfb2efa1db1210f13926b9ae978236a94a13654bf4cef"
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261027",
+      "checks_sha": "032f756d122425ce41de47380215a624d432ccdbde48f4045e4960b685d5c887"
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261031",
+      "checks_sha": "737e57854c9e4b89a21f99596f45fc765294d1b12b1b2e768bba98c535b6bf0e"
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261101",
+      "checks_sha": "9725dc0e15ccff3f42ba54251f11646c3db1428ab5a40659721b91133530ff7b"
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261102",
+      "checks_sha": "ba45bcdeba9fd63297c9e265ea04d48d48df2a88e3abb8869f5001ae975b1bfe"
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261103",
+      "checks_sha": "dd72c67ed62eb851007ce56c0439013d8d830f78be458e4f6310bb58f1df9b6e"
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261026",
+      "checks_sha": "c82ce5c6fe50bb072a549e3e5027f90cde50bde90389988b165e30701e1dcc58"
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261027",
+      "checks_sha": "adab5040cd686b12693a264debcd16a8230aabcc0cb6438111d6647a95a71a8c"
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261031",
+      "checks_sha": "ff860f2df074e42d1829b319c45c92c9ece3c9e171c416dbf387d9bc1ae36a4a"
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261101",
+      "checks_sha": "1a6111ab8994dd2bab649a9f01ea021b3c72e6b47c52aae719d23ff9dc1d458d"
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261102",
+      "checks_sha": "ede0aac6cea7f77646b21a377948de87c45d4f2f33a227f6e1b992c7cd1c1998"
+    },
+    {
+      "scenario": "X",
+      "mode": "hold_rule",
+      "day": "20261103",
+      "checks_sha": "0ff719f28ff7837ea3777582fa2f9a5ac51ebec034c35e25c0edda1e8a5c7758"
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261026",
+      "checks_sha": "c82ce5c6fe50bb072a549e3e5027f90cde50bde90389988b165e30701e1dcc58"
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261027",
+      "checks_sha": "adab5040cd686b12693a264debcd16a8230aabcc0cb6438111d6647a95a71a8c"
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261031",
+      "checks_sha": "ff860f2df074e42d1829b319c45c92c9ece3c9e171c416dbf387d9bc1ae36a4a"
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261101",
+      "checks_sha": "1a6111ab8994dd2bab649a9f01ea021b3c72e6b47c52aae719d23ff9dc1d458d"
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261102",
+      "checks_sha": "ede0aac6cea7f77646b21a377948de87c45d4f2f33a227f6e1b992c7cd1c1998"
+    },
+    {
+      "scenario": "X",
+      "mode": "continuation",
+      "day": "20261103",
+      "checks_sha": "0ff719f28ff7837ea3777582fa2f9a5ac51ebec034c35e25c0edda1e8a5c7758"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261026",
+      "checks_sha": "c82ce5c6fe50bb072a549e3e5027f90cde50bde90389988b165e30701e1dcc58"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261027",
+      "checks_sha": "adab5040cd686b12693a264debcd16a8230aabcc0cb6438111d6647a95a71a8c"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261031",
+      "checks_sha": "ff860f2df074e42d1829b319c45c92c9ece3c9e171c416dbf387d9bc1ae36a4a"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261101",
+      "checks_sha": "1a6111ab8994dd2bab649a9f01ea021b3c72e6b47c52aae719d23ff9dc1d458d"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261102",
+      "checks_sha": "ede0aac6cea7f77646b21a377948de87c45d4f2f33a227f6e1b992c7cd1c1998"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_filter",
+      "day": "20261103",
+      "checks_sha": "0ff719f28ff7837ea3777582fa2f9a5ac51ebec034c35e25c0edda1e8a5c7758"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "checks_sha": "574aab9f7c5cb0ce704bfb2efa1db1210f13926b9ae978236a94a13654bf4cef"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "checks_sha": "032f756d122425ce41de47380215a624d432ccdbde48f4045e4960b685d5c887"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "checks_sha": "737e57854c9e4b89a21f99596f45fc765294d1b12b1b2e768bba98c535b6bf0e"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "checks_sha": "9725dc0e15ccff3f42ba54251f11646c3db1428ab5a40659721b91133530ff7b"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "checks_sha": "ba45bcdeba9fd63297c9e265ea04d48d48df2a88e3abb8869f5001ae975b1bfe"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "checks_sha": "dd72c67ed62eb851007ce56c0439013d8d830f78be458e4f6310bb58f1df9b6e"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "checks_sha": "c82ce5c6fe50bb072a549e3e5027f90cde50bde90389988b165e30701e1dcc58"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "checks_sha": "adab5040cd686b12693a264debcd16a8230aabcc0cb6438111d6647a95a71a8c"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "checks_sha": "ff860f2df074e42d1829b319c45c92c9ece3c9e171c416dbf387d9bc1ae36a4a"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "checks_sha": "1a6111ab8994dd2bab649a9f01ea021b3c72e6b47c52aae719d23ff9dc1d458d"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "checks_sha": "ede0aac6cea7f77646b21a377948de87c45d4f2f33a227f6e1b992c7cd1c1998"
+    },
+    {
+      "scenario": "X",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "checks_sha": "0ff719f28ff7837ea3777582fa2f9a5ac51ebec034c35e25c0edda1e8a5c7758"
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261026",
+      "checks_sha": "9f63e1c3cc267831f6f6b33ad1e5c0f51f731ae020d3ff7e3f5f6bb0236c7cf2"
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261027",
+      "checks_sha": "0e1ebc8266ebdc72b6a595cb4fb4bff33516129eb8faa15a2f89bbee3cc61be8"
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261031",
+      "checks_sha": "65b2c61dd7470b8977b3bb8eb538bc9c0d6db67b7f23a698361642cc30e1e13a"
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261101",
+      "checks_sha": "e2080f56ac7f253f064bf74090e99d0a9da7b64f6e8d5cc97c8cbe14533c3c76"
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261102",
+      "checks_sha": "e3bae4940e69ad9027c13f4f411dee0f8a02b5e5ff89915e6edd2899476368e4"
+    },
+    {
+      "scenario": "stress",
+      "mode": "reference",
+      "day": "20261103",
+      "checks_sha": "ee39378a1888efeb237df8879ecba74cc70b5e1d1dcee34035305a21a8bd5a2a"
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261026",
+      "checks_sha": "9f63e1c3cc267831f6f6b33ad1e5c0f51f731ae020d3ff7e3f5f6bb0236c7cf2"
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261027",
+      "checks_sha": "0e1ebc8266ebdc72b6a595cb4fb4bff33516129eb8faa15a2f89bbee3cc61be8"
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261031",
+      "checks_sha": "65b2c61dd7470b8977b3bb8eb538bc9c0d6db67b7f23a698361642cc30e1e13a"
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261101",
+      "checks_sha": "e2080f56ac7f253f064bf74090e99d0a9da7b64f6e8d5cc97c8cbe14533c3c76"
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261102",
+      "checks_sha": "e3bae4940e69ad9027c13f4f411dee0f8a02b5e5ff89915e6edd2899476368e4"
+    },
+    {
+      "scenario": "stress",
+      "mode": "continuation",
+      "day": "20261103",
+      "checks_sha": "ee39378a1888efeb237df8879ecba74cc70b5e1d1dcee34035305a21a8bd5a2a"
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261026",
+      "checks_sha": "9f63e1c3cc267831f6f6b33ad1e5c0f51f731ae020d3ff7e3f5f6bb0236c7cf2"
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261027",
+      "checks_sha": "0e1ebc8266ebdc72b6a595cb4fb4bff33516129eb8faa15a2f89bbee3cc61be8"
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261031",
+      "checks_sha": "65b2c61dd7470b8977b3bb8eb538bc9c0d6db67b7f23a698361642cc30e1e13a"
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261101",
+      "checks_sha": "e2080f56ac7f253f064bf74090e99d0a9da7b64f6e8d5cc97c8cbe14533c3c76"
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261102",
+      "checks_sha": "e3bae4940e69ad9027c13f4f411dee0f8a02b5e5ff89915e6edd2899476368e4"
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed",
+      "day": "20261103",
+      "checks_sha": "ee39378a1888efeb237df8879ecba74cc70b5e1d1dcee34035305a21a8bd5a2a"
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261026",
+      "checks_sha": "9f63e1c3cc267831f6f6b33ad1e5c0f51f731ae020d3ff7e3f5f6bb0236c7cf2"
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261027",
+      "checks_sha": "0e1ebc8266ebdc72b6a595cb4fb4bff33516129eb8faa15a2f89bbee3cc61be8"
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261031",
+      "checks_sha": "65b2c61dd7470b8977b3bb8eb538bc9c0d6db67b7f23a698361642cc30e1e13a"
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261101",
+      "checks_sha": "e2080f56ac7f253f064bf74090e99d0a9da7b64f6e8d5cc97c8cbe14533c3c76"
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261102",
+      "checks_sha": "e3bae4940e69ad9027c13f4f411dee0f8a02b5e5ff89915e6edd2899476368e4"
+    },
+    {
+      "scenario": "stress",
+      "mode": "calm_seed_continuation",
+      "day": "20261103",
+      "checks_sha": "ee39378a1888efeb237df8879ecba74cc70b5e1d1dcee34035305a21a8bd5a2a"
+    }
+  ],
+  "declaration_sha": "5f9c37d050d286449a021f7aaa0fb5bd97e2ca034dda231639b64c32c48b3c13"
+}

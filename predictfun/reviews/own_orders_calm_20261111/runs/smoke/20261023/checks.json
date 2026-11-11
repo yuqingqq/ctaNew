@@ -1,0 +1,31 @@
+{
+  "as_of": "2026-11-11T16:28:44.955946+00:00",
+  "day": "20261023",
+  "group": "smoke",
+  "variants": [
+    {
+      "mode": "reference",
+      "windows": 8,
+      "generations": 1469,
+      "fills": 11,
+      "statuses": {
+        "rung_cancel": 434,
+        "replace_or_resize": 341,
+        "pending_create_cancel": 265,
+        "hard_guard_or_outside_band": 201,
+        "size_or_known_fill": 184,
+        "eligible": 42,
+        "accepted_no_cancel": 1,
+        "postonly_refused": 1
+      },
+      "hashes": {
+        "win": "15973030915cf579203d64b017f073f0c753dcc201bcfbab1ef980e3b7ff6e1d",
+        "fills": "2c9185b6f2bca69257fd9bd5b5e497061a9480ca5c81aaba0da76d0805a7954b",
+        "requests": "103ba1f9659e5f0408f96f3d0dce223d170aa11520ecc10643a6478580fdc70e"
+      },
+      "generation_sha": "ddc3420477d307364ca4f598b81239bd7783b2c57e3c3f16f5df0e526d204d3a"
+    }
+  ],
+  "reference_exact": true,
+  "status": "PASS"
+}
