@@ -1,5 +1,23 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 02:38Z (session ce68ebe0) — B12 addendum: our first-minute loss is the fills taken after the guard turns OFF (no new run)
+
+- Done: answered the USER's question (what separates our fills from the top makers' at the same price; are their
+  profits from layered quotes) from the committed B12 output. research/pf_b12_qa_derive.py (arithmetic on b12.json /
+  b12_posthoc.json; output reviews/b12_20261110/b12_qa_derive.txt); addendum in handoffs/20261110_b12_profitable_makers.md.
+  Post hoc, descriptive; 86 own legs, one day, no null.
+- Findings: (1) at the best with the guard OFF, 25 own legs lose -1.98 c/sh at 1 s, -$4.16 a day = 99% of our
+  first-minute -$4.18; the rest nets to about zero. (2) With the guard ON we make -0.25 against the top 5's +0.94 c/sh
+  ($4.72 a day at our ON volume); 39.2% of our at-best shares come from trades through the level, against 14.5% for the
+  top 5 and 17.0% for ranks 6 and below (consistent with a back-of-queue place; not proven). (3) 66% of the top 5's
+  dollars are behind the best, but depth alone loses (ranks 21 and below), and our one-tick-back fills (v3's rung, a
+  third of our shares) are near the top 5 (-0.01 against +0.24 c/sh, 27 legs).
+- Next: pull timing before queue place or a deeper layer. (1) USER D2: live run with the A4b capture (B1). (2) Proposed,
+  not run: join the 25 OFF legs to live's order paths (B1a) and count those after our cancel request. (3) B12b.
+  (4) USER: rebate and rewards on the account.
+- Watch out: research trade times for our legs are off in both directions (B1a); the research guard is not the live
+  engine's guard; one consumed Sunday.
+
 ## 2026-11-10 16:50Z (session ce68ebe0) — B12 DONE: the top makers' edge is not in states our guard marks; within a state it is the move after their fills, two thirds behind the best
 
 - Done: B12 (strategy review item 9; USER "Then we check the next"). research/pf_b12_makers.py committed and pushed

@@ -159,3 +159,29 @@ off in both directions for our own legs (fill-clock audit, B1a): level ages unde
 are uncertain, and R32 changes sign around zero between lags. The book contains our own orders. These are values of the
 flow the makers received, not of an order we can place. Queue position inside a level is not observed. 'Sweep unknown'
 legs (no taker order id) are excluded from the decomposition.
+
+## Addendum 2026-11-11 02:38Z (post hoc; no new run)
+
+Written to answer the USER's question: what separates our fills from the top makers' at the same price, and are their
+profits from layered quotes. Arithmetic on the committed `b12.json` / `b12_posthoc.json` only
+(`research/pf_b12_qa_derive.py`; output `reviews/b12_20261110/b12_qa_derive.txt`, not in SHA256SUMS). Descriptive; our
+group is 86 legs on one day and has no null.
+
+- Our first-minute loss is the fills taken at the best while the guard reads OFF (lag 50): 25 legs, 160.0 sh, -1.98 c/sh
+  at 1 s, -$4.16 a day, 99% of our first-minute -$4.18 a day. The rest nets to about zero: ON at the best -$0.99, one
+  tick behind -$0.0 (27 legs), two or more behind +$1.0 (2 legs). Live's own record has fills of this kind: 218.0 of
+  849.9 live fill shares have a research trade time after our cancel request (B1a, M 50). Whether the 25 legs are among
+  them is not checked here.
+- With the guard ON we make -0.25 c/sh at the best where the top 5 make +0.94 (32 legs; $4.72 a day at our ON volume).
+  39.2% of our at-best shares come from trades that go through the level, against 14.5% for the top 5 and 17.0% for
+  ranks 6 and below (sweep-known). An order at the back of the queue is reached mostly by trades that use the level up,
+  so this is consistent with our place in the queue (the book shows about 360 sh ahead when the v3 join goes live,
+  review 6.3); it does not prove it. In trades that stop at the level, the top 5 make +1.05 c/sh with the guard ON,
+  ranks 6 and below +0.78, we -0.41.
+- Layers: 66% of the top 5's first-minute dollars are behind the best, but their per-share advantage is at every depth,
+  and depth alone loses (ranks 21 and below: -0.56 one tick back, -0.54 two or more). A third of our first-minute shares
+  fill one tick back (v3 has a rung there): -0.01 c/sh against the top 5's +0.24 and ranks 6 and below -0.19 (27 legs).
+  Two of our legs fill two or more back.
+- Ranking: the first loss to remove is the fills after the guard turns OFF (pull timing), before queue place or a
+  deeper layer. B1 (live run with the A4b capture, USER D2) measures it order by order. Proposed, not run: join the 25
+  legs to live's order paths (B1a) to count how many came after our cancel request.
