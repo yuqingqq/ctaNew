@@ -1,5 +1,32 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 03:21Z (session ce68ebe0) — B12b DONE: not queue place; the top makers handle moves in progress better; our first-minute loss is the venue's slow cancels
+
+- Done: B12b (USER "Yes find out the reason"). research/pf_b12b_reason.py committed and pushed before its run
+  (c882da77; output 03:10Z); post hoc research/pf_b12b_posthoc.py (03:14Z-03:17Z). Report handoffs/20261111_b12b_reason.md;
+  output live_vs_replay/b12b_20261111/, copies in reviews/b12b_20261111/ (SHA256SUMS). Controls pass; K0 reproduces
+  the committed b12.json exactly. One consumed Sunday, point estimates.
+- Readings: R42 FIFO-LIKE (94.6% of <= 5 sh taker levels fill one maker); R40 NOT-QUEUE (within guard x reach the top
+  5 still +0.23 c/sh, null p99 +0.10; reach mix -0.02); R41 SAME-PLACE (median reach 0.213 against 0.181),
+  OURS-BEHIND (0.300, 28 legs); R43 n/a (65 clean flips; the guard flips ON -> OFF ~every 2 s per side); R44 MIXED;
+  R45 OWN-SIGNAL (exits n/a).
+- Post hoc: our guard's value and the time in the window explain none of the top-5 gap (X -0.01); 73% of it sits
+  while our guard's value is falling (a move under way): -0.14 against -0.56 c/sh. At the best, ranks 6-20 do as well
+  as the top 5; ranks 21+ lose at the same queue places.
+- Ours: 11 of our 25 guard-OFF fills came on orders whose cancel we had sent 0.35-4.1 s before, while the venue took
+  0.6-5 s to confirm it: -4.88 c/sh, -$4.16 a day = our whole first-minute loss, all 49-60 s into the window (8
+  windows; 85% in three legs). The other 14 net 0.00. Live-wide: 86 of 30,219 cancels took > 500 ms, 1.29% of those
+  sent 50-60 s in against 0.06-0.20% elsewhere; no throttle or reject recorded.
+- Changes: the B12 addendum's "pull timing first" is superseded (pointer added there): the pulls were sent; the loss is
+  the venue's slow cancels. The top makers' edge is speed / signal for moves in progress, not queue or our guard's
+  states.
+- Next: (1) hand the slow-cancel issue to the Tokyo / Dublin session (report section "Issue for the live session":
+  kernel cancel stages; the same count on 11-07 tokyo-5). (2) USER D2: live run with the A4b capture (B1). (3) USER:
+  rebate and rewards. (4) Signal / latency work aimed at moves under way (B7 reframed).
+- Watch out: post hoc splits are descriptive; the slow-cancel loss is 11 legs in 8 windows; 6 of the 25 OFF legs have
+  research trade times outside the audit's feasible interval; B12's guard lookup reads a NaN prediction as OFF (23 of
+  72,913 at-best legs, none of the top 5's or ours).
+
 ## 2026-11-11 02:38Z (session ce68ebe0) — B12 addendum: our first-minute loss is the fills taken after the guard turns OFF (no new run)
 
 - Done: answered the USER's question (what separates our fills from the top makers' at the same price; are their

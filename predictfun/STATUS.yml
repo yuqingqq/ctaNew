@@ -6,6 +6,13 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 03:21Z (session ce68ebe0): B12b DONE (read-only; USER "Yes find out the reason";
+  research/pf_b12b_reason.py c882da77 committed before its run; post hoc pf_b12b_posthoc.py; report
+  handoffs/20261111_b12b_reason.md): matching is price-time (R42 FIFO-LIKE); queue place does NOT explain the top
+  makers' edge (R40 NOT-QUEUE: +0.23 c/sh within guard x reach, null p99 +0.10; R41 SAME-PLACE); post hoc, 73% of it
+  sits while our guard's value is falling (moves under way). Ours: behind in the queue (R41 OURS-BEHIND) and our
+  first-minute loss is 11 fills during slow venue cancels 49-60 s into the window (-$4.16 of -$4.18 a day; R44 MIXED by
+  the research clock). Exits test n/a (65 clean flips). Next: slow-cancel issue to the live session; USER D2 (B1).
   2026-11-11 02:38Z (session ce68ebe0): B12 ADDENDUM (no new run; arithmetic on the committed output,
   research/pf_b12_qa_derive.py; addendum in handoffs/20261110_b12_profitable_makers.md): our first-minute loss is the
   fills taken at the best after the guard turns OFF (25 legs, -1.98 c/sh, -$4.16 of -$4.18 a day). With the guard ON we
@@ -1580,4 +1587,6 @@ flags:
   queue_priority: "NOT FOUND at the order level (strategy review revision 3, level_birth.txt 2026-11-10 09:47Z; one consumed partial day, fill rule not validated): a 5-sh order goes live behind p50 229-423 sh at a level born as the best; unguarded join / birth / rung / improve lose in 40 of 40 cells; at 250 ms trade-time shift every arm is negative. Candidate for a fresh-day test only: touch order enters at the step its price becomes the best (arm B-g90, reading MIXED); see updated 10:05Z and handoffs/20261110_strategy_review.md section 6.5"
   fill_model_b1a: "NOT VALIDATED at the order level (B1a, 2026-11-10 13:19Z, handoffs/20261110_b1a_live_orders.md): on live's own orders the replay credits 1.47-1.96x live's shares under M / L, precision 0.08-0.25, young-order fills 88-92% not live's; a constant 250 ms trade-time shift is contradicted by live's fills; B1 needs live match clocks (A4b)"
   profitable_makers_b12: "EDGE NOT IN GUARD STATES (B12, 2026-11-10 16:43Z, handoffs/20261110_b12_profitable_makers.md): top 5 +0.36 c/sh at 1 s; at the best their gap is within the same guard state and trade type and is the move after the fill (same spread); 86% of their at-best volume is with our guard OFF; two thirds of their dollars are behind the best; queue place, cancel timing and information are not separable on the public tape"
+  reason_b12b: "NOT QUEUE (B12b, 2026-11-11 03:10Z, handoffs/20261111_b12b_reason.md): price-time matching; at the same queue reach the top 5 are still filled by better trades (+0.23 c/sh, null p99 +0.10) and are not nearer the front; post hoc 73% of the gap sits while our guard value is falling (moves under way) -> speed / signal for moves"
+  slow_cancels_b12b: "LIVE ISSUE (B12b): 86 of 30,219 cancels took 0.5-5 s, 1.29% of those sent 50-60 s into the window; 11 fills inside such cancels = our whole first-minute loss on 11-08 (-$4.16 a day); for the Tokyo / Dublin session"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"
