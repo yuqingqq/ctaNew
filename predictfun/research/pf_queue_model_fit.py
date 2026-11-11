@@ -128,6 +128,8 @@ def null_test(pred,draws=500):
     rng=np.random.default_rng(20261111);groups=[];observed={}
     for config,g in pred.groupby('config',sort=False):
         y=g[['keep_utility','cancel_utility','rejoin_utility']].to_numpy();a=g.queue_action.to_numpy(dtype=int);b=g.market_action.to_numpy(dtype=int)
+        if not np.isfinite(y).all() or ((a<0)|(a>2)|(b<0)|(b>2)).any():raise ValueError('invalid null population')
+        if (((a==2)|(b==2))&~rejoin_allowed(g)).any():raise ValueError('illegal null action')
         ref=y[np.arange(len(y)),b].sum();observed[config]=float((y[np.arange(len(y)),a].sum()-ref)/100)
         strata=g.assign(minute=(g.decision//60000).astype(int),hour=(g.ws%86400//3600).astype(int),inventory_sign=np.sign(g.inventory),rejoin_allowed=rejoin_allowed(g)).groupby(['day','side','hour','minute','inventory_sign','rejoin_allowed'],sort=False).indices
         groups.append((config,y,a,ref,list(strata.values())))

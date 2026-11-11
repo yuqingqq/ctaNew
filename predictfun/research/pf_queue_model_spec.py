@@ -15,9 +15,9 @@ AGES = [250., 1000., 2000.]
 SIZE = 5.
 LEASE = 5000.
 RISK_C = .01  # cents per share squared; fixed design choice, not fitted
-CONFIGS = {'L50':dict(rule='L',shift=50.,place=40.,cancel=22.,notice=100.),
-           'M50':dict(rule='M',shift=50.,place=40.,cancel=22.,notice=100.),
-           'L250slow':dict(rule='L',shift=250.,place=80.,cancel=100.,notice=250.)}
+CONFIGS = {'L50':dict(rule='L',shift=50.,place=40.,cancel=22.,cancel_ack=42.,notice=100.),
+           'M50':dict(rule='M',shift=50.,place=40.,cancel=22.,cancel_ack=42.,notice=100.),
+           'L250slow':dict(rule='L',shift=250.,place=80.,cancel=100.,cancel_ack=180.,notice=250.)}
 ACTIONS = ['keep','cancel','rejoin']
 L90 = [.0492,.0623,.0789,.0917]
 
@@ -52,7 +52,7 @@ def declare():
         source_sha=source,input_sha=inputs,days=DAYS,starts_s=STARTS,ages_ms=AGES,configs=CONFIGS,
         design='Controlled fixed-5-share queue-continuation model. One neutral generation per side every10s from5..225s in every BTC5m window;5s lease, no replenishment except the explicitly tested sequential cancel/rejoin.',
         unit='One action row per neutral generation at a deterministic age250/1000/2000ms after activation; all scheduled generations retained as statuses. All actions within each generation share one marking horizon; portfolio arms share240s. Not a full v3 replacement.',
-        actions='KEEP queue; CANCEL with effective latency; REJOIN same price after cancel takes effect plus create latency, size=client-known remaining. Same unavoidable fills before cancel. All arms use the same post-only,1USD minimum notional,stale/book,gap-to-touch and Binance price guards. Maker fees must be0 in registry; no rebates.',
+        actions='KEEP queue; CANCEL with effective latency; REJOIN same price after a modeled cancel acknowledgment plus create latency, size=client-known remaining at decision. Same unavoidable fills before cancel. All arms use the same post-only,1USD minimum notional,stale/book,gap-to-touch and Binance price guards. Maker fees must be0 in registry; no rebates. Cancel acknowledgment42ms/180ms is a declared assumption, not a measured calibration.',
         information='Features use cached causal Tokyo-clock market rows and last-received books. Queue features use initial displayed size, minimum observed size at this exact price, order age and notified fills, never latent simulated queue or unnotified fills.',
         target='Two regressions: KEEP minus CANCEL and REJOIN minus CANCEL. Cash plus inventory marked at min(decision+30s,window240s), less0.01c times change in squared terminal inventory, under neutral other-side continuation. Initial admissions are neutral; model controls continuation, not a learned entry policy.',
         feature_arms=['market: current32 features + causal pressure changes/activity ratio + side/order price/known remaining/signed inventory','queue: market + order age/initial queue/minimum same-price queue/current same-price queue/progress'],
