@@ -45,17 +45,40 @@ lead through the null, taker sign, label rules; K0, our address join).
 | R73 book | THIN-SIDE (side hit median 84 sh against 228) |
 | R74 Binance after | NO-BINANCE-FOLLOW (+0.086 bps) |
 
-## The Binance grid is coarse (check made after the run)
+## Binance from the raw stream (B12e v2, 06:00Z)
 
-The Binance series used here and in B12c v2 (step5 rows_rl_d2.bn_mid) changes in bursts: 90% of 1 s intervals in the
-first minute show no change; a window's first minute holds a median of 5 distinct values; changes come 50-100 ms apart
-(p50 0.1 s) and then nothing for up to ~5 s (p90 4.7 s), with sizes of $0.3-8.5 (p50 $2.9). That may be a quiet Sunday
-or a coarse recording; no independent Binance recording of 11-08 was found to check against. Until it is checked:
+A post-run check first suspected the research Binance grid (step5 rows_rl_d2.bn_mid) of being coarse: 90% of 1 s
+intervals in the first minute show no change. `research/pf_b12e2_binance_raw.py` (f0b19fc9, committed before its run)
+recomputed the Binance features from the HF collectors' raw BTCUSDT bookTicker for 11-08 (best bid / ask, updates
+every few ms). The raw stream shows the same: 90.3% of 1 s intervals at random times have an unchanged best-price
+mid (grid 90.5%). The updates are size changes; the best prices sit still. So the grid is faithful and Binance's best
+bid / ask was genuinely quiet. The declared resolution rule (R76: zero share <= 0.5) assumed the price moves in most
+seconds; it reads BN-RESOLUTION-WEAK, so R70v2 / R71v2 / R74v2 are n/a by rule, because the market was quiet, not
+because the recording was coarse.
 
-- R70 / R74 here say only that this recording shows little Binance movement around the takes, not that Binance did
-  not move. Our feed was busier at the takes (last update 37 ms old against 67 ms).
-- B12c v2's NOT-BINANCE (R55) has the same weakness and is read as not shown (the instrument could not see sub-second
-  Binance moves). B12c's model-free split (the gap earned within 250 ms) and v1 (our guard value) stand.
+| Binance best-price mid (raw), bps in the taker's favour | SMART | OTHER | RANDOM |
+|---|---|---|---|
+| second before: mean / median | +0.054 / 0 | +0.062 | +0.018 / 0 |
+| second before: moved >= 1 bp their way / against | 4% / 2% | 4% | 1% / 1% |
+| 2 s after: mean / moved >= 1 bp their way | +0.145 / 6% | +0.066 / 4% | +0.028 / 3% |
+
+Near 50 c, with ~4.5 minutes left, a 5-minute binary moves roughly 4-5 c per bp of BTC, so even 1 bp matters; but in
+94% of their takes Binance's best price had moved less than 1 bp in the second before (median 0). Their trigger is on
+Predict for most of their takes; a few per cent follow a visible Binance move. B12c v2's NOT-BINANCE stands as a
+statement about Binance's best bid / ask (the correction notes added at 05:49Z are superseded).
+
+**Our own at-best fills by the book on our side** (frame before; thin = our side's size <= half the other side's,
+heavy = >= twice; share of shares / net 1 s / legs):
+
+| Makers | thin side | balanced | heavy side |
+|---|---|---|---|
+| top 5 | 27% / -0.45 (4,386) | 38% / +0.10 | 35% / +0.71 |
+| ranks 6-20 | 21% / -0.52 | 37% / +0.02 | 42% / +0.58 |
+| ranks 21+ | 39% / -1.00 | 33% / -0.10 | 29% / +0.52 |
+| ours | 17% / -2.16 (14) | 11% / -0.50 (6) | 72% / -0.59 (37) |
+
+Thin-side fills lose for everyone; heavy-side fills earn for everyone except us. Most of our fills are on the heavy
+side, where we sit at the back of a long queue (B12b: OURS-BEHIND), so we are filled when the big level is being eaten.
 
 ## What it says
 
@@ -66,7 +89,7 @@ or a coarse recording; no independent Binance recording of 11-08 was found to ch
 2. Our own model sees these moments: its 1 s prediction points their way at 81% of their takes, and our guard value
    for the side they hit is below zero at 90% of them, so v3 should already be out of that side.
 3. They act in runs: more than half of their orders follow another of theirs within 250 ms.
-4. Binance: this recording shows little movement, but it is too coarse to say Binance did not move.
+4. Binance: its best bid / ask had not moved by 1 bp in the second before 94% of their takes (raw stream, v2).
 
 ## What this changes
 
@@ -76,11 +99,10 @@ or a coarse recording; no independent Binance recording of 11-08 was found to ch
   cancels, B12b).
 - A guard input worth testing: book imbalance at the best (side size against the other side) with Predict's own recent
   move.
-- The Binance data question needs a sub-second Binance source for the cohort (or the live engine's own feed, via the
-  A4b capture run).
+- Binance trade flow and top-of-book size (not only the price) at their takes are still unchecked.
 
 ## Limits
 
 One consumed Sunday; point estimates; three addresses. Trade times are reports, so "the second before" includes about
-0.2 s after the match, and part of the move after is their own take clearing the level. The Binance grid is coarse
-(above). Sizes and spreads are ~50 ms snapshots.
+0.2 s after the match, and part of the move after is their own take clearing the level. Binance is checked on its
+best bid / ask only (not trades or sizes). Sizes and spreads are ~50 ms snapshots.
