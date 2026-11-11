@@ -1,0 +1,19 @@
+B12f Binance activity at the top makers' takes, and Predict imbalance / queue. point estimates, one consumed partial day (220 windows of 2026-11-08, 0.764 window-days)
+Controls: {"B12e_controls": true, "A1_window_sum": true, "A2_aggressor": true, "A3_classes": true, "A4_null": true, "A5_rules": true}; counts {'SMART': 2491, 'OTHER': 34909, 'RANDOM': 12455}; Binance files {'trade_files': 19, 'bt_files': 19, 'missing': []}
+
+Part A (flows in BTC, imbalance -1..1, + = the Predict taker's favour; activity unsigned): feature | SMART mean / median / share > 0 | OTHER mean | RANDOM mean / sd / share > 0 | SMART - RANDOM (null p99, p)
+flow_1s | +0.504 / +0.001 / 52% | +0.603 | +0.373 / +15.651 / 43% | +0.131 (+0.788, 0.350)
+flow_250ms | +0.423 / +0.000 / 38% | +0.542 | +0.050 / +2.774 / 22% | +0.373 (+0.344, 0.004)
+flow_after | +0.263 / +0.000 / 41% | +0.300 | +0.117 / +5.906 / 34% | +0.146 (+0.312, 0.110)
+imb | +0.167 / +0.215 / 58% | +0.072 | +0.038 / +0.542 / 51% | +0.129 (+0.025, 0.000)
+n_trades_1s | +45.671 / +4.000 / 91% | +42.660 | +21.645 / +171.412 / 84% | +24.026 (+8.861, 0.000)
+n_bt_1s | +426.443 / +107.000 / 100% | +351.338 | +198.949 / +462.385 / 100% | +227.494 (+21.139, 0.000)
+
+Part B: D_thin within guard x v-quintile cells -0.582 c/sh (null p01 -0.182, p50 -0.098)
+by guard state, field at-best fills: class share / net 1 s / net 5 s / legs
+  ON: thin 6% +0.133 +0.632 (565); balanced 24% +0.425 +0.871 (2083); heavy 71% +0.936 +1.873 (5919)
+  OFF: thin 33% -0.721 -1.168 (24074); balanced 38% -0.013 -0.243 (21759); heavy 29% +0.433 +0.585 (15352)
+heavy side by reach: back (r > 0.5) +0.298 (3710); front (r <= 0.5) +0.682 (15764); median reach on heavy levels: field 0.199, ours 0.930
+ours: ON thin -1.000 (2), balanced -0.750 (4), heavy -0.142 (26); OFF thin -2.321 (12), balanced +0.500 (2), heavy -2.000 (11)
+
+Readings: {"R80": "NO-FLOW-LEAD", "R81": "BN-BOOK-LEAD", "R82": "BN-ACTIVE", "R85": "IMBALANCE-INCREMENTAL", "R86": "THIN-OK-WHEN-ON", "R87": "NO-QUEUE-SPLIT"}

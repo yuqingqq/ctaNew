@@ -1,5 +1,22 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 06:48Z (session ce68ebe0) — B12f DONE: at the top makers' takes Binance is twice as busy and its top of book leans their way (price still); Predict imbalance adds 0.58 c/sh beyond our guard value; we sit at the very back of heavy levels
+
+- Done: B12f (USER "Yea check Binance activity during those times, and imbalance etc"). research/pf_b12f_activity_imbalance.py
+  committed and pushed before its run (6a51ba39; output 06:46Z). Report handoffs/20261111_b12f_activity_imbalance.md;
+  output live_vs_replay/b12f_20261111/, copies reviews/b12f_20261111/. Controls pass; event counts equal B12e's.
+- Readings: R80 NO-FLOW-LEAD; R81 BN-BOOK-LEAD (Binance top-of-book imbalance their way +0.17 against +0.04 at random);
+  R82 BN-ACTIVE (45.7 against 21.6 trades in the second before; updates 426 against 199); R85 IMBALANCE-INCREMENTAL
+  (thin-side fills -0.58 c/sh at the same guard value; null p01 -0.18); R86 THIN-OK-WHEN-ON (+0.13 with the guard ON,
+  6% of ON volume); R87 NO-QUEUE-SPLIT (heavy levels: back +0.30, front +0.68).
+- Ours: median reach on heavy levels 0.93 (field 0.20); heavy-side fills ON -0.14 (26 legs), OFF -2.00 (11 legs).
+- Says: the top makers act on book pressure on Binance and Predict before a price tick; our models' feature table has
+  these inputs (bn_imb, bn_flow*, bn_ntr1000, pf_imb1/3, pf_dm*), and the guard value under-uses Predict imbalance.
+- Next: (1) a declared guard-input test (Binance / Predict book pressure) that needs >= 5 untouched days to validate;
+  (2) queue: avoid joining the very back of heavy levels (descriptive here); (3) slow cancels to the live session;
+  (4) USER D2 / rebate.
+- Watch out: pro rata values rank moments only; one Sunday; three addresses; BBO-only Binance imbalance.
+
 ## 2026-11-11 06:01Z (session ce68ebe0) — B12e v2 DONE: Binance's best bid / ask was genuinely quiet (raw stream = research grid); the 05:49Z "coarse grid" correction is reversed; our fills sit mostly on the heavy side and lose there
 
 - Done: B12e v2 (USER "Can you still check Binance data, whether we have that data"). The HF collectors recorded
