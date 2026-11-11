@@ -6,6 +6,13 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 09:23Z (session ce68ebe0): SOFT PULL CODED + MERGED to pmmmrust main (f6ff6fe from branch
+  feature/pfmm-soft-pull-b3, fast-forward at 09:37Z, USER; main 0c3b115 incl. a doc follow-up; pushed; no tag, not
+  deployed; check.sh OK). LIVE CONFIG (both v3 examples): size_layering =
+  "incremental_v1" + soft_pull = { band_c = 0.01, max_size = 5.0 }, no cap (USER); code defaults off (absent = research's
+  handler). Decisions unchanged; a resting touch is kept while withheld only for the pull line within 0.01; probes cancel
+  only. Not replayed against B3 (first minute, 100 ms cap); the first live run measures it. Hand-off for the Tokyo
+  session: handoffs/20261111_soft_pull_port.md.
   2026-11-11 08:33Z (session ce68ebe0): fix plan checked against the code: size by add / remove is already on pmmmrust main
   (IncrementalV1, 70b965b / f20fdb1, never live); the B3 soft pull (0.01 c, <= 100 ms) is studied but not in the engine.
   USER: v4 = soft pull + incremental size, coded in research + a pmmmrust branch (no tag, no deploy).
@@ -1641,5 +1648,6 @@ flags:
   pressure_model_b13a: "EMPH IMPROVES (B13a, 2026-11-11 07:08Z, handoffs/20261111_b13a_pressure_model.md): + 13 engineered pressure features raise out-of-sample R2 of the 1 s Predict move from ~0.18 to ~0.21 on 9 of 9 days (blocked CV); not yet a guard (needs a value mapping and >= 5 untouched days)"
   top_behaviour_b13b: "TAKES PREDICTED, NO PULLING (B13b, 2026-11-11 07:10Z): the pressure model separates the top makers' takes (AUC 0.77); their share of fills and their stay rate do not fall under adverse pressure"
   churn_b13c: "CHURN-HEAVY, GUARD FLICKER (B13c 07:12Z, corrected by B13d): live at-best orders cancelled a median 23-38 ms after going live, 82.5% re-placed at the same price; 83.5% of touch withholds are the pull line crossed back and forth on the 50 ms grid, 14.7% G4; same-price size flips also cancel; always ~380 sh back in the queue; fix = pull hysteresis + size by add / remove (new candidate)"
+  soft_pull_port: "ON MAIN, NOT DEPLOYED (2026-11-11 09:37Z, pmmmrust main 0c3b115 = f6ff6fe + doc, from branch feature/pfmm-soft-pull-b3; handoffs/20261111_soft_pull_port.md): the next Tokyo tag's live config = both v3 examples' size_layering = \"incremental_v1\" + soft_pull = { band_c = 0.01, max_size = 5.0 } (no max_hold_ms, USER 2026-11-11); absent = off (research's handler). Not replayed against the B3 study (first minute, 100 ms cap): the first live run measures it"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"

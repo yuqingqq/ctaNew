@@ -1,5 +1,34 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 09:23Z (session ce68ebe0) — Soft pull coded in pmmmrust and merged to main (no tag, not deployed); live config recorded: incremental_v1 + soft pull 0.01 / 5 sh / no cap
+
+- Done (USER "Can you check the code and do the coding, then update status and handoffs"; "We enable them all as default
+  and record these configs correctly in status and handoffs"): pmmmrust commit f6ff6fe on branch feature/pfmm-soft-pull-b3 (from
+  main 79a05d3), merged to main by fast-forward at 09:37Z (USER "Merge to main as well"; main 0c3b115 = f6ff6fe + a doc
+  follow-up), pushed; no tag, not deployed. Hand-off for the Tokyo session:
+  handoffs/20261111_soft_pull_port.md; plan entry pmmmrust docs/PREDICT_FUN_PLAN.md "2026-11-11: soft pull".
+- LIVE CONFIG (both v3 examples, config/predict/pfmm.ladder_v3.example.toml and pfmm.ladder_v3_basis_v1.example.toml):
+  `size_layering = "incremental_v1"` (main f20fdb1, 2026-11-09, never run live) + `soft_pull = { band_c = 0.01,
+  max_size = 5.0 }` with no max_hold_ms (USER: "if the guard does not show an off signal, we can still rest our quotes
+  there"). Code defaults off: a config without the fields runs research's handler (one order per lane, no soft pull).
+- Engine (pf_engine::ladder::SoftPull): the strategy's decisions and decision clock are unchanged. A touch order resting at
+  the previous tick is kept when its side is withheld only for the pull line and v stays within 0.01 under it (sent and
+  open <= 5 sh, accepted, no newer create in flight; the relaxed quote, pull and rung lines - 0.01, still wants that price
+  and size; no rung at that price). Nothing new is sent for the side, a top-up beside it is cancelled, rungs are not kept.
+  It ends without a cancel when the side quotes again; with a cancel on a hold, Binance guard, stale v, v at or under the
+  lowered line, a moved relaxed quote, a rung at the price or the order gone, checked at every decision and every 50 ms
+  guard point (probes only cancel). Journal header records it; decision_reasons lines carry soft_kept; replay refuses a
+  different setting.
+- Tests: 8 window tests (single + incremental_v1, falsifiers; an engaged-but-never-triggered arm equals research's handler
+  exactly, the real band is its positive control), core and config tests (refusals with a positive control); mutations
+  (no probe / no keep) fail 3 / 8 tests; check.sh OK.
+- Not covered by a research number: B3 studied the first minute only with a 100 ms cap; the engine softens every minute's
+  line with no cap; not replayed on 11-08 (that needs a venue simulator for acceptances). The first live run measures it.
+- Next: the Tokyo session reviews, tags from main 0c3b115 and deploys (live = USER, D2); measure requests per window, cancels < 100 ms after
+  going live, the soft_ended mix and kept-order fill markouts; slow venue cancels at 50-60 s (B12b) stay open there.
+  Research: the B13a EMPH guard needs a guard mapping and a test on >= 5 untouched days before any live use.
+- Watch out: predictfun/research/pf_step4_ladder.py untouched; C2 (v3 forward check) unaffected.
+
 ## 2026-11-11 08:33Z (session ce68ebe0) — Fix plan, checked against the code: size by add / remove is already built (IncrementalV1); the pull hysteresis is studied (B3) but not in the engine
 
 - Checked (USER "I remember we have already implemented the size adjustment logic?"): pmmmrust main has
