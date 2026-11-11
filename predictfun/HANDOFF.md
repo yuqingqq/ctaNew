@@ -2,10 +2,10 @@
 
 <!-- DEFAULT_PULL_LOOP -->
 
-## 2026-11-11T19:16:28.403289+00:00 — Quote-default / learned-pull research loop: superseded
+## 2026-11-11T19:17:38.077875+00:00 — Quote-default / learned-pull research loop: running
 
-- Stage `driver`. Six neutral days preserved; no model fit. Correct known-empty price-level admission in v4 before training.
-- 8 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
+- Stage `build_20261023`. v4: observed empty levels are known, retaining all data and inventory controls.
+- 2 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
 - Prior own-order/calm test remains COMPLETE, no promotion; comparison_v4.json / d475eccb.
 - Branch research/predict-default-pull-20261111; one light numeric process; no live changes/protected-day reads.
 
@@ -2287,3 +2287,7 @@ The driver only uses run_light.sh (core 8, one process); P-2026-003 must not pin
 - Oct27 is running in the single numeric slot. No model, threshold, label or policy changes.
 - Receipts in reviews/default_pull_20261111_v3; automatic stage tracker in handoffs/20261111_default_pull_progress.md.
 - Models, six-day primary/stress portfolios, completion audit and figure remain pending. No live changes.
+
+## 2026-11-11T19:17:20.070468+00:00 — quote-default v4 restarted before model fitting
+
+Known-empty price levels were incorrectly treated as missing by the v3 pull-policy state. Six verified v3 neutral days are preserved; no learned model was fit. Corrected v4 source/declaration are frozen at 36093438 /531836a5. The controls pass, including a newly formed level and the planted old admission delay, late-fill inventory reservations,13 original controls and9,180 exact cached feature queries. The eight-window smoke and full loop now run serially; canonical data default_pull_20261111_v4. See handoffs/20261111_default_pull_v4_plan.md and live progress handoff. No current strategy result or promotion claim.

@@ -5,7 +5,7 @@ status: active
 owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no other writer)
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
-updated: >-
+updated: "2026-11-11T19:17:20.070468+00:00"
   2026-11-11 19:02Z: Default-pull v3 neutral builds4/9 complete (Oct23-26), all exact baseline/accounting/cap checks
   and27,392 direct feature identities PASS. Oct27 RUNNING. Full fitted-policy and stress comparisons remain pending.
   2026-11-11 18:55Z: Default-pull v3 neutral builds3/9 complete (Oct23-25); exact baseline/accounting/cap checks
@@ -1718,11 +1718,11 @@ flags:
 
 # DEFAULT_PULL_LOOP
 default_pull_loop:
-  as_of: "2026-11-11T19:16:28.403289+00:00"
-  state: "superseded"
-  stage: "driver"
-  completed_stages: 8
-  detail: "Six neutral days preserved; no model fit. Correct known-empty price-level admission in v4 before training."
+  as_of: "2026-11-11T19:17:38.077875+00:00"
+  state: "running"
+  stage: "build_20261023"
+  completed_stages: 2
+  detail: "v4: observed empty levels are known, retaining all data and inventory controls."
   progress: handoffs/20261111_default_pull_progress.md
   branch: research/predict-default-pull-20261111
 # /DEFAULT_PULL_LOOP

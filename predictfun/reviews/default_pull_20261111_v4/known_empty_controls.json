@@ -1,0 +1,19 @@
+{
+  "as_of": "2026-11-11T19:16:54.330829+00:00",
+  "status": "PASS",
+  "declaration_sha": "27aacbc919b83b5af958f2a527775c2f46a2aae9059d963dd1b54206862d34ea",
+  "source_sha": "55b8317d9ac1da16d9fd470470ff84d7d54441d374b45c97d5695455f7bb2974",
+  "new_level_quote": [
+    50.0,
+    5.0
+  ],
+  "planted_old_behavior": [
+    null,
+    0.0
+  ],
+  "missing_history_refused": true,
+  "outside_depth_refused": true,
+  "zero_to_zero_neutral": true,
+  "positive_to_zero_thinning": true,
+  "prior_controls": "Original13, late-fill reservation regressions and9180 exact cached-feature queries pass."
+}
