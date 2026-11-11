@@ -2242,3 +2242,10 @@ The driver only uses run_light.sh (core 8, one process); P-2026-003 must not pin
   model run before). Peaks: step 1 ~1.0 GiB, step 4 ~1.5 GiB, features ~1.7 GiB, model ~1.4 GiB.
 - 10-28..10-30: do not read (Binance tape sealed for P-2026-003's order-flow test). Read days now: 10-22 (partial), 10-23..27, 10-31.
 - Results are gross at 5 shares with a modelled fill (FIFO behind displayed size, no own impact); no real-fill calibration.
+
+## 2026-11-11 — Default-pull completion audit prepared
+
+- Checker source63704e50 and reviews/default_pull_20261111_v2/completion_audit_plan.json; run after all26 v2 stages.
+- Reconstruct actual saved policy scores/actions, all replay/source/input/feature identities and paired report totals.
+- Distinguish union of resting intervals from aggregate order-time, which can overlap during cancellation.
+- PREPARED, not run while the neutral build owns the shared numeric slot. No policy/threshold/null changes.
