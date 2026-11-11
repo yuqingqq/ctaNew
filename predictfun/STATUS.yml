@@ -6,6 +6,12 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 06:48Z (session ce68ebe0): B12f DONE (read-only; research/pf_b12f_activity_imbalance.py 6a51ba39 committed
+  before its run; report handoffs/20261111_b12f_activity_imbalance.md): at the top makers' takes Binance is twice as
+  busy (R82 BN-ACTIVE) and its top-of-book sizes lean their way (R81 BN-BOOK-LEAD, +0.17 vs +0.04) while its price is
+  still; aggressor flow does not lean (R80). Predict thin-side fills lose 0.58 c/sh more at the same guard value (R85
+  IMBALANCE-INCREMENTAL); with the guard ON the thin side earns +0.13 (R86); heavy-level back +0.30 / front +0.68 (R87
+  NO-QUEUE-SPLIT); our heavy-side fills come at median reach 0.93 (field 0.20).
   2026-11-11 06:01Z (session ce68ebe0): B12e v2 DONE (research/pf_b12e2_binance_raw.py f0b19fc9 committed before its
   run): the raw Binance bookTicker shows the same 90% of unchanged seconds as the research grid, so Binance's best bid /
   ask was quiet and the 05:49Z coarse-grid correction is reversed (B12c v2 NOT-BINANCE stands). R76 BN-RESOLUTION-WEAK
@@ -1494,6 +1500,7 @@ days_read:
   - {day: "20261108", scope: "strategy review revisions 2-3 (session ce68ebe0, read-only): derived outputs and book frames of the 220-window live-samewindow cohort; the day was already consumed by the live diagnosis"}
   - {day: "20261108", scope: "B12 (session ce68ebe0, read-only): cohort tape (legs_timed2, legs_tk, books, step5 guard) of the 220 windows and raw REST match pages of hours 03 and 15 (maker fee field); the day was already consumed"}
   - {day: "20261108", scope: "B12e v2 (session ce68ebe0, read-only, 2026-11-11): HF collectors' raw Binance BTCUSDT bookTicker hour files (data/mm_hf/raw/bookTicker/BTCUSDT/20261108_HH.csv.gz), first minutes of the 220 cohort windows +/- 3 s"}
+  - {day: "20261108", scope: "B12f (session ce68ebe0, read-only, 2026-11-11): HF collectors' raw Binance BTCUSDT trade and bookTicker hour files (data/mm_hf/raw/trade|bookTicker/BTCUSDT/20261108_HH.csv.gz), first minutes of the 220 cohort windows +/- 3 s"}
   - {day: "20261023", scope: "B12 input check (session ce68ebe0, read-only): on-chain slice 14:00-14:15 calldata and raw REST match pages of hour 14 (signer identity, maker fee); a read day"}
   # Binance tape directory listings (file counts only, no content) were made for 10-22..10-31.
 
@@ -1613,5 +1620,6 @@ flags:
   slow_cancels_b12b: "LIVE ISSUE (B12b): 86 of 30,219 cancels took 0.5-5 s, 1.29% of those sent 50-60 s into the window; 11 fills inside such cancels = our whole first-minute loss on 11-08 (-$4.16 a day); for the Tokyo / Dublin session"
   model_or_speed_b12c: "PREDICT-LOCAL TIMING (B12c; 05:49Z correction reversed by B12e v2): the top makers' edge is earned within 250 ms of the trade report; our guard value does not account for it (v1); Binance's best bid / ask path accounts for 22% (v2), and the raw stream confirms Binance was quiet (90% of 1 s unchanged); not a trend model"
   smart_takes_b12e: "THIN SIDE + PREDICT MOMENTUM + OUR MODEL SEES (B12e / v2, 2026-11-11): makers 48 / 51 / 661 take the thin side of a lopsided book (84 vs 228 sh) after Predict moved their way (+0.61 c); our 1 s prediction points their way at 81%; 55% in runs within 250 ms; Binance's best price moved >= 1 bp their way before only 4% of them (raw stream)"
+  book_pressure_b12f: "BINANCE BOOK + ACTIVITY, PREDICT IMBALANCE (B12f, 2026-11-11 06:46Z, handoffs/20261111_b12f_activity_imbalance.md): at the top makers' takes Binance is 2x as busy and its top-of-book leans their way (+0.17 vs +0.04) with the price still; Predict thin-side fills lose 0.58 c/sh more at the same guard value; we fill at median reach 0.93 on heavy levels (field 0.20)"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"
