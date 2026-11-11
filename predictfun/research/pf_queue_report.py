@@ -6,14 +6,15 @@ import numpy as np
 import pandas as pd
 from . import pf_queue_model_spec as S
 from . import pf_queue_age_control as A
+from . import pf_queue_accounting_v2 as C
 
 
 def run():
-    raw=json.loads((S.OUT/'report.json').read_text());age=json.loads((A.OUT/'report.json').read_text())
-    ver=json.loads((S.OUT/'verification.json').read_text())
+    raw=json.loads((C.OUT/'report.json').read_text());age=json.loads((A.OUT/'report.json').read_text())
+    ver=json.loads((C.OUT/'verification.json').read_text())
     if ver['status']!='PASS':raise ValueError('unverified original result')
     parts=[]
-    for folder,report in [(S.OUT,raw),(A.OUT,age)]:
+    for folder,report in [(C.OUT,raw),(A.OUT,age)]:
         path=folder/'portfolio_windows.parquet'
         if S.sha(path)!=report['portfolio_sha']:raise ValueError('portfolio hash mismatch')
         parts.append(pd.read_parquet(path))
@@ -56,7 +57,7 @@ def run():
     supported=primary['marked_interval_positive'] and all(x['complete_mark_comparison'] and x['marked_point_positive'] and x['inventory_square_nonincreasing'] for x in decision_checks)
     result=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),tables=output,comparisons=comparisons,
         decision_checks=decision_checks,supports_incremental_queue_improvement=supported,
-        original_sha=S.sha(S.OUT/'report.json'),age_sha=S.sha(A.OUT/'report.json'),
+        original_sha=S.sha(C.OUT/'report.json'),age_sha=S.sha(A.OUT/'report.json'),
         note='Common-mark tables are a reporting clarification, not a new policy or validation. Full marked PnL is unavailable when stop marks are missing; original partial sums are preserved. No decision interval is asserted for the common-mark subset. Settlement is shown separately.')
     S.write(S.OUT/'comparison.json',result);S.write(S.REVIEW/'comparison.json',result)
     rows=['# Queue continuation model: controlled research comparison','',f"As of {result['as_of']}. All dates were previously consumed; exploratory results.",'',
@@ -80,6 +81,7 @@ def run():
     rows+=['',f"Computed evidence rule supports incremental queue improvement: **{supported}**. See decision_checks in comparison.json; missing complete marked values prevent a positive primary decision.",'',
         '## Checks and limits','',
         f"15 synthetic controls passed. Original saved-artifact verifier reconciled {ver['portfolio_windows_checked']:,} portfolio windows and {ver['selected_fill_records_checked']:,} selected fills; the age baseline independently reconciled {age['verified_windows']:,} more windows. Nulls use500 action-matched shuffles; intervals are clustered on UTC day.",'',
+        'Accounting v2 supersedes a floating-point bug: a roughly1e-15-share residue made an economically flat portfolio lose its known cash mark when the book mark was missing. Stable summation and1e-9-share zero tolerance restore those marks. Original model decisions, labels, fills, failed verifier and report are preserved. All comparisons here use the superseding receipt.', '',
         'This is a fixed-entry continuation experiment, not a full-v3 comparison. Queue position and fill timing remain uncalibrated against own live fills. RuleL credits trades only; ruleM additionally caps queue ahead by observed same-price size. Slower timings are a separate sensitivity. Maker fees were verified zero in input registry; rebates are excluded. Legacy-score baseline uses prior LODO predictions and is diagnostic only. Markout/spread sums with missing-mark groups are partial, not complete trading PnL.', '',
         'Reproduction: source68769426; original freeze9f8b09a8; age-control source recorded in its declaration. Run run_queue_model.sh controls, declare, commit declaration, all; then pf_queue_age_control declare/run and pf_queue_report. Existing output directories intentionally refuse overwrites.','']
     path=Path(__file__).resolve().parents[1]/'handoffs/20261111_queue_policy_results.md'

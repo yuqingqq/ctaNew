@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 from . import pf_queue_model_spec as S
 from . import pf_queue_model_fit as F
+from . import pf_queue_accounting_v2 as C
 from .pf_queue_model_sim import MARKET, QUEUE
 from .pf_queue_model_verify import verify_selection,verify_window
 from .pf_io import mem_check
@@ -40,7 +41,8 @@ def declare():
         for suffix in ('.parquet','_fills.parquet','_build.json'):
             p=S.OUT/f'{day}{suffix}';hashes[p.name]=S.sha(p)
     d=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),source_commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
-           source_sha=S.sha(__file__),original_declaration_sha=S.sha(S.OUT/'declaration.json'),input_sha=hashes,
+           source_sha=S.sha(__file__),accounting_source_sha=S.sha(C.__file__),accounting_report_sha=S.sha(C.OUT/'report.json'),
+           original_declaration_sha=S.sha(S.OUT/'declaration.json'),input_sha=hashes,
            design='Add order_age_ms to the market-only baseline before inspecting original PnL results. Same labels, chronological folds, pinned parameters, portfolio, null500, day intervals, and timing scenarios. Reuse the unchanged original queue candidate; no candidate selection or new tuning.',
            purpose='Queue versus market_age isolates incremental queue size/progress information from age and remaining lease. Original queue versus market is joint order-state value.',
            multiplicity=dict(feature_sets_total=3,candidate_policies=1,comparators=2,scenarios=3),
@@ -54,13 +56,16 @@ def run():
     if S.sha(__file__)!=d['source_sha'] or S.sha(S.OUT/'declaration.json')!=d['original_declaration_sha']:raise ValueError('source changed')
     for name,h in d['input_sha'].items():
         if S.sha(S.OUT/name)!=h:raise ValueError('generation artifact changed')
-    verification=json.loads((S.OUT/'verification.json').read_text())
+    if S.sha(C.__file__)!=d['accounting_source_sha'] or S.sha(C.OUT/'report.json')!=d['accounting_report_sha']:raise ValueError('accounting correction changed')
+    verification=json.loads((C.OUT/'verification.json').read_text())
     if verification['status']!='PASS':raise ValueError('original verifier did not pass')
     original=json.loads((S.OUT/'report.json').read_text())
     for key,name in [('prediction_sha','predictions.parquet'),('portfolio_sha','portfolio_windows.parquet')]:
         if S.sha(S.OUT/name)!=original[key]:raise ValueError('original result changed')
     a=pd.concat([pd.read_parquet(S.OUT/f'{day}.parquet') for day in S.DAYS],ignore_index=True)
-    p=pd.read_parquet(S.OUT/'predictions.parquet');base=pd.read_parquet(S.OUT/'portfolio_windows.parquet')
+    corrected=json.loads((C.OUT/'report.json').read_text())
+    if S.sha(C.OUT/'portfolio_windows.parquet')!=corrected['portfolio_sha']:raise ValueError('corrected portfolio changed')
+    p=pd.read_parquet(S.OUT/'predictions.parquet');base=pd.read_parquet(C.OUT/'portfolio_windows.parquet')
     results=[];predictions=[];folds=[];checks=0;selected_hashes={}
     (OUT/'models').mkdir(exist_ok=False)
     for day in S.DAYS[3:]:
@@ -78,12 +83,9 @@ def run():
             neutral['market_action']=acts;neutral['market_keep_score']=scores[:,0];neutral['market_rejoin_score']=scores[:,2]
             predictions.append(neutral)
             rr,chosen=F.portfolio(rows,fills[fills.id.isin(set(rows.id))],'market',models,COLS)
-            rr['arm']='market_age';results.append(rr)
             verify_selection(chosen,fills);identity=rows.drop_duplicates('mid').set_index('mid')
-            groups={m:g for m,g in chosen.groupby('mid',sort=False)}
-            for r in rr.to_dict('records'):
-                ident=identity.loc[r['mid']]
-                verify_window(r,groups.get(r['mid'],chosen.iloc[:0]),ident.stop_mid,ident.outcome);checks+=1
+            rr=C.correct_windows(rr,chosen,identity);checks+=len(rr)
+            rr['arm']='market_age';results.append(rr)
             path=OUT/f'{day}_{config}_selected.parquet';chosen.to_parquet(path,index=False);selected_hashes[path.name]=S.sha(path)
             print('AGE_CONTROL',day,config,'train',len(tr),'test',len(neutral),flush=True)
     r=pd.concat(results,ignore_index=True);pred=pd.concat(predictions,ignore_index=True)
