@@ -1,5 +1,27 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 11:31Z (session ce68ebe0) — B14 / B15 DONE: the pressure guard does not improve v3's quote decision (R120 NO-CHANGE, R121 / R122 MIXED); the live soft pull without a cap cuts orders like the 100 ms buffer at about the same value (R130 / R131 MIXED, R132 n/a)
+
+- Done (USER "run the prediction guard"; "We are testing the soft pull and new model right?"): B14
+  research/pf_b14_pressure_guard.py + research/run_b14.sh (0851282b; two fixes before any result, f602a2b2 / 17d30722:
+  C1 parity caught a repeated column, then a crash; failed-run logs kept) and B15 research/pf_b15_soft_pull_nocap.py
+  (19691045), each committed before its first run. Report handoffs/20261111_b14_b15_guard_softpull.md; copies
+  reviews/b14_20261111/, reviews/b15_20261111/.
+- B14 (the live guard rebuilt with B13a's 13 pressure features by the same recipe, run in the frozen v3 engine on the 9
+  consumed days at J and X): every control passes (C1 the rebuild of the live guard is exact; C6 the REF replays equal
+  the stored i2J / i2X, 18 / 18). R120 NO-CHANGE: the keep value on the moments each guard quotes differs by +0.0002
+  c/sh [-0.0057, +0.0061] (4 / 8 days; falsifier NO-CHANGE); rank correlation 0.230 vs 0.213. R121 MIXED (settle sum
+  +$161.6 at J, 6 / 9 days; +$11.0 at X, 5 / 9); R122 MIXED (+1 s sum +$24.0 at J, 7 / 9; -$27.4 at X, 5 / 9);
+  descriptively +60 s is lower (-$38 J, -$175 X). Keep the current guard.
+- B15 (order level, 11-08 first minute, one 5-sh order per side): orders per side-minute 38.4 / 30.3 / 29.5 (v3 /
+  100 ms buffer / no cap, JOIN price) and 34.1 / 26.9 / 26.2 (v3's price rule); $/day with v3's price rule +0.84 /
+  +0.81 / +0.65 at 1 s and +7.41 / +7.68 / +8.86 at 5 s. R130 MIXED (below v3 at a 250 ms trade shift), R131 MIXED,
+  R132 n/a (29 / 18 fills in the band). No measurable P&L effect either way; churn control as intended.
+- Next: the live run with the current guard and the soft pull as configured (Tokyo session; live = USER): requests per
+  window, cancels within 100 ms, soft_ended mix, fills on kept orders. The pressure model is not promoted; another use
+  of it is a new candidate, declared and tested on untouched days.
+- Watch out: the B14 build peaked at 1,961 MiB of the 2,048 MiB guard. Protected days unread; C1 / C2 unaffected.
+
 ## 2026-11-11 09:23Z (session ce68ebe0) — Soft pull coded in pmmmrust and merged to main (no tag, not deployed); live config recorded: incremental_v1 + soft pull 0.01 / 5 sh / no cap
 
 - Done (USER "Can you check the code and do the coding, then update status and handoffs"; "We enable them all as default
