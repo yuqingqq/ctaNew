@@ -1,0 +1,22 @@
+B12g makers' fill value by horizon (c/sh). R170 top 5 = EDGE-HOLDS; R171 ranks 6-20 = EDGE-HOLDS
+
+9 replay days, 0-240 s, all depths (pooled; shares):
+  top 5  1 s +0.309 | 5 s +0.219 | 60 s +0.138 | settle +0.163 | 24,411,431 sh
+  6-20   1 s +0.270 | 5 s +0.228 | 60 s +0.215 | settle +0.130 | 23,507,841 sh
+  rest   1 s -0.269 | 5 s -0.358 | 60 s -0.381 | settle -0.147 | 28,753,128 sh
+9 replay days, first minute:
+  top 5  1 s +0.424 | 5 s +0.318 | 60 s +0.356 | settle +0.414 | 7,665,906 sh
+  6-20   1 s +0.357 | 5 s +0.335 | 60 s +0.353 | settle +0.607 | 7,116,009 sh
+  rest   1 s -0.427 | 5 s -0.559 | 60 s -0.709 | settle -0.430 | 7,368,249 sh
+11-08 cohort, 0-240 s:
+  top 5  1 s +0.249 | 5 s -0.068 | 60 s -0.243 | settle -0.764 | 981,715 sh
+  6-20   1 s +0.086 | 5 s -0.152 | 60 s -0.202 | settle -0.324 | 1,199,213 sh
+  rest   1 s -0.295 | 5 s -0.470 | 60 s -0.383 | settle -0.267 | 1,424,092 sh
+  ours   1 s -0.333 | 5 s -0.100 | 60 s -0.269 | settle -1.134 | 825 sh
+11-08 cohort, first minute (B12 control population):
+  top 5  1 s +0.363 | 5 s +0.268 | 60 s +0.164 | settle +0.439 | 353,007 sh
+  6-20   1 s +0.189 | 5 s +0.089 | 60 s +0.175 | settle +0.060 | 353,711 sh
+  rest   1 s -0.330 | 5 s -0.462 | 60 s -0.992 | settle -0.620 | 367,505 sh
+  ours   1 s -0.436 | 5 s -0.261 | 60 s -0.044 | settle -0.938 | 734 sh
+per day, top 5 (0-240 s): 1023 +0.33/+0.12/+0.07, 1024 +0.52/+0.18/+0.12, 1025 +0.49/+0.27/+0.37, 1026 +0.37/+0.58/+0.89, 1027 +0.20/-0.14/-0.14, 1031 +0.08/-0.33/-0.92, 1101 +0.34/+0.26/+0.28, 1102 +0.26/+0.07/+0.36, 1103 +0.21/+0.08/-0.01  (1 s / 60 s / settle)
+replay fills, 9 days (c/sh): REF J 1 s +1.50 60 s +1.56 settle +2.51; REF X 1 s +1.37 60 s +1.72 settle +1.99; qa J 1 s +1.49 60 s +1.84 settle +2.71; qa X 1 s +1.39 60 s +1.74 settle +1.99; qb J 1 s +1.57 60 s +1.27 settle +1.94; qb X 1 s +1.35 60 s +1.02 settle +1.29; B14 EMPH J 1 s +1.49 60 s +1.39 settle +2.81; B14 EMPH X 1 s +1.27 60 s +1.12 settle +2.01

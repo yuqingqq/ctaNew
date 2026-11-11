@@ -1,5 +1,16 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 13:59Z (session ce68ebe0) — B12g DONE: the top makers' fills stay good at 60 s and at settlement on the 9 replay days (R170 / R171 EDGE-HOLDS); B16 qb's "better at 1 s, worse at 60 s" is not how they earn
+
+- Done (USER: what are the top makers' values at these horizons): research/pf_b12g_horizons.py (da9aa50b; key-lookup fix before
+  any table a12b0284). Report handoffs/20261111_b12g_horizons.md; copies reviews/b12g_20261111/. Control: on 11-08's first minute it
+  reproduces B12's published 1 s / 5 s values for every group, the top-5 ids and our 734 sh.
+- 9 replay days, 0-240 s, whole market (c/sh at 1 s / 5 s / 60 s / settlement): top 5 +0.31 / +0.22 / +0.14 / +0.16; ranks 6-20
+  +0.27 / +0.23 / +0.22 / +0.13; rest -0.27 / -0.36 / -0.38 / -0.15. First minute: top 5 +0.42 / +0.32 / +0.36 / +0.41.
+- 11-08 alone (0-240 s): top 5 +0.25 at 1 s, -0.24 at 60 s, -0.76 at settlement; ours -0.33 / -0.27 / -1.13 (one day).
+- The replay's own fills are worth ~+1.5 c/sh at 1 s (REF), five times the top makers' tape value: its level is not believable,
+  only differences inside it (B1a).
+
 ## 2026-11-11 13:39Z (session ce68ebe0) — B16 stage 1 DONE: the target alone changes nothing; target + pressure is better at 1 s (R162 BETTER, J 9 / 9 days) but worse at 60 s and settlement - the model learned the label's 1 s horizon; not promoted
 
 - Done: research/pf_b16_queue_label.py, pf_b16_queue_guard.py, run_b16.sh (18515190; report fix before any table 167fdfe8).
