@@ -6,6 +6,9 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 13:59Z (session ce68ebe0): B12g DONE (da9aa50b / a12b0284; handoffs/20261111_b12g_horizons.md): top makers' fills on the
+  9 replay days, 0-240 s: +0.31 / +0.22 / +0.14 / +0.16 c/sh at 1 s / 5 s / 60 s / settlement (ranks 6-20 +0.27 / +0.23 / +0.22 /
+  +0.13; rest -0.27 / -0.36 / -0.38 / -0.15): R170 / R171 EDGE-HOLDS. Their edge does not fade like B16 qb's; 11-08 alone fades.
   2026-11-11 13:39Z (session ce68ebe0): B16 stage 1 DONE (18515190, report fix 167fdfe8; handoffs/20261111_b16_queue_guard.md):
   guard trained on our resting order's value at the back of the queue (rule M, 1 s). qa (32 features) R160 NO-CHANGE, replay MIXED;
   qb (+ 13 pressure) R160 NO-CHANGE, R162 BETTER (+1 s +72 J 9/9, +19 X 7/9) but settle -148 / -183 and +60 s -67 / -191 (not
@@ -1665,5 +1668,6 @@ flags:
   pressure_guard_b14: "NO-CHANGE AS A GUARD (B14, 2026-11-11 11:31Z, handoffs/20261111_b14_b15_guard_softpull.md): the live guard rebuilt with B13a's 13 pressure features (same recipe, exact rebuild parity) quotes no better moments at the pull line (+0.0002 c/sh [-0.0057, +0.0061], 4/8 days) and its v3 replay is MIXED (settle sum +162 J / +11 X, +1 s sum +24 J / -27 X, 9 consumed days); not promoted"
   soft_pull_nocap_b15: "CHURN CONTROL, VALUE ABOUT UNCHANGED (B15, 2026-11-11 11:31Z): order-level replay of 11-08's first minute: the live soft pull (0.01 c, no cap) places 23% fewer orders than v3 (the 100 ms buffer 21%), $/day within about 1 at 1 s and 5 s (R130 / R131 MIXED; below v3 at a 250 ms trade shift), band fills too few to read (R132 n/a); one consumed partial day, fill rule not validated"
   queue_guard_b16: "HORIZON DECIDES (B16, 2026-11-11 13:39Z, handoffs/20261111_b16_queue_guard.md): a guard trained on our resting order's value at the back of the queue (rule M, 1 s) equals the live guard (qa); with the 13 pressure features (qb) it is better at 1 s in the v3 replay (+72 J 9/9 days, +19 X) and worse at 60 s / settlement (-67 / -191, -148 / -183; not inventory); not promoted"
+  maker_horizons_b12g: "EDGE HOLDS TO 60 s AND SETTLEMENT (B12g, 2026-11-11 13:59Z): on the 9 replay days the top 5 makers' fills are +0.31 / +0.14 / +0.16 c/sh at 1 s / 60 s / settlement over 0-240 s (+0.42 / +0.36 / +0.41 in the first minute), ranks 6-20 similar, the rest lose more with the horizon; 11-08 alone fades (-0.24 at 60 s); the replay's fills are ~5x the tape's value (not a level)"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"
