@@ -1,0 +1,7 @@
+B12d POST HOC 2: do the top makers hit their own quotes when they take? (descriptive)
+All cohort self-matches: {'rows': 56, 'shares': 1449.874390296265}
+maker 30: taker shares (first minute) 0.0 on 0 legs; self-match shares (all minutes) 0.0; taker orders at the best 0: its own maker fill at that price and side in the 2 s before 0, in the 2 s after 0; own maker fills 6278
+maker 40: taker shares (first minute) 0.0 on 0 legs; self-match shares (all minutes) 0.0; taker orders at the best 0: its own maker fill at that price and side in the 2 s before 0, in the 2 s after 0; own maker fills 3216
+maker 48: taker shares (first minute) 12,192.4 on 844 legs; self-match shares (all minutes) 154.0; taker orders at the best 651: its own maker fill at that price and side in the 2 s before 3, in the 2 s after 0; own maker fills 4138
+maker 51: taker shares (first minute) 18,066.1 on 1576 legs; self-match shares (all minutes) 78.2; taker orders at the best 1395: its own maker fill at that price and side in the 2 s before 14, in the 2 s after 0; own maker fills 1861
+maker 661: taker shares (first minute) 10,602.9 on 622 legs; self-match shares (all minutes) 0.0; taker orders at the best 445: its own maker fill at that price and side in the 2 s before 1, in the 2 s after 5; own maker fills 3937

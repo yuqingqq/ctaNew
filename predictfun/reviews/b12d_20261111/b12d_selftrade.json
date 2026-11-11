@@ -1,0 +1,54 @@
+{
+ "note": "POST HOC, descriptive",
+ "self_matches_all": {
+  "rows": 56,
+  "shares": 1449.874390296265
+ },
+ "makers": {
+  "30": {
+   "taker_legs_hit": 0,
+   "taker_shares": 0.0,
+   "self_match_shares": 0.0,
+   "taker_orders_at_best": 0,
+   "quoted_same_price_2s_before": 0,
+   "quoted_same_price_2s_after": 0,
+   "own_maker_fills": 6278
+  },
+  "40": {
+   "taker_legs_hit": 0,
+   "taker_shares": 0.0,
+   "self_match_shares": 0.0,
+   "taker_orders_at_best": 0,
+   "quoted_same_price_2s_before": 0,
+   "quoted_same_price_2s_after": 0,
+   "own_maker_fills": 3216
+  },
+  "48": {
+   "taker_legs_hit": 844,
+   "taker_shares": 12192.368034860901,
+   "self_match_shares": 154.0,
+   "taker_orders_at_best": 651,
+   "quoted_same_price_2s_before": 3,
+   "quoted_same_price_2s_after": 0,
+   "own_maker_fills": 4138
+  },
+  "51": {
+   "taker_legs_hit": 1576,
+   "taker_shares": 18066.11246452974,
+   "self_match_shares": 78.1805,
+   "taker_orders_at_best": 1395,
+   "quoted_same_price_2s_before": 14,
+   "quoted_same_price_2s_after": 0,
+   "own_maker_fills": 1861
+  },
+  "661": {
+   "taker_legs_hit": 622,
+   "taker_shares": 10602.912349648104,
+   "self_match_shares": 0.0,
+   "taker_orders_at_best": 445,
+   "quoted_same_price_2s_before": 1,
+   "quoted_same_price_2s_after": 5,
+   "own_maker_fills": 3937
+  }
+ }
+}
