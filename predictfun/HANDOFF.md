@@ -1,5 +1,14 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 16:38Z — Own-order study: four builders verified; unique-action training frozen before fits
+
+- Baseline win/fill/request parity exact on Oct23..26; independent generation/fill/cash/inventory checks PASS.
+-21 controls PASS. Training v2 (f167d50b, declaration64001a70) deduplicates identical decisions shared by the two
+  neutral paths; conflicting labels for the same causal action refuse the fit. No original model was trained.
+  Original source/declaration retained. Policy thresholds, labels, features, nulls and test dates unchanged.
+- Single light slot remains reserved, now run_own_order_v2.sh. Same log /tmp/own_orders_calm_run_20261111.log.
+  Remaining five builders, fits, primary/stress replays, then report. Partial outcomes are not a verdict.
+
 ## 2026-11-11 16:28Z — Own-order continuation + calm-entry experiment prepared; single light slot reserved
 
 - USER: learn continuation on our admitted orders and also test posting during calm periods.

@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 16:38Z: Own-order study four complete baseline parities PASS;21 controls PASS. Superseding training v2
+  deduplicates shared neutral actions before any fit. Single light slot remains reserved; models/results pending.
   2026-11-11 16:28Z: Own-order continuation/calm-entry pipeline prepared;18 controls PASS. Single light slot reserved
   for research/predict-own-orders-calm-20261111, /tmp/own_orders_calm_run_20261111.log. Exact baseline parity
   and numerical runs pending; no live/frozen v3 edits.
