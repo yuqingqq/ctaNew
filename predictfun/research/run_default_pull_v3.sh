@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT=/home/yuqing/ctaNew
+WORK=$(cd "$(dirname "$0")/../.." && pwd)
+PY=/home/yuqing/pricer-sol/venv/bin/python3
+OUT=$ROOT/data/predict_fun/research/default_pull_20261111_v3
+HELPER=$WORK/predictfun/research/pf_default_pull_fast.py
+export DEFAULT_PULL_DRIVER_PID=$$
+mkdir -p "$OUT/logs"
+exec 9>"$OUT/driver.lock"
+flock -n 9 || { echo 'REFUSED: another v3 driver owns this loop'; exit 1; }
+update() { "$PY" "$HELPER" progress "$@"; }
+run() {
+  local tag=$1; shift
+  if [ -e "$OUT/logs/$tag.done" ]; then sha256sum -c "$OUT/logs/$tag.done"; return; fi
+  if [ -e "$OUT/logs/$tag.log" ]; then update "$tag" failed 'Existing incomplete log; explicit recovery required.'; exit 1; fi
+  while ! "$PY" "$HELPER" slot > "$OUT/slot.json"; do update "$tag" queued 'Waiting for the shared numeric slot.'; sleep 15; done
+  update "$tag" running 'v3 cached observed-depth features; full-day v2 identity required before further tests.'
+  set +e
+  "$ROOT/predictfun/research/run_light.sh" "default_pull_v3_$tag" -- bash -c 'cd "$1" && shift && exec "$@"' _ "$WORK" "$PY" -m predictfun.research.pf_default_pull_fast "$@" > "$OUT/logs/$tag.log" 2>&1
+  local rc=$?
+  set -e
+  if [ "$rc" -ne 0 ]; then update "$tag" failed "Exit $rc; logs/$tag.log retained, later stages stopped."; exit "$rc"; fi
+  sha256sum "$OUT/logs/$tag.log" > "$OUT/logs/$tag.done"
+  update "$tag" complete "Passed; logs/$tag.log plus artifact/feature checks retained."
+}
+trap 'update driver interrupted "Driver interrupted; completed stages retained."; exit 130' INT TERM
+run controls controls
+run smoke run 20261023 smoke
+for d in 20261023 20261024 20261025 20261026 20261027 20261031 20261101 20261102 20261103; do run "build_$d" run "$d" build; done
+run fit fit
+for d in 20261026 20261027 20261031 20261101 20261102 20261103; do run "eval_$d" run "$d" eval; done
+run primary_report report primary
+for d in 20261026 20261027 20261031 20261101 20261102 20261103; do run "stress_$d" run "$d" stress; done
+run final_report report final
+update driver complete 'All v3 tests complete. Canonical output default_pull_20261111_v3/comparison_final.json; final completion audit pending. No live promotion.'
