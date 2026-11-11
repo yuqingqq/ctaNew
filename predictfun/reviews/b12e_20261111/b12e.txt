@@ -1,0 +1,22 @@
+B12e what happens when the top makers take. point estimates, one consumed partial day (220 windows of 2026-11-08, 0.764 window-days)
+Controls: {"B12b_controls": true, "E1_events": true, "E2_sign": true, "E3_rules": true}; KJ {'own_ok': True, 'smart_orders': {'30': 0, '40': 0, '48': 651, '51': 1395, '661': 445}}
+Counts {'SMART': 2491, 'OTHER': 34909, 'RANDOM': 12455}; SMART orders within 250 ms of another SMART order on that side: 55.2%; their taker gain on the legs hit (= - maker value at 1 s) +1.23 c/sh
+
+feature (taker-favourable sign for moves) | SMART mean / median / share > 0 | OTHER mean / share > 0 | RANDOM mean / share > 0 | SMART - RANDOM (null p99, p)
+bn_before | +0.089 / +0.000 / 19% | +0.095 / 13% | +0.013 / 5% | +0.075 (+0.022, 0.000)
+bn_just_before | +0.053 / +0.000 / 13% | +0.067 / 9% | +0.006 / 2% | +0.046 (+0.014, 0.000)
+bn_after_500 | +0.047 / +0.000 / 10% | +0.029 / 7% | +0.005 / 4% | +0.042 (+0.032, 0.002)
+bn_after_2000 | +0.108 / +0.000 / 17% | +0.055 / 11% | +0.021 / 9% | +0.086 (+0.061, 0.000)
+pf_before | +0.608 / +0.000 / 35% | +0.264 / 26% | +0.079 / 20% | +0.529 (+0.154, 0.000)
+pf_after_250 | +1.143 / +1.000 / 51% | +0.404 / 25% | +0.013 / 8% | +1.129 (+0.070, 0.000)
+pf_after_1000 | +1.743 / +1.000 / 64% | +0.536 / 34% | +0.048 / 19% | +1.695 (+0.119, 0.000)
+pred_s | +0.597 / +0.368 / 81% | +0.218 / 56% | +0.031 / 53% | +0.566 (+0.038, 0.000)
+v_side | -0.517 / -0.174 / 10% | -0.335 / 36% | -0.103 / 41% | -0.414 (+0.031, 1.000)
+spread | +1.030 / +1.000 / 100% | +1.080 / 100% | +1.027 / 100% | +0.002 (+0.017, 0.378)
+q_side | +122.100 / +84.000 / 100% | +203.107 / 100% | +227.927 / 100% | -105.827 (+7.866, 1.000)
+q_other | +344.473 / +312.430 / 100% | +241.558 / 100% | +235.287 / 100% | +109.186 (+8.467, 0.000)
+bn_age | +36.657 / +18.500 / 100% | +56.792 / 100% | +66.881 / 100% | -30.224 (+4.612, 1.000)
+t_in | +28.045 / +27.673 / 100% | +28.630 / 100% | +30.176 / 100% | -2.131 (+0.918, 1.000)
+Instrument: corr(pred_1000, realised 1 s Predict change) at RANDOM +0.297; SMART share above RANDOM's 90th percentile of signed pred_1000 37.3%
+
+Readings: {"R70": "NO-BINANCE-LEAD", "R71": "n/a", "R72": "OUR-MODEL-SEES", "R73": ["THIN-SIDE"], "R74": "NO-BINANCE-FOLLOW", "R75": ["NO-BINANCE-LEAD", "n/a", "OUR-MODEL-SEES", "THIN-SIDE", "NO-BINANCE-FOLLOW"]}
