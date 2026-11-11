@@ -1,0 +1,15 @@
+B18 pressure fills. R180 SIMILAR; R181 SAME; R182 NOT-WORSE
+
+base rate (share of live rows, both sides), mean of days: thin 0.331, thinning 0.243, burst 0.079, bnshift 0.047, any 0.476
+
+pooled 9 days: share of filled shares in each class | c/sh at 1 s / 60 s in the class (out of it)
+  top 5  thin 0.431 (+0.03/-0.12 vs +0.52/+0.34) | thinning 0.366 (+0.05/-0.12 vs +0.46/+0.29) | burst 0.201 (-0.47/-0.70 vs +0.50/+0.35) | bnshift 0.114 (-0.65/-0.66 vs +0.43/+0.24) | any 0.629 (+0.04/-0.15 vs +0.76/+0.63)
+  6-20   thin 0.327 (-0.16/-0.40 vs +0.48/+0.51) | thinning 0.307 (-0.07/-0.19 vs +0.42/+0.40) | burst 0.156 (-1.00/-1.22 vs +0.50/+0.48) | bnshift 0.089 (-1.21/-1.17 vs +0.41/+0.35) | any 0.531 (-0.09/-0.26 vs +0.68/+0.75)
+  rest   thin 0.382 (-0.73/-0.99 vs +0.02/-0.01) | thinning 0.319 (-0.86/-0.92 vs +0.01/-0.13) | burst 0.221 (-1.87/-1.87 vs +0.19/+0.04) | bnshift 0.132 (-2.04/-2.20 vs +0.00/-0.10) | any 0.593 (-0.75/-0.95 vs +0.43/+0.44)
+  REF J  thin 0.131 (+1.99/+2.36 vs +1.42/+1.44) | thinning 0.496 (+1.76/+1.55 vs +1.24/+1.57) | burst 0.125 (+0.83/+0.68 vs +1.59/+1.69) | bnshift 0.137 (+0.65/+1.31 vs +1.63/+1.60) | any 0.610 (+1.57/+1.51 vs +1.38/+1.65)
+  qb J   thin 0.142 (+1.81/+3.62 vs +1.53/+0.88) | thinning 0.518 (+1.74/+1.21 vs +1.38/+1.33) | burst 0.143 (+0.67/+1.85 vs +1.71/+1.17) | bnshift 0.129 (+0.66/+1.27 vs +1.70/+1.27) | any 0.634 (+1.57/+1.48 vs +1.56/+0.92)
+  REF X  thin 0.126 (+1.73/+2.09 vs +1.32/+1.67) | thinning 0.468 (+1.63/+1.38 vs +1.15/+2.02) | burst 0.119 (+0.71/+1.73 vs +1.46/+1.72) | bnshift 0.131 (+0.75/+0.78 vs +1.47/+1.86) | any 0.585 (+1.47/+1.56 vs +1.24/+1.95)
+  qb X   thin 0.144 (+1.16/-0.07 vs +1.38/+1.20) | thinning 0.493 (+1.40/+0.70 vs +1.30/+1.32) | burst 0.133 (+0.66/+1.99 vs +1.46/+0.87) | bnshift 0.136 (+0.51/+0.04 vs +1.48/+1.17) | any 0.627 (+1.30/+0.92 vs +1.43/+1.18)
+
+per day, share of filled shares in 'any': 1023 top5 0.614 REF 0.658 qb 0.641; 1024 top5 0.588 REF 0.563 qb 0.610; 1025 top5 0.574 REF 0.601 qb 0.644; 1026 top5 0.633 REF 0.732 qb 0.680; 1027 top5 0.601 REF 0.675 qb 0.671; 1031 top5 0.639 REF 0.450 qb 0.531; 1101 top5 0.619 REF 0.483 qb 0.542; 1102 top5 0.680 REF 0.597 qb 0.593; 1103 top5 0.706 REF 0.611 qb 0.701
+statuses (fills without a row within 100 ms): {}
