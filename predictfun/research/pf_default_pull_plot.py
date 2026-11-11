@@ -72,6 +72,8 @@ def run():
                 x,y=r['exposure_pct'],r['marked_delta'];lo,hi=r['day_interval']
                 ax.vlines(x,lo,hi,color=color,alpha=.42,lw=1.4)
                 ax.scatter(x,y,marker='o' if r['scenario']=='X' else 'X',s=65,color=color,zorder=3,edgecolors='white',linewidths=.5)
+                ax.annotate(f"n={r['common_marks']}",(x,y),xytext=(4,6 if r['scenario']=='X' else -12),
+                    textcoords='offset points',fontsize=6,color=color)
         ax.axhline(0,color='#333333',lw=.8);ax.axvline(0,color='#333333',lw=.8)
         ax.grid(alpha=.15);ax.set_title(title,fontsize=12)
         ax.set_xlabel('Inventory-square time change (%)')
@@ -80,7 +82,8 @@ def run():
     handles += [Line2D([0],[0],color='#333333',marker='o',lw=0,label='Primary timing / queue M'),
                 Line2D([0],[0],color='#333333',marker='X',lw=0,label='Slower timing / queue L')]
     fig.legend(handles=handles,loc='outside lower center',ncol=4,frameon=False,fontsize=9)
-    fig.suptitle('Quote by default, learn when to pull\nSix consumed dates — exploratory, not live validation',fontsize=14)
+    fig.suptitle('Quote by default, learn when to pull\nSix consumed dates — exploratory, not live validation\n'
+        f"1,728 windows per arm; labels show paired marks | As of {report['as_of'][:19]} UTC",fontsize=12)
     for p in targets[:2]:fig.savefig(p,dpi=170)
     plt.close(fig)
     receipt=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=HERE,text=True).strip(),
