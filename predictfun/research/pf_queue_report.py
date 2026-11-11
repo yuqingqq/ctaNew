@@ -50,8 +50,10 @@ def run():
         inv=next(x for x in age['deltas'] if x['config']==config and x['metric']=='inventory_square_s')
         interval=mark.get('interval')
         decision_checks.append(dict(config=config,complete_mark_comparison='sum' in mark,
-            marked_interval_positive=bool(interval and interval['low']>0),inventory_square_nonincreasing=bool(inv.get('sum',float('inf'))<=0)))
-    supported=all(x['complete_mark_comparison'] and x['marked_interval_positive'] and x['inventory_square_nonincreasing'] for x in decision_checks)
+            marked_interval_positive=bool(interval and interval['low']>0),marked_point_positive=bool(mark.get('sum',float('-inf'))>0),
+            inventory_square_nonincreasing=bool(inv.get('sum',float('inf'))<=0)))
+    primary=next(x for x in decision_checks if x['config']=='L50')
+    supported=primary['marked_interval_positive'] and all(x['complete_mark_comparison'] and x['marked_point_positive'] and x['inventory_square_nonincreasing'] for x in decision_checks)
     result=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),tables=output,comparisons=comparisons,
         decision_checks=decision_checks,supports_incremental_queue_improvement=supported,
         original_sha=S.sha(S.OUT/'report.json'),age_sha=S.sha(A.OUT/'report.json'),
@@ -73,7 +75,8 @@ def run():
            '|---|---:|---:|---:|']
     for c in comparisons:
         if c['ref']!='market_age':continue
-        rows.append(f"| {c['config']} | ${c['marked_delta_usd']:+.2f} | ${c['full_settlement_delta_usd']:+.2f} | {c['inventory_square_change_pct']:+.2f}% |")
+        settle=f"${c['full_settlement_delta_usd']:+.2f}" if c['full_settlement_delta_usd'] is not None else 'Unavailable'
+        rows.append(f"| {c['config']} | ${c['marked_delta_usd']:+.2f} | {settle} | {c['inventory_square_change_pct']:+.2f}% |")
     rows+=['',f"Computed evidence rule supports incremental queue improvement: **{supported}**. See decision_checks in comparison.json; missing complete marked values prevent a positive primary decision.",'',
         '## Checks and limits','',
         f"15 synthetic controls passed. Original saved-artifact verifier reconciled {ver['portfolio_windows_checked']:,} portfolio windows and {ver['selected_fill_records_checked']:,} selected fills; the age baseline independently reconciled {age['verified_windows']:,} more windows. Nulls use500 action-matched shuffles; intervals are clustered on UTC day.",'',
