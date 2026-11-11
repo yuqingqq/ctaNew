@@ -1,0 +1,11 @@
+{
+  "as_of": "2026-11-11T22:57:50.654037+00:00",
+  "status": "METADATA_WATCHER_RECOVERED",
+  "watcher_pid": 2203545,
+  "driver_pid": 199624,
+  "log": "/home/yuqing/ctaNew/data/predict_fun/research/default_pull_20261111_v4/logs/publication_watcher_20261111T225749Z.log",
+  "previous_pid": 1763547,
+  "previous_state": "PID absent; old tool session 94120 unknown after host reset; exact termination cause not observed",
+  "controls": "Unchanged watcher positive/refusal controls passed before launch",
+  "scope": "Metadata helper only; no numerical test or frozen source restarted or modified"
+}
