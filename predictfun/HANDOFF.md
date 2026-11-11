@@ -2,10 +2,10 @@
 
 <!-- DEFAULT_PULL_LOOP -->
 
-## 2026-11-11T18:43:39.255210+00:00 — Quote-default / learned-pull research loop: running
+## 2026-11-11T18:51:12.637742+00:00 — Quote-default / learned-pull research loop: running
 
-- Stage `build_20261025`. v3 cached observed-depth features; full-day v2 identity required before further tests.
-- 4 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
+- Stage `build_20261026`. v3 cached observed-depth features; full-day v2 identity required before further tests.
+- 5 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
 - Prior own-order/calm test remains COMPLETE, no promotion; comparison_v4.json / d475eccb.
 - Branch research/predict-default-pull-20261111; one light numeric process; no live changes/protected-day reads.
 
@@ -2272,3 +2272,11 @@ The driver only uses run_light.sh (core 8, one process); P-2026-003 must not pin
 -13,656 direct saved-feature identities checked across these two full days. Missing label marks remain explicit statuses.
 - Oct25 is RUNNING in the single numeric slot. Model fitting, full six-day primary/stress comparisons and final audit remain pending.
 - Source/receipts/progress on research/predict-default-pull-20261111; canonical data default_pull_20261111_v3. No live changes.
+
+## 2026-11-11 18:55Z — Default-pull neutral builds3/9 PASS; final plot prepared
+
+- Oct23-25:288 windows per day per reference/default path; exact baseline, accounting and inventory cap checks PASS.
+-19,941 saved feature decisions checked directly against causal inputs. Oct26 is running in the single numeric slot.
+- After all26 driver stages, run pf_default_pull_completion_v3; then pf_default_pull_plot (source05d5a936) through run_light.
+- Plot requires the verified final report/audit identities and writes PNG/PDF plus exact point populations/as-of. No new model selection.
+- Canonical data: default_pull_20261111_v3. All policy/stress conclusions remain pending; live unchanged.
