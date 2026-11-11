@@ -1,5 +1,25 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 06:01Z (session ce68ebe0) — B12e v2 DONE: Binance's best bid / ask was genuinely quiet (raw stream = research grid); the 05:49Z "coarse grid" correction is reversed; our fills sit mostly on the heavy side and lose there
+
+- Done: B12e v2 (USER "Can you still check Binance data, whether we have that data"). The HF collectors recorded
+  Binance BTCUSDT bookTicker for 11-08 (data/mm_hf/raw/bookTicker/BTCUSDT/20261108_HH.csv.gz). research/pf_b12e2_binance_raw.py
+  committed and pushed before its run (f0b19fc9; output 05:58Z); report section in handoffs/20261111_b12e_smart_takes.md;
+  copies reviews/b12e_20261111/.
+- Result: 90.3% of 1 s intervals at random times have an unchanged best-price mid on the raw stream (grid 90.5%): the
+  grid is faithful, Binance was quiet. R76 BN-RESOLUTION-WEAK by its rule (it assumed the price moves most seconds), so
+  R70v2 / R71v2 / R74v2 are n/a by rule. Descriptive: Binance had moved >= 1 bp their way in the second before 4% of the
+  top makers' takes (random 1%), median 0. Their trigger is on Predict for most takes.
+- Reversal: B12c v2's NOT-BINANCE and B12e's R70 / R74 stand as statements about Binance's best bid / ask; the 05:49Z
+  notes in the B12c report, the B12d summary and the STATUS flag are superseded in place.
+- Ours by the book on our side: 72% of our at-best shares are on the heavy side at -0.59 c/sh (37 legs), where every
+  other group earns +0.52 to +0.71; thin side 17% at -2.16 (14 legs). Consistent with our place at the back of long
+  queues (B12b OURS-BEHIND).
+- Next: (1) Binance trade flow and top-of-book sizes at the takes (raw trade / bookTicker, unchecked); (2) the
+  imbalance guard-input test (B12f); (3) slow cancels to the live session; (4) USER D2 / rebate.
+- Watch out: the HF collectors' 11-08 Binance files are now read by P-2026-005 (recorded under days_read); bookTicker
+  only covers the best price.
+
 ## 2026-11-11 05:49Z (session ce68ebe0) — B12e DONE: the top makers take the thin side of a lopsided Predict book that has started to move, at moments our own model flags; the Binance grid used is too coarse to judge Binance
 
 - Done: B12e (USER "can you check their take, what happens on Binance or what events happen during then?").

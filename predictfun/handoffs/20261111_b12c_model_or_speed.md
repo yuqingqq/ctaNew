@@ -7,7 +7,8 @@ output 04:25Z). Output in `live_vs_replay/b12c_20261111/`, copies in `reviews/b1
 
 Public tape and the cohort's Binance grid. One consumed partial day (the 220 windows of 2026-11-08): point estimates.
 
-**Correction (05:49Z, after B12e).** The Binance grid used by v2 (step5 rows_rl_d2.bn_mid) is coarse: 90% of 1 s
+**Superseded 06:00Z (B12e v2): the raw bookTicker shows the same 90% of unchanged seconds, so the grid is faithful and
+v2's NOT-BINANCE stands for Binance's best bid / ask; the note below was wrong.** ~~Correction (05:49Z, after B12e).~~ The Binance grid used by v2 (step5 rows_rl_d2.bn_mid) is coarse: 90% of 1 s
 intervals in the first minute show no change, and a window's first minute holds a median of 5 distinct values
 (handoffs/20261111_b12e_smart_takes.md). v2's NOT-BINANCE (R55) therefore reads as not shown: the instrument could not
 see sub-second Binance moves. 'Not faster reaction to Binance' is withdrawn. The model-free split (the gap earned

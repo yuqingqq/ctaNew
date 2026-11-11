@@ -1,0 +1,19 @@
+B12e v2: Binance at the top makers' takes, from the raw bookTicker. point estimates, one consumed partial day (220 windows of 2026-11-08, 0.764 window-days)
+Controls: {"B12e_controls": true, "G1_lookup": true, "G2_rule": true}; K-check {'counts': {'SMART': 2491, 'OTHER': 34909, 'RANDOM': 12455}, 'counts_ok': True, 'pf_before_mean_SMART': 0.6083902047370534, 'pf_before_ok': True}; bookTicker {'files': 19, 'missing_hours': [], 'windows_with_data': 220}
+Resolution at RANDOM times: share of zero changes over the second before: raw bookTicker 90.3%, old grid 90.5%
+
+feature (bps, + = taker's favour) | SMART mean / median / >= +1 bp / <= -1 bp | OTHER mean / >= +1 bp | RANDOM mean / >= +1 bp / <= -1 bp | SMART - RANDOM (null p99, p)
+bn_before | +0.054 / +0.000 / 4% / 2% | +0.062 / 4% | +0.018 / 1% / 1% | +0.036 (+0.030, 0.006)
+bn_just_before | +0.052 / +0.000 / 1% / 0% | +0.053 / 2% | +0.005 / 0% / 0% | +0.048 (+0.016, 0.000)
+bn_after_500 | +0.051 / +0.000 / 2% / 1% | +0.028 / 2% | +0.008 / 1% / 1% | +0.043 (+0.025, 0.000)
+bn_after_2000 | +0.145 / +0.000 / 6% / 1% | +0.066 / 4% | +0.028 / 3% / 2% | +0.117 (+0.053, 0.000)
+old_before | +0.089 / +0.000 / 4% / 2% | +0.095 / 5% | +0.013 / 1% / 1% | +0.075 (+0.022, 0.000)
+
+At-best fills by the book on the maker's side (frame before; thin = size <= half the other side, heavy = >= twice): share of shares / net 1 s / legs
+top 5: thin side 27% -0.448 (4386); balanced 38% +0.100 (5060); heavy side 35% +0.709 (4509)
+6-20: thin side 21% -0.524 (6246); balanced 37% +0.023 (9520); heavy side 42% +0.576 (10220)
+rest: thin side 39% -1.002 (15004); balanced 33% -0.102 (10005); heavy side 29% +0.515 (7906)
+O (ranks >= 6): thin side 30% -0.836 (21250); balanced 35% -0.036 (19525); heavy side 35% +0.551 (18126)
+ours: thin side 17% -2.156 (14); balanced 11% -0.500 (6); heavy side 72% -0.590 (37)
+
+Readings: {"R76": "BN-RESOLUTION-WEAK", "R70v2": "n/a (resolution)", "R71v2": "n/a (resolution)", "R74v2": "n/a (resolution)"}
