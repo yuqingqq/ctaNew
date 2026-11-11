@@ -1,5 +1,26 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 17:15Z — Own-order study: primary replay complete; causal warm-up audit, stress RUNNING
+
+- All six primary test days PASS independent generation/fill/cash/inventory checks, in addition to9/9 exact baseline rebuilds.
+- Review found a bug in the NEW experimental feature harness: imbalance deltas before250ms used x[-1].
+  Calm already masks the boundary; continuation features required an explicit unknown value. Frozen originals preserved.
+- Audit bd61f96d + causal declaration c47a2e71:70,115 feature decisions across42 neutral/primary populations checked;
+  ZERO affected early decisions. Primary models/decisions/fills/results are unchanged and usable. Additional actual-clock
+  identity check includes float32 feature quantization tolerance; future-clock and future-data falsifiers pass.
+- Corrected wrapper pf_own_order_runner_v3 / run_own_order_v3.sh is now running six stress days. Canonical final
+  receipt will be comparison_v3.json and handoffs/20261111_own_orders_calm_results_v3.md. No tuning / no live changes.
+- Single light slot remains reserved; /tmp/own_orders_calm_run_20261111.log. Full report pending.
+
+## 2026-11-11 16:50Z — Own-order study: all nine neutral days reconciled; chronological fits complete
+
+-9/9 full baseline win/fill/request identities PASS; reference and calm-seed generation/fill/cash/inventory checks PASS.
+- Unique-action trainer v2 completed all six expanding folds, 5,895..17,659 distinct training actions. Both
+  queue and market+age models are saved. Shared-action conflicting-label refusal passed on the actual population.
+- Primary six-policy comparisons and four-policy stress replays are RUNNING serially. Source frozen; no tuning.
+  Single light slot remains reserved. Log /tmp/own_orders_calm_run_20261111.log. Full report still pending.
+- Added descriptive mechanism/saved-model reconstruction script1f91ea3b before policy outcomes; no new candidate.
+
 ## 2026-11-11 16:38Z — Own-order study: four builders verified; unique-action training frozen before fits
 
 - Baseline win/fill/request parity exact on Oct23..26; independent generation/fill/cash/inventory checks PASS.

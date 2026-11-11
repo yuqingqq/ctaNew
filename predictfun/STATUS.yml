@@ -6,6 +6,11 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 17:15Z: Own-order primary6/6 complete, all checks PASS. New-harness warm-up delta bug corrected
+  with superseding causal v3 wrapper:70,115 saved feature decisions audited, zero affected primary decisions.
+  Stress6-day replay RUNNING; slot reserved. Canonical result will be comparison_v3.json.
+  2026-11-11 16:50Z: Own-order study9/9 baseline parities PASS; six chronological fits completed with unique
+  training actions. Primary and stress portfolios running; single light slot reserved, no tuning/promotion.
   2026-11-11 16:38Z: Own-order study four complete baseline parities PASS;21 controls PASS. Superseding training v2
   deduplicates shared neutral actions before any fit. Single light slot remains reserved; models/results pending.
   2026-11-11 16:28Z: Own-order continuation/calm-entry pipeline prepared;18 controls PASS. Single light slot reserved
