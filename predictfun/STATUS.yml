@@ -6,6 +6,11 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 07:14Z (session ce68ebe0): B13b / B13c DONE (54dc5df9 committed before the runs; report
+  handoffs/20261111_b13bc_behaviour_queue.md): the pressure model predicts the top makers' takes (AUC 0.771, current
+  features 0.725) but their quotes show no pulling on it (R101 NO-PULL-SIGNAL); our engine cancels at-best orders a median
+  23-38 ms after they go live and re-places 82.5% at the same price (R110 CHURN-HEAVY), 87% while the research guard is ON,
+  stepping away from flow worth +0.45 c/sh (R112 PULLS-COST; R114 GUARD-PULLS-GOOD-ORDERS); queue ahead p50 381 sh.
   2026-11-11 07:10Z (session ce68ebe0): B13a DONE (research/pf_b13a_pressure_model.py 4b98b043 committed before its run;
   report handoffs/20261111_b13a_pressure_model.md): EMPH (current 32 features + 13 engineered pressure features) beats
   BASE out of sample on all 9 days by blocked 3-fold CV (R90 IMPROVES, dR2 +0.027 [+0.023, +0.032]; R91 IMPROVES-UNDER-PRESSURE;
@@ -1627,5 +1632,7 @@ flags:
   smart_takes_b12e: "THIN SIDE + PREDICT MOMENTUM + OUR MODEL SEES (B12e / v2, 2026-11-11): makers 48 / 51 / 661 take the thin side of a lopsided book (84 vs 228 sh) after Predict moved their way (+0.61 c); our 1 s prediction points their way at 81%; 55% in runs within 250 ms; Binance's best price moved >= 1 bp their way before only 4% of them (raw stream)"
   book_pressure_b12f: "BINANCE BOOK + ACTIVITY, PREDICT IMBALANCE (B12f, 2026-11-11 06:46Z, handoffs/20261111_b12f_activity_imbalance.md): at the top makers' takes Binance is 2x as busy and its top-of-book leans their way (+0.17 vs +0.04) with the price still; Predict thin-side fills lose 0.58 c/sh more at the same guard value; we fill at median reach 0.93 on heavy levels (field 0.20)"
   pressure_model_b13a: "EMPH IMPROVES (B13a, 2026-11-11 07:08Z, handoffs/20261111_b13a_pressure_model.md): + 13 engineered pressure features raise out-of-sample R2 of the 1 s Predict move from ~0.18 to ~0.21 on 9 of 9 days (blocked CV); not yet a guard (needs a value mapping and >= 5 untouched days)"
+  top_behaviour_b13b: "TAKES PREDICTED, NO PULLING (B13b, 2026-11-11 07:10Z): the pressure model separates the top makers' takes (AUC 0.77); their share of fills and their stay rate do not fall under adverse pressure"
+  churn_b13c: "CHURN-HEAVY (B13c, 2026-11-11 07:12Z, handoffs/20261111_b13bc_behaviour_queue.md): live at-best orders cancelled a median 23-38 ms after going live, 82.5% re-placed at the same price, 87% with the research guard ON; always ~380 sh back in the queue; issue for the live session and the strategy"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"

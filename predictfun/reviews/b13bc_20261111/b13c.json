@@ -1,0 +1,94 @@
+{
+ "as_of_note": "point estimates, one consumed partial day (220 windows of 2026-11-08)",
+ "controls": {
+  "B12b_controls": true,
+  "Q1_would_fill": true,
+  "Q2_queue_at": true,
+  "Q3_replace": true,
+  "Q4_rules": true,
+  "B12b_controls_detail": {
+   "B12_controls": true,
+   "A1_buckets_levels": true,
+   "A2_decomposition": true,
+   "A3_null": true,
+   "B1_flips": true,
+   "B2_exits": true,
+   "C1_late_fills": true,
+   "M1_matching": true,
+   "NA_and_R45": true,
+   "B12_controls_detail": {
+    "C1_level_cases": true,
+    "C2_guard_lookup": true,
+    "C3_sweep_flag": true,
+    "C4_decomposition": true,
+    "C5_null": true,
+    "C6_refusals": true,
+    "C7_nan_is_na": true
+   }
+  }
+ },
+ "K0": true,
+ "Kcheck": {
+  "live_filled": 849.867319,
+  "ok": true
+ },
+ "pulls_at_best": 12240,
+ "life_ms_p10_50_90": [
+  1.3283447265625,
+  23.1695556640625,
+  230.99956054687524
+ ],
+ "life_share_le_1s": 0.9928921568627451,
+ "life_share_le_2s": 0.9986928104575163,
+ "by_guard": {
+  "ON": {
+   "pulls": 10606,
+   "replaced_share": 0.8391476522722987,
+   "flow_legs": 37814,
+   "flow_sh": 428979.63028233754,
+   "flow_net1": 0.44589163717558217,
+   "would_be_sh": 1630.9420791616456,
+   "would_be_net1": 0.041528587229682445,
+   "q_ahead_act_p50": 383.76
+  },
+  "OFF": {
+   "pulls": 1627,
+   "replaced_share": 0.7314074984634297,
+   "flow_legs": 5999,
+   "flow_sh": 67220.55766093844,
+   "flow_net1": 0.30793929837477885,
+   "would_be_sh": 267.24945409764206,
+   "would_be_net1": -0.984944527559201,
+   "q_ahead_act_p50": 357.9568627450981
+  },
+  "n/a": {
+   "pulls": 7,
+   "replaced_share": 1.0,
+   "flow_legs": 10,
+   "flow_sh": 112.90465767857143,
+   "flow_net1": 1.0845640149576077,
+   "would_be_sh": 0.0,
+   "would_be_net1": NaN,
+   "q_ahead_act_p50": 175.91
+  }
+ },
+ "replace": {
+  "share": 0.8249183006535947,
+  "n_with_queue": 10097,
+  "q_lost_p25_50_75": [
+   -2.0,
+   0.0,
+   20.0
+  ],
+  "q_ahead_act_p50_all": 380.73
+ },
+ "readings": {
+  "R110": "CHURN-HEAVY",
+  "R111": "QUEUE-KEPT",
+  "R112": [
+   "PULLS-COST"
+  ],
+  "R113": "STAYING-PAYS",
+  "R114": "GUARD-PULLS-GOOD-ORDERS"
+ }
+}
