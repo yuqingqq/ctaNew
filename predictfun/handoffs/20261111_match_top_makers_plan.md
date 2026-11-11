@@ -67,3 +67,29 @@ comparisons; replay fill rule not validated). Every step below is a declared tes
 - Falsifier: B16 refit on labels shuffled within each day must not beat the baseline.
 - Limits: consumed days only, so exploratory; the label inherits the unvalidated fill rule; decisions are only at the
   baseline's decision times (a faster reaction between them is invisible here, and the full replay checks it).
+
+## Issues behind our queue position (2026-11-11, USER: "we note down these issues")
+
+The churn fix (soft pull + incremental size, pmmmrust main 0c3b115) stops self-inflicted re-entries at the back. It does not move
+us forward: every research replay still enters at the back (queue ahead = the size shown when our order goes live).
+
+| Group | # | Issue | Evidence | Status |
+|---|---|---|---|---|
+| A. Entry | 1 | We join existing levels, behind everything already resting | Queue ahead when live: p50 ~360-400 sh at the v3 join (strategy review 6.3 / 6.5) | Inherent to joining the best |
+| A. Entry | 2 | Lateness: ~100 ms from a book change to our order live (53 ms to see it + 44 ms to go live) | A new level grows from 52 to ~155 sh in 100 ms (228 in 200 ms), so we join behind 150+ even reacting at once (6.5) | Partly the venue's feed delay; not measured live |
+| A. Entry | 3 | Entry only when the guard opens (top 10% of moments), after the queue formed | Born levels: 423 sh ahead at PM90 vs 229 unguarded (6.5) | By design |
+| A. Entry | 4 | The MICRO rule quotes the heavy side, the longest queue | 72% of our fills on the heavy side at median reach 0.93 (B12e / B12f) | By design |
+| B. Holding | 5 | Churn: cancel and re-place on guard flicker and size flips | Cancelled a median 23-38 ms after going live, 82.5% re-placed at the same price (B13c / B13d) | Fixed in code; not live; not in the research engine |
+| B. Holding | 6 | Absent most of the time; each return after a guard pull joins at the back | We rest ~11% of side-time (6.3) | By design |
+| B. Holding | 7 | Re-pricing: when the best moves we cancel and re-place at the new best, behind its resting queue | Every move of the best resets our place | By design |
+| B. Holding | 8 | We do not stay after a fill; the top makers do | Re-hit after an absorbed fill: top 5 59.5% vs others 38.4% (B12d) | Not addressed |
+| C. Position | 9 | Only one rung (1 tick behind), pulled by the guard; no deeper layers | 41% of the top 5's volume fills behind the best (+0.24 at 1 tick, +1.00 c/sh at 2+; B12) | Rung test MIXED (6.5); deeper untested |
+| D. Speed | 10 | We see trades and book changes late, outside the window where the top makers earn | Their edge is earned within 250 ms of the report (B12c) | Same latency as #2 |
+| D. Speed | 11 | Slow venue cancels late in the first minute | 11 fills inside cancels of 0.5-5 s = our 11-08 first-minute loss (B12b) | Live-session issue |
+| E. Measurement | 12 | The fill clock (match vs report time) is unknown | It flips the sign of every layer arm (+0.28 at 50 ms, -3.15 at 250 ms; 6.5) | Needs B1 (live fills with A4b) |
+| E. Measurement | 13 | The replay's queue / fill model always enters at the shown size and is too generous | Replay fills ~5x the tape's value (B12g); misses pressure losses (B18) | Known limit |
+
+Even at zero latency, 1 + 3 + 6 put us behind everyone already resting. Latency (2) matters at new levels, about half the at-best
+volume. Next measurement (proposed): the order-level replay with one change at a time - zero latency, always present without guard
+pulls, no re-pricing, a rung resting continuously 1 and 2 ticks behind - reporting the queue ahead at fill and the value at all
+three trade-time shifts.
