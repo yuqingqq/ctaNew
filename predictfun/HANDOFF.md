@@ -1,5 +1,22 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 14:22Z — Independent maker/model comparison review COMPLETE; B16c continues separately
+
+- Reviewed frozen B12–B18 source/artifacts through ea2f107a; all8 SHA256SUMS manifests pass. Report:
+  handoffs/20261111_maker_comparison_review.md. Branch research/predict-maker-comparison-20261111.
+- Structural gap: B16 still labels a generic5-share order at the back on every grid row, without actual age/queue progress,
+  outstanding orders or inventory. It does not test earned queue continuation value. Prioritize action-specific keep vs
+  cancel/repost value with effective cancellation latency; post and keep have different alternatives.
+- B16 qb's +1s improvement/longer-horizon loss does not isolate extra fills or prove horizon causality; similar absolute
+  terminal inventory cannot rule out signed/path inventory effects. Top-makers' target/cancels are not observable.
+- Qualify B18: filled-share pressure fractions are not exposure/cancel rates; public-vs-simulated populations do not alone
+  identify fill-model bias. Burst uses a log/geometric baseline (not2x arithmetic mean); thinning lacks same-price identity
+  and includes executions; NaN inputs become false flags. Historical impacts not measured; superseding definitions needed.
+- B16c design5deb1103 read, outcomes not read: R190's qlm remains rule-M simulated own fills, so its tape input is not an
+  independent fill-model validation. Combined horizons do not resolve the missing order state. B1 remains open.
+- No new raw-data/model/replay pass, protected reads or strategy/live changes. Optional artifact/synthetic audit helper
+  b6a44a72 is prepared but NOT RUN: run_light refused while B16c owns the single slot. Do not interrupt B16c.
+
 ## 2026-11-11 14:09Z (session ce68ebe0) — B18 DONE: top makers do not avoid pressure moments (63% of their fills, base 48%) but break even there; our replay is as exposed (R180 SIMILAR, qb the same) and the replay cannot value those fills
 
 - Done (USER: other days; do we pull when top makers do in imbalance / flow bursts, or still take the bad fills):
