@@ -1,13 +1,14 @@
 """Positive controls and known-bad refusals for queue continuation research."""
 import copy
 import unittest
+from unittest.mock import patch
 import numpy as np
 import pandas as pd
 from predictfun.research.pf_model_spec import SETS
 from predictfun.research.pf_queue_model_sim import Tape, simulate, features, marks, reservation, MARKET, QUEUE
 from predictfun.research.pf_queue_model_spec import CONFIGS
 from predictfun.research.pf_queue_model_data import admit, load_day
-from predictfun.research.pf_queue_model_fit import fit, choices, rejoin_allowed, null_test
+from predictfun.research.pf_queue_model_fit import fit, choices, rejoin_allowed, null_test, portfolio
 from predictfun.research.pf_queue_model_verify import verify_window,verify_selection
 
 
@@ -139,6 +140,28 @@ class QueueControls(unittest.TestCase):
         with self.assertRaises(ValueError):verify_window({**r,'cash_c':-244},f,50.,1.)
         bad=f.copy();bad.loc[0,'price']=48
         with self.assertRaises(ValueError):verify_selection(bad,f)
+
+    def test_portfolio_integrates_both_sides_and_cancel(self):
+        rows=[];fills=[]
+        for side,q,price,t,age in [(0,5.,49.,5500.,250.),(1,3.,51.,6500.,1000.)]:
+            r=dict(id=str(side),config='L50',day='20261026',mid=1,episode=5,side=side,decision=5040.+age,
+                   order_age_ms=age,status='eligible',decision_status='eligible',stop_mid=50.,outcome=1.)
+            for action in ('keep','cancel','rejoin'):
+                r[action+'_q']=q if action=='keep' else 0.
+                r[action+'_orders']=1
+                for key in ('spread','mo1','mo5','mo60'):r[action+'_'+key]=q if action=='keep' else 0.
+                r[action+'_through_q']=0.
+                for a in (250,1000,2000):r[f'{action}_reserved_{a}']=5.
+            rows.append(r)
+            fills.append(dict(id=str(side),action='keep',fill_index=0,t=t,q=q,price=price,side=side,
+                              through=False,generation=0,anchor=t))
+        frame=pd.DataFrame(rows);ff=pd.DataFrame(fills)
+        with patch('predictfun.research.pf_queue_model_fit.STARTS',[5]):
+            result,chosen=portfolio(frame,ff,'always_keep')
+            row=result.iloc[0];self.assertEqual(row.stop_value_c,8.);self.assertEqual(row.inventory_square_s,959.)
+            verify_window(row,chosen,50.,1.)
+            canceled,empty=portfolio(frame,ff,'always_cancel')
+            self.assertEqual(canceled.iloc[0].stop_value_c,0.);self.assertTrue(empty.empty)
 
 
 if __name__=='__main__':unittest.main()
