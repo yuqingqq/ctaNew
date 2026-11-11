@@ -4,7 +4,7 @@ import json
 import numpy as np
 import pandas as pd
 from .pf_queue_model_spec import ROOT, OUT, DAYS, STARTS, AGES, CONFIGS, ACTIONS, SIZE, RISK_C, check, sha, write
-from .pf_queue_model_sim import Tape, simulate, features, marks
+from .pf_queue_model_sim import Tape, simulate, features, marks, reservation
 from .pf_model_spec import SETS
 from .pf_io import mem_check
 
@@ -112,6 +112,7 @@ def build(day):
                     if any(not np.isfinite(v['value']) for v in metric.values()):row['status']='missing_common_mark'
                     for action,stats in metric.items():
                         row.update({action+'_'+k:v for k,v in stats.items()})
+                        for a in AGES:row[f'{action}_reserved_{int(a)}']=reservation(potentials[action],send+c['place']+a,c)
                         for fill_index,(t,q,through,generation,anchor) in enumerate(potentials[action]['fills']):
                             fills.append(dict(id=rid,action=action,fill_index=fill_index,t=t,q=q,through=through,generation=generation,anchor=anchor,price=p,side=side))
                     pair.append((row,potentials,metric))
@@ -126,7 +127,7 @@ def build(day):
                         other_known=sum(q*(1 if 1-side==0 else -1) for t,q,_,_,_ in other[1]['keep']['fills'] if t+c['notice']<=row['decision']) if admitted[1-side] else 0.
                         own_known=sum(q*s for t,q,_,_,_ in potentials['keep']['fills'] if t+c['notice']<=row['decision'])
                         row['inventory']=initial_net+own_known+other_known
-                        row['other_reserved']=max(0.,SIZE-abs(other_known)) if admitted[1-side] else 0.
+                        row['other_reserved']=reservation(other[1]['keep'],row['decision'],c) if admitted[1-side] else 0.
                         for a,m in metric.items():
                             row[a+'_utility']=m['value']-RISK_C*((initial_net+other_end+m['net'])**2-(initial_net+other_end)**2)
                     counts[row['status']]+=1;rows.append(row)

@@ -4,7 +4,7 @@ import unittest
 import numpy as np
 import pandas as pd
 from predictfun.research.pf_model_spec import SETS
-from predictfun.research.pf_queue_model_sim import Tape, simulate, features, marks, MARKET, QUEUE
+from predictfun.research.pf_queue_model_sim import Tape, simulate, features, marks, reservation, MARKET, QUEUE
 from predictfun.research.pf_queue_model_spec import CONFIGS
 from predictfun.research.pf_queue_model_data import admit, load_day
 from predictfun.research.pf_queue_model_fit import fit, choices, rejoin_allowed, null_test
@@ -50,6 +50,9 @@ class QueueControls(unittest.TestCase):
         self.assertEqual(self.qty(self.sim(t,'cancel')),2)
         self.assertEqual(self.qty(self.sim(t)),5)
         self.assertEqual(self.sim(t,'cancel')['orders'][0]['remove'],1062)
+        r=self.sim(t,'cancel')
+        self.assertEqual(reservation(r,1083,C),5)  # canceled, but the fill notice may still be pending
+        self.assertEqual(reservation(r,1162,C),0)
 
     def test_notice_and_rejoin_pending_reservation(self):
         t=tape([(1000,0,49,12),(1500,0,49,20)])

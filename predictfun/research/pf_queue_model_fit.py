@@ -70,7 +70,7 @@ def portfolio(frame,fillframe,arm,models=None,columns=None):
                         if not pair['active'][s]:continue
                         notified=sum(f['q'] for f in fs(other,pair['chosen'][s]) if f['t']+c['notice']<=now)
                         known+=(1 if s==0 else -1)*notified
-                        if s!=side:other_reserved=max(0.,SIZE-notified)
+                        if s!=side:other_reserved=other[f'{ACTIONS[pair["chosen"][s]]}_reserved_{int(age)}']
                     q['inventory']=known;q['other_reserved']=other_reserved
                     queries.append(q);refs.append((pair,side))
             if not queries:continue
@@ -185,6 +185,7 @@ def run():
             print('EVAL',day,config,'train',len(tr),'test',len(neutral),flush=True)
     p=pd.concat(predictions,ignore_index=True);r=pd.concat(outputs,ignore_index=True)
     p.to_parquet(OUT/'predictions.parquet',index=False);r.to_parquet(OUT/'portfolio_windows.parquet',index=False)
+    complete_days={b['day'] for b in builds if not b['missing_registry_windows']}
     null=null_test(p);summary=[];deltas=[];neutral_summary=[]
     for config,g in p.groupby('config',sort=False):
         y=g[['keep_utility','cancel_utility','rejoin_utility']].to_numpy()
@@ -213,7 +214,8 @@ def run():
                 x=(paired[metric+'_q']-paired[metric+'_b']).groupby(paired.day).sum()
                 scale=100 if metric.endswith('_c') else 1
                 deltas.append(dict(config=config,ref=ref,metric=metric,sum=float(x.sum()/scale),days_positive=int((x>0).sum()),
-                                   per_day={str(d):float(v/scale) for d,v in x.items()},interval=bootstrap_day(x/scale)))
+                                   per_day={str(d):float(v/scale) for d,v in x.items()},
+                                   interval=bootstrap_day(x[x.index.isin(complete_days)]/scale)))
     report=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),declaration=declaration,builds=builds,folds=folds,
         summary=summary,deltas=deltas,neutral_summary=neutral_summary,feature_importance=importance,
         null=null,prediction_rows=len(p),generation_rows=len(a),
