@@ -1,0 +1,9 @@
+{
+  "as_of": "2026-11-11T20:42:14.318103+00:00",
+  "status": "NEXT_STAGE_HELD_CURRENT_REPLAY_CONTINUES",
+  "driver_pid": 199624,
+  "child_pid": 941372,
+  "driver_session": 45627,
+  "reason": "After the current Oct26 eval child finishes and passes checks, run the predeclared neutral-action diagnostic once in the single numeric slot, then SIGCONT driver. Do not retire driver or overwrite its logs.",
+  "source_commit": "d50f8323"
+}
