@@ -1,5 +1,5 @@
 # Quote-default / learned-pull research loop
-As of 2026-11-11T22:42:12.899952+00:00. **running: eval_20261101**. v4: observed empty levels are known, retaining all data and inventory controls.
+As of 2026-11-11T23:22:19.557825+00:00. **interrupted: driver**. Driver interrupted; completed stages retained.
 
 Completed prior test: own-order/calm study d475eccb, canonical comparison_v4.json; no promoted variant.
 Current branch: research/predict-default-pull-20261111. One numeric process; consumed dates only; no live changes.
@@ -24,3 +24,4 @@ Plan: controls →8-window parity smoke →9 neutral build days →6 expanding m
 | eval_20261027 | complete | 2026-11-11T22:01:04.820222+00:00 | Passed; logs/eval_20261027.log plus artifact/feature checks retained. |
 | eval_20261031 | complete | 2026-11-11T22:42:12.791386+00:00 | Passed; logs/eval_20261031.log plus artifact/feature checks retained. |
 | eval_20261101 | running | 2026-11-11T22:42:12.899952+00:00 | v4: observed empty levels are known, retaining all data and inventory controls. |
+| driver | interrupted | 2026-11-11T23:22:19.557825+00:00 | Driver interrupted; completed stages retained. |
