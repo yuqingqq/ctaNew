@@ -1,5 +1,17 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 15:24Z — Queue continuation model prepared; awaiting B16c/B19a compute slot
+
+- USER requested a reasonable order-state model and an actual test. Isolated branch
+  research/predict-queue-policy-20261111, worktree /tmp/cta-queue-policy-20261111.
+- Prepared fixed-entry5-share KEEP/CANCEL/sequential REJOIN experiment, with causal queue estimates,
+  cancel/notice latency, chronological market-only vs queue-feature models, matched-action500-draw null,
+  sequential inventory portfolios, controls and independent saved-fill reconciliation. Not run yet.
+- Uses only the9 consumed Oct23–27/31 and Nov1–3 dates. Full pipeline/declaration will be committed
+  before outcomes. No frozen-v3/live edits. Fixed-entry continuation study, not full strategy parity.
+- B16c and its already queued B19a own the single light slot first. This study runs after both;
+  please avoid starting another numeric job in that interval. Every numeric phase uses run_light.sh.
+
 ## 2026-11-11 14:09Z (session ce68ebe0) — B18 DONE: top makers do not avoid pressure moments (63% of their fills, base 48%) but break even there; our replay is as exposed (R180 SIMILAR, qb the same) and the replay cannot value those fills
 
 - Done (USER: other days; do we pull when top makers do in imbalance / flow bursts, or still take the bad fills):

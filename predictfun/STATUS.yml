@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 15:24Z: Independent queue continuation model prepared on research/predict-queue-policy-20261111;
+  fixed-entry KEEP/CANCEL/REJOIN, market-only vs queue features. Not run; queued after B16c and B19a.
   2026-11-11 14:09Z (session ce68ebe0): B18 DONE (c28f99d5; handoffs/20261111_b18_pressure_fills.md): pressure moments (thin side,
   thinning, Binance burst / book shift against us) = 48% of live moments. Top 5 fills: 63% in them at +0.04 / -0.15 c/sh vs +0.76 /
   +0.63 outside (rest -0.75 / -0.95 inside). Our replay as exposed (REF 61%, qb 63%; R180 SIMILAR, R181 SAME), 50% of our fills while
