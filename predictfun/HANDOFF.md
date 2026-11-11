@@ -1,5 +1,18 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 12:07Z (session ce68ebe0) — Plan to match the top makers written; B16 (second-layer decision model) starting
+
+- USER: "we want to match the top makers, at least we can pull when they pull to avoid adverse fills like they do and
+  reduce redundant pulls to get good fills"; confirmed that v3 re-quotes only on events (no periodic refresh). Plan:
+  handoffs/20261111_match_top_makers_plan.md (steps 1-6: live run with the churn fix; B16; B17 G4 hysteresis; B1 on own
+  fills; freeze + forward on >= 5 untouched days; port behind a flag).
+- B16 design (to be declared in its script before the first run): at v3's own decision times, a second layer scores keep /
+  post against pull for our order at its queue place (no credit for cancels ahead), inputs = old v + 32 + 13 pressure +
+  order / level state incl. thinning; flip score against the baseline's decisions, benchmarks current guard and B14,
+  falsifier on shuffled labels; then the full replay.
+- Key number for "pull when they pull": fills after the level thinned >= 20% - ours 21.4% of fills at -5.83 c/sh, top 5
+  17.2% at -0.31 (B12d); their cancels are anonymous, so thinning is the observable proxy.
+
 ## 2026-11-11 11:31Z (session ce68ebe0) — B14 / B15 DONE: the pressure guard does not improve v3's quote decision (R120 NO-CHANGE, R121 / R122 MIXED); the live soft pull without a cap cuts orders like the 100 ms buffer at about the same value (R130 / R131 MIXED, R132 n/a)
 
 - Done (USER "run the prediction guard"; "We are testing the soft pull and new model right?"): B14

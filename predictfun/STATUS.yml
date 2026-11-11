@@ -6,6 +6,9 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 12:07Z (session ce68ebe0): PLAN to match the top makers (handoffs/20261111_match_top_makers_plan.md): live run
+  with the churn fix (USER / Tokyo), B16 second-layer decision model (starting), B17 G4 hysteresis, B1 on own fills, freeze
+  + forward on >= 5 untouched days, port behind a flag. Thinning >= 20% before a fill = the observable "they pull" proxy.
   2026-11-11 11:31Z (session ce68ebe0): B14 / B15 DONE (scripts 0851282b / 19691045 committed before their runs; report
   handoffs/20261111_b14_b15_guard_softpull.md). B14, the pressure guard as v3's guard (9 consumed days, J / X; C1 exact
   rebuild of the live guard, C6 replays reproduced): R120 NO-CHANGE (+0.0002 c/sh [-0.0057, +0.0061]), R121 MIXED (settle
