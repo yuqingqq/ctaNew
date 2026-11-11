@@ -1,0 +1,17 @@
+{
+  "as_of": "2026-11-11T19:38:48.605211+00:00",
+  "status": "PRIOR_RESULT_PRESERVED",
+  "artifacts": [
+    {
+      "path": "predictfun/reviews/own_orders_calm_20261111/comparison_v4.json",
+      "sha256": "0c4fa08e0b6e7492f4d64efd505e678ccb2d616bcf05812a3cd9103e1804d522",
+      "preserved_from": "d475eccb"
+    },
+    {
+      "path": "predictfun/handoffs/20261111_own_orders_calm_review.md",
+      "sha256": "5104ba3f575ab9fafe9d3301ce0743a0a465248efb83ea88fd6ddedbd838e861",
+      "preserved_from": "d475eccb"
+    }
+  ],
+  "method": "Direct byte equality against git object at completed prior commit; this is not evidence that the new experiment is complete."
+}
