@@ -1,0 +1,55 @@
+{
+  "as_of": "2026-11-11T18:35:55.354029+00:00",
+  "status": "PASS",
+  "day": "20261023",
+  "windows": 288,
+  "arms": 2,
+  "matches": [
+    {
+      "path": "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+      "old_sha": "bf155f98b9ea341d5402687f3de7fb6a50ae21bd7a2c3cf7ff77aa2e71f75e71",
+      "new_sha": "bf155f98b9ea341d5402687f3de7fb6a50ae21bd7a2c3cf7ff77aa2e71f75e71"
+    },
+    {
+      "path": "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+      "old_sha": "c58342d7a902d0fa60d971ab382fcd8de6acb150c8e75bd05b0c118a9d27f331",
+      "new_sha": "c58342d7a902d0fa60d971ab382fcd8de6acb150c8e75bd05b0c118a9d27f331"
+    },
+    {
+      "path": "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240__mid_szAM-5-25-95.parquet",
+      "old_sha": "e4926eaf0d08db3f28c513f22e1d144aaf7ec73ea77d5d877f906d81a4b3eeb2",
+      "new_sha": "e4926eaf0d08db3f28c513f22e1d144aaf7ec73ea77d5d877f906d81a4b3eeb2"
+    },
+    {
+      "path": "generations/reference.parquet",
+      "old_sha": "97bb9a489f7e8ab5709cbae075f2ab62741fbd23752050cd287bc07c29517270",
+      "new_sha": "97bb9a489f7e8ab5709cbae075f2ab62741fbd23752050cd287bc07c29517270"
+    },
+    {
+      "path": "win/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-5-25-95.parquet",
+      "old_sha": "382b44b3c1595fbdfad11f0b1d5cdebf2a0b1941da7647880af84d76289691e4",
+      "new_sha": "382b44b3c1595fbdfad11f0b1d5cdebf2a0b1941da7647880af84d76289691e4"
+    },
+    {
+      "path": "fills/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-5-25-95.parquet",
+      "old_sha": "b84bdc746cd2d1c0d2db6aaad04f848c0d7af3024f410b3ce6f5b9d730fd3cb7",
+      "new_sha": "b84bdc746cd2d1c0d2db6aaad04f848c0d7af3024f410b3ce6f5b9d730fd3cb7"
+    },
+    {
+      "path": "requests/MICRO_G4_G2_G6_G5_G3_G1_PM90_GS_LD2_CAP10_XNA_XMIN1_XV_RO60_S240_DDEFAULT__mid_szAM-5-25-95.parquet",
+      "old_sha": "20269e1cf7120cdccd07f428bec46f8d28863fb6631014a98f10c9e9fb662d70",
+      "new_sha": "20269e1cf7120cdccd07f428bec46f8d28863fb6631014a98f10c9e9fb662d70"
+    },
+    {
+      "path": "generations/default.parquet",
+      "old_sha": "4c92d560e8b354516ac89f742037d0007699316b752c4d1dab424ed7f8928283",
+      "new_sha": "4c92d560e8b354516ac89f742037d0007699316b752c4d1dab424ed7f8928283"
+    }
+  ],
+  "old_independent_sha": "941dbe99491d34ee7fc9b6e4a0ed9628e81b2f9ff48c6f784ff1d7b0f4cf01b9",
+  "new_independent_sha": "941dbe99491d34ee7fc9b6e4a0ed9628e81b2f9ff48c6f784ff1d7b0f4cf01b9",
+  "old_checks_sha": "13e98586914f94923d854bd9a92bb17a7029768ec8ce7767e3619f52b182de2b",
+  "new_checks_sha": "349bb4725d9a928624b65641531f4bb2bea80cc2718c7e06423af9dd47621419",
+  "declaration_sha": "c60807eb98050fb7bdf1ea6a24d8c6ae5008cb7196e26a1f98e555fa01e19fa9",
+  "comparator": "Exact DataFrame identities, all columns and rows; changed-value artifact is refused."
+}
