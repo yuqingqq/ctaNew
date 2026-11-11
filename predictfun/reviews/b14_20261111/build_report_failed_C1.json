@@ -1,0 +1,25 @@
+{
+ "grid_rows": 1071151,
+ "grid_rows_without_any_engineered_value": 0,
+ "thresholds": {},
+ "controls": {
+  "C1_parity": {
+   "20261103": {
+    "equal": false,
+    "falsifier_differs": true,
+    "thresholds": {
+     "bid": -0.08556482739687449,
+     "ask": -0.08406990321658979
+    }
+   },
+   "20261023": {
+    "equal": false,
+    "falsifier_differs": true,
+    "thresholds": {
+     "bid": -0.08345692270351414,
+     "ask": -0.08152891431871795
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,81 @@
+{
+ "controls": {
+  "C2_lines": {
+   "rule_90": [
+    0.0492,
+    0.0623,
+    0.0789,
+    0.0917
+   ],
+   "rule_95": [
+    0.0698,
+    0.0841,
+    0.1009,
+    0.1094
+   ],
+   "frozen_90": [
+    0.0492,
+    0.0623,
+    0.0789,
+    0.0917
+   ],
+   "frozen_95": [
+    0.0698,
+    0.0841,
+    0.1009,
+    0.1094
+   ],
+   "equal": true
+  },
+  "C3_mapping": {
+   "20261023": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261024": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261025": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261026": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261027": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261031": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261101": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261102": {
+    "ok": true,
+    "falsifier_breaks": true
+   },
+   "20261103": {
+    "ok": true,
+    "falsifier_breaks": true
+   }
+  }
+ },
+ "emph_q90": [
+  0.04498392716050148,
+  0.056849367916584015,
+  0.0698399767279625,
+  0.0785539299249649
+ ],
+ "emph_q95": [
+  0.0638502985239029,
+  0.07673197984695435,
+  0.08962848037481308,
+  0.09377152472734451
+ ]
+}
