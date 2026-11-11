@@ -6,6 +6,10 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 15:50Z: Queue continuation model TESTED; not promoted. Versus age-matched market baseline,
+  L50 +59.13USD marked on1,376 common windows but inventory-square exposure +0.69%; slower timing -11.50USD.
+  Six consumed test days/1,728 windows; fixed-entry arms all lose.15 controls and superseding accounting
+  verification pass. Report handoffs/20261111_queue_policy_results.md; next use actual v3 admissions.
   2026-11-11 15:38Z: Queue study all9 builders done; chronological portfolios running. Age-matched
   baseline a7842678 queued in same slot before inspecting PnL; prevents order lifetime confounding.
   2026-11-11 15:28Z: Queue continuation experiment RUNNING after B16c/B19a;15 controls PASS.

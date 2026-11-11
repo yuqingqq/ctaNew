@@ -1,5 +1,23 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 15:50Z — Queue continuation model TESTED; objective not met, not promoted
+
+- Branch research/predict-queue-policy-20261111. Report handoffs/20261111_queue_policy_results.md.
+  Fixed5-share entries; learn KEEP/CANCEL/REJOIN with current market/inventory and causal queue estimates.
+  Nine consumed dates, expanding training, six test days/1,728 windows per scenario; age-matched baseline added
+  before inspecting aggregate PnL. Full v3 integration remains untested; frozen/live code unchanged.
+- Queue vs market+age, primary L50: +$59.13 marked on1,376 common-mark windows; +$139.35 full settlement,
+  inventory-square time +0.69%. M50: +$23.21 marked on1,372 windows, exposure -0.41%; slow timing:
+  -$11.50 marked on1,376 windows, exposure -1.57%. Primary action-matched null p=0.236 (500 draws/3 scenarios).
+- All fixed-entry arms lose: primary full settlement queue -$1,047.29, market+age -$1,186.64,
+  scheduled-cancel -$862.99. Keep existing selective admission in the next experiment; use actual v3 neutral
+  generations and age-matched controls. A queue-only continuation layer has not solved the objective.
+-15 controls passed. Independent verification exposed a flat-position float residue; accounting_v2 supersedes
+  the original receipt without changing models/labels/decisions/fills. Reconciled31,104 policy-window results
+  and264,795 fill records, plus5,184 age-control windows. Canonical receipts reviews/queue_accounting_v2_20261111/
+  and reviews/queue_age_control_20261111/; comparison.json explicitly matches available marks and records exclusions.
+- Single light slot released after report; peak job RSS1,394MiB. Protected days unread; rebates excluded.
+
 ## 2026-11-11 15:38Z — Queue study: age-matched baseline queued next in the same light slot
 
 - All9 day builders completed; chronological portfolio tests running. Before reading PnL, committed
