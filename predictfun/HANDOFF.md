@@ -1,5 +1,19 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 07:10Z (session ce68ebe0) — B13a DONE: a guard model with 13 engineered pressure features beats the current one on all 9 out-of-sample days (R2 0.18 -> 0.21)
+
+- Done: B13a (USER: train on some days, validate on others, emphasise imbalance and flow). research/pf_b13a_pressure_model.py
+  committed and pushed before its run (4b98b043; output 07:08Z). Report handoffs/20261111_b13a_pressure_model.md; output and
+  six fold models in data/predict_fun/research/b13_20261111/; copies reviews/b13a_20261111/.
+- Design: LightGBM y1000 with the pinned step-5 settings; BASE = the current 32 features, EMPH = + 13 engineered pressure
+  features (imbalance changes, thin flag, best-level depletion, Binance activity, interactions); blocked 3-fold CV by day
+  over 10-23..10-27, 10-31, 11-01..11-03 (no protected or later day; 11-08 not used).
+- Readings: R90 IMPROVES (dR2 +0.027 [+0.023, +0.032], 9/9 days); R91 IMPROVES-UNDER-PRESSURE (+0.025, 9/9); R92
+  NOT-ABSORBED (the error's link to imbalance falls by about a quarter). Top new feature: the 250 ms change of Binance's
+  best bid / ask imbalance (16.7% of gain).
+- Next: B13b (do these features explain the top makers' behaviour, 11-08) and B13c (do our pulls give up queue place and
+  good orders); then a guard mapping for EMPH and a test on untouched days (>= 5) before any live use.
+
 ## 2026-11-11 06:48Z (session ce68ebe0) — B12f DONE: at the top makers' takes Binance is twice as busy and its top of book leans their way (price still); Predict imbalance adds 0.58 c/sh beyond our guard value; we sit at the very back of heavy levels
 
 - Done: B12f (USER "Yea check Binance activity during those times, and imbalance etc"). research/pf_b12f_activity_imbalance.py
