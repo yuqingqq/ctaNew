@@ -1718,11 +1718,11 @@ flags:
 
 # DEFAULT_PULL_LOOP
 default_pull_loop:
-  as_of: "2026-11-11T22:42:12.899952+00:00"
-  state: "running"
-  stage: "eval_20261101"
+  as_of: "2026-11-11T23:22:19.557825+00:00"
+  state: "interrupted"
+  stage: "driver"
   completed_stages: 16
-  detail: "v4: observed empty levels are known, retaining all data and inventory controls."
+  detail: "Driver interrupted; completed stages retained."
   progress: handoffs/20261111_default_pull_progress.md
   branch: research/predict-default-pull-20261111
 # /DEFAULT_PULL_LOOP
