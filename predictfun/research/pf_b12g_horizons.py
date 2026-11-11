@@ -16,7 +16,7 @@ Readings DECLARED BEFORE THE FIRST RUN (9 replay days, 0-240 s, all depths, pool
  R171 ranks 6-20: the same rule.
 Control (any failure -> no table): K12 on 11-08, first minute, all depths, this loader reproduces B12's published net at 1 s and 5 s
 for top 5 / ranks 6-20 / rest / ours (+0.36 / +0.27, +0.19 / +0.09, -0.33 / -0.46, -0.44 / -0.26 c/sh) within 0.005, and our id's
-first-minute shares B12's 961 sh/day within 1 sh/day; the reading rules on synthetic inputs.
+first-minute shares B12's 961 sh/day within 1 sh/day, and its top 5 are B12's top5_ids; the reading rules on synthetic inputs.
 Limits: descriptive; whole-market fills, not an order we can place (pro rata is not an order); settlement values carry the binary
 outcome's variance (one window's outcome moves every fill in it together), so per-day settlement numbers are noisy; the 9 days were
 read by earlier research.
@@ -142,7 +142,7 @@ def main():
     out = sys.argv[1]; os.makedirs(out, exist_ok=True)
     if not rules_ok():
         sys.exit('REFUSED: reading rules on synthetic inputs')
-    own = json.load(open(B12J))['K']['K2']['own_id']
+    b12 = json.load(open(B12J)); own = b12['own_id']
     sc = json.load(open(f'{RP}/scope.json')); W0 = [int(w['market']) for w in sc['windows']]; days08 = len(W0) / 288.0
     L8, vol8 = load(f'{RP}/research/step1/20261108', windows=set(W0)); g8 = groups(L8, vol8, own)
     f60 = L8.rel.values < 60
@@ -150,8 +150,9 @@ def main():
     k12 = {n: (round(t8[n]['v1'], 2), round(t8[n]['v5'], 2)) for n in B12_PUB if n in t8}
     ok = all(n in t8 and abs(t8[n]['v1'] - B12_PUB[n][0]) <= 0.005 + 1e-9 and abs(t8[n]['v5'] - B12_PUB[n][1]) <= 0.005 + 1e-9 for n in B12_PUB)
     ours_sh_day = t8.get('ours', {}).get('shares', 0.0) / days08
-    ok = ok and abs(ours_sh_day - B12_OURS_SH_DAY) <= 1.0
-    ctl = dict(K12=k12, published=B12_PUB, ours_sh_day=ours_sh_day, ok=bool(ok))
+    top5 = sorted(set(L8.signer.values[g8 == 'top 5'])); top5_same = top5 == sorted(b12['top5_ids'])
+    ok = ok and abs(ours_sh_day - B12_OURS_SH_DAY) <= 1.0 and top5_same
+    ctl = dict(K12=k12, published=B12_PUB, ours_sh_day=ours_sh_day, top5_same_as_b12=bool(top5_same), ok=bool(ok))
     print('control', ctl, flush=True)
     if not ok:
         json.dump(dict(control=ctl), open(f'{out}/b12g.json', 'w'), indent=1, default=float); sys.exit('CONTROL FAILED -> no table')
