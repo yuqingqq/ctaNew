@@ -1,5 +1,18 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 16:08Z (session ce68ebe0) — B20 DONE: pre-positioned / held orders do NOT solve the queue position (R210 NOT-IMPROVED, all guarded arms)
+
+- Done (USER "post in advance ... until our guard says to withdraw"; "check if we solved the position issue"):
+  research/pf_b20_hold_layers.py (2f6283f6). Report handoffs/20261111_b20_hold_layers.md; copies reviews/b20_20261111/.
+  The 6.5 lane simulator plus hold lanes (touch / 1 / 2 ticks behind, never re-priced; cancelled at guard off, > 3 ticks behind or
+  crossing); all 80 stored 6.5 cells reproduced.
+- With the guard: life p50 82 ms and resting 11% of the time, as v3; queue ahead when live 288-355 sh (v3 363). No time priority.
+- Without the guard: life 1.0-1.3 s, near the front at fill (16-17% of the level ahead vs v3 36%), but -1.39..-1.94 c/sh at 1 s.
+- Guarded arms are MIXED by the fill clock: 1 tick behind +0.58 / +0.19 / -3.16 c/sh (shifts 0 / 50 / 250 ms), like the rung;
+  2 behind +1.00 / +1.23 / -4.33 on 33 fills. At the front (rule U) they would earn +0.75..+1.32: the edge is where we cannot get.
+- Next: the live run with A4b (the fill clock and our real queue place) decides the next step; holding at the guard's rhythm cannot
+  build priority, and resting through weak guard states takes the losing fills.
+
 ## 2026-11-11 15:29Z (session ce68ebe0) — B16c / B19a DONE: a combined 1 s / 5 s / 60 s target makes the guard worse; at the back of the queue our fills lose ~1.7 c/sh in EVERY regime (favourable and calm included) - the lever is queue position, not a regime model
 
 - Done: research/pf_b16c_combined_guard.py + run_b16c.sh (5deb1103), research/pf_b19a_regimes.py (4d169c27), committed before their
