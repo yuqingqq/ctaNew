@@ -2,10 +2,10 @@
 
 <!-- DEFAULT_PULL_LOOP -->
 
-## 2026-11-11T20:38:36.520319+00:00 — Quote-default / learned-pull research loop: running
+## 2026-11-11T21:20:20.699411+00:00 — Quote-default / learned-pull research loop: running
 
-- Stage `eval_20261026`. v4: observed empty levels are known, retaining all data and inventory controls.
-- 12 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
+- Stage `eval_20261027`. v4: observed empty levels are known, retaining all data and inventory controls.
+- 14 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
 - Prior own-order/calm test remains COMPLETE, no promotion; comparison_v4.json / d475eccb.
 - Branch research/predict-default-pull-20261111; one light numeric process; no live changes/protected-day reads.
 
@@ -2303,3 +2303,7 @@ All9 neutral build days passed exact reference parity, independent accounting/in
 ## 2026-11-11T20:55:08.234812+00:00 — neutral diagnostic scheduled at the next stage boundary
 
 Current Oct26 eval child941372 continues under the resource cap. Driver199624/session45627 is SIGSTOP-held so it cannot start the next numeric job. After the child finishes: verify rc0, checks.json and feature_check.json; ensure the numeric slot is free; run pf_default_pull_model_diagnostic_v4 through run_light from /tmp/cta-default-pull-20261111; then verify driver identity and SIGCONT199624 (do not retire it or replace its logs). The committed wrapper d50f8323 calls the unchanged frozen report diagnostic with500 matched-count shuffles. No model/threshold/null change. Preserve and report local diagnostic limits; full portfolio and stress results remain pending. Boundary receipt and model_diagnostic_plan.json identify the state.
+
+## 2026-11-11T21:24:15.371036+00:00 — neutral selection signal; portfolio study still active
+
+The neutral diagnostic passed on40,059 eligible actions across6 consumed dates. Market, queue and queue-with-margin policies exceed their declared500 matched-count shuffles on local cancellation value; added queue features show little descriptive excess over market/age and no formal incremental advantage is established. These overlapping local scores are not portfolio P&L. First Oct26 policy replay passed all6 arms/288 windows each and90,294 feature identities; one-day settlement favors matched_guard over all learned policies. See handoffs/20261111_default_pull_early_readout.md for counts/as-of, exact values and limits. Main driver199624 resumed after the diagnostic; Oct27 is running. All remaining primary/stress runs and final audit remain required.
