@@ -208,7 +208,7 @@ def step_report():
                 if bad or e.get('PF_R60_FILE'):
                     sys.exit(f'REFUSED: {tag}{tm} {d} env differs: {bad}')
     G = pd.read_parquet(f'{B.OUTD}/oof_grid.parquet')                      # B14: labels (old), base_* (REF out of fold)
-    Q = pd.read_parquet(QL)
+    Q = pd.read_parquet(QL).rename(columns={'qa_bid': 'ahead_bid', 'qa_ask': 'ahead_ask'})   # the label's size-ahead columns; arm 'qa' owns qa_*
     J = G.merge(Q, on=['day', 'mid', 'tau'], how='left', validate='one_to_one')
     for arm in TAGS:
         A = pd.read_parquet(f'{OUTD}/oof_{arm}.parquet', columns=['day', 'mid', 'tau', f'{arm}_bid', f'{arm}_ask', f'{arm}perm_bid', f'{arm}perm_ask'])
