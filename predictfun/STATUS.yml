@@ -6,6 +6,10 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 14:09Z (session ce68ebe0): B18 DONE (c28f99d5; handoffs/20261111_b18_pressure_fills.md): pressure moments (thin side,
+  thinning, Binance burst / book shift against us) = 48% of live moments. Top 5 fills: 63% in them at +0.04 / -0.15 c/sh vs +0.76 /
+  +0.63 outside (rest -0.75 / -0.95 inside). Our replay as exposed (REF 61%, qb 63%; R180 SIMILAR, R181 SAME), 50% of our fills while
+  our level thins; the replay scores those fills like the rest (R182 NOT-WORSE): it misses pressure adverse selection.
   2026-11-11 13:59Z (session ce68ebe0): B12g DONE (da9aa50b / a12b0284; handoffs/20261111_b12g_horizons.md): top makers' fills on the
   9 replay days, 0-240 s: +0.31 / +0.22 / +0.14 / +0.16 c/sh at 1 s / 5 s / 60 s / settlement (ranks 6-20 +0.27 / +0.23 / +0.22 /
   +0.13; rest -0.27 / -0.36 / -0.38 / -0.15): R170 / R171 EDGE-HOLDS. Their edge does not fade like B16 qb's; 11-08 alone fades.
@@ -1669,5 +1673,6 @@ flags:
   soft_pull_nocap_b15: "CHURN CONTROL, VALUE ABOUT UNCHANGED (B15, 2026-11-11 11:31Z): order-level replay of 11-08's first minute: the live soft pull (0.01 c, no cap) places 23% fewer orders than v3 (the 100 ms buffer 21%), $/day within about 1 at 1 s and 5 s (R130 / R131 MIXED; below v3 at a 250 ms trade shift), band fills too few to read (R132 n/a); one consumed partial day, fill rule not validated"
   queue_guard_b16: "HORIZON DECIDES (B16, 2026-11-11 13:39Z, handoffs/20261111_b16_queue_guard.md): a guard trained on our resting order's value at the back of the queue (rule M, 1 s) equals the live guard (qa); with the 13 pressure features (qb) it is better at 1 s in the v3 replay (+72 J 9/9 days, +19 X) and worse at 60 s / settlement (-67 / -191, -148 / -183; not inventory); not promoted"
   maker_horizons_b12g: "EDGE HOLDS TO 60 s AND SETTLEMENT (B12g, 2026-11-11 13:59Z): on the 9 replay days the top 5 makers' fills are +0.31 / +0.14 / +0.16 c/sh at 1 s / 60 s / settlement over 0-240 s (+0.42 / +0.36 / +0.41 in the first minute), ranks 6-20 similar, the rest lose more with the horizon; 11-08 alone fades (-0.24 at 60 s); the replay's fills are ~5x the tape's value (not a level)"
+  pressure_fills_b18: "TOP MAKERS DO NOT PULL, THEY BREAK EVEN UNDER PRESSURE (B18, 2026-11-11 14:09Z): 63% of the top 5's fills come in pressure moments (48% of time) at +0.04 / -0.15 c/sh vs +0.76 / +0.63 outside; our replay is as exposed (61%, qb 63%), mostly while our level thins (50% vs 37%); the replay values pressure fills like any other, so it cannot reward pulling on pressure"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"

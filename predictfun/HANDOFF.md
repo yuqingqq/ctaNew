@@ -1,5 +1,19 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 14:09Z (session ce68ebe0) — B18 DONE: top makers do not avoid pressure moments (63% of their fills, base 48%) but break even there; our replay is as exposed (R180 SIMILAR, qb the same) and the replay cannot value those fills
+
+- Done (USER: other days; do we pull when top makers do in imbalance / flow bursts, or still take the bad fills):
+  research/pf_b18_pressure_fills.py (c28f99d5). Report handoffs/20261111_b18_pressure_fills.md; copies reviews/b18_20261111/.
+- Classes (our side): thin (best level <= half the other's), thinning (best level -20% in 250 ms), Binance burst against us,
+  Binance book shift against us; any = 48% of live moments.
+- Tape, 9 days: top 5 have 63% of fills in 'any' at +0.04 / -0.15 c/sh (1 s / 60 s) vs +0.76 / +0.63 outside; rest -0.75 / -0.95
+  inside (bursts -1.87). Their edge = little damage under pressure, not more pulling (as B13b).
+- Replay: REF 61% in 'any' (R180 SIMILAR), qb 63% (R181 SAME); we are rarely on the thin side (13% vs 43%, the MICRO rule) but
+  50% of our fills come while our level thins (top 5 37%). The replay values our pressure fills like the rest (+1.5 c/sh; R182
+  NOT-WORSE) while real makers lose there: its fill model misses pressure adverse selection, so replays cannot reward pulling.
+- Next: B16c with a combined-horizon target (USER: "a combined version of multiple windows"), scored first on the tape-based
+  decision referee (R160-style) because the replay understates pressure losses; the live run's own fills are the real test.
+
 ## 2026-11-11 13:59Z (session ce68ebe0) — B12g DONE: the top makers' fills stay good at 60 s and at settlement on the 9 replay days (R170 / R171 EDGE-HOLDS); B16 qb's "better at 1 s, worse at 60 s" is not how they earn
 
 - Done (USER: what are the top makers' values at these horizons): research/pf_b12g_horizons.py (da9aa50b; key-lookup fix before
