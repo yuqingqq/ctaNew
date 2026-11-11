@@ -155,7 +155,7 @@ def run():
     a=pd.concat(allrows,ignore_index=True);f=pd.concat(allfills,ignore_index=True);del allrows,allfills
     mem_check('queue training inputs')
     if a.id.duplicated().any():raise ValueError('duplicate generation')
-    outputs=[];predictions=[];folds=[]
+    outputs=[];predictions=[];folds=[];importance=[]
     (OUT/'models').mkdir(exist_ok=False)
     for day in DAYS[3:]:
         mem_check('queue fold')
@@ -164,7 +164,10 @@ def run():
         models={}
         for name,columns in [('market',MARKET),('queue',MARKET+QUEUE)]:
             models[name]=fit(tr,day,columns)
-            for action,m in zip(('keep','rejoin'),models[name]):m.save_model(str(OUT/f'models/{day}_{name}_{action}.txt'))
+            for action,m in zip(('keep','rejoin'),models[name]):
+                m.save_model(str(OUT/f'models/{day}_{name}_{action}.txt'))
+                importance.append(dict(day=day,model=name,action=action,
+                    gain={k:float(v) for k,v in zip(columns,m.feature_importance('gain'))}))
         folds.append(dict(test_day=day,train_days=sorted(tr.day.unique()),train_n=len(tr)))
         for config in CONFIGS:
             rows=a[(a.day==day)&(a.config==config)].copy()
@@ -182,11 +185,20 @@ def run():
             print('EVAL',day,config,'train',len(tr),'test',len(neutral),flush=True)
     p=pd.concat(predictions,ignore_index=True);r=pd.concat(outputs,ignore_index=True)
     p.to_parquet(OUT/'predictions.parquet',index=False);r.to_parquet(OUT/'portfolio_windows.parquet',index=False)
-    null=null_test(p);summary=[];deltas=[]
+    null=null_test(p);summary=[];deltas=[];neutral_summary=[]
+    for config,g in p.groupby('config',sort=False):
+        y=g[['keep_utility','cancel_utility','rejoin_utility']].to_numpy()
+        keep=np.zeros(len(g),int);cancel=np.ones(len(g),int)
+        for name,action in [('always_keep',keep),('always_cancel',cancel),('market',g.market_action.to_numpy(int)),('queue',g.queue_action.to_numpy(int))]:
+            neutral_summary.append(dict(config=config,arm=name,n=len(g),days=int(g.day.nunique()),
+                mean_action_utility_c=float(y[np.arange(len(g)),action].mean()),
+                keep=int((action==0).sum()),cancel=int((action==1).sum()),rejoin=int((action==2).sum()),
+                keep_filled_generations=int((g.keep_q>0).sum()),unfilled_keep_generations=int((g.keep_q==0).sum())))
     for (config,arm),g in r.groupby(['config','arm'],sort=False):
         summary.append(dict(config=config,arm=arm,days=int(g.day.nunique()),windows=len(g),
             stop_value_usd=float(g.stop_value_c.sum()/100),settle_value_usd=float(g.settle_value_c.sum()/100),
             missing_stop=int(g.stop_value_c.isna().sum()),missing_settlement=int(g.settle_value_c.isna().sum()),
+            settlement_carry_usd=float((g.settle_value_c-g.stop_value_c).sum()/100),missing_fill_mark_groups=int(g.missing_marks.sum()),
             mo1_usd=float(g.mo1_c.sum()/100),mo5_usd=float(g.mo5_c.sum()/100),mo60_usd=float(g.mo60_c.sum()/100),
             spread_usd=float(g.spread_c.sum()/100),shares=float(g.shares.sum()),fills=int(g.fills.sum()),orders=int(g.orders.sum()),
             inventory_square_s=float(g.inventory_square_s.sum()),terminal_abs_mean=float(g.terminal_abs.mean()),max_inventory=float(g.max_inventory.max()),
@@ -203,7 +215,8 @@ def run():
                 deltas.append(dict(config=config,ref=ref,metric=metric,sum=float(x.sum()/scale),days_positive=int((x>0).sum()),
                                    per_day={str(d):float(v/scale) for d,v in x.items()},interval=bootstrap_day(x/scale)))
     report=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),declaration=declaration,builds=builds,folds=folds,
-        summary=summary,deltas=deltas,null=null,prediction_rows=len(p),generation_rows=len(a),
+        summary=summary,deltas=deltas,neutral_summary=neutral_summary,feature_importance=importance,
+        null=null,prediction_rows=len(p),generation_rows=len(a),
         prediction_sha=sha(OUT/'predictions.parquet'),portfolio_sha=sha(OUT/'portfolio_windows.parquet'),
         limits=['Fixed scheduled5share continuation experiment, not full v3 or live implementation.',
                 'Initial placement is held fixed; no learned admission model. Queue estimates are uncertain and fill timing uncalibrated.',
