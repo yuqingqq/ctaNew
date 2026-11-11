@@ -6,6 +6,9 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 16:28Z: Own-order continuation/calm-entry pipeline prepared;18 controls PASS. Single light slot reserved
+  for research/predict-own-orders-calm-20261111, /tmp/own_orders_calm_run_20261111.log. Exact baseline parity
+  and numerical runs pending; no live/frozen v3 edits.
   2026-11-11 15:50Z: Queue continuation model TESTED; not promoted. Versus age-matched market baseline,
   L50 +59.13USD marked on1,376 common windows but inventory-square exposure +0.69%; slower timing -11.50USD.
   Six consumed test days/1,728 windows; fixed-entry arms all lose.15 controls and superseding accounting

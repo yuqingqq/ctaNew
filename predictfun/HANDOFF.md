@@ -1,5 +1,16 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 16:28Z — Own-order continuation + calm-entry experiment prepared; single light slot reserved
+
+- USER: learn continuation on our admitted orders and also test posting during calm periods.
+- Isolated branch research/predict-own-orders-calm-20261111; worktree /tmp/cta-own-orders-calm-20261111.
+  Frozen v3 stays unchanged. Full pipeline adds actual-generation tracing, causal queue history, cancel-effective
+  shadow labels, chronological continuation, calm-only new entries and small early calm quotes; primary and stress replays.
+-18 controls PASS (including future-data invariance, pending-cancel competition, retained queue, known-bad accounting,
+  and planted model signal). Next: freeze declaration, exact reference parity smoke, nine consumed builders and six test days.
+- Reserve the single numeric slot for run_order_policy.sh. Log /tmp/own_orders_calm_run_20261111.log.
+  No protected-day payload reads, no live changes, no promotion claim. Results pending.
+
 ## 2026-11-11 15:50Z — Queue continuation model TESTED; objective not met, not promoted
 
 - Branch research/predict-queue-policy-20261111. Report handoffs/20261111_queue_policy_results.md.
