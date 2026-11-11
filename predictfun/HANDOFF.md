@@ -1,5 +1,22 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 13:39Z (session ce68ebe0) — B16 stage 1 DONE: the target alone changes nothing; target + pressure is better at 1 s (R162 BETTER, J 9 / 9 days) but worse at 60 s and settlement - the model learned the label's 1 s horizon; not promoted
+
+- Done: research/pf_b16_queue_label.py, pf_b16_queue_guard.py, run_b16.sh (18515190; report fix before any table 167fdfe8).
+  Report handoffs/20261111_b16_queue_guard.md; copies reviews/b16_20261111/.
+- Label = a 5-sh order RESTING at the back of the queue at the known best, filled by the engine's rule M (thinning moves it up),
+  1 s markout. It equals the live guard's label on all 438,951 sweep rows (K1); it fills 13% of grid moments (10% by sweeps); mean
+  -0.225 vs -0.228 c/sh. Even with cancel credit, our 5-sh order behind ~400 sh is filled almost only by sweeps.
+- qa (new target, 32 features): R160 NO-CHANGE (-0.0001 c/sh), replay MIXED (sums +93 / +13 settle, +9 / +15 at 1 s, +111 / +18
+  at 60 s; J / X).
+- qb (+ 13 pressure features): R160 NO-CHANGE (+0.0033, 6 / 8 days); replay +1 s +$72 at J (9 / 9 days) and +$19 at X (7 / 9) =
+  R162 BETTER, but settle -$148 / -$183 and +60 s -$67 / -$191. Not inventory (|net| at the stop 6.56 vs 6.67 sh, carry the same):
+  mark-to-market at the stop 622 vs 758 (J). It trades 7% more; its extra fills pay at 1 s and lose by 60 s.
+- Falsifier (qb on shuffled labels) reads WORSE (-0.474 c/sh): the referee can see a worse guard.
+- Next (proposals, not run): B16c with the label's horizon matched to the window's P&L (60 s, or 1 s + the inventory's value at
+  the stop; in-sample by construction); stage 2 at v3's decision times with our order's state; any winner frozen and tested on
+  >= 5 untouched days. Keep the live guard.
+
 ## 2026-11-11 12:07Z (session ce68ebe0) — Plan to match the top makers written; B16 (second-layer decision model) starting
 
 - USER: "we want to match the top makers, at least we can pull when they pull to avoid adverse fills like they do and
