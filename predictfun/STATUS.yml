@@ -6,6 +6,10 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 08:28Z (session ce68ebe0): B13d diagnosis (report handoffs/20261111_b13d_churn_diagnosis.md; pmmmrust read at
+  pfmm-ladder-v3-tokyo-6, unchanged): 83.5% of v3's touch withholds are the pull line (guard value flickering on the 50 ms
+  grid; 53% back within 100 ms), 14.7% G4; 2,622 same-price size flips in the first minute; every change cancels and
+  re-places (pf-engine ladder.rs:479-528). B13c's "87% not guard decisions" corrected (lag-50 read one grid step early).
   2026-11-11 07:14Z (session ce68ebe0): B13b / B13c DONE (54dc5df9 committed before the runs; report
   handoffs/20261111_b13bc_behaviour_queue.md): the pressure model predicts the top makers' takes (AUC 0.771, current
   features 0.725) but their quotes show no pulling on it (R101 NO-PULL-SIGNAL); our engine cancels at-best orders a median
@@ -1633,6 +1637,6 @@ flags:
   book_pressure_b12f: "BINANCE BOOK + ACTIVITY, PREDICT IMBALANCE (B12f, 2026-11-11 06:46Z, handoffs/20261111_b12f_activity_imbalance.md): at the top makers' takes Binance is 2x as busy and its top-of-book leans their way (+0.17 vs +0.04) with the price still; Predict thin-side fills lose 0.58 c/sh more at the same guard value; we fill at median reach 0.93 on heavy levels (field 0.20)"
   pressure_model_b13a: "EMPH IMPROVES (B13a, 2026-11-11 07:08Z, handoffs/20261111_b13a_pressure_model.md): + 13 engineered pressure features raise out-of-sample R2 of the 1 s Predict move from ~0.18 to ~0.21 on 9 of 9 days (blocked CV); not yet a guard (needs a value mapping and >= 5 untouched days)"
   top_behaviour_b13b: "TAKES PREDICTED, NO PULLING (B13b, 2026-11-11 07:10Z): the pressure model separates the top makers' takes (AUC 0.77); their share of fills and their stay rate do not fall under adverse pressure"
-  churn_b13c: "CHURN-HEAVY (B13c, 2026-11-11 07:12Z, handoffs/20261111_b13bc_behaviour_queue.md): live at-best orders cancelled a median 23-38 ms after going live, 82.5% re-placed at the same price, 87% with the research guard ON; always ~380 sh back in the queue; issue for the live session and the strategy"
+  churn_b13c: "CHURN-HEAVY, GUARD FLICKER (B13c 07:12Z, corrected by B13d): live at-best orders cancelled a median 23-38 ms after going live, 82.5% re-placed at the same price; 83.5% of touch withholds are the pull line crossed back and forth on the 50 ms grid, 14.7% G4; same-price size flips also cancel; always ~380 sh back in the queue; fix = pull hysteresis + size by add / remove (new candidate)"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"

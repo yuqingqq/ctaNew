@@ -7,6 +7,11 @@ and `research/pf_b13c_queue_pulls.py`, committed and pushed before their runs (5
 Output in `live_vs_replay/b13_20261111/`, copies in `reviews/b13bc_20261111/`. One consumed partial day (the 220 windows
 of 2026-11-08, first minute): point estimates; 11-08 is the day the pressure idea came from, so B13b is descriptive.
 
+**Correction (08:28Z, B13d, handoffs/20261111_b13d_churn_diagnosis.md).** B13c's split by the research guard read it 50 ms
+before each cancel, one grid step before the crossing that triggers it. The engine's own decisions show 83.5% of touch
+withholds are the pull line (the guard value flickering around it). So "87% of pulls while the guard still says quote,
+not guard decisions" is wrong: read "ON" below as "pulls on a fresh crossing". The other B13c numbers stand.
+
 ## B13b: do the pressure features explain the top makers' behaviour?
 
 Pressure composite: B13a's fold models (trained on other days, none on 11-08) predicting the next-second Predict move,
