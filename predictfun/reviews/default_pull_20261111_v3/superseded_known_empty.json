@@ -1,0 +1,56 @@
+{
+  "as_of": "2026-11-11T19:16:28.298157+00:00",
+  "status": "SUPERSEDED_BEFORE_MODEL_FIT",
+  "reason": "Known absent depth0 incorrectly triggered unknown state, delaying new-level admission and shortening labels. Correct in v4 before any learned fit; preserve all v3 artifacts.",
+  "learned_models_fit": 0,
+  "days": [
+    {
+      "day": "20261023",
+      "windows": 288,
+      "reference_exact": true,
+      "feature_decisions": 7221,
+      "checks_sha": "349bb4725d9a928624b65641531f4bb2bea80cc2718c7e06423af9dd47621419",
+      "features_sha": "3089437ed3c8bd97f8d60d66a75b322c21cd4f5d4d377e1fe8728e9c15e295b5"
+    },
+    {
+      "day": "20261024",
+      "windows": 288,
+      "reference_exact": true,
+      "feature_decisions": 6435,
+      "checks_sha": "18bd4ea4684b2e02d63de60570ef8a3742a985aecce65bd5a4cecb331f3b8912",
+      "features_sha": "fe052f9c17f55b13c1bb2b4a7c669ca716cdd93057ccc791278dc89c566c54b4"
+    },
+    {
+      "day": "20261025",
+      "windows": 288,
+      "reference_exact": true,
+      "feature_decisions": 6285,
+      "checks_sha": "a57e089f23b3d0254b5e542834702ec8d0cd792ea3f9e516e4d64da913c6d85d",
+      "features_sha": "6667ac0e8093f190caf6324c0b5649e5b8a19c71c7f082441bf74824dc245808"
+    },
+    {
+      "day": "20261026",
+      "windows": 288,
+      "reference_exact": true,
+      "feature_decisions": 7451,
+      "checks_sha": "3d0dfe91eeb9249f9e2461321b09d8c1c9b2d1d847e733833d13050d9cbf2c08",
+      "features_sha": "42d5c463356f75cb1644b55e7e94c0543eb17a01fc6dbabeb57660bfff9ff543"
+    },
+    {
+      "day": "20261027",
+      "windows": 288,
+      "reference_exact": true,
+      "feature_decisions": 6648,
+      "checks_sha": "e9d640a6070b16f6d1e171b5b396044c9f757d19b1d9a70a5c1ec4634223e037",
+      "features_sha": "9c0e1981edfe6f640e8a964b380ae73cf4513ed32158ae37664101d11365edc2"
+    },
+    {
+      "day": "20261031",
+      "windows": 288,
+      "reference_exact": true,
+      "feature_decisions": 4769,
+      "checks_sha": "6d21ec56e682cd239a41d62bb42aff956b695ee66b2032c66eddb64fa61ef25d",
+      "features_sha": "5f47eb69c13d93070080e4e69c9c6998cc5e9b0998542c6a1fa33fa95b38e6dc"
+    }
+  ]
+}
