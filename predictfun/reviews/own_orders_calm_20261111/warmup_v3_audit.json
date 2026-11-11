@@ -1,0 +1,430 @@
+{
+  "as_of": "2026-11-11T17:12:22.766671+00:00",
+  "version": 3,
+  "status": "AUDIT_ONLY",
+  "source_sha": "6b4efce5e59df626c82d4022fccf65ee712930ceff09a992401895efe2822b9c",
+  "issue": "Original Window used x[-1] for imbalance deltas during its first250ms. Calm already masked that history, but continuation features did not. Corrected deltas are unknown until past history is available. Original source/artifacts retained.",
+  "controls": "Causal future-mutation positive and original implementation known-bad falsifier pass; calm unchanged; mature history unchanged.",
+  "rows": [
+    {
+      "group": "build",
+      "day": "20261023",
+      "mode": "reference",
+      "generations": 35257,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "8a2a7c029adae371f58eee5e77aa42e7e31e4c1957eeb6f2d84b322b7791307f"
+    },
+    {
+      "group": "build",
+      "day": "20261023",
+      "mode": "calm_seed",
+      "generations": 35310,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "f890e8e963f9c64ffed0d0d19d3cfad5b50b5eb8f3995069d703cdaf1fdb2fc9"
+    },
+    {
+      "group": "build",
+      "day": "20261024",
+      "mode": "reference",
+      "generations": 40267,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "d2e1d876ae3b585fa048fbb86fb5dc670a5427b7c934f66cad1a2d0096b62135"
+    },
+    {
+      "group": "build",
+      "day": "20261024",
+      "mode": "calm_seed",
+      "generations": 40540,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "34fad911e49cbaeb3fc3a08e64783305e64e814eaaa2e69813d1d910025e65eb"
+    },
+    {
+      "group": "build",
+      "day": "20261025",
+      "mode": "reference",
+      "generations": 46563,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "74088835936cca5542455b285f2a954b4c2b2ac407b3000b0cb046a26c070ad5"
+    },
+    {
+      "group": "build",
+      "day": "20261025",
+      "mode": "calm_seed",
+      "generations": 46924,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "ba7147c54cf5677c12aae13b4915fc9d0c51f78ebb053d371fb8b786b396d57c"
+    },
+    {
+      "group": "build",
+      "day": "20261026",
+      "mode": "reference",
+      "generations": 37792,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "1db71e479eafdc1247afc71e98eb6a3d8ef5a7c6ca2ac626266e964e8abf8771"
+    },
+    {
+      "group": "build",
+      "day": "20261026",
+      "mode": "calm_seed",
+      "generations": 37896,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "853dce7ae2b39bc4db204bd904a47524c0113872b406f8f1fad0ec27cd03a2f9"
+    },
+    {
+      "group": "build",
+      "day": "20261027",
+      "mode": "reference",
+      "generations": 33265,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "a75785c0d25586a8509d307199f106d2f48a2c8b8c27ff0137b496ecd47a4bdc"
+    },
+    {
+      "group": "build",
+      "day": "20261027",
+      "mode": "calm_seed",
+      "generations": 33355,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "ec137871d76e69227da340a87fd4fe7c37ffc37dfb85efe609c9a2b67e744cc8"
+    },
+    {
+      "group": "build",
+      "day": "20261031",
+      "mode": "reference",
+      "generations": 57814,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "271bc6c172aa466f3241ee77caac6e5b9792e4c5f1b72a7326e06866b57fa308"
+    },
+    {
+      "group": "build",
+      "day": "20261031",
+      "mode": "calm_seed",
+      "generations": 58638,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "f084358ab5a17381c5f44377eeb99a017ec19dadc7d82adbbf8796823d1f14f4"
+    },
+    {
+      "group": "build",
+      "day": "20261101",
+      "mode": "reference",
+      "generations": 51182,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "26b6f256c7cb3fb81e8ae54c45f6cae7d3fbc925c5972b5db185d47f0dd44807"
+    },
+    {
+      "group": "build",
+      "day": "20261101",
+      "mode": "calm_seed",
+      "generations": 51584,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "4e9371e3e163beb5aa194109dded875de165eec5915c461c113921ad1dc6cea6"
+    },
+    {
+      "group": "build",
+      "day": "20261102",
+      "mode": "reference",
+      "generations": 36107,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "1291240690355e54d3aa9b7fe9157ef43d4e45987db2497f7968c562746b6758"
+    },
+    {
+      "group": "build",
+      "day": "20261102",
+      "mode": "calm_seed",
+      "generations": 36133,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "8ba467766db64a264ec42868ec290a83df147e65fee46c2baa53957568976cc6"
+    },
+    {
+      "group": "build",
+      "day": "20261103",
+      "mode": "reference",
+      "generations": 35064,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "4da6669ba9e979cc0aad16f9a9b4b15f90724c96f2d8ee2d2355d0b0d6ca45fa"
+    },
+    {
+      "group": "build",
+      "day": "20261103",
+      "mode": "calm_seed",
+      "generations": 35108,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "20358380b064606c4e8310a7f2e438e71f53fd69e9e0e398e37e766d49c3500b"
+    },
+    {
+      "group": "eval",
+      "day": "20261026",
+      "mode": "hold_rule",
+      "generations": 37459,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "258cdb4b3dac105be8b470713bd141d97304b53cacae1d7ee62afbd1fd77ee03"
+    },
+    {
+      "group": "eval",
+      "day": "20261026",
+      "mode": "continuation",
+      "generations": 37618,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "b81e8331c6d7a24449559ba6fb6ce6e4635ac92ed689a7e2cb2548cd5967d841"
+    },
+    {
+      "group": "eval",
+      "day": "20261026",
+      "mode": "calm_filter",
+      "generations": 176,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "a27923ecfa537ada5abd6bf41a5e1f6c3564384612f62b3c6ff7a7bbab3b0e7b"
+    },
+    {
+      "group": "eval",
+      "day": "20261026",
+      "mode": "calm_seed_continuation",
+      "generations": 37726,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "6dd6afa5389f3dd347325a2715d86cf64e12192fa5395cbab5ec1c62a799a1b6"
+    },
+    {
+      "group": "eval",
+      "day": "20261027",
+      "mode": "hold_rule",
+      "generations": 32812,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "2256eb5f8057417669a986b2d7d7ca2dc9bd23d9c99c3a100ca714336b3dd8b9"
+    },
+    {
+      "group": "eval",
+      "day": "20261027",
+      "mode": "continuation",
+      "generations": 33106,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "c8b38ad050457ec19aec40c76cdde087b13ac822accb2225558efa45029520f5"
+    },
+    {
+      "group": "eval",
+      "day": "20261027",
+      "mode": "calm_filter",
+      "generations": 493,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "e05ed78cee4ba9c95f2c8422bebe89850dbca1ff217dab34d64c614d6203cef0"
+    },
+    {
+      "group": "eval",
+      "day": "20261027",
+      "mode": "calm_seed_continuation",
+      "generations": 33193,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "e87b4397554a2e94be2e06b942699eb6f52c78c0e547db6414f29a7c17967026"
+    },
+    {
+      "group": "eval",
+      "day": "20261031",
+      "mode": "hold_rule",
+      "generations": 55983,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "ce5542448bb4e1fb144af3b68ae526213140a09ab8668b949b06f14ee1474b47"
+    },
+    {
+      "group": "eval",
+      "day": "20261031",
+      "mode": "continuation",
+      "generations": 57459,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "0eceaf3e22297b06e2d4cfcb9e5977c25e09f03eb6bebcad33a822679bde5328"
+    },
+    {
+      "group": "eval",
+      "day": "20261031",
+      "mode": "calm_filter",
+      "generations": 8293,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "36e56de9e8a2e8823cd8479b6eb0591ee39e320956ed53db7a51c60ac143a853"
+    },
+    {
+      "group": "eval",
+      "day": "20261031",
+      "mode": "calm_seed_continuation",
+      "generations": 58304,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "4555b669537692ccb5868d16fef9a8ba34de95065e85e695d1d0222fa9c2ea70"
+    },
+    {
+      "group": "eval",
+      "day": "20261101",
+      "mode": "hold_rule",
+      "generations": 50205,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "005713c816917fa1136b762527bd81271c52fffc3d7cb4443149f501087911cf"
+    },
+    {
+      "group": "eval",
+      "day": "20261101",
+      "mode": "continuation",
+      "generations": 50893,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "66241d0e9950c7ac65c01f4236bcbddb1cc75e411ea1152a503ed24ff146242f"
+    },
+    {
+      "group": "eval",
+      "day": "20261101",
+      "mode": "calm_filter",
+      "generations": 6171,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "1debf8453b2ebefa323bb93a05173edfa60d98f88be37f91c0b0c7eef71d3621"
+    },
+    {
+      "group": "eval",
+      "day": "20261101",
+      "mode": "calm_seed_continuation",
+      "generations": 51310,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "2d4b29ad939d1a98a6bf184c07b947d2d408a9f7805a1afe6907979057bd204c"
+    },
+    {
+      "group": "eval",
+      "day": "20261102",
+      "mode": "hold_rule",
+      "generations": 35811,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "9fc2bac198b6ce9c0f0efa093124b2f5fa47e91884a72a44064f95549e1bdfca"
+    },
+    {
+      "group": "eval",
+      "day": "20261102",
+      "mode": "continuation",
+      "generations": 35986,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "5f44e44afc651d48db80a30abae111b2f3f04c169c86a2fd347f442a9853d1e9"
+    },
+    {
+      "group": "eval",
+      "day": "20261102",
+      "mode": "calm_filter",
+      "generations": 78,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "e7fabbadfe659b90c0fe68484a5649f12a8584c3e3cda88b7f1ccebf000926e2"
+    },
+    {
+      "group": "eval",
+      "day": "20261102",
+      "mode": "calm_seed_continuation",
+      "generations": 36010,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "9378b7b60784bf1c8230518d48cef5dd7a5e3d3b7fb63b2641ba7378b235ebe0"
+    },
+    {
+      "group": "eval",
+      "day": "20261103",
+      "mode": "hold_rule",
+      "generations": 34635,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "384173a4ffb33a44a1dd9ab634287f09fc6c22538a18a8cd7128976dbb18d5ac"
+    },
+    {
+      "group": "eval",
+      "day": "20261103",
+      "mode": "continuation",
+      "generations": 34791,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "d4a29ba9e39cc0c653d1c8dcb729ddaf36c8030ef4f1de8b37ec76052d536fc1"
+    },
+    {
+      "group": "eval",
+      "day": "20261103",
+      "mode": "calm_filter",
+      "generations": 169,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "113153486223e6a44e41d9c623ac242d275b3611c35c0198e704f4769a60be12"
+    },
+    {
+      "group": "eval",
+      "day": "20261103",
+      "mode": "calm_seed_continuation",
+      "generations": 34835,
+      "early_decisions": 0,
+      "affected": 0,
+      "affected_ids": [],
+      "input_sha": "c659126cd039e580e3bc6c90983d5bc2ba97843a4cdaf3092bf2673755cd74ad"
+    }
+  ]
+}
