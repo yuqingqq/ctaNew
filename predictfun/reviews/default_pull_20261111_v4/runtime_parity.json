@@ -1,0 +1,9 @@
+{
+  "as_of": "2026-11-11T19:16:33.704308+00:00",
+  "status": "PASS",
+  "kind": "inherited_cache_implementation_equivalence",
+  "inherited_path": "/home/yuqing/ctaNew/data/predict_fun/research/default_pull_20261111_v3/runtime_parity.json",
+  "inherited_sha": "7b7b69cd3e38a104a795bdfb8aaa190101da21fbc3c9cc72525aae709f7bc79a",
+  "policy_output_equality_claim": false,
+  "scope": "Original versus cached observed features, verified before v4. This does not claim equal v3/v4 policies after the known-empty fix."
+}
