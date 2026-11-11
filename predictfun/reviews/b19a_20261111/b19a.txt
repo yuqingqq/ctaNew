@@ -1,0 +1,15 @@
+B19a regimes. R200 NEITHER; R201 CALM-PAYS (FAVOURABLE-PAYS); R202 WE-CAPTURE-MORE
+
+A. our side, 8 read days pooled (grid moments, both sides):
+  regime       time   gate rate  v3 quote (gate+side)  order at back: combined / 1 s / 60 s per moment | fill rate | c/sh per filled share (1 s) | gated / not gated (combined)
+  calm        0.199  0.088      0.051                -0.117 / -0.109 / -0.126   | 0.062 | -1.78 | -0.010 / -0.127
+  adverse     0.472  0.068      0.030                -0.380 / -0.367 / -0.388   | 0.215 | -1.73 | +0.026 / -0.409
+  favourable  0.330  0.153      0.147                -0.091 / -0.085 / -0.103   | 0.053 | -1.63 | -0.005 / -0.107
+  quoted moments by regime: calm 0.174, adverse 0.322, favourable 0.504; moments with both signs 0.142
+
+B. fills by regime, 9 days pooled: share of filled shares | c/sh 1 s / 60 s
+  top 5  calm 0.127 (+0.43 / +0.15) | adverse 0.629 (+0.04 / -0.15) | favourable 0.244 (+0.93 / +0.87)
+  6-20   calm 0.157 (+0.31 / +0.19) | adverse 0.531 (-0.09 / -0.26) | favourable 0.311 (+0.86 / +1.03)
+  rest   calm 0.171 (+0.11 / -0.02) | adverse 0.593 (-0.75 / -0.95) | favourable 0.236 (+0.67 / +0.78)
+  REF J  calm 0.035 (-0.19 / +3.88) | adverse 0.610 (+1.57 / +1.51) | favourable 0.355 (+1.54 / +1.43)
+per day, favourable share top 5 / REF: 1023 0.261 / 0.314; 1024 0.281 / 0.402; 1025 0.255 / 0.359; 1026 0.246 / 0.241; 1027 0.241 / 0.315; 1031 0.182 / 0.437; 1101 0.265 / 0.454; 1102 0.238 / 0.386; 1103 0.212 / 0.373
