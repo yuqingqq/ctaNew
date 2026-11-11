@@ -15,7 +15,9 @@ p in the last venue frame before it, raised to the next frame's if larger and <=
             ask: above) fills what is left of us at p. Rule L beside (qll_*): the same without the frame cap (no credit for cancels
             ahead, the lower bound). Legs in time order (tx anchor), price-first at one time.
   value     per fill, s (m(t_f + h) - p) per share for h = 1 s (primary) and 5 s, m = the venue mid of the last frame <= t_f + h;
-            label = sum(shares x value) / 5 (c per share of the order; a full fill on a sweep equals the old label exactly)
+            label = sum(shares x value) / 5 (c per share of the order; a full fill on a sweep equals the old label exactly).
+            With an output path argument (B16c, 2026-11-11): also h = 60 s (ql60_*) and the combined label qlm_* = the mean of the
+            1 s, 5 s and 60 s values (USER: "a combined version of multiple windows"); the default output is unchanged.
 Outputs step4/badfill_info_tx_tk/grid_ql.parquet (day, mid, tau aligned to grid.parquet's rows): ql_bid / ql_ask (1 s), ql5_bid /
 ql5_ask (5 s), qf_bid / qf_ask (shares filled), qs_bid / qs_ask (filled by a sweep), qa_bid / qa_ask (size ahead), and the fresh post's
 qlf_* / qff_* / qsf_* (rule M) and the resting order under rule L, qll_* / qfl_*; a report with statuses (no frame, no mid after a fill, post-only refusals, deeper than shown) and the controls.
@@ -38,7 +40,8 @@ from . import pf_clock_rl as CK
 assert CK.D_DEC == 2, 'run with PF_RL_DDEC=2'
 DAYS = ['20261023', '20261024', '20261025', '20261026', '20261027', '20261031', '20261101', '20261102']
 GRID = f'{io.OUT}/step4/badfill_info_tx_tk/grid.parquet'
-OUT = f'{io.OUT}/step4/badfill_info_tx_tk/grid_ql.parquet'
+OUT = sys.argv[1] if len(sys.argv) > 1 else f'{io.OUT}/step4/badfill_info_tx_tk/grid_ql.parquet'
+EXTENDED = len(sys.argv) > 1          # B16c: 60 s and the combined label, written to the given path
 L_PLACE, L_CXL, W, SIZE, QACT_MS = 40.0, 22.0, 500.0, 5.0, 100.0
 ms_ = lambda d: pd.Timestamp(d, tz='UTC').value // 1_000_000
 SEAL_MS = (ms_('2026-10-28'), ms_('2026-10-31')); FWD_MS = ms_('2026-11-04')
@@ -121,7 +124,8 @@ def build(d, G):
         o = np.lexsort((x.ptick.values * (1 if k[1] == 1 else -1), x.ta.values))   # one time: the maker side's best price first
         LB[k] = (x.ta.values[o].astype(float), x.ptick.values[o].astype(int), x.shares.values[o].astype(float))
     BKD = {m: g for m, g in bk.groupby('mid', sort=False)}; del bk, lt
-    res = {c: np.full(len(rows), np.nan) for c in ('ql_bid', 'ql_ask', 'ql5_bid', 'ql5_ask', 'qf_bid', 'qf_ask', 'qa_bid', 'qa_ask',
+    res = {c: np.full(len(rows), np.nan) for c in ('ql_bid', 'ql_ask', 'ql5_bid', 'ql5_ask', 'ql60_bid', 'ql60_ask', 'qlm_bid', 'qlm_ask',
+                                                   'qf_bid', 'qf_ask', 'qa_bid', 'qa_ask',
                                                    'qll_bid', 'qll_ask', 'qfl_bid', 'qfl_ask', 'qlf_bid', 'qlf_ask', 'qff_bid', 'qff_ask')}
     res.update({c: np.zeros(len(rows), bool) for c in ('qs_bid', 'qs_ask', 'qsf_bid', 'qsf_ask')})
     k1 = dict(rows=0, equal=0, first_diff=None)
@@ -175,17 +179,19 @@ def build(d, G):
                     variants = (('M', caps), ('L', None)) if kind == 'rest' else (('M', caps),)
                     for rule, cp in variants:
                         fills = fill_order(s, p[n], ahead, legs, caps=cp)
-                        v1 = v5 = 0.0; miss = False
+                        v1 = v5 = v60 = 0.0; miss = False
                         for tfl, q, sw in fills:
                             k = np.searchsorted(tv, tfl + 1000.0, side='right') - 1; k5 = np.searchsorted(tv, tfl + 5000.0, side='right') - 1
-                            if k < 0 or k5 < 0:
+                            k60 = np.searchsorted(tv, tfl + 60000.0, side='right') - 1
+                            if k < 0 or k5 < 0 or k60 < 0:
                                 miss = True; break
-                            v1 += q * s * (mv[k] - p[n]); v5 += q * s * (mv[k5] - p[n])
+                            v1 += q * s * (mv[k] - p[n]); v5 += q * s * (mv[k5] - p[n]); v60 += q * s * (mv[k60] - p[n])
                         if miss:
                             st['no_mid_after'] += 1; continue
                         qf = sum(f[1] for f in fills); qs = any(f[2] for f in fills)
                         if kind == 'rest' and rule == 'M':
                             res[f'qa_{nm}'][r] = ahead; res[f'ql_{nm}'][r] = v1 / SIZE; res[f'ql5_{nm}'][r] = v5 / SIZE
+                            res[f'ql60_{nm}'][r] = v60 / SIZE; res[f'qlm_{nm}'][r] = (v1 + v5 + v60) / (3.0 * SIZE)
                             res[f'qf_{nm}'][r] = qf; res[f'qs_{nm}'][r] = qs
                         elif kind == 'rest':
                             res[f'qll_{nm}'][r] = v1 / SIZE; res[f'qfl_{nm}'][r] = qf
@@ -211,11 +217,14 @@ def main():
         sys.exit('REFUSED: K2 / K3 synthetic controls failed')
     if os.path.exists(OUT):
         sys.exit(f'REFUSED: {OUT} exists')
+    print('output', OUT, 'extended' if EXTENDED else 'B16 default', flush=True)
     G = pd.read_parquet(GRID, columns=['day', 'mid', 'tau', 'v_bid', 'v_ask'])
     parts, k1s = [], {}
     for d in DAYS:
         o, k1 = build(d, G); parts.append(o); k1s[d] = k1; print(d, len(o), k1, flush=True)
     R = pd.concat(parts, ignore_index=True)
+    if not EXTENDED:
+        R = R.drop(columns=[c for c in R.columns if c.startswith(('ql60_', 'qlm_'))])
     if len(R) != len(G) or not ((R.day.values == G.day.values).all() and (R.mid.values == G.mid.values).all() and (R.tau.values == G.tau.values).all()):
         sys.exit('REFUSED: label rows not aligned with grid.parquet')
     k1_rows = sum(v['rows'] for v in k1s.values()); k1_eq = sum(v['equal'] for v in k1s.values())
@@ -226,6 +235,10 @@ def main():
                mean_ql={s: float(np.nanmean(R[f'ql_{s}'].values)) for s in ('bid', 'ask')},
                mean_old={s: float(np.mean(G[f'v_{s}'].values)) for s in ('bid', 'ask')})
     io.write_json(f'{OUT[:-8]}_report.json', rep)
+    if EXTENDED:
+        rep['mean_qlm'] = {s: float(np.nanmean(R[f'qlm_{s}'].values)) for s in ('bid', 'ask')}
+        rep['mean_ql60'] = {s: float(np.nanmean(R[f'ql60_{s}'].values)) for s in ('bid', 'ask')}
+        io.write_json(f'{OUT[:-8]}_report.json', rep)
     if k1_rows < 1000 or k1_eq != k1_rows:
         sys.exit(f'REFUSED: K1 {k1_eq} of {k1_rows} rows equal (need all, >= 1000)')
     R.to_parquet(OUT, index=False)
