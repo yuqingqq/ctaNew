@@ -2,10 +2,10 @@
 
 <!-- DEFAULT_PULL_LOOP -->
 
-## 2026-11-11T20:29:13.716588+00:00 — Quote-default / learned-pull research loop: running
+## 2026-11-11T20:38:36.520319+00:00 — Quote-default / learned-pull research loop: running
 
-- Stage `build_20261103`. v4: observed empty levels are known, retaining all data and inventory controls.
-- 10 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
+- Stage `eval_20261026`. v4: observed empty levels are known, retaining all data and inventory controls.
+- 12 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
 - Prior own-order/calm test remains COMPLETE, no promotion; comparison_v4.json / d475eccb.
 - Branch research/predict-default-pull-20261111; one light numeric process; no live changes/protected-day reads.
 
@@ -2295,3 +2295,7 @@ Known-empty price levels were incorrectly treated as missing by the v3 pull-poli
 ## 2026-11-11T19:27:54.651089+00:00 — first corrected default-pull day verified
 
 V4 Oct23 build:288 windows per arm, exact frozen reference, independent accounting/inventory checks PASS and7,842 direct feature identities. The neutral default path has18,115 sent generations:7,838 eligible,7,722 ended-before-probe/unknown,2,551 post-only refusals and4 missing-label-mark statuses. As-of and artifact identities are in reviews/default_pull_20261111_v4/first_day_verified.json. One of nine build days complete; Oct24 is running; no model fit or performance claim yet.
+
+## 2026-11-11T20:39:43.385636+00:00 — complete default-pull neutral dataset and models
+
+All9 neutral build days passed exact reference parity, independent accounting/inventory checks and61,628 direct feature identities (smoke excluded). Fit contains61,605 eligible neutral actions and40,059 test actions across6 consumed chronological folds, with2 saved models per fold. All12 model identities and prediction artifact identity checked; fitting reloads every model and verifies scores with a corrupted-score refusal. First full policy replay (Oct26) is running. Remaining:6 primary days, primary report,6 stress days, final report, artifact audit and figure. No policy performance or validation conclusion yet. See reviews/default_pull_20261111_v4/neutral_and_fit_verified.json and fit.json.
