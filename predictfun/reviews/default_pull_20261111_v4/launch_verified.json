@@ -1,0 +1,19 @@
+{
+  "as_of": "2026-11-11T19:18:07.227015+00:00",
+  "status": "RUNNING_AFTER_VERIFIED_SMOKE",
+  "driver_pid": 199624,
+  "driver_session": 45627,
+  "branch": "research/predict-default-pull-20261111",
+  "freeze_commit": "531836a5",
+  "smoke": {
+    "day": "20261023",
+    "windows_per_arm": 8,
+    "arms": 2,
+    "reference_exact": true,
+    "feature_decisions": 199,
+    "checks_sha": "e9c0a310b65a042789ac94dc2f7e73b20728d843d6a751866ace33a26e2079ba",
+    "features_sha": "d3db67f41d3a27a5cae809df0a6ae3834b2f07305dd0bad66b61f2db04010b88"
+  },
+  "next_stage": "build_20261023",
+  "note": "Controls, corrected known-empty regression and smoke passed; no learned-model result yet. Prior six v3 days are superseded provenance."
+}
