@@ -20,8 +20,8 @@ def verify_window(row,fills,stop_mid,outcome):
         signed=f.q if f.side==0 else -f.q
         net+=signed;cash-=signed*f.price;shares+=f.q;maxnet=max(maxnet,abs(net))
     square+=(240000-last)/1000*net*net
-    values={'net':net,'cash_c':cash,'stop_value_c':cash+net*stop_mid,
-            'settle_value_c':cash+net*100*outcome,'inventory_square_s':square,
+    values={'net':net,'cash_c':cash,'stop_value_c':cash+net*stop_mid if net else cash,
+            'settle_value_c':cash+net*100*outcome if net else cash,'inventory_square_s':square,
             'terminal_abs':abs(net),'max_inventory':maxnet,'shares':shares,'fills':len(fills)}
     for k,v in values.items():close(row[k],v,k)
     if maxnet>25+1e-7:raise ValueError('inventory cap')

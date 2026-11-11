@@ -160,8 +160,8 @@ def features(tape,side,p,send,decision,config,neutral,inventory=0.,other_reserve
 def marks(tape,result,mark_t,outcome):
     m=tape.midpoint(mark_t)
     s=1 if result['side']==0 else -1;p=result['price'];fills=result['fills'];q=sum(f[1] for f in fills)
-    value=s*q*(m-p)
-    out=dict(q=q,value=value,settle=s*q*(100*outcome-p),cash=-s*q*p,net=s*q,
+    value=s*q*(m-p) if q else 0.
+    out=dict(q=q,value=value,settle=s*q*(100*outcome-p) if q else 0.,cash=-s*q*p,net=s*q,
              orders=sum(not o['refused'] and o['size']>0 for o in result['orders']),refused=sum(o['refused'] for o in result['orders']))
     for horizon in (1,5,60):
         terms=[];missing=0

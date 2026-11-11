@@ -107,7 +107,8 @@ def portfolio(frame,fillframe,arm,models=None,columns=None):
     for mid,s in states.items():
         row=look[(mid,STARTS[0],0)];s['square']+=(240000-s['last'])/1000*s['net']**2
         results.append(dict(mid=mid,arm=arm,config=scenario,day=row['day'],net=s['net'],cash_c=s['cash'],
-            stop_value_c=s['cash']+s['net']*row['stop_mid'],settle_value_c=s['cash']+s['net']*100*row['outcome'],
+            stop_value_c=s['cash']+s['net']*row['stop_mid'] if s['net'] else s['cash'],
+            settle_value_c=s['cash']+s['net']*100*row['outcome'] if s['net'] else s['cash'],
             inventory_square_s=s['square'],max_inventory=s['max_net'],terminal_abs=abs(s['net']),
             fills=s['fills'],shares=s['shares'],orders=s['orders'],admitted=s['admitted'],
             mo1_c=s['mo1'],mo5_c=s['mo5'],mo60_c=s['mo60'],spread_c=s['spread'],missing_marks=s['missing_marks'],

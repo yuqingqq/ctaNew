@@ -99,6 +99,8 @@ def build(day):
                     if (p if side==0 else 100-p)*SIZE<100:
                         row['status']=row['decision_status']='minimum_notional';pair.append((row,None,None));continue
                     stop=tape.hard_stop(side,p,send,send+5000.)
+                    if stop<=send:
+                        row['status']=row['decision_status']='initial_hard_guard';pair.append((row,None,None));continue
                     potentials={a:simulate(tape,side,p,send,decision,c,a,stop=stop) for a in ACTIONS}
                     neutral=potentials['keep'];base_prefix=[f for f in neutral['fills'] if f[0]<=decision]
                     if any([f for f in x['fills'] if f[0]<=decision]!=base_prefix for x in potentials.values()):raise ValueError('neutral prefix changed')
