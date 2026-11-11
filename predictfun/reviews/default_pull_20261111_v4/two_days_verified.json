@@ -1,0 +1,98 @@
+{
+  "as_of": "2026-11-11T19:36:10.427397+00:00",
+  "status": "TWO_OF_NINE_NEUTRAL_DAYS_VERIFIED",
+  "days": [
+    {
+      "day": "20261023",
+      "as_of": "2026-11-11T19:26:47.415226+00:00",
+      "windows_per_arm": 288,
+      "feature_decisions": 7842,
+      "checks_sha": "927ac29a43b2a797d6d8c017858ade7dd668718927c4fbc7c7a0444148079763",
+      "feature_sha": "e164f3c7d0f6870169f6d5431eff77b445a94e1008900b57de92a228492e6e6b",
+      "populations": [
+        {
+          "mode": "reference",
+          "windows": 288,
+          "generations": 35257,
+          "fills": 589,
+          "statuses": {
+            "accepted_no_cancel": 35199,
+            "postonly_refused": 58
+          },
+          "hashes": {
+            "win": "bf155f98b9ea341d5402687f3de7fb6a50ae21bd7a2c3cf7ff77aa2e71f75e71",
+            "fills": "c58342d7a902d0fa60d971ab382fcd8de6acb150c8e75bd05b0c118a9d27f331",
+            "requests": "e4926eaf0d08db3f28c513f22e1d144aaf7ec73ea77d5d877f906d81a4b3eeb2"
+          },
+          "generation_sha": "97bb9a489f7e8ab5709cbae075f2ab62741fbd23752050cd287bc07c29517270"
+        },
+        {
+          "mode": "default",
+          "windows": 288,
+          "generations": 18115,
+          "fills": 11052,
+          "statuses": {
+            "eligible": 7838,
+            "ended_before_probe_or_unknown": 7722,
+            "postonly_refused": 2551,
+            "missing_label_mark": 4
+          },
+          "hashes": {
+            "win": "deb97cdd2c83246a919b63cce344e964642cc9e908bec4f6b7fdab359009ad27",
+            "fills": "34704e70deb2108a2355e902461a508feaf83e55972fcd4dab838fdf769f4c1c",
+            "requests": "137d9b362b59a4ef010bfc14db5a0958dd28d0f42f6da5b520bf606843cdace6"
+          },
+          "generation_sha": "1047ad46d8a6762f6402785765c899bfb322d8fb435f464a161dacd8139fa732"
+        }
+      ]
+    },
+    {
+      "day": "20261024",
+      "as_of": "2026-11-11T19:35:43.460436+00:00",
+      "windows_per_arm": 288,
+      "feature_decisions": 6968,
+      "checks_sha": "ed8bbfb1109086151dd2634f5b34c87dbbd946fa4a687dd94e239b5d33641677",
+      "feature_sha": "a15d890c00741a31f4e81bf0b60c85e538049071b77cede91936e1c0b81dde86",
+      "populations": [
+        {
+          "mode": "reference",
+          "windows": 288,
+          "generations": 40267,
+          "fills": 696,
+          "statuses": {
+            "accepted_no_cancel": 40169,
+            "postonly_refused": 98
+          },
+          "hashes": {
+            "win": "e9ba8aa125a1173625af851ac0cc23453728eeea0f3c1b114532775994b976c8",
+            "fills": "61f3e4b7db794ef356f7c1196c88925df0bea1e4319a43c56d64b3f9a6cfcf2b",
+            "requests": "6c90aba78ee7131ae0a6ce7709b412194093264b8bbd25397cb4cbef7c992f3d"
+          },
+          "generation_sha": "a0dcaa5606530fdd757e1638f6c4d8780390b97a0a6ceacb15a8bf8785d8d09c"
+        },
+        {
+          "mode": "default",
+          "windows": 288,
+          "generations": 15372,
+          "fills": 10010,
+          "statuses": {
+            "eligible": 6965,
+            "ended_before_probe_or_unknown": 6565,
+            "postonly_refused": 1839,
+            "missing_label_mark": 3
+          },
+          "hashes": {
+            "win": "f5415f2165333f62aedae1e17612b0ee935d2810688f11c71e3e55b66241465a",
+            "fills": "ca75072fd912cd7511316621b54003d12f54f9c36cb5b0f40f1a9701036c3d01",
+            "requests": "14d61b09794c0b6366c69bc6fa0dc81a128c66116d14b51a3deca2f7590c7135"
+          },
+          "generation_sha": "2826df0cf2aef50089397b9ac8198221cf385a8d90861318d13115903435ca52"
+        }
+      ]
+    }
+  ],
+  "next_stage": "build_20261025",
+  "learned_models_fit": 0,
+  "feature_decisions": 14810,
+  "interpretation": "Neutral build progress, not learned-policy performance. All dates consumed; final six-day paired comparisons in both scenarios still pending."
+}
