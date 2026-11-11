@@ -1,0 +1,18 @@
+# Default-quote / learned-pull completion requirements
+
+This checklist maps the user objective to evidence. It is not a completion receipt: the research loop remains active. Canonical experiment: `default_pull_20261111_v4`; frozen source/declaration commits `36093438` / `531836a5`.
+
+| Requirement | Evidence to inspect before declaring completion |
+|---|---|
+| Preserve the completed own-order/calm study | Prior `own_orders_calm_20261111/comparison_v4.json` and human review remain identical to completed commit `d475eccb`; no promoted variant is relabeled as successful. |
+| Quote by default and estimate when to pull actual resting orders | Frozen hook/label/model/policy sources; new-level admission positive and old-behavior refusal; primary and stress generation records contain actual model scores, decisions and effective cancellations. |
+| Causal labels with inventory, delay, queue and re-entry costs | Neutral one-probe-per-generation population and exclusion statuses; effective-cancel snapshot and unavoidable prefix treatment; reset wait and queue loss; declared inventory-square term; synthetic prefix/queue/causality controls and per-run reconciliations. Local-label approximations remain explicit. |
+| Complete the authorized consumed cohort | Nine neutral build days and six evaluation days, all 288 windows per arm; protected-day refusal; source/input hashes and saved generated-engine timing identities. Missing marks and excluded actions retain statuses and counts. |
+| Fit the declared models without result-driven tuning | Six expanding folds, two pinned models per fold, earlier-day training populations, saved models and predictions, direct reconstruction of both neutral scores and actual replay actions. No fresh-validation claim. |
+| Compare whole portfolios and simple controls | All eight arms in both execution scenarios; matched guard and frozen ladder baselines; paired common-mark populations, settlement/carry, spread and markouts, inventory-square time and terminal exposure, cancellation activity and union of resting intervals. Alternative value measures are not added together. |
+| Quantify evidence without misleading significance | 500 declared matched-count null draws on decision value, 1,000 day-cluster bootstrap draws across six consumed complete days, matched population counts and as-of timestamps. Distinguish exploratory effects from untouched-day validation. |
+| Verify final artifacts | Every stage log and completion marker; `completion_audit.json`, `completion_runtime_v4.json`, `comparison_final.json`, figure receipt and rendered PNG/PDF. Confirm identities, numeric population scope and positive/refusal controls; inspect the actual figure. |
+| Keep status, findings and reproducibility current | Final human review and data requirements; current root/worktree HANDOFF, STATUS and progress handoff; small receipts and complete pipeline committed/pushed on `research/predict-default-pull-20261111`; large data stays outside git. |
+| Conclude honestly and preserve scope | An evidence-backed candidate or a clear negative result for this tested architecture, including both comparisons and execution scenarios. State remaining queue/fill calibration and later untouched-day requirements. Confirm the diff contains research/documentation changes only and no live strategy, loss-budget or rebate-accounting changes. |
+
+After all stages finish, resolve each row against the named artifacts and write the final completion finding. A running process, a passing smoke, a source manifest or the final report alone does not prove the whole objective complete.
