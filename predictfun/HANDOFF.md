@@ -1,5 +1,20 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 17:45Z — Own-order continuation + calm posting COMPLETE: no variant meets the objective
+
+- USER request implemented and tested on actual frozen-v3 admitted order generations. Read handoffs/20261111_own_orders_calm_review.md;
+  full tables handoffs/20261111_own_orders_calm_results_v4.md; canonical machine receipt reviews/own_orders_calm_20261111/comparison_v4.json.
+- Six consumed test days /1,728 windows. Paired marked delta vs baseline: learned continuation -5.60USD on1,578 common windows,
+  inventory-square time +0.007%; early calm quotes -15.77USD on1,578, exposure -1.288%; combined -21.38USD on1,577, exposure -1.281%.
+  Strict calm gate -142.14USD on1,579, exposure -97.733% but only75 fills vs3,095 baseline: it sacrifices trading activity.
+- Stress: continuation -15.51USD marked on1,559 common windows, exposure +0.849%; early calm -1.48USD on1,558, exposure +0.013%.
+  No promotion. Only92/12,757 reference neutral decisions have incremental fills; queue matched-null p=.735/500 draws.
+  Early seeds:13/3,494 generations filled (54.29shares), own1s/5s values only~0.03/0.23USD; full path effects matter.
+-9 exact baseline parities;21 original/dedup controls; all portfolios independently reconciled;12 model artifacts reconstructed.
+  Causal warm-up fix:70,115 feature decisions audited directly against cache rows; zero affected original decisions. Report serialization
+  fixed in v4 without numerical changes. Original sources/artifacts retained. Live/frozen v3 unchanged; conditional LODO-guard caveat applies.
+- Single light slot RELEASED. Peak replay RSS1,648MiB; outputs138MiB. Branch research/predict-own-orders-calm-20261111.
+
 ## 2026-11-11 17:15Z — Own-order study: primary replay complete; causal warm-up audit, stress RUNNING
 
 - All six primary test days PASS independent generation/fill/cash/inventory checks, in addition to9/9 exact baseline rebuilds.

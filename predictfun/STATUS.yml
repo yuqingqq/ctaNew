@@ -6,6 +6,10 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 17:45Z: Own-order continuation/calm study COMPLETE, not promoted. Learned continuation -5.60USD
+  paired marked value with +0.007% exposure; early calm -15.77USD with -1.288%, reduction disappears under stress.
+  Strict calm gate removes most trading. Canonical comparison_v4.json and own_orders_calm_review.md; all checks
+  and70,115 direct causal feature identities PASS. Single light slot released; live/frozen engine unchanged.
   2026-11-11 17:15Z: Own-order primary6/6 complete, all checks PASS. New-harness warm-up delta bug corrected
   with superseding causal v3 wrapper:70,115 saved feature decisions audited, zero affected primary decisions.
   Stress6-day replay RUNNING; slot reserved. Canonical result will be comparison_v3.json.
