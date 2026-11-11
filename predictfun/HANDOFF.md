@@ -2,10 +2,10 @@
 
 <!-- DEFAULT_PULL_LOOP -->
 
-## 2026-11-11T18:51:12.637742+00:00 — Quote-default / learned-pull research loop: running
+## 2026-11-11T18:59:26.595100+00:00 — Quote-default / learned-pull research loop: running
 
-- Stage `build_20261026`. v3 cached observed-depth features; full-day v2 identity required before further tests.
-- 5 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
+- Stage `build_20261027`. v3 cached observed-depth features; full-day v2 identity required before further tests.
+- 6 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
 - Prior own-order/calm test remains COMPLETE, no promotion; comparison_v4.json / d475eccb.
 - Branch research/predict-default-pull-20261111; one light numeric process; no live changes/protected-day reads.
 
@@ -2280,3 +2280,10 @@ The driver only uses run_light.sh (core 8, one process); P-2026-003 must not pin
 - After all26 driver stages, run pf_default_pull_completion_v3; then pf_default_pull_plot (source05d5a936) through run_light.
 - Plot requires the verified final report/audit identities and writes PNG/PDF plus exact point populations/as-of. No new model selection.
 - Canonical data: default_pull_20261111_v3. All policy/stress conclusions remain pending; live unchanged.
+
+## 2026-11-11 19:02Z — Default-pull neutral builds4/9 PASS
+
+- Oct23-26 complete:288 windows/day/path, exact baseline parity, accounting/cap checks and27,392 direct feature identities PASS.
+- Oct27 is running in the single numeric slot. No model, threshold, label or policy changes.
+- Receipts in reviews/default_pull_20261111_v3; automatic stage tracker in handoffs/20261111_default_pull_progress.md.
+- Models, six-day primary/stress portfolios, completion audit and figure remain pending. No live changes.
