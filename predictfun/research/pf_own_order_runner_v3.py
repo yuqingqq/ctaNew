@@ -11,7 +11,9 @@ from .pf_own_order_warmup_v3 import CausalWindow,controls
 def check_decision_clocks(g):
     a=g[g.order_age_ms.notna()]
     lag=a.decision-a.ws-1000*a.t_rel
-    if not np.isfinite(lag).all() or (lag<-.001).any() or (lag>100.001).any():raise ValueError('feature decision clock identity')
+    # t_rel is a float32 model feature: its rounding is at most one ULP, not event-clock error.
+    tol=np.spacing(a.t_rel.to_numpy(np.float32)).astype(float)*1000+.001
+    if not np.isfinite(lag).all() or (lag < -tol).any() or (lag>100+tol).any():raise ValueError('feature decision clock identity')
     if ((a.decision-a.ws)<250).any() or (a.t_rel<.25).any():raise ValueError('affected decision requires recomputation')
 
 
