@@ -22,12 +22,21 @@ REVIEW=Path(__file__).resolve().parents[1]/'reviews/queue_age_control_20261111'
 COLS=MARKET+['order_age_ms']
 
 
+def check_columns(columns):
+    if set(columns)&set(QUEUE)!= {'order_age_ms'}:raise ValueError('age baseline feature contamination')
+
+
 def declare():
     original=S.check()
     if OUT.exists():raise ValueError('refuse overwrite')
-    if set(COLS)&set(QUEUE)!= {'order_age_ms'}:raise ValueError('queue estimates leaked into age baseline')
+    check_columns(COLS)
+    for bad in (MARKET,COLS+['queue_progress']):
+        try:check_columns(bad)
+        except ValueError:pass
+        else:raise ValueError('feature-checker falsifier failed')
     hashes={}
     for day in S.DAYS:
+        if json.loads((S.OUT/f'{day}_build.json').read_text())['missing_registry_windows']:raise ValueError('incomplete UTC day')
         for suffix in ('.parquet','_fills.parquet','_build.json'):
             p=S.OUT/f'{day}{suffix}';hashes[p.name]=S.sha(p)
     d=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),source_commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
@@ -47,6 +56,9 @@ def run():
         if S.sha(S.OUT/name)!=h:raise ValueError('generation artifact changed')
     verification=json.loads((S.OUT/'verification.json').read_text())
     if verification['status']!='PASS':raise ValueError('original verifier did not pass')
+    original=json.loads((S.OUT/'report.json').read_text())
+    for key,name in [('prediction_sha','predictions.parquet'),('portfolio_sha','portfolio_windows.parquet')]:
+        if S.sha(S.OUT/name)!=original[key]:raise ValueError('original result changed')
     a=pd.concat([pd.read_parquet(S.OUT/f'{day}.parquet') for day in S.DAYS],ignore_index=True)
     p=pd.read_parquet(S.OUT/'predictions.parquet');base=pd.read_parquet(S.OUT/'portfolio_windows.parquet')
     results=[];predictions=[];folds=[];checks=0;selected_hashes={}
