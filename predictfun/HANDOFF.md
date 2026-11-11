@@ -1,6 +1,6 @@
 # P-2026-005 HANDOFF
 
-## 2026-11-11 15:24Z — Queue continuation model prepared; awaiting B16c/B19a compute slot
+## 2026-11-11 15:16Z — Queue continuation model prepared; awaiting B16c/B19a compute slot
 
 - USER requested a reasonable order-state model and an actual test. Isolated branch
   research/predict-queue-policy-20261111, worktree /tmp/cta-queue-policy-20261111.
