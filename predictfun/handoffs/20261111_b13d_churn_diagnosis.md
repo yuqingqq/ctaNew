@@ -51,6 +51,19 @@ flow after the pulls +0.45 c/sh), with "pulls with the research guard ON" read a
 as "pulls after the value had been below the line for a grid step or more": would-be fills after fresh crossings +0.04
 c/sh (1,631 sh), after sustained OFF -0.98 (267 sh).
 
+## Already built (checked 08:32Z)
+
+- Size by add / remove is implemented on pmmmrust main: `SizeLayering::IncrementalV1` (70b965b, f20fdb1, 2026-11-09), the v3
+  examples' setting; a 5 that becomes 25 keeps its place and gains a 20 (research's quote-mechanics study on 11-08: requests
+  -4.5%, time at the wanted price 76.2% against 73.3%); a size-down below a resting order still replaces it (no amend). Not
+  yet run live: the 11-08 run (tokyo-6, 4d65884) predates it, which is why its data shows the resizes.
+- The pull hysteresis is specified and studied but not in the engine: B3 soft pull (handoffs/20261109_soft_pull_results.md;
+  reference policy research/pf_soft_pull.py on branch research/predict-soft-pull-20261109): keep an accepted, uncancelled base
+  order of at most 5 sh at its price while line - 0.01 c < v <= line, at most 100 ms, ended by a lower-line crossing, a
+  stale value, a Binance guard, a hold or the price / size no longer allowed; no new order during the grace; no rungs.
+  Mechanics on 11-08: requests -7.0%, aligned time +2.65%, off-target time +34%. Its stated next step is the integration
+  with IncrementalV1 and parity ("B4").
+
 ## What this means for the fix
 
 1. "Only act when the model agrees" is not enough: the model itself flickers at the line. A resting touch order needs a
@@ -58,9 +71,8 @@ c/sh (1,631 sh), after sustained OFF -0.98 (267 sh).
    The earlier pull-buffer study (B3: 0.01 c band, at most 100 ms; mechanics only, `research/pf_review_gate_bands.py`) is
    that rule; it was never put into the live code. Wide bands were not supported (fills inside wide bands were
    adverse), so the band has to stay narrow.
-2. Size changes should add or remove orders instead of cancel-and-replace (USER): keep the resting order, add an order
-   for the difference when sizing up, cancel the newest add-on first when sizing down. Predict orders are signed and
-   cannot be amended; a lane then holds more than one order.
+2. Size changes should add or remove orders instead of cancel-and-replace (USER): already built as IncrementalV1 (above);
+   it needs only to be the live setting.
 3. G4's flicker (14.7%) could take the same treatment (withhold only a clearly lighter side), as a separate token.
 4. Each is a strategy change: a new candidate (v3 is frozen, b261091d), implemented in a new research engine file (not
    in pf_step4_ladder.py, which the scheduled v3 forward run depends on) and in pmmmrust behind tokens that are off by
