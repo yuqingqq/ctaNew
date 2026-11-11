@@ -40,7 +40,7 @@ def run():
     d=json.loads((S.OUT/'causal_v3_declaration.json').read_text())
     if total!=d['feature_decisions_checked']:raise ValueError('audit population identity')
     result=dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(),status='PASS',source_sha=S.sha(__file__),
-        comparison_sha=S.sha(S.OUT/'comparison_v3.json'),decisions=total,checks=checks,
+        comparison_sha=S.sha(S.OUT/'comparison_v4.json'),decisions=total,checks=checks,
         control='Positive identity and known-bad changed-feature refusal pass. Every original primary derivative equals its actual causal250ms cache difference; grids complete from window start.')
     S.write(S.OUT/'grid_check.json',result);S.write(S.REVIEW/'grid_check.json',result)
     print('GRID_VERIFIED',total,'decisions',flush=True)
