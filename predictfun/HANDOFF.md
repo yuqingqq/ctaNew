@@ -1,5 +1,26 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 05:49Z (session ce68ebe0) — B12e DONE: the top makers take the thin side of a lopsided Predict book that has started to move, at moments our own model flags; the Binance grid used is too coarse to judge Binance
+
+- Done: B12e (USER "can you check their take, what happens on Binance or what events happen during then?").
+  research/pf_b12e_smart_takes.py committed and pushed before its run (04422a15; output 05:45Z). Report
+  handoffs/20261111_b12e_smart_takes.md; output live_vs_replay/b12e_20261111/, copies reviews/b12e_20261111/. Controls pass.
+- Results: 2,491 taker orders of makers 48 / 51 / 661 against 12,455 random times. Side hit median 84 sh (random 228),
+  other side 312 (~235); Predict mid +0.61 c their way in the second before (random +0.08), +1.14 c 250 ms after, +1.74 c
+  1 s after; our model's 1 s prediction points their way at 81% (mean +0.60 c; R72 OUR-MODEL-SEES); our guard value of
+  the side hit < 0 at 90%; 55% within 250 ms of another of their orders. R70 NO-BINANCE-LEAD, R74 NO-BINANCE-FOLLOW,
+  R73 THIN-SIDE.
+- Correction: the Binance grid (step5 rows_rl_d2.bn_mid) is coarse (90% of 1 s intervals unchanged; median 5 distinct
+  values per first minute). R70 / R74 here and B12c v2's NOT-BINANCE read as not shown; correction notes added to the
+  B12c report and the B12d summary table; flag model_or_speed_b12c updated.
+- Says: avoid their flow by not resting on the thin side of a lopsided book when our model points against it, and by
+  pulling that side right after the first smart hit; our model already flags most of these moments.
+- Next: (1) a guard-input test with book imbalance + Predict's recent move (public tape); (2) a sub-second Binance source
+  for the cohort (or the live feed via the A4b capture, USER D2); (3) slow-cancel issue to the live session; (4) USER
+  rebate / rewards.
+- Watch out: three addresses, one Sunday; part of the move after is their own take clearing the level; the one-sided
+  null covers only the upward differences.
+
 ## 2026-11-11 04:59Z (session ce68ebe0) — B12d DONE: the top makers stay after being hit; a quarter of their edge is their own taking; the rest is not visible on the public tape
 
 - Done: B12d (USER "Run it, and give me a clear explanation"). research/pf_b12d_bursts.py committed and pushed before
