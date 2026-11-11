@@ -135,6 +135,8 @@ def day_matrix(d, cols, ex=None):
             ex = pd.read_parquet(ex_path(d))
         assert len(ex) == len(r) and (ex.mid.values == r.mid.values).all() and (ex.tau.values == r.tau.values).all(), f'{d}: ex alignment'
         X = np.concatenate([X, ex[EXTRA].values.astype(np.float32)], axis=1)
+    if X.shape[1] != len(cols):
+        sys.exit(f'REFUSED: {d} matrix {X.shape[1]} wide, expected {len(cols)}')
     return r, live, X
 
 
@@ -312,7 +314,10 @@ def step_features():
 
 def load_grid():
     """The guard grid (file order) with EXTRA attached per day from that day's rows (only the grid's rows are kept)."""
-    G = pd.read_parquet(GRID, columns=['day', 'mid', 'tau', 't_rel', 'v_bid', 'v_ask'] + FE)
+    # t_rel is one of the features: the column list must not repeat it (a repeat made G[FE] 33 wide; C1 caught it, 10:13Z)
+    G = pd.read_parquet(GRID, columns=list(dict.fromkeys(['day', 'mid', 'tau', 't_rel', 'v_bid', 'v_ask'] + FE)))
+    if G.columns.duplicated().any() or G[FE].shape[1] != len(FE):
+        sys.exit('REFUSED: duplicate grid columns')
     if sorted(G.day.unique()) != READ:
         sys.exit(f'REFUSED: the grid holds {sorted(G.day.unique())}')
     parts = []
@@ -339,6 +344,8 @@ def step_build():
     XE = np.concatenate([G[FE].values.astype(np.float32), G[EXTRA].values.astype(np.float32)], axis=1)
     G.drop(columns=FE + EXTRA, inplace=True)
     XB = XE[:, :len(FE)]
+    if XE.shape[1] != len(EMPH):
+        sys.exit(f'REFUSED: training matrix {XE.shape[1]} wide, expected {len(EMPH)}')
     day = G.day.values
     rep = dict(grid_rows=int(len(G)), grid_rows_without_any_engineered_value=miss, thresholds={}, controls={})
     # C1 parity: this file's fit / apply = the live guard's preds_t60, on 11-03 (all 8 days) and 10-23 (LODO); falsifier: c + 1e-6
