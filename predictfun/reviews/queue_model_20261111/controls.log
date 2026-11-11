@@ -1,0 +1,21 @@
+test_L_M_bracket (predictfun.research.tests.test_queue_model.QueueControls.test_L_M_bracket) ... ok
+test_action_matched_null_positive_and_refusal (predictfun.research.tests.test_queue_model.QueueControls.test_action_matched_null_positive_and_refusal) ... ok
+test_artifact_checker_positive_and_falsifiers (predictfun.research.tests.test_queue_model.QueueControls.test_artifact_checker_positive_and_falsifiers) ... ok
+test_bad_clocks_and_protected_dates (predictfun.research.tests.test_queue_model.QueueControls.test_bad_clocks_and_protected_dates) ... ok
+test_cancel_latency_and_exact_boundary (predictfun.research.tests.test_queue_model.QueueControls.test_cancel_latency_and_exact_boundary) ... ok
+test_causal_features_no_latent_or_future_input (predictfun.research.tests.test_queue_model.QueueControls.test_causal_features_no_latent_or_future_input) ... ok
+test_fixed_size_reduce_only_no_reversal (predictfun.research.tests.test_queue_model.QueueControls.test_fixed_size_reduce_only_no_reversal) ... ok
+test_notice_and_rejoin_pending_reservation (predictfun.research.tests.test_queue_model.QueueControls.test_notice_and_rejoin_pending_reservation) ... ok
+test_pinned_model_finds_planted_queue_value (predictfun.research.tests.test_queue_model.QueueControls.test_pinned_model_finds_planted_queue_value) ... ok
+test_portfolio_integrates_both_sides_and_cancel (predictfun.research.tests.test_queue_model.QueueControls.test_portfolio_integrates_both_sides_and_cancel) ... ok
+test_postonly_and_pending_create_cancel (predictfun.research.tests.test_queue_model.QueueControls.test_postonly_and_pending_create_cancel) ... ok
+test_queue_progress_and_rejoin_cost (predictfun.research.tests.test_queue_model.QueueControls.test_queue_progress_and_rejoin_cost) ... ok
+test_rejoin_minimum_notional (predictfun.research.tests.test_queue_model.QueueControls.test_rejoin_minimum_notional) ... ok
+test_stale_invalid_missing_state (predictfun.research.tests.test_queue_model.QueueControls.test_stale_invalid_missing_state) ... ok
+test_toxic_keep_and_side_mirror (predictfun.research.tests.test_queue_model.QueueControls.test_toxic_keep_and_side_mirror) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.147s
+
+OK
+2026-11-11T15:27:59Z tag=queue_controls rc=0 peak_rss_mib=195 wall_s=1.04 cpu_user_s=0.85 memavail_start_gib=24 disk_free_gib=517->517
