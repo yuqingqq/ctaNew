@@ -342,7 +342,7 @@ def step_build():
     G, miss = load_grid(); io.mem_check('grid')
     Y = {s: G[f'v_{s}'].clip(-10, 10).values for s in ('bid', 'ask')}
     XE = np.concatenate([G[FE].values.astype(np.float32), G[EXTRA].values.astype(np.float32)], axis=1)
-    G.drop(columns=FE + EXTRA, inplace=True)
+    G.drop(columns=[c for c in FE + EXTRA if c != 't_rel'], inplace=True)   # t_rel is a feature and the minute key
     XB = XE[:, :len(FE)]
     if XE.shape[1] != len(EMPH):
         sys.exit(f'REFUSED: training matrix {XE.shape[1]} wide, expected {len(EMPH)}')
@@ -392,14 +392,15 @@ def step_build():
     write_preds(FRESH, apply(ms, cs, live, X), rows)
     for s in ('bid', 'ask'):
         ms[s].save_model(f'{OUTD}/guard_emph_{s}.txt')
-    del X
-    # BASE on the grid rows = preds_t60's v (the live guard, out of fold)
-    parts = []
+    del X, XE, XP, XB
+    # BASE on the grid rows = preds_t60's v (the live guard, out of fold), joined day by day
+    oof['base_bid'] = np.float32(np.nan); oof['base_ask'] = np.float32(np.nan)
     for d in READ:
-        p = pd.read_parquet(f'{S5}/{d}/preds_t60.parquet', columns=['mid', 'tau', 'v_bid', 'v_ask'])
-        p['day'] = d; parts.append(p)
-    B = pd.concat(parts, ignore_index=True); del parts
-    oof = oof.merge(B.rename(columns={'v_bid': 'base_bid', 'v_ask': 'base_ask'}), on=['day', 'mid', 'tau'], how='left', validate='one_to_one')
+        k = oof.loc[oof.day == d, ['mid', 'tau']]
+        b = k.merge(pd.read_parquet(f'{S5}/{d}/preds_t60.parquet', columns=['mid', 'tau', 'v_bid', 'v_ask']), on=['mid', 'tau'], how='left',
+                    validate='one_to_one')
+        oof.loc[k.index, 'base_bid'] = b.v_bid.values; oof.loc[k.index, 'base_ask'] = b.v_ask.values
+        del k, b; io.mem_check(f'base join {d}')
     oof.to_parquet(f'{OUTD}/oof_grid.parquet', index=False)
     rep['oof_rows'] = int(len(oof)); rep['oof_base_missing'] = int(oof.base_bid.isna().sum())
     io.write_json(f'{OUTD}/build_report.json', rep)
