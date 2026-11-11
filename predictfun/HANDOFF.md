@@ -1,5 +1,25 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 04:59Z (session ce68ebe0) — B12d DONE: the top makers stay after being hit; a quarter of their edge is their own taking; the rest is not visible on the public tape
+
+- Done: B12d (USER "Run it, and give me a clear explanation"). research/pf_b12d_bursts.py committed and pushed before
+  its run (7b70bfa1; output 04:54Z); post hoc research/pf_b12d_takers.py (04:57Z). Report handoffs/20261111_b12d_bursts.md
+  (with a summary table of B12-B12d); output live_vs_replay/b12d_20261111/, copies reviews/b12d_20261111/. Controls pass.
+- Readings: R60 SAME-POSITION (first in a run 46.9% against 43.8%; X_RUN 0.08); R61 BOOK-NOT-ENOUGH (X_THIN 0.12);
+  R62 STAY-AFTER-HIT (re-hit after an absorbed fill 59.5% against 38.4%, null p99 +4.4 pp); R63 SAME-HOLD (+5.0 pp);
+  R64 HOLD-THE-PRICE (from R62; the holding itself is small).
+- Post hoc: makers 48, 51, 661 of the top 5 also take (1.1-1.9% of taker volume each); their taker orders cost the
+  makers hit -1.23 c/sh at 1 s (others' +0.08), mostly ranks 21+; without them the gap is +0.16 instead of +0.21.
+- Says: they do not pull after hits (they stay, at no cost; staying costs the others); the losses sit in stress
+  moments (after the level thinned: ranks 6+ -1.04, top 5 -0.31; ours -5.83 on 21% of our at-best shares); at the best
+  ranks 6-20 match the top 5, the losers are ranks 21+ and us. Most of the gap is not visible on the public tape
+  (cancels are anonymous).
+- Next: (1) B1 / USER D2: our reaction to Predict book changes needs the A4b capture. (2) Guard inputs from Predict's
+  own book and takers (level thinning, informed takers hitting), not Binance. (3) Slow-cancel issue to the live
+  session. (4) USER rebate / rewards.
+- Watch out: re-hit cannot tell a cancel from an order used up exactly (the top makers' larger orders raise their
+  rate a little by themselves); the taker check uses the 69% of legs with an unambiguous join; our rows are 28 legs.
+
 ## 2026-11-11 04:28Z (session ce68ebe0) — B12c DONE: not a better trend model and not faster reaction to Binance; the top makers' edge is Predict-local and earned within 250 ms
 
 - Done: B12c (USER "Can you check if they have a better model, or they just react faster"). v1

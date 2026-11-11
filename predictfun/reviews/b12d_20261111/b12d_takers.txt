@@ -1,0 +1,12 @@
+B12d POST HOC: who the takers are (descriptive).
+Join: {'legs': 94783, 'legs_unambiguous': 65382, 'share_joined': 0.6898072439150481, 'own_address_ok': True, 'signer_purity_p10': 1.0}
+
+Top-5 makers as takers (first minute; shares of maker legs their taker orders hit, % of taker volume with a known taker):
+  maker 30: 0.0 sh (0.00%)
+  maker 40: 0.0 sh (0.00%)
+  maker 48: 12,192.4 sh (1.28%)
+  maker 51: 18,066.1 sh (1.90%)
+  maker 661: 10,602.9 sh (1.11%)
+Value to the makers hit, at-best legs, by taker: top-5 taker: legs 2491, net -1.23, move -1.77; other taker: legs 58015, net +0.08, move -0.45
+Part A gap, top 5 against O within guard (c/sh at 1 s): all part A legs: +0.21 (55514 legs); taker known: +0.21 (50676 legs); taker known, not a top-5 address: +0.16 (48381 legs); taker a top-5 address: +0.79 (2295 legs)
+Share of each group's part A fill shares from top-5 taker orders (net from them / from others): top 5: 4.7% (-0.59 / +0.28); 6-20: 3.1% (-0.70 / +0.35); rest: 8.3% (-1.61 / -0.10); O (ranks >= 6): 5.8% (-1.39 / +0.12); ours: 1.9% (-1.50 / -1.12)

@@ -1,0 +1,19 @@
+B12d bursts, re-hits, thinning, holds. point estimates, one consumed partial day (220 windows of 2026-11-08, 0.764 window-days)
+Controls: {"B12b_controls": true, "D1_runs": true, "D2_rehit": true, "D3_thin_holds": true, "D4_null": true, "D5_rules": true}
+K0 True part A {'top5': 10656, 'O': 44858} True; taker orders {'taker_orders': 60770, 'share_in_runs': 0.6495474740826066}
+
+Part A legs by group: legs | net 1 s | first / second / third+ in run (share, net) | followed within 0.5 s (share; net followed / alone) | level holds 250 ms later
+top 5 | 10656 | +0.24 | 46.9% +0.50 / 16.0% +0.16 / 37.1% -0.06 | 45.0%; -0.13 / +0.54 | 81.6%
+6-20 | 19965 | +0.26 | 44.0% +0.49 / 18.6% +0.37 / 37.5% -0.06 | 40.1%; -0.16 / +0.54 | 81.9%
+rest | 24893 | -0.20 | 43.6% +0.32 / 16.4% +0.12 / 40.0% -0.90 | 48.1%; -0.88 / +0.43 | 72.9%
+O (ranks >= 6) | 44858 | +0.02 | 43.8% +0.40 / 17.4% +0.25 / 38.8% -0.50 | 44.2%; -0.56 / +0.49 | 77.3%
+ours | 28 | -1.34 | 40.9% -1.04 / 23.0% -1.82 / 36.1% -1.38 | 54.9%; -1.60 / -1.03 | 42.2%
+Thinning before the trade (share, net 1 s): top 5: new 8.4% +0.42; shrank 17.2% -0.31; stable 55.1% +0.31; grew 19.3% +0.44; no earlier frame 0.0% n/a || O (ranks >= 6): new 7.6% +0.29; shrank 19.6% -1.04; stable 54.9% +0.25; grew 17.9% +0.38; no earlier frame 0.0% n/a || ours: new 8.9% -0.50; shrank 21.4% -5.83; stable 51.0% -0.19; grew 18.8% +0.23; no earlier frame 0.0% n/a
+Decomposition top 5 against O (c/sh at 1 s): WITHIN_G +0.21; RUN WITHIN +0.19 X 0.08; THIN WITHIN +0.19 X 0.12 (of +0.21); HOLD within reach +5.0 pp
+
+Re-hit after an absorbed fill: absorbed 31722, with a next same-price order within 0.5 s 19029; top 5 59.5% (n 4323) against O 38.4% (n 14695); delta +21.1 pp, null p01 +0.8 p99 +4.4 pp
+  by time to the next order: 0-100 ms: top 5 54.0% (n 2765), O 32.6% (n 11146); 100-250 ms: top 5 72.7% (n 719), O 58.1% (n 1680); 250-500 ms: top 5 66.3% (n 839), O 54.8% (n 1869)
+  by group: top 5 59.5% (n 4323); 6-20 32.1% (n 6055); rest 42.7% (n 8640); O (ranks >= 6) 38.4% (n 14695); ours 45.5% (n 11)
+  value of the absorbed fill: top 5, stayed +0.02 (2571); top 5, left -0.03 (1752); 6-20, stayed +0.11 (1946); 6-20, left -0.14 (4109); rest, stayed -0.94 (3693); rest, left -0.55 (4947); O (ranks >= 6), stayed -0.65 (5639); O (ranks >= 6), left -0.34 (9056); ours, stayed -1.29 (5); ours, left -2.00 (6)
+
+Readings: {"R60": "SAME-POSITION", "R61": "BOOK-NOT-ENOUGH", "R62": "STAY-AFTER-HIT", "R63": "SAME-HOLD", "R64": ["HOLD-THE-PRICE"]}
