@@ -1,0 +1,107 @@
+BUILD 20261023 48 rss_mib 1049
+BUILD 20261023 96 rss_mib 1082
+BUILD 20261023 144 rss_mib 1116
+BUILD 20261023 192 rss_mib 1147
+BUILD 20261023 240 rss_mib 1181
+BUILD 20261023 288 rss_mib 1215
+BUILT 20261023 39744 {'eligible': 19626, 'fill_known_before_decision': 4187, 'minimum_notional': 5652, 'hard_guard_before_decision': 6051, 'initial_hard_guard': 2028, 'postonly_or_depth_refused': 1198, 'missing_book': 906, 'missing_common_mark': 71, 'missing_or_stale_state': 21, 'unknown_queue_estimate': 4}
+2026-11-11T15:28:22Z tag=queue_build_20261023 rc=0 peak_rss_mib=1215 wall_s=21.09 cpu_user_s=19.51 memavail_start_gib=24 disk_free_gib=517->517
+BUILD 20261024 48 rss_mib 1223
+BUILD 20261024 96 rss_mib 1257
+BUILD 20261024 144 rss_mib 1293
+BUILD 20261024 192 rss_mib 1323
+BUILD 20261024 240 rss_mib 1358
+BUILD 20261024 288 rss_mib 1394
+BUILT 20261024 39744 {'fill_known_before_decision': 4288, 'hard_guard_before_decision': 4958, 'eligible': 21191, 'postonly_or_depth_refused': 960, 'initial_hard_guard': 1341, 'minimum_notional': 6060, 'missing_book': 828, 'missing_common_mark': 77, 'missing_or_stale_state': 36, 'unknown_queue_estimate': 5}
+2026-11-11T15:28:43Z tag=queue_build_20261024 rc=0 peak_rss_mib=1394 wall_s=21.24 cpu_user_s=19.75 memavail_start_gib=24 disk_free_gib=517->517
+BUILD 20261025 48 rss_mib 955
+BUILD 20261025 96 rss_mib 990
+BUILD 20261025 144 rss_mib 1023
+BUILD 20261025 192 rss_mib 1058
+BUILD 20261025 240 rss_mib 1093
+BUILD 20261025 288 rss_mib 1123
+BUILT 20261025 39744 {'eligible': 21708, 'hard_guard_before_decision': 4617, 'minimum_notional': 6159, 'fill_known_before_decision': 4310, 'missing_common_mark': 79, 'missing_book': 1200, 'initial_hard_guard': 717, 'postonly_or_depth_refused': 928, 'missing_or_stale_state': 25, 'unknown_queue_estimate': 1}
+2026-11-11T15:29:04Z tag=queue_build_20261025 rc=0 peak_rss_mib=1126 wall_s=21.06 cpu_user_s=19.69 memavail_start_gib=24 disk_free_gib=517->517
+BUILD 20261026 48 rss_mib 1073
+BUILD 20261026 96 rss_mib 1105
+BUILD 20261026 144 rss_mib 1139
+BUILD 20261026 192 rss_mib 1169
+BUILD 20261026 240 rss_mib 1203
+BUILD 20261026 288 rss_mib 1238
+BUILT 20261026 39744 {'hard_guard_before_decision': 7087, 'postonly_or_depth_refused': 1191, 'fill_known_before_decision': 3470, 'eligible': 19118, 'initial_hard_guard': 2541, 'minimum_notional': 5277, 'missing_common_mark': 72, 'missing_or_stale_state': 46, 'missing_book': 942}
+2026-11-11T15:29:25Z tag=queue_build_20261026 rc=0 peak_rss_mib=1238 wall_s=21.17 cpu_user_s=19.33 memavail_start_gib=24 disk_free_gib=517->517
+BUILD 20261027 48 rss_mib 1078
+BUILD 20261027 96 rss_mib 1113
+BUILD 20261027 144 rss_mib 1158
+BUILD 20261027 192 rss_mib 1203
+BUILD 20261027 240 rss_mib 1249
+BUILD 20261027 288 rss_mib 1297
+BUILT 20261027 39744 {'eligible': 20728, 'initial_hard_guard': 1635, 'hard_guard_before_decision': 5493, 'fill_known_before_decision': 3717, 'postonly_or_depth_refused': 1236, 'minimum_notional': 5658, 'missing_common_mark': 107, 'missing_or_stale_state': 42, 'missing_book': 1128}
+2026-11-11T15:29:46Z tag=queue_build_20261027 rc=0 peak_rss_mib=1297 wall_s=21.85 cpu_user_s=20.26 memavail_start_gib=24 disk_free_gib=517->517
+BUILD 20261031 48 rss_mib 1168
+BUILD 20261031 96 rss_mib 1202
+BUILD 20261031 144 rss_mib 1236
+BUILD 20261031 192 rss_mib 1271
+BUILD 20261031 240 rss_mib 1309
+BUILD 20261031 288 rss_mib 1359
+BUILT 20261031 39744 {'postonly_or_depth_refused': 552, 'hard_guard_before_decision': 3167, 'eligible': 26402, 'initial_hard_guard': 678, 'fill_known_before_decision': 2588, 'minimum_notional': 5694, 'missing_book': 612, 'missing_or_stale_state': 12, 'unknown_queue_estimate': 8, 'missing_common_mark': 31}
+2026-11-11T15:30:08Z tag=queue_build_20261031 rc=0 peak_rss_mib=1359 wall_s=20.43 cpu_user_s=19.02 memavail_start_gib=24 disk_free_gib=517->517
+BUILD 20261101 48 rss_mib 990
+BUILD 20261101 96 rss_mib 1022
+BUILD 20261101 144 rss_mib 1056
+BUILD 20261101 192 rss_mib 1090
+BUILD 20261101 240 rss_mib 1128
+BUILD 20261101 288 rss_mib 1176
+BUILT 20261101 39744 {'hard_guard_before_decision': 3253, 'eligible': 24587, 'minimum_notional': 6168, 'fill_known_before_decision': 3228, 'initial_hard_guard': 480, 'postonly_or_depth_refused': 763, 'missing_common_mark': 94, 'missing_or_stale_state': 47, 'missing_book': 1122, 'unknown_queue_estimate': 2}
+2026-11-11T15:30:29Z tag=queue_build_20261101 rc=0 peak_rss_mib=1175 wall_s=19.89 cpu_user_s=18.58 memavail_start_gib=24 disk_free_gib=517->517
+BUILD 20261102 48 rss_mib 1189
+BUILD 20261102 96 rss_mib 1223
+BUILD 20261102 144 rss_mib 1256
+BUILD 20261102 192 rss_mib 1286
+BUILD 20261102 240 rss_mib 1316
+BUILD 20261102 288 rss_mib 1348
+BUILT 20261102 39744 {'hard_guard_before_decision': 6352, 'initial_hard_guard': 2157, 'eligible': 19400, 'fill_known_before_decision': 3536, 'minimum_notional': 5637, 'missing_book': 1428, 'postonly_or_depth_refused': 1062, 'missing_common_mark': 116, 'missing_or_stale_state': 48, 'unknown_queue_estimate': 8}
+2026-11-11T15:30:49Z tag=queue_build_20261102 rc=0 peak_rss_mib=1348 wall_s=19.43 cpu_user_s=18.16 memavail_start_gib=24 disk_free_gib=517->517
+BUILD 20261103 48 rss_mib 1183
+BUILD 20261103 96 rss_mib 1214
+BUILD 20261103 144 rss_mib 1247
+BUILD 20261103 192 rss_mib 1276
+BUILD 20261103 240 rss_mib 1308
+BUILD 20261103 288 rss_mib 1342
+BUILT 20261103 39744 {'fill_known_before_decision': 2932, 'eligible': 20389, 'hard_guard_before_decision': 6159, 'initial_hard_guard': 2097, 'postonly_or_depth_refused': 1022, 'minimum_notional': 5664, 'missing_book': 1338, 'missing_common_mark': 98, 'missing_or_stale_state': 38, 'unknown_queue_estimate': 7}
+2026-11-11T15:31:08Z tag=queue_build_20261103 rc=0 peak_rss_mib=1342 wall_s=19.97 cpu_user_s=18.43 memavail_start_gib=24 disk_free_gib=517->517
+EVAL 20261026 L50 train 15483 test 4832
+EVAL 20261026 M50 train 15483 test 4730
+EVAL 20261026 L250slow train 15483 test 4738
+EVAL 20261027 L50 train 20315 test 5240
+EVAL 20261027 M50 train 20315 test 5112
+EVAL 20261027 L250slow train 20315 test 5258
+EVAL 20261031 L50 train 25555 test 6729
+EVAL 20261031 M50 train 25555 test 6658
+EVAL 20261031 L250slow train 25555 test 6754
+EVAL 20261101 L50 train 32284 test 6138
+EVAL 20261101 M50 train 32284 test 6081
+EVAL 20261101 L250slow train 32284 test 6189
+EVAL 20261102 L50 train 38422 test 4831
+EVAL 20261102 M50 train 38422 test 4728
+EVAL 20261102 L250slow train 38422 test 4804
+EVAL 20261103 L50 train 43253 test 5152
+EVAL 20261103 M50 train 43253 test 5027
+EVAL 20261103 L250slow train 43253 test 5056
+DONE 98057 held-out-in-time generation rows
+2026-11-11T15:31:28Z tag=queue_fit rc=0 peak_rss_mib=1143 wall_s=589.14 cpu_user_s=587.05 memavail_start_gib=24 disk_free_gib=517->517
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/tmp/cta-queue-policy-20261111/predictfun/research/pf_queue_model_verify.py", line 89, in <module>
+    if __name__=='__main__':run()
+                            ^^^^^
+  File "/tmp/cta-queue-policy-20261111/predictfun/research/pf_queue_model_verify.py", line 62, in run
+    verify_window(r,bymid.get(r['mid'],chosen.iloc[:0]),ident.stop_mid,ident.outcome)
+  File "/tmp/cta-queue-policy-20261111/predictfun/research/pf_queue_model_verify.py", line 26, in verify_window
+    for k,v in values.items():close(row[k],v,k)
+                              ^^^^^^^^^^^^^^^^^
+  File "/tmp/cta-queue-policy-20261111/predictfun/research/pf_queue_model_verify.py", line 11, in close
+    raise ValueError('artifact reconciliation failed: '+label)
+ValueError: artifact reconciliation failed: stop_value_c
+2026-11-11T15:41:17Z tag=queue_verify rc=1 peak_rss_mib=337 wall_s=0.98 cpu_user_s=0.77 memavail_start_gib=24 disk_free_gib=517->517
