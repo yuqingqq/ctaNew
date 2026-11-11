@@ -1,0 +1,20 @@
+{
+  "as_of": "2026-11-11T17:14:53.789599+00:00",
+  "version": 3,
+  "status": "CAUSAL_CORRECTION_DECLARED",
+  "supersedes": "warm-up derivative implementation in original experiment; preserves its frozen source, artifacts and unchanged primary actions",
+  "source_commit": "e9bd1ba895c37e79b6b02970cda2e5acb65c560e",
+  "source_sha": {
+    "predictfun/research/pf_own_order_runner_v3.py": "7c92ddfb5ef2dfaa4973c25e938af1ec7ce1faa2a25a90801647183293f3115b",
+    "predictfun/research/pf_own_order_warmup_v3.py": "6b4efce5e59df626c82d4022fccf65ee712930ceff09a992401895efe2822b9c",
+    "predictfun/research/run_own_order_v3.sh": "18f62230886bb9c95c72f82d00ec52c701662081229fbee0023029be31659c35",
+    "predictfun/research/pf_own_order_mechanism.py": "b3d04dfb0da5b13d8b48cf2fcc322991e57d76271a11f49055d01f7f41c3984a"
+  },
+  "original_declaration_sha": "5f9c37d050d286449a021f7aaa0fb5bd97e2ca034dda231639b64c32c48b3c13",
+  "audit_sha": "cd88b87ce5569f3971a84632a886cb7915569eeaec57a3bcf822a24bef72ec24",
+  "audit_populations": 42,
+  "feature_decisions_checked": 70115,
+  "affected_primary_decisions": 0,
+  "correction": "Unknown imbalance derivatives until250ms of causal history. Original calm states already masked this boundary. All saved feature-decision clocks reconciled; zero first250ms feature decisions in the42 primary/neutral populations. Models and all primary actions/fills unchanged and reused. Stress replay uses CausalWindow. No policy/threshold/label/null change.",
+  "controls": "Warm-up future-mutation invariance, original known-bad future read, unchanged calm/mature features, actual feature-clock identity and known-bad future-clock refusal pass."
+}
