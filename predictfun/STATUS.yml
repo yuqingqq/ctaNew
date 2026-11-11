@@ -6,6 +6,11 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 02:38Z (session ce68ebe0): B12 ADDENDUM (no new run; arithmetic on the committed output,
+  research/pf_b12_qa_derive.py; addendum in handoffs/20261110_b12_profitable_makers.md): our first-minute loss is the
+  fills taken at the best after the guard turns OFF (25 legs, -1.98 c/sh, -$4.16 of -$4.18 a day). With the guard ON we
+  make -0.25 against the top 5's +0.94 c/sh; 39.2% of our at-best shares come from trades through the level (top 5
+  14.5%). The top 5's dollars are 66% behind the best, but depth alone loses. Next: pull timing first (B1, USER D2).
   2026-11-10 16:50Z (session ce68ebe0): B12 DONE (read-only, public tape; USER "Then we check the next"): the top
   makers' edge is NOT in states our guard marks. research/pf_b12_makers.py d5f68cf2 (committed and pushed before its
   run); report handoffs/20261110_b12_profitable_makers.md; output live_vs_replay/b12_20261110/, copies in

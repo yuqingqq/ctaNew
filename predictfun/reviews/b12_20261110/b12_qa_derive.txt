@@ -1,0 +1,6 @@
+ours first minute: 86 legs, $-4.18/day at 1 s
+ours at best, guard OFF (lag 50): 25 legs, 160.0 sh, 209 sh/day, -1.98 c/sh, $-4.16/day = 99% of the first-minute $
+ours at best, guard ON: 32 legs, 395 sh/day, -0.25; top 5 ON +0.94; gap at our ON volume $+4.72/day
+ours: at-best share from trades through the level 39.2% of all, 39.2% of sweep-known (unknown 0.0%); ON not swept net -0.41
+top 5: at-best share from trades through the level 13.3% of all, 14.5% of sweep-known (unknown 8.3%); ON not swept net +1.05
+O (ranks >= 6): at-best share from trades through the level 15.9% of all, 17.0% of sweep-known (unknown 6.4%); ON not swept net +0.78
