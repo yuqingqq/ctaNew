@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 18:45Z: Default-pull v3 neutral builds2/9 complete (Oct23-24), both288-window baseline parities
+  and all accounting/cap checks PASS;13,656 direct feature identities PASS. Oct25 RUNNING. Models/evaluations pending.
   2026-11-11 18:36Z: Default-pull v3 full-day runtime parity PASS: all288 windows x2 paths,8 generation/engine
   artifacts and independent accounting identical to v2;7221 feature identities PASS. Runtime840.73s ->474.03s.
   Next neutral day20261024 RUNNING; model/portfolio findings pending. Receipt reviews/default_pull_20261111_v3/runtime_parity.json.
@@ -1712,10 +1714,10 @@ flags:
 
 # DEFAULT_PULL_LOOP
 default_pull_loop:
-  as_of: "2026-11-11T18:35:55.609674+00:00"
+  as_of: "2026-11-11T18:43:39.255210+00:00"
   state: "running"
-  stage: "build_20261024"
-  completed_stages: 3
+  stage: "build_20261025"
+  completed_stages: 4
   detail: "v3 cached observed-depth features; full-day v2 identity required before further tests."
   progress: handoffs/20261111_default_pull_progress.md
   branch: research/predict-default-pull-20261111
