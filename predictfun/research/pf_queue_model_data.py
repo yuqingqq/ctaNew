@@ -93,7 +93,7 @@ def build(day):
                              decision=decision,status='missing_book',decision_status='missing_book',initial_net=initial_net,mark_t=min(240000.,decision+30000.),
                              outcome=float(reg.outcome=='Up') if reg.outcome in ('Up','Down') else np.nan)
                     row['stop_mid']=tape.midpoint(240000.) if tape is not None else np.nan
-                    if np.isfinite(reg.maker_fee_bps) and reg.maker_fee_bps!=0:raise ValueError('undeclared nonzero maker fee')
+                    if pd.isna(reg.maker_fee_bps) or reg.maker_fee_bps!=0:raise ValueError('missing or nonzero maker fee')
                     if tape is None or not tape.book_ok(i):pair.append((row,None,None));continue
                     p=int(tape.bp[i,0] if side==0 else tape.ap[i,0]);row['price']=p
                     if (p if side==0 else 100-p)*SIZE<100:

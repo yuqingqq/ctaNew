@@ -30,6 +30,10 @@ class Tape:
         for t in (self.tf,self.known,self.tt,self.rt):
             if not np.isfinite(t).all() or (np.diff(t)<0).any():raise ValueError('nonmonotone or invalid clock')
         if not ((self.ts==0)|(self.ts==1)).all() or not np.isfinite(self.tq).all() or (self.tq<0).any():raise ValueError('invalid trade')
+        if not np.isfinite(self.tp).all() or ((self.tp<0)|(self.tp>100)).any():raise ValueError('invalid trade price')
+        if (self.known<self.tf).any():raise ValueError('book known before venue event')
+        if len({len(self.tt),len(self.ts),len(self.tp),len(self.tq)})!=1:raise ValueError('trade identity lengths')
+        if len(self.rt)!=len(self.x) or len(self.rt)!=len(self.v):raise ValueError('feature identity lengths')
 
     def index(self,t,known=False):
         arr=self.known if known else self.tf
