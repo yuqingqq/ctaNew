@@ -1,5 +1,22 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 15:38Z — Queue study: age-matched baseline queued next in the same light slot
+
+- All9 day builders completed; chronological portfolio tests running. Before reading PnL, committed
+  pf_queue_age_control.py (a7842678): add order age to the market baseline to distinguish remaining
+  lease time from queue-size/progress value. Reuses original labels and unchanged queue candidate.
+- This addendum runs immediately after the original verifier, followed by common-population reporting.
+  Keep the single numeric slot reserved through those phases. No outcomes inspected yet; no tuning.
+
+## 2026-11-11 15:28Z — Queue continuation experiment RUNNING
+
+- Source68769426; frozen declaration/input hashes9f8b09a8 on research/predict-queue-policy-20261111.
+  All15 controls PASS (including planted model signal and known-bad artifact refusals).
+- B16c/B19a finished; the single light slot now belongs to run_queue_model.sh in
+  /tmp/cta-queue-policy-20261111. Log /tmp/queue_model_run_20261111.log; artifacts
+  data/predict_fun/research/queue_model_20261111. Nine day builders, six chronological model folds,
+  three assumptions, sequential portfolios and independent verifier run serially. Results pending.
+
 ## 2026-11-11 15:16Z — Queue continuation model prepared; awaiting B16c/B19a compute slot
 
 - USER requested a reasonable order-state model and an actual test. Isolated branch
