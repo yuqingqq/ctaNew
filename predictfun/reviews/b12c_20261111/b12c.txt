@@ -1,0 +1,14 @@
+B12c better model or faster reaction. point estimates, one consumed partial day (220 windows of 2026-11-08, 0.764 window-days)
+Controls: {"B12b_controls": true, "F1_lookup": true, "F2_worlds": true, "F3_rules": true}; planted worlds {"speed": {"X500": 0.8897648179566424, "X250": -0.0007155138235330746, "r50": "SPEED", "r51": "MATCHED-AT-500MS"}, "model": {"X500": 0.0019027388283968363, "X250": -0.0007155138235330746, "r50": "MODEL", "r51": "NONE-WITHIN-2S"}}
+K0: True, part A legs {'top5': 10656, 'O': 44858} ok True; status {'partA_legs': 55514, 'missing_value_legs': 299, 'missing_value_shares_T': 657.1201295687717, 'missing_value_shares_O': 2217.014496354818}
+
+Curves (top 5 against O): h | WITHIN_G | key: WITHIN / X (share explained by our model's information up to anc + key ms; past = the 250 ms before)
+1 s | +0.205 | past: +0.183 / 0.11 | 0: +0.199 / 0.03 | 250: +0.207 / -0.01 | 500: +0.225 / -0.10 | 1000: +0.211 / -0.03 | 2000: +0.209 / -0.02
+5 s | +0.147 | past: +0.149 / -0.02 | 0: +0.149 / -0.02 | 250: +0.154 / -0.05 | 500: +0.209 / -0.42 | 1000: +0.151 / -0.03 | 2000: +0.182 / -0.24
+N4 null (h 5 s, L 500 ms): WITHIN +0.209, p50 +0.087, p99 +0.217, share >= observed 0.022
+By tercile of the change of our value over the half second after the trade (h 5 s; edges [np.float64(-0.0244), np.float64(0.0249)]; falling -> rising):
+   tercile 0: wT 35.2% wO 36.2% T -0.171 O -0.416
+   tercile 1: wT 33.0% wO 31.9% T +0.300 O +0.572
+   tercile 2: wT 31.8% wO 31.9% T +0.308 O -0.142
+
+Readings: {"R53": "INSTRUMENT-WEAK", "R50": "n/a (instrument weak)", "R51": "n/a (instrument weak)"}

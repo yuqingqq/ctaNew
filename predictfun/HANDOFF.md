@@ -1,5 +1,27 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-11 04:28Z (session ce68ebe0) — B12c DONE: not a better trend model and not faster reaction to Binance; the top makers' edge is Predict-local and earned within 250 ms
+
+- Done: B12c (USER "Can you check if they have a better model, or they just react faster"). v1
+  research/pf_b12c_model_or_speed.py (8bc18b8e, committed before its run; output 04:19Z): instrument = our guard
+  value; v2 research/pf_b12c2_binance.py (dc8dde4e, committed before its run after v1's result; output 04:25Z):
+  instrument = the Binance path, plus a model-free split of when the gap builds. Report
+  handoffs/20261111_b12c_model_or_speed.md; output live_vs_replay/b12c_20261111/, copies reviews/b12c_20261111/.
+  Controls pass (planted speed / model / visible / later / other worlds read correctly); K0 / K1 reproduce B12 / B12b.
+- Readings: v1 R53 INSTRUMENT-WEAK (our value 2 s later accounts for none of the 1 s gap; R50 / R51 n/a). v2 R55
+  NOT-BINANCE (the Binance path up to 2 s after the trade accounts for 22% of the 1 s gap; residual +0.165 c/sh, null
+  p99 +0.040) -> R57 OTHER-INFORMATION.
+- Model-free: the gap is earned in the first 250 ms after the report (+0.196 of +0.211 c/sh at 1 s); 0.25-5 s adds
+  nothing (-0.03). Their fills come after Binance moves no better than everyone's.
+- Says: not a trend model, not faster reaction to Binance; Predict-local and immediate. Polymarket unlikely (research
+  session lead-lag 2026-11-10: Predict leads by 100-200 ms; PM cuts 1 s error 0.4%). Untested candidates: they react to
+  Predict's own trades / book (pull after the first taker order of a burst); their own size / refills hold the mid.
+- Next: (1) B12d (proposed): taker-order bursts and refills on the public tape. (2) Slow-cancel issue to the Tokyo /
+  Dublin session (B12b). (3) USER D2 (B1). (4) USER rebate / rewards. Guard work (B7) should use Predict's own recent
+  trades and book, not Binance.
+- Watch out: at 5 s the Binance path up to +2 s accounts for 59% of the smaller 5 s gap (descriptive only, beside a 1-5
+  s mid split near zero); report clock ~0.2 s after the match; coarse cells bias X down.
+
 ## 2026-11-11 03:21Z (session ce68ebe0) — B12b DONE: not queue place; the top makers handle moves in progress better; our first-minute loss is the venue's slow cancels
 
 - Done: B12b (USER "Yes find out the reason"). research/pf_b12b_reason.py committed and pushed before its run

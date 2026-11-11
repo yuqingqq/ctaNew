@@ -1,0 +1,12 @@
+B12c v2 (Binance instrument): better model or faster reaction. point estimates, one consumed partial day (220 windows of 2026-11-08, 0.764 window-days)
+Controls: {"B12c_v1_controls": true, "G1_lookup_sign": true, "G2_worlds": true, "G3_rules": true}; planted worlds {"visible": {"X_past": 0.8772151362150806, "X500": 0.8596274227523867, "X2000": 0.8576302215761488, "R55": "BN-OK", "R56": "VISIBLE", "R57": "REACT-FASTER"}, "later": {"X_past": 0.004683526819533421, "X500": 0.002255676308726284, "X2000": 0.8529574193361041, "R55": "BN-OK", "R56": "LATER", "R57": "BETTER-MODEL"}, "other": {"X_past": 0.0006645548598346287, "X500": 0.004952573939759392, "X2000": -0.005703423012983644, "R55": "NOT-BINANCE", "R56": "n/a", "R57": "OTHER-INFORMATION"}}
+K0 True part A {'top5': 10656, 'O': 44858} True; K1 {'v1_max_abs_diff': 0.0, 'v5_max_abs_diff': 0.0, 'ok': True}; status {'partA_legs': 55514, 'missing_legs': 0, 'missing_shares_T': 0.0, 'missing_shares_O': 0.0}
+
+Curves (top 5 against O): h | WITHIN_G | key: WITHIN / X (share accounted for by the Binance path; past = up to 50 ms before the report; L = up to anc + L ms)
+1 s | +0.211 | past: +0.198 / 0.06 | 0: +0.191 / 0.09 | 250: +0.184 / 0.13 | 500: +0.180 / 0.15 | 1000: +0.182 / 0.14 | 2000: +0.165 / 0.22
+5 s | +0.172 | past: +0.160 / 0.07 | 0: +0.146 / 0.15 | 250: +0.140 / 0.19 | 500: +0.132 / 0.24 | 1000: +0.128 / 0.26 | 2000: +0.070 / 0.59
+N5 residual at key 2000 (1 s): WITHIN +0.165, p50 -0.049, p99 +0.040, share >= observed 0.000
+Gap by when the move happens (within guard, c/sh): 0-250 ms +0.196; 250-500 ms +0.012; 500-1000 ms -0.004; 1000-5000 ms -0.039; spread +0.008; net 5 s +0.172; net 1 s +0.211
+Signed Binance returns at their fills (bps; + = good for the maker): top 5: past 250 ms -0.040, past 1 s -0.083, next 0.5 s -0.021, next 2 s -0.052; O (ranks >= 6): past 250 ms -0.042, past 1 s -0.028, next 0.5 s -0.004, next 2 s -0.020
+
+Readings: {"R55": "NOT-BINANCE", "R56": "n/a", "R57": "OTHER-INFORMATION"}
