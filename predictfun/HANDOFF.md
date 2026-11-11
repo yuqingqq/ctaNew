@@ -1,5 +1,16 @@
 # P-2026-005 HANDOFF
 
+<!-- DEFAULT_PULL_LOOP -->
+
+## 2026-11-11T18:09:49.928582+00:00 — Quote-default / learned-pull research loop: running
+
+- Stage `build_20261023`. v2 cancellation reservation correction; serial replay with direct feature identity audit.
+- 2 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
+- Prior own-order/calm test remains COMPLETE, no promotion; comparison_v4.json / d475eccb.
+- Branch research/predict-default-pull-20261111; one light numeric process; no live changes/protected-day reads.
+
+<!-- /DEFAULT_PULL_LOOP -->
+
 ## 2026-11-11 17:45Z — Own-order continuation + calm posting COMPLETE: no variant meets the objective
 
 - USER request implemented and tested on actual frozen-v3 admitted order generations. Read handoffs/20261111_own_orders_calm_review.md;

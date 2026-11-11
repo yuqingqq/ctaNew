@@ -6,6 +6,9 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-11 18:10Z: Default-quote learned-pull loop RUNNING, research/predict-default-pull-20261111.
+  v2 late-fill reservation correction passed8-window exact parity and197 feature identities;9-day neutral build started.
+  Live unchanged. Current per-stage state: default_pull_loop below and handoffs/20261111_default_pull_progress.md.
   2026-11-11 17:45Z: Own-order continuation/calm study COMPLETE, not promoted. Learned continuation -5.60USD
   paired marked value with +0.007% exposure; early calm -15.77USD with -1.288%, reduction disappears under stress.
   Strict calm gate removes most trading. Canonical comparison_v4.json and own_orders_calm_review.md; all checks
@@ -1700,3 +1703,14 @@ flags:
   pressure_fills_b18: "TOP MAKERS DO NOT PULL, THEY BREAK EVEN UNDER PRESSURE (B18, 2026-11-11 14:09Z): 63% of the top 5's fills come in pressure moments (48% of time) at +0.04 / -0.15 c/sh vs +0.76 / +0.63 outside; our replay is as exposed (61%, qb 63%), mostly while our level thins (50% vs 37%); the replay values pressure fills like any other, so it cannot reward pulling on pressure"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"
+
+# DEFAULT_PULL_LOOP
+default_pull_loop:
+  as_of: "2026-11-11T18:09:49.928582+00:00"
+  state: "running"
+  stage: "build_20261023"
+  completed_stages: 2
+  detail: "v2 cancellation reservation correction; serial replay with direct feature identity audit."
+  progress: handoffs/20261111_default_pull_progress.md
+  branch: research/predict-default-pull-20261111
+# /DEFAULT_PULL_LOOP
