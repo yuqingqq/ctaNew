@@ -1,0 +1,16 @@
+20261031: 40 window-sides, 29 s, rss 584 MiB
+20261031: 80 window-sides, 57 s, rss 584 MiB
+20261031: 120 window-sides, 85 s, rss 584 MiB
+20261031: 160 window-sides, 112 s, rss 584 MiB
+20261031: 200 window-sides, 140 s, rss 584 MiB
+20261031: 240 window-sides, 169 s, rss 584 MiB
+20261031: 280 window-sides, 198 s, rss 584 MiB
+20261031: 320 window-sides, 226 s, rss 584 MiB
+20261031: 360 window-sides, 254 s, rss 584 MiB
+20261031: 400 window-sides, 284 s, rss 584 MiB
+20261031: 440 window-sides, 312 s, rss 584 MiB
+20261031: 480 window-sides, 340 s, rss 584 MiB
+20261031: 520 window-sides, 368 s, rss 584 MiB
+20261031: 560 window-sides, 395 s, rss 584 MiB
+20261031: evaluated in 405 s
+2026-11-12T05:17:38Z tag=kp_s4_eval_20261031 rc=0 peak_rss_mib=772 wall_s=408.30 cpu_user_s=404.01 memavail_start_gib=23 disk_free_gib=509->509 slot=claude

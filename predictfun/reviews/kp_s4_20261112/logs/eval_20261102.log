@@ -1,0 +1,16 @@
+20261102: 40 window-sides, 31 s, rss 647 MiB
+20261102: 80 window-sides, 61 s, rss 647 MiB
+20261102: 120 window-sides, 92 s, rss 647 MiB
+20261102: 160 window-sides, 123 s, rss 647 MiB
+20261102: 200 window-sides, 155 s, rss 647 MiB
+20261102: 240 window-sides, 186 s, rss 647 MiB
+20261102: 280 window-sides, 218 s, rss 647 MiB
+20261102: 320 window-sides, 249 s, rss 647 MiB
+20261102: 360 window-sides, 282 s, rss 647 MiB
+20261102: 400 window-sides, 315 s, rss 647 MiB
+20261102: 440 window-sides, 347 s, rss 647 MiB
+20261102: 480 window-sides, 378 s, rss 647 MiB
+20261102: 520 window-sides, 408 s, rss 647 MiB
+20261102: 560 window-sides, 436 s, rss 647 MiB
+20261102: evaluated in 448 s
+2026-11-12T05:32:19Z tag=kp_s4_eval_20261102 rc=0 peak_rss_mib=836 wall_s=450.82 cpu_user_s=446.87 memavail_start_gib=23 disk_free_gib=509->508 slot=claude
