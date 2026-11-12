@@ -56,6 +56,7 @@ Statuses:
 | P14 | 10-31's taker ids: the step-1 and txmap signer indexes disagree (13% of first-minute shares unmapped) | Taker-order analyses on 10-31 are weaker |
 | P15 | Binance is known at event time + 3.5 ms (a Tokyo-like constant); Binance-side delay spikes are not modelled | Sensitivity once a Tokyo busy-hour capture exists |
 | P16 | Raw features (`gap`, `p_bn`) use the window's start price from tau = ws; only the guard value is masked (v = -1) until the price is known | Any model that reads raw features must apply the start-known mask itself |
+| P17 | A rank AUC over rows that include NaN scores returns NaN without warning (FA's R341 on 5 of 9 days) | Drop or count NaN rows before any AUC / rank statistic; a NaN reading is an instrument failure, not a result |
 
 ## 3. Findings
 
@@ -77,6 +78,7 @@ Statuses:
 | The top makers' edge is not in our guard's states | HOLDS | B12 |
 | A pressure-feature guard does not change the guard | HOLDS | B14 |
 | A queue-aware guard target equals the live guard; adding pressure is better at 1 s, worse at 60 s; not promoted | HOLDS | B16 |
+| The guard is on (stay out) in ~90% of resting moments; 94% of its alarms see no harm within its own 500 ms horizon, but after those "false" alarms a resting order loses -1.7 to -1.9 c per moment over the next 4.5 s (9 of 9 days), twice the loss after no-alarm moments: the alarms are mostly early, not false. It separates activity (AUC 0.67-0.72) better than harm (0.60-0.65) | HOLDS (replay, never-pull path, orders >= 100 ms old; the AUC result is post hoc after an instrument fix) | FA, 20261112_false_alarm_results.md |
 
 ### C. Resting by default and pulling
 

@@ -1,0 +1,25 @@
+FA the guard's false alarms on the never-pull path - 9 replay days, first 60 s; as of 2026-11-12T14:10:19Z; control passed; statuses {'window_sides': 5184, 'rows': 1714173, 'rows_young': 77533, 'rows_v_withheld': 70086, 'pend_fills': 9741}
+
+M 0:
+  orders >= 100 ms old (primary): rows 549886, alarm share 89.8%; among alarms: HARM 5.8%, QUIET 90.8%, GOOD 3.4% -> false 94.2%; recall of HARM 97.7%
+    $/day near (each fill once): false-alarm rows 109.15, true-alarm rows -391.90, no-alarm rows 0.40; later value per row (c per order): alarm -1.605, no alarm -0.801; near per row: alarm -0.515, no alarm +0.006
+  orders < 100 ms old: rows 24050, alarm share 87.4%; among alarms: HARM 14.3%, QUIET 80.7%, GOOD 5.0% -> false 85.7%; recall of HARM 96.8%
+    $/day near (each fill once): false-alarm rows 8.71, true-alarm rows -43.50, no-alarm rows 0.66; later value per row (c per order): alarm -1.389, no alarm -0.918; near per row: alarm -1.489, no alarm +0.196
+
+M 50:
+  orders >= 100 ms old (primary): rows 547119, alarm share 89.7%; among alarms: HARM 6.1%, QUIET 90.5%, GOOD 3.4% -> false 93.9%; recall of HARM 97.6%
+    $/day near (each fill once): false-alarm rows 110.01, true-alarm rows -417.79, no-alarm rows -2.49; later value per row (c per order): alarm -1.780, no alarm -0.869; near per row: alarm -0.564, no alarm -0.040
+  orders < 100 ms old: rows 24171, alarm share 87.4%; among alarms: HARM 15.0%, QUIET 80.1%, GOOD 4.9% -> false 85.0%; recall of HARM 96.8%
+    $/day near (each fill once): false-alarm rows 8.41, true-alarm rows -46.39, no-alarm rows 0.31; later value per row (c per order): alarm -1.536, no alarm -1.025; near per row: alarm -1.618, no alarm +0.090
+
+M 250:
+  orders >= 100 ms old (primary): rows 539635, alarm share 89.5%; among alarms: HARM 6.5%, QUIET 90.0%, GOOD 3.4% -> false 93.5%; recall of HARM 96.9%
+    $/day near (each fill once): false-alarm rows 109.47, true-alarm rows -443.91, no-alarm rows -6.96; later value per row (c per order): alarm -1.943, no alarm -0.970; near per row: alarm -0.623, no alarm -0.111
+  orders < 100 ms old: rows 29312, alarm share 89.4%; among alarms: HARM 18.0%, QUIET 77.2%, GOOD 4.7% -> false 82.0%; recall of HARM 96.9%
+    $/day near (each fill once): false-alarm rows 10.60, true-alarm rows -77.16, no-alarm rows -0.88; later value per row (c per order): alarm -1.385, no alarm -0.954; near per row: alarm -2.285, no alarm -0.255
+
+R340 PRECISION: MOSTLY-FALSE; false share of alarms M 0 / M 50 94.2% / 93.9%
+R341 DISCRIMINATION (M 50): NOT-SHOWN; AUC harm vs good among near fills 0.629 0.638 0.642 0.599 0.624 0.635 0.642 0.609 0.612 | AUC any near fill vs quiet 0.693 nan nan nan nan 0.671 0.671 nan 0.712
+R342 CEILING: CEILING-LARGE; $/day near value on false-alarm rows / on true-alarm rows: M 0 +109.15 / -391.90; M 50 +110.01 / -417.79
+R343 LATER: BAD-FLOW-AFTER-FALSE-ALARMS; days mean later value after false alarms > 0 at M 0 / M 50 [0, 0], < 0 [9, 9]; pooled c per order: M 0: false -1.697, true -0.099, no alarm -0.801; M 50: false -1.888, true -0.114, no alarm -0.869
+2026-11-12T14:10:19Z tag=fa_report rc=0 peak_rss_mib=314 wall_s=1.46 cpu_user_s=0.96 memavail_start_gib=22 disk_free_gib=502->502 slot=claude

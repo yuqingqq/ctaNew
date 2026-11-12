@@ -1,5 +1,14 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 14:11Z (session ce68ebe0) — FA DONE: the guard's alarms are 94% "false" inside its own 500 ms, but staying through them loses afterwards (-1.7 to -1.9 c per moment over 4.5 s, 9 of 9 days): they are mostly early, not false; the guard tracks activity more than harm; longer-term flow for a back-of-queue order is negative in every state
+
+- Done (USER: "proceed" with the false-alarm measurement): research/pf_false_alarm.py + run_fa.sh (5dff3d9f), 14:08-14:10Z.
+  Report handoffs/20261112_false_alarm_results.md; copies reviews/fa_20261112/; FINDINGS updated (+ P17).
+- R340 MOSTLY-FALSE (94%); R341 declared NOT-SHOWN by an instrument defect (NaN guard values in the AUC), post hoc ACTIVITY-NOT-HARM
+  9 of 9; R342 CEILING-LARGE (just, 26-28%); R343 BAD-FLOW-AFTER-FALSE-ALARMS 9 of 9.
+- Also answered (USER: "what should be the way to be in the front"): four routes (create the level / pre-position / arrive within one
+  snapshot / outlast others); only the order path showed money; improving the price and real queue place need the live capture.
+
 ## 2026-11-12 13:49Z (session ce68ebe0) — FV3 DONE: correct numbers on the FROZEN v3 engine (USER: "fix the errors and get some correct numbers first"): $60 / $45 a day at 1 s (J / X) but 79-83% on orders < 100 ms old (about $10 a day without them); loses $40 a day at the 250 ms clock; 42% of its shares cancel-pending; a 10-20 ms order path adds $2-5 a day without young fills (8-9 of 9 days)
 
 - Done: research/pf_fv3_check.py + run_fv3.sh (3925a6c3; slot-wait retry 7e371753), the generated engine pf_step4_ladder_v3.py
