@@ -1,0 +1,3312 @@
+{
+  "as_of": "2026-11-12T00:45:43.161967+00:00",
+  "stage": "primary",
+  "days": [
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "days_consumed": true,
+  "validation": false,
+  "table": [
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "windows": 1728,
+      "marked_windows": 1579,
+      "marked_missing": 149,
+      "marked": 152.62872931074995,
+      "settlement": 324.2958067398047,
+      "carry_common": 46.24075795014019,
+      "settlement_common": 198.86948726089014,
+      "value1": 250.42325916418798,
+      "value5": 212.22091145008943,
+      "value_known": 251221,
+      "value_missing": 3,
+      "spread": 220.8215430871629,
+      "spread_known": 251224,
+      "spread_missing": 0,
+      "inventory_square_s": 57767753.90717833,
+      "inventory_rms": 11.799803953772821,
+      "terminal_abs_mean": 5.737189706386247,
+      "terminal_abs_p95": 25.0,
+      "max_inventory": 60.0,
+      "settlement_day_sd": 83.68262929199466,
+      "generations": 251224,
+      "filled_generations": 1497,
+      "fills": 3095,
+      "shares": 18211.588835454477,
+      "places": 251224,
+      "cancels": 250916,
+      "model_pulls": 0,
+      "model_scores": 0,
+      "order_life_p50": 55.0,
+      "order_life_p90": 232.0,
+      "rest_side_fraction": 0.03649170489104307
+    },
+    {
+      "scenario": "X",
+      "mode": "matched_guard",
+      "windows": 1728,
+      "marked_windows": 1611,
+      "marked_missing": 117,
+      "marked": -35.954226389048934,
+      "settlement": 42.10615339767847,
+      "carry_common": 31.740053170425455,
+      "settlement_common": -4.214173218623465,
+      "value1": 50.13998079465844,
+      "value5": 36.64125982424717,
+      "value_known": 100544,
+      "value_missing": 4,
+      "spread": 45.903744921361856,
+      "spread_known": 100548,
+      "spread_missing": 0,
+      "inventory_square_s": 3877523.2809413737,
+      "inventory_rms": 3.057097274855755,
+      "terminal_abs_mean": 1.523548125133246,
+      "terminal_abs_p95": 5.0,
+      "max_inventory": 10.0,
+      "settlement_day_sd": 21.613747021797824,
+      "generations": 100548,
+      "filled_generations": 1053,
+      "fills": 1528,
+      "shares": 4863.6833201046375,
+      "places": 100548,
+      "cancels": 100031,
+      "model_pulls": 0,
+      "model_scores": 0,
+      "order_life_p50": 82.0,
+      "order_life_p90": 382.0,
+      "rest_side_fraction": 0.022081382977485672
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "windows": 1728,
+      "marked_windows": 1656,
+      "marked_missing": 72,
+      "marked": -2596.5705453662194,
+      "settlement": -2643.218266234835,
+      "carry_common": 7.978364592737527,
+      "settlement_common": -2588.5921807734817,
+      "value1": -2488.545493845834,
+      "value5": -2593.339591581564,
+      "value_known": 90250,
+      "value_missing": 33,
+      "spread": 687.6580279614031,
+      "spread_known": 90279,
+      "spread_missing": 4,
+      "inventory_square_s": 6541339.960578801,
+      "inventory_rms": 3.9706847796329323,
+      "terminal_abs_mean": 0.35496255584696224,
+      "terminal_abs_p95": 1.3636649999999977,
+      "max_inventory": 10.000000000000004,
+      "settlement_day_sd": 84.37185165722592,
+      "generations": 90283,
+      "filled_generations": 34730,
+      "fills": 50733,
+      "shares": 162571.87514846414,
+      "places": 90283,
+      "cancels": 63249,
+      "model_pulls": 0,
+      "model_scores": 0,
+      "order_life_p50": 594.0,
+      "order_life_p90": 4627.98017578125,
+      "rest_side_fraction": 0.18835797291118878
+    },
+    {
+      "scenario": "X",
+      "mode": "pressure",
+      "windows": 1728,
+      "marked_windows": 1644,
+      "marked_missing": 84,
+      "marked": -18.13791075856706,
+      "settlement": 60.10193613536835,
+      "carry_common": 68.7602689319675,
+      "settlement_common": 50.62235817340047,
+      "value1": -76.75919739017856,
+      "value5": -75.14058849239353,
+      "value_known": 42776,
+      "value_missing": 2,
+      "spread": 29.65099945523735,
+      "spread_known": 42778,
+      "spread_missing": 0,
+      "inventory_square_s": 3397465.88662403,
+      "inventory_rms": 2.8616044551021895,
+      "terminal_abs_mean": 1.2129141547671107,
+      "terminal_abs_p95": 5.0,
+      "max_inventory": 10.0,
+      "settlement_day_sd": 15.322314040622008,
+      "generations": 42778,
+      "filled_generations": 1133,
+      "fills": 1665,
+      "shares": 5433.7017269668595,
+      "places": 42778,
+      "cancels": 42311,
+      "model_pulls": 0,
+      "model_scores": 0,
+      "order_life_p50": 435.1041259765625,
+      "order_life_p90": 1960.405786132815,
+      "rest_side_fraction": 0.041632435292422505
+    },
+    {
+      "scenario": "X",
+      "mode": "floor",
+      "windows": 1728,
+      "marked_windows": 1583,
+      "marked_missing": 145,
+      "marked": -375.4471871021376,
+      "settlement": -121.7678129832896,
+      "carry_common": 66.41807244760761,
+      "settlement_common": -309.02911465453,
+      "value1": -168.28661028847088,
+      "value5": -177.49326434889622,
+      "value_known": 55666,
+      "value_missing": 5,
+      "spread": 136.98071430175935,
+      "spread_known": 55670,
+      "spread_missing": 1,
+      "inventory_square_s": 8450687.53788634,
+      "inventory_rms": 4.513132384416998,
+      "terminal_abs_mean": 1.7290588838038945,
+      "terminal_abs_p95": 10.0,
+      "max_inventory": 10.0,
+      "settlement_day_sd": 23.77261974422676,
+      "generations": 55671,
+      "filled_generations": 4776,
+      "fills": 6672,
+      "shares": 22577.484219479957,
+      "places": 55671,
+      "cancels": 52498,
+      "model_pulls": 0,
+      "model_scores": 0,
+      "order_life_p50": 640.398681640625,
+      "order_life_p90": 3541.1083984375,
+      "rest_side_fraction": 0.09629745487694069
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "windows": 1728,
+      "marked_windows": 1599,
+      "marked_missing": 129,
+      "marked": -637.5035973660638,
+      "settlement": -685.9953908770768,
+      "carry_common": -13.149896323707377,
+      "settlement_common": -650.6534936897712,
+      "value1": -733.8914771336173,
+      "value5": -766.2368030359746,
+      "value_known": 221358,
+      "value_missing": 5,
+      "spread": 89.16220259821462,
+      "spread_known": 221362,
+      "spread_missing": 1,
+      "inventory_square_s": 6757413.8364918055,
+      "inventory_rms": 4.035731914941996,
+      "terminal_abs_mean": 0.878871776328202,
+      "terminal_abs_p95": 5.0,
+      "max_inventory": 10.000000000000002,
+      "settlement_day_sd": 24.881610231642757,
+      "generations": 221363,
+      "filled_generations": 8478,
+      "fills": 12106,
+      "shares": 38631.84786019083,
+      "places": 221363,
+      "cancels": 214846,
+      "model_pulls": 199146,
+      "model_scores": 262314,
+      "order_life_p50": 132.0,
+      "order_life_p90": 226.888916015625,
+      "rest_side_fraction": 0.039837937219184806
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "windows": 1728,
+      "marked_windows": 1557,
+      "marked_missing": 171,
+      "marked": -661.7847824236062,
+      "settlement": -735.8770290928262,
+      "carry_common": 19.621592721527616,
+      "settlement_common": -642.1631897020784,
+      "value1": -742.2497348168523,
+      "value5": -808.3734155947958,
+      "value_known": 222608,
+      "value_missing": 9,
+      "spread": 93.74989112135827,
+      "spread_known": 222617,
+      "spread_missing": 0,
+      "inventory_square_s": 6984428.73827832,
+      "inventory_rms": 4.102962014085752,
+      "terminal_abs_mean": 0.959381052361107,
+      "terminal_abs_p95": 5.0,
+      "max_inventory": 10.000000000000002,
+      "settlement_day_sd": 28.908543123239575,
+      "generations": 222617,
+      "filled_generations": 8547,
+      "fills": 12218,
+      "shares": 38862.213650662525,
+      "places": 222617,
+      "cancels": 215829,
+      "model_pulls": 199713,
+      "model_scores": 258886,
+      "order_life_p50": 132.0,
+      "order_life_p90": 145.266015625,
+      "rest_side_fraction": 0.039478578897768325
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "windows": 1728,
+      "marked_windows": 1568,
+      "marked_missing": 160,
+      "marked": -633.6896610881782,
+      "settlement": -730.0080131401475,
+      "carry_common": -2.1328659023737115,
+      "settlement_common": -635.822526990552,
+      "value1": -751.0819767692767,
+      "value5": -798.6958289288633,
+      "value_known": 221515,
+      "value_missing": 9,
+      "spread": 97.0274930849492,
+      "spread_known": 221524,
+      "spread_missing": 0,
+      "inventory_square_s": 7198022.043601298,
+      "inventory_rms": 4.165226636830701,
+      "terminal_abs_mean": 0.9528271517247815,
+      "terminal_abs_p95": 5.0,
+      "max_inventory": 10.000000000000002,
+      "settlement_day_sd": 33.86389527123322,
+      "generations": 221524,
+      "filled_generations": 8757,
+      "fills": 12431,
+      "shares": 39772.5296695683,
+      "places": 221524,
+      "cancels": 214759,
+      "model_pulls": 198493,
+      "model_scores": 265029,
+      "order_life_p50": 132.0,
+      "order_life_p90": 155.0,
+      "rest_side_fraction": 0.04018830320517244
+    }
+  ],
+  "comparisons": {
+    "X:reference-matched_guard": {
+      "windows": 1728,
+      "common_mark_windows": 1555,
+      "missing_either_mark": 173,
+      "marked_delta": 159.6126652787463,
+      "marked_day_interval": [
+        -105.07761556016037,
+        416.41371726829317
+      ],
+      "marked_daily": {
+        "20261026": 41.61063440983253,
+        "20261027": 87.36176983864844,
+        "20261031": 88.1162297570012,
+        "20261101": -10.092182100693893,
+        "20261102": 23.073762250849743,
+        "20261103": -70.45754887689172
+      },
+      "settlement_delta": 282.18965334212623,
+      "settlement_day_interval": [
+        -10.283841790143178,
+        606.4976557501703
+      ],
+      "settlement_daily": {
+        "20261026": 161.76524223546798,
+        "20261027": 80.71144313552281,
+        "20261031": 35.590660421091634,
+        "20261101": 58.126777566198655,
+        "20261102": -13.682123871268367,
+        "20261103": -40.3223461448865
+      },
+      "exposure_delta": 53890230.62623695,
+      "exposure_pct": 1389.8106270854844,
+      "terminal_abs_delta": 7281.1726524051855
+    },
+    "X:reference-default": {
+      "windows": 1728,
+      "common_mark_windows": 1545,
+      "missing_either_mark": 183,
+      "marked_delta": 2525.4946426361125,
+      "marked_day_interval": [
+        2164.4155200627165,
+        2849.3245805164333
+      ],
+      "marked_daily": {
+        "20261026": 482.2265482648773,
+        "20261027": 508.0842005009519,
+        "20261031": 423.9475711571187,
+        "20261101": 285.4763245423371,
+        "20261102": 439.28346345092973,
+        "20261103": 386.47653471989787
+      },
+      "settlement_delta": 2967.5140729746395,
+      "settlement_day_interval": [
+        2529.367062210947,
+        3464.6782632346603
+      ],
+      "settlement_daily": {
+        "20261026": 681.1418097518942,
+        "20261027": 548.022270649681,
+        "20261031": 389.7004670628123,
+        "20261101": 401.3166025750702,
+        "20261102": 436.5955573075805,
+        "20261103": 510.7373656276014
+      },
+      "exposure_delta": 51226413.94659952,
+      "exposure_pct": 783.1180500526505,
+      "terminal_abs_delta": 9300.488516131883
+    },
+    "X:matched_guard-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1555,
+      "missing_either_mark": 173,
+      "marked_delta": -159.6126652787463,
+      "marked_day_interval": [
+        -416.41371726829317,
+        105.07761556016037
+      ],
+      "marked_daily": {
+        "20261026": -41.61063440983253,
+        "20261027": -87.36176983864844,
+        "20261031": -88.1162297570012,
+        "20261101": 10.092182100693893,
+        "20261102": -23.073762250849743,
+        "20261103": 70.45754887689172
+      },
+      "settlement_delta": -282.18965334212623,
+      "settlement_day_interval": [
+        -606.4976557501705,
+        10.283841790143178
+      ],
+      "settlement_daily": {
+        "20261026": -161.76524223546798,
+        "20261027": -80.71144313552281,
+        "20261031": -35.590660421091634,
+        "20261101": -58.126777566198655,
+        "20261102": 13.682123871268367,
+        "20261103": 40.3223461448865
+      },
+      "exposure_delta": -53890230.62623695,
+      "exposure_pct": -93.2877375028778,
+      "terminal_abs_delta": -7281.1726524051855
+    },
+    "X:matched_guard-default": {
+      "windows": 1728,
+      "common_mark_windows": 1578,
+      "missing_either_mark": 150,
+      "marked_delta": 2417.5504080425503,
+      "marked_day_interval": [
+        2087.4934114752846,
+        2696.925504123681
+      ],
+      "marked_daily": {
+        "20261026": 449.60721976682055,
+        "20261027": 428.8211371644834,
+        "20261031": 335.0592051457502,
+        "20261101": 296.3438397194614,
+        "20261102": 431.7180811677032,
+        "20261103": 476.00092507833205
+      },
+      "settlement_delta": 2685.3244196325136,
+      "settlement_day_interval": [
+        2312.0349428766303,
+        3043.8668445411317
+      ],
+      "settlement_daily": {
+        "20261026": 519.3765675164263,
+        "20261027": 467.3108275141582,
+        "20261031": 354.10980664172064,
+        "20261101": 343.18982500887154,
+        "20261102": 450.2776811788489,
+        "20261103": 551.059711772488
+      },
+      "exposure_delta": -2663816.6796374284,
+      "exposure_pct": -40.72279832099912,
+      "terminal_abs_delta": 2019.3158637266981
+    },
+    "X:default-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1545,
+      "missing_either_mark": 183,
+      "marked_delta": -2525.4946426361125,
+      "marked_day_interval": [
+        -2849.3245805164333,
+        -2164.4155200627165
+      ],
+      "marked_daily": {
+        "20261026": -482.2265482648773,
+        "20261027": -508.0842005009519,
+        "20261031": -423.9475711571187,
+        "20261101": -285.4763245423371,
+        "20261102": -439.28346345092973,
+        "20261103": -386.47653471989787
+      },
+      "settlement_delta": -2967.5140729746395,
+      "settlement_day_interval": [
+        -3464.6782632346603,
+        -2529.367062210947
+      ],
+      "settlement_daily": {
+        "20261026": -681.1418097518942,
+        "20261027": -548.022270649681,
+        "20261031": -389.7004670628123,
+        "20261101": -401.3166025750702,
+        "20261102": -436.5955573075805,
+        "20261103": -510.7373656276014
+      },
+      "exposure_delta": -51226413.94659952,
+      "exposure_pct": -88.67648555093646,
+      "terminal_abs_delta": -9300.488516131883
+    },
+    "X:default-matched_guard": {
+      "windows": 1728,
+      "common_mark_windows": 1578,
+      "missing_either_mark": 150,
+      "marked_delta": -2417.5504080425503,
+      "marked_day_interval": [
+        -2696.9255041236815,
+        -2087.4934114752846
+      ],
+      "marked_daily": {
+        "20261026": -449.60721976682055,
+        "20261027": -428.8211371644834,
+        "20261031": -335.0592051457502,
+        "20261101": -296.3438397194614,
+        "20261102": -431.7180811677032,
+        "20261103": -476.00092507833205
+      },
+      "settlement_delta": -2685.3244196325136,
+      "settlement_day_interval": [
+        -3043.8668445411317,
+        -2312.0349428766303
+      ],
+      "settlement_daily": {
+        "20261026": -519.3765675164263,
+        "20261027": -467.3108275141582,
+        "20261031": -354.10980664172064,
+        "20261101": -343.18982500887154,
+        "20261102": -450.2776811788489,
+        "20261103": -551.059711772488
+      },
+      "exposure_delta": 2663816.6796374284,
+      "exposure_pct": 68.69892162170888,
+      "terminal_abs_delta": -2019.3158637266981
+    },
+    "X:pressure-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1533,
+      "missing_either_mark": 195,
+      "marked_delta": -153.07586150072342,
+      "marked_day_interval": [
+        -391.9814503791116,
+        62.59514855245973
+      ],
+      "marked_daily": {
+        "20261026": -47.3826854742472,
+        "20261027": -80.09672280164386,
+        "20261031": -88.45193075700118,
+        "20261101": 15.733121037630722,
+        "20261102": 9.237785060238625,
+        "20261103": 37.88457143429948
+      },
+      "settlement_delta": -264.19387060443637,
+      "settlement_day_interval": [
+        -638.1977044184748,
+        69.8428830006063
+      ],
+      "settlement_daily": {
+        "20261026": -183.31479621924214,
+        "20261027": -53.079378792934044,
+        "20261031": -15.550901759715961,
+        "20261101": -71.77522610954185,
+        "20261102": 55.65703503745263,
+        "20261103": 3.8693972395450316
+      },
+      "exposure_delta": -54370288.0205543,
+      "exposure_pct": -94.11875024242225,
+      "terminal_abs_delta": -7817.948153197867
+    },
+    "X:pressure-matched_guard": {
+      "windows": 1728,
+      "common_mark_windows": 1557,
+      "missing_either_mark": 171,
+      "marked_delta": 29.983615630481875,
+      "marked_day_interval": [
+        -38.656092904396445,
+        120.36466769525083
+      ],
+      "marked_daily": {
+        "20261026": -5.357251064414676,
+        "20261027": 6.90891588946359,
+        "20261031": -0.6357009999999907,
+        "20261101": 7.7183609369368265,
+        "20261102": 37.03154731108837,
+        "20261103": -15.682256442592244
+      },
+      "settlement_delta": 17.995782737689893,
+      "settlement_day_interval": [
+        -109.6354293566285,
+        152.37684639143168
+      ],
+      "settlement_daily": {
+        "20261026": -21.54955398377414,
+        "20261027": 27.63206434258877,
+        "20261031": 20.03975866137567,
+        "20261101": -13.64844854334319,
+        "20261102": 41.97491116618426,
+        "20261103": -36.452948905341486
+      },
+      "exposure_delta": -480057.3943173437,
+      "exposure_pct": -12.380516106167562,
+      "terminal_abs_delta": -536.7755007926817
+    },
+    "X:pressure-default": {
+      "windows": 1728,
+      "common_mark_windows": 1589,
+      "missing_either_mark": 139,
+      "marked_delta": 2467.310034792141,
+      "marked_day_interval": [
+        2147.516276591754,
+        2744.4456684278903
+      ],
+      "marked_daily": {
+        "20261026": 449.3382063175068,
+        "20261027": 438.151088076871,
+        "20261031": 348.9451722977467,
+        "20261101": 302.39738108326026,
+        "20261102": 470.24880239678464,
+        "20261103": 458.22938461997177
+      },
+      "settlement_delta": 2703.3202023702033,
+      "settlement_day_interval": [
+        2349.9691789014614,
+        3009.1837608795768
+      ],
+      "settlement_daily": {
+        "20261026": 497.82701353265213,
+        "20261027": 494.94289185674694,
+        "20261031": 374.1495653030963,
+        "20261101": 329.54137646552834,
+        "20261102": 492.2525923450332,
+        "20261103": 514.6067628671465
+      },
+      "exposure_delta": -3143874.073954772,
+      "exposure_pct": -48.061621822153256,
+      "terminal_abs_delta": 1482.5403629340165
+    },
+    "X:floor-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1501,
+      "missing_either_mark": 227,
+      "marked_delta": -464.2104440816945,
+      "marked_day_interval": [
+        -709.2731256051528,
+        -222.39763839382613
+      ],
+      "marked_daily": {
+        "20261026": -112.63414605622236,
+        "20261027": -109.94724688505501,
+        "20261031": -144.29480610804325,
+        "20261101": -51.0684605203565,
+        "20261102": -55.833545620401395,
+        "20261103": 9.567761108384033
+      },
+      "settlement_delta": -446.0636197230943,
+      "settlement_day_interval": [
+        -828.5567751317969,
+        -128.81548079473166
+      ],
+      "settlement_daily": {
+        "20261026": -211.75541967224902,
+        "20261027": -59.81671867998874,
+        "20261031": -73.6570787550725,
+        "20261101": -122.38669359320087,
+        "20261102": 5.689054594358044,
+        "20261103": 15.863236383058807
+      },
+      "exposure_delta": -49317066.36929198,
+      "exposure_pct": -85.37127209158075,
+      "terminal_abs_delta": -6926.050061422305
+    },
+    "X:floor-matched_guard": {
+      "windows": 1728,
+      "common_mark_windows": 1527,
+      "missing_either_mark": 201,
+      "marked_delta": -289.2134582901277,
+      "marked_day_interval": [
+        -374.73296535878086,
+        -188.7912581155006
+      ],
+      "marked_daily": {
+        "20261026": -73.00051164638984,
+        "20261027": -13.569477046406565,
+        "20261031": -58.665755838221536,
+        "20261101": -54.560642621050405,
+        "20261102": -32.57728336955166,
+        "20261103": -56.83978776850768
+      },
+      "settlement_delta": -163.87396638096808,
+      "settlement_day_interval": [
+        -288.84597387913055,
+        -21.41209369515428
+      ],
+      "settlement_daily": {
+        "20261026": -49.99017743678104,
+        "20261027": 20.894724455534053,
+        "20261031": -38.06641833398087,
+        "20261101": -64.2599160270022,
+        "20261102": -7.993069276910324,
+        "20261103": -24.459109761827712
+      },
+      "exposure_delta": 4573164.256944967,
+      "exposure_pct": 117.94034298704992,
+      "terminal_abs_delta": 355.12259098288087
+    },
+    "X:floor-default": {
+      "windows": 1728,
+      "common_mark_windows": 1559,
+      "missing_either_mark": 169,
+      "marked_delta": 2066.0412795127527,
+      "marked_day_interval": [
+        1740.9974730426864,
+        2368.821071338672
+      ],
+      "marked_daily": {
+        "20261026": 364.0197508104457,
+        "20261027": 405.37764218933876,
+        "20261031": 281.81776155205694,
+        "20261101": 231.32843855662819,
+        "20261102": 372.9493366590173,
+        "20261103": 410.54834974526585
+      },
+      "settlement_delta": 2521.4504532515457,
+      "settlement_day_interval": [
+        2083.323279124979,
+        2941.471457192958
+      ],
+      "settlement_daily": {
+        "20261026": 469.38639007964525,
+        "20261027": 488.20555196969224,
+        "20261031": 316.0433883077398,
+        "20261101": 278.92990898186935,
+        "20261102": 442.2846119019386,
+        "20261103": 526.6006020106602
+      },
+      "exposure_delta": 1909347.5773075386,
+      "exposure_pct": 29.188936652339848,
+      "terminal_abs_delta": 2374.4384547095788
+    },
+    "X:market-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1511,
+      "missing_either_mark": 217,
+      "marked_delta": -738.960080360745,
+      "marked_day_interval": [
+        -1054.5579184806354,
+        -466.78038465193663
+      ],
+      "marked_daily": {
+        "20261026": -121.65026101522423,
+        "20261027": -218.56251013101263,
+        "20261031": -187.06618809408084,
+        "20261101": -66.26010351270844,
+        "20261102": -96.34841600724027,
+        "20261103": -49.07260160047851
+      },
+      "settlement_delta": -1010.2911976168815,
+      "settlement_day_interval": [
+        -1321.6218018076745,
+        -705.5449902268614
+      ],
+      "settlement_daily": {
+        "20261026": -266.7809093695953,
+        "20261027": -208.7656848852159,
+        "20261031": -150.0267041479763,
+        "20261101": -185.62618477545618,
+        "20261102": -67.75620287512697,
+        "20261103": -131.33551156351083
+      },
+      "exposure_delta": -51010340.07068652,
+      "exposure_pct": -88.30244664289758,
+      "terminal_abs_delta": -8395.173383140302
+    },
+    "X:market-matched_guard": {
+      "windows": 1728,
+      "common_mark_windows": 1534,
+      "missing_either_mark": 194,
+      "marked_delta": -559.3478202086269,
+      "marked_day_interval": [
+        -673.7910182638849,
+        -451.6647839157812
+      ],
+      "marked_daily": {
+        "20261026": -74.12718014201103,
+        "20261027": -130.37332356355063,
+        "20261031": -100.18713782425915,
+        "20261101": -72.21150468033946,
+        "20261102": -68.37965375639052,
+        "20261103": -114.0690202420761
+      },
+      "settlement_delta": -728.1015442747554,
+      "settlement_day_interval": [
+        -854.423013334696,
+        -591.8209328498912
+      ],
+      "settlement_daily": {
+        "20261026": -105.0156671341273,
+        "20261027": -128.0542417496931,
+        "20261031": -114.43604372688468,
+        "20261101": -127.49940720925753,
+        "20261102": -81.43832674639535,
+        "20261103": -171.65785770839736
+      },
+      "exposure_delta": 2879890.555550432,
+      "exposure_pct": 74.27139302310675,
+      "terminal_abs_delta": -1114.000730735116
+    },
+    "X:market-default": {
+      "windows": 1728,
+      "common_mark_windows": 1565,
+      "missing_either_mark": 163,
+      "marked_delta": 1839.3240264980755,
+      "marked_day_interval": [
+        1521.8159928236603,
+        2133.0929186806884
+      ],
+      "marked_daily": {
+        "20261026": 374.69301684599424,
+        "20261027": 288.8450198211414,
+        "20261031": 229.97884813300826,
+        "20261101": 215.81156189172967,
+        "20261102": 360.21592870252647,
+        "20261103": 369.77965110367546
+      },
+      "settlement_delta": 1957.2228753577583,
+      "settlement_day_interval": [
+        1594.8409565105962,
+        2285.1886050075964
+      ],
+      "settlement_daily": {
+        "20261026": 414.360900382299,
+        "20261027": 339.25658576446506,
+        "20261031": 239.67376291483598,
+        "20261101": 215.690417799614,
+        "20261102": 368.83935443245355,
+        "20261103": 379.40185406409057
+      },
+      "exposure_delta": 216073.87591300393,
+      "exposure_pct": 3.3032051111112857,
+      "terminal_abs_delta": 905.3151329915822
+    },
+    "X:queue-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1488,
+      "missing_either_mark": 240,
+      "marked_delta": -765.0409580680937,
+      "marked_day_interval": [
+        -1079.7401438031372,
+        -475.51007874208057
+      ],
+      "marked_daily": {
+        "20261026": -152.21436673543823,
+        "20261027": -226.82229714220875,
+        "20261031": -169.45244931240487,
+        "20261101": -77.06409158281967,
+        "20261102": -109.80797774944146,
+        "20261103": -29.679775545780746
+      },
+      "settlement_delta": -1060.172835832631,
+      "settlement_day_interval": [
+        -1474.4285611537764,
+        -699.3091390534764
+      ],
+      "settlement_daily": {
+        "20261026": -321.04579093404595,
+        "20261027": -249.0738715946779,
+        "20261031": -145.58072408419838,
+        "20261101": -164.3956916330511,
+        "20261102": -84.85625848629917,
+        "20261103": -95.22049910035837
+      },
+      "exposure_delta": -50783325.168900006,
+      "exposure_pct": -87.90946805807793,
+      "terminal_abs_delta": -8256.053354155441
+    },
+    "X:queue-matched_guard": {
+      "windows": 1728,
+      "common_mark_windows": 1508,
+      "missing_either_mark": 220,
+      "marked_delta": -592.2733496626527,
+      "marked_day_interval": [
+        -694.894231278037,
+        -511.54478429977985
+      ],
+      "marked_daily": {
+        "20261026": -107.45808571333423,
+        "20261027": -140.17665630356032,
+        "20261031": -80.72339904258317,
+        "20261101": -86.18277761143858,
+        "20261102": -85.63255202384426,
+        "20261103": -92.0998789678921
+      },
+      "settlement_delta": -777.9831824905046,
+      "settlement_day_interval": [
+        -907.635563431277,
+        -659.1496780573026
+      ],
+      "settlement_daily": {
+        "20261026": -159.280548698578,
+        "20261027": -168.3624284591551,
+        "20261031": -109.99006366310672,
+        "20261101": -106.26891406685242,
+        "20261102": -98.53838235756754,
+        "20261103": -135.54284524524488
+      },
+      "exposure_delta": 3106905.4573369455,
+      "exposure_pct": 80.1260297419197,
+      "terminal_abs_delta": -974.8807017502559
+    },
+    "X:queue-default": {
+      "windows": 1728,
+      "common_mark_windows": 1534,
+      "missing_either_mark": 194,
+      "marked_delta": 1738.758696497033,
+      "marked_day_interval": [
+        1438.9800297663207,
+        2009.0231339151157
+      ],
+      "marked_daily": {
+        "20261026": 335.38251782166674,
+        "20261027": 270.1517672230199,
+        "20261031": 253.40776034288993,
+        "20261101": 190.1836285434165,
+        "20261102": 328.01660410063596,
+        "20261103": 361.61641846540425
+      },
+      "settlement_delta": 1907.341237142009,
+      "settlement_day_interval": [
+        1612.6399788243884,
+        2204.5582213004086
+      ],
+      "settlement_daily": {
+        "20261026": 360.0960188178483,
+        "20261027": 298.94839905500305,
+        "20261031": 244.11974297861394,
+        "20261101": 236.9209109420191,
+        "20261102": 351.73929882128135,
+        "20261103": 415.51686652724305
+      },
+      "exposure_delta": 443088.7776995176,
+      "exposure_pct": 6.773669926494869,
+      "terminal_abs_delta": 1044.4351619764423
+    },
+    "X:queue_cost-reference": {
+      "windows": 1728,
+      "common_mark_windows": 1495,
+      "missing_either_mark": 233,
+      "marked_delta": -732.4951444000592,
+      "marked_day_interval": [
+        -1021.4227148933321,
+        -472.7362420390155
+      ],
+      "marked_daily": {
+        "20261026": -144.17006530131357,
+        "20261027": -214.82149867167166,
+        "20261031": -155.6001696991725,
+        "20261101": -77.18798387783116,
+        "20261102": -107.18488380540798,
+        "20261103": -33.530543044662444
+      },
+      "settlement_delta": -1054.3038198799522,
+      "settlement_day_interval": [
+        -1478.9050896319866,
+        -699.6138163539706
+      ],
+      "settlement_daily": {
+        "20261026": -308.08925537509157,
+        "20261027": -254.27670901211357,
+        "20261031": -121.00699684318663,
+        "20261101": -179.02101212893282,
+        "20261102": -99.89645184546279,
+        "20261103": -92.01339467516472
+      },
+      "exposure_delta": -50569731.86357703,
+      "exposure_pct": -87.53972319026435,
+      "terminal_abs_delta": -8267.378494455012
+    },
+    "X:queue_cost-matched_guard": {
+      "windows": 1728,
+      "common_mark_windows": 1516,
+      "missing_either_mark": 212,
+      "marked_delta": -563.7707983576167,
+      "marked_day_interval": [
+        -657.4112443040789,
+        -478.00415754160775
+      ],
+      "marked_daily": {
+        "20261026": -99.05097033615775,
+        "20261027": -128.41455383302323,
+        "20261031": -66.87111942935081,
+        "20261101": -84.0488907930047,
+        "20261102": -86.78231883892903,
+        "20261103": -98.60294512715116
+      },
+      "settlement_delta": -772.1141665378259,
+      "settlement_day_interval": [
+        -904.4500396725311,
+        -637.045832685374
+      ],
+      "settlement_daily": {
+        "20261026": -146.3240131396236,
+        "20261027": -173.56526587659076,
+        "20261031": -85.416336422095,
+        "20261101": -120.89423456273418,
+        "20261102": -113.57857571673117,
+        "20261103": -132.33574082005123
+      },
+      "exposure_delta": 3320498.762659924,
+      "exposure_pct": 85.6345280757098,
+      "terminal_abs_delta": -986.2058420498265
+    },
+    "X:queue_cost-default": {
+      "windows": 1728,
+      "common_mark_windows": 1543,
+      "missing_either_mark": 185,
+      "marked_delta": 1780.6413500467484,
+      "marked_day_interval": [
+        1477.710562915247,
+        2023.9327740747
+      ],
+      "marked_daily": {
+        "20261026": 341.85461030402826,
+        "20261027": 291.92809440959985,
+        "20261031": 267.36003995612225,
+        "20261101": 192.235918715871,
+        "20261102": 326.43753798827106,
+        "20261103": 360.82514867285585
+      },
+      "settlement_delta": 1913.2102530946877,
+      "settlement_day_interval": [
+        1608.8134501095267,
+        2223.3471085850615
+      ],
+      "settlement_daily": {
+        "20261026": 373.05255437680273,
+        "20261027": 293.7455616375674,
+        "20261031": 268.6934702196257,
+        "20261101": 222.29559044613734,
+        "20261102": 336.69910546211776,
+        "20261103": 418.7239709524367
+      },
+      "exposure_delta": 656682.0830224962,
+      "exposure_pct": 10.038953593300027,
+      "terminal_abs_delta": 1033.1100216768716
+    }
+  },
+  "statuses": [
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 37722
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 70
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 33206
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 59
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 57744
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 70
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 51132
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 50
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 36049
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 58
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 35032
+    },
+    {
+      "scenario": "X",
+      "mode": "reference",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 32
+    },
+    {
+      "scenario": "X",
+      "mode": "matched_guard",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 13737
+    },
+    {
+      "scenario": "X",
+      "mode": "matched_guard",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 76
+    },
+    {
+      "scenario": "X",
+      "mode": "matched_guard",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 12128
+    },
+    {
+      "scenario": "X",
+      "mode": "matched_guard",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 58
+    },
+    {
+      "scenario": "X",
+      "mode": "matched_guard",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 25053
+    },
+    {
+      "scenario": "X",
+      "mode": "matched_guard",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 49
+    },
+    {
+      "scenario": "X",
+      "mode": "matched_guard",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 22660
+    },
+    {
+      "scenario": "X",
+      "mode": "matched_guard",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 72
+    },
+    {
+      "scenario": "X",
+      "mode": "matched_guard",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 13365
+    },
+    {
+      "scenario": "X",
+      "mode": "matched_guard",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 53
+    },
+    {
+      "scenario": "X",
+      "mode": "matched_guard",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 13247
+    },
+    {
+      "scenario": "X",
+      "mode": "matched_guard",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 50
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261026",
+      "status": "eligible",
+      "n": 8112
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261026",
+      "status": "ended_before_probe_or_unknown",
+      "n": 8527
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261026",
+      "status": "missing_label_mark",
+      "n": 4
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 2473
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261027",
+      "status": "eligible",
+      "n": 7195
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261027",
+      "status": "ended_before_probe_or_unknown",
+      "n": 6805
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 1992
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261031",
+      "status": "eligible",
+      "n": 4933
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261031",
+      "status": "ended_before_probe_or_unknown",
+      "n": 3514
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261031",
+      "status": "missing_label_mark",
+      "n": 2
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 1026
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261101",
+      "status": "eligible",
+      "n": 5244
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261101",
+      "status": "ended_before_probe_or_unknown",
+      "n": 4077
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261101",
+      "status": "missing_label_mark",
+      "n": 4
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 1328
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261102",
+      "status": "eligible",
+      "n": 7489
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261102",
+      "status": "ended_before_probe_or_unknown",
+      "n": 7770
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261102",
+      "status": "missing_label_mark",
+      "n": 2
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 2683
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261103",
+      "status": "eligible",
+      "n": 7086
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261103",
+      "status": "ended_before_probe_or_unknown",
+      "n": 7345
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261103",
+      "status": "missing_label_mark",
+      "n": 2
+    },
+    {
+      "scenario": "X",
+      "mode": "default",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 2670
+    },
+    {
+      "scenario": "X",
+      "mode": "pressure",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 6397
+    },
+    {
+      "scenario": "X",
+      "mode": "pressure",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 11
+    },
+    {
+      "scenario": "X",
+      "mode": "pressure",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 7449
+    },
+    {
+      "scenario": "X",
+      "mode": "pressure",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 24
+    },
+    {
+      "scenario": "X",
+      "mode": "pressure",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 8831
+    },
+    {
+      "scenario": "X",
+      "mode": "pressure",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 20
+    },
+    {
+      "scenario": "X",
+      "mode": "pressure",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 7420
+    },
+    {
+      "scenario": "X",
+      "mode": "pressure",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 18
+    },
+    {
+      "scenario": "X",
+      "mode": "pressure",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 5773
+    },
+    {
+      "scenario": "X",
+      "mode": "pressure",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 13
+    },
+    {
+      "scenario": "X",
+      "mode": "pressure",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 6807
+    },
+    {
+      "scenario": "X",
+      "mode": "pressure",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 15
+    },
+    {
+      "scenario": "X",
+      "mode": "floor",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 9274
+    },
+    {
+      "scenario": "X",
+      "mode": "floor",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 83
+    },
+    {
+      "scenario": "X",
+      "mode": "floor",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 9644
+    },
+    {
+      "scenario": "X",
+      "mode": "floor",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 58
+    },
+    {
+      "scenario": "X",
+      "mode": "floor",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 8854
+    },
+    {
+      "scenario": "X",
+      "mode": "floor",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 91
+    },
+    {
+      "scenario": "X",
+      "mode": "floor",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 8546
+    },
+    {
+      "scenario": "X",
+      "mode": "floor",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 220
+    },
+    {
+      "scenario": "X",
+      "mode": "floor",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 9608
+    },
+    {
+      "scenario": "X",
+      "mode": "floor",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 90
+    },
+    {
+      "scenario": "X",
+      "mode": "floor",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 9150
+    },
+    {
+      "scenario": "X",
+      "mode": "floor",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 53
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 1485
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 2120
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261026",
+      "status": "pulled",
+      "n": 29434
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261026",
+      "status": "scored_keep",
+      "n": 863
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 1265
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 1720
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261027",
+      "status": "pulled",
+      "n": 30956
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261027",
+      "status": "scored_keep",
+      "n": 571
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 998
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 1034
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261031",
+      "status": "pulled",
+      "n": 36570
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261031",
+      "status": "scored_keep",
+      "n": 391
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 1168
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 1415
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261101",
+      "status": "pulled",
+      "n": 36203
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261101",
+      "status": "scored_keep",
+      "n": 357
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 1645
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 2503
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261102",
+      "status": "pulled",
+      "n": 33299
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261102",
+      "status": "scored_keep",
+      "n": 476
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 1537
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 2227
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261103",
+      "status": "pulled",
+      "n": 32684
+    },
+    {
+      "scenario": "X",
+      "mode": "market",
+      "day": "20261103",
+      "status": "scored_keep",
+      "n": 442
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 1473
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 2077
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261026",
+      "status": "pulled",
+      "n": 29202
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261026",
+      "status": "scored_keep",
+      "n": 849
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 1415
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 1916
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261027",
+      "status": "pulled",
+      "n": 33931
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261027",
+      "status": "scored_keep",
+      "n": 641
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 1012
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 1060
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261031",
+      "status": "pulled",
+      "n": 37193
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261031",
+      "status": "scored_keep",
+      "n": 374
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 1128
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 1369
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261101",
+      "status": "pulled",
+      "n": 33509
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261101",
+      "status": "scored_keep",
+      "n": 588
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 1644
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 2497
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261102",
+      "status": "pulled",
+      "n": 32706
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261102",
+      "status": "scored_keep",
+      "n": 512
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 1515
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 2330
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261103",
+      "status": "pulled",
+      "n": 33172
+    },
+    {
+      "scenario": "X",
+      "mode": "queue",
+      "day": "20261103",
+      "status": "scored_keep",
+      "n": 504
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261026",
+      "status": "accepted_no_cancel",
+      "n": 1485
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 2035
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261026",
+      "status": "pulled",
+      "n": 29033
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261026",
+      "status": "scored_keep",
+      "n": 913
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261027",
+      "status": "accepted_no_cancel",
+      "n": 1416
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 1944
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261027",
+      "status": "pulled",
+      "n": 33677
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261027",
+      "status": "scored_keep",
+      "n": 710
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261031",
+      "status": "accepted_no_cancel",
+      "n": 983
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 1049
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261031",
+      "status": "pulled",
+      "n": 36260
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261031",
+      "status": "scored_keep",
+      "n": 398
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261101",
+      "status": "accepted_no_cancel",
+      "n": 1094
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 1323
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261101",
+      "status": "pulled",
+      "n": 34106
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261101",
+      "status": "scored_keep",
+      "n": 632
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261102",
+      "status": "accepted_no_cancel",
+      "n": 1656
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 2480
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261102",
+      "status": "pulled",
+      "n": 32782
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261102",
+      "status": "scored_keep",
+      "n": 545
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261103",
+      "status": "accepted_no_cancel",
+      "n": 1522
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 2265
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261103",
+      "status": "pulled",
+      "n": 32635
+    },
+    {
+      "scenario": "X",
+      "mode": "queue_cost",
+      "day": "20261103",
+      "status": "scored_keep",
+      "n": 581
+    }
+  ],
+  "receipts": [
+    {
+      "day": "20261026",
+      "scenario": "X",
+      "mode": "reference",
+      "checks_sha": "b567147420184eb0fe7a1a1fc38cecb6074342005111eff4cd81a6582d9347d6"
+    },
+    {
+      "day": "20261027",
+      "scenario": "X",
+      "mode": "reference",
+      "checks_sha": "d152ed48858133a59e1d22d73f1e774821daeca606b126822b9e802be9f8841b"
+    },
+    {
+      "day": "20261031",
+      "scenario": "X",
+      "mode": "reference",
+      "checks_sha": "6e0066f8e4489585712a6a2fbf0c8bb6c84bf4994419bf983d613457b0e004ba"
+    },
+    {
+      "day": "20261101",
+      "scenario": "X",
+      "mode": "reference",
+      "checks_sha": "bf3cc526ecb46cefcdaf4e5cb07b20e9d95d82a64e30df206d5eae1aba14f531"
+    },
+    {
+      "day": "20261102",
+      "scenario": "X",
+      "mode": "reference",
+      "checks_sha": "1b4012eb7f13528881abe9d5cb467f86ef91320f5e2b7c77dceafab3139641f1"
+    },
+    {
+      "day": "20261103",
+      "scenario": "X",
+      "mode": "reference",
+      "checks_sha": "e4a04380027a8ac872e27e2f5626bbe5bff0ef5a94ad1b9d14c6998bddff9a5f"
+    },
+    {
+      "day": "20261026",
+      "scenario": "X",
+      "mode": "matched_guard",
+      "checks_sha": "5566988ae38ddce6f96a82f0dd7fb8f6643fff9b6cf59d6f4d92791a6c413ea6"
+    },
+    {
+      "day": "20261027",
+      "scenario": "X",
+      "mode": "matched_guard",
+      "checks_sha": "c34cefafab7e591bf698437460bd12ec5bc0739e3529a47cb422682760fa8c6d"
+    },
+    {
+      "day": "20261031",
+      "scenario": "X",
+      "mode": "matched_guard",
+      "checks_sha": "51204bff274a1f61a93fb21e0a47dcde30c58decfd2061d80d4a81e21f5d58d6"
+    },
+    {
+      "day": "20261101",
+      "scenario": "X",
+      "mode": "matched_guard",
+      "checks_sha": "90fdfa48d3fe11e37e76e94c254abe15cf4ad465616babcd61ca2a580c2378b0"
+    },
+    {
+      "day": "20261102",
+      "scenario": "X",
+      "mode": "matched_guard",
+      "checks_sha": "032f3db014ede0d312295dbe87e297f8c4f9886485cba2be54003ec8829f1ab1"
+    },
+    {
+      "day": "20261103",
+      "scenario": "X",
+      "mode": "matched_guard",
+      "checks_sha": "c2278e9fd3205e303989c0aa7e07926ea275a06097f825360f75020340412a4d"
+    },
+    {
+      "day": "20261026",
+      "scenario": "X",
+      "mode": "default",
+      "checks_sha": "b567147420184eb0fe7a1a1fc38cecb6074342005111eff4cd81a6582d9347d6"
+    },
+    {
+      "day": "20261027",
+      "scenario": "X",
+      "mode": "default",
+      "checks_sha": "d152ed48858133a59e1d22d73f1e774821daeca606b126822b9e802be9f8841b"
+    },
+    {
+      "day": "20261031",
+      "scenario": "X",
+      "mode": "default",
+      "checks_sha": "6e0066f8e4489585712a6a2fbf0c8bb6c84bf4994419bf983d613457b0e004ba"
+    },
+    {
+      "day": "20261101",
+      "scenario": "X",
+      "mode": "default",
+      "checks_sha": "bf3cc526ecb46cefcdaf4e5cb07b20e9d95d82a64e30df206d5eae1aba14f531"
+    },
+    {
+      "day": "20261102",
+      "scenario": "X",
+      "mode": "default",
+      "checks_sha": "1b4012eb7f13528881abe9d5cb467f86ef91320f5e2b7c77dceafab3139641f1"
+    },
+    {
+      "day": "20261103",
+      "scenario": "X",
+      "mode": "default",
+      "checks_sha": "e4a04380027a8ac872e27e2f5626bbe5bff0ef5a94ad1b9d14c6998bddff9a5f"
+    },
+    {
+      "day": "20261026",
+      "scenario": "X",
+      "mode": "pressure",
+      "checks_sha": "5566988ae38ddce6f96a82f0dd7fb8f6643fff9b6cf59d6f4d92791a6c413ea6"
+    },
+    {
+      "day": "20261027",
+      "scenario": "X",
+      "mode": "pressure",
+      "checks_sha": "c34cefafab7e591bf698437460bd12ec5bc0739e3529a47cb422682760fa8c6d"
+    },
+    {
+      "day": "20261031",
+      "scenario": "X",
+      "mode": "pressure",
+      "checks_sha": "51204bff274a1f61a93fb21e0a47dcde30c58decfd2061d80d4a81e21f5d58d6"
+    },
+    {
+      "day": "20261101",
+      "scenario": "X",
+      "mode": "pressure",
+      "checks_sha": "90fdfa48d3fe11e37e76e94c254abe15cf4ad465616babcd61ca2a580c2378b0"
+    },
+    {
+      "day": "20261102",
+      "scenario": "X",
+      "mode": "pressure",
+      "checks_sha": "032f3db014ede0d312295dbe87e297f8c4f9886485cba2be54003ec8829f1ab1"
+    },
+    {
+      "day": "20261103",
+      "scenario": "X",
+      "mode": "pressure",
+      "checks_sha": "c2278e9fd3205e303989c0aa7e07926ea275a06097f825360f75020340412a4d"
+    },
+    {
+      "day": "20261026",
+      "scenario": "X",
+      "mode": "floor",
+      "checks_sha": "5566988ae38ddce6f96a82f0dd7fb8f6643fff9b6cf59d6f4d92791a6c413ea6"
+    },
+    {
+      "day": "20261027",
+      "scenario": "X",
+      "mode": "floor",
+      "checks_sha": "c34cefafab7e591bf698437460bd12ec5bc0739e3529a47cb422682760fa8c6d"
+    },
+    {
+      "day": "20261031",
+      "scenario": "X",
+      "mode": "floor",
+      "checks_sha": "51204bff274a1f61a93fb21e0a47dcde30c58decfd2061d80d4a81e21f5d58d6"
+    },
+    {
+      "day": "20261101",
+      "scenario": "X",
+      "mode": "floor",
+      "checks_sha": "90fdfa48d3fe11e37e76e94c254abe15cf4ad465616babcd61ca2a580c2378b0"
+    },
+    {
+      "day": "20261102",
+      "scenario": "X",
+      "mode": "floor",
+      "checks_sha": "032f3db014ede0d312295dbe87e297f8c4f9886485cba2be54003ec8829f1ab1"
+    },
+    {
+      "day": "20261103",
+      "scenario": "X",
+      "mode": "floor",
+      "checks_sha": "c2278e9fd3205e303989c0aa7e07926ea275a06097f825360f75020340412a4d"
+    },
+    {
+      "day": "20261026",
+      "scenario": "X",
+      "mode": "market",
+      "checks_sha": "5566988ae38ddce6f96a82f0dd7fb8f6643fff9b6cf59d6f4d92791a6c413ea6"
+    },
+    {
+      "day": "20261027",
+      "scenario": "X",
+      "mode": "market",
+      "checks_sha": "c34cefafab7e591bf698437460bd12ec5bc0739e3529a47cb422682760fa8c6d"
+    },
+    {
+      "day": "20261031",
+      "scenario": "X",
+      "mode": "market",
+      "checks_sha": "51204bff274a1f61a93fb21e0a47dcde30c58decfd2061d80d4a81e21f5d58d6"
+    },
+    {
+      "day": "20261101",
+      "scenario": "X",
+      "mode": "market",
+      "checks_sha": "90fdfa48d3fe11e37e76e94c254abe15cf4ad465616babcd61ca2a580c2378b0"
+    },
+    {
+      "day": "20261102",
+      "scenario": "X",
+      "mode": "market",
+      "checks_sha": "032f3db014ede0d312295dbe87e297f8c4f9886485cba2be54003ec8829f1ab1"
+    },
+    {
+      "day": "20261103",
+      "scenario": "X",
+      "mode": "market",
+      "checks_sha": "c2278e9fd3205e303989c0aa7e07926ea275a06097f825360f75020340412a4d"
+    },
+    {
+      "day": "20261026",
+      "scenario": "X",
+      "mode": "queue",
+      "checks_sha": "5566988ae38ddce6f96a82f0dd7fb8f6643fff9b6cf59d6f4d92791a6c413ea6"
+    },
+    {
+      "day": "20261027",
+      "scenario": "X",
+      "mode": "queue",
+      "checks_sha": "c34cefafab7e591bf698437460bd12ec5bc0739e3529a47cb422682760fa8c6d"
+    },
+    {
+      "day": "20261031",
+      "scenario": "X",
+      "mode": "queue",
+      "checks_sha": "51204bff274a1f61a93fb21e0a47dcde30c58decfd2061d80d4a81e21f5d58d6"
+    },
+    {
+      "day": "20261101",
+      "scenario": "X",
+      "mode": "queue",
+      "checks_sha": "90fdfa48d3fe11e37e76e94c254abe15cf4ad465616babcd61ca2a580c2378b0"
+    },
+    {
+      "day": "20261102",
+      "scenario": "X",
+      "mode": "queue",
+      "checks_sha": "032f3db014ede0d312295dbe87e297f8c4f9886485cba2be54003ec8829f1ab1"
+    },
+    {
+      "day": "20261103",
+      "scenario": "X",
+      "mode": "queue",
+      "checks_sha": "c2278e9fd3205e303989c0aa7e07926ea275a06097f825360f75020340412a4d"
+    },
+    {
+      "day": "20261026",
+      "scenario": "X",
+      "mode": "queue_cost",
+      "checks_sha": "5566988ae38ddce6f96a82f0dd7fb8f6643fff9b6cf59d6f4d92791a6c413ea6"
+    },
+    {
+      "day": "20261027",
+      "scenario": "X",
+      "mode": "queue_cost",
+      "checks_sha": "c34cefafab7e591bf698437460bd12ec5bc0739e3529a47cb422682760fa8c6d"
+    },
+    {
+      "day": "20261031",
+      "scenario": "X",
+      "mode": "queue_cost",
+      "checks_sha": "51204bff274a1f61a93fb21e0a47dcde30c58decfd2061d80d4a81e21f5d58d6"
+    },
+    {
+      "day": "20261101",
+      "scenario": "X",
+      "mode": "queue_cost",
+      "checks_sha": "90fdfa48d3fe11e37e76e94c254abe15cf4ad465616babcd61ca2a580c2378b0"
+    },
+    {
+      "day": "20261102",
+      "scenario": "X",
+      "mode": "queue_cost",
+      "checks_sha": "032f3db014ede0d312295dbe87e297f8c4f9886485cba2be54003ec8829f1ab1"
+    },
+    {
+      "day": "20261103",
+      "scenario": "X",
+      "mode": "queue_cost",
+      "checks_sha": "c2278e9fd3205e303989c0aa7e07926ea275a06097f825360f75020340412a4d"
+    }
+  ],
+  "fit": {
+    "folds": [
+      {
+        "day": "20261026",
+        "train_days": [
+          "20261023",
+          "20261024",
+          "20261025"
+        ],
+        "train_n": 21546,
+        "test_n": 8112,
+        "zero_keep_and_reset_train": 14734,
+        "zero_keep_and_reset_test": 5638,
+        "importance": {
+          "market": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 0.0,
+            "bn_r250": 1479.0189819335938,
+            "bn_r500": 12317.212997436523,
+            "bn_r1000": 19352.810989379883,
+            "bn_r3000": 60827.68617248535,
+            "bn_imb": 125972.92472457886,
+            "bn_age": 117088.12075424194,
+            "bn_flow250": 61770.943130493164,
+            "bn_flow1000": 90572.80415344238,
+            "bn_flow5000": 105035.78537750244,
+            "bn_ntr1000": 81493.16394805908,
+            "pf_spread": 1317.5959930419922,
+            "pf_mid": 47246.50193023682,
+            "pf_micro_dev": 48471.721199035645,
+            "pf_imb1": 50352.29480743408,
+            "pf_imb3": 91358.06079483032,
+            "pf_lbs": 90969.6489868164,
+            "pf_las": 100916.90213775635,
+            "pf_age": 118161.16700744629,
+            "pf_nfr1000": 22191.791969299316,
+            "pf_dm250": 14331.922927856445,
+            "pf_dm1000": 37669.6438369751,
+            "pf_dm5000": 51883.227851867676,
+            "pf_pend_bid1000": 126771.83727264404,
+            "pf_pend_ask1000": 28605.369140625,
+            "pf_pend_tot5000": 109483.89082336426,
+            "t_rel": 104278.97840118408,
+            "sigma": 109866.16525268555,
+            "basis_bps": 96263.28769302368,
+            "gap": 123534.83500289917,
+            "side": 40752.722175598145,
+            "order_price": 47747.88195800781,
+            "remaining": 2595.656021118164,
+            "inventory": 47783.09634399414,
+            "order_age_ms": 123221.52033996582,
+            "other_reserved": 30724.626861572266,
+            "guard_v": 259587.39387512207,
+            "guard_margin": 171228.81050109863,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 120345.38688659668,
+            "d_bnimb250": 121243.85130310059,
+            "d_pfimb250": 118038.77543067932
+          },
+          "queue": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 0.0,
+            "bn_r250": 1349.8839721679688,
+            "bn_r500": 9446.624099731445,
+            "bn_r1000": 15403.31704711914,
+            "bn_r3000": 49791.02699279785,
+            "bn_imb": 99498.70108032227,
+            "bn_age": 120806.95166015625,
+            "bn_flow250": 51869.67010498047,
+            "bn_flow1000": 76328.11693572998,
+            "bn_flow5000": 95220.87992095947,
+            "bn_ntr1000": 85380.0252456665,
+            "pf_spread": 449.9289855957031,
+            "pf_mid": 41300.32814788818,
+            "pf_micro_dev": 47598.87459564209,
+            "pf_imb1": 45514.15104675293,
+            "pf_imb3": 90280.82205963135,
+            "pf_lbs": 75149.0771560669,
+            "pf_las": 85150.59075927734,
+            "pf_age": 98774.47717285156,
+            "pf_nfr1000": 16662.178886413574,
+            "pf_dm250": 14820.745010375977,
+            "pf_dm1000": 39800.744079589844,
+            "pf_dm5000": 55223.80319213867,
+            "pf_pend_bid1000": 121350.82511138916,
+            "pf_pend_ask1000": 24837.534812927246,
+            "pf_pend_tot5000": 104874.6065826416,
+            "t_rel": 110102.06081390381,
+            "sigma": 101366.09215545654,
+            "basis_bps": 89660.42240142822,
+            "gap": 114606.47047424316,
+            "side": 26613.22624206543,
+            "order_price": 52974.233070373535,
+            "remaining": 2395.6490020751953,
+            "inventory": 44133.44605255127,
+            "order_age_ms": 112266.98307800293,
+            "other_reserved": 26443.81507873535,
+            "guard_v": 256479.73142242432,
+            "guard_margin": 150678.97171783447,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 107458.18376159668,
+            "d_bnimb250": 112103.69898223877,
+            "d_pfimb250": 119795.06459236145,
+            "queue_initial": 79082.07709693909,
+            "queue_now": 119198.12007141113,
+            "queue_min": 97833.25225830078,
+            "queue_progress": 45429.73699951172
+          }
+        },
+        "models_sha": {
+          "market": "bc63154a9fff3b7575f03441e9f99f93b3e037f74f24e20bd9874f16b499cba6",
+          "queue": "8c4a164330aa995ab7b85ad6a50323ef02fcd1671b11634b5b16d076e17b5cb3"
+        }
+      },
+      {
+        "day": "20261027",
+        "train_days": [
+          "20261023",
+          "20261024",
+          "20261025",
+          "20261026"
+        ],
+        "train_n": 29658,
+        "test_n": 7195,
+        "zero_keep_and_reset_train": 20372,
+        "zero_keep_and_reset_test": 5054,
+        "importance": {
+          "market": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 10349.948028564453,
+            "bn_r250": 8828.283950805664,
+            "bn_r500": 19265.0479888916,
+            "bn_r1000": 27495.98109436035,
+            "bn_r3000": 84607.13014221191,
+            "bn_imb": 143768.47634887695,
+            "bn_age": 113967.64894104004,
+            "bn_flow250": 87160.35713195801,
+            "bn_flow1000": 133274.00314331055,
+            "bn_flow5000": 134854.8701171875,
+            "bn_ntr1000": 104607.25991821289,
+            "pf_spread": 1332.3070068359375,
+            "pf_mid": 59159.982986450195,
+            "pf_micro_dev": 83427.10116577148,
+            "pf_imb1": 55322.2900390625,
+            "pf_imb3": 136622.20510864258,
+            "pf_lbs": 115480.94010925293,
+            "pf_las": 135988.61799621582,
+            "pf_age": 130386.4637298584,
+            "pf_nfr1000": 25154.498046875,
+            "pf_dm250": 19444.04005432129,
+            "pf_dm1000": 43702.91310119629,
+            "pf_dm5000": 77994.19505310059,
+            "pf_pend_bid1000": 150838.33419799805,
+            "pf_pend_ask1000": 53787.81706237793,
+            "pf_pend_tot5000": 153016.6411895752,
+            "t_rel": 156211.14985656738,
+            "sigma": 162540.63206481934,
+            "basis_bps": 135143.43922424316,
+            "gap": 149031.28662109375,
+            "side": 42955.026931762695,
+            "order_price": 65648.6637878418,
+            "remaining": 5154.4739990234375,
+            "inventory": 77172.24829101562,
+            "order_age_ms": 169876.09678649902,
+            "other_reserved": 25969.52899169922,
+            "guard_v": 363723.2442779541,
+            "guard_margin": 241119.04383850098,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 128154.24714660645,
+            "d_bnimb250": 145823.8747253418,
+            "d_pfimb250": 143546.84855651855
+          },
+          "queue": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 8192.027923583984,
+            "bn_r250": 5346.71598815918,
+            "bn_r500": 18542.449111938477,
+            "bn_r1000": 33485.9229888916,
+            "bn_r3000": 71921.41973876953,
+            "bn_imb": 121456.3352355957,
+            "bn_age": 116498.96516418457,
+            "bn_flow250": 84995.12789916992,
+            "bn_flow1000": 118679.56004333496,
+            "bn_flow5000": 156053.27362060547,
+            "bn_ntr1000": 88234.9740447998,
+            "pf_spread": 179.4600067138672,
+            "pf_mid": 57064.98405456543,
+            "pf_micro_dev": 65680.6110534668,
+            "pf_imb1": 59665.858001708984,
+            "pf_imb3": 119434.76622009277,
+            "pf_lbs": 92706.87982177734,
+            "pf_las": 110979.20635986328,
+            "pf_age": 140132.08128356934,
+            "pf_nfr1000": 22521.480926513672,
+            "pf_dm250": 16249.278991699219,
+            "pf_dm1000": 50445.90431213379,
+            "pf_dm5000": 73701.93315124512,
+            "pf_pend_bid1000": 149478.33656311035,
+            "pf_pend_ask1000": 46204.985092163086,
+            "pf_pend_tot5000": 153067.55172729492,
+            "t_rel": 139163.25482177734,
+            "sigma": 152038.79655456543,
+            "basis_bps": 122446.4349822998,
+            "gap": 125196.97311401367,
+            "side": 25093.273040771484,
+            "order_price": 59331.59588623047,
+            "remaining": 3528.1339721679688,
+            "inventory": 66557.85383605957,
+            "order_age_ms": 146544.68725585938,
+            "other_reserved": 28783.256927490234,
+            "guard_v": 352884.8486480713,
+            "guard_margin": 218571.91244506836,
+            "seed": 0.0,
+            "calm": 495.3070068359375,
+            "activity_ratio": 133299.4990081787,
+            "d_bnimb250": 152411.9348602295,
+            "d_pfimb250": 126665.46293640137,
+            "queue_initial": 101601.00112915039,
+            "queue_now": 179910.40322875977,
+            "queue_min": 115166.82696533203,
+            "queue_progress": 72840.88206481934
+          }
+        },
+        "models_sha": {
+          "market": "8bc8149a4a58732ba6dc82abd887c5462b22c4a364e59a28bdb25ba633620b4a",
+          "queue": "14d464c35835b986a881f9479c9659f9509757ab959101711d72caba5a9256c5"
+        }
+      },
+      {
+        "day": "20261031",
+        "train_days": [
+          "20261023",
+          "20261024",
+          "20261025",
+          "20261026",
+          "20261027"
+        ],
+        "train_n": 36853,
+        "test_n": 4933,
+        "zero_keep_and_reset_train": 25426,
+        "zero_keep_and_reset_test": 3885,
+        "importance": {
+          "market": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 13904.337051391602,
+            "bn_r250": 6756.270965576172,
+            "bn_r500": 25141.93409729004,
+            "bn_r1000": 39530.30799865723,
+            "bn_r3000": 86698.04890441895,
+            "bn_imb": 155337.47109985352,
+            "bn_age": 150387.54489135742,
+            "bn_flow250": 93498.53413391113,
+            "bn_flow1000": 128545.0348815918,
+            "bn_flow5000": 142314.87826538086,
+            "bn_ntr1000": 113738.72314453125,
+            "pf_spread": 3316.413055419922,
+            "pf_mid": 61092.08299255371,
+            "pf_micro_dev": 65421.183029174805,
+            "pf_imb1": 75486.59289550781,
+            "pf_imb3": 147239.27207946777,
+            "pf_lbs": 131096.04592895508,
+            "pf_las": 146302.65286254883,
+            "pf_age": 143484.2719116211,
+            "pf_nfr1000": 15570.21696472168,
+            "pf_dm250": 16879.801040649414,
+            "pf_dm1000": 44129.1630859375,
+            "pf_dm5000": 76060.13821411133,
+            "pf_pend_bid1000": 172802.8059234619,
+            "pf_pend_ask1000": 63801.78695678711,
+            "pf_pend_tot5000": 148871.36981201172,
+            "t_rel": 168589.8650817871,
+            "sigma": 193635.65864562988,
+            "basis_bps": 155098.12782287598,
+            "gap": 163843.4321899414,
+            "side": 44998.430114746094,
+            "order_price": 65121.631927490234,
+            "remaining": 3959.0900115966797,
+            "inventory": 88128.63203430176,
+            "order_age_ms": 182275.5312652588,
+            "other_reserved": 29495.27604675293,
+            "guard_v": 385718.54344177246,
+            "guard_margin": 294214.0891113281,
+            "seed": 0.0,
+            "calm": 261.08099365234375,
+            "activity_ratio": 156176.0750427246,
+            "d_bnimb250": 173930.47717285156,
+            "d_pfimb250": 141113.9942932129
+          },
+          "queue": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 11378.913101196289,
+            "bn_r250": 9379.46794128418,
+            "bn_r500": 26846.278091430664,
+            "bn_r1000": 40101.74493408203,
+            "bn_r3000": 72247.55082702637,
+            "bn_imb": 123277.70487976074,
+            "bn_age": 130350.35429382324,
+            "bn_flow250": 81663.53010559082,
+            "bn_flow1000": 123236.33079528809,
+            "bn_flow5000": 149877.5110168457,
+            "bn_ntr1000": 112289.05921936035,
+            "pf_spread": 3055.927001953125,
+            "pf_mid": 60740.177963256836,
+            "pf_micro_dev": 69698.54121398926,
+            "pf_imb1": 61063.93798828125,
+            "pf_imb3": 134485.87983703613,
+            "pf_lbs": 118138.5131072998,
+            "pf_las": 132829.54208374023,
+            "pf_age": 135368.49295043945,
+            "pf_nfr1000": 16907.880966186523,
+            "pf_dm250": 18524.646118164062,
+            "pf_dm1000": 39707.83106994629,
+            "pf_dm5000": 71003.26405334473,
+            "pf_pend_bid1000": 135347.18403625488,
+            "pf_pend_ask1000": 49694.11389160156,
+            "pf_pend_tot5000": 134099.04216003418,
+            "t_rel": 158246.01712036133,
+            "sigma": 173570.8827972412,
+            "basis_bps": 131696.55715942383,
+            "gap": 153306.38844299316,
+            "side": 45312.817138671875,
+            "order_price": 47692.92883300781,
+            "remaining": 4079.501007080078,
+            "inventory": 87782.3890991211,
+            "order_age_ms": 163900.51733398438,
+            "other_reserved": 30533.46615600586,
+            "guard_v": 400263.8406982422,
+            "guard_margin": 262447.1243286133,
+            "seed": 0.0,
+            "calm": 392.04400634765625,
+            "activity_ratio": 132994.55476379395,
+            "d_bnimb250": 158323.47592163086,
+            "d_pfimb250": 133775.03884887695,
+            "queue_initial": 122492.82786560059,
+            "queue_now": 189200.80418395996,
+            "queue_min": 136308.9341583252,
+            "queue_progress": 79843.90211486816
+          }
+        },
+        "models_sha": {
+          "market": "d95aade69b4d1025315132b735f49bdca06301729989f07a9ff4778e7f18638f",
+          "queue": "ea8f999c10437e74b9d66ce99adfbb5bcf72dfada34932e02b79dcd7dd741d0f"
+        }
+      },
+      {
+        "day": "20261101",
+        "train_days": [
+          "20261023",
+          "20261024",
+          "20261025",
+          "20261026",
+          "20261027",
+          "20261031"
+        ],
+        "train_n": 41786,
+        "test_n": 5244,
+        "zero_keep_and_reset_train": 29311,
+        "zero_keep_and_reset_test": 3966,
+        "importance": {
+          "market": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 13236.309005737305,
+            "bn_r250": 7383.962951660156,
+            "bn_r500": 31417.055862426758,
+            "bn_r1000": 42550.946044921875,
+            "bn_r3000": 79229.62426757812,
+            "bn_imb": 142740.9588470459,
+            "bn_age": 144196.32873535156,
+            "bn_flow250": 113987.24697875977,
+            "bn_flow1000": 122535.44999694824,
+            "bn_flow5000": 153456.07942199707,
+            "bn_ntr1000": 115404.22596740723,
+            "pf_spread": 2232.290054321289,
+            "pf_mid": 67596.03596496582,
+            "pf_micro_dev": 80607.42289733887,
+            "pf_imb1": 69796.57786560059,
+            "pf_imb3": 142894.36376953125,
+            "pf_lbs": 139309.36708068848,
+            "pf_las": 153906.67304992676,
+            "pf_age": 138072.76725769043,
+            "pf_nfr1000": 19842.353134155273,
+            "pf_dm250": 21849.904190063477,
+            "pf_dm1000": 42977.13710021973,
+            "pf_dm5000": 96047.25987243652,
+            "pf_pend_bid1000": 173181.17672729492,
+            "pf_pend_ask1000": 52805.90702819824,
+            "pf_pend_tot5000": 139011.11294555664,
+            "t_rel": 164065.46272277832,
+            "sigma": 224891.50205993652,
+            "basis_bps": 135225.2108154297,
+            "gap": 185192.65686035156,
+            "side": 46584.7080078125,
+            "order_price": 53670.247985839844,
+            "remaining": 6293.813980102539,
+            "inventory": 76211.92102050781,
+            "order_age_ms": 189474.2954864502,
+            "other_reserved": 28194.407989501953,
+            "guard_v": 286904.1800842285,
+            "guard_margin": 471491.12228393555,
+            "seed": 0.0,
+            "calm": 501.5540008544922,
+            "activity_ratio": 179675.47718811035,
+            "d_bnimb250": 151425.40711975098,
+            "d_pfimb250": 150481.46603393555
+          },
+          "queue": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 9185.419006347656,
+            "bn_r250": 6786.421951293945,
+            "bn_r500": 24993.81800842285,
+            "bn_r1000": 37906.146057128906,
+            "bn_r3000": 73171.48286437988,
+            "bn_imb": 137296.7848968506,
+            "bn_age": 125221.65916442871,
+            "bn_flow250": 95220.21366882324,
+            "bn_flow1000": 140444.65312194824,
+            "bn_flow5000": 168026.20693969727,
+            "bn_ntr1000": 107621.71797180176,
+            "pf_spread": 1257.218017578125,
+            "pf_mid": 58185.61601257324,
+            "pf_micro_dev": 64445.29626464844,
+            "pf_imb1": 64577.25329589844,
+            "pf_imb3": 130387.34794616699,
+            "pf_lbs": 119619.09309387207,
+            "pf_las": 123978.81800842285,
+            "pf_age": 119221.49327087402,
+            "pf_nfr1000": 16650.789978027344,
+            "pf_dm250": 17526.19302368164,
+            "pf_dm1000": 48093.70001220703,
+            "pf_dm5000": 86702.06004333496,
+            "pf_pend_bid1000": 161144.96221923828,
+            "pf_pend_ask1000": 51439.8681640625,
+            "pf_pend_tot5000": 131501.16424560547,
+            "t_rel": 162373.3039703369,
+            "sigma": 189539.5577392578,
+            "basis_bps": 138600.71284484863,
+            "gap": 173275.2649078369,
+            "side": 36978.333068847656,
+            "order_price": 51053.25505065918,
+            "remaining": 5611.570037841797,
+            "inventory": 73882.04797363281,
+            "order_age_ms": 168781.78010559082,
+            "other_reserved": 31687.70001220703,
+            "guard_v": 280479.76861572266,
+            "guard_margin": 428947.9542541504,
+            "seed": 0.0,
+            "calm": 1148.4320068359375,
+            "activity_ratio": 143671.60292053223,
+            "d_bnimb250": 151172.6831817627,
+            "d_pfimb250": 126891.55937194824,
+            "queue_initial": 130899.42695617676,
+            "queue_now": 223900.99395751953,
+            "queue_min": 143248.2974243164,
+            "queue_progress": 74807.86599731445
+          }
+        },
+        "models_sha": {
+          "market": "7f5437c1163ccadd9c6a94fa0d3ffc7d4effe3e498cda2b9ff28731aa3098bdd",
+          "queue": "fc9e623a44e568a33dfd89860da1af7fd8e59bb02bd83d6678ac52a55924447c"
+        }
+      },
+      {
+        "day": "20261102",
+        "train_days": [
+          "20261023",
+          "20261024",
+          "20261025",
+          "20261026",
+          "20261027",
+          "20261031",
+          "20261101"
+        ],
+        "train_n": 47030,
+        "test_n": 7489,
+        "zero_keep_and_reset_train": 33277,
+        "zero_keep_and_reset_test": 5472,
+        "importance": {
+          "market": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 17508.993942260742,
+            "bn_r250": 10546.521926879883,
+            "bn_r500": 29449.47003173828,
+            "bn_r1000": 44297.017974853516,
+            "bn_r3000": 89062.98194885254,
+            "bn_imb": 155210.1777496338,
+            "bn_age": 148018.8675994873,
+            "bn_flow250": 101484.02726745605,
+            "bn_flow1000": 141482.0168914795,
+            "bn_flow5000": 156252.69189453125,
+            "bn_ntr1000": 122876.86494445801,
+            "pf_spread": 2139.980987548828,
+            "pf_mid": 78759.88307189941,
+            "pf_micro_dev": 75935.44686889648,
+            "pf_imb1": 76566.75520324707,
+            "pf_imb3": 166332.29216003418,
+            "pf_lbs": 148039.55111694336,
+            "pf_las": 155669.33781433105,
+            "pf_age": 147289.4237060547,
+            "pf_nfr1000": 25484.768020629883,
+            "pf_dm250": 16317.340881347656,
+            "pf_dm1000": 50524.56817626953,
+            "pf_dm5000": 96133.880859375,
+            "pf_pend_bid1000": 192011.43016052246,
+            "pf_pend_ask1000": 53433.039001464844,
+            "pf_pend_tot5000": 149083.12692260742,
+            "t_rel": 157846.56079101562,
+            "sigma": 192056.11434936523,
+            "basis_bps": 133868.7364501953,
+            "gap": 177425.7830657959,
+            "side": 56593.331634521484,
+            "order_price": 58909.66390991211,
+            "remaining": 5739.783050537109,
+            "inventory": 89582.48495483398,
+            "order_age_ms": 163564.48805236816,
+            "other_reserved": 29413.093841552734,
+            "guard_v": 431075.56689453125,
+            "guard_margin": 297665.9396057129,
+            "seed": 0.0,
+            "calm": 1127.4230041503906,
+            "activity_ratio": 175044.87803649902,
+            "d_bnimb250": 157521.1922302246,
+            "d_pfimb250": 148780.65509033203
+          },
+          "queue": {
+            "bn_r25": 0.0,
+            "bn_r50": 0.0,
+            "bn_r100": 18048.983139038086,
+            "bn_r250": 11225.617965698242,
+            "bn_r500": 27627.323165893555,
+            "bn_r1000": 36821.87614440918,
+            "bn_r3000": 79535.4298248291,
+            "bn_imb": 142012.11054992676,
+            "bn_age": 125920.36799621582,
+            "bn_flow250": 94787.5950012207,
+            "bn_flow1000": 139403.0181427002,
+            "bn_flow5000": 160831.1541748047,
+            "bn_ntr1000": 117394.86288452148,
+            "pf_spread": 562.1710205078125,
+            "pf_mid": 72752.32206726074,
+            "pf_micro_dev": 61316.129135131836,
+            "pf_imb1": 59960.289978027344,
+            "pf_imb3": 120446.69059753418,
+            "pf_lbs": 132651.78901672363,
+            "pf_las": 131475.15309143066,
+            "pf_age": 131811.70483398438,
+            "pf_nfr1000": 19905.083099365234,
+            "pf_dm250": 19785.187103271484,
+            "pf_dm1000": 41769.858963012695,
+            "pf_dm5000": 81850.13288879395,
+            "pf_pend_bid1000": 168434.9891204834,
+            "pf_pend_ask1000": 47845.063903808594,
+            "pf_pend_tot5000": 142032.5488433838,
+            "t_rel": 156808.3398590088,
+            "sigma": 176232.31169128418,
+            "basis_bps": 137050.54080200195,
+            "gap": 158078.18827819824,
+            "side": 37852.1530456543,
+            "order_price": 59833.04600524902,
+            "remaining": 5944.162979125977,
+            "inventory": 69975.29804992676,
+            "order_age_ms": 171289.72273254395,
+            "other_reserved": 29706.77296447754,
+            "guard_v": 422851.50033569336,
+            "guard_margin": 312112.05630493164,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 135250.8617401123,
+            "d_bnimb250": 154206.8380432129,
+            "d_pfimb250": 143853.43823242188,
+            "queue_initial": 113480.22421264648,
+            "queue_now": 229211.97344970703,
+            "queue_min": 141158.52125549316,
+            "queue_progress": 94989.11399841309
+          }
+        },
+        "models_sha": {
+          "market": "16a9fa15aa001ed72ad9f41ded9c6dd4817c0907495e38ad599f1b730ff5f28c",
+          "queue": "a49cc2aebfd2429753be6483ddbf953964e8981713030e286c647054d712300d"
+        }
+      },
+      {
+        "day": "20261103",
+        "train_days": [
+          "20261023",
+          "20261024",
+          "20261025",
+          "20261026",
+          "20261027",
+          "20261031",
+          "20261101",
+          "20261102"
+        ],
+        "train_n": 54519,
+        "test_n": 7086,
+        "zero_keep_and_reset_train": 38749,
+        "zero_keep_and_reset_test": 5209,
+        "importance": {
+          "market": {
+            "bn_r25": 0.0,
+            "bn_r50": 1144.2730255126953,
+            "bn_r100": 11702.65299987793,
+            "bn_r250": 12697.745895385742,
+            "bn_r500": 33971.97607421875,
+            "bn_r1000": 53055.91311645508,
+            "bn_r3000": 87043.63813781738,
+            "bn_imb": 180463.78288269043,
+            "bn_age": 162345.51315307617,
+            "bn_flow250": 100453.01786804199,
+            "bn_flow1000": 169583.0222015381,
+            "bn_flow5000": 171138.70907592773,
+            "bn_ntr1000": 125102.23684692383,
+            "pf_spread": 2009.1339874267578,
+            "pf_mid": 74280.23495483398,
+            "pf_micro_dev": 77450.16387939453,
+            "pf_imb1": 80146.8881225586,
+            "pf_imb3": 154477.75592041016,
+            "pf_lbs": 170103.69898986816,
+            "pf_las": 139643.52700805664,
+            "pf_age": 153685.87606811523,
+            "pf_nfr1000": 29682.25796508789,
+            "pf_dm250": 30282.760284423828,
+            "pf_dm1000": 49574.987884521484,
+            "pf_dm5000": 103609.83155822754,
+            "pf_pend_bid1000": 215934.80630493164,
+            "pf_pend_ask1000": 64991.66505432129,
+            "pf_pend_tot5000": 146962.64854431152,
+            "t_rel": 170157.2813873291,
+            "sigma": 219570.9660797119,
+            "basis_bps": 140991.80018615723,
+            "gap": 179578.79571533203,
+            "side": 53994.20016479492,
+            "order_price": 56579.446838378906,
+            "remaining": 8662.03695678711,
+            "inventory": 88775.72787475586,
+            "order_age_ms": 182342.5886077881,
+            "other_reserved": 26907.51481628418,
+            "guard_v": 540869.8072967529,
+            "guard_margin": 326581.7075653076,
+            "seed": 0.0,
+            "calm": 682.0039978027344,
+            "activity_ratio": 172060.4061279297,
+            "d_bnimb250": 169606.81478881836,
+            "d_pfimb250": 157665.32788085938
+          },
+          "queue": {
+            "bn_r25": 0.0,
+            "bn_r50": 584.6840209960938,
+            "bn_r100": 16548.27215576172,
+            "bn_r250": 12904.207901000977,
+            "bn_r500": 22828.59893798828,
+            "bn_r1000": 47681.74378967285,
+            "bn_r3000": 90112.8321685791,
+            "bn_imb": 157334.7523651123,
+            "bn_age": 140962.79704284668,
+            "bn_flow250": 107403.38697814941,
+            "bn_flow1000": 151539.81927490234,
+            "bn_flow5000": 186145.50323486328,
+            "bn_ntr1000": 103081.4349822998,
+            "pf_spread": 500.05699157714844,
+            "pf_mid": 68784.50303649902,
+            "pf_micro_dev": 65744.25291442871,
+            "pf_imb1": 69259.99903869629,
+            "pf_imb3": 135632.27200317383,
+            "pf_lbs": 134062.89498901367,
+            "pf_las": 123359.52903747559,
+            "pf_age": 142318.12887573242,
+            "pf_nfr1000": 29136.348846435547,
+            "pf_dm250": 28126.357009887695,
+            "pf_dm1000": 47017.12593078613,
+            "pf_dm5000": 99141.45719909668,
+            "pf_pend_bid1000": 187667.09280395508,
+            "pf_pend_ask1000": 61921.15718078613,
+            "pf_pend_tot5000": 148489.18995666504,
+            "t_rel": 158751.4048614502,
+            "sigma": 181939.4941558838,
+            "basis_bps": 138628.76106262207,
+            "gap": 156045.24060058594,
+            "side": 49285.300231933594,
+            "order_price": 61917.67892456055,
+            "remaining": 7185.7520751953125,
+            "inventory": 71840.55895996094,
+            "order_age_ms": 174902.48428344727,
+            "other_reserved": 32670.046112060547,
+            "guard_v": 519494.91285705566,
+            "guard_margin": 300810.0027923584,
+            "seed": 0.0,
+            "calm": 0.0,
+            "activity_ratio": 159361.9909210205,
+            "d_bnimb250": 180116.62580871582,
+            "d_pfimb250": 139260.87608337402,
+            "queue_initial": 126654.30422973633,
+            "queue_now": 226354.89697265625,
+            "queue_min": 165673.41862487793,
+            "queue_progress": 97707.51411437988
+          }
+        },
+        "models_sha": {
+          "market": "cf4242b83c967ae32197f0cbdaafdb524bc7b4e321203bdbb39ab2042bcdea3d",
+          "queue": "08cbdfead33bbc2dc0cd746fb02aa9c41e04ce5702ca5ec72e5d0b1bc4e6c5d2"
+        }
+      }
+    ],
+    "statuses": [
+      {
+        "day": "20261023",
+        "status": "eligible",
+        "n": 7838
+      },
+      {
+        "day": "20261023",
+        "status": "ended_before_probe_or_unknown",
+        "n": 7722
+      },
+      {
+        "day": "20261023",
+        "status": "postonly_refused",
+        "n": 2551
+      },
+      {
+        "day": "20261023",
+        "status": "missing_label_mark",
+        "n": 4
+      },
+      {
+        "day": "20261024",
+        "status": "eligible",
+        "n": 6965
+      },
+      {
+        "day": "20261024",
+        "status": "ended_before_probe_or_unknown",
+        "n": 6565
+      },
+      {
+        "day": "20261024",
+        "status": "postonly_refused",
+        "n": 1839
+      },
+      {
+        "day": "20261024",
+        "status": "missing_label_mark",
+        "n": 3
+      },
+      {
+        "day": "20261025",
+        "status": "eligible",
+        "n": 6743
+      },
+      {
+        "day": "20261025",
+        "status": "ended_before_probe_or_unknown",
+        "n": 6340
+      },
+      {
+        "day": "20261025",
+        "status": "postonly_refused",
+        "n": 1888
+      },
+      {
+        "day": "20261025",
+        "status": "missing_label_mark",
+        "n": 2
+      },
+      {
+        "day": "20261026",
+        "status": "ended_before_probe_or_unknown",
+        "n": 8527
+      },
+      {
+        "day": "20261026",
+        "status": "eligible",
+        "n": 8112
+      },
+      {
+        "day": "20261026",
+        "status": "postonly_refused",
+        "n": 2473
+      },
+      {
+        "day": "20261026",
+        "status": "missing_label_mark",
+        "n": 4
+      },
+      {
+        "day": "20261027",
+        "status": "eligible",
+        "n": 7195
+      },
+      {
+        "day": "20261027",
+        "status": "ended_before_probe_or_unknown",
+        "n": 6805
+      },
+      {
+        "day": "20261027",
+        "status": "postonly_refused",
+        "n": 1992
+      },
+      {
+        "day": "20261031",
+        "status": "eligible",
+        "n": 4933
+      },
+      {
+        "day": "20261031",
+        "status": "ended_before_probe_or_unknown",
+        "n": 3514
+      },
+      {
+        "day": "20261031",
+        "status": "postonly_refused",
+        "n": 1026
+      },
+      {
+        "day": "20261031",
+        "status": "missing_label_mark",
+        "n": 2
+      },
+      {
+        "day": "20261101",
+        "status": "eligible",
+        "n": 5244
+      },
+      {
+        "day": "20261101",
+        "status": "ended_before_probe_or_unknown",
+        "n": 4077
+      },
+      {
+        "day": "20261101",
+        "status": "postonly_refused",
+        "n": 1328
+      },
+      {
+        "day": "20261101",
+        "status": "missing_label_mark",
+        "n": 4
+      },
+      {
+        "day": "20261102",
+        "status": "ended_before_probe_or_unknown",
+        "n": 7770
+      },
+      {
+        "day": "20261102",
+        "status": "eligible",
+        "n": 7489
+      },
+      {
+        "day": "20261102",
+        "status": "postonly_refused",
+        "n": 2683
+      },
+      {
+        "day": "20261102",
+        "status": "missing_label_mark",
+        "n": 2
+      },
+      {
+        "day": "20261103",
+        "status": "ended_before_probe_or_unknown",
+        "n": 7345
+      },
+      {
+        "day": "20261103",
+        "status": "eligible",
+        "n": 7086
+      },
+      {
+        "day": "20261103",
+        "status": "postonly_refused",
+        "n": 2670
+      },
+      {
+        "day": "20261103",
+        "status": "missing_label_mark",
+        "n": 2
+      }
+    ],
+    "eligible_actions": 61605,
+    "predictions_sha": "bdde518e37dcad672ac84d59933c6ec9cdf7672c4a5f173df0bcf54932fab1aa"
+  },
+  "diagnostics": {
+    "market": {
+      "n": 40059,
+      "kept": 30003,
+      "groups": 4844,
+      "shuffleable": 3423,
+      "observed_c": 34013.60297130307,
+      "null_mean_c": 29493.186368013543,
+      "null_p95_c": 30621.99539072631,
+      "p_ge": 0.001996007984031936,
+      "draws": 500,
+      "zero_keep_and_reset": 29224,
+      "keep_all_value_c": -68080.83367747563,
+      "reset_all_value_c": -30572.011757535314,
+      "selected_keep_c": -58191.37985816814,
+      "selected_reset_c": -24177.776886865067
+    },
+    "queue": {
+      "n": 40059,
+      "kept": 30211,
+      "groups": 4844,
+      "shuffleable": 3382,
+      "observed_c": 34585.11730865629,
+      "null_mean_c": 30004.034959444944,
+      "null_p95_c": 31112.307251117032,
+      "p_ge": 0.001996007984031936,
+      "draws": 500,
+      "zero_keep_and_reset": 29224,
+      "keep_all_value_c": -68080.83367747563,
+      "reset_all_value_c": -30572.011757535314,
+      "selected_keep_c": -58437.57106573455,
+      "selected_reset_c": -23852.453757078263
+    },
+    "queue_cost": {
+      "n": 40059,
+      "kept": 29621,
+      "groups": 4844,
+      "shuffleable": 3436,
+      "observed_c": 34052.459604067786,
+      "null_mean_c": 29434.234367016204,
+      "null_p95_c": 30530.72016694272,
+      "p_ge": 0.001996007984031936,
+      "draws": 500,
+      "zero_keep_and_reset": 29224,
+      "keep_all_value_c": -68080.83367747563,
+      "reset_all_value_c": -30572.011757535314,
+      "selected_keep_c": -57696.29560131238,
+      "selected_reset_c": -23643.835997244598
+    }
+  },
+  "predicates": {
+    "pressure": {
+      "reference": {
+        "all_scenarios_trading_up_exposure_down": false,
+        "primary_day_interval_positive": false,
+        "stress_complete": false
+      },
+      "matched_guard": {
+        "all_scenarios_trading_up_exposure_down": true,
+        "primary_day_interval_positive": false,
+        "stress_complete": false
+      }
+    },
+    "floor": {
+      "reference": {
+        "all_scenarios_trading_up_exposure_down": false,
+        "primary_day_interval_positive": false,
+        "stress_complete": false
+      },
+      "matched_guard": {
+        "all_scenarios_trading_up_exposure_down": false,
+        "primary_day_interval_positive": false,
+        "stress_complete": false
+      }
+    },
+    "market": {
+      "reference": {
+        "all_scenarios_trading_up_exposure_down": false,
+        "primary_day_interval_positive": false,
+        "stress_complete": false
+      },
+      "matched_guard": {
+        "all_scenarios_trading_up_exposure_down": false,
+        "primary_day_interval_positive": false,
+        "stress_complete": false
+      }
+    },
+    "queue": {
+      "reference": {
+        "all_scenarios_trading_up_exposure_down": false,
+        "primary_day_interval_positive": false,
+        "stress_complete": false
+      },
+      "matched_guard": {
+        "all_scenarios_trading_up_exposure_down": false,
+        "primary_day_interval_positive": false,
+        "stress_complete": false
+      }
+    },
+    "queue_cost": {
+      "reference": {
+        "all_scenarios_trading_up_exposure_down": false,
+        "primary_day_interval_positive": false,
+        "stress_complete": false
+      },
+      "matched_guard": {
+        "all_scenarios_trading_up_exposure_down": false,
+        "primary_day_interval_positive": false,
+        "stress_complete": false
+      }
+    }
+  },
+  "declaration_sha": "27aacbc919b83b5af958f2a527775c2f46a2aae9059d963dd1b54206862d34ea"
+}
