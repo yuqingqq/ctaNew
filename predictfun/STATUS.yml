@@ -1734,3 +1734,19 @@ default_pull_loop:
   final_integrity: reviews/default_pull_20261111_v4/final_review_integrity_v2.json
   numerical_work: finished
 # /DEFAULT_PULL_LOOP
+
+# DEFAULT_PULL_QUALITY
+default_pull_quality:
+  as_of: "2026-11-12T07:35:39.607254+00:00"
+  state: complete
+  actions: 40059
+  days: 6
+  validation: false
+  conclusion: local_random_selection_skill_but_no_guard_value_increment
+  report: handoffs/20261112_default_pull_quality.md
+  result: reviews/default_pull_quality_20261112_v2/result.json
+  source_commit: 511d6dea469d0e9908329d3ef5b435aa3bacc276
+  model_fits: 0
+  new_policy_variants: 0
+  numerical_work: finished
+# /DEFAULT_PULL_QUALITY
