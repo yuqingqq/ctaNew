@@ -1,5 +1,7 @@
 # GAP: the remaining gap between us and the top makers (results, 2026-11-12)
 
+> **Re-check (2026-11-12 11:41Z, handoffs/20261112_age_recheck_results.md, USER):** 73-77% of our simulated profit comes from fills on orders under 100 ms old, which B1a found only 8-12% real. Without them v3's per-share lead over the top 5 is MIXED (8 / 6 of 9 days) and Y+F30's holds (9 / 8); our volume without them is about 40% of the figures below (v3: 567 of 1,433 sh a day at M 50).
+
 Session ce68ebe0. USER: "Yea we do the test to check the performance first, then check what's the remaining gap to top makers".
 
 Script and run:

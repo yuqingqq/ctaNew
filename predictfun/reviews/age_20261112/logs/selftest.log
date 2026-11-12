@@ -1,0 +1,2 @@
+failing: [] planted error caught: True
+2026-11-12T11:39:08Z tag=age_selftest rc=0 peak_rss_mib=101 wall_s=0.29 cpu_user_s=0.22 memavail_start_gib=22 disk_free_gib=504->504 slot=claude

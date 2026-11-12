@@ -1,5 +1,16 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 11:41Z (session ce68ebe0) — AGE re-check DONE: confirmed (USER) - 73-77% of the replay profit of v3 and every QR2 arm is on orders under 100 ms old (R310 YOUNG-DRIVEN), the part B1a found 8-12% real; without them v3 is worth $3.7 a day at M 50; QR2's speed gain survives at a third (+2.6 $/day, R312)
+
+- Done: research/pf_qr2_age_check.py + run_age.sh (64638440, before the run), 11:40Z claude slot. Report
+  handoffs/20261112_age_recheck_results.md; copies reviews/age_20261112/; re-check notes added at the top of the QR2 and GAP reports.
+- v3 $/day M 50: all 14.73; < 100 ms 11.03; 100-500 ms 3.49; >= 500 ms 0.21; B1a-weighted 2.46. Y+F30: 23.45 / 17.15 / 5.60 / 0.71
+  / 4.05. At M 250 nothing earns (weighted -0.66 / -0.04).
+- R311 SURVIVES without < 100 ms (small); R311b FAILS for v3 (>= 500 ms ~0); R312 F30 / Y+F30 GAIN-SURVIVES (+2.4 / +2.6 $/day M 50,
+  9 of 9), Y GAIN-IS-YOUNG; R313 WEIGHTED-ABOVE; R314 vs top 5 MIXED (v3) / OURS-HIGHER (Y+F30).
+- Watch out: replay $ of young-order strategies is not trustworthy; B1a's rates are one day of another engine. The live A4b capture is
+  the only test.
+
 ## 2026-11-12 11:31Z (session ce68ebe0) — GAP DONE: per share our simulated v3 beats the top 5's real at-best fills (R300 OURS-HIGHER 9 of 9 days); the gap is volume (345x our shares, 76x our $) and that 60% of their money is made while v3's guard says stay out (R302 OFF-DOMINANT); different flow (R303, 17% shared)
 
 - Done (USER: "then check what's the remaining gap to top makers"): research/pf_gap_top_makers.py + run_gap.sh (767924de, before
