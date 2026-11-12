@@ -1,0 +1,9 @@
+20261102: 80 window-sides, 1 s, rss 557 MiB
+20261102: 160 window-sides, 2 s, rss 557 MiB
+20261102: 240 window-sides, 2 s, rss 557 MiB
+20261102: 320 window-sides, 3 s, rss 557 MiB
+20261102: 400 window-sides, 4 s, rss 557 MiB
+20261102: 480 window-sides, 5 s, rss 557 MiB
+20261102: 560 window-sides, 6 s, rss 557 MiB
+20261102: done in 6 s; legs at the best 120595, aligned, QR2 reproduced
+2026-11-12T11:29:30Z tag=gap_day_20261102 rc=0 peak_rss_mib=709 wall_s=7.76 cpu_user_s=6.98 memavail_start_gib=22 disk_free_gib=504->504 slot=claude

@@ -1,0 +1,9 @@
+20261031: 80 window-sides, 1 s, rss 483 MiB
+20261031: 160 window-sides, 1 s, rss 483 MiB
+20261031: 240 window-sides, 2 s, rss 483 MiB
+20261031: 320 window-sides, 3 s, rss 483 MiB
+20261031: 400 window-sides, 4 s, rss 484 MiB
+20261031: 480 window-sides, 4 s, rss 484 MiB
+20261031: 560 window-sides, 5 s, rss 484 MiB
+20261031: done in 5 s; legs at the best 80885, aligned, QR2 reproduced
+2026-11-12T11:28:16Z tag=gap_day_20261031 rc=0 peak_rss_mib=749 wall_s=6.94 cpu_user_s=6.44 memavail_start_gib=22 disk_free_gib=504->504 slot=claude
