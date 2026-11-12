@@ -1,0 +1,35 @@
+AGE re-check of QR2 / GAP against B1a (young orders) - 9 replay days, first 60 s; as of 2026-11-12T11:41:07Z
+controls passed per day (QR2 reproduced, bins add up); B1a precision by age (< 100 / 100-500 / >= 500 ms): M|0 8.3% / 54.8% / 46.8%; M|50 12.3% / 28.6% / 47.7%; M|250 0.7% / 7.7% / 22.0%
+
+M|0: $/day at 1 s (c/sh, shares/day) by order age at the fill; cancel-pending; B1a-weighted
+  J-v3   all   21.21 (+1.38, 1542 sh) | < 100 ms   16.27 (+1.63, 1001) | 100-500 ms    4.44 (+1.08, 412) | >= 500 ms    0.50 (+0.39, 129) | pending 2.89 (283 sh) | B1a-weighted 4.01
+  Y      all   20.26 (+1.64, 1239 sh) | < 100 ms   15.41 (+1.79, 861) | 100-500 ms    4.26 (+1.36, 313) | >= 500 ms    0.59 (+0.92, 64) | pending 3.20 (232 sh) | B1a-weighted 3.89
+  F30    all   32.46 (+1.26, 2586 sh) | < 100 ms   23.85 (+1.34, 1775) | 100-500 ms    7.73 (+1.20, 645) | >= 500 ms    0.88 (+0.53, 165) | pending 9.75 (757 sh) | B1a-weighted 6.62
+  Y+F30  all   31.69 (+1.38, 2297 sh) | < 100 ms   23.16 (+1.41, 1641) | 100-500 ms    7.60 (+1.37, 555) | >= 500 ms    0.93 (+0.91, 101) | pending 9.80 (694 sh) | B1a-weighted 6.52
+
+M|50: $/day at 1 s (c/sh, shares/day) by order age at the fill; cancel-pending; B1a-weighted
+  J-v3   all   14.73 (+1.03, 1433 sh) | < 100 ms   11.03 (+1.27, 866) | 100-500 ms    3.49 (+0.80, 437) | >= 500 ms    0.21 (+0.16, 130) | pending 2.13 (294 sh) | B1a-weighted 2.46
+  Y      all   14.88 (+1.34, 1108 sh) | < 100 ms   10.94 (+1.53, 716) | 100-500 ms    3.58 (+1.09, 327) | >= 500 ms    0.36 (+0.55, 65) | pending 2.18 (229 sh) | B1a-weighted 2.54
+  F30    all   23.30 (+0.92, 2540 sh) | < 100 ms   17.20 (+0.98, 1749) | 100-500 ms    5.52 (+0.88, 625) | >= 500 ms    0.59 (+0.35, 166) | pending 4.65 (731 sh) | B1a-weighted 3.98
+  Y+F30  all   23.45 (+1.05, 2232 sh) | < 100 ms   17.15 (+1.07, 1603) | 100-500 ms    5.60 (+1.06, 528) | >= 500 ms    0.71 (+0.70, 102) | pending 4.77 (658 sh) | B1a-weighted 4.05
+    fine J-v3: < 50 7.57 (+1.30), 50-100 3.46 (+1.23), 100-250 2.84 (+0.91), 250-500 0.64 (+0.52), 500-1000 0.15 (+0.25), >= 1000 0.06 (+0.08)
+    fine Y: < 50 7.60 (+1.56), 50-100 3.35 (+1.46), 100-250 2.94 (+1.21), 250-500 0.64 (+0.77), 500-1000 0.28 (+0.79), >= 1000 0.08 (+0.27)
+    fine F30: < 50 11.40 (+0.92), 50-100 5.79 (+1.13), 100-250 4.27 (+0.94), 250-500 1.25 (+0.72), 500-1000 0.25 (+0.30), >= 1000 0.34 (+0.41)
+    fine Y+F30: < 50 11.41 (+1.01), 50-100 5.74 (+1.23), 100-250 4.37 (+1.11), 250-500 1.23 (+0.91), 500-1000 0.38 (+0.67), >= 1000 0.34 (+0.74)
+
+M|250: $/day at 1 s (c/sh, shares/day) by order age at the fill; cancel-pending; B1a-weighted
+  J-v3   all  -11.85 (-0.74, 1595 sh) | < 100 ms   -7.72 (-0.87, 884) | 100-500 ms   -2.11 (-0.41, 514) | >= 500 ms   -2.02 (-1.03, 197) | pending -3.27 (313 sh) | B1a-weighted -0.66
+  Y      all   -2.93 (-0.28, 1060 sh) | < 100 ms   -2.43 (-0.39, 628) | 100-500 ms    0.20 (+0.06, 344) | >= 500 ms   -0.70 (-0.80, 88) | pending -1.40 (224 sh) | B1a-weighted -0.16
+  F30    all  -14.04 (-0.54, 2620 sh) | < 100 ms  -11.17 (-0.66, 1693) | 100-500 ms   -1.27 (-0.18, 690) | >= 500 ms   -1.61 (-0.68, 236) | pending -7.08 (764 sh) | B1a-weighted -0.53
+  Y+F30  all   -5.57 (-0.26, 2102 sh) | < 100 ms   -6.07 (-0.42, 1443) | 100-500 ms    0.79 (+0.15, 533) | >= 500 ms   -0.29 (-0.23, 126) | pending -4.92 (663 sh) | B1a-weighted -0.04
+
+R310 J-v3: YOUNG-DRIVEN (share of $ from orders < 100 ms: M 0 77%, M 50 75%); R311 without < 100 ms: SURVIVES (days > 0 [9, 7]); R311b only >= 500 ms: FAILS (days > 0 [7, 5])
+R310 Y: YOUNG-DRIVEN (share of $ from orders < 100 ms: M 0 76%, M 50 74%); R311 without < 100 ms: SURVIVES (days > 0 [9, 9]); R311b only >= 500 ms: SURVIVES (days > 0 [7, 7])
+R310 F30: YOUNG-DRIVEN (share of $ from orders < 100 ms: M 0 73%, M 50 74%); R311 without < 100 ms: SURVIVES (days > 0 [9, 8]); R311b only >= 500 ms: SURVIVES (days > 0 [7, 7])
+R310 Y+F30: YOUNG-DRIVEN (share of $ from orders < 100 ms: M 0 73%, M 50 73%); R311 without < 100 ms: SURVIVES (days > 0 [9, 9]); R311b only >= 500 ms: SURVIVES (days > 0 [7, 8])
+R312 GAIN F30 vs J-v3 without < 100 ms: GAIN-SURVIVES; days above [9, 9], below [0, 0]; mean diff $/day M 0 / M 50 +3.68 / +2.41
+R312 GAIN Y vs J-v3 without < 100 ms: GAIN-IS-YOUNG; days above [4, 5], below [5, 4]; mean diff $/day M 0 / M 50 -0.08 / +0.24
+R312 GAIN Y+F30 vs J-v3 without < 100 ms: GAIN-SURVIVES; days above [9, 9], below [0, 0]; mean diff $/day M 0 / M 50 +3.59 / +2.61
+R313 B1a-WEIGHTED Y+F30 vs J-v3: WEIGHTED-ABOVE; days above [9, 9], below [0, 0]
+R314 J-v3 (orders >= 100 ms) vs top 5: MIXED; days ours higher [8, 6], top higher [1, 3]; ours M 50 per day +0.87 +0.83 +0.40 +2.03 +1.74 -0.15 +0.06 -0.24 +0.67 | top 5 +0.31 +0.27 +0.28 +0.26 +0.19 +0.10 +0.15 +0.24 +0.18
+R314 Y+F30 (orders >= 100 ms) vs top 5: OURS-HIGHER; days ours higher [9, 8], top higher [0, 1]; ours M 50 per day +1.16 +0.81 +0.77 +1.88 +1.97 +0.95 +0.50 +0.18 +0.70 | top 5 +0.31 +0.27 +0.28 +0.26 +0.19 +0.10 +0.15 +0.24 +0.18

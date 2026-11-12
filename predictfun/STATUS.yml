@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-12 11:41Z (session ce68ebe0): AGE re-check (handoffs/20261112_age_recheck_results.md): 73-77% of the replay profit is on orders
+  < 100 ms old (B1a: 8-12% real); without them v3 $3.7/day at M 50, Y+F30 $6.3 (gain +2.6, 9 of 9 days); nothing at M 250.
   2026-11-12 11:31Z (session ce68ebe0): GAP (handoffs/20261112_gap_top_makers_results.md): per share our simulated v3 beats the top 5's real
   at-best fills (9 of 9 days); they trade 345x our shares; 60% of their money is made while v3's guard is OFF (+0.15 c/sh on 459k sh/day).
   2026-11-12 11:20Z (session ce68ebe0): QR2 (handoffs/20261112_qr2_results.md): R290 NOT-SHOWN (joining earlier at today's speed = v3's $/day);
@@ -1715,5 +1717,6 @@ flags:
   queue_race: "LATE-ENTRY (QR, 2026-11-12 10:31Z): queue ahead at go-live is mostly joined after we could have been there (v3 41%, live 11-08 44%), not latency (16% / 27%) or re-places (15% / 14%); v3 fills on young levels / first orders +1.59 / +1.16 c/sh vs old / re-placed ~0 (M 50); joining new levels needs the guard (positive at every delay at M 0 / M 50, negative at M 250) and speed below one ~50 ms snapshot halves the queue; consumed days, rule M unvalidated"
   qr2_v3_early: "SPEED-ONLY (QR2, 2026-11-12 11:20Z): v3 + no joins on levels > 500 ms + flicker hold = v3's $/day (R290 NOT-SHOWN); v3 + joining new levels 30 ms after birth (F30, Y+F30) +8.6 / +8.7 $/day at M 50 on 9 of 9 days at v3's c/sh; the age cut alone raises c/sh on 9 of 9 days and cuts the M 250 loss -11.9 -> -2.9 $/day; keep-through-flicker (K, K2) worse; post hoc parameters, consumed days, 30 ms is below our feed delay"
   gap_top_makers: "VOLUME-AND-OFF (GAP, 2026-11-12 11:31Z): per share v3 (simulated, +1.03 c/sh) beats the top 5's real at-best fills (+0.23) on 9 of 9 days; they trade 345x our shares (69x per maker) and earn 76x our $; 60% of their money is made while v3's guard is OFF (+0.15 c/sh on 459k sh/day), 40% while ON (+1.30 on 35k sh/day vs our 1.4k); only 17% of our fills share a taker order with them"
+  age_recheck: "YOUNG-DRIVEN (AGE, 2026-11-12 11:41Z): 73-77% of v3's and QR2's replay profit is on orders < 100 ms old, which B1a found 8-12% real; without them v3 $3.7/day (M 50), B1a-weighted $2.5; orders >= 500 ms ~0; QR2's fast-join gain survives at +2.6 $/day (9 of 9 days); M 250 ~0 or negative; the replay cannot price young-order strategies - live A4b capture needed"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"
