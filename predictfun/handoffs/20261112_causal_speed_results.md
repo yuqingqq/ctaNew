@@ -1,5 +1,7 @@
 # CS: the speed test with causal clocks (results, 2026-11-12)
 
+> **Pipeline review (2026-11-12, handoffs/20261112_pipeline_review.md):** "v3" here is lane J-v3, v3's quote line only, not the frozen pm_ladder v3 (FINDINGS C11). Own-order overlap fills (P13) are 1-7% of the fast arms' shares. Excluding them the gains shrink by up to 14% (best arm 8.10 -> 7.01 $/day) and still hold on 8-9 of 9 days (`research/pf_cs_overlap.py`).
+
 Session ce68ebe0. USER: "Yes" to rerunning the speed test with honest timing. Replaces the VOID fast-entry arms of QR and QR2
 (their decision was scheduled before the level existed; FINDINGS.md C6).
 
