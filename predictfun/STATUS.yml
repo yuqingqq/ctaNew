@@ -1718,11 +1718,11 @@ flags:
 
 # DEFAULT_PULL_LOOP
 default_pull_loop:
-  as_of: "2026-11-12T03:20:02.339083+00:00"
+  as_of: "2026-11-12T04:04:32.688048+00:00"
   state: "running"
-  stage: "stress_20261101"
-  completed_stages: 23
-  detail: "User resumed work with two global research slots. Current replay continues on core 8; scheduler handover will preserve this result before proceeding."
+  stage: "stress_20261102"
+  completed_stages: 24
+  detail: "v4 unchanged; Codex core 8 with global research cap two (user 2026-11-12)."
   progress: handoffs/20261111_default_pull_progress.md
   branch: research/predict-default-pull-20261111
   process_cap: 2
