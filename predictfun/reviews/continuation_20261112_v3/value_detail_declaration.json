@@ -1,0 +1,7 @@
+{
+  "as_of": "2026-11-12T11:06:24.074972+00:00",
+  "source_commit": "94d97f4c8fc254dc3557517be0c037306ae72738",
+  "source_sha": "31fbb0078ef4220f85241aa732b3fcae4472773f3f8aec8553755f47f54f52cd",
+  "experiment_declaration_sha": "e497cf4ad16161ace53974028678af25816ef8ea9ddfa77968e4cd056a587ed8",
+  "design": "Before any full-day build/fit readout: report 10s gain/loss/risk means and errors for all existing families, paired day intervals for queue calibrated versus raw/market calibrated/training baseline, fixed score bins (-inf,-5,0,5,inf) in cents, and KEEP/PULL value decomposition on each declared zero-threshold kept subset. Positive aggregation and changed-sign refusal controls. No new fit, candidate, threshold or population."
+}
