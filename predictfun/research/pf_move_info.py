@@ -55,6 +55,8 @@ them; K2 no TAPE feature uses a leg known after t (asserted on every row), a pla
 case; K3 Part B falsifiers: a planted feature (DN_250 with 20% of rows flipped) must read NEW-INFO and TAPE permuted within each day
 must read NONE; K4 Part A falsifiers: a planted feature (mv_250 plus equal-variance noise) must reach R^2 >= 0.3 and permuted TAPE
 must stay <= 0.005; K5 AUC inputs carry no NaN score (P17: counted and refused).
+Added 17:35Z, before the report ran and after one day's build (no reading changed): Part A's per-family fits and gap shares are also
+printed for the all-legs population (on day 1 the top-5 vs field gap sits in trades that clear the level, not in standing ones).
 Limits: consumed days; descriptive; the venue delays are assumptions; exchange clocks vs Predict's venue clock are not synchronised
 (under ~10 ms not resolved); the relay (Predict's reference price) is not used: 1 print per s, ~1.3 s after publication.
 Usage: research/run_move.sh; python3 predictfun/research/pf_move_info.py selftest | day <yyyymmdd> | report
@@ -476,8 +478,6 @@ def report():
         fits = {}
         for nm, cols in list(FAM.items()) + [('ALL', A_BN + A_VEN + A_TAPE + A_BOOK)]:
             days = dz8 if nm in ('VEN', 'ALL') else dz
-            if pop == 'all' and nm != 'ALL' and nm != 'BN':
-                continue
             pr_ = lgb_oof(MA(cols)[idx], yy, dd, days, 'regression'); fits[nm] = (pr_, days)
             print(f'[A] {pop} {nm} done', flush=True)
         if pop == 'standing':
