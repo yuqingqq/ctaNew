@@ -1,5 +1,5 @@
 # Quote-default / learned-pull research loop
-As of 2026-11-12T03:20:02.339083+00:00. **running: stress_20261101**. User resumed work with two global research slots. Current replay continues on core 8; scheduler handover will preserve this result before proceeding.
+As of 2026-11-12T04:04:32.688048+00:00. **running: stress_20261102**. v4 unchanged; Codex core 8 with global research cap two (user 2026-11-12).
 
 Completed prior test: own-order/calm study d475eccb, canonical comparison_v4.json; no promoted variant.
 Current branch: research/predict-default-pull-20261111. One Codex worker on core 8; two research workers allowed globally (user 2026-11-12); consumed dates only; no live changes.
@@ -24,11 +24,12 @@ Plan: controls →8-window parity smoke →9 neutral build days →6 expanding m
 | eval_20261027 | complete | 2026-11-11T22:01:04.820222+00:00 | Passed; logs/eval_20261027.log plus artifact/feature checks retained. |
 | eval_20261031 | complete | 2026-11-11T22:42:12.791386+00:00 | Passed; logs/eval_20261031.log plus artifact/feature checks retained. |
 | eval_20261101 | complete | 2026-11-11T23:24:01.983452+00:00 | Recovered missing marker after driver interruption: numeric rc=0, all artifact hashes and 105395 feature identities verified. Original artifacts unchanged. |
-| driver | interrupted | 2026-11-11T23:22:19.557825+00:00 | Driver interrupted; completed stages retained. |
+| driver | interrupted | 2026-11-12T04:04:27.550233+00:00 | Driver interrupted; completed stages retained. |
 | eval_20261102 | complete | 2026-11-12T00:05:00.713258+00:00 | Passed; logs/eval_20261102.log plus artifact/feature checks retained. |
 | eval_20261103 | complete | 2026-11-12T00:45:10.056923+00:00 | Passed; logs/eval_20261103.log plus artifact/feature checks retained. |
 | primary_report | complete | 2026-11-12T00:45:43.363107+00:00 | Passed; logs/primary_report.log plus artifact/feature checks retained. |
 | stress_20261026 | complete | 2026-11-12T01:35:45.851437+00:00 | Passed; logs/stress_20261026.log plus artifact/feature checks retained. |
 | stress_20261027 | complete | 2026-11-12T02:24:44.564910+00:00 | Passed; logs/stress_20261027.log plus artifact/feature checks retained. |
 | stress_20261031 | complete | 2026-11-12T03:15:48.366331+00:00 | Passed; logs/stress_20261031.log plus artifact/feature checks retained. |
-| stress_20261101 | running | 2026-11-12T03:20:02.339083+00:00 | User resumed work with two global research slots. Current replay continues on core 8; scheduler handover will preserve this result before proceeding. |
+| stress_20261101 | complete | 2026-11-12T04:04:32.524067+00:00 | Verified unchanged replay after scheduler handover; two global research slots, Codex core 8. |
+| stress_20261102 | running | 2026-11-12T04:04:32.688048+00:00 | v4 unchanged; Codex core 8 with global research cap two (user 2026-11-12). |
