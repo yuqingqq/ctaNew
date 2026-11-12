@@ -1,0 +1,9 @@
+{
+  "as_of": "2026-11-12T10:55:46.180762+00:00",
+  "status": "PASS",
+  "tests": 8,
+  "source_commit": "8a8f1534",
+  "test_source_sha": "f844da54db1c99c3c408e6a648912fdb5c9e7750b1338f1920c4a773b8e0170e",
+  "command": "python -m pytest predictfun/research/tests/test_continuation_v3.py -q",
+  "scope": "Full synthetic fork, alias, event-heap, current-touch re-entry, cancellation prefix, equal-clock trade exclusion, coherent moment/calibration controls and known-bad refusals. 8 passed before real-data v3 smoke."
+}
