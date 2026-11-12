@@ -2,10 +2,10 @@
 
 <!-- DEFAULT_PULL_LOOP -->
 
-## 2026-11-12T05:43:57.178099+00:00 — Quote-default / learned-pull research loop: complete
+## 2026-11-12T07:22:32.194451+00:00 — Quote-default / learned-pull research loop: complete
 
-- Stage `driver`. All v4 tests complete. Canonical output default_pull_20261111_v4/comparison_final.json; completion artifact audit and comparison figure passed. No live promotion.
-- 30 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
+- Stage `human_review`. Final review complete: no candidate preserves trading value with no higher inventory exposure across both scenarios. Six primary and six stress replays, independent audit and integrity checks passed. See handoffs/20261112_default_pull_review.md. No live promotion; numerical work finished.
+- 31 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
 - Prior own-order/calm test remains COMPLETE, no promotion; comparison_v4.json / d475eccb.
 - Branch research/predict-default-pull-20261111; Codex slot/core 8, global cap two research workers; no live changes/protected-day reads.
 
@@ -13,7 +13,7 @@
 
 <!-- DEFAULT_PULL_PRIMARY_FINDING -->
 
-Primary finding (2026-11-12 00:45:43 UTC): all six primary replay days complete. Learned pull policies trail matched guard on paired marked value on every test day; pressure rules have a favorable but uncertain point estimate. Stress and final audit remain pending. Interpretation, populations and limitations: `handoffs/20261111_default_pull_primary_review.md`.
+Final finding (numerical report as of 2026-11-12 05:42:48 UTC; review complete): all six primary and six stress replays and independent audits passed. No candidate meets the declared trading-value/inventory objective under both execution scenarios. Learned pulls lose paired marked value on every test day in both scenarios; the pressure rule's favorable primary estimate reverses under stress. This supersedes the pending-stress primary snapshot. Final interpretation, populations, limits and next data requirements: [completed review](handoffs/20261112_default_pull_review.md). Canonical result: `reviews/default_pull_20261111_v4/comparison_final.json`; final integrity: `final_review_integrity_v2.json`. No live changes or candidate promotion.
 
 <!-- /DEFAULT_PULL_PRIMARY_FINDING -->
 

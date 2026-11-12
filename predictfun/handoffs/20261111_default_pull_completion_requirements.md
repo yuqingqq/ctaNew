@@ -1,6 +1,6 @@
 # Default-quote / learned-pull completion requirements
 
-This checklist maps the user objective to evidence. It is not a completion receipt: the research loop remains active. Canonical experiment: `default_pull_20261111_v4`; frozen source/declaration commits `36093438` / `531836a5`.
+This checklist maps the user objective to evidence. **Completed and reviewed:** all requirements are resolved in [the final review](20261112_default_pull_review.md), with artifact integrity recorded in `../reviews/default_pull_20261111_v4/final_review_integrity_v2.json`. No candidate qualifies for promotion. Canonical experiment: `default_pull_20261111_v4`; frozen source/declaration commits `36093438` / `531836a5`.
 
 | Requirement | Evidence to inspect before declaring completion |
 |---|---|
@@ -15,6 +15,6 @@ This checklist maps the user objective to evidence. It is not a completion recei
 | Keep status, findings and reproducibility current | Final human review and data requirements; current root/worktree HANDOFF, STATUS and progress handoff; small receipts and complete pipeline committed/pushed on `research/predict-default-pull-20261111`; large data stays outside git. |
 | Conclude honestly and preserve scope | An evidence-backed candidate or a clear negative result for this tested architecture, including both comparisons and execution scenarios. State remaining queue/fill calibration and later untouched-day requirements. Confirm the diff contains research/documentation changes only and no live strategy, loss-budget or rebate-accounting changes. |
 
-After all stages finish, resolve each row against the named artifacts and write the final completion finding. A running process, a passing smoke, a source manifest or the final report alone does not prove the whole objective complete.
+Each row has been resolved against the named artifacts in the final review. A running process, a passing smoke, a source manifest or the final report alone does not prove the whole objective complete.
 
 Risk interpretation: the declared inventory-square time and marked value use the 240.1-second observation point (`pf_order_policy_hooks.py::Hook.finish`). Orders stop at 240 seconds; the remaining inventory is then carried toward settlement. Evaluate terminal absolute inventory and settlement/carry alongside the chart's inventory-area change. A smaller area alone does not prove lower settlement variance. Keep the frozen metrics and criteria unchanged, and state their time horizon in the final review.

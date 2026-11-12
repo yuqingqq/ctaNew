@@ -1718,14 +1718,19 @@ flags:
 
 # DEFAULT_PULL_LOOP
 default_pull_loop:
-  as_of: "2026-11-12T05:43:57.178099+00:00"
+  as_of: "2026-11-12T07:22:32.194451+00:00"
   state: "complete"
-  stage: "driver"
-  completed_stages: 30
-  detail: "All v4 tests complete. Canonical output default_pull_20261111_v4/comparison_final.json; completion artifact audit and comparison figure passed. No live promotion."
+  stage: "human_review"
+  completed_stages: 31
+  detail: "Final review complete: no candidate preserves trading value with no higher inventory exposure across both scenarios. Six primary and six stress replays, independent audit and integrity checks passed. See handoffs/20261112_default_pull_review.md. No live promotion; numerical work finished."
   progress: handoffs/20261111_default_pull_progress.md
   branch: research/predict-default-pull-20261111
   process_cap: 2
   execution_slot: codex
   cpu_core: 8
+  conclusion: no_candidate_promoted
+  final_review: handoffs/20261112_default_pull_review.md
+  canonical_result: reviews/default_pull_20261111_v4/comparison_final.json
+  final_integrity: reviews/default_pull_20261111_v4/final_review_integrity_v2.json
+  numerical_work: finished
 # /DEFAULT_PULL_LOOP
