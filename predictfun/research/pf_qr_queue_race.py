@@ -373,6 +373,15 @@ def chain_start(O, idx, ts_key='ts'):
     return c, n
 
 
+def live_chain(prev, tA, i):
+    """Part C: walk back over re-places (B13c's match). A predecessor counts only if it was accepted strictly earlier: a cancel
+    sent before its ack can make two orders each other's re-place (fix 2026-11-12, after the first live run looped)."""
+    c = i; n = 0; seen = {i}
+    while prev[c] >= 0 and tA[prev[c]] < tA[c] and prev[c] not in seen:
+        c = int(prev[c]); n += 1; seen.add(c)
+    return c, n
+
+
 def decompose(ta, pt, a0, a0n, tb, tch, side, qrule, tfl, lvp, ttl, tpl, tql, strict=False):
     s1 = min(tb + D_OURS, tch); kw = dict(ss=strict, se=strict)
     gU = ghost(pt, side, tb, ta, qrule, tfl, lvp, ttl, tpl, tql, **kw)
@@ -470,6 +479,8 @@ def selftest():
     O = [dict(pt=50, ts=-30.0, ta=10.0, tc=100.0, tfill=INF, ref=False), dict(pt=50, ts=150.0, ta=190.0, tc=300.0, tfill=INF, ref=False),
          dict(pt=51, ts=350.0, ta=390.0, tc=500.0, tfill=INF, ref=False), dict(pt=51, ts=1600.0, ta=1640.0, tc=INF, tfill=INF, ref=False)]
     chk('S4 chains', [chain_start(O, i)[1] for i in range(4)] == [0, 1, 0, 0])
+    pv = np.array([-1, 0, 3, 2]); tAc = np.array([10.0, 50.0, 150.0, 120.0])   # 2 and 3: each other's re-place (cancel before ack)
+    chk('S4 live chains end (cycle)', [live_chain(pv, tAc, i) for i in range(4)] == [(0, 0), (0, 1), (3, 1), (3, 0)])
     # S5: FB live time and grace
     fr5 = [(0, [(50, 10)], 60), (100, [(51, 5)], 60), (300, [(51, 8)], 60)]
     X = syn(fr5, [(5, 49, 1)], kdelay=60.0)
@@ -690,6 +701,8 @@ def run_live():
         tA = cr.t_Accepted.values.astype(float); tick = cr.tick.values.astype('int64'); sd = cr.side.values; mk = cr.market.values; ws = cr.ws.values
         for i in range(len(cr)):
             st['orders'] += 1
+            if st['orders'] % 5000 == 0:
+                print(f'live: {st["orders"]} orders, rss {K.rss_mib():.0f} MiB', flush=True)
             if not (ws[i] <= tA[i] < ws[i] + 60000.0):
                 st['outside_first_minute'] += 1; continue
             m = int(mk[i]); s_ = int(sd[i])
@@ -706,9 +719,7 @@ def run_live():
             if j0 == 0:
                 st['censored'] += 1; continue
             kd = KINDS[int(kind[j0])]; tb = tfl[j0]
-            c = i; npos = 0
-            while prev[c] >= 0:
-                c = int(prev[c]); npos += 1
+            c, npos = live_chain(prev, tA, i)
             tch = max(tA[c], tb)
             lvp = lvarr(Pk, Sk, int(tick[i]), s_)
             a0 = BC.queue_at(tf, Pk, Sk, tA[i], int(tick[i]))
