@@ -1,0 +1,8 @@
+{
+  "as_of": "2026-11-12T10:45:08.180552+00:00",
+  "status": "PASS",
+  "tests": 5,
+  "source_commit": "3a2a3953",
+  "log_sha": "da1ab399d06e9534f6806488a03ad83c7502d08aaf620ac4077464e47dac64aa",
+  "scope": "Synthetic source transforms, alias preservation, current-touch re-entry, longer-horizon fills, prefix and KEEP reconciliation, wrong-latency refusal, shared moment/calibration support and known-bad refusals; no real-data numerical outcomes."
+}
