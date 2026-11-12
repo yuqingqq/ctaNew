@@ -1786,10 +1786,10 @@ joint_fill_20261112:
 
 # CONTINUATION_20261112
 continuation_20261112:
-  as_of: "2026-11-12T10:43:37.918270+00:00"
+  as_of: "2026-11-12T10:50:21.309607+00:00"
   state: "complete"
-  stage: "declaration"
-  detail: "Full-engine paired continuation, timing/flow profiles and coherent estimator declared before numerical builds."
+  stage: "declaration_v2"
+  detail: "v1 smoke failed KEEP parity; v2 re-heapifies filtered fork events. Design unchanged, failed run preserved."
   validation: false
-  receipts: reviews/continuation_20261112/
+  receipts: reviews/continuation_20261112_v2/
 # /CONTINUATION_20261112
