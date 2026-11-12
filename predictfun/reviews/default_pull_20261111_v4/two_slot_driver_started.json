@@ -1,0 +1,12 @@
+{
+  "as_of": "2026-11-12T04:04:34.592795+00:00",
+  "status": "TWO_SLOT_DRIVER_RUNNING",
+  "driver_pid": 802992,
+  "watcher_pid": 803044,
+  "driver_log": "/home/yuqing/ctaNew/data/predict_fun/research/default_pull_20261111_v4/logs/driver_two_slots_20261112T040432Z.log",
+  "watcher_log": "/home/yuqing/ctaNew/data/predict_fun/research/default_pull_20261111_v4/logs/publication_watcher_two_slots_20261112T040432Z.log",
+  "process_cap": 2,
+  "slot": "codex",
+  "core": 8,
+  "source_sha": "2ec0dc94bc5ce59080407d1e3b23379aade1df07129cea2289532e635da2eefb"
+}
