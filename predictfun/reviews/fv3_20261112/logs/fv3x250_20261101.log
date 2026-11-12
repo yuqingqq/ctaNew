@@ -1,0 +1,4 @@
+[tx timing] {'mode': 'ws', 'legs': 479777, 'legs_retimed': 17615, 'shares_retimed': 320184.6718279081, 'untimed_given_time': 945, 'abs_shift_ms_p50': 434.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 410231, 3: 45863, 5: 23683}, 'groups_old_key': 151092, 'groups_tk': 337016, 'tx_multi_time_before': 7681, 'tx_multi_time_after': 0}
+[in] 20261101 tokyoreal books 1440616 legs 479777 binance raw 15279506 kept 87338 [mem] 1001 MiB
+[done] 20261101 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (76.82, 666)}
+2026-11-12T13:32:22Z tag=fv3_fv3x250_20261101 rc=0 peak_rss_mib=1045 wall_s=51.88 cpu_user_s=50.23 memavail_start_gib=22 disk_free_gib=502->502 slot=claude

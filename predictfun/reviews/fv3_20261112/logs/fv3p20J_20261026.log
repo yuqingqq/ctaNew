@@ -1,0 +1,5 @@
+[tx timing] {'mode': 'ws', 'legs': 818939, 'legs_retimed': 42251, 'shares_retimed': 1060953.0354493381, 'untimed_given_time': 1372, 'abs_shift_ms_p50': 451.0, 'key': 'taker order (tx hash + taker hash)', 'tk_status_legs': {0: 697120, 3: 82106, 5: 39713}, 'groups_old_key': 238329, 'groups_tk': 580259, 'tx_multi_time_before': 14712, 'tx_multi_time_after': 0}
+[tx jitter] {'jitter': 'frame', 'jitter_mean_ms': 26.36601412424388, 'jitter_p50_ms': 25.0604248046875, 'jitter_zero_gap_legs': 0}
+[in] 20261026 tokyoreal books 1712000 legs 818939 binance raw 44540532 kept 355093 [mem] 1186 MiB
+[done] 20261026 tokyoreal custom {'MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95': (291.29, 853)}
+2026-11-12T13:08:08Z tag=fv3_fv3p20J_20261026 rc=0 peak_rss_mib=1407 wall_s=79.65 cpu_user_s=73.57 memavail_start_gib=22 disk_free_gib=503->503 slot=claude
