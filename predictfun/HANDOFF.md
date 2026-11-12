@@ -1,5 +1,18 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 07:31Z (session ce68ebe0) — keep-or-pull S4 diagnostic: the inputs are clean; the false pulls come from the target - 72.5% of the model's pulls are quiet moments (no fill either way within 5 s), and "pulling right" is mostly luck on the re-entered order
+
+- Done (USER: "check the raw input to find out any reasons"): research/pf_kp_s4_diag.py, post hoc, 07:25Z claude slot. Report
+  handoffs/20261112_kp_s4_diag.md; copies reviews/kp_s4_20261112/diag/. Inputs: NaN <= 1.3%, no inf, own-order invariants hold
+  (planted rows flagged), re-predicted held-out rows = oof exactly.
+- Prediction separates activity (AUC 0.63) more than harm (sign 0.57): its negatives land on quiet states, pushed by our order's
+  position (at the best, young, small shown size); true pulls are separated by v and rare Binance moves.
+- Label: of the pull-right moments only 16.6% are an adverse fill avoided; 35.5% are a good fill of the re-entered order, 47.9% both
+  paths filled. Keep and pull-re-enter both lose about 3 c/sh per fill (-1.66 / -1.77 per row): Delta is the difference of two
+  losing lotteries. Binance returns / flows / imbalances and Predict.fun mid changes / imbalances separate the sign at 0.496-0.501.
+- Next (proposal, user's call): target Q_keep vs 0 (value of our resting order over 5 s, no re-entry leg), rest only when >= 0 -
+  the in-or-out decision the guard trigger and v3 exploit.
+
 ## 2026-11-12 05:53Z (session ce68ebe0) — keep-or-pull S4 DONE: the model has skill (R260 9 of 9 days) but its policy does NOT pay (R261 DECISION-FAIL): it beats never pulling and random pulls on 9 of 9 days, loses to the guard trigger on 0 of 9 and to v3 in 6 of 6 cells (R262 0 of 6); falsifier valid (R263)
 
 - Done (USER "try to build a model and get the performance"): research/pf_kp_s4.py + run_kp_s4.sh (f2c3a298), run 04:16-05:48Z in

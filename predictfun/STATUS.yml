@@ -6,6 +6,9 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-12 07:31Z (session ce68ebe0): keep-or-pull S4 diagnostic (handoffs/20261112_kp_s4_diag.md, post hoc): inputs clean; 72.5% of the
+  model's pulls are quiet moments; the label is mostly re-entry luck (16.6% of pull-right moments are an adverse fill avoided);
+  proposal: target Q_keep vs 0 (in or out of the book).
   2026-11-12 05:53Z (session ce68ebe0): keep-or-pull S4 DONE (f2c3a298; handoffs/20261112_kp_s4_model.md): R260 SKILL-OVER-GUARD 9 of 9,
   R261 DECISION-FAIL (beats never pull / random 9 of 9, the guard trigger 0 of 9), R262 0 of 6 vs v3, R263 falsifier valid; the
   policy churns because the label prices pull-and-re-enter, never staying out. v3 stays the best arm.
