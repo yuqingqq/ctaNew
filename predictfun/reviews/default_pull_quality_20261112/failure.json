@@ -1,0 +1,9 @@
+{
+  "as_of": "2026-11-12T07:34:50.159094+00:00",
+  "status": "FAILED_BEFORE_RESULT_WRITE",
+  "error": "NumPy int64 not JSON serializable",
+  "log_sha": "0b34f604cb3ac87c71d12080410a989cc5fd97839f427c7f3fa06e3f814362b0",
+  "source_sha": "7f49af63a92b8ba9ee172539cee588d01c5e468e7d5e48db6bb6b9e0a0608c7d",
+  "superseded_by": "default_pull_quality_20261112_v2",
+  "numerical_definition_change": false
+}
