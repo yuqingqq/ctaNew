@@ -1,0 +1,12 @@
+{
+  "as_of": "2026-11-12T07:40:34.789008+00:00",
+  "status": "PUBLISHED_LOCAL_REVIEW",
+  "diagnostic_source_commit": "511d6dea469d0e9908329d3ef5b435aa3bacc276",
+  "diagnostic_source_sha": "c4eb84f462ab78ec203a65dc35346b9f5012d316290d966f32850258cf151174",
+  "declaration_sha": "62a572f8d57c6981fc75140114c5414635cfc3bf0a1085097668a65c93d67ea0",
+  "result_sha": "0e1f2884779dd3c7c488943ba290d31a1e8157cd0ac7250678ebd67b20d64842",
+  "human_review_sha": "7bf3234b4a91e44ecb97132289a01e91b5924d6733c130f484c203346504d789",
+  "successful_log_sha": "ccd6e67bd080b7d9cd63ec76b83fb220ca156002ac9cdfdc6d293e6f19d2ae2d",
+  "shared_copies_identical": true,
+  "original_portfolio_result_sha": "e84214cd58030c8b510aaf3be4c6b9167a86e01778e8aa5a8f8dea9728649fba"
+}

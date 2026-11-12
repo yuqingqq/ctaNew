@@ -1,5 +1,16 @@
 # P-2026-005 HANDOFF
 
+<!-- DEFAULT_PULL_QUALITY -->
+
+## 2026-11-12T07:40:34.789008+00:00 — Current pull-model quality audit complete
+
+- Saved-action diagnostic, result as of 2026-11-12T07:35:39.607254+00:00: 40,059 neutral test actions across six consumed dates; no retraining or new strategy variant.
+- Local selection beats matched random pulling, but shows no incremental benefit over matched ranking by the existing guard value margin. Keep predictions are poorly calibrated. Entry permission plus this model remains untested.
+- Read [pull-quality review](handoffs/20261112_default_pull_quality.md); canonical receipt `reviews/default_pull_quality_20261112_v2/result.json`. Full original portfolio result remains negative and unchanged.
+- 500-draw nulls reproduced; source/input, action/decomposition and positive/refusal checks PASS. v2 corrects output serialization only; failed v1 retained. Numerical work finished; no live changes.
+
+<!-- /DEFAULT_PULL_QUALITY -->
+
 <!-- DEFAULT_PULL_LOOP -->
 
 ## 2026-11-12T07:22:32.194451+00:00 — Quote-default / learned-pull research loop: complete
