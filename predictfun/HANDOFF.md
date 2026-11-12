@@ -1,9 +1,9 @@
 # P-2026-005 HANDOFF
 
 <!-- JOINT_FILL_20261112 -->
-## 2026-11-12T10:10:00.996691+00:00 — Coherent fill/value model: complete
+## 2026-11-12T10:18:30.477289+00:00 — Coherent fill/value model: complete
 
-Stage `declaration`. Frozen coherent paired-outcome model and earlier-day calibration; no threshold tuning.
+Stage `human_review`. Shared outcome consistency passes; earlier-day calibration improves aggregate fill rates but not pull selection. No candidate promoted. Open gaps and next target study: handoffs/20261112_joint_fill_review.md.
 
 Default resting / useful queue retention remains the objective. Receipts: `reviews/joint_fill_20261112/`; branch `research/predict-fill-value-20261112`. No live changes.
 <!-- /JOINT_FILL_20261112 -->
