@@ -15,11 +15,15 @@ configure()
 
 def main(pid):
     identity=Path(f'/proc/{pid}/cmdline')
-    while not (S.OUT/'result.json').exists() or identity.exists():
+    while True:
         p=json.loads((S.OUT/'progress.json').read_text())
         if p['state']=='failed':raise SystemExit('Main driver failed; audits not run.')
-        if not identity.exists():raise SystemExit('Main driver ended without result; audits not run.')
-        if b'continuation_driver_v3.py' not in identity.read_bytes():raise SystemExit('Driver PID identity changed.')
+        try:command=identity.read_bytes()
+        except FileNotFoundError:command=b''
+        if not command:
+            if (S.OUT/'result.json').exists():break
+            raise SystemExit('Main driver ended without result; audits not run.')
+        if b'continuation_driver_v3.py' not in command:raise SystemExit('Driver PID identity changed.')
         time.sleep(10)
     env=dict(os.environ,PYTHONPATH=str(WORK),PYTHONSAFEPATH='1',PF_SLOT='codex',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1',NUMEXPR_NUM_THREADS='1')
     for module,artifact in [('pf_continuation_audit','audit.json'),('pf_continuation_value_detail','value_detail.json')]:
