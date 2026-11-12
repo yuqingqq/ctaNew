@@ -1,5 +1,7 @@
 # Fill opportunity and quote value — first-stage plan
 
+Completed: [first-stage review](20261112_fill_value_review.md), with all six folds and 120 models retained. No candidate promoted.
+
 User authorized proceeding after the queue-priority clarification. Quote by
 default and retain valuable priority remains the objective; restoring the old
 entry gate is not the experiment.

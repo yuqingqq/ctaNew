@@ -2,9 +2,9 @@
 
 <!-- FILL_VALUE_20261112 -->
 
-## 2026-11-12T09:09:57.548474+00:00 — Fill opportunity / value diagnostic: complete
+## 2026-11-12T09:21:58.611027+00:00 — Fill opportunity / value diagnostic: complete
 
-Stage `declaration`. Frozen explicit fill and value diagnostic; 120 models across six chronological folds, no policy tuning.
+Stage `human_review`. First-stage review complete: KEEP fill prediction improves, RESET forecasts and component pull value do not. Physical-support failures recorded; no model promoted. See handoffs/20261112_fill_value_review.md.
 
 Default quoting and useful queue retention remain the objective. Same saved short-horizon neutral labels; no entry-gate restoration or live changes. Source/declaration and receipts: `reviews/fill_value_20261112/`; branch `research/predict-fill-value-20261112`.
 
