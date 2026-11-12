@@ -1,5 +1,19 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 03:38Z (session ce68ebe0) — keep-or-pull S1 DONE: GATE-PASS - a perfect keep / pull decision makes resting by default pay at every fill clock (+0.82 / +0.70 / +0.42 c/sh at 1 s, +$138 / +$120 / +$73 per day); pulling is usually wrong (12% of resting moments)
+
+- Done (USER "Go"; design handoffs/20261112_keep_pull_model_design.md aa727160): research/pf_kp_s1.py (b8603604), run 03:26-03:36Z
+  in the claude slot. Report handoffs/20261112_kp_s1_label_ceiling.md; copies reviews/kp_s1_20261112/. Controls: K1 104 committed
+  B21 cells reproduced, K2 / K3 fork cases + planted errors, K4 20,587 forks = B21's once-pulled rest lane (0 differ).
+- Label Delta = Q_keep - Q_pull (M 50, H 5 s, 1 s): 12% of resting moments favour pulling (mean -1.52 c/sh), 23% keeping (+1.51),
+  65% neither; mean +0.16 (re-entering at the back is worse than staying), the same at every clock and under rule L.
+- Ceiling (perfect foresight): 8.9 pulls per side-minute, R252 6 of 6 above v3. Bounds the prize; S4 tests whether our data holds
+  the information.
+- Post hoc: Binance book shift (mean Delta -0.50, 24.5% pull-moments) and burst (-0.20) flip the mean; guard / thinning / thin side
+  raise the pull share (15-16% vs 11-12%) but keeping still wins on average there - why single-signal pulls failed in B21.
+- Next: S2 (port the simulator's inputs to the 9 replay days), S3 (labels + inputs, pilot day first), S4 (leave-one-day-out model,
+  policy simulation, matched random pulls, falsifier).
+
 ## 2026-11-12 02:59Z (session ce68ebe0) — B21b DONE: zero own latency does NOT rescue resting by default (R233 NOT-RESCUED, all eight arms still NEGATIVE); it helps the gated v3 at every fill clock (R231 SPEED-HELPS)
 
 - Done (USER "so that will be the optimistic result right?"): research/pf_b21b_zero_latency.py (3b3e85c2), run 2026-11-12 02:55Z in
