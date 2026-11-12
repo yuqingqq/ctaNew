@@ -1,0 +1,103 @@
+Keep-or-pull S4 diagnostic (post hoc). 1099880 never-pull rows, 9 days, held-out predictions, M 50, y1 c/sh.
+
+A input sanity: inputs with NaN > 5%, a single value > 50% of rows, or day drift > 0.5 sd:
+  bn_r25           NaN 0.000  mode share 0.990  p1 / p50 / p99 +0 / +0 / +0  drift 0.01  inf 0
+  bn_r50           NaN 0.000  mode share 0.983  p1 / p50 / p99 +0 / +0 / +0  drift 0.01  inf 0
+  bn_r100          NaN 0.000  mode share 0.971  p1 / p50 / p99 -0.2326 / +0 / +0.219  drift 0.01  inf 0
+  bn_r250          NaN 0.000  mode share 0.943  p1 / p50 / p99 -0.6413 / +0 / +0.6373  drift 0.01  inf 0
+  bn_r500          NaN 0.000  mode share 0.900  p1 / p50 / p99 -1.006 / +0 / +0.9998  drift 0.02  inf 0
+  bn_r1000         NaN 0.000  mode share 0.827  p1 / p50 / p99 -1.494 / +0 / +1.506  drift 0.02  inf 0
+  bn_r3000         NaN 0.000  mode share 0.638  p1 / p50 / p99 -2.603 / +0 / +2.659  drift 0.04  inf 0
+  pf_spread        NaN 0.000  mode share 0.972  p1 / p50 / p99 +1 / +1 / +2  drift 0.05  inf 0
+  pf_dm250         NaN 0.000  mode share 0.797  p1 / p50 / p99 -3 / +0 / +3  drift 0.01  inf 0
+  pf_dm1000        NaN 0.000  mode share 0.518  p1 / p50 / p99 -7 / +0 / +7  drift 0.02  inf 0
+  pf_pend_ask1000  NaN 0.000  mode share 0.790  p1 / p50 / p99 +0 / +0 / +90.88  drift 0.09  inf 0
+  sigma            NaN 0.002  mode share 0.001  p1 / p50 / p99 +1.212e-05 / +3.321e-05 / +0.0001107  drift 0.72  inf 0
+  basis_bps        NaN 0.000  mode share 0.000  p1 / p50 / p99 +1.802 / +4.422 / +7.781  drift 1.39  inf 0
+  our order invariants violated (rows): {'behind_not_integer': 0, 'age_negative': 0, 'a0k_negative': 0, 'shown_min_rel_above_1': 0, 'shown_min_above_now': 0}; planted 100 bad rows flagged: {'behind_not_integer': 100, 'age_negative': 100, 'a0k_negative': 100, 'shown_min_rel_above_1': 100, 'shown_min_above_now': 100}
+  behind (ticks, share of rows): {"nan": 0.0, "<0": 0.0105, "0": 0.45, "1": 0.2584, "2": 0.1746, "3": 0.1006, ">3": 0.0058}
+
+B label anatomy (y1 = Q_keep - Q_pull):
+  y < 0 0.148, y = 0 0.607, y > 0 0.245; mean y given < 0 -1.90, given > 0 +1.59
+  pulling right (y < 0): keep path loses and pull path no fill 0.166; keep no fill and the re-entered order wins 0.355; both filled 0.479; share of the negative sum from keep losses 1.615
+  keeping right (y > 0): keep wins and pull no fill 0.197; keep no fill and the re-entered order loses 0.206; both filled 0.597
+  keep path filled in 0.549 of rows (mean -1.660, losing given a fill 0.654); pull path filled in 0.580 (mean -1.769, losing given a fill 0.691)
+
+C parity: re-predicted held-out rows vs oof.parquet, max |diff| 0.00e+00
+
+D decision groups (KP, pull when pred < 0): share of rows, mean y, mean prediction
+  TP     0.038  mean y -2.487  mean pred -0.573
+  FPpos  0.031  mean y +1.376  mean pred -0.185
+  FP0    0.182  mean y +0.000  mean pred -0.152
+  FN     0.110  mean y -1.699  mean pred +0.267
+  TNpos  0.214  mean y +1.622  mean pred +0.264
+  TN0    0.425  mean y +0.000  mean pred +0.196
+  mean contribution (base) +0.111; inputs by mean contribution in FP0 + FP+ rows (what pushes false pulls below 0), with TP and the raw input z (FP0 / FP+ / TP):
+  behind           FP -0.122  TP -0.130  FN +0.081  | z FP0 -0.77  FP+ -0.54  TP -0.66  FN +0.53
+  v                FP -0.039  TP -0.234  FN +0.020  | z FP0 -0.35  FP+ -0.55  TP -1.66  FN +0.15
+  d_bnimb250       FP -0.021  TP -0.076  FN +0.006  | z FP0 +0.01  FP+ +0.04  TP +0.01  FN -0.01
+  shown_now_rel    FP -0.018  TP -0.021  FN +0.004  | z FP0 -0.01  FP+ -0.01  TP -0.01  FN +0.00
+  age              FP -0.015  TP -0.017  FN +0.006  | z FP0 -0.45  FP+ -0.33  TP -0.43  FN +0.10
+  bn_imb           FP -0.010  TP -0.027  FN +0.006  | z FP0 +0.01  FP+ +0.01  TP +0.02  FN -0.03
+  sigma            FP -0.007  TP -0.009  FN +0.000  | z FP0 +0.08  FP+ +0.10  TP +0.23  FN +0.06
+  gap              FP -0.005  TP -0.008  FN +0.003  | z FP0 +0.03  FP+ +0.01  TP +0.02  FN -0.00
+  shown_now        FP -0.005  TP -0.007  FN +0.001  | z FP0 -0.40  FP+ -0.46  TP -0.59  FN +0.17
+  basis_bps        FP -0.005  TP -0.003  FN +0.003  | z FP0 -0.04  FP+ -0.00  TP -0.10  FN -0.02
+  bn_r100          FP -0.005  TP -0.056  FN +0.004  | z FP0 +0.01  FP+ +0.02  TP +0.02  FN -0.01
+  a0k              FP -0.004  TP -0.000  FN +0.002  | z FP0 +0.06  FP+ -0.05  TP -0.07  FN -0.00
+  inputs that separate TP from FP the most (mean contribution TP - FP):
+  v                TP - FP -0.195
+  d_bnimb250       TP - FP -0.055
+  bn_r100          TP - FP -0.052
+  bn_r250          TP - FP -0.018
+  bn_imb           TP - FP -0.017
+  act_rel          TP - FP -0.014
+  bn_r50           TP - FP -0.009
+  behind           TP - FP -0.008
+
+E raw separation, AUC (0.5 = none): pulling right (y < 0 vs rest) | sign among rows with a fill (y < 0 vs y > 0) | activity (y != 0)
+  | days (of 9) with the pooled sign direction, sign AUC range over days; sorted by |sign AUC - 0.5|
+  pred_KP          pull 0.533 | sign 0.433 | act 0.628 | 9 days, 0.401..0.469
+  age              pull 0.501 | sign 0.445 | act 0.559 | 9 days, 0.430..0.464
+  shown_now_rel    pull 0.493 | sign 0.448 | act 0.546 | 9 days, 0.430..0.469
+  v                pull 0.444 | sign 0.451 | act 0.471 | 9 days, 0.435..0.473
+  shown_now        pull 0.484 | sign 0.453 | act 0.527 | 9 days, 0.436..0.483
+  bn_ntr1000       pull 0.551 | sign 0.544 | act 0.527 | 9 days, 0.525..0.556
+  bn_age           pull 0.454 | sign 0.458 | act 0.479 | 9 days, 0.448..0.472
+  act_rel          pull 0.520 | sign 0.530 | act 0.497 | 9 days, 0.519..0.538
+  behind           pull 0.578 | sign 0.476 | act 0.639 | 6 days, 0.444..0.505
+  pf_pend_bid1000  pull 0.538 | sign 0.523 | act 0.530 | 9 days, 0.511..0.530
+  pf_pend_tot5000  pull 0.546 | sign 0.521 | act 0.543 | 9 days, 0.503..0.527
+  sigma            pull 0.531 | sign 0.521 | act 0.522 | 8 days, 0.496..0.535
+  pf_las           pull 0.472 | sign 0.481 | act 0.479 | 9 days, 0.462..0.488
+  pf_lbs           pull 0.472 | sign 0.482 | act 0.478 | 9 days, 0.470..0.498
+  pf_nfr1000       pull 0.528 | sign 0.517 | act 0.521 | 9 days, 0.504..0.529
+  own_d250         pull 0.474 | sign 0.484 | act 0.480 | 9 days, 0.479..0.486
+  pf_pend_ask1000  pull 0.514 | sign 0.509 | act 0.511 | 9 days, 0.502..0.514
+  opp_d250         pull 0.515 | sign 0.507 | act 0.514 | 9 days, 0.502..0.513
+  basis_bps        pull 0.486 | sign 0.495 | act 0.486 | 4 days, 0.484..0.519
+  pf_spread        pull 0.506 | sign 0.504 | act 0.503 | 9 days, 0.503..0.507
+  pf_dm5000        pull 0.496 | sign 0.496 | act 0.499 | 5 days, 0.479..0.519
+  bn_r3000         pull 0.497 | sign 0.496 | act 0.500 | 5 days, 0.481..0.509
+  bn_imb           pull 0.495 | sign 0.497 | act 0.496 | 4 days, 0.484..0.510
+  shown_min_rel    pull 0.478 | sign 0.497 | act 0.472 | 6 days, 0.484..0.507
+  pf_age           pull 0.495 | sign 0.497 | act 0.496 | 7 days, 0.493..0.502
+  a0k              pull 0.482 | sign 0.502 | act 0.473 | 6 days, 0.489..0.516
+  t_rel            pull 0.493 | sign 0.498 | act 0.492 | 5 days, 0.481..0.509
+  bn_r1000         pull 0.498 | sign 0.498 | act 0.499 | 5 days, 0.487..0.506
+  pf_micro_dev     pull 0.500 | sign 0.501 | act 0.499 | 6 days, 0.493..0.510
+  bn_r500          pull 0.499 | sign 0.499 | act 0.500 | 4 days, 0.491..0.504
+  pf_imb1          pull 0.500 | sign 0.501 | act 0.499 | 6 days, 0.493..0.509
+  pf_mid           pull 0.497 | sign 0.499 | act 0.497 | 4 days, 0.481..0.511
+  bn_flow250       pull 0.498 | sign 0.499 | act 0.498 | 4 days, 0.490..0.504
+  bn_r250          pull 0.499 | sign 0.499 | act 0.500 | 4 days, 0.493..0.503
+  bn_flow1000      pull 0.499 | sign 0.500 | act 0.499 | 4 days, 0.491..0.512
+  gap              pull 0.501 | sign 0.500 | act 0.501 | 5 days, 0.495..0.510
+  d_bnimb250       pull 0.499 | sign 0.500 | act 0.498 | 5 days, 0.497..0.504
+  bn_r100          pull 0.500 | sign 0.500 | act 0.500 | 4 days, 0.496..0.502
+  bn_r25           pull 0.500 | sign 0.500 | act 0.500 | 5 days, 0.499..0.501
+  pf_imb3          pull 0.497 | sign 0.500 | act 0.496 | 5 days, 0.494..0.512
+  pf_dm1000        pull 0.499 | sign 0.500 | act 0.498 | 6 days, 0.486..0.512
+  bn_flow5000      pull 0.500 | sign 0.500 | act 0.500 | 4 days, 0.485..0.514
+  pf_dm250         pull 0.499 | sign 0.500 | act 0.498 | 3 days, 0.495..0.503
+  bn_r50           pull 0.500 | sign 0.500 | act 0.500 | 6 days, 0.498..0.501
