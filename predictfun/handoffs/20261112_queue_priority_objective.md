@@ -88,3 +88,7 @@ retain the consumed-versus-untouched distinction.
 
 No new model, strategy variant, numerical experiment or live change was launched
 for this clarification. Earlier artifacts and conclusions are unchanged.
+
+## Subsequent first-stage result
+
+The explicit fill/value diagnostic is now complete: [review](20261112_fill_value_review.md). It found useful KEEP fill-opportunity signal, weak RESET forecasts, no improvement in pull selection, and inconsistent independent value/quantity components. This does not complete the longer-horizon queue-retention or live-calibration work.

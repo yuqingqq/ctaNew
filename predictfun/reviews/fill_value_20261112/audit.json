@@ -1,0 +1,107 @@
+{
+  "as_of": "2026-11-12T09:16:03.185005+00:00",
+  "status": "ARTIFACT_INTEGRITY_PASS",
+  "n": 40059,
+  "days": [
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "source_commit": "a5cddefe5b6f767ccf37ec19a3745a65a5c987f9",
+  "audit_declaration_sha": "2f7f9828b900aab1d66fe3eeb8b9d7d762ff349444ac9ad98e0aeeb9dd0a6ddb",
+  "result_sha": "1872956f050bd22e3e976db30db9172359c129825aaab4674152df3991dd5376",
+  "predictions_sha": "8ab0fe01f4a62014910e1649c47e1ffcc785c637eaf8172e32bc59dae58413ee",
+  "models_verified": 120,
+  "forecast_support": [
+    {
+      "family": "baseline",
+      "branch": "keep",
+      "n": 40059,
+      "counts": {
+        "zero_quantity_nonzero_value": 0,
+        "gain_over_price_bound": 6,
+        "loss_over_price_bound": 8,
+        "absolute_mark_over_bound": 5
+      },
+      "any_violation": 11,
+      "necessary_support_pass": false,
+      "sum_predicted_absolute_value_c_on_violations": 38.6620698010465
+    },
+    {
+      "family": "baseline",
+      "branch": "reset",
+      "n": 40059,
+      "counts": {
+        "zero_quantity_nonzero_value": 0,
+        "gain_over_price_bound": 4,
+        "loss_over_price_bound": 8,
+        "absolute_mark_over_bound": 5
+      },
+      "any_violation": 9,
+      "necessary_support_pass": false,
+      "sum_predicted_absolute_value_c_on_violations": 9.732034764772976
+    },
+    {
+      "family": "market",
+      "branch": "keep",
+      "n": 40059,
+      "counts": {
+        "zero_quantity_nonzero_value": 205,
+        "gain_over_price_bound": 136,
+        "loss_over_price_bound": 173,
+        "absolute_mark_over_bound": 214
+      },
+      "any_violation": 228,
+      "necessary_support_pass": false,
+      "sum_predicted_absolute_value_c_on_violations": 204.14293779318643
+    },
+    {
+      "family": "market",
+      "branch": "reset",
+      "n": 40059,
+      "counts": {
+        "zero_quantity_nonzero_value": 675,
+        "gain_over_price_bound": 486,
+        "loss_over_price_bound": 536,
+        "absolute_mark_over_bound": 732
+      },
+      "any_violation": 796,
+      "necessary_support_pass": false,
+      "sum_predicted_absolute_value_c_on_violations": 377.57986802008736
+    },
+    {
+      "family": "queue",
+      "branch": "keep",
+      "n": 40059,
+      "counts": {
+        "zero_quantity_nonzero_value": 235,
+        "gain_over_price_bound": 131,
+        "loss_over_price_bound": 212,
+        "absolute_mark_over_bound": 254
+      },
+      "any_violation": 266,
+      "necessary_support_pass": false,
+      "sum_predicted_absolute_value_c_on_violations": 227.8733142331482
+    },
+    {
+      "family": "queue",
+      "branch": "reset",
+      "n": 40059,
+      "counts": {
+        "zero_quantity_nonzero_value": 708,
+        "gain_over_price_bound": 525,
+        "loss_over_price_bound": 601,
+        "absolute_mark_over_bound": 778
+      },
+      "any_violation": 850,
+      "necessary_support_pass": false,
+      "sum_predicted_absolute_value_c_on_violations": 418.17027898689173
+    }
+  ],
+  "all_forecasts_meet_necessary_support": false,
+  "controls": "Valid physical forecast accepted; planted impossible value forecasts detected and refused by support gate.",
+  "meaning": "Integrity pass does not imply calibrated or jointly coherent forecasts. Necessary-support failures are recorded without altering the frozen predictions; original results remain as measured."
+}

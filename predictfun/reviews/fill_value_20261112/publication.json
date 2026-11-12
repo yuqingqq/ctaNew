@@ -1,0 +1,20 @@
+{
+  "as_of": "2026-11-12T09:21:58.779618+00:00",
+  "status": "REVIEW_COMPLETE",
+  "source_commit": "4ac8a3b6a524e6e09483088a0adc18105dc00614",
+  "branch": "research/predict-fill-value-20261112",
+  "result_sha": "1872956f050bd22e3e976db30db9172359c129825aaab4674152df3991dd5376",
+  "audit_sha": "159c682fa140351956da9fa1fea95d60eb672e0a080a8cdf44fb6c6fa2c84f0f",
+  "audit_scope_v2_sha": "ec8ae15884ad6c8211dc26eca2fdc0ea3c9394b76009e1fe2cc9328b5c71fdae",
+  "review_sha": "ce1e0d437a42c94738674f69b17c5604fb3541368a9f8ff2e1088b58939c3715",
+  "report_sha": "e7130941647a42252decbfafee84a060df776146d19aa93ba87fa2802d227de4",
+  "successful_run_log_sha": "23a16c789a02b82406e12b46e48c99523c93729ac1314e54da2b0d513bfd48b3",
+  "successful_audit_log_sha": "f7912b92c5c2a94cb7b6742429b5ea0862a2cccc33d54bcb274bde58ed704a3a",
+  "models": 120,
+  "folds": 6,
+  "actions": 40059,
+  "shared_copies_identical": true,
+  "necessary_forecast_support_pass": false,
+  "new_candidate_promoted": false,
+  "scope": "First-stage saved-label diagnostic completed; later queue value, consistent re-entry, fill-time/raw-volume forecasts and live calibration remain untested. Original model/results retained."
+}

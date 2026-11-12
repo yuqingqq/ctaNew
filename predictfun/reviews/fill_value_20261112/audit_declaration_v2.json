@@ -1,0 +1,19 @@
+{
+  "as_of": "2026-11-12T09:16:02.587667+00:00",
+  "source_commit": "a5cddefe5b6f767ccf37ec19a3745a65a5c987f9",
+  "source_path": "predictfun/research/pf_fill_value_audit.py",
+  "source_sha": "dab770b56c08d8d3fc2e7309c67b5cea0623d1e87d39530bb8b6890ceab08a55",
+  "original_declaration_sha": "d59c2ea164d81f2a05cbce57072060ab887421f3135fea4a809c6e8f59ef143d",
+  "scope": "Necessary physical-support checks prepared during fitting and declared before the numerical report completed or its outcomes were inspected. Fit completed at 09:14:50 UTC, original audit declaration at 09:14:55 UTC, numerical report at 09:15:02 UTC. No model/threshold change or new candidate; report rather than repair incoherent component forecasts.",
+  "bounds": "At price p in [0,100], buy gain <= (100-p)*E[Q], loss <= p*E[Q]; sell reverses the bounds. Also E[gain]+E[loss] <= 100*E[Q]. Zero expected quantity requires zero expected absolute markout. These are necessary bounds, not a sufficient joint-distribution or calibration proof.",
+  "controls": "Valid forecast accepted; planted zero-quantity positive-value and excessive adverse-value forecasts flagged and refused by support gate. Saved input/source/model/prediction identities unchanged.",
+  "version": 2,
+  "supersedes": {
+    "path": "audit_declaration.json",
+    "sha": "2f7f9828b900aab1d66fe3eeb8b9d7d762ff349444ac9ad98e0aeeb9dd0a6ddb",
+    "fields": [
+      "scope"
+    ]
+  },
+  "correction": "Corrects only the earlier scope phrase declared while fitting. Audit bounds, source and controls are unchanged; source identity remains the original audit declaration."
+}

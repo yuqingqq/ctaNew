@@ -1,0 +1,601 @@
+{
+  "folds": [
+    {
+      "day": "20261026",
+      "train_n": 21546,
+      "test_n": 8112,
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025"
+      ],
+      "models_sha": {
+        "20261026_market_keep_fill.txt": "a5fba6a3f7e0786a182071aa0c76c7a1aa3801933fa309904254d4440e61b154",
+        "20261026_market_keep_fraction.txt": "f894dc24fc6b47385110ae1725f3f4156e09e8f1bc71ad794bc81277703e85f6",
+        "20261026_market_keep_fraction2.txt": "7ba0b0b9a58f753b0eb7b95ef51ce2a079ef309faa6a4932bc2f69a0d241b243",
+        "20261026_market_keep_gain.txt": "c078db1cd14ce3a1b11cf9c7edf8e97739c7f3b3c738648e653187bb2afa590a",
+        "20261026_market_keep_loss.txt": "b865f1ed77345fcf62caa4bd832c6e8b7e4f4e248abf283f04e27c2d1b446497",
+        "20261026_market_reset_fill.txt": "fc088a44ddc89dab0e266061c29969c1dd19a9547606d2a64c2cf1f7f616c36e",
+        "20261026_market_reset_fraction.txt": "9061641af15bbf571c703690ca8a15405a8e99b1fa5af0802676cc970ec78a57",
+        "20261026_market_reset_fraction2.txt": "874f8e7d0f9412beed7201f00564aaf80df0b507441e94fee9cdf80be4f8e32d",
+        "20261026_market_reset_gain.txt": "a85d903d10dbbfad2295915de7823e2d894810e5f895abc2b7fe9e4f4edff843",
+        "20261026_market_reset_loss.txt": "3f107ad459ca87ca69f98bc3e256a36ab4d3eecb4b995d9f11152f51a1023c78",
+        "20261026_queue_keep_fill.txt": "4100c49a52efbd2f94af6da6fb9895eda611881520d26b7c7a6295a20fb1a7f2",
+        "20261026_queue_keep_fraction.txt": "92e99aca4f7e101d032e01d71459fc048fe5220664c2b234ab57459579ceea2c",
+        "20261026_queue_keep_fraction2.txt": "1a259cdf368e6d5053ef17aacc97e8550919ad3eb2522f2711d4110877f679a6",
+        "20261026_queue_keep_gain.txt": "17d85ef1fa00342d4977b21c4e2a56a101d792e9d5277c093ab3fec470cc2736",
+        "20261026_queue_keep_loss.txt": "1d49d6320d8612f17ce6830cef8d363d72c9de80e77c1af655e4895aa2be59de",
+        "20261026_queue_reset_fill.txt": "d6107dda5945bb80d2a83c430efb19dde7c10179e496547bd7c35854864403b6",
+        "20261026_queue_reset_fraction.txt": "a4c203e509027a2d742db5c3c8eb3b380910a98580d59a39ef385b1afa1259d4",
+        "20261026_queue_reset_fraction2.txt": "2bdb83ce860c4f71e14e522bf241fe3db2815293a29b856ff22469e5f51c94eb",
+        "20261026_queue_reset_gain.txt": "9ba242548e8a41b45f6bdedaba8bbc5510ef7efdd171bd06e32961c5a71bc538",
+        "20261026_queue_reset_loss.txt": "b6ad04f5ab76f786f2c44898cf72d35d3af69bb59dec2185c5cced3989b290fa"
+      },
+      "constraints": {
+        "baseline_keep_fill": 0,
+        "baseline_keep_fraction": 0,
+        "baseline_keep_fraction2": 0,
+        "baseline_keep_gain": 0,
+        "baseline_keep_loss": 0,
+        "market_keep_fill": 0,
+        "market_keep_fraction": 2966,
+        "market_keep_fraction2": 6697,
+        "market_keep_gain": 429,
+        "market_keep_loss": 207,
+        "baseline_reset_fill": 0,
+        "baseline_reset_fraction": 0,
+        "baseline_reset_fraction2": 0,
+        "baseline_reset_gain": 0,
+        "baseline_reset_loss": 0,
+        "market_reset_fill": 0,
+        "market_reset_fraction": 4282,
+        "market_reset_fraction2": 7358,
+        "market_reset_gain": 1289,
+        "market_reset_loss": 666,
+        "queue_keep_fill": 0,
+        "queue_keep_fraction": 3056,
+        "queue_keep_fraction2": 6717,
+        "queue_keep_gain": 453,
+        "queue_keep_loss": 221,
+        "queue_reset_fill": 0,
+        "queue_reset_fraction": 4323,
+        "queue_reset_fraction2": 7407,
+        "queue_reset_gain": 1234,
+        "queue_reset_loss": 658
+      },
+      "action_ids_sha": "97c1b702756d3d4bd6617486cc90da89de3d06dd0b01a2ca4bf801333bd59002",
+      "predictions_sha": "8e9baae07242a0e5b133c61fdc3660f3823ce4b196782dad8f18be179e62ed60"
+    },
+    {
+      "day": "20261027",
+      "train_n": 29658,
+      "test_n": 7195,
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026"
+      ],
+      "models_sha": {
+        "20261027_market_keep_fill.txt": "6d398da52cef8cf2fc51e87360d944214938adebc4705ce30a1cceef23e97ecd",
+        "20261027_market_keep_fraction.txt": "454818b6aad4bf6f2c321f3be667cfd57339e4ee0d41809d991d6b4f0d76001a",
+        "20261027_market_keep_fraction2.txt": "34a5fade67b05408e1b5b13ae6d8c5f74f217e85eea1a8f906e72af2974c0096",
+        "20261027_market_keep_gain.txt": "3af414060c3291c13a795f5671e5cec425a227a4a7a259827c7e7cae81bb08c9",
+        "20261027_market_keep_loss.txt": "eee646662db0169e6808ff0ac6adcab71e22cfa2a1783cdca40b80a82db9d16b",
+        "20261027_market_reset_fill.txt": "d767941421abba11ae2ac85f5242a8f1fb369e62811af7165cf8596afe9c3629",
+        "20261027_market_reset_fraction.txt": "29e526e50d15c3b89a01eda20f46934e859a5a2820ab8bd604013dcbe4c2f529",
+        "20261027_market_reset_fraction2.txt": "6ce9bf24af20d9cfef862bcfab772ec584fdc7a186eef7d8689c706921297f05",
+        "20261027_market_reset_gain.txt": "ff3dc74937828b67cfaff317b1e9987b303e3c31bc57fc4662174e2b592ad8ef",
+        "20261027_market_reset_loss.txt": "dfdbbc991f0a28763bff3643e489dbf114015da4f40f719709ea7158c8a329be",
+        "20261027_queue_keep_fill.txt": "42fa80b2a6ab71b11e0842a04421cb17253f9731268fffad92353a9f38df3df9",
+        "20261027_queue_keep_fraction.txt": "a223bfcdec0b8c07bb76f578de56e7c501be8894c8ea6bacebacc51a6087c693",
+        "20261027_queue_keep_fraction2.txt": "7cd5d99942f30944b749c28e977d8b21cd1d9ba2bbb12308d4383872dae3980e",
+        "20261027_queue_keep_gain.txt": "d0146136df30c8ecdaae22b1a108b7935999108fcd1fe2c2fbc927d2e70acb98",
+        "20261027_queue_keep_loss.txt": "f8313b36f6c182650358d713e59e1b511e204f5dfae9dcac3d51c2fda688dee0",
+        "20261027_queue_reset_fill.txt": "2973ae611db140020d465c89a492a20a11aed1d687dc16aa9243e564dccf92b5",
+        "20261027_queue_reset_fraction.txt": "c9596ff0ccb9474fe59472f5aefdfe0a39fae55cf9fc631dc2367411d6bcb76c",
+        "20261027_queue_reset_fraction2.txt": "f42f95a59437d15210a4f09a05441b6dea255932b3f9eb722a68965d88f77aa5",
+        "20261027_queue_reset_gain.txt": "24a4ce979780634d10622ee7cd4b11f2e3b9001b997ff546296098fedc8470bf",
+        "20261027_queue_reset_loss.txt": "fec8b1f8f09a7bab0f51818e7dfef9f8531d564f352c9768d1091ab47ac166a1"
+      },
+      "constraints": {
+        "baseline_keep_fill": 0,
+        "baseline_keep_fraction": 0,
+        "baseline_keep_fraction2": 0,
+        "baseline_keep_gain": 0,
+        "baseline_keep_loss": 0,
+        "market_keep_fill": 0,
+        "market_keep_fraction": 2692,
+        "market_keep_fraction2": 6019,
+        "market_keep_gain": 404,
+        "market_keep_loss": 189,
+        "baseline_reset_fill": 0,
+        "baseline_reset_fraction": 0,
+        "baseline_reset_fraction2": 0,
+        "baseline_reset_gain": 0,
+        "baseline_reset_loss": 0,
+        "market_reset_fill": 0,
+        "market_reset_fraction": 3744,
+        "market_reset_fraction2": 6578,
+        "market_reset_gain": 1273,
+        "market_reset_loss": 465,
+        "queue_keep_fill": 0,
+        "queue_keep_fraction": 2828,
+        "queue_keep_fraction2": 6098,
+        "queue_keep_gain": 505,
+        "queue_keep_loss": 225,
+        "queue_reset_fill": 0,
+        "queue_reset_fraction": 3762,
+        "queue_reset_fraction2": 6589,
+        "queue_reset_gain": 1306,
+        "queue_reset_loss": 492
+      },
+      "action_ids_sha": "a32bb37b9d5b75eee840056d55f9ed51b0aa0a2606db8b454f2156e042d45d35",
+      "predictions_sha": "336870f5f056308da26566b06b868a2210f9d28d83e8847af0b3eeebae6e162e"
+    },
+    {
+      "day": "20261031",
+      "train_n": 36853,
+      "test_n": 4933,
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027"
+      ],
+      "models_sha": {
+        "20261031_market_keep_fill.txt": "2df9ae190e96f7a9e183f3dd6191d6f347bc7402109be7c9499d9a10b75f8a9d",
+        "20261031_market_keep_fraction.txt": "a54cbecd90b35aa80d42676e102a4a1219aea060a72ac1f046c85b49d3c1dc47",
+        "20261031_market_keep_fraction2.txt": "96693b316a0b3a79c980bb7dee09dbf99b3ff7b744b38fd54b2d56911a50db9e",
+        "20261031_market_keep_gain.txt": "95094b3adb17845aa317584b9c95787907f1825c6740dc82e50ddf02540ef8c8",
+        "20261031_market_keep_loss.txt": "39234ebe401b923da1d87fca061ef8335f9951f7626dbabaa64b344bf8845ff6",
+        "20261031_market_reset_fill.txt": "a87e5628bd17af1f945dfe14e41d04193e487cd5063e1059770d2d89e24fb413",
+        "20261031_market_reset_fraction.txt": "6f5773615625d50204b22f4bf81d22c7b74d39588d5a3387000d64621ba6a51c",
+        "20261031_market_reset_fraction2.txt": "aa8c61ddbf52e898960737a4a8601712c0f8a0ae17657b796d61979da01a97a8",
+        "20261031_market_reset_gain.txt": "4f9d1c94bcbbc580a2cae7244f45e1ba0a446e9ba9436785ca2a31d02c0194ad",
+        "20261031_market_reset_loss.txt": "60ad8da1ee08e2144c7cd8799676c386ec5190c1171047c69ce1ca7c96e0d08d",
+        "20261031_queue_keep_fill.txt": "b96e1b4f774c3eb37a424b1edc2a5ef827a2b49ebed2752fde26a27eb5037a92",
+        "20261031_queue_keep_fraction.txt": "57d6995e935e21206f7a4d38c9f78e77fe965daa651d844aeb0a0131051b23a0",
+        "20261031_queue_keep_fraction2.txt": "b676cf3385c807a78b78745594ef9702bd94c9540e33bd757e1360d6f8e02461",
+        "20261031_queue_keep_gain.txt": "cbad5af2dc909dad4bb77c2b846d63adea1182241582c3f6714ff47cdef2d724",
+        "20261031_queue_keep_loss.txt": "991104c6632f1c1b439a97449734e46b8a3333b85c1c1c5691f608a3125e4087",
+        "20261031_queue_reset_fill.txt": "d135da1e6a037d2af42976deb16cbd659f362323ba48be202f8bed8c4a392d6c",
+        "20261031_queue_reset_fraction.txt": "7b89f4b26d7fd3ab0fe8b1d90afd61d02fd7a98a3c67a319ca809789f43afa94",
+        "20261031_queue_reset_fraction2.txt": "e875c5f4cd1ea6f82ee0bf1a4d88f5ab62d409b86b3f52813942f1a211e6c609",
+        "20261031_queue_reset_gain.txt": "830cbb6b7a456b56763b16a8f3121c6474f3449284a6053c07fbd5600bcd6a8b",
+        "20261031_queue_reset_loss.txt": "a7e48a7c4a28c5e6c28f3c936842bd484c2df0e7fcf355457aabbe13ba6c9ef9"
+      },
+      "constraints": {
+        "baseline_keep_fill": 0,
+        "baseline_keep_fraction": 0,
+        "baseline_keep_fraction2": 0,
+        "baseline_keep_gain": 0,
+        "baseline_keep_loss": 0,
+        "market_keep_fill": 0,
+        "market_keep_fraction": 1851,
+        "market_keep_fraction2": 4080,
+        "market_keep_gain": 329,
+        "market_keep_loss": 123,
+        "baseline_reset_fill": 0,
+        "baseline_reset_fraction": 0,
+        "baseline_reset_fraction2": 0,
+        "baseline_reset_gain": 0,
+        "baseline_reset_loss": 0,
+        "market_reset_fill": 0,
+        "market_reset_fraction": 2530,
+        "market_reset_fraction2": 4465,
+        "market_reset_gain": 1168,
+        "market_reset_loss": 519,
+        "queue_keep_fill": 0,
+        "queue_keep_fraction": 1869,
+        "queue_keep_fraction2": 4145,
+        "queue_keep_gain": 439,
+        "queue_keep_loss": 95,
+        "queue_reset_fill": 0,
+        "queue_reset_fraction": 2432,
+        "queue_reset_fraction2": 4458,
+        "queue_reset_gain": 1159,
+        "queue_reset_loss": 498
+      },
+      "action_ids_sha": "844fbaa78f93ff499f52e4acc078bb82b031abfa8e6a35f94d3549027ccceeea",
+      "predictions_sha": "33f4020177f7468e5be1f0e90bb1267354644065e07b7826b7d6a03dcae2226f"
+    },
+    {
+      "day": "20261101",
+      "train_n": 41786,
+      "test_n": 5244,
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031"
+      ],
+      "models_sha": {
+        "20261101_market_keep_fill.txt": "1cb8a94a2d86ac4fb76856fa0d5145d8684ee01a8665780433bbf62cdceddeb9",
+        "20261101_market_keep_fraction.txt": "9f0dc63e68a32462169629d6b6f7a7b3b4aec8bdba5e64e419f1fa20a64dd07e",
+        "20261101_market_keep_fraction2.txt": "c339263d5e03644b120ad589077c25895ac878de0adffb3242c041c6f660b964",
+        "20261101_market_keep_gain.txt": "328cfd6d3e0f6ff451781edf7eb7767ae590a5cb47ee9203927c1e522cca001a",
+        "20261101_market_keep_loss.txt": "bf537365ce93852055c884bb4a6cc47981baa42b532091cbe755bb153497aa4d",
+        "20261101_market_reset_fill.txt": "d3c9a643789d13d4f9ac4078d646d0e5ed060dd686d64ea5e0bbf82950fa0d38",
+        "20261101_market_reset_fraction.txt": "7aa5d5db063f24d3d090292390efd0fa19613594c2e0884c8c12128e94634aed",
+        "20261101_market_reset_fraction2.txt": "a7c97e819cbe3462b0bda9d9d5681fa2709a056b893522625734cd5cba6b4387",
+        "20261101_market_reset_gain.txt": "307599e4cfce459a147667a720c3b8a61106fa4bd01fec2725fac2ddbffa1f27",
+        "20261101_market_reset_loss.txt": "bc4e7c78fd6912e07fb74aef1b9feef1fab58868f9d46448e2d4d67ede05b7b1",
+        "20261101_queue_keep_fill.txt": "843dfbf7cdb67900abbfac79f5805c7c09156f0afa9295ca35a16e8ea44f28b1",
+        "20261101_queue_keep_fraction.txt": "4ac6739c86da976baa9246b109eefeb839cc24b75f671cd2e9ffe2271b528f94",
+        "20261101_queue_keep_fraction2.txt": "20a3ddb04529dbb7506a1bfbdf584275750b151b08b1383afd3e0fea0d13724c",
+        "20261101_queue_keep_gain.txt": "41fe0160f2195650831645296603aa54260a03a95161d1c43ea8f222af27e2fa",
+        "20261101_queue_keep_loss.txt": "b31899bc6cd6cec225047bf85ea9ecde8370513a4c5f89ca7e8688c6c0bcbee7",
+        "20261101_queue_reset_fill.txt": "44c8555977df8f313f9f8d753c7fdac6d0b1d1d83110ea1d2292465e5570734c",
+        "20261101_queue_reset_fraction.txt": "a547670f1ecc5b09534a60bbb0d046e4d627f913991910d6e8bc9cf49dd66e38",
+        "20261101_queue_reset_fraction2.txt": "ac0eb9fd6f02a06c873f3bc0e23091ae641018b1416ec05111079a0b47c11473",
+        "20261101_queue_reset_gain.txt": "61c5ed39f1966e0c6f0918b714d9fcc924e11b69eca093a73d0df36fd6b7da17",
+        "20261101_queue_reset_loss.txt": "5f12c425cf73d86f4a02e77865fb20adfd5e7e2d383876e0fdd5e5fe442e70e4"
+      },
+      "constraints": {
+        "baseline_keep_fill": 0,
+        "baseline_keep_fraction": 0,
+        "baseline_keep_fraction2": 0,
+        "baseline_keep_gain": 0,
+        "baseline_keep_loss": 0,
+        "market_keep_fill": 0,
+        "market_keep_fraction": 1969,
+        "market_keep_fraction2": 4421,
+        "market_keep_gain": 200,
+        "market_keep_loss": 186,
+        "baseline_reset_fill": 0,
+        "baseline_reset_fraction": 0,
+        "baseline_reset_fraction2": 0,
+        "baseline_reset_gain": 0,
+        "baseline_reset_loss": 0,
+        "market_reset_fill": 0,
+        "market_reset_fraction": 2649,
+        "market_reset_fraction2": 4767,
+        "market_reset_gain": 966,
+        "market_reset_loss": 541,
+        "queue_keep_fill": 0,
+        "queue_keep_fraction": 2029,
+        "queue_keep_fraction2": 4469,
+        "queue_keep_gain": 292,
+        "queue_keep_loss": 169,
+        "queue_reset_fill": 0,
+        "queue_reset_fraction": 2635,
+        "queue_reset_fraction2": 4721,
+        "queue_reset_gain": 925,
+        "queue_reset_loss": 535
+      },
+      "action_ids_sha": "560bc946885ef7fadf456b51561de0092dce5550a581d2cc968eee8e204c39b4",
+      "predictions_sha": "a621fd0c0265634a2f00947281a418768e70a445caac25f344de79e8c803cbbf"
+    },
+    {
+      "day": "20261102",
+      "train_n": 47030,
+      "test_n": 7489,
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031",
+        "20261101"
+      ],
+      "models_sha": {
+        "20261102_market_keep_fill.txt": "5b344f07ad6eae2a64984440fd1c791bcd0b2f9244ead5c2e9df3e0d07185a1f",
+        "20261102_market_keep_fraction.txt": "043e2d96e56e08d1a464a127a94f8f13b01a272273404a6e5ebcdee4dd6582f0",
+        "20261102_market_keep_fraction2.txt": "cc4dd571a2d9d0e08ff19a616d05249e2b6542a52459142608bf3fdb255dba6f",
+        "20261102_market_keep_gain.txt": "60e42c1c3c4021ef4c42745f1f0ba6237b6c413e2db1f08ee61469e2650a01b2",
+        "20261102_market_keep_loss.txt": "dcb0211a33a3ddf774b89726e380c149b02379f140d4c46b5061348f89ee94ff",
+        "20261102_market_reset_fill.txt": "53f1bdbed15f268c77d6e6e44d2fc34b9371c96f0c3426b4baf16803201e5636",
+        "20261102_market_reset_fraction.txt": "b39eb91747ea786c50c205ce8c7292741c962d34f35353044628ef9352e8b033",
+        "20261102_market_reset_fraction2.txt": "67a8a115137998e4d3284b71c4e910f206e0ef78bce93a5e5cdb3d2538af38e6",
+        "20261102_market_reset_gain.txt": "9e89ddfdb4cde628e384e5db2b9c66ffeb2909063605592fa933813643fe1241",
+        "20261102_market_reset_loss.txt": "facfd036c28c03e9b963238aed587a3f3af534f03dd7b2c421bf8b034a4750d7",
+        "20261102_queue_keep_fill.txt": "d502affc7001613aee77f8c20ef32fe196a9b10c9e9ca8870a57364a177700b0",
+        "20261102_queue_keep_fraction.txt": "2aa9eca970b4921377fa98fe4f9c3f6aa99d9e2add2d7f7d793a52e68f01da6a",
+        "20261102_queue_keep_fraction2.txt": "799923bfdd99b937abcc1f8196706b86fa39792deadf037125139990532cdfed",
+        "20261102_queue_keep_gain.txt": "939b2ea40796498347d30034d8f451aae4808c5d1bfa9e3a75496e712b691b62",
+        "20261102_queue_keep_loss.txt": "ac1f00d6e95dd2d4ad64446d223dc84e2d77a6af6af82a1a44867e93b999d2c7",
+        "20261102_queue_reset_fill.txt": "eb6f99a714fa709d16038ba3578f3eef38a1128d42abfa0ef1c7656562365359",
+        "20261102_queue_reset_fraction.txt": "4f0559cfea7a2382059e44dc12779530ef2c2c016d27d73b53619d4132790078",
+        "20261102_queue_reset_fraction2.txt": "3f24728cb09f5bf2f96cb72ec3dde14cd01f1a93c0fe080d9833c160edb0d706",
+        "20261102_queue_reset_gain.txt": "622710495149b272a7d47703c9a00576fba9c7477b4462a5c82d3b78b751b4f7",
+        "20261102_queue_reset_loss.txt": "59ef6486a0ab38c17eb6e0c79836cb342386b803f453c3eaa13ab3c4a575c3f1"
+      },
+      "constraints": {
+        "baseline_keep_fill": 0,
+        "baseline_keep_fraction": 0,
+        "baseline_keep_fraction2": 0,
+        "baseline_keep_gain": 0,
+        "baseline_keep_loss": 0,
+        "market_keep_fill": 0,
+        "market_keep_fraction": 2405,
+        "market_keep_fraction2": 5930,
+        "market_keep_gain": 332,
+        "market_keep_loss": 114,
+        "baseline_reset_fill": 0,
+        "baseline_reset_fraction": 0,
+        "baseline_reset_fraction2": 0,
+        "baseline_reset_gain": 0,
+        "baseline_reset_loss": 0,
+        "market_reset_fill": 0,
+        "market_reset_fraction": 3413,
+        "market_reset_fraction2": 6613,
+        "market_reset_gain": 1232,
+        "market_reset_loss": 519,
+        "queue_keep_fill": 0,
+        "queue_keep_fraction": 2571,
+        "queue_keep_fraction2": 6039,
+        "queue_keep_gain": 363,
+        "queue_keep_loss": 115,
+        "queue_reset_fill": 0,
+        "queue_reset_fraction": 3522,
+        "queue_reset_fraction2": 6619,
+        "queue_reset_gain": 1325,
+        "queue_reset_loss": 517
+      },
+      "action_ids_sha": "aecfd6e5018ba44db01e250fa8dd9df6ea1c01ae3f815134e8e310ec711719ac",
+      "predictions_sha": "b3d048f4756fcb8d529b998189ba13007e865d5471fe9cdf39847e62ae595e8d"
+    },
+    {
+      "day": "20261103",
+      "train_n": 54519,
+      "test_n": 7086,
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031",
+        "20261101",
+        "20261102"
+      ],
+      "models_sha": {
+        "20261103_market_keep_fill.txt": "78199521fa61d5d4da974f9209490940ab0097a425a69fac41f4bbb2ad129d93",
+        "20261103_market_keep_fraction.txt": "bc33d4702137aa5ff67588d4f9ee162312bebbefeb07d722c6a29a8bef581d89",
+        "20261103_market_keep_fraction2.txt": "37f0f451c5db2e75f9aba8e4ccefd0a93bef887682f88f895534d570a420b492",
+        "20261103_market_keep_gain.txt": "e7adcf6684b4dff424f105d980549c1495266703fefbe7c1fcbab3ae599e9bdd",
+        "20261103_market_keep_loss.txt": "6654824d5fdb18226275638470a466f7425534b71da2baeef4faba40ed41a013",
+        "20261103_market_reset_fill.txt": "3db8721ba3f91dbb164a5a351959f318e9aeb5f65cd02f10f1af85e6c341ecfc",
+        "20261103_market_reset_fraction.txt": "b1147b54f01a1e977b4fc8008b08e32e4ccaef0711cbdbd390df3aeef9eaf4a1",
+        "20261103_market_reset_fraction2.txt": "0ce5ff6d834c9f30ba516dd3449947c77b2da2110cbe37d243eb002f832739fe",
+        "20261103_market_reset_gain.txt": "0d96275aae761aeff1bba467e5c1fa2bb88d1d5b1de14d0c9efb0ceb4093eaa0",
+        "20261103_market_reset_loss.txt": "cffb56b4fdc12c1c01d41099434d803c32dc49bbee54b330df28267f7abe5f76",
+        "20261103_queue_keep_fill.txt": "08df382ccd851d0c602607dde1185e48a6d1a2c5f3a3aec40d368c5084f5a778",
+        "20261103_queue_keep_fraction.txt": "337f2341d13289aacc8876f0b8e971f5e63a751342ef78e32c03ed582022155e",
+        "20261103_queue_keep_fraction2.txt": "79e626c298da94025f9a71fa3c9857a76dab1794aa878f21e9ae473d1980f286",
+        "20261103_queue_keep_gain.txt": "be013430c04a736ed9cc45047309412e71780c926b30c8407f5781b90e0ea243",
+        "20261103_queue_keep_loss.txt": "37a1a8f3fb30726979e62508326c0ecfe7a0ce939440e5a1434ff6d42bfe1144",
+        "20261103_queue_reset_fill.txt": "c111c41aaae23628a35c081225f9267648e39e8b58777ac77500e82daae55117",
+        "20261103_queue_reset_fraction.txt": "ee8732caa9230c226e03004c45f8c8621bccb770747510456209de35e51ab229",
+        "20261103_queue_reset_fraction2.txt": "df2f3d82ae37eb2b41638b2776312245fd284e2cfe2e420dff170257235abd08",
+        "20261103_queue_reset_gain.txt": "7a21c1a34b948c173ccc22ff6964c9a4149c1f1ebde0316ce90016db7431c14c",
+        "20261103_queue_reset_loss.txt": "04eeebf2025273dd1b195b03a63aa350201a0ad692268fa8b0a3c10be8146ca7"
+      },
+      "constraints": {
+        "baseline_keep_fill": 0,
+        "baseline_keep_fraction": 0,
+        "baseline_keep_fraction2": 0,
+        "baseline_keep_gain": 0,
+        "baseline_keep_loss": 0,
+        "market_keep_fill": 0,
+        "market_keep_fraction": 2325,
+        "market_keep_fraction2": 5720,
+        "market_keep_gain": 348,
+        "market_keep_loss": 110,
+        "baseline_reset_fill": 0,
+        "baseline_reset_fraction": 0,
+        "baseline_reset_fraction2": 0,
+        "baseline_reset_gain": 0,
+        "baseline_reset_loss": 0,
+        "market_reset_fill": 0,
+        "market_reset_fraction": 3116,
+        "market_reset_fraction2": 6373,
+        "market_reset_gain": 1083,
+        "market_reset_loss": 396,
+        "queue_keep_fill": 0,
+        "queue_keep_fraction": 2400,
+        "queue_keep_fraction2": 5771,
+        "queue_keep_gain": 444,
+        "queue_keep_loss": 107,
+        "queue_reset_fill": 0,
+        "queue_reset_fraction": 3358,
+        "queue_reset_fraction2": 6405,
+        "queue_reset_gain": 1191,
+        "queue_reset_loss": 423
+      },
+      "action_ids_sha": "d5567c57f080580aa4a3038f90f2338e986df0eb35e3ce7c796ed3f4b8219ee6",
+      "predictions_sha": "f62311b618ef237c914c9498100ddf58f10dadf544b2b5dc1c1a0427480af036"
+    }
+  ],
+  "statuses": [
+    {
+      "day": "20261023",
+      "status": "eligible",
+      "n": 7838
+    },
+    {
+      "day": "20261023",
+      "status": "ended_before_probe_or_unknown",
+      "n": 7722
+    },
+    {
+      "day": "20261023",
+      "status": "postonly_refused",
+      "n": 2551
+    },
+    {
+      "day": "20261023",
+      "status": "missing_label_mark",
+      "n": 4
+    },
+    {
+      "day": "20261024",
+      "status": "eligible",
+      "n": 6965
+    },
+    {
+      "day": "20261024",
+      "status": "ended_before_probe_or_unknown",
+      "n": 6565
+    },
+    {
+      "day": "20261024",
+      "status": "postonly_refused",
+      "n": 1839
+    },
+    {
+      "day": "20261024",
+      "status": "missing_label_mark",
+      "n": 3
+    },
+    {
+      "day": "20261025",
+      "status": "eligible",
+      "n": 6743
+    },
+    {
+      "day": "20261025",
+      "status": "ended_before_probe_or_unknown",
+      "n": 6340
+    },
+    {
+      "day": "20261025",
+      "status": "postonly_refused",
+      "n": 1888
+    },
+    {
+      "day": "20261025",
+      "status": "missing_label_mark",
+      "n": 2
+    },
+    {
+      "day": "20261026",
+      "status": "ended_before_probe_or_unknown",
+      "n": 8527
+    },
+    {
+      "day": "20261026",
+      "status": "eligible",
+      "n": 8112
+    },
+    {
+      "day": "20261026",
+      "status": "postonly_refused",
+      "n": 2473
+    },
+    {
+      "day": "20261026",
+      "status": "missing_label_mark",
+      "n": 4
+    },
+    {
+      "day": "20261027",
+      "status": "eligible",
+      "n": 7195
+    },
+    {
+      "day": "20261027",
+      "status": "ended_before_probe_or_unknown",
+      "n": 6805
+    },
+    {
+      "day": "20261027",
+      "status": "postonly_refused",
+      "n": 1992
+    },
+    {
+      "day": "20261031",
+      "status": "eligible",
+      "n": 4933
+    },
+    {
+      "day": "20261031",
+      "status": "ended_before_probe_or_unknown",
+      "n": 3514
+    },
+    {
+      "day": "20261031",
+      "status": "postonly_refused",
+      "n": 1026
+    },
+    {
+      "day": "20261031",
+      "status": "missing_label_mark",
+      "n": 2
+    },
+    {
+      "day": "20261101",
+      "status": "eligible",
+      "n": 5244
+    },
+    {
+      "day": "20261101",
+      "status": "ended_before_probe_or_unknown",
+      "n": 4077
+    },
+    {
+      "day": "20261101",
+      "status": "postonly_refused",
+      "n": 1328
+    },
+    {
+      "day": "20261101",
+      "status": "missing_label_mark",
+      "n": 4
+    },
+    {
+      "day": "20261102",
+      "status": "ended_before_probe_or_unknown",
+      "n": 7770
+    },
+    {
+      "day": "20261102",
+      "status": "eligible",
+      "n": 7489
+    },
+    {
+      "day": "20261102",
+      "status": "postonly_refused",
+      "n": 2683
+    },
+    {
+      "day": "20261102",
+      "status": "missing_label_mark",
+      "n": 2
+    },
+    {
+      "day": "20261103",
+      "status": "ended_before_probe_or_unknown",
+      "n": 7345
+    },
+    {
+      "day": "20261103",
+      "status": "eligible",
+      "n": 7086
+    },
+    {
+      "day": "20261103",
+      "status": "postonly_refused",
+      "n": 2670
+    },
+    {
+      "day": "20261103",
+      "status": "missing_label_mark",
+      "n": 2
+    }
+  ],
+  "eligible_actions": 61605,
+  "test_actions": 40059,
+  "predictions_sha": "8ab0fe01f4a62014910e1649c47e1ffcc785c637eaf8172e32bc59dae58413ee",
+  "models": 120,
+  "versions": {
+    "lightgbm": "4.6.0",
+    "numpy": "2.2.6",
+    "pandas": "3.0.1"
+  }
+}
