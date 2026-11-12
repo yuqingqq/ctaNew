@@ -1,5 +1,24 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 10:31Z (session ce68ebe0) — QR queue race DONE: our orders are at the back mainly because we join levels late (R280 LATE-ENTRY, 9 of 9 days; live R281 the same), not because we are slower than others or re-place; speed buys queue only below one book snapshot (~50 ms) and pays only with the guard
+
+- Done (USER: "not sure if it is because we requote slower than others, or we requote and we lose the position ... check how fast
+  we need to be"): research/pf_qr_queue_race.py + run_qr.sh (bd71adbb, before the run; part C loop fix 4756b27d), 09:58-10:31Z
+  claude slot. Report handoffs/20261112_queue_race_results.md; copies reviews/qr_20261112/. All controls passed (sim3 = S4's sim2,
+  lane B schedule = lane B, ghost = simulator queue at 122,493 fills, additivity, planted errors).
+- Queue ahead at go-live, v3 (M 50): 548 sh = already there 17% / joined within our 97 ms 16% / joined after we could have been
+  there 41% / lost by re-places 15% / snapshot allowance 11%. Live 11-08: 431 sh = 7 / 27 / 44 / 14 / 7%. v3's first order at a
+  level goes live a median 177 ms after its birth (live 386 ms); 14% within 97 ms.
+- v3 fills by level age at go-live: < 100 ms +1.59, 100-500 ms +1.06, 0.5-2 s +0.03, >= 2 s -0.14 c/sh (M 50); first order +1.16
+  vs re-placed +0.07 (both 9 of 9 days at M 0 and M 50, post hoc counts).
+- Speed: the book arrives in ~50 ms snapshots; joining a new level under ~50 ms puts us behind ~51 sh, at 97 ms behind ~143 (250
+  with the allowance) (R284 SPEED-BUYS-QUEUE). With v3's guard joining new levels is positive at every delay at M 0 / M 50 (R286
+  POS 150), per share MIXED (R285); 30 ms gives +18.8 vs +12.9 $/day at 97 ms (9 of 9 days, post hoc), v3 +14.7. Without a guard it
+  loses at every speed (R286 NONE). At M 250 every arm loses except lane B (+0.07).
+- Watch out: young / fast-entry fills are the ones B1a found mostly phantom live; consumed days, exploratory.
+- Next (proposal, user's call): QR2 = v3 + join at births within ~30-50 ms while the guard is on, skip levels the stale clock no
+  longer shows, keep through guard flicker instead of re-placing; then freeze + forward test on >= 5 untouched days.
+
 ## 2026-11-12 07:31Z (session ce68ebe0) — keep-or-pull S4 diagnostic: the inputs are clean; the false pulls come from the target - 72.5% of the model's pulls are quiet moments (no fill either way within 5 s), and "pulling right" is mostly luck on the re-entered order
 
 - Done (USER: "check the raw input to find out any reasons"): research/pf_kp_s4_diag.py, post hoc, 07:25Z claude slot. Report

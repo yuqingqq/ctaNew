@@ -1,0 +1,26 @@
+09:58:53Z start selftest
+09:58:54Z done selftest
+09:59:24Z start day_20261023
+10:00:23Z done day_20261023
+10:00:53Z start day_20261024
+10:01:50Z done day_20261024
+10:02:20Z start day_20261025
+10:03:17Z done day_20261025
+10:03:47Z start day_20261026
+10:04:47Z done day_20261026
+10:05:17Z start day_20261027
+10:06:14Z done day_20261027
+10:06:44Z start day_20261031
+10:07:35Z done day_20261031
+10:08:05Z start day_20261101
+10:08:56Z done day_20261101
+10:09:26Z start day_20261102
+10:10:23Z done day_20261102
+10:10:53Z start day_20261103
+10:11:50Z done day_20261103
+10:12:20Z start live
+10:30:05Z FAILED live
+10:30:33Z start live (rerun after fix 4756b27d)
+10:30:43Z done live
+10:30:48Z start report
+10:30:49Z done report; ALL DONE

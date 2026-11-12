@@ -1,0 +1,8 @@
+live: 5000 orders, rss 570 MiB
+live: 10000 orders, rss 570 MiB
+live: 15000 orders, rss 570 MiB
+live: 20000 orders, rss 571 MiB
+live: 25000 orders, rss 571 MiB
+live: 30000 orders, rss 571 MiB
+{"as_of_note": "point estimates, one consumed partial day (220 windows of 2026-11-08), first minute by t_Accepted", "planted": {"MUT_GHOST_NOCAP": true, "MUT_CHAIN_ANYPRICE": true, "MUT_NO_GRACE": true, "L_PLACE": true}, "K0": true, "stat": {"orders": 30221, "outside_first_minute": 2506, "no_frames": 0, "not_best_at_live": 14099, "censored": 0, "ghost_ta_differ": 0}, "dec": {"L": {"n": 13616, "a0": 5870925.3339556875, "U": 592973.2937177707, "LAT": 1656280.099241372, "LATE": 2540187.4916784964, "REQ": 648723.0070073731, "RAISE": 432761.4423106676, "replaced": 8098, "kinds": {"censored": 0, "improve": 8871, "fallback": 4745, "invalid": 0}}, "M": {"n": 13616, "a0": 5870925.3339556875, "U": 417181.9468949982, "LAT": 1571951.061118926, "LATE": 2600872.457160626, "REQ": 848158.4264704669, "RAISE": 432761.4423106676, "replaced": 8098, "kinds": {"censored": 0, "improve": 8871, "fallback": 4745, "invalid": 0}}}, "age_p10_50_90": [128.030029296875, 1441.7496337890625, 7189.658935546875], "first_delay_p10_50_90": [84.563037109375, 386.120361328125, 5041.068554687501], "first_delay_share_le_97": 0.1418992388546575}
+2026-11-12T10:30:33Z tag=qr_live rc=0 peak_rss_mib=787 wall_s=10.58 cpu_user_s=10.03 memavail_start_gib=23 disk_free_gib=506->506 slot=claude
