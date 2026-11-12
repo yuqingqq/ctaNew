@@ -92,3 +92,7 @@ for this clarification. Earlier artifacts and conclusions are unchanged.
 ## Subsequent first-stage result
 
 The explicit fill/value diagnostic is now complete: [review](20261112_fill_value_review.md). It found useful KEEP fill-opportunity signal, weak RESET forecasts, no improvement in pull selection, and inconsistent independent value/quantity components. This does not complete the longer-horizon queue-retention or live-calibration work.
+
+## Subsequent coherent-model result
+
+The joint-outcome model and earlier-day calibration study is complete: [review and gap register](20261112_joint_fill_review.md). Forecast probability, quantity and value now satisfy shared outcome bounds; aggregate fill-rate bias is smaller. The candidate does not improve matched pull-selection value and is not promoted. Conditional value calibration, later queue continuation, consistent re-entry, flow/fill-time forecasts and live calibration remain open. This closes the structural-consistency step, not the full queue-retention research objective.

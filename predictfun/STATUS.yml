@@ -1776,10 +1776,10 @@ fill_value_20261112:
 
 # JOINT_FILL_20261112
 joint_fill_20261112:
-  as_of: "2026-11-12T10:10:00.996691+00:00"
+  as_of: "2026-11-12T10:18:30.477289+00:00"
   state: "complete"
-  stage: "declaration"
-  detail: "Frozen coherent paired-outcome model and earlier-day calibration; no threshold tuning."
+  stage: "human_review"
+  detail: "Shared outcome consistency passes; earlier-day calibration improves aggregate fill rates but not pull selection. No candidate promoted. Open gaps and next target study: handoffs/20261112_joint_fill_review.md."
   receipts: reviews/joint_fill_20261112/
   validation: false
 # /JOINT_FILL_20261112
