@@ -1,5 +1,29 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 02:36Z (session ce68ebe0) — B21 DONE: resting at the touch by default and pulling only on a signal keeps orders present and nearer the front but LOSES at every fill clock (R220 NEGATIVE, all eight arms); run_light.sh now has two slots (USER)
+
+- Done (USER "rest orders there as default, only pull when real signals happen"): research/pf_b21_rest_default.py (8391a783), run
+  2026-11-12 02:24Z. Report handoffs/20261111_b21_rest_default.md; copies reviews/b21_20261111/. All controls passed: B20's 80 cells
+  and its table reproduced, the rest cases and their no-cooldown falsifier, all 264,000 grid steps found their row, Z-none = H0-none.
+- Presence fixed: never pulled, orders live 1.0 s and rest 97%, 129 sh ahead when live (v3 82 ms, 11%, 363 sh); with the burst,
+  Binance-shift, guard or thin-side signal 0.6-0.9 s and 56-92%.
+- Value not: every arm < 0 at 1 s and 5 s at 0 / 50 / 250 ms; -0.51 (guard) .. -1.55 (thinning) c/sh at 50 ms; 0 of 6 $/day cells
+  above v3. The guard (v <= -0.10), Binance burst and Binance book shift HELP (+0.25..+1.04 c/sh against never pulling); thinning
+  and thin side MIXED (+ at 0 ms, - at 250 ms).
+- Even at the front (rule U) resting earns less than v3's gated quotes: -0.35 never pulled, +0.58 with all five signals, v3 +0.90.
+- Next (proposed, not run): B21b, the same arms at zero latency (each signal at its venue event time, instant cancel), to split
+  "too late" from "not informative". The live run with A4b still decides the fill clock and our real queue place.
+- run_light.sh (USER 2026-11-12 "Can we launch 2 parallel processes" / "One for codex and one here"): two slots, PF_SLOT=codex
+  (the default, core 8) and PF_SLOT=claude (core 9). Refuses a busy slot's core or a third process. Script-path jobs
+  (predictfun/research/pf_*.py) now count. Six cases tested on a copy; installed by atomic rename while a Codex stage ran.
+- Watch out:
+  - This session launches with PF_SLOT=claude; without it a job takes the Codex slot.
+  - The Codex default-pull driver has its own check (pf_default_pull_progress.busy) that waits while ANY research process runs.
+    Until that session changes it, its next stage waits for a claude-slot job to finish. B21 ran in its gap (B21 started
+    02:24:44Z; the driver resumed at 02:26:00Z).
+  - Another session's progress updater replaced STATUS.yml's `updated: >-` header with a quoted timestamp in the working tree
+    (uncommitted, not ours), so the working-tree file no longer parses as YAML. Left as found.
+
 ## 2026-11-11 16:08Z (session ce68ebe0) — B20 DONE: pre-positioned / held orders do NOT solve the queue position (R210 NOT-IMPROVED, all guarded arms)
 
 - Done (USER "post in advance ... until our guard says to withdraw"; "check if we solved the position issue"):
