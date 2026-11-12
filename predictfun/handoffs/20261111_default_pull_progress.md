@@ -1,5 +1,5 @@
 # Quote-default / learned-pull research loop
-As of 2026-11-12T00:45:43.466064+00:00. **running: stress_20261026**. v4: observed empty levels are known, retaining all data and inventory controls.
+As of 2026-11-12T01:35:45.958752+00:00. **running: stress_20261027**. v4: observed empty levels are known, retaining all data and inventory controls.
 
 Completed prior test: own-order/calm study d475eccb, canonical comparison_v4.json; no promoted variant.
 Current branch: research/predict-default-pull-20261111. One numeric process; consumed dates only; no live changes.
@@ -28,4 +28,5 @@ Plan: controls →8-window parity smoke →9 neutral build days →6 expanding m
 | eval_20261102 | complete | 2026-11-12T00:05:00.713258+00:00 | Passed; logs/eval_20261102.log plus artifact/feature checks retained. |
 | eval_20261103 | complete | 2026-11-12T00:45:10.056923+00:00 | Passed; logs/eval_20261103.log plus artifact/feature checks retained. |
 | primary_report | complete | 2026-11-12T00:45:43.363107+00:00 | Passed; logs/primary_report.log plus artifact/feature checks retained. |
-| stress_20261026 | running | 2026-11-12T00:45:43.466064+00:00 | v4: observed empty levels are known, retaining all data and inventory controls. |
+| stress_20261026 | complete | 2026-11-12T01:35:45.851437+00:00 | Passed; logs/stress_20261026.log plus artifact/feature checks retained. |
+| stress_20261027 | running | 2026-11-12T01:35:45.958752+00:00 | v4: observed empty levels are known, retaining all data and inventory controls. |
