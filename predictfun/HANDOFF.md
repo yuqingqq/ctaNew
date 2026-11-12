@@ -1,5 +1,14 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 12:07Z (session ce68ebe0) — CS causal speed DONE: with honest clocks a faster ORDER PATH adds money to v3 (10-20 ms: +1.5 to +4.4 $/day without young fills, 8-9 of 9 days), a faster feed alone does not (R320 NOT-SHOWN at today's speed); SPEED-NEEDED = today's feed + 20 ms path; M 250 still loses
+
+- Done (USER "Yes"): research/pf_causal_speed.py + run_cs.sh (7e16d03e), post hoc pf_cs_posthoc.py (764352cd), 12:01-12:07Z claude
+  slot. Report handoffs/20261112_causal_speed_results.md; copies reviews/cs_20261112/; FINDINGS.md updated (QR2 F30 SUPERSEDED).
+- Controls: v3 lane = sim2 join; old schedule = QR2 F30 exactly; causal future-cut check 400 / 0 differ, planted acausal 40 / 40.
+- w/o-young $/day M 50 vs v3 3.70: today's feed 40 ms 3.80; 15.2 ms feed 40 ms 3.85; today's feed 10 ms 6.14; 30 ms feed 10 ms 8.10.
+  Post hoc: the pending-cancel window is not the cause (identical with 95 ms). Mechanism not established. ~70% of headlines still young.
+- In progress: full-pipeline review (data / time alignment, features / guard, simulator / valuation) by three read-only reviewers.
+
 ## 2026-11-12 12:00Z (session ce68ebe0) — FINDINGS.md register created (USER: "keep all our findings tracked, otherwise these misfindings happen again and again"); QR / QR2 fast-entry (d < 40 ms) results VOID (acausal clock, independent review 10:42Z)
 
 - New: predictfun/FINDINGS.md = checklist every result must pass (C1 order-age split / B1a-weighted, C2 M 0 / 50 / 250, C3 pending,

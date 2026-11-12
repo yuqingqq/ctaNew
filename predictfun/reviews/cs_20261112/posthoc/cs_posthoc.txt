@@ -1,0 +1,22 @@
+CS post hoc: pending-cancel window fixed at 95 ms; control {'checked': 240, 'differ': 0}; as of 2026-11-12T12:08:25Z
+M|0: w/o-young $/day - J-v3 4.94
+  E(cur,20)   CS (55 + p window)   6.40 | window 95 ms   6.40 | days above J-v3 9 of 9
+  E(cur,10)   CS (55 + p window)   7.57 | window 95 ms   7.57 | days above J-v3 9 of 9
+  E(30,20)    CS (55 + p window)   8.27 | window 95 ms   8.27 | days above J-v3 9 of 9
+  E(30,10)    CS (55 + p window)  10.93 | window 95 ms  10.93 | days above J-v3 9 of 9
+  E(15.2,20)  CS (55 + p window)   9.40 | window 95 ms   9.40 | days above J-v3 9 of 9
+  E(15.2,10)  CS (55 + p window)   9.35 | window 95 ms   9.35 | days above J-v3 9 of 9
+M|50: w/o-young $/day - J-v3 3.70
+  E(cur,20)   CS (55 + p window)   5.18 | window 95 ms   5.18 | days above J-v3 8 of 9
+  E(cur,10)   CS (55 + p window)   6.14 | window 95 ms   6.14 | days above J-v3 9 of 9
+  E(30,20)    CS (55 + p window)   5.89 | window 95 ms   5.89 | days above J-v3 9 of 9
+  E(30,10)    CS (55 + p window)   8.10 | window 95 ms   8.10 | days above J-v3 9 of 9
+  E(15.2,20)  CS (55 + p window)   6.45 | window 95 ms   6.45 | days above J-v3 9 of 9
+  E(15.2,10)  CS (55 + p window)   6.62 | window 95 ms   6.62 | days above J-v3 9 of 9
+M|250: w/o-young $/day - J-v3 -4.13
+  E(cur,20)   CS (55 + p window)  -3.73 | window 95 ms  -3.73 | days above J-v3 4 of 9
+  E(cur,10)   CS (55 + p window)  -3.47 | window 95 ms  -3.47 | days above J-v3 6 of 9
+  E(30,20)    CS (55 + p window)  -3.43 | window 95 ms  -3.43 | days above J-v3 6 of 9
+  E(30,10)    CS (55 + p window)  -2.83 | window 95 ms  -2.83 | days above J-v3 6 of 9
+  E(15.2,20)  CS (55 + p window)  -2.77 | window 95 ms  -2.77 | days above J-v3 8 of 9
+  E(15.2,10)  CS (55 + p window)  -2.75 | window 95 ms  -2.75 | days above J-v3 7 of 9

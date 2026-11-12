@@ -91,7 +91,8 @@ Statuses:
 | Joining earlier at today's speed (no old levels, keep through flicker) does not beat v3's $/day | HOLDS | QR2 R290 |
 | Keeping orders through guard flicker is worse per share | HOLDS | QR2 K / K2 |
 | The 500 ms age cut: same $/day, better per share, less M 250 loss | QUALIFIED: its gain is young-only (AGE R312 GAIN-IS-YOUNG) | QR2, AGE |
-| v3 + joining new levels at 30 ms (F30, Y+F30, QR2-fast) beats v3 (+8.7 $/day; +2.6 without young fills) | **VOID** pending a causal rerun: same schedule as QR's 30 ms arm (C6) | QR2, AGE R312 / R313 |
+| v3 + joining new levels at 30 ms (F30, Y+F30, QR2-fast) beats v3 (+8.7 $/day; +2.6 without young fills) | **VOID** (C6); SUPERSEDED by CS's causal speed test | QR2, AGE R312 / R313; CS |
+| With causal clocks, v3 plus event-driven joins at new levels gains only with a faster order path: 10-20 ms paths +1.5 to +4.4 $/day without young fills (M 50, 8-9 of 9 days); a faster feed with today's 40 ms path gains nothing; slowest gaining arm = today's feed + 20 ms path; at M 250 everything still loses; joining at births beats random times | HOLDS (replay; young fills about 70% of the headline; mechanism not established; pending-cancel window ruled out post hoc) | CS, 20261112_causal_speed_results.md |
 | The live engine churns: at-best orders cancelled 23-38 ms after going live, 82.5% re-placed; guard flicker | HOLDS | B13c / B13d |
 | The live soft pull is a churn control with value about unchanged; merged (pmmmrust 0c3b115), not deployed | HOLDS | B15 |
 

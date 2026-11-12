@@ -1,0 +1,9 @@
+20261101: 80 window-sides, 3 s, rss 489 MiB
+20261101: 160 window-sides, 6 s, rss 490 MiB
+20261101: 240 window-sides, 8 s, rss 490 MiB
+20261101: 320 window-sides, 11 s, rss 490 MiB
+20261101: 400 window-sides, 13 s, rss 490 MiB
+20261101: 480 window-sides, 16 s, rss 491 MiB
+20261101: 560 window-sides, 18 s, rss 491 MiB
+20261101: done in 18 s; controls {"reg_differ": 0, "causal_checked": 0, "causal_differ": 0, "causal_planted_differ": 0}
+2026-11-12T12:02:53Z tag=cs_day_20261101 rc=0 peak_rss_mib=745 wall_s=20.43 cpu_user_s=19.61 memavail_start_gib=22 disk_free_gib=504->504 slot=claude
