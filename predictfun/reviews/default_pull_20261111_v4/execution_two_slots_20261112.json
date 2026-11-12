@@ -1,0 +1,31 @@
+{
+  "as_of": "2026-11-12T03:20:02.313540+00:00",
+  "status": "USER_AUTHORIZED_TWO_RESEARCH_SLOTS",
+  "user_instruction": "no, we can run 2 processes in parallel, so resume the job",
+  "supersedes_operations_only_of": "27aacbc919b83b5af958f2a527775c2f46a2aae9059d963dd1b54206862d34ea",
+  "preserved_frozen_sources": 232,
+  "numerical_stage_sequence_unchanged": true,
+  "process_cap": 2,
+  "codex_slot": {
+    "core": 8,
+    "max_workers": 1
+  },
+  "other_slot": {
+    "core": 9,
+    "max_workers": 1
+  },
+  "shared_launcher_commit": "8352d3c8",
+  "shared_launcher_sha": "4877e2b3fe26e0ce04033ae4eb872be596ecaa94c31ca9d9f5d7726d84d662d4",
+  "execution_sources": {
+    "predictfun/research/default_pull_execution.py": "e183d7cce6f334192abb53fcc23feabbec67bec0f38dbca5865a2b80f4409688",
+    "predictfun/research/run_default_pull_two_slots.sh": "ab080433aba8658f3167992e055caf21e99186684db8692ab85a388ab3104315",
+    "predictfun/research/default_pull_transition.py": "2ec0dc94bc5ce59080407d1e3b23379aade1df07129cea2289532e635da2eefb",
+    "predictfun/research/default_pull_watch.py": "ae1656758bf8db2a1cf2642b69a4822f222a89cdfaa6e39716e702e84e47e1e9"
+  },
+  "current_driver_pid": 2447808,
+  "current_worker_pid": 365350,
+  "current_stage": "stress_20261101",
+  "handover": "Old parent has received TERM and will exit after its current numerical child. Transition helper waits, verifies successful artifacts, preserves or recovers the completion marker, and starts the two-slot scheduler and publication watcher.",
+  "controls": "Empty slot and one core-9 worker allowed; occupied core 8, global cap two, broad overlapping affinity and invalid affinity refused. Numeric module/script positive cases detected; metadata helpers/launchers excluded. All232 frozen sources and numerical stage sequence identical. Valid exit0 and known-bad exit1/wrong-stage transition controls passed.",
+  "scope": "Scheduling only. Current replay was not terminated and is already running through the shared two-slot launcher. All numerical models, strategies, inputs, thresholds and execution assumptions remain frozen. This receipt supersedes only the single-process operations limit; per-process memory, CPU and disk guards remain."
+}

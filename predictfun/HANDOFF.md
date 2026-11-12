@@ -2,12 +2,12 @@
 
 <!-- DEFAULT_PULL_LOOP -->
 
-## 2026-11-12T03:15:48.475179+00:00 — Quote-default / learned-pull research loop: running
+## 2026-11-12T03:20:02.339083+00:00 — Quote-default / learned-pull research loop: running
 
-- Stage `stress_20261101`. v4: observed empty levels are known, retaining all data and inventory controls.
+- Stage `stress_20261101`. User resumed work with two global research slots. Current replay continues on core 8; scheduler handover will preserve this result before proceeding.
 - 23 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
 - Prior own-order/calm test remains COMPLETE, no promotion; comparison_v4.json / d475eccb.
-- Branch research/predict-default-pull-20261111; one light numeric process; no live changes/protected-day reads.
+- Branch research/predict-default-pull-20261111; Codex slot/core 8, global cap two research workers; no live changes/protected-day reads.
 
 <!-- /DEFAULT_PULL_LOOP -->
 

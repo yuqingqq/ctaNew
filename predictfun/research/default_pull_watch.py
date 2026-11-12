@@ -17,6 +17,13 @@ COMMON=['predictfun/HANDOFF.md','predictfun/STATUS.yml','predictfun/handoffs/202
 MODES={'reference','matched_guard','default','pressure','floor','market','queue','queue_cost'}
 
 
+def driver_args(args):
+    return args in (
+        ['bash','predictfun/research/run_default_pull_v4.sh'],
+        ['bash','predictfun/research/run_default_pull_two_slots.sh'],
+    )
+
+
 def report_shape(r,stage):
     scenarios={'X'} if stage=='primary' else {'X','stress'}
     expected={(s,m) for s in scenarios for m in MODES}
@@ -27,6 +34,8 @@ def report_shape(r,stage):
 
 def controls():
     checkpoint_controls()
+    if not driver_args(['bash','predictfun/research/run_default_pull_two_slots.sh']):raise ValueError('two-slot driver refused')
+    if driver_args(['bash','unrelated.sh']):raise ValueError('unrelated driver accepted')
     r=dict(stage='primary',validation=False,days=list(DAYS),table=[dict(scenario='X',mode=m,windows=1728,marked_windows=1700,marked_missing=28) for m in sorted(MODES)])
     report_shape(r,'primary');r['table'][0]['windows']=1727
     try:report_shape(r,'primary')
@@ -85,7 +94,7 @@ def final_artifacts():
 
 
 def live(pid):
-    try:return Path(f'/proc/{pid}/cmdline').read_bytes().decode().strip('\0').split('\0')==['bash','predictfun/research/run_default_pull_v4.sh']
+    try:return driver_args(Path(f'/proc/{pid}/cmdline').read_bytes().decode().strip('\0').split('\0'))
     except (FileNotFoundError,ProcessLookupError):return False
 
 

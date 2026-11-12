@@ -1718,11 +1718,14 @@ flags:
 
 # DEFAULT_PULL_LOOP
 default_pull_loop:
-  as_of: "2026-11-12T03:15:48.475179+00:00"
+  as_of: "2026-11-12T03:20:02.339083+00:00"
   state: "running"
   stage: "stress_20261101"
   completed_stages: 23
-  detail: "v4: observed empty levels are known, retaining all data and inventory controls."
+  detail: "User resumed work with two global research slots. Current replay continues on core 8; scheduler handover will preserve this result before proceeding."
   progress: handoffs/20261111_default_pull_progress.md
   branch: research/predict-default-pull-20261111
+  process_cap: 2
+  execution_slot: codex
+  cpu_core: 8
 # /DEFAULT_PULL_LOOP
