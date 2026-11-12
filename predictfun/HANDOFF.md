@@ -11,6 +11,13 @@
 
 <!-- /DEFAULT_PULL_LOOP -->
 
+<!-- DEFAULT_PULL_PRIMARY_FINDING -->
+
+Primary finding (2026-11-12 00:45:43 UTC): all six primary replay days complete. Learned pull policies trail matched guard on paired marked value on every test day; pressure rules have a favorable but uncertain point estimate. Stress and final audit remain pending. Interpretation, populations and limitations: `handoffs/20261111_default_pull_primary_review.md`.
+
+<!-- /DEFAULT_PULL_PRIMARY_FINDING -->
+
+
 ## 2026-11-11 17:45Z — Own-order continuation + calm posting COMPLETE: no variant meets the objective
 
 - USER request implemented and tested on actual frozen-v3 admitted order generations. Read handoffs/20261111_own_orders_calm_review.md;
