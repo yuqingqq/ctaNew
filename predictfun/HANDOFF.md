@@ -1,5 +1,13 @@
 # P-2026-005 HANDOFF
 
+<!-- CONTINUATION_20261112 -->
+## 2026-11-12T10:43:37.918270+00:00 — Full-engine continuation: complete
+
+Stage `declaration`. Full-engine paired continuation, timing/flow profiles and coherent estimator declared before numerical builds.
+
+Branch `research/predict-continuation-20261112`; receipts `reviews/continuation_20261112/`. Default resting and useful queue retention remain the objective. Live calibration awaits a new capture.
+<!-- /CONTINUATION_20261112 -->
+
 <!-- JOINT_FILL_20261112 -->
 ## 2026-11-12T10:18:30.477289+00:00 — Coherent fill/value model: complete
 

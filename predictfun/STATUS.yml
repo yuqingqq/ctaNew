@@ -1783,3 +1783,13 @@ joint_fill_20261112:
   receipts: reviews/joint_fill_20261112/
   validation: false
 # /JOINT_FILL_20261112
+
+# CONTINUATION_20261112
+continuation_20261112:
+  as_of: "2026-11-12T10:43:37.918270+00:00"
+  state: "complete"
+  stage: "declaration"
+  detail: "Full-engine paired continuation, timing/flow profiles and coherent estimator declared before numerical builds."
+  validation: false
+  receipts: reviews/continuation_20261112/
+# /CONTINUATION_20261112
