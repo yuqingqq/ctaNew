@@ -1,5 +1,13 @@
 # P-2026-005 HANDOFF
 
+<!-- QUEUE_PRIORITY_OBJECTIVE -->
+
+## 2026-11-12T08:12:12.938767+00:00 — User clarified the objective: acquire and retain useful queue priority
+
+Quote early by default, selectively withdraw from adverse flow; the current model is replaceable. Do not treat restoring the old entry gate as the agreed direction. The existing local label captures queue loss only through fills inside its short horizon and assigns no terminal value to unfilled queue progress. This limitation is verified in code, but its contribution to losses is unmeasured. Read [objective and proposed study](handoffs/20261112_queue_priority_objective.md). No new experiment launched; prior negative results remain unchanged.
+
+<!-- /QUEUE_PRIORITY_OBJECTIVE -->
+
 <!-- DEFAULT_PULL_QUALITY -->
 
 ## 2026-11-12T07:40:34.789008+00:00 — Current pull-model quality audit complete
