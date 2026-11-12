@@ -200,7 +200,8 @@ session start too, and update both after each completed step.
 
 **P-2026-005 predictfun** (added 2026-11-01) is the same kind of self-contained,
 single-seat folder: Predict.fun BTC 5m market-making research (D1 transfer), public
-data only. State is `predictfun/STATUS.yml` + `predictfun/HANDOFF.md`. Exploratory mode
+data only. State is `predictfun/STATUS.yml` + `predictfun/HANDOFF.md`; standing findings, known simulator defects and the
+checklist every result must pass are in `predictfun/FINDINGS.md` (read it at session start; update it with every result). Exploratory mode
 (no held-out rules yet, by user decision); launch jobs via `predictfun/research/run_light.sh`.
 
 **Exception — P-2026-003 is multi-seat and its state files have ONE writer.**

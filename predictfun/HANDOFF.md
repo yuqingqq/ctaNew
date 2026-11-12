@@ -1,5 +1,15 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 12:00Z (session ce68ebe0) — FINDINGS.md register created (USER: "keep all our findings tracked, otherwise these misfindings happen again and again"); QR / QR2 fast-entry (d < 40 ms) results VOID (acausal clock, independent review 10:42Z)
+
+- New: predictfun/FINDINGS.md = checklist every result must pass (C1 order-age split / B1a-weighted, C2 M 0 / 50 / 250, C3 pending,
+  C4 volume inflation, C5 queue rule, C6 causal clocks, C7 pro rata, C8 days / post hoc, C9 real vs simulated, C10 live arbiter),
+  data / code pitfalls, and every finding with a status (HOLDS / QUALIFIED / VOID / SUPERSEDED / OPEN). Read at session start; update
+  with every result. CLAUDE.md points to it.
+- VOID: QR part B d = 0 / 15 / 30 ms and QR2 F30 / Y+F30 / QR2-fast (decision scheduled at birth + d - 40 ms, before the level exists;
+  handoffs/20261112_new_results_insights.md, 9053263d); AGE R312 / R313 for those arms. Notes at the top of the QR, QR2, AGE reports.
+- Next (proposal): a causal speed rerun with explicit observation / decision / placement clocks.
+
 ## 2026-11-12 11:41Z (session ce68ebe0) — AGE re-check DONE: confirmed (USER) - 73-77% of the replay profit of v3 and every QR2 arm is on orders under 100 ms old (R310 YOUNG-DRIVEN), the part B1a found 8-12% real; without them v3 is worth $3.7 a day at M 50; QR2's speed gain survives at a third (+2.6 $/day, R312)
 
 - Done: research/pf_qr2_age_check.py + run_age.sh (64638440, before the run), 11:40Z claude slot. Report

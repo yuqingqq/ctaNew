@@ -1,5 +1,7 @@
 # AGE: QR2 / GAP re-checked against B1a's young-order finding (results, 2026-11-12)
 
+> **Causal-clock note (2026-11-12, FINDINGS.md C6; independent review handoffs/20261112_new_results_insights.md, 9053263d):** R312 / R313 for F30 and Y+F30 inherit QR2's acausal 30 ms schedule and are VOID pending a causal rerun. The young-order split itself (R310, R311 for v3 and Y) is unaffected.
+
 Session ce68ebe0. USER: "The simulation has some issues, profits are mainly from short-lived orders, but in practice it's hard for
 us to fill those orders, we have already checked this previously, can you check that again".
 
