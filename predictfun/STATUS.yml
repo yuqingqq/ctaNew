@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-12 19:05Z (session ce68ebe0): MOVE (handoffs/20261112_move_results.md): no missing info in any public feed (<= +0.002 AUC); guard inputs
+  aimed at 'level goes in 250 ms' AUC 0.87 (avoidable 0.84); top makers' edge = fewer fills in level-clearing trades. TB: limits off +$3-4.5/day.
   2026-11-12 17:00Z (session ce68ebe0): INV-RULES post hoc (handoffs/20261112_inv_rules_results.md): v3 has no inventory price skew; CAP10 / G6 / RO60
   only withhold; only CAP10 acts in the first minute (+$2.7 / +$1.2 a day w/o young without it, J 8 / X 4 of 9 days); J-v3 studies unaffected.
   2026-11-12 14:11Z (session ce68ebe0): FA (handoffs/20261112_false_alarm_results.md): 94% of alarms see no harm in 500 ms but are followed by losses
@@ -1736,5 +1738,7 @@ flags:
   frozen_v3_correct: "FV3 (2026-11-12 13:49Z): frozen pm_ladder_v3 on its own engine, 9 replay days: $60 / $45 a day at 1 s (J / X), settlement $99 / $65 (ties 50); 79-83% on orders < 100 ms (~$10/day without); -$40/day at the 250 ms clock; 42% of shares cancel-pending; order path 10-20 ms +$2-5/day w/o young on 8-9 of 9 days, not at 250 ms"
   false_alarms: "EARLY-NOT-FALSE (FA, 2026-11-12 14:11Z): guard on ~90% of resting moments; 94% of alarms no harm within 500 ms, but -1.7..-1.9 c per moment over the next 4.5 s after them (9 of 9 days), twice the no-alarm loss; activity AUC 0.67-0.72 > harm 0.60-0.65 (post hoc); later flow negative in every state for a back-of-queue order"
   inventory_rules: "NO-SKEW (INV-RULES post hoc, 2026-11-12 17:00Z): frozen v3's inventory logic only withholds quotes (CAP10, G6, RO60); only CAP10 acts in the first minute (about 1/6 of shares; without it +$2.7 J / +$1.2 X a day w/o young, 8 / 4 of 9 days; settlement noise); timing base proposal = first 60 s, CAP10 + G6 off"
+  move_info: "NO-MISSING-INFO + TARGET (MOVE, 2026-11-12 19:05Z): public tape; tape / taker reputation / book cancels / Coinbase-OKX-Bybit add <= +0.002 AUC over the guard's inputs; those inputs predict 'the best moves against the side in (t + 24, t + 274]' at AUC 0.87 (activity 0.60), avoidable part 0.84 (29% gone before a cancel lands), clearing vs standing 0.82; pull 11% / 23% of moments for 50% / 70% recall; top makers' edge = fewer fills in level-clearing trades, BTC explains none of it"
+  timing_base: "TB (2026-11-12 18:52Z): limits off (no CAP10 / G6 / RO60) +$4.5 J / +$3.4 X a day w/o young (8 / 7 of 9 days); IM95 front share 18.7% vs 5.0% but +$1.6 / +$0.4 (6 of 9 days), $0 at 250 ms"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"

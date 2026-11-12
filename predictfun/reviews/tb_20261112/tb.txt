@@ -1,0 +1,18 @@
+TB frozen v3 engine, limits off and IM95, 9 consumed replay days, fills in the first 60 s; as of 2026-11-12T18:52:45Z; controls passed (CTRL = i2 noCAP_S60 on ('20261023', '20261103'), limits withhold 0, IM engaged only in IM95, bins)
+
+$/day at 1 s - all | < 100 ms | 100-500 ms | >= 500 ms | w/o young | B1a M0 / M50 | settle (ties 50) | shares/day | pending share | shares ahead0 <= 5 sh | median ahead0 | improve decisions/day
+  J    v3      50.27 |  40.53 |  10.65 |  -0.92 |   9.73 |  8.76 /  7.61 |   90.60 |   3418 | 41.3% | 4.5% |   315 |      0
+  J    B0      66.90 |  52.67 |  14.52 |  -0.29 |  14.23 | 12.18 / 10.51 |   50.65 |   4358 | 38.4% | 5.0% |   308 |      0
+  J    IM95    80.01 |  64.20 |  16.84 |  -1.03 |  15.82 | 14.06 / 12.25 |   87.28 |   5603 | 41.3% | 18.7% |   208 |   5916
+  X    v3      39.46 |  30.65 |   9.56 |  -0.75 |   8.81 |  7.43 /  6.16 |   50.39 |   2876 | 40.5% | 2.6% |   429 |      0
+  X    B0      48.98 |  36.73 |  13.28 |  -1.02 |  12.25 |  9.84 /  7.84 |   32.11 |   3581 | 38.2% | 3.2% |   418 |      0
+  X    IM95    55.16 |  42.50 |  14.34 |  -1.68 |  12.66 | 10.59 /  8.54 |   65.70 |   4392 | 41.2% | 10.4% |   332 |   5915
+  X250 B0     -39.54 | -26.37 |  -7.04 |  -6.12 | -13.17 | -8.91 / -8.19 |  -19.90 |   3815 | 37.0% | 2.1% |   456 |      0
+  X250 IM95   -39.02 | -25.85 |  -6.43 |  -6.74 | -13.17 | -8.82 / -8.24 |   14.74 |   4498 | 40.4% | 9.3% |   363 |   5909
+
+R360 LIMITS-OFF (B0 vs v3, first 60 s): HIGHER; days above / below J, X [(8, 1), (7, 2)]; w/o young diff J / X +4.49 / +3.44 $/day
+R361 IMPROVE (IM95 vs B0): NOT-SHOWN; days above / below J, X [(6, 3), (6, 3)]; w/o young diff J / X +1.59 / +0.41 $/day
+R362 IMPROVE-AT-250: NOT-SHOWN; days above 6, below 3; w/o young diff -0.00 $/day
+R363 FRONT (J): shares with ahead0 <= 5 sh / median ahead0: B0 5.0% / 308, IM95 18.7% / 208
+
+per day w/o young $ (J): B0 13.5 20.3 18.0 41.2 22.9 -4.2 4.0 6.8 5.6; IM95 16.3 19.6 18.9 43.8 30.2 -5.3 4.8 9.0 5.1

@@ -1,0 +1,5 @@
+MOVE-AVOID ops (POST HOC) as of 2026-11-12T19:03:29Z; AV fit reproduced (0.8410); rows still present at t + 24 570613, AV rate 0.087
+  recall 50%: flags 10.8% of moments, precision 40.0% (false alarms 60.0%)
+  recall 70%: flags 22.6% of moments, precision 26.9% (false alarms 73.1%)
+  recall 90%: flags 50.4% of moments, precision 15.5% (false alarms 84.5%)
+  among moments with a WS-timed trade at the level in the window (133918, cleared 13.8%): AUC cleared vs standing 0.8218 (days 0.839 0.802 0.814 0.836 0.846 0.799 0.769 0.810 0.849)
