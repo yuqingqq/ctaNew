@@ -1,8 +1,8 @@
 # Quote-default / learned-pull research loop
-As of 2026-11-12T03:15:48.475179+00:00. **running: stress_20261101**. v4: observed empty levels are known, retaining all data and inventory controls.
+As of 2026-11-12T03:20:02.339083+00:00. **running: stress_20261101**. User resumed work with two global research slots. Current replay continues on core 8; scheduler handover will preserve this result before proceeding.
 
 Completed prior test: own-order/calm study d475eccb, canonical comparison_v4.json; no promoted variant.
-Current branch: research/predict-default-pull-20261111. One numeric process; consumed dates only; no live changes.
+Current branch: research/predict-default-pull-20261111. One Codex worker on core 8; two research workers allowed globally (user 2026-11-12); consumed dates only; no live changes.
 Plan: controls →8-window parity smoke →9 neutral build days →6 expanding model folds →6 primary replay days →primary report →6 stress replay days →final report.
 
 | Stage | Status | As of | Detail |
@@ -31,4 +31,4 @@ Plan: controls →8-window parity smoke →9 neutral build days →6 expanding m
 | stress_20261026 | complete | 2026-11-12T01:35:45.851437+00:00 | Passed; logs/stress_20261026.log plus artifact/feature checks retained. |
 | stress_20261027 | complete | 2026-11-12T02:24:44.564910+00:00 | Passed; logs/stress_20261027.log plus artifact/feature checks retained. |
 | stress_20261031 | complete | 2026-11-12T03:15:48.366331+00:00 | Passed; logs/stress_20261031.log plus artifact/feature checks retained. |
-| stress_20261101 | running | 2026-11-12T03:15:48.475179+00:00 | v4: observed empty levels are known, retaining all data and inventory controls. |
+| stress_20261101 | running | 2026-11-12T03:20:02.339083+00:00 | User resumed work with two global research slots. Current replay continues on core 8; scheduler handover will preserve this result before proceeding. |
