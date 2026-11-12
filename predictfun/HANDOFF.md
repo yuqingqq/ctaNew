@@ -2,10 +2,10 @@
 
 <!-- DEFAULT_PULL_LOOP -->
 
-## 2026-11-12T04:53:15.947344+00:00 — Quote-default / learned-pull research loop: running
+## 2026-11-12T05:41:59.675909+00:00 — Quote-default / learned-pull research loop: running
 
-- Stage `stress_20261103`. v4 unchanged; Codex core 8 with global research cap two (user 2026-11-12).
-- 25 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
+- Stage `final_report`. v4 unchanged; Codex core 8 with global research cap two (user 2026-11-12).
+- 26 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
 - Prior own-order/calm test remains COMPLETE, no promotion; comparison_v4.json / d475eccb.
 - Branch research/predict-default-pull-20261111; Codex slot/core 8, global cap two research workers; no live changes/protected-day reads.
 

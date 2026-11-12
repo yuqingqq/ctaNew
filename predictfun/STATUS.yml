@@ -1718,10 +1718,10 @@ flags:
 
 # DEFAULT_PULL_LOOP
 default_pull_loop:
-  as_of: "2026-11-12T04:53:15.947344+00:00"
+  as_of: "2026-11-12T05:41:59.675909+00:00"
   state: "running"
-  stage: "stress_20261103"
-  completed_stages: 25
+  stage: "final_report"
+  completed_stages: 26
   detail: "v4 unchanged; Codex core 8 with global research cap two (user 2026-11-12)."
   progress: handoffs/20261111_default_pull_progress.md
   branch: research/predict-default-pull-20261111
