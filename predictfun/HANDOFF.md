@@ -1,5 +1,15 @@
 # P-2026-005 HANDOFF
 
+<!-- FILL_VALUE_20261112 -->
+
+## 2026-11-12T09:09:57.548474+00:00 — Fill opportunity / value diagnostic: complete
+
+Stage `declaration`. Frozen explicit fill and value diagnostic; 120 models across six chronological folds, no policy tuning.
+
+Default quoting and useful queue retention remain the objective. Same saved short-horizon neutral labels; no entry-gate restoration or live changes. Source/declaration and receipts: `reviews/fill_value_20261112/`; branch `research/predict-fill-value-20261112`.
+
+<!-- /FILL_VALUE_20261112 -->
+
 <!-- QUEUE_PRIORITY_OBJECTIVE -->
 
 ## 2026-11-12T08:12:12.938767+00:00 — User clarified the objective: acquire and retain useful queue priority

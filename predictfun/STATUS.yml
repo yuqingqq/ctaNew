@@ -1762,3 +1762,14 @@ queue_priority_objective:
   loss_attribution: unmeasured
   plan: handoffs/20261112_queue_priority_objective.md
 # /QUEUE_PRIORITY_OBJECTIVE
+
+# FILL_VALUE_20261112
+fill_value_20261112:
+  as_of: "2026-11-12T09:09:57.548474+00:00"
+  state: "complete"
+  stage: "declaration"
+  detail: "Frozen explicit fill and value diagnostic; 120 models across six chronological folds, no policy tuning."
+  branch: research/predict-fill-value-20261112
+  receipts: reviews/fill_value_20261112/
+  validation: false
+# /FILL_VALUE_20261112
