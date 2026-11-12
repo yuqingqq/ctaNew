@@ -1,0 +1,7 @@
+{
+  "as_of": "2026-11-12T11:03:51.300729+00:00",
+  "source_commit": "0efad393b146f5e4b03f389e683a89f9d1e82314",
+  "source_sha": "8c56daafb91a118b5dc301ad7b30564adb98dd583b78080170b26ad729f5ba6b",
+  "experiment_declaration_sha": "e497cf4ad16161ace53974028678af25816ef8ea9ddfa77968e4cd056a587ed8",
+  "design": "Artifact audit only: complete action/status and deterministic sampling identities; independently reconstruct every saved baseline and model forecast; compare report metric values to predictions; validate source/input/output hashes, chronology and shared receipts. Synthetic valid hash and known-bad hash refusal. No fits, new candidates, thresholds or changed population."
+}
