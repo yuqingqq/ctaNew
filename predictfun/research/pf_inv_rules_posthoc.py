@@ -73,6 +73,12 @@ def main():
                          f'{p["wo"]:>6.2f} | {p["w_M0"]:>5.2f} / {p["w_M50"]:>5.2f} | {p["settle"]:>7.2f} | {p["q"]:>6.0f} | '
                          f'{p["zombie_q"] / max(p["q"], 1e-9):.1%} | {"-" if a == "v3" else up}')
                 RES[f'{tag}|{a}|{part}'] = p
+        for tag in ('i2J', 'i2X'):
+            for a in [a_ for a_ in ARMS if a_ != 'v3']:
+                cnt = {k_: (int(sum(D[(tag, a, d)][part][k_] > D[(tag, 'v3', d)][part][k_] + 1e-9 for d in fv3.DAYS9)),
+                            int(sum(D[(tag, a, d)][part][k_] < D[(tag, 'v3', d)][part][k_] - 1e-9 for d in fv3.DAYS9))) for k_ in ('mo1', 'wo', 'settle')}
+                L.append(f'    {tag[-1]} {a} vs v3, days above / below (of 9): 1 s {cnt["mo1"]}, w/o young {cnt["wo"]}, settle {cnt["settle"]}')
+                RES[f'{tag}|{a}|{part}|days_vs_v3'] = cnt
     L.append(''); L.append('inventory (per day; summary.json): mean |net| at the stop per window | p95 |net| at the end | carry stop -> settlement $ | '
                            'mark at the stop $ | decisions withheld by CAP10 / RO / G6 soft / XMIN1')
     for tag in ('i2J', 'i2X'):

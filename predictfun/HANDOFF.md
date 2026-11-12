@@ -1,5 +1,10 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 17:00Z (session ce68ebe0) — INV-RULES (post hoc): the frozen v3 has no inventory price skew; its inventory logic only withholds quotes (CAP10, G6, RO60), and only CAP10 touches the first minute (about a sixth of v3's shares there; without it +$2.7 / +$1.2 a day w/o young fills at J / X, 8 / 4 of 9 days; settlement noise); the J-v3 timing studies carry no inventory logic
+
+- Done (USER: "Can we recheck our quoting logic ... skew/inventory related logics ... will that influence our profit test, if we optimize the timing now, we can disable those first"): read the v3 arm's rules in pf_step4_ladder_v3.py; research/pf_inv_rules_posthoc.py (0a1262f0, committed before its run) on the existing in-sample runs i2J / i2X, whose four arms differ only in CAP10 and RO60 vs S60. Report handoffs/20261112_inv_rules_results.md; copies reviews/inv_rules_20261112/; FINDINGS updated.
+- Proposal (user's call): a timing base on the frozen engine = first 60 s, CAP10 and G6 off (new runs via PF_ARMS, engine unedited), venue rules kept; re-measure the order path on it; inventory control added back afterwards with settlement as its check.
+
 ## 2026-11-12 14:11Z (session ce68ebe0) — FA DONE: the guard's alarms are 94% "false" inside its own 500 ms, but staying through them loses afterwards (-1.7 to -1.9 c per moment over 4.5 s, 9 of 9 days): they are mostly early, not false; the guard tracks activity more than harm; longer-term flow for a back-of-queue order is negative in every state
 
 - Done (USER: "proceed" with the false-alarm measurement): research/pf_false_alarm.py + run_fa.sh (5dff3d9f), 14:08-14:10Z.
