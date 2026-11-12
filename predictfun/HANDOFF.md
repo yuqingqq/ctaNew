@@ -1,5 +1,22 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 02:59Z (session ce68ebe0) — B21b DONE: zero own latency does NOT rescue resting by default (R233 NOT-RESCUED, all eight arms still NEGATIVE); it helps the gated v3 at every fill clock (R231 SPEED-HELPS)
+
+- Done (USER "so that will be the optimistic result right?"): research/pf_b21b_zero_latency.py (3b3e85c2), run 2026-11-12 02:55Z in
+  the claude slot beside a Codex job (the first parallel run). Report handoffs/20261112_b21b_zero_latency.md; copies
+  reviews/b21b_20261112/. Controls passed: committed B21 table reproduced (770 / 770 cells), three latency-flip cases in both worlds,
+  latencies restored.
+- World @0: order live at its decision step (+40 ms), cancel at once (+22 / 95 ms pending), own fill known at once (+100 ms);
+  information unchanged (feed ~55 ms, 50 ms grid). An earlier book would let the replay see a trade's effect before the trade.
+- Rest arms: still -0.46 (guard) .. -1.81 (never pulled) c/sh at 1 s (50 ms clock), 0 of 6 vs v3@0. An instant cancel moves the
+  signal arms by -0.14..+0.22 at 0-50 ms: the signals are late / uninformative relative to the trades, not slowed by our order path.
+  Faster is WORSE for resting orders: instant re-placement after fills brings more of the same adverse fills (never pulled 6,143 ->
+  7,402 fills, -1.50 -> -1.81); at 250 ms every Z arm loses 0.28-0.58 more.
+- v3 at zero own latency: +0.57 / +0.23 / -1.53 c/sh at the 0 / 50 / 250 ms clocks (+0.22..+0.27 each); $/day at 1 s / 5 s at 50 ms
+  -0.58 / +6.23 -> +3.53 / +13.33. Speed pays for the gated strategy; the fill clock still decides its sign.
+- Next: resting by default is closed at the replay level (B21 + B21b); it would need a pull signal that sees the harmful trade before
+  it shows in our book / Binance data. The live run with A4b measures the real latencies, the fill clock and our queue place.
+
 ## 2026-11-12 02:36Z (session ce68ebe0) — B21 DONE: resting at the touch by default and pulling only on a signal keeps orders present and nearer the front but LOSES at every fill clock (R220 NEGATIVE, all eight arms); run_light.sh now has two slots (USER)
 
 - Done (USER "rest orders there as default, only pull when real signals happen"): research/pf_b21_rest_default.py (8391a783), run

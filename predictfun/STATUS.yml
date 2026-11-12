@@ -6,6 +6,9 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-12 02:59Z (session ce68ebe0): B21b DONE (3b3e85c2; handoffs/20261112_b21b_zero_latency.md): zero own latency (order live,
+  cancel, own fill known at once) does not rescue resting by default (all eight Z arms NEGATIVE, 0 of 6 vs v3@0, R233
+  NOT-RESCUED; faster is worse for resting orders) but helps v3 at every fill clock (+0.22..+0.27 c/sh at 1 s, R231 SPEED-HELPS).
   2026-11-12 02:36Z (session ce68ebe0): B21 DONE (8391a783; handoffs/20261111_b21_rest_default.md): resting at the touch by
   default and pulling only on a signal keeps orders present (life 0.6-1.0 s, 56-97% resting, nearer the front) but every arm
   loses at every fill clock (R220 NEGATIVE x8, R221 0 of 6); guard / Binance burst / Binance shift help, thinning / thin side
@@ -1690,5 +1693,6 @@ flags:
   hold_layers_b20: "NOT SOLVED (B20, 2026-11-11 16:08Z): orders posted in advance and held until the guard withdraws still live ~82 ms with the guard (no time priority, 288-355 sh ahead when live); without the guard they reach the front but lose -1.4..-1.9 c/sh; guarded layers flip sign with the fill clock (+0.2..+1.2 at 0-50 ms, -2..-4.3 at 250 ms); the front of the queue would earn +0.75..+1.32 (rule U)"
   rest_default_b21: "NOT A CANDIDATE (B21, 2026-11-12 02:36Z): resting at the touch by default and pulling only on a signal (thinning, thin side, Binance burst, Binance book shift, guard v <= -0.10) keeps orders present (life 0.6-1.0 s, 56-97% resting, 129-234 sh ahead when live vs v3 363) but loses at every fill clock (-0.51..-1.55 c/sh at 1 s, 50 ms; 0 of 6 $/day cells above v3); at the front (rule U) +0.58 with all five signals vs v3 +0.90; next B21b zero-latency bound (proposed)"
   research_slots: "TWO SLOTS (USER 2026-11-12 'One for codex and one here'): run_light.sh PF_SLOT=codex (default, core 8) / PF_SLOT=claude (core 9); cap 2 predictfun research processes; script-path jobs count; the Codex driver's own busy() still waits for any research process"
+  zero_latency_b21b: "NOT RESCUED (B21b, 2026-11-12 02:59Z): with our order path at zero latency (live, cancel, own fill known at once; information unchanged) every rest-by-default arm still loses at every fill clock (-0.46..-1.81 c/sh at 1 s, 50 ms; 0 of 6 vs v3@0) and faster is worse for resting orders; v3 gains +0.22..+0.27 c/sh at every clock (+0.23 at 50 ms, -1.53 at 250 ms)"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"
