@@ -1,0 +1,965 @@
+{
+ "day": "20261031",
+ "scenario": "tokyoreal",
+ "armset": "custom",
+ "timing": "e2",
+ "tx_timing": {
+  "mode": "ws",
+  "legs": 446330,
+  "legs_retimed": 12852,
+  "shares_retimed": 304656.94282546785,
+  "untimed_given_time": 814,
+  "abs_shift_ms_p50": 457.0,
+  "key": "taker order (tx hash + taker hash)",
+  "tk_status_legs": {
+   "0": 375099,
+   "3": 71231
+  },
+  "groups_old_key": 139626,
+  "groups_tk": 338280,
+  "tx_multi_time_before": 5365,
+  "tx_multi_time_after": 0
+ },
+ "input_bounds": {
+  "t_lo_ms": 1793404800000.0,
+  "t_hi_ms": Infinity,
+  "book_frames_dropped": 0
+ },
+ "code_sha256": {
+  "pf_step4_ladder.py": "c682229e4fbe606b217cfa633816bcba67bce701c7e690b4cb8be9aa7ff6e37f",
+  "pf_clock_rl.py": "0a1ce1e12e45a73de7a46102385f63be94d065d60ffbcc44aa30b4e1a840bb98",
+  "pf_io.py": "057fb052683b715084e175304a3c0bdf4dd9262694992d332056bbc6523e9494"
+ },
+ "env": {
+  "PF_ARMS": "MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240|mid|AM:5:25:95;MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+DMATCH|mid|AM:5:25:95;MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+DDEFAULT|mid|AM:5:25:95;MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+DPRESS|mid|AM:5:25:95;MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+DFLOOR|mid|AM:5:25:95;MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+DMARKET|mid|AM:5:25:95;MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+DQUEUE|mid|AM:5:25:95;MICRO|G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+DCOST|mid|AM:5:25:95",
+  "PF_FORWARD": "20261104",
+  "PF_MAX_WINDOWS": "0",
+  "PF_PREDS": "preds_t60k",
+  "PF_QACT": "max",
+  "PF_RL_DDEC": "2",
+  "PF_RL_LCANCEL": "100",
+  "PF_RL_LFILL": "250",
+  "PF_RL_LPENDCANCEL": "95",
+  "PF_RL_LPLACE": "80",
+  "PF_TIMING": "e2",
+  "PF_TXKEY": "tk",
+  "PF_TXSHIFT": "-250",
+  "PF_TXTIME": "ws"
+ },
+ "preds": "preds_t60k",
+ "fill_model": "v2",
+ "mode": "EXPLORATORY",
+ "size": 5.0,
+ "order_latency_ms": 22.0,
+ "order_live_ms": 80.0,
+ "cancel_effective_ms": 100.0,
+ "pending_cancel_after_create_ms": 95.0,
+ "decision_ms": 2.0,
+ "predict_in_ms": "tokyo-measured (receipt - 76.4, >= update + 13.2) + 10",
+ "binance_in_ms": 3.5,
+ "fill_known_ms": 250.0,
+ "arms": {
+  "MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240/mid@AM:5:25:95": {
+   "windows": 288,
+   "gross_usd": 3.69,
+   "windows_positive": 72,
+   "fills": 874,
+   "shares": 4777.1,
+   "abs_net_end_p95": 30.0,
+   "mo1_usd": -120.52,
+   "mo60_usd": -93.38,
+   "rebate_usd_unverified": 8.02,
+   "by_kind": {
+    "at": {
+     "shares": 432.9,
+     "mo1": 1.84,
+     "settle": 18.75
+    },
+    "through": {
+     "shares": 4344.2,
+     "mo1": -122.35,
+     "settle": -15.06
+    }
+   },
+   "by_lane": {
+    "0": {
+     "fills": 326,
+     "shares": 1774.8,
+     "mo1": -49.33,
+     "settle": 69.18,
+     "through_share": 0.892,
+     "ahead0_median": 473.9
+    },
+    "1": {
+     "fills": 329,
+     "shares": 1714.9,
+     "mo1": -43.41,
+     "settle": -100.14,
+     "through_share": 0.911,
+     "ahead0_median": 476.5
+    },
+    "2": {
+     "fills": 103,
+     "shares": 581.1,
+     "mo1": -16.68,
+     "settle": 18.41,
+     "through_share": 0.949,
+     "ahead0_median": 400.0
+    },
+    "3": {
+     "fills": 116,
+     "shares": 706.3,
+     "mo1": -11.09,
+     "settle": 16.24,
+     "through_share": 0.916,
+     "ahead0_median": 345.3
+    }
+   },
+   "by_phase_60s": {
+    "0": {
+     "shares": 3929.17,
+     "settle": 34.35
+    },
+    "60": {
+     "shares": 529.11,
+     "settle": 2.15
+    },
+    "120": {
+     "shares": 152.4,
+     "settle": -17.39
+    },
+    "180": {
+     "shares": 166.44,
+     "settle": -15.41
+    }
+   },
+   "withheld_decisions": {
+    "BTC": 1015191,
+    "G4": 1407326,
+    "G3": 23457,
+    "LD_dup_touch": 156,
+    "LD_CAPN": 21601,
+    "CAPN": 18143,
+    "LD_RO": 372763,
+    "RO": 174196,
+    "MIN_USD": 23810,
+    "LD_G6_soft": 5153,
+    "G6_soft": 3588,
+    "LD_MIN_USD": 1723,
+    "GS_nocover": 28
+   },
+   "mtm_stop_usd": -8.76,
+   "carry_stop_usd": 12.45,
+   "carry_stop_sd": 4.01,
+   "abs_net_stop_mean": 6.5,
+   "live": {
+    "requests": {
+     "place": 59052,
+     "cancel": 59032
+    },
+    "refused_events": 0,
+    "windows_with_refusal": 0,
+    "halted_windows": 0,
+    "zombie_fills": 515,
+    "cap_state_end": {
+     "realised": 3.6912843087071163,
+     "halted": false,
+     "halted_at": null,
+     "windows_seen": 288
+    },
+    "counters": {
+     "leg_groups_reordered": 12553,
+     "place_never": 6134,
+     "place_immediate": 55693,
+     "own_dup_price": 0,
+     "own_cross": 0,
+     "zombies": 58832,
+     "prio_reordered": 890,
+     "qact_raised": 14841,
+     "zombie_fills": 515,
+     "view_filled_unknown": 726,
+     "acted_on_unknown_fill": 132,
+     "throttled": 12645,
+     "place_delayed": 3359,
+     "postonly_refused": 69,
+     "rej_reset": 1
+    },
+    "place_delay_ms": {
+     "n": 3359,
+     "p50": 250.0,
+     "p90": 750.0,
+     "max": 19049.48388671875
+    }
+   }
+  },
+  "MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+DMATCH/mid@AM:5:25:95": {
+   "windows": 288,
+   "gross_usd": -34.77,
+   "windows_positive": 70,
+   "fills": 509,
+   "shares": 1687.0,
+   "abs_net_end_p95": 10.0,
+   "mo1_usd": -39.03,
+   "mo60_usd": -43.04,
+   "rebate_usd_unverified": 3.03,
+   "by_kind": {
+    "at": {
+     "shares": 191.9,
+     "mo1": 0.88,
+     "settle": 16.4
+    },
+    "through": {
+     "shares": 1495.1,
+     "mo1": -39.9,
+     "settle": -51.17
+    }
+   },
+   "by_lane": {
+    "0": {
+     "fills": 254,
+     "shares": 809.6,
+     "mo1": -19.31,
+     "settle": 10.91,
+     "through_share": 0.893,
+     "ahead0_median": 441.3
+    },
+    "1": {
+     "fills": 255,
+     "shares": 877.4,
+     "mo1": -19.72,
+     "settle": -45.68,
+     "through_share": 0.88,
+     "ahead0_median": 465.3
+    }
+   },
+   "by_phase_60s": {
+    "0": {
+     "shares": 1402.7,
+     "settle": -37.24
+    },
+    "60": {
+     "shares": 205.73,
+     "settle": 7.33
+    },
+    "120": {
+     "shares": 54.01,
+     "settle": -0.65
+    },
+    "180": {
+     "shares": 24.52,
+     "settle": -4.2
+    }
+   },
+   "withheld_decisions": {
+    "BTC": 2031314,
+    "G4": 2761896,
+    "G3": 49012,
+    "LD_RO": 704937,
+    "RO": 348615,
+    "LD_CAPN": 16974,
+    "CAPN": 13666,
+    "MIN_USD": 52676,
+    "LD_MIN_USD": 5377,
+    "GS_nocover": 28
+   },
+   "mtm_stop_usd": -28.99,
+   "carry_stop_usd": -5.78,
+   "carry_stop_sd": 1.15,
+   "abs_net_stop_mean": 2.2,
+   "live": {
+    "requests": {
+     "place": 22482,
+     "cancel": 22434
+    },
+    "refused_events": 0,
+    "windows_with_refusal": 0,
+    "halted_windows": 0,
+    "zombie_fills": 238,
+    "cap_state_end": {
+     "realised": -34.769669145894376,
+     "halted": false,
+     "halted_at": null,
+     "windows_seen": 288
+    },
+    "counters": {
+     "leg_groups_reordered": 12553,
+     "place_never": 0,
+     "place_immediate": 22482,
+     "qact_raised": 5887,
+     "own_dup_price": 0,
+     "own_cross": 0,
+     "zombies": 22257,
+     "postonly_refused": 55,
+     "zombie_fills": 238,
+     "view_filled_unknown": 1104,
+     "acted_on_unknown_fill": 130,
+     "prio_reordered": 94,
+     "rej_reset": 8
+    },
+    "place_delay_ms": null
+   }
+  },
+  "MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+DDEFAULT/mid@AM:5:25:95": {
+   "windows": 288,
+   "gross_usd": -375.87,
+   "windows_positive": 47,
+   "fills": 4423,
+   "shares": 14621.5,
+   "abs_net_end_p95": 1.1,
+   "mo1_usd": -330.95,
+   "mo60_usd": -359.58,
+   "rebate_usd_unverified": 28.52,
+   "by_kind": {
+    "at": {
+     "shares": 3028.2,
+     "mo1": 4.06,
+     "settle": 1.87
+    },
+    "through": {
+     "shares": 11593.3,
+     "mo1": -335.02,
+     "settle": -377.74
+    }
+   },
+   "by_lane": {
+    "0": {
+     "fills": 2211,
+     "shares": 7298.5,
+     "mo1": -173.34,
+     "settle": 44.98,
+     "through_share": 0.777,
+     "ahead0_median": 231.0
+    },
+    "1": {
+     "fills": 2212,
+     "shares": 7323.1,
+     "mo1": -157.61,
+     "settle": -420.85,
+     "through_share": 0.809,
+     "ahead0_median": 246.0
+    }
+   },
+   "by_phase_60s": {
+    "0": {
+     "shares": 12861.15,
+     "settle": -235.41
+    },
+    "60": {
+     "shares": 1607.27,
+     "settle": -146.77
+    },
+    "120": {
+     "shares": 139.77,
+     "settle": 7.42
+    },
+    "180": {
+     "shares": 13.34,
+     "settle": -1.11
+    }
+   },
+   "withheld_decisions": {
+    "BTC": 2032315,
+    "G4": 2763734,
+    "G3": 49012,
+    "LD_CAPN": 32540,
+    "CAPN": 28594,
+    "LD_RO": 705051,
+    "RO": 398138,
+    "LD_MIN_USD": 4702,
+    "MIN_USD": 24889,
+    "GS_nocover": 28
+   },
+   "mtm_stop_usd": -380.27,
+   "carry_stop_usd": 4.4,
+   "carry_stop_sd": 0.09,
+   "abs_net_stop_mean": 0.3,
+   "live": {
+    "requests": {
+     "place": 9119,
+     "cancel": 6589
+    },
+    "refused_events": 0,
+    "windows_with_refusal": 0,
+    "halted_windows": 0,
+    "zombie_fills": 318,
+    "cap_state_end": {
+     "realised": -375.8724125486707,
+     "halted": false,
+     "halted_at": null,
+     "windows_seen": 288
+    },
+    "counters": {
+     "leg_groups_reordered": 12553,
+     "place_never": 0,
+     "place_immediate": 9119,
+     "postonly_refused": 1376,
+     "rej_reset": 431,
+     "qact_raised": 3361,
+     "own_dup_price": 0,
+     "own_cross": 0,
+     "zombies": 4827,
+     "zombie_fills": 318,
+     "view_filled_unknown": 27636,
+     "acted_on_unknown_fill": 811,
+     "postonly_refused_own": 226,
+     "prio_reordered": 157
+    },
+    "place_delay_ms": null
+   }
+  },
+  "MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+DPRESS/mid@AM:5:25:95": {
+   "windows": 288,
+   "gross_usd": -92.35,
+   "windows_positive": 77,
+   "fills": 922,
+   "shares": 2965.4,
+   "abs_net_end_p95": 7.6,
+   "mo1_usd": -92.81,
+   "mo60_usd": -123.55,
+   "rebate_usd_unverified": 5.4,
+   "by_kind": {
+    "at": {
+     "shares": 293.7,
+     "mo1": 0.57,
+     "settle": -22.27
+    },
+    "through": {
+     "shares": 2671.7,
+     "mo1": -93.38,
+     "settle": -70.08
+    }
+   },
+   "by_lane": {
+    "0": {
+     "fills": 462,
+     "shares": 1447.7,
+     "mo1": -52.21,
+     "settle": -29.59,
+     "through_share": 0.884,
+     "ahead0_median": 492.0
+    },
+    "1": {
+     "fills": 460,
+     "shares": 1517.7,
+     "mo1": -40.6,
+     "settle": -62.76,
+     "through_share": 0.917,
+     "ahead0_median": 463.5
+    }
+   },
+   "by_phase_60s": {
+    "0": {
+     "shares": 2090.5,
+     "settle": 14.56
+    },
+    "60": {
+     "shares": 609.14,
+     "settle": -83.37
+    },
+    "120": {
+     "shares": 142.93,
+     "settle": -4.33
+    },
+    "180": {
+     "shares": 122.83,
+     "settle": -19.21
+    }
+   },
+   "withheld_decisions": {
+    "BTC": 2031406,
+    "G4": 2761981,
+    "G3": 49012,
+    "LD_CAPN": 9583,
+    "CAPN": 7888,
+    "LD_RO": 704937,
+    "RO": 371753,
+    "LD_MIN_USD": 5559,
+    "MIN_USD": 37162,
+    "GS_nocover": 28
+   },
+   "mtm_stop_usd": -102.71,
+   "carry_stop_usd": 10.36,
+   "carry_stop_sd": 0.41,
+   "abs_net_stop_mean": 1.1,
+   "live": {
+    "requests": {
+     "place": 8922,
+     "cancel": 8790
+    },
+    "refused_events": 0,
+    "windows_with_refusal": 0,
+    "halted_windows": 0,
+    "zombie_fills": 179,
+    "cap_state_end": {
+     "realised": -92.35119077352162,
+     "halted": false,
+     "halted_at": null,
+     "windows_seen": 288
+    },
+    "counters": {
+     "leg_groups_reordered": 12553,
+     "place_never": 0,
+     "place_immediate": 8922,
+     "qact_raised": 1697,
+     "own_dup_price": 0,
+     "own_cross": 0,
+     "zombies": 8419,
+     "zombie_fills": 179,
+     "view_filled_unknown": 3033,
+     "acted_on_unknown_fill": 341,
+     "postonly_refused": 37,
+     "prio_reordered": 11,
+     "rej_reset": 7
+    },
+    "place_delay_ms": null
+   }
+  },
+  "MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+DFLOOR/mid@AM:5:25:95": {
+   "windows": 288,
+   "gross_usd": -191.09,
+   "windows_positive": 77,
+   "fills": 1905,
+   "shares": 6303.7,
+   "abs_net_end_p95": 5.0,
+   "mo1_usd": -147.36,
+   "mo60_usd": -146.08,
+   "rebate_usd_unverified": 11.98,
+   "by_kind": {
+    "at": {
+     "shares": 1180.1,
+     "mo1": 1.83,
+     "settle": -30.48
+    },
+    "through": {
+     "shares": 5123.6,
+     "mo1": -149.19,
+     "settle": -160.61
+    }
+   },
+   "by_lane": {
+    "0": {
+     "fills": 951,
+     "shares": 3135.4,
+     "mo1": -81.54,
+     "settle": -21.19,
+     "through_share": 0.804,
+     "ahead0_median": 385.5
+    },
+    "1": {
+     "fills": 954,
+     "shares": 3168.2,
+     "mo1": -65.83,
+     "settle": -169.9,
+     "through_share": 0.821,
+     "ahead0_median": 383.1
+    }
+   },
+   "by_phase_60s": {
+    "0": {
+     "shares": 4827.78,
+     "settle": -54.88
+    },
+    "60": {
+     "shares": 1090.64,
+     "settle": -114.36
+    },
+    "120": {
+     "shares": 301.33,
+     "settle": -29.23
+    },
+    "180": {
+     "shares": 83.9,
+     "settle": 7.38
+    }
+   },
+   "withheld_decisions": {
+    "BTC": 2031650,
+    "G4": 2762332,
+    "G3": 49013,
+    "LD_CAPN": 30511,
+    "CAPN": 26097,
+    "LD_RO": 704952,
+    "RO": 371585,
+    "MIN_USD": 37854,
+    "LD_MIN_USD": 4974,
+    "GS_nocover": 28
+   },
+   "mtm_stop_usd": -182.74,
+   "carry_stop_usd": -8.35,
+   "carry_stop_sd": 0.48,
+   "abs_net_stop_mean": 0.8,
+   "live": {
+    "requests": {
+     "place": 8100,
+     "cancel": 7567
+    },
+    "refused_events": 0,
+    "windows_with_refusal": 0,
+    "halted_windows": 0,
+    "zombie_fills": 217,
+    "cap_state_end": {
+     "realised": -191.09032673543263,
+     "halted": false,
+     "halted_at": null,
+     "windows_seen": 288
+    },
+    "counters": {
+     "leg_groups_reordered": 12553,
+     "place_never": 0,
+     "place_immediate": 8100,
+     "qact_raised": 2479,
+     "own_dup_price": 0,
+     "own_cross": 0,
+     "zombies": 6852,
+     "postonly_refused": 141,
+     "zombie_fills": 217,
+     "view_filled_unknown": 8944,
+     "acted_on_unknown_fill": 623,
+     "prio_reordered": 59,
+     "rej_reset": 49,
+     "postonly_refused_own": 8
+    },
+    "place_delay_ms": null
+   }
+  },
+  "MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+DMARKET/mid@AM:5:25:95": {
+   "windows": 288,
+   "gross_usd": -202.96,
+   "windows_positive": 77,
+   "fills": 1878,
+   "shares": 6340.1,
+   "abs_net_end_p95": 5.0,
+   "mo1_usd": -166.33,
+   "mo60_usd": -181.99,
+   "rebate_usd_unverified": 11.88,
+   "by_kind": {
+    "at": {
+     "shares": 644.5,
+     "mo1": 0.49,
+     "settle": -12.83
+    },
+    "through": {
+     "shares": 5695.6,
+     "mo1": -166.82,
+     "settle": -190.13
+    }
+   },
+   "by_lane": {
+    "0": {
+     "fills": 930,
+     "shares": 3113.2,
+     "mo1": -81.94,
+     "settle": -58.56,
+     "through_share": 0.882,
+     "ahead0_median": 185.1
+    },
+    "1": {
+     "fills": 948,
+     "shares": 3226.9,
+     "mo1": -84.39,
+     "settle": -144.41,
+     "through_share": 0.914,
+     "ahead0_median": 183.3
+    }
+   },
+   "by_phase_60s": {
+    "0": {
+     "shares": 4975.27,
+     "settle": -60.74
+    },
+    "60": {
+     "shares": 1029.7,
+     "settle": -133.15
+    },
+    "120": {
+     "shares": 239.74,
+     "settle": -17.15
+    },
+    "180": {
+     "shares": 95.38,
+     "settle": 8.08
+    }
+   },
+   "withheld_decisions": {
+    "BTC": 2031337,
+    "G4": 2761895,
+    "G3": 49012,
+    "LD_CAPN": 20412,
+    "CAPN": 17130,
+    "LD_RO": 704922,
+    "RO": 342980,
+    "MIN_USD": 46559,
+    "LD_MIN_USD": 4734,
+    "GS_nocover": 28
+   },
+   "mtm_stop_usd": -210.62,
+   "carry_stop_usd": 7.66,
+   "carry_stop_sd": 0.34,
+   "abs_net_stop_mean": 0.7,
+   "live": {
+    "requests": {
+     "place": 34340,
+     "cancel": 33880
+    },
+    "refused_events": 0,
+    "windows_with_refusal": 0,
+    "halted_windows": 0,
+    "zombie_fills": 770,
+    "cap_state_end": {
+     "realised": -202.9643915603786,
+     "halted": false,
+     "halted_at": null,
+     "windows_seen": 288
+    },
+    "counters": {
+     "leg_groups_reordered": 12553,
+     "place_never": 0,
+     "place_immediate": 34340,
+     "postonly_refused": 1208,
+     "rej_reset": 409,
+     "qact_raised": 8176,
+     "own_dup_price": 0,
+     "own_cross": 0,
+     "zombies": 32407,
+     "zombie_fills": 770,
+     "view_filled_unknown": 3410,
+     "acted_on_unknown_fill": 673,
+     "postonly_refused_own": 13,
+     "prio_reordered": 25
+    },
+    "place_delay_ms": null
+   }
+  },
+  "MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+DQUEUE/mid@AM:5:25:95": {
+   "windows": 288,
+   "gross_usd": -200.71,
+   "windows_positive": 75,
+   "fills": 1920,
+   "shares": 6311.6,
+   "abs_net_end_p95": 5.0,
+   "mo1_usd": -169.14,
+   "mo60_usd": -180.92,
+   "rebate_usd_unverified": 11.92,
+   "by_kind": {
+    "at": {
+     "shares": 815.4,
+     "mo1": -0.89,
+     "settle": 18.82
+    },
+    "through": {
+     "shares": 5496.1,
+     "mo1": -168.25,
+     "settle": -219.52
+    }
+   },
+   "by_lane": {
+    "0": {
+     "fills": 928,
+     "shares": 3104.9,
+     "mo1": -89.07,
+     "settle": -55.93,
+     "through_share": 0.858,
+     "ahead0_median": 171.6
+    },
+    "1": {
+     "fills": 992,
+     "shares": 3206.6,
+     "mo1": -80.07,
+     "settle": -144.78,
+     "through_share": 0.884,
+     "ahead0_median": 178.2
+    }
+   },
+   "by_phase_60s": {
+    "0": {
+     "shares": 4986.79,
+     "settle": -133.46
+    },
+    "60": {
+     "shares": 971.34,
+     "settle": -56.44
+    },
+    "120": {
+     "shares": 275.83,
+     "settle": -11.41
+    },
+    "180": {
+     "shares": 77.61,
+     "settle": 0.6
+    }
+   },
+   "withheld_decisions": {
+    "BTC": 2031332,
+    "G4": 2761897,
+    "G3": 49012,
+    "LD_CAPN": 20298,
+    "CAPN": 17388,
+    "LD_RO": 704930,
+    "RO": 338666,
+    "MIN_USD": 42415,
+    "LD_MIN_USD": 4767,
+    "GS_nocover": 28
+   },
+   "mtm_stop_usd": -206.05,
+   "carry_stop_usd": 5.35,
+   "carry_stop_sd": 0.62,
+   "abs_net_stop_mean": 0.8,
+   "live": {
+    "requests": {
+     "place": 35517,
+     "cancel": 35066
+    },
+    "refused_events": 0,
+    "windows_with_refusal": 0,
+    "halted_windows": 0,
+    "zombie_fills": 776,
+    "cap_state_end": {
+     "realised": -200.70736389234844,
+     "halted": false,
+     "halted_at": null,
+     "windows_seen": 288
+    },
+    "counters": {
+     "leg_groups_reordered": 12553,
+     "place_never": 0,
+     "place_immediate": 35517,
+     "postonly_refused": 1142,
+     "rej_reset": 396,
+     "qact_raised": 8535,
+     "own_dup_price": 0,
+     "own_cross": 0,
+     "zombies": 33616,
+     "zombie_fills": 776,
+     "view_filled_unknown": 3515,
+     "acted_on_unknown_fill": 703,
+     "postonly_refused_own": 15,
+     "prio_reordered": 28
+    },
+    "place_delay_ms": null
+   }
+  },
+  "MICRO+G4+G2+G6+G5+G3+G1+PM90+GS+LD2+CAP10+XNA+XMIN1+XV+RO60+S240+DCOST/mid@AM:5:25:95": {
+   "windows": 288,
+   "gross_usd": -197.57,
+   "windows_positive": 74,
+   "fills": 1895,
+   "shares": 6313.2,
+   "abs_net_end_p95": 5.0,
+   "mo1_usd": -171.29,
+   "mo60_usd": -193.48,
+   "rebate_usd_unverified": 11.94,
+   "by_kind": {
+    "at": {
+     "shares": 827.3,
+     "mo1": -0.86,
+     "settle": 26.58
+    },
+    "through": {
+     "shares": 5486.0,
+     "mo1": -170.42,
+     "settle": -224.14
+    }
+   },
+   "by_lane": {
+    "0": {
+     "fills": 921,
+     "shares": 3106.1,
+     "mo1": -93.18,
+     "settle": -49.43,
+     "through_share": 0.863,
+     "ahead0_median": 179.1
+    },
+    "1": {
+     "fills": 974,
+     "shares": 3207.1,
+     "mo1": -78.1,
+     "settle": -148.14,
+     "through_share": 0.875,
+     "ahead0_median": 162.5
+    }
+   },
+   "by_phase_60s": {
+    "0": {
+     "shares": 4980.08,
+     "settle": -135.06
+    },
+    "60": {
+     "shares": 993.51,
+     "settle": -37.65
+    },
+    "120": {
+     "shares": 247.28,
+     "settle": -23.55
+    },
+    "180": {
+     "shares": 92.38,
+     "settle": -1.31
+    }
+   },
+   "withheld_decisions": {
+    "BTC": 2031329,
+    "G4": 2761891,
+    "G3": 49012,
+    "LD_CAPN": 20903,
+    "CAPN": 17826,
+    "LD_RO": 704927,
+    "RO": 334467,
+    "MIN_USD": 42417,
+    "LD_MIN_USD": 5040,
+    "GS_nocover": 28
+   },
+   "mtm_stop_usd": -205.52,
+   "carry_stop_usd": 7.96,
+   "carry_stop_sd": 0.57,
+   "abs_net_stop_mean": 0.8,
+   "live": {
+    "requests": {
+     "place": 35526,
+     "cancel": 35094
+    },
+    "refused_events": 0,
+    "windows_with_refusal": 0,
+    "halted_windows": 0,
+    "zombie_fills": 753,
+    "cap_state_end": {
+     "realised": -197.56713391083,
+     "halted": false,
+     "halted_at": null,
+     "windows_seen": 288
+    },
+    "counters": {
+     "leg_groups_reordered": 12553,
+     "place_never": 0,
+     "place_immediate": 35526,
+     "postonly_refused": 1106,
+     "rej_reset": 386,
+     "qact_raised": 8554,
+     "own_dup_price": 0,
+     "own_cross": 0,
+     "zombies": 33658,
+     "zombie_fills": 753,
+     "view_filled_unknown": 3561,
+     "acted_on_unknown_fill": 715,
+     "postonly_refused_own": 12,
+     "prio_reordered": 30
+    },
+    "place_delay_ms": null
+   }
+  }
+ },
+ "live_data_diag": {
+  "windows": 288,
+  "bn_silent_gt1s_quote_s": 81.59,
+  "bn_windows_hit": 25,
+  "pf_silent_gt5s_quote_s": 28.04,
+  "pf_windows_hit": 2,
+  "pf_windows_gap30": 0,
+  "reg_lead_s": {
+   "min": 264.54,
+   "p01": 265.75,
+   "p50": 283.26
+  },
+  "reg_lead_lt5s": 0,
+  "reg_lead_nan": 0
+ }
+}

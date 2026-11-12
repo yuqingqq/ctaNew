@@ -1,5 +1,5 @@
 # Quote-default / learned-pull research loop
-As of 2026-11-12T02:24:44.677371+00:00. **queued: stress_20261031**. Waiting for the shared numeric slot.
+As of 2026-11-12T03:15:48.475179+00:00. **running: stress_20261101**. v4: observed empty levels are known, retaining all data and inventory controls.
 
 Completed prior test: own-order/calm study d475eccb, canonical comparison_v4.json; no promoted variant.
 Current branch: research/predict-default-pull-20261111. One numeric process; consumed dates only; no live changes.
@@ -30,4 +30,5 @@ Plan: controls →8-window parity smoke →9 neutral build days →6 expanding m
 | primary_report | complete | 2026-11-12T00:45:43.363107+00:00 | Passed; logs/primary_report.log plus artifact/feature checks retained. |
 | stress_20261026 | complete | 2026-11-12T01:35:45.851437+00:00 | Passed; logs/stress_20261026.log plus artifact/feature checks retained. |
 | stress_20261027 | complete | 2026-11-12T02:24:44.564910+00:00 | Passed; logs/stress_20261027.log plus artifact/feature checks retained. |
-| stress_20261031 | queued | 2026-11-12T02:24:44.677371+00:00 | Waiting for the shared numeric slot. |
+| stress_20261031 | complete | 2026-11-12T03:15:48.366331+00:00 | Passed; logs/stress_20261031.log plus artifact/feature checks retained. |
+| stress_20261101 | running | 2026-11-12T03:15:48.475179+00:00 | v4: observed empty levels are known, retaining all data and inventory controls. |

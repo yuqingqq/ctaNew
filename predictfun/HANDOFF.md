@@ -2,10 +2,10 @@
 
 <!-- DEFAULT_PULL_LOOP -->
 
-## 2026-11-12T02:24:44.677371+00:00 — Quote-default / learned-pull research loop: queued
+## 2026-11-12T03:15:48.475179+00:00 — Quote-default / learned-pull research loop: running
 
-- Stage `stress_20261031`. Waiting for the shared numeric slot.
-- 22 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
+- Stage `stress_20261101`. v4: observed empty levels are known, retaining all data and inventory controls.
+- 23 stages complete. Tracked plan, receipts and failures: handoffs/20261111_default_pull_progress.md.
 - Prior own-order/calm test remains COMPLETE, no promotion; comparison_v4.json / d475eccb.
 - Branch research/predict-default-pull-20261111; one light numeric process; no live changes/protected-day reads.
 
