@@ -1,5 +1,5 @@
 # Quote-default / learned-pull research loop
-As of 2026-11-12T05:43:57.178099+00:00. **complete: driver**. All v4 tests complete. Canonical output default_pull_20261111_v4/comparison_final.json; completion artifact audit and comparison figure passed. No live promotion.
+As of 2026-11-12T07:22:32.194451+00:00. **complete: human_review**. Final review complete: no candidate preserves trading value with no higher inventory exposure across both scenarios. Six primary and six stress replays, independent audit and integrity checks passed. See handoffs/20261112_default_pull_review.md. No live promotion; numerical work finished.
 
 Completed prior test: own-order/calm study d475eccb, canonical comparison_v4.json; no promoted variant.
 Current branch: research/predict-default-pull-20261111. One Codex worker on core 8; two research workers allowed globally (user 2026-11-12); consumed dates only; no live changes.
@@ -37,3 +37,4 @@ Plan: controls →8-window parity smoke →9 neutral build days →6 expanding m
 | final_report | complete | 2026-11-12T05:42:48.514828+00:00 | Passed; logs/final_report.log plus artifact/feature checks retained. |
 | completion_audit | complete | 2026-11-12T05:43:55.358684+00:00 | Passed; logs/completion_audit.log plus artifact/feature checks retained. |
 | comparison_figure | complete | 2026-11-12T05:43:57.078032+00:00 | Passed; logs/comparison_figure.log plus artifact/feature checks retained. |
+| human_review | complete | 2026-11-12T07:22:32.194451+00:00 | Final review complete: no candidate preserves trading value with no higher inventory exposure across both scenarios. Six primary and six stress replays, independent audit and integrity checks passed. See handoffs/20261112_default_pull_review.md. No live promotion; numerical work finished. |

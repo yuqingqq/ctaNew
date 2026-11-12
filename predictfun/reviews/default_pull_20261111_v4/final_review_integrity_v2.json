@@ -1,0 +1,30 @@
+{
+  "as_of": "2026-11-12T07:18:36.454832+00:00",
+  "status": "FINAL_REVIEW_INTEGRITY_PASS",
+  "source_commit": "32f69df43bd641630e82fb517d0560753ea9918f",
+  "source_sha": "cbe81c340452277aac9eecea3da678d8f98207ebbce8306a40f2463073bb830e",
+  "supersedes_metadata_receipt": {
+    "path": "final_review_integrity.json",
+    "sha": "b66179b928d6a4a011c5c398a554e86bebda479b658e2dc982e309d2873687ff"
+  },
+  "correction": "Earlier metadata receipt recorded the pre-commit HEAD for its newly added checker. This receipt verifies exact checker bytes at source_commit. All numerical results are unchanged; original receipt and original source/review commit are retained.",
+  "comparison_sha": "e84214cd58030c8b510aaf3be4c6b9167a86e01778e8aa5a8f8dea9728649fba",
+  "numerical_audit_sha": "62036d6c49a5944dbb2dad95819d99f6002d03a75d334bf9169b704ee9a71545",
+  "runtime_audit_sha": "d77db312530743b2b840317a7c0e699a912975d51a1ea89258f2b13a8bbf9b18",
+  "human_review_sha": "db5df9effeae996c68d7964b118bf81b2338ae95bb2cc7ebbfe589ab39565c53",
+  "figure_receipt_sha": "709a9d4cb0fe6a53e2505ae0cc99214293f34815e245b3d83ab4e626b3601b30",
+  "authorization_sha": "bb52c17c316e1ed0b1514b6468dd028779547d66c2751d4a1ff5582074725f64",
+  "stage_logs_verified": 28,
+  "run_artifact_hashes_verified": 504,
+  "frozen_sources_verified": 232,
+  "saved_models_verified": 12,
+  "checked_runs": 22,
+  "feature_decisions": 1189652,
+  "saved_policy_score_checks": 1127825,
+  "qualifying_candidates": [],
+  "prior_completed_results_preserved": true,
+  "research_only_diff": true,
+  "changed_paths": 164,
+  "controls": "Actual final population/hash accepted; planted wrong population and changed hash refused; criteria recomputed.",
+  "scope": "Current artifact integrity after the completed numerical audit and human source/report/PNG review. Numerical reconciliation, causal-feature equality, saved-model/action reconstruction and input rehashing are the recorded independent numerical audit, not new results from this metadata script. No fresh validation or live promotion."
+}
