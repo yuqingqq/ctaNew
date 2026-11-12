@@ -1,0 +1,30 @@
+{
+  "as_of": "2026-11-12T11:12:41.295639+00:00",
+  "state": "running",
+  "pids": {
+    "build_driver": 339629,
+    "audit_supervisor": 459264
+  },
+  "source_commit": "8a8f1534",
+  "declaration_sha": "e497cf4ad16161ace53974028678af25816ef8ea9ddfa77968e4cd056a587ed8",
+  "smoke_sha": "708782656c7bc293d81b4599d82ba159835657029ce46c088badf088df936690",
+  "smoke_windows": 4,
+  "smoke_forks": 16,
+  "driver": "predictfun/research/continuation_driver_v3.py",
+  "driver_sha": "2460407d633c81e86e0a7b894e9dc43aeb6c1deb99652639f52fff3495521ae6",
+  "audit_supervisor": "predictfun/research/continuation_finish.py",
+  "audit_supervisor_sha": "9a717a3d756438ca17185a6a6490ee48396d8dd997f3f7cda20b972fa8cbc679",
+  "queued": [
+    "nine complete neutral day builds",
+    "six chronological model folds",
+    "opportunity and local decision-value report",
+    "artifact reconstruction audit",
+    "gain/loss/inventory component diagnostics"
+  ],
+  "numerical_workers": 1,
+  "slot": "codex",
+  "core": 8,
+  "live_capture_available": false,
+  "promoted": false,
+  "scope": "Execution snapshot, not a completed result. Mandatory parity gates stop on any failure. Full numerical interpretation remains pending."
+}
