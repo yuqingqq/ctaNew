@@ -88,7 +88,41 @@ def report():
         sys.exit(1)
 
 
+def ops():
+    """Operating points of the AV fit (added after the AV result, post hoc): for recall 50 / 70 / 90% of AV among rows still present
+    at t + 24, the share of those moments flagged (how often a front order would pull) and the precision; and the AUC among the moments
+    with a WS-timed trade at the level in the window (ACT_250 = 1): clearing (CLR_250) vs the level standing."""
+    B = {}; gone = []
+    for d in MV.DAYS9:
+        z = np.load(f'{MV.OUTM}/day_{d}.npz')
+        for k in MV.BASE_N + ['day', 'DN_250', 'ACT_250', 'CLR_250']:
+            B.setdefault(k, []).append(z[f'B|{k}'])
+        gone.append(np.load(f'{MV.OUTM}/avoid_{d}.npy'))
+    B = {k: np.concatenate(v) for k, v in B.items()}; gone = np.concatenate(gone).astype(bool)
+    day = B['day'].astype(int); dz = [int(d) for d in MV.DAYS9]; y = B['DN_250'].astype(int); still = ~gone; av = (y == 1) & still
+    Xm = np.column_stack([B[k] for k in MV.BASE_N]).astype(np.float32)
+    p2 = MV.lgb_oof(Xm[still], av[still].astype(int), day[still], dz, 'binary')
+    a2 = MV.auc(av[still], p2)
+    if abs(a2 - 0.8410) > 0.0005:
+        sys.exit(f'MOVE-AVOID ops: refit AUC {a2:.4f} does not reproduce 0.8410')
+    yy = av[still]; L = [f'MOVE-AVOID ops (POST HOC) as of {time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}; AV fit reproduced ({a2:.4f}); '
+                         f'rows still present at t + 24 {int(still.sum())}, AV rate {yy.mean():.3f}']
+    o = np.sort(p2[yy])[::-1]; R = {}
+    for rc in (0.5, 0.7, 0.9):
+        thr = o[int(np.ceil(rc * len(o))) - 1]; fl = p2 >= thr
+        R[rc] = dict(flag_share=float(fl.mean()), precision=float(yy[fl].mean()), recall=float(fl[yy].mean()))
+        L.append(f'  recall {rc:.0%}: flags {fl.mean():.1%} of moments, precision {yy[fl].mean():.1%} (false alarms {1 - yy[fl].mean():.1%})')
+    act = B['ACT_250'][still].astype(bool); clr = B['CLR_250'][still].astype(bool)
+    aa = MV.auc(clr[act], p2[act]); aad = [MV.auc(clr[act & (day[still] == d)], p2[act & (day[still] == d)]) for d in dz]
+    L.append(f'  among moments with a WS-timed trade at the level in the window ({int(act.sum())}, cleared {clr[act].mean():.1%}): AUC cleared vs standing '
+             f'{aa:.4f} (days {" ".join(f"{x:.3f}" for x in aad)})')
+    json.dump(dict(auc_av=a2, ops={str(k): v for k, v in R.items()}, auc_clr_given_act=aa, days=aad), open(f'{MV.OUTM}/avoid_ops.json', 'w'), indent=1)
+    open(f'{MV.OUTM}/avoid_ops.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
+
+
 if __name__ == '__main__':
+    if len(sys.argv) > 1 and sys.argv[1] == 'ops':
+        ops(); sys.exit(0)
     if len(sys.argv) > 2 and sys.argv[1] == 'day':
         run_day(sys.argv[2])
     elif len(sys.argv) > 1 and sys.argv[1] == 'report':
