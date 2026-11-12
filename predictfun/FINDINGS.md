@@ -33,6 +33,8 @@ Statuses:
 | C8 | Name the days used. Parameters chosen on seen days are post hoc. A pass is a candidate; validation needs a freeze and >= 5 untouched days | Consumed days: 10-23..27, 10-31, 11-01..03 (9 replay days), 11-07, 11-08. Never read 11-04..06 or 11-09..13 (forward blocks) |
 | C9 | When ours is simulated and theirs is real, say so in the table | GAP |
 | C10 | No replay number is validated at the order level; only a live run with the A4b capture can validate one | B1a; USER D2 |
+| C11 | Name the strategy. Lane J-v3 (one 5-sh order per side, v3's PM90 gate on the 50 ms grid) is NOT the frozen pm_ladder v3 (MICRO side choice, G1-G6 guards, LD2 rung, 25-sh size, CAP10, XMIN1, XV, RO60 / S240, event-driven). Test any candidate on the frozen engine (`pf_step4_ladder_v3.py`) too | Pipeline review 2026-11-12, S1 |
+| C12 | Split C1's age table by trade-anchor source (WS-timed / E2-estimated); E2 anchors are uncertain by about +-250 ms | Pipeline review D4 |
 
 ## 2. Data and code pitfalls (each has bitten once)
 
@@ -47,6 +49,13 @@ Statuses:
 | P7 | Results from before an engine fix | Void; report only fixed-engine numbers |
 | P8 | STATUS.yml `updated:` must stay a block scalar | A quoted scalar broke the file (repaired 2026-11-12) |
 | P9 | Forward data-day paths printed in a session count as reads | Aggregate at family level; never name the paths |
+| P10 | Tie windows (start = end price, paid 50/50) are recorded as "Up" in the registry (`pf_step1.py:57-59`): 14 on the 9 days | Settlement-valued numbers need ties at 50 (fix proposed) |
+| P11 | Step-1 day folders include the adjacent days' boundary hour files (sealed 10-28 / 10-30, forward 11-04); the loader keeps frames from ws - 5 s | Filter frames by stamp in the loader with a status; never list or read those files |
+| P12 | Trade anchors: E2 estimates (about a third of first-minute shares) differ from WS times by IQR about -250 / +150 ms; a taker order's minimum time can come from a mismatched leg | See C12 |
+| P13 | The sim2 family serves our own orders in time order (the frozen engine: best price first) and lets two of them take one trade leg | Matters when two of our orders overlap (CS fast paths: 1-7% of shares) |
+| P14 | 10-31's taker ids: the step-1 and txmap signer indexes disagree (13% of first-minute shares unmapped) | Taker-order analyses on 10-31 are weaker |
+| P15 | Binance is known at event time + 3.5 ms (a Tokyo-like constant); Binance-side delay spikes are not modelled | Sensitivity once a Tokyo busy-hour capture exists |
+| P16 | Raw features (`gap`, `p_bn`) use the window's start price from tau = ws; only the guard value is masked (v = -1) until the price is known | Any model that reads raw features must apply the start-known mask itself |
 
 ## 3. Findings
 
@@ -62,7 +71,7 @@ Statuses:
 
 | Finding | Status | Source |
 |---|---|---|
-| v3 (pm_ladder v3) is frozen with a forward block and is the only positive replay arm (+1.03 c/sh, $14.7 a day at M 50 on the 9 days) | QUALIFIED by AGE: 75% of it is young-order fills | S4, QR2, AGE |
+| Lane J-v3 (v3's quote line only, NOT the frozen pm_ladder v3, C11) is the only positive simple replay arm (+1.03 c/sh, $14.7 a day at M 50 on the 9 days). The frozen v3 is under a forward test with its own engine | QUALIFIED: 75% of J-v3's value is young-order fills (AGE); every "v3" in S4 / QR / QR2 / AGE / GAP / CS means J-v3 | S4, QR2, AGE, pipeline review S1 |
 | The top makers' edge is not in our guard's states | HOLDS | B12 |
 | A pressure-feature guard does not change the guard | HOLDS | B14 |
 | A queue-aware guard target equals the live guard; adding pressure is better at 1 s, worse at 60 s; not promoted | HOLDS | B16 |
@@ -75,7 +84,7 @@ Statuses:
 | Resting at the touch by default and pulling on a signal loses at every fill clock (eight arms) | HOLDS (11-08) | B21 |
 | Zero own latency does not rescue resting; it helps the gated v3 (+0.25 c/sh) | QUALIFIED: the v3 gain is young-order exposed (C1) | B21b |
 | A perfect keep / pull decision makes resting pay on 11-08 | HOLDS as a perfect-foresight ceiling only | S1 |
-| A learned keep / pull model has skill (9 of 9 days) but its policy loses to the guard trigger and v3; the label is mostly re-entry luck | HOLDS | S4, S4 diagnostic |
+| A learned keep / pull model has skill (9 of 9 days) but its policy loses to the guard trigger and v3; the label is mostly re-entry luck | HOLDS as a negative; its KP numbers are biased in KP's favour (start price before known, P16; fold leakage through v; no decision during the unknown-fill window) | S4, S4 diagnostic, pipeline review F1 / F3 / S3 |
 | Default-pull loop (Codex): no candidate keeps trading value at no higher inventory; a learned pull beats random but not the guard margin; a joint fill model improves calibration, not selection | HOLDS | 20261112_default_pull_review.md, 20261112_fill_value_review.md, 20261112_joint_fill_review.md |
 | 250 ms danger-pull design | OPEN, never run | bbf0112d |
 
@@ -92,7 +101,7 @@ Statuses:
 | Keeping orders through guard flicker is worse per share | HOLDS | QR2 K / K2 |
 | The 500 ms age cut: same $/day, better per share, less M 250 loss | QUALIFIED: its gain is young-only (AGE R312 GAIN-IS-YOUNG) | QR2, AGE |
 | v3 + joining new levels at 30 ms (F30, Y+F30, QR2-fast) beats v3 (+8.7 $/day; +2.6 without young fills) | **VOID** (C6); SUPERSEDED by CS's causal speed test | QR2, AGE R312 / R313; CS |
-| With causal clocks, v3 plus event-driven joins at new levels gains only with a faster order path: 10-20 ms paths +1.5 to +4.4 $/day without young fills (M 50, 8-9 of 9 days); a faster feed with today's 40 ms path gains nothing; slowest gaining arm = today's feed + 20 ms path; at M 250 everything still loses; joining at births beats random times | HOLDS (replay; young fills about 70% of the headline; mechanism not established; pending-cancel window ruled out post hoc) | CS, 20261112_causal_speed_results.md |
+| With causal clocks, v3 plus event-driven joins at new levels gains only with a faster order path: 10-20 ms paths +1.5 to +4.4 $/day without young fills (M 50, 8-9 of 9 days); a faster feed with today's 40 ms path gains nothing; slowest gaining arm = today's feed + 20 ms path; at M 250 everything still loses; joining at births beats random times | HOLDS (replay, on J-v3 not the frozen v3 (C11); young fills about 70% of the headline; mechanism not established; pending-cancel window ruled out post hoc; own-order overlap fills (P13) are 1-7% of shares and excluding them shrinks the gains by up to 14%, still 8-9 of 9 days) | CS, 20261112_causal_speed_results.md, pf_cs_overlap.py |
 | The live engine churns: at-best orders cancelled 23-38 ms after going live, 82.5% re-placed; guard flicker | HOLDS | B13c / B13d |
 | The live soft pull is a churn control with value about unchanged; merged (pmmmrust 0c3b115), not deployed | HOLDS | B15 |
 
@@ -100,8 +109,8 @@ Statuses:
 
 | Finding | Status | Source |
 |---|---|---|
-| Their edge is not queue place, not Binance and not trend. It is earned within 250 ms of the trade report, on Predict.fun itself; they stay after being hit; about a quarter is their own taking; it holds to 60 s and settlement | HOLDS (mostly 11-08; B12g 9 days) | B12-B12g, B13b, B18 |
-| Per share, our simulated v3 beats their real at-best fills (+1.03 against +0.23) | QUALIFIED by AGE: MIXED without young fills (8 / 6 of 9 days) | GAP, AGE R314 |
+| Their edge is not queue place, not Binance and not trend. It is earned within 250 ms of the trade report, on Predict.fun itself; they stay after being hit; about a quarter is their own taking; it holds to 60 s and settlement | HOLDS (mostly 11-08; B12g 9 days); B12g's settlement values carry the tie error (P10, 14 windows) | B12-B12g, B13b, B18 |
+| Per share, our simulated J-v3 beats their real at-best fills (+1.03 against +0.23) | QUALIFIED by AGE: MIXED without young fills (8 / 6 of 9 days); J-v3, not the frozen v3 (C11) | GAP, AGE R314 |
 | They trade 345x our shares; 60% of their money is made while v3's guard is OFF (+0.15 c/sh on 459k sh a day); only 17% of our fills share a taker order with them | HOLDS (theirs real) | GAP |
 
 ### F. Live and execution
@@ -111,6 +120,12 @@ Statuses:
 | Live is not running (USER 2026-11-10); live = the user's call | HOLDS | HANDOFF |
 | Slow cancels (0.5-5 s) 50-60 s into the window caused 11-08's first-minute loss | HOLDS; handed to the live session | B12b |
 | Maker fee 0 in public match records; rebate unverified | OPEN | STATUS maker_fee_public, rebate |
+
+### G. Pipeline review (2026-11-12)
+
+| Finding | Status | Source |
+|---|---|---|
+| Three independent stage reviews (data / time alignment, features / guard, simulator / valuation): two ERRORs (tie outcomes P10; S4's `gap` before the start price is known P16) and the framing risk that "v3" in the replays is J-v3 (C11); the rest are RISK / NOTE items now in §2 | HOLDS; fixes proposed (user's call) | 20261112_pipeline_review.md |
 
 ## 4. Only live can answer
 

@@ -1,5 +1,17 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 12:27Z (session ce68ebe0) — Pipeline review DONE (USER: "review the whole logic of the flow ... check if there are any existing errors"): two ERRORs (tie windows recorded as "Up" - settlement values only; S4's gap feature uses the start price before it is known - S4 only), and the framing risk that every replay "v3" is lane J-v3, not the frozen pm_ladder v3; CS survives the own-order overlap defect
+
+- Three independent read-only reviewers (data / time alignment, features / guard, simulator / valuation); every ERROR and the RISKs
+  that bear on today's results re-verified in code / data. Report handoffs/20261112_pipeline_review.md; reviewer scripts
+  reviews/pipeline_review_20261112/scripts/; FINDINGS.md updated (C11 name the strategy, C12 anchor source, P10-P16, statuses).
+- Follow-up research/pf_cs_overlap.py (committed before its run): own-order overlap fills 1-7% of CS fast-arm shares; excluding them
+  the gains shrink <= 14% and hold 8-9 of 9 days.
+- DISCLOSURE: verifying D3 I read the min / max timestamps (no prices) of 11-03's step-1 boundary book file holding 2.4 s of forward
+  day 11-04 (00:00:00-00:00:02); the replay loader also loads and drops it. Recorded, not used.
+- Fixes proposed (user's call): ties at 50; test the order-path candidate on the frozen v3 engine; own-order price priority in the
+  sim2 family; drop adjacent-day frames by stamp; split C1 by anchor source; rebuild 10-31 taker ids; Binance receipt sensitivity.
+
 ## 2026-11-12 12:07Z (session ce68ebe0) — CS causal speed DONE: with honest clocks a faster ORDER PATH adds money to v3 (10-20 ms: +1.5 to +4.4 $/day without young fills, 8-9 of 9 days), a faster feed alone does not (R320 NOT-SHOWN at today's speed); SPEED-NEEDED = today's feed + 20 ms path; M 250 still loses
 
 - Done (USER "Yes"): research/pf_causal_speed.py + run_cs.sh (7e16d03e), post hoc pf_cs_posthoc.py (764352cd), 12:01-12:07Z claude
