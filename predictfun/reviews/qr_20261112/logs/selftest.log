@@ -1,0 +1,2 @@
+failing: [] planted errors caught: {'MUT_GHOST_NOCAP': True, 'MUT_CHAIN_ANYPRICE': True, 'MUT_NO_GRACE': True, 'L_PLACE': True}
+2026-11-12T09:58:53Z tag=qr_selftest rc=0 peak_rss_mib=104 wall_s=0.32 cpu_user_s=0.27 memavail_start_gib=23 disk_free_gib=506->506 slot=claude
