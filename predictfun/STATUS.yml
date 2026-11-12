@@ -1718,10 +1718,10 @@ flags:
 
 # DEFAULT_PULL_LOOP
 default_pull_loop:
-  as_of: "2026-11-11T23:24:21.343227+00:00"
+  as_of: "2026-11-12T00:05:00.822900+00:00"
   state: "running"
-  stage: "eval_20261102"
-  completed_stages: 17
+  stage: "eval_20261103"
+  completed_stages: 18
   detail: "v4: observed empty levels are known, retaining all data and inventory controls."
   progress: handoffs/20261111_default_pull_progress.md
   branch: research/predict-default-pull-20261111
