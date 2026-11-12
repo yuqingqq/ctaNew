@@ -1,5 +1,5 @@
 # Quote-default / learned-pull research loop
-As of 2026-11-12T05:41:59.675909+00:00. **running: final_report**. v4 unchanged; Codex core 8 with global research cap two (user 2026-11-12).
+As of 2026-11-12T05:43:57.178099+00:00. **complete: driver**. All v4 tests complete. Canonical output default_pull_20261111_v4/comparison_final.json; completion artifact audit and comparison figure passed. No live promotion.
 
 Completed prior test: own-order/calm study d475eccb, canonical comparison_v4.json; no promoted variant.
 Current branch: research/predict-default-pull-20261111. One Codex worker on core 8; two research workers allowed globally (user 2026-11-12); consumed dates only; no live changes.
@@ -24,7 +24,7 @@ Plan: controls →8-window parity smoke →9 neutral build days →6 expanding m
 | eval_20261027 | complete | 2026-11-11T22:01:04.820222+00:00 | Passed; logs/eval_20261027.log plus artifact/feature checks retained. |
 | eval_20261031 | complete | 2026-11-11T22:42:12.791386+00:00 | Passed; logs/eval_20261031.log plus artifact/feature checks retained. |
 | eval_20261101 | complete | 2026-11-11T23:24:01.983452+00:00 | Recovered missing marker after driver interruption: numeric rc=0, all artifact hashes and 105395 feature identities verified. Original artifacts unchanged. |
-| driver | interrupted | 2026-11-12T04:04:27.550233+00:00 | Driver interrupted; completed stages retained. |
+| driver | complete | 2026-11-12T05:43:57.178099+00:00 | All v4 tests complete. Canonical output default_pull_20261111_v4/comparison_final.json; completion artifact audit and comparison figure passed. No live promotion. |
 | eval_20261102 | complete | 2026-11-12T00:05:00.713258+00:00 | Passed; logs/eval_20261102.log plus artifact/feature checks retained. |
 | eval_20261103 | complete | 2026-11-12T00:45:10.056923+00:00 | Passed; logs/eval_20261103.log plus artifact/feature checks retained. |
 | primary_report | complete | 2026-11-12T00:45:43.363107+00:00 | Passed; logs/primary_report.log plus artifact/feature checks retained. |
@@ -34,4 +34,6 @@ Plan: controls →8-window parity smoke →9 neutral build days →6 expanding m
 | stress_20261101 | complete | 2026-11-12T04:04:32.524067+00:00 | Verified unchanged replay after scheduler handover; two global research slots, Codex core 8. |
 | stress_20261102 | complete | 2026-11-12T04:53:15.799113+00:00 | Passed; logs/stress_20261102.log plus artifact/feature checks retained. |
 | stress_20261103 | complete | 2026-11-12T05:41:59.537073+00:00 | Passed; logs/stress_20261103.log plus artifact/feature checks retained. |
-| final_report | running | 2026-11-12T05:41:59.675909+00:00 | v4 unchanged; Codex core 8 with global research cap two (user 2026-11-12). |
+| final_report | complete | 2026-11-12T05:42:48.514828+00:00 | Passed; logs/final_report.log plus artifact/feature checks retained. |
+| completion_audit | complete | 2026-11-12T05:43:55.358684+00:00 | Passed; logs/completion_audit.log plus artifact/feature checks retained. |
+| comparison_figure | complete | 2026-11-12T05:43:57.078032+00:00 | Passed; logs/comparison_figure.log plus artifact/feature checks retained. |

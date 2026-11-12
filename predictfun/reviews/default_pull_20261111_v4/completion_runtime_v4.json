@@ -1,0 +1,13 @@
+{
+  "as_of": "2026-11-12T05:43:55.165506+00:00",
+  "status": "PASS",
+  "source_sha": "ae366ab165a1ae91e2979be81880654572f364c236898107f60f436582c1747a",
+  "source_commit": "450cf2d22bd4df8b25654a81b316cc6dcd89adac",
+  "completion_audit_sha": "62036d6c49a5944dbb2dad95819d99f6002d03a75d334bf9169b704ee9a71545",
+  "runtime_parity_sha": "b8c75f27006ed89ce219f2e77da7f907b5cbc3ac516517cc75d50de6e96279ea",
+  "known_empty_controls_sha": "507cc0c98335da7128e882729feadeb1e0448ab2f783ee23e32b819bc43ff09c",
+  "declaration_sha": "27aacbc919b83b5af958f2a527775c2f46a2aae9059d963dd1b54206862d34ea",
+  "comparison_sha": "e84214cd58030c8b510aaf3be4c6b9167a86e01778e8aa5a8f8dea9728649fba",
+  "scope": "All full artifact/model/action checks plus v4 known-empty correction controls. Prior cache equivalence is inherited implementation evidence, not a v3/v4 policy-equality claim.",
+  "status_semantics": "Raw generation status describes probe/label state. Inherited accepted_no_cancel on reference rows means no training probe, not absence of an actual cancellation. Use first_cancel and engine request records for lifecycle; the audit computes resting intervals from those actual lifecycle fields."
+}
