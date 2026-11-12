@@ -1,5 +1,7 @@
 # QR, the queue race: why our orders sit at the back, and how fast we would need to be (results, 2026-11-12)
 
+> **Causal-clock note (2026-11-12, FINDINGS.md C6; independent review handoffs/20261112_new_results_insights.md, 9053263d):** the speed sweep's d = 0 / 15 / 30 ms arms schedule the decision at birth + d - 40 ms, before the level exists, so they use a price not yet observable. Part B's results for those three delays are VOID. d = 55 / 97 / 150 ms are causal. Parts A and C (the queue split) are unaffected.
+
 Session ce68ebe0. USER: "it seems we quote at bad timings, not sure if it is because we requote slower than others, or we requote
 and we lose the position. And yes, if we lose the latency game, we need to check how fast we need to be".
 
