@@ -1,5 +1,5 @@
 # Quote-default / learned-pull research loop
-As of 2026-11-12T04:53:15.947344+00:00. **running: stress_20261103**. v4 unchanged; Codex core 8 with global research cap two (user 2026-11-12).
+As of 2026-11-12T05:41:59.675909+00:00. **running: final_report**. v4 unchanged; Codex core 8 with global research cap two (user 2026-11-12).
 
 Completed prior test: own-order/calm study d475eccb, canonical comparison_v4.json; no promoted variant.
 Current branch: research/predict-default-pull-20261111. One Codex worker on core 8; two research workers allowed globally (user 2026-11-12); consumed dates only; no live changes.
@@ -33,4 +33,5 @@ Plan: controls →8-window parity smoke →9 neutral build days →6 expanding m
 | stress_20261031 | complete | 2026-11-12T03:15:48.366331+00:00 | Passed; logs/stress_20261031.log plus artifact/feature checks retained. |
 | stress_20261101 | complete | 2026-11-12T04:04:32.524067+00:00 | Verified unchanged replay after scheduler handover; two global research slots, Codex core 8. |
 | stress_20261102 | complete | 2026-11-12T04:53:15.799113+00:00 | Passed; logs/stress_20261102.log plus artifact/feature checks retained. |
-| stress_20261103 | running | 2026-11-12T04:53:15.947344+00:00 | v4 unchanged; Codex core 8 with global research cap two (user 2026-11-12). |
+| stress_20261103 | complete | 2026-11-12T05:41:59.537073+00:00 | Passed; logs/stress_20261103.log plus artifact/feature checks retained. |
+| final_report | running | 2026-11-12T05:41:59.675909+00:00 | v4 unchanged; Codex core 8 with global research cap two (user 2026-11-12). |
