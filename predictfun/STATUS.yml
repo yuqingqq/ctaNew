@@ -1773,3 +1773,13 @@ fill_value_20261112:
   receipts: reviews/fill_value_20261112/
   validation: false
 # /FILL_VALUE_20261112
+
+# JOINT_FILL_20261112
+joint_fill_20261112:
+  as_of: "2026-11-12T10:10:00.996691+00:00"
+  state: "complete"
+  stage: "declaration"
+  detail: "Frozen coherent paired-outcome model and earlier-day calibration; no threshold tuning."
+  receipts: reviews/joint_fill_20261112/
+  validation: false
+# /JOINT_FILL_20261112

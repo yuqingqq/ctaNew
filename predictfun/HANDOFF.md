@@ -1,5 +1,13 @@
 # P-2026-005 HANDOFF
 
+<!-- JOINT_FILL_20261112 -->
+## 2026-11-12T10:10:00.996691+00:00 — Coherent fill/value model: complete
+
+Stage `declaration`. Frozen coherent paired-outcome model and earlier-day calibration; no threshold tuning.
+
+Default resting / useful queue retention remains the objective. Receipts: `reviews/joint_fill_20261112/`; branch `research/predict-fill-value-20261112`. No live changes.
+<!-- /JOINT_FILL_20261112 -->
+
 <!-- FILL_VALUE_20261112 -->
 
 ## 2026-11-12T09:21:58.611027+00:00 — Fill opportunity / value diagnostic: complete
