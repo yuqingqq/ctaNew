@@ -1,0 +1,9 @@
+20261026: 80 window-sides, 3 s, rss 512 MiB
+20261026: 160 window-sides, 5 s, rss 513 MiB
+20261026: 240 window-sides, 8 s, rss 513 MiB
+20261026: 320 window-sides, 10 s, rss 513 MiB
+20261026: 400 window-sides, 13 s, rss 514 MiB
+20261026: 480 window-sides, 16 s, rss 514 MiB
+20261026: 560 window-sides, 18 s, rss 515 MiB
+20261026: done in 18 s; controls {"reg_differ": 0, "causal_checked": 0, "causal_differ": 0, "causal_planted_differ": 0}
+2026-11-12T12:01:37Z tag=cs_day_20261026 rc=0 peak_rss_mib=752 wall_s=20.85 cpu_user_s=19.62 memavail_start_gib=22 disk_free_gib=504->504 slot=claude

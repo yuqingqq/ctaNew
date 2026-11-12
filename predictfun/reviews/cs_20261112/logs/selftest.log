@@ -1,0 +1,2 @@
+failing: [] planted errors caught: {'MUT_EARLY': True, 'MUT_NOPLACE': True}
+2026-11-12T12:00:14Z tag=cs_selftest rc=0 peak_rss_mib=103 wall_s=0.30 cpu_user_s=0.23 memavail_start_gib=22 disk_free_gib=504->504 slot=claude
