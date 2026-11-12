@@ -1,5 +1,18 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 11:31Z (session ce68ebe0) — GAP DONE: per share our simulated v3 beats the top 5's real at-best fills (R300 OURS-HIGHER 9 of 9 days); the gap is volume (345x our shares, 76x our $) and that 60% of their money is made while v3's guard says stay out (R302 OFF-DOMINANT); different flow (R303, 17% shared)
+
+- Done (USER: "then check what's the remaining gap to top makers"): research/pf_gap_top_makers.py + run_gap.sh (767924de, before
+  the run), 11:24-11:31Z claude slot. Report handoffs/20261112_gap_top_makers_results.md; copies reviews/gap_20261112/. Controls
+  passed (legs aligned, QR2 reproduced, planted errors).
+- Top 5 at the best (real, first minute): 494k sh/day, +0.23 c/sh, $1,118/day; ranks 6-20 +0.25, rest -0.49. v3 (simulated) 1,433
+  sh/day, +1.03, $14.7; Y+F30 $23.5.
+- Top 5 while v3's guard is ON: +1.30 c/sh on 35k sh/day ($449); while OFF: +0.15 on 459k sh/day ($668). We lose when resting in
+  OFF moments.
+- Watch out: theirs real, ours simulated (B1a); at-best maker legs only; per-day ranks; our account not identifiable on these days.
+- Next (proposals, user's call): SIZE (5 / 25 / 50 / 100 sh in guard-ON moments); the guard-OFF edge (what their OFF fills have in
+  common); live A4b capture.
+
 ## 2026-11-12 11:20Z (session ce68ebe0) — QR2 DONE: joining earlier at today's speed does NOT beat v3 (R290 NOT-SHOWN); joining new levels within 30 ms does (F30 / Y+F30 IMPROVES 9 of 9 days, +8.7 $/day at M 50); keeping through guard flicker hurts
 
 - Done (USER: "we do the test to check the performance first, then check what's the remaining gap to top makers"):
