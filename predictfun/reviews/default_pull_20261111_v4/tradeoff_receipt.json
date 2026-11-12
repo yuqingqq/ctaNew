@@ -1,0 +1,327 @@
+{
+  "as_of": "2026-11-12T05:43:56.916072+00:00",
+  "source_commit": "450cf2d22bd4df8b25654a81b316cc6dcd89adac",
+  "source_sha": "ed2ac097e4495f5fa43d0df6bb71642f21d6475e28c50d359ba7891bbf29bd90",
+  "comparison_sha": "e84214cd58030c8b510aaf3be4c6b9167a86e01778e8aa5a8f8dea9728649fba",
+  "audit_sha": "d77db312530743b2b840317a7c0e699a912975d51a1ea89258f2b13a8bbf9b18",
+  "artifacts": {
+    "tradeoff.png": "886c2aa4bdb66cffa5c85eb69d1658decdc647cb3085aa0c38f3ce5b423608e7",
+    "tradeoff.pdf": "6939d69804c29f7d5fbc9f8c3cc12ae182ab83db6e64781c2283f1318aabd652"
+  },
+  "rows": [
+    {
+      "baseline": "reference",
+      "scenario": "X",
+      "mode": "default",
+      "windows": 1728,
+      "common_marks": 1545,
+      "marked_delta": -2525.4946426361125,
+      "exposure_pct": -88.67648555093646,
+      "day_interval": [
+        -2849.3245805164333,
+        -2164.4155200627165
+      ]
+    },
+    {
+      "baseline": "reference",
+      "scenario": "X",
+      "mode": "pressure",
+      "windows": 1728,
+      "common_marks": 1533,
+      "marked_delta": -153.07586150072342,
+      "exposure_pct": -94.11875024242225,
+      "day_interval": [
+        -391.9814503791116,
+        62.59514855245973
+      ]
+    },
+    {
+      "baseline": "reference",
+      "scenario": "X",
+      "mode": "floor",
+      "windows": 1728,
+      "common_marks": 1501,
+      "marked_delta": -464.2104440816945,
+      "exposure_pct": -85.37127209158075,
+      "day_interval": [
+        -709.2731256051528,
+        -222.39763839382613
+      ]
+    },
+    {
+      "baseline": "reference",
+      "scenario": "X",
+      "mode": "market",
+      "windows": 1728,
+      "common_marks": 1511,
+      "marked_delta": -738.960080360745,
+      "exposure_pct": -88.30244664289758,
+      "day_interval": [
+        -1054.5579184806354,
+        -466.78038465193663
+      ]
+    },
+    {
+      "baseline": "reference",
+      "scenario": "X",
+      "mode": "queue",
+      "windows": 1728,
+      "common_marks": 1488,
+      "marked_delta": -765.0409580680937,
+      "exposure_pct": -87.90946805807793,
+      "day_interval": [
+        -1079.7401438031372,
+        -475.51007874208057
+      ]
+    },
+    {
+      "baseline": "reference",
+      "scenario": "X",
+      "mode": "queue_cost",
+      "windows": 1728,
+      "common_marks": 1495,
+      "marked_delta": -732.4951444000592,
+      "exposure_pct": -87.53972319026435,
+      "day_interval": [
+        -1021.4227148933321,
+        -472.7362420390155
+      ]
+    },
+    {
+      "baseline": "reference",
+      "scenario": "stress",
+      "mode": "default",
+      "windows": 1728,
+      "common_marks": 1527,
+      "marked_delta": -2518.2448551639663,
+      "exposure_pct": -92.03443838677082,
+      "day_interval": [
+        -2973.019205826949,
+        -2057.377998743964
+      ]
+    },
+    {
+      "baseline": "reference",
+      "scenario": "stress",
+      "mode": "pressure",
+      "windows": 1728,
+      "common_marks": 1488,
+      "marked_delta": -122.6971846853325,
+      "exposure_pct": -92.64307563927224,
+      "day_interval": [
+        -495.0605273872727,
+        310.28154372847746
+      ]
+    },
+    {
+      "baseline": "reference",
+      "scenario": "stress",
+      "mode": "floor",
+      "windows": 1728,
+      "common_marks": 1503,
+      "marked_delta": -643.8257480005484,
+      "exposure_pct": -89.68756215425778,
+      "day_interval": [
+        -948.07895682713,
+        -233.52501514036456
+      ]
+    },
+    {
+      "baseline": "reference",
+      "scenario": "stress",
+      "mode": "market",
+      "windows": 1728,
+      "common_marks": 1493,
+      "marked_delta": -1103.9838359185726,
+      "exposure_pct": -92.22947794618281,
+      "day_interval": [
+        -1463.2482772744602,
+        -808.2428173305998
+      ]
+    },
+    {
+      "baseline": "reference",
+      "scenario": "stress",
+      "mode": "queue",
+      "windows": 1728,
+      "common_marks": 1503,
+      "marked_delta": -1098.5029882408494,
+      "exposure_pct": -92.04806126032408,
+      "day_interval": [
+        -1455.3316004471867,
+        -781.0851957338118
+      ]
+    },
+    {
+      "baseline": "reference",
+      "scenario": "stress",
+      "mode": "queue_cost",
+      "windows": 1728,
+      "common_marks": 1495,
+      "marked_delta": -1086.3613162777383,
+      "exposure_pct": -91.93511051550695,
+      "day_interval": [
+        -1457.7432713673973,
+        -759.3835810781275
+      ]
+    },
+    {
+      "baseline": "matched_guard",
+      "scenario": "X",
+      "mode": "default",
+      "windows": 1728,
+      "common_marks": 1578,
+      "marked_delta": -2417.5504080425503,
+      "exposure_pct": 68.69892162170888,
+      "day_interval": [
+        -2696.9255041236815,
+        -2087.4934114752846
+      ]
+    },
+    {
+      "baseline": "matched_guard",
+      "scenario": "X",
+      "mode": "pressure",
+      "windows": 1728,
+      "common_marks": 1557,
+      "marked_delta": 29.983615630481875,
+      "exposure_pct": -12.380516106167562,
+      "day_interval": [
+        -38.656092904396445,
+        120.36466769525083
+      ]
+    },
+    {
+      "baseline": "matched_guard",
+      "scenario": "X",
+      "mode": "floor",
+      "windows": 1728,
+      "common_marks": 1527,
+      "marked_delta": -289.2134582901277,
+      "exposure_pct": 117.94034298704992,
+      "day_interval": [
+        -374.73296535878086,
+        -188.7912581155006
+      ]
+    },
+    {
+      "baseline": "matched_guard",
+      "scenario": "X",
+      "mode": "market",
+      "windows": 1728,
+      "common_marks": 1534,
+      "marked_delta": -559.3478202086269,
+      "exposure_pct": 74.27139302310675,
+      "day_interval": [
+        -673.7910182638849,
+        -451.6647839157812
+      ]
+    },
+    {
+      "baseline": "matched_guard",
+      "scenario": "X",
+      "mode": "queue",
+      "windows": 1728,
+      "common_marks": 1508,
+      "marked_delta": -592.2733496626527,
+      "exposure_pct": 80.1260297419197,
+      "day_interval": [
+        -694.894231278037,
+        -511.54478429977985
+      ]
+    },
+    {
+      "baseline": "matched_guard",
+      "scenario": "X",
+      "mode": "queue_cost",
+      "windows": 1728,
+      "common_marks": 1516,
+      "marked_delta": -563.7707983576167,
+      "exposure_pct": 85.6345280757098,
+      "day_interval": [
+        -657.4112443040789,
+        -478.00415754160775
+      ]
+    },
+    {
+      "baseline": "matched_guard",
+      "scenario": "stress",
+      "mode": "default",
+      "windows": 1728,
+      "common_marks": 1561,
+      "marked_delta": -2560.414585010809,
+      "exposure_pct": 26.537403214087128,
+      "day_interval": [
+        -2889.564932623458,
+        -2195.066849150333
+      ]
+    },
+    {
+      "baseline": "matched_guard",
+      "scenario": "stress",
+      "mode": "pressure",
+      "windows": 1728,
+      "common_marks": 1514,
+      "marked_delta": -105.7562915099712,
+      "exposure_pct": 16.868859905981978,
+      "day_interval": [
+        -265.99401000431885,
+        17.7410027139726
+      ]
+    },
+    {
+      "baseline": "matched_guard",
+      "scenario": "stress",
+      "mode": "floor",
+      "windows": 1728,
+      "common_marks": 1530,
+      "marked_delta": -663.5727648701743,
+      "exposure_pct": 63.81884532029803,
+      "day_interval": [
+        -803.4852604508154,
+        -528.401824608135
+      ]
+    },
+    {
+      "baseline": "matched_guard",
+      "scenario": "stress",
+      "mode": "market",
+      "windows": 1728,
+      "common_marks": 1517,
+      "marked_delta": -1110.1609966934993,
+      "exposure_pct": 23.439090681920423,
+      "day_interval": [
+        -1260.7575085793762,
+        -968.4517598348502
+      ]
+    },
+    {
+      "baseline": "matched_guard",
+      "scenario": "stress",
+      "mode": "queue",
+      "windows": 1728,
+      "common_marks": 1528,
+      "marked_delta": -1100.400548583105,
+      "exposure_pct": 26.320996245257803,
+      "day_interval": [
+        -1237.2355059174095,
+        -952.6960360135199
+      ]
+    },
+    {
+      "baseline": "matched_guard",
+      "scenario": "stress",
+      "mode": "queue_cost",
+      "windows": 1728,
+      "common_marks": 1522,
+      "marked_delta": -1095.4019160759158,
+      "exposure_pct": 28.115282026252835,
+      "day_interval": [
+        -1236.5519466789583,
+        -967.009605351197
+      ]
+    }
+  ],
+  "caption": "Upper-left direction means more paired marked trading value with less inventory-square exposure. Lines connect primary/stress assumptions, not a time trend. Vertical ranges resample six UTC days; they do not adjust for selection on consumed history. Each point uses its own common-mark windows, with counts in this receipt and the full report. Inventory exposure is a risk proxy, not measured future P&L variance. Spread/settlement are separate tables; neither is added to marked value.",
+  "controls": "All24 expected populations accepted; a planted impossible common-window count is refused."
+}
