@@ -1718,11 +1718,11 @@ flags:
 
 # DEFAULT_PULL_LOOP
 default_pull_loop:
-  as_of: "2026-11-12T01:35:45.958752+00:00"
-  state: "running"
-  stage: "stress_20261027"
-  completed_stages: 21
-  detail: "v4: observed empty levels are known, retaining all data and inventory controls."
+  as_of: "2026-11-12T02:24:44.677371+00:00"
+  state: "queued"
+  stage: "stress_20261031"
+  completed_stages: 22
+  detail: "Waiting for the shared numeric slot."
   progress: handoffs/20261111_default_pull_progress.md
   branch: research/predict-default-pull-20261111
 # /DEFAULT_PULL_LOOP
