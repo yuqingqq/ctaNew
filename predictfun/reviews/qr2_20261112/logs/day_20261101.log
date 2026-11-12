@@ -1,0 +1,16 @@
+20261101: 40 window-sides, 9 s, rss 480 MiB
+20261101: 80 window-sides, 18 s, rss 480 MiB
+20261101: 120 window-sides, 27 s, rss 480 MiB
+20261101: 160 window-sides, 37 s, rss 480 MiB
+20261101: 200 window-sides, 46 s, rss 480 MiB
+20261101: 240 window-sides, 55 s, rss 480 MiB
+20261101: 280 window-sides, 64 s, rss 480 MiB
+20261101: 320 window-sides, 72 s, rss 480 MiB
+20261101: 360 window-sides, 80 s, rss 480 MiB
+20261101: 400 window-sides, 88 s, rss 481 MiB
+20261101: 440 window-sides, 96 s, rss 481 MiB
+20261101: 480 window-sides, 104 s, rss 481 MiB
+20261101: 520 window-sides, 112 s, rss 481 MiB
+20261101: 560 window-sides, 120 s, rss 481 MiB
+20261101: done in 123 s; controls {"reg_differ": 0, "parity_differ": 0, "yinf_differ": 0, "lcancel_differ": 0}
+2026-11-12T11:11:44Z tag=qr2_day_20261101 rc=0 peak_rss_mib=772 wall_s=125.07 cpu_user_s=123.99 memavail_start_gib=22 disk_free_gib=505->505 slot=claude
