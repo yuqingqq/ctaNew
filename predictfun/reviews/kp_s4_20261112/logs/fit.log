@@ -1,0 +1,19 @@
+fit 20261023 side 0: 489607 train rows, 60684 held-out rows
+fit 20261023 side 1: 488910 train rows, 60679 held-out rows
+fit 20261024 side 0: 489364 train rows, 60927 held-out rows
+fit 20261024 side 1: 488755 train rows, 60834 held-out rows
+fit 20261025 side 0: 489133 train rows, 61158 held-out rows
+fit 20261025 side 1: 488557 train rows, 61032 held-out rows
+fit 20261026 side 0: 489697 train rows, 60594 held-out rows
+fit 20261026 side 1: 489038 train rows, 60551 held-out rows
+fit 20261027 side 0: 489272 train rows, 61019 held-out rows
+fit 20261027 side 1: 488660 train rows, 60929 held-out rows
+fit 20261031 side 0: 488250 train rows, 62041 held-out rows
+fit 20261031 side 1: 487725 train rows, 61864 held-out rows
+fit 20261101 side 0: 488516 train rows, 61775 held-out rows
+fit 20261101 side 1: 487890 train rows, 61699 held-out rows
+fit 20261102 side 0: 489214 train rows, 61077 held-out rows
+fit 20261102 side 1: 488492 train rows, 61097 held-out rows
+fit 20261103 side 0: 489275 train rows, 61016 held-out rows
+fit 20261103 side 1: 488685 train rows, 60904 held-out rows
+2026-11-12T04:26:23Z tag=kp_s4_fit rc=0 peak_rss_mib=836 wall_s=620.43 cpu_user_s=605.65 memavail_start_gib=22 disk_free_gib=509->509 slot=claude

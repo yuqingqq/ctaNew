@@ -1,0 +1,16 @@
+20261103: 40 window-sides, 29 s, rss 655 MiB
+20261103: 80 window-sides, 59 s, rss 655 MiB
+20261103: 120 window-sides, 88 s, rss 655 MiB
+20261103: 160 window-sides, 119 s, rss 655 MiB
+20261103: 200 window-sides, 150 s, rss 655 MiB
+20261103: 240 window-sides, 181 s, rss 655 MiB
+20261103: 280 window-sides, 212 s, rss 655 MiB
+20261103: 320 window-sides, 244 s, rss 655 MiB
+20261103: 360 window-sides, 277 s, rss 655 MiB
+20261103: 400 window-sides, 309 s, rss 655 MiB
+20261103: 440 window-sides, 339 s, rss 655 MiB
+20261103: 480 window-sides, 368 s, rss 655 MiB
+20261103: 520 window-sides, 397 s, rss 655 MiB
+20261103: 560 window-sides, 425 s, rss 655 MiB
+20261103: evaluated in 437 s
+2026-11-12T05:40:20Z tag=kp_s4_eval_20261103 rc=0 peak_rss_mib=783 wall_s=439.94 cpu_user_s=436.63 memavail_start_gib=22 disk_free_gib=508->508 slot=claude

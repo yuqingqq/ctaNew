@@ -1,0 +1,16 @@
+20261031: 40 window-sides, 8507 rows, rss 490 MiB
+20261031: 80 window-sides, 17136 rows, rss 490 MiB
+20261031: 120 window-sides, 25764 rows, rss 491 MiB
+20261031: 160 window-sides, 34412 rows, rss 491 MiB
+20261031: 200 window-sides, 43018 rows, rss 491 MiB
+20261031: 240 window-sides, 51621 rows, rss 491 MiB
+20261031: 280 window-sides, 60256 rows, rss 492 MiB
+20261031: 320 window-sides, 68842 rows, rss 492 MiB
+20261031: 360 window-sides, 77472 rows, rss 492 MiB
+20261031: 400 window-sides, 86056 rows, rss 492 MiB
+20261031: 440 window-sides, 94656 rows, rss 493 MiB
+20261031: 480 window-sides, 103265 rows, rss 493 MiB
+20261031: 520 window-sides, 111858 rows, rss 493 MiB
+20261031: 560 window-sides, 120456 rows, rss 493 MiB
+20261031: built {'registry': 288, 'outside_day': 0, 'sealed_or_forward': 0, 'no_outcome': 0, 'untimed_legs_0_60': 762, 'untimed_shares_0_60': 9077.803427559644, 'windows': 288, 'window_sides': 576, 'rows': 123905, 'truncated': 10734, 'forks': 123905, 'k4_rows': 1688, 'k4_differ': 0, 'c1_differ': 0, 'grid_steps': 345600, 'grid_steps_without_row': 0}
+2026-11-12T04:22:10Z tag=kp_s4_build_20261031 rc=0 peak_rss_mib=706 wall_s=30.70 cpu_user_s=29.81 memavail_start_gib=22 disk_free_gib=509->509 slot=claude

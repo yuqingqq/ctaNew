@@ -1,0 +1,18 @@
+{
+ "registry": 288,
+ "outside_day": 0,
+ "sealed_or_forward": 0,
+ "no_outcome": 0,
+ "untimed_legs_0_60": 2093,
+ "untimed_shares_0_60": 20830.638290695933,
+ "windows": 288,
+ "window_sides": 576,
+ "rows": 121363,
+ "truncated": 10575,
+ "forks": 121363,
+ "k4_rows": 1661,
+ "k4_differ": 0,
+ "c1_differ": 0,
+ "grid_steps": 345600,
+ "grid_steps_without_row": 0
+}

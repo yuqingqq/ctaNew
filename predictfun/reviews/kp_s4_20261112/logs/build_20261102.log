@@ -1,0 +1,16 @@
+20261102: 40 window-sides, 8524 rows, rss 559 MiB
+20261102: 80 window-sides, 17032 rows, rss 560 MiB
+20261102: 120 window-sides, 25528 rows, rss 560 MiB
+20261102: 160 window-sides, 34076 rows, rss 560 MiB
+20261102: 200 window-sides, 42546 rows, rss 560 MiB
+20261102: 240 window-sides, 51006 rows, rss 561 MiB
+20261102: 280 window-sides, 59417 rows, rss 561 MiB
+20261102: 320 window-sides, 67935 rows, rss 561 MiB
+20261102: 360 window-sides, 76319 rows, rss 561 MiB
+20261102: 400 window-sides, 84741 rows, rss 561 MiB
+20261102: 440 window-sides, 93181 rows, rss 562 MiB
+20261102: 480 window-sides, 101652 rows, rss 562 MiB
+20261102: 520 window-sides, 110130 rows, rss 562 MiB
+20261102: 560 window-sides, 118720 rows, rss 562 MiB
+20261102: built {'registry': 288, 'outside_day': 0, 'sealed_or_forward': 0, 'no_outcome': 0, 'untimed_legs_0_60': 1228, 'untimed_shares_0_60': 14628.328666538513, 'windows': 288, 'window_sides': 576, 'rows': 122174, 'truncated': 10614, 'forks': 122174, 'k4_rows': 1660, 'k4_differ': 0, 'c1_differ': 0, 'grid_steps': 345600, 'grid_steps_without_row': 0}
+2026-11-12T04:24:13Z tag=kp_s4_build_20261102 rc=0 peak_rss_mib=690 wall_s=35.46 cpu_user_s=34.36 memavail_start_gib=22 disk_free_gib=509->509 slot=claude

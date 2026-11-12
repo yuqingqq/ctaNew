@@ -1,5 +1,18 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 05:53Z (session ce68ebe0) — keep-or-pull S4 DONE: the model has skill (R260 9 of 9 days) but its policy does NOT pay (R261 DECISION-FAIL): it beats never pulling and random pulls on 9 of 9 days, loses to the guard trigger on 0 of 9 and to v3 in 6 of 6 cells (R262 0 of 6); falsifier valid (R263)
+
+- Done (USER "try to build a model and get the performance"): research/pf_kp_s4.py + run_kp_s4.sh (f2c3a298), run 04:16-05:48Z in
+  the claude slot. Report handoffs/20261112_kp_s4_model.md; copies reviews/kp_s4_20261112/. 9 replay days, first 60 s, 1.10 M
+  never-pull rows, leave one day out. Controls: C1 0 differ every day and clock, K4 0 differ, statuses 0, self-tests passed.
+- IC vs Delta: KP +0.10..+0.18, guard value only +0.03..+0.08, shuffled -0.01..+0.01. Pooled 1 s c/sh (M 0 / 50 / 250): KP -0.84 /
+  -1.17 / -2.11, guard trigger -0.09 / -0.34 / -1.50, never pull -1.41 / -1.53 / -1.93, v3 +1.38 / +1.03 / -0.74.
+- Post hoc (pf_kp_s4_posthoc.py): one step at a time on the never-pull rows the rule gains +0.052 c/sh per row (perfect +0.281); on
+  its own path it churns (pull, re-place at the back after 250 ms, pull again: 122 pulls per side-minute) because the label never
+  prices staying out, which is what the guard trigger does. The random null realised 64.5% of KP's planned pulls (limit).
+- Next (proposals, user's call): S4b add the stay-out action (label Q_enter_now - Q_wait, place only when >= 0), or gate v3 with
+  the pull model. Exploratory on consumed days either way; a pass -> freeze + forward test on >= 5 untouched days after 11-13.
+
 ## 2026-11-12 03:38Z (session ce68ebe0) — keep-or-pull S1 DONE: GATE-PASS - a perfect keep / pull decision makes resting by default pay at every fill clock (+0.82 / +0.70 / +0.42 c/sh at 1 s, +$138 / +$120 / +$73 per day); pulling is usually wrong (12% of resting moments)
 
 - Done (USER "Go"; design handoffs/20261112_keep_pull_model_design.md aa727160): research/pf_kp_s1.py (b8603604), run 03:26-03:36Z
