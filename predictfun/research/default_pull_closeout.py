@@ -35,6 +35,11 @@ def shape(r):
 
 
 def run():
+    source_commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=WORK, text=True).strip()
+    source_path = str(Path(__file__).resolve().relative_to(WORK))
+    committed_source = subprocess.check_output(['git', 'show', source_commit + ':' + source_path], cwd=WORK)
+    if committed_source != Path(__file__).read_bytes():
+        raise ValueError('closeout checker must be committed before producing its receipt')
     report = json.loads((OUT / 'comparison_final.json').read_text())
     shape(report)
     bad = copy.deepcopy(report); bad['table'][0]['windows'] = 1727
@@ -124,7 +129,9 @@ def run():
     candidates = [m for m, bs in report['predicates'].items()
                   if all(p['all_scenarios_trading_up_exposure_down'] for p in bs.values())]
     result = dict(as_of=dt.datetime.now(dt.timezone.utc).isoformat(), status='FINAL_REVIEW_INTEGRITY_PASS',
-        source_commit=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=WORK, text=True).strip(), source_sha=sha(__file__),
+        source_commit=source_commit, source_sha=sha(__file__),
+        supersedes_metadata_receipt=dict(path='final_review_integrity.json', sha=sha(OUT / 'final_review_integrity.json')),
+        correction='Earlier metadata receipt recorded the pre-commit HEAD for its newly added checker. This receipt verifies exact checker bytes at source_commit. All numerical results are unchanged; original receipt and original source/review commit are retained.',
         comparison_sha=sha(OUT / 'comparison_final.json'), numerical_audit_sha=sha(OUT / 'completion_audit.json'),
         runtime_audit_sha=sha(OUT / 'completion_runtime_v4.json'), human_review_sha=sha(WORK / REVIEW),
         figure_receipt_sha=sha(WORK / REL / 'tradeoff_receipt.json'), authorization_sha=sha(OUT / 'execution_two_slots_20261112.json'),
@@ -134,7 +141,7 @@ def run():
         prior_completed_results_preserved=True, research_only_diff=True, changed_paths=len(paths),
         controls='Actual final population/hash accepted; planted wrong population and changed hash refused; criteria recomputed.',
         scope='Current artifact integrity after the completed numerical audit and human source/report/PNG review. Numerical reconciliation, causal-feature equality, saved-model/action reconstruction and input rehashing are the recorded independent numerical audit, not new results from this metadata script. No fresh validation or live promotion.')
-    target = OUT / 'final_review_integrity.json'
+    target = OUT / 'final_review_integrity_v2.json'
     with target.open('x') as f:
         json.dump(result, f, indent=2); f.write('\n')
     for base in (WORK, ROOT):
