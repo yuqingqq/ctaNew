@@ -12,9 +12,13 @@ ARM=$(python3 -c "from predictfun.research.pf_ladder_v3_build import ARM; print(
 unset PF_R60_FILE PF_LINES_FILE PF_TXJIT PF_TXSHIFT PF_QACT PF_ARMS PF_TAG PF_FORWARD
 export PF_RL_DDEC=2 PF_RL_LCANCEL=22 PF_RL_LPENDCANCEL=95 PF_RL_LFILL=100 PF_TIMING=e2 PF_TXTIME=ws PF_TXKEY=tk PF_PREDS=preds_t60k PF_ARMS="$ARM"
 R="env PF_SLOT=claude predictfun/research/run_light.sh"; E="python3 -m predictfun.research.pf_step4_ladder_v3"
-job() { local tag=$1 day=$2; shift 2; echo "$(date -u +%H:%M:%SZ) start $tag $day" >> $OUT/logs/driver.log
-  env "$@" PF_TAG=$tag $R fv3_${tag}_$day -- $E $day tokyoreal custom > $OUT/logs/${tag}_$day.log 2>&1 || { echo "$(date -u +%H:%M:%SZ) FAILED $tag $day" >> $OUT/logs/driver.log; exit 1; }
-  sleep 3; }
+job() { local tag=$1 day=$2; shift 2; local n=0
+  while :; do echo "$(date -u +%H:%M:%SZ) start $tag $day" >> $OUT/logs/driver.log
+    if env "$@" PF_TAG=$tag $R fv3_${tag}_$day -- $E $day tokyoreal custom > $OUT/logs/${tag}_$day.log 2>&1; then break; fi
+    if grep -q -E "^REFUSED: (research slot|[0-9]+ predictfun research processes)" $OUT/logs/${tag}_$day.log && [ $n -lt 240 ]; then
+      n=$((n+1)); echo "$(date -u +%H:%M:%SZ) slot busy ($(head -1 $OUT/logs/${tag}_$day.log)); retry in 60 s" >> $OUT/logs/driver.log; sleep 60; continue; fi
+    echo "$(date -u +%H:%M:%SZ) FAILED $tag $day" >> $OUT/logs/driver.log; exit 1
+  done; sleep 3; }
 for d in $CTRL; do job fv3c40J $d PF_RL_LPLACE=40 PF_TXJIT=frame; job fv3c40X $d PF_RL_LPLACE=40 PF_TXSHIFT=-50 PF_QACT=max; done
 for d in $DAYS; do
   job fv3p20J $d PF_RL_LPLACE=20 PF_TXJIT=frame; job fv3p20X $d PF_RL_LPLACE=20 PF_TXSHIFT=-50 PF_QACT=max
