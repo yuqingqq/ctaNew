@@ -1,5 +1,16 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 13:49Z (session ce68ebe0) — FV3 DONE: correct numbers on the FROZEN v3 engine (USER: "fix the errors and get some correct numbers first"): $60 / $45 a day at 1 s (J / X) but 79-83% on orders < 100 ms old (about $10 a day without them); loses $40 a day at the 250 ms clock; 42% of its shares cancel-pending; a 10-20 ms order path adds $2-5 a day without young fills (8-9 of 9 days)
+
+- Done: research/pf_fv3_check.py + run_fv3.sh (3925a6c3; slot-wait retry 7e371753), the generated engine pf_step4_ladder_v3.py
+  (never edited) on the 9 replay days with the forward check's settings minus PF_FORWARD; 12:42-13:48Z claude slot (the other
+  session held both slots at 12:41Z; the driver waited). Report handoffs/20261112_fv3_results.md; copies reviews/fv3_20261112/.
+- Controls: reruns reproduce i2J / i2X row for row on 10-23 and 11-03; 14 tie windows corrected at 50; side convention; bins.
+- R330 YOUNG-DRIVEN; R331 NEGATIVE-AT-250; R332 GAIN (20 ms +2.0..2.6, 10 ms +4.6..4.7 $/day w/o young); R333 NOT-SHOWN.
+- Next (proposals): $ split by cancel-pending (C3); a good-flow target (USER 13:3xZ: "is it good to predict potential good flows?
+  The flows may come longer than 250ms") on our resting order's own value with a continuation term; the remaining review fixes;
+  live A4b capture.
+
 ## 2026-11-12 12:27Z (session ce68ebe0) — Pipeline review DONE (USER: "review the whole logic of the flow ... check if there are any existing errors"): two ERRORs (tie windows recorded as "Up" - settlement values only; S4's gap feature uses the start price before it is known - S4 only), and the framing risk that every replay "v3" is lane J-v3, not the frozen pm_ladder v3; CS survives the own-order overlap defect
 
 - Three independent read-only reviewers (data / time alignment, features / guard, simulator / valuation); every ERROR and the RISKs

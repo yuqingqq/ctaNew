@@ -25,7 +25,7 @@ Statuses:
 |---|---|---|
 | C1 | Split profit by the order's age at the fill (< 100 / 100-500 / >= 500 ms). Report the headline without fills on orders < 100 ms old and B1a-weighted, beside the headline | Replay fills on orders < 100 ms old were 8-12% real on live's own orders (B1a). 73-77% of v3's and QR2's replay profit is there (AGE) |
 | C2 | Report fill clocks M 0 / M 50 / M 250, and say whether the claim holds at M 250 | No constant trade-time shift is valid; signs flip between clocks (B1a, review 2026-11-10) |
-| C3 | Report the cancel-pending share of fills | The replay credits 2.5x live's cancel-pending shares (B1a) |
+| C3 | Report the cancel-pending share of fills, and its $ | The replay credits 2.5x live's cancel-pending shares (B1a); 42% of the frozen v3's replay shares are cancel-pending (FV3) |
 | C4 | Treat replay volumes and $ totals as inflated | The replay credits 1.5-2x live's shares (B1a R24) |
 | C5 | Rule M primary, L shown; U is a front bound only | M is unvalidated; a fifth of live's fills contradict the shown-size queue (B1a) |
 | C6 | Every decision may use only information observable at its time. Write out observation, decision and placement clocks: feed >= 13.2 ms (median ~53), decision 2 ms, placement 40 ms. To model faster placement, change that leg explicitly. Never schedule a price-dependent decision before its information exists | QR's fast entries decided before the level existed (review 2026-11-12 10:42Z, 9053263d) |
@@ -71,6 +71,8 @@ Statuses:
 
 | Finding | Status | Source |
 |---|---|---|
+| The frozen pm_ladder v3 (its own engine, 9 replay days, whole window): $60 / $45 a day at 1 s (J / X timing), settlement $99 / $65 with ties at 50; 79-83% of the 1 s profit is on orders < 100 ms old (about $10 a day without them, $9-10 B1a-weighted); orders >= 500 ms lose slightly; 42% of its filled shares are on cancel-pending orders; at the 250 ms fill clock it loses $40 a day (1 of 9 days positive) | QUALIFIED: young and cancel-pending fills unvalidated (B1a); parameters chosen on these days | FV3, 20261112_fv3_results.md |
+| A faster order path on the frozen v3 (20 / 10 ms against 40): +$2.0-2.6 / +$4.6-4.7 a day without young fills, 8-9 of 9 days at J and X; not at the 250 ms clock | HOLDS (replay; the speeds are settings, not measurements) | FV3 R332 / R333 |
 | Lane J-v3 (v3's quote line only, NOT the frozen pm_ladder v3, C11) is the only positive simple replay arm (+1.03 c/sh, $14.7 a day at M 50 on the 9 days). The frozen v3 is under a forward test with its own engine | QUALIFIED: 75% of J-v3's value is young-order fills (AGE); every "v3" in S4 / QR / QR2 / AGE / GAP / CS means J-v3 | S4, QR2, AGE, pipeline review S1 |
 | The top makers' edge is not in our guard's states | HOLDS | B12 |
 | A pressure-feature guard does not change the guard | HOLDS | B14 |
