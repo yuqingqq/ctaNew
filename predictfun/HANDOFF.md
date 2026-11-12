@@ -1,9 +1,9 @@
 # P-2026-005 HANDOFF
 
 <!-- CONTINUATION_20261112 -->
-## 2026-11-12T10:55:18.073920+00:00 — Full-engine continuation: complete
+## 2026-11-12T10:56:31.273054+00:00 — Full-engine continuation: running
 
-Stage `declaration_v3`. v2 smoke passed; v3 excludes predecision trades sharing the decision clock from future flow and reconciliation. Failed/stopped artifacts preserved.
+Stage `build_20261023`. Full-state KEEP/PULL forks; complete day; 2/10/30s profiles and neutral parity.
 
 Branch `research/predict-continuation-20261112`; receipts `reviews/continuation_20261112_v3/`. Default resting and useful queue retention remain the objective. Live calibration awaits a new capture.
 <!-- /CONTINUATION_20261112 -->
