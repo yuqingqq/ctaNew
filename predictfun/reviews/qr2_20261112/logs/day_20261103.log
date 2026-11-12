@@ -1,0 +1,16 @@
+20261103: 40 window-sides, 8 s, rss 546 MiB
+20261103: 80 window-sides, 17 s, rss 546 MiB
+20261103: 120 window-sides, 25 s, rss 546 MiB
+20261103: 160 window-sides, 33 s, rss 546 MiB
+20261103: 200 window-sides, 41 s, rss 547 MiB
+20261103: 240 window-sides, 49 s, rss 547 MiB
+20261103: 280 window-sides, 58 s, rss 547 MiB
+20261103: 320 window-sides, 67 s, rss 547 MiB
+20261103: 360 window-sides, 78 s, rss 547 MiB
+20261103: 400 window-sides, 87 s, rss 547 MiB
+20261103: 440 window-sides, 95 s, rss 547 MiB
+20261103: 480 window-sides, 103 s, rss 547 MiB
+20261103: 520 window-sides, 111 s, rss 547 MiB
+20261103: 560 window-sides, 118 s, rss 547 MiB
+20261103: done in 122 s; controls {"reg_differ": 0, "parity_differ": 0, "yinf_differ": 0, "lcancel_differ": 0}
+2026-11-12T11:16:56Z tag=qr2_day_20261103 rc=0 peak_rss_mib=742 wall_s=123.51 cpu_user_s=122.19 memavail_start_gib=22 disk_free_gib=505->505 slot=claude

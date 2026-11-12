@@ -1,0 +1,16 @@
+20261025: 40 window-sides, 8 s, rss 562 MiB
+20261025: 80 window-sides, 17 s, rss 562 MiB
+20261025: 120 window-sides, 26 s, rss 562 MiB
+20261025: 160 window-sides, 35 s, rss 562 MiB
+20261025: 200 window-sides, 44 s, rss 562 MiB
+20261025: 240 window-sides, 52 s, rss 562 MiB
+20261025: 280 window-sides, 61 s, rss 562 MiB
+20261025: 320 window-sides, 70 s, rss 562 MiB
+20261025: 360 window-sides, 80 s, rss 562 MiB
+20261025: 400 window-sides, 90 s, rss 563 MiB
+20261025: 440 window-sides, 99 s, rss 563 MiB
+20261025: 480 window-sides, 108 s, rss 563 MiB
+20261025: 520 window-sides, 117 s, rss 563 MiB
+20261025: 560 window-sides, 126 s, rss 563 MiB
+20261025: done in 130 s; controls {"reg_differ": 0, "parity_differ": 0, "yinf_differ": 0, "lcancel_differ": 0}
+2026-11-12T11:01:15Z tag=qr2_day_20261025 rc=0 peak_rss_mib=683 wall_s=132.62 cpu_user_s=131.31 memavail_start_gib=22 disk_free_gib=505->505 slot=claude

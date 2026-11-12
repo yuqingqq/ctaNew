@@ -1,0 +1,2 @@
+failing: [] planted errors caught: {'MUT_DEB_IGNORED': True, 'MUT_ALLOW_IGNORED': True, 'MUT_NO_GRACE': True, 'L_PLACE': True}
+2026-11-12T10:55:28Z tag=qr2_selftest rc=0 peak_rss_mib=103 wall_s=0.32 cpu_user_s=0.26 memavail_start_gib=23 disk_free_gib=505->505 slot=claude

@@ -1,5 +1,17 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-12 11:20Z (session ce68ebe0) — QR2 DONE: joining earlier at today's speed does NOT beat v3 (R290 NOT-SHOWN); joining new levels within 30 ms does (F30 / Y+F30 IMPROVES 9 of 9 days, +8.7 $/day at M 50); keeping through guard flicker hurts
+
+- Done (USER: "we do the test to check the performance first, then check what's the remaining gap to top makers"):
+  research/pf_qr2_v3_early.py + run_qr2.sh (21fb9040, before the run), 10:55-11:20Z claude slot. Report handoffs/20261112_qr2_results.md;
+  copies reviews/qr2_20261112/. Controls passed (switches off = sim2 join, both off-parities 0 differ, regression can fail). Post hoc
+  parameters (500 ms age cut, 2-step debounce chosen after QR on these days).
+- v3 14.7 $/day at M 50 (+1.03 c/sh); Y (no joins on levels > 500 ms) 14.9 but +1.34 c/sh and -2.9 vs -11.9 $/day at M 250 (9 of 9
+  days, AGE-SELECTS vs a random-skip null); K / K2 (keep through flicker) worse per share; F30 23.3; Y+F30 23.5 at +1.05 c/sh,
+  [+6.2, +11.3] $/day over v3 (post hoc), -5.6 at M 250.
+- Watch out: 30 ms is below our 53 ms median feed delay; fast entries are young orders (B1a: mostly phantom live); consumed days.
+- Next (USER): the remaining gap to the top makers on the same 9 days.
+
 ## 2026-11-12 10:31Z (session ce68ebe0) — QR queue race DONE: our orders are at the back mainly because we join levels late (R280 LATE-ENTRY, 9 of 9 days; live R281 the same), not because we are slower than others or re-place; speed buys queue only below one book snapshot (~50 ms) and pays only with the guard
 
 - Done (USER: "not sure if it is because we requote slower than others, or we requote and we lose the position ... check how fast
