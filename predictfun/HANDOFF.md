@@ -1,5 +1,11 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 15:13Z (session ce68ebe0) — SIDE-MOVES post hoc + CORRECTION: on the protection side the top makers' orders are mostly already at the next price before the move (49% of the volume filled there in the trade that pushes the price there; first in its queue); on the other side they rarely requote and their old order stays more often than others' (24% vs 9% when 100+ sh trade there again), but most are gone; kept fills earn +0.5 to +0.6 c/sh. Same in pumps and dumps
+
+- Done (USER: "So they don't requote, their orders are already there ... top makers don't pull bid side, then what they do? ... solid conclusions"): pf_side_moves.py dayposthoc / posthoc + run_side_moves_posthoc.sh (6e49d5ff, before its run), 15:10-15:12Z; the declared readings reproduce exactly. Report section added to handoffs/20261113_side_moves_results.md; FINDINGS row rewritten; copies refreshed.
+- Correction: the 14:36Z entry below said the top 5 "MOVE down" on the protection side and "KEEP" their old quote on the other side; both overstated (see the report's correction note). Public match records carry no order creation / cancel time (checked), so placement times cannot be observed.
+- Next (proposals, user's call): unchanged (FAST path, KEEP-BEHIND, STOP-HERE).
+
 ## 2026-11-13 14:59Z (session ce68ebe0) — MOVE-DOWN + WHY-GONE DONE: entering the protection side's new best at once after the move (128 ms, 46 ms with the fast path, vs 347 ms today) loses $400-440 a day (behind 160-220 sh, filled when the move continues); today's rule with the fast path helps at every clock (+$22 a day M 50, +$12 at M 250, 9/9). Other side: our held order is pulled by our own guard (52% within 1 s); the top makers keep theirs
 
 - Done (USER: "The requote side ... can we do faster. Bid side, why we left?"): research/pf_move_down.py + run_move_down.sh (3695d17c, before the first run), 14:53-14:58Z. Report handoffs/20261113_move_down_results.md; copies reviews/move_down_20261113/; FINDINGS updated.

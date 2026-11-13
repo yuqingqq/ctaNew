@@ -1,0 +1,9 @@
+20261031: 80 window-sides, 2 s, rss 527 MiB
+20261031: 160 window-sides, 3 s, rss 530 MiB
+20261031: 240 window-sides, 3 s, rss 534 MiB
+20261031: 320 window-sides, 4 s, rss 538 MiB
+20261031: 400 window-sides, 5 s, rss 542 MiB
+20261031: 480 window-sides, 5 s, rss 545 MiB
+20261031: 560 window-sides, 6 s, rss 548 MiB
+20261031: {"registry": 288, "outside_day": 0, "sealed_or_forward": 0, "no_outcome": 0, "untimed_legs_0_60": 762, "untimed_shares_0_60": 9077.803427559644, "windows": 288, "window_sides": 576, "sim_differ": 0, "grid_steps": 345600, "grid_steps_without_row": 0, "events_differ": 0, "unpaired_windows": 0} events {'other': 5783, 'adverse': 5537, 'calm improve': 2912, 'calm fallback': 2571} in 6 s
+2026-11-13T15:11:19Z tag=smp_day_20261031 rc=0 peak_rss_mib=704 wall_s=6.61 cpu_user_s=6.01 memavail_start_gib=22 disk_free_gib=528->528 slot=claude
