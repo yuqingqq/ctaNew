@@ -1,0 +1,40 @@
+DEPTH-TIMING, 9 consumed replay days, first 60 s, WS-timed exact complete taker orders; as of 2026-11-13T07:46:17Z; controls passed
+statuses {"real": 773905, "ours": 221219, "ours_unknown_type": 357611, "window_sides": 5184}
+
+Readings: {"R420": "WITHIN-TYPE", "R421": "MORE-STOPS", "R422": "PRESENT-WHEN-SAFE"}
+  {"R420_detail": {"gap": 1.9944644075659346, "mix": 0.5478561103123041, "within": 1.4466082972536305, "mix_share": 0.27468833649476526, "parts": {"STOP": {"w_top": 0.6434392498289261, "w_ours": 0.3713302844755257, "v_top": 0.940721251268069, "v_ours": 0.16115772889837948}, "THROUGH": {"w_top": 0.3565607501710741, "w_ours": 0.6286697155244743, "v_top": 0.7981254914119023, "v_ours": -1.8522125751663123}}, "days_positive": 9, "per_day": [1.5933786804221384, 1.5448854258562381, 1.7764298724855025, 1.7284488542842806, 2.030566226416677, 2.63536940282075, 2.725788617626268, 2.140360476235126, 2.295843119939512]}, "R421_detail": {"top5": 0.6434392498289261, "ours": 0.3713302844755257, "field": 0.5982154390208846}, "R422_detail": {"top5": 0.42120933572650526, "ours": 0.21467236531867023, "field": 0.46294324984762686, "terciles": [0.09040728596733005, 0.4236075378593026]}}
+
+c/sh at 1 s (5 s) | share of shares | before (c) - by who x depth x type:
+  depth 0
+    top 5         all +0.40 (+0.37) sh    2606724 | STOP +0.53 (+0.47) 80% bf -0.45 | THROUGH -0.09 (-0.04) 20% bf -0.88
+    field         all +0.24 (+0.26) sh    5224863 | STOP +0.36 (+0.38) 71% bf -0.02 | THROUGH -0.05 (-0.02) 29% bf -0.61
+    ours LZ-none  all -0.88 (-0.89) sh     638802 | STOP -0.00 (-0.05) 52% bf -1.74 | THROUGH -1.81 (-1.79) 48% bf -3.59
+    ours LFPQ     all -1.29 (-1.26) sh     269753 | STOP -0.16 (-0.17) 45% bf -2.53 | THROUGH -2.19 (-2.13) 55% bf -4.43
+  depth 1
+    top 5         all +0.58 (+0.54) sh    1231017 | STOP +0.69 (+0.74) 65% bf -1.29 | THROUGH +0.37 (+0.17) 35% bf -1.38
+    field         all +0.34 (+0.31) sh    1467027 | STOP +0.29 (+0.35) 59% bf -1.13 | THROUGH +0.40 (+0.27) 41% bf -1.14
+    ours LZ-none  all -1.16 (-1.15) sh     330007 | STOP -0.03 (+0.15) 39% bf -2.04 | THROUGH -1.88 (-1.98) 61% bf -3.52
+    ours LFPQ     all -1.29 (-1.25) sh     324895 | STOP -0.13 (+0.08) 36% bf -2.18 | THROUGH -1.93 (-1.99) 64% bf -3.52
+  depth 2
+    top 5         all +0.98 (+0.69) sh     540193 | STOP +1.03 (+0.93) 61% bf -1.86 | THROUGH +0.90 (+0.32) 39% bf -1.81
+    field         all +0.68 (+0.48) sh     587208 | STOP +0.54 (+0.65) 57% bf -1.85 | THROUGH +0.88 (+0.27) 43% bf -1.78
+    ours LZ-none  all -1.03 (-1.11) sh     146516 | STOP +0.34 (+0.42) 36% bf -2.26 | THROUGH -1.81 (-1.97) 64% bf -3.88
+    ours LFPQ     all -1.07 (-1.26) sh     145253 | STOP +0.21 (+0.29) 33% bf -2.42 | THROUGH -1.72 (-2.04) 67% bf -3.82
+  depth 3+
+    top 5         all +1.77 (+1.34) sh     379192 | STOP +1.62 (+1.22) 67% bf -3.57 | THROUGH +2.08 (+1.57) 33% bf -2.72
+    field         all +1.33 (+0.94) sh     390656 | STOP +0.95 (+0.55) 66% bf -3.67 | THROUGH +2.08 (+1.68) 34% bf -2.41
+    ours LZ-none  all -1.03 (-1.14) sh     108900 | STOP +0.57 (+0.25) 33% bf -2.97 | THROUGH -1.83 (-1.84) 67% bf -4.70
+    ours LFPQ     all -1.18 (-1.32) sh     111316 | STOP +0.40 (+0.08) 32% bf -3.11 | THROUGH -1.93 (-1.97) 68% bf -4.74
+  depth >= 1
+    top 5         all +0.89 (+0.72) sh    2150403 | STOP +0.94 (+0.87) 64% bf -1.84 | THROUGH +0.80 (+0.44) 36% bf -1.72
+    field         all +0.58 (+0.45) sh    2444891 | STOP +0.46 (+0.45) 60% bf -1.74 | THROUGH +0.75 (+0.46) 40% bf -1.48
+    ours LZ-none  all -1.10 (-1.14) sh     585423 | STOP +0.16 (+0.23) 37% bf -2.25 | THROUGH -1.85 (-1.95) 63% bf -3.85
+    ours LFPQ     all -1.22 (-1.26) sh     581464 | STOP +0.04 (+0.13) 34% bf -2.40 | THROUGH -1.87 (-2.00) 66% bf -3.84
+
+depth >= 1, by P tercile (P <= 0.090 / <= 0.424 / above): share of shares and c/sh at 1 s, STOP / THROUGH
+  top 5         low 42%: +1.45 / +1.00 | mid 39%: +0.92 / +0.65 | high 19%: -0.01 / -0.19
+  field         low 46%: +1.49 / +1.03 | mid 34%: +0.92 / +0.58 | high 20%: -1.74 / -0.57
+  ours LZ-none  low 21%: +1.41 / +0.85 | mid 28%: +0.71 / +0.12 | high 50%: -1.35 / -3.64
+  ours LFPQ     low 21%: +1.39 / +0.84 | mid 27%: +0.71 / +0.12 | high 52%: -1.50 / -3.64
+
+R420 per day (top 5 minus ours LZ-none, depth >= 1, c/sh 1 s): +1.59 +1.54 +1.78 +1.73 +2.03 +2.64 +2.73 +2.14 +2.30
