@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 12:22Z (session ce68ebe0) — PULL-DEPTH DONE: pulling only the prices the predicted move reaches beats pulling every layer on exactly-timed trades (PD10 +$23, PD25 +$44 a day at M 50; 9/9, 8/9 days); 60% of guard onsets are false alarms and the depth is predictable (AUC 0.75); the gain is behind the best, not at it. Two sides: the hit side's new best is queued before it becomes the best (top 5 take 42% there, +0.30 c/sh); the other side is a speed race (first-100 ms fills +0.96 vs +0.45 c/sh) that the top makers do not win
+
+- Done (USER: "if we can pull the quotes only at risk ... keep our best bid at 0.47 ... Can we check 2 sides as well ... check different side behavior in these cases for top makers"): research/pf_pull_depth.py + run_pull_depth.sh (6fa5182e before the first run; fix 7f5f6aa1 after the first job failed on a duplicate column name, no output; post hoc split 0fb1fa22), 11:56-12:17Z. Report handoffs/20261113_pull_depth_results.md; copies reviews/pull_depth_20261113/; FINDINGS updated.
+- Readings: R490 PREDICTABLE (j 1-3), R491 PD10 HELPS / PD25 HELPS, R492 descriptive, R493 PROPORTIONAL (1.10), R494 EARLY-PAYS, R495 NOT-SHOWN.
+- Watch out: on E2-timed trades PD25 loses more than LDG (all trades M 50: PD10 -119.5, LDG -136.6, PD25 -174.3). Another session's job briefly held core 9 (11:55Z); the driver waited one retry.
+- Next (proposals, user's call): freeze PD10 (model + tau) for a forward replay on untouched days after 11-13 or the live probe; a REPOST lane on the other side (move rung 0 to the new price at once, today's path and FAST).
+
 ## 2026-11-13 11:28Z (session ce68ebe0) — QUEUE-PLACE DONE: we are behind from the moment we join, not mainly by re-places (re-places 22% of the queue ahead at our at-best fills, 80% of that guard pulls); we arrive late (median 359 ms after a level becomes the best; LATE 40%), because at the birth the guard has just pulled us or rung 0 is parked at the old price; orders already at the price before it became the best earn +0.20 c/sh at 57% STOP vs ~0 at 33-35% (7/9 days)
 
 - Done (USER: "How do we become front in the queue ... check if we join early, then replace to be back in the queue, or is it because we are already back from when we join"): research/pf_queue_place.py + run_queue_place.sh (bad57131, renamed 2f7143ea, both before the run), 11:16-11:20Z; post hoc pf_queue_place_why_late.py (af81edf8, before its run), 11:22-11:24Z. Report handoffs/20261113_queue_place_results.md; copies reviews/queue_place_20261113/; FINDINGS updated.

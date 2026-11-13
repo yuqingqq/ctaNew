@@ -1,0 +1,2 @@
+20261023: {'window_sides': 576, 'guard_steps': 287291, 'invalid_book': 40, 'rows': 287251} in 17 s
+2026-11-13T11:56:47Z tag=pd_rows_20261023 rc=0 peak_rss_mib=871 wall_s=17.54 cpu_user_s=15.50 memavail_start_gib=22 disk_free_gib=531->531 slot=claude

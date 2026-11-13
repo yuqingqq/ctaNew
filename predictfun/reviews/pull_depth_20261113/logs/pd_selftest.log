@@ -1,0 +1,2 @@
+selftest passed; planted errors caught: {'MUT_MOVE_SIGN': True, 'MUT_DEC_INV': True, 'MUT_ONSET_ANY': True}
+2026-11-13T11:56:44Z tag=pd_selftest rc=0 peak_rss_mib=103 wall_s=0.31 cpu_user_s=0.24 memavail_start_gib=22 disk_free_gib=531->531 slot=claude
