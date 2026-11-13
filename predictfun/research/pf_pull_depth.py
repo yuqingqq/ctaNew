@@ -597,6 +597,21 @@ def report():
     open(f'{OUTD}/pull_depth.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
 
 
+def posthoc():
+    """POST HOC (added after the report, descriptive, no readings): the age split (all ages vs w/o young) and where each arm's WS $/day comes
+    from (at the best vs behind it; at-best PRE vs POST), M 0 / M 50."""
+    stats = {d: json.load(open(f'{OUTD}/day_{d}.json')) for d in DAYS9}; ndays = sum(stats[d]['days'] for d in DAYS9)
+    A = pd.concat([pd.read_parquet(f'{OUTD}/fills_{d}.parquet') for d in DAYS9], ignore_index=True); A = A[np.isfinite(A.v1)]
+    usd = lambda x: float((x.q * x.v1).sum()) / 100.0 / ndays
+    L = ['PULL-DEPTH post hoc: WS-timed trades, $/day at 1 s: all ages | w/o young || w/o young: at the best (PRE | POST) | behind the best | other']
+    for cfg in ('M0', 'M50'):
+        for arm in ARMS:
+            x = A[(A.arm == arm) & (A.cfg == cfg) & (A.src == 'WS')]; o = x[~x.young]; ab = o[o.depth == 0]
+            L.append(f'  {cfg} {arm:<5} {usd(x):+8.1f} | {usd(o):+8.1f} || {usd(ab):+8.1f} ({usd(ab[ab.pre == "PRE"]):+7.1f} | {usd(ab[ab.pre == "POST"]):+7.1f}) |'
+                     f' {usd(o[o.depth > 0]):+8.1f} | {usd(o[(o.depth < 0)]):+7.1f}')
+    open(f'{OUTD}/posthoc.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''
     if cmd == 'selftest':
@@ -609,5 +624,7 @@ if __name__ == '__main__':
         eval_day(sys.argv[2])
     elif cmd == 'report':
         report()
+    elif cmd == 'posthoc':
+        posthoc()
     else:
         sys.exit(__doc__)
