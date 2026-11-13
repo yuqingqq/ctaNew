@@ -1,0 +1,41 @@
+{
+ "R540": {
+  "share": 0.42865717010248483,
+  "usual": 0.3394182953390083,
+  "lower": 0,
+  "higher": 9,
+  "label": "THICK-WHERE-RUN-OVER"
+ },
+ "R541": {
+  "top5": -3.4011650874662447,
+  "field": -4.20878733619017,
+  "neg_days": 9,
+  "better_days": 9,
+  "worse_days": 0,
+  "label": "THEY-LOSE-THERE / LESS-THAN-THE-FIELD"
+ },
+ "R542": {
+  "big": 0.04880611813791692,
+  "small": 0.03512916308679414,
+  "ratio": 1.389333358649363,
+  "higher": 9,
+  "lower": 0,
+  "label": "TAKE-INTO-BIG-MOVES"
+ },
+ "R543 big, reverts": {
+  "share": 0.40998449588276387,
+  "top5_cps": -0.9443585070204705,
+  "field_cps": -1.7157462986733882
+ },
+ "R543 big, trends": {
+  "share": 0.33806180384705153,
+  "top5_cps": 1.824843660451319,
+  "field_cps": 1.630514322625114
+ },
+ "R544": {
+  "usd_day": 7964.788655210875,
+  "pos": 9,
+  "neg": 0,
+  "label": "NET-POSITIVE"
+ }
+}
