@@ -1,0 +1,2 @@
+selftest passed; planted errors caught: {'MUT_NO_TAIL': True, 'MUT_ANY_EPISODE': True, 'MUT_MOVE_SIGN': True}
+2026-11-13T14:53:12Z tag=md_selftest rc=0 peak_rss_mib=103 wall_s=0.30 cpu_user_s=0.23 memavail_start_gib=22 disk_free_gib=528->528 slot=claude

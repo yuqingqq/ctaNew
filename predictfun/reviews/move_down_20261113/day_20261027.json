@@ -1,0 +1,41 @@
+{
+ "stat": {
+  "registry": 288,
+  "outside_day": 0,
+  "sealed_or_forward": 0,
+  "no_outcome": 0,
+  "untimed_legs_0_60": 2964,
+  "untimed_shares_0_60": 32617.169265447075,
+  "windows": 288,
+  "window_sides": 576,
+  "ctrl_ldg": 0,
+  "ctrl_fast": 0,
+  "md_differs": 1672,
+  "sim4_differ": 0,
+  "unmapped": 0,
+  "clock_ok": 1,
+  "grid_steps": 345600,
+  "grid_steps_without_row": 0,
+  "pulls|LDG|M0": 13448,
+  "pulls|FAST|M0": 13440,
+  "pulls|MD|M0": 15865,
+  "pulls|MDP|M0": 48477,
+  "pulls|MDF|M0": 16675,
+  "pulls|LDG|M50": 13429,
+  "pulls|FAST|M50": 13405,
+  "pulls|MD|M50": 15854,
+  "pulls|MDP|M50": 48470,
+  "pulls|MDF|M50": 16655,
+  "pulls|LDG|M250": 13130,
+  "pulls|FAST|M250": 13083,
+  "pulls|MD|M250": 15598,
+  "pulls|MDP|M250": 48101,
+  "pulls|MDF|M250": 16365,
+  "planted_caught": {
+   "MUT_NO_TAIL": true,
+   "MUT_ANY_EPISODE": true,
+   "MUT_MOVE_SIGN": true
+  }
+ },
+ "days": 1.0
+}

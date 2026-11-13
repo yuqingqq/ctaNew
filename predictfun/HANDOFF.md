@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 14:59Z (session ce68ebe0) — MOVE-DOWN + WHY-GONE DONE: entering the protection side's new best at once after the move (128 ms, 46 ms with the fast path, vs 347 ms today) loses $400-440 a day (behind 160-220 sh, filled when the move continues); today's rule with the fast path helps at every clock (+$22 a day M 50, +$12 at M 250, 9/9). Other side: our held order is pulled by our own guard (52% within 1 s); the top makers keep theirs
+
+- Done (USER: "The requote side ... can we do faster. Bid side, why we left?"): research/pf_move_down.py + run_move_down.sh (3695d17c, before the first run), 14:53-14:58Z. Report handoffs/20261113_move_down_results.md; copies reviews/move_down_20261113/; FINDINGS updated.
+- Readings: R520 FASTER (MD, MDF, FAST; 9/9), R521 MD HURTS, MDF HURTS, FAST HELPS (9/9 at M 0 / 50 / 250), MDP NOT-SHOWN, R522 MD / MDF LOWER (9/9), MDP NOT-SHOWN, R523 descriptive.
+- Watch out: the MDP arm's entry was not gated by its model, so it re-entered after every pull (44k pulls a day); uninformative.
+- Next (proposals, user's call): FAST path as an engine requirement (measure live latency on Tokyo); KEEP-BEHIND on the other side (the guard does not pull an order behind the best while the price moves away); the front of the new best only via being there before it forms (FUTURE-BEST's stop-here prediction).
+
 ## 2026-11-13 14:36Z (session ce68ebe0) — SIDE-MOVES DONE: the top makers handle the two sides oppositely after a signal: on the protection side they MOVE down to the new best (2.75x the field, fill there 302 ms after it forms, first in its queue); on the other side they mostly KEEP their old quote (2.6x the field) and seldom requote. Ours: protection side out (guard) and late (347 ms, 35% of events); other side held but gone within 1 s two-thirds of the time
 
 - Done (USER: "Can you still check both sides for top makers ... for the other quoting side, can you check what they do, do they also requote or what"): research/pf_side_moves.py + run_side_moves.sh (e2626a18, before the first run), 14:32-14:34Z; report fix 36637b1f (first report job failed on DataFrame.join; day outputs unchanged). Report handoffs/20261113_side_moves_results.md; copies reviews/side_moves_20261113/; FINDINGS updated.
