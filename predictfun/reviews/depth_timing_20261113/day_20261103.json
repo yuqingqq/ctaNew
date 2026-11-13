@@ -1,0 +1,16 @@
+{
+ "registry": 288,
+ "outside_day": 0,
+ "sealed_or_forward": 0,
+ "no_outcome": 0,
+ "untimed_legs_0_60": 2426,
+ "untimed_shares_0_60": 38118.44680133401,
+ "windows": 288,
+ "window_sides": 576,
+ "real": 76118,
+ "ours": 24750,
+ "ours_unknown_type": 50904,
+ "c1_differ": 0,
+ "grid_steps": 345600,
+ "grid_steps_without_row": 0
+}

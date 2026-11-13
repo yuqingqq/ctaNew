@@ -1,5 +1,11 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 07:48Z (session ce68ebe0) — DEPTH-TIMING DONE: it is timing - real makers earn behind the best (top 5 +0.89, field +0.58 c/sh), our rungs lose (-1.10) because half our deep fills come at high P (theirs 19%); in the same P tercile our fills are worth about theirs
+
+- Done (USER: "If deep ladder doesnot work, why top makers do so? Check if it still the timing issue"): research/pf_depth_timing.py + run_depth_timing.sh (586efcba, before the first run; 80ec5108 column fix after a 4 s crash, before any output), 07:37-07:46Z. Report handoffs/20261113_depth_timing_results.md; copies reviews/depth_timing_20261113/; FINDINGS updated.
+- Readings: R420 WITHIN-TYPE (gap +1.99 c/sh, 73% within type, 9/9 days), R421 MORE-STOPS (64% vs 37%), R422 PRESENT-WHEN-SAFE (42% vs 21% at low P).
+- Next (in progress): DEEP-PULL - pull and block every rung when P is high (FRONT-PULL's 90% / 75% lines) or on the guard trigger, 6 rungs at 30 sh.
+
 ## 2026-11-13 07:24Z (session ce68ebe0) — FRONT-PULL-SIZE DONE (replay): bigger orders and a 6-level ladder do not close the gap - per share size changes nothing (-1.18 c/sh at 5 / 30 / 100 sh, FPQ, M 50), losses scale; the ladder loses 9/9 days (-$5,095 a day); our orders are filled repeatedly but 60% swept vs the top makers' ~16%; only the front bound (rule U) pays (+$689 a day at 30 sh with the guard)
 
 - Done (USER: "it looks we need to increase our size and price levels for testing? Yes can you try to test"): research/pf_front_pull_size.py + run_front_pull_size.sh (b8e7592a, before the first run), 06:46-07:22Z; pf_kp_s4.py gains inert size / offset switches. Report handoffs/20261113_front_pull_size_results.md; copies reviews/front_pull_size_20261113/; FINDINGS updated.
