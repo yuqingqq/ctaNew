@@ -44,7 +44,7 @@ guard off, missing prediction, tau = 0) with three planted errors (the +1 shift 
 sign flipped) that must each fail a case, and PULL-DEPTH's own self-test; (v) memory self-guard.
 Limits fixed in advance: replay rule M (B1a; C5), replay volumes inflated (C4); consumed days, exploratory (C8); tau from PULL-DEPTH; the
 rungs are independent orders; the lane is the guard ladder, not the frozen pm_ladder v3 (C11); no order-level validation (C10).
-Usage (run_light, PF_SLOT=claude): pf_future_best.py selftest | eval <day> | report; driver run_future_best.sh
+Usage (run_light, PF_SLOT=claude): pf_future_best.py selftest | eval <day> | report | posthoc (added after the report); driver run_future_best.sh
 """
 import json
 import os
@@ -379,6 +379,33 @@ def report():
     open(f'{OUTD}/future_best.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
 
 
+def posthoc():
+    """POST HOC (added after the report, descriptive, no readings): (a) C2 for PULL-DEPTH's arms, which were not run at M 250 there: PD10 /
+    PD25 minus LDG, WS $/day w/o young, per clock and days higher; (b) our aged fills at adverse levels (M 50, WS) by trade type: share of
+    shares and c/sh for STOP / THROUGH, PRE (order live before the birth) and POST."""
+    stats = {d: json.load(open(f'{OUTD}/day_{d}.json')) for d in DAYS9}; dd = {d: stats[d]['days'] for d in DAYS9}; ndays = sum(dd.values())
+    A = pd.concat([pd.read_parquet(f'{OUTD}/fills_{d}.parquet') for d in DAYS9], ignore_index=True); A = A[np.isfinite(A.v1) & ~A.young & (A.src == 'WS')]
+    LV = pd.concat([pd.read_parquet(f'{OUTD}/levfills_{d}.parquet') for d in DAYS9], ignore_index=True); LV = LV[np.isfinite(LV.v1) & LV.aged]
+    cps = lambda x: float((x.q * x.v1).sum() / x.q.sum()) if x.q.sum() else NAN
+    usd = lambda x, d=None: float((x.q * x.v1).sum()) / 100.0 / (dd[d] if d else ndays)
+    L = ['FUTURE-BEST post hoc (descriptive): (a) PULL-DEPTH arms minus LDG, WS $/day w/o young at 1 s, per clock (days higher of 9)']
+    for arm in ('PD10', 'PD25', 'FB10', 'FB25'):
+        parts = []
+        for cfg in ('M0', 'M50', 'M250'):
+            x = A[(A.arm == arm) & (A.cfg == cfg)]; y = A[(A.arm == 'LDG') & (A.cfg == cfg)]
+            hi = sum(usd(x[x.day == int(d)], d) > usd(y[y.day == int(d)], d) for d in DAYS9)
+            parts.append(f'{cfg} {usd(x) - usd(y):+8.1f} ({hi}/9)')
+        L.append(f'  {arm:<4} ' + ' | '.join(parts))
+    L += ['', '(b) adverse levels, M 50, WS, aged: arm | PRE: share of our shares there, STOP share, c/sh STOP / THROUGH | POST: the same']
+    for arm in ARMS:
+        y = LV[(LV.kind == 'adverse') & (LV.arm == arm)]; tot = max(y.q.sum(), 1e-9); parts = []
+        for nm, z in (('PRE', y[y.gap < 0]), ('POST', y[y.gap >= 0])):
+            st_ = z[z.type == 'STOP']; th = z[z.type == 'THROUGH']
+            parts.append(f'{nm} {z.q.sum() / tot:4.0%}, STOP {st_.q.sum() / max(z.q.sum(), 1e-9):4.0%}, {cps(st_):+.3f} / {cps(th):+.3f}')
+        L.append(f'  {arm:<4} ' + ' | '.join(parts))
+    open(f'{OUTD}/posthoc.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''
     if cmd == 'selftest':
@@ -387,5 +414,7 @@ if __name__ == '__main__':
         eval_day(sys.argv[2])
     elif cmd == 'report':
         report()
+    elif cmd == 'posthoc':
+        posthoc()
     else:
         sys.exit(__doc__)
