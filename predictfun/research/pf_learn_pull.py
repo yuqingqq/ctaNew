@@ -87,14 +87,16 @@ MEM_CAP_MIB = 2048.0
 def next_trade_obs(side, orders, present_after, e2_legs):
     """orders: [(t, legs [(signer, p, q)])] time-sorted WS taker orders of one window-side. Returns observations: presence of x at p at t1
     (sole-maker stop with p still shown after) and the next taker order with a leg at p at t2 <= t1 + 3 s: STAYED / GONE."""
-    obs = []; amb = 0; open_ = {}                         # p -> (signer, t1) of the latest presence at p not yet resolved
+    obs = []; amb = 0; same = 0; open_ = {}               # p -> (signer, t1) of the latest presence at p not yet resolved
     for t, legs in orders:
         ps = {p for _, p, _ in legs}
         for p in list(ps):
             if p in open_:
                 s, t1 = open_.pop(p)
-                if t1 >= t:
-                    raise ValueError('LEARN-PULL: an observation uses a record at or after t2')
+                if t1 > t:
+                    raise ValueError('LEARN-PULL: an observation uses a record after t2')
+                if t1 == t:
+                    same += 1; continue                 # same frame stamp: order of the two trades unknown (status)
                 if t - t1 > W_MAX:
                     continue
                 if any(t1 - E2_TOL <= x <= t + E2_TOL for x in e2_legs.get((s, p), ())):
@@ -109,7 +111,7 @@ def next_trade_obs(side, orders, present_after, e2_legs):
         taken, stop, at_stop = EX.classify(side, legs)
         if len(at_stop) == 1 and present_after(stop, t):
             open_[stop] = (next(iter(at_stop)), t)
-    return obs, amb
+    return obs, amb, same
 
 
 def positions(events):
@@ -155,11 +157,14 @@ def selftest():
     # next trade at 50 at t = 3500 is beyond 3 s -> no observation; maker 4 sole stop at 51 at 400, next trade at 51 at 600 fills 4 -> STAYED
     orders = [(100.0, [(7, 50, 5.0)]), (300.0, [(9, 50, 3.0)]), (400.0, [(4, 51, 2.0)]), (600.0, [(4, 51, 6.0), (8, 52, 1.0)]),
               (3500.0, [(9, 50, 2.0)])]
-    obs, amb = next_trade_obs(1, orders, pa, {})
+    obs, amb, _ = next_trade_obs(1, orders, pa, {})
     got = [(o['signer'], o['p'], o['stayed'], o['through']) for o in obs]
     if got != [(7, 50, 0, 0), (4, 51, 1, 1)]:
         bad.append(f'next-trade outcomes {got}')
-    obs2, amb2 = next_trade_obs(1, orders, pa, {(7, 50): [250.0]})
+    obs2, amb2, _ = next_trade_obs(1, orders, pa, {(7, 50): [250.0]})
+    o3, _, s3 = next_trade_obs(1, [(100.0, [(7, 50, 5.0)]), (100.0, [(9, 50, 3.0)])], pa, {})
+    if o3 or s3 != 1:
+        bad.append('same-stamp next trade must be a status, not an observation')
     if amb2 != 1 or [(o['signer'], o['stayed']) for o in obs2] != [(4, 1)]:
         bad.append('E2 ambiguity')
     ev = leg_events(0, 7, 3, 10.0, 1.0) + leg_events(1, 7, 3, 4.0, 2.0)          # 7 bought 10 on its bid, sold 4 on its ask; 3 the taker
@@ -214,7 +219,7 @@ def day_run(day):
     mdl = lgb.Booster(model_file=f'{FPDIR}/models/av_{day}.txt')
     LTI = LT.groupby(['mid', 'side'], sort=False).indices; LTM = LT.groupby('mid', sort=False).indices
     PE = pd.read_parquet(f'{PD.OUTD}/events_{day}.parquet', columns=['eid', 'kind', 'side', 'p', 'tb'])
-    st.update(window_sides=0, obs=0, e2_ambiguous=0, big_events=0)
+    st.update(window_sides=0, obs=0, e2_ambiguous=0, same_stamp=0, big_events=0)
     rows = []; brows = []; bev = []; evs = []; pend = {}; nb = len(K.G32)
     for w in K.window_sides(D):
         st['window_sides'] += 1; m, side, sg = w['m'], w['side'], w['sg']
@@ -236,7 +241,7 @@ def day_run(day):
             def present_after(p, t):
                 j = bisect.bisect_right(tfl, t)
                 return j < len(tfl) and bool(np.any((P5[j] == p) & (S5[j] > 0)))
-            obs, amb = next_trade_obs(side, orders, present_after, e2); st['e2_ambiguous'] += amb
+            obs, amb, same = next_trade_obs(side, orders, present_after, e2); st['e2_ambiguous'] += amb; st['same_stamp'] += same
         Pw = PD.av_P(w, mdl) if n else np.zeros(0)
         tgl = list(tg); r0 = len(rows)
         for o in obs:
@@ -366,7 +371,7 @@ def report():
     vw = lambda x, c='v5': float((x[c] * x.vol_p).sum() / x.vol_p.sum()) if len(x) and x.vol_p.sum() else NAN
     R = {}
     L = [f'LEARN-PULL, 9 consumed replay days, first 60 s, WS-timed tape; as of {asof}; controls passed; observations {len(A)} (top 5 {len(T5)},'
-         f' field {len(FD)}); E2-ambiguous {sum(stats[d]["stat"]["e2_ambiguous"] for d in DAYS9)}; big events {sum(stats[d]["stat"]["big_events"] for d in DAYS9)}', '']
+         f' field {len(FD)}); E2-ambiguous {sum(stats[d]["stat"]["e2_ambiguous"] for d in DAYS9)}; same-stamp next trade {sum(stats[d]["stat"]["same_stamp"] for d in DAYS9)}; big events {sum(stats[d]["stat"]["big_events"] for d in DAYS9)}', '']
     # R551 rates
     L.append('R551 PULL RATE on the same intervals (front order at the best, next trade at that price): their GONE share | our pull share, by interval')
     for g_, X in (('top 5', T5), ('field', FD)):
