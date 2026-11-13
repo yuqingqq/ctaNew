@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 07:24Z (session ce68ebe0) — FRONT-PULL-SIZE DONE (replay): bigger orders and a 6-level ladder do not close the gap - per share size changes nothing (-1.18 c/sh at 5 / 30 / 100 sh, FPQ, M 50), losses scale; the ladder loses 9/9 days (-$5,095 a day); our orders are filled repeatedly but 60% swept vs the top makers' ~16%; only the front bound (rule U) pays (+$689 a day at 30 sh with the guard)
+
+- Done (USER: "it looks we need to increase our size and price levels for testing? Yes can you try to test"): research/pf_front_pull_size.py + run_front_pull_size.sh (b8e7592a, before the first run), 06:46-07:22Z; pf_kp_s4.py gains inert size / offset switches. Report handoffs/20261113_front_pull_size_results.md; copies reviews/front_pull_size_20261113/; FINDINGS updated.
+- Readings: R410 SIZE NOT-SHOWN, R411 LADDER-HURTS (9/9), R412 0 of 6, R413 0 of 3 (LFPQ-30, FPQ-30).
+- Meaning: in the replay the top makers' shape does not give us their fills; the gap is where our orders sit when trades arrive (rule M puts us at the front as others leave, just before the level is taken). Not a candidate; J-v3 stays the only positive arm.
+- Next (proposals, user's call): live probe after the churn-fix deploy - one 30-sh order per side resting at the best, kept through fills, guard-trigger pull; measure swept share of our real fills against rule M's 60% and the top makers' 16%; no deep ladder.
+
 ## 2026-11-13 06:05Z (session ce68ebe0) — ORDERS DONE: the top makers keep larger orders (median 30 sh, p90 100) through fills and so hold the front (orders first in queue at >= 2 trades 15.7% vs 4.9%); they do not create levels more than their share; 6 prices per side per minute, two-sided, near flat; takes directional; EXIT holds on exact taker orders (EXIT-v2)
 
 - Done (USER: "Start the information collection, we fill the gaps and figure out how they work"): research/pf_orders.py + run_orders.sh. Build v1 (8fd16d97) stopped 10-23 at its control (86% mapped, no map written); build v2 + analysis (1ffafa5e, 9f8ec338, before the v2 run), 04:59-06:04Z: maker 100%, order hash 95.6-98.7%, exact taker order 84.4-93.3% of first-minute legs; agreement with legs_tk 100%; sealed / forward hours skipped (10-28 00-01Z, 10-30 23Z, 11-04 00-01Z). Report handoffs/20261113_orders_results.md; copies reviews/orders_20261113/; FINDINGS updated.
