@@ -1,0 +1,27 @@
+{
+ "stat": {
+  "registry": 288,
+  "outside_day": 0,
+  "sealed_or_forward": 0,
+  "no_outcome": 0,
+  "untimed_legs_0_60": 1316,
+  "untimed_shares_0_60": 13038.545279926448,
+  "windows": 288,
+  "window_sides": 576,
+  "obs": 23143,
+  "e2_ambiguous": 6358,
+  "same_stamp": 5069,
+  "big_events": 3463,
+  "grid_steps": 345600,
+  "grid_steps_without_row": 0,
+  "events_differ": 0,
+  "unpaired_windows": 0,
+  "inv_missing": 0,
+  "planted_caught": {
+   "MUT_OUTCOME_INV": true,
+   "MUT_TAKER_SIGN": true,
+   "MUT_PULL_LATE": true
+  }
+ },
+ "days": 1.0
+}
