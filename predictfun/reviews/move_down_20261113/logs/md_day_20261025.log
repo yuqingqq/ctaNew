@@ -1,0 +1,9 @@
+20261025: 80 window-sides, 6 s, rss 521 MiB
+20261025: 160 window-sides, 9 s, rss 528 MiB
+20261025: 240 window-sides, 12 s, rss 535 MiB
+20261025: 320 window-sides, 16 s, rss 543 MiB
+20261025: 400 window-sides, 19 s, rss 552 MiB
+20261025: 480 window-sides, 23 s, rss 558 MiB
+20261025: 560 window-sides, 26 s, rss 565 MiB
+20261025: {"registry": 288, "outside_day": 0, "sealed_or_forward": 0, "no_outcome": 0, "untimed_legs_0_60": 1316, "untimed_shares_0_60": 13038.545279926448, "windows": 288, "window_sides": 576, "ctrl_ldg": 0, "ctrl_fast": 0, "md_differs": 1566, "sim4_differ": 0, "unmapped": 0, "clock_ok": 1, "grid_steps": 345600, "grid_steps_without_row": 0, "pulls|LDG|M0": 12043, "pulls|FAST|M0": 12046, "pulls|MD|M0": 14145, "pulls|MDP|M0": 41457, "pulls|MDF|M0": 14893, "pulls|LDG|M50": 12016, "pulls|FAST|M50": 12012, "pulls|MD|M50": 14133, "pulls|MDP|M50": 41429, "pulls|MDF|M50": 14880, "pulls|LDG|M250": 11787, "pulls|FAST|M250": 11777, "pulls|MD|M250": 13952, "pulls|MDP|M250": 41164, "pulls|MDF|M250": 14655} in 27 s
+2026-11-13T14:54:18Z tag=md_day_20261025 rc=0 peak_rss_mib=753 wall_s=27.10 cpu_user_s=26.30 memavail_start_gib=22 disk_free_gib=527->527 slot=claude
