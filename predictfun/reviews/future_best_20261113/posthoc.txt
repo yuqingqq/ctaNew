@@ -1,0 +1,13 @@
+FUTURE-BEST post hoc (descriptive): (a) PULL-DEPTH arms minus LDG, WS $/day w/o young at 1 s, per clock (days higher of 9)
+  PD10 M0    +28.5 (9/9) | M50    +23.0 (9/9) | M250   -172.2 (0/9)
+  PD25 M0    +60.3 (9/9) | M50    +43.9 (8/9) | M250   -452.5 (0/9)
+  FB10 M0    +49.8 (9/9) | M50    +40.6 (8/9) | M250   -302.3 (0/9)
+  FB25 M0   +108.7 (9/9) | M50    +70.8 (8/9) | M250   -733.2 (0/9)
+
+(b) adverse levels, M 50, WS, aged: arm | PRE: share of our shares there, STOP share, c/sh STOP / THROUGH | POST: the same
+  LDG  PRE  16%, STOP  30%, +0.110 / -0.928 | POST  84%, STOP  24%, +0.399 / -0.243
+  PD10 PRE  15%, STOP  31%, +0.184 / -1.000 | POST  85%, STOP  24%, +0.398 / -0.264
+  PD25 PRE  20%, STOP  35%, -0.015 / -1.018 | POST  80%, STOP  25%, +0.412 / -0.282
+  FB10 PRE  18%, STOP  36%, +0.138 / -0.878 | POST  82%, STOP  25%, +0.362 / -0.271
+  FB25 PRE  64%, STOP  50%, +0.236 / -0.669 | POST  36%, STOP  26%, +0.472 / -0.333
+  OFB  PRE  85%, STOP  88%, +1.010 / +0.120 | POST  15%, STOP  25%, +0.358 / -0.309
