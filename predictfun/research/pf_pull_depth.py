@@ -102,7 +102,7 @@ LGB_PARAMS = dict(objective='binary', learning_rate=0.05, num_leaves=31, min_dat
                   bagging_freq=1, seed=1, num_threads=1, verbose=-1)
 MIN_FILLS = 30
 INF = float('inf'); NAN = float('nan')
-FEAT = [f'x{i}' for i in range(37)] + ['side', 'P', 's1', 's2', 's3', 's4', 's5', 'g2', 'g3', 'g4', 'g5', 'spread', 'c1', 'c2', 'c3', 'gage']
+FEAT = [f'x{i}' for i in range(37)] + ['fside', 'P', 's1', 's2', 's3', 's4', 's5', 'g2', 'g3', 'g4', 'g5', 'spread', 'c1', 'c2', 'c3', 'gage']
 MUT_MOVE_SIGN = MUT_DEC_INV = MUT_ONSET_ANY = 0           # planted errors (self-test only)
 MEM_CAP_MIB = 2048.0
 
@@ -222,6 +222,7 @@ def rows_day(day):
             continue
         P = av_P(w, mdl); vg = np.asarray(w['vkl'], float) <= K.GUARD_PULL
         b0, valid, rs, kind = QR.runs(w['tf'], w['P5'], w['opp'], w['side']); tfl = w['tf'].tolist(); gage = 0
+        rw = []
         for k in range(n):
             if not vg[k]:
                 gage = 0; continue
@@ -230,10 +231,18 @@ def rows_day(day):
             if jk < 0 or not valid[jk] or w['best'][k] < 0:
                 st['invalid_book'] += 1; continue
             t = float(w['tg'][k])
-            out.append([int(day), int(w['m']), int(w['side']), k, t, int(gage == 1)] + feats(w, k, P, gage) +
-                       [move_ticks(b0, valid, tfl, w['side'], jk, t), move_ticks(b0, valid, tfl, w['side'], jk, t, H_SHORT)])
+            rw.append([int(day), int(w['m']), int(w['side']), k, t, int(gage == 1)] + feats(w, k, P, gage) +
+                      [move_ticks(b0, valid, tfl, w['side'], jk, t), move_ticks(b0, valid, tfl, w['side'], jk, t, H_SHORT)])
+        if rw:
+            out.append(np.asarray(rw, dtype=np.float64))
+        if st['window_sides'] % 80 == 0:
+            r2 = K.rss_mib()
+            if r2 > MEM_CAP_MIB:
+                sys.exit(f'REFUSED: resident memory {r2:.0f} MiB > {MEM_CAP_MIB:.0f} MiB')
     os.makedirs(OUTD, exist_ok=True)
-    R = pd.DataFrame(out, columns=['day', 'm', 'side', 'k', 't', 'onset'] + FEAT + ['mv1000', 'mv250'])
+    cols = ['day', 'm', 'side', 'k', 't', 'onset'] + FEAT + ['mv1000', 'mv250']
+    R = pd.DataFrame(np.vstack(out) if out else np.zeros((0, len(cols))), columns=cols)
+    R = R.astype({'day': 'int64', 'm': 'int64', 'side': 'int64', 'k': 'int64', 'onset': 'int64', **{c: 'float32' for c in FEAT}})
     R.to_parquet(f'{OUTD}/rows_{day}.parquet', index=False)
     st['rows'] = len(R); json.dump(st, open(f'{OUTD}/rows_{day}.json', 'w'))
     print(f'{day}: {st} in {time.time() - T0:.0f} s', flush=True)
