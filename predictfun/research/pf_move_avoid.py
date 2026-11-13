@@ -10,7 +10,7 @@ Rows are rebuilt exactly as MOVE's (same windows, every 10th grid step, same exc
 asserted. Fits: the guard's inputs (MOVE's BASE), LightGBM pinned parameters, leave one day out: (1) on DN_250, all rows - must
 reproduce MOVE's 0.8707 within 0.0005 (control); its AUC on the rows still present at t + 24 for AV; (2) fitted on AV among the rows
 still present at t + 24. Also: the share of DN_250 that is GONE, and the top features by gain of a fit on all 9 days (descriptive).
-Usage: research/run_light.sh move_avoid -- python3 predictfun/research/pf_move_avoid.py day <yyyymmdd> | report
+Usage: research/run_light.sh move_avoid -- python3 predictfun/research/pf_move_avoid.py day <yyyymmdd> | report | ops | feeds
 """
 import bisect
 import json
@@ -120,9 +120,53 @@ def ops():
     open(f'{MV.OUTM}/avoid_ops.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
 
 
+FEEDS = {   # which live feed each input reads; t_rel (time in the window) and side are context, given to every split
+    'Binance': MS.BN + ['act_rel', 'd_bnimb250', 'sigma'],
+    'Predict': [k for k in MS.PF if k.startswith('pf_')] + ['own_d250', 'opp_d250'],
+    'cross': ['basis_bps', 'gap'],   # Binance against the relay / against Predict's mid: both feeds
+}
+
+
+def feeds():
+    """Which live feed carries the avoidable-harm prediction (added 2026-11-13 after the AV / ops results, post hoc, no reading
+    declared; USER: "so do we take actions based on predict's feed"). The AV fit of ops (rows still present at t + 24) with the guard's
+    inputs split by the feed they read: Binance only, Predict only, both without v, v alone; each with t_rel and side. Control: the
+    full set (MOVE's BASE) must reproduce ops' 0.8410 within 0.0005."""
+    B = {}; gone = []
+    for d in MV.DAYS9:
+        z = np.load(f'{MV.OUTM}/day_{d}.npz')
+        for k in MV.BASE_N + ['day', 'DN_250']:
+            B.setdefault(k, []).append(z[f'B|{k}'])
+        gone.append(np.load(f'{MV.OUTM}/avoid_{d}.npy'))
+    B = {k: np.concatenate(v) for k, v in B.items()}; gone = np.concatenate(gone).astype(bool)
+    day = B['day'].astype(int); dz = [int(d) for d in MV.DAYS9]; still = ~gone; av = ((B['DN_250'] == 1) & still)[still].astype(int)
+    ctx = ['t_rel', 'side']; allf = sum(FEEDS.values(), [])
+    if sorted(allf + ctx + ['v']) != sorted(MV.BASE_N):
+        sys.exit(f'MOVE-AVOID feeds: the split does not cover BASE exactly ({sorted(set(MV.BASE_N) ^ set(allf + ctx + ["v"]))})')
+    SPL = {'BASE (control)': MV.BASE_N, 'v alone': ['v'] + ctx, 'Binance feed': FEEDS['Binance'] + ctx,
+           'Predict feed': FEEDS['Predict'] + ctx, 'both feeds, no v': allf + ctx, 'time and side only': ctx}
+    R = {}; L = [f'MOVE-AVOID feeds (POST HOC) as of {time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}; rows still present at t + 24 '
+                 f'{int(still.sum())}, AV rate {av.mean():.3f}; AUC out of day on AV']
+    for nm, cols in SPL.items():
+        Xm = np.column_stack([B[k][still] for k in cols]).astype(np.float32)
+        p = MV.lgb_oof(Xm, av, day[still], dz, 'binary'); a = MV.auc(av, p)
+        ad = [MV.auc(av[day[still] == d], p[day[still] == d]) for d in dz]
+        R[nm] = dict(auc=a, days=ad, inputs=cols)
+        L.append(f'  {nm:<20} {a:.4f} (days {" ".join(f"{x:.3f}" for x in ad)}) [{len(cols)} inputs]')
+        if nm == 'BASE (control)' and abs(a - 0.8410) > 0.0005:
+            sys.exit(f'MOVE-AVOID feeds: control refit AUC {a:.4f} does not reproduce 0.8410')
+    L.append(f'  Predict added to Binance (both - Binance) {R["both feeds, no v"]["auc"] - R["Binance feed"]["auc"]:+.4f}; Binance added to '
+             f'Predict (both - Predict) {R["both feeds, no v"]["auc"] - R["Predict feed"]["auc"]:+.4f}; v added to both (BASE - both) '
+             f'{R["BASE (control)"]["auc"] - R["both feeds, no v"]["auc"]:+.4f}')
+    json.dump(R, open(f'{MV.OUTM}/avoid_feeds.json', 'w'), indent=1)
+    open(f'{MV.OUTM}/avoid_feeds.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
+
+
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'ops':
         ops(); sys.exit(0)
+    if len(sys.argv) > 1 and sys.argv[1] == 'feeds':
+        feeds(); sys.exit(0)
     if len(sys.argv) > 2 and sys.argv[1] == 'day':
         run_day(sys.argv[2])
     elif len(sys.argv) > 1 and sys.argv[1] == 'report':
