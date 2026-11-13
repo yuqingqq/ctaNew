@@ -406,8 +406,40 @@ def posthoc():
     open(f'{OUTD}/posthoc.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
 
 
+def mincheck():
+    """REVIEW CHECK (added after the report, after the other session's source review 20261113_future_best_model_integration_review.md):
+    (a) the declared rule 'a day with < 30 fills in a compared cell does not count' was not applied in report()'s R500 / R501 loops (nor in
+    PULL-DEPTH's R491, same rows): fills per cell (arm, clock, day; WS, w/o young, finite 1 s value), the minimum, and the R500 / R501 / R491
+    labels recomputed with the rule; (b) status counts the report did not print: fills without a 5 s value, level fills without a 1 s value."""
+    A = pd.concat([pd.read_parquet(f'{OUTD}/fills_{d}.parquet') for d in DAYS9], ignore_index=True)
+    LV = pd.concat([pd.read_parquet(f'{OUTD}/levfills_{d}.parquet') for d in DAYS9], ignore_index=True)
+    stats = {d: json.load(open(f'{OUTD}/day_{d}.json')) for d in DAYS9}; dd = {d: stats[d]['days'] for d in DAYS9}
+    W = A[np.isfinite(A.v1) & ~A.young & (A.src == 'WS')]
+    n = W.groupby(['arm', 'cfg', 'day']).size()
+    val = (W.q * W.v1).groupby([W.arm, W.cfg, W.day]).sum() / 100.0
+    L = [f'FUTURE-BEST review check: WS w/o-young fills per cell (arm, clock, day): min {int(n.min())}, cells < {MIN_FILLS}: {int((n < MIN_FILLS).sum())} of {len(n)}']
+    for cfg in ('M0', 'M50', 'M250'):
+        L.append(f'  {cfg}: min per arm ' + ', '.join(f'{a_} {int(n.loc[(a_, cfg)].min())}' for a_ in ARMS))
+    out = {}
+    for arm, ref in (('FB10', 'PD10'), ('FB25', 'PD25'), ('FB10', 'LDG'), ('FB25', 'LDG'), ('PD10', 'LDG'), ('PD25', 'LDG')):
+        up = {}; dn = {}
+        for cfg in ('M0', 'M50'):
+            ok = [d for d in DAYS9 if n.get((arm, cfg, int(d)), 0) >= MIN_FILLS and n.get((ref, cfg, int(d)), 0) >= MIN_FILLS]
+            up[cfg] = sum(val[(arm, cfg, int(d))] / dd[d] > val[(ref, cfg, int(d))] / dd[d] for d in ok)
+            dn[cfg] = sum(val[(arm, cfg, int(d))] / dd[d] < val[(ref, cfg, int(d))] / dd[d] for d in ok)
+        good, bad = ('BETTER', 'WORSE') if ref.startswith('PD') else ('HELPS', 'HURTS')
+        lab = good if min(up.values()) >= 7 else (bad if min(dn.values()) >= 7 else 'NOT-SHOWN')
+        out[f'{arm} vs {ref}'] = lab
+        L.append(f'  with the rule: {arm} vs {ref}: higher M 0 {up["M0"]}/9, M 50 {up["M50"]}/9 -> {lab}')
+    L.append(f'  status: fills without a 5 s value {int((~np.isfinite(A.v5)).sum())} of {len(A)}; level fills without a 1 s value '
+             f'{int((~np.isfinite(LV.v1)).sum())} of {len(LV)}')
+    open(f'{OUTD}/mincheck.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''
+    if cmd == 'mincheck':
+        mincheck(); sys.exit(0)
     if cmd == 'selftest':
         print(f'selftest passed; planted errors caught: {all_selftests()}')
     elif cmd == 'eval' and len(sys.argv) > 2:
