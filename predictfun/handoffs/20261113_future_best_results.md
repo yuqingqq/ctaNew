@@ -9,6 +9,7 @@ Scripts and runs, claude slot:
 |---|---|---|
 | Script `research/pf_future_best.py` + `run_future_best.sh` | 037ed9de, before the first run | 13:44-13:57Z, peak 779 MiB |
 | Post hoc readout (descriptive) | 6f13eb38 | 13:58Z |
+| Review check (after the other session's source review) | 7b5eced4 | 14:01Z |
 
 ## Design
 
@@ -19,8 +20,8 @@ Scripts and runs, claude slot:
   - An order placed behind the best that the market has come to stays unless P(move >= 1) >= tau. Rung 0 at the best is pulled as today.
   - P is PULL-DEPTH's out-of-day model, unchanged; tau = 0.10 / 0.25 as before.
   - The other side's guard is mostly off, so the repost side is unchanged.
-- **OFB:** the same rule with the realized move instead of P. This is an upper bound with perfect foresight, not a candidate. It knows the
-  next second, which is also the horizon the fills are valued at.
+- **OFB:** the same rule with the realized move instead of P: a perfect-foresight diagnostic of this fixed rule. It is not a candidate and
+  not a bound on what any policy could earn. It knows the next second, which is also the horizon the fills are valued at.
 - **Clocks:** M 0 / M 50 / M 250. Splits by order age and trade timing (WS exact / E2 estimated).
 - **New best after a signal:** PULL-DEPTH's adverse levels (the hit side's first new best within 1 s of a guard onset, 75,914 levels).
 - **Controls passed:**
@@ -96,8 +97,9 @@ Our fills at the hit side's new best after a signal (M 50, WS, aged):
 1. **"Ideally much better" is right, in the ideal.**
    - With perfect knowledge of how far the move goes, keeping the order at the landing price would make about +$380 a day more than
      pulling everything on exact trades.
-   - It would earn +0.90 c/sh at 88% STOP on the new best, about what the top makers show there (+0.30, 82% STOP).
-   - The rule is right. The bottleneck is the depth prediction.
+   - It would earn +0.90 c/sh at 88% STOP on the new best. The top makers show 82% STOP there (+0.30 c/sh).
+   - So the rule is limited by the depth prediction. How much a realistic predictor can recover is unknown: the oracle also sees the
+     next second, which is the horizon the fills are valued at.
 2. **With today's model (AUC 0.75) the gain is modest and fragile.**
    - +$18-27 a day over PULL-DEPTH on exact trades at M 0 / M 50.
    - It does not hold over all trades or at M 250.
@@ -124,10 +126,33 @@ Our fills at the hit side's new best after a signal (M 50, WS, aged):
 
 - Replay rule M (B1a, C5). Replay volumes inflated (C4). No order-level validation (C10).
 - Consumed days, exploratory (C8). Tau from PULL-DEPTH.
-- OFB uses the future; it is a ceiling, not reachable.
+- OFB uses the future: a diagnostic, not a bound.
 - The rungs are independent orders. The lane is the guard ladder, not the frozen pm_ladder v3 (C11).
 - Cancel-pending fills: 6% of WS shares at M 50 (FB25 -$37 a day of them, LDG -$12; C3).
 
+## Review notes (added after the report)
+
+The other session's source reviews (`handoffs/20261113_future_best_model_integration_review.md`, 13:53Z, written while this ran; and
+`handoffs/20261113_pull_depth_model_integration_review.md`) raised these points:
+
+1. **R500 / R501 (and PULL-DEPTH's R491) did not apply the declared 30-fill day minimum.** Checked (7b5eced4): the smallest cell has 657
+   fills, so no day is excluded and every label is unchanged.
+2. **Uncounted statuses:** 0 of 1,383,411 fills lack a 5 s value; 0 of 26,285 level fills lack a 1 s value.
+3. **Inherited from PULL-DEPTH's P model.** This affects the PD and FB arms, not LDG. OFB shares the move definition.
+   - **Nested-fold leak:** each training row's FRONT-PULL score comes from a model fitted on every other day, which includes the held-out
+     day. The magnitude and direction are not measured.
+   - **Target clock:** the move is counted from the last known book frame, not from the decision or the cancel taking effect. It is part
+     nowcast.
+   - **Missing frames:** a valid known frame whose later frames are all invalid counts as "no move". The count is not measured.
+   - **Fold order:** leave-one-day-out trains on later days too. R490's AUC is the mean of daily AUCs, not pooled.
+
+   So the PD / FB gains on exact trades are not clean out-of-sample numbers. The M 250 and all-trade conclusions (not robust) stand either
+   way.
+4. **Independent rungs:** the rungs are independent orders with separate trade budgets. This was already a limit.
+
+A STOP-HERE model should use earlier-only training through the whole chain, targets that start at the action deadline, and explicit
+statuses for missing future frames.
+
 Outputs:
-- `data/predict_fun/research/future_best_20261113/`: future_best.txt / .json, posthoc.txt, fills_*, levfills_*, day_*.json, logs.
+- `data/predict_fun/research/future_best_20261113/`: future_best.txt / .json, posthoc.txt, mincheck.txt, fills_*, levfills_*, day_*.json, logs.
 - Copies (txt / json / logs) in `reviews/future_best_20261113/`.

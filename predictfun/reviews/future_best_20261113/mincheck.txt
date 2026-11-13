@@ -1,0 +1,11 @@
+FUTURE-BEST review check: WS w/o-young fills per cell (arm, clock, day): min 657, cells < 30: 0 of 162
+  M0: min per arm LDG 657, PD10 686, PD25 775, FB10 704, FB25 1038, OFB 3320
+  M50: min per arm LDG 767, PD10 810, PD25 960, FB10 852, FB25 1384, OFB 3395
+  M250: min per arm LDG 3747, PD10 4338, PD25 5743, FB10 4862, FB25 7721, OFB 6582
+  with the rule: FB10 vs PD10: higher M 0 9/9, M 50 8/9 -> BETTER
+  with the rule: FB25 vs PD25: higher M 0 9/9, M 50 7/9 -> BETTER
+  with the rule: FB10 vs LDG: higher M 0 9/9, M 50 8/9 -> HELPS
+  with the rule: FB25 vs LDG: higher M 0 9/9, M 50 8/9 -> HELPS
+  with the rule: PD10 vs LDG: higher M 0 9/9, M 50 9/9 -> HELPS
+  with the rule: PD25 vs LDG: higher M 0 9/9, M 50 8/9 -> HELPS
+  status: fills without a 5 s value 0 of 1383411; level fills without a 1 s value 0 of 26285
