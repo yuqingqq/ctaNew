@@ -1,0 +1,2 @@
+selftest passed; planted errors caught: {'MUT_SWEEP_LOOSE': True, 'MUT_MARGIN_ZERO': True, 'MUT_GATE_OFF': True}
+2026-11-13T15:27:40Z tag=rc_selftest rc=0 peak_rss_mib=103 wall_s=0.31 cpu_user_s=0.24 memavail_start_gib=22 disk_free_gib=527->527 slot=claude

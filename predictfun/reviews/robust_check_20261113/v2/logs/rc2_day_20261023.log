@@ -1,0 +1,9 @@
+20261023: 80 window-sides, 8 s, rss 634 MiB
+20261023: 160 window-sides, 14 s, rss 641 MiB
+20261023: 240 window-sides, 19 s, rss 648 MiB
+20261023: 320 window-sides, 25 s, rss 656 MiB
+20261023: 400 window-sides, 31 s, rss 663 MiB
+20261023: 480 window-sides, 37 s, rss 670 MiB
+20261023: 560 window-sides, 42 s, rss 677 MiB
+20261023: {"registry": 288, "outside_day": 0, "sealed_or_forward": 0, "no_outcome": 0, "untimed_legs_0_60": 2093, "untimed_shares_0_60": 20830.638290695933, "windows": 288, "window_sides": 576, "ctrl_off": 0, "arms_differ": 4354, "clock_ok": 1, "keep_truncated": 2010, "grid_steps": 345600, "grid_steps_without_row": 0, "events_differ": 0, "unpaired_windows": 0} excluded {'adverse': {'invalid birth frame': 13}, 'other': {'invalid birth frame': 11}, 'calm fallback': {'invalid birth frame': 11}, 'calm improve': {'invalid birth frame': 11}} in 44 s
+2026-11-13T15:47:06Z tag=rc2_day_20261023 rc=0 peak_rss_mib=689 wall_s=44.12 cpu_user_s=42.65 memavail_start_gib=22 disk_free_gib=527->527 slot=claude

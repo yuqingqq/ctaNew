@@ -1,0 +1,9 @@
+20261031: 80 window-sides, 7 s, rss 532 MiB
+20261031: 160 window-sides, 12 s, rss 536 MiB
+20261031: 240 window-sides, 17 s, rss 540 MiB
+20261031: 320 window-sides, 22 s, rss 544 MiB
+20261031: 400 window-sides, 27 s, rss 549 MiB
+20261031: 480 window-sides, 32 s, rss 554 MiB
+20261031: 560 window-sides, 37 s, rss 558 MiB
+20261031: {"registry": 288, "outside_day": 0, "sealed_or_forward": 0, "no_outcome": 0, "untimed_legs_0_60": 762, "untimed_shares_0_60": 9077.803427559644, "windows": 288, "window_sides": 576, "ctrl_off": 0, "arms_differ": 3530, "clock_ok": 1, "keep_truncated": 1062, "grid_steps": 345600, "grid_steps_without_row": 0, "events_differ": 0, "unpaired_windows": 0} excluded {} in 38 s
+2026-11-13T15:50:57Z tag=rc2_day_20261031 rc=0 peak_rss_mib=771 wall_s=38.35 cpu_user_s=37.21 memavail_start_gib=22 disk_free_gib=526->526 slot=claude
