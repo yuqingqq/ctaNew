@@ -41,7 +41,8 @@ and the cooldown switch restored after every run; (v) memory self-guard.
 Limits fixed in advance: fills are lower bounds (no order creation / cancel times in public data); inferences from queue order assume
 price-time priority, which live fills only partly follow (B1a: a fifth contradict the shown-size queue); replay rule M for ours (C5);
 consumed days (C8); PULL-DEPTH's P carries the nested-fold leak noted by the other session's review.
-Usage (run_light, PF_SLOT=claude): pf_robust_check.py selftest | day <day> | report; driver run_robust_check.sh
+Usage (run_light, PF_SLOT=claude): pf_robust_check.py selftest | day <day> | report | posthoc (added after the report); driver
+run_robust_check.sh
 """
 import bisect
 import json
@@ -493,6 +494,29 @@ def report():
     open(f'{OUTD}/robust_check.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
 
 
+def posthoc():
+    """POST HOC (added after the report, descriptive): K7's declared rule compared each gated arm with LDG rung 0, so the fast-path arms
+    (MDG10F, MDG25F) inherit the fast path's own gain. Matched comparisons isolate the gated early entry: MDG10 / MDG25 against LDG rung 0,
+    MDG10F / MDG25F against FAST rung 0 (same path): WS $/day w/o young at 1 s and all trades, per clock, days higher / lower."""
+    stats = {d: json.load(open(f'{OUTD}/day_{d}.json')) for d in DAYS9}; dd = {d: stats[d]['days'] for d in DAYS9}; ndays = sum(dd.values())
+    A = pd.concat([pd.read_parquet(f'{OUTD}/fills_{d}.parquet') for d in DAYS9], ignore_index=True); A = A[np.isfinite(A.v1) & (A.rung == 0) & ~A.young]
+
+    def cell(arm, cfg, d=None, srcs=('WS',)):
+        y = A[(A.arm == arm) & (A.cfg == cfg) & A.src.isin(srcs)]
+        if d:
+            y = y[y.day == int(d)]
+        return float((y.q * y.v1).sum()) / 100.0 / (dd[d] if d else ndays)
+    L = ['ROBUST-CHECK post hoc (descriptive): gated early entry against the same path, rung 0, w/o young: WS $/day difference (days higher /'
+         ' lower of 9) per clock | all trades M 50 difference']
+    for a_, ref in (('MDG10', 'LDG'), ('MDG25', 'LDG'), ('MDG10F', 'FAST'), ('MDG25F', 'FAST')):
+        parts = []
+        for cfg in ('M0', 'M50', 'M250'):
+            hi = sum(cell(a_, cfg, d) > cell(ref, cfg, d) for d in DAYS9); lo = sum(cell(a_, cfg, d) < cell(ref, cfg, d) for d in DAYS9)
+            parts.append(f'{cfg} {cell(a_, cfg) - cell(ref, cfg):+7.1f} ({hi} / {lo})')
+        L.append(f'  {a_:<6} vs {ref:<4} ' + ' | '.join(parts) + f' | all M 50 {cell(a_, "M50", srcs=("WS", "E2")) - cell(ref, "M50", srcs=("WS", "E2")):+7.1f}')
+    open(f'{OUTD}/posthoc.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''
     if cmd == 'selftest':
@@ -501,5 +525,7 @@ if __name__ == '__main__':
         day_run(sys.argv[2])
     elif cmd == 'report':
         report()
+    elif cmd == 'posthoc':
+        posthoc()
     else:
         sys.exit(__doc__)
