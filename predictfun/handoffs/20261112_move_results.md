@@ -64,8 +64,10 @@ Readings:
 - **On all fills (printed beside the readings):**
   - The top 5's edge (+0.21 c at 250 ms) is not BTC: Binance and the other venues remove 2-3% of it.
   - Most of it, 57%, goes with the book's reaction: the top 5's fills are less often followed by the level being taken.
-  - Their edge is not being on the right side of BTC moves; they are less often in the trades that clear the level (cf. B12 §3.1: 84%
-    of their at-best volume leaves the level standing, against 73%).
+  - Their edge is not being on the right side of BTC moves; they are less often in the trades that clear the level (cf. the 2026-11-10
+    strategy review §34, 8 public days: 84% of their at-best volume is in trades that leave the level standing, against 73% for
+    the rest; the same review finds them first in the queue no more often than their volume share, 30.7% of front shares against
+    32.0% of volume). Citation corrected 2026-11-13; it previously named B12 §3.1.
 
 ## Part B: what predicts the level going, and is any information missing?
 
