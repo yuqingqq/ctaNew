@@ -1,5 +1,13 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 06:05Z (session ce68ebe0) — ORDERS DONE: the top makers keep larger orders (median 30 sh, p90 100) through fills and so hold the front (orders first in queue at >= 2 trades 15.7% vs 4.9%); they do not create levels more than their share; 6 prices per side per minute, two-sided, near flat; takes directional; EXIT holds on exact taker orders (EXIT-v2)
+
+- Done (USER: "Start the information collection, we fill the gaps and figure out how they work"): research/pf_orders.py + run_orders.sh. Build v1 (8fd16d97) stopped 10-23 at its control (86% mapped, no map written); build v2 + analysis (1ffafa5e, 9f8ec338, before the v2 run), 04:59-06:04Z: maker 100%, order hash 95.6-98.7%, exact taker order 84.4-93.3% of first-minute legs; agreement with legs_tk 100%; sealed / forward hours skipped (10-28 00-01Z, 10-30 23Z, 11-04 00-01Z). Report handoffs/20261113_orders_results.md; copies reviews/orders_20261113/; FINDINGS updated.
+- Readings: R400 PERSIST-MORE (x2.6, 9/9), R401 FRONT-KEEP-MORE (x3.2, 9/9), R402 PROPORTIONAL (0.85), R404 DIRECTIONAL (39.6%, at the line).
+- Found (pipeline): K.load_day turns legs without a certain taker order (legs_tk status 3, 6-16% of legs) into one-leg taker orders; EXIT-v2 (post hoc, exact complete taker orders) reproduces EXIT (29% -> 79% vs 44% -> 64%, 9/9), so EXIT stands. Other users of tk (MOVE Part A, S4, QR...) carry the same approximation - not re-checked.
+- Gap 1 (order-level events): Predict's public WS has no order-level feed (docs: aggregated levels; own wallet events only); the match records' hashes are the only order-level view. predictTopOfBook/{marketId} exists and is not recorded (user's call).
+- Next (proposals, user's call): FRONT-PULL at 30 / 100 sh resting orders kept through partial fills (replay, ~1.5 h); the live probe with that shape after the churn-fix deploy.
+
 ## 2026-11-13 04:37Z (session ce68ebe0) — EXIT DONE (public tape): the top makers do not leave front orders more often than other makers, but at the right moments - gone 28% at low P, 80% at high P (field 42% -> 63%), 9/9 days; decided 100-1000 ms before the trade; they hold the front with size. QCAL not run: live's 11-08 orders cannot calibrate the front
 
 - Done (USER: "Yes" to tasks 2 and 3; "what information we need to collect to bridge the gap"): research/pf_exit_check.py + run_exit.sh (11fb2adc, before the first run), 04:31-04:34Z; post hoc robustness 5abc1d96. Report handoffs/20261113_exit_results.md; copies reviews/exit_20261113/; FINDINGS updated.

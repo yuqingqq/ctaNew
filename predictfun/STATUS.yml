@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-13 06:05Z (session ce68ebe0): ORDERS (handoffs/20261113_orders_results.md): top makers keep 30-100 sh orders through fills (first in queue at
+  >= 2 trades 15.7% vs 4.9%), not level creators, 6 prices/side/min, two-sided, near flat; EXIT-v2 confirms signal-timed exits.
   2026-11-13 04:37Z (session ce68ebe0): EXIT (handoffs/20261113_exit_results.md): top makers leave front orders no more often than others but on the
   signal (gone 28% -> 80% across our P quintiles vs 42% -> 63%, 9/9 days); they hold the front with size. QCAL not run (no front orders live).
   2026-11-13 03:56Z (session ce68ebe0): FRONT-PULL (handoffs/20261113_front_pull_results.md): resting + pull on P(level goes) -$48/day w/o young (M 50) vs guard
@@ -1746,5 +1748,6 @@ flags:
   timing_base: "TB (2026-11-12 18:52Z): limits off (no CAP10 / G6 / RO60) +$4.5 J / +$3.4 X a day w/o young (8 / 7 of 9 days); IM95 front share 18.7% vs 5.0% but +$1.6 / +$0.4 (6 of 9 days), $0 at 250 ms"
   front_pull: "NOT-A-CANDIDATE (FRONT-PULL, 2026-11-13 03:54Z, df320ba3): rest by default + pull on P(level goes in 24-274 ms) loses -$48/day w/o young at M 50 (guard trigger -$20, J-v3 +$3.7); beats matched random 9/9 days, guard 0/9; front-tier line +$1.3/day; rule U +$171-246/day; feeds: Binance 0.762, Predict 0.767, both 0.841 AUC"
   maker_exits: "SIGNAL-TIMED (EXIT, 2026-11-13 04:34Z, 11fb2adc): top makers' front orders gone 51% before level-taking trades (field 46-62%), but 28% at low P vs 80% at high P (field 42% -> 63%), 9/9 days, decided 100-1000 ms ahead; 42% of first-in-queue volume"
+  maker_orders: "KEEP-WITH-SIZE (ORDERS, 2026-11-13 06:04Z, 9f8ec338): top-5 orders median 30 sh filled (p90 100), 25.8% filled by >= 3 trades (vs 10.0%), 15.7% first in queue at >= 2 trades (vs 4.9%); creators 20.7% vs 24.4% at-best share; 6 prices per side per minute; two-sided 89%; takes directional; EXIT-v2 holds"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"
