@@ -1,5 +1,11 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 08:33Z (session ce68ebe0) — DEEP-PULL DONE: pulling every rung at high risk fixes the timing (deep fills at high P 54% -> 13%, top makers 19%) and recovers ~$4,000 a day (9/9), but no arm is positive; best = guard trigger on every rung (LDG) -$137 a day at M 50, -$16 at M 0, +$781 at the front bound; what is left is queue place at deep levels (61-69% swept vs 36%; ~75k pulls a day re-queue the rungs)
+
+- Done: research/pf_deep_pull.py + run_deep_pull.sh (ffc7e475, before the first run), 07:49-08:32Z. Report handoffs/20261113_deep_pull_results.md; copies reviews/deep_pull_20261113/; FINDINGS updated.
+- Readings: R430 DEEP-PULL-HELPS (+$4,033/day, 9/9), R431 0 of 3 (LD90, LD75, LDG), R432 0 of 6, R433 high-P share 13% (LD90) vs 54% (LZ-none), 19% (top makers).
+- Next (proposals, user's call): KEEP-PLACE (LDG with fewer, stickier pulls so rungs keep their place: strong-signal or near-best-only pulls, immediate re-entry); the live probe.
+
 ## 2026-11-13 07:48Z (session ce68ebe0) — DEPTH-TIMING DONE: it is timing - real makers earn behind the best (top 5 +0.89, field +0.58 c/sh), our rungs lose (-1.10) because half our deep fills come at high P (theirs 19%); in the same P tercile our fills are worth about theirs
 
 - Done (USER: "If deep ladder doesnot work, why top makers do so? Check if it still the timing issue"): research/pf_depth_timing.py + run_depth_timing.sh (586efcba, before the first run; 80ec5108 column fix after a 4 s crash, before any output), 07:37-07:46Z. Report handoffs/20261113_depth_timing_results.md; copies reviews/depth_timing_20261113/; FINDINGS updated.

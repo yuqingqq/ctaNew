@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-13 08:33Z (session ce68ebe0): DEEP-PULL (handoffs/20261113_deep_pull_results.md): pulling every rung at high risk recovers ~$4k/day (9/9) and
+  matches the top makers' risk mix, but none positive; best LDG -$137/day (M 50), +$781 at U; remaining gap = deep queue place.
   2026-11-13 07:48Z (session ce68ebe0): DEPTH-TIMING (handoffs/20261113_depth_timing_results.md): deep fills pay for real makers (+0.89 / +0.58 c/sh);
   ours lose because half fill at high P (theirs 19%); same-tercile values match: timing of pulls at every rung. Next: DEEP-PULL.
   2026-11-13 07:24Z (session ce68ebe0): FRONT-PULL-SIZE (handoffs/20261113_front_pull_size_results.md): size and a 6-rung ladder do not close the gap in
@@ -1755,5 +1757,6 @@ flags:
   maker_orders: "KEEP-WITH-SIZE (ORDERS, 2026-11-13 06:04Z, 9f8ec338): top-5 orders median 30 sh filled (p90 100), 25.8% filled by >= 3 trades (vs 10.0%), 15.7% first in queue at >= 2 trades (vs 4.9%); creators 20.7% vs 24.4% at-best share; 6 prices per side per minute; two-sided 89%; takes directional; EXIT-v2 holds"
   front_pull_size: "NOT-A-CANDIDATE (FRONT-PULL-SIZE, 2026-11-13 07:22Z, b8e7592a): per share size changes nothing (-1.18 c/sh FPQ at 5/30/100 sh, M 50); 6-rung ladder -$5,095/day 9/9 days; our fills 60% swept vs top makers ~16%; rule U +$689/day (Z-guard-30)"
   depth_timing: "TIMING (DEPTH-TIMING, 2026-11-13 07:46Z, 586efcba): behind the best top 5 +0.89 / field +0.58 / ours -1.10 c/sh at 1 s; ours 50% of deep shares at high P vs 19%; same-P-tercile values about equal"
+  deep_pull: "HELPS-NOT-POSITIVE (DEEP-PULL, 2026-11-13 08:32Z, ffc7e475): every-rung pull cuts high-P deep fills 54% -> 13% (top makers 19%), +$4,033/day vs pull-at-best (9/9); LDG -$137/day at M 50, -$16 at M 0, +$781 at U; deep 61-69% swept vs 36%"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"
