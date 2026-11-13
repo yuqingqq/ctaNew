@@ -9,6 +9,13 @@ Scripts and runs, claude slot:
 |---|---|---|
 | Script `research/pf_side_moves.py` + `run_side_moves.sh` | e2626a18, before the first run | 14:32-14:34Z, peak 730 MiB |
 | Report fix | 36637b1f: the first report job failed (the maker table read DataFrame.join, a method, not the column); day outputs unchanged | 14:34Z |
+| Post hoc readout (descriptive) + correction | 6e49d5ff: pump / dump split, proof of resting at the new price, KEPT by traded volume, value of kept fills; the readings reproduce exactly | 15:10-15:12Z |
+
+**Corrected 2026-11-13 15:13Z (post hoc, section at the end):** two statements of the first version went beyond the data.
+- "On the protection side they MOVE down to the new best": the post hoc shows their orders are mostly already at the next price before the
+  move. A maker filled at both prices may have held both orders (a ladder); placement times are not public.
+- "On the other side they mostly KEEP their old quote": they keep it more often than others (2.6x), but at least three quarters of their
+  old orders are gone (cancelled or used up) even when 100+ sh trade at that price again.
 
 ## Design
 
@@ -33,7 +40,9 @@ Scripts and runs, claude slot:
   - The simulator copy equals the simulator on every window-side.
   - Synthetic cases with three planted errors caught.
 
-## Other side (the side that requotes): the top makers mostly KEEP their old quote
+## Other side (the side the price moves away from): the top makers keep their old quote more often than others and rarely requote
+
+(Heading corrected 15:13Z; it said "mostly KEEP". See the post hoc section.)
 
 B. Makers at the old best when the other side's price improves after a signal:
 
@@ -66,7 +75,9 @@ D. Ours (simulated) at these events:
 - It has an order at the new price before the level ends in 22% of events, a median 315 ms after the birth.
 - Our held old order is still live 1 s later only 34% of the time.
 
-## Protection side: the top makers MOVE down to the new best, fast, and are at its front
+## Protection side: the top makers are at the front of the new best
+
+(Heading corrected 15:13Z; it said "MOVE down ... fast". The post hoc shows their orders are mostly already at that price before the move.)
 
 B. Makers at the old best when it falls away:
 
@@ -92,11 +103,11 @@ of events, live a median 347 ms after the birth.
 ## What it means
 
 1. **The two sides are handled oppositely.**
-   - **Protection side:** they follow the price down. Top-5 makers quoting the old best show up at the new best 2.75 times as often as
-     the field. Their first fill there comes a median 302 ms after it forms, and their order is usually first in its queue. Another 10% of
-     their orders there were already resting at that price.
-   - **Other side:** they mostly do not requote. They keep their old quote in its queue (2.6 times the field) and only sometimes add one
-     at the new price. When they do, it is usually first.
+   - **Protection side** (corrected 15:13Z, see post hoc): their orders are mostly already at the next price before the move, and first in
+     its queue. Top-5 makers quoting the old best are also filled at the new best 2.75 times as often as the field; that can be a ladder
+     order rather than a requote.
+   - **Other side** (corrected 15:13Z): they rarely requote. Their old quote stays more often than others' (2.6 times), but most of their
+     old orders are gone. When one does stay it is usually filled later at a profit.
 2. **Latency on the protection side is not similar to ours.**
    - Their fills at the new best (an upper bound on when their order arrived) come at 302 ms, at the front.
    - Our order goes live at a median 347 ms, in only 35% of events. It is behind the queue because we wait for the guard to clear plus
@@ -123,3 +134,50 @@ of events, live a median 347 ms after the birth.
 Outputs:
 - `data/predict_fun/research/side_moves_20261113/`: side_moves.txt / .json, orders_*, makers_*, runover_*, ours_*, day_*.json, logs.
 - Copies (txt / json / logs) in `reviews/side_moves_20261113/`.
+
+## Post hoc (added after the report, descriptive): pump vs dump, proof of being there first, how often the old order stays
+
+Rerun with extended rows (6e49d5ff); the declared readings reproduce exactly. UP = a pump (protection side = asks, other side = bids);
+DOWN = a dump. Fills are lower bounds: the public match records carry only order hash, signer, price and amount, with no creation or
+cancel time (checked on a consumed day), so placement and cancel times are not observable.
+
+**Protection side (the side the price moves into): their orders are already at the next price.**
+
+| After a signal | Group | Share of fill shares at the new best | Of the group's shares there, from orders PROVEN there before it became the best | First-fill share | Shares ahead, median | c/sh | Share of the volume filled at the new price in the trade(s) that made it the best |
+|---|---|---|---|---|---|---|---|
+| UP (new best ask) | **top 5** | 43.5% | **16.7%** | 37.9% | **0** | **+0.30** | **48.9%** |
+| UP | field | 56.5% | 8.6% | 62.1% | 10 | -0.05 | 51.1% |
+| DOWN (new best bid) | **top 5** | 41.4% | **16.1%** | 36.7% | **0** | **+0.29** | **47.2%** |
+| DOWN | field | 58.6% | 9.4% | 63.3% | 6 | -0.18 | 52.8% |
+
+- **In the trade that pushes the price to the new level, half of the volume filled at that level is theirs.** That is 49% in a pump and
+  47% in a dump, against their usual 34% of at-best fills.
+  - Those orders were resting at the next price before the move: a taker reaches the front of the next level's queue first.
+- At least 16-17% of their later fills there come from orders proven there before (field 9%, higher on 9 of 9 days). This is a lower
+  bound.
+- The same holds at calm fallbacks (17.5-18.4% vs 11.6-12.0%, 9 of 9 days). This is how they quote, not a reaction to a signal.
+
+**Other side (the side the price moves away from): rarely requote; the old order stays more often than others', most are gone.**
+
+Makers proven at the old best just before the move:
+
+| After a signal | Group | Quote filled at the new price (JOIN) | Old order filled again within 10 s, when that price traded again | Same, by shares traded there after the move: < 30 / 30-100 / >= 100 sh | Kept fills: c/sh at 1 s, first one after the move |
+|---|---|---|---|---|---|
+| UP (old best bid) | **top 5** | 6.1% | **18.4%** | 14.7% / 18.2% / **23.7%** | **+0.52**, 1.2 s |
+| UP | field | 4.4% | 7.4% | 6.6% / 7.2% / 8.6% | -0.04, 1.3 s |
+| DOWN (old best ask) | **top 5** | 6.3% | **18.5%** | 13.6% / 19.4% / **23.5%** | **+0.64**, 1.4 s |
+| DOWN | field | 4.6% | 6.9% | 5.2% / 7.4% / 8.6% | +0.30, 1.2 s |
+
+- **Requoting to the better price is rare:** about 6% (field 4-5%).
+- **The old order is still there more often than others':** 9 of 9 days.
+  - When 100+ sh trade at the old price after the move, it would very likely be reached if it were still there (it was near the front:
+    it had just been filled there).
+  - Even then only 24% of the top makers' old orders are filled again (field 9%).
+  - So at least about a quarter stay. The rest are gone, cancelled or used up by the fills before the move; public data cannot separate
+    those two.
+- **When it stays, waiting pays:** their kept fills come about 1.2-1.4 s after the move and earn +0.52 / +0.64 c/sh (field -0.04 /
+  +0.30).
+- The same pattern holds at calm improvements (kept 18.5-20.0% vs 7.1-7.2%).
+
+**Ours (MOVE-DOWN, simulated):** our own guard on that side pulls our held old order within 1 s 52% of the time.
+
