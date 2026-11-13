@@ -1,0 +1,2 @@
+selftest passed; planted errors caught: {'MUT_NO_SHIFT': True, 'MUT_ARRIVE_R0': True, 'MUT_ORACLE_SIGN': True}
+2026-11-13T13:44:04Z tag=fb_selftest rc=0 peak_rss_mib=107 wall_s=0.32 cpu_user_s=0.25 memavail_start_gib=22 disk_free_gib=529->529 slot=claude

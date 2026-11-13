@@ -1,0 +1,49 @@
+{
+ "stat": {
+  "registry": 288,
+  "outside_day": 0,
+  "sealed_or_forward": 0,
+  "no_outcome": 0,
+  "untimed_legs_0_60": 2964,
+  "untimed_shares_0_60": 32617.169265447075,
+  "windows": 288,
+  "window_sides": 576,
+  "ctrl_differ": 0,
+  "fb25_differs": 9348,
+  "clock_ok": 1,
+  "levfills": 1901,
+  "align_bad": 0,
+  "events": {
+   "adverse": 8374,
+   "calm fallback": 3871
+  },
+  "grid_steps": 345600,
+  "grid_steps_without_row": 0,
+  "pulls|LDG|M0": 81430,
+  "pulls|PD10|M0": 49710,
+  "pulls|PD25|M0": 33629,
+  "pulls|FB10|M0": 40099,
+  "pulls|FB25|M0": 24929,
+  "pulls|OFB|M0": 18323,
+  "pulls|LDG|M50": 81377,
+  "pulls|PD10|M50": 49646,
+  "pulls|PD25|M50": 33535,
+  "pulls|FB10|M50": 40033,
+  "pulls|FB25|M50": 24793,
+  "pulls|OFB|M50": 18213,
+  "pulls|LDG|M250": 80563,
+  "pulls|PD10|M250": 48638,
+  "pulls|PD25|M250": 32109,
+  "pulls|FB10|M250": 38839,
+  "pulls|FB25|M250": 22987,
+  "pulls|OFB|M250": 17361,
+  "ref_bad": {},
+  "fills": 136519,
+  "planted_caught": {
+   "MUT_NO_SHIFT": true,
+   "MUT_ARRIVE_R0": true,
+   "MUT_ORACLE_SIGN": true
+  }
+ },
+ "days": 1.0
+}
