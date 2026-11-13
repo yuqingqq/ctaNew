@@ -1,0 +1,9 @@
+20261024: 80 window-sides, 8 s, rss 819 MiB
+20261024: 160 window-sides, 12 s, rss 823 MiB
+20261024: 240 window-sides, 15 s, rss 826 MiB
+20261024: 320 window-sides, 18 s, rss 829 MiB
+20261024: 400 window-sides, 22 s, rss 833 MiB
+20261024: 480 window-sides, 25 s, rss 836 MiB
+20261024: 560 window-sides, 28 s, rss 838 MiB
+20261024: {'registry': 288, 'outside_day': 0, 'sealed_or_forward': 0, 'no_outcome': 0, 'untimed_legs_0_60': 1023, 'untimed_shares_0_60': 10108.96713956579, 'windows': 288, 'window_sides': 576, 'sim_differ': 0, 'ghost_checked': 7683, 'ghost_differ': 0, 'ghost_shared': 0, 'real': 71319, 'fills_all': 12633, 'grid_steps': 345600, 'grid_steps_without_row': 0, 'status_fills': {'M50|ok': 3853, 'M0|ok': 3830, 'M50|not_best_sim': 98, 'M50|censored': 4, 'M0|censored': 4}, 'planted_caught': {'MUT_CHAIN_ANYPRICE': True, 'MUT_PRE_AS_POST': True, 'MUT_SIM_NOOFFSET': True}} in 29 s
+2026-11-13T11:16:41Z tag=qp_day_20261024 rc=0 peak_rss_mib=839 wall_s=29.39 cpu_user_s=27.76 memavail_start_gib=22 disk_free_gib=532->532 slot=claude

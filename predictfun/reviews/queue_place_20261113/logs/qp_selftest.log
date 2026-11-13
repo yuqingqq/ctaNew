@@ -1,0 +1,2 @@
+selftest passed; planted errors caught: {'MUT_CHAIN_ANYPRICE': True, 'MUT_PRE_AS_POST': True, 'MUT_SIM_NOOFFSET': True}
+2026-11-13T11:16:04Z tag=qp_selftest rc=0 peak_rss_mib=103 wall_s=0.30 cpu_user_s=0.23 memavail_start_gib=22 disk_free_gib=532->532 slot=claude

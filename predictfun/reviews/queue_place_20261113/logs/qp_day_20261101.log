@@ -1,0 +1,9 @@
+20261101: 80 window-sides, 6 s, rss 657 MiB
+20261101: 160 window-sides, 9 s, rss 660 MiB
+20261101: 240 window-sides, 12 s, rss 662 MiB
+20261101: 320 window-sides, 15 s, rss 665 MiB
+20261101: 400 window-sides, 18 s, rss 668 MiB
+20261101: 480 window-sides, 21 s, rss 670 MiB
+20261101: 560 window-sides, 23 s, rss 672 MiB
+20261101: {'registry': 288, 'outside_day': 0, 'sealed_or_forward': 0, 'no_outcome': 0, 'untimed_legs_0_60': 981, 'untimed_shares_0_60': 10717.451728936834, 'windows': 288, 'window_sides': 576, 'sim_differ': 0, 'ghost_checked': 8078, 'ghost_differ': 0, 'ghost_shared': 0, 'real': 48281, 'fills_all': 11908, 'grid_steps': 345600, 'grid_steps_without_row': 0, 'status_fills': {'M50|ok': 4080, 'M0|ok': 3998, 'M50|not_best_sim': 89, 'M50|censored': 3, 'M0|censored': 3}, 'planted_caught': {'MUT_CHAIN_ANYPRICE': True, 'MUT_PRE_AS_POST': True, 'MUT_SIM_NOOFFSET': True}} in 24 s
+2026-11-13T11:19:14Z tag=qp_day_20261101 rc=0 peak_rss_mib=750 wall_s=23.97 cpu_user_s=22.96 memavail_start_gib=22 disk_free_gib=532->532 slot=claude
