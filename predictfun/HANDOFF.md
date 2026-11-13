@@ -1,5 +1,24 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 03:56Z (session ce68ebe0) — FRONT-PULL DONE: resting by default and pulling on P(the level goes in 24-274 ms) loses (-$48 a day w/o young at M 50 against -$20 for the guard trigger and +$3.7 for J-v3); P beats random pulls 9/9 days but the guard value v is the better trigger; with nothing ahead (rule U) the same policies earn +$171-246: the queue model decides the sign
+
+- Done (USER: "How we can do front pull" / "so do we take actions based on predict's feed" / "You mean we use imbalance, level change to do the action? We can try"):
+  - feeds (post hoc, research/pf_move_avoid.py feeds, 50227d6e, 02:25-02:36Z): the avoidable-harm fit with Binance only AUC 0.762, Predict's book only 0.767,
+    both 0.841; v adds nothing on top. Added to handoffs/20261112_move_results.md and FINDINGS.
+  - FRONT-PULL (research/pf_front_pull.py + run_front_pull.sh, df320ba3, committed before the first run; 02:57-03:54Z): S4's rest lane, 9 replay days, one 5-sh
+    order per side; P = MOVE-AVOID's fit, one model per held-out day; arms Z-none / Z-guard / J-v3 / FP10 / FP25 / FP50 / FPQ (queue-priced line) / FPQ-shuf
+    / random. Report handoffs/20261113_front_pull_results.md; copies reviews/front_pull_20261113/; FINDINGS updated. All controls passed.
+  - pf_kp_s4.py gains one inert switch (KP_TRIG_IDLE_ONLY, off by default; S4 / B21 self-tests pass).
+  - MOVE report citation corrected (f9452078): 84% vs 73% is from the 11-10 strategy review, not B12.
+- Readings: R380 PULL-NOT-SHOWN (random 9/9, guard 0/9), R381 0 of 6, R382 FRONT-LINE-HELPS (+$1.3 a day), R383 0 of 3, R384 falsifier fails as required.
+- Meaning: 'the level goes' is not 'our fill is bad'; more pulling leaves the unannounced sweeps (top-50% line -1.30 c/sh, swept 63%); under rule M we reach the
+  front when the queue ahead leaves, just before the sweep. Not a candidate; J-v3 stays the only positive arm.
+- INCIDENT (disclosed): 02:55:03Z a script of mine truncated the working-tree predictfun/FINDINGS.md (open for write before the read). Restored at 02:56Z from
+  the Codex session's own transcript (its cat of the file at 02:46:54Z plus its apply_patch at 02:49:20Z), verified as HEAD + only its MODEL_UPGRADE_LOCAL
+  section; no Codex edit to the file after 02:49:20Z. Its section is unchanged.
+- Next (proposals, user's call): the live A4b capture (M vs U moves resting policies by $220-310 a day); a queue-priced line on v (about 1 h); the tape check of
+  the top makers' exits before level-taking trades (about 1 h).
+
 ## 2026-11-12 19:05Z (session ce68ebe0) — MOVE DONE (public tape): no missing information in any feed we have (tape + taker reputation, book cancels / adds, Coinbase / OKX / Bybit add <= +0.002 AUC); the guard's own inputs, aimed at 'the level goes within (t + 24, t + 274] ms', predict it at AUC 0.87 (avoidable part 0.84; 29% gone before a cancel lands); the top makers' edge = fewer fills in level-clearing trades, not BTC; TB: limits off +$3-4.5 a day w/o young, improving inside the spread buys front place but little value
 
 - Done (USER: "find ways to improve on these 2 key issues" / "finding missing information or explain the move will be more important"): research/pf_move_info.py + run_move.sh (e62e1fbd; report addition 8d8fdd20), 17:31-18:36Z; post hoc pf_move_avoid.py (85a17cf4, ops 3668f17c), 18:49-19:03Z; research/pf_tb_check.py + run_tb.sh (72a03e1a), 17:21-18:52Z. Reports handoffs/20261112_move_results.md, handoffs/20261112_tb_results.md; copies reviews/move_20261112/, reviews/tb_20261112/; FINDINGS updated.
