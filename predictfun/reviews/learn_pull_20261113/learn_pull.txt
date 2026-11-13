@@ -1,0 +1,59 @@
+LEARN-PULL, 9 consumed replay days, first 60 s, WS-timed tape; as of 2026-11-13T16:48:15Z; controls passed; observations 193153 (top 5 78294, field 114859); E2-ambiguous 49274; same-stamp next trade 58135; big events 30588
+
+R551 PULL RATE on the same intervals (front order at the best, next trade at that price): their GONE share | our pull share, by interval
+  top 5  all: 27.8% | 59.8%;  0-250 ms: 15.9% | 48.6% (32427);  250-1000 ms: 30.7% | 64.1% (32337);  1000-3000 ms: 49.2% | 76.6% (13523)
+  field  all: 40.1% | 57.9%;  0-250 ms: 27.5% | 46.9% (44896);  250-1000 ms: 41.7% | 60.5% (48320);  1000-3000 ms: 62.3% | 74.9% (21630)
+
+R550 / values: GONE share and our pull share before THROUGH vs STOP next trades; next-trade value at 5 s (volume-weighted c/sh)
+  top 5  THROUGH: GONE 47.0%, we pull 80.9%, value +0.07 (3369) | STOP: GONE 26.9%, we pull 58.9%, value +0.50 (74925)
+         next-trade value when they STAYED +0.47 / when they were GONE +0.14; when we pull +0.18 / when we do not +0.69
+  field  THROUGH: GONE 47.1%, we pull 83.0%, value +0.10 (6939) | STOP: GONE 39.6%, we pull 56.3%, value +0.60 (107920)
+         next-trade value when they STAYED +0.59 / when they were GONE +0.24; when we pull +0.10 / when we do not +0.89
+  R550: top-5 GONE before THROUGH / before STOP = 1.74, higher on 9 of 9 -> AVOID-ADVERSE
+
+R552 / R553 THE 2 x 2 (top 5): share of intervals | next-trade value at 5 s (c/sh, volume-weighted) | share THROUGH
+  we pull, they pull: 21.2% | +0.01 |  8.5%
+  we pull, they stay: 38.6% | +0.25 |  4.3%
+  we keep, they pull:  6.6% | +0.50 |  3.2%
+  we keep, they stay: 33.6% | +0.72 |  1.8%
+  R552: value +0.25, > 0 on 8, < 0 on 1 of 9 -> OUR-EXTRA-PULLS-COST
+  R553: value +0.50, > 0 on 7, < 0 on 2 of 9 -> THEY-PULL-NEEDLESSLY
+
+R555 INVENTORY: GONE share by what the order does to the maker's position (reduce <= -10 sh | flat | add >= 10 sh)
+  top 5  reduce 26.1% (33311) | flat 30.6% (6717) | add 28.8% (38266)
+  field  reduce 40.2% (28750) | flat 45.0% (31721) | add 37.1% (54388)
+  R555: add / reduce = 1.10, higher on 9 of 9 -> NOT-SHOWN
+
+R554 WHY: GONE share by feature quintile (Q1 .. Q5, low to high) - top 5 | field | our pull share
+  v               top 5  40%  30%  25%  22%  22% | field  47%  46%  42%  35%  31% | ours  89%  93%  69%  28%  15%
+  P               top 5  18%  20%  24%  31%  47% | field  26%  33%  40%  47%  57% | ours  19%  40%  62%  79%  88%
+  adv_bn_r250     top 5  30%  27%  23%  25%  34% | field  39%  36%  40%  40%  46% | ours  56%  56%  59%  52%  71%
+  adv_bn_r1000    top 5  29%  28%  24%  25%  33% | field  42%  36%  39%  39%  46% | ours  57%  54%  57%  54%  72%
+  adv_bn_flow250  top 5  25%  28%  24%  26%  36% | field  40%  37%  38%  39%  47% | ours  57%  54%  52%  60%  71%
+  adv_bn_imb      top 5  26%  27%  26%  26%  33% | field  38%  40%  39%  40%  45% | ours  35%  52%  54%  66%  87%
+  adv_pf_dm250    top 5  32%  29%  25%  26%  28% | field  41%  36%  40%  39%  45% | ours  56%  55%  58%  54%  70%
+  adv_pf_imb1     top 5  22%  24%  26%  30%  37% | field  31%  35%  41%  46%  47% | ours  35%  41%  55%  75%  87%
+  own_d250        top 5  39%  28%  22%  23%  27% | field  52%  40%  30%  35%  42% | ours  76%  56%  49%  49%  64%
+  opp_d250        top 5  25%  26%  26%  30%  32% | field  40%  37%  35%  42%  46% | ours  54%  57%  57%  63%  63%
+  pf_spread       top 5  31%  28%  26%  25%  29% | field  40%  37%  41%  40%  43% | ours  59%  57%  61%  51%  66%
+  size_p          top 5  42%  30%  27%  23%  19% | field  47%  46%  41%  37%  29% | ours  81%  71%  58%  48%  36%
+  gap             top 5  13%  19%  27%  34%  48% | field  25%  30%  38%  45%  61% | ours  39%  56%  60%  64%  75%
+  inv             top 5  25%  32%  29%  29%  29% | field  38%  43%  44%  40%  28% | ours  56%  58%  61%  59%  59%
+  t_rel           top 5  27%  28%  28%  28%  28% | field  38%  41%  40%  41%  40% | ours  68%  59%  57%  56%  54%
+  sigma           top 5  30%  30%  27%  26%  27% | field  39%  40%  40%  41%  41% | ours  48%  55%  61%  63%  67%
+  act_rel         top 5  25%  26%  26%  28%  34% | field  40%  38%  38%  40%  46% | ours  57%  55%  55%  58%  66%
+  model (top-5 GONE, leave one day out): AUC all features 0.782, v only 0.590, inventory only 0.527; top gain: gap, P, size_p, x_pf_pend_bid1000, own_d250, inv, sigma, x_d_bnimb250, adv_pf_imb1, adv_bn_r250
+
+R556 BIG MOVES (>= 3 ticks in 2 s after a signal; 30588 events): share of events with a top-5 fill at a price run over, by speed (time to the peak)
+  <= 250 ms    28.5% of 7867 events
+  250-1000 ms  53.7% of 9613 events
+  > 1000 ms    73.1% of 13108 events
+  top-5 share of the volume filled at each price (old best | run-over 1 | 2 | 3+ | peak), by speed
+  <= 250 ms    old 26.5% | 1 35.9% | 2 42.4% | 3+ 43.3% | peak 56.8%
+  250-1000 ms  old 32.1% | 1 37.9% | 2 41.6% | 3+ 43.8% | peak 58.2%
+  > 1000 ms    old 32.1% | 1 41.0% | 2 43.6% | 3+ 44.1% | peak 58.6%
+  run-over volume (levels 1, 2, 3+) by the maker's inventory direction: reducing | flat | increasing
+  top 5  reducing 41.3% | flat  8.8% | increasing 49.9%
+  field  reducing 25.1% | flat 31.1% | increasing 43.9%
+
+READINGS: {"R550": "AVOID-ADVERSE", "R552": "OUR-EXTRA-PULLS-COST", "R553": "THEY-PULL-NEEDLESSLY", "R555": "NOT-SHOWN", "R554": ""}
