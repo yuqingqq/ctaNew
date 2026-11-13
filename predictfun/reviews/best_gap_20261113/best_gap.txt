@@ -1,0 +1,36 @@
+BEST-GAP, 9 consumed replay days, first 60 s, fills at the best on exact complete WS-timed trades; as of 2026-11-13T09:43:00Z; controls passed
+top 5 +0.405 c/sh, field +0.239, ours BASE (aged, M 50) +0.007; gap G +0.398
+levers (change in BASE c/sh, share of G): SIZE +0.003 (1%), QUEUE +0.660 (166%), TIMING -0.133 (-33%), LATENCY +0.111 (28%), LATENCY_ZERO +0.133 (34%)
+R464: MAIN: QUEUE
+M 0: base +0.122, gap +0.283, levers SIZE +0.008, QUEUE +0.660, TIMING -0.123
+
+c/sh and share of shares by type (STOP = the level held, THROUGH = it was taken); aged fills unless "all"; pending share
+  top 5      all +0.405 sh   2606698 | STOP +0.53 (80%) | THROUGH -0.09 (20%) | P low/mid/high 70% / 24% / 7% | pending 0%
+  field      all +0.239 sh   5224854 | STOP +0.36 (71%) | THROUGH -0.05 (29%) | P low/mid/high 72% / 19% / 9% | pending 0%
+  BASE M50   all +0.007 sh    105603 | STOP +0.47 (37%) | THROUGH -0.26 (63%) | P low/mid/high 78% / 19% / 3% | pending 4%
+  BASE M0    all +0.122 sh    102171 | STOP +0.55 (37%) | THROUGH -0.13 (63%) | P low/mid/high 83% / 16% / 0% | pending 3%
+  BASE U50   all +0.667 sh    675634 | STOP +0.75 (92%) | THROUGH -0.26 (8%) | P low/mid/high 90% / 9% / 1% | pending 2%
+  S5 M50     all -0.001 sh     20270 | STOP +0.55 (37%) | THROUGH -0.33 (63%) | P low/mid/high 74% / 22% / 4% | pending 5%
+  S5 M0      all +0.131 sh     19104 | STOP +0.61 (38%) | THROUGH -0.17 (62%) | P low/mid/high 81% / 19% / 0% | pending 3%
+  S5 U50     all +0.696 sh    210299 | STOP +0.74 (96%) | THROUGH -0.30 (4%) | P low/mid/high 91% / 9% / 1% | pending 2%
+  S100 M50   all +0.010 sh    280563 | STOP +0.48 (32%) | THROUGH -0.21 (68%) | P low/mid/high 81% / 17% / 2% | pending 3%
+  S100 M0    all +0.096 sh    276336 | STOP +0.55 (32%) | THROUGH -0.12 (68%) | P low/mid/high 85% / 15% / 0% | pending 2%
+  S100 U50   all +0.613 sh   1214373 | STOP +0.75 (85%) | THROUGH -0.19 (15%) | P low/mid/high 90% / 9% / 1% | pending 2%
+  FAST M50   all +0.118 sh    113757 | STOP +0.59 (41%) | THROUGH -0.20 (59%) | P low/mid/high 80% / 18% / 2% | pending 1%
+  FAST M0    all +0.221 sh    111038 | STOP +0.63 (41%) | THROUGH -0.07 (59%) | P low/mid/high 85% / 15% / 0% | pending 0%
+  ZERO M50   all +0.141 sh    117222 | STOP +0.61 (41%) | THROUGH -0.19 (59%) | P low/mid/high 81% / 17% / 2% | pending 0%
+  ZERO M0    all +0.241 sh    114706 | STOP +0.65 (42%) | THROUGH -0.06 (58%) | P low/mid/high 85% / 15% / 0% | pending 0%
+  BASE M50 incl. young: -0.009 (young share 10%)
+  FAST M50 incl. young: +0.100 (young share 11%)
+  ZERO M50 incl. young: +0.135 (young share 12%)
+
+per day (M 50): gap | SIZE | LATENCY | QUEUE | TIMING
+  20261023 +0.33 | +0.04 | +0.07 | +0.69 | -0.06
+  20261024 +0.28 | -0.04 | +0.10 | +0.52 | -0.15
+  20261025 +0.27 | +0.04 | +0.03 | +0.52 | -0.14
+  20261026 +0.29 | -0.01 | +0.27 | +0.65 | -0.10
+  20261027 +0.26 | +0.05 | +0.14 | +0.61 | -0.16
+  20261031 +0.39 | -0.02 | +0.05 | +0.59 | -0.15
+  20261101 +0.43 | +0.03 | +0.08 | +0.64 | -0.17
+  20261102 +0.61 | +0.04 | +0.19 | +0.85 | -0.13
+  20261103 +0.52 | +0.10 | +0.30 | +0.83 | -0.03
