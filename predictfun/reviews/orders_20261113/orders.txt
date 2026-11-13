@@ -1,0 +1,26 @@
+ORDERS public tape + order hashes, 9 consumed replay days, first 60 s; as of 2026-11-13T06:04:01Z; build and analysis controls passed
+statuses {'legs_0_61': 1603252, 'legs_unmapped': 0, 'self_legs': 707, 'births_0_60': 187633, 'births_filled': 116966, 'orders': 911353, 'takes': 274270, 'maker_windows': 136352, 'reentries': 144442}
+
+Readings: {"R400": "PERSIST-MORE", "R401": "FRONT-KEEP-MORE", "R402": "PROPORTIONAL", "R404": "DIRECTIONAL"}
+  {"R400_detail": {"top5": 0.2577368826894083, "field": 0.10047113852828526, "ratio": 2.5652827913047744, "days_higher": 9, "days_lower": 0}, "R401_detail": {"top5": 0.15688982494907294, "field": 0.04875978714029082, "ratio": 3.217606846758216, "days_higher": 9, "days_lower": 0}, "R402_detail": {"creator_share": 0.20687208248550862, "at_best_share": 0.24395178443203436, "ratio": 0.8480039732734308, "days_higher": 2, "days_lower": 7, "births_filled": 116966}, "R404_detail": {"reducing_share": 0.3961056766073895}}
+
+measure                                                    |                  top 5 |                   6-20 |                   rest
+orders (first fill in 0-60 s)                              |                 173778 |                 283317 |                 454258
+fills per order, median                                    |                      1 |                      1 |                      1
+orders filled >= 3 times                                   |                  25.8% |                  12.0% |                   8.8%
+shares filled per order, median / p90                      |           30.0 / 100.0 |            20.0 / 60.0 |            10.0 / 27.7
+life of orders filled >= 2 times, median / p90 ms          |             357 / 2350 |             153 / 1454 |             109 / 1504
+orders first in queue >= 1 / >= 2 times                    |          37.1% / 15.7% |           22.4% / 6.3% |           16.6% / 4.0%
+share of new-level creators / of at-best fills             |          20.7% / 24.4% |          35.8% / 30.2% |          43.5% / 45.4%
+creator: birth to first fill, median ms                    |                    450 |                    294 |                    397
+prices per maker and window-side, median / p90             |                 6 / 11 |                  3 / 6 |                  1 / 5
+other prices held at a fill, median / p90                  |                  0 / 1 |                  0 / 1 |                  0 / 0
+fills with another price held                              |                  19.7% |                  11.2% |                   9.0%
+take shares / maker shares                                 |                  12.6% |                   7.0% |                  44.0%
+take shares reducing the position / from flat              |           39.6% / 5.1% |           40.4% / 4.7% |          11.7% / 40.3%
+maker-windows two-sided                                    |                  89.1% |                  84.1% |                  43.7%
+|net| / gross at the end of the minute                     |                  26.8% |                  35.0% |                  65.2%
+re-entry gap at the same price, median (p25 / p75) ms      |    5905 / 2332 / 13991 |    5105 / 2010 / 12005 |    4844 / 2086 / 11078
+
+EXIT-v2 (POST HOC: EXIT on exact, complete taker orders): observations 10020; GONE share top 5 0.507, 6-20 0.621, rest 0.469; gap-matched top 5 minus field -0.016 (per day +0.032 -0.068 +0.029 +0.009 +0.055 -0.172 -0.093 -0.031 +0.091)
+  GONE share bottom -> top P quintile: top 5 0.293 (652) -> 0.790 (547); field 0.440 (1249) -> 0.642 (1353); days the top-5 P effect exceeds the field's: 9 of 9
