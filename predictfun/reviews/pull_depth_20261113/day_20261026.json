@@ -1,0 +1,47 @@
+{
+ "stat": {
+  "registry": 288,
+  "outside_day": 0,
+  "sealed_or_forward": 0,
+  "no_outcome": 0,
+  "untimed_legs_0_60": 3191,
+  "untimed_shares_0_60": 39785.99813006458,
+  "windows": 288,
+  "window_sides": 576,
+  "ctrl_differ": 0,
+  "pd25_differs": 6896,
+  "align_rows": 65866,
+  "align_bad": 0,
+  "clock_restored": 1,
+  "fills": 62935,
+  "real_atbest_q": {
+   "field": 853590.129364561,
+   "top 5": 446865.2901939127
+  },
+  "events": {
+   "adverse": 10276,
+   "other": 10672,
+   "calm fallback": 4150,
+   "calm improve": 4370
+  },
+  "grid_steps": 345600,
+  "grid_steps_without_row": 0,
+  "pulls|LDG|M0": 87052,
+  "pulls|PD10|M0": 56490,
+  "pulls|PD25|M0": 39582,
+  "pulls|PDF2|M0": 31477,
+  "pulls|PDF3|M0": 44186,
+  "pulls|LDG|M50": 86993,
+  "pulls|PD10|M50": 56422,
+  "pulls|PD25|M50": 39488,
+  "pulls|PDF2|M50": 30987,
+  "pulls|PDF3|M50": 43860,
+  "unpaired_windows": 0,
+  "planted_caught": {
+   "MUT_MOVE_SIGN": true,
+   "MUT_DEC_INV": true,
+   "MUT_ONSET_ANY": true
+  }
+ },
+ "days": 1.0
+}

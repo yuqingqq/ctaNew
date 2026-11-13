@@ -1,0 +1,10 @@
+fit 20261023: train 300000 rows, AUC j1 0.764 j2 0.752 j3 0.746 j4 0.749 j5 0.751
+fit 20261024: train 300000 rows, AUC j1 0.754 j2 0.758 j3 0.757 j4 0.760 j5 0.766
+fit 20261025: train 300000 rows, AUC j1 0.754 j2 0.752 j3 0.752 j4 0.756 j5 0.765
+fit 20261026: train 300000 rows, AUC j1 0.768 j2 0.752 j3 0.751 j4 0.749 j5 0.755
+fit 20261027: train 300000 rows, AUC j1 0.770 j2 0.762 j3 0.761 j4 0.766 j5 0.775
+fit 20261031: train 300000 rows, AUC j1 0.746 j2 0.753 j3 0.762 j4 0.765 j5 0.767
+fit 20261101: train 300000 rows, AUC j1 0.741 j2 0.746 j3 0.758 j4 0.773 j5 0.772
+fit 20261102: train 300000 rows, AUC j1 0.754 j2 0.745 j3 0.742 j4 0.738 j5 0.735
+fit 20261103: train 300000 rows, AUC j1 0.765 j2 0.757 j3 0.751 j4 0.746 j5 0.739
+2026-11-13T11:59:41Z tag=pd_fit rc=0 peak_rss_mib=1579 wall_s=470.98 cpu_user_s=459.73 memavail_start_gib=22 disk_free_gib=531->531 slot=claude

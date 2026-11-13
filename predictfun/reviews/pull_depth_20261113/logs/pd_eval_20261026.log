@@ -1,0 +1,9 @@
+20261026: 80 window-sides, 11 s, rss 773 MiB
+20261026: 160 window-sides, 18 s, rss 778 MiB
+20261026: 240 window-sides, 26 s, rss 784 MiB
+20261026: 320 window-sides, 33 s, rss 790 MiB
+20261026: 400 window-sides, 40 s, rss 796 MiB
+20261026: 480 window-sides, 48 s, rss 801 MiB
+20261026: 560 window-sides, 55 s, rss 806 MiB
+20261026: {"registry": 288, "outside_day": 0, "sealed_or_forward": 0, "no_outcome": 0, "untimed_legs_0_60": 3191, "untimed_shares_0_60": 39785.99813006458, "windows": 288, "window_sides": 576, "ctrl_differ": 0, "pd25_differs": 6896, "align_rows": 65866, "align_bad": 0, "clock_restored": 1, "fills": 62935, "grid_steps": 345600, "grid_steps_without_row": 0, "pulls|LDG|M0": 87052, "pulls|PD10|M0": 56490, "pulls|PD25|M0": 39582, "pulls|PDF2|M0": 31477, "pulls|PDF3|M0": 44186, "pulls|LDG|M50": 86993, "pulls|PD10|M50": 56422, "pulls|PD25|M50": 39488, "pulls|PDF2|M50": 30987, "pulls|PDF3|M50": 43860, "unpaired_windows": 0} events {'adverse': 10276, 'other': 10672, 'calm fallback': 4150, 'calm improve': 4370} in 56 s
+2026-11-13T12:10:34Z tag=pd_eval_20261026 rc=0 peak_rss_mib=814 wall_s=57.32 cpu_user_s=55.67 memavail_start_gib=22 disk_free_gib=531->531 slot=claude

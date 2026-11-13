@@ -1,0 +1,72 @@
+PULL-DEPTH, 9 consumed replay days, first 60 s; as of 2026-11-13T12:16:21Z; controls passed (tau = 0 = LDG on every window-side, LDG = TIMING-SPLIT, P aligned, clocks restored, planted errors caught)
+
+PART A: guard-on steps 2290802 (275122 onsets); move within 1 s at the onset (share): 0 60%, 1 20%, 2 8%, 3 4%, 4 2%, >= 5 5%; within 250 ms: 0 80%, 1 14%, >= 2 7%
+  all guard-on steps, P(move >= j within 1 s): j1 45%, j2 25%, j3 16%, j4 10%, j5 7%
+  R490 j1: out-of-day AUC mean 0.757 (days 0.741-0.770) -> PREDICTABLE
+  R490 j2: out-of-day AUC mean 0.753 (days 0.745-0.762) -> PREDICTABLE
+  R490 j3: out-of-day AUC mean 0.753 (days 0.742-0.762) -> PREDICTABLE
+  R490 j4: out-of-day AUC mean 0.756 (days 0.738-0.773) -> printed
+  R490 j5: out-of-day AUC mean 0.758 (days 0.735-0.775) -> printed
+
+PART B: $/day w/o young at 1 s (WS-timed | E2 | all), pulls a day; c/sh WS w/o young
+  M0 LDG       +86.1 |    -102.0 |     -15.9 | pulls     77591 | c/sh +0.416 | WS 5 s     +75.6
+  M0 PD10     +114.6 |    -100.8 |     +13.8 | pulls     47135 | c/sh +0.542 | WS 5 s    +102.6
+  M0 PD25     +146.3 |    -136.8 |      +9.6 | pulls     32087 | c/sh +0.630 | WS 5 s    +111.6
+  M0 PDF2     -749.7 |    -891.5 |   -1641.2 | pulls     26280 | c/sh -1.308 | WS 5 s    -702.1
+  M0 PDF3     -394.7 |    -482.1 |    -876.8 | pulls     38010 | c/sh -1.008 | WS 5 s    -369.0
+  M50 LDG       +53.5 |    -190.1 |    -136.6 | pulls     77513 | c/sh +0.239 | WS 5 s     +44.8
+  M50 PD10      +76.5 |    -196.0 |    -119.5 | pulls     47038 | c/sh +0.334 | WS 5 s     +61.6
+  M50 PD25      +97.5 |    -271.8 |    -174.3 | pulls     31939 | c/sh +0.384 | WS 5 s     +58.6
+  M50 PDF2    -1028.6 |   -1152.3 |   -2180.9 | pulls     25756 | c/sh -1.519 | WS 5 s    -947.8
+  M50 PDF3     -591.6 |    -705.3 |   -1296.9 | pulls     37630 | c/sh -1.271 | WS 5 s    -548.9
+  R491 PD10: HELPS (WS $/day vs LDG: M 0 +28.5, higher 9/9; M 50 +23.0, higher 9/9)
+  R491 PD25: HELPS (WS $/day vs LDG: M 0 +60.3, higher 9/9; M 50 +43.9, higher 8/9)
+  per day WS $/day M 50: LDG | PD10 | PD25 | PDF2 | PDF3
+    20261023    +54.0 |    +61.0 |    +81.0 |   -689.6 |   -354.5
+    20261024   +182.2 |   +197.8 |   +263.1 |   -625.7 |   -314.6
+    20261025   +160.3 |   +243.4 |   +326.0 |   -804.6 |   -453.6
+    20261026    +57.8 |    +67.4 |    +76.0 |   -736.8 |   -371.2
+    20261027    +19.2 |    +24.9 |    +44.8 |   -858.3 |   -470.4
+    20261031    +18.5 |    +43.6 |    +53.7 |  -1424.7 |   -917.3
+    20261101     -8.6 |    +17.8 |    +25.0 |  -1460.5 |   -972.5
+    20261102     +0.6 |    +27.5 |    +26.2 |  -1321.8 |   -742.9
+    20261103     -2.4 |     +5.2 |    -18.8 |  -1335.5 |   -727.4
+
+R492 (M 50, WS, w/o young): at-best fills: PRE share | PRE c/sh | PRE STOP | POST c/sh || deep fills: share at high P | c/sh
+  LDG   16.8% | +0.207 |  58% | -0.032 ||   5% | +0.843
+  PD10  16.4% | +0.242 |  60% | -0.026 ||   7% | +1.015
+  PD25  18.7% | +0.189 |  61% | -0.010 ||  10% | +0.885
+  PDF2  38.1% | -0.898 |  47% | -0.007 ||  58% | -1.357
+  PDF3  27.2% | -0.839 |  49% | -0.028 ||  57% | -1.283
+
+PART C: levels after a guard onset (adverse = the hit side's new best by fallback; other = the other side's new best by improvement) and calm births; events: {"adverse": 75914, "other": 78800, "calm fallback": 33318, "calm improve": 35412}
+  queue at the new level, median shown sh at the birth / +100 / +250 / +500 / +1000 ms (while it stays the best); life median ms
+    adverse        n  75914 | 128 / 145 / 236 / 277 / 310 | life 388
+    calm fallback  n  33318 | 101 / 118 / 189 / 233 / 265 | life 250
+    other          n  78800 | 54 / 167 / 349 / 377 / 359 | life 391
+    calm improve   n  35412 | 51 / 155 / 334 / 364 / 351 | life 253
+  real WS fills at these levels: who | share of shares | first-fill share | first fill ms after birth median | PROOF of first fills | c/sh | STOP | c/sh < 100 ms / 100-500 / >= 500 ms
+    adverse        top 5  42.4% | 37.3% |    250 |  18% | +0.295 |  82% | +0.05 / +0.25 / +0.39
+    adverse        field  57.6% | 62.7% |    204 |  10% | -0.114 |  71% | -0.98 / -0.23 / +0.17
+    calm fallback  top 5  42.7% | 37.0% |    198 |  10% | +0.126 |  86% | -0.35 / +0.06 / +0.36
+    calm fallback  field  57.3% | 63.0% |    155 |   7% | -0.344 |  79% | -1.36 / -0.46 / +0.09
+    other          top 5  26.6% | 20.0% |    340 |   6% | +0.530 |  79% | +0.98 / +0.73 / +0.36
+    other          field  73.4% | 80.0% |    301 |   3% | +0.584 |  73% | +0.96 / +0.66 / +0.48
+    calm improve   top 5  24.7% | 18.4% |    336 |   2% | +0.723 |  81% | +1.19 / +0.80 / +0.62
+    calm improve   field  75.3% | 81.6% |    260 |   1% | +0.657 |  78% | +1.05 / +0.75 / +0.51
+    (top 5 share of all real at-best WS fill shares, first minute: 33.9%)
+  R493 ADVERSE-FRONT: top 5 first-fill share / at-best share = 1.10 (higher on 8, lower on 1 of 9) -> PROPORTIONAL
+  R494 OTHER-SIDE-EARLY: real fills < 100 ms +0.962 vs >= 500 ms +0.446 c/sh (higher 9, lower 0 of 9) -> EARLY-PAYS
+  ours at these levels (M 50, WS): arm | fills | shares | aged c/sh | STOP | our order live after the birth, ms median | share live < 100 ms
+    adverse        LDG     2001 |    23332 | -0.174 |  25% |    320 |  18%
+    adverse        PD10    1944 |    22709 | -0.184 |  25% |    322 |  18%
+    adverse        PD25    1855 |    21562 | -0.221 |  27% |    317 |  22%
+    calm fallback  LDG      695 |     7804 | +0.135 |  45% |   -432 |  56%
+    calm fallback  PD10     698 |     7757 | +0.192 |  47% |   -344 |  56%
+    calm fallback  PD25     680 |     7551 | +0.263 |  51% |   -588 |  56%
+    other          LDG     1099 |    11905 | +0.373 |  33% |    207 |  20%
+    other          FAST    1471 |    15519 | +0.415 |  42% |    113 |  44%
+    calm improve   LDG      530 |     5127 | +0.216 |  47% |    119 |  33%
+    calm improve   FAST     667 |     6706 | +0.344 |  56% |     47 |  66%
+  R495 OUR-SPEED-THERE: FAST +0.415 vs BASE +0.373 c/sh (higher 6, lower 3 of 9) -> NOT-SHOWN
+2026-11-13T12:16:17Z tag=pd_report rc=0 peak_rss_mib=926 wall_s=8.87 cpu_user_s=7.10 memavail_start_gib=22 disk_free_gib=531->531 slot=claude
