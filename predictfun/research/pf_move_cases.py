@@ -49,7 +49,8 @@ planted errors (the move measured with the wrong sign, run-over levels including
 (iv) memory self-guard.
 Limits fixed in advance: fills only (orders that are pulled are invisible: a low share is "not filled there", never proof of a pull); WS-timed
 legs only (C12); the guard is OUR signal; consumed days (C8); ours replay rule M (C5); taker addresses 90% known.
-Usage (run_light, PF_SLOT=claude): pf_move_cases.py selftest | day <day> | report; driver run_move_cases.sh
+Usage (run_light, PF_SLOT=claude): pf_move_cases.py selftest | day <day> | report | posthoc (added after the report); driver
+run_move_cases.sh
 """
 import bisect
 import json
@@ -438,6 +439,26 @@ def report():
     open(f'{OUTD}/move_cases.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
 
 
+def posthoc():
+    """POST HOC (added after the report, descriptive): per case, each group's maker volume and $ / day at 5 s on the INTO side and the AWAY
+    side, the AWAY / INTO volume ratio (how much of the side run over is matched by fills on the other side), and c/sh; ours (SIMULATED LDG)
+    beside. Adverse events."""
+    stats = {d: json.load(open(f'{OUTD}/day_{d}.json')) for d in DAYS9}; ndays = sum(stats[d]['days'] for d in DAYS9)
+    rd = lambda nm: pd.concat([pd.read_parquet(f'{OUTD}/{nm}_{d}.parquet') for d in DAYS9], ignore_index=True)
+    SG, OU = rd('segs'), rd('ours')
+    mk = SG[(SG.role == 'maker') & (SG.kind == 'adverse')]; ou = OU[OU.kind == 'adverse']
+    L = ['MOVE-CASES post hoc (descriptive, adverse events): per case and group: INTO sh/day, $/day, c/sh || AWAY sh/day, $/day, c/sh || AWAY / INTO'
+         ' volume || total $/day, c/sh']
+    for cs in CASES + ('ALL',):
+        for g_, X in (('top 5', mk[mk.grp == 'top 5']), ('field', mk[mk.grp == 'field']), ('ours', ou)):
+            x = X if cs == 'ALL' else X[X.case == cs]
+            i_ = x[x.seg.str.startswith('into')]; a_ = x[x.seg.str.startswith('away')]
+            iq, iv, aq, av = i_.q.sum(), i_.v5q.sum(), a_.q.sum(), a_.v5q.sum()
+            L.append(f'  {cs:<16} {g_:<6} {iq / ndays:8.0f} {iv / 100 / ndays:+9.1f} {iv / max(iq, 1e-9):+.2f} || {aq / ndays:8.0f} {av / 100 / ndays:+9.1f}'
+                     f' {av / max(aq, 1e-9):+.2f} || {aq / max(iq, 1e-9):4.2f} || {(iv + av) / 100 / ndays:+9.1f} {(iv + av) / max(iq + aq, 1e-9):+.2f}')
+    open(f'{OUTD}/posthoc.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''
     if cmd == 'selftest':
@@ -446,5 +467,7 @@ if __name__ == '__main__':
         day_run(sys.argv[2])
     elif cmd == 'report':
         report()
+    elif cmd == 'posthoc':
+        posthoc()
     else:
         sys.exit(__doc__)
