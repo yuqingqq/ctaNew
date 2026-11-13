@@ -1,0 +1,54 @@
+{
+ "stat": {
+  "registry": 288,
+  "outside_day": 0,
+  "sealed_or_forward": 0,
+  "no_outcome": 0,
+  "untimed_legs_0_60": 1023,
+  "untimed_shares_0_60": 10108.96713956579,
+  "windows": 288,
+  "window_sides": 576,
+  "ctrl_off": 0,
+  "arms_differ": 3980,
+  "clock_ok": 1,
+  "real_atbest_q": {
+   "top 5": 300667.59273282206,
+   "field": 610701.817525619
+  },
+  "hash_legs": {
+   "top 5": [
+    31706,
+    31696
+   ],
+   "field": [
+    79878,
+    77462
+   ]
+  },
+  "excluded": {
+   "calm improve": {
+    "invalid birth frame": 5
+   },
+   "calm fallback": {
+    "invalid birth frame": 5
+   },
+   "adverse": {
+    "invalid birth frame": 5
+   },
+   "other": {
+    "invalid birth frame": 5
+   }
+  },
+  "keep_truncated": 1856,
+  "grid_steps": 345600,
+  "grid_steps_without_row": 0,
+  "events_differ": 0,
+  "unpaired_windows": 0,
+  "planted_caught": {
+   "MUT_FIRST_LEG": true,
+   "MUT_PRE_IGNORED": true,
+   "MUT_WRAP_OFF": true
+  }
+ },
+ "days": 1.0
+}

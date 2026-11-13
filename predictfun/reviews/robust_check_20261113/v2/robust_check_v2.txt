@@ -1,0 +1,45 @@
+ROBUST-CHECK v2 (after the code review), 9 consumed replay days, first 60 s; as of 2026-11-13T15:53:51Z; controls passed (events = PULL-DEPTH before the exclusion, corrected arms with entry off = their plain lanes, clocks restored, planted errors caught); fills without a 1 s value 0
+statuses: events excluded {"adverse": {"invalid birth frame": 63}, "other": {"invalid birth frame": 61}, "calm fallback": {"invalid birth frame": 36}, "calm improve": {"invalid birth frame": 36}}; maker events with a truncated 10 s window 15161; hash coverage of WS first-minute legs: top 5 99.8%, field 96.1%; top-5 share of all real at-best WS fill shares 33.9%
+
+K1 STRICT SWEEP: top-5 share of the volume at the new price | at the old best | shares
+  adverse       UP   50.7% | 28.9% | 665335
+  adverse       DOWN 50.7% | 28.0% | 568810
+  calm fallback UP   48.2% | 26.6% | 232216
+  calm fallback DOWN 49.8% | 26.8% | 194550
+  K1: UP 50.7%, DOWN 50.7% vs 40.7%; above the day's share on 9 of 9 -> PASS
+
+K2 PROOF WITH A MARGIN: group's shares at the new best from orders filled there at t <= birth - 0 / 50 / 250 ms
+  adverse UP   top 5  16.7% /  7.4% /  6.6% (13006 orders)
+  adverse UP   field   8.6% /  4.5% /  4.1% (34301 orders)
+  adverse DOWN top 5  16.1% /  7.5% /  6.9% (11554 orders)
+  adverse DOWN field   9.4% /  4.9% /  4.4% (31260 orders)
+  K2: top 5 > field at 250 ms on UP 8 / DOWN 8 of 9 -> PASS
+
+K3 / K3b FRONT: top-5 share of first-filled orders (K3) / of orders filled by the first trade (K3b) | of all filled orders | ratio
+  K3: 37.3% | 27.3% | 1.37; higher on 9 of 9 -> PASS
+  K3b: 32.5% | 27.3% | 1.19; higher on 9 of 9 -> PASS
+
+K4 REQUOTE WHEN VISIBLE (other side): JOIN rate of makers proven at the old best, all | >= 100 sh traded at the new price
+  other UP   top 5   6.2% (16948) | 32.1% (770)
+  other UP   field   4.4% (42029) | 28.8% (2208)
+  other DOWN top 5   6.4% (19502) | 31.3% (1009)
+  other DOWN field   4.7% (47355) | 27.8% (2446)
+  K4: top 5 UP 32.1%, DOWN 31.3% (line 33%) -> PASS; field UP 28.8%, DOWN 27.8%
+
+K5 / K6 KEPT PER ORDER (other side; 10 s window complete): KEPT | >= 100 / >= 300 sh traded at the old price || at >= 300 sh: pre-move fills < 10 / >= 10 sh || kept fills c/sh 1 s / 5 s
+  other UP   top 5  23.4% (2782) / 25.0% (1004) || 46.2% / 19.8% || +0.531 / +0.163
+  other UP   field   8.2% (7391) /  8.3% (2808) || 11.1% /  6.6% || -0.051 / -1.002
+  other DOWN top 5  23.4% (3889) / 24.2% (1450) || 45.7% / 18.9% || +0.602 / +0.439
+  other DOWN field   8.3% (9867) /  8.7% (3731) || 11.8% /  6.6% || +0.282 / +0.054
+  K5: top 5 > field at >= 300 sh on 9 of 9 -> PASS; K6: kept fills > 0 at 1 s on 9 of 9, 5 s pooled +0.321 -> PASS
+
+K7 EARLY ENTRY, corrected, against the same path (rung 0, WS $/day w/o young at 1 s): arm - lane, M 0 / M 50 / M 250 (days higher / lower) | all trades M 50
+  MD2      vs LDG0    -383.7 (0 / 9) /   -420.5 (0 / 9) /   -463.3 (0 / 9) |   -791.5 -> HURTS
+  MDF2     vs FAST0   -349.1 (0 / 9) /   -394.2 (0 / 9) /   -476.8 (0 / 9) |   -769.5 -> HURTS
+  MDG10v2  vs LDG0      -0.1 (0 / 2) /     -0.7 (0 / 3) /     -0.0 (1 / 2) |     -0.7 -> NOT-SHOWN
+  MDG25v2  vs LDG0      -1.0 (4 / 5) /     -2.3 (2 / 7) /    -31.6 (0 / 9) |    -19.4 -> NOT-SHOWN
+  MDG10Fv2 vs FAST0     -0.0 (0 / 1) /     -0.7 (0 / 2) /     -0.0 (1 / 1) |     -0.7 -> NOT-SHOWN
+  MDG25Fv2 vs FAST0     -0.6 (3 / 6) /     -0.9 (4 / 5) /    -32.9 (0 / 9) |    -16.9 -> NOT-SHOWN
+  K7: C4 ROBUST
+
+VERDICTS v2: {"K1": "PASS", "K2": "PASS", "K3": "PASS", "K3b": "PASS", "K4": "PASS", "K5": "PASS", "K6": "PASS", "K7": "C4 ROBUST"}  (K8 from v1: PASS)

@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 15:55Z (session ce68ebe0) — ROBUST-CHECK DONE (v1 + independent code review + v2): the conclusions hold, one restated. Side the price moves into: top 5 hold 51% of the next price's volume in crossing trades (28% at the old best), lead its queue; side it moves away from: about one in three requote when visible (32% vs 28%, not "rare"), old orders stay 3x the field and kept fills pay; early entry after the move loses (corrected) or adds nothing (gated); the fast path helps the whole ladder
+
+- Done (USER: "Can you review then make sure your conclusion is correct then give me some robust results"): pf_robust_check.py (1ae29bdb, before its run; post hoc aaa04b61), an independent read-only code review of pf_side_moves.py / pf_move_down.py (nine findings, none reverses a conclusion), pf_robust_check_v2.py with the fixes (9b218820, before its run). Report handoffs/20261113_robust_check_results.md; copies reviews/robust_check_20261113/ (v2/); FINDINGS (new row; SIDE-MOVES row restated), STATUS, TODO updated.
+- Verdicts v2: K1 K2 K3 K3b K4 K5 K6 PASS, K7 C4 ROBUST; K8 (v1) PASS. v1's declared K7 "C4 REVISED" was an artifact of comparing fast arms with today's slow lane.
+- Watch out: K4 passes its declared 33% line narrowly (32%); WHY-GONE not re-run after review point 8 (small); SIDE-MOVES' RESTED origin share is slightly contaminated (review point 1), not used in the robust checks.
+- Next (proposals, user's call): FAST path as an engine requirement (live latency on Tokyo); KEEP-BEHIND; STOP-HERE prediction for being at the next price before the move.
+
 ## 2026-11-13 15:13Z (session ce68ebe0) — SIDE-MOVES post hoc + CORRECTION: on the protection side the top makers' orders are mostly already at the next price before the move (49% of the volume filled there in the trade that pushes the price there; first in its queue); on the other side they rarely requote and their old order stays more often than others' (24% vs 9% when 100+ sh trade there again), but most are gone; kept fills earn +0.5 to +0.6 c/sh. Same in pumps and dumps
 
 - Done (USER: "So they don't requote, their orders are already there ... top makers don't pull bid side, then what they do? ... solid conclusions"): pf_side_moves.py dayposthoc / posthoc + run_side_moves_posthoc.sh (6e49d5ff, before its run), 15:10-15:12Z; the declared readings reproduce exactly. Report section added to handoffs/20261113_side_moves_results.md; FINDINGS row rewritten; copies refreshed.

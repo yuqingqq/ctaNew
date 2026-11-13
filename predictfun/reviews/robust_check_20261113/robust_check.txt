@@ -1,0 +1,63 @@
+ROBUST-CHECK, 9 consumed replay days, first 60 s; as of 2026-11-13T15:35:31Z; controls passed (events = PULL-DEPTH, gated tau 0 = LDG / FAST, fast rung 0 = BEST-GAP, LDG ladder = FUTURE-BEST, clocks restored, planted errors caught); fills without a 1 s value 0; top-5 share of all real at-best WS fill shares 33.9%
+
+K1 STRICT SWEEP (protection side, taker orders crossing the old best into the new price): top-5 share of the volume filled at the new price | at the old best | units (shares)
+  adverse       UP   50.7% | 28.9% | 665924
+  adverse       DOWN 50.7% | 28.0% | 569532
+  calm fallback UP   48.1% | 26.6% | 232559
+  calm fallback DOWN 49.8% | 26.8% | 194747
+  K1: adverse UP 50.7%, DOWN 50.7% vs 1.2 x 33.9% = 40.7%; above the day's at-best share on 9 of 9 days -> PASS
+
+K2 PROOF WITH A MARGIN (protection-side new best): share of the group's fill shares there from orders filled at that price at t <= birth - margin: margin 0 / 50 / 250 ms
+  adverse       UP   top 5  16.7% /  7.4% /  6.6% (13006 orders)
+  adverse       UP   field   8.6% /  4.5% /  4.1% (34305 orders)
+  adverse       DOWN top 5  16.1% /  7.5% /  6.9% (11554 orders)
+  adverse       DOWN field   9.4% /  4.9% /  4.4% (31262 orders)
+  calm fallback UP   top 5  17.5% /  4.7% /  3.8% (5064 orders)
+  calm fallback UP   field  11.6% /  4.1% /  3.1% (12382 orders)
+  calm fallback DOWN top 5  18.4% /  5.1% /  4.2% (4405 orders)
+  calm fallback DOWN field  12.0% /  5.3% /  4.7% (11472 orders)
+  K2: top 5 > field at 250 ms margin on UP 8 / DOWN 8 of 9 days -> PASS
+
+K3 FRONT (protection-side new best): top-5 share of first-filled orders | of all filled orders (count) | ratio
+  adverse       37.3% | 27.3% | 1.37
+  calm fallback 37.1% | 28.4% | 1.31
+  K3: ratio 1.37, higher on 9 of 9 days -> PASS
+
+K4 REQUOTE WHEN VISIBLE (other side, makers proven at the old best): JOIN rate, all events | events with >= 100 sh traded at the new price while it was the best
+  other         UP   top 5   6.1% (19579) | 32.4% (870)
+  other         UP   field   4.4% (48579) | 29.1% (2483)
+  other         DOWN top 5   6.3% (22580) | 31.9% (1161)
+  other         DOWN field   4.6% (54590) | 26.5% (2819)
+  calm improve  UP   top 5   7.0% (4363) | 28.9% (190)
+  calm improve  UP   field   4.4% (15856) | 26.7% (719)
+  calm improve  DOWN top 5   7.7% (4523) | 39.3% (229)
+  calm improve  DOWN field   4.9% (15991) | 29.1% (826)
+  K4: top-5 JOIN when visible UP 32.4%, DOWN 31.9% (RARE if <= 33%) -> PASS
+
+K5 / K6 KEPT (other side): KEPT | traded at the old price after the move >= 100 / >= 300 sh || at >= 300 sh, pre-move fills < 10 / >= 10 sh || kept fills c/sh at 1 s / 5 s
+  other         UP   top 5  23.7% (3027) / 25.6% (1083) || 47.2% / 20.2% || +0.522 / +0.222
+  other         UP   field   8.6% (7823) /  8.9% (2906) || 11.3% /  7.4% || -0.043 / -0.872
+  other         DOWN top 5  23.5% (4081) / 24.7% (1521) || 45.9% / 19.3% || +0.643 / +0.509
+  other         DOWN field   8.6% (10212) /  9.0% (3905) || 12.4% /  6.8% || +0.301 / +0.045
+  calm improve  UP   top 5  23.8% (713) / 29.9% (221) || 59.0% / 23.6% || +0.669 / +0.044
+  calm improve  UP   field   8.4% (2442) /  9.0% (823) || 10.2% /  8.3% || +0.013 / -0.659
+  calm improve  DOWN top 5  23.5% (737) / 21.6% (241) || 39.1% / 17.4% || +0.906 / +0.778
+  calm improve  DOWN field   9.5% (2548) /  8.9% (822) ||  9.8% /  8.3% || +0.073 / +0.957
+  K5: top 5 KEPT > field at >= 300 sh on 9 of 9 days -> PASS; K6: top-5 kept fills > 0 at 1 s on 9 of 9 days, pooled 5 s +0.383 c/sh -> PASS
+
+K7 GATED FAST ENTRY (rung 0): WS $/day w/o young at 1 s, M 0 / M 50 / M 250 (days higher than LDG rung 0) | all trades M 50
+  LDG        +27.7 (0) /     +6.3 (0) /   -313.4 (0) |    -89.5
+  FAST       +46.4 (9) /    +28.0 (9) /   -301.0 (9) |    -45.9
+  MDG10      +27.6 (0) /     +5.6 (1) /   -313.5 (2) |    -90.2
+  MDG25      +26.7 (4) /     +3.8 (2) /   -345.5 (0) |   -108.9
+  MDG10F     +46.4 (9) /    +27.3 (9) /   -301.0 (9) |    -46.5
+  MDG25F     +46.1 (9) /    +27.1 (9) /   -334.9 (0) |    -63.2
+  K7: {'MDG10': 'NOT-SHOWN', 'MDG25': 'NOT-SHOWN', 'MDG10F': 'HELPS', 'MDG25F': 'HELPS'} -> C4 REVISED
+
+K8 FAST LADDER (rungs 0-5): WS $/day w/o young at 1 s, LDG | FAST (days higher) per clock; E2; all trades
+  M0      +86.1 |   +113.0 (9/9) || E2   -102.0 |    -58.4 || all    -15.9 |    +54.5
+  M50     +53.5 |    +84.7 (9/9) || E2   -190.1 |   -148.0 || all   -136.6 |    -63.4
+  M250   -936.4 |   -914.1 (8/9) || E2   -848.6 |   -824.8 || all  -1785.0 |  -1738.9
+  K8: FAST ladder higher on {'M0': 9, 'M50': 9, 'M250': 8} -> PASS
+
+VERDICTS: {"K1": "PASS", "K2": "PASS", "K3": "PASS", "K4": "PASS", "K5": "PASS", "K6": "PASS", "K7": "C4 REVISED", "K8": "PASS"}
