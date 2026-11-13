@@ -298,6 +298,35 @@ def report():
     open(f'{OUTE}/exit.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
 
 
+def posthoc():
+    """POST HOC (2026-11-13, after R392's result; no reading declared): is R392's top-5 vs field difference in the P effect an artifact
+    of the gap or of single days? The GONE share in the bottom / top P quintile (all-observation quintiles, as R392) by gap bin and by
+    day, top 5 vs field; and the top 5 minus field GONE share within each P quintile."""
+    A = pd.concat([pd.read_parquet(f'{OUTE}/obs_{d}.parquet') for d in DAYS9], ignore_index=True)
+    A = A[np.isfinite(A.P)].copy(); q = np.quantile(A.P, [0.2, 0.4, 0.6, 0.8]); A['pq'] = np.searchsorted(q, A.P.values, side='right')
+    A['g2'] = np.where(A.grp == 'top 5', 'top 5', 'field')
+    A['gb'] = pd.cut(A.gap, [-1e-9, 100.0, 250.0, 1000.0], labels=[g[0] for g in GAPB]).astype(str)
+    L = [f'EXIT POST HOC as of {time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}: GONE share bottom -> top P quintile (n), top 5 | field']
+    res = {}
+    def eff(x):
+        lo_ = x[x.pq == 0]; hi_ = x[x.pq == 4]
+        return gone_share(lo_), gone_share(hi_), int(len(lo_)), int(len(hi_))
+    for nm, _, _ in GAPB:
+        r = {g: eff(A[(A.gb == nm) & (A.g2 == g)]) for g in ('top 5', 'field')}; res[nm] = r
+        L.append(f'  gap {nm:<12} ' + ' | '.join(f'{g} {v[0]:.3f} ({v[2]}) -> {v[1]:.3f} ({v[3]}) diff {v[1] - v[0]:+.3f}' for g, v in r.items()))
+    up = 0
+    for d in DAYS9:
+        r = {g: eff(A[(A.day == int(d)) & (A.g2 == g)]) for g in ('top 5', 'field')}; res[d] = r
+        dt = r['top 5'][1] - r['top 5'][0]; df_ = r['field'][1] - r['field'][0]; up += int(dt > df_)
+        L.append(f'  day {d} ' + ' | '.join(f'{g} {v[0]:.3f} ({v[2]}) -> {v[1]:.3f} ({v[3]}) diff {v[1] - v[0]:+.3f}' for g, v in r.items()))
+    L.append(f'  days on which the P effect of the top 5 exceeds that of the field: {up} of 9')
+    by_q = {int(k): (gone_share(x[x.g2 == 'top 5']), gone_share(x[x.g2 == 'field']), int((x.g2 == 'top 5').sum()), int((x.g2 == 'field').sum())) for k, x in A.groupby('pq')}
+    L.append('  GONE share by P quintile, top 5 / field (n): ' + '; '.join(f'Q{k + 1} {v[0]:.3f} / {v[1]:.3f} ({v[2]} / {v[3]})' for k, v in by_q.items()))
+    res['by_quintile'] = by_q; res['days_top_effect_larger'] = up
+    json.dump(res, open(f'{OUTE}/exit_posthoc.json', 'w'), indent=1, default=float)
+    open(f'{OUTE}/exit_posthoc.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''
     if cmd == 'selftest':
@@ -308,5 +337,7 @@ if __name__ == '__main__':
         run_day(sys.argv[2])
     elif cmd == 'report':
         report()
+    elif cmd == 'posthoc':
+        posthoc()
     else:
         sys.exit(__doc__)
