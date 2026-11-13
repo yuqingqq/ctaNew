@@ -334,9 +334,10 @@ def report():
             x = MK[MK.kind == kev]
             for g_ in ('top 5', 'field'):
                 y = x[x.grp == g_]; ob = y[y.obs]
-                sp = ' / '.join(f'{v_:4.0%}' for v_ in ((ob.join & ~ob.kept).mean(), (ob.join & ob.kept).mean(), (~ob.join & ob.kept).mean(),
-                                                        (~ob.join & ~ob.kept).mean())) if len(ob) else 'n/a'
-                L.append(f'    {kev:<13} {g_:<6} {len(y):>7} | {y.join.mean() if len(y) else NAN:5.1%} | {np.nanmedian(y.jgap) if y.join.any() else NAN:5.0f} |'
+                oj = ob['join']; yj = y['join']                # ['join']: DataFrame.join is a method
+                sp = ' / '.join(f'{v_:4.0%}' for v_ in ((oj & ~ob.kept).mean(), (oj & ob.kept).mean(), (~oj & ob.kept).mean(),
+                                                        (~oj & ~ob.kept).mean())) if len(ob) else 'n/a'
+                L.append(f'    {kev:<13} {g_:<6} {len(y):>7} | {yj.mean() if len(y) else NAN:5.1%} | {np.nanmedian(y.jgap) if yj.any() else NAN:5.0f} |'
                          f' {y.obs.mean() if len(y) else NAN:4.0%} | {ob.kept.mean() if len(ob) else NAN:5.1%} || {sp}')
         if kinds[0] == 'adverse':
             ab = {g_: sum(stats[d]['stat']['real_atbest_q'].get(g_, 0.0) for d in DAYS9) for g_ in ('top 5', 'field')}
