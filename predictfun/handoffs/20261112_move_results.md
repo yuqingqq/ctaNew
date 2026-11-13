@@ -130,6 +130,20 @@ Readings:
 Among moments when a WS-timed trade hits the level (133,918; 13.8% of them clear it), the model separates "this trade will take the
 whole level" from "the level stays" at AUC 0.822 (0.769-0.849 by day).
 
+**feeds (post hoc, 2026-11-13; USER: "so do we take actions based on predict's feed").** The AV fit with the inputs split by the live feed
+they read (`pf_move_avoid.py feeds`, 50227d6e, committed before its run; control: the full set reproduces 0.8410):
+
+| Inputs | AUC on AV |
+|---|---|
+| Binance only (returns, imbalance and its change, flow, activity, volatility) | 0.762 |
+| Predict's book only (spread, imbalance, level sizes and their 250 ms change, pending, book age) | 0.767 |
+| Both, without v | 0.841 |
+| v alone | 0.779 |
+| Time and side only | 0.495 |
+
+Each feed adds about +0.08 to the other; v adds nothing once both feeds are in (-0.0003). A pull needs both feeds. By day the
+Predict-only fit is steadier (0.747-0.774) than the Binance-only one (0.701-0.804).
+
 These alarm rates are not directly comparable with FA's (94% of alarms false, guard on 90% of moments). FA judged a back-of-queue
 order's own fills over 500 ms; this judges the level within 250 ms.
 

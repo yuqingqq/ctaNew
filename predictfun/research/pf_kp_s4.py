@@ -392,6 +392,8 @@ def sim2(lane, side, tf, opp, P5, S5, cache, tau, v, s, enter, best, bopp, tt, t
             rest_ = cur is not None and not cur['ref'] and cur['ta'] <= t and cur['rem'] > 1e-12   # keep-or-pull S4 (inert unless set)
             if KP_TRIG_RESTING_ONLY and not rest_:
                 trig = False
+            if KP_TRIG_IDLE_ONLY and rest_:               # FRONT-PULL: the trigger is the entry line only (inert unless set)
+                trig = False
             if KP_DECIDE is not None and rest_ and not trig:
                 trig = bool(KP_DECIDE(k, t, cur))
             if trig and rest_:
@@ -1579,6 +1581,7 @@ NULL_DRAWS = 200
 GUARD_PULL = -0.10                                        # Z-guard: B21's guard trigger
 KP_DECIDE = None                                          # S4: rest-lane decision callback (k, t, cur) -> pull?
 KP_TRIG_RESTING_ONLY = 0                                  # S4: triggers act only on a resting order (random pulls)
+KP_TRIG_IDLE_ONLY = 0                                     # FRONT-PULL (2026-11-13): triggers act only while no order of ours rests
 KP_STAT = dict(pulls=0)
 CTX = {}                                                  # S4: per window-side context of the callbacks
 
@@ -1730,12 +1733,12 @@ def vals(w, F, tt):
     return dict(t=tt[ix], q=np.array([f[2] for f in F], float), m1=m1, m5=m5, m60=m60, st=w['sg'] * (100.0 * w['yup'] - p_))
 
 
-def sim_arm(w, q, shf, arm, aux=None, decide=None, model=None, resting_only=0):
+def sim_arm(w, q, shf, arm, aux=None, decide=None, model=None, resting_only=0, idle_only=0):
     """One arm on one window-side; returns (fills, orders, pulls)."""
-    global KP_DECIDE, KP_TRIG_RESTING_ONLY
+    global KP_DECIDE, KP_TRIG_RESTING_ONLY, KP_TRIG_IDLE_ONLY
     tt = w['anc'] - shf; cache = w.setdefault('cache', {})
     CTX.clear(); CTX.update(cache=cache, kf=w['kf'], jk=w['jk'], best=w['best'], side=w['side'], X=w['X'], model=model, rec={}, resting=[])
-    KP_STAT['pulls'] = 0; KP_DECIDE = decide; KP_TRIG_RESTING_ONLY = resting_only
+    KP_STAT['pulls'] = 0; KP_DECIDE = decide; KP_TRIG_RESTING_ONLY = resting_only; KP_TRIG_IDLE_ONLY = idle_only
     try:
         if arm == 'J-v3':
             F, O = sim2('join', w['side'], w['tf'], w['opp'], w['P5'], w['S5'], cache, w['tg'], w['vkl'], w['stv3'], w['P90'], w['best'], w['bopp'],
@@ -1744,7 +1747,7 @@ def sim_arm(w, q, shf, arm, aux=None, decide=None, model=None, resting_only=0):
             F, O = sim2('rest', w['side'], w['tf'], w['opp'], w['P5'], w['S5'], cache, w['tg'], w['vkl'], w['stn'], -INF, w['best'], w['bopp'],
                         tt, w['ptl'], w['shl'], q, w['te'], aux=aux if aux is not None else [False] * w['n'])
     finally:
-        KP_DECIDE = None; KP_TRIG_RESTING_ONLY = 0
+        KP_DECIDE = None; KP_TRIG_RESTING_ONLY = 0; KP_TRIG_IDLE_ONLY = 0
     return F, O, KP_STAT['pulls']
 
 
