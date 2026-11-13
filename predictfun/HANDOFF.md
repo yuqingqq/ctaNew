@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 14:36Z (session ce68ebe0) — SIDE-MOVES DONE: the top makers handle the two sides oppositely after a signal: on the protection side they MOVE down to the new best (2.75x the field, fill there 302 ms after it forms, first in its queue); on the other side they mostly KEEP their old quote (2.6x the field) and seldom requote. Ours: protection side out (guard) and late (347 ms, 35% of events); other side held but gone within 1 s two-thirds of the time
+
+- Done (USER: "Can you still check both sides for top makers ... for the other quoting side, can you check what they do, do they also requote or what"): research/pf_side_moves.py + run_side_moves.sh (e2626a18, before the first run), 14:32-14:34Z; report fix 36637b1f (first report job failed on DataFrame.join; day outputs unchanged). Report handoffs/20261113_side_moves_results.md; copies reviews/side_moves_20261113/; FINDINGS updated.
+- Readings: R510 TOP-REQUOTE-MORE (1.37, 8/9), R511 TOP-KEEP-MORE (2.58, 9/9), R512 TOP-AHEAD (9/9), R513 PROPORTIONAL (0.94), R514 descriptive.
+- Watch out: fills-only visibility (lower bounds); KEPT favours larger orders; JOIN times are fill times, ours are go-live times.
+- Next (proposals, user's call): MOVE-DOWN replay (protection side: at the onset cancel rung 0 and place at the new best as soon as it forms, no 250 ms clear wait, then keep it); why our held other-side order goes within 1 s (cause split).
+
 ## 2026-11-13 13:59Z (session ce68ebe0) — FUTURE-BEST DONE: keeping the protection side's order at the predicted landing price beats PULL-DEPTH and pulling everything on exact trades at M 0 / M 50 (FB10 +$18, FB25 +$27 a day vs PD at M 50), but not at M 250 (PD too, 0/9) or over all trades; at the new best our kept orders are there first (FB25 64% vs 16%) but run over half the time; with perfect foresight the same rule makes +$378 a day and +0.90 c/sh at 88% STOP there: the bottleneck is predicting where the move stops
 
 - Done (USER: "Pull the risk ones, and keep our protection side at the future best price, it should be ideally much better ... It looks the repost side they are similar to us"): research/pf_future_best.py + run_future_best.sh (037ed9de, before the first run), 13:44-13:57Z; post hoc readout 6f13eb38, 13:58Z. Report handoffs/20261113_future_best_results.md; copies reviews/future_best_20261113/; FINDINGS updated (PULL-DEPTH row now says it flips at M 250).
