@@ -71,7 +71,7 @@ def day_run(day):
     if b:
         sys.exit(f'SELFTEST FAILED: {b}')
     T0 = time.time(); D = K.load_day(day); st = D['stat']; S1d = f'{K.IO}/step1/{day}'
-    full = pd.read_parquet(f'{S1d}/legs_timed2.parquet', columns=['mid', 'signer', 'shares', 't_rel'] + OLDKEY[1:] + ['how', 't_ms'])
+    full = pd.read_parquet(f'{S1d}/legs_timed2.parquet', columns=['mid', 'signer', 'shares', 't_rel', 'side', 'ptick'] + OLDKEY[1:] + ['how', 't_ms'])
     inw = full.mid.isin(list(D['W0'])).values
     G = GP.rank_groups(full.signer.values[inw], full.shares.values[inw].astype(float), full.t_rel.values[inw].astype(float))
     MP = pd.read_parquet(f'{ORD}/map_{day}.parquet').set_index('row')
