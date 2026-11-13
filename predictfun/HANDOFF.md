@@ -1,5 +1,14 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 04:37Z (session ce68ebe0) — EXIT DONE (public tape): the top makers do not leave front orders more often than other makers, but at the right moments - gone 28% at low P, 80% at high P (field 42% -> 63%), 9/9 days; decided 100-1000 ms before the trade; they hold the front with size. QCAL not run: live's 11-08 orders cannot calibrate the front
+
+- Done (USER: "Yes" to tasks 2 and 3; "what information we need to collect to bridge the gap"): research/pf_exit_check.py + run_exit.sh (11fb2adc, before the first run), 04:31-04:34Z; post hoc robustness 5abc1d96. Report handoffs/20261113_exit_results.md; copies reviews/exit_20261113/; FINDINGS updated.
+- Readings: R390 NOT-SHOWN (-0.8 points gap-matched), R392 SIGNAL-USED (+51 vs +21 points), R391 / R393 descriptive.
+- QCAL (task 2) NOT RUN, with reason: of 1,401 live orders on 11-08 that rested >= 500 ms, only 12 ever saw more volume trade at their price than the queue ahead at activation (B1a queue table), and B1a's main error is the trade clock; no queue rule fitted on them can tell M from U for front orders. That needs the live probe.
+- Found: the raw match records carry each maker leg's ORDER HASH and signer and the taker's signer (step 1 drops the hash): an order-level reconstruction of the top makers' orders (life, repeat fills, size lower bound, re-entry, own taking) is possible from data on disk.
+- USER 2026-11-13: rewards / rebates are not counted (top makers profit without them); the churn fix is done and must be deployed before the next live run; multi-level posting is wanted.
+- Next (proposals, user's call): ORDERS (order-hash reconstruction of top-maker orders on the consumed days); the live probe for our real queue place.
+
 ## 2026-11-13 03:56Z (session ce68ebe0) — FRONT-PULL DONE: resting by default and pulling on P(the level goes in 24-274 ms) loses (-$48 a day w/o young at M 50 against -$20 for the guard trigger and +$3.7 for J-v3); P beats random pulls 9/9 days but the guard value v is the better trigger; with nothing ahead (rule U) the same policies earn +$171-246: the queue model decides the sign
 
 - Done (USER: "How we can do front pull" / "so do we take actions based on predict's feed" / "You mean we use imbalance, level change to do the action? We can try"):

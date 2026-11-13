@@ -1,0 +1,20 @@
+EXIT public tape, 9 consumed replay days, first 60 s, WS-timed taker orders; as of 2026-11-13T04:34:20Z; controls passed (synthetic cases, 3 planted errors caught, no record at or after t0, null mean -0.0023)
+statuses {'window_sides': 5184, 'orders_ws': 571941, 'events': 38825, 'presence': 387892, 'e2_ambiguous': 3057, 'obs': 10180, 'p_undefined': 558}
+
+Readings: {"R390": "NOT-SHOWN", "R392": "SIGNAL-USED"}
+R390: GONE share top 5 minus field, gap-matched -0.008 (days higher 5, lower 4; null p1 / p99 -0.026 / +0.023); per day +0.061 -0.068 +0.021 +0.015 +0.057 -0.196 -0.074 -0.027 +0.095
+GONE share by group (all gaps): top 5 0.513 (n 3097), 6-20 0.618 (n 2539), rest 0.464 (n 4544)
+
+R391 GONE share by gap t0 - t1 (n):
+  top 5  0-100 ms: 0.314 (242) | 100-250 ms: 0.387 (796) | 250-1000 ms: 0.586 (2059)
+  6-20   0-100 ms: 0.431 (197) | 100-250 ms: 0.476 (540) | 250-1000 ms: 0.681 (1802)
+  rest   0-100 ms: 0.357 (392) | 100-250 ms: 0.341 (1321) | 250-1000 ms: 0.536 (2831)
+
+R392 GONE share in the bottom / top quintile of P (P <= 0.067 / >= 0.406):
+  top 5  0.282 (663) -> 0.796 (568), diff +0.514
+  field  0.421 (1263) -> 0.631 (1357), diff +0.210
+
+R393 volume share and shares per maker leg, by trade kind:
+  taken      top 5: 33.9%, 51.6 sh/leg | 6-20: 36.1%, 27.6 sh/leg | rest: 30.0%, 14.0 sh/leg
+  sole_stop  top 5: 42.4%, 12.7 sh/leg | 6-20: 23.9%, 9.3 sh/leg | rest: 33.7%, 8.6 sh/leg
+  other_stop top 5: 36.8%, 35.9 sh/leg | 6-20: 36.1%, 21.0 sh/leg | rest: 27.0%, 11.3 sh/leg

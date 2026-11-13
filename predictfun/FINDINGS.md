@@ -120,6 +120,7 @@ Statuses:
 | Finding | Status | Source |
 |---|---|---|
 | Their edge is not queue place, not Binance and not trend. It is earned within 250 ms of the trade report, on Predict.fun itself; they stay after being hit; about a quarter is their own taking; it holds to 60 s and settlement | HOLDS (mostly 11-08; B12g 9 days); B12g's settlement values carry the tie error (P10, 14 windows) | B12-B12g, B13b, B18 |
+| The top makers' exits before level-taking trades (EXIT, public tape, 9 days, first minute; front orders proven by a sole-maker stop <= 1 s before): they do not leave more often than other makers (GONE 51% vs 46-62%; gap-matched -0.8 points, R390 NOT-SHOWN) but they leave at the right moments - GONE 28% -> 80% from the bottom to the top quintile of our P against 42% -> 63% for the field (9 / 9 days, every gap bin); the choice is made 100-1000 ms before the trade, not in the last 100 ms; they are 42% of first-in-queue volume against 34% of level-taken volume, 52 sh per leg when a level is taken while they are in it | HOLDS (public tape, consumed days; R392 post hoc robust) | 20261113_exit_results.md; 11fb2adc / 5abc1d96 |
 | Per share, our simulated J-v3 beats their real at-best fills (+1.03 against +0.23) | QUALIFIED by AGE: MIXED without young fills (8 / 6 of 9 days); J-v3, not the frozen v3 (C11) | GAP, AGE R314 |
 | They trade 345x our shares; 60% of their money is made while v3's guard is OFF (+0.15 c/sh on 459k sh a day); only 17% of our fills share a taker order with them | HOLDS (theirs real) | GAP |
 

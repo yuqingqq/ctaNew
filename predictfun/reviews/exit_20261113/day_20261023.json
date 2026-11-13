@@ -1,0 +1,18 @@
+{
+ "registry": 288,
+ "outside_day": 0,
+ "sealed_or_forward": 0,
+ "no_outcome": 0,
+ "untimed_legs_0_60": 2093,
+ "untimed_shares_0_60": 20830.638290695933,
+ "windows": 288,
+ "window_sides": 576,
+ "orders_ws": 74009,
+ "events": 4894,
+ "presence": 49375,
+ "e2_ambiguous": 428,
+ "obs": 1313,
+ "p_undefined": 86,
+ "grid_steps": 345600,
+ "grid_steps_without_row": 0
+}
