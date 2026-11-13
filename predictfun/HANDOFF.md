@@ -1,5 +1,11 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 09:44Z (session ce68ebe0) — BEST-GAP DONE: the gap at the best is queue place (their at-best fills 80% STOP vs ours 37%; nothing-ahead bound closes 166% of the gap), latency ~30% (5 ms path + fastest feed), size ~0, timing none (we are at lower risk than they are)
+
+- Done (USER: "The gap at the best price, is it mostly the timing issue, or latency, or size?"): research/pf_best_gap.py + run_best_gap.sh (a4767fc1, before the first run), 09:36-09:43Z. Report handoffs/20261113_best_gap_results.md; copies reviews/best_gap_20261113/; FINDINGS updated.
+- Reading: R464 MAIN: QUEUE (gap +0.398 c/sh; queue +0.660, latency +0.111 / +0.133, size +0.003, timing -0.133).
+- Next (proposals, user's call): FRONT-ENTRY on rung 0 (join new levels at birth with the fast path; improve inside 2+ tick spreads), measuring the STOP share at the best; the live probe (our real STOP share at the best).
+
 ## 2026-11-13 09:27Z (session ce68ebe0) — TIMING-SPLIT DONE (C12): the guard ladder makes money on exactly-timed trades (+$54 a day at M 50, +$86 at M 0, 7/9 days; deep fills +0.92 c/sh vs the top 5's +0.86) and loses on estimated-time trades (-$190, 46% of shares); real makers also look much worse on E2 trades. Today's ladder totals are E2-driven
 
 - Done (USER: "We can run it, it still looks we don't manage deep ladder well, the timing is also not good"): research/pf_timing_split.py + run_timing_split.sh (298390f7, before the first run), 09:16-09:26Z. Report handoffs/20261113_timing_split_results.md; copies reviews/timing_split_20261113/; FINDINGS updated.

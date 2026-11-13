@@ -1,0 +1,19 @@
+{
+ "stat": {
+  "registry": 288,
+  "outside_day": 0,
+  "sealed_or_forward": 0,
+  "no_outcome": 0,
+  "untimed_legs_0_60": 1228,
+  "untimed_shares_0_60": 14628.328666538513,
+  "windows": 288,
+  "window_sides": 576,
+  "c1_differ": 0,
+  "base_differ": 0,
+  "clock_restored": 1,
+  "real": 62504,
+  "ours": 36877,
+  "grid_steps": 345600,
+  "grid_steps_without_row": 0
+ }
+}

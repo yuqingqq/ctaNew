@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-13 09:44Z (session ce68ebe0): BEST-GAP (handoffs/20261113_best_gap_results.md): gap at the best = queue place (80% vs 37% STOP fills),
+  latency ~30%, size ~0, timing none. Next: FRONT-ENTRY (birth joins / improve) or the live probe.
   2026-11-13 09:27Z (session ce68ebe0): TIMING-SPLIT (handoffs/20261113_timing_split_results.md): guard ladder +$54/day on WS-timed trades (M 50),
   -$190 on E2-timed ones; deep WS fills +0.92 c/sh ~ top 5's +0.86; today's ladder losses are E2-driven.
   2026-11-13 09:07Z (session ce68ebe0): KEEP-PLACE + gap review (handoffs/20261113_keep_place_and_gap_review.md): fewer pulls lose; LDG stays best;
@@ -1764,5 +1766,6 @@ flags:
   deep_pull: "HELPS-NOT-POSITIVE (DEEP-PULL, 2026-11-13 08:32Z, ffc7e475): every-rung pull cuts high-P deep fills 54% -> 13% (top makers 19%), +$4,033/day vs pull-at-best (9/9); LDG -$137/day at M 50, -$16 at M 0, +$781 at U; deep 61-69% swept vs 36%"
   keep_place: "NO-HELP (KEEP-PLACE, 2026-11-13 09:05Z, 0a5a6ee6): strong-only / near-best-only pulls lose 9/9, immediate re-entry ~equal; swept share unchanged with fewer pulls; open gaps: queue place, speed, taking"
   timing_split: "E2-DRIVEN (TIMING-SPLIT, 2026-11-13 09:26Z, 298390f7): LDG +$54/day w/o young on WS-timed trades at M 50 (+$86 at M 0, 7/9 days), -$190 on E2-timed (46% of shares); deep WS fills +0.92 c/sh vs top 5 +0.86"
+  best_gap: "QUEUE (BEST-GAP, 2026-11-13 09:43Z, a4767fc1): at the best top 5 +0.405 vs ours +0.007 c/sh on exact trades; STOP share 80% vs 37%; levers: queue +0.660 (bound), latency +0.111, size +0.003, timing -0.133"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"
