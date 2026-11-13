@@ -1,0 +1,30 @@
+{
+ "stat": {
+  "registry": 288,
+  "outside_day": 0,
+  "sealed_or_forward": 0,
+  "no_outcome": 0,
+  "untimed_legs_0_60": 2093,
+  "untimed_shares_0_60": 20830.638290695933,
+  "windows": 288,
+  "window_sides": 576,
+  "sim_differ": 0,
+  "ghost_checked": 4795,
+  "ghost_differ": 0,
+  "ghost_shared": 0,
+  "real": 76969,
+  "fills_all": 8346,
+  "grid_steps": 345600,
+  "grid_steps_without_row": 0,
+  "status_fills": {
+   "M50|ok": 2452,
+   "M0|ok": 2343,
+   "M50|not_best_sim": 25
+  },
+  "planted_caught": {
+   "MUT_CHAIN_ANYPRICE": true,
+   "MUT_PRE_AS_POST": true,
+   "MUT_SIM_NOOFFSET": true
+  }
+ }
+}

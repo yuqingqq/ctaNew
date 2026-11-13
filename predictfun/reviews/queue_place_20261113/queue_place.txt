@@ -1,0 +1,49 @@
+QUEUE-PLACE, 9 consumed replay days, first 60 s, guard ladder (30 sh, rungs 0-5); as of 2026-11-13T11:20:40Z; controls passed
+control iii: rung 0 M 50 exact aged at the best = BEST-GAP BASE: 9398 fills, 105603 sh, +0.007 c/sh
+
+statuses (at-best fills, all rungs): {"M0|censored": 25, "M0|ok": 23534, "M50|censored": 25, "M50|not_best_sim": 449, "M50|ok": 24289}
+ghost control: 47823 checked, 0 shared (skipped), 0 differ; sim4 = sim_arm on 5184 window-sides x 6 rungs x 2 clocks
+
+queue ahead at the fill (share-weighted mean sh per filled share; share of A): U at birth | LAT <= 97 ms | LATE | PREA ahead at the deeper level | REQ our re-places | RAISE; KEPT = had our first order been kept
+  rung 0 M50 exact aged (primary)    fills    9327 sh    104958 | A   14.5 sh | U    1.8 ( 12%) | LAT    1.6 ( 11%) | LATE    5.8 ( 40%) | PREA    0.5 (  3%) | REQ    3.1 ( 22%) | RAISE    1.7 ( 11%) | KEPT    9.7
+  rung 0 M0 exact aged               fills    8980 sh    102066 | A   11.9 sh | U    1.2 ( 10%) | LAT    1.4 ( 12%) | LATE    4.5 ( 38%) | PREA    0.4 (  3%) | REQ    2.7 ( 23%) | RAISE    1.7 ( 15%) | KEPT    7.5
+  rung 0 M50 other (E2) aged         fills   10014 sh     88251 | A   68.0 sh | U   14.4 ( 21%) | LAT    7.7 ( 11%) | LATE   27.8 ( 41%) | PREA    1.3 (  2%) | REQ   12.0 ( 18%) | RAISE    4.8 (  7%) | KEPT   51.2
+  rungs 1-5 M50 exact aged           fills    1203 sh     11962 | A    5.2 sh | U    0.2 (  4%) | LAT    0.0 (  1%) | LATE    0.0 (  0%) | PREA    4.2 ( 79%) | REQ    0.7 ( 12%) | RAISE    0.2 (  3%) | KEPT    4.4
+  all rungs M50 exact aged           fills   10530 sh    116920 | A   13.5 sh | U    1.6 ( 12%) | LAT    1.5 ( 11%) | LATE    5.2 ( 38%) | PREA    0.9 (  6%) | REQ    2.9 ( 21%) | RAISE    1.5 ( 11%) | KEPT    9.1
+
+R480 WHERE-LOST: REQ share 21.7% -> BEHIND-FROM-ENTRY, STABLE (7 of 9); per day 28% 22% 21% 14% 24% 32% 21% 19% 23%
+R481 ENTRY-PART: LATE-ENTRY, STABLE (8 of 9); sums U 1.8, LAT 1.6, LATE 5.8, PREA 0.5
+
+origin of our at-best fills (M 50, exact, aged): share of shares | c/sh | STOP share | mean A | mean KEPT
+  rung 0    PRE-KEPT        8.2% | +0.287 |  63% |    6.3 |    4.3
+  rung 0    PRE-REPLACED    7.5% | +0.043 |  37% |   10.7 |    1.8
+  rung 0    POST-FIRST     58.8% | +0.024 |  35% |   16.0 |   13.8
+  rung 0    POST-REPLACED  25.4% | -0.129 |  33% |   14.5 |    4.1
+  rungs 1-5 PRE-KEPT       92.3% | +0.138 |  51% |    5.1 |    4.5
+  rungs 1-5 PRE-REPLACED    2.9% | +0.040 |  56% |    9.9 |    1.3
+  rungs 1-5 POST-FIRST      4.8% | +0.227 |  55% |    6.2 |    5.5
+  all rungs PRE-KEPT       16.8% | +0.203 |  57% |    5.6 |    4.4
+  all rungs PRE-REPLACED    7.0% | +0.043 |  37% |   10.7 |    1.8
+  all rungs POST-FIRST     53.3% | +0.026 |  35% |   16.0 |   13.8
+  all rungs POST-REPLACED  22.8% | -0.129 |  33% |   14.5 |    4.1
+R482 FIRST-THERE (all rungs): PRE +0.156 vs POST -0.020 c/sh -> BEING-THERE-FIRST-PAYS (+ 7 / - 2 of 9 qualifying days)
+  per day PRE - POST (n PRE / n POST): -0.24 (209/683) +0.06 (536/1363) +0.23 (534/1269) +0.37 (133/428) +0.20 (105/487) +0.25 (394/936) +0.33 (646/1500) +0.25 (144/665) -0.06 (66/432)
+
+entry delay of POST chains (our first order live after the birth), rung 0 M 50 exact aged, share of shares: < 97 ms 5% | 97-500 ms 53% | 0.5-2 s 33% | >= 2 s 9%
+  median entry delay 359 ms; chain length (re-places before the filling order) share-weighted mean 0.61
+
+REQ (rung 0, M 50, exact, aged) by why the earlier order ended: filled 0.6 sh (20%), nobook 0.0 sh (0%), trig 2.5 sh (80%)
+
+R483 theirs vs ours (exact at-best fills, WS clock; shares): fallback / improve share | run age at the fill median (p25 / p75) | PROOF (an earlier fill > 250 ms before the run) | truth (ours: chain before the birth) | c/sh | STOP
+  top 5            61% /  39% |     841 ms (296 / 1905) |   4% | nan% | +0.405 |  80%
+  field            44% /  55% |     839 ms (286 / 2023) |   2% | nan% | +0.239 |  71%
+  ours rung 0      57% /  43% |    2143 ms (1050 / 4035) |   0% |  16% | +0.007 |  37%
+  ours all rungs   61% /  39% |    1971 ms (904 / 3802) |   0% |  24% | +0.017 |  38%
+
+by rung (M 50, exact, aged, at the best, decomposed): share of at-best shares | c/sh | STOP | mean A | PRE share
+  rung 0: 89.8% | +0.008 |  37% |   14.5 |  16%
+  rung 1:  8.6% | +0.160 |  50% |    5.0 |  95%
+  rung 2:  1.2% | -0.145 |  54% |    6.5 |  98%
+  rung 3:  0.3% | +0.664 |  75% |    6.2 | 100%
+  rung 4:  0.1% | -0.553 |  92% |   14.7 | 100%
+  rung 5:  0.0% | +1.466 | 100% |    0.0 | 100%

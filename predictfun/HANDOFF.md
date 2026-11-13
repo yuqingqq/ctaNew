@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 11:28Z (session ce68ebe0) — QUEUE-PLACE DONE: we are behind from the moment we join, not mainly by re-places (re-places 22% of the queue ahead at our at-best fills, 80% of that guard pulls); we arrive late (median 359 ms after a level becomes the best; LATE 40%), because at the birth the guard has just pulled us or rung 0 is parked at the old price; orders already at the price before it became the best earn +0.20 c/sh at 57% STOP vs ~0 at 33-35% (7/9 days)
+
+- Done (USER: "How do we become front in the queue ... check if we join early, then replace to be back in the queue, or is it because we are already back from when we join"): research/pf_queue_place.py + run_queue_place.sh (bad57131, renamed 2f7143ea, both before the run), 11:16-11:20Z; post hoc pf_queue_place_why_late.py (af81edf8, before its run), 11:22-11:24Z. Report handoffs/20261113_queue_place_results.md; copies reviews/queue_place_20261113/; FINDINGS updated.
+- Readings: R480 BEHIND-FROM-ENTRY STABLE (7/9), R481 LATE-ENTRY STABLE (8/9), R482 BEING-THERE-FIRST-PAYS (7/9), R483 descriptive (top 5 fill 0.84 s into a level's life vs ours 2.1 s).
+- Watch out: bad57131 committed the new script as pf_queue_origin.py and overwrote the 11-06 descriptive script of that name; restored byte-identical (2f7143ea, == 8d5b02a0) before any run. Check `git ls-files` for a name before creating a research script.
+- Next (proposals, user's call): QUEUE-FRONT replay (keep-and-add: keep the order at the old price when the best improves and add one at the new best; after a guard pull re-enter behind the best first), measuring PRE / STOP share and value at the best; the live probe.
+
 ## 2026-11-13 09:44Z (session ce68ebe0) — BEST-GAP DONE: the gap at the best is queue place (their at-best fills 80% STOP vs ours 37%; nothing-ahead bound closes 166% of the gap), latency ~30% (5 ms path + fastest feed), size ~0, timing none (we are at lower risk than they are)
 
 - Done (USER: "The gap at the best price, is it mostly the timing issue, or latency, or size?"): research/pf_best_gap.py + run_best_gap.sh (a4767fc1, before the first run), 09:36-09:43Z. Report handoffs/20261113_best_gap_results.md; copies reviews/best_gap_20261113/; FINDINGS updated.

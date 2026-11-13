@@ -1,0 +1,14 @@
+QUEUE-PLACE post hoc WHY-LATE: rung 0, M 50, exact, aged, at-best fills from POST chains; 7708 fills, 88436 sh; as of 2026-11-13T11:24:19Z; sim4 = sim_arm on every window-side
+
+state of our rung-0 lane at the level's birth: share of shares | c/sh | STOP | our first order live after the birth, ms median (p25 / p75) | the earlier order ended after the birth, ms
+  HELD  37.7% | -0.131 |  34% | 400 (130 / 1251) | 97 (58 / 464)
+  PEND   2.1% | -0.118 |  50% | 403 (135 / 982) | 145 (91 / 956)
+  OUT   60.2% | +0.050 |  33% | 350 (274 / 706) | -350 (-944 / -123)
+  SAME   0.0% | -0.500 | 100% | 495 (495 / 495) | 55 (55 / 55)
+
+  HELD: why the earlier order ended (share of shares): cross 13%, drift 23%, filled 2%, trig 63%
+  OUT: why the earlier order ended (share of shares): none 10%, cross 0%, drift 0%, filled 8%, nobook 0%, trig 81%
+  PEND: why the earlier order ended (share of shares): cross 6%, drift 2%, filled 35%, trig 56%
+  HELD: the held order was this many ticks behind the new best (share of shares): -3 0%, -2 1%, -1 19%, 1 32%, 2 15%, 3 7%, 4 20%, 5 4%, 6 1%, 7 0%, 8 0%
+  by the run's birth kind (share of shares): fallback 54% (HELD 18%), improve 46% (HELD 61%), invalid 0% (HELD 0%)
+2026-11-13T11:24:19Z tag=qw_report rc=0 peak_rss_mib=118 wall_s=0.35 cpu_user_s=0.28 memavail_start_gib=22 disk_free_gib=532->532 slot=claude

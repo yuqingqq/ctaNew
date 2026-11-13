@@ -1,0 +1,9 @@
+20261102: 80 window-sides, 7 s, rss 762 MiB
+20261102: 160 window-sides, 11 s, rss 765 MiB
+20261102: 240 window-sides, 14 s, rss 768 MiB
+20261102: 320 window-sides, 17 s, rss 771 MiB
+20261102: 400 window-sides, 20 s, rss 773 MiB
+20261102: 480 window-sides, 23 s, rss 776 MiB
+20261102: 560 window-sides, 25 s, rss 777 MiB
+20261102: {'registry': 288, 'outside_day': 0, 'sealed_or_forward': 0, 'no_outcome': 0, 'untimed_legs_0_60': 1228, 'untimed_shares_0_60': 14628.328666538513, 'windows': 288, 'window_sides': 576, 'sim_differ': 0, 'ghost_checked': 3655, 'ghost_differ': 0, 'ghost_shared': 0, 'real': 62504, 'fills_all': 6447, 'grid_steps': 345600, 'grid_steps_without_row': 0, 'status_fills': {'M50|ok': 1873, 'M0|ok': 1782, 'M50|not_best_sim': 29, 'M50|censored': 2, 'M0|censored': 2}, 'planted_caught': {'MUT_CHAIN_ANYPRICE': True, 'MUT_PRE_AS_POST': True, 'MUT_SIM_NOOFFSET': True}} in 26 s
+2026-11-13T11:19:41Z tag=qp_day_20261102 rc=0 peak_rss_mib=777 wall_s=26.23 cpu_user_s=24.79 memavail_start_gib=22 disk_free_gib=532->532 slot=claude
