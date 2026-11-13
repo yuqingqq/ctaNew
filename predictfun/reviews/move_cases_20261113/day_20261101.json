@@ -1,0 +1,31 @@
+{
+ "stat": {
+  "registry": 288,
+  "outside_day": 0,
+  "sealed_or_forward": 0,
+  "no_outcome": 0,
+  "untimed_legs_0_60": 981,
+  "untimed_shares_0_60": 10717.451728936834,
+  "windows": 288,
+  "window_sides": 576,
+  "real_atbest_q": {
+   "field": 413141.9900212111,
+   "top 5": 241936.55131903873
+  },
+  "excluded": 7,
+  "truncated": 646,
+  "zero_move": 0,
+  "ref_rows": 6297,
+  "grid_steps": 345600,
+  "grid_steps_without_row": 0,
+  "events_differ": 0,
+  "ldg_differ": 0,
+  "unpaired_windows": 0,
+  "planted_caught": {
+   "MUT_PATH_SIGN": true,
+   "MUT_RUNOVER_PEAK": true,
+   "MUT_CHASE_REV": true
+  }
+ },
+ "days": 1.0
+}

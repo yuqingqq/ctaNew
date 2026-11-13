@@ -1,0 +1,94 @@
+MOVE-CASES, 9 consumed replay days, first 60 s, real WS legs; as of 2026-11-13T16:12:36Z; controls passed (events = PULL-DEPTH, LDG = FUTURE-BEST, planted errors caught); statuses {"excluded": 99, "truncated": 8414, "zero_move": 0}; top-5 share of all real at-best WS fill volume 33.9%
+
+Cases (protection-side events after a signal | calm fallbacks): share of events, UP / DOWN; median ms to the peak
+  1 tick, holds    15.9% (16.1% / 15.6%) | 12.9% (12.9% / 13.0%) | to peak     0 ms
+  1 tick, reverts  19.1% (18.9% / 19.2%) | 16.9% (16.8% / 17.1%) | to peak     0 ms
+  2 ticks          20.9% (21.0% / 20.9%) | 19.4% (19.4% / 19.3%) | to peak   245 ms
+  big, trends      25.8% (25.8% / 25.8%) | 29.6% (30.0% / 29.1%) | to peak   990 ms
+  big, partial      4.2% (4.0% / 4.4%) |  5.4% (5.4% / 5.4%) | to peak   896 ms
+  big, reverts     14.1% (14.1% / 14.0%) | 15.8% (15.5% / 16.0%) | to peak   500 ms
+
+MAKERS (adverse): per case and segment: top-5 share of the fill volume | top 5 c/sh at 5 s | field c/sh at 5 s | ours (SIMULATED LDG) shares a day, c/sh at 5 s   (usual top-5 share 33.9%)
+  1 tick, holds
+    into_old      34.1% | -1.25 | -1.25 | ours    1156 sh/day -0.92
+    into_peak     48.3% | -0.35 | -0.15 | ours     251 sh/day -0.11
+    into_after    43.0% | -0.38 | -0.60 | ours    2117 sh/day -0.71
+    away_chase    33.1% | +0.81 | +0.81 | ours    1179 sh/day +0.80
+    away_old      43.8% | +2.62 | +2.66 | ours     603 sh/day +2.31
+    away_after    33.5% | +2.11 | +1.90 | ours    1389 sh/day +2.28
+  1 tick, reverts
+    into_old      32.7% | +2.44 | +2.66 | ours    1599 sh/day +2.38
+    into_peak     47.6% | +3.70 | +3.62 | ours     337 sh/day +2.69
+    into_after    35.6% | +2.18 | +1.81 | ours    1459 sh/day +2.10
+    away_chase    33.7% | -3.35 | -3.48 | ours    1289 sh/day -2.58
+    away_old      45.8% | -1.05 | -0.82 | ours     926 sh/day -0.36
+    away_after    42.1% | -0.58 | -1.13 | ours    4445 sh/day -0.87
+  2 ticks
+    into_old      30.4% | -0.45 | -0.42 | ours    1714 sh/day -0.31
+    into_runover  42.3% | +0.59 | +0.76 | ours    2161 sh/day +0.79
+    into_peak     53.2% | +1.85 | +1.95 | ours     318 sh/day +1.61
+    into_after    40.8% | +0.58 | +0.62 | ours    2832 sh/day +0.25
+    away_chase    32.7% | -0.41 | -0.62 | ours    1891 sh/day -0.61
+    away_old      44.6% | +1.67 | +1.61 | ours     910 sh/day +1.58
+    away_after    37.5% | +0.40 | +0.11 | ours    3328 sh/day -0.45
+  big, trends
+    into_old      31.5% | -5.92 | -6.18 | ours    1302 sh/day -5.85
+    into_runover  42.9% | -3.59 | -4.03 | ours    3864 sh/day -2.99
+    into_peak     58.8% | -0.18 | -0.29 | ours     170 sh/day -0.03
+    into_after    45.6% | -0.31 | -0.68 | ours    2810 sh/day -0.70
+    away_chase    29.3% | +4.72 | +4.71 | ours    1490 sh/day +4.27
+    away_old      44.0% | +7.38 | +7.40 | ours     937 sh/day +7.68
+    away_after    33.8% | +1.82 | +1.63 | ours    2504 sh/day +1.72
+  big, partial
+    into_old      28.8% | -5.44 | -6.34 | ours     198 sh/day -6.06
+    into_runover  41.5% | -0.92 | -2.04 | ours     647 sh/day -2.17
+    into_peak     59.5% | +3.37 | +3.28 | ours      24 sh/day +0.81
+    into_after    38.8% | +2.21 | +1.94 | ours     224 sh/day +2.06
+    away_chase    28.6% | +3.76 | +3.21 | ours     324 sh/day +4.75
+    away_old      41.8% | +7.42 | +7.42 | ours     215 sh/day +7.38
+    away_after    41.3% | -0.14 | -0.48 | ours     581 sh/day +0.60
+  big, reverts
+    into_old      30.1% | +0.86 | +1.00 | ours     685 sh/day +0.74
+    into_runover  41.6% | +3.27 | +3.03 | ours    2319 sh/day +2.47
+    into_peak     56.3% | +5.39 | +5.34 | ours      94 sh/day +4.97
+    into_after    35.5% | +3.28 | +2.59 | ours    1429 sh/day +2.45
+    away_chase    30.0% | -1.81 | -2.31 | ours     834 sh/day -2.00
+    away_old      41.2% | +0.64 | +1.08 | ours     589 sh/day +0.77
+    away_after    41.0% | -0.94 | -1.72 | ours    2626 sh/day -1.24
+
+TAKERS (adverse): per case and segment: share of taker volume top 5 / other makers / non-makers / unknown | top-5 taker c/sh at 5 s
+  1 tick, holds    take_with     3.5% / 17.5% / 76.9% /  2.1% | +0.71
+  1 tick, holds    take_after    2.8% / 18.8% / 75.3% /  3.2% | +1.78
+  1 tick, holds    take_against  1.5% / 17.5% / 78.8% /  2.2% | -1.43
+  1 tick, reverts  take_with     2.1% / 18.1% / 78.0% /  1.8% | -2.67
+  1 tick, reverts  take_after    2.2% / 19.3% / 76.1% /  2.4% | -1.04
+  1 tick, reverts  take_against  3.1% / 20.8% / 72.7% /  3.4% | +2.33
+  2 ticks          take_with     3.0% / 16.7% / 78.4% /  1.9% | +0.10
+  2 ticks          take_after    2.5% / 19.5% / 74.7% /  3.3% | +0.57
+  2 ticks          take_against  2.5% / 20.0% / 74.6% /  3.0% | +1.24
+  big, trends      take_with     4.9% / 23.4% / 67.4% /  4.3% | +4.79
+  big, trends      take_after    4.0% / 25.4% / 64.8% /  5.8% | +1.18
+  big, trends      take_against  3.0% / 20.4% / 74.2% /  2.5% | -0.87
+  big, partial     take_with     5.4% / 28.0% / 60.7% /  5.9% | +3.27
+  big, partial     take_after    3.8% / 26.8% / 63.0% /  6.4% | -2.03
+  big, partial     take_against  5.6% / 21.9% / 69.2% /  3.3% | +1.41
+  big, reverts     take_with     3.3% / 20.7% / 72.9% /  3.1% | -2.62
+  big, reverts     take_after    2.3% / 21.6% / 72.2% /  3.9% | -2.99
+  big, reverts     take_against  4.2% / 24.4% / 66.9% /  4.5% | +3.26
+
+TOP-5 MAKER $ / day at 5 s by case (adverse): into side | away side | total;   field total;   ours (SIMULATED) total
+  1 tick, holds      -486.4 |  +1451.4 |   +965.0;    +1463.1;      +29.1
+  1 tick, reverts   +2443.0 |  -1632.1 |   +810.9;     +404.2;       +2.2
+  2 ticks           +1137.8 |   +872.9 |  +2010.7;    +2006.0;      +11.8
+  big, trends       -5923.8 |  +6168.3 |   +244.6;     +372.7;      -32.5
+  big, partial        +25.7 |   +615.9 |   +641.6;     +263.8;      +13.4
+  big, reverts      +4393.5 |  -1101.5 |  +3291.9;    +2592.8;      +57.3
+
+READINGS:
+  R540: {"share": 0.42865717010248483, "usual": 0.3394182953390083, "lower": 0, "higher": 9, "label": "THICK-WHERE-RUN-OVER"}
+  R541: {"top5": -3.4011650874662447, "field": -4.20878733619017, "neg_days": 9, "better_days": 9, "worse_days": 0, "label": "THEY-LOSE-THERE / LESS-THAN-THE-FIELD"}
+  R542: {"big": 0.04880611813791692, "small": 0.03512916308679414, "ratio": 1.389333358649363, "higher": 9, "lower": 0, "label": "TAKE-INTO-BIG-MOVES"}
+  R543 big, reverts: {"share": 0.40998449588276387, "top5_cps": -0.9443585070204705, "field_cps": -1.7157462986733882}
+  R543 big, trends: {"share": 0.33806180384705153, "top5_cps": 1.824843660451319, "field_cps": 1.630514322625114}
+  R544: {"usd_day": 7964.788655210875, "pos": 9, "neg": 0, "label": "NET-POSITIVE"}
+2026-11-13T16:12:36Z tag=mc_report rc=0 peak_rss_mib=573 wall_s=2.41 cpu_user_s=2.00 memavail_start_gib=22 disk_free_gib=527->527 slot=claude
