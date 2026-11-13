@@ -1,0 +1,41 @@
+TIMING-SPLIT, 9 consumed replay days, first 60 s; as of 2026-11-13T09:26:22Z; controls passed
+Readings: {"R450": "E2-DRIVEN", "R450_detail": {"total_wo": -136.59467542638143, "e2_wo": -190.12322898015543, "e2_loss_share": 1.391878771165012, "e2_share_of_shares": 0.4595203185563417}, "R451": "WS-POSITIVE", "R451_detail": {"ws_wo_M50": 53.528553553774, "per_day": [54.02928736504522, 182.18749709665502, 160.34387472626827, 57.82606993040154, 19.20040726316163, 18.50077753976001, -8.611687381475972, 0.6349106191221594, -2.3541551749718854], "ws_wo_M0": 86.08304437736473}}
+
+ours: $/day at 1 s, all / w/o young, by trade timing (WS = exact, E2 = estimated); c/sh w/o young in brackets; share of shares
+  LDG      M0    all    +15.05 /    -15.90 | WS   +102.14 /    +86.08 (+0.42) 54% | E2    -87.09 /   -101.98 (-0.62) 46%
+  LDG      M50   all   -136.54 /   -136.59 | WS    +59.13 /    +53.53 (+0.24) 53% | E2   -195.68 /   -190.12 (-1.00) 47%
+  LDG      M250  all  -2071.08 /  -1785.01 | WS  -1084.45 /   -936.37 (-1.87) 59% | E2   -986.63 /   -848.64 (-2.48) 41%
+  LZ-none  M0    all  -8770.89 /  -7742.03 | WS  -4359.20 /  -3819.16 (-1.35) 58% | E2  -4411.68 /  -3922.86 (-1.99) 42%
+  LZ-none  M50   all  -9851.60 /  -8548.08 | WS  -5068.62 /  -4341.53 (-1.45) 59% | E2  -4782.98 /  -4206.55 (-2.08) 41%
+  LZ-none  M250  all -13891.42 / -10572.03 | WS  -7473.57 /  -5580.01 (-1.63) 61% | E2  -6417.85 /  -4992.01 (-2.30) 39%
+  J-v3     M0    all    +21.21 /     +4.94 | WS     +6.97 /     +2.03 (+0.90) 36% | E2    +14.24 /     +2.90 (+0.92) 64%
+  J-v3     M50   all    +14.73 /     +3.70 | WS     +5.23 /     +1.73 (+0.73) 37% | E2     +9.50 /     +1.97 (+0.59) 63%
+  J-v3     M250  all    -11.85 /     -4.13 | WS     -7.60 /     -2.20 (-0.57) 52% | E2     -4.25 /     -1.93 (-0.59) 48%
+
+R452 real legs, c/sh at 1 s (share of shares): at the best | behind it, by timing
+  top 5  best WS +0.38 (67%) | best E2 -0.08 (33%) | behind WS +0.86 (73%) | behind E2 +0.30 (27%)
+  field  best WS +0.20 (57%) | best E2 -0.58 (43%) | behind WS +0.49 (65%) | behind E2 -0.43 (35%)
+
+R453 LDG loss map at M 50, $/day at 1 s (c/sh), by timing x young x pending x depth (0 / >= 1); then by P tercile
+  WS young pending best     -1.07 (-0.80) sh/day      134
+  WS young pending deep     -0.46 (-0.70) sh/day       66
+  WS young live    best     -0.85 (-0.06) sh/day     1323
+  WS young live    deep    +10.84 (+1.53) sh/day      709
+  WS aged  pending best     -6.74 (-1.14) sh/day      591
+  WS aged  pending deep     -1.98 (-0.52) sh/day      377
+  WS aged  live    best     +7.02 (+0.05) sh/day    13240
+  WS aged  live    deep    +64.40 (+0.92) sh/day     7023
+  E2 young pending best     -2.96 (-1.93) sh/day      153
+  E2 young pending deep     -1.79 (-0.84) sh/day      215
+  E2 young live    best    -11.20 (-0.75) sh/day     1501
+  E2 young live    deep    +10.09 (+0.71) sh/day     1417
+  E2 aged  pending best    -13.25 (-2.37) sh/day      559
+  E2 aged  pending deep    -17.42 (-1.99) sh/day      875
+  E2 aged  live    best    -75.12 (-0.76) sh/day     9899
+  E2 aged  live    deep    -74.37 (-1.04) sh/day     7155
+  deep w/o young WS: low   +55.95 (+1.07, 5228 sh) | mid   +13.26 (+0.74, 1791 sh) | high    -6.79 (-1.78, 382 sh) | n/a    +0.00 (+nan, 0 sh)
+  deep w/o young E2: low   -30.20 (-0.64, 4724 sh) | mid   -27.66 (-1.46, 1895 sh) | high   -33.93 (-2.40, 1411 sh) | n/a    +0.00 (+nan, 0 sh)
+  deep w/o young WS: at our price   +53.38 (+1.14) | through    +9.04 (+0.33)
+  deep w/o young E2: at our price    +9.21 (+0.69) | through  -101.00 (-1.51)
+
+R451 per day, LDG w/o young on WS-timed trades, M 50: +54.0 +182.2 +160.3 +57.8 +19.2 +18.5 -8.6 +0.6 -2.4

@@ -1,5 +1,11 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 09:27Z (session ce68ebe0) — TIMING-SPLIT DONE (C12): the guard ladder makes money on exactly-timed trades (+$54 a day at M 50, +$86 at M 0, 7/9 days; deep fills +0.92 c/sh vs the top 5's +0.86) and loses on estimated-time trades (-$190, 46% of shares); real makers also look much worse on E2 trades. Today's ladder totals are E2-driven
+
+- Done (USER: "We can run it, it still looks we don't manage deep ladder well, the timing is also not good"): research/pf_timing_split.py + run_timing_split.sh (298390f7, before the first run), 09:16-09:26Z. Report handoffs/20261113_timing_split_results.md; copies reviews/timing_split_20261113/; FINDINGS updated.
+- Readings: R450 E2-DRIVEN, R451 WS-POSITIVE, R452 / R453 descriptive.
+- Next (proposals, user's call): better times for the E2 half (what trades lack WS timing; predictTopOfBook); live probe of the guard ladder (exact times for our own fills); the gap at the best (WS aged +0.05 vs +0.38).
+
 ## 2026-11-13 09:07Z (session ce68ebe0) — KEEP-PLACE DONE + gap review: fewer / stickier pulls do not help (strong-only and near-best-only lose 9/9, immediate re-entry about equal); the guard ladder (LDG) stays best (-$16 M 0, -$137 M 50, +$781 at U). Closed vs the top makers in replay: size, persistence, levels, high-risk exposure, two-sided. Open: which trades fill us at a level (queue place: our new orders join behind existing queues), speed / fill clock, taking
 
 - Done (USER: "Yes go test, check the performance result, then review our gaps to top makers"): research/pf_keep_place.py + run_keep_place.sh (0a5a6ee6, before the first run), 08:37-09:05Z. Report + gap review handoffs/20261113_keep_place_and_gap_review.md; copies reviews/keep_place_20261113/; FINDINGS updated.

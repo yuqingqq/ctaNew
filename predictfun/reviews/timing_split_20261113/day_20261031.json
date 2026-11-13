@@ -1,0 +1,20 @@
+{
+ "stat": {
+  "registry": 288,
+  "outside_day": 0,
+  "sealed_or_forward": 0,
+  "no_outcome": 0,
+  "untimed_legs_0_60": 762,
+  "untimed_shares_0_60": 9077.803427559644,
+  "windows": 288,
+  "window_sides": 576,
+  "c1_differ": 0,
+  "align_rows": 65666,
+  "align_bad": 0,
+  "real": 109677,
+  "ours": 150087,
+  "grid_steps": 345600,
+  "grid_steps_without_row": 0
+ },
+ "days": 1.0
+}
