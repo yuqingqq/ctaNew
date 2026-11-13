@@ -403,14 +403,17 @@ def sim2(lane, side, tf, opp, P5, S5, cache, tau, v, s, enter, best, bopp, tt, t
                     kill = True
                 else:
                     beh = (b - cur['pt']) if side == 0 else (cur['pt'] - b)
-                    kill = beh > HOLD_K or not ((cur['pt'] < bopp[k]) if side == 0 else (cur['pt'] > bopp[k]))
+                    kill = beh > HOLD_K + REST_OFFSET or not ((cur['pt'] < bopp[k]) if side == 0 else (cur['pt'] > bopp[k]))
                 if kill:
                     cancel(cur, t); cur = None
             if trig:
                 lastpull = t
             cool = 0.0 if MUT_REST_NOCOOL else REST_COOL
             if cur is None and b >= 0 and not trig and t - lastpull >= cool:
-                cur = place(int(b), t)
+                if not REST_OFFSET:
+                    cur = place(int(b), t)
+                elif 1 <= (int(b) - REST_OFFSET if side == 0 else int(b) + REST_OFFSET) <= 99:   # FRONT-PULL-SIZE: a ladder rung d ticks behind
+                    cur = place(int(b) - REST_OFFSET if side == 0 else int(b) + REST_OFFSET, t)
         elif lane.startswith('hold'):                    # B20: placed at the best minus dd ticks, then held (no re-price)
             dd = int(lane[-1])
             if cur is not None:
@@ -1582,6 +1585,7 @@ GUARD_PULL = -0.10                                        # Z-guard: B21's guard
 KP_DECIDE = None                                          # S4: rest-lane decision callback (k, t, cur) -> pull?
 KP_TRIG_RESTING_ONLY = 0                                  # S4: triggers act only on a resting order (random pulls)
 KP_TRIG_IDLE_ONLY = 0                                     # FRONT-PULL (2026-11-13): triggers act only while no order of ours rests
+REST_OFFSET = 0                                           # FRONT-PULL-SIZE (2026-11-13): rest lane placed d ticks behind the best (0 = at it)
 KP_STAT = dict(pulls=0)
 CTX = {}                                                  # S4: per window-side context of the callbacks
 
@@ -1733,12 +1737,14 @@ def vals(w, F, tt):
     return dict(t=tt[ix], q=np.array([f[2] for f in F], float), m1=m1, m5=m5, m60=m60, st=w['sg'] * (100.0 * w['yup'] - p_))
 
 
-def sim_arm(w, q, shf, arm, aux=None, decide=None, model=None, resting_only=0, idle_only=0):
-    """One arm on one window-side; returns (fills, orders, pulls)."""
-    global KP_DECIDE, KP_TRIG_RESTING_ONLY, KP_TRIG_IDLE_ONLY
+def sim_arm(w, q, shf, arm, aux=None, decide=None, model=None, resting_only=0, idle_only=0, offset=0, size=None):
+    """One arm on one window-side; returns (fills, orders, pulls). offset / size: FRONT-PULL-SIZE's rung and order size (defaults inert)."""
+    global KP_DECIDE, KP_TRIG_RESTING_ONLY, KP_TRIG_IDLE_ONLY, REST_OFFSET, SIZE
+    size0 = SIZE
     tt = w['anc'] - shf; cache = w.setdefault('cache', {})
     CTX.clear(); CTX.update(cache=cache, kf=w['kf'], jk=w['jk'], best=w['best'], side=w['side'], X=w['X'], model=model, rec={}, resting=[])
     KP_STAT['pulls'] = 0; KP_DECIDE = decide; KP_TRIG_RESTING_ONLY = resting_only; KP_TRIG_IDLE_ONLY = idle_only
+    REST_OFFSET = int(offset); SIZE = size0 if size is None else float(size)
     try:
         if arm == 'J-v3':
             F, O = sim2('join', w['side'], w['tf'], w['opp'], w['P5'], w['S5'], cache, w['tg'], w['vkl'], w['stv3'], w['P90'], w['best'], w['bopp'],
@@ -1747,7 +1753,7 @@ def sim_arm(w, q, shf, arm, aux=None, decide=None, model=None, resting_only=0, i
             F, O = sim2('rest', w['side'], w['tf'], w['opp'], w['P5'], w['S5'], cache, w['tg'], w['vkl'], w['stn'], -INF, w['best'], w['bopp'],
                         tt, w['ptl'], w['shl'], q, w['te'], aux=aux if aux is not None else [False] * w['n'])
     finally:
-        KP_DECIDE = None; KP_TRIG_RESTING_ONLY = 0; KP_TRIG_IDLE_ONLY = 0
+        KP_DECIDE = None; KP_TRIG_RESTING_ONLY = 0; KP_TRIG_IDLE_ONLY = 0; REST_OFFSET = 0; SIZE = size0
     return F, O, KP_STAT['pulls']
 
 
