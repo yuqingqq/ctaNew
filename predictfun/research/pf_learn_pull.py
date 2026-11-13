@@ -256,7 +256,7 @@ def day_run(day):
             jk = int(w['jk'][k]); size_p = float((S5[jk] * (P5[jk] == o['p'])).sum()) if jk >= 0 else NAN
             feat = dict(v=d['v'], P=float(Pw[k]), adv_bn_r250=adv * d['bn_r250'], adv_bn_r1000=adv * d['bn_r1000'], adv_bn_flow250=adv * d['bn_flow250'],
                         adv_bn_imb=adv * d['bn_imb'], adv_pf_dm250=adv * d['pf_dm250'], adv_pf_imb1=adv * d['pf_imb1'], own_d250=d['own_d250'],
-                        opp_d250=d['opp_d250'], pf_spread=d['pf_spread'], size_p=size_p, gap=o['gap'], t_rel=d['t_rel'], sigma=d['sigma'], act_rel=d['act_rel'])
+                        opp_d250=d['opp_d250'], pf_spread=d['pf_spread'], size_p=size_p, t_rel=d['t_rel'], sigma=d['sigma'], act_rel=d['act_rel'])
             rows.append(dict(day=int(day), m=m, side=side, signer=o['signer'], grp=gname(o['signer']), p=o['p'], t1=o['t1'], t2=o['t2'], gap=o['gap'],
                              stayed=o['stayed'], through=o['through'], vol_p=o['vol_p'], v1=val(o['t2'], 1000.0, o['p']), v5=val(o['t2'], 5000.0, o['p']),
                              we_pull=int(we_pull(tgl, vg, o['t1'], o['t2'])), **feat, **{f'x_{nm}': d[nm] for nm in XN}))
