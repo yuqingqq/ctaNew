@@ -50,7 +50,8 @@ the birth) that must each fail a case; (iv) memory self-guard.
 Limits fixed in advance: orders are seen only through fills (lower bounds; an order used up before tb cannot show KEPT, which favours
 larger orders); WS-timed legs only (C12); the guard is OUR signal, the top makers' own signals are unknown; consumed days (C8); ours
 simulated with replay rule M (C5, C9).
-Usage (run_light, PF_SLOT=claude): pf_side_moves.py selftest | day <day> | report; driver run_side_moves.sh
+Usage (run_light, PF_SLOT=claude): pf_side_moves.py selftest | day <day> | report; driver run_side_moves.sh. POST HOC (added after the
+report, descriptive): dayposthoc <day> | posthoc; driver run_side_moves_posthoc.sh
 """
 import bisect
 import json
@@ -81,9 +82,12 @@ MUT_AHEAD_SELF = MUT_KEPT_ANY = MUT_JOIN_EARLY = 0         # planted errors (sel
 MEM_CAP_MIB = 2048.0
 
 
-def measures(L, p_new, p_old, tb, tend, t_ref, adverse):
+def measures(L, p_new, p_old, tb, tend, t_ref, adverse, extra=False):
     """L: one side's WS legs sorted by time: t, p, q, sig, grp, oh ('' = no certain hash), v1 (lists). Returns (orders at p_new,
-    maker-events at p_old, run-over fills)."""
+    maker-events at p_old, run-over fills); extra=True (POST HOC readout, 2026-11-13 after the report) adds per order 'prebirth' (the order
+    had a fill at p_new at or before the birth: it was resting there before the price became the best), per maker-event the shares traded
+    at p_old after the birth (obs_q) and its kept fills' shares / value / first time, and returns a 4th list: fills at p_new in
+    (tb - 1 s, tb] (the trade that made it the best)."""
     t = L['t']; n = len(t)
     i0 = bisect.bisect_left(t, tb - SIDE_MS); i_tb = bisect.bisect_right(t, tb); i_end = bisect.bisect_right(t, tb + KEEP_MS)
     # A: orders at p_new
@@ -105,7 +109,9 @@ def measures(L, p_new, p_old, tb, tend, t_ref, adverse):
         side_sig.add(L['sig'][i])
         if L['p'][i] == p_old and t[i] >= tb - OLD_MS and L['oh'][i]:
             old_sig.setdefault(L['sig'][i], set()).add(L['oh'][i])
+    pb = {L['oh'][i] for i in range(0, i_tb) if L['p'][i] == p_new and L['oh'][i]}
     for o in orders:
+        o['prebirth'] = bool(o['oh'] and o['oh'] in pb)
         o['origin'] = ('RESTED' if o['oh'] and o['oh'] in pre_new else ('FROM-OLD' if o['sig'] in old_sig else
                                                                          ('OTHER' if o['sig'] in side_sig else 'FRESH')))
     # B: makers proven at p_old
@@ -113,17 +119,24 @@ def measures(L, p_new, p_old, tb, tend, t_ref, adverse):
     for o in orders:
         jn.setdefault(o['sig'], o['gap'])
     obs = any(L['p'][i] == p_old for i in range(i_tb, i_end))
+    obs_q = float(sum(L['q'][i] for i in range(i_tb, i_end) if L['p'][i] == p_old))
     mk = []
     for s_, hs in old_sig.items():
-        kept = any(L['p'][i] == p_old and L['sig'][i] == s_ and (MUT_KEPT_ANY or L['oh'][i] in hs) for i in range(i_tb, i_end))
+        kix = [i for i in range(i_tb, i_end) if L['p'][i] == p_old and L['sig'][i] == s_ and (MUT_KEPT_ANY or L['oh'][i] in hs)]
+        kept = bool(kix)
         g_ = next(L['grp'][i] for i in range(i0, i_tb) if L['sig'][i] == s_)
-        mk.append(dict(grp=g_, join=s_ in jn, jgap=jn.get(s_, NAN), obs=obs, kept=kept))
+        mk.append(dict(grp=g_, join=s_ in jn, jgap=jn.get(s_, NAN), obs=obs, kept=kept, obs_q=obs_q,
+                       kept_q=float(sum(L['q'][i] for i in kix)), kept_v=float(sum(L['q'][i] * L['v1'][i] for i in kix)),
+                       kept_gap=(t[kix[0]] - tb) if kix else NAN))
     # C: run over (protection side)
     ro = []
     if adverse:
         for i in range(bisect.bisect_right(t, tb - RUN_MS), i_tb):
             if L['p'][i] == p_old:
                 ro.append(dict(grp=L['grp'][i], q=L['q'][i], v1=L['v1'][i]))
+    if extra:
+        sw = [dict(grp=L['grp'][i], q=L['q'][i]) for i in range(bisect.bisect_right(t, tb - RUN_MS), i_tb) if L['p'][i] == p_new]
+        return orders, mk, ro, sw
     return orders, mk, ro
 
 
@@ -194,7 +207,7 @@ def ours_at(O, p_new, p_old, tb, tend):
     return st_, (max(min(jt) - tb, 0.0) if jt else NAN), (any(min(o['tr'], o['tfill']) > tb + 1000.0 for o in held) if held else None)
 
 
-def day_run(day):
+def day_run(day, posthoc=False):
     import pf_gap_top_makers as GP
     mut = all_selftests()
     T0 = time.time(); D = K.load_day(day); st = D['stat']; S1d = f'{K.IO}/step1/{day}'
@@ -211,7 +224,7 @@ def day_run(day):
     gname = lambda s_: 'top 5' if G.get(int(s_), 'rest') == 'top 5' else 'field'
     PE = pd.read_parquet(f'{PD.OUTD}/events_{day}.parquet', columns=['eid', 'kind', 'side', 'p', 'tb'])
     st.update(window_sides=0, sim_differ=0, real_atbest_q={})
-    evs = []; ordr = []; mkr = []; ror = []; our = []; pend = {}
+    evs = []; ordr = []; mkr = []; ror = []; our = []; pend = {}; ordx = []; mkx = []; swx = []
     for w in K.window_sides(D):
         st['window_sides'] += 1; m, side, sg = w['m'], w['side'], w['sg']
         tf, mff = w['tf_mff']; tfl = tf.tolist(); P5, opp = w['P5'], w['opp']
@@ -277,7 +290,12 @@ def day_run(day):
                         E.append((f'{day}|{m}|{x}|{j}', kev, x, p, tb, te_run, po, tb - PROOF_MS))
             for eid, kev, x, p, tb, te_run, po, tref in E:
                 tend = min(te_run, tb + LEVEL_MS)
-                o_l, mk, ro = measures(pair[x]['L'], p, po, tb, tend, tref, kev in ('adverse', 'calm fallback'))
+                res_ = measures(pair[x]['L'], p, po, tb, tend, tref, kev in ('adverse', 'calm fallback'), extra=posthoc)
+                o_l, mk, ro = res_[:3]
+                if posthoc:
+                    ordx += [(int(day), kev, x, z['grp'], z['rank'], z['ahead'], z['q'], z['v'], z['origin'], z['prebirth']) for z in o_l if z['oh']]
+                    mkx += [(int(day), kev, x, z['grp'], z['join'], z['obs'], z['kept'], z['obs_q'], z['kept_q'], z['kept_v'], z['kept_gap']) for z in mk]
+                    swx += [(int(day), kev, x, z['grp'], z['q']) for z in res_[3]]
                 evs.append((eid, kev, x, p, tb))
                 ordr += [(int(day), kev, z['grp'], z['rank'], z['ahead'], z['gap'], z['q'], z['v'], z['origin']) for z in o_l if z['oh']]
                 mkr += [(int(day), kev, z['grp'], z['join'], z['jgap'], z['obs'], z['kept']) for z in mk]
@@ -298,18 +316,23 @@ def day_run(day):
     if st['sim_differ'] or st['events_differ'] or st['unpaired_windows']:
         sys.exit(f'SIDE-MOVES CONTROL FAILED on {day} -> no output: { {k_: v_ for k_, v_ in st.items() if not isinstance(v_, dict)} }')
     st['planted_caught'] = mut
-    os.makedirs(OUTD, exist_ok=True)
-    pd.DataFrame(ordr, columns=['day', 'kind', 'grp', 'rank', 'ahead', 'gap', 'q', 'v', 'origin']).to_parquet(f'{OUTD}/orders_{day}.parquet', index=False)
-    pd.DataFrame(mkr, columns=['day', 'kind', 'grp', 'join', 'jgap', 'obs', 'kept']).to_parquet(f'{OUTD}/makers_{day}.parquet', index=False)
-    pd.DataFrame(ror, columns=['day', 'kind', 'grp', 'q', 'v1']).to_parquet(f'{OUTD}/runover_{day}.parquet', index=False)
-    pd.DataFrame(our, columns=['day', 'kind', 'state', 'jgap', 'held_1s']).to_parquet(f'{OUTD}/ours_{day}.parquet', index=False)
-    json.dump(dict(stat=st, days=len(D['W0']) / 288.0), open(f'{OUTD}/day_{day}.json', 'w'), indent=1, default=float)
+    od = f'{OUTD}/posthoc' if posthoc else OUTD
+    os.makedirs(od, exist_ok=True)
+    if posthoc:
+        pd.DataFrame(ordx, columns=['day', 'kind', 'side', 'grp', 'rank', 'ahead', 'q', 'v', 'origin', 'prebirth']).to_parquet(f'{od}/ordx_{day}.parquet', index=False)
+        pd.DataFrame(mkx, columns=['day', 'kind', 'side', 'grp', 'join', 'obs', 'kept', 'obs_q', 'kept_q', 'kept_v', 'kept_gap']).to_parquet(f'{od}/mkx_{day}.parquet', index=False)
+        pd.DataFrame(swx, columns=['day', 'kind', 'side', 'grp', 'q']).to_parquet(f'{od}/swx_{day}.parquet', index=False)
+    pd.DataFrame(ordr, columns=['day', 'kind', 'grp', 'rank', 'ahead', 'gap', 'q', 'v', 'origin']).to_parquet(f'{od}/orders_{day}.parquet', index=False)
+    pd.DataFrame(mkr, columns=['day', 'kind', 'grp', 'join', 'jgap', 'obs', 'kept']).to_parquet(f'{od}/makers_{day}.parquet', index=False)
+    pd.DataFrame(ror, columns=['day', 'kind', 'grp', 'q', 'v1']).to_parquet(f'{od}/runover_{day}.parquet', index=False)
+    pd.DataFrame(our, columns=['day', 'kind', 'state', 'jgap', 'held_1s']).to_parquet(f'{od}/ours_{day}.parquet', index=False)
+    json.dump(dict(stat=st, days=len(D['W0']) / 288.0), open(f'{od}/day_{day}.json', 'w'), indent=1, default=float)
     print(f'{day}: {json.dumps({k_: v_ for k_, v_ in st.items() if not isinstance(v_, dict)}, default=float)} events {st["events"]} in {time.time() - T0:.0f} s', flush=True)
 
 
-def report():
-    stats = {d: json.load(open(f'{OUTD}/day_{d}.json')) for d in DAYS9}
-    rd = lambda nm: pd.concat([pd.read_parquet(f'{OUTD}/{nm}_{d}.parquet') for d in DAYS9], ignore_index=True)
+def report(od=OUTD, write=True):
+    stats = {d: json.load(open(f'{od}/day_{d}.json')) for d in DAYS9}
+    rd = lambda nm: pd.concat([pd.read_parquet(f'{od}/{nm}_{d}.parquet') for d in DAYS9], ignore_index=True)
     OR, MK, RO, OU = rd('orders'), rd('makers'), rd('runover'), rd('ours')
     asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
     cps = lambda x, qc='q', vc='v': float(x[vc].sum() / x[qc].sum()) if len(x) and x[qc].sum() else NAN
@@ -392,9 +415,65 @@ def report():
     lab = 'TOP-AVOIDS' if ratio <= 1 / 1.2 and lo_ >= 7 else ('TOP-RUN-OVER-MORE' if ratio >= 1.2 and hi >= 7 else 'PROPORTIONAL')
     R['R513'] = dict(share=sh, atbest_share=sh_ab, ratio=ratio, higher=hi, lower=lo_, label=lab)
     L.append(f'R513: protection side, top 5 share of the run-over shares {sh:.1%} vs at-best {sh_ab:.1%} (ratio {ratio:.2f}; higher {hi}, lower {lo_} of 9) -> {lab}')
+    if not write:
+        return R
     os.makedirs(OUTD, exist_ok=True)
     json.dump(R, open(f'{OUTD}/side_moves.json', 'w'), indent=1, default=float)
     open(f'{OUTD}/side_moves.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
+    return R
+
+
+def posthoc_report():
+    """POST HOC (2026-11-13, after the report; USER: "So they don't requote, their orders are already there ... top makers don't pull bid
+    side, then what they do? They wait to get filled? Or they requote in higher price? ... Can you give me some solid conclusions").
+    Descriptive, no readings. Control: the declared readings recomputed from the post hoc rerun equal side_moves.json. Split by direction:
+    UP (a pump: the protection side is the ask, the other side the bid) / DOWN (a dump). Fills are lower bounds (public data has no order
+    creation or cancel times: the match records carry only hash, signer, price and amount; checked on a consumed day)."""
+    od = f'{OUTD}/posthoc'
+    R0 = json.load(open(f'{OUTD}/side_moves.json')); R1 = report(od, write=False)
+    bad = {k: (R0[k], R1[k]) for k in R0 if json.dumps(R0[k], sort_keys=True, default=float) != json.dumps(json.loads(json.dumps(R1[k], default=float)), sort_keys=True, default=float)}
+    if bad:
+        sys.exit(f'SIDE-MOVES POSTHOC CONTROL FAILED (rerun readings differ) -> no output: {bad}')
+    rd = lambda nm: pd.concat([pd.read_parquet(f'{od}/{nm}_{d}.parquet') for d in DAYS9], ignore_index=True)
+    OX, MX, SW = rd('ordx'), rd('mkx'), rd('swx')
+    up = lambda df: ((df.kind.isin(['adverse', 'calm fallback']) & (df.side == 1)) | (df.kind.isin(['other', 'calm improve']) & (df.side == 0)))
+    for df in (OX, MX, SW):
+        df['dir'] = np.where(up(df), 'UP', 'DOWN')
+    cps = lambda q, v: float(v.sum() / q.sum()) if q.sum() else NAN
+    asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+    L = [f'SIDE-MOVES post hoc (descriptive), as of {asof}; control passed (readings from the rerun = side_moves.json)', '',
+         'PROTECTION SIDE new best (UP: the new best ask after a pump; DOWN: the new best bid after a dump): group | share of fill shares |'
+         ' share of the group\'s fill shares there from orders PROVEN resting at that price at or before it became the best | first-fill share |'
+         ' shares ahead median | c/sh || share of the fills at that price in the trade(s) that made it the best (last 1 s up to the birth)']
+    for kev in ('adverse', 'calm fallback'):
+        for dr in ('UP', 'DOWN'):
+            x = OX[(OX.kind == kev) & (OX.dir == dr)]; s_ = SW[(SW.kind == kev) & (SW.dir == dr)]
+            for g_ in ('top 5', 'field'):
+                y = x[x.grp == g_]
+                L.append(f'  {kev:<13} {dr:<4} {g_:<6} {y.q.sum() / max(x.q.sum(), 1e-9):5.1%} | {y.q[y.prebirth].sum() / max(y.q.sum(), 1e-9):5.1%} |'
+                         f' {((x["rank"] == 1) & (x.grp == g_)).sum() / max((x["rank"] == 1).sum(), 1):5.1%} | {np.median(y.ahead) if len(y) else NAN:4.0f} |'
+                         f' {cps(y.q, y.v):+.3f} || {s_.q[s_.grp == g_].sum() / max(s_.q.sum(), 1e-9):5.1%}')
+        y5 = OX[(OX.kind == kev) & (OX.grp == 'top 5')]; yf = OX[(OX.kind == kev) & (OX.grp == 'field')]
+        hi = sum(int(y5[y5.day == int(d)].q[y5[y5.day == int(d)].prebirth].sum() / max(y5[y5.day == int(d)].q.sum(), 1e-9) >
+                     yf[yf.day == int(d)].q[yf[yf.day == int(d)].prebirth].sum() / max(yf[yf.day == int(d)].q.sum(), 1e-9)) for d in DAYS9)
+        L.append(f'    {kev}: top 5 PROVEN-before share higher than the field on {hi} of 9 days')
+    L += ['', 'MAKERS AT THE OLD BEST when the price moves (proven by a fill there in the 2 s before): group | maker-events | quote at the new price'
+          ' (JOIN) | old order filled again at the old price in 10 s, given it traded again (KEPT | OBS) | KEPT | OBS by shares traded at the old'
+          ' price after the move: < 30 / 30-100 / >= 100 sh | kept fills: c/sh at 1 s, first one ms after the move (median)']
+    for kev in ('other', 'calm improve', 'adverse', 'calm fallback'):
+        for dr in ('UP', 'DOWN'):
+            x = MX[(MX.kind == kev) & (MX.dir == dr)]
+            for g_ in ('top 5', 'field'):
+                y = x[x.grp == g_]; ob = y[y.obs]
+                bk = ' / '.join(f'{z.kept.mean() if len(z) else NAN:5.1%} ({len(z)})' for z in (ob[ob.obs_q < 30], ob[(ob.obs_q >= 30) & (ob.obs_q < 100)], ob[ob.obs_q >= 100]))
+                kk = y[y.kept]
+                L.append(f'  {kev:<13} {dr:<4} {g_:<6} {len(y):>6} | {y["join"].mean() if len(y) else NAN:5.1%} | {ob.kept.mean() if len(ob) else NAN:5.1%} | {bk} |'
+                         f' {cps(kk.kept_q, kk.kept_v):+.3f}, {np.nanmedian(kk.kept_gap) if len(kk) else NAN:5.0f}')
+        y5 = MX[(MX.kind == kev) & (MX.grp == 'top 5') & MX.obs]; yf = MX[(MX.kind == kev) & (MX.grp == 'field') & MX.obs]
+        hk = sum(int(y5[y5.day == int(d)].kept.mean() > yf[yf.day == int(d)].kept.mean()) for d in DAYS9)
+        hj = sum(int(MX[(MX.kind == kev) & (MX.grp == 'top 5') & (MX.day == int(d))]['join'].mean() > MX[(MX.kind == kev) & (MX.grp == 'field') & (MX.day == int(d))]['join'].mean()) for d in DAYS9)
+        L.append(f'    {kev}: top 5 KEPT higher than the field on {hk} of 9 days; JOIN higher on {hj} of 9')
+    open(f'{OUTD}/posthoc.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
 
 
 if __name__ == '__main__':
@@ -405,5 +484,9 @@ if __name__ == '__main__':
         day_run(sys.argv[2])
     elif cmd == 'report':
         report()
+    elif cmd == 'dayposthoc' and len(sys.argv) > 2:
+        day_run(sys.argv[2], posthoc=True)
+    elif cmd == 'posthoc':
+        posthoc_report()
     else:
         sys.exit(__doc__)
