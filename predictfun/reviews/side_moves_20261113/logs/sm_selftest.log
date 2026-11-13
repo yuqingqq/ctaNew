@@ -1,0 +1,2 @@
+selftest passed; planted errors caught: {'MUT_AHEAD_SELF': True, 'MUT_KEPT_ANY': True, 'MUT_JOIN_EARLY': True}
+2026-11-13T14:32:26Z tag=sm_selftest rc=0 peak_rss_mib=102 wall_s=0.31 cpu_user_s=0.24 memavail_start_gib=22 disk_free_gib=529->529 slot=claude

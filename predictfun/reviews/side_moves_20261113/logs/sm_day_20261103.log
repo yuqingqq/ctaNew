@@ -1,0 +1,9 @@
+20261103: 80 window-sides, 3 s, rss 595 MiB
+20261103: 160 window-sides, 3 s, rss 598 MiB
+20261103: 240 window-sides, 4 s, rss 602 MiB
+20261103: 320 window-sides, 5 s, rss 605 MiB
+20261103: 400 window-sides, 6 s, rss 610 MiB
+20261103: 480 window-sides, 6 s, rss 612 MiB
+20261103: 560 window-sides, 7 s, rss 615 MiB
+20261103: {"registry": 288, "outside_day": 0, "sealed_or_forward": 0, "no_outcome": 0, "untimed_legs_0_60": 2426, "untimed_shares_0_60": 38118.44680133401, "windows": 288, "window_sides": 576, "sim_differ": 0, "grid_steps": 345600, "grid_steps_without_row": 0, "events_differ": 0, "unpaired_windows": 0} events {'other': 8337, 'adverse': 7971, 'calm improve': 4366, 'calm fallback': 4104} in 7 s
+2026-11-13T14:33:58Z tag=sm_day_20261103 rc=0 peak_rss_mib=748 wall_s=7.78 cpu_user_s=7.03 memavail_start_gib=23 disk_free_gib=528->528 slot=claude

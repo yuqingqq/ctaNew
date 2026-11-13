@@ -1,0 +1,34 @@
+Traceback (most recent call last):
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/ops/array_ops.py", line 374, in na_logical_op
+    result = op(x, y)
+             ^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/roperator.py", line 55, in rand_
+    return operator.and_(right, left)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for &: 'method' and 'bool'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/yuqing/ctaNew/predictfun/research/pf_side_moves.py", line 406, in <module>
+    report()
+  File "/home/yuqing/ctaNew/predictfun/research/pf_side_moves.py", line 337, in report
+    sp = ' / '.join(f'{v_:4.0%}' for v_ in ((ob.join & ~ob.kept).mean(), (ob.join & ob.kept).mean(), (~ob.join & ob.kept).mean(),
+                                             ~~~~~~~~^~~~~~~~~~
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/ops/common.py", line 85, in new_method
+    return method(self, other)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/arraylike.py", line 76, in __rand__
+    return self._logical_method(other, roperator.rand_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/series.py", line 6746, in _logical_method
+    res_values = ops.logical_op(lvalues, rvalues, op)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/ops/array_ops.py", line 464, in logical_op
+    res_values = na_logical_op(lvalues, rvalues, op)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/ops/array_ops.py", line 384, in na_logical_op
+    assert lib.is_scalar(y)
+           ^^^^^^^^^^^^^^^^
+AssertionError
+2026-11-13T14:34:09Z tag=sm_report rc=1 peak_rss_mib=207 wall_s=0.58 cpu_user_s=0.45 memavail_start_gib=22 disk_free_gib=528->528 slot=claude

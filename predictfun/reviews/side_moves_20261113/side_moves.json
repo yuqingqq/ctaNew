@@ -1,0 +1,33 @@
+{
+ "R510": {
+  "top5": 0.06181361037975284,
+  "field": 0.04505229283990346,
+  "ratio": 1.3720413875362996,
+  "higher": 8,
+  "lower": 1,
+  "label": "TOP-REQUOTE-MORE"
+ },
+ "R511": {
+  "top5": 0.1847756263191704,
+  "field": 0.07156102807551089,
+  "ratio": 2.5820705946845255,
+  "higher": 9,
+  "lower": 0,
+  "label": "TOP-KEEP-MORE"
+ },
+ "R512": {
+  "top5": 0.0,
+  "field": 9.9,
+  "ahead_days": 9,
+  "behind_days": 0,
+  "label": "TOP-AHEAD"
+ },
+ "R513": {
+  "share": 0.319813539061349,
+  "atbest_share": 0.33941829533900825,
+  "ratio": 0.9422401309921195,
+  "higher": 2,
+  "lower": 7,
+  "label": "PROPORTIONAL"
+ }
+}

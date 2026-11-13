@@ -1,0 +1,33 @@
+{
+ "stat": {
+  "registry": 288,
+  "outside_day": 0,
+  "sealed_or_forward": 0,
+  "no_outcome": 0,
+  "untimed_legs_0_60": 981,
+  "untimed_shares_0_60": 10717.451728936834,
+  "windows": 288,
+  "window_sides": 576,
+  "sim_differ": 0,
+  "real_atbest_q": {
+   "field": 413141.9900212111,
+   "top 5": 241936.55131903873
+  },
+  "grid_steps": 345600,
+  "grid_steps_without_row": 0,
+  "events_differ": 0,
+  "unpaired_windows": 0,
+  "events": {
+   "other": 6597,
+   "adverse": 6335,
+   "calm improve": 2965,
+   "calm fallback": 2767
+  },
+  "planted_caught": {
+   "MUT_AHEAD_SELF": true,
+   "MUT_KEPT_ANY": true,
+   "MUT_JOIN_EARLY": true
+  }
+ },
+ "days": 1.0
+}
