@@ -1,5 +1,11 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-13 09:07Z (session ce68ebe0) — KEEP-PLACE DONE + gap review: fewer / stickier pulls do not help (strong-only and near-best-only lose 9/9, immediate re-entry about equal); the guard ladder (LDG) stays best (-$16 M 0, -$137 M 50, +$781 at U). Closed vs the top makers in replay: size, persistence, levels, high-risk exposure, two-sided. Open: which trades fill us at a level (queue place: our new orders join behind existing queues), speed / fill clock, taking
+
+- Done (USER: "Yes go test, check the performance result, then review our gaps to top makers"): research/pf_keep_place.py + run_keep_place.sh (0a5a6ee6, before the first run), 08:37-09:05Z. Report + gap review handoffs/20261113_keep_place_and_gap_review.md; copies reviews/keep_place_20261113/; FINDINGS updated.
+- Readings: R440 KPS HURTS, KPN HURTS, KPF NOT-SHOWN; R441 / R442 0 for all.
+- Next (proposals, user's call): KEEP-AND-ADD ladder (place at the best only, keep old orders as the price moves away - early queue place - add at the new best, guard pulls; needs a multi-order lane); the live probe; a taking study.
+
 ## 2026-11-13 08:33Z (session ce68ebe0) — DEEP-PULL DONE: pulling every rung at high risk fixes the timing (deep fills at high P 54% -> 13%, top makers 19%) and recovers ~$4,000 a day (9/9), but no arm is positive; best = guard trigger on every rung (LDG) -$137 a day at M 50, -$16 at M 0, +$781 at the front bound; what is left is queue place at deep levels (61-69% swept vs 36%; ~75k pulls a day re-queue the rungs)
 
 - Done: research/pf_deep_pull.py + run_deep_pull.sh (ffc7e475, before the first run), 07:49-08:32Z. Report handoffs/20261113_deep_pull_results.md; copies reviews/deep_pull_20261113/; FINDINGS updated.
