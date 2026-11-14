@@ -13,7 +13,8 @@ USER review of the ORDER-HARM POLICY design (its run stopped, outputs deleted un
 
 THE LANE (labels): each rung of the guard ladder alone (shared client-state lane, 30 sh, M 50), KEEP-ALL with the guard as the ENTRY line only: a resting
 order is never pulled by the guard; an order still in flight when the guard comes on is cancelled; nothing new is placed while the guard is on;
-re-entry at the back 250 ms after it clears (CL.reference_lane: the policy engine, active side and rung offset explicit). v2's keep branch was the never-pull
+re-entry at the back at the first 50 ms step after it clears - no timer (USER 2026-11-14: the fixed 250 ms re-post timer does not match the current
+system; CL.REPOST_MS = 0) (CL.reference_lane: the policy engine, active side and rung offset explicit). v2's keep branch was the never-pull
 lane, which also placed replacement orders while the guard was on - not what keeping an order does.
 DECISIONS (the policy's cadence, also used by every same-cadence arm of the replay): in each guard episode (a maximal run of guard-on steps),
 for the rung's order resting when it starts (client-known: activation reached, no cancel sent, no full fill known, i.e. fill + 100 ms), at the
@@ -88,7 +89,7 @@ import pf_order_harm_v2 as OH                             # noqa: E402  (order_i
 import pf_joint_ladder as JL                              # noqa: E402  (synthetic contexts)
 
 DAYS9 = K.DAYS9
-OUTD = f'{K.IO}/order_harm_v3_client50_20261114'
+OUTD = f'{K.IO}/order_harm_v3_client50_repost0_20261114'
 SIZE = 30.0; NR = 6; EVERY = 1; H_TAIL = 2000.0; QCFG = ('M', 50.0); CLIP = 10.0; SUB_N = 300000; N_ITER = 3
 assert EVERY * 50 == CL.DECISION_MS
 FEAT = OH.FEAT
@@ -98,14 +99,19 @@ FOLDS = {DAYS9[i]: (tuple(DAYS9[:i - 1]), DAYS9[i - 1]) for i in range(4, 9)}   
 CHECK_EVERY = 20
 MEM_CAP_MIB = 2048.0
 INF = float('inf'); NAN = float('nan')
-MUT_SLOW_CADENCE = MUT_VENUE_REST = MUT_NO_LAT = MUT_BOOTSTRAP = MUT_SHARED_CHAIN = 0   # planted errors (selftest only)
+MUT_SLOW_CADENCE = MUT_VENUE_REST = MUT_NO_LAT = MUT_BOOTSTRAP = MUT_SHARED_CHAIN = MUT_TIMER = 0   # planted errors (selftest only)
 INT_KEYS = ('day', 'm', 'side', 'k', 'rung_i', 'ep', 'j', 'J', 'last', 'next_ok')
 BATCH = 200000                                                        # rows per parquet batch (memory)
 
 
 # ---------------------------------------------------------------- building blocks
+def repost():
+    """The re-post wait used by the labels' lanes: none (CL.REPOST_MS); planted error: the old 250 ms timer."""
+    return K.REST_COOL if MUT_TIMER else CL.REPOST_MS
+
+
 def run_fork(w, k, d, vg, q, shf, t_end):
-    F, O, _, _ = CL.reference_lane(w, q, shf, d, vg, size=SIZE, start_k=k, end_time=t_end)
+    F, O, _, _ = CL.reference_lane(w, q, shf, d, vg, size=SIZE, start_k=k, end_time=t_end, cooldown=repost())
     return F, O
 
 
@@ -185,15 +191,15 @@ def selftest():
     def recorder(k, t, cur):
         rec.setdefault(id(cur), cur)
         return False
-    Fk, Ok, _, _ = CL.reference_lane(w, 'U', 0.0, 0, vg, size=SIZE, decide=recorder)
-    F0, O0, _, _ = CL.reference_lane(w, 'U', 0.0, 0, vg, size=SIZE)
+    Fk, Ok, _, _ = CL.reference_lane(w, 'U', 0.0, 0, vg, size=SIZE, decide=recorder, cooldown=repost())
+    F0, O0, _, _ = CL.reference_lane(w, 'U', 0.0, 0, vg, size=SIZE, cooldown=repost())
     if (Fk, Ok) != (F0, O0):
         bad.append('the recording callback changed the keep-all lane')
-    if [o[0] for o in Ok] != [K.L_PLACE, 1000.0 + K.L_PLACE] or sum(f[2] for f in Fk) != 30.0:
+    if [o[0] for o in Ok] != [K.L_PLACE, 800.0 + K.L_PLACE] or sum(f[2] for f in Fk) != 30.0:   # re-post at the first step after the clear (800 ms)
         bad.append(f'keep-all lane: orders {[o[0] for o in Ok]}, fills {[f[2] for f in Fk]}')
     Ff1, Of1 = run_fork(w, 4, 0, vg, 'U', 0.0, 2750.0)
     Ff2, Of2 = run_fork(w, 9, 0, vg, 'U', 0.0, 2750.0)
-    if [o[0] for o in Of1] != [1000.0 + K.L_PLACE] or [o[0] for o in Of1] != [o[0] for o in Of2] or Ff1 != Ff2:
+    if [o[0] for o in Of1] != [800.0 + K.L_PLACE] or [o[0] for o in Of1] != [o[0] for o in Of2] or Ff1 != Ff2:
         bad.append(f'pull branch not constant within the episode: {[o[0] for o in Of1]} vs {[o[0] for o in Of2]}')
     # (2) client-known resting: an order filled at 400 ms rests (to the client) until 500 ms; a cancel sent at 600 ms ends it there
     o = dict(ref=False, ta=100.0, tc=INF, tfill=400.0)
@@ -251,6 +257,10 @@ def selftest():
             pr = predict_day(type('M', (), {'predict': staticmethod(lambda X: X[:, 0].astype(np.float64))})(), 'x', batch=3)
             if not np.array_equal(pr, A[:, len(KEYS)].astype(np.float32).astype(np.float64)):
                 bad.append('batched predictions out of order')
+            fake = type('M', (), {'feature_importance': staticmethod(lambda kind: np.arange(len(FEAT), dtype=float))})()
+            ld = level_diagnostics(fake, 'x', np.linspace(-1.0, 1.0, nr), A[:, KEYS.index('rung_i')].astype(int))
+            if sum(g[3] for g in ld['by_level_vol_size']) != nr or len(ld['importance_top']) != 15 or sum(v for _, v in ld['importance_top']) > 1.0 + 1e-9:
+                bad.append(f'level diagnostics {ld}')
         finally:
             OUTD = old
     # (7) the nested chain: a training day's own targets never reach its own decisions (USER's reproduction, here through chain_model with a
@@ -280,7 +290,7 @@ def selftest():
 
 def mutation_check():
     out = {}
-    for nm in ('MUT_SLOW_CADENCE', 'MUT_VENUE_REST', 'MUT_NO_LAT', 'MUT_BOOTSTRAP', 'MUT_SHARED_CHAIN'):
+    for nm in ('MUT_SLOW_CADENCE', 'MUT_VENUE_REST', 'MUT_NO_LAT', 'MUT_BOOTSTRAP', 'MUT_SHARED_CHAIN', 'MUT_TIMER'):
         globals()[nm] = 1
         try:
             out[nm] = bool(selftest())
@@ -363,8 +373,8 @@ def rows_day(day):
             def recorder(k, t, cur, rec=rec):
                 rec.setdefault(id(cur), cur)
                 return False
-            Fk, Ok, order_states, _ = CL.reference_lane(w, q, shf, d, vg, size=SIZE, decide=recorder)
-            F0, O0, _, _ = CL.reference_lane(w, q, shf, d, vg, size=SIZE)
+            Fk, Ok, order_states, _ = CL.reference_lane(w, q, shf, d, vg, size=SIZE, decide=recorder, cooldown=repost())
+            F0, O0, _, _ = CL.reference_lane(w, q, shf, d, vg, size=SIZE, cooldown=repost())
             st['recorder_differ'] += int(Fk != F0 or Ok != O0)
             ka = [(float(tt[f[0]]), val(f[0], int(f[1]), f[2])) for f in Fk]
             orders = order_states
@@ -545,7 +555,7 @@ def fit_fold(test):
         for y in (cal, test):
             preds[y].append(predict_day(b, y))
         if it == N_ITER - 1:
-            b.save_model(f'{OUTD}/models/a_{test}.txt')
+            b.save_model(f'{OUTD}/models/a_{test}.txt'); final = b
     info.update(chain_models=cst['models'], nested_predictions=cst['nested_predictions'],
                 final_target_keep_share=cst['final_target_keep_share'])
     # PULL-DEPTH refit on the same training days (FB25 / FB25-C's model in the replay)
@@ -589,11 +599,42 @@ def fit_fold(test):
                 flip_last=float(np.mean((a_fin > 0) != (a_prev > 0))), keep_share_test=float(np.mean(a_fin > 0)), cont_mean=float(np.mean(cont)),
                 cont_by_rung=[float(np.mean(cont[rung == r])) if (rung == r).any() else NAN for r in range(NR)],
                 rows_test=int(len(a_fin)), rows_cal=int(len(a_cal)))
+    info.update(level_diagnostics(final, test, a_fin, rung))
     pd.DataFrame(dict(m=kt['df'].m.values, side=kt['df'].side.values, k=kt['df'].k.values, rung_i=rung, j=kt['df'].j.values,
                       a_final=a_fin, a_init=a_init, target=G, realized=real)).to_parquet(f'{OUTD}/pred_{test}.parquet', index=False)
     json.dump(dict(info=info, thresholds=thr, **CL.stamp()), open(f'{OUTD}/fit_{test}.json', 'w'), indent=1, default=float)
     print(f'fold {test}: train {train}, cal {cal}; IC final {info["ic_final"]:+.3f}, keep share {info["keep_share_test"]:.3f}, flip last '
           f'{info["flip_last"]:.3f}, theta_M {thr["theta_M"]:+.3f}; {time.time() - T0_:.0f} s', flush=True)
+
+
+def readable(f):
+    """Input names for the report: x0..x31 are the guard's raw step inputs (pf_kp_s4.G32), x33..x36 its four extras."""
+    if f.startswith('x') and f[1:].isdigit():
+        i = int(f[1:])
+        return K.G32[i] if i < len(K.G32) else {33: 'own_book_chg250', 34: 'opp_book_chg250', 35: 'activity', 36: 'bn_imb_chg250'}.get(i, f)
+    return f
+
+
+def level_diagnostics(model, day, a_hat, rung):
+    """USER 2026-11-14 ("volume, volatility will have big influence for each level?"): the final model's input importance (gain shares) and,
+    on the test day, the keep share (A_hat > 0) and mean A_hat for each level x volatility tercile (sigma) x size-at-better tercile."""
+    import pyarrow.parquet as pq
+    imp = model.feature_importance('gain'); tot = float(imp.sum()) or 1.0; top = np.argsort(-imp)[:15]
+    DV = pq.read_table(f'{OUTD}/rows_{day}.parquet', columns=['x29', 'size_better']).to_pandas()
+
+    def terc(x):
+        ok = np.isfinite(x)
+        e = np.quantile(x[ok], [1 / 3, 2 / 3]) if ok.any() else np.array([np.nan, np.nan])
+        return np.where(~ok, -1, np.where(x <= e[0], 0, np.where(x <= e[1], 1, 2))), [float(v) for v in e]
+    tv, ev = terc(DV.x29.values.astype(float)); ts, es = terc(DV.size_better.values.astype(float))
+    grid = []
+    for r in range(NR):
+        for a_ in range(3):
+            for b_ in range(3):
+                mk = (rung == r) & (tv == a_) & (ts == b_)
+                if mk.any():
+                    grid.append([r, a_, b_, int(mk.sum()), float(a_hat[mk].mean()), float((a_hat[mk] > 0).mean())])
+    return dict(importance_top=[[readable(FEAT[i]), float(imp[i]) / tot] for i in top], by_level_vol_size=grid, vol_edges=ev, size_edges=es)
 
 
 # ---------------------------------------------------------------- report
@@ -640,6 +681,26 @@ def report():
           f'; decisions flipped vs iteration 0 {np.mean([Fz[t]["info"]["flip_vs_init"] for t in FOLDS]):.3f}, vs the previous iteration '
           f'{np.mean([Fz[t]["info"]["flip_last"] for t in FOLDS]):.3f} (fold means)',
           f'R661 SKILL: IC > 0 on {up}/5 test days, pooled {pooled:+.3f} -> {lab}']
+    # USER: input importance and the level x volatility x size-at-better keep map (printed diagnostics)
+    imp = {}
+    for t in FOLDS:
+        for nm, sh in Fz[t]['info']['importance_top']:
+            imp[nm] = imp.get(nm, 0.0) + sh / len(FOLDS)
+    L += ['', 'INPUT IMPORTANCE (final models, gain share, mean over the 5 folds; top 15 per fold): ' +
+          ', '.join(f'{nm} {v:.3f}' for nm, v in sorted(imp.items(), key=lambda z: -z[1])[:15])]
+    G = pd.DataFrame([g for t in FOLDS for g in Fz[t]['info']['by_level_vol_size']], columns=['rung', 'vol', 'size', 'n', 'a_mean', 'keep'])
+    G['a_sum'] = G.a_mean * G.n; G['k_sum'] = G.keep * G.n
+    H = G.groupby(['rung', 'vol', 'size'])[['n', 'a_sum', 'k_sum']].sum()
+    L += ['', 'KEEP MAP (test days pooled): keep share (mean A_hat c/sh) by level, volatility tercile (low / mid / high sigma) and tercile of size at '
+          'better prices (thin / mid / thick cushion in front)']
+    for r in range(NR):
+        cells = []
+        for a_ in range(3):
+            for b_ in range(3):
+                if (r, a_, b_) in H.index:
+                    h = H.loc[(r, a_, b_)]
+                    cells.append(f'v{a_}s{b_} {h.k_sum / h.n:.2f} ({h.a_sum / h.n:+.2f})')
+        L.append(f'  level {r}: ' + ' | '.join(cells))
     open(f'{OUTD}/order_harm_v3.txt', 'w').write('\n'.join(L) + '\n')
     json.dump(dict(R661=lab, pooled_ic=pooled, ic=ic, **CL.stamp()), open(f'{OUTD}/order_harm_v3.json', 'w'), indent=1)
     print('\n'.join(L), flush=True)

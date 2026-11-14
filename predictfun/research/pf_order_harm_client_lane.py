@@ -13,11 +13,14 @@ import pf_joint_ladder_v3 as J3
 K = J3.K
 SIZE, NR, L_NOTE, VIOL, INF = J3.SIZE, J3.NR, J3.L_NOTE, J3.VIOL, J3.INF
 MUT_REF_RELEASE = MUT_REST_TRUE = MUT_HELD_TRUE = MUT_LEG_LEAK = MUT_PRIORITY = INDEP = 0
-CONTRACT = 'order-harm-client-50ms-terminal-tail-v1'
+CONTRACT = 'order-harm-client-50ms-terminal-tail-v2'
 DECISION_MS = 50
+REPOST_MS = 0.0      # ORDER-HARM labels and replay: an empty rung re-posts at the first 50 ms step after the guard clears, no timer (USER 2026-11-14:
+                     # the fixed 250 ms re-post timer does not match the current system); the engine default stays K.REST_COOL (frozen-v3 parity)
 TAIL_MS = 200.0
 
-def sim_joint(W, q, shf, cap, aux, decide=None, idle_only=0, size=SIZE, nr=NR, mode='soft', state='client', rung_offsets=None, active_sides=(0, 1)):
+def sim_joint(W, q, shf, cap, aux, decide=None, idle_only=0, size=SIZE, nr=NR, mode='soft', state='client', rung_offsets=None, active_sides=(0, 1),
+              cooldown=None):
     """Both sides of one window. mode: 'soft' / 'hard' / 'none' (cap); state: 'client' (decisions on client-known state, the header) or
     'compat' (v1's venue-state decisions; regression control only). Returns per (s, d) fills / orders (sim2 tuple form), the decision log,
     stats incl. conservation violations."""
@@ -29,6 +32,7 @@ def sim_joint(W, q, shf, cap, aux, decide=None, idle_only=0, size=SIZE, nr=NR, m
     if mode == 'none':
         cap = None
     client = state == 'client'
+    cool = K.REST_COOL if cooldown is None else float(cooldown)   # re-post wait after the last guard / pull step
     taul = W[0]['tg'].tolist(); tfl = W[0]['tf'].tolist(); nf = len(tfl); t_end = W[0]['te']
     TL = []
     for s in (0, 1):
@@ -202,7 +206,7 @@ def sim_joint(W, q, shf, cap, aux, decide=None, idle_only=0, size=SIZE, nr=NR, m
                         cancel(cur, t, why); cur = None
                 if trig:
                     S_['lastpull'][d] = t
-                if cur is None and b >= 0 and not trig and t - S_['lastpull'][d] >= K.REST_COOL:
+                if cur is None and b >= 0 and not trig and t - S_['lastpull'][d] >= cool:
                     tgt = int(b) if offset == 0 else ((int(b) - offset) if s == 0 else (int(b) + offset))
                     if offset == 0 or 1 <= tgt <= 99:
                         if client and not MUT_HELD_TRUE:
@@ -246,11 +250,12 @@ def sim_joint(W, q, shf, cap, aux, decide=None, idle_only=0, size=SIZE, nr=NR, m
 
 
 def reference_lane(w, q, shf, rung, guard, size=SIZE, start_k=0, end_time=None,
-                   decide=None, state='client'):
+                   decide=None, state='client', cooldown=None):
     """One reference rung, using the policy engine and its client-known state.
 
     A fork starts without an order at start_k. Both KEEP and PULL use this
-    function; guard-on blocks entry, and the existing cooldown is unchanged.
+    function; guard-on blocks entry. cooldown: the re-post wait after the last guard / pull step (None = the engine's 250 ms;
+    ORDER-HARM passes REPOST_MS = 0: re-post at the first step after the guard clears).
     """
     end = float(w['te'] if end_time is None else end_time)
     stop = int(np.searchsorted(w['tg'], end, side='left'))
@@ -267,7 +272,7 @@ def reference_lane(w, q, shf, rung, guard, size=SIZE, start_k=0, end_time=None,
     callback = None if decide is None else {(side, 0): lambda k, t, o: decide(k + start_k, t, o)}
     r = sim_joint(W, q, shf, None, aux, decide=callback, idle_only=1,
                   size=size, nr=1, mode='none', state=state,
-                  rung_offsets=(rung,), active_sides=(side,))
+                  rung_offsets=(rung,), active_sides=(side,), cooldown=cooldown)
     if any(r['stat']['viol'].values()):
         raise ValueError(f"reference accounting failed: {r['stat']['viol']}")
     return r['fills'][(side, 0)], r['orders'][(side, 0)], r['order_states'][(side, 0)], r
@@ -298,7 +303,7 @@ def portfolio_terminal(r, tf, mid):
 
 
 def stamp():
-    return dict(contract=CONTRACT, decision_ms=DECISION_MS)
+    return dict(contract=CONTRACT, decision_ms=DECISION_MS, repost_ms=REPOST_MS)
 
 
 def require_contract(receipt):
