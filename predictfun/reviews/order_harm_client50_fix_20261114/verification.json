@@ -1,0 +1,38 @@
+{
+  "asof": "2026-11-14T10:07:17.579856+00:00",
+  "source_commit": "32da4014c00853f0c5207bfa29da21a551b3d185",
+  "base_source_commit": "f481b01b",
+  "contract": {
+    "contract": "order-harm-client-50ms-terminal-tail-v1",
+    "decision_ms": 50
+  },
+  "tests": 9,
+  "failures": 0,
+  "errors": 0,
+  "shared_historical_data_read_attempts": 0,
+  "full_historical_run_started": false,
+  "model_fit_started": false,
+  "default_v3_parity_cases": 12,
+  "new_engine_planted_errors_caught": 5,
+  "target_planted_errors_caught": 4,
+  "policy_planted_errors_caught": 5,
+  "bash_syntax": "pass",
+  "source_sha256": {
+    "pf_order_harm_client_lane.py": "a84bff92bdfebcfe62d5f9fbe20bd51d009d1030eda0308bb04847d8a3e51e93",
+    "pf_order_harm_v3.py": "2964f85bd9fd27ebd7bb9809a2afb3592368d033ae94025f77f5e2d30462150c",
+    "pf_order_harm_policy_v2.py": "870bb7ac8273df230bbfb7a7f3452ba9c6bc88574f7ea887ae1bfa4d5afd6249",
+    "test_order_harm_client50.py": "3a334fdc9790f5eeb8cc1c47d3b7b7292ff5d6beb19b04acea4efd4893f13b01",
+    "run_order_harm_v3.sh": "776a694b125ca7271c5ca227c26cef562cc2c0182180769e08bb8bf28e78fde7",
+    "run_order_harm_policy_v2.sh": "04d53f81149f26ecd5b7eb0eabce4ece025d5bbd6ddb9ab477a10eebd8d8553f"
+  },
+  "outputs": {
+    "labels": "/home/yuqing/ctaNew/data/predict_fun/research/order_harm_v3_client50_20261114",
+    "policy": "/home/yuqing/ctaNew/data/predict_fun/research/order_harm_policy_v2_client50_20261114"
+  },
+  "limitations": [
+    "No historical performance claim",
+    "Upstream guard/FRONT-PULL remain LODO",
+    "50 ms inference runtime not benchmarked",
+    "Fitted-Q remains a three-iteration approximation"
+  ]
+}

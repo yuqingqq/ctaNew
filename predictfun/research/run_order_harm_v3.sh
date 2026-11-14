@@ -3,7 +3,7 @@
 # fitted-Q folds (test days 10-27 .. 11-03) with the PULL-DEPTH refit and calibration, report; claude slot, waits for a free slot.
 set -u
 cd /home/yuqing/ctaNew
-OUT=data/predict_fun/research/order_harm_v3_20261114; mkdir -p $OUT/logs
+OUT=data/predict_fun/research/order_harm_v3_client50_20261114; mkdir -p $OUT/logs
 DAYS="20261023 20261024 20261025 20261026 20261027 20261031 20261101 20261102 20261103"
 TESTS="20261027 20261031 20261101 20261102 20261103"
 job() { local tag=$1; shift; local n=0
@@ -13,6 +13,7 @@ job() { local tag=$1; shift; local n=0
       n=$((n+1)); sleep 60; continue; fi
     echo "$(date -u +%H:%M:%SZ) FAILED $tag" >> $OUT/logs/driver.log; exit 1
   done; sleep 3; }
+job oh3_client50_controls python3 -m unittest predictfun.research.test_order_harm_client50
 job oh3_selftest python3 predictfun/research/pf_order_harm_v3.py selftest
 for d in $DAYS; do job oh3_rows_$d python3 predictfun/research/pf_order_harm_v3.py rows $d; done
 for d in $TESTS; do job oh3_fit_$d python3 predictfun/research/pf_order_harm_v3.py fit $d; done

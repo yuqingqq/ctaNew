@@ -1,5 +1,30 @@
 # P-2026-005 HANDOFF
 
+<!-- ORDER_HARM_CLIENT50_FIX_20261114 -->
+Integration: merged into `mm-research` on 2026-11-14 10:16:29 UTC; no push or research run.
+
+## 2026-11-14 — ORDER-HARM client-state / 50 ms repair complete in code
+
+User requested the fix after the 09:47 review. Source **32da4014**, branch
+`research/predict-order-harm-fix-20261114` (checkout `/tmp/cta-order-harm-fix-20261114`);
+verified files mirrored into this shared workspace. [Repair record](handoffs/20261114_order_harm_client50_fix.md).
+Labels and policy now share the client-state engine; unseen fills cannot end
+label decisions before notice. Model/label decisions are every **50 ms**.
+Portfolio cash and inventory are marked at **60.2 s**, after the 60 s stop and
+cancellation tail; every run reconciles the complete fill value to cash plus
+inventory. Frozen JOINT-LADDER v3 is unchanged; old 60 s values remain only for
+regression. Fresh client50 directories and artifact-contract checks prevent
+reuse of old labels/models. Re-entry cooldown and execution delays unchanged.
+Verification as of **10:07:17 UTC**: 9 targeted tests, 12 default-engine parity
+cases, 5 joint / 4 target / 5 policy planted defects caught, existing synthetic
+selftests and shell syntax pass; zero shared historical-data read attempts.
+Receipt: `reviews/order_harm_client50_fix_20261114/verification.json`.
+No historical experiment or model fit launched. The earlier no-run instruction
+remains in force. Next research step, when separately authorized, is the repaired
+label/fit driver followed by policy replay. Upstream guard/FRONT-PULL LODO,
+fill-model calibration and a real 50 ms inference benchmark remain unresolved.
+<!-- /ORDER_HARM_CLIENT50_FIX_20261114 -->
+
 ## 2026-11-14 09:39Z (session ce68ebe0) — USER review of the ORDER-HARM POLICY design: four issues FIXED IN CODE, NOTHING RUN (USER: "Don't run, let me know when you have fixed the issues"); awaiting the USER's go
 
 - USER review: (1) the model arms reconsidered every 250 ms against FB25 at 50 ms - cancelling less often could be the gain; add a same-cadence baseline; (2) the success criterion covered a favorable subset (WS fills) - require a separate whole-portfolio acceptance criterion; (3) no forward validation: thresholds from all nine days, leave-one-day-out training used later dates - chronological training / calibration, then untouched days; (4) the label kept blind for 2 s while the policy reconsiders every 250 ms - estimate "keep now, retain the option to cancel later", including queue value.
