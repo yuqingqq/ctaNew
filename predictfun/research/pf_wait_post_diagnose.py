@@ -26,7 +26,7 @@ sys.path.insert(0,str(HERE))
 import pf_wait_post_v2 as M
 E=M.E
 BASE=Path('/home/yuqing/ctaNew/data/predict_fun/research/wait_post_v2_20261114_v1/full')
-OUT=Path('/home/yuqing/ctaNew/data/predict_fun/research/wait_post_diagnosis_20261114_v1')
+OUT=Path('/home/yuqing/ctaNew/data/predict_fun/research/wait_post_diagnosis_20261114_v2')
 ARMS=('VALUE','ALWAYS','TIMER','VALUE_GUARD_EXIT')
 AGES=(100.,500.,2000.,10000.)
 STATE_AGES=(50.,250.,1000.,5000.,20000.)
@@ -187,6 +187,11 @@ def reconcile(actual,expected):
         if not math.isclose(actual[k],float(expected[k]),rel_tol=1e-10,abs_tol=1e-7):raise ValueError('replay differs: '+k)
 
 
+def pack_window(day,market,arm,metrics,presence):
+    if any(metrics[k]!=presence[k] for k in metrics.keys()&presence.keys()):raise ValueError('overlapping window metrics differ')
+    return dict(day=day,market=market,arm=arm,**(metrics|presence))
+
+
 def replay(day,out):
     if day not in M.TESTS:raise ValueError('undeclared diagnostic day')
     p=M.stage(out,'replay_'+day);saved,_,receipt=M.read_eval(day,BASE);saved=saved[saved['shift']==50].set_index(['market','arm'])
@@ -199,7 +204,7 @@ def replay(day,out):
             r=guard_run(W,forecast,audit.capture) if arm=='VALUE_GUARD_EXIT' else M.run(W,M.policy(W,forecast,arm,audit.capture if audit else None),entry_mode='legacy' if arm=='TIMER' else 'value')
             metrics=E.metrics(W,r)
             if arm!='VALUE_GUARD_EXIT':reconcile(metrics,saved.loc[(market,arm)])
-            f,presence=attribute(W,r);windows.append(dict(day=day,market=market,arm=arm,**metrics,**presence))
+            f,presence=attribute(W,r);windows.append(pack_window(day,market,arm,metrics,presence))
             if f:
                 agg=pd.DataFrame(f).groupby(['side','rung','age_band'])[['quantity','fill_spread','post_fill_move','pnl','cancel_pending_shares']].sum().reset_index()
                 fills.extend(dict(day=day,market=market,arm=arm,**row) for row in agg.to_dict('records'))

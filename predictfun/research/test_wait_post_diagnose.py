@@ -45,6 +45,11 @@ class DiagnosisTests(unittest.TestCase):
         bad=dict(m,pnl=m['pnl']+1)
         with self.assertRaises(ValueError):D.reconcile(m,bad)
 
+    def test_window_pack_common_key_and_mismatch(self):
+        W=late();r=D.M.run(W,lambda v:True);m=D.E.metrics(W,r);_,p=D.attribute(W,r)
+        row=D.pack_window('synthetic',1,'VALUE',m,p);self.assertEqual(row['grid_steps'],len(W[0]['tg']));self.assertEqual(row['pnl'],m['pnl'])
+        with self.assertRaises(ValueError):D.pack_window('synthetic',1,'VALUE',m,dict(p,grid_steps=p['grid_steps']+1))
+
     def test_generation_dedup_and_bad_repeat(self):
         s=D.Support(pd.DataFrame({k:np.zeros(6) for k in D.M.FEATURES}));a=D.EntryAudit({0:s,1:s});x=np.zeros(len(D.M.FEATURES))
         v=dict(side=0,rung=0,generation=0,t=0,kind='entry');a.capture(v,x,(-1,0),False,'eligible');a.capture(dict(v,t=100),x,(1,0),True,'eligible')
