@@ -1,0 +1,51 @@
+{
+ "window_sides": 576,
+ "steps": 691200,
+ "invalid_book": 252,
+ "masked": 28864,
+ "quiet": 14,
+ "boundary_windows": 0,
+ "rows": 690948,
+ "load_stat": {
+  "registry": 288,
+  "outside_day": 0,
+  "sealed_or_forward": 0,
+  "no_outcome": 0,
+  "untimed_legs_0_60": 1228,
+  "untimed_shares_0_60": 14628.328666538513,
+  "windows": 288,
+  "grid_steps": 345600,
+  "grid_steps_without_row": 0
+ },
+ "falsifier": {
+  "checked": 791,
+  "feat_differ": 0,
+  "label_differ": 774,
+  "cols": [],
+  "scale_checked": 396,
+  "scale_differ": 0
+ },
+ "brute": {
+  "checked": 7623,
+  "differ": 0,
+  "planted_differ": 2748
+ },
+ "parity": {
+  "sd_rows": 259677,
+  "sd_rows_boundary": 0,
+  "missing": 0,
+  "differ": {},
+  "ok": true
+ },
+ "seconds": 74.4,
+ "gap_rows": 650,
+ "hgap_q": [
+  80.0,
+  126.0,
+  239.0,
+  483.0
+ ],
+ "empty_side_rows": 0,
+ "scale_w30_missing": 0,
+ "inf_missing": 0.04177448954190475
+}

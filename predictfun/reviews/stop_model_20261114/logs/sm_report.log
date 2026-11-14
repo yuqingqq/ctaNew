@@ -1,0 +1,131 @@
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+stop-model selftests passed; planted errors caught: {'MUT_AGE_NEXT': True, 'MUT_FOLD_LATE': True, 'MUT_HORIZON_EARLY': True, 'MUT_PSI_NONAN': True, 'MUT_AUC_KEEPNAN': True, 'MUT_RULE_OFF': True, 'MUT_SCALE_FUTURE': True, 'MUT_GAP_IGNORE': True, 'MUT_MATCH_NO_TFILL': True, 'MUT_ORACLE_NOGATE': True, 'MUT_LANE_NOGATE': True}
+STOP-MODEL v3 (keep / cancel per ladder level), 5 chronological test days 20261027, 20261031, 20261101, 20261102, 20261103; as of 2026-11-14T18:56:52Z
+inputs 85 (scale W30; audit v2 dropped []); GAP rows excluded {'20261027': 1334, '20261031': 3316, '20261101': 2356, '20261102': 650, '20261103': 294}; T5 permuted-label BSS -0.0052 -> PASS (v3.1: no skill), AUC 0.4772 (the v3 two-sided tolerance 0.02: NOT met - anti-skill side, see v3.1 (ii); 663820 rows); controls passed on every rows / align day
+
+=== H = 72 ms (y = the level is run over within (t + 22, t + 72] ms)
+SKILL per level j (rows not ALREADY_j): AUC | Brier skill vs the training base rate
+  j1: rows  3314633 rate  1.95% mean P  2.13% | AUC 0.911 days 0.915 0.903 0.882 0.909 0.928 | BSS +0.158 days +0.166 +0.133 +0.108 +0.172 +0.187  -> PREDICTABLE / BEATS-BASE
+      calibration deciles (mean P / rate): 0.001/0.000 0.001/0.001 0.002/0.001 0.002/0.001 0.003/0.002 0.005/0.003 0.008/0.006 0.015/0.013 0.033/0.031 0.142/0.137  max gap 0.005 -> CALIBRATED
+  j2: rows  3398589 rate  0.72% mean P  0.66% | AUC 0.947 days 0.953 0.936 0.918 0.947 0.962 | BSS +0.177 days +0.191 +0.173 +0.140 +0.180 +0.185  -> PREDICTABLE / BEATS-BASE
+      calibration deciles (mean P / rate): 0.000/0.000 0.000/0.000 0.000/0.000 0.001/0.000 0.001/0.001 0.001/0.001 0.001/0.001 0.002/0.002 0.004/0.004 0.056/0.063  max gap 0.008 -> CALIBRATED
+  j3: rows  3417776 rate  0.36% mean P  0.26% | AUC 0.964 days 0.968 0.956 0.945 0.963 0.974 | BSS +0.167 days +0.188 +0.172 +0.151 +0.160 +0.165  -> PREDICTABLE / BEATS-BASE
+      calibration deciles (mean P / rate): 0.000/0.000 0.000/0.000 0.000/0.000 0.000/0.000 0.000/0.000 0.000/0.000 0.000/0.000 0.000/0.000 0.001/0.001 0.024/0.033  max gap 0.010 -> CALIBRATED
+  j4: rows  3425329 rate  0.20% mean P  0.11% | AUC 0.971 days 0.973 0.962 0.963 0.975 0.978 | BSS +0.145 days +0.123 +0.150 +0.147 +0.161 +0.142  -> PREDICTABLE / BEATS-BASE
+  j5: rows  3428406 rate  0.12% mean P  0.05% | AUC 0.973 days 0.978 0.968 0.967 0.978 0.977 | BSS +0.124 days +0.107 +0.124 +0.128 +0.143 +0.117  -> PREDICTABLE / BEATS-BASE
+  j6: rows  3430130 rate  0.08% mean P  0.02% | AUC 0.966 days 0.972 0.963 0.950 0.976 0.969 | BSS +0.086 days +0.083 +0.125 +0.108 +0.089 +0.027  -> PREDICTABLE / BEATS-BASE
+AGAINST THE GUARD (rows with a known guard value; score -v); per-day AUC model | reference
+  j1 vs guard: 0.917|0.869 0.907|0.840 0.884|0.809 0.912|0.862 0.931|0.884 -> BETTER
+  j2 vs guard: 0.956|0.934 0.935|0.910 0.915|0.884 0.949|0.931 0.965|0.941 -> BETTER
+  j3 vs guard: 0.970|0.962 0.956|0.943 0.942|0.937 0.965|0.960 0.976|0.965 -> BETTER
+KEEP QUALITY per rung d (the guard's keep count; run-over share of kept steps model | guard; stopped at the rung model | guard)
+  d0: run over 0.001|0.004 0.002|0.005 0.003|0.006 0.002|0.005 0.001|0.003; at the rung 0.999|0.996 0.998|0.995 0.997|0.994 0.998|0.995 0.999|0.997 -> FEWER-RUN-OVERS
+  d1: run over 0.000|0.001 0.001|0.001 0.001|0.001 0.000|0.001 0.000|0.000; at the rung 0.005|0.007 0.006|0.009 0.010|0.013 0.005|0.009 0.003|0.005 -> FEWER-RUN-OVERS
+  d2: run over 0.000|0.000 0.000|0.000 0.000|0.000 0.000|0.000 0.000|0.000; at the rung 0.001|0.001 0.001|0.001 0.001|0.002 0.001|0.001 0.000|0.001 -> FEWER-RUN-OVERS
+  d3: run over 0.000|0.000 0.000|0.000 0.000|0.000 0.000|0.000 0.000|0.000; at the rung 0.000|0.000 0.000|0.000 0.000|0.000 0.000|0.000 0.000|0.000 -> NOT-SHOWN
+  d4: run over 0.000|0.000 0.000|0.000 0.000|0.000 0.000|0.000 0.000|0.000; at the rung 0.000|0.000 0.000|0.000 0.000|0.000 0.000|0.000 0.000|0.000 -> NOT-SHOWN
+  d5: run over 0.000|0.000 0.000|0.000 0.000|0.000 0.000|0.000 0.000|0.000; at the rung 0.000|0.000 0.000|0.000 0.000|0.000 0.000|0.000 0.000|0.000 -> MORE-RUN-OVERS
+
+=== H = 250 ms (y = the level is run over within (t + 22, t + 250] ms)
+SKILL per level j (rows not ALREADY_j): AUC | Brier skill vs the training base rate
+  j1: rows  3314633 rate  7.48% mean P  8.32% | AUC 0.854 days 0.870 0.833 0.823 0.847 0.871 | BSS +0.243 days +0.280 +0.198 +0.172 +0.253 +0.279  -> PREDICTABLE / BEATS-BASE
+      calibration deciles (mean P / rate): 0.007/0.005 0.011/0.008 0.015/0.012 0.020/0.017 0.028/0.024 0.039/0.033 0.057/0.048 0.089/0.079 0.156/0.137 0.410/0.385  max gap 0.025 -> CALIBRATED
+  j2: rows  3398589 rate  3.16% mean P  3.14% | AUC 0.889 days 0.910 0.861 0.857 0.885 0.903 | BSS +0.296 days +0.337 +0.250 +0.222 +0.303 +0.322  -> PREDICTABLE / BEATS-BASE
+      calibration deciles (mean P / rate): 0.002/0.002 0.004/0.003 0.005/0.004 0.006/0.006 0.008/0.007 0.010/0.009 0.013/0.013 0.019/0.019 0.034/0.035 0.213/0.218  max gap 0.005 -> CALIBRATED
+  j3: rows  3417776 rate  1.74% mean P  1.60% | AUC 0.907 days 0.932 0.881 0.878 0.903 0.917 | BSS +0.325 days +0.379 +0.297 +0.263 +0.319 +0.336  -> PREDICTABLE / BEATS-BASE
+      calibration deciles (mean P / rate): 0.001/0.001 0.002/0.002 0.002/0.002 0.003/0.003 0.003/0.003 0.004/0.004 0.005/0.005 0.007/0.007 0.012/0.014 0.122/0.133  max gap 0.011 -> CALIBRATED
+  j4: rows  3425329 rate  1.04% mean P  0.87% | AUC 0.919 days 0.948 0.892 0.894 0.917 0.927 | BSS +0.333 days +0.391 +0.320 +0.289 +0.323 +0.331  -> PREDICTABLE / BEATS-BASE
+  j5: rows  3428406 rate  0.67% mean P  0.52% | AUC 0.924 days 0.960 0.903 0.895 0.920 0.931 | BSS +0.323 days +0.379 +0.334 +0.296 +0.314 +0.297  -> PREDICTABLE / BEATS-BASE
+  j6: rows  3430130 rate  0.45% mean P  0.31% | AUC 0.928 days 0.965 0.903 0.897 0.929 0.934 | BSS +0.306 days +0.336 +0.326 +0.295 +0.285 +0.294  -> PREDICTABLE / BEATS-BASE
+AGAINST THE GUARD (rows with a known guard value; score -v); per-day AUC model | reference
+  j1 vs guard: 0.871|0.816 0.832|0.767 0.822|0.754 0.848|0.794 0.873|0.820 -> BETTER
+  j2 vs guard: 0.910|0.880 0.854|0.824 0.849|0.811 0.885|0.856 0.903|0.870 -> BETTER
+  j3 vs guard: 0.931|0.917 0.873|0.862 0.869|0.855 0.903|0.888 0.916|0.895 -> BETTER
+KEEP QUALITY per rung d (the guard's keep count; run-over share of kept steps model | guard; stopped at the rung model | guard)
+  d0: run over 0.017|0.027 0.020|0.027 0.024|0.033 0.024|0.035 0.016|0.025; at the rung 0.983|0.973 0.980|0.973 0.976|0.967 0.976|0.965 0.984|0.975 -> FEWER-RUN-OVERS
+  d1: run over 0.004|0.006 0.006|0.007 0.007|0.008 0.007|0.009 0.005|0.007; at the rung 0.017|0.025 0.019|0.025 0.025|0.032 0.022|0.031 0.013|0.021 -> FEWER-RUN-OVERS
+  d2: run over 0.002|0.002 0.003|0.003 0.003|0.003 0.003|0.004 0.002|0.003; at the rung 0.003|0.004 0.004|0.005 0.005|0.006 0.005|0.006 0.003|0.004 -> FEWER-RUN-OVERS
+  d3: run over 0.001|0.001 0.002|0.002 0.002|0.002 0.002|0.002 0.001|0.001; at the rung 0.001|0.001 0.002|0.002 0.002|0.002 0.002|0.002 0.001|0.002 -> FEWER-RUN-OVERS
+  d4: run over 0.000|0.000 0.001|0.001 0.001|0.001 0.001|0.001 0.001|0.001; at the rung 0.001|0.000 0.001|0.001 0.001|0.001 0.001|0.001 0.001|0.001 -> NOT-SHOWN
+  d5: run over 0.000|0.000 0.001|0.001 0.001|0.001 0.001|0.000 0.001|0.000; at the rung 0.000|0.000 0.000|0.000 0.000|0.000 0.001|0.000 0.000|0.000 -> MORE-RUN-OVERS
+
+=== H = 1000 ms (y = the level is run over within (t + 22, t + 1000] ms)
+SKILL per level j (rows not ALREADY_j): AUC | Brier skill vs the training base rate
+  j1: rows  3314633 rate 22.99% mean P 25.23% | AUC 0.747 days 0.751 0.732 0.738 0.731 0.753 | BSS +0.168 days +0.181 +0.175 +0.155 +0.155 +0.175  -> PREDICTABLE / BEATS-BASE
+      calibration deciles (mean P / rate): 0.064/0.053 0.098/0.084 0.124/0.110 0.152/0.136 0.182/0.164 0.218/0.197 0.265/0.239 0.330/0.299 0.432/0.394 0.658/0.623  max gap 0.038 -> MISCALIBRATED
+  j2: rows  3398589 rate 11.88% mean P 12.47% | AUC 0.756 days 0.758 0.732 0.737 0.742 0.759 | BSS +0.158 days +0.172 +0.152 +0.142 +0.153 +0.167  -> PREDICTABLE / BEATS-BASE
+      calibration deciles (mean P / rate): 0.030/0.025 0.043/0.039 0.054/0.049 0.064/0.060 0.076/0.070 0.092/0.088 0.112/0.107 0.143/0.138 0.200/0.193 0.434/0.418  max gap 0.015 -> CALIBRATED
+  j3: rows  3417776 rate  7.31% mean P  7.46% | AUC 0.762 days 0.761 0.737 0.743 0.751 0.761 | BSS +0.149 days +0.164 +0.141 +0.135 +0.144 +0.155  -> PREDICTABLE / BEATS-BASE
+      calibration deciles (mean P / rate): 0.017/0.016 0.025/0.021 0.030/0.028 0.036/0.034 0.043/0.040 0.051/0.050 0.063/0.062 0.080/0.080 0.111/0.112 0.290/0.288  max gap 0.003 -> CALIBRATED
+  j4: rows  3425329 rate  4.86% mean P  4.69% | AUC 0.766 days 0.766 0.745 0.752 0.751 0.765 | BSS +0.140 days +0.162 +0.129 +0.128 +0.133 +0.143  -> PREDICTABLE / BEATS-BASE
+  j5: rows  3428406 rate  3.37% mean P  3.11% | AUC 0.762 days 0.767 0.739 0.745 0.752 0.767 | BSS +0.130 days +0.156 +0.120 +0.116 +0.122 +0.131  -> PREDICTABLE / BEATS-BASE
+  j6: rows  3430130 rate  2.42% mean P  2.13% | AUC 0.757 days 0.772 0.730 0.734 0.749 0.770 | BSS +0.120 days +0.149 +0.112 +0.110 +0.110 +0.116  -> PREDICTABLE / BEATS-BASE
+AGAINST THE GUARD (rows with a known guard value; score -v) and STOP-DEPTH NEW refit chronologically (its guard-on rows); per-day AUC model | reference
+  j1 vs guard: 0.750|0.708 0.728|0.683 0.735|0.687 0.730|0.684 0.754|0.709 -> BETTER; vs STOP-DEPTH (chronological, guard-on): 0.735|0.733 0.710|0.706 0.693|0.694 0.707|0.706 0.724|0.725 -> NOT-SHOWN
+  j2 vs guard: 0.755|0.727 0.721|0.702 0.729|0.703 0.741|0.705 0.757|0.722 -> BETTER; vs STOP-DEPTH (chronological, guard-on): 0.742|0.738 0.715|0.712 0.704|0.706 0.721|0.721 0.731|0.730 -> BETTER
+  j3 vs guard: 0.756|0.736 0.725|0.716 0.732|0.718 0.749|0.719 0.758|0.732 -> BETTER; vs STOP-DEPTH (chronological, guard-on): 0.745|0.738 0.729|0.724 0.718|0.720 0.730|0.726 0.731|0.732 -> NOT-SHOWN
+KEEP QUALITY per rung d (the guard's keep count; run-over share of kept steps model | guard; stopped at the rung model | guard)
+  d0: run over 0.146|0.166 0.113|0.124 0.129|0.142 0.171|0.194 0.136|0.156; at the rung 0.854|0.834 0.887|0.876 0.871|0.858 0.829|0.806 0.864|0.844 -> FEWER-RUN-OVERS
+  d1: run over 0.062|0.070 0.047|0.049 0.051|0.054 0.078|0.089 0.067|0.077; at the rung 0.089|0.100 0.072|0.079 0.089|0.095 0.099|0.109 0.072|0.082 -> FEWER-RUN-OVERS
+  d2: run over 0.036|0.039 0.027|0.028 0.027|0.028 0.044|0.050 0.040|0.045; at the rung 0.028|0.031 0.021|0.022 0.025|0.027 0.036|0.040 0.028|0.032 -> FEWER-RUN-OVERS
+  d3: run over 0.022|0.023 0.017|0.018 0.017|0.018 0.028|0.031 0.025|0.029; at the rung 0.015|0.016 0.009|0.010 0.010|0.011 0.017|0.019 0.015|0.017 -> FEWER-RUN-OVERS
+  d4: run over 0.015|0.016 0.013|0.013 0.013|0.013 0.018|0.020 0.017|0.019; at the rung 0.008|0.008 0.005|0.005 0.005|0.005 0.011|0.011 0.009|0.010 -> FEWER-RUN-OVERS
+  d5: run over 0.010|0.011 0.010|0.010 0.010|0.010 0.013|0.014 0.012|0.013; at the rung 0.005|0.005 0.003|0.003 0.003|0.003 0.007|0.006 0.006|0.006 -> NOT-SHOWN
+
+WHERE THE SKILL COMES FROM (POST HOC, dev calibration day 20261026, j = 1, fold 20261027's model): share of rows | base rate | AUC model | AUC thin best level (-r_s1) | AUC Binance 250 ms return against us | AUC Binance imbalance change
+  all                            H   72: 100.0% |  2.70% | 0.913 | 0.807 | 0.660 | 0.687
+  all                            H  250: 100.0% | 10.13% | 0.869 | 0.735 | 0.618 | 0.693
+  all                            H 1000: 100.0% | 29.47% | 0.753 | 0.661 | 0.561 | 0.622
+  no Binance move in 500 ms      H   72:  83.4% |  1.88% | 0.901 | 0.817 | 0.500 | 0.757
+  no Binance move in 500 ms      H  250:  83.4% |  8.28% | 0.843 | 0.735 | 0.500 | 0.729
+  no Binance move in 500 ms      H 1000:  83.4% | 27.97% | 0.728 | 0.658 | 0.500 | 0.629
+  Binance against us in 250 ms   H   72:   3.9% | 22.02% | 0.762 | 0.669 | 0.625 | 0.580
+  Binance against us in 250 ms   H  250:   3.9% | 56.45% | 0.851 | 0.609 | 0.660 | 0.657
+  Binance against us in 250 ms   H 1000:   3.9% | 74.15% | 0.824 | 0.609 | 0.654 | 0.659
+  our best moved in 250 ms       H   72:  23.1% |  4.22% | 0.886 | 0.740 | 0.697 | 0.619
+  our best moved in 250 ms       H  250:  23.1% | 13.58% | 0.863 | 0.678 | 0.667 | 0.645
+  our best moved in 250 ms       H 1000:  23.1% | 33.82% | 0.762 | 0.608 | 0.606 | 0.607
+
+ORACLE REPLAY (R701): whole portfolio at the 60.2 s mid, $ a day (pooled over the 5 days / per day); KA = keep-all, ORh = act on the true label at horizon h, SHh = the same rule on the previous window's labels (no information)
+  M0 all fills: KA  -5684.9; OR72   -785.5; SH72  -5595.4; OR250   +158.6; SH250  -5442.9; OR1000   +909.7; SH1000  -4911.7
+  M0 w/o fills on orders < 100 ms: KA  -5261.5; OR72   -720.1; SH72  -5052.6; OR250   +145.0; SH250  -4928.8; OR1000   +831.6; SH1000  -4475.2
+  M50 all fills: KA  -6493.9; OR72  -3330.7; SH72  -6334.7; OR250    -82.5; SH250  -6173.7; OR1000   +833.1; SH1000  -5603.0
+  M50 w/o fills on orders < 100 ms: KA  -5873.3; OR72  -2972.7; SH72  -5661.5; OR250    -47.6; SH250  -5444.3; OR1000   +794.7; SH1000  -4966.7
+  M250 all fills: KA  -8923.9; OR72  -6782.6; SH72  -8753.2; OR250  -3516.0; SH250  -8569.1; OR1000   +603.2; SH1000  -7882.2
+  M250 w/o fills on orders < 100 ms: KA  -7280.4; OR72  -5724.5; SH72  -6910.6; OR250  -3251.8; SH250  -6761.7; OR1000   +578.2; SH1000  -6191.8
+  M50 pulls a day: KA 0, OR72 16010, SH72 16598, OR250 14668, SH250 18215, OR1000 11737, SH1000 20176; filled shares a day: KA 344546, OR72 255945, SH72 317430, OR250 113955, SH250 308415, OR1000 73887, SH1000 274771
+  H 72: M0 OR-KA  +4541.4 SH-KA   +208.9 | M50 OR-KA  +2900.6 SH-KA   +211.8 | M250 OR-KA  +1555.9 SH-KA   +369.7 (w/o young, $/day) -> R701 ALIGNED
+  H 250: M0 OR-KA  +5406.5 SH-KA   +332.7 | M50 OR-KA  +5825.7 SH-KA   +429.0 | M250 OR-KA  +4028.6 SH-KA   +518.7 (w/o young, $/day) -> R701 ALIGNED
+  H 1000: M0 OR-KA  +6093.1 SH-KA   +786.3 | M50 OR-KA  +6667.9 SH-KA   +906.6 | M250 OR-KA  +7858.6 SH-KA  +1088.6 (w/o young, $/day) -> R701 ALIGNED
+
+OUR ORDERS (keep-all lane, every 250 ms, depth 0..5, not ALREADY; V = 1 s value of the order's fills in (t + 22, t + H], cents per order share; descriptive: rows overlap)
+  M0 H 72: top-risk decile V -0.0352 vs bottom half +0.0005 (days -0.034|+0.001 -0.036|+0.000 -0.036|+0.001 -0.033|+0.000 -0.038|+0.000); V run over -0.6012 vs not -0.0006; harm in not-run-over rows 33.7%; good value in run-over rows 28.0% (w/o young fills)
+  M0 H 250: top-risk decile V -0.1714 vs bottom half -0.0013 (days -0.189|+0.001 -0.136|-0.002 -0.161|-0.002 -0.179|-0.002 -0.192|-0.002); V run over -1.0131 vs not -0.0001; harm in not-run-over rows 16.4%; good value in run-over rows 35.5% (w/o young fills)
+  M0 H 1000: top-risk decile V -0.3070 vs bottom half -0.0447 (days -0.336|-0.040 -0.255|-0.040 -0.295|-0.044 -0.306|-0.049 -0.344|-0.050); V run over -1.2637 vs not +0.0108; harm in not-run-over rows 5.2%; good value in run-over rows 40.7% (w/o young fills)
+  M50 H 72: top-risk decile V -0.0392 vs bottom half +0.0002 (days -0.038|+0.001 -0.027|+0.000 -0.037|+0.000 -0.042|+0.000 -0.051|+0.000); V run over -0.3127 vs not -0.0027; harm in not-run-over rows 71.1%; good value in run-over rows 5.2% (w/o young fills)
+  M50 H 250: top-risk decile V -0.1701 vs bottom half -0.0044 (days -0.187|-0.002 -0.130|-0.006 -0.152|-0.005 -0.187|-0.005 -0.195|-0.005); V run over -1.0513 vs not -0.0034; harm in not-run-over rows 24.8%; good value in run-over rows 31.5% (w/o young fills)
+  M50 H 1000: top-risk decile V -0.3173 vs bottom half -0.0539 (days -0.340|-0.049 -0.265|-0.049 -0.294|-0.052 -0.331|-0.060 -0.356|-0.060); V run over -1.3868 vs not +0.0074; harm in not-run-over rows 7.1%; good value in run-over rows 40.8% (w/o young fills)
+  M250 H 72: top-risk decile V -0.0259 vs bottom half -0.0030 (days -0.029|-0.002 -0.024|-0.004 -0.021|-0.004 -0.027|-0.003 -0.029|-0.003); V run over -0.1074 vs not -0.0066; harm in not-run-over rows 93.0%; good value in run-over rows 2.3% (w/o young fills)
+  M250 H 250: top-risk decile V -0.1118 vs bottom half -0.0156 (days -0.129|-0.012 -0.080|-0.015 -0.093|-0.015 -0.122|-0.018 -0.134|-0.017); V run over -0.4895 vs not -0.0230; harm in not-run-over rows 71.9%; good value in run-over rows 11.3% (w/o young fills)
+  M250 H 1000: top-risk decile V -0.2707 vs bottom half -0.0755 (days -0.289|-0.071 -0.226|-0.064 -0.245|-0.072 -0.284|-0.089 -0.310|-0.082); V run over -1.3665 vs not -0.0143; harm in not-run-over rows 19.9%; good value in run-over rows 37.1% (w/o young fills)
+  statuses (order steps): {"M50|20261027": {"order_steps": 682104, "deeper_than_5": 70810, "without_usable_row": 1165, "already": 5605, "used": 604524}, "M50|20261031": {"order_steps": 683568, "deeper_than_5": 73382, "without_usable_row": 3004, "already": 3753, "used": 603429}, "M50|20261101": {"order_steps": 693283, "deeper_than_5": 75849, "without_usable_row": 2075, "already": 3874, "used": 611485}, "M50|20261102": {"order_steps": 681317, "deeper_than_5": 69594, "without_usable_row": 572, "already": 6096, "used": 605055}, "M50|20261103": {"order_steps": 681519, "deeper_than_5": 69519, "without_usable_row": 270, "already": 5956, "used": 605774}}
+
+TRAINING CHECKS per fold: T2 sample - population rate (pp, H 1000 j1..j6), T3 positives (H 1000), T6 AUC train / cal / test (H 1000 j1..3), T4 raw non-monotone share (H 1000), T7 top inputs (H 1000 j1)
+  20261027 (train 1023,1024,1025; cal 1026): T2 -0.18 -0.16 -0.14 -0.12 -0.08 -0.07 | T3 45024 23499 14023 8786 5806 3981 | T6 0.781/0.753/0.751 0.802/0.756/0.758 0.832/0.758/0.761 | T4 0.003 0.007 0.028 0.050 0.089
+      T7 adv_d_bnimb250 0.18, adv_pf_imb3 0.11, r_s1 0.11, adv_pf_imb1 0.08, r_own_l1 0.06, adv_bn_r250 0.04, adv_bn_imb 0.03, r_c1 0.03
+  20261031 (train 1023,1024,1025,1026; cal 1027): T2 +0.01 -0.08 -0.05 -0.07 -0.03 -0.03 | T3 62194 33254 20204 12613 8283 5600 | T6 0.773/0.752/0.732 0.792/0.760/0.732 0.814/0.762/0.737 | T4 0.003 0.004 0.019 0.089 0.114
+      T7 adv_d_bnimb250 0.20, adv_pf_imb3 0.14, adv_pf_imb1 0.12, r_s1 0.08, adv_bn_r250 0.05, r_own_l1 0.04, adv_bn_imb 0.03, adv_bn_r100 0.03
+  20261101 (train 1023,1024,1025,1026,1027; cal 1031): T2 -0.01 -0.04 -0.04 +0.00 -0.00 +0.01 | T3 77103 41189 25024 15904 10460 7189 | T6 0.769/0.732/0.738 0.785/0.733/0.737 0.806/0.739/0.743 | T4 0.003 0.007 0.029 0.068 0.139
+      T7 adv_d_bnimb250 0.21, adv_pf_imb3 0.20, adv_pf_imb1 0.10, r_s1 0.07, adv_bn_r250 0.06, adv_bn_imb 0.03, r_own_l1 0.03, adv_bn_r500 0.02
+  20261102 (train 1023,1024,1025,1026,1027,1031; cal 1101): T2 -0.11 +0.01 -0.02 -0.02 +0.02 -0.01 | T3 75263 38836 23356 14856 9973 6858 | T6 0.771/0.738/0.731 0.787/0.737/0.742 0.807/0.743/0.751 | T4 0.002 0.005 0.019 0.032 0.070
+      T7 adv_d_bnimb250 0.20, adv_pf_imb3 0.14, r_s1 0.11, adv_pf_imb1 0.09, r_own_l1 0.06, adv_bn_r250 0.05, adv_bn_imb 0.03, adv_bn_r500 0.03
+  20261103 (train 1023,1024,1025,1026,1027,1031,1101; cal 1102): T2 -0.09 +0.01 -0.01 +0.01 +0.01 -0.01 | T3 72706 36954 22160 14189 9561 6644 | T6 0.770/0.731/0.753 0.789/0.742/0.759 0.810/0.749/0.761 | T4 0.003 0.007 0.023 0.042 0.079
+      T7 adv_d_bnimb250 0.19, r_s1 0.17, adv_pf_imb3 0.14, adv_pf_imb1 0.07, adv_bn_r250 0.06, r_c1 0.03, adv_bn_imb 0.03, own_lvl_age 0.02
+  T2 sample parity within 0.5 pp: all heads
+
+VERDICT H 72: MODEL-READY
+VERDICT H 250: MODEL-READY
+VERDICT H 1000: MODEL-READY
+(development only: consumed days, C8 / C16; B4 exposure recorded)
+READINGS {"R702_H72_j1": "PREDICTABLE / BEATS-BASE", "R703_H72_j1": "CALIBRATED", "R702_H72_j2": "PREDICTABLE / BEATS-BASE", "R703_H72_j2": "CALIBRATED", "R702_H72_j3": "PREDICTABLE / BEATS-BASE", "R703_H72_j3": "CALIBRATED", "R702_H72_j4": "PREDICTABLE / BEATS-BASE", "R702_H72_j5": "PREDICTABLE / BEATS-BASE", "R702_H72_j6": "PREDICTABLE / BEATS-BASE", "R704_H72_j1": "BETTER", "R704_H72_j2": "BETTER", "R704_H72_j3": "BETTER", "R706_H72_d0": "FEWER-RUN-OVERS", "R706_H72_d1": "FEWER-RUN-OVERS", "R706_H72_d2": "FEWER-RUN-OVERS", "R706_H72_d3": "NOT-SHOWN", "R706_H72_d4": "NOT-SHOWN", "R706_H72_d5": "MORE-RUN-OVERS", "R702_H250_j1": "PREDICTABLE / BEATS-BASE", "R703_H250_j1": "CALIBRATED", "R702_H250_j2": "PREDICTABLE / BEATS-BASE", "R703_H250_j2": "CALIBRATED", "R702_H250_j3": "PREDICTABLE / BEATS-BASE", "R703_H250_j3": "CALIBRATED", "R702_H250_j4": "PREDICTABLE / BEATS-BASE", "R702_H250_j5": "PREDICTABLE / BEATS-BASE", "R702_H250_j6": "PREDICTABLE / BEATS-BASE", "R704_H250_j1": "BETTER", "R704_H250_j2": "BETTER", "R704_H250_j3": "BETTER", "R706_H250_d0": "FEWER-RUN-OVERS", "R706_H250_d1": "FEWER-RUN-OVERS", "R706_H250_d2": "FEWER-RUN-OVERS", "R706_H250_d3": "FEWER-RUN-OVERS", "R706_H250_d4": "NOT-SHOWN", "R706_H250_d5": "MORE-RUN-OVERS", "R702_H1000_j1": "PREDICTABLE / BEATS-BASE", "R703_H1000_j1": "MISCALIBRATED", "R702_H1000_j2": "PREDICTABLE / BEATS-BASE", "R703_H1000_j2": "CALIBRATED", "R702_H1000_j3": "PREDICTABLE / BEATS-BASE", "R703_H1000_j3": "CALIBRATED", "R702_H1000_j4": "PREDICTABLE / BEATS-BASE", "R702_H1000_j5": "PREDICTABLE / BEATS-BASE", "R702_H1000_j6": "PREDICTABLE / BEATS-BASE", "R704_H1000_j1": "BETTER", "R705_j1": "NOT-SHOWN", "R704_H1000_j2": "BETTER", "R705_j2": "BETTER", "R704_H1000_j3": "BETTER", "R705_j3": "NOT-SHOWN", "R706_H1000_d0": "FEWER-RUN-OVERS", "R706_H1000_d1": "FEWER-RUN-OVERS", "R706_H1000_d2": "FEWER-RUN-OVERS", "R706_H1000_d3": "FEWER-RUN-OVERS", "R706_H1000_d4": "FEWER-RUN-OVERS", "R706_H1000_d5": "NOT-SHOWN", "R701_H72": "ALIGNED", "R701_H250": "ALIGNED", "R701_H1000": "ALIGNED", "R707_H72": "PRICES-HARM", "R707_H250": "PRICES-HARM", "R707_H1000": "PRICES-HARM", "VERDICT_H72": "MODEL-READY", "VERDICT_H250": "MODEL-READY", "VERDICT_H1000": "MODEL-READY"}
+2026-11-14T18:56:51Z tag=sm_report rc=0 peak_rss_mib=1752 wall_s=43.87 cpu_user_s=36.64 memavail_start_gib=22 disk_free_gib=500->500 slot=claude

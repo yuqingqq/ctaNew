@@ -1,0 +1,29 @@
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+stop-model selftests passed; planted errors caught: {'MUT_AGE_NEXT': True, 'MUT_FOLD_LATE': True, 'MUT_HORIZON_EARLY': True, 'MUT_PSI_NONAN': True, 'MUT_AUC_KEEPNAN': True, 'MUT_RULE_OFF': True, 'MUT_SCALE_FUTURE': True, 'MUT_GAP_IGNORE': True, 'MUT_MATCH_NO_TFILL': True, 'MUT_ORACLE_NOGATE': True, 'MUT_LANE_NOGATE': True}
+/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/lib/_nanfunctions_impl.py:2019: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+STOP-MODEL DATA AUDIT v3 (model inputs, scale W30) as of 2026-11-14T17:55:06Z; decisions AND printed statistics from the dev days 20261023, 20261024, 20261025, 20261026 only; the other days as counts (B4)
+
+ROWS per day (GAP = label window with a feed gap > 500 ms: excluded; boundary = windows excluded at a sealed day, B12)
+  20261023 rows   690552 GAP    326 usable   690226 boundary windows   0 invalid book   648 our side empty    0   (dev)
+  20261024 rows   690664 GAP    206 usable   690458 boundary windows   0 invalid book   536 our side empty    0   (dev)
+  20261025 rows   690928 GAP    286 usable   690642 boundary windows   0 invalid book   272 our side empty    0   (dev)
+  20261026 rows   690478 GAP    558 usable   689920 boundary windows   0 invalid book   722 our side empty    0   (dev)
+  20261027 rows   691128 GAP   1334 usable   689794 boundary windows   0 invalid book    72 our side empty    0
+  20261031 rows   676788 GAP   3316 usable   673472 boundary windows   6 invalid book    12 our side empty    0
+  20261101 rows   690790 GAP   2356 usable   688434 boundary windows   0 invalid book   410 our side empty    0
+  20261102 rows   690948 GAP    650 usable   690298 boundary windows   0 invalid book   252 our side empty    0
+  20261103 rows   691062 GAP    294 usable   690768 boundary windows   0 invalid book   138 our side empty   21
+
+LABELS (dev days): j | ALREADY share | base rate at H = 72 / 250 / 1000 ms
+  20261023 j1 4.73% 2.56%/9.70%/28.50% | j2 1.21% 0.84%/3.85%/14.99% | j3 0.48% 0.39%/1.97%/8.97% | j4 0.21% 0.19%/1.05%/5.53% | j5 0.11% 0.11%/0.61%/3.56% | j6 0.06% 0.06%/0.37%/2.33%
+  20261024 j1 3.99% 2.29%/8.59%/25.66% | j2 1.13% 0.79%/3.41%/12.69% | j3 0.51% 0.39%/1.84%/7.65% | j4 0.26% 0.21%/1.04%/4.83% | j5 0.15% 0.13%/0.66%/3.19% | j6 0.09% 0.08%/0.44%/2.24%
+  20261025 j1 3.91% 2.30%/8.40%/24.69% | j2 1.15% 0.81%/3.42%/12.42% | j3 0.51% 0.39%/1.81%/7.29% | j4 0.25% 0.22%/1.06%/4.67% | j5 0.15% 0.13%/0.68%/3.18% | j6 0.10% 0.09%/0.47%/2.27%
+  20261026 j1 4.69% 2.70%/10.13%/29.47% | j2 1.28% 0.97%/4.35%/16.33% | j3 0.49% 0.43%/2.26%/10.10% | j4 0.20% 0.20%/1.17%/6.32% | j5 0.10% 0.11%/0.67%/4.00% | j6 0.05% 0.06%/0.41%/2.61%
+  stop at 1 s (D0 = 0 rows) 0 / 1 / 2 / 3 / 4 / 5 / 6+ ticks:
+    20261023 71.50% 14.67%  5.85%  3.19%  1.75%  1.08%  1.96%
+    20261024 74.34% 13.76%  4.93%  2.65%  1.50%  0.85%  1.95%
+    20261025 75.31% 12.99%  5.03%  2.49%  1.37%  0.82%  1.99%
+    20261026 70.53% 14.29%  6.15%  3.52%  2.09%  1.21%  2.20%
+
+2026-11-14T17:55:05Z tag=sm_audit2 rc=0 peak_rss_mib=2323 wall_s=35.73 cpu_user_s=19.95 memavail_start_gib=22 disk_free_gib=501->501 slot=claude
