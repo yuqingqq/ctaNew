@@ -35,6 +35,16 @@ READINGS DECLARED BEFORE THE FIRST RUN (5 test days; day rule >= 4 of 5):
       the common 60.2 s mid, after the 60 s stop and cancellation tail (cash plus inventory), counted both with and without fills on orders < 100 ms old. ACCEPT iff,
       against EACH of LDG and FB25C, at EACH fill clock M 0 / M 50 / M 250, under EACH age treatment, the arm is higher pooled over the 5 days
       AND on >= 4 of 5 days (12 conditions); otherwise REJECT, naming every failing condition.
+ R653 AVAILABILITY (printed): 50 ms steps with a live order - every rung, during the guard, at the best, at the best during the guard -, the
+      orders resting at a guard onset still live at its last step, and at-best fills split STOP / THROUGH (USER review, during the fit stage: "A
+      high reported keep share would not establish high quote availability" - the guard still blocks new orders and re-entry, then the cooldown).
+ R654 PRESERVE: onset orders kept through the guard episode (episodes >= 100 ms), model arm vs FB25C at M 50: higher pooled AND on >= 4 of 5
+      days -> PRESERVES; lower on both -> FEWER; else NOT-SHOWN.
+ R655 GOOD-AT-BEST: at-best fills where the taker order stopped at our price (STOP), on orders >= 100 ms old, all trades, $/day at 1 s, model
+      arm vs FB25C and vs LDG, at M 0 AND M 50: higher pooled AND on >= 4 of 5 days -> MORE; lower -> LESS; else NOT-SHOWN.
+ R656 GAP-EVIDENCE (USER: "judge the replay on whole-portfolio value and whether it preserves older orders and captures more good at-best fills.
+      That is the evidence needed to show we are closing the maker gap"): R652 ACCEPT AND R654 PRESERVES AND R655 MORE vs both, at the headline
+      cap -> EVIDENCE; else NOT-YET, naming the missing parts.
  VERDICT per model arm: DEVELOPMENT-ACCEPT iff R652 ACCEPT at hard 50 (the headline cap); else NOT-ACCEPTED. A development accept is only a
       candidate for a frozen forward test on >= 5 untouched days (none readable here: the forward blocks are reserved; the USER decides).
 CONTROLS (any failure -> no output): selftests (v3 lane, ORDER-HARM v3, FUTURE-BEST, exposure) and this script's cadence wrapper with planted
@@ -43,7 +53,8 @@ fit files and client50 artifact contract); terminal cash/inventory reconciliatio
 wherever its order is v3's label order (same window, side, step, rung, depth and age) A_hat must equal v3's saved prediction (<= 1e-9) on
 every matched decision and all 97 inputs the label row's stored float32 inputs on every 20th (memory: keys only in memory); the no-look-ahead falsifier on every 20th new decision input; LDG equals v3's saved LDG fills at hard 10 and none
 row for row; v3's conservation / accounting checks and the true exposure <= the cap on every hard-cap run; memory self-guard (2 GiB).
-LIMITS: consumed days (C8), development only; replay rule M (B1a); the guard and FRONT-PULL's P are leave-one-day-out upstream models; labels
+LIMITS: consumed days (C8), development only; replay rule M (B1a: the queue position is an estimate); the predictor has no remaining-order-size or
+portfolio-inventory input (inventory protection comes from the caps); the guard and FRONT-PULL's P are leave-one-day-out upstream models; labels
 from rungs alone (the replay couples them); the 2 s tail bounds the queue value counted.
 Usage (run_light, PF_SLOT=claude): pf_order_harm_policy_v2.py selftest | parity <day> | eval <day> | report; driver run_order_harm_policy_v2.sh
 """
@@ -61,6 +72,7 @@ import pf_kp_s4 as K                                      # noqa: E402
 import pf_qr_queue_race as QR                             # noqa: E402
 import pf_timing_split as TS                              # noqa: E402
 import pf_future_best as FB                               # noqa: E402
+import pf_depth_timing as DT                              # noqa: E402  (trade type: STOP / THROUGH)
 import pf_order_harm_v2 as OH                             # noqa: E402
 import pf_order_harm_v3 as V3                             # noqa: E402
 import pf_order_harm_client_lane as CL                    # noqa: E402
@@ -69,6 +81,7 @@ import pf_joint_ladder_v3_exposure as JX                  # noqa: E402
 import pf_order_harm_policy as P1                         # noqa: E402  (day_inputs, window_inputs, window_pairs: unchanged)
 
 TESTS = tuple(V3.FOLDS)
+AV_KEYS = ('steps', 'live', 'guard_steps', 'guard_live', 'best_steps', 'best_live', 'best_guard_steps', 'best_guard_live', 'surv_n', 'surv_k')
 OUTD = f'{K.IO}/order_harm_policy_v2_client50_20261114'
 SIZE = J3.SIZE; NR = J3.NR; EVERY = V3.EVERY
 assert EVERY * 50 == CL.DECISION_MS
@@ -78,7 +91,7 @@ ARMS = ('LDG', 'FB25', 'FB25C', 'OFB2C', 'OHQ0', 'OHQM'); MODEL_ARMS = ('OHQ0', 
 CHECK_EVERY = 20
 MEM_CAP_MIB = 2048.0
 NAN = float('nan')
-MUT_GRID = MUT_HOLD = MUT_EVERY_STEP = MUT_NOINPUT_KEEP = MUT_CADENCE_250 = 0  # planted errors (selftest only)
+MUT_GRID = MUT_HOLD = MUT_EVERY_STEP = MUT_NOINPUT_KEEP = MUT_CADENCE_250 = MUT_SURV_ANY = MUT_TYPE_THR = 0  # planted errors (selftest only)
 
 
 # ---------------------------------------------------------------- cadence C
@@ -153,12 +166,31 @@ def selftest():
     got = [f(k, 50.0 * k, o) for k in (1, 2)]
     if got != [False, True] or calls != [1, 2]:
         bad.append(f'50 ms default cadence {got}, calls {calls}')
+    # availability and preservation on a synthetic run record: 10 steps of 50 ms, guard on at steps 3-7 on side 0; rung 0 order A live 0-500 ms
+    # (kept through the episode) at the best (50), rung 1 order B live 100-260 ms then replaced by C 300-500 ms (B pulled during the episode)
+    INF_ = float('inf')
+    Wsyn = {0: dict(tg=np.arange(0.0, 500.0, 50.0), best=[50] * 10), 1: dict(tg=np.arange(0.0, 500.0, 50.0), best=[52] * 10)}
+    oA = dict(ref=False, ta=0.0, tr=INF_, tfill=INF_, pt=50); oB = dict(ref=False, ta=100.0, tr=260.0, tfill=INF_, pt=49)
+    oC = dict(ref=False, ta=300.0, tr=INF_, tfill=INF_, pt=49); oR = dict(ref=True, ta=0.0, tr=0.0, tfill=INF_, pt=48)
+    rsyn = dict(order_states={(0, 0): [oA], (0, 1): [oB, oC], (0, 2): [oR]})
+    for s_ in (0, 1):
+        for d_ in range(NR):
+            rsyn['order_states'].setdefault((s_, d_), [])
+    vgs = {0: [False] * 3 + [True] * 5 + [False] * 2, 1: [False] * 10}
+    av_ = availability(rsyn, Wsyn, vgs)
+    if (av_['surv_n'], av_['surv_k']) != (2, 1):
+        bad.append(f'survival through the guard episode {av_["surv_n"]}, {av_["surv_k"]} (A kept: 1 of 2; B pulled, C is another order)')
+    if (av_['steps'], av_['live'], av_['guard_steps'], av_['guard_live'], av_['best_live'], av_['best_guard_live']) != (120, 10 + 4 + 4, 30, 5 + 3 + 2, 10, 5):
+        bad.append(f'availability counts {av_}')
+    # trade type: our bid at 50; the taker sold 50 and 49 -> THROUGH; sold only at 50 -> STOP; a strict through (thr) is THROUGH
+    if [fill_type(0, 50, False, [50, 49]), fill_type(0, 50, False, [50]), fill_type(0, 50, True, [50])] != ['THROUGH', 'STOP', 'THROUGH']:
+        bad.append('fill trade type')
     return bad
 
 
 def mutation_check():
     out = {}
-    for nm in ('MUT_GRID', 'MUT_HOLD', 'MUT_EVERY_STEP', 'MUT_NOINPUT_KEEP', 'MUT_CADENCE_250'):
+    for nm in ('MUT_GRID', 'MUT_HOLD', 'MUT_EVERY_STEP', 'MUT_NOINPUT_KEEP', 'MUT_CADENCE_250', 'MUT_SURV_ANY', 'MUT_TYPE_THR'):
         globals()[nm] = 1
         try:
             out[nm] = bool(selftest())
@@ -316,6 +348,44 @@ def parity_day(day):
     print(f'parity {day}: {st} in {time.time() - T0:.0f} s', flush=True)
 
 
+# ---------------------------------------------------------------- availability and preservation (USER review: keep share is not availability)
+def availability(r, W, vg_by_side):
+    """From a run's own order records (venue-live from activation to the cancel landing or the full fill), on the 50 ms steps: steps with a
+    live order on every rung, during the guard, at the best price (all steps with a book / during the guard); for guard episodes of >= 2 steps
+    with an order live on the rung at the onset, whether that same order is still live at the episode's last step (it was kept through)."""
+    tg = np.asarray(W[0]['tg'], float); n = len(tg)
+    out = dict(steps=0, live=0, guard_steps=0, guard_live=0, best_steps=0, best_live=0, best_guard_steps=0, best_guard_live=0, surv_n=0, surv_k=0)
+    for s in (0, 1):
+        vg = np.asarray(vg_by_side[s], bool); best = np.asarray(W[s]['best'], float); at_best = np.zeros(n, bool)
+        for d in range(NR):
+            L = np.zeros(n, bool); ids = np.full(n, -1)
+            for j, o in enumerate(r['order_states'][(s, d)]):
+                if o['ref']:
+                    continue
+                k0 = int(np.searchsorted(tg, o['ta'], side='left')); k1 = int(np.searchsorted(tg, min(o['tr'], o['tfill']), side='left'))
+                if k1 > k0:
+                    L[k0:k1] = True; ids[k0:k1] = j
+                    at_best[k0:k1] |= (best[k0:k1] == o['pt'])
+            out['steps'] += n; out['live'] += int(L.sum()); out['guard_steps'] += int(vg.sum()); out['guard_live'] += int((L & vg).sum())
+            for (k_on, k_clear) in V3.episodes(list(vg)):
+                k_last = (n if k_clear is None else k_clear) - 1
+                if k_last - k_on >= 1 and L[k_on]:
+                    out['surv_n'] += 1; out['surv_k'] += int(bool(L[k_last]) and ids[k_last] == ids[k_on] and not MUT_SURV_ANY)
+                    if MUT_SURV_ANY:
+                        out['surv_k'] += int(bool(L[k_last]))
+        ok = best >= 0
+        out['best_steps'] += int(ok.sum()); out['best_live'] += int((at_best & ok).sum())
+        out['best_guard_steps'] += int((ok & vg).sum()); out['best_guard_live'] += int((at_best & ok & vg).sum())
+    return out
+
+
+def fill_type(side, pt, thr, prices):
+    """STOP: our price is the taker order's worst on this side (the trade stopped at our level); THROUGH: it went past (or a strict through)."""
+    if thr and not MUT_TYPE_THR:
+        return 'THROUGH'
+    return DT.trade_type(side, pt, prices)
+
+
 # ---------------------------------------------------------------- replay (one test day)
 def eval_day(day):
     import pf_gap_top_makers as GP
@@ -325,14 +395,14 @@ def eval_day(day):
     tkf = pd.read_parquet(f'{S1d}/legs_tk.parquet', columns=['tk']).tk.values
     LT = D['LT']; ix = LT.index.values
     grp = np.where(tkf[ix] >= 0, tkf[ix], -1 - ix)
-    WSg = pd.Series(TS.ws_groups(LT.how.values, grp), index=LT.index)
+    WSg = pd.Series(TS.ws_groups(LT.how.values, grp), index=LT.index); TKS = pd.Series(grp, index=LT.index)
     st.update(windows=0, runs=0, viol={v_: 0 for v_ in J3.VIOL}, maxexp={}, over_cap=0, inputs=0, lookahead_checks=0, lookahead_bad=0,
               theta_M=F_['theta_M'], train=F_['train'], cal=F_['cal'], terminal_checks=0, terminal_bad=0)
     cnt = {}; fills = []; inv = []
     for W in P1.window_pairs(D):
         st['windows'] += 1; m = W[0]['m']; n = W[0]['n']
         ctx = J3.window_ctx(W, F_['PO'], F_['POI'], n); wi = P1.window_inputs(W, ctx, DI); pred = make_pred(W, wi, F_['B'], st)
-        src = {}
+        src = {}; tkv = {}; tkp = {}
         for s in (0, 1):
             if (m, s) in D['LI']:
                 l = D['LT'].iloc[D['LI'][(m, s)]]
@@ -340,6 +410,9 @@ def eval_day(day):
             else:
                 lrow = np.zeros(0, 'int64')
             src[s] = WSg.reindex(lrow).values.astype(bool) if len(lrow) else np.zeros(0, bool)
+            tkv[s] = TKS.reindex(lrow).values if len(lrow) else np.zeros(0, 'int64'); tkp[s] = {}
+            for t_, p_ in zip(tkv[s], W[s]['ptl']):
+                tkp[s].setdefault(int(t_), []).append(int(p_))
         tend = W[0]['te']; jte = int(np.searchsorted(ctx[0]['tf'], tend, side='right')) - 1; mid_end = ctx[0]['mff'][max(jte, 0)]
         yup = 100.0 * W[0]['yup']
         for q, shf in CFGS:
@@ -359,8 +432,10 @@ def eval_day(day):
                     st['maxexp'][cn] = max(st['maxexp'].get(cn, 0.0), mx)
                     if capv is not None:
                         st['over_cap'] += int(mx > capv + JX.TOL)
+                    av = availability(r, W, {0: ctx[0]['vg'], 1: ctx[1]['vg']})
                     inv.append((int(day), cfg, arm, cn, m, r['stat']['maxpos'], r['endpos'], sum(r['stat']['pulls']), sum(r['stat']['skip']),
-                                sum(r['stat']['hard_block']), mx, terminal['cash'], terminal['position'], terminal['mark'], terminal['pnl'], terminal['time']))
+                                sum(r['stat']['hard_block']), mx, terminal['cash'], terminal['position'], terminal['mark'], terminal['pnl'], terminal['time'])
+                               + tuple(av[k_] for k_ in AV_KEYS))
                     for s in (0, 1):
                         c2 = ctx[s]; sg = c2['sg']; tf, mff, tfl = c2['tf'], c2['mff'], c2['tfl']; anc = W[s]['anc']
                         for d in range(NR):
@@ -377,7 +452,8 @@ def eval_day(day):
                                 v5 = sg * (mff[max(int(np.searchsorted(tf, t + 5000.0, side='right')) - 1, 0)] - pt)
                                 fills.append((int(day), cfg, arm, cn, s, d, 'WS' if src[s][i] else 'E2', -9 if d_ is None else d_, bool(thr_),
                                               age < 100.0, ph == 'pend', float(qq), v1, v5, vend, sg * (yup - pt), float(age),
-                                              sg * (mid_end - pt), int(m), t_exec, terminal['time'], pt))
+                                              sg * (mid_end - pt), int(m), t_exec, terminal['time'], pt,
+                                              fill_type(s, pt, bool(thr_), tkp[s][int(tkv[s][i])])))
                     st['terminal_checks'] += 1
                     st['terminal_bad'] += int(abs(terminal_value_sum - terminal['pnl']) > 1e-6)
         for s in (0, 1):
@@ -386,7 +462,7 @@ def eval_day(day):
             r2 = K.rss_mib(); print(f'{day}: {st["windows"]} windows, {st["inputs"]} model inputs, {time.time() - T0:.0f} s, rss {r2:.0f} MiB', flush=True)
             if r2 > MEM_CAP_MIB:
                 sys.exit(f'REFUSED: resident memory {r2:.0f} MiB > {MEM_CAP_MIB:.0f} MiB')
-    F = pd.DataFrame(fills, columns=['day', 'cfg', 'arm', 'capk', 'side', 'rung', 'src', 'depth', 'thr', 'young', 'pend', 'q', 'v1', 'v5', 'vend', 'vset', 'age', 'vend60', 'm', 't_exec', 'terminal_ms', 'pt'])
+    F = pd.DataFrame(fills, columns=['day', 'cfg', 'arm', 'capk', 'side', 'rung', 'src', 'depth', 'thr', 'young', 'pend', 'q', 'v1', 'v5', 'vend', 'vset', 'age', 'vend60', 'm', 't_exec', 'terminal_ms', 'pt', 'typ'])
     R3 = pd.read_parquet(f'{J3.OUTD}/fills_{day}.parquet'); reg_bad = {}
     for cfg in ('M0', 'M50', 'M250'):
         for cn in V3_CAPS:
@@ -410,7 +486,7 @@ def eval_day(day):
     os.makedirs(OUTD, exist_ok=True)
     F.to_parquet(f'{OUTD}/fills_{day}.parquet', index=False)
     pd.DataFrame(inv, columns=['day', 'cfg', 'arm', 'capk', 'm', 'maxpos', 'endpos', 'pulls', 'skip', 'hard_block', 'maxexp',
-                              'terminal_cash', 'terminal_position', 'terminal_mid', 'terminal_pnl', 'terminal_ms']
+                              'terminal_cash', 'terminal_position', 'terminal_mid', 'terminal_pnl', 'terminal_ms'] + list(AV_KEYS)
                  ).to_parquet(f'{OUTD}/inv_{day}.parquet', index=False)
     st['counts'] = {' '.join(k_): v_ for k_, v_ in cnt.items()}
     json.dump(dict(stat=st, days=len(D['W0']) / 288.0, **CL.stamp()), open(f'{OUTD}/day_{day}.json', 'w'), indent=1, default=float)
@@ -517,12 +593,68 @@ def report():
             lab = 'ACCEPT' if not fails else 'REJECT'
             R[f'R652 {a} {cn}'] = dict(label=lab, conditions=cond)
             L.append(f'  {a} {cn:<6}: {lab}' + ('' if not fails else f' - failing {len(fails)} of 12: ' + '; '.join(fails)))
+    # R653 availability (printed), R654 preservation, R655 good at-best fills, R656 the gap evidence (USER review: judge on whole-portfolio value
+    # AND whether older orders are preserved and more good at-best fills captured; a keep share is not quote availability)
+    def av(arm, cfg, cn, d=None):
+        x = I[(I.arm == arm) & (I.cfg == cfg) & (I.capk == cn)]
+        if d:
+            x = x[x.day == int(d)]
+        sm = {k_: float(x[k_].sum()) for k_ in AV_KEYS}
+        f = lambda a_, b_: sm[a_] / sm[b_] if sm[b_] > 0 else float('nan')
+        return dict(live=f('live', 'steps'), guard=f('guard_live', 'guard_steps'), best=f('best_live', 'best_steps'),
+                    best_guard=f('best_guard_live', 'best_guard_steps'), surv=f('surv_k', 'surv_n'), surv_n=sm['surv_n'])
+
+    def good(arm, cfg, cn, d=None, typ='STOP', aged=True, srcs=('WS', 'E2')):
+        x = A[(A.arm == arm) & (A.cfg == cfg) & (A.capk == cn) & (A.depth == 0) & (A.typ == typ) & A.src.isin(srcs)]
+        if aged:
+            x = x[~x.young]
+        if d:
+            x = x[x.day == int(d)]
+        q = float(x.q.sum()); v = float((x.q * x.v1).sum())
+        return q / (dd[d] if d else ndays), v / 100.0 / (dd[d] if d else ndays), (v / q if q > 0 else float('nan'))
+    L += ['', 'R653 QUOTE AVAILABILITY AND PRESERVATION (printed): share of 50 ms steps with a live order - all rungs | during the guard | an '
+          'order at the best | at the best during the guard || orders resting at a guard onset still live at its last step (episodes >= 100 ms; '
+          'episodes) || at-best fills on orders >= 100 ms old, all trades: shares a day | STOP share | STOP c/sh 1 s | THROUGH c/sh 1 s']
+    for cfg in ('M0', 'M50', 'M250'):
+        for cn in CN:
+            for arm in ARMS:
+                v_ = av(arm, cfg, cn); gs = good(arm, cfg, cn); gt = good(arm, cfg, cn, typ='THROUGH')
+                tot = gs[0] + gt[0]
+                L.append(f'  {cfg:<4} {cn:<6} {arm:<5} {v_["live"]:.3f} | {v_["guard"]:.3f} | {v_["best"]:.3f} | {v_["best_guard"]:.3f} || '
+                         f'{v_["surv"]:.3f} ({v_["surv_n"]:.0f}) || {tot:8.0f} | {gs[0] / tot if tot > 0 else float("nan"):.3f} | {gs[2]:+.3f} | {gt[2]:+.3f}')
+        L.append('')
+    L.append('R654 PRESERVE (onset orders kept through the guard episode, vs FB25C, M 50: higher pooled AND on >= 4/5 days -> PRESERVES; lower on '
+             'both -> FEWER; else NOT-SHOWN) | R655 GOOD-AT-BEST (at-best STOP fills on orders >= 100 ms old, all trades, $/day at 1 s, vs FB25C and '
+             'vs LDG at M 0 AND M 50: higher pooled AND on >= 4/5 days -> MORE; lower -> LESS; else NOT-SHOWN)')
+    for a in MODEL_ARMS:
+        for cn in CN:
+            dif = av(a, 'M50', cn)['surv'] - av('FB25C', 'M50', cn)['surv']
+            upd = sum(av(a, 'M50', cn, d)['surv'] > av('FB25C', 'M50', cn, d)['surv'] for d in TESTS)
+            dnd = sum(av(a, 'M50', cn, d)['surv'] < av('FB25C', 'M50', cn, d)['surv'] for d in TESTS)
+            lab4 = 'PRESERVES' if dif > 0 and upd >= 4 else ('FEWER' if dif < 0 and dnd >= 4 else 'NOT-SHOWN')
+            R[f'R654 {a} {cn}'] = dict(label=lab4, diff=dif, up=upd, down=dnd)
+            parts = []; labs = []
+            for b in ('FB25C', 'LDG'):
+                ok_up = all(good(a, c, cn)[1] - good(b, c, cn)[1] > 0 and sum(good(a, c, cn, d)[1] > good(b, c, cn, d)[1] for d in TESTS) >= 4
+                            for c in ('M0', 'M50'))
+                ok_dn = all(good(a, c, cn)[1] - good(b, c, cn)[1] < 0 and sum(good(a, c, cn, d)[1] < good(b, c, cn, d)[1] for d in TESTS) >= 4
+                            for c in ('M0', 'M50'))
+                lb = 'MORE' if ok_up else ('LESS' if ok_dn else 'NOT-SHOWN'); labs.append(lb)
+                parts.append(f'vs {b} {lb} (M 0 {good(a, "M0", cn)[1] - good(b, "M0", cn)[1]:+.1f}, M 50 {good(a, "M50", cn)[1] - good(b, "M50", cn)[1]:+.1f} $/day)')
+                R[f'R655 {a} vs {b} {cn}'] = dict(label=lb)
+            L.append(f'  {a} {cn:<6}: R654 {lab4} (survival {dif:+.3f}, {upd}/5 days) | R655 ' + '; '.join(parts))
     L.append('')
     for a in MODEL_ARMS:
         v = 'DEVELOPMENT-ACCEPT' if R[f'R652 {a} {HEAD_CAP}']['label'] == 'ACCEPT' else 'NOT-ACCEPTED'
         R[f'VERDICT {a}'] = dict(label=v)
         L.append(f'VERDICT {a} (headline cap {HEAD_CAP}): {v}' + (' (a candidate for a frozen forward test on >= 5 untouched days only)'
                                                                  if v == 'DEVELOPMENT-ACCEPT' else ''))
+        need = dict(R652=R[f'R652 {a} {HEAD_CAP}']['label'] == 'ACCEPT', R654=R[f'R654 {a} {HEAD_CAP}']['label'] == 'PRESERVES',
+                    R655=all(R[f'R655 {a} vs {b} {HEAD_CAP}']['label'] == 'MORE' for b in ('FB25C', 'LDG')))
+        g = 'EVIDENCE' if all(need.values()) else 'NOT-YET'
+        R[f'R656 {a}'] = dict(label=g, parts=need)
+        L.append(f'R656 GAP-EVIDENCE {a} (headline cap {HEAD_CAP}; whole-portfolio accept AND preserves older orders AND more good at-best fills): '
+                 f'{g}' + ('' if g == 'EVIDENCE' else ' - missing ' + ', '.join(k_ for k_, v_ in need.items() if not v_)))
     L += ['', f'  per day, M 50, {HEAD_CAP}: portfolio all ages || WS 1 s w/o young: ' + ' | '.join(ARMS)]
     for d in TESTS:
         L.append(f'    {d} ' + ' | '.join(f'{port(a_, "M50", HEAD_CAP, False, d):+7.1f}' for a_ in ARMS) + ' || ' +

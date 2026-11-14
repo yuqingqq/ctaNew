@@ -30,12 +30,15 @@ before T_e are CENSORED (status).
         pull: R_j). The option to cancel later is the max(0, .) term; queue value enters through R's tail (the kept order's place vs the
         re-entered order behind the queue).
 FIT (POLICY ITERATION on realized continuation returns, LightGBM, PULL-DEPTH's pinned parameters, regression clipped +-10 c/sh; review
-2026-11-14 10:2xZ): one-step fitted-Q backups (target T0 + max(0, A_hat(s_{j+1}))) move the end-of-episode value back one decision per
+2026-11-14, commit a8e6d473): one-step fitted-Q backups (target T0 + max(0, A_hat(s_{j+1}))) move the end-of-episode value back one decision per
 iteration, so with 3 iterations only the last 3 decisions of an episode see it - 150 ms at the 50 ms cadence (synthetic 40-step episode worth
 +1 to keep: the first decision read "pull"). Instead, with T0_j = R_j (- P_e if last), the advantage of keeping now and then following policy
 pi is the sum of T0 from j until pi next pulls (or the episode ends): G_j = T0_j + [pi keeps at s_{j+1}] G_{j+1}. Iteration 0: pi = keep-all
-(G = keep through the episode and tail minus pull now); iteration n: pi keeps at s iff A_hat_{n-1}(s) > 0, with A_hat_{n-1} OUT OF FOLD (a model
-not trained on that day); 3 iterations; the share of decisions that change between the last two iterations is printed (convergence).
+(G = keep through the episode and tail minus pull now); iteration n: pi keeps at s iff A_hat_{n-1}(s) > 0, with A_hat_{n-1} from a NESTED
+chain: the decisions in each training day's targets come from a model whose whole chain excluded that day (USER review 2026-11-14, during the fit stage: in
+a shared leave-one-day-out chain a held-out day shapes other days' targets, which then train the model predicting it - from the second
+iteration it reaches its own decisions); for 3 iterations the final model, one model per left-out day and one per left-out pair (memoized);
+the share of test-day decisions that change between the last two iterations is printed (convergence).
 CHRONOLOGICAL FOLDS on the 9 consumed days (C8; development only): for test day D[i], i = 4..8 (10-27, 10-31, 11-01, 11-02, 11-03): train on
 D[0..i-2], calibrate on D[i-1], test on D[i]; out-of-fold predictions inside the training block by leaving one training day out. FB25's
 PULL-DEPTH model is refit the same way (train D[0..i-2]; its rows, features and parameters unchanged). Calibration on D[i-1]: the share of
@@ -53,7 +56,8 @@ Readings DECLARED BEFORE THE FIRST RUN (printed by report; the economic test is 
  Printed: the label with a 5 s tail beside the 2 s one (episodes not censored at 5 s) - how much of keeping's value comes after the episode.
 Controls (any failure -> no output): synthetic cases (keep-all lane semantics, re-entry, decision cadence anchored at the onset, client-known
 resting, R's partition of (t_0 + 22, T_e], the continuation target on a 40-step episode) with planted errors (slow 250 ms cadence; venue-state
-resting; intervals without the cancel latency; the one-step backup); v2's selftests (forks, causal queue inputs); on real data: the keep-all
+resting; intervals without the cancel latency; the one-step backup; the shared chain - a held-out day's shifted targets must not move its
+own decisions, the USER's reproduction with a synthetic learner); v2's selftests (forks, causal queue inputs); on real data: the keep-all
 lane with the recording
 callback equals it without, on every window-side and rung; P_e from the episode's last decision equals P_e from its first on every 20th
 multi-decision episode; the R partition on every episode; the no-look-ahead falsifier (frames not yet known perturbed, order inputs identical)
@@ -94,7 +98,7 @@ FOLDS = {DAYS9[i]: (tuple(DAYS9[:i - 1]), DAYS9[i - 1]) for i in range(4, 9)}   
 CHECK_EVERY = 20
 MEM_CAP_MIB = 2048.0
 INF = float('inf'); NAN = float('nan')
-MUT_SLOW_CADENCE = MUT_VENUE_REST = MUT_NO_LAT = MUT_BOOTSTRAP = 0   # planted errors (selftest only)
+MUT_SLOW_CADENCE = MUT_VENUE_REST = MUT_NO_LAT = MUT_BOOTSTRAP = MUT_SHARED_CHAIN = 0   # planted errors (selftest only)
 INT_KEYS = ('day', 'm', 'side', 'k', 'rung_i', 'ep', 'j', 'J', 'last', 'next_ok')
 BATCH = 200000                                                        # rows per parquet batch (memory)
 
@@ -249,12 +253,34 @@ def selftest():
                 bad.append('batched predictions out of order')
         finally:
             OUTD = old
+    # (7) the nested chain: a training day's own targets never reach its own decisions (USER's reproduction, here through chain_model with a
+    #     synthetic learner = the mean target of its training rows). Day d1's targets are shifted; its decisions at iterations 1 and 2 must not move.
+    def syn_keys(v):
+        return dict(T0=np.full(6, v), nxt=np.array([1, 2, -1, 4, 5, -1]), n=6)
+
+    def syn_fit(days, KD_, TG, key):
+        return float(np.mean(np.concatenate([TG[x] for x in days])))
+
+    def syn_pred(b, y):
+        return np.full(6, b)
+    days4 = ['d1', 'd2', 'd3', 'd4']
+
+    def own_decisions(KD_):
+        st_ = dict(models=0, nested_predictions=0, final_target_keep_share={}); cache_ = {}
+        return [float(syn_pred(chain_model(n - 1, frozenset({'d1'}), days4, KD_, cache_, syn_fit, syn_pred, st_), 'd1')[0]) for n in (1, 2)]
+    base = {x: syn_keys(0.1) for x in days4}; pert = dict(base); pert['d1'] = syn_keys(-10.0)
+    if own_decisions(base) != own_decisions(pert):
+        bad.append(f'a held-out day reaches its own decisions through the chain: {own_decisions(base)} vs {own_decisions(pert)}')
+    st_ = dict(models=0, nested_predictions=0, final_target_keep_share={})
+    chain_model(2, frozenset(), days4, base, {}, syn_fit, syn_pred, st_)
+    if st_['models'] != 1 + 4 + 6:
+        bad.append(f'nested chain size {st_["models"]} (final + one per left-out day + one per left-out pair = 11)')
     return bad
 
 
 def mutation_check():
     out = {}
-    for nm in ('MUT_SLOW_CADENCE', 'MUT_VENUE_REST', 'MUT_NO_LAT', 'MUT_BOOTSTRAP'):
+    for nm in ('MUT_SLOW_CADENCE', 'MUT_VENUE_REST', 'MUT_NO_LAT', 'MUT_BOOTSTRAP', 'MUT_SHARED_CHAIN'):
         globals()[nm] = 1
         try:
             out[nm] = bool(selftest())
@@ -470,6 +496,38 @@ def fit_model(days, KD, TG, seed):
     return lgb.train(preg, lgb.Dataset(np.vstack(Xs), np.concatenate(ys), feature_name=FEAT), PD.N_ROUNDS)
 
 
+def chain_model(n, excl, train, KD, cache, fit, predict, st):
+    """The iteration-n policy-iteration model trained on the training days outside excl. The policy decisions in each day y's targets come
+    from the iteration-(n-1) model of a chain that excluded y AND every day already excluded, so no day can reach its own decisions through the
+    chain (USER review 2026-11-14: in a shared chain, held-out day A shaped other days' targets that then trained the model predicting A). For
+    3 iterations: the final model, one model per left-out day, one per left-out pair. Memoized on (n, excl)."""
+    key = (n, excl)
+    if key in cache:
+        return cache[key]
+    days = [x for x in train if x not in excl]
+    TG = {}
+    for y in days:
+        if n == 0:
+            a = None                                      # keep-all: no model
+        else:
+            sub = frozenset({y}) if MUT_SHARED_CHAIN else (excl | {y})   # planted error: the old shared chain (exclusions not carried)
+            a = predict(chain_model(n - 1, sub, train, KD, cache, fit, predict, st), y)
+            st['nested_predictions'] += 1
+            if not excl:
+                st['final_target_keep_share'][y] = float(np.mean(policy_keep_next(KD[y], a)[KD[y]['nxt'] >= 0])) if (KD[y]['nxt'] >= 0).any() else NAN
+        TG[y] = continuation_targets(KD[y]['T0'], KD[y]['nxt'], policy_keep_next(KD[y], a))
+    b = fit(days, KD, TG, key)
+    st['models'] += 1
+    cache[key] = b
+    return b
+
+
+def chain_seed(test, key):
+    import hashlib
+    n, excl = key
+    return int(hashlib.md5(f'{test}|{n}|{",".join(sorted(excl))}'.encode()).hexdigest()[:8], 16)
+
+
 def fit_fold(test):
     import lightgbm as lgb
     from scipy.stats import spearmanr
@@ -478,24 +536,18 @@ def fit_fold(test):
     if test in train or cal in train or test == cal or any(DAYS9.index(x) >= DAYS9.index(cal) for x in train):
         sys.exit(f'REFUSED: fold {test} not chronological: train {train}, calibration {cal}')
     KD = {x: load_keys(x) for x in train}; KC = {y: load_keys(y, full=True) for y in (cal, test)}
-    oof = None; preds = {cal: [], test: []}; info = dict(train=list(train), cal=cal, test=test, iters=[])
+    preds = {cal: [], test: []}; info = dict(train=list(train), cal=cal, test=test)
     os.makedirs(f'{OUTD}/models', exist_ok=True)
-    for it in range(N_ITER):
-        TG = {x: continuation_targets(KD[x]['T0'], KD[x]['nxt'], policy_keep_next(KD[x], None if oof is None else oof[x])) for x in train}
-        new = {}
-        for x in train:                                    # out of fold inside the training block (leave one training day out)
-            b = fit_model([y for y in train if y != x], KD, TG, seed=int(test) % 1000 * 10 + it)
-            new[x] = predict_day(b, x)
-        ball = fit_model(list(train), KD, TG, seed=int(test) % 1000 * 10 + it + 5)
+    cache = {}; cst = dict(models=0, nested_predictions=0, final_target_keep_share={})
+    fit = lambda days, KD_, TG, key: fit_model(days, KD_, TG, seed=chain_seed(test, key))
+    for it in range(N_ITER):                              # the iteration-it model on all training days (the last is the fold's model)
+        b = chain_model(it, frozenset(), list(train), KD, cache, fit, predict_day, cst)
         for y in (cal, test):
-            preds[y].append(predict_day(ball, y))
+            preds[y].append(predict_day(b, y))
         if it == N_ITER - 1:
-            ball.save_model(f'{OUTD}/models/a_{test}.txt')
-        flip = None if oof is None else float(np.mean(np.concatenate([(new[x] > 0) != (oof[x] > 0) for x in train])))
-        oof = new
-        info['iters'].append(dict(it=it, policy='keep-all' if it == 0 else 'A_hat > 0 (out of fold)',
-                                  train_target_mean=float(np.mean(np.concatenate([TG[x] for x in train]))),
-                                  oof_keep_share=float(np.mean(np.concatenate([oof[x] > 0 for x in train]))), oof_flip_vs_previous=flip))
+            b.save_model(f'{OUTD}/models/a_{test}.txt')
+    info.update(chain_models=cst['models'], nested_predictions=cst['nested_predictions'],
+                final_target_keep_share=cst['final_target_keep_share'])
     # PULL-DEPTH refit on the same training days (FB25 / FB25-C's model in the replay)
     pdc = ['day', 'm', 'side', 'k', 'mv1000'] + PD.FEAT; parts = []; per = SUB_N // len(train)
     for x in train:                                       # memory: each training day subsampled as it is read
