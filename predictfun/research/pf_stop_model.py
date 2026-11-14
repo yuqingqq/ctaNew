@@ -74,7 +74,8 @@ LIMITS: consumed days (inputs chosen after PULL-DEPTH / STOP-DEPTH on them; expl
   apart: a sweep refilled within one snapshot is invisible to it - R701 measures what that misses on our simulated orders); replay rule M for
   'align' (B1a: the queue position is an estimate, C5 / C10); E2 trade anchors +-250 ms (C12); AUC ranks rows, only the policy replay values
   decisions; rows overlap (every 50 ms with a 1 s horizon): per-row statistics describe decision states, never strategy P&L.
-Usage (run_light, PF_SLOT=claude): pf_stop_model.py selftest | rows <day> | audit | fit <test_day> | align <test_day> | report;
+Usage (run_light, PF_SLOT=claude): pf_stop_model.py selftest | rows <day> | audit (v1, raw inputs) | scalecheck | audit2 | fit <test_day> |
+align <test_day> | report; PROCESSING v2 (sizes relative to a causal scale, GAP status, audit v2 rules) is described at its constants;
 driver run_stop_model.sh.
 """
 import json
@@ -126,6 +127,26 @@ AUC_POOL, AUC_DAY, DAY_RULE, CAL_TOL, T2_TOL, T5_TOL = 0.70, 0.65, 4, 0.03, 0.00
 MEM_CAP_MIB = 2048.0
 INF = float('inf'); NAN = float('nan')
 MUT_AGE_NEXT = MUT_FOLD_LATE = MUT_NO_CUMMIN = MUT_HORIZON_EARLY = MUT_PSI_NONAN = MUT_AUC_KEEPNAN = MUT_RULE_OFF = 0   # planted (selftest)
+# ---- PROCESSING v2 (2026-11-14 17:15Z, after audit v1 and BEFORE any fit; decided on the dev days 10-23..26 only; test days untouched):
+# audit v1's PSI rule dropped 19 inputs, among them every book size. A dev-day probe (rate of y1 by input decile, sd across the 4 dev days)
+# showed: sizes are stable RELATIVE to the day's liquidity scale (sd 1.9-2.7 pp) and unstable in absolute terms (5.0-7.4 pp) -> normalise,
+# not drop; sigma is stable in absolute terms (1.4 vs 2.2 pp) -> a covariate shift only, keep; basis_bps is unstable either way and its AUC
+# flips sign between dev days -> drop. A distribution shift alone is not a reason to drop an input; an unstable relation to the target is.
+#   (1) sizes -> relative to a CAUSAL liquidity scale (both sides' L1 size, known frames only): candidates W30 = the median over the known
+#       frames of the last 30 s; H1 = the median of the previous <= 12 windows' first-minute medians of the same day (>= 3 windows, else W30);
+#       'scalecheck' picks the candidate with the lower mean shape dispersion over the size inputs on the dev days (declared rule).
+#   (2) GAP status: a row whose label window has a gap > 500 ms between consecutive valid frames (the book arrives every ~50-100 ms; a 1 s
+#       quiet horizon is a feed gap, not "no move") is excluded from training and evaluation and counted.
+#   (3) audit v2 rules on the model inputs: DROP if > 20% missing or constant on a dev day, if the shape dispersion (rate of y1 by pooled
+#       dev decile minus the day's base rate, weighted sd across dev days) > 3.0 pp, or if the input's AUC for y1 is > 0.52 on one dev day
+#       and < 0.48 on another; a PSI >= 0.25 with a stable relation is a FLAG (covariate shift), not a drop.
+SCALE_MS = 30000.0; PREV_N = 12; PREV_MIN = 3; GAP_MS = 500.0; D_MAX = 0.030
+SIZE_ABS = ['s1', 's2', 's3', 's4', 's5', 'c1', 'c2', 'c3', 'ct1', 'ct2', 'ct3', 'ct4', 'ct5']
+SIZE_LOG = ['own_l1', 'opp_l1']
+DROP_V2 = ['basis_bps', 'pf_lbs', 'pf_las']                # basis: unstable relation; pf_lbs / pf_las = own_l1 / opp_l1 by side (duplicates)
+FEAT_M = [c for c in FEAT if c not in SIZE_ABS + SIZE_LOG + DROP_V2] + [f'r_{c}' for c in SIZE_ABS + SIZE_LOG]
+SCALES = ('W30', 'H1')
+MUT_SCALE_FUTURE = MUT_GAP_IGNORE = 0                     # planted (selftest)
 
 
 # ---------------------------------------------------------------- inputs and target
@@ -173,6 +194,95 @@ def label_brute(tf, b0, valid, side, jk, t, lc=None, h=None):
     return float(D0), float(D1), bool(quiet)
 
 
+def horizon_gap(tf, tfl, valid, jk, t):
+    """Largest gap (ms) between consecutive valid frames over the label window: the state at t + 22 ms (its last valid frame), the valid
+    frames stamped in (t + 22, t + 1000] and the horizon's end (status GAP above GAP_MS; a label-side quantity, never an input)."""
+    import bisect
+    j0 = bisect.bisect_right(tfl, t + L_C); j1 = bisect.bisect_right(tfl, t + H_MS)
+    jl = j0 - 1
+    while jl > jk and not valid[jl]:
+        jl -= 1
+    seg = np.asarray(tf[j0:j1], float)[np.asarray(valid[j0:j1], bool)]
+    seq = np.concatenate([[float(tf[jl])], seg, [t + H_MS]])
+    return float(np.diff(seq).max())
+
+
+def pair_scales(W):
+    """Causal liquidity scales of one window from both sides' L1 sizes (valid frames): per step k the median over the frames KNOWN in
+    (t - 30 s, t] (W30), and the window's first-minute median (frames known in [ws, ws + 60 s]; used only by windows starting >= ws + 300 s)."""
+    w0, w1 = W[0], W[1]
+    ok = (np.asarray(w0['P5'])[:, 0] >= 0) & (np.asarray(w1['P5'])[:, 0] >= 0)
+    l1 = np.where(ok, (np.asarray(w0['S5'], float)[:, 0] + np.asarray(w1['S5'], float)[:, 0]) / 2.0, np.nan)
+    kf = np.asarray(w0['kf'], float); tg = np.asarray(w0['tg'], float)
+    hi = np.searchsorted(kf, tg, side='right')
+    if MUT_SCALE_FUTURE:
+        hi = np.minimum(hi + 5, len(kf))
+    lo = np.searchsorted(kf, tg - SCALE_MS, side='right')
+    w30 = np.full(len(tg), np.nan)
+    for i, (a, b) in enumerate(zip(lo, hi)):
+        seg = l1[a:b]; seg = seg[np.isfinite(seg)]
+        if len(seg):
+            w30[i] = float(np.median(seg))
+    ws = float(w0['ws']); m1 = (kf >= ws) & (kf <= ws + 60000.0) & np.isfinite(l1)
+    return w30, (float(np.median(l1[m1])) if m1.any() else NAN)
+
+
+def h1_scale(prev):
+    """The H1 scale of a window from the first-minute medians of the day's earlier windows (NaN below PREV_MIN windows)."""
+    p = [x for x in prev[-PREV_N:] if np.isfinite(x)]
+    return float(np.median(p)) if len(p) >= PREV_MIN else NAN
+
+
+def model_inputs(R, scale):
+    """PROCESSING v2: the model's inputs (FEAT_M order) from the stored raw inputs and the chosen causal scale (W30 / H1)."""
+    sc = scale_of(R, scale)
+    out = {}
+    for c in FEAT_M:
+        if c.startswith('r_'):
+            b = c[2:]
+            x = R[b].to_numpy(np.float64)
+            out[c] = (x - np.log(sc)) if b in SIZE_LOG else x / sc
+        else:
+            out[c] = R[c].to_numpy(np.float64)
+    return pd.DataFrame(out)[FEAT_M].astype(np.float32)
+
+
+def scale_of(R, scale):
+    w30 = R['scale_w30'].to_numpy(np.float64)
+    if scale == 'W30':
+        sc = w30
+    elif scale == 'H1':
+        h1 = R['scale_h1'].to_numpy(np.float64); sc = np.where(np.isfinite(h1), h1, w30)
+    elif scale == 'DAYMED':                                # non-causal reference (scalecheck only)
+        sc = np.full(len(R), float(np.nanmedian((np.exp(R['own_l1'].to_numpy(np.float64)) + np.exp(R['opp_l1'].to_numpy(np.float64))) / 2.0)))
+    else:
+        raise ValueError(scale)
+    return np.where(sc > 0, sc, np.nan)
+
+
+def usable(R):
+    """Rows that train / evaluate: not GAP (label window with a feed gap)."""
+    return np.ones(len(R), bool) if MUT_GAP_IGNORE else (R['hgap'].to_numpy(np.float64) <= GAP_MS)
+
+
+def shape_disp(xs, ys, min_n=2000):
+    """Weighted sd across days of (rate of y by pooled-decile bin - the day's base rate); xs / ys: per-day arrays (dev days)."""
+    allx = np.concatenate([x[np.isfinite(x)] for x in xs])
+    if not len(allx):
+        return NAN
+    e = np.unique(np.quantile(allx, np.linspace(0.1, 0.9, 9)))
+    nb = len(e) + 1; rates = np.full((len(xs), nb), np.nan); w = np.zeros(nb)
+    for i, (x, y) in enumerate(zip(xs, ys)):
+        f = np.isfinite(x); b = np.searchsorted(e, x[f], side='right'); yy = np.asarray(y, float)[f]; base = float(np.mean(y))
+        for j in range(nb):
+            s = b == j
+            if s.sum() >= min_n:
+                rates[i, j] = yy[s].mean() - base
+            w[j] += s.sum()
+    sd = np.nanstd(rates, axis=0); ok = np.isfinite(sd) & (np.sum(np.isfinite(rates), axis=0) >= 2)
+    return float(np.sum(sd[ok] * w[ok]) / w[ok].sum()) if ok.any() else NAN
+
+
 def window_rows(w, st):
     """Rows of one window-side: keys, inputs (float32), labels (D0, D1, quiet), guard value (comparison only), known best."""
     n = w['n']
@@ -182,7 +292,7 @@ def window_rows(w, st):
     b0, valid, rs, _ = QR.runs(w['tf'], w['P5'], w['opp'], side)
     rso = run_starts(np.asarray(w['opp'], 'int64'), valid)
     tfl = w['tf'].tolist(); vv = np.asarray(w['vkl'], float); nanP = np.full(n, np.nan)
-    ks, X, Y = [], [], []
+    ks, X, Y, G = [], [], [], []
     for k in range(n):
         st['steps'] += 1
         jk = int(w['jk'][k])
@@ -191,14 +301,14 @@ def window_rows(w, st):
         t = float(w['tg'][k])
         X.append(step_feats(w, k, side, rs, rso, nanP))
         D0, D1, q = SD.move_clean(b0, valid, tfl, side, jk, t)
-        Y.append((D0, D1, float(q))); ks.append(k)
+        Y.append((D0, D1, float(q))); ks.append(k); G.append(horizon_gap(w['tf'], tfl, valid, jk, t))
         st['quiet'] += int(q); st['masked'] += int(vv[k] == MASK_V)
     if not ks:
         return None
     ks = np.asarray(ks, 'int64')
     return dict(m=np.full(len(ks), int(w['m']), 'int64'), side=np.full(len(ks), side, 'int64'), k=ks,
                 t=np.asarray(w['tg'], float)[ks], v=vv[ks].astype(np.float32), best=np.asarray(w['best'], 'int64')[ks],
-                X=np.asarray(X, np.float64).astype(np.float32), Y=np.asarray(Y, np.float32), ctx=(b0, valid))
+                hgap=np.asarray(G, np.float32), X=np.asarray(X, np.float64).astype(np.float32), Y=np.asarray(Y, np.float32), ctx=(b0, valid))
 
 
 def perturb_future(w, jk, k, rng):
@@ -387,12 +497,33 @@ def selftest():
     chk(f'horizon sums {q_} {v_}', float(q_[0]) == 2.0 and float(v_[0]) == -2.0)
     chk('fill type', fill_type(0, 49, False, [51, 50, 49]) == 'STOP' and fill_type(0, 50, False, [51, 50, 49]) == 'THROUGH'
         and fill_type(1, 52, True, [52]) == 'THROUGH')
+    # PROCESSING v2: horizon gap, causal scales, model inputs, GAP status, shape dispersion
+    tfh = np.array([0.0, 100.0, 150.0, 900.0, 1500.0])
+    chk(f'horizon gap {horizon_gap(tfh, tfh.tolist(), np.ones(5, bool), 0, 100.0)}', horizon_gap(tfh, tfh.tolist(), np.ones(5, bool), 0, 100.0) == 750.0)
+    chk(f'horizon gap quiet {horizon_gap(tfh, tfh.tolist(), np.ones(5, bool), 0, 1600.0)}', horizon_gap(tfh, tfh.tolist(), np.ones(5, bool), 0, 1600.0) == 1100.0)
+    kf = np.array([0.0, 34000.0, 35000.0, 35001.0, 35002.0, 35003.0, 35004.0, 35005.0, 35006.0]); nfr = len(kf); tgs = np.array([35000.0])
+    S0 = np.full((nfr, 5), 100.0); S1 = np.full((nfr, 5), 300.0); S0[3:, 0] = 1e6; S1[3:, 0] = 1e6     # frames known after t: huge sizes
+    P0 = np.full((nfr, 5), 50, 'int64'); P1_ = np.full((nfr, 5), 52, 'int64'); P0[1, 0] = -1        # frame 1 invalid (no bid): skipped
+    Wsc = {0: dict(P5=P0, S5=S0, kf=kf, tg=tgs, ws=0.0), 1: dict(P5=P1_, S5=S1, kf=kf, tg=tgs, ws=0.0)}
+    w30, med = pair_scales(Wsc)
+    chk(f'scale w30 {w30} {med}', w30[0] == 200.0 and med == 1e6)
+    chk('h1 scale', np.isnan(h1_scale([1.0, 2.0])) and h1_scale([1.0, 2.0, 3.0, np.nan]) == 2.0 and h1_scale(list(range(20))) == 13.5)
+    Rm = pd.DataFrame({c: [1.0, 1.0] for c in RAW_NEEDED})
+    Rm['s1'] = [200.0, 300.0]; Rm['own_l1'] = [np.log(200.0), np.log(300.0)]; Rm['scale_w30'] = [100.0, 100.0]; Rm['scale_h1'] = [np.nan, 50.0]
+    Mi = model_inputs(Rm, 'H1')
+    chk(f'model inputs {Mi.r_s1.tolist()} {Mi.r_own_l1.tolist()}', np.allclose(Mi.r_s1.values, [2.0, 6.0]) and np.allclose(Mi.r_own_l1.values, [np.log(2.0), np.log(6.0)])
+        and list(Mi.columns) == FEAT_M and not set(SIZE_ABS + SIZE_LOG + DROP_V2) & set(FEAT_M))
+    chk('GAP status', list(usable(pd.DataFrame({'hgap': [100.0, 499.0, 501.0, 1000.0]}))) == [True, True, False, False])
+    rg = np.random.default_rng(1); xa_ = [rg.uniform(0, 1, 20000) for _ in range(3)]
+    ya_ = [rg.uniform(0, 1, 20000) < x for x in xa_]; yb_ = [rg.uniform(0, 1, 20000) < (x if i < 2 else 1 - x) for i, x in enumerate(xa_)]
+    chk(f'shape dispersion {shape_disp(xa_, ya_):.4f} {shape_disp(xa_, yb_):.4f}', shape_disp(xa_, ya_, min_n=500) < 0.02 and shape_disp(xa_, yb_, min_n=500) > 0.15)
     return bad
 
 
 def mutation_check():
     out = {}
-    for nm in ('MUT_AGE_NEXT', 'MUT_FOLD_LATE', 'MUT_NO_CUMMIN', 'MUT_HORIZON_EARLY', 'MUT_PSI_NONAN', 'MUT_AUC_KEEPNAN', 'MUT_RULE_OFF'):
+    for nm in ('MUT_AGE_NEXT', 'MUT_FOLD_LATE', 'MUT_NO_CUMMIN', 'MUT_HORIZON_EARLY', 'MUT_PSI_NONAN', 'MUT_AUC_KEEPNAN', 'MUT_RULE_OFF',
+               'MUT_SCALE_FUTURE', 'MUT_GAP_IGNORE'):
         globals()[nm] = 1
         try:
             out[nm] = len(selftest()) > 0
@@ -441,32 +572,48 @@ def rows_day(day):
         sys.exit(f'REFUSED: {day} is not a consumed replay day')
     T0 = time.time(); D = K.load_day(day)
     st = dict(window_sides=0, steps=0, invalid_book=0, masked=0, quiet=0)
-    fz = dict(checked=0, feat_differ=0, label_differ=0, cols=[]); bf = dict(checked=0, differ=0, planted_differ=0)
-    rng = np.random.default_rng(int(day)); parts = []
-    for w in K.window_sides(D):
-        st['window_sides'] += 1
-        out = window_rows(w, st)
-        if out is None:
-            continue
-        if st['window_sides'] % FZ_EVERY == 1:
-            falsify_window(w, out, rng, fz)
-        if st['window_sides'] % BF_EVERY == 0:
-            brute_window(w, out, bf)
-        out.pop('ctx'); parts.append(out)
+    fz = dict(checked=0, feat_differ=0, label_differ=0, cols=[], scale_checked=0, scale_differ=0)
+    bf = dict(checked=0, differ=0, planted_differ=0)
+    rng = np.random.default_rng(int(day)); parts = []; prev = []
+    for W in P1.window_pairs(D):
+        w30, med1m = pair_scales(W); h1 = h1_scale(prev)
+        if st['window_sides'] % (2 * FZ_EVERY) == 0:        # control (b) for the scale: frames known after t perturbed on both sides
+            kk = np.arange(0, W[0]['n'], FZ_STEP)
+            for k in kk:
+                jk = int(W[0]['jk'][k]); W2 = {s: dict(W[s]) for s in (0, 1)}
+                for s in (0, 1):
+                    S5 = np.array(W[s]['S5'], dtype=float, copy=True); S5[jk + 1:] *= rng.uniform(0.2, 3.0, S5[jk + 1:].shape); W2[s]['S5'] = S5
+                a, _ = pair_scales(W2); fz['scale_checked'] += 1
+                fz['scale_differ'] += int(not ((a[k] == w30[k]) or (np.isnan(a[k]) and np.isnan(w30[k]))))
+        for s in (0, 1):
+            w = W[s]; st['window_sides'] += 1
+            out = window_rows(w, st)
+            if out is None:
+                continue
+            if st['window_sides'] % FZ_EVERY == 1:
+                falsify_window(w, out, rng, fz)
+            if st['window_sides'] % BF_EVERY == 0:
+                brute_window(w, out, bf)
+            out['scale_w30'] = w30[out['k']].astype(np.float32); out['scale_h1'] = np.full(len(out['k']), h1, np.float32)
+            out.pop('ctx'); parts.append(out)
+        prev.append(med1m)
         if st['window_sides'] % 80 == 0:
             mem_guard(f'rows {day}')
     R = pd.DataFrame({'day': np.full(sum(len(p['k']) for p in parts), int(day), 'int64'),
-                      **{c: np.concatenate([p[c] for p in parts]) for c in ('m', 'side', 'k', 't', 'v', 'best')}})
+                      **{c: np.concatenate([p[c] for p in parts]) for c in ('m', 'side', 'k', 't', 'v', 'best', 'hgap', 'scale_w30', 'scale_h1')}})
     X = np.vstack([p['X'] for p in parts]); Y = np.vstack([p['Y'] for p in parts]); del parts
     R = pd.concat([R, pd.DataFrame(X, columns=FEAT), pd.DataFrame(Y, columns=LAB)], axis=1); del X, Y
     R['masked'] = (R.v.values == MASK_V)
     mem_guard(f'rows {day} frame')
     pc = parity(day, R)
-    st.update(rows=int(len(R)), load_stat=D['stat'], falsifier=fz, brute=bf, parity=pc, seconds=round(time.time() - T0, 1))
+    hg = R.hgap.to_numpy(np.float64)
+    st.update(rows=int(len(R)), load_stat=D['stat'], falsifier=fz, brute=bf, parity=pc, seconds=round(time.time() - T0, 1),
+              gap_rows=int((hg > GAP_MS).sum()), hgap_q=[float(x) for x in np.quantile(hg, [0.5, 0.9, 0.99, 0.999])],
+              scale_w30_missing=int(np.isnan(R.scale_w30.values).sum()), scale_h1_missing=int(np.isnan(R.scale_h1.values).sum()))
     fails = []
     if not pc['ok']:
         fails.append(f'parity {pc}')
-    if fz['checked'] < 50 or fz['feat_differ'] or fz['label_differ'] == 0:
+    if fz['checked'] < 50 or fz['feat_differ'] or fz['label_differ'] == 0 or fz['scale_checked'] < 50 or fz['scale_differ']:
         fails.append(f'falsifier {fz}')
     if bf['checked'] < 500 or bf['differ'] or bf['planted_differ'] == 0:
         fails.append(f'brute {bf}')
@@ -475,8 +622,8 @@ def rows_day(day):
     os.makedirs(OUTD, exist_ok=True)
     R.to_parquet(f'{OUTD}/rows_{day}.parquet', index=False)
     json.dump(st, open(f'{OUTD}/rows_{day}.json', 'w'), indent=1, default=str)
-    print(f'{day}: rows {len(R)}; invalid {st["invalid_book"]}; quiet {st["quiet"]}; masked {st["masked"]}; parity {pc["sd_rows"]} rows ok; '
-          f'falsifier {fz}; brute {bf}; {time.time() - T0:.0f} s', flush=True)
+    print(f'{day}: rows {len(R)}; invalid {st["invalid_book"]}; quiet {st["quiet"]}; GAP {st["gap_rows"]} (hgap p50/p90/p99/p99.9 '
+          f'{st["hgap_q"]}); masked {st["masked"]}; parity {pc["sd_rows"]} rows ok; falsifier {fz}; brute {bf}; {time.time() - T0:.0f} s', flush=True)
 
 
 # ---------------------------------------------------------------- data audit (decisions on the dev days only)
@@ -588,6 +735,141 @@ def audit():
     print('\n'.join(L[:40]), flush=True)
 
 
+# ---------------------------------------------------------------- PROCESSING v2: scale choice and audit of the model inputs (dev days decide)
+RAW_NEEDED = [c for c in FEAT_M if not c.startswith('r_')] + SIZE_ABS + SIZE_LOG + ['scale_w30', 'scale_h1', 'hgap']
+
+
+def scalecheck():
+    """Declared rule (PROCESSING v2 (1)): on the dev days, for every size input, the shape dispersion of y1 under each candidate scale;
+    the causal candidate with the lower mean over the size inputs is the choice. ABS (no scale) and DAYMED (the day's own median, not
+    causal) are printed as references."""
+    all_selftests()
+    S = {}
+    for d in DEV_DAYS:
+        R = pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=SIZE_ABS + SIZE_LOG + ['scale_w30', 'scale_h1', 'hgap', 'D0', 'D1'])
+        R = R[usable(R) & (R.D0.values < 1)]
+        ix = np.sort(np.random.default_rng(int(d) + 7).choice(len(R), min(len(R), 200000), replace=False)); S[d] = R.iloc[ix].reset_index(drop=True)
+    res = {}
+    for cand in ('ABS', 'DAYMED') + SCALES:
+        res[cand] = {}
+        for c in SIZE_ABS + SIZE_LOG:
+            xs, ys = [], []
+            for d in DEV_DAYS:
+                x = S[d][c].to_numpy(np.float64)
+                if cand != 'ABS':
+                    sc = scale_of(S[d], cand); x = (x - np.log(sc)) if c in SIZE_LOG else x / sc
+                xs.append(x); ys.append(S[d].D1.to_numpy() >= 1)
+            res[cand][c] = shape_disp(xs, ys)
+        res[cand]['_mean'] = float(np.nanmean([res[cand][c] for c in SIZE_ABS + SIZE_LOG]))
+    choice = min(SCALES, key=lambda s: res[s]['_mean'])
+    out = dict(asof=time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), dev_days=list(DEV_DAYS), choice=choice, disp=res,
+               missing={d: dict(w30=float(np.isnan(S[d].scale_w30.values).mean()), h1=float(np.isnan(S[d].scale_h1.values).mean())) for d in DEV_DAYS})
+    json.dump(out, open(f'{OUTD}/scale_choice.json', 'w'), indent=1, default=float)
+    print('shape dispersion of y1 across the dev days (pp), mean over the 15 size inputs: '
+          + ', '.join(f'{c} {100 * res[c]["_mean"]:.2f}' for c in res) + f' -> choice {choice}', flush=True)
+    for c in SIZE_ABS + SIZE_LOG:
+        print(f'  {c:8s} ' + ' '.join(f'{k} {100 * res[k][c]:5.2f}' for k in res), flush=True)
+
+
+def audit2():
+    """Audit v2 of the MODEL inputs (FEAT_M) with the v2 rules (decisions on the dev days only; every day printed)."""
+    all_selftests()
+    asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+    scale = json.load(open(f'{OUTD}/scale_choice.json'))['choice']
+    rj = {d: json.load(open(f'{OUTD}/rows_{d}.json')) for d in DAYS9}
+    sub = []
+    for d in DEV_DAYS:
+        R = pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=RAW_NEEDED); R = R[usable(R)]
+        ix = np.sort(np.random.default_rng(int(d)).choice(len(R), min(len(R), 100000), replace=False))
+        sub.append(model_inputs(R.iloc[ix], scale).to_numpy(np.float64)); del R
+    sub = np.vstack(sub); edges = {}
+    for i, c in enumerate(FEAT_M):
+        x = sub[:, i]; x = x[np.isfinite(x)]
+        edges[c] = np.unique(np.quantile(x, np.linspace(0.1, 0.9, 9))) if len(x) else np.zeros(0)
+    del sub
+    per = {}; H = {}; SH = {c: ([], []) for c in FEAT_M}
+    for d in DAYS9:
+        R = pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=RAW_NEEDED + ['side', 'D0', 'D1', 'quiet', 'masked', 'best'])
+        U = usable(R); n_all = len(R); R = R[U].reset_index(drop=True); M = model_inputs(R, scale)
+        D0 = R.D0.to_numpy(np.float64); D1 = R.D1.to_numpy(np.float64); side = R.side.to_numpy()
+        rng = np.random.default_rng(int(d) + 1); ok1 = np.where(D0 < 1)[0]
+        si = np.sort(rng.choice(ok1, min(len(ok1), 200000), replace=False)); y1 = D1[si] >= 1
+        per[d] = dict(rows=int(n_all), gap_rows=int(n_all - len(R)), usable=int(len(R)), invalid_book=int(rj[d]['invalid_book']),
+                      quiet=float(R.quiet.mean()), masked=float(R.masked.mean()), labels=label_stats(D0, D1),
+                      labels_by_side={s: label_stats(D0[side == s], D1[side == s]) for s in (0, 1)}, feat={})
+        H[d] = {}
+        for c in FEAT_M:
+            x = M[c].to_numpy(np.float64); fin = np.isfinite(x); xf = x[fin]
+            q = np.quantile(xf, [0.01, 0.5, 0.99]).tolist() if len(xf) else [NAN] * 3
+            a, na = auc_nan(y1, x[si])
+            per[d]['feat'][c] = dict(missing=float(1.0 - fin.mean()), constant=bool(len(xf) == 0 or float(np.ptp(xf)) == 0.0), p01=q[0],
+                                     p50=q[1], p99=q[2], auc_y1=a, auc_rows=na)
+            H[d][c] = hist_counts(x, edges[c])
+            if d in DEV_DAYS:
+                SH[c][0].append(x[si]); SH[c][1].append(y1)
+        del R, M
+        mem_guard(f'audit2 {d}')
+    drop, flag, why = [], [], {}
+    psi_dev = {c: {d: psi(H[d][c], sum(H[e][c] for e in DEV_DAYS if e != d)) for d in DEV_DAYS} for c in FEAT_M}
+    disp = {c: shape_disp(SH[c][0], SH[c][1]) for c in FEAT_M}
+    for c in FEAT_M:
+        mi = [per[d]['feat'][c]['missing'] for d in DEV_DAYS]; co = [per[d]['feat'][c]['constant'] for d in DEV_DAYS]
+        ps = [psi_dev[c][d] for d in DEV_DAYS]; au = [a for a in (per[d]['feat'][c]['auc_y1'] for d in DEV_DAYS) if np.isfinite(a)]
+        r_ = []
+        if max(mi) > MISS_DROP:
+            r_.append(f'missing {max(mi):.1%}')
+        if any(co):
+            r_.append('constant on a dev day')
+        if np.isfinite(disp[c]) and disp[c] > D_MAX:
+            r_.append(f'unstable relation: shape dispersion {100 * disp[c]:.2f} pp > {100 * D_MAX:.1f}')
+        if au and max(au) > 0.5 + AUC_FLIP and min(au) < 0.5 - AUC_FLIP:
+            r_.append(f'AUC for y1 flips {min(au):.3f}..{max(au):.3f}')
+        if r_:
+            drop.append(c); why[c] = 'DROP: ' + '; '.join(r_); continue
+        f_ = []
+        if max(mi) > MISS_FLAG:
+            f_.append(f'missing {max(mi):.1%}')
+        if sum(p >= PSI_DROP for p in ps) >= PSI_DAYS:
+            f_.append(f'covariate shift (relation stable, dispersion {100 * disp[c]:.2f} pp): PSI {", ".join(f"{p:.2f}" for p in ps)}')
+        elif sum(PSI_FLAG <= p for p in ps) >= PSI_DAYS:
+            f_.append(f'PSI {", ".join(f"{p:.2f}" for p in ps)}')
+        if f_:
+            flag.append(c); why[c] = 'FLAG: ' + '; '.join(f_)
+    lab_flag = {}
+    for j in JS:
+        rr = [per[d]['labels'][f'j{j}']['rate'] for d in DEV_DAYS]
+        if min(rr) > 0 and max(rr) / min(rr) > RATE_RATIO:
+            lab_flag[f'j{j}'] = rr
+    psi_fold = {t: {c: dict(train_vs_test=psi(sum(H[d][c] for d in FOLDS[t][0]), H[t][c]),
+                            train_vs_cal=psi(sum(H[d][c] for d in FOLDS[t][0]), H[FOLDS[t][1]][c])) for c in FEAT_M} for t in TESTS}
+    res = dict(asof=asof, version=2, scale=scale, dev_days=list(DEV_DAYS), drop=drop, flag=flag, why=why, label_flags=lab_flag, per_day=per,
+               psi_dev=psi_dev, disp=disp, psi_fold=psi_fold, features=FEAT_M,
+               rules=dict(MISS_DROP=MISS_DROP, MISS_FLAG=MISS_FLAG, D_MAX=D_MAX, AUC_FLIP=AUC_FLIP, PSI_DROP=PSI_DROP, PSI_FLAG=PSI_FLAG,
+                          PSI_DAYS=PSI_DAYS, GAP_MS=GAP_MS))
+    json.dump(res, open(f'{OUTD}/audit2.json', 'w'), indent=1, default=float)
+    L = [f'STOP-MODEL DATA AUDIT v2 (model inputs, PROCESSING v2, scale {scale}) as of {asof}; decisions from the dev days {", ".join(DEV_DAYS)} only', '',
+         'ROWS AND LABELS per day (GAP = label window with a feed gap > 500 ms: excluded; rate = P(y_j) among usable rows not ALREADY_j)']
+    L.append('  day       rows      GAP  usable  quiet  masked | ' + ' | '.join(f'j{j} already / rate' for j in JS))
+    for d in DAYS9:
+        p = per[d]; lb = p['labels']
+        L.append(f'  {d} {p["rows"]:8d} {p["gap_rows"]:7d} {p["usable"]:8d} {p["quiet"]:6.3%} {p["masked"]:6.2%} | '
+                 + ' | '.join(f'{lb[f"j{j}"]["already"]:6.2%} / {lb[f"j{j}"]["rate"]:6.2%}' for j in JS) + ('   (dev)' if d in DEV_DAYS else ''))
+    L += ['', f'LABEL FLAGS (dev-day base rate ratio > {RATE_RATIO}): {lab_flag if lab_flag else "none"}', '',
+          f'R700 DATA (v2): DROP {len(drop)} {drop}; FLAG {len(flag)} {flag}']
+    for c in drop + flag:
+        L.append(f'  {c:18s} {why[c]}')
+    L += ['', 'MODEL INPUTS: shape dispersion (pp, dev) | PSI dev days | per day missing | median | AUC for y1']
+    for c in FEAT_M:
+        L.append(f'  {c:18s} {100 * disp[c]:5.2f} | ' + ' '.join(f'{psi_dev[c][d]:.2f}' for d in DEV_DAYS) + ' | '
+                 + ' '.join(f'{per[d]["feat"][c]["missing"]:5.1%}|{per[d]["feat"][c]["p50"]:9.3g}|{per[d]["feat"][c]["auc_y1"]:.3f}' for d in DAYS9))
+    L += ['', 'PSI by fold (training days vs the test day; description only), top 10 per fold:']
+    for t in TESTS:
+        top = sorted(FEAT_M, key=lambda c: -np.nan_to_num(psi_fold[t][c]['train_vs_test']))[:10]
+        L.append(f'  {t}: ' + ', '.join(f'{c} {psi_fold[t][c]["train_vs_test"]:.2f}' for c in top))
+    open(f'{OUTD}/audit2.txt', 'w').write('\n'.join(L) + '\n')
+    print('\n'.join(L[:30]), flush=True)
+
+
 # ---------------------------------------------------------------- fit (one chronological fold)
 def fit_fold(test):
     import lightgbm as lgb
@@ -597,16 +879,21 @@ def fit_fold(test):
     T0 = time.time(); tr_days = train_days(test); cal = FOLDS[test][1]
     if not chrono_ok(tr_days, cal, test):
         sys.exit(f'REFUSED: fold not chronological {tr_days} / {cal} / {test}')
-    A = json.load(open(f'{OUTD}/audit.json')); F = [c for c in FEAT if c not in set(A['drop'])]
+    A = json.load(open(f'{OUTD}/audit2.json')); scale = A['scale']; F = [c for c in FEAT_M if c not in set(A['drop'])]
     parts = []
     for d in tr_days:
-        R = pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=KEYS + F + ['D0', 'D1'])
+        R = pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=KEYS + RAW_NEEDED + ['D0', 'D1'])
+        R = R[usable(R)].reset_index(drop=True)
         ix = np.sort(np.random.default_rng(int(test) * 31 + int(d)).choice(len(R), min(len(R), SUB_DAY), replace=False))
-        parts.append(R.iloc[ix].reset_index(drop=True)); del R
+        Rs = R.iloc[ix].reset_index(drop=True); del R
+        parts.append(pd.concat([Rs[KEYS + ['D0', 'D1']], model_inputs(Rs, scale)[F]], axis=1)); del Rs
     tr = pd.concat(parts, ignore_index=True); del parts
     if tr.day.isin([int(cal), int(test)]).any():
         sys.exit('REFUSED: a calibration or test row in the training rows')
-    ev = {dd: pd.read_parquet(f'{OUTD}/rows_{dd}.parquet', columns=KEYS + F + ['D0', 'D1']) for dd in (cal, test)}
+    ev = {}
+    for dd in (cal, test):
+        R = pd.read_parquet(f'{OUTD}/rows_{dd}.parquet', columns=KEYS + RAW_NEEDED + ['D0', 'D1'])
+        ev[dd] = pd.concat([R[KEYS + ['D0', 'D1']], pd.Series(usable(R), name='usable'), model_inputs(R, scale)[F]], axis=1); del R
     mem_guard(f'fit {test} load')
     pop = {j: (sum(A['per_day'][d]['labels'][f'j{j}']['rows'] * A['per_day'][d]['labels'][f'j{j}']['rate'] for d in tr_days)
                / max(1, sum(A['per_day'][d]['labels'][f'j{j}']['rows'] for d in tr_days))) for j in JS}
@@ -624,7 +911,7 @@ def fit_fold(test):
                    T2_gap=float(y.mean() - pop[j]), auc_train=a_tr)
         for dd in ev:
             raw[dd][:, ji] = b.predict(ev[dd][F].to_numpy(np.float32))
-            okd = ev[dd].D0.values < j
+            okd = (ev[dd].D0.values < j) & ev[dd].usable.values
             inf[f'auc_{"cal" if dd == cal else "test"}'] = auc_nan(ev[dd].D1.values[okd] >= j, raw[dd][okd, ji])[0]
         imp = b.feature_importance('gain'); inf['top_gain'] = [(F[i], float(imp[i] / imp.sum())) for i in np.argsort(-imp)[:10]]
         info[f'j{j}'] = inf
@@ -636,18 +923,20 @@ def fit_fold(test):
         for _, ix in trj.groupby(['day', 'side']).indices.items():
             yp[ix] = rng.permutation(y[ix])
         bp = lgb.train(PD.LGB_PARAMS, lgb.Dataset(trj[F].to_numpy(np.float32), yp, feature_name=F), PD.N_ROUNDS)
-        okd = ev[test].D0.values < 1
+        okd = (ev[test].D0.values < 1) & ev[test].usable.values
         a_p, n_p = auc_nan(ev[test].D1.values[okd] >= 1, bp.predict(ev[test][F].to_numpy(np.float32)[okd]))
         T5 = dict(auc=a_p, rows=n_p, ok=bool(abs(a_p - 0.5) <= T5_TOL))
     mono = {}
     for dd in ev:
         P = cummin_pred(raw[dd])
-        mono[dd] = {f'j{j + 1}': float((raw[dd][:, j] > raw[dd][:, j - 1] + 1e-12).mean()) for j in range(1, len(JS))}
-        out = ev[dd][KEYS].copy()
+        u = ev[dd].usable.values
+        mono[dd] = {f'j{j + 1}': float((raw[dd][u, j] > raw[dd][u, j - 1] + 1e-12).mean()) for j in range(1, len(JS))}
+        out = ev[dd][KEYS + ['usable']].copy()
         for ji, j in enumerate(JS):
             out[f'P{j}'] = P[:, ji].astype(np.float32); out[f'R{j}'] = raw[dd][:, ji].astype(np.float32)
         out.to_parquet(f'{OUTD}/pred_fold{test}_{dd}.parquet', index=False)
-    res = dict(test=test, cal=cal, train_days=list(tr_days), features=F, dropped=A['drop'], info=info, T1=True, T5=T5, T4_monotonicity=mono,
+    res = dict(test=test, cal=cal, train_days=list(tr_days), features=F, dropped=A['drop'], scale=scale, processing=2, info=info, T1=True, T5=T5,
+               T4_monotonicity=mono,
                params=PD.LGB_PARAMS, rounds=PD.N_ROUNDS, sub_day=SUB_DAY, sub_n=SUB_N, seconds=round(time.time() - T0, 1))
     json.dump(res, open(f'{OUTD}/fit_{test}.json', 'w'), indent=1, default=float)
     print(f'fit {test}: ' + '; '.join(f'j{j} train {info[f"j{j}"]["train_rows"]} pos {info[f"j{j}"]["positives"]} AUC tr/cal/test '
@@ -750,24 +1039,26 @@ def align_day(day):
 def report():
     all_selftests()
     asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
-    A = json.load(open(f'{OUTD}/audit.json')); FJ = {t: json.load(open(f'{OUTD}/fit_{t}.json')) for t in TESTS}
+    A = json.load(open(f'{OUTD}/audit2.json')); FJ = {t: json.load(open(f'{OUTD}/fit_{t}.json')) for t in TESTS}; GAPN = {}
     RJ = {d: json.load(open(f'{OUTD}/rows_{d}.json')) for d in DAYS9}
     T5 = FJ[TESTS[0]]['T5']
     if not T5 or not T5['ok']:
         sys.exit(f'REFUSED: permuted-label falsifier failed {T5}')
     E = {}
     for t in TESTS:
-        R = pd.read_parquet(f'{OUTD}/rows_{t}.parquet', columns=KEYS + ['D0', 'D1', 'v', 'masked'])
+        R = pd.read_parquet(f'{OUTD}/rows_{t}.parquet', columns=KEYS + ['D0', 'D1', 'v', 'masked', 'hgap'])
         P = pd.read_parquet(f'{OUTD}/pred_fold{t}_{t}.parquet')
         if not (np.array_equal(R.m.values, P.m.values) and np.array_equal(R.side.values, P.side.values) and np.array_equal(R.k.values, P.k.values)):
             sys.exit(f'REFUSED: predictions of {t} not aligned with its rows')
         for j in JS:
             R[f'P{j}'] = P[f'P{j}'].values
         S = pd.read_parquet(f'{SD.OUTD}/pred_{t}.parquet', columns=['m', 'side', 'k'] + [f'NEW_P{j}' for j in (1, 2, 3)])
-        E[t] = R.merge(S, on=['m', 'side', 'k'], how='left', validate='one_to_one')
+        U = usable(R); GAPN[t] = int((~U).sum())
+        E[t] = R[U].reset_index(drop=True).merge(S, on=['m', 'side', 'k'], how='left', validate='one_to_one')
     L = [f'STOP-MODEL (the keep / cancel model for every ladder level), {len(TESTS)} chronological test days {", ".join(TESTS)}; as of {asof}',
          f'controls: rows parity / falsifier / brute-force passed on 9 days (no output otherwise); T5 permuted-label AUC {T5["auc"]:.4f} '
-         f'({T5["rows"]} rows); inputs {len(FJ[TESTS[0]]["features"])} (dropped by the audit: {A["drop"]})', '']
+         f'({T5["rows"]} rows); PROCESSING v2 (scale {A["scale"]}): inputs {len(FJ[TESTS[0]]["features"])} (dropped by audit v2: {A["drop"]}); '
+         f'GAP rows excluded per test day {GAPN}', '']
     R_ = {}
     # R702 skill and R703 calibration
     L.append('SKILL per level j (the order j - 1 ticks behind the best is run over), rows not ALREADY_j: AUC | Brier skill vs the training base rate')
@@ -917,6 +1208,10 @@ if __name__ == '__main__':
         rows_day(sys.argv[2])
     elif cmd == 'audit':
         audit()
+    elif cmd == 'scalecheck':
+        scalecheck()
+    elif cmd == 'audit2':
+        audit2()
     elif cmd == 'fit':
         fit_fold(sys.argv[2])
     elif cmd == 'align':
