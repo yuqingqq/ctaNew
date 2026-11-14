@@ -1,0 +1,33 @@
+{
+  "asof": "2026-11-14T16:39:43.812370+00:00",
+  "status": "frozen_development_design",
+  "candidate_count": 3,
+  "forward_validation": false,
+  "purpose": "Distinguish market feature shift from policy/order-state shift, test train-only data processing and direct timing signal learning. No test-row filtering or outcome clipping.",
+  "source_population": "Original v2 eligible neutral-reference delayed action probes, one row per sampled generation, original statuses/exclusions preserved. Earlier dates only in each fold. All5 consumed test dates retained.",
+  "dates": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "audit": [
+    "Per-feature missingness, range and central99% exceedance, quantiles, median/IQR shift, descriptive KS distance; no iid p-values.",
+    "Train-window-hash reference/calibration split. Up to512 reference rows,1024 calibration rows, fixed seed. Train-fitted robust transforms and nearest distance95% calibration threshold. Separate market and state groups. No test-data adaptation or policy gate.",
+    "Frozen-model errors and selected value within seen>=5/sparse1..4/unseen state bins, and within/outside market/state distance support.",
+    "Full original VALUE runtime generation population: coarse unseen/sparse flags versus outside individual training ranges. First-generation sampling mismatch. No biased runtime inference sample substituted for all entries."
+  ],
+  "arms": {
+    "FROZEN_V2": "Saved original POST and WAIT-difference predictions; reference only.",
+    "RAW_DIRECT": "Reuse frozen POST prediction; fit raw POST-minus-WAIT target directly on original71 inputs, pinned LightGBM params/rounds.",
+    "COMPACT_DIRECT": "Fit raw POST and direct timing delta with pinned LightGBM on36 predeclared economic inputs plus train-fitted missing/extreme flags.",
+    "COMPACT_RIDGE": "Same processed inputs and raw economic targets, fixed Ridge alpha100. No tuning."
+  },
+  "compact_features": "Side-aligned Binance100/250/1000/3000ms returns divided by pre-existing trailing sigma and sqrt(h); signed log flow; PF price changes/microprice/gap divided by known spread; imbalance, own/other public book logs, shown/better queue in30-share units, activity/freshness, candidate price/rung/spread, known inventory/exposure/capacity in lots, remaining horizon, waiting age/change, sigma and basis.",
+  "preprocessing": "Fit bounds0.5/99.5%, median and IQR only on each training fold; impute missing values, retain missing/low/high flags where variable in training, remove constant/duplicate training columns. Never fit transforms on later test rows. No economic label clipping, class balancing by realized outcome or row deletion.",
+  "interpretation": "Removing overlapping ultra-short windows is a declared ablation, not proof those windows are noise. Processing may hide useful extreme magnitudes; raw model retained and all outcomes evaluated. Existing neutral-KEEP target limitations remain.",
+  "evaluation": "Report every arm on every side/date and full sample. RMSE/R2/rank IC versus prior means and earlier-data rung/price baseline. Selection POST>0 AND delta>=0. 500-draw null matched on day/side/hour/rung and action count, original metric actual delta and positive actual POST. Insufficient action variation fails. No full-portfolio acceptance or significance claim for covariate-shift statistics.",
+  "verification": "Nine synthetic tests: units/signs, no future/outcome dependence, train-frozen preprocessing with extreme/missing flags, constant/duplicate/schema/infinite refusals, chronology, shift positive controls, distance support/refusal, regularized direction learning, absolute+incremental entry gate.",
+  "execution": "Own core8 via run_light; parent size queue yields, current worker finishes normally, identity-checked finally and ExecStopPost resume. MemoryMax2G, one thread. Frozen files checked between stages; failed output namespace preserved. No repeated run on failure without a superseding receipt."
+}
