@@ -82,7 +82,7 @@ def summarize(raw):
         interpretation=[
             'Generalization failure exists on held-out neutral-reference probes before closed-loop state mismatch. The old constant-head bug is not the explanation.',
             'The timing target is mostly zero and tail-heavy; two separately fitted correlated value heads do not reliably recover their difference.',
-            'Runtime support bins and eventual posting are descriptive evidence of a train/runtime gap and delayed participation, not causal attribution of loss.',
+            'Runtime support bins describe a train/runtime gap. Post-after-WAIT counts describe delayed participation, not causal attribution of loss or a test of entry skill.',
             'Fill-time spread and subsequent mark movement reconcile to terminal PNL; this is an accounting decomposition, not a forecast-skill test.',
             'The guard exit changes the continuation and exposure as well as cancellations. Its gain is not proof of selective keeper skill; churn is material.',
             'Code inspection: whole-portfolio targets include ladder interactions, while model inputs lack a per-order snapshot of other resting prices, ages and remaining sizes. Aggregate inventory/exposure cannot distinguish all such states.'
@@ -97,6 +97,7 @@ def summarize(raw):
             'Touch means exactly received public best; near means public best or one tick behind. Both exclude price-improving quotes and do not establish front-of-queue residence.',
             'The keeper sensitivity uses historical LODO guard inputs and no matched activity null; it is not new deployable skill evidence.',
             'Largest-one-percent statistic is squared target magnitude, not a measured fraction of fitted residual loss.'
+            ,'Runtime generations are policy-dependent: a POST advances the generation, and an unposted terminal generation is censored. The eventual-POST fraction cannot establish failure to abstain or rejection skill.'
         ])
 
 
