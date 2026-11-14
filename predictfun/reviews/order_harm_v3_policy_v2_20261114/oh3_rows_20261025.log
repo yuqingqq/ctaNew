@@ -1,0 +1,12 @@
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+influence selftests passed; planted errors caught: {'MUT_DFV_NOSIDE': True, 'MUT_ONSET_ALL': True, 'MUT_NO_DEBOUNCE': True}
+order-harm v2 selftests passed; planted errors caught: {'MUT_NOWAIT': True, 'MUT_LAT_KEEP': True, 'MUT_HARM_SIGN': True, 'MUT_STAMP': True, 'MUT_RAISE': True}
+order-harm v3 selftests passed; planted errors caught: {'MUT_SLOW_CADENCE': True, 'MUT_VENUE_REST': True, 'MUT_NO_LAT': True, 'MUT_BOOTSTRAP': True, 'MUT_SHARED_CHAIN': True, 'MUT_TIMER': True}
+20261025: 96 window-sides, 124674 rows, 20 s, rss 856 MiB
+20261025: 192 window-sides, 268445 rows, 42 s, rss 966 MiB
+20261025: 288 window-sides, 425800 rows, 65 s, rss 1031 MiB
+20261025: 384 window-sides, 582526 rows, 88 s, rss 1032 MiB
+20261025: 480 window-sides, 719400 rows, 108 s, rss 1035 MiB
+20261025: 576 window-sides, 886604 rows, 131 s, rss 1035 MiB
+20261025: {'window_sides': 576, 'episodes': 28931, 'rung_episodes': 159237, 'censored': 6648, 'censored5': 8448, 'no_input_at_onset': 0, 'two_resting': 0, 'rows': 886604, 'forced_pull': 0, 'multi': 88009, 'recorder_differ': 0, 'pconst_checks': 4401, 'pconst_differ': 0, 'partition_bad': 0, 'lookahead_checks': 44331, 'lookahead_bad': 0} in 131 s
+2026-11-14T12:09:13Z tag=oh3_rows_20261025 rc=0 peak_rss_mib=1209 wall_s=131.74 cpu_user_s=128.15 memavail_start_gib=22 disk_free_gib=511->510 slot=claude

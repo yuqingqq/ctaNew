@@ -1,0 +1,40 @@
+ORDER-HARM v3 (keep now with the option to cancel later; policy iteration; chronological folds), 9 consumed days, first 60 s, M 50, 50 ms decisions; as of 2026-11-14T13:19:02Z
+statuses: {'window_sides': 5184, 'episodes': 275122, 'rung_episodes': 1518411, 'censored': 62136, 'censored5': 78938, 'no_input_at_onset': 0, 'two_resting': 0, 'rows': 9068348, 'forced_pull': 0, 'multi': 878527, 'recorder_differ': 0, 'pconst_checks': 43932, 'pconst_differ': 0, 'partition_bad': 0, 'lookahead_checks': 453421, 'lookahead_bad': 0}
+
+LABELS (c per share of the 30-sh order; first decision of each rung-episode): rows | mean R | keep-all to T_e minus pull (KAV - Pe) | share KAV > Pe | mean P_e
+  rung 0:  250760 | -0.184 | -0.106 | 0.182 | -0.496
+  rung 1:  252407 | -0.140 | -0.119 | 0.120 | -0.356
+  rung 2:  253205 | -0.110 | -0.125 | 0.083 | -0.253
+  rung 3:  253623 | -0.086 | -0.119 | 0.063 | -0.182
+  rung 4:  254117 | -0.069 | -0.113 | 0.050 | -0.132
+  rung 5:  254299 | -0.050 | -0.089 | 0.056 | -0.088
+  rung all: 1518411 | -0.106 | -0.112 | 0.092 | -0.250
+
+TAIL SENSITIVITY (first decisions not censored at 5 s): keep-all minus pull with a 2 s tail | with a 5 s tail | rows
+  rung 0: -0.106 | -0.066 | 237725
+  rung 1: -0.119 | -0.087 | 239275
+  rung 2: -0.125 | -0.105 | 240033
+  rung 3: -0.120 | -0.112 | 240448
+  rung 4: -0.113 | -0.123 | 240912
+  rung 5: -0.089 | -0.102 | 241080
+  rung all: -0.112 | -0.099 | 1439473
+
+FOLDS (train -> calibrate -> test): IC final vs realized keep-all minus pull | IC final vs one-step realized target | IC iteration-0 model vs realized | keep share (A_hat > 0) test | flip vs iteration 0 | flip vs previous iteration | continuation mean | theta_M (FB25 keep share on the calibration day)
+  20261027: train 1023,1024,1025 cal 1026 | +0.140 | +0.097 | +0.160 | 0.500 | 0.410 | 0.247 | +0.011 | -0.021 (0.785)
+  20261031: train 1023,1024,1025,1026 cal 1027 | +0.137 | +0.099 | +0.126 | 0.549 | 0.432 | 0.232 | +0.011 | -0.016 (0.807)
+  20261101: train 1023,1024,1025,1026,1027 cal 1031 | +0.142 | +0.095 | +0.137 | 0.593 | 0.450 | 0.230 | +0.013 | -0.017 (0.832)
+  20261102: train 1023,1024,1025,1026,1027,1031 cal 1101 | +0.128 | +0.087 | +0.146 | 0.605 | 0.511 | 0.183 | +0.012 | -0.017 (0.843)
+  20261103: train 1023,1024,1025,1026,1027,1031,1101 cal 1102 | +0.144 | +0.099 | +0.154 | 0.582 | 0.515 | 0.181 | +0.007 | -0.016 (0.803)
+
+R660 OPTION (printed): continuation term by rung (fold mean): +0.034 +0.019 +0.010 +0.004 +0.000 +0.001; decisions flipped vs iteration 0 0.464, vs the previous iteration 0.215 (fold means)
+R661 SKILL: IC > 0 on 5/5 test days, pooled +0.137 -> SKILL
+
+INPUT IMPORTANCE (final models, gain share, mean over the 5 folds; top 15 per fold): dfv250 0.186, adv_d_bnimb250 0.052, adv_bn_imb 0.043, adv_bn_r100 0.036, shown_k 0.031, sens 0.030, size_better 0.027, activity 0.025, depth_now 0.024, adv_bn_r250 0.020, gap_adv 0.019, dfv1000 0.016, rung 0.015, sigma 0.014, basis_bps 0.008
+
+KEEP MAP (test days pooled): keep share (mean A_hat c/sh) by level, volatility tercile (low / mid / high sigma) and tercile of size at better prices (thin / mid / thick cushion in front)
+  level 0: v0s0 0.62 (-0.01) | v0s1 0.94 (+0.10) | v0s2 0.92 (+0.13) | v1s0 0.62 (-0.01) | v1s1 0.93 (+0.10) | v1s2 0.93 (+0.13) | v2s0 0.60 (-0.01) | v2s1 0.91 (+0.10) | v2s2 0.93 (+0.13)
+  level 1: v0s0 0.43 (-0.03) | v0s1 0.83 (+0.04) | v0s2 0.95 (+0.09) | v1s0 0.42 (-0.03) | v1s1 0.84 (+0.04) | v1s2 0.95 (+0.09) | v2s0 0.41 (-0.03) | v2s1 0.79 (+0.03) | v2s2 0.92 (+0.08)
+  level 2: v0s0 0.17 (-0.05) | v0s1 0.59 (-0.00) | v0s2 0.90 (+0.02) | v1s0 0.17 (-0.05) | v1s1 0.57 (-0.00) | v1s2 0.90 (+0.03) | v2s0 0.18 (-0.05) | v2s1 0.54 (-0.00) | v2s2 0.88 (+0.03)
+  level 3: v0s0 0.12 (-0.06) | v0s1 0.52 (-0.01) | v0s2 0.84 (+0.01) | v1s0 0.12 (-0.06) | v1s1 0.50 (-0.01) | v1s2 0.86 (+0.01) | v2s0 0.14 (-0.05) | v2s1 0.45 (-0.01) | v2s2 0.83 (+0.01)
+  level 4: v0s0 0.09 (-0.07) | v0s1 0.33 (-0.01) | v0s2 0.75 (+0.00) | v1s0 0.08 (-0.07) | v1s1 0.31 (-0.01) | v1s2 0.75 (+0.01) | v2s0 0.11 (-0.06) | v2s1 0.29 (-0.01) | v2s2 0.71 (+0.00)
+  level 5: v0s0 0.07 (-0.08) | v0s1 0.28 (-0.02) | v0s2 0.72 (+0.00) | v1s0 0.07 (-0.07) | v1s1 0.24 (-0.02) | v1s2 0.74 (+0.00) | v2s0 0.10 (-0.06) | v2s1 0.26 (-0.02) | v2s2 0.72 (+0.00)

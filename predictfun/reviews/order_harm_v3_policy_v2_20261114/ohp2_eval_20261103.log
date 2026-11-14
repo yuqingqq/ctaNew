@@ -1,0 +1,21 @@
+joint-ladder v3 selftests passed; planted errors caught: {'MUT_REF_RELEASE': True, 'MUT_REST_TRUE': True, 'MUT_HELD_TRUE': True, 'MUT_LEG_LEAK': True, 'MUT_PRIORITY': True}
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+influence selftests passed; planted errors caught: {'MUT_DFV_NOSIDE': True, 'MUT_ONSET_ALL': True, 'MUT_NO_DEBOUNCE': True}
+order-harm v2 selftests passed; planted errors caught: {'MUT_NOWAIT': True, 'MUT_LAT_KEEP': True, 'MUT_HARM_SIGN': True, 'MUT_STAMP': True, 'MUT_RAISE': True}
+order-harm v3 selftests passed; planted errors caught: {'MUT_SLOW_CADENCE': True, 'MUT_VENUE_REST': True, 'MUT_NO_LAT': True, 'MUT_BOOTSTRAP': True, 'MUT_SHARED_CHAIN': True, 'MUT_TIMER': True}
+exposure selftests passed (5 synthetic cases incl. the flagged two-order case); planted position-only statistic caught
+order-harm policy v2 selftests passed; planted errors caught: {'MUT_GRID': True, 'MUT_HOLD': True, 'MUT_EVERY_STEP': True, 'MUT_NOINPUT_KEEP': True, 'MUT_CADENCE_250': True, 'MUT_SURV_ANY': True, 'MUT_TYPE_THR': True}
+20261103: 24 windows, 90845 model inputs, 56 s, rss 878 MiB
+20261103: 48 windows, 180687 model inputs, 108 s, rss 899 MiB
+20261103: 72 windows, 274319 model inputs, 161 s, rss 919 MiB
+20261103: 96 windows, 370681 model inputs, 218 s, rss 947 MiB
+20261103: 120 windows, 478606 model inputs, 274 s, rss 972 MiB
+20261103: 144 windows, 575910 model inputs, 331 s, rss 1001 MiB
+20261103: 168 windows, 678370 model inputs, 389 s, rss 1028 MiB
+20261103: 192 windows, 786141 model inputs, 453 s, rss 1064 MiB
+20261103: 216 windows, 884835 model inputs, 508 s, rss 1085 MiB
+20261103: 240 windows, 977111 model inputs, 561 s, rss 1108 MiB
+20261103: 264 windows, 1064090 model inputs, 614 s, rss 1129 MiB
+20261103: 288 windows, 1140900 model inputs, 666 s, rss 1153 MiB
+20261103: windows 288, runs 20736, model inputs 1140900, violations {'leg': 0, 'order': 0, 'live': 0, 'priority': 0, 'collision': 0, 'position': 0, 'cap': 0}, max exposure {'hard10': 300.0000000000001, 'hard20': 600.0, 'hard50': 1499.9671032248677, 'none': 1822.73288362362} in 668 s
+2026-11-14T14:11:23Z tag=ohp2_eval_20261103 rc=0 peak_rss_mib=1361 wall_s=669.14 cpu_user_s=664.86 memavail_start_gib=23 disk_free_gib=507->507 slot=claude

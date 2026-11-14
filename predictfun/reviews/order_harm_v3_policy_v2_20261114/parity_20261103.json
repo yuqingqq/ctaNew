@@ -1,0 +1,15 @@
+{
+ "windows": 288,
+ "recorded": 1183854,
+ "key_found": 1015700,
+ "matched": 660956,
+ "checked": 33048,
+ "input_differ": 0,
+ "pred_differ": 0,
+ "inputs": 1183854,
+ "lookahead_checks": 59192,
+ "lookahead_bad": 0,
+ "contract": "order-harm-client-50ms-terminal-tail-v2",
+ "decision_ms": 50,
+ "repost_ms": 0.0
+}

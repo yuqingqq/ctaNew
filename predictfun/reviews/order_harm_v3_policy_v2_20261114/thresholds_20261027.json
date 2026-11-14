@@ -1,0 +1,15 @@
+{
+ "contract": "order-harm-client-50ms-terminal-tail-v2",
+ "decision_ms": 50,
+ "repost_ms": 0.0,
+ "test": "20261027",
+ "cal": "20261026",
+ "train": [
+  "20261023",
+  "20261024",
+  "20261025"
+ ],
+ "s_FB_cal": 0.7845379378531986,
+ "theta_M": -0.020813932042776772,
+ "keep_OHQ0_cal": 0.47076670554745986
+}

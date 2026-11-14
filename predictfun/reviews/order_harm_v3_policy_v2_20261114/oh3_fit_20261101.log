@@ -1,0 +1,6 @@
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+influence selftests passed; planted errors caught: {'MUT_DFV_NOSIDE': True, 'MUT_ONSET_ALL': True, 'MUT_NO_DEBOUNCE': True}
+order-harm v2 selftests passed; planted errors caught: {'MUT_NOWAIT': True, 'MUT_LAT_KEEP': True, 'MUT_HARM_SIGN': True, 'MUT_STAMP': True, 'MUT_RAISE': True}
+order-harm v3 selftests passed; planted errors caught: {'MUT_SLOW_CADENCE': True, 'MUT_VENUE_REST': True, 'MUT_NO_LAT': True, 'MUT_BOOTSTRAP': True, 'MUT_SHARED_CHAIN': True, 'MUT_TIMER': True}
+fold 20261101: train ('20261023', '20261024', '20261025', '20261026', '20261027'), cal 20261031; IC final +0.142, keep share 0.593, flip last 0.230, theta_M -0.017; 616 s
+2026-11-14T12:37:47Z tag=oh3_fit_20261101 rc=0 peak_rss_mib=1543 wall_s=616.63 cpu_user_s=598.57 memavail_start_gib=23 disk_free_gib=509->509 slot=claude

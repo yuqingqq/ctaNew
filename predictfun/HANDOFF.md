@@ -1,5 +1,13 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-14 14:34Z (session ce68ebe0) — ORDER-HARM v3 + POLICY v2 DONE (keep-vs-cancel, scheduled re-post): the model ranks (R661 SKILL, IC +0.137, 5 / 5 days) but is NOT ACCEPTED on the whole portfolio (R652 REJECT, both arms, every cap); R654 FEWER, R655 MORE, R656 NOT-YET
+
+- Run 12:04:15Z-14:27:35Z (c5f4557c); post hoc C3 reading 9ee5cc1b (14:32Z, labelled post hoc). Report handoffs/20261114_order_harm_v3_policy_v2_results.md; copies reviews/order_harm_v3_policy_v2_20261114/; FINDINGS row added (section 3 B).
+- Controls all passed: label look-ahead 0 / 453,421; input parity 2,769,679 matched decisions, 0 differ; replay look-ahead 0 / 251,744; engine regression (LDG, default timer) = frozen v3 row for row; FB25 = FB25C; conservation 0 on 103,680 runs; terminal reconciliation 103,680 / 103,680; exposure <= cap; peak 1,769 MiB.
+- Results (hard 50, whole portfolio, $ a day): OHQ0 vs FB25C +$8 / +$0 at M 0 (3 / 5), +$130 / +$100 at M 50 (4 / 5), +$483 / +$527 at M 250 (5 / 5); vs LDG +$3 / -$41 at M 0, +$6 / -$20 at M 50, -$482 / -$667 at M 250 (all ages / w/o young). OHQM fails 12 / 12. LDG itself: +$1 (M 0), -$172 (M 50), -$2,162 (M 250); ceiling OFB2C +$582 / +$358 / -$1,704.
+- Watch out: the policy iteration is not converged (18-25% of decisions flip between iterations 2 and 3); R661's realized benchmark is iteration 0's own target (iteration 0 scores higher in 3 / 5 folds); the losses sit on E2-timed trades against orders >= 500 ms old.
+- Next (USER's call): the model-decided posting model is the other session's. For keep / cancel, untested candidates: label horizon to the 60.2 s portfolio mark, a converged policy iteration, inventory / remaining-size inputs, labels from the policy's own states. Proposed first: a post hoc split of OHQ0 - LDG by rung, order age and trade source from the saved fills (no new replay).
+
 ## 2026-11-14 12:04Z (session ce68ebe0) — keep-vs-cancel with a SCHEDULED re-post runs first (USER), the model-decided posting next; level diagnostics added (c5f4557c)
 
 - USER: "Let me know the current keep vs cancel model first" (explained: one model for all levels, level differences through the order's inputs - ticks behind, size at better prices, queue; threshold 0 or one matched threshold) / "So the volume, volatility will have big influence for each level right?" / "Yes we can add in. Meanwhile, do you think we can try to run the keep vs cancel + scheduled repost model first".
