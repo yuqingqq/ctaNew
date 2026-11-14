@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-14 10:24Z (session ce68ebe0): review of the USER's client-state / 50 ms repair (32da4014): right; three fixes on top (a8e6d473:
+  driver path, policy iteration for the option value, 50 ms memory); committed and pushed; nothing run, awaiting the go.
   2026-11-14 09:39Z (session ce68ebe0): USER review of the ORDER-HARM POLICY design - four issues fixed in code (ORDER-HARM v3, POLICY
   v2: same cadence, whole-portfolio acceptance, chronological folds, keep-with-option target); NOTHING RUN (USER: "Don't run"); awaiting the go.
   2026-11-14 08:43Z (session ce68ebe0): JOINT-LADDER v3 DONE after the USER's review voided v2 (client-known decisions, invariance 0 of
@@ -1808,8 +1810,8 @@ flags:
   pull_depth: "HELPS at M 0 / M 50, FLIPS at M 250 (FUTURE-BEST post hoc 6f13eb38: PD10 -$172, PD25 -$453 a day vs LDG, 0/9) (PULL-DEPTH, 2026-11-13 12:16Z, 6fa5182e/7f5f6aa1): move depth at guard-on steps AUC 0.75 out of day, 60% of onsets no move in 1 s; PD10 +$23 / PD25 +$44 a day vs LDG on WS trades at M 50 (9/9, 8/9), gain behind the best; all trades only PD10 better; hit side new best queued before birth (top 5 42% of fills, +0.30 c/sh); other side race: first-100 ms fills +0.96 vs +0.45 c/sh, top 5 20% of first fills; FAST 6/9"
   order_harm_v2: "HARM PREDICTABLE, KEEP STILL NEGATIVE (ORDER-HARM v2, 2026-11-14 06:29Z, abf5638e; v1 void after USER review): 2.29 M decision states; P(harm) 18.9% within 2 s (rung 0 32%), severity 3.1 c/sh; keep - pull -0.40 (rung 0 -0.68 .. rung 5 -0.21); R621 AUC 0.753 9/9, R620 IC +0.151 9/9; best predicted decile -0.06; falsifier 114,383 rows 0 differ; censored 64,182"
   order_harm_policy_v1: "VOID (stopped at its 4th day after the USER's review, outputs deleted unread; 73950293 / 041edeee)"
-  order_harm_v3: "WRITTEN, NOT RUN (9d38c57d / f481b01b; first run stopped on the USER's \"Don't run\", rows deleted unread): keep-with-option target on the policy's lane and cadence, chronological folds"
-  order_harm_policy_v2: "WRITTEN, NOT RUN (f481b01b): same-cadence baselines, R652 whole-portfolio acceptance, chronological folds"
+  order_harm_v3: "CLIENT-STATE / 50 ms + POLICY ITERATION, NOT RUN (USER repair 32da4014, review fixes a8e6d473; earlier 250 ms code 9d38c57d / f481b01b superseded): keep-with-option target on the client-state lane, realized continuation from keep-all, chronological folds"
+  order_harm_policy_v2: "CLIENT-STATE / 50 ms, NOT RUN (32da4014, a8e6d473): R652 portfolio at 60.2 s after the cancellation tail, FB25C = FB25 fill for fill, chronological folds"
   joint_ladder_v3: "KEEP PAYS ON WS WHERE THE CAP HAS ROOM, NOT OVER ALL TRADES (JOINT-LADDER v3, 2026-11-14 07:54Z, eb735795; v2 void after USER review; post hoc 273bbe8f / 87ebe59c): client-known decisions, invariance 6,912 checks 0 differ; hard caps: exposure never over (0 of 69,984 runs); WS $/day w/o young M 50: LDG hard2 +14 / hard10 +47 / none +54, FB25 +26 / +100 / +120, OFB2 +77 / +335 / +358; R613 FB25 NOT-SHOWN hard2, PAYS hard5 / hard10 (M 250 0/9); OFB2 PAYS everywhere; R615 v1 within $1 (LDG / FB25); PH1 all trades FB25 below LDG 7/9 (hard 10 -$77), E2 9/9; PH3 gains in 10-23..10-27"
   joint_ladder: "KEEP SURVIVES THE CAP AT M 0/50 (JOINT-LADDER, 2026-11-14 06:02Z, 0ded5c49/879fe15a/0e60b8e4): WS $/day w/o young M 50: LDG cap2 +32 / none +54; FB25 cap2 +74 / none +121; OFB2 cap2 +275 / none +366; R611 FB25 vs LDG PAYS every cap (M 250 0/9), OFB2 PAYS every cap and clock; cap 2 x size binds 25-30% of steps, overshoot p95 ~2x; all trades / 60 s marks negative except OFB2; post hoc parity 15,552 checks 0 differ"
   target_test: "HORIZON NOT THE PROBLEM (TARGET-TEST, 2026-11-14 05:37Z, 54408bcd): WS $/day w/o young M 50: LDG +54, FB25 +124, FBN25 +120, FBF25 +109, FBF10 +64, IR -219, OFB1 +432, OFB2 +435, OFB3 +415; R600 NOT-SHOWN, R600b 2S-BETTER, R601 NOT-SHOWN, R602 HELPS, R603 HURTS, R604 FLIPS-AT-M250 (all keep arms); USER gaps: blanket pull at the best, onset model applied throughout, independent rungs"
@@ -1847,3 +1849,16 @@ order_harm_client50_fix_20261114:
   integration_state: merged
   remote_pushed: false
 # /ORDER_HARM_CLIENT50_FIX_20261114
+
+# ORDER_HARM_CLIENT50_REVIEW_20261114
+order_harm_client50_review_20261114:
+  reviewed_as_of: "2026-11-14 10:24Z"
+  session: ce68ebe0
+  repair_commit: 32da4014
+  review_fix_commit: a8e6d473
+  repair_confirmed: true
+  fixes: [policy_driver_prerequisite_path, policy_iteration_continuation_from_keep_all, memory_50ms_batched_float32, unclosed_files]
+  findings_added: [P25, P26, P27]
+  synthetic_checks: "9 unit tests; v3 selftest 6 cases, 4/4 planted; policy selftest, 5/5 planted"
+  historical_run_started: false
+# /ORDER_HARM_CLIENT50_REVIEW_20261114
