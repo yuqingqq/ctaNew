@@ -1,0 +1,30 @@
+{
+  "asof": "2026-11-14T13:13:18Z",
+  "synthetic_tests": 16,
+  "failures": 0,
+  "source_files": [
+    "pf_wait_post_v2.py",
+    "pf_wait_post_v2_lane.py",
+    "test_wait_post_v2.py",
+    "model_wait_post_v2_runner.py"
+  ],
+  "historic_started": false,
+  "controls": [
+    "old zero-label profitable/loss cases now separated",
+    "WAIT can continue indefinitely under frozen model",
+    "WAIT can choose a better later price",
+    "shared ladder displacement is priced",
+    "positive tie posts, nonpositive absolute value waits",
+    "optimized engine execution parity",
+    "fast features match original, future invariance",
+    "side heads independent",
+    "raw economics and strict chronology",
+    "constant learned head refused",
+    "local skill required despite positive PNL",
+    "portfolio-null counts and market identities verified",
+    "old/partial/protected artifacts refused"
+  ],
+  "fixture_correction": "Initial new test assumed independent fills across rungs. Corrected that fixture to isolate the rung and retained a separate test asserting the shared-ladder displacement effect; implementation unchanged.",
+  "performance_claim": false,
+  "forward_validation": false
+}
