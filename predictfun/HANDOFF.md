@@ -1,5 +1,29 @@
 # P-2026-005 HANDOFF
 
+<!-- WAIT_POST_SIGNAL_DATA_20261114 -->
+## 2026-11-14 — distribution and signal-processing study queued
+
+USER: filter noise, generate useful signals, check train/test distribution and
+process data accordingly. Source04d94d1b/freeze7d177ca0; receipt
+`reviews/wait_post_signal_data_20261114/current.json`. Existing five consumed
+v2 test dates and neutral-reference generation labels; no new forward days.
+Separate raw market-feature shift from joint inventory/exposure/waiting-state
+coverage. Report errors inside and outside training support, not only overall.
+
+Three declared development probes against saved FROZEN_V2: RAW_DIRECT fits
+POST-minus-WAIT directly; COMPACT_DIRECT uses causal economic normalization
+and training-fitted missing/extreme flags with the same pinned LGBM; COMPACT_RIDGE
+uses the same inputs with fixed regularization. No target clipping, fill-selected
+training, test-row removal, test-fitted transforms or post hoc thresholds.
+All candidates retain positive absolute POST and nonnegative timing advantage.
+500-draw action-matched local nulls; no portfolio or forward acceptance claim.
+
+Nine synthetic checks must pass before historical audit/fitting. Supervisor
+`pf-wait-post-signal-data-20261114` waits on own core8; current size worker
+finishes normally, parent1576587 yields and resumes via finally/ExecStopPost.
+Output: `data/predict_fun/research/wait_post_signal_data_20261114_v1`.
+<!-- /WAIT_POST_SIGNAL_DATA_20261114 -->
+
 ## START HERE - 2026-11-14 16:38Z (session ce68ebe0, before a session reset): the PULL line's direction, corrected with the USER
 
 USER: "Make sure our direction is correct, then correct handoffs and status, I will clear this session and reload".
