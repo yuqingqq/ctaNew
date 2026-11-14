@@ -42,7 +42,8 @@ Limits: fills only (GONE includes moves to another price); their own pull can ma
 so an outcome after a pull is not independent of it; v and P are our signals, read 100 ms before the trade (they may have pulled earlier
 in the interval); the population is front orders after small stopping trades, E2-ambiguous intervals excluded; values are 5 s marks of
 one fill; consumed days (C8); no replay of our orders here (C7; C9: theirs are real fills, ours a ranking of our signal on their orders).
-Usage (run_light, PF_SLOT=claude): pf_learn_pull_target.py selftest | report; driver run_learn_pull_target.sh
+Usage (run_light, PF_SLOT=claude): pf_learn_pull_target.py selftest | report | check; driver run_learn_pull_target.sh (selftest, report).
+'check' is POST HOC, added after the first report (02:25Z): the same T2 / T3 with every trade counted once (see check()).
 """
 import json
 import os
@@ -297,6 +298,49 @@ def report():
     print(txt)
 
 
+def check():
+    """POST HOC, added after the first report (2026-11-14 02:25Z), descriptive, no readings. The report's T2 / T3 weight each trade by its
+    volume at the price, and that volume depends on their own presence (a trade through the price takes less there once they have left).
+    Here every next trade counts once (one fill of one size): T2's gap and kind share, and T3's value kept per trade at their pull count
+    (their pulls, our guard v, P, random 200 draws, the bound by the value itself), at 1 s and 5 s, with the day counts printed."""
+    A = pd.concat([pd.read_parquet(f'{LP.OUTD}/obs_{d}.parquet') for d in DAYS9], ignore_index=True)
+    A['gone'] = 1 - A.stayed; A['b'] = bucket(A.gap.values)
+    T = A[A.grp == 'top 5'].reset_index(drop=True)
+    D = T[np.isfinite(T.v.values) & np.isfinite(T.P.values)].reset_index(drop=True)
+    one = np.ones(len(T)); rng = np.random.default_rng(SEED + 1)
+    L = [f'LEARN-PULL-TARGET CHECK (POST HOC after the first report; descriptive, no readings): every next trade counts once; as of '
+         f'{time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}; top 5 {len(T)}, T3 rows {len(D)}', '']
+    for col in ('v1', 'v5'):
+        g, gk, sh = gap_share(T[col].values, one, T.gone.values, T.through.values)
+        st_ = T.gone.values == 0
+        sd = [gap_share(y[col].values, np.ones(len(y)), y.gone.values, y.through.values) for _, y in T.groupby('day')]
+        L.append(f'T2u {col}: stayed {T[col].values[st_].mean():+.2f}, gone {T[col].values[~st_].mean():+.2f}: gap {g:+.2f}; kind accounts for {gk:+.2f} ({sh:.0%});'
+                 f' days with gap > 0 and kind share < 0.5: {sum(1 for x in sd if x[0] > 0 and x[2] < 0.5)} of 9')
+        for th, nm in ((0, 'STOP'), (1, 'THROUGH')):
+            y = T[T.through == th]; s_ = y.gone.values == 0
+            L.append(f'     within {nm:<7}: stayed {y[col].values[s_].mean():+.2f}, gone {y[col].values[~s_].mean():+.2f}')
+    L.append('')
+    L.append('T3u value kept per trade at their own pull count (c, unweighted; per day x interval bucket): pooled mean kept | days above theirs')
+    for col in ('v1', 'v5'):
+        res = {a: [] for a in ('actual', 'guard', 'P', 'bound', 'rnd_mean', 'rnd_p95')}; kept = {a: [0.0, 0] for a in ('actual', 'guard', 'P', 'bound')}
+        for d, x in D.groupby('day'):
+            val = x[col].values; cell = x.b.values; gone = x.gone.values.astype(bool)
+            kc = {c: int(gone[cell == c].sum()) for c in np.unique(cell)}
+            arms = dict(actual=gone, guard=pick(-x.v.values, cell, kc, rng), P=pick(x.P.values, cell, kc, rng), bound=pick(-val, cell, kc, rng))
+            for a, pl in arms.items():
+                res[a].append(float(val[~pl].mean())); kept[a][0] += float(val[~pl].sum()); kept[a][1] += int((~pl).sum())
+            rnd = np.array([float(val[~pick(rng.random(len(val)), cell, kc, rng)].mean()) for _ in range(NDRAW)])
+            res['rnd_mean'].append(float(rnd.mean())); res['rnd_p95'].append(float(np.quantile(rnd, 0.95)))
+        act = np.array(res['actual'])
+        L.append(f'  {col}: theirs {kept["actual"][0] / kept["actual"][1]:+.3f} | random mean {np.mean(res["rnd_mean"]):+.3f} (theirs above the random p95 on'
+                 f' {int((act > np.array(res["rnd_p95"])).sum())} of 9) | our guard v {kept["guard"][0] / kept["guard"][1]:+.3f} (>= theirs on'
+                 f' {int((np.array(res["guard"]) >= act).sum())} of 9) | P {kept["P"][0] / kept["P"][1]:+.3f} (>= theirs on {int((np.array(res["P"]) >= act).sum())} of 9)'
+                 f' | bound {kept["bound"][0] / kept["bound"][1]:+.3f}')
+    txt = '\n'.join(L) + '\n'
+    open(f'{OUTT}/learn_pull_target_check.txt', 'w').write(txt)
+    print(txt)
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''
     if cmd == 'selftest':
@@ -304,5 +348,8 @@ if __name__ == '__main__':
     elif cmd == 'report':
         selftest()
         report()
+    elif cmd == 'check':
+        selftest()
+        check()
     else:
-        sys.exit('usage: pf_learn_pull_target.py selftest | report')
+        sys.exit('usage: pf_learn_pull_target.py selftest | report | check')
