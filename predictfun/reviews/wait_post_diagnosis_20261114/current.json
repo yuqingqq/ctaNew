@@ -1,6 +1,6 @@
 {
-  "asof": "2026-11-14T15:43:35.955154+00:00",
-  "status": "running_assigned_slot",
+  "asof": "2026-11-14T16:21:20.507349+00:00",
+  "status": "complete_post_hoc_diagnosis",
   "current_attempt": 3,
   "source_commit": "33925207",
   "freeze_commit": "3ac6a3b4",
@@ -12,5 +12,10 @@
     "v2": "preflight refused on occupied second slot; stopped before tests/historical work"
   },
   "historical_models_unchanged": true,
-  "forward_validation": false
+  "forward_validation": false,
+  "current_result": "v3/diagnosis.json",
+  "raw_report": "v3/raw_report.json",
+  "completion": "v3/completion.json",
+  "size_queue_resumed": true,
+  "full_study_complete": true
 }

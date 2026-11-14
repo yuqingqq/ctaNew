@@ -1,0 +1,905 @@
+{
+  "asof": "2026-11-14T16:21:11Z",
+  "status": "complete_post_hoc_diagnosis",
+  "forward_validation": false,
+  "new_candidates": 0,
+  "scope": {
+    "complete_days": 5,
+    "market_windows": 1440,
+    "dates": [
+      "20261027",
+      "20261031",
+      "20261101",
+      "20261102",
+      "20261103"
+    ],
+    "clock": "M50",
+    "first_seconds": 60,
+    "terminal_seconds": 60.2,
+    "economic_units": "gross simulated dollars; local value targets cents per nominal share",
+    "heldout_neutral_reference_probes": 9922,
+    "exclusions": {
+      "untimed_legs_0_60": 8361,
+      "untimed_shares_0_60": 105159.19988981608,
+      "grid_steps_without_row": 0
+    },
+    "original_market_arm_reconciliations": 4320
+  },
+  "generalization": {
+    "post": {
+      "cells": 10,
+      "worse_than_train_mean": 10,
+      "worse_than_price_rung": 10,
+      "train_r2_range": [
+        0.22674062412290763,
+        0.28949173614884205
+      ],
+      "test_r2_range": [
+        -0.1127024144601887,
+        -0.023432564440952097
+      ],
+      "test_rank_ic_range": [
+        -0.016365126358918944,
+        0.082027707794631
+      ],
+      "train_zero_fraction_range": [
+        0.27628032345013476,
+        0.3715705765407555
+      ],
+      "train_top1pct_squared_target_fraction_range": [
+        0.3583316080434749,
+        0.3916362087624438
+      ]
+    },
+    "wait": {
+      "cells": 10,
+      "worse_than_train_mean": 10,
+      "worse_than_price_rung": 10,
+      "train_r2_range": [
+        0.22991213399004629,
+        0.2865284647166896
+      ],
+      "test_r2_range": [
+        -0.12189748351202212,
+        -0.014999022994195421
+      ],
+      "test_rank_ic_range": [
+        -0.04308254014869145,
+        0.09985208317485683
+      ],
+      "train_zero_fraction_range": [
+        0.28706199460916443,
+        0.3852882703777336
+      ],
+      "train_top1pct_squared_target_fraction_range": [
+        0.3614736921941578,
+        0.4007465669522331
+      ]
+    },
+    "delta": {
+      "cells": 10,
+      "worse_than_train_mean": 10,
+      "worse_than_price_rung": 10,
+      "train_r2_range": [
+        0.14956447061889022,
+        0.2235596152221826
+      ],
+      "test_r2_range": [
+        -0.15137468187649605,
+        -0.028905101787342513
+      ],
+      "test_rank_ic_range": [
+        -0.03415899569215392,
+        0.05504675108026888
+      ],
+      "train_zero_fraction_range": [
+        0.6811386442760597,
+        0.7290482076637824
+      ],
+      "train_top1pct_squared_target_fraction_range": [
+        0.4800346845275024,
+        0.587308827483536
+      ]
+    }
+  },
+  "selected_heldout_calibration": {
+    "0": {
+      "eligible_probes": 5017,
+      "selected": 954,
+      "predicted_post": 3.138783431422664,
+      "actual_post": -0.8357807691927341,
+      "predicted_delta": 2.3040193379597356,
+      "actual_delta": -0.18392657326717113
+    },
+    "1": {
+      "eligible_probes": 4905,
+      "selected": 889,
+      "predicted_post": 3.794278499474305,
+      "actual_post": -3.6561870072515856,
+      "predicted_delta": 2.921127769059314,
+      "actual_delta": 0.10922719440997479
+    }
+  },
+  "post_wait_test_target_correlation_range": [
+    0.860883449129397,
+    0.9455268587032803
+  ],
+  "labeled_probe_support": {
+    "n": 9922,
+    "unseen_fraction": 0.16357589195726668
+  },
+  "runtime_generations": {
+    "VALUE": {
+      "generations": 51446,
+      "posts": 49487,
+      "initial_posts": 9842,
+      "posted_after_wait": 39645,
+      "eventual_post_fraction": 0.9619212378027446,
+      "initial_post_fraction": 0.19130739027329627,
+      "posts_after_wait_fraction": 0.8011194859255967,
+      "posted_unseen_fraction": 0.6685796269727403,
+      "posted_sparse_fraction": 0.8814638187806899,
+      "first_unseen_fraction": 0.80857598258368
+    },
+    "VALUE_GUARD_EXIT": {
+      "generations": 721779,
+      "posts": 713138,
+      "initial_posts": 299707,
+      "posted_after_wait": 413431,
+      "eventual_post_fraction": 0.9880281914547251,
+      "initial_post_fraction": 0.41523374883447706,
+      "posts_after_wait_fraction": 0.579734918066349,
+      "posted_unseen_fraction": 0.8836788952488859,
+      "posted_sparse_fraction": 0.9423617869192218,
+      "first_unseen_fraction": 0.9136744072631651
+    }
+  },
+  "value_runtime_by_side": {
+    "0": {
+      "generations": 25280,
+      "posts": 24196,
+      "initial_posts": 5435,
+      "posted_after_wait": 18761,
+      "eventual_post_fraction": 0.957120253164557,
+      "initial_post_fraction": 0.21499208860759494,
+      "posts_after_wait_fraction": 0.7753760952223508,
+      "posted_unseen_fraction": 0.6528351793684907,
+      "posted_sparse_fraction": 0.8631591998677467,
+      "first_unseen_fraction": 0.7395965189873418
+    },
+    "1": {
+      "generations": 26166,
+      "posts": 25291,
+      "initial_posts": 4407,
+      "posted_after_wait": 20884,
+      "eventual_post_fraction": 0.9665596575708936,
+      "initial_post_fraction": 0.16842467324008256,
+      "posts_after_wait_fraction": 0.8257482899055,
+      "posted_unseen_fraction": 0.683642402435649,
+      "posted_sparse_fraction": 0.8989759202878495,
+      "first_unseen_fraction": 0.875219750821677
+    }
+  },
+  "portfolio_totals": [
+    {
+      "arm": "ALWAYS",
+      "pnl": -13832.571550409279,
+      "pnl_without_young": -13161.580604682096,
+      "shares": 825126.064532893,
+      "places": 66499,
+      "inventory_square_seconds": 9398921584.389387,
+      "grid_steps": 1728000,
+      "both_live": 1724245,
+      "both_touch": 16882,
+      "both_near": 64702,
+      "bid_live": 1725242,
+      "ask_live": 1725121,
+      "bid_touch": 366299,
+      "ask_touch": 391385,
+      "both_live_fraction": 0.9978269675925926,
+      "both_touch_fraction": 0.009769675925925926,
+      "both_near_fraction": 0.03744328703703704,
+      "bid_touch_fraction": 0.21197858796296296,
+      "ask_touch_fraction": 0.22649594907407408
+    },
+    {
+      "arm": "TIMER",
+      "pnl": -11066.000246580188,
+      "pnl_without_young": -11197.08201785337,
+      "shares": 626495.6276622537,
+      "places": 48094,
+      "inventory_square_seconds": 4331216394.826732,
+      "grid_steps": 1728000,
+      "both_live": 1521057,
+      "both_touch": 43013,
+      "both_near": 153169,
+      "bid_live": 1580265,
+      "ask_live": 1581766,
+      "bid_touch": 362163,
+      "ask_touch": 387481,
+      "both_live_fraction": 0.8802413194444444,
+      "both_touch_fraction": 0.024891782407407408,
+      "both_near_fraction": 0.08863946759259259,
+      "bid_touch_fraction": 0.20958506944444444,
+      "ask_touch_fraction": 0.22423668981481482
+    },
+    {
+      "arm": "VALUE",
+      "pnl": -12046.46504132825,
+      "pnl_without_young": -11850.130853820483,
+      "shares": 645172.3463422963,
+      "places": 49487,
+      "inventory_square_seconds": 4576710009.907525,
+      "grid_steps": 1728000,
+      "both_live": 1581733,
+      "both_touch": 24717,
+      "both_near": 122947,
+      "bid_live": 1664500,
+      "ask_live": 1638571,
+      "bid_touch": 312758,
+      "ask_touch": 338189,
+      "both_live_fraction": 0.9153547453703703,
+      "both_touch_fraction": 0.014303819444444444,
+      "both_near_fraction": 0.07114988425925926,
+      "bid_touch_fraction": 0.18099421296296297,
+      "ask_touch_fraction": 0.19571122685185185
+    },
+    {
+      "arm": "VALUE_GUARD_EXIT",
+      "pnl": -1846.3774066869094,
+      "pnl_without_young": -377.1233722064009,
+      "shares": 140685.8776801331,
+      "places": 713138,
+      "inventory_square_seconds": 331270511.2875621,
+      "grid_steps": 1728000,
+      "both_live": 417127,
+      "both_touch": 52703,
+      "both_near": 121787,
+      "bid_live": 944617,
+      "ask_live": 852780,
+      "bid_touch": 370811,
+      "ask_touch": 285825,
+      "both_live_fraction": 0.24139293981481483,
+      "both_touch_fraction": 0.030499421296296295,
+      "both_near_fraction": 0.07047858796296297,
+      "bid_touch_fraction": 0.21458969907407408,
+      "ask_touch_fraction": 0.1654079861111111
+    }
+  ],
+  "daily": [
+    {
+      "day": "20261027",
+      "arm": "ALWAYS",
+      "pnl": -2032.5410450527072,
+      "pnl_without_young": -1919.9984430249972,
+      "shares": 176127.8257019506,
+      "places": 14258,
+      "inventory_square_seconds": 1936313297.0095143,
+      "grid_steps": 345600,
+      "both_live": 345057,
+      "both_touch": 3959,
+      "both_near": 13414,
+      "bid_live": 345170,
+      "ask_live": 345163,
+      "bid_touch": 71759,
+      "ask_touch": 84591,
+      "both_live_fraction": 0.9984288194444444,
+      "both_touch_fraction": 0.011455439814814814,
+      "both_near_fraction": 0.03881365740740741,
+      "bid_touch_fraction": 0.20763599537037036,
+      "ask_touch_fraction": 0.244765625
+    },
+    {
+      "day": "20261027",
+      "arm": "TIMER",
+      "pnl": -1361.7363026780274,
+      "pnl_without_young": -1395.8409093308626,
+      "shares": 126310.92274252701,
+      "places": 9887,
+      "inventory_square_seconds": 799944538.2409599,
+      "grid_steps": 345600,
+      "both_live": 299905,
+      "both_touch": 5720,
+      "both_near": 17319,
+      "bid_live": 314699,
+      "ask_live": 313088,
+      "bid_touch": 61454,
+      "ask_touch": 71862,
+      "both_live_fraction": 0.8677806712962963,
+      "both_touch_fraction": 0.016550925925925927,
+      "both_near_fraction": 0.05011284722222222,
+      "bid_touch_fraction": 0.17781828703703703,
+      "ask_touch_fraction": 0.20793402777777778
+    },
+    {
+      "day": "20261027",
+      "arm": "VALUE",
+      "pnl": -2147.590577118056,
+      "pnl_without_young": -2145.7423327518472,
+      "shares": 140585.13943464536,
+      "places": 10955,
+      "inventory_square_seconds": 943338942.1465833,
+      "grid_steps": 345600,
+      "both_live": 315806,
+      "both_touch": 4544,
+      "both_near": 22545,
+      "bid_live": 328156,
+      "ask_live": 331755,
+      "bid_touch": 55726,
+      "ask_touch": 75457,
+      "both_live_fraction": 0.9137905092592593,
+      "both_touch_fraction": 0.013148148148148148,
+      "both_near_fraction": 0.065234375,
+      "bid_touch_fraction": 0.16124421296296296,
+      "ask_touch_fraction": 0.21833622685185186
+    },
+    {
+      "day": "20261027",
+      "arm": "VALUE_GUARD_EXIT",
+      "pnl": -208.78152813162765,
+      "pnl_without_young": -121.91876773654138,
+      "shares": 22410.29038527586,
+      "places": 142478,
+      "inventory_square_seconds": 39441330.28488958,
+      "grid_steps": 345600,
+      "both_live": 52231,
+      "both_touch": 10342,
+      "both_near": 20802,
+      "bid_live": 130504,
+      "ask_live": 171180,
+      "bid_touch": 54397,
+      "ask_touch": 73995,
+      "both_live_fraction": 0.15113136574074074,
+      "both_touch_fraction": 0.029924768518518517,
+      "both_near_fraction": 0.06019097222222222,
+      "bid_touch_fraction": 0.15739872685185186,
+      "ask_touch_fraction": 0.21410590277777777
+    },
+    {
+      "day": "20261031",
+      "arm": "ALWAYS",
+      "pnl": -2685.6302542510875,
+      "pnl_without_young": -2584.323073315603,
+      "shares": 141409.3415304178,
+      "places": 11110,
+      "inventory_square_seconds": 1585733871.522102,
+      "grid_steps": 345600,
+      "both_live": 344843,
+      "both_touch": 2186,
+      "both_near": 12230,
+      "bid_live": 345090,
+      "ask_live": 345059,
+      "bid_touch": 65531,
+      "ask_touch": 79325,
+      "both_live_fraction": 0.9978096064814815,
+      "both_touch_fraction": 0.006325231481481481,
+      "both_near_fraction": 0.03538773148148148,
+      "bid_touch_fraction": 0.18961516203703704,
+      "ask_touch_fraction": 0.22952835648148148
+    },
+    {
+      "day": "20261031",
+      "arm": "TIMER",
+      "pnl": -2847.0814810546894,
+      "pnl_without_young": -2866.807550200904,
+      "shares": 115904.1585020444,
+      "places": 8563,
+      "inventory_square_seconds": 792654880.0492132,
+      "grid_steps": 345600,
+      "both_live": 309392,
+      "both_touch": 10704,
+      "both_near": 47246,
+      "bid_live": 318659,
+      "ask_live": 318450,
+      "bid_touch": 77372,
+      "ask_touch": 94002,
+      "both_live_fraction": 0.8952314814814815,
+      "both_touch_fraction": 0.030972222222222224,
+      "both_near_fraction": 0.13670717592592593,
+      "bid_touch_fraction": 0.22387731481481482,
+      "ask_touch_fraction": 0.2719965277777778
+    },
+    {
+      "day": "20261031",
+      "arm": "VALUE",
+      "pnl": -2273.8441210892206,
+      "pnl_without_young": -2190.0413843163146,
+      "shares": 93908.29438397544,
+      "places": 7282,
+      "inventory_square_seconds": 645942178.6979429,
+      "grid_steps": 345600,
+      "both_live": 308689,
+      "both_touch": 2829,
+      "both_near": 20746,
+      "bid_live": 340365,
+      "ask_live": 313011,
+      "bid_touch": 62862,
+      "ask_touch": 45885,
+      "both_live_fraction": 0.893197337962963,
+      "both_touch_fraction": 0.008185763888888888,
+      "both_near_fraction": 0.060028935185185185,
+      "bid_touch_fraction": 0.18189236111111112,
+      "ask_touch_fraction": 0.13276909722222222
+    },
+    {
+      "day": "20261031",
+      "arm": "VALUE_GUARD_EXIT",
+      "pnl": -127.90838427951014,
+      "pnl_without_young": 40.90217272056182,
+      "shares": 21685.777715400916,
+      "places": 68132,
+      "inventory_square_seconds": 62622437.40099445,
+      "grid_steps": 345600,
+      "both_live": 83064,
+      "both_touch": 7050,
+      "both_near": 18741,
+      "bid_live": 215380,
+      "ask_live": 142595,
+      "bid_touch": 108405,
+      "ask_touch": 26742,
+      "both_live_fraction": 0.2403472222222222,
+      "both_touch_fraction": 0.020399305555555556,
+      "both_near_fraction": 0.05422743055555555,
+      "bid_touch_fraction": 0.313671875,
+      "ask_touch_fraction": 0.07737847222222222
+    },
+    {
+      "day": "20261101",
+      "arm": "ALWAYS",
+      "pnl": -3866.4701029313514,
+      "pnl_without_young": -3717.32727181837,
+      "shares": 148155.62877824553,
+      "places": 11658,
+      "inventory_square_seconds": 1775026930.5925047,
+      "grid_steps": 345600,
+      "both_live": 344540,
+      "both_touch": 2045,
+      "both_near": 9063,
+      "bid_live": 344850,
+      "ask_live": 344797,
+      "bid_touch": 60114,
+      "ask_touch": 80646,
+      "both_live_fraction": 0.9969328703703704,
+      "both_touch_fraction": 0.0059172453703703705,
+      "both_near_fraction": 0.026223958333333332,
+      "bid_touch_fraction": 0.1739409722222222,
+      "ask_touch_fraction": 0.23335069444444445
+    },
+    {
+      "day": "20261101",
+      "arm": "TIMER",
+      "pnl": -2642.367425797856,
+      "pnl_without_young": -2689.6175961832073,
+      "shares": 120803.98552431967,
+      "places": 9014,
+      "inventory_square_seconds": 808564989.1582756,
+      "grid_steps": 345600,
+      "both_live": 302644,
+      "both_touch": 13680,
+      "both_near": 49126,
+      "bid_live": 313485,
+      "ask_live": 317063,
+      "bid_touch": 75235,
+      "ask_touch": 94836,
+      "both_live_fraction": 0.8757060185185185,
+      "both_touch_fraction": 0.03958333333333333,
+      "both_near_fraction": 0.14214699074074075,
+      "bid_touch_fraction": 0.21769386574074073,
+      "ask_touch_fraction": 0.2744097222222222
+    },
+    {
+      "day": "20261101",
+      "arm": "VALUE",
+      "pnl": -3238.787696136985,
+      "pnl_without_young": -3348.0884746399583,
+      "shares": 118779.5338167968,
+      "places": 8872,
+      "inventory_square_seconds": 821900941.0146179,
+      "grid_steps": 345600,
+      "both_live": 309824,
+      "both_touch": 5307,
+      "both_near": 29802,
+      "bid_live": 328749,
+      "ask_live": 324767,
+      "bid_touch": 65246,
+      "ask_touch": 78642,
+      "both_live_fraction": 0.8964814814814814,
+      "both_touch_fraction": 0.015355902777777777,
+      "both_near_fraction": 0.0862326388888889,
+      "bid_touch_fraction": 0.18879050925925925,
+      "ask_touch_fraction": 0.22755208333333332
+    },
+    {
+      "day": "20261101",
+      "arm": "VALUE_GUARD_EXIT",
+      "pnl": -399.9949434602884,
+      "pnl_without_young": -146.87946709898083,
+      "shares": 37604.13465376451,
+      "places": 99967,
+      "inventory_square_seconds": 77338282.23708616,
+      "grid_steps": 345600,
+      "both_live": 103073,
+      "both_touch": 23307,
+      "both_near": 44478,
+      "bid_live": 205628,
+      "ask_live": 190050,
+      "bid_touch": 106968,
+      "ask_touch": 76384,
+      "both_live_fraction": 0.29824363425925926,
+      "both_touch_fraction": 0.0674392361111111,
+      "both_near_fraction": 0.12869791666666666,
+      "bid_touch_fraction": 0.30951388888888887,
+      "ask_touch_fraction": 0.22101851851851853
+    },
+    {
+      "day": "20261102",
+      "arm": "ALWAYS",
+      "pnl": -2686.670697043666,
+      "pnl_without_young": -2457.575111407251,
+      "shares": 177033.9259050775,
+      "places": 14906,
+      "inventory_square_seconds": 1982646653.3888605,
+      "grid_steps": 345600,
+      "both_live": 344869,
+      "both_touch": 5166,
+      "both_near": 13899,
+      "bid_live": 345024,
+      "ask_live": 345031,
+      "bid_touch": 91552,
+      "ask_touch": 66089,
+      "both_live_fraction": 0.997884837962963,
+      "both_touch_fraction": 0.014947916666666667,
+      "both_near_fraction": 0.04021701388888889,
+      "bid_touch_fraction": 0.2649074074074074,
+      "ask_touch_fraction": 0.19122974537037038
+    },
+    {
+      "day": "20261102",
+      "arm": "TIMER",
+      "pnl": -2312.8409255029287,
+      "pnl_without_young": -2342.5724110395213,
+      "shares": 132131.3229350033,
+      "places": 10623,
+      "inventory_square_seconds": 982778643.5338465,
+      "grid_steps": 345600,
+      "both_live": 306808,
+      "both_touch": 6523,
+      "both_near": 19919,
+      "bid_live": 317119,
+      "ask_live": 318571,
+      "bid_touch": 77388,
+      "ask_touch": 57794,
+      "both_live_fraction": 0.8877546296296296,
+      "both_touch_fraction": 0.018874421296296295,
+      "both_near_fraction": 0.05763599537037037,
+      "bid_touch_fraction": 0.22392361111111111,
+      "ask_touch_fraction": 0.16722800925925926
+    },
+    {
+      "day": "20261102",
+      "arm": "VALUE",
+      "pnl": -2334.4839841923167,
+      "pnl_without_young": -2264.0631693889004,
+      "shares": 150876.0788778701,
+      "places": 11849,
+      "inventory_square_seconds": 1102933810.4597778,
+      "grid_steps": 345600,
+      "both_live": 325546,
+      "both_touch": 6286,
+      "both_near": 23706,
+      "bid_live": 337940,
+      "ask_live": 331833,
+      "bid_touch": 76640,
+      "ask_touch": 62012,
+      "both_live_fraction": 0.9419733796296297,
+      "both_touch_fraction": 0.018188657407407407,
+      "both_near_fraction": 0.06859375,
+      "bid_touch_fraction": 0.22175925925925927,
+      "ask_touch_fraction": 0.17943287037037037
+    },
+    {
+      "day": "20261102",
+      "arm": "VALUE_GUARD_EXIT",
+      "pnl": -458.48247275153517,
+      "pnl_without_young": -33.60341942992997,
+      "shares": 33117.75394730036,
+      "places": 204882,
+      "inventory_square_seconds": 54780552.9020447,
+      "grid_steps": 345600,
+      "both_live": 86319,
+      "both_touch": 8825,
+      "both_near": 26195,
+      "bid_live": 202945,
+      "ask_live": 165569,
+      "bid_touch": 74053,
+      "ask_touch": 45418,
+      "both_live_fraction": 0.249765625,
+      "both_touch_fraction": 0.025535300925925927,
+      "both_near_fraction": 0.0757957175925926,
+      "bid_touch_fraction": 0.21427372685185186,
+      "ask_touch_fraction": 0.13141782407407407
+    },
+    {
+      "day": "20261103",
+      "arm": "ALWAYS",
+      "pnl": -2561.259451130465,
+      "pnl_without_young": -2482.3567051158757,
+      "shares": 182399.3426172016,
+      "places": 14567,
+      "inventory_square_seconds": 2119200831.8764064,
+      "grid_steps": 345600,
+      "both_live": 344936,
+      "both_touch": 3526,
+      "both_near": 16096,
+      "bid_live": 345108,
+      "ask_live": 345071,
+      "bid_touch": 77343,
+      "ask_touch": 80734,
+      "both_live_fraction": 0.9980787037037037,
+      "both_touch_fraction": 0.010202546296296296,
+      "both_near_fraction": 0.04657407407407407,
+      "bid_touch_fraction": 0.2237934027777778,
+      "ask_touch_fraction": 0.23360532407407408
+    },
+    {
+      "day": "20261103",
+      "arm": "TIMER",
+      "pnl": -1901.9741115466873,
+      "pnl_without_young": -1902.2435510988748,
+      "shares": 131345.23795835933,
+      "places": 10007,
+      "inventory_square_seconds": 947273343.8444365,
+      "grid_steps": 345600,
+      "both_live": 302308,
+      "both_touch": 6386,
+      "both_near": 19559,
+      "bid_live": 316303,
+      "ask_live": 314594,
+      "bid_touch": 70714,
+      "ask_touch": 68987,
+      "both_live_fraction": 0.8747337962962963,
+      "both_touch_fraction": 0.01847800925925926,
+      "both_near_fraction": 0.056594328703703706,
+      "bid_touch_fraction": 0.20461226851851852,
+      "ask_touch_fraction": 0.19961516203703702
+    },
+    {
+      "day": "20261103",
+      "arm": "VALUE",
+      "pnl": -2051.7586627916726,
+      "pnl_without_young": -1902.1954927234617,
+      "shares": 141023.2998290086,
+      "places": 10529,
+      "inventory_square_seconds": 1062594137.5886034,
+      "grid_steps": 345600,
+      "both_live": 321868,
+      "both_touch": 5751,
+      "both_near": 26148,
+      "bid_live": 329290,
+      "ask_live": 337205,
+      "bid_touch": 52284,
+      "ask_touch": 76193,
+      "both_live_fraction": 0.9313310185185185,
+      "both_touch_fraction": 0.016640625,
+      "both_near_fraction": 0.07565972222222223,
+      "bid_touch_fraction": 0.15128472222222222,
+      "ask_touch_fraction": 0.22046585648148148
+    },
+    {
+      "day": "20261103",
+      "arm": "VALUE_GUARD_EXIT",
+      "pnl": -651.210078063948,
+      "pnl_without_young": -115.62389066151054,
+      "shares": 25867.920978391445,
+      "places": 197679,
+      "inventory_square_seconds": 97087908.46254718,
+      "grid_steps": 345600,
+      "both_live": 92440,
+      "both_touch": 3179,
+      "both_near": 11571,
+      "bid_live": 190160,
+      "ask_live": 183386,
+      "bid_touch": 26988,
+      "ask_touch": 63286,
+      "both_live_fraction": 0.2674768518518518,
+      "both_touch_fraction": 0.00919849537037037,
+      "both_near_fraction": 0.03348090277777778,
+      "bid_touch_fraction": 0.07809027777777777,
+      "ask_touch_fraction": 0.18311921296296296
+    }
+  ],
+  "fill_attribution": {
+    "ALWAYS": {
+      "quantity": 825126.064532893,
+      "fill_spread": 6707.7579934118285,
+      "post_fill_move": -20540.329543821106,
+      "pnl": -13832.571550409279,
+      "cancel_pending_shares": 27373.84319870549,
+      "age_bands": [
+        {
+          "age_band": 0,
+          "quantity": 52074.39858928281,
+          "pnl": -670.9909457271825
+        },
+        {
+          "age_band": 1,
+          "quantity": 118989.04999228103,
+          "pnl": -2162.0865690706933
+        },
+        {
+          "age_band": 2,
+          "quantity": 151139.83965886646,
+          "pnl": -2078.6516341342904
+        },
+        {
+          "age_band": 3,
+          "quantity": 273300.9254986426,
+          "pnl": -3667.70177123116
+        },
+        {
+          "age_band": 4,
+          "quantity": 229621.85079382014,
+          "pnl": -5253.140630245953
+        }
+      ]
+    },
+    "TIMER": {
+      "quantity": 626495.6276622537,
+      "fill_spread": 5571.092863200564,
+      "post_fill_move": -16637.09310978075,
+      "pnl": -11066.000246580188,
+      "cancel_pending_shares": 18166.706536597292,
+      "age_bands": [
+        {
+          "age_band": 0,
+          "quantity": 7222.771796255991,
+          "pnl": 131.08177127318234
+        },
+        {
+          "age_band": 1,
+          "quantity": 31685.21211693736,
+          "pnl": -421.80860905887414
+        },
+        {
+          "age_band": 2,
+          "quantity": 100274.67398788927,
+          "pnl": -1518.7692308518226
+        },
+        {
+          "age_band": 3,
+          "quantity": 259701.48972327012,
+          "pnl": -4218.391711145576
+        },
+        {
+          "age_band": 4,
+          "quantity": 227611.48003790097,
+          "pnl": -5038.112466797098
+        }
+      ]
+    },
+    "VALUE": {
+      "quantity": 645172.3463422963,
+      "fill_spread": 5814.215446962383,
+      "post_fill_move": -17860.680488290633,
+      "pnl": -12046.46504132825,
+      "cancel_pending_shares": 19750.832391255135,
+      "age_bands": [
+        {
+          "age_band": 0,
+          "quantity": 19642.2470078262,
+          "pnl": -196.33418750776846
+        },
+        {
+          "age_band": 1,
+          "quantity": 60262.94889737721,
+          "pnl": -1181.7630621295912
+        },
+        {
+          "age_band": 2,
+          "quantity": 118088.80347029731,
+          "pnl": -2047.7050185885855
+        },
+        {
+          "age_band": 3,
+          "quantity": 245685.77077101544,
+          "pnl": -3872.9796569511
+        },
+        {
+          "age_band": 4,
+          "quantity": 201492.57619578013,
+          "pnl": -4747.6831161512055
+        }
+      ]
+    },
+    "VALUE_GUARD_EXIT": {
+      "quantity": 140685.8776801331,
+      "fill_spread": 1343.9603349077966,
+      "post_fill_move": -3190.3377415947057,
+      "pnl": -1846.3774066869094,
+      "cancel_pending_shares": 38315.556152483,
+      "age_bands": [
+        {
+          "age_band": 0,
+          "quantity": 56870.76674790635,
+          "pnl": -1469.2540344805084
+        },
+        {
+          "age_band": 1,
+          "quantity": 23451.874496522392,
+          "pnl": -145.98717313567593
+        },
+        {
+          "age_band": 2,
+          "quantity": 32772.637110447686,
+          "pnl": -181.5503905003891
+        },
+        {
+          "age_band": 3,
+          "quantity": 24465.12078447173,
+          "pnl": -63.37500046393038
+        },
+        {
+          "age_band": 4,
+          "quantity": 3125.4785407849317,
+          "pnl": 13.789191893594586
+        }
+      ]
+    }
+  },
+  "gross_pnl_cents_per_filled_share": {
+    "ALWAYS": -1.6764191733829121,
+    "TIMER": -1.766333196589508,
+    "VALUE": -1.8671700840285232,
+    "VALUE_GUARD_EXIT": -1.3124113359017306
+  },
+  "value_versus_baseline_volume_value_identity": {
+    "ALWAYS": {
+      "pnl_difference": 1786.106509081028,
+      "quantity_change_at_baseline_rate": 3016.7786349626163,
+      "per_share_value_change_at_value_quantity": -1230.6721258815865,
+      "interpretation": "Descriptive arithmetic identity; policy-dependent fills, not a causal participation/selection test."
+    },
+    "TIMER": {
+      "pnl_difference": -980.4647947480626,
+      "quantity_change_at_baseline_rate": -329.89308207922727,
+      "per_share_value_change_at_value_quantity": -650.5717126688354,
+      "interpretation": "Descriptive arithmetic identity; policy-dependent fills, not a causal participation/selection test."
+    }
+  },
+  "guard_exit_sensitivity": {
+    "pnl_change": 10200.08763464134,
+    "placement_ratio": 14.410612888233274,
+    "filled_quantity_ratio": 0.21805937355766977,
+    "days_with_smaller_loss": 5,
+    "correctly_relabelled_combined_candidate": false
+  },
+  "interpretation": [
+    "Generalization failure exists on held-out neutral-reference probes before closed-loop state mismatch. The old constant-head bug is not the explanation.",
+    "The timing target is mostly zero and tail-heavy; two separately fitted correlated value heads do not reliably recover their difference.",
+    "Runtime support bins describe a train/runtime gap. Post-after-WAIT counts describe delayed participation, not causal attribution of loss or a test of entry skill.",
+    "Fill-time spread and subsequent mark movement reconcile to terminal PNL; this is an accounting decomposition, not a forecast-skill test.",
+    "The guard exit changes the continuation and exposure as well as cancellations. Its gain is not proof of selective keeper skill; churn is material.",
+    "Code inspection: whole-portfolio targets include ladder interactions, while model inputs lack a per-order snapshot of other resting prices, ages and remaining sizes. Aggregate inventory/exposure cannot distinguish all such states."
+  ],
+  "next_research_sequence": [
+    "Keep a positive absolute POST-value gate; test a direct POST-minus-WAIT advantage estimate against earlier-data baselines and the existing action-matched null before another broad replay.",
+    "Represent client-known ladder state and jointly empty/waiting configurations, while retaining neutral action populations and exclusions; never train only on fills.",
+    "Build entry labels under the actual frozen order-specific keeper/continuation intended for evaluation, then evaluate the combined policy with action-level churn and fill-value accounting.",
+    "Require untouched later complete days for validation; these dates are consumed development data. No model size or fixed retry timer is established as a remedy."
+  ],
+  "limitations": [
+    "No new fitted candidate or threshold selection.",
+    "Guard-exit sensitivity uses an entry model trained under neutral KEEP, so it is not a correctly relabeled combined policy.",
+    "Historical guard uses LODO inputs.",
+    "State-bin support is a descriptive proxy, not a proven cause.",
+    "Fill marks/queue remain simulated, at M50 only.",
+    "All dates consumed; no forward validation or additional signal claim.",
+    "Touch means exactly received public best; near means public best or one tick behind. Both exclude price-improving quotes and do not establish front-of-queue residence.",
+    "The keeper sensitivity uses historical LODO guard inputs and no matched activity null; it is not new deployable skill evidence.",
+    "Largest-one-percent statistic is squared target magnitude, not a measured fraction of fitted residual loss.",
+    "Runtime generations are policy-dependent: a POST advances the generation, and an unposted terminal generation is censored. The eventual-POST fraction cannot establish failure to abstain or rejection skill.",
+    "Other-session maker/keeper results use different caps or horizons; this report makes no direct comparable top-maker performance claim."
+  ],
+  "raw_report_sha256": "54037e7ca5b39c38e5c7ad2b90d401ad11d6135ac4d925e63bfb25ba8ef93dae",
+  "presentation_source_sha256": "5085bd4b2279f0b66b0ffaa61728e79861ceeb694d43a4cfc416c1b707add15d"
+}
