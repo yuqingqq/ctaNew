@@ -1,0 +1,20 @@
+{
+  "asof": "2026-11-14T16:50:20.643558+00:00",
+  "status": "post_hoc_sampling_correction_design",
+  "new_candidates": 2,
+  "cumulative_candidates": 5,
+  "forward_validation": false,
+  "trigger": "Phase1 found initial-generation fraction84..87% in labeled training versus34% runtime. Code samples first with probability1/2 and later1/32. This is a sampling-design correction, not a test-outcome filter.",
+  "target_population": "The existing neutral-reference delayed eligible opportunities, reweighted for known independent hash inclusion only. No correction for unreached probes, latent missing states, or policy-dependent runtime generations is claimed.",
+  "weights": "First-generation weight2, later32. Normalize training weights to mean1. All test metrics and controls use the same raw inclusion weights. Actual row n and effective n reported; sum of weights is not an observed count.",
+  "arms": {
+    "IPW_RAW_DIRECT": "Weighted raw-feature POST and direct POST-minus-WAIT LightGBM, pinned parameters/rounds.",
+    "IPW_COMPACT_DIRECT": "Identical phase1 training-fitted compact preprocessing, weighted POST and timing LightGBM, pinned parameters/rounds."
+  },
+  "controls": "Reevaluate saved FROZEN_V2, RAW_DIRECT, COMPACT_DIRECT, COMPACT_RIDGE predictions on identical weighted test rows. Exact action/target identity reconciliation. Prior-training weighted mean and fixed rung/price-bin weighted mean baselines.",
+  "null": "500 draws, match day/side/hour/rung/initial-generation status and selected count. Within each stratum weight is constant, so selected weight mass also matches exactly. Uniform k-subsets. Require >=30 selected/unselected rows and >=30 selected effective n; positive weighted absolute POST and weighted timing advantage above0 and nullp95.",
+  "constraints": "Raw labels retained. No clipping outcomes, test-fitting, no outcome-selected rows, no tuning. All five consumed test dates and all six arms reported. No new portfolio/forward claim.",
+  "checks": "Five tests: correct inverse probabilities and invalid generation refusals; weighted metrics/oracle/anti/invalid weights; known population recovered under artificial sampling; weighted null oracle/anti/wrong-weight/undersampled refusals; timing advantage cannot override negative absolute entry value.",
+  "phase1_result_sha256": "a405c22eed637b650ab4340d28578345e8e0911f95189b3bb14095e0192b5ddd",
+  "execution": "Own core8 via supervised run_light. Current size worker completes, parent yields, finally and ExecStopPost resume. Failed namespaces preserved."
+}
