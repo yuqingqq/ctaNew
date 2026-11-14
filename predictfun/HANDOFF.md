@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-14 02:29Z (session ce68ebe0) — LEARN-PULL-TARGET DONE (post hoc): the top makers' pulls line up with the fill losing within ~1 s, mostly on trades that STOP at their price, not only with the level being taken; our guard's label is the sweep alone; at their pull count our signals pick as well as they do
+
+- Done (USER: "Why do they pull? You mean they pull because some trade will take the price level? Or what is their target to train the model to pull"): research/pf_learn_pull_target.py + run_learn_pull_target.sh (a325538c, before the first run), `check` (acbdb7f7, post hoc after the first report: every trade counted once). Report handoffs/20261114_learn_pull_target_results.md; copies reviews/learn_pull_20261113/target/; FINDINGS updated.
+- Readings: R557 PULLS-TRACK-FILL-LOSS (1.26 at 5 s, 9/9; 1.77 at 1 s), R558 GAP-MOSTLY-WITHIN-KIND (7/9; per trade the kind accounts for 6%, 9/9), R560 FAIL (3/9) so R559 / R559P VOID; post hoc per trade: guard v / P keep >= their pulls on 9/9 days.
+- Watch out: our guard's label (pf_badfill_grid_tx) is the 1 s loss on a sweep within 0.5 s, else 0; volume at the price depends on the top makers' own presence (count trades once when comparing pulls); v and P read 100 ms before the trade favour our signals.
+- Next (proposals, user's call): unchanged: live queue probe; LEVEL-GUARD replay at rule M and U; narrower guard.
+
 ## 2026-11-13 16:50Z (session ce68ebe0) — LEARN-PULL DONE: the top makers avoid specific trades, we avoid whole periods. On the same intervals they pull 28% vs our 60%; they pull 47% before trades that go through their price vs 27% before trades that stop; where we pull and they stay (39%) the front fill we skip is worth +0.25 c/sh. Their pulls follow the level (P, thin queue, own side depleting), ours Binance imbalance and volatility. Their low pull rate rests on being at the front
 
 - Done (USER: "We learn from them first, check how do they avoid being hit ... why they pull ... we pull much more often than theirs"; "keep checking our timing issue ... why we avoid such periods, and what they avoid actually?"): research/pf_learn_pull.py + run_learn_pull.sh (e3ad37ff, before the first run; fixes d4adcdef same-stamp tie, 245fbc4c duplicate key; both failed jobs wrote no output), 16:44-16:49Z. Report handoffs/20261113_learn_pull_results.md; copies reviews/learn_pull_20261113/; FINDINGS updated.

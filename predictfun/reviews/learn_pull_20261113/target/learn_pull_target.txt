@@ -1,0 +1,38 @@
+LEARN-PULL-TARGET (post hoc on LEARN-PULL's observations), 9 consumed days, first 60 s, WS-timed tape; as of 2026-11-14T02:25:33Z; controls passed; top 5 78294 (field 114859); v5 = 0 (no sign) top 5 224; without v or P (out of T3) 1542; in the last bucket at exactly 3000 ms 20
+
+T1 GONE share by the next trade's kind x the fill's value sign (bucket-standardised; n). Ours = our guard's pull flag on the top 5's observations
+  5 s top 5 GONE      THROUGH, fill loses: 44.6% (1873) | THROUGH, fill wins: 42.7% (1481) | STOP, fill loses: 30.7% (32468) | STOP, fill wins: 24.4% (42248) | STOP loses / wins 1.26
+  5 s field GONE      THROUGH, fill loses: 43.6% (3920) | THROUGH, fill wins: 45.9% (3005) | STOP, fill loses: 43.3% (46953) | STOP, fill wins: 37.1% (60711) | STOP loses / wins 1.17
+  5 s ours (we_pull)  THROUGH, fill loses: 81.9% (1873) | THROUGH, fill wins: 75.6% (1481) | STOP, fill loses: 64.4% (32468) | STOP, fill wins: 54.9% (42248) | STOP loses / wins 1.17
+  1 s top 5 GONE      THROUGH, fill loses: 47.4% (2239) | THROUGH, fill wins: 36.6% (1102) | STOP, fill loses: 39.9% (19712) | STOP, fill wins: 22.5% (54850) | STOP loses / wins 1.77
+  1 s field GONE      THROUGH, fill loses: 43.9% (4765) | THROUGH, fill wins: 46.2% (2139) | STOP, fill loses: 50.5% (30449) | STOP, fill wins: 35.6% (76967) | STOP loses / wins 1.42
+  1 s ours (we_pull)  THROUGH, fill loses: 83.5% (2239) | THROUGH, fill wins: 70.2% (1102) | STOP, fill loses: 73.7% (19712) | STOP, fill wins: 53.7% (54850) | STOP loses / wins 1.37
+  top 5 by interval bucket (5 s): GONE share STOP-loses / STOP-wins / THROUGH-loses / THROUGH-wins
+    0-250 ms     17.1% (13893) / 14.2% (17521) / 32.7% (532) / 32.4% (383)
+    250-1000 ms  34.4% (13199) / 26.3% (17509) / 49.4% (847) / 47.9% (687)
+    1000-3000 ms 54.5% (5376) / 44.1% (7218) / 61.5% (494) / 55.2% (411)
+  R557 per day (STOP loses / wins, top 5): 1023 1.19, 1024 1.17, 1025 1.29, 1026 1.26, 1027 1.31, 1031 1.25, 1101 1.30, 1102 1.25, 1103 1.33
+  R557: pooled 1.26, > 1 on 9 of 9 -> PULLS-TRACK-FILL-LOSS
+
+T2 VALUE GAP (5 s, c/sh, volume-weighted): stayed - gone, and the part the trade's kind accounts for
+  top 5  stayed +0.47, gone +0.14: gap +0.33; kind accounts for -0.01 (-2%); kind x interval cells -0.04 (-12%)
+  field  stayed +0.59, gone +0.24: gap +0.35; kind accounts for -0.00 (-1%); kind x interval cells -0.03 (-7%)
+  top 5 within STOP   : stayed +0.60, gone +0.15 (n 74925, gone 26.9%)
+  top 5 within THROUGH: stayed +0.06, gone +0.10 (n 3369, gone 47.0%)
+  R558 per day (gap, kind share): 1023 +0.08 -5%, 1024 -0.02 nan%, 1025 +0.15 5%, 1026 -0.19 nan%, 1027 +1.07 2%, 1031 +0.37 0%, 1101 +0.88 1%, 1102 +0.23 6%, 1103 +0.73 1%
+  R558: share -2%, below half on 7 of 9 -> GAP-MOSTLY-WITHIN-KIND
+
+T3 SELECTION AT THEIR OWN PULL COUNT (top 5, 76752 observations, 21444 pulls = 27.9%; per day x interval bucket):
+  arm      value kept $/day | c/sh kept | THROUGH trades among the pulled | bad (v5 <= -2) among the pulled
+  theirs           668.7 | +0.46 | 47.0% | 32.8%
+  our guard v      821.7 | +0.58 | 50.7% | 35.5%
+  P                792.6 | +0.56 | 56.1% | 35.6%
+  random           503.4 | +0.39 | 32.1% | 27.9%
+  bound (v5)      3535.1 | +3.15 | 48.5% | 76.1%
+  ours as run (we_pull, 59.2% pulled, not matched): c/sh kept +0.69 | THROUGH 80.5% | bad 67.6%; value kept $/day 559.5
+  per day value kept $ (theirs / guard / P / random p95 / bound): 1023 650 / 1069 / 1068 / 790 / 4869; 1024 282 / 674 / 491 / 443 / 3275; 1025 249 / 266 / 316 / 317 / 2238; 1026 603 / 994 / 785 / 833 / 5149; 1027 1171 / 1029 / 907 / 913 / 4533; 1031 475 / 438 / 546 / 532 / 2151; 1101 563 / 614 / 630 / 487 / 1919; 1102 1358 / 1636 / 1680 / 1383 / 4508; 1103 668 / 676 / 709 / 661 / 3175
+  R560 null control: theirs above the random p95 on 3 of 9 -> FAIL
+  R559 guard: theirs higher on 2, ours higher or equal on 7 -> VOID
+  R559P P: theirs higher on 1, P higher or equal on 8 -> VOID
+
+READINGS: {"R557": "PULLS-TRACK-FILL-LOSS", "R558": "GAP-MOSTLY-WITHIN-KIND", "R559": "VOID", "R559P": "VOID", "R560": "FAIL"}

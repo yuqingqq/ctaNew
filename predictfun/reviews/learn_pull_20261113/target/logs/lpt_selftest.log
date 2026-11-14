@@ -1,0 +1,7 @@
+selftest kind: R557 NOT-SHOWN (0.97), R558 GAP-MOSTLY-KIND (1.00), bound True -> ok
+selftest kind: planted value-sign flip caught: True
+selftest loss: R557 PULLS-TRACK-FILL-LOSS (7.00), R558 GAP-MOSTLY-WITHIN-KIND (0.05), bound True -> ok
+selftest loss: planted value-sign flip caught: True
+selftest buckets: [0, 0, 1, 1, 2, 2, -1] -> ok
+SELFTEST PASS
+2026-11-14T02:25:26Z tag=lpt_selftest rc=0 peak_rss_mib=117 wall_s=1.75 cpu_user_s=1.68 memavail_start_gib=22 disk_free_gib=520->520 slot=claude
