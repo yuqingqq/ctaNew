@@ -57,6 +57,21 @@ the actual frozen order-specific keeper/continuation. Gate prediction skill
 before another broad strategy replay. These dates remain development-only;
 validation needs later untouched complete days. Larger model/size or fixed
 retry timers are not established remedies.
+
+
+Follow-up to "prediction is totally reverse?" (2026-11-14T16:26:50.436761+00:00; same9,922
+probes over5dates, measurements asof2026-11-14T16:21:11Z):
+`reviews/wait_post_diagnosis_20261114/v3/sign_followup.json`. Actual-source
+terminal accounting passes four bid/ask favorable/adverse sign controls and
+refuses four corrupt-position cases. POST target is POST-minus-NEVER, not
+its inverse. POST rank correlations are positive in6/10side-day cells and
+negative in4/10, range-0.016..+0.082: weak/mixed, no consistent inversion.
+Both negative-forecast and nonnegative-forecast cohorts lose on average on
+both sides. Those cohorts include all probes, not just the selected POST
+subset. This supports overconfident/noisy estimates plus selection of
+optimistic errors, not simply flipping the score. No inverted policy was
+evaluated, no new skill claim, and the controls do not exclude every other
+possible data/model/simulator defect.
 <!-- /WAIT_POST_WHY_20261114 -->
 
 <!-- WAIT_POST_V2_20261114 -->
