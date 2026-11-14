@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-14 16:25Z (session ce68ebe0): MODEL AUDIT (handoffs/20261114_model_audit_results.md): training sound, targets misaligned - the guard prices only sweep cost
+  on a quantile line (54 alarms a side-minute); the keep / cancel label makes most pulls free (66-87%); no queue-place value in either.
   2026-11-14 15:57Z (session ce68ebe0): ORDER-HARM WHY (post hoc; handoffs/20261114_order_harm_why_results.md): not timing of presence - the gap to the top makers is
   same-state fill quality (queue place + worse same-type fills), growing with reaction delay; the model keeps through visible moves.
   2026-11-14 15:01Z (Codex): wait/post v2 target fixes complete and five-day test REJECTED; M50 VALUE -$12046.47, loss5/5 days, both matched timing tests fail.
