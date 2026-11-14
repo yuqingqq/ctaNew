@@ -1,0 +1,27 @@
+{
+  "asof": "2026-11-14T16:21:20.507349+00:00",
+  "status": "complete_post_hoc_diagnosis",
+  "source_commit": "339252076ac4ae5f819b75628745492749f968b0",
+  "freeze_commit": "3ac6a3b4",
+  "presentation_commit": "8731bffb",
+  "freeze_files_verified": 47,
+  "original_models_unchanged": true,
+  "tests_passed": 8,
+  "complete_days": 5,
+  "market_windows": 1440,
+  "baseline_market_arm_reconciliations": 4320,
+  "service_state": "ExecMainStatus=0\nActiveState=inactive\nSubState=dead\n",
+  "size_queue": {
+    "pid": 1576587,
+    "identity_matches": true,
+    "state": "S",
+    "resumed": true
+  },
+  "files": {
+    "raw_report.json": "54037e7ca5b39c38e5c7ad2b90d401ad11d6135ac4d925e63bfb25ba8ef93dae",
+    "diagnosis.json": "d713d42aef63da3d93c7b60e97b22524c2ec7481a4ab024d6149bd474df68084",
+    "selftest.log": "0c2f4800015247ec6a916db0b329f8d4fac0b1f5cd56fe3f6079ef6dce7958e2",
+    "runner_complete.json": "976f36c9b8bea6820b3d869da09b870be5bb4182480c9960c4ab00eec1745166"
+  },
+  "forward_validation": false
+}
