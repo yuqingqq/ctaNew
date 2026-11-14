@@ -1,9 +1,9 @@
 {
-  "asof": "2026-11-14T16:53:35.510865+00:00",
-  "status": "phase1_complete_sampling_correction_queued",
+  "asof": "2026-11-14T16:58:21.294060+00:00",
+  "status": "complete_development_study",
   "source_commit": "04d94d1b",
   "freeze_commit": "7d177ca0",
-  "candidate_count": 3,
+  "candidate_count": 5,
   "forward_validation": false,
   "service": "pf-wait-post-signal-data-20261114",
   "output": "data/predict_fun/research/wait_post_signal_data_20261114_v1",
@@ -17,5 +17,12 @@
   "sampling_source_commit": "3145fc9f",
   "sampling_freeze_commit": "a357cbc4",
   "sampling_service": "pf-wait-post-sampling-20261114",
-  "sampling_output": "data/predict_fun/research/wait_post_sampling_20261114_v1"
+  "sampling_output": "data/predict_fun/research/wait_post_sampling_20261114_v1",
+  "current_result": "summary.json",
+  "completion": "completion.json",
+  "sampling_result": "sampling/result.json",
+  "tests_passed": 14,
+  "sampling_complete": true,
+  "size_queue_resumed": true,
+  "sampling_candidate_count": 2
 }
