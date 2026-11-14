@@ -1,0 +1,3 @@
+joint-ladder selftests passed; planted errors caught: {'MUT_LEG_ALL': True, 'MUT_CAP_SIDE': True, 'MUT_CAP_NOLAG': True}
+parity 20261031: {'windows': 288, 'checked': 5184, 'differ': 0} in 53 s
+2026-11-14T06:04:15Z tag=jl_parity_20261031 rc=0 peak_rss_mib=674 wall_s=53.31 cpu_user_s=52.44 memavail_start_gib=22 disk_free_gib=518->518 slot=claude
