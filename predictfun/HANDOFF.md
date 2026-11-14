@@ -1,5 +1,11 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-14 16:25Z (session ce68ebe0) — MODEL AUDIT DONE (post hoc): training is sound, the TARGETS are misaligned - the guard prices only the cost of being swept (quantile line, flickers 54 times a side-minute, pulls every rung) and the keep / cancel label sees no cost of pulling in most episodes (free pulls 66-87%); neither contains the queue place
+
+- USER: "Can you check if the model is good for our task, or check if the model is reasonable at all? We shouldn't have triggered so many pulls, is our training target aligned with our goal, or do we train it properly".
+- Done: research/pf_model_audit.py (a1b88d8b, before the run), 16:23Z. Report handoffs/20261114_model_audit_results.md; copies reviews/model_audit_20261114/; FINDINGS row.
+- Proposal (USER's call): an aligned target - keep vs pull valued over the order's life (to its fill or the 60.2 s mark, the pulled branch re-entering at the back), every fill scored (STOP fills included), an economic pull rule with hysteresis, rung-specific risk, on-policy (joint ladder) labels.
+
 <!-- WAIT_POST_WHY_20261114 -->
 ## 2026-11-14 — wait/post failure diagnosis COMPLETE
 
