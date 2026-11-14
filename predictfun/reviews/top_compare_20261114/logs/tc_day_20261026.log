@@ -1,0 +1,9 @@
+top-compare selftests passed; planted errors caught: {'MUT_NOLAG': True, 'MUT_NOSTALE': True}
+20261026: 96 window-sides, 2 s, rss 515 MiB
+20261026: 192 window-sides, 3 s, rss 515 MiB
+20261026: 288 window-sides, 3 s, rss 515 MiB
+20261026: 384 window-sides, 4 s, rss 515 MiB
+20261026: 480 window-sides, 5 s, rss 515 MiB
+20261026: 576 window-sides, 5 s, rss 516 MiB
+20261026: {'window_sides': 576, 'align_differ': 0, 'legs': 209669, 'no_frame': 117, 'nan1': 0, 'no_taker_id': 25369} in 5 s
+2026-11-14T08:39:55Z tag=tc_day_20261026 rc=0 peak_rss_mib=725 wall_s=5.45 cpu_user_s=4.88 memavail_start_gib=20 disk_free_gib=515->515 slot=claude

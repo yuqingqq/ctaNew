@@ -1,0 +1,47 @@
+top-compare selftests passed; planted errors caught: {'MUT_NOLAG': True, 'MUT_NOSTALE': True}
+TOP-COMPARE (POST HOC, descriptive): our JOINT-LADDER v3 lanes (simulated) against the real makers, 9 consumed days, first 60 s; as of 2026-11-14T08:40:45Z; legs aligned on every window-side; our cells reconcile with v3 (18 cells); their legs 1573290 (no frame 856, no 1 s mid 0, without a taker id 180597)
+
+PART 1: per day. sh/day | $/day at 1 s | c/sh 1 s | c/sh 5 s || WS-timed: sh/day | $/day 1 s | c/sh 1 s   (ours: fills on orders < 100 ms old excluded; [all ages: WS $/day, c/sh])
+  top 5 (real)               851396 |  +3610.2 | +0.424 | +0.317 ||    596108 |  +3471.0 | +0.582
+  6-20 (real)                790142 |  +2813.4 | +0.356 | +0.332 ||    496485 |  +2883.9 | +0.581
+  rest (real)                818209 |  -3483.1 | -0.426 | -0.559 ||    474332 |    -94.4 | -0.020
+  top 5, per maker           170279 |   +722.0 | +0.424 | +0.317 ||    119222 |   +694.2 | +0.582
+  ours LDG hard10 M0          32898 |     -1.6 | -0.005 | -0.066 ||     19220 |    +73.7 | +0.383   [  +84.3, +0.396]
+  ours FB25 hard10 M0         45144 |     -3.4 | -0.008 | -0.139 ||     26153 |   +147.1 | +0.562   [ +154.4, +0.555]
+  ours OFB2 hard10 M0         56014 |   +395.3 | +0.706 | +0.848 ||     35809 |   +362.1 | +1.011   [ +369.6, +0.978]
+  ours LDG none M0            33979 |     +9.4 | +0.028 | -0.041 ||     19941 |    +82.6 | +0.414   [  +94.2, +0.425]
+  ours FB25 none M0           47631 |    +23.8 | +0.050 | -0.104 ||     27767 |   +168.8 | +0.608   [ +178.4, +0.603]
+  ours OFB2 none M0           58374 |   +428.6 | +0.734 | +0.877 ||     37469 |   +386.0 | +1.030   [ +395.5, +0.998]
+
+  ours LDG hard10 M50         36387 |   -101.2 | -0.278 | -0.338 ||     20677 |    +46.7 | +0.226   [  +50.0, +0.218]
+  ours FB25 hard10 M50        51588 |   -178.5 | -0.346 | -0.471 ||     28531 |   +100.2 | +0.351   [ +101.7, +0.337]
+  ours OFB2 hard10 M50        59212 |   +295.1 | +0.498 | +0.635 ||     37181 |   +334.5 | +0.900   [ +335.2, +0.854]
+  ours LDG none M50           37509 |    -91.9 | -0.245 | -0.310 ||     21434 |    +53.9 | +0.251   [  +58.9, +0.247]
+  ours FB25 none M50          54377 |   -155.4 | -0.286 | -0.427 ||     30337 |   +120.4 | +0.397   [ +122.9, +0.382]
+  ours OFB2 none M50          61710 |   +327.9 | +0.531 | +0.671 ||     38886 |   +358.0 | +0.921   [ +360.4, +0.876]
+
+  ours LDG hard10 M250        66467 |  -1347.8 | -2.028 | -1.939 ||     39773 |   -674.8 | -1.697   [ -772.0, -1.702]
+  ours FB25 hard10 M250      106366 |  -2306.4 | -2.168 | -2.091 ||     61896 |  -1100.2 | -1.777   [-1176.8, -1.779]
+  ours OFB2 hard10 M250       85697 |   -960.7 | -1.121 | -0.975 ||     53756 |   -386.2 | -0.719   [ -487.2, -0.826]
+  ours LDG none M250          69435 |  -1381.7 | -1.990 | -1.896 ||     41598 |   -691.2 | -1.662   [ -792.9, -1.664]
+  ours FB25 none M250        114552 |  -2410.6 | -2.104 | -2.042 ||     66847 |  -1154.0 | -1.726   [-1237.7, -1.729]
+  ours OFB2 none M250         90827 |   -958.8 | -1.056 | -0.906 ||     57076 |   -380.6 | -0.667   [ -486.9, -0.776]
+
+PART 2: by depth at the fill, WS-timed, 1 s: share of the group's shares | c/sh | $/day   (ours: M 50, w/o young)
+  at best   : top 5 55.5% +0.378 +1250.6 | 6-20 63.2% +0.499 +1563.9 | rest 69.6% -0.090  -298.5 | LDG hard10 63.6% +0.004    +0.5 | LDG none 63.3% +0.021    +2.8 | FB25 hard10 43.9% +0.063    +7.9 | FB25 none 43.4% +0.086   +11.4 | OFB2 hard10 59.8% +0.651  +144.6 | OFB2 none 59.6% +0.659  +152.8
+  1 behind  : top 5 24.2% +0.559  +805.4 | 6-20 19.8% +0.576  +566.0 | rest 15.3% -0.146  -105.8 | LDG hard10 20.0% +0.522   +21.6 | LDG none 19.9% +0.532   +22.6 | FB25 hard10 27.5% +0.273   +21.4 | FB25 none 27.0% +0.289   +23.6 | OFB2 hard10 22.4% +1.038   +86.5 | OFB2 none 22.2% +1.067   +92.0
+  2+ behind : top 5 17.9% +1.254 +1339.5 | 6-20 12.2% +1.076  +650.9 | rest 11.4% +0.519  +281.7 | LDG hard10 11.4% +1.414   +33.3 | LDG none 11.8% +1.487   +37.5 | FB25 hard10 24.6% +1.151   +80.6 | FB25 none 25.5% +1.237   +95.7 | OFB2 hard10 15.3% +1.959  +111.2 | OFB2 none 15.6% +2.004  +121.7
+  inside    : top 5  2.4% +0.520   +75.4 | 6-20  4.9% +0.427  +103.1 | rest  3.7% +0.160   +28.2 | LDG hard10  5.0% -0.842    -8.7 | LDG none  5.0% -0.839    -9.1 | FB25 hard10  4.0% -0.843    -9.7 | FB25 none  4.0% -0.839   -10.3 | OFB2 hard10  2.5% -0.827    -7.8 | OFB2 none  2.6% -0.849    -8.5
+
+PART 3: theirs by OUR guard ladder's state at the leg (lag 50 ms; ON = our ladder pulls, OFF = it rests), WS-timed, 1 s: share of their shares | c/sh | $/day
+  top 5 : ON 51.5% +0.281  +861.7 | OFF 48.5% +0.901 +2607.4 | none  0.0% +4.671    +1.9
+  6-20  : ON 36.7% +0.061  +111.2 | OFF 63.3% +0.882 +2772.7 | none  0.0% -3.500    -0.0
+  rest  : ON 51.6% -0.697 -1707.9 | OFF 48.3% +0.704 +1610.9 | none  0.1% +0.562    +2.6
+
+PART 4: theirs by trade type at each depth, WS-timed, 1 s: STOP share | STOP c/sh | THROUGH c/sh
+  top 5 : at best 82.3% +0.479 -0.087 | 1 behind 66.8% +0.651 +0.374 | 2+ behind 65.1% +1.207 +1.342
+  6-20  : at best 73.9% +0.634 +0.116 | 1 behind 57.8% +0.629 +0.504 | 2+ behind 56.6% +0.964 +1.224
+  rest  : at best 74.4% -0.046 -0.219 | 1 behind 66.0% -0.340 +0.229 | 2+ behind 69.0% +0.130 +1.385
+
+top-5 maker-days: 40 signer ids over 9 days (ids are per day)
+2026-11-14T08:40:43Z tag=tc_report rc=0 peak_rss_mib=563 wall_s=4.24 cpu_user_s=3.88 memavail_start_gib=20 disk_free_gib=514->514 slot=claude

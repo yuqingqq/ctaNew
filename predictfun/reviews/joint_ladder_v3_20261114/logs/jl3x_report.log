@@ -1,0 +1,13 @@
+exposure selftests passed (5 synthetic cases incl. the flagged two-order case); planted position-only statistic caught
+JOINT-LADDER v3 POST HOC control: true exposure (position + every share of ours that can still fill, from submission), 9 days, client-state runs; as of 2026-11-14T08:39:07Z
+runs 93312, accepted submissions read 13152371
+
+cap      | cap sh | max exposure sh | runs over the cap | max |position| sh | window-side exposure p50 / p95 / p99 sh
+hard2    |     60 |            60.0 |       0 of  23328 |              60.0 |   60.0 /   60.0 /   60.0
+hard5    |    150 |           150.0 |       0 of  23328 |             150.0 |  150.0 /  150.0 /  150.0
+hard10   |    300 |           300.0 |       0 of  23328 |             300.0 |  300.0 /  300.0 /  300.0
+soft2    |     60 |           419.8 |   23319 of  23328 |             239.8 |  330.0 /  389.6 /  408.1
+
+positive control: soft2 exceeded 2 x size on 9 of 9 days
+READING: HARD-EXPOSURE-OK
+2026-11-14T08:39:07Z tag=jl3x_report rc=0 peak_rss_mib=130 wall_s=0.38 cpu_user_s=0.31 memavail_start_gib=20 disk_free_gib=515->515 slot=claude

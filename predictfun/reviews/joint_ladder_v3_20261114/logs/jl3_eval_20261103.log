@@ -1,0 +1,10 @@
+joint-ladder v3 selftests passed; planted errors caught: {'MUT_REF_RELEASE': True, 'MUT_REST_TRUE': True, 'MUT_HELD_TRUE': True, 'MUT_LEG_LEAK': True, 'MUT_PRIORITY': True}
+20261103: 40 windows, 45 s, rss 587 MiB
+20261103: 80 windows, 90 s, rss 601 MiB
+20261103: 120 windows, 136 s, rss 619 MiB
+20261103: 160 windows, 182 s, rss 639 MiB
+20261103: 200 windows, 226 s, rss 656 MiB
+20261103: 240 windows, 271 s, rss 673 MiB
+20261103: 280 windows, 316 s, rss 689 MiB
+20261103: windows 288, runs 18144, violations {'leg': 0, 'order': 0, 'live': 0, 'priority': 0, 'collision': 0, 'position': 0, 'cap': 0}, max hard exposure {'hard2': 60.00000000000003, 'hard5': 150.00000000000003, 'hard10': 300.0000000000001} in 326 s
+2026-11-14T07:47:01Z tag=jl3_eval_20261103 rc=0 peak_rss_mib=694 wall_s=326.60 cpu_user_s=324.11 memavail_start_gib=20 disk_free_gib=515->515 slot=claude
