@@ -1988,12 +1988,32 @@ wait_post_why_20261114:
   post_negative_rank_cells: 4
 
 wait_post_signal_data_20261114:
-  status: queued
+  status: complete_development_study
+  asof: 2026-11-14T16:57:36Z
   source_commit: 04d94d1b
   freeze_commit: 7d177ca0
-  candidate_count: 3
+  sampling_source_commit: 3145fc9f
+  sampling_freeze_commit: a357cbc4
+  evidence_commit: 560686a4
+  candidate_count: 5
   current: predictfun/reviews/wait_post_signal_data_20261114/current.json
+  result: predictfun/reviews/wait_post_signal_data_20261114/summary.json
   output: data/predict_fun/research/wait_post_signal_data_20261114_v1
-  service: pf-wait-post-signal-data-20261114
+  sampling_output: data/predict_fun/research/wait_post_sampling_20261114_v1
+  tests_passed: 14
+  frozen_files_verified: 57
+  model_artifacts_bound: 70
+  services_active: false
+  service_exit_status: 0
+  size_queue_resumed: true
+  market_distance_outside: 605
+  heldout_probes: 9922
+  runtime_posts: 49487
+  runtime_outside_five_state_ranges: 3
+  sampling_inclusion_ratio: 16
+  unweighted_local_tests_passed: 0
+  unweighted_local_tests: 8
+  weighted_local_tests_passed: 0
+  weighted_local_tests: 12
   forward_validation: false
-  next: verify controls, measure support-conditioned errors, compare all declared processing probes
+  next: more later-generation and jointly waiting neutral-reference labels with complete client-known ladder context; signal skill remains unproven

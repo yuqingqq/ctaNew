@@ -1,27 +1,65 @@
 # P-2026-005 HANDOFF
 
 <!-- WAIT_POST_SIGNAL_DATA_20261114 -->
-## 2026-11-14 — distribution and signal-processing study queued
+## 2026-11-14 — distribution, processing and sampling correction COMPLETE
 
 USER: filter noise, generate useful signals, check train/test distribution and
-process data accordingly. Source04d94d1b/freeze7d177ca0; receipt
-`reviews/wait_post_signal_data_20261114/current.json`. Existing five consumed
-v2 test dates and neutral-reference generation labels; no new forward days.
-Separate raw market-feature shift from joint inventory/exposure/waiting-state
-coverage. Report errors inside and outside training support, not only overall.
+process the data. Complete asof **2026-11-14T16:57:36Z**, five consumed development dates
+(Oct27,Oct31,Nov1/2/3), **9,922 held-out action probes /1,440 market windows**.
+Evidence: `reviews/wait_post_signal_data_20261114/summary.json` and
+`completion.json`; phase1 audit/probes and sampling result retain every cell.
+Source04d94d1b/freeze7d177ca0; sampling follow-up3145fc9f/freezea357cbc4;
+completed evidence560686a4. Five new candidates total, no forward validation.
 
-Three declared development probes against saved FROZEN_V2: RAW_DIRECT fits
-POST-minus-WAIT directly; COMPACT_DIRECT uses causal economic normalization
-and training-fitted missing/extreme flags with the same pinned LGBM; COMPACT_RIDGE
-uses the same inputs with fixed regularization. No target clipping, fill-selected
-training, test-row removal, test-fitted transforms or post hoc thresholds.
-All candidates retain positive absolute POST and nonnegative timing advantage.
-500-draw action-matched local nulls; no portfolio or forward acceptance claim.
+The evidence does NOT support "all test data was unseen". The declared market
+nearest-distance check flags **605/9922 (6.1%)** outside
+its training-calibration95% threshold. Inside that market-support proxy, entry
+selection still loses. In coarse order-state bins with >=5 training examples,
+**5377 probes /1006 selected** have realized selected POST value
+**-2.389c per nominal share**; POST and timing predictions
+still lose to prior means. These support checks are descriptive and do not rule
+out changing conditional relationships or hidden market regimes.
 
-Nine synthetic checks must pass before historical audit/fitting. Supervisor
-`pf-wait-post-signal-data-20261114` waits on own core8; current size worker
-finishes normally, parent1576587 yields and resumes via finally/ExecStopPost.
-Output: `data/predict_fun/research/wait_post_signal_data_20261114_v1`.
+Of49487 actual VALUE posts, 33086 use unseen joint bins,
+but only **3** exceed the min/max of the FIVE audited state
+variables (known position, own/other exposure, idle age, price change while
+empty). This is new combinations of familiar values, not proof all market
+inputs are familiar. Runtime market-feature vectors were not exhaustively
+stored; biased saved inference samples were not substituted.
+
+The training builder samples first generations with probability1/2 and later
+ones1/32: **16x different inclusion probability**. Initial generations are
+84.3..86.7% of training probes; runtime generation share is
+33.6% (policy-dependent, a different population). Implemented inverse-inclusion
+weights2/32 in both fitting AND evaluation. Weighted initial training share
+becomes25.1..29.0%; training effective n is only
+522.6..1595.8 per side/fold. Weighting corrects known sampling,
+not absent joint states or unreached probes, and does not force runtime shares.
+
+Implemented/tested train-only volatility/spread/lot normalization, missing and
+extreme flags, constant/duplicate removal, direct timing-difference learning,
+and a fixed regularized linear baseline. Labels and rare losses remain raw;
+no test-row removal, test-fitted transforms or outcome-selected training.
+Three initial variants plus two sampling-corrected variants were declared and
+all reported. The regularized variant reduces prediction error but remains
+below the prior-mean baseline overall. No full economic test passes:
+**0/8 unweighted side/arm tests** and **0/12 weighted side/arm tests**,
+including controls. Every null has500 draws; weighted controls additionally
+match initial/later generation and selected weight mass. These are two views
+of overlapping candidates, not20 independent experiments.
+
+Fourteen synthetic checks passed (positive controls + refusals),57 frozen
+source/artifact files verified,70 fitted LGBM files bound in
+`model_artifacts.json` (linear parameters in phase1 receipt). Both supervised
+jobs exited0; old size queue resumed. Source exclusions:8361
+untimed legs /105159.20 shares; no missing feature-grid rows.
+
+Next data change: label more later-generation and jointly waiting ladder states
+on the neutral action reference, with client-known prices/remaining quantities
+of the other resting orders. Reweighting scarce examples cannot create that
+information. Evaluate signals incrementally to simple price/rung baselines and
+use the actual intended frozen keeper/continuation for combined entry labels.
+No new portfolio/forward claim; useful economic prediction is still unproven.
 <!-- /WAIT_POST_SIGNAL_DATA_20261114 -->
 
 ## START HERE - 2026-11-14 16:38Z (session ce68ebe0, before a session reset): the PULL line's direction, corrected with the USER
