@@ -1928,3 +1928,13 @@ wait_post_v2_20261114:
   full_study_complete: true
   forward_validation: false
   next: audit admission calibration and joint waiting-state coverage under the frozen learned keeper before integration
+
+wait_post_why_20261114:
+  status: running_diagnostic
+  current: predictfun/reviews/wait_post_diagnosis_20261114/current.json
+  source_commit: 33925207
+  freeze_commit: 3ac6a3b4
+  output: data/predict_fun/research/wait_post_diagnosis_20261114_v3
+  service: pf-wait-post-diagnose-v3-20261114
+  tests_passed: 8
+  forward_validation: false
