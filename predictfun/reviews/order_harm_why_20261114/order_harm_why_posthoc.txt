@@ -1,4 +1,4 @@
-ORDER-HARM WHY POST HOC (labelled post hoc; after W2), test days 20261027, 20261031, 20261101, 20261102, 20261103; as of 2026-11-14T15:54:24Z; control: WITHIN equals ORDER-HARM WHY's W2 on all 12 WS cells, falsifier (values swapped) differs on 12
+ORDER-HARM WHY POST HOC (labelled post hoc; after W2), test days 20261027, 20261031, 20261101, 20261102, 20261103; as of 2026-11-14T16:08:52Z; control: WITHIN equals ORDER-HARM WHY's W2 on all 12 WS cells, falsifier (values swapped) differs on 12
 
 WT WITHIN-STATE SPLIT (WS-timed, 1 s, ours w/o young): TYPE-MIX (a different STOP / THROUGH share in the same state) + SAME-TYPE
   M0   LDG  : WITHIN -0.489 = TYPE-MIX -0.248 + SAME-TYPE -0.240 + RESIDUAL -0.002 -> QUEUE-PLACE
@@ -38,3 +38,9 @@ KT OHQ0 KEPT-ON FILLS AT M 50 (all trades, all ages): type x depth: sh/day | c/s
   THROUGH at best:    2641 | -1.148 | -0.911
   THROUGH behind :    5491 | -1.159 | -1.551
   THROUGH inside :     772 | -1.519 | -0.573
+
+AG AGE OF THE FILLED ORDER (M 50, all trades): arm: median / p90 ms (share-weighted) || age bucket: sh/day | STOP share | WS c/sh 1 s | E2 c/sh 1 s
+  LDG  :   641 /   4150 || <100 ms   8738 | 0.10 | +0.224 | -0.991 || 100-500 ms  13509 | 0.24 | +0.272 | -1.027 || 0.5-2 s  15676 | 0.33 | +0.073 | -1.337 || >= 2 s  11710 | 0.50 | +0.231 | -1.117
+  FB25C:  1676 /  10730 || <100 ms   6741 | 0.11 | +0.050 | -0.458 || 100-500 ms  11034 | 0.25 | +0.352 | -0.990 || 0.5-2 s  17060 | 0.33 | +0.162 | -1.316 || >= 2 s  29536 | 0.44 | +0.236 | -1.634
+  OHQ0 :  1151 /   6976 || <100 ms   6805 | 0.10 | +0.207 | -0.708 || 100-500 ms  12444 | 0.26 | +0.324 | -0.967 || 0.5-2 s  18871 | 0.37 | +0.091 | -1.215 || >= 2 s  22083 | 0.47 | +0.198 | -1.369
+  OHQM :  1675 /   8982 || <100 ms   6089 | 0.11 | +0.266 | -0.545 || 100-500 ms  13460 | 0.27 | +0.102 | -1.045 || 0.5-2 s  24063 | 0.37 | -0.045 | -1.234 || >= 2 s  36414 | 0.46 | +0.154 | -1.396

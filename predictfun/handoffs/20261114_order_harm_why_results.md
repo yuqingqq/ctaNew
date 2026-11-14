@@ -196,3 +196,49 @@ Within a type our fills are still worse. In CALM at the best:
 
 - **Outputs:** `data/predict_fun/research/order_harm_why_20261114/` (`order_harm_why.txt`, `order_harm_why_posthoc.txt`).
 - **Review copies:** `predictfun/reviews/order_harm_why_20261114/`.
+
+## Follow-up: the USER's questions (16:09Z)
+
+USER: "Why we earn less than theirs, is it because we only have 30 shares resting there, they have hundreds, why we suffer from big moves much worse than them, why we make less during calm periods. Still, why we don't queue in the front if we keep our orders there early, I think now we should keep there for a long time? Pull and repost both lose, it doesnot make sense, we pull then why we lose?"
+
+Facts behind the answers. The AG reading was added to the follow-up script (ed976bf8) and re-run.
+
+**Order size**
+
+- In our replay, value per share does not depend on the order's size: -1.18 / -1.19 / -1.18 c/sh at 5 / 30 / 100 sh (FRONT-PULL-SIZE, R410).
+- To fill an order at the back, a trade must be bigger than the queue ahead of it (queue rule M). Even our STOP fills therefore come only from trades bigger than that queue.
+- Whether this explains the same-type gap is not measured yet. The check is the taker order's size and the queue ahead for each fill.
+
+**How often we lose our place**
+
+- Our guard comes on about 53 times a minute on each side: 275,122 episodes over 5,184 window-sides (ORDER-HARM v3 statuses).
+- LDG pulls about 143,700 orders a day at hard 50 / M 50, about 42 per rung per minute.
+- Every re-post joins at the back. The queue ahead of a joining order is mostly orders that joined after we could have been there (QR: 41-44%).
+
+**Age of the filled order** (AG, M 50, share-weighted):
+
+| Arm | Median age | p90 age |
+|---|---|---|
+| LDG | 641 ms | 4.2 s |
+| OHQ0 | 1.2 s | 7.0 s |
+| FB25C | 1.7 s | 10.7 s |
+
+| Age bucket | STOP share | WS c/sh at 1 s | E2 c/sh at 1 s |
+|---|---|---|---|
+| < 100 ms | 0.10-0.11 | +0.05 to +0.27 | -0.46 to -0.99 |
+| 100-500 ms | 0.24-0.27 | +0.10 to +0.35 | -0.97 to -1.05 |
+| 0.5-2 s | 0.33-0.37 | -0.05 to +0.16 | -1.22 to -1.34 |
+| >= 2 s | 0.44-0.50 | +0.15 to +0.24 | -1.12 to -1.63 |
+
+- Keeping longer does move us forward: the STOP share rises with age.
+- It does not raise the value per share on WS-timed trades.
+- Older orders lose more on E2-timed trades: they are run over in moves.
+- The top 5's STOP share at the best is 80-85%.
+
+**The "pull" branch is pull + re-post**
+
+- In the labels and the replay, a pulled order re-enters at the first 50 ms step after the guard clears (REPOST_MS = 0).
+- The branch loses through:
+  - fills that land before our cancel does (PEND: LDG -$95.7 a day at M 50, -1.6 to -2.0 c/sh);
+  - the re-posted order (REPOST: LDG -$118.9 a day; WS-timed +$30.8, E2-timed -$149.7).
+- Pulling and staying out would cost only the PEND part.
