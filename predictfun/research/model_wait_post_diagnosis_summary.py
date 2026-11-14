@@ -57,6 +57,23 @@ def summarize(raw):
     source = [x['source_status'] for x in raw['receipts'].values()]
     value, guard = arms['VALUE'], arms['VALUE_GUARD_EXIT']
     support = raw['saved_audit']['probe_support']
+    calibration = {}
+    for side in (0, 1):
+        rows = [f['test_selection'] for f in fits if f['side'] == side]
+        n = sum(x['selected'] for x in rows)
+        calibration[str(side)] = dict(
+            eligible_probes=sum(x['n'] for x in rows), selected=n,
+            **{k: sum(x[k]*x['selected'] for x in rows)/n for k in
+               ('predicted_post', 'actual_post', 'predicted_delta', 'actual_delta')})
+    rates = {a: 100*x['pnl']/x['shares'] for a, x in arms.items()}
+    volume_value = {}
+    for baseline in ('ALWAYS', 'TIMER'):
+        b = arms[baseline]
+        volume_value[baseline] = dict(
+            pnl_difference=value['pnl']-b['pnl'],
+            quantity_change_at_baseline_rate=(value['shares']-b['shares'])*b['pnl']/b['shares'],
+            per_share_value_change_at_value_quantity=value['shares']*(rates['VALUE']-rates[baseline])/100,
+            interpretation='Descriptive arithmetic identity; policy-dependent fills, not a causal participation/selection test.')
     return dict(
         asof=raw['asof'], status='complete_post_hoc_diagnosis',
         forward_validation=False, new_candidates=0,
@@ -67,11 +84,14 @@ def summarize(raw):
                    exclusions={k: sum(x[k] for x in source) for k in ('untimed_legs_0_60', 'untimed_shares_0_60', 'grid_steps_without_row')},
                    original_market_arm_reconciliations=sum(x['baseline_metric_reconciliations'] for x in raw['receipts'].values())),
         generalization=generalization,
+        selected_heldout_calibration=calibration,
         post_wait_test_target_correlation_range=span(x['test_post_wait_correlation'] for x in fits),
         labeled_probe_support=dict(n=sum(x['n'] for x in support),
                                   unseen_fraction=sum(x['unseen'] for x in support)/sum(x['n'] for x in support)),
         runtime_generations=runtime, value_runtime_by_side=runtime_by_side,
         portfolio_totals=raw['totals'], daily=raw['daily'], fill_attribution=attribution,
+        gross_pnl_cents_per_filled_share=rates,
+        value_versus_baseline_volume_value_identity=volume_value,
         guard_exit_sensitivity=dict(
             pnl_change=guard['pnl']-value['pnl'], placement_ratio=guard['places']/value['places'],
             filled_quantity_ratio=guard['shares']/value['shares'],
@@ -82,7 +102,7 @@ def summarize(raw):
         interpretation=[
             'Generalization failure exists on held-out neutral-reference probes before closed-loop state mismatch. The old constant-head bug is not the explanation.',
             'The timing target is mostly zero and tail-heavy; two separately fitted correlated value heads do not reliably recover their difference.',
-            'Runtime support bins and eventual posting are descriptive evidence of a train/runtime gap and delayed participation, not causal attribution of loss.',
+            'Runtime support bins describe a train/runtime gap. Post-after-WAIT counts describe delayed participation, not causal attribution of loss or a test of entry skill.',
             'Fill-time spread and subsequent mark movement reconcile to terminal PNL; this is an accounting decomposition, not a forecast-skill test.',
             'The guard exit changes the continuation and exposure as well as cancellations. Its gain is not proof of selective keeper skill; churn is material.',
             'Code inspection: whole-portfolio targets include ladder interactions, while model inputs lack a per-order snapshot of other resting prices, ages and remaining sizes. Aggregate inventory/exposure cannot distinguish all such states.'
@@ -96,7 +116,9 @@ def summarize(raw):
         limitations=raw['limitations']+[
             'Touch means exactly received public best; near means public best or one tick behind. Both exclude price-improving quotes and do not establish front-of-queue residence.',
             'The keeper sensitivity uses historical LODO guard inputs and no matched activity null; it is not new deployable skill evidence.',
-            'Largest-one-percent statistic is squared target magnitude, not a measured fraction of fitted residual loss.'
+            'Largest-one-percent statistic is squared target magnitude, not a measured fraction of fitted residual loss.',
+            'Runtime generations are policy-dependent: a POST advances the generation, and an unposted terminal generation is censored. The eventual-POST fraction cannot establish failure to abstain or rejection skill.',
+            'Other-session maker/keeper results use different caps or horizons; this report makes no direct comparable top-maker performance claim.'
         ])
 
 
