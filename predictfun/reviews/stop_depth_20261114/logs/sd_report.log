@@ -1,0 +1,76 @@
+/home/yuqing/ctaNew/predictfun/research/pf_stop_depth.py:314: RuntimeWarning: Mean of empty slice.
+  [float((np.minimum(x, 5) == i).mean()) for i in range(6)]))
+/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/_core/_methods.py:145: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+STOP-DEPTH, 9 consumed replay days, first 60 s, guard-on steps; as of 2026-11-14T04:21:52Z; controls passed; rows 2015322; masked steps excluded 275520; invalid book 0; quiet (no new frame in the horizon) 543; rows without an OLD prediction 0
+
+HOW FAR THE MOVE GOES within 1 s after a guard-on step (ticks against us, venue frames after t + 22 ms; rows with nothing moved yet, n 1830551)
+  all            0 59.2% | 1 19.7% | 2  8.4% | 3  4.6% | 4  2.8% | 5+  5.3%
+  onset steps    0 63.4% | 1 18.7% | 2  7.4% | 3  3.9% | 4  2.2% | 5+  4.4%  (n 257773)
+  later steps    0 58.5% | 1 19.8% | 2  8.5% | 3  4.8% | 4  2.9% | 5+  5.5%
+  guard value Q1 (most negative) 0 36.0% | 1 23.3% | 2 14.1% | 3  9.0% | 4  5.7% | 5+ 12.0%
+  guard value Q2 0 56.7% | 1 22.4% | 2  9.0% | 3  4.6% | 4  2.7% | 5+  4.6%
+  guard value Q3 0 63.7% | 1 19.5% | 2  7.2% | 3  3.6% | 4  2.2% | 5+  3.8%
+  guard value Q4 0 68.0% | 1 17.4% | 2  6.2% | 3  3.2% | 4  1.8% | 5+  3.4%
+  guard value Q5 0 71.4% | 1 15.9% | 2  5.4% | 3  2.8% | 4  1.5% | 5+  3.0%
+  Binance 1 s return against us Q1 0 61.8% | 1 19.7% | 2  7.7% | 3  4.0% | 4  2.3% | 5+  4.3%
+  Binance 1 s return against us Q2 0  nan% | 1  nan% | 2  nan% | 3  nan% | 4  nan% | 5+  nan%
+  Binance 1 s return against us Q3 0  nan% | 1  nan% | 2  nan% | 3  nan% | 4  nan% | 5+  nan%
+  Binance 1 s return against us Q4 0  nan% | 1  nan% | 2  nan% | 3  nan% | 4  nan% | 5+  nan%
+  Binance 1 s return against us Q5 (most against) 0 43.9% | 1 19.4% | 2 12.1% | 3  8.1% | 4  5.3% | 5+ 11.1%
+  moves of >= 1 tick (n 747200) stop at 1 tick 48.2%, 2 ticks 20.5%, 3+ 31.2%
+
+AUC OUT OF DAY on the clean target (rows not ALREADY_j): pooled | per day; OLD = PULL-DEPTH's model (FUTURE-BEST's), BASE = its inputs without P / v, NEW
+  j1 OLD  0.721 | 0.728 0.719 0.716 0.729 0.734 0.709 0.696 0.708 0.723  (base rate 0.408, n 1830551)
+  j1 NEW  0.725 | 0.731 0.723 0.721 0.733 0.736 0.714 0.701 0.710 0.725  (base rate 0.408, n 1830551)
+  j1 BASE 0.719 | 0.723 0.718 0.713 0.726 0.730 0.708 0.698 0.705 0.721  (base rate 0.408, n 1830551)
+  j2 OLD  0.731 | 0.730 0.736 0.726 0.730 0.740 0.720 0.703 0.720 0.730  (base rate 0.229, n 1963321)
+  j2 NEW  0.733 | 0.733 0.737 0.729 0.732 0.742 0.722 0.709 0.722 0.733  (base rate 0.229, n 1963321)
+  j2 BASE 0.728 | 0.725 0.732 0.722 0.727 0.737 0.718 0.706 0.719 0.728  (base rate 0.229, n 1963321)
+  j3 OLD  0.736 | 0.730 0.737 0.728 0.736 0.744 0.732 0.719 0.725 0.731  (base rate 0.144, n 1993977)
+  j3 NEW  0.738 | 0.733 0.737 0.732 0.737 0.745 0.735 0.723 0.728 0.734  (base rate 0.144, n 1993977)
+  j3 BASE 0.732 | 0.727 0.734 0.724 0.732 0.739 0.730 0.719 0.723 0.729  (base rate 0.144, n 1993977)
+  j4 OLD  0.739 | 0.733 0.738 0.732 0.738 0.754 0.740 0.741 0.727 0.732  (base rate 0.095, n 2005477)
+  j4 NEW  0.742 | 0.734 0.739 0.742 0.741 0.756 0.744 0.746 0.732 0.734  (base rate 0.095, n 2005477)
+  j5 OLD  0.741 | 0.735 0.742 0.741 0.745 0.765 0.747 0.747 0.727 0.727  (base rate 0.063, n 2009930)
+  j5 NEW  0.745 | 0.737 0.743 0.752 0.754 0.766 0.747 0.758 0.730 0.735  (base rate 0.063, n 2009930)
+  R580_j1: PREDICTABLE; R581_j1: BETTER; R582_j1: FEATURES-HELP; R580_j2: PREDICTABLE; R581_j2: BETTER; R582_j2: FEATURES-HELP; R580_j3: PREDICTABLE; R581_j3: BETTER; R582_j3: FEATURES-HELP
+
+CALIBRATION of NEW (deciles of the prediction: mean predicted / realized)
+  j1: 0.16/0.15 0.21/0.22 0.26/0.26 0.30/0.30 0.34/0.34 0.39/0.39 0.45/0.45 0.52/0.52 0.62/0.61 0.83/0.83
+  j2: 0.08/0.08 0.10/0.10 0.12/0.12 0.14/0.14 0.16/0.16 0.18/0.19 0.21/0.22 0.26/0.26 0.36/0.35 0.67/0.67
+  j3: 0.05/0.05 0.06/0.06 0.07/0.07 0.08/0.08 0.09/0.09 0.10/0.11 0.12/0.13 0.15/0.15 0.21/0.20 0.51/0.51
+
+KEEP DECISION for rung d (keep while the guard is on): kept steps split into not reached (D1 < d) / stopped at the rung (D1 = d, the good case) / run over (D1 >= d + 1)
+  rung 1 (n 1963321):
+    FB25 OLD: kept 71.9% of steps; not reached 65.9% | stopped 19.4% | run over 14.7%
+    FB25 NEW: kept 71.9% of steps; not reached 65.8% | stopped 19.6% | run over 14.6%
+    FB25 realized: kept 77.1% of steps; not reached 71.7% | stopped 28.3% | run over  0.0%
+    FB10 OLD: kept 10.9% of steps; not reached 82.0% | stopped  9.8% | run over  8.2%
+    FB10 NEW: kept 10.9% of steps; not reached 81.2% | stopped 10.9% | run over  7.9%
+  rung 2 (n 1993977):
+    FB25 OLD: kept 88.9% of steps; not reached 81.6% | stopped  8.3% | run over 10.2%
+    FB25 NEW: kept 88.9% of steps; not reached 81.5% | stopped  8.3% | run over 10.2%
+    FB25 realized: kept 85.6% of steps; not reached 88.7% | stopped 11.3% | run over  0.0%
+    FB10 OLD: kept 52.3% of steps; not reached 87.2% | stopped  5.6% | run over  7.2%
+    FB10 NEW: kept 52.3% of steps; not reached 87.2% | stopped  5.7% | run over  7.1%
+  rung 3 (n 2005477):
+    FB25 OLD: kept 94.2% of steps; not reached 88.4% | stopped  4.6% | run over  6.9%
+    FB25 NEW: kept 94.2% of steps; not reached 88.4% | stopped  4.7% | run over  6.9%
+    FB25 realized: kept 90.5% of steps; not reached 94.0% | stopped  6.0% | run over  0.0%
+    FB10 OLD: kept 80.1% of steps; not reached 90.7% | stopped  3.6% | run over  5.7%
+    FB10 NEW: kept 80.1% of steps; not reached 90.7% | stopped  3.7% | run over  5.7%
+  rung 4 (n 2009930):
+    FB25 OLD: kept 96.5% of steps; not reached 92.4% | stopped  2.9% | run over  4.7%
+    FB25 NEW: kept 96.5% of steps; not reached 92.4% | stopped  2.9% | run over  4.7%
+    FB25 realized: kept 93.7% of steps; not reached 96.5% | stopped  3.5% | run over  0.0%
+    FB10 OLD: kept 90.7% of steps; not reached 93.5% | stopped  2.4% | run over  4.1%
+    FB10 NEW: kept 90.7% of steps; not reached 93.5% | stopped  2.4% | run over  4.1%
+  R583_d1: NOT-SHOWN (6 lower / 3 higher); R583_d2: NOT-SHOWN (5 lower / 4 higher)
+
+NEW top inputs by gain, j1 (days in the top 8): x29 9, s1 9, c1 9, adv_pf_imb3 9, adv_pf_imb1 9, adv_d_bnimb250 9, adv_bn_r250 9, adv_bn_r100 9
+NEW top inputs by gain, j2 (days in the top 8): x29 9, ct2 9, adv_pf_imb3 9, adv_d_bnimb250 9, adv_bn_r500 9, adv_bn_r250 9, adv_bn_r100 9, adv_bn_imb 8, x36 1
+
+READINGS: {"R580_j1": "PREDICTABLE", "R581_j1": "BETTER", "R582_j1": "FEATURES-HELP", "R580_j2": "PREDICTABLE", "R581_j2": "BETTER", "R582_j2": "FEATURES-HELP", "R580_j3": "PREDICTABLE", "R581_j3": "BETTER", "R582_j3": "FEATURES-HELP", "R583_d1": "NOT-SHOWN", "R583_d2": "NOT-SHOWN"}
+
+2026-11-14T04:21:51Z tag=sd_report rc=0 peak_rss_mib=2056 wall_s=24.57 cpu_user_s=9.99 memavail_start_gib=22 disk_free_gib=519->518 slot=claude
