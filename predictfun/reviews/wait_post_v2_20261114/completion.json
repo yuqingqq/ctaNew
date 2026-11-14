@@ -1,0 +1,37 @@
+{
+  "asof": "2026-11-14T14:58:55Z",
+  "status": "complete",
+  "runner": {
+    "status": "complete",
+    "pid": 2470496,
+    "asof": "2026-11-14T14:57:44Z",
+    "result": "/home/yuqing/ctaNew/data/predict_fun/research/wait_post_v2_20261114_v1/full/report/result.json",
+    "result_sha256": "92610a5dfc50d60a59e29da7ee38ec06b804f11943647f7cd2d2c6cb793557e1"
+  },
+  "service": "MainPID=0\nResult=success\nExecMainStatus=0\nActiveState=inactive\nSubState=dead\n",
+  "size_queue_pid": 1576587,
+  "size_queue_resumed": true,
+  "size_queue_process_state": "S",
+  "artifacts": {
+    "performance.json": "de961d0b4f6ecc21696884c2ebcb1b1feb4d394c30dd37e2e08ae710bd0d54e3",
+    "raw_report.json": "92610a5dfc50d60a59e29da7ee38ec06b804f11943647f7cd2d2c6cb793557e1",
+    "daily.json": "ed7c76cde0d109e8e70b55513310aab25e66defd2b0d28c1d97440759d305252"
+  },
+  "verified": {
+    "frozen_files": 42,
+    "eval_receipts": 5,
+    "model_receipts": 6,
+    "label_receipts": 9,
+    "daily_aggregates_match": true,
+    "comparisons_reconciled": true,
+    "local_means_reconciled": true,
+    "model_hashes_and_tree_structures_match": true
+  },
+  "libraries": {
+    "numpy": "2.2.6",
+    "pandas": "3.0.1",
+    "pyarrow": "24.0.0",
+    "lightgbm": "4.6.0"
+  },
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]"
+}
