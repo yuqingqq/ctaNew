@@ -57,6 +57,7 @@ orders; the top makers' entry times are not observable (CROSSING proves presence
 consumed days (C8); the 5 s lookback and the 30 sh line are fixed here.
 Usage (run_light, PF_SLOT=claude): pf_next_price.py selftest | day <day> | report | posthoc; driver run_next_price.sh (selftest, days,
 report). 'posthoc' is POST HOC, added after the first report (03:32Z): the queue numbers paired within the same births (see posthoc()).
+'posthoc2' is POST HOC too (after posthoc, 03:33Z): rungs 0-4 only, because a price beyond the 5 shown levels gets 0 sh ahead (see posthoc2()).
 """
 import bisect
 import json
@@ -451,8 +452,44 @@ def posthoc():
     print(txt)
 
 
+def posthoc2():
+    """POST HOC 2, added after posthoc (03:33Z), descriptive, no readings. posthoc showed rung 5 with 0 sh ahead on nearly every birth:
+    an order placed at a price beyond the 5 shown levels has an unknown queue, which the simulator (sim2 / sim4 place()) sets to 0, so
+    it starts at the front. Here: posthoc's paired numbers for rungs 0-4 only; the share of rung-5 rows with 0 ahead; and, from
+    QUEUE-PLACE's saved at-best fills of the same ladder, rung 5's share of at-best shares and their queue ahead (the defect's reach)."""
+    O = pd.concat([pd.read_parquet(f'{OUTD}/ours_{d}.parquet') for d in DAYS9], ignore_index=True)
+    X = O[(O.cfg == 'M50') & (O.kind == 'fallback') & ~O.guard.isin(['masked', 'pre_grid'])]
+    q3 = lambda v: '%.0f (%.0f / %.0f)' % tuple(np.nanpercentile(np.asarray(v, float), [50, 25, 75])) if np.isfinite(np.asarray(v, float)).any() else 'n/a'
+    L = [f'NEXT-PRICE POST HOC 2 (after posthoc; descriptive, no readings): fallback births, M 50, guard not masked, rungs 0-4; as of '
+         f'{time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}', '']
+    r5 = X[(X.rung == 5) & X.status.isin(['LIVE', 'PULLED'])]
+    L.append(f'rung 5 rows (LIVE / PULLED): {len(r5)}, with 0 sh ahead {float((r5.ahead <= 0).mean()):.1%}')
+    Y = X[X.rung.between(0, 4) | (X.rung < 0)]
+    for st_ in ('LIVE', 'PULLED'):
+        y = Y[Y.status == st_]; fr = np.where(y.shown.values > 0, y.ahead.values / y.shown.values, np.nan)
+        L.append(f'{st_} (n {len(y)}): queue ahead at the birth {q3(y.ahead)} sh{" had it been kept" if st_ == "PULLED" else ""}; shown '
+                 f'{q3(y.shown)} sh; ahead / shown median {np.nanmedian(fr):.2f}; at the front (<= 5 sh ahead) {float((y.ahead <= 5).mean()):.1%};'
+                 f' age at the birth {q3(y.age)} ms')
+    y = Y[(Y.status == 'PULLED') & Y.next_a0.notna()]
+    L.append(f'PULLED births with a next order at the price (n {len(y)}): kept {q3(y.ahead)} sh against the next order at activation '
+             f'{q3(y.next_a0)} sh; next minus kept {q3(y.next_a0 - y.ahead)} sh')
+    QF = pd.concat([pd.read_parquet(f'{K.IO}/queue_place_20261113/fills_{d}.parquet', columns=['cfg', 'rung', 'src', 'q', 'A', 'v1', 'status'])
+                    for d in DAYS9], ignore_index=True)
+    QF = QF[(QF.cfg == 'M50') & (QF.status == 'ok')]
+    for src in ('exact', 'other'):
+        z = QF[QF.src == src]; z5 = z[z.rung == 5]
+        L.append(f'QUEUE-PLACE at-best fills, M 50, {src}: rung 5 {z5.q.sum() / max(z.q.sum(), 1e-9):.1%} of shares; its queue ahead 0 sh on '
+                 f'{float((z5.A <= 0).mean()) if len(z5) else float("nan"):.0%} of its fills; c/sh at 1 s rung 5 '
+                 f'{(z5.q * z5.v1).sum() / max(z5.q.sum(), 1e-9):+.2f} vs rungs 0-4 {(z[z.rung < 5].q * z[z.rung < 5].v1).sum() / max(z[z.rung < 5].q.sum(), 1e-9):+.2f}')
+    txt = '\n'.join(L) + '\n'
+    open(f'{OUTD}/next_price_posthoc2.txt', 'w').write(txt)
+    print(txt)
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''
+    if cmd == 'posthoc2':
+        posthoc2(); sys.exit(0)
     if cmd == 'selftest':
         all_selftests()
     elif cmd == 'day':
