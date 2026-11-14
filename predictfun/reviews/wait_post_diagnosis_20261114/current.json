@@ -1,0 +1,16 @@
+{
+  "asof": "2026-11-14T15:43:35.955154+00:00",
+  "status": "running_assigned_slot",
+  "current_attempt": 3,
+  "source_commit": "33925207",
+  "freeze_commit": "3ac6a3b4",
+  "output": "data/predict_fun/research/wait_post_diagnosis_20261114_v3",
+  "service": "pf-wait-post-diagnose-v3-20261114",
+  "tests_passed": 8,
+  "superseded_attempts": {
+    "v1": "saved audit complete; first replay stopped on duplicate grid_steps packing, no replay artifact",
+    "v2": "preflight refused on occupied second slot; stopped before tests/historical work"
+  },
+  "historical_models_unchanged": true,
+  "forward_validation": false
+}
