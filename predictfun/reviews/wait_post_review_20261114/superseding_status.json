@@ -1,0 +1,10 @@
+{
+  "asof": "2026-11-14T12:33:44Z",
+  "supersedes": "predictfun/reviews/wait_post_20261114/run_status.json",
+  "previous_reported_status": "waiting_for_slot",
+  "observed_status": "driver_absent_no_full_outputs",
+  "driver_pid": 2030852,
+  "cause": "not established; no terminal receipt",
+  "full_training_complete": false,
+  "current_action": "review original target; run predeclared bounded pilot under supervised service"
+}
