@@ -57,6 +57,14 @@ def summarize(raw):
     source = [x['source_status'] for x in raw['receipts'].values()]
     value, guard = arms['VALUE'], arms['VALUE_GUARD_EXIT']
     support = raw['saved_audit']['probe_support']
+    calibration = {}
+    for side in (0, 1):
+        rows = [f['test_selection'] for f in fits if f['side'] == side]
+        n = sum(x['selected'] for x in rows)
+        calibration[str(side)] = dict(
+            eligible_probes=sum(x['n'] for x in rows), selected=n,
+            **{k: sum(x[k]*x['selected'] for x in rows)/n for k in
+               ('predicted_post', 'actual_post', 'predicted_delta', 'actual_delta')})
     rates = {a: 100*x['pnl']/x['shares'] for a, x in arms.items()}
     volume_value = {}
     for baseline in ('ALWAYS', 'TIMER'):
@@ -76,6 +84,7 @@ def summarize(raw):
                    exclusions={k: sum(x[k] for x in source) for k in ('untimed_legs_0_60', 'untimed_shares_0_60', 'grid_steps_without_row')},
                    original_market_arm_reconciliations=sum(x['baseline_metric_reconciliations'] for x in raw['receipts'].values())),
         generalization=generalization,
+        selected_heldout_calibration=calibration,
         post_wait_test_target_correlation_range=span(x['test_post_wait_correlation'] for x in fits),
         labeled_probe_support=dict(n=sum(x['n'] for x in support),
                                   unseen_fraction=sum(x['unseen'] for x in support)/sum(x['n'] for x in support)),
