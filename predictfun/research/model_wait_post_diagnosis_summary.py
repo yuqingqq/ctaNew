@@ -57,6 +57,15 @@ def summarize(raw):
     source = [x['source_status'] for x in raw['receipts'].values()]
     value, guard = arms['VALUE'], arms['VALUE_GUARD_EXIT']
     support = raw['saved_audit']['probe_support']
+    rates = {a: 100*x['pnl']/x['shares'] for a, x in arms.items()}
+    volume_value = {}
+    for baseline in ('ALWAYS', 'TIMER'):
+        b = arms[baseline]
+        volume_value[baseline] = dict(
+            pnl_difference=value['pnl']-b['pnl'],
+            quantity_change_at_baseline_rate=(value['shares']-b['shares'])*b['pnl']/b['shares'],
+            per_share_value_change_at_value_quantity=value['shares']*(rates['VALUE']-rates[baseline])/100,
+            interpretation='Descriptive arithmetic identity; policy-dependent fills, not a causal participation/selection test.')
     return dict(
         asof=raw['asof'], status='complete_post_hoc_diagnosis',
         forward_validation=False, new_candidates=0,
@@ -72,6 +81,8 @@ def summarize(raw):
                                   unseen_fraction=sum(x['unseen'] for x in support)/sum(x['n'] for x in support)),
         runtime_generations=runtime, value_runtime_by_side=runtime_by_side,
         portfolio_totals=raw['totals'], daily=raw['daily'], fill_attribution=attribution,
+        gross_pnl_cents_per_filled_share=rates,
+        value_versus_baseline_volume_value_identity=volume_value,
         guard_exit_sensitivity=dict(
             pnl_change=guard['pnl']-value['pnl'], placement_ratio=guard['places']/value['places'],
             filled_quantity_ratio=guard['shares']/value['shares'],
@@ -96,8 +107,9 @@ def summarize(raw):
         limitations=raw['limitations']+[
             'Touch means exactly received public best; near means public best or one tick behind. Both exclude price-improving quotes and do not establish front-of-queue residence.',
             'The keeper sensitivity uses historical LODO guard inputs and no matched activity null; it is not new deployable skill evidence.',
-            'Largest-one-percent statistic is squared target magnitude, not a measured fraction of fitted residual loss.'
-            ,'Runtime generations are policy-dependent: a POST advances the generation, and an unposted terminal generation is censored. The eventual-POST fraction cannot establish failure to abstain or rejection skill.'
+            'Largest-one-percent statistic is squared target magnitude, not a measured fraction of fitted residual loss.',
+            'Runtime generations are policy-dependent: a POST advances the generation, and an unposted terminal generation is censored. The eventual-POST fraction cannot establish failure to abstain or rejection skill.',
+            'Other-session maker/keeper results use different caps or horizons; this report makes no direct comparable top-maker performance claim.'
         ])
 
 
