@@ -17,5 +17,8 @@
   "raw_report": "v3/raw_report.json",
   "completion": "v3/completion.json",
   "size_queue_resumed": true,
-  "full_study_complete": true
+  "full_study_complete": true,
+  "sign_followup": "v3/sign_followup.json",
+  "sign_followup_source_commit": "fbdba596",
+  "sign_followup_asof": "2026-11-14T16:26:50.436761+00:00"
 }
