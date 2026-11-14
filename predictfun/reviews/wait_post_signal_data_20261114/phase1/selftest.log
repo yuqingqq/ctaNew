@@ -1,0 +1,15 @@
+test_chronology_positive_and_future_refusal (test_wait_post_signal_data.SignalDataTests.test_chronology_positive_and_future_refusal) ... ok
+test_compact_ignores_outcomes_and_future_rows (test_wait_post_signal_data.SignalDataTests.test_compact_ignores_outcomes_and_future_rows) ... ok
+test_compact_units_and_sides (test_wait_post_signal_data.SignalDataTests.test_compact_units_and_sides) ... ok
+test_distance_whole_window_calibration_and_missing_support_refusal (test_wait_post_signal_data.SignalDataTests.test_distance_whole_window_calibration_and_missing_support_refusal) ... ok
+test_marginal_shift_fires_and_identical_control (test_wait_post_signal_data.SignalDataTests.test_marginal_shift_fires_and_identical_control) ... ok
+test_policy_requires_absolute_and_incremental_value (test_wait_post_signal_data.SignalDataTests.test_policy_requires_absolute_and_incremental_value) ... ok
+test_processor_freezes_training_stats_and_preserves_extreme_flags (test_wait_post_signal_data.SignalDataTests.test_processor_freezes_training_stats_and_preserves_extreme_flags) ... ok
+test_processor_removes_training_duplicates_and_refuses_no_signal (test_wait_post_signal_data.SignalDataTests.test_processor_removes_training_duplicates_and_refuses_no_signal) ... ok
+test_ridge_preserves_negative_base_value_and_learns_direction (test_wait_post_signal_data.SignalDataTests.test_ridge_preserves_negative_base_value_and_learns_direction) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.110s
+
+OK
+2026-11-14T16:42:27Z tag=wait_post_signal_selftest rc=0 peak_rss_mib=175 wall_s=0.89 cpu_user_s=0.76 memavail_start_gib=23 disk_free_gib=503->503 slot=codex
