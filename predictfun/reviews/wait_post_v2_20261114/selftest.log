@@ -1,0 +1,22 @@
+test_absolute_target_separates_old_zero_label_profit_and_loss (test_wait_post_v2.WaitPostV2Tests.test_absolute_target_separates_old_zero_label_profit_and_loss) ... ok
+test_absolute_value_accounts_for_displacing_better_deeper_fill (test_wait_post_v2.WaitPostV2Tests.test_absolute_value_accounts_for_displacing_better_deeper_fill) ... ok
+test_chronological_pipeline_preserves_raw_economic_targets (test_wait_post_v2.WaitPostV2Tests.test_chronological_pipeline_preserves_raw_economic_targets) ... ok
+test_constant_heads_refused_positive_health_control (test_wait_post_v2.WaitPostV2Tests.test_constant_heads_refused_positive_health_control) ... ok
+test_delayed_probe_has_shared_prefix_and_real_wait_age (test_wait_post_v2.WaitPostV2Tests.test_delayed_probe_has_shared_prefix_and_real_wait_age) ... ok
+test_fast_inputs_equal_original_and_preserve_waiting_state (test_wait_post_v2.WaitPostV2Tests.test_fast_inputs_equal_original_and_preserve_waiting_state) ... ok
+test_full_screen_requires_timing_skill_even_with_positive_pnl (test_wait_post_v2.WaitPostV2Tests.test_full_screen_requires_timing_skill_even_with_positive_pnl) ... ok
+test_generation_population_deduplicated_and_statuses_retained (test_wait_post_v2.WaitPostV2Tests.test_generation_population_deduplicated_and_statuses_retained) ... ok
+test_independent_side_heads_and_invalid_predictions (test_wait_post_v2.WaitPostV2Tests.test_independent_side_heads_and_invalid_predictions) ... ok
+test_matched_local_null_detects_real_and_reversed_selection (test_wait_post_v2.WaitPostV2Tests.test_matched_local_null_detects_real_and_reversed_selection) ... ok
+test_neutral_keeper_fast_lane_execution_parity (test_wait_post_v2.WaitPostV2Tests.test_neutral_keeper_fast_lane_execution_parity) ... ok
+test_portfolio_null_checks_counts_identity_and_computed_economics (test_wait_post_v2.WaitPostV2Tests.test_portfolio_null_checks_counts_identity_and_computed_economics) ... ok
+test_quota_controller_matches_placements_and_rejects_bad_quota (test_wait_post_v2.WaitPostV2Tests.test_quota_controller_matches_placements_and_rejects_bad_quota) ... ok
+test_refuses_old_contract_protected_dates_and_partial_rows (test_wait_post_v2.WaitPostV2Tests.test_refuses_old_contract_protected_dates_and_partial_rows) ... ok
+test_wait_follows_same_model_and_can_wait_multiple_decisions (test_wait_post_v2.WaitPostV2Tests.test_wait_follows_same_model_and_can_wait_multiple_decisions) ... ok
+test_wait_value_captures_model_driven_better_later_entry (test_wait_post_v2.WaitPostV2Tests.test_wait_value_captures_model_driven_better_later_entry) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 1.776s
+
+OK
+2026-11-14T13:12:07Z tag=wait_post_v2_fixed_selftest rc=0 peak_rss_mib=215 wall_s=2.29 cpu_user_s=2.11 memavail_start_gib=22 disk_free_gib=508->508 slot=codex
