@@ -1,0 +1,12 @@
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+influence selftests passed; planted errors caught: {'MUT_DFV_NOSIDE': True, 'MUT_ONSET_ALL': True, 'MUT_NO_DEBOUNCE': True}
+order-harm v2 selftests passed; planted errors caught: {'MUT_NOWAIT': True, 'MUT_LAT_KEEP': True, 'MUT_HARM_SIGN': True, 'MUT_STAMP': True, 'MUT_RAISE': True}
+20261025: 80 window-sides, 29644 rows, 9 s, rss 773 MiB
+20261025: 160 window-sides, 59089 rows, 16 s, rss 773 MiB
+20261025: 240 window-sides, 93364 rows, 24 s, rss 794 MiB
+20261025: 320 window-sides, 124367 rows, 32 s, rss 821 MiB
+20261025: 400 window-sides, 156851 rows, 40 s, rss 851 MiB
+20261025: 480 window-sides, 187429 rows, 48 s, rss 879 MiB
+20261025: 560 window-sides, 220078 rows, 56 s, rss 906 MiB
+20261025: {'window_sides': 576, 'ref_differ': 0, 'steps': 240726, 'no_order': 5451, 'no_inputs': 0, 'rows': 229317, 'censored': 5958, 'censored5': 10540, 'lookahead_checks': 11466, 'lookahead_bad': 0} in 60 s
+2026-11-14T06:15:02Z tag=oh2_rows_20261025 rc=0 peak_rss_mib=1310 wall_s=60.01 cpu_user_s=58.22 memavail_start_gib=22 disk_free_gib=517->517 slot=claude
