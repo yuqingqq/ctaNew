@@ -240,11 +240,12 @@ def selftest():
     f0 = sum(x[2] for x in r['fills'][(0, 0)]); f1 = sum(x[2] for x in r['fills'][(0, 1)])
     if (f0, f1) != (30.0, 10.0) or r['stat']['inter'][0] != 1:
         bad.append(f'sweep shared {f0} {f1} inter {r["stat"]["inter"]}')
-    # (b) the cap: 60 sh of bid fills (rungs 0 and 1 swept at 500 ms) -> |known position| 60 >= 2 x 30 from 520 ms: bids withheld, asks kept
+    # (b) the cap: 60 sh of bid fills (rungs 0 and 1 swept at 500 ms) -> |known position| 60 >= 2 x 30 once the fills are known (500 ms +
+    # L_FILL, at the next grid step): bids withheld; the asks rest until the window's end (cancelled there, at 1000 ms)
     W = {0: _ctx(0, fb, [(500.0, 47, 60.0)]), 1: _ctx(1, fa, [])}
     r = sim_joint(W, 'U', 0.0, 60.0, {0: [False] * 20, 1: [False] * 20}, nr=3)
-    c2 = r['cancels'][(0, 2)]; ca = r['cancels'][(1, 0)]
-    if not (len(c2) == 1 and c2[0] == 550.0 and ca[0] == INF and r['stat']['cap_pulls'][0] >= 1):
+    c2 = r['cancels'][(0, 2)]; ca = r['cancels'][(1, 0)]; tcap = float(np.ceil((500.0 + K.L_FILL) / 50.0) * 50.0)
+    if not (len(c2) == 1 and c2[0] == tcap and ca == [1000.0] and r['stat']['cap_pulls'][0] >= 1):
         bad.append(f'cap: bid rung 2 cancel {c2}, ask rung 0 cancel {ca}, cap pulls {r["stat"]["cap_pulls"]}')
     # (c) a placement waiting on a price we hold: rung 1 pulled by its callback at 100 ms; the best moves to 51 at 300 ms while rung 0 holds 50
     fb2 = [(0.0, [(50, 100), (49, 100)], 52), (300.0, [(51, 100), (50, 100), (49, 100)], 53)]; fa2 = [(0.0, [(52, 100)], 50), (300.0, [(53, 100)], 51)]
