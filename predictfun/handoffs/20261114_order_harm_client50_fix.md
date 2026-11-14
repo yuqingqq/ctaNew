@@ -1,5 +1,7 @@
 # ORDER-HARM client-state / 50 ms repair
 
+> **Review (session ce68ebe0, 2026-11-14 10:23Z; fixes in a8e6d473, code only, nothing run):** the repair below is right. Three issues were fixed on top: (1) the policy driver checked the old `order_harm_v3_20261114` folder for its prerequisite folds and would always refuse; (2) the three one-step fitted-Q iterations reach only the last 150 ms of an episode at 50 ms decisions - replaced by policy iteration on realized continuation returns from a keep-all start (FINDINGS P25), so the "three fitted-Q iterations" limit below no longer applies; (3) memory at 50 ms (~1.6 M label rows a day) - rows written in batches with float32 inputs, compact keys, batched predictions (P26). The 60 s mark this repair replaced is recorded as P27.
+
 Implemented at **32da4014**, verified **2026-11-14 10:07:17 UTC**. Branch
 `research/predict-order-harm-fix-20261114`, checkout
 `/tmp/cta-order-harm-fix-20261114`. The three requested repairs are complete in

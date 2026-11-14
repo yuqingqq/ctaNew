@@ -1,5 +1,13 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-14 10:24Z (session ce68ebe0) — REVIEW of the USER's client-state / 50 ms ORDER-HARM repair: right, plus three fixes (a8e6d473); committed and pushed; NOTHING RUN (awaiting the USER's go)
+
+- USER: "I have done the fix, can you review then check if it is good now" / "Yes we commit and push". Their repair: 32da4014 (record 811d63bd, merge 553e9068; handoffs/20261114_order_harm_client50_fix.md).
+- Confirmed: labels on the client-state lane (an unseen fill no longer ends label decisions), the portfolio marked at 60.2 s after the cancellation tail and reconciled per run, 50 ms decisions everywhere (FB25C = FB25 fill for fill), artifact contracts; their 9 unit tests pass.
+- Fixed on top (a8e6d473): (1) run_order_harm_policy_v2.sh checked the old v3 folder for its prerequisite folds (it would always refuse); (2) the three one-step fitted-Q backups reach only 150 ms at 50 ms decisions (P25) -> policy iteration on realized continuation returns from a keep-all start; (3) memory at 50 ms (~1.6 M label rows a day, P26) -> batched float32 rows, compact keys, batched predictions, keys-only parity; (4) two unclosed files. Synthetic checks only: 9 unit tests, v3 selftest 6 cases (4 / 4 planted errors), policy selftest (5 / 5).
+- FINDINGS: P25, P26, P27 (the 60 s mark counted fills after the stop; JOINT-LADDER v3's "marked at 60 s" column not re-run); P21 pointer. Review note at the top of the repair record.
+- Next (USER's call): predictfun/research/run_order_harm_v3.sh, then run_order_harm_policy_v2.sh (roughly 2.5 h at 50 ms). Forward test: >= 5 untouched days and frozen upstream inputs (USER's call).
+
 <!-- ORDER_HARM_CLIENT50_FIX_20261114 -->
 Integration: merged into `mm-research` on 2026-11-14 10:16:29 UTC; no push or research run.
 
