@@ -15,7 +15,8 @@ job() { local tag=$1; shift; local n=0
   done; sleep 3; }
 job oh3_client50_controls python3 -m unittest predictfun.research.test_order_harm_client50
 job oh3_selftest python3 predictfun/research/pf_order_harm_v3.py selftest
-for d in $DAYS; do job oh3_rows_$d python3 predictfun/research/pf_order_harm_v3.py rows $d; done
+# label days already built by the identical label code are reused (USER: "Existing label files remain reusable"); fits read them via their receipts
+for d in $DAYS; do if [ -f $OUT/rows_$d.parquet ] && [ -f $OUT/rows_$d.json ]; then echo "$(date -u +%H:%M:%SZ) reuse rows $d" >> $OUT/logs/driver.log; else job oh3_rows_$d python3 predictfun/research/pf_order_harm_v3.py rows $d; fi; done
 for d in $TESTS; do job oh3_fit_$d python3 predictfun/research/pf_order_harm_v3.py fit $d; done
 job oh3_report python3 predictfun/research/pf_order_harm_v3.py report
 echo "$(date -u +%H:%M:%SZ) ALL DONE" >> $OUT/logs/driver.log
