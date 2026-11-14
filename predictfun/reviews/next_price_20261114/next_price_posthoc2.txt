@@ -1,0 +1,8 @@
+NEXT-PRICE POST HOC 2 (after posthoc; descriptive, no readings): fallback births, M 50, guard not masked, rungs 0-4; as of 2026-11-14T03:35:07Z
+
+rung 5 rows (LIVE / PULLED): 7207, with 0 sh ahead 97.8%
+LIVE (n 12026): queue ahead at the birth 190 (100 / 326) sh; shown 232 (125 / 378) sh; ahead / shown median 1.00; at the front (<= 5 sh ahead) 2.1%; age at the birth 828 (272 / 2058) ms
+PULLED (n 85602): queue ahead at the birth 80 (18 / 196) sh had it been kept; shown 125 (45 / 266) sh; ahead / shown median 1.00; at the front (<= 5 sh ahead) 15.3%; age at the birth 1332 (686 / 2457) ms
+PULLED births with a next order at the price (n 27844): kept 133 (50 / 251) sh against the next order at activation 469 (275 / 716) sh; next minus kept 288 (127 / 509) sh
+QUEUE-PLACE at-best fills, M 50, exact: rung 5 0.0% of shares; its queue ahead 0 sh on 100% of its fills; c/sh at 1 s rung 5 +1.47 vs rungs 0-4 +0.00
+QUEUE-PLACE at-best fills, M 50, other: rung 5 0.0% of shares; its queue ahead 0 sh on 100% of its fills; c/sh at 1 s rung 5 +0.50 vs rungs 0-4 -0.81

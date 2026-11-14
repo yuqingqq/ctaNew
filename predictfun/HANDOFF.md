@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-14 03:37Z (session ce68ebe0) — NEXT-PRICE DONE: when the next price becomes the best (50c goes, 49c is the best) our order is there 7.8% of the time; 60% the guard pulled the order we had there ~0.56 s before. We are late because we repost, not on first arrival. Kept, the order would sit ~80 sh back instead of ~470. The top makers hold the front of such prices (x1.36 their share)
+
+- Done (USER: "For example, when best bid is 50c, their orders are 49c, and always there? Can we also put our orders early there, It's we are late when we first there or we late because we repost"): research/pf_next_price.py + run_next_price.sh (89b45cac, before the first run); posthoc 2626caae and posthoc2 0eaa311b (post hoc). Report handoffs/20261114_next_price_results.md; copies reviews/next_price_20261114/; FINDINGS updated (new row; defect P18).
+- Readings: R570 LATE-BY-REPOST (66% vs 32% of the misses, STABLE 9/9), R571 NOT-SHOWN (2/9 days; pooled LIVE 189 / kept 66 vs next 439 sh), R572 THEY-HOLD-THE-FRONT (x1.36, 9/9).
+- Watch out: new simulator defect P18 (an order beyond the 5 shown levels starts with 0 sh ahead; rung 5; reach ~0% of the ladder's at-best shares, not re-run); queue numbers are rule M (B1a); what keeping costs is not measured here (PULL-DEPTH / FUTURE-BEST: +$18-44 a day at M 0 / 50, flip at M 250).
+- Next (proposals, user's call): live queue probe (decisive for the sign); a replay that keeps the order one tick behind through the guard unless the move is predicted to go through it, reporting queue place at the birth and $ at M 0 / 50 / 250 rule M and U.
+
 ## 2026-11-14 02:29Z (session ce68ebe0) — LEARN-PULL-TARGET DONE (post hoc): the top makers' pulls line up with the fill losing within ~1 s, mostly on trades that STOP at their price, not only with the level being taken; our guard's label is the sweep alone; at their pull count our signals pick as well as they do
 
 - Done (USER: "Why do they pull? You mean they pull because some trade will take the price level? Or what is their target to train the model to pull"): research/pf_learn_pull_target.py + run_learn_pull_target.sh (a325538c, before the first run), `check` (acbdb7f7, post hoc after the first report: every trade counted once). Report handoffs/20261114_learn_pull_target_results.md; copies reviews/learn_pull_20261113/target/; FINDINGS updated.
