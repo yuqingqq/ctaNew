@@ -1,0 +1,23 @@
+joint-ladder v3 selftests passed; planted errors caught: {'MUT_REF_RELEASE': True, 'MUT_REST_TRUE': True, 'MUT_HELD_TRUE': True, 'MUT_LEG_LEAK': True, 'MUT_PRIORITY': True}
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+influence selftests passed; planted errors caught: {'MUT_DFV_NOSIDE': True, 'MUT_ONSET_ALL': True, 'MUT_NO_DEBOUNCE': True}
+order-harm v2 selftests passed; planted errors caught: {'MUT_NOWAIT': True, 'MUT_LAT_KEEP': True, 'MUT_HARM_SIGN': True, 'MUT_STAMP': True, 'MUT_RAISE': True}
+order-harm v3 selftests passed; planted errors caught: {'MUT_SLOW_CADENCE': True, 'MUT_VENUE_REST': True, 'MUT_NO_LAT': True, 'MUT_BOOTSTRAP': True, 'MUT_SHARED_CHAIN': True, 'MUT_TIMER': True}
+exposure selftests passed (5 synthetic cases incl. the flagged two-order case); planted position-only statistic caught
+order-harm policy v2 selftests passed; planted errors caught: {'MUT_GRID': True, 'MUT_HOLD': True, 'MUT_EVERY_STEP': True, 'MUT_NOINPUT_KEEP': True, 'MUT_CADENCE_250': True, 'MUT_SURV_ANY': True, 'MUT_TYPE_THR': True}
+top-compare selftests passed; planted errors caught: {'MUT_NOLAG': True, 'MUT_NOSTALE': True}
+order-harm why selftests passed; planted errors caught: {'MUT_NOLAG': True, 'MUT_KEPT_NODEC': True, 'MUT_PEND_LAST': True, 'MUT_SWAP': True}
+20261027: 24 windows, 288 runs, 17 s, rss 1136 MiB
+20261027: 48 windows, 576 runs, 31 s, rss 1143 MiB
+20261027: 72 windows, 864 runs, 45 s, rss 1151 MiB
+20261027: 96 windows, 1152 runs, 59 s, rss 1159 MiB
+20261027: 120 windows, 1440 runs, 74 s, rss 1166 MiB
+20261027: 144 windows, 1728 runs, 88 s, rss 1173 MiB
+20261027: 168 windows, 2016 runs, 103 s, rss 1182 MiB
+20261027: 192 windows, 2304 runs, 119 s, rss 1188 MiB
+20261027: 216 windows, 2592 runs, 134 s, rss 1194 MiB
+20261027: 240 windows, 2880 runs, 147 s, rss 1204 MiB
+20261027: 264 windows, 3168 runs, 160 s, rss 1212 MiB
+20261027: 288 windows, 3456 runs, 173 s, rss 1218 MiB
+20261027: {'windows': 288, 'window_sides': 576, 'align_differ': 0, 'legs': 212243, 'runs': 3456, 'noinput': 0, 'kept_fills': 37457, 'viol': 0, 'lookahead_checks': 51803, 'lookahead_bad': 0, 'reconciled_rows': 99116} in 174 s
+2026-11-14T15:38:17Z tag=ohw_day_20261027 rc=0 peak_rss_mib=1253 wall_s=175.31 cpu_user_s=172.54 memavail_start_gib=22 disk_free_gib=504->504 slot=claude
