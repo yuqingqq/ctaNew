@@ -12,6 +12,9 @@ queue place leaves an order mostly the THROUGH fills.
   ST  printed: STOP share of shares and c/sh by type, top 5 vs ours, by phase group (CALM / AFTER / ON) x depth (at best / behind), WS, M 50.
   E2  printed: c/sh at 1 s by trade source (WS / E2) - top 5 by phase group, ours by timing class (M 50, all ages).
   KT  printed: OHQ0's KEPT-ON fills at M 50 by trade type and depth: sh/day, c/sh at 1 s and at the 60.2 s mark.
+  AG  printed (added after the USER's questions 2026-11-14 "why we don't queue in the front if we keep our orders there early"): the filled
+      order's age (< 100 ms / 100-500 ms / 0.5-2 s / >= 2 s) per arm at M 50: sh/day, STOP share, c/sh at 1 s on WS- and E2-timed trades;
+      share-weighted median and p90 age.
 Control: WITHIN recomputed here from the per-state sums equals ORDER-HARM WHY's printed WITHIN (to 1e-3 c/sh) for every arm x clock (WS),
 else no output; falsifier: the same with the top 5's state values swapped for ours must differ.
 Usage (run_light, PF_SLOT=claude): pf_order_harm_why_posthoc.py
@@ -153,6 +156,19 @@ def main():
         for dep in ('at best', 'behind', 'inside'):
             y = k[(k.typ == typ) & (k.depth == dep)]; qy = y.q.sum()
             L.append(f'  {typ:<7} {dep:<7}: {qy / ndays:7.0f} | {(y.q * y.v1).sum() / max(qy, 1e-9):+6.3f} | {(y.q * y.vend).sum() / max(qy, 1e-9):+6.3f}')
+    L.append('')
+    L.append('AG AGE OF THE FILLED ORDER (M 50, all trades): arm: median / p90 ms (share-weighted) || age bucket: sh/day | STOP share | WS c/sh 1 s '
+             '| E2 c/sh 1 s')
+    x50 = O[O.cfg == 'M50']
+    for arm in WY.ARMS:
+        y = x50[x50.arm == arm].sort_values('age', kind='stable'); c = np.cumsum(y.q.values) / y.q.sum()
+        med = y.age.values[np.searchsorted(c, 0.5)]; p90 = y.age.values[np.searchsorted(c, 0.9)]
+        parts = []
+        for lo, hi, nm in ((0, 100, '<100 ms'), (100, 500, '100-500 ms'), (500, 2000, '0.5-2 s'), (2000, np.inf, '>= 2 s')):
+            z = y[(y.age >= lo) & (y.age < hi)]; ws = z[z.src == 'WS']; e2 = z[z.src == 'E2']
+            parts.append(f'{nm} {z.q.sum() / ndays:6.0f} | {z[z.typ == "STOP"].q.sum() / max(z.q.sum(), 1e-9):4.2f} | '
+                         f'{(ws.q * ws.v1).sum() / max(ws.q.sum(), 1e-9):+6.3f} | {(e2.q * e2.v1).sum() / max(e2.q.sum(), 1e-9):+6.3f}')
+        L.append(f'  {arm:<5}: {med:5.0f} / {p90:6.0f} || ' + ' || '.join(parts))
     txt = '\n'.join(L)
     open(f'{OUTD}/order_harm_why_posthoc.txt', 'w').write(txt + '\n')
     json.dump(dict(readings=out), open(f'{OUTD}/order_harm_why_posthoc.json', 'w'), indent=1, default=float)
