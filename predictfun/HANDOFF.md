@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-14 04:58Z (session ce68ebe0) — INFLUENCE DONE: target reset to the signal's onset and the whole move; the influence measured in price units. A Binance fair-price move of X c moves the Predict price ~X ticks, mostly within 250 ms, and it stays; but only 2.9% of our guard's onsets come with such a move. The other 97% are Predict-local: half see no move in 2 s, ~43% of moves stop at 1 tick, and nothing we have separates them much better (AUC ~0.70)
+
+- Done (USER: "We need to reset the target and rebuild the model, to measure the influence effects"): research/pf_influence.py + run_influence.sh (19e52dfb, before the first run). Report handoffs/20261114_influence_results.md; copies reviews/influence_20261114/; FINDINGS updated.
+- Readings: R590 FOLLOWS (9/9; pass-through 0.82-1.24 at 1 s), R591 FOLLOWS (tiny), R592 INFLUENCE-HELPS NOT-SHOWN, R593 RESET-HELPS BETTER (8/9), R594 FEWER-RUN-OVERS (rung 1 9/9, rung 2 7/9; 24.0% vs 24.1%).
+- Watch out: the fair-price gap's level is uninformative (basis drift?); events and onsets in the first minute only; FULL predictions and models saved per held-out day for a replay.
+- Next (proposals, user's call): an influence rule in the replay (pull prices within ~X ticks when the fair price moved X >= 0.5 c against us; else pull the best, keep the next); step 2's ask side (keep the old order, add one at the new best).
+
 ## 2026-11-14 04:25Z (session ce68ebe0) — STOP-DEPTH DONE (step 1 of the USER's plan): after our guard fires, 59% of the time nothing moves within 1 s; a move stops at 1 tick 48% of the time; big moves follow Binance moving against us. A cleaner, richer depth model is better on every day but only marginally (AUC +0.002-0.004) and does not change the keep decision (14.6% vs 14.7% of kept orders run over)
 
 - Done (USER: "Ok, so we need to check how large is the influence of the signal ... if we estimate it will stop 1c, we can rest 49c there and repost 50c ask" / "Makes sense. Proceed"): research/pf_stop_depth.py + run_stop_depth.sh (ebec8cd1, before the first run), posthoc 4adf3d32 (the report's Binance quintiles were broken by ties at 0: replaced by value bins). Report handoffs/20261114_stop_depth_results.md; copies reviews/stop_depth_20261114/; FINDINGS updated.

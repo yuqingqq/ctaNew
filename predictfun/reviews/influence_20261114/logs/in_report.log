@@ -1,0 +1,72 @@
+INFLUENCE, 9 consumed replay days, first 60 s; as of 2026-11-14T04:56:46Z; controls passed; fair-price events 34813 (no frame 0); guard onsets 269938 (invalid book 0, no fair price 333, used 269605; without a STEP prediction 0)
+
+PART A - THE MARKET'S RESPONSE TO A FAIR-PRICE MOVE AGAINST A SIDE (Binance-implied p_bn moved >= 0.5 c in 250 ms; ticks against us from the event)
+  dfv250 bin    events  mean dfv | Predict mid moved: 250 ms  1 s  2 s  3 s | pass-through 1 s / 3 s | best moved >= 1 / 2 / 3 ticks in 2 s | guard on
+  [0.5, 1)        10123    0.72 c |  0.64  0.90  0.92  0.91 | 1.25 / 1.26 | 62.6% 44.0% 31.3% | 64.1%
+  [1, 2)          10455    1.45 c |  1.33  1.82  1.76  1.73 | 1.25 / 1.19 | 78.5% 61.9% 46.7% | 81.1%
+  [2, 4)           9234    2.81 c |  2.32  3.01  2.98  2.92 | 1.07 / 1.04 | 88.7% 78.3% 65.3% | 91.2%
+  [4, 1e+09)       5001    6.55 c |  4.55  5.82  5.76  5.67 | 0.89 / 0.87 | 95.1% 91.4% 85.2% | 96.7%
+  R590: pass-through at 1 s for moves >= 1 c, per day 1023 0.97, 1024 0.82, 1025 0.94, 1026 1.10, 1027 1.10, 1031 0.89, 1101 0.92, 1102 1.24, 1103 1.16 -> FOLLOWS
+
+PART B - THE MOVE AFTER OUR SIGNAL (guard onsets, nothing moved by t + 22 ms, n 257451; ticks against us)
+  farthest within 1 s 0 63.4% | 1 18.7% | 2  7.4% | 3  3.9% | 4  2.2% | 5+  4.4%
+  farthest within 2 s 0 50.0% | 1 21.0% | 2 10.2% | 3  6.0% | 4  3.8% | 5+  9.1%   (the target)
+  farthest within 3 s 0 42.1% | 1 20.9% | 2 11.5% | 3  7.2% | 4  4.8% | 5+ 13.5%
+  at 3 s (where it settles; negative = in our favour): mean 0.47; below the 2 s peak 46.5% of onsets; time to the 2 s peak, median by its size: 1 tick 618 ms, 2 tick 962 ms, 3 tick 1091 ms
+  by fair price minus Predict mid, against us (c):
+    [-1e+09, -1) 39.3% of onsets: 0 53.2% | 1 19.4% | 2  9.3% | 3  5.4% | 4  3.6% | 5+  9.0%; mean 1.38; moves of >= 1 tick stop at 1: 41.4%
+    [-1, 0)  9.8% of onsets: 0 50.6% | 1 21.0% | 2  9.7% | 3  5.9% | 4  3.9% | 5+  8.8%; mean 1.40; moves of >= 1 tick stop at 1: 42.5%
+    [0, 1)  9.9% of onsets: 0 49.6% | 1 21.3% | 2 10.6% | 3  6.0% | 4  3.5% | 5+  9.1%; mean 1.43; moves of >= 1 tick stop at 1: 42.2%
+    [1, 2)  9.1% of onsets: 0 49.3% | 1 21.6% | 2  9.8% | 3  6.1% | 4  3.8% | 5+  9.4%; mean 1.49; moves of >= 1 tick stop at 1: 42.6%
+    [2, 4) 14.2% of onsets: 0 48.4% | 1 22.1% | 2 10.6% | 3  6.3% | 4  3.7% | 5+  8.9%; mean 1.45; moves of >= 1 tick stop at 1: 42.8%
+    [4, 1e+09) 17.8% of onsets: 0 44.3% | 1 23.5% | 2 11.9% | 3  6.7% | 4  4.1% | 5+  9.6%; mean 1.63; moves of >= 1 tick stop at 1: 42.1%
+  by fair-price move in the last 250 ms, against us (c):
+    [-1e+09, 0) 42.7% of onsets: 0 50.7% | 1 20.4% | 2 10.1% | 3  6.0% | 4  3.8% | 5+  9.0%; mean 1.43; moves of >= 1 tick stop at 1: 41.4%
+    [0, 0.5) 54.4% of onsets: 0 50.8% | 1 21.9% | 2 10.1% | 3  5.7% | 4  3.5% | 5+  8.0%; mean 1.34; moves of >= 1 tick stop at 1: 44.4%
+    [0.5, 1)  0.8% of onsets: 0 34.0% | 1 20.9% | 2 14.0% | 3  9.7% | 4  6.2% | 5+ 15.2%; mean 2.12; moves of >= 1 tick stop at 1: 31.7%
+    [1, 2)  0.9% of onsets: 0 25.2% | 1 17.7% | 2 15.5% | 3 11.2% | 4  8.7% | 5+ 21.7%; mean 2.75; moves of >= 1 tick stop at 1: 23.7%
+    [2, 1e+09)  1.2% of onsets: 0 12.6% | 1  8.9% | 2  9.5% | 3  9.1% | 4  8.2% | 5+ 51.7%; mean 5.85; moves of >= 1 tick stop at 1: 10.2%
+  R591: Spearman(gap_adv, peak) per day 1023 +0.067, 1024 +0.048, 1025 +0.035, 1026 +0.059, 1027 +0.061, 1031 +0.081, 1101 +0.044, 1102 +0.061, 1103 +0.049 -> FOLLOWS; dfv250 pooled +0.052
+
+AUC OUT OF DAY at onsets, new target (farthest within 2 s >= j; onsets not ALREADY_j): pooled | per day
+  j1 FULL    0.701 | 0.696 0.708 0.717 0.694 0.697 0.702 0.677 0.691 0.704  (base rate 0.500, n 257451)
+  j1 NOINF   0.700 | 0.694 0.706 0.715 0.693 0.696 0.703 0.678 0.689 0.706  (base rate 0.500, n 257451)
+  j1 INFONLY 0.577 | 0.565 0.589 0.567 0.576 0.556 0.572 0.547 0.584 0.582  (base rate 0.500, n 257451)
+  j1 STEP    0.697 | 0.688 0.702 0.713 0.688 0.691 0.699 0.678 0.689 0.700  (base rate 0.500, n 257451)
+  j2 FULL    0.685 | 0.670 0.696 0.696 0.669 0.677 0.683 0.664 0.676 0.683  (base rate 0.297, n 267979)
+  j2 NOINF   0.684 | 0.669 0.695 0.695 0.669 0.676 0.684 0.666 0.675 0.683  (base rate 0.297, n 267979)
+  j2 INFONLY 0.589 | 0.568 0.602 0.580 0.579 0.561 0.580 0.556 0.593 0.589  (base rate 0.297, n 267979)
+  j2 STEP    0.679 | 0.665 0.690 0.690 0.664 0.673 0.679 0.665 0.670 0.680  (base rate 0.297, n 267979)
+  j3 FULL    0.675 | 0.656 0.691 0.681 0.657 0.658 0.676 0.658 0.666 0.673  (base rate 0.193, n 269185)
+  j3 NOINF   0.674 | 0.656 0.687 0.682 0.657 0.658 0.677 0.658 0.665 0.673  (base rate 0.193, n 269185)
+  j3 INFONLY 0.594 | 0.559 0.611 0.584 0.578 0.558 0.592 0.570 0.600 0.590  (base rate 0.193, n 269185)
+  j3 STEP    0.667 | 0.651 0.675 0.674 0.651 0.655 0.671 0.660 0.657 0.668  (base rate 0.193, n 269185)
+  j4 FULL    0.669 | 0.644 0.682 0.681 0.652 0.651 0.678 0.663 0.669 0.662  (base rate 0.131, n 269466)
+  j4 STEP    0.660 | 0.645 0.657 0.673 0.644 0.649 0.669 0.670 0.657 0.657  (base rate 0.131, n 269466)
+  j5 FULL    0.669 | 0.638 0.671 0.685 0.649 0.654 0.693 0.672 0.672 0.660  (base rate 0.093, n 269547)
+  j5 STEP    0.654 | 0.632 0.654 0.676 0.637 0.650 0.671 0.673 0.655 0.650  (base rate 0.093, n 269547)
+  R592_j1: NOT-SHOWN (6/9); R593_j1: BETTER (8/9); R592_j2: NOT-SHOWN (6/9); R593_j2: BETTER (8/9); R592_j3: NOT-SHOWN (5/9); R593_j3: BETTER (8/9)
+
+CALIBRATION of FULL (deciles: mean predicted / realized)
+  j1: 0.24/0.24 0.32/0.31 0.37/0.37 0.41/0.41 0.46/0.45 0.51/0.51 0.56/0.56 0.62/0.62 0.70/0.69 0.84/0.85
+  j2: 0.13/0.13 0.17/0.16 0.19/0.20 0.22/0.22 0.25/0.25 0.28/0.27 0.31/0.30 0.36/0.35 0.43/0.43 0.64/0.65
+  j3: 0.08/0.08 0.11/0.10 0.12/0.12 0.14/0.14 0.15/0.15 0.17/0.17 0.19/0.19 0.22/0.22 0.27/0.27 0.47/0.47
+
+KEEP DECISION at onsets: kept onsets split into not reached / stopped at the rung / run over (farthest within 2 s)
+  rung 1 (onsets 267979):
+    STEP (FB25)        kept 81.4%; not reached 54.0% | stopped 21.8% | run over 24.1%
+    FULL (same count)  kept 81.4%; not reached 54.3% | stopped 21.8% | run over 24.0%
+    realized           kept 70.3%; not reached 68.3% | stopped 31.7% | run over  0.0%
+    R594_d1: FULL lower on 9, higher on 0 of 9 -> FEWER-RUN-OVERS
+  rung 2 (onsets 269185):
+    STEP (FB25)        kept 94.0%; not reached 72.8% | stopped 10.3% | run over 16.9%
+    FULL (same count)  kept 94.0%; not reached 72.8% | stopped 10.3% | run over 16.9%
+    realized           kept 80.7%; not reached 86.7% | stopped 13.3% | run over  0.0%
+    R594_d2: FULL lower on 7, higher on 2 of 9 -> FEWER-RUN-OVERS
+
+FULL top inputs by gain, j1 (days in the top 8): sens 9, s1 9, adv_pf_imb3 9, adv_pf_imb1 9, adv_d_bnimb250 9, adv_bn_r100 7, adv_bn_imb 7, gap_adv 5, adv_bn_r50 4, dfv250 2, x29 1, adv_pf_micro_dev 1
+FULL top inputs by gain, j2 (days in the top 8): x29 9, sens 9, dfv250 9, adv_pf_imb3 9, adv_d_bnimb250 9, adv_bn_r50 9, adv_bn_r100 9, adv_bn_r250 8, ct2 1
+
+READINGS: {"R590": "FOLLOWS", "R591": "FOLLOWS", "R592_j1": "NOT-SHOWN", "R593_j1": "BETTER", "R592_j2": "NOT-SHOWN", "R593_j2": "BETTER", "R592_j3": "NOT-SHOWN", "R593_j3": "BETTER", "R594_d1": "FEWER-RUN-OVERS", "R594_d2": "FEWER-RUN-OVERS"}
+
+2026-11-14T04:56:46Z tag=in_report rc=0 peak_rss_mib=593 wall_s=2.68 cpu_user_s=1.92 memavail_start_gib=22 disk_free_gib=517->517 slot=claude
