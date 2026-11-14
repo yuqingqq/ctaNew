@@ -21,7 +21,7 @@ INPUTS at t (no fitted model's output): STOP-DEPTH's NEW inputs (82, incl. steps
 and the order's own state: rung, ticks behind the known best now, age, rule M's queue ahead now (shown size at activation capped by the
 smallest shown since), the shown size at its price, the size at better prices on our side, queue ahead / shown, the known best's move against
 us since the guard came on.
-MODELS (LightGBM, PULL-DEPTH's pinned parameters and rounds, leave one day out, <= 300,000 training rows): DELTA at 1 s (regression, clipped
+MODELS (LightGBM, PULL-DEPTH's pinned parameters and rounds, leave one day out, 300,000 training rows = 37,500 per training day): DELTA at 1 s (regression, clipped
 +-10 c/sh), P(harm) at 1 s (binary), severity (regression on rows with harm). Saved per held-out day for the replay.
 Readings DECLARED BEFORE THE FIRST RUN (out of day; day rule >= 7 of 9):
  R620 DELTA-SKILL: Spearman IC of predicted DELTA with DELTA (1 s) > 0 on >= 7 days and pooled >= 0.05 -> SKILL; else NO-SKILL.
@@ -237,11 +237,16 @@ def fit_day(d):
     import lightgbm as lgb
     all_selftests()
     T0 = time.time()
-    tr = pd.concat([pd.read_parquet(f'{OUTD}/rows_{x}.parquet') for x in DAYS9 if x != d], ignore_index=True)
+    cols = ['day', 'm', 'side', 'k', 'rung_i', 'delta1', 'harm1'] + FEAT; parts = []; per_day = SUB_N // (len(DAYS9) - 1)
+    for x in DAYS9:                                       # memory: each training day subsampled as it is read (float32)
+        if x == d:
+            continue
+        R_ = pd.read_parquet(f'{OUTD}/rows_{x}.parquet', columns=cols)
+        R_ = R_.iloc[np.sort(np.random.default_rng(int(d) * 13 + int(x)).choice(len(R_), min(len(R_), per_day), replace=False))]
+        parts.append(R_.astype({c: 'float32' for c in FEAT})); del R_
+    tr = pd.concat(parts, ignore_index=True); del parts
     assert not (tr.day == int(d)).any(), 'held-out day in the training rows'
-    te = pd.read_parquet(f'{OUTD}/rows_{d}.parquet')
-    if len(tr) > SUB_N:
-        tr = tr.iloc[np.sort(np.random.default_rng(int(d) % 100000 + 3).choice(len(tr), SUB_N, replace=False))]
+    te = pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=cols).astype({c: 'float32' for c in FEAT})
     Xtr = tr[FEAT].values.astype(np.float32); Xte = te[FEAT].values.astype(np.float32)
     preg = dict(PD.LGB_PARAMS, objective='regression'); out = dict(m=te.m.values, side=te.side.values, k=te.k.values, rung_i=te.rung_i.values); info = {}
     b = lgb.train(preg, lgb.Dataset(Xtr, np.clip(tr.delta1.values, -CLIP, CLIP), feature_name=FEAT), PD.N_ROUNDS)
