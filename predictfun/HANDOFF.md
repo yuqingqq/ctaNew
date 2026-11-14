@@ -1,5 +1,13 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-14 15:57Z (session ce68ebe0) — ORDER-HARM WHY DONE (post hoc): the model swaps re-post losses for kept-order losses; against the top makers it is NOT timing of presence (our state mix is better) but same-state fill quality (a third to a half fewer STOP fills = queue place, the rest worse same-type fills), growing with our reaction delay; the model keeps through visible moves when the cushion is thick and cannot see later moves
+
+- USER: "yes check why it suffers loss and performs worse. Check against top makers, is it timing issue, then check the model why it picks the wrong time".
+- Done: research/pf_order_harm_why.py + run_order_harm_why.sh (38995519, before the run), 15:38-15:52Z; post hoc follow-up a83af1f2 (15:54Z). Report handoffs/20261114_order_harm_why_results.md; copies reviews/order_harm_why_20261114/; FINDINGS row added.
+- Controls: 512,172 fill rows equal POLICY v2's saved fills row for row; legs aligned; violations 0; look-ahead 0 / 231,895; 4 planted errors caught; the follow-up reconciles on 12 / 12 cells with its falsifier.
+- Watch out: the losses sit on E2-timed trades (anchors +-250 ms, C12); OHQ0's WS-timed classes are positive at M 50 apart from KEPT-ON, PEND and a few OTHER-ON fills.
+- Next (USER's call): (a) a visible-move override for the keep model (pull when dfv250 > 0.5 c whatever the cushion, or a monotone constraint), about $34 a day at M 50; (b) re-post timing = the other session's post-vs-wait model; (c) the dominant gap (same-state fill quality, queue place) needs speed and earlier queue joining; (d) a check of our E2-timed fills.
+
 ## 2026-11-14 14:34Z (session ce68ebe0) — ORDER-HARM v3 + POLICY v2 DONE (keep-vs-cancel, scheduled re-post): the model ranks (R661 SKILL, IC +0.137, 5 / 5 days) but is NOT ACCEPTED on the whole portfolio (R652 REJECT, both arms, every cap); R654 FEWER, R655 MORE, R656 NOT-YET
 
 - Run 12:04:15Z-14:27:35Z (c5f4557c); post hoc C3 reading 9ee5cc1b (14:32Z, labelled post hoc). Report handoffs/20261114_order_harm_v3_policy_v2_results.md; copies reviews/order_harm_v3_policy_v2_20261114/; FINDINGS row added (section 3 B).

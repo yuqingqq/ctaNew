@@ -1,0 +1,19 @@
+{
+ "stat": {
+  "windows": 288,
+  "window_sides": 576,
+  "align_differ": 0,
+  "legs": 111465,
+  "runs": 3456,
+  "noinput": 0,
+  "kept_fills": 31469,
+  "viol": 0,
+  "lookahead_checks": 31557,
+  "lookahead_bad": 0,
+  "reconciled_rows": 98603
+ },
+ "days": 1.0,
+ "contract": "order-harm-client-50ms-terminal-tail-v2",
+ "decision_ms": 50,
+ "repost_ms": 0.0
+}
