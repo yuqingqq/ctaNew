@@ -1,0 +1,23 @@
+{
+ "info": {
+  "delta_top": [
+   "dfv250",
+   "depth_now",
+   "adv_d_bnimb250",
+   "adv_bn_imb",
+   "sens",
+   "adv_bn_r100",
+   "gap_adv",
+   "x35",
+   "x29",
+   "pbn_dist",
+   "dfv1000",
+   "x30",
+   "x28",
+   "adv_bn_r50",
+   "size_better"
+  ]
+ },
+ "train_rows": 300000,
+ "harm_rows": 56564
+}

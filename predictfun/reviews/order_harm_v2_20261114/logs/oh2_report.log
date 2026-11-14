@@ -1,0 +1,27 @@
+ORDER-HARM v2, 9 consumed replay days, first 60 s, guard ladder decision states every 250 ms while the guard is on, M 50; as of 2026-11-14T06:29:41Z; controls passed (no-look-ahead falsifier: 114383 rows with every unknown frame perturbed, 0 differ); rows 2287617; censored (horizon past the lane's end) 64182, 5 s horizon censored 110575; decision steps without a resting order 56205, without inputs 0; overlapping rows: ranking diagnostics only, no summed value
+
+LABEL by rung (c per share of the 30-sh order, 1 s values, H 2 s): rows | P(harm) | severity when harmed | gain | pull value | DELTA (keep - pull) | DELTA 5 s values
+  rung 0:  372022 | 32.0% |   3.22 | +0.207 | -0.144 | -0.680 | -0.726
+  rung 1:  379067 | 23.8% |   3.21 | +0.142 | -0.099 | -0.522 | -0.540
+  rung 2:  382144 | 18.7% |   3.14 | +0.109 | -0.068 | -0.410 | -0.421
+  rung 3:  383941 | 15.4% |   3.02 | +0.088 | -0.047 | -0.329 | -0.339
+  rung 4:  385158 | 12.7% |   2.94 | +0.074 | -0.033 | -0.267 | -0.274
+  rung 5:  385285 | 11.1% |   2.81 | +0.083 | -0.022 | -0.205 | -0.212
+  all   : 2287617 | 18.9% |   3.11 | +0.117 | -0.068 | -0.400 | -0.417
+  steps since the guard came on first step :  308993 rows, P(harm) 14.1%, DELTA -0.270
+  steps since the guard came on 2-5 steps  :  535465 rows, P(harm) 17.4%, DELTA -0.362
+  steps since the guard came on 6-20 steps :  781769 rows, P(harm) 19.4%, DELTA -0.409
+  steps since the guard came on > 20 steps :  661390 rows, P(harm) 21.5%, DELTA -0.482
+
+R620 DELTA-SKILL: Spearman IC pooled +0.151; per day 1023 +0.160, 1024 +0.121, 1025 +0.133, 1026 +0.161, 1027 +0.166, 1031 +0.139, 1101 +0.133, 1102 +0.157, 1103 +0.159 -> SKILL
+R621 HARM-AUC: pooled 0.753; per day 1023 0.754, 1024 0.772, 1025 0.770, 1026 0.747, 1027 0.758, 1031 0.748, 1101 0.761, 1102 0.737, 1103 0.731 -> PREDICTABLE
+  severity model on harmed rows: Spearman +0.220
+
+CALIBRATION (deciles of the prediction: mean predicted / realized)
+  DELTA: -1.16/-1.35 -0.56/-0.65 -0.43/-0.51 -0.34/-0.40 -0.27/-0.32 -0.22/-0.26 -0.17/-0.20 -0.12/-0.15 -0.08/-0.10 -0.01/-0.06
+  P(harm): +0.04/+0.03 +0.06/+0.06 +0.08/+0.08 +0.10/+0.10 +0.13/+0.13 +0.16/+0.16 +0.20/+0.20 +0.26/+0.26 +0.34/+0.34 +0.52/+0.52
+DELTA model top inputs (days in the top 10): dfv250 9, adv_d_bnimb250 9, depth_now 9, adv_bn_r100 9, adv_bn_imb 9, sens 9, dfv1000 8, x29 8, gap_adv 8, pbn_dist 6, x35 4, size_better 2
+
+READINGS: {"R620": "SKILL", "R621": "PREDICTABLE"}
+
+2026-11-14T06:29:40Z tag=oh2_report rc=0 peak_rss_mib=888 wall_s=6.54 cpu_user_s=3.81 memavail_start_gib=22 disk_free_gib=517->517 slot=claude
