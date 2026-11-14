@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-14 12:04Z (session ce68ebe0) — keep-vs-cancel with a SCHEDULED re-post runs first (USER), the model-decided posting next; level diagnostics added (c5f4557c)
+
+- USER: "Let me know the current keep vs cancel model first" (explained: one model for all levels, level differences through the order's inputs - ticks behind, size at better prices, queue; threshold 0 or one matched threshold) / "So the volume, volatility will have big influence for each level right?" / "Yes we can add in. Meanwhile, do you think we can try to run the keep vs cancel + scheduled repost model first".
+- Built (c5f4557c): re-post at the first 50 ms step after the guard clears, no timer, nothing posted during the guard - in the labels, forks, parity lane and every scored arm (client lane: optional cooldown, default 250 ms kept for the frozen-v3 parity; contract v2 with repost_ms = 0). Engine regression: a separate LDG pass with the default timer must equal frozen v3's saved fills. Diagnostics: input importance and a keep map by level x volatility tercile x size-at-better tercile. New folders *_client50_repost0_20261114; drivers read them from the scripts. Synthetic checks: 9 unit tests, v3 6 / 6, policy 7 / 7 planted errors.
+- Running: run_order_harm_v3.sh (labels, five nested folds, report) then run_order_harm_policy_v2.sh (parity, replay, report; R652 acceptance, R653-R656).
+- Next (USER's choice, after this run): the model-decided posting version (post now vs wait label; separate files).
+
 ## 2026-11-14 11:40Z (session ce68ebe0) — USER: "Stop the run first, the post now uses a fixed timer, it doesn't make sense for the current system" -> stopped; the timer-based labels are void and deleted; USER chose: the model decides posting too (design proposed, not built)
 
 - Stopped at 11:35Z: the relaunched fit stage (first nested fold, about 2 minutes in, no fold finished); the policy replay never started.

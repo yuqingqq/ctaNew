@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-14 12:04Z (session ce68ebe0): keep-vs-cancel with a scheduled re-post (first step after the guard clears, no timer) running
+  first (c5f4557c); level diagnostics added; the model-decided posting version next.
   2026-11-14 11:40Z (session ce68ebe0): run stopped (USER: the fixed 250 ms re-post timer does not match the current system); the
   timer-based labels deleted; USER chose model-decided posting (post now vs wait label) - design proposed, not built.
   2026-11-14 11:33Z (session ce68ebe0): USER review during the fit stage - nested out-of-fold chain, availability / preservation / good
@@ -1872,7 +1874,7 @@ order_harm_client50_review_20261114:
 # NEXT_TEST_20261114
 next_test_20261114:
   recorded_as_of: "2026-11-14 10:26Z"
-  status: "stopped_redesign (USER: model decides posting too; the fixed re-post timer removed; labels to be rebuilt)"
+  status: "running: keep-vs-cancel with the scheduled re-post (no timer), c5f4557c; model-decided posting next"
   question: "keep now with the option to cancel later (queue value included) vs LDG and FB25, whole portfolio, chronological"
   step_1: "predictfun/research/run_order_harm_v3.sh (labels 9 days, 50 ms, client-state lane; 5 chronological folds; R660, R661)"
   step_2: "predictfun/research/run_order_harm_policy_v2.sh (input parity; replay LDG, FB25, FB25C, OFB2C, OHQ0, OHQM)"
