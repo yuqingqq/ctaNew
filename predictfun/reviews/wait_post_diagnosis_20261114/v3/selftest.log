@@ -1,0 +1,14 @@
+test_attribution_and_refusal (test_wait_post_diagnose.DiagnosisTests.test_attribution_and_refusal) ... ok
+test_generation_dedup_and_bad_repeat (test_wait_post_diagnose.DiagnosisTests.test_generation_dedup_and_bad_repeat) ... ok
+test_guard_off_exact_and_on_changes_exit (test_wait_post_diagnose.DiagnosisTests.test_guard_off_exact_and_on_changes_exit) ... ok
+test_metric_positive_and_bad (test_wait_post_diagnose.DiagnosisTests.test_metric_positive_and_bad) ... ok
+test_saved_replay_refuses_bad_number (test_wait_post_diagnose.DiagnosisTests.test_saved_replay_refuses_bad_number) ... ok
+test_support_known_and_unknown (test_wait_post_diagnose.DiagnosisTests.test_support_known_and_unknown) ... ok
+test_tail_fires (test_wait_post_diagnose.DiagnosisTests.test_tail_fires) ... ok
+test_window_pack_common_key_and_mismatch (test_wait_post_diagnose.DiagnosisTests.test_window_pack_common_key_and_mismatch) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.023s
+
+OK
+2026-11-14T15:42:00Z tag=wait_post_diagnose_selftest rc=0 peak_rss_mib=134 wall_s=0.46 cpu_user_s=0.37 memavail_start_gib=22 disk_free_gib=504->504 slot=codex
