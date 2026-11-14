@@ -1,0 +1,50 @@
+{
+  "asof": "2026-11-14T12:34:59Z",
+  "review_verdict": "not_ready_for_full_performance_claim",
+  "findings": [
+    {
+      "severity": "P1",
+      "name": "label_continuation_differs_from_repeated_wait_policy",
+      "source": "predictfun/research/pf_entry_value.py",
+      "line": 208,
+      "policy_source": "predictfun/research/pf_wait_post.py",
+      "policy_line": 255,
+      "evidence": "late profitable and late harmful entry both label zero; current zero-score policy posts neither",
+      "implication": "The score estimates the benefit of a 50ms head start under forced neutral continuation, not the value of admission versus continuing to wait. Changing >0 to >=0 alone admits both cases."
+    },
+    {
+      "severity": "P1",
+      "name": "repeated_wait_states_are_not_in_training_population",
+      "source": "predictfun/research/pf_wait_post.py",
+      "line": 92,
+      "evidence": "neutral policy posts on the first legal opportunity; generation gets one entry row. Runtime can decide repeatedly with different inventory/book/price while remaining empty.",
+      "implication": "Need causal support for empty-slot continuation states and shared post-decision policy; no optimal-waiting interpretation."
+    },
+    {
+      "severity": "P1",
+      "name": "abandoned_launcher_left_false_waiting_state",
+      "source": "predictfun/research/model_wait_post_driver.py",
+      "line": 75,
+      "evidence": "PID2030852 absent, no full rows or models, waiting status still present, size driver1576587 remained stopped",
+      "repair": "bounded diagnostic uses user systemd service with identity-checked ExecStopPost resume hook; original status superseded without deleting artifacts"
+    },
+    {
+      "severity": "P2",
+      "name": "acceptance_does_not_test_incremental_timing_skill",
+      "source": "predictfun/research/pf_wait_post.py",
+      "line": 340,
+      "evidence": "development_screen combines relative PNL, absolute positivity and inventory; local_null is printed but not part of the predicate; there is no participation-matched portfolio null",
+      "implication": "Even a pass is a descriptive policy comparison, not evidence of superior entry selection."
+    }
+  ],
+  "confirmed": [
+    "distinct bid/ask model routing; independent decisions with shared exposure caps",
+    "train excludes calibration/test dates; fixed zero threshold; pinned parameters",
+    "sanitized client state and received-book features; pending quantities reserve capacity",
+    "paired branch prefix equality; common terminal cash+inventory accounting",
+    "result populations include flat/no-fill windows; source/model/inference hashes"
+  ],
+  "recommended_target": "Q(POST,state)-Q(WAIT,state) under the same frozen continuation policy, allowing repeated waiting; include an absolute admission-value/never-post control; collect causal empty-slot continuation support and exclude each test day through the entire training chain",
+  "performance_status": "supervised bounded chronological diagnostic running; original model unchanged; no full-study acceptance",
+  "interpretation": "The existing target is valid as a one-step policy-improvement diagnostic under its declared neutral continuation. It is not a complete admission/optimal-stopping model. The review finding concerns applying it repeatedly outside that continuation and support, not a claim that every zero one-step advantage must cause economic loss."
+}
