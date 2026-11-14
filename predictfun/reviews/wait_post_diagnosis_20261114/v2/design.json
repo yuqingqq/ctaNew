@@ -1,0 +1,46 @@
+{
+  "asof": "2026-11-14T15:39:06.529785+00:00",
+  "status": "post_hoc_diagnostic_design",
+  "candidate_count": 0,
+  "diagnostic_keeper_sensitivities": 1,
+  "original_source": "990b4e99",
+  "original_result_sha256": "92610a5dfc50d60a59e29da7ee38ec06b804f11943647f7cd2d2c6cb793557e1",
+  "purpose": "Explain frozen wait-post v2 losses; no fitting, tuning, threshold selection, promotion or new forward validation.",
+  "tests": 8,
+  "saved_artifacts": [
+    "All five chronological folds: train and test R2, RMSE, MAE, bias, rank correlation for POST/WAIT and their difference.",
+    "Earlier-training mean and fixed rung/10-tick-price-bin mean baselines, minimum100 cell rows; sparse cells fall back to rung mean.",
+    "Fixed forecast bins [-5,-2,0,2,5,10] cents per nominal share; train/test selection calibration.",
+    "Target zero share, scale, top1pct squared-target mass, POST/WAIT correlation, gain importance."
+  ],
+  "replay": {
+    "dates": [
+      "20261027",
+      "20261031",
+      "20261101",
+      "20261102",
+      "20261103"
+    ],
+    "population": "All288 first-minute windows per date; flat/no-fill windows retained; source exclusions carried.",
+    "clock": "M50, native unchanged placement/cancel/notice timing",
+    "arms": [
+      "VALUE",
+      "ALWAYS",
+      "TIMER",
+      "VALUE_GUARD_EXIT"
+    ],
+    "original_arm_check": "Reconcile each market/arm PNL, young-cut PNL, shares, placements, inventory-square area and both-side presence against saved original output.",
+    "sensitivity": "Same frozen VALUE entry model; resting order is cancelled when existing guard crosses its pull threshold. No entry cooldown or veto. This changes continuation and is NOT a correctly relabeled combined model."
+  },
+  "attribution": [
+    "Every fill: signed fill-time-mid minus price, plus signed terminal-mid minus fill-time-mid; reconcile sum to whole-portfolio PNL.",
+    "Age edges100/500/2000/10000ms; side/rung strata. Cancel-pending quantity.",
+    "True live any-rung quote versus received-book at-best/within-one-tick presence; no front-queue inference."
+  ],
+  "waiting_state_audit": "Every legal runtime entry callback, de-duplicate side/rung/generation per window. Count initial POST, eventual POST, post-after-WAIT, delay and forecast. Support bins: rung, floor(position/60), floor(own_exposure/60), floor(other_exposure/60), age bins50/250/1000/5000/20000ms. Unseen and <5 support are descriptive only; also marginal ranges. Compare with same definitions on labeled test probes. Full runtime audit replaces reliance on biased first/every500th saved inference samples.",
+  "nulls": "No new skill claim or acceptance decision. Existing declared500-draw matched local selection nulls remain authoritative. Keeper differences, decomposition and error metrics are descriptive post hoc diagnostics; no selected operating threshold.",
+  "intervals": "No new significance claims or intervals. All five consumed dates reported separately and pooled.",
+  "execution": "One supervised core9 worker via run_light while the older core8 size queue continues; wait for idle second slot; total research-process cap2. Original v2 source/model/data artifacts immutable. Frozen diagnostic source checked before/after every stage.",
+  "supersedes": "../design.json",
+  "correction": "Window output packing now explicitly reconciles shared metric names before merging. Original attempt failed before writing any replay output. Predictions, model, policy and analytical design unchanged. All stages rerun in v2 namespace."
+}

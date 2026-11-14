@@ -1,0 +1,12 @@
+{
+  "asof": "2026-11-14T15:40:25.405120+00:00",
+  "status": "superseded_before_execution",
+  "runner": {
+    "status": "waiting_for_slot",
+    "asof": "2026-11-14T15:39:06Z",
+    "pid": 3885362,
+    "stage": "selftest"
+  },
+  "service_stopped": true,
+  "reason": "Second slot belongs to other session now running order-harm why; move diagnosis to own core8 after current size worker."
+}

@@ -1,0 +1,11 @@
+{
+  "runner": {
+    "status": "failed",
+    "asof": "2026-11-14T15:36:59Z",
+    "pid": 3865283,
+    "error": "replay_20261027 failed; exit1"
+  },
+  "original_freeze_sha256": "7918f5957c029c9a7a2ee64b1ee5d3c632f4e5a0bebb3310a7368e36a235e037",
+  "saved_audit_sha256": "3f02ce8d8ac7c9bdad919d024aa26b1592f780767e6b58f8a7432ef840aa6ed9",
+  "replay_failure_log": "Traceback (most recent call last):\n  File \"/tmp/cta-wait-post-diagnose-20261114/predictfun/research/pf_wait_post_diagnose.py\", line 253, in <module>\n    if __name__=='__main__':main()\n                            ^^^^^^\n  File \"/tmp/cta-wait-post-diagnose-20261114/predictfun/research/pf_wait_post_diagnose.py\", line 249, in main\n    elif a.command=='replay':replay(a.day,a.out)\n                             ^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/cta-wait-post-diagnose-20261114/predictfun/research/pf_wait_post_diagnose.py\", line 202, in replay\n    f,presence=attribute(W,r);windows.append(dict(day=day,market=market,arm=arm,**metrics,**presence))\n                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: dict() got multiple values for keyword argument 'grid_steps'\n2026-11-14T15:36:56Z tag=wait_post_diagnose_replay_20261027 rc=1 peak_rss_mib=906 wall_s=3.17 cpu_user_s=2.53 memavail_start_gib=22 disk_free_gib=505->505 slot=claude\n"
+}
