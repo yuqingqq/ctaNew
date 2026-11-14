@@ -1,35 +1,62 @@
 # P-2026-005 HANDOFF
 
 <!-- WAIT_POST_WHY_20261114 -->
-## 2026-11-14 — wait/post failure diagnosis running
+## 2026-11-14 — wait/post failure diagnosis COMPLETE
 
-USER: "It looks the model performs really bad, check why." No new model,
-threshold, fee assumption or promotion. Source33925207/freeze3ac6a3b4;
-current receipt `reviews/wait_post_diagnosis_20261114/current.json`.
-Saved-artifact audit: train/test errors against prior-mean and fixed price/rung
-baselines, target-tail concentration, calibration and state support. Replay:
-all five original test dates at M50, VALUE/ALWAYS/TIMER saved metrics must match;
-add one crude existing-guard EXIT sensitivity with the SAME frozen entry heads,
-no cooldown. Attribute fills to fill-time spread + subsequent marked move,
-side/rung/order age; exact received-public-best presence; every legal entry
-callback and unique-generation waiting/state support. No new signal claim.
+USER: "It looks the model performs really bad, check why." Complete post hoc
+explanation as of **2026-11-14T16:21:11Z**, source33925207/freeze3ac6a3b4.
+Primary evidence: `reviews/wait_post_diagnosis_20261114/v3/diagnosis.json`;
+`raw_report.json` and `completion.json` bind the calculations and artifacts.
+Five complete consumed dates, **1440 market windows** and
+**9922 held-out neutral-reference probes**;
+first60s/window, common60.2s terminal, M50, six rungs/side,30shares/order,
+cap1500. Gross simulation, no new candidate, selection or forward validation.
 
-Eight diagnostic tests pass with known-bad refusals. Attempt1 preserved: saved
-audit completed; replay stopped before output because duplicate grid_steps
-were passed when merging metric dictionaries. Fixed via explicit reconciliation
-and a new test. Attempt2 never ran historical work (second slot occupied).
-Current attempt3 is supervised on OWN core8, service
-`pf-wait-post-diagnose-v3-20261114`; output
-`data/predict_fun/research/wait_post_diagnosis_20261114_v3/runner.json`.
-Older size parent1576587 yielded after its current worker finished and will
-resume via finally + ExecStopPost. Other core9 order-harm diagnosis unchanged.
+Confirmed generalization failure: POST, WAIT and their difference each lose to
+both prior-training-mean and fixed price/rung baselines in **10/10 side-day
+cells**. POST trainR2 0.227..0.289,
+testR2 -0.113..-0.023; timing rankIC
+-0.034..0.055.
+Selected local POST predictions vs actual: bid+3.139c vs-0.836c, ask+3.794c
+vs-3.656c per nominal share. Original500-draw matched tests fail on both sides.
+This failure exists before the closed-loop state shift, not merely calibration.
+The timing target is68..73% zero; its largest1% has48..59% of squared-target
+magnitude (not residual loss). POST/WAIT target correlation0.861..0.946.
 
-Initial saved-audit result (asof15:42:07 UTC, same frozen9,922 labeled test
-probes over5 dates): all10 POST side-day test R2 values are negative versus
-training-mean prediction, despite training R2 ~0.23..0.29; WAIT and difference
-also fail that benchmark. Largest1% of training timing targets account for
-~48..59% of squared target magnitude. This supports a generalization failure;
-state mismatch/keeper effects still being measured, not asserted as sole causes.
+VALUE fill accounting: spread **$5,814.22**, subsequent marked
+move **$-17,860.68**, total **$-12,046.47**.
+Per filled share, VALUE-1.867c versus ALWAYS-1.676c and TIMER-1.766c;
+volume/value decomposition is descriptive, not a matched selection experiment.
+The crude guard-exit sensitivity reduces loss on5/5dates,
+but causes **14.41x placements**, with only
+21.8% of VALUE's filled quantity. It uses the SAME
+entry heads trained under neutral KEEP and a historical LODO guard, so it is
+not a correctly relabeled combined candidate or evidence of selective keeper
+skill. Naive entry/exit disagreement produces severe churn.
+
+At actual VALUE entries, 66.9% of49487
+POSTs lie in unseen coarse inventory/exposure/wait-age bins, versus
+16.4% of9922 neutral labeled test probes. This is a
+support proxy, not causal attribution. Generations advance after posting and
+terminal waits are censored: eventual-POST rates do NOT prove failure to abstain.
+Code inspection also finds a target/input gap: targets include whole-ladder
+interactions, but inputs lack the other resting orders' prices, ages and
+remaining quantities. No causal cost is assigned to that omission yet.
+
+Eight diagnostic tests passed, including planted errors;47 frozen files
+unchanged; **4320 original market/arm reconciliations**, plus all-fill terminal
+accounting. Source exclusions:8361 untimed legs /
+105159.20 shares; no missing feature-grid rows or excluded
+registry windows. Exact-best/near presence excludes improving quotes and says
+nothing about front queue residence. Failed diagnostic attempts1/2 remain
+preserved; currentattempt3 completed, service exited, older size queue resumed.
+
+Next: test direct POST-minus-WAIT prediction while retaining positive absolute
+POST value; add client-known ladder/joint-waiting state support; label under
+the actual frozen order-specific keeper/continuation. Gate prediction skill
+before another broad strategy replay. These dates remain development-only;
+validation needs later untouched complete days. Larger model/size or fixed
+retry timers are not established remedies.
 <!-- /WAIT_POST_WHY_20261114 -->
 
 ## 2026-11-14 15:57Z (session ce68ebe0) — ORDER-HARM WHY DONE (post hoc): the model swaps re-post losses for kept-order losses; against the top makers it is NOT timing of presence (our state mix is better) but same-state fill quality (a third to a half fewer STOP fills = queue place, the rest worse same-type fills), growing with our reaction delay; the model keeps through visible moves when the cushion is thick and cannot see later moves
