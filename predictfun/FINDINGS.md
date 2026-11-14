@@ -1,5 +1,37 @@
 # P-2026-005 findings register
 
+<!-- WAIT_POST_WHY_20261114 -->
+## 2026-11-14 — wait/post failure diagnosis running
+
+USER: "It looks the model performs really bad, check why." No new model,
+threshold, fee assumption or promotion. Source33925207/freeze3ac6a3b4;
+current receipt `reviews/wait_post_diagnosis_20261114/current.json`.
+Saved-artifact audit: train/test errors against prior-mean and fixed price/rung
+baselines, target-tail concentration, calibration and state support. Replay:
+all five original test dates at M50, VALUE/ALWAYS/TIMER saved metrics must match;
+add one crude existing-guard EXIT sensitivity with the SAME frozen entry heads,
+no cooldown. Attribute fills to fill-time spread + subsequent marked move,
+side/rung/order age; exact received-public-best presence; every legal entry
+callback and unique-generation waiting/state support. No new signal claim.
+
+Eight diagnostic tests pass with known-bad refusals. Attempt1 preserved: saved
+audit completed; replay stopped before output because duplicate grid_steps
+were passed when merging metric dictionaries. Fixed via explicit reconciliation
+and a new test. Attempt2 never ran historical work (second slot occupied).
+Current attempt3 is supervised on OWN core8, service
+`pf-wait-post-diagnose-v3-20261114`; output
+`data/predict_fun/research/wait_post_diagnosis_20261114_v3/runner.json`.
+Older size parent1576587 yielded after its current worker finished and will
+resume via finally + ExecStopPost. Other core9 order-harm diagnosis unchanged.
+
+Initial saved-audit result (asof15:42:07 UTC, same frozen9,922 labeled test
+probes over5 dates): all10 POST side-day test R2 values are negative versus
+training-mean prediction, despite training R2 ~0.23..0.29; WAIT and difference
+also fail that benchmark. Largest1% of training timing targets account for
+~48..59% of squared target magnitude. This supports a generalization failure;
+state mismatch/keeper effects still being measured, not asserted as sole causes.
+<!-- /WAIT_POST_WHY_20261114 -->
+
 <!-- WAIT_POST_V2_20261114 -->
 ## 2026-11-14 15:01Z — wait/post v2 target fixes complete; five-day candidate REJECTED
 
