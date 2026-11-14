@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-14 15:01Z (Codex): wait/post v2 target fixes complete and five-day test REJECTED; M50 VALUE -$12046.47, loss5/5 days, both matched timing tests fail.
+  Evidence33cce3bf merged3a057b9c; service exited0 and size queue resumed. Details: reviews/wait_post_v2_20261114/performance.json.
   2026-11-14 14:34Z (session ce68ebe0): ORDER-HARM v3 + POLICY v2 done: the keep-vs-cancel model ranks (IC +0.137, 5/5 days) but is
   NOT ACCEPTED on the whole portfolio (R652 REJECT, both arms, every cap); more good at-best fills, fewer orders kept through the guard.
   2026-11-14 12:04Z (session ce68ebe0): keep-vs-cancel with a scheduled re-post (first step after the guard clears, no timer) running
@@ -1889,3 +1891,38 @@ next_test_20261114:
   runtime_estimate_hours: 2.5
   after_accept: "development candidate only; freeze, then a forward test on >= 5 untouched days chosen by the USER"
 # /NEXT_TEST_20261114
+
+wait_post_v2_20261114:
+  status: complete_rejected
+  asof: 2026-11-14T14:57:44Z
+  source_commit: 990b4e99
+  freeze_commit: e4a6ad83
+  fix_merge: 1ee92421
+  evidence_commit: 33cce3bf
+  evidence_merge: 3a057b9c
+  service: pf-wait-post-v2-20261114
+  service_exit_status: 0
+  service_active: false
+  size_queue_resumed: true
+  output: data/predict_fun/research/wait_post_v2_20261114_v1/full
+  current_result: predictfun/reviews/wait_post_v2_20261114/performance.json
+  completion: predictfun/reviews/wait_post_v2_20261114/completion.json
+  tests_passed: 16
+  complete_test_days: 5
+  test_market_windows: 1440
+  local_probe_actions: 9922
+  all_fitted_heads_nonconstant: true
+  final_fold_training_actions: 11969
+  value_m50_pnl: -12046.46504132825
+  value_m50_pnl_without_young: -11850.130853820483
+  value_m50_both_side_quote_fraction: 0.9153547453703703
+  value_negative_days_all_clocks: 5
+  development_accept: false
+  local_timing_bid_pass: false
+  local_timing_ask_pass: false
+  local_null_draws_per_side: 500
+  portfolio_null_status: skipped_basic_screen_failed
+  portfolio_null_draws: 0
+  full_study_complete: true
+  forward_validation: false
+  next: audit admission calibration and joint waiting-state coverage under the frozen learned keeper before integration

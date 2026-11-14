@@ -1,5 +1,88 @@
 # P-2026-005 findings register
 
+<!-- WAIT_POST_V2_20261114 -->
+## 2026-11-14 15:01Z — wait/post v2 target fixes complete; five-day candidate REJECTED
+
+USER: "We fix the model first, align the target and fix the issues. Then check
+ the performance." Source **990b4e99**, freeze **e4a6ad83**, fix merged
+**1ee92421**. Complete evidence **33cce3bf**, merged **3a057b9c** into
+`mm-research`. Current result: `reviews/wait_post_v2_20261114/performance.json`;
+`raw_report.json`, `daily.json`, `completion.json` bind and reconcile the artifacts.
+This supersedes the interim `first_day.json` as the full-study status.
+
+Target repair: POST and WAIT share the same frozen learned continuation, with
+both valued against leaving the selected rung empty. WAIT can keep waiting;
+POST requires positive absolute value and value at least as high as WAIT.
+One delayed probe per sampled neutral generation adds waiting-state examples;
+sampling ages are not retry timers. Raw whole-portfolio targets price shared
+ladder displacement. Bid/ask POST/WAIT heads are separate, with shared inventory.
+No fees/rebates or hyperparameter changes. Neutral KEEP with engine safety is
+fixed throughout; combined learned keep/pull performance is not claimed.
+
+16 synthetic checks pass, including causal prefix/feature parity, repeated
+waiting, better later entry, shared-fill displacement, chronology, constant-head
+refusals and matched-control falsifiers. All fitted heads have actual splits and
+varying predictions; the final fold trains11969 actions on six earlier days.
+The old constant-ask/small-support defect is repaired, without establishing skill.
+
+Performance as of **2026-11-14T14:57:44Z**: five COMPLETE consumed development dates
+(Oct27, Oct31, Nov1/2/3), **1440 market windows**, first60s of each market,
+common60.2s terminal. M50 gross simulated terminal cash plus inventory:
+
+| Entry arm; same neutral keeper | PNL, $ | Without <100ms-fill contributions, $ |
+|---|---:|---:|
+| VALUE | -12,046.47 | -11,850.13 |
+| ADMISSION | -13,440.61 | -12,975.81 |
+| ALWAYS | -13,832.57 | -13,161.58 |
+| SCHEDULED | -11,509.31 | -11,617.62 |
+| TIMER | -11,066.00 | -11,197.08 |
+| FLAT | +0.00 | +0.00 |
+
+VALUE loses on **5/5 dates at every M0/M50/M250 clock**, also without young-fill
+contributions. It beats ALWAYS on4/5 M50 dates but TIMER on only1/5. Its
+inventory-square exposure is **5.67% above TIMER**. Both-side quote presence
+is **91.535%**, meaning at least one live order
+per side, including deep rungs; no at-best/front-of-queue claim.
+
+Pooled local probe diagnostics, cents per nominal30-share order share:
+
+| Side | Eligible probes | Selected POST | Predicted absolute POST | Actual absolute POST | Actual POST-minus-WAIT | Matched-null p95 | Required test |
+|---|---:|---:|---:|---:|---:|---:|---|
+| bid | 5017 | 954 | +3.139 | -0.836 | -0.184 | +0.355 | FAIL |
+| ask | 4905 | 889 | +3.794 | -3.656 | +0.109 | +0.180 | FAIL |
+
+Each local null has500 selections matched on day/side/hour/rung and action count.
+Both fail. These are counterfactual labeled states, not the realized policy's
+exact entries; local labels are never summed as portfolio PNL. Absolute POST
+value is negative for selected probes on both sides despite positive forecasts.
+The remaining defect is unreliable admission-value prediction; joint waiting-
+state distribution shift is a plausible concern, not a proven sole cause.
+
+Acceptance FALSE: absolute profit, required relative comparisons, inventory risk
+and both local tests fail. Only10/24 relative comparison cells pass. The200-draw
+portfolio null was explicitly **skipped_basic_screen_failed**, as predeclared;
+no incomplete/null-skipped result can accept. UTC-day intervals in the raw report
+are descriptive; these consumed dates are not forward validation.
+
+Source exclusions: **8361 untimed trade legs /105159.20 shares**; zero excluded
+registry markets, no missing feature-grid rows. M0/M50/M250 shift public trade
+anchors while the decision grid stays50ms. The young-fill cut removes those
+legs' PNL contributions on the saved path; it is not a new execution replay.
+Queue/fill assumptions remain uncalibrated, and terminal marks are not settlement
+or realized live PNL. Guard comparators inherit historical LODO inputs.
+
+Completion verified:42 frozen files,5 eval receipts,6 model receipts,9 label
+receipts; model hashes/tree structures, daily sums, comparison predicates and
+local means reconciled. Service `pf-wait-post-v2-20261114` exited0; older size
+queue1576587 resumed with identity checked. No v2 worker remains running.
+Raw models/data: `data/predict_fun/research/wait_post_v2_20261114_v1/full/`.
+
+Next research: audit absolute-admission calibration and joint waiting-state
+coverage under the frozen learned keeper before integrating entry with keep/pull.
+Integration changes continuation values and requires new labels and replay.
+No timer or threshold adjustment was selected from these outcomes.
+<!-- /WAIT_POST_V2_20261114 -->
+
 <!-- ORDER_HARM_CLIENT50_FIX_20261114 -->
 Integration: merged into `mm-research` on 2026-11-14 10:16:29 UTC; no push or research run.
 
