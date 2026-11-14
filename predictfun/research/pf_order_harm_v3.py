@@ -38,8 +38,11 @@ INPUTS: exactly ORDER-HARM v2's FEAT (STOP-DEPTH's step inputs, INFLUENCE's six 
 Readings DECLARED BEFORE THE FIRST RUN (printed by report; the economic test is pf_order_harm_policy_v2):
  R660 OPTION (printed): the mean option term max(0, A_hat(s_{j+1})) by rung, and the share of test-day decisions whose sign (keep if
       A_hat > 0) differs between iteration 0 (myopic: keep one step, then pull) and the final iteration.
- R661 SKILL: Spearman IC of the final A_hat with its target on each test day (target built with the same final model at the next state):
-      > 0 on >= 4 of 5 test days and pooled >= 0.05 -> SKILL; else NO-SKILL.
+ R661 SKILL: Spearman IC of the final A_hat with a REALIZED, model-free advantage - keeping the order through the rest of the episode and its
+      tail minus pulling now (KAV - P_e) - on each test day: > 0 on >= 4 of 5 test days and pooled >= 0.05 -> SKILL; else NO-SKILL. (The
+      fitted-Q target itself contains the model's next-state prediction, so it is never used to score the model.) IC with the myopic realized
+      target (R_j, last: R - P_e) printed.
+ Printed: the label with a 5 s tail beside the 2 s one (episodes not censored at 5 s) - how much of keeping's value comes after the episode.
 Controls (any failure -> no output): synthetic cases (keep-all lane semantics, re-entry, decision cadence anchored at the onset, client-known
 resting, R's partition of (t_0 + 22, T_e], option-target assembly) with planted errors (global 250 ms grid; venue-state resting; intervals
 without the cancel latency; min instead of max); v2's selftests (forks, causal queue inputs); on real data: the keep-all lane with the recording
@@ -73,7 +76,8 @@ DAYS9 = K.DAYS9
 OUTD = f'{K.IO}/order_harm_v3_20261114'
 SIZE = 30.0; NR = 6; EVERY = 5; H_TAIL = 2000.0; QCFG = ('M', 50.0); CLIP = 10.0; SUB_N = 300000; N_ITER = 3
 FEAT = OH.FEAT
-KEYS = ['day', 'm', 'side', 'k', 'rung_i', 'ep', 'j', 'J', 'last', 'next_ok', 't_rel', 'R', 'Pe', 'T0', 'KAV']
+KEYS = ['day', 'm', 'side', 'k', 'rung_i', 'ep', 'j', 'J', 'last', 'next_ok', 't_rel', 'R', 'Pe', 'T0', 'KAV', 'Pe5', 'KAV5']
+H_TAIL5 = 5000.0
 FOLDS = {DAYS9[i]: (tuple(DAYS9[:i - 1]), DAYS9[i - 1]) for i in range(4, 9)}     # test day -> (training days, calibration day)
 CHECK_EVERY = 20
 MEM_CAP_MIB = 2048.0
@@ -221,8 +225,8 @@ def rows_day(day):
     PB = {int(m): (g.tau.values.astype(float).tolist(), g.p_bn.values.astype(float), g.tau_rem.values.astype(float), g.sigma.values.astype(float))
           for m, g in P.groupby('mid', sort=False)}
     del P
-    st = dict(window_sides=0, episodes=0, rung_episodes=0, censored=0, no_input_at_onset=0, two_resting=0, rows=0, forced_pull=0,
-              recorder_differ=0, pconst_checks=0, pconst_differ=0, partition_bad=0, lookahead_checks=0, lookahead_bad=0)
+    st = dict(window_sides=0, episodes=0, rung_episodes=0, censored=0, censored5=0, no_input_at_onset=0, two_resting=0, rows=0, forced_pull=0,
+              multi=0, recorder_differ=0, pconst_checks=0, pconst_differ=0, partition_bad=0, lookahead_checks=0, lookahead_bad=0)
     out = []
     for w in K.window_sides(D):
         st['window_sides'] += 1; m, side, sg, n = int(w['m']), int(w['side']), w['sg'], w['n']
@@ -263,7 +267,7 @@ def rows_day(day):
             for (k_on, k_clear) in eps:
                 if k_clear is None or tgl[k_clear] + H_TAIL > w['te']:
                     st['censored'] += 1; continue
-                T_e = tgl[k_clear] + H_TAIL; t_on = tgl[k_on]
+                T_e = tgl[k_clear] + H_TAIL; t_on = tgl[k_on]; T_e5 = tgl[k_clear] + H_TAIL5; c5 = T_e5 > w['te']
                 res = [o for o in orders if client_resting(o, t_on)]
                 if not res:
                     continue
@@ -277,19 +281,25 @@ def rows_day(day):
                 ts = [tgl[k] for k in steps]
                 t_last_end = (tgl[k_on + EVERY * len(steps)] + K.L_CANCEL) if forced else T_e
                 R = dp_fields(ts, t_last_end, ka)
-                Ff, _ = OH.run_fork(w, k_on, d, vg, q, shf, T_e)
+                st['censored5'] += int(c5)
+                Ff, _ = OH.run_fork(w, k_on, d, vg, q, shf, T_e if c5 else T_e5)
                 Pe = sum(val(f[0], int(f[1]), f[2]) for f in Ff if ts[0] + K.L_CANCEL < float(tt[f[0]]) <= T_e)
+                Pe5 = NAN if c5 else sum(val(f[0], int(f[1]), f[2]) for f in Ff if ts[0] + K.L_CANCEL < float(tt[f[0]]) <= T_e5)
+                R5 = None if (c5 or forced) else dp_fields(ts, T_e5, ka)
                 tot = sum(v for (t, v) in ka if ts[0] + K.L_CANCEL < t <= t_last_end)
                 st['partition_bad'] += int(abs(sum(R) - tot) > 1e-6)
-                if len(steps) >= 2 and st['rung_episodes'] % CHECK_EVERY == 0:      # control: P_e is the same from the last decision
-                    Ff2, _ = OH.run_fork(w, steps[-1], d, vg, q, shf, T_e)
-                    Pe2 = sum(val(f[0], int(f[1]), f[2]) for f in Ff2 if ts[-1] + K.L_CANCEL < float(tt[f[0]]) <= T_e)
-                    st['pconst_checks'] += 1; st['pconst_differ'] += int(abs(Pe2 - Pe) > 1e-6)
+                if len(steps) >= 2:
+                    st['multi'] += 1
+                    if st['multi'] % CHECK_EVERY == 1:            # control: P_e is the same from the last decision (every 20th, from the first)
+                        Ff2, _ = OH.run_fork(w, steps[-1], d, vg, q, shf, T_e)
+                        Pe2 = sum(val(f[0], int(f[1]), f[2]) for f in Ff2 if ts[-1] + K.L_CANCEL < float(tt[f[0]]) <= T_e)
+                        st['pconst_checks'] += 1; st['pconst_differ'] += int(abs(Pe2 - Pe) > 1e-6)
                 pt = int(o['pt']); lvp = cache.get(pt)
                 if lvp is None:
                     lvp = QR.lvarr(P5, S5, pt, side); cache[pt] = lvp
                 b0k = int(w['best'][k_on]) if w['best'][k_on] >= 0 else int(w['best'][steps[0]])
                 J = len(steps); kav = np.cumsum(R[::-1])[::-1]
+                kav5 = np.cumsum(R5[::-1])[::-1] if R5 is not None else np.full(J, NAN)
                 for j, k in enumerate(steps):
                     t = tgl[k]; jk = int(w['jk'][k])
                     ordf = OH.order_inputs(o, t, d, side, int(w['best'][k]), b0k, lvp, S5, P5, jk, kfl, tfl)
@@ -301,8 +311,8 @@ def rows_day(day):
                     last = (j == J - 1) and not forced; nok = j < J - 1
                     Rj = R[j] / SIZE; pe = Pe / SIZE
                     T0 = Rj - (pe if last else 0.0)
-                    rw.append([int(day), m, side, k, d, k_on, j, J, int(last), int(nok), t - w['ws'], Rj, pe, T0, kav[j] / SIZE] +
-                              list(MK[k]) + ordf)
+                    rw.append([int(day), m, side, k, d, k_on, j, J, int(last), int(nok), t - w['ws'], Rj, pe, T0, kav[j] / SIZE, Pe5 / SIZE,
+                               kav5[j] / SIZE] + list(MK[k]) + ordf)
                     st['rows'] += 1
         if rw:
             out.append(np.asarray(rw, dtype=np.float64))
@@ -324,7 +334,8 @@ def rows_day(day):
 
 # ---------------------------------------------------------------- chronological fitted-Q iteration (one test day)
 def load_keys(day):
-    R = pd.read_parquet(f'{OUTD}/rows_{day}.parquet', columns=['m', 'side', 'k', 'rung_i', 'ep', 'j', 'last', 'next_ok', 'T0', 'R', 'Pe', 'depth_now'])
+    R = pd.read_parquet(f'{OUTD}/rows_{day}.parquet', columns=['m', 'side', 'k', 'rung_i', 'ep', 'j', 'last', 'next_ok', 'T0', 'R', 'Pe', 'KAV',
+                                                             'depth_now'])
     g = R.m.values * 1000 + R.side.values * 100 + R.rung_i.values
     same = np.r_[(g[1:] == g[:-1]) & (R.ep.values[1:] == R.ep.values[:-1]) & (R.j.values[1:] == R.j.values[:-1] + 1), False]
     nxt = np.where(same & (R.next_ok.values == 1), np.arange(len(R)) + 1, -1)
@@ -409,12 +420,14 @@ def fit_fold(test):
     kt = KD[test]; a_fin = preds[test][-1]; a0 = preds[test][0]
     a_next = np.where(kt['nxt'] >= 0, a_fin[np.clip(kt['nxt'], 0, None)], np.nan)
     tgt = option_targets(kt['T0'], kt['last'], kt['nok'], a_next)
-    info.update(ic_final=float(spearmanr(a_fin, tgt)[0]), ic_myopic=float(spearmanr(a0, kt['T0'])[0]), flip_vs_myopic=float(np.mean((a_fin > 0) != (a0 > 0))),
+    real = (kt['df'].KAV - kt['df'].Pe).values
+    info.update(ic_final=float(spearmanr(a_fin, real)[0]), ic_final_myopic_target=float(spearmanr(a_fin, kt['T0'])[0]),
+                ic_myopic=float(spearmanr(a0, kt['T0'])[0]), flip_vs_myopic=float(np.mean((a_fin > 0) != (a0 > 0))),
                 keep_share_test=float(np.mean(a_fin > 0)), option_mean=float(np.nanmean(np.where(np.isfinite(a_next), np.maximum(0.0, a_next), 0.0))),
                 option_by_rung=[float(np.nanmean(np.where(np.isfinite(a_next), np.maximum(0.0, a_next), 0.0)[kt['df'].rung_i.values == r])) for r in range(NR)],
                 rows_test=int(len(a_fin)), rows_cal=int(len(a_cal)))
     pd.DataFrame(dict(m=kt['df'].m.values, side=kt['df'].side.values, k=kt['df'].k.values, rung_i=kt['df'].rung_i.values, j=kt['df'].j.values,
-                      a_final=a_fin, a_myopic=a0, target=tgt)).to_parquet(f'{OUTD}/pred_{test}.parquet', index=False)
+                      a_final=a_fin, a_myopic=a0, target=tgt, realized=real)).to_parquet(f'{OUTD}/pred_{test}.parquet', index=False)
     json.dump(dict(info=info, thresholds=thr), open(f'{OUTD}/fit_{test}.json', 'w'), indent=1, default=float)
     print(f'fold {test}: train {train}, cal {cal}; IC final {info["ic_final"]:+.3f}, keep share {info["keep_share_test"]:.3f}, theta_M '
           f'{thr["theta_M"]:+.3f}; {time.time() - T0_:.0f} s', flush=True)
@@ -425,8 +438,8 @@ def report():
     asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
     S = {d: json.load(open(f'{OUTD}/rows_{d}.json')) for d in DAYS9}
     Fz = {t: json.load(open(f'{OUTD}/fit_{t}.json')) for t in FOLDS}
-    A = pd.concat([pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=['day', 'rung_i', 'j', 'J', 'last', 'R', 'Pe', 'T0', 'KAV']) for d in DAYS9],
-                  ignore_index=True)
+    A = pd.concat([pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=['day', 'rung_i', 'j', 'J', 'last', 'R', 'Pe', 'T0', 'KAV', 'Pe5', 'KAV5'])
+                   for d in DAYS9], ignore_index=True)
     tot = {k_: sum(S[d][k_] for d in DAYS9) for k_ in S[DAYS9[0]]}
     L = [f'ORDER-HARM v3 (keep now with the option to cancel later; chronological folds), 9 consumed days, first 60 s, M 50; as of {asof}',
          f'statuses: {tot}', '',
@@ -436,16 +449,22 @@ def report():
     for r in list(range(NR)) + ['all']:
         x = F0 if r == 'all' else F0[F0.rung_i == r]
         L.append(f'  rung {r}: {len(x):7d} | {x.R.mean():+.3f} | {(x.KAV - x.Pe).mean():+.3f} | {(x.KAV > x.Pe).mean():.3f} | {x.Pe.mean():+.3f}')
-    L += ['', 'FOLDS (train -> calibrate -> test): IC final (target with the final model) | IC myopic | keep share (A_hat > 0) test | flip vs myopic | '
-          'option term mean | theta_M (matched to FB25 on the calibration day, keep share there)']
+    L += ['', 'TAIL SENSITIVITY (first decisions not censored at 5 s): keep-all minus pull with a 2 s tail | with a 5 s tail | rows']
+    F5 = F0[np.isfinite(F0.KAV5.values) & np.isfinite(F0.Pe5.values)]
+    for r in list(range(NR)) + ['all']:
+        x = F5 if r == 'all' else F5[F5.rung_i == r]
+        L.append(f'  rung {r}: {(x.KAV - x.Pe).mean():+.3f} | {(x.KAV5 - x.Pe5).mean():+.3f} | {len(x)}')
+    L += ['', 'FOLDS (train -> calibrate -> test): IC final vs realized keep-all minus pull | IC final vs myopic realized target | IC myopic model vs '
+          'myopic target | keep share (A_hat > 0) test | flip vs myopic | option term mean | theta_M (FB25 keep share on the calibration day)']
     ic = []
     for t in FOLDS:
         i_ = Fz[t]['info']; th = Fz[t]['thresholds']; ic.append(i_['ic_final'])
-        L.append(f'  {t}: train {",".join(x[4:] for x in i_["train"])} cal {i_["cal"][4:]} | {i_["ic_final"]:+.3f} | {i_["ic_myopic"]:+.3f} | '
+        L.append(f'  {t}: train {",".join(x[4:] for x in i_["train"])} cal {i_["cal"][4:]} | {i_["ic_final"]:+.3f} | '
+                 f'{i_["ic_final_myopic_target"]:+.3f} | {i_["ic_myopic"]:+.3f} | '
                  f'{i_["keep_share_test"]:.3f} | {i_["flip_vs_myopic"]:.3f} | {i_["option_mean"]:+.3f} | {th["theta_M"]:+.3f} ({th["s_FB_cal"]:.3f})')
     P = pd.concat([pd.read_parquet(f'{OUTD}/pred_{t}.parquet') for t in FOLDS], ignore_index=True)
     from scipy.stats import spearmanr
-    pooled = float(spearmanr(P.a_final, P.target)[0]); up = sum(1 for v in ic if v > 0)
+    pooled = float(spearmanr(P.a_final, P.realized)[0]); up = sum(1 for v in ic if v > 0)
     lab = 'SKILL' if up >= 4 and pooled >= 0.05 else 'NO-SKILL'
     L += ['', f'R660 OPTION (printed): option term by rung (fold mean): ' + ' '.join(f'{np.mean([Fz[t]["info"]["option_by_rung"][r] for t in FOLDS]):+.3f}'
                                                                                  for r in range(NR)) +
