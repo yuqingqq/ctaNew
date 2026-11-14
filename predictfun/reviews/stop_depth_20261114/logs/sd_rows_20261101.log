@@ -1,0 +1,3 @@
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+20261101: {'window_sides': 576, 'guard_steps': 180482, 'masked': 30514, 'invalid_book': 0, 'quiet': 8, 'rows': 149968} in 11 s
+2026-11-14T04:05:09Z tag=sd_rows_20261101 rc=0 peak_rss_mib=717 wall_s=11.23 cpu_user_s=9.80 memavail_start_gib=22 disk_free_gib=519->519 slot=claude

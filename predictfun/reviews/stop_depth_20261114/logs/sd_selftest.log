@@ -1,0 +1,2 @@
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+2026-11-14T04:03:15Z tag=sd_selftest rc=0 peak_rss_mib=102 wall_s=0.30 cpu_user_s=0.24 memavail_start_gib=22 disk_free_gib=520->520 slot=claude

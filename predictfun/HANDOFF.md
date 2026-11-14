@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-14 04:25Z (session ce68ebe0) — STOP-DEPTH DONE (step 1 of the USER's plan): after our guard fires, 59% of the time nothing moves within 1 s; a move stops at 1 tick 48% of the time; big moves follow Binance moving against us. A cleaner, richer depth model is better on every day but only marginally (AUC +0.002-0.004) and does not change the keep decision (14.6% vs 14.7% of kept orders run over)
+
+- Done (USER: "Ok, so we need to check how large is the influence of the signal ... if we estimate it will stop 1c, we can rest 49c there and repost 50c ask" / "Makes sense. Proceed"): research/pf_stop_depth.py + run_stop_depth.sh (ebec8cd1, before the first run), posthoc 4adf3d32 (the report's Binance quintiles were broken by ties at 0: replaced by value bins). Report handoffs/20261114_stop_depth_results.md; copies reviews/stop_depth_20261114/; FINDINGS updated.
+- Readings: R580 PREDICTABLE (j 1-3), R581 BETTER than PULL-DEPTH's model (>= 7/9 each), R582 FEATURES-HELP, R583 NOT-SHOWN (rung 1: 6/9 lower; rung 2: 5/9).
+- Watch out: NEW predictions saved per held-out day (pred_<day>.parquet, models/new_<day>_j<j>.txt) for step 2; masked guard steps have no prediction (pull); the clean target differs from PULL-DEPTH's (OLD scores 0.72-0.74 on it vs 0.74-0.77 on its own).
+- Next (proposals, user's call): step 2 = the whole strategy in one replay (bid: pull through-price, keep the next with NEW; ask: keep the old order and add at the new best with the fast path); or first more information for the stop (features of the unfolding move, another venue).
+
 ## 2026-11-14 03:37Z (session ce68ebe0) — NEXT-PRICE DONE: when the next price becomes the best (50c goes, 49c is the best) our order is there 7.8% of the time; 60% the guard pulled the order we had there ~0.56 s before. We are late because we repost, not on first arrival. Kept, the order would sit ~80 sh back instead of ~470. The top makers hold the front of such prices (x1.36 their share)
 
 - Done (USER: "For example, when best bid is 50c, their orders are 49c, and always there? Can we also put our orders early there, It's we are late when we first there or we late because we repost"): research/pf_next_price.py + run_next_price.sh (89b45cac, before the first run); posthoc 2626caae and posthoc2 0eaa311b (post hoc). Report handoffs/20261114_next_price_results.md; copies reviews/next_price_20261114/; FINDINGS updated (new row; defect P18).
