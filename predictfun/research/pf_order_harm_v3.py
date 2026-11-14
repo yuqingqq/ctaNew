@@ -1,6 +1,9 @@
 """ORDER-HARM v3 (2026-11-14, session ce68ebe0): the value of KEEPING NOW WITH THE OPTION TO CANCEL LATER, per resting order, at the
 policy's own decision cadence, fit CHRONOLOGICALLY. Supersedes v2's target for the keep / pull decision (v2 stays as provenance).
 
+REPAIR: shared client-state reference/fork engine, 50 ms decisions, and a new
+client50 output namespace. Earlier 250 ms artifacts are incompatible.
+
 USER review of the ORDER-HARM POLICY design (its run stopped, outputs deleted unread):
  "4. The target still differs from the intended action. Labels assume keeping without reconsideration for two seconds; the policy can
      reconsider every 250 ms. We need to estimate 'keep now, retain the option to cancel later', including queue value."
@@ -8,22 +11,22 @@ USER review of the ORDER-HARM POLICY design (its run stopped, outputs deleted un
      ones. Useful for development, but improvement needs chronological training/calibration followed by untouched days."
  "1. ... The new policy generally reconsiders every 250 ms, versus 50 ms for FB25 ... Add a baseline using exactly the same cadence."
 
-THE LANE (labels): each rung of the guard ladder alone (S4's rest lane, 30 sh, M 50), KEEP-ALL with the guard as the ENTRY line only: a resting
+THE LANE (labels): each rung of the guard ladder alone (shared client-state lane, 30 sh, M 50), KEEP-ALL with the guard as the ENTRY line only: a resting
 order is never pulled by the guard; an order still in flight when the guard comes on is cancelled; nothing new is placed while the guard is on;
-re-entry at the back 250 ms after it clears (K.sim_arm aux = guard, idle_only = 1: the policy lane's rules). v2's keep branch was the never-pull
+re-entry at the back 250 ms after it clears (CL.reference_lane: the policy engine, active side and rung offset explicit). v2's keep branch was the never-pull
 lane, which also placed replacement orders while the guard was on - not what keeping an order does.
 DECISIONS (the policy's cadence, also used by every same-cadence arm of the replay): in each guard episode (a maximal run of guard-on steps),
 for the rung's order resting when it starts (client-known: activation reached, no cancel sent, no full fill known, i.e. fill + 100 ms), at the
-onset step and every 5 steps (250 ms) after it, while the guard stays on and the order rests. A step without inputs (masked start) is a forced
+onset step and every 50 ms step after it, while the guard stays on and the order rests. A step without inputs (masked start) is a forced
 pull (the policy fails closed).
 VALUES (c per share of the 30-sh order; each fill valued sg (mid(anchor + 1 s) - price); fills inside the 22 ms cancel latency on neither
 branch): for an episode clearing at t_clear, T_e = t_clear + H_TAIL (2 s), the same terminal for every branch. Episodes reaching the lane's end
 before T_e are CENSORED (status).
  R_j  = the keep-all lane's fills of the rung in (t_j + 22, t_{j+1} + 22] (last decision: to T_e) - the kept order's fills in the episode and,
         after it, the kept order (with its queue place) or its re-entered replacement, in the tail;
- P_e  = the pull branch's fills in (t_j + 22, T_e]: cancel at t_j, stay out, re-enter after the clear (pf_order_harm_v2.run_fork). Pulled at
+ P_e  = the pull branch's fills in (t_j + 22, T_e]: cancel at t_j, stay out, re-enter after the clear (run_fork on the shared client-state engine). Pulled at
         ANY decision of the episode, the branch is empty until the same re-entry, so P_e is one number per episode (asserted on a sample);
- A_j  = Q(keep now, decide again in 250 ms optimally) - Q(pull now) = R_j + E[max(0, A_{j+1})]  (last decision: R_j - P_e; before a forced
+ A_j  = Q(keep now, decide again in 50 ms) - Q(pull now) = R_j + E[max(0, A_{j+1})]  (last decision: R_j - P_e; before a forced
         pull: R_j). The option to cancel later is the max(0, .) term; queue value enters through R's tail (the kept order's place vs the
         re-entered order behind the queue).
 FIT (fitted Q iteration, LightGBM, PULL-DEPTH's pinned parameters, regression clipped +-10 c/sh): iteration 0 target T0 = R_j (- P_e if last);
@@ -44,13 +47,13 @@ Readings DECLARED BEFORE THE FIRST RUN (printed by report; the economic test is 
       target (R_j, last: R - P_e) printed.
  Printed: the label with a 5 s tail beside the 2 s one (episodes not censored at 5 s) - how much of keeping's value comes after the episode.
 Controls (any failure -> no output): synthetic cases (keep-all lane semantics, re-entry, decision cadence anchored at the onset, client-known
-resting, R's partition of (t_0 + 22, T_e], option-target assembly) with planted errors (global 250 ms grid; venue-state resting; intervals
+resting, R's partition of (t_0 + 22, T_e], option-target assembly) with planted errors (slow 250 ms cadence; venue-state resting; intervals
 without the cancel latency; min instead of max); v2's selftests (forks, causal queue inputs); on real data: the keep-all lane with the recording
 callback equals it without, on every window-side and rung; P_e from the episode's last decision equals P_e from its first on every 20th
 multi-decision episode; the R partition on every episode; the no-look-ahead falsifier (frames not yet known perturbed, order inputs identical)
 on every 20th row; no row past the lane's end; no test or calibration day in a fit; memory self-guard (2 GiB).
 Limits: replay rule M (B1a); rungs alone (the joint replay couples them); the tail assumes keep-all after the episode (a later episode inside
-the tail is not decided); queue value beyond T_e not counted; S4's lane decides on venue state (P21); consumed days.
+the tail is not decided); queue value beyond T_e not counted; three fitted-Q iterations are an approximation; consumed days.
 Usage (run_light, PF_SLOT=claude): pf_order_harm_v3.py selftest | rows <day> | fit <test day> | report; driver run_order_harm_v3.sh
 """
 import bisect
@@ -69,12 +72,14 @@ import pf_qr_queue_race as QR                             # noqa: E402
 import pf_pull_depth as PD                                # noqa: E402
 import pf_stop_depth as SD                                # noqa: E402
 import pf_influence as IN                                 # noqa: E402
-import pf_order_harm_v2 as OH                             # noqa: E402  (run_fork, order_inputs, FEAT, selftests)
+import pf_order_harm_client_lane as CL                    # noqa: E402
+import pf_order_harm_v2 as OH                             # noqa: E402  (order_inputs, FEAT, selftests)
 import pf_joint_ladder as JL                              # noqa: E402  (synthetic contexts)
 
 DAYS9 = K.DAYS9
-OUTD = f'{K.IO}/order_harm_v3_20261114'
-SIZE = 30.0; NR = 6; EVERY = 5; H_TAIL = 2000.0; QCFG = ('M', 50.0); CLIP = 10.0; SUB_N = 300000; N_ITER = 3
+OUTD = f'{K.IO}/order_harm_v3_client50_20261114'
+SIZE = 30.0; NR = 6; EVERY = 1; H_TAIL = 2000.0; QCFG = ('M', 50.0); CLIP = 10.0; SUB_N = 300000; N_ITER = 3
+assert EVERY * 50 == CL.DECISION_MS
 FEAT = OH.FEAT
 KEYS = ['day', 'm', 'side', 'k', 'rung_i', 'ep', 'j', 'J', 'last', 'next_ok', 't_rel', 'R', 'Pe', 'T0', 'KAV', 'Pe5', 'KAV5']
 H_TAIL5 = 5000.0
@@ -82,10 +87,15 @@ FOLDS = {DAYS9[i]: (tuple(DAYS9[:i - 1]), DAYS9[i - 1]) for i in range(4, 9)}   
 CHECK_EVERY = 20
 MEM_CAP_MIB = 2048.0
 INF = float('inf'); NAN = float('nan')
-MUT_GRID = MUT_VENUE_REST = MUT_NO_LAT = MUT_OPTION_MIN = 0   # planted errors (selftest only)
+MUT_SLOW_CADENCE = MUT_VENUE_REST = MUT_NO_LAT = MUT_OPTION_MIN = 0   # planted errors (selftest only)
 
 
 # ---------------------------------------------------------------- building blocks
+def run_fork(w, k, d, vg, q, shf, t_end):
+    F, O, _, _ = CL.reference_lane(w, q, shf, d, vg, size=SIZE, start_k=k, end_time=t_end)
+    return F, O
+
+
 def episodes(vg):
     """Maximal guard-on runs: [(k_on, k_clear)], k_clear = the first step after the run (None if it reaches the lane's end)."""
     out = []; k = 0; n = len(vg)
@@ -108,13 +118,10 @@ def client_resting(o, t):
 
 
 def decision_steps(k_on, k_clear, n, o, tgl, has_input):
-    """The cadence: the onset step and every 5 steps after it while the guard stays on and o rests (client-known). Returns (steps,
+    """The cadence: the onset step and every 50 ms step after it while the guard stays on and o rests (client-known). Returns (steps,
     forced_pull_after): a step without inputs ends the sequence as a forced pull."""
     kc = n if k_clear is None else k_clear
-    if MUT_GRID:
-        ks = [k for k in range(k_on, kc) if k % EVERY == 0]
-    else:
-        ks = list(range(k_on, kc, EVERY))
+    ks = list(range(k_on, kc, 5 if MUT_SLOW_CADENCE else EVERY))
     steps = []
     for k in ks:
         if not client_resting(o, tgl[k]):
@@ -157,14 +164,14 @@ def selftest():
     def recorder(k, t, cur):
         rec.setdefault(id(cur), cur)
         return False
-    Fk, Ok, _ = K.sim_arm(w, 'U', 0.0, 'rest', aux=vg, decide=recorder, idle_only=1, offset=0, size=SIZE)
-    F0, O0, _ = K.sim_arm(w, 'U', 0.0, 'rest', aux=vg, idle_only=1, offset=0, size=SIZE)
+    Fk, Ok, _, _ = CL.reference_lane(w, 'U', 0.0, 0, vg, size=SIZE, decide=recorder)
+    F0, O0, _, _ = CL.reference_lane(w, 'U', 0.0, 0, vg, size=SIZE)
     if (Fk, Ok) != (F0, O0):
         bad.append('the recording callback changed the keep-all lane')
     if [o[0] for o in Ok] != [K.L_PLACE, 1000.0 + K.L_PLACE] or sum(f[2] for f in Fk) != 30.0:
         bad.append(f'keep-all lane: orders {[o[0] for o in Ok]}, fills {[f[2] for f in Fk]}')
-    Ff1, Of1 = OH.run_fork(w, 4, 0, vg, 'U', 0.0, 2750.0)
-    Ff2, Of2 = OH.run_fork(w, 9, 0, vg, 'U', 0.0, 2750.0)
+    Ff1, Of1 = run_fork(w, 4, 0, vg, 'U', 0.0, 2750.0)
+    Ff2, Of2 = run_fork(w, 9, 0, vg, 'U', 0.0, 2750.0)
     if [o[0] for o in Of1] != [1000.0 + K.L_PLACE] or [o[0] for o in Of1] != [o[0] for o in Of2] or Ff1 != Ff2:
         bad.append(f'pull branch not constant within the episode: {[o[0] for o in Of1]} vs {[o[0] for o in Of2]}')
     # (2) client-known resting: an order filled at 400 ms rests (to the client) until 500 ms; a cancel sent at 600 ms ends it there
@@ -174,13 +181,13 @@ def selftest():
     o2 = dict(ref=False, ta=100.0, tc=600.0, tfill=INF)
     if [client_resting(o2, t) for t in (599.0, 600.0)] != [True, False]:
         bad.append('client-known resting (cancel)')
-    # (3) cadence anchored at the onset: guard on from step 3 to step 14; decisions at 3, 8, 13
+    # (3) 50 ms cadence: every step from 3 through 14; missing inputs force a pull at that step
     tgl = [50.0 * k for k in range(30)]; orest = dict(ref=False, ta=0.0, tc=INF, tfill=INF)
     st, fp = decision_steps(3, 15, 30, orest, tgl, lambda k: True)
-    if st != [3, 8, 13] or fp:
+    if st != list(range(3, 15)) or fp:
         bad.append(f'cadence {st}')
     st, fp = decision_steps(3, 15, 30, orest, tgl, lambda k: k != 8)
-    if st != [3] or not fp:
+    if st != list(range(3, 8)) or not fp:
         bad.append(f'forced pull at a step without inputs {st} {fp}')
     # (4) R's partition: decisions at 200 / 450 / 700 ms, T_e 2750; a fill at 465 ms (inside the 22 ms after 450) belongs to the first interval
     fills = [(300.0, -60.0), (465.0, 30.0), (480.0, -10.0), (900.0, 15.0), (2800.0, 99.0)]
@@ -196,7 +203,7 @@ def selftest():
 
 def mutation_check():
     out = {}
-    for nm in ('MUT_GRID', 'MUT_VENUE_REST', 'MUT_NO_LAT', 'MUT_OPTION_MIN'):
+    for nm in ('MUT_SLOW_CADENCE', 'MUT_VENUE_REST', 'MUT_NO_LAT', 'MUT_OPTION_MIN'):
         globals()[nm] = 1
         try:
             out[nm] = bool(selftest())
@@ -259,11 +266,11 @@ def rows_day(day):
             def recorder(k, t, cur, rec=rec):
                 rec.setdefault(id(cur), cur)
                 return False
-            Fk, Ok, _ = K.sim_arm(w, q, shf, 'rest', aux=vg, decide=recorder, idle_only=1, offset=d, size=SIZE)
-            F0, O0, _ = K.sim_arm(w, q, shf, 'rest', aux=vg, idle_only=1, offset=d, size=SIZE)
+            Fk, Ok, order_states, _ = CL.reference_lane(w, q, shf, d, vg, size=SIZE, decide=recorder)
+            F0, O0, _, _ = CL.reference_lane(w, q, shf, d, vg, size=SIZE)
             st['recorder_differ'] += int(Fk != F0 or Ok != O0)
             ka = [(float(tt[f[0]]), val(f[0], int(f[1]), f[2])) for f in Fk]
-            orders = list(rec.values())
+            orders = order_states
             for (k_on, k_clear) in eps:
                 if k_clear is None or tgl[k_clear] + H_TAIL > w['te']:
                     st['censored'] += 1; continue
@@ -282,7 +289,7 @@ def rows_day(day):
                 t_last_end = (tgl[k_on + EVERY * len(steps)] + K.L_CANCEL) if forced else T_e
                 R = dp_fields(ts, t_last_end, ka)
                 st['censored5'] += int(c5)
-                Ff, _ = OH.run_fork(w, k_on, d, vg, q, shf, T_e if c5 else T_e5)
+                Ff, _ = run_fork(w, k_on, d, vg, q, shf, T_e if c5 else T_e5)
                 Pe = sum(val(f[0], int(f[1]), f[2]) for f in Ff if ts[0] + K.L_CANCEL < float(tt[f[0]]) <= T_e)
                 Pe5 = NAN if c5 else sum(val(f[0], int(f[1]), f[2]) for f in Ff if ts[0] + K.L_CANCEL < float(tt[f[0]]) <= T_e5)
                 R5 = None if (c5 or forced) else dp_fields(ts, T_e5, ka)
@@ -291,7 +298,7 @@ def rows_day(day):
                 if len(steps) >= 2:
                     st['multi'] += 1
                     if st['multi'] % CHECK_EVERY == 1:            # control: P_e is the same from the last decision (every 20th, from the first)
-                        Ff2, _ = OH.run_fork(w, steps[-1], d, vg, q, shf, T_e)
+                        Ff2, _ = run_fork(w, steps[-1], d, vg, q, shf, T_e)
                         Pe2 = sum(val(f[0], int(f[1]), f[2]) for f in Ff2 if ts[-1] + K.L_CANCEL < float(tt[f[0]]) <= T_e)
                         st['pconst_checks'] += 1; st['pconst_differ'] += int(abs(Pe2 - Pe) > 1e-6)
                 pt = int(o['pt']); lvp = cache.get(pt)
@@ -328,12 +335,15 @@ def rows_day(day):
     cols = KEYS + FEAT
     R_ = pd.DataFrame(np.vstack(out) if out else np.zeros((0, len(cols))), columns=cols)
     R_ = R_.astype({c: 'int64' for c in ('day', 'm', 'side', 'k', 'rung_i', 'ep', 'j', 'J', 'last', 'next_ok')})
-    R_.to_parquet(f'{OUTD}/rows_{day}.parquet', index=False); json.dump(st, open(f'{OUTD}/rows_{day}.json', 'w'))
+    R_.to_parquet(f'{OUTD}/rows_{day}.parquet', index=False)
+    with open(f'{OUTD}/rows_{day}.json', 'w') as handle:
+        json.dump(dict(stat=st, **CL.stamp()), handle)
     print(f'{day}: {st} in {time.time() - T0_:.0f} s', flush=True)
 
 
 # ---------------------------------------------------------------- chronological fitted-Q iteration (one test day)
 def load_keys(day):
+    CL.require_contract(json.load(open(f'{OUTD}/rows_{day}.json')))
     R = pd.read_parquet(f'{OUTD}/rows_{day}.parquet', columns=['m', 'side', 'k', 'rung_i', 'ep', 'j', 'last', 'next_ok', 'T0', 'R', 'Pe', 'KAV',
                                                              'depth_now'])
     g = R.m.values * 1000 + R.side.values * 100 + R.rung_i.values
@@ -414,7 +424,7 @@ def fit_fold(test):
     pj = C[[f'P{j}' for j in PD.JS]].values[np.arange(len(C)), jx - 1]
     keep_fb = ~((~np.isfinite(dn)) | (dn < 0) | ((dn == 0) & (off == 0))) & np.isfinite(pj) & (pj < 0.25)
     a_cal = preds[cal][-1]; s_fb = float(keep_fb.mean())
-    thr = dict(test=test, cal=cal, train=list(train), s_FB_cal=s_fb, theta_M=float(np.quantile(a_cal, 1.0 - s_fb)), keep_OHQ0_cal=float((a_cal > 0).mean()))
+    thr = dict(**CL.stamp(), test=test, cal=cal, train=list(train), s_FB_cal=s_fb, theta_M=float(np.quantile(a_cal, 1.0 - s_fb)), keep_OHQ0_cal=float((a_cal > 0).mean()))
     json.dump(thr, open(f'{OUTD}/thresholds_{test}.json', 'w'), indent=1)
     # diagnostics on the test day (R660 / R661)
     kt = KD[test]; a_fin = preds[test][-1]; a0 = preds[test][0]
@@ -428,7 +438,7 @@ def fit_fold(test):
                 rows_test=int(len(a_fin)), rows_cal=int(len(a_cal)))
     pd.DataFrame(dict(m=kt['df'].m.values, side=kt['df'].side.values, k=kt['df'].k.values, rung_i=kt['df'].rung_i.values, j=kt['df'].j.values,
                       a_final=a_fin, a_myopic=a0, target=tgt, realized=real)).to_parquet(f'{OUTD}/pred_{test}.parquet', index=False)
-    json.dump(dict(info=info, thresholds=thr), open(f'{OUTD}/fit_{test}.json', 'w'), indent=1, default=float)
+    json.dump(dict(info=info, thresholds=thr, **CL.stamp()), open(f'{OUTD}/fit_{test}.json', 'w'), indent=1, default=float)
     print(f'fold {test}: train {train}, cal {cal}; IC final {info["ic_final"]:+.3f}, keep share {info["keep_share_test"]:.3f}, theta_M '
           f'{thr["theta_M"]:+.3f}; {time.time() - T0_:.0f} s', flush=True)
 
@@ -436,8 +446,13 @@ def fit_fold(test):
 # ---------------------------------------------------------------- report
 def report():
     asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
-    S = {d: json.load(open(f'{OUTD}/rows_{d}.json')) for d in DAYS9}
+    receipts = {d: json.load(open(f'{OUTD}/rows_{d}.json')) for d in DAYS9}
+    for receipt in receipts.values():
+        CL.require_contract(receipt)
+    S = {d: receipt['stat'] for d, receipt in receipts.items()}
     Fz = {t: json.load(open(f'{OUTD}/fit_{t}.json')) for t in FOLDS}
+    for receipt in Fz.values():
+        CL.require_contract(receipt)
     A = pd.concat([pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=['day', 'rung_i', 'j', 'J', 'last', 'R', 'Pe', 'T0', 'KAV', 'Pe5', 'KAV5'])
                    for d in DAYS9], ignore_index=True)
     tot = {k_: sum(S[d][k_] for d in DAYS9) for k_ in S[DAYS9[0]]}
@@ -471,7 +486,7 @@ def report():
           f'; decisions flipped vs myopic (fold mean) {np.mean([Fz[t]["info"]["flip_vs_myopic"] for t in FOLDS]):.3f}',
           f'R661 SKILL: IC > 0 on {up}/5 test days, pooled {pooled:+.3f} -> {lab}']
     open(f'{OUTD}/order_harm_v3.txt', 'w').write('\n'.join(L) + '\n')
-    json.dump(dict(R661=lab, pooled_ic=pooled, ic=ic), open(f'{OUTD}/order_harm_v3.json', 'w'), indent=1)
+    json.dump(dict(R661=lab, pooled_ic=pooled, ic=ic, **CL.stamp()), open(f'{OUTD}/order_harm_v3.json', 'w'), indent=1)
     print('\n'.join(L), flush=True)
 
 

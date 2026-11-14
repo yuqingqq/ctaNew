@@ -14,10 +14,10 @@ USER review:
 
 TEST DAYS: ORDER-HARM v3's chronological test days 10-27, 10-31, 11-01, 11-02, 11-03; each replayed with the models of its fold (trained on the
 days before its calibration day; PULL-DEPTH refit on the same days; theta_M set on the calibration day). Consumed days: development only.
-LANE: pf_joint_ladder_v3.sim_joint unchanged (client-known decisions, both sides, rungs 0-5 x 30 sh, shared position); caps hard 10 / 20 / 50 x
+LANE: pf_order_harm_client_lane, derived from the frozen JOINT-LADDER v3 engine (client-known decisions, both sides, rungs 0-5 x 30 sh, shared position); caps hard 10 / 20 / 50 x
 size and none (USER: "much larger cap"); fill clocks M 0 / 50 / 250.
 CADENCE C (every arm marked C, and ORDER-HARM v3's labels): in a guard episode, an order resting is decided at its first resting step and then
-on the onset-anchored 250 ms grid (k - onset multiple of 5); the decision holds between; a new episode starts fresh; once pulled, the order stays
+on every 50 ms step; a new episode starts fresh; once pulled, the order stays
 out while the guard is on and re-enters at the back 250 ms after it clears (the lane's rule).
 ARMS:
   LDG     pull every resting order at the guard (cadence-free: it pulls at the onset step under any cadence);
@@ -30,16 +30,16 @@ ARMS:
 READINGS DECLARED BEFORE THE FIRST RUN (5 test days; day rule >= 4 of 5):
  R650 WS (a diagnostic, never acceptance): OHQ0 / OHQM vs FB25C and vs LDG, WS-timed $/day without fills on orders < 100 ms old at 1 s, per cap:
       higher at M 0 AND M 50 on >= 4 days -> BETTER (vs FB25C) / PAYS (vs LDG); lower at both on >= 4 -> WORSE / HURTS; else NOT-SHOWN.
- R651 CADENCE (printed): FB25C minus FB25 on every measure, per cap and clock.
+ R651 CADENCE (printed): FB25C minus FB25; now both 50 ms, required to match fill for fill.
  R652 PORTFOLIO-ACCEPT (the acceptance criterion, per model arm and cap): the WHOLE PORTFOLIO = every fill on every trade (WS and E2) marked at
-      the window's 60 s mid (the first minute's mark-to-market P&L), counted both with and without fills on orders < 100 ms old. ACCEPT iff,
+      the common 60.2 s mid, after the 60 s stop and cancellation tail (cash plus inventory), counted both with and without fills on orders < 100 ms old. ACCEPT iff,
       against EACH of LDG and FB25C, at EACH fill clock M 0 / M 50 / M 250, under EACH age treatment, the arm is higher pooled over the 5 days
       AND on >= 4 of 5 days (12 conditions); otherwise REJECT, naming every failing condition.
  VERDICT per model arm: DEVELOPMENT-ACCEPT iff R652 ACCEPT at hard 50 (the headline cap); else NOT-ACCEPTED. A development accept is only a
       candidate for a frozen forward test on >= 5 untouched days (none readable here: the forward blocks are reserved; the USER decides).
 CONTROLS (any failure -> no output): selftests (v3 lane, ORDER-HARM v3, FUTURE-BEST, exposure) and this script's cadence wrapper with planted
-errors (a global 250 ms grid; a decision held across episodes; re-deciding every 50 ms; no inputs -> keep); the folds are chronological (v3's
-fit files); INPUT PARITY on each test day: the keep-all joint lane (no cap, M 50: the labels' rules) records the inputs at cadence-C decisions;
+errors (250 ms default cadence; no inputs -> keep; generic cadence-wrapper regressions); the folds are chronological (v3's
+fit files and client50 artifact contract); terminal cash/inventory reconciliation on every run; INPUT PARITY on each test day: the keep-all joint lane (no cap, M 50: the labels' rules) records the inputs at cadence-C decisions;
 wherever its order is v3's label order (same window, side, step, rung, depth and age) all 97 inputs must equal the label row's and A_hat v3's
 saved prediction (<= 1e-9); the no-look-ahead falsifier on every 20th new decision input; LDG equals v3's saved LDG fills at hard 10 and none
 row for row; v3's conservation / accounting checks and the true exposure <= the cap on every hard-cap run; memory self-guard (2 GiB).
@@ -63,25 +63,28 @@ import pf_timing_split as TS                              # noqa: E402
 import pf_future_best as FB                               # noqa: E402
 import pf_order_harm_v2 as OH                             # noqa: E402
 import pf_order_harm_v3 as V3                             # noqa: E402
+import pf_order_harm_client_lane as CL                    # noqa: E402
 import pf_joint_ladder_v3 as J3                           # noqa: E402
 import pf_joint_ladder_v3_exposure as JX                  # noqa: E402
 import pf_order_harm_policy as P1                         # noqa: E402  (day_inputs, window_inputs, window_pairs: unchanged)
 
 TESTS = tuple(V3.FOLDS)
-OUTD = f'{K.IO}/order_harm_policy_v2_20261114'
+OUTD = f'{K.IO}/order_harm_policy_v2_client50_20261114'
 SIZE = J3.SIZE; NR = J3.NR; EVERY = V3.EVERY
+assert EVERY * 50 == CL.DECISION_MS
 CAPS = (('hard', 10), ('hard', 20), ('hard', 50), ('none', None)); HEAD_CAP = 'hard50'; V3_CAPS = ('hard10', 'none')
 CFGS = J3.CFGS
 ARMS = ('LDG', 'FB25', 'FB25C', 'OFB2C', 'OHQ0', 'OHQM'); MODEL_ARMS = ('OHQ0', 'OHQM')
 CHECK_EVERY = 20
 MEM_CAP_MIB = 2048.0
 NAN = float('nan')
-MUT_GRID = MUT_HOLD = MUT_EVERY_STEP = MUT_NOINPUT_KEEP = 0  # planted errors (selftest only)
+MUT_GRID = MUT_HOLD = MUT_EVERY_STEP = MUT_NOINPUT_KEEP = MUT_CADENCE_250 = 0  # planted errors (selftest only)
 
 
 # ---------------------------------------------------------------- cadence C
-def cadence(keep_fn, vg, onset, cnt, d):
+def cadence(keep_fn, vg, onset, cnt, d, every=None):
     """Wrap keep_fn(k, t, cur) -> keep? into cadence C; returns the lane callback (True = pull)."""
+    every = (5 if MUT_CADENCE_250 else EVERY) if every is None else every
     last = {}
 
     def dec(k, t, cur):
@@ -89,7 +92,7 @@ def cadence(keep_fn, vg, onset, cnt, d):
             return False
         k0 = int(onset[k]); key = id(cur); h = last.get(key)
         same_ep = h is not None and (h[0] == k0 or MUT_HOLD)
-        on_grid = (k % EVERY == 0) if MUT_GRID else ((k - k0) % EVERY == 0)
+        on_grid = (k % every == 0) if MUT_GRID else ((k - k0) % every == 0)
         if same_ep and not on_grid and not MUT_EVERY_STEP:
             return not h[1]
         keep = bool(keep_fn(k, t, cur))
@@ -126,7 +129,7 @@ def selftest():
 
     def run(ks, o, theta=0.0):
         cnt = dict(keep=[0] * NR, pull=[0] * NR, noinput=0)
-        f = cadence(model_keep(MK, pred, 0, 1, theta, cnt), vg, onset, cnt, 1)
+        f = cadence(model_keep(MK, pred, 0, 1, theta, cnt), vg, onset, cnt, 1, every=5)
         return [f(k, 50.0 * k, o) for k in ks], cnt
     calls.clear(); r, c = run([0, 1, 2, 3, 4, 5, 6], dict(pt=49))
     if r != [False, False, False, False, False, False, True] or calls != [1, 6]:
@@ -143,12 +146,19 @@ def selftest():
     calls.clear(); r, c = run([1, 6], dict(pt=46), theta=-1.0)
     if r != [False, False]:
         bad.append(f'threshold {r}')
+    # Production/default cadence must score again on the next 50 ms step.
+    calls.clear(); cnt = dict(keep=[0] * NR, pull=[0] * NR, noinput=0)
+    f = cadence(model_keep(MK, pred, 0, 1, 0.0, cnt), vg, onset, cnt, 1)
+    o = dict(pt=49)
+    got = [f(k, 50.0 * k, o) for k in (1, 2)]
+    if got != [False, True] or calls != [1, 2]:
+        bad.append(f'50 ms default cadence {got}, calls {calls}')
     return bad
 
 
 def mutation_check():
     out = {}
-    for nm in ('MUT_GRID', 'MUT_HOLD', 'MUT_EVERY_STEP', 'MUT_NOINPUT_KEEP'):
+    for nm in ('MUT_GRID', 'MUT_HOLD', 'MUT_EVERY_STEP', 'MUT_NOINPUT_KEEP', 'MUT_CADENCE_250'):
         globals()[nm] = 1
         try:
             out[nm] = bool(selftest())
@@ -169,7 +179,8 @@ def all_selftests():
 # ---------------------------------------------------------------- the fold's models and inputs
 def fold(day):
     import lightgbm as lgb
-    fz = json.load(open(f'{V3.OUTD}/fit_{day}.json')); info = fz['info']; thr = fz['thresholds']
+    fz = json.load(open(f'{V3.OUTD}/fit_{day}.json')); CL.require_contract(fz)
+    info = fz['info']; thr = fz['thresholds']; CL.require_contract(thr)
     tr, cal = info['train'], info['cal']
     if not (all(DI < K.DAYS9.index(cal) for DI in (K.DAYS9.index(x) for x in tr)) and K.DAYS9.index(cal) < K.DAYS9.index(day) and info['test'] == day):
         sys.exit(f'REFUSED: fold of {day} not chronological: {tr} / {cal}')
@@ -243,6 +254,7 @@ def arm_dec(arm, W, ctx, wi, pred, F_, cnt):
 def parity_day(day):
     all_selftests()
     T0 = time.time(); F_ = fold(day); D = K.load_day(day); DI = P1.day_inputs(day, D)
+    CL.require_contract(json.load(open(f'{V3.OUTD}/rows_{day}.json')))
     R = pd.read_parquet(f'{V3.OUTD}/rows_{day}.parquet', columns=['m', 'side', 'k', 'rung_i'] + V3.FEAT)
     Pr = pd.read_parquet(f'{V3.OUTD}/pred_{day}.parquet')
     for c in ('m', 'side', 'k', 'rung_i'):
@@ -266,7 +278,7 @@ def parity_day(day):
                     rec.append((s, k, d, np.concatenate([MK[k], np.asarray(ordf, float)]), pred(s, d, cur, k, t)))
                 return True
             return cadence(keep_fn, ctx[s]['vg'], wi['onset'][s], dcnt, d)
-        J3.sim_joint(W, 'M', 50.0, None, {0: ctx[0]['vg'], 1: ctx[1]['vg']}, decide={(s, d): recorder(s, d) for s in (0, 1) for d in range(NR)},
+        CL.sim_joint(W, 'M', 50.0, None, {0: ctx[0]['vg'], 1: ctx[1]['vg']}, decide={(s, d): recorder(s, d) for s in (0, 1) for d in range(NR)},
                      idle_only=1, mode='none')
         for (s, k, d, x, pr) in rec:
             st['recorded'] += 1; i = RI.get((m, s, k, d))
@@ -281,7 +293,7 @@ def parity_day(day):
         for s in (0, 1):
             W[s].pop('cache', None)
     os.makedirs(OUTD, exist_ok=True)
-    json.dump(st, open(f'{OUTD}/parity_{day}.json', 'w'), indent=1)
+    json.dump(dict(st, **CL.stamp()), open(f'{OUTD}/parity_{day}.json', 'w'), indent=1)
     if st['input_differ'] or st['pred_differ'] or st['lookahead_bad'] or not st['matched'] or st['matched'] < 0.5 * st['key_found']:
         sys.exit(f'ORDER-HARM POLICY v2 INPUT PARITY FAILED on {day}: {st}')
     print(f'parity {day}: {st} in {time.time() - T0:.0f} s', flush=True)
@@ -298,7 +310,7 @@ def eval_day(day):
     grp = np.where(tkf[ix] >= 0, tkf[ix], -1 - ix)
     WSg = pd.Series(TS.ws_groups(LT.how.values, grp), index=LT.index)
     st.update(windows=0, runs=0, viol={v_: 0 for v_ in J3.VIOL}, maxexp={}, over_cap=0, inputs=0, lookahead_checks=0, lookahead_bad=0,
-              theta_M=F_['theta_M'], train=F_['train'], cal=F_['cal'])
+              theta_M=F_['theta_M'], train=F_['train'], cal=F_['cal'], terminal_checks=0, terminal_bad=0)
     cnt = {}; fills = []; inv = []
     for W in P1.window_pairs(D):
         st['windows'] += 1; m = W[0]['m']; n = W[0]['n']
@@ -320,8 +332,10 @@ def eval_day(day):
                     cn = J3.cap_name(mode, ck); c_ = cnt.setdefault((cfg, arm, cn), dict(keep=[0] * NR, pull=[0] * NR, noinput=0))
                     dec, idle = arm_dec(arm, W, ctx, wi, pred, F_, c_)
                     capv = None if ck is None else ck * SIZE
-                    r = J3.sim_joint(W, q, shf, capv, {0: ctx[0]['vg'], 1: ctx[1]['vg']}, decide=dec, idle_only=idle, mode=mode)
+                    r = CL.sim_joint(W, q, shf, capv, {0: ctx[0]['vg'], 1: ctx[1]['vg']}, decide=dec, idle_only=idle, mode=mode)
                     st['runs'] += 1
+                    terminal = CL.portfolio_terminal(r, ctx[0]['tf'], ctx[0]['mff'])
+                    terminal_value_sum = 0.0
                     for v_ in J3.VIOL:
                         st['viol'][v_] += r['stat']['viol'][v_]
                     e = JX.max_exposure(r); mx = max(e[0], e[1])
@@ -329,44 +343,60 @@ def eval_day(day):
                     if capv is not None:
                         st['over_cap'] += int(mx > capv + JX.TOL)
                     inv.append((int(day), cfg, arm, cn, m, r['stat']['maxpos'], r['endpos'], sum(r['stat']['pulls']), sum(r['stat']['skip']),
-                                sum(r['stat']['hard_block']), mx))
+                                sum(r['stat']['hard_block']), mx, terminal['cash'], terminal['position'], terminal['mark'], terminal['pnl'], terminal['time']))
                     for s in (0, 1):
                         c2 = ctx[s]; sg = c2['sg']; tf, mff, tfl = c2['tf'], c2['mff'], c2['tfl']; anc = W[s]['anc']
                         for d in range(NR):
                             for f in r['fills'][(s, d)]:
                                 i, pt, qq, thr_, age, ph = f[0], int(f[1]), f[2], f[3], f[4], f[5]
                                 t = float(anc[i])
-                                if not (W[s]['ws'] <= t < W[s]['ws'] + 61000.0):
-                                    continue
+                                t_exec = t - shf
+                                if not (W[s]['ws'] <= t_exec <= terminal['time']):
+                                    raise ValueError('fill outside the portfolio execution interval')
+                                vend = sg * (terminal['mark'] - pt)
+                                terminal_value_sum += float(qq) * vend / 100.0
                                 d_ = GP.depth_of(tfl, W[s]['P5'], W[s]['opp'], s, t, pt)
                                 v1 = sg * (mff[max(int(np.searchsorted(tf, t + 1000.0, side='right')) - 1, 0)] - pt)
                                 v5 = sg * (mff[max(int(np.searchsorted(tf, t + 5000.0, side='right')) - 1, 0)] - pt)
                                 fills.append((int(day), cfg, arm, cn, s, d, 'WS' if src[s][i] else 'E2', -9 if d_ is None else d_, bool(thr_),
-                                              age < 100.0, ph == 'pend', float(qq), v1, v5, sg * (mid_end - pt), sg * (yup - pt), float(age)))
+                                              age < 100.0, ph == 'pend', float(qq), v1, v5, vend, sg * (yup - pt), float(age),
+                                              sg * (mid_end - pt), int(m), t_exec, terminal['time'], pt))
+                    st['terminal_checks'] += 1
+                    st['terminal_bad'] += int(abs(terminal_value_sum - terminal['pnl']) > 1e-6)
         for s in (0, 1):
             W[s].pop('cache', None)
         if st['windows'] % 24 == 0:
             r2 = K.rss_mib(); print(f'{day}: {st["windows"]} windows, {st["inputs"]} model inputs, {time.time() - T0:.0f} s, rss {r2:.0f} MiB', flush=True)
             if r2 > MEM_CAP_MIB:
                 sys.exit(f'REFUSED: resident memory {r2:.0f} MiB > {MEM_CAP_MIB:.0f} MiB')
-    F = pd.DataFrame(fills, columns=['day', 'cfg', 'arm', 'capk', 'side', 'rung', 'src', 'depth', 'thr', 'young', 'pend', 'q', 'v1', 'v5', 'vend', 'vset', 'age'])
+    F = pd.DataFrame(fills, columns=['day', 'cfg', 'arm', 'capk', 'side', 'rung', 'src', 'depth', 'thr', 'young', 'pend', 'q', 'v1', 'v5', 'vend', 'vset', 'age', 'vend60', 'm', 't_exec', 'terminal_ms', 'pt'])
     R3 = pd.read_parquet(f'{J3.OUTD}/fills_{day}.parquet'); reg_bad = {}
     for cfg in ('M0', 'M50', 'M250'):
         for cn in V3_CAPS:
-            X = F[(F.capk == cn) & (F.arm == 'LDG') & (F.cfg == cfg)].drop(columns=['capk']).reset_index(drop=True)
+            X = F[(F.capk == cn) & (F.arm == 'LDG') & (F.cfg == cfg)].drop(columns=['capk', 'vend', 'm', 't_exec', 'terminal_ms', 'pt']).rename(columns={'vend60': 'vend'}).reset_index(drop=True)
             Y = R3[(R3.capk == cn) & (R3.arm == 'LDG') & (R3.cfg == cfg)].drop(columns=['capk']).reset_index(drop=True)
+            X = X[Y.columns]
             if not FB.same_rows(X, Y):
                 reg_bad[f'LDG {cfg} {cn}'] = (len(X), len(Y))
     st['regression_bad'] = reg_bad
-    if any(st['viol'].values()) or reg_bad or st['over_cap'] or st['lookahead_bad'] or not st['lookahead_checks']:
+    for cfg in ('M0', 'M50', 'M250'):
+        for mode, ck in CAPS:
+            cn = J3.cap_name(mode, ck)
+            a = F[(F.capk == cn) & (F.cfg == cfg) & (F.arm == 'FB25')].drop(columns=['arm']).reset_index(drop=True)
+            b = F[(F.capk == cn) & (F.cfg == cfg) & (F.arm == 'FB25C')].drop(columns=['arm']).reset_index(drop=True)
+            if not FB.same_rows(a, b):
+                reg_bad[f'50ms cadence equivalence {cfg} {cn}'] = (len(a), len(b))
+    if (any(st['viol'].values()) or reg_bad or st['over_cap'] or st['lookahead_bad'] or not st['lookahead_checks']
+            or st['terminal_bad'] or st['terminal_checks'] != st['runs']):
         sys.exit(f'ORDER-HARM POLICY v2 CONTROL FAILED on {day} -> no output: viol {st["viol"]}, regression {reg_bad}, over cap {st["over_cap"]}, '
-                 f'look-ahead {st["lookahead_bad"]} of {st["lookahead_checks"]}')
+                 f'look-ahead {st["lookahead_bad"]} of {st["lookahead_checks"]}; terminal mismatches {st["terminal_bad"]}')
     os.makedirs(OUTD, exist_ok=True)
     F.to_parquet(f'{OUTD}/fills_{day}.parquet', index=False)
-    pd.DataFrame(inv, columns=['day', 'cfg', 'arm', 'capk', 'm', 'maxpos', 'endpos', 'pulls', 'skip', 'hard_block', 'maxexp']
+    pd.DataFrame(inv, columns=['day', 'cfg', 'arm', 'capk', 'm', 'maxpos', 'endpos', 'pulls', 'skip', 'hard_block', 'maxexp',
+                              'terminal_cash', 'terminal_position', 'terminal_mid', 'terminal_pnl', 'terminal_ms']
                  ).to_parquet(f'{OUTD}/inv_{day}.parquet', index=False)
     st['counts'] = {' '.join(k_): v_ for k_, v_ in cnt.items()}
-    json.dump(dict(stat=st, days=len(D['W0']) / 288.0), open(f'{OUTD}/day_{day}.json', 'w'), indent=1, default=float)
+    json.dump(dict(stat=st, days=len(D['W0']) / 288.0, **CL.stamp()), open(f'{OUTD}/day_{day}.json', 'w'), indent=1, default=float)
     print(f'{day}: windows {st["windows"]}, runs {st["runs"]}, model inputs {st["inputs"]}, violations {st["viol"]}, max exposure {st["maxexp"]} '
           f'in {time.time() - T0:.0f} s', flush=True)
 
@@ -375,9 +405,13 @@ def eval_day(day):
 def report():
     stats = {d: json.load(open(f'{OUTD}/day_{d}.json')) for d in TESTS}
     par = {d: json.load(open(f'{OUTD}/parity_{d}.json')) for d in TESTS}
+    for receipt in list(stats.values()) + list(par.values()):
+        CL.require_contract(receipt)
     A = pd.concat([pd.read_parquet(f'{OUTD}/fills_{d}.parquet') for d in TESTS], ignore_index=True)
     I = pd.concat([pd.read_parquet(f'{OUTD}/inv_{d}.parquet') for d in TESTS], ignore_index=True)
-    nbad = int((~np.isfinite(A.v1)).sum()); A = A[np.isfinite(A.v1)]
+    nbad = int((~np.isfinite(A.v1)).sum())
+    if not np.isfinite(A.vend).all() or (A.t_exec > A.terminal_ms).any():
+        raise ValueError('invalid terminal portfolio rows')
     dd = {d: stats[d]['days'] for d in TESTS}; ndays = sum(dd.values())
     asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
     CN = [J3.cap_name(mo, k) for mo, k in CAPS]
@@ -420,7 +454,7 @@ def report():
             tk, tp = sum(a_['keep']), sum(a_['pull'])
             L.append(f'  {arm:<5} {cn:<6}: {tk / max(tk + tp, 1):.3f} | ' + ' '.join(f'{a_["keep"][r_] / max(a_["keep"][r_] + a_["pull"][r_], 1):.2f}'
                                                                                for r_ in range(NR)) + f' | {a_["noinput"]}')
-    L += ['', 'PART 1: $/day: WS 1 s w/o young | E2 1 s w/o young | all trades 1 s w/o young | PORTFOLIO (all trades, marked at 60 s): all ages | '
+    L += ['', 'PART 1: $/day: WS 1 s w/o young | E2 1 s w/o young | all trades 1 s w/o young | PORTFOLIO (all trades, marked after the cancellation tail (60.2 s)): all ages | '
           'w/o young | settlement, all || pulls a day | refused a day | max |position| median / p95 / max sh']
     for cfg in ('M0', 'M50', 'M250'):
         for arm in ARMS:
@@ -449,7 +483,7 @@ def report():
                                              f'{cell("FB25C", c, cn, ("WS", "E2")) - cell("FB25", c, cn, ("WS", "E2")):+7.1f} | '
                                              f'{port("FB25C", c, cn, False) - port("FB25", c, cn, False):+7.1f} | '
                                              f'{port("FB25C", c, cn, True) - port("FB25", c, cn, True):+7.1f}' for c in ('M0', 'M50', 'M250')))
-    L += ['', 'R652 PORTFOLIO-ACCEPT (all trades, marked at 60 s; vs LDG and FB25C x M 0 / 50 / 250 x all ages / w/o young: pooled higher AND >= 4/5 '
+    L += ['', 'R652 PORTFOLIO-ACCEPT (all trades, marked after the cancellation tail (60.2 s); vs LDG and FB25C x M 0 / 50 / 250 x all ages / w/o young: pooled higher AND >= 4/5 '
           'days, all 12 conditions)']
     for a in MODEL_ARMS:
         for cn in CN:
@@ -486,7 +520,7 @@ def report():
     L.append('')
     L.append('READINGS: ' + json.dumps({k_: v_['label'] for k_, v_ in R.items()}))
     os.makedirs(OUTD, exist_ok=True)
-    json.dump(R, open(f'{OUTD}/order_harm_policy_v2.json', 'w'), indent=1, default=float)
+    json.dump(dict(readings=R, **CL.stamp()), open(f'{OUTD}/order_harm_policy_v2.json', 'w'), indent=1, default=float)
     open(f'{OUTD}/order_harm_policy_v2.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
 
 
