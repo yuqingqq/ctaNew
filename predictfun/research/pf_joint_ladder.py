@@ -35,7 +35,11 @@ waiting on a price we hold) with planted errors (each order given the whole leg;
 that must each fail a case; memory self-guard (2 GiB).
 Limits: replay rule M (B1a), inflated volumes (C4), consumed days (C8); the guard ladder, not the frozen v3 (C11); LDG / FB25 decisions are
 unchanged here (the ORDER-HARM policy comes next); settlement marks rest on one binary outcome per window (noisy).
-Usage (run_light, PF_SLOT=claude): pf_joint_ladder.py selftest | eval <day> | report; driver run_joint_ladder.sh
+Usage (run_light, PF_SLOT=claude): pf_joint_ladder.py selftest | eval <day> | report | parity <day>; driver run_joint_ladder.sh
+'parity' is a POST HOC control, added after the first report (06:02Z): R610 checked only the 2% of window-sides where no two of our orders
+interacted. With INDEP = 1 (each order gets the whole leg; a placement never waits on a price we hold - the per-rung lanes' rules) and no cap,
+the joint lane must equal pf_kp_s4.sim_arm per rung on EVERY window-side, arm and clock; any difference voids the joint results. The
+two interaction rules themselves are covered by the synthetic cases. Run on 10-23, 10-31, 11-03.
 """
 import bisect
 import json
@@ -63,6 +67,7 @@ CFGS = [('M', 0.0), ('M', 50.0), ('M', 250.0)]
 AGEB = FB.AGEB
 INF = float('inf'); NAN = float('nan')
 MUT_LEG_ALL = MUT_CAP_SIDE = MUT_CAP_NOLAG = 0            # planted errors (self-test only)
+INDEP = 0                                                 # post hoc control only: each order the whole leg, no price-collision wait
 MEM_CAP_MIB = 2048.0
 
 
@@ -128,7 +133,7 @@ def sim_joint(W, q, shf, cap, aux, decide=None, idle_only=0, size=SIZE, nr=NR):
                         o['ahead'] = float(seg.min())
                     o['ci'] = j
             thr = (p < o['pt']) if s == 0 else (p > o['pt'])
-            lft = full if MUT_LEG_ALL else left
+            lft = full if (MUT_LEG_ALL or INDEP) else left
             if p == o['pt']:
                 use = min(lft, o['ahead']); o['ahead'] -= use; qq = min(lft - use, o['rem'])
             elif thr:
@@ -189,7 +194,7 @@ def sim_joint(W, q, shf, cap, aux, decide=None, idle_only=0, size=SIZE, nr=NR):
                 if cur is None and b >= 0 and not trig and t - S_['lastpull'][d] >= K.REST_COOL:
                     tgt = int(b) if d == 0 else ((int(b) - d) if s == 0 else (int(b) + d))
                     if d == 0 or 1 <= tgt <= 99:
-                        if any(o['pt'] == tgt and o['rem'] > 1e-12 and o['tr'] > t for o in S_['live']):
+                        if not INDEP and any(o['pt'] == tgt and o['rem'] > 1e-12 and o['tr'] > t for o in S_['live']):
                             stat['skip'][s] += 1
                         else:
                             cur = place(s, d, tgt, t)
@@ -458,6 +463,61 @@ def report():
     open(f'{OUTD}/joint_ladder.txt', 'w').write('\n'.join(L) + '\n'); print('\n'.join(L))
 
 
+def parity_day(day):
+    """POST HOC control (header): the joint lane in INDEP mode, no cap, equals the per-rung lanes on every window-side, arm and clock."""
+    global INDEP
+    all_selftests()
+    T0 = time.time(); D = K.load_day(day)
+    PO = pd.read_parquet(f'{PD.OUTD}/pred_{day}.parquet'); POI = PO.groupby(['m', 'side']).indices
+    st = dict(windows=0, checked=0, differ=0)
+    pend = {}
+    INDEP = 1
+    try:
+        for w in K.window_sides(D):
+            pend.setdefault(w['m'], {})[w['side']] = w
+            if len(pend[w['m']]) < 2:
+                continue
+            W = pend.pop(w['m']); st['windows'] += 1; m = W[0]['m']; n = W[0]['n']; ctx = {}
+            for s in (0, 1):
+                w_ = W[s]; tf = w_['tf']; tfl = tf.tolist()
+                Pm = np.full((n, len(PD.JS)), np.nan)
+                if (m, s) in POI:
+                    ii = POI[(m, s)]; Pm[PO.k.values[ii]] = PO[[f'P{j}' for j in PD.JS]].values[ii]
+                vg = (np.asarray(w_['vkl'], float) <= K.GUARD_PULL).tolist()
+                b0, valid, _, _ = QR.runs(tf, w_['P5'], w_['opp'], s)
+                mv2 = np.full(n, np.nan)
+                for k in range(n):
+                    if vg[k]:
+                        jk = int(w_['jk'][k])
+                        if jk >= 0 and valid[jk] and w_['best'][k] >= 0:
+                            mv2[k] = PD.move_ticks(b0, valid, tfl, s, jk, float(w_['tg'][k]), 2000.0)
+                ctx[s] = dict(Pm=Pm, vg=vg, mv2=mv2)
+            for q, shf in CFGS:
+                for arm in ARMS:
+                    dec = None; idle = 0
+                    if arm != 'LDG':
+                        idle = 1
+                        dec = {(s, d): (FB.fb_dec(ctx[s]['vg'], W[s]['best'], s, ctx[s]['Pm'], d, tau=0.25) if arm == 'FB25' else
+                                        FB.fb_dec(ctx[s]['vg'], W[s]['best'], s, ctx[s]['Pm'], d, mv=ctx[s]['mv2'])) for s in (0, 1) for d in range(NR)}
+                    r = sim_joint(W, q, shf, None, {0: ctx[0]['vg'], 1: ctx[1]['vg']}, decide=dec, idle_only=idle)
+                    for s in (0, 1):
+                        st['checked'] += 1; bad = 0
+                        for d in range(NR):
+                            F_, O_, _ = K.sim_arm(W[s], q, shf, 'rest', aux=ctx[s]['vg'], decide=(dec[(s, d)] if dec else None), idle_only=idle,
+                                                  offset=d, size=SIZE)
+                            bad += int(F_ != r['fills'][(s, d)] or O_ != r['orders'][(s, d)])
+                        st['differ'] += int(bad > 0)
+            for s in (0, 1):
+                W[s].pop('cache', None)
+    finally:
+        INDEP = 0
+    os.makedirs(OUTD, exist_ok=True)
+    json.dump(st, open(f'{OUTD}/parity_{day}.json', 'w'), indent=1)
+    if st['differ'] or not st['checked']:
+        sys.exit(f'JOINT-LADDER PARITY CONTROL FAILED on {day}: {st} -> the joint results are void')
+    print(f'parity {day}: {st} in {time.time() - T0:.0f} s', flush=True)
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''
     if cmd == 'selftest':
@@ -466,5 +526,7 @@ if __name__ == '__main__':
         eval_day(sys.argv[2])
     elif cmd == 'report':
         report()
+    elif cmd == 'parity':
+        parity_day(sys.argv[2])
     else:
-        sys.exit('usage: pf_joint_ladder.py selftest | eval <day> | report')
+        sys.exit('usage: pf_joint_ladder.py selftest | eval <day> | report | parity <day>')
