@@ -1,0 +1,21 @@
+test_actual_post_wait_and_keep_cancel_targets (test_entry_value.EntryValueTests.test_actual_post_wait_and_keep_cancel_targets) ... ok
+test_feature_future_invariance_and_remaining_quantity_positive_control (test_entry_value.EntryValueTests.test_feature_future_invariance_and_remaining_quantity_positive_control) ... ok
+test_fit_uses_only_earlier_training_actions (test_entry_value.EntryValueTests.test_fit_uses_only_earlier_training_actions) ... ok
+test_full_replay_keeps_flat_windows_and_reconciles (test_entry_value.EntryValueTests.test_full_replay_keeps_flat_windows_and_reconciles) ... ok
+test_known_capacity_prevents_large_ladder_overbooking (test_entry_value.EntryValueTests.test_known_capacity_prevents_large_ladder_overbooking) ... ok
+test_legacy_default_parity_and_existing_engine_mutants (test_entry_value.EntryValueTests.test_legacy_default_parity_and_existing_engine_mutants) ... ok
+test_local_null_detects_oracle_and_anti_oracle (test_entry_value.EntryValueTests.test_local_null_detects_oracle_and_anti_oracle) ... ok
+test_metric_can_enter_during_guard_without_waiting_for_timer (test_entry_value.EntryValueTests.test_metric_can_enter_during_guard_without_waiting_for_timer) ... ok
+test_model_policy_heads_and_invalid_forecast (test_entry_value.EntryValueTests.test_model_policy_heads_and_invalid_forecast) ... ok
+test_negative_score_does_not_expire_into_a_retry (test_entry_value.EntryValueTests.test_negative_score_does_not_expire_into_a_retry) ... ok
+test_no_fill_rows_and_generation_deduplication (test_entry_value.EntryValueTests.test_no_fill_rows_and_generation_deduplication) ... ok
+test_partial_fills_preserve_generation_and_client_remaining (test_entry_value.EntryValueTests.test_partial_fills_preserve_generation_and_client_remaining) ... ok
+test_pending_cancel_reserves_price_and_capacity (test_entry_value.EntryValueTests.test_pending_cancel_reserves_price_and_capacity) ... ok
+test_refuses_legacy_receipts_partial_rows_and_protected_dates (test_entry_value.EntryValueTests.test_refuses_legacy_receipts_partial_rows_and_protected_dates) ... ok
+test_report_rejects_relative_losses_and_mismatched_windows (test_entry_value.EntryValueTests.test_report_rejects_relative_losses_and_mismatched_windows) ... ok
+test_unseen_fill_and_future_refusal_cannot_change_prefix (test_entry_value.EntryValueTests.test_unseen_fill_and_future_refusal_cannot_change_prefix) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 4.706s
+
+OK
