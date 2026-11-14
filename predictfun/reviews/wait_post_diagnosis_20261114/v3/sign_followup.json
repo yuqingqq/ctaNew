@@ -1,0 +1,216 @@
+{
+  "asof": "2026-11-14T16:26:50.436761+00:00",
+  "measurements_asof": "2026-11-14T16:21:11Z",
+  "status": "complete_descriptive_followup",
+  "raw_report_sha256": "54037e7ca5b39c38e5c7ad2b90d401ad11d6135ac4d925e63bfb25ba8ef93dae",
+  "source_sha256": "3bcaaa1a63d3b82610b2224dfe129fb495d7645380052a167a4d9a2b5936fc2d",
+  "n_complete_days": 5,
+  "n_probes": 9922,
+  "cohorts": [
+    {
+      "side": 0,
+      "group": "negative_forecast",
+      "n": 3635,
+      "predicted": -5.013263173650991,
+      "actual": -1.832098888545307
+    },
+    {
+      "side": 0,
+      "group": "nonnegative_forecast",
+      "n": 1382,
+      "predicted": 2.8829670079747034,
+      "actual": -1.2879837624837525
+    },
+    {
+      "side": 1,
+      "group": "negative_forecast",
+      "n": 3502,
+      "predicted": -6.471869633917905,
+      "actual": -3.0475818003938286
+    },
+    {
+      "side": 1,
+      "group": "nonnegative_forecast",
+      "n": 1403,
+      "predicted": 3.42025455346359,
+      "actual": -3.387156442889481
+    }
+  ],
+  "rank_correlations": [
+    {
+      "side": 0,
+      "head": "post",
+      "days": [
+        {
+          "day": "20261027",
+          "n": 999,
+          "rank_ic": 0.082027707794631
+        },
+        {
+          "day": "20261031",
+          "n": 981,
+          "rank_ic": 0.02147242237604291
+        },
+        {
+          "day": "20261101",
+          "n": 985,
+          "rank_ic": 0.009414832124971012
+        },
+        {
+          "day": "20261102",
+          "n": 1065,
+          "rank_ic": 0.06310960421946689
+        },
+        {
+          "day": "20261103",
+          "n": 987,
+          "rank_ic": -0.016365126358918944
+        }
+      ],
+      "negative_days": 1
+    },
+    {
+      "side": 0,
+      "head": "delta",
+      "days": [
+        {
+          "day": "20261027",
+          "n": 999,
+          "rank_ic": 0.006431275974003435
+        },
+        {
+          "day": "20261031",
+          "n": 981,
+          "rank_ic": 0.01889900482732889
+        },
+        {
+          "day": "20261101",
+          "n": 985,
+          "rank_ic": -0.03415899569215392
+        },
+        {
+          "day": "20261102",
+          "n": 1065,
+          "rank_ic": -0.019190428521850048
+        },
+        {
+          "day": "20261103",
+          "n": 987,
+          "rank_ic": -0.0004993489768904611
+        }
+      ],
+      "negative_days": 3
+    },
+    {
+      "side": 1,
+      "head": "post",
+      "days": [
+        {
+          "day": "20261027",
+          "n": 993,
+          "rank_ic": 0.050873516555629154
+        },
+        {
+          "day": "20261031",
+          "n": 950,
+          "rank_ic": 0.020766997857527537
+        },
+        {
+          "day": "20261101",
+          "n": 965,
+          "rank_ic": -0.005197700077949053
+        },
+        {
+          "day": "20261102",
+          "n": 991,
+          "rank_ic": -0.00955446421452696
+        },
+        {
+          "day": "20261103",
+          "n": 1006,
+          "rank_ic": -0.013444257930455271
+        }
+      ],
+      "negative_days": 3
+    },
+    {
+      "side": 1,
+      "head": "delta",
+      "days": [
+        {
+          "day": "20261027",
+          "n": 993,
+          "rank_ic": 0.05504675108026888
+        },
+        {
+          "day": "20261031",
+          "n": 950,
+          "rank_ic": 0.030268999686604972
+        },
+        {
+          "day": "20261101",
+          "n": 965,
+          "rank_ic": 0.0028332997870242765
+        },
+        {
+          "day": "20261102",
+          "n": 991,
+          "rank_ic": 0.04904579954028382
+        },
+        {
+          "day": "20261103",
+          "n": 1006,
+          "rank_ic": 0.02075052778499188
+        }
+      ],
+      "negative_days": 0
+    }
+  ],
+  "sign_controls": {
+    "source_sha256": "6b478816565ceb0f196b0994c14d32fdc937bc16a81a113ea3b8d087c7297010",
+    "cases": [
+      {
+        "side": 0,
+        "fill_price": 50.0,
+        "mark": 55,
+        "quantity": 30.0,
+        "pnl": 1.5,
+        "expected": 1.5
+      },
+      {
+        "side": 0,
+        "fill_price": 50.0,
+        "mark": 45,
+        "quantity": 30.0,
+        "pnl": -1.5,
+        "expected": -1.5
+      },
+      {
+        "side": 1,
+        "fill_price": 50.0,
+        "mark": 45,
+        "quantity": 30.0,
+        "pnl": 1.5,
+        "expected": 1.5
+      },
+      {
+        "side": 1,
+        "fill_price": 50.0,
+        "mark": 55,
+        "quantity": 30.0,
+        "pnl": -1.5,
+        "expected": -1.5
+      }
+    ],
+    "wrong_position_refusals": 4
+  },
+  "forward_validation": false,
+  "new_candidates": 0,
+  "interpretation": "No consistent inverse ranking. Both forecast-sign cohorts lose on average. Positive selected forecasts can reflect optimistic estimation errors when true values are mostly negative. Training fit and later failure support overfitting; noisy targets, missing state and state shift remain plausible contributors, not isolated causal effects.",
+  "limitations": [
+    "Forecast-sign cohorts include all labeled probes; they differ from the selected POST subset, which also requires POST >= WAIT.",
+    "Nonnegative bin includes a zero forecast; no row-level rethresholding is performed.",
+    "No inverted trading policy was fitted or evaluated, and inversion is not established as a remedy.",
+    "Four synthetic accounting sign cases do not exclude every possible feature, label or simulator bug."
+  ]
+}
