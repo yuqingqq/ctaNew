@@ -5,7 +5,7 @@ set -u
 cd /home/yuqing/ctaNew
 OUT=data/predict_fun/research/order_harm_policy_v2_client50_20261114; mkdir -p $OUT/logs
 TESTS="20261027 20261031 20261101 20261102 20261103"
-for d in $TESTS; do [ -f data/predict_fun/research/order_harm_v3_20261114/fit_$d.json ] || { echo "REFUSED: ORDER-HARM v3 fold $d missing"; exit 1; }; done
+for d in $TESTS; do [ -f data/predict_fun/research/order_harm_v3_client50_20261114/fit_$d.json ] || { echo "REFUSED: ORDER-HARM v3 (client50) fold $d missing"; exit 1; }; done
 job() { local tag=$1; shift; local n=0
   while :; do echo "$(date -u +%H:%M:%SZ) start $tag" >> $OUT/logs/driver.log
     if env PF_SLOT=claude predictfun/research/run_light.sh $tag -- "$@" > $OUT/logs/$tag.log 2>&1; then break; fi

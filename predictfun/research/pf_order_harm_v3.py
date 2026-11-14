@@ -29,8 +29,13 @@ before T_e are CENSORED (status).
  A_j  = Q(keep now, decide again in 50 ms) - Q(pull now) = R_j + E[max(0, A_{j+1})]  (last decision: R_j - P_e; before a forced
         pull: R_j). The option to cancel later is the max(0, .) term; queue value enters through R's tail (the kept order's place vs the
         re-entered order behind the queue).
-FIT (fitted Q iteration, LightGBM, PULL-DEPTH's pinned parameters, regression clipped +-10 c/sh): iteration 0 target T0 = R_j (- P_e if last);
-iteration n target = T0 + max(0, A_hat_{n-1}(s_{j+1})) with A_hat_{n-1} OUT OF FOLD (a model not trained on that day); 3 iterations.
+FIT (POLICY ITERATION on realized continuation returns, LightGBM, PULL-DEPTH's pinned parameters, regression clipped +-10 c/sh; review
+2026-11-14 10:2xZ): one-step fitted-Q backups (target T0 + max(0, A_hat(s_{j+1}))) move the end-of-episode value back one decision per
+iteration, so with 3 iterations only the last 3 decisions of an episode see it - 150 ms at the 50 ms cadence (synthetic 40-step episode worth
++1 to keep: the first decision read "pull"). Instead, with T0_j = R_j (- P_e if last), the advantage of keeping now and then following policy
+pi is the sum of T0 from j until pi next pulls (or the episode ends): G_j = T0_j + [pi keeps at s_{j+1}] G_{j+1}. Iteration 0: pi = keep-all
+(G = keep through the episode and tail minus pull now); iteration n: pi keeps at s iff A_hat_{n-1}(s) > 0, with A_hat_{n-1} OUT OF FOLD (a model
+not trained on that day); 3 iterations; the share of decisions that change between the last two iterations is printed (convergence).
 CHRONOLOGICAL FOLDS on the 9 consumed days (C8; development only): for test day D[i], i = 4..8 (10-27, 10-31, 11-01, 11-02, 11-03): train on
 D[0..i-2], calibrate on D[i-1], test on D[i]; out-of-fold predictions inside the training block by leaving one training day out. FB25's
 PULL-DEPTH model is refit the same way (train D[0..i-2]; its rows, features and parameters unchanged). Calibration on D[i-1]: the share of
@@ -39,21 +44,23 @@ Residual (stated): the guard values and FRONT-PULL's P (a PULL-DEPTH input) come
 frozen forward test on untouched days removes them.
 INPUTS: exactly ORDER-HARM v2's FEAT (STOP-DEPTH's step inputs, INFLUENCE's six fair-price inputs, the order's nine known-frame inputs).
 Readings DECLARED BEFORE THE FIRST RUN (printed by report; the economic test is pf_order_harm_policy_v2):
- R660 OPTION (printed): the mean option term max(0, A_hat(s_{j+1})) by rung, and the share of test-day decisions whose sign (keep if
-      A_hat > 0) differs between iteration 0 (myopic: keep one step, then pull) and the final iteration.
+ R660 OPTION (printed): the mean continuation term (G_j - T0_j under the final policy) by rung, the share of test-day decisions whose sign
+      (keep if A_hat > 0) differs between iteration 0 (keep-all continuation) and the final iteration, and between the last two iterations.
  R661 SKILL: Spearman IC of the final A_hat with a REALIZED, model-free advantage - keeping the order through the rest of the episode and its
       tail minus pulling now (KAV - P_e) - on each test day: > 0 on >= 4 of 5 test days and pooled >= 0.05 -> SKILL; else NO-SKILL. (The
-      fitted-Q target itself contains the model's next-state prediction, so it is never used to score the model.) IC with the myopic realized
+      policy-iteration target contains the model's own decisions, so it is never used to score the model.) IC with the one-step realized
       target (R_j, last: R - P_e) printed.
  Printed: the label with a 5 s tail beside the 2 s one (episodes not censored at 5 s) - how much of keeping's value comes after the episode.
 Controls (any failure -> no output): synthetic cases (keep-all lane semantics, re-entry, decision cadence anchored at the onset, client-known
-resting, R's partition of (t_0 + 22, T_e], option-target assembly) with planted errors (slow 250 ms cadence; venue-state resting; intervals
-without the cancel latency; min instead of max); v2's selftests (forks, causal queue inputs); on real data: the keep-all lane with the recording
+resting, R's partition of (t_0 + 22, T_e], the continuation target on a 40-step episode) with planted errors (slow 250 ms cadence; venue-state
+resting; intervals without the cancel latency; the one-step backup); v2's selftests (forks, causal queue inputs); on real data: the keep-all
+lane with the recording
 callback equals it without, on every window-side and rung; P_e from the episode's last decision equals P_e from its first on every 20th
 multi-decision episode; the R partition on every episode; the no-look-ahead falsifier (frames not yet known perturbed, order inputs identical)
-on every 20th row; no row past the lane's end; no test or calibration day in a fit; memory self-guard (2 GiB).
+on every 20th row; no row past the lane's end; no test or calibration day in a fit; memory self-guard (2 GiB): label rows are written in
+batches with the inputs as float32 (the model's precision), training rows are sampled and predictions made batch by batch.
 Limits: replay rule M (B1a); rungs alone (the joint replay couples them); the tail assumes keep-all after the episode (a later episode inside
-the tail is not decided); queue value beyond T_e not counted; three fitted-Q iterations are an approximation; consumed days.
+the tail is not decided); queue value beyond T_e not counted; three policy-iteration steps (convergence printed); consumed days.
 Usage (run_light, PF_SLOT=claude): pf_order_harm_v3.py selftest | rows <day> | fit <test day> | report; driver run_order_harm_v3.sh
 """
 import bisect
@@ -87,7 +94,9 @@ FOLDS = {DAYS9[i]: (tuple(DAYS9[:i - 1]), DAYS9[i - 1]) for i in range(4, 9)}   
 CHECK_EVERY = 20
 MEM_CAP_MIB = 2048.0
 INF = float('inf'); NAN = float('nan')
-MUT_SLOW_CADENCE = MUT_VENUE_REST = MUT_NO_LAT = MUT_OPTION_MIN = 0   # planted errors (selftest only)
+MUT_SLOW_CADENCE = MUT_VENUE_REST = MUT_NO_LAT = MUT_BOOTSTRAP = 0   # planted errors (selftest only)
+INT_KEYS = ('day', 'm', 'side', 'k', 'rung_i', 'ep', 'j', 'J', 'last', 'next_ok')
+BATCH = 200000                                                        # rows per parquet batch (memory)
 
 
 # ---------------------------------------------------------------- building blocks
@@ -145,10 +154,18 @@ def dp_fields(ts, t_end, fills):
     return R
 
 
-def option_targets(T0, last, next_ok, a_next):
-    """Fitted-Q target: T0 + max(0, A_hat(next state)) where the next decision exists (not last, no forced pull)."""
-    opt = np.minimum(0.0, a_next) if MUT_OPTION_MIN else np.maximum(0.0, a_next)
-    return T0 + np.where((~last) & next_ok & np.isfinite(a_next), opt, 0.0)
+def continuation_targets(T0, nxt, keep_next):
+    """Policy-iteration target: G_j = T0_j + [the policy keeps at the next decision] G_{j+1}. Rows of one episode are consecutive with j rising;
+    nxt[i] = the row of the next decision of the same episode (-1: none, the episode's last decision or a forced pull next); keep_next[i] = the
+    policy's decision at that row (True = keep). Keep-all gives the realized keep-through-the-episode-and-tail minus pull-now advantage."""
+    G = np.array(T0, dtype=np.float64)
+    if MUT_BOOTSTRAP:                                     # planted error: no continuation (one decision only)
+        return G
+    for i in range(len(G) - 1, -1, -1):
+        j = nxt[i]
+        if j >= 0 and keep_next[i]:
+            G[i] += G[j]
+    return G
 
 
 # ---------------------------------------------------------------- self-tests
@@ -194,16 +211,50 @@ def selftest():
     R = dp_fields([200.0, 450.0, 700.0], 2750.0, fills)
     if R != [-30.0, -10.0, 15.0] or abs(sum(R) - sum(v for t, v in fills if 222.0 < t <= 2750.0)) > 1e-12:
         bad.append(f'R partition {R}')
-    # (5) the option target
-    T = option_targets(np.array([1.0, -2.0, 0.5]), np.array([False, False, True]), np.array([True, True, False]), np.array([0.7, -0.3, 5.0]))
-    if list(T) != [1.7, -2.0, 0.5]:
-        bad.append(f'option target {list(T)}')
+    # (5) the continuation target: a 40-decision episode (2 s at 50 ms) worth +1 to keep through, all of it at the end
+    J = 40; T0 = np.zeros(J); T0[-1] = 1.0; nxt = np.r_[np.arange(1, J), -1]
+    G = continuation_targets(T0, nxt, np.ones(J, bool))
+    if not np.allclose(G, 1.0):
+        bad.append(f'keep-all continuation reaches {int((G > 0).sum())} of {J} decisions')
+    kn = np.ones(J, bool); kn[19] = False                   # the policy pulls at decision 20: the earlier decisions get no continuation past it
+    G = continuation_targets(T0, nxt, kn)
+    if not (np.allclose(G[:20], 0.0) and np.allclose(G[20:], 1.0)):
+        bad.append('continuation not cut at the policy pull')
+    G = continuation_targets(np.array([1.0, 2.0, 4.0, 8.0]), np.array([1, -1, 3, -1]), np.ones(4, bool))
+    if list(G) != [3.0, 2.0, 12.0, 8.0]:
+        bad.append(f'continuation crossed an episode boundary {list(G)}')
+    # (6) batched label I/O: rows written in two batches come back in order, inputs float32 in FEAT order, episode links intact, read in batches of 3
+    import tempfile
+    global OUTD
+    old = OUTD
+    with tempfile.TemporaryDirectory() as tmp:
+        OUTD = tmp
+        try:
+            nr = 7; A = np.zeros((nr, len(KEYS) + len(FEAT)))
+            for c, v in (('m', 5), ('rung_i', [0, 0, 0, 1, 1, 2, 2]), ('ep', [3, 3, 3, 3, 3, 9, 9]), ('j', [0, 1, 2, 0, 1, 0, 1]),
+                         ('next_ok', [1, 1, 0, 1, 0, 1, 0]), ('T0', np.arange(nr))):
+                A[:, KEYS.index(c)] = v
+            A[:, len(KEYS):] = np.arange(nr)[:, None] * 1000.0 + np.arange(len(FEAT))[None, :] + 0.25
+            wr = RowWriter(f'{tmp}/rows_x.parquet'); wr.write(A[:3]); wr.write(A[3:]); wr.close()
+            with open(f'{tmp}/rows_x.json', 'w') as fh:
+                json.dump(dict(stat={}, **CL.stamp()), fh)
+            kd = load_keys('x')
+            if list(kd['nxt']) != [1, 2, -1, 4, -1, 6, -1] or list(kd['T0']) != list(range(nr)) or wr.rows != nr:
+                bad.append(f'batched label keys {list(kd["nxt"])}')
+            got = feats_rows('x', np.array([1, 3, 5]), batch=3)
+            if not np.array_equal(got, A[[1, 3, 5], len(KEYS):].astype(np.float32)) or got.dtype != np.float32:
+                bad.append('batched label inputs (order / precision)')
+            pr = predict_day(type('M', (), {'predict': staticmethod(lambda X: X[:, 0].astype(np.float64))})(), 'x', batch=3)
+            if not np.array_equal(pr, A[:, len(KEYS)].astype(np.float32).astype(np.float64)):
+                bad.append('batched predictions out of order')
+        finally:
+            OUTD = old
     return bad
 
 
 def mutation_check():
     out = {}
-    for nm in ('MUT_SLOW_CADENCE', 'MUT_VENUE_REST', 'MUT_NO_LAT', 'MUT_OPTION_MIN'):
+    for nm in ('MUT_SLOW_CADENCE', 'MUT_VENUE_REST', 'MUT_NO_LAT', 'MUT_BOOTSTRAP'):
         globals()[nm] = 1
         try:
             out[nm] = bool(selftest())
@@ -222,6 +273,25 @@ def all_selftests():
 
 
 # ---------------------------------------------------------------- rows (one day)
+class RowWriter:
+    """Label rows to parquet batch by batch: keys int64 / float64, the 97 model inputs float32 (the precision the model is fit and applied in)."""
+    def __init__(self, path):
+        import pyarrow as pa
+        import pyarrow.parquet as pq
+        self.pa = pa
+        self.schema = pa.schema([(c, pa.int64() if c in INT_KEYS else pa.float64()) for c in KEYS] + [(c, pa.float32()) for c in FEAT])
+        self.w = pq.ParquetWriter(path, self.schema); self.rows = 0
+
+    def write(self, A):
+        pa = self.pa; nk = len(KEYS)
+        cols = [pa.array(A[:, i].astype(np.int64) if c in INT_KEYS else A[:, i]) for i, c in enumerate(KEYS)]
+        cols += [pa.array(A[:, nk + i].astype(np.float32)) for i in range(len(FEAT))]
+        self.w.write_table(pa.Table.from_arrays(cols, schema=self.schema)); self.rows += len(A)
+
+    def close(self):
+        self.w.close()
+
+
 def rows_day(day):
     all_selftests()
     T0_ = time.time(); D = K.load_day(day); q, shf = QCFG
@@ -234,7 +304,8 @@ def rows_day(day):
     del P
     st = dict(window_sides=0, episodes=0, rung_episodes=0, censored=0, censored5=0, no_input_at_onset=0, two_resting=0, rows=0, forced_pull=0,
               multi=0, recorder_differ=0, pconst_checks=0, pconst_differ=0, partition_bad=0, lookahead_checks=0, lookahead_bad=0)
-    out = []
+    os.makedirs(OUTD, exist_ok=True)                     # memory: rows go to a partial parquet file in batches (inputs as float32)
+    part = f'{OUTD}/rows_{day}.parquet.partial'; writer = RowWriter(part); buf = []; nbuf = 0
     for w in K.window_sides(D):
         st['window_sides'] += 1; m, side, sg, n = int(w['m']), int(w['side']), w['sg'], w['n']
         if not n:
@@ -322,52 +393,79 @@ def rows_day(day):
                                kav5[j] / SIZE] + list(MK[k]) + ordf)
                     st['rows'] += 1
         if rw:
-            out.append(np.asarray(rw, dtype=np.float64))
+            buf.append(np.asarray(rw, dtype=np.float64)); nbuf += len(rw)
+            if nbuf >= BATCH:
+                writer.write(np.vstack(buf)); buf = []; nbuf = 0
         w.pop('cache', None)
         if st['window_sides'] % 96 == 0:
             r2 = K.rss_mib(); print(f'{day}: {st["window_sides"]} window-sides, {st["rows"]} rows, {time.time() - T0_:.0f} s, rss {r2:.0f} MiB', flush=True)
             if r2 > MEM_CAP_MIB:
                 sys.exit(f'REFUSED: resident memory {r2:.0f} MiB > {MEM_CAP_MIB:.0f} MiB')
+    if buf:
+        writer.write(np.vstack(buf)); buf = []
+    writer.close()
     if (st['recorder_differ'] or st['pconst_differ'] or st['partition_bad'] or st['lookahead_bad'] or not st['lookahead_checks']
-            or not st['pconst_checks']):
-        sys.exit(f'ORDER-HARM v3 CONTROL FAILED on {day} -> no output: {st}')
-    os.makedirs(OUTD, exist_ok=True)
-    cols = KEYS + FEAT
-    R_ = pd.DataFrame(np.vstack(out) if out else np.zeros((0, len(cols))), columns=cols)
-    R_ = R_.astype({c: 'int64' for c in ('day', 'm', 'side', 'k', 'rung_i', 'ep', 'j', 'J', 'last', 'next_ok')})
-    R_.to_parquet(f'{OUTD}/rows_{day}.parquet', index=False)
+            or not st['pconst_checks'] or writer.rows != st['rows']):
+        os.remove(part)
+        sys.exit(f'ORDER-HARM v3 CONTROL FAILED on {day} -> no output: {st}, rows written {writer.rows}')
+    os.replace(part, f'{OUTD}/rows_{day}.parquet')
     with open(f'{OUTD}/rows_{day}.json', 'w') as handle:
         json.dump(dict(stat=st, **CL.stamp()), handle)
     print(f'{day}: {st} in {time.time() - T0_:.0f} s', flush=True)
 
 
-# ---------------------------------------------------------------- chronological fitted-Q iteration (one test day)
-def load_keys(day):
-    CL.require_contract(json.load(open(f'{OUTD}/rows_{day}.json')))
-    R = pd.read_parquet(f'{OUTD}/rows_{day}.parquet', columns=['m', 'side', 'k', 'rung_i', 'ep', 'j', 'last', 'next_ok', 'T0', 'R', 'Pe', 'KAV',
-                                                             'depth_now'])
-    g = R.m.values * 1000 + R.side.values * 100 + R.rung_i.values
+# ---------------------------------------------------------------- chronological policy iteration (one test day)
+def load_keys(day, full=False):
+    """Compact keys of a day's rows: the next-decision link and T0 (training days); plus the columns calibration and diagnostics need (full)."""
+    import pyarrow.parquet as pq
+    with open(f'{OUTD}/rows_{day}.json') as fh:
+        CL.require_contract(json.load(fh))
+    cols = ['m', 'side', 'rung_i', 'ep', 'j', 'next_ok', 'T0'] + (['k', 'KAV', 'Pe', 'depth_now'] if full else [])
+    R = pq.read_table(f'{OUTD}/rows_{day}.parquet', columns=cols).to_pandas()
+    g = R.m.values.astype(np.int64) * 1000 + R.side.values.astype(np.int64) * 100 + R.rung_i.values.astype(np.int64)
     same = np.r_[(g[1:] == g[:-1]) & (R.ep.values[1:] == R.ep.values[:-1]) & (R.j.values[1:] == R.j.values[:-1] + 1), False]
     nxt = np.where(same & (R.next_ok.values == 1), np.arange(len(R)) + 1, -1)
-    return dict(df=R, nxt=nxt, last=R['last'].values.astype(bool), nok=(R.next_ok.values == 1), T0=R.T0.values.astype(float))
+    kd = dict(nxt=nxt, T0=R.T0.values.astype(np.float64), n=len(R))
+    if full:
+        kd['df'] = R
+    return kd
 
 
-def feats(day, idx=None):
-    X = pd.read_parquet(f'{OUTD}/rows_{day}.parquet', columns=FEAT).to_numpy(dtype=np.float32)
-    return X if idx is None else X[idx]
+def feat_batches(day, batch=None):
+    """The day's 97 inputs as float32 arrays in FEAT order, batch by batch (memory)."""
+    import pyarrow.parquet as pq
+    for b in pq.ParquetFile(f'{OUTD}/rows_{day}.parquet').iter_batches(batch_size=batch or BATCH, columns=FEAT):
+        names = b.schema.names
+        yield np.column_stack([b.column(names.index(c)).to_numpy(zero_copy_only=False) for c in FEAT]).astype(np.float32)
 
 
-def targets_for(kd, a_oof):
-    a_next = np.where(kd['nxt'] >= 0, a_oof[np.clip(kd['nxt'], 0, None)], np.nan) if a_oof is not None else np.full(len(kd['T0']), np.nan)
-    return option_targets(kd['T0'], kd['last'], kd['nok'], a_next)
+def feats_rows(day, idx, batch=None):
+    """float32 inputs of the rows idx (sorted), read batch by batch."""
+    out = []; lo = 0
+    for X in feat_batches(day, batch):
+        hi = lo + len(X); sel = idx[(idx >= lo) & (idx < hi)] - lo
+        if len(sel):
+            out.append(X[sel])
+        lo = hi
+    return np.vstack(out) if out else np.zeros((0, len(FEAT)), np.float32)
+
+
+def predict_day(b, day, batch=None):
+    return np.concatenate([b.predict(X) for X in feat_batches(day, batch)] or [np.zeros(0)])
+
+
+def policy_keep_next(kd, a):
+    """The policy's decision at each row's next decision: keep-all (a is None) or keep iff A_hat > 0 there."""
+    nxt = kd['nxt']
+    return (nxt >= 0) if a is None else ((nxt >= 0) & (a[np.clip(nxt, 0, None)] > 0))
 
 
 def fit_model(days, KD, TG, seed):
     import lightgbm as lgb
     per = SUB_N // max(len(days), 1); Xs = []; ys = []
     for x in days:
-        nr = len(KD[x]['T0']); idx = np.sort(np.random.default_rng(seed * 31 + int(x)).choice(nr, min(nr, per), replace=False))
-        Xs.append(feats(x, idx)); ys.append(np.clip(TG[x][idx], -CLIP, CLIP))
+        nr = KD[x]['n']; idx = np.sort(np.random.default_rng(seed * 31 + int(x)).choice(nr, min(nr, per), replace=False))
+        Xs.append(feats_rows(x, idx)); ys.append(np.clip(TG[x][idx], -CLIP, CLIP))
     preg = dict(PD.LGB_PARAMS, objective='regression')
     return lgb.train(preg, lgb.Dataset(np.vstack(Xs), np.concatenate(ys), feature_name=FEAT), PD.N_ROUNDS)
 
@@ -379,23 +477,25 @@ def fit_fold(test):
     train, cal = FOLDS[test]
     if test in train or cal in train or test == cal or any(DAYS9.index(x) >= DAYS9.index(cal) for x in train):
         sys.exit(f'REFUSED: fold {test} not chronological: train {train}, calibration {cal}')
-    KD = {x: load_keys(x) for x in train + (cal, test)}
-    oof = {x: None for x in train}; preds = {cal: [], test: []}; info = dict(train=list(train), cal=cal, test=test, iters=[])
+    KD = {x: load_keys(x) for x in train}; KC = {y: load_keys(y, full=True) for y in (cal, test)}
+    oof = None; preds = {cal: [], test: []}; info = dict(train=list(train), cal=cal, test=test, iters=[])
     os.makedirs(f'{OUTD}/models', exist_ok=True)
     for it in range(N_ITER):
-        TG = {x: targets_for(KD[x], oof[x]) for x in train}
+        TG = {x: continuation_targets(KD[x]['T0'], KD[x]['nxt'], policy_keep_next(KD[x], None if oof is None else oof[x])) for x in train}
         new = {}
         for x in train:                                    # out of fold inside the training block (leave one training day out)
             b = fit_model([y for y in train if y != x], KD, TG, seed=int(test) % 1000 * 10 + it)
-            new[x] = b.predict(feats(x))
+            new[x] = predict_day(b, x)
         ball = fit_model(list(train), KD, TG, seed=int(test) % 1000 * 10 + it + 5)
         for y in (cal, test):
-            preds[y].append(ball.predict(feats(y)))
+            preds[y].append(predict_day(ball, y))
         if it == N_ITER - 1:
             ball.save_model(f'{OUTD}/models/a_{test}.txt')
+        flip = None if oof is None else float(np.mean(np.concatenate([(new[x] > 0) != (oof[x] > 0) for x in train])))
         oof = new
-        info['iters'].append(dict(it=it, train_target_mean=float(np.mean(np.concatenate([TG[x] for x in train]))),
-                                  oof_keep_share=float(np.mean(np.concatenate([oof[x] > 0 for x in train])))))
+        info['iters'].append(dict(it=it, policy='keep-all' if it == 0 else 'A_hat > 0 (out of fold)',
+                                  train_target_mean=float(np.mean(np.concatenate([TG[x] for x in train]))),
+                                  oof_keep_share=float(np.mean(np.concatenate([oof[x] > 0 for x in train]))), oof_flip_vs_previous=flip))
     # PULL-DEPTH refit on the same training days (FB25 / FB25-C's model in the replay)
     pdc = ['day', 'm', 'side', 'k', 'mv1000'] + PD.FEAT; parts = []; per = SUB_N // len(train)
     for x in train:                                       # memory: each training day subsampled as it is read
@@ -416,35 +516,38 @@ def fit_fold(test):
         for j, b in zip(PD.JS, pdm):
             p = np.minimum(b.predict(X), prev); prev = p; out[f'P{j}'] = p
         pd.DataFrame(out).to_parquet(f'{OUTD}/pd_{test}_{y}.parquet', index=False)
+        del PY, X
     # calibration on the calibration day: FB25's keep share on its decision rows -> theta_M
-    C = KD[cal]['df'][['m', 'side', 'k', 'rung_i', 'depth_now']].merge(pd.read_parquet(f'{OUTD}/pd_{test}_{cal}.parquet'), on=['m', 'side', 'k'],
+    C = KC[cal]['df'][['m', 'side', 'k', 'rung_i', 'depth_now']].merge(pd.read_parquet(f'{OUTD}/pd_{test}_{cal}.parquet'), on=['m', 'side', 'k'],
                                                                        how='left', validate='many_to_one')
-    dn = C.depth_now.values; off = C.rung_i.values
+    dn = C.depth_now.values.astype(np.float64); off = C.rung_i.values
     jx = np.clip(np.where(np.isfinite(dn), dn, -1) + 1, 1, len(PD.JS)).astype(int)
     pj = C[[f'P{j}' for j in PD.JS]].values[np.arange(len(C)), jx - 1]
     keep_fb = ~((~np.isfinite(dn)) | (dn < 0) | ((dn == 0) & (off == 0))) & np.isfinite(pj) & (pj < 0.25)
     a_cal = preds[cal][-1]; s_fb = float(keep_fb.mean())
-    thr = dict(**CL.stamp(), test=test, cal=cal, train=list(train), s_FB_cal=s_fb, theta_M=float(np.quantile(a_cal, 1.0 - s_fb)), keep_OHQ0_cal=float((a_cal > 0).mean()))
+    thr = dict(**CL.stamp(), test=test, cal=cal, train=list(train), s_FB_cal=s_fb, theta_M=float(np.quantile(a_cal, 1.0 - s_fb)),
+               keep_OHQ0_cal=float((a_cal > 0).mean()))
     json.dump(thr, open(f'{OUTD}/thresholds_{test}.json', 'w'), indent=1)
     # diagnostics on the test day (R660 / R661)
-    kt = KD[test]; a_fin = preds[test][-1]; a0 = preds[test][0]
-    a_next = np.where(kt['nxt'] >= 0, a_fin[np.clip(kt['nxt'], 0, None)], np.nan)
-    tgt = option_targets(kt['T0'], kt['last'], kt['nok'], a_next)
-    real = (kt['df'].KAV - kt['df'].Pe).values
-    info.update(ic_final=float(spearmanr(a_fin, real)[0]), ic_final_myopic_target=float(spearmanr(a_fin, kt['T0'])[0]),
-                ic_myopic=float(spearmanr(a0, kt['T0'])[0]), flip_vs_myopic=float(np.mean((a_fin > 0) != (a0 > 0))),
-                keep_share_test=float(np.mean(a_fin > 0)), option_mean=float(np.nanmean(np.where(np.isfinite(a_next), np.maximum(0.0, a_next), 0.0))),
-                option_by_rung=[float(np.nanmean(np.where(np.isfinite(a_next), np.maximum(0.0, a_next), 0.0)[kt['df'].rung_i.values == r])) for r in range(NR)],
+    kt = KC[test]; a_fin = preds[test][-1]; a_init = preds[test][0]; a_prev = preds[test][-2] if N_ITER > 1 else a_init
+    G = continuation_targets(kt['T0'], kt['nxt'], policy_keep_next(kt, a_fin))
+    real = (kt['df'].KAV - kt['df'].Pe).values; cont = G - kt['T0']; rung = kt['df'].rung_i.values
+    info.update(ic_final=float(spearmanr(a_fin, real)[0]), ic_final_onestep=float(spearmanr(a_fin, kt['T0'])[0]),
+                ic_init=float(spearmanr(a_init, real)[0]), flip_vs_init=float(np.mean((a_fin > 0) != (a_init > 0))),
+                flip_last=float(np.mean((a_fin > 0) != (a_prev > 0))), keep_share_test=float(np.mean(a_fin > 0)), cont_mean=float(np.mean(cont)),
+                cont_by_rung=[float(np.mean(cont[rung == r])) if (rung == r).any() else NAN for r in range(NR)],
                 rows_test=int(len(a_fin)), rows_cal=int(len(a_cal)))
-    pd.DataFrame(dict(m=kt['df'].m.values, side=kt['df'].side.values, k=kt['df'].k.values, rung_i=kt['df'].rung_i.values, j=kt['df'].j.values,
-                      a_final=a_fin, a_myopic=a0, target=tgt, realized=real)).to_parquet(f'{OUTD}/pred_{test}.parquet', index=False)
+    pd.DataFrame(dict(m=kt['df'].m.values, side=kt['df'].side.values, k=kt['df'].k.values, rung_i=rung, j=kt['df'].j.values,
+                      a_final=a_fin, a_init=a_init, target=G, realized=real)).to_parquet(f'{OUTD}/pred_{test}.parquet', index=False)
     json.dump(dict(info=info, thresholds=thr, **CL.stamp()), open(f'{OUTD}/fit_{test}.json', 'w'), indent=1, default=float)
-    print(f'fold {test}: train {train}, cal {cal}; IC final {info["ic_final"]:+.3f}, keep share {info["keep_share_test"]:.3f}, theta_M '
-          f'{thr["theta_M"]:+.3f}; {time.time() - T0_:.0f} s', flush=True)
+    print(f'fold {test}: train {train}, cal {cal}; IC final {info["ic_final"]:+.3f}, keep share {info["keep_share_test"]:.3f}, flip last '
+          f'{info["flip_last"]:.3f}, theta_M {thr["theta_M"]:+.3f}; {time.time() - T0_:.0f} s', flush=True)
 
 
 # ---------------------------------------------------------------- report
 def report():
+    import pyarrow.parquet as pq
+    from scipy.stats import spearmanr
     asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
     receipts = {d: json.load(open(f'{OUTD}/rows_{d}.json')) for d in DAYS9}
     for receipt in receipts.values():
@@ -453,14 +556,13 @@ def report():
     Fz = {t: json.load(open(f'{OUTD}/fit_{t}.json')) for t in FOLDS}
     for receipt in Fz.values():
         CL.require_contract(receipt)
-    A = pd.concat([pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=['day', 'rung_i', 'j', 'J', 'last', 'R', 'Pe', 'T0', 'KAV', 'Pe5', 'KAV5'])
-                   for d in DAYS9], ignore_index=True)
+    F0 = pd.concat([pq.read_table(f'{OUTD}/rows_{d}.parquet', columns=['day', 'rung_i', 'j', 'R', 'Pe', 'KAV', 'Pe5', 'KAV5'],
+                                  filters=[('j', '=', 0)]).to_pandas() for d in DAYS9], ignore_index=True)      # first decisions only (memory)
     tot = {k_: sum(S[d][k_] for d in DAYS9) for k_ in S[DAYS9[0]]}
-    L = [f'ORDER-HARM v3 (keep now with the option to cancel later; chronological folds), 9 consumed days, first 60 s, M 50; as of {asof}',
-         f'statuses: {tot}', '',
+    L = [f'ORDER-HARM v3 (keep now with the option to cancel later; policy iteration; chronological folds), 9 consumed days, first 60 s, M 50, '
+         f'{CL.DECISION_MS} ms decisions; as of {asof}', f'statuses: {tot}', '',
          'LABELS (c per share of the 30-sh order; first decision of each rung-episode): rows | mean R | keep-all to T_e minus pull (KAV - Pe) | '
          'share KAV > Pe | mean P_e']
-    F0 = A[A.j == 0]
     for r in list(range(NR)) + ['all']:
         x = F0 if r == 'all' else F0[F0.rung_i == r]
         L.append(f'  rung {r}: {len(x):7d} | {x.R.mean():+.3f} | {(x.KAV - x.Pe).mean():+.3f} | {(x.KAV > x.Pe).mean():.3f} | {x.Pe.mean():+.3f}')
@@ -469,26 +571,26 @@ def report():
     for r in list(range(NR)) + ['all']:
         x = F5 if r == 'all' else F5[F5.rung_i == r]
         L.append(f'  rung {r}: {(x.KAV - x.Pe).mean():+.3f} | {(x.KAV5 - x.Pe5).mean():+.3f} | {len(x)}')
-    L += ['', 'FOLDS (train -> calibrate -> test): IC final vs realized keep-all minus pull | IC final vs myopic realized target | IC myopic model vs '
-          'myopic target | keep share (A_hat > 0) test | flip vs myopic | option term mean | theta_M (FB25 keep share on the calibration day)']
+    L += ['', 'FOLDS (train -> calibrate -> test): IC final vs realized keep-all minus pull | IC final vs one-step realized target | IC iteration-0 '
+          'model vs realized | keep share (A_hat > 0) test | flip vs iteration 0 | flip vs previous iteration | continuation mean | theta_M (FB25 keep '
+          'share on the calibration day)']
     ic = []
     for t in FOLDS:
         i_ = Fz[t]['info']; th = Fz[t]['thresholds']; ic.append(i_['ic_final'])
-        L.append(f'  {t}: train {",".join(x[4:] for x in i_["train"])} cal {i_["cal"][4:]} | {i_["ic_final"]:+.3f} | '
-                 f'{i_["ic_final_myopic_target"]:+.3f} | {i_["ic_myopic"]:+.3f} | '
-                 f'{i_["keep_share_test"]:.3f} | {i_["flip_vs_myopic"]:.3f} | {i_["option_mean"]:+.3f} | {th["theta_M"]:+.3f} ({th["s_FB_cal"]:.3f})')
-    P = pd.concat([pd.read_parquet(f'{OUTD}/pred_{t}.parquet') for t in FOLDS], ignore_index=True)
-    from scipy.stats import spearmanr
+        L.append(f'  {t}: train {",".join(x[4:] for x in i_["train"])} cal {i_["cal"][4:]} | {i_["ic_final"]:+.3f} | {i_["ic_final_onestep"]:+.3f} | '
+                 f'{i_["ic_init"]:+.3f} | {i_["keep_share_test"]:.3f} | {i_["flip_vs_init"]:.3f} | {i_["flip_last"]:.3f} | {i_["cont_mean"]:+.3f} | '
+                 f'{th["theta_M"]:+.3f} ({th["s_FB_cal"]:.3f})')
+    P = pd.concat([pd.read_parquet(f'{OUTD}/pred_{t}.parquet', columns=['a_final', 'realized']) for t in FOLDS], ignore_index=True)
     pooled = float(spearmanr(P.a_final, P.realized)[0]); up = sum(1 for v in ic if v > 0)
     lab = 'SKILL' if up >= 4 and pooled >= 0.05 else 'NO-SKILL'
-    L += ['', f'R660 OPTION (printed): option term by rung (fold mean): ' + ' '.join(f'{np.mean([Fz[t]["info"]["option_by_rung"][r] for t in FOLDS]):+.3f}'
-                                                                                 for r in range(NR)) +
-          f'; decisions flipped vs myopic (fold mean) {np.mean([Fz[t]["info"]["flip_vs_myopic"] for t in FOLDS]):.3f}',
+    L += ['', f'R660 OPTION (printed): continuation term by rung (fold mean): ' +
+          ' '.join(f'{np.nanmean([Fz[t]["info"]["cont_by_rung"][r] for t in FOLDS]):+.3f}' for r in range(NR)) +
+          f'; decisions flipped vs iteration 0 {np.mean([Fz[t]["info"]["flip_vs_init"] for t in FOLDS]):.3f}, vs the previous iteration '
+          f'{np.mean([Fz[t]["info"]["flip_last"] for t in FOLDS]):.3f} (fold means)',
           f'R661 SKILL: IC > 0 on {up}/5 test days, pooled {pooled:+.3f} -> {lab}']
     open(f'{OUTD}/order_harm_v3.txt', 'w').write('\n'.join(L) + '\n')
     json.dump(dict(R661=lab, pooled_ic=pooled, ic=ic, **CL.stamp()), open(f'{OUTD}/order_harm_v3.json', 'w'), indent=1)
     print('\n'.join(L), flush=True)
-
 
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''

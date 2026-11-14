@@ -40,8 +40,8 @@ READINGS DECLARED BEFORE THE FIRST RUN (5 test days; day rule >= 4 of 5):
 CONTROLS (any failure -> no output): selftests (v3 lane, ORDER-HARM v3, FUTURE-BEST, exposure) and this script's cadence wrapper with planted
 errors (250 ms default cadence; no inputs -> keep; generic cadence-wrapper regressions); the folds are chronological (v3's
 fit files and client50 artifact contract); terminal cash/inventory reconciliation on every run; INPUT PARITY on each test day: the keep-all joint lane (no cap, M 50: the labels' rules) records the inputs at cadence-C decisions;
-wherever its order is v3's label order (same window, side, step, rung, depth and age) all 97 inputs must equal the label row's and A_hat v3's
-saved prediction (<= 1e-9); the no-look-ahead falsifier on every 20th new decision input; LDG equals v3's saved LDG fills at hard 10 and none
+wherever its order is v3's label order (same window, side, step, rung, depth and age) A_hat must equal v3's saved prediction (<= 1e-9) on
+every matched decision and all 97 inputs the label row's stored float32 inputs on every 20th (memory: keys only in memory); the no-look-ahead falsifier on every 20th new decision input; LDG equals v3's saved LDG fills at hard 10 and none
 row for row; v3's conservation / accounting checks and the true exposure <= the cap on every hard-cap run; memory self-guard (2 GiB).
 LIMITS: consumed days (C8), development only; replay rule M (B1a); the guard and FRONT-PULL's P are leave-one-day-out upstream models; labels
 from rungs alone (the replay couples them); the 2 s tail bounds the queue value counted.
@@ -252,18 +252,26 @@ def arm_dec(arm, W, ctx, wi, pred, F_, cnt):
 
 # ---------------------------------------------------------------- control: input parity with v3's labels
 def parity_day(day):
+    """Control: inputs and A_hat of the keep-all joint lane's decisions against v3's label rows (memory: keys only in memory; predictions
+    compared on every matched decision, the 97 stored float32 inputs on every 20th, from the first)."""
+    import pyarrow.parquet as pq
     all_selftests()
     T0 = time.time(); F_ = fold(day); D = K.load_day(day); DI = P1.day_inputs(day, D)
     CL.require_contract(json.load(open(f'{V3.OUTD}/rows_{day}.json')))
-    R = pd.read_parquet(f'{V3.OUTD}/rows_{day}.parquet', columns=['m', 'side', 'k', 'rung_i'] + V3.FEAT)
-    Pr = pd.read_parquet(f'{V3.OUTD}/pred_{day}.parquet')
+    RK = pq.read_table(f'{V3.OUTD}/rows_{day}.parquet', columns=['m', 'side', 'k', 'rung_i', 'depth_now', 'age']).to_pandas()
+    Pr = pq.read_table(f'{V3.OUTD}/pred_{day}.parquet', columns=['m', 'side', 'k', 'rung_i', 'a_final']).to_pandas()
     for c in ('m', 'side', 'k', 'rung_i'):
-        if not np.array_equal(Pr[c].values, R[c].values):
+        if not np.array_equal(Pr[c].values, RK[c].values):
             sys.exit(f'REFUSED: v3 predictions not aligned with its rows on {c}')
-    RV = R[V3.FEAT].to_numpy(dtype=np.float64); PV = Pr.a_final.values.astype(float)
-    RI = {(int(a), int(b), int(c), int(e)): i for i, (a, b, c, e) in enumerate(zip(R.m.values, R.side.values, R.k.values, R.rung_i.values))}
+    KEYV = ((RK.m.values.astype(np.int64) * 2 + RK.side.values.astype(np.int64)) * 8192 + RK.k.values.astype(np.int64)) * 8 + RK.rung_i.values.astype(np.int64)
+    order = np.argsort(KEYV, kind='stable'); KS = KEYV[order]
+    if len(KS) > 1 and (np.diff(KS) == 0).any():
+        sys.exit('REFUSED: duplicate label keys')
+    DN = RK.depth_now.values.astype(np.float32); AG = RK.age.values.astype(np.float32); PV = Pr.a_final.values.astype(np.float64)
+    del RK, Pr
     iD, iA = V3.FEAT.index('depth_now'), V3.FEAT.index('age')
-    st = dict(windows=0, recorded=0, key_found=0, matched=0, input_differ=0, pred_differ=0, inputs=0, lookahead_checks=0, lookahead_bad=0)
+    st = dict(windows=0, recorded=0, key_found=0, matched=0, checked=0, input_differ=0, pred_differ=0, inputs=0, lookahead_checks=0, lookahead_bad=0)
+    checks = []
     for W in P1.window_pairs(D):
         st['windows'] += 1; n = W[0]['n']; m = int(W[0]['m']); ctx = J3.window_ctx(W, F_['PO'], F_['POI'], n); wi = P1.window_inputs(W, ctx, DI)
         pred = make_pred(W, wi, F_['B'], st); rec = []
@@ -281,20 +289,29 @@ def parity_day(day):
         CL.sim_joint(W, 'M', 50.0, None, {0: ctx[0]['vg'], 1: ctx[1]['vg']}, decide={(s, d): recorder(s, d) for s in (0, 1) for d in range(NR)},
                      idle_only=1, mode='none')
         for (s, k, d, x, pr) in rec:
-            st['recorded'] += 1; i = RI.get((m, s, k, d))
-            if i is None:
+            st['recorded'] += 1
+            kv = ((m * 2 + s) * 8192 + k) * 8 + d; p_ = int(np.searchsorted(KS, kv))
+            if p_ >= len(KS) or KS[p_] != kv:
                 continue
-            st['key_found'] += 1
-            if not (x[iD] == RV[i, iD] and abs(x[iA] - RV[i, iA]) < 1e-6):
+            i = int(order[p_]); st['key_found'] += 1; x32 = x.astype(np.float32)
+            if not (x32[iD] == DN[i] and x32[iA] == AG[i]):  # the same order: ticks behind the best and age
                 continue
             st['matched'] += 1
-            st['input_differ'] += int(not all((a == b) or (a != a and b != b) for a, b in zip(x, RV[i])))
             st['pred_differ'] += int(abs(pr - PV[i]) > 1e-9)
+            if st['matched'] % CHECK_EVERY == 1:
+                checks.append((i, x32))
         for s in (0, 1):
             W[s].pop('cache', None)
+    if checks:                                            # the sampled decisions' inputs against the stored label rows (float32: the model's precision)
+        checks.sort(key=lambda z: z[0])
+        LV = V3.feats_rows(day, np.array([c[0] for c in checks]))
+        for (i, x32), lv in zip(checks, LV):
+            st['checked'] += 1
+            st['input_differ'] += int(not all((a_ == b_) or (a_ != a_ and b_ != b_) for a_, b_ in zip(x32, lv)))
     os.makedirs(OUTD, exist_ok=True)
     json.dump(dict(st, **CL.stamp()), open(f'{OUTD}/parity_{day}.json', 'w'), indent=1)
-    if st['input_differ'] or st['pred_differ'] or st['lookahead_bad'] or not st['matched'] or st['matched'] < 0.5 * st['key_found']:
+    if (st['input_differ'] or st['pred_differ'] or st['lookahead_bad'] or not st['matched'] or not st['checked']
+            or st['matched'] < 0.5 * st['key_found']):
         sys.exit(f'ORDER-HARM POLICY v2 INPUT PARITY FAILED on {day}: {st}')
     print(f'parity {day}: {st} in {time.time() - T0:.0f} s', flush=True)
 
