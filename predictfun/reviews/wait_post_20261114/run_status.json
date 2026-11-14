@@ -1,0 +1,14 @@
+{
+  "asof": "2026-11-14T12:15:25Z",
+  "status": "waiting_for_slot",
+  "stage": "selftest",
+  "driver_pid": 2030852,
+  "slot": "codex",
+  "output": "/home/yuqing/ctaNew/data/predict_fun/research/wait_post_20261114_v1",
+  "status_file": "/home/yuqing/ctaNew/data/predict_fun/research/wait_post_20261114_v1/driver_full/status.json",
+  "execution_checkout": "/tmp/cta-entry-value-20261114",
+  "size_queue_resume_record": "/tmp/cta-wait-post-size-yield-20261114.json",
+  "size_queue_auto_resume": "driver finally block on completion/failure",
+  "full_training_complete": false,
+  "performance_claim": false
+}
