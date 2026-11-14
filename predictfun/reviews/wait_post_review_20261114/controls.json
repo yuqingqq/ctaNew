@@ -1,0 +1,30 @@
+{
+  "zero_contrast_cases": [
+    {
+      "adverse": false,
+      "value_yes": 0.3000000000000007,
+      "value_no": 0.3000000000000007,
+      "target_c": 0.0,
+      "terminal": 1200.0,
+      "zero_score_pnl": 0.0,
+      "zero_score_orders": 0
+    },
+    {
+      "adverse": true,
+      "value_yes": -2.6999999999999993,
+      "value_no": -2.6999999999999993,
+      "target_c": 0.0,
+      "terminal": 1200.0,
+      "zero_score_pnl": 0.0,
+      "zero_score_orders": 0
+    }
+  ],
+  "between_activations_positive_control": {
+    "value_yes": 0.3000000000000007,
+    "value_no": 0.0,
+    "target_c": 1.0000000000000024,
+    "terminal": 1200.0
+  },
+  "target_does_not_identify_absolute_entry_value": true,
+  "independent_side_routing": true
+}
