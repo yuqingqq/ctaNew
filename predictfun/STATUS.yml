@@ -1820,3 +1820,22 @@ flags:
   future_best: "BETTER on WS M 0 / M 50, NOT ROBUST (FUTURE-BEST, 2026-11-13 13:57Z, 037ed9de/6f13eb38): keep the order at the predicted landing price; FB10 +$18 / FB25 +$27 a day vs PD at M 50 (8/9, 7/9), vs LDG +$41 / +$71; flips at M 250 (0/9) and over all trades; new best: FB25 there first 64% but 50% STOP, -0.18 c/sh (R502 NOT-SHOWN); perfect-foresight diagnostic +$378 a day, +0.90 c/sh 88% STOP; P model: nested-fold leak and known-frame target inherited (review, unmeasured); 30-fill rule checked 7b5eced4"
   mechanism_b12d: "STAY + OWN TAKING (B12d, 2026-11-11 04:54Z, handoffs/20261111_b12d_bursts.md): the top makers stay after being hit (re-hit 59.5% vs 38.4%) at no cost; runs / thinning / holding explain ~10% each; post hoc 3 of the top 5 also take and their taker orders (-1.23 c/sh to the makers hit) are a quarter of the gap; the rest is not visible on the public tape"
   maker_fee_public: "0 on all 87,155 maker legs of public match records (10-23 14h, 11-08 03h and 15h; B12 input check): no rebate inside the match record; account data needed (D3, T5)"
+
+# ORDER_HARM_CLIENT50_FIX_20261114
+order_harm_client50_fix_20261114:
+  verified_as_of: "2026-11-14T10:07:17.579856+00:00"
+  state: code_complete_synthetic_checks_passed
+  source_commit: 32da4014
+  branch: research/predict-order-harm-fix-20261114
+  review: handoffs/20261114_order_harm_client50_fix.md
+  receipt: reviews/order_harm_client50_fix_20261114/verification.json
+  shared_client_state_engine: true
+  decision_ms: 50
+  portfolio_terminal_seconds: 60.2
+  regression_tests_passed: 9
+  historical_run_started: false
+  model_fit_started: false
+  old_artifacts_compatible: false
+  upstream_chronology_complete: false
+  inference_latency_benchmarked: false
+# /ORDER_HARM_CLIENT50_FIX_20261114
