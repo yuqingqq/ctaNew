@@ -1,0 +1,41 @@
+NEXT-PRICE, 9 consumed replay days, first 60 s, guard ladder (LDG, 6 rungs x 30 sh); as of 2026-11-14T03:32:29Z; controls passed; births 357901 (fallback 170442, improve 187459); window-sides 5184
+
+OUR STATUS WHEN A PRICE BECOMES OUR SIDE'S BEST (share of births; guard masked / no decision step excluded)
+  M50  fallback n 154740 (excluded 15702): LIVE  7.8% | PULLED 59.9% | MOVED  1.3% | USED  1.2% | OTHER  0.3% | NEVER 29.5%; PULLED still pending at the birth 2%; NEVER with the guard on 88%
+  M50  improve  n 166381 (excluded 21078): LIVE  0.8% | PULLED 26.9% | MOVED  0.4% | USED  2.5% | OTHER  1.4% | NEVER 68.1%; PULLED still pending at the birth 0%; NEVER with the guard on 11%
+  M0   fallback n 154740 (excluded 15702): LIVE  7.8% | PULLED 60.1% | MOVED  1.3% | USED  1.0% | OTHER  0.3% | NEVER 29.5%; PULLED still pending at the birth 2%; NEVER with the guard on 88%
+  M0   improve  n 166381 (excluded 21078): LIVE  0.7% | PULLED 27.2% | MOVED  0.4% | USED  2.4% | OTHER  1.3% | NEVER 68.1%; PULLED still pending at the birth 0%; NEVER with the guard on 11%
+  M250 fallback n 154740 (excluded 15702): LIVE  7.9% | PULLED 58.5% | MOVED  1.3% | USED  2.4% | OTHER  0.4% | NEVER 29.5%; PULLED still pending at the birth 2%; NEVER with the guard on 88%
+  M250 improve  n 166381 (excluded 21078): LIVE  1.4% | PULLED 25.6% | MOVED  0.4% | USED  2.6% | OTHER  2.2% | NEVER 67.9%; PULLED still pending at the birth 0%; NEVER with the guard on 11%
+  R570 (fallback, M 50): of the births where we were not LIVE, PULLED + MOVED 66.4%, NEVER 32.0% -> LATE-BY-REPOST, STABLE (9 of 9 days the same)
+    per day (repost / never): 1023 69% / 30%, 1024 65% / 33%, 1025 63% / 33%, 1026 70% / 29%, 1027 66% / 33%, 1031 61% / 36%, 1101 58% / 38%, 1102 70% / 29%, 1103 67% / 32%
+    fallback by 1 tick     n 117768: LIVE  8.7% | PULLED 60.2% | MOVED  1.0% | USED  1.2% | OTHER  0.3% | NEVER 28.5%
+    fallback by >= 2 ticks n  36972: LIVE  4.9% | PULLED 58.9% | MOVED  2.2% | USED  1.0% | OTHER  0.1% | NEVER 32.9%
+    rungs of LIVE orders: 0 33%, 1 50%, 2 12%, 3 3%, 4 2%, 5 1%; of PULLED: 0 18%, 1 33%, 2 19%, 3 13%, 4 10%, 5 8%
+    PULLED: our cancel was decided 558 ms before the birth (p25 202 / p75 1362)
+    LIVE orders after the birth: still there 250 ms later 57%, 1 s later 34%; ended within 1 s by the guard 57%, by fills 5%; age at the birth median 831 ms
+    not LIVE: our next order at that price goes live 434 ms after the birth (p25 311 / p75 741); none while the level lasts 72%
+
+QUEUE AHEAD AT THE BIRTH (rule M arithmetic, sh; median (p25 / p75)) - fallback, M 50
+  LIVE orders, at the birth                        189.0 (99.1 / 324.7)  n 12091
+  PULLED orders had they been kept                  66.2 (10.0 / 182.0)  n 92744
+  our next order after the birth, at activation    439.1 (254.6 / 687.9)  n 45186
+  size shown at the price in the birth frame       122.5 (45.5 / 259.0)  n 154740
+  R571: LIVE 189.0 / kept 66.2 vs next 439.1 sh; both <= half on 2 of 9 days -> NOT-SHOWN
+
+THE TOP MAKERS AT THE SAME BIRTHS (real fills; first taker order with a leg at the new best)
+  baseline: top 5 share of all exactly timed at-best maker volume in the minute 33.3%
+  fallback births 170442: first trade exact 74727, not exact 34290, none 61425
+    all first trades               n  74727: a top-5 maker filled 50.2%; top-5 volume share 50.9% (x1.53 their baseline); median 0 ms after the birth
+    SMALL (<= 30 sh at the price)  n  59967: a top-5 maker filled 43.4%; top-5 volume share 45.4% (x1.36 their baseline); median 48 ms after the birth
+    CROSSING                       n  21005: a top-5 maker filled 61.9%; top-5 volume share 51.9% (x1.56 their baseline); median 0 ms after the birth
+  improve  births 187459: first trade exact 65629, not exact 24941, none 96889
+    all first trades               n  65629: a top-5 maker filled 25.7%; top-5 volume share 28.6% (x0.86 their baseline); median 157 ms after the birth
+    SMALL (<= 30 sh at the price)  n  55570: a top-5 maker filled 20.2%; top-5 volume share 21.8% (x0.66 their baseline); median 197 ms after the birth
+    CROSSING                       n   2515: a top-5 maker filled 69.0%; top-5 volume share 42.4% (x1.28 their baseline); median -102 ms after the birth
+  R572: small first trades at the new best (fallback): top-5 volume share x1.36 their baseline, above it on 9 of 9 days -> THEY-HOLD-THE-FRONT
+    per day: 1023 x1.38, 1024 x1.22, 1025 x1.38, 1026 x1.32, 1027 x1.22, 1031 x1.58, 1101 x1.38, 1102 x1.33, 1103 x1.63
+
+READINGS: {"R570": "LATE-BY-REPOST", "R571": "NOT-SHOWN", "R572": "THEY-HOLD-THE-FRONT"}
+
+2026-11-14T03:32:28Z tag=np_report rc=0 peak_rss_mib=506 wall_s=1.74 cpu_user_s=1.20 memavail_start_gib=22 disk_free_gib=520->520 slot=claude

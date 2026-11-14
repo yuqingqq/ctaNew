@@ -1,0 +1,10 @@
+selftests passed; planted errors caught: {'MUT_LANDING_AS_REQ': True, 'MUT_NO_LOOKBACK': True, 'MUT_ANY_PRICE': True, 'MUT_CROSS_SIDE': True}
+20261103: 80 window-sides, 8 s, rss 772 MiB
+20261103: 160 window-sides, 11 s, rss 779 MiB
+20261103: 240 window-sides, 15 s, rss 786 MiB
+20261103: 320 window-sides, 19 s, rss 794 MiB
+20261103: 400 window-sides, 23 s, rss 805 MiB
+20261103: 480 window-sides, 26 s, rss 812 MiB
+20261103: 560 window-sides, 30 s, rss 818 MiB
+20261103: {'registry': 288, 'outside_day': 0, 'sealed_or_forward': 0, 'no_outcome': 0, 'untimed_legs_0_60': 2426, 'untimed_shares_0_60': 38118.44680133401, 'windows': 288, 'window_sides': 576, 'sim_differ': 0, 'births': 40879, 'base_q': 748898.9280447887, 'base_qtop': 236898.82390064636, 'grid_steps': 345600, 'grid_steps_without_row': 0, 'planted_caught': {'MUT_LANDING_AS_REQ': True, 'MUT_NO_LOOKBACK': True, 'MUT_ANY_PRICE': True, 'MUT_CROSS_SIDE': True}} in 31 s
+2026-11-14T03:31:54Z tag=np_day_20261103 rc=0 peak_rss_mib=830 wall_s=31.27 cpu_user_s=29.93 memavail_start_gib=22 disk_free_gib=520->520 slot=claude

@@ -1,0 +1,282 @@
+{
+ "asof": "2026-11-14T03:32:29Z",
+ "readings": {
+  "R570": {
+   "repost": 0.6640775610063863,
+   "never": 0.32022657011265415,
+   "label": "LATE-BY-REPOST",
+   "stable": "STABLE",
+   "days_same": 9,
+   "per_day": {
+    "20261023": [
+     0.6874172886559737,
+     0.3017309830077815,
+     "LATE-BY-REPOST"
+    ],
+    "20261024": [
+     0.6508504362015942,
+     0.32686876294483147,
+     "LATE-BY-REPOST"
+    ],
+    "20261025": [
+     0.6337053717120292,
+     0.3333333333333333,
+     "LATE-BY-REPOST"
+    ],
+    "20261026": [
+     0.6980120834145391,
+     0.2946793997271487,
+     "LATE-BY-REPOST"
+    ],
+    "20261027": [
+     0.6631092991186522,
+     0.3288566460818994,
+     "LATE-BY-REPOST"
+    ],
+    "20261031": [
+     0.6145177328471992,
+     0.3598497403601812,
+     "LATE-BY-REPOST"
+    ],
+    "20261101": [
+     0.5849573988835569,
+     0.38370384879052005,
+     "LATE-BY-REPOST"
+    ],
+    "20261102": [
+     0.7037805072579358,
+     0.28521295262402296,
+     "LATE-BY-REPOST"
+    ],
+    "20261103": [
+     0.6678272980501393,
+     0.32457056638811516,
+     "LATE-BY-REPOST"
+    ]
+   }
+  },
+  "R571": {
+   "live": 188.9961904761905,
+   "kept": 66.24630555555555,
+   "next": 439.1267456391647,
+   "days": 2,
+   "label": "NOT-SHOWN"
+  },
+  "R572": {
+   "ratio": 1.3646072781426828,
+   "days_up": 9,
+   "per_day": {
+    "20261023": 1.384008584470562,
+    "20261024": 1.2201346849895933,
+    "20261025": 1.3763246740458372,
+    "20261026": 1.3176078944652474,
+    "20261027": 1.2221184181778018,
+    "20261031": 1.576080434857023,
+    "20261101": 1.3765600742860833,
+    "20261102": 1.3345023253184598,
+    "20261103": 1.625643772974224
+   },
+   "label": "THEY-HOLD-THE-FRONT"
+  }
+ },
+ "stats": {
+  "20261023": {
+   "registry": 288,
+   "outside_day": 0,
+   "sealed_or_forward": 0,
+   "no_outcome": 0,
+   "untimed_legs_0_60": 2093,
+   "untimed_shares_0_60": 20830.638290695933,
+   "windows": 288,
+   "window_sides": 576,
+   "sim_differ": 0,
+   "births": 45468,
+   "base_q": 1045576.0437159432,
+   "base_qtop": 358319.3592882866,
+   "grid_steps": 345600,
+   "grid_steps_without_row": 0,
+   "planted_caught": {
+    "MUT_LANDING_AS_REQ": true,
+    "MUT_NO_LOOKBACK": true,
+    "MUT_ANY_PRICE": true,
+    "MUT_CROSS_SIDE": true
+   }
+  },
+  "20261024": {
+   "registry": 288,
+   "outside_day": 0,
+   "sealed_or_forward": 0,
+   "no_outcome": 0,
+   "untimed_legs_0_60": 1023,
+   "untimed_shares_0_60": 10108.96713956579,
+   "windows": 288,
+   "window_sides": 576,
+   "sim_differ": 0,
+   "births": 41962,
+   "base_q": 836902.8728484402,
+   "base_qtop": 273390.6497573645,
+   "grid_steps": 345600,
+   "grid_steps_without_row": 0,
+   "planted_caught": {
+    "MUT_LANDING_AS_REQ": true,
+    "MUT_NO_LOOKBACK": true,
+    "MUT_ANY_PRICE": true,
+    "MUT_CROSS_SIDE": true
+   }
+  },
+  "20261025": {
+   "registry": 288,
+   "outside_day": 0,
+   "sealed_or_forward": 0,
+   "no_outcome": 0,
+   "untimed_legs_0_60": 1316,
+   "untimed_shares_0_60": 13038.545279926448,
+   "windows": 288,
+   "window_sides": 576,
+   "sim_differ": 0,
+   "births": 41620,
+   "base_q": 829868.2047823863,
+   "base_qtop": 215742.376660204,
+   "grid_steps": 345600,
+   "grid_steps_without_row": 0,
+   "planted_caught": {
+    "MUT_LANDING_AS_REQ": true,
+    "MUT_NO_LOOKBACK": true,
+    "MUT_ANY_PRICE": true,
+    "MUT_CROSS_SIDE": true
+   }
+  },
+  "20261026": {
+   "registry": 288,
+   "outside_day": 0,
+   "sealed_or_forward": 0,
+   "no_outcome": 0,
+   "untimed_legs_0_60": 3191,
+   "untimed_shares_0_60": 39785.99813006458,
+   "windows": 288,
+   "window_sides": 576,
+   "sim_differ": 0,
+   "births": 47811,
+   "base_q": 1156277.6620442574,
+   "base_qtop": 385398.82024750893,
+   "grid_steps": 345600,
+   "grid_steps_without_row": 0,
+   "planted_caught": {
+    "MUT_LANDING_AS_REQ": true,
+    "MUT_NO_LOOKBACK": true,
+    "MUT_ANY_PRICE": true,
+    "MUT_CROSS_SIDE": true
+   }
+  },
+  "20261027": {
+   "registry": 288,
+   "outside_day": 0,
+   "sealed_or_forward": 0,
+   "no_outcome": 0,
+   "untimed_legs_0_60": 2964,
+   "untimed_shares_0_60": 32617.169265447075,
+   "windows": 288,
+   "window_sides": 576,
+   "sim_differ": 0,
+   "births": 39364,
+   "base_q": 1108508.0965559892,
+   "base_qtop": 391979.01331450226,
+   "grid_steps": 345600,
+   "grid_steps_without_row": 0,
+   "planted_caught": {
+    "MUT_LANDING_AS_REQ": true,
+    "MUT_NO_LOOKBACK": true,
+    "MUT_ANY_PRICE": true,
+    "MUT_CROSS_SIDE": true
+   }
+  },
+  "20261031": {
+   "registry": 288,
+   "outside_day": 0,
+   "sealed_or_forward": 0,
+   "no_outcome": 0,
+   "untimed_legs_0_60": 762,
+   "untimed_shares_0_60": 9077.803427559644,
+   "windows": 288,
+   "window_sides": 576,
+   "sim_differ": 0,
+   "births": 26746,
+   "base_q": 609345.8218576227,
+   "base_qtop": 215314.08947495584,
+   "grid_steps": 345600,
+   "grid_steps_without_row": 0,
+   "planted_caught": {
+    "MUT_LANDING_AS_REQ": true,
+    "MUT_NO_LOOKBACK": true,
+    "MUT_ANY_PRICE": true,
+    "MUT_CROSS_SIDE": true
+   }
+  },
+  "20261101": {
+   "registry": 288,
+   "outside_day": 0,
+   "sealed_or_forward": 0,
+   "no_outcome": 0,
+   "untimed_legs_0_60": 981,
+   "untimed_shares_0_60": 10717.451728936834,
+   "windows": 288,
+   "window_sides": 576,
+   "sim_differ": 0,
+   "births": 29516,
+   "base_q": 581232.1697727637,
+   "base_qtop": 215916.54191158636,
+   "grid_steps": 345600,
+   "grid_steps_without_row": 0,
+   "planted_caught": {
+    "MUT_LANDING_AS_REQ": true,
+    "MUT_NO_LOOKBACK": true,
+    "MUT_ANY_PRICE": true,
+    "MUT_CROSS_SIDE": true
+   }
+  },
+  "20261102": {
+   "registry": 288,
+   "outside_day": 0,
+   "sealed_or_forward": 0,
+   "no_outcome": 0,
+   "untimed_legs_0_60": 1228,
+   "untimed_shares_0_60": 14628.328666538513,
+   "windows": 288,
+   "window_sides": 576,
+   "sim_differ": 0,
+   "births": 44535,
+   "base_q": 914942.0154115383,
+   "base_qtop": 313738.1923810348,
+   "grid_steps": 345600,
+   "grid_steps_without_row": 0,
+   "planted_caught": {
+    "MUT_LANDING_AS_REQ": true,
+    "MUT_NO_LOOKBACK": true,
+    "MUT_ANY_PRICE": true,
+    "MUT_CROSS_SIDE": true
+   }
+  },
+  "20261103": {
+   "registry": 288,
+   "outside_day": 0,
+   "sealed_or_forward": 0,
+   "no_outcome": 0,
+   "untimed_legs_0_60": 2426,
+   "untimed_shares_0_60": 38118.44680133401,
+   "windows": 288,
+   "window_sides": 576,
+   "sim_differ": 0,
+   "births": 40879,
+   "base_q": 748898.9280447887,
+   "base_qtop": 236898.82390064636,
+   "grid_steps": 345600,
+   "grid_steps_without_row": 0,
+   "planted_caught": {
+    "MUT_LANDING_AS_REQ": true,
+    "MUT_NO_LOOKBACK": true,
+    "MUT_ANY_PRICE": true,
+    "MUT_CROSS_SIDE": true
+   }
+  }
+ }
+}

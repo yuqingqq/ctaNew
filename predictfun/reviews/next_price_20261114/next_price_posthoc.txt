@@ -1,0 +1,19 @@
+NEXT-PRICE POST HOC (after the first report; descriptive, no readings): fallback births, M 50, guard not masked; as of 2026-11-14T03:33:51Z; sh / ms as median (p25 / p75)
+
+LIVE (n 12091): queue ahead at the birth 189 (99 / 325) sh; size shown at the price 232 (125 / 377) sh; ahead / shown 1.00 (0.82 / 1.00); at the front (<= 5 sh ahead) 2.5%; order age at the birth 831 (273 / 2064) ms
+  rung 0: n   3932; ahead 176 (91 / 315); shown 242 (140 / 399); ahead / shown 1.00 (0.64 / 1.00); front 1.9%; age 932 (308 / 2174)
+  rung 1: n   6095; ahead 194 (103 / 329); shown 225 (120 / 368); ahead / shown 1.00 (0.89 / 1.00); front 1.9%; age 693 (230 / 1757)
+  rung 2: n   1393; ahead 210 (110 / 344); shown 239 (125 / 386); ahead / shown 1.00 (0.90 / 1.00); front 2.4%; age 1138 (365 / 2800)
+  rung 3: n    423; ahead 192 (98 / 323); shown 209 (112 / 361); ahead / shown 1.00 (0.98 / 1.00); front 3.8%; age 1190 (318 / 3042)
+  rung 4: n    183; ahead 151 (54 / 284); shown 185 (77 / 342); ahead / shown 1.00 (0.91 / 1.00); front 7.7%; age 1159 (419 / 2788)
+  rung 5: n     65; ahead 0 (0 / 0); shown 170 (82 / 231); ahead / shown 0.00 (0.00 / 0.00); front 84.6%; age 1104 (424 / 2744)
+PULLED (n 92744): queue ahead at the birth 66 (10 / 182) sh had it been kept; size shown at the price 122 (44 / 261) sh; ahead / shown 1.00 (0.45 / 1.00); at the front (<= 5 sh ahead) 21.7%; order age at the birth 1389 (712 / 2556) ms
+  it had rested 410 (110 / 1060) ms before the guard pulled it, 558 (202 / 1362) ms before the birth
+  rung 0: n  16896; ahead 88 (18 / 210); shown 150 (57 / 300); ahead / shown 1.00 (0.50 / 1.00); front 16.8%; age 1446 (743 / 2669)
+  rung 1: n  30272; ahead 100 (28 / 220); shown 135 (50 / 279); ahead / shown 1.00 (0.79 / 1.00); front 11.2%; age 1026 (515 / 1962)
+  rung 2: n  17614; ahead 76 (17 / 191); shown 115 (39 / 254); ahead / shown 1.00 (0.69 / 1.00); front 14.4%; age 1368 (733 / 2452)
+  rung 3: n  11974; ahead 64 (15 / 165); shown 107 (35 / 233); ahead / shown 1.00 (0.60 / 1.00); front 16.9%; age 1609 (882 / 2772)
+  rung 4: n   8846; ahead 49 (5 / 137); shown 100 (32 / 224); ahead / shown 1.00 (0.26 / 1.00); front 26.1%; age 1864 (1047 / 3163)
+  rung 5: n   7142; ahead 0 (0 / 0); shown 100 (32 / 215); ahead / shown 0.00 (0.00 / 0.00); front 98.1%; age 2212 (1227 / 3602)
+PULLED births with a next order of ours at the price (n 29299): kept 123 (39 / 243) sh against the next order at activation 471 (276 / 719) sh; next minus kept 298 (133 / 525) sh; the next order 420 (311 / 712) ms after the birth
+All births with a next order (n 45186): next order at activation 439 (255 / 688) sh against 185 (92 / 322) sh shown at the birth; ratio 2.05 (1.25 / 4.06)

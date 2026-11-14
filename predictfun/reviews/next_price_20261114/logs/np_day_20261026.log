@@ -1,0 +1,10 @@
+selftests passed; planted errors caught: {'MUT_LANDING_AS_REQ': True, 'MUT_NO_LOOKBACK': True, 'MUT_ANY_PRICE': True, 'MUT_CROSS_SIDE': True}
+20261026: 80 window-sides, 11 s, rss 904 MiB
+20261026: 160 window-sides, 16 s, rss 913 MiB
+20261026: 240 window-sides, 22 s, rss 922 MiB
+20261026: 320 window-sides, 28 s, rss 929 MiB
+20261026: 400 window-sides, 34 s, rss 940 MiB
+20261026: 480 window-sides, 39 s, rss 948 MiB
+20261026: 560 window-sides, 45 s, rss 954 MiB
+20261026: {'registry': 288, 'outside_day': 0, 'sealed_or_forward': 0, 'no_outcome': 0, 'untimed_legs_0_60': 3191, 'untimed_shares_0_60': 39785.99813006458, 'windows': 288, 'window_sides': 576, 'sim_differ': 0, 'births': 47811, 'base_q': 1156277.6620442574, 'base_qtop': 385398.82024750893, 'grid_steps': 345600, 'grid_steps_without_row': 0, 'planted_caught': {'MUT_LANDING_AS_REQ': True, 'MUT_NO_LOOKBACK': True, 'MUT_ANY_PRICE': True, 'MUT_CROSS_SIDE': True}} in 46 s
+2026-11-14T03:28:39Z tag=np_day_20261026 rc=0 peak_rss_mib=987 wall_s=46.49 cpu_user_s=36.16 memavail_start_gib=22 disk_free_gib=520->520 slot=claude

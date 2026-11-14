@@ -1,0 +1,2 @@
+selftests passed; planted errors caught: {'MUT_LANDING_AS_REQ': True, 'MUT_NO_LOOKBACK': True, 'MUT_ANY_PRICE': True, 'MUT_CROSS_SIDE': True}
+2026-11-14T03:26:33Z tag=np_selftest rc=0 peak_rss_mib=102 wall_s=0.31 cpu_user_s=0.23 memavail_start_gib=22 disk_free_gib=520->520 slot=claude
