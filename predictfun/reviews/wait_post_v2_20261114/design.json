@@ -1,0 +1,69 @@
+{
+  "status": "code_complete_16_synthetic_checks_passed",
+  "candidate_count": 1,
+  "supersedes_model": "wait-post-side-heads-v1; no old labels/models reused",
+  "objective": "Choose POST or continued WAIT separately for each empty bid/ask rung using expected incremental whole-portfolio terminal value",
+  "actions": {
+    "post": "submit now, then follow the frozen continuation policy on all future empty-slot decisions",
+    "wait": "skip this decision, then follow exactly the same frozen policy, including repeated waiting",
+    "never_reference": "same prefix and same continuation on other rungs, but keep this rung empty for the remaining window"
+  },
+  "targets": {
+    "qpost": "100 * (terminal_value_POST - terminal_value_NEVER) / 30",
+    "qwait": "100 * (terminal_value_WAIT - terminal_value_NEVER) / 30",
+    "delta": "qpost - qwait, local selection diagnostic only",
+    "terminal": "60.2s joint portfolio cash plus inventory; native placement/cancel/notice timing and pending fills",
+    "clipping": "none; v1's +/-10 clipping removed because it changes the economic expectation being estimated",
+    "cost_convention": "inherited gross simulated value, no fee/rebate or invented inventory-penalty change"
+  },
+  "policy": "POST iff qpost_hat > 0 and qpost_hat >= qwait_hat; positive ties post; nonpositive/nonfinite/missing input waits; reevaluate every50ms; no cooldown or legacy guard veto",
+  "keeper": "neutral KEEP with identical engine safety cancels in every branch and replay arm; integration with the other session's learned keeper requires relabeling under that keeper",
+  "population": "neutral no-cancel POST/KEEP entry generations; first generation sampled1/2, later generations1/32 by outcome-independent hash; one row per reference generation",
+  "waiting_state_support": "suppress only the sampled rung from its neutral birth for a hash-assigned age0/50/100/200/400/800/1600/3200/6400/12800/25600/51200ms, then probe its first legal opportunity; three branches share the complete prefix and client state; age is sampling only, never an execution retry timer",
+  "exclusions": "unsampled, probe not reached, missing input and engine constraints retained as statuses; no fill/outcome filtering",
+  "features": "v1's69 causal features plus idle_age_ms and side_price_change_while_empty; same raw and side-aligned signals, known inventory/exposures; optimized entry features checked against original implementation",
+  "model": "pinned LightGBM params and200 rounds; side-specific post/wait regressors; no hyperparameter tuning",
+  "support_checks": "at least1000 actions and two training dates per side, at least100 nonzero targets per learned head; require actual tree splits and varying predictions; FLAT bootstrap wait value is structurally zero, not fitted",
+  "chronology": {
+    "bootstrap": "full consumed Oct23/24 labels under FLAT entry continuation -> pi1 post-admission heads",
+    "continuation_labels": "all later consumed days labeled under the SAME frozen pi1; pi1 never learns from them",
+    "final_models": "each pi2 fold fits both heads using continuation-label days strictly before its test day; first fold trains Oct25/26",
+    "test_days": [
+      "20261027",
+      "20261031",
+      "20261101",
+      "20261102",
+      "20261103"
+    ],
+    "calibration": "none; economic thresholds fixed, no calibration outcome tuning",
+    "interpretation": "finite policy improvement under a learned continuation, not convergence or optimality"
+  },
+  "portfolio": "6rungs per side,30shares per order,1500-share hard exposure cap, shared inventory and price reservations",
+  "replay_arms": [
+    "VALUE pi2",
+    "ADMISSION pi1",
+    "ALWAYS",
+    "SCHEDULED guard-clear",
+    "TIMER guard-clear plus250ms",
+    "FLAT"
+  ],
+  "execution_clock_shifts_ms": [
+    0,
+    50,
+    250
+  ],
+  "basic_screen": "positive absolute M50 PNL with/without <100ms fills; beat every nonflat comparator pooled and on at least4/5 days at each clock under both age treatments; no higher integrated squared inventory at M50; both sides must pass local matched timing null",
+  "local_null": "500 count-matched selections within UTC day/side/hour/rung; evaluate paired joint-portfolio POST-minus-WAIT value, never sum labels as portfolio PNL; selected absolute POST value and delta both positive, delta exceeds null95th percentile; require at least30 selected and30 withheld actions per side",
+  "portfolio_null": "only if basic screen passes:200 accepted M50 random quota-controlled admissions per market window, matching candidate submission counts EXACTLY per side (therefore also hour); neutral keeper and full coupled replay; predetermined coin-rate mixture0.25/0.5/0.75/0.95/1.0; reject unmatched counts, maximum2000 attempts per window; cannot accept with missing draws/windows",
+  "acceptance": "basic_screen AND complete matched portfolio null AND candidate total PNL exceeds null95th percentile with and without <100ms fills; skipped/refused null always means no acceptance",
+  "intervals": "1000 UTC-day bootstrap draws only after five complete consumed development days; descriptive, not forward validation",
+  "execution": "supervised user service, codex/core8 via run_light,4GiB AS cap and2GiB RSS guard; preserve artifacts; source freeze before historical work; identity-checked ExecStopPost resumes older size queue",
+  "forward_validation": false,
+  "limitations": [
+    "neutral-keeper experiment, not combined learned keep/pull performance",
+    "finite learned-policy improvement can still have policy/state distribution shift; no optimality claim",
+    "queue/fill simulator and gross economics remain unvalidated",
+    "SCHEDULED/TIMER inherit historical LODO guard inputs and are exploratory comparators",
+    "candidate has seen-day development only; any forward test requires separately frozen untouched complete days"
+  ]
+}
