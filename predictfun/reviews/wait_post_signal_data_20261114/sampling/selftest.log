@@ -1,0 +1,11 @@
+test_good_timing_cannot_override_negative_absolute_value (test_wait_post_sampling.SamplingTests.test_good_timing_cannot_override_negative_absolute_value) ... ok
+test_probabilities_and_invalid_generation (test_wait_post_sampling.SamplingTests.test_probabilities_and_invalid_generation) ... ok
+test_sampling_correction_recovers_known_population (test_wait_post_sampling.SamplingTests.test_sampling_correction_recovers_known_population) ... ok
+test_weight_matched_null_oracle_anti_and_bad_weight (test_wait_post_sampling.SamplingTests.test_weight_matched_null_oracle_anti_and_bad_weight) ... ok
+test_weighted_metrics_and_refusal (test_wait_post_sampling.SamplingTests.test_weighted_metrics_and_refusal) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.024s
+
+OK
+2026-11-14T16:57:05Z tag=wait_post_sampling_selftest rc=0 peak_rss_mib=160 wall_s=0.67 cpu_user_s=0.51 memavail_start_gib=23 disk_free_gib=502->502 slot=codex
