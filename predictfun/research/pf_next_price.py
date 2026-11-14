@@ -55,7 +55,8 @@ ignored; crossing read on the wrong side) that must each fail a case; (iii) memo
 Limits: replay rule M (B1a): every queue number is the simulator's model; our order is not in the public book; the rungs are independent
 orders; the top makers' entry times are not observable (CROSSING proves presence before the birth, not for how long); first trade only;
 consumed days (C8); the 5 s lookback and the 30 sh line are fixed here.
-Usage (run_light, PF_SLOT=claude): pf_next_price.py selftest | day <day> | report; driver run_next_price.sh
+Usage (run_light, PF_SLOT=claude): pf_next_price.py selftest | day <day> | report | posthoc; driver run_next_price.sh (selftest, days,
+report). 'posthoc' is POST HOC, added after the first report (03:32Z): the queue numbers paired within the same births (see posthoc()).
 """
 import bisect
 import json
@@ -414,6 +415,42 @@ def report():
     print(txt)
 
 
+def posthoc():
+    """POST HOC, added after the first report (2026-11-14 03:32Z), descriptive, no readings. The report's queue medians are over different
+    births (LIVE ones, PULLED ones, those with a next order). Here they are paired within the same births (fallback, M 50, guard not
+    masked): queue ahead against the size shown at the price in the birth frame, the share at the front (<= 5 sh ahead), the order's age,
+    by rung; for PULLED births with a next order, the kept order's queue against the next order's on the same birth."""
+    O = pd.concat([pd.read_parquet(f'{OUTD}/ours_{d}.parquet') for d in DAYS9], ignore_index=True)
+    X = O[(O.cfg == 'M50') & (O.kind == 'fallback') & ~O.guard.isin(['masked', 'pre_grid'])]
+    q3 = lambda v: '%.0f (%.0f / %.0f)' % tuple(np.nanpercentile(np.asarray(v, float), [50, 25, 75])) if np.isfinite(np.asarray(v, float)).any() else 'n/a'
+    q3f = lambda v: '%.2f (%.2f / %.2f)' % tuple(np.nanpercentile(np.asarray(v, float), [50, 25, 75])) if np.isfinite(np.asarray(v, float)).any() else 'n/a'
+    L = [f'NEXT-PRICE POST HOC (after the first report; descriptive, no readings): fallback births, M 50, guard not masked; as of '
+         f'{time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}; sh / ms as median (p25 / p75)', '']
+    for st_ in ('LIVE', 'PULLED'):
+        y = X[X.status == st_]; fr = np.where(y.shown.values > 0, y.ahead.values / y.shown.values, np.nan)
+        L.append(f'{st_} (n {len(y)}): queue ahead at the birth {q3(y.ahead)} sh{" had it been kept" if st_ == "PULLED" else ""}; size shown at the'
+                 f' price {q3(y.shown)} sh; ahead / shown {q3f(fr)}; at the front (<= 5 sh ahead) {float((y.ahead <= 5).mean()):.1%};'
+                 f' order age at the birth {q3(y.age)} ms')
+        if st_ == 'PULLED':
+            L.append(f'  it had rested {q3(y.age - y.since)} ms before the guard pulled it, {q3(y.since)} ms before the birth')
+        for r in RUNGS:
+            z = y[y.rung == r]
+            if len(z):
+                fz = np.where(z.shown.values > 0, z.ahead.values / z.shown.values, np.nan)
+                L.append(f'  rung {r}: n {len(z):>6}; ahead {q3(z.ahead)}; shown {q3(z.shown)}; ahead / shown {q3f(fz)}; front {float((z.ahead <= 5).mean()):.1%};'
+                         f' age {q3(z.age)}')
+    y = X[(X.status == 'PULLED') & X.next_a0.notna()]
+    L.append(f'PULLED births with a next order of ours at the price (n {len(y)}): kept {q3(y.ahead)} sh against the next order at activation'
+             f' {q3(y.next_a0)} sh; next minus kept {q3(y.next_a0 - y.ahead)} sh; the next order {q3(y.delay)} ms after the birth')
+    y = X[X.next_a0.notna()]
+    fr = np.where(y.shown.values > 0, y.next_a0.values / y.shown.values, np.nan)
+    L.append(f'All births with a next order (n {len(y)}): next order at activation {q3(y.next_a0)} sh against {q3(y.shown)} sh shown at the birth;'
+             f' ratio {q3f(fr)}')
+    txt = '\n'.join(L) + '\n'
+    open(f'{OUTD}/next_price_posthoc.txt', 'w').write(txt)
+    print(txt)
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''
     if cmd == 'selftest':
@@ -422,5 +459,7 @@ if __name__ == '__main__':
         day_run(sys.argv[2])
     elif cmd == 'report':
         report()
+    elif cmd == 'posthoc':
+        posthoc()
     else:
-        sys.exit('usage: pf_next_price.py selftest | day <day> | report')
+        sys.exit('usage: pf_next_price.py selftest | day <day> | report | posthoc')
