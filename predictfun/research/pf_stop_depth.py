@@ -43,7 +43,9 @@ day (asserted); every row matches an OLD prediction or is counted; memory self-g
 Limits: OUR signal's population (guard-on steps); the 1 s horizon is PULL-DEPTH's; consumed days and the inputs were chosen after PULL-DEPTH /
 FUTURE-BEST on these days (exploratory: a better model is a candidate for the replay of step 2, not a result); AUC ranks rows, the replay
 values them.
-Usage (run_light, PF_SLOT=claude): pf_stop_depth.py selftest | rows <day> | fit <day> | report; driver run_stop_depth.sh
+Usage (run_light, PF_SLOT=claude): pf_stop_depth.py selftest | rows <day> | fit <day> | report | posthoc; driver run_stop_depth.sh
+(selftest, rows, fits, report). 'posthoc' is POST HOC, added after the first report (04:22Z): the broken Binance-return quintiles
+replaced by value bins, and where moves stop by signal strength (see posthoc()).
 """
 import bisect
 import json
@@ -401,8 +403,48 @@ def report():
     print(txt)
 
 
+def posthoc():
+    """POST HOC, added after the first report (2026-11-14 04:22Z), descriptive, no readings. The report's Binance-return quintiles were
+    broken: 77% of the 1 s returns against us are exactly 0, so every quintile line was 0 (Q2-Q4 empty, 'Q5' = any move against us). Here
+    value bins instead (in our favour < 0 / zero / against us in terciles of the positive values) for the 1 s and 250 ms returns, and where
+    moves of >= 1 tick stop by guard-value quintile and by those bins."""
+    Z = pd.concat([pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=['v', 'onset', 'adv_bn_r1000', 'adv_bn_r250', 'D0', 'D1']) for d in DAYS9],
+                  ignore_index=True)
+    Z = Z[Z.D0 == 0]
+    dist = lambda x: ' | '.join(f'{lab} {v:5.1%}' for lab, v in zip(('0', '1', '2', '3', '4', '5+'),
+                                                                     [float((np.minimum(x, 5) == i).mean()) for i in range(6)]))
+    stop = lambda x: (f'stop at 1 tick {float((x == 1).mean()):5.1%}, 2 ticks {float((x == 2).mean()):5.1%}, 3+ {float((x >= 3).mean()):5.1%}'
+                      f' (n {len(x)})') if len(x) else 'n/a'
+    L = [f'STOP-DEPTH POST HOC (after the first report; descriptive, no readings): guard-on steps with nothing moved yet, n {len(Z)}; as of '
+         f'{time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}', '']
+    for col, nm in (('adv_bn_r1000', 'Binance 1 s return against us'), ('adv_bn_r250', 'Binance 250 ms return against us')):
+        x = Z[col].values.astype(float); pos = x[x > 0]; t1, t2 = np.quantile(pos, [1 / 3, 2 / 3]) if len(pos) else (NAN, NAN)
+        bins = (('in our favour (< 0)', x < 0), ('zero', x == 0), (f'against, low (0, {t1:.2f}]', (x > 0) & (x <= t1)),
+                (f'against, mid ({t1:.2f}, {t2:.2f}]', (x > t1) & (x <= t2)), (f'against, high (> {t2:.2f})', x > t2), ('missing', ~np.isfinite(x)))
+        L.append(f'HOW FAR THE MOVE GOES by the {nm} (share of steps; ticks within 1 s)')
+        for lab, m in bins:
+            if m.any():
+                L.append(f'  {lab:<28} {m.mean():5.1%} of steps: {dist(Z.D1.values[m])}')
+        L.append(f'WHERE MOVES OF >= 1 TICK STOP by the {nm}')
+        for lab, m in bins:
+            if (m & (Z.D1.values >= 1)).any():
+                L.append(f'  {lab:<28} {stop(Z.D1.values[m & (Z.D1.values >= 1)])}')
+        L.append('')
+    qv = np.nanquantile(Z.v.values, [0.2, 0.4, 0.6, 0.8]); bv = np.searchsorted(qv, Z.v.values)
+    L.append('WHERE MOVES OF >= 1 TICK STOP by guard-value quintile (Q1 = most negative, the strongest signal)')
+    for i in range(5):
+        L.append(f'  Q{i + 1} {stop(Z.D1.values[(bv == i) & (Z.D1.values >= 1)])}')
+    for o, nm in ((1, 'onset steps'), (0, 'later steps')):
+        L.append(f'  {nm:<11} {stop(Z.D1.values[(Z.onset.values == o) & (Z.D1.values >= 1)])}')
+    txt = '\n'.join(L) + '\n'
+    open(f'{OUTD}/stop_depth_posthoc.txt', 'w').write(txt)
+    print(txt)
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''
+    if cmd == 'posthoc':
+        posthoc(); sys.exit(0)
     if cmd == 'selftest':
         all_selftests()
     elif cmd == 'rows':
