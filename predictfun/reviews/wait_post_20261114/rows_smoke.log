@@ -1,0 +1,3 @@
+20261023: 1 windows, 66 entry generations, RSS 541 MiB, 6.7s
+20261023: 2 windows, 147 entry generations, RSS 542 MiB, 10.6s
+2026-11-14T12:13:12Z tag=wait_post_rows_smoke rc=0 peak_rss_mib=797 wall_s=11.47 cpu_user_s=10.57 memavail_start_gib=22 disk_free_gib=510->510 slot=codex
