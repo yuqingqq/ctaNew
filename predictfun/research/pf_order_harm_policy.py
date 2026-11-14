@@ -4,10 +4,14 @@
 USER 2026-11-14: "Orders originally posted at the best still get pulled whenever the guard fires, regardless of the new forecast" / "It needs to
 predict the remaining move from the current decision state" / "Preserving several orders needs evaluation under shared inventory limits,
 including adverse fills and cancellation/re-entry costs" / "the next target should be the probability and severity of harm to each order after
-cancellation could take effect, with queue value included in the keep/pull decision" / "We should have larger cap when we increase the size".
+cancellation could take effect, with queue value included in the keep/pull decision" / "We should have larger cap when we increase the size" /
+(after JOINT-LADDER v3, before this script's first run) "We can use a much larger cap for testing, I mean there will be multiple ladders, so the
+potential cap can be much larger".
 
-LANE: pf_joint_ladder_v3.sim_joint unchanged (state 'client', rungs 0-5 x 30 sh, both sides); caps hard K = 2 / 5 / 10 x size; fill clocks
-M 0 / 50 / 250; values as v3 (WS / E2 / all trades at 1 s without fills on orders < 100 ms old, 5 s, 60 s marks, settlement, order-age split).
+LANE: pf_joint_ladder_v3.sim_joint unchanged (state 'client', rungs 0-5 x 30 sh, both sides); caps hard K = 10 / 20 / 50 x size and none
+(changed before the first run from 2 / 5 / 10 after the USER's message above: one ladder already rests 180 sh a side, so hard 2 / 5 mostly test
+the cap; hard 10 = the full ladder + 120 sh of position); fill clocks M 0 / 50 / 250; values as v3 (WS / E2 / all trades at 1 s without fills
+on orders < 100 ms old, 5 s, 60 s marks, settlement, order-age split).
 ARMS:
   LDG   pull every resting order while the guard is on (reference);
   FB25  FUTURE-BEST's rule: keep rung d >= 1 when P(move >= d + 1) < 0.25; rung 0 at the best always pulled;
@@ -28,7 +32,7 @@ THRESHOLDS, MATCHED ON THE DECISION VARIABLE (CLAUDE.md rule 7), fixed before an
   at each row, as fb_dec); tau_H and eps_E = the s_FB quantiles of P(harm) and P(harm) x severity, theta_D = the (1 - s_FB) quantile of DELTA,
   so OHH / OHE / OHD keep as many orders as FB25 on that population (OHD0 is not matched). The lane's realized keep shares (decisions on the
   250 ms grid) are printed.
-READINGS DECLARED BEFORE THE FIRST RUN (WS-timed $/day w/o young at 1 s; day rule >= 7 of 9; per model arm and per hard cap):
+READINGS DECLARED BEFORE THE FIRST RUN (WS-timed $/day w/o young at 1 s; day rule >= 7 of 9; per model arm and per cap):
   R630 OH-VS-FB25: higher than FB25 at M 0 AND M 50 on >= 7 days -> BETTER; lower at both on >= 7 -> WORSE; else NOT-SHOWN.
   R631 OH-VS-LDG:  higher than LDG at M 0 AND M 50 on >= 7 days -> PAYS; lower at both on >= 7 -> HURTS; else NOT-SHOWN.
   R632 RUNG-0 (printed): $/day on rung 0 vs rungs 1-5 per arm (the order at the best, which FB25 always pulls).
@@ -42,7 +46,8 @@ CONTROLS (any failure -> no output):
       all 97 inputs must be identical and the three predictions equal to the saved out-of-day predictions (|diff| <= 1e-9);
   (iii) NO-LOOK-AHEAD falsifier on every 20th new decision input in the replay: every frame not yet known at t perturbed, the order's inputs
       recomputed must be identical;
-  (iv) REGRESSION: LDG / FB25 / OFB2 fills equal v3's saved fills row for row on every day, cap and clock (same lane, harness unchanged);
+  (iv) REGRESSION: LDG / FB25 / OFB2 fills equal v3's saved fills row for row on every day and clock at the caps v3 ran (hard 10, none; same
+      lane, harness unchanged);
   (v) v3's conservation / accounting checks on every run, and the true exposure (pf_joint_ladder_v3_exposure.max_exposure) <= K x size on every
       run; memory self-guard (2 GiB).
 Limits: replay rule M (B1a); the label's 2 s horizon and blind keep; ORDER-HARM's models were fit on the S4 reference path's order population;
@@ -75,7 +80,9 @@ import pf_joint_ladder_v3_exposure as JX                  # noqa: E402
 DAYS9 = K.DAYS9
 OUTD = f'{K.IO}/order_harm_policy_20261114'
 SIZE = J3.SIZE; NR = J3.NR
-CAPS = (('hard', 2), ('hard', 5), ('hard', 10))
+CAPS = (('hard', 10), ('hard', 20), ('hard', 50), ('none', None))
+V3_CAPS = ('hard10', 'none')                              # caps with v3 fills (regression control)
+DETAIL_CAP = 'hard20'                                     # per-day and order-age tables
 CFGS = J3.CFGS
 BASE_ARMS = ('LDG', 'FB25', 'OFB2'); OH_ARMS = ('OHH', 'OHE', 'OHD', 'OHD0'); ARMS = ('LDG', 'FB25', 'OHH', 'OHE', 'OHD', 'OHD0', 'OFB2')
 EVERY = OH.EVERY                                          # 5 steps = 250 ms, the label's grid
@@ -425,12 +432,15 @@ def eval_day(day):
                 for mode, ck in CAPS:
                     cn = J3.cap_name(mode, ck); c_ = cnt.setdefault((cfg, arm, cn), dict(keep=[0] * NR, pull=[0] * NR, noinput=0))
                     dec, idle = arm_dec(arm, W, ctx, wi, pred, thr, c_)
-                    r = J3.sim_joint(W, q, shf, ck * SIZE, {0: ctx[0]['vg'], 1: ctx[1]['vg']}, decide=dec, idle_only=idle, mode=mode)
+                    capv = None if ck is None else ck * SIZE
+                    r = J3.sim_joint(W, q, shf, capv, {0: ctx[0]['vg'], 1: ctx[1]['vg']}, decide=dec, idle_only=idle, mode=mode)
                     st['runs'] += 1
                     for v_ in J3.VIOL:
                         st['viol'][v_] += r['stat']['viol'][v_]
                     e = JX.max_exposure(r); mx = max(e[0], e[1])
-                    st['maxexp'][cn] = max(st['maxexp'].get(cn, 0.0), mx); st['over_cap'] += int(mx > ck * SIZE + JX.TOL)
+                    st['maxexp'][cn] = max(st['maxexp'].get(cn, 0.0), mx)
+                    if capv is not None:
+                        st['over_cap'] += int(mx > capv + JX.TOL)
                     inv.append((int(day), cfg, arm, cn, m, r['stat']['maxpos'], r['endpos'], sum(r['stat']['pulls']), sum(r['stat']['skip']),
                                 sum(r['stat']['hard_block']), mx))
                     for s in (0, 1):
@@ -456,8 +466,7 @@ def eval_day(day):
     R3 = pd.read_parquet(f'{J3.OUTD}/fills_{day}.parquet'); reg_bad = {}
     for arm in BASE_ARMS:
         for cfg in ('M0', 'M50', 'M250'):
-            for mode, ck in CAPS:
-                cn = J3.cap_name(mode, ck)
+            for cn in V3_CAPS:
                 X = F[(F.capk == cn) & (F.arm == arm) & (F.cfg == cfg)].drop(columns=['capk']).reset_index(drop=True)
                 Y = R3[(R3.capk == cn) & (R3.arm == arm) & (R3.cfg == cfg)].drop(columns=['capk']).reset_index(drop=True)
                 if not FB.same_rows(X, Y):
@@ -513,7 +522,8 @@ def report():
          f'caps K x {SIZE:.0f} sh; as of {asof}; controls passed: input parity on {len(PAR_DAYS)} days ({sum(p["matched"] for p in par.values())} matched '
          f'decision rows of {sum(p["key_found"] for p in par.values())} with ORDER-HARM v2\'s row present, 0 inputs / predictions differ); no-look-ahead '
          f'falsifier {sum(stats[d]["stat"]["lookahead_checks"] for d in DAYS9)} checks in the replay, 0 differ; LDG / FB25 / OFB2 = v3 row for row; '
-         f'conservation / accounting on all {runs} runs, 0 violations; max true exposure {mx} sh (<= cap on every run); fills without a 1 s value {nbad}',
+         f'conservation / accounting on all {runs} runs, 0 violations; max true exposure {mx} sh (<= the cap on every hard-cap run); fills without a 1 s '
+         f'value {nbad}',
          '', f'THRESHOLDS (predictions only, matched to FB25\'s keep share {thr["s_FB"]:.3f} on {thr["rows"]} ORDER-HARM v2 rows): tau_H {thr["tau_H"]:.4f}, '
          f'eps_E {thr["eps_E"]:.4f} c/sh, theta_D {thr["theta_D"]:+.4f} c/sh; keep share by rung 0-5 on those rows: ' +
          '; '.join(f'{c} ' + ' '.join(f'{v:.2f}' for v in thr['share_by_rung'][c]) for c in ('keep_fb', 'OHH', 'OHE', 'OHD', 'OHD0')),
@@ -556,12 +566,12 @@ def report():
         for arm in ARMS:
             L.append(f'  {arm:<4} {cn:<6}: ' + ' ; '.join(f'{c} {cell(arm, c, cn, rungs=[0]):+7.1f} | {cell(arm, c, cn, rungs=list(range(1, NR))):+7.1f}'
                                                        for c in ('M0', 'M50')))
-    L += ['', '  per day, WS $/day w/o young, M 50, hard5: ' + ' | '.join(ARMS)]
+    L += ['', f'  per day, WS $/day w/o young, M 50, {DETAIL_CAP}: ' + ' | '.join(ARMS)]
     for d in DAYS9:
-        L.append(f'    {d} ' + ' | '.join(f'{cell(a_, "M50", "hard5", d=d):+7.1f}' for a_ in ARMS))
-    L += ['', 'C1 / C12: $/day at 1 s by order age, M 50, hard5: WS (< 100 | 100-500 | >= 500 ms) || E2 (same)']
+        L.append(f'    {d} ' + ' | '.join(f'{cell(a_, "M50", DETAIL_CAP, d=d):+7.1f}' for a_ in ARMS))
+    L += ['', f'C1 / C12: $/day at 1 s by order age, M 50, {DETAIL_CAP}: WS (< 100 | 100-500 | >= 500 ms) || E2 (same)']
     for arm in ARMS:
-        x = A[(A.arm == arm) & (A.cfg == 'M50') & (A.capk == 'hard5')]; parts = []
+        x = A[(A.arm == arm) & (A.cfg == 'M50') & (A.capk == DETAIL_CAP)]; parts = []
         for s_ in ('WS', 'E2'):
             y = x[x.src == s_]
             parts.append(' | '.join(f'{float((y.q * y.v1)[(y.age >= lo) & (y.age < hi)].sum()) / 100.0 / ndays:+8.1f}' for _, lo, hi in J3.AGEB))
