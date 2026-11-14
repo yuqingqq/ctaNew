@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-14 11:33Z (session ce68ebe0) — USER review during the fit stage: nested out-of-fold chain + availability / preservation / good at-best readings (06e534e8); unrepaired fit outputs deleted unread; the 9 label days reused; the test relaunched
+
+- USER: (1) "The iterative training is not fully out-of-fold ... From the second iteration, A can indirectly influence its own prediction ... keep A excluded throughout the entire iteration chain. Existing label files remain reusable"; (2) "The old guard still controls availability ... A high reported 'keep share' would not establish high quote availability ... judge the replay on whole-portfolio value and whether it preserves older orders and captures more good at-best fills".
+- Stopped: the fit stage (10:53Z, unrepaired split) at its 5th fold (11:26Z); models, predictions, thresholds, PULL-DEPTH refits and fit logs deleted unread. Kept: the 9 label days (0.56-1.15 M rows a day, peak 1.2-1.45 GiB); the label-stage code is identical (syntax tree) to the code that built them.
+- Fixed (06e534e8): chain_model - nested exclusion (final model, one per left-out day, one per left-out pair; memoized), falsifier through the real chain with a synthetic learner (planted shared chain caught: 0.2 -> 0.1). Replay readings declared before any replay: R653 availability (live-quote time every rung / during the guard / at the best; onset orders kept through the guard; at-best STOP / THROUGH), R654 PRESERVE, R655 GOOD-AT-BEST, R656 GAP-EVIDENCE (R652 accept AND preserves AND more good at-best fills). Limits stated: queue position estimated; no remaining-size or inventory input (caps protect inventory). FINDINGS: P28, C17.
+- Running: run_order_harm_v3.sh (reuses the labels; five nested folds; report) then run_order_harm_policy_v2.sh (input parity, replay, report).
+
 ## 2026-11-14 10:26Z (session ce68ebe0) — PROGRESS and the NEXT TEST (USER: "Update handoffs and status as well, then show the current progress, what's our next test")
 
 Where we are (replay rule M, 9 consumed days, first minute; WS = exactly-timed trades):

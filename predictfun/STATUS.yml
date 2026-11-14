@@ -6,6 +6,8 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-14 11:33Z (session ce68ebe0): USER review during the fit stage - nested out-of-fold chain, availability / preservation / good
+  at-best readings (06e534e8); unrepaired fits deleted unread, labels reused; test relaunched.
   2026-11-14 10:26Z (session ce68ebe0): progress summary and the next test recorded (HANDOFF): ORDER-HARM v3 labels + chronological folds,
   then POLICY v2 replay judged by R652 whole-portfolio acceptance; awaiting the USER's go.
   2026-11-14 10:24Z (session ce68ebe0): review of the USER's client-state / 50 ms repair (32da4014): right; three fixes on top (a8e6d473:
@@ -1868,7 +1870,7 @@ order_harm_client50_review_20261114:
 # NEXT_TEST_20261114
 next_test_20261114:
   recorded_as_of: "2026-11-14 10:26Z"
-  status: awaiting_user_go
+  status: running (relaunched 2026-11-14 11:33Z after the nested-chain repair, 06e534e8; labels reused)
   question: "keep now with the option to cancel later (queue value included) vs LDG and FB25, whole portfolio, chronological"
   step_1: "predictfun/research/run_order_harm_v3.sh (labels 9 days, 50 ms, client-state lane; 5 chronological folds; R660, R661)"
   step_2: "predictfun/research/run_order_harm_policy_v2.sh (input parity; replay LDG, FB25, FB25C, OFB2C, OHQ0, OHQM)"
@@ -1877,6 +1879,7 @@ next_test_20261114:
   fill_clocks: [M0, M50, M250]
   acceptance: "R652: vs LDG and FB25C, each clock, with and without young fills, cash + inventory at 60.2 s, pooled higher and >= 4/5 days; 12 conditions; headline cap hard50"
   diagnostic_only: "R650 WS-timed reading"
+  gap_evidence: "R656 = R652 accept AND R654 preserves (onset orders kept through the guard, vs FB25C) AND R655 more good at-best (STOP) fills vs FB25C and LDG; R653 availability printed"
   runtime_estimate_hours: 2.5
   after_accept: "development candidate only; freeze, then a forward test on >= 5 untouched days chosen by the USER"
 # /NEXT_TEST_20261114
