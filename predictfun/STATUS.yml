@@ -6,6 +6,9 @@ owner: single-seat (this folder's STATUS.yml + HANDOFF.md are the state; no othe
 mode: EXPLORATORY       # user 2026-11-01: no held-out / freeze rules yet; results descriptive
 
 updated: >-
+  2026-11-14 16:38Z (session ce68ebe0): DIRECTION CORRECTED with the USER (HANDOFF START HERE): the USER's stop-price design - rest every
+  level by default, predict the stop from the current state at every step, pull only the levels inside it, protection side at the new
+  best, no guard trigger; next E2-CHECK -> STOP-MODEL -> STOP-POLICY, each on the USER's go. ORDER-HARM line closed (off-direction).
   2026-11-14 16:32Z (session ce68ebe0): COURSE REVIEW (HANDOFF): "pull every level" (LDG) became the skeleton after DEEP-PULL
   (11-13); the USER's stop-price design won on exact trades and lost on E2 trades every time, never investigated; correction proposed.
   2026-11-14 16:25Z (session ce68ebe0): MODEL AUDIT (handoffs/20261114_model_audit_results.md): training sound, targets misaligned - the guard prices only sweep cost
@@ -1772,6 +1775,9 @@ confirmation_C2:
   result: "VOID - driver STOPPED 2026-11-05 17:15Z by user decision (engine pf_step4.py never got the 11-05 fixes); 11-01..11-04 had been admitted; c2/ and its replay outputs deleted"
 
 flags:
+  pull_direction: "USER's design (2026-11-14, HANDOFF START HERE): rest every level by default; a stop-price model from the current state at every step; pull only the levels inside the predicted stop; protection side at the predicted new best; hysteresis; joint ladder; fast path as an arm; posting = the other session. Next: E2-CHECK -> STOP-MODEL -> STOP-POLICY, each on the USER's go"
+  order_harm_line: "CLOSED 2026-11-14 (off-direction): per-order keep / cancel value model inside guard episodes; NOT ACCEPTED (R652); its label makes 66-87% of pulls free (MODEL AUDIT); tooling reusable"
+  guard_as_trigger: "RETIRED for new designs 2026-11-14: pm_ladder_v1's guard = 1 s cost of a sweep through the best, quantile line; on 34% of steps, 54.5 alarms a side-minute; LDG (pull every level on it) is a comparator only"
   prefix_results: "VOID + DELETED 2026-11-05 17:17Z (user): every replay result before round i; see updated 17:17Z"
   fill_timing: "RESOLVED (T1): REST = volumes; WS pending increments (USD at YES price) time ~55% of volume to the ms; rest +-0.5 s (executedAt rounded)"
   futures_spot_basis: "Binance futures mid ~ -3.9 bps vs relay at 10-23 00:00Z (one sample); tick leg must correct"
@@ -1897,6 +1903,21 @@ next_test_20261114:
   runtime_estimate_hours: 2.5
   after_accept: "development candidate only; freeze, then a forward test on >= 5 untouched days chosen by the USER"
 # /NEXT_TEST_20261114
+
+# DIRECTION_20261114
+direction_20261114:
+  recorded_as_of: "2026-11-14 16:38Z"
+  source: "USER: 'we need to predict the next stop price and only pull the risky levels' / 'Make sure our direction is correct, then correct handoffs and status'"
+  design: "rest every level by default (rung 0 included, deeper rungs early at the next prices); stop-price model from the current state at every 50 ms step, per side, P(move >= d + 1) for d = 0..5; pull only the levels inside the predicted stop; keep the protection side at the predicted new best; hysteresis; no guard trigger; joint client lane with hard caps; fast path as an arm; re-entry by the other session's post-vs-wait model (until then: when the level's predicted risk is gone)"
+  why_drifted: "LDG (pull every rung on the guard) won DEEP-PULL 11-13 and became the skeleton; the USER's design was tested only inside it and lost on E2-timed trades and at M 250, never investigated; ORDER-HARM replaced it (FINDINGS P29, C18)"
+  evidence_to_resolve: "FB25C - LDG, whole portfolio, hard 50: WS +$96 / +$40 a day at M 0 / 50, E2 -$101 / -$163; at M 250 WS -$438 too"
+  next:
+    - "E2-CHECK: FB25C vs LDG with E2 anchors moved across their error (P12, IQR -250 / +150 ms) and with E2 removed; 5 test days, hard 50, M 0 / 50 / 250; FB25C - LDG on E2 per shift"
+    - "STOP-MODEL: every-step stop-price model per side and level, chronological folds, skill vs base rate"
+    - "STOP-POLICY: the design in the joint client lane; arms STOP / STOP-FAST vs LDG / FB25C; whole portfolio (C15), WS / E2 (C12), queue place (C17), M 0 / 50 / 250, rule U bound"
+    - "LIVE-QUEUE-PROBE: USER's call (B1a, C10)"
+  gate: "each step on the USER's explicit go; code + synthetic checks + commit before any run"
+# /DIRECTION_20261114
 
 wait_post_v2_20261114:
   status: complete_rejected

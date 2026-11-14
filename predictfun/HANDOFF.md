@@ -1,5 +1,36 @@
 # P-2026-005 HANDOFF
 
+## START HERE - 2026-11-14 16:38Z (session ce68ebe0, before a session reset): the PULL line's direction, corrected with the USER
+
+USER: "Make sure our direction is correct, then correct handoffs and status, I will clear this session and reload".
+
+**The direction is the USER's design, in the USER's words:** "rest orders there as default, only pull when real signals happen"; "Pull the risk ones, and keep our protection side at the future best price"; "if we estimate it will stop 1c, we can rest 49c there and repost 50c ask"; "when best bid is 50c, their orders are 49c, and always there? Can we also put our orders early there"; "we need to predict the next stop price and only pull the risky levels". It is what the top makers do (FINDINGS 3 B / E): they rest larger orders and hold the front (ORDERS), are already at the next price before the move (SIDE-MOVES), and on the same intervals pull 28% against our 60%, before specific trades (LEARN-PULL).
+
+**The pull policy to build:**
+- Every level rests by default: rung 0 included, the deeper rungs early at the next prices.
+- A STOP-PRICE model predicts, from the CURRENT state at every step (USER gap 2), how far the move against each side will go: P(the best moves >= d + 1 ticks against the side) for each level d.
+- Pull ONLY the levels inside the predicted stop; keep the rest; keep the protection side's order at the predicted new best.
+- No flicker: hysteresis on the decision. No guard trigger.
+- Joint ladder: both sides, shared position, hard caps K x size (USER gap 3; the client-known lane).
+- Speed as an arm (USER: "we don't have to wait to decide, and we can send both post and cancel"): the fast path.
+- Posting / re-entry belongs to the OTHER session (post-vs-wait model; its v2 was rejected 11-14 15:01Z - see its sections). Until it lands, re-enter a pulled level when its predicted risk is gone.
+
+**Closed 2026-11-14 (not the direction):**
+- Pulling every level when the guard fires (LDG): a COMPARATOR only - never the lane skeleton, the decision scope or the trigger.
+- The guard (pm_ladder_v1's frozen model: the 1 s cost of a sweep through the best within 500 ms, on a quantile line; on 34% of 50 ms steps, 54.5 alarms a side-minute, pulls every rung) as the trigger of anything new (MODEL AUDIT).
+- The per-order keep / cancel value model (ORDER-HARM v3 + POLICY v2): NOT ACCEPTED; decided only inside guard episodes; pull = pull + immediate re-post; its label makes 66-87% of pulls free (MODEL AUDIT).
+- Reusable from that line: the client-known joint lane (pf_order_harm_client_lane.py: caps, conservation, terminal reconciliation, REPOST_MS), POLICY v2's whole-portfolio evaluation and availability readings, the ORDER-HARM WHY instrument (loss map by timing class, our fills against the top makers in the same states), the STOP-DEPTH / PULL-DEPTH / FUTURE-BEST / INFLUENCE models and rows.
+
+**Why we drifted (COURSE REVIEW, next section):** LDG won DEEP-PULL (11-13) against pulling only at the best and became the skeleton; the USER's design was tested only inside it (decisions at guard alarms, rung 0 always pulled) and lost on E2-timed trades and at M 250 every time; the E2 loss was never investigated; ORDER-HARM then replaced the stop-price design (FINDINGS P29, C18).
+
+**Next steps, in order, each on the USER's go (code + synthetic checks with planted errors + commit BEFORE any run):**
+1. E2-CHECK - is the stop rule's E2 loss real? Whole portfolio, hard 50 (ORDER-HARM WHY outputs, sums of its W1 cells): FB25C (the USER's rule as implemented) minus LDG is +$96 / +$40 a day on WS-timed trades at M 0 / 50 and -$101 / -$163 on E2-timed trades. Replay both, same engine (client lane, REPOST_MS 0) and the 5 test days, with the E2 trades' anchors moved across their error (P12: IQR about -250 / +150 ms) and with E2 trades removed; read FB25C - LDG on E2 per shift. If it turns >= 0 inside the error range, the rejection was timing. Watch out: at M 250 FB25C also loses on WS trades (-$438 a day vs LDG): this design needs speed.
+2. STOP-MODEL - the stop-price model at every 50 ms step (not only at guard onsets), per side, d = 0..5; STOP-DEPTH's + INFLUENCE's inputs; chronological folds (C16); skill per level against the base rate; compared with STOP-DEPTH's onset model and the guard.
+3. STOP-POLICY - the policy above in the joint client lane, no guard; tau per level set chronologically; arms STOP and STOP-FAST; comparators LDG and FB25C; whole portfolio at M 0 / 50 / 250 with and without young fills (C15), the WS / E2 split (C12), queue place (order age, STOP share at the best and behind; C17), pulls a day; rule U as a front bound (C5).
+4. LIVE-QUEUE-PROBE (USER's call) - rule M is not validated on live orders (B1a, C10) and this design lives on queue place.
+
+**Standing rules:** run_light.sh with PF_SLOT=claude (core 9; the other session uses the default slot); 2 GiB self-guard, never raise limits; consumed replay days 10-23..27, 10-31, 11-01..03 (and 11-07, 11-08); never read 11-04..06 or 11-09..13, never the sealed 10-28..30, never name forward day paths; declare readings and commit scripts before the first run, label post hoc work; run FINDINGS.md's checklist (C1-C18) before any number; commit only own hunks (state files via the HEAD-based staging), fetch, ahead-only, push after each test; after a USER review: fix, synthetic checks, commit, report, WAIT for the go.
+
 ## 2026-11-14 16:32Z (session ce68ebe0) — COURSE REVIEW (USER: "The thing is we need to predict the next stop price and only pull the risky levels, why we pull all levels? Does not make sense at all. Review your handoffs and status, why we went to the wrong direction")
 
 How "pull every level" became the skeleton (from this file):
