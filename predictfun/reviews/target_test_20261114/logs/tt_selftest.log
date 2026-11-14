@@ -1,0 +1,4 @@
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+influence selftests passed; planted errors caught: {'MUT_DFV_NOSIDE': True, 'MUT_ONSET_ALL': True, 'MUT_NO_DEBOUNCE': True}
+target-test selftests passed; planted errors caught: {'MUT_IR_SHIFT': True, 'MUT_IR_NAN_KEEP': True, 'MUT_HORIZON': True}
+2026-11-14T05:17:41Z tag=tt_selftest rc=0 peak_rss_mib=126 wall_s=0.45 cpu_user_s=0.35 memavail_start_gib=22 disk_free_gib=518->518 slot=claude
