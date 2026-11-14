@@ -1,0 +1,12 @@
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+influence selftests passed; planted errors caught: {'MUT_DFV_NOSIDE': True, 'MUT_ONSET_ALL': True, 'MUT_NO_DEBOUNCE': True}
+target-test selftests passed; planted errors caught: {'MUT_IR_SHIFT': True, 'MUT_IR_NAN_KEEP': True, 'MUT_HORIZON': True}
+20261027: 80 window-sides, 19 s, rss 584 MiB
+20261027: 160 window-sides, 35 s, rss 594 MiB
+20261027: 240 window-sides, 50 s, rss 604 MiB
+20261027: 320 window-sides, 66 s, rss 615 MiB
+20261027: 400 window-sides, 82 s, rss 623 MiB
+20261027: 480 window-sides, 98 s, rss 635 MiB
+20261027: 560 window-sides, 113 s, rss 645 MiB
+20261027: {"registry": 288, "outside_day": 0, "sealed_or_forward": 0, "no_outcome": 0, "untimed_legs_0_60": 2964, "untimed_shares_0_60": 32617.169265447075, "windows": 288, "window_sides": 576, "ctrl_differ": 0, "steps_guard": 284862, "miss_old": 0, "miss_new": 30738, "miss_full": 30738, "clock_ok": 1, "grid_steps": 345600, "grid_steps_without_row": 0, "pulls|LDG|M0": 81430, "pulls|FB25|M0": 24929, "pulls|FBN25|M0": 24546, "pulls|FBF10|M0": 62207, "pulls|FBF25|M0": 32272, "pulls|IR|M0": 18574, "pulls|OFB1|M0": 18323, "pulls|OFB2|M0": 21342, "pulls|OFB3|M0": 24313, "pulls|LDG|M50": 81377, "pulls|FB25|M50": 24793, "pulls|FBN25|M50": 24407, "pulls|FBF10|M50": 62145, "pulls|FBF25|M50": 32168, "pulls|IR|M50": 18261, "pulls|OFB1|M50": 18213, "pulls|OFB2|M50": 21260, "pulls|OFB3|M50": 24238, "pulls|LDG|M250": 80563, "pulls|FB25|M250": 22987, "pulls|FBN25|M250": 22576, "pulls|FBF10|M250": 61260, "pulls|FBF25|M250": 30733, "pulls|IR|M250": 15948, "pulls|OFB1|M250": 17361, "pulls|OFB2|M250": 20455, "pulls|OFB3|M250": 23469, "fills": 249105} in 117 s
+2026-11-14T05:27:50Z tag=tt_eval_20261027 rc=0 peak_rss_mib=747 wall_s=117.07 cpu_user_s=115.28 memavail_start_gib=23 disk_free_gib=518->518 slot=claude

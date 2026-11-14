@@ -1,0 +1,5 @@
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+influence selftests passed; planted errors caught: {'MUT_DFV_NOSIDE': True, 'MUT_ONSET_ALL': True, 'MUT_NO_DEBOUNCE': True}
+target-test selftests passed; planted errors caught: {'MUT_IR_SHIFT': True, 'MUT_IR_NAN_KEEP': True, 'MUT_HORIZON': True}
+score 20261101: {'rows': 149968, 'no_fair_price': 0, 'onsets': 26301, 'onsets_unmatched': 0, 'max_diff_at_onsets': 0.0} in 7 s
+2026-11-14T05:19:11Z tag=tt_score_20261101 rc=0 peak_rss_mib=608 wall_s=8.03 cpu_user_s=7.25 memavail_start_gib=22 disk_free_gib=518->518 slot=claude
