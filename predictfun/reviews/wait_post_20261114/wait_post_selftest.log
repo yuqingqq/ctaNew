@@ -1,0 +1,16 @@
+test_bid_and_ask_route_independently_and_rest_never_uses_entry_head (test_wait_post.WaitPostTests.test_bid_and_ask_route_independently_and_rest_never_uses_entry_head) ... ok
+test_entry_rows_include_no_fills_and_only_one_per_generation (test_wait_post.WaitPostTests.test_entry_rows_include_no_fills_and_only_one_per_generation) ... ok
+test_fit_separates_sides_and_excludes_calibration_and_test (test_wait_post.WaitPostTests.test_fit_separates_sides_and_excludes_calibration_and_test) ... ok
+test_local_null_oracle_and_reversed_score (test_wait_post.WaitPostTests.test_local_null_oracle_and_reversed_score) ... ok
+test_refuses_constant_targets_partial_and_incompatible_rows (test_wait_post.WaitPostTests.test_refuses_constant_targets_partial_and_incompatible_rows) ... ok
+test_replay_all_arms_keep_flat_and_reconstruct_side_models (test_wait_post.WaitPostTests.test_replay_all_arms_keep_flat_and_reconstruct_side_models) ... ok
+test_report_requires_profit_and_exact_market_identity (test_wait_post.WaitPostTests.test_report_requires_profit_and_exact_market_identity) ... ok
+test_signed_features_inventory_and_future_invariance (test_wait_post.WaitPostTests.test_signed_features_inventory_and_future_invariance) ... ok
+test_targets_capture_gain_and_harm_not_direction_labels (test_wait_post.WaitPostTests.test_targets_capture_gain_and_harm_not_direction_labels) ... ok
+test_wait_never_expires_and_guard_free_entry (test_wait_post.WaitPostTests.test_wait_never_expires_and_guard_free_entry) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 4.129s
+
+OK
+2026-11-14T12:13:07Z tag=wait_post_wait_post_selftest rc=0 peak_rss_mib=217 wall_s=4.66 cpu_user_s=4.47 memavail_start_gib=22 disk_free_gib=510->510 slot=codex
