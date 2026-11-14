@@ -1,0 +1,16 @@
+{
+ "verdict": "HARD-EXPOSURE-OK",
+ "over": {
+  "hard2": 0,
+  "hard5": 0,
+  "hard10": 0,
+  "soft2": 23319
+ },
+ "runs": {
+  "hard2": 23328,
+  "hard5": 23328,
+  "hard10": 23328,
+  "soft2": 23328
+ },
+ "pc_days": 9
+}

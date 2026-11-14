@@ -1,0 +1,8 @@
+exposure selftests passed (5 synthetic cases incl. the flagged two-order case); planted position-only statistic caught
+joint-ladder v3 selftests passed; planted errors caught: {'MUT_REF_RELEASE': True, 'MUT_REST_TRUE': True, 'MUT_HELD_TRUE': True, 'MUT_LEG_LEAK': True, 'MUT_PRIORITY': True}
+20261102: 72 windows, 62 s, rss 562 MiB
+20261102: 144 windows, 125 s, rss 563 MiB
+20261102: 216 windows, 183 s, rss 564 MiB
+20261102: 288 windows, 239 s, rss 565 MiB
+20261102: windows 288, runs 10368, max exposure {'hard2': 60.00000000000006, 'hard5': 150.00000000000006, 'hard10': 300.00000000000006, 'soft2': 419.13482899999997}, runs over the cap {'hard2': 0, 'hard5': 0, 'hard10': 0, 'soft2': 2592} in 239 s
+2026-11-14T08:31:08Z tag=jl3x_day_20261102 rc=0 peak_rss_mib=708 wall_s=238.88 cpu_user_s=237.75 memavail_start_gib=20 disk_free_gib=515->515 slot=claude

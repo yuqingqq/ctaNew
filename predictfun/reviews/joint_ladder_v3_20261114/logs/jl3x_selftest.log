@@ -1,0 +1,2 @@
+exposure selftests passed (5 synthetic cases incl. the flagged two-order case); planted position-only statistic caught
+2026-11-14T08:00:45Z tag=jl3x_selftest rc=0 peak_rss_mib=101 wall_s=0.32 cpu_user_s=0.25 memavail_start_gib=20 disk_free_gib=516->516 slot=claude

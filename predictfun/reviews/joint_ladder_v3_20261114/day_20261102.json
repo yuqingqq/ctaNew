@@ -1,0 +1,37 @@
+{
+ "stat": {
+  "registry": 288,
+  "outside_day": 0,
+  "sealed_or_forward": 0,
+  "no_outcome": 0,
+  "untimed_legs_0_60": 1228,
+  "untimed_shares_0_60": 14628.328666538513,
+  "windows": 288,
+  "runs": 18144,
+  "viol": {
+   "leg": 0,
+   "order": 0,
+   "live": 0,
+   "priority": 0,
+   "collision": 0,
+   "position": 0,
+   "cap": 0
+  },
+  "maxexp_hard": {
+   "hard2": 60.000000000000014,
+   "hard5": 150.00000000000003,
+   "hard10": 300.00000000000006
+  },
+  "grid_steps": 345600,
+  "grid_steps_without_row": 0,
+  "regression_bad": {},
+  "planted_caught": {
+   "MUT_REF_RELEASE": true,
+   "MUT_REST_TRUE": true,
+   "MUT_HELD_TRUE": true,
+   "MUT_LEG_LEAK": true,
+   "MUT_PRIORITY": true
+  }
+ },
+ "days": 1.0
+}
