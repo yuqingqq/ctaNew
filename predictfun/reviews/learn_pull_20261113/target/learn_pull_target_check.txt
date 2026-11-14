@@ -1,0 +1,12 @@
+LEARN-PULL-TARGET CHECK (POST HOC after the first report; descriptive, no readings): every next trade counts once; as of 2026-11-14T02:27:26Z; top 5 78294, T3 rows 76752
+
+T2u v1: stayed +0.56, gone -0.12: gap +0.68; kind accounts for +0.04 (6%); days with gap > 0 and kind share < 0.5: 9 of 9
+     within STOP   : stayed +0.58, gone -0.06
+     within THROUGH: stayed -0.27, gone -0.90
+T2u v5: stayed +0.49, gone -0.22: gap +0.71; kind accounts for +0.04 (6%); days with gap > 0 and kind share < 0.5: 9 of 9
+     within STOP   : stayed +0.52, gone -0.18
+     within THROUGH: stayed -0.53, gone -0.78
+
+T3u value kept per trade at their own pull count (c, unweighted; per day x interval bucket): pooled mean kept | days above theirs
+  v1: theirs +0.546 | random mean +0.364 (theirs above the random p95 on 9 of 9) | our guard v +0.583 (>= theirs on 9 of 9) | P +0.608 (>= theirs on 9 of 9) | bound +1.152
+  v5: theirs +0.468 | random mean +0.279 (theirs above the random p95 on 9 of 9) | our guard v +0.541 (>= theirs on 9 of 9) | P +0.570 (>= theirs on 9 of 9) | bound +2.360
