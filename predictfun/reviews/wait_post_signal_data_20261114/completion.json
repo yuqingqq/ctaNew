@@ -1,0 +1,34 @@
+{
+  "asof": "2026-11-14T16:58:21.294060+00:00",
+  "status": "complete_development_study",
+  "phase1_source": "04d94d1b",
+  "phase1_freeze": "7d177ca0",
+  "sampling_source": "3145fc9f",
+  "sampling_freeze": "a357cbc4",
+  "presentation_source": "7cdb8cfb",
+  "tests_passed": 14,
+  "cumulative_candidates": 5,
+  "source_files_verified": 57,
+  "services": {
+    "pf-wait-post-signal-data-20261114": "ExecMainStatus=0\nActiveState=inactive\n",
+    "pf-wait-post-sampling-20261114": "ExecMainStatus=0\nActiveState=inactive\n"
+  },
+  "size_queue": {
+    "pid": 1576587,
+    "state": "S",
+    "resumed": true
+  },
+  "files": {
+    "summary.json": "c9979a42fc4fc2490b9c0f5fb492a2bee50a4c03d13d737b2bad3f15df0a6ec3",
+    "phase1/audit.json": "5f593a906321ea4fddd5ce9f204207f1c835f684fd9cfe54a3f538d653d01fde",
+    "phase1/probes.json": "a405c22eed637b650ab4340d28578345e8e0911f95189b3bb14095e0192b5ddd",
+    "phase1/selftest.log": "72a7ecd413793f9fd5520fdac50fde64d042d20ea144f4745b9ae6bd32579461",
+    "phase1/completion.json": "b87b408c9f7794f9e7740609f71fc7fc6ba7499f8dd79ce3c1047fdf9d0b5b6f",
+    "sampling/result.json": "7abe8ea45a19c84f59c2d3e5c836e1bb79ef6caa533a83401a16205ef1a7db17",
+    "sampling/selftest.log": "a42a2984fb2932eb4046b349060d750c6aed9ba3a980a0a703fd7b602c296ce7",
+    "sampling/runner_complete.json": "b0d40794e9644337df7666cd592054fdac564bdedcb86cc1d2f48c05b77aca62"
+  },
+  "forward_validation": false,
+  "model_artifacts_sha256": "0f78118b5cdb4245ed484b1716804b2d23db13d11e3f37275bb6e7df3309f85d",
+  "fitted_lgbm_artifacts": 70
+}
