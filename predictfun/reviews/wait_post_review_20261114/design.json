@@ -1,0 +1,24 @@
+{
+  "status": "review_failed_bounded_diagnostic_declared",
+  "candidate": "frozen wait-post-side-heads-v1, source 7d82571f; unchanged",
+  "candidate_count": 1,
+  "purpose": "Review the current candidate and measure its behavior without representing a target repair or complete-day validation",
+  "review_findings": [
+    "P1: target is post now versus forced neutral repost on the next decision; an entry with positive value and one with negative value can both have a zero label; repeating the learned WAIT does not implement that continuation",
+    "P1: neutral reference offers each empty generation once; repeated-wait states in deployment are absent from training support",
+    "P1 operational: original queued driver PID2030852 is absent, status stayed waiting, and older size queue remained suspended; no full training started",
+    "P2: development_screen does not require the local selection null; no matched-participation full-portfolio null, so its pass cannot establish timing skill"
+  ],
+  "synthetic_controls": "late benign and adverse fills yield identical zero labels despite opposite absolute entry values; a fill between activation times must yield positive contrast; opposite side scores must route to different actions",
+  "pilot_train": {"days": ["20261023", "20261024", "20261025"], "eligible_windows_per_day": 24, "selection": "first in chronological iterator, fixed before pilot results"},
+  "pilot_test": {"day": "20261027", "eligible_windows": 12, "selection": "first in chronological iterator, fixed before pilot results"},
+  "calibration": "20261026 excluded, no threshold tuning; threshold remains 0",
+  "training": "original features, original 1/4 generation sample, two side models, pinned LightGBM parameters and rounds, original nonzero/support gates; no adaptation if the support gate fails",
+  "evaluation": "original VALUE, ALWAYS, SCHEDULED, TIMER, FLAT with neutral keeper at M0/M50/M250; complete joint portfolio cash plus inventory and actual quote presence; saved inference reconstruction",
+  "null": "500 draws on local held-out action values matched by UTC day, side, hour and positive-action count; local diagnostic only, not portfolio PNL",
+  "intervals": "none: one partial test day",
+  "acceptance": false,
+  "forward_validation": false,
+  "durability": "supervised user service, ExecStopPost resumes the identity-verified older size queue even if the interpreter is killed; one core8 worker via run_light, core9 unchanged",
+  "limits": ["prefix sample only; no per-day extrapolation", "same flawed one-step target, no claim that this is an optimal waiting model", "neutral keeper only; separate learned keeper is not evaluated", "gross simulated PNL, no fees/rebates; fill/queue model remains unvalidated"]
+}
