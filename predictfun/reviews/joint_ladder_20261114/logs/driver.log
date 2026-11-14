@@ -1,0 +1,14 @@
+05:44:48Z start jl_selftest
+05:44:48Z FAILED jl_selftest
+05:45:23Z start jl_selftest
+05:45:26Z start jl_eval_20261023
+05:47:17Z start jl_eval_20261024
+05:49:05Z start jl_eval_20261025
+05:50:52Z start jl_eval_20261026
+05:52:41Z start jl_eval_20261027
+05:54:31Z start jl_eval_20261031
+05:56:06Z start jl_eval_20261101
+05:57:44Z start jl_eval_20261102
+05:59:29Z start jl_eval_20261103
+06:01:11Z start jl_report
+06:02:24Z ALL DONE

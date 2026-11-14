@@ -1,0 +1,22 @@
+{
+ "stat": {
+  "registry": 288,
+  "outside_day": 0,
+  "sealed_or_forward": 0,
+  "no_outcome": 0,
+  "untimed_legs_0_60": 1316,
+  "untimed_shares_0_60": 13038.545279926448,
+  "windows": 288,
+  "parity_checked": 75,
+  "parity_bad": 0,
+  "parity_skipped": 5109,
+  "grid_steps": 345600,
+  "grid_steps_without_row": 0,
+  "planted_caught": {
+   "MUT_LEG_ALL": true,
+   "MUT_CAP_SIDE": true,
+   "MUT_CAP_NOLAG": true
+  }
+ },
+ "days": 1.0
+}

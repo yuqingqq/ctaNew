@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-14 06:07Z (session ce68ebe0) — JOINT-LADDER DONE (USER gap 3): with both sides in one lane, a shared position and cap = K x size, keeping (FB25) still beats pulling everything at M 0 / 50 (+$41 a day at 2 x size, +$66 uncapped) and loses at M 250; with perfect foresight keeping wins at every cap and clock (+$240-310): prediction is the limit; over all trades / held to 60 s everything but the oracle loses
+
+- Done (USER: "Preserving several orders needs evaluation under shared inventory limits ..." / "larger cap when we increase the size"): research/pf_joint_ladder.py + run_joint_ladder.sh (0ded5c49 before the first run; self-test fix 879fe15a: two wrong expected values, L_FILL = 100 ms here and the end-of-window cancel; post hoc independent-mode parity 0e60b8e4: 15,552 checks on 3 days, 0 differ). Report handoffs/20261114_joint_ladder_results.md; copies reviews/joint_ladder_20261114/; FINDINGS updated.
+- Readings: R610 parity passed (thin: 897 non-interacting cases; post hoc full parity in independent mode), R611 FB25 PAYS at every cap (M 0 / 50; M 250 0/9), OFB2 PAYS everywhere; R612 cap 2 x size costs $22-92 a day at M 0 / 50.
+- Watch out: sweeps overshoot the cap ~2x (several rungs in one taker order); K.L_FILL = 100 ms in the S4 family (v3 engine: 20 ms); the lane is the replay's guard ladder (C11).
+- Next: ORDER-HARM (running: label rows, fits, report), then its policy in this joint lane.
+
 ## 2026-11-14 05:40Z (session ce68ebe0) — TARGET-TEST DONE: the move horizon is not the problem (perfect knowledge over 1 s or 2 s worth the same, ~+$380 a day over LDG at M 50); the rebuilt onset model does not beat the old model in the replay; the influence rule loses; every keep arm flips at M 250. USER found three gaps (blanket pull at the best; onset-trained model applied throughout the signal; independent rungs without a shared position) and set the next target: probability and severity of harm per order after the cancel could land, with queue value
 
 - Done (USER: "Yea we rebuild the model, make sure we are on the right target, proceed to test the model and check the performance"): research/pf_target_test.py + run_target_test.sh (54408bcd, before the first run). Report handoffs/20261114_target_test_results.md; copies reviews/target_test_20261114/; FINDINGS updated.

@@ -1,0 +1,10 @@
+joint-ladder selftests passed; planted errors caught: {'MUT_LEG_ALL': True, 'MUT_CAP_SIDE': True, 'MUT_CAP_NOLAG': True}
+20261025: 40 windows, 14 s, rss 572 MiB
+20261025: 80 windows, 28 s, rss 591 MiB
+20261025: 120 windows, 42 s, rss 608 MiB
+20261025: 160 windows, 57 s, rss 627 MiB
+20261025: 200 windows, 72 s, rss 647 MiB
+20261025: 240 windows, 86 s, rss 662 MiB
+20261025: 280 windows, 100 s, rss 674 MiB
+20261025: {"registry": 288, "outside_day": 0, "sealed_or_forward": 0, "no_outcome": 0, "untimed_legs_0_60": 1316, "untimed_shares_0_60": 13038.545279926448, "windows": 288, "parity_checked": 75, "parity_bad": 0, "parity_skipped": 5109, "grid_steps": 345600, "grid_steps_without_row": 0} in 104 s
+2026-11-14T05:49:05Z tag=jl_eval_20261025 rc=0 peak_rss_mib=684 wall_s=103.96 cpu_user_s=102.84 memavail_start_gib=22 disk_free_gib=518->517 slot=claude
