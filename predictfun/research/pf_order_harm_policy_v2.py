@@ -18,7 +18,8 @@ LANE: pf_order_harm_client_lane, derived from the frozen JOINT-LADDER v3 engine 
 size and none (USER: "much larger cap"); fill clocks M 0 / 50 / 250.
 CADENCE C (every arm marked C, and ORDER-HARM v3's labels): in a guard episode, an order resting is decided at its first resting step and then
 on every 50 ms step; a new episode starts fresh; once pulled, the order stays
-out while the guard is on and re-enters at the back 250 ms after it clears (the lane's rule).
+out while the guard is on and re-enters at the back at the first 50 ms step after it clears - no timer, every arm (USER 2026-11-14: the fixed
+250 ms re-post timer does not match the current system; CL.REPOST_MS = 0; model-decided posting is the next version).
 ARMS:
   LDG     pull every resting order at the guard (cadence-free: it pulls at the onset step under any cadence);
   FB25    FUTURE-BEST's rule at every 50 ms step (the fold's PULL-DEPTH model) - the previous comparison;
@@ -51,8 +52,8 @@ CONTROLS (any failure -> no output): selftests (v3 lane, ORDER-HARM v3, FUTURE-B
 errors (250 ms default cadence; no inputs -> keep; generic cadence-wrapper regressions); the folds are chronological (v3's
 fit files and client50 artifact contract); terminal cash/inventory reconciliation on every run; INPUT PARITY on each test day: the keep-all joint lane (no cap, M 50: the labels' rules) records the inputs at cadence-C decisions;
 wherever its order is v3's label order (same window, side, step, rung, depth and age) A_hat must equal v3's saved prediction (<= 1e-9) on
-every matched decision and all 97 inputs the label row's stored float32 inputs on every 20th (memory: keys only in memory); the no-look-ahead falsifier on every 20th new decision input; LDG equals v3's saved LDG fills at hard 10 and none
-row for row; v3's conservation / accounting checks and the true exposure <= the cap on every hard-cap run; memory self-guard (2 GiB).
+every matched decision and all 97 inputs the label row's stored float32 inputs on every 20th (memory: keys only in memory); the no-look-ahead falsifier on every 20th new decision input; engine regression: an extra LDG pass with the engine's default 250 ms timer
+equals v3's saved LDG fills at hard 10 and none row for row (the scored arms use the no-timer re-post); v3's conservation / accounting checks and the true exposure <= the cap on every hard-cap run; memory self-guard (2 GiB).
 LIMITS: consumed days (C8), development only; replay rule M (B1a: the queue position is an estimate); the predictor has no remaining-order-size or
 portfolio-inventory input (inventory protection comes from the caps); the guard and FRONT-PULL's P are leave-one-day-out upstream models; labels
 from rungs alone (the replay couples them); the 2 s tail bounds the queue value counted.
@@ -82,7 +83,7 @@ import pf_order_harm_policy as P1                         # noqa: E402  (day_inp
 
 TESTS = tuple(V3.FOLDS)
 AV_KEYS = ('steps', 'live', 'guard_steps', 'guard_live', 'best_steps', 'best_live', 'best_guard_steps', 'best_guard_live', 'surv_n', 'surv_k')
-OUTD = f'{K.IO}/order_harm_policy_v2_client50_20261114'
+OUTD = f'{K.IO}/order_harm_policy_v2_client50_repost0_20261114'
 SIZE = J3.SIZE; NR = J3.NR; EVERY = V3.EVERY
 assert EVERY * 50 == CL.DECISION_MS
 CAPS = (('hard', 10), ('hard', 20), ('hard', 50), ('none', None)); HEAD_CAP = 'hard50'; V3_CAPS = ('hard10', 'none')
@@ -319,7 +320,7 @@ def parity_day(day):
                 return True
             return cadence(keep_fn, ctx[s]['vg'], wi['onset'][s], dcnt, d)
         CL.sim_joint(W, 'M', 50.0, None, {0: ctx[0]['vg'], 1: ctx[1]['vg']}, decide={(s, d): recorder(s, d) for s in (0, 1) for d in range(NR)},
-                     idle_only=1, mode='none')
+                     idle_only=1, mode='none', cooldown=CL.REPOST_MS)
         for (s, k, d, x, pr) in rec:
             st['recorded'] += 1
             kv = ((m * 2 + s) * 8192 + k) * 8 + d; p_ = int(np.searchsorted(KS, kv))
@@ -398,7 +399,7 @@ def eval_day(day):
     WSg = pd.Series(TS.ws_groups(LT.how.values, grp), index=LT.index); TKS = pd.Series(grp, index=LT.index)
     st.update(windows=0, runs=0, viol={v_: 0 for v_ in J3.VIOL}, maxexp={}, over_cap=0, inputs=0, lookahead_checks=0, lookahead_bad=0,
               theta_M=F_['theta_M'], train=F_['train'], cal=F_['cal'], terminal_checks=0, terminal_bad=0)
-    cnt = {}; fills = []; inv = []
+    cnt = {}; fills = []; inv = []; fills_reg = []
     for W in P1.window_pairs(D):
         st['windows'] += 1; m = W[0]['m']; n = W[0]['n']
         ctx = J3.window_ctx(W, F_['PO'], F_['POI'], n); wi = P1.window_inputs(W, ctx, DI); pred = make_pred(W, wi, F_['B'], st)
@@ -422,7 +423,8 @@ def eval_day(day):
                     cn = J3.cap_name(mode, ck); c_ = cnt.setdefault((cfg, arm, cn), dict(keep=[0] * NR, pull=[0] * NR, noinput=0))
                     dec, idle = arm_dec(arm, W, ctx, wi, pred, F_, c_)
                     capv = None if ck is None else ck * SIZE
-                    r = CL.sim_joint(W, q, shf, capv, {0: ctx[0]['vg'], 1: ctx[1]['vg']}, decide=dec, idle_only=idle, mode=mode)
+                    r = CL.sim_joint(W, q, shf, capv, {0: ctx[0]['vg'], 1: ctx[1]['vg']}, decide=dec, idle_only=idle, mode=mode,
+                                     cooldown=CL.REPOST_MS)
                     st['runs'] += 1
                     terminal = CL.portfolio_terminal(r, ctx[0]['tf'], ctx[0]['mff'])
                     terminal_value_sum = 0.0
@@ -456,6 +458,24 @@ def eval_day(day):
                                               fill_type(s, pt, bool(thr_), tkp[s][int(tkv[s][i])])))
                     st['terminal_checks'] += 1
                     st['terminal_bad'] += int(abs(terminal_value_sum - terminal['pnl']) > 1e-6)
+            for cn_ in V3_CAPS:                           # engine regression: LDG with the default 250 ms timer equals frozen v3's saved fills
+                mode_, ck_ = ('hard', 10) if cn_ == 'hard10' else ('none', None)
+                rr = CL.sim_joint(W, q, shf, None if ck_ is None else ck_ * SIZE, {0: ctx[0]['vg'], 1: ctx[1]['vg']}, decide=None, idle_only=0,
+                                  mode=mode_)
+                for s in (0, 1):
+                    c2 = ctx[s]; sg = c2['sg']; tf, mff, tfl = c2['tf'], c2['mff'], c2['tfl']; anc = W[s]['anc']
+                    for d in range(NR):
+                        for f in rr['fills'][(s, d)]:
+                            i, pt, qq, thr_, age, ph = f[0], int(f[1]), f[2], f[3], f[4], f[5]
+                            t = float(anc[i])
+                            if not (W[s]['ws'] <= t < W[s]['ws'] + 61000.0):
+                                continue
+                            d_ = GP.depth_of(tfl, W[s]['P5'], W[s]['opp'], s, t, pt)
+                            fills_reg.append((int(day), cfg, 'LDG', cn_, s, d, 'WS' if src[s][i] else 'E2', -9 if d_ is None else d_, bool(thr_),
+                                              age < 100.0, ph == 'pend', float(qq),
+                                              sg * (mff[max(int(np.searchsorted(tf, t + 1000.0, side='right')) - 1, 0)] - pt),
+                                              sg * (mff[max(int(np.searchsorted(tf, t + 5000.0, side='right')) - 1, 0)] - pt),
+                                              sg * (mid_end - pt), sg * (yup - pt), float(age)))
         for s in (0, 1):
             W[s].pop('cache', None)
         if st['windows'] % 24 == 0:
@@ -464,9 +484,10 @@ def eval_day(day):
                 sys.exit(f'REFUSED: resident memory {r2:.0f} MiB > {MEM_CAP_MIB:.0f} MiB')
     F = pd.DataFrame(fills, columns=['day', 'cfg', 'arm', 'capk', 'side', 'rung', 'src', 'depth', 'thr', 'young', 'pend', 'q', 'v1', 'v5', 'vend', 'vset', 'age', 'vend60', 'm', 't_exec', 'terminal_ms', 'pt', 'typ'])
     R3 = pd.read_parquet(f'{J3.OUTD}/fills_{day}.parquet'); reg_bad = {}
+    FR = pd.DataFrame(fills_reg, columns=list(R3.columns))
     for cfg in ('M0', 'M50', 'M250'):
         for cn in V3_CAPS:
-            X = F[(F.capk == cn) & (F.arm == 'LDG') & (F.cfg == cfg)].drop(columns=['capk', 'vend', 'm', 't_exec', 'terminal_ms', 'pt']).rename(columns={'vend60': 'vend'}).reset_index(drop=True)
+            X = FR[(FR.capk == cn) & (FR.cfg == cfg)].drop(columns=['capk']).reset_index(drop=True)
             Y = R3[(R3.capk == cn) & (R3.arm == 'LDG') & (R3.cfg == cfg)].drop(columns=['capk']).reset_index(drop=True)
             X = X[Y.columns]
             if not FB.same_rows(X, Y):
@@ -534,7 +555,8 @@ def report():
     L = [f'ORDER-HARM POLICY v2: keep-with-option (ORDER-HARM v3, chronological folds) in JOINT-LADDER v3\'s lane; test days {", ".join(TESTS)} '
          f'(consumed: development only); as of {asof}; controls passed: input parity {sum(p["matched"] for p in par.values())} matched decisions of '
          f'{sum(p["key_found"] for p in par.values())}, 0 differ; look-ahead falsifier {sum(stats[d]["stat"]["lookahead_checks"] for d in TESTS)} '
-         f'checks, 0 differ; LDG = v3 row for row; conservation on {runs} runs, 0 violations; max true exposure {mx} sh (<= the cap on every '
+         f'checks, 0 differ; the engine with its default 250 ms timer = v3 row for row (LDG; scored arms re-post at the first step after the guard '
+         f'clears); conservation on {runs} runs, 0 violations; max true exposure {mx} sh (<= the cap on every '
          f'hard-cap run); fills without a 1 s value {nbad}',
          '  folds: ' + '; '.join(f'{d[4:]}: train {",".join(x[4:] for x in stats[d]["stat"]["train"])} cal {stats[d]["stat"]["cal"][4:]} theta_M '
                                  f'{stats[d]["stat"]["theta_M"]:+.3f}' for d in TESTS), '',

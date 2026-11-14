@@ -104,7 +104,8 @@ class Client50Controls(unittest.TestCase):
             first = V3.run_fork(w, 4, 2, guard, 'U', 0., 2750.)
             later = V3.run_fork(w, 9, 2, guard, 'U', 0., 2750.)
             self.assertEqual(first, later)
-            self.assertEqual(first[1][0][0], 1040.)
+            # re-post at the first 50 ms step after the guard clears (800 ms), live 40 ms later; no 250 ms timer (USER 2026-11-14)
+            self.assertEqual(first[1][0][0], 840.)
 
     def terminal_run(self, time):
         frames = {0: [(0., [(50, 100)], 52), (60030., [(39, 100)], 41)],

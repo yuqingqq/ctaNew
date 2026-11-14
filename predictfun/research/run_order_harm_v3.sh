@@ -3,7 +3,7 @@
 # fitted-Q folds (test days 10-27 .. 11-03) with the PULL-DEPTH refit and calibration, report; claude slot, waits for a free slot.
 set -u
 cd /home/yuqing/ctaNew
-OUT=data/predict_fun/research/order_harm_v3_client50_20261114; mkdir -p $OUT/logs
+OUT=$(python3 -c "import sys; sys.path.insert(0, 'predictfun/research'); import pf_order_harm_v3 as M; print(M.OUTD)") || exit 1; mkdir -p $OUT/logs   # the folder comes from the script (no drift)
 DAYS="20261023 20261024 20261025 20261026 20261027 20261031 20261101 20261102 20261103"
 TESTS="20261027 20261031 20261101 20261102 20261103"
 job() { local tag=$1; shift; local n=0
