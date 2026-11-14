@@ -1,5 +1,20 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-14 10:26Z (session ce68ebe0) — PROGRESS and the NEXT TEST (USER: "Update handoffs and status as well, then show the current progress, what's our next test")
+
+Where we are (replay rule M, 9 consumed days, first minute; WS = exactly-timed trades):
+- Engine: the joint ladder (both sides, rungs 0-5 x 30 sh, shared position) decides on client-known state (C13, invariance 0 of 9.8 M decisions differ); hard caps bound true exposure (measured, P22); acceptance is whole-portfolio (C15), fits chronological (C16), arms compared at one cadence (C14). JOINT-LADDER v3: handoffs/20261114_joint_ladder_v3_results.md.
+- Keeping vs pulling: FB25 beats LDG on WS trades where the cap has room (hard 5 / 10: +$33 / +$54 a day at M 50, 7/9) but is below LDG over all trades at M 50 (hard 10 -$77 a day, 7/9; E2-timed 9/9 below) and at M 250 (0/9). Perfect foresight of the move pays at every cap and clock (+$61 to +$289 a day, 9/9): the keep strategy has room; prediction is the limit.
+- Against the top makers (TOP-COMPARE): per share we match the top 5 behind the best (1 tick +0.52 vs +0.56 c/sh; 2+ +1.41 vs +1.25) but not at the best (+0.00 vs +0.38: their fills there are 82% STOP, ours 37%, queue place) nor on E2-timed trades (ours lose, theirs stay +0.42 over all trades); they fill 851,396 sh a day against our 36,387-51,588. handoffs/20261114_top_compare_results.md.
+- ORDER-HARM v2 (harm predictable, AUC 0.753) is QUALIFIED: its label kept blind for 2 s on a lane that re-placed orders during the guard (P23). ORDER-HARM v3 + POLICY v2 replace it: code complete, reviewed, committed (USER repair 32da4014; review fixes a8e6d473), NOT RUN.
+
+NEXT TEST (on the USER's go; claude slot; roughly 2.5 h):
+- Question: does a per-order model of "keep now, with the option to cancel later" (queue value included) beat pulling everything (LDG) and the keep rule (FB25) on the WHOLE PORTFOLIO, chronologically out of sample?
+- Step 1, predictfun/research/run_order_harm_v3.sh: synthetic suite; labels for the 9 days (client-state lane, 50 ms decisions); five chronological folds (test 10-27, 10-31, 11-01, 11-02, 11-03; train on the days before the calibration day; calibrate on the day before the test day; FB25's PULL-DEPTH refit the same way); report: R660 continuation by rung, R661 SKILL (IC with the realized keep-all-minus-pull advantage > 0 on >= 4/5 test days and pooled >= 0.05).
+- Step 2, predictfun/research/run_order_harm_policy_v2.sh: synthetic suite; input parity on the 5 test days; replay of LDG, FB25 (= FB25C at 50 ms), OFB2C (ceiling), OHQ0 (keep iff A_hat > 0), OHQM (keep share matched to FB25 on the calibration day) at caps hard 10 / 20 / 50 / none and fill clocks M 0 / 50 / 250.
+- Acceptance (R652, declared): against BOTH LDG and FB25C, at EACH of M 0 / 50 / 250, with AND without fills on orders < 100 ms old, the whole portfolio (all trades, cash + inventory at 60.2 s) higher pooled AND on >= 4 of 5 test days - all 12 conditions, headline cap hard 50. The WS reading (R650) is a diagnostic only.
+- After: ACCEPT = a development candidate only -> freeze (commit) -> forward test on >= 5 untouched days (the USER chooses the days; frozen upstream inputs must be built for them). REJECT names the failing conditions; OFB2C's margin shows how much room is left.
+
 ## 2026-11-14 10:24Z (session ce68ebe0) — REVIEW of the USER's client-state / 50 ms ORDER-HARM repair: right, plus three fixes (a8e6d473); committed and pushed; NOTHING RUN (awaiting the USER's go)
 
 - USER: "I have done the fix, can you review then check if it is good now" / "Yes we commit and push". Their repair: 32da4014 (record 811d63bd, merge 553e9068; handoffs/20261114_order_harm_client50_fix.md).
