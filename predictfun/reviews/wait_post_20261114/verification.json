@@ -1,0 +1,30 @@
+{
+  "asof": "2026-11-14T12:14:08Z",
+  "source_commit": "7d82571f0a77d2745b665b31acb4739e7d22e2cc",
+  "freeze_commit": "99ba6a63",
+  "synthetic_tests": 26,
+  "failures": 0,
+  "historical_smoke": {
+    "day": "20261023",
+    "asof": "2026-11-14T12:13:23Z",
+    "windows": 2,
+    "partial": true,
+    "action_status": {
+      "not_sampled": 110,
+      "eligible": 37
+    },
+    "positive_targets": 6,
+    "negative_targets": 1,
+    "zero_targets": 30,
+    "receipt_path": "/home/yuqing/ctaNew/data/predict_fun/research/wait_post_20261114_v1/smoke/rows_20261023/receipt.json",
+    "receipt_sha256": "bdc7f4205bf689ad5406369b67e5ed1ee704c187d71f9ad67352c3d35d4e45ca"
+  },
+  "trained_models_available": false,
+  "performance_claim": false,
+  "forward_validation": false,
+  "source_execution": "/tmp/cta-entry-value-20261114",
+  "limitations": [
+    "smoke is two windows only; no interval, performance inference or sufficiency claim",
+    "one-step neutral continuation, not optimal waiting; neutral keeper only"
+  ]
+}
