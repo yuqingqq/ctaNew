@@ -3,7 +3,7 @@
 # test days, report. Needs ORDER-HARM v3's outputs (run_order_harm_v3.sh) first. claude slot, waits for a free slot.
 set -u
 cd /home/yuqing/ctaNew
-OUT=data/predict_fun/research/order_harm_policy_v2_20261114; mkdir -p $OUT/logs
+OUT=data/predict_fun/research/order_harm_policy_v2_client50_20261114; mkdir -p $OUT/logs
 TESTS="20261027 20261031 20261101 20261102 20261103"
 for d in $TESTS; do [ -f data/predict_fun/research/order_harm_v3_20261114/fit_$d.json ] || { echo "REFUSED: ORDER-HARM v3 fold $d missing"; exit 1; }; done
 job() { local tag=$1; shift; local n=0
@@ -13,6 +13,7 @@ job() { local tag=$1; shift; local n=0
       n=$((n+1)); sleep 60; continue; fi
     echo "$(date -u +%H:%M:%SZ) FAILED $tag" >> $OUT/logs/driver.log; exit 1
   done; sleep 3; }
+job ohp2_client50_controls python3 -m unittest predictfun.research.test_order_harm_client50
 job ohp2_selftest python3 predictfun/research/pf_order_harm_policy_v2.py selftest
 for d in $TESTS; do job ohp2_parity_$d python3 predictfun/research/pf_order_harm_policy_v2.py parity $d; done
 for d in $TESTS; do job ohp2_eval_$d python3 predictfun/research/pf_order_harm_policy_v2.py eval $d; done
