@@ -1,0 +1,4 @@
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+stop-model selftests passed; planted errors caught: {'MUT_AGE_NEXT': True, 'MUT_FOLD_LATE': True, 'MUT_HORIZON_EARLY': True, 'MUT_PSI_NONAN': True, 'MUT_AUC_KEEPNAN': True, 'MUT_RULE_OFF': True, 'MUT_SCALE_FUTURE': True, 'MUT_GAP_IGNORE': True, 'MUT_MATCH_NO_TFILL': True, 'MUT_ORACLE_NOGATE': True, 'MUT_LANE_NOGATE': True}
+align 20261027: windows 288, runs 6048, fills 148497, order steps 2046762, regression 288 windows / 0 differ, 200.5 s; M50 $: KA -6092, OR72 -3329, SH72 -5593, OR250 -108, SH250 -5530, OR1000 +861, SH1000 -5176
+2026-11-14T18:40:47Z tag=sm_align_20261027 rc=0 peak_rss_mib=787 wall_s=201.78 cpu_user_s=200.57 memavail_start_gib=22 disk_free_gib=500->500 slot=claude

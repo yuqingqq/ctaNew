@@ -1,0 +1,43 @@
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+stop-model selftests passed; planted errors caught: {'MUT_AGE_NEXT': True, 'MUT_FOLD_LATE': True, 'MUT_NO_CUMMIN': True, 'MUT_HORIZON_EARLY': True, 'MUT_PSI_NONAN': True, 'MUT_AUC_KEEPNAN': True, 'MUT_RULE_OFF': True}
+STOP-MODEL DATA AUDIT as of 2026-11-14T17:09:22Z; decisions from the dev days 20261023, 20261024, 20261025, 20261026 only (the other days are description)
+
+ROWS AND LABELS per day (rows = valid known book; ALREADY_j = the move reached j before a cancel lands; rate = P(y_j) among the rest)
+  day       rows    invalid  quiet  masked extreme | j1 already / rate | j2 already / rate | j3 already / rate | j4 already / rate | j5 already / rate | j6 already / rate
+  20261023   690552      648  0.01%  4.73%  0.26% |  4.73% / 28.49% |  1.21% / 14.99% |  0.48% /  8.97% |  0.21% /  5.53% |  0.11% /  3.56% |  0.06% /  2.33%   (dev)
+  20261024   690664      536  0.01%  4.42%  0.01% |  3.99% / 25.65% |  1.13% / 12.69% |  0.51% /  7.65% |  0.26% /  4.83% |  0.15% /  3.19% |  0.09% /  2.24%   (dev)
+  20261025   690928      272  0.00%  4.66%  0.39% |  3.91% / 24.68% |  1.15% / 12.41% |  0.51% /  7.29% |  0.25% /  4.66% |  0.15% /  3.18% |  0.10% /  2.27%   (dev)
+  20261026   690478      722  0.03%  4.23%  0.00% |  4.69% / 29.46% |  1.28% / 16.33% |  0.49% / 10.10% |  0.20% /  6.32% |  0.10% /  4.00% |  0.05% /  2.61%   (dev)
+  20261027   691128       72  0.03%  4.45%  0.04% |  3.76% / 25.85% |  1.01% / 13.22% |  0.40% /  8.06% |  0.18% /  5.18% |  0.10% /  3.52% |  0.05% /  2.46%
+  20261031   691188       12  0.16%  4.62%  0.22% |  2.44% / 16.94% |  0.75% /  7.88% |  0.36% /  4.73% |  0.20% /  3.27% |  0.13% /  2.38% |  0.09% /  1.85%
+  20261101   690790      410  0.03%  4.42%  0.39% |  2.76% / 19.15% |  0.80% /  8.58% |  0.38% /  4.90% |  0.22% /  3.26% |  0.15% /  2.40% |  0.10% /  1.85%
+  20261102   690948      252  0.00%  4.18%  0.06% |  4.28% / 27.93% |  1.20% / 15.31% |  0.51% /  9.56% |  0.23% /  6.31% |  0.12% /  4.20% |  0.07% /  2.91%
+  20261103   691062      138  0.01%  4.18%  0.15% |  3.93% / 24.96% |  1.22% / 14.33% |  0.52% /  9.28% |  0.25% /  6.25% |  0.13% /  4.34% |  0.07% /  3.02%
+  stop (D1 among D0 = 0 rows) 0 / 1 / 2 / 3 / 4 / 5 / 6+ ticks:
+    20261023 71.51% 14.67%  5.84%  3.19%  1.75%  1.08%  1.96%
+    20261024 74.35% 13.76%  4.93%  2.65%  1.50%  0.85%  1.95%
+    20261025 75.32% 12.98%  5.03%  2.49%  1.37%  0.82%  1.99%
+    20261026 70.54% 14.28%  6.15%  3.52%  2.09%  1.21%  2.20%
+    20261027 74.15% 13.57%  5.06%  2.69%  1.49%  0.94%  2.10%
+    20261031 83.06%  9.53%  3.07%  1.39%  0.82%  0.48%  1.64%
+    20261101 80.85% 11.07%  3.59%  1.56%  0.79%  0.50%  1.64%
+    20261102 72.07% 13.67%  5.64%  3.07%  1.92%  1.14%  2.49%
+    20261103 75.04% 11.61%  5.01%  2.87%  1.72%  1.17%  2.58%
+
+LABEL FLAGS (dev-day base rate ratio > 1.5): none
+
+R700 DATA: DROP 19 ['pf_lbs', 'pf_las', 'sigma', 'basis_bps', 's1', 's2', 's3', 's4', 's5', 'c1', 'c2', 'c3', 'own_l1', 'opp_l1', 'ct1', 'ct2', 'ct3', 'ct4', 'ct5']; FLAG 5 ['bn_r3000', 'bn_ntr1000', 'd_bnimb250', 'adv_bn_r3000', 'adv_d_bnimb250']
+  pf_lbs             DROP: PSI >= 0.25 on 2 dev days (0.09, 0.48, 0.22, 0.42)
+  pf_las             DROP: PSI >= 0.25 on 2 dev days (0.07, 0.40, 0.17, 0.38)
+  sigma              DROP: PSI >= 0.25 on 3 dev days (0.81, 0.18, 0.92, 0.97)
+  basis_bps          DROP: PSI >= 0.25 on 2 dev days (0.04, 0.30, 0.19, 0.49)
+  s1                 DROP: PSI >= 0.25 on 2 dev days (0.08, 0.44, 0.19, 0.40)
+  s2                 DROP: PSI >= 0.25 on 4 dev days (0.44, 0.81, 0.75, 1.01)
+  s3                 DROP: PSI >= 0.25 on 4 dev days (0.57, 0.92, 0.85, 1.41)
+  s4                 DROP: PSI >= 0.25 on 4 dev days (0.35, 0.60, 0.68, 1.29)
+  s5                 DROP: PSI >= 0.25 on 4 dev days (0.26, 0.44, 0.56, 1.23)
+  c1                 DROP: PSI >= 0.25 on 2 dev days (0.08, 0.44, 0.19, 0.40)
+  c2                 DROP: PSI >= 0.25 on 4 dev days (0.26, 0.71, 0.48, 0.78)
+  c3                 DROP: PSI >= 0.25 on 4 dev days (0.42, 0.89, 0.69, 1.13)
+  own_l1             DROP: PSI >= 0.25 on 2 dev days (0.08, 0.44, 0.19, 0.40)
+2026-11-14T17:09:21Z tag=sm_audit rc=0 peak_rss_mib=1016 wall_s=29.03 cpu_user_s=26.00 memavail_start_gib=22 disk_free_gib=503->503 slot=claude

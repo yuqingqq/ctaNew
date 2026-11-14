@@ -1,0 +1,4 @@
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+stop-model selftests passed; planted errors caught: {'MUT_AGE_NEXT': True, 'MUT_FOLD_LATE': True, 'MUT_HORIZON_EARLY': True, 'MUT_PSI_NONAN': True, 'MUT_AUC_KEEPNAN': True, 'MUT_RULE_OFF': True, 'MUT_SCALE_FUTURE': True, 'MUT_GAP_IGNORE': True, 'MUT_MATCH_NO_TFILL': True, 'MUT_ORACLE_NOGATE': True, 'MUT_LANE_NOGATE': True}
+20261102: rows 690948; boundary windows 0; invalid 252; GAP 650 (hgap p50/p90/p99/p99.9 [80.0, 126.0, 239.0, 483.0]); empty side 0; masked 28864; fair-price inputs missing 4.18%; parity 259677 rows ok; falsifier {'checked': 791, 'feat_differ': 0, 'label_differ': 774, 'cols': [], 'scale_checked': 396, 'scale_differ': 0}; brute {'checked': 7623, 'differ': 0, 'planted_differ': 2748}; 76 s
+2026-11-14T17:52:16Z tag=sm_rows_20261102 rc=0 peak_rss_mib=1461 wall_s=77.18 cpu_user_s=74.56 memavail_start_gib=22 disk_free_gib=501->501 slot=claude
