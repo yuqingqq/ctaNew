@@ -1958,3 +1958,8 @@ wait_post_why_20261114:
   guard_exit_is_correctly_relabelled_candidate: false
   forward_validation: false
   next: direct marginal entry prediction, better client-known ladder state, and labels under the actual frozen keeper before combined evaluation
+  sign_followup: predictfun/reviews/wait_post_diagnosis_20261114/v3/sign_followup.json
+  economic_sign_controls_passed: 4
+  wrong_position_refusals: 4
+  post_positive_rank_cells: 6
+  post_negative_rank_cells: 4
