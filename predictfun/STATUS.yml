@@ -1930,11 +1930,29 @@ wait_post_v2_20261114:
   next: audit admission calibration and joint waiting-state coverage under the frozen learned keeper before integration
 
 wait_post_why_20261114:
-  status: running_diagnostic
+  status: complete_post_hoc_diagnosis
+  asof: 2026-11-14T16:21:11Z
   current: predictfun/reviews/wait_post_diagnosis_20261114/current.json
+  result: predictfun/reviews/wait_post_diagnosis_20261114/v3/diagnosis.json
   source_commit: 33925207
   freeze_commit: 3ac6a3b4
   output: data/predict_fun/research/wait_post_diagnosis_20261114_v3
   service: pf-wait-post-diagnose-v3-20261114
+  service_active: false
+  service_exit_status: 0
+  size_queue_resumed: true
   tests_passed: 8
+  source_files_verified: 47
+  complete_days: 5
+  market_windows: 1440
+  heldout_probes: 9922
+  original_market_arm_reconciliations: 4320
+  post_side_day_cells_worse_than_prior_mean: 10
+  post_side_day_cells_worse_than_price_rung: 10
+  value_posted_state_unseen_fraction: 0.6685796269727403
+  value_fill_spread: 5814.215446962383
+  value_post_fill_move: -17860.680488290633
+  guard_exit_placement_ratio: 14.410612888233274
+  guard_exit_is_correctly_relabelled_candidate: false
   forward_validation: false
+  next: direct marginal entry prediction, better client-known ladder state, and labels under the actual frozen keeper before combined evaluation
