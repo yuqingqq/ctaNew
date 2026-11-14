@@ -14,7 +14,7 @@ import time
 
 HERE=Path(__file__).resolve().parent
 ROOT=HERE.parents[1]
-REVIEW=ROOT/'predictfun/reviews/wait_post_diagnosis_20261114'
+REVIEW=ROOT/'predictfun/reviews/wait_post_diagnosis_20261114/v2'
 DAYS=('20261027','20261031','20261101','20261102','20261103')
 
 
