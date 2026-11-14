@@ -1,0 +1,125 @@
+{
+  "asof": "2026-11-14T12:39:11Z",
+  "verdict": "review_not_passed_pilot_underperforms_guard_controls",
+  "source_commit": "9308e26e4d266f3666e39ffccd8577c15c6dbc39",
+  "raw_result_path": "/home/yuqing/ctaNew/data/predict_fun/research/wait_post_review_20261114_v1/pilot/result.json",
+  "raw_result_sha256": "0ee9aa1d64dea17ab1d228122fad10b0694f30b9834831880ad45d52bc7a082e",
+  "n_test_windows": 12,
+  "test_date": "20261027",
+  "n_complete_test_days": 0,
+  "train_windows": 72,
+  "train_days": [
+    "20261023",
+    "20261024",
+    "20261025"
+  ],
+  "n_training_actions": 974,
+  "n_nonzero_training_targets": 92,
+  "zero_training_target_fraction": 0.9055441478439425,
+  "n_test_actions": 151,
+  "model_structure": {
+    "bid": {
+      "trees": 200,
+      "minimum_leaves": 2,
+      "maximum_leaves": 2,
+      "constant_model": false
+    },
+    "ask": {
+      "trees": 1,
+      "minimum_leaves": 1,
+      "maximum_leaves": 1,
+      "constant_model": true
+    }
+  },
+  "local_selection": [
+    {
+      "side": 0,
+      "n": 86,
+      "nonzero": 13,
+      "post_share": 0.46511627906976744,
+      "mean_prediction": -0.01297255953283887,
+      "mean_target": -0.37974280156704804,
+      "local_null": {
+        "status": "local_only",
+        "n": 40,
+        "draws": 500,
+        "observed_mean_c": -1.0307870369791694,
+        "null_p95_c": 0.47439696906926193,
+        "above_null_p95": false
+      }
+    },
+    {
+      "side": 1,
+      "n": 65,
+      "nonzero": 6,
+      "post_share": 1.0,
+      "mean_prediction": 0.06356600077629614,
+      "mean_target": -0.15674164122912718,
+      "local_null": {
+        "status": "local_only",
+        "n": 65,
+        "draws": 500,
+        "observed_mean_c": -0.15674164122912718,
+        "null_p95_c": -0.15674164122912715,
+        "above_null_p95": false
+      }
+    }
+  ],
+  "m50": [
+    {
+      "arm": "ALWAYS",
+      "pnl": -310.008597625,
+      "pnl_without_young": -236.6989509301,
+      "shares": 8095.2097540827,
+      "both_quote_fraction": 0.9979166667,
+      "inventory_square_seconds": 137895665.29311508
+    },
+    {
+      "arm": "FLAT",
+      "pnl": 0.0,
+      "pnl_without_young": 0.0,
+      "shares": 0.0,
+      "both_quote_fraction": 0.0,
+      "inventory_square_seconds": 0.0
+    },
+    {
+      "arm": "SCHEDULED",
+      "pnl": -65.8242287767,
+      "pnl_without_young": -54.9434657767,
+      "shares": 6216.328324197,
+      "both_quote_fraction": 0.9254166667,
+      "inventory_square_seconds": 52317252.858264625
+    },
+    {
+      "arm": "TIMER",
+      "pnl": 66.9382534997,
+      "pnl_without_young": 57.6382534997,
+      "shares": 5825.7132606772,
+      "both_quote_fraction": 0.8686805556,
+      "inventory_square_seconds": 38820617.858546406
+    },
+    {
+      "arm": "VALUE",
+      "pnl": -271.5278055117,
+      "pnl_without_young": -203.7713268168,
+      "shares": 7945.5801158889,
+      "both_quote_fraction": 0.9970138889,
+      "inventory_square_seconds": 114441755.59683129
+    }
+  ],
+  "m50_delta_vs_always": 38.48079211329997,
+  "m50_delta_vs_scheduled": -205.703576735,
+  "m50_delta_vs_timer": -338.46605901140003,
+  "model_negative_all_clocks": true,
+  "model_negative_without_young_all_clocks": true,
+  "model_higher_inventory_than_scheduled_m50": true,
+  "full_study": false,
+  "forward_validation": false,
+  "intervals": null,
+  "limitations": [
+    "first 12 test windows only, first 24 windows on each training day; no intervals or generalization claim",
+    "one-decision target and repeated-wait population mismatch remain; not a repaired model",
+    "neutral keeper, gross simulated cash+inventory; not combined strategy or live economics"
+  ],
+  "interpretation": "The frozen policy is modestly better than always-post on M50 in this prefix, but loses absolutely and to guard-based entry controls. Sparse target support and a constant ask head mean this is not a performance estimate for a fully trained dynamic waiting model."
+}

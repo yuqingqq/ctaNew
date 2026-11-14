@@ -35,6 +35,14 @@
       "line": 340,
       "evidence": "development_screen combines relative PNL, absolute positivity and inventory; local_null is printed but not part of the predicate; there is no participation-matched portfolio null",
       "implication": "Even a pass is a descriptive policy comparison, not evidence of superior entry selection."
+    },
+    {
+      "severity": "P2",
+      "name": "support_gate_allows_constant_timing_head",
+      "source": "predictfun/research/pf_wait_post.py",
+      "line": 174,
+      "evidence": "pilot ask trained on424 actions (36 nonzero), min_data_in_leaf200 and bagging_fraction0.8; saved model has1 tree/1 leaf and posts on all65 labeled test actions",
+      "implication": "Current200-action threshold does not ensure a head can split. Require actual model capacity/variation diagnostics, and sufficient training data before interpreting timing skill."
     }
   ],
   "confirmed": [
@@ -45,6 +53,6 @@
     "result populations include flat/no-fill windows; source/model/inference hashes"
   ],
   "recommended_target": "Q(POST,state)-Q(WAIT,state) under the same frozen continuation policy, allowing repeated waiting; include an absolute admission-value/never-post control; collect causal empty-slot continuation support and exclude each test day through the entire training chain",
-  "performance_status": "supervised bounded chronological diagnostic running; original model unchanged; no full-study acceptance",
+  "performance_status": "bounded diagnostic complete; full chronological study not launched; candidate not advanced",
   "interpretation": "The existing target is valid as a one-step policy-improvement diagnostic under its declared neutral continuation. It is not a complete admission/optimal-stopping model. The review finding concerns applying it repeatedly outside that continuation and support, not a claim that every zero one-step advantage must cause economic loss."
 }

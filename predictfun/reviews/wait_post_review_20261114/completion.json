@@ -1,0 +1,13 @@
+{
+  "asof": "2026-11-14T12:41:48Z",
+  "supervised_service": "Result=success\nExecMainStatus=0\nActiveState=inactive",
+  "size_queue_pid": 1576587,
+  "size_queue_state": "Ssl",
+  "size_queue_resumed": true,
+  "frozen_sources_verified": 41,
+  "result_artifacts_verified": 4,
+  "models_verified": 2,
+  "review_controls_passed": true,
+  "performance_file": "performance.json",
+  "old_full_run_restarted": false
+}
