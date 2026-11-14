@@ -1,0 +1,9 @@
+joint-ladder v3 selftests passed; planted errors caught: {'MUT_REF_RELEASE': True, 'MUT_REST_TRUE': True, 'MUT_HELD_TRUE': True, 'MUT_LEG_LEAK': True, 'MUT_PRIORITY': True}
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+influence selftests passed; planted errors caught: {'MUT_DFV_NOSIDE': True, 'MUT_ONSET_ALL': True, 'MUT_NO_DEBOUNCE': True}
+order-harm v2 selftests passed; planted errors caught: {'MUT_NOWAIT': True, 'MUT_LAT_KEEP': True, 'MUT_HARM_SIGN': True, 'MUT_STAMP': True, 'MUT_RAISE': True}
+order-harm v3 selftests passed; planted errors caught: {'MUT_SLOW_CADENCE': True, 'MUT_VENUE_REST': True, 'MUT_NO_LAT': True, 'MUT_BOOTSTRAP': True, 'MUT_SHARED_CHAIN': True, 'MUT_TIMER': True}
+exposure selftests passed (5 synthetic cases incl. the flagged two-order case); planted position-only statistic caught
+order-harm policy v2 selftests passed; planted errors caught: {'MUT_GRID': True, 'MUT_HOLD': True, 'MUT_EVERY_STEP': True, 'MUT_NOINPUT_KEEP': True, 'MUT_CADENCE_250': True, 'MUT_SURV_ANY': True, 'MUT_TYPE_THR': True}
+parity 20261031: {'windows': 288, 'recorded': 616688, 'key_found': 537645, 'matched': 396905, 'checked': 19846, 'input_differ': 0, 'pred_differ': 0, 'inputs': 616688, 'lookahead_checks': 30834, 'lookahead_bad': 0} in 64 s
+2026-11-14T13:21:10Z tag=ohp2_parity_20261031 rc=0 peak_rss_mib=1189 wall_s=64.47 cpu_user_s=63.09 memavail_start_gib=23 disk_free_gib=507->508 slot=claude

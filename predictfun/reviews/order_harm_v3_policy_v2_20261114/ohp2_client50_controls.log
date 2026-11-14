@@ -1,0 +1,6 @@
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 0.394s
+
+OK
+2026-11-14T13:19:09Z tag=ohp2_client50_controls rc=0 peak_rss_mib=144 wall_s=0.83 cpu_user_s=0.66 memavail_start_gib=23 disk_free_gib=508->508 slot=claude

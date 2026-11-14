@@ -1,0 +1,1221 @@
+{
+ "readings": {
+  "R650 OHQ0 vs FB25C hard10": {
+   "label": "NOT-SHOWN",
+   "up": {
+    "M0": 1,
+    "M50": 2,
+    "M250": 5
+   },
+   "down": {
+    "M0": 4,
+    "M50": 3,
+    "M250": 0
+   },
+   "diff": {
+    "M0": -23.56894622718505,
+    "M50": -10.968620356232776,
+    "M250": 292.120491336575
+   }
+  },
+  "R650 OHQ0 vs FB25C hard20": {
+   "label": "WORSE",
+   "up": {
+    "M0": 1,
+    "M50": 1,
+    "M250": 5
+   },
+   "down": {
+    "M0": 4,
+    "M50": 4,
+    "M250": 0
+   },
+   "diff": {
+    "M0": -27.875360665836666,
+    "M50": -11.97632444354955,
+    "M250": 320.9088474033822
+   }
+  },
+  "R650 OHQ0 vs FB25C hard50": {
+   "label": "WORSE",
+   "up": {
+    "M0": 1,
+    "M50": 1,
+    "M250": 5
+   },
+   "down": {
+    "M0": 4,
+    "M50": 4,
+    "M250": 0
+   },
+   "diff": {
+    "M0": -30.585200407367168,
+    "M50": -16.067564126233684,
+    "M250": 322.41660623700955
+   }
+  },
+  "R650 OHQ0 vs FB25C none": {
+   "label": "WORSE",
+   "up": {
+    "M0": 1,
+    "M50": 1,
+    "M250": 5
+   },
+   "down": {
+    "M0": 4,
+    "M50": 4,
+    "M250": 0
+   },
+   "diff": {
+    "M0": -30.01838040736716,
+    "M50": -16.058706983328925,
+    "M250": 322.18546337991415
+   }
+  },
+  "R650 OHQ0 vs LDG hard10": {
+   "label": "NOT-SHOWN",
+   "up": {
+    "M0": 5,
+    "M50": 3,
+    "M250": 0
+   },
+   "down": {
+    "M0": 0,
+    "M50": 2,
+    "M250": 5
+   },
+   "diff": {
+    "M0": 25.367435978614843,
+    "M50": 7.396287318026971,
+    "M250": -307.2317338521161
+   }
+  },
+  "R650 OHQ0 vs LDG hard20": {
+   "label": "PAYS",
+   "up": {
+    "M0": 5,
+    "M50": 4,
+    "M250": 0
+   },
+   "down": {
+    "M0": 0,
+    "M50": 1,
+    "M250": 5
+   },
+   "diff": {
+    "M0": 29.017387393878806,
+    "M50": 12.022505819742719,
+    "M250": -313.12225006983294
+   }
+  },
+  "R650 OHQ0 vs LDG hard50": {
+   "label": "PAYS",
+   "up": {
+    "M0": 5,
+    "M50": 5,
+    "M250": 0
+   },
+   "down": {
+    "M0": 0,
+    "M50": 0,
+    "M250": 5
+   },
+   "diff": {
+    "M0": 29.937975827280823,
+    "M50": 13.714882484038156,
+    "M250": -310.60005454556836
+   }
+  },
+  "R650 OHQ0 vs LDG none": {
+   "label": "PAYS",
+   "up": {
+    "M0": 5,
+    "M50": 5,
+    "M250": 0
+   },
+   "down": {
+    "M0": 0,
+    "M50": 0,
+    "M250": 5
+   },
+   "diff": {
+    "M0": 30.357188827280808,
+    "M50": 13.573739626942924,
+    "M250": -310.83119740266375
+   }
+  },
+  "R650 OHQM vs FB25C hard10": {
+   "label": "WORSE",
+   "up": {
+    "M0": 1,
+    "M50": 0,
+    "M250": 1
+   },
+   "down": {
+    "M0": 4,
+    "M50": 5,
+    "M250": 4
+   },
+   "diff": {
+    "M0": -11.435437653619516,
+    "M50": -30.020351598025897,
+    "M250": -20.327666898433108
+   }
+  },
+  "R650 OHQM vs FB25C hard20": {
+   "label": "WORSE",
+   "up": {
+    "M0": 1,
+    "M50": 0,
+    "M250": 1
+   },
+   "down": {
+    "M0": 4,
+    "M50": 5,
+    "M250": 4
+   },
+   "diff": {
+    "M0": -18.281757268236504,
+    "M50": -35.69988070394825,
+    "M250": -32.296831663700004
+   }
+  },
+  "R650 OHQM vs FB25C hard50": {
+   "label": "WORSE",
+   "up": {
+    "M0": 0,
+    "M50": 0,
+    "M250": 1
+   },
+   "down": {
+    "M0": 5,
+    "M50": 5,
+    "M250": 4
+   },
+   "diff": {
+    "M0": -18.790831525662725,
+    "M50": -36.756309944912374,
+    "M250": -32.71486290906432
+   }
+  },
+  "R650 OHQM vs FB25C none": {
+   "label": "WORSE",
+   "up": {
+    "M0": 0,
+    "M50": 0,
+    "M250": 1
+   },
+   "down": {
+    "M0": 5,
+    "M50": 5,
+    "M250": 4
+   },
+   "diff": {
+    "M0": -18.584011525662703,
+    "M50": -36.96630994491238,
+    "M250": -32.81278290906448
+   }
+  },
+  "R650 OHQM vs LDG hard10": {
+   "label": "NOT-SHOWN",
+   "up": {
+    "M0": 5,
+    "M50": 2,
+    "M250": 0
+   },
+   "down": {
+    "M0": 0,
+    "M50": 3,
+    "M250": 5
+   },
+   "diff": {
+    "M0": 37.50094455218038,
+    "M50": -11.655443923766152,
+    "M250": -619.6798920871242
+   }
+  },
+  "R650 OHQM vs LDG hard20": {
+   "label": "NOT-SHOWN",
+   "up": {
+    "M0": 5,
+    "M50": 2,
+    "M250": 0
+   },
+   "down": {
+    "M0": 0,
+    "M50": 3,
+    "M250": 5
+   },
+   "diff": {
+    "M0": 38.61099079147897,
+    "M50": -11.701050440655987,
+    "M250": -666.3279291369151
+   }
+  },
+  "R650 OHQM vs LDG hard50": {
+   "label": "NOT-SHOWN",
+   "up": {
+    "M0": 5,
+    "M50": 2,
+    "M250": 0
+   },
+   "down": {
+    "M0": 0,
+    "M50": 3,
+    "M250": 5
+   },
+   "diff": {
+    "M0": 41.732344708985266,
+    "M50": -6.973863334640534,
+    "M250": -665.7315236916422
+   }
+  },
+  "R650 OHQM vs LDG none": {
+   "label": "NOT-SHOWN",
+   "up": {
+    "M0": 5,
+    "M50": 2,
+    "M250": 0
+   },
+   "down": {
+    "M0": 0,
+    "M50": 3,
+    "M250": 5
+   },
+   "diff": {
+    "M0": 41.791557708985266,
+    "M50": -7.333863334640533,
+    "M250": -665.8294436916424
+   }
+  },
+  "R652 OHQ0 hard10": {
+   "label": "REJECT",
+   "conditions": [
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": false,
+     "diff": -16.372958764771777,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": true,
+     "diff": -56.778417366764614,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": false,
+     "diff": -20.767290362739743,
+     "up": 4,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": true,
+     "diff": -41.86213652426807,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": false,
+     "diff": -442.0857255718274,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": true,
+     "diff": -603.0008714600251,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": false,
+     "diff": 11.632054090497313,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": true,
+     "diff": 15.71787143089044,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": false,
+     "diff": 110.64845233306977,
+     "up": 4,
+     "ok": true
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": true,
+     "diff": 88.59820204799763,
+     "up": 4,
+     "ok": true
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": false,
+     "diff": 463.78093331087166,
+     "up": 5,
+     "ok": true
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": true,
+     "diff": 510.4540632977314,
+     "up": 5,
+     "ok": true
+    }
+   ]
+  },
+  "R652 OHQ0 hard20": {
+   "label": "REJECT",
+   "conditions": [
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": false,
+     "diff": -1.7548920418106544,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": true,
+     "diff": -46.230783550122915,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": false,
+     "diff": 0.9508766952180281,
+     "up": 4,
+     "ok": true
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": true,
+     "diff": -26.017113852183,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": false,
+     "diff": -483.66992467367936,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": true,
+     "diff": -665.2279204323779,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": false,
+     "diff": 12.210913334185113,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": true,
+     "diff": 3.878845637925238,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": false,
+     "diff": 131.42916592399945,
+     "up": 4,
+     "ok": true
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": true,
+     "diff": 101.62081936904104,
+     "up": 4,
+     "ok": true
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": false,
+     "diff": 483.62683465876717,
+     "up": 5,
+     "ok": true
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": true,
+     "diff": 529.546347220944,
+     "up": 5,
+     "ok": true
+    }
+   ]
+  },
+  "R652 OHQ0 hard50": {
+   "label": "REJECT",
+   "conditions": [
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": false,
+     "diff": 2.6007965800007877,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": true,
+     "diff": -40.649473928311494,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": false,
+     "diff": 6.373449406753394,
+     "up": 4,
+     "ok": true
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": true,
+     "diff": -20.444180695087653,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": false,
+     "diff": -481.752768425059,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": true,
+     "diff": -667.2898221714404,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": false,
+     "diff": 7.92183636008217,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": true,
+     "diff": 0.03923773358970095,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": false,
+     "diff": 129.91042740082946,
+     "up": 4,
+     "ok": true
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": true,
+     "diff": 99.91886050688808,
+     "up": 4,
+     "ok": true
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": false,
+     "diff": 483.44702360109204,
+     "up": 5,
+     "ok": true
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": true,
+     "diff": 527.3529081776051,
+     "up": 5,
+     "ok": true
+    }
+   ]
+  },
+  "R652 OHQ0 none": {
+   "label": "REJECT",
+   "conditions": [
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": false,
+     "diff": 3.1400095800007906,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": true,
+     "diff": -40.11026092831145,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": false,
+     "diff": 6.711519549658135,
+     "up": 4,
+     "ok": true
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": true,
+     "diff": -20.10532355218288,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": false,
+     "diff": -482.04391128215457,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": true,
+     "diff": -667.7309650285356,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": false,
+     "diff": 8.427096360082182,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": true,
+     "diff": 0.5144977335897352,
+     "up": 3,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": false,
+     "diff": 130.21928454373418,
+     "up": 4,
+     "ok": true
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": true,
+     "diff": 100.22771764979282,
+     "up": 4,
+     "ok": true
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": false,
+     "diff": 483.1558807439965,
+     "up": 5,
+     "ok": true
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": true,
+     "diff": 526.9117653205099,
+     "up": 5,
+     "ok": true
+    }
+   ]
+  },
+  "R652 OHQM hard10": {
+   "label": "REJECT",
+   "conditions": [
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": false,
+     "diff": -73.91042737936101,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": true,
+     "diff": -130.92736763159272,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": false,
+     "diff": -201.1945496269044,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": true,
+     "diff": -232.76180380882164,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": false,
+     "diff": -1026.8663752171783,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": true,
+     "diff": -1277.8402842364392,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": false,
+     "diff": -45.905414524091924,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": true,
+     "diff": -58.43107883393766,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": false,
+     "diff": -69.77880693109489,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": true,
+     "diff": -102.30146523655594,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": false,
+     "diff": -120.99971633447922,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": true,
+     "diff": -164.38534947868266,
+     "up": 1,
+     "ok": false
+    }
+   ]
+  },
+  "R652 OHQM hard20": {
+   "label": "REJECT",
+   "conditions": [
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": false,
+     "diff": -63.27212550355121,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": true,
+     "diff": -121.0617205636992,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": false,
+     "diff": -191.18690199203564,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": true,
+     "diff": -215.23445524276843,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": false,
+     "diff": -1140.7855417157252,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": true,
+     "diff": -1425.6742320437227,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": false,
+     "diff": -49.306320127555445,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": true,
+     "diff": -70.95209137565104,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": false,
+     "diff": -60.70861276325422,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": true,
+     "diff": -87.59652202154439,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": false,
+     "diff": -173.4887823832787,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": true,
+     "diff": -230.89996439040078,
+     "up": 1,
+     "ok": false
+    }
+   ]
+  },
+  "R652 OHQM hard50": {
+   "label": "REJECT",
+   "conditions": [
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": false,
+     "diff": -55.12075755275479,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": true,
+     "diff": -111.17473161290273,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": false,
+     "diff": -183.57841647953646,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": true,
+     "diff": -206.5465454352367,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": false,
+     "diff": -1145.2522840688143,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": true,
+     "diff": -1434.5262273897033,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": false,
+     "diff": -49.799717772673404,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": true,
+     "diff": -70.48601995100154,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": false,
+     "diff": -60.04143848546039,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": true,
+     "diff": -86.18350423326098,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": false,
+     "diff": -180.0524920426633,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": true,
+     "diff": -239.88349704065786,
+     "up": 1,
+     "ok": false
+    }
+   ]
+  },
+  "R652 OHQM none": {
+   "label": "REJECT",
+   "conditions": [
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": false,
+     "diff": -55.15154455275479,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M0",
+     "aged": true,
+     "diff": -111.1155186129027,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": false,
+     "diff": -183.36920347953648,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M50",
+     "aged": true,
+     "diff": -206.33654543523673,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": false,
+     "diff": -1145.5222840688143,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "LDG",
+     "cfg": "M250",
+     "aged": true,
+     "diff": -1434.8262273897035,
+     "up": 0,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": false,
+     "diff": -49.864457772673404,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M0",
+     "aged": true,
+     "diff": -70.49075995100152,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": false,
+     "diff": -59.86143848546044,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M50",
+     "aged": true,
+     "diff": -86.00350423326103,
+     "up": 2,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": false,
+     "diff": -180.32249204266327,
+     "up": 1,
+     "ok": false
+    },
+    {
+     "vs": "FB25C",
+     "cfg": "M250",
+     "aged": true,
+     "diff": -240.18349704065804,
+     "up": 1,
+     "ok": false
+    }
+   ]
+  },
+  "R654 OHQ0 hard10": {
+   "label": "FEWER",
+   "diff": -0.2289266932830335,
+   "up": 0,
+   "down": 5
+  },
+  "R655 OHQ0 vs FB25C hard10": {
+   "label": "MORE"
+  },
+  "R655 OHQ0 vs LDG hard10": {
+   "label": "MORE"
+  },
+  "R654 OHQ0 hard20": {
+   "label": "FEWER",
+   "diff": -0.2294767045988847,
+   "up": 0,
+   "down": 5
+  },
+  "R655 OHQ0 vs FB25C hard20": {
+   "label": "MORE"
+  },
+  "R655 OHQ0 vs LDG hard20": {
+   "label": "MORE"
+  },
+  "R654 OHQ0 hard50": {
+   "label": "FEWER",
+   "diff": -0.2294844785371999,
+   "up": 0,
+   "down": 5
+  },
+  "R655 OHQ0 vs FB25C hard50": {
+   "label": "MORE"
+  },
+  "R655 OHQ0 vs LDG hard50": {
+   "label": "MORE"
+  },
+  "R654 OHQ0 none": {
+   "label": "FEWER",
+   "diff": -0.22947448389904623,
+   "up": 0,
+   "down": 5
+  },
+  "R655 OHQ0 vs FB25C none": {
+   "label": "MORE"
+  },
+  "R655 OHQ0 vs LDG none": {
+   "label": "MORE"
+  },
+  "R654 OHQM hard10": {
+   "label": "FEWER",
+   "diff": -0.015311568453083568,
+   "up": 0,
+   "down": 5
+  },
+  "R655 OHQM vs FB25C hard10": {
+   "label": "MORE"
+  },
+  "R655 OHQM vs LDG hard10": {
+   "label": "MORE"
+  },
+  "R654 OHQM hard20": {
+   "label": "FEWER",
+   "diff": -0.017002998108183287,
+   "up": 0,
+   "down": 5
+  },
+  "R655 OHQM vs FB25C hard20": {
+   "label": "MORE"
+  },
+  "R655 OHQM vs LDG hard20": {
+   "label": "MORE"
+  },
+  "R654 OHQM hard50": {
+   "label": "FEWER",
+   "diff": -0.017134632295676244,
+   "up": 0,
+   "down": 5
+  },
+  "R655 OHQM vs FB25C hard50": {
+   "label": "MORE"
+  },
+  "R655 OHQM vs LDG hard50": {
+   "label": "MORE"
+  },
+  "R654 OHQM none": {
+   "label": "FEWER",
+   "diff": -0.01714087941818243,
+   "up": 0,
+   "down": 5
+  },
+  "R655 OHQM vs FB25C none": {
+   "label": "MORE"
+  },
+  "R655 OHQM vs LDG none": {
+   "label": "MORE"
+  },
+  "VERDICT OHQ0": {
+   "label": "NOT-ACCEPTED"
+  },
+  "R656 OHQ0": {
+   "label": "NOT-YET",
+   "parts": {
+    "R652": false,
+    "R654": false,
+    "R655": true
+   }
+  },
+  "VERDICT OHQM": {
+   "label": "NOT-ACCEPTED"
+  },
+  "R656 OHQM": {
+   "label": "NOT-YET",
+   "parts": {
+    "R652": false,
+    "R654": false,
+    "R655": true
+   }
+  }
+ },
+ "contract": "order-harm-client-50ms-terminal-tail-v2",
+ "decision_ms": 50,
+ "repost_ms": 0.0
+}
