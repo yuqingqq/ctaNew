@@ -1,5 +1,11 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-14 11:40Z (session ce68ebe0) — USER: "Stop the run first, the post now uses a fixed timer, it doesn't make sense for the current system" -> stopped; the timer-based labels are void and deleted; USER chose: the model decides posting too (design proposed, not built)
+
+- Stopped at 11:35Z: the relaunched fit stage (first nested fold, about 2 minutes in, no fold finished); the policy replay never started.
+- The replay lane re-posts only after the guard clears plus a fixed 250 ms timer (REST_COOL); the 11-09 re-entry study found the current system cancels at once and re-enters at its decision events with no timer (25-100 ms delays only lost quote time). The labels' keep-all lane and pull branch embed the timer, so the 9 label days (10:34-10:53Z) are void and were deleted unread.
+- USER's choice (asked after the stop): "Model decides posting too" - at each 50 ms step an empty rung is valued as a new order at its price and posted when it pays; after the guard clears, re-entry is immediate. Needs a new "post now vs wait" label and target; design proposed to the USER before building.
+
 ## 2026-11-14 11:33Z (session ce68ebe0) — USER review during the fit stage: nested out-of-fold chain + availability / preservation / good at-best readings (06e534e8); unrepaired fit outputs deleted unread; the 9 label days reused; the test relaunched
 
 - USER: (1) "The iterative training is not fully out-of-fold ... From the second iteration, A can indirectly influence its own prediction ... keep A excluded throughout the entire iteration chain. Existing label files remain reusable"; (2) "The old guard still controls availability ... A high reported 'keep share' would not establish high quote availability ... judge the replay on whole-portfolio value and whether it preserves older orders and captures more good at-best fills".
