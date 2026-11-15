@@ -7,7 +7,7 @@ cd /home/yuqing/ctaNew
 PHASE="${1:?data}"
 OUT=data/predict_fun/research/stop_ev_20261115; mkdir -p $OUT/logs
 DAYS="20261023 20261024 20261025 20261026 20261027 20261031 20261101 20261102 20261103"
-Z="${PF_EV_SIZE:-30}"; T=$([ "$Z" = "30" ] && echo "" || echo "_s$Z")
+Z="${PF_EV_SIZE:-30}"; T=$([ "$Z" = "30" ] && echo "_imp" || echo "_s${Z}_imp")   # '_imp': untimed legs imputed (pf_stop_ev ZTAG)
 job() { local tag=$1; shift; local n=0
   while :; do echo "$(date -u +%H:%M:%SZ) start $tag" >> $OUT/logs/driver.log
     if env PF_SLOT=claude predictfun/research/run_light.sh $tag -- "$@" > $OUT/logs/$tag.log 2>&1; then break; fi
