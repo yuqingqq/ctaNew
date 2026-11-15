@@ -18,6 +18,8 @@ All five original chronological folds; all 83 declared features. Declare:
 No selected threshold, inferential confidence or claim that all tails can be
 avoided. Matched random-selection expectation is computed analytically as a
 descriptive comparator, not a sampled null or significance test.
+v2 supersedes the v1 comparator: match hour as well as day/side/rung, to
+preserve the decision-time distribution required by the repository rules.
 """
 import argparse
 from collections import Counter
@@ -124,7 +126,7 @@ def score_capture(p,cut,col,sign):
     for fraction in (.01,.05,.10):
         n=max(1,int(np.ceil(fraction*len(p))));sel=np.zeros(len(p),bool);sel[ix[:n]]=True
         expected_tail=expected_loss=0.
-        for _,g in p.assign(selected=sel).groupby(['side','rung']):
+        for _,g in p.assign(selected=sel).groupby(['hour','side','rung']):
             ratio=float(g.selected.mean());expected_tail+=ratio*int((g.value_cents<=cut).sum())
             expected_loss+=ratio*float(np.maximum(-g.value_cents,0.).sum())
         out[str(fraction)]=dict(selected=n,tail_selected=int((tail&sel).sum()),tail_total=int(tail.sum()),
@@ -142,7 +144,7 @@ def selftest():
     r=decompose(a,b,['cell']);require(abs(r['composition']+3)<1e-9 and abs(r['within'])<1e-9,'mix control')
     b=pd.DataFrame(dict(cell=['a']*50+['b']*50,value_cents=[-2.]*50+[-12.]*50))
     r=decompose(a,b,['cell']);require(abs(r['within']+2)<1e-9 and abs(r['composition'])<1e-9,'within control')
-    toy=pd.DataFrame(dict(side=[0]*100,rung=[0]*100,value_cents=[-10.]*10+[1.]*90,risk=[1.]*10+[0.]*90))
+    toy=pd.DataFrame(dict(hour=[0]*100,side=[0]*100,rung=[0]*100,value_cents=[-10.]*10+[1.]*90,risk=[1.]*10+[0.]*90))
     x=score_capture(toy,-5,'risk',1)['0.1'];require(x['tail_capture']==1. and abs(x['tail_capture_matched_expectation']-.1)<1e-9,'tail capture control')
     ba,bb,_=bucket([0,1,2],[np.nan,5]);require(bb[0]==-1,'missing bucket')
     corrupt=toy.copy();corrupt.loc[0,'risk']=np.nan
@@ -213,7 +215,8 @@ def run(out):
             totals['tail_capture_matched_expectation']=sum(z['tail_capture_matched_expectation']*z['tail_total'] for z in parts)/totals['tail_total']
             pooled_capture[name][key]=totals
     for p,h in hashes.items():require(sha(Path(p))==h,'input changed')
-    result=dict(asof=datetime.now(timezone.utc).isoformat(),source_sha256=sha(__file__),
+    result=dict(version='v2',supersedes=str(ROOT/'stop_ev_distribution_20261115_v1'/'report.json'),
+        matched_comparator=['day','hour','side','rung'],asof=datetime.now(timezone.utc).isoformat(),source_sha256=sha(__file__),
         source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=Path(__file__).resolve().parents[2],text=True).strip(),
         controls=ctl,input_sha256=hashes,daily=daily,exclusion_statuses=excluded,folds=records,pooled_tail_capture=pooled_capture,
         n_unique_test_actions=sum(len(panels[d]) for d in TESTS),peak_rss_mib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024.,
