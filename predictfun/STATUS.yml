@@ -1,3 +1,17 @@
+stop_ev_review_20261115:
+  asof: '2026-11-15T11:44:33.221355+00:00'
+  status: review_complete_design_corrections_required
+  review: predictfun/handoffs/20261115_stop_ev_review.md
+  evidence: predictfun/reviews/stop_ev_review_20261115/evidence.json
+  reviewed_design_commit: ff4f7d1b
+  reviewed_result_commit: 9851287a
+  result_asof: '2026-11-15T11:24:12Z'
+  recommendation: direct_local_keep_value_with_quantity_conservation
+  original_design_changed: false
+  running_code_changed: false
+  new_model_runs: 0
+  forward_validation: false
+
 entry_local_prediction_20261115:
   asof: '2026-11-15T10:53:36Z'
   status: prediction_complete_portfolio_replay_running

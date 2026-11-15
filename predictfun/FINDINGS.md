@@ -1,3 +1,21 @@
+<!-- STOP_EV_REVIEW_20261115 -->
+## 2026-11-15 Stop EV design reviewed before implementation
+
+Read-only review of the other session's design and latest completed STOP-PLAY
+v6 receipts. Economic objective is better aligned with profitable queue
+retention, but implementation needs quantity conservation, joint fill-value
+labels, a distinction between book movement and execution, causal q/remaining-Z
+inputs, cancellation-prefix accounting and action-level net-value evaluation.
+Recommend one direct signed local keep-value head per side first. Entry remains
+separate and evaluates the back of the queue; current resting priority can make
+KEEP attractive when a new POST is not. No model or running source changed.
+
+Review: handoffs/20261115_stop_ev_review.md; artifact identities and day-receipt
+reconciliation: reviews/stop_ev_review_20261115/evidence.json. The review records
+the completed result as of 11:24:12Z and qualifies its consumed-data, no-cap,
+queue/timing assumptions. Original draft remains unchanged for its owning session.
+<!-- /STOP_EV_REVIEW_20261115 -->
+
 <!-- ENTRY_LOCAL_PREDICTION_20261115 -->
 ## 2026-11-15 Local entry prediction complete; strategy replay running
 
