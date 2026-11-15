@@ -1,8 +1,15 @@
 {
+  "asof": "2026-11-15T11:10:45.844575+00:00",
   "freeze": "freeze_v3.json",
-  "launch": "launch_v3.json",
-  "state": "full_running",
-  "runner": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_v3/runner.json",
+  "runtime_freeze": "runtime_freeze_v4.json",
+  "launch": "launch_runtime_v4.json",
+  "state": "prediction_complete_replay_running",
+  "state_is_snapshot": true,
+  "authoritative_status": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_v4/runner.json",
+  "runner": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_v4/runner.json",
+  "result": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_v4/report/result.json",
+  "checkpoint": "prediction_checkpoint_v4.json",
   "plan": "predictfun/handoffs/20261115_entry_local_plan.md",
-  "scope": "Single-order local admission; shortened known exposure at window end; fixed keeper in full replay; consumed development."
+  "handoff": "predictfun/handoffs/20261115_entry_local_results.md",
+  "scope": "Single-order local admission. All consumed development; strategy effectiveness pending complete frozen replay."
 }
