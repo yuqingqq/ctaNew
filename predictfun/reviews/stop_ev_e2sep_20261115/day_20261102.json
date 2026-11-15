@@ -1,0 +1,51 @@
+{
+ "day": "20261102",
+ "stat": {
+  "windows": 288,
+  "shift_violations_-250": 0,
+  "e2_legs_-250": 68428,
+  "actions_-250_eligible_estimated_timing": 32941,
+  "actions_-250_not_client_resting": 16200,
+  "actions_-250_probe_not_reached": 527,
+  "actions_-250_untimed_reach": 571,
+  "shift_violations_0": 0,
+  "e2_legs_0": 68428,
+  "actions_0_eligible_estimated_timing": 32552,
+  "actions_0_not_client_resting": 14100,
+  "actions_0_probe_not_reached": 486,
+  "shift_violations_250": 0,
+  "e2_legs_250": 68428,
+  "actions_250_eligible_estimated_timing": 32526,
+  "actions_250_not_client_resting": 13441,
+  "actions_250_probe_not_reached": 489,
+  "actions_0_untimed_reach": 526,
+  "actions_250_untimed_reach": 533,
+  "actions_-250_eligible": 554,
+  "actions_0_eligible": 638,
+  "actions_250_eligible": 714,
+  "actions_-250_incomplete_book_coverage": 789,
+  "actions_0_incomplete_book_coverage": 755,
+  "actions_250_incomplete_book_coverage": 785,
+  "actions_-250_missing_or_stale_mark": 2,
+  "actions_0_missing_or_stale_mark": 2,
+  "actions_250_missing_or_stale_mark": 2
+ },
+ "regression": {
+  "stage1": 49059,
+  "rebuilt": 49059,
+  "unmatched": 0,
+  "status_differ": 0,
+  "value_differ": 0
+ },
+ "asof": "2026-11-15T14:39:04Z",
+ "seconds": 44.0,
+ "sources": {
+  "pf_stop_ev.py": "d951a1eaa0e70856",
+  "pf_stop_ev_accounting.py": "1cffc03eb8d801d8",
+  "pf_stop_queue_activation_lane.py": "8d61029d348f8085",
+  "pf_queue_activation.py": "b63e7f00a74db3c8",
+  "pf_stop_model.py": "e2a857ddb6c4e76a",
+  "pf_kp_s4.py": "3a2cbceb239fa25a",
+  "pf_order_harm_client_lane.py": "c203beeed0a82ae3"
+ }
+}

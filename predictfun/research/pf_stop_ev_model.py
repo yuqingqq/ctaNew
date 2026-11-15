@@ -45,7 +45,31 @@ CONTROLS (synthetic, any failure -> no output): the order-input derivation (unit
   falsifier without the permutation.
 LIMITS: consumed days (exploratory, USER); replay rule M (B1a); E2 point estimates (+-250 ms, C12); a local 1 s value under a neutral
   continuation, not portfolio P&L (stage 3); the untimed rule's limit (stage 1 docstring).
-Usage (run_light, PF_SLOT=claude): pf_stop_ev_model.py selftest | prep <day> | fit <test day> | report; driver run_stop_ev_model.sh.
+V2 (2026-11-15, after the Codex review handoffs/20261115_stop_ev_latest_commit_review.md relayed by the USER: "remain: 1 ... 4"). v1's
+  receipts stay as they are: its T5 FAILED the declared two-sided rule on 10-31 / 11-03 (10 draws, below the repository's 200) and its
+  one-sided recomputation is NOT a pass of the frozen check; v1's MODEL-READY is exploratory only. v2 is a NEW, separately declared fit:
+  DATA: the Codex timing-certified labels (pf_stop_ev_timing_certificate, contract stop-ev-side-prefix-invariance-v1;
+    data/.../stop_ev_timing_certified_20261115_v1): PRIMARY = certified_estimated eligible (no untimed / out-of-range event can reach any
+    accepted order of the side before the label ends, given the E2 point anchors); TIMING-INVARIANT subset = certified_ws eligible (no E2
+    interval or missing event can either). Exact one-to-one joins on (day, m, side, rung, generation, decision_ms) with our model rows;
+    certified values must equal ours (0 differences); every certified action must be among ours. The broader v1 population (the USER's
+    future-only untimed rule) is a sensitivity only.
+  MODEL: the hurdle with a MEAN-preserving value head - LightGBM squared-error regression on the filled actions (E[value | fill]) - x
+    P(fill): a Huber head estimates a robust location, not the mean, and its product with P(fill) is not an expected value (the review's
+    control: 900 x +1 and 100 x -100 have mean -9.1 and Huber location +0.89 at delta 1). Stage 1's declared ROBUST loss is superseded for
+    this reason. Same inputs, parameters, rounds, folds and baselines (B2 refit the same way) as v1.
+  T5v2 (declared here, before any v2 run): 200 permuted-label refits per fold (the training labels permuted jointly over the training set,
+    the identical pipeline), test IC on the primary test actions. LEAK gate (two-sided): |mean IC| <= 3 x sd / sqrt(200); SKILL: the
+    model's test IC above the 99th percentile of the permuted ICs. No v2 verdict until every fold's T5v2 exists and passes the leak gate.
+  READINGS (v2, primary population; the rules of R900-R904 unchanged) + R905 MEAN CALIBRATION: |sum of predictions - sum of values| <=
+    10% of |sum of values| pooled, and the top prediction decile's realized mean has the sign of its mean prediction -> CALIBRATED, else
+    MISCALIBRATED; R952v2 SKILL ON TIMING-INVARIANT: IC > 0 pooled and on >= 4 of 5 days on the certified_ws test actions ->
+    SKILL-ON-INVARIANT, else NOT-SHOWN. VERDICT v2: MODEL-READY iff the v1 rules (R900, R901 IC+ and BEATS-B2-IC, R902, R903) and R905
+    CALIBRATED and T5v2 (leak gate on every fold) hold; R952v2 and R904 printed beside it.
+  ARTIFACTS: every fitted head saved (LightGBM text, feature order, parameters) with sha256 of the files and of the training matrix; a
+    reload of each saved head must reproduce the in-memory test predictions (max |difference| <= 1e-9).
+Usage (run_light, PF_SLOT=claude): pf_stop_ev_model.py selftest | prep <day> | fit <test day> | report (v1); prep2 <day> | fit2 <test day> |
+t5v2 <test day> | report2 (v2); drivers run_stop_ev_model.sh (v1), run_stop_ev_model2.sh (v2).
 """
 import json
 import os
@@ -75,7 +99,12 @@ PARAMS = {**PD.LGB_PARAMS, 'lambda_l2': 10.0}; ROUNDS = 200
 T5_DRAWS = 10; T5_MEAN = 0.01; T5_MAX = 0.03; NULL_DRAWS = 500; P_MAX = 0.05
 MEM_CAP_MIB = 2048.0; NAN = float('nan')
 MUT_JOIN_LATE = MUT_OUTCOME_IN = MUT_HURDLE_ALL = MUT_NO_PERM = 0   # planted errors (selftest only)
-MUTS = ('MUT_JOIN_LATE', 'MUT_OUTCOME_IN', 'MUT_HURDLE_ALL', 'MUT_NO_PERM')
+MUT_V2_HUBER = MUT_T5_ONESIDED = MUT_CERT_NOVAL = 0
+MUTS = ('MUT_JOIN_LATE', 'MUT_OUTCOME_IN', 'MUT_HURDLE_ALL', 'MUT_NO_PERM', 'MUT_V2_HUBER', 'MUT_T5_ONESIDED', 'MUT_CERT_NOVAL')
+CERT = f'{K.IO}/stop_ev_timing_certified_20261115_v1'
+KEYJ = ['day', 'm', 'side', 'rung', 'generation', 'decision_ms']
+CERT_EST_OK = ('eligible_estimated_timing', 'eligible'); CERT_WS_OK = ('eligible_timing_invariant',)
+T5V2_DRAWS = 200; T5V2_SE = 3.0; SKILL_Q = 0.99; CAL_TOL = 0.10
 
 
 # ---------------------------------------------------------------- inputs
@@ -322,6 +351,205 @@ def report():
     print('\n'.join(T), flush=True)
 
 
+# ---------------------------------------------------------------- v2 (after the Codex review; see the docstring)
+def sha_file(path):
+    import hashlib
+    return hashlib.sha256(open(path, 'rb').read()).hexdigest()
+
+
+def cert_flags(D, C_est, C_ws):
+    """Exact one-to-one joins of our model rows D with the two certificate tables (one row per probe): flags and checks."""
+    out = {}
+    for mode, C, okst in (('certified_estimated', C_est, CERT_EST_OK), ('certified_ws', C_ws, CERT_WS_OK)):
+        dup = int(C.duplicated(KEYJ).sum()) + int(D.duplicated(KEYJ).sum())
+        if dup:
+            out[mode] = (np.zeros(len(D), bool), dict(duplicates=dup)); continue
+        J = D[KEYJ + ['value_cents']].merge(C[KEYJ + ['status', 'value_cents']], on=KEYJ, how='left', suffixes=('', '_c'), validate='one_to_one', indicator=True)
+        ok = J.status.isin(okst).values & (J._merge.values == 'both')
+        v1, v2 = J.value_cents.values.astype(float), J.value_cents_c.values.astype(float)
+        vd = 0 if MUT_CERT_NOVAL else int((ok & ~(np.abs(v1 - v2) <= 1e-9)).sum())
+        cert_keys = C.loc[C.status.isin(okst).values, KEYJ]
+        extra = int(len(cert_keys.merge(D[KEYJ], on=KEYJ, how='left', indicator=True).query('_merge == "left_only"')))
+        out[mode] = (ok, dict(duplicates=0, ours=int(len(D)), not_in_certificate=int((J._merge.values != 'both').sum()), certified=int(ok.sum()),
+                              value_differ=vd, certified_not_ours=extra))
+    return out
+
+
+def prep2(day):
+    """v1's model rows (ev_x_<day>) with the certificate flags; refuses unless the joins are exact and the values agree."""
+    all_selftests()
+    D = pd.read_parquet(f'{OUTD}/ev_x_{day}.parquet')
+    paths = {m_: f'{CERT}/{day}/{m_}.parquet' for m_ in ('certified_estimated', 'certified_ws')}
+    C = {m_: pd.read_parquet(p_, columns=KEYJ + ['status', 'value_cents']) for m_, p_ in paths.items()}
+    for x in C.values():
+        x['day'] = x['day'].astype('int64')
+    fl = cert_flags(D, C['certified_estimated'], C['certified_ws'])
+    st = dict(day=day, rows=int(len(D)), checks={m_: v[1] for m_, v in fl.items()}, cert_sha256={m_: sha_file(p_) for m_, p_ in paths.items()},
+              ev_x_sha256=sha_file(f'{OUTD}/ev_x_{day}.parquet'))
+    bad = [m_ for m_, v in st['checks'].items() if v.get('duplicates') or v.get('not_in_certificate') or v.get('value_differ') or v.get('certified_not_ours')]
+    if bad:
+        sys.exit(f'REFUSED (no output for {day}): certificate join {st["checks"]}')
+    D['cert_est'] = fl['certified_estimated'][0]; D['cert_ws'] = fl['certified_ws'][0]
+    D.to_parquet(f'{OUTD}/ev_x2_{day}.parquet', index=False); json.dump(st, open(f'{OUTD}/ev_x2_{day}.json', 'w'), indent=1, default=str)
+    print(f'{day}: {len(D)} rows, certified_estimated {int(D.cert_est.sum())}, certified_ws {int(D.cert_ws.sum())}; {st["checks"]}', flush=True)
+
+
+def fit_hurdle2(X, y, fill, F, rounds=ROUNDS):
+    """v2: P(fill) on every action x E[value | fill] by SQUARED error (the conditional mean) on the filled actions."""
+    import lightgbm as lgb
+    fill = np.asarray(fill, bool); y = np.asarray(y, float)
+    bp = lgb.train(PARAMS, lgb.Dataset(X, fill.astype(float), feature_name=F), rounds)
+    if MUT_V2_HUBER:
+        d_ = float(np.median(np.abs(y[fill]))) if fill.any() else 1.0
+        pv = {**PARAMS, 'objective': 'huber', 'alpha': d_ if d_ > 0 else 1.0}
+    else:
+        pv = {**PARAMS, 'objective': 'regression'}
+    bv = lgb.train(pv, lgb.Dataset(X[fill], y[fill], feature_name=F), rounds)
+    return dict(p=bp, v=bv, objective_value=pv['objective'])
+
+
+def t5v2_gate(ics, observed=None):
+    """Two-sided leak gate on the permuted-label refits' test ICs (|mean| <= 3 sd / sqrt(n)); skill = the observed IC above their 99th pct."""
+    ic = np.asarray(ics, float); n = len(ic); sd = float(ic.std(ddof=1)) if n > 1 else float('inf')
+    leak_ok = bool(n >= T5V2_DRAWS and (np.mean(ic) <= T5V2_SE * sd / np.sqrt(n) if MUT_T5_ONESIDED else abs(np.mean(ic)) <= T5V2_SE * sd / np.sqrt(n)))
+    q = float(np.quantile(ic, SKILL_Q)) if n else NAN
+    return dict(n=n, mean=float(np.mean(ic)) if n else NAN, sd=sd, se=sd / np.sqrt(n) if n else NAN, leak_pass=leak_ok, q99=q,
+                skill_beyond_null=bool(observed is not None and observed == observed and observed > q))
+
+
+def load2(days):
+    return pd.concat([pd.read_parquet(f'{OUTD}/ev_x2_{d}.parquet') for d in days], ignore_index=True)
+
+
+def fit2(test):
+    import lightgbm as lgb
+    all_selftests()
+    tr, cal = FOLDS[test]
+    assert max(tr) < cal < test, 'T1 chronology'
+    T0 = time.time(); Dtr = load2(list(tr)); Dtr = Dtr[Dtr.cert_est.values].reset_index(drop=True)
+    F = inputs_of(list(FULL_IN)); FB = inputs_of(list(B2_IN))
+    Xtr = Dtr[F].to_numpy(np.float32); ytr = Dtr.value_cents.values.astype(float); ftr = Dtr.filled_quantity.values > 0
+    H = fit_hurdle2(Xtr, ytr, ftr, F); HB = fit_hurdle2(Dtr[FB].to_numpy(np.float32), ytr, ftr, FB)
+    tab = b1_table(Dtr); dflt = float(ytr.mean())
+    import hashlib
+    info = dict(version='v2', test=test, cal=cal, train_days=list(tr), n_train=int(len(Dtr)), filled_train=int(ftr.sum()), objective_value=H['objective_value'],
+                params=PARAMS, rounds=ROUNDS, features=F, b2_features=FB, b1=[[int(k[0]), int(k[1]), float(v)] for k, v in tab.items()],
+                train_matrix_sha256=hashlib.sha256(Xtr.tobytes() + ytr.tobytes()).hexdigest(),
+                inputs_sha256={d: sha_file(f'{OUTD}/ev_x2_{d}.parquet') for d in list(tr) + [cal, test]},
+                T6_ic_train=spearman(predict_hurdle(H, Xtr)[0], ytr))
+    md = f'{OUTD}/models_v2'; os.makedirs(md, exist_ok=True); arts = {}
+    Dte = load2([test]); Xte = Dte[F].to_numpy(np.float32); XteB = Dte[FB].to_numpy(np.float32)
+    for nm, h, X_ in (('full', H, Xte), ('b2', HB, XteB)):
+        for head in ('p', 'v'):
+            path = f'{md}/{test}_{nm}_{head}.txt'; h[head].save_model(path)
+            rel = lgb.Booster(model_file=path); diff = float(np.max(np.abs(rel.predict(X_) - h[head].predict(X_)))) if len(X_) else 0.0
+            arts[f'{nm}_{head}'] = dict(path=path, sha256=sha_file(path), reload_max_abs_diff=diff)
+    info['artifacts'] = arts; info['reload_pass'] = bool(all(a['reload_max_abs_diff'] <= 1e-9 for a in arts.values()))
+    imp = pd.Series(H['v'].feature_importance('gain'), index=F).sort_values(ascending=False)
+    imp_p = pd.Series(H['p'].feature_importance('gain'), index=F).sort_values(ascending=False)
+    info['T7_top_value'] = [[c, float(v)] for c, v in imp.head(12).items()]; info['T7_top_fill'] = [[c, float(v)] for c, v in imp_p.head(12).items()]
+    for d in (cal, test):
+        Dd = Dte if d == test else load2([d]); Xd = Dd[F].to_numpy(np.float32)
+        pr, pp, pv = predict_hurdle(H, Xd); pb = predict_hurdle(HB, Dd[FB].to_numpy(np.float32))[0]
+        P_ = Dd[KEYJ + ['hour', 'status', 'x_known_remaining', 'value_cents', 'filled_quantity', 'cert_est', 'cert_ws']].copy()
+        P_['pred'] = pr; P_['p_fill'] = pp; P_['v_fill'] = pv; P_['b2'] = pb; P_['b1'] = b1_predict(tab, Dd, dflt)
+        P_.to_parquet(f'{OUTD}/pred2_{test}_{d}.parquet', index=False)
+    info['seconds'] = round(time.time() - T0, 1)
+    json.dump(info, open(f'{OUTD}/fit2_{test}.json', 'w'), indent=1, default=float)
+    if not info['reload_pass']:
+        sys.exit(f'REFUSED: a saved head does not reproduce its predictions {arts}')
+    print(f'fold {test} v2: train {info["n_train"]} ({info["filled_train"]} filled), IC train {info["T6_ic_train"]:+.3f}, reload ok, {info["seconds"]} s', flush=True)
+
+
+def t5v2(test):
+    """T5v2: T5V2_DRAWS permuted-label refits of the v2 pipeline on the fold's certified training actions; test IC on the primary test actions."""
+    all_selftests()
+    tr, cal = FOLDS[test]; T0 = time.time()
+    Dtr = load2(list(tr)); Dtr = Dtr[Dtr.cert_est.values].reset_index(drop=True); F = inputs_of(list(FULL_IN))
+    Xtr = Dtr[F].to_numpy(np.float32); ytr = Dtr.value_cents.values.astype(float); ftr = Dtr.filled_quantity.values > 0
+    Dte = load2([test]); Dte = Dte[Dte.cert_est.values]; Xte = Dte[F].to_numpy(np.float32); yte = Dte.value_cents.values.astype(float)
+    rng = np.random.default_rng(int(test) + 2); ics = []
+    for i in range(T5V2_DRAWS):
+        yp, fp = permute_labels(ytr, ftr, rng)
+        ics.append(spearman(predict_hurdle(fit_hurdle2(Xtr, yp, fp, F), Xte)[0], yte))
+        if (i + 1) % 20 == 0:
+            print(f'{test}: {i + 1} draws, {time.time() - T0:.0f} s', flush=True)
+    obs = pd.read_parquet(f'{OUTD}/pred2_{test}_{test}.parquet'); obs = obs[obs.cert_est.values]
+    g = t5v2_gate(ics, spearman(obs.pred.values, obs.value_cents.values))
+    json.dump(dict(test=test, draws=T5V2_DRAWS, ics=ics, gate=g, seconds=round(time.time() - T0, 1)), open(f'{OUTD}/t5v2_{test}.json', 'w'), indent=1, default=float)
+    print(f'{test} T5v2: mean {g["mean"]:+.4f} (se {g["se"]:.4f}) -> leak gate {"PASS" if g["leak_pass"] else "FAIL"}; q99 {g["q99"]:+.4f}, skill beyond null '
+          f'{g["skill_beyond_null"]}; {time.time() - T0:.0f} s', flush=True)
+
+
+def report2():
+    fits = {t: json.load(open(f'{OUTD}/fit2_{t}.json')) for t in TESTS if os.path.exists(f'{OUTD}/fit2_{t}.json')}
+    if len(fits) < len(TESTS):
+        sys.exit(f'REFUSED: v2 folds missing {[t for t in TESTS if t not in fits]}')
+    t5 = {t: json.load(open(f'{OUTD}/t5v2_{t}.json')) for t in TESTS if os.path.exists(f'{OUTD}/t5v2_{t}.json')}
+    PA = pd.concat([pd.read_parquet(f'{OUTD}/pred2_{t}_{t}.parquet') for t in TESTS], ignore_index=True)
+    T = [f'STOP-EV STAGE 2 v2 - MODEL (hurdle P(fill) x E[value | fill] by squared error; Codex timing-certified labels; v1 kept as exploratory); '
+         f'as of {time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}', '']
+    T.append('TRAINING per fold (certified_estimated training actions): n (filled) | IC train | saved heads reload | T5v2 (200 refits): mean / se -> leak gate | '
+             'q99 vs observed -> skill beyond the null')
+    for t, f in fits.items():
+        g = t5.get(t, {}).get('gate')
+        T.append(f"  {t}: {f['n_train']} ({f['filled_train']}) | {f['T6_ic_train']:+.3f} | {'ok' if f['reload_pass'] else 'FAIL'} | "
+                 + (f"{g['mean']:+.4f} / {g['se']:.4f} -> {'PASS' if g['leak_pass'] else 'FAIL'} | {g['q99']:+.4f} -> {g['skill_beyond_null']}" if g else 'PENDING'))
+    R = {}
+    for popn, sel in (('PRIMARY certified_estimated', PA.cert_est.values), ('TIMING-INVARIANT certified_ws', PA.cert_ws.values),
+                      ('SENSITIVITY v1 population (future-only untimed rule)', np.ones(len(PA), bool))):
+        P = PA[sel].reset_index(drop=True); y = P.value_cents.values.astype(float); days = [int(t) for t in TESTS]
+        per = {}
+        for d in days:
+            x = P[P.day.values == d]; yy = x.value_cents.values.astype(float)
+            q = quint(x.pred.values, yy) if len(x) >= 5 else [NAN] * 5
+            per[d] = dict(n=len(x), mean=float(yy.mean()) if len(x) else NAN, ic=spearman(x.pred.values, yy), ic_b2=spearman(x.b2.values, yy), q=q,
+                          tb=q[-1] - q[0], gain=float(-yy[~(x.pred.values > 0)].sum()), gain_b2=float(-yy[~(x.b2.values > 0)].sum()),
+                          pull=float(np.mean(~(x.pred.values > 0))) if len(x) else NAN, mse=float(np.mean((x.pred.values - yy) ** 2)) if len(x) else NAN,
+                          mse_b1=float(np.mean((x.b1.values - yy) ** 2)) if len(x) else NAN)
+        qp = quint(P.pred.values, y); dec = pd.qcut(pd.Series(P.pred.values).rank(method='first'), 10, labels=False).values
+        cal_sum = float(abs(P.pred.values.sum() - y.sum()) / max(abs(y.sum()), 1e-12)); top_p = float(P.pred.values[dec == 9].mean()); top_y = float(y[dec == 9].mean())
+        nd = lambda f: sum(int(f(per[d])) for d in days)
+        r900 = 'RANKS' if (qp[-1] - qp[0] > 0 and nd(lambda z: z['tb'] > 0) >= 4) else 'NO-RANK'
+        icp = spearman(P.pred.values, y); ic_pos = icp > 0 and nd(lambda z: z['ic'] > 0) >= 4; beats_b2 = nd(lambda z: z['ic'] > z['ic_b2']) >= 4
+        sides = {s: (spearman(P.pred.values[P.side.values == s], y[P.side.values == s]),
+                     (lambda qq: qq[-1] - qq[0])(quint(P.pred.values[P.side.values == s], y[P.side.values == s]))) for s in (0, 1)}
+        r902 = 'BOTH-SIDES' if all(v[0] > 0 and v[1] > 0 for v in sides.values()) else 'FAILS-' + '/'.join(('BID', 'ASK')[s] for s, v in sides.items() if not (v[0] > 0 and v[1] > 0))
+        gain = float(-y[~(P.pred.values > 0)].sum()); mm = metric_rows(P, P.pred.values > 0)
+        r903 = 'LOCAL-GAIN' if (gain > 0 and nd(lambda z: z['gain'] > 0) >= 4 and mm['p_value'] is not None and mm['p_value'] <= P_MAX) else 'NOT-SHOWN'
+        r904 = 'BEATS-B2-DECISION' if nd(lambda z: z['gain'] > z['gain_b2']) >= 4 else 'NOT-SHOWN'
+        r905 = 'CALIBRATED' if (cal_sum <= CAL_TOL and np.sign(top_p) == np.sign(top_y)) else 'MISCALIBRATED'
+        T += ['', f'{popn}: {len(P)} test actions; IC {icp:+.3f} (B2 {spearman(P.b2.values, y):+.3f}); quintiles ' + ' '.join(f'{v:+.2f}' for v in qp)
+              + f'; keep iff pred > 0: pull {np.mean(~(P.pred.values > 0)):.1%}, local gain ${gain / 100:+.1f}, null p {mm["p_value"]}']
+        for d in days:
+            z = per[d]
+            T.append(f"  {d}: n {z['n']} | mean {z['mean']:+.2f} | IC {z['ic']:+.3f} / B2 {z['ic_b2']:+.3f} | quintiles " + ' '.join(f'{v:+.2f}' for v in z['q'])
+                     + f" | MSE {z['mse']:.0f} / B1 {z['mse_b1']:.0f} | pull {z['pull']:.1%}, gain ${z['gain'] / 100:+.1f} / B2 ${z['gain_b2'] / 100:+.1f}")
+        T.append('  calibration by decile (mean prediction -> realized): ' + ' | '.join(f'{P.pred.values[dec == i].mean():+.2f} -> {y[dec == i].mean():+.2f}' for i in range(10)))
+        T.append(f'  sides IC / top-bottom: bid {sides[0][0]:+.3f} / {sides[0][1]:+.2f}; ask {sides[1][0]:+.3f} / {sides[1][1]:+.2f}; '
+                 f'sum of predictions vs values off by {cal_sum:.1%}; top decile {top_p:+.2f} -> {top_y:+.2f}')
+        T.append(f'  READINGS: R900 {r900}; R901 {"IC+" if ic_pos else "IC-NOT-SHOWN"}, {"BEATS-B2-IC" if beats_b2 else "NOT-ABOVE-B2-IC"}; R902 {r902}; '
+                 f'R903 {r903}; R904 {r904}; R905 {r905}')
+        R[popn] = dict(per_day=per, ic=icp, quintiles=qp, readings=dict(R900=r900, R901=[ic_pos, beats_b2], R902=r902, R903=r903, R904=r904, R905=r905),
+                       calibration=dict(sum_off=cal_sum, top_pred=top_p, top_real=top_y), metrics=mm)
+    inv = R['TIMING-INVARIANT certified_ws']; r952 = 'SKILL-ON-INVARIANT' if (inv['ic'] > 0 and sum(int(z['ic'] > 0) for z in inv['per_day'].values()) >= 4) else 'NOT-SHOWN'
+    pr = R['PRIMARY certified_estimated']['readings']
+    t5ok = len(t5) == len(TESTS) and all(x['gate']['leak_pass'] for x in t5.values())
+    parts = [n for n, ok in (('R900', pr['R900'] == 'RANKS'), ('R901 IC+', pr['R901'][0]), ('R901 B2', pr['R901'][1]), ('R902', pr['R902'] == 'BOTH-SIDES'),
+                             ('R903', pr['R903'] == 'LOCAL-GAIN'), ('R905', pr['R905'] == 'CALIBRATED')) if not ok]
+    if len(t5) < len(TESTS):
+        verdict = f'PENDING (T5v2 missing on {[t for t in TESTS if t not in t5]}); readings above are not a claim'
+    elif not t5ok:
+        verdict = 'REFUSED (T5v2 leak gate failed on ' + ', '.join(t for t, x in t5.items() if not x['gate']['leak_pass']) + ')'
+    else:
+        verdict = 'MODEL-READY' if not parts else 'NOT-READY (' + ', '.join(parts) + ')'
+    T += ['', f'R952v2 {r952} (timing-invariant test actions); VERDICT v2: {verdict} (development only: consumed days, replay rule M; local 1 s value)']
+    R.update(R952v2=r952, verdict=verdict, t5v2={t: x['gate'] for t, x in t5.items()})
+    open(f'{OUTD}/stop_ev_model_v2.txt', 'w').write('\n'.join(T) + '\n')
+    json.dump(R, open(f'{OUTD}/stop_ev_model_v2.json', 'w'), indent=1, default=float)
+    print('\n'.join(T), flush=True)
+
+
 # ---------------------------------------------------------------- self-tests (synthetic)
 def selftest():
     bad = []
@@ -373,6 +601,28 @@ def selftest():
     mt = metric_rows(Pm, yy > 0)
     if not (mt['p_value'] is not None and mt['p_value'] <= 0.01 and abs(mt['local_gain_vs_keep_all_cents'] - 5.0 * nn / 2) < 1e-6):
         bad.append(f'matched null adapter {mt}')
+    # (7) v2 value head = the conditional MEAN: the review's control (900 x +1, 100 x -100 among filled actions; mean -9.1, Huber +0.89)
+    # two groups (LightGBM's Huber starts from the label mean and barely moves on one group): x = 0 holds 10% -100 (mean -9.1), x = 1 only +1
+    n7 = 4000; x7 = (np.arange(n7) % 2).astype(float); y7 = np.where(x7 > 0, 1.0, np.where(np.arange(n7) % 20 == 0, -100.0, 1.0))
+    r7 = np.random.default_rng(7)                         # its own generator: the case must not depend on earlier draws
+    X7 = np.stack([x7, r7.normal(0, 1, n7)], 1).astype(np.float32); f7 = np.ones(n7, bool); f7[3::97] = False
+    H7 = fit_hurdle2(X7, y7, f7, ['a', 'b'], rounds=600)
+    pv7 = H7['v'].predict(X7[f7]); g7 = x7[f7]; obj7 = H7['v'].dump_model()['objective']   # in-sample group means of the value head
+    v7 = [float(pv7[g7 == 0].mean()), float(pv7[g7 == 1].mean())]; m7 = [float(y7[f7][g7 == 0].mean()), float(y7[f7][g7 == 1].mean())]
+    if abs(v7[0] - m7[0]) > 1.5 or abs(v7[1] - m7[1]) > 0.5 or not str(obj7).startswith('regression'):
+        bad.append(f'v2 value head: group means {np.round(v7, 2).tolist()} vs {np.round(m7, 2).tolist()}; fitted objective {obj7}')
+    # (8) T5v2 gate: two-sided (an IC of -1 on every draw must fail), passes centred noise, needs 200 draws
+    g_neg = t5v2_gate([-1.0] * 199 + [-0.99]); g_ok = t5v2_gate(list(rng.normal(0, 0.01, 200))); g_few = t5v2_gate(list(rng.normal(0, 0.01, 10)))
+    if g_neg['leak_pass'] or not g_ok['leak_pass'] or g_few['leak_pass']:
+        bad.append(f"T5v2 gate: all -1 {g_neg['leak_pass']}, centred {g_ok['leak_pass']}, 10 draws {g_few['leak_pass']}")
+    # (9) the certificate join: exact keys, values must agree, certified actions must be ours
+    Dc = pd.DataFrame(dict(day=[1, 1, 1], m=[5, 5, 5], side=[0, 0, 1], rung=[0, 1, 0], generation=[0, 0, 0], decision_ms=[10.0, 20.0, 10.0], value_cents=[1.0, 2.0, 3.0]))
+    Ce = Dc.assign(status=['eligible_estimated_timing', 'uncertain_prior_reference', 'eligible_estimated_timing'], value_cents=[1.0, NAN, 3.5])
+    Cw = Dc.assign(status=['eligible_timing_invariant', 'uncertain_prior_reference', 'uncertain_prior_reference'], value_cents=[1.0, NAN, NAN])
+    fl = cert_flags(Dc, Ce, Cw)
+    if not (list(fl['certified_estimated'][0]) == [True, False, True] and fl['certified_estimated'][1]['value_differ'] == 1
+            and list(fl['certified_ws'][0]) == [True, False, False] and fl['certified_ws'][1]['value_differ'] == 0):
+        bad.append(f'certificate join {fl}')
     return bad
 
 
@@ -408,5 +658,13 @@ if __name__ == '__main__':
         fit_fold(sys.argv[2])
     elif cmd == 'report':
         report()
+    elif cmd == 'prep2':
+        prep2(sys.argv[2])
+    elif cmd == 'fit2':
+        fit2(sys.argv[2])
+    elif cmd == 't5v2':
+        t5v2(sys.argv[2])
+    elif cmd == 'report2':
+        report2()
     else:
         sys.exit(__doc__)
