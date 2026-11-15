@@ -48,7 +48,7 @@ class Checks(unittest.TestCase):
         self.assertFalse(c.assess(0,300.,1200.)['certified'])
 
     def test_trade_at_better_price_changes_shared_volume(self):
-        W=T.world(((400.,49,40.),)); l,c=missing(W,0,50,lo=250.,hi=250.,qty=30.,nr=2)
+        W=T.world(((350.,49,40.),)); l,c=missing(W,0,50,lo=250.,hi=250.,qty=30.,nr=2)
         base=T.action(T.ledger(W,nr=2),300.,rung=1)['label']['filled_quantity']
         alt=T.action(T.ledger(add_leg(W,0,250.,50,30.),nr=2),300.,rung=1)['label']['filled_quantity']
         self.assertEqual((base,alt),(10.,30.))
