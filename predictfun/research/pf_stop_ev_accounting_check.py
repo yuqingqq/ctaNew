@@ -22,12 +22,20 @@ def world(legs=((200., 50, 10.),), *, side=0, queue=0., epoch=0., frames=None, m
         best, direction, opp = (50, -1, 52) if s == 0 else (52, 1, 50)
         book = [(t, [(best + direction*d, q) for d in range(5)], opp)
                 for t, q in (frames or ((0., queue), (500., queue)))]
+        mark_points = marks or ((0., 51.), (1000., 51.), (2500., 51.))
+        # Future raw books carry the requested mark; no inconsistent synthetic
+        # ffilled-mid column can substitute for an actual valid bid/ask pair.
+        for t, mid in mark_points:
+            if t <= max(f[0] for f in book): continue
+            mb, ma = mid-1., mid+1.
+            mp, mo = (mb, ma) if s == 0 else (ma, mb)
+            book.append((t, [(mp + direction*d, queue) for d in range(5)], mo))
         w = J._ctx(s, book, list(legs) if s == side else [])
         w['m'] = 1
         for name in ('tf', 'kf', 'tg', 'anc'):
             w[name] = np.asarray(w[name], float) + epoch
         w['ws'] += epoch; w['te'] += epoch
-        mt, mv = zip(*(marks or ((0., 51.), (1000., 51.), (2500., 51.))))
+        mt, mv = zip(*mark_points)
         w['tf_mff'] = (np.asarray(mt) + epoch, np.asarray(mv))
         W[s] = w
     return W
@@ -156,10 +164,14 @@ class Checks(unittest.TestCase):
         for cov, status in cases:
             row = action(ledger(l.W, result=l.result, coverage=cov))
             self.assertEqual(row['status'], status); self.assertIsNone(row['label'])
-        w = copy.deepcopy(l.W); w[0]['tf_mff'] = (np.array([0.]), np.array([51.]))
+        l = ledger(world(((800., 50, 10.),)))
+        w = copy.deepcopy(l.W); future = w[0]['tf'] >= 1000.
+        w[0]['opp'][future] = -1
+        # Old ffilled mids are still finite and recent: the checker must use
+        # raw-valid timestamps (last valid book is 500 ms; mark asks for 1800).
+        w[0]['tf_mff'] = (np.array([1800.]), np.array([51.]))
         self.assertEqual(action(ledger(w, result=l.result))['status'], 'missing_or_stale_mark')
-        w[0]['tf_mff'] = (np.array([1200.]), np.array([np.nan]))
-        self.assertEqual(action(ledger(w, result=l.result))['status'], 'missing_or_stale_mark')
+        self.assertEqual(A.valid_marks(w[0], 0)[0][-1], 500.)
 
     def test_marks_follow_execution_clock_not_unshifted_anchor(self):
         w = world(((250., 50, 10.),), marks=((0., 50.), (1200., 51.), (1250., 49.)))
