@@ -1,0 +1,326 @@
+feature,group,source,original_input,description
+bn_r25,BN_RETURN,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+bn_r50,BN_RETURN,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+bn_r100,BN_RETURN,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+bn_r250,BN_RETURN,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+bn_r500,BN_RETURN,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+bn_r1000,BN_RETURN,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+bn_r3000,BN_RETURN,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+bn_imb,BN_PRESSURE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+bn_age,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+bn_flow250,BN_PRESSURE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+bn_flow1000,BN_PRESSURE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+bn_flow5000,BN_PRESSURE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+bn_ntr1000,BN_PRESSURE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_spread,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_mid,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_micro_dev,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_imb1,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_imb3,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_lbs,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_las,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_age,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_nfr1000,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_dm250,PF_HISTORY,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_dm1000,PF_HISTORY,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_dm5000,PF_HISTORY,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_pend_bid1000,PF_HISTORY,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_pend_ask1000,PF_HISTORY,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+pf_pend_tot5000,PF_HISTORY,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+t_rel,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+sigma,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+basis_bps,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+gap,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_sign,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+rung,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+price,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+depth,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+spread,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+age,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+quantity,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+known_filled,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+ahead_known,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+initial_ahead_known,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+shown_known,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+size_better,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+queue_fraction,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+known_position,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_exposure,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+other_exposure,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+capacity_left,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+time_remaining,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+frame_age,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_bn_r25,BN_RETURN,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_bn_r50,BN_RETURN,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_bn_r100,BN_RETURN,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_bn_r250,BN_RETURN,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_bn_r500,BN_RETURN,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_bn_r1000,BN_RETURN,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_bn_r3000,BN_RETURN,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_bn_imb,BN_PRESSURE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_bn_flow250,BN_PRESSURE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_bn_flow1000,BN_PRESSURE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_bn_flow5000,BN_PRESSURE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_pf_micro_dev,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_pf_imb1,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_pf_imb3,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_pf_dm250,PF_HISTORY,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_pf_dm1000,PF_HISTORY,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_pf_dm5000,PF_HISTORY,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_position,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+idle_age_ms,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+side_price_change_while_empty,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_orders,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_remaining_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_pending_place_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_pending_cancel_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_filled_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_price_gap_mean,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_price_gap_min,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_price_gap_max,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_oldest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_newest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_active_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_shown_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_queue_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_queue_unknown,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_empty_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_0_generation_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_orders,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_remaining_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_pending_place_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_pending_cancel_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_filled_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_price_gap_mean,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_price_gap_min,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_price_gap_max,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_oldest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_newest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_active_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_shown_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_queue_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_queue_unknown,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_empty_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_1_generation_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_orders,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_remaining_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_pending_place_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_pending_cancel_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_filled_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_price_gap_mean,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_price_gap_min,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_price_gap_max,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_oldest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_newest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_active_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_shown_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_queue_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_queue_unknown,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_empty_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_2_generation_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_orders,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_remaining_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_pending_place_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_pending_cancel_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_filled_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_price_gap_mean,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_price_gap_min,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_price_gap_max,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_oldest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_newest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_active_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_shown_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_queue_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_queue_unknown,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_empty_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_3_generation_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_orders,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_remaining_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_pending_place_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_pending_cancel_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_filled_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_price_gap_mean,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_price_gap_min,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_price_gap_max,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_oldest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_newest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_active_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_shown_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_queue_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_queue_unknown,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_empty_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_4_generation_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_orders,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_remaining_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_pending_place_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_pending_cancel_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_filled_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_price_gap_mean,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_price_gap_min,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_price_gap_max,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_oldest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_newest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_active_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_shown_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_queue_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_queue_unknown,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_empty_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_5_generation_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_orders,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_remaining_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_pending_place_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_pending_cancel_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_filled_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_price_gap_mean,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_price_gap_min,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_price_gap_max,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_oldest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_newest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_active_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_shown_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_queue_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_queue_unknown,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_empty_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_0_generation_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_orders,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_remaining_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_pending_place_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_pending_cancel_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_filled_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_price_gap_mean,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_price_gap_min,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_price_gap_max,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_oldest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_newest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_active_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_shown_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_queue_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_queue_unknown,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_empty_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_1_generation_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_orders,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_remaining_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_pending_place_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_pending_cancel_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_filled_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_price_gap_mean,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_price_gap_min,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_price_gap_max,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_oldest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_newest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_active_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_shown_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_queue_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_queue_unknown,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_empty_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_2_generation_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_orders,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_remaining_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_pending_place_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_pending_cancel_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_filled_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_price_gap_mean,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_price_gap_min,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_price_gap_max,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_oldest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_newest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_active_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_shown_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_queue_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_queue_unknown,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_empty_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_3_generation_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_orders,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_remaining_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_pending_place_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_pending_cancel_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_filled_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_price_gap_mean,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_price_gap_min,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_price_gap_max,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_oldest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_newest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_active_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_shown_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_queue_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_queue_unknown,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_empty_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_4_generation_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_orders,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_remaining_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_pending_place_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_pending_cancel_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_filled_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_price_gap_mean,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_price_gap_min,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_price_gap_max,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_oldest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_newest_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_active_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_shown_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_queue_lots,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_queue_unknown,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_empty_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_5_generation_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_book_liquidity_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_book_best_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_book_frame_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_book_imbalance,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_book_size1_relative,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_book_size2_relative,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_book_size3_relative,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_book_size4_relative,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_book_size5_relative,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_book_liquidity_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_book_best_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_book_frame_age_log,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_book_imbalance,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_book_size1_relative,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_book_size2_relative,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_book_size3_relative,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_book_size4_relative,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_book_size5_relative,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+start_known,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_empty_count,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+opp_empty_count,STATE,frozen action-row input,True,Original model input; directional aliases contain no new raw information.
+own_d250,RECOVERED,known grid history,False,Already computed upstream; omitted by the original 32-market-column slice.
+opp_d250,RECOVERED,known grid history,False,Already computed upstream; omitted by the original 32-market-column slice.
+act_rel,RECOVERED,known grid history,False,Already computed upstream; omitted by the original 32-market-column slice.
+d_bnimb250,RECOVERED,known grid history,False,Already computed upstream; omitted by the original 32-market-column slice.
+own_level_gap2,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+own_level_gap3,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+own_level_gap4,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+own_level_gap5,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+opp_level_gap2,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+opp_level_gap3,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+opp_level_gap4,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+opp_level_gap5,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+own_depth_ticks1_lots,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+own_depth_ticks2_lots,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+own_depth_ticks3_lots,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+own_depth_ticks4_lots,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+own_depth_ticks5_lots,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+opp_depth_ticks1_lots,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+opp_depth_ticks2_lots,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+opp_depth_ticks3_lots,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+opp_depth_ticks4_lots,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+opp_depth_ticks5_lots,GEOMETRY,known book history,False,Price spacing or cumulative displayed size within a fixed tick distance; both sides.
+own_best_move250,LEVEL_DYNAMICS,known book history,False,"Received-frame best moves, same-price size changes/churn, or imbalance changes over trailing 250/1000 ms."
+own_best_move1000,LEVEL_DYNAMICS,known book history,False,"Received-frame best moves, same-price size changes/churn, or imbalance changes over trailing 250/1000 ms."
+opp_best_move250,LEVEL_DYNAMICS,known book history,False,"Received-frame best moves, same-price size changes/churn, or imbalance changes over trailing 250/1000 ms."
+opp_best_move1000,LEVEL_DYNAMICS,known book history,False,"Received-frame best moves, same-price size changes/churn, or imbalance changes over trailing 250/1000 ms."
+candidate_change250_lots,LEVEL_DYNAMICS,known book history,False,"Received-frame best moves, same-price size changes/churn, or imbalance changes over trailing 250/1000 ms."
+candidate_shrink250_lots,LEVEL_DYNAMICS,known book history,False,"Received-frame best moves, same-price size changes/churn, or imbalance changes over trailing 250/1000 ms."
+candidate_grow250_lots,LEVEL_DYNAMICS,known book history,False,"Received-frame best moves, same-price size changes/churn, or imbalance changes over trailing 250/1000 ms."
+candidate_change1000_lots,LEVEL_DYNAMICS,known book history,False,"Received-frame best moves, same-price size changes/churn, or imbalance changes over trailing 250/1000 ms."
+candidate_shrink1000_lots,LEVEL_DYNAMICS,known book history,False,"Received-frame best moves, same-price size changes/churn, or imbalance changes over trailing 250/1000 ms."
+candidate_grow1000_lots,LEVEL_DYNAMICS,known book history,False,"Received-frame best moves, same-price size changes/churn, or imbalance changes over trailing 250/1000 ms."
+own_imb_change250,LEVEL_DYNAMICS,known book history,False,"Received-frame best moves, same-price size changes/churn, or imbalance changes over trailing 250/1000 ms."
+own_imb_change1000,LEVEL_DYNAMICS,known book history,False,"Received-frame best moves, same-price size changes/churn, or imbalance changes over trailing 250/1000 ms."
+side_fair_change250,FAIR_DYNAMICS,known grid history,False,"Model-implied fair-value transform, not observed truth; start-unknown values stay missing; contract expiry differs from research cutoff."
+side_fair_change1000,FAIR_DYNAMICS,known grid history,False,"Model-implied fair-value transform, not observed truth; start-unknown values stay missing; contract expiry differs from research cutoff."
+side_gap_change250,FAIR_DYNAMICS,known grid history,False,"Model-implied fair-value transform, not observed truth; start-unknown values stay missing; contract expiry differs from research cutoff."
+side_gap_change1000,FAIR_DYNAMICS,known grid history,False,"Model-implied fair-value transform, not observed truth; start-unknown values stay missing; contract expiry differs from research cutoff."
+fair_sensitivity,FAIR_DYNAMICS,known grid history,False,"Model-implied fair-value transform, not observed truth; start-unknown values stay missing; contract expiry differs from research cutoff."
+fair_distance50,FAIR_DYNAMICS,known grid history,False,"Model-implied fair-value transform, not observed truth; start-unknown values stay missing; contract expiry differs from research cutoff."
+contract_remaining_s,FAIR_DYNAMICS,known grid history,False,"Model-implied fair-value transform, not observed truth; start-unknown values stay missing; contract expiry differs from research cutoff."

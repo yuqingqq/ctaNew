@@ -1,0 +1,8 @@
+{
+  "completion": "completion.json",
+  "result": "result.json",
+  "inventory": "inventory.csv",
+  "features": "feature_summary.csv",
+  "groups": "group_summary.csv",
+  "freeze": "freeze_v2.json"
+}
