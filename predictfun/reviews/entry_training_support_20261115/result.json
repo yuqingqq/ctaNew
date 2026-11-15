@@ -1,0 +1,206 @@
+{
+  "asof": "2026-11-15T05:16:37.782981+00:00",
+  "data_asof": "2026-11-15T05:04:52Z",
+  "status": "read_only_training_support_interpretation",
+  "source_sha256": {
+    "predictfun/reviews/entry_normalization_20261115/summary.json": "d7c2ad1dc71a3a7a4961c43cc985f5c287bfb7ab6225cc3636f4ce14e529b25e",
+    "predictfun/reviews/entry_representation_20261115/result.json": "2d75ded009ce2ac0a494d8ec2247364193fe650b7f2812b2a4b936ccdc4eef61",
+    "/home/yuqing/ctaNew/data/predict_fun/research/entry_normalization_20261115_v1/audit/result.json": "e088b5cfdb5f722a4bbbc7f7b5b6a3288b63d2ffe904fdc878beb1782d45bcd9",
+    "predictfun/reviews/entry_representation_20261115/fit_receipts/20261027.json": "79821a08e667efbeb7ed7e92e178671309004b361b71ed4efc39d80406ce39ca",
+    "/home/yuqing/ctaNew/data/predict_fun/research/entry_information_20261115_v3/rows_20261025/receipt.json": "33c3a451a1ca0a0f132e1e3390af97ca822ebb5c5542e36bcb78f1f6028f8cab",
+    "/home/yuqing/ctaNew/data/predict_fun/research/entry_information_20261115_v3/rows_20261026/receipt.json": "0c674e75911d06022a58cae1cef89cbd4637498247e40b65b93a31ca64ff90e1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/entry_information_20261115_v3/rows_20261027/receipt.json": "1a8314f0f92d7a66d3493c6695f760867d89461d8280dc816650b422ba99481e",
+    "predictfun/reviews/entry_representation_20261115/fit_receipts/20261031.json": "0e67935dd55644e0f7f0ba0c9e10e932f747918b6c77d2517d1aed3a585683eb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/entry_information_20261115_v3/rows_20261031/receipt.json": "fd57f541a6c8e5b70805309fcd52954a08bb1f0051184d06c9a1e1a1624954b4",
+    "predictfun/reviews/entry_representation_20261115/fit_receipts/20261101.json": "dd3b2ff8c0b959edf4bfff96e690690d5dad16d35e58bea196eb86c72f921309",
+    "/home/yuqing/ctaNew/data/predict_fun/research/entry_information_20261115_v3/rows_20261101/receipt.json": "820b96bcab6669505d5866f84e03f26babdf978fbe91be5ff4493c6b05b72122",
+    "predictfun/reviews/entry_representation_20261115/fit_receipts/20261102.json": "2f5ae0d117689e2685bb156aebd0bd8d7c71969ba1b20cc89f536b2fda05642f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/entry_information_20261115_v3/rows_20261102/receipt.json": "98ac4e8155627c90b379ed1aee77773d2146b394784681b5fcbc5fd0e4df72f0",
+    "predictfun/reviews/entry_representation_20261115/fit_receipts/20261103.json": "f8d598b61a0d7da871e47fd16748898a04b9c19d4bc88b28f765788774033d83",
+    "/home/yuqing/ctaNew/data/predict_fun/research/entry_information_20261115_v3/rows_20261103/receipt.json": "aa8a9840b098ac5919872c3ef7fc9def497c7c7d398b8351ca47c1b002ab0940"
+  },
+  "folds": [
+    {
+      "test_day": "20261027",
+      "side": 0,
+      "train_dates": [
+        "20261025",
+        "20261026"
+      ],
+      "labeled_train_days": 2,
+      "train_n": 2065,
+      "train_initial": 1741,
+      "train_later": 324,
+      "weight_concentration_ess": 566.2823994804274,
+      "test_n": 999,
+      "timing_r2_vs_prior": -0.08248442656278443
+    },
+    {
+      "test_day": "20261027",
+      "side": 1,
+      "train_dates": [
+        "20261025",
+        "20261026"
+      ],
+      "labeled_train_days": 2,
+      "train_n": 1975,
+      "train_initial": 1691,
+      "train_later": 284,
+      "weight_concentration_ess": 522.5515827676592,
+      "test_n": 993,
+      "timing_r2_vs_prior": -0.03045943010516905
+    },
+    {
+      "test_day": "20261031",
+      "side": 0,
+      "train_dates": [
+        "20261025",
+        "20261026",
+        "20261027"
+      ],
+      "labeled_train_days": 3,
+      "train_n": 3064,
+      "train_initial": 2603,
+      "train_later": 461,
+      "weight_concentration_ess": 825.5783997545992,
+      "test_n": 954,
+      "timing_r2_vs_prior": -0.06399563863955549
+    },
+    {
+      "test_day": "20261031",
+      "side": 1,
+      "train_dates": [
+        "20261025",
+        "20261026",
+        "20261027"
+      ],
+      "labeled_train_days": 3,
+      "train_n": 2968,
+      "train_initial": 2538,
+      "train_later": 430,
+      "weight_concentration_ess": 787.6069900015983,
+      "test_n": 926,
+      "timing_r2_vs_prior": 0.0004576822653895585
+    },
+    {
+      "test_day": "20261101",
+      "side": 0,
+      "train_dates": [
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031"
+      ],
+      "labeled_train_days": 4,
+      "train_n": 4018,
+      "train_initial": 3454,
+      "train_later": 564,
+      "weight_concentration_ess": 1053.1831058320595,
+      "test_n": 985,
+      "timing_r2_vs_prior": -0.053023912050355504
+    },
+    {
+      "test_day": "20261101",
+      "side": 1,
+      "train_dates": [
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031"
+      ],
+      "labeled_train_days": 4,
+      "train_n": 3894,
+      "train_initial": 3352,
+      "train_later": 542,
+      "weight_concentration_ess": 1017.3997635534538,
+      "test_n": 965,
+      "timing_r2_vs_prior": -0.02881230583004024
+    },
+    {
+      "test_day": "20261102",
+      "side": 0,
+      "train_dates": [
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031",
+        "20261101"
+      ],
+      "labeled_train_days": 5,
+      "train_n": 5003,
+      "train_initial": 4335,
+      "train_later": 668,
+      "weight_concentration_ess": 1287.1373764564312,
+      "test_n": 1065,
+      "timing_r2_vs_prior": -0.11710122498681286
+    },
+    {
+      "test_day": "20261102",
+      "side": 1,
+      "train_dates": [
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031",
+        "20261101"
+      ],
+      "labeled_train_days": 5,
+      "train_n": 4859,
+      "train_initial": 4213,
+      "train_later": 646,
+      "weight_concentration_ess": 1248.1552518146814,
+      "test_n": 991,
+      "timing_r2_vs_prior": -0.08087497837623969
+    },
+    {
+      "test_day": "20261103",
+      "side": 0,
+      "train_dates": [
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031",
+        "20261101",
+        "20261102"
+      ],
+      "labeled_train_days": 6,
+      "train_n": 6068,
+      "train_initial": 5221,
+      "train_later": 847,
+      "weight_concentration_ess": 1587.1234750262324,
+      "test_n": 987,
+      "timing_r2_vs_prior": -0.08793106375825599
+    },
+    {
+      "test_day": "20261103",
+      "side": 1,
+      "train_dates": [
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031",
+        "20261101",
+        "20261102"
+      ],
+      "labeled_train_days": 6,
+      "train_n": 5850,
+      "train_initial": 5067,
+      "train_later": 783,
+      "weight_concentration_ess": 1506.3816509743815,
+      "test_n": 1006,
+      "timing_r2_vs_prior": -0.04734943323089702
+    }
+  ],
+  "new_candidates": 0,
+  "new_model_fits": 0,
+  "evaluation_actions": 9871,
+  "effective_count_definition": "(sum inclusion weights)^2 / sum squared inclusion weights; only weight concentration, not temporal dependence",
+  "limits": [
+    "Earlier folds and later folds test different days; cannot identify a training-size effect.",
+    "Two to six labeled days are expanding historical datasets, not a two-to-six-day rolling cap.",
+    "Sampling weights do not create missing later-generation examples.",
+    "Feature history coverage and label-training history are different issues.",
+    "Representation candidate implemented, not promoted; missing observations and target/model adequacy remain unresolved.",
+    "No learning-curve ablation run; all dates consumed development."
+  ]
+}
