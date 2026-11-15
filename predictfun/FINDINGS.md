@@ -1,24 +1,27 @@
 <!-- STOP_EV_ACCOUNTING_FIX_20261115 -->
-## 2026-11-15 STOP-EV accounting implementation available; final edge checks queued
+## 2026-11-15 STOP-EV accounting fixed and integrated; synthetic checks pass
 
-User authorized resolving the accounting issues. New `pf_stop_ev_accounting.py`
-uses the corrected joint neutral replay's actual order tranches, shared leg
-quantities and partial remainder. It excludes common cancellation-latency fills,
-marks each later tranche separately, separates client-known inputs from outcomes,
-retains invalid data as statuses, and evaluates unique actions with matched nulls.
-The one-second neutral continuation is explicit; 50-ms policy decisions are separate.
+User authorized resolving the accounting issues. `pf_stop_ev_accounting.py`
+uses the corrected joint neutral replay's per-order tranches, shared leg
+quantity and partial remainder. It excludes common cancellation-latency fills,
+marks each later tranche using valid raw quotes, separates client-known inputs
+from outcomes, retains invalid timing/book/mark data as statuses, and evaluates
+unique actions with matched nulls. The one-second neutral continuation is
+explicit; policy decisions can still repeat every 50 ms without a retry timer.
 
-Merged in 211109b1. First 15 synthetic checks passed at 12:34:07Z on 3dc503bf;
-3abb190f adds late queue visibility/mark-gap checks, awaiting the Codex slot.
-Current receipt: reviews/stop_ev_accounting_20261115/current.json.
-Integration contract: handoffs/20261115_stop_ev_accounting_fix.md. Sections 7–8
-of the canonical STOP-EV design now supersede the aggregate target/sign gates.
+Source c04370d6, code integration f373310b, receipts integrated bf57feff.
+All 16 accounting checks passed as of 2026-11-15T12:54:55Z. Builder integration
+passed at 12:55:32Z on 06f80178, catching all nine planted errors. The other
+session's builder now uses the adapter for primary neutral-generation labels,
+independent E9 reconciliation, explicit statuses and source-hash guards.
+See handoffs/20261115_stop_ev_accounting_fix.md and
+reviews/stop_ev_accounting_20261115/receipt_v2.json (v1 retained).
 
-The other session's `pf_stop_ev.py` appeared at 8f0992cb after the prebuild
-review: its chronological single-order diagnostics improve the draft, but its
-CLEAN-only reconciliation/old lane are not the corrected joint-order labels.
-Wire the new adapter into that raw-data build before fitting. No historical
-label build, model refit, or performance improvement is claimed here.
+Next: validate historical coverage/exclusion counts and the known-time market
+feature join, then fit on regenerated labels. These checks establish accounting
+correctness on synthetic cases; no historical or economic improvement claim.
+The pre-existing entry experiment was resumed and its runner records all stages
+complete at 12:54:58Z; its performance report has not been reviewed in this fix.
 <!-- /STOP_EV_ACCOUNTING_FIX_20261115 -->
 
 <!-- STOP_EV_PREBUILD_REVIEW_20261115 -->
