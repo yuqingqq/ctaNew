@@ -487,6 +487,59 @@ def d12cmp():
         sys.exit('REFUSED: rows differ after the boundary-hour filter (investigate before any replay)')
 
 
+X5_ADOPT_GAIN = 0.0025; X5_ADOPT_HEADS = 10
+OUT_XJ = f'{M.OUTD}/x5test_20261115.json'; OUT_XT = f'{M.OUTD}/x5test_20261115.txt'
+
+
+def x5test():
+    """EXTRA INPUTS TEST (USER 2026-11-15: "If we include sufficient inputs like imbalance, flow etc"; declared before the run, dev days only).
+    Fold 10-27 with v4's decisions (target U, 180k rows a day, 200 rounds, lambda_l2 10, the review / copies drops): base = v4's fold-10-27
+    models (their raw 10-26 predictions); variants = base + PF_OFI and base + BN_DEPTH (pf_stop_model_x5.py inputs), refit on the same rows,
+    seeds and parameters. A family is ADOPTED iff its 10-26 log loss (every usable row, all 18 heads) improves on the base by >= 0.25% on
+    average with >= 10 of 18 heads better. Printed: each variant's per-head log loss and AUC, and the new inputs' SHAP shares at H72 / H250 /
+    H1000 j1 (TreeSHAP on 30,000 rows of 10-26). Output x5test_20261115.json ('adopt' is read by fit5)."""
+    M.all_selftests()
+    T0 = time.time(); asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()); res = dict(asof=asof)
+    A = json.load(open(f'{M.OUTD}/audit2.json')); scale = A['scale']; fj = json.load(open(f'{M.OUTD}/fit_{F1_TEST}_v4.json'))
+    Fb = fj['features']; lgbp = fj['lgb_params'] or None
+    if fj['version'] != '4' or fj['decisions']['target'] != 'U' or fj['volume']['rows_a_day'] != M.VOL['V180'][1] or any(c in Fb for c in M.X5_F):
+        sys.exit('REFUSED: the v4 fold-10-27 fit is not the x5 base')
+    s26 = M.day_usable(EVAL); lab26 = {c: v.astype(np.float32) for c, v in M.day_cols(EVAL, LABC, s26).items()}
+    PB = M.day_cols(f'{M.OUTD}/pred_fold{F1_TEST}_{EVAL}_v4.parquet', ['k', 'usable'] + [f'R{h}_{j}' for (h, j) in DG.HEADS]); uu = PB['usable'].astype(bool)
+    if not np.array_equal(PB['k'][uu], M.day_cols(EVAL, ['k'], s26)['k']):
+        sys.exit('REFUSED: v4 fold-10-27 predictions not aligned with 10-26 rows')
+    mbase = DG.metrics({hj: PB[f'R{hj[0]}_{hj[1]}'][uu] for hj in DG.HEADS}, lab26, 'U', DG.HEADS); del PB
+    s1 = lambda d: int(F1_TEST) * 31 + int(d)                                    # noqa: E731
+    h1 = lambda h, j: int(F1_TEST) * 7 + j * 1009 + h                             # noqa: E731
+    var = {}; adopt = []; L = [f'EXTRA INPUTS TEST (fold 10-27, v4 decisions, lambda_l2 {lgbp}, 10-26 log loss, every usable row); as of {asof}; base {len(Fb)} inputs']
+    rg = np.random.default_rng(int(EVAL) + 7); ish = np.sort(rg.choice(len(s26), N_SHAP, replace=False))
+    for fam, cols in M.X5_FAM.items():
+        Fv = Fb + cols; X_, lab_, w_, _ = DG.train_table(F1_TRAIN, s1, 'V180', None, Fv, scale); X26 = M.day_matrix(EVAL, scale, Fv, s26); P = {}; sh = {}
+        for (h, j) in DG.HEADS:
+            ii = np.flatnonzero(M.head_rows(lab_['D0'], j, 'U')); ic, wc = M.head_cap(None, w_[ii], M.VOL['V180'][2], h1(h, j)); ii = ii[ic]
+            y = (lab_[M.DCOL[h]][ii] >= j).astype(int); b_, n_ = M.fit_head(X_[ii], y, wc, Fv, params=lgbp)
+            P[(h, j)] = b_.predict(X26).astype(np.float32)
+            if j == 1:
+                S = b_.predict(X26[ish], pred_contrib=True)[:, :-1]; ma = np.abs(S).mean(0); sh[f'H{h}_j1'] = {c: float(ma[Fv.index(c)] / ma.sum()) for c in cols}
+            del b_
+            M.mem_guard(f'x5test {fam} H{h} j{j}')
+        mv = DG.metrics(P, lab26, 'U', DG.HEADS); del P, X_, X26
+        rel = {hk(*hj): (mbase[hk(*hj)]['ll'] - mv[hk(*hj)]['ll']) / mbase[hk(*hj)]['ll'] for hj in DG.HEADS}
+        mg = float(np.mean(list(rel.values()))); nb = int(sum(v > 0 for v in rel.values())); ok = bool(mg >= X5_ADOPT_GAIN and nb >= X5_ADOPT_HEADS)
+        var[fam] = dict(inputs=cols, metrics=mv, rel_gain=rel, mean_gain=mg, heads_better=nb, adopt=ok, shap_share=sh)
+        if ok:
+            adopt.append(fam)
+        L.append(f'   + {fam} ({len(cols)} inputs): mean log-loss gain {mg:+.3%}, better {nb}/18 -> {"ADOPT" if ok else "no"}; SHAP share of the family at j1 '
+                 + ' / '.join(f'{100 * sum(sh[f"H{h}_j1"].values()):.1f}%' for h in M.HS) + ' (H72 / H250 / H1000)')
+        L.append('     per head log loss base / with (AUC base / with): ' + ' '.join(f'{hk(*hj)} {mbase[hk(*hj)]["ll"]:.5f}/{mv[hk(*hj)]["ll"]:.5f} '
+                                                                          f'({mbase[hk(*hj)]["auc"]:.3f}/{mv[hk(*hj)]["auc"]:.3f})' for hj in DG.HEADS))
+        L.append('     input SHAP shares H1000 j1: ' + ', '.join(f'{c} {100 * v:.1f}%' for c, v in sh['H1000_j1'].items()))
+    res.update(base=mbase, variants=var, adopt=adopt, rule=f'mean gain >= {X5_ADOPT_GAIN:.2%} and >= {X5_ADOPT_HEADS}/18 heads', seconds=round(time.time() - T0, 1))
+    L.append(f'DECISION: adopt {adopt or "none (v4 stands)"}; {res["seconds"]} s')
+    json.dump(res, open(OUT_XJ, 'w'), indent=1, default=float); open(OUT_XT, 'w').write('\n'.join(L) + '\n')
+    print('\n'.join(L), flush=True)
+
+
 S5_BN = ['bn_r25', 'bn_r50', 'bn_r100', 'bn_r250', 'bn_r500', 'bn_r1000', 'bn_r3000', 'bn_imb', 'bn_age', 'bn_flow250', 'bn_flow1000', 'bn_flow5000',
          'bn_ntr1000']
 S5_PF = ['pf_spread', 'pf_mid', 'pf_micro_dev', 'pf_imb1', 'pf_imb3', 'pf_age', 'pf_nfr1000', 'pf_dm250', 'pf_dm1000', 'pf_dm5000']
@@ -667,5 +720,7 @@ if __name__ == '__main__':
         dup()
     elif cmd == 'd12cmp':
         d12cmp()
+    elif cmd == 'x5test':
+        x5test()
     else:
         sys.exit(f'unknown command {cmd}')
