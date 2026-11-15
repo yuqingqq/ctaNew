@@ -7,7 +7,9 @@ a correctness control. E2 +/-250 ms remains an assumption in both variants.
 """
 import argparse
 import ast
+import copy
 from collections import Counter
+from dataclasses import replace
 from datetime import datetime, timezone
 import gzip
 import hashlib
@@ -72,6 +74,7 @@ def freeze(path):
 
 def manifest(day):
     if day not in DAYS:raise ValueError('not a consumed day')
+    if E.K.PREROLL_MS!=30000. or not E.K.SKIP_FOREIGN_PARTS:raise ValueError('loader boundary/preroll contract changed')
     p=Path(E.K.IO)/'step1'/day; q=Path(E.K.IO)/'step5'/day
     files=[p/n for n in ('registry.parquet','clock_rl_d2.json','legs_timed2.parquet','legs_tk.parquet')]
     files += [q/n for n in ('preds_t60k.parquet','rows_rl_d2_pk.parquet')]
@@ -121,16 +124,14 @@ def build(day,out,freeze_path):
                     row=cert.label(key,t,day=day,estimated=estimated); good=row['status'].startswith('eligible')
                     old_good=old['status'].startswith('eligible'); counts[mode+':'+row['status']]+=1;counts['baseline_'+mode+':'+old['status']]+=1
                     if old_good:
-                        if not good or row['label']!=old['label'] or row['features']!=old['features']:raise ValueError('baseline overlap changed')
+                        if not good or row['label']!=old['label']:raise ValueError('baseline overlap changed')
+                        np.testing.assert_array_equal([row['features'][c] for c in A.ORDER_FEATURES], [old['features'][c] for c in A.ORDER_FEATURES])
                         parity+=1
                     future=None
                     if estimated:
                         # Exact reproduction of the future-only coverage rule.
-                        v=cert.label(key,t,day=day,estimated=True)
                         # Obtain the nominal label eligibility without interpreting
                         # the proof; all other data validity checks remain intact.
-                        import copy
-                        from dataclasses import replace
                         lens=copy.copy(led);lens.coverage=replace(cov,missing=tuple(g for g in cov.missing if g.reason!='untimed'))
                         base=A.label_action(lens,key,t,day=day,settings=A.Settings(timing='all_anchors_sensitivity'))
                         future=base['status']
