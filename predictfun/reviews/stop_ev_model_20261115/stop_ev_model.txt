@@ -1,0 +1,33 @@
+STOP-EV STAGE 2 - MODEL (hurdle P(fill) x E[value | fill], Huber; all_anchors_sensitivity; untimed rule order_reach); 5 chronological test days; as of 2026-11-15T14:00:57Z
+
+DATA per day: eligible actions / probes (statuses) | E10 join
+  20261023: 33543 / 48312 (eligible_estimated_timing 33000, not_client_resting 13327, untimed_reach 698, eligible 543, probe_not_reached 519, incomplete_book_coverage 225) | E10 PASS
+  20261024: 29585 / 43154 (eligible_estimated_timing 28639, not_client_resting 12509, eligible 946, untimed_reach 392, probe_not_reached 382, incomplete_book_coverage 286) | E10 PASS
+  20261025: 29114 / 44390 (eligible_estimated_timing 28297, not_client_resting 14140, eligible 817, untimed_reach 497, probe_not_reached 418, incomplete_book_coverage 221) | E10 PASS
+  20261026: 35428 / 51528 (eligible_estimated_timing 35116, not_client_resting 14107, untimed_reach 938, incomplete_book_coverage 547, probe_not_reached 508, eligible 312) | E10 PASS
+  20261027: 30698 / 44677 (eligible_estimated_timing 30228, not_client_resting 12389, untimed_reach 814, eligible 470, probe_not_reached 404, incomplete_book_coverage 372) | E10 PASS
+  20261031: 19869 / 29715 (eligible_estimated_timing 18332, not_client_resting 8470, eligible 1537, incomplete_book_coverage 816, untimed_reach 305, probe_not_reached 254, missing_or_stale_mark 1) | E10 PASS
+  20261101: 21361 / 34209 (eligible_estimated_timing 20281, not_client_resting 11042, incomplete_book_coverage 1090, eligible 1080, untimed_reach 387, probe_not_reached 327, missing_or_stale_mark 2) | E10 PASS
+  20261102: 33190 / 49059 (eligible_estimated_timing 32552, not_client_resting 14100, incomplete_book_coverage 755, eligible 638, untimed_reach 526, probe_not_reached 486, missing_or_stale_mark 2) | E10 PASS
+  20261103: 32585 / 48110 (eligible_estimated_timing 31738, not_client_resting 14091, eligible 847, untimed_reach 638, probe_not_reached 468, incomplete_book_coverage 327, missing_or_stale_mark 1) | E10 PASS
+TRAINING per fold: n train (filled) | Huber delta | IC train | T5 permuted IC signed mean / max (one-sided gate, POST HOC) and two-sided mean |.| (as declared) | top value / fill inputs
+  20261027: 92242 (10859) | 15.22 c | +0.223 | -0.0018 / +0.0121 (two-sided 0.0099) | dfv250, adv_d_bnimb250, o_q_frac, adv_bn_imb, o_q_rel / o_depth, o_edge, adv_pf_imb3, o_q_rel, adv_d_bnimb250
+  20261031: 127670 (15049) | 17.50 c | +0.212 | -0.0026 / +0.0227 (two-sided 0.0121) | dfv250, adv_d_bnimb250, adv_bn_imb, o_q_frac, o_q_rel / o_depth, o_edge, adv_pf_imb3, o_q_rel, adv_bn_r250
+  20261101: 158368 (18382) | 17.50 c | +0.201 | -0.0038 / +0.0114 (two-sided 0.0080) | dfv250, adv_bn_imb, o_q_rel, adv_d_bnimb250, o_q_frac / o_depth, o_edge, o_q_rel, adv_pf_imb3, adv_bn_r250
+  20261102: 178237 (20130) | 17.59 c | +0.193 | +0.0017 / +0.0139 (two-sided 0.0086) | dfv250, adv_bn_imb, o_q_rel, adv_bn_r250, adv_d_bnimb250 / o_depth, o_edge, adv_bn_r250, o_q_rel, adv_pf_imb3
+  20261103: 199598 (22092) | 17.50 c | +0.185 | -0.0042 / +0.0228 (two-sided 0.0151) | dfv250, adv_bn_imb, o_depth, o_q_rel, adv_bn_r250 / o_depth, o_edge, adv_bn_r250, o_q_rel, adv_pf_imb3
+
+TEST DAYS (137703 eligible actions; value per action c): day | n | mean | IC model / B2 / B1 | quintiles of the prediction (realized mean, low -> high) | MSE model / B1 / B2 | keep iff pred > 0: pull share, local gain $ (model / B2)
+  20261027: 30698 | -2.80 | +0.148 / +0.092 / +0.035 | -9.33 -3.20 -0.91 -0.88 +0.30 | 637 / 657 / 657 | 92.3%, +880.9 / +843.7
+  20261031: 19869 | -3.24 | +0.109 / +0.071 / +0.024 | -10.62 -2.55 -1.60 -0.72 -0.70 | 1036 / 1064 / 1065 | 92.0%, +618.2 / +630.8
+  20261101: 21361 | -3.13 | +0.104 / +0.068 / +0.024 | -9.23 -3.19 -1.98 -0.07 -1.17 | 996 / 1018 / 1018 | 90.8%, +638.2 / +657.6
+  20261102: 33190 | -3.63 | +0.139 / +0.094 / +0.052 | -10.67 -3.90 -1.82 -1.12 -0.63 | 930 / 952 / 954 | 93.8%, +1183.0 / +1179.1
+  20261103: 32585 | -4.01 | +0.145 / +0.098 / +0.057 | -11.75 -4.45 -2.61 -0.72 -0.52 | 1063 / 1085 / 1089 | 94.7%, +1307.5 / +1298.7
+  pooled: IC +0.134 / +0.087 / +0.041; quintiles -10.44 -3.60 -1.77 -0.75 -0.45; pull 92.9%; local gain $+4627.8 (B2 $+4609.9); matched null p 0.001996007984031936 (null mean kept value $-313.3 vs kept $-55.4; B2 p 0.015968063872255488)
+  by side (n | IC | top - bottom quintile): bid 68792 | +0.127 | +9.37; ask 68911 | +0.141 | +10.76
+  by rung (n | IC | mean value | pull share): r0 31870 | +0.147 | -4.74 | 86%; r1 22651 | +0.143 | -4.88 | 94%; r2 22733 | +0.136 | -3.43 | 97%; r3 22066 | +0.107 | -2.74 | 97%; r4 19760 | +0.104 | -2.03 | 97%; r5 18623 | +0.087 | -1.51 | 88%
+  calibration by decile (mean prediction -> realized, c): -8.05 -> -14.94 | -2.57 -> -5.93 | -1.50 -> -3.91 | -0.95 -> -3.29 | -0.63 -> -2.03 | -0.41 -> -1.51 | -0.27 -> -1.05 | -0.16 -> -0.45 | -0.07 -> -0.37 | +0.43 -> -0.53
+  strict-WS subset (descriptive): 4572 actions, IC -0.009, mean value -0.12
+
+R900 RANKS; R901 IC+, BEATS-B2-IC, BEATS-B1-MSE; R902 BOTH-SIDES; R903 LOCAL-GAIN; R904 NOT-SHOWN
+VERDICT: MODEL-READY (development only: consumed days; replay rule M; E2 point estimates; a local 1 s value, not portfolio P&L)

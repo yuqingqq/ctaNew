@@ -1,0 +1,35 @@
+{
+ "day": "20261025",
+ "probes": 44390,
+ "status": {
+  "eligible_estimated_timing": 28297,
+  "not_client_resting": 14140,
+  "eligible": 817,
+  "untimed_reach": 497,
+  "probe_not_reached": 418,
+  "incomplete_book_coverage": 221
+ },
+ "E10": {
+  "actions": 29114,
+  "joined": 29114,
+  "t_mismatch": 0,
+  "depth_mismatch": 0,
+  "control_breaks": true,
+  "pass": true
+ },
+ "rows": 29114,
+ "missing_share": {
+  "o_rung": 0.0,
+  "o_depth": 0.0,
+  "o_price": 0.0,
+  "o_age": 0.0,
+  "o_rem": 0.0,
+  "o_q_rel": 0.07820979597444529,
+  "o_shown_rel": 0.13869615992306106,
+  "o_q0_rel": 0.10936319296558357,
+  "o_q_frac": 0.18228343752146733,
+  "o_qunk": 0.0,
+  "o_edge": 0.0,
+  "o_horizon": 0.0
+ }
+}

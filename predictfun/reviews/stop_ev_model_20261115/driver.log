@@ -1,0 +1,18 @@
+13:49:27Z start evm_selftest
+13:49:29Z start evm_prep_20261023
+13:49:31Z start evm_prep_20261024
+13:49:33Z start evm_prep_20261025
+13:49:35Z start evm_prep_20261026
+13:49:37Z start evm_prep_20261027
+13:49:39Z start evm_prep_20261031
+13:49:41Z start evm_prep_20261101
+13:49:44Z start evm_prep_20261102
+13:49:46Z start evm_prep_20261103
+13:49:48Z start evm_fit_20261027
+13:51:23Z start evm_fit_20261031
+13:53:12Z start evm_fit_20261101
+13:55:19Z start evm_fit_20261102
+13:57:44Z start evm_fit_20261103
+14:00:20Z start evm_report
+14:00:20Z FAILED evm_report
+14:00:20Z STOP-EV-MODEL all DONE
