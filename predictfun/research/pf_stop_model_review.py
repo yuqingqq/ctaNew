@@ -972,6 +972,44 @@ def swaprows():
     print(f'swapped rows on {len(M.DAYS9)} days (old rows kept as rows_<day>_p5.*)', flush=True)
 
 
+def skip():
+    """DOES THE MODEL SKIP THE RISK? (USER 2026-11-15: "How well is the model now, does it effectively skips risks"; descriptive, 5 test days.)
+    Our keep-all orders every 250 ms (STOP-MODEL align order steps, depth 0..5) at M 50 and M 250: V = the 1 s value of the order's fills in
+    (t + 22, t + 1 s] without fills on orders < 100 ms old, cents per order share. Order states ranked by v6's risk of their level (P^1000 and
+    P^250, pooled per clock); pulling the riskiest X% (5 / 10 / 20 / 30 / 50): the share of the HARM (sum of negative V) avoided and of the
+    GOOD value (sum of positive V) given up; against the ORACLE (pull exactly the states run over within 1 s), the GUARD (pull while v <= -0.10)
+    and the model at the guard's pull share; random pulling avoids X% of the harm. Rows overlap (1 s values every 250 ms): shares, not $. Not
+    a replay (no re-entry, queue loss or inventory) - the replay follows."""
+    out = {}; L = ['DOES THE MODEL SKIP THE RISK? (our keep-all orders every 250 ms, 5 test days, 1 s fill value w/o young fills; shares of the harm avoided / good value '
+                   'given up)']
+    for cfg in ('M50', 'M250'):
+        parts = []
+        for t in M.TESTS:
+            O = pd.read_parquet(f'{M.OUTD}/align_{t}_{cfg}.parquet', columns=['m', 'side', 'k', 'depth', 'vo1000'])
+            O = O.assign(depth=np.maximum(O.depth.values, 0)); O = O[O.depth.values <= 5]
+            P = pd.read_parquet(f'{M.OUTD}/pred_fold{t}_{t}_v6.parquet', columns=['m', 'side', 'k'] + [M.pcol(h, j) for h in (250, 1000) for j in M.JS])
+            Rr = pd.read_parquet(f'{M.OUTD}/rows_{t}.parquet', columns=['m', 'side', 'k', 'D1', 'v'])
+            X = O.merge(P, on=['m', 'side', 'k'], how='inner').merge(Rr, on=['m', 'side', 'k'], how='inner'); j_ = X.depth.values + 1
+            parts.append(pd.DataFrame({'V': X.vo1000.values / M.SIZE, 'y': X.D1.values >= j_, 'g': (X.v.values <= M.GUARD),
+                                       'p1000': np.choose(j_ - 1, [X[M.pcol(1000, j)].values for j in M.JS]),
+                                       'p250': np.choose(j_ - 1, [X[M.pcol(250, j)].values for j in M.JS])}))
+        D = pd.concat(parts, ignore_index=True); V = D.V.values; neg = V < 0; pos = V > 0; H = -V[neg].sum(); G = V[pos].sum()
+        def sh(m_):
+            return dict(pull=float(m_.mean()), harm_avoided=float(-V[m_ & neg].sum() / H), good_lost=float(V[m_ & pos].sum() / G))
+        res = {'oracle (run over within 1 s)': sh(D.y.values), 'guard (v <= -0.10)': sh(D.g.values)}
+        gx = float(D.g.values.mean())
+        for hh in ('p1000', 'p250'):
+            pr = D[hh].values
+            for x in (0.05, 0.10, 0.20, 0.30, 0.50, gx):
+                thr = np.quantile(pr, 1.0 - x); res[f'model {hh} top {x:.0%}' + (' (= guard share)' if x == gx else '')] = sh(pr >= thr)
+        out[cfg] = dict(rows=int(len(D)), harm_total=float(H), good_total=float(G), rules=res)
+        L.append(f'{cfg}: {len(D)} order states; harm {H:.0f} / good {G:.0f} (cents per order share, summed)')
+        for k_, v_ in res.items():
+            L.append(f'   {k_:34s} pull {v_["pull"]:6.1%} | harm avoided {v_["harm_avoided"]:6.1%} | good given up {v_["good_lost"]:6.1%}')
+    json.dump(out, open(f'{M.OUTD}/skip_20261115.json', 'w'), indent=1, default=float); open(f'{M.OUTD}/skip_20261115.txt', 'w').write('\n'.join(L) + '\n')
+    print('\n'.join(L), flush=True)
+
+
 S5_BN = ['bn_r25', 'bn_r50', 'bn_r100', 'bn_r250', 'bn_r500', 'bn_r1000', 'bn_r3000', 'bn_imb', 'bn_age', 'bn_flow250', 'bn_flow1000', 'bn_flow5000',
          'bn_ntr1000']
 S5_PF = ['pf_spread', 'pf_mid', 'pf_micro_dev', 'pf_imb1', 'pf_imb3', 'pf_age', 'pf_nfr1000', 'pf_dm250', 'pf_dm1000', 'pf_dm5000']
@@ -1166,5 +1204,7 @@ if __name__ == '__main__':
         x6test()
     elif cmd == 'swaprows':
         swaprows()
+    elif cmd == 'skip':
+        skip()
     else:
         sys.exit(f'unknown command {cmd}')
