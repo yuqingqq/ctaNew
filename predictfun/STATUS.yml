@@ -1,3 +1,37 @@
+stop_ev_economic_layer_20261115:
+  asof: '2026-11-15T16:29:13.811533+00:00'
+  status: partial_order_state_correction_all_variants_negative
+  integration_commit: 78d5b0cd
+  source_commit: 1183afef
+  freeze_commit: f6b82170
+  test_actions: 81630
+  filled_test_actions: 7620
+  raw_nonnegative_actions: 15681
+  raw_nonnegative_local_value_cents: -11757.103469833948
+  order_correction_zero_cutoff_actions: 9846
+  order_correction_zero_cutoff_local_value_cents: -2467.364173107793
+  order_correction_same_count_gain_dollars: 25.93
+  order_correction_same_count_positive_days: 5
+  order_correction_good_value_retained_fraction: 0.7977671389800433
+  raw_kept_tail_cases: 87
+  order_correction_tail_cases_removed: 40
+  order_correction_tail_cases_missed: 47
+  tested_variants: 15
+  all_variants_negative_pooled_local_value: true
+  primary_pressure_screen_pass: false
+  new_lgbm_fits: 0
+  new_calibration_setups: 4
+  queue_cost_estimated: false
+  new_layer_portfolio_replay: false
+  model_predictions_reproduced: true
+  calibrator_reload_exact: true
+  protected_data_read: false
+  untouched_validation: false
+  active_strategy_changed: false
+  new_policy_promoted: false
+  review: predictfun/handoffs/20261115_stop_ev_economic_layer_review.md
+  evidence: predictfun/reviews/stop_ev_economic_layer_20261115/interpretation_v1.json
+
 fill_input_separation_20261115:
   asof: '2026-11-15T15:59:26.217544+00:00'
   status: modest_pressure_and_queue_separation_fair_level_weak
