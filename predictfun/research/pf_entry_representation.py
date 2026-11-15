@@ -268,7 +268,7 @@ class Checks(unittest.TestCase):
         x=represent(a,'RELATIVE');y=represent(b,'RELATIVE')
         names=[n+'_liquidity_ratio' for n in PUBLIC];np.testing.assert_allclose(x[names],y[names])
         self.assertFalse(np.array_equal(x,y,equal_nan=True))
-        for n in ('known_position','own_exposure','other_exposure','own_0_remaining_lots'):np.testing.assert_equal(x[n],y[n])
+        for n in ('known_position','own_exposure','other_exposure','own_0_remaining_lots'):pd.testing.assert_series_equal(x[n],y[n])
         for n,d in PUBLIC.items():np.testing.assert_allclose(x[n+'_liquidity_ratio']*np.expm1(a.own_book_liquidity_log)*d,a[n])
         b.own_book_liquidity_log=0.
         with self.assertRaises(ValueError):represent(b,'RELATIVE')
