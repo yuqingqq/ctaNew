@@ -1,0 +1,22 @@
+[
+  {
+    "attempt": "v1",
+    "runner": {
+      "status": "failed",
+      "asof": "2026-11-15T03:35:15Z",
+      "error": "selftest failed with 1; attempt preserved"
+    },
+    "historical_builds": 0,
+    "note": "v1: wrong Python executable lacked NumPy; v2: stopped while queued to strengthen missing-value validation before historical work."
+  },
+  {
+    "attempt": "v2",
+    "runner": {
+      "status": "failed",
+      "asof": "2026-11-15T03:41:22Z",
+      "error": ""
+    },
+    "historical_builds": 0,
+    "note": "v1: wrong Python executable lacked NumPy; v2: stopped while queued to strengthen missing-value validation before historical work."
+  }
+]
