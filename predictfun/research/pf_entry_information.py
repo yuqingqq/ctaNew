@@ -139,7 +139,9 @@ def future_check(W, row, expected):
         w['X'][np.asarray(w['tg']) > t] = -123456.
     np.testing.assert_equal(extra_features(changed, row), expected)
     changed = copy.deepcopy(W)
-    changed[int(row['side'])]['X'][int(row['probe_k']), 33] += 10.
+    x = changed[int(row['side'])]['X']
+    k = int(row['probe_k'])
+    x[k, 33] = float(x[k, 33])+10. if np.isfinite(x[k, 33]) else 10.
     if np.array_equal(extra_features(changed, row), expected, equal_nan=True):
         raise ValueError('known-input positive control failed')
 
@@ -418,6 +420,8 @@ class Checks(unittest.TestCase):
         self.assertAlmostEqual(x[NEW.index('own_depth_ticks5_lots')],5.)
         W[0]['vkl'][20]=-1.
         self.assertTrue(np.isnan(extra_features(W,row)[NEW.index('fair_sensitivity')]))
+        W[0]['X'][20,33]=np.nan
+        future_check(W,row,extra_features(W,row))
         with self.assertRaises(ValueError): extra_features(W,dict(row,probe_t=999.))
 
     def test_matched_value_positive_and_bad_controls(self):
