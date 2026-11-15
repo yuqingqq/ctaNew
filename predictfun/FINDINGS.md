@@ -1,3 +1,34 @@
+<!-- ENTRY_TRAINING_ISSUES_20261115 -->
+## 2026-11-15 — complete known entry-training issue register and coverage repair specification
+
+User asks data versus training-window cause, repairability, and all current
+training issues. Review only: no new labels, models or replay. Snapshot remains
+2026-11-15T05:04:52Z, 9,871 evaluation actions on five consumed dates.
+Coverage is mainly a dataset/sampling and admissible-date issue, not a rolling
+window cap: initial generations sampled 1/2, later 1/32; only 2–6 comparable
+training days. Proposed density comparison uses later 1/4, unchanged original
+probe ages and evaluation actions, per-row probabilities and correct 2/4 train
+versus 2/32 original evaluation weights. Specification only, not implemented.
+
+15 issues span coverage/state scope; loader/upstream lineage; neutral-KEEP
+continuation and terminal noise; unknown-depth queue and execution assumptions;
+missing observations/proxy signals; model support/generalization; controlled
+learning curves and full economic/forward validation. Two code paths verified:
+entry builders do not enable SKIP_FOREIGN_PARTS before reads; place() can turn
+unknown beyond-five-level queue into zero. The latter's effect on labels/P&L is
+unmeasured. Neither establishes that future values entered eligible features.
+Missingness-aware inputs do not fix execution-label assumptions. Downstream
+future checks do not certify every upstream precomputed field.
+
+Read-boundary disclosure: directory inventory exposed forward-family date names;
+no forward file content/outcome was opened in this review. No fresh-validation
+eligibility claim. Details and exact source bindings in the receipt.
+Review: `handoffs/20261115_entry_training_issues_review.md`.
+Receipt: `reviews/entry_training_issues_20261115/current.json`; evidence 7a4aa584.
+Next: fix/qualify loader and label assumptions, freeze keeper scope, build denser
+representative labels, isolate training-length effects, then model/portfolio tests.
+<!-- /ENTRY_TRAINING_ISSUES_20261115 -->
+
 <!-- ENTRY_TRAINING_SUPPORT_20261115 -->
 ## 2026-11-15 — training-window interpretation checked; cause not established
 

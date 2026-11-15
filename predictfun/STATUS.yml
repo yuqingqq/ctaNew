@@ -1,3 +1,26 @@
+entry_training_issues_20261115:
+  status: complete_known_issue_review
+  data_asof: 2026-11-15T05:04:52Z
+  evidence_commit: 7a4aa584
+  results: predictfun/reviews/entry_training_issues_20261115/current.json
+  review: predictfun/handoffs/20261115_entry_training_issues_review.md
+  known_issues: 15
+  evaluation_actions: 9871
+  new_candidates: 0
+  new_model_fits: 0
+  new_labels: 0
+  coverage_repair_status: specified_not_implemented
+  proposed_later_inclusion_probability: 0.25
+  preserve_original_probe_ages: true
+  entry_preread_filter_enabled: false
+  unknown_queue_to_zero_in_label_lane: true
+  queue_fallback_effect_measured: false
+  full_upstream_entry_reconstruction_complete: false
+  forward_directory_metadata_exposed_in_inventory: true
+  forward_file_contents_read_in_review: false
+  forward_validation: false
+  next: Qualify loader/label assumptions, then denser state coverage and fixed-evaluation learning curves.
+
 entry_training_support_20261115:
   status: complete_read_only_interpretation
   data_asof: 2026-11-15T05:04:52Z
