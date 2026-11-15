@@ -1226,7 +1226,7 @@ def pcol(H, j):
 
 # ---------------------------------------------------------------- v4 training options (2026-11-15): helpers shared by the dev-day
 # diagnostics (pf_stop_model_diag.py, which decides which options v4 uses) and the v4 fit
-DIAG_JSON = f'{OUTD}/diag_20261115.json'; REVIEW_JSON = f'{OUTD}/review_20261115.json'; REG_JSON = f'{OUTD}/reg_20261115.json'
+DIAG_JSON = f'{OUTD}/diag_20261115.json'; REVIEW_JSON = f'{OUTD}/review_20261115.json'; REG_JSON = f'{OUTD}/reg_20261115.json'; DUP_JSON = f'{OUTD}/dup_20261115.json'
 BN_F = [c for c in FEAT_M if c.startswith(('bn_', 'adv_bn_')) or c in ('d_bnimb250', 'adv_d_bnimb250', 'dfv250', 'dfv1000', 'gap_adv', 'sens',
                                                                        'pbn_dist', 'act_rel')]   # Binance-derived inputs (P15; act_rel added
                                                                        # 2026-11-15, code review D4 - the diag's Q8 ran without it)
@@ -1583,7 +1583,11 @@ def fit_fold_v4(test):
     F = [c for c in F if c not in rdrop]
     if not os.path.exists(REG_JSON):
         sys.exit('REFUSED: no regularization review (run pf_stop_model_review.py reg first)')
-    RG = json.load(open(REG_JSON)); ncols = [c for c in RG['norm_inputs'] if c in F]; lgbp = RG['lgb_params'] or None
+    RG = json.load(open(REG_JSON)); lgbp = RG['lgb_params'] or None
+    if not os.path.exists(DUP_JSON):
+        sys.exit('REFUSED: no within-side copies test (run pf_stop_model_review.py dup first)')
+    DP = json.load(open(DUP_JSON)); rdrop |= set(DP['drop_inputs']); F = [c for c in F if c not in rdrop]
+    ncols = [c for c in DP['norm_inputs'] if c in F]               # the final R1 decision (dup runs reg's comparison on the final inputs)
     LABC = ['D0'] + [DCOL[h] for h in HS]
     pn = {(h, j): 0 for h in HS for j in JS}; pp_ = dict(pn)
     for d in tr_days:                                      # the training days' population rate of every head (T2; the rare levels of S)
