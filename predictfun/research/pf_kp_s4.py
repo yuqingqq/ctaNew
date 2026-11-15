@@ -1572,6 +1572,19 @@ IO = '/home/yuqing/ctaNew/data/predict_fun/research'
 OUT4 = f'{IO}/kp_s4_20261112'
 _ms = lambda d: pd.Timestamp(d, tz='UTC').value // 1_000_000
 SEAL_MS = (_ms('2026-10-28'), _ms('2026-10-31')); FWD_MS = _ms('2026-11-04')   # sealed block and forward blocks: never used
+# 2026-11-15 (STOP-MODEL code review D12): a day's step-1 books folder also holds the adjacent days' boundary hours (part_<day-1>_23,
+# part_<day+1>_00), e.g. sealed 10-28 00Z in 10-27's folder, sealed 10-30 23Z in 10-31's, forward 11-04 00Z in 11-03's. load_day read
+# them and filtered their frames out (none reached a row of an included window). Opt-in (callers set it; the default is unchanged for other
+# scripts): read only the day's own hours and the previous hour when it is neither sealed nor forward; skipped files are counted.
+SKIP_FOREIGN_PARTS = False
+
+
+def part_allowed(fn, day):
+    """A books part file part_<YYYYMMDD>_<HH>.parquet is read for `day` iff its hour lies in [day 00:00 - 1 h, day 24:00) and is neither in
+    the sealed block nor at or after the forward boundary."""
+    b = os.path.basename(fn); dd, hh = b[5:13], b[14:16]
+    h0 = _ms(f'{dd[:4]}-{dd[4:6]}-{dd[6:]}') + int(hh) * 3600000; d0 = _ms(f'{day[:4]}-{day[4:6]}-{day[6:]}')
+    return bool(d0 - 3600000 <= h0 < d0 + 86400000 and not (SEAL_MS[0] <= h0 < SEAL_MS[1]) and h0 < FWD_MS)
 G32 = list(MS.SETS['ALL'])
 MKT = G32 + ['v', 'own_d250', 'opp_d250', 'act_rel', 'd_bnimb250']   # market inputs at the grid step (live-clock rows), per side
 OWN = ['age', 'behind', 'a0k', 'shown_now', 'shown_now_rel', 'shown_min_rel']   # our order, from what we know at t
@@ -1660,7 +1673,10 @@ def load_day(day):
     del r
     cols = ['mid', 't_ms', 'recv_ns'] + [f'{s}{i}_{x}' for s in 'ba' for i in range(1, 6) for x in 'ps']
     parts = []
+    st['parts_skipped'] = 0
     for fn in sorted(glob.glob(f'{S1d}/books/part_*.parquet')):
+        if SKIP_FOREIGN_PARTS and not part_allowed(fn, day):
+            st['parts_skipped'] += 1; continue
         d = pd.read_parquet(fn, columns=cols); d = d[d.mid.isin(W0)]
         rel = d.t_ms.values - d.mid.map(W0).values
         parts.append(d[(rel >= -5000.0) & (rel <= 125000.0)])
