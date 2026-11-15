@@ -1,0 +1,9 @@
+test_public_liquidity_scaling_preserves_own_quantities (__main__.Checks.test_public_liquidity_scaling_preserves_own_quantities) ... ok
+test_ridge_positive_and_bad_schema (__main__.Checks.test_ridge_positive_and_bad_schema) ... ok
+test_training_only_processing_and_no_label_mutation (__main__.Checks.test_training_only_processing_and_no_label_mutation) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.017s
+
+OK
+2026-11-15T02:58:18Z tag=wait_post_clean_selftest rc=0 peak_rss_mib=160 wall_s=0.73 cpu_user_s=0.52 memavail_start_gib=23 disk_free_gib=492->492 slot=codex

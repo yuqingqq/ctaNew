@@ -1,0 +1,8 @@
+{
+  "summary": "summary.json",
+  "completion": "completion.json",
+  "main": "main/result.json",
+  "noise": "noise/result.json",
+  "cleanup": "clean/result.json",
+  "cleanup_freeze": "clean_freeze_v2.json"
+}

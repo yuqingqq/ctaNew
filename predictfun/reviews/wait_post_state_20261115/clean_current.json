@@ -1,0 +1,7 @@
+{
+  "freeze": "clean_freeze_v2.json",
+  "runner_binding_manifest": "clean_freeze.json",
+  "identical_source_input_bindings": true,
+  "new_candidates": 2,
+  "state_study_candidates_total": 5
+}

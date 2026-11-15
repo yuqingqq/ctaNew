@@ -1,0 +1,227 @@
+{
+  "asof": "2026-11-15T02:59:00Z",
+  "status": "complete_development_study",
+  "source_commit": "99173056",
+  "freeze_commit": "42f61bf1",
+  "cleanup_source_commit": "70217846",
+  "cleanup_freeze_commit": "c9fc924e",
+  "cleanup_authoritative_freeze": "clean_freeze_v2.json",
+  "dates": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "n_test_actions": 9871,
+  "test_windows": 1434,
+  "label_windows": 2010,
+  "label_statuses": {
+    "not_sampled": 81584,
+    "eligible": 13911,
+    "probe_not_reached": 344,
+    "sealed_lookback_window": 251
+  },
+  "changed_labels_from_start_mask": 994,
+  "feature_future_checks": 2010,
+  "candidates": [
+    "BASE",
+    "LADDER",
+    "COMPONENTS",
+    "CLEAN_TREE",
+    "CLEAN_RIDGE"
+  ],
+  "new_candidates": 5,
+  "metrics": [
+    {
+      "arm": "BASE",
+      "post_r2": -0.0739158182133488,
+      "timing_r2": -0.04501894015393493
+    },
+    {
+      "arm": "LADDER",
+      "post_r2": -0.06693762863446784,
+      "timing_r2": -0.05281281946522154
+    },
+    {
+      "arm": "COMPONENTS",
+      "post_r2": -0.06927837163756956,
+      "timing_r2": -0.05957888078249418
+    },
+    {
+      "arm": "CLEAN_TREE",
+      "post_r2": -0.0829980678612876,
+      "timing_r2": -0.051247416525224576
+    },
+    {
+      "arm": "CLEAN_RIDGE",
+      "post_r2": -0.11123172923643043,
+      "timing_r2": -0.08347104037008024
+    }
+  ],
+  "matched_tests": [
+    {
+      "arm": "BASE",
+      "side": 0,
+      "n": 4990,
+      "posts": 896,
+      "selected_weight_mass": 5722.0,
+      "selected_effective_n": 238.63213900469373,
+      "draws": 500,
+      "status": "matched_weighted_action_value",
+      "observed_delta": -0.55582678178084,
+      "observed_absolute_post": -3.184179960554825,
+      "null_p95": 0.29326193089627356,
+      "passes": false
+    },
+    {
+      "arm": "BASE",
+      "side": 1,
+      "n": 4881,
+      "posts": 757,
+      "selected_weight_mass": 5324.0,
+      "selected_effective_n": 213.81461589523866,
+      "draws": 500,
+      "status": "matched_weighted_action_value",
+      "observed_delta": 0.048072580726831474,
+      "observed_absolute_post": -1.8281001136516348,
+      "null_p95": 0.1985454370154465,
+      "passes": false
+    },
+    {
+      "arm": "COMPONENTS",
+      "side": 0,
+      "n": 4990,
+      "posts": 897,
+      "selected_weight_mass": 4764.0,
+      "selected_effective_n": 217.04246040853798,
+      "draws": 500,
+      "status": "matched_weighted_action_value",
+      "observed_delta": -0.15204059303639061,
+      "observed_absolute_post": -1.8987593496194417,
+      "null_p95": 0.1920311708985309,
+      "passes": false
+    },
+    {
+      "arm": "COMPONENTS",
+      "side": 1,
+      "n": 4881,
+      "posts": 727,
+      "selected_weight_mass": 5024.0,
+      "selected_effective_n": 203.08135942327496,
+      "draws": 500,
+      "status": "matched_weighted_action_value",
+      "observed_delta": 0.19319698202613692,
+      "observed_absolute_post": -1.6275159966155102,
+      "null_p95": 0.8054682797002619,
+      "passes": false
+    },
+    {
+      "arm": "LADDER",
+      "side": 0,
+      "n": 4990,
+      "posts": 891,
+      "selected_weight_mass": 5112.0,
+      "selected_effective_n": 223.76818742293466,
+      "draws": 500,
+      "status": "matched_weighted_action_value",
+      "observed_delta": -0.5558391417564009,
+      "observed_absolute_post": -2.63109051984709,
+      "null_p95": 0.4664169062166981,
+      "passes": false
+    },
+    {
+      "arm": "LADDER",
+      "side": 1,
+      "n": 4881,
+      "posts": 742,
+      "selected_weight_mass": 5024.0,
+      "selected_effective_n": 204.66216917488325,
+      "draws": 500,
+      "status": "matched_weighted_action_value",
+      "observed_delta": 0.17221519366127724,
+      "observed_absolute_post": -0.25980470349811735,
+      "null_p95": 0.7452341566948792,
+      "passes": false
+    },
+    {
+      "arm": "CLEAN_RIDGE",
+      "side": 0,
+      "n": 4990,
+      "posts": 1068,
+      "selected_weight_mass": 6156.0,
+      "selected_effective_n": 268.85986718883026,
+      "draws": 500,
+      "status": "matched_weighted_action_value",
+      "observed_delta": -0.4679529953623325,
+      "observed_absolute_post": -2.2115881775437147,
+      "null_p95": 0.16186264286292268,
+      "passes": false
+    },
+    {
+      "arm": "CLEAN_RIDGE",
+      "side": 1,
+      "n": 4881,
+      "posts": 1170,
+      "selected_weight_mass": 7350.0,
+      "selected_effective_n": 308.66472403153927,
+      "draws": 500,
+      "status": "matched_weighted_action_value",
+      "observed_delta": 0.40827644443853484,
+      "observed_absolute_post": -2.0598301265911347,
+      "null_p95": 0.5051429343225305,
+      "passes": false
+    },
+    {
+      "arm": "CLEAN_TREE",
+      "side": 0,
+      "n": 4990,
+      "posts": 991,
+      "selected_weight_mass": 6002.0,
+      "selected_effective_n": 256.136088279628,
+      "draws": 500,
+      "status": "matched_weighted_action_value",
+      "observed_delta": -0.4795380366400977,
+      "observed_absolute_post": -2.8542549831382704,
+      "null_p95": 0.31467709566743435,
+      "passes": false
+    },
+    {
+      "arm": "CLEAN_TREE",
+      "side": 1,
+      "n": 4881,
+      "posts": 772,
+      "selected_weight_mass": 4844.0,
+      "selected_effective_n": 203.5279994448685,
+      "draws": 500,
+      "status": "matched_weighted_action_value",
+      "observed_delta": 0.32609539485529515,
+      "observed_absolute_post": -2.91338331862651,
+      "null_p95": 0.6286331549632417,
+      "passes": false
+    }
+  ],
+  "economic_tests_passed": 0,
+  "economic_tests": 10,
+  "synthetic_tests_passed": 19,
+  "model_artifacts": 120,
+  "forward_validation": false,
+  "portfolio_evaluated": false,
+  "supersedes": {
+    "scope": "Entry feature availability and richer state/target pipeline; old receipts preserved, not comparable unchanged.",
+    "prior_source": "pf_wait_post_v2.py",
+    "reason": "Previously unmasked start-price gap; same continuation weights now use causal masking; sealed-lookback windows excluded."
+  },
+  "limitations": [
+    "Labels retain neutral KEEP, not the separate stop model. No combined policy claim.",
+    "Same neutral action population: additional jointly waiting states are not generated by reweighting.",
+    "Order queue is a causal public-book estimate, not actual queue position.",
+    "Original frozen bootstrap continuation now masks the start-price gap; its weights were not retrained.",
+    "Components share one terminal mark. Local heads do not remove all long-horizon outcome noise.",
+    "Consumed development dates; later untouched-day validation is still required.",
+    "Model diagnostic only; C1/C2/C3/C5/C12/C15/C17 portfolio gates are not evaluated.",
+    "Cleanup was post hoc after first-fold diagnosis; two additional candidates recorded before fitting.",
+    "160 compact raw fields become318-332 model columns after missing/extreme indicators; do not describe this as fewer encoded dimensions than284.",
+    "All models remain below the prior-mean error baseline overall and all full local economic gates fail. No model promoted."
+  ]
+}

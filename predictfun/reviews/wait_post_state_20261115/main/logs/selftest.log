@@ -1,0 +1,19 @@
+test_components_policy_sums_externalities_and_checks_schema (test_wait_post_state.StateTests.test_components_policy_sums_externalities_and_checks_schema) ... ok
+test_components_reconcile_with_economic_controls (test_wait_post_state.StateTests.test_components_reconcile_with_economic_controls) ... ok
+test_execution_parity_all_clocks_and_waiting (test_wait_post_state.StateTests.test_execution_parity_all_clocks_and_waiting) ... ok
+test_future_books_do_not_change_full_vector (test_wait_post_state.StateTests.test_future_books_do_not_change_full_vector) ... ok
+test_future_venue_events_cannot_change_decision_prefix (test_wait_post_state.StateTests.test_future_venue_events_cannot_change_decision_prefix) ... ok
+test_ladder_features_react_to_prices_ages_and_remaining (test_wait_post_state.StateTests.test_ladder_features_react_to_prices_ages_and_remaining) ... ok
+test_local_order_does_not_hide_displaced_ladder_value (test_wait_post_state.StateTests.test_local_order_does_not_hide_displaced_ladder_value) ... ok
+test_no_fill_is_zero_not_dropped_and_next_order_is_residual (test_wait_post_state.StateTests.test_no_fill_is_zero_not_dropped_and_next_order_is_residual) ... ok
+test_queue_proxy_uses_received_frames_and_never_future_activation (test_wait_post_state.StateTests.test_queue_proxy_uses_received_frames_and_never_future_activation) ... ok
+test_snapshot_reserves_pending_orders_across_sides (test_wait_post_state.StateTests.test_snapshot_reserves_pending_orders_across_sides) ... ok
+test_start_price_is_masked_in_candidate_and_continuation (test_wait_post_state.StateTests.test_start_price_is_masked_in_candidate_and_continuation) ... ok
+test_training_vector_matches_actual_policy_vector_and_side_heads (test_wait_post_state.StateTests.test_training_vector_matches_actual_policy_vector_and_side_heads) ... ok
+test_unreceived_partial_fill_does_not_change_snapshot_or_features (test_wait_post_state.StateTests.test_unreceived_partial_fill_does_not_change_snapshot_or_features) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.115s
+
+OK
+2026-11-15T02:03:27Z tag=wait_post_state_selftest rc=0 peak_rss_mib=164 wall_s=0.77 cpu_user_s=0.67 memavail_start_gib=22 disk_free_gib=494->494 slot=codex
