@@ -1795,7 +1795,8 @@ def report(v='3.1'):
                 R[pcol(h, j)] = P[pcol(h, j)].values
         S = pd.read_parquet(f'{OUTD}/pred_sdc_fold{t}.parquet')
         U = usable(R); GAPN[t] = int((~U).sum())
-        E[t] = R[U].reset_index(drop=True).merge(S, on=['m', 'side', 'k'], how='left', validate='one_to_one')
+        E[t] = R[U].reset_index(drop=True).merge(S, on=['m', 'side', 'k'], how='left', validate='one_to_one'); del R, P, S
+        mem_guard(f'report {t}')
     L = [(f'STOP-MODEL v4 (decisions {json.dumps(FJ[TESTS[0]]["decisions"])}; population {"every usable row" if TGT == "U" else "rows not ALREADY_j"})'
           if V4 else 'STOP-MODEL v3') + f' (keep / cancel per ladder level), 5 chronological test days {", ".join(TESTS)}; as of {asof}',
          f'inputs {len(FJ[TESTS[0]]["features"])} (scale {A["scale"]}; audit v2 dropped {A["drop"]}); GAP rows excluded {GAPN}; T5 permuted-label '
@@ -1874,7 +1875,7 @@ def report(v='3.1'):
                     if not (np.array_equal(Q.m.values, e.m.values) and np.array_equal(Q.side.values, e.side.values) and np.array_equal(Q.k.values, e.k.values)):
                         sys.exit(f'REFUSED: v3.1 predictions of {t} not aligned with v4 rows')
                     y = e[DCOL[h]].values >= j; c = e.D0.values < j; a3 = Q[pcol(h, j)].values.astype(float); a4 = e[pcol(h, j)].values.astype(float)
-                    ys.append(y); p3.append(a3); p4.append(a4); yc.append(y[c]); c3.append(a3[c]); c4.append(a4[c])
+                    ys.append(y); p3.append(a3); p4.append(a4); yc.append(y[c]); c3.append(a3[c]); c4.append(a4[c]); del Q
                 y = np.concatenate(ys); a3 = np.concatenate(p3); a4 = np.concatenate(p4); y2 = np.concatenate(yc); b3 = np.concatenate(c3); b4 = np.concatenate(c4)
                 x = dict(all=dict(auc3=auc_nan(y, a3)[0], auc4=auc_nan(y, a4)[0], ll3=logloss(y, a3), ll4=logloss(y, a4), br3=brier(y, a3), br4=brier(y, a4),
                                   rate=float(y.mean()), mp3=float(a3.mean()), mp4=float(a4.mean())),
@@ -1883,7 +1884,7 @@ def report(v='3.1'):
                 L.append(f'  H{h} j{j}: {a_["auc3"]:.3f} / {a_["auc4"]:.3f}, {a_["ll3"]:.5f} / {a_["ll4"]:.5f}, {a_["br3"]:.5f} / {a_["br4"]:.5f} (rate {a_["rate"]:.4f}, '
                          f'mean P {a_["mp3"]:.4f} / {a_["mp4"]:.4f}) | {c_["auc3"]:.3f} / {c_["auc4"]:.3f}, {c_["ll3"]:.5f} / {c_["ll4"]:.5f}')
         sk['v31_vs_v4'] = cv
-        L.append('')
+        L.append(''); mem_guard('report v3.1 vs v4')
     # where the short-horizon skill comes from (POST HOC, declared in v3.1 (iii); fold 10-27's calibration day = a dev day)
     cd = FOLDS[TESTS[0]][1]
     Rc = pd.read_parquet(f'{OUTD}/rows_{cd}.parquet', columns=KEYS + ['D0'] + [DCOL[h] for h in HS] + ['hgap', 's1', 'scale_w30', 'adv_bn_r250',
@@ -1945,6 +1946,7 @@ def report(v='3.1'):
             j_ = O.depth.values + 1; ok = (O.D0.values < j_) if TGT == 'C' else np.ones(len(O), bool); O = O[ok].reset_index(drop=True); j_ = j_[ok]
             stat_os[(cfg, t)] = dict(order_steps=n0, deeper_than_5=deep, without_usable_row=n0 - deep - nlab, already=int((~ok).sum()), used=len(O))
             per_day[t] = (O, j_)
+            mem_guard(f'report orders {cfg} {t}')
         for h in HS:
             V = {}; top = {}; bh = {}; y1 = {}; y0 = {}
             for t in TESTS:
