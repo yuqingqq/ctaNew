@@ -1226,7 +1226,10 @@ def pcol(H, j):
 
 # ---------------------------------------------------------------- v4 training options (2026-11-15): helpers shared by the dev-day
 # diagnostics (pf_stop_model_diag.py, which decides which options v4 uses) and the v4 fit
-DIAG_JSON = f'{OUTD}/diag_20261115.json'; REVIEW_JSON = f'{OUTD}/review_20261115.json'; REG_JSON = f'{OUTD}/reg_20261115.json'; DUP_JSON = f'{OUTD}/dup_20261115.json'
+X5_FAM = {'PF_OFI': ['adv_ofi250', 'adv_ofi1000', 'adv_dd3_250', 'adv_dd3_1000'],          # pf_stop_model_x5.py (rows_<day>_x5.parquet)
+          'BN_DEPTH': ['adv_bnd_imb5', 'adv_bnd_imb20', 'adv_d_bnd_imb5_250', 'adv_bnd_ofi250', 'adv_bnd_ofi1000', 'bnd_age']}
+X5_F = X5_FAM['PF_OFI'] + X5_FAM['BN_DEPTH']
+DIAG_JSON = f'{OUTD}/diag_20261115.json'; X5_JSON = f'{OUTD}/x5test_20261115.json'; REVIEW_JSON = f'{OUTD}/review_20261115.json'; REG_JSON = f'{OUTD}/reg_20261115.json'; DUP_JSON = f'{OUTD}/dup_20261115.json'
 BN_F = [c for c in FEAT_M if c.startswith(('bn_', 'adv_bn_')) or c in ('d_bnimb250', 'adv_d_bnimb250', 'dfv250', 'dfv1000', 'gap_adv', 'sens',
                                                                        'pbn_dist', 'act_rel')]   # Binance-derived inputs (P15; act_rel added
                                                                        # 2026-11-15, code review D4 - the diag's Q8 ran without it)
@@ -1424,10 +1427,21 @@ def day_usable(src):
 def day_matrix(src, scale, F, sel=None):
     """model_inputs(rows, scale)[F] as a float32 array of the rows at positions sel, built one column at a time from the file (memory; the
     same float64 arithmetic, then the cast - selftest)."""
-    pf = _pq(src)
+    pf = _pq(src); x5 = {}
 
     def col(c):
-        a = pf.read(columns=[c]).column(0).to_numpy(zero_copy_only=False)
+        if c in X5_F:                                      # extra inputs live beside the rows, same row order (checked on first use)
+            if not x5:
+                if not isinstance(src, str) or src.endswith('.parquet'):
+                    raise ValueError('x5 inputs need a day')
+                q = _pq(f'{OUTD}/rows_{src}_x5.parquet')
+                if q.metadata.num_rows != pf.metadata.num_rows or not np.array_equal(q.read(columns=['k']).column(0).to_numpy(),
+                                                                                     pf.read(columns=['k']).column(0).to_numpy()):
+                    raise ValueError(f'rows_{src}_x5 not aligned with rows_{src}')
+                x5['q'] = q
+            a = x5['q'].read(columns=[c]).column(0).to_numpy(zero_copy_only=False)
+        else:
+            a = pf.read(columns=[c]).column(0).to_numpy(zero_copy_only=False)
         return (a if sel is None else a[sel]).astype(np.float64)
     w30 = col('scale_w30')
     if scale == 'W30':
@@ -1559,7 +1573,7 @@ def fit_fold(test):
           flush=True)
 
 
-def fit_fold_v4(test):
+def fit_fold_v4(test, vtag='_v4'):
     """v4 fit of one chronological fold with the options the dev-day diagnostics decided (DIAG_JSON 'decisions': target C / U, volume V60 /
     V180 / S60, early stopping on the calibration day, Platt fitted on the calibration day, level projection). Same folds, seeds, inputs and
     pinned parameters as v3.1; outputs fit_{test}_v4.json, pred_fold{test}_{day}_v4.parquet (R = raw, P = final), models *_v4.txt. The
@@ -1587,6 +1601,14 @@ def fit_fold_v4(test):
     if not os.path.exists(DUP_JSON):
         sys.exit('REFUSED: no within-side copies test (run pf_stop_model_review.py dup first)')
     DP = json.load(open(DUP_JSON)); rdrop |= set(DP['drop_inputs']); F = [c for c in F if c not in rdrop]
+    x5add = []
+    if vtag == '_v5':                                      # v5 = v4 + the extra input families the x5 test adopted
+        if not os.path.exists(X5_JSON):
+            sys.exit('REFUSED: no x5 test (run pf_stop_model_review.py x5test first)')
+        x5add = [c for fam in json.load(open(X5_JSON))['adopt'] for c in X5_FAM[fam]]
+        if not x5add:
+            sys.exit('REFUSED: the x5 test adopted no family (v4 stands)')
+        F = F + x5add
     ncols = [c for c in DP['norm_inputs'] if c in F]               # the final R1 decision (dup runs reg's comparison on the final inputs)
     LABC = ['D0'] + [DCOL[h] for h in HS]
     pn = {(h, j): 0 for h in HS for j in JS}; pp_ = dict(pn)
@@ -1621,7 +1643,7 @@ def fit_fold_v4(test):
             if valid is not None:
                 rv = head_rows(valid[1]['D0'], j, target); vv = (valid[0][rv], (valid[1][DCOL[h]][rv] >= j).astype(int))
             Xh = X[ii]; b, nr = fit_head(Xh, y, wc, F, valid=vv, params=lgbp); del vv
-            b.save_model(f'{OUTD}/models/fold{test}_H{h}_j{j}_v4.txt', num_iteration=nr); boost[(h, j)] = (b, nr)
+            b.save_model(f'{OUTD}/models/fold{test}_H{h}_j{j}{vtag}.txt', num_iteration=nr); boost[(h, j)] = (b, nr)
             a_tr, _ = auc_nan(y.astype(bool), b.predict(Xh, num_iteration=nr)); del Xh
             imp = b.feature_importance('gain', iteration=nr); br = float(np.average(y, weights=wc))
             info[f'H{h}_j{j}'] = dict(train_rows=int(len(y)), positives=int(y.sum()), base_rate=br, population_rate=float(rates[(h, j)]),
@@ -1661,15 +1683,16 @@ def fit_fold_v4(test):
             pq_ = bp[0].predict(Xd[r], num_iteration=bp[1]); a_p, n_p = auc_nan(yt.astype(bool), pq_)
             bss = 1.0 - float(((pq_ - yt) ** 2).mean()) / float(((bpr - yt) ** 2).mean())
             T5 = dict(auc=a_p, bss=bss, rows=n_p, rounds=int(bp[1]), ok=bool(bss <= T5_BSS), auc_within_declared_v3=bool(abs(a_p - 0.5) <= T5_AUC))
-        out.to_parquet(f'{OUTD}/pred_fold{test}_{dd}_v4.parquet', index=False); del Xd, out, raw, fin, lab_
+        out.to_parquet(f'{OUTD}/pred_fold{test}_{dd}{vtag}.parquet', index=False); del Xd, out, raw, fin, lab_
         mem_guard(f'fit v4 {test} predict {dd}')
-    res = dict(test=test, cal=cal, train_days=list(tr_days), features=F, dropped=A['drop'], review_dropped=sorted(rdrop), scale=scale, version='4',
+    res = dict(test=test, cal=cal, train_days=list(tr_days), features=F, dropped=A['drop'], review_dropped=sorted(rdrop), x5_added=x5add, scale=scale,
+               version=vtag[2:],
                decisions=dec, norm_inputs=ncols, lgb_params=lgbp,
                rare_levels={str(h): v_ for h, v_ in cut.items()}, info=info, T1=True, T5=T5, T4_monotonicity=mono,
                platt={f'H{h}_j{j}': list(v_) for (h, j), v_ in ab.items()}, params={**PD.LGB_PARAMS, **(lgbp or {})}, rounds_max=ES_MAX if es else PD.N_ROUNDS,
                volume=dict(mode=mode, rows_a_day=sub, rows_a_head=cap), seconds=round(time.time() - T0, 1))
-    json.dump(res, open(f'{OUTD}/fit_{test}_v4.json', 'w'), indent=1, default=float)
-    print(f'fit v4 {test} ({dec}): ' + '; '.join(f'H{h} j{j} AUC tr/cal/test {info[f"H{h}_j{j}"]["auc_train"]:.3f}/{info[f"H{h}_j{j}"]["auc_cal"]:.3f}/'
+    json.dump(res, open(f'{OUTD}/fit_{test}{vtag}.json', 'w'), indent=1, default=float)
+    print(f'fit {vtag[1:]} {test} ({dec}; {len(F)} inputs): ' + '; '.join(f'H{h} j{j} AUC tr/cal/test {info[f"H{h}_j{j}"]["auc_train"]:.3f}/{info[f"H{h}_j{j}"]["auc_cal"]:.3f}/'
                                                 f'{info[f"H{h}_j{j}"]["auc_test"]:.3f} r{info[f"H{h}_j{j}"]["rounds"]}' for h in HS for j in (1, 2, 3))
           + f'; T5 {T5}; {time.time() - T0:.0f} s', flush=True)
 
@@ -1823,10 +1846,10 @@ def report(v='3.1'):
     population (TGT: 'U' = every usable row, 'C' = rows not ALREADY_j), R705 on STOP-DEPTH's own rows (not ALREADY_j), plus v3.1 vs v4."""
     all_selftests()
     asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
-    V4 = v == '4'; sfx = '_v4' if V4 else ''
+    V4 = v != '3.1'; sfx = f'_v{v}' if V4 else ''
     A = json.load(open(f'{OUTD}/audit2.json')); FJ = {t: json.load(open(f'{OUTD}/fit_{t}{sfx}.json')) for t in TESTS}
     TGT = FJ[TESTS[0]]['decisions']['target'] if V4 else 'C'
-    if V4 and any(FJ[t]['decisions'] != FJ[TESTS[0]]['decisions'] or FJ[t]['version'] != '4' for t in TESTS):
+    if V4 and any(FJ[t]['decisions'] != FJ[TESTS[0]]['decisions'] or FJ[t]['version'] != v or FJ[t]['features'] != FJ[TESTS[0]]['features'] for t in TESTS):
         sys.exit('REFUSED: v4 folds fitted with different decisions / versions')
     AJ = {t: json.load(open(f'{OUTD}/align_{t}.json')) for t in TESTS}
     RJ = {d: json.load(open(f'{OUTD}/rows_{d}.json')) for d in DAYS9}
@@ -1846,7 +1869,7 @@ def report(v='3.1'):
         U = usable(R); GAPN[t] = int((~U).sum())
         E[t] = R[U].reset_index(drop=True).merge(S, on=['m', 'side', 'k'], how='left', validate='one_to_one'); del R, P, S
         mem_guard(f'report {t}')
-    L = [(f'STOP-MODEL v4 (decisions {json.dumps(FJ[TESTS[0]]["decisions"])}; population {"every usable row" if TGT == "U" else "rows not ALREADY_j"})'
+    L = [(f'STOP-MODEL v{v} ({len(FJ[TESTS[0]]["features"])} inputs; decisions {json.dumps(FJ[TESTS[0]]["decisions"])}; population {"every usable row" if TGT == "U" else "rows not ALREADY_j"})'
           if V4 else 'STOP-MODEL v3') + f' (keep / cancel per ladder level), 5 chronological test days {", ".join(TESTS)}; as of {asof}',
          f'inputs {len(FJ[TESTS[0]]["features"])} (scale {A["scale"]}; audit v2 dropped {A["drop"]}); GAP rows excluded {GAPN}; T5 permuted-label '
          f'BSS {T5["bss"]:+.4f} -> PASS (v3.1: no skill), AUC {T5["auc"]:.4f} (the v3 two-sided tolerance 0.02: '
@@ -2083,11 +2106,15 @@ if __name__ == '__main__':
         fit_fold(sys.argv[2])
     elif cmd == 'fit4':
         fit_fold_v4(sys.argv[2])
+    elif cmd == 'fit5':
+        fit_fold_v4(sys.argv[2], vtag='_v5')
     elif cmd == 'align':
         align_day(sys.argv[2])
     elif cmd == 'report':
         report()
     elif cmd == 'report4':
         report('4')
+    elif cmd == 'report5':
+        report('5')
     else:
         sys.exit(f'unknown command {cmd}')
