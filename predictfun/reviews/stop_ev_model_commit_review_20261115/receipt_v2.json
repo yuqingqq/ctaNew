@@ -1,0 +1,291 @@
+{
+  "asof": "2026-11-15T14:35:33.259389+00:00",
+  "source_asof": "2026-11-15T14:00:57Z",
+  "checker_sha256": "d19c6bd6718596d66f9a8a4cd4de2962237f8d8c8104f9a6507268aa39b60159",
+  "input_sha256": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/stop_ev_model.json": "d7e4995032a596539689adf83101c2a39befc4e0690d7f13d9d0bf4b3fb615e2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred_20261027_20261027.parquet": "916410f51ccb9f253f1f1d21880a7576387d503564c6e74a9acd2c0582f3fa1d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/ev_x_20261027.parquet": "4412fb182093a646da5898013fd338ebcaabc5c45ca40e4fddfa6ec37e0af3e3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/fit_20261027.json": "5b63ebc213315399b7fae772835c5f9d5d71a74d4fcb8deed964012cd9443f3f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261027/receipt.json": "4b92586b87e1833492581f7d41d390a193373ccf60d38fbdc0b5c1cdea9d8f17",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261027/certified_ws.parquet": "6c44b74656db30533ea6d5b9269bd2f7920d34bb024fd271723599c42dc35a14",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261027/certified_estimated.parquet": "bb9c33e0b185d26ac7ab045aefe416b8df3354a39b1e2e905cf2d83aa501ce79",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred_20261031_20261031.parquet": "2a3878b522f2dff3654ea49f9bdf2e559e39c75d9ca7f9b2ee68ad1e6717df7a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/ev_x_20261031.parquet": "d4e4a45b2b2b7b422de335fb4504f395b0c6a308f4b1d99a3470593b9f6e85e1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/fit_20261031.json": "6f31669a0e737e12444341b9336f333453242989cf9a2f644c4d2685b029c8d9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261031/receipt.json": "75b11135c5eaba8310193bbaace6787cfa0b6bbd01f0eb56f6b7db298de71c57",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261031/certified_ws.parquet": "7eaaa4705a515ee931f6c8de024bc9a92bcd40f9ea04b89d109f241cbf2365d3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261031/certified_estimated.parquet": "1a6301c2668e918efe33fa135cf376be28f21991e86397ce83575a79df5c0d81",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred_20261101_20261101.parquet": "5f2c0f803b05336f0fc4b5dc432678f46343ba00b34e8316b48f4901806a983d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/ev_x_20261101.parquet": "aa0eeb483f9204d92f05a1a591dcda7c656760b8eaeb9f3fc2406eda9dd89cf5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/fit_20261101.json": "fd14b920a4e2339d66d814229e1e2a2934aa7a32b356bd1cbb9060a3a3312862",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261101/receipt.json": "59d31c9e79fc57945dfc03529cc781dd0239fbd91ee1af143ea97aa6753c30c6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261101/certified_ws.parquet": "9bc71b9ad7305b8de338f04b68bef87cea880291acc5c30f1eef5f679b38f6a7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261101/certified_estimated.parquet": "cf4d888c8d20b99631e3bb527def0a34d7d9eacb2a67907f681a3219c1e25ee7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred_20261102_20261102.parquet": "26776bfff4cc0813508245bfdc1c4644f7ff8eee42f03207c9014d8d06b17b4b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/ev_x_20261102.parquet": "953f343de4167fc78aa96b1f6f9be0457e564cac74fb5ccf31671b654d17fbc2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/fit_20261102.json": "bed3075717194b7ecf8ff5aecfe3bafb4a2976fea97f34c723322e26a7f0e822",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261102/receipt.json": "c381a3d16dfbc30d9f1932f129c529b201645499f2ef96a2b1d0256028102df0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261102/certified_ws.parquet": "0c5f05bcd4f7641facbb8c5404a9355cb93f109beea97a8919d1b8d75ab5115f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261102/certified_estimated.parquet": "d869589fe6c5e3120383958e57d77d47e961c5acdb5336db674408c1366dc8e0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred_20261103_20261103.parquet": "91a153d23d4eb24aaabc2ad13b8138bdc7ee3fa2aa1169e7338fea82d386a012",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/ev_x_20261103.parquet": "f522a5ca90025f0d2f68d7834dc40c71e543118b1429803c328c6c01ccb2f68b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/fit_20261103.json": "16246086b7842e45411be2b1a001d084c131f6b93e0653c561e530efae81d612",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261103/receipt.json": "7991959cf1724589bc121aa57a9ab3eed508d8cb056b076b3dcd8d3a7c24f99a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261103/certified_ws.parquet": "fef744a45aea3dc2fc9cd1020839928272135e2f7350fa3cd34e9aa8bbdf2e6f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261103/certified_estimated.parquet": "411771411255a721ab121c1f04d6614e03d5bbb2b35d462120c30c059762e77d",
+    "/home/yuqing/ctaNew/predictfun/research/pf_stop_ev_model.py": "0451e1f811560e114f78f26a37b05d53e1a1bcddbf68480ea91df05ba2268798"
+  },
+  "artifact_identity_pass": true,
+  "controls": {
+    "duplicate": true,
+    "probability": true,
+    "label": true
+  },
+  "n": 137703,
+  "days": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "metrics": {
+    "ic": 0.13387815697259584,
+    "ic_b2": 0.08725500784201057,
+    "kept": 9727,
+    "pull_fraction": 0.9293624685010493,
+    "kept_value_cents": -5541.456246751437,
+    "local_gain_cents": 462784.768351219,
+    "b2_gain_cents": 460991.2326506953,
+    "increment_above_b2_cents": 1793.535700523702
+  },
+  "calibration": [
+    {
+      "n": 13771,
+      "prediction": -8.048811285723607,
+      "realized": -14.941517343718287
+    },
+    {
+      "n": 13770,
+      "prediction": -2.5695399981649842,
+      "realized": -5.929687021000754
+    },
+    {
+      "n": 13770,
+      "prediction": -1.5001810995547231,
+      "realized": -3.9120838180914044
+    },
+    {
+      "n": 13770,
+      "prediction": -0.9494653033561492,
+      "realized": -3.2866439214654193
+    },
+    {
+      "n": 13771,
+      "prediction": -0.625031873174052,
+      "realized": -2.029121263772399
+    },
+    {
+      "n": 13770,
+      "prediction": -0.4142181503456174,
+      "realized": -1.511780822248923
+    },
+    {
+      "n": 13770,
+      "prediction": -0.26680333889786867,
+      "realized": -1.0544566640428639
+    },
+    {
+      "n": 13770,
+      "prediction": -0.1558646766865011,
+      "realized": -0.4466266135679609
+    },
+    {
+      "n": 13770,
+      "prediction": -0.0666770532473777,
+      "realized": -0.370870571910906
+    },
+    {
+      "n": 13771,
+      "prediction": 0.4345473027196685,
+      "realized": -0.526560355170753
+    }
+  ],
+  "timing_membership": {
+    "20261027": {
+      "certified_ws": {
+        "predictions": 30698,
+        "certified": 1441,
+        "without_certificate": 29257,
+        "original_ws_claim": 470,
+        "original_ws_claim_uncertified": 166,
+        "statuses": {
+          "uncertain_prior_reference": 28721,
+          "eligible_timing_invariant": 1441,
+          "uncertain_future_exposure": 536
+        }
+      },
+      "certified_estimated": {
+        "predictions": 30698,
+        "certified": 12842,
+        "without_certificate": 17856,
+        "original_ws_claim": 470,
+        "original_ws_claim_uncertified": 166,
+        "statuses": {
+          "uncertain_prior_reference": 17648,
+          "eligible_estimated_timing": 12842,
+          "uncertain_future_exposure": 208
+        }
+      }
+    },
+    "20261031": {
+      "certified_ws": {
+        "predictions": 19869,
+        "certified": 3024,
+        "without_certificate": 16845,
+        "original_ws_claim": 1537,
+        "original_ws_claim_uncertified": 237,
+        "statuses": {
+          "uncertain_prior_reference": 16206,
+          "eligible_timing_invariant": 3024,
+          "uncertain_future_exposure": 639
+        }
+      },
+      "certified_estimated": {
+        "predictions": 19869,
+        "certified": 14278,
+        "without_certificate": 5591,
+        "original_ws_claim": 1537,
+        "original_ws_claim_uncertified": 237,
+        "statuses": {
+          "eligible_estimated_timing": 14278,
+          "uncertain_prior_reference": 5504,
+          "uncertain_future_exposure": 87
+        }
+      }
+    },
+    "20261101": {
+      "certified_ws": {
+        "predictions": 21361,
+        "certified": 2755,
+        "without_certificate": 18606,
+        "original_ws_claim": 1080,
+        "original_ws_claim_uncertified": 200,
+        "statuses": {
+          "uncertain_prior_reference": 17944,
+          "eligible_timing_invariant": 2755,
+          "uncertain_future_exposure": 662
+        }
+      },
+      "certified_estimated": {
+        "predictions": 21361,
+        "certified": 14851,
+        "without_certificate": 6510,
+        "original_ws_claim": 1080,
+        "original_ws_claim_uncertified": 200,
+        "statuses": {
+          "eligible_estimated_timing": 14851,
+          "uncertain_prior_reference": 6421,
+          "uncertain_future_exposure": 89
+        }
+      }
+    },
+    "20261102": {
+      "certified_ws": {
+        "predictions": 33190,
+        "certified": 2161,
+        "without_certificate": 31029,
+        "original_ws_claim": 638,
+        "original_ws_claim_uncertified": 155,
+        "statuses": {
+          "uncertain_prior_reference": 30334,
+          "eligible_timing_invariant": 2161,
+          "uncertain_future_exposure": 695
+        }
+      },
+      "certified_estimated": {
+        "predictions": 33190,
+        "certified": 20079,
+        "without_certificate": 13111,
+        "original_ws_claim": 638,
+        "original_ws_claim_uncertified": 155,
+        "statuses": {
+          "eligible_estimated_timing": 20079,
+          "uncertain_prior_reference": 12932,
+          "uncertain_future_exposure": 179
+        }
+      }
+    },
+    "20261103": {
+      "certified_ws": {
+        "predictions": 32585,
+        "certified": 2193,
+        "without_certificate": 30392,
+        "original_ws_claim": 847,
+        "original_ws_claim_uncertified": 235,
+        "statuses": {
+          "uncertain_prior_reference": 29720,
+          "eligible_timing_invariant": 2193,
+          "uncertain_future_exposure": 672
+        }
+      },
+      "certified_estimated": {
+        "predictions": 32585,
+        "certified": 19580,
+        "without_certificate": 13005,
+        "original_ws_claim": 847,
+        "original_ws_claim_uncertified": 235,
+        "statuses": {
+          "eligible_estimated_timing": 19580,
+          "uncertain_prior_reference": 12868,
+          "uncertain_future_exposure": 137
+        }
+      }
+    }
+  },
+  "t5": {
+    "20261027": {
+      "draws": 10,
+      "original_gate": true,
+      "revised_gate": true,
+      "stored_gate": true
+    },
+    "20261031": {
+      "draws": 10,
+      "original_gate": false,
+      "revised_gate": true,
+      "stored_gate": false
+    },
+    "20261101": {
+      "draws": 10,
+      "original_gate": true,
+      "revised_gate": true,
+      "stored_gate": true
+    },
+    "20261102": {
+      "draws": 10,
+      "original_gate": true,
+      "revised_gate": true,
+      "stored_gate": true
+    },
+    "20261103": {
+      "draws": 10,
+      "original_gate": false,
+      "revised_gate": true,
+      "stored_gate": false
+    }
+  },
+  "counterexamples": {
+    "t5_accepts_perfect_negative_skill": true,
+    "t5_rejects_perfect_positive_skill": true,
+    "huber": {
+      "n": 1000,
+      "delta": 1.0,
+      "mean": -9.1,
+      "minimizer": 0.8888888888888888,
+      "quadratic_control_pass": true
+    }
+  },
+  "limitations": "Post hoc saved-artifact review on consumed days. No refit, new null, performance comparison on certificate subsets, raw-tape read, or physical timing validation."
+}
