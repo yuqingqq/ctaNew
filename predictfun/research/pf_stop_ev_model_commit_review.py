@@ -79,6 +79,7 @@ def main(out):
             path=cert/day/(mode+'.parquet');record(path)
             require(hashes[str(path)]==cr['artifacts'][path.name], 'certificate artifact changed')
             c=pd.read_parquet(path,columns=KEY+['status','value_cents'])
+            c['day']=c['day'].astype('int64')
             j=pred.merge(c,on=KEY,how='left',validate='one_to_one',indicator=True,suffixes=('','_cert'))
             require((j._merge=='both').all(),'certificate join missing action/time')
             ok=j.status_cert.str.startswith('eligible')
