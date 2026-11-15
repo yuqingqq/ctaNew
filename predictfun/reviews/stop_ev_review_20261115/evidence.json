@@ -1,0 +1,78 @@
+{
+  "asof": "2026-11-15T11:44:33.221355+00:00",
+  "status": "review_complete_design_corrections_required",
+  "review_head": "9851287a0b8a3fff28ab2605a56d65e4a01e0a79",
+  "design_commit": "ff4f7d1b",
+  "result_copy_commit": "9851287a",
+  "result_asof": "2026-11-15T11:24:12Z",
+  "sources": {
+    "predictfun/handoffs/20261115_stop_ev_design.md": "ad9f85ee9ee5ada44cb60555b09fc70d60acf16ca6743c8117aa0f38428bee8d",
+    "predictfun/handoffs/20261115_stop_ev_review.md": "fd58f7cd61c203ff4027783df18c5974e2b7a6b6821e22e25796c1a6a781410e",
+    "predictfun/research/pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed",
+    "predictfun/research/pf_stop_play.py": "c82675eda4f40ce9e0631af0ed17c4a35ae8aa4af0710258bff43a9fc13e7f74",
+    "predictfun/research/pf_stop_model_review.py": "d01c44423debabce83f1f8b428ef36d0b013a8cb44a43c44330676a03376043c",
+    "predictfun/reviews/stop_model_20261114/stop_play_v6.json": "a756b78bd2bd46a2a0e494c5e6ef18a53ad67dfece138be527644c14ba907fd3",
+    "predictfun/reviews/stop_model_20261114/stop_play_v6.txt": "a562acf0cf9fc84e2603be7274855008328557c507c6b5afefaf8cb2cafcada2",
+    "data/predict_fun/research/stop_model_20261114/stop_play_v6.json": "a756b78bd2bd46a2a0e494c5e6ef18a53ad67dfece138be527644c14ba907fd3",
+    "data/predict_fun/research/stop_model_20261114/stop_play_v6.txt": "a562acf0cf9fc84e2603be7274855008328557c507c6b5afefaf8cb2cafcada2",
+    "data/predict_fun/research/stop_model_20261114/skip_20261115.json": "8ab0a86cd07bbbd7ba259775f59ab0997d659878cb3738d5a60d9d34471ee65f",
+    "data/predict_fun/research/stop_model_20261114/play_20261027_v6.json": "621819a1d9216f61567ed13b9ee6ca63b99b6adf59b3241b88eaea92ccf4d418",
+    "data/predict_fun/research/stop_model_20261114/play_cal_20261027_v6.json": "8d22a08a65894be458ea9831473a36fe7bd1bc42b86f64c08c9f37e595299f6d",
+    "data/predict_fun/research/stop_model_20261114/play_20261031_v6.json": "614cc86589fcd9688d99aa20823b92651761a3925ba0a668ed99505aaeebe9d0",
+    "data/predict_fun/research/stop_model_20261114/play_cal_20261031_v6.json": "ab52e690b30fdd9416fb82e781acd84fa4df1187cefac006e0fb36adf01ed0b1",
+    "data/predict_fun/research/stop_model_20261114/play_20261101_v6.json": "e9083cbb88fea7cad0ab2c0a3b43be57dbb167186188cf841a983d4f1aa33802",
+    "data/predict_fun/research/stop_model_20261114/play_cal_20261101_v6.json": "e8dc7482d4fb1153e05459908412cd77195ac8f906fd8b99463c3da87ce2aed1",
+    "data/predict_fun/research/stop_model_20261114/play_20261102_v6.json": "59262b5256a12b6d0c72cb4e6950fe3885fc91399f6b346cdc5b2167002885ca",
+    "data/predict_fun/research/stop_model_20261114/play_cal_20261102_v6.json": "146929ca60cd5d0c8c33ed7ef0ec39d6fb073fc1bb4c6423cdde7b2cbf15f864",
+    "data/predict_fun/research/stop_model_20261114/play_20261103_v6.json": "d7396b606de4a9d002785f091b23ba2dcfb277ce0f88f6ee541f3f41c6a56341",
+    "data/predict_fun/research/stop_model_20261114/play_cal_20261103_v6.json": "b48f3f7220d642a475503df932e5d64dd7c1bd39042a1c309483ed73b2d52bce"
+  },
+  "checks": {
+    "result_copy_equals_data": true,
+    "day_receipts_reconcile": {
+      "20261027": {
+        "value": true,
+        "live": true,
+        "stat": true,
+        "choice": true
+      },
+      "20261031": {
+        "value": true,
+        "live": true,
+        "stat": true,
+        "choice": true
+      },
+      "20261101": {
+        "value": true,
+        "live": true,
+        "stat": true,
+        "choice": true
+      },
+      "20261102": {
+        "value": true,
+        "live": true,
+        "stat": true,
+        "choice": true
+      },
+      "20261103": {
+        "value": true,
+        "live": true,
+        "stat": true,
+        "choice": true
+      }
+    }
+  },
+  "scope": "Read-only design/code/artifact review; no refit, replay, new selection or original design/source edits. Current source hashes identify the reviewed code, not a retroactive freeze of the original experiment.",
+  "findings": [
+    "remaining_quantity_double_charge",
+    "fill_value_dependence_and_sign",
+    "book_move_is_not_full_execution",
+    "causal_queue_and_remaining_size_contract",
+    "cancellation_prefix_and_queue_option_sign",
+    "action_population_and_net_value_evaluation"
+  ],
+  "recommendation": "Direct unconditional signed local keep-value target, with a quantity-conserving ledger and optional additive diagnostics; separate entry evaluation at new queue position.",
+  "new_model_runs": 0,
+  "new_candidates_fitted": 0,
+  "forward_validation": false
+}
