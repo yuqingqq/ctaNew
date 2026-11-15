@@ -15,16 +15,27 @@ LABELS per row and level (float32; statuses instead of silent drops):
     au_j / auv_j   legs AT p_j without a taker key (type unknown; the lane's fill_type calls them STOP)
     bt_j / btv_j   legs BEYOND p_j (the level was taken; a front order at p_j fills at p_j)
     value = shares x sg x (mid(anchor + 1 s) - p_j), cents x shares (order_steps' markout: the last venue frame <= anchor + 1 s)
-  EXACT ORDER FILLS - the lane's rule M (CL.sim_joint's apply) for ONE order of Z shares resting at p_j with queue ahead q at t: legs
-    in (t, t + 22) are applied (they drain the queue / fill) but not counted; a leg AT p_j drains the queue, then fills us; a leg BEYOND
-    fills us up to its size and clears the queue; before each leg the queue is capped by the visible size at p_j in every venue frame
-    since the known frame:
+  EXACT ORDER FILLS = THE LABEL (a chronological, quantity-conserving ledger; the components above are diagnostics only - Codex reviews
+    e315abe8 / ffa2025e: window-average markouts erase the queue position's value). The lane's rule M (CL.sim_joint's apply) for ONE
+    order of Z shares resting at p_j with queue ahead q at t, CONTINUATION declared: the order is held until t + 1 s, no cancel, no
+    replacement (a rolling local keep-value surrogate, not the value of keeping only until the next 50 ms decision). Legs in (t, t + 22)
+    are applied (they drain the queue / fill: unavoidable under keep and pull alike) but not counted; a leg AT p_j drains the queue, then
+    fills us; a leg BEYOND fills us by min(its size, our remainder) and clears the queue; before each leg the queue is capped by the
+    visible size at p_j in every venue frame since the known frame; each tranche is valued at its own mark (anchor + 1 s; frames are
+    loaded to ws + 125 s). SUPPORT: a fresh order (remainder Z) at a hypothetical queue position on the grid below; the lane's own
+    order states (rec, with partial remainders) give the support of real states. One order per level: shared trade volume with our
+    other rungs is the joint lane's (E7's SHARED status measures it):
     f0_j / v0_j    front (q = 0): shares, 1 s value; v0x5_j its 5 s value; f0w_j / v0w_j the part from WS-anchored legs
     fh_j / vh_j    middle (q = 0.5 vis_j);  fb_j / vb_j  back (q = vis_j)   (NaN when vis_j is unknown)
     v0m0_j / v0m250_j   the front's 1 s value on the M 0 / M 250 clocks (timing sensitivity)
+  INCOMPLETE flags inc_j (bits; the value is kept, the row is flagged, the report counts): 1 = a counted leg's 1 s mark frame is more than
+    500 ms old (feed gap); 2 = an UNTIMED leg (no anchor) at or beyond p_j may fall in (t, t + 1 s] (its possible time = its exec second
+    + the 0.1-99.9% band of timed legs' anchor - exec second offsets on the day) - missing flow would change both the queue and the fills.
 LEG TABLE legs_<day>: every leg the lane sees (row id in step 1's legs_timed2, anchor, price, shares, WS / E2 source, taker group, type,
   depth = ticks behind the venue best in the frame strictly before the anchor, beyond the 5th shown level, 1 s / 5 s mids).
-RECONCILIATION TABLE rec_<day>: the keep-all client lane (M 50, 6 rungs x Z sh a side, no cap, re-post at once = align's KA) order states
+RECONCILIATION TABLE rec_<day>: the keep-all client lane with the CORRECTED queue initialization (pf_stop_queue_activation_lane, contract
+  activation-snapshot-queue-v1: queue ahead from the last snapshot at or before activation; the old lane's next-frame uplift was
+  look-ahead; M 50, 6 rungs x Z sh a side, no cap, re-post at once = align's KA) order states
   every 5th step: the lane's own queue ahead / remaining size, the lane's fills of that order in [t + 22, t + 1 s], the label simulated
   from that state; status ENDED (the order's cancel lands by t + 1 s: drift / cross / window end) and SHARED (a leg that reaches it also
   filled our better-priced order on the side; the label takes the whole leg); CLEAN = neither.
@@ -44,15 +55,19 @@ DATA CHECKS, declared before the first run (E1-E7: any failure -> no output for 
                  0); control: the mid at anchor + 0.9 s differs somewhere.
  E6 BRUTE        on >= 2,000 sampled (row, level) the components and the front order's fill f0 equal a recomputation from the leg table
                  with E3's independent types (mismatch 0); control: the components over (t, t + 1 s] differ somewhere.
- E7 RECONCILE    the recording lane equals the plain lane fill for fill, no lane violations; on >= 1,000 CLEAN order-steps the label from
+ E7 RECONCILE    the recording corrected lane equals the plain corrected lane fill for fill, no lane violations; on >= 1,000 CLEAN order-steps
+                 the label from
                  the lane's own state equals the lane's fills (shares 1e-9, value 1e-6 c x sh) on 100%; controls: the cap removed and
                  the early window each differ somewhere. ENDED / SHARED shares and value gaps are printed (the single-order limit).
- E8 SANITY       STOP legs at the best (leg level, first minute, each leg once, 1 s): value per share pooled over the dev days in
-                 [+0.20, +0.80] c (LEARN-PULL: a front fill on a stopping trade +0.50) and > 0 on >= 8 of 9 days; sweep fills at the best
-                 (beyond legs at j = 1, valued at p_1): pooled <= -0.20 c/sh over the dev days and < 0 on >= 8 of 9 days.
+ E8 SANITY (descriptive, not a pass condition - Codex ffa2025e: a selected maker population cannot define the data's correctness)
+                 STOP legs at the best (leg level, first minute, each leg once, 1 s) per share beside LEARN-PULL's +0.50 c for the top
+                 makers' front fills; sweep fills at the best (beyond legs at j = 1, valued at p_1). A sign opposite to the expectation
+                 (STOP <= 0 or sweep >= 0, dev pooled) -> FLAG named in the verdict, explained before stage 2.
 READINGS (B4 discipline: tables for the dev days 10-23..26 only; test days get counts and the E-predicates):
- b COVERAGE   by level / side / time in window: rows, VIS_UNKNOWN / PRICE_OUT, any STOP / THROUGH-at-price / sweep flow, front fill
-              share; legs beyond the 5th shown level (flow the visible depth misses).
+ b COVERAGE   by level / side / time in window / volatility regime (step 5's sigma, dev terciles): rows, VIS_UNKNOWN / PRICE_OUT /
+              INCOMPLETE, any STOP / THROUGH-at-price / sweep flow, fill share at the front / middle / back, rows with vis 0 (the grid's
+              three positions identical - stage 2 deduplicates); book move through the level (STOP-MODEL D1 >= j) without a through trade
+              and a through trade without that move; legs beyond the 5th shown level; the lane's states with a partial remainder (support).
  e TIMING     E2-anchored share of the front's fill shares and value by level; front value at M 0 / 50 / 250. Declared: E2 share of the
               front's fill shares at j = 1 > 30% -> E2-DEPENDENT (stage 2 reads by source, C12), else WS-DOMINANT.
  g SHAPE      by level: zero share of the front value, its quantiles (c per order), the top 1% of rows' share of |value|, STOP flow /
@@ -62,8 +77,12 @@ READINGS (B4 discipline: tables for the dev days 10-23..26 only; test days get c
  r GRID       mean value per order at the front / middle / back by level (descriptive).
 CONTROLS (synthetic; any failure -> no output): the single-order rule on hand cases (queue drain, beyond fill, visible-size cap,
   unavoidable legs, size cap, ask sign); types against DT.trade_type; the known-frame visible size; the population; components and the
-  front against brute force; the reconciliation on a toy two-sided lane window (cap binding, SHARED, ENDED); planted errors each caught:
-  rule-M cap off, legs before t + 22 counted, THROUGH counted as STOP, venue-frame visible size, ask markout sign, invalid-book rows kept.
+  front against brute force; the INCOMPLETE flags against brute force (a feed gap, an untimed leg); the reconciliation on a toy two-sided
+  lane window (cap binding, SHARED, ENDED); planted errors each caught: rule-M cap off, legs before t + 22 counted, THROUGH counted as
+  STOP, venue-frame visible size, ask markout sign, invalid-book rows kept, INCOMPLETE flags off.
+STAGE 2 NOTES (from the reviews, not built here): inputs use client-known state only (never the simulator's ahead / rem, delayed trade
+  reports or unacknowledged fills); evaluation on signed value of neutral actions with matched controls and >= 200-draw nulls, day
+  clusters; grid copies are correlated samples (weights / dedupe); baselines conditional on price, level, q and size; joint cap in stage 3.
 LIMITS: one order per level (the joint lane's shared legs: SHARED status, measured); rule M is the replay's queue model (B1a: not
   validated on live orders); E2 anchors +-250 ms (C12); consumed days (exploratory); rows overlap (1 s windows every 50 ms) - per-row
   statistics describe decision states, never strategy P&L.
@@ -83,6 +102,7 @@ import pandas as pd
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import pf_stop_model as M                                 # noqa: E402  (loader settings, rows, boundary cut, the lanes)
+import pf_stop_queue_activation_lane as QA                # noqa: E402  (the corrected queue initialization, Codex 00971693 / a815aa8a)
 
 K, CL, P1, QR, TS, DT = M.K, M.CL, M.P1, M.QR, M.TS, M.DT
 DAYS9 = tuple(K.DAYS9); DEV = tuple(M.DEV_DAYS)
@@ -102,8 +122,9 @@ EVERY_REC = 5; SAMPLE_WIN = 23; SAMPLE_ROW = 13; SAMPLE_BRUTE = 7
 TOL_F = 1e-9; TOL_V = 1e-6; N_MIN = 2000; N_CLEAN_MIN = 1000; DUP_MAX = 0.001
 MEM_CAP_MIB = 2048.0
 INF = float('inf'); NAN = float('nan')
-MUT_NO_CAP = MUT_WIN_EARLY = MUT_THR_AS_STOP = MUT_VENUE_VIS = MUT_ASK_SIGN = MUT_POP_ALL = 0     # planted errors (selftest only)
-MUTS = ('MUT_NO_CAP', 'MUT_WIN_EARLY', 'MUT_THR_AS_STOP', 'MUT_VENUE_VIS', 'MUT_ASK_SIGN', 'MUT_POP_ALL')
+STALE_MS = 500.0; INC_STALE = 1; INC_UNTIMED = 2; ICOLS = [f'inc_{j}' for j in JS]
+MUT_NO_CAP = MUT_WIN_EARLY = MUT_THR_AS_STOP = MUT_VENUE_VIS = MUT_ASK_SIGN = MUT_POP_ALL = MUT_INC_OFF = 0     # planted errors (selftest only)
+MUTS = ('MUT_NO_CAP', 'MUT_WIN_EARLY', 'MUT_THR_AS_STOP', 'MUT_VENUE_VIS', 'MUT_ASK_SIGN', 'MUT_POP_ALL', 'MUT_INC_OFF')
 
 
 # ---------------------------------------------------------------- the single-order rule and the legs
@@ -167,9 +188,11 @@ class SideCtx:
         j1 = np.maximum(np.searchsorted(self.tf, self.anc + 1000.0, side='right') - 1, 0)
         j5 = np.maximum(np.searchsorted(self.tf, self.anc + 5000.0, side='right') - 1, 0)
         self.m1 = mff[j1] if n else np.zeros(0); self.m5 = mff[j5] if n else np.zeros(0)
+        self.a1 = (self.anc + 1000.0 - self.tf[j1]) if n else np.zeros(0); self.a5 = (self.anc + 5000.0 - self.tf[j5]) if n else np.zeros(0)   # mark ages
         self.src = np.asarray(src, bool); self.grp = np.asarray(grp, 'int64'); self.row = np.asarray(lrow, 'int64')
         self.ty = leg_types(self.side, self.pr, self.grp)
-        base = dict(prl=self.pr.tolist(), shl=self.sh.tolist(), m1l=self.m1.tolist(), m5l=self.m5.tolist(), srcl=self.src.tolist(), tyl=self.ty.tolist())
+        base = dict(prl=self.pr.tolist(), shl=self.sh.tolist(), m1l=self.m1.tolist(), m5l=self.m5.tolist(), srcl=self.src.tolist(), tyl=self.ty.tolist(),
+                    stl=(self.a1 > STALE_MS).tolist())
         self.L = {s: dict(base, ttl=(self.anc - s).tolist()) for s in (SHF,) + SHF_ALT}
         self._lv = {}; self._lvi = {}
 
@@ -192,7 +215,8 @@ class SideCtx:
         depth = np.where(ok & (b >= 0), (b - self.pr) if self.side == 0 else (self.pr - b), -99)
         bvis = ok & (last >= 0) & ((self.pr < last) if self.side == 0 else (self.pr > last))
         return dict(row=self.row, m=np.full(n, m, 'int64'), side=np.full(n, self.side, 'int8'), anc=self.anc, arel=self.anc - ws, pr=self.pr,
-                    sh=self.sh, src=self.src, grp=self.grp, ty=self.ty, depth=depth.astype('int16'), bvis=bvis, m1=self.m1, m5=self.m5)
+                    sh=self.sh, src=self.src, grp=self.grp, ty=self.ty, depth=depth.astype('int16'), bvis=bvis, m1=self.m1, m5=self.m5,
+                    m1_age=self.a1.astype(np.float32), m5_age=self.a5.astype(np.float32))
 
 
 def rel_legs(L, lo, hi, side, p):
@@ -200,15 +224,16 @@ def rel_legs(L, lo, hi, side, p):
     return [i for i in range(lo, hi) if (pr[i] <= p if side == 0 else pr[i] >= p)]
 
 
-def side_rows(S, st):
-    """Label rows of one window-side (the STOP-MODEL population). Returns keys, X (rows x NCOL float32), statuses (rows x 6 int8)."""
+def side_rows(S, st, unt=()):
+    """Label rows of one window-side (the STOP-MODEL population). Returns keys, X (rows x NCOL float32), statuses and INCOMPLETE flags
+    (rows x 6 int8). unt: the side's untimed legs as (earliest tt, latest tt, price)."""
     w = S.w; n = int(w['n']); side = S.side; sg = sgn(side)
     if not n:
         return None
     _, valid, _, _ = QR.runs(w['tf'], w['P5'], w['opp'], side)
     jk = np.asarray(w['jk'], 'int64'); best = np.asarray(w['best'], 'int64'); tg = np.asarray(w['tg'], float)
-    L = S.L[SHF]; ttl, prl, shl, m1l, tyl = L['ttl'], L['prl'], L['shl'], L['m1l'], L['tyl']
-    keep, X, STS = [], [], []
+    L = S.L[SHF]; ttl, prl, shl, m1l, tyl, stl = L['ttl'], L['prl'], L['shl'], L['m1l'], L['tyl'], L['stl']
+    keep, X, STS, INC = [], [], [], []
     for k in range(n):
         st['steps'] += 1; j0 = int(jk[k])
         if not (j0 >= 0 and bool(valid[j0]) and best[k] >= 0) and not MUT_POP_ALL:
@@ -217,7 +242,8 @@ def side_rows(S, st):
         jv = (bisect.bisect_right(S.tfl, t) - 1) if MUT_VENUE_VIS else j0
         lo = bisect.bisect_right(ttl, t); hi = bisect.bisect_right(ttl, t + H_EV)
         alt = {a: (bisect.bisect_right(S.L[a]['ttl'], t), bisect.bisect_right(S.L[a]['ttl'], t + H_EV)) for a in SHF_ALT}
-        x = [NAN] * NCOL; sts = [ST_OK] * len(JS)
+        x = [NAN] * NCOL; sts = [ST_OK] * len(JS); inc = [0] * len(JS)
+        uk = [u for u in unt if u[0] <= t + H_EV and u[1] > t]
         for j in JS:
             b = (j - 1) * NL; p = ref - (j - 1) if side == 0 else ref + (j - 1)
             if p < 1 or p > 99:
@@ -228,11 +254,17 @@ def side_rows(S, st):
             for i in rel:
                 if ttl[i] < tc and not MUT_WIN_EARLY:
                     continue
+                if stl[i]:
+                    inc[j - 1] |= INC_STALE
                 q = shl[i]; v = q * sg * (m1l[i] - p)
                 if prl[i] == p:
                     o = 2 * tyl[i]; c[o] += q; c[o + 1] += v
                 else:
                     c[6] += q; c[7] += v
+            if any((u[2] <= p if side == 0 else u[2] >= p) for u in uk):
+                inc[j - 1] |= INC_UNTIMED
+            if MUT_INC_OFF:
+                inc[j - 1] = 0
             f = sim_one(L, rel, side, p, 0.0, Z, j0, None, S.tfl, tc, cap=False) if rel else (0.0, 0.0, 0.0, 0.0, 0.0)
             x[b] = vis; x[b + 1:b + 9] = c; x[b + 9:b + 14] = f
             if vis == vis:
@@ -245,17 +277,18 @@ def side_rows(S, st):
             for o_, a in ((18, 0.0), (19, 250.0)):
                 La = S.L[a]; ra = rel_legs(La, alt[a][0], alt[a][1], side, p)
                 x[b + o_] = sim_one(La, ra, side, p, 0.0, Z, j0, None, S.tfl, tc, cap=False)[1] if ra else 0.0
-        keep.append(k); X.append(x); STS.append(sts)
+        keep.append(k); X.append(x); STS.append(sts); INC.append(inc)
     if not keep:
         return None
     ks = np.asarray(keep, 'int64')
     return dict(m=np.full(len(ks), int(w['m']), 'int64'), side=np.full(len(ks), side, 'int64'), k=ks, t=tg[ks], trel=(tg[ks] - float(w['ws'])).astype(np.float32),
-                best=best[ks], X=np.asarray(X, np.float64).astype(np.float32), S=np.asarray(STS, 'int8'))
+                best=best[ks], X=np.asarray(X, np.float64).astype(np.float32), S=np.asarray(STS, 'int8'), I=np.asarray(INC, 'int8'))
 
 
 # ---------------------------------------------------------------- E7: the keep-all lane's own order states
 def rec_window(W, SS, st, ctl):
-    """E7 on one window: keep-all client lane (align's KA) with a recording callback that never pulls; per recorded order state the
+    """E7 on one window: keep-all client lane (align's KA, corrected queue initialization) with a recording callback that never pulls (its
+    fills must equal the plain run's); per recorded order state the
     lane's fills of that order in [t + 22, t + 1 s] against the label simulated from the lane's own queue ahead / remaining size / frame."""
     n = int(W[0]['n']); aux = {0: [False] * n, 1: [False] * n}; R = []; objs = {}
 
@@ -265,9 +298,9 @@ def rec_window(W, SS, st, ctl):
                 R.append((s, d, k, float(t), int(cur['pt']), float(cur['ahead']), int(cur['ci']), float(cur['rem']), id(cur))); objs[id(cur)] = cur
             return False
         return dec
-    r0 = CL.sim_joint(W, 'M', SHF, None, aux, decide=None, idle_only=0, size=Z, mode='none', cooldown=CL.REPOST_MS)
-    r = M.sim_joint_g(W, 'M', SHF, None, aux, decide={(s, d): mk(s, d) for s in (0, 1) for d in range(NR)}, gate=None, idle_only=0, size=Z,
-                      mode='none', cooldown=CL.REPOST_MS)
+    r0 = QA.sim_joint_g(W, 'M', SHF, None, aux, decide=None, gate=None, idle_only=0, size=Z, mode='none', cooldown=CL.REPOST_MS)
+    r = QA.sim_joint_g(W, 'M', SHF, None, aux, decide={(s, d): mk(s, d) for s in (0, 1) for d in range(NR)}, gate=None, idle_only=0, size=Z,
+                       mode='none', cooldown=CL.REPOST_MS)
     st['rec_windows'] += 1; st['rec_regress_differ'] += int(r['fills'] != r0['fills'] or r['endpos'] != r0['endpos'])
     st['rec_viol'] += int(sum(r['stat']['viol'].values()))
     used = {0: {}, 1: {}}                                # side -> leg index -> prices of our orders that leg filled
@@ -444,6 +477,24 @@ def e456_books(day, wins, ROWS, ROWS4, TAB, TYI):
 
 
 # ---------------------------------------------------------------- one day
+def untimed_legs(day, D):
+    """The day's UNTIMED legs (no WS / E2 anchor; the loader drops them with a count) per (m, side) as (earliest tt, latest tt, price):
+    exec second + the 0.1-99.9% band of the timed legs' anchor - exec second offsets, on the M 50 clock (independent read of step 1)."""
+    T = pd.read_parquet(f'{K.IO}/step1/{day}/legs_timed2.parquet', columns=['mid', 'exec_s', 'side', 'ptick', 'how', 't_ms', 't_e2'])
+    tk = pd.read_parquet(f'{K.IO}/step1/{day}/legs_tk.parquet', columns=['tk']).tk.values.astype('int64')
+    rid = np.arange(len(T)); grp = np.where(tk >= 0, tk, -1 - rid)
+    wsT = np.where(T.how.values > 0, T.t_ms.values.astype(float), np.nan)
+    e2T = np.where((T.how.values == 0) & np.isfinite(T.t_e2.values.astype(float)), T.t_e2.values.astype(float), np.nan)
+    a = pd.Series(wsT).groupby(grp).transform('min').values; b = pd.Series(e2T).groupby(grp).transform('min').values
+    anc = np.where(np.isfinite(a), a, b)
+    off = D['LT'].anc.values - D['LT'].exec_s.values.astype(float) * 1000.0
+    lo, hi = (float(x) for x in np.quantile(off, [0.001, 0.999]))
+    u = ~np.isfinite(anc) & T.mid.isin(list(D['W0'])).values; out = {}
+    for m, sd, e, pt in zip(T.mid.values[u], T.side.values[u], T.exec_s.values[u].astype(float) * 1000.0, T.ptick.values[u]):
+        out.setdefault((int(m), int(sd)), []).append((e + lo - SHF, e + hi - SHF, int(pt)))
+    return out, dict(band_ms=[lo, hi], untimed_legs_day_windows=int(u.sum()))
+
+
 def mem_guard(what):
     M.trim(); r = K.rss_mib()
     if r > MEM_CAP_MIB:
@@ -452,7 +503,8 @@ def mem_guard(what):
 
 def rows_frame(parts):
     return pd.concat([pd.DataFrame({'m': p['m'], 'side': p['side'], 'k': p['k'], 't': p['t'], 'trel': p['trel'], 'best': p['best']})
-                      .join(pd.DataFrame(p['X'], columns=LCOLS)).join(pd.DataFrame(p['S'], columns=SCOLS)) for p in parts], ignore_index=True)
+                      .join(pd.DataFrame(p['X'], columns=LCOLS)).join(pd.DataFrame(p['S'], columns=SCOLS)).join(pd.DataFrame(p['I'], columns=ICOLS))
+                      for p in parts], ignore_index=True)
 
 
 def day_build(day):
@@ -462,12 +514,12 @@ def day_build(day):
     if day not in DAYS9:
         sys.exit(f'REFUSED: {day} is not a consumed replay day')
     if M.QUNK != 'zero':
-        sys.exit('REFUSED: E7 compares with CL.sim_joint, which treats an unknown queue as 0 (QUNK zero)')
+        sys.exit('REFUSED: E7 runs the lane with an unknown queue = 0 (QUNK zero), the primary assumption')
     T0 = time.time(); D = K.load_day(day); cut = M.boundary_cut(day)
     tkf = pd.read_parquet(f'{K.IO}/step1/{day}/legs_tk.parquet', columns=['tk']).tk.values
     LT = D['LT']; ix = LT.index.values; g_all = np.where(tkf[ix] >= 0, tkf[ix], -1 - ix)
     WSg = pd.Series(TS.ws_groups(LT.how.values, g_all), index=LT.index); GRP = pd.Series(g_all, index=LT.index)
-    st = collections.Counter(); ctl = dict(cap=0, early=0)
+    st = collections.Counter(); ctl = dict(cap=0, early=0); UNT, ust = untimed_legs(day, D)
     os.makedirs(OUTD, exist_ok=True); tmp = f'{OUTD}/rows_{day}{ZTAG}.parquet.tmp'; writer = None; buf = []
     legs, recs, samp, wins, keys = [], [], [], {}, []
     for W in P1.window_pairs(D):
@@ -489,12 +541,13 @@ def day_build(day):
             S = SideCtx(w, lrow, grp, src); SS[s] = S
             st['clock_roundtrip_differ'] += int(not np.array_equal((S.anc - SHF) + SHF, S.anc))
             st['legs_mid_nan'] += int(np.isnan(S.m1).sum() + np.isnan(S.m5).sum())
-            out = side_rows(S, st)
+            out = side_rows(S, st, UNT.get((m, s), ()))
             if out is not None:
                 buf.append(out); keys.append(pd.DataFrame({'m': out['m'], 'side': out['side'], 'k': out['k'], 'best': out['best']}))
                 st['rows'] += len(out['k'])
                 for j in JS:
                     st[f'price_out_{j}'] += int((out['S'][:, j - 1] == ST_PRICE_OUT).sum()); st[f'vis_unknown_{j}'] += int((out['S'][:, j - 1] == ST_VIS_UNKNOWN).sum())
+                    st[f'inc_stale_{j}'] += int((out['I'][:, j - 1] & INC_STALE > 0).sum()); st[f'inc_untimed_{j}'] += int((out['I'][:, j - 1] & INC_UNTIMED > 0).sum())
                 if st['windows'] % SAMPLE_WIN == 1:
                     samp.append(out)
             legs.append(S.leg_table(m, ws))
@@ -532,7 +585,8 @@ def day_build(day):
     fails = [e for e, x in checks.items() if not x['pass']]
     if st['clock_roundtrip_differ'] or st['legs_mid_nan']:
         fails.append(f"clock round trip {st['clock_roundtrip_differ']} / legs without a mid {st['legs_mid_nan']}")
-    rep = dict(day=day, size=Z, stat=dict(st), load_stat=load_stat, checks=checks, flags=dict(dup=checks['E2']['flag_dup']), seconds=round(time.time() - T0, 1), preroll_ms=K.PREROLL_MS,
+    rep = dict(day=day, size=Z, stat=dict(st), load_stat=load_stat, checks=checks, flags=dict(dup=checks['E2']['flag_dup']), untimed=ust,
+               queue_contract=QA.QUEUE_CONTRACT, clock=f'M {SHF:g}', horizon_ms=H_EV, seconds=round(time.time() - T0, 1), preroll_ms=K.PREROLL_MS,
                skip_foreign_parts=K.SKIP_FOREIGN_PARTS)
     if fails:
         if os.path.exists(tmp):
@@ -580,12 +634,13 @@ def report():
     b_pool = sum(e8b[d][0] for d in dev) / max(sum(e8b[d][1] for d in dev), 1e-12) if dev else NAN
     a_days = sum(int(e8a[d][1] > 0 and e8a[d][0] > 0) for d in J); b_days = sum(int(e8b[d][1] > 0 and e8b[d][0] < 0) for d in J)
     e8 = dict(stop_at_best_c_per_sh_dev=a_pool, stop_at_best_positive_days=a_days, sweep_at_best_c_per_sh_dev=b_pool, sweep_negative_days=b_days)
-    e8['pass'] = bool(len(J) == 9 and 0.20 <= a_pool <= 0.80 and a_days >= 8 and b_pool <= -0.20 and b_days >= 8)
-    if not e8['pass']:
-        fails.append(f'E8 sanity {e8}')
+    e8['flag'] = bool(not (a_pool > 0) or not (b_pool < 0))
+    if e8['flag']:
+        flags.append(f'E8 sign opposite to the expectation (STOP at the best {a_pool:+.3f}, sweeps {b_pool:+.3f} c/sh)')
     R['E8'] = e8
-    T += ['', f"E8 SANITY: STOP legs at the best {a_pool:+.3f} c/sh (dev pooled; declared +0.20..+0.80), positive on {a_days} of {len(J)} days; "
-              f"sweep fills at the best {b_pool:+.3f} c/sh (declared <= -0.20), negative on {b_days} of {len(J)} days -> {'PASS' if e8['pass'] else 'FAIL'}"]
+    T += ['', f"E8 SANITY (descriptive): STOP legs at the best {a_pool:+.3f} c/sh (dev pooled; the top makers' front fills on stopping trades +0.50, "
+              f"LEARN-PULL), positive on {a_days} of {len(J)} days; sweep fills at the best {b_pool:+.3f} c/sh, negative on {b_days} of {len(J)} days"
+              + (' -> FLAG' if e8['flag'] else '')]
     # E7 pooled (all days: a validity table, not a result)
     if J:
         e7 = {k_: sum(J[d]['checks']['E7'][k_] for d in J) for k_ in ('order_steps', 'clean', 'clean_mismatch', 'ended', 'shared', 'mismatch_ended_or_shared')}
@@ -598,17 +653,25 @@ def report():
     T += ['', f'READINGS (dev days {", ".join(dev)} only; test days: counts and predicates above)']
     agg = {j: collections.Counter() for j in JS}; sub = {j: [] for j in JS}; ratio = {j: [] for j in JS}
     side_t = {(j, s): collections.Counter() for j in JS for s in (0, 1)}; tb = {(j, b): collections.Counter() for j in (1, 2) for b in range(4)}
-    leg_bvis = [0.0, 0.0]; QQ = []
+    leg_bvis = [0.0, 0.0]; QQ = []; reg = []
     for d in dev:
-        cols = ['side', 'trel'] + SCOLS + [f'{c}_{j}' for j in JS for c in ('vis', 'as', 'at', 'au', 'bt', 'f0', 'v0', 'v0x5', 'f0w', 'v0w', 'vh', 'vb', 'v0m0', 'v0m250')]
+        cols = ['m', 'side', 'k', 'trel'] + SCOLS + ICOLS + [f'{c}_{j}' for j in JS for c in ('vis', 'as', 'at', 'au', 'bt', 'f0', 'v0', 'v0x5', 'f0w', 'v0w', 'fh',
+                                                                                         'vh', 'fb', 'vb', 'v0m0', 'v0m250')]
         X = pd.read_parquet(f'{OUTD}/rows_{d}{ZTAG}.parquet', columns=cols)
+        SMR = pd.read_parquet(f'{M.OUTD}/rows_{d}.parquet', columns=['m', 'side', 'k', 'sigma', 'D1'])
+        X = X.merge(SMR, on=['m', 'side', 'k'], how='left', validate='one_to_one'); del SMR
+        reg.append(pd.DataFrame({'sigma': X.sigma.values.astype(np.float32), **{f'{c}_{j}': X[f'{c}_{j}'].values.astype(np.float32) for j in (1, 2) for c in ('v0', 'f0')}}))
         sd = X.side.values; bkt = np.minimum((X.trel.values // 15000.0).astype(int), 3)
         for j in JS:
             stj = X[f'st_{j}'].values; okp = stj != ST_PRICE_OUT; a = agg[j]
             a['rows'] += len(stj); a['price_out'] += int((~okp).sum()); a['vis_unknown'] += int((stj == ST_VIS_UNKNOWN).sum())
             g = lambda c: X[f'{c}_{j}'].values.astype(float)
             asj, atj, buj, btj, f0, v0 = g('as'), g('at'), g('au'), g('bt'), g('f0'), g('v0')
-            for nm, msk in (('any_stop', asj > 0), ('any_thr_at', atj > 0), ('any_unk_at', buj > 0), ('any_sweep', btj > 0), ('front_fill', f0 > 0)):
+            fh, fb, inc, d1 = g('fh'), g('fb'), X[f'inc_{j}'].values, X.D1.values.astype(float)
+            for nm, msk in (('any_stop', asj > 0), ('any_thr_at', atj > 0), ('any_unk_at', buj > 0), ('any_sweep', btj > 0), ('front_fill', f0 > 0),
+                            ('mid_fill', fh > 0), ('back_fill', fb > 0), ('vis_zero', g('vis') == 0), ('inc_stale', (inc & INC_STALE) > 0),
+                            ('inc_untimed', (inc & INC_UNTIMED) > 0), ('book_through', d1 >= j), ('gone_no_trade', (d1 >= j) & ~(btj > 0)),
+                            ('trade_no_move', (btj > 0) & (d1 < j)), ('d1_missing', ~np.isfinite(d1))):
                 a[nm] += int((msk & okp).sum())
             for nm, c in (('f0', 'f0'), ('v0', 'v0'), ('v0x5', 'v0x5'), ('f0w', 'f0w'), ('v0w', 'v0w'), ('v0m0', 'v0m0'), ('v0m250', 'v0m250')):
                 a[nm] += float(np.nansum(g(c)[okp]))
@@ -627,7 +690,7 @@ def report():
         del X
         L = pd.read_parquet(f'{OUTD}/legs_{d}{ZTAG}.parquet', columns=['arel', 'sh', 'bvis'])
         fm = (L.arel.values >= 0) & (L.arel.values < 60000.0); leg_bvis[0] += float(L.sh.values[fm & L.bvis.values].sum()); leg_bvis[1] += float(L.sh.values[fm].sum())
-        QQ.append(pd.read_parquet(f'{OUTD}/rec_{d}{ZTAG}.parquet', columns=['depth', 'ahead', 'visk', 'ended']))
+        QQ.append(pd.read_parquet(f'{OUTD}/rec_{d}{ZTAG}.parquet', columns=['depth', 'ahead', 'visk', 'ended', 'rem']))
     RD = {}
     if dev:
         T.append('b COVERAGE by level (share of level-steps; price-out excluded):  rows | VIS_UNKNOWN | any STOP flow | THROUGH-at-price | '
@@ -637,6 +700,20 @@ def report():
             T.append(f"  j{j}: {a['rows']:9d} | {a['vis_unknown'] / n_:6.1%} | {a['any_stop'] / n_:6.1%} | {a['any_thr_at'] / n_:6.1%} | "
                      f"{a['any_unk_at'] / n_:6.1%} | {a['any_sweep'] / n_:6.1%} | {a['front_fill'] / n_:6.1%}")
         T.append(f"  legs beyond the 5th shown level: {leg_bvis[0] / max(leg_bvis[1], 1e-12):.2%} of first-minute leg shares")
+        T.append('  INCOMPLETE / grid / book move vs trade (share of level-steps): stale mark | untimed leg may fall in | middle fill | back fill | '
+                 'vis 0 (grid copies identical) | book through the level (D1 >= j) | gone without a through trade | through trade without that move')
+        for j in JS:
+            a = agg[j]; n_ = max(a['rows'] - a['price_out'], 1)
+            T.append(f"  j{j}: {a['inc_stale'] / n_:6.2%} | {a['inc_untimed'] / n_:6.2%} | {a['mid_fill'] / n_:6.1%} | {a['back_fill'] / n_:6.1%} | "
+                     f"{a['vis_zero'] / n_:6.1%} | {a['book_through'] / n_:6.1%} | {a['gone_no_trade'] / n_:6.1%} | {a['trade_no_move'] / n_:6.1%}"
+                     + (f" (D1 missing {a['d1_missing']})" if a['d1_missing'] else ''))
+        RG = pd.concat(reg, ignore_index=True); del reg
+        sq = np.nanquantile(RG.sigma.values, [1 / 3, 2 / 3]); tr_ = np.digitize(RG.sigma.values, sq); tr_[~np.isfinite(RG.sigma.values)] = -1
+        T.append(f'  by volatility regime (step 5 sigma terciles {sq[0]:.2e} / {sq[1]:.2e}; front value c per order, front fill share), low / mid / high:')
+        for j in (1, 2):
+            T.append(f'    j{j}: ' + ' | '.join(f"{np.nanmean(RG[f'v0_{j}'].values[tr_ == b]):+.3f}, {np.mean(RG[f'f0_{j}'].values[tr_ == b] > 0):.1%}"
+                                             for b in range(3)) + f" (sigma missing {int((tr_ < 0).sum())})")
+        del RG
         T.append('  by side (front value c per order | front fill share), bid / ask:')
         for j in JS:
             b_, a_ = side_t[(j, 0)], side_t[(j, 1)]
@@ -666,15 +743,17 @@ def report():
         loss = ('HURDLE' if shp[1]['zero'] >= 0.5 else 'DIRECT') + ' + ' + ('ROBUST' if shp[1]['top1'] >= 0.30 else 'L2')
         T.append(f"  declared loss rule (j1: zero share >= 50% -> HURDLE; top-1% share >= 30% -> ROBUST): {loss}")
         Q = pd.concat(QQ, ignore_index=True) if QQ else pd.DataFrame(columns=['depth', 'ahead', 'visk', 'ended']); del QQ
-        T.append("q QUEUE (keep-all lane's orders, every 5th step): by depth behind the known best - steps | queue ahead / visible p10 / p50 / p90 | "
-                 "at the front (ahead 0) | at or behind the visible size | visible unknown")
+        T.append("q QUEUE (keep-all lane's orders, corrected initialization, every 5th step): by depth behind the known best - steps | queue ahead / "
+                 "visible p10 / p50 / p90 | at the front (ahead 0) | at or behind the visible size | visible unknown | partial remainder (support)")
         qd = {}
         for dd in range(0, 6):
             x = Q[Q.depth.values == dd]; vk = x.visk.values.astype(float); ah = x.ahead.values.astype(float); fin = np.isfinite(vk) & (vk > 0)
             rq = np.quantile(ah[fin] / vk[fin], [0.1, 0.5, 0.9]) if fin.any() else [NAN] * 3
             qd[dd] = dict(steps=int(len(x)), q=[float(v) for v in rq], front=float((ah == 0).mean()) if len(x) else NAN,
-                          back=float((ah[fin] >= vk[fin]).mean()) if fin.any() else NAN, vis_unknown=float((~np.isfinite(vk)).mean()) if len(x) else NAN)
-            T.append(f"  d{dd}: {len(x):8d} | " + ' / '.join(f'{v:.2f}' for v in rq) + f" | {qd[dd]['front']:.1%} | {qd[dd]['back']:.1%} | {qd[dd]['vis_unknown']:.1%}")
+                          back=float((ah[fin] >= vk[fin]).mean()) if fin.any() else NAN, vis_unknown=float((~np.isfinite(vk)).mean()) if len(x) else NAN,
+                          partial=float((x.rem.values.astype(float) < Z - 1e-6).mean()) if len(x) else NAN)
+            T.append(f"  d{dd}: {len(x):8d} | " + ' / '.join(f'{v:.2f}' for v in rq) + f" | {qd[dd]['front']:.1%} | {qd[dd]['back']:.1%} | {qd[dd]['vis_unknown']:.1%}"
+                     f" | {qd[dd]['partial']:.1%}")
         T.append('r GRID: mean value per order, front (all rows) | front / middle / back on rows with the visible size known (c per order; c/sh = / Z)')
         for j in JS:
             a = agg[j]
@@ -692,11 +771,14 @@ def report():
 
 
 # ---------------------------------------------------------------- self-tests (synthetic, no data files)
-def toy_w(side, legs, n=40, drop=None, invalid=None, known_lag=60.0, mid2=50.5, t_mid=600.0):
+def toy_w(side, legs, n=40, drop=None, invalid=None, known_lag=60.0, mid2=50.5, t_mid=600.0, gap=None):
     """A synthetic window-side: venue frames every 25 ms known `known_lag` ms later, a contiguous 5-level book at 50..46 (bids) /
     52..56 (asks), 100 shares a level; drop = (t0, level, size) from frame time t0; invalid = (t0, t1): a crossed book in those frames;
     legs = [(anchor, price, shares, taker group)]; mid 51, then mid2 from t_mid. Returns (w, leg rows, groups, WS flags)."""
-    tg = np.arange(0.0, 50.0 * n, 50.0); tf = np.arange(-1000.0, 50.0 * n + 3000.0, 25.0); nf = len(tf)
+    tg = np.arange(0.0, 50.0 * n, 50.0); tf = np.arange(-1000.0, 50.0 * n + 3000.0, 25.0)
+    if gap:
+        tf = tf[(tf < gap[0]) | (tf >= gap[1])]           # a feed gap: no frames in [gap0, gap1)
+    nf = len(tf)
     lvl = np.array([50, 49, 48, 47, 46]) if side == 0 else np.array([52, 53, 54, 55, 56])
     P5 = np.tile(lvl, (nf, 1)).astype('int64'); S5 = np.full((nf, 5), 100.0)
     if drop:
@@ -759,9 +841,12 @@ def selftest():
         p0 = 50 if side == 0 else 52; dpx = -1 if side == 0 else 1
         legs = [(float(a), int(p0 + dpx * int(rng.integers(0, 4))), float(rng.integers(1, 40)), int(rng.integers(-2, 25))) for a in rng.uniform(0.0, 2500.0, 90)]
         legs += [(1012.0, p0, 7.0, 40), (1012.0, p0 + dpx, 9.0, 40)]        # one taker order through the best (THROUGH at p0)
-        w, lrow, grp, src = toy_w(side, legs, drop=(510.0, 0, 20.0), invalid=(900.0, 1000.0))
-        S = SideCtx(w, lrow, grp, src); st = collections.Counter(); out = side_rows(S, st)
+        w, lrow, grp, src = toy_w(side, legs, drop=(510.0, 0, 20.0), invalid=(900.0, 1000.0), gap=(1600.0, 2300.0))
+        unt = [(950.0, 1350.0, p0 + dpx)]                 # an untimed leg one tick behind the best, possible tt 950..1350 ms
+        S = SideCtx(w, lrow, grp, src); st = collections.Counter(); out = side_rows(S, st, unt)
         n_inv = sum(1 for k in range(w['n']) if not (w['jk'][k] >= 0 and w['best'][k] >= 0))
+        if not (S.a1 > STALE_MS).any():
+            bad.append(f'toy side {side}: the feed gap made no stale mark (the INCOMPLETE check would be vacuous)')
         if out is None or len(out['k']) != w['n'] - n_inv or n_inv == 0:
             bad.append(f'population side {side}: rows {None if out is None else len(out["k"])}, n {w["n"]}, invalid {n_inv}'); continue
         X = out['X']; pos = {int(k): i for i, k in enumerate(out['k'])}
@@ -788,6 +873,11 @@ def selftest():
                 fb = brute_front(L, side, p, t, Z)
                 if abs(fb - X[r_, b + 9]) > 1e-4:
                     bad.append(f'front side {side} k {k} j {j}: {fb} vs {X[r_, b + 9]}'); break
+                reach = lambda q_: (q_ <= p if side == 0 else q_ >= p)
+                e_inc = (INC_STALE if any(t + L_C <= L['ttl'][i] <= t + H_EV and reach(L['prl'][i]) and S.a1[i] > STALE_MS for i in range(len(L['ttl']))) else 0) \
+                    | (INC_UNTIMED if any(u[0] <= t + H_EV and u[1] > t and reach(u[2]) for u in unt) else 0)
+                if int(out['I'][r_, j - 1]) != e_inc:
+                    bad.append(f'INCOMPLETE flags side {side} k {k} j {j}: {int(out["I"][r_, j - 1])} vs {e_inc}'); break
             if bad:
                 break
     # (4) the reconciliation on a toy two-sided lane window (cap binding, SHARED, ENDED)

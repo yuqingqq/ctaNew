@@ -18,7 +18,7 @@ job() { local tag=$1; shift; local n=0
 case "$PHASE" in
   data)
     job ev_selftest$T python3 predictfun/research/pf_stop_ev.py selftest || exit 1
-    for d in $DAYS; do job ev_day${T}_$d python3 predictfun/research/pf_stop_ev.py day $d; done
+    for d in $DAYS; do [ -f $OUT/day_${d}${T}.json ] && continue; job ev_day${T}_$d python3 predictfun/research/pf_stop_ev.py day $d; done
     job ev_report$T python3 predictfun/research/pf_stop_ev.py report;;
   *) echo "unknown phase $PHASE" >&2; exit 1;;
 esac
