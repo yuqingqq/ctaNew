@@ -29,7 +29,7 @@ PARTS (declared before the run):
    Predict / fair-price moves raise the risk; a thicker own best level and more own-side size lower it; sigma raises it).
 OUTPUT review_20261115.json / .txt; 'drop_inputs' is read by the v4 build. Controls: pf_stop_model's selftests (planted errors); group
 membership covers every input exactly once; the SHAP rows sum to the raw score (TreeSHAP additivity, max error <= 1e-4).
-Usage (run_light, PF_SLOT=claude): pf_stop_model_review.py selftest | run
+Usage (run_light, PF_SLOT=claude): pf_stop_model_review.py selftest | run | reg (the regularization review, after run)
 """
 import json
 import os
@@ -273,11 +273,147 @@ def run():
     print('\n'.join(L), flush=True)
 
 
+NORM_DRIFT = 0.5; NORM_CUT = 0.25; NORM_HEADS = 3
+REG_VARIANTS = {'MDL1000': {'min_data_in_leaf': 1000}, 'L2_10': {'lambda_l2': 10.0}, 'LEAF15': {'num_leaves': 15}}
+OUT_RJ = f'{M.OUTD}/reg_20261115.json'; OUT_RT = f'{M.OUTD}/reg_20261115.txt'
+
+
+def reg():
+    """REGULARIZATION REVIEW (USER 2026-11-15: "And check if any inputs need regularization etc"), after 'run' (its decisions), dev days only.
+    R1 INPUT CONDITIONING: candidates = inputs the audit v2 flagged (PSI >= 0.10 on >= 2 dev days) or whose daily median drifts > 0.5 pooled sd
+       (review C), except the book sizes (already relative to W30), time / side inputs and dropped inputs. For each, the causal normalization
+       N1 = x / its trailing day-level scale (M.trail_scale: median of the previous <= 12 windows' median |x|, >= 3 windows) against raw: the
+       shape dispersion across the dev days (rate of y by pooled decile minus the day's base rate) at H72 j1, H250 j1, H1000 j1, H1000 j3.
+       SELECTED iff N1 lowers it by >= 25% at >= 3 of the 4 heads; the selected set is ADOPTED iff a fold-10-27 refit (60k rows a day, target U,
+       j = 1..3 at every H) with them normalized is not worse on 10-26 log loss on average than the review's raw refit (same rows and seeds).
+    R2 TAILS (10-26, 200,000 rows, printed): per input the share of finite values beyond 10 IQR from the median, (p99.9 - p50) / IQR. Trees
+       are invariant to monotone transforms: tails matter only through drift (R1) - no clipping rule.
+    R3 MODEL REGULARIZATION (fold 10-27: 180k rows a day, target U, every head, 200 rounds; 10-26 log loss on every usable row) against v4's
+       fold-10-27 models (pinned parameters): min_data_in_leaf 1000; lambda_l2 10; num_leaves 15. ADOPTED: the HELPS variant (mean relative
+       gain >= 0.5% AND >= 10 of 18 heads better) with the largest mean gain; none -> the pinned parameters stay (a change is flagged: the
+       LightGBM parameters were pinned since PULL-DEPTH).
+    Output reg_20261115.json / .txt ('norm_inputs', 'lgb_params' are read by the v4 build)."""
+    M.all_selftests()
+    T0 = time.time(); asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()); L = []; res = dict(asof=asof, version='reg 2026-11-15')
+    A = json.load(open(f'{M.OUTD}/audit2.json')); scale = A['scale']; RV = json.load(open(OUT_J))
+    F0 = [c for c in M.FEAT_M if c not in set(A['drop'])]
+    rdrop = set(RV['drop_inputs']) | {c for c, x in RV['C_inputs'].items() if x['group'] in RV['drop_groups']}
+    F = [c for c in F0 if c not in rdrop]
+    cands = sorted(({c for c in A['flag']} | {c for c, x in RV['C_inputs'].items() if x['median_drift_sd'] == x['median_drift_sd'] and x['median_drift_sd'] > NORM_DRIFT})
+                   & set(F) - set(TIMEV) - {c for c in F if c.startswith('r_')})
+    L.append(f'REGULARIZATION REVIEW (dev days only); as of {asof}; review drops applied: {sorted(rdrop) or "none"}; {len(F)} inputs')
+    LB = {}; KK = {}; SEL = {}
+    for d in M.DEV_DAYS:
+        SEL[d] = M.day_usable(d); LB[d] = M.day_cols(d, LABC, SEL[d]); KK[d] = M.day_cols(d, ['m', 'side'])
+    r1 = {}; selc = []
+    for c in cands:
+        xr = {}; xn = {}
+        for d in M.DEV_DAYS:
+            x = M.day_matrix(d, scale, [c])[:, 0].astype(np.float64); sc = M.trail_scale(x, KK[d]['m'], KK[d]['side'])
+            xr[d] = x[SEL[d]]; xn[d] = (x / sc)[SEL[d]]
+        z = {}
+        for (h, j) in UHEADS:
+            ys = [LB[d][M.DCOL[h]] >= j for d in M.DEV_DAYS]
+            dr = 100.0 * M.shape_disp([xr[d] for d in M.DEV_DAYS], ys); dn = 100.0 * M.shape_disp([xn[d] for d in M.DEV_DAYS], ys)
+            z[f'H{h}_j{j}'] = dict(disp_raw=dr, disp_norm=dn, auc_raw=M.auc_nan(np.concatenate(ys), np.concatenate([xr[d] for d in M.DEV_DAYS]))[0],
+                                   auc_norm=M.auc_nan(np.concatenate(ys), np.concatenate([xn[d] for d in M.DEV_DAYS]))[0])
+        nb = sum(1 for v in z.values() if v['disp_raw'] == v['disp_raw'] and v['disp_norm'] <= (1.0 - NORM_CUT) * v['disp_raw'])
+        r1[c] = dict(heads=z, heads_better=nb, nan_norm=float(np.mean([np.isnan(xn[d]).mean() for d in M.DEV_DAYS])))
+        if nb >= NORM_HEADS:
+            selc.append(c)
+        M.mem_guard(f'reg R1 {c}')
+    s1 = lambda d: int(F1_TEST) * 31 + int(d)                                    # noqa: E731
+    h1 = lambda h, j: int(F1_TEST) * 7 + j * 1009 + h                             # noqa: E731
+    s26 = M.day_usable(EVAL); lab26 = {c: v.astype(np.float32) for c, v in M.day_cols(EVAL, LABC, s26).items()}
+    adopt_norm = False; mnorm = None
+    if selc:
+        Xs, Ls, Ws = [], [], []
+        for d in F1_TRAIN:
+            ix, w = M.day_sample(len(SEL.get(d, M.day_usable(d))), M.VOL['V60'][1], s1(d))
+            pos = SEL.get(d, M.day_usable(d))[ix]
+            Xs.append(M.apply_norm(M.day_matrix(d, scale, F, pos), F, d, pos, selc, scale)); Ws.append(w)
+            Ls.append({c: v.astype(np.float32) for c, v in M.day_cols(d, LABC, pos).items()})
+        Tn = (np.concatenate(Xs), {c: np.concatenate([x[c] for x in Ls]) for c in LABC}, np.concatenate(Ws), np.zeros(sum(len(w) for w in Ws), bool))
+        del Xs
+        Bn = DG.train_heads(Tn, F, 'U', 'V60', h1, MHEADS); del Tn
+        Xn = M.apply_norm(M.day_matrix(EVAL, scale, F, s26), F, EVAL, s26, selc, scale)
+        mnorm = DG.metrics(DG.predict(Bn, Xn, MHEADS), lab26, 'U', MHEADS); del Xn, Bn
+        base = RV['E_ablation']['ALL']
+        if F == F0:                                                    # the review's raw refit used the same inputs, rows and seeds
+            gain = [(base[k]['ll'] - mnorm[k]['ll']) / base[k]['ll'] for k in mnorm]; adopt_norm = bool(np.mean(gain) >= 0.0)
+            res['R1_refit'] = dict(gain=dict(zip(mnorm, gain)), mean_gain=float(np.mean(gain)), heads_better=int(sum(g > 0 for g in gain)))
+        else:
+            res['R1_refit'] = 'not compared: the review dropped inputs (its raw refit had other inputs)'
+        M.mem_guard('reg R1 refit')
+    res.update(R1=r1, R1_candidates=cands, R1_selected=selc, norm_inputs=selc if adopt_norm else [])
+    L.append(f'R1 INPUT CONDITIONING: candidates {cands}')
+    L.append('   input | per head (H72 j1, H250 j1, H1000 j1, H1000 j3): shape dispersion pp raw -> normalized, AUC raw / normalized | heads better | NaN after N1')
+    for c in cands:
+        z = r1[c]
+        L.append(f'   {c:15s} ' + ' | '.join(f'{v["disp_raw"]:.2f}->{v["disp_norm"]:.2f} {v["auc_raw"]:.3f}/{v["auc_norm"]:.3f}' for v in z['heads'].values())
+                 + f' | {z["heads_better"]}/4 | {z["nan_norm"]:.1%}')
+    L.append(f'   selected {selc or "none"}; refit {res.get("R1_refit", "not run (none selected)")}; -> normalize {res["norm_inputs"] or "none"}')
+    # ---- R2 tails
+    rg = np.random.default_rng(int(EVAL) + 1); it = np.sort(rg.choice(len(s26), 200000, replace=False)); XT = M.day_matrix(EVAL, scale, F, s26[it])
+    tails = {}
+    for i, c in enumerate(F):
+        x = XT[:, i].astype(float); x = x[np.isfinite(x)]
+        if len(x) < 1000:
+            continue
+        q1, q50, q3, q999 = np.quantile(x, [0.25, 0.5, 0.75, 0.999]); iqr = q3 - q1
+        tails[c] = dict(iqr=float(iqr), beyond_10iqr=float((np.abs(x - q50) > 10 * iqr).mean()) if iqr > 0 else M.NAN,
+                        p999_ratio=float((q999 - q50) / iqr) if iqr > 0 else M.NAN)
+    del XT
+    res['R2_tails'] = tails
+    heavy = sorted([c for c, v in tails.items() if v['beyond_10iqr'] == v['beyond_10iqr'] and v['beyond_10iqr'] > 0.001], key=lambda c: -tails[c]['beyond_10iqr'])
+    zero_iqr = [c for c, v in tails.items() if not v['iqr'] > 0]
+    L.append(f'R2 TAILS (10-26, printed): beyond 10 IQR > 0.1% of rows: ' + (', '.join(f'{c} {tails[c]["beyond_10iqr"]:.2%}' for c in heavy) or 'none')
+             + f'; IQR = 0 (mostly one value): {zero_iqr or "none"} (trees: no clipping rule)')
+    # ---- R3 model regularization
+    fj = json.load(open(f'{M.OUTD}/fit_{F1_TEST}_v4.json'))
+    if fj['features'] != F0 or fj['decisions']['target'] != 'U' or fj['volume']['rows_a_day'] != M.VOL['V180'][1]:
+        sys.exit('REFUSED: the v4 fold-10-27 fit is not the R3 base')
+    PB = M.day_cols(f'{M.OUTD}/pred_fold{F1_TEST}_{EVAL}_v4.parquet', ['m', 'side', 'k', 'usable'] + [f'R{h}_{j}' for (h, j) in DG.HEADS])
+    uu = PB['usable'].astype(bool)
+    kk26 = M.day_cols(EVAL, ['m', 'side', 'k'], s26)
+    if not (np.array_equal(PB['m'][uu], kk26['m']) and np.array_equal(PB['k'][uu], kk26['k'])):
+        sys.exit('REFUSED: v4 fold-10-27 predictions not aligned with 10-26 rows')
+    mbase = DG.metrics({hj: PB[f'R{hj[0]}_{hj[1]}'][uu] for hj in DG.HEADS}, lab26, 'U', DG.HEADS); del PB
+    T180 = DG.train_table(F1_TRAIN, s1, 'V180', None, F0, scale); X26 = M.day_matrix(EVAL, scale, F0, s26); r3 = {}
+    for nm, pv in REG_VARIANTS.items():
+        X_, lab_, w_, _ = T180; P = {}
+        for (h, j) in DG.HEADS:
+            ii = np.flatnonzero(M.head_rows(lab_['D0'], j, 'U')); ic, wc = M.head_cap(None, w_[ii], M.VOL['V180'][2], h1(h, j)); ii = ii[ic]
+            y = (lab_[M.DCOL[h]][ii] >= j).astype(int); b_, n_ = M.fit_head(X_[ii], y, wc, F0, params=pv)
+            P[(h, j)] = b_.predict(X26).astype(np.float32); del b_
+            M.mem_guard(f'reg R3 {nm} H{h} j{j}')
+        mv = DG.metrics(P, lab26, 'U', DG.HEADS); del P
+        mr, nb, ok = M.helps([mbase[hk(*hj)]['ll'] for hj in DG.HEADS], [mv[hk(*hj)]['ll'] for hj in DG.HEADS])
+        r3[nm] = dict(params=pv, metrics=mv, mean_gain=mr, heads_better=nb, helps=ok)
+    del T180, X26
+    hl = [nm for nm in r3 if r3[nm]['helps']]; best = max(hl, key=lambda nm: r3[nm]['mean_gain']) if hl else None
+    res.update(R3=r3, R3_base=mbase, lgb_params=(REG_VARIANTS[best] if best else {}), lgb_choice=best or 'pinned', seconds=round(time.time() - T0, 1))
+    L.append('R3 MODEL REGULARIZATION (fold 10-27, V180, U, 18 heads, 10-26 log loss vs the pinned parameters): '
+             + '; '.join(f'{nm} {r3[nm]["params"]} gain {r3[nm]["mean_gain"]:+.2%} better {r3[nm]["heads_better"]}/18 {"HELPS" if r3[nm]["helps"] else "no"}' for nm in r3)
+             + f' -> {best or "keep the pinned parameters"}')
+    L.append('   per head log loss pinned / ' + ' / '.join(r3) + ': ' + ' '.join(f'{hk(*hj)} {mbase[hk(*hj)]["ll"]:.5f}/' + '/'.join(f'{r3[nm]["metrics"][hk(*hj)]["ll"]:.5f}' for nm in r3)
+                                                                       for hj in DG.HEADS))
+    L.append(f'DECISIONS: normalize {res["norm_inputs"] or "none"}; LightGBM {res["lgb_choice"]} {res["lgb_params"]}; {res["seconds"]} s')
+    json.dump(res, open(OUT_RJ, 'w'), indent=1, default=float); open(OUT_RT, 'w').write('\n'.join(L) + '\n')
+    print('\n'.join(L), flush=True)
+
+
+def hk(h, j):
+    return f'H{h}_j{j}'
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else 'selftest'
     if cmd == 'selftest':
         M.all_selftests(); b_ = selftest(); print('review selftest', b_ or 'passed')
     elif cmd == 'run':
         run()
+    elif cmd == 'reg':
+        reg()
     else:
         sys.exit(f'unknown command {cmd}')

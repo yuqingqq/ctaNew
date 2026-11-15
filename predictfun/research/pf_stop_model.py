@@ -938,6 +938,9 @@ def selftest():
     labb = {c: v.copy() for c, v in labg.items()}; labb['D1_250'][2] = 3.0
     ib = integrity(np.array([1, 2, 1]), np.array([0, 0, 0]), np.array([0, 0, 1]), labb, np.array([[0.0, np.inf]] * 3, np.float32))
     chk(f'integrity {ig} {ib}', ig['ok'] and not ib['ok'] and ib['blocks_split'] == 1 and ib['label_not_monotone'] == 1 and ib['input_inf'] == 3)
+    mt = np.repeat(np.arange(6), 4); st_ = np.tile([0, 0, 1, 1], 6); xt = np.repeat(np.array([1.0, 2.0, 3.0, 4.0, 100.0, 6.0]), 4)
+    ts_ = trail_scale(xt, mt, st_, n_prev=2, n_min=2)
+    chk(f'trailing scale causal {ts_[::4].tolist()}', np.isnan(ts_[:8]).all() and np.allclose(ts_[8::4], [1.5, 2.5, 3.5, 52.0]))
     xe = rg2.normal(0, 1, (3000, 3)).astype(np.float32); yn = rg2.uniform(0, 1, 3000) < 0.3; ys_ = (xe[:, 0] + 0.3 * rg2.normal(0, 1, 3000)) > 0.5
     _, rn = fit_head(xe[:2000], yn[:2000].astype(int), None, ['a', 'b', 'c'], valid=(xe[2000:], yn[2000:].astype(int)))
     _, rs_ = fit_head(xe[:2000], ys_[:2000].astype(int), None, ['a', 'b', 'c'], valid=(xe[2000:], ys_[2000:].astype(int)))
@@ -949,7 +952,7 @@ def mutation_check():
     out = {}
     for nm in ('MUT_AGE_NEXT', 'MUT_FOLD_LATE', 'MUT_HORIZON_EARLY', 'MUT_PSI_NONAN', 'MUT_AUC_KEEPNAN', 'MUT_RULE_OFF', 'MUT_SCALE_FUTURE',
                'MUT_GAP_IGNORE', 'MUT_MATCH_NO_TFILL', 'MUT_ORACLE_NOGATE', 'MUT_LANE_NOGATE', 'MUT_NOWEIGHT', 'MUT_CAP_NOADJ', 'MUT_STALE_CROSS',
-               'MUT_PLATT_SWAP', 'MUT_HEAD_COND'):
+               'MUT_PLATT_SWAP', 'MUT_HEAD_COND', 'MUT_TRAIL_NOW'):
         globals()[nm] = 1
         try:
             out[nm] = len(selftest()) > 0
@@ -1221,14 +1224,14 @@ def pcol(H, j):
 
 # ---------------------------------------------------------------- v4 training options (2026-11-15): helpers shared by the dev-day
 # diagnostics (pf_stop_model_diag.py, which decides which options v4 uses) and the v4 fit
-DIAG_JSON = f'{OUTD}/diag_20261115.json'
+DIAG_JSON = f'{OUTD}/diag_20261115.json'; REVIEW_JSON = f'{OUTD}/review_20261115.json'; REG_JSON = f'{OUTD}/reg_20261115.json'
 BN_F = [c for c in FEAT_M if c.startswith(('bn_', 'adv_bn_')) or c in ('d_bnimb250', 'adv_d_bnimb250', 'dfv250', 'dfv1000', 'gap_adv', 'sens',
                                                                        'pbn_dist')]       # Binance-derived inputs (P15)
 RARE = 0.02                                                # S sampling: a head is rare below this training-day rate
 VOL = {'V60': ('V', 60000, 300000), 'V180': ('V', 180000, 600000), 'S60': ('S', 60000, 300000)}   # -> (draw, rows a day, rows a head)
 ES_MAX = 1000; ES_PAT = 50; VAL_N = 200000; EPS_P = 1e-6
 HELP_MEAN = 0.005; HELP_HEADS = 10                         # an option HELPS: mean relative loss gain >= 0.5% AND >= 10 of 18 heads better
-MUT_NOWEIGHT = MUT_CAP_NOADJ = MUT_STALE_CROSS = MUT_PLATT_SWAP = MUT_HEAD_COND = 0
+MUT_NOWEIGHT = MUT_CAP_NOADJ = MUT_STALE_CROSS = MUT_PLATT_SWAP = MUT_HEAD_COND = MUT_TRAIL_NOW = 0
 
 
 def head_rows(D0, j, target):
@@ -1287,17 +1290,18 @@ def head_cap(z, w, cap, seed):
     return ix, w2
 
 
-def fit_head(X, y, w, F, rounds=None, valid=None):
-    """One head with the pinned parameters (PD.LGB_PARAMS): a fixed number of rounds, or early stopping on a validation set (the calibration
-    day; patience ES_PAT, at most ES_MAX rounds). Uniform weights are passed as none (v3's training). Returns (booster, rounds used)."""
+def fit_head(X, y, w, F, rounds=None, valid=None, params=None):
+    """One head with the pinned parameters (PD.LGB_PARAMS, or params = overrides of them): a fixed number of rounds, or early stopping on a
+    validation set (the calibration day; patience ES_PAT, at most ES_MAX rounds). Uniform weights are passed as none (v3's training).
+    Returns (booster, rounds used)."""
     import lightgbm as lgb
     w = None if (w is None or np.all(np.asarray(w) == 1.0)) else np.asarray(w, float)
-    ds = lgb.Dataset(X, y, weight=w, feature_name=F)
+    ds = lgb.Dataset(X, y, weight=w, feature_name=F); P_ = {**PD.LGB_PARAMS, **(params or {})}
     if valid is None:
         n = int(rounds or PD.N_ROUNDS)
-        return lgb.train(PD.LGB_PARAMS, ds, n), n
+        return lgb.train(P_, ds, n), n
     dv = lgb.Dataset(valid[0], valid[1], reference=ds)
-    b = lgb.train({**PD.LGB_PARAMS, 'metric': 'binary_logloss'}, ds, ES_MAX, valid_sets=[dv],
+    b = lgb.train({**P_, 'metric': 'binary_logloss'}, ds, ES_MAX, valid_sets=[dv],
                   callbacks=[lgb.early_stopping(ES_PAT, first_metric_only=True, verbose=False)])
     return b, int(b.best_iteration)
 
@@ -1337,6 +1341,35 @@ def helps(base, var):
     """Per-head losses (lower is better) of a reference and an option -> (mean relative gain, heads better, HELPS)."""
     rel = [(b - v) / b for b, v in zip(base, var)]; nb = int(sum(r > 0 for r in rel)); mr = float(np.mean(rel))
     return mr, nb, bool(mr >= HELP_MEAN and nb >= HELP_HEADS)
+
+
+def trail_scale(x, m, s, n_prev=12, n_min=3):
+    """Causal day-level scale of an input for every row: per side, the median over the day's previous <= n_prev windows (>= n_min) of each
+    window-side's median |x| (finite values; the rows of a window are its first 60 s, so earlier windows are entirely in the past); NaN before
+    n_min earlier windows. Rows in file order (window-side blocks, windows in time order)."""
+    x = np.asarray(x, np.float64); m = np.asarray(m); s = np.asarray(s); out = np.full(len(x), np.nan)
+    df = pd.DataFrame({'m': m, 's': s, 'a': np.abs(x)})
+    wm = df.groupby(['s', 'm'], sort=False)['a'].median()
+    for sd_ in (0, 1):
+        if sd_ not in wm.index.get_level_values(0):
+            continue
+        ser = wm.loc[sd_]
+        tr = ser.shift(1).rolling(n_prev, min_periods=n_min).median() if not MUT_TRAIL_NOW else ser.rolling(n_prev, min_periods=n_min).median()
+        mp = dict(zip(ser.index.values.tolist(), tr.values.tolist())); sel = s == sd_
+        out[sel] = np.array([mp[v] for v in m[sel].tolist()])
+    return np.where(out > 0, out, np.nan)
+
+
+def apply_norm(X, F, day, sel, cols, scale):
+    """In place: each input in cols (an input-review decision) divided by its causal trailing scale (trail_scale over ALL of the day's rows,
+    then the rows at positions sel; sel None = every row)."""
+    if not cols:
+        return X
+    kk = day_cols(day, ['m', 'side'])
+    for c in cols:
+        x = day_matrix(day, scale, [c])[:, 0].astype(np.float64); xn = x / trail_scale(x, kk['m'], kk['side'])
+        X[:, F.index(c)] = (xn if sel is None else xn[sel]).astype(np.float32)
+    return X
 
 
 def stale_prev(m, s, k):
@@ -1540,6 +1573,14 @@ def fit_fold_v4(test):
     es, pl, cm = bool(dec['early_stop']), bool(dec['platt']), bool(dec['cummin']) and dec['target'] == 'U'
     mode, sub, cap = VOL[vol]
     A = json.load(open(f'{OUTD}/audit2.json')); scale = A['scale']; F = [c for c in FEAT_M if c not in set(A['drop'])]
+    if not os.path.exists(REVIEW_JSON):
+        sys.exit('REFUSED: no input review (run pf_stop_model_review.py first)')
+    RV = json.load(open(REVIEW_JSON))                      # the input review's declared drops (an input, or every input of a dropped group)
+    rdrop = set(RV['drop_inputs']) | {c for c, x in RV['C_inputs'].items() if x['group'] in RV['drop_groups']}
+    F = [c for c in F if c not in rdrop]
+    if not os.path.exists(REG_JSON):
+        sys.exit('REFUSED: no regularization review (run pf_stop_model_review.py reg first)')
+    RG = json.load(open(REG_JSON)); ncols = [c for c in RG['norm_inputs'] if c in F]; lgbp = RG['lgb_params'] or None
     LABC = ['D0'] + [DCOL[h] for h in HS]
     pn = {(h, j): 0 for h in HS for j in JS}; pp_ = dict(pn)
     for d in tr_days:                                      # the training days' population rate of every head (T2; the rare levels of S)
@@ -1554,7 +1595,7 @@ def fit_fold_v4(test):
             sys.exit('REFUSED: a calibration or test row in the training rows')
         lab = {c: v_.astype(np.float32) for c, v_ in day_cols(d, LABC, sel).items()}; z = stratum(lab, cut) if mode == 'S' else None
         ix, w = day_sample(len(sel), sub, int(test) * 31 + int(d), z)
-        Xs.append(day_matrix(d, scale, F, sel[ix])); Ls.append({c: v_[ix] for c, v_ in lab.items()}); Ws.append(w)
+        Xs.append(apply_norm(day_matrix(d, scale, F, sel[ix]), F, d, sel[ix], ncols, scale)); Ls.append({c: v_[ix] for c, v_ in lab.items()}); Ws.append(w)
         Zs.append(z[ix] if z is not None else np.zeros(len(ix), bool))
         mem_guard(f'fit v4 {test} rows {d}')
     X = np.concatenate(Xs); del Xs
@@ -1562,7 +1603,7 @@ def fit_fold_v4(test):
     valid = None
     if es:                                                 # early stopping on a uniform sample of the calibration day (usable rows)
         sV = day_usable(cal); iv = sV[np.sort(np.random.default_rng(int(cal)).choice(len(sV), min(len(sV), VAL_N), replace=False))]
-        valid = (day_matrix(cal, scale, F, iv), {c: v_.astype(np.float32) for c, v_ in day_cols(cal, LABC, iv).items()})
+        valid = (apply_norm(day_matrix(cal, scale, F, iv), F, cal, iv, ncols, scale), {c: v_.astype(np.float32) for c, v_ in day_cols(cal, LABC, iv).items()})
     mem_guard(f'fit v4 {test} training rows')
     info = {}; boost = {}; os.makedirs(f'{OUTD}/models', exist_ok=True)
     for h in HS:
@@ -1572,7 +1613,7 @@ def fit_fold_v4(test):
             y = (lab[DCOL[h]][ii] >= j).astype(int); vv = None
             if valid is not None:
                 rv = head_rows(valid[1]['D0'], j, target); vv = (valid[0][rv], (valid[1][DCOL[h]][rv] >= j).astype(int))
-            Xh = X[ii]; b, nr = fit_head(Xh, y, wc, F, valid=vv); del vv
+            Xh = X[ii]; b, nr = fit_head(Xh, y, wc, F, valid=vv, params=lgbp); del vv
             b.save_model(f'{OUTD}/models/fold{test}_H{h}_j{j}_v4.txt', num_iteration=nr); boost[(h, j)] = (b, nr)
             a_tr, _ = auc_nan(y.astype(bool), b.predict(Xh, num_iteration=nr)); del Xh
             imp = b.feature_importance('gain', iteration=nr); br = float(np.average(y, weights=wc))
@@ -1587,11 +1628,11 @@ def fit_fold_v4(test):
         yp = np.random.default_rng(99).permutation((lab[DCOL[HP]][ii] >= 1).astype(int)); vv = None
         if valid is not None:
             rv = head_rows(valid[1]['D0'], 1, target); vv = (valid[0][rv], (valid[1][DCOL[HP]][rv] >= 1).astype(int))
-        bp = fit_head(X[ii], yp, wc, F, valid=vv); bpr = float(np.average(yp, weights=wc)); del vv
+        bp = fit_head(X[ii], yp, wc, F, valid=vv, params=lgbp); bpr = float(np.average(yp, weights=wc)); del vv
     del X, lab, w, z, valid
     mono = {}; ab = {}
     for dd in (cal, test):                                 # calibration day first: Platt is fitted there and applied to both days
-        kc = day_cols(dd, KEYS + LABC + ['hgap']); u = usable(pd.DataFrame({'hgap': kc['hgap']})); Xd = day_matrix(dd, scale, F)
+        kc = day_cols(dd, KEYS + LABC + ['hgap']); u = usable(pd.DataFrame({'hgap': kc['hgap']})); Xd = apply_norm(day_matrix(dd, scale, F), F, dd, None, ncols, scale)
         out = pd.DataFrame({c: kc[c] for c in KEYS}); out['usable'] = u; lab_ = {c: kc[c].astype(np.float32) for c in LABC}; del kc
         raw = {hj: b.predict(Xd, num_iteration=nr).astype(np.float32) for hj, (b, nr) in boost.items()}
         if pl and dd == cal:
@@ -1615,9 +1656,10 @@ def fit_fold_v4(test):
             T5 = dict(auc=a_p, bss=bss, rows=n_p, rounds=int(bp[1]), ok=bool(bss <= T5_BSS), auc_within_declared_v3=bool(abs(a_p - 0.5) <= T5_AUC))
         out.to_parquet(f'{OUTD}/pred_fold{test}_{dd}_v4.parquet', index=False); del Xd, out, raw, fin, lab_
         mem_guard(f'fit v4 {test} predict {dd}')
-    res = dict(test=test, cal=cal, train_days=list(tr_days), features=F, dropped=A['drop'], scale=scale, version='4', decisions=dec,
+    res = dict(test=test, cal=cal, train_days=list(tr_days), features=F, dropped=A['drop'], review_dropped=sorted(rdrop), scale=scale, version='4',
+               decisions=dec, norm_inputs=ncols, lgb_params=lgbp,
                rare_levels={str(h): v_ for h, v_ in cut.items()}, info=info, T1=True, T5=T5, T4_monotonicity=mono,
-               platt={f'H{h}_j{j}': list(v_) for (h, j), v_ in ab.items()}, params=PD.LGB_PARAMS, rounds_max=ES_MAX if es else PD.N_ROUNDS,
+               platt={f'H{h}_j{j}': list(v_) for (h, j), v_ in ab.items()}, params={**PD.LGB_PARAMS, **(lgbp or {})}, rounds_max=ES_MAX if es else PD.N_ROUNDS,
                volume=dict(mode=mode, rows_a_day=sub, rows_a_head=cap), seconds=round(time.time() - T0, 1))
     json.dump(res, open(f'{OUTD}/fit_{test}_v4.json', 'w'), indent=1, default=float)
     print(f'fit v4 {test} ({dec}): ' + '; '.join(f'H{h} j{j} AUC tr/cal/test {info[f"H{h}_j{j}"]["auc_train"]:.3f}/{info[f"H{h}_j{j}"]["auc_cal"]:.3f}/'
