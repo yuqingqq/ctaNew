@@ -1,5 +1,38 @@
 # P-2026-005 HANDOFF
 
+<!-- STOP_EV_DYNAMICS_SCALE_20261115 -->
+## 2026-11-15 Dynamics exist; marginal scaling does not explain most severe misses
+
+As of 17:01:13Z, nine consumed dates / 149,658 certified actions profiled;
+five existing test folds / 81,630 actions, 7,620 fills, 1,014 severe outcomes.
+83 current inputs + 22 predefined context/history descriptors; 40 severe
+separation diagnostics, all reported. Source 73203849, freeze 79a11db1,
+results integration eccbf302. No fits, new policy or protected data.
+
+Current inputs include net OFI, depth/price changes, level ages and relative
+activity. They omit much of gross flow and fixed-price replenishment paths.
+Zero infinite current fields. None of 87 raw-kept severe cases has a finite
+input beyond prior training min/max; only 6 cross a training 0.1/99.9% tail.
+This does not rule out joint/regime shift, missingness or timing issues.
+Largest absolute 1% of outcomes accounts for 65.45-82.02% of test EV squared
+error; v2 L2 already weights tails heavily. Do not trim real losses.
+
+Extra cached histories show modest/unstable severe separation after matching
+order state and score bands. Depletion/(remaining+shown) has inverse AUC
+0.428, 2,748 matched fills; not a cancellation rule. Existing relative queue
+AUC 0.585, 4,083 matched fills. Strict subset has 421 fills / 23 severe;
+conditional-history comparisons often cover only 5 fills. Fixed-price 1s
+history available for 48,695/81,630 actions. Proposed net-flow/median-net-flow
+normalization is ill-conditioned (up to 1.25e15), rejected; it is NOT a current
+model input. Next: stable gross-flow/replenishment/short-volatility block,
+scale-support indicators, paired ablation and severe-risk calibration.
+
+Positive/refusal controls and source/prediction identities pass. One core,
+69 s, 619 MiB. Review: handoffs/20261115_stop_ev_dynamics_scale_review.md;
+full evidence: reviews/stop_ev_dynamics_20261115/report_v1.json. All results
+descriptive on consumed data; no established model or portfolio improvement.
+<!-- /STOP_EV_DYNAMICS_SCALE_20261115 -->
+
 ## 2026-11-15 17:00Z (session aea5bfb9) — REVIEW OF THE STOP-EV PIPELINE (USER: "Review the model thoroughly, from data to model, check if there are bugs first then check how to optimize"): defects confirmed, several of today's readings void or qualified; fixes and a sensitivity plan wait for the USER's go
 
 - Four independent read-only reviews (labels, model, replay, premises), then my own checks: duplicates = distinct on-chain fills (not ingestion copies); unknown-queue fills 29% of MD1000's shares; replay latency 40 / 22 ms vs measured 58 / 37 ms (pf_clock_rl.py).

@@ -1,3 +1,34 @@
+stop_ev_dynamics_scale_20261115:
+  asof: '2026-11-15T17:01:13.094806+00:00'
+  status: dynamics_present_tail_prediction_weak_no_simple_marginal_scale_explanation
+  source_commit: 73203849
+  freeze_commit: 79a11db1
+  integration_commit: eccbf302
+  certified_profile_actions: 149658
+  test_actions: 81630
+  filled_test_actions: 7620
+  severe_test_actions: 1014
+  raw_kept_severe_actions: 87
+  raw_kept_severe_outside_training_range: 0
+  raw_kept_severe_training_tail_extreme: 6
+  current_features: 83
+  new_diagnostic_descriptors: 22
+  severe_discriminators: 40
+  current_input_infinite_fields: 0
+  top1_absolute_value_ev_error_fraction_min: 0.6544526134873931
+  top1_absolute_value_ev_error_fraction_max: 0.8202105088284003
+  fixed_price_one_second_history_actions: 48695
+  proposed_net_flow_median_ratio_rejected: true
+  proposed_ratio_is_current_model_input: false
+  all_source_and_prediction_identity_checks_pass: true
+  new_model_fits: 0
+  new_policy_promoted: false
+  protected_data_read: false
+  untouched_validation: false
+  next: stable_gross_flow_replenishment_volatility_block_then_paired_ablation
+  review: predictfun/handoffs/20261115_stop_ev_dynamics_scale_review.md
+  evidence: predictfun/reviews/stop_ev_dynamics_20261115/report_v1.json
+
 stop_ev_economic_layer_20261115:
   asof: '2026-11-15T16:29:13.811533+00:00'
   status: partial_order_state_correction_all_variants_negative
