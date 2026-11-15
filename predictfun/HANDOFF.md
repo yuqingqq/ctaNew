@@ -12,31 +12,49 @@
 - Next: the USER's call - rung-matched RV (small code change + ~1 h run), the sensitivity grid, strategy levers (inventory cap, no chasing, sweep depth), "place first".
 
 <!-- STOP_EV_LATENCY_20261115 -->
-## 2026-11-15 Current-model latency sensitivity: four dates complete, final date running
+## 2026-11-15 Latency matters; full EV earns selectively, churn and inventory remain
 
-Frozen protocol 30b92397, source c7bc4aca; corrected v3 EV/B2/QR heads and
-saved v6 MD benchmark. Five consumed dates; four clocks x five fixed rules.
-Every rule reviews at 50 ms; every entry gate fresh. Six rungs x 30 shares,
-no cap or repost timer, shared activation-queue lane, all fills included.
-QR retains earlier fixed thresholds; no optimization or inferential claim.
+COMPLETE as of 2026-11-15T18:58:55.527073+00:00: 1,434 first-minute windows on five
+consumed dates, 28,680 rule-clock replays, all fills included. Six established
+October 31 boundary windows excluded. Source c7bc4aca, freeze 30b92397,
+results 26803af4, integration ebce46a3. Corrected v3 EV/B2/QR heads; saved v6
+MD benchmark. Fresh gates and review every 50 ms, 6 x 30 shares per side,
+no cap or retry timer. No new fits, threshold search or policy promotion.
 
-EARLY ONLY (as of 2026-11-15T18:39:59.501550+00:00, 1146 first-minute windows on
-10-27, 10-31 and 11-01..02): pooled EV current clocks +$341.24, zero modeled
-feed/order delays +$859.34. Both positive on 3/4 dates. The fourth date
-reverses the gain: current +$75.76 -> zero -$8.37 (M0 zero -$50.29).
-Lower latency materially helps pooled value, but does not uniformly help
-this frozen policy. EV remains sparse and churns heavily; rule rankings
-vary across dates. No five-day conclusion or policy change. Final date
-11-03 continues in the Codex slot.
+Five-date EV trading value: existing replay delays +$397.10 / +0.9259c per
+share / 42,890 shares; zero order/notice delay +$642.44 / +0.9252c / 69,439;
+zero modeled feed + order delay +$820.92 / +0.9612c / 85,402. Positive dates
+4/5, 5/5 and 3/5. Full zero helps 3/5 dates and hurts the last two; its gain
+is chiefly more captured volume (1.991x), not much more value/share (1.038x).
+The hypothesis that the model cannot earn even without latency is not
+supported by this replay. It is not live or untouched validation.
 
-Completed receipts pass lane/terminal accounting, cached/uncached trajectory
-checks, sampled known-state accounting, input rehashing, and exact source
-and model-fit identities against the pre-run freeze. Worktree:
-/tmp/cta-latency-20261115. Zero modeled latency retains the 50 ms grid,
-event-time/imputation and queue assumptions; EV fresh entry is a diagnostic
-extension of a 1 s keep-value model. Other session's simulator work untouched.
-Output: data/predict_fun/research/stop_ev_latency_20261115_v3/.
-Protocol: reviews/stop_ev_latency_20261115/freeze_v3.json.
+Same-environment rules: existing-delay B2 -$219.70, QR -$818.39, MD1000
+-$805.51; full zero B2 -$265.18, QR -$0.19, MD1000 -$65.16. EV/B2 control
+supports further use of market inputs, but endogenous exposures differ;
+no matched-retention causal skill claim. QR keeps prior fixed thresholds.
+Trade-time M0 sensitivity takes full-zero EV to +$913.24, QR to +$478.74,
+MD1000 to +$306.08: physical timestamp/queue review remains material.
+
+EV +1s markout is positive on every date in all clocks. Full-zero Nov 2/3
++1s values +$132.45/+$225.88 become -$8.37/-$38.42 at the terminal mark;
+later price moves erase short-horizon gains. Maximum net inventory reaches
+1,579.71 shares without a cap. Queue retention is still poor: pulls/orders
+92.98% -> 92.40%; mean rung exposure 2.82% -> 3.69%, touch rung 2.77% ->
+4.18%. These are per-rung measures, not any-order uptime. At cutoff zero,
+EV sign is conditional-value sign whenever P(fill)>0: tiny expected losses
+can trigger pulls without pricing surrendered queue position.
+
+292,978 independent sampled state comparisons, 60 cached/uncached trajectory
+comparisons, all lane/terminal/input checks, five frozen source/fit checks
+and 20-cell independent reconciliation pass; planted errors refused.
+One core, 4,559.55 s, peak RSS 1,364.02 MiB. Interpretation v4 supersedes
+v3's verification summary with computed artifact checks; numbers unchanged.
+Next: separate entry and resting-order targets; price queue/re-entry value
+and inventory exposure, while the other session verifies physical replay.
+No fixed cooldown implied. Review: handoffs/20261115_stop_ev_latency_review.md.
+Evidence: reviews/stop_ev_latency_20261115/report.json, attribution_v3.json,
+interpretation_v4.json and receipt_*_v3.json.
 <!-- /STOP_EV_LATENCY_20261115 -->
 
 

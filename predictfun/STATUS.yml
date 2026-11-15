@@ -1,21 +1,40 @@
 stop_ev_latency_20261115:
-  asof: '2026-11-15T18:39:59.501550+00:00'
-  status: four_dates_latency_helps_pooled_but_not_every_day_final_date_running
+  asof: '2026-11-15T18:58:55.527073+00:00'
+  status: complete_latency_material_full_ev_positive_selective_high_churn_no_promotion
   source_commit: c7bc4aca
   freeze_commit: 30b92397
+  results_commit: 26803af4
+  integration_commit: ebce46a3
   model_version: v3
   consumed_test_dates: [20261027, 20261031, 20261101, 20261102, 20261103]
-  completed_dates: 4
-  completed_windows: 1146
-  interim_ev_current_pnl_dollars: 341.2416795589932
-  interim_ev_zero_modeled_pnl_dollars: 859.3362310589521
+  completed_dates: 5
+  windows: 1434
+  excluded_boundary_windows: 6
+  primary_replays: 28680
   clock_configurations: 4
   fixed_rules: 5
   review_grid_ms: 50
-  completed_five_day_result: false
+  ev_current_pnl_dollars: 397.10076732410437
+  ev_zero_order_pnl_dollars: 642.4409323283533
+  ev_zero_modeled_pnl_dollars: 820.9191230324161
+  ev_zero_modeled_trade0_pnl_dollars: 913.2363039243863
+  ev_positive_dates_current_orderzero_fullzero: [4, 5, 3]
+  ev_short_mark_positive_dates: 5
+  ev_volume_ratio_zero_to_current: 1.9911977893088952
+  ev_value_per_share_ratio_zero_to_current: 1.0382100888408394
+  state_comparisons: 292978
+  trajectory_comparisons: 60
+  aggregate_cells_reconciled: 20
+  source_and_fit_identities_verified: true
+  peak_rss_mib: 1364.015625
+  elapsed_replay_seconds: 4559.546723127365
+  new_model_fits: 0
   protected_data_read: false
+  untouched_validation: false
   policy_promoted: false
-  protocol: predictfun/reviews/stop_ev_latency_20261115/freeze_v3.json
+  next: separate_entry_keep_targets_and_price_queue_reentry_inventory_value
+  review: predictfun/handoffs/20261115_stop_ev_latency_review.md
+  evidence: predictfun/reviews/stop_ev_latency_20261115/interpretation_v4.json
 
 
 stop_ev_dynamics_scale_20261115:
