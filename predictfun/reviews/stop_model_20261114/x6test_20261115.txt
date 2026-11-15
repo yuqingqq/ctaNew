@@ -1,0 +1,4 @@
+REPRESENTATION TEST (rebuilt rows; fold 10-27, V60, U, lambda_l2 {'lambda_l2': 10.0}; 10-26 log loss); as of 2026-11-15T09:09:21Z; base 71 inputs
+   VOLZ: mean log-loss gain +0.043%, better 8/9 -> no; per head H72_j1 +0.04% H72_j2 +0.24% H72_j3 +0.03% H250_j1 +0.02% H250_j2 +0.02% H250_j3 +0.04% H1000_j1 -0.02% H1000_j2 +0.02% H1000_j3 +0.01%
+   PEND_REL: mean log-loss gain +0.134%, better 9/9 -> ADOPT; per head H72_j1 +0.19% H72_j2 +0.20% H72_j3 +0.24% H250_j1 +0.17% H250_j2 +0.14% H250_j3 +0.08% H1000_j1 +0.07% H1000_j2 +0.04% H1000_j3 +0.07%
+DECISION: adopt ['PEND_REL']; 350.9 s
