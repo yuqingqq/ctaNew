@@ -1,10 +1,60 @@
 {
-  "asof": "2026-11-15T12:39:40.939145+00:00",
-  "status": "implementation_available_final_edge_checks_queued",
-  "source_commit": "3abb190f588e4eb36e7d4e80b1d62dbd7077d3dd",
-  "latest_completed_receipt": "receipt_v1.json",
-  "pending_changes": "later queue visibility; mark-time gaps; stricter mixed-label rejection",
-  "historical_runs": 0,
-  "model_runs": 0,
-  "other_builder_integration": "required; other session owns raw-data pipeline"
+  "asof": "2026-11-15T12:54:55.034139+00:00",
+  "contract": "stop-ev-chronological-order-value-v1",
+  "data": "synthetic only; no historical performance claim",
+  "errors": 0,
+  "failures": 0,
+  "passed": true,
+  "peak_rss_mib": 125.57421875,
+  "source_sha256": {
+    "pf_stop_ev_accounting.py": "1cffc03eb8d801d87ae70b2a2edb1794513e0962dc2892303eb7b92ac201a793",
+    "pf_stop_ev_accounting_check.py": "5fb93d66efe6bae8118419818989665c3cf91a2d1957820e5dce4800cb5f2748"
+  },
+  "tests": 16,
+  "status": "implemented_integrated_synthetic_checks_pass",
+  "source_commit": "c04370d6ea3b0c22086920a3710f0dda795295b2",
+  "code_integration_commit": "f373310b",
+  "log": "checks_v2.log",
+  "log_sha256": "c6028499f979ba71273f3d4c2367ae919a87748b615a0646aec484a2f0f020d6",
+  "dependency_receipt": "dependencies.json",
+  "dependency_receipt_sha256": "ef8a1fefe7afaec723f3873446fdb2324d82c614baaeb7f034c112efac25a4eb",
+  "builder_integration": {
+    "commit": "06f801785474165fb094400f44c6f399038a660f",
+    "asof": "2026-11-15T12:55:32Z",
+    "passed": true,
+    "planted_errors": {
+      "MUT_NO_CAP": true,
+      "MUT_WIN_EARLY": true,
+      "MUT_THR_AS_STOP": true,
+      "MUT_VENUE_VIS": true,
+      "MUT_ASK_SIGN": true,
+      "MUT_POP_ALL": true,
+      "MUT_INC_OFF": true,
+      "MUT_MARK_ANCHOR": true,
+      "MUT_PROV_DROP": true
+    },
+    "source_sha256": {
+      "predictfun/research/pf_stop_ev.py": "9a7b9014d96f30e264e42520fa5b1bdc8bbfef49f60174b7f35fe1ed80245523",
+      "predictfun/research/pf_stop_ev_accounting.py": "1cffc03eb8d801d87ae70b2a2edb1794513e0962dc2892303eb7b92ac201a793",
+      "predictfun/research/pf_stop_queue_activation_lane.py": "8d61029d348f80856853ca16c2d3e49c54f7ae26be73866d6b244d08c746e2ed",
+      "predictfun/research/pf_queue_activation.py": "b63e7f00a74db3c87cd85858cfb4a73c06e3fce0173328289913f9caf6571f02",
+      "predictfun/research/pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed",
+      "predictfun/research/pf_kp_s4.py": "3a2cbceb239fa25a615c21b31bc3e775863aeab3cd4a60068d7b440f1a307528",
+      "predictfun/research/pf_order_harm_client_lane.py": "c203beeed0a82ae31696cc3c1653947b37b1b952984a85d0ff3f82ff4c7941b5"
+    },
+    "log": "integration_v1.log",
+    "log_sha256": "be426e571d17069e0556743e90952a04a4e038ff590c0c678fbf8e3fc82eeaa3"
+  },
+  "historical_runs_by_this_fix": 0,
+  "model_runs_by_this_fix": 0,
+  "performance_improvement_claim": false,
+  "primary_target": "Own avoidable chronological tranches under neutral continuation; gross 1s markout, no replacement or full portfolio value.",
+  "remaining": [
+    "Verify historical coverage and status populations in new builder outputs.",
+    "Validate known-time market-feature joins before fitting.",
+    "Simulated queue and WS/E2 timing assumptions remain explicit.",
+    "Use new labels for model fitting; no promotion or economic improvement claim."
+  ],
+  "receipt": "receipt_v2.json",
+  "supersedes": "receipt_v1.json"
 }
