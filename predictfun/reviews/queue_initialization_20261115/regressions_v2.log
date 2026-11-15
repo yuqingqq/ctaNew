@@ -1,0 +1,16 @@
+test_additions_after_activation_do_not_go_ahead (__main__.Checks.test_additions_after_activation_do_not_go_ahead) ... ok
+test_cancel_and_repost_join_the_new_existing_queue (__main__.Checks.test_cancel_and_repost_join_the_new_existing_queue) ... ok
+test_empty_visible_price_keeps_first_place (__main__.Checks.test_empty_visible_price_keeps_first_place) ... ok
+test_existing_queue_and_activation_boundary_are_respected (__main__.Checks.test_existing_queue_and_activation_boundary_are_respected) ... ok
+test_invalid_assumptions_are_refused (__main__.Checks.test_invalid_assumptions_are_refused) ... ok
+test_later_frame_perturbation_cannot_change_initial_queue (__main__.Checks.test_later_frame_perturbation_cannot_change_initial_queue) ... ok
+test_partial_fills_preserve_the_same_order (__main__.Checks.test_partial_fills_preserve_the_same_order) ... ok
+test_unchanged_initialization_preserves_legacy_replay (__main__.Checks.test_unchanged_initialization_preserves_legacy_replay) ... ok
+test_unknown_depth_stays_an_explicit_assumption (__main__.Checks.test_unknown_depth_stays_an_explicit_assumption) ... ok
+test_unknown_initial_queue_is_not_retroactively_replaced (__main__.Checks.test_unknown_initial_queue_is_not_retroactively_replaced) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.029s
+
+OK
+2026-11-15T12:06:38Z tag=queue_activation_regressions_v2 rc=0 peak_rss_mib=129 wall_s=0.45 cpu_user_s=0.38 memavail_start_gib=23 disk_free_gib=478->478 slot=codex

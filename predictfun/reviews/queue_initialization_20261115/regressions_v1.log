@@ -1,0 +1,35 @@
+test_additions_after_activation_do_not_go_ahead (__main__.Checks.test_additions_after_activation_do_not_go_ahead) ... ok
+test_cancel_and_repost_join_the_new_existing_queue (__main__.Checks.test_cancel_and_repost_join_the_new_existing_queue) ... FAIL
+test_empty_visible_price_keeps_first_place (__main__.Checks.test_empty_visible_price_keeps_first_place) ... ok
+test_existing_queue_and_activation_boundary_are_respected (__main__.Checks.test_existing_queue_and_activation_boundary_are_respected) ... ok
+test_invalid_assumptions_are_refused (__main__.Checks.test_invalid_assumptions_are_refused) ... ok
+test_later_frame_perturbation_cannot_change_initial_queue (__main__.Checks.test_later_frame_perturbation_cannot_change_initial_queue) ... ok
+test_partial_fills_preserve_the_same_order (__main__.Checks.test_partial_fills_preserve_the_same_order) ... ok
+test_unchanged_initialization_preserves_legacy_replay (__main__.Checks.test_unchanged_initialization_preserves_legacy_replay) ... ok
+test_unknown_depth_stays_an_explicit_assumption (__main__.Checks.test_unknown_depth_stays_an_explicit_assumption) ... ok
+test_unknown_initial_queue_is_not_retroactively_replaced (__main__.Checks.test_unknown_initial_queue_is_not_retroactively_replaced) ... ok
+
+======================================================================
+FAIL: test_cancel_and_repost_join_the_new_existing_queue (__main__.Checks.test_cancel_and_repost_join_the_new_existing_queue)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/cta-queue-activation-20261115/predictfun/research/pf_queue_activation_check.py", line 115, in test_cancel_and_repost_join_the_new_existing_queue
+    self.assertEqual([o['a0'] for o in orders], [100., 300.])
+AssertionError: Lists differ: [100.0, 500.0] != [100.0, 300.0]
+
+First differing element 1:
+500.0
+300.0
+
+- [100.0, 500.0]
+?         ^
+
++ [100.0, 300.0]
+?         ^
+
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.029s
+
+FAILED (failures=1)
+2026-11-15T12:06:11Z tag=queue_activation_regressions_v1 rc=1 peak_rss_mib=137 wall_s=0.64 cpu_user_s=0.55 memavail_start_gib=23 disk_free_gib=478->478 slot=codex
