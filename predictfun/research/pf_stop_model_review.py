@@ -743,6 +743,142 @@ def sides():
     print('\n'.join(L), flush=True)
 
 
+def s5check2():
+    """FULL STEP-5 RECOMPUTATION (USER 2026-11-15: "We fixed all data issues then build the model and do model play"; Codex register item
+    "incomplete upstream verification"; code review D1). Supersedes K1's scope: on EVERY one of the nine days, 2 windows in each of 3 random
+    hours, both sides, 50 random steps per window-side, every step-5 input the model uses is recomputed from raw data known by t and compared
+    with the stored rows: K1's 23 (Binance returns / imbalance / age / flows / trades; Predict spread / mid / microprice / imbalances / age /
+    frames / mid changes) + sigma (1 s Binance mids over the 30 min before the window) + the fair price p_bn (Binance mid known by t, the 60 s
+    median relay basis known by t, sigma, the start price, time left) and its five inputs (dfv250 / dfv1000 / gap_adv / sens / pbn_dist,
+    masked while the start price is unknown) + the settlement-pending flows (pf_pend_bid / ask1000, pf_pend_tot5000, own / opp_pend; frame
+    clock) + act_rel + d_bnimb250 + own / opp_d250 + every adv_ copy (adverse sign x the raw value) + t_rel. PASS iff each matches on >= 99%
+    of the steps where both are finite (|d| <= max(1e-4 relative, 1e-3)) with NaN agreement >= 99%. POSITIVE CONTROLS (must fail): Binance
+    known at E - 50 ms; Predict frames and pending increments known at their update time (no feed delay)."""
+    import pf_io as io
+    from scipy.special import ndtr
+    M.all_selftests()
+    T0 = time.time(); asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()); res = dict(asof=asof, days={}); L = [f'FULL STEP-5 RECOMPUTATION (all 9 days); as of {asof}']
+    XC = ['sigma', 'dfv250', 'dfv1000', 'gap_adv', 'sens', 'pbn_dist', 'pf_pend_bid1000', 'pf_pend_ask1000', 'pf_pend_tot5000', 'own_pend', 'opp_pend',
+          'act_rel', 'd_bnimb250', 'own_d250', 'opp_d250', 't_rel']
+    ADVC = [c for c in M.SD.ADV]
+    allok = True; ctrl = {'bn_future': [], 'pf_nodelay': []}
+    for d in M.DAYS9:
+        ck = json.load(open(f'{M.K.IO}/step1/{d}/clock_rl_d2.json')); shift = float(ck['shift_ms']); b_in = float(ck['bn_in']) + float(ck['d_dec']); dd = float(ck['d_dec'])
+        reg = pd.read_parquet(f'{M.K.IO}/step1/{d}/registry.parquet', columns=['mid', 'ws', 'start_price']); WS = dict(zip(reg.mid.astype(int), reg.ws.astype(float)))
+        SP = dict(zip(reg.mid.astype(int), reg.start_price.astype(float)))
+        cols = ['m', 'side', 'k', 't', 'masked'] + S5_BN + S5_PF + XC + [f'adv_{c}' for c in ADVC]
+        R = M.day_cols(d, cols); rg = np.random.default_rng(int(d) + 11)
+        hrs = (R['t'] // 3600000).astype(np.int64); cand_h = np.unique(hrs[(R['t'] % 3600000) > 120000]); rows = []
+        for hh in rg.choice(cand_h, K1_HOURS, replace=False):
+            ms = np.unique(R['m'][hrs == hh]); ms = rg.choice(ms, min(K1_WIN, len(ms)), replace=False)
+            for m_ in ms:
+                for s_ in (0, 1):
+                    ii = np.flatnonzero((R['m'] == m_) & (R['side'] == s_)); rows.extend(rg.choice(ii, min(K1_STEPS, len(ii)), replace=False).tolist())
+        rows = np.sort(np.array(rows)); mm = R['m'][rows].astype(int); sd_ = R['side'][rows].astype(int); t = R['t'][rows].astype(np.float64)
+        mids = sorted(set(mm.tolist()))
+        hset = set()
+        for m_ in mids:
+            for x in range(int((WS[m_] - 1800.0 - 60.0) // 3600), int((WS[m_] + 70.0) // 3600) + 1):
+                hset.add(x)
+        hname = [pd.Timestamp(x * 3600000, unit='ms', tz='UTC').strftime('%Y%m%d_%H') for x in sorted(hset)]
+        hname = [h for h in hname if M.K.part_allowed(f'part_{h}.parquet', d) or h[:8] < d and h[:8] not in ('20261028', '20261029', '20261030')]
+        books = [f for f in sorted(os.listdir(f'{M.K.IO}/step1/{d}/books')) if M.K.part_allowed(f, d)]
+        FR = pd.concat([pd.read_parquet(f'{M.K.IO}/step1/{d}/books/{f}', columns=['mid', 't_ms', 'recv_ns'] + [f'{x}{i}_{y}' for x in 'ba' for i in (1, 2, 3) for y in 'ps'],
+                                        filters=[('mid', 'in', mids)]) for f in books], ignore_index=True)
+        PE = pd.read_parquet(f'{M.K.IO}/step1/{d}/pend_inc.parquet', columns=['mid', 't_ms', 'side', 'inc', 'recv_ns']); PE = PE[PE.mid.isin(mids)]
+        REF = [(r[0] / 1e6 - (72.0 - dd), float(r[2])) for h in hname for r in io.ref_rows(h) if not r[3]]
+        REF = np.array(sorted(REF)) if REF else np.empty((0, 2))
+        for tag, bi, nodelay in (('real', b_in, False), ('bn_future', -50.0, False), ('pf_nodelay', b_in, True)):
+            BTs, TRs = [], []
+            for h in hname:
+                bt, tr = _bn_hour(h, bi)
+                if bt is not None:
+                    BTs.append(bt)
+                if tr is not None:
+                    TRs.append(tr)
+            k_ = np.concatenate([x[0] for x in BTs]); o = np.argsort(k_, kind='stable'); BT = (k_[o], np.concatenate([x[1] for x in BTs])[o], np.concatenate([x[2] for x in BTs])[o])
+            tk_ = np.concatenate([x[0] for x in TRs]); o = np.argsort(tk_, kind='stable'); TR = (tk_[o], np.concatenate([x[1] for x in TRs])[o])
+            sb = (BT[0] // 1000).astype(np.int64); lastb = np.r_[sb[1:] != sb[:-1], True]; secm = dict(zip(sb[lastb].tolist(), BT[1][lastb].tolist()))
+            if len(REF):
+                ii = np.searchsorted(BT[0], REF[:, 0], side='right') - 1; okr = ii >= 0
+                rel_t = REF[okr, 0]; rel_v = REF[okr, 1] / BT[1][ii[okr]]
+            else:
+                rel_t = rel_v = np.empty(0)
+            rec = {c: np.full(len(rows), np.nan) for c in S5_BN + S5_PF + XC + [f'adv_{c}' for c in ADVC]}
+            for m_ in mids:
+                ws = WS[m_] * 1000.0; sl = np.flatnonzero(mm == m_); tt = t[sl]; s0 = int(WS[m_]) - 1800
+                sm = pd.Series([secm.get(s0 + i, np.nan) for i in range(1800)]).ffill().values; lr = np.diff(np.log(sm)); lr = lr[np.isfinite(lr)]
+                sig = float(np.sqrt(np.mean(lr ** 2))) if len(lr) > 1000 else np.nan
+                g = np.arange(ws, ws + 60000.0, 50.0); kk_ = np.rint((tt - ws) / 50.0).astype(int)
+                fr = FR[FR.mid.values == m_]
+                if nodelay:
+                    fr = fr.assign(recv_ns=fr.t_ms.values.astype(np.float64) * 1e6)
+                full = _recompute(g, BT, TR, fr, shift if not nodelay else 0.0, pf_min=(13.2 if not nodelay else 0.0), d_dec=(dd if not nodelay else 0.0))
+                for c in S5_BN + S5_PF:
+                    rec[c][sl] = full[c][kk_]
+                a_ = np.searchsorted(rel_t, g - 60000.0); b_ = np.searchsorted(rel_t, g, side='right')
+                bas = np.array([np.median(rel_v[x:y]) if y - x >= 5 else np.nan for x, y in zip(a_, b_)])
+                i_ = np.searchsorted(BT[0], g, side='right') - 1; S_ = np.where(i_ >= 0, BT[1][np.clip(i_, 0, None)], np.nan)
+                trem = 300.0 - (g - ws) / 1000.0; pbn = 100.0 * ndtr(np.log(S_ * bas / SP[m_]) / (sig * np.sqrt(np.maximum(trem, 1e-3))))
+                gfr = fr.sort_values(['t_ms', 'recv_ns'], kind='stable')
+                kn = np.maximum.accumulate(np.maximum(gfr.t_ms.values.astype(np.float64) + (13.2 if not nodelay else 0.0),
+                                                      gfr.recv_ns.values.astype(np.float64) / 1e6 - (shift if not nodelay else 0.0)) + (dd if not nodelay else 0.0))
+                b1, a1 = gfr.b1_p.values, gfr.a1_p.values; vf = (b1 >= 0) & (a1 > b1); mf = pd.Series(np.where(vf, (a1 + b1) / 2.0, np.nan)).ffill().values
+                jf = np.searchsorted(kn, g, side='right') - 1; cur = np.where(jf >= 0, mf[np.clip(jf, 0, None)], np.nan); gap = pbn - cur
+                lbs = np.where(jf >= 0, np.where(vf[np.clip(jf, 0, None)], np.log1p(gfr.b1_s.values[np.clip(jf, 0, None)]), np.nan), np.nan)
+                las = np.where(jf >= 0, np.where(vf[np.clip(jf, 0, None)], np.log1p(gfr.a1_s.values[np.clip(jf, 0, None)]), np.nan), np.nan)
+                lt = np.log1p(full['bn_ntr1000']); arl = lt - pd.Series(lt).rolling(600, min_periods=20).mean().values
+                pe = PE[PE.mid.values == m_]
+                o_ = np.lexsort((pe.recv_ns.values, pe.t_ms.values)); tq = pe.t_ms.values[o_].astype(np.float64)
+                pk = np.maximum.accumulate((np.maximum(tq + 13.2, pe.recv_ns.values[o_].astype(np.float64) / 1e6 - shift) + dd) if not nodelay else tq)
+                inc = pe.inc.values[o_].astype(float); psd = pe.side.values[o_]
+                def pend(sidev, h):
+                    cs = np.cumsum(np.where(psd == sidev, inc, 0.0)) if sidev is not None else np.cumsum(inc)
+                    a2 = np.searchsorted(pk, tt, side='right') - 1; b2 = np.searchsorted(pk, tt - h, side='right') - 1
+                    return np.where(a2 >= 0, cs[np.clip(a2, 0, None)] if len(cs) else 0.0, 0.0) - np.where(b2 >= 0, cs[np.clip(b2, 0, None)] if len(cs) else 0.0, 0.0)
+                pbid, pask, ptot = (pend(0, 1000.0), pend(1, 1000.0), pend(None, 5000.0)) if len(pe) else (np.zeros(len(tt)),) * 3
+                adv = np.where(sd_[sl] == 1, 1.0, -1.0); msk = R['masked'][rows][sl].astype(bool)
+                def at(arr, kk2):
+                    return np.where((kk2 >= 0), arr[np.clip(kk2, 0, None)], np.nan)
+                p0 = pbn[kk_]; p250 = at(pbn, kk_ - 5); p1000 = at(pbn, kk_ - 20)
+                rec['sigma'][sl] = sig; rec['t_rel'][sl] = (tt - ws) / 1000.0
+                rec['dfv250'][sl] = np.where(msk, np.nan, adv * (p0 - p250)); rec['dfv1000'][sl] = np.where(msk, np.nan, adv * (p0 - p1000))
+                rec['gap_adv'][sl] = np.where(msk, np.nan, adv * gap[kk_]); rec['pbn_dist'][sl] = np.where(msk, np.nan, np.abs(p0 - 50.0))
+                rec['sens'][sl] = np.where(msk, np.nan, [IN_sens(x, sig, y) for x, y in zip(p0, trem[kk_])])
+                rec['pf_pend_bid1000'][sl] = pbid; rec['pf_pend_ask1000'][sl] = pask; rec['pf_pend_tot5000'][sl] = ptot
+                rec['own_pend'][sl] = np.where(sd_[sl] == 0, pbid, pask); rec['opp_pend'][sl] = np.where(sd_[sl] == 0, pask, pbid)
+                rec['act_rel'][sl] = arl[kk_]; rec['d_bnimb250'][sl] = full['bn_imb'][kk_] - at(full['bn_imb'], kk_ - 5)
+                dl = lbs[kk_] - at(lbs, kk_ - 5); da = las[kk_] - at(las, kk_ - 5)
+                rec['own_d250'][sl] = np.where(sd_[sl] == 0, dl, da); rec['opp_d250'][sl] = np.where(sd_[sl] == 0, da, dl)
+                for c in ADVC:
+                    rec[f'adv_{c}'][sl] = adv * rec[c][sl] if c in rec else np.nan
+            for c in ('d_bnimb250',):
+                rec[f'adv_{c}'] = np.where(sd_ == 1, 1.0, -1.0) * rec[c]
+            ag = {c: _agree(rec[c], R[c][rows]) for c in rec}
+            ok_ = all((x['match'] >= K1_OK or x['n'] == 0) and x['nan_agree'] >= K1_OK for x in ag.values())
+            if tag == 'real':
+                res['days'][d] = dict(rows=int(len(rows)), inputs=ag, ok=ok_); allok &= ok_
+            else:
+                ctrl[tag].append(dict(day=d, fails=not ok_))
+            del BT, TR, BTs, TRs
+        _BN_CACHE.clear(); del FR, R, PE
+        M.mem_guard(f's5check2 {d}')
+        bad = {c: v for c, v in res['days'][d]['inputs'].items() if not ((v['match'] >= K1_OK or v['n'] == 0) and v['nan_agree'] >= K1_OK)}
+        L.append(f'   {d}: {len(rows)} steps, {len(res["days"][d]["inputs"])} inputs; min match {min(v["match"] for v in res["days"][d]["inputs"].values() if v["n"]):.4f}; '
+                 f'min NaN agreement {min(v["nan_agree"] for v in res["days"][d]["inputs"].values()):.4f}; failing {bad or "none"}')
+    cok = all(x['fails'] for v in ctrl.values() for x in v)
+    res.update(pass_=bool(allok), controls_fire=bool(cok), controls=ctrl, seconds=round(time.time() - T0, 1))
+    L.insert(1, f'RESULT: {"PASS" if allok else "FAIL"} on every day; positive controls fire on every day: {cok}; {res["seconds"]} s')
+    json.dump(res, open(f'{M.OUTD}/s5check2_20261115.json', 'w'), indent=1, default=float); open(f'{M.OUTD}/s5check2_20261115.txt', 'w').write('\n'.join(L) + '\n')
+    print('\n'.join(L), flush=True)
+    if not allok:
+        sys.exit('REFUSED: a step-5 input does not match its recomputation from raw data')
+
+
+def IN_sens(p, sig, tr):
+    return M.IN.sens_of(float(p), float(sig), float(tr)) if np.isfinite(p) else np.nan
+
+
 S5_BN = ['bn_r25', 'bn_r50', 'bn_r100', 'bn_r250', 'bn_r500', 'bn_r1000', 'bn_r3000', 'bn_imb', 'bn_age', 'bn_flow250', 'bn_flow1000', 'bn_flow5000',
          'bn_ntr1000']
 S5_PF = ['pf_spread', 'pf_mid', 'pf_micro_dev', 'pf_imb1', 'pf_imb3', 'pf_age', 'pf_nfr1000', 'pf_dm250', 'pf_dm1000', 'pf_dm5000']
@@ -929,5 +1065,7 @@ if __name__ == '__main__':
         datacheck()
     elif cmd == 'sides':
         sides()
+    elif cmd == 's5check2':
+        s5check2()
     else:
         sys.exit(f'unknown command {cmd}')
