@@ -83,3 +83,43 @@ never an input (inputs stay the book / Binance / fair-price features known at t)
 1. STOP-FLOW labels from public trades (with the q grid), falsifier and brute-force checks; VALUES table.
 2. STOP-FLOW head (v6 inputs + q), chronological folds as v6; component readings.
 3. EV policy in the STOP-PLAY lane (queue estimate from the lane), selectivity check, then the portfolio replay against the harm-only baseline.
+
+## 7. Decisions agreed with the USER (2026-11-15, before the build)
+
+- LOCAL EV (USER: "it looks still have downstream complications"): EV(keep) values only this order's own fills within the next horizon
+  H = 1 s, each at its own 1 s markout, if kept until the next decision; decisions repeat every 50 ms (rolling), so nothing after H is
+  modelled. Downstream effects are handled outside the EV: pre-positioning value -> KEEP BY DEFAULT (an EV ~ 0 order stays); the value of
+  the queue place -> ONE margin (pull only if EV < -m, chosen on the calibration day); inventory from multi-level sweeps -> the joint lane's
+  exposure cap (when it binds, keep the highest EV per share); re-entry -> the posting rule (the other session's model; meanwhile EV(post at
+  the back) > +m + h); P&L beyond 1 s -> the whole-portfolio replay.
+- QUEUE (USER: "how do we keep our position front in the queue"): no churn (every pull resets us to the back), pre-position deeper levels
+  before they become the best, be early at new levels (posting rule); q = the visible size at our price when we posted, then the minimum
+  visible size there over KNOWN frames since (client-known; the one simulator-dependent piece).
+- MULTIPLE LEVELS (USER: "how do we manage multiple levels"): each level its own order, own EV and own q, decided independently (gaps
+  allowed); sweeps go inner -> outer, so the predicted stop emerges; values v_stop / v_sweep per side and level (deep fills in reverting
+  moves can win); v1 = 30 sh per level; v2 = size per level by EV per share.
+- SIDES (USER: "Does bid/ask have separate models"): one pooled model with side-aligned inputs and fside (the sweep model is symmetric:
+  AUC bid / ask 0.928 / 0.923 at 72 ms, 0.770 / 0.767 at 1 s); values per side; per-side calibration and decision checks; split a side if it
+  differs materially.
+- v1 LABEL: per decision step and level j, from the public trade legs in (t + 22 ms, t + 1 s] at the level's price p_j (the lane's
+  STOP / THROUGH rule): stopping shares Vstop and their markout sum, through shares and their markout sum, the visible size at p_j in the
+  known frame. Local value of a Z = 30 sh order at queue position q: R(q) = min(Z, max(0, Vstop - q)) x m_stop + [Z - that] x m_through
+  if a through trade occurs (m = share-weighted 1 s markouts in the window) - FIFO ordering inside the window approximated by averages
+  (stated limit). Grid q in {0, 0.5, 1} x the visible size (front / middle / back).
+
+## 8. Build stages (USER 2026-11-15: "we should have a few preprocessing steps, first, data processing, check its coverage, data quality, etc, then model, then the pipeline")
+
+STAGE 1 - DATA (no model): (a) build the label data per decision step and level from the public trade legs, the known-frame book and the
+mid (stopping / through shares and 1 s markout sums, visible size; untimed legs excluded as a counted status); (b) COVERAGE - share of
+level-steps with any stopping flow in 1 s by level / side / time in window / day, WS-timed vs E2-estimated share (C12), flow beyond the
+visible depth; (c) QUALITY - leg reconciliation against step 1 (every first-minute leg accounted), no duplicate legs, STOP / THROUGH
+consistent with each transaction's own prices, visible sizes equal to the lane's; (d) SANITY - front stopping fills ~ +0.5 c/sh (the top
+makers' real value, LEARN-PULL), sweep fills clearly negative; (e) TIMING - labels from WS-timed legs only vs all legs; (f) RECONCILIATION
+- on the keep-all lane's order states the label's local value at the lane's own queue position reproduces the lane's simulated 1 s fill
+value within the stated approximations; (g) DISTRIBUTION - zero-inflated, heavy-tailed stopping flow relative to the visible queue (sets
+the model loss). Declared pass rules in the stage's docstring; the model waits for a pass.
+STAGE 2 - MODEL: local value regressed on v6's 71 inputs + level + queue position (grid front / middle / back); chronological folds as
+v6; calibration by decile, per-side checks, the local decision-quality check (harm avoided per good value given up vs harm-only ~1.0 and
+the oracle 2.25).
+STAGE 3 - PIPELINE: the keep rule in the STOP-PLAY lane (client-known queue estimate, margins m / h chosen on the calibration day) vs the
+harm-only baseline (v6 30 sh queue zero: -$135 / day at M 50) at queue zero / inf and 30 / 100 sh, whole portfolio, C1-C18.
