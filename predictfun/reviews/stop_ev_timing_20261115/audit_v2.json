@@ -1,0 +1,932 @@
+{
+  "asof": "2026-11-15T14:02:20.203055+00:00",
+  "status": "saved_labels_and_certificates_pass",
+  "checker_sha256": "29d11d474389b8deba12ab7f2dada2f18cddd2aba6893bf52ec8aaf9ee590159",
+  "source_report_sha256": "3c3f3ca408f071aa6049179b2f0198224266e0f01d73f93decd74195834e8b0a",
+  "source_asof": "2026-11-15T13:58:13.321658+00:00",
+  "all_days": {
+    "certified_ws": {
+      "probes": 393154,
+      "baseline_eligible": 2809,
+      "certified_eligible": 18911,
+      "baseline_fraction": 0.007144782960366676,
+      "certified_fraction": 0.04810074423762699,
+      "gain": 16102,
+      "multiple": 6.732289070843716,
+      "by_side": {
+        "0": {
+          "probes": 195440,
+          "baseline_eligible": 1394,
+          "certified_eligible": 9590,
+          "statuses": {
+            "uncertain_prior_reference": 122120,
+            "not_client_resting": 56628,
+            "eligible_timing_invariant": 9590,
+            "uncertain_future_exposure": 2944,
+            "probe_not_reached": 1868,
+            "incomplete_book_coverage": 2287,
+            "missing_or_stale_mark": 3
+          }
+        },
+        "1": {
+          "probes": 197714,
+          "baseline_eligible": 1415,
+          "certified_eligible": 9321,
+          "statuses": {
+            "uncertain_prior_reference": 123553,
+            "not_client_resting": 57547,
+            "eligible_timing_invariant": 9321,
+            "uncertain_future_exposure": 3040,
+            "probe_not_reached": 1898,
+            "incomplete_book_coverage": 2352,
+            "missing_or_stale_mark": 3
+          }
+        }
+      }
+    },
+    "certified_estimated": {
+      "probes": 393154,
+      "baseline_eligible": 72255,
+      "certified_eligible": 149658,
+      "baseline_fraction": 0.1837829451054803,
+      "certified_fraction": 0.3806599958286066,
+      "gain": 77403,
+      "multiple": 2.0712476645214863,
+      "by_side": {
+        "0": {
+          "probes": 195440,
+          "baseline_eligible": 36101,
+          "certified_eligible": 73663,
+          "statuses": {
+            "uncertain_prior_reference": 60311,
+            "eligible_estimated_timing": 73663,
+            "not_client_resting": 56628,
+            "probe_not_reached": 1868,
+            "incomplete_book_coverage": 2287,
+            "uncertain_future_exposure": 680,
+            "missing_or_stale_mark": 3
+          }
+        },
+        "1": {
+          "probes": 197714,
+          "baseline_eligible": 36154,
+          "certified_eligible": 75995,
+          "statuses": {
+            "uncertain_prior_reference": 59206,
+            "eligible_estimated_timing": 75995,
+            "not_client_resting": 57547,
+            "probe_not_reached": 1898,
+            "incomplete_book_coverage": 2352,
+            "uncertain_future_exposure": 713,
+            "missing_or_stale_mark": 3
+          }
+        }
+      }
+    },
+    "future_only_eligible_without_certificate": 115715
+  },
+  "development": {
+    "certified_ws": {
+      "probes": 187384,
+      "baseline_eligible": 969,
+      "certified_eligible": 7337,
+      "baseline_fraction": 0.005171199248601802,
+      "certified_fraction": 0.0391548904922512,
+      "gain": 6368,
+      "multiple": 7.57172342621259,
+      "by_side": {
+        "0": {
+          "probes": 92936,
+          "baseline_eligible": 482,
+          "certified_eligible": 3590,
+          "statuses": {
+            "uncertain_prior_reference": 59628,
+            "not_client_resting": 26835,
+            "eligible_timing_invariant": 3590,
+            "uncertain_future_exposure": 1327,
+            "probe_not_reached": 918,
+            "incomplete_book_coverage": 638
+          }
+        },
+        "1": {
+          "probes": 94448,
+          "baseline_eligible": 487,
+          "certified_eligible": 3747,
+          "statuses": {
+            "uncertain_prior_reference": 60450,
+            "not_client_resting": 27248,
+            "eligible_timing_invariant": 3747,
+            "uncertain_future_exposure": 1453,
+            "probe_not_reached": 909,
+            "incomplete_book_coverage": 641
+          }
+        }
+      }
+    },
+    "certified_estimated": {
+      "probes": 187384,
+      "baseline_eligible": 30076,
+      "certified_eligible": 68028,
+      "baseline_fraction": 0.16050463219912053,
+      "certified_fraction": 0.3630406011185587,
+      "gain": 37952,
+      "multiple": 2.2618699295119034,
+      "by_side": {
+        "0": {
+          "probes": 92936,
+          "baseline_eligible": 14895,
+          "certified_eligible": 32847,
+          "statuses": {
+            "uncertain_prior_reference": 31382,
+            "eligible_estimated_timing": 32847,
+            "not_client_resting": 26835,
+            "probe_not_reached": 918,
+            "incomplete_book_coverage": 638,
+            "uncertain_future_exposure": 316
+          }
+        },
+        "1": {
+          "probes": 94448,
+          "baseline_eligible": 15181,
+          "certified_eligible": 35181,
+          "statuses": {
+            "uncertain_prior_reference": 30092,
+            "eligible_estimated_timing": 35181,
+            "not_client_resting": 27248,
+            "probe_not_reached": 909,
+            "incomplete_book_coverage": 641,
+            "uncertain_future_exposure": 377
+          }
+        }
+      }
+    },
+    "future_only_eligible_without_certificate": 59642
+  },
+  "days": {
+    "20261023": {
+      "certified_ws": {
+        "n": 48312,
+        "eligible": 1503,
+        "statuses": {
+          "uncertain_prior_reference": 31987,
+          "not_client_resting": 13327,
+          "eligible_timing_invariant": 1503,
+          "uncertain_future_exposure": 751,
+          "probe_not_reached": 519,
+          "incomplete_book_coverage": 225
+        },
+        "by_side": {
+          "0": {
+            "n": 23870,
+            "eligible": 641,
+            "baseline_eligible": 54,
+            "statuses": {
+              "uncertain_prior_reference": 15962,
+              "not_client_resting": 6585,
+              "eligible_timing_invariant": 641,
+              "uncertain_future_exposure": 319,
+              "probe_not_reached": 248,
+              "incomplete_book_coverage": 115
+            }
+          },
+          "1": {
+            "n": 24442,
+            "eligible": 862,
+            "baseline_eligible": 64,
+            "statuses": {
+              "uncertain_prior_reference": 16025,
+              "not_client_resting": 6742,
+              "eligible_timing_invariant": 862,
+              "uncertain_future_exposure": 432,
+              "probe_not_reached": 271,
+              "incomplete_book_coverage": 110
+            }
+          }
+        }
+      },
+      "certified_estimated": {
+        "n": 48312,
+        "eligible": 15713,
+        "statuses": {
+          "uncertain_prior_reference": 18343,
+          "eligible_estimated_timing": 15713,
+          "not_client_resting": 13327,
+          "probe_not_reached": 519,
+          "incomplete_book_coverage": 225,
+          "uncertain_future_exposure": 185
+        },
+        "by_side": {
+          "0": {
+            "n": 23870,
+            "eligible": 7677,
+            "baseline_eligible": 2951,
+            "statuses": {
+              "uncertain_prior_reference": 9153,
+              "eligible_estimated_timing": 7677,
+              "not_client_resting": 6585,
+              "probe_not_reached": 248,
+              "incomplete_book_coverage": 115,
+              "uncertain_future_exposure": 92
+            }
+          },
+          "1": {
+            "n": 24442,
+            "eligible": 8036,
+            "baseline_eligible": 3066,
+            "statuses": {
+              "uncertain_prior_reference": 9190,
+              "eligible_estimated_timing": 8036,
+              "not_client_resting": 6742,
+              "probe_not_reached": 271,
+              "incomplete_book_coverage": 110,
+              "uncertain_future_exposure": 93
+            }
+          }
+        }
+      }
+    },
+    "20261024": {
+      "certified_ws": {
+        "n": 43154,
+        "eligible": 2494,
+        "statuses": {
+          "uncertain_prior_reference": 26779,
+          "not_client_resting": 12509,
+          "eligible_timing_invariant": 2494,
+          "uncertain_future_exposure": 704,
+          "probe_not_reached": 382,
+          "incomplete_book_coverage": 286
+        },
+        "by_side": {
+          "0": {
+            "n": 21315,
+            "eligible": 1220,
+            "baseline_eligible": 233,
+            "statuses": {
+              "uncertain_prior_reference": 13222,
+              "not_client_resting": 6174,
+              "eligible_timing_invariant": 1220,
+              "uncertain_future_exposure": 367,
+              "probe_not_reached": 197,
+              "incomplete_book_coverage": 135
+            }
+          },
+          "1": {
+            "n": 21839,
+            "eligible": 1274,
+            "baseline_eligible": 227,
+            "statuses": {
+              "uncertain_prior_reference": 13557,
+              "not_client_resting": 6335,
+              "eligible_timing_invariant": 1274,
+              "uncertain_future_exposure": 337,
+              "probe_not_reached": 185,
+              "incomplete_book_coverage": 151
+            }
+          }
+        }
+      },
+      "certified_estimated": {
+        "n": 43154,
+        "eligible": 18818,
+        "statuses": {
+          "eligible_estimated_timing": 18818,
+          "not_client_resting": 12509,
+          "uncertain_prior_reference": 11031,
+          "probe_not_reached": 382,
+          "incomplete_book_coverage": 286,
+          "uncertain_future_exposure": 128
+        },
+        "by_side": {
+          "0": {
+            "n": 21315,
+            "eligible": 9279,
+            "baseline_eligible": 5299,
+            "statuses": {
+              "eligible_estimated_timing": 9279,
+              "not_client_resting": 6174,
+              "uncertain_prior_reference": 5468,
+              "probe_not_reached": 197,
+              "incomplete_book_coverage": 135,
+              "uncertain_future_exposure": 62
+            }
+          },
+          "1": {
+            "n": 21839,
+            "eligible": 9539,
+            "baseline_eligible": 5480,
+            "statuses": {
+              "eligible_estimated_timing": 9539,
+              "not_client_resting": 6335,
+              "uncertain_prior_reference": 5563,
+              "probe_not_reached": 185,
+              "incomplete_book_coverage": 151,
+              "uncertain_future_exposure": 66
+            }
+          }
+        }
+      }
+    },
+    "20261025": {
+      "certified_ws": {
+        "n": 44390,
+        "eligible": 2089,
+        "statuses": {
+          "uncertain_prior_reference": 26843,
+          "not_client_resting": 14140,
+          "eligible_timing_invariant": 2089,
+          "uncertain_future_exposure": 679,
+          "probe_not_reached": 418,
+          "incomplete_book_coverage": 221
+        },
+        "by_side": {
+          "0": {
+            "n": 22026,
+            "eligible": 1093,
+            "baseline_eligible": 177,
+            "statuses": {
+              "uncertain_prior_reference": 13321,
+              "not_client_resting": 6978,
+              "eligible_timing_invariant": 1093,
+              "uncertain_future_exposure": 309,
+              "probe_not_reached": 217,
+              "incomplete_book_coverage": 108
+            }
+          },
+          "1": {
+            "n": 22364,
+            "eligible": 996,
+            "baseline_eligible": 175,
+            "statuses": {
+              "uncertain_prior_reference": 13522,
+              "not_client_resting": 7162,
+              "eligible_timing_invariant": 996,
+              "uncertain_future_exposure": 370,
+              "probe_not_reached": 201,
+              "incomplete_book_coverage": 113
+            }
+          }
+        }
+      },
+      "certified_estimated": {
+        "n": 44390,
+        "eligible": 17653,
+        "statuses": {
+          "eligible_estimated_timing": 17653,
+          "not_client_resting": 14140,
+          "uncertain_prior_reference": 11778,
+          "probe_not_reached": 418,
+          "incomplete_book_coverage": 221,
+          "uncertain_future_exposure": 180
+        },
+        "by_side": {
+          "0": {
+            "n": 22026,
+            "eligible": 8876,
+            "baseline_eligible": 3994,
+            "statuses": {
+              "eligible_estimated_timing": 8876,
+              "not_client_resting": 6978,
+              "uncertain_prior_reference": 5769,
+              "probe_not_reached": 217,
+              "incomplete_book_coverage": 108,
+              "uncertain_future_exposure": 78
+            }
+          },
+          "1": {
+            "n": 22364,
+            "eligible": 8777,
+            "baseline_eligible": 4033,
+            "statuses": {
+              "eligible_estimated_timing": 8777,
+              "not_client_resting": 7162,
+              "uncertain_prior_reference": 6009,
+              "probe_not_reached": 201,
+              "incomplete_book_coverage": 113,
+              "uncertain_future_exposure": 102
+            }
+          }
+        }
+      }
+    },
+    "20261026": {
+      "certified_ws": {
+        "n": 51528,
+        "eligible": 1251,
+        "statuses": {
+          "uncertain_prior_reference": 34469,
+          "not_client_resting": 14107,
+          "eligible_timing_invariant": 1251,
+          "uncertain_future_exposure": 646,
+          "incomplete_book_coverage": 547,
+          "probe_not_reached": 508
+        },
+        "by_side": {
+          "0": {
+            "n": 25725,
+            "eligible": 636,
+            "baseline_eligible": 18,
+            "statuses": {
+              "uncertain_prior_reference": 17123,
+              "not_client_resting": 7098,
+              "eligible_timing_invariant": 636,
+              "uncertain_future_exposure": 332,
+              "incomplete_book_coverage": 280,
+              "probe_not_reached": 256
+            }
+          },
+          "1": {
+            "n": 25803,
+            "eligible": 615,
+            "baseline_eligible": 21,
+            "statuses": {
+              "uncertain_prior_reference": 17346,
+              "not_client_resting": 7009,
+              "eligible_timing_invariant": 615,
+              "uncertain_future_exposure": 314,
+              "incomplete_book_coverage": 267,
+              "probe_not_reached": 252
+            }
+          }
+        }
+      },
+      "certified_estimated": {
+        "n": 51528,
+        "eligible": 15844,
+        "statuses": {
+          "uncertain_prior_reference": 20322,
+          "eligible_estimated_timing": 15844,
+          "not_client_resting": 14107,
+          "incomplete_book_coverage": 547,
+          "probe_not_reached": 508,
+          "uncertain_future_exposure": 200
+        },
+        "by_side": {
+          "0": {
+            "n": 25725,
+            "eligible": 7015,
+            "baseline_eligible": 2651,
+            "statuses": {
+              "uncertain_prior_reference": 10992,
+              "not_client_resting": 7098,
+              "eligible_estimated_timing": 7015,
+              "incomplete_book_coverage": 280,
+              "probe_not_reached": 256,
+              "uncertain_future_exposure": 84
+            }
+          },
+          "1": {
+            "n": 25803,
+            "eligible": 8829,
+            "baseline_eligible": 2602,
+            "statuses": {
+              "uncertain_prior_reference": 9330,
+              "eligible_estimated_timing": 8829,
+              "not_client_resting": 7009,
+              "incomplete_book_coverage": 267,
+              "probe_not_reached": 252,
+              "uncertain_future_exposure": 116
+            }
+          }
+        }
+      }
+    },
+    "20261027": {
+      "certified_ws": {
+        "n": 44677,
+        "eligible": 1441,
+        "statuses": {
+          "uncertain_prior_reference": 29535,
+          "not_client_resting": 12389,
+          "eligible_timing_invariant": 1441,
+          "uncertain_future_exposure": 536,
+          "probe_not_reached": 404,
+          "incomplete_book_coverage": 372
+        },
+        "by_side": {
+          "0": {
+            "n": 22287,
+            "eligible": 759,
+            "baseline_eligible": 49,
+            "statuses": {
+              "uncertain_prior_reference": 14686,
+              "not_client_resting": 6158,
+              "eligible_timing_invariant": 759,
+              "uncertain_future_exposure": 292,
+              "probe_not_reached": 211,
+              "incomplete_book_coverage": 181
+            }
+          },
+          "1": {
+            "n": 22390,
+            "eligible": 682,
+            "baseline_eligible": 48,
+            "statuses": {
+              "uncertain_prior_reference": 14849,
+              "not_client_resting": 6231,
+              "eligible_timing_invariant": 682,
+              "uncertain_future_exposure": 244,
+              "probe_not_reached": 193,
+              "incomplete_book_coverage": 191
+            }
+          }
+        }
+      },
+      "certified_estimated": {
+        "n": 44677,
+        "eligible": 12842,
+        "statuses": {
+          "uncertain_prior_reference": 18462,
+          "eligible_estimated_timing": 12842,
+          "not_client_resting": 12389,
+          "probe_not_reached": 404,
+          "incomplete_book_coverage": 372,
+          "uncertain_future_exposure": 208
+        },
+        "by_side": {
+          "0": {
+            "n": 22287,
+            "eligible": 6638,
+            "baseline_eligible": 2114,
+            "statuses": {
+              "uncertain_prior_reference": 8980,
+              "eligible_estimated_timing": 6638,
+              "not_client_resting": 6158,
+              "probe_not_reached": 211,
+              "incomplete_book_coverage": 181,
+              "uncertain_future_exposure": 119
+            }
+          },
+          "1": {
+            "n": 22390,
+            "eligible": 6204,
+            "baseline_eligible": 2051,
+            "statuses": {
+              "uncertain_prior_reference": 9482,
+              "not_client_resting": 6231,
+              "eligible_estimated_timing": 6204,
+              "probe_not_reached": 193,
+              "incomplete_book_coverage": 191,
+              "uncertain_future_exposure": 89
+            }
+          }
+        }
+      }
+    },
+    "20261031": {
+      "certified_ws": {
+        "n": 29715,
+        "eligible": 3024,
+        "statuses": {
+          "uncertain_prior_reference": 16511,
+          "not_client_resting": 8470,
+          "eligible_timing_invariant": 3024,
+          "incomplete_book_coverage": 816,
+          "uncertain_future_exposure": 639,
+          "probe_not_reached": 254,
+          "missing_or_stale_mark": 1
+        },
+        "by_side": {
+          "0": {
+            "n": 14823,
+            "eligible": 1638,
+            "baseline_eligible": 370,
+            "statuses": {
+              "uncertain_prior_reference": 8162,
+              "not_client_resting": 4164,
+              "eligible_timing_invariant": 1638,
+              "incomplete_book_coverage": 414,
+              "uncertain_future_exposure": 327,
+              "probe_not_reached": 118
+            }
+          },
+          "1": {
+            "n": 14892,
+            "eligible": 1386,
+            "baseline_eligible": 388,
+            "statuses": {
+              "uncertain_prior_reference": 8349,
+              "not_client_resting": 4306,
+              "eligible_timing_invariant": 1386,
+              "incomplete_book_coverage": 402,
+              "uncertain_future_exposure": 312,
+              "probe_not_reached": 136,
+              "missing_or_stale_mark": 1
+            }
+          }
+        }
+      },
+      "certified_estimated": {
+        "n": 29715,
+        "eligible": 14278,
+        "statuses": {
+          "eligible_estimated_timing": 14278,
+          "not_client_resting": 8470,
+          "uncertain_prior_reference": 5809,
+          "incomplete_book_coverage": 816,
+          "probe_not_reached": 254,
+          "uncertain_future_exposure": 87,
+          "missing_or_stale_mark": 1
+        },
+        "by_side": {
+          "0": {
+            "n": 14823,
+            "eligible": 6945,
+            "baseline_eligible": 4541,
+            "statuses": {
+              "eligible_estimated_timing": 6945,
+              "not_client_resting": 4164,
+              "uncertain_prior_reference": 3127,
+              "incomplete_book_coverage": 414,
+              "probe_not_reached": 118,
+              "uncertain_future_exposure": 55
+            }
+          },
+          "1": {
+            "n": 14892,
+            "eligible": 7333,
+            "baseline_eligible": 4462,
+            "statuses": {
+              "eligible_estimated_timing": 7333,
+              "not_client_resting": 4306,
+              "uncertain_prior_reference": 2682,
+              "incomplete_book_coverage": 402,
+              "probe_not_reached": 136,
+              "uncertain_future_exposure": 32,
+              "missing_or_stale_mark": 1
+            }
+          }
+        }
+      }
+    },
+    "20261101": {
+      "certified_ws": {
+        "n": 34209,
+        "eligible": 2755,
+        "statuses": {
+          "uncertain_prior_reference": 18331,
+          "not_client_resting": 11042,
+          "eligible_timing_invariant": 2755,
+          "incomplete_book_coverage": 1090,
+          "uncertain_future_exposure": 662,
+          "probe_not_reached": 327,
+          "missing_or_stale_mark": 2
+        },
+        "by_side": {
+          "0": {
+            "n": 16990,
+            "eligible": 1514,
+            "baseline_eligible": 247,
+            "statuses": {
+              "uncertain_prior_reference": 9059,
+              "not_client_resting": 5407,
+              "eligible_timing_invariant": 1514,
+              "incomplete_book_coverage": 529,
+              "uncertain_future_exposure": 333,
+              "probe_not_reached": 147,
+              "missing_or_stale_mark": 1
+            }
+          },
+          "1": {
+            "n": 17219,
+            "eligible": 1241,
+            "baseline_eligible": 241,
+            "statuses": {
+              "uncertain_prior_reference": 9272,
+              "not_client_resting": 5635,
+              "eligible_timing_invariant": 1241,
+              "incomplete_book_coverage": 561,
+              "uncertain_future_exposure": 329,
+              "probe_not_reached": 180,
+              "missing_or_stale_mark": 1
+            }
+          }
+        }
+      },
+      "certified_estimated": {
+        "n": 34209,
+        "eligible": 14851,
+        "statuses": {
+          "eligible_estimated_timing": 14851,
+          "not_client_resting": 11042,
+          "uncertain_prior_reference": 6808,
+          "incomplete_book_coverage": 1090,
+          "probe_not_reached": 327,
+          "uncertain_future_exposure": 89,
+          "missing_or_stale_mark": 2
+        },
+        "by_side": {
+          "0": {
+            "n": 16990,
+            "eligible": 7180,
+            "baseline_eligible": 4313,
+            "statuses": {
+              "eligible_estimated_timing": 7180,
+              "not_client_resting": 5407,
+              "uncertain_prior_reference": 3678,
+              "incomplete_book_coverage": 529,
+              "probe_not_reached": 147,
+              "uncertain_future_exposure": 48,
+              "missing_or_stale_mark": 1
+            }
+          },
+          "1": {
+            "n": 17219,
+            "eligible": 7671,
+            "baseline_eligible": 4214,
+            "statuses": {
+              "eligible_estimated_timing": 7671,
+              "not_client_resting": 5635,
+              "uncertain_prior_reference": 3130,
+              "incomplete_book_coverage": 561,
+              "probe_not_reached": 180,
+              "uncertain_future_exposure": 41,
+              "missing_or_stale_mark": 1
+            }
+          }
+        }
+      }
+    },
+    "20261102": {
+      "certified_ws": {
+        "n": 49059,
+        "eligible": 2161,
+        "statuses": {
+          "uncertain_prior_reference": 30860,
+          "not_client_resting": 14100,
+          "eligible_timing_invariant": 2161,
+          "incomplete_book_coverage": 755,
+          "uncertain_future_exposure": 695,
+          "probe_not_reached": 486,
+          "missing_or_stale_mark": 2
+        },
+        "by_side": {
+          "0": {
+            "n": 24345,
+            "eligible": 1009,
+            "baseline_eligible": 125,
+            "statuses": {
+              "uncertain_prior_reference": 15325,
+              "not_client_resting": 7060,
+              "eligible_timing_invariant": 1009,
+              "incomplete_book_coverage": 367,
+              "uncertain_future_exposure": 333,
+              "probe_not_reached": 249,
+              "missing_or_stale_mark": 2
+            }
+          },
+          "1": {
+            "n": 24714,
+            "eligible": 1152,
+            "baseline_eligible": 121,
+            "statuses": {
+              "uncertain_prior_reference": 15535,
+              "not_client_resting": 7040,
+              "eligible_timing_invariant": 1152,
+              "incomplete_book_coverage": 388,
+              "uncertain_future_exposure": 362,
+              "probe_not_reached": 237
+            }
+          }
+        }
+      },
+      "certified_estimated": {
+        "n": 49059,
+        "eligible": 20079,
+        "statuses": {
+          "eligible_estimated_timing": 20079,
+          "not_client_resting": 14100,
+          "uncertain_prior_reference": 13458,
+          "incomplete_book_coverage": 755,
+          "probe_not_reached": 486,
+          "uncertain_future_exposure": 179,
+          "missing_or_stale_mark": 2
+        },
+        "by_side": {
+          "0": {
+            "n": 24345,
+            "eligible": 10120,
+            "baseline_eligible": 4999,
+            "statuses": {
+              "eligible_estimated_timing": 10120,
+              "not_client_resting": 7060,
+              "uncertain_prior_reference": 6469,
+              "incomplete_book_coverage": 367,
+              "probe_not_reached": 249,
+              "uncertain_future_exposure": 78,
+              "missing_or_stale_mark": 2
+            }
+          },
+          "1": {
+            "n": 24714,
+            "eligible": 9959,
+            "baseline_eligible": 5080,
+            "statuses": {
+              "eligible_estimated_timing": 9959,
+              "not_client_resting": 7040,
+              "uncertain_prior_reference": 6989,
+              "incomplete_book_coverage": 388,
+              "probe_not_reached": 237,
+              "uncertain_future_exposure": 101
+            }
+          }
+        }
+      }
+    },
+    "20261103": {
+      "certified_ws": {
+        "n": 48110,
+        "eligible": 2193,
+        "statuses": {
+          "uncertain_prior_reference": 30358,
+          "not_client_resting": 14091,
+          "eligible_timing_invariant": 2193,
+          "uncertain_future_exposure": 672,
+          "probe_not_reached": 468,
+          "incomplete_book_coverage": 327,
+          "missing_or_stale_mark": 1
+        },
+        "by_side": {
+          "0": {
+            "n": 24059,
+            "eligible": 1080,
+            "baseline_eligible": 121,
+            "statuses": {
+              "uncertain_prior_reference": 15260,
+              "not_client_resting": 7004,
+              "eligible_timing_invariant": 1080,
+              "uncertain_future_exposure": 332,
+              "probe_not_reached": 225,
+              "incomplete_book_coverage": 158
+            }
+          },
+          "1": {
+            "n": 24051,
+            "eligible": 1113,
+            "baseline_eligible": 130,
+            "statuses": {
+              "uncertain_prior_reference": 15098,
+              "not_client_resting": 7087,
+              "eligible_timing_invariant": 1113,
+              "uncertain_future_exposure": 340,
+              "probe_not_reached": 243,
+              "incomplete_book_coverage": 169,
+              "missing_or_stale_mark": 1
+            }
+          }
+        }
+      },
+      "certified_estimated": {
+        "n": 48110,
+        "eligible": 19580,
+        "statuses": {
+          "eligible_estimated_timing": 19580,
+          "not_client_resting": 14091,
+          "uncertain_prior_reference": 13506,
+          "probe_not_reached": 468,
+          "incomplete_book_coverage": 327,
+          "uncertain_future_exposure": 137,
+          "missing_or_stale_mark": 1
+        },
+        "by_side": {
+          "0": {
+            "n": 24059,
+            "eligible": 9933,
+            "baseline_eligible": 5239,
+            "statuses": {
+              "eligible_estimated_timing": 9933,
+              "not_client_resting": 7004,
+              "uncertain_prior_reference": 6675,
+              "probe_not_reached": 225,
+              "incomplete_book_coverage": 158,
+              "uncertain_future_exposure": 64
+            }
+          },
+          "1": {
+            "n": 24051,
+            "eligible": 9647,
+            "baseline_eligible": 5166,
+            "statuses": {
+              "eligible_estimated_timing": 9647,
+              "not_client_resting": 7087,
+              "uncertain_prior_reference": 6831,
+              "probe_not_reached": 243,
+              "incomplete_book_coverage": 169,
+              "uncertain_future_exposure": 73,
+              "missing_or_stale_mark": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "controls": {
+    "duplicate": true,
+    "quantity": true,
+    "certificate": true,
+    "source": true,
+    "invalid_label": true
+  },
+  "overlap_parity_pairs": 75064,
+  "interpretation": "Certified coverage within the declared replay/timing assumptions, not physical timing truth or model performance."
+}
