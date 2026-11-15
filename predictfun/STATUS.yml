@@ -2319,6 +2319,17 @@ stop_ev_design_20261115:
   components: {SWEEP: have (v6), STOP_FLOW: "new, public-trade labels for hypothetical queue positions", VALUES: "1 s / 5 s markouts", QUEUE: "rule-M estimate - the only simulator-dependent piece"}
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
+stop_ev_model_20261115:
+  status: done_model_ready_economics_negative
+  asof: "2026-11-15 14:01Z"
+  session: aea5bfb9
+  code: {model: predictfun/research/pf_stop_ev_model.py, driver: predictfun/research/run_stop_ev_model.sh, commits: "490f7407 (before any fit) / 34734643 (T5 POST HOC one-sided)"}
+  labels: "all_anchors_sensitivity eligible actions, untimed rule order_reach (USER); 137,703 test actions"
+  readings: {R900: RANKS, R901: "IC +0.134 (B2 +0.087, B1 +0.041), beats B2 5/5", R902: BOTH-SIDES, R903: "LOCAL-GAIN (pull 92.9%, +$4,628 / 5 days, null p 0.002)", R904: "NOT-SHOWN (3/5 vs B2)"}
+  verdict: MODEL-READY (development only)
+  caveats: ["every prediction decile loses on average (top decile realized -0.53 c)", "strict-WS test subset: mean -0.12 c, IC -0.009 (E2 windows carry losses and skill)"]
+  next: "USER: stage 3 vs separating E2 timing from activity vs a longer value horizon"
+
 stop_ev_stage1_20261115:
   status: done_data_pass_with_flags
   asof: "2026-11-15 13:02Z"
