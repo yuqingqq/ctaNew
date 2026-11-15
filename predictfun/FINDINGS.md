@@ -1,24 +1,29 @@
 <!-- STOP_EV_LATENCY_20261115 -->
-## 2026-11-15 Current-model latency sensitivity: running
+## 2026-11-15 Current-model latency sensitivity: first date complete, four running
 
-Frozen protocol 30b92397, source c7bc4aca; integrated on mm-research before
-results. Corrected v3 EV/B2/QR heads, saved v6 MD benchmark, five consumed
-test dates (10-27, 10-31, 11-01..03), all first-minute windows and all fills.
-Four clocks: current, zero order/notification delay, zero modeled feed plus
-order delay, and the same with M0 instead of M50 trade timing. Every rule
-reviews at 50 ms and freshly scores every entry. Six rungs x 30 shares,
-no repost timer, shared activation-queue lane. QR retains earlier fixed
-thresholds; no optimization. Five rules x four clocks; no inferential claim.
+Frozen protocol 30b92397, source c7bc4aca; corrected v3 EV/B2/QR heads and
+saved v6 MD benchmark. Five consumed dates; four clocks x five fixed rules.
+Every rule reviews at 50 ms; every entry gate fresh. Six rungs x 30 shares,
+no cap or repost timer, shared activation-queue lane, all fills included.
+QR retains earlier fixed thresholds; no optimization or inferential claim.
 
-No completed latency result yet. First-day replay is running in the Codex
-slot from /tmp/cta-latency-20261115; exact cached/uncached trajectory checks
-and sampled known-state accounting are passing. Earlier attempts were
-interrupted before completed economic results (inference optimization,
-then current v3 heads becoming available). Sources and inputs remain frozen
-through the five-day run. Other session's simulator/replay work untouched.
+EARLY ONLY (as of 17:54:48Z, 2026-10-27, 288 first-minute windows): EV at
+current clocks +$197.70 / +1.6516 c per share / 11,970 shares; zero modeled
+feed/order delays +$535.95 / +2.1304 c per share / 25,157 shares. Quote
+exposure only 3.55% / 4.81%; pulls/orders 94.9% / 94.6%. QR -$155.10 ->
++$82.59. This day does NOT support assuming zero delay cannot help, but
+there is no five-day result yet. No rule change made after reading it.
+
+First receipt passes terminal/lane accounting, 58,027 independent known-state
+comparisons and 12 cached/uncached trajectory comparisons; inputs rehashed.
+Four dates continue in the Codex slot from /tmp/cta-latency-20261115.
+Early attempts superseded before completed economic output. Zero modeled
+latency retains the 50 ms grid, event-time/imputation and queue assumptions;
+EV fresh entry remains a diagnostic extension of a 1 s keep-value model.
 Output: data/predict_fun/research/stop_ev_latency_20261115_v3/.
 Protocol: reviews/stop_ev_latency_20261115/freeze_v3.json.
 <!-- /STOP_EV_LATENCY_20261115 -->
+
 
 <!-- STOP_EV_DYNAMICS_SCALE_20261115 -->
 ## 2026-11-15 Dynamics exist; marginal scaling does not explain most severe misses
