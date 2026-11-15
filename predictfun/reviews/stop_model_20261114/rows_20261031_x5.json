@@ -1,0 +1,27 @@
+{
+ "windows": 282,
+ "pair_checked": 450,
+ "pair_differ": 0,
+ "depth_checked": 400,
+ "depth_differ": 0,
+ "depth": {
+  "files": 24,
+  "missing": [],
+  "snapshots": 793961
+ },
+ "rows": 676788,
+ "rows_filled": 676788,
+ "nan_share": {
+  "adv_ofi250": 0.0,
+  "adv_ofi1000": 0.0,
+  "adv_dd3_250": 1.477567569164938e-05,
+  "adv_dd3_1000": 1.7730810829979254e-05,
+  "adv_bnd_imb5": 0.0,
+  "adv_bnd_imb20": 0.0,
+  "adv_d_bnd_imb5_250": 0.0,
+  "adv_bnd_ofi250": 0.0,
+  "adv_bnd_ofi1000": 0.0,
+  "bnd_age": 0.0
+ },
+ "seconds": 43.4
+}
