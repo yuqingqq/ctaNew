@@ -1,0 +1,9 @@
+test_bias_and_oracle_controls (__main__.Checks.test_bias_and_oracle_controls) ... ok
+test_component_cancellation_and_bad_sign (__main__.Checks.test_component_cancellation_and_bad_sign) ... ok
+test_tail_preserves_real_losses_and_bad_weights_refused (__main__.Checks.test_tail_preserves_real_losses_and_bad_weights_refused) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+OK
+2026-11-15T02:34:58Z tag=wait_post_noise_selftest rc=0 peak_rss_mib=157 wall_s=0.62 cpu_user_s=0.53 memavail_start_gib=23 disk_free_gib=492->492 slot=codex

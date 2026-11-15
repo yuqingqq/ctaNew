@@ -1,0 +1,20 @@
+{
+  "asof": "2026-11-15T03:01:37.772588+00:00",
+  "status": "complete",
+  "models_verified": 120,
+  "row_and_fit_receipts_verified": 12,
+  "freezes_verified": [
+    "freeze.json",
+    "noise_freeze.json",
+    "clean_freeze_v2.json"
+  ],
+  "synthetic_tests": 19,
+  "results": {
+    "main/result.json": "5d8c4b8f8a2bdb634ddfe8ef10772144f176fe15bf86db474568b2e4b77c5694",
+    "clean/result.json": "ab6189b52a2902f0c8173bc3d56a66ff57a90d1657871efe9b3a3e63baf33c44",
+    "noise/result.json": "8702ba7bc35d9d630a8f5a3a0a2da9e3ef201ffad21af9fb288991da90d19d2a",
+    "summary.json": "77321a6f6851fd5912499b5acfa4eddc40a092b45f6b5fe6395e4d07e4db6a7e"
+  },
+  "portfolio_evaluated": false,
+  "forward_validation": false
+}
