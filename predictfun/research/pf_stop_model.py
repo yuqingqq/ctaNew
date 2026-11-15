@@ -188,6 +188,9 @@ RAW_NEEDED = [c for c in FEAT_M if not c.startswith('r_')] + SIZE_ABS + SIZE_LOG
 SCALES = ('W30', 'H1')
 MUT_AGE_NEXT = MUT_FOLD_LATE = MUT_HORIZON_EARLY = MUT_PSI_NONAN = MUT_AUC_KEEPNAN = MUT_RULE_OFF = 0       # planted (selftest only)
 MUT_SCALE_FUTURE = MUT_GAP_IGNORE = MUT_MATCH_NO_TFILL = MUT_ORACLE_NOGATE = MUT_LANE_NOGATE = 0
+MUT_QUNK_IGNORE = 0
+QUNK = 'zero'     # 2026-11-15 (Codex register L1): queue ahead of an order placed beyond the visible 5th level - 'zero' (the client lane's
+                  # optimistic default) or 'inf' (conservative: fills only through its price until the level is visible, then the visible size)
 
 
 # ---------------------------------------------------------------- inputs and target
@@ -211,7 +214,7 @@ def inf_feats(PBm, side, t, gap, masked):
     price within PBN_TOL of t."""
     if masked or PBm is None:
         return [NAN] * 6
-    rt, pv, trv, sgv = PBm
+    rt, pv, trv, sgv = PBm[:4]
     pk = IN.pbn_at(rt, pv, t)
     if not np.isfinite(pk):
         return [NAN] * 6
@@ -599,7 +602,7 @@ def sim_joint_g(W, q, shf, cap, aux, decide=None, gate=None, idle_only=0, size=N
     for s in (0, 1):
         w = W[s]
         ST[s] = dict(P5=w['P5'], S5=w['S5'], opp=w['opp'], best=w['best'], bopp=w['bopp'], v=w['vkl'], ptl=w['ptl'], shl=w['shl'],
-                     cache=w.setdefault('cache', {}), live=[], cl=[], cur=[None] * nr, lastpull=[-INF_] * nr, fills=[[] for _ in range(nr)],
+                     cache=w.setdefault('cache', {}), live=[], cl=[], cur=[None] * nr, lastpull=[-INF_] * nr, fills=[[] for _ in range(nr)], fq=[[] for _ in range(nr)],
                      orders=[[] for _ in range(nr)], aux=aux[s], dec=[(decide.get((s, d)) if decide else None) for d in range(nr)],
                      gate=[((gate.get((s, d)) if gate else None) if not MUT_LANE_NOGATE else None) for d in range(nr)])
     stat = dict(pulls=[0, 0], cap_pulls=[0, 0], cap_steps=0, skip=[0, 0], inter=[0, 0], maxpos=0.0, hard_block=[0, 0], gated=[0, 0],
@@ -633,12 +636,12 @@ def sim_joint_g(W, q, shf, cap, aux, decide=None, gate=None, idle_only=0, size=N
         if fi < 0 or ((0 <= opp[fi] <= pt) if s == 0 else (opp[fi] >= pt)):
             o['ref'] = True; o['tr'] = ta
         else:
-            a = lv(s, pt)[fi]; a = float(a) if np.isfinite(a) else 0.0
+            a = lv(s, pt)[fi]; unk = not np.isfinite(a); a = float(a) if not unk else (0.0 if QUNK == 'zero' else INF_)
             if fi + 1 < nf and tfl[fi + 1] - ta <= 100.0:
                 d2 = lv(s, pt)[fi + 1]
-                if np.isfinite(d2) and d2 > a:
-                    a = float(d2)
-            o['a0'] = a; o['ahead'] = 0.0 if q == 'U' else a
+                if np.isfinite(d2) and (d2 > a or (unk and QUNK != 'zero')):
+                    a = float(d2); unk = unk and QUNK == 'zero'
+            o['a0'] = a; o['ahead'] = 0.0 if q == 'U' else a; o['qunk'] = bool(unk)
             if any(x['pt'] == pt and x['rem'] > 1e-12 and x['tr'] > ta for x in ST[s]['live']):
                 stat['viol']['collision'] += 1
             ST[s]['live'].append(o)
@@ -688,7 +691,7 @@ def sim_joint_g(W, q, shf, cap, aux, decide=None, gate=None, idle_only=0, size=N
                 left -= qq; o['rem'] -= qq; got += qq; filled.append(o)
                 g = bisect.bisect_right(taul, t) - 1
                 ph = 'pend' if t >= o['tc'] else ('above' if g >= 0 and S_['v'][g] > -INF_ else 'hold')
-                S_['fills'][o['rung']].append((i, o['pt'], qq, thr, t - o['ta'], ph, o['a0']))
+                S_['fills'][o['rung']].append((i, o['pt'], qq, thr, t - o['ta'], ph, o['a0'])); S_['fq'][o['rung']].append(o.get('qunk', False))
                 o['fl'].append((t, qq))
                 sq = qq if s == 0 else -qq
                 pos[0] += sq; KN.append((t + L_NOTE, sq)); fl.append((s, o['rung'], t, o['pt'], qq))
@@ -795,7 +798,7 @@ def sim_joint_g(W, q, shf, cap, aux, decide=None, gate=None, idle_only=0, size=N
                     stat['viol']['order'] += 1
     if abs(pos[0] - sum((x[4] if x[0] == 0 else -x[4]) for x in fl)) > 1e-6:
         stat['viol']['position'] += 1
-    return dict(fills={(s, d): ST[s]['fills'][d] for s in (0, 1) for d in range(nr)},
+    return dict(fills={(s, d): ST[s]['fills'][d] for s in (0, 1) for d in range(nr)}, fill_qunk={(s, d): ST[s]['fq'][d] for s in (0, 1) for d in range(nr)},
                 orders={(s, d): [(o['ta'], min(o['tr'], o['tfill'], t_end + CL.TAIL_MS), o['a0'], o['ref']) for o in ST[s]['orders'][d]]
                         for s in (0, 1) for d in range(nr)},
                 cancels={(s, d): [o['tc'] for o in ST[s]['orders'][d]] for s in (0, 1) for d in range(nr)},
@@ -970,6 +973,14 @@ def selftest():
     gate = {(0, d): oracle_gate(arr, d) for d in range(NR)}; dec = {(0, d): oracle_dec(arr, W[0]['best'], 0) for d in range(NR)}
     ro = sim_joint_g(W, 'M', 0.0, None, aux, decide=dec, gate=gate, idle_only=0, mode='none', cooldown=CL.REPOST_MS)
     chk(f'oracle gate blocks rung 0 {ro["stat"]["gated"]}', not ro['fills'][(0, 0)] and ro['stat']['gated'][0] > 0 and any(ro['order_states'][(0, 1)]))
+    global QUNK                                            # unknown queue (L1): rung 5 sits beyond the 5 visible levels (50..46 -> 45)
+    Wq = toy_lane_window([1000.0], [45], [200.0]); nq = Wq[0]['n']; auxq = {0: [False] * nq, 1: [False] * nq}; qs_ = {}
+    for mode in ('zero', 'inf'):
+        QUNK = mode if not MUT_QUNK_IGNORE else 'zero'
+        rq = sim_joint_g(Wq, 'M', 0.0, None, auxq, decide=None, gate=None, idle_only=0, mode='none', cooldown=CL.REPOST_MS)
+        qs_[mode] = (sum(f[2] for f in rq['fills'][(0, 5)]), list(rq['fill_qunk'][(0, 5)]), sum(f[2] for f in rq['fills'][(0, 4)]))
+    QUNK = 'zero'
+    chk(f'unknown queue zero / inf {qs_}', qs_['zero'][0] == 30.0 and qs_['zero'][1] == [True] and qs_['inf'][0] == 0.0 and qs_['zero'][2] == qs_['inf'][2] == 30.0)
     v = arm_value(r, W[0]['tf_mff'][0], W[0]['tf_mff'][1])
     chk(f'arm value {v}', abs(v['pnl'] - CL.portfolio_terminal(r, W[0]['tf_mff'][0], W[0]['tf_mff'][1])['pnl']) < 1e-9 and v['shares'] > 0)
     # v4 helpers (2026-11-15): head populations; S sampling unbiased with its weights; the cap keeps the stratum and the weight mass; the
@@ -1018,6 +1029,9 @@ def selftest():
     chk(f'relay basis window [t - 60 s, t], >= 5 prints {rb}', rb[0] == 3.5 and rb[1] == 3.5 and rb[2] == 5.0 and np.isnan(rb[3]))
     pb5 = ([0.0, 50.0, 100.0], np.array([50.0, 51.0, 52.0]), np.array([300.0] * 3), np.array([3e-5] * 3), np.array([1.0, 2.0, 3.0]))
     chk('gap override', gap_of(pb5, 60.0, 9.0) == 2.0 and gap_of(pb5[:4], 60.0, 9.0) == 9.0 and np.isnan(gap_of(pb5, 500.0, 9.0)))
+    PB5 = PBm + (np.linspace(-3.0, 3.0, len(rt)),)          # the corrected-gap tuple through the input builder and the falsifier's perturbation
+    f5 = np.array(inf_feats(PB5, 0, 250.0, gap_of(PB5, 250.0, 2.0), False)); p5 = perturb_pb(PB5, 250.0, np.random.default_rng(2))
+    chk(f'inf feats with corrected gaps {f5}', np.isfinite(f5).all() and len(p5) == 5 and np.allclose(f5, np.array(inf_feats(p5, 0, 250.0, gap_of(p5, 250.0, 2.0), False))))
     xe = rg2.normal(0, 1, (3000, 3)).astype(np.float32); yn = rg2.uniform(0, 1, 3000) < 0.3; ys_ = (xe[:, 0] + 0.3 * rg2.normal(0, 1, 3000)) > 0.5
     _, rn = fit_head(xe[:2000], yn[:2000].astype(int), None, ['a', 'b', 'c'], valid=(xe[2000:], yn[2000:].astype(int)))
     _, rs_ = fit_head(xe[:2000], ys_[:2000].astype(int), None, ['a', 'b', 'c'], valid=(xe[2000:], ys_[2000:].astype(int)))
@@ -1029,7 +1043,7 @@ def mutation_check():
     out = {}
     for nm in ('MUT_AGE_NEXT', 'MUT_FOLD_LATE', 'MUT_HORIZON_EARLY', 'MUT_PSI_NONAN', 'MUT_AUC_KEEPNAN', 'MUT_RULE_OFF', 'MUT_SCALE_FUTURE',
                'MUT_GAP_IGNORE', 'MUT_MATCH_NO_TFILL', 'MUT_ORACLE_NOGATE', 'MUT_LANE_NOGATE', 'MUT_NOWEIGHT', 'MUT_CAP_NOADJ', 'MUT_STALE_CROSS',
-               'MUT_PLATT_SWAP', 'MUT_HEAD_COND', 'MUT_TRAIL_NOW'):
+               'MUT_PLATT_SWAP', 'MUT_HEAD_COND', 'MUT_TRAIL_NOW', 'MUT_QUNK_IGNORE'):
         globals()[nm] = 1
         try:
             out[nm] = len(selftest()) > 0

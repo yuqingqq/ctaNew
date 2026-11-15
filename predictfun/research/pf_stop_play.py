@@ -59,7 +59,9 @@ MUT_GATE_IGNORE = MUT_DEC_ALWAYS = 0
 OUT = M.OUTD
 PV = os.environ.get('PF_PLAY_V', '4')                     # the model version played (v4, or v5 = v4 + adopted extra inputs)
 PSZ = float(os.environ.get('PF_PLAY_SIZE', '30'))           # order size per rung (USER 2026-11-15: "we can use a larger size for testing or make it
-VS = f'_v{PV}' + ('' if PSZ == 30.0 else f'_s{int(PSZ)}')    # configurable"); 30 sh = the oracle's size; other sizes write their own files
+QU = os.environ.get('PF_PLAY_QUNK', 'zero')                # unknown queue beyond the visible 5th level: 'zero' (optimistic) / 'inf' (conservative)
+M.QUNK = QU
+VS = f'_v{PV}' + ('' if PSZ == 30.0 else f'_s{int(PSZ)}') + ('' if QU == 'zero' else f'_q{QU}')   # 30 sh / zero = the oracle's lane
 
 
 def pred_arrays(path, h):
@@ -104,10 +106,12 @@ def arm_value2(r, tf, mff, src):
     """M.arm_value plus splits: by order age at the fill (C1), by trade-anchor source WS / E2 (C12), cancel-pending fills (C3), and the share
     of the window's steps each rung has a live order (C17)."""
     v = M.arm_value(r, tf, mff); mark = M.CL.portfolio_terminal(r, tf, mff)['mark']
-    age = [0.0] * len(AGE_B); ws = [0.0, 0.0]; ws_old = [0.0, 0.0]; pend = pend_sh = 0.0
+    age = [0.0] * len(AGE_B); ws = [0.0, 0.0]; ws_old = [0.0, 0.0]; pend = pend_sh = 0.0; qu = qu_sh = 0.0
     for (s, d), Fl in r['fills'].items():
-        sg = 1.0 if s == 0 else -1.0
-        for f in Fl:
+        sg = 1.0 if s == 0 else -1.0; fq = r.get('fill_qunk', {}).get((s, d), [False] * len(Fl))
+        for f, uq in zip(Fl, fq):
+            if uq:
+                qu += f[2] * sg * (mark - f[1]) / 100.0; qu_sh += f[2]
             x = f[2] * sg * (mark - f[1]) / 100.0; a = float(f[4]); w_ = 0 if bool(src[s][int(f[0])]) else 1
             for i, (lo, hi) in enumerate(AGE_B):
                 if lo <= a < hi:
@@ -118,7 +122,7 @@ def arm_value2(r, tf, mff, src):
             if f[5] == 'pend':
                 pend += x; pend_sh += f[2]
     v.update(age_lt100=age[0], age_100_500=age[1], age_ge500=age[2], ws=ws[0], e2=ws[1], ws_old=ws_old[0], e2_old=ws_old[1], pend=pend,
-             pend_shares=pend_sh, gated=float(sum(r['stat']['gated'])))
+             pend_shares=pend_sh, gated=float(sum(r['stat']['gated'])), qunk=qu, qunk_shares=qu_sh)
     return v
 
 
@@ -225,10 +229,7 @@ def play_day(test, phase):
 
     def run(W, q, shf, dec=None, gate=None, aux=None):
         n = W[0]['n']; aux = aux or {0: [False] * n, 1: [False] * n}
-        if dec is None and gate is None:
-            r = M.CL.sim_joint(W, q, shf, None, aux, decide=None, idle_only=0, size=PSZ, mode='none', cooldown=M.CL.REPOST_MS)
-        else:
-            r = M.sim_joint_g(W, q, shf, None, aux, decide=dec, gate=gate, idle_only=0, size=PSZ, mode='none', cooldown=M.CL.REPOST_MS)
+        r = M.sim_joint_g(W, q, shf, None, aux, decide=dec, gate=gate, idle_only=0, size=PSZ, mode='none', cooldown=M.CL.REPOST_MS)   # every arm, one queue mode
         st['runs'] += 1
         for v_ in M.J3.VIOL:
             st['viol'][v_] += r['stat']['viol'][v_]
@@ -336,13 +337,14 @@ def report():
         L.append(f'   per day M50 w/o young MD | KA | SM | LDG | OR: ' + '; '.join(f'{t[4:]} {PJ[t]["value"]["M50"][md]["pnl_old"]:+.0f} | '
                  f'{PJ[t]["value"]["M50"][ka]["pnl_old"]:+.0f} | {PJ[t]["value"]["M50"][sm]["pnl_old"]:+.0f} | {PJ[t]["value"]["M50"][ld]["pnl_old"]:+.0f} | '
                  f'{PJ[t]["value"]["M50"][orc]["pnl_old"]:+.0f}' for t in T))
-    L.append('SPLITS at M 50 (mean $ a day): arm | WS / E2 (all) | WS / E2 (w/o young) | by order age < 100 / 100-500 / >= 500 ms | cancel-pending $ (shares) '
-             '| pulls | gated entries | live share per rung 0..5')
+    L.append(f'SPLITS at M 50 (mean $ a day; queue mode {QU}): arm | WS / E2 (all) | WS / E2 (w/o young) | by order age < 100 / 100-500 / >= 500 ms | '
+             'cancel-pending $ (shares) | unknown-queue fills $ (shares) | pulls | gated entries | live share per rung 0..5')
     for a in arms:
         g = lambda k_: np.mean([PJ[t]['value']['M50'][a][k_] for t in T])           # noqa: E731
         lv = np.mean([np.array(PJ[t]['live']['M50'][a]) / PJ[t]['stat']['windows'] for t in T], axis=0)
         L.append(f'  {a:7s} {g("ws"):+8.1f} / {g("e2"):+8.1f} | {g("ws_old"):+8.1f} / {g("e2_old"):+8.1f} | {g("age_lt100"):+8.1f} / {g("age_100_500"):+8.1f} / '
-                 f'{g("age_ge500"):+8.1f} | {g("pend"):+7.1f} ({g("pend_shares"):.0f}) | {g("pulls"):8.0f} | {g("gated"):8.0f} | ' + ' '.join(f'{x:.2f}' for x in lv))
+                 f'{g("age_ge500"):+8.1f} | {g("pend"):+7.1f} ({g("pend_shares"):.0f}) | {g("qunk"):+7.1f} ({g("qunk_shares"):.0f}) | {g("pulls"):8.0f} | '
+                 f'{g("gated"):8.0f} | ' + ' '.join(f'{x:.2f}' for x in lv))
     L.append('TAU CURVE at M 50 w/o young, test days (POST HOC, printed - never a choice): H | tau_on: $ a day')
     for h in M.HS:
         L.append(f'  H {h}: ' + ' '.join(f'{t2}: {np.mean([PJ[t]["value"]["M50"][f"CURVE{h}|{t2}"]["pnl_old"] for t in T]):+.0f}' for t2 in TAUS))
