@@ -1,0 +1,11 @@
+E2SEP v2 - certificate groups and fixed identities (builds at 0b7e30cd; Codex certificate stop-ev-side-prefix-invariance-v1); as of 2026-11-15T14:55:26Z
+
+C-INV: 18911 INVARIANT actions; missing / changed under the shifts: 0 -> PASS
+GROUPS (DELTA 0 eligible): n | mean value | share of the total loss | matched in both shifts | mean value at -250 / 0 / +250 on the matched | share whose value changes
+  INVARIANT      18911 | +0.172 |  -0.4% | 100.0% | +0.172 / +0.172 / +0.172 | 0.0%
+  E2-DEPENDENT  130747 | -3.298 |  53.2% |  50.1% | -3.453 / -2.868 / -1.986 | 6.4%
+  UNCERTIFIED   115715 | -3.302 |  47.2% |  43.2% | -3.460 / -3.016 / -2.151 | 6.2%
+
+R950v2 TIMING (fixed identities, common-offset scenarios): E2-DEPENDENT -250 / 0 / +250 -3.453 / -2.868 / -1.986 (range 1.467 vs 1.434) -> TIMING-SENSITIVE
+R951v2 MATCHED ACTIVITY (DELTA 0): E2-DEPENDENT - INVARIANT -13.754 c pooled over 35898 reached actions; per day 20261023 -19.48, 20261024 -7.49, 20261025 -5.97, 20261026 -21.13, 20261027 -12.11, 20261031 -14.70, 20261101 -15.13, 20261102 -25.45, 20261103 -14.68 -> E2-WORSE-AT-EQUAL-ACTIVITY
+READINGS: R950v2 TIMING-SENSITIVE; R951v2 E2-WORSE-AT-EQUAL-ACTIVITY (descriptive; consumed days; replay rule M)

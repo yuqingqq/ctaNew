@@ -2396,7 +2396,8 @@ stop_ev_design_20261115:
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
 stop_ev_v2_fixes_20261115:
-  status: code_fixed_not_run_awaiting_go
+  status: fast_phase_done_t5v2_pending
+  fast_results: "E2SEP v2 C-INV PASS; INVARIANT +0.17 c, E2-DEPENDENT -3.30 (timing-sensitive, -13.8 c vs INVARIANT at equal activity); model v2 primary IC +0.113 (B2 +0.071), R905 MISCALIBRATED, invariant IC +0.016; verdict PENDING (T5v2)"
   asof: "2026-11-15 14:55Z"
   session: aea5bfb9
   review: "predictfun/handoffs/20261115_stop_ev_latest_commit_review.md (relayed by the USER: remain 1 ... 4)"

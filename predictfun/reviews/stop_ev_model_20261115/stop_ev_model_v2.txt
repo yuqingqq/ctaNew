@@ -1,0 +1,40 @@
+STOP-EV STAGE 2 v2 - MODEL (hurdle P(fill) x E[value | fill] by squared error; Codex timing-certified labels; v1 kept as exploratory); as of 2026-11-15T14:58:13Z
+
+TRAINING per fold (certified_estimated training actions): n (filled) | IC train | saved heads reload | T5v2 (200 refits): mean / se -> leak gate | q99 vs observed -> skill beyond the null
+  20261027: 52184 (5808) | +0.213 | ok | PENDING
+  20261031: 68028 (7541) | +0.224 | ok | PENDING
+  20261101: 80870 (8770) | +0.224 | ok | PENDING
+  20261102: 95148 (9994) | +0.217 | ok | PENDING
+  20261103: 109999 (11267) | +0.204 | ok | PENDING
+
+PRIMARY certified_estimated: 81630 test actions; IC +0.113 (B2 +0.071); quintiles -9.93 -3.47 -1.69 -0.83 -0.73; keep iff pred > 0: pull 80.8%, local gain $+2601.5, null p 0.001996007984031936
+  20261027: n 12842 | mean -2.32 | IC +0.120 / B2 +0.065 | quintiles -7.26 -3.00 -1.54 -0.07 +0.25 | MSE 542 / B1 557 | pull 75.6%, gain $+306.0 / B2 $+293.9
+  20261031: n 14278 | mean -2.90 | IC +0.097 / B2 +0.058 | quintiles -8.82 -2.25 -1.32 -0.94 -1.16 | MSE 866 / B1 892 | pull 78.2%, gain $+378.3 / B2 $+382.6
+  20261101: n 14851 | mean -3.23 | IC +0.081 / B2 +0.050 | quintiles -8.93 -3.68 -1.61 -1.08 -0.86 | MSE 943 / B1 969 | pull 77.9%, gain $+454.5 / B2 $+452.5
+  20261102: n 20079 | mean -3.61 | IC +0.125 / B2 +0.074 | quintiles -11.56 -3.06 -1.72 -0.93 -0.77 | MSE 851 / B1 883 | pull 81.3%, gain $+693.3 / B2 $+680.6
+  20261103: n 19580 | mean -4.10 | IC +0.129 / B2 +0.094 | quintiles -11.40 -4.79 -2.61 -0.65 -1.05 | MSE 925 / B1 961 | pull 87.7%, gain $+769.3 / B2 $+784.2
+  calibration by decile (mean prediction -> realized): -14.52 -> -13.77 | -4.59 -> -6.09 | -2.46 -> -3.67 | -1.43 -> -3.27 | -0.84 -> -1.99 | -0.48 -> -1.40 | -0.25 -> -0.98 | -0.08 -> -0.68 | +0.07 -> -0.65 | +1.60 -> -0.81
+  sides IC / top-bottom: bid +0.110 / +8.99; ask +0.117 / +9.40; sum of predictions vs values off by 31.0%; top decile +1.60 -> -0.81
+  READINGS: R900 RANKS; R901 IC+, BEATS-B2-IC; R902 BOTH-SIDES; R903 LOCAL-GAIN; R904 NOT-SHOWN; R905 MISCALIBRATED
+
+TIMING-INVARIANT certified_ws: 11574 test actions; IC +0.016 (B2 +0.034); quintiles -0.66 +0.30 +0.03 +0.08 +0.65; keep iff pred > 0: pull 70.9%, local gain $+7.5, null p 0.011976047904191617
+  20261027: n 1441 | mean +0.32 | IC +0.010 / B2 +0.028 | quintiles +0.03 +1.15 +0.09 -0.16 +0.49 | MSE 91 / B1 87 | pull 55.2%, gain $-3.7 / B2 $-3.9
+  20261031: n 3024 | mean -0.15 | IC +0.016 / B2 +0.061 | quintiles -0.71 +0.05 -0.48 +0.08 +0.33 | MSE 180 / B1 183 | pull 65.6%, gain $+6.8 / B2 $+7.0
+  20261101: n 2755 | mean +0.02 | IC +0.009 / B2 +0.017 | quintiles -0.04 -0.69 -0.11 +0.04 +0.92 | MSE 102 / B1 107 | pull 70.6%, gain $+4.5 / B2 $+2.9
+  20261102: n 2161 | mean +0.69 | IC +0.040 / B2 +0.022 | quintiles -0.68 +0.36 +1.23 +0.07 +2.46 | MSE 388 / B1 390 | pull 77.5%, gain $-3.8 / B2 $-16.0
+  20261103: n 2193 | mean -0.29 | IC +0.002 / B2 +0.028 | quintiles -1.45 +0.67 +0.03 +0.03 -0.73 | MSE 147 / B1 150 | pull 82.4%, gain $+3.5 / B2 $+5.1
+  calibration by decile (mean prediction -> realized): -9.50 -> -1.44 | -3.15 -> +0.11 | -1.57 -> +0.02 | -0.84 -> +0.59 | -0.46 -> +0.36 | -0.23 -> -0.30 | -0.07 -> +0.03 | +0.05 -> +0.13 | +0.27 -> +0.26 | +2.43 -> +1.03
+  sides IC / top-bottom: bid +0.031 / +1.97; ask +0.001 / +0.60; sum of predictions vs values off by 1727.8%; top decile +2.43 -> +1.03
+  READINGS: R900 RANKS; R901 IC+, NOT-ABOVE-B2-IC; R902 BOTH-SIDES; R903 NOT-SHOWN; R904 NOT-SHOWN; R905 MISCALIBRATED
+
+SENSITIVITY v1 population (future-only untimed rule): 137703 test actions; IC +0.117 (B2 +0.074); quintiles -10.11 -3.58 -1.66 -0.86 -0.80; keep iff pred > 0: pull 80.9%, local gain $+4472.4, null p 0.001996007984031936
+  20261027: n 30698 | mean -2.80 | IC +0.129 / B2 +0.084 | quintiles -9.00 -2.56 -1.75 -0.51 -0.19 | MSE 633 / B1 657 | pull 76.9%, gain $+850.0 / B2 $+840.5
+  20261031: n 19869 | mean -3.24 | IC +0.095 / B2 +0.060 | quintiles -9.83 -2.63 -1.59 -0.93 -1.20 | MSE 1024 / B1 1065 | pull 78.4%, gain $+594.8 / B2 $+593.9
+  20261101: n 21361 | mean -3.13 | IC +0.089 / B2 +0.052 | quintiles -8.57 -3.80 -1.70 -0.81 -0.77 | MSE 991 / B1 1018 | pull 78.6%, gain $+637.4 / B2 $+624.6
+  20261102: n 33190 | mean -3.63 | IC +0.123 / B2 +0.073 | quintiles -10.97 -3.26 -1.78 -1.06 -1.08 | MSE 923 / B1 953 | pull 81.3%, gain $+1133.7 / B2 $+1131.4
+  20261103: n 32585 | mean -4.01 | IC +0.129 / B2 +0.085 | quintiles -11.35 -4.68 -2.42 -0.60 -1.02 | MSE 1055 / B1 1086 | pull 87.2%, gain $+1256.5 / B2 $+1280.4
+  calibration by decile (mean prediction -> realized): -14.92 -> -14.27 | -4.70 -> -5.96 | -2.51 -> -3.91 | -1.45 -> -3.25 | -0.85 -> -1.86 | -0.48 -> -1.46 | -0.25 -> -0.98 | -0.08 -> -0.73 | +0.07 -> -0.50 | +1.58 -> -1.09
+  sides IC / top-bottom: bid +0.113 / +9.08; ask +0.121 / +9.67; sum of predictions vs values off by 30.6%; top decile +1.58 -> -1.09
+  READINGS: R900 RANKS; R901 IC+, BEATS-B2-IC; R902 BOTH-SIDES; R903 LOCAL-GAIN; R904 BEATS-B2-DECISION; R905 MISCALIBRATED
+
+R952v2 SKILL-ON-INVARIANT (timing-invariant test actions); VERDICT v2: PENDING (T5v2 missing on ['20261027', '20261031', '20261101', '20261102', '20261103']); readings above are not a claim (development only: consumed days, replay rule M; local 1 s value)

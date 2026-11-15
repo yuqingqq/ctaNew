@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-15 15:00Z (session aea5bfb9) — STOP-EV v2 FAST RESULTS (USER: "Can we do some fast tests and check some results first"; T5v2 not run - the v2 verdict is PENDING, nothing here is a claim)
+
+- Ran run_stop_ev_model2.sh fast (ea9b2013; 14:55-14:58Z): selftests; E2SEP report2; certificate flags on 9 / 9 days (exact joins, 0 value differences); 5 v2 fits (mean value head, heads saved and reloaded exactly); report2 PENDING.
+- E2SEP v2: C-INV PASS (all 18,911 timing-INVARIANT actions identical under +-250 ms shifts - the certificate and the shift builds agree). INVARIANT actions average +0.17 c per 30 sh order over 1 s (no loss); E2-DEPENDENT -3.30 (fixed identities -3.45 / -2.87 / -1.99 at -250 / 0 / +250 ms: TIMING-SENSITIVE); at equal reach activity E2-DEPENDENT lose 13.8 c more than INVARIANT (9 / 9 days).
+- Model v2 (primary certified_estimated, 81,630 test actions): IC +0.113 (B2 +0.071, above it 5 / 5), quintiles -9.9 / -3.5 / -1.7 / -0.8 / -0.7, keep-iff-positive pulls 81% (+$2,602 local over 5 days, null p 0.002), R904 NOT-SHOWN (3 / 5 vs B2), R905 MISCALIBRATED (predictions 31% optimistic; the top decile +1.60 -> -0.81 realized; the test days' mean loss grows -2.3 -> -4.1 c from 10-27 to 11-03). On the 11,574 timing-INVARIANT test actions the mean value is ~0 and the IC +0.016 (B2 +0.034): the skill and the losses sit where E2 timing is involved.
+- Next (USER's call): T5v2 (1,000 refits, ~1.5-2 h) before any claim; and a check of the E2 trades themselves - which trades carry E2 anchors and whether their anchors lead or lag the book's own update of the traded level (that decides whether the E2-dependent losses are real flow or a replay timing artifact).
+
 <!-- STOP_EV_PERFORMANCE_CAUSES_20261115 -->
 ## 2026-11-15 Controlled cause analysis confirms loss-objective bias and remaining adverse-fill risk
 
