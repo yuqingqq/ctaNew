@@ -1,0 +1,20 @@
+{
+ "20261027": {
+  "rows": 691128,
+  "identical": true,
+  "differing": [],
+  "parts_skipped": 1
+ },
+ "20261031": {
+  "rows": 676788,
+  "identical": true,
+  "differing": [],
+  "parts_skipped": 2
+ },
+ "20261103": {
+  "rows": 691062,
+  "identical": true,
+  "differing": [],
+  "parts_skipped": 1
+ }
+}
