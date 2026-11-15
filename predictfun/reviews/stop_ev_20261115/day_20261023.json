@@ -1,0 +1,193 @@
+{
+ "day": "20261023",
+ "size": 30.0,
+ "stat": {
+  "windows": 288,
+  "clock_roundtrip_differ": 0,
+  "legs_mid_nan": 0,
+  "steps": 691200,
+  "rows": 690552,
+  "price_out_1": 0,
+  "vis_unknown_1": 0,
+  "inc_stale_1": 70,
+  "inc_untimed_1": 18798,
+  "price_out_2": 0,
+  "vis_unknown_2": 0,
+  "inc_stale_2": 25,
+  "inc_untimed_2": 10933,
+  "price_out_3": 41,
+  "vis_unknown_3": 0,
+  "inc_stale_3": 25,
+  "inc_untimed_3": 8298,
+  "price_out_4": 366,
+  "vis_unknown_4": 0,
+  "inc_stale_4": 23,
+  "inc_untimed_4": 6632,
+  "price_out_5": 431,
+  "vis_unknown_5": 0,
+  "inc_stale_5": 20,
+  "inc_untimed_5": 5474,
+  "price_out_6": 704,
+  "vis_unknown_6": 677248,
+  "inc_stale_6": 20,
+  "inc_untimed_6": 4533,
+  "book_gaps": 3990,
+  "actions_ws_strict_ambiguous_reference_timing": 5899,
+  "actions_ws_strict_not_client_resting": 13327,
+  "actions_all_anchors_sensitivity_eligible_estimated_timing": 5899,
+  "e9_compared": 6017,
+  "e9_mismatch": 0,
+  "e9_control_differ": 83,
+  "actions_all_anchors_sensitivity_not_client_resting": 13327,
+  "rec_windows": 288,
+  "rec_regress_differ": 0,
+  "rec_viol": 0,
+  "actions_ws_strict_missing_trade_timing": 28224,
+  "actions_ws_strict_probe_not_reached": 519,
+  "actions_all_anchors_sensitivity_missing_trade_timing": 28224,
+  "actions_all_anchors_sensitivity_probe_not_reached": 519,
+  "invalid_book": 648,
+  "actions_ws_strict_eligible": 118,
+  "actions_all_anchors_sensitivity_eligible": 118,
+  "actions_ws_strict_incomplete_book_coverage": 225,
+  "actions_all_anchors_sensitivity_incomplete_book_coverage": 225
+ },
+ "load_stat": {
+  "registry": 288,
+  "outside_day": 0,
+  "sealed_or_forward": 0,
+  "no_outcome": 0,
+  "parts_skipped": 1,
+  "untimed_legs_0_60": 2093,
+  "untimed_shares_0_60": 20830.638290695933,
+  "windows": 288,
+  "grid_steps": 345600,
+  "grid_steps_without_row": 0
+ },
+ "checks": {
+  "E1": {
+   "label_only": 0,
+   "stop_model_only": 0,
+   "best_differ": 0,
+   "joined": 690552,
+   "control_fires": true,
+   "pass": true
+  },
+  "E2": {
+   "first_minute_legs": 211772,
+   "used": 209679,
+   "untimed": 2093,
+   "out_of_range": 0,
+   "shares_first_minute": 2935554.621054096,
+   "shares_used": 2914723.9827634008,
+   "shares_untimed": 20830.638290695933,
+   "shares_out": 0.0,
+   "unaccounted": 0,
+   "missing_from_table": 0,
+   "table_rows_not_admissible": 0,
+   "table_duplicate_rows": 0,
+   "table_rows": 215415,
+   "table_tail_rows": 5736,
+   "anchor_differ": 0,
+   "control_fires": true,
+   "exact_dup_legs": 16226,
+   "exact_dup_share_of_shares": 0.05045909391812828,
+   "pass": true,
+   "flag_dup": true
+  },
+  "E3": {
+   "compared": 215415,
+   "mismatch": 0,
+   "multi_market_or_side_legs": 0,
+   "unk_legs": 24605,
+   "control_fires": true,
+   "pass": true
+  },
+  "E4": {
+   "compared": 14507,
+   "mismatch": 0,
+   "venue_differ": 5063,
+   "pass": true
+  },
+  "E5": {
+   "compared": 11107,
+   "mismatch": 0,
+   "early_differ": 2058,
+   "pass": true
+  },
+  "E6": {
+   "compared": 26831,
+   "mismatch": 0,
+   "early_differ": 383,
+   "pass": true
+  },
+  "E7": {
+   "order_steps": 687341,
+   "clean": 546975,
+   "clean_mismatch": 0,
+   "ended": 114295,
+   "shared": 41439,
+   "mismatch_ended_or_shared": 37191,
+   "value_gap_ended_or_shared": 1206273.625,
+   "value_lane_ended_or_shared": -1427081.75,
+   "value_lane_all": -1701712.25,
+   "regress_windows": 288,
+   "regress_differ": 0,
+   "lane_violations": 0,
+   "control_cap_differ": 50,
+   "control_early_differ": 50,
+   "pass": true
+  },
+  "E9": {
+   "compared": 6017,
+   "mismatch": 0,
+   "control_differ": 83,
+   "ledger_failures": 0,
+   "ledger_errors": [],
+   "pass": true
+  }
+ },
+ "flags": {
+  "dup": true
+ },
+ "untimed": {
+  "band_ms": [
+   -1463.0,
+   1442.0
+  ],
+  "population_legs": 217550,
+  "untimed": 2106,
+  "anchor_out_of_range": 29
+ },
+ "asof": "2026-11-15T12:51:15Z",
+ "sources": {
+  "pf_stop_ev.py": "9a7b9014d96f30e2",
+  "pf_stop_ev_accounting.py": "1cffc03eb8d801d8",
+  "pf_stop_queue_activation_lane.py": "8d61029d348f8085",
+  "pf_queue_activation.py": "b63e7f00a74db3c8",
+  "pf_stop_model.py": "e2a857ddb6c4e76a",
+  "pf_kp_s4.py": "3a2cbceb239fa25a",
+  "pf_order_harm_client_lane.py": "c203beeed0a82ae3"
+ },
+ "label_contract": "stop-ev-chronological-order-value-v1",
+ "reference": "corrected_stop_neutral_no_model_no_gate_v1",
+ "ages_ms": [
+  0.0,
+  250.0,
+  500.0,
+  1000.0,
+  2000.0
+ ],
+ "timings": [
+  "ws_strict",
+  "all_anchors_sensitivity"
+ ],
+ "e2_uncertainty_ms": 250.0,
+ "book_gap_ms": 500.0,
+ "queue_contract": "activation-snapshot-queue-v1",
+ "clock": "M 50",
+ "horizon_ms": 1000.0,
+ "seconds": 68.5,
+ "preroll_ms": 30000.0,
+ "skip_foreign_parts": true
+}
