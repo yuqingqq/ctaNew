@@ -1,5 +1,5 @@
 <!-- STOP_EV_LATENCY_20261115 -->
-## 2026-11-15 Current-model latency sensitivity: first date complete, four running
+## 2026-11-15 Current-model latency sensitivity: three dates complete, two running
 
 Frozen protocol 30b92397, source c7bc4aca; corrected v3 EV/B2/QR heads and
 saved v6 MD benchmark. Five consumed dates; four clocks x five fixed rules.
@@ -7,19 +7,21 @@ Every rule reviews at 50 ms; every entry gate fresh. Six rungs x 30 shares,
 no cap or repost timer, shared activation-queue lane, all fills included.
 QR retains earlier fixed thresholds; no optimization or inferential claim.
 
-EARLY ONLY (as of 17:54:48Z, 2026-10-27, 288 first-minute windows): EV at
-current clocks +$197.70 / +1.6516 c per share / 11,970 shares; zero modeled
-feed/order delays +$535.95 / +2.1304 c per share / 25,157 shares. Quote
-exposure only 3.55% / 4.81%; pulls/orders 94.9% / 94.6%. QR -$155.10 ->
-+$82.59. This day does NOT support assuming zero delay cannot help, but
-there is no five-day result yet. No rule change made after reading it.
+EARLY ONLY (as of 2026-11-15T18:24:14.763551+00:00, 858 first-minute windows on
+10-27, 10-31 and 11-01): pooled EV current clocks +$265.48, zero modeled
+feed/order delays +$867.71. Zero-modeled EV positive on all 3 dates;
+current EV positive on 2. Daily current -> zero: +$197.70 -> +$535.95,
+-$59.99 -> +$101.45, +$127.77 -> +$230.31. This does NOT support assuming
+zero delay cannot help. EV remains sparse (roughly 2-5% quote exposure)
+and churns heavily. EV and QR/MD rankings vary across dates. No five-day
+conclusion or rule change; last two dates continue in the Codex slot.
 
-First receipt passes terminal/lane accounting, 58,027 independent known-state
-comparisons and 12 cached/uncached trajectory comparisons; inputs rehashed.
-Four dates continue in the Codex slot from /tmp/cta-latency-20261115.
-Early attempts superseded before completed economic output. Zero modeled
-latency retains the 50 ms grid, event-time/imputation and queue assumptions;
-EV fresh entry remains a diagnostic extension of a 1 s keep-value model.
+Completed receipts pass lane/terminal accounting, cached/uncached trajectory
+checks, sampled known-state accounting, input rehashing, and exact source
+and model-fit identities against the pre-run freeze. Worktree:
+/tmp/cta-latency-20261115. Zero modeled latency retains the 50 ms grid,
+event-time/imputation and queue assumptions; EV fresh entry is a diagnostic
+extension of a 1 s keep-value model. Other session's simulator work untouched.
 Output: data/predict_fun/research/stop_ev_latency_20261115_v3/.
 Protocol: reviews/stop_ev_latency_20261115/freeze_v3.json.
 <!-- /STOP_EV_LATENCY_20261115 -->

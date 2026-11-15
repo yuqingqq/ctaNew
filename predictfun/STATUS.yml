@@ -1,14 +1,14 @@
 stop_ev_latency_20261115:
-  asof: '2026-11-15T17:54:48.900604+00:00'
-  status: first_date_positive_ev_four_dates_running_no_promotion
+  asof: '2026-11-15T18:24:14.763551+00:00'
+  status: three_dates_zero_delay_ev_positive_two_dates_running_no_promotion
   source_commit: c7bc4aca
   freeze_commit: 30b92397
   model_version: v3
   consumed_test_dates: [20261027, 20261031, 20261101, 20261102, 20261103]
-  completed_dates: 1
-  first_date_windows: 288
-  first_date_ev_current_pnl_dollars: 197.70
-  first_date_ev_zero_modeled_pnl_dollars: 535.95
+  completed_dates: 3
+  completed_windows: 858
+  interim_ev_current_pnl_dollars: 265.47774187647946
+  interim_ev_zero_modeled_pnl_dollars: 867.7063282927455
   clock_configurations: 4
   fixed_rules: 5
   review_grid_ms: 50
