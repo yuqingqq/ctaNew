@@ -1,3 +1,27 @@
+<!-- ENTRY_REPAIR_SIZES_20261115 -->
+## 2026-11-15 08:19 UTC Entry size results and denser coverage
+
+Neutral POST/KEEP sizing completed: seven consumed dates, 2,010 included
+windows, six sealed-lookback windows excluded, same 1,500-share cap. Original
+queue assumption at 30/50/100 shares: mean resting time 15.33/15.89/17.02 s;
+reposts 71,719/67,128/57,525; gross cents per filled share -1.850/-1.878/-1.917.
+Both larger sizes worsen gross total P&L on all seven days under both queue
+assumptions. Conservative queue treatment preserves the direction. Hard-cap
+blocked decisions increase sharply with size; this includes cap/inventory
+effects, not a pure partial-fill queue experiment. These are neutral replays,
+not learned WAIT/POST or selective-keeper results; no fees/rewards/own impact.
+
+Six completed dense days: eligible actions 11,918 -> 23,486; later generations
+1,630 -> 13,198; all 11,918 old eligible labels/features/timestamps match exactly.
+Statuses: eligible 23,486; unsampled 55,819; unreached 1,967; sealed 251. Last day
+November 3 building after main driver resumed 08:19:03 UTC; fixed-evaluation
+model fits follow. No new prediction-performance claim yet.
+
+Evidence 383cd85b; handoffs/20261115_entry_size_early_results.md;
+reviews/entry_repair_20261115/sizes_current.json. Source/inputs frozen separately
+for this already-declared summary; full experiment unchanged.
+<!-- /ENTRY_REPAIR_SIZES_20261115 -->
+
 <!-- ENTRY_REPAIR_VALIDITY_20261115 -->
 ## 2026-11-15 07:10 UTC Entry validity complete and coverage build running
 

@@ -1,3 +1,19 @@
+entry_repair_sizes_20261115:
+  asof: '2026-11-15T08:19:02Z'
+  status: neutral_sizes_complete_last_dense_day_running
+  evidence_commit: 383cd85b
+  current: predictfun/reviews/entry_repair_20261115/sizes_current.json
+  days: 7
+  windows: 2010
+  sizes_shares: [30, 50, 100]
+  larger_size_gross_pnl_better_days: 0
+  size_comparison_days: 7
+  completed_dense_days: 6
+  original_eligible_actions: 11918
+  new_eligible_actions: 23486
+  prediction_results_available: false
+  forward_validation: false
+
 entry_repair_validity_20261115:
   asof: '2026-11-15T07:10:11Z'
   status: validity_complete_density_running
