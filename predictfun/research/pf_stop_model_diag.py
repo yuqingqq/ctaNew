@@ -63,18 +63,13 @@ def hk(h, j):
     return f'H{h}_j{j}'
 
 
-def read_day(d, cols):
-    R = pd.read_parquet(f'{M.OUTD}/rows_{d}.parquet', columns=cols)
-    return R[M.usable(R)].reset_index(drop=True)
-
-
 def day_rates(days, target):
     """Population rate of every head over the days (usable rows; head rows by target)."""
     n = {hj: 0 for hj in HEADS}; p = {hj: 0 for hj in HEADS}
     for d in days:
-        R = read_day(d, LABC + ['hgap'])
+        lab = M.day_cols(d, LABC, M.day_usable(d))
         for (h, j) in HEADS:
-            r = M.head_rows(R.D0.values, j, target); n[(h, j)] += int(r.sum()); p[(h, j)] += int((R[M.DCOL[h]].values[r] >= j).sum())
+            r = M.head_rows(lab['D0'], j, target); n[(h, j)] += int(r.sum()); p[(h, j)] += int((lab[M.DCOL[h]][r] >= j).sum())
     return {hj: p[hj] / max(1, n[hj]) for hj in HEADS}
 
 
@@ -82,17 +77,16 @@ def train_table(days, seed_of, vol, cut, F, scale, stale=False):
     """Training rows of the days under a volume option: X (float32), labels, weights, stratum flags."""
     mode, sub, _ = M.VOL[vol]; Xs, Ls, Ws, Zs = [], [], [], []
     for d in days:
-        R = read_day(d, M.KEYS + M.RAW_NEEDED + LABC)
-        lab = {c: R[c].to_numpy(np.float32) for c in LABC}
+        sel = M.day_usable(d); lab = {c: v.astype(np.float32) for c, v in M.day_cols(d, LABC, sel).items()}
         z = M.stratum(lab, cut) if mode == 'S' else None
-        ix, w = M.day_sample(len(R), sub, seed_of(d), z)
+        ix, w = M.day_sample(len(sel), sub, seed_of(d), z)
         if stale:
-            X = M.model_matrix(R, scale, F)
-            M.stale_shift(X, [F.index(c) for c in M.BN_F if c in F], M.stale_prev(R.m.values, R.side.values, R.k.values)); X = X[ix]
+            kk = M.day_cols(d, ['m', 'side', 'k'], sel); Xf = M.day_matrix(d, scale, F, sel)
+            M.stale_shift(Xf, [F.index(c) for c in M.BN_F if c in F], M.stale_prev(kk['m'], kk['side'], kk['k'])); X = Xf[ix]; del Xf
         else:
-            X = M.model_matrix(R.iloc[ix].reset_index(drop=True), scale, F)
+            X = M.day_matrix(d, scale, F, sel[ix])
         Xs.append(X); Ls.append({c: v[ix] for c, v in lab.items()}); Ws.append(w)
-        Zs.append(z[ix] if z is not None else np.zeros(len(ix), bool)); del R
+        Zs.append(z[ix] if z is not None else np.zeros(len(ix), bool))
         M.mem_guard(f'diag table {d}')
     X = np.concatenate(Xs); del Xs
     return X, {c: np.concatenate([x[c] for x in Ls]) for c in LABC}, np.concatenate(Ws), np.concatenate(Zs)
@@ -135,16 +129,16 @@ def run():
     # ---- Q1 integrity, Q2 populations
     q1 = {}; q2 = {}; nan_sh = {}
     for d in M.DEV_DAYS:
-        R = pd.read_parquet(f'{M.OUTD}/rows_{d}.parquet', columns=M.KEYS + M.RAW_NEEDED + LABC + ['masked', 'quiet'])
-        X = M.model_matrix(R, scale, F)
-        q1[d] = M.integrity(R.m.values, R.side.values, R.k.values, {c: R[c].values for c in M.LAB}, X)
+        R = M.day_cols(d, ['m', 'side', 'k', 'hgap', 'masked'] + M.LAB); X = M.day_matrix(d, scale, F)
+        q1[d] = M.integrity(R['m'], R['side'], R['k'], {c: R[c] for c in M.LAB}, X)
         nan_sh[d] = {c: float(np.isnan(X[:, i]).mean()) for i, c in enumerate(F)}
-        u = M.usable(R); D0 = R.D0.values
-        q2[d] = dict(rows=int(len(R)), gap=float((~u).mean()), masked=float(R.masked.values.mean()),
+        del X
+        u = M.usable(pd.DataFrame({'hgap': R['hgap']})); D0 = R['D0']
+        q2[d] = dict(rows=int(len(D0)), gap=float((~u).mean()), masked=float(R['masked'].mean()),
                      already={f'j{j}': float((D0[u] >= j).mean()) for j in M.JS},
-                     rate_C={hk(h, j): float((R[M.DCOL[h]].values[u & (D0 < j)] >= j).mean()) for (h, j) in HEADS},
-                     rate_U={hk(h, j): float((R[M.DCOL[h]].values[u] >= j).mean()) for (h, j) in HEADS})
-        del R, X
+                     rate_C={hk(h, j): float((R[M.DCOL[h]][u & (D0 < j)] >= j).mean()) for (h, j) in HEADS},
+                     rate_U={hk(h, j): float((R[M.DCOL[h]][u] >= j).mean()) for (h, j) in HEADS})
+        del R
         M.mem_guard(f'diag Q1 {d}')
     res['Q1'] = q1; res['Q2'] = q2
     L.append('Q1 INTEGRITY: ' + '; '.join(f'{d} ' + ('ok' if q1[d]['ok'] else f'FAULT {q1[d]}') for d in M.DEV_DAYS))
@@ -159,13 +153,14 @@ def run():
         L.append(f'   {d}: GAP {x["gap"]:.3%} | masked {x["masked"]:.1%} | ' + ' '.join(f'{x["already"][f"j{j}"]:.2%}' for j in M.JS)
                  + f' | {x["rate_C"]["H1000_j1"]:.3f} / {x["rate_U"]["H1000_j1"]:.3f}')
     # ---- the evaluation day (10-26) and C (v3.1's saved predictions)
-    E = read_day(EVAL, M.KEYS + M.RAW_NEEDED + LABC + ['masked'])
-    lab = {c: E[c].to_numpy(np.float32) for c in LABC}; kk = E.k.values; msk = E.masked.values
-    PCf = pd.read_parquet(f'{M.OUTD}/pred_fold{F1_TEST}_{EVAL}.parquet'); PCf = PCf[PCf.usable.values].reset_index(drop=True)
-    if not (np.array_equal(PCf.m.values, E.m.values) and np.array_equal(PCf.side.values, E.side.values) and np.array_equal(PCf.k.values, kk)):
+    s26 = M.day_usable(EVAL); E = M.day_cols(EVAL, ['m', 'side', 'k', 'masked'] + LABC, s26)
+    lab = {c: E[c].astype(np.float32) for c in LABC}; kk = E['k']; msk = E['masked'].astype(bool)
+    PCf = M.day_cols(f'{M.OUTD}/pred_fold{F1_TEST}_{EVAL}.parquet', ['m', 'side', 'k', 'usable'] + [M.pcol(h, j) for (h, j) in HEADS])
+    uu = PCf['usable'].astype(bool)
+    if not (np.array_equal(PCf['m'][uu], E['m']) and np.array_equal(PCf['side'][uu], E['side']) and np.array_equal(PCf['k'][uu], kk)):
         sys.exit('REFUSED: v3.1 predictions of 10-26 not aligned with its rows')
-    PC = {(h, j): PCf[M.pcol(h, j)].to_numpy(np.float32) for (h, j) in HEADS}; del PCf
-    X26 = M.model_matrix(E, scale, F); keys26 = (E.m.values.copy(), E.side.values.copy(), kk.copy()); del E
+    PC = {(h, j): PCf[M.pcol(h, j)][uu].astype(np.float32) for (h, j) in HEADS}; del PCf
+    X26 = M.day_matrix(EVAL, scale, F, s26); keys26 = (E['m'], E['side'], kk); del E
     M.mem_guard('diag eval day')
     s1 = lambda d: int(F1_TEST) * 31 + int(d)                                    # noqa: E731  (v3.1's seeds)
     h1 = lambda h, j: int(F1_TEST) * 7 + j * 1009 + h                             # noqa: E731
@@ -225,9 +220,9 @@ def run():
     hD = lambda h, j: int(EVAL) * 7 + j * 1009 + h                                 # noqa: E731
     cutD = M.rare_levels(day_rates(FD_TRAIN, target))
     TD = train_table(FD_TRAIN, sD, vol, cutD, F, scale)
-    V = read_day(FD_STOP, M.KEYS + M.RAW_NEEDED + LABC)
-    iv = np.sort(np.random.default_rng(int(FD_STOP)).choice(len(V), min(len(V), M.VAL_N), replace=False))
-    V = V.iloc[iv].reset_index(drop=True); XV = M.model_matrix(V, scale, F); labV = {c: V[c].to_numpy(np.float32) for c in LABC}; del V
+    sV = M.day_usable(FD_STOP)
+    iv = sV[np.sort(np.random.default_rng(int(FD_STOP)).choice(len(sV), min(len(sV), M.VAL_N), replace=False))]
+    XV = M.day_matrix(FD_STOP, scale, F, iv); labV = {c: v.astype(np.float32) for c, v in M.day_cols(FD_STOP, LABC, iv).items()}
     BF = train_heads(TD, F, target, vol, hD, HEADS); BE = train_heads(TD, F, target, vol, hD, HEADS, valid=(XV, labV)); del TD
     PF = predict(BF, X26, HEADS); PE = predict(BE, X26, HEADS)
     mF = metrics(PF, lab, target, HEADS); mE = metrics(PE, lab, target, HEADS)

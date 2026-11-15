@@ -925,6 +925,14 @@ def selftest():
     chk('logloss / brier', abs(logloss([1, 0], [0.5, 0.5]) - np.log(2.0)) < 1e-12 and brier([1, 0], [0.75, 0.25]) == 0.0625)
     chk('helps rule', helps([1.0] * 18, [0.99] * 18)[2] and not helps([1.0] * 18, [0.99] * 9 + [1.0] * 9)[2] and not helps([1.0] * 18, [0.998] * 18)[2])
     chk('model matrix = model inputs', np.array_equal(model_matrix(Rm, 'H1', FEAT_M), model_inputs(Rm, 'H1').to_numpy(np.float32), equal_nan=True))
+    import io
+    Rb = pd.concat([Rm, Rm.iloc[::-1]], ignore_index=True).astype(np.float32); Rb['hgap'] = np.array([0.0, 600.0, 10.0, 20.0], np.float32)
+    buf = io.BytesIO(); Rb.to_parquet(buf, index=False)
+    for sc_ in SCALES:
+        buf.seek(0); dm = day_matrix(buf, sc_, FEAT_M, sel=np.array([0, 2, 3]))
+        chk(f'day matrix {sc_} = model inputs', np.array_equal(dm, model_inputs(Rb.iloc[[0, 2, 3]].reset_index(drop=True), sc_).to_numpy(np.float32), equal_nan=True))
+    buf.seek(0); chk('day usable / cols', list(day_usable(buf)) == [0, 2, 3])
+    buf.seek(0); chk('day cols', np.array_equal(day_cols(buf, ['s1'], sel=np.array([1]))['s1'], Rb.s1.values[[1]]))
     labg = {c: np.array([0.0, 1.0, 0.0]) for c in LAB}; labg['D1'] = np.array([1.0, 2.0, 0.0])
     ig = integrity(np.array([1, 1, 2]), np.array([0, 0, 0]), np.array([0, 1, 0]), labg, np.zeros((3, 2), np.float32))
     labb = {c: v.copy() for c, v in labg.items()}; labb['D1_250'][2] = 3.0
@@ -963,7 +971,7 @@ def all_selftests():
 
 
 def mem_guard(what):
-    r = K.rss_mib()
+    trim(); r = K.rss_mib()
     if r > MEM_CAP_MIB:
         sys.exit(f'REFUSED: resident memory {r:.0f} MiB > {MEM_CAP_MIB:.0f} MiB ({what})')
 
@@ -1349,6 +1357,58 @@ def stale_shift(X, cols, ok):
     return X
 
 
+def trim():
+    """Hand freed heap memory back to the OS (glibc malloc_trim): whole-day reads fragment the heap, and the guard should see what is in use."""
+    try:
+        import ctypes
+        ctypes.CDLL('libc.so.6').malloc_trim(0)
+    except Exception:
+        pass
+
+
+def _pq(src):
+    import pyarrow.parquet as pq
+    return pq.ParquetFile(f'{OUTD}/rows_{src}.parquet' if (isinstance(src, str) and not src.endswith('.parquet')) else src)
+
+
+def day_cols(src, cols, sel=None):
+    """Columns of a rows file (a day or a path / buffer) as numpy arrays, read one column at a time (memory); sel = row positions."""
+    pf = _pq(src); out = {}
+    for c in cols:
+        a = pf.read(columns=[c]).column(0).to_numpy(zero_copy_only=False)
+        out[c] = a if sel is None else a[sel]
+    return out
+
+
+def day_usable(src):
+    """Positions of a rows file's usable rows (not GAP; = usable())."""
+    return np.flatnonzero(usable(pd.DataFrame(day_cols(src, ['hgap']))))
+
+
+def day_matrix(src, scale, F, sel=None):
+    """model_inputs(rows, scale)[F] as a float32 array of the rows at positions sel, built one column at a time from the file (memory; the
+    same float64 arithmetic, then the cast - selftest)."""
+    pf = _pq(src)
+
+    def col(c):
+        a = pf.read(columns=[c]).column(0).to_numpy(zero_copy_only=False)
+        return (a if sel is None else a[sel]).astype(np.float64)
+    w30 = col('scale_w30')
+    if scale == 'W30':
+        sc = w30
+    elif scale == 'H1':
+        h1 = col('scale_h1'); sc = np.where(np.isfinite(h1), h1, w30)
+    else:
+        raise ValueError(scale)
+    sc = np.where(sc > 0, sc, np.nan); lsc = np.log(sc); X = np.empty((len(sc), len(F)), np.float32)
+    for i, c in enumerate(F):
+        if c.startswith('r_'):
+            b = c[2:]; x = col(b); X[:, i] = (x - lsc) if b in SIZE_LOG else x / sc
+        else:
+            X[:, i] = col(c)
+    return X
+
+
 def model_matrix(R, scale, F):
     """model_inputs(R, scale)[F] as one float32 array, built column by column (the same float64 arithmetic, then the cast): memory."""
     sc = scale_of(R, scale); X = np.empty((len(R), len(F)), np.float32)
@@ -1483,27 +1543,26 @@ def fit_fold_v4(test):
     LABC = ['D0'] + [DCOL[h] for h in HS]
     pn = {(h, j): 0 for h in HS for j in JS}; pp_ = dict(pn)
     for d in tr_days:                                      # the training days' population rate of every head (T2; the rare levels of S)
-        R = pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=LABC + ['hgap']); R = R[usable(R)]
+        lb = day_cols(d, LABC, day_usable(d))
         for (h, j) in pn:
-            r = head_rows(R.D0.values, j, target); pn[(h, j)] += int(r.sum()); pp_[(h, j)] += int((R[DCOL[h]].values[r] >= j).sum())
+            r = head_rows(lb['D0'], j, target); pn[(h, j)] += int(r.sum()); pp_[(h, j)] += int((lb[DCOL[h]][r] >= j).sum())
     rates = {hj: pp_[hj] / max(1, pn[hj]) for hj in pn}; cut = rare_levels(rates) if mode == 'S' else {h: None for h in HS}
     Xs, Ls, Ws, Zs = [], [], [], []
     for d in tr_days:
-        R = pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=KEYS + RAW_NEEDED + LABC); R = R[usable(R)].reset_index(drop=True)
-        if R.day.isin([int(cal), int(test)]).any():
+        sel = day_usable(d)
+        if np.isin(day_cols(d, ['day'], sel)['day'], [int(cal), int(test)]).any():
             sys.exit('REFUSED: a calibration or test row in the training rows')
-        lab = {c: R[c].to_numpy(np.float32) for c in LABC}; z = stratum(lab, cut) if mode == 'S' else None
-        ix, w = day_sample(len(R), sub, int(test) * 31 + int(d), z)
-        Xs.append(model_matrix(R.iloc[ix].reset_index(drop=True), scale, F)); Ls.append({c: v_[ix] for c, v_ in lab.items()}); Ws.append(w)
-        Zs.append(z[ix] if z is not None else np.zeros(len(ix), bool)); del R
+        lab = {c: v_.astype(np.float32) for c, v_ in day_cols(d, LABC, sel).items()}; z = stratum(lab, cut) if mode == 'S' else None
+        ix, w = day_sample(len(sel), sub, int(test) * 31 + int(d), z)
+        Xs.append(day_matrix(d, scale, F, sel[ix])); Ls.append({c: v_[ix] for c, v_ in lab.items()}); Ws.append(w)
+        Zs.append(z[ix] if z is not None else np.zeros(len(ix), bool))
         mem_guard(f'fit v4 {test} rows {d}')
     X = np.concatenate(Xs); del Xs
     lab = {c: np.concatenate([x[c] for x in Ls]) for c in LABC}; w = np.concatenate(Ws); z = np.concatenate(Zs); del Ls, Ws, Zs
     valid = None
     if es:                                                 # early stopping on a uniform sample of the calibration day (usable rows)
-        Vd = pd.read_parquet(f'{OUTD}/rows_{cal}.parquet', columns=KEYS + RAW_NEEDED + LABC); Vd = Vd[usable(Vd)].reset_index(drop=True)
-        iv = np.sort(np.random.default_rng(int(cal)).choice(len(Vd), min(len(Vd), VAL_N), replace=False)); Vd = Vd.iloc[iv].reset_index(drop=True)
-        valid = (model_matrix(Vd, scale, F), {c: Vd[c].to_numpy(np.float32) for c in LABC}); del Vd
+        sV = day_usable(cal); iv = sV[np.sort(np.random.default_rng(int(cal)).choice(len(sV), min(len(sV), VAL_N), replace=False))]
+        valid = (day_matrix(cal, scale, F, iv), {c: v_.astype(np.float32) for c, v_ in day_cols(cal, LABC, iv).items()})
     mem_guard(f'fit v4 {test} training rows')
     info = {}; boost = {}; os.makedirs(f'{OUTD}/models', exist_ok=True)
     for h in HS:
@@ -1532,9 +1591,8 @@ def fit_fold_v4(test):
     del X, lab, w, z, valid
     mono = {}; ab = {}
     for dd in (cal, test):                                 # calibration day first: Platt is fitted there and applied to both days
-        R = pd.read_parquet(f'{OUTD}/rows_{dd}.parquet', columns=KEYS + RAW_NEEDED + LABC)
-        u = usable(R); Xd = model_matrix(R, scale, F); out = R[KEYS].copy(); out['usable'] = u
-        lab_ = {c: R[c].to_numpy(np.float32) for c in LABC}; del R
+        kc = day_cols(dd, KEYS + LABC + ['hgap']); u = usable(pd.DataFrame({'hgap': kc['hgap']})); Xd = day_matrix(dd, scale, F)
+        out = pd.DataFrame({c: kc[c] for c in KEYS}); out['usable'] = u; lab_ = {c: kc[c].astype(np.float32) for c in LABC}; del kc
         raw = {hj: b.predict(Xd, num_iteration=nr).astype(np.float32) for hj, (b, nr) in boost.items()}
         if pl and dd == cal:
             for (h, j) in boost:
