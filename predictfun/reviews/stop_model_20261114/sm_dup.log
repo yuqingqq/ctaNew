@@ -1,0 +1,8 @@
+selftests passed; planted errors caught: {'MUT_SIGN': True, 'MUT_EARLY_IN_D1': True, 'MUT_ADV_NOSIDE': True}
+stop-model selftests passed; planted errors caught: {'MUT_AGE_NEXT': True, 'MUT_FOLD_LATE': True, 'MUT_HORIZON_EARLY': True, 'MUT_PSI_NONAN': True, 'MUT_AUC_KEEPNAN': True, 'MUT_RULE_OFF': True, 'MUT_SCALE_FUTURE': True, 'MUT_GAP_IGNORE': True, 'MUT_MATCH_NO_TFILL': True, 'MUT_ORACLE_NOGATE': True, 'MUT_LANE_NOGATE': True, 'MUT_NOWEIGHT': True, 'MUT_CAP_NOADJ': True, 'MUT_STALE_CROSS': True, 'MUT_PLATT_SWAP': True, 'MUT_HEAD_COND': True, 'MUT_TRAIL_NOW': True}
+WITHIN-SIDE COPIES (fold 10-27 refits, V60, U, 9 heads; 10-26 log loss); as of 2026-11-15T04:24:28Z
+   copies (20): ['bn_r25', 'bn_r50', 'bn_r100', 'bn_r250', 'bn_r500', 'bn_r1000', 'bn_r3000', 'bn_imb', 'bn_flow250', 'bn_flow1000', 'bn_flow5000', 'pf_micro_dev', 'pf_imb1', 'pf_imb3', 'pf_dm250', 'pf_dm1000', 'pf_dm5000', 'd_bnimb250', 'pf_pend_bid1000', 'pf_pend_ask1000']
+   head: log loss with / without (relative gain without): H72_j1 0.14762 / 0.14760 (+0.02%); H72_j2 0.05217 / 0.05205 (+0.22%); H72_j3 0.02418 / 0.02411 (+0.29%); H250_j1 0.25068 / 0.25041 (+0.11%); H250_j2 0.11839 / 0.11793 (+0.38%); H250_j3 0.06409 / 0.06397 (+0.19%); H1000_j1 0.50434 / 0.50420 (+0.03%); H1000_j2 0.37481 / 0.37495 (-0.04%); H1000_j3 0.27512 / 0.27506 (+0.02%)
+   mean gain without +0.136%, better without 8/9 -> drop the copies (81 -> 61 inputs)
+   R1 final (reg selected ['bn_ntr1000', 'sens']): normalized vs raw on the final inputs, mean gain -0.077%, better 1/9 -> normalize none; 290.4 s
+2026-11-15T04:24:24Z tag=sm_dup rc=0 peak_rss_mib=985 wall_s=294.49 cpu_user_s=290.13 memavail_start_gib=23 disk_free_gib=490->490 slot=claude
