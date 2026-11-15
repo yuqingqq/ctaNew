@@ -980,12 +980,12 @@ def selftest():
     ro = sim_joint_g(W, 'M', 0.0, None, aux, decide=dec, gate=gate, idle_only=0, mode='none', cooldown=CL.REPOST_MS)
     chk(f'oracle gate blocks rung 0 {ro["stat"]["gated"]}', not ro['fills'][(0, 0)] and ro['stat']['gated'][0] > 0 and any(ro['order_states'][(0, 1)]))
     global QUNK                                            # unknown queue (L1): rung 5 sits beyond the 5 visible levels (50..46 -> 45)
-    Wq = toy_lane_window([1000.0], [45], [200.0]); nq = Wq[0]['n']; auxq = {0: [False] * nq, 1: [False] * nq}; qs_ = {}
+    qprev = QUNK; Wq = toy_lane_window([1000.0], [45], [200.0]); nq = Wq[0]['n']; auxq = {0: [False] * nq, 1: [False] * nq}; qs_ = {}
     for mode in ('zero', 'inf'):
         QUNK = mode if not MUT_QUNK_IGNORE else 'zero'
         rq = sim_joint_g(Wq, 'M', 0.0, None, auxq, decide=None, gate=None, idle_only=0, mode='none', cooldown=CL.REPOST_MS)
         qs_[mode] = (sum(f[2] for f in rq['fills'][(0, 5)]), list(rq['fill_qunk'][(0, 5)]), sum(f[2] for f in rq['fills'][(0, 4)]))
-    QUNK = 'zero'
+    QUNK = qprev                                           # restore the caller's mode (a replay sets it; the selftest must not reset it)
     chk(f'unknown queue zero / inf {qs_}', qs_['zero'][0] == 30.0 and qs_['zero'][1] == [True] and qs_['inf'][0] == 0.0 and qs_['zero'][2] == qs_['inf'][2] == 30.0)
     v = arm_value(r, W[0]['tf_mff'][0], W[0]['tf_mff'][1])
     chk(f'arm value {v}', abs(v['pnl'] - CL.portfolio_terminal(r, W[0]['tf_mff'][0], W[0]['tf_mff'][1])['pnl']) < 1e-9 and v['shares'] > 0)

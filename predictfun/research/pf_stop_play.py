@@ -60,7 +60,7 @@ OUT = M.OUTD
 PV = os.environ.get('PF_PLAY_V', '4')                     # the model version played (v4, or v5 = v4 + adopted extra inputs)
 PSZ = float(os.environ.get('PF_PLAY_SIZE', '30'))           # order size per rung (USER 2026-11-15: "we can use a larger size for testing or make it
 QU = os.environ.get('PF_PLAY_QUNK', 'zero')                # unknown queue beyond the visible 5th level: 'zero' (optimistic) / 'inf' (conservative)
-M.QUNK = QU
+VIN = f'_v{PV}'                                            # the model's files (fit / predictions) - no size / queue tag
 VS = f'_v{PV}' + ('' if PSZ == 30.0 else f'_s{int(PSZ)}') + ('' if QU == 'zero' else f'_q{QU}')   # 30 sh / zero = the oracle's lane
 
 
@@ -204,18 +204,19 @@ def play_day(test, phase):
     if test not in M.TESTS:
         sys.exit(f'REFUSED: {test} is not a fold test day')
     day = M.FOLDS[test][1] if phase == 'cal' else test
-    fj = json.load(open(f'{OUT}/fit_{test}{VS}.json'))
+    fj = json.load(open(f'{OUT}/fit_{test}{VIN}.json'))
     if fj['version'] != PV:
         sys.exit(f'REFUSED: not a v{PV} fit')
+    M.QUNK = QU                                            # set AFTER the selftests (they run the lane in its default mode)
     T0 = time.time(); D = M.K.load_day(day); cut = M.boundary_cut(day)
     tkf = pd.read_parquet(f'{M.K.IO}/step1/{day}/legs_tk.parquet', columns=['tk']).tk.values
     LT = D['LT']; ix = LT.index.values; grp = np.where(tkf[ix] >= 0, tkf[ix], -1 - ix)
     WSg = pd.Series(M.TS.ws_groups(LT.how.values, grp), index=LT.index); TKS = pd.Series(grp, index=LT.index)
-    path = f'{OUT}/pred_fold{test}_{day}{VS}.parquet'
+    path = f'{OUT}/pred_fold{test}_{day}{VIN}.parquet'
     PA = {h: pred_arrays(path, h) for h in M.HS}; order = PA[M.HS[0]][1]; pos_ = {m: i for i, m in enumerate(order)}
     LA = M.label_arrays(day)[0] if phase == 'test' else None
     choice = json.load(open(f'{OUT}/play_cal_{test}{VS}.json'))['choice'] if phase == 'test' else None
-    st = dict(windows=0, boundary_windows=0, runs=0, viol={v_: 0 for v_ in M.J3.VIOL}, offpar_windows=0, offpar_differ=0, no_pred=0)
+    st = dict(windows=0, boundary_windows=0, runs=0, viol={v_: 0 for v_ in M.J3.VIOL}, offpar_windows=0, offpar_differ=0, no_pred=0, qunk=M.QUNK, size=PSZ)
     val = {}; live = {}
 
     def add(cfg, arm, v_, ls=None):
@@ -281,6 +282,8 @@ def play_day(test, phase):
                     add('M50', f'CURVE{h}|{tau}', arm_value2(r_, tf, mff, src))
         if st['windows'] % 40 == 0:
             M.mem_guard(f'play test {day}')
+    if M.QUNK != QU:
+        sys.exit(f'REFUSED: queue mode {M.QUNK} differs from the requested {QU}')
     if any(st['viol'].values()) or st['offpar_differ']:
         sys.exit(f'REFUSED (no output for {day}): lane violations / off-parity differences {st}')
     st['seconds'] = round(time.time() - T0, 1); res = dict(test=test, day=day, phase=phase, stat=st, value=val, live=live)
