@@ -4,6 +4,7 @@ import math
 from pathlib import Path
 import resource
 import sys
+from types import SimpleNamespace
 import unittest
 from unittest import mock
 
@@ -165,6 +166,28 @@ class Checks(unittest.TestCase):
         for shown, rule, unknown in ((-1., 'M', 'zero'), (1., 'bad', 'zero'), (np.nan, 'M', 'bad')):
             with self.assertRaises(ValueError):
                 initial_queue(shown, rule, unknown)
+
+    def test_entry_command_routes_to_corrected_lane_and_restores(self):
+        from pf_queue_activation_replay import corrected_entry
+        module = SimpleNamespace(L=OLD_ENTRY)
+        W = context(); aux = {s: [False] * len(W[s]['tg']) for s in (0, 1)}
+        def run():
+            return module.L.sim_joint(copy.deepcopy(W), 'M', 0., None, aux, nr=1, mode='none',
+                                     policy=lambda v: v['side'] == 0)['order_states'][0, 0][0]['a0']
+        self.assertEqual(run(), 300.)
+        with corrected_entry(module):
+            self.assertEqual(run(), 100.)
+        self.assertEqual(run(), 300.)
+
+    def test_stop_command_routes_to_corrected_lane_and_restores(self):
+        from pf_queue_activation_replay import corrected_stop
+        module = SimpleNamespace(M=OLD_STOP, VS='_v6', all_selftests=lambda: None)
+        self.assertEqual(replay('stop', context(), legacy=True)['order_states'][0, 0][0]['a0'], 300.)
+        with corrected_stop(module):
+            self.assertEqual(module.VS, '_v6_qinit_activation_v1')
+            self.assertEqual(replay('stop', context(), legacy=True)['order_states'][0, 0][0]['a0'], 100.)
+        self.assertEqual(module.VS, '_v6')
+        self.assertEqual(replay('stop', context(), legacy=True)['order_states'][0, 0][0]['a0'], 300.)
 
 
 if __name__ == '__main__':
