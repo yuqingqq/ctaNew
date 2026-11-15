@@ -1,0 +1,10 @@
+{
+  "asof": "2026-11-15T12:39:40.939145+00:00",
+  "status": "implementation_available_final_edge_checks_queued",
+  "source_commit": "3abb190f588e4eb36e7d4e80b1d62dbd7077d3dd",
+  "latest_completed_receipt": "receipt_v1.json",
+  "pending_changes": "later queue visibility; mark-time gaps; stricter mixed-label rejection",
+  "historical_runs": 0,
+  "model_runs": 0,
+  "other_builder_integration": "required; other session owns raw-data pipeline"
+}
