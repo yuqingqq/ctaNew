@@ -1,0 +1,542 @@
+{
+  "cal_day": "20261031",
+  "n": 14278,
+  "global_offset": -0.6259101124848365,
+  "global_rate": -0.2057834668493264,
+  "prior_exposure": 1520.7978611399444,
+  "order": {
+    "0": {
+      "n": 565,
+      "filled": 137,
+      "exposure": 4747.8502530545065,
+      "residual_cents": -488.8201461158659,
+      "rate": -0.12790241017720863,
+      "parent_rate": -0.2057834668493264,
+      "supported": true
+    },
+    "1": {
+      "n": 1212,
+      "filled": 70,
+      "exposure": 2600.628862955129,
+      "residual_cents": -209.59426404743164,
+      "rate": -0.12678845343406756,
+      "parent_rate": -0.2057834668493264,
+      "supported": true
+    },
+    "2": {
+      "n": 736,
+      "filled": 144,
+      "exposure": 5606.827338721766,
+      "residual_cents": 2288.5354614313615,
+      "rate": 0.2771723189411353,
+      "parent_rate": -0.2057834668493264,
+      "supported": true
+    },
+    "3": {
+      "n": 3060,
+      "filled": 127,
+      "exposure": 5599.433198085887,
+      "residual_cents": -2514.518837434112,
+      "rate": -0.3971042330168364,
+      "parent_rate": -0.2057834668493264,
+      "supported": true
+    },
+    "4": {
+      "n": 96,
+      "filled": 23,
+      "exposure": 829.407117016267,
+      "residual_cents": -17.469602501861914,
+      "rate": -0.2057834668493264,
+      "parent_rate": -0.2057834668493264,
+      "supported": false
+    },
+    "5": {
+      "n": 1276,
+      "filled": 33,
+      "exposure": 1098.409744870836,
+      "residual_cents": -434.13140179753896,
+      "rate": -0.2852337692993407,
+      "parent_rate": -0.2057834668493264,
+      "supported": true
+    },
+    "6": {
+      "n": 670,
+      "filled": 133,
+      "exposure": 5587.340801965031,
+      "residual_cents": -491.12435379019206,
+      "rate": -0.11312095165028373,
+      "parent_rate": -0.2057834668493264,
+      "supported": true
+    },
+    "7": {
+      "n": 1313,
+      "filled": 86,
+      "exposure": 2902.5236708298144,
+      "residual_cents": -2852.176984940748,
+      "rate": -0.7155554979006227,
+      "parent_rate": -0.2057834668493264,
+      "supported": true
+    },
+    "8": {
+      "n": 851,
+      "filled": 194,
+      "exposure": 6430.591044088957,
+      "residual_cents": -387.73449233854427,
+      "rate": -0.08812165483695346,
+      "parent_rate": -0.2057834668493264,
+      "supported": true
+    },
+    "9": {
+      "n": 3113,
+      "filled": 204,
+      "exposure": 6016.217417546446,
+      "residual_cents": -3284.1848355915463,
+      "rate": -0.47726318162126663,
+      "parent_rate": -0.2057834668493264,
+      "supported": true
+    },
+    "10": {
+      "n": 87,
+      "filled": 24,
+      "exposure": 691.6503918234424,
+      "residual_cents": -276.5403960602056,
+      "rate": -0.2057834668493264,
+      "parent_rate": -0.2057834668493264,
+      "supported": false
+    },
+    "11": {
+      "n": 1299,
+      "filled": 49,
+      "exposure": 1317.0238817541729,
+      "residual_cents": -268.9847328718106,
+      "rate": -0.20506566015691488,
+      "parent_rate": -0.2057834668493264,
+      "supported": true
+    }
+  },
+  "pressure": {
+    "0": {
+      "n": 435,
+      "filled": 93,
+      "exposure": 3422.7484037318,
+      "residual_cents": -460.5407863420928,
+      "rate": -0.13250700268124838,
+      "parent_rate": -0.12790241017720863,
+      "supported": true
+    },
+    "1": {
+      "n": 62,
+      "filled": 18,
+      "exposure": 584.1302137415483,
+      "residual_cents": 223.072891937695,
+      "rate": -0.12790241017720863,
+      "parent_rate": -0.12790241017720863,
+      "supported": false
+    },
+    "2": {
+      "n": 67,
+      "filled": 26,
+      "exposure": 730.3668843057387,
+      "residual_cents": -251.59931625062393,
+      "rate": -0.12790241017720863,
+      "parent_rate": -0.12790241017720863,
+      "supported": false
+    },
+    "3": {
+      "n": 1,
+      "filled": 0,
+      "exposure": 10.604751275420051,
+      "residual_cents": 0.2470645391557025,
+      "rate": -0.12790241017720863,
+      "parent_rate": -0.12790241017720863,
+      "supported": false
+    },
+    "4": {
+      "n": 907,
+      "filled": 45,
+      "exposure": 1587.0892500788857,
+      "residual_cents": -578.1345734545667,
+      "rate": -0.24806376636762414,
+      "parent_rate": -0.12678845343406756,
+      "supported": true
+    },
+    "5": {
+      "n": 172,
+      "filled": 17,
+      "exposure": 526.1324036024813,
+      "residual_cents": 389.41286867963544,
+      "rate": -0.12678845343406756,
+      "parent_rate": -0.12678845343406756,
+      "supported": false
+    },
+    "6": {
+      "n": 129,
+      "filled": 8,
+      "exposure": 483.26983715809024,
+      "residual_cents": -26.730760390324868,
+      "rate": -0.12678845343406756,
+      "parent_rate": -0.12678845343406756,
+      "supported": false
+    },
+    "7": {
+      "n": 4,
+      "filled": 0,
+      "exposure": 4.137372115671936,
+      "residual_cents": 5.858201117824465,
+      "rate": -0.12678845343406756,
+      "parent_rate": -0.12678845343406756,
+      "supported": false
+    },
+    "8": {
+      "n": 486,
+      "filled": 73,
+      "exposure": 3345.9784418019112,
+      "residual_cents": 1652.2038605442533,
+      "rate": 0.4260986742093754,
+      "parent_rate": 0.2771723189411353,
+      "supported": true
+    },
+    "9": {
+      "n": 96,
+      "filled": 26,
+      "exposure": 839.6363318548538,
+      "residual_cents": -352.2311780252653,
+      "rate": 0.2771723189411353,
+      "parent_rate": 0.2771723189411353,
+      "supported": false
+    },
+    "10": {
+      "n": 152,
+      "filled": 45,
+      "exposure": 1407.3368187132164,
+      "residual_cents": 983.1635312477199,
+      "rate": 0.2771723189411353,
+      "parent_rate": 0.2771723189411353,
+      "supported": false
+    },
+    "11": {
+      "n": 2,
+      "filled": 0,
+      "exposure": 13.87574635178461,
+      "residual_cents": 5.39924766465346,
+      "rate": 0.2771723189411353,
+      "parent_rate": 0.2771723189411353,
+      "supported": false
+    },
+    "12": {
+      "n": 2180,
+      "filled": 68,
+      "exposure": 3094.794062613761,
+      "residual_cents": -2102.108994541156,
+      "rate": -0.5862789231510008,
+      "parent_rate": -0.3971042330168364,
+      "supported": true
+    },
+    "13": {
+      "n": 338,
+      "filled": 17,
+      "exposure": 678.8994763085278,
+      "residual_cents": -1269.3656729626598,
+      "rate": -0.851608495992992,
+      "parent_rate": -0.3971042330168364,
+      "supported": true
+    },
+    "14": {
+      "n": 510,
+      "filled": 40,
+      "exposure": 1759.3292640266345,
+      "residual_cents": 894.0398572279541,
+      "rate": 0.08844919051471137,
+      "parent_rate": -0.3971042330168364,
+      "supported": true
+    },
+    "15": {
+      "n": 32,
+      "filled": 2,
+      "exposure": 66.41039513696342,
+      "residual_cents": -37.08402715825096,
+      "rate": -0.3971042330168364,
+      "parent_rate": -0.3971042330168364,
+      "supported": false
+    },
+    "16": {
+      "n": 48,
+      "filled": 12,
+      "exposure": 379.05974614775107,
+      "residual_cents": -296.24737821603134,
+      "rate": -0.2057834668493264,
+      "parent_rate": -0.2057834668493264,
+      "supported": false
+    },
+    "17": {
+      "n": 13,
+      "filled": 2,
+      "exposure": 90.85161272177666,
+      "residual_cents": 13.39877049894599,
+      "rate": -0.2057834668493264,
+      "parent_rate": -0.2057834668493264,
+      "supported": false
+    },
+    "18": {
+      "n": 34,
+      "filled": 9,
+      "exposure": 350.29322005947756,
+      "residual_cents": 265.87465558119055,
+      "rate": -0.2057834668493264,
+      "parent_rate": -0.2057834668493264,
+      "supported": false
+    },
+    "19": {
+      "n": 1,
+      "filled": 0,
+      "exposure": 9.202538087261521,
+      "residual_cents": -0.4956503659670895,
+      "rate": -0.2057834668493264,
+      "parent_rate": -0.2057834668493264,
+      "supported": false
+    },
+    "20": {
+      "n": 950,
+      "filled": 19,
+      "exposure": 558.5485030105515,
+      "residual_cents": -346.10583149034613,
+      "rate": -0.3750643717716007,
+      "parent_rate": -0.2852337692993407,
+      "supported": true
+    },
+    "21": {
+      "n": 171,
+      "filled": 5,
+      "exposure": 114.91026685543702,
+      "residual_cents": -126.36757749613543,
+      "rate": -0.2852337692993407,
+      "parent_rate": -0.2852337692993407,
+      "supported": false
+    },
+    "22": {
+      "n": 147,
+      "filled": 9,
+      "exposure": 414.40114079582327,
+      "residual_cents": 19.026406753648985,
+      "rate": -0.2852337692993407,
+      "parent_rate": -0.2852337692993407,
+      "supported": false
+    },
+    "23": {
+      "n": 8,
+      "filled": 0,
+      "exposure": 10.549834209024091,
+      "residual_cents": 19.31560043529349,
+      "rate": -0.2852337692993407,
+      "parent_rate": -0.2852337692993407,
+      "supported": false
+    },
+    "24": {
+      "n": 494,
+      "filled": 79,
+      "exposure": 3844.4516496412375,
+      "residual_cents": -222.22881101942954,
+      "rate": -0.07348454373781609,
+      "parent_rate": -0.11312095165028373,
+      "supported": true
+    },
+    "25": {
+      "n": 95,
+      "filled": 28,
+      "exposure": 865.7099043415893,
+      "residual_cents": -442.5557468840534,
+      "rate": -0.11312095165028373,
+      "parent_rate": -0.11312095165028373,
+      "supported": false
+    },
+    "26": {
+      "n": 74,
+      "filled": 26,
+      "exposure": 827.9476994894485,
+      "residual_cents": 170.6695674968155,
+      "rate": -0.11312095165028373,
+      "parent_rate": -0.11312095165028373,
+      "supported": false
+    },
+    "27": {
+      "n": 7,
+      "filled": 0,
+      "exposure": 49.2315484927552,
+      "residual_cents": 2.9906366164753884,
+      "rate": -0.11312095165028373,
+      "parent_rate": -0.11312095165028373,
+      "supported": false
+    },
+    "28": {
+      "n": 967,
+      "filled": 51,
+      "exposure": 1807.996469199566,
+      "residual_cents": -1873.7644062898894,
+      "rate": -0.8898055521267324,
+      "parent_rate": -0.7155554979006227,
+      "supported": true
+    },
+    "29": {
+      "n": 180,
+      "filled": 17,
+      "exposure": 502.6920121919542,
+      "residual_cents": -966.5060165669042,
+      "rate": -0.7155554979006227,
+      "parent_rate": -0.7155554979006227,
+      "supported": false
+    },
+    "30": {
+      "n": 160,
+      "filled": 18,
+      "exposure": 580.7282588482442,
+      "residual_cents": -16.67582792323259,
+      "rate": -0.7155554979006227,
+      "parent_rate": -0.7155554979006227,
+      "supported": false
+    },
+    "31": {
+      "n": 6,
+      "filled": 0,
+      "exposure": 11.106930590050034,
+      "residual_cents": 4.769265839278017,
+      "rate": -0.7155554979006227,
+      "parent_rate": -0.7155554979006227,
+      "supported": false
+    },
+    "32": {
+      "n": 559,
+      "filled": 113,
+      "exposure": 3792.87357920907,
+      "residual_cents": -880.9690283808116,
+      "rate": -0.19101373955298526,
+      "parent_rate": -0.08812165483695346,
+      "supported": true
+    },
+    "33": {
+      "n": 98,
+      "filled": 19,
+      "exposure": 733.272602754159,
+      "residual_cents": -74.91593978212643,
+      "rate": -0.08812165483695346,
+      "parent_rate": -0.08812165483695346,
+      "supported": false
+    },
+    "34": {
+      "n": 187,
+      "filled": 62,
+      "exposure": 1848.241954534967,
+      "residual_cents": 535.3375816171413,
+      "rate": -0.08812165483695346,
+      "parent_rate": -0.08812165483695346,
+      "supported": false
+    },
+    "35": {
+      "n": 7,
+      "filled": 0,
+      "exposure": 56.20290759076155,
+      "residual_cents": 32.81289420725208,
+      "rate": -0.08812165483695346,
+      "parent_rate": -0.08812165483695346,
+      "supported": false
+    },
+    "36": {
+      "n": 2131,
+      "filled": 102,
+      "exposure": 3010.298336033428,
+      "residual_cents": -2233.8720653890973,
+      "rate": -0.6531957747985809,
+      "parent_rate": -0.47726318162126663,
+      "supported": true
+    },
+    "37": {
+      "n": 311,
+      "filled": 17,
+      "exposure": 679.8923035041515,
+      "residual_cents": -274.01628671698745,
+      "rate": -0.45432888672411187,
+      "parent_rate": -0.47726318162126663,
+      "supported": true
+    },
+    "38": {
+      "n": 642,
+      "filled": 82,
+      "exposure": 2267.2213329381057,
+      "residual_cents": -1103.4892833045765,
+      "rate": -0.4829199682976452,
+      "parent_rate": -0.47726318162126663,
+      "supported": true
+    },
+    "39": {
+      "n": 29,
+      "filled": 3,
+      "exposure": 58.80544507076002,
+      "residual_cents": 327.1927998191145,
+      "rate": -0.47726318162126663,
+      "parent_rate": -0.47726318162126663,
+      "supported": false
+    },
+    "40": {
+      "n": 31,
+      "filled": 9,
+      "exposure": 204.70926504510967,
+      "residual_cents": -395.37547622034316,
+      "rate": -0.2057834668493264,
+      "parent_rate": -0.2057834668493264,
+      "supported": false
+    },
+    "41": {
+      "n": 21,
+      "filled": 6,
+      "exposure": 164.33613094333555,
+      "residual_cents": 241.528704454807,
+      "rate": -0.2057834668493264,
+      "parent_rate": -0.2057834668493264,
+      "supported": false
+    },
+    "42": {
+      "n": 35,
+      "filled": 9,
+      "exposure": 322.6049958349973,
+      "residual_cents": -122.69362429466942,
+      "rate": -0.2057834668493264,
+      "parent_rate": -0.2057834668493264,
+      "supported": false
+    },
+    "44": {
+      "n": 956,
+      "filled": 21,
+      "exposure": 749.4094921204018,
+      "residual_cents": 341.003620762497,
+      "rate": 0.012835921512085936,
+      "parent_rate": -0.20506566015691488,
+      "supported": true
+    },
+    "45": {
+      "n": 139,
+      "filled": 3,
+      "exposure": 144.42529708777255,
+      "residual_cents": 203.14552123108388,
+      "rate": -0.20506566015691488,
+      "parent_rate": -0.20506566015691488,
+      "supported": false
+    },
+    "46": {
+      "n": 189,
+      "filled": 24,
+      "exposure": 410.31620135280025,
+      "residual_cents": -836.2510969740011,
+      "rate": -0.20506566015691488,
+      "parent_rate": -0.20506566015691488,
+      "supported": false
+    },
+    "47": {
+      "n": 15,
+      "filled": 1,
+      "exposure": 12.872891193198562,
+      "residual_cents": 23.117222108609546,
+      "rate": -0.20506566015691488,
+      "parent_rate": -0.20506566015691488,
+      "supported": false
+    }
+  }
+}
