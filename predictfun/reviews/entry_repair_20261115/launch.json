@@ -1,0 +1,65 @@
+{
+  "asof": "2026-11-15T06:32:06.917504+00:00",
+  "status": "smoke_pass_full_run_launched",
+  "source_commit": "ce6e645e",
+  "freeze_commit": "edca5c96",
+  "freeze": "freeze_v2.json",
+  "freeze_sha256": "175c3a96d5bce816814a64b60de7a9cc10e8b061ca974b8839fc152b4a0a730c",
+  "smoke_artifacts": {
+    "runner.json": {
+      "sha256": "6b845d7635eb5449e43a26b0247b6afb529758589cddcc6dcecc18e75eb0e3d2",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_smoke_v2/runner.json"
+    },
+    "logs/selftest.log": {
+      "sha256": "20b15064be17169ba7d52a49e6be5c0c79012cb44bc27e5a58f0e2a3c18463bd",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_smoke_v2/logs/selftest.log"
+    },
+    "logs/validity_smoke.log": {
+      "sha256": "f887327c20606308d96a69b86462c2a79fdcb5c8149a77eef5aa02a7b83a1a44",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_smoke_v2/logs/validity_smoke.log"
+    },
+    "logs/density_smoke.log": {
+      "sha256": "3e089e1dd707911a45577f3682760be4dbf1c7d7c65a6d8b757afb6dcdb12a2e",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_smoke_v2/logs/density_smoke.log"
+    },
+    "validity_20261025/receipt.json": {
+      "sha256": "e499e19cec6798ca602a1f47fa7e914ce94408f6408a4981c97045fc19fb01c6",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_smoke_v2/validity_20261025/receipt.json"
+    },
+    "rows_20261025/receipt.json": {
+      "sha256": "6245e455ad4abca64823f6c69174864e880d312a3a02f47e4911e0f1a417696d",
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_smoke_v2/rows_20261025/receipt.json"
+    }
+  },
+  "smoke": {
+    "windows": 2,
+    "statuses": {
+      "not_sampled": 65,
+      "eligible": 28,
+      "probe_not_reached": 4
+    },
+    "all_original_rows_checked": 10,
+    "validity_rows_checked": 4,
+    "sizes": [
+      30.0,
+      50.0,
+      100.0
+    ],
+    "fixed_cap_shares": 1500.0,
+    "asof": "2026-11-15T06:31:36Z"
+  },
+  "full_output": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_v2",
+  "full_runner": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_v2/runner.json",
+  "systemd_unit": "pf-entry-repair-20261115.service",
+  "resume_record": "/tmp/entry-repair-resume-20261115.json",
+  "superseded_attempt": {
+    "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_smoke_v1",
+    "reason": "rung dropped when indexing old action rows; dense check failed before rows were saved or any models fit"
+  },
+  "limits": [
+    "Smoke is an engineering check, not model performance.",
+    "Full validity, density and history comparisons are running, not complete.",
+    "Larger-size neutral replay is a mechanism/sensitivity test; size-specific learned entry labels are a later separate experiment.",
+    "Inherited retrospective clock and neutral KEEP target remain qualifications."
+  ]
+}

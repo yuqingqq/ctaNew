@@ -1,5 +1,25 @@
 # P-2026-005 HANDOFF
 
+<!-- ENTRY_REPAIR_20261115 -->
+## 2026-11-15 Entry repair and larger size study running
+
+User accepted loader/label validity → representative coverage → controlled
+training history → model changes, and requested larger sizes. Implemented and
+frozen at ce6e645e / edca5c96: strict pre-read loader filtering; old-target and
+feature reconciliation; denser later sampling preserving old ages; fixed-test
+sparse/dense/history comparisons; 30/50/100-share neutral paths at the same
+1,500-share cap and two unknown-queue assumptions. Eight synthetic controls and
+the two-window smoke pass (28 eligible actions, all 10 old eligible actions
+exact). Full study running in pf-entry-repair-20261115.service, core 8.
+
+Current: reviews/entry_repair_20261115/current.json and
+handoffs/20261115_entry_repair_progress.md. Runner:
+data/predict_fun/research/entry_repair_20261115_v2/runner.json.
+No performance/promotion claim. Clock reconstruction, simulator queue truth,
+selective-keeper labels and size-specific learned entry models remain open.
+Older owned supervisor 2900451 held; durable runner resumes it on exit.
+<!-- /ENTRY_REPAIR_20261115 -->
+
 <!-- ENTRY_TRAINING_ISSUES_20261115 -->
 ## 2026-11-15 — complete known entry-training issue register and coverage repair specification
 
