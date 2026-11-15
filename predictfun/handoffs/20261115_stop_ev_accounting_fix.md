@@ -157,17 +157,20 @@ missing/ambiguous timing, mark gaps, corrupted identities and ledgers,
 independent probes and matched-control evaluation. Deliberately bad inputs
 must be rejected; profitable through-price fills must be allowed.
 
-The other session still needs to wire this adapter into its raw data build,
-report coverage/status counts on consumed development dates, and freeze/train
-the model on the corrected labels. The draft single-order tables are not a
-substitute. Existing model artifacts and frozen running replays remain
-historical and are not relabeled in place. Historical frequency of these
-defects and the model's economic improvement are not measured by this fix.
+The other session's builder at `06f80178` now wires this adapter into primary
+order-generation labels, exports statuses, independently recomputes eligible
+tranche values in E9, and records/refuses changes to source hashes. Its raw
+quote fixture and independent mark check follow the corrected contract.
 
-Integration update: a developing `pf_stop_ev.py` was observed importing this
-adapter and adding primary generation labels and E9 reconciliation. Its E9
-must independently derive marks from **valid raw quotes**, using the same
-execution-time target; the legacy forward-filled mid can be stale or, in a
-synthetic fixture, inconsistent with raw bid/ask values. A fixture must supply
-coherent raw quotes. An empirical 0.1–99.9% offset interval for an untimed leg
-does not make its missing anchor safe. No historical data run was reviewed.
+Verification: **16 accounting checks passed as of 2026-11-15T12:54:55Z** on
+`c04370d6`; **builder integration passed as of 12:55:32Z** on `06f80178`, with
+all nine planted errors caught. Both ran through the Codex slot under a 2 GiB
+RSS guard. Full source identities and logs are in
+`reviews/stop_ev_accounting_20261115/receipt_v2.json`; v1 evidence is retained.
+
+Historical coverage/status counts, the exact known-time market-feature join,
+and fitting on regenerated labels remain the next stages. Existing frozen
+model artifacts and running-replay outputs were not relabeled in place.
+Historical frequency of these defects and economic improvement have not been
+measured by this fix. Empirical offset quantiles do not make untimed legs safe;
+they remain invalid for primary action labels.
