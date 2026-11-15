@@ -112,6 +112,15 @@ class Checks(unittest.TestCase):
         l = ledger(world((), frames=((0., 10.), (100., 20.), (200., 5.), (300., 40.))))
         self.assertEqual(action(l, 350.)['features']['queue_ahead_known'], 5.)
 
+    def test_unknown_queue_can_be_bounded_when_later_visible(self):
+        w = world((), frames=((0., 10.), (200., 5.)))
+        w[0]['P5'][1][-1] = 45
+        l = ledger(w, nr=6)
+        before, after = action(l, 150., rung=5), action(l, 250., rung=5)
+        self.assertTrue(np.isnan(before['features']['queue_ahead_known']))
+        self.assertEqual(after['features']['queue_ahead_known'], 5.)
+        self.assertEqual(after['features']['queue_initial_unknown'], 1.)
+
     def test_valid_unfilled_and_unacknowledged_full_fill_are_zero(self):
         l = ledger(world(()))
         self.assertEqual(action(l)['label']['value_cents'], 0.)
@@ -142,6 +151,7 @@ class Checks(unittest.TestCase):
         cases = [(replace(l.coverage, trade_end_ms=100.), 'incomplete_trade_coverage'),
                  (replace(l.coverage, book_end_ms=100.), 'incomplete_book_coverage'),
                  (replace(l.coverage, mark_end_ms=100.), 'incomplete_mark_coverage'),
+                 (replace(l.coverage, book_gaps=(A.MissingLeg('mark', 1150., 1170., 'gap'),)), 'missing_or_stale_mark'),
                  (replace(l.coverage, book_gaps=(A.MissingLeg('b', 80., 90., 'gap'),)), 'incomplete_book_coverage')]
         for cov, status in cases:
             row = action(ledger(l.W, result=l.result, coverage=cov))
@@ -217,6 +227,9 @@ class Checks(unittest.TestCase):
         rows[0]['features']['known_remaining'] = 29.
         unique = rows[:1]
         self.assertIsNone(A.action_metrics(unique, [True], asof='synthetic')['p_value'])
+        rows[0]['label_spec']['markout_ms'] = 5000.
+        with self.assertRaisesRegex(ValueError, 'horizons'):
+            A.action_metrics(rows, keep, asof='synthetic')
 
 
 if __name__ == '__main__':

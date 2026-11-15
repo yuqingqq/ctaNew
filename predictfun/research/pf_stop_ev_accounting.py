@@ -12,7 +12,7 @@ All public-feed execution assumptions remain assumptions, not live fill truth.
 """
 from bisect import bisect_right
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 import hashlib
 import math
 
@@ -224,12 +224,12 @@ def known_state(W, order, key, decision_ms, submitted_quantity, *, terminal_ms, 
         shown = shown_at(w, jt, side, order['pt'])
     if ja >= 0 and ja <= jt:
         initial = shown_at(w, ja, side, order['pt'])
-        if math.isfinite(initial):
-            ahead = initial
-            for j in range(ja + 1, jt + 1):
-                size = shown_at(w, j, side, order['pt'])
-                if math.isfinite(size):
-                    ahead = min(ahead, size)
+        ahead = initial if math.isfinite(initial) else math.inf
+        for j in range(ja + 1, jt + 1):
+            size = shown_at(w, j, side, order['pt'])
+            if math.isfinite(size):
+                ahead = min(ahead, size)
+        if not math.isfinite(ahead): ahead = math.nan
     best = float(w['P5'][jt][0]) if jt >= 0 else math.nan
     return dict(side=side, price=float(order['pt']), rung=rung,
                 depth=float(best - order['pt'] if side == 0 else order['pt'] - best),
@@ -263,7 +263,7 @@ def label_action(ledger, key, decision_ms, *, day, settings=Settings()):
                action_id=(str(day), market, side, rung, generation), decision_ms=t,
                hour=int(t // 3600000), timing=settings.timing, status='pending',
                continuation='neutral_keep_with_engine_safety_no_replacement_value',
-               exposure_end_ms=end, reference=dict(ref), label=None, features=None)
+               exposure_end_ms=end, reference=dict(ref), label_spec=asdict(settings), label=None, features=None)
     if t < order['ta'] or t >= ledger.W[side]['te']:
         row['status'] = 'probe_not_reached'; return row
     features = known_state(ledger.W, order, key, t, ledger.size, terminal_ms=ledger.end, settings=settings)
@@ -305,7 +305,10 @@ def label_action(ledger, key, decision_ms, *, day, settings=Settings()):
         if c.mark_end_ms < mark_t:
             row['status'] = 'incomplete_mark_coverage'; return row
         j = bisect_right(tf, mark_t) - 1
-        if j < 0 or not math.isfinite(mids[j]) or mark_t - tf[j] > settings.max_mark_age_ms:
+        if (j < 0 or not math.isfinite(mids[j]) or not 0 <= mids[j] <= 100
+                or mark_t - tf[j] > settings.max_mark_age_ms):
+            row['status'] = 'missing_or_stale_mark'; return row
+        if any(overlaps(g.earliest_ms, g.latest_ms, tf[j], mark_t) for g in c.book_gaps):
             row['status'] = 'missing_or_stale_mark'; return row
         v = fill['quantity'] * sign * (mids[j] - order['pt'])
         value += v; quantity += fill['quantity']
@@ -357,7 +360,8 @@ def replay_neutral(W, *, size, shift_ms, queue='M', unknown_queue='zero', nr=6,
         raise ValueError('undeclared queue assumption')
     if nr < 1 or int(nr) != nr or not math.isfinite(size) or size <= 0:
         raise ValueError('invalid neutral ladder')
-    if mode not in ('none', 'soft', 'hard') or (mode != 'none' and (cap is None or cap <= 0)):
+    if mode not in ('none', 'soft', 'hard') or (mode != 'none' and (
+            cap is None or not math.isfinite(cap) or cap <= 0)):
         raise ValueError('invalid neutral cap contract')
     if mode == 'none' and cap is not None:
         raise ValueError('cap specified but disabled')
@@ -415,6 +419,10 @@ def action_metrics(rows, keep, *, asof, draws=500, seed=20261115):
         raise ValueError('mixed timing populations')
     if any(r['reference'] != rows[0]['reference'] for r in rows):
         raise ValueError('mixed reference paths or size/clock assumptions')
+    if any(r['label_spec'] != rows[0]['label_spec'] for r in rows):
+        raise ValueError('mixed label horizons/latencies')
+    if any(not isinstance(x, (bool, np.bool_)) for x in keep):
+        raise ValueError('keep decisions must be boolean')
     if any(r['status'] not in ('eligible', 'eligible_estimated_timing') for r in rows):
         raise ValueError('invalid labels included in evaluation')
     y = np.array([r['label']['value_cents'] for r in rows], float)
