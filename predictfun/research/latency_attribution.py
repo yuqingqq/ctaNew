@@ -29,6 +29,14 @@ def verify(df, receipt):
                 require(abs(float(g[column].sum()) - total[column]) < 1e-6, f'{column} reconciliation')
 
 
+def verify_frozen(receipt, freeze, day):
+    require(receipt['model_version'] == 'v3', 'model version')
+    for name, digest in freeze['sources'].items():
+        require(receipt['sources'][name] == digest, 'frozen source identity')
+    fits = [v['sha256'] for p, v in receipt['inputs'].items() if p.endswith(f'/fit3_{day}.json')]
+    require(fits == [freeze['model_fit_hashes'][day]], 'fit changed since freeze')
+
+
 def selftest():
     df = pd.DataFrame([dict(day='d', m=i, cfg='c', arm='a', pnl=p, shares=10, orders=2, pulls=1)
                        for i, p in enumerate([2., -1.])])
@@ -41,11 +49,23 @@ def selftest():
         except ValueError:
             caught += 1
     require(caught == 2, 'attribution refusals did not fire')
-    return dict(reconciliation_positive=True, duplicate_refused=True, changed_value_refused=True)
+    freeze = dict(sources={'s.py': 's'}, model_fit_hashes={'d': 'f'})
+    receipt = dict(model_version='v3', sources={'s.py': 's'}, inputs={'/fit3_d.json': dict(sha256='f')})
+    verify_frozen(receipt, freeze, 'd')
+    receipt['inputs']['/fit3_d.json']['sha256'] = 'changed'
+    caught = False
+    try:
+        verify_frozen(receipt, freeze, 'd')
+    except ValueError:
+        caught = True
+    require(caught, 'changed frozen fit was not refused')
+    return dict(reconciliation_positive=True, duplicate_refused=True, changed_value_refused=True, frozen_fit_change_refused=True)
 
 
 def run(src, out):
     controls = selftest()
+    freeze_path = Path(__file__).resolve().parents[1] / 'reviews/stop_ev_latency_20261115/freeze_v3.json'
+    freeze = json.loads(freeze_path.read_text())
     frames = []
     identities = {}
     for day in DAYS:
@@ -53,6 +73,7 @@ def run(src, out):
         wp = src / day / 'windows.parquet'
         receipt = json.loads(rp.read_text())
         require(receipt['day'] == day and not receipt['smoke_only'], 'day identity')
+        verify_frozen(receipt, freeze, day)
         frame = pd.read_parquet(wp)
         verify(frame, receipt)
         require(set(frame.day) == {day}, 'window day identity')
@@ -88,6 +109,7 @@ def run(src, out):
             mean_terminal_abs_position=float(g.terminal_abs_position.mean()),
             max_abs_position=float(g.max_abs_position.max()))
     result = dict(asof=datetime.now(timezone.utc).isoformat(), controls=controls,
+                  freeze_sha256=hashlib.sha256(freeze_path.read_bytes()).hexdigest(),
                   input_hashes=identities, source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                   cells=cells, interpretation='Attribution only, all fills primary; overlapping source/age/queue splits. '
                   'Tail summaries do not define a filtered strategy. Markouts use recorded anchors, not M-shifted fill times. '
