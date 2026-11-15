@@ -1,3 +1,58 @@
+<!-- WAIT_POST_STATE_RESULT_20261115 -->
+## 2026-11-15 — ladder state and cleanup fail economic gates (QUALIFIED development result)
+
+User: add missing inputs, review the model and improve it; diagnose poor first
+prediction and noise filtering. Completed asof2026-11-15T02:59:00Z. Five consumed
+test dates Oct27/31,Nov1/2/3:9871 probes (4990bid/4881ask),1434 windows.
+Source99173056/freeze42f61bf1; noise20ba3773/068a4382;
+cleanup70217846/c9fc924e (authoritative clean_freeze_v2.json metadata correction);
+evidenceeeab2486. Merged into mm-research. Results:
+`handoffs/20261115_wait_post_state_results.md` and
+`reviews/wait_post_state_20261115/current.json`.
+
+Implemented client-known per-rung prices/remaining/fills/ages/pending status,
+empty generations and causal public queue estimates in labels and inference.
+Added first-order/remaining-portfolio target components with exact reconciliation.
+Repaired unavailable start-price gap in inputs and frozen continuation;994of13911
+rebuilt eligible labels changed. Six sealed-lookback windows explicitly excluded.
+Nineteen synthetic checks pass;2010 historical feature falsifiers;120 fitted
+artifacts verified. Three supervised jobs exited0; old size queue resumed.
+
+Five candidates (BASE,LADDER,COMPONENTS,CLEAN_TREE,CLEAN_RIDGE). All pooled POST
+and timing R2 remain below the prior-mean baseline.0/10 full local economic
+side/candidate tests pass,500 matched draws each; all selected absolute POST
+means negative. Rich inputs slightly improve absolute-value error but not timing.
+Train-only cleanup and fixed ridge do not improve aggregate error. Cleanup's160
+raw fields become318-332 columns with indicators, not fewer encoded columns.
+
+First-fold diagnosis (4040 train/1992 test probes) supports sparse/tail-heavy
+labels and overfitting. Failures persist on ordinary-outcome/fresher subsets and
+after oracle intercept removal. Filtering alone is not established as the fix;
+real adverse outcomes must remain. Main remaining gap: neutral KEEP/terminal
+portfolio targets versus intended selective keeper, plus limited later-generation
+and joint-waiting support. Relabel under the actual frozen keeper; learn near-term
+order influence separately; expand representative states. No model promoted,
+portfolio replay/acceptance or forward validation. Old frozen results preserved.
+<!-- /WAIT_POST_STATE_RESULT_20261115 -->
+
+<!-- WAIT_POST_STATE_NOISE_20261115 -->
+## 2026-11-15 — first-fold state-model noise diagnosis (post hoc, QUALIFIED)
+
+As of02:35:02Z,4040 training probes (Oct25/26),1992 evaluation probes (Oct27).
+New ladder inputs improve training fit without reliably improving the first
+later-day fit. Labels are sparse/tail-heavy; the remaining portfolio/replacement
+contribution has more variance than the first order's contribution. Failures
+persist on ordinary-outcome and fresher-data diagnostic subsets and after
+oracle intercept correction. This does not prove an irreducible noise floor.
+Do not remove real adverse outcomes as noise. Train-only compact preprocessing,
+representative later-generation/joint-waiting data, and relabeling under the
+intended selective keeper remain necessary research directions. Full comparison and cleanup complete;0/10 economic gates pass across five
+candidates. The diagnosis itself added no candidate. No promotion. Source20ba3773,
+freeze068a4382, evidence004c7ddc, now merged into mm-research;
+reviews/wait_post_state_20261115/noise/{summary,result}.json. Three diagnostic
+controls pass, positive cases and known-bad refusals; exact saved inference parity.
+<!-- /WAIT_POST_STATE_NOISE_20261115 -->
+
 # P-2026-005 findings register
 
 <!-- WAIT_POST_SIGNAL_DATA_20261114 -->

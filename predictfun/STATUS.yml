@@ -1,3 +1,35 @@
+wait_post_state_20261115:
+  status: complete_development_study
+  asof: 2026-11-15T02:59:00Z
+  source_commit: 99173056
+  freeze_commit: 42f61bf1
+  evidence_commit: eeab2486
+  worktree: /tmp/cta-wait-post-state-20261115
+  integrated_branch: mm-research
+  results: predictfun/reviews/wait_post_state_20261115/current.json
+  new_candidates: 5
+  test_probes: 9871
+  test_windows: 1434
+  economic_tests_passed: 0
+  economic_tests: 10
+  matched_draws_per_test: 500
+  synthetic_tests_passed: 19
+  feature_future_checks: 2010
+  fitted_artifacts_verified: 120
+  first_fold_noise_diagnosis: complete
+  noise_asof: 2026-11-15T02:35:02Z
+  noise_evidence_commit: 004c7ddc
+  noise_test_probes: 1992
+  noise_new_candidates: 0
+  cleanup_candidates: 2
+  cleanup_authoritative_freeze: clean_freeze_v2.json
+  forward_validation: false
+  portfolio_evaluated: false
+  promoted: false
+  services: complete_exit0
+  old_size_queue: resumed
+  remaining: Neutral KEEP/terminal target mismatch; sparse later-generation and joint-waiting support.
+
 program: P-2026-005-predict-fun
 name: Predict.fun BTC 5m market making (D1 transfer research)
 phase: explore          # explore / build / validate / review
