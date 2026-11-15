@@ -168,6 +168,30 @@ Fold 10-27 refits (60k rows a day, target U, the 9 heads j = 1..3 at every H, v3
 | D12 | the loader read every part file in a day folder, incl. the adjacent days' boundary hours: sealed 10-28 00Z (in 10-27's folder), sealed 10-30 23Z (10-31), forward-block 11-04 00Z (11-03); their frames were filtered out before any row of an included window | process (P11, forward-block rule) | fixed for this model (opt-in filter, skips counted); rows regression on 10-27 / 10-31 / 11-03 (section 8); other scripts still read them (default unchanged); step 5's per-day clock shift was computed over the folder's frames incl. those hours (not rebuilt) |
 | D13 | Binance arrays concatenated across hour files without re-sorting | minor (unverified) | K2: no future event on any step; lookbacks can only be stale near hour boundaries |
 
-## 8. Decisions for the build (v4) and what follows
+## 8. Decisions for the build (v4) and the result
 
-(pending: build)
+v4 = target U (every usable row), 180k rows a day (<= 600k a head), 200 rounds, lambda_l2 = 10, no recalibration, level projection
+(cummin), 61 inputs (85 - spread, tau_rem, r_c1, r_ct1 - the 20 within-side raw copies), nothing normalized; v3.1's folds, seeds and
+inputs otherwise. The loader's boundary-hour filter is on; rows rebuilt with it are identical to the stored rows on 10-27 / 10-31 / 11-03
+(1 / 2 / 1 part files skipped). Fits 04:33-05:21Z (code d1965a2b / fa2b5537 - functionally the same for v4), 9-10 min each, peak
+0.84-0.98 GiB (v3.1: 2.06-2.18); report 05:21Z (peak 1.89 GiB). VERDICT MODEL-READY at H 72 / 250 / 1000 ms (5 test days, every usable row):
+
+| Head | AUC v3.1 -> v4 | log loss v3.1 -> v4 | Brier skill v4 | mean P v4 / rate |
+|---|---|---|---|---|
+| H72 j1 | 0.924 -> 0.929 | 0.1345 -> 0.1200 (-11%) | +0.336 | 0.057 / 0.053 (v3.1 0.029) |
+| H72 j6 | 0.968 -> 0.984 | 0.0081 -> 0.0045 (-45%) | +0.319 | 0.0010 / 0.0015 |
+| H250 j1 | 0.881 -> 0.883 | 0.2213 -> 0.2186 (-1.2%) | +0.349 | 0.117 / 0.106 |
+| H250 j6 | 0.936 -> 0.941 | 0.0168 -> 0.0151 (-10%) | +0.392 | 0.0039 / 0.0052 |
+| H1000 j1 | 0.772 -> 0.774 | 0.4645 -> 0.4641 (-0.1%) | +0.225 | 0.281 / 0.256 |
+| H1000 j6 | 0.763 -> 0.771 | 0.0967 -> 0.0958 (-1%) | +0.142 | 0.022 / 0.025 |
+
+- Every level PREDICTABLE / BEATS-BASE on 5 / 5 days; calibrated except H1000 j1 (over-predicts by up to 4.5 pp in the top deciles; the
+  replay sets its threshold on each fold's calibration day).
+- Better than the guard at every H, j = 1..3, 5 / 5 days; at 1 s better than STOP-DEPTH refit chronologically at j = 1, 2, 3 (v3.1: j2 only).
+- On v3.1's own population (rows not ALREADY_j) v4's AUC is equal or higher except H250 j1 (0.854 -> 0.853); its log loss there is worse at
+  H72 j1 / j2 and H250 j1 because it now predicts risk in states that look like a move in flight (it was trained on them).
+- The oracle (R701, labels only) is unchanged: ALIGNED at every H; the model's top-risk decile still marks our orders' harm (R707).
+
+Next (queued 05:23Z, run_stop_model2.sh): the extra order-flow inputs (pf_stop_model_x5.py: Predict OFI from known frames, Binance 20-level
+depth; USER "If we include sufficient inputs like imbalance, flow etc") for the 9 days -> x5test (adopt a family iff +0.25% log loss on
+average with >= 10 / 18 heads better on the dev fold) -> v5 if adopted -> STOP-PLAY on the winning version.
