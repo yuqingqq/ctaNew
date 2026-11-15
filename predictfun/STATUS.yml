@@ -2581,15 +2581,20 @@ stop_ev_design_20261115:
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
 stop_ev_critical_fixes_20261115:
-  status: labels_and_model_v3_done_replay_v2_running
-  asof: "2026-11-15 17:35Z"
+  status: done_replay_v2_not_profitable   # labels HOLD, model v3 NOT-READY, replay v2 R985 NOT-PROFITABLE
+  asof: "2026-11-15 18:50Z"
   session: aea5bfb9
   user: "Can we fix the critical issues and let the results be correct first"
   labels: {commit: b1ea549a, rule: "untimed legs imputed (group exec second + median offset, E2-class +-1500 ms); no refusal by later events", checks: "E1-E9 PASS 9/9", imputed_legs: 16154, eligible_probes: 270767, outputs: "*_imp"}
   model_v3: {commit: 0465f7c3, test_actions: 140487, ic: 0.138, ic_b2: 0.087, daily_ic_95: [0.105, 0.162], within_window_p: 0.001, quintiles_c: [-12.67, -4.06, -2.36, -1.15, -0.28], keep_share: 0.099, kept_usd_5d: -46.3, random_same_count_usd_5d: -483.1, verdict: "NOT-READY (R903' no positive keep, R905 miscalibrated)"}
-  replay_v2: {commit: 34ea0eb9, status: running, started: "17:34Z", driver: predictfun/research/run_stop_ev_play2.sh, out: data/predict_fun/research/stop_ev_play2_20261115}
+  replay_v2: {commit: 34ea0eb9, ran: "17:34-18:46Z", receipts: predictfun/reviews/stop_ev_play2_20261115, controls: "order-state parity 12103 / 0 bad; off-parity 1434 windows / 0 differ; lane violations 0",
+              m50_wo_young_usd_day: {KA: -5845.0, LDG: -178.5, LDG250: -1113.3, MD1000: -140.9, MD250: -708.1, QR: -186.0, QRS: -622.1, RV: -1185.6},
+              m250_wo_young_usd_day: {KA: -7260.1, LDG: -1712.8, LDG250: -2684.2, MD1000: -1363.8, MD250: -1894.1, QR: -515.7, QRS: -823.4, RV: -1541.2},
+              m50_c_per_share: {KA: -1.780, LDG: -0.404, MD1000: -0.923, QR: -2.399, RV: -1.170},
+              readings: {R980: BEATS-KEEP-ALL, R981: NOT-SHOWN, R982: NOT-SHOWN, R983: INFORMED, R984: "BEATS-RANDOM (RV matched per window and side, not per rung: P43)", R985: NOT-PROFITABLE},
+              qr_theta: "0.02 = grid floor on 5/5 folds; calibration $ monotone in theta (less resting always better)", qr_uptime_per_rung: [0.00, 0.00, 0.05, 0.29, 0.60, 0.76]}
   superseded: ["stop_ev_model_20261115 (v1) and stop_ev_v2_fixes_20261115 readings", "stop_ev_play_20261115 VOID AS RUN"]
-  next: "replay v2 report; then USER: sensitivity grid / strategy levers / place-first"
+  next: "USER: rung-matched RV / sensitivity grid / strategy levers (inventory cap, no chasing, sweep depth) / place-first"
 
 stop_ev_play_20261115:
   status: void_as_run_superseded_by_stop_ev_play2   # REVIEW 2026-11-15: stale gate, QRS inputs, cadence, grid floor

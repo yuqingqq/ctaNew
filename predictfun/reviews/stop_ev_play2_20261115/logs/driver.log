@@ -1,0 +1,13 @@
+17:34:32Z start evp2_selftest
+17:34:33Z start evp2_cal_20261027
+17:43:06Z start evp2_test_20261027
+17:49:24Z start evp2_cal_20261031
+17:57:54Z start evp2_test_20261031
+18:03:53Z start evp2_cal_20261101
+18:11:55Z start evp2_test_20261101
+18:17:45Z start evp2_cal_20261102
+18:26:06Z start evp2_test_20261102
+18:32:00Z start evp2_cal_20261103
+18:40:23Z start evp2_test_20261103
+18:46:22Z start evp2_report
+18:46:23Z STOP-EV-PLAY2 all DONE

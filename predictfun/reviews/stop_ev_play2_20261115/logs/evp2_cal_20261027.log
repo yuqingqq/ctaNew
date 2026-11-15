@@ -1,0 +1,3 @@
+stop-ev-play2 selftests passed; planted errors caught: {'MUT_FEAT_VENUE': True, 'MUT_GATE_OFF': True, 'MUT_STALE_GATE': True, 'MUT_QRS_PREV': True}
+cal 20261027 (day 20261026): QR (0.02, 0.6), MD1000 (0.1, 1.0); M50 w/o young (0.02, 1.0) -54, (0.02, 0.6) -46, (0.05, 1.0) -271, (0.05, 0.6) -211, (0.1, 1.0) -563, (0.1, 0.6) -453, (0.2, 1.0) -1547, (0.2, 0.6) -1350, (0.3, 1.0) -2280, (0.3, 0.6) -2070; 511.8 s
+2026-11-15T17:34:33Z tag=evp2_cal_20261027 rc=0 peak_rss_mib=974 wall_s=513.00 cpu_user_s=509.46 memavail_start_gib=23 disk_free_gib=468->467 slot=claude

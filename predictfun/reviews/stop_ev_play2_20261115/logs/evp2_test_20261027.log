@@ -1,0 +1,3 @@
+stop-ev-play2 selftests passed; planted errors caught: {'MUT_FEAT_VENUE': True, 'MUT_GATE_OFF': True, 'MUT_STALE_GATE': True, 'MUT_QRS_PREV': True}
+test 20261027: M50 KA -5520, LDG -1, LDG250 -822, MD1000 -195, MD250 -445, QR -53, RV -720, QRS -422; M50LAT KA -5683, LDG -39, MD1000 -214, QR -51; M50QINF KA -5560, LDG +0, MD1000 -154, QR -42; M250 KA -6937, LDG -1522, LDG250 -2575, MD1000 -1386, MD250 -2105, QR -387, RV -921, QRS -646; parity {'n': 2374, 'bad': 0}; off-parity 0 of 288; 376.5 s
+2026-11-15T17:43:06Z tag=evp2_test_20261027 rc=0 peak_rss_mib=985 wall_s=377.67 cpu_user_s=374.28 memavail_start_gib=22 disk_free_gib=467->467 slot=claude

@@ -1,5 +1,16 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-15 18:50Z (session aea5bfb9) — REPLAY v2 DONE (USER: "Can we fix the critical issues and let the results be correct first"): on the corrected labels and the corrected replay NO policy is profitable; "rest when quiet, pull on activity" (QR) beats keep-all and random pulls, but not the guard or the harm-only model at 50 ms
+
+- Run 17:34-18:46Z (34ea0eb9, claude slot, peak RSS 1.0 GiB); every control passed: order-state parity 12,103 checks / 0 mismatches, off-parity 1,434 windows / 0 differences, lane violations 0, 4 planted errors caught. Receipts: reviews/stop_ev_play2_20261115/.
+- $ a day (mean of 5 test days, whole portfolio w/o young fills) M 50 | M 250, and c / share at M 50 on shares a day: KA -5,845 | -7,260 (-1.78 c on 328k); LDG -179 | -1,713 (-0.40 c on 44k); MD1000 -141 | -1,364 (-0.92 c on 15k); QR -186 | -516 (-2.40 c on 7.8k); QRS -622 | -823; RV -1,186 | -1,541 (-1.17 c on 101k); LDG250 -1,113 | -2,684; MD250 -708 | -1,894.
+- Readings: R980 BEATS-KEEP-ALL; R981 NOT-SHOWN (vs MD1000: -$45 at M 50, better on 2 / 5 days; +$848 at M 250, 5 / 5); R982 NOT-SHOWN (vs LDG: -$7.5 at M 50, 2 / 5; +$1,197 at M 250, 5 / 5); R983 INFORMED (+$436 vs QRS); R984 BEATS-RANDOM (+$1,000 / +$1,026 at M 50 / M 250); R985 NOT-PROFITABLE (every arm loses pooled at both clocks; of the 30 printed arm-days at M 50 one is positive, LDG 11-01 +$138).
+- QR's theta sits at the grid floor 0.02 on 5 / 5 folds and the calibration $ worsens monotonically as theta rises on every fold: within this family less resting is always better and the limit is not quoting. QR quotes rungs 0-1 0% of the time (uptime 0.00 0.00 0.05 0.29 0.60 0.76): its smaller loss is volume, not better fills - per share it is the worst arm.
+- CAVEAT R984: RV matched QR's pull and closed-gate rates per window and side, NOT per rung; RV's uptime is even (0.26-0.34 on every rung) while QR sits on deep rungs, so BEATS-RANDOM can be rung placement rather than timing (P43). A rung-matched RV is needed before reading timing skill.
+- WS / E2 (M 50 w/o young): LDG +$33 / -$211 (earns on WS-timed trades); every other arm loses on both. Young fills small for QR (-$10 a day < 100 ms). Sensitivity (M 50 w/o young): LAT 58 / 37 ms worsens every arm (QR -199, LDG -235, MD1000 -187); QINF changes little (QR -193).
+- Scope note: the other session's latency study (STOP_EV_LATENCY_20261115, its EV rule on the v3 heads, first-minute windows, all fills) is a different scope; its numbers are not comparable with these.
+- Next: the USER's call - rung-matched RV (small code change + ~1 h run), the sensitivity grid, strategy levers (inventory cap, no chasing, sweep depth), "place first".
+
 <!-- STOP_EV_LATENCY_20261115 -->
 ## 2026-11-15 Current-model latency sensitivity: four dates complete, final date running
 
