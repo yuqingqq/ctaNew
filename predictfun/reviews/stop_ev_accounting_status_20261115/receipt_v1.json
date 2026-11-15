@@ -1,0 +1,414 @@
+{
+  "asof": "2026-11-15T13:37:11.660804+00:00",
+  "status": "saved_primary_accounting_checks_pass",
+  "checker_sha256": "2c07228cc220379073a0aa345309c55b6f2065efe94b08f87049bbb70b5621df",
+  "source_asof": "2026-11-15T13:00:52Z",
+  "days": {
+    "20261023": {
+      "asof": "2026-11-15T12:51:15Z",
+      "E9": {
+        "compared": 6017,
+        "mismatch": 0,
+        "control_differ": 83,
+        "ledger_failures": 0,
+        "ledger_errors": [],
+        "pass": true
+      },
+      "timings": {
+        "ws_strict": {
+          "n": 48312,
+          "eligible": 118,
+          "statuses": {
+            "missing_trade_timing": 28224,
+            "not_client_resting": 13327,
+            "ambiguous_reference_timing": 5899,
+            "probe_not_reached": 519,
+            "incomplete_book_coverage": 225,
+            "eligible": 118
+          }
+        },
+        "all_anchors_sensitivity": {
+          "n": 48312,
+          "eligible": 6017,
+          "statuses": {
+            "missing_trade_timing": 28224,
+            "not_client_resting": 13327,
+            "eligible_estimated_timing": 5899,
+            "probe_not_reached": 519,
+            "incomplete_book_coverage": 225,
+            "eligible": 118
+          }
+        }
+      }
+    },
+    "20261024": {
+      "asof": "2026-11-15T12:53:27Z",
+      "E9": {
+        "compared": 10779,
+        "mismatch": 0,
+        "control_differ": 119,
+        "ledger_failures": 0,
+        "ledger_errors": [],
+        "pass": true
+      },
+      "timings": {
+        "ws_strict": {
+          "n": 43154,
+          "eligible": 460,
+          "statuses": {
+            "missing_trade_timing": 19198,
+            "not_client_resting": 12509,
+            "ambiguous_reference_timing": 10319,
+            "eligible": 460,
+            "probe_not_reached": 382,
+            "incomplete_book_coverage": 286
+          }
+        },
+        "all_anchors_sensitivity": {
+          "n": 43154,
+          "eligible": 10779,
+          "statuses": {
+            "missing_trade_timing": 19198,
+            "not_client_resting": 12509,
+            "eligible_estimated_timing": 10319,
+            "eligible": 460,
+            "probe_not_reached": 382,
+            "incomplete_book_coverage": 286
+          }
+        }
+      }
+    },
+    "20261025": {
+      "asof": "2026-11-15T12:54:33Z",
+      "E9": {
+        "compared": 8027,
+        "mismatch": 0,
+        "control_differ": 95,
+        "ledger_failures": 0,
+        "ledger_errors": [],
+        "pass": true
+      },
+      "timings": {
+        "ws_strict": {
+          "n": 44390,
+          "eligible": 352,
+          "statuses": {
+            "missing_trade_timing": 21584,
+            "not_client_resting": 14140,
+            "ambiguous_reference_timing": 7675,
+            "probe_not_reached": 418,
+            "eligible": 352,
+            "incomplete_book_coverage": 221
+          }
+        },
+        "all_anchors_sensitivity": {
+          "n": 44390,
+          "eligible": 8027,
+          "statuses": {
+            "missing_trade_timing": 21584,
+            "not_client_resting": 14140,
+            "eligible_estimated_timing": 7675,
+            "probe_not_reached": 418,
+            "eligible": 352,
+            "incomplete_book_coverage": 221
+          }
+        }
+      }
+    },
+    "20261026": {
+      "asof": "2026-11-15T12:55:38Z",
+      "E9": {
+        "compared": 5253,
+        "mismatch": 0,
+        "control_differ": 79,
+        "ledger_failures": 0,
+        "ledger_errors": [],
+        "pass": true
+      },
+      "timings": {
+        "ws_strict": {
+          "n": 51528,
+          "eligible": 39,
+          "statuses": {
+            "missing_trade_timing": 31113,
+            "not_client_resting": 14107,
+            "ambiguous_reference_timing": 5214,
+            "incomplete_book_coverage": 547,
+            "probe_not_reached": 508,
+            "eligible": 39
+          }
+        },
+        "all_anchors_sensitivity": {
+          "n": 51528,
+          "eligible": 5253,
+          "statuses": {
+            "missing_trade_timing": 31113,
+            "not_client_resting": 14107,
+            "eligible_estimated_timing": 5214,
+            "incomplete_book_coverage": 547,
+            "probe_not_reached": 508,
+            "eligible": 39
+          }
+        }
+      }
+    },
+    "20261027": {
+      "asof": "2026-11-15T12:56:47Z",
+      "E9": {
+        "compared": 4165,
+        "mismatch": 0,
+        "control_differ": 29,
+        "ledger_failures": 0,
+        "ledger_errors": [],
+        "pass": true
+      },
+      "timings": {
+        "ws_strict": {
+          "n": 44677,
+          "eligible": 97,
+          "statuses": {
+            "missing_trade_timing": 27347,
+            "not_client_resting": 12389,
+            "ambiguous_reference_timing": 4068,
+            "probe_not_reached": 404,
+            "incomplete_book_coverage": 372,
+            "eligible": 97
+          }
+        },
+        "all_anchors_sensitivity": {
+          "n": 44677,
+          "eligible": 4165,
+          "statuses": {
+            "missing_trade_timing": 27347,
+            "not_client_resting": 12389,
+            "eligible_estimated_timing": 4068,
+            "probe_not_reached": 404,
+            "incomplete_book_coverage": 372,
+            "eligible": 97
+          }
+        }
+      }
+    },
+    "20261031": {
+      "asof": "2026-11-15T12:57:54Z",
+      "E9": {
+        "compared": 9003,
+        "mismatch": 0,
+        "control_differ": 78,
+        "ledger_failures": 0,
+        "ledger_errors": [],
+        "pass": true
+      },
+      "timings": {
+        "ws_strict": {
+          "n": 29715,
+          "eligible": 758,
+          "statuses": {
+            "missing_trade_timing": 11172,
+            "not_client_resting": 8470,
+            "ambiguous_reference_timing": 8245,
+            "incomplete_book_coverage": 816,
+            "eligible": 758,
+            "probe_not_reached": 254
+          }
+        },
+        "all_anchors_sensitivity": {
+          "n": 29715,
+          "eligible": 9003,
+          "statuses": {
+            "missing_trade_timing": 11172,
+            "not_client_resting": 8470,
+            "eligible_estimated_timing": 8245,
+            "incomplete_book_coverage": 816,
+            "eligible": 758,
+            "probe_not_reached": 254
+          }
+        }
+      }
+    },
+    "20261101": {
+      "asof": "2026-11-15T12:58:49Z",
+      "E9": {
+        "compared": 8527,
+        "mismatch": 0,
+        "control_differ": 61,
+        "ledger_failures": 0,
+        "ledger_errors": [],
+        "pass": true
+      },
+      "timings": {
+        "ws_strict": {
+          "n": 34209,
+          "eligible": 488,
+          "statuses": {
+            "missing_trade_timing": 13222,
+            "not_client_resting": 11042,
+            "ambiguous_reference_timing": 8040,
+            "incomplete_book_coverage": 1090,
+            "eligible": 488,
+            "probe_not_reached": 327
+          }
+        },
+        "all_anchors_sensitivity": {
+          "n": 34209,
+          "eligible": 8527,
+          "statuses": {
+            "missing_trade_timing": 13222,
+            "not_client_resting": 11042,
+            "eligible_estimated_timing": 8039,
+            "incomplete_book_coverage": 1090,
+            "eligible": 488,
+            "probe_not_reached": 327,
+            "missing_or_stale_mark": 1
+          }
+        }
+      }
+    },
+    "20261102": {
+      "asof": "2026-11-15T12:59:46Z",
+      "E9": {
+        "compared": 10079,
+        "mismatch": 0,
+        "control_differ": 86,
+        "ledger_failures": 0,
+        "ledger_errors": [],
+        "pass": true
+      },
+      "timings": {
+        "ws_strict": {
+          "n": 49059,
+          "eligible": 246,
+          "statuses": {
+            "missing_trade_timing": 23638,
+            "not_client_resting": 14100,
+            "ambiguous_reference_timing": 9834,
+            "incomplete_book_coverage": 755,
+            "probe_not_reached": 486,
+            "eligible": 246
+          }
+        },
+        "all_anchors_sensitivity": {
+          "n": 49059,
+          "eligible": 10079,
+          "statuses": {
+            "missing_trade_timing": 23638,
+            "not_client_resting": 14100,
+            "eligible_estimated_timing": 9833,
+            "incomplete_book_coverage": 755,
+            "probe_not_reached": 486,
+            "eligible": 246,
+            "missing_or_stale_mark": 1
+          }
+        }
+      }
+    },
+    "20261103": {
+      "asof": "2026-11-15T13:00:52Z",
+      "E9": {
+        "compared": 10405,
+        "mismatch": 0,
+        "control_differ": 114,
+        "ledger_failures": 0,
+        "ledger_errors": [],
+        "pass": true
+      },
+      "timings": {
+        "ws_strict": {
+          "n": 48110,
+          "eligible": 251,
+          "statuses": {
+            "missing_trade_timing": 22819,
+            "not_client_resting": 14091,
+            "ambiguous_reference_timing": 10154,
+            "probe_not_reached": 468,
+            "incomplete_book_coverage": 327,
+            "eligible": 251
+          }
+        },
+        "all_anchors_sensitivity": {
+          "n": 48110,
+          "eligible": 10405,
+          "statuses": {
+            "missing_trade_timing": 22819,
+            "not_client_resting": 14091,
+            "eligible_estimated_timing": 10154,
+            "probe_not_reached": 468,
+            "incomplete_book_coverage": 327,
+            "eligible": 251
+          }
+        }
+      }
+    }
+  },
+  "totals": {
+    "ws_strict": {
+      "n": 393154,
+      "eligible": 2809
+    },
+    "all_anchors_sensitivity": {
+      "n": 393154,
+      "eligible": 72255
+    }
+  },
+  "dev": {
+    "ws_strict": {
+      "n": 187384,
+      "eligible": 969
+    },
+    "all_anchors_sensitivity": {
+      "n": 187384,
+      "eligible": 30076
+    }
+  },
+  "planted_corruptions_refused": {
+    "duplicate": true,
+    "quantity": true,
+    "value": true,
+    "invalid_status": true,
+    "source": true
+  },
+  "artifact_sha256": {
+    "day_20261023.json": "2dd2c0e51858eb9f21547fcba2228465fde94669c07a5a931ad2787b9a4c6fea",
+    "actions_20261023_ws_strict.parquet": "f4922dfb291457b485c99ee06e0b1e1f6880bdde6000e2331ecd65c1203b7ec9",
+    "actions_20261023_all_anchors_sensitivity.parquet": "102c5a6519468d27d6b57635704aa56ffaf6e93c3e068f86ceadb7e9bfb3ed39",
+    "day_20261024.json": "6aa37a2e7d0ce790c3eb2778a770842932b7787227681ecfa0e340aed0aba0f3",
+    "actions_20261024_ws_strict.parquet": "116cf09446d67a67621ca13d471dae07e6558d6665ac07a47b430ca1b419a561",
+    "actions_20261024_all_anchors_sensitivity.parquet": "a9fc4d2dd9756b3b0af90cd70ef894c4a21321e850c6a6fa819cc4234183c705",
+    "day_20261025.json": "e58842e3b2e7a48c6aa77c023cd5d8e3b422a9de540e08ddc517a9cffec5bb5e",
+    "actions_20261025_ws_strict.parquet": "1a28d4a976e68f10fc3543fa8674a46b0dd3fc1ea815e1dd610fe3d1a580468e",
+    "actions_20261025_all_anchors_sensitivity.parquet": "2ec3e0fc96b55ddb021f91ebeeb0e2ed2fcc1b471d6a17a8be1375b99583a2fb",
+    "day_20261026.json": "cf51d396a62eb9348edd4d92c4669eb1f0268b75d3711623b9e63d2c168b3c3e",
+    "actions_20261026_ws_strict.parquet": "6f61a429ce30996f69a640d69c6b67f947fbfd5b32c6c80b943e9c81445943f3",
+    "actions_20261026_all_anchors_sensitivity.parquet": "140dd5938ab7c7f1ed9ee35b645c421a0adb127d6c4a5c1c96180eb70338c791",
+    "day_20261027.json": "45c4ffe8feb776042fef292def0504a9aa99e39ea10df2d2d643d7cd515c4d12",
+    "actions_20261027_ws_strict.parquet": "914480c70ef626fb6f2153ed6ffa75fef46c938bdac39ea8cf75fcda723b1a7a",
+    "actions_20261027_all_anchors_sensitivity.parquet": "b7be2d91b9dcbef63622d9b6c6f28511c1e6b446a655af5bf5d16a466073e4d4",
+    "day_20261031.json": "f02291482d8effab879db07a39a4bc822ea1c5f78b8e1b1508fca59a3bbb45d3",
+    "actions_20261031_ws_strict.parquet": "0389755cc609974708e4df754f05b89d53f3b7ae1b6870bba6d866e8666bf336",
+    "actions_20261031_all_anchors_sensitivity.parquet": "405592822a89f0d1e8ca179ae641f45f39c648329412629486380aef375cb701",
+    "day_20261101.json": "3f8bbbf8914d63330d550727513fbafeeb6365e526d0d2914e38910bb5aa5d61",
+    "actions_20261101_ws_strict.parquet": "ceee6897b072befbd4da5203e198c65998bb35cee133f5bb4fbdf618765f1536",
+    "actions_20261101_all_anchors_sensitivity.parquet": "68fcd5e58eccce5459fca101ec88908e4d01992825fbddfb2597cf17d5a52476",
+    "day_20261102.json": "0ec5e75ea71380ec6337bec1fc1bc62e697c417cf77a035726437dfc45bd62b5",
+    "actions_20261102_ws_strict.parquet": "0a4ac8d3ea222a5a0d6614b4f9ea20591d6dd7e3ea069d938a00d7f62631bd12",
+    "actions_20261102_all_anchors_sensitivity.parquet": "72b1adf7c0b146fa62ae41eea1e73545ea7dc173de825ebe6f1370bae9a9820a",
+    "day_20261103.json": "f03f6c210c50fa362b517cca0dc7c557fffcf8ad18a8937d4d5837c6117a9b37",
+    "actions_20261103_ws_strict.parquet": "209c294630e1bb2b6f84a6dc74c3c8ca7bc1bd4e700782fd2d8ca98d9770ba9d",
+    "actions_20261103_all_anchors_sensitivity.parquet": "c5a0abb2cf7bc5df7375ee7e8a94ce71ec1fdb3fa6743c544e81304303d35b91"
+  },
+  "source_ids": {
+    "pf_stop_ev.py": "9a7b9014d96f30e2",
+    "pf_stop_ev_accounting.py": "1cffc03eb8d801d8",
+    "pf_stop_queue_activation_lane.py": "8d61029d348f8085",
+    "pf_queue_activation.py": "b63e7f00a74db3c8",
+    "pf_stop_model.py": "e2a857ddb6c4e76a",
+    "pf_kp_s4.py": "3a2cbceb239fa25a",
+    "pf_order_harm_client_lane.py": "c203beeed0a82ae3"
+  },
+  "limits": [
+    "No raw-feed fill truth validation.",
+    "Diagnostic single-order tables are not primary labels.",
+    "Timing exclusions reduce and can select the training population.",
+    "No model or performance claim."
+  ]
+}
