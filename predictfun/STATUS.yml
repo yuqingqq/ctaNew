@@ -1,3 +1,43 @@
+entry_representation_20261115:
+  status: complete_development_comparison
+  asof: 2026-11-15T05:04:52Z
+  source_commit: a6ee5803
+  freeze_commit: 2523293e
+  evidence_commit: 5b287084
+  formatting_commit: af777b65
+  results: predictfun/reviews/entry_representation_20261115/current.json
+  review: predictfun/handoffs/20261115_entry_representation_review.md
+  label_probes: 13911
+  evaluation_probes: 9871
+  evaluation_windows: 1434
+  consumed_evaluation_days: 5
+  new_candidates: 2
+  control_candidates: 1
+  relative_feature_count: 325
+  condition_feature_count: 351
+  public_sizes_represented_relatively: 47
+  condition_bid_timing_error_reduction_pct: 1.4347141259850704
+  condition_ask_timing_error_reduction_pct: -0.9491074067878635
+  condition_bid_days_better: 5
+  condition_ask_days_better: 0
+  partial_history_actions: 7857
+  unknown_reference_actions: 4758
+  unknown_candidate_250ms_history_actions: 2031
+  later_generation_actions: 1323
+  synthetic_checks_passed: 7
+  future_checks_passed: 2010
+  verified_model_artifacts: 60
+  matched_draws: 500
+  economic_passes: 0
+  economic_checks: 6
+  service_exit_code: 0
+  old_size_supervisor: completed_after_resume
+  forward_validation: false
+  portfolio_evaluated: false
+  promoted: false
+  component_study_started: false
+  next: Component investigation by side and condition; improve later-entry support.
+
 entry_normalization_20261115:
   status: complete_read_only_audit
   asof: 2026-11-15T04:33:04Z

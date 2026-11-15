@@ -1,0 +1,9 @@
+{
+  "result": "result.json",
+  "freeze": "freeze_v2.json",
+  "artifacts": "artifacts.json",
+  "review": "predictfun/handoffs/20261115_entry_representation_review.md",
+  "source_commit": "a6ee5803d6c13dbad38c454803f9bad0d976df55",
+  "freeze_commit": "2523293e",
+  "prior_attempt": "attempt_v1_runner.json"
+}

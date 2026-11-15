@@ -1,5 +1,41 @@
 # P-2026-005 HANDOFF
 
+<!-- ENTRY_REPRESENTATION_20261115 -->
+## 2026-11-15 — condition-preserving entry representation COMPLETE
+
+User: check data and make economically different conditions separable. Completed
+2026-11-15T05:04:52Z: 9,871 evaluation probes (4,990 bid / 4,881 ask), 1,434
+windows on five consumed dates Oct 27/31 and Nov 1/2/3; all seven label days
+13,911 probes / 2,010 windows. Two new candidates, one exact saved RAW control.
+RELATIVE replaces 47 public size coordinates while preserving absolute liquidity
+and own risk; CONDITION adds 26 history-support, volatility and fair-response
+features (351 total). All original rows, labels, weights and model params stay
+unchanged. Actual history support reconciles to the saved liquidity scale.
+
+CONDITION timing squared error improves 1.43% bid (5/5 days), worsens 0.95% ask
+(0/5 better). RELATIVE alone improves 0.36% bid, worsens 0.73% ask. All arms
+remain below prior-mean and price/rung baselines; 0/6 matched economic checks
+pass (500 draws, six-way adjustment). Absolute-POST improvement differs from
+timing improvement; no policy promotion or forward-validation claim.
+
+Actual coverage: 7,857/9,871 partial liquidity histories, 4,758 unknown start
+references, 2,031 unavailable complete 250ms candidate histories. Later entries
+are 1,323 rows (13.40%) but 71.23% of inclusion-weight mass. Representation
+exposes these support limits without manufacturing missing observations.
+Seven synthetic checks, 2,010 future checks, 60 saved model artifacts verified.
+Peak worker RSS 859 MiB; completed service exits 0. Initial synthetic assertion
+failure preserved; corrected before any historical build/fit. Older size
+verification completed and its resumed supervisor exited.
+
+Source a6ee5803, authoritative freeze 2523293e / freeze_v2.json, evidence
+5b287084 (summary line endings af777b65). Review:
+`handoffs/20261115_entry_representation_review.md`; current receipt:
+`reviews/entry_representation_20261115/current.json`.
+Next: component-level investigation using explicit condition/support states;
+side-specific evaluation and representative later-entry data remain necessary.
+Component study not started; WAIT/POST and cancel/keep remain separate.
+<!-- /ENTRY_REPRESENTATION_20261115 -->
+
 <!-- ENTRY_NORMALIZATION_20261115 -->
 ## 2026-11-15 — entry normalization audit COMPLETE; component study not started
 

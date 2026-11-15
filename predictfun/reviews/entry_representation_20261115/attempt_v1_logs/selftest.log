@@ -1,0 +1,27 @@
+test_condition_sensitivity_and_opposite_sides (__main__.Checks.test_condition_sensitivity_and_opposite_sides) ... ok
+test_estimator_distinguishes_hidden_regime (__main__.Checks.test_estimator_distinguishes_hidden_regime) ... ok
+test_known_support_future_and_bad_clock (__main__.Checks.test_known_support_future_and_bad_clock) ... ok
+test_missing_is_not_zero (__main__.Checks.test_missing_is_not_zero) ... ok
+test_scale_invariance_keeps_regime_and_own_risk (__main__.Checks.test_scale_invariance_keeps_regime_and_own_risk) ... ERROR
+test_selection_instrument (__main__.Checks.test_selection_instrument) ... ok
+test_weighted_strata_and_no_future_fit (__main__.Checks.test_weighted_strata_and_no_future_fit) ... ok
+
+======================================================================
+ERROR: test_scale_invariance_keeps_regime_and_own_risk (__main__.Checks.test_scale_invariance_keeps_regime_and_own_risk)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/cta-entry-representation-20261115/predictfun/research/pf_entry_representation.py", line 271, in test_scale_invariance_keeps_regime_and_own_risk
+    for n in ('known_position','own_exposure','other_exposure','own_0_remaining_lots'):np.testing.assert_equal(x[n],y[n])
+                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 452, in assert_equal
+    if not (desired == actual):
+            ^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/generic.py", line 1513, in __bool__
+    raise ValueError(
+ValueError: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.406s
+
+FAILED (errors=1)
+2026-11-15T05:01:59Z tag=entry_representation_selftest rc=1 peak_rss_mib=221 wall_s=1.35 cpu_user_s=1.21 memavail_start_gib=23 disk_free_gib=490->490 slot=codex
