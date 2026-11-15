@@ -1,16 +1,21 @@
 stop_ev_accounting_fix_20261115:
-  status: implementation_available_final_edge_checks_queued
-  integration_commit: 211109b1
-  source_commit: 3abb190f
-  first_test_commit: 3dc503bf
-  first_tests_passed: 15
-  first_test_asof: '2026-11-15T12:34:07.296052+00:00'
+  asof: '2026-11-15T12:55:32Z'
+  status: implemented_integrated_synthetic_checks_pass
+  integration_commit: f373310b
+  receipt_integration_commit: bf57feff
+  source_commit: c04370d6
+  tests_passed: 16
+  test_asof: '2026-11-15T12:54:55.034139+00:00'
+  builder_integration_commit: 06f80178
+  builder_planted_errors_caught: 9
   handoff: predictfun/handoffs/20261115_stop_ev_accounting_fix.md
-  evidence: predictfun/reviews/stop_ev_accounting_20261115/current.json
-  raw_builder_integration: required_by_owning_session
-  historical_runs: 0
-  model_runs: 0
+  evidence: predictfun/reviews/stop_ev_accounting_20261115/receipt_v2.json
+  raw_builder_integration: implemented_synthetic_checks_pass
+  historical_validation_by_this_fix: false
+  model_runs_by_this_fix: 0
   performance_improvement_claim: false
+  prior_entry_chain_status: complete
+  prior_entry_chain_asof: '2026-11-15T12:54:58Z'
 
 stop_ev_prebuild_review_20261115:
   asof: '2026-11-15T12:17:18.814666+00:00'
