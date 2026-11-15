@@ -1,0 +1,524 @@
+{
+  "cal_day": "20261027",
+  "n": 12842,
+  "global_offset": -0.2898979372295797,
+  "global_rate": -0.09509381455357775,
+  "prior_exposure": 1524.2733641011184,
+  "order": {
+    "0": {
+      "n": 490,
+      "filled": 139,
+      "exposure": 3987.731202889051,
+      "residual_cents": 914.1912377959322,
+      "rate": 0.139557625512126,
+      "parent_rate": -0.09509381455357775,
+      "supported": true
+    },
+    "1": {
+      "n": 1310,
+      "filled": 95,
+      "exposure": 2776.6918082977427,
+      "residual_cents": -447.8447162686588,
+      "rate": -0.13782805977775872,
+      "parent_rate": -0.09509381455357775,
+      "supported": true
+    },
+    "2": {
+      "n": 773,
+      "filled": 195,
+      "exposure": 6082.898512588046,
+      "residual_cents": 356.5492700216254,
+      "rate": 0.02781589595145698,
+      "parent_rate": -0.09509381455357775,
+      "supported": true
+    },
+    "3": {
+      "n": 2837,
+      "filled": 156,
+      "exposure": 5313.697162473467,
+      "residual_cents": -1107.2124321269082,
+      "rate": -0.1831188648554992,
+      "parent_rate": -0.09509381455357775,
+      "supported": true
+    },
+    "4": {
+      "n": 32,
+      "filled": 13,
+      "exposure": 285.48082330569616,
+      "residual_cents": 238.3475728995785,
+      "rate": -0.09509381455357775,
+      "parent_rate": -0.09509381455357775,
+      "supported": false
+    },
+    "5": {
+      "n": 1196,
+      "filled": 25,
+      "exposure": 780.6982743917047,
+      "residual_cents": 207.15078898370032,
+      "rate": 0.026985937410311495,
+      "parent_rate": -0.09509381455357775,
+      "supported": true
+    },
+    "6": {
+      "n": 470,
+      "filled": 128,
+      "exposure": 3964.7491296017633,
+      "residual_cents": 205.35284625927898,
+      "rate": 0.011004487176685042,
+      "parent_rate": -0.09509381455357775,
+      "supported": true
+    },
+    "7": {
+      "n": 1215,
+      "filled": 93,
+      "exposure": 2772.6764669661657,
+      "residual_cents": -2272.6628667402974,
+      "rate": -0.5626344105475852,
+      "parent_rate": -0.09509381455357775,
+      "supported": true
+    },
+    "8": {
+      "n": 770,
+      "filled": 188,
+      "exposure": 6383.0038974075305,
+      "residual_cents": -1019.2532392321629,
+      "rate": -0.14723174227291883,
+      "parent_rate": -0.09509381455357775,
+      "supported": true
+    },
+    "9": {
+      "n": 2651,
+      "filled": 161,
+      "exposure": 5619.76540989522,
+      "residual_cents": -1868.4618408784186,
+      "rate": -0.28183089050717974,
+      "parent_rate": -0.09509381455357775,
+      "supported": true
+    },
+    "10": {
+      "n": 38,
+      "filled": 11,
+      "exposure": 346.640565212816,
+      "residual_cents": -12.784992708975249,
+      "rate": -0.09509381455357775,
+      "parent_rate": -0.09509381455357775,
+      "supported": false
+    },
+    "11": {
+      "n": 1060,
+      "filled": 25,
+      "exposure": 835.4038305439265,
+      "residual_cents": 1083.759062093044,
+      "rate": 0.3978553064837645,
+      "parent_rate": -0.09509381455357775,
+      "supported": true
+    }
+  },
+  "pressure": {
+    "0": {
+      "n": 393,
+      "filled": 101,
+      "exposure": 2980.1210837705357,
+      "residual_cents": 512.101000281423,
+      "rate": 0.16091507526594132,
+      "parent_rate": 0.139557625512126,
+      "supported": true
+    },
+    "1": {
+      "n": 40,
+      "filled": 14,
+      "exposure": 353.3245414844614,
+      "residual_cents": -156.49580048174482,
+      "rate": 0.139557625512126,
+      "parent_rate": 0.139557625512126,
+      "supported": false
+    },
+    "2": {
+      "n": 56,
+      "filled": 23,
+      "exposure": 649.767994553008,
+      "residual_cents": 541.7778656318096,
+      "rate": 0.139557625512126,
+      "parent_rate": 0.139557625512126,
+      "supported": false
+    },
+    "3": {
+      "n": 1,
+      "filled": 1,
+      "exposure": 4.517583081045409,
+      "residual_cents": 16.808172364444488,
+      "rate": 0.139557625512126,
+      "parent_rate": 0.139557625512126,
+      "supported": false
+    },
+    "4": {
+      "n": 1036,
+      "filled": 66,
+      "exposure": 1804.743181998339,
+      "residual_cents": -804.0817021444543,
+      "rate": -0.30464532946756023,
+      "parent_rate": -0.13782805977775872,
+      "supported": true
+    },
+    "5": {
+      "n": 139,
+      "filled": 15,
+      "exposure": 430.35051369795553,
+      "residual_cents": 236.72006329322903,
+      "rate": -0.13782805977775872,
+      "parent_rate": -0.13782805977775872,
+      "supported": false
+    },
+    "6": {
+      "n": 134,
+      "filled": 14,
+      "exposure": 541.2488691197456,
+      "residual_cents": 119.35904158200285,
+      "rate": -0.13782805977775872,
+      "parent_rate": -0.13782805977775872,
+      "supported": false
+    },
+    "7": {
+      "n": 1,
+      "filled": 0,
+      "exposure": 0.3492434817027648,
+      "residual_cents": 0.15788100056359872,
+      "rate": -0.13782805977775872,
+      "parent_rate": -0.13782805977775872,
+      "supported": false
+    },
+    "8": {
+      "n": 519,
+      "filled": 123,
+      "exposure": 3512.442708384943,
+      "residual_cents": 450.79347256975564,
+      "rate": 0.09791945679871049,
+      "parent_rate": 0.02781589595145698,
+      "supported": true
+    },
+    "9": {
+      "n": 94,
+      "filled": 21,
+      "exposure": 804.9336491070687,
+      "residual_cents": -49.497965833762116,
+      "rate": 0.02781589595145698,
+      "parent_rate": 0.02781589595145698,
+      "supported": false
+    },
+    "10": {
+      "n": 157,
+      "filled": 49,
+      "exposure": 1739.5647743715895,
+      "residual_cents": -3.678785444579688,
+      "rate": 0.02781589595145698,
+      "parent_rate": 0.02781589595145698,
+      "supported": false
+    },
+    "11": {
+      "n": 3,
+      "filled": 2,
+      "exposure": 25.957380724444537,
+      "residual_cents": -41.06745126978842,
+      "rate": 0.02781589595145698,
+      "parent_rate": 0.02781589595145698,
+      "supported": false
+    },
+    "12": {
+      "n": 2045,
+      "filled": 80,
+      "exposure": 2951.1817368523075,
+      "residual_cents": -1222.1923704116316,
+      "rate": -0.33545539944205216,
+      "parent_rate": -0.1831188648554992,
+      "supported": true
+    },
+    "13": {
+      "n": 293,
+      "filled": 20,
+      "exposure": 632.6762955648795,
+      "residual_cents": -65.18318414243996,
+      "rate": -0.15962653127445975,
+      "parent_rate": -0.1831188648554992,
+      "supported": true
+    },
+    "14": {
+      "n": 480,
+      "filled": 55,
+      "exposure": 1694.6908966553397,
+      "residual_cents": 196.1346989961532,
+      "rate": -0.02578112164190797,
+      "parent_rate": -0.1831188648554992,
+      "supported": true
+    },
+    "15": {
+      "n": 19,
+      "filled": 1,
+      "exposure": 35.14823340093937,
+      "residual_cents": -15.971576568990209,
+      "rate": -0.1831188648554992,
+      "parent_rate": -0.1831188648554992,
+      "supported": false
+    },
+    "16": {
+      "n": 14,
+      "filled": 7,
+      "exposure": 108.6981474882008,
+      "residual_cents": 294.96700709727696,
+      "rate": -0.09509381455357775,
+      "parent_rate": -0.09509381455357775,
+      "supported": false
+    },
+    "17": {
+      "n": 2,
+      "filled": 0,
+      "exposure": 13.545868548803139,
+      "residual_cents": 7.892466809572087,
+      "rate": -0.09509381455357775,
+      "parent_rate": -0.09509381455357775,
+      "supported": false
+    },
+    "18": {
+      "n": 16,
+      "filled": 6,
+      "exposure": 163.2368072686922,
+      "residual_cents": -64.51190100727051,
+      "rate": -0.09509381455357775,
+      "parent_rate": -0.09509381455357775,
+      "supported": false
+    },
+    "20": {
+      "n": 914,
+      "filled": 11,
+      "exposure": 385.4770780356406,
+      "residual_cents": 177.110444968686,
+      "rate": 0.1142790103634363,
+      "parent_rate": 0.026985937410311495,
+      "supported": true
+    },
+    "21": {
+      "n": 137,
+      "filled": 4,
+      "exposure": 67.94211603968027,
+      "residual_cents": -77.38739444775855,
+      "rate": 0.026985937410311495,
+      "parent_rate": 0.026985937410311495,
+      "supported": false
+    },
+    "22": {
+      "n": 140,
+      "filled": 10,
+      "exposure": 322.44648559868597,
+      "residual_cents": 100.52472860949537,
+      "rate": 0.026985937410311495,
+      "parent_rate": 0.026985937410311495,
+      "supported": false
+    },
+    "23": {
+      "n": 5,
+      "filled": 0,
+      "exposure": 4.832594717697899,
+      "residual_cents": 6.903009853277496,
+      "rate": 0.026985937410311495,
+      "parent_rate": 0.026985937410311495,
+      "supported": false
+    },
+    "24": {
+      "n": 360,
+      "filled": 95,
+      "exposure": 2812.1872291702084,
+      "residual_cents": 432.76773695686893,
+      "rate": 0.1036655525806954,
+      "parent_rate": 0.011004487176685042,
+      "supported": true
+    },
+    "25": {
+      "n": 52,
+      "filled": 16,
+      "exposure": 461.9199805229887,
+      "residual_cents": -90.68289411139293,
+      "rate": 0.011004487176685042,
+      "parent_rate": 0.011004487176685042,
+      "supported": false
+    },
+    "26": {
+      "n": 58,
+      "filled": 17,
+      "exposure": 690.6419199085663,
+      "residual_cents": -136.73199658619723,
+      "rate": 0.011004487176685042,
+      "parent_rate": 0.011004487176685042,
+      "supported": false
+    },
+    "28": {
+      "n": 916,
+      "filled": 50,
+      "exposure": 1668.8308797796365,
+      "residual_cents": -1115.3583953229693,
+      "rate": -0.6178836925942423,
+      "parent_rate": -0.5626344105475852,
+      "supported": true
+    },
+    "29": {
+      "n": 167,
+      "filled": 24,
+      "exposure": 539.3752565729973,
+      "residual_cents": -11.317784467484922,
+      "rate": -0.5626344105475852,
+      "parent_rate": -0.5626344105475852,
+      "supported": false
+    },
+    "30": {
+      "n": 131,
+      "filled": 19,
+      "exposure": 563.4488644790997,
+      "residual_cents": -1147.3575200410705,
+      "rate": -0.5626344105475852,
+      "parent_rate": -0.5626344105475852,
+      "supported": false
+    },
+    "31": {
+      "n": 1,
+      "filled": 0,
+      "exposure": 1.0214661344321403,
+      "residual_cents": 1.3708330912272697,
+      "rate": -0.5626344105475852,
+      "parent_rate": -0.5626344105475852,
+      "supported": false
+    },
+    "32": {
+      "n": 488,
+      "filled": 109,
+      "exposure": 3570.464233230543,
+      "residual_cents": -178.2921105737835,
+      "rate": -0.07904500005682592,
+      "parent_rate": -0.14723174227291883,
+      "supported": true
+    },
+    "33": {
+      "n": 87,
+      "filled": 17,
+      "exposure": 732.0376712501591,
+      "residual_cents": 104.21782511901269,
+      "rate": -0.14723174227291883,
+      "parent_rate": -0.14723174227291883,
+      "supported": false
+    },
+    "34": {
+      "n": 193,
+      "filled": 61,
+      "exposure": 2065.8993557237895,
+      "residual_cents": -904.1108255520251,
+      "rate": -0.14723174227291883,
+      "parent_rate": -0.14723174227291883,
+      "supported": false
+    },
+    "35": {
+      "n": 2,
+      "filled": 1,
+      "exposure": 14.602637203038979,
+      "residual_cents": -41.06812822536688,
+      "rate": -0.14723174227291883,
+      "parent_rate": -0.14723174227291883,
+      "supported": false
+    },
+    "36": {
+      "n": 1865,
+      "filled": 86,
+      "exposure": 2922.5274172287177,
+      "residual_cents": -679.2457075883291,
+      "rate": -0.24935522900527157,
+      "parent_rate": -0.28183089050717974,
+      "supported": true
+    },
+    "37": {
+      "n": 247,
+      "filled": 19,
+      "exposure": 692.0352216724386,
+      "residual_cents": -268.2523900918187,
+      "rate": -0.3148657701153312,
+      "parent_rate": -0.28183089050717974,
+      "supported": true
+    },
+    "38": {
+      "n": 522,
+      "filled": 55,
+      "exposure": 1970.8342200169109,
+      "residual_cents": -880.003224991209,
+      "rate": -0.37469248458132076,
+      "parent_rate": -0.28183089050717974,
+      "supported": true
+    },
+    "39": {
+      "n": 17,
+      "filled": 1,
+      "exposure": 34.36855097715288,
+      "residual_cents": -40.960518207062044,
+      "rate": -0.28183089050717974,
+      "parent_rate": -0.28183089050717974,
+      "supported": false
+    },
+    "40": {
+      "n": 17,
+      "filled": 5,
+      "exposure": 152.40397217009416,
+      "residual_cents": -51.1693295134256,
+      "rate": -0.09509381455357775,
+      "parent_rate": -0.09509381455357775,
+      "supported": false
+    },
+    "41": {
+      "n": 4,
+      "filled": 0,
+      "exposure": 31.575242377964294,
+      "residual_cents": 26.243231713791978,
+      "rate": -0.09509381455357775,
+      "parent_rate": -0.09509381455357775,
+      "supported": false
+    },
+    "42": {
+      "n": 17,
+      "filled": 6,
+      "exposure": 162.66135066475758,
+      "residual_cents": 12.14110509065836,
+      "rate": -0.09509381455357775,
+      "parent_rate": -0.09509381455357775,
+      "supported": false
+    },
+    "44": {
+      "n": 827,
+      "filled": 12,
+      "exposure": 467.27758376473366,
+      "residual_cents": 686.8700572480425,
+      "rate": 0.6493985529586599,
+      "parent_rate": 0.3978553064837645,
+      "supported": true
+    },
+    "45": {
+      "n": 119,
+      "filled": 3,
+      "exposure": 117.16829188318007,
+      "residual_cents": 227.93084101807716,
+      "rate": 0.3978553064837645,
+      "parent_rate": 0.3978553064837645,
+      "supported": false
+    },
+    "46": {
+      "n": 111,
+      "filled": 10,
+      "exposure": 250.32810694419072,
+      "residual_cents": 168.81674575372048,
+      "rate": 0.3978553064837645,
+      "parent_rate": 0.3978553064837645,
+      "supported": false
+    },
+    "47": {
+      "n": 3,
+      "filled": 0,
+      "exposure": 0.629847951822014,
+      "residual_cents": 0.1414180732036321,
+      "rate": 0.3978553064837645,
+      "parent_rate": 0.3978553064837645,
+      "supported": false
+    }
+  }
+}
