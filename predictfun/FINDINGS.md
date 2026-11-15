@@ -1,3 +1,43 @@
+<!-- STOP_EV_ECONOMIC_LAYER_20261115 -->
+## 2026-11-15 Per-order economic correction avoids some losses; no tested variant is profitable
+
+As of 16:29:13Z, five consumed test dates / 81,630 primary neutral actions
+(7,620 filled), saved LGBM heads unchanged. Four earlier-reserved-day
+calibration layers plus raw, three fixed keep-margin sensitivities = 15
+variants. Corrections use ALL actions, including no-fills; no tail trimming.
+Source 1183afef, freeze f6b82170, integration 78d5b0cd.
+
+Raw nonnegative set: 15,681 actions / 1,121 fills, forecast +$136.56 versus
+-$117.57 local value. Good/bad fills 545/573; mean +34.63/-53.45 c/order.
+At-price +$64.55, through-price -$182.12. Filled-value term is 91.48% of
+retained-set overprediction (identity, not causal attribution).
+
+Side x queue x edge correction at zero cutoff: 9,846 actions / 810 fills,
+-$24.67; preserves 79.78% of raw good value, 42.79% less gross loss. At equal
+retention counts it beats raw by $25.93, positive 5/5 dates. Highlighted after
+inspection, not promoted. It removes 40/87 raw-kept calibration-defined tail
+cases ($83.37) but misses 47 ($85.69). Order + pressure gives -$37.64 and
+-$0.21 vs order-only at its own counts. This pressure representation adds
+little; no general information-ceiling claim.
+
+All 15 variants retain negative pooled local value. Primary pressure + 0.1c
+margin retains 59,153 actions / -$811.32; fails declared screen (positive
+kept value 0/5, vs matched order-only 3/5), so no new sequential replay.
+Margins are sensitivities, not measured queue value. Strict subset: raw
+zero-cutoff +$16.76 on 3,368; order correction +$10.67 on 2,251. No uptime,
+churn, portfolio or untouched-validation improvement claimed. The existing
+activity-only replay is separately reconciled; young-order losses are age
+attribution, not a measured causal churn cost.
+
+Both saved heads and calibration reload exact; identity/chronology/label
+checks and planted controls pass, known-bad inputs refused. One core, 14s,
+324 MiB. Prepared consumed data only. Review:
+handoffs/20261115_stop_ev_economic_layer_review.md; evidence:
+reviews/stop_ev_economic_layer_20261115/interpretation_v1.json. Remaining
+question: improve severe-loss discrimination or measure queue continuation
+value; arbitrary pressure penalties/keep margins have not repaired the edge.
+<!-- /STOP_EV_ECONOMIC_LAYER_20261115 -->
+
 <!-- FILL_INPUT_SEPARATION_20261115 -->
 ## 2026-11-15 Inputs distinguish harmful fills modestly; pressure and queue deserve the next check
 
