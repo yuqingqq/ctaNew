@@ -1,5 +1,13 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-15 15:20Z (session aea5bfb9) — E2 TIMING CHECK DONE (USER: "Go next"): the E2 timing method does not manufacture the losses; they are real adverse flow in states with E2-timed trades (within the replay)
+
+- USER: "Is it the model has little prediction power, or the model is not good at predicting this target" -> skill split (read-only, v2 test predictions): fills are well predicted (AUC 0.82 certified / 0.86 invariant); among fills the value head ranks (IC +0.23) but explains 2% of the variance, and even its best fifth of fills loses (-13 c per order) in the certified population - the target, not the learner. Then "Go next".
+- E2 times are step 1's book-time estimator (the frame whose size drop is closest to the cell volume within +-600 ms of the exec second): on 1.01M WS-timed cells its signed error has median 0 ms, p10 / p90 about -400 / +300 ms, 8-14% later and 12-16% earlier than 250 ms (the replay assumed +-250 ms).
+- E2IZE (pf_stop_ev_e2ize.py, ae83775a before the run; 15:12-15:16Z): every WS-timed trade re-timed by its own E2 estimate, stage 1's labels rebuilt; the certified timing-invariant actions move +0.175 -> +0.161 c (-0.01, mixed signs; R970 E2-TIMING-NEUTRAL; low power - only 2.2% of them change at all). E2-dependent actions -3.37 -> -3.26.
+- Reading together with E2SEP v2 (invariant +0.17 c; E2-dependent -3.30 and 13.8 c worse at equal activity): the losses are not a timing artifact; they come from states with trades the WS feed missed (likely bursts), i.e. real adverse flow in the replay. Quiet (timing-invariant) states roughly break even; there fills make +2 c on average and the value head ranks them (top fifth +18 c, only 421 test fills).
+- Next (USER's call): (a) a stage-3 replay of "rest in quiet states, pull when the fill head sees activity" (the fill head is the model's real skill); (b) T5v2 before any claim about v2; (c) what the WS-missing trades are (size, sweep depth, burst structure).
+
 <!-- STOP_EV_TAIL_DISTRIBUTION_20261115 -->
 ## 2026-11-15 Tail losses and the training/forward gap independently checked
 

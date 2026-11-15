@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# E2IZE driver (2026-11-15, session aea5bfb9; USER: "Go next"): run_stop_ev_e2sep.sh all -> selftests, the nine consumed days rebuilt with WS-timed trades re-timed by their E2 estimates (was: E2 shifts
-# -250 / 0 / +250 ms (DELTA 0 must reproduce stage 1), the report. Each step through run_light on the claude slot; a busy slot is waited for.
+# E2IZE driver (2026-11-15, session aea5bfb9; USER: "Go next"): run_stop_ev_e2ize.sh all -> selftests, the nine consumed days rebuilt with every
+# WS-timed taker group re-timed by its own E2 book-time estimate, the report. Each step through run_light on the claude slot; a busy slot is waited for.
 set -u
 cd /home/yuqing/ctaNew
 PHASE="${1:?all}"

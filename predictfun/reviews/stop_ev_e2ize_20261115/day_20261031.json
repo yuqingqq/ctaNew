@@ -1,0 +1,42 @@
+{
+ "day": "20261031",
+ "stat": {
+  "windows": 282,
+  "identity_differ": 0,
+  "retimed_legs": 67088,
+  "ws_legs_without_e2": 1146,
+  "identity_lost": 0,
+  "actions_0_eligible_estimated_timing": 19872,
+  "actions_0_not_client_resting": 8988,
+  "actions_0_eligible": 71,
+  "actions_0_probe_not_reached": 244,
+  "actions_0_untimed_reach": 312,
+  "actions_0_incomplete_book_coverage": 818
+ },
+ "asof": "2026-11-15T15:14:31Z",
+ "seconds": 17.3,
+ "manifest": {
+  "pf_stop_ev.py": "d951a1eaa0e70856",
+  "pf_stop_ev_accounting.py": "1cffc03eb8d801d8",
+  "pf_stop_queue_activation_lane.py": "8d61029d348f8085",
+  "pf_queue_activation.py": "b63e7f00a74db3c8",
+  "pf_stop_model.py": "e2a857ddb6c4e76a",
+  "pf_kp_s4.py": "3a2cbceb239fa25a",
+  "pf_order_harm_client_lane.py": "c203beeed0a82ae3",
+  "pf_stop_ev_e2sep.py": "64c10f0b31b72e41",
+  "pf_stop_ev_model.py": "c061b9c79b42fc87",
+  "pf_stop_ev_timing_certificate.py": "4a039b5b57075c82"
+ },
+ "e2_error": {
+  "n": 84124,
+  "q": [
+   -373.0,
+   0.0,
+   0.0,
+   0.0,
+   225.0
+  ],
+  "late_250": 0.09027150397032951,
+  "early_250": 0.13540725595549427
+ }
+}
