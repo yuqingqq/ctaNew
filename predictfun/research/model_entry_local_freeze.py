@@ -53,6 +53,10 @@ def main():
                 if p.exists(): raw[d][str(p)]=digest(p)
         for name in ('receipt.json','rows.parquet'):
             p=DATA/'entry_repair_20261115_v2'/('rows_'+d)/name; inputs[str(p)]=digest(p)
+        reuse=DATA/'entry_local_20261115_v2'/('rows_'+d)
+        if d in DAYS[:5]:
+            for name in ('receipt.json','rows.parquet'):
+                p=reuse/name; inputs[str(p)]=digest(p)
         if d in DAYS[2:]:
             for name in (f'fit_{d}_v6.json',f'pred_fold{d}_{d}_v6.parquet'):
                 p=DATA/'stop_model_20261114'/name; inputs[str(p)]=digest(p)
@@ -69,7 +73,7 @@ def main():
         claim_limit='Mechanistic single-order surrogate. Neutral-KEEP labels; separate frozen keeper only in full replay. No promotion from this consumed-data experiment.')
     if args.supersedes:
         prior=review/args.supersedes
-        r['supersedes']=dict(path=args.supersedes,sha256=digest(prior),reason='Initial smoke refused pandas float64 correction into float32 columns before any rows/model; corrected assignment, added keeper/data controls and queue-availability metrics before fitting.')
+        r['supersedes']=dict(path=args.supersedes,sha256=digest(prior),reason='Before any model fit, cover late-window entries using their remaining executable lifetime including cancel-pending fills. Reuse unchanged full-horizon labels, with frozen identities and one replayed reconciliation per window.')
     with (review/args.name).open('x') as f: json.dump(r,f,indent=2); f.write('\n')
     print('Frozen',len(files),'sources;',len(inputs),'derived inputs;',sum(map(len,raw.values())),'admissible raw files')
 

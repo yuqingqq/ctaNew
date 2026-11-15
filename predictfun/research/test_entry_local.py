@@ -42,10 +42,22 @@ class Checks(unittest.TestCase):
     def test_horizon_status_and_future_mark_refusal(self):
         W=context(); v=dict(t=0.,side=0,price=50,activation=40.)
         o=dict(ts=0.,ta=40.,pt=50,tr=float('inf'),ref=False,fl=[])
+        W[0]['tf_mff']=(np.array([0.,1000.]),np.array([51.,51.]))
         self.assertEqual(P.label(W,o,v,51.)['status'],'insufficient_horizon')
+        W=context()
         for w in W.values(): w['te']=7000.
         o['fl']=[(5000.,10.)]
         self.assertEqual(P.label(W,o,v,51.)['status'],'missing_future_mark')
+
+    def test_late_entry_includes_cancel_pending_exposure(self):
+        W=context()
+        for w in W.values():
+            w['te']=6000.; w['tf_mff']=(np.array([0.,7020.,8000.]),np.array([51.,49.,49.]))
+        v=dict(t=5500.,side=0,price=50,activation=5540.)
+        o=dict(ts=5500.,ta=5540.,pt=50,tr=6022.,ref=False,fl=[(6020.,15.)])
+        y=P.label(W,o,v,51.)
+        self.assertEqual(y['status'],'eligible'); self.assertEqual(y['fill_fraction'],.5)
+        self.assertEqual(y['local_value'],-.5)
 
     def test_features_and_engine_reconciliation(self):
         W=context(); views=[]
