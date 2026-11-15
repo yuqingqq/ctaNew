@@ -920,6 +920,55 @@ def p30cmp():
         sys.exit('REFUSED: labels changed or integrity failed after the pre-roll rebuild')
 
 
+def x6test():
+    """REPRESENTATION TEST on the rebuilt rows (30 s pre-roll, corrected fair price; declared before the run, dev days): fold 10-27 with v5's
+    inputs and v4's decisions (target U, 60k rows a day, 200 rounds, lambda_l2 10, v3.1 seeds; the 9 heads j = 1..3 at every H), 10-26 log
+    loss on every usable row. VOLZ (+ z_bn_r250 / 1000 / 3000 = adverse Binance return / (1e4 sigma sqrt(h / 1 s)): the low-volatility
+    coverage flag) ADOPTED iff +0.25% on average with >= 5 of 9 heads better; PEND_REL (own_pend / opp_pend / pf_pend_tot5000 replaced by
+    their W30-relative versions: code review D10, the pending-flow coverage flag) ADOPTED iff not worse on average (>= 0). Output
+    x6test_20261115.json ('adopt' is read by fit6)."""
+    M.all_selftests()
+    T0 = time.time(); asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()); A = json.load(open(f'{M.OUTD}/audit2.json')); scale = A['scale']
+    f5 = json.load(open(f'{M.OUTD}/fit_{F1_TEST}_v5.json')); Fb = f5['features']; lgbp = f5['lgb_params'] or None
+    s1 = lambda d: int(F1_TEST) * 31 + int(d)                                    # noqa: E731
+    h1 = lambda h, j: int(F1_TEST) * 7 + j * 1009 + h                             # noqa: E731
+    s26 = M.day_usable(EVAL); lab26 = {c: v.astype(np.float32) for c, v in M.day_cols(EVAL, LABC, s26).items()}
+    VAR = {'BASE': Fb, 'VOLZ': Fb + M.VOLZ, 'PEND_REL': [M.PEND_REL.get(c, c) for c in Fb]}
+    met = {}
+    for nm, Fv in VAR.items():
+        X_, lab_, w_, _ = DG.train_table(F1_TRAIN, s1, 'V60', None, Fv, scale); X26 = M.day_matrix(EVAL, scale, Fv, s26); P = {}
+        for (h, j) in MHEADS:
+            ii = np.flatnonzero(M.head_rows(lab_['D0'], j, 'U')); ic, wc = M.head_cap(None, w_[ii], M.VOL['V60'][2], h1(h, j)); ii = ii[ic]
+            b_, _ = M.fit_head(X_[ii], (lab_[M.DCOL[h]][ii] >= j).astype(int), wc, Fv, params=lgbp); P[(h, j)] = b_.predict(X26).astype(np.float32); del b_
+        met[nm] = DG.metrics(P, lab26, 'U', MHEADS); del X_, X26, P
+        M.mem_guard(f'x6test {nm}')
+    rel = {nm: {k: (met['BASE'][k]['ll'] - met[nm][k]['ll']) / met['BASE'][k]['ll'] for k in met['BASE']} for nm in ('VOLZ', 'PEND_REL')}
+    g = {nm: float(np.mean(list(v.values()))) for nm, v in rel.items()}; nb = {nm: int(sum(x > 0 for x in v.values())) for nm, v in rel.items()}
+    adopt = (['VOLZ'] if g['VOLZ'] >= 0.0025 and nb['VOLZ'] >= 5 else []) + (['PEND_REL'] if g['PEND_REL'] >= 0.0 else [])
+    res = dict(asof=asof, metrics=met, rel_gain=rel, mean_gain=g, heads_better=nb, adopt=adopt, base_inputs=len(Fb), seconds=round(time.time() - T0, 1))
+    L = [f'REPRESENTATION TEST (rebuilt rows; fold 10-27, V60, U, lambda_l2 {lgbp}; 10-26 log loss); as of {asof}; base {len(Fb)} inputs',
+         *[f'   {nm}: mean log-loss gain {g[nm]:+.3%}, better {nb[nm]}/9 -> {"ADOPT" if nm in adopt else "no"}; per head ' + ' '.join(f'{k} {v:+.2%}' for k, v in rel[nm].items())
+           for nm in ('VOLZ', 'PEND_REL')], f'DECISION: adopt {adopt or "none"}; {res["seconds"]} s']
+    json.dump(res, open(f'{M.OUTD}/x6test_20261115.json', 'w'), indent=1, default=float); open(f'{M.OUTD}/x6test_20261115.txt', 'w').write('\n'.join(L) + '\n')
+    print('\n'.join(L), flush=True)
+
+
+def swaprows():
+    """Replace the stored rows by the rebuilt rows_<day>_p30 iff p30cmp passed on all nine days (labels identical, integrity ok); the old
+    rows are kept as rows_<day>_p5.*; refuses otherwise or if a backup already exists."""
+    C = json.load(open(f'{M.OUTD}/p30cmp_20261115.json'))
+    bad = [d for d in M.DAYS9 if not (d in C and C[d]['labels_identical'] and C[d]['integrity']['ok'])]
+    if bad:
+        sys.exit(f'REFUSED: p30cmp did not pass on {bad}')
+    for d in M.DAYS9:
+        for ext in ('parquet', 'json'):
+            old, new, bak = f'{M.OUTD}/rows_{d}.{ext}', f'{M.OUTD}/rows_{d}_p30.{ext}', f'{M.OUTD}/rows_{d}_p5.{ext}'
+            if os.path.exists(bak):
+                sys.exit(f'REFUSED: backup {bak} exists')
+            os.rename(old, bak); os.rename(new, old)
+    print(f'swapped rows on {len(M.DAYS9)} days (old rows kept as rows_<day>_p5.*)', flush=True)
+
+
 S5_BN = ['bn_r25', 'bn_r50', 'bn_r100', 'bn_r250', 'bn_r500', 'bn_r1000', 'bn_r3000', 'bn_imb', 'bn_age', 'bn_flow250', 'bn_flow1000', 'bn_flow5000',
          'bn_ntr1000']
 S5_PF = ['pf_spread', 'pf_mid', 'pf_micro_dev', 'pf_imb1', 'pf_imb3', 'pf_age', 'pf_nfr1000', 'pf_dm250', 'pf_dm1000', 'pf_dm5000']
@@ -1110,5 +1159,9 @@ if __name__ == '__main__':
         s5check2()
     elif cmd == 'p30cmp':
         p30cmp()
+    elif cmd == 'x6test':
+        x6test()
+    elif cmd == 'swaprows':
+        swaprows()
     else:
         sys.exit(f'unknown command {cmd}')
