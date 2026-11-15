@@ -3,5 +3,9 @@
   "launch": "launch.json",
   "plan": "predictfun/handoffs/20261115_entry_repair_plan.md",
   "runner": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_v2/runner.json",
-  "state": "smoke_pass_full_running"
+  "state": "complete_no_economic_skill",
+  "completion": "completion.json",
+  "result": "full_result.json",
+  "review": "predictfun/handoffs/20261115_entry_repair_results.md",
+  "sizes": "sizes_current.json"
 }

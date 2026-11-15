@@ -1,3 +1,31 @@
+<!-- ENTRY_REPAIR_COMPLETE_20261115 -->
+## 2026-11-15 08:34:59 UTC Entry coverage and history study complete
+
+All stages complete. Eligible labels 13,911 -> 27,669 over seven consumed days;
+all 13,911 original features/targets/probe times match. Statuses: eligible
+27,669, unsampled 65,889, unreached 2,281, sealed 251 (six windows). Fixed test:
+9,871 actions, 4,990 bid /4,881 ask on five consumed chronological dates.
+
+Dense all-history timing MSE improves 2.27% bid /2.38% ask versus sparse;
+R2 remains -0.0557 /-0.0134 versus training means. Recent-two timing MSE improves
+another 0.50% /1.14% pooled, but only two of four nontrivial days per side;
+absolute POST favors all history. Zero of six 500-draw matched economic checks
+pass; all selected absolute POST means negative. No promotion or forward claim.
+
+Interpretation: sampling repair helps modestly; simply lengthening training is
+not supported as the fix. Neutral KEEP continuation and terminal portfolio
+spillovers remain target-design gaps relative to the intended selective keeper.
+Capacity/regularization unchanged; causes not uniquely identified. The larger
+size results were neutral baseline economics, not a combined learned policy.
+
+Evidence 5a26b127; handoffs/20261115_entry_repair_results.md; canonical
+reviews/entry_repair_20261115/current.json now points to completion.json and
+full_result.json. All 60 model identities and 49 frozen sources verified;
+all stages rc0, max full-run worker RSS 859 MiB. Older owned action-depth driver
+resumed. Next experiment should freeze keeper/target alignment and model changes
+separately, preserving this dense-data control; no new model launched here.
+<!-- /ENTRY_REPAIR_COMPLETE_20261115 -->
+
 <!-- ENTRY_REPAIR_SIZES_20261115 -->
 ## 2026-11-15 08:19 UTC Entry size results and denser coverage
 

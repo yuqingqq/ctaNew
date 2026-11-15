@@ -1,3 +1,21 @@
+entry_repair_complete_20261115:
+  asof: '2026-11-15T08:34:59Z'
+  status: complete_no_economic_skill
+  evidence_commit: 5a26b127
+  current: predictfun/reviews/entry_repair_20261115/current.json
+  labeled_actions: 27669
+  original_actions_reconciled: 13911
+  evaluation_actions: 9871
+  evaluation_days: 5
+  verified_model_artifacts: 60
+  economic_passes: 0
+  economic_checks: 6
+  promoted: false
+  keeper_integrated: false
+  model_capacity_changed: false
+  forward_validation: false
+  older_action_depth_driver_resumed: true
+
 entry_repair_sizes_20261115:
   asof: '2026-11-15T08:19:02Z'
   status: neutral_sizes_complete_last_dense_day_running
