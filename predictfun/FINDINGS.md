@@ -1,3 +1,38 @@
+<!-- FILL_INPUT_SEPARATION_20261115 -->
+## 2026-11-15 Inputs distinguish harmful fills modestly; pressure and queue deserve the next check
+
+As of 15:59:26Z, five consumed dates / 81,630 certified-estimated actions:
+7,620 filled (2,561 good, 5,027 bad, 32 zero). No new fit or horizon change.
+All 83 inputs independently rebuilt from stored event-derived rows and known
+order state over 265,373 actions / nine dates: 22,025,959 fields exact,
+including times/signs/scaling. Collector tape was not rebuilt; physical feed
+and estimated trade timing remain unresolved by this reconstruction check.
+
+Good/bad conditional AUC, matching day/side/rung/edge/fill-probability bands:
+queue ahead 0.587 (6,428 covered fills), Binance depth OFI 0.594 and Predict
+OFI 0.580 (6,519 each), fair deficit 0.504 (5,323). Adding hour preserves the
+queue/OFI associations. Strict timing-invariant evidence is weaker for OFI
+(AUC 0.525/0.530, 413 nonzero fills); queue AUC 0.596 (411). All 88 scores
+reported; no significance or information-ceiling claim. Near-zero filtering
+barely changes the main readings.
+
+Four frozen all-action rules, with exact matched-count analytic expectations:
+fair-price-below-order has -$83.38 incremental avoidance; adverse fair move
+exceeding edge +$37.88 (2,095 flagged), thin adverse book +$67.00 (10,034).
+The latter two have positive incremental avoidance on 5/5 dates, descriptive
+only. Every rule leaves negative unflagged local value. No policy promoted.
+Next input question: pressure x queue x quote cushion, with freshness and
+persistence; the shorter-horizon proposal is not established as the best test.
+The other session's committed replay reviews every 250 ms (50 ms grid), so a
+future incremental-exposure target must use actual review cadence.
+
+Source af087fdb, freeze 331a8279; integration 4266da46. Controls pass and
+known-bad inputs refused. One core / 152 s / 794 MiB. Review:
+handoffs/20261115_fill_input_separation_review.md; evidence:
+reviews/fill_input_separation_20261115/readings_v1.json. Consumed data only;
+no protected data, model fitting, active guard or other-session job changes.
+<!-- /FILL_INPUT_SEPARATION_20261115 -->
+
 <!-- STOP_EV_MODEL_CHOICE_20261115 -->
 ## 2026-11-15 Controlled model comparison favors retaining the hurdle benchmark
 

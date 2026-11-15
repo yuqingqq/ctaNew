@@ -1,3 +1,39 @@
+fill_input_separation_20261115:
+  asof: '2026-11-15T15:59:26.217544+00:00'
+  status: modest_pressure_and_queue_separation_fair_level_weak
+  integration_commit: 4266da46
+  source_commit: af087fdb
+  freeze_commit: 331a8279
+  test_actions: 81630
+  filled_test_actions: 7620
+  good_filled_actions: 2561
+  bad_filled_actions: 5027
+  zero_filled_actions: 32
+  lineage_actions: 265373
+  lineage_features: 83
+  lineage_field_comparisons: 22025959
+  lineage_mismatches: 0
+  all_feature_and_score_count: 88
+  fixed_rule_count: 4
+  queue_conditional_auc: 0.5874359305681182
+  binance_depth_ofi_conditional_auc: 0.593839100222079
+  predict_ofi_conditional_auc: 0.5799340927000501
+  fair_deficit_conditional_auc: 0.5043828346600787
+  shock_over_edge_flagged_actions: 2095
+  shock_over_edge_incremental_local_avoidance_dollars: 37.88363122262054
+  all_rules_leave_negative_remaining_local_value: true
+  comparator_is_significance_test: false
+  new_model_fits: 0
+  horizon_changed: false
+  raw_collector_rebuilt: false
+  physical_timing_resolved: false
+  untouched_validation: false
+  protected_data_read: false
+  new_policy_promoted: false
+  next: inspect_joint_pressure_queue_and_quote_cushion_states
+  review: predictfun/handoffs/20261115_fill_input_separation_review.md
+  evidence: predictfun/reviews/fill_input_separation_20261115/readings_v1.json
+
 stop_ev_model_choice_20261115:
   asof: '2026-11-15T15:31:29.684547+00:00'
   status: retain_hurdle_benchmark_test_immediate_urgency_alignment_next
