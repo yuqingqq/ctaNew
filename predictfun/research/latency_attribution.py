@@ -1,6 +1,7 @@
 """Descriptive attribution of all frozen latency cells, never a filtered policy.
 
-Declared during the five-day replay, after inspecting the first date only.
+Declared during the five-day replay, after inspecting the first date only;
+per-rung exposure added after the third date, before the last two completed.
 All fills remain primary. No selection, new fit, null or inferential claim.
 """
 import argparse
@@ -89,6 +90,7 @@ def run(src, out):
         cells.setdefault(cfg, {})[arm] = dict(
             windows=len(g), trading_windows=int((g.shares > 0).sum()),
             positive_windows=int((g.pnl > 0).sum()), negative_windows=int((g.pnl < 0).sum()),
+            live_share_by_rung={str(j): float(g[f'live{j}'].mean()) for j in range(6)},
             primary_pnl=pnl, shares=shares, orders=orders,
             pulls_per_order=float(g.pulls.sum()) / orders if orders else None,
             young_share_fraction=float(g.shares_young.sum()) / shares if shares else None,
