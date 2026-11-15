@@ -76,7 +76,13 @@ class Checks(unittest.TestCase):
             changed=W
             for t in (40.,50.,100.,199.,200.,500.): changed=add_leg(changed,side,t,unreachable,100.)
             alt=T.action(T.ledger(changed),side=side)
-            self.assertEqual(alt['label'],row['label'])
+            # Inserting public events renumbers the side's array positions;
+            # executions and per-tranche economics must stay identical.
+            def economics(y):
+                z=copy.deepcopy(y)
+                for f in z['tranches']: f.pop('leg')
+                return z
+            self.assertEqual(economics(alt['label']),economics(row['label']))
 
     def test_known_interval_can_be_irrelevant_but_empirical_untimed_interval_cannot(self):
         W=T.world()
