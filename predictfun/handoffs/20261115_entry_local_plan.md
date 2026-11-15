@@ -13,10 +13,12 @@ with inverse-probability weights 2/4. The original age assignment stays fixed.
 Every action has a status, including unfilled, refused, insufficient-horizon and
 unreached actions. No filter selects favorable outcomes or completed fills.
 
-For one posted order, count fills through five seconds after the probe. Value
+For one posted order, count fills through five seconds after the probe or the
+known research session's terminal cancellation tail, whichever comes first. Value
 each executed tranche at its own fill time plus one second. Unfilled orders
-have zero fill fraction and zero value. Missing/stale future marks and probes
-without the full horizon remain exclusion statuses. The actual order is not
+have zero fill fraction and zero value. Missing/stale future marks remain
+exclusion statuses. Late-window entries remain in training with their shorter
+known exposure and the existing time-left feature. The actual order is not
 cancelled when the measurement horizon ends.
 
 F is total filled quantity divided by submitted quantity. D is the sum of
@@ -79,6 +81,11 @@ clock calibration remain limitations. No promotion or validation claim follows
 from this consumed-data experiment. Larger sizes need their own label support.
 
 ## Verification and execution
+
+The v3 correction was declared before any local model fit. Full-horizon v2
+labels are unchanged and can be reused only with their frozen receipt and file
+identities; one reused action per window is replayed and compared exactly.
+Late-window labels are rebuilt. Previous attempts remain as provenance.
 
 Synthetic controls cover per-tranche timestamp/sign accounting, zeros for
 unfilled actions, horizon statuses, future input perturbation, deliberately
