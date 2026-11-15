@@ -1,3 +1,25 @@
+<!-- STOP_EV_LATENCY_20261115 -->
+## 2026-11-15 Current-model latency sensitivity: running
+
+Frozen protocol 30b92397, source c7bc4aca; integrated on mm-research before
+results. Corrected v3 EV/B2/QR heads, saved v6 MD benchmark, five consumed
+test dates (10-27, 10-31, 11-01..03), all first-minute windows and all fills.
+Four clocks: current, zero order/notification delay, zero modeled feed plus
+order delay, and the same with M0 instead of M50 trade timing. Every rule
+reviews at 50 ms and freshly scores every entry. Six rungs x 30 shares,
+no repost timer, shared activation-queue lane. QR retains earlier fixed
+thresholds; no optimization. Five rules x four clocks; no inferential claim.
+
+No completed latency result yet. First-day replay is running in the Codex
+slot from /tmp/cta-latency-20261115; exact cached/uncached trajectory checks
+and sampled known-state accounting are passing. Earlier attempts were
+interrupted before completed economic results (inference optimization,
+then current v3 heads becoming available). Sources and inputs remain frozen
+through the five-day run. Other session's simulator/replay work untouched.
+Output: data/predict_fun/research/stop_ev_latency_20261115_v3/.
+Protocol: reviews/stop_ev_latency_20261115/freeze_v3.json.
+<!-- /STOP_EV_LATENCY_20261115 -->
+
 <!-- STOP_EV_DYNAMICS_SCALE_20261115 -->
 ## 2026-11-15 Dynamics exist; marginal scaling does not explain most severe misses
 
