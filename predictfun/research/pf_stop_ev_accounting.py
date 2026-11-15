@@ -294,7 +294,9 @@ def label_action(ledger, key, decision_ms, *, day, settings=Settings()):
     # Earlier uncertain events can alter the neutral path's queue, inventory
     # and births. Fail closed on the full relevant reference prefix, not just
     # on whether an excluded leg happened to fill this particular order.
-    if any(overlaps(g.earliest_ms, g.latest_ms, ledger.ws, end) for g in c.missing):
+    # Empirical offset quantiles are not hard bounds for an untimed event.
+    # A missing anchor cannot be declared harmless from such an interval.
+    if any(g.reason == 'untimed' or overlaps(g.earliest_ms, g.latest_ms, ledger.ws, end) for g in c.missing):
         row['status'] = 'missing_trade_timing'; return row
     estimated = any(info.timing == 'e2' and overlaps(ledger.legs[k][0] - info.uncertainty_ms,
                      ledger.legs[k][0] + info.uncertainty_ms, ledger.ws, end)

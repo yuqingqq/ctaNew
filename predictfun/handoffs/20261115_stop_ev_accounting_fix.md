@@ -29,6 +29,9 @@ Fills at or before decision time have already occurred. There is no full-size
 loss assigned just because price crosses the level. No remaining exposure is
 assigned after a full fill. Every tranche uses its own markout, including when
 the fill clock is shifted; marks do not stay at the unshifted anchor.
+Marks come from actual valid raw bid/ask pairs, not `tf_mff` forward-filled
+values. Freshness uses the last valid pair's timestamp; a later invalid frame
+cannot make an old mid look fresh.
 
 The one-second target assumes neutral continuation over that interval, subject
 to the fixed STOP engine's cross/no-book/drift/end and declared inventory-cap
@@ -100,6 +103,8 @@ The API example is a wiring guide, not a claim that raw provenance is validated.
 The supplied source counts must include excluded legs as statuses. Untimed
 legs with no finite bound use `(-inf, +inf)` and therefore invalidate affected
 actions rather than disappear. Out-of-range records can carry bounded intervals.
+`reason='untimed'` invalidates the reference even if a caller supplies a finite
+interval: empirical offset quantiles do not establish hard event-time bounds.
 Duplicate source IDs fail; distinct IDs with duplicate raw contents still need
 the upstream source-quality check. Preserve reserved-day pre-read filtering.
 
@@ -158,3 +163,11 @@ the model on the corrected labels. The draft single-order tables are not a
 substitute. Existing model artifacts and frozen running replays remain
 historical and are not relabeled in place. Historical frequency of these
 defects and the model's economic improvement are not measured by this fix.
+
+Integration update: a developing `pf_stop_ev.py` was observed importing this
+adapter and adding primary generation labels and E9 reconciliation. Its E9
+must independently derive marks from **valid raw quotes**, using the same
+execution-time target; the legacy forward-filled mid can be stale or, in a
+synthetic fixture, inconsistent with raw bid/ask values. A fixture must supply
+coherent raw quotes. An empirical 0.1–99.9% offset interval for an untimed leg
+does not make its missing anchor safe. No historical data run was reviewed.
