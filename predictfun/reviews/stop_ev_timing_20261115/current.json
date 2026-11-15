@@ -1,0 +1,14 @@
+{
+  "asof": "2026-11-15T14:02:20.203055+00:00",
+  "audit": "audit_v2.json",
+  "audit_extends": "audit_v1.json",
+  "extension": "Adds declared bid/ask coverage; all aggregate values unchanged.",
+  "report": "historical_report.json",
+  "runner": "historical_runner.json",
+  "label_directory": "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1",
+  "checker_commit": "1e6c71d2",
+  "builder_commit": "f0682872",
+  "freeze_commit": "3bb6773f",
+  "model_fitting": false,
+  "physical_timing_validated": false
+}
