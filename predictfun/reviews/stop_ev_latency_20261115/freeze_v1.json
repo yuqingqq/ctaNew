@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "asof": "2026-11-15T17:26:11.509601+00:00",
+  "source_commit": "9121f8f04c79a6da8440a7f4afe6f615f5cbefe4",
+  "sources": {
+    "pf_stop_ev_latency.py": "ff6bec9d476c6ccc8cd6b9d1d315d7e43512645bfdec3c22d1c66b34794da881",
+    "pf_latency_inputs.py": "b8f5ccbb7df623d9895ac668bc986e5ddc48193a7a9a2cd0c413feaf1a86a037"
+  },
+  "days": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "population": "All available first-minute windows on the five existing consumed test dates, boundary filter recorded; no timing-certificate or fill-outcome sample filter. Untimed trades imputed by committed b1ea549a; old selected-population models held frozen.",
+  "configurations": [
+    "current execution and signal clocks, M50",
+    "zero placement/cancel/pending-cancel/fill-notice delay, existing signal clocks, M50",
+    "zero modeled Predict and Binance event-to-knowledge + order/notification delay, M50",
+    "same modeled zero clocks, M0 trade timestamp sensitivity"
+  ],
+  "fixed": "50ms review and fresh gate at every entry; 6 rungs x 30 shares x 2 sides; uncapped; zero repost wait; unknown-depth queue = 0; activation-snapshot queue rule M. All fills primary; young/WS/E2/imputed are additive attribution only.",
+  "rules": [
+    "KA keep all",
+    "EV full frozen hurdle keep/post iff EV >=0 (fresh entry is diagnostic, not validated wait/post target)",
+    "B2 frozen order-only hurdle same zero cutoff",
+    "QR frozen fill head, prior calibration thresholds",
+    "MD1000 frozen harm-depth heads, prior calibration thresholds"
+  ],
+  "multiplicity": {
+    "rules": 5,
+    "clock_configurations": 4,
+    "cells_per_day": 20,
+    "new_fits": 0,
+    "new_threshold_searches": 0
+  },
+  "primary": "Whole-portfolio cash plus inventory marked at 60.2s, including all fills; counts, shares, cents/share, good and lost value, 1s/5s markouts, quote uptime, pulls, terminal/max inventory and pending/imputed/unknown-queue attribution. Paired day deltas of clock settings within same rule; between-rule differences have endogenous exposure and are descriptive.",
+  "positive_controls": [
+    "instant placement catches a toy trade missed with delay",
+    "instant cancel prevents a toy fill that arrives before delayed cancellation",
+    "zero event knowledge sees an event delayed clock cannot",
+    "fresh entry evaluated off former 250ms cadence",
+    "clock restoration",
+    "every sampled order state equals independent known_state under its clock"
+  ],
+  "refusals": [
+    "stale entry gate rejected by off-cadence test",
+    "future event perturbation must not change past lookup",
+    "tape and model identity mismatches fail",
+    "lane conservation and terminal reconciliation fail",
+    "changed input hashes fail",
+    "resident memory cap 2GiB"
+  ],
+  "nulls": "No inferential or information-beyond-null claim. No random null run; future inferential comparison needs a separately frozen matched design with >=200 draws. All variants reported and these dates remain consumed.",
+  "limitations": [
+    "Zero modeled delay retains 50ms grid; cannot claim continuous zero reaction latency",
+    "Zero-feed rebuild keeps pre-window volatility context fixed and uses relay receipt-minus-72ms clock",
+    "Venue-event timestamps and imputed executions are assumptions; same shared queue simulator remains under independent review",
+    "Frozen models trained on timing-selected population and positive cancel latency; not the best model retrained for zero latency",
+    "EV entry extension and zero cutoff omit measured queue continuation cost",
+    "No live trading, no policy promotion, no protected dates"
+  ],
+  "output": "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_latency_20261115_v1"
+}
