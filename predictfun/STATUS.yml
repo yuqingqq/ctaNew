@@ -1,3 +1,16 @@
+stop_ev_prebuild_review_20261115:
+  asof: '2026-11-15T12:17:18.814666+00:00'
+  status: specification_issues_found_implementation_unverified
+  reviewed_design_commit: cae5c88f
+  review: predictfun/handoffs/20261115_stop_ev_prebuild_review.md
+  evidence: predictfun/reviews/stop_ev_review_20261115/prebuild_v2.json
+  critical_label_issue: aggregate_markouts_remove_execution_order
+  required_queue_contract: activation-snapshot-queue-v1
+  pooled_sides_rejected: false
+  code_changed: false
+  new_data_runs: 0
+  new_model_runs: 0
+
 queue_initialization_fix_20261115:
   asof: '2026-11-15T12:08:34Z'
   status: corrected_engines_and_entrypoints_tested
