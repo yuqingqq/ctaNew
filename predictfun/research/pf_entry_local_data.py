@@ -98,9 +98,15 @@ def load_day(day):
     for m in data['W0']:
         if m not in data['ROWS']:
             continue
-        x=data['ROWS'][m]; corr=fixed[m]
-        if not np.array_equal(x.tau.to_numpy(float), np.asarray(corr[0])):
-            raise ValueError('fair correction timestamp mismatch')
-        x.loc[:,'gap']=corr[4]; x.loc[:,'basis_bps']=corr[5]
+        apply_correction(data['ROWS'][m],fixed[m])
     stats.update(preroll_ms=30000., sealed_lookback_windows=sealed)
     return data, stats
+
+
+def apply_correction(x,corr):
+    if not np.array_equal(x.tau.to_numpy(float),np.asarray(corr[0])):
+        raise ValueError('fair correction timestamp mismatch')
+    # Replace the columns so pandas does not attempt an invalid float64-in-
+    # float32 in-place assignment; preserve the correction's precision.
+    x['gap']=np.asarray(corr[4],float)
+    x['basis_bps']=np.asarray(corr[5],float)
