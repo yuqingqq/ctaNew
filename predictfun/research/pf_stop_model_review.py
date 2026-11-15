@@ -769,8 +769,12 @@ def s5check2():
         cols = ['m', 'side', 'k', 't', 'masked'] + S5_BN + S5_PF + XC + [f'adv_{c}' for c in ADVC]
         R = M.day_cols(d, cols); rg = np.random.default_rng(int(d) + 11)
         hrs = (R['t'] // 3600000).astype(np.int64); cand_h = np.unique(hrs[(R['t'] % 3600000) > 120000]); rows = []
-        for hh in rg.choice(cand_h, K1_HOURS, replace=False):
+        for ih, hh in enumerate(rg.choice(cand_h, K1_HOURS, replace=False)):   # the first hour's sample always includes its HH:00 window
             ms = np.unique(R['m'][hrs == hh]); ms = rg.choice(ms, min(K1_WIN, len(ms)), replace=False)
+            if ih == 0:
+                h00 = [x for x in np.unique(R['m'][hrs == hh]) if WS.get(int(x), 1.0) % 3600.0 == 0.0]
+                if h00:
+                    ms = np.unique(np.r_[ms[:max(K1_WIN - 1, 1)], h00[:1]])
             for m_ in ms:
                 for s_ in (0, 1):
                     ii = np.flatnonzero((R['m'] == m_) & (R['side'] == s_)); rows.extend(rg.choice(ii, min(K1_STEPS, len(ii)), replace=False).tolist())
@@ -868,7 +872,7 @@ def s5check2():
                  f'min NaN agreement {min(v["nan_agree"] for v in res["days"][d]["inputs"].values()):.4f}; failing {bad or "none"}')
     cok = all(x['fails'] for v in ctrl.values() for x in v)
     res.update(pass_=bool(allok), controls_fire=bool(cok), controls=ctrl, seconds=round(time.time() - T0, 1))
-    L.insert(1, f'RESULT: {"PASS" if allok else "FAIL"} on every day; positive controls fire on every day: {cok}; {res["seconds"]} s')
+    L.insert(1, f'RESULT: {"PASS on every day" if allok else "FAIL (see the failing days)"}; positive controls fire on every day: {cok}; {res["seconds"]} s')
     json.dump(res, open(f'{M.OUTD}/s5check2_20261115.json', 'w'), indent=1, default=float); open(f'{M.OUTD}/s5check2_20261115.txt', 'w').write('\n'.join(L) + '\n')
     print('\n'.join(L), flush=True)
     if not allok:
@@ -877,6 +881,43 @@ def s5check2():
 
 def IN_sens(p, sig, tr):
     return M.IN.sens_of(float(p), float(sig), float(tr)) if np.isfinite(p) else np.nan
+
+
+def p30cmp():
+    """30 s PRE-ROLL REBUILD CHECK (D5 fix): rows_<day>_p30 (load_day with 30 s of pre-window books) against the stored rows (5 s), all nine
+    days: keys, labels (must be identical), the inputs that changed (share of rows, inside / after the first 30 s of the window), and the row
+    integrity of the rebuilt rows (blocks, monotone labels, no infinite input). Exit 1 if a label differs or integrity fails."""
+    out = {}; ok = True; L = ['30 s PRE-ROLL REBUILD vs stored rows: day | rows old / new (keys equal) | labels identical | integrity | inputs changed (share of rows; '
+                              'in the first 30 s / after)']
+    for d in M.DAYS9:
+        a = pd.read_parquet(f'{M.OUTD}/rows_{d}.parquet'); b_ = pd.read_parquet(f'{M.OUTD}/rows_{d}_p30.parquet')
+        ka = pd.MultiIndex.from_arrays([a.m.values, a.side.values, a.k.values]); kb = pd.MultiIndex.from_arrays([b_.m.values, b_.side.values, b_.k.values])
+        same_keys = len(a) == len(b_) and bool((ka == kb).all()) if len(a) == len(b_) else False
+        x = dict(rows_old=int(len(a)), rows_new=int(len(b_)), keys_equal=same_keys, only_new=int(len(kb.difference(ka))), only_old=int(len(ka.difference(kb))))
+        if not same_keys:
+            j = pd.DataFrame({'m': a.m, 'side': a.side, 'k': a.k, 'i': np.arange(len(a))}).merge(pd.DataFrame({'m': b_.m, 'side': b_.side, 'k': b_.k, 'j': np.arange(len(b_))}), on=['m', 'side', 'k'])
+            a = a.iloc[j.i.values].reset_index(drop=True); b_ = b_.iloc[j.j.values].reset_index(drop=True)
+        lab = [c for c in M.LAB if c in a.columns]
+        x['labels_identical'] = all(np.array_equal(a[c].values, b_[c].values, equal_nan=True) for c in lab)
+        early = a.k.values < 600; ch = {}
+        for c in a.columns:
+            if c in lab or c in ('day', 'm', 'side', 'k'):
+                continue
+            u, v = a[c].to_numpy(), b_[c].to_numpy()
+            diff = ~((u == v) | (pd.isna(u) & pd.isna(v))) if u.dtype.kind in 'fc' else (u != v)
+            if diff.any():
+                ch[c] = (float(diff[early].mean()), float(diff[~early].mean()))
+        x['changed'] = ch
+        R = M.day_cols(f'{M.OUTD}/rows_{d}_p30.parquet', ['m', 'side', 'k'] + M.LAB)
+        x['integrity'] = M.integrity(R['m'], R['side'], R['k'], {c: R[c] for c in M.LAB}); out[d] = x
+        ok &= bool(x['labels_identical'] and x['integrity']['ok'])
+        L.append(f'   {d}: {x["rows_old"]} / {x["rows_new"]} ({same_keys}; +{x["only_new"]} / -{x["only_old"]}) | {x["labels_identical"]} | {x["integrity"]["ok"]} | '
+                 + ', '.join(f'{c} {e:.1%}/{l_:.1%}' for c, (e, l_) in sorted(ch.items(), key=lambda z: -z[1][0])[:8]))
+        del a, b_, R
+    json.dump(out, open(f'{M.OUTD}/p30cmp_20261115.json', 'w'), indent=1, default=float); open(f'{M.OUTD}/p30cmp_20261115.txt', 'w').write('\n'.join(L) + '\n')
+    print('\n'.join(L), flush=True)
+    if not ok:
+        sys.exit('REFUSED: labels changed or integrity failed after the pre-roll rebuild')
 
 
 S5_BN = ['bn_r25', 'bn_r50', 'bn_r100', 'bn_r250', 'bn_r500', 'bn_r1000', 'bn_r3000', 'bn_imb', 'bn_age', 'bn_flow250', 'bn_flow1000', 'bn_flow5000',
@@ -1067,5 +1108,7 @@ if __name__ == '__main__':
         sides()
     elif cmd == 's5check2':
         s5check2()
+    elif cmd == 'p30cmp':
+        p30cmp()
     else:
         sys.exit(f'unknown command {cmd}')

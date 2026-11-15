@@ -5,7 +5,7 @@
 #   PF_PLAY_V=<4|5> [PF_PLAY_SIZE=<sh>] run_stop_model2.sh play -> STOP-PLAY on that version and order size: calibration-day choice, test-day arms, report
 set -u
 cd /home/yuqing/ctaNew
-PHASE="${1:?x5|v5|play}"
+PHASE="${1:?fix|x5|v5|play}"
 OUT=data/predict_fun/research/stop_model_20261114; mkdir -p $OUT/logs
 DAYS="20261023 20261024 20261025 20261026 20261027 20261031 20261101 20261102 20261103"
 TESTS="20261027 20261031 20261101 20261102 20261103"
@@ -20,6 +20,10 @@ case "$PHASE" in
   x5)
     for d in $DAYS; do job sm_x5_$d python3 predictfun/research/pf_stop_model_x5.py build $d; done
     job sm_x5test python3 predictfun/research/pf_stop_model_review.py x5test;;
+  fix)    # (2026-11-15, USER: 'We fixed all data issues then build the model and do model play'): rows rebuilt with the 30 s pre-roll and the
+          # corrected fair price into rows_<day>_p30, then the comparison with the stored rows (labels identical, integrity, what changed)
+    for d in $DAYS; do PF_SM_ROWS_TAG=_p30 job sm_rows_p30_$d python3 predictfun/research/pf_stop_model.py rows $d; done
+    job sm_p30cmp python3 predictfun/research/pf_stop_model_review.py p30cmp;;
   v5)
     for t in $TESTS; do job sm_fit5_$t python3 predictfun/research/pf_stop_model.py fit5 $t; done
     job sm_report5 python3 predictfun/research/pf_stop_model.py report5;;
