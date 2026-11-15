@@ -1,0 +1,13 @@
+{
+  "asof": "2026-11-15T08:19:02Z",
+  "result": "sizes_early_result.json",
+  "result_sha256": "384d02dc4278db9c3afc808ee77cc2a2e2577a4ad1f71b72fff3f04e51355534",
+  "source_commit": "5b1a0ffc",
+  "manifest": "sizes_snapshot_manifest.json",
+  "manifest_commit": "cb3b8175",
+  "review": "predictfun/handoffs/20261115_entry_size_early_results.md",
+  "data": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_sizes_20261115_v1",
+  "main_runner_resumed": true,
+  "main_stage_after_resume": "build_20261103",
+  "model_prediction_results_available": false
+}
