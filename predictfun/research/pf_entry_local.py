@@ -48,6 +48,8 @@ FEATURES=['price','rung','edge','spread','shown_ratio','better_ratio','opposite_
           'candidate_grow1000',*['side_'+x for x in RAW]]
 BASE=Path(K.IO)/'entry_repair_20261115_v2'
 OUT=Path(K.IO)/'entry_local_20261115_v1'
+REUSE=Path(K.IO)/'entry_local_20261115_v2'
+REUSE_DAYS=DAYS[:5]
 STOP=Path(K.IO)/'stop_model_20261114'
 STOP_THRESHOLD=.20; STOP_HORIZON=1000
 SCENARIOS=((50.,'zero'),(250.,'zero'),(50.,'block'))
@@ -150,9 +152,9 @@ def label(W,order,view,entry_mid):
     The actual order may live longer, which terminal replay will evaluate.
     """
     t=view['t']; s=view['side']; sg=1. if s==0 else -1.
-    cutoff=t+FILL_MS
+    cutoff=min(t+FILL_MS,W[s]['te']+L.TAIL_MS)
     tf,mid=W[s]['tf_mff']; tf=np.asarray(tf); mid=np.asarray(mid)
-    if cutoff>W[s]['te'] or tf[-1]<cutoff+MARK_MS:
+    if tf[-1]<cutoff+MARK_MS:
         return dict(status='insufficient_horizon')
     if order['ts']!=t or order['pt']!=view['price'] or order['ta']!=view['activation']:
         raise ValueError('focal order identity/timestamp differs')
@@ -212,17 +214,42 @@ def build(day,out,max_windows=None):
     if digest(rp/'rows.parquet')!=rr['rows_sha256']: raise ValueError('changed reference rows')
     original=pd.read_parquet(rp/'rows.parquet',columns=KEYS+['birth_t','status'])
     old={int(m):g for m,g in original.groupby('market')}
+    # v2 never fitted a model. Its complete rows with a full five-second
+    # horizon are unchanged by the end-window correction. New freeze binds
+    # these receipts/bytes; one reused row per window is fully replayed again.
+    reuse={}; reuse_id=None; reused=0; rechecked=0
+    prior=REUSE/('rows_'+day)
+    if day in REUSE_DAYS:
+        meta=json.loads((prior/'receipt.json').read_text())
+        if meta['partial'] or meta['day']!=day or digest(prior/'rows.parquet')!=meta['rows_sha256']:
+            raise ValueError('invalid reusable rows')
+        ff=pd.read_parquet(prior/'rows.parquet'); ff=ff[(ff.status=='eligible')&(ff.time_left>=FILL_MS)]
+        reuse={tuple(r[k] for k in KEYS):r for r in ff.to_dict('records')}; reuse_id=digest(prior/'receipt.json')
     for W in E.PAIRS.window_pairs(data):
         market=W[0]['m']; births=[]
         ref=run(W,lambda v:True,observe=lambda v,a:births.append(dict(v)) if v['kind']=='entry' and v['status']=='eligible' else None)
         want={(int(x.side),int(x.rung),int(x.generation)):x.birth_t for x in old[market].itertuples()}
         got={M.key(v):v['t'] for v in births}
         if got!=want or len(got)!=len(births): raise ValueError('30-second history changed neutral action identities')
+        window_rechecked=False
         for b in births:
             sm=sampling(day,market,M.key(b)); row=dict(day=day,market=market,side=b['side'],rung=b['rung'],generation=b['generation'],birth_t=b['t'],**sm,status='not_sampled')
             if sm['selected']:
-                result,x=fork(W,b,sm['requested_delay']); row.update(result)
-                if x is not None: row.update(dict(zip(FEATURES,map(float,x))))
+                key=tuple(row[k] for k in KEYS); cached=reuse.get(key)
+                if cached is not None:
+                    if cached['birth_t']!=b['t'] or cached['requested_delay']!=sm['requested_delay'] or cached['sampling_weight']!=sm['sampling_weight']:
+                        raise ValueError('reused action differs')
+                    row.update(cached); reused+=1
+                if cached is None or not window_rechecked:
+                    result,x=fork(W,b,sm['requested_delay'])
+                    if cached is not None:
+                        if result['status']!='eligible': raise ValueError('reused status differs')
+                        for name in ('fill_fraction','drift_value','local_value','probe_t','focal_terminal_value'):
+                            np.testing.assert_allclose(result[name],cached[name],atol=1e-9,rtol=0)
+                        np.testing.assert_equal(x,np.asarray([cached[n] for n in FEATURES],np.float32))
+                        window_rechecked=True; rechecked+=1
+                    row.update(result)
+                    if x is not None: row.update(dict(zip(FEATURES,map(float,x))))
             records.append(row)
         if births:
             v=births[0]; x,_=vector(W,v); future_check(W,v,x); checked+=1
@@ -240,6 +267,7 @@ def build(day,out,max_windows=None):
     write(p/'receipt.json',dict(asof=now(),day=day,partial=max_windows is not None,n=len(f),eligible=len(valid),
         statuses={str(k):int(v) for k,v in f.status.value_counts().items()},windows=windows,
         source_status=data['stat'],data_fix=fix,feature_future_checks=checked,
+        reused_rows=reused,replayed_reuse_checks=rechecked,reuse_receipt_sha256=reuse_id,
         rows_sha256=digest(p/'rows.parquet'),reference_receipt_sha256=digest(rp/'receipt.json'),limits=LIMITS))
 
 
