@@ -1,3 +1,15 @@
+entry_repair_20261115:
+  status: full_running_after_smoke_pass
+  source_commit: ce6e645e
+  freeze_commit: edca5c96
+  current: predictfun/reviews/entry_repair_20261115/current.json
+  runner: data/predict_fun/research/entry_repair_20261115_v2/runner.json
+  sizes_shares: [30, 50, 100]
+  fixed_cap_shares: 1500
+  prior_supervisor_held: 2900451
+  performance_claim: false
+  forward_validation: false
+
 entry_training_issues_20261115:
   status: complete_known_issue_review
   data_asof: 2026-11-15T05:04:52Z
