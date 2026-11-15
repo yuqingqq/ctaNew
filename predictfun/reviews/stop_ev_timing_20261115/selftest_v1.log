@@ -1,0 +1,25 @@
+test_e2_modes_keep_qualifications (__main__.Checks.test_e2_modes_keep_qualifications) ... ok
+test_earlier_fill_changes_order_birth (__main__.Checks.test_earlier_fill_changes_order_birth) ... ok
+test_earlier_queue_drain_changes_later_value (__main__.Checks.test_earlier_queue_drain_changes_later_value) ... ok
+test_invalid_marks_are_not_rescued_by_certificate (__main__.Checks.test_invalid_marks_are_not_rescued_by_certificate) ... ok
+test_known_interval_can_be_irrelevant_but_empirical_untimed_interval_cannot (__main__.Checks.test_known_interval_can_be_irrelevant_but_empirical_untimed_interval_cannot) ... ok
+test_opposite_side_is_invariant_without_cap (__main__.Checks.test_opposite_side_is_invariant_without_cap) ... ok
+test_refuses_cap_metadata_and_bad_provenance (__main__.Checks.test_refuses_cap_metadata_and_bad_provenance) ... ok
+test_trade_at_better_price_changes_shared_volume (__main__.Checks.test_trade_at_better_price_changes_shared_volume) ... ok
+test_unreachable_price_is_invariant_even_with_multiple_missing_legs (__main__.Checks.test_unreachable_price_is_invariant_even_with_multiple_missing_legs) ... FAIL
+
+======================================================================
+FAIL: test_unreachable_price_is_invariant_even_with_multiple_missing_legs (__main__.Checks.test_unreachable_price_is_invariant_even_with_multiple_missing_legs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/cta-stop-ev-timing-20261115/predictfun/research/pf_stop_ev_timing_check.py", line 79, in test_unreachable_price_is_invariant_even_with_multiple_missing_legs
+    self.assertEqual(alt['label'],row['label'])
+AssertionError: {'val[353 chars] (0, 5), 'through': False, 'mark_time': 1000.0[76 chars]0)}]} != {'val[353 chars] (0, 0), 'through': False, 'mark_time': 1000.0[76 chars]0)}]}
+Diff is 742 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.184s
+
+FAILED (failures=1)
+{"asof": "2026-11-15T13:46:40.124141+00:00", "tests": 9, "failures": 1, "errors": 0, "passed": false, "peak_rss_mib": 132.52734375}
+2026-11-15T13:46:39Z tag=stop_ev_timing_selftest_v1 rc=1 peak_rss_mib=135 wall_s=0.62 cpu_user_s=0.53 memavail_start_gib=23 disk_free_gib=474->474 slot=codex
