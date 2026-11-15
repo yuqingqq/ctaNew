@@ -1,0 +1,27 @@
+{
+ "day": "20261023",
+ "rows": 33543,
+ "checks": {
+  "certified_estimated": {
+   "duplicates": 0,
+   "ours": 33543,
+   "not_in_certificate": 0,
+   "certified": 15713,
+   "value_differ": 0,
+   "certified_not_ours": 0
+  },
+  "certified_ws": {
+   "duplicates": 0,
+   "ours": 33543,
+   "not_in_certificate": 0,
+   "certified": 1503,
+   "value_differ": 0,
+   "certified_not_ours": 0
+  }
+ },
+ "cert_sha256": {
+  "certified_estimated": "9f63c7e61f7facb38af45ff2485f967a8d1e616fd1573b54d7be49f6582449a6",
+  "certified_ws": "fd396365f0f0edfe9a49d1171ca0c0403c07332eaa21d67f398b540d2206b09a"
+ },
+ "ev_x_sha256": "f9f1477379feb3ad733c2e79ea58a9ebd59805ff38b3c6d703dcd82e3c39cf1c"
+}
