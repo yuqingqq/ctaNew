@@ -2303,6 +2303,27 @@ stop_ev_design_20261115:
   components: {SWEEP: have (v6), STOP_FLOW: "new, public-trade labels for hypothetical queue positions", VALUES: "1 s / 5 s markouts", QUEUE: "rule-M estimate - the only simulator-dependent piece"}
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
+stop_ev_stage1_20261115:
+  status: done_data_pass_with_flags
+  asof: "2026-11-15 13:02Z"
+  session: aea5bfb9
+  code: {builder: predictfun/research/pf_stop_ev.py, driver: predictfun/research/run_stop_ev.sh, built_with: "06f80178 (sha 9a7b9014)"}
+  label_contract: "stop-ev-chronological-order-value-v1 (Codex pf_stop_ev_accounting c04370d6, sha 1cffc03e)"
+  queue_contract: activation-snapshot-queue-v1
+  checks: "E1-E7, E9 PASS 9/9 days; E8 descriptive; flag explained (equal-clip legs 2.6-7.7% of shares)"
+  population_dev: {probes: 187384, ws_strict_eligible: 969, all_anchors_eligible: 30076}
+  untimed_rule: "whole-window refusal: 198k of 393k probes; band over [ws, end] 132k; band over the order's own window 5.2k"
+  values_dev: "all_anchors mean -2.45 c per 30 sh order over 1 s, 88.9% zero; front order at the best -4.9 c (diagnostic)"
+  loss_rule: "HURDLE + ROBUST (declared)"
+  next: "USER: training population + untimed rule + go for stage 2"
+
+stop_play_v6_20261115:
+  status: done_30sh_zero_inf_100sh_stopped
+  asof: "2026-11-15 12:35Z"
+  m50_wo_young_usd_day: {MD1000: [-134.6, -114.6], LDG: [-173.2, -176.4], OR1000: [794.7, 709.6], KA: [-5873.3, -5883.8]}
+  note: "[queue zero, queue inf]; old queue initialization (next-frame uplift); R802 NOT-SHOWN vs LDG at H 1000"
+  s100: "stopped 12:36Z (no output) for STOP-EV stage 1; rerun on the corrected queue lane"
+
 wait_post_v2_20261114:
   status: complete_rejected
   asof: 2026-11-14T14:57:44Z

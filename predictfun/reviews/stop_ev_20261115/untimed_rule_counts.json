@@ -1,0 +1,83 @@
+[
+ {
+  "day": "20261023",
+  "probes": 48312,
+  "missing_trade_timing": 28224,
+  "windows": 288,
+  "windows_with_untimed": 234,
+  "refused_bounded_prefix": 19298,
+  "refused_own_window_reach": 698
+ },
+ {
+  "day": "20261024",
+  "probes": 43154,
+  "missing_trade_timing": 19198,
+  "windows": 288,
+  "windows_with_untimed": 168,
+  "refused_bounded_prefix": 12852,
+  "refused_own_window_reach": 392
+ },
+ {
+  "day": "20261025",
+  "probes": 44390,
+  "missing_trade_timing": 21584,
+  "windows": 288,
+  "windows_with_untimed": 192,
+  "refused_bounded_prefix": 13900,
+  "refused_own_window_reach": 497
+ },
+ {
+  "day": "20261026",
+  "probes": 51528,
+  "missing_trade_timing": 31113,
+  "windows": 288,
+  "windows_with_untimed": 245,
+  "refused_bounded_prefix": 21519,
+  "refused_own_window_reach": 938
+ },
+ {
+  "day": "20261027",
+  "probes": 44677,
+  "missing_trade_timing": 27347,
+  "windows": 288,
+  "windows_with_untimed": 239,
+  "refused_bounded_prefix": 19506,
+  "refused_own_window_reach": 814
+ },
+ {
+  "day": "20261031",
+  "probes": 29715,
+  "missing_trade_timing": 11172,
+  "windows": 282,
+  "windows_with_untimed": 153,
+  "refused_bounded_prefix": 6669,
+  "refused_own_window_reach": 305
+ },
+ {
+  "day": "20261101",
+  "probes": 34209,
+  "missing_trade_timing": 13222,
+  "windows": 288,
+  "windows_with_untimed": 163,
+  "refused_bounded_prefix": 8144,
+  "refused_own_window_reach": 387
+ },
+ {
+  "day": "20261102",
+  "probes": 49059,
+  "missing_trade_timing": 23638,
+  "windows": 288,
+  "windows_with_untimed": 191,
+  "refused_bounded_prefix": 15094,
+  "refused_own_window_reach": 526
+ },
+ {
+  "day": "20261103",
+  "probes": 48110,
+  "missing_trade_timing": 22819,
+  "windows": 288,
+  "windows_with_untimed": 188,
+  "refused_bounded_prefix": 15410,
+  "refused_own_window_reach": 638
+ }
+]
