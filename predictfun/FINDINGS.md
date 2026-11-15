@@ -1,3 +1,21 @@
+<!-- STOP_EV_ACCOUNTING_STATUS_20261115 -->
+## 2026-11-15 Historical STOP-EV primary accounting audited: no new defect found
+
+As of 13:37:11Z, all 393,154 saved neutral probes were audited in both timing
+variants across nine consumed dates. The 72,255 eligible estimated-timing
+labels match E9 counts; day receipts have zero E9 mismatches/ledger failures.
+Saved quantity, residual, component, normalization, null-status and unique-key
+checks pass. Source identities match. Five planted corruptions are refused.
+
+Strict development coverage remains only 969 / 187,384 probes; estimated timing
+has 30,076. Timing/selection and actual fill realism remain open. E7's older
+single-order diagnostics (including their mark freshness convention) must not
+replace primary order labels. Raw maker identities behind equal-content trade
+flags were not independently re-read in this audit. No model/performance claim.
+Review: handoffs/20261115_stop_ev_accounting_status.md; artifact:
+reviews/stop_ev_accounting_status_20261115/receipt_v1.json. Checker c677eef8.
+<!-- /STOP_EV_ACCOUNTING_STATUS_20261115 -->
+
 <!-- STOP_EV_ACCOUNTING_FIX_20261115 -->
 ## 2026-11-15 STOP-EV accounting fixed and integrated; synthetic checks pass
 

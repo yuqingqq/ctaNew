@@ -1,5 +1,23 @@
 # P-2026-005 HANDOFF
 
+<!-- STOP_EV_ACCOUNTING_STATUS_20261115 -->
+## 2026-11-15 Historical STOP-EV primary accounting audited: no new defect found
+
+As of 13:37:11Z, all 393,154 saved neutral probes were audited in both timing
+variants across nine consumed dates. The 72,255 eligible estimated-timing
+labels match E9 counts; day receipts have zero E9 mismatches/ledger failures.
+Saved quantity, residual, component, normalization, null-status and unique-key
+checks pass. Source identities match. Five planted corruptions are refused.
+
+Strict development coverage remains only 969 / 187,384 probes; estimated timing
+has 30,076. Timing/selection and actual fill realism remain open. E7's older
+single-order diagnostics (including their mark freshness convention) must not
+replace primary order labels. Raw maker identities behind equal-content trade
+flags were not independently re-read in this audit. No model/performance claim.
+Review: handoffs/20261115_stop_ev_accounting_status.md; artifact:
+reviews/stop_ev_accounting_status_20261115/receipt_v1.json. Checker c677eef8.
+<!-- /STOP_EV_ACCOUNTING_STATUS_20261115 -->
+
 ## 2026-11-15 13:05Z (session aea5bfb9) — STOP-EV STAGE 1 (DATA) DONE: every data check passes on 9 / 9 days; the label population needs two timing decisions before the model (USER's call)
 
 - USER: "Again, we should have a few preprocessing steps, first, data processing, check its coverage, data quality, etc, then model, then the pipeline"; "What's taking the slot" (my own replay chain: the 100 sh replay was stopped at 12:36Z with no output to give stage 1 the slot).
