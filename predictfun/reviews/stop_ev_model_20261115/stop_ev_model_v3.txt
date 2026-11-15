@@ -1,0 +1,29 @@
+STOP-EV STAGE 2 v3 - MODEL (hurdle P(fill) x E[value | fill] by squared error; imputed-untimed labels, every eligible status; v1 / v2 superseded, kept as provenance); as of 2026-11-15T17:33:14Z
+
+TRAINING per fold: n (filled) | IC train | saved heads reload | top value inputs
+  20261027: 93878 (11485) | +0.226 | ok | dfv250, o_q_rel, dfv1000, adv_d_bnimb250, r_pf_pend_tot5000, adv_bn_imb
+  20261031: 130280 (16053) | +0.217 | ok | dfv250, adv_bn_imb, dfv1000, sigma, r_pf_pend_tot5000, o_q_rel
+  20261101: 161807 (19736) | +0.209 | ok | dfv250, dfv1000, adv_d_bnimb250, adv_bn_imb, o_q_rel, sigma
+  20261102: 182009 (21592) | +0.198 | ok | dfv250, adv_bn_imb, adv_d_bnimb250, dfv1000, sigma, o_q_rel
+  20261103: 203795 (23709) | +0.191 | ok | dfv250, sigma, adv_d_bnimb250, adv_bn_imb, o_q_rel, dfv1000
+EXCLUSIONS per test day (probe statuses; the model uses eligible + eligible_estimated_timing):
+  20261027: probes 44709 | eligible 405, eligible_estimated_timing 31122, incomplete_book_coverage 372, not_client_resting 12405, probe_not_reached 405
+  20261031: probes 29806 | eligible 1479, eligible_estimated_timing 18723, incomplete_book_coverage 820, missing_or_stale_mark 1, not_client_resting 8523, probe_not_reached 260
+  20261101: probes 34318 | eligible 1021, eligible_estimated_timing 20765, incomplete_book_coverage 1097, missing_or_stale_mark 2, not_client_resting 11101, probe_not_reached 332
+  20261102: probes 49161 | eligible 614, eligible_estimated_timing 33124, incomplete_book_coverage 756, missing_or_stale_mark 2, not_client_resting 14175, probe_not_reached 490
+  20261103: probes 48192 | eligible 828, eligible_estimated_timing 32406, incomplete_book_coverage 327, missing_or_stale_mark 1, not_client_resting 14163, probe_not_reached 467
+
+TEST ACTIONS: n 140487 on 5 days (as of 2026-11-15T17:33:14Z); mean -4.10 c per order of 30 sh; IC +0.138 (B2 +0.087); daily IC mean +0.134, day-cluster 95% t-interval [+0.105, +0.162] (G = 5)
+  within-window permutation (1000 draws, 1430 day x window strata): IC +0.1381 vs null mean +0.0008, q95 +0.0052 -> p 0.000999000999000999
+  quintiles of the prediction (realized mean c): -12.67 -4.06 -2.36 -1.15 -0.28
+  keep iff pred > 0: keep 9.9% (13908); kept value $-46.3 (-0.33 c per kept action); matched null (random keeps, same count in day / side / hour / rung / remainder strata, 1000 draws, 1430 varying strata) mean $-483.1 -> p 0.000999000999000999; gain vs keep-all $+5717.0 (printed only)
+  20261027: n 31527 | mean -3.69 | IC +0.154 / B2 +0.092 | quintiles -12.22 -4.06 -1.35 -1.00 +0.19 | MSE 829 / B1 877 | keep 11.9% (3767) -> kept $+3.6; B2 at the same count (3767) $-43.4 | gain vs keep-all $+1166.2
+  20261031: n 20202 | mean -3.64 | IC +0.106 / B2 +0.069 | quintiles -11.45 -2.87 -2.32 -0.92 -0.63 | MSE 1143 / B1 1219 | keep 9.7% (1962) -> kept $-24.5; B2 at the same count (1962) $-27.4 | gain vs keep-all $+710.7
+  20261101: n 21786 | mean -4.21 | IC +0.113 / B2 +0.069 | quintiles -12.52 -4.50 -2.67 -0.85 -0.50 | MSE 1386 / B1 1451 | keep 9.4% (2045) -> kept $-6.7; B2 at the same count (2045) $-2.2 | gain vs keep-all $+909.8
+  20261102: n 33738 | mean -4.28 | IC +0.140 / B2 +0.089 | quintiles -13.12 -3.63 -2.99 -1.22 -0.42 | MSE 1124 / B1 1164 | keep 9.7% (3257) -> kept $-8.3; B2 at the same count (3257) $-32.9 | gain vs keep-all $+1434.5
+  20261103: n 33234 | mean -4.53 | IC +0.154 / B2 +0.102 | quintiles -13.38 -4.90 -2.58 -1.44 -0.37 | MSE 1186 / B1 1234 | keep 8.7% (2877) -> kept $-10.4; B2 at the same count (2877) $-18.7 | gain vs keep-all $+1495.8
+  calibration by decile (mean prediction -> realized): -17.81 -> -17.92 | -6.26 -> -7.41 | -3.75 -> -4.93 | -2.42 -> -3.19 | -1.60 -> -2.57 | -1.06 -> -2.15 | -0.68 -> -1.34 | -0.38 -> -0.96 | -0.13 -> -0.23 | +0.93 -> -0.33
+  sides IC / top-bottom: bid +0.135 / +11.97; ask +0.142 / +12.86; sum of predictions vs values off by 19.2%; top decile +0.93 -> -0.33
+
+READINGS: R900 RANKS; R901 IC+, BEATS-B2-IC; R901w WITHIN-SKILL; R902 BOTH-SIDES; R903' NOT-SHOWN; R904' BEATS-B2-DECISION; R905 MISCALIBRATED
+VERDICT v3: NOT-READY (R903', R905) (development only: consumed days, replay rule M; a local 1 s value under a neutral continuation, not P&L)
