@@ -59,6 +59,11 @@ def run(out,receipt):
         for mode in MODES:
             p=d/(mode+'.parquet');require(sha(p)==r['artifacts'][p.name],'action file changed')
             df=pd.read_parquet(p);x=check(df,proofs,mode=='certified_estimated');summaries[day][mode]=x
+            x['by_side']={str(int(side)):dict(n=len(g),
+                eligible=int(g.status.str.startswith('eligible').sum()),
+                baseline_eligible=int(g.baseline_status.str.startswith('eligible').sum()),
+                statuses={k:int(v) for k,v in g.status.value_counts().items()})
+                for side,g in df.groupby('side',sort=True)}
             for s,n in x['statuses'].items():require(r['counts'][mode+':'+s]==n,'receipt status count differs')
             if not controls:
                 good=df.index[df.status.str.startswith('eligible')][0];bad=df.index[~df.status.str.startswith('eligible')][0]
@@ -78,7 +83,18 @@ def run(out,receipt):
         for mode in MODES:
             eligible=sum(summaries[d][mode]['eligible'] for d in days)
             base=sum(n for k,n in counts.items() if k.startswith('baseline_'+mode+':eligible'))
-            result[mode]=dict(probes=sum(summaries[d][mode]['n'] for d in days),baseline_eligible=base,certified_eligible=eligible,gain=eligible-base,multiple=eligible/base)
+            probes=sum(summaries[d][mode]['n'] for d in days)
+            sides={}
+            for side in ('0','1'):
+                ss=[summaries[d][mode]['by_side'][side] for d in days];statuses=Counter()
+                for s in ss:statuses.update(s['statuses'])
+                sides[side]=dict(probes=sum(s['n'] for s in ss),
+                    baseline_eligible=sum(s['baseline_eligible'] for s in ss),
+                    certified_eligible=sum(s['eligible'] for s in ss),statuses=dict(statuses))
+            require(sum(s['baseline_eligible'] for s in sides.values())==base,'baseline count differs')
+            result[mode]=dict(probes=probes,baseline_eligible=base,certified_eligible=eligible,
+                baseline_fraction=base/probes,certified_fraction=eligible/probes,
+                gain=eligible-base,multiple=eligible/base,by_side=sides)
         result['future_only_eligible_without_certificate']=counts['future_only_eligible_without_certificate']
         return result
     final=dict(asof=datetime.now(timezone.utc).isoformat(),status='saved_labels_and_certificates_pass',
