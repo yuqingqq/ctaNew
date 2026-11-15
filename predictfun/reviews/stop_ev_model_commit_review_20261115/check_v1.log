@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/tmp/cta-stop-ev-model-review-20261115/predictfun/research/pf_stop_ev_model_commit_review.py", line 126, in <module>
+    a=argparse.ArgumentParser();a.add_argument('--out',type=Path,required=True);main(a.parse_args().out)
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/cta-stop-ev-model-review-20261115/predictfun/research/pf_stop_ev_model_commit_review.py", line 82, in main
+    j=pred.merge(c,on=KEY,how='left',validate='one_to_one',indicator=True,suffixes=('','_cert'))
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/frame.py", line 12884, in merge
+    return merge(
+           ^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/reshape/merge.py", line 385, in merge
+    op = _MergeOperation(
+         ^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/reshape/merge.py", line 1031, in __init__
+    self._maybe_coerce_merge_keys()
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/pandas/core/reshape/merge.py", line 1835, in _maybe_coerce_merge_keys
+    raise ValueError(msg)
+ValueError: You are trying to merge on int64 and str columns for key 'day'. If you wish to proceed you should use pd.concat
+2026-11-15T14:35:03Z tag=stop_ev_model_commit_review_v1 rc=1 peak_rss_mib=146 wall_s=0.48 cpu_user_s=0.33 memavail_start_gib=23 disk_free_gib=473->473 slot=codex
