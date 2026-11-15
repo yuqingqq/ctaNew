@@ -1,5 +1,6 @@
 """Freeze only admissible inputs before historical entry-repair execution."""
 import ast
+import argparse
 import datetime as dt
 import hashlib
 import json
@@ -31,6 +32,9 @@ def allowed(p,day):
 
 
 def main():
+    parser=argparse.ArgumentParser();parser.add_argument('--name',default='freeze.json');parser.add_argument('--supersedes')
+    args=parser.parse_args()
+    if Path(args.name).name!=args.name or not args.name.endswith('.json'):raise ValueError('invalid receipt name')
     old=json.loads((ROOT/'predictfun/reviews/entry_representation_20261115/freeze_v2.json').read_text())
     pending=['pf_entry_repair','test_entry_repair','model_entry_repair_runner','model_entry_repair_freeze'];found=set()
     while pending:
@@ -76,7 +80,10 @@ def main():
         null={'draws':500,'match':['day','side','hour','rung','initial_later','action_count','sampling_weight_mass'],'bonferroni':6},
         training='Denser 2/4 weights; sparse control and fixed old evaluation 2/32; same 351 CONDITION features and pinned learner',
         qualifiers=['Inherited retrospective per-day clock','Neutral KEEP and frozen bootstrap continuation','Unknown queue sensitivity, not ground truth','No size-specific entry model fitted'])
-    with (REVIEW/'freeze.json').open('x') as f:json.dump(receipt,f,indent=2);f.write('\n')
+    if args.supersedes:
+        prior=REVIEW/args.supersedes
+        receipt['supersedes']={'receipt':args.supersedes,'sha256':digest(prior),'reason':'Preserve rung as both action key and model feature in dense-row identity check; first smoke failed before writing dense rows or fitting models.'}
+    with (REVIEW/args.name).open('x') as f:json.dump(receipt,f,indent=2);f.write('\n')
     print('Frozen',len(files),'source files',len(inputs),'label/model inputs',sum(map(len,raw.values())),'admissible raw inputs; rejected parts',sum(skipped.values()))
 
 

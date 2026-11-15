@@ -224,7 +224,7 @@ def validity(day, out, max_windows=None):
 def build(day,out,max_windows=None):
     """Denser training rows; old requested ages and existing labels must match."""
     require_day(day);p=M.stage(out,'rows_'+day);start=time.monotonic();data,sealed=load_day(day)
-    prior=original_rows(day); old=R.load(day,REFERENCE).set_index(N.KEYS)
+    prior=original_rows(day); old=R.load(day,REFERENCE).set_index(N.KEYS,drop=False)
     orig={m:g for m,g in prior.groupby('market',sort=False)}
     allrows=[];visited=[];checks=0; model=predictor()
     for row in prior[prior.market.isin(sealed)].to_dict('records'):
@@ -263,7 +263,7 @@ def build(day,out,max_windows=None):
     f=pd.DataFrame(allrows)
     if f.duplicated(N.KEYS).any():raise ValueError('duplicate action')
     eligible=f[f.status=='eligible'];N.check_targets(eligible);weights(eligible);R.represent(eligible,'CONDITION')
-    expected=old.reset_index();expected=expected[expected.market.isin(visited)]
+    expected=old.reset_index(drop=True);expected=expected[expected.market.isin(visited)]
     if checks!=len(expected):raise ValueError('old eligible population lost')
     f.to_parquet(p/'rows.parquet',index=False)
     N.write(p/'receipt.json',dict(asof=M.now(),day=day,partial=max_windows is not None,windows=visited,
