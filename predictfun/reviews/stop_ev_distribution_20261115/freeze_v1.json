@@ -1,0 +1,36 @@
+{
+  "asof": "2026-11-15T14:58:44.480574+00:00",
+  "source_commit": "26d6df4f077d9a7d4059efce29fa40739ec3e95a",
+  "source_sha256": "41836248cd08581a3f5e184665b87482322744f47d16056d54d58dca680b5551",
+  "test_days": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "tail_threshold": "training all-action 1st percentile, each fold",
+  "risk_rank_fractions": [
+    0.01,
+    0.05,
+    0.1
+  ],
+  "scores": [
+    "existing_huber",
+    "existing_l2",
+    "existing_order_only",
+    "existing_fill_probability"
+  ],
+  "decision_state_bins": "training terciles price and sigma, with side/rung",
+  "min_train_cell": 50,
+  "min_train_filled_cell": 25,
+  "feature_drift": "all declared inputs, training-decile total variation, missingness, min/max support",
+  "null": "No significance or confidence claim; exact analytic matched-selection expectation, no Monte Carlo null.",
+  "learned_candidates": 0,
+  "new_fits": 0,
+  "selection": false,
+  "training_populations": "original v1; certified sensitivity reported separately",
+  "source_data": "consumed prepared actions only; no raw/protected data",
+  "memory_limit_mib": 2048,
+  "slot": "codex"
+}
