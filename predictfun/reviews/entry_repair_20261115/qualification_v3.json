@@ -1,0 +1,79 @@
+{
+  "asof": "2026-11-15T09:43:25.842088+00:00",
+  "kind": "superseding_interpretation_qualification",
+  "status": "known_upstream_input_defect_entry_rebuild_required",
+  "supersedes": {
+    "receipt": "completion.json",
+    "sha256": "eca9b27b23dda7bd24330ce17b402604e0ef9f9afdcc55dd4668866cde593565",
+    "scope": "Interpretation and next-stage priority only; frozen numerical artifacts remain unchanged and reproducible."
+  },
+  "prior_report": {
+    "path": "full_result.json",
+    "sha256": "7b15c0f7910b4a4296f8ee64c715c5102e96bb111d9b81cc096841869e407cae",
+    "asof": "2026-11-15T08:34:59Z",
+    "n_test_actions": 9871,
+    "economic_passes": 0
+  },
+  "entry_source_commit": "ce6e645ed65c970baa9d89846c260ce1032d5bce",
+  "entry_source_hashes_match": true,
+  "entry_sources": {
+    "predictfun/research/pf_kp_s4.py": "56377b13c71362281036a8711e94a4b9979d163f02c22f6bb821e799fcb2f8e3",
+    "predictfun/research/pf_entry_repair.py": "c2526c3ebe7ed6662935b3a2ffa3cc8b0bdd6bd0e7a4a1156bc92133fb6d4397",
+    "predictfun/research/pf_wait_post_v2.py": "d822211ae363e3ed9c821e47539bda6f5370d8e140a72434ae9a63f423d6544d",
+    "predictfun/research/pf_wait_post_state.py": "b1dd1065034c7b373cf787fea3878fa78fa7ff87ee80998d3ab142edebff24e7",
+    "predictfun/research/pf_entry_information.py": "57f7b10e50ddf4030f8b6a7601bbadd0c895127d25a78d17dccc2e6a677e224a",
+    "predictfun/research/pf_entry_representation.py": "a016a4fd5813c0183bb9be400c2d62ead49006c03d2b092820b913c3aab77889"
+  },
+  "reviewed_root_commit": "0ad5445b77f6538fb1f165b60fe885798427f6f1",
+  "reviewed_root_files": {
+    "predictfun/research/pf_step5_features_rl.py": "8bb95a0090f03196169d62e92a66b8a01bbdb3845021793655b08b4c0555d553",
+    "predictfun/research/pf_stop_model.py": "3d2e0e787e5b749ff727482744845dba2248cb3bd83486e3ad4050d4a6e907f8",
+    "predictfun/research/pf_kp_s4.py": "3a2cbceb239fa25a615c21b31bc3e775863aeab3cd4a60068d7b440f1a307528",
+    "predictfun/reviews/stop_model_20261114/s5check2_20261115.json": "d4c20f196abb4e6252b4032791c1c6ce8bc4fe5064803cf2882a2fe5954b384c",
+    "predictfun/reviews/stop_model_20261114/p30cmp_20261115.json": "0fb228bc1268a3fff854f5dad9283deb712470e867c8c0d468509636bbb39270"
+  },
+  "issues": [
+    {
+      "id": "D_FAIR",
+      "status": "confirmed_not_propagated_to_entry",
+      "finding": "Hourly carry relay observations enter the shared step5 basis twice. Entry consumes affected basis_bps and gap plus fair-derived features. Stop-model fair_fix is local to its builder; shared step5 and frozen entry artifacts are unchanged.",
+      "label_impact": "Possible through frozen bootstrap continuation consuming basis_bps/gap; entry-specific label/prediction impact has not been measured."
+    },
+    {
+      "id": "D_HISTORY",
+      "status": "confirmed_not_propagated_to_entry",
+      "finding": "Frozen entry loader retains only 5 s before each window, while liquidity features request 30 s. Availability flags describe partial support but do not restore missing observations. Root opt-in PREROLL_MS still defaults to 5 s; stop model alone opts into 30 s."
+    },
+    {
+      "id": "T_KEEPER",
+      "status": "open_target_policy_mismatch",
+      "finding": "Entry labels value terminal POST/WAIT versus NEVER with neutral KEEP and frozen bootstrap entry continuation. Intended selective keeper is absent; future replacements and other-slot inventory/cap effects remain in the target."
+    },
+    {
+      "id": "M_GENERALIZATION",
+      "status": "observed_on_affected_development_pipeline",
+      "finding": "Saved study does not establish economic entry skill. Attribution to weak signals, overfitting or training duration must be revisited after correcting inputs and checking labels."
+    },
+    {
+      "id": "D_SIMULATION",
+      "status": "unresolved_assumptions",
+      "finding": "Unobserved queue, public fill timing and retrospective clock calibration remain qualifications; size sensitivities do not validate actual queues."
+    },
+    {
+      "id": "E_COVERAGE",
+      "status": "open",
+      "finding": "Coverage repair adds actions on the same consumed dates and neutral path; it does not add new regimes, jointly waiting states or untouched validation."
+    }
+  ],
+  "entry_impact_measured": false,
+  "new_numeric_experiment": false,
+  "promoted": false,
+  "next_stage": [
+    "Freeze a new entry data correction; preserve the old pipeline as a control.",
+    "Count relay observations once and consistently rebuild basis/gap and every dependent feature; validate HH:00 and ordinary windows against raw inputs.",
+    "Restore admissible 30 s book prehistory and reconcile engine/action/queue effects; retain boundary exclusions.",
+    "Replay continuation to quantify label changes; explicitly freeze whether bootstrap weights are held or rebuilt.",
+    "Re-evaluate the same declared comparisons, then align the intended keeper and isolate target/model changes."
+  ],
+  "review": "predictfun/handoffs/20261115_entry_data_model_audit.md"
+}
