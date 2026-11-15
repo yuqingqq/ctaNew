@@ -1,0 +1,17 @@
+17:28:39Z start evm3_selftest
+17:28:47Z start evm3_prep_20261023
+17:28:57Z start evm3_prep_20261024
+17:29:06Z start evm3_prep_20261025
+17:29:15Z start evm3_prep_20261026
+17:29:24Z start evm3_prep_20261027
+17:29:33Z start evm3_prep_20261031
+17:29:43Z start evm3_prep_20261101
+17:29:52Z start evm3_prep_20261102
+17:30:02Z start evm3_prep_20261103
+17:30:11Z start evm3_fit_20261027
+17:30:42Z start evm3_fit_20261031
+17:31:14Z start evm3_fit_20261101
+17:31:50Z start evm3_fit_20261102
+17:32:30Z start evm3_fit_20261103
+17:33:13Z start evm3_report
+17:33:39Z STOP-EV v3 all DONE

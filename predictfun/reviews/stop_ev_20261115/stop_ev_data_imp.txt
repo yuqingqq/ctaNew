@@ -1,0 +1,117 @@
+STOP-EV STAGE 1 - DATA (Z = 30 sh, clock M 50, horizon 1000 ms; 9 of 9 days built)
+
+DATA CHECKS E1-E7 per day (PASS / FAIL; counts)
+  20261023: E1 PASS E2 PASS E3 PASS E4 PASS E5 PASS E6 PASS E7 PASS E9 PASS | rows 690552, legs used 209679 / untimed 2093 / out 0, dup share 5.0459%, E4 14507, E5 11303, E6 26831, E7 clean 546928 / ended 114214 / shared 41643 of 687408
+  20261024: E1 PASS E2 PASS E3 PASS E4 PASS E5 PASS E6 PASS E7 PASS E9 PASS | rows 690664, legs used 173923 / untimed 1023 / out 0, dup share 2.6314%, E4 14508, E5 7935, E6 26832, E7 clean 579555 / ended 96169 / shared 35150 of 697242
+  20261025: E1 PASS E2 PASS E3 PASS E4 PASS E5 PASS E6 PASS E7 PASS E9 PASS | rows 690928, legs used 178159 / untimed 1316 / out 0, dup share 3.7105%, E4 14508, E5 7508, E6 26832, E7 clean 581965 / ended 93747 / shared 32834 of 696856
+  20261026: E1 PASS E2 PASS E3 PASS E4 PASS E5 PASS E6 PASS E7 PASS E9 PASS | rows 690478, legs used 209146 / untimed 3191 / out 0, dup share 5.3440%, E4 14508, E5 10349, E6 26832, E7 clean 534145 / ended 125203 / shared 45344 of 686881
+  20261027: E1 PASS E2 PASS E3 PASS E4 PASS E5 PASS E6 PASS E7 PASS E9 PASS | rows 691128, legs used 211555 / untimed 2964 / out 0, dup share 6.1502%, E4 14508, E5 9434, E6 26832, E7 clean 560075 / ended 104957 / shared 38040 of 688385
+  20261031: E1 PASS E2 PASS E3 PASS E4 PASS E5 PASS E6 PASS E7 PASS E9 PASS | rows 676788, legs used 108880 / untimed 747 / out 0, dup share 3.2442%, E4 14508, E5 5410, E6 26832, E7 clean 609940 / ended 64187 / shared 21323 of 687840
+  20261101: E1 PASS E2 PASS E3 PASS E4 PASS E5 PASS E6 PASS E7 PASS E9 PASS | rows 690790, legs used 131052 / untimed 981 / out 0, dup share 4.9367%, E4 14425, E5 5537, E6 26681, E7 clean 612162 / ended 69984 / shared 23671 of 697557
+  20261102: E1 PASS E2 PASS E3 PASS E4 PASS E5 PASS E6 PASS E7 PASS E9 PASS | rows 690948, legs used 165379 / untimed 1228 / out 0, dup share 5.0828%, E4 14497, E5 7805, E6 26812, E7 clean 545907 / ended 119694 / shared 40806 of 688710
+  20261103: E1 PASS E2 PASS E3 PASS E4 PASS E5 PASS E6 PASS E7 PASS E9 PASS | rows 691062, legs used 178270 / untimed 2426 / out 0, dup share 7.7126%, E4 14508, E5 7103, E6 26832, E7 clean 549153 / ended 115140 / shared 42079 of 688439
+
+E8 SANITY (descriptive): STOP legs at the best +0.145 c/sh (dev pooled; the top makers' front fills on stopping trades +0.50, LEARN-PULL), positive on 5 of 9 days; sweep fills at the best -2.353 c/sh, negative on 9 of 9 days
+E7 RECONCILIATION pooled: 5119830 clean order-steps of 6219318, clean mismatches 0; ENDED 903295, SHARED 320890, mismatching among them 277693; their value gap (lane - label) +97,537 $ against the lane's 1 s fill value -161,639 $ (the single-order label's limit)
+
+PRIMARY LABELS (Codex contract stop-ev-chronological-order-value-v1; one probe per neutral order generation, ages [0.0, 250.0, 500.0, 1000.0, 2000.0] ms): statuses per day
+  ws_strict:
+    20261023: ambiguous_reference_timing 33734, not_client_resting 13337, eligible 523, probe_not_reached 517, incomplete_book_coverage 228
+    20261024: ambiguous_reference_timing 29089, not_client_resting 12530, eligible 899, probe_not_reached 383, incomplete_book_coverage 286
+    20261025: ambiguous_reference_timing 28850, not_client_resting 14172, eligible 783, probe_not_reached 425, incomplete_book_coverage 220
+    20261026: ambiguous_reference_timing 36112, not_client_resting 14141, incomplete_book_coverage 549, probe_not_reached 510, eligible 290
+    20261027: ambiguous_reference_timing 31122, not_client_resting 12405, probe_not_reached 405, eligible 405, incomplete_book_coverage 372
+    20261031: ambiguous_reference_timing 18724, not_client_resting 8523, eligible 1479, incomplete_book_coverage 820, probe_not_reached 260
+    20261101: ambiguous_reference_timing 20767, not_client_resting 11101, incomplete_book_coverage 1097, eligible 1021, probe_not_reached 332
+    20261102: ambiguous_reference_timing 33126, not_client_resting 14175, incomplete_book_coverage 756, eligible 614, probe_not_reached 490
+    20261103: ambiguous_reference_timing 32407, not_client_resting 14163, eligible 828, probe_not_reached 467, incomplete_book_coverage 327
+  all_anchors_sensitivity:
+    20261023: eligible_estimated_timing 33734, not_client_resting 13337, eligible 523, probe_not_reached 517, incomplete_book_coverage 228
+    20261024: eligible_estimated_timing 29089, not_client_resting 12530, eligible 899, probe_not_reached 383, incomplete_book_coverage 286
+    20261025: eligible_estimated_timing 28850, not_client_resting 14172, eligible 783, probe_not_reached 425, incomplete_book_coverage 220
+    20261026: eligible_estimated_timing 36112, not_client_resting 14141, incomplete_book_coverage 549, probe_not_reached 510, eligible 290
+    20261027: eligible_estimated_timing 31122, not_client_resting 12405, probe_not_reached 405, eligible 405, incomplete_book_coverage 372
+    20261031: eligible_estimated_timing 18723, not_client_resting 8523, eligible 1479, incomplete_book_coverage 820, probe_not_reached 260, missing_or_stale_mark 1
+    20261101: eligible_estimated_timing 20765, not_client_resting 11101, incomplete_book_coverage 1097, eligible 1021, probe_not_reached 332, missing_or_stale_mark 2
+    20261102: eligible_estimated_timing 33124, not_client_resting 14175, incomplete_book_coverage 756, eligible 614, probe_not_reached 490, missing_or_stale_mark 2
+    20261103: eligible_estimated_timing 32406, not_client_resting 14163, eligible 828, probe_not_reached 467, incomplete_book_coverage 327, missing_or_stale_mark 1
+  E9 (an independent recomputation of every eligible action from its own tranches): 20261023 34257 / 0 mismatches; 20261024 29988 / 0 mismatches; 20261025 29633 / 0 mismatches; 20261026 36402 / 0 mismatches; 20261027 31527 / 0 mismatches; 20261031 20202 / 0 mismatches; 20261101 21786 / 0 mismatches; 20261102 33738 / 0 mismatches; 20261103 33234 / 0 mismatches
+
+READINGS (dev days 20261023, 20261024, 20261025, 20261026 only; test days: counts and predicates above)
+a ACTIONS (ws_strict): 187578 probes, 2495 eligible (1.3%); value per action (c): mean -0.894, zero 93.9%, p1 / p50 / p99 -52.90 / +0.00 / +30.90, top-1% share of |value| 59.0%
+  by rung (bid / ask): eligible | mean value c per action | filled share | at-price / through-price value c | partial remainder | queue unknown at activation | known queue ahead / shown p50
+    r0: 207 | -2.317 | 20.3% | +0.127 / -2.445 | 4.3% | 0.0% | 1.00   //   214 | -2.071 | 17.8% | +1.509 / -3.580 | 0.9% | 0.0% | 1.00
+    r1: 209 | +0.911 | 5.7% | +1.379 / -0.468 | 0.5% | 0.0% | 1.00   //   194 | -0.549 | 5.7% | +0.252 / -0.801 | 0.5% | 0.0% | 1.00
+    r2: 231 | -3.008 | 4.3% | +0.034 / -3.042 | 0.4% | 0.4% | 1.00   //   190 | -0.374 | 5.8% | +0.428 / -0.802 | 0.0% | 0.0% | 1.00
+    r3: 211 | -1.825 | 3.8% | +1.350 / -3.176 | 0.0% | 0.9% | 0.99   //   220 | +0.464 | 4.1% | +0.322 / +0.142 | 0.0% | 0.5% | 1.00
+    r4: 195 | +0.385 | 0.5% | +0.385 / +0.000 | 0.0% | 1.0% | 0.82   //   214 | +0.149 | 4.2% | +0.920 / -0.771 | 0.0% | 1.4% | 1.00
+    r5: 199 | -2.789 | 0.5% | +0.000 / -2.789 | 0.5% | 45.7% | 0.93   //   211 | +0.498 | 1.4% | +0.569 / -0.071 | 0.0% | 55.0% | 0.46
+a ACTIONS (all_anchors_sensitivity): 187578 probes, 130280 eligible (69.5%); value per action (c): mean -3.336, zero 87.7%, p1 / p50 / p99 -135.00 / +0.00 / +45.00, top-1% share of |value| 37.0%
+  by rung (bid / ask): eligible | mean value c per action | filled share | at-price / through-price value c | partial remainder | queue unknown at activation | known queue ahead / shown p50
+    r0: 15497 | -5.557 | 24.5% | -0.093 / -5.464 | 3.7% | 0.0% | 0.66   //   16050 | -4.538 | 24.2% | +0.451 / -4.990 | 3.5% | 0.0% | 0.66
+    r1: 10898 | -4.980 | 15.2% | -0.204 / -4.776 | 1.8% | 0.0% | 0.78   //   11162 | -3.418 | 14.3% | +0.092 / -3.510 | 1.8% | 0.0% | 0.78
+    r2: 10623 | -3.637 | 9.7% | -0.019 / -3.617 | 1.0% | 0.3% | 0.85   //   10684 | -2.925 | 9.6% | +0.033 / -2.957 | 0.9% | 0.3% | 0.85
+    r3: 10241 | -2.755 | 7.1% | -0.075 / -2.680 | 0.5% | 1.3% | 0.90   //   10208 | -2.550 | 6.9% | -0.144 / -2.406 | 0.5% | 1.1% | 0.90
+    r4: 8974 | -1.903 | 5.3% | +0.108 / -2.011 | 0.3% | 5.4% | 0.95   //   9058 | -2.023 | 4.9% | -0.092 / -1.931 | 0.4% | 5.3% | 0.95
+    r5: 8346 | -1.697 | 4.3% | -0.102 / -1.595 | 0.4% | 81.0% | 0.88   //   8539 | -1.111 | 4.1% | +0.086 / -1.197 | 0.4% | 81.6% | 0.87
+  declared loss rule on the primary label (zero share >= 50% -> HURDLE; top-1% share >= 30% -> ROBUST): HURDLE + ROBUST
+b COVERAGE by level (share of level-steps; price-out excluded):  rows | VIS_UNKNOWN | any STOP flow | THROUGH-at-price | no-key-at-price | sweep | front fill
+  j1:   2762622 |   0.0% |  57.8% |   6.1% |   7.4% |  25.8% |  70.2%
+  j2:   2762622 |   0.0% |  18.1% |   2.9% |   2.1% |  13.8% |  25.6%
+  j3:   2762622 |   0.0% |   9.3% |   1.5% |   1.4% |   8.4% |  13.7%
+  j4:   2762622 |   0.0% |   5.7% |   0.8% |   1.1% |   5.3% |   8.3%
+  j5:   2762622 |   0.0% |   3.5% |   0.5% |   0.7% |   3.4% |   5.2%
+  j6:   2762622 |  97.6% |   2.3% |   0.3% |   0.4% |   2.3% |   3.4%
+  legs beyond the 5th shown level: 0.62% of first-minute leg shares
+  INCOMPLETE / grid / book move vs trade (share of level-steps): stale mark | untimed leg may fall in | middle fill | back fill | vis 0 (grid copies identical) | book through the level (D1 >= j) | gone without a through trade | through trade without that move
+  j1:  0.01% |  0.00% |  33.2% |  30.4% |   0.0% |  30.2% |   6.1% |   1.8%
+  j2:  0.00% |  0.00% |  16.3% |  15.5% |   1.5% |  15.1% |   2.6% |   1.4%
+  j3:  0.00% |  0.00% |   9.6% |   9.3% |   0.9% |   8.9% |   1.5% |   0.9%
+  j4:  0.00% |  0.00% |   5.9% |   5.8% |   0.7% |   5.6% |   0.9% |   0.6%
+  j5:  0.00% |  0.00% |   3.8% |   3.7% |   0.7% |   3.6% |   0.6% |   0.4%
+  j6:  0.00% |  0.00% |   0.3% |   0.3% |   0.6% |   2.4% |   0.4% |   0.3%
+  by volatility regime (step 5 sigma terciles 2.71e-05 / 4.07e-05; front value c per order, front fill share), low / mid / high:
+    j1: -3.832, 67.7% | -5.007, 70.1% | -5.917, 72.8% (sigma missing 0)
+    j2: -4.913, 21.7% | -5.845, 24.4% | -5.931, 30.7% (sigma missing 0)
+  by side (front value c per order | front fill share), bid / ask:
+    j1: -5.357 | 69.5%   /   -4.481 | 70.9%
+    j2: -5.898 | 25.3%   /   -5.228 | 25.8%
+    j3: -4.075 | 13.7%   /   -3.625 | 13.7%
+    j4: -2.788 | 8.3%   /   -2.449 | 8.3%
+    j5: -1.939 | 5.3%   /   -1.727 | 5.2%
+    j6: -1.370 | 3.4%   /   -1.212 | 3.4%
+  by time in window (0-15 / 15-30 / 30-45 / 45-60 s; front value c per order, front fill share):
+    j1: -7.749, 67.1% | -4.133, 71.4% | -4.372, 71.5% | -3.422, 70.7%
+    j2: -7.403, 27.4% | -5.155, 25.4% | -5.378, 25.4% | -4.316, 24.1%
+e TIMING (front order): E2-anchored share of fill shares / value (c per order, E2 part) / front value at M 0 / 50 / 250 (c per order)
+  j1:  33.5% / -3.0661 / -4.3381 / -4.9188 / -6.9337
+  j2:  32.5% / -2.8328 / -5.3103 / -5.5629 / -6.3994
+  j3:  37.1% / -2.0147 / -3.6604 / -3.8497 / -4.4932
+  j4:  40.6% / -1.3403 / -2.4720 / -2.6185 / -3.0896
+  j5:  40.6% / -0.8668 / -1.7257 / -1.8331 / -2.1789
+  j6:  41.4% / -0.5818 / -1.2141 / -1.2911 / -1.5552
+  declared (E2 share at j1 > 30% -> E2-DEPENDENT): E2-DEPENDENT (33.5%)
+g SHAPE of the front value (c per order): zero share | p1 / p5 / p25 / p50 / p75 / p95 / p99 | top-1% share of |value| | STOP flow / visible queue p50 / p90 / p99 (rows with vis > 0)
+  j1:  30.1% | -225.00 / -95.81 / -2.73 / +0.00 / +10.42 / +45.00 / +135.00 |  13.4% | 0.01 / 0.47 / 3.58
+  j2:  74.5% | -195.00 / -60.00 / +0.00 / +0.00 / +0.00 / +15.00 / +75.00 |  23.7% | 0.00 / 0.06 / 1.00
+  j3:  86.3% | -165.00 / -22.50 / +0.00 / +0.00 / +0.00 / +5.55 / +52.50 |  33.3% | 0.00 / 0.00 / 0.50
+  j4:  91.7% | -135.00 / +0.00 / +0.00 / +0.00 / +0.00 / +0.00 / +45.00 |  44.0% | 0.00 / 0.00 / 0.25
+  j5:  94.8% | -105.00 / +0.00 / +0.00 / +0.00 / +0.00 / +0.00 / +17.50 |  56.9% | 0.00 / 0.00 / 0.13
+  j6:  96.6% | -70.00 / +0.00 / +0.00 / +0.00 / +0.00 / +0.00 / +12.50 |  70.6% | 0.00 / 0.00 / 1.16
+  declared loss rule (j1: zero share >= 50% -> HURDLE; top-1% share >= 30% -> ROBUST): DIRECT + L2
+q QUEUE (keep-all lane's orders, corrected initialization, every 5th step): by depth behind the known best - steps | queue ahead / visible p10 / p50 / p90 | at the front (ahead 0) | at or behind the visible size | visible unknown | partial remainder (support)
+  d0:   325349 | 0.00 / 0.31 / 1.11 | 20.9% | 18.1% | 0.0% | 17.4%
+  d1:   441810 | 0.00 / 0.36 / 1.00 | 17.9% | 12.5% | 0.0% | 6.6%
+  d2:   489618 | 0.00 / 0.39 / 0.98 | 18.1% | 9.0% | 0.0% | 3.8%
+  d3:   478963 | 0.00 / 0.42 / 0.97 | 20.6% | 8.6% | 0.0% | 2.5%
+  d4:   402347 | 0.00 / 0.43 / 1.00 | 26.4% | 9.8% | 0.0% | 1.5%
+  d5:   309007 | 0.00 / 0.06 / 1.00 | 47.3% | 23.4% | 97.4% | 1.2%
+r GRID: mean value per order, front (all rows) | front / middle / back on rows with the visible size known (c per order; c/sh = / Z)
+  j1: -4.919 | -4.919 / -10.230 / -10.676
+  j2: -5.563 | -5.563 / -6.715 / -6.880
+  j3: -3.850 | -3.850 / -4.413 / -4.525
+  j4: -2.619 | -2.619 / -2.953 / -3.022
+  j5: -1.833 | -1.833 / -2.029 / -2.071
+  j6: -1.291 | -5.584 / -6.103 / -6.192
+
+VERDICT: DATA-PASS-WITH-FLAGS | FLAGS: 20261023: step-1 exact duplicates 5.046% of first-minute shares; 20261024: step-1 exact duplicates 2.631% of first-minute shares; 20261025: step-1 exact duplicates 3.710% of first-minute shares; 20261026: step-1 exact duplicates 5.344% of first-minute shares; 20261027: step-1 exact duplicates 6.150% of first-minute shares; 20261031: step-1 exact duplicates 3.244% of first-minute shares; 20261101: step-1 exact duplicates 4.937% of first-minute shares; 20261102: step-1 exact duplicates 5.083% of first-minute shares; 20261103: step-1 exact duplicates 7.713% of first-minute shares

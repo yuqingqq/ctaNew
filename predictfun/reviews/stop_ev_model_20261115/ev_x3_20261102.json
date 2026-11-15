@@ -1,0 +1,58 @@
+{
+ "version": "v3",
+ "day": "20261102",
+ "probes": 49161,
+ "status": {
+  "eligible_estimated_timing": 33124,
+  "not_client_resting": 14175,
+  "incomplete_book_coverage": 756,
+  "eligible": 614,
+  "probe_not_reached": 490,
+  "missing_or_stale_mark": 2
+ },
+ "stamps": [
+  {
+   "reference": "corrected_stop_neutral_no_model_no_gate_v1",
+   "contract": "stop-ev-chronological-order-value-v1",
+   "untimed_rule": "impute",
+   "accounting": "1cffc03eb8d801d8",
+   "lane": "8d61029d348f8085"
+  },
+  {
+   "timing": "all_anchors_sensitivity",
+   "ages_ms": [
+    0.0,
+    250.0,
+    500.0,
+    1000.0,
+    2000.0
+   ],
+   "e2_uncertainty_ms": 250.0,
+   "size": 30.0
+  }
+ ],
+ "actions_sha256": "40d81b1b0f7d27841875af1a61fc3af7af3ca90efb397310b786e84fbcce3f1a",
+ "E10": {
+  "actions": 33738,
+  "joined": 33738,
+  "t_mismatch": 0,
+  "depth_mismatch": 0,
+  "control_breaks": true,
+  "pass": true
+ },
+ "rows": 33738,
+ "missing_share": {
+  "o_rung": 0.0,
+  "o_depth": 0.0,
+  "o_price": 0.0,
+  "o_age": 0.0,
+  "o_rem": 0.0,
+  "o_q_rel": 0.08776453850257869,
+  "o_shown_rel": 0.152883988381054,
+  "o_q0_rel": 0.1278084059517458,
+  "o_q_frac": 0.1675855118857075,
+  "o_qunk": 0.0,
+  "o_edge": 0.0,
+  "o_horizon": 0.0
+ }
+}

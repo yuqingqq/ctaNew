@@ -68,8 +68,43 @@ V2 (2026-11-15, after the Codex review handoffs/20261115_stop_ev_latest_commit_r
     CALIBRATED and T5v2 (leak gate on every fold) hold; R952v2 and R904 printed beside it.
   ARTIFACTS: every fitted head saved (LightGBM text, feature order, parameters) with sha256 of the files and of the training matrix; a
     reload of each saved head must reproduce the in-memory test predictions (max |difference| <= 1e-9).
+V3 (2026-11-15, after the pipeline REVIEW; USER "Can we fix the critical issues and let the results be correct first"). v1 / v2 receipts
+  stay as provenance; their readings are superseded: both trained and tested on outcome-selected populations (the untimed 'order_reach'
+  rule; the certificate subsets, selected by later trades), R903 could not fail when every action loses (pulling anything 'gains'), R904
+  compared unequal pull shares, T5 / T5v2's permuted-label refits test the pipeline, not significance, the matched null was fed constant
+  stamps (its mixed-reference refusal could not fire) and the v2 reload gate refused only after writing its predictions.
+  DATA: stage 1's imputed-untimed labels (actions_<day>_imp_all_anchors_sensitivity: untimed legs in the tape, no probe refused by a later
+    event), every eligible status (eligible / eligible_estimated_timing); no certificate subset. Each day's build stamps (reference,
+    contract, untimed rule, accounting / lane source hashes, ages, E2 uncertainty, size) are read from stage 1's day record and carried
+    into the matched null, which refuses mixed stamps.
+  MODEL: v2's hurdle (P(fill) binary x E[value | fill] by squared error), inputs, parameters, rounds, folds, B1 / B2. Every head saved;
+    the saved heads are reloaded and must reproduce the in-memory predictions (max |diff| <= 1e-9) BEFORE any prediction is written; all
+    predictions come from the reloaded heads.
+  READINGS v3 (test days = the 5 fold test days, eligible actions; day rule >= 4 of 5; c per order of Z sh), declared before any v3 run:
+   R900 RANKS as v1.
+   R901 IC+ as v1 (pooled IC > 0 and > 0 on >= 4 days; the day-cluster 95% t-interval of the five daily ICs printed) and BEATS-B2-IC as v1.
+   R901w WITHIN-WINDOW SKILL (printed, not in the verdict): the pooled IC against 1,000 draws of the value labels permuted within (day,
+        window) strata; p <= 0.05 -> WITHIN-SKILL (the windows' common shocks and the cross-window part of the association stay in every
+        draw, so it tests the ranking inside a window only).
+   R902 BOTH-SIDES as v1.
+   R903' POSITIVE-KEEP (keep iff prediction > 0): the KEPT actions' realized value > 0 pooled and on >= 4 days, AND the matched null
+        (pf_stop_ev_accounting.action_metrics: random keeps of the same count within day / side / hour / rung / known remainder, 1,000
+        draws) p <= 0.05 pooled -> POSITIVE-KEEP, else NOT-SHOWN. v1's gain vs keep-all is printed only (it is positive whenever the
+        population loses on average).
+   R904' BEATS-B2-DECISION: per day, B2 keeps the same NUMBER of actions as the model (its top-k by prediction); the model's kept value
+        above B2's on >= 4 days -> BEATS-B2-DECISION, else NOT-SHOWN.
+   R905 CALIBRATED as v2.
+   VERDICT v3: MODEL-READY iff R900 RANKS, R901 IC+ and BEATS-B2-IC, R902 BOTH-SIDES, R903' POSITIVE-KEEP, R904' BEATS-B2-DECISION and
+     R905 CALIBRATED; else NOT-READY naming the parts. The exclusion statuses of every test day are printed beside the tables.
+  DROPPED: T5 / T5v2 (permuted-label refits cannot see a feature leak and are no significance test; leaks are covered by E10, the
+    contract's known-state inputs and inputs_of), R952v2 (the certified subset is selected by later trades).
+  CONTROLS added (synthetic): the within-window permutation (a cross-window-only signal keeps its association in the null; a within-
+    window signal is significant), the positive-keep reading (all-losing actions cannot pass), the matched-count B2 comparator, the stamp
+    check (rows of two references are refused), the reload gate (a 1e-6 difference refuses); planted errors each caught: a global
+    permutation, the gain-vs-keep-all rule, B2 at its own count, constant stamps, the reload gate skipped.
 Usage (run_light, PF_SLOT=claude): pf_stop_ev_model.py selftest | prep <day> | fit <test day> | report (v1); prep2 <day> | fit2 <test day> |
-t5v2 <test day> | report2 (v2); drivers run_stop_ev_model.sh (v1), run_stop_ev_model2.sh (v2).
+t5v2 <test day> | report2 (v2); prep3 <day> | fit3 <test day> | report3 (v3); drivers run_stop_ev_model.sh (v1),
+run_stop_ev_model2.sh (v2), run_stop_ev_model3.sh (v3).
 """
 import json
 import os
@@ -100,11 +135,14 @@ T5_DRAWS = 10; T5_MEAN = 0.01; T5_MAX = 0.03; NULL_DRAWS = 500; P_MAX = 0.05
 MEM_CAP_MIB = 2048.0; NAN = float('nan')
 MUT_JOIN_LATE = MUT_OUTCOME_IN = MUT_HURDLE_ALL = MUT_NO_PERM = 0   # planted errors (selftest only)
 MUT_V2_HUBER = MUT_T5_ONESIDED = MUT_CERT_NOVAL = 0
-MUTS = ('MUT_JOIN_LATE', 'MUT_OUTCOME_IN', 'MUT_HURDLE_ALL', 'MUT_NO_PERM', 'MUT_V2_HUBER', 'MUT_T5_ONESIDED', 'MUT_CERT_NOVAL')
+MUT_PERM_GLOBAL = MUT_KEEP_GAIN = MUT_B2_UNMATCHED = MUT_CONST_STAMP = MUT_RELOAD_SKIP = 0           # v3
+MUTS = ('MUT_JOIN_LATE', 'MUT_OUTCOME_IN', 'MUT_HURDLE_ALL', 'MUT_NO_PERM', 'MUT_V2_HUBER', 'MUT_T5_ONESIDED', 'MUT_CERT_NOVAL',
+        'MUT_PERM_GLOBAL', 'MUT_KEEP_GAIN', 'MUT_B2_UNMATCHED', 'MUT_CONST_STAMP', 'MUT_RELOAD_SKIP')
 CERT = f'{K.IO}/stop_ev_timing_certified_20261115_v1'
 KEYJ = ['day', 'm', 'side', 'rung', 'generation', 'decision_ms']
 CERT_EST_OK = ('eligible_estimated_timing', 'eligible'); CERT_WS_OK = ('eligible_timing_invariant',)
 T5V2_DRAWS = 200; T5V2_SE = 3.0; SKILL_Q = 0.99; CAL_TOL = 0.10
+V3_DRAWS = 1000; T4_975 = 2.776                                   # v3: null draws; t(4) two-sided 95% for the five daily ICs
 
 
 # ---------------------------------------------------------------- inputs
@@ -550,6 +588,233 @@ def report2():
     print('\n'.join(T), flush=True)
 
 
+# ---------------------------------------------------------------- v3 (REVIEW 2026-11-15)
+def stamps_of(J):
+    """A day's build stamps from stage 1's day record: (reference, label_spec) for the contract's matched null, which refuses mixed ones."""
+    s = J.get('sources', {})
+    ref = dict(reference=J['reference'], contract=J['label_contract'], untimed_rule=J.get('untimed_rule'),
+               accounting=s.get('pf_stop_ev_accounting.py'), lane=s.get('pf_stop_queue_activation_lane.py'))
+    spec = dict(timing=TIMING, ages_ms=[float(a) for a in J['ages_ms']], e2_uncertainty_ms=float(J['e2_uncertainty_ms']), size=float(J['size']))
+    return ref, spec
+
+
+def prep3(day):
+    """v3 model rows: stage 1's imputed-untimed actions, every eligible status; E10 and its control; the day's build stamps."""
+    all_selftests()
+    if E.ZTAG != '_imp' or E.UNTIMED_RULE != 'impute':
+        sys.exit(f'REFUSED: v3 reads the imputed-untimed labels only (ZTAG {E.ZTAG}, rule {E.UNTIMED_RULE})')
+    for t in TESTS:
+        if json.load(open(f'{M.OUTD}/fit_{t}_v6.json'))['features'] != F71:
+            sys.exit(f'REFUSED: v6 fold {t} has a different input list')
+    J = json.load(open(f'{E.OUTD}/day_{day}{E.ZTAG}.json'))
+    if J['label_contract'] != AC.CONTRACT or J['reference'] != AC.REFERENCE or J.get('untimed_rule') != 'impute':
+        sys.exit(f"REFUSED: {day} labels built under {J['label_contract']} / {J['reference']} / {J.get('untimed_rule')}")
+    ap = f'{E.OUTD}/actions_{day}{E.ZTAG}_{TIMING}.parquet'; A = pd.read_parquet(ap)
+    st = dict(version='v3', day=day, probes=int(len(A)), status={k: int(v) for k, v in A.status.value_counts().items()}, stamps=stamps_of(J),
+              actions_sha256=sha_file(ap))
+    A = A[A.status.isin(ELIG).values].reset_index(drop=True)
+    R = pd.read_parquet(f'{M.OUTD}/rows_{day}.parquet', columns=['m', 'side', 'k', 't', 'best', 'scale_w30'])
+    pi, e10, good = join_rows(A, R)
+    global MUT_JOIN_LATE
+    keep_ = MUT_JOIN_LATE; MUT_JOIN_LATE = 1
+    _, ctl, _ = join_rows(A, R)
+    MUT_JOIN_LATE = keep_
+    e10['control_breaks'] = bool(ctl['depth_mismatch'] + ctl['t_mismatch'] + (ctl['actions'] - ctl['joined']) > 0)
+    e10['pass'] = bool(e10['joined'] == e10['actions'] and e10['t_mismatch'] == 0 and e10['depth_mismatch'] == 0 and e10['control_breaks'])
+    st['E10'] = e10
+    if not e10['pass']:
+        sys.exit(f'REFUSED (no output for {day}): E10 {e10}')
+    X = M.day_matrix(day, 'W30', F71, sel=pi)
+    O = order_inputs(A, R.scale_w30.values[pi], X[:, F71.index('pf_mid')])
+    D = pd.DataFrame(X, columns=F71)
+    for c in ORDER_IN:
+        D[c] = O[c].astype(np.float32)
+    keys = A[['day', 'm', 'side', 'rung', 'generation', 'decision_ms', 'k', 'hour', 'status', 'x_known_remaining', 'value_cents', 'filled_quantity',
+              'at_price_value_cents', 'through_price_value_cents']].reset_index(drop=True)
+    D = pd.concat([keys, D], axis=1)
+    os.makedirs(OUTD, exist_ok=True)
+    D.to_parquet(f'{OUTD}/ev_x3_{day}.parquet', index=False)
+    st['rows'] = int(len(D)); st['missing_share'] = {c: float(np.isnan(D[c].values.astype(float)).mean()) for c in ORDER_IN}
+    json.dump(st, open(f'{OUTD}/ev_x3_{day}.json', 'w'), indent=1, default=str)
+    print(f'{day} v3: {len(D)} eligible actions of {st["probes"]} probes; statuses {st["status"]}; E10 {e10}', flush=True)
+
+
+def load3(days):
+    return pd.concat([pd.read_parquet(f'{OUTD}/ev_x3_{d}.parquet') for d in days], ignore_index=True)
+
+
+def reload_gate(arts):
+    """The saved heads must reproduce the in-memory predictions BEFORE any prediction is written (v2 refused only after writing)."""
+    if MUT_RELOAD_SKIP:
+        return True
+    return bool(arts) and all(a['reload_max_abs_diff'] <= 1e-9 for a in arts.values())
+
+
+def fit3(test):
+    import hashlib
+    import lightgbm as lgb
+    all_selftests()
+    if test not in FOLDS:
+        sys.exit(f'REFUSED: {test} is not a fold test day')
+    tr, cal = FOLDS[test]
+    assert max(tr) < cal < test, 'T1 chronology'
+    T0 = time.time(); Dtr = load3(list(tr)); F = inputs_of(list(FULL_IN)); FB = inputs_of(list(B2_IN))
+    Xtr = Dtr[F].to_numpy(np.float32); ytr = Dtr.value_cents.values.astype(float); ftr = Dtr.filled_quantity.values > 0
+    H = fit_hurdle2(Xtr, ytr, ftr, F); HB = fit_hurdle2(Dtr[FB].to_numpy(np.float32), ytr, ftr, FB)
+    tab = b1_table(Dtr); dflt = float(ytr.mean())
+    info = dict(version='v3', test=test, cal=cal, train_days=list(tr), n_train=int(len(Dtr)), filled_train=int(ftr.sum()), objective_value=H['objective_value'],
+                params=PARAMS, rounds=ROUNDS, features=F, b2_features=FB, b1=[[int(k[0]), int(k[1]), float(v)] for k, v in tab.items()],
+                train_matrix_sha256=hashlib.sha256(Xtr.tobytes() + ytr.tobytes()).hexdigest(),
+                inputs_sha256={d: sha_file(f'{OUTD}/ev_x3_{d}.parquet') for d in list(tr) + [cal, test]},
+                T6_ic_train=spearman(predict_hurdle(H, Xtr)[0], ytr))
+    del Xtr
+    md = f'{OUTD}/models_v3'; os.makedirs(md, exist_ok=True); arts = {}; rel = {}
+    Dte = load3([test]); Xte = Dte[F].to_numpy(np.float32); XteB = Dte[FB].to_numpy(np.float32)
+    for nm, h, X_ in (('full', H, Xte), ('b2', HB, XteB)):
+        for head in ('p', 'v'):
+            path = f'{md}/{test}_{nm}_{head}.txt'; h[head].save_model(path); rel[(nm, head)] = lgb.Booster(model_file=path)
+            diff = float(np.max(np.abs(rel[(nm, head)].predict(X_) - h[head].predict(X_)))) if len(X_) else 0.0
+            arts[f'{nm}_{head}'] = dict(path=path, sha256=sha_file(path), reload_max_abs_diff=diff)
+    info['artifacts'] = arts; info['reload_pass'] = reload_gate(arts)
+    if not info['reload_pass']:
+        json.dump(info, open(f'{OUTD}/fit3_{test}.json', 'w'), indent=1, default=float)
+        sys.exit(f'REFUSED (no predictions written): a saved head does not reproduce its predictions {arts}')
+    imp = pd.Series(H['v'].feature_importance('gain'), index=F).sort_values(ascending=False)
+    imp_p = pd.Series(H['p'].feature_importance('gain'), index=F).sort_values(ascending=False)
+    info['T7_top_value'] = [[c, float(v)] for c, v in imp.head(12).items()]; info['T7_top_fill'] = [[c, float(v)] for c, v in imp_p.head(12).items()]
+    RH = dict(p=rel[('full', 'p')], v=rel[('full', 'v')]); RB = dict(p=rel[('b2', 'p')], v=rel[('b2', 'v')])   # predictions from the saved heads
+    for d in (cal, test):
+        Dd = Dte if d == test else load3([d]); Xd = Dd[F].to_numpy(np.float32)
+        pr, pp, pv = predict_hurdle(RH, Xd); pb = predict_hurdle(RB, Dd[FB].to_numpy(np.float32))[0]
+        P_ = Dd[KEYJ + ['hour', 'status', 'x_known_remaining', 'value_cents', 'filled_quantity']].copy()
+        P_['pred'] = pr; P_['p_fill'] = pp; P_['v_fill'] = pv; P_['b2'] = pb; P_['b1'] = b1_predict(tab, Dd, dflt)
+        P_.to_parquet(f'{OUTD}/pred3_{test}_{d}.parquet', index=False)
+    info['seconds'] = round(time.time() - T0, 1)
+    json.dump(info, open(f'{OUTD}/fit3_{test}.json', 'w'), indent=1, default=float)
+    print(f'fold {test} v3: train {info["n_train"]} ({info["filled_train"]} filled), IC train {info["T6_ic_train"]:+.3f}, reload ok, {info["seconds"]} s', flush=True)
+
+
+def perm_ic_within(pred, y, strata, draws, seed):
+    """Spearman IC of pred vs y and its null with y permuted WITHIN strata (day x window): the windows' common shocks and the cross-window
+    part of the association stay in every draw, so p tests the ranking inside windows only. MUT_PERM_GLOBAL permutes across all rows."""
+    rp = pd.Series(np.asarray(pred, float)).rank().values; ry = pd.Series(np.asarray(y, float)).rank().values
+    rp = rp - rp.mean(); ry = ry - ry.mean(); den = float(np.sqrt((rp ** 2).sum() * (ry ** 2).sum()))
+    if not den > 0:
+        return dict(ic=NAN, null_mean=NAN, null_q95=NAN, p=None, draws=draws)
+    codes = np.zeros(len(rp), 'int64') if MUT_PERM_GLOBAL else np.asarray(strata, 'int64')
+    base = np.argsort(codes, kind='stable'); rng = np.random.default_rng(seed); null = np.empty(draws); yp = np.empty_like(ry)
+    for i in range(draws):
+        o = np.lexsort((rng.random(len(codes)), codes)); yp[base] = ry[o]; null[i] = float((rp * yp).sum()) / den
+    obs = float((rp * ry).sum()) / den
+    return dict(ic=obs, null_mean=float(null.mean()), null_q95=float(np.quantile(null, 0.95)), p=float((1 + np.sum(null >= obs)) / (1 + draws)), draws=draws)
+
+
+def positive_keep(y, pred, day):
+    """R903' core: the realized value of the KEPT actions (keep iff pred > 0), pooled and per day. MUT_KEEP_GAIN reads v1's gain vs
+    keep-all instead, which is positive whenever the population loses on average."""
+    y = np.asarray(y, float); keep = np.asarray(pred, float) > 0; day = np.asarray(day)
+    val = (lambda s: float(-y[s & ~keep].sum())) if MUT_KEEP_GAIN else (lambda s: float(y[s & keep].sum()))
+    return val(np.ones(len(y), bool)), {int(d): val(day == d) for d in np.unique(day)}
+
+
+def kept_b2_matched(y, pred, b2, day):
+    """R904': per day, B2 keeps the same NUMBER of actions as the model (its top-k by prediction). {day: (model kept value, B2 kept value,
+    model kept count, B2 kept count)}. MUT_B2_UNMATCHED lets B2 keep at its own sign."""
+    y = np.asarray(y, float); pred = np.asarray(pred, float); b2 = np.asarray(b2, float); day = np.asarray(day); out = {}
+    for d in np.unique(day):
+        s = np.flatnonzero(day == d); k = int((pred[s] > 0).sum())
+        if MUT_B2_UNMATCHED:
+            kb = b2[s] > 0
+        else:
+            kb = np.zeros(len(s), bool); kb[np.argsort(-b2[s], kind='stable')[:k]] = True
+        out[int(d)] = (float(y[s][pred[s] > 0].sum()), float(y[s][kb].sum()), k, int(kb.sum()))
+    return out
+
+
+def metric_rows3(P, keep, stamps, draws=V3_DRAWS):
+    """action_metrics adapter with each day's RECORDED build stamps (v1 / v2 stamped constants, so the contract's mixed-reference refusal
+    could not fire); MUT_CONST_STAMP plants the constants back."""
+    rows = []
+    for d, m, s, r, g, st, v, h, kr in zip(P.day.values, P.m.values, P.side.values, P.rung.values, P.generation.values, P.status.values,
+                                            P.value_cents.values, P.hour.values, P.x_known_remaining.values):
+        ref, spec = (dict(contract=AC.REFERENCE), dict(timing=TIMING)) if MUT_CONST_STAMP else stamps[int(d)]
+        rows.append(dict(action_id=(str(int(d)), int(m), int(s), int(r), int(g)), timing=TIMING, reference=ref, label_spec=spec, status=st,
+                         label=dict(value_cents=float(v)), hour=int(h), features=dict(known_remaining=float(kr))))
+    return AC.action_metrics(rows, [bool(x) for x in keep], asof=time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), draws=draws)
+
+
+def report3():
+    fits = {t: json.load(open(f'{OUTD}/fit3_{t}.json')) for t in TESTS if os.path.exists(f'{OUTD}/fit3_{t}.json')}
+    if len(fits) < len(TESTS) or not all(f.get('reload_pass') for f in fits.values()):
+        sys.exit(f'REFUSED: v3 folds missing or refused {[t for t in TESTS if not fits.get(t, {}).get("reload_pass")]}')
+    PX = {int(d): json.load(open(f'{OUTD}/ev_x3_{d}.json')) for d in DAYS9}
+    stamps = {d: tuple(x['stamps']) for d, x in PX.items()}
+    PA = pd.concat([pd.read_parquet(f'{OUTD}/pred3_{t}_{t}.parquet') for t in TESTS], ignore_index=True)
+    asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()); days = [int(t) for t in TESTS]
+    y = PA.value_cents.values.astype(float); pr = PA.pred.values.astype(float); b2 = PA.b2.values.astype(float); day = PA.day.values.astype('int64')
+    keep = pr > 0
+    T = [f'STOP-EV STAGE 2 v3 - MODEL (hurdle P(fill) x E[value | fill] by squared error; imputed-untimed labels, every eligible status; '
+         f'v1 / v2 superseded, kept as provenance); as of {asof}', '']
+    T.append('TRAINING per fold: n (filled) | IC train | saved heads reload | top value inputs')
+    for t, f in fits.items():
+        T.append(f"  {t}: {f['n_train']} ({f['filled_train']}) | {f['T6_ic_train']:+.3f} | {'ok' if f['reload_pass'] else 'FAIL'} | "
+                 + ', '.join(c for c, _ in f['T7_top_value'][:6]))
+    T.append('EXCLUSIONS per test day (probe statuses; the model uses eligible + eligible_estimated_timing):')
+    for d in days:
+        T.append(f'  {d}: probes {PX[d]["probes"]} | ' + ', '.join(f'{k} {v}' for k, v in sorted(PX[d]['status'].items())))
+    bm = kept_b2_matched(y, pr, b2, day); kv, kvd = positive_keep(y, pr, day); per = {}
+    for d in days:
+        s = day == d; yy = y[s]; x = PA[s]; q = quint(x.pred.values, yy)
+        per[d] = dict(n=int(s.sum()), mean=float(yy.mean()), ic=spearman(x.pred.values, yy), ic_b2=spearman(x.b2.values, yy), q=q, tb=q[-1] - q[0],
+                      mse=float(np.mean((x.pred.values - yy) ** 2)), mse_b1=float(np.mean((x.b1.values - yy) ** 2)), keep=float(keep[s].mean()),
+                      kept=int(keep[s].sum()), kept_value=kvd[d], kept_value_b2=bm[d][1], b2_kept=bm[d][3], gain_vs_keep_all=float(-yy[~keep[s]].sum()))
+    icp = spearman(pr, y); dics = np.asarray([per[d]['ic'] for d in days]); hw = T4_975 * dics.std(ddof=1) / np.sqrt(len(dics))
+    strata = PA.groupby(['day', 'm'], sort=False).ngroup().values
+    pw = perm_ic_within(pr, y, strata, V3_DRAWS, 20261115)
+    qp = quint(pr, y); dec = pd.qcut(pd.Series(pr).rank(method='first'), 10, labels=False).values
+    cal_sum = float(abs(pr.sum() - y.sum()) / max(abs(y.sum()), 1e-12)); top_p = float(pr[dec == 9].mean()); top_y = float(y[dec == 9].mean())
+    nd = lambda f: sum(int(f(per[d])) for d in days)
+    r900 = 'RANKS' if (qp[-1] - qp[0] > 0 and nd(lambda z: z['tb'] > 0) >= 4) else 'NO-RANK'
+    ic_pos = bool(icp > 0 and nd(lambda z: z['ic'] > 0) >= 4); beats_b2 = nd(lambda z: z['ic'] > z['ic_b2']) >= 4
+    r901w = 'WITHIN-SKILL' if (pw['p'] is not None and pw['p'] <= P_MAX) else 'NOT-SHOWN'
+    sides = {s: (spearman(pr[PA.side.values == s], y[PA.side.values == s]),
+                 (lambda qq: qq[-1] - qq[0])(quint(pr[PA.side.values == s], y[PA.side.values == s]))) for s in (0, 1)}
+    r902 = 'BOTH-SIDES' if all(v[0] > 0 and v[1] > 0 for v in sides.values()) else 'FAILS-' + '/'.join(('BID', 'ASK')[s] for s, v in sides.items() if not (v[0] > 0 and v[1] > 0))
+    mm = metric_rows3(PA, keep, stamps)
+    r903 = 'POSITIVE-KEEP' if (kv > 0 and sum(int(kvd[d] > 0) for d in days) >= 4 and mm['p_value'] is not None and mm['p_value'] <= P_MAX) else 'NOT-SHOWN'
+    r904 = 'BEATS-B2-DECISION' if nd(lambda z: z['kept_value'] > z['kept_value_b2']) >= 4 else 'NOT-SHOWN'
+    r905 = 'CALIBRATED' if (cal_sum <= CAL_TOL and np.sign(top_p) == np.sign(top_y)) else 'MISCALIBRATED'
+    T += ['', f'TEST ACTIONS: n {len(PA)} on {len(days)} days (as of {asof}); mean {y.mean():+.2f} c per order of {E.Z:.0f} sh; IC {icp:+.3f} '
+              f'(B2 {spearman(b2, y):+.3f}); daily IC mean {dics.mean():+.3f}, day-cluster 95% t-interval [{dics.mean() - hw:+.3f}, {dics.mean() + hw:+.3f}] (G = 5)',
+          f'  within-window permutation ({V3_DRAWS} draws, {int(strata.max()) + 1} day x window strata): IC {pw["ic"]:+.4f} vs null mean '
+          f'{pw["null_mean"]:+.4f}, q95 {pw["null_q95"]:+.4f} -> p {pw["p"]}',
+          '  quintiles of the prediction (realized mean c): ' + ' '.join(f'{v:+.2f}' for v in qp),
+          f'  keep iff pred > 0: keep {keep.mean():.1%} ({int(keep.sum())}); kept value ${kv / 100:+.1f} ({kv / max(int(keep.sum()), 1):+.2f} c per kept '
+          f'action); matched null (random keeps, same count in day / side / hour / rung / remainder strata, {mm["draws"]} draws, {mm["varying_strata"]} '
+          f'varying strata) mean ${mm["null_mean"] / 100:+.1f} -> p {mm["p_value"]}; gain vs keep-all ${mm["local_gain_vs_keep_all_cents"] / 100:+.1f} (printed only)']
+    for d in days:
+        z = per[d]
+        T.append(f"  {d}: n {z['n']} | mean {z['mean']:+.2f} | IC {z['ic']:+.3f} / B2 {z['ic_b2']:+.3f} | quintiles " + ' '.join(f'{v:+.2f}' for v in z['q'])
+                 + f" | MSE {z['mse']:.0f} / B1 {z['mse_b1']:.0f} | keep {z['keep']:.1%} ({z['kept']}) -> kept ${z['kept_value'] / 100:+.1f}; B2 at the "
+                 f"same count ({z['b2_kept']}) ${z['kept_value_b2'] / 100:+.1f} | gain vs keep-all ${z['gain_vs_keep_all'] / 100:+.1f}")
+    T.append('  calibration by decile (mean prediction -> realized): ' + ' | '.join(f'{pr[dec == i].mean():+.2f} -> {y[dec == i].mean():+.2f}' for i in range(10)))
+    T.append(f'  sides IC / top-bottom: bid {sides[0][0]:+.3f} / {sides[0][1]:+.2f}; ask {sides[1][0]:+.3f} / {sides[1][1]:+.2f}; '
+             f'sum of predictions vs values off by {cal_sum:.1%}; top decile {top_p:+.2f} -> {top_y:+.2f}')
+    parts = [n for n, ok in (('R900', r900 == 'RANKS'), ('R901 IC+', ic_pos), ('R901 B2', beats_b2), ('R902', r902 == 'BOTH-SIDES'),
+                             ("R903'", r903 == 'POSITIVE-KEEP'), ("R904'", r904 == 'BEATS-B2-DECISION'), ('R905', r905 == 'CALIBRATED')) if not ok]
+    verdict = 'MODEL-READY' if not parts else 'NOT-READY (' + ', '.join(parts) + ')'
+    T += ['', f"READINGS: R900 {r900}; R901 {'IC+' if ic_pos else 'IC-NOT-SHOWN'}, {'BEATS-B2-IC' if beats_b2 else 'NOT-ABOVE-B2-IC'}; R901w {r901w}; "
+              f"R902 {r902}; R903' {r903}; R904' {r904}; R905 {r905}",
+          f'VERDICT v3: {verdict} (development only: consumed days, replay rule M; a local 1 s value under a neutral continuation, not P&L)']
+    R = dict(asof=asof, n=int(len(PA)), per_day=per, ic=icp, daily_ic_interval=[float(dics.mean() - hw), float(dics.mean() + hw)], within=pw,
+             quintiles=qp, kept_value=kv, metrics=mm, calibration=dict(sum_off=cal_sum, top_pred=top_p, top_real=top_y),
+             readings=dict(R900=r900, R901=[ic_pos, beats_b2], R901w=r901w, R902=r902, R903p=r903, R904p=r904, R905=r905), verdict=verdict,
+             exclusions={d: PX[d]['status'] for d in days})
+    open(f'{OUTD}/stop_ev_model_v3.txt', 'w').write('\n'.join(T) + '\n')
+    json.dump(R, open(f'{OUTD}/stop_ev_model_v3.json', 'w'), indent=1, default=float)
+    print('\n'.join(T), flush=True)
+
+
 # ---------------------------------------------------------------- self-tests (synthetic)
 def selftest():
     bad = []
@@ -623,6 +888,39 @@ def selftest():
     if not (list(fl['certified_estimated'][0]) == [True, False, True] and fl['certified_estimated'][1]['value_differ'] == 1
             and list(fl['certified_ws'][0]) == [True, False, False] and fl['certified_ws'][1]['value_differ'] == 0):
         bad.append(f'certificate join {fl}')
+    # (10) v3 within-window permutation: a within-window signal is significant; a cross-window-only signal keeps its association in the
+    # null (null mean near the observed IC, p not small); a global permutation would call the cross-window signal significant
+    r10 = np.random.default_rng(10); g10 = np.repeat(np.arange(150), 8); wf = r10.normal(0, 1, 150)[g10]; e_ = r10.normal(0, 1, len(g10))
+    a10 = perm_ic_within(e_ + r10.normal(0, 1, len(g10)), wf + e_, g10, 200, 1)
+    b10 = perm_ic_within(wf + r10.normal(0, 1, len(g10)), wf + r10.normal(0, 1, len(g10)), g10, 200, 2)
+    if not (a10['p'] <= 0.01 and b10['ic'] > 0.2 and b10['null_mean'] > 0.5 * b10['ic'] and b10['p'] > 0.05):
+        bad.append(f"within-window permutation: within p {a10['p']}; cross-only IC {b10['ic']:+.3f}, null mean {b10['null_mean']:+.3f}, p {b10['p']}")
+    # (11) R903' cannot pass when every action loses (v1's gain vs keep-all would)
+    kv11, _ = positive_keep(-np.ones(10), np.r_[np.ones(5), -np.ones(5)], np.zeros(10, 'int64'))
+    if kv11 > 0:
+        bad.append(f'positive keep: all-losing actions read {kv11:+.1f}')
+    # (12) R904': B2 keeps the model's count
+    bm12 = kept_b2_matched(np.arange(10.0), np.r_[np.ones(3), -np.ones(7)], np.r_[-np.ones(2), np.ones(8)], np.zeros(10, 'int64'))
+    if not (bm12[0][2] == 3 and bm12[0][3] == 3 and bm12[0][0] == 3.0):
+        bad.append(f'B2 at the matched count {bm12}')
+    # (13) stamps: rows of two references are refused; one reference passes and the separable toy beats its null
+    n13 = 400; y13 = np.where(np.arange(n13) % 2 == 0, 5.0, -5.0)
+    P13 = pd.DataFrame(dict(day=[20261027] * (n13 // 2) + [20261031] * (n13 // 2), m=np.arange(n13), side=[0] * n13, rung=[0] * n13, generation=[0] * n13,
+                            status=['eligible'] * n13, value_cents=y13, hour=[1] * n13, x_known_remaining=[30.0] * n13))
+    s_a = (dict(reference='a', contract='c'), dict(timing=TIMING)); s_b = (dict(reference='b', contract='c'), dict(timing=TIMING))
+    try:
+        metric_rows3(P13, y13 > 0, {20261027: s_a, 20261031: s_b}, draws=200); bad.append('stamps: two references were not refused')
+    except ValueError:
+        pass
+    try:
+        mt13 = metric_rows3(P13, y13 > 0, {20261027: s_a, 20261031: s_a}, draws=200)
+        if not (mt13['p_value'] is not None and mt13['p_value'] <= 0.01):
+            bad.append(f'stamps: one reference, separable toy {mt13}')
+    except ValueError as e:
+        bad.append(f'stamps: one reference refused ({e})')
+    # (14) the reload gate refuses a 1e-6 difference and an empty artefact list
+    if reload_gate({'full_p': dict(reload_max_abs_diff=1e-6)}) or reload_gate({}) or not reload_gate({'full_p': dict(reload_max_abs_diff=0.0)}):
+        bad.append('reload gate')
     return bad
 
 
@@ -666,5 +964,11 @@ if __name__ == '__main__':
         t5v2(sys.argv[2])
     elif cmd == 'report2':
         report2()
+    elif cmd == 'prep3':
+        prep3(sys.argv[2])
+    elif cmd == 'fit3':
+        fit3(sys.argv[2])
+    elif cmd == 'report3':
+        report3()
     else:
         sys.exit(__doc__)
