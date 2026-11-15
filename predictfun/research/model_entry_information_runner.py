@@ -18,7 +18,7 @@ DAYS=('20261025','20261026','20261027','20261031','20261101','20261102','2026110
 
 def run(out, resume):
     out.mkdir(); logs=out/'logs'; logs.mkdir()
-    freeze=json.loads((ROOT/'predictfun/reviews/entry_information_20261115/freeze.json').read_text())
+    freeze=json.loads((ROOT/'predictfun/reviews/entry_information_20261115/freeze_v2.json').read_text())
     def check(day=None):
         for p,h in freeze['files'].items():
             if digest(ROOT/p)!=h:raise ValueError('source changed: '+p)
