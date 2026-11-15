@@ -2370,6 +2370,16 @@ stop_ev_design_20261115:
   components: {SWEEP: have (v6), STOP_FLOW: "new, public-trade labels for hypothetical queue positions", VALUES: "1 s / 5 s markouts", QUEUE: "rule-M estimate - the only simulator-dependent piece"}
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
+stop_ev_v2_fixes_20261115:
+  status: code_fixed_not_run_awaiting_go
+  asof: "2026-11-15 14:55Z"
+  session: aea5bfb9
+  review: "predictfun/handoffs/20261115_stop_ev_latest_commit_review.md (relayed by the USER: remain 1 ... 4)"
+  fixes: {certified_labels: "certified_estimated primary, certified_ws invariant subset", value_head: "squared error (mean)", falsifier: "T5v2 200 refits per fold, two-sided", e2sep: "certificate groups + fixed identities + C-INV"}
+  v1_status: "STOP-EV model v1 exploratory only (T5 failed as declared, 10 draws); E2SEP v1 qualified (P39)"
+  planted_errors_caught: {model: 7, e2sep: 3}
+  run: "predictfun/research/run_stop_ev_model2.sh all (~2 h incl. T5v2) - on the USER's go"
+
 stop_ev_model_20261115:
   status: done_model_ready_economics_negative
   asof: "2026-11-15 14:01Z"

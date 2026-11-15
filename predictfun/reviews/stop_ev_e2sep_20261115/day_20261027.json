@@ -1,0 +1,49 @@
+{
+ "day": "20261027",
+ "stat": {
+  "windows": 288,
+  "shift_violations_-250": 0,
+  "e2_legs_-250": 95445,
+  "actions_-250_eligible_estimated_timing": 30758,
+  "actions_-250_not_client_resting": 13899,
+  "actions_-250_untimed_reach": 902,
+  "actions_-250_probe_not_reached": 418,
+  "shift_violations_0": 0,
+  "e2_legs_0": 95445,
+  "actions_0_eligible_estimated_timing": 30228,
+  "actions_0_not_client_resting": 12389,
+  "actions_0_untimed_reach": 814,
+  "actions_0_probe_not_reached": 404,
+  "shift_violations_250": 0,
+  "e2_legs_250": 95445,
+  "actions_250_eligible_estimated_timing": 30284,
+  "actions_250_not_client_resting": 11317,
+  "actions_250_untimed_reach": 822,
+  "actions_250_probe_not_reached": 397,
+  "actions_-250_eligible": 415,
+  "actions_0_eligible": 470,
+  "actions_250_eligible": 557,
+  "actions_-250_incomplete_book_coverage": 381,
+  "actions_0_incomplete_book_coverage": 372,
+  "actions_250_incomplete_book_coverage": 384,
+  "actions_-250_missing_or_stale_mark": 1
+ },
+ "regression": {
+  "stage1": 44677,
+  "rebuilt": 44677,
+  "unmatched": 0,
+  "status_differ": 0,
+  "value_differ": 0
+ },
+ "asof": "2026-11-15T14:37:10Z",
+ "seconds": 44.0,
+ "sources": {
+  "pf_stop_ev.py": "d951a1eaa0e70856",
+  "pf_stop_ev_accounting.py": "1cffc03eb8d801d8",
+  "pf_stop_queue_activation_lane.py": "8d61029d348f8085",
+  "pf_queue_activation.py": "b63e7f00a74db3c8",
+  "pf_stop_model.py": "e2a857ddb6c4e76a",
+  "pf_kp_s4.py": "3a2cbceb239fa25a",
+  "pf_order_harm_client_lane.py": "c203beeed0a82ae3"
+ }
+}

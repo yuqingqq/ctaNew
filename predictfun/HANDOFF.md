@@ -1,5 +1,13 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-15 14:55Z (session aea5bfb9) — REVIEW ISSUES (USER: "remain: 1 ... 4", from handoffs/20261115_stop_ev_latest_commit_review.md) FIXED IN CODE, NOT RUN; waiting for the USER's go
+
+- USER: "remain: 1. The new timing experiment does not isolate timestamp-independent outcomes ... 2. The value head still targets the wrong statistical quantity ... 3. The model still uses the older timing population ... 4. The validation gate was relaxed after failing ... using only 10 draws, below the repository's required 200."
+- E2SEP v1 ran before the message (0b7e30cd, 14:34-14:40Z; the zero shift reproduced stage 1 exactly on 9 / 9 days): E2-reached actions -26.3 / -19.5 / -8.2 c at E2 shifts -250 / 0 / +250 ms; future-WS-reached -2.5 / -1.1 / -2.9 - itself shift-dependent (point 1). Readings R950 TIMING-SENSITIVE, R951 E2-WORSE, R952 SKILL-ON-WS are QUALIFIED (P39). Copies reviews/stop_ev_e2sep_20261115/.
+- Fixes (code + synthetic selftests; committed; nothing run): (3) v2 trains and evaluates on the Codex certified labels (certified_estimated primary, certified_ws timing-invariant subset; exact one-to-one joins, certified values must equal ours, every certified action must be ours); v1's population is a sensitivity. (2) v2 value head = squared error (conditional mean); stage 1's ROBUST rule superseded (P40). (4) v1's T5 stays FAILED as declared (its MODEL-READY is exploratory only; receipts kept); T5v2 declared before any v2 run: 200 permuted-label refits per fold, two-sided leak gate |mean IC| <= 3 sd / sqrt(200), skill vs the 99th percentile; no v2 verdict until it passes. (1) E2SEP report2: certificate groups (INVARIANT / E2-DEPENDENT / UNCERTIFIED), fixed identities across shifts (one-to-one joins with decision_ms), control C-INV (invariant actions unchanged under the +-250 ms shifts), full source manifest checked before / after a day. Also: v2 heads saved with sha256 + reload check; R905 mean calibration; R952v2 skill on timing-invariant actions.
+- Planted errors caught: model 7 (incl. the Huber head, a one-sided gate, unchecked certificate values), E2SEP 3 (incl. a moved probe matched as the same action).
+- Next on the USER's go: predictfun/research/run_stop_ev_model2.sh all - E2SEP report2 (~1 min), certificate flags + 5 fits (~10 min), a PENDING report, then T5v2 (1,000 refits, ~1.5-2 h on the claude slot), the final report.
+
 <!-- STOP_EV_LATEST_COMMIT_REVIEW_20261115 -->
 ## 2026-11-15 Model and E2SEP review: validity/target issues remain
 

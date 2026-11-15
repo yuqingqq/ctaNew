@@ -27,7 +27,25 @@ CONTROLS (any failure -> no output): DELTA 0 reproduces stage 1's actions exactl
   lane's order and every leg's identity; planted errors caught: WS legs shifted too, the provenance left unsorted.
 LIMITS: a shift moves every E2 leg of the window by the same DELTA (the true errors vary per leg); E2-timed trades may differ in kind
   from WS-timed ones (R951 matches activity, not kind); consumed days; replay rule M.
-Usage (run_light, PF_SLOT=claude): pf_stop_ev_e2sep.py selftest | day <day> | report; driver run_stop_ev_e2sep.sh.
+V2 (2026-11-15, after the Codex review relayed by the USER, point 1: "Its WS-REACHED group can depend on earlier estimated-time trades
+  draining the queue"): v1's groups look only at the trades that reach the order in its FUTURE window, so its WS-REACHED is
+  "future-WS-reached, prior E2 dependence unresolved" (its mean moved -2.50 / -1.07 / -2.94 under the shifts), and v1's R950 compares three
+  common-offset scenario populations that change with the shift. v1's R951 / R952 cannot settle the timing question. report2 (no
+  rebuild; the existing builds at 0b7e30cd) instead groups by the Codex prefix certificate (pf_stop_ev_timing_certificate,
+  stop-ev-side-prefix-invariance-v1; data/.../stop_ev_timing_certified_20261115_v1): INVARIANT = certified_ws eligible (no E2 interval or
+  missing event can reach any accepted order of the side before the label ends), E2-DEPENDENT = certified_estimated eligible but not
+  INVARIANT, UNCERTIFIED = ours but not certified_estimated; and compares FIXED IDENTITIES across the shifts (exact one-to-one joins on
+  day / m / side / rung / generation / decision_ms; an action whose identity or eligibility changes is counted as unmatched).
+  C-INV (control, refuses on failure): every INVARIANT action exists, eligible, with an IDENTICAL value in both shifted builds (the
+  shifts lie inside the certificate's +-250 ms intervals) - the certificate and these builds check each other.
+  R950v2 TIMING: E2-DEPENDENT matched-identity mean value at -250 / 0 / +250; range > 50% of |mean at 0| -> TIMING-SENSITIVE, else
+    TIMING-ROBUST (common-offset scenarios, not a bound on independent per-leg errors); unmatched shares printed.
+  R951v2 MATCHED ACTIVITY (DELTA 0): E2-DEPENDENT minus INVARIANT mean value within rung x side x reach-share quintile strata (reached
+    actions; weights = stratum sizes), < 0 pooled and on >= 7 of 9 days -> E2-WORSE-AT-EQUAL-ACTIVITY; > 0 on >= 7 -> E2-BETTER; else
+    NOT-SHOWN. (The model's skill on INVARIANT actions is pf_stop_ev_model's R952v2.)
+  Future day runs record the full source manifest (this file and the model's included) before and after the day and join on
+  decision_ms one-to-one.
+Usage (run_light, PF_SLOT=claude): pf_stop_ev_e2sep.py selftest | day <day> | report | report2; driver run_stop_ev_e2sep.sh.
 """
 import bisect
 import collections
@@ -48,8 +66,29 @@ M, K, AC = E.M, E.K, E.AC
 OUTD = f'{K.IO}/stop_ev_e2sep_20261115'
 DELTAS = (-250.0, 0.0, 250.0); TIMING = 'all_anchors_sensitivity'; ELIG = ('eligible', 'eligible_estimated_timing')
 MEM_CAP_MIB = 2048.0; NAN = float('nan')
-MUT_SHIFT_WS = MUT_PROV_STALE = 0                         # planted errors (selftest only)
-MUTS = ('MUT_SHIFT_WS', 'MUT_PROV_STALE')
+MUT_SHIFT_WS = MUT_PROV_STALE = MUT_ID_NO_TIME = 0       # planted errors (selftest only)
+MUTS = ('MUT_SHIFT_WS', 'MUT_PROV_STALE', 'MUT_ID_NO_TIME')
+KEYJ = ['day', 'm', 'side', 'rung', 'generation', 'decision_ms']
+CERT = f'{K.IO}/stop_ev_timing_certified_20261115_v1'
+
+
+def manifest():
+    """sha256 (16 hex) of every source a day run imports, this file and the model's included."""
+    import hashlib
+    ids = dict(E.source_ids())
+    for f in ('pf_stop_ev_e2sep.py', 'pf_stop_ev_model.py', 'pf_stop_ev_timing_certificate.py'):
+        ids[f] = hashlib.sha256(open(f'{HERE}/{f}', 'rb').read()).hexdigest()[:16]
+    return ids
+
+
+def id_join(A, B):
+    """Fixed-identity join of A (DELTA 0 eligible) with build B (all statuses): one-to-one on KEYJ (decision time included)."""
+    k = [c for c in KEYJ if not (MUT_ID_NO_TIME and c == 'decision_ms')]
+    if A.duplicated(k).any() or B.duplicated(k).any():
+        raise ValueError('duplicate action identities')
+    J = A[KEYJ + ['value_cents']].merge(B[k + ['status', 'value_cents']], on=k, how='left', suffixes=('', '_b'), validate='one_to_one', indicator=True)
+    matched = (J._merge.values == 'both') & J.status.isin(ELIG).values
+    return J, matched
 
 
 def shift_window(W, LR, SR, delta):
@@ -136,7 +175,7 @@ def day_run(day):
     all_selftests()
     if day not in E.DAYS9:
         sys.exit(f'REFUSED: {day} is not a consumed replay day')
-    T0 = time.time(); D = K.load_day(day); cut = M.boundary_cut(day); RW, _ = E.raw_windows(day, D)
+    T0 = time.time(); MAN = manifest(); D = K.load_day(day); cut = M.boundary_cut(day); RW, _ = E.raw_windows(day, D)
     tkf = pd.read_parquet(f'{K.IO}/step1/{day}/legs_tk.parquet', columns=['tk']).tk.values
     LT = D['LT']; ix = LT.index.values; g_all = np.where(tkf[ix] >= 0, tkf[ix], -1 - ix)
     WSg = pd.Series(E.TS.ws_groups(LT.how.values, g_all), index=LT.index)
@@ -165,10 +204,10 @@ def day_run(day):
                 OUT[d].append({k: np.asarray(v) for k, v in c.items()})
         if st['windows'] % 40 == 0:
             E.mem_guard(f'e2sep {day}')
-    A0 = pd.read_parquet(f'{E.OUTD}/actions_{day}{E.ZTAG}_{TIMING}.parquet', columns=['m', 'side', 'rung', 'generation', 'status', 'value_cents'])
     B0 = pd.DataFrame({k: np.concatenate([x[k] for x in OUT[0.0]]) for k in OUT[0.0][0]})
-    J = A0.merge(B0[['m', 'side', 'rung', 'generation', 'status', 'value_cents']], on=['m', 'side', 'rung', 'generation'], how='outer', suffixes=('', '_b'),
-                 indicator=True)
+    A0 = pd.read_parquet(f'{E.OUTD}/actions_{day}{E.ZTAG}_{TIMING}.parquet', columns=['m', 'side', 'rung', 'generation', 'decision_ms', 'status', 'value_cents'])
+    J = A0.merge(B0[['m', 'side', 'rung', 'generation', 'decision_ms', 'status', 'value_cents']], on=['m', 'side', 'rung', 'generation', 'decision_ms'],
+                 how='outer', suffixes=('', '_b'), indicator=True, validate='one_to_one')
     both = J._merge.values == 'both'; v1, v2 = J.value_cents.values.astype(float), J.value_cents_b.values.astype(float)
     reg = dict(stage1=int(len(A0)), rebuilt=int(len(B0)), unmatched=int((~both).sum()), status_differ=int((J.status.values[both] != J.status_b.values[both]).sum()),
                value_differ=int((~((np.isnan(v1) & np.isnan(v2)) | (np.abs(v1 - v2) <= 1e-9)))[both].sum()))
@@ -177,7 +216,9 @@ def day_run(day):
         fails.append(f'DELTA 0 does not reproduce stage 1: {reg}')
     if any(st[f'shift_violations_{d:g}'] for d in DELTAS) or st['ledger_fail']:
         fails.append(f"shift violations {[st[f'shift_violations_{d:g}'] for d in DELTAS]}, ledger failures {st['ledger_fail']} {errs[:3]}")
-    rep = dict(day=day, stat=dict(st), regression=reg, asof=asof, seconds=round(time.time() - T0, 1), sources=E.source_ids())
+    if manifest() != MAN:
+        fails.append('a source changed while the day ran')
+    rep = dict(day=day, stat=dict(st), regression=reg, asof=asof, seconds=round(time.time() - T0, 1), sources=E.source_ids(), manifest=MAN)
     os.makedirs(OUTD, exist_ok=True)
     if fails:
         json.dump(rep, open(f'{OUTD}/refused_{day}.json', 'w'), indent=1, default=str)
@@ -260,6 +301,78 @@ def report():
     print('\n'.join(T), flush=True)
 
 
+def report2():
+    days = [d for d in E.DAYS9 if os.path.exists(f'{OUTD}/day_{d}.json')]
+    if len(days) < len(E.DAYS9):
+        sys.exit(f'REFUSED: days missing {[d for d in E.DAYS9 if d not in days]}')
+    B = {d: pd.concat([pd.read_parquet(f'{OUTD}/e2_{day}_{int(d)}.parquet') for day in days], ignore_index=True) for d in DELTAS}
+    A = B[0.0][B[0.0].status.isin(ELIG).values].reset_index(drop=True)
+    C = {}
+    for mode, okst in (('certified_ws', ('eligible_timing_invariant',)), ('certified_estimated', ('eligible_estimated_timing', 'eligible'))):
+        X = pd.concat([pd.read_parquet(f'{CERT}/{day}/{mode}.parquet', columns=KEYJ + ['status', 'value_cents']) for day in days], ignore_index=True)
+        X['day'] = X['day'].astype('int64'); C[mode] = X[X.status.isin(okst).values]
+    fails = []
+    for mode, X in C.items():                             # certified actions must be ours, with our values
+        J = X.merge(A[KEYJ + ['value_cents']], on=KEYJ, how='left', suffixes=('_c', ''), validate='one_to_one', indicator=True)
+        miss = int((J._merge.values != 'both').sum()); vd = int((~(np.abs(J.value_cents_c.values - J.value_cents.values) <= 1e-9))[J._merge.values == 'both'].sum())
+        if miss or vd:
+            fails.append(f'{mode}: {miss} certified actions not ours, {vd} values differ')
+    key = lambda X: pd.MultiIndex.from_frame(X[KEYJ])
+    inv = key(A).isin(key(C['certified_ws'])); est = key(A).isin(key(C['certified_estimated']))
+    A['grp'] = np.where(inv, 'INVARIANT', np.where(est, 'E2-DEPENDENT', 'UNCERTIFIED'))
+    T = [f'E2SEP v2 - certificate groups and fixed identities (builds at 0b7e30cd; Codex certificate stop-ev-side-prefix-invariance-v1); '
+         f'as of {time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}', '']
+    MJ = {}
+    for d in (-250.0, 250.0):
+        J, ok = id_join(A, B[d]); MJ[d] = (J, ok)
+    both = MJ[-250.0][1] & MJ[250.0][1]
+    vals = {d: (A.value_cents.values if d == 0.0 else MJ[d][0].value_cents_b.values) for d in DELTAS}
+    gi = A.grp.values == 'INVARIANT'
+    inv_bad = int((~both[gi]).sum()) + int(sum((~(np.abs(vals[d][gi & both] - A.value_cents.values[gi & both]) <= 1e-9)).sum() for d in (-250.0, 250.0)))
+    if inv_bad:
+        fails.append(f'C-INV: {inv_bad} INVARIANT actions missing, ineligible or changed under a shift inside their certified interval')
+    T.append(f'C-INV: {int(gi.sum())} INVARIANT actions; missing / changed under the shifts: {inv_bad} -> {"PASS" if not inv_bad else "FAIL"}')
+    T.append('GROUPS (DELTA 0 eligible): n | mean value | share of the total loss | matched in both shifts | mean value at -250 / 0 / +250 on the matched | '
+             'share whose value changes')
+    tot = float(A.value_cents.sum()); R = {}
+    for g in ('INVARIANT', 'E2-DEPENDENT', 'UNCERTIFIED'):
+        s_ = A.grp.values == g; mb = s_ & both
+        mv = [float(vals[d][mb].mean()) if mb.any() else NAN for d in DELTAS]
+        ch = float(np.mean((np.abs(vals[-250.0][mb] - vals[0.0][mb]) > 1e-9) | (np.abs(vals[250.0][mb] - vals[0.0][mb]) > 1e-9))) if mb.any() else NAN
+        T.append(f'  {g:12s} {int(s_.sum()):7d} | {A.value_cents.values[s_].mean():+.3f} | {A.value_cents.values[s_].sum() / tot:6.1%} | {mb.sum() / max(s_.sum(), 1):6.1%} | '
+                 + ' / '.join(f'{v:+.3f}' for v in mv) + f' | {ch:.1%}')
+        R[g] = dict(n=int(s_.sum()), mean=float(A.value_cents.values[s_].mean()), matched_share=float(mb.sum() / max(s_.sum(), 1)), matched_means=mv, changed=ch)
+    e2 = R['E2-DEPENDENT']['matched_means']; rng_ = max(e2) - min(e2)
+    r950 = 'TIMING-SENSITIVE' if rng_ > 0.5 * abs(e2[1]) else 'TIMING-ROBUST'
+    rs = A.reach_ws.values + A.reach_e2.values; reached = rs > 0
+    edges = np.quantile(rs[reached], [0.2, 0.4, 0.6, 0.8]); qb = np.digitize(rs, edges); kk = pd.Series(list(zip(A.rung.values, A.side.values, qb)))
+
+    def diff(sel):
+        num = den = 0.0
+        for _, ix in kk[sel].groupby(kk[sel]).groups.items():
+            ix = np.asarray(list(ix)); g_ = A.grp.values[ix]; v_ = A.value_cents.values[ix]
+            a, b = v_[g_ == 'E2-DEPENDENT'], v_[g_ == 'INVARIANT']
+            if len(a) and len(b):
+                w = len(a) + len(b); num += w * (a.mean() - b.mean()); den += w
+        return (num / den if den else NAN), den
+    base = reached & np.isin(A.grp.values, ['E2-DEPENDENT', 'INVARIANT'])
+    pooled, wt = diff(base); per = {dd: diff(base & (A.day.values == int(dd)))[0] for dd in days}
+    neg = sum(int(v < 0) for v in per.values() if v == v); pos = sum(int(v > 0) for v in per.values() if v == v)
+    r951 = 'E2-WORSE-AT-EQUAL-ACTIVITY' if (pooled < 0 and neg >= 7) else 'E2-BETTER-AT-EQUAL-ACTIVITY' if (pooled > 0 and pos >= 7) else 'NOT-SHOWN'
+    T += ['', f'R950v2 TIMING (fixed identities, common-offset scenarios): E2-DEPENDENT -250 / 0 / +250 ' + ' / '.join(f'{v:+.3f}' for v in e2)
+          + f' (range {rng_:.3f} vs {0.5 * abs(e2[1]):.3f}) -> {r950}',
+          f'R951v2 MATCHED ACTIVITY (DELTA 0): E2-DEPENDENT - INVARIANT {pooled:+.3f} c pooled over {int(wt)} reached actions; per day '
+          + ', '.join(f'{dd} {v:+.2f}' for dd, v in per.items()) + f' -> {r951}']
+    verdict = 'REFUSED - ' + '; '.join(fails) if fails else f'R950v2 {r950}; R951v2 {r951}'
+    T.append(f'READINGS: {verdict} (descriptive; consumed days; replay rule M)')
+    R.update(R950v2=r950, R951v2=dict(pooled=pooled, per_day=per, reading=r951), fails=fails)
+    open(f'{OUTD}/e2sep_v2.txt', 'w').write('\n'.join(T) + '\n')
+    json.dump(R, open(f'{OUTD}/e2sep_v2.json', 'w'), indent=1, default=float)
+    print('\n'.join(T), flush=True)
+    if fails:
+        sys.exit(f'REFUSED: {fails}')
+
+
 # ---------------------------------------------------------------- self-tests
 def selftest():
     bad = []
@@ -280,6 +393,16 @@ def selftest():
                 bad.append(f'shift {d:g} side {s}: leg identities changed')
             if d == 0.0 and not (np.array_equal(W2[s]['anc'], W[s]['anc']) and list(LR2[s]) == list(LR[s])):
                 bad.append(f'shift 0 side {s}: not the identity')
+    # fixed identities: a generation whose probe time moved under the shift is NOT the same action
+    A_ = pd.DataFrame(dict(day=[1, 1], m=[5, 5], side=[0, 0], rung=[0, 1], generation=[0, 0], decision_ms=[100.0, 200.0], value_cents=[1.0, 2.0]))
+    B_ = pd.DataFrame(dict(day=[1, 1], m=[5, 5], side=[0, 0], rung=[0, 1], generation=[0, 0], decision_ms=[100.0, 450.0], value_cents=[1.0, 9.0],
+                           status=['eligible_estimated_timing', 'eligible_estimated_timing']))
+    try:
+        _, ok_ = id_join(A_, B_)
+        if list(ok_) != [True, False]:
+            bad.append(f'fixed-identity join matched a moved probe: {list(ok_)}')
+    except ValueError as e:
+        bad.append(f'fixed-identity join: {e}')
     return bad
 
 
@@ -313,5 +436,7 @@ if __name__ == '__main__':
         day_run(sys.argv[2])
     elif cmd == 'report':
         report()
+    elif cmd == 'report2':
+        report2()
     else:
         sys.exit(__doc__)

@@ -1,0 +1,29 @@
+E2SEP - timing vs activity in the STOP-EV local values (all_anchors_sensitivity, the USER's untimed rule; 9 consumed days; c per 30 sh order over 1 s; as of 2026-11-15T14:40:31Z)
+
+GROUPS per E2 shift (eligible actions): n | mean value | share of the total loss | E2 share of filled quantity
+  DELTA -250 ms: all 268756 | -4.159 | E2 share of filled quantity 42.7%
+    QUIET       196766 | +0.000 |  -0.0%
+    WS-REACHED   37888 | -2.498 |   8.5%
+    MIXED        10932 | -37.905 |  37.1%
+    E2-REACHED   23170 | -26.277 |  54.5%
+  DELTA +0 ms: all 265373 | -3.053 | E2 share of filled quantity 41.5%
+    QUIET       198100 | +0.000 |  -0.0%
+    WS-REACHED   34891 | -1.066 |   4.6%
+    MIXED        10460 | -32.949 |  42.5%
+    E2-REACHED   21922 | -19.534 |  52.9%
+  DELTA +250 ms: all 266011 | -2.147 | E2 share of filled quantity 34.4%
+    QUIET       197859 | +0.000 |  -0.0%
+    WS-REACHED   35521 | -2.938 |  18.3%
+    MIXED         9826 | -28.539 |  49.1%
+    E2-REACHED   22805 | -8.168 |  32.6%
+
+R950 TIMING: E2-REACHED mean at DELTA -250 / 0 / +250: -26.277 / -19.534 / -8.168 (range 18.110 vs 50% of |mean at 0| 9.767) -> TIMING-SENSITIVE; WS-REACHED -2.498 / -1.066 / -2.938
+  per day E2-REACHED -250 / 0 / +250: 20261023 -21.32 / -16.46 / -7.15; 20261024 -18.61 / -12.53 / -4.91; 20261025 -22.19 / -15.63 / -5.24; 20261026 -20.24 / -16.28 / -6.79; 20261027 -23.64 / -17.48 / -6.33; 20261031 -34.53 / -24.04 / -11.39; 20261101 -33.29 / -21.32 / -9.07; 20261102 -34.95 / -26.31 / -11.52; 20261103 -34.00 / -27.00 / -12.09
+R951 MATCHED ACTIVITY (DELTA 0; strata rung x side x reach-share quintile, edges [9.6, 25.0, 60.0, 141.6] sh): E2-REACHED - WS-REACHED -10.881 c pooled over 56813 actions; per day 20261023 -10.58, 20261024 -6.94, 20261025 -7.44, 20261026 -9.73, 20261027 -9.55, 20261031 -10.83, 20261101 -10.67, 20261102 -16.26, 20261103 -14.89 -> E2-WORSE-AT-EQUAL-ACTIVITY
+R952 MODEL BY GROUP (stage 2 test-day predictions joined to DELTA 0: 137703 of 137703): group | n | IC pooled | IC per test day
+  WS-REACHED   16790 | +0.106 | 20261027 +0.137, 20261031 +0.119, 20261101 +0.120, 20261102 +0.088, 20261103 +0.065
+  MIXED         4820 | +0.089 | 20261027 +0.136, 20261031 +0.115, 20261101 +0.025, 20261102 +0.065, 20261103 +0.090
+  E2-REACHED   11352 | +0.150 | 20261027 +0.176, 20261031 +0.159, 20261101 +0.120, 20261102 +0.134, 20261103 +0.140
+
+READINGS: R950 TIMING-SENSITIVE; R951 E2-WORSE-AT-EQUAL-ACTIVITY; R952 SKILL-ON-WS
+(descriptive; consumed days; replay rule M; a shift moves all E2 legs of a window alike)
