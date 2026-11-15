@@ -1,5 +1,32 @@
 # P-2026-005 HANDOFF
 
+<!-- STOP_EV_LATEST_COMMIT_REVIEW_20261115 -->
+## 2026-11-15 Model and E2SEP review: validity/target issues remain
+
+Reviewed stage-2 commits through f3fb7e3b and new E2SEP 0b7e30cd. Saved-file
+check as of 14:35:33Z reproduces published metrics (source 14:00:57Z; five
+consumed test days, 137,703 actions); 3 planted corruptions refused. No model,
+policy, label or running E2SEP source changed by this review.
+
+High-priority findings: (1) Huber estimates a robust location, not the mean
+required by EV; top decile n=13,771 forecasts +0.4345 c but realizes -0.5266 c.
+(2) 56,073 / 137,703 model test actions lack the new estimated-timing
+certificate; certified overlap values match exactly. Even 993 / 4,572 reported
+strict-WS actions lack the missing-timing certificate (not measured errors).
+(3) Oct 31 / Nov 3 fail the original T5 gate; the report reinterprets them under
+a post hoc one-sided gate, with only 10 draws rather than the required 200.
+(4) E2SEP's future WS-REACHED group does not remove prior E2 queue dependence:
+a synthetic earlier E2 shift changes its local value +5 c -> 0 at 14:36:46Z.
+
+Additional issues: R950 compares changing populations; E2SEP source manifest
+omits its own builder; exact joins omit decision time/uniqueness; model fitting
+saves predictions but not fitted heads or input hashes. Keep MODEL-READY as
+exploratory ranking output, not proof that an EV-driven policy is ready.
+Read handoffs/20261115_stop_ev_latest_commit_review.md before integration.
+Evidence: reviews/stop_ev_model_commit_review_20261115/receipt_v2.json and
+e2sep_v1.json; review merge af9478e7. Existing experiments remain untouched.
+<!-- /STOP_EV_LATEST_COMMIT_REVIEW_20261115 -->
+
 <!-- STOP_EV_TIMING_COVERAGE_20261115 -->
 ## 2026-11-15 Timing coverage improved with a side-prefix certificate; historical audit passes
 
