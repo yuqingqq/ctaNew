@@ -29,7 +29,7 @@ PARTS (declared before the run):
    Predict / fair-price moves raise the risk; a thicker own best level and more own-side size lower it; sigma raises it).
 OUTPUT review_20261115.json / .txt; 'drop_inputs' is read by the v4 build. Controls: pf_stop_model's selftests (planted errors); group
 membership covers every input exactly once; the SHAP rows sum to the raw score (TreeSHAP additivity, max error <= 1e-4).
-Usage (run_light, PF_SLOT=claude): pf_stop_model_review.py selftest | run | reg (the regularization review, after run) | s5check (input-pipeline checks)
+Usage (run_light, PF_SLOT=claude): pf_stop_model_review.py selftest | run | reg (the regularization review, after run) | s5check (input-pipeline checks) | dup (within-side copies)
 """
 import json
 import os
@@ -407,6 +407,64 @@ def hk(h, j):
     return f'H{h}_j{j}'
 
 
+OUT_DJ = f'{M.OUTD}/dup_20261115.json'; OUT_DT = f'{M.OUTD}/dup_20261115.txt'
+
+
+def dup():
+    """WITHIN-SIDE COPIES (the code review D3; declared before the run, dev days): the 18 raw directional inputs with an adv_ copy (adv_x = -x
+    for bids, +x for asks) and pf_pend_bid1000 / pf_pend_ask1000 (= own_pend / opp_pend by side) carry nothing the copy and fside do not;
+    their pooled correlation is ~0, so the review's |r| > 0.999 rule cannot see them. Test: fold 10-27 refits (60k rows a day, target U, the 9
+    heads j = 1..3 at every H, v3.1 seeds) with the review's drops applied, with and without the 20 copies; the copies are DROPPED iff the
+    10-26 log loss without them is not worse on average (mean relative change >= 0). Output dup_20261115.json / .txt ('drop_inputs')."""
+    M.all_selftests()
+    T0 = time.time(); asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()); res = dict(asof=asof)
+    A = json.load(open(f'{M.OUTD}/audit2.json')); scale = A['scale']; RV = json.load(open(OUT_J))
+    rdrop = set(RV['drop_inputs']) | {c for c, x in RV['C_inputs'].items() if x['group'] in RV['drop_groups']}
+    F = [c for c in M.FEAT_M if c not in set(A['drop']) | rdrop]
+    cop = [c for c in M.SD.ADV if c in F and f'adv_{c}' in F] + [c for c in ('pf_pend_bid1000', 'pf_pend_ask1000') if c in F and {'own_pend', 'opp_pend'} <= set(F)]
+    Fd = [c for c in F if c not in cop]
+    s1 = lambda d: int(F1_TEST) * 31 + int(d)                                    # noqa: E731
+    h1 = lambda h, j: int(F1_TEST) * 7 + j * 1009 + h                             # noqa: E731
+    T60 = DG.train_table(F1_TRAIN, s1, 'V60', None, F, scale); s26 = M.day_usable(EVAL)
+    X26 = M.day_matrix(EVAL, scale, F, s26); lab26 = {c: v.astype(np.float32) for c, v in M.day_cols(EVAL, LABC, s26).items()}
+    out = {}
+    for nm, FF in (('with', F), ('without', Fd)):
+        keep = [F.index(c) for c in FF]; Tk = (np.ascontiguousarray(T60[0][:, keep]), T60[1], T60[2], T60[3])
+        B = DG.train_heads(Tk, FF, 'U', 'V60', h1, MHEADS); out[nm] = DG.metrics(DG.predict(B, np.ascontiguousarray(X26[:, keep]), MHEADS), lab26, 'U', MHEADS)
+        del Tk, B
+        M.mem_guard(f'dup {nm}')
+    rel = {k: (out['with'][k]['ll'] - out['without'][k]['ll']) / out['with'][k]['ll'] for k in out['with']}
+    mg = float(np.mean(list(rel.values()))); drop = cop if mg >= 0.0 else []
+    # R1's refit comparison (declared 2026-11-15 04:1xZ, before reg's output was read): reg compares against the review's raw refit only
+    # when the review dropped nothing; it dropped 4 duplicates, so the comparison runs here on the FINAL input set: the inputs reg's
+    # dispersion rule selected, normalized, against the same set raw (same rows and seeds); adopted iff the mean log-loss change >= 0
+    RG = json.load(open(OUT_RJ)); Ff = [c for c in F if c not in drop]; sel = [c for c in RG['R1_selected'] if c in Ff]; norm = []
+    if sel:
+        keep = [F.index(c) for c in Ff]; Xs, Ls, Ws = [], [], []
+        for d in F1_TRAIN:
+            sd_ = M.day_usable(d); ix, w = M.day_sample(len(sd_), M.VOL['V60'][1], s1(d)); pos = sd_[ix]
+            Xs.append(M.apply_norm(M.day_matrix(d, scale, Ff, pos), Ff, d, pos, sel, scale)); Ws.append(w)
+            Ls.append({c: v.astype(np.float32) for c, v in M.day_cols(d, LABC, pos).items()})
+        Tn = (np.concatenate(Xs), {c: np.concatenate([x[c] for x in Ls]) for c in LABC}, np.concatenate(Ws), np.zeros(sum(len(w) for w in Ws), bool)); del Xs
+        B = DG.train_heads(Tn, Ff, 'U', 'V60', h1, MHEADS); del Tn
+        Xn = M.apply_norm(np.ascontiguousarray(X26[:, keep]), Ff, EVAL, s26, sel, scale)
+        mn = DG.metrics(DG.predict(B, Xn, MHEADS), lab26, 'U', MHEADS); del B, Xn
+        bse = out['without'] if drop else out['with']
+        g2 = {k: (bse[k]['ll'] - mn[k]['ll']) / bse[k]['ll'] for k in mn}; norm = sel if np.mean(list(g2.values())) >= 0.0 else []
+        res.update(R1_final=dict(selected=sel, metrics=mn, rel_gain=g2, mean_gain=float(np.mean(list(g2.values()))), heads_better=int(sum(v > 0 for v in g2.values()))))
+    res['norm_inputs'] = norm
+    res.update(copies=cop, metrics=out, rel_gain_without=rel, mean_gain_without=mg, heads_better_without=int(sum(v > 0 for v in rel.values())), drop_inputs=drop,
+               inputs_with=len(F), inputs_without=len(Fd), seconds=round(time.time() - T0, 1))
+    L = [f'WITHIN-SIDE COPIES (fold 10-27 refits, V60, U, 9 heads; 10-26 log loss); as of {asof}',
+         f'   copies ({len(cop)}): {cop}',
+         '   head: log loss with / without (relative gain without): ' + '; '.join(f'{k} {out["with"][k]["ll"]:.5f} / {out["without"][k]["ll"]:.5f} ({rel[k]:+.2%})' for k in rel),
+         f'   mean gain without {mg:+.3%}, better without {res["heads_better_without"]}/9 -> drop {"the copies" if drop else "none"} ({len(F)} -> {len(F) - len(drop)} inputs)',
+         (f'   R1 final (reg selected {sel}): normalized vs raw on the final inputs, mean gain {res["R1_final"]["mean_gain"]:+.3%}, better {res["R1_final"]["heads_better"]}/9 -> '
+          f'normalize {norm or "none"}' if sel else '   R1 final: reg selected no input (nothing to normalize)') + f'; {res["seconds"]} s']
+    json.dump(res, open(OUT_DJ, 'w'), indent=1, default=float); open(OUT_DT, 'w').write('\n'.join(L) + '\n')
+    print('\n'.join(L), flush=True)
+
+
 S5_BN = ['bn_r25', 'bn_r50', 'bn_r100', 'bn_r250', 'bn_r500', 'bn_r1000', 'bn_r3000', 'bn_imb', 'bn_age', 'bn_flow250', 'bn_flow1000', 'bn_flow5000',
          'bn_ntr1000']
 S5_PF = ['pf_spread', 'pf_mid', 'pf_micro_dev', 'pf_imb1', 'pf_imb3', 'pf_age', 'pf_nfr1000', 'pf_dm250', 'pf_dm1000', 'pf_dm5000']
@@ -583,5 +641,7 @@ if __name__ == '__main__':
         reg()
     elif cmd == 's5check':
         s5check()
+    elif cmd == 'dup':
+        dup()
     else:
         sys.exit(f'unknown command {cmd}')
