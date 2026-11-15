@@ -1,3 +1,21 @@
+<!-- QUEUE_INITIALIZATION_FIX_20261115 -->
+## 2026-11-15 Activation queue initialization fixed for new runs
+
+New entry/STOP engines use the last snapshot at or before activation; later
+additions no longer inflate initial queue ahead. Existing queue, partial fills,
+repost acknowledgements and unknown-depth scenarios are preserved. The new
+pf_queue_activation_replay.py commands explicitly route to corrected engines
+and use separate output namespaces. Historical commands and running frozen
+experiments retain the old behavior; no completed result is relabelled.
+
+Source/integration 07f287be / a815aa8a. All 12 synthetic tests pass as of
+2026-11-15T12:08:34Z, both sides and both engines, including known-bad legacy
+controls and command routing. No historical performance rerun or refit yet.
+Retraining needs regenerated neutral references and labels. See
+handoffs/20261115_queue_initialization_fix.md and
+reviews/queue_initialization_20261115/current.json for commands and evidence.
+<!-- /QUEUE_INITIALIZATION_FIX_20261115 -->
+
 <!-- STOP_EV_REVIEW_20261115 -->
 ## 2026-11-15 Stop EV design reviewed before implementation
 

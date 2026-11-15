@@ -1,3 +1,18 @@
+queue_initialization_fix_20261115:
+  asof: '2026-11-15T12:08:34Z'
+  status: corrected_engines_and_entrypoints_tested
+  source_commit: 07f287be
+  integration_commit: a815aa8a
+  handoff: predictfun/handoffs/20261115_queue_initialization_fix.md
+  evidence: predictfun/reviews/queue_initialization_20261115/current.json
+  entrypoint: predictfun/research/pf_queue_activation_replay.py
+  queue_contract: activation-snapshot-queue-v1
+  synthetic_tests_passed: 12
+  historical_corrected_runs: 0
+  frozen_runs_changed: false
+  entry_retraining_needs_new_references_and_labels: true
+  performance_improvement_claim: false
+
 stop_ev_review_20261115:
   asof: '2026-11-15T11:44:33.221355+00:00'
   status: review_complete_design_corrections_required
