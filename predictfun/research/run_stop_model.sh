@@ -3,9 +3,11 @@
 #   run_stop_model.sh data   -> selftest, per-day rows (with parity / falsifier / brute-force controls), scale choice + audit v2 (then stop: the USER asked
 #                               for the data to be checked and its issues cleared before any fit)
 #   run_stop_model.sh model  -> per-fold fits, per-test-day alignment lanes, report
+#   run_stop_model.sh v4     -> (2026-11-15, after the dev-day diagnostics) v3.1 report regression, v4 fits, v4 report
+#   run_stop_model.sh play   -> (2026-11-15) STOP-PLAY: the v4 model's own decisions in the oracle's lane
 set -u
 cd /home/yuqing/ctaNew
-PHASE="${1:?data|model}"
+PHASE="${1:?data|model|v4|play}"
 OUT=data/predict_fun/research/stop_model_20261114; mkdir -p $OUT/logs
 DAYS="20261023 20261024 20261025 20261026 20261027 20261031 20261101 20261102 20261103"
 TESTS="20261027 20261031 20261101 20261102 20261103"
@@ -26,6 +28,14 @@ case "$PHASE" in
     for t in $TESTS; do job sm_fit_$t python3 predictfun/research/pf_stop_model.py fit $t; done
     for t in $TESTS; do job sm_align_$t python3 predictfun/research/pf_stop_model.py align $t; done
     job sm_report python3 predictfun/research/pf_stop_model.py report;;
+  v4)     # after pf_stop_model_diag.py run (its decisions): v3.1 report regression, v4 fits, v4 report
+    job sm_report31 python3 predictfun/research/pf_stop_model.py report
+    for t in $TESTS; do job sm_fit4_$t python3 predictfun/research/pf_stop_model.py fit4 $t; done
+    job sm_report4 python3 predictfun/research/pf_stop_model.py report4;;
+  play)   # STOP-PLAY on v4's predictions: calibration-day choice, test-day arms, report
+    for t in $TESTS; do job sp_cal_$t python3 predictfun/research/pf_stop_play.py cal $t; done
+    for t in $TESTS; do job sp_test_$t python3 predictfun/research/pf_stop_play.py test $t; done
+    job sp_report python3 predictfun/research/pf_stop_play.py report;;
   *) echo "unknown phase $PHASE" >&2; exit 1;;
 esac
 echo "$(date -u +%H:%M:%SZ) PHASE $PHASE DONE" >> $OUT/logs/driver.log
