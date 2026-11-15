@@ -1,0 +1,35 @@
+{
+  "asof": "2026-11-15T12:10:14.426991+00:00",
+  "status": "implemented_synthetic_checks_pass",
+  "source_commit": "07f287bea5d994e9bcff0d1ea7d74dbe151b1ff2",
+  "queue_initialization": "activation-snapshot-queue-v1",
+  "source_hashes": {
+    "predictfun/research/pf_queue_activation.py": "b63e7f00a74db3c87cd85858cfb4a73c06e3fce0173328289913f9caf6571f02",
+    "predictfun/research/pf_entry_queue_activation_lane.py": "5b8ab30b30b52f150dbdd2f7695073b6a480e865157d0fc865faaa0e04a4bc37",
+    "predictfun/research/pf_stop_queue_activation_lane.py": "8d61029d348f80856853ca16c2d3e49c54f7ae26be73866d6b244d08c746e2ed",
+    "predictfun/research/pf_queue_activation_replay.py": "d850910a851aa9efbccb21ec1377b1c4ef78fcd127279d2bb3ab1756f9d5134f",
+    "predictfun/research/pf_queue_activation_check.py": "61622077868214b14af1472ae08fdaa862f411cb0cae1e26673c26326e05d214",
+    "predictfun/research/pf_entry_repair_lane.py": "f0d58d617217eef61fdc7c850b6a76d7cb51e1edca576fb21f70b3ffca4dda77",
+    "predictfun/research/pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed",
+    "predictfun/research/pf_stop_play.py": "c82675eda4f40ce9e0631af0ed17c4a35ae8aa4af0710258bff43a9fc13e7f74",
+    "predictfun/research/pf_order_harm_client_lane.py": "c203beeed0a82ae31696cc3c1653947b37b1b952984a85d0ff3f82ff4c7941b5"
+  },
+  "logs": {
+    "regressions_v1.log": "7961123025c73a30bdd939cccc71ef18b41da6274fad6e5cc77a3bdd5138df41",
+    "regressions_v2.log": "9a0e1502e17e7868fd8de7d6d0a4c26d06c74db4338bd9b4cebe2cf191a56fa3",
+    "regressions_v3.log": "a28890e86bad7d3098b629e2ec46460aa71a37f69e8f3e3cbfb31385e762f234"
+  },
+  "tests": 12,
+  "tests_passed": true,
+  "test_asof": "2026-11-15T12:08:34Z",
+  "historical_runs": 0,
+  "existing_frozen_sources_changed": false,
+  "entrypoints": "predictfun/research/pf_queue_activation_replay.py",
+  "limits": [
+    "Versioned corrected engines; existing frozen commands/results retain historical initialization.",
+    "Fixed-model replay is a sensitivity, not corrected-label training.",
+    "New entry training requires new neutral references and labels.",
+    "P&L improvement and actual venue FIFO not established."
+  ],
+  "initial_test_failure": "Repost fixture omitted cancellation acknowledgement; fixed expected activation from 290 to 390 ms, moving the later addition after activation; engine latency unchanged."
+}
