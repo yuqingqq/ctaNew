@@ -1,5 +1,15 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-15 17:00Z (session aea5bfb9) — REVIEW OF THE STOP-EV PIPELINE (USER: "Review the model thoroughly, from data to model, check if there are bugs first then check how to optimize"): defects confirmed, several of today's readings void or qualified; fixes and a sensitivity plan wait for the USER's go
+
+- Four independent read-only reviews (labels, model, replay, premises), then my own checks: duplicates = distinct on-chain fills (not ingestion copies); unknown-queue fills 29% of MD1000's shares; replay latency 40 / 22 ms vs measured 58 / 37 ms (pf_clock_rl.py).
+- VOID AS RUN: STOP-EV-PLAY (QR's stale re-entry gate: every pull re-posted within ~150 ms unchecked; QRS order inputs corrupted; 250 ms vs 50 ms cadence; theta at the grid floor). QUALIFIED: the STOP-EV model (pull-everything beats its keep rule; R903 cannot fail; MODEL-READY not supported); E2SEP / E2IZE (populations selected by later trades). SUPERSEDED: the stage-1 FINDINGS row (pre-rebuild counts).
+- Outcome-selected populations: my untimed rule (USER-approved on my recommendation) drops probes whose own next second holds an untimed trade at their price - the refused 2% carry 13-24% of the keep-all loss; the Codex certificate and the strict-WS subset drop states by later trades too.
+- Sound: label clocks / signs / queue rule / provenance, client-known inputs, folds (no leak), joins, evaluation arithmetic, order-state parity, PnL marking at 60.2 s (settlement - mid -0.35 +- 1.21 c).
+- Premises that can flip the best arms' sign: $ a day ranks arms by how little they trade (per share all lose); latency; unknown queue = 0; rule M vs U; cancel-pending fills ~2.5x live; missed fills from crossing orders; liquidity rewards excluded.
+- Loss examples (11-03 replay, USER request): one-sided sweeps in thin books run through our deep orders (e.g. asks at 55-57 filled by a sweep 49 -> 58, mid 48.5 -> 78.5); the ladder re-centres into spikes; fresh deep orders are hit at once; no inventory cap.
+- Next on the USER's go: (1) labels without outcome selection (untimed legs kept with imputed times; certificate only as a sensitivity); (2) replay fixes (gate, QRS, cadence, grid) + per-share and volume-matched comparisons with a random volume-matched control; (3) a sensitivity grid on 1-2 days (latency 58 / 37, unknown queue inf, rule U / M, M 0 / 25 / 50, cancel-pending weight) reporting each arm's sign; (4) strategy levers from the loss examples (inventory cap, no chasing, sweep depth for deep orders), then the "place first" test.
+
 <!-- STOP_EV_ECONOMIC_LAYER_20261115 -->
 ## 2026-11-15 Per-order economic correction avoids some losses; no tested variant is profitable
 
