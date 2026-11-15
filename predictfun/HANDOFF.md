@@ -1,5 +1,42 @@
 # P-2026-005 HANDOFF
 
+<!-- WAIT_POST_STATE_20261115 -->
+## 2026-11-15 — ladder-state repair, full comparison and noise cleanup COMPLETE
+
+User: add missing inputs, review the model and improve it; diagnose poor first
+prediction and noise filtering. Completed asof2026-11-15T02:59:00Z. Five consumed
+test dates Oct27/31,Nov1/2/3:9871 probes (4990bid/4881ask),1434 windows.
+Source99173056/freeze42f61bf1; noise20ba3773/068a4382;
+cleanup70217846/c9fc924e (authoritative clean_freeze_v2.json metadata correction);
+evidenceeeab2486. Merged into mm-research. Results:
+`handoffs/20261115_wait_post_state_results.md` and
+`reviews/wait_post_state_20261115/current.json`.
+
+Implemented client-known per-rung prices/remaining/fills/ages/pending status,
+empty generations and causal public queue estimates in labels and inference.
+Added first-order/remaining-portfolio target components with exact reconciliation.
+Repaired unavailable start-price gap in inputs and frozen continuation;994of13911
+rebuilt eligible labels changed. Six sealed-lookback windows explicitly excluded.
+Nineteen synthetic checks pass;2010 historical feature falsifiers;120 fitted
+artifacts verified. Three supervised jobs exited0; old size queue resumed.
+
+Five candidates (BASE,LADDER,COMPONENTS,CLEAN_TREE,CLEAN_RIDGE). All pooled POST
+and timing R2 remain below the prior-mean baseline.0/10 full local economic
+side/candidate tests pass,500 matched draws each; all selected absolute POST
+means negative. Rich inputs slightly improve absolute-value error but not timing.
+Train-only cleanup and fixed ridge do not improve aggregate error. Cleanup's160
+raw fields become318-332 columns with indicators, not fewer encoded columns.
+
+First-fold diagnosis (4040 train/1992 test probes) supports sparse/tail-heavy
+labels and overfitting. Failures persist on ordinary-outcome/fresher subsets and
+after oracle intercept removal. Filtering alone is not established as the fix;
+real adverse outcomes must remain. Main remaining gap: neutral KEEP/terminal
+portfolio targets versus intended selective keeper, plus limited later-generation
+and joint-waiting support. Relabel under the actual frozen keeper; learn near-term
+order influence separately; expand representative states. No model promoted,
+portfolio replay/acceptance or forward validation. Old frozen results preserved.
+<!-- /WAIT_POST_STATE_20261115 -->
+
 <!-- WAIT_POST_SIGNAL_DATA_20261114 -->
 ## 2026-11-14 — distribution, processing and sampling correction COMPLETE
 
