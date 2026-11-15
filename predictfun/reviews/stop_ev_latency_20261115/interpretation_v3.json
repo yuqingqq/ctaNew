@@ -1,0 +1,263 @@
+{
+  "asof": "2026-11-15T18:55:52.101702+00:00",
+  "windows": 1434,
+  "dates": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "model_version": "v3",
+  "source_commit": "30b923973275bc95a593b8508a43c72558c50502",
+  "primary": "All-fill terminal marked trading value; 50 ms review; first-minute windows only; consumed data, no policy promotion.",
+  "ev_zero_modeled_pooled_positive": true,
+  "ev_current_pooled_positive": true,
+  "ev_current_positive_dates": 4,
+  "ev_zero_modeled_positive_dates": 3,
+  "ev_zero_order_positive_dates": 5,
+  "ev_zero_modeled_minus_current": 423.81835570831174,
+  "ev_volume_ratio": 1.9911977893088952,
+  "ev_value_per_share_ratio": 1.0382100888408394,
+  "ev_zero_modeled_better_dates": 3,
+  "ev_short_mark_positive_dates": {
+    "current": 5,
+    "order_zero": 5,
+    "modeled_zero": 5,
+    "modeled_zero_trade0": 5
+  },
+  "ev_day2_horizon_gap": {
+    "20261102": {
+      "mark1_dollars": 132.44794487097462,
+      "terminal_dollars": -8.370097233793373
+    },
+    "20261103": {
+      "mark1_dollars": 225.88110489380443,
+      "terminal_dollars": -38.417108026536056
+    }
+  },
+  "comparisons": {
+    "current": {
+      "B2": {
+        "ev_minus_other_by_day": {
+          "20261027": 315.40186227249507,
+          "20261031": 11.830898135530234,
+          "20261101": 143.15254588357345,
+          "20261102": 93.89368788063032,
+          "20261103": 52.5192542234445
+        },
+        "pooled_delta": 616.7982483956736,
+        "positive_delta_days": 5,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      },
+      "QR": {
+        "ev_minus_other_by_day": {
+          "20261027": 352.80415437401143,
+          "20261031": -99.69708187304842,
+          "20261101": 88.99291486990316,
+          "20261102": 287.6103163718061,
+          "20261103": 585.780433307237
+        },
+        "pooled_delta": 1215.4907370499093,
+        "positive_delta_days": 4,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      },
+      "MD1000": {
+        "ev_minus_other_by_day": {
+          "20261027": 419.7876803890997,
+          "20261031": 87.2989760869091,
+          "20261101": 228.35955656175852,
+          "20261102": 265.61290603968473,
+          "20261103": 201.55012531452041
+        },
+        "pooled_delta": 1202.6092443919724,
+        "positive_delta_days": 5,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      },
+      "KA": {
+        "ev_minus_other_by_day": {
+          "20261027": 6232.454653161495,
+          "20261031": 5812.264821814004,
+          "20261101": 6753.310648714562,
+          "20261102": 5936.819820284038,
+          "20261103": 8070.76040230598
+        },
+        "pooled_delta": 32805.61034628008,
+        "positive_delta_days": 5,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      }
+    },
+    "order_zero": {
+      "B2": {
+        "ev_minus_other_by_day": {
+          "20261027": 579.1335443020926,
+          "20261031": 87.85726914960672,
+          "20261101": 84.74635089676872,
+          "20261102": 147.42294480357955,
+          "20261103": 18.857806030029
+        },
+        "pooled_delta": 918.0179151820765,
+        "positive_delta_days": 5,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      },
+      "QR": {
+        "ev_minus_other_by_day": {
+          "20261027": 371.8661982361401,
+          "20261031": -187.04094709262603,
+          "20261101": -128.34046144351663,
+          "20261102": 227.20153331838094,
+          "20261103": 391.6413417356244
+        },
+        "pooled_delta": 675.3276647540029,
+        "positive_delta_days": 3,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      },
+      "MD1000": {
+        "ev_minus_other_by_day": {
+          "20261027": 393.6669714542034,
+          "20261031": 115.96076592596033,
+          "20261101": -106.53649181397398,
+          "20261102": 368.37480259617666,
+          "20261103": 170.4684998437517
+        },
+        "pooled_delta": 941.9345480061181,
+        "positive_delta_days": 4,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      },
+      "KA": {
+        "ev_minus_other_by_day": {
+          "20261027": 7634.0272785698835,
+          "20261031": 7165.483075800926,
+          "20261101": 8480.498864498368,
+          "20261102": 6947.122422119982,
+          "20261103": 9362.0691964311
+        },
+        "pooled_delta": 39589.200837420256,
+        "positive_delta_days": 5,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      }
+    },
+    "modeled_zero": {
+      "B2": {
+        "ev_minus_other_by_day": {
+          "20261027": 676.1958458330212,
+          "20261031": 199.19336203306787,
+          "20261101": 262.65220831108917,
+          "20261102": -12.852841596960367,
+          "20261103": -39.08485656679579
+        },
+        "pooled_delta": 1086.103718013422,
+        "positive_delta_days": 3,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      },
+      "QR": {
+        "ev_minus_other_by_day": {
+          "20261027": 453.36129215964223,
+          "20261031": -198.71380017808866,
+          "20261101": 139.7323436385687,
+          "20261102": 76.07369232612838,
+          "20261103": 350.65873722826893
+        },
+        "pooled_delta": 821.1122651745196,
+        "positive_delta_days": 4,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      },
+      "MD1000": {
+        "ev_minus_other_by_day": {
+          "20261027": 559.4020724061884,
+          "20261031": 140.3753015261082,
+          "20261101": -62.75202775798007,
+          "20261102": 101.14511363510883,
+          "20261103": 147.90915219353232
+        },
+        "pooled_delta": 886.0796120029577,
+        "positive_delta_days": 4,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      },
+      "KA": {
+        "ev_minus_other_by_day": {
+          "20261027": 6703.229915800566,
+          "20261031": 6088.665634315623,
+          "20261101": 7767.161423399415,
+          "20261102": 5474.144547892442,
+          "20261103": 8079.365392214225
+        },
+        "pooled_delta": 34112.56691362227,
+        "positive_delta_days": 5,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      }
+    },
+    "modeled_zero_trade0": {
+      "B2": {
+        "ev_minus_other_by_day": {
+          "20261027": 572.1327722416506,
+          "20261031": 256.5979958087176,
+          "20261101": 362.3720024203262,
+          "20261102": -45.43857121897777,
+          "20261103": -23.964877726731856
+        },
+        "pooled_delta": 1121.6993215249847,
+        "positive_delta_days": 3,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      },
+      "QR": {
+        "ev_minus_other_by_day": {
+          "20261027": 339.62561654882074,
+          "20261031": -168.1791073735077,
+          "20261101": 109.81804082979059,
+          "20261102": -82.65098228684192,
+          "20261103": 235.88000913524982
+        },
+        "pooled_delta": 434.4935768535115,
+        "positive_delta_days": 3,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      },
+      "MD1000": {
+        "ev_minus_other_by_day": {
+          "20261027": 336.325233167267,
+          "20261031": 76.00052385505491,
+          "20261101": 78.1378057270141,
+          "20261102": -4.902919660816352,
+          "20261103": 121.59313770642632
+        },
+        "pooled_delta": 607.153780794946,
+        "positive_delta_days": 4,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      },
+      "KA": {
+        "ev_minus_other_by_day": {
+          "20261027": 5226.2630873386315,
+          "20261031": 4377.113363428474,
+          "20261101": 5475.665513461264,
+          "20261102": 3497.153972333879,
+          "20261103": 5740.822417415803
+        },
+        "pooled_delta": 24317.018353978052,
+        "positive_delta_days": 5,
+        "interpretation": "Same execution environment, different endogenous orders/volumes; no matched-retention or causal information-skill claim."
+      }
+    }
+  },
+  "verification": {
+    "all_twenty_cell_pnl_shares_windows_reconciled": true,
+    "source_and_fit_freeze_verified": true,
+    "state_comparisons": 292978,
+    "cached_trajectory_comparisons": 60,
+    "primary_replays": 28680,
+    "boundary_windows": 6,
+    "total_seconds": 4559.546723127365,
+    "peak_rss_mib": 1364.015625
+  },
+  "artifact_hashes": {
+    "report.json": "6da3f27bfa63cf1c4b3ba176a256c7f793cd016fe45b1e20f77ac326e0b5f1eb",
+    "attribution_v3.json": "815ea9b8394f8f1375b487a6f15beabb73626877af73cecc88c837e21748460b",
+    "freeze_v3.json": "5535588c0801b30d351faf3af2b15b5a87e89c4d65527390b21d35a4cd13375f"
+  },
+  "limitations": [
+    "Zero modeled transport retains 50 ms decision grid and event/imputed trade clocks.",
+    "No refit for zero delay; EV fresh-entry extension is not a validated wait/post target.",
+    "QR retains prior fixed thresholds, MD saved v6 thresholds; different endogenous exposure, no matched-retention skill claim.",
+    "Tail/source decompositions are attribution, never a filtered-policy PnL.",
+    "Unvalidated physical queue/timestamp assumptions and omitted rewards; no untouched or live profitability claim."
+  ]
+}
