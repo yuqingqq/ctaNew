@@ -1,0 +1,87 @@
+{
+  "asof": "2026-11-15T10:41:13.265638+00:00",
+  "status": "smoke_pass_full_running",
+  "source_commit": "0d1b70e9",
+  "freeze_commit": "cc929f01",
+  "freeze": "freeze_v3.json",
+  "freeze_sha256": "59f25ea89cef13649ba8a8616b198bcf2a72981af06e296650fa6988eca29842",
+  "smoke": {
+    "runner.json": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_smoke_v3/runner.json",
+      "sha256": "fd45ae5c2288d8202ddb4b9195a3d310014bb999899ad4db3246d9090af7ae35"
+    },
+    "logs/selftest.log": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_smoke_v3/logs/selftest.log",
+      "sha256": "c17afbc95860688e86d1516302cd6c1bb4d96c8a12f804b60dc2624386c52cd4"
+    },
+    "logs/build_smoke.log": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_smoke_v3/logs/build_smoke.log",
+      "sha256": "86e8df0f974d31047e127c2cc38efff900ecfb8b04bb73ab3c5a17e7d5418a94"
+    },
+    "rows_20261025/receipt.json": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_smoke_v3/rows_20261025/receipt.json",
+      "sha256": "12c8fa65d35a2ac437179cde26037d8d20326d404ae13b4c9a22abac583e126d"
+    }
+  },
+  "smoke_summary": {
+    "asof": "2026-11-15T10:40:54Z",
+    "day": "20261025",
+    "partial": true,
+    "n": 97,
+    "eligible": 28,
+    "statuses": {
+      "not_sampled": 65,
+      "eligible": 28,
+      "probe_not_reached": 4
+    },
+    "windows": [
+      3723772,
+      3723774
+    ],
+    "source_status": {
+      "registry": 288,
+      "outside_day": 0,
+      "sealed_or_forward": 0,
+      "no_outcome": 0,
+      "parts_skipped": 1,
+      "untimed_legs_0_60": 1316,
+      "untimed_shares_0_60": 13038.545279926448,
+      "windows": 288,
+      "grid_steps": 2400,
+      "grid_steps_without_row": 0
+    },
+    "data_fix": {
+      "rows": 351360,
+      "changed": 0.024866234061930784,
+      "changed_hh00": 0.2983948087431694,
+      "changed_other": 0.0,
+      "max_abs_c": 14.770571647602651,
+      "relay_prints": 96213,
+      "preroll_ms": 30000.0,
+      "sealed_lookback_windows": []
+    },
+    "feature_future_checks": 2,
+    "reused_rows": 25,
+    "replayed_reuse_checks": 2,
+    "reuse_receipt_sha256": "bd76268965051e974544f751ff853dc738a95cc6976b76d522f3f07f56991ee5",
+    "rows_sha256": "2ba9fa0af1eb9fb315266d75dbea1ed383ab5e3e72afed915a9789c825fbcfc2",
+    "reference_receipt_sha256": "f2e9e0e01dfc5f2d21151268cbde87a10a76f5b92a055487c50749d3359a04ae",
+    "limits": [
+      "Consumed development dates only; no forward-validation or promotion.",
+      "The local score is a surrogate for admission, not POST-minus-WAIT continuation value.",
+      "Labels use neutral KEEP with engine safety; they are potential single-order outcomes, not keeper-conditioned Q values.",
+      "Five-second fill horizon and one-second per-tranche markout are measurements, never runtime retry/cancel timers.",
+      "Later queue option value, other-slot effects and terminal inventory remain full-replay criteria, absent from the local training label.",
+      "Gross marks exclude fees/rewards/own impact. Public queue and fill-clock assumptions are unvalidated.",
+      "Clock nuisance calibration is inherited; raw-step5 inputs beyond the reviewed correction retain upstream qualifications."
+    ]
+  },
+  "runner": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_v3/runner.json",
+  "service": "pf-entry-local-v3-20261115.service",
+  "supersedes": {
+    "launch": "launch.json",
+    "reason": "Before fitting, add remaining executable exposure for late entries, including cancellation-pending fills. Five earlier full-horizon builds reused with frozen identities and replayed checks."
+  },
+  "performance_claim": false,
+  "promoted": false
+}
