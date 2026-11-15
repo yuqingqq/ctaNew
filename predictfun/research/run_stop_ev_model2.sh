@@ -26,6 +26,16 @@ case "$PHASE" in
     job evm2_report_pending python3 predictfun/research/pf_stop_ev_model.py report2
     for t in $TESTS; do job evm2_t5_$t python3 predictfun/research/pf_stop_ev_model.py t5v2 $t || exit 1; done
     job evm2_report python3 predictfun/research/pf_stop_ev_model.py report2;;
+  fast)                                    # USER 2026-11-15 "Can we do some fast tests and check some results first": everything but T5v2
+    job evm2_selftest python3 predictfun/research/pf_stop_ev_model.py selftest || exit 1
+    job e2s2_selftest python3 predictfun/research/pf_stop_ev_e2sep.py selftest || exit 1
+    job e2s2_report python3 predictfun/research/pf_stop_ev_e2sep.py report2
+    for d in $DAYS; do job evm2_prep_$d python3 predictfun/research/pf_stop_ev_model.py prep2 $d || exit 1; done
+    for t in $TESTS; do job evm2_fit_$t python3 predictfun/research/pf_stop_ev_model.py fit2 $t || exit 1; done
+    job evm2_report_pending python3 predictfun/research/pf_stop_ev_model.py report2;;
+  t5)                                      # the falsifier and the final report, after 'fast'
+    for t in $TESTS; do job evm2_t5_$t python3 predictfun/research/pf_stop_ev_model.py t5v2 $t || exit 1; done
+    job evm2_report python3 predictfun/research/pf_stop_ev_model.py report2;;
   *) echo "unknown phase $PHASE" >&2; exit 1;;
 esac
 echo "$(date -u +%H:%M:%SZ) STOP-EV-MODEL2 $PHASE DONE" >> $OUT/logs/driver2.log
