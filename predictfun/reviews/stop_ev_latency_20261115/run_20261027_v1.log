@@ -1,0 +1,63 @@
+zero inputs 20261027 hour 20261026_23 rows 0
+zero inputs 20261027 hour 20261027_00 rows 14640
+zero inputs 20261027 hour 20261027_01 rows 14640
+zero inputs 20261027 hour 20261027_02 rows 14640
+zero inputs 20261027 hour 20261027_03 rows 14640
+zero inputs 20261027 hour 20261027_04 rows 14640
+zero inputs 20261027 hour 20261027_05 rows 14640
+zero inputs 20261027 hour 20261027_06 rows 14640
+zero inputs 20261027 hour 20261027_07 rows 14640
+zero inputs 20261027 hour 20261027_08 rows 14640
+zero inputs 20261027 hour 20261027_09 rows 14640
+zero inputs 20261027 hour 20261027_10 rows 14640
+zero inputs 20261027 hour 20261027_11 rows 14640
+zero inputs 20261027 hour 20261027_12 rows 14640
+zero inputs 20261027 hour 20261027_13 rows 14640
+zero inputs 20261027 hour 20261027_14 rows 14640
+zero inputs 20261027 hour 20261027_15 rows 14640
+zero inputs 20261027 hour 20261027_16 rows 14640
+zero inputs 20261027 hour 20261027_17 rows 14640
+zero inputs 20261027 hour 20261027_18 rows 14640
+zero inputs 20261027 hour 20261027_19 rows 14640
+zero inputs 20261027 hour 20261027_20 rows 14640
+zero inputs 20261027 hour 20261027_21 rows 14640
+zero inputs 20261027 hour 20261027_22 rows 14640
+zero inputs 20261027 hour 20261027_23 rows 14640
+{"day": "20261027", "windows": 12, "seconds": 171, "rss_mib": 1034.31640625}
+{"day": "20261027", "windows": 24, "seconds": 249, "rss_mib": 950.26953125}
+Traceback (most recent call last):
+  File "/tmp/cta-latency-20261115/predictfun/research/pf_stop_ev_latency.py", line 263, in <module>
+    else:run(a.day,a.out,a.max_windows)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/cta-latency-20261115/predictfun/research/pf_stop_ev_latency.py", line 235, in run
+    r=simulate(w,dec,gate,shift);val,live=value(w,r,SR,IM)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/cta-latency-20261115/predictfun/research/pf_stop_ev_latency.py", line 120, in simulate
+    r=QA.sim_joint_g(W,'M',shift,None,aux,decide=dec,gate=gate,size=30.,mode='none',cooldown=0.)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/cta-latency-20261115/predictfun/research/pf_stop_queue_activation_lane.py", line 171, in sim_joint_g
+    trig = bool(S_['dec'][d](k, t, cur))
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/cta-latency-20261115/predictfun/research/pf_stop_ev_latency.py", line 107, in f
+    self.reg[(s,d)]=cur;p=self.prob(s,d,k,t,cur);self.st['resting_decisions']+=1
+                          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/cta-latency-20261115/predictfun/research/pf_stop_ev_latency.py", line 92, in prob
+    if k!=self.ck:self._batch(k,t)
+                  ^^^^^^^^^^^^^^^^
+  File "/tmp/cta-latency-20261115/predictfun/research/pf_stop_ev_latency.py", line 83, in _batch
+    v=self._vec(s,d,k,t,c)
+      ^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/cta-latency-20261115/predictfun/research/pf_stop_ev_play.py", line 138, in _vec
+    f = order_state(self.W[s], cur, k, t, s, d, self.term) if cur is not None else fresh_state(self.W[s], k, t, s, d, self.term)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/cta-latency-20261115/predictfun/research/pf_stop_ev_play.py", line 82, in order_state
+    x = shown(w, j, side, pt)
+        ^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/cta-latency-20261115/predictfun/research/pf_stop_ev_play.py", line 67, in shown
+    return float(np.asarray(S, float)[np.asarray(P) == price].sum())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/yuqing/pricer-sol/venv/lib/python3.12/site-packages/numpy/_core/_methods.py", line 50, in _sum
+    def _sum(a, axis=None, dtype=None, out=None, keepdims=False,
+    
+KeyboardInterrupt
+2026-11-15T17:26:11Z tag=stop-ev-latency-20261027-v1 rc=130 peak_rss_mib=1221 wall_s=265.33 cpu_user_s=255.30 memavail_start_gib=23 disk_free_gib=468->468 slot=codex

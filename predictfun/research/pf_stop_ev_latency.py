@@ -69,15 +69,15 @@ def clock(zero):
 
 
 class Policy(P.FillPolicy):
-    def __init__(self,heads,W,X,arm,choice,stat,check=None):
+    def __init__(self,heads,W,X,arm,choice,stat,check=None,fresh=None):
         super().__init__(heads[0],W,X,choice[0],choice[1],float(W[0]['te'])+200.,stat,check)
-        self.heads=heads;self.arm=arm;self.ix=[V.FULL_IN.index(c) for c in V.B2_IN] if arm=='B2' else None
+        self.heads=heads;self.arm=arm;self.fresh=fresh;self.ix=[V.FULL_IN.index(c) for c in V.B2_IN] if arm=='B2' else None
         self.reg={(s,d):None for s in (0,1) for d in range(P.NR)}
 
     def _batch(self,k,t):
         self.ck=k;self.cache={};keys=[];rows=[]
         for (s,d),cur in self.reg.items():
-            candidates=[None]
+            candidates=[None] if self.fresh is None else []
             if cur is not None and cur['tc']>t and not cur['ref'] and cur['ta']<=t:candidates.append(cur)
             for c in candidates:
                 v=self._vec(s,d,k,t,c)
@@ -89,6 +89,9 @@ class Policy(P.FillPolicy):
             self.cache.update(zip(keys,map(float,p)));self.st['batch_rows']+=len(rows);self.st['batches']+=1
 
     def prob(self,s,d,k,t,cur):
+        if cur is None and self.fresh is not None:
+            self.st['fresh_cache_lookups']+=1
+            return float(self.fresh[s,d,k])
         if k!=self.ck:self._batch(k,t)
         key=((s,d),id(cur) if cur is not None else None)
         if key not in self.cache:
@@ -115,11 +118,44 @@ class Policy(P.FillPolicy):
         return g
 
 
+def fresh_predictions(models,W,X):
+    """Fresh-order features do not depend on the simulated policy path.
+
+    Batch exactly the same vectors once per market/knowledge-clock pair, then
+    reuse them for every placement and for both execution-latency settings.
+    This is an inference optimization, not a rule/threshold change.
+    """
+    pol=Policy(models['EV'],W,X,'EV',(0.,1.),collections.Counter())
+    keys=[];rows=[]
+    for k,t in enumerate(W[0]['tg']):
+        for s in (0,1):
+            for d in range(P.NR):
+                v=pol._vec(s,d,k,float(t),None)
+                if v is not None:keys.append((s,d,k));rows.append(v)
+    out={arm:np.full((2,P.NR,W[0]['n']),np.nan) for arm in ['EV','B2','QR']}
+    if not rows:return out
+    x=np.vstack(rows);pf=models['EV'][0].predict(x,num_threads=1);vf=models['EV'][1].predict(x,num_threads=1)
+    xb=x[:,[V.FULL_IN.index(c) for c in V.B2_IN]];b2=models['B2'][0].predict(xb,num_threads=1)*models['B2'][1].predict(xb,num_threads=1)
+    for arm,pred in [('EV',pf*vf),('QR',pf),('B2',b2)]:
+        for key,v in zip(keys,pred):out[arm][key]=v
+    # Verify batching at scattered rows against independent single-row calls.
+    for i in range(0,len(x),997):
+        for arm,xx in [('EV',x),('B2',xb)]:
+            p=float(models[arm][0].predict(xx[i:i+1],num_threads=1)[0])*float(models[arm][1].predict(xx[i:i+1],num_threads=1)[0])
+            require(p==out[arm][keys[i]],'fresh batch/single mismatch')
+    return out
+
+
 def simulate(W,dec=None,gate=None,shift=50.):
     aux={s:[False]*W[s]['n'] for s in (0,1)}
     r=QA.sim_joint_g(W,'M',shift,None,aux,decide=dec,gate=gate,size=30.,mode='none',cooldown=0.)
     require(sum(r['stat']['viol'].values())==0,'lane violation')
     return r
+
+
+def same_trajectory(a,b):
+    for key in ['fills','fill_qunk','orders','cancels','stat']:
+        np.testing.assert_equal(a[key],b[key],err_msg=f'cached inference trajectory: {key}')
 
 
 def value(W,r,src,im):
@@ -148,6 +184,11 @@ def selftest():
     with clock(False):a=simulate(W,dec=dec,shift=0.)
     with clock(True):b=simulate(W,dec=dec,shift=0.)
     require(a['fl'] and not b['fl'],'cancel latency control did not fire')
+    same_trajectory(a,a)
+    caught=False
+    try:same_trajectory(a,b)
+    except AssertionError:caught=True
+    require(caught,'trajectory mismatch falsifier ineffective')
     class Fake:
         def predict(self,x,**kw):return np.full(len(x),.9)
     w0=E.toy_w(0,[(300.,50,150.,1)])[0];w1=E.toy_w(1,[])[0];W={0:w0,1:w1};n=w0['n']
@@ -158,7 +199,7 @@ def selftest():
     bad=P.FillPolicy(Fake(),W,X,.1,1.,2000.,collections.Counter())
     require(not bad.gate(0,0)(1),'stale gate falsifier ineffective')
     require({c:getattr(K,c) for c in BASE_CLOCK}==BASE_CLOCK and P.L_NOTE==M.CL.L_NOTE==BASE_NOTE,'clock restoration')
-    checks.update(placement_clock_fires=True,cancel_clock_fires=True,fresh_gate_every_entry=True,stale_gate_falsifier=True,clock_restores=True)
+    checks.update(placement_clock_fires=True,cancel_clock_fires=True,fresh_gate_every_entry=True,stale_gate_falsifier=True,clock_restores=True,trajectory_mismatch_refused=True)
     return checks
 
 
@@ -213,6 +254,7 @@ def run(day,out,max_windows=None):
         stats['windows']+=1;stats['imputed_legs']+=sum(int(IM[s].sum()) for s in (0,1))
         for s in (0,1):stats['tape_legs']+=len(LR[s])
         X={s:MK.get((m,s)) for s in (0,1)};Wz,Xz=ZI.window(W,ZERO[m])
+        fresh={False:fresh_predictions(models,W,X),True:fresh_predictions(models,Wz,Xz)}
         for cfg,zero,feed,shift in CFGS:
             w=Wz if feed else W;x=Xz if feed else X
             pp={}
@@ -227,12 +269,17 @@ def run(day,out,max_windows=None):
                 for arm in ARMS:
                     dec=gate=None;ast=collections.Counter()
                     if arm in models:
-                        pol=Policy(models[arm],w,x,arm,qchoice,ast,check)
+                        pol=Policy(models[arm],w,x,arm,qchoice,ast,check,fresh=fresh[feed][arm])
                         dec={(s,d):pol.dec(s,d) for s in (0,1) for d in range(P.NR)};gate={(s,d):pol.gate(s,d) for s in (0,1) for d in range(P.NR)}
                     elif arm=='MD1000':
                         dec={(s,d):SP.model_dec(pp[s],w[s]['best'],s,mdchoice[0]) for s in (0,1) for d in range(P.NR)}
                         gate={(s,d):SP.model_gate(pp[s],d,mdchoice[0]*mdchoice[1]) for s in (0,1) for d in range(P.NR)}
                     r=simulate(w,dec,gate,shift);val,live=value(w,r,SR,IM)
+                    if stats['windows']==1 and arm in models:
+                        ref=Policy(models[arm],w,x,arm,qchoice,collections.Counter())
+                        rr=simulate(w,{(s,d):ref.dec(s,d) for s in (0,1) for d in range(P.NR)},
+                            {(s,d):ref.gate(s,d) for s in (0,1) for d in range(P.NR)},shift)
+                        same_trajectory(r,rr);stats['cached_trajectory_parity']+=1
                     results.append(dict(day=day,m=m,hour=int(W[0]['ws']//3600000)%24,cfg=cfg,arm=arm,**val,
                         **{f'live{j}':v for j,v in enumerate(live)},**{f'policy_{k}':v for k,v in ast.items()}))
                     stats['runs']+=1
@@ -248,6 +295,7 @@ def run(day,out,max_windows=None):
         totals.setdefault(cfg,{})[arm]=sums
     for p,z in inputs.items():require(Path(p).exists()==z['exists'] and (not z['exists'] or sha(p)==z['sha256']),'input changed')
     require(stats['state_parity']>0,'no parity control observed')
+    require(stats['cached_trajectory_parity']==12,'incomplete cached trajectory parity')
     receipt=dict(asof=datetime.now(timezone.utc).isoformat(),day=day,source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=Path(__file__).resolve().parents[2],text=True).strip(),
         sources={p.name:sha(p) for p in Path(__file__).parent.glob('pf_*.py')},inputs=inputs,controls=controls,stats=dict(stats),loader=D['stat'],zero_inputs=zstat,
         imputation=ust,base_clock=BASE_CLOCK,base_note=BASE_NOTE,qr_choice=qchoice,md_choice=mdchoice,totals=totals,
