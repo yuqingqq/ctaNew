@@ -717,6 +717,32 @@ def datacheck():
     print('\n'.join(L), flush=True)
 
 
+def sides():
+    """PER-SIDE / PER-DAY SKILL of v4 on the five test days (USER 2026-11-15: does the model have the entry model's issues - e.g. 'Weak,
+    asymmetric predictive results: bid timing improves, ask timing worsens'). Every usable row, v4's final P: AUC and Brier skill against the
+    fold's training base rate, bids and asks separately, j = 1..3 at every H. Descriptive (the readings are v4's report)."""
+    M.all_selftests()
+    out = {}; L = ['PER-SIDE SKILL (v4, every usable row, 5 test days): head | bid AUC / BSS per day | ask AUC / BSS per day | pooled bid / ask AUC']
+    for t in M.TESTS:
+        fj = json.load(open(f'{M.OUTD}/fit_{t}_v4.json')); sel = M.day_usable(t)
+        R = M.day_cols(t, ['side', 'D0'] + [M.DCOL[h] for h in M.HS], sel)
+        P = M.day_cols(f'{M.OUTD}/pred_fold{t}_{t}_v4.parquet', ['usable'] + [M.pcol(h, j) for h in M.HS for j in (1, 2, 3)])
+        uu = P['usable'].astype(bool)
+        for (h, j) in MHEADS:
+            y = R[M.DCOL[h]] >= j; p = P[M.pcol(h, j)][uu].astype(float); b = fj['info'][f'H{h}_j{j}']['base_rate']
+            for s_ in (0, 1):
+                m_ = R['side'] == s_; yy = y[m_].astype(float); pp = p[m_]
+                out.setdefault(f'H{h}_j{j}', {}).setdefault(s_, []).append((M.auc_nan(yy.astype(bool), pp)[0], 1.0 - float(((pp - yy) ** 2).mean()) / float(((b - yy) ** 2).mean()),
+                                                                             float(yy.mean()), float(pp.mean())))
+        del R, P
+    for k, v in out.items():
+        L.append(f'   {k:9s} bid ' + ' '.join(f'{a:.3f}/{b_:+.3f}' for a, b_, _, _ in v[0]) + ' | ask ' + ' '.join(f'{a:.3f}/{b_:+.3f}' for a, b_, _, _ in v[1])
+                 + f' | mean AUC {np.mean([x[0] for x in v[0]]):.3f} / {np.mean([x[0] for x in v[1]]):.3f}; mean P vs rate bid {np.mean([x[3] for x in v[0]]):.3f}/{np.mean([x[2] for x in v[0]]):.3f}'
+                 f' ask {np.mean([x[3] for x in v[1]]):.3f}/{np.mean([x[2] for x in v[1]]):.3f}')
+    json.dump(out, open(f'{M.OUTD}/sides_20261115.json', 'w'), indent=1, default=float); open(f'{M.OUTD}/sides_20261115.txt', 'w').write('\n'.join(L) + '\n')
+    print('\n'.join(L), flush=True)
+
+
 S5_BN = ['bn_r25', 'bn_r50', 'bn_r100', 'bn_r250', 'bn_r500', 'bn_r1000', 'bn_r3000', 'bn_imb', 'bn_age', 'bn_flow250', 'bn_flow1000', 'bn_flow5000',
          'bn_ntr1000']
 S5_PF = ['pf_spread', 'pf_mid', 'pf_micro_dev', 'pf_imb1', 'pf_imb3', 'pf_age', 'pf_nfr1000', 'pf_dm250', 'pf_dm1000', 'pf_dm5000']
@@ -901,5 +927,7 @@ if __name__ == '__main__':
         x5test()
     elif cmd == 'datacheck':
         datacheck()
+    elif cmd == 'sides':
+        sides()
     else:
         sys.exit(f'unknown command {cmd}')
