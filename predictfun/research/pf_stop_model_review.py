@@ -29,7 +29,7 @@ PARTS (declared before the run):
    Predict / fair-price moves raise the risk; a thicker own best level and more own-side size lower it; sigma raises it).
 OUTPUT review_20261115.json / .txt; 'drop_inputs' is read by the v4 build. Controls: pf_stop_model's selftests (planted errors); group
 membership covers every input exactly once; the SHAP rows sum to the raw score (TreeSHAP additivity, max error <= 1e-4).
-Usage (run_light, PF_SLOT=claude): pf_stop_model_review.py selftest | run | reg (the regularization review, after run)
+Usage (run_light, PF_SLOT=claude): pf_stop_model_review.py selftest | run | reg (the regularization review, after run) | s5check (input-pipeline checks)
 """
 import json
 import os
@@ -407,6 +407,172 @@ def hk(h, j):
     return f'H{h}_j{j}'
 
 
+S5_BN = ['bn_r25', 'bn_r50', 'bn_r100', 'bn_r250', 'bn_r500', 'bn_r1000', 'bn_r3000', 'bn_imb', 'bn_age', 'bn_flow250', 'bn_flow1000', 'bn_flow5000',
+         'bn_ntr1000']
+S5_PF = ['pf_spread', 'pf_mid', 'pf_micro_dev', 'pf_imb1', 'pf_imb3', 'pf_age', 'pf_nfr1000', 'pf_dm250', 'pf_dm1000', 'pf_dm5000']
+K1_DAYS = ('20261024', '20261026'); K1_HOURS = 3; K1_WIN = 2; K1_STEPS = 50; K1_OK = 0.99
+OUT_KJ = f'{M.OUTD}/s5check_20261115.json'; OUT_KT = f'{M.OUTD}/s5check_20261115.txt'
+
+
+_BN_CACHE = {}
+
+
+def _bn_hour(h, b_in):
+    """One raw Binance hour (read once, cached by hour): bookTicker (known time E + b_in, mid, imbalance) and trades (known time, signed qty),
+    with step 5's filters."""
+    if h not in _BN_CACHE:
+        _BN_CACHE[h] = _bn_hour_raw(h)
+    bt, tr = _BN_CACHE[h]
+    return ((bt[0] + b_in, bt[1], bt[2]) if bt is not None else None), ((tr[0] + b_in, tr[1]) if tr is not None else None)
+
+
+def _bn_hour_raw(h):
+    import pf_io as io
+    b_in = 0.0; bt = tr = None
+    p = f'{io.BN_DIR}/{h}.csv.gz'
+    if os.path.exists(p):
+        df = pd.read_csv(p, header=None, names=['recv', 'E', 'T', 'u', 'bid', 'bq', 'ask', 'aq'], usecols=['E', 'u', 'bid', 'bq', 'ask', 'aq'])
+        df = df.apply(pd.to_numeric, errors='coerce').dropna(); df = df[(df.bid > 0) & (df.ask > df.bid)].drop_duplicates('u', keep='first')
+        bt = (df.E.values.astype(np.float64) + b_in, (df.bid.values + df.ask.values) / 2, (df.bq.values - df.aq.values) / (df.bq.values + df.aq.values))
+    tp = f'{io.ROOT}/data/mm_hf/raw/trade/BTCUSDT/{h}.csv.gz'
+    if os.path.exists(tp):
+        td = pd.read_csv(tp, header=None, names=['recv', 'E', 'T', 'id', 'px', 'qty', 'bm'], usecols=['E', 'qty', 'bm']).apply(pd.to_numeric, errors='coerce').dropna()
+        tr = (td.E.values.astype(np.float64) + b_in, np.where(td.bm.values == 0, 1.0, -1.0) * td.qty.values)
+    return bt, tr
+
+
+def _recompute(t, BT, TR, FR, shift, pf_min=13.2, d_dec=2.0):
+    """Step-5 inputs at decision times t from events known by t only: BT / TR = globally sorted Binance arrays, FR = one market's frames."""
+    out = {c: np.full(len(t), np.nan) for c in S5_BN + S5_PF}
+    k, m, imb = BT; i = np.searchsorted(k, t, side='right') - 1; ok = i >= 0; ic = np.clip(i, 0, None)
+    out['bn_imb'] = np.where(ok, imb[ic], np.nan); out['bn_age'] = np.where(ok, t - k[ic], np.nan)
+    for hh in (25, 50, 100, 250, 500, 1000, 3000):
+        j = np.searchsorted(k, t - hh, side='right') - 1
+        out[f'bn_r{hh}'] = np.where(ok & (j >= 0), 1e4 * np.log(m[ic] / m[np.clip(j, 0, None)]), np.nan)
+    tk, sq = TR; csq = np.cumsum(sq); it = np.searchsorted(tk, t, side='right') - 1
+    for hh in (250, 1000, 5000):
+        jt = np.searchsorted(tk, t - hh, side='right') - 1
+        out[f'bn_flow{hh}'] = np.where(it >= 0, csq[np.clip(it, 0, None)], 0.0) - np.where(jt >= 0, csq[np.clip(jt, 0, None)], 0.0)
+    out['bn_ntr1000'] = (it - (np.searchsorted(tk, t - 1000, side='right') - 1)).astype(float)
+    g = FR.sort_values(['t_ms', 'recv_ns'], kind='stable')
+    kn = np.maximum.accumulate(np.maximum(g.t_ms.values.astype(np.float64) + pf_min, g.recv_ns.values.astype(np.float64) / 1e6 - shift) + d_dec)
+    b1, a1, bs1, as1 = g.b1_p.values, g.a1_p.values, g.b1_s.values, g.a1_s.values; valid = (b1 >= 0) & (a1 > b1)
+    midv = np.where(valid, (a1 + b1) / 2.0, np.nan); mf = pd.Series(midv).ffill().values
+    i = np.searchsorted(kn, t, side='right') - 1; ok = i >= 0; ic = np.clip(i, 0, None); vv = ok & valid[ic]
+    out['pf_spread'] = np.where(vv, (a1 - b1)[ic], np.nan); out['pf_mid'] = np.where(vv, midv[ic], np.nan)
+    micro = (b1 * as1 + a1 * bs1) / np.maximum(bs1 + as1, 1e-9); out['pf_micro_dev'] = np.where(vv, (micro - midv)[ic], np.nan)
+    out['pf_imb1'] = np.where(vv, ((bs1 - as1) / np.maximum(bs1 + as1, 1e-9))[ic], np.nan)
+    sb3 = sum(np.where(g[f'b{j}_p'].values >= 0, g[f'b{j}_s'].values, 0) for j in (1, 2, 3))
+    sa3 = sum(np.where(g[f'a{j}_p'].values >= 0, g[f'a{j}_s'].values, 0) for j in (1, 2, 3))
+    out['pf_imb3'] = np.where(vv, ((sb3 - sa3) / np.maximum(sb3 + sa3, 1e-9))[ic], np.nan)
+    out['pf_age'] = np.where(ok, t - kn[ic], np.nan); out['pf_nfr1000'] = (i - (np.searchsorted(kn, t - 1000, side='right') - 1)).astype(float)
+    cur = np.where(ok, mf[ic], np.nan)
+    for hh in (250, 1000, 5000):
+        j = np.searchsorted(kn, t - hh, side='right') - 1; out[f'pf_dm{hh}'] = cur - np.where(j >= 0, mf[np.clip(j, 0, None)], np.nan)
+    return out
+
+
+def _agree(a, b):
+    a = np.asarray(a, float); b = np.asarray(b, float); fa, fb = np.isfinite(a), np.isfinite(b); both = fa & fb
+    close = np.abs(a[both] - b[both]) <= np.maximum(1e-4 * np.abs(b[both]), 1e-3)
+    return dict(n=int(both.sum()), match=float(close.mean()) if both.any() else M.NAN, nan_agree=float((fa == fb).mean()))
+
+
+def s5check():
+    """INPUT-PIPELINE CHECKS (the independent code review 2026-11-15: D1 / D2 / D9 / D12 / D13); declared before the run.
+    K1 STEP-5 RECOMPUTATION (D1: the future-perturbation falsifier covers only the 25 model-side inputs): on 10-24 and 10-26, 2 windows in
+       each of 3 random hours, both sides, 50 random steps per window-side; 23 step-5 inputs (S5_BN + S5_PF) recomputed independently from
+       the raw Binance hour files and the day's Predict frames with ONLY events known by t (Binance E + 1.5 + 2 ms; a Predict frame at the
+       cumulative max of max(update + 13.2, receipt - shift) + 2 ms; the day's shift from clock_rl_d2.json); PASS iff each input matches the
+       stored row (|d| <= max(1e-4 relative, 1e-3)) on >= 99% of the steps where both are finite and NaN agrees on >= 99%. POSITIVE CONTROLS
+       (must FAIL the same criterion): Binance known at E - 50 ms; Predict frames known at their update time (no feed delay).
+    K2 STALE / FUTURE BINANCE (D2 / D13; nine days, counts): steps with bn_age < 0 (an event after t), > 1 s, > 60 s; missing Binance
+       bookTicker / trade hour files for the day's 24 hours and the hour before (sealed days are not listed).
+    K3 TWO CLOCKS (D9; nine days, counts): rows where step 5's pf_spread differs from the model side's spread, and expm1(own_l1) from s1.
+    Predict part files are read only for the day's own hours and the previous day's last hour (D12)."""
+    M.all_selftests()
+    T0 = time.time(); asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()); L = []; res = dict(asof=asof)
+    L.append(f'INPUT-PIPELINE CHECKS; as of {asof}')
+    k1 = {}; pos = {'bn_future': [], 'pf_nodelay': []}; allok = True
+    for d in K1_DAYS:
+        ck = json.load(open(f'{M.K.IO}/step1/{d}/clock_rl_d2.json')); shift = float(ck['shift_ms']); b_in = float(ck['bn_in']) + float(ck['d_dec'])
+        R = M.day_cols(d, ['m', 'side', 'k', 't'] + S5_BN + S5_PF); rg = np.random.default_rng(int(d))
+        hrs = (R['t'] // 3600000).astype(np.int64); cand_h = np.unique(hrs[(R['t'] % 3600000) > 120000])
+        pick_h = rg.choice(cand_h, K1_HOURS, replace=False); rows = []
+        for hh in pick_h:
+            ms = np.unique(R['m'][hrs == hh]); ms = rg.choice(ms, min(K1_WIN, len(ms)), replace=False)
+            for m_ in ms:
+                for s_ in (0, 1):
+                    ii = np.flatnonzero((R['m'] == m_) & (R['side'] == s_))
+                    rows.extend(rg.choice(ii, min(K1_STEPS, len(ii)), replace=False).tolist())
+        rows = np.sort(np.array(rows)); t = R['t'][rows].astype(np.float64); mm = R['m'][rows]
+        hours = sorted({int(x) for x in (t // 3600000)} | {int(x) - 1 for x in (t // 3600000)})
+        hname = [pd.Timestamp(h * 3600000, unit='ms', tz='UTC').strftime('%Y%m%d_%H') for h in hours]
+        books = [f for f in sorted(os.listdir(f'{M.K.IO}/step1/{d}/books')) if f[5:13] == d or (f[5:13] < d and f[14:16] == '23')]
+        mids = set(int(x) for x in np.unique(mm))
+        FR = pd.concat([pd.read_parquet(f'{M.K.IO}/step1/{d}/books/{f}', columns=['mid', 't_ms', 'recv_ns'] + [f'{x}{i}_{y}' for x in 'ba' for i in (1, 2, 3) for y in 'ps'],
+                                        filters=[('mid', 'in', sorted(mids))]) for f in books], ignore_index=True)
+        for tag, bi, pdel in (('real', b_in, None), ('bn_future', -50.0, None), ('pf_nodelay', b_in, 'nodelay')):
+            BTs, TRs = [], []
+            for h in hname:
+                bt, tr = _bn_hour(h, bi)
+                if bt is not None:
+                    BTs.append(bt)
+                if tr is not None:
+                    TRs.append(tr)
+            k_ = np.concatenate([x[0] for x in BTs]); o = np.argsort(k_, kind='stable'); BT = (k_[o], np.concatenate([x[1] for x in BTs])[o], np.concatenate([x[2] for x in BTs])[o])
+            tk_ = np.concatenate([x[0] for x in TRs]); o = np.argsort(tk_, kind='stable'); TR = (tk_[o], np.concatenate([x[1] for x in TRs])[o])
+            rec = {c: np.full(len(rows), np.nan) for c in S5_BN + S5_PF}
+            for m_ in mids:
+                sl = np.flatnonzero(mm == m_)
+                fr = FR[FR.mid.values == m_]
+                if pdel == 'nodelay':
+                    fr = fr.assign(recv_ns=fr.t_ms.values.astype(np.float64) * 1e6)
+                o_ = _recompute(t[sl], BT, TR, fr, shift if pdel is None else 0.0, pf_min=(13.2 if pdel is None else 0.0), d_dec=(2.0 if pdel is None else 0.0))
+                for c in rec:
+                    rec[c][sl] = o_[c]
+            ag = {c: _agree(rec[c], R[c][rows]) for c in S5_BN + S5_PF}
+            ok_ = all((x['match'] >= K1_OK or x['n'] == 0) and x['nan_agree'] >= K1_OK for x in ag.values())
+            if tag == 'real':
+                k1[d] = dict(rows=int(len(rows)), hours=hname, inputs=ag, ok=ok_); allok &= ok_
+            else:
+                pos[tag].append(dict(day=d, fails=not ok_, worst={c: x['match'] for c, x in sorted(ag.items(), key=lambda z: z[1]['match'] if z[1]['match'] == z[1]['match'] else 1)[:4]}))
+            del BTs, TRs, BT, TR
+            M.mem_guard(f's5check {d} {tag}')
+        del FR, R; _BN_CACHE.clear()
+    pos_ok = all(x['fails'] for v in pos.values() for x in v)
+    res.update(K1=k1, K1_positive=pos, K1_pass=bool(allok), K1_controls_fire=bool(pos_ok))
+    L.append(f'K1 STEP-5 RECOMPUTATION (raw data known by t vs stored rows): {"PASS" if allok else "FAIL"}; positive controls fire: {pos_ok}')
+    for d, x in k1.items():
+        bad = {c: v for c, v in x['inputs'].items() if not ((v['match'] >= K1_OK or v['n'] == 0) and v['nan_agree'] >= K1_OK)}
+        L.append(f'   {d}: {x["rows"]} steps, hours {x["hours"]}; min match {min(v["match"] for v in x["inputs"].values() if v["n"]):.4f}; '
+                 f'min NaN agreement {min(v["nan_agree"] for v in x["inputs"].values()):.4f}; failing {bad or "none"}')
+    for tag, v in pos.items():
+        L.append(f'   control {tag}: ' + '; '.join(f'{x["day"]} fails {x["fails"]} worst {x["worst"]}' for x in v))
+    # K2 / K3 counts on every day
+    import pf_io as io
+    k23 = {}
+    for d in M.DAYS9:
+        R = M.day_cols(d, ['bn_age', 'pf_spread', 'spread', 'own_l1', 's1'])
+        ba = R['bn_age'].astype(float); fs = np.isfinite(R['pf_spread']) & np.isfinite(R['spread']); fo = np.isfinite(R['own_l1'])
+        prev = (pd.Timestamp(f'{d[:4]}-{d[4:6]}-{d[6:]}', tz='UTC') - pd.Timedelta(hours=1)).strftime('%Y%m%d_%H')
+        hrs = ([prev] if prev[:8] not in ('20261028', '20261029', '20261030') else []) + [f'{d}_{h:02d}' for h in range(24)]
+        k23[d] = dict(rows=int(len(ba)), bn_age_neg=int((ba < 0).sum()), bn_age_gt1s=int((ba > 1000).sum()), bn_age_gt60s=int((ba > 60000).sum()),
+                      bn_age_nan=int((~np.isfinite(ba)).sum()), missing_bookticker=[h for h in hrs if not os.path.exists(f'{io.BN_DIR}/{h}.csv.gz')],
+                      missing_trades=[h for h in hrs if not os.path.exists(f'{io.ROOT}/data/mm_hf/raw/trade/BTCUSDT/{h}.csv.gz')],
+                      spread_differs=float((R['pf_spread'][fs] != R['spread'][fs]).mean()) if fs.any() else M.NAN,
+                      l1_differs=float((np.abs(np.expm1(R['own_l1'][fo].astype(float)) - R['s1'][fo]) > 1e-3).mean()) if fo.any() else M.NAN)
+        del R
+    res['K2_K3'] = k23; res['seconds'] = round(time.time() - T0, 1)
+    L.append('K2 / K3 (counts): day | rows | bn_age < 0 / > 1 s / > 60 s / NaN | missing Binance bookTicker / trade hours | pf_spread != spread | '
+             'expm1(own_l1) != s1')
+    for d, x in k23.items():
+        L.append(f'   {d}: {x["rows"]} | {x["bn_age_neg"]} / {x["bn_age_gt1s"]} / {x["bn_age_gt60s"]} / {x["bn_age_nan"]} | {x["missing_bookticker"] or "none"} / '
+                 f'{x["missing_trades"] or "none"} | {x["spread_differs"]:.3%} | {x["l1_differs"]:.3%}')
+    json.dump(res, open(OUT_KJ, 'w'), indent=1, default=float); open(OUT_KT, 'w').write('\n'.join(L) + '\n')
+    print('\n'.join(L), flush=True)
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else 'selftest'
     if cmd == 'selftest':
@@ -415,5 +581,7 @@ if __name__ == '__main__':
         run()
     elif cmd == 'reg':
         reg()
+    elif cmd == 's5check':
+        s5check()
     else:
         sys.exit(f'unknown command {cmd}')
