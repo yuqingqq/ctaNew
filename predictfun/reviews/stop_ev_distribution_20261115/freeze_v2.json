@@ -1,0 +1,26 @@
+{
+  "asof": "2026-11-15T15:05:11.226603+00:00",
+  "source_commit": "23eb4c3eac1859023f62f5ca7a81539ba5150754",
+  "source_sha256": {
+    "predictfun/research/pf_stop_ev_distribution_review.py": "e654f901486516cb092213b9b0124e488601a295a070e2d610b34e7b1e31f76d",
+    "predictfun/research/pf_stop_ev_generalization_review.py": "bc8950683da85ee0c30e1709c86f4e54d8bd65e4948e0105ee2cd78d4d5823e3"
+  },
+  "supersedes_comparator": "freeze_v1.json: add hour to matched analytic expectation; other readings unchanged",
+  "v2_generalization": "Saved-head replay only; reproduce training matrices and IC, intermediate/calibration and test predictions, report exact same certified populations. No new fits, parameters, significance tests, tuning or protected data.",
+  "multiplicity": {
+    "new_model_candidates": 0,
+    "new_fits": 0,
+    "new_policies": 0
+  },
+  "days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ]
+}
