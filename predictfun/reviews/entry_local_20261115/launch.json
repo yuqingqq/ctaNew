@@ -1,0 +1,86 @@
+{
+  "asof": "2026-11-15T10:24:11.783582+00:00",
+  "status": "smoke_pass_full_running",
+  "source_commit": "63547e54",
+  "freeze_commit": "4822c21c",
+  "freeze": "freeze_v2.json",
+  "freeze_sha256": "0b32192a335ce73158f49345e7b47fe826eae5d64e14b29204ad6597b054c5c0",
+  "smoke": {
+    "runner.json": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_smoke_v2/runner.json",
+      "sha256": "63f7060f9a1762a92978409b7b9eb365cc205832b63b47d9dd4c89c67240b7f0"
+    },
+    "logs/selftest.log": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_smoke_v2/logs/selftest.log",
+      "sha256": "b0f0ccd7198a668e98be02361c8010cf1c58550736df06c042d1e2755c4b81f2"
+    },
+    "logs/build_smoke.log": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_smoke_v2/logs/build_smoke.log",
+      "sha256": "bd470a64fc5107d9cfe1e517553a9721d0f82d4334c14ad9603517f3eadb6705"
+    },
+    "rows_20261025/receipt.json": {
+      "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_smoke_v2/rows_20261025/receipt.json",
+      "sha256": "81d87cd22b20dc1144ce3ab5f87b29e7107ebc61f62bbcfc60abb19f4463051a"
+    }
+  },
+  "smoke_summary": {
+    "asof": "2026-11-15T10:23:25Z",
+    "day": "20261025",
+    "partial": true,
+    "n": 97,
+    "eligible": 25,
+    "statuses": {
+      "not_sampled": 65,
+      "eligible": 25,
+      "probe_not_reached": 4,
+      "insufficient_horizon": 3
+    },
+    "windows": [
+      3723772,
+      3723774
+    ],
+    "source_status": {
+      "registry": 288,
+      "outside_day": 0,
+      "sealed_or_forward": 0,
+      "no_outcome": 0,
+      "parts_skipped": 1,
+      "untimed_legs_0_60": 1316,
+      "untimed_shares_0_60": 13038.545279926448,
+      "windows": 288,
+      "grid_steps": 2400,
+      "grid_steps_without_row": 0
+    },
+    "data_fix": {
+      "rows": 351360,
+      "changed": 0.024866234061930784,
+      "changed_hh00": 0.2983948087431694,
+      "changed_other": 0.0,
+      "max_abs_c": 14.770571647602651,
+      "relay_prints": 96213,
+      "preroll_ms": 30000.0,
+      "sealed_lookback_windows": []
+    },
+    "feature_future_checks": 2,
+    "rows_sha256": "fb8360f3f9ea54b83c15cd5f2067391f2498646a4f374a89d190b7f0533361ee",
+    "reference_receipt_sha256": "f2e9e0e01dfc5f2d21151268cbde87a10a76f5b92a055487c50749d3359a04ae",
+    "limits": [
+      "Consumed development dates only; no forward-validation or promotion.",
+      "The local score is a surrogate for admission, not POST-minus-WAIT continuation value.",
+      "Labels use neutral KEEP with engine safety; they are potential single-order outcomes, not keeper-conditioned Q values.",
+      "Five-second fill horizon and one-second per-tranche markout are measurements, never runtime retry/cancel timers.",
+      "Later queue option value, other-slot effects and terminal inventory remain full-replay criteria, absent from the local training label.",
+      "Gross marks exclude fees/rewards/own impact. Public queue and fill-clock assumptions are unvalidated.",
+      "Clock nuisance calibration is inherited; raw-step5 inputs beyond the reviewed correction retain upstream qualifications."
+    ]
+  },
+  "full_output": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_v2",
+  "runner": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_v2/runner.json",
+  "service": "pf-entry-local-20261115.service",
+  "superseded_attempt": {
+    "path": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_smoke_v1",
+    "reason": "Pandas refused float64 correction into float32 column before rows or model output."
+  },
+  "performance_claim": false,
+  "promoted": false
+}

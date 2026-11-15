@@ -1,0 +1,8 @@
+{
+  "freeze": "freeze_v2.json",
+  "launch": "launch.json",
+  "state": "full_running",
+  "runner": "/home/yuqing/ctaNew/data/predict_fun/research/entry_local_20261115_v2/runner.json",
+  "plan": "predictfun/handoffs/20261115_entry_local_plan.md",
+  "scope": "Single-order local admission candidate; separate fixed keeper in replay; all consumed development dates."
+}
