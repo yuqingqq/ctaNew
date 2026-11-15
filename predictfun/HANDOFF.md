@@ -1,5 +1,29 @@
 # P-2026-005 HANDOFF
 
+<!-- ENTRY_TRAINING_SUPPORT_20261115 -->
+## 2026-11-15 — training-window interpretation checked; cause not established
+
+User asks whether representation is cleared and short training explains failure.
+Known coordinate/missingness changes are implemented in CONDITION, not promoted;
+missing observations and adequacy of conditional prediction remain unresolved.
+Read-only review of the 2026-11-15T05:04:52Z snapshot, 9,871 evaluation actions on
+five consumed dates. No new candidate, fit or learning-curve experiment.
+
+Actual expanding training sets contain 2–6 labeled days; per-side training rows
+1,975–6,068; weight-concentration effective rows 522.6–1,587.1; later-entry
+training rows 284–847. Effective counts discount unequal weights only, not time
+or market dependence. All available comparable earlier labels are used; there
+is no short rolling cap discarding a larger same-target dataset. Different
+folds evaluate different days, so their non-monotone scores cannot identify a
+training-size effect. Thirty-second feature coverage is a separate limitation.
+
+Review: `handoffs/20261115_entry_training_support_review.md`.
+Receipt: `reviews/entry_training_support_20261115/current.json`; evidence b46f6c7c.
+Next discriminating test: fixed evaluation actions, nested earlier training
+histories, unchanged representation/targets/learner; denser later-entry sampling
+as a separate comparison. No claim that short history is the sole cause.
+<!-- /ENTRY_TRAINING_SUPPORT_20261115 -->
+
 <!-- ENTRY_REPRESENTATION_20261115 -->
 ## 2026-11-15 — condition-preserving entry representation COMPLETE
 
