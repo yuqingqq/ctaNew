@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "asof": "2026-11-15T16:59:58.359094+00:00",
+  "source_commit": "73203849246d2d1a7487e0386064e3cc46c6f0ba",
+  "source_sha256": "07d7c53d871dad87afa552235b20d7196a3690a7a83ffa088b9da06036e14eaf",
+  "consumed_days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "test_days": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "population": "Every cert_est neutral-path action, unique day/market/side/rung/generation/decision_ms; statuses retained in build receipts; cert_ws sensitivity. No model fit or policy replay.",
+  "multiplicity": {
+    "current_feature_profiles": 83,
+    "new_descriptors": 22,
+    "severe_discriminators": 40,
+    "model_candidates": 0,
+    "policy_candidates": 0
+  },
+  "design": "All 22 descriptors listed in committed source. Severe = value cents / client-known remaining shares <= earlier reserved day 1st percentile; all actions retained. Severe-vs-other-filled AUC is diagnostic only, not a training population. Matched on day, side, rung, floored edge, fixed P(fill) bands, earlier reserved-day score quintiles; add hour sensitivity and strict timing subset. Report every descriptor/day, no winner selection.",
+  "scale_tests": "Per-day distributions/missingness of all 105 inputs; current 83 test inputs outside prior training min/max and 0.1/99.9 percentiles; all/good/severe/raw-kept groups. Quantify largest absolute 0.1% and 1% labels contribution to squared label magnitude/gross loss and test EV/filled-value-head squared error. No clipping or trimming.",
+  "controls": [
+    "saved prediction identity and three corruptions",
+    "fixed-price roundtrip positive control",
+    "ask mirror",
+    "moving best with fixed order price",
+    "future perturbation invariance",
+    "grid gap refused",
+    "scale equivariance",
+    "zero W30 refused",
+    "matched oracle AUC 1 and tied AUC 0.5"
+  ],
+  "nulls": "No significance/null-max claim or confidence interval. No random null experiment. These are descriptive diagnostics on already consumed data, not validation; a future claim requires separately frozen >=200-draw null and >=5 later untouched days.",
+  "limitations": [
+    "cached 50ms histories omit intra-grid events",
+    "depletion does not identify trade vs cancellation",
+    "same assumed knowledge clocks as cached model inputs, not newly host-receive certified",
+    "fixed-price depth outside visible five levels is missing",
+    "net flow ratio scale uses historical absolute net flow, not unavailable gross traded volume",
+    "history availability explicitly counted",
+    "pointwise associations do not prove incremental multivariate prediction or policy value"
+  ],
+  "output": "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_dynamics_audit_20261115_v1"
+}
