@@ -1,0 +1,16 @@
+INPUT-PIPELINE CHECKS; as of 2026-11-15T04:01:11Z
+K1 STEP-5 RECOMPUTATION (raw data known by t vs stored rows): PASS; positive controls fire: True
+   20261024: 600 steps, hours ['20261023_23', '20261024_00', '20261024_16', '20261024_17', '20261024_21', '20261024_22']; min match 1.0000; min NaN agreement 1.0000; failing none
+   20261026: 600 steps, hours ['20261026_07', '20261026_08', '20261026_12', '20261026_13', '20261026_17', '20261026_18']; min match 1.0000; min NaN agreement 1.0000; failing none
+   control bn_future: 20261024 fails True worst {'bn_age': 0.0, 'bn_imb': 0.6216666666666667, 'bn_ntr1000': 0.6666666666666666, 'bn_flow5000': 0.69}; 20261026 fails True worst {'bn_age': 0.0, 'bn_flow5000': 0.39666666666666667, 'bn_flow1000': 0.4083333333333333, 'bn_ntr1000': 0.4216666666666667}
+   control pf_nodelay: 20261024 fails True worst {'pf_age': 0.0, 'pf_imb3': 0.23666666666666666, 'pf_imb1': 0.38333333333333336, 'pf_micro_dev': 0.39166666666666666}; 20261026 fails True worst {'pf_age': 0.0, 'pf_imb3': 0.21, 'pf_imb1': 0.2683333333333333, 'pf_micro_dev': 0.29}
+K2 / K3 (counts): day | rows | bn_age < 0 / > 1 s / > 60 s / NaN | missing Binance bookTicker / trade hours | pf_spread != spread | expm1(own_l1) != s1
+   20261023: 690552 | 0 / 0 / 0 / 0 | none / none | 0.000% | 0.020%
+   20261024: 690664 | 0 / 0 / 0 / 0 | none / none | 0.000% | 0.034%
+   20261025: 690928 | 0 / 8 / 0 / 0 | none / none | 0.000% | 0.038%
+   20261026: 690478 | 0 / 0 / 0 / 0 | none / none | 0.000% | 0.004%
+   20261027: 691128 | 0 / 0 / 0 / 0 | none / none | 0.000% | 0.088%
+   20261031: 676788 | 0 / 42 / 0 / 0 | none / none | 0.000% | 0.007%
+   20261101: 690790 | 0 / 0 / 0 / 0 | none / none | 0.000% | 0.003%
+   20261102: 690948 | 0 / 348 / 0 / 0 | none / none | 0.000% | 0.045%
+   20261103: 691062 | 0 / 0 / 0 / 0 | none / none | 0.000% | 0.121%
