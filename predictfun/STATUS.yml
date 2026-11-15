@@ -1,14 +1,14 @@
 stop_ev_latency_20261115:
-  asof: '2026-11-15T18:24:14.763551+00:00'
-  status: three_dates_zero_delay_ev_positive_two_dates_running_no_promotion
+  asof: '2026-11-15T18:39:59.501550+00:00'
+  status: four_dates_latency_helps_pooled_but_not_every_day_final_date_running
   source_commit: c7bc4aca
   freeze_commit: 30b92397
   model_version: v3
   consumed_test_dates: [20261027, 20261031, 20261101, 20261102, 20261103]
-  completed_dates: 3
-  completed_windows: 858
-  interim_ev_current_pnl_dollars: 265.47774187647946
-  interim_ev_zero_modeled_pnl_dollars: 867.7063282927455
+  completed_dates: 4
+  completed_windows: 1146
+  interim_ev_current_pnl_dollars: 341.2416795589932
+  interim_ev_zero_modeled_pnl_dollars: 859.3362310589521
   clock_configurations: 4
   fixed_rules: 5
   review_grid_ms: 50
@@ -16,6 +16,7 @@ stop_ev_latency_20261115:
   protected_data_read: false
   policy_promoted: false
   protocol: predictfun/reviews/stop_ev_latency_20261115/freeze_v3.json
+
 
 stop_ev_dynamics_scale_20261115:
   asof: '2026-11-15T17:01:13.094806+00:00'
