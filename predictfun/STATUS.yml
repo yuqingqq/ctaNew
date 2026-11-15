@@ -1,3 +1,16 @@
+entry_repair_validity_20261115:
+  asof: '2026-11-15T07:10:11Z'
+  status: validity_complete_density_running
+  evidence_commit: 3cd077a6
+  receipt: predictfun/reviews/entry_repair_20261115/validity_checkpoint.json
+  validity_days: 7
+  included_windows: 2010
+  excluded_sealed_windows: 6
+  reconciled_actions: 3982
+  dense_first_day_windows_logged: 224
+  new_fit_days_complete: 0
+  prediction_performance_claim: false
+
 entry_repair_20261115:
   status: full_running_after_smoke_pass
   source_commit: ce6e645e

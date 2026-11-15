@@ -1,3 +1,20 @@
+<!-- ENTRY_REPAIR_VALIDITY_20261115 -->
+## 2026-11-15 07:10 UTC Entry validity complete and coverage build running
+
+Seven consumed days complete: 2,010 included market windows, six sealed-lookback
+windows excluded. All 3,982 predeclared action checks reproduce saved targets,
+probe times and features; zero missing grid rows. All 30/50/100-share neutral
+replays and both queue scenarios finished; size economics are not yet aggregated.
+Maximum clock-shift difference from admissible parts is 0.004638671875 ms; the
+retrospective clock and fill assumptions remain qualified.
+
+Denser label construction is running (first day 224/288 windows at this snapshot).
+No new fit completed yet. Current process remains healthy; the later training
+history comparison is queued. Checkpoint evidence 3cd077a6:
+reviews/entry_repair_20261115/validity_checkpoint.json. The running status is
+still data/predict_fun/research/entry_repair_20261115_v2/runner.json.
+<!-- /ENTRY_REPAIR_VALIDITY_20261115 -->
+
 <!-- ENTRY_REPAIR_20261115 -->
 ## 2026-11-15 Entry repair and larger size study running
 

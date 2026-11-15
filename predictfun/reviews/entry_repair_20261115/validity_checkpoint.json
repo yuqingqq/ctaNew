@@ -1,0 +1,282 @@
+{
+  "asof": "2026-11-15T07:10:11.076220+00:00",
+  "status": "validity_complete_density_running",
+  "runner_snapshot": {
+    "status": "running",
+    "asof": "2026-11-15T06:57:42Z",
+    "pid": 3661508,
+    "mode": "full",
+    "freeze_sha256": "175c3a96d5bce816814a64b60de7a9cc10e8b061ca974b8839fc152b4a0a730c",
+    "stage": "build_20261025"
+  },
+  "validity_days": 7,
+  "windows": 2010,
+  "reconciled_actions": 3982,
+  "excluded_sealed_windows": 6,
+  "max_abs_clock_difference_ms": 0.004638671875,
+  "grid_rows_missing": 0,
+  "artifact_receipts": {
+    "20261025": {
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_v2/validity_20261025/receipt.json",
+      "receipt_sha256": "78a6b2400b0506e30037f0d0fc07202cea8df90621124771e6009a0625843def",
+      "size_windows_sha256": "0df1b34bd290df3d26b8663ae77d55976654ea49fde396272c8fe8f651a824f4"
+    },
+    "20261026": {
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_v2/validity_20261026/receipt.json",
+      "receipt_sha256": "bada72624a51ee15e3859edc66140cfbb1d6834fe0318ed513e652a5c38914f1",
+      "size_windows_sha256": "f3e7ad77c382ac0edafcd9eaf4edee0b5184e7865a7fa4cd34b088d4071b6401"
+    },
+    "20261027": {
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_v2/validity_20261027/receipt.json",
+      "receipt_sha256": "0c122f9ade3b2bbb3afa32c935de10ed49209741825786951af998dc2eb5c4f3",
+      "size_windows_sha256": "35e17fa62c6af4666bdd2ff1c0e6836ae9ec579595c4c3e8d4584a1f79e45611"
+    },
+    "20261031": {
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_v2/validity_20261031/receipt.json",
+      "receipt_sha256": "571be63b71f818deec63c4a74b4ce3e5f83e77baed911264b90e4a65d6c950a1",
+      "size_windows_sha256": "c0c8b168de5e97e8fff52df9c96d9925674f4f3205d12ee77dab9c256e170b27"
+    },
+    "20261101": {
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_v2/validity_20261101/receipt.json",
+      "receipt_sha256": "a72b78f5c394329091dcbdd9f7a3da6398d647df1b27ce849fc0ecb32e8f15db",
+      "size_windows_sha256": "af2533d2dce48f9f63b40c8d74e466b891e0d54c1402e58544b4945beb3e5e7e"
+    },
+    "20261102": {
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_v2/validity_20261102/receipt.json",
+      "receipt_sha256": "4e24f3ea4f4468a7ebabaabec2c7d8f272ba737f9921559d7d4e5e4021c33817",
+      "size_windows_sha256": "5a302ee39778567d51c884416cad0fe59d83ba5326cfc6f2bd273a08923c461f"
+    },
+    "20261103": {
+      "receipt": "/home/yuqing/ctaNew/data/predict_fun/research/entry_repair_20261115_v2/validity_20261103/receipt.json",
+      "receipt_sha256": "7e2f7d8a75587b1d7017694f8d1586798806c773cffe4383112c6d9aaac7dfce",
+      "size_windows_sha256": "b892af09356a18940583107c4c531d813e6996e271e6859d9ced430a7fd2fdec"
+    }
+  },
+  "days": [
+    {
+      "day": "20261025",
+      "asof": "2026-11-15T06:36:04Z",
+      "windows": 288,
+      "reconciled_actions": 574,
+      "source_status": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "parts_skipped": 1,
+        "untimed_legs_0_60": 1316,
+        "untimed_shares_0_60": 13038.545279926448,
+        "windows": 288,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0
+      },
+      "sealed_windows": 0,
+      "clock": {
+        "n_frames": 1579159,
+        "parts": 25,
+        "parts_skipped": 1,
+        "allowed_parts_shift_ms": 82.68955078125,
+        "inherited_shift_ms": 82.68955078125,
+        "difference_ms": 0.0,
+        "exactly_equal": true,
+        "interpretation": "diagnostic only; stored features and labels retain their common inherited clock"
+      },
+      "seconds": 235.09388347063214
+    },
+    {
+      "day": "20261026",
+      "asof": "2026-11-15T06:39:47Z",
+      "windows": 288,
+      "reconciled_actions": 570,
+      "source_status": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "parts_skipped": 1,
+        "untimed_legs_0_60": 3191,
+        "untimed_shares_0_60": 39785.99813006458,
+        "windows": 288,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0
+      },
+      "sealed_windows": 0,
+      "clock": {
+        "n_frames": 1711981,
+        "parts": 25,
+        "parts_skipped": 1,
+        "allowed_parts_shift_ms": 75.29990234375,
+        "inherited_shift_ms": 75.300146484375,
+        "difference_ms": -0.000244140625,
+        "exactly_equal": false,
+        "interpretation": "diagnostic only; stored features and labels retain their common inherited clock"
+      },
+      "seconds": 222.03503940440714
+    },
+    {
+      "day": "20261027",
+      "asof": "2026-11-15T06:43:30Z",
+      "windows": 288,
+      "reconciled_actions": 572,
+      "source_status": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "parts_skipped": 1,
+        "untimed_legs_0_60": 2964,
+        "untimed_shares_0_60": 32617.169265447075,
+        "windows": 288,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0
+      },
+      "sealed_windows": 0,
+      "clock": {
+        "n_frames": 1681580,
+        "parts": 25,
+        "parts_skipped": 1,
+        "allowed_parts_shift_ms": 75.040625,
+        "inherited_shift_ms": 75.040869140625,
+        "difference_ms": -0.000244140625,
+        "exactly_equal": false,
+        "interpretation": "diagnostic only; stored features and labels retain their common inherited clock"
+      },
+      "seconds": 221.29392346646637
+    },
+    {
+      "day": "20261031",
+      "asof": "2026-11-15T06:46:56Z",
+      "windows": 282,
+      "reconciled_actions": 557,
+      "source_status": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "parts_skipped": 2,
+        "untimed_legs_0_60": 762,
+        "untimed_shares_0_60": 9077.803427559644,
+        "windows": 288,
+        "grid_steps": 338400,
+        "grid_steps_without_row": 0
+      },
+      "sealed_windows": 6,
+      "clock": {
+        "n_frames": 1496377,
+        "parts": 24,
+        "parts_skipped": 2,
+        "allowed_parts_shift_ms": 76.436865234375,
+        "inherited_shift_ms": 76.44150390625,
+        "difference_ms": -0.004638671875,
+        "exactly_equal": false,
+        "interpretation": "diagnostic only; stored features and labels retain their common inherited clock"
+      },
+      "seconds": 204.90822489652783
+    },
+    {
+      "day": "20261101",
+      "asof": "2026-11-15T06:50:35Z",
+      "windows": 288,
+      "reconciled_actions": 571,
+      "source_status": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "parts_skipped": 1,
+        "untimed_legs_0_60": 981,
+        "untimed_shares_0_60": 10717.451728936834,
+        "windows": 288,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0
+      },
+      "sealed_windows": 0,
+      "clock": {
+        "n_frames": 1440598,
+        "parts": 25,
+        "parts_skipped": 1,
+        "allowed_parts_shift_ms": 78.430517578125,
+        "inherited_shift_ms": 78.430517578125,
+        "difference_ms": 0.0,
+        "exactly_equal": true,
+        "interpretation": "diagnostic only; stored features and labels retain their common inherited clock"
+      },
+      "seconds": 217.11596198566258
+    },
+    {
+      "day": "20261102",
+      "asof": "2026-11-15T06:54:07Z",
+      "windows": 288,
+      "reconciled_actions": 572,
+      "source_status": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "parts_skipped": 1,
+        "untimed_legs_0_60": 1228,
+        "untimed_shares_0_60": 14628.328666538513,
+        "windows": 288,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0
+      },
+      "sealed_windows": 0,
+      "clock": {
+        "n_frames": 1609036,
+        "parts": 25,
+        "parts_skipped": 1,
+        "allowed_parts_shift_ms": 73.2929443359375,
+        "inherited_shift_ms": 73.293310546875,
+        "difference_ms": -0.0003662109375,
+        "exactly_equal": false,
+        "interpretation": "diagnostic only; stored features and labels retain their common inherited clock"
+      },
+      "seconds": 210.49868192896247
+    },
+    {
+      "day": "20261103",
+      "asof": "2026-11-15T06:57:42Z",
+      "windows": 288,
+      "reconciled_actions": 566,
+      "source_status": {
+        "registry": 288,
+        "outside_day": 0,
+        "sealed_or_forward": 0,
+        "no_outcome": 0,
+        "parts_skipped": 1,
+        "untimed_legs_0_60": 2426,
+        "untimed_shares_0_60": 38118.44680133401,
+        "windows": 288,
+        "grid_steps": 345600,
+        "grid_steps_without_row": 0
+      },
+      "sealed_windows": 0,
+      "clock": {
+        "n_frames": 1603461,
+        "parts": 25,
+        "parts_skipped": 1,
+        "allowed_parts_shift_ms": 73.430517578125,
+        "inherited_shift_ms": 73.430517578125,
+        "difference_ms": 0.0,
+        "exactly_equal": true,
+        "interpretation": "diagnostic only; stored features and labels retain their common inherited clock"
+      },
+      "seconds": 213.73659361619502
+    }
+  ],
+  "dense_day_progress": {
+    "day": "20261025",
+    "windows_logged": 224,
+    "windows_expected": 288,
+    "elapsed_logged_seconds": 734.5
+  },
+  "completed_dense_days": [],
+  "completed_fit_days": [],
+  "freeze_sha256": "175c3a96d5bce816814a64b60de7a9cc10e8b061ca974b8839fc152b4a0a730c",
+  "limitations": [
+    "Original labels and features reproduced for the predeclared first saved eligible action per side per window; dense builds will check every original eligible action.",
+    "Size/queue replays are complete, but economic aggregation and comparison remain pending.",
+    "Retrospective daily clock and unobserved queues remain modelling assumptions; numerical agreement is not a full raw-data causal audit.",
+    "No new prediction performance or forward-validation result yet."
+  ]
+}
