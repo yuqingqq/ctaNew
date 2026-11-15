@@ -540,6 +540,183 @@ def x5test():
     print('\n'.join(L), flush=True)
 
 
+FOOT_SIZES = (30, 50, 100); FR_DAYS = ('20261024', '20261026'); TOP_INPUTS = 10; SUP_FLAG = 0.05; ADV_FLAG = 0.70
+OUT_CJ = f'{M.OUTD}/datacheck_20261115.json'; OUT_CT = f'{M.OUTD}/datacheck_20261115.txt'
+
+
+def _adv_auc(Xa, Xb, F, seed):
+    """Adversarial validation: 2-fold AUC of a classifier separating two row sets, and its top-gain inputs."""
+    import lightgbm as lgb
+    X = np.vstack([Xa, Xb]); y = np.r_[np.zeros(len(Xa)), np.ones(len(Xb))]; rg = np.random.default_rng(seed); f = rg.uniform(0, 1, len(y)) < 0.5
+    pr = np.zeros(len(y)); gain = np.zeros(len(F))
+    for tr in (f, ~f):
+        b = lgb.train({'objective': 'binary', 'learning_rate': 0.1, 'num_leaves': 31, 'min_data_in_leaf': 200, 'verbose': -1, 'num_threads': 1, 'seed': seed},
+                      lgb.Dataset(X[tr], y[tr], feature_name=F), 100)
+        pr[~tr] = b.predict(X[~tr]); gain += b.feature_importance('gain')
+    return M.auc_nan(y.astype(bool), pr)[0], [(F[i], float(gain[i] / gain.sum())) for i in np.argsort(-gain)[:5]]
+
+
+def datacheck():
+    """DATA REPRESENTATION AND COVERAGE (USER 2026-11-15: "Also check if the data representation is good and data coverage is good, need to
+    check the data first"; declared before the run). Inputs = v5's 71 (v4's 61 + the x5 order-flow families). Decisions only on dev days;
+    test-day input coverage is descriptive (no labels of a test day are read).
+    REPRESENTATION (dev days): R1 sampling - frame gaps, known-time lag, the share of 50 ms steps whose known frame did not change; R2 label
+      resolution - frames inside (t + 22, t + H] per row, the share with none; R3 prices - integer ticks, spread, price level; R4 sizes - level
+      sizes, the own-order FOOTPRINT (share of rows whose visible level d is smaller than our order, sizes 30 / 50 / 100 sh: the model reads
+      the venue book WITHOUT our orders, so a live feed must subtract them), frames inside the W30 window at t_rel 0 / 1 / 5 / 30 s (D5);
+      R5 missing values by input group and time in window; R6 side symmetry (median of each adverse / size input, bids vs asks).
+    COVERAGE: C1 per day (9 days) - weekday, regimes (sigma, Binance and Predict activity, spread, price level); C2 per fold - the share of the
+      test day's rows outside the training days' [p0.5, p99.5] for each input; C3 adversarial AUC (dev fold 10-23..25 vs 10-26 decides; the
+      five test folds descriptive), with and without sigma (a per-window constant that identifies days); C4 rare events - positives and
+      windows with a positive per head (dev days); C5 regime cells (dev days) - rows and rates by sigma tertile x time in window.
+    FLAGS (printed; any fix is decided on dev-day evidence): non-integer ticks; known frame unchanged on > 80% of steps; a side asymmetry
+      > 0.1 IQR in a top input; footprint > 20% of rows at a size; W30 window with a median < 20 frames at t_rel 0; a top-10 input with > 5% of
+      a test day outside the training range; dev-fold adversarial AUC without sigma > 0.70."""
+    M.all_selftests()
+    T0 = time.time(); asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()); res = dict(asof=asof); L = [f'DATA REPRESENTATION AND COVERAGE; as of {asof}']
+    A = json.load(open(f'{M.OUTD}/audit2.json')); scale = A['scale']; F = json.load(open(f'{M.OUTD}/fit_{F1_TEST}_v5.json'))['features']
+    RV = json.load(open(OUT_J)); XT = json.load(open(OUT_XJ))
+    top = sorted({c for hk_, v in RV['E_shap'].items() if hk_.endswith('_j1') for c in sorted(v, key=lambda c: -v[c]['mean_abs'])[:TOP_INPUTS]} & set(F))
+    top += [c for fam in XT['adopt'] for c in sorted(M.X5_FAM[fam], key=lambda c: -XT['variants'][fam]['shap_share']['H1000_j1'][c])[:2]]
+    flags = []
+    # ---- R1 / R2 / R4b from the loaded windows
+    r12 = {}
+    for d in FR_DAYS:
+        D = M.K.load_day(d); gaps, lag, unch, nfr = [], [], [], {h: [] for h in M.HS}; w30n = {0: [], 20: [], 100: [], 600: []}
+        for W in M.P1.window_pairs(D):
+            tf = np.asarray(W[0]['tf'], float); kf = np.asarray(W[0]['kf'], float); tg = np.asarray(W[0]['tg'], float); jk = np.asarray(W[0]['jk'], 'int64')
+            sel = (tf >= tg[0] - 5000) & (tf <= tg[-1] + 1000)
+            gaps.append(np.diff(tf[sel])); lag.append((kf - tf)[sel]); unch.append(jk[1:] == jk[:-1])
+            for h in M.HS:
+                nfr[h].append(np.searchsorted(tf, tg + h, side='right') - np.searchsorted(tf, tg + M.L_C, side='right'))
+            for k_ in w30n:
+                if k_ < len(tg):
+                    w30n[k_].append(int(np.searchsorted(kf, tg[k_], side='right') - np.searchsorted(kf, tg[k_] - M.SCALE_MS, side='right')))
+        g = np.concatenate(gaps); lg = np.concatenate(lag); u = np.concatenate(unch)
+        r12[d] = dict(frame_gap_ms=dict(zip(('p50', 'p90', 'p99'), np.quantile(g, [0.5, 0.9, 0.99]).round(1).tolist())),
+                      known_lag_ms=dict(zip(('p50', 'p90', 'p99'), np.quantile(lg, [0.5, 0.9, 0.99]).round(1).tolist())), step_unchanged=float(u.mean()),
+                      frames_in_label=({h: dict(mean=float(np.concatenate(nfr[h]).mean()), none=float((np.concatenate(nfr[h]) == 0).mean())) for h in M.HS}),
+                      w30_frames_median={k_: float(np.median(v)) for k_, v in w30n.items()})
+        del D
+        M.mem_guard(f'datacheck frames {d}')
+    res['R1_R2'] = r12
+    if max(x['step_unchanged'] for x in r12.values()) > 0.80:
+        flags.append('known frame unchanged on > 80% of 50 ms steps')
+    if min(x['w30_frames_median'][0] for x in r12.values()) < 20:
+        flags.append('W30 window has < 20 frames at t_rel 0 (D5)')
+    L.append('R1 SAMPLING / R2 LABEL RESOLUTION / W30 HISTORY: day | frame gap p50 / p90 / p99 ms | known lag p50 / p90 / p99 | steps with an unchanged known frame '
+             '| frames in (t + 22, t + H] mean (share none) H 72 / 250 / 1000 | frames in the W30 window at t_rel 0 / 1 / 5 / 30 s')
+    for d, x in r12.items():
+        L.append(f'   {d}: {x["frame_gap_ms"]} | {x["known_lag_ms"]} | {x["step_unchanged"]:.1%} | ' + ' / '.join(f'{v["mean"]:.2f} ({v["none"]:.1%})' for v in x['frames_in_label'].values())
+                 + ' | ' + ' / '.join(f'{v:.0f}' for v in x['w30_frames_median'].values()))
+    # ---- R3 / R4 / R5 / R6 and C4 / C5 from the rows (dev days)
+    rows = {}; sizes = ['s1', 's2', 's3', 's4', 's5']; groups = {}
+    for c in F:
+        groups.setdefault(group_of(c) if c not in M.X5_F else ('X5_' + ('PF_OFI' if c in M.X5_FAM['PF_OFI'] else 'BN_DEPTH')), []).append(c)
+    r3 = {}; r4 = {}; r5 = {}; r6 = {}; c4 = {}; c5 = {}
+    sg_cut = None
+    for d in M.DEV_DAYS:
+        sel = M.day_usable(d); R = M.day_cols(d, ['side', 'k', 'pf_spread', 'pf_mid', 'sigma'] + sizes + LABC, sel)
+        sp = R['pf_spread']; md = R['pf_mid']
+        r3[d] = dict(spread={'1': float((sp == 1).mean()), '2': float((sp == 2).mean()), '3+': float((sp >= 3).mean()), 'nan': float(np.isnan(sp).mean())},
+                     mid_deciles=np.nanquantile(md, np.linspace(0.1, 0.9, 9)).round(1).tolist(), mid_extreme=float(((md < 10) | (md > 90)).mean()),
+                     spread_integer=bool(np.all(np.isnan(sp) | (sp == np.round(sp)))))
+        r4[d] = dict(size_p50={c: float(np.nanmedian(R[c])) for c in sizes},
+                     footprint={str(z): {c: float((R[c] < z).mean()) for c in sizes} for z in FOOT_SIZES})
+        tb = [((R['k'] >= a) & (R['k'] < b_)) for a, b_ in DG.TB]
+        X = M.day_matrix(d, scale, F, sel)
+        r5[d] = {g: [float(np.isnan(X[np.ix_(t_, [F.index(c) for c in cs])]).mean()) for t_ in tb] for g, cs in groups.items()}
+        sd = R['side']
+        r6[d] = {c: (float(np.nanmedian(X[sd == 0, F.index(c)])), float(np.nanmedian(X[sd == 1, F.index(c)])),
+                     float(np.subtract(*np.nanquantile(X[:, F.index(c)], [0.75, 0.25])))) for c in F if c.startswith(('adv_', 'r_'))}
+        del X
+        c4[d] = {f'H{h}_j{j}': dict(pos=int((R[M.DCOL[h]] >= j).sum())) for h in M.HS for j in M.JS}
+        if sg_cut is None:
+            sg_cut = np.nanquantile(np.concatenate([M.day_cols(x, ['sigma'], M.day_usable(x))['sigma'] for x in F1_TRAIN]), [1 / 3, 2 / 3])
+        sb = np.searchsorted(sg_cut, R['sigma']); cell = {}
+        for i in range(3):
+            for ti, t_ in enumerate(tb):
+                m_ = (sb == i) & t_
+                cell[f'sigma{i}_t{ti}'] = dict(rows=int(m_.sum()), **{f'H{h}_j1': float((R[M.DCOL[h]][m_] >= 1).mean()) if m_.any() else M.NAN for h in M.HS})
+        c5[d] = cell; del R
+        M.mem_guard(f'datacheck rows {d}')
+    res.update(R3=r3, R4=r4, R5=r5, R6=r6, C4=c4, C5=c5, top_inputs=top)
+    if not all(x['spread_integer'] for x in r3.values()):
+        flags.append('non-integer spread ticks')
+    for z in FOOT_SIZES:
+        fp = max(r4[d]['footprint'][str(z)]['s1'] for d in M.DEV_DAYS)
+        if fp > 0.20:
+            flags.append(f'footprint: our {z} sh exceed the visible best level on {fp:.0%} of rows (live inputs must subtract own orders)')
+    asym = sorted({c for d in M.DEV_DAYS for c, (a, b_, iq) in r6[d].items() if c in top and iq > 0 and abs(a - b_) > 0.1 * iq})
+    if asym:
+        flags.append(f'side asymmetry in top inputs: {asym}')
+    L.append('R3 PRICES: day | spread 1 / 2 / 3+ ticks | mid deciles (c) | mid < 10 or > 90 c | integer ticks')
+    for d, x in r3.items():
+        L.append(f'   {d}: {x["spread"]["1"]:.1%} / {x["spread"]["2"]:.1%} / {x["spread"]["3+"]:.1%} | {x["mid_deciles"]} | {x["mid_extreme"]:.1%} | {x["spread_integer"]}')
+    L.append('R4 SIZES: day | median visible size of own levels 1..5 (sh) | FOOTPRINT: share of rows with the level smaller than our order, levels 1..5, at 30 / 50 / 100 sh')
+    for d, x in r4.items():
+        L.append(f'   {d}: ' + ' '.join(f'{v:.0f}' for v in x['size_p50'].values()) + ' | ' + ' || '.join(f'{z} sh: ' + ' '.join(f'{v:.0%}' for v in x['footprint'][str(z)].values())
+                                                                                     for z in FOOT_SIZES))
+    L.append('R5 MISSING VALUES (share NaN) by input group, time in window 0-5 / 5-15 / 15-30 / 30-60 s (10-26): ' + '; '.join(
+        f'{g} ' + '/'.join(f'{v:.1%}' for v in r5[EVAL][g]) for g in sorted(r5[EVAL]) if max(r5[EVAL][g]) > 0.001))
+    L.append(f'R6 SIDE SYMMETRY (median bid vs ask, adverse / size inputs; top inputs flagged if |diff| > 0.1 IQR): {asym or "no top input asymmetric"}; '
+             + ', '.join(f'{c} {r6[EVAL][c][0]:+.3g}/{r6[EVAL][c][1]:+.3g}' for c in top if c in r6[EVAL]))
+    # ---- C1 regimes per day / C2 support / C3 adversarial
+    c1 = {}
+    for d in M.DAYS9:
+        sel = M.day_usable(d); R = M.day_cols(d, ['m', 'sigma', 'bn_ntr1000', 'pf_nfr1000', 'pf_spread', 'pf_mid'], sel)
+        sw = pd.Series(R['sigma']).groupby(R['m']).first().values
+        c1[d] = dict(weekday=pd.Timestamp(f'{d[:4]}-{d[4:6]}-{d[6:]}').day_name()[:3], rows=int(len(sel)), sigma_p50=float(np.nanmedian(sw)),
+                     sigma_iqr=np.nanquantile(sw, [0.25, 0.75]).tolist(), bn_trades_1s_p50=float(np.nanmedian(R['bn_ntr1000'])),
+                     pf_frames_1s_p50=float(np.nanmedian(R['pf_nfr1000'])), spread_p50=float(np.nanmedian(R['pf_spread'])),
+                     mid_iqr=np.nanquantile(R['pf_mid'], [0.25, 0.75]).tolist()); del R
+    res['C1'] = c1
+    L.append('C1 REGIMES (descriptive): day | weekday | rows | sigma per window p50 [IQR] (x1e5) | Binance trades / s p50 | Predict frames / s p50 | spread p50 | mid IQR')
+    for d, x in c1.items():
+        L.append(f'   {d}: {x["weekday"]} | {x["rows"]} | {1e5 * x["sigma_p50"]:.2f} [{1e5 * x["sigma_iqr"][0]:.2f}, {1e5 * x["sigma_iqr"][1]:.2f}] | {x["bn_trades_1s_p50"]:.0f} | '
+                 f'{x["pf_frames_1s_p50"]:.0f} | {x["spread_p50"]:.0f} | {x["mid_iqr"]}')
+    c2 = {}; c3 = {}; US = {d: M.day_usable(d) for d in M.DAYS9}
+    folds = [('dev', F1_TRAIN, EVAL)] + [(t, list(M.train_days(t)), t) for t in M.TESTS]
+    for nm, trd, tgt in folds:
+        sel_t = US[tgt]; out = {}
+        for c in F:
+            xtr = np.concatenate([M.day_matrix(d, scale, [c], US[d])[:, 0] for d in trd]); xtr = xtr[np.isfinite(xtr)]
+            xt = M.day_matrix(tgt, scale, [c], sel_t)[:, 0]; xt = xt[np.isfinite(xt)]
+            if len(xtr) > 1000 and len(xt):
+                lo, hi = np.quantile(xtr, [0.005, 0.995]); out[c] = float(((xt < lo) | (xt > hi)).mean()) - 0.01   # beyond the 1% expected
+            del xtr, xt
+        c2[nm] = out
+        rg = np.random.default_rng(int(tgt) + 3); Xa = []
+        for d in trd:
+            sd_ = US[d]; Xa.append(M.day_matrix(d, scale, F, np.sort(rg.choice(sd_, min(len(sd_), 150000 // len(trd)), replace=False))))
+        Xa = np.vstack(Xa); Xb = M.day_matrix(tgt, scale, F, np.sort(rg.choice(sel_t, 150000, replace=False)))
+        a_all, g_all = _adv_auc(Xa, Xb, F, int(tgt)); ks = [i for i, c in enumerate(F) if c != 'sigma']
+        a_ns, g_ns = _adv_auc(Xa[:, ks], Xb[:, ks], [F[i] for i in ks], int(tgt) + 1); c3[nm] = dict(auc=a_all, top=g_all, auc_no_sigma=a_ns, top_no_sigma=g_ns)
+        del Xa, Xb
+        M.mem_guard(f'datacheck coverage {nm}')
+    res.update(C2=c2, C3=c3)
+    for nm, out in c2.items():
+        bad = [c for c in top if out.get(c, 0.0) > SUP_FLAG]
+        if bad and nm != 'dev':
+            flags.append(f'coverage {nm}: top inputs with > 5% of the test day outside the training range: {bad}')
+    if c3['dev']['auc_no_sigma'] > ADV_FLAG:
+        flags.append(f'dev-fold adversarial AUC without sigma {c3["dev"]["auc_no_sigma"]:.3f} > {ADV_FLAG}')
+    L.append('C2 / C3 COVERAGE per fold (target day vs its training days): fold | inputs with the most rows outside the training [p0.5, p99.5] (excess over 1%) | '
+             'adversarial AUC all inputs (top) | without sigma (top)')
+    for nm, _, tgt in folds:
+        o = sorted(c2[nm].items(), key=lambda x: -x[1])[:5]; a = c3[nm]
+        L.append(f'   {nm} ({tgt}): ' + ', '.join(f'{c} {v:+.1%}' for c, v in o) + f' | {a["auc"]:.3f} ({", ".join(f"{c} {v:.0%}" for c, v in a["top"][:3])}) | '
+                 f'{a["auc_no_sigma"]:.3f} ({", ".join(f"{c} {v:.0%}" for c, v in a["top_no_sigma"][:3])})')
+    L.append('C4 RARE EVENTS (dev days): positives per day H72 j6 / H250 j6 / H1000 j6: ' + '; '.join(f'{d} {c4[d]["H72_j6"]["pos"]} / {c4[d]["H250_j6"]["pos"]} / '
+                                                                                                f'{c4[d]["H1000_j6"]["pos"]}' for d in M.DEV_DAYS))
+    L.append('C5 REGIME CELLS (10-26): sigma tertile x time 0-5 / 5-15 / 15-30 / 30-60 s: rows (rate H1000 j1): ' + '; '.join(
+        f'{k_} {v["rows"]} ({v["H1000_j1"]:.3f})' for k_, v in c5[EVAL].items()))
+    res.update(flags=flags, seconds=round(time.time() - T0, 1))
+    L.append(f'FLAGS: {flags or "none"}; {res["seconds"]} s')
+    json.dump(res, open(OUT_CJ, 'w'), indent=1, default=float); open(OUT_CT, 'w').write('\n'.join(L) + '\n')
+    print('\n'.join(L), flush=True)
+
+
 S5_BN = ['bn_r25', 'bn_r50', 'bn_r100', 'bn_r250', 'bn_r500', 'bn_r1000', 'bn_r3000', 'bn_imb', 'bn_age', 'bn_flow250', 'bn_flow1000', 'bn_flow5000',
          'bn_ntr1000']
 S5_PF = ['pf_spread', 'pf_mid', 'pf_micro_dev', 'pf_imb1', 'pf_imb3', 'pf_age', 'pf_nfr1000', 'pf_dm250', 'pf_dm1000', 'pf_dm5000']
@@ -722,5 +899,7 @@ if __name__ == '__main__':
         d12cmp()
     elif cmd == 'x5test':
         x5test()
+    elif cmd == 'datacheck':
+        datacheck()
     else:
         sys.exit(f'unknown command {cmd}')
