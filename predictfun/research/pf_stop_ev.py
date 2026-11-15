@@ -668,7 +668,7 @@ def day_build(day):
     checks['E1'] = e1_population(day, KEYS); del KEYS
     e2, e3, TYI = e23_legs(day, wins, TAB); checks['E2'] = e2; checks['E3'] = e3; mem_guard(f'day {day} legs checks')
     smp = TAB[TAB.m.isin(set(ROWS.m.values.tolist()))]
-    ROWS4 = ROWS.groupby(['m', 'side'], sort=False, group_keys=False).apply(lambda g: g.iloc[::SAMPLE_ROW])
+    ROWS4 = ROWS[ROWS.groupby(['m', 'side'], sort=False).cumcount().values % SAMPLE_ROW == 0]     # every 13th row per window-side (all columns kept)
     e4, e5, e6 = e456_books(day, wins, ROWS, ROWS4, smp, TYI.reindex(smp.index))
     checks['E4'] = e4; checks['E5'] = e5; checks['E6'] = e6
     cl = ~REC.ended.values & ~REC.shared.values
