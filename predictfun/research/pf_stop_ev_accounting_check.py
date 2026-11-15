@@ -143,6 +143,8 @@ class Checks(unittest.TestCase):
         gap = A.MissingLeg('missing', -float('inf'), float('inf'), 'untimed')
         c = replace(l.coverage, expected_legs=2, missing=(gap,))
         self.assertEqual(action(ledger(l.W, result=l.result, coverage=c))['status'], 'missing_trade_timing')
+        empirical = replace(c, missing=(A.MissingLeg('missing', 5000., 6000., 'untimed'),))
+        self.assertEqual(action(ledger(l.W, result=l.result, coverage=empirical))['status'], 'missing_trade_timing')
         info = {(0, 0): A.LegInfo('0:0', 'e2', 250.)}
         e = ledger(l.W, result=l.result, info=info)
         self.assertEqual(action(e)['status'], 'ambiguous_reference_timing')
