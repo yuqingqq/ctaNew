@@ -1,0 +1,31 @@
+DOES THE MODEL SKIP THE RISK? (our keep-all orders every 250 ms, 5 test days, 1 s fill value w/o young fills; shares of the harm avoided / good value given up)
+M50: 3062637 order states; harm 407706 / good 83118 (cents per order share, summed)
+   oracle (run over within 1 s)       pull   9.0% | harm avoided  93.1% | good given up  41.4%
+   guard (v <= -0.10)                 pull  34.9% | harm avoided  61.2% | good given up  53.9%
+   model p1000 top 5%                 pull   5.0% | harm avoided  23.8% | good given up  18.3%
+   model p1000 top 10%                pull  10.0% | harm avoided  36.4% | good given up  34.0%
+   model p1000 top 20%                pull  20.0% | harm avoided  54.5% | good given up  56.4%
+   model p1000 top 30%                pull  30.0% | harm avoided  67.0% | good given up  70.7%
+   model p1000 top 50%                pull  50.0% | harm avoided  83.4% | good given up  86.3%
+   model p1000 top 35% (= guard share) pull  34.9% | harm avoided  71.8% | good given up  75.4%
+   model p250 top 5%                  pull   5.0% | harm avoided  23.7% | good given up  18.3%
+   model p250 top 10%                 pull  10.0% | harm avoided  36.1% | good given up  33.8%
+   model p250 top 20%                 pull  20.0% | harm avoided  53.6% | good given up  56.7%
+   model p250 top 30%                 pull  30.0% | harm avoided  66.0% | good given up  71.0%
+   model p250 top 50%                 pull  50.0% | harm avoided  82.5% | good given up  86.0%
+   model p250 top 35% (= guard share) pull  34.9% | harm avoided  70.9% | good given up  75.9%
+M250: 3065153 order states; harm 458285 / good 80200 (cents per order share, summed)
+   oracle (run over within 1 s)       pull   9.0% | harm avoided  80.4% | good given up  37.7%
+   guard (v <= -0.10)                 pull  34.8% | harm avoided  56.1% | good given up  52.1%
+   model p1000 top 5%                 pull   5.0% | harm avoided  15.8% | good given up  16.5%
+   model p1000 top 10%                pull  10.0% | harm avoided  28.7% | good given up  32.4%
+   model p1000 top 20%                pull  20.0% | harm avoided  48.0% | good given up  54.9%
+   model p1000 top 30%                pull  30.0% | harm avoided  61.7% | good given up  69.3%
+   model p1000 top 50%                pull  50.0% | harm avoided  80.2% | good given up  85.8%
+   model p1000 top 35% (= guard share) pull  34.8% | harm avoided  67.1% | good given up  74.3%
+   model p250 top 5%                  pull   5.0% | harm avoided  15.6% | good given up  16.3%
+   model p250 top 10%                 pull  10.0% | harm avoided  28.3% | good given up  31.8%
+   model p250 top 20%                 pull  20.0% | harm avoided  46.8% | good given up  54.7%
+   model p250 top 30%                 pull  30.0% | harm avoided  60.3% | good given up  69.2%
+   model p250 top 50%                 pull  50.0% | harm avoided  79.0% | good given up  85.0%
+   model p250 top 35% (= guard share) pull  34.8% | harm avoided  65.8% | good given up  74.3%
