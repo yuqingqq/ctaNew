@@ -1,0 +1,45 @@
+{
+  "asof": "2026-11-15T16:28:54.753398+00:00",
+  "source_commit": "1183afef4e36d6eaff523541099503c301fb81f7",
+  "source_sha256": "ed30a49c5f22dfd9476a814b30402e853714febe5ef096ccb7dfb7e393e71eb7",
+  "test_days": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "population": "All certified-estimated neutral per-order actions, strict timing subset separately; exclusions recorded",
+  "model": "Saved full v2 LGBM p and v heads fixed, exact parity required",
+  "calibration": "Reserved earlier day only, all actions including no fills, no tail trimming",
+  "score_setups": [
+    "raw",
+    "global additive mean residual",
+    "global exposure-scaled residual",
+    "side x queue x edge residual",
+    "side x queue x edge x pressure residual"
+  ],
+  "exposure_scale": "P(fill) x client-known remaining; normalization for calibration, not forecast actual fill quantity",
+  "queue_bins": "fraction <=0.5, >0.5, unknown",
+  "edge_bins": "<=1 cent, >1 cent",
+  "pressure_bins": "joint adverse 250ms OFI (Predict and Binance depth): persistent also at 1000ms, transient, other, unknown/stale; stale = either age >250ms",
+  "min_cell_n": 200,
+  "shrinkage_prior_n": 500,
+  "margin_cents_per_known_remaining_share": [
+    0,
+    0.1,
+    0.5
+  ],
+  "margin_is_estimated_queue_value": false,
+  "variant_count": 15,
+  "forward_candidates_promoted": 0,
+  "controls": "Saved head parity; calibration chronology; planted opposite-state residual; changed future outcomes do not change application; invalid probabilities/remaining/no-fill labels refused; matched oracle",
+  "economic_comparators": "Same kept counts by day/hour/side/rung/exact known remaining; raw ranking, order-only calibration ranking and exact analytic random expectation; all gains/losses retained",
+  "significance_test": false,
+  "null_draws": null,
+  "replay_screen": "Pressure correction margin 0.1: delta vs raw >0 and vs order-only at equal counts >0 pooled and >=4/5 days; kept value >0 pooled and >=4/5. Failure -> no replay warranted by local screen. Success -> separately declare sequential replay, not policy promotion.",
+  "raw_data_read": false,
+  "protected_days_read": false,
+  "new_lgbm_fits": 0,
+  "scope": "Local per-order loss diagnosis and economic-layer screen; no portfolio/uptime/churn claim without sequential replay"
+}
