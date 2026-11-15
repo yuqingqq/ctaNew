@@ -1,3 +1,23 @@
+<!-- STOP_EV_PREBUILD_REVIEW_20261115 -->
+## 2026-11-15 Revised Stop EV design has label issues before fitting
+
+Review of cae5c88f sections 7-8: direct local EV and data-first staging are
+improvements, but window-average markouts can erase front/back queue value;
+any through leg still assigns a full residual fill; one-second exposure versus
+50-ms continuation is undefined; partial remaining size is unsupported; and
+the decision gate still uses unlike percentages/overlapping states. Top-maker
+signs must be descriptive comparisons, not data sanity pass conditions.
+
+No STOP-EV builder/dataset/model was visible at this review snapshot; actual
+implementation quality is unverified. Pooled side-aligned training with a side
+indicator is a permissible design choice, subject to per-side EV checks.
+New work must explicitly import the corrected queue lane, preserve causal q/Z,
+propagate missing timing to action validity and rebuild affected references.
+See handoffs/20261115_stop_ev_prebuild_review.md and
+reviews/stop_ev_review_20261115/prebuild_v2.json. Review only; no running source
+or the owning session's design was changed.
+<!-- /STOP_EV_PREBUILD_REVIEW_20261115 -->
+
 <!-- QUEUE_INITIALIZATION_FIX_20261115 -->
 ## 2026-11-15 Activation queue initialization fixed for new runs
 

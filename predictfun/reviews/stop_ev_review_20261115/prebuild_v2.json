@@ -1,0 +1,32 @@
+{
+  "asof": "2026-11-15T12:17:18.814666+00:00",
+  "status": "prebuild_review_specification_issues_found_implementation_unverified",
+  "design_revision": "cae5c88f",
+  "review_head": "e546621a6792961701d0dd00293767ca4aea9ef2",
+  "sources": {
+    "predictfun/handoffs/20261115_stop_ev_design.md": "c9190c73e60398e9039f36e6ee3392d6a0dcca2499b20a90ada21b741096e475",
+    "predictfun/handoffs/20261115_stop_ev_prebuild_review.md": "48729e922806200c40d882bd856173aea3c6b9ed538e6643de286fa12e30924d",
+    "predictfun/research/pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed",
+    "predictfun/research/pf_stop_model_review.py": "d01c44423debabce83f1f8b428ef36d0b013a8cb44a43c44330676a03376043c",
+    "predictfun/research/pf_order_harm_v2.py": "fac15d080f5253d048a0fb86c44e9134a5205c28cdb3081120bf58f2585f4cdb",
+    "predictfun/research/pf_stop_queue_activation_lane.py": "8d61029d348f80856853ca16c2d3e49c54f7ae26be73866d6b244d08c746e2ed",
+    "predictfun/research/pf_queue_activation_replay.py": "d850910a851aa9efbccb21ec1377b1c4ef78fcd127279d2bb3ab1756f9d5134f",
+    "predictfun/reviews/queue_initialization_20261115/current.json": "f5d6110927de6c6f44d0e0e9f49cd0f4fda8719f96c723a56ecc6b76ed2c3d1a"
+  },
+  "supersedes_scope": "Extends the earlier design review to sections 7-8 added at cae5c88f; earlier evidence.json retained.",
+  "confirmed_specification_findings": [
+    "aggregate_markouts_erase_queue_specific_fill_value",
+    "any_through_trade_assumes_full_residual_execution",
+    "50ms_next_action_vs_1s_exposure_continuation_undefined",
+    "remaining_size_support_omitted",
+    "percentage_ratio_and_overlapping_state_evaluation",
+    "top_maker_signs_used_as_label_sanity_gate"
+  ],
+  "implementation_status": "No STOP-EV-specific builder, dataset receipt, model or evaluation artifact visible in the searched shared research paths at this snapshot; other active worker is STOP-PLAY.",
+  "pooled_side_model": "Permissible design choice; requires per-side EV calibration and action-value checks.",
+  "new_data_runs": 0,
+  "new_model_runs": 0,
+  "new_empirical_metrics": false,
+  "code_changed": false,
+  "forward_validation": false
+}
