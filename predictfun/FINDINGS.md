@@ -1,3 +1,37 @@
+<!-- STOP_EV_TIMING_COVERAGE_20261115 -->
+## 2026-11-15 Timing coverage improved with a side-prefix certificate; historical audit passes
+
+As of 14:02:20Z, nine consumed days / 393,154 neutral probes per variant:
+strict eligible 2,809 -> 18,911; conditional E2 point-anchor eligible
+72,255 -> 149,658. Development Oct 23–26 / 187,384 probes: strict
+969 -> 7,337; estimated 30,076 -> 68,028. These are label coverage counts,
+not quote uptime, physical timing validation or model-performance results.
+All 75,064 baseline label/feature comparisons match; 9 synthetic checks pass;
+5 saved-artifact corruptions are refused. Sources/raw inputs and artifact
+hashes reconcile. Full exclusions and bid/ask/day counts are in audit_v2.json.
+
+The filter proves missing/E2 events cannot affect any accepted focal-side order
+before the label horizon, including earlier queue drain, partial fills and
+order births. Opposite-side independence holds only for the uncapped neutral
+reference with fixed external books. Missing timestamps stay unbounded;
+strict E2 +/-250 ms bounds remain assumptions. Prior uncertainty and selected
+coverage remain unresolved. No actual exchange fill claim.
+
+CAUTION for the active model session: future-only/focal-price filtering can
+miss earlier state changes (three synthetic counterexamples). Its 265,373
+admissions include 115,715 lacking this certificate; this is NOT a measured
+mislabel rate. Keep that user-approved population as a qualified sensitivity.
+No active model sources, inputs or fitting jobs were changed here.
+
+New labels: data/predict_fun/research/stop_ev_timing_certified_20261115_v1/.
+Do not use certificate/status columns as model inputs. A subsequent experiment
+needs an exact decision-time market join and explicit status/timing adapter;
+these exports omit k/hour. See the handoff for integration/reproduction.
+Review: handoffs/20261115_stop_ev_timing_coverage.md.
+Evidence: reviews/stop_ev_timing_20261115/current.json (audit_v2 extends v1).
+Builder f0682872; freeze 3bb6773f; checker 1e6c71d2; result merge 79e8f13d.
+<!-- /STOP_EV_TIMING_COVERAGE_20261115 -->
+
 <!-- STOP_EV_ACCOUNTING_STATUS_20261115 -->
 ## 2026-11-15 Historical STOP-EV primary accounting audited: no new defect found
 

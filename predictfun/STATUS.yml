@@ -1,3 +1,32 @@
+stop_ev_timing_coverage_20261115:
+  asof: '2026-11-15T14:02:20.203055+00:00'
+  status: historical_coverage_improved_saved_artifact_audit_pass
+  integration_commit: 79e8f13d
+  builder_commit: f0682872
+  freeze_commit: 3bb6773f
+  checker_commit: 1e6c71d2
+  days: 9
+  neutral_probes: 393154
+  strict_eligible_before: 2809
+  strict_eligible_after: 18911
+  estimated_eligible_before: 72255
+  estimated_eligible_after: 149658
+  development_probes: 187384
+  development_strict_eligible: 7337
+  development_estimated_eligible: 68028
+  baseline_overlap_comparisons_unchanged: 75064
+  synthetic_tests_passed: 9
+  planted_corruptions_refused: 5
+  future_only_admissions_without_certificate: 115715
+  noncertification_is_measured_error: false
+  timing_coverage_resolved: false
+  physical_timing_validated: false
+  reference_requires_no_cap: true
+  model_pipeline_changed: false
+  model_runs: 0
+  review: predictfun/handoffs/20261115_stop_ev_timing_coverage.md
+  evidence: predictfun/reviews/stop_ev_timing_20261115/current.json
+
 stop_ev_accounting_status_20261115:
   asof: '2026-11-15T13:37:11.660804+00:00'
   status: saved_primary_accounting_checks_pass
