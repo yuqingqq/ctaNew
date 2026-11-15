@@ -1,3 +1,30 @@
+entry_information_20261115:
+  status: complete_development_study
+  asof: 2026-11-15T03:52:15Z
+  source_commit: c6621973
+  freeze_commit: 1acaf302
+  evidence_commit: d97f0b29
+  integration_commit: dd702519
+  results: predictfun/reviews/entry_information_20261115/current.json
+  inventory: predictfun/handoffs/20261115_entry_information_inventory.md
+  features: 325
+  diagnostic_candidates: 9
+  production_candidates: 0
+  marginal_screens: 1300
+  test_probes: 9871
+  test_windows: 1434
+  test_days: 5
+  economic_passes: 0
+  economic_tests: 18
+  matched_draws: 500
+  synthetic_checks: 6
+  future_checks: 2010
+  verified_models: 180
+  forward_validation: false
+  portfolio_evaluated: false
+  promoted: false
+  old_size_supervisor: resumed
+
 wait_post_state_20261115:
   status: complete_development_study
   asof: 2026-11-15T02:59:00Z

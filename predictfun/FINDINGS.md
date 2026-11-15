@@ -1,3 +1,37 @@
+<!-- ENTRY_INFORMATION_20261115 -->
+## 2026-11-15 — entry-information inventory and contribution measurements COMPLETE
+
+User: list available information and measure influence on the wait/post target.
+Entry stays wait/post; cancel/keep remains a separate model. Completed as of
+2026-11-15T03:52:15Z: 9,871 evaluation probes (4,990 bid / 4,881 ask), 1,434
+windows on five consumed dates, Oct 27/31 and Nov 1/2/3. Seven label days contain
+13,911 probes / 2,010 windows. No forward validation or policy promotion.
+
+325 named inputs (284 existing + 41 transforms); complete field inventory and
+1,300 feature/side/target screens retained. Nine fixed family probes compare
+incremental histories/geometry against current book, contract and order state.
+For POST-minus-WAIT, Predict history/pending flow reduces bid squared error by
+1.25%; level dynamics 0.73%; fair-value dynamics 0.37%. No addition improves
+aggregate ask timing error. Recovered upstream fields worsen timing on both
+sides, as does ALL. Every pooled model R2 remains below the prior-mean baseline;
+0/18 matched local economic checks pass (500 draws each, multiplicity adjusted).
+Weak marginal relationships exist; they do not establish causal or tradable
+influence. The four missing inputs alone do not explain the earlier failures.
+
+Six synthetic checks and 2,010 historical future checks pass; 180 saved model
+schemas/digests verified; peak worker RSS 902 MiB. Source c6621973, authoritative
+freeze 1acaf302 / freeze_v2.json, evidence d97f0b29; merged dd702519 into mm-research.
+Completed worker exited 0; older size supervisor resumed. Prior launch attempts
+preserved, no historical builds/fits in those attempts. Labels unchanged under
+neutral KEEP: separate cancellation benefits are not credited in this study.
+
+Results: `handoffs/20261115_entry_information_results.md`.
+Inventory: `handoffs/20261115_entry_information_inventory.md`.
+Scores/receipt: `reviews/entry_information_20261115/current.json`.
+Next research should use the measured side-specific contributions, not assume
+that a larger feature set solves timing. All dates are consumed development.
+<!-- /ENTRY_INFORMATION_20261115 -->
+
 <!-- WAIT_POST_STATE_RESULT_20261115 -->
 ## 2026-11-15 — ladder state and cleanup fail economic gates (QUALIFIED development result)
 
