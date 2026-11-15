@@ -1,0 +1,24 @@
+{
+  "asof": "2026-11-15T14:45:39.331632+00:00",
+  "report_sha256": "b88398fceabdbf00eaece11bcae1554a04cc491bc03744b73b40eb3b1d7c2a4d",
+  "control_exact_all_folds": true,
+  "mean_optimism_reduction_fraction": 0.6515589172326508,
+  "original_top_decile_optimism_reduction_fraction": 0.19361407349554405,
+  "original_kept_value_residual_fraction": 0.9342717754371436,
+  "l2_bias_lower_all_days": true,
+  "each_own_positive_set_loses": {
+    "huber": true,
+    "squared_error": true
+  },
+  "test_fill_value_worse_all_days": true,
+  "final_model_selected": false,
+  "model_pipeline_changed": false,
+  "portfolio_test": false,
+  "untouched_validation": false,
+  "formulas": {
+    "optimism": "mean(prediction - label)",
+    "bias_reduction": "1 - squared_error_optimism / huber_optimism",
+    "decomposition": "p*v-y = (p-fill)*v + fill*(v-y); residual fractions are an identity, not independent causal effects"
+  },
+  "saved_models_and_predictions": "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_causes_20261115_v1"
+}
