@@ -1,0 +1,165 @@
+{
+  "asof": "2026-11-15T17:01:13.094806+00:00",
+  "original_actions": 265373,
+  "primary_actions_nine_dates": 149658,
+  "population": {
+    "n": 81630,
+    "filled": 7620,
+    "severe": 1014,
+    "value_cents": -271902.27466583945,
+    "gross_loss_cents": 355815.13572926295,
+    "severe_loss_cents": 211949.67431213587,
+    "raw_kept_severe": 87
+  },
+  "strict_population": {
+    "n": 11574,
+    "filled": 421,
+    "severe": 23,
+    "value_cents": 930.1114990577407,
+    "gross_loss_cents": 8117.943740284663,
+    "severe_loss_cents": 4158.39825,
+    "raw_kept_severe": 1
+  },
+  "current_feature_infinite_fields": 0,
+  "raw_kept_severe": {
+    "n": 87,
+    "outside_training_full_ranges": 0,
+    "outside_training_tail_ranges": 6,
+    "fair_missing": 26,
+    "queue_missing": 9
+  },
+  "test_error_tail_mass_by_day": {
+    "20261027": {
+      "actions": 12842,
+      "filled_actions": 1229,
+      "n": 129,
+      "filled": 129,
+      "ev_squared_error_share": 0.7214641476672533,
+      "filled_value_head_squared_error_share": 0.7025639943489713
+    },
+    "20261031": {
+      "actions": 14278,
+      "filled_actions": 1224,
+      "n": 143,
+      "filled": 143,
+      "ev_squared_error_share": 0.8049149534084717,
+      "filled_value_head_squared_error_share": 0.7737753641701364
+    },
+    "20261101": {
+      "actions": 14851,
+      "filled_actions": 1273,
+      "n": 149,
+      "filled": 149,
+      "ev_squared_error_share": 0.8202105088284003,
+      "filled_value_head_squared_error_share": 0.7915005572766561
+    },
+    "20261102": {
+      "actions": 20079,
+      "filled_actions": 1958,
+      "n": 201,
+      "filled": 201,
+      "ev_squared_error_share": 0.6979838630495404,
+      "filled_value_head_squared_error_share": 0.6815784966297207
+    },
+    "20261103": {
+      "actions": 19580,
+      "filled_actions": 1936,
+      "n": 196,
+      "filled": 196,
+      "ev_squared_error_share": 0.6544526134873931,
+      "filled_value_head_squared_error_share": 0.6434120889321026
+    }
+  },
+  "squared_ev_error_top1_daily_range": [
+    0.6544526134873931,
+    0.8202105088284003
+  ],
+  "squared_value_head_error_top1_daily_range": [
+    0.6434120889321026,
+    0.7915005572766561
+  ],
+  "label_top1_training_squared_magnitude_range": [
+    0.7288033749754165,
+    0.7651635595576863
+  ],
+  "daily_median_w30": {
+    "20261023": 392.9859924316405,
+    "20261024": 203.79557022929447,
+    "20261025": 222.82580566406247,
+    "20261026": 434.37936401367193,
+    "20261027": 425.99096679687494,
+    "20261031": 267.1650085449219,
+    "20261101": 203.73449707031259,
+    "20261102": 386.2608947753908,
+    "20261103": 426.9905696004794
+  },
+  "daily_bn_flow250_abs_p99": {
+    "20261023": 6.119360179901105,
+    "20261024": 6.377489819526667,
+    "20261025": 4.61943992614746,
+    "20261026": 6.9670000076293945,
+    "20261027": 6.178999900817871,
+    "20261031": 4.2400600957870385,
+    "20261101": 5.565999984741211,
+    "20261102": 7.689880065917974,
+    "20261103": 7.0351298570631595
+  },
+  "proposed_net_flow_ratio": {
+    "max_absolute": 1245808280207360.0,
+    "missing_test_actions": 28756,
+    "test_actions": 81630,
+    "status": "rejected_as_numerically_ill_conditioned_not_in_current_model"
+  },
+  "level_depletion_ratio_daily_auc_below_half": true,
+  "health": {
+    "all": {
+      "n": 81630,
+      "any_extreme": 6784,
+      "outside_range": 1299,
+      "fair_missing": 14253,
+      "queue_missing": 14618,
+      "level_history_missing": 32935,
+      "flow_history_missing": 8483
+    },
+    "good": {
+      "n": 2561,
+      "any_extreme": 289,
+      "outside_range": 65,
+      "fair_missing": 517,
+      "queue_missing": 206,
+      "level_history_missing": 852,
+      "flow_history_missing": 303
+    },
+    "severe": {
+      "n": 1014,
+      "any_extreme": 165,
+      "outside_range": 19,
+      "fair_missing": 217,
+      "queue_missing": 86,
+      "level_history_missing": 394,
+      "flow_history_missing": 144
+    },
+    "raw_kept_good": {
+      "n": 545,
+      "any_extreme": 49,
+      "outside_range": 15,
+      "fair_missing": 137,
+      "queue_missing": 45,
+      "level_history_missing": 159,
+      "flow_history_missing": 89
+    },
+    "raw_kept_severe": {
+      "n": 87,
+      "any_extreme": 6,
+      "outside_range": 0,
+      "fair_missing": 26,
+      "queue_missing": 9,
+      "level_history_missing": 35,
+      "flow_history_missing": 17
+    }
+  },
+  "history_1s_complete_actions": 73147,
+  "history_fixed_price_1s_complete_actions": 48695,
+  "scope": "Consumed-data description. No model trained, feature promoted, causal loss attribution, or untouched validation.",
+  "report_sha256": "e849e4e86efd2d00939540cda7c94e3b2dfebacbb0a438084d53c70bed194081"
+}
