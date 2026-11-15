@@ -1329,6 +1329,9 @@ def pcol(H, j):
 X5_FAM = {'PF_OFI': ['adv_ofi250', 'adv_ofi1000', 'adv_dd3_250', 'adv_dd3_1000'],          # pf_stop_model_x5.py (rows_<day>_x5.parquet)
           'BN_DEPTH': ['adv_bnd_imb5', 'adv_bnd_imb20', 'adv_d_bnd_imb5_250', 'adv_bnd_ofi250', 'adv_bnd_ofi1000', 'bnd_age']}
 X5_F = X5_FAM['PF_OFI'] + X5_FAM['BN_DEPTH']
+VOLZ = ['z_bn_r250', 'z_bn_r1000', 'z_bn_r3000']            # 2026-11-15: adverse Binance return / (1e4 sigma sqrt(h / 1 s)) (Codex 'condition' idea;
+PEND_REL = {'own_pend': 'r_own_pend', 'opp_pend': 'r_opp_pend', 'pf_pend_tot5000': 'r_pf_pend_tot5000'}   # the low-vol coverage flag)
+X6_JSON = f'{OUTD}/x6test_20261115.json'; T5_DRAWS = 10; T5_MAX = 0.01
 DIAG_JSON = f'{OUTD}/diag_20261115.json'; X5_JSON = f'{OUTD}/x5test_20261115.json'; REVIEW_JSON = f'{OUTD}/review_20261115.json'; REG_JSON = f'{OUTD}/reg_20261115.json'; DUP_JSON = f'{OUTD}/dup_20261115.json'
 BN_F = [c for c in FEAT_M if c.startswith(('bn_', 'adv_bn_')) or c in ('d_bnimb250', 'adv_d_bnimb250', 'dfv250', 'dfv1000', 'gap_adv', 'sens',
                                                                        'pbn_dist', 'act_rel')]   # Binance-derived inputs (P15; act_rel added
@@ -1530,6 +1533,8 @@ def day_matrix(src, scale, F, sel=None):
     pf = _pq(src); x5 = {}
 
     def col(c):
+        if c.startswith('z_'):                             # volatility-normalized adverse Binance return
+            h_ = float(c.split('_r')[-1]); return col('adv_' + c[2:]) / (1e4 * col('sigma') * np.sqrt(h_ / 1000.0))
         if c in X5_F:                                      # extra inputs live beside the rows, same row order (checked on first use)
             if not x5:
                 if not isinstance(src, str) or src.endswith('.parquet'):
@@ -1702,13 +1707,21 @@ def fit_fold_v4(test, vtag='_v4'):
         sys.exit('REFUSED: no within-side copies test (run pf_stop_model_review.py dup first)')
     DP = json.load(open(DUP_JSON)); rdrop |= set(DP['drop_inputs']); F = [c for c in F if c not in rdrop]
     x5add = []
-    if vtag == '_v5':                                      # v5 = v4 + the extra input families the x5 test adopted
+    if vtag in ('_v5', '_v6'):                                      # v5 = v4 + the extra input families the x5 test adopted
         if not os.path.exists(X5_JSON):
             sys.exit('REFUSED: no x5 test (run pf_stop_model_review.py x5test first)')
         x5add = [c for fam in json.load(open(X5_JSON))['adopt'] for c in X5_FAM[fam]]
         if not x5add:
             sys.exit('REFUSED: the x5 test adopted no family (v4 stands)')
         F = F + x5add
+    if vtag == '_v6':                                      # v6 = v5 + the x6 test's adopted representation changes (on the rebuilt rows)
+        if not os.path.exists(X6_JSON):
+            sys.exit('REFUSED: no x6 test (run pf_stop_model_review.py x6test first)')
+        X6 = json.load(open(X6_JSON))
+        if 'PEND_REL' in X6['adopt']:
+            F = [PEND_REL.get(c, c) for c in F]
+        if 'VOLZ' in X6['adopt']:
+            F = F + VOLZ
     ncols = [c for c in DP['norm_inputs'] if c in F]               # the final R1 decision (dup runs reg's comparison on the final inputs)
     LABC = ['D0'] + [DCOL[h] for h in HS]
     pn = {(h, j): 0 for h in HS for j in JS}; pp_ = dict(pn)
@@ -1757,7 +1770,11 @@ def fit_fold_v4(test, vtag='_v4'):
         yp = np.random.default_rng(99).permutation((lab[DCOL[HP]][ii] >= 1).astype(int)); vv = None
         if valid is not None:
             rv = head_rows(valid[1]['D0'], 1, target); vv = (valid[0][rv], (valid[1][DCOL[HP]][rv] >= 1).astype(int))
-        bp = fit_head(X[ii], yp, wc, F, valid=vv, params=lgbp); bpr = float(np.average(yp, weights=wc)); del vv
+        bp = [fit_head(X[ii], yp, wc, F, valid=vv, params=lgbp)]; bpr = float(np.average(yp, weights=wc))
+        if vtag == '_v6':                                  # v6: T5 over T5_DRAWS permutations (v5's single draw refused at +0.00115; P31 / rule 6)
+            for sd_ in range(1, T5_DRAWS):
+                bp.append(fit_head(X[ii], np.random.default_rng(99 + sd_).permutation(yp), wc, F, valid=vv, params=lgbp))
+        del vv
     del X, lab, w, z, valid
     mono = {}; ab = {}
     for dd in (cal, test):                                 # calibration day first: Platt is fitted there and applied to both days
@@ -1780,9 +1797,13 @@ def fit_fold_v4(test, vtag='_v4'):
         mono[dd] = {f'H{h}': {f'j{j}': float((raw[(h, j)][u] > raw[(h, j - 1)][u] + 1e-7).mean()) for j in JS[1:]} for h in HS}
         if dd == test and bp is not None:
             r = u & head_rows(lab_['D0'], 1, target); yt = (lab_[DCOL[HP]][r] >= 1).astype(float)
-            pq_ = bp[0].predict(Xd[r], num_iteration=bp[1]); a_p, n_p = auc_nan(yt.astype(bool), pq_)
-            bss = 1.0 - float(((pq_ - yt) ** 2).mean()) / float(((bpr - yt) ** 2).mean())
-            T5 = dict(auc=a_p, bss=bss, rows=n_p, rounds=int(bp[1]), ok=bool(bss <= T5_BSS), auc_within_declared_v3=bool(abs(a_p - 0.5) <= T5_AUC))
+            dr = []
+            for (bb, nn) in bp:
+                pq_ = bb.predict(Xd[r], num_iteration=nn); a_p, n_p = auc_nan(yt.astype(bool), pq_)
+                dr.append((a_p, 1.0 - float(((pq_ - yt) ** 2).mean()) / float(((bpr - yt) ** 2).mean())))
+            bss = float(np.mean([x[1] for x in dr])); mx = float(max(x[1] for x in dr)); a_p = float(np.mean([x[0] for x in dr]))
+            ok5 = bool(bss <= T5_BSS and mx <= T5_MAX) if len(dr) > 1 else bool(dr[0][1] <= T5_BSS)
+            T5 = dict(auc=a_p, bss=bss, max_bss=mx, draws=dr, rows=n_p, rounds=int(bp[0][1]), ok=ok5, auc_within_declared_v3=bool(abs(a_p - 0.5) <= T5_AUC))
         out.to_parquet(f'{OUTD}/pred_fold{test}_{dd}{vtag}.parquet', index=False); del Xd, out, raw, fin, lab_
         mem_guard(f'fit v4 {test} predict {dd}')
     res = dict(test=test, cal=cal, train_days=list(tr_days), features=F, dropped=A['drop'], review_dropped=sorted(rdrop), x5_added=x5add, scale=scale,
@@ -2208,6 +2229,8 @@ if __name__ == '__main__':
         fit_fold_v4(sys.argv[2])
     elif cmd == 'fit5':
         fit_fold_v4(sys.argv[2], vtag='_v5')
+    elif cmd == 'fit6':
+        fit_fold_v4(sys.argv[2], vtag='_v6')
     elif cmd == 'align':
         align_day(sys.argv[2])
     elif cmd == 'report':
@@ -2216,5 +2239,7 @@ if __name__ == '__main__':
         report('4')
     elif cmd == 'report5':
         report('5')
+    elif cmd == 'report6':
+        report('6')
     else:
         sys.exit(f'unknown command {cmd}')

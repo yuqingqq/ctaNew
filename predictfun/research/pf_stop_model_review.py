@@ -910,14 +910,17 @@ def p30cmp():
         x['changed'] = ch
         R = M.day_cols(f'{M.OUTD}/rows_{d}_p30.parquet', ['m', 'side', 'k'] + M.LAB)
         x['integrity'] = M.integrity(R['m'], R['side'], R['k'], {c: R[c] for c in M.LAB}); out[d] = x
-        ok &= bool(x['labels_identical'] and x['integrity']['ok'])
+        fair = max((e * early.mean() + l_ * (1 - early.mean())) for c, (e, l_) in ch.items() if c in ('dfv250', 'dfv1000', 'gap_adv', 'sens', 'pbn_dist')) if ch else 0.0
+        x['fair_changed_share'] = float(fair); x['scale_after_30s'] = float(ch.get('scale_w30', (0.0, 0.0))[1])
+        x['expected'] = bool(fair <= 0.15 and x['scale_after_30s'] == 0.0)   # declared: the fair-price fix touches the HH:00 windows (8.3%)
+        ok &= bool(x['labels_identical'] and x['integrity']['ok'] and x['expected'])
         L.append(f'   {d}: {x["rows_old"]} / {x["rows_new"]} ({same_keys}; +{x["only_new"]} / -{x["only_old"]}) | {x["labels_identical"]} | {x["integrity"]["ok"]} | '
                  + ', '.join(f'{c} {e:.1%}/{l_:.1%}' for c, (e, l_) in sorted(ch.items(), key=lambda z: -z[1][0])[:8]))
         del a, b_, R
     json.dump(out, open(f'{M.OUTD}/p30cmp_20261115.json', 'w'), indent=1, default=float); open(f'{M.OUTD}/p30cmp_20261115.txt', 'w').write('\n'.join(L) + '\n')
     print('\n'.join(L), flush=True)
     if not ok:
-        sys.exit('REFUSED: labels changed or integrity failed after the pre-roll rebuild')
+        sys.exit('REFUSED: labels changed, integrity failed or the changes are not the expected ones after the pre-roll rebuild')
 
 
 def x6test():
