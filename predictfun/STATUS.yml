@@ -1,3 +1,36 @@
+stop_ev_model_choice_20261115:
+  asof: '2026-11-15T15:31:29.684547+00:00'
+  status: retain_hurdle_benchmark_test_immediate_urgency_alignment_next
+  integration_commit: 10ca931a
+  source_commit: d32b0ca1
+  freeze_commit: 266f3ee2
+  test_days: 5
+  test_actions: 81630
+  filled_test_actions: 7620
+  estimator_setups: 4
+  raw_and_calibrated_variants: 8
+  hyperparameter_search: false
+  hurdle_mse_better_than_each_alternative_days: 5
+  matched_selection_count: 17585
+  hurdle_matched_local_value_cents: -14873.059512568594
+  direct_matched_local_value_cents: -23300.615186365165
+  component_matched_local_value_cents: -26254.712219877605
+  extra_trees_matched_local_value_cents: -15597.951591881474
+  calibrated_extra_trees_positive_count: 1115
+  calibrated_extra_trees_positive_local_value_cents: 597.1923862527844
+  short_exposure_target_tested: false
+  current_target_is_neutral_one_second_local_value: true
+  model_switch_supported_by_this_comparison: false
+  all_model_reload_checks_pass: true
+  original_control_reproduced: true
+  new_model_promoted: false
+  protected_data_read: false
+  untouched_validation: false
+  active_policy_changed: false
+  e2ize_establishes_ws_missing_timestamp_validity: false
+  review: predictfun/handoffs/20261115_stop_ev_model_choice_review.md
+  evidence: predictfun/reviews/stop_ev_model_choice_20261115/interpretation_v1.json
+
 stop_ev_tail_distribution_20261115:
   asof: '2026-11-15T15:05:47.480856+00:00'
   status: tail_concentration_and_forward_gap_confirmed_physical_timing_unresolved

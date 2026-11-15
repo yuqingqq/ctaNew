@@ -1,5 +1,44 @@
 # P-2026-005 HANDOFF
 
+<!-- STOP_EV_MODEL_CHOICE_20261115 -->
+## 2026-11-15 Controlled model comparison favors retaining the hurdle benchmark
+
+As of 15:31:29Z, five consumed test days / 81,630 certified-estimated actions
+(7,620 filled): four setups, each raw + one reserved-day mean-offset
+calibration; eight variants, no parameter search. Original LGBM hurdle versus
+direct LGBM, at-price + through-price LGBM and Extra Trees (one fixed setup).
+Same inputs/labels/folds; control predictions and training matrices exact.
+Hurdle MSE beats all three alternatives on all five days. At identical group
+counts (17,585 selected actions), local value is -$148.73 / -$233.01 /
+-$262.55 / -$155.98 respectively; order-only -$328.35. Hurdle and Extra Trees
+beat order-only at matched counts all five days, but no raw setup is profitable.
+
+Fill AUC 0.809-0.841; conditional filled-value R2 0.0007-0.0318. Calibration
+reduces hurdle mean optimism 1.033 -> 0.320 c/action, but its 4,791 positive
+selections lose $41.37. Calibrated Extra Trees makes $5.97 on only 1,115
+selected actions (1.37%); this is not measured quote uptime or a promoted
+replacement. No controlled evidence here for switching model families.
+
+Target review: agreed one-second neutral local EV is coherent, but does not
+isolate urgency before the next 50 ms recheck/cancel (about t+72 ms under
+22 ms cancel latency). A shorter incremental-exposure target with good-fill
+value, longer risk context and queue-priority costs is a PROPOSED next test;
+no horizon or active policy changed. The current zero cutoff is diagnostic,
+not the agreed stage-3 default-rest policy with a negative pull margin.
+
+Qualification to the newer E2IZE interpretation: re-timing observed-WS groups
+leaves actual E2 groups unchanged. Small mean effect in the selected invariant
+subset does not establish timestamp validity for WS-missing trades. It is a
+useful negative control, not proof that all E2-associated losses are physical.
+
+Source d32b0ca1, freeze 266f3ee2; merge 10ca931a. All heads save/reload
+exactly, positive controls pass and corrupted inputs refused. One core, 176 s,
+519 MiB peak; prepared consumed data only. Review:
+handoffs/20261115_stop_ev_model_choice_review.md; evidence:
+reviews/stop_ev_model_choice_20261115/{report_v1,interpretation_v1}.json.
+No new model promoted, protected data read, live code or T5v2 changes.
+<!-- /STOP_EV_MODEL_CHOICE_20261115 -->
+
 ## 2026-11-15 15:20Z (session aea5bfb9) — E2 TIMING CHECK DONE (USER: "Go next"): the E2 timing method does not manufacture the losses; they are real adverse flow in states with E2-timed trades (within the replay)
 
 - USER: "Is it the model has little prediction power, or the model is not good at predicting this target" -> skill split (read-only, v2 test predictions): fills are well predicted (AUC 0.82 certified / 0.86 invariant); among fills the value head ranks (IC +0.23) but explains 2% of the variance, and even its best fifth of fills loses (-13 c per order) in the certified population - the target, not the learner. Then "Go next".
