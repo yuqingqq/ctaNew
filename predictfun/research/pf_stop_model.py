@@ -1463,6 +1463,110 @@ def fit_fold(test):
           flush=True)
 
 
+def fit_fold_v4(test):
+    """v4 fit of one chronological fold with the options the dev-day diagnostics decided (DIAG_JSON 'decisions': target C / U, volume V60 /
+    V180 / S60, early stopping on the calibration day, Platt fitted on the calibration day, level projection). Same folds, seeds, inputs and
+    pinned parameters as v3.1; outputs fit_{test}_v4.json, pred_fold{test}_{day}_v4.parquet (R = raw, P = final), models *_v4.txt. The
+    comparator (STOP-DEPTH refit) is v3.1's (it does not depend on this model)."""
+    all_selftests()
+    if test not in TESTS:
+        sys.exit(f'REFUSED: {test} is not a fold test day')
+    if not os.path.exists(DIAG_JSON):
+        sys.exit('REFUSED: no dev-day diagnostics (run pf_stop_model_diag.py first)')
+    T0 = time.time(); tr_days = train_days(test); cal = FOLDS[test][1]
+    if not chrono_ok(tr_days, cal, test):
+        sys.exit(f'REFUSED: fold not chronological {tr_days} / {cal} / {test}')
+    dec = json.load(open(DIAG_JSON))['decisions']; target, vol = dec['target'], dec['volume']
+    es, pl, cm = bool(dec['early_stop']), bool(dec['platt']), bool(dec['cummin']) and dec['target'] == 'U'
+    mode, sub, cap = VOL[vol]
+    A = json.load(open(f'{OUTD}/audit2.json')); scale = A['scale']; F = [c for c in FEAT_M if c not in set(A['drop'])]
+    LABC = ['D0'] + [DCOL[h] for h in HS]
+    pn = {(h, j): 0 for h in HS for j in JS}; pp_ = dict(pn)
+    for d in tr_days:                                      # the training days' population rate of every head (T2; the rare levels of S)
+        R = pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=LABC + ['hgap']); R = R[usable(R)]
+        for (h, j) in pn:
+            r = head_rows(R.D0.values, j, target); pn[(h, j)] += int(r.sum()); pp_[(h, j)] += int((R[DCOL[h]].values[r] >= j).sum())
+    rates = {hj: pp_[hj] / max(1, pn[hj]) for hj in pn}; cut = rare_levels(rates) if mode == 'S' else {h: None for h in HS}
+    Xs, Ls, Ws, Zs = [], [], [], []
+    for d in tr_days:
+        R = pd.read_parquet(f'{OUTD}/rows_{d}.parquet', columns=KEYS + RAW_NEEDED + LABC); R = R[usable(R)].reset_index(drop=True)
+        if R.day.isin([int(cal), int(test)]).any():
+            sys.exit('REFUSED: a calibration or test row in the training rows')
+        lab = {c: R[c].to_numpy(np.float32) for c in LABC}; z = stratum(lab, cut) if mode == 'S' else None
+        ix, w = day_sample(len(R), sub, int(test) * 31 + int(d), z)
+        Xs.append(model_matrix(R.iloc[ix].reset_index(drop=True), scale, F)); Ls.append({c: v_[ix] for c, v_ in lab.items()}); Ws.append(w)
+        Zs.append(z[ix] if z is not None else np.zeros(len(ix), bool)); del R
+        mem_guard(f'fit v4 {test} rows {d}')
+    X = np.concatenate(Xs); del Xs
+    lab = {c: np.concatenate([x[c] for x in Ls]) for c in LABC}; w = np.concatenate(Ws); z = np.concatenate(Zs); del Ls, Ws, Zs
+    valid = None
+    if es:                                                 # early stopping on a uniform sample of the calibration day (usable rows)
+        Vd = pd.read_parquet(f'{OUTD}/rows_{cal}.parquet', columns=KEYS + RAW_NEEDED + LABC); Vd = Vd[usable(Vd)].reset_index(drop=True)
+        iv = np.sort(np.random.default_rng(int(cal)).choice(len(Vd), min(len(Vd), VAL_N), replace=False)); Vd = Vd.iloc[iv].reset_index(drop=True)
+        valid = (model_matrix(Vd, scale, F), {c: Vd[c].to_numpy(np.float32) for c in LABC}); del Vd
+    mem_guard(f'fit v4 {test} training rows')
+    info = {}; boost = {}; os.makedirs(f'{OUTD}/models', exist_ok=True)
+    for h in HS:
+        for j in JS:
+            ii = np.flatnonzero(head_rows(lab['D0'], j, target))
+            ic, wc = head_cap(z[ii] if mode == 'S' else None, w[ii], cap, int(test) * 7 + j * 1009 + h); ii = ii[ic]
+            y = (lab[DCOL[h]][ii] >= j).astype(int); vv = None
+            if valid is not None:
+                rv = head_rows(valid[1]['D0'], j, target); vv = (valid[0][rv], (valid[1][DCOL[h]][rv] >= j).astype(int))
+            Xh = X[ii]; b, nr = fit_head(Xh, y, wc, F, valid=vv); del vv
+            b.save_model(f'{OUTD}/models/fold{test}_H{h}_j{j}_v4.txt', num_iteration=nr); boost[(h, j)] = (b, nr)
+            a_tr, _ = auc_nan(y.astype(bool), b.predict(Xh, num_iteration=nr)); del Xh
+            imp = b.feature_importance('gain', iteration=nr); br = float(np.average(y, weights=wc))
+            info[f'H{h}_j{j}'] = dict(train_rows=int(len(y)), positives=int(y.sum()), base_rate=br, population_rate=float(rates[(h, j)]),
+                                      T2_gap=float(br - rates[(h, j)]), auc_train=a_tr, rounds=int(nr),
+                                      top_gain=[(F[i], float(imp[i] / imp.sum())) for i in np.argsort(-imp)[:10]])
+            mem_guard(f'fit v4 {test} H{h} j{j}')
+    T5 = None; bp = None
+    if test == TESTS[0]:                                   # permuted-label falsifier, the same procedure (v3.1's rule: blocks on skill)
+        ii = np.flatnonzero(head_rows(lab['D0'], 1, target))
+        ic, wc = head_cap(z[ii] if mode == 'S' else None, w[ii], cap, int(test) * 7 + 1009 + HP); ii = ii[ic]
+        yp = np.random.default_rng(99).permutation((lab[DCOL[HP]][ii] >= 1).astype(int)); vv = None
+        if valid is not None:
+            rv = head_rows(valid[1]['D0'], 1, target); vv = (valid[0][rv], (valid[1][DCOL[HP]][rv] >= 1).astype(int))
+        bp = fit_head(X[ii], yp, wc, F, valid=vv); bpr = float(np.average(yp, weights=wc)); del vv
+    del X, lab, w, z, valid
+    mono = {}; ab = {}
+    for dd in (cal, test):                                 # calibration day first: Platt is fitted there and applied to both days
+        R = pd.read_parquet(f'{OUTD}/rows_{dd}.parquet', columns=KEYS + RAW_NEEDED + LABC)
+        u = usable(R); Xd = model_matrix(R, scale, F); out = R[KEYS].copy(); out['usable'] = u
+        lab_ = {c: R[c].to_numpy(np.float32) for c in LABC}; del R
+        raw = {hj: b.predict(Xd, num_iteration=nr).astype(np.float32) for hj, (b, nr) in boost.items()}
+        if pl and dd == cal:
+            for (h, j) in boost:
+                r = u & head_rows(lab_['D0'], j, target); ab[(h, j)] = platt_fit(raw[(h, j)][r], lab_[DCOL[h]][r] >= j)
+        fin = {hj: (platt_apply(raw[hj], ab[hj]).astype(np.float32) if pl else raw[hj]) for hj in raw}
+        if cm:
+            for h in HS:
+                Zm = np.minimum.accumulate(np.stack([fin[(h, j)] for j in JS], axis=1), axis=1)
+                for i, j in enumerate(JS):
+                    fin[(h, j)] = Zm[:, i]
+        for (h, j) in boost:
+            out[f'R{h}_{j}'] = raw[(h, j)]; out[pcol(h, j)] = fin[(h, j)]
+            r = u & head_rows(lab_['D0'], j, target)
+            info[f'H{h}_j{j}'][f'auc_{"cal" if dd == cal else "test"}'] = auc_nan(lab_[DCOL[h]][r] >= j, fin[(h, j)][r])[0]
+        mono[dd] = {f'H{h}': {f'j{j}': float((raw[(h, j)][u] > raw[(h, j - 1)][u] + 1e-7).mean()) for j in JS[1:]} for h in HS}
+        if dd == test and bp is not None:
+            r = u & head_rows(lab_['D0'], 1, target); yt = (lab_[DCOL[HP]][r] >= 1).astype(float)
+            pq_ = bp[0].predict(Xd[r], num_iteration=bp[1]); a_p, n_p = auc_nan(yt.astype(bool), pq_)
+            bss = 1.0 - float(((pq_ - yt) ** 2).mean()) / float(((bpr - yt) ** 2).mean())
+            T5 = dict(auc=a_p, bss=bss, rows=n_p, rounds=int(bp[1]), ok=bool(bss <= T5_BSS), auc_within_declared_v3=bool(abs(a_p - 0.5) <= T5_AUC))
+        out.to_parquet(f'{OUTD}/pred_fold{test}_{dd}_v4.parquet', index=False); del Xd, out, raw, fin, lab_
+        mem_guard(f'fit v4 {test} predict {dd}')
+    res = dict(test=test, cal=cal, train_days=list(tr_days), features=F, dropped=A['drop'], scale=scale, version='4', decisions=dec,
+               rare_levels={str(h): v_ for h, v_ in cut.items()}, info=info, T1=True, T5=T5, T4_monotonicity=mono,
+               platt={f'H{h}_j{j}': list(v_) for (h, j), v_ in ab.items()}, params=PD.LGB_PARAMS, rounds_max=ES_MAX if es else PD.N_ROUNDS,
+               volume=dict(mode=mode, rows_a_day=sub, rows_a_head=cap), seconds=round(time.time() - T0, 1))
+    json.dump(res, open(f'{OUTD}/fit_{test}_v4.json', 'w'), indent=1, default=float)
+    print(f'fit v4 {test} ({dec}): ' + '; '.join(f'H{h} j{j} AUC tr/cal/test {info[f"H{h}_j{j}"]["auc_train"]:.3f}/{info[f"H{h}_j{j}"]["auc_cal"]:.3f}/'
+                                                f'{info[f"H{h}_j{j}"]["auc_test"]:.3f} r{info[f"H{h}_j{j}"]["rounds"]}' for h in HS for j in (1, 2, 3))
+          + f'; T5 {T5}; {time.time() - T0:.0f} s', flush=True)
+
+
 # ---------------------------------------------------------------- align (one test day): oracle replay and our orders' fills
 OS_COLS = (('m', 'int64'), ('side', 'int64'), ('k', 'int64'), ('rung', 'int64'), ('depth', 'int64'), ('age', 'float32'))
 OS_VALS = tuple(f'{c}{h}' for h in HS for c in ('q', 'v', 'vo')) + ('vws1000', 'qthr1000')
@@ -1607,10 +1711,16 @@ def align_day(day):
 
 
 # ---------------------------------------------------------------- report
-def report():
+def report(v='3.1'):
+    """v '3.1' = the committed v3.1 report (outputs stop_model.*); v '4' = the same readings on v4's fits (files *_v4), on v4's target
+    population (TGT: 'U' = every usable row, 'C' = rows not ALREADY_j), R705 on STOP-DEPTH's own rows (not ALREADY_j), plus v3.1 vs v4."""
     all_selftests()
     asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
-    A = json.load(open(f'{OUTD}/audit2.json')); FJ = {t: json.load(open(f'{OUTD}/fit_{t}.json')) for t in TESTS}
+    V4 = v == '4'; sfx = '_v4' if V4 else ''
+    A = json.load(open(f'{OUTD}/audit2.json')); FJ = {t: json.load(open(f'{OUTD}/fit_{t}{sfx}.json')) for t in TESTS}
+    TGT = FJ[TESTS[0]]['decisions']['target'] if V4 else 'C'
+    if V4 and any(FJ[t]['decisions'] != FJ[TESTS[0]]['decisions'] or FJ[t]['version'] != '4' for t in TESTS):
+        sys.exit('REFUSED: v4 folds fitted with different decisions / versions')
     AJ = {t: json.load(open(f'{OUTD}/align_{t}.json')) for t in TESTS}
     RJ = {d: json.load(open(f'{OUTD}/rows_{d}.json')) for d in DAYS9}
     T5 = FJ[TESTS[0]]['T5']
@@ -1619,7 +1729,7 @@ def report():
     E = {}; GAPN = {}
     for t in TESTS:
         R = pd.read_parquet(f'{OUTD}/rows_{t}.parquet', columns=KEYS + ['D0'] + [DCOL[h] for h in HS] + ['v', 'masked', 'hgap'])
-        P = pd.read_parquet(f'{OUTD}/pred_fold{t}_{t}.parquet')
+        P = pd.read_parquet(f'{OUTD}/pred_fold{t}_{t}{sfx}.parquet')
         if not (np.array_equal(R.m.values, P.m.values) and np.array_equal(R.side.values, P.side.values) and np.array_equal(R.k.values, P.k.values)):
             sys.exit(f'REFUSED: predictions of {t} not aligned with its rows')
         for h in HS:
@@ -1628,7 +1738,8 @@ def report():
         S = pd.read_parquet(f'{OUTD}/pred_sdc_fold{t}.parquet')
         U = usable(R); GAPN[t] = int((~U).sum())
         E[t] = R[U].reset_index(drop=True).merge(S, on=['m', 'side', 'k'], how='left', validate='one_to_one')
-    L = [f'STOP-MODEL v3 (keep / cancel per ladder level), 5 chronological test days {", ".join(TESTS)}; as of {asof}',
+    L = [(f'STOP-MODEL v4 (decisions {json.dumps(FJ[TESTS[0]]["decisions"])}; population {"every usable row" if TGT == "U" else "rows not ALREADY_j"})'
+          if V4 else 'STOP-MODEL v3') + f' (keep / cancel per ladder level), 5 chronological test days {", ".join(TESTS)}; as of {asof}',
          f'inputs {len(FJ[TESTS[0]]["features"])} (scale {A["scale"]}; audit v2 dropped {A["drop"]}); GAP rows excluded {GAPN}; T5 permuted-label '
          f'BSS {T5["bss"]:+.4f} -> PASS (v3.1: no skill), AUC {T5["auc"]:.4f} (the v3 two-sided tolerance 0.02: '
          f'{"met" if T5["auc_within_declared_v3"] else "NOT met - anti-skill side, see v3.1 (ii)"}; {T5["rows"]} rows); controls passed on every rows / align day', '']
@@ -1639,7 +1750,7 @@ def report():
         for j in JS:
             ys, ps, bs, aucs, bss = [], [], [], [], []
             for t in TESTS:
-                e = E[t]; ok = e.D0.values < j; y = (e[DCOL[h]].values[ok] >= j).astype(float); p = e[pcol(h, j)].values[ok].astype(float)
+                e = E[t]; ok = head_rows(e.D0.values, j, TGT); y = (e[DCOL[h]].values[ok] >= j).astype(float); p = e[pcol(h, j)].values[ok].astype(float)
                 b = FJ[t]['info'][f'H{h}_j{j}']['base_rate']
                 aucs.append(auc_nan(y.astype(bool), p)[0]); bss.append(1.0 - float(((p - y) ** 2).mean()) / float(((b - y) ** 2).mean()))
                 ys.append(y); ps.append(p); bs.append(np.full(len(y), b))
@@ -1663,10 +1774,10 @@ def report():
         for j in (1, 2, 3):
             mg, gg, ms, ss = [], [], [], []
             for t in TESTS:
-                e = E[t]; ok = (e.D0.values < j) & np.isfinite(e.v.values) & (e.v.values != MASK_V); y = e[DCOL[h]].values[ok] >= j
+                e = E[t]; gv = np.isfinite(e.v.values) & (e.v.values != MASK_V); ok = head_rows(e.D0.values, j, TGT) & gv; y = e[DCOL[h]].values[ok] >= j
                 mg.append(auc_nan(y, e[pcol(h, j)].values[ok])[0]); gg.append(auc_nan(y, -e.v.values[ok].astype(float))[0])
                 if h == HP:
-                    o2 = ok & (e.v.values <= GUARD) & np.isfinite(e[f'SDC_P{j}'].values); y2 = e[DCOL[h]].values[o2] >= j
+                    o2 = (e.D0.values < j) & gv & (e.v.values <= GUARD) & np.isfinite(e[f'SDC_P{j}'].values); y2 = e[DCOL[h]].values[o2] >= j
                     ms.append(auc_nan(y2, e[pcol(h, j)].values[o2])[0]); ss.append(auc_nan(y2, e[f'SDC_P{j}'].values[o2])[0])
             b1, w1 = day_rule(mg, gg)
             R_[f'R704_H{h}_j{j}'] = 'BETTER' if b1 >= DAY_RULE else ('WORSE' if w1 >= DAY_RULE else 'NOT-SHOWN')
@@ -1681,7 +1792,7 @@ def report():
         for d in range(6):
             j = d + 1; mr, gr, ma, ga = [], [], [], []
             for t in TESTS:
-                e = E[t]; ok = (e.D0.values < j) & np.isfinite(e.v.values) & (e.v.values != MASK_V)
+                e = E[t]; ok = head_rows(e.D0.values, j, TGT) & np.isfinite(e.v.values) & (e.v.values != MASK_V)
                 Dh = e[DCOL[h]].values[ok]; y = Dh >= j; at = Dh == d; v = e.v.values[ok]; p = e[pcol(h, j)].values[ok]
                 gk = v > GUARD; nk = int(gk.sum()); mk = np.zeros(len(p), bool); mk[np.argsort(p, kind='stable')[:nk]] = True
                 mr.append(float(y[mk].mean()) if nk else NAN); gr.append(float(y[gk].mean()) if nk else NAN)
@@ -1692,14 +1803,37 @@ def report():
             L.append(f'  d{d}: run over ' + ' '.join(f'{a:.3f}|{b:.3f}' for a, b in zip(mr, gr)) + '; at the rung '
                      + ' '.join(f'{a:.3f}|{b:.3f}' for a, b in zip(ma, ga)) + f' -> {R_[f"R706_H{h}_d{d}"]}')
         L.append('')
+    if V4:                                                 # v3.1 against v4 on the same rows (printed; the readings above are v4's)
+        L.append('v3.1 AGAINST v4 (5 test days pooled): head | every usable row: AUC v3.1 / v4, log loss v3.1 / v4, Brier v3.1 / v4 | rows not '
+                 'ALREADY_j: AUC v3.1 / v4, log loss v3.1 / v4')
+        cv = {}
+        for h in HS:
+            for j in JS:
+                ys, yc, p3, p4, c3, c4 = [], [], [], [], [], []
+                for t in TESTS:
+                    Q = pd.read_parquet(f'{OUTD}/pred_fold{t}_{t}.parquet', columns=KEYS + ['usable', pcol(h, j)]); Q = Q[Q.usable.values]
+                    e = E[t]
+                    if not (np.array_equal(Q.m.values, e.m.values) and np.array_equal(Q.side.values, e.side.values) and np.array_equal(Q.k.values, e.k.values)):
+                        sys.exit(f'REFUSED: v3.1 predictions of {t} not aligned with v4 rows')
+                    y = e[DCOL[h]].values >= j; c = e.D0.values < j; a3 = Q[pcol(h, j)].values.astype(float); a4 = e[pcol(h, j)].values.astype(float)
+                    ys.append(y); p3.append(a3); p4.append(a4); yc.append(y[c]); c3.append(a3[c]); c4.append(a4[c])
+                y = np.concatenate(ys); a3 = np.concatenate(p3); a4 = np.concatenate(p4); y2 = np.concatenate(yc); b3 = np.concatenate(c3); b4 = np.concatenate(c4)
+                x = dict(all=dict(auc3=auc_nan(y, a3)[0], auc4=auc_nan(y, a4)[0], ll3=logloss(y, a3), ll4=logloss(y, a4), br3=brier(y, a3), br4=brier(y, a4),
+                                  rate=float(y.mean()), mp3=float(a3.mean()), mp4=float(a4.mean())),
+                         cond=dict(auc3=auc_nan(y2, b3)[0], auc4=auc_nan(y2, b4)[0], ll3=logloss(y2, b3), ll4=logloss(y2, b4)))
+                cv[f'H{h}_j{j}'] = x; a_, c_ = x['all'], x['cond']
+                L.append(f'  H{h} j{j}: {a_["auc3"]:.3f} / {a_["auc4"]:.3f}, {a_["ll3"]:.5f} / {a_["ll4"]:.5f}, {a_["br3"]:.5f} / {a_["br4"]:.5f} (rate {a_["rate"]:.4f}, '
+                         f'mean P {a_["mp3"]:.4f} / {a_["mp4"]:.4f}) | {c_["auc3"]:.3f} / {c_["auc4"]:.3f}, {c_["ll3"]:.5f} / {c_["ll4"]:.5f}')
+        sk['v31_vs_v4'] = cv
+        L.append('')
     # where the short-horizon skill comes from (POST HOC, declared in v3.1 (iii); fold 10-27's calibration day = a dev day)
     cd = FOLDS[TESTS[0]][1]
     Rc = pd.read_parquet(f'{OUTD}/rows_{cd}.parquet', columns=KEYS + ['D0'] + [DCOL[h] for h in HS] + ['hgap', 's1', 'scale_w30', 'adv_bn_r250',
                                                                                                         'adv_bn_r500', 'adv_d_bnimb250', 'own_mv250'])
-    Pc = pd.read_parquet(f'{OUTD}/pred_fold{TESTS[0]}_{cd}.parquet', columns=KEYS + [pcol(h, 1) for h in HS])
+    Pc = pd.read_parquet(f'{OUTD}/pred_fold{TESTS[0]}_{cd}{sfx}.parquet', columns=KEYS + [pcol(h, 1) for h in HS])
     if not (np.array_equal(Rc.m.values, Pc.m.values) and np.array_equal(Rc.k.values, Pc.k.values)):
         sys.exit('REFUSED: calibration-day predictions not aligned')
-    okc = usable(Rc) & (Rc.D0.values < 1); Rc = Rc[okc].reset_index(drop=True); Pc = Pc[okc].reset_index(drop=True)
+    okc = usable(Rc) & head_rows(Rc.D0.values, 1, TGT); Rc = Rc[okc].reset_index(drop=True); Pc = Pc[okc].reset_index(drop=True)
     rs1 = -(Rc.s1.values / Rc.scale_w30.values)
     subs = {'all': np.ones(len(Rc), bool), 'no Binance move in 500 ms': (Rc.adv_bn_r250.values == 0) & (Rc.adv_bn_r500.values == 0),
             'Binance against us in 250 ms': Rc.adv_bn_r250.values > 0, 'our best moved in 250 ms': Rc.own_mv250.values != 0}
@@ -1750,7 +1884,7 @@ def report():
             O = O.assign(depth=np.maximum(O.depth.values, 0)); deep = int((O.depth.values > 5).sum()); O = O[O.depth.values <= 5]
             e = E[t][['m', 'side', 'k', 'D0'] + [DCOL[h] for h in HS] + [pcol(h, j) for h in HS for j in JS]]
             O = O.merge(e, on=['m', 'side', 'k'], how='inner', validate='many_to_one'); nlab = len(O)
-            j_ = O.depth.values + 1; ok = O.D0.values < j_; O = O[ok].reset_index(drop=True); j_ = j_[ok]
+            j_ = O.depth.values + 1; ok = (O.D0.values < j_) if TGT == 'C' else np.ones(len(O), bool); O = O[ok].reset_index(drop=True); j_ = j_[ok]
             stat_os[(cfg, t)] = dict(order_steps=n0, deeper_than_5=deep, without_usable_row=n0 - deep - nlab, already=int((~ok).sum()), used=len(O))
             per_day[t] = (O, j_)
         for h in HS:
@@ -1794,6 +1928,12 @@ def report():
         L.append('      T7 ' + ', '.join(f'{c} {g:.2f}' for c, g in inf[f'H{HP}_j1']['top_gain'][:8]))
     t2_bad = [(t, k_) for t in TESTS for k_, x in FJ[t]['info'].items() if abs(x['T2_gap']) > T2_TOL]
     L.append(f'  T2 sample parity within {100 * T2_TOL:.1f} pp: {"all heads" if not t2_bad else f"FAILS {t2_bad}"}')
+    if V4:
+        for t in TESTS:
+            f = FJ[t]
+            L.append(f'  {t} v4: rows per head ' + ' '.join(f'{f["info"][f"H{h}_j{j}"]["train_rows"]}' for h in HS for j in (1, 6)) + ' (H x j1, j6) | rounds '
+                     + ' '.join(f'H{h}:' + ','.join(str(f['info'][f'H{h}_j{j}']['rounds']) for j in JS) for h in HS)
+                     + (' | Platt (a, b) H1000 j1 ' + ', '.join(f'{x:+.3f}' for x in f['platt']['H1000_j1']) if f.get('platt') else ''))
     L.append('')
     for h in HS:
         miss = [f'R701 {R_[f"R701_H{h}"]}'] if not R_[f'R701_H{h}'].startswith('ALIGNED') else []
@@ -1813,8 +1953,8 @@ def report():
                              boundary_windows=RJ[d]['boundary_windows']) for d in DAYS9},
                fits={t: dict(info=FJ[t]['info'], T4=FJ[t]['T4_monotonicity']) for t in TESTS},
                align={t: AJ[t]['stat'] for t in TESTS})
-    json.dump(res, open(f'{OUTD}/stop_model.json', 'w'), indent=1, default=float)
-    open(f'{OUTD}/stop_model.txt', 'w').write('\n'.join(L) + '\n')
+    json.dump(res, open(f'{OUTD}/stop_model{sfx}.json', 'w'), indent=1, default=float)
+    open(f'{OUTD}/stop_model{sfx}.txt', 'w').write('\n'.join(L) + '\n')
     print('\n'.join(L), flush=True)
 
 
@@ -1832,9 +1972,13 @@ if __name__ == '__main__':
         audit2()
     elif cmd == 'fit':
         fit_fold(sys.argv[2])
+    elif cmd == 'fit4':
+        fit_fold_v4(sys.argv[2])
     elif cmd == 'align':
         align_day(sys.argv[2])
     elif cmd == 'report':
         report()
+    elif cmd == 'report4':
+        report('4')
     else:
         sys.exit(f'unknown command {cmd}')
