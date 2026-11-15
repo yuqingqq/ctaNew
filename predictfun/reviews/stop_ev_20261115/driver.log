@@ -9,3 +9,15 @@
 13:00:49Z start ev_day_20261103
 13:01:54Z start ev_report
 13:01:59Z STOP-EV data DONE
+13:38:54Z start ev_selftest
+13:38:55Z start ev_day_20261023
+13:40:06Z start ev_day_20261024
+13:41:12Z start ev_day_20261025
+13:42:20Z start ev_day_20261026
+13:43:32Z start ev_day_20261027
+13:44:42Z start ev_day_20261031
+13:45:37Z start ev_day_20261101
+13:46:36Z start ev_day_20261102
+13:47:43Z start ev_day_20261103
+13:48:51Z start ev_report
+13:48:55Z STOP-EV data DONE

@@ -32,26 +32,28 @@
   "inc_stale_6": 11,
   "inc_untimed_6": 4819,
   "book_gaps": 4543,
-  "actions_ws_strict_missing_trade_timing": 23638,
+  "probes_in_windows_with_untimed_ws_strict": 34828,
+  "actions_ws_strict_ambiguous_reference_timing": 33072,
   "actions_ws_strict_not_client_resting": 14100,
   "actions_ws_strict_probe_not_reached": 486,
-  "actions_all_anchors_sensitivity_missing_trade_timing": 23638,
+  "probes_in_windows_with_untimed_all_anchors_sensitivity": 34828,
+  "actions_all_anchors_sensitivity_eligible_estimated_timing": 32552,
+  "e9_compared": 33190,
+  "e9_mismatch": 0,
+  "e9_control_differ": 363,
   "actions_all_anchors_sensitivity_not_client_resting": 14100,
   "actions_all_anchors_sensitivity_probe_not_reached": 486,
   "rec_windows": 288,
   "rec_regress_differ": 0,
   "rec_viol": 0,
-  "actions_ws_strict_ambiguous_reference_timing": 9834,
-  "actions_all_anchors_sensitivity_eligible_estimated_timing": 9833,
-  "e9_compared": 10079,
-  "e9_mismatch": 0,
-  "e9_control_differ": 86,
-  "actions_ws_strict_eligible": 246,
-  "actions_all_anchors_sensitivity_eligible": 246,
+  "actions_all_anchors_sensitivity_untimed_reach": 526,
+  "actions_ws_strict_eligible": 638,
+  "actions_all_anchors_sensitivity_eligible": 638,
+  "actions_ws_strict_untimed_reach": 8,
   "invalid_book": 252,
   "actions_ws_strict_incomplete_book_coverage": 755,
   "actions_all_anchors_sensitivity_incomplete_book_coverage": 755,
-  "actions_all_anchors_sensitivity_missing_or_stale_mark": 1
+  "actions_all_anchors_sensitivity_missing_or_stale_mark": 2
  },
  "load_stat": {
   "registry": 288,
@@ -140,9 +142,9 @@
    "pass": true
   },
   "E9": {
-   "compared": 10079,
+   "compared": 33190,
    "mismatch": 0,
-   "control_differ": 86,
+   "control_differ": 363,
    "ledger_failures": 0,
    "ledger_errors": [],
    "pass": true
@@ -160,9 +162,9 @@
   "untimed": 1242,
   "anchor_out_of_range": 53
  },
- "asof": "2026-11-15T12:59:46Z",
+ "asof": "2026-11-15T13:46:38Z",
  "sources": {
-  "pf_stop_ev.py": "9a7b9014d96f30e2",
+  "pf_stop_ev.py": "d951a1eaa0e70856",
   "pf_stop_ev_accounting.py": "1cffc03eb8d801d8",
   "pf_stop_queue_activation_lane.py": "8d61029d348f8085",
   "pf_queue_activation.py": "b63e7f00a74db3c8",
@@ -172,6 +174,7 @@
  },
  "label_contract": "stop-ev-chronological-order-value-v1",
  "reference": "corrected_stop_neutral_no_model_no_gate_v1",
+ "untimed_rule": "order_reach",
  "ages_ms": [
   0.0,
   250.0,
@@ -188,7 +191,7 @@
  "queue_contract": "activation-snapshot-queue-v1",
  "clock": "M 50",
  "horizon_ms": 1000.0,
- "seconds": 64.6,
+ "seconds": 66.4,
  "preroll_ms": 30000.0,
  "skip_foreign_parts": true
 }

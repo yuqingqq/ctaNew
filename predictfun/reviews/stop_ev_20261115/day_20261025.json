@@ -33,23 +33,25 @@
   "inc_untimed_6": 4580,
   "book_gaps": 4314,
   "actions_ws_strict_not_client_resting": 14140,
-  "actions_ws_strict_ambiguous_reference_timing": 7675,
+  "actions_ws_strict_ambiguous_reference_timing": 28793,
   "actions_all_anchors_sensitivity_not_client_resting": 14140,
-  "actions_all_anchors_sensitivity_eligible_estimated_timing": 7675,
-  "e9_compared": 8027,
+  "actions_all_anchors_sensitivity_eligible_estimated_timing": 28297,
+  "e9_compared": 29114,
   "e9_mismatch": 0,
-  "e9_control_differ": 95,
+  "e9_control_differ": 450,
   "rec_windows": 288,
   "rec_regress_differ": 0,
   "rec_viol": 0,
   "actions_ws_strict_probe_not_reached": 418,
   "actions_all_anchors_sensitivity_probe_not_reached": 418,
   "actions_ws_strict_incomplete_book_coverage": 221,
-  "actions_ws_strict_eligible": 352,
+  "actions_ws_strict_eligible": 817,
   "actions_all_anchors_sensitivity_incomplete_book_coverage": 221,
-  "actions_all_anchors_sensitivity_eligible": 352,
-  "actions_ws_strict_missing_trade_timing": 21584,
-  "actions_all_anchors_sensitivity_missing_trade_timing": 21584,
+  "actions_all_anchors_sensitivity_eligible": 817,
+  "probes_in_windows_with_untimed_ws_strict": 32565,
+  "probes_in_windows_with_untimed_all_anchors_sensitivity": 32565,
+  "actions_all_anchors_sensitivity_untimed_reach": 497,
+  "actions_ws_strict_untimed_reach": 1,
   "invalid_book": 272
  },
  "load_stat": {
@@ -139,9 +141,9 @@
    "pass": true
   },
   "E9": {
-   "compared": 8027,
+   "compared": 29114,
    "mismatch": 0,
-   "control_differ": 95,
+   "control_differ": 450,
    "ledger_failures": 0,
    "ledger_errors": [],
    "pass": true
@@ -159,9 +161,9 @@
   "untimed": 1346,
   "anchor_out_of_range": 29
  },
- "asof": "2026-11-15T12:54:33Z",
+ "asof": "2026-11-15T13:41:14Z",
  "sources": {
-  "pf_stop_ev.py": "9a7b9014d96f30e2",
+  "pf_stop_ev.py": "d951a1eaa0e70856",
   "pf_stop_ev_accounting.py": "1cffc03eb8d801d8",
   "pf_stop_queue_activation_lane.py": "8d61029d348f8085",
   "pf_queue_activation.py": "b63e7f00a74db3c8",
@@ -171,6 +173,7 @@
  },
  "label_contract": "stop-ev-chronological-order-value-v1",
  "reference": "corrected_stop_neutral_no_model_no_gate_v1",
+ "untimed_rule": "order_reach",
  "ages_ms": [
   0.0,
   250.0,
@@ -187,7 +190,7 @@
  "queue_contract": "activation-snapshot-queue-v1",
  "clock": "M 50",
  "horizon_ms": 1000.0,
- "seconds": 63.4,
+ "seconds": 66.9,
  "preroll_ms": 30000.0,
  "skip_foreign_parts": true
 }
