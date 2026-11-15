@@ -465,6 +465,28 @@ def dup():
     print('\n'.join(L), flush=True)
 
 
+def d12cmp():
+    """D12 regression: rows rebuilt with the loader's boundary-hour filter (rows_<day>_d12.*, PF_SM_ROWS_TAG) must equal the stored rows
+    (built before the filter) column for column on 10-27, 10-31 and 11-03 (the days whose folders hold a sealed / forward hour); else exit 1."""
+    out = {}
+    for d in ('20261027', '20261031', '20261103'):
+        a = pd.read_parquet(f'{M.OUTD}/rows_{d}.parquet'); b_ = pd.read_parquet(f'{M.OUTD}/rows_{d}_d12.parquet')
+        same = list(a.columns) == list(b_.columns) and len(a) == len(b_)
+        diff = [] if same else ['shape']
+        if same:
+            for c in a.columns:
+                x, y = a[c].to_numpy(), b_[c].to_numpy()
+                eq = np.array_equal(x, y, equal_nan=True) if x.dtype.kind == 'f' else np.array_equal(x, y)
+                if not eq:
+                    diff.append(c)
+        sk = json.load(open(f'{M.OUTD}/rows_{d}_d12.json')).get('load_stat', {}).get('parts_skipped')
+        out[d] = dict(rows=int(len(a)), identical=not diff, differing=diff, parts_skipped=sk); del a, b_
+    json.dump(out, open(f'{M.OUTD}/d12cmp_20261115.json', 'w'), indent=1)
+    print(f'D12 regression: {out}', flush=True)
+    if not all(x['identical'] for x in out.values()):
+        sys.exit('REFUSED: rows differ after the boundary-hour filter (investigate before any replay)')
+
+
 S5_BN = ['bn_r25', 'bn_r50', 'bn_r100', 'bn_r250', 'bn_r500', 'bn_r1000', 'bn_r3000', 'bn_imb', 'bn_age', 'bn_flow250', 'bn_flow1000', 'bn_flow5000',
          'bn_ntr1000']
 S5_PF = ['pf_spread', 'pf_mid', 'pf_micro_dev', 'pf_imb1', 'pf_imb3', 'pf_age', 'pf_nfr1000', 'pf_dm250', 'pf_dm1000', 'pf_dm5000']
@@ -643,5 +665,7 @@ if __name__ == '__main__':
         s5check()
     elif cmd == 'dup':
         dup()
+    elif cmd == 'd12cmp':
+        d12cmp()
     else:
         sys.exit(f'unknown command {cmd}')

@@ -7,7 +7,7 @@
 #   run_stop_model.sh play   -> (2026-11-15) STOP-PLAY: the v4 model's own decisions in the oracle's lane
 set -u
 cd /home/yuqing/ctaNew
-PHASE="${1:?data|model|v4|play}"
+PHASE="${1:?data|model|v4|v4b|play}"
 OUT=data/predict_fun/research/stop_model_20261114; mkdir -p $OUT/logs
 DAYS="20261023 20261024 20261025 20261026 20261027 20261031 20261101 20261102 20261103"
 TESTS="20261027 20261031 20261101 20261102 20261103"
@@ -30,6 +30,12 @@ case "$PHASE" in
     job sm_report python3 predictfun/research/pf_stop_model.py report;;
   v4)     # after pf_stop_model_diag.py run (its decisions): v3.1 report regression, v4 fits, v4 report
     job sm_report31 python3 predictfun/research/pf_stop_model.py report
+    for t in $TESTS; do job sm_fit4_$t python3 predictfun/research/pf_stop_model.py fit4 $t; done
+    job sm_report4 python3 predictfun/research/pf_stop_model.py report4;;
+  v4b)    # (2026-11-15, after the input review / s5check / reg): within-side copies test, the loader-filter regression, v4 fits, v4 report
+    job sm_dup python3 predictfun/research/pf_stop_model_review.py dup
+    for d in 20261027 20261031 20261103; do PF_SM_ROWS_TAG=_d12 job sm_rows_d12_$d python3 predictfun/research/pf_stop_model.py rows $d; done
+    job sm_d12cmp python3 predictfun/research/pf_stop_model_review.py d12cmp
     for t in $TESTS; do job sm_fit4_$t python3 predictfun/research/pf_stop_model.py fit4 $t; done
     job sm_report4 python3 predictfun/research/pf_stop_model.py report4;;
   play)   # STOP-PLAY on v4's predictions: calibration-day choice, test-day arms, report
