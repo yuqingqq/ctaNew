@@ -2,6 +2,20 @@
 model (USER 2026-11-15: "Again, we should have a few preprocessing steps, first, data processing, check its coverage, data quality, etc,
 then model, then the pipeline"). Design: predictfun/handoffs/20261115_stop_ev_design.md, sections 7-8. No model and no policy here.
 
+PRIMARY LABELS (actions_<day>_<timing>; the Codex contract stop-ev-chronological-order-value-v1 in pf_stop_ev_accounting.py, adopted
+  2026-11-15 after its reviews e315abe8 / ffa2025e / 211109b1, which supersede the design's aggregate label): the corrected neutral keep-all
+  ladder (replay_neutral: pf_stop_queue_activation_lane, M 50, 6 rungs x Z sh a side, unknown queue 0, no cap, no learned pull / gate /
+  retry timer), its checked Ledger (every raw leg with provenance - WS, or E2 with +-250 ms - or an exclusion status: UNTIMED with the
+  exec-second band, ANCHOR_OUT_OF_RANGE as a point; expected legs counted independently from step 1; book gaps > 500 ms declared;
+  per-leg / per-order / flat fills, remainders and position reconciled; a failure refuses the day) and ONE outcome-independent probe per
+  order generation (age drawn by hash from 0 / 250 / 500 / 1000 / 2000 ms, the instrument default, declared here before any data run).
+  Label = the focal order's own tranches in [t + 22 ms, min(t + 1 s, end)], each at its fill time + 1 s; client-known order inputs only
+  (x_*: depth, age, known remainder, known queue / shown size, unknown-queue flag); every probe keeps a status (not reached, not resting,
+  coverage, invalid book, missing / ambiguous timing, stale mark). Two timing populations, built and reported separately: ws_strict (any
+  E2 leg near the path refuses) and all_anchors_sensitivity (E2 point estimates, status eligible_estimated_timing).
+  E9: every eligible action's value and quantity recomputed independently from its order's tranches (mismatch 0; control: marks at the
+  anchor instead of the fill clock must differ somewhere); with no ledger failure.
+DIAGNOSTIC TABLES (below; market flow and hypothetical single orders on a queue grid; descriptive, not the economic action population):
 ROWS: the STOP-MODEL's rows (every 50 ms grid step of the first 60 s, both sides, valid known book; ref = the side's best in the last
   frame KNOWN at t), keys (m, side, k). LEVELS j = 1..6: price p_j = ref - (j - 1) ticks on the side (bids down, asks up).
 CLOCK: the lane's primary fill clock M 50 (trade time tt = anchor - 50 ms). A decision at t can avoid the legs with tt >= t + 22 ms
@@ -14,7 +28,8 @@ LABELS per row and level (float32; statuses instead of silent drops):
     at_j / atv_j   legs AT p_j whose taker order went deeper (THROUGH)
     au_j / auv_j   legs AT p_j without a taker key (type unknown; the lane's fill_type calls them STOP)
     bt_j / btv_j   legs BEYOND p_j (the level was taken; a front order at p_j fills at p_j)
-    value = shares x sg x (mid(anchor + 1 s) - p_j), cents x shares (order_steps' markout: the last venue frame <= anchor + 1 s)
+    value = shares x sg x (mid(tt + 1 s) - p_j), cents x shares: the last venue frame <= the fill clock's time + 1 s (the contract's mark;
+    order_steps used anchor + 1 s)
   EXACT ORDER FILLS = THE LABEL (a chronological, quantity-conserving ledger; the components above are diagnostics only - Codex reviews
     e315abe8 / ffa2025e: window-average markouts erase the queue position's value). The lane's rule M (CL.sim_joint's apply) for ONE
     order of Z shares resting at p_j with queue ahead q at t, CONTINUATION declared: the order is held until t + 1 s, no cancel, no
@@ -55,7 +70,8 @@ DATA CHECKS, declared before the first run (E1-E7: any failure -> no output for 
                  0); control: the mid at anchor + 0.9 s differs somewhere.
  E6 BRUTE        on >= 2,000 sampled (row, level) the components and the front order's fill f0 equal a recomputation from the leg table
                  with E3's independent types (mismatch 0); control: the components over (t, t + 1 s] differ somewhere.
- E7 RECONCILE    the recording corrected lane equals the plain corrected lane fill for fill, no lane violations; on >= 1,000 CLEAN order-steps
+ E7 RECONCILE    (the diagnostic single-order rule against the lane) the recording corrected lane equals the neutral replay fill for
+                 fill, no lane violations; on >= 1,000 CLEAN order-steps
                  the label from
                  the lane's own state equals the lane's fills (shares 1e-9, value 1e-6 c x sh) on 100%; controls: the cap removed and
                  the early window each differ somewhere. ENDED / SHARED shares and value gaps are printed (the single-order limit).
@@ -71,15 +87,19 @@ READINGS (B4 discipline: tables for the dev days 10-23..26 only; test days get c
  e TIMING     E2-anchored share of the front's fill shares and value by level; front value at M 0 / 50 / 250. Declared: E2 share of the
               front's fill shares at j = 1 > 30% -> E2-DEPENDENT (stage 2 reads by source, C12), else WS-DOMINANT.
  g SHAPE      by level: zero share of the front value, its quantiles (c per order), the top 1% of rows' share of |value|, STOP flow /
-              visible queue. Declared loss rule at j = 1: zero share >= 50% -> HURDLE (P(fill) and the value given a fill) else DIRECT;
-              top-1% share of |value| >= 30% -> ROBUST (Huber / clipped) else L2.
+              visible queue (descriptive). Declared loss rule on the PRIMARY label (all_anchors_sensitivity eligible actions, dev days):
+              zero share >= 50% -> HURDLE (P(fill) and the value given a fill) else DIRECT; top-1% share of |value| >= 30% -> ROBUST
+              (Huber / clipped) else L2. The same rule on the diagnostic front value is printed beside it.
+ a ACTIONS    per timing: probes, eligible share, value per action (mean, zero share, quantiles, tail), by rung and side: fills, at-price /
+              through-price value, partial known remainder, unknown queue at activation, known queue ahead / shown size.
  q QUEUE      the lane's queue ahead / known visible size at its price by depth (stage 3's estimate; how real the grid is).
  r GRID       mean value per order at the front / middle / back by level (descriptive).
 CONTROLS (synthetic; any failure -> no output): the single-order rule on hand cases (queue drain, beyond fill, visible-size cap,
   unavoidable legs, size cap, ask sign); types against DT.trade_type; the known-frame visible size; the population; components and the
   front against brute force; the INCOMPLETE flags against brute force (a feed gap, an untimed leg); the reconciliation on a toy two-sided
-  lane window (cap binding, SHARED, ENDED); planted errors each caught: rule-M cap off, legs before t + 22 counted, THROUGH counted as
-  STOP, venue-frame visible size, ask markout sign, invalid-book rows kept, INCOMPLETE flags off.
+  lane window (cap binding, SHARED, ENDED); the primary labels through the contract on that window (ledger reconciles, E9 agrees);
+  planted errors each caught: rule-M cap off, legs before t + 22 counted, THROUGH counted as STOP, venue-frame visible size, ask markout
+  sign, invalid-book rows kept, INCOMPLETE flags off, marks at the anchor, a leg missing from the provenance.
 STAGE 2 NOTES (from the reviews, not built here): inputs use client-known state only (never the simulator's ahead / rem, delayed trade
   reports or unacknowledged fills); evaluation on signed value of neutral actions with matched controls and >= 200-draw nulls, day
   clusters; grid copies are correlated samples (weights / dedupe); baselines conditional on price, level, q and size; joint cap in stage 3.
@@ -103,6 +123,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import pf_stop_model as M                                 # noqa: E402  (loader settings, rows, boundary cut, the lanes)
 import pf_stop_queue_activation_lane as QA                # noqa: E402  (the corrected queue initialization, Codex 00971693 / a815aa8a)
+import pf_stop_ev_accounting as AC                        # noqa: E402  (the primary label contract, Codex 3dc503bf / 211109b1)
 
 K, CL, P1, QR, TS, DT = M.K, M.CL, M.P1, M.QR, M.TS, M.DT
 DAYS9 = tuple(K.DAYS9); DEV = tuple(M.DEV_DAYS)
@@ -123,8 +144,12 @@ TOL_F = 1e-9; TOL_V = 1e-6; N_MIN = 2000; N_CLEAN_MIN = 1000; DUP_MAX = 0.001
 MEM_CAP_MIB = 2048.0
 INF = float('inf'); NAN = float('nan')
 STALE_MS = 500.0; INC_STALE = 1; INC_UNTIMED = 2; ICOLS = [f'inc_{j}' for j in JS]
-MUT_NO_CAP = MUT_WIN_EARLY = MUT_THR_AS_STOP = MUT_VENUE_VIS = MUT_ASK_SIGN = MUT_POP_ALL = MUT_INC_OFF = 0     # planted errors (selftest only)
-MUTS = ('MUT_NO_CAP', 'MUT_WIN_EARLY', 'MUT_THR_AS_STOP', 'MUT_VENUE_VIS', 'MUT_ASK_SIGN', 'MUT_POP_ALL', 'MUT_INC_OFF')
+AGES = (0.0, 250.0, 500.0, 1000.0, 2000.0); TIMINGS = ('ws_strict', 'all_anchors_sensitivity'); E2_UNC_MS = 250.0; BOOK_GAP_MS = 500.0
+A_FEAT = tuple(AC.ORDER_FEATURES)
+A_LAB = ('value_cents', 'value_per_known_remaining_share', 'filled_quantity', 'past_quantity', 'common_prefix_quantity', 'actual_remaining_after_prefix',
+         'at_price_value_cents', 'through_price_value_cents')
+MUT_NO_CAP = MUT_WIN_EARLY = MUT_THR_AS_STOP = MUT_VENUE_VIS = MUT_ASK_SIGN = MUT_POP_ALL = MUT_INC_OFF = MUT_MARK_ANCHOR = MUT_PROV_DROP = 0   # planted errors
+MUTS = ('MUT_NO_CAP', 'MUT_WIN_EARLY', 'MUT_THR_AS_STOP', 'MUT_VENUE_VIS', 'MUT_ASK_SIGN', 'MUT_POP_ALL', 'MUT_INC_OFF', 'MUT_MARK_ANCHOR', 'MUT_PROV_DROP')
 
 
 # ---------------------------------------------------------------- the single-order rule and the legs
@@ -185,15 +210,17 @@ class SideCtx:
         self.tf = np.asarray(w['tf'], float); self.tfl = self.tf.tolist()
         self.anc = np.asarray(w['anc'], float); self.pr = np.asarray(w['ptl'], 'int64'); self.sh = np.asarray(w['shl'], float)
         mff = np.asarray(w['tf_mff'][1], float); n = len(self.anc)
-        j1 = np.maximum(np.searchsorted(self.tf, self.anc + 1000.0, side='right') - 1, 0)
-        j5 = np.maximum(np.searchsorted(self.tf, self.anc + 5000.0, side='right') - 1, 0)
-        self.m1 = mff[j1] if n else np.zeros(0); self.m5 = mff[j5] if n else np.zeros(0)
-        self.a1 = (self.anc + 1000.0 - self.tf[j1]) if n else np.zeros(0); self.a5 = (self.anc + 5000.0 - self.tf[j5]) if n else np.zeros(0)   # mark ages
+        self.mk = {}                                      # per clock: each tranche marked at ITS fill time + 1 s / 5 s (Codex contract), and the mark ages
+        for c_ in (SHF,) + SHF_ALT:
+            ft = self.anc if MUT_MARK_ANCHOR else self.anc - c_
+            j1 = np.maximum(np.searchsorted(self.tf, ft + 1000.0, side='right') - 1, 0); j5 = np.maximum(np.searchsorted(self.tf, ft + 5000.0, side='right') - 1, 0)
+            self.mk[c_] = (mff[j1], mff[j5], ft + 1000.0 - self.tf[j1], ft + 5000.0 - self.tf[j5]) if n else tuple(np.zeros(0) for _ in range(4))
+        self.m1, self.m5, self.a1, self.a5 = self.mk[SHF]
         self.src = np.asarray(src, bool); self.grp = np.asarray(grp, 'int64'); self.row = np.asarray(lrow, 'int64')
         self.ty = leg_types(self.side, self.pr, self.grp)
-        base = dict(prl=self.pr.tolist(), shl=self.sh.tolist(), m1l=self.m1.tolist(), m5l=self.m5.tolist(), srcl=self.src.tolist(), tyl=self.ty.tolist(),
-                    stl=(self.a1 > STALE_MS).tolist())
-        self.L = {s: dict(base, ttl=(self.anc - s).tolist()) for s in (SHF,) + SHF_ALT}
+        base = dict(prl=self.pr.tolist(), shl=self.sh.tolist(), srcl=self.src.tolist(), tyl=self.ty.tolist())
+        self.L = {c_: dict(base, ttl=(self.anc - c_).tolist(), m1l=self.mk[c_][0].tolist(), m5l=self.mk[c_][1].tolist(), stl=(self.mk[c_][2] > STALE_MS).tolist())
+                  for c_ in (SHF,) + SHF_ALT}
         self._lv = {}; self._lvi = {}
 
     def lv(self, p):
@@ -286,7 +313,7 @@ def side_rows(S, st, unt=()):
 
 
 # ---------------------------------------------------------------- E7: the keep-all lane's own order states
-def rec_window(W, SS, st, ctl):
+def rec_window(W, SS, st, ctl, r0):
     """E7 on one window: keep-all client lane (align's KA, corrected queue initialization) with a recording callback that never pulls (its
     fills must equal the plain run's); per recorded order state the
     lane's fills of that order in [t + 22, t + 1 s] against the label simulated from the lane's own queue ahead / remaining size / frame."""
@@ -298,7 +325,6 @@ def rec_window(W, SS, st, ctl):
                 R.append((s, d, k, float(t), int(cur['pt']), float(cur['ahead']), int(cur['ci']), float(cur['rem']), id(cur))); objs[id(cur)] = cur
             return False
         return dec
-    r0 = QA.sim_joint_g(W, 'M', SHF, None, aux, decide=None, gate=None, idle_only=0, size=Z, mode='none', cooldown=CL.REPOST_MS)
     r = QA.sim_joint_g(W, 'M', SHF, None, aux, decide={(s, d): mk(s, d) for s in (0, 1) for d in range(NR)}, gate=None, idle_only=0, size=Z,
                        mode='none', cooldown=CL.REPOST_MS)
     st['rec_windows'] += 1; st['rec_regress_differ'] += int(r['fills'] != r0['fills'] or r['endpos'] != r0['endpos'])
@@ -314,7 +340,7 @@ def rec_window(W, SS, st, ctl):
         Fl = Vl = 0.0
         for (tq, qq) in o['fl']:
             if tc <= tq <= th:
-                j1 = max(int(np.searchsorted(tf, tq + SHF + 1000.0, side='right')) - 1, 0)
+                j1 = max(int(np.searchsorted(tf, tq + 1000.0, side='right')) - 1, 0)
                 Fl += qq; Vl += qq * S.sg * (float(mff[j1]) - pt)
         rel = rel_legs(L, bisect.bisect_right(L['ttl'], t), bisect.bisect_right(L['ttl'], th), s, pt)
         lvi = S.lvi(pt)
@@ -441,7 +467,7 @@ def e456_books(day, wins, ROWS, ROWS4, TAB, TYI):
                     if jvn >= 0:
                         vv = vis_at(jvn); e4['venue_differ'] += int(not ((np.isnan(vv) and np.isnan(lab)) or vv == lab))
             lg = TAB[(TAB.m.values == m) & (TAB.side.values == side)]
-            for a1, m1, m5 in zip(lg.anc.values, lg.m1.values, lg.m5.values):
+            for a1, m1, m5 in zip(lg.anc.values - SHF, lg.m1.values, lg.m5.values):     # the fill clock's time + 1 s / 5 s
                 i1 = max(int(np.searchsorted(tf, a1 + 1000.0, side='right')) - 1, 0); i5 = max(int(np.searchsorted(tf, a1 + 5000.0, side='right')) - 1, 0)
                 i9 = max(int(np.searchsorted(tf, a1 + 900.0, side='right')) - 1, 0)
                 e5['compared'] += 1; e5['mismatch'] += int(not (mid[i1] == m1 and mid[i5] == m5)); e5['early_differ'] += int(mid[i9] != m1)
@@ -477,9 +503,12 @@ def e456_books(day, wins, ROWS, ROWS4, TAB, TYI):
 
 
 # ---------------------------------------------------------------- one day
-def untimed_legs(day, D):
-    """The day's UNTIMED legs (no WS / E2 anchor; the loader drops them with a count) per (m, side) as (earliest tt, latest tt, price):
-    exec second + the 0.1-99.9% band of the timed legs' anchor - exec second offsets, on the M 50 clock (independent read of step 1)."""
+def raw_windows(day, D):
+    """Per included-day window m, from an independent read of step 1: the raw leg population a window's actions depend on (anchored in
+    [ws - 2 s, ws + 61 s] or executed in [ws - 2 s, ws + 61 s)), its count (Coverage.expected_legs) and the legs the loader excludes
+    as statuses (Coverage.missing): UNTIMED (no WS / E2 anchor) with the interval exec second + the 0.1-99.9% band of the timed legs'
+    anchor - exec offsets on the day, and anchors out of range as a point; tt on the M 50 clock. Also the untimed legs per side for the
+    INCOMPLETE flags of the diagnostic rows."""
     T = pd.read_parquet(f'{K.IO}/step1/{day}/legs_timed2.parquet', columns=['mid', 'exec_s', 'side', 'ptick', 'how', 't_ms', 't_e2'])
     tk = pd.read_parquet(f'{K.IO}/step1/{day}/legs_tk.parquet', columns=['tk']).tk.values.astype('int64')
     rid = np.arange(len(T)); grp = np.where(tk >= 0, tk, -1 - rid)
@@ -489,10 +518,74 @@ def untimed_legs(day, D):
     anc = np.where(np.isfinite(a), a, b)
     off = D['LT'].anc.values - D['LT'].exec_s.values.astype(float) * 1000.0
     lo, hi = (float(x) for x in np.quantile(off, [0.001, 0.999]))
-    u = ~np.isfinite(anc) & T.mid.isin(list(D['W0'])).values; out = {}
-    for m, sd, e, pt in zip(T.mid.values[u], T.side.values[u], T.exec_s.values[u].astype(float) * 1000.0, T.ptick.values[u]):
-        out.setdefault((int(m), int(sd)), []).append((e + lo - SHF, e + hi - SHF, int(pt)))
-    return out, dict(band_ms=[lo, hi], untimed_legs_day_windows=int(u.sum()))
+    W0 = pd.Series(D['W0'], dtype=float); inw = T.mid.isin(W0.index).values; ws = T.mid.map(W0).values.astype(float)
+    ex = T.exec_s.values.astype(float) * 1000.0
+    inr = inw & np.isfinite(anc) & (anc >= ws - 2000.0) & (anc <= ws + 61000.0)
+    exr = inw & (ex >= ws - 2000.0) & (ex < ws + 61000.0)
+    pop = inr | exr; miss = pop & ~inr
+    out = {int(m): dict(expected=int(n), missing=[], unt={0: [], 1: []}) for m, n in pd.Series(T.mid.values[pop]).value_counts().items()}
+    for r_, m, sd, e, pt, a_ in zip(rid[miss], T.mid.values[miss], T.side.values[miss], ex[miss], T.ptick.values[miss], anc[miss]):
+        x = out[int(m)]
+        if np.isfinite(a_):
+            x['missing'].append((str(int(r_)), float(a_) - SHF, float(a_) - SHF, 'anchor_out_of_range'))
+        else:
+            x['missing'].append((str(int(r_)), e + lo - SHF, e + hi - SHF, 'untimed')); x['unt'][int(sd)].append((e + lo - SHF, e + hi - SHF, int(pt)))
+    return out, dict(band_ms=[lo, hi], population_legs=int(pop.sum()), untimed=int((miss & ~np.isfinite(anc)).sum()),
+                     anchor_out_of_range=int((miss & np.isfinite(anc)).sum()))
+
+
+def actions_window(day, W, lrows, srcs, RW, st, asof, errs):
+    """THE PRIMARY LABELS (Codex contract stop-ev-chronological-order-value-v1, pf_stop_ev_accounting): the corrected neutral keep-all
+    ladder (replay_neutral), its checked ledger (every raw leg with provenance or an exclusion status, per-leg / per-order / flat fills,
+    remainders, position) and one outcome-independent probe per order generation (ages AGES), under each timing variant. E9: an
+    independent recomputation of every eligible action's value from the order's own tranches. Returns ({timing: columns}, the replay)."""
+    m = int(W[0]['m']); ws = float(W[0]['ws']); tf = np.asarray(W[0]['tf'], float)
+    r = AC.replay_neutral(W, size=Z, shift_ms=SHF, queue='M', unknown_queue='zero', nr=NR, cap=None, mode='none')
+    prov = {(s, i): AC.LegInfo(str(int(lrows[s][i])), 'ws' if bool(srcs[s][i]) else 'e2', 0.0 if bool(srcs[s][i]) else E2_UNC_MS)
+            for s in (0, 1) for i in range(len(lrows[s]))}
+    if MUT_PROV_DROP and prov:
+        prov.pop(next(iter(prov)))
+    rw = RW.get(m, dict(expected=0, missing=[]))
+    gi = np.flatnonzero(np.diff(tf) > BOOK_GAP_MS)
+    cov = AC.Coverage(trade_start_ms=ws - 2000.0 - SHF, trade_end_ms=ws + 61000.0 - SHF, mark_end_ms=float(tf[-1]), expected_legs=int(rw['expected']),
+                      book_start_ms=float(tf[0]), book_end_ms=float(tf[-1]), missing=tuple(AC.MissingLeg(*x) for x in rw['missing']),
+                      book_gaps=tuple(AC.MissingLeg(f'gap_{m}_{i}', float(tf[i]), float(tf[i + 1]), 'feed_gap') for i in gi))
+    st['book_gaps'] += int(len(gi))
+    try:
+        led = AC.Ledger(W, r, submitted_quantity=Z, shift_ms=SHF, leg_info=prov, coverage=cov)
+    except ValueError as e:
+        st['ledger_fail'] += 1
+        if len(errs) < 20:
+            errs.append(f'window {m}: {e}')
+        return None, r
+    out = {}; MK = {sd: ([float(x) for x in W[sd]['tf_mff'][0]], np.asarray(W[sd]['tf_mff'][1], float)) for sd in (0, 1)}
+    for timing in TIMINGS:
+        rows, _ = AC.build_actions(led, day=day, asof=asof, ages_ms=AGES, settings=AC.Settings(timing=timing))
+        c = collections.defaultdict(list)
+        for x in rows:
+            d_, mm, sd, rung, gen = x['action_id']; t = float(x['decision_ms']); tg = np.asarray(W[sd]['tg'], float)
+            kk = int(np.searchsorted(tg, t)); kk = kk if (kk < len(tg) and tg[kk] == t) else -1
+            for c_, v_ in (('m', int(mm)), ('side', int(sd)), ('rung', int(rung)), ('generation', int(gen)), ('decision_ms', t), ('k', kk),
+                           ('hour', int(x['hour'])), ('status', x['status'])):
+                c[c_].append(v_)
+            f_ = x['features'] or {}; l_ = x['label'] or {}
+            for c_ in A_FEAT:
+                c[f'x_{c_}'].append(float(f_.get(c_, NAN)))
+            for c_ in A_LAB:
+                c[c_].append(float(l_.get(c_, NAN)))
+            c['n_tranches'].append(len(l_.get('tranches', ())) if l_ else -1)
+            st[f'actions_{timing}_{x["status"]}'] += 1
+            if timing == TIMINGS[-1] and l_:                # E9 on every eligible action (the broader population)
+                o = led.orders[(sd, rung, gen)]; sg = 1.0 if sd == 0 else -1.0; end = min(t + 1000.0, led.end); tfm, mid = MK[sd]
+                vv = qq_ = vx = 0.0
+                for (tq, qq) in o['fl']:
+                    if t < tq <= end and tq >= t + L_C:
+                        vv += qq * sg * (float(mid[bisect.bisect_right(tfm, tq + 1000.0) - 1]) - o['pt']); qq_ += qq
+                        vx += qq * sg * (float(mid[bisect.bisect_right(tfm, tq + SHF + 1000.0) - 1]) - o['pt'])
+                st['e9_compared'] += 1; st['e9_mismatch'] += int(abs(vv - l_['value_cents']) > TOL_V or abs(qq_ - l_['filled_quantity']) > TOL_F)
+                st['e9_control_differ'] += int(abs(vx - l_['value_cents']) > TOL_V)
+        out[timing] = c
+    return out, r
 
 
 def mem_guard(what):
@@ -519,13 +612,14 @@ def day_build(day):
     tkf = pd.read_parquet(f'{K.IO}/step1/{day}/legs_tk.parquet', columns=['tk']).tk.values
     LT = D['LT']; ix = LT.index.values; g_all = np.where(tkf[ix] >= 0, tkf[ix], -1 - ix)
     WSg = pd.Series(TS.ws_groups(LT.how.values, g_all), index=LT.index); GRP = pd.Series(g_all, index=LT.index)
-    st = collections.Counter(); ctl = dict(cap=0, early=0); UNT, ust = untimed_legs(day, D)
+    st = collections.Counter(); ctl = dict(cap=0, early=0); RW, ust = raw_windows(day, D); errs = []
+    asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()); ACT = {tm: [] for tm in TIMINGS}
     os.makedirs(OUTD, exist_ok=True); tmp = f'{OUTD}/rows_{day}{ZTAG}.parquet.tmp'; writer = None; buf = []
     legs, recs, samp, wins, keys = [], [], [], {}, []
     for W in P1.window_pairs(D):
         if W[0]['ws'] < cut:
             st['boundary_windows'] += 1; continue
-        m = int(W[0]['m']); ws = float(W[0]['ws']); st['windows'] += 1; wins[m] = ws; SS = {}
+        m = int(W[0]['m']); ws = float(W[0]['ws']); st['windows'] += 1; wins[m] = ws; SS = {}; LR = {}; SR = {}
         for s in (0, 1):
             w = W[s]
             if (m, s) in D['LI']:
@@ -538,10 +632,10 @@ def day_build(day):
                 sys.exit(f'REFUSED: {day} window {m} side {s}: leg rows not aligned with the window-side legs')
             src = WSg.reindex(lrow).values.astype(bool) if len(lrow) else np.zeros(0, bool)
             grp = GRP.reindex(lrow).values.astype('int64') if len(lrow) else np.zeros(0, 'int64')
-            S = SideCtx(w, lrow, grp, src); SS[s] = S
+            S = SideCtx(w, lrow, grp, src); SS[s] = S; LR[s] = lrow; SR[s] = src
             st['clock_roundtrip_differ'] += int(not np.array_equal((S.anc - SHF) + SHF, S.anc))
             st['legs_mid_nan'] += int(np.isnan(S.m1).sum() + np.isnan(S.m5).sum())
-            out = side_rows(S, st, UNT.get((m, s), ()))
+            out = side_rows(S, st, RW.get(m, {}).get('unt', {}).get(s, ()))
             if out is not None:
                 buf.append(out); keys.append(pd.DataFrame({'m': out['m'], 'side': out['side'], 'k': out['k'], 'best': out['best']}))
                 st['rows'] += len(out['k'])
@@ -551,7 +645,11 @@ def day_build(day):
                 if st['windows'] % SAMPLE_WIN == 1:
                     samp.append(out)
             legs.append(S.leg_table(m, ws))
-        recs.append(rec_window(W, SS, st, ctl))
+        acts, rn = actions_window(day, W, LR, SR, RW, st, asof, errs)
+        if acts is not None:
+            for tm in TIMINGS:
+                ACT[tm].append({c: np.asarray(v) for c, v in acts[tm].items()})
+        recs.append(rec_window(W, SS, st, ctl, rn))
         if len(buf) >= 80:
             tb = pa.Table.from_pandas(rows_frame(buf), preserve_index=False)
             writer = writer or pq.ParquetWriter(tmp, tb.schema); writer.write_table(tb); buf = []
@@ -582,10 +680,16 @@ def day_build(day):
     e7['pass'] = bool(e7['regress_differ'] == 0 and e7['lane_violations'] == 0 and e7['clean'] >= N_CLEAN_MIN and e7['clean_mismatch'] == 0
                       and e7['control_cap_differ'] >= 1 and e7['control_early_differ'] >= 1)
     checks['E7'] = e7
+    e9 = dict(compared=int(st['e9_compared']), mismatch=int(st['e9_mismatch']), control_differ=int(st['e9_control_differ']),
+              ledger_failures=int(st['ledger_fail']), ledger_errors=errs)
+    e9['pass'] = bool(e9['ledger_failures'] == 0 and e9['compared'] >= N_CLEAN_MIN and e9['mismatch'] == 0 and e9['control_differ'] >= 1)
+    checks['E9'] = e9
     fails = [e for e, x in checks.items() if not x['pass']]
     if st['clock_roundtrip_differ'] or st['legs_mid_nan']:
         fails.append(f"clock round trip {st['clock_roundtrip_differ']} / legs without a mid {st['legs_mid_nan']}")
-    rep = dict(day=day, size=Z, stat=dict(st), load_stat=load_stat, checks=checks, flags=dict(dup=checks['E2']['flag_dup']), untimed=ust,
+    rep = dict(day=day, size=Z, stat=dict(st), load_stat=load_stat, checks=checks, flags=dict(dup=checks['E2']['flag_dup']), untimed=ust, asof=asof,
+               label_contract=AC.CONTRACT, reference=AC.REFERENCE, ages_ms=list(AGES), timings=list(TIMINGS), e2_uncertainty_ms=E2_UNC_MS,
+               book_gap_ms=BOOK_GAP_MS,
                queue_contract=QA.QUEUE_CONTRACT, clock=f'M {SHF:g}', horizon_ms=H_EV, seconds=round(time.time() - T0, 1), preroll_ms=K.PREROLL_MS,
                skip_foreign_parts=K.SKIP_FOREIGN_PARTS)
     if fails:
@@ -595,6 +699,9 @@ def day_build(day):
         sys.exit(f'REFUSED (no output for {day}): {fails}; detail in refused_{day}{ZTAG}.json')
     os.replace(tmp, f'{OUTD}/rows_{day}{ZTAG}.parquet')
     TAB.to_parquet(f'{OUTD}/legs_{day}{ZTAG}.parquet', index=False); REC.to_parquet(f'{OUTD}/rec_{day}{ZTAG}.parquet', index=False)
+    for tm in TIMINGS:
+        A_ = pd.DataFrame({c: np.concatenate([x[c] for x in ACT[tm]]) for c in ACT[tm][0]}); A_.insert(0, 'day', int(day))
+        A_.to_parquet(f'{OUTD}/actions_{day}{ZTAG}_{tm}.parquet', index=False)
     json.dump(rep, open(f'{OUTD}/day_{day}{ZTAG}.json', 'w'), indent=1, default=str)
     print(f'{day}: rows {st["rows"]}, windows {st["windows"]} (boundary {st["boundary_windows"]}), invalid book {st["invalid_book"]}; '
           + '; '.join(f'{e} ' + ('PASS' if x['pass'] else 'FAIL') for e, x in checks.items()) + f'; {rep["seconds"]} s', flush=True)
@@ -649,8 +756,47 @@ def report():
                  f"ENDED {e7['ended']}, SHARED {e7['shared']}, mismatching among them {e7['mismatch_ended_or_shared']}; their value gap (lane - label) "
                  f"{gap / 100.0:+,.0f} $ against the lane's 1 s fill value {lane / 100.0:+,.0f} $ (the single-order label's limit)")
         R['E7_pooled'] = dict(e7, value_gap=gap, value_lane=lane)
+    # the PRIMARY labels: action statuses per day and timing variant (counts on every day), E9
+    T += ['', f'PRIMARY LABELS (Codex contract {AC.CONTRACT}; one probe per neutral order generation, ages {list(AGES)} ms): statuses per day']
+    for tm in TIMINGS:
+        T.append(f'  {tm}:')
+        for d, x in J.items():
+            sc = {k_[len(f'actions_{tm}_'):]: v_ for k_, v_ in x['stat'].items() if k_.startswith(f'actions_{tm}_')}
+            T.append(f'    {d}: ' + ', '.join(f'{k_} {v_}' for k_, v_ in sorted(sc.items(), key=lambda z: -z[1])))
+    T.append('  E9 (an independent recomputation of every eligible action from its own tranches): '
+             + '; '.join(f"{d} {x['checks']['E9']['compared']} / {x['checks']['E9']['mismatch']} mismatches" for d, x in J.items()))
     # readings on the dev days
     T += ['', f'READINGS (dev days {", ".join(dev)} only; test days: counts and predicates above)']
+    for tm in TIMINGS:
+        A_ = [pd.read_parquet(f'{OUTD}/actions_{d}{ZTAG}_{tm}.parquet') for d in dev if os.path.exists(f'{OUTD}/actions_{d}{ZTAG}_{tm}.parquet')]
+        if not A_:
+            continue
+        A_ = pd.concat(A_, ignore_index=True); el = A_.status.isin(['eligible', 'eligible_estimated_timing']).values; E_ = A_[el]
+        v = E_.value_cents.values.astype(float)
+        T.append(f'a ACTIONS ({tm}): {len(A_)} probes, {int(el.sum())} eligible ({el.mean():.1%}); value per action (c): mean {np.mean(v):+.3f}, '
+                 f'zero {np.mean(np.abs(v) < 1e-9):.1%}, p1 / p50 / p99 {np.quantile(v, 0.01):+.2f} / {np.quantile(v, 0.5):+.2f} / {np.quantile(v, 0.99):+.2f}, '
+                 f'top-1% share of |value| {np.sort(np.abs(v))[::-1][:max(len(v) // 100, 1)].sum() / max(np.abs(v).sum(), 1e-12):.1%}'
+                 if len(v) else f'a ACTIONS ({tm}): {len(A_)} probes, none eligible')
+        if not len(v):
+            continue
+        T.append('  by rung (bid / ask): eligible | mean value c per action | filled share | at-price / through-price value c | partial remainder | '
+                 'queue unknown at activation | known queue ahead / shown p50')
+        for rg in range(NR):
+            segs = []
+            for sd in (0, 1):
+                x = E_[(E_.rung.values == rg) & (E_.side.values == sd)]
+                if not len(x):
+                    segs.append('-'); continue
+                qa = x.x_queue_ahead_known.values.astype(float); sh_ = x.x_shown_known.values.astype(float); fin = np.isfinite(qa) & np.isfinite(sh_) & (sh_ > 0)
+                segs.append(f"{len(x)} | {x.value_cents.mean():+.3f} | {(x.filled_quantity.values > 0).mean():.1%} | {x.at_price_value_cents.mean():+.3f} / "
+                            f"{x.through_price_value_cents.mean():+.3f} | {(x.x_known_remaining.values < Z - 1e-6).mean():.1%} | "
+                            f"{x.x_queue_initial_unknown.mean():.1%} | {np.median(qa[fin] / sh_[fin]) if fin.any() else NAN:.2f}")
+            T.append(f'    r{rg}: ' + '   //   '.join(segs))
+        if tm == TIMINGS[-1]:
+            z0 = float(np.mean(np.abs(v) < 1e-9)); top = float(np.sort(np.abs(v))[::-1][:max(len(v) // 100, 1)].sum() / max(np.abs(v).sum(), 1e-12))
+            R['action_loss'] = ('HURDLE' if z0 >= 0.5 else 'DIRECT') + ' + ' + ('ROBUST' if top >= 0.30 else 'L2')
+            T.append(f"  declared loss rule on the primary label (zero share >= 50% -> HURDLE; top-1% share >= 30% -> ROBUST): {R['action_loss']}")
+        del A_, E_
     agg = {j: collections.Counter() for j in JS}; sub = {j: [] for j in JS}; ratio = {j: [] for j in JS}
     side_t = {(j, s): collections.Counter() for j in JS for s in (0, 1)}; tb = {(j, b): collections.Counter() for j in (1, 2) for b in range(4)}
     leg_bvis = [0.0, 0.0]; QQ = []; reg = []
@@ -789,7 +935,7 @@ def toy_w(side, legs, n=40, drop=None, invalid=None, known_lag=60.0, mid2=50.5, 
     kf = tf + known_lag; jk = np.searchsorted(kf, tg, side='right') - 1
     valid = (opp > P5[:, 0]) if side == 0 else (P5[:, 0] > opp)
     best = [int(P5[j, 0]) if (j >= 0 and valid[j]) else -1 for j in jk]
-    mff = np.where(tf >= t_mid, mid2, 51.0)
+    mff = np.where(tf >= t_mid, mid2 - 0.002 * (tf - t_mid), 51.0)       # a ramp after t_mid: marks taken at different times differ
     lg = sorted(legs, key=lambda x: (x[0], -x[1] if side == 0 else x[1]))
     anc = np.asarray([x[0] for x in lg], float); pt = [int(x[1]) for x in lg]; sh = [float(x[2]) for x in lg]
     w = dict(m=1, side=side, sg=1.0 if side == 0 else -1.0, ws=0.0, te=float(50.0 * n), tf=tf, kf=kf, jk=jk, tg=tg, n=n, opp=opp, P5=P5, S5=S5,
@@ -888,7 +1034,7 @@ def selftest():
         ask = [(300.0, 52, 15.0, 3), (800.0, 53, 40.0, 5), (1500.0, 52, 18.0, 7)]
         (w0, r0_, g0, s0), (w1, r1_, g1, s1) = toy_w(0, bid, drop=(500.0, 0, 20.0)), toy_w(1, ask)
         W = {0: w0, 1: w1}; SS = {0: SideCtx(w0, r0_, g0, s0), 1: SideCtx(w1, r1_, g1, s1)}; st = collections.Counter(); ctl = dict(cap=0, early=0)
-        c = rec_window(W, SS, st, ctl)
+        c = rec_window(W, SS, st, ctl, AC.replay_neutral(W, size=Z, shift_ms=SHF, queue='M', unknown_queue='zero', nr=NR, cap=None, mode='none'))
         cl = [not e and not s_ for e, s_ in zip(c['ended'], c['shared'])]
         nclean = sum(cl); cm = sum(1 for x, m_ in zip(cl, c['match']) if x and not m_)
         fills_clean = sum(1 for x, f_ in zip(cl, c['Fl']) if x and f_ > 0)
@@ -897,6 +1043,16 @@ def selftest():
                 or ctl['cap'] < 1 or ctl['early'] < 1:
             bad.append(f'reconciliation toy: regress {st["rec_regress_differ"]}, viol {st["rec_viol"]}, clean {nclean}, clean mismatches {cm}, '
                        f'clean with fills {fills_clean} (asks {ask_clean}), shared {sum(c["shared"])}, ended {sum(c["ended"])}, controls {ctl}')
+        # (5) the primary labels through the Codex contract on the same toy window: ledger reconciles, every probe has a status, E9 agrees
+        (v0, q0_, g0_, s0_), (v1, q1_, g1_, s1_) = toy_w(0, bid, drop=(500.0, 0, 20.0)), toy_w(1, ask)
+        W2 = {0: v0, 1: v1}; LR = {0: q0_, 1: q1_ + 1000}; SR = {0: s0_, 1: s1_}
+        RW = {1: dict(expected=len(bid) + len(ask), missing=[], unt={0: [], 1: []})}; st2 = collections.Counter(); errs = []
+        acts, _ = actions_window('20261023', W2, LR, SR, RW, st2, '2026-11-15T00:00:00Z', errs)
+        n_el = sum(st2[k_] for k_ in st2 if k_.startswith(f'actions_{TIMINGS[-1]}_eligible'))
+        if acts is None or st2['ledger_fail'] or errs or n_el < 3 or st2['e9_compared'] < 3 or st2['e9_mismatch'] or st2['e9_control_differ'] < 1 \
+                or any(len(acts[tm]['status']) != len(acts[TIMINGS[0]]['status']) for tm in TIMINGS):
+            bad.append(f'actions toy: ledger failures {st2["ledger_fail"]} {errs[:2]}, eligible {n_el}, E9 {st2["e9_compared"]} / {st2["e9_mismatch"]} / '
+                       f'control {st2["e9_control_differ"]}, statuses {dict((k_, v_) for k_, v_ in st2.items() if k_.startswith("actions_"))}')
     finally:
         EVERY_REC = keep_every
     return bad
