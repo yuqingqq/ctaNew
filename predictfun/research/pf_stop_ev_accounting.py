@@ -244,6 +244,17 @@ def overlaps(a, b, lo, hi):
     return a <= hi and b >= lo
 
 
+def valid_marks(w, side):
+    """Use actual valid quote timestamps, never the timestamp of an ffilled mid."""
+    tf = np.asarray(w['tf'], float)
+    best = np.asarray(w['P5'], float)[:, 0]; opp = np.asarray(w['opp'], float)
+    if len(tf) != len(best) or len(tf) != len(opp) or not np.isfinite(tf).all() or np.any(np.diff(tf) < 0):
+        raise ValueError('invalid raw quote/mark series')
+    bid, ask = (best, opp) if side == 0 else (opp, best)
+    valid = np.isfinite(bid) & np.isfinite(ask) & (bid >= 0) & (ask <= 100) & (bid < ask)
+    return tf[valid], (bid[valid] + ask[valid]) / 2.
+
+
 def label_action(ledger, key, decision_ms, *, day, settings=Settings()):
     """One neutral order-generation action; no q-grid augmentation here.
 
@@ -283,16 +294,16 @@ def label_action(ledger, key, decision_ms, *, day, settings=Settings()):
     # Earlier uncertain events can alter the neutral path's queue, inventory
     # and births. Fail closed on the full relevant reference prefix, not just
     # on whether an excluded leg happened to fill this particular order.
-    if any(overlaps(g.earliest_ms, g.latest_ms, ledger.ws, end) for g in c.missing):
+    # Empirical offset quantiles are not hard bounds for an untimed event.
+    # A missing anchor cannot be declared harmless from such an interval.
+    if any(g.reason == 'untimed' or overlaps(g.earliest_ms, g.latest_ms, ledger.ws, end) for g in c.missing):
         row['status'] = 'missing_trade_timing'; return row
     estimated = any(info.timing == 'e2' and overlaps(ledger.legs[k][0] - info.uncertainty_ms,
                      ledger.legs[k][0] + info.uncertainty_ms, ledger.ws, end)
                     for k, info in ledger.leg_info.items())
     if settings.timing == 'ws_strict' and estimated:
         row['status'] = 'ambiguous_reference_timing'; return row
-    tf, mids = ledger.W[side]['tf_mff']; tf, mids = np.asarray(tf, float), np.asarray(mids, float)
-    if len(tf) != len(mids) or not np.isfinite(tf).all() or np.any(np.diff(tf) < 0):
-        raise ValueError('invalid mark series')
+    tf, mids = valid_marks(ledger.W[side], side)
     prefix_end = t + settings.cancel_ms
     past_qty = sum(x['quantity'] for x in ledger.fills[key] if x['time'] <= t)
     prefix_qty = sum(x['quantity'] for x in ledger.fills[key] if t < x['time'] < prefix_end)
