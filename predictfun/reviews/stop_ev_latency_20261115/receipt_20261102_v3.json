@@ -1,0 +1,1411 @@
+{
+  "asof": "2026-11-15T18:39:59.501550+00:00",
+  "day": "20261102",
+  "source_commit": "30b923973275bc95a593b8508a43c72558c50502",
+  "sources": {
+    "pf_inv_report.py": "39bde8e5881de77a9ec48bc42d49328aa2467240ce96f39d26455e73ba90e14c",
+    "pf_stop_ev_model_choice.py": "011ca4ba89911180a33a9a1e5ccd9fe229b3ddbc2f8b53011a0eacf72697b1c9",
+    "pf_ladder2_report.py": "71def54278bf2340791bfde251af8d6d3b1f936a028e5735f208d190c92b6190",
+    "pf_review_queue_reach.py": "dee291da1cf4d6e52fd3c714713ecefcc94eaff9f2197ff561699f30d3c20ad3",
+    "pf_order_harm_v3.py": "6bc6b2778ce9d40f769d216385cab38034674f1546fefdbec077d6121db4abd3",
+    "pf_txmap.py": "dc31b9a36f1016d97ded1f2e793cfb4bd4ea5a6f8bf4cfeaad4b67455a833ae2",
+    "pf_stop_queue_activation_lane.py": "8d61029d348f80856853ca16c2d3e49c54f7ae26be73866d6b244d08c746e2ed",
+    "pf_stop_ev_model_commit_review.py": "d19c6bd6718596d66f9a8a4cd4de2962237f8d8c8104f9a6507268aa39b60159",
+    "pf_sweep_precursor.py": "b09a25af49ce50aa75fab5cd15985657a2944c8b1467769e52c9a501779aa280",
+    "pf_badfill_info4.py": "e7340cdd85ccd72049f784bc1b8860fa3afa2e6f78aefa7a5576b7205df3639e",
+    "pf_badfill_info2.py": "fe8998fbfbd78e7220a98542137c62aa2390f8442fd19f0b400ad04c6722ea37",
+    "pf_move_info.py": "ae6d7389fbc9eceeacce0b9a3c2f7b5cba001825155f179825b94e497d372461",
+    "pf_stop_ev_cause_timing.py": "947b69b564c88480ebd87a524c0c8dc1f2ecad4407765d8ad866c9bdf0c0f7b5",
+    "pf_o2_report.py": "8143aca05681ced64484194df6a965cbd9ad57775a36e08a8cc6515cd9e033a0",
+    "pf_maker_ladder.py": "42f46f19d4e724ee3cee09367f1c38dd05e91b569ed1f19e05e7e9989906ebea",
+    "pf_guard_report.py": "c9451b66faeb8c54a2a224e257ccf626ed92b38d71a44e37e7cfde386b7e3103",
+    "pf_incremental_checks.py": "3f7226daee4e54f2baf4cc4d6c142a632cd9749ec8c5d95f3198ca882d8d02a0",
+    "pf_causal_speed.py": "f0fdde38197793883bd893a90e39fd27552c08c2b78801940133e84470e0739f",
+    "pf_wait_post.py": "1424c860d1036066b8d6ceaff872764e2263619ec321137e73a485864a0dc4c3",
+    "pf_live_report3.py": "39ecf42733471909fe915a9a152467ea5739121be0a64fc88c6562a1562349f4",
+    "pf_joint_ladder_v3_exposure.py": "44e4b7372874cd7190d69f35350d302294a15dfaf32c9d04c799ab6c6f6d74e2",
+    "pf_b16_queue_guard.py": "5de7276a6a4f3674ad7619080770f93abb7db7b86e15ab3be7ad4e713da93737",
+    "pf_chain_recon.py": "296fdd14a972090a44eaec5b0feb0772f248a263420d3781a45580f396331c89",
+    "pf_inv2.py": "5cad84f0e5971e2d5c3ae98c77aa2476bb5fb12bb10bbd3acb040ce7167af2d3",
+    "pf_queue_activation.py": "b63e7f00a74db3c87cd85858cfb4a73c06e3fce0173328289913f9caf6571f02",
+    "pf_ladder_v3_build.py": "8c0ea4c4f0b7e2a47de91babd772aaf92b84bcbe3deb389f61eaffda55e92b38",
+    "pf_entry_local_data.py": "8e9961e12ccf82d111c7d7318955bfa1ab2c0a59d9858ebd317dfd4dd615c21f",
+    "pf_b13c_queue_pulls.py": "219e13aa19e8e2ace1eb79137e17f36b7d299df1e320e66d5a4da8f3d3ca6292",
+    "pf_guard_stepback_report.py": "d49fba8ceb862705413fae6e4cbe4f5552948660b10a5e3123a69abe2adba9ea",
+    "pf_order_harm_why.py": "5ef31b4a0923332bafa48eff46855302943e75f04faffa5fc2d740b91e3b7270",
+    "pf_b21_rest_default.py": "146013ec3835f9a475fca564f644a76c017c193bffeee5e75820e9c8a10ad038",
+    "pf_move_down.py": "ac2d388474c6dd247c41d37ac4f075e704eea2f68c34c06704ddcc9cf6cd5421",
+    "pf_live_report2.py": "a782162e7603809b58c571d01c54dcac0476fa732ec6a2433786df60330bbf16",
+    "pf_ladder_parity.py": "f402b8ba686a0cc9882272d60a820e4d81027a34b1d62819f4019804b973c2ba",
+    "pf_order_harm_why_posthoc.py": "90354a1c9ef4074d38ff7900d42784df5782a06098ad74721c095b701de1cfc8",
+    "pf_step5_lodo_rl.py": "3961a82e0b092380ef2639fa1f18d85509e3feba4c5f6270a653fb6c6da35890",
+    "pf_depth_timing.py": "1e51024d9db458b69da37e32e73a8308a644b30d60d8d6cc6ea9fc5012441b97",
+    "pf_cs_posthoc.py": "5300c0433c6b899fc53dfb1c53e413ea4a6b1313885a3a0a713b01551a5cace9",
+    "pf_badfill_info.py": "82980a4b6516894f2c076d5986f074b7aad53506c21d0541f4d52ea035247087",
+    "pf_v2_rehearsal_report.py": "a4c4184e5cb2112465ea873f87683b060b26035c7781307dee9c0a3b034c56c7",
+    "pf_v3_engine_check.py": "15a6f891fa0640eeecf30f1d8f10d936cf1ab898a96c3995455888fa9a8f0dc9",
+    "pf_stop_ev_timing_build.py": "9721901be3e3f84e01abc9da143754d7f6c35646e75cb429086c5feeacd1da54",
+    "pf_latency_report2.py": "8bb7253eb92af091437d72d8c2584c530ee918daf5a8abc37da48c68801e80d0",
+    "pf_side_moves.py": "597d8ae5fd61abc2f64fc0d7375841eb820b8b98cdd6300c70ea3c55e3e901d8",
+    "pf_latency_inputs.py": "b8f5ccbb7df623d9895ac668bc986e5ddc48193a7a9a2cd0c413feaf1a86a037",
+    "pf_stop_ev_generalization_review.py": "bc8950683da85ee0c30e1709c86f4e54d8bd65e4948e0105ee2cd78d4d5823e3",
+    "pf_anchor_lead.py": "dc295d7f4c64e58942a5b218abc8a35f793b23b1d33e3d7cbd3612dad6e36cfc",
+    "pf_entry_repair_sizes.py": "051bd6095642a47bd2716644c84c1bd38c6b1a40076f7e47c432e0c8f8cba6c9",
+    "pf_order_harm_policy_v2_posthoc.py": "00f4679d8bfc4429525b7134c22a1d4986eac29bf1507ad0969f5fe261bc7264",
+    "pf_ws_pending_taker.py": "3fc757880a94c1878cf3e5cf37455197f93db86d00d7745e6117d35d91e52098",
+    "pf_queue_origin.py": "755289bfe5bf832d09f0dbfcfdefcf39dce8035650e6943eb5809f296e065243",
+    "pf_live_samewindow.py": "01faa396e4d6a1310651b89d7294042633e5a8e1959d067d19fda420507fbb2e",
+    "pf_step4_ladder.py": "c682229e4fbe606b217cfa633816bcba67bce701c7e690b4cb8be9aa7ff6e37f",
+    "pf_minute_pnl.py": "5ebf56cd75bcb7df80b7f491180f119fe35371e685014cd63fc6a58b0b2800df",
+    "pf_entry_queue_activation_lane.py": "5b8ab30b30b52f150dbdd2f7695073b6a480e865157d0fc865faaa0e04a4bc37",
+    "pf_order_harm_policy_v2.py": "97aaaa40c8d573cac18ed3280abbf8315cef62d29bf888bd37a156dcd1e77e06",
+    "pf_io.py": "057fb052683b715084e175304a3c0bdf4dd9262694992d332056bbc6523e9494",
+    "pf_queue_activation_replay.py": "d850910a851aa9efbccb21ec1377b1c4ef78fcd127279d2bb3ab1756f9d5134f",
+    "pf_live_report.py": "3feb00e375908c6359d93a33a31f700017fc8d896f72a76dd8339119d64ec493",
+    "pf_ladder_report.py": "337ab1a9c75c0bf839dbf9520185691c17e628b3508d6e94e50042cb98d0cea1",
+    "pf_step3.py": "c2e0df301262d24893a136a3daeb3fd00e59ac90afdbc15a71c8bc93db93e2b7",
+    "pf_stop_play.py": "c82675eda4f40ce9e0631af0ed17c4a35ae8aa4af0710258bff43a9fc13e7f74",
+    "pf_match_type.py": "61ca83214599ae3a76efa61897dcb874e191106ac8827a62fc90e79c8a311e3c",
+    "pf_stop_ev_timing_audit.py": "29d11d474389b8deba12ab7f2dada2f18cddd2aba6893bf52ec8aaf9ee590159",
+    "pf_front_pull_size.py": "5cb593e4e117b0e473d8ae403d382070782fe9d981cdf8bba18d91eef4339284",
+    "pf_hold_check.py": "6a66c376d530fa24d73d61071a49a2564499adca976ebd10024d86176dbd329f",
+    "pf_stop_ev_accounting_check.py": "5fb93d66efe6bae8118419818989665c3cf91a2d1957820e5dce4800cb5f2748",
+    "pf_stop_ev_dynamics_export.py": "1c80aea2b54b5d522023a02fd5a4c66f09e6c828e170af6a7c835ba37b481438",
+    "pf_next_price.py": "d7445bc2bc6470ef0f23573c72c082eb18e840092f68031262927bd7eb610a3e",
+    "pf_b21b_zero_latency.py": "1762d5023a6c045be3b93089b99e56686f5514ebc89d1fb0e7b19b5c43bf0264",
+    "pf_b13b_top_behaviour.py": "d311cac63c94063f82138a65fbfc7ebf0aa9d49d05a974a1fd9d9b82fcc39701",
+    "pf_preds_merge_ev.py": "03bf1b05cb52fa249627e8ea6d35d69ca50af8fb531c08c12beef23a63cc9ea2",
+    "pf_wait_post_state_lane.py": "032cc352edbc9b3e9ab24358393bc4de09a7227796028307eb2cccf8574e5288",
+    "pf_step4_ladder_incremental.py": "fa3c44eed40a327b06a52751407df6301b5fd56b8d9f84f2f64d5aeac608eb84",
+    "pf_model_spec.py": "ede27dafd28766d4d8de320238c277e0dde838f2cb335460bb66d21006151dd8",
+    "pf_ladder_causes.py": "6cf0123bd432f85a85035da047d910a0b7bd0abb095beb49c801e0abe6f4f1c8",
+    "pf_inv_rules_posthoc.py": "74e04ab85f5c5e57d272225e03606317c5314a345ce5fd04fe6d52da69f39c24",
+    "pf_step1.py": "fa03ee189a587207ea4484820f6276bef20a3d073ef16b4370ccbfade974cc71",
+    "pf_qr2_age_check.py": "d4287a20964fc67c1b70a835146e5bb86a5533b8cfebb0ff90f08a9e27a22d97",
+    "pf_move_cases.py": "106c3fd61b55352d562cd5c56d5e7936b154d6b8476bc6c8ee957cbf37e77499",
+    "pf_review_gate_followup.py": "8b5020dcdd4c75159f514c1bb0b0d73af5ccfc1ccda13099b6a6841432009da7",
+    "pf_mm_decomp.py": "35ca27c34500c8c310c7b7386d3543a8dd8ba572db46f71c3ceabde9007e67c5",
+    "pf_b12_qa_derive.py": "a62014393eedc4917eaba5937daeca61109d85e1d67186b8ecaba46b1d8627a4",
+    "pf_check_fills.py": "b4d20450c1a4041b68bd56bb283f211a954aa8ac7ce133d513fdf87839e0dd86",
+    "pf_review_report.py": "e175cbec943082735b86623330d1883be04646922c7ebc805cdfb43b1531eb0d",
+    "pf_guard_freeze.py": "901fc66632cb13e25f43770535ce77372d95107a4d429c3b61ce68b2784e1332",
+    "pf_b20_hold_layers.py": "c5cd23263adc70677f718fc5a952bdc040ffcac0ef9e7376ca9f1a2213dd279a",
+    "pf_freeze_pm_ladder_v1.py": "446fb0bfb75364d6cbfbc82441582ed7645320dff55086759ec0fcd8eeb603e3",
+    "pf_latency_report.py": "2bde5fd865faa02f108f17cb5a259b0ddd43a67dd6d07b696278448539bca851",
+    "pf_qr_queue_race.py": "a6d9eef39f9550136488aaec4d912b7da1712712c07512473a41b2c427288145",
+    "pf_ladder_tracer.py": "0be04d7cf5e2884f6ed17029642a8b2bd5478cb6f4796cb64db6c8b1ca77de19",
+    "pf_future_best.py": "bbe6dbf406ca0da9a2f5dbe6025b52a0fe8a2dc14fb04057e34422034930f7f3",
+    "pf_b15_soft_pull_nocap.py": "9c725fd84ac2ec9f56253a0e57974d2a058da845771ca68fdac02eb2e70098da",
+    "pf_step5_o3_preds.py": "c351cbee51eb290beff6956819b5db2b5d6e1e280d970f7b633592014840b925",
+    "pf_ladder_v2_build.py": "fe1e518c149a366f8bb7c311a24c85b6455032466b49655935782d5443fc7af9",
+    "pf_queue_priority.py": "b681f28d07a73bdc57b1a7da40c19aa662bd73e32271362122cf6537f1aae80b",
+    "pf_speed_race.py": "534583e8197c2dfa633e18cf60006eaa6852e70002e1877aa70444fe418c31b8",
+    "pf_joint_ladder.py": "9931c21e6f135737c329ffac1bcbcdd9eb0c19fb65ddd0b51e44943063434fe8",
+    "pf_wait_post_sampling.py": "07aeb9d858f65428ea396868926101caf2d0a81c64c750fcb2e1ada0e26faf95",
+    "pf_causes_report.py": "bcb3ce568af959a5b6e19f6f5213ea8a4df50be4087fb21e5f43902874ff9870",
+    "pf_orders.py": "f822a5af3ecdfb2849bee2785776eee3508c1279f8eb01827292e72a8b3dab65",
+    "pf_live_vs_replay.py": "38723e08ff7956a16fa6be556da3c8643b06fe31f5a98480275f35efa7191374",
+    "pf_stop_ev_causes.py": "92d826b1e93de17436585e7f629fcf641bbd9eebf3cc71e83aa695a6a3793f42",
+    "pf_anchor_eval.py": "9d02d55fa4cfebe253d3fbaa6eedff5fc3f09dba31cb6decfb302edeb77f07dc",
+    "pf_entry_information.py": "57f7b10e50ddf4030f8b6a7601bbadd0c895127d25a78d17dccc2e6a677e224a",
+    "pf_fill_mix.py": "5f9b99b5e7a76645d9b05fd37a5fb24740dac4b6df74ace587932a666155cb55",
+    "pf_inv_check.py": "78c05221fdba8152d48197a78f45e48e27b43a9dba6173d899199ebee79fbadf",
+    "pf_o4_report.py": "981927949eae9c7e634d05c290a1113e47e5db3cdd427bc0b56ff22de3242f66",
+    "pf_deep_pull.py": "d3c54ec79d1e146b56f83d5e83f6de749afd5348651bb9a2e8c2bf8167ea43cb",
+    "pf_stop_ev_e2sep.py": "64c10f0b31b72e41830c9d701d19b8e7394786f9e05dc8f971deb40ce3aee426",
+    "pf_order_harm_client_lane.py": "c203beeed0a82ae31696cc3c1653947b37b1b952984a85d0ff3f82ff4c7941b5",
+    "pf_step5_features_rl.py": "8bb95a0090f03196169d62e92a66b8a01bbdb3845021793655b08b4c0555d553",
+    "pf_window_size_report.py": "45486ee11103e13e1edfc9cf901bf4cc91ef417c73bcc72016445b97854e4f29",
+    "pf_b12d_takers.py": "ee11934add3a55e19d0207a36a6f3b6eec7405a575b3f1fc6b3721f544ab97b2",
+    "pf_b12_makers.py": "791c7743c6cc5c96feca32ab7c99e74b8c5d5679234d2093fedf09e4be091475",
+    "pf_move_avoid.py": "8e37001985fb786d4011cc03e3e20e88065179e13bacfc1d91c659034b521c27",
+    "pf_stop_ev_timing_certificate.py": "4a039b5b57075c82af2243da3f47aaa0199b3b7a94798054748ba9c5898bc745",
+    "pf_b12d_bursts.py": "ac8f60f49d3020c83d7b19d00cc78c0c5b64e813578d9ad92c98142eae7fbceb",
+    "pf_b12f_activity_imbalance.py": "a5a5862bec83d3764490e14984a2d9a6f5390caf93183557cc2d8b40883196b1",
+    "pf_step3_guard_attr.py": "7461ec478d1112909879add776b2e7a12d24c6bb71442f2e11f3ed24f571e11b",
+    "pf_step4_ladder_v2.py": "9e1dc0ed441dd3355ba2e55418e29e7a0f849cd7a165e2bfde8acfc64d08688b",
+    "pf_step5_c3_preds.py": "8d06904b5600c0679ac3aa1baafe94e07d02f117a129baf8df3eae65f7f0b0d5",
+    "pf_v2_engine_check.py": "bb12d4281a52cf081b1b5393642b86acce11253a2e4e24d873539c9c277e3ffb",
+    "pf_entry_repair.py": "c2526c3ebe7ed6662935b3a2ffa3cc8b0bdd6bd0e7a4a1156bc92133fb6d4397",
+    "pf_preds_startknown.py": "02d55cd721548b2f958a2a75b49290feb343393a369a4a1c12782fa26b76f08d",
+    "pf_ladder_causes_build.py": "f77a0ae4ad786759bf1a1d88773c2413090ae1464e47b98dd4f05bb723d23d67",
+    "pf_rebuild_report.py": "7e620b49b0c09bc70e85c63b2eee8f317bdc45fe0285bebafaaa011aeb2ffa70",
+    "pf_stop_ev_accounting_status_review.py": "2c07228cc220379073a0aa345309c55b6f2065efe94b08f87049bbb70b5621df",
+    "pf_repost_anatomy.py": "ef7364906f9cebb2bb9122413644be07afa00e53e38c2ee92a4b77e19232e613",
+    "pf_stop_ev_e2sep_commit_review.py": "304092e6198c9cf207ca0458d839bbed1e6a156e2ae1ccb449ba669b7cf5bb33",
+    "pf_order_harm.py": "00786bc1cf1a7ffb651c960e96aa81e7d2c5c7d8ff52db03bc17d5db5643938f",
+    "pf_wait_post_state.py": "b1dd1065034c7b373cf787fea3878fa78fa7ff87ee80998d3ab142edebff24e7",
+    "pf_model_audit.py": "d9c55db57764d8322cb867638355c5079231f18f258d6417e0be39f22b0a355f",
+    "pf_ladder_orders_report.py": "5af5b3393054447b7236cf6e045498c5eacb33111abb3489b7ec61bd812dcb1e",
+    "pf_stop_ev_distribution_review.py": "e654f901486516cb092213b9b0124e488601a295a070e2d610b34e7b1e31f76d",
+    "pf_step1_timing.py": "0e669a7c6389027094ef0bf6fd040372b13daccc3dd87962bf4f9715b98c5775",
+    "pf_wait_post_state_clean.py": "47441f594ca29e686951fcb6b2efa829a43639067ee44feaf68b412603876d07",
+    "pf_ws_pending_diag.py": "2a57006116c4eac3e854d94e8ae5c6eb69354622b1f43721224ac7ca9a8c0647",
+    "pf_step5_guard_preds_wf.py": "385d2ee5594038db00ae3ab4db9960ffdf36a0770108073db07449625ccbf36f",
+    "pf_step4.py": "5d9bdf8721991d778cd89dd97f945cf439646b85a10128913af6789f51875b0f",
+    "pf_review_gate_bands.py": "5bf52852888ab117938788ad1221f42984d726b7a441ecf7321ff1fa55583dd4",
+    "pf_live_report5.py": "4579cfaad9232ab21f7c1110743913db32f25fe7b91ffc359cc9078ffe4e9f8d",
+    "pf_inv_r60.py": "3dcacc738abe4c74816452835a87f60061d6f590d1d2af2e5a960e81ba314a87",
+    "pf_fresh240_report.py": "8274cceee15f80dc7be3435313b4bd4e6fd0852969cb0bc4a059b996e3b71acc",
+    "pf_b16c_combined_guard.py": "31647774144f5158bfd12f8c36973a8aa01ea0195238a9ab33da1ef80d198ef1",
+    "pf_stop_ev_e2ize.py": "a90a49c1467798b7f9fd0937b709b250a0295a051d6a0effc89320750fa50212",
+    "pf_joint_ladder_v3_posthoc.py": "700d93b999c9b45d67f75d9195a88432bc53721f7b912b87f2496ade9c8b09f3",
+    "pf_anchor_sweep_report.py": "09e9e2b8f8288de42ac4c17a98f16052bee70daa72377b6296746265aababc2e",
+    "pf_guard_control_report.py": "f437d206ee1c78f97566982567710d9ce9e0b2511e11bfa06a94cc9626e7ce5f",
+    "pf_order_harm_policy.py": "ecb980a45a7495884b06eda5891617452749566dba195e252eb8441ab7f24e4e",
+    "pf_step4_live.py": "742637b9a2d5bd6d53c7538f78b2277412aff6b5c40dec05e4d6d2ee68a4884f",
+    "pf_review_level_birth.py": "c2fd3e8aa5b7871e0112301e907a2845972ee150a2f99d2e327872bba942efc3",
+    "pf_entry_local_fast.py": "db97b0d1a0b5aaca701f8a0212e7e374eda0fd34729aa171a870960c033cf961",
+    "pf_venue_feeds.py": "b194e7f48704b8d962901f3c933f3acd3d052ab16b65384afae9bd7cac0f9d52",
+    "pf_vacate_gap.py": "28da2b5829f2379a9539fb970c2dee5dc140154eb0d20714cd08a97bb6b575ef",
+    "pf_fill_input_separation.py": "59100fff0aa2858457e4380d34afd17070b24e3bcccb5b0f42c9d302663201fc",
+    "pf_step5_features.py": "d345469db55258b91a016ba8c4b81abec396f5e18016bbd189212efaf312c51e",
+    "pf_forward_v3_report.py": "413c4dc38e8e98e982cfd5a787ff92a2dcf67f132f6b7d9229990e9a4139a733",
+    "pf_clock_rl.py": "0a1ce1e12e45a73de7a46102385f63be94d065d60ffbcc44aa30b4e1a840bb98",
+    "pf_anchor_fit.py": "887a64c8d3ada1879a284ee4ccc9bacda52fc7dfc1eebfd9118d8f29a12a9d63",
+    "pf_replace_compare.py": "89a0ec17ee242a210837b4341b4c472d9a857764cf827d9082477a69ba07dba2",
+    "pf_entry_local.py": "1862f19fb4ea173ef430763abf4b10e0be42c33dd0966b95849a051e3ea5f5c5",
+    "pf_incremental_replay.py": "4467d897ce4c74c1f62bf406d6459552a98ee88932a449eedde8c7b3ac9c2d6a",
+    "pf_b13d_g4_check.py": "3262a46bc5096e55e13f9c23deca1610b389ad886d3c1dd272199be2b4a1bc5b",
+    "pf_chain_fetch.py": "917def1d9191cd2ef5e8058e77e105f75e8a416c70757ff23e2d7984d3ad9e82",
+    "pf_sweep_reversion.py": "e945162abee055557246eb12e86317e575fbe38762c0f94fe8d174f5b88a176e",
+    "pf_review_queue_miss_age.py": "c73861946806af8a53b294070ac2819f57dd87d0f443f64076eedd59580bc5f5",
+    "pf_badfill_grid_tx.py": "17e9d700142f74e8dbf419e2d2cb36f408e88b2f51fd44a71998aaa68702fbb5",
+    "pf_step1_report.py": "f68807ea25613aef73cbb311947f6867dc475a86bb0b573df3ba5daf9559ce56",
+    "pf_step1_isolated.py": "37563a567799431dfb7d2a592e9bbdff085d7759cba00c1b7e285c5ca60df41b",
+    "pf_lc_report.py": "1e07b5abcf3fee3f3d7152270397ad7d4be76423068e4ef73ba2c956a6d00ac4",
+    "pf_guard_flicker.py": "dfe7cc576ac2120ec90b203a46150961c9bf9d3485e6fa2c17fa95eb607e6e06",
+    "pf_spread_capture.py": "1e1a69a968a08fd1a6ccec288e01a3486b7aafb51e44a97c994d6ecbccaba32e",
+    "pf_joint_ladder_v2.py": "0fd000338ead0da15dc150f042d0c7a12fed3511f9a646dd0f898cfe78cf75a2",
+    "pf_rebate_compare.py": "69d9904edaed7d5fa96cf1b7c5e7770d2bfcb1de3cc8c2a118899dad033e97b0",
+    "pf_ladder.py": "0db0d053413c5877028b3ad0974485a064b55e169a6af91c3d6c6e09720c92a6",
+    "pf_ladder_trace_build.py": "b22e9f0df24db505e5613bf3d607f15d7edc0cc27b35e0149429e4b96b3db6fb",
+    "pf_b1a_live_orders.py": "0a4c314a6c84f8ab57dba57afeb37cfe1adfa4b7e6adda248e7ae189d5a0b62f",
+    "pf_step4_ladder_trace.py": "3f1564edf10eaa9b10309f81593805418f7eba442e906b6461f791d2d1817853",
+    "pf_wait_post_review.py": "a6f1e0e55c8dad8d679b933b3686b9250b56482c1e797517842b28820a4afdd5",
+    "pf_b19a_regimes.py": "ce421b6de1b0f3e35a3200518cf66f01f9ed8a9448f3544ef8a3ce9720a16e1b",
+    "pf_b12c2_binance.py": "a1e0f7b45d93141d23731201d29f557433196cebf23e87511b2dbec7dee5cd9c",
+    "pf_step5_degraded_preds.py": "60c6273042691a31051250287943dc255b4e251a97fcaf67722fb594c836ebed",
+    "pf_chain_failed.py": "514d189b2d076eede481128fb1e440004c964b42e3e000825be16069e5d46163",
+    "pf_big_prints_split.py": "fbcc5657f4c23b90d5cb313382a914e572a1628c2120925f077d497dc2dc57fc",
+    "pf_stop_ev_economic_layer.py": "ed30a49c5f22dfd9476a814b30402e853714febe5ef096ccb7dfb7e393e71eb7",
+    "pf_chain_calldata.py": "614a5bf337085be5faf4e40c6e5b29106ccfe9f89c0c236ddaff688a19ec28b9",
+    "pf_live_report4.py": "6bf3a9acd8d28b8aa144115b58b1abd82772a9a81bf19c1ac2005b6f942abf1e",
+    "pf_b18_pressure_fills.py": "605d41036ed791d2ddeb6d8cc734f8dbb50b3ea585453872b7c9427b13140d11",
+    "pf_kp_s1.py": "a71de76576493de4b35a3afb01dab5ff174176d43ded40534c24a13dced1497b",
+    "pf_step5_guard_preds.py": "15d84613d74a9d0f08c501a279ebd28372e501ae5fb057b65162fa159f6e0f56",
+    "pf_step5_lodo6.py": "4307d5a9a64945dc8a614638e3edb8b799736fa13bba97eb3a3a2e9c5b9fc66b",
+    "pf_mm_decomp_fw.py": "64688cb9453a66b9b518e97c98433fc497a0c9fc2a26c0364fc89f111078dba2",
+    "pf_maker_behavior.py": "a8246a56e6d2cfc1997cdd4f0ef863303411d8e035286b08f7f40c8034c41b9c",
+    "pf_stop_ev_accounting.py": "1cffc03eb8d801d87ae70b2a2edb1794513e0962dc2892303eb7b92ac201a793",
+    "pf_stop_ev.py": "229d93f11ef6d346c2d1cda1c3a745c89a5b6ee99c6a6cab7a3f7b4d35e6cec8",
+    "pf_b14_pressure_guard.py": "175538b8949cd1ab9727c10d345c48a4500fe05debf829b9858252c1132ae726",
+    "pf_stop_model_review.py": "d01c44423debabce83f1f8b428ef36d0b013a8cb44a43c44330676a03376043c",
+    "pf_b12e2_binance_raw.py": "20aab57a815ce1df21f8f464fdbf5d8870eb903d81295962685f07d55fe77624",
+    "pf_b12_posthoc.py": "3307661efec74ff5b83fa2eb17586192acbc66e28017ad8d1c6259f715f8e8a5",
+    "pf_ladder_fwd_build.py": "b78fd0e2003ffb2a102f0cd0ea0e5c128b10b8def5392d96ac07782d60c68ea1",
+    "pf_hold_align_check.py": "e528469af45778ab47afe5ecc355f137f4e67d8e99d600830140258ed2683538",
+    "pf_top_compare.py": "92ace5949a2119be39cfce59fa62ac1b92ba736454bd49ef9e0a627fa1890adb",
+    "pf_stop_model_diag.py": "8172832800fd088806658eaf2918bb07565bb257b93b68cb5734a6b74ef4140a",
+    "pf_fv3_check.py": "97114d0501ffaa7ec8a415a33a8df50248c6cf3d5d8820770ef9ec8e0d8a60f3",
+    "pf_learn_pull.py": "57a49dedaf1d48aa56b801b12cfd584bb74c75a5f3ef84026f5a8669bc707dbd",
+    "pf_review_gate_hysteresis.py": "fa14a10c755193f4a9753aa1fd12b5655861a98ec7ce81897d920cff846634ec",
+    "pf_chain_pending_iso.py": "b436219a189b298fe29b4b0b7abb20912bd7cceb635951e96ccac29bf65af983",
+    "pf_step5_model.py": "b3290239267e45065e5d9ba89c6e5608919268ea9482fea7f41844a12f943fee",
+    "pf_kp_s4_posthoc.py": "ba2048d9aa1b492bc17a17956e1539af939e7cbe1a818b6a5171a1e17675a089",
+    "pf_anchor_report.py": "22d5363401837adc0995e9a3903b9797e375b328ed6c1e7b9e677d67655f36f7",
+    "pf_v2_report.py": "d798862a5a56c89a4a25cdd82fe0591199ac771fc5e52bacd5a5b03d80f3b001",
+    "pf_step5_c2.py": "c662c1800f7e8258c9213dd8ae13f9610e3669fa7ce1a127339603e07b1607dd",
+    "pf_stop_ev_timing_check.py": "2c0830e61e4f9e7ef308c3214d23d4270254b3fee9c2abe52ad97af620eba04b",
+    "pf_b12g_horizons.py": "cd2971892a07a07b2754980d35ab9e41cf06cd1ce9dbe7c3e8897e6a2138f020",
+    "pf_keep_place.py": "41d00a526db5a3f16fadf6b125dbed918f98da2043e018d7ef0bb8eb762004e8",
+    "pf_b12d_selftrade.py": "d053fa257fb2f14130b3954ca8e8a71f116afcad0fb12a4e2b8a166cb867756c",
+    "pf_badfill_info3.py": "9c7d9c441e512f932f64b463802e91c22b6271acdba5af3c1c95ad0010dcd61a",
+    "pf_timing_split.py": "de33ec3e64f22f2db8226c1cbc85ea230e6cc1bb1a478773cc5a978da4997b48",
+    "pf_b16_queue_label.py": "95fb1d88b2f9750176b972bdb4ee8c7df5f13d9ddbcaf83b18253e1d83aa05de",
+    "pf_stop_ev_play2.py": "717f98be095e302d3ef5f7f5f387d8dfdd2d9d89eca10c2a2794a9f4b00f0d4a",
+    "pf_qr2_v3_early.py": "b714f32a0ae838c0bee81f630675a70778cde5201789be82117488b510ac0c80",
+    "pf_stop_ev_latency_report.py": "42295d6aacf0df52936996154b986292ef7435b7d475e1b02a583daeb6f8f2bf",
+    "pf_big_prints.py": "67f6b43e2cf4d9dc5794a2b78bfce2db91e5a81178055c0357f44e94bd0a995f",
+    "pf_queue_activation_check.py": "61622077868214b14af1472ae08fdaa862f411cb0cae1e26673c26326e05d214",
+    "pf_wait_post_state_noise.py": "ddbe8c992e113aee67d60b9d486d18320afcb44238a23cebdbdc5c739dbc6c08",
+    "pf_ladder_incremental_build.py": "349d52e961d2c9f556ef89ae77157e28938bd6cc81f7d41cd3e8a73e5cf73130",
+    "pf_skip_match.py": "e5528050e1a3bb0dbe4abcdccbf3c1f53612fce864f1f1bff015b0e8c39614db",
+    "pf_front_pull.py": "42d832d8922b6eb5c7af4363d075b12c39851b29eb0b9f732db6d720ff0d76d6",
+    "pf_exit_check.py": "dd5f426e42366af7b8588602c06a0c9aadec0d91f1d5af4e8f173b7f35c06f3b",
+    "pf_entry_representation.py": "a016a4fd5813c0183bb9be400c2d62ead49006c03d2b092820b913c3aab77889",
+    "pf_resplit_report.py": "68d92555c193100a7b21066e08db67c72f8f2063382a23d1904649ccd8f3715e",
+    "pf_entry_value_lane.py": "ee807a13d7cf9762a7b14e536ebabea7d47ac320f9f3e1a99b12a2cb79dec597",
+    "pf_hedge_check.py": "ea814180ba4d3a206e16f57b17a56ca1e99b27c9ebd599a9ca87a701160d3d0b",
+    "pf_entry_normalization_audit.py": "7dae305300cfe8c8683ce46d738bb050a5d76053a93ded3cd4d48e56124b5645",
+    "pf_v2_refit.py": "2e0127a08b3ecb4b3a6452164dd26f2fdc7fd19310dd35505e02c9b2587af61b",
+    "pf_cross_venue.py": "2b56512d32606a0d6fa5fc86c42a0b97512b2cc339abb966857ab7839735a7ce",
+    "pf_step2.py": "1bb008fe2d0a49530d8e898034fbd9693f51fdd9d7eb6ab8f216674652af7afc",
+    "pf_review_gate_information.py": "ff1a4cc4ce336ed3460716ec442b42735c88ff670a4608287227c2a091eb5b76",
+    "pf_ladder_inv_build.py": "e6f37a43bcb268ec300a69a050273db94fec14df747e4040c4c0d27f7c162461",
+    "pf_cap10_attribution.py": "b5e00798f6845c2e3c68b35a04b9e77591fccd255eedca552364db8ff60ff363",
+    "pf_b13a_pressure_model.py": "54cc8615e93196def286dd43df976d5e6766b6f7fcf12c76b14bfb5c08e44f8d",
+    "pf_step4_ladder_fwd.py": "4aa075d1fe4c9b1deac206047b35e707d10895db159c5bddb623684acd72f025",
+    "pf_stop_depth.py": "819d5e06d32b647cdac96cca0f9f9191eb033c9a9b6c1cfd160df3f0228aae46",
+    "pf_lat.py": "535bebaf1a600f6bfac2d71059ba2157bcbe42021f7fa5c3b638af61bdde3891",
+    "pf_c2_report.py": "0406c9edda94680d10e56ed9bde47c9db3a5c59e17e93d1156b2f7a4f13cd62a",
+    "pf_joint_ladder_v3.py": "2d1b54a88fc5186973b032d0a0dcd2b1d1116cb3264fe00bd30c2f3bd9f0cb94",
+    "pf_v2_grid_day.py": "d60efd0dd18ea4b143e718e3a01ee33602324f0d24a23cc9ed12f7f55901e756",
+    "pf_stop_ev_play.py": "00ba2507883b168f79fae02bebfaa0f454ab6c194d58eb9d72d610bf749dacfc",
+    "pf_wait_post_v2.py": "d822211ae363e3ed9c821e47539bda6f5370d8e140a72434ae9a63f423d6544d",
+    "pf_step5_oracle_preds.py": "1974d3529dbcb2ce9d0db2c4239e603352f24b639ce46c45aa5931fbe07aa48c",
+    "pf_wait_post_diagnose.py": "bf7557fa8d7b34f760ac961764fa439add6e9d491d3a82bff9f2164ef090fbc6",
+    "pf_b12b_posthoc.py": "b13fb4d55da183bc6c0aa76f559555fe5cc67206d1cd9f4ea44aa9c571f09117",
+    "pf_robust_check.py": "f7b70ab8c1e431efdcd24c9d93162e5014cde4604a45436cb57d820870fee104",
+    "pf_step4_ladder_inv.py": "fad7195621e5c332f80c3aa0fa3edaf6c00c1ede2ff80cc91c22b3d0cf3ded6c",
+    "pf_cap_check.py": "a388f383e67f68540d5d6d5746fe0618187126a9a1f066f9675e819940112403",
+    "pf_o3_report.py": "a1e312a9dc44e286679b2107bfaa7119935e476680506d851c2a8ddb51dffb38",
+    "pf_b12c_model_or_speed.py": "ccb4a8476b39fe8136e4fb9521801953558b143cbb02dc289f75bf45934e31e3",
+    "pf_pnl_decomp.py": "8c1699beb037598ddeb3c1d8e4123a2a571a4e979ceef03dfcbd6837771548ac",
+    "pf_forward_report.py": "d38eea40cb87be0641e7bafdfa669a5d88dbb5579385ccb956bf73716d55eeca",
+    "pf_b12e_smart_takes.py": "d150accbe528ee1ff3ec37eac431412e46452ab1f767419ac40211461a9ffc2c",
+    "pf_view_check.py": "844420a112f42e199d14759f09585bc8312bdfad1d888b13c30e7ea863b03b8d",
+    "pf_b13d_withhold_attrib.py": "4b75a9452daca8016c783faabe9aa638099539bb2169e268379ee9600bb1467d",
+    "pf_queue_place_why_late.py": "9907f14990f8c4160598fd7bb64be9807588c8994ebe954c3e995d6374cf2119",
+    "pf_step5_apply.py": "df3d89c7b9aca5426764338e7c8136390f123e4b725b60f38db2d008bd70744c",
+    "pf_kp_s4.py": "3a2cbceb239fa25a615c21b31bc3e775863aeab3cd4a60068d7b440f1a307528",
+    "pf_stop_model.py": "e2a857ddb6c4e76af40080e753942e1e0bef3bd42a34ed2929f378fe869df0ed",
+    "pf_stop_ev_latency.py": "d96d1e000152c21067a59f01b3c8aae255793d79faf2232dbcc97da7043eba48",
+    "pf_order_harm_v2.py": "fac15d080f5253d048a0fb86c44e9134a5205c28cdb3081120bf58f2585f4cdb",
+    "pf_false_alarm.py": "c19e748c612f5b5b13a33e85764af6a584bccd40716b4cf5b705fe9917f20708",
+    "pf_entry_repair_lane.py": "f0d58d617217eef61fdc7c850b6a76d7cb51e1edca576fb21f70b3ffca4dda77",
+    "pf_stop_ev_dynamics_audit.py": "07d7c53d871dad87afa552235b20d7196a3690a7a83ffa088b9da06036e14eaf",
+    "pf_step1_booktime.py": "3e0d2969b744a29f49ab1291569091dd4b936b9878be1092ad8ccfd4cf9990d8",
+    "pf_step5_baseguard_preds.py": "aa1b48fb450b79b1b9107a01e4d35707302af4f3ec6090374f4236173c93edff",
+    "pf_stop_model_x5.py": "18ed5d41d3a87e00c60da3e0332166def73a5d9ba75331b2895ae4255cbe03de",
+    "pf_explore_semantics.py": "8887a494217716839271e13c1d5162445b25ea48a0e0a92db9fbb8a27e041e6d",
+    "pf_maker_bad_fills.py": "3170d65f88ecb224bfff5251d8d432e3ac6f5a06158ca59bb0efe839af4e9c51",
+    "pf_pull_depth.py": "a8670b2e9751f16dce37aab7c18ce35cc31fa3431e392b9a7397f4375a9114ef",
+    "pf_size_stop_report.py": "1902ac99f504ec9556c17a01bf553b3838e9c101184844c01b4bda029120ecf9",
+    "pf_stop_ev_model.py": "1f178255c12d0b12fe54c97d50bfb913b7594aed5ea3f271c5e71ea69a10cb9c",
+    "pf_v1_apply.py": "810147752dbef7baad326a53543fbec8c0dd3134d6368cc33b64d811b7e95739",
+    "pf_gap_top_makers.py": "33feed2507215e0c8cd7b66d768337e97ea4a2a6504be67e7bbc7866f67a82e5",
+    "pf_b12b_reason.py": "f2c4d837c39d774232a66f2e0179632386f0cc42f7638e7f8856165b361ebef5",
+    "pf_ws_pending_offsets.py": "16dcb45829d3189c91e052ef975406124e1fa811176239e4e55409a81b0af0fa",
+    "pf_target_test.py": "5aa308e4fd69ab01b03ef7a36071fc4cb3ed2290951a6c800bc5d1c9bada68ba",
+    "pf_ws_pending_examples.py": "e7ecb355e46a8055de5b0b9ba5c0943d457fa94b9e122601e045343eaac2e6cf",
+    "pf_invwin_report.py": "428aae112a053897d893675a3c72846b4855fe5ecb8fe3362d63551c7dad4fa2",
+    "pf_wait_post_signal_data.py": "6529bfd416295d3fda2c6914e074f7fc4ad5c1c0c23b5bc5c551232c2c9ce1f4",
+    "pf_learn_pull_target.py": "f6bfa8c38b7cab89b51a9706363c1db90ff0c9d48b9652558693abb1d1ce3ed3",
+    "pf_o1_combo_report.py": "1d37afbc5e817a6033d5441c1fe56bc4b16873fadcf48680db28726269afd139",
+    "pf_ladder_trace_check.py": "2715816a155bfc1115b6f8a072c443543c8cb199b1f54d3fd799261a785638f9",
+    "pf_minute_pct.py": "8dece2b10b41faa4b6b237d7700720a8b0c94bdcae985d0a49ebfa0c16af5cd1",
+    "pf_influence.py": "5c5bd6f61da5800fcc67045b8c5ec3b4ab61eede3a4383ac244f5dd405f6ac55",
+    "pf_toxicity_by_minute.py": "6a30d0f0cfa16390da1e85a288b558cd434c848f12dd360dd38d5a946025cd8f",
+    "pf_robust_check_v2.py": "59ce592255388fc934a7656ae2af14ed73d4a9665d3d40dbedeb17b995ffa7fa",
+    "pf_step3_report.py": "282884f3f0a533352bf6add5f8dd3c77e962bc953a2960cd9ade1ea1c7882877",
+    "pf_best_gap.py": "2e07922c2eb47675f443852fe0707ebfbce411889aa0569754519058c9e7d3dc",
+    "pf_kp_s4_diag.py": "4cb8b6c87fe4f91061eafe111c764d89a453c6f0fc58063576b6c1355d1ddeed",
+    "pf_entry_value.py": "ebdad6013b8b76c03417f24495b87af309f213078eb018f5b7b358c9884ef12b",
+    "pf_wait_post_v2_lane.py": "6b478816565ceb0f196b0994c14d32fdc937bc16a81a113ea3b8d087c7297010",
+    "pf_tb_check.py": "b59611e840bc72c98943f68d7090222d0b30b08875ac6a7fbcbd88b9f25dd943",
+    "pf_step4_report.py": "d277f78470e2a4a959d9d4cec47a72d7b8c86ec98f9bc51ae008b51814b39228",
+    "pf_incremental_size.py": "3eb41fb20af3894380dad7dde883907594399d92013ae1b0d10faf29ed16928c",
+    "pf_step4_ladder_causes.py": "0eb09a34c02fe5552477e78df22de09d32b76d5fccc91a5a517325340c803686",
+    "pf_o1_report.py": "ea3179ca3f1d70c934d715823212bbee3c77b75b7e79eb5c44d28c7424b7ebcc",
+    "pf_o1_size_decomp.py": "e69f34ddda314d47585c0da83f76a769273c68c9b5dc798d7984dfb64c6f5922",
+    "pf_step4_ladder_v3.py": "d678e7c3c4e47c6d60ebc031edf8d7fc7317210d5e58ff301d92d7ae0ece5f17",
+    "pf_queue_place.py": "82a69aed6340be016ce7ed43bb1005dfba5da7eff76663c427a3dcd2da5bd922",
+    "pf_review3_report.py": "f9ee24a91c80be1f03a5fa8b91050fe1c68a53b62ae5b7b6bd90bc93b6ee1be7",
+    "pf_cs_overlap.py": "5cf9ae4171dd03d8ee6b7f13337ce23c065d786c113bdbbd78ede2b5991f4509"
+  },
+  "inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/fit3_20261102.json": {
+      "exists": true,
+      "sha256": "f4bc7e344eb811da5f3443dd1ab6a8b2cc3c0ebf97304b8810b3d0aa0b217d4f"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/models_v3/20261102_full_p.txt": {
+      "exists": true,
+      "sha256": "516eb4628113e88aa46d16c68a3b0adc8434fd4385ef9bbe159fe7d1b2cbca86"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/models_v3/20261102_full_v.txt": {
+      "exists": true,
+      "sha256": "dfa399413443ceb332df44edcaf6cfc8ddf23bcf71a690cbbe952b04e2477d7f"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/models_v3/20261102_b2_p.txt": {
+      "exists": true,
+      "sha256": "9be9ae61df16c62c11a47a897a18ffdc3292e8e0dac40cb2659301358f0eabc9"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/models_v3/20261102_b2_v.txt": {
+      "exists": true,
+      "sha256": "970bc5dc76ff7da9f0ec7d57c1a8cdfaa8a3f56f06fe1c52fd0b22ef116d95be"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_play_20261115/cal_20261102.json": {
+      "exists": true,
+      "sha256": "f0049eace10c90885d0365568934a6c86161ddd590a9845c2a32b339e983e05a"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_model_20261114/play_cal_20261102_v6.json": {
+      "exists": true,
+      "sha256": "146929ca60cd5d0c8c33ed7ef0ec39d6fb073fc1bb4c6423cdde7b2cbf15f864"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_model_20261114/fit_20261102_v6.json": {
+      "exists": true,
+      "sha256": "549f210ab4637438fd423410591751a4e4ec6396f5d10f171f262bbffadfd716"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_model_20261114/models/fold20261102_H1000_j1_v6.txt": {
+      "exists": true,
+      "sha256": "725123d60ba69bf15e28037094efcc6d814065eada0962256b4a52c7905175e2"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_model_20261114/models/fold20261102_H1000_j2_v6.txt": {
+      "exists": true,
+      "sha256": "749528fee8afbfda440950e2210658a7e66c3ae95ae39d244fedee2e514f3e92"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_model_20261114/models/fold20261102_H1000_j3_v6.txt": {
+      "exists": true,
+      "sha256": "bb077eca1db1b1fa4e1f91605eaaedbefb2791b0fbf2d06ed54ea9ab615c6050"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_model_20261114/models/fold20261102_H1000_j4_v6.txt": {
+      "exists": true,
+      "sha256": "f6df6685af7fe0f59d79a8d3f3331ad677d051afb91ad435331d7e1842db33b9"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_model_20261114/models/fold20261102_H1000_j5_v6.txt": {
+      "exists": true,
+      "sha256": "ddf925f2aace0da911724f856bb5c67b6b2d486403ae8d3de7a27b398dbc8a42"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_model_20261114/models/fold20261102_H1000_j6_v6.txt": {
+      "exists": true,
+      "sha256": "208f83fd381e41ee879db24e11fb3fd1d8512c8685d8dbe67f9d4ef754630b24"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/registry.parquet": {
+      "exists": true,
+      "sha256": "c21b61f114b805a1d5462780266a6c8cec88e1b82d9b568b2a6ada29ce1077dc"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/legs_timed2.parquet": {
+      "exists": true,
+      "sha256": "e0ddaedede613fbf546c63ff09232b210c72e6c51f9a6f69dbc65480fba58e1d"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/legs_tk.parquet": {
+      "exists": true,
+      "sha256": "e8ec34d932939d558160705a861edb5ac7615071e1ad8c17dd3184cb071d5591"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/clock_rl_d2.json": {
+      "exists": true,
+      "sha256": "538b0ca78106126e36249b1e824512572e55a12ef97f8a33bc3dbaa7986e4b2e"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/pend_inc.parquet": {
+      "exists": true,
+      "sha256": "78456327f69b348850d90d5e7fd0cad83e1bda4aea2180bbf823fd95331a33db"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_12.parquet": {
+      "exists": true,
+      "sha256": "a12ca03ced6da9ef64d4b8b5d712794d52de4b224ba39b8c4bc576a0d11a5093"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_23.parquet": {
+      "exists": true,
+      "sha256": "c26d2e88efb3de66fd7c5a2dc246fc530d4a135587deb225072f9f1f1f44eae0"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_18.parquet": {
+      "exists": true,
+      "sha256": "80a40ac615e51551b14ce41e65998d31925c0b8ab0ed615c0aadaff19bb5f2d3"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_15.parquet": {
+      "exists": true,
+      "sha256": "0217006451587e3eb771cf2b5779aaa21838b9e55158482e701b41ca8baa4eb9"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_21.parquet": {
+      "exists": true,
+      "sha256": "46f59e13b00d1e6abed5fa575f43f2294b96ad2456e47ac1353a4c8877b4b578"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_02.parquet": {
+      "exists": true,
+      "sha256": "7da260900997612b5946b5150746de92218ad64cc84ecad495a4839379536ef9"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_17.parquet": {
+      "exists": true,
+      "sha256": "d989d50b4ccbff73ae6b9f58da38939c6d32743bd5546177d8ab9677bd883087"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_07.parquet": {
+      "exists": true,
+      "sha256": "a45fe1f54f83396ba286d95afb4527fc73791426765be501e34f36e399624655"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_13.parquet": {
+      "exists": true,
+      "sha256": "0c6d36ef607c20f2ab7e068cfaf0314547f8ddbff52f853bdb1dd9b757373dc5"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_04.parquet": {
+      "exists": true,
+      "sha256": "3226135612a1ff29c8ac00a0daf596ec8819fa01975d10d6136a6bbc076e6cf0"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_09.parquet": {
+      "exists": true,
+      "sha256": "088d53ae9021319f0ab69970b4ffd50c97c902e0d17979eac92d8c42647f0096"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_14.parquet": {
+      "exists": true,
+      "sha256": "05cc8e741046cc248a52f390a85cdeec29b1eeb3598920b36bf22fec2de20687"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_10.parquet": {
+      "exists": true,
+      "sha256": "1dd21caf2ff59442ab3868f2d6a0d9222c8686d1c650ae0fa49f375870b2c4d3"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_05.parquet": {
+      "exists": true,
+      "sha256": "efc7e86942a94ea57d0c6fdcbaa71bda41737d357f845ca2803030cbd7206237"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261101_23.parquet": {
+      "exists": true,
+      "sha256": "c831725e68aed93144dc81d1f1ab0fb23183ec1123865936f4eb53930548d655"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_16.parquet": {
+      "exists": true,
+      "sha256": "d3038fc4aec8b62472a37b9966f7f6bc97f060764afa33b38234debf39a308e1"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_03.parquet": {
+      "exists": true,
+      "sha256": "d9d4856b8879415acb910d83f94ff830fc65f3e8210925eeab7555911c8c1f9a"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_11.parquet": {
+      "exists": true,
+      "sha256": "65e2a798f81ed91cf7143650987364542bab792b785d06d9db0c969a75814fda"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_08.parquet": {
+      "exists": true,
+      "sha256": "353146904ea832bdb75798d69b181c7636c4d0f924fcf815ea1dbf7b45535a8a"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_22.parquet": {
+      "exists": true,
+      "sha256": "5f4f31d2003e7872ad8cd4a2bc8f7790e65c1a3d87f8b69afc9bf7014da918ef"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_00.parquet": {
+      "exists": true,
+      "sha256": "3670fc2593203830b63e2449a7ec8e8c61b7e8b191b2e3474f5771eb9f603de4"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_06.parquet": {
+      "exists": true,
+      "sha256": "1be3b769739aaeb4df0cef3526288749391ef36cc80f958081738fc72e257b3d"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_20.parquet": {
+      "exists": true,
+      "sha256": "a36dc06f9c697f41dd6769e61f2f0b0241ec01e96af38afa0924bbd1a74df854"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_19.parquet": {
+      "exists": true,
+      "sha256": "44441147cbad9bdec246bd5c8edb88e22f13cad8a3c9edc4d20c9040e7c73f0e"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step1/20261102/books/part_20261102_01.parquet": {
+      "exists": true,
+      "sha256": "96bf9eb83790164d29db3c16dc3393e7b5006784fe860898413a54c634cbdea7"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261102/rows_rl_d2_pk.parquet": {
+      "exists": true,
+      "sha256": "5b3a5333183f257de9b5f39f467537e214272889f8f09d3050659c8db786fee1"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/step5/20261102/preds_t60k.parquet": {
+      "exists": true,
+      "sha256": "5581a19ecd7c1a17108f6465a2d3b5df9cd5615377f70704eaad0f993b0badf0"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_model_20261114/rows_20261102.parquet": {
+      "exists": true,
+      "sha256": "a255685f787f81d624144d9dce04cb8347ffed24c0e0f164821859cce60d73bd"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_model_20261114/rows_20261102_x5.parquet": {
+      "exists": true,
+      "sha256": "1591959898fcd91212a2a3d69b6beebea4fbd501688d6ae171aba8863e1e6366"
+    },
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_model_20261114/pred_fold20261102_20261102_v6.parquet": {
+      "exists": true,
+      "sha256": "7470e5936d8831055dda2e8d1b22c978ed3c58c531b6b8d5672a0d88f4ffbe6b"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261101_23.jsonl.gz": {
+      "exists": true,
+      "sha256": "5870fe9ccd4b72788ef9c79ca6f9d6ffe26e4065c605a1a5b85aeb28d6f21ebe"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_00.jsonl.gz": {
+      "exists": true,
+      "sha256": "a7880ccd3e04e315f3d5765c64aa8cc9621849b1febdefbee38647a90b8d5cc4"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_01.jsonl.gz": {
+      "exists": true,
+      "sha256": "855dcc20be20dd239fc8a8859f6a85873946a36bf0c0811f833d4152531b7438"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_02.jsonl.gz": {
+      "exists": true,
+      "sha256": "ef4b5ca30524bd185abce5c1d839d411cc26608b5f2a9aff8661147419cf8bec"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_03.jsonl.gz": {
+      "exists": true,
+      "sha256": "f5120b958e7c829bc0c1f3ec0a8b3a73cb0de817231868fa16c88a0913cfd6bd"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_04.jsonl.gz": {
+      "exists": true,
+      "sha256": "ef4356a6271eb1185138fc77e6048489f7f2e0e0bc2d53779228bd840473ee95"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_05.jsonl.gz": {
+      "exists": true,
+      "sha256": "6fcbadad533fe6068e9520d51c5e108c9a2149b7c9514ab2fdd807522d826075"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_06.jsonl.gz": {
+      "exists": true,
+      "sha256": "8984e7bfaace310da955e624cd0cca5ed79ead40c513cfa9a436ee521ff6f737"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_07.jsonl.gz": {
+      "exists": true,
+      "sha256": "c817cb67459ff6db284a69059aa6e564f338229f9e961d3414fb009a7ae2b1da"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_08.jsonl.gz": {
+      "exists": true,
+      "sha256": "9754acd7032f05e7908d785dffde391095b54d72f06fb32c18d78dc69ce08643"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_09.jsonl.gz": {
+      "exists": true,
+      "sha256": "865efc6e1414bca77644d323afbff0d0982b172604ce5f8866abbf1828b772bf"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_10.jsonl.gz": {
+      "exists": true,
+      "sha256": "75056695cb3c925bed5b0ada9ce34879a9dd2c6a98a5687811dc92fc941782cc"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_11.jsonl.gz": {
+      "exists": true,
+      "sha256": "436d645f658fac80d03a36c6243dbf9c6d54f36a17b109496acc3245c837450d"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_12.jsonl.gz": {
+      "exists": true,
+      "sha256": "b18b3cf971a384efefd88857057bd083f9f18383765fbf8e441dbec870deeef3"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_13.jsonl.gz": {
+      "exists": true,
+      "sha256": "008bce36f9f332134a35740cd0fc1bf1f60508ae1ecab6989dd05aa01c029793"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_14.jsonl.gz": {
+      "exists": true,
+      "sha256": "0ea48c406f067bbc48efbb388dd7fd646cefeb73100ebb811b619418eb299e8b"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_15.jsonl.gz": {
+      "exists": true,
+      "sha256": "ef87e47030ab16cae7387e9845641afb6495f3490e033cbf294a256422ab4d6c"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_16.jsonl.gz": {
+      "exists": true,
+      "sha256": "b897f86126117581d18bf1d227b2de1aaf9053cab9a8bc5ac4560b99363fb787"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_17.jsonl.gz": {
+      "exists": true,
+      "sha256": "d7465fd980c1f2c610b12e0d0df74d810473ac8b0defc8e57d0994c19d4ae0b6"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_18.jsonl.gz": {
+      "exists": true,
+      "sha256": "53edd6f8af322e28d5d0ba9b833576bed380c68ed2a9beb48d2ec7bc466c1036"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_19.jsonl.gz": {
+      "exists": true,
+      "sha256": "0dee2ce476b79e2583bfa6db51efcf4af4717e87cc95b11c9c3a0aa5efea2ea1"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_20.jsonl.gz": {
+      "exists": true,
+      "sha256": "72b9ecb0fd261ea32b9ef89136a6828915fcfa37b2881741d96141b39a049e58"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_21.jsonl.gz": {
+      "exists": true,
+      "sha256": "6736b9be9e605981df5f1425332e69f5b9e641a89125eb36d603ca01024e9757"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_22.jsonl.gz": {
+      "exists": true,
+      "sha256": "432a5c09e78c2e373bc8a58a09bc93a399d1f0473fc2655500fa7fa8722f190b"
+    },
+    "/home/yuqing/ctaNew/data/predict_reference/runs/20261022T132901Z_8c043d17b6/reference_prices/20261102_23.jsonl.gz": {
+      "exists": true,
+      "sha256": "b5700e1a884681237bc3b940d87c7091ac5467283cb7f50815f1db2cacb38ac0"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261101_23.csv.gz": {
+      "exists": true,
+      "sha256": "4b6d8954ae40943c695d3eec052e3ec74ae002d7ca1934f2e6cbbcbca5aaec1e"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261101_23.csv.gz": {
+      "exists": true,
+      "sha256": "8c5141cc5adb831a204f0f3f491ac79b0749a9c6bb5ae5d56ac9562f6e1ab0d2"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261101_23.csv.gz": {
+      "exists": true,
+      "sha256": "3f214bf78287fc5dbda8f1f176ece79505251582cce9fdb6fead072b657fd536"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_00.csv.gz": {
+      "exists": true,
+      "sha256": "9e89d8c8d969048d7ecb11c1baa2d8d50fffce5b7fab2032dcd97fc8287e2956"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_00.csv.gz": {
+      "exists": true,
+      "sha256": "498bcdf9145e2aad2fcf8a78d359b5be8293bb1591cdbd6aab195cd453f3b3e1"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_00.csv.gz": {
+      "exists": true,
+      "sha256": "b24c4730d11d9a9c95b72e686fc4bbd0cc7146e988e164cef23f6d7c5df7ae49"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_01.csv.gz": {
+      "exists": true,
+      "sha256": "cbfa8d98f539babe0bf128e4682153a6ecfd08e07c2717e31515f4916918b489"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_01.csv.gz": {
+      "exists": true,
+      "sha256": "b1a79411ed3731c549b4636295def09ca5071930429352667555422fb1ac6c32"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_01.csv.gz": {
+      "exists": true,
+      "sha256": "44664020e151e9938f4c0ff0e1347f567609c4bf2072f4137926922d461d0481"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_02.csv.gz": {
+      "exists": true,
+      "sha256": "dc4baec07ebc8a7d13eac39889822e0bebc3f0e90ef888600347e2c22e869208"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_02.csv.gz": {
+      "exists": true,
+      "sha256": "f434e4d5ddeadcc4a19cd7674d6ede7ee43d37e25d90dd18b8a4281278dc9fe6"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_02.csv.gz": {
+      "exists": true,
+      "sha256": "8aae82be02fe55ba356d6b4a8f1bb6c472a397f1016ae796426fecd920419564"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_03.csv.gz": {
+      "exists": true,
+      "sha256": "dd6864a09560e724193308c31e51d3676ed420e2ce8bc8d1659c2af225383199"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_03.csv.gz": {
+      "exists": true,
+      "sha256": "1cbbdd734971de55242a3874d77b6f0d1d6ae5a869a504d139603c60b4d868ae"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_03.csv.gz": {
+      "exists": true,
+      "sha256": "b47940dba74ac01f2049463b7eca7a6fdfd1dbf685c5b771ffdce05fc68a6a87"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_04.csv.gz": {
+      "exists": true,
+      "sha256": "c899cfc76a5c8fc7da084bd2ebe56073f0a666ff9f7cb22b8938e57e26fbceb6"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_04.csv.gz": {
+      "exists": true,
+      "sha256": "7e8547e1faa6c4cc794b6e3e942d44dbde2039c3b6748af38d33f9bc6fe43322"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_04.csv.gz": {
+      "exists": true,
+      "sha256": "c9d3890508577734ec5676f801b30ef17b950044d8c10b582267926b3075822a"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_05.csv.gz": {
+      "exists": true,
+      "sha256": "1d254a85fae83198bb389cf5fdd15c6fe7b59c2ece13ee9534e3dc0acbe84ed8"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_05.csv.gz": {
+      "exists": true,
+      "sha256": "00b1385603116a9d497c60be735cd93ae580825d741e79701592453bdc86d535"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_05.csv.gz": {
+      "exists": true,
+      "sha256": "1e37554131d587bd172f27edc760ee03a3c85373f29977f23885dd7283ce088e"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_06.csv.gz": {
+      "exists": true,
+      "sha256": "f2199239e2a9e77b8c2cf020596a1a11a3b3a6da49e3eafc191e8db5a8eccd81"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_06.csv.gz": {
+      "exists": true,
+      "sha256": "b0e8a474f31a45e67d2270abfa266ccbfdf97781d6abd0899408ff83ba430c3b"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_06.csv.gz": {
+      "exists": true,
+      "sha256": "3f261a0f862c56a3d4f4dbe99ade2d61e2099df276b529562c110e357bdfc236"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_07.csv.gz": {
+      "exists": true,
+      "sha256": "4d160e0e7e44b3160641ae5d1d7268e502537a5d16763d62e80709d1f930e4a5"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_07.csv.gz": {
+      "exists": true,
+      "sha256": "3d4b17e2fc92d4446d82d074e2b774fae291b0bc4a4d7e9c7c79f001cdf4acae"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_07.csv.gz": {
+      "exists": true,
+      "sha256": "45cd3faa8853045f6549de2f787f687a5fb8d8dd6e0bd24ecf0928a641c113fb"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_08.csv.gz": {
+      "exists": true,
+      "sha256": "e47a3900cb81d21a018d55189987a8e01e057240d13ade1a19344588de5c6bfc"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_08.csv.gz": {
+      "exists": true,
+      "sha256": "deee2fd70a08c807f31f59015b7f34ea12917b33d822119dcc57a4d14bf9b12d"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_08.csv.gz": {
+      "exists": true,
+      "sha256": "10ca5b2d2ff090efaa6ff49323b5de52f0fd8b4b74e6cd01a64c05c136201c6f"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_09.csv.gz": {
+      "exists": true,
+      "sha256": "1640dc0365d98beb3e5d1032af1315fc0b95e20cf9bcc2023a10d0c28b4371fe"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_09.csv.gz": {
+      "exists": true,
+      "sha256": "403d0e86c192875f405686a27e09185d221189d2cbeda44c3ec3053e334f01f9"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_09.csv.gz": {
+      "exists": true,
+      "sha256": "81eab2da222c5cacaf3ac0b0be0e55e68b82e3c71f1ec0af88dd42394fad94c2"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_10.csv.gz": {
+      "exists": true,
+      "sha256": "f8628c300c921dbd6a3cec02ccc098311cc0c7044d7303b23323038b8bf661be"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_10.csv.gz": {
+      "exists": true,
+      "sha256": "eb7b5005a8f5f1cc7bfb7b5adf7137010da432dba8d96c468be886e1ff0b8a75"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_10.csv.gz": {
+      "exists": true,
+      "sha256": "05252f7b7eb1040b3a10063f9f94399c210995eb8caa6068e4e878db794f1165"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_11.csv.gz": {
+      "exists": true,
+      "sha256": "e1a1a079df18cbe532e716d49c30c7f3de609f3eab63bef996ee87bfef937781"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_11.csv.gz": {
+      "exists": true,
+      "sha256": "1b5a6695a4e805090550a35fce4f266b2e614b1aa2da17241898a523abb1bb36"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_11.csv.gz": {
+      "exists": true,
+      "sha256": "1eb750de419e3bead5539b966f54a71c216b4fe7731bc0df0a58a4d39b96930e"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_12.csv.gz": {
+      "exists": true,
+      "sha256": "0a7e07c03e16315f342b7b7cb22f4440be3c27e240f69eff91430d244bc0277a"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_12.csv.gz": {
+      "exists": true,
+      "sha256": "d9cbaee1aa90c6ed3df20c1cc1ef57bef64b31917b7bfbe9e88cade7ba2bac9e"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_12.csv.gz": {
+      "exists": true,
+      "sha256": "880b6e46b40e231e5fb5b36f014ccdb647187f6fd154b0d675d4d1bfcb818b79"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_13.csv.gz": {
+      "exists": true,
+      "sha256": "5a11f5589aed2bf895b7e51dd08da0552f18f0f1e9bb7748e28861346c51cab0"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_13.csv.gz": {
+      "exists": true,
+      "sha256": "4cc70ce574fd64b9f6eaceb6a4eb7e7f45d0f286c09dc6d3b1cc32c89d18b834"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_13.csv.gz": {
+      "exists": true,
+      "sha256": "311ecffa8d0472bdc6e3afa9128654f3a050c7095f418a7c50417089c4507bb1"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_14.csv.gz": {
+      "exists": true,
+      "sha256": "aa52f6abd5ed820ad64d41f39a41d5a733fdb80710756444282c09d257e32b0c"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_14.csv.gz": {
+      "exists": true,
+      "sha256": "dfd5ced6043f460496d71520dccb04d482ec64b3a80a5e1dd9d21348f444d414"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_14.csv.gz": {
+      "exists": true,
+      "sha256": "df3c129f0329b5b19e13024352fb8597c0bc24b97d98e32865c4589a1fe12ac0"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_15.csv.gz": {
+      "exists": true,
+      "sha256": "15553c9e19f4b3c38827b4b55af6246d0d80429ad1148df06a6c5338bac6b172"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_15.csv.gz": {
+      "exists": true,
+      "sha256": "c817f82a1fbf0bf216233acd97f3b61361e5a7ebe63baa1527ed82211ce0db54"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_15.csv.gz": {
+      "exists": true,
+      "sha256": "af74230fc3fc2840ae78afa536b4ec98bb3e96ce9fb319ed9eed3a24c5727983"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_16.csv.gz": {
+      "exists": true,
+      "sha256": "720ee7fa242d96a3d64a264be951e08b03805763dfc78a9f77c5a47a3e3d9a83"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_16.csv.gz": {
+      "exists": true,
+      "sha256": "c75916b1c2236088d8317dff0d52e1cdd8e98f5f6344f3730948a5e7e69210c3"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_16.csv.gz": {
+      "exists": true,
+      "sha256": "3aa8735f70ad57e3c0fcbbb718486272e4889fffa9181fb81612fc291960216b"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_17.csv.gz": {
+      "exists": true,
+      "sha256": "b75f316ad6098d8bf2283a08d210a40d776a595eb496e0b86ea5a3833455a7eb"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_17.csv.gz": {
+      "exists": true,
+      "sha256": "dbe14be6959a4e52027e209fc7d533f20f40d30b7e8cf9bca6b82d0837dbcbc7"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_17.csv.gz": {
+      "exists": true,
+      "sha256": "12a0c1b72268c4f07fdb80d97496367e2d6ea0960c3ca72cac16531b32949cc4"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_18.csv.gz": {
+      "exists": true,
+      "sha256": "9db448a0eebbfdcc00e293b8041562fa14834f293839e05b7ed57ce2ff34623b"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_18.csv.gz": {
+      "exists": true,
+      "sha256": "1b41b128dd8dcdbab47cc216cfe536b12746bca243e6cf01bf5c8796abee8396"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_18.csv.gz": {
+      "exists": true,
+      "sha256": "ab1e1e94521c904d7009af38492aa2df88d9d6de8b6ec4d1bdcdbaceaccb0df5"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_19.csv.gz": {
+      "exists": true,
+      "sha256": "dc5a13928f0781155788b02cf20c6bab617caff8652804c7d0b188596a33cf07"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_19.csv.gz": {
+      "exists": true,
+      "sha256": "5e93798eabec72a5653fb734a45da4b00dfe058a147f244787b0a2b69da5cce0"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_19.csv.gz": {
+      "exists": true,
+      "sha256": "5c6e4b31c0756604f0c7bfd697de081aa5413a77bdd7a0961e391f74b8584e7b"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_20.csv.gz": {
+      "exists": true,
+      "sha256": "5a73620ea223848bd1f3df4030b4ae6d273b0994f7c1882b44179097a58e8935"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_20.csv.gz": {
+      "exists": true,
+      "sha256": "5167173bb73e662c96a1373b92afe559c08e245a219793c1e85be5d5eb876e1c"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_20.csv.gz": {
+      "exists": true,
+      "sha256": "37ce9093e72ceac236750c838e43400b2cdbbf6985cd2f27d70ee7826ac0479e"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_21.csv.gz": {
+      "exists": true,
+      "sha256": "d4d63c515a9fc99f98a03335c4df1a1ae4872fede501473a4a20af645b3d4777"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_21.csv.gz": {
+      "exists": true,
+      "sha256": "cb521a0ba74985c5f8eb81f8c72bcaf75572a48c682aa55f7ef4509139438266"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_21.csv.gz": {
+      "exists": true,
+      "sha256": "011cdc18ec01e5af3acb1641ed00c9dceb430369bee71b3393cc14fa097eb140"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_22.csv.gz": {
+      "exists": true,
+      "sha256": "dfe3008031ae0619d622540d0c8e8283c0f64f3528e8d4aaa6e1f95b7dfb8e4d"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_22.csv.gz": {
+      "exists": true,
+      "sha256": "3eb7e97641647a6ecd92899832fdcb90a4c8e31c2686f2d40dffda7a5934aa04"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_22.csv.gz": {
+      "exists": true,
+      "sha256": "77c2deff9db5474d31a63cff233417606e9521c9cb77a31774358f4c77c3ed32"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/BTCUSDT/20261102_23.csv.gz": {
+      "exists": true,
+      "sha256": "a681eeaf18b3b50cb6281c513fa1c21da479bc6315e0cd5e1b31c6457cc46396"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/trade/BTCUSDT/20261102_23.csv.gz": {
+      "exists": true,
+      "sha256": "6d702e89a772ebc9b986803771c937674c01f7cc4b9892dbbbd5c8b4aa1fc5e0"
+    },
+    "/home/yuqing/ctaNew/data/mm_hf/raw/depth20/BTCUSDT/20261102_23.csv.gz": {
+      "exists": true,
+      "sha256": "610bbb8ca53c89d0ae4e111e4e85e0b5785882fbf73641a4a5aa505aa3893bc5"
+    }
+  },
+  "controls": {
+    "event_lookup": true,
+    "rolling_boundary": true,
+    "future_invariant": true,
+    "zero_clock_control": true,
+    "placement_clock_fires": true,
+    "cancel_clock_fires": true,
+    "fresh_gate_every_entry": true,
+    "stale_gate_falsifier": true,
+    "clock_restores": true,
+    "trajectory_mismatch_refused": true
+  },
+  "stats": {
+    "windows": 288,
+    "imputed_legs": 1242,
+    "tape_legs": 170639,
+    "runs": 5760,
+    "state_calls": 11429884,
+    "state_parity": 58019,
+    "cached_trajectory_parity": 12
+  },
+  "loader": {
+    "registry": 288,
+    "outside_day": 0,
+    "sealed_or_forward": 0,
+    "no_outcome": 0,
+    "parts_skipped": 1,
+    "untimed_legs_0_60": 1228,
+    "untimed_shares_0_60": 14628.328666538513,
+    "windows": 288,
+    "grid_steps": 345600,
+    "grid_steps_without_row": 0
+  },
+  "zero_inputs": {
+    "hours": 25
+  },
+  "imputation": {
+    "band_ms": [
+      -1445.0,
+      1425.0
+    ],
+    "imp_off_ms": -10.0,
+    "population_legs": 170692,
+    "untimed": 1242,
+    "anchor_out_of_range": 53
+  },
+  "base_clock": {
+    "L_PLACE": 40.0,
+    "L_CANCEL": 22.0,
+    "L_PENDCANCEL": 95.0,
+    "L_FILL": 100.0
+  },
+  "base_note": 100.0,
+  "qr_choice": [
+    0.1,
+    0.6
+  ],
+  "md_choice": [
+    0.05,
+    1.0
+  ],
+  "model_version": "v3",
+  "totals": {
+    "current": {
+      "KA": {
+        "pnl": -5861.055882601524,
+        "pnl_old": -5370.695122869519,
+        "shares": 393721.5509025269,
+        "shares_young": 27267.602394598813,
+        "pulls": 0.0,
+        "orders": 49161.0,
+        "fill_events": 42547.0,
+        "good_value": 18115.29372126982,
+        "gross_loss": 23976.349603871346,
+        "markout1_cents": -761042.7527097845,
+        "markout5_cents": -749630.577331017,
+        "imputed_pnl": -42.42165905788937,
+        "imputed_shares": 2722.9235877917263,
+        "pend_shares": 16051.909980137847,
+        "qunk_shares": 35692.42870782779,
+        "windows": 288,
+        "cents_per_share": -1.4886296849045324,
+        "live_share": 0.8252554205246914,
+        "max_abs_position": 1291.5703425469753
+      },
+      "EV": {
+        "pnl": 75.76393768251378,
+        "pnl_old": 57.18897661112496,
+        "shares": 6928.838386078622,
+        "shares_young": 4670.445603745516,
+        "pulls": 46875.0,
+        "orders": 50867.0,
+        "fill_events": 724.0,
+        "good_value": 413.1329558215007,
+        "gross_loss": 337.3690181389869,
+        "markout1_cents": 4890.983352949056,
+        "markout5_cents": 5626.31793187252,
+        "imputed_pnl": 2.9014514531860573,
+        "imputed_shares": 155.86887513761906,
+        "pend_shares": 1478.851280747333,
+        "qunk_shares": 370.95853683251977,
+        "windows": 288,
+        "cents_per_share": 1.0934580006186638,
+        "live_share": 0.035862697723765435,
+        "max_abs_position": 145.27918181818183
+      },
+      "B2": {
+        "pnl": -18.129750198116533,
+        "pnl_old": -18.440681087005423,
+        "shares": 1028.506972598916,
+        "shares_young": 375.9203555555556,
+        "pulls": 6431.0,
+        "orders": 6670.0,
+        "fill_events": 115.0,
+        "good_value": 25.440478801883465,
+        "gross_loss": 43.570229000000005,
+        "markout1_cents": -702.8111909661247,
+        "markout5_cents": -1493.1088839227643,
+        "imputed_pnl": 0.3055555555555555,
+        "imputed_shares": 5.555555555555555,
+        "pend_shares": 318.9058,
+        "qunk_shares": 652.5866170433604,
+        "windows": 288,
+        "cents_per_share": -1.7627250646930266,
+        "live_share": 0.014844155092592595,
+        "max_abs_position": 60.0
+      },
+      "QR": {
+        "pnl": -211.84637868929232,
+        "pnl_old": -216.87349282735818,
+        "shares": 24063.8589849388,
+        "shares_young": 1904.9115012489478,
+        "pulls": 33039.0,
+        "orders": 55016.0,
+        "fill_events": 2122.0,
+        "good_value": 1172.8794888048105,
+        "gross_loss": 1384.7258674941027,
+        "markout1_cents": -33391.52782806697,
+        "markout5_cents": -32368.278654730628,
+        "imputed_pnl": 12.87505235637245,
+        "imputed_shares": 2145.300616589489,
+        "pend_shares": 4060.681367896086,
+        "qunk_shares": 4478.094117570071,
+        "windows": 288,
+        "cents_per_share": -0.880350814978943,
+        "live_share": 0.6151866801697531,
+        "max_abs_position": 308.5116
+      },
+      "MD1000": {
+        "pnl": -189.84896835717097,
+        "pnl_old": -158.5489303566244,
+        "shares": 12957.693063074392,
+        "shares_young": 1973.9067737612033,
+        "pulls": 77779.0,
+        "orders": 97892.0,
+        "fill_events": 1265.0,
+        "good_value": 637.1202945730981,
+        "gross_loss": 826.969262930269,
+        "markout1_cents": -24203.558867140142,
+        "markout5_cents": -24262.58602053672,
+        "imputed_pnl": 35.14423168732834,
+        "imputed_shares": 1794.330581920227,
+        "pend_shares": 2175.9628953019173,
+        "qunk_shares": 4869.915477971357,
+        "windows": 288,
+        "cents_per_share": -1.4651448173146238,
+        "live_share": 0.5096821132330247,
+        "max_abs_position": 240.0
+      }
+    },
+    "order_zero": {
+      "KA": {
+        "pnl": -6793.578970750968,
+        "pnl_old": -5488.334243134259,
+        "shares": 437644.57208898664,
+        "shares_young": 56595.67020911968,
+        "pulls": 0.0,
+        "orders": 54864.0,
+        "fill_events": 46894.0,
+        "good_value": 20113.049372864833,
+        "gross_loss": 26906.628343615797,
+        "markout1_cents": -873687.1696673527,
+        "markout5_cents": -859596.3821940635,
+        "imputed_pnl": -44.74461051994203,
+        "imputed_shares": 2808.1485877917257,
+        "pend_shares": 0.0,
+        "qunk_shares": 36476.09712322624,
+        "windows": 288,
+        "cents_per_share": -1.5523050904809632,
+        "live_share": 0.8458078366126542,
+        "max_abs_position": 1498.752872350138
+      },
+      "EV": {
+        "pnl": 153.54345136901316,
+        "pnl_old": 59.705655238151756,
+        "shares": 12073.202761965204,
+        "shares_young": 7450.626208298385,
+        "pulls": 50860.0,
+        "orders": 55284.0,
+        "fill_events": 1237.0,
+        "good_value": 711.899030494395,
+        "gross_loss": 558.3555791253818,
+        "markout1_cents": 12038.064758909994,
+        "markout5_cents": 14741.013333980503,
+        "imputed_pnl": 3.227955851145241,
+        "imputed_shares": 158.35357513761906,
+        "pend_shares": 0.0,
+        "qunk_shares": 613.6517080268991,
+        "windows": 288,
+        "cents_per_share": 1.2717706676204308,
+        "live_share": 0.04487492283950617,
+        "max_abs_position": 150.0
+      },
+      "B2": {
+        "pnl": 6.120506565433605,
+        "pnl_old": -6.547149975894307,
+        "shares": 937.5825475311653,
+        "shares_young": 475.2506860433604,
+        "pulls": 8278.0,
+        "orders": 8550.0,
+        "fill_events": 92.0,
+        "good_value": 25.021756565433606,
+        "gross_loss": 18.90125,
+        "markout1_cents": -138.21915892005427,
+        "markout5_cents": -281.65198250000014,
+        "imputed_pnl": 0.3055555555555555,
+        "imputed_shares": 5.555555555555555,
+        "pend_shares": 0.0,
+        "qunk_shares": 598.7267170433604,
+        "windows": 288,
+        "cents_per_share": 0.652796554452733,
+        "live_share": 0.016728612075617284,
+        "max_abs_position": 90.0
+      },
+      "QR": {
+        "pnl": -73.6580819493678,
+        "pnl_old": -119.84560030062399,
+        "shares": 21682.188620530695,
+        "shares_young": 2495.8321515584394,
+        "pulls": 33547.0,
+        "orders": 56346.0,
+        "fill_events": 1876.0,
+        "good_value": 1097.6424565122295,
+        "gross_loss": 1171.3005384615974,
+        "markout1_cents": -24128.413945580258,
+        "markout5_cents": -23023.214149412073,
+        "imputed_pnl": 15.307953433469947,
+        "imputed_shares": 2154.745061033934,
+        "pend_shares": 0.0,
+        "qunk_shares": 3734.9109343661485,
+        "windows": 288,
+        "cents_per_share": -0.3397170056883535,
+        "live_share": 0.6277080198688272,
+        "max_abs_position": 308.5116
+      },
+      "MD1000": {
+        "pnl": -214.8313512271635,
+        "pnl_old": -225.33909611349318,
+        "shares": 12400.254511155463,
+        "shares_young": 2577.1937723163896,
+        "pulls": 85634.0,
+        "orders": 106633.0,
+        "fill_events": 1154.0,
+        "good_value": 568.1695353482488,
+        "gross_loss": 783.0008865754123,
+        "markout1_cents": -20195.764721022824,
+        "markout5_cents": -24947.890885813315,
+        "imputed_pnl": 25.781913319981403,
+        "imputed_shares": 1809.330581920227,
+        "pend_shares": 0.0,
+        "qunk_shares": 4137.428645718705,
+        "windows": 288,
+        "cents_per_share": -1.7324753377755098,
+        "live_share": 0.532085513117284,
+        "max_abs_position": 240.0
+      }
+    },
+    "modeled_zero": {
+      "KA": {
+        "pnl": -5482.514645126235,
+        "pnl_old": -4494.0497050201575,
+        "shares": 423231.07455090154,
+        "shares_young": 54428.705575842054,
+        "pulls": 0.0,
+        "orders": 54033.0,
+        "fill_events": 45264.0,
+        "good_value": 19767.37082123938,
+        "gross_loss": 25249.885466365617,
+        "markout1_cents": -707166.3615553395,
+        "markout5_cents": -689416.5389367992,
+        "imputed_pnl": -41.46121908316144,
+        "imputed_shares": 2778.1485877917257,
+        "pend_shares": 0.0,
+        "qunk_shares": 36410.02344070459,
+        "windows": 288,
+        "cents_per_share": -1.2953951103292296,
+        "live_share": 0.8474994116512347,
+        "max_abs_position": 1383.4748034654958
+      },
+      "EV": {
+        "pnl": -8.370097233793373,
+        "pnl_old": 49.6328073759215,
+        "shares": 14085.508195031161,
+        "shares_young": 8662.528809544772,
+        "pulls": 51429.0,
+        "orders": 56058.0,
+        "fill_events": 1423.0,
+        "good_value": 715.0526769350174,
+        "gross_loss": 723.4227741688107,
+        "markout1_cents": 13244.794487097462,
+        "markout5_cents": 13805.329131620114,
+        "imputed_pnl": -0.1270576989902601,
+        "imputed_shares": 218.35357513761903,
+        "pend_shares": 0.0,
+        "qunk_shares": 723.3105994587823,
+        "windows": 288,
+        "cents_per_share": -0.05942346643017133,
+        "live_share": 0.04566246624228395,
+        "max_abs_position": 173.47003020163018
+      },
+      "B2": {
+        "pnl": 4.482744363166993,
+        "pnl_old": -2.656712886833006,
+        "shares": 531.7577032847398,
+        "shares_young": 274.16144999999995,
+        "pulls": 8363.0,
+        "orders": 8620.0,
+        "fill_events": 57.0,
+        "good_value": 13.781164363166994,
+        "gross_loss": 9.298419999999998,
+        "markout1_cents": -339.57936045463055,
+        "markout5_cents": 325.13709896037756,
+        "imputed_pnl": 0.3055555555555555,
+        "imputed_shares": 5.555555555555555,
+        "pend_shares": 0.0,
+        "qunk_shares": 349.0162532847398,
+        "windows": 288,
+        "cents_per_share": 0.8430050632979024,
+        "live_share": 0.016747386188271603,
+        "max_abs_position": 56.818200000000004
+      },
+      "QR": {
+        "pnl": -84.44378955992175,
+        "pnl_old": -117.17315429322676,
+        "shares": 20915.010535625675,
+        "shares_young": 2767.4447687831625,
+        "pulls": 35582.0,
+        "orders": 58900.0,
+        "fill_events": 1807.0,
+        "good_value": 1024.250631721803,
+        "gross_loss": 1108.6944212817248,
+        "markout1_cents": -17957.04016517244,
+        "markout5_cents": -20421.962750421262,
+        "imputed_pnl": 15.557504806236928,
+        "imputed_shares": 2280.300616589489,
+        "pend_shares": 0.0,
+        "qunk_shares": 2991.594330903019,
+        "windows": 288,
+        "cents_per_share": -0.4037472963070425,
+        "live_share": 0.6342639949845679,
+        "max_abs_position": 354.89789999999994
+      },
+      "MD1000": {
+        "pnl": -109.5152108689022,
+        "pnl_old": -121.29647901428662,
+        "shares": 11060.292018969465,
+        "shares_young": 3076.014746822557,
+        "pulls": 87659.0,
+        "orders": 108991.0,
+        "fill_events": 978.0,
+        "good_value": 542.2024576275688,
+        "gross_loss": 651.7176684964709,
+        "markout1_cents": -10702.790522707122,
+        "markout5_cents": -13023.602424303388,
+        "imputed_pnl": 22.280579573028167,
+        "imputed_shares": 1745.7340905025326,
+        "pend_shares": 0.0,
+        "qunk_shares": 2416.5084704814717,
+        "windows": 288,
+        "cents_per_share": -0.9901656365046517,
+        "live_share": 0.5351600260416667,
+        "max_abs_position": 234.8979
+      }
+    },
+    "modeled_zero_trade0": {
+      "KA": {
+        "pnl": -3547.441265552857,
+        "pnl_old": -3085.490142929987,
+        "shares": 377957.524652594,
+        "shares_young": 36191.7491812899,
+        "pulls": 0.0,
+        "orders": 50462.0,
+        "fill_events": 40051.0,
+        "good_value": 18247.550510497284,
+        "gross_loss": 21794.991776050138,
+        "markout1_cents": -507696.42470429896,
+        "markout5_cents": -492070.36385351967,
+        "imputed_pnl": -40.805215493232126,
+        "imputed_shares": 2796.102076661782,
+        "pend_shares": 0.0,
+        "qunk_shares": 34206.85061503849,
+        "windows": 288,
+        "cents_per_share": -0.9385819924642451,
+        "live_share": 0.8490331404320988,
+        "max_abs_position": 1274.1798942692863
+      },
+      "EV": {
+        "pnl": -50.287293218977766,
+        "pnl_old": -47.12993505980108,
+        "shares": 13590.669582343391,
+        "shares_young": 8216.080789365542,
+        "pulls": 51495.0,
+        "orders": 56054.0,
+        "fill_events": 1455.0,
+        "good_value": 669.1849312954843,
+        "gross_loss": 719.472224514462,
+        "markout1_cents": 14890.284779489826,
+        "markout5_cents": 10692.545947603343,
+        "imputed_pnl": 7.328285698965766,
+        "imputed_shares": 221.55529605663406,
+        "pend_shares": 0.0,
+        "qunk_shares": 379.0398724594015,
+        "windows": 288,
+        "cents_per_share": -0.3700133603741612,
+        "live_share": 0.04566288580246914,
+        "max_abs_position": 255.08109976418802
+      },
+      "B2": {
+        "pnl": -4.848721999999999,
+        "pnl_old": -6.472967,
+        "shares": 403.6776,
+        "shares_young": 248.27100000000002,
+        "pulls": 8358.0,
+        "orders": 8613.0,
+        "fill_events": 34.0,
+        "good_value": 5.081833,
+        "gross_loss": 9.930555,
+        "markout1_cents": -300.60031111111107,
+        "markout5_cents": 107.9464888888889,
+        "imputed_pnl": 0.0,
+        "imputed_shares": 0.0,
+        "pend_shares": 0.0,
+        "qunk_shares": 130.48000000000002,
+        "windows": 288,
+        "cents_per_share": -1.201137244177036,
+        "live_share": 0.016746619405864197,
+        "max_abs_position": 60.0
+      },
+      "QR": {
+        "pnl": 32.363689067864165,
+        "pnl_old": -55.77345304651306,
+        "shares": 17130.756966344376,
+        "shares_young": 3282.853008090804,
+        "pulls": 35540.0,
+        "orders": 58773.0,
+        "fill_events": 1439.0,
+        "good_value": 822.6575235844696,
+        "gross_loss": 790.2938345166053,
+        "markout1_cents": -1540.4450039545563,
+        "markout5_cents": -6174.780371414816,
+        "imputed_pnl": 17.479011714733666,
+        "imputed_shares": 2000.909108092757,
+        "pend_shares": 0.0,
+        "qunk_shares": 2090.2910149905124,
+        "windows": 288,
+        "cents_per_share": 0.18892153529144617,
+        "live_share": 0.6344713300540124,
+        "max_abs_position": 300.0
+      },
+      "MD1000": {
+        "pnl": -45.384373558161414,
+        "pnl_old": -62.65348775940512,
+        "shares": 8225.982796195212,
+        "shares_young": 2944.737359361454,
+        "pulls": 87671.0,
+        "orders": 108940.0,
+        "fill_events": 716.0,
+        "good_value": 386.6097677395083,
+        "gross_loss": 431.99414129766967,
+        "markout1_cents": 2639.546166780611,
+        "markout5_cents": 262.9192703768315,
+        "imputed_pnl": 8.489341518508809,
+        "imputed_shares": 1516.9017820058007,
+        "pend_shares": 0.0,
+        "qunk_shares": 1449.9278518605518,
+        "windows": 288,
+        "cents_per_share": -0.5517197723675423,
+        "live_share": 0.5351643952546296,
+        "max_abs_position": 176.20689655172413
+      }
+    }
+  },
+  "smoke_only": false,
+  "seconds": 943.726799249649,
+  "peak_rss_mib": 1308.18359375,
+  "limits": "Consumed data; unvalidated queue and event-time clocks; zero modeled transport remains 50ms-grid sampled with fixed pre-window sigma. Frozen corrected v3 heads, no zero-latency refit; QR uses prior v2 fixed thresholds, not v3-optimized calibration. MD uses saved v6 heads/thresholds. EV fresh-entry is diagnostic. No significance/promotion claim; model PnL comparisons have different endogenous volumes."
+}
