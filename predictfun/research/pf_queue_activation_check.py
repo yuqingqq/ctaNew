@@ -109,11 +109,13 @@ class Checks(unittest.TestCase):
 
     def test_cancel_and_repost_join_the_new_existing_queue(self):
         for kind, side in self.cases():
-            W = context(((0., 100.), (60., 300.), (360., 500.)), ((150., 110.), (600., 310.)), side)
+            # Cancel lands at 222 ms, is known at 322 ms, and the next decision
+            # posts at 350 ms for activation at 390 ms. The addition is later.
+            W = context(((0., 100.), (60., 300.), (460., 500.)), ((150., 110.), (600., 310.)), side)
             orders = replay(kind, W, side, size=50., cancel=200.)['order_states'][side, 0]
             self.assertEqual(len(orders), 2)
             self.assertEqual([o['a0'] for o in orders], [100., 300.])
-            self.assertEqual([o['ta'] for o in orders], [40., 290.])
+            self.assertEqual([o['ta'] for o in orders], [40., 390.])
             self.assertEqual(orders[0]['fl'], [(150., 10.)])
             self.assertEqual(orders[1]['fl'], [(600., 10.)])
 
