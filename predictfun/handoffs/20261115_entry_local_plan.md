@@ -38,6 +38,7 @@ Use separate bid and ask models with a compact, predeclared set of market,
 candidate queue, price, history support and inventory inputs. DIRECT predicts
 local value. FACTOR predicts F and D and combines them with the known edge.
 No test-day feature selection, threshold selection or horizon selection.
+Positive scores post; exact zero ties also post to preserve queue opportunity.
 
 This explicitly changes the old pinned learner to seven leaves, one hundred
 rounds and L2=10 for both arms. It is a new compact-model experiment, not a
@@ -67,6 +68,7 @@ Replay ALWAYS, price/rung BASELINE, DIRECT and FACTOR at M50 and M250, plus
 M50 with blocked unknown queue. Keep thirty shares and the 1500-share cap fixed.
 Report full terminal portfolio P&L, an accounting sensitivity excluding fills
 younger than one hundred milliseconds, volume, posts, pulls and inventory.
+Include quote availability, resting duration and integrated squared inventory.
 Compare model arms to controls on every day and in aggregate; local prediction
 alone is insufficient. These replay arms do not sum overlapping local labels.
 

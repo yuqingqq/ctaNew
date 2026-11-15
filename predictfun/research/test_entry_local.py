@@ -81,6 +81,30 @@ class Checks(unittest.TestCase):
         self.assertEqual(touched,[])
         with self.assertRaisesRegex(ValueError,'undeclared'): P.DATA.load_day('20261104')
 
+    def test_fair_assignment_precision_and_identity(self):
+        x=pd.DataFrame(dict(tau=[0.,50.],gap=np.array([1.,2.],np.float32),basis_bps=np.array([3.,4.],np.float32)))
+        c=([0.,50.],None,None,None,np.array([1.123456789,2.]),np.array([3.123456789,4.]))
+        P.DATA.apply_correction(x,c)
+        np.testing.assert_equal(x.gap.to_numpy(),c[4]); np.testing.assert_equal(x.basis_bps.to_numpy(),c[5])
+        with self.assertRaisesRegex(ValueError,'timestamp'):
+            P.DATA.apply_correction(x,([0.,51.],*c[1:]))
+
+    def test_keeper_is_order_depth_specific(self):
+        W=context(); arrays={(1,0):np.array([[.9,.1,.1,.1,.1,.1]]),(1,1):np.array([[.9,.1,.1,.1,.1,.1]])}
+        cancel=P.stop_rule(W,arrays)
+        self.assertTrue(cancel(dict(side=0,k=0,price=50)))
+        self.assertTrue(cancel(dict(side=1,k=0,price=52)))
+        self.assertFalse(cancel(dict(side=0,k=0,price=49)))
+        self.assertFalse(cancel(dict(side=1,k=0,price=53)))
+        self.assertFalse(cancel(dict(side=0,k=0,price=44)))
+        self.assertFalse(P.stop_rule(W,{})(dict(side=0,k=0,price=50)))
+
+    def test_queue_availability_positive_and_empty(self):
+        W=context(); posted=P.run(W,lambda v:True); empty=P.run(W,lambda v:False)
+        a=P.path_metrics(W,posted); b=P.path_metrics(W,empty)
+        self.assertGreater(a['quote_live_ms'],0.); self.assertLessEqual(a['quote_live_ms'],a['quote_possible_ms'])
+        self.assertEqual(b['quote_live_ms'],0.); self.assertEqual(b['inventory_squared_seconds'],0.)
+
     def test_matched_null_positive_and_bad_input(self):
         n=200
         f=pd.DataFrame(dict(day=['20261027']*n,market=np.arange(n),side=[0]*n,rung=[0]*n,generation=[0]*n,

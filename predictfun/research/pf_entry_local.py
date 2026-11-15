@@ -287,11 +287,11 @@ def fit(day,out):
             bases[target]=baseline(tr,te,target)
         for arm in ARMS:
             pred=preds['local_value'] if arm=='DIRECT' else te.edge.to_numpy()*preds['fill_fraction']+preds['drift_value']
-            base=bases['local_value'] if arm=='DIRECT' else te.edge.to_numpy()*bases['fill_fraction']+bases['drift_value']
+            base=te.edge.to_numpy()*bases['fill_fraction']+bases['drift_value']
             y=te.local_value.to_numpy(); avg=float(np.average(tr.local_value,weights=w))
             cells.append(dict(day=day,side=side,arm=arm,n=len(te),sse=float(np.sum(wt*(pred-y)**2)),baseline_sse=float(np.sum(wt*(base-y)**2)),mean_sse=float(np.sum(wt*(avg-y)**2))))
             f=te[KEYS+['probe_t','sampling_weight','local_value','fill_fraction','focal_terminal_value']].copy()
-            f['arm']=arm; f['score']=pred; f['baseline_score']=base; f['post_action']=pred>0; parts.append(f)
+            f['arm']=arm; f['score']=pred; f['baseline_score']=base; f['post_action']=pred>=0; parts.append(f)
         guard(); print(day,'side',side,'fit complete',flush=True)
     pd.concat(parts,ignore_index=True).to_parquet(p/'predictions.parquet',index=False)
     write(p/'receipt.json',dict(asof=now(),day=day,train_dates=FOLDS[day],models=hashes,cells=cells,features=FEATURES,params=PARAMS,rounds=ROUNDS,
@@ -343,7 +343,10 @@ def report(out):
     for (shift,queue,arm),g in rf.groupby(['shift','queue','arm']):
         totals.append(dict(shift=float(shift),queue=queue,arm=arm,windows=len(g),terminal_pnl=float(g.terminal_pnl.sum()),
             terminal_pnl_without_young=float(g.terminal_pnl_without_young.sum()),shares=float(g.shares.sum()),posts=int(g.posts.sum()),
-            pulls=int(g.pulls.sum()),max_inventory=float(g.max_inventory.max())))
+            pulls=int(g.pulls.sum()),max_inventory=float(g.max_inventory.max()),
+            quote_availability=float(g.quote_live_ms.sum()/g.quote_possible_ms.sum()),
+            mean_rest_ms=float(g.accepted_resting_ms.sum()/g.accepted_orders.sum()) if g.accepted_orders.sum() else None,
+            inventory_squared_seconds=float(g.inventory_squared_seconds.sum())))
     write(p/'result.json',dict(asof=now(),n_test_actions=len(f)//len(ARMS),pooled=pooled,cells=cells,matched_tests=tests,
         local_checks_passed=sum(x['passes'] for x in tests),rows=rows,fit_receipts=fits,features=FEATURES,
         learned_candidates=2,head_fits=30,primary_fill_ms=FILL_MS,mark_ms=MARK_MS,limits=LIMITS,
@@ -377,6 +380,24 @@ def stop_rule(W,arrays):
     return cancel
 
 
+def path_metrics(W,r):
+    ws=W[0]['ws']; end=W[0]['te']; live=0.; lifetimes=[]
+    for orders in r['orders'].values():
+        spans=sorted((max(ws,a),min(end,b)) for a,b,_,ref in orders if not ref and min(end,b)>max(ws,a))
+        merged=[]
+        for a,b in spans:
+            lifetimes.append(b-a)
+            if merged and a<=merged[-1][1]: merged[-1][1]=max(b,merged[-1][1])
+            else: merged.append([a,b])
+        live+=sum(b-a for a,b in merged)
+    position=0.; previous=ws; risk=0.
+    for s,_,t,_,q in sorted(r['fl'],key=lambda x:x[2]):
+        risk+=position**2*max(0.,t-previous)/1000.; previous=t; position+=q if s==0 else -q
+    risk+=position**2*max(0.,r['terminal_time']-previous)/1000.
+    return dict(quote_live_ms=live,quote_possible_ms=2*M.NR*(end-ws),
+                accepted_resting_ms=sum(lifetimes),accepted_orders=len(lifetimes),inventory_squared_seconds=risk)
+
+
 def replay(day,out,max_windows=None):
     import lightgbm as lgb
     p=stage(out,'replay_'+day); fp=out/('fit_'+day); fit_r=json.loads((fp/'receipt.json').read_text())
@@ -391,9 +412,11 @@ def replay(day,out,max_windows=None):
     train=pd.concat([load(d,out) for d in FOLDS[day]],ignore_index=True)
     lookup={}
     for s in (0,1):
-        tr=train[train.side==s].copy(); tr['bucket']=(tr.price//10).astype(int); tr['weighted']=tr.local_value*tr.sampling_weight
-        sums=tr.groupby(['rung','bucket'])[['weighted','sampling_weight']].sum()
-        lookup[s]=(sums.weighted/sums.sampling_weight,float(np.average(tr.local_value,weights=tr.sampling_weight)))
+        tr=train[train.side==s].copy(); tr['bucket']=(tr.price//10).astype(int)
+        for target in ('fill_fraction','drift_value'):
+            tr['weighted']=tr[target]*tr.sampling_weight
+            sums=tr.groupby(['rung','bucket'])[['weighted','sampling_weight']].sum()
+            lookup[s,target]=(sums.weighted/sums.sampling_weight,float(np.average(tr[target],weights=tr.sampling_weight)))
     arrays,stop_id=stop_arrays(day); data,fix=DATA.load_day(day); rows=[]; windows=[]
     for W in E.PAIRS.window_pairs(data):
         keeper=stop_rule(W,arrays)
@@ -403,15 +426,17 @@ def replay(day,out,max_windows=None):
                 def choose(v):
                     born=births.setdefault(M.key(v),v['t'])
                     if arm=='ALWAYS': return True
-                    if arm=='BASELINE':
-                        means,fallback=lookup[v['side']]
-                        return bool(means.get((v['rung'],v['price']//10),fallback)>0.)
                     x,_=vector(W,v,v['t']-born); xx=x[None,:]; s=v['side']
+                    if arm=='BASELINE':
+                        base={}
+                        for target in ('fill_fraction','drift_value'):
+                            means,fallback=lookup[s,target]; base[target]=means.get((v['rung'],v['price']//10),fallback)
+                        return bool(x[FEATURES.index('edge')]*base['fill_fraction']+base['drift_value']>=0.)
                     if arm=='DIRECT': score=models[s,'local_value'].predict(xx)[0]
                     else:
                         fraction=np.clip(models[s,'fill_fraction'].predict(xx)[0],0.,1.)
                         score=x[FEATURES.index('edge')]*fraction+models[s,'drift_value'].predict(xx)[0]
-                    return bool(score>0.)
+                    return bool(score>=0.)
                 r=run(W,choose,shift=shift,queue=queue,keeper=keeper); terminal=E.terminal(W,r)
                 mature=0.
                 for (s,d),orders in r['order_states'].items():
@@ -423,7 +448,7 @@ def replay(day,out,max_windows=None):
                 rows.append(dict(day=day,market=W[0]['m'],shift=shift,queue=queue,arm=arm,
                     terminal_pnl=terminal['pnl'],terminal_pnl_without_young=mature,
                     shares=sum(x[4] for x in r['fl']),posts=sum(len(x) for x in r['orders'].values()),
-                    pulls=sum(r['stat']['pulls']),max_inventory=r['stat']['maxpos']))
+                    pulls=sum(r['stat']['pulls']),max_inventory=r['stat']['maxpos'],**path_metrics(W,r)))
         windows.append(W[0]['m'])
         if len(windows)%16==0: print(day,'replay windows',len(windows),flush=True); guard()
         if max_windows and len(windows)>=max_windows: break

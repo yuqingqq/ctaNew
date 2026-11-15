@@ -1,5 +1,6 @@
 """Commit-bound design and admissible input identities for the local candidate."""
 import ast
+import argparse
 import datetime as dt
 import hashlib
 import json
@@ -19,6 +20,8 @@ def digest(p):
 
 
 def main():
+    parser=argparse.ArgumentParser();parser.add_argument('--name',default='freeze.json');parser.add_argument('--supersedes');args=parser.parse_args()
+    if Path(args.name).name!=args.name: raise ValueError('invalid freeze name')
     pending=['pf_entry_local','pf_entry_local_data','test_entry_local','model_entry_local_runner','model_entry_local_freeze']; seen=set()
     while pending:
         name=pending.pop()
@@ -64,7 +67,10 @@ def main():
         keeper=dict(version=6,horizon_ms=1000,threshold=.20,entry_gate=False),
         replay_scenarios=[dict(shift=50,queue='zero'),dict(shift=250,queue='zero'),dict(shift=50,queue='block')],
         claim_limit='Mechanistic single-order surrogate. Neutral-KEEP labels; separate frozen keeper only in full replay. No promotion from this consumed-data experiment.')
-    with (review/'freeze.json').open('x') as f: json.dump(r,f,indent=2); f.write('\n')
+    if args.supersedes:
+        prior=review/args.supersedes
+        r['supersedes']=dict(path=args.supersedes,sha256=digest(prior),reason='Initial smoke refused pandas float64 correction into float32 columns before any rows/model; corrected assignment, added keeper/data controls and queue-availability metrics before fitting.')
+    with (review/args.name).open('x') as f: json.dump(r,f,indent=2); f.write('\n')
     print('Frozen',len(files),'sources;',len(inputs),'derived inputs;',sum(map(len,raw.values())),'admissible raw files')
 
 
