@@ -1,3 +1,38 @@
+<!-- STOP_EV_TAIL_DISTRIBUTION_20261115 -->
+## 2026-11-15 Tail losses and the training/forward gap independently checked
+
+Distribution as of 15:05:27Z: 137,703 original-model test actions over five
+consumed days. Tail threshold fixed to each training first percentile:
+1,779 test tail actions; highest-risk 10% contains 39.1% (Huber) / 39.4% (L2),
+versus 12.2% / 12.5% expected after matching day/hour/side/rung. Descriptive
+ranking only, not a deployable threshold or proof those losses are avoidable.
+V2 comparator supersedes v1 by also matching hour; both receipts retained.
+
+Test fill frequency falls every fold; filled size rises modestly but cost
+per filled share worsens. Side/rung/price/sigma matching leaves worse
+within-cell outcomes all five days. Matching filled size/source additionally
+leaves 76-94% of the last four days' matched gap within groups. These are
+coarse descriptive controls, not causal identification. Marginal out-of-range
+features affect 0.062-4.391% of test actions; not wholesale unseen ranges,
+but joint support and unmeasured regime changes remain unresolved.
+
+Saved v2 heads independently replayed at 15:05:47Z (81,630 certified test
+actions): all keys, labels, matrices and predictions exact. Training IC
+0.204-0.224 is IN-SAMPLE; intermediate reserved-day IC 0.080-0.133 and test
+0.081-0.129. The code saves the reserved day's predictions but fits no value
+recalibrator. V2 positive set: 15,681 actions, -$117.57 local value, loses
+on four of five days. Positive gain vs keep-all is not profitable kept value.
+
+Keep tails in the EV target; conditional expected tail cost matters. Physical
+E2 timing, representative conditional coverage and forward calibration are
+still unresolved. This does not select a new model or run the other session's
+pending T5v2. Controls pass, three prediction corruptions refused. Sources
+23eb4c3e / freeze 60732c8e; integration 694ae73e.
+Review: handoffs/20261115_stop_ev_tail_distribution_review.md
+Evidence: reviews/stop_ev_distribution_20261115/ (report_v2,
+generalization_v1, interpretation_v1). No raw/protected reads or new fits.
+<!-- /STOP_EV_TAIL_DISTRIBUTION_20261115 -->
+
 <!-- STOP_EV_PERFORMANCE_CAUSES_20261115 -->
 ## 2026-11-15 Controlled cause analysis confirms loss-objective bias and remaining adverse-fill risk
 

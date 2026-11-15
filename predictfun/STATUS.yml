@@ -1,3 +1,34 @@
+stop_ev_tail_distribution_20261115:
+  asof: '2026-11-15T15:05:47.480856+00:00'
+  status: tail_concentration_and_forward_gap_confirmed_physical_timing_unresolved
+  integration_commit: 694ae73e
+  source_commit: 23eb4c3e
+  freeze_commit: 60732c8e
+  distribution_test_actions: 137703
+  v2_certified_test_actions: 81630
+  training_threshold_tail_actions: 1779
+  huber_top_risk_tenth_tail_capture: 0.3912310286677909
+  huber_matched_expected_capture: 0.12233085403663845
+  comparator_matches: [day, hour, side, rung]
+  comparator_is_significance_test: false
+  all_test_folds_lower_fill_rate: true
+  all_test_folds_worse_value_per_filled_share: true
+  all_decision_state_within_components_negative: true
+  v2_saved_heads_and_training_ic_reproduced: true
+  v2_train_ic_is_in_sample: true
+  v2_all_reserved_day_ic_below_training: true
+  v2_kept_actions: 15681
+  v2_kept_local_value_cents: -11757.103469833946
+  v2_kept_negative_days: 4
+  v2_t5_run_here: false
+  new_fits: 0
+  new_model_selected: false
+  protected_data_read: false
+  untouched_validation: false
+  physical_timing_resolved: false
+  review: predictfun/handoffs/20261115_stop_ev_tail_distribution_review.md
+  evidence: predictfun/reviews/stop_ev_distribution_20261115/interpretation_v1.json
+
 stop_ev_performance_causes_20261115:
   asof: '2026-11-15T14:46:05.295270+00:00'
   status: controlled_objective_effect_confirmed_remaining_timing_and_tail_risk
