@@ -1,0 +1,389 @@
+{
+  "asof": "2026-11-15T15:05:47.480856+00:00",
+  "source_sha256": "bc8950683da85ee0c30e1709c86f4e54d8bd65e4948e0105ee2cd78d4d5823e3",
+  "source_commit": "60732c8e1c8838b5791546f92e6c6f4b28ba084d",
+  "controls": {
+    "valid_identity_pass": true,
+    "corruptions_refused": 3
+  },
+  "input_sha256": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/fit2_20261027.json": "168af746758d972eb7a452534e2a8e0cc1e92062c4b3c54b4c639f2b800d54f5",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/models_v2/20261027_full_p.txt": "7f17360d0b726bdd648f8a563e51cbcb0740e596b662093d0ae93c71031bab26",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/models_v2/20261027_full_v.txt": "98372c5af530fa05c2aba4e5162ed93d9b0a3d621010346fd4ebf0de177d9959",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/ev_x2_20261023.parquet": "bcb980f491c61b5f0bca432ec1ff86d48f288af6fb9ff0396af7fc53d0ee3202",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/ev_x2_20261024.parquet": "14a95cc8dafa51c41ca932d59c0845a9c613b8ab623a687857fafad3df88f706",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/ev_x2_20261025.parquet": "91c7906b725d190c6c0afa697f497c45edd8b9ce3fdf1ee4deef2f9c4c49e9d8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/ev_x2_20261026.parquet": "fd62b5de47f99658c091de43e16b282f11ec8e7159c1b2a532862862ea2a391e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred2_20261027_20261026.parquet": "b8d16d179140466731aee572e2de15b76e3ab05ec21a1ec3e19ddbc1f3a4e2e7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/ev_x2_20261027.parquet": "e7058571912d08f4e827b690f13484dab4ab71555c1bc50d8a28ec1326b9b982",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred2_20261027_20261027.parquet": "234642dfbb515cb3bcdfc13510bb8feaebf16f4397359f0e7250ae2a98fc25bd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/fit2_20261031.json": "764e84acee35f20520ea6e6342d0b919b9ee15cee429239b5b8145e9f183d243",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/models_v2/20261031_full_p.txt": "ef49437b54e12e2241411e00a6d391bb2d721f0d23a79fb3f714fa994df2052f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/models_v2/20261031_full_v.txt": "ba7aba6f0d449ef56ac83b27bf7d9aaf1d56369aea89cf47a63cab17a0a10e88",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred2_20261031_20261027.parquet": "89d4316e1e1385b79c9004e4a01f8c8220a95f90d18b33c13801fe2bc9b5ca6e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/ev_x2_20261031.parquet": "4e70cbbe48106d46e347f97f12a1b767d2effff4941cd3c0975cf5924b494b37",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred2_20261031_20261031.parquet": "1a8c062f193c58ee45b0fddfd775d67c11390554d6bee756c47fb8156067e7f1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/fit2_20261101.json": "fca8710c3722813276dc8c075c389240e9148a3fbed0459e4ba7a856beb1b9bb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/models_v2/20261101_full_p.txt": "bce5ea0b84b5f270b8f1bc527e7ffe5df7686bd834a8b613bff06437d120b89b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/models_v2/20261101_full_v.txt": "2b64184be3f741dcfbeba0c6c87c3de990764a105fa5b947398b856ddd8d1b2c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred2_20261101_20261031.parquet": "b8bac864030b3895b48d766f4347e4793fb287333be5e998dfa777bc108595ae",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/ev_x2_20261101.parquet": "0c3e97467fe55975d4b76ab0e18d3608bdcba0e093338dd474f5d33befd04592",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred2_20261101_20261101.parquet": "6e0cfbb87583a295ea38f5d90af94541434445638cd6923b56895d76d596ca62",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/fit2_20261102.json": "0ffff3164b22b32a400d88fea238190eed3acbf2bc1d10208d369034cf258a62",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/models_v2/20261102_full_p.txt": "c7c8c31e0cf689c07100dd9ef76968464c875390731be771ede5153170910204",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/models_v2/20261102_full_v.txt": "20e207c2148bb4a483d14e5a68d1f3654a332606a293b5b8b185390864202dbd",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred2_20261102_20261101.parquet": "66db42bda02508e950092302395d152674d49cd779b01681827564a738df3ea7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/ev_x2_20261102.parquet": "16a23a5b0914c101f5012c059720854d64c68241b6ab352fe875feba20e8beb2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred2_20261102_20261102.parquet": "bf719f7d212736783819f6fec327479ba09a642168a263a0dc28b5afd448052f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/fit2_20261103.json": "c7595cd964523202b8b9951febb94fbd64931daad50facd34a7802ee520de937",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/models_v2/20261103_full_p.txt": "3908d16c2f6f593293e7735be23a4fd0cc9ede934acac0eb93a22e9339a2fc64",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/models_v2/20261103_full_v.txt": "9b0df89b674932de64839654fdf8c1b702ec00d87aaf2b7b289b5d9c3a31310a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred2_20261103_20261102.parquet": "a0a6dd3e5c90abd69e4f2f071449707553752e6d08e5d539573e94002816f740",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/ev_x2_20261103.parquet": "307a80fedf8f15ea725c68fd949ac8252bc278825aa82fd790ec97847714ad57",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_model_20261115/pred2_20261103_20261103.parquet": "2f39bdb67dbccb6506c484880cf70b782d4355a7181e79cea1ea1ea974b1d38a"
+  },
+  "folds": {
+    "20261027": {
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025"
+      ],
+      "cal_day": "20261026",
+      "train": {
+        "n": 52184,
+        "filled": 5808,
+        "ic": 0.21261280541997396,
+        "pred_mean": -2.1997789054829795,
+        "value_mean": -2.2464516854142196,
+        "optimism": 0.04667277993123994,
+        "mse": 587.1345431215196,
+        "top_n": 5219,
+        "top_pred": 2.1802888903051354,
+        "top_value": 7.311639289344146,
+        "kept_n": 13640,
+        "kept_value_cents": 40113.035294057496
+      },
+      "forward": {
+        "20261026": {
+          "n": 15844,
+          "filled": 1733,
+          "ic": 0.1332422212766254,
+          "pred_mean": -2.0536195486218123,
+          "value_mean": -2.4494316277035852,
+          "optimism": 0.3958120790817732,
+          "mse": 614.1982771288683,
+          "top_n": 1585,
+          "top_pred": 1.3735220018529368,
+          "top_value": -0.04379663625336199,
+          "kept_n": 4020,
+          "kept_value_cents": -1398.2847628746777
+        },
+        "20261027": {
+          "n": 12842,
+          "filled": 1229,
+          "ic": 0.12043591188314229,
+          "pred_mean": -2.005414005808723,
+          "value_mean": -2.323819122165358,
+          "optimism": 0.31840511635663526,
+          "mse": 541.8388146749746,
+          "top_n": 1285,
+          "top_pred": 1.4618638833520154,
+          "top_value": 0.4914681110865528,
+          "kept_n": 3130,
+          "kept_value_cents": 762.3611214202007
+        }
+      },
+      "strict_test": {
+        "n": 1441,
+        "filled": 39,
+        "ic": 0.009533097463077005,
+        "pred_mean": -1.1038124990105842,
+        "value_mean": 0.3208899038818,
+        "optimism": -1.424702402892384,
+        "mse": 91.11509251810021,
+        "top_n": 144,
+        "top_pred": 2.358314709731866,
+        "top_value": 0.970019905554497,
+        "kept_n": 645,
+        "kept_value_cents": 96.64365071357302
+      }
+    },
+    "20261031": {
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026"
+      ],
+      "cal_day": "20261027",
+      "train": {
+        "n": 68028,
+        "filled": 7541,
+        "ic": 0.22354787911355223,
+        "pred_mean": -2.2147080824011725,
+        "value_mean": -2.2937265458486396,
+        "optimism": 0.0790184634474666,
+        "mse": 578.9139424811208,
+        "top_n": 6803,
+        "top_pred": 2.279288078023091,
+        "top_value": 7.447741350185163,
+        "kept_n": 16126,
+        "kept_value_cents": 53443.754709124434
+      },
+      "forward": {
+        "20261027": {
+          "n": 12842,
+          "filled": 1229,
+          "ic": 0.1332422566046145,
+          "pred_mean": -2.0339211849357786,
+          "value_mean": -2.323819122165358,
+          "optimism": 0.2898979372295797,
+          "mse": 536.098523159418,
+          "top_n": 1285,
+          "top_pred": 1.9105223867025005,
+          "top_value": 1.4068330853905986,
+          "kept_n": 2902,
+          "kept_value_cents": 2298.2822504909554
+        },
+        "20261031": {
+          "n": 14278,
+          "filled": 1224,
+          "ic": 0.09675625317651748,
+          "pred_mean": -2.240216300945017,
+          "value_mean": -2.8967914580689937,
+          "optimism": 0.6565751571239764,
+          "mse": 866.3410419142017,
+          "top_n": 1428,
+          "top_pred": 2.211479005351556,
+          "top_value": -1.8171518348687898,
+          "kept_n": 3117,
+          "kept_value_cents": -3531.6341191537304
+        }
+      },
+      "strict_test": {
+        "n": 3024,
+        "filled": 137,
+        "ic": 0.01601121064585157,
+        "pred_mean": -1.2538196254169394,
+        "value_mean": -0.1468962273113447,
+        "optimism": -1.1069233981055946,
+        "mse": 179.98518172139734,
+        "top_n": 303,
+        "top_pred": 3.306947830471445,
+        "top_value": 0.43497831401362863,
+        "kept_n": 1041,
+        "kept_value_cents": 240.74342914612947
+      }
+    },
+    "20261101": {
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027"
+      ],
+      "cal_day": "20261031",
+      "train": {
+        "n": 80870,
+        "filled": 8770,
+        "ic": 0.223992988092206,
+        "pred_mean": -2.227769513764358,
+        "value_mean": -2.298505188918496,
+        "optimism": 0.07073567515413799,
+        "mse": 564.2389688843747,
+        "top_n": 8087,
+        "top_pred": 2.258238346869037,
+        "top_value": 7.131679571503938,
+        "kept_n": 18734,
+        "kept_value_cents": 61278.57066957766
+      },
+      "forward": {
+        "20261031": {
+          "n": 14278,
+          "filled": 1224,
+          "ic": 0.08665054009818259,
+          "pred_mean": -2.270881345584157,
+          "value_mean": -2.8967914580689937,
+          "optimism": 0.6259101124848365,
+          "mse": 866.6824682496607,
+          "top_n": 1428,
+          "top_pred": 2.144127322838369,
+          "top_value": -1.897600229062493,
+          "kept_n": 3112,
+          "kept_value_cents": -3950.348491236261
+        },
+        "20261101": {
+          "n": 14851,
+          "filled": 1273,
+          "ic": 0.08114319427333849,
+          "pred_mean": -2.228073260736735,
+          "value_mean": -3.2314813064773915,
+          "optimism": 1.0034080457406562,
+          "mse": 943.4913207083933,
+          "top_n": 1485,
+          "top_pred": 2.048115666332684,
+          "top_value": -0.6315890251936188,
+          "kept_n": 3283,
+          "kept_value_cents": -2536.4013200631653
+        }
+      },
+      "strict_test": {
+        "n": 2755,
+        "filled": 83,
+        "ic": 0.00931131907549288,
+        "pred_mean": -1.2327960019376731,
+        "value_mean": 0.024374813951741847,
+        "optimism": -1.257170815889415,
+        "mse": 102.40562564458364,
+        "top_n": 276,
+        "top_pred": 2.326681946205803,
+        "top_value": 1.8895867148713759,
+        "kept_n": 809,
+        "kept_value_cents": 522.0659333044998
+      }
+    },
+    "20261102": {
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031"
+      ],
+      "cal_day": "20261101",
+      "train": {
+        "n": 95148,
+        "filled": 9994,
+        "ic": 0.21652077904213957,
+        "pred_mean": -2.3245424894383655,
+        "value_mean": -2.3882845994256092,
+        "optimism": 0.06374210998724297,
+        "mse": 597.6791214238104,
+        "top_n": 9515,
+        "top_pred": 1.9487514437284479,
+        "top_value": 6.623645749883533,
+        "kept_n": 18191,
+        "kept_value_cents": 65768.59365132726
+      },
+      "forward": {
+        "20261101": {
+          "n": 14851,
+          "filled": 1273,
+          "ic": 0.08044075973401943,
+          "pred_mean": -2.46352080815662,
+          "value_mean": -3.2314813064773915,
+          "optimism": 0.767960498320772,
+          "mse": 941.5873840183671,
+          "top_n": 1485,
+          "top_pred": 1.3496932476533217,
+          "top_value": -0.8149318210304506,
+          "kept_n": 2111,
+          "kept_value_cents": -1358.7974155205418
+        },
+        "20261102": {
+          "n": 20079,
+          "filled": 1958,
+          "ic": 0.12490529809076711,
+          "pred_mean": -2.276815886599331,
+          "value_mean": -3.6060159576529633,
+          "optimism": 1.3292000710536322,
+          "mse": 850.6693526360187,
+          "top_n": 2008,
+          "top_pred": 1.336195907926507,
+          "top_value": -0.29676308028019494,
+          "kept_n": 3749,
+          "kept_value_cents": -3078.9036628054837
+        }
+      },
+      "strict_test": {
+        "n": 2161,
+        "filled": 83,
+        "ic": 0.0398947306617311,
+        "pred_mean": -1.3039378888381443,
+        "value_mean": 0.6877409414210046,
+        "optimism": -1.991678830259149,
+        "mse": 387.7489477605184,
+        "top_n": 216,
+        "top_pred": 1.81569015930942,
+        "top_value": 2.908110696191239,
+        "kept_n": 486,
+        "kept_value_cents": 1108.1519103773076
+      }
+    },
+    "20261103": {
+      "train_days": [
+        "20261023",
+        "20261024",
+        "20261025",
+        "20261026",
+        "20261027",
+        "20261031",
+        "20261101"
+      ],
+      "cal_day": "20261102",
+      "train": {
+        "n": 109999,
+        "filled": 11267,
+        "ic": 0.20432282667192592,
+        "pred_mean": -2.4509274945898882,
+        "value_mean": -2.502124855213626,
+        "optimism": 0.051197360623737614,
+        "mse": 637.5281394675465,
+        "top_n": 11000,
+        "top_pred": 1.745432774719318,
+        "top_value": 5.889258253850087,
+        "kept_n": 15763,
+        "kept_value_cents": 66426.88997191189
+      },
+      "forward": {
+        "20261102": {
+          "n": 20079,
+          "filled": 1958,
+          "ic": 0.12520128843303086,
+          "pred_mean": -2.3690181348111663,
+          "value_mean": -3.6060159576529633,
+          "optimism": 1.2369978228417973,
+          "mse": 850.3570362082945,
+          "top_n": 2008,
+          "top_pred": 1.1680022452567935,
+          "top_value": -0.3993614878855816,
+          "kept_n": 2808,
+          "kept_value_cents": -1103.902640760902
+        },
+        "20261103": {
+          "n": 19580,
+          "filled": 1936,
+          "ic": 0.12933267685661654,
+          "pred_mean": -2.6067766887398287,
+          "value_mean": -4.101301213711603,
+          "optimism": 1.4945245249717747,
+          "mse": 924.5079184862468,
+          "top_n": 1958,
+          "top_pred": 1.1387602838442348,
+          "top_value": -1.6149175719603857,
+          "kept_n": 2402,
+          "kept_value_cents": -3372.525489231768
+        }
+      },
+      "strict_test": {
+        "n": 2193,
+        "filled": 79,
+        "ic": 0.0023671818215093518,
+        "pred_mean": -1.616154012566604,
+        "value_mean": -0.29249313629469514,
+        "optimism": -1.3236608762719089,
+        "mse": 146.81095218128203,
+        "top_n": 220,
+        "top_pred": 1.7940640668811847,
+        "top_value": -1.5918088248373485,
+        "kept_n": 387,
+        "kept_value_cents": -291.7484365137217
+      }
+    }
+  },
+  "all_saved_head_predictions_exact": true,
+  "interpretation": "Consumed-data description only. In-sample training IC is not validation. No fitting, selected model, threshold or inferential claim."
+}
