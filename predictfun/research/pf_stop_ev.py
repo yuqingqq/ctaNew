@@ -588,6 +588,17 @@ def actions_window(day, W, lrows, srcs, RW, st, asof, errs):
     return out, r
 
 
+SOURCES = ('pf_stop_ev.py', 'pf_stop_ev_accounting.py', 'pf_stop_queue_activation_lane.py', 'pf_queue_activation.py', 'pf_stop_model.py', 'pf_kp_s4.py',
+           'pf_order_harm_client_lane.py')
+
+
+def source_ids():
+    """sha256 (16 hex) of every source a day's labels depend on, read when the day starts: the report refuses days built from different
+    sources (the accounting module is another session's and may change between days)."""
+    import hashlib
+    return {f: hashlib.sha256(open(f'{HERE}/{f}', 'rb').read()).hexdigest()[:16] for f in SOURCES}
+
+
 def mem_guard(what):
     M.trim(); r = K.rss_mib()
     if r > MEM_CAP_MIB:
@@ -608,7 +619,7 @@ def day_build(day):
         sys.exit(f'REFUSED: {day} is not a consumed replay day')
     if M.QUNK != 'zero':
         sys.exit('REFUSED: E7 runs the lane with an unknown queue = 0 (QUNK zero), the primary assumption')
-    T0 = time.time(); D = K.load_day(day); cut = M.boundary_cut(day)
+    T0 = time.time(); SRC = source_ids(); D = K.load_day(day); cut = M.boundary_cut(day)
     tkf = pd.read_parquet(f'{K.IO}/step1/{day}/legs_tk.parquet', columns=['tk']).tk.values
     LT = D['LT']; ix = LT.index.values; g_all = np.where(tkf[ix] >= 0, tkf[ix], -1 - ix)
     WSg = pd.Series(TS.ws_groups(LT.how.values, g_all), index=LT.index); GRP = pd.Series(g_all, index=LT.index)
@@ -685,10 +696,12 @@ def day_build(day):
     e9['pass'] = bool(e9['ledger_failures'] == 0 and e9['compared'] >= N_CLEAN_MIN and e9['mismatch'] == 0 and e9['control_differ'] >= 1)
     checks['E9'] = e9
     fails = [e for e, x in checks.items() if not x['pass']]
+    if source_ids() != SRC:
+        fails.append('a source changed while the day ran (another session edited a module this build imports)')
     if st['clock_roundtrip_differ'] or st['legs_mid_nan']:
         fails.append(f"clock round trip {st['clock_roundtrip_differ']} / legs without a mid {st['legs_mid_nan']}")
     rep = dict(day=day, size=Z, stat=dict(st), load_stat=load_stat, checks=checks, flags=dict(dup=checks['E2']['flag_dup']), untimed=ust, asof=asof,
-               label_contract=AC.CONTRACT, reference=AC.REFERENCE, ages_ms=list(AGES), timings=list(TIMINGS), e2_uncertainty_ms=E2_UNC_MS,
+               sources=SRC, label_contract=AC.CONTRACT, reference=AC.REFERENCE, ages_ms=list(AGES), timings=list(TIMINGS), e2_uncertainty_ms=E2_UNC_MS,
                book_gap_ms=BOOK_GAP_MS,
                queue_contract=QA.QUEUE_CONTRACT, clock=f'M {SHF:g}', horizon_ms=H_EV, seconds=round(time.time() - T0, 1), preroll_ms=K.PREROLL_MS,
                skip_foreign_parts=K.SKIP_FOREIGN_PARTS)
@@ -717,6 +730,9 @@ def report():
     J = {d: json.load(open(f'{OUTD}/day_{d}{ZTAG}.json')) for d in DAYS9 if os.path.exists(f'{OUTD}/day_{d}{ZTAG}.json')}
     fails = [f'{d}: no output (refused or not run)' for d in DAYS9 if d not in J]
     fails += [f'{d}: {e}' for d, x in J.items() for e, y in x['checks'].items() if not y['pass']]
+    srcs = {json.dumps(x.get('sources'), sort_keys=True) for x in J.values()}
+    if len(srcs) > 1:
+        fails.append(f'days built from different sources ({len(srcs)} source sets): rebuild them on one version')
     flags = [f'{d}: step-1 exact duplicates {x["checks"]["E2"]["exact_dup_share_of_shares"]:.3%} of first-minute shares' for d, x in J.items() if x['flags']['dup']]
     T = [f'STOP-EV STAGE 1 - DATA (Z = {Z:g} sh, clock M {SHF:g}, horizon {H_EV:g} ms; {len(J)} of 9 days built)', '']
     T.append('DATA CHECKS E1-E7 per day (PASS / FAIL; counts)')
@@ -917,10 +933,11 @@ def report():
 
 
 # ---------------------------------------------------------------- self-tests (synthetic, no data files)
-def toy_w(side, legs, n=40, drop=None, invalid=None, known_lag=60.0, mid2=50.5, t_mid=600.0, gap=None):
+def toy_w(side, legs, n=40, drop=None, invalid=None, known_lag=60.0, gap=None, ask_up=None):
     """A synthetic window-side: venue frames every 25 ms known `known_lag` ms later, a contiguous 5-level book at 50..46 (bids) /
     52..56 (asks), 100 shares a level; drop = (t0, level, size) from frame time t0; invalid = (t0, t1): a crossed book in those frames;
-    legs = [(anchor, price, shares, taker group)]; mid 51, then mid2 from t_mid. Returns (w, leg rows, groups, WS flags)."""
+    legs = [(anchor, price, shares, taker group)]; ask_up = t: the ask side's book one tick higher from frame time t (both sides' views);
+    the mid is the book's (as the loader's, forward-filled over invalid frames). Returns (w, leg rows, groups, WS flags)."""
     tg = np.arange(0.0, 50.0 * n, 50.0); tf = np.arange(-1000.0, 50.0 * n + 3000.0, 25.0)
     if gap:
         tf = tf[(tf < gap[0]) | (tf >= gap[1])]           # a feed gap: no frames in [gap0, gap1)
@@ -930,12 +947,18 @@ def toy_w(side, legs, n=40, drop=None, invalid=None, known_lag=60.0, mid2=50.5, 
     if drop:
         S5[tf >= drop[0], drop[1]] = drop[2]
     opp = np.full(nf, 52 if side == 0 else 50, 'int64')
+    if ask_up is not None:
+        if side == 0:
+            opp[tf >= ask_up] += 1
+        else:
+            P5[tf >= ask_up] += 1
     if invalid:
         opp[(tf >= invalid[0]) & (tf < invalid[1])] = 50 if side == 0 else 52
     kf = tf + known_lag; jk = np.searchsorted(kf, tg, side='right') - 1
     valid = (opp > P5[:, 0]) if side == 0 else (P5[:, 0] > opp)
     best = [int(P5[j, 0]) if (j >= 0 and valid[j]) else -1 for j in jk]
-    mff = np.where(tf >= t_mid, mid2 - 0.002 * (tf - t_mid), 51.0)       # a ramp after t_mid: marks taken at different times differ
+    bb_, ba_ = (P5[:, 0], opp) if side == 0 else (opp, P5[:, 0]); ok_ = (bb_ >= 0) & (ba_ > bb_)
+    mff = pd.Series(np.where(ok_, (ba_ + bb_) / 2.0, np.nan)).ffill().values
     lg = sorted(legs, key=lambda x: (x[0], -x[1] if side == 0 else x[1]))
     anc = np.asarray([x[0] for x in lg], float); pt = [int(x[1]) for x in lg]; sh = [float(x[2]) for x in lg]
     w = dict(m=1, side=side, sg=1.0 if side == 0 else -1.0, ws=0.0, te=float(50.0 * n), tf=tf, kf=kf, jk=jk, tg=tg, n=n, opp=opp, P5=P5, S5=S5,
@@ -1032,7 +1055,7 @@ def selftest():
     try:
         bid = [(710.0, 50, 30.0, 2), (910.0, 50, 25.0, 4), (1210.0, 47, 40.0, 6), (1260.0, 49, 12.0, 8)]
         ask = [(300.0, 52, 15.0, 3), (800.0, 53, 40.0, 5), (1500.0, 52, 18.0, 7)]
-        (w0, r0_, g0, s0), (w1, r1_, g1, s1) = toy_w(0, bid, drop=(500.0, 0, 20.0)), toy_w(1, ask)
+        (w0, r0_, g0, s0), (w1, r1_, g1, s1) = toy_w(0, bid, drop=(500.0, 0, 20.0), ask_up=1700.0), toy_w(1, ask, ask_up=1700.0)
         W = {0: w0, 1: w1}; SS = {0: SideCtx(w0, r0_, g0, s0), 1: SideCtx(w1, r1_, g1, s1)}; st = collections.Counter(); ctl = dict(cap=0, early=0)
         c = rec_window(W, SS, st, ctl, AC.replay_neutral(W, size=Z, shift_ms=SHF, queue='M', unknown_queue='zero', nr=NR, cap=None, mode='none'))
         cl = [not e and not s_ for e, s_ in zip(c['ended'], c['shared'])]
@@ -1044,7 +1067,7 @@ def selftest():
             bad.append(f'reconciliation toy: regress {st["rec_regress_differ"]}, viol {st["rec_viol"]}, clean {nclean}, clean mismatches {cm}, '
                        f'clean with fills {fills_clean} (asks {ask_clean}), shared {sum(c["shared"])}, ended {sum(c["ended"])}, controls {ctl}')
         # (5) the primary labels through the Codex contract on the same toy window: ledger reconciles, every probe has a status, E9 agrees
-        (v0, q0_, g0_, s0_), (v1, q1_, g1_, s1_) = toy_w(0, bid, drop=(500.0, 0, 20.0)), toy_w(1, ask)
+        (v0, q0_, g0_, s0_), (v1, q1_, g1_, s1_) = toy_w(0, bid, drop=(500.0, 0, 20.0), ask_up=1700.0), toy_w(1, ask, ask_up=1700.0)
         W2 = {0: v0, 1: v1}; LR = {0: q0_, 1: q1_ + 1000}; SR = {0: s0_, 1: s1_}
         RW = {1: dict(expected=len(bid) + len(ask), missing=[], unt={0: [], 1: []})}; st2 = collections.Counter(); errs = []
         acts, _ = actions_window('20261023', W2, LR, SR, RW, st2, '2026-11-15T00:00:00Z', errs)
