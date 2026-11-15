@@ -1,0 +1,51 @@
+{
+  "asof": "2026-11-15T15:06:39.560768+00:00",
+  "sources": {
+    "report_v2.json": "c3daa86aca5654be7edf681f121c7bd906c7b73b8bead58bf4ee70c9c0dd81e8",
+    "generalization_v1.json": "760e757a0be85c411734c84f3dde28e3217498cdf0d90667f150ed3f46c69a08",
+    "model_v2_readout.txt": "280127bb4aed6ad805d61381969be7b0a594c16c90aec61f0d029861796cb5f8"
+  },
+  "n_unique_test_actions": 137703,
+  "original_kept": {
+    "n": 9727,
+    "training_threshold_tail_n": 78,
+    "tail_loss_cents": 16727.999890618197
+  },
+  "within_filled_gap_fractions": [
+    0.5752215070979018,
+    0.9393821801076008,
+    0.9040482298634123,
+    0.8714017495319006,
+    0.7558991211766178
+  ],
+  "within_last_four_range": [
+    0.7558991211766178,
+    0.9393821801076008
+  ],
+  "all_folds_fill_frequency_lower": true,
+  "all_folds_per_share_value_worse": true,
+  "all_folds_decision_within_negative": true,
+  "marginal_outside_train_range_range": [
+    0.0006189328295002932,
+    0.043911801881934366
+  ],
+  "v2_train_ic_range": [
+    0.20432282667192592,
+    0.223992988092206
+  ],
+  "v2_cal_ic_range": [
+    0.08044075973401943,
+    0.1332422566046145
+  ],
+  "v2_test_ic_range": [
+    0.08114319427333849,
+    0.12933267685661654
+  ],
+  "v2_test_actions": 81630,
+  "v2_kept_actions": 15681,
+  "v2_kept_value_cents": -11757.103469833946,
+  "v2_all_cal_ic_below_training": true,
+  "v2_all_test_ic_below_training": true,
+  "v2_positive_set_negative_test_days": 4,
+  "all_source_controls_pass": true
+}
