@@ -127,6 +127,7 @@ import pandas as pd
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import pf_kp_s4 as K                                      # noqa: E402  (load_day, window_sides, clocks)
+K.SKIP_FOREIGN_PARTS = True                               # 2026-11-15 (code review D12): never read the adjacent days' boundary-hour books
 import pf_qr_queue_race as QR                             # noqa: E402  (runs: valid frames, run starts)
 import pf_pull_depth as PD                                # noqa: E402  (feats, pinned LightGBM parameters)
 import pf_stop_depth as SD                                # noqa: E402  (target, NEW inputs, saved rows for parity / the comparator)
@@ -1063,8 +1064,9 @@ def rows_day(day):
     if fails:
         sys.exit(f'REFUSED (no output for {day}): {fails}')
     os.makedirs(OUTD, exist_ok=True)
-    R.to_parquet(f'{OUTD}/rows_{day}.parquet', index=False)
-    json.dump(st, open(f'{OUTD}/rows_{day}.json', 'w'), indent=1, default=str)
+    tag = os.environ.get('PF_SM_ROWS_TAG', '')               # regression runs write rows_<day><tag>.* beside the stored rows
+    R.to_parquet(f'{OUTD}/rows_{day}{tag}.parquet', index=False)
+    json.dump(st, open(f'{OUTD}/rows_{day}{tag}.json', 'w'), indent=1, default=str)
     print(f'{day}: rows {len(R)}; boundary windows {st["boundary_windows"]}; invalid {st["invalid_book"]}; GAP {st["gap_rows"]} (hgap p50/p90/p99/'
           f'p99.9 {st["hgap_q"]}); empty side {st["empty_side_rows"]}; masked {st["masked"]}; fair-price inputs missing {st["inf_missing"]:.2%}; '
           f'parity {pc["sd_rows"]} rows ok; falsifier {fz}; brute {bf}; {time.time() - T0:.0f} s', flush=True)
@@ -1226,7 +1228,8 @@ def pcol(H, j):
 # diagnostics (pf_stop_model_diag.py, which decides which options v4 uses) and the v4 fit
 DIAG_JSON = f'{OUTD}/diag_20261115.json'; REVIEW_JSON = f'{OUTD}/review_20261115.json'; REG_JSON = f'{OUTD}/reg_20261115.json'
 BN_F = [c for c in FEAT_M if c.startswith(('bn_', 'adv_bn_')) or c in ('d_bnimb250', 'adv_d_bnimb250', 'dfv250', 'dfv1000', 'gap_adv', 'sens',
-                                                                       'pbn_dist')]       # Binance-derived inputs (P15)
+                                                                       'pbn_dist', 'act_rel')]   # Binance-derived inputs (P15; act_rel added
+                                                                       # 2026-11-15, code review D4 - the diag's Q8 ran without it)
 RARE = 0.02                                                # S sampling: a head is rare below this training-day rate
 VOL = {'V60': ('V', 60000, 300000), 'V180': ('V', 180000, 600000), 'S60': ('S', 60000, 300000)}   # -> (draw, rows a day, rows a head)
 ES_MAX = 1000; ES_PAT = 50; VAL_N = 200000; EPS_P = 1e-6
