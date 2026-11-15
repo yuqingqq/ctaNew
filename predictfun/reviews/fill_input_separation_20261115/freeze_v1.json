@@ -1,0 +1,37 @@
+{
+  "asof": "2026-11-15T15:56:53.935362+00:00",
+  "source_commit": "af087fdb3928b5d601e56eebb4bf496584cf7221",
+  "source_sha256": "59100fff0aa2858457e4380d34afd17070b24e3bcccb5b0f42c9d302663201fc",
+  "dev_days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026"
+  ],
+  "test_days": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "population": "All certified_estimated neutral actions, strict subset separately; filled subsets diagnostic only",
+  "classes": "no fill, positive-value fill, negative-value fill, zero-value fill; material subset >=0.5c/share absolute value",
+  "features": "All 83 inputs plus fair_deficit, fair_shock_over_edge, bn50_shock_over_edge, bn250_shock_over_edge, micro_deficit",
+  "binning": "Four early days, five all-action quantile bins plus missing; direction chosen on early good/bad fills, raw direction always reported",
+  "conditional_auc": "pair weighted within day/side/rung/floor(edge)/P(fill) bands .05,.1,.2,.4; finer version adds hour; coverage reported",
+  "rules": [
+    "fair_below_order",
+    "fair_shock_exceeds_edge",
+    "joint_adverse_pressure",
+    "thin_adverse_book"
+  ],
+  "economic_control": "Exact analytic expected selected value within day/hour/side/rung/exact known remaining/floor(edge)/P(fill) bands/feature availability; no sampled null or p value",
+  "new_model_fits": 0,
+  "forward_race_candidates": 0,
+  "hyperparameter_or_horizon_search": false,
+  "multiplicity": "88 inputs/scores and four fixed logical diagnostics, all reported; no winner promoted",
+  "lineage": "Rebuild all model inputs from stored event-derived feature rows and client-known action states. Exact timestamps, keys, signs/scales, source labels. Preserve prior raw-recomputation receipt; no collector-tape rebuild.",
+  "controls": "Known good/bad/no-fill categorization; reject nonzero no-fill value; rank oracle and confounded matched AUC; bid/ask economic identity; corrupted saved predictions refused",
+  "compute": "Codex slot core8, 2GiB RSS guard; nine consumed dates only"
+}
