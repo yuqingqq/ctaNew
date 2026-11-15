@@ -72,6 +72,87 @@ future-only comparator measures additional admissions lacking a certificate;
 that count is **not** an observed mislabel rate. There is no P&L-based selection,
 model fitting, significance test, or forward-validation claim in this study.
 
-The run is sequential on the Codex slot with an external 2 GiB RSS guard.
-Results will be recorded after all declared days complete. Do not substitute
-partial-day counts for the final comparison.
+## Completed comparison and saved-artifact audit
+
+Build as of **2026-11-15T13:58:13Z**, saved-artifact audit as of
+**2026-11-15T14:02:20Z**. All nine declared days completed, 2,586 windows and
+393,154 unique neutral probes per variant. The development subset is Oct 23–26,
+1,152 windows and 187,384 probes per variant. These are consumed data.
+
+| Population / timing assumptions | Probes | Original eligible | Certified eligible | Coverage before → after |
+|---|---:|---:|---:|---:|
+| All nine days / strict interval invariance | 393,154 | 2,809 | 18,911 | 0.71% → 4.81% |
+| All nine days / conditional E2 point anchors | 393,154 | 72,255 | 149,658 | 18.38% → 38.07% |
+| Development / strict interval invariance | 187,384 | 969 | 7,337 | 0.52% → 3.92% |
+| Development / conditional E2 point anchors | 187,384 | 30,076 | 68,028 | 16.05% → 36.30% |
+
+The estimated-timing development population gains 37,952 labels (2.26x total);
+the strict population gains 6,368 (7.57x total). These fractions measure label
+coverage of scheduled probes, **not quote uptime or fill rate**.
+
+For the same all-day population/as-of, bid has 195,440 probes and ask 197,714.
+Strict certified labels are 9,590 bid / 9,321 ask; estimated-timing labels are
+73,663 bid / 75,995 ask. Per-day/per-side counts and every exclusion status
+are in `reviews/stop_ev_timing_20261115/audit_v2.json`.
+
+| All nine days: status (n = 393,154 per variant) | Strict | Estimated |
+|---|---:|---:|
+| Eligible under the declared assumptions | 18,911 | 149,658 |
+| Uncertain prior reference state | 245,673 | 119,517 |
+| Uncertain future exposure | 5,984 | 1,393 |
+| Not client-resting | 114,175 | 114,175 |
+| Probe not reached | 3,766 | 3,766 |
+| Incomplete book coverage | 4,639 | 4,639 |
+| Missing/stale mark | 6 | 6 |
+
+All **75,064 baseline-overlap comparisons** preserve label values and order
+features exactly (2,809 strict + 72,255 estimated comparisons; not 75,064
+distinct actions). Saved files pass unique-key, quantity/residual, component,
+normalization, invalid-status nullness, certificate and source-count checks.
+All five planted artifact corruptions are refused. Nine synthetic tests passed.
+The extended v2 audit adds the declared side summaries; the passing v1 receipt
+and both logs remain. Frozen sources and raw inputs match before/after every
+day; saved artifact hashes match their receipts.
+
+The sequential Codex-slot build completed in 360 seconds with exit code 0 and
+an external 2 GiB RSS guard. Build report, runner result, all nine day manifests,
+and audit receipts are versioned in `reviews/stop_ev_timing_20261115/`.
+
+## What remains and how to use the artifacts
+
+The future-only comparator admits 265,373 of the same 393,154 probes; **115,715
+of those admissions lack the new prefix certificate** (development: 59,642 of
+127,670 admissions among 187,384 probes). This is not an observed error rate.
+The synthetic counterexamples establish that its rule cannot generally prove
+the neutral queue, generation or value unchanged. The user-approved broader
+model population should remain explicitly a sensitivity.
+
+Missing execution times and uncertain prior queue state remain the main
+coverage limit. The strict sample is still small and potentially selected;
+both populations need representativeness checks before extrapolating model
+results. Neither coverage improvement establishes prediction quality,
+profitability, live fills, or physical timestamp accuracy. No model was fitted
+or running model pipeline changed in this work.
+
+Per-day Parquets contain all probes, statuses, baseline statuses, label scalar
+columns, `x_*` known-order features, and source/certificate counts. Keep the
+two variants separate. `certified_ws` uses `eligible_timing_invariant`;
+`certified_estimated` uses `eligible_estimated_timing`. Existing evaluators
+that only accept the original statuses need an explicit adapter with timing
+provenance; do not silently relabel the strict variant as physical truth.
+Certificate counts and exclusion statuses use outcome information and must
+never become model inputs or live eligibility gates.
+
+For the next model experiment, join market features at exactly
+`(day, market, side, decision_ms)` and verify the known-book depth identity.
+These Parquets do not include the other builder's `k` or `hour` fields: recover
+`k` from the exact decision grid, derive UTC hour from the timestamp, and refuse
+missing/duplicate/time-shifted matches. Compare the certified population with
+the broader sensitivity under a newly declared experiment; do not overwrite
+the already-running model's frozen inputs or claim untouched validation.
+
+Reproduction uses an isolated checkout of builder commit `f0682872` and the
+committed `freeze_v1.json` from `3bb6773f`, then `run_stop_ev_timing.sh` with a
+new output directory. Its source-hash guard deliberately refuses a checkout
+whose imported sources have since changed. Audit checker `1e6c71d2` reads the
+saved artifacts only and can run through `run_light.sh` on the Codex slot.
