@@ -58,7 +58,8 @@ TAU_OFFPAR = 2.0                                           # above every probabi
 MUT_GATE_IGNORE = MUT_DEC_ALWAYS = 0
 OUT = M.OUTD
 PV = os.environ.get('PF_PLAY_V', '4')                     # the model version played (v4, or v5 = v4 + adopted extra inputs)
-VS = f'_v{PV}'
+PSZ = float(os.environ.get('PF_PLAY_SIZE', '30'))           # order size per rung (USER 2026-11-15: "we can use a larger size for testing or make it
+VS = f'_v{PV}' + ('' if PSZ == 30.0 else f'_s{int(PSZ)}')    # configurable"); 30 sh = the oracle's size; other sizes write their own files
 
 
 def pred_arrays(path, h):
@@ -225,9 +226,9 @@ def play_day(test, phase):
     def run(W, q, shf, dec=None, gate=None, aux=None):
         n = W[0]['n']; aux = aux or {0: [False] * n, 1: [False] * n}
         if dec is None and gate is None:
-            r = M.CL.sim_joint(W, q, shf, None, aux, decide=None, idle_only=0, mode='none', cooldown=M.CL.REPOST_MS)
+            r = M.CL.sim_joint(W, q, shf, None, aux, decide=None, idle_only=0, size=PSZ, mode='none', cooldown=M.CL.REPOST_MS)
         else:
-            r = M.sim_joint_g(W, q, shf, None, aux, decide=dec, gate=gate, idle_only=0, mode='none', cooldown=M.CL.REPOST_MS)
+            r = M.sim_joint_g(W, q, shf, None, aux, decide=dec, gate=gate, idle_only=0, size=PSZ, mode='none', cooldown=M.CL.REPOST_MS)
         st['runs'] += 1
         for v_ in M.J3.VIOL:
             st['viol'][v_] += r['stat']['viol'][v_]
@@ -303,7 +304,7 @@ def report():
     asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
     PJ = {t: json.load(open(f'{OUT}/play_{t}{VS}.json')) for t in M.TESTS}; CJ = {t: json.load(open(f'{OUT}/play_cal_{t}{VS}.json')) for t in M.TESTS}
     T = M.TESTS; DR = M.DAY_RULE; R_ = {}; L = []
-    L.append(f'STOP-PLAY (the v{PV} model\'s own decisions in the oracle\'s lane; 6 rungs x 30 sh both sides, no guard), 5 chronological test days {", ".join(T)}; '
+    L.append(f'STOP-PLAY (the v{PV} model\'s own decisions in the oracle\'s lane; 6 rungs x {PSZ:.0f} sh both sides, no guard), 5 chronological test days {", ".join(T)}; '
              f'as of {asof}')
     L.append('chosen (tau_on, r) per fold on its calibration day (M 50, w/o young): ' + '; '.join(f'{t}: ' + ' '.join(f'H{h} {CJ[t]["choice"][str(h)]}' for h in M.HS) for t in T))
     per = lambda cfg, a, key: np.array([PJ[t]['value'][cfg][a][key] for t in T])          # noqa: E731
