@@ -1,0 +1,10 @@
+30 s PRE-ROLL REBUILD vs stored rows: day | rows old / new (keys equal) | labels identical | integrity | inputs changed (share of rows; in the first 30 s / after)
+   20261023: 690552 / 690552 (True; +0 / -0) | True | True | scale_w30 81.4%/0.0%, dfv1000 3.2%/5.0%, dfv250 3.0%/4.6%, gap_adv 2.9%/4.5%, sens 2.9%/4.5%, pbn_dist 2.9%/4.5%
+   20261024: 690664 / 690664 (True; +0 / -0) | True | True | scale_w30 80.3%/0.0%, dfv1000 2.8%/3.8%, dfv250 2.6%/3.5%, gap_adv 2.5%/3.3%, sens 2.5%/3.3%, pbn_dist 2.5%/3.3%, own_lvl_age 0.0%/0.0%, opp_lvl_age 0.0%/0.0%
+   20261025: 690928 / 690928 (True; +0 / -0) | True | True | scale_w30 79.9%/0.0%, dfv1000 2.3%/3.2%, dfv250 2.1%/2.9%, gap_adv 2.1%/2.8%, pbn_dist 2.1%/2.8%, sens 2.1%/2.8%
+   20261026: 690478 / 690478 (True; +0 / -0) | True | True | scale_w30 80.7%/0.0%, dfv1000 3.5%/4.0%, dfv250 3.3%/3.7%, gap_adv 3.2%/3.5%, sens 3.2%/3.5%, pbn_dist 3.2%/3.5%, own_lvl_age 0.0%/0.0%, opp_lvl_age 0.0%/0.0%
+   20261027: 691128 / 691128 (True; +0 / -0) | True | True | scale_w30 80.6%/0.0%, dfv1000 3.1%/3.8%, dfv250 2.9%/3.4%, gap_adv 2.7%/3.3%, sens 2.7%/3.3%, pbn_dist 2.7%/3.3%, own_lvl_age 0.0%/0.0%, opp_lvl_age 0.0%/0.0%
+   20261031: 676788 / 676788 (True; +0 / -0) | True | True | scale_w30 76.2%/0.0%, dfv1000 1.3%/2.2%, dfv250 1.2%/2.0%, gap_adv 1.1%/1.9%, sens 1.1%/1.9%, pbn_dist 1.1%/1.9%, own_lvl_age 0.0%/0.0%, opp_lvl_age 0.0%/0.0%
+   20261101: 690790 / 690790 (True; +0 / -0) | True | True | scale_w30 76.1%/0.0%, dfv1000 1.6%/2.6%, dfv250 1.5%/2.4%, gap_adv 1.4%/2.3%, sens 1.4%/2.3%, pbn_dist 1.4%/2.3%
+   20261102: 690948 / 690948 (True; +0 / -0) | True | True | scale_w30 80.2%/0.0%, dfv1000 2.8%/3.6%, dfv250 2.6%/3.3%, gap_adv 2.6%/3.1%, sens 2.6%/3.1%, pbn_dist 2.6%/3.1%, own_lvl_age 0.0%/0.0%, opp_lvl_age 0.0%/0.0%
+   20261103: 691062 / 691062 (True; +0 / -0) | True | True | scale_w30 79.8%/0.0%, dfv1000 2.4%/3.5%, dfv250 2.2%/3.1%, gap_adv 2.1%/3.0%, sens 2.1%/3.0%, pbn_dist 2.1%/3.0%, own_lvl_age 0.0%/0.0%, opp_lvl_age 0.0%/0.0%

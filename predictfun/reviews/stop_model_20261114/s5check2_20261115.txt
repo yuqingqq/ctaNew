@@ -1,0 +1,11 @@
+FULL STEP-5 RECOMPUTATION (all 9 days); as of 2026-11-15T08:59:51Z
+RESULT: PASS on every day; positive controls fire on every day: True; 70.5 s
+   20261023: 600 steps, 57 inputs; min match 1.0000; min NaN agreement 1.0000; failing none
+   20261024: 600 steps, 57 inputs; min match 1.0000; min NaN agreement 1.0000; failing none
+   20261025: 600 steps, 57 inputs; min match 1.0000; min NaN agreement 1.0000; failing none
+   20261026: 600 steps, 57 inputs; min match 1.0000; min NaN agreement 1.0000; failing none
+   20261027: 600 steps, 57 inputs; min match 1.0000; min NaN agreement 1.0000; failing none
+   20261031: 600 steps, 57 inputs; min match 1.0000; min NaN agreement 1.0000; failing none
+   20261101: 600 steps, 57 inputs; min match 1.0000; min NaN agreement 1.0000; failing none
+   20261102: 600 steps, 57 inputs; min match 1.0000; min NaN agreement 1.0000; failing none
+   20261103: 600 steps, 57 inputs; min match 1.0000; min NaN agreement 1.0000; failing none
