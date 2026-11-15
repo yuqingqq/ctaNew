@@ -1,7 +1,7 @@
 # P-2026-005 HANDOFF
 
 <!-- STOP_EV_LATENCY_20261115 -->
-## 2026-11-15 Current-model latency sensitivity: three dates complete, two running
+## 2026-11-15 Current-model latency sensitivity: four dates complete, final date running
 
 Frozen protocol 30b92397, source c7bc4aca; corrected v3 EV/B2/QR heads and
 saved v6 MD benchmark. Five consumed dates; four clocks x five fixed rules.
@@ -9,14 +9,14 @@ Every rule reviews at 50 ms; every entry gate fresh. Six rungs x 30 shares,
 no cap or repost timer, shared activation-queue lane, all fills included.
 QR retains earlier fixed thresholds; no optimization or inferential claim.
 
-EARLY ONLY (as of 2026-11-15T18:24:14.763551+00:00, 858 first-minute windows on
-10-27, 10-31 and 11-01): pooled EV current clocks +$265.48, zero modeled
-feed/order delays +$867.71. Zero-modeled EV positive on all 3 dates;
-current EV positive on 2. Daily current -> zero: +$197.70 -> +$535.95,
--$59.99 -> +$101.45, +$127.77 -> +$230.31. This does NOT support assuming
-zero delay cannot help. EV remains sparse (roughly 2-5% quote exposure)
-and churns heavily. EV and QR/MD rankings vary across dates. No five-day
-conclusion or rule change; last two dates continue in the Codex slot.
+EARLY ONLY (as of 2026-11-15T18:39:59.501550+00:00, 1146 first-minute windows on
+10-27, 10-31 and 11-01..02): pooled EV current clocks +$341.24, zero modeled
+feed/order delays +$859.34. Both positive on 3/4 dates. The fourth date
+reverses the gain: current +$75.76 -> zero -$8.37 (M0 zero -$50.29).
+Lower latency materially helps pooled value, but does not uniformly help
+this frozen policy. EV remains sparse and churns heavily; rule rankings
+vary across dates. No five-day conclusion or policy change. Final date
+11-03 continues in the Codex slot.
 
 Completed receipts pass lane/terminal accounting, cached/uncached trajectory
 checks, sampled known-state accounting, input rehashing, and exact source
