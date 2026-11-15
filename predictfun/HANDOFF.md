@@ -1,5 +1,12 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-15 16:15Z (session aea5bfb9) — STOP-EV-PLAY DONE (USER: "We can test 1 first"): "rest when quiet, pull on activity" beats keep-all but LOSES to the guard and the harm-only sweep model
+
+- Done: research/pf_stop_ev_play.py + run_stop_ev_play.sh (40791e5e before the run; 15:31-16:13Z). The v2 fill head on the lane's own client-known order state (incremental known_state, 0 mismatches in ~33k parity checks; off-parity 0 differences on every window) pulls when P(fill) > theta, blocks re-entry while a fresh order's P(fill) >= r x theta, every 250 ms; corrected queue lane for every arm.
+- Results (5 test days, $ a day, whole portfolio, w/o young fills): M 50 QR -1,371 | KA -5,812 | LDG -144 | MD1000 -129 | QRS -3,786; M 250 QR -3,218 | KA -7,212 | LDG -1,673 | MD1000 -1,303. R980 BEATS-KEEP-ALL, R981 LOSES-TO-HARM-ONLY, R982 LOSES-TO-LDG, R983 INFORMED. Every fold chose theta 0.10 (the grid's edge): quoting less is better. QR's young-order fills lose $1,188 a day (72.7k pulls, re-posts at the back).
+- Reading: the model's real skill (when fills come) is the wrong signal for keep / pull - it pulls good fills with bad ones and churns; the harm-only sweep model and the guard stay the best arms, both still slightly negative at M 50 (-$129 / -$144) and clearly negative at M 250.
+- Next (USER's call): no STOP-EV rule beats the incumbents in the replay. Options: (a) combine the sweep model's pulls with the value head only in quiet states (thin evidence: 421 test fills); (b) accept that at our queue place passive 30 sh quoting loses in active periods - the remaining edge needs queue place or speed (B16-B21, GAP); (c) T5v2 only if the v2 model is still to be used.
+
 <!-- FILL_INPUT_SEPARATION_20261115 -->
 ## 2026-11-15 Inputs distinguish harmful fills modestly; pressure and queue deserve the next check
 

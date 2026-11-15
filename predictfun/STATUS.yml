@@ -2495,6 +2495,16 @@ stop_ev_design_20261115:
   components: {SWEEP: have (v6), STOP_FLOW: "new, public-trade labels for hypothetical queue positions", VALUES: "1 s / 5 s markouts", QUEUE: "rule-M estimate - the only simulator-dependent piece"}
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
+stop_ev_play_20261115:
+  status: done_loses_to_incumbents
+  asof: "2026-11-15 16:13Z"
+  session: aea5bfb9
+  code: "predictfun/research/pf_stop_ev_play.py (40791e5e before the run)"
+  m50_wo_young_usd_day: {QR: -1370.7, KA: -5812.2, LDG: -143.5, MD1000: -129.1, QRS: -3786.3}
+  m250_wo_young_usd_day: {QR: -3217.5, KA: -7211.5, LDG: -1673.0, MD1000: -1303.4, QRS: -4889.3}
+  readings: {R980: BEATS-KEEP-ALL, R981: LOSES-TO-HARM-ONLY, R982: LOSES-TO-LDG, R983: INFORMED}
+  next: "USER: combine / accept the queue-place limit / T5v2"
+
 stop_ev_v2_fixes_20261115:
   status: fast_phase_done_t5v2_pending
   fast_results: "E2SEP v2 C-INV PASS; INVARIANT +0.17 c, E2-DEPENDENT -3.30 (timing-sensitive, -13.8 c vs INVARIANT at equal activity); model v2 primary IC +0.113 (B2 +0.071), R905 MISCALIBRATED, invariant IC +0.016; verdict PENDING (T5v2)"
