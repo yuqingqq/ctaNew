@@ -52,6 +52,12 @@ v3.1 (2026-11-14 18:06Z, after fold 10-27 ran once on v3 - its outputs are regen
       Tokyo-like constant, delay spikes not modelled) while Predict's own book is known ~53 ms late and reprices ~0.3 s after Binance, so the
       skill is plausible but rests on that latency assumption. The report adds a POST HOC decomposition on the dev calibration day 10-26
       (rows with / without a Binance move, single-input AUCs) - declared here before any further result.
+v4 (2026-11-15, in progress; USER: "Before playing model performance, can you check if our model/data has any issues? Or preprocess data and
+  refine the model if it has"): training-option helpers - head populations C (v3: not ALREADY_j) / U (every row), S sampling (every row
+  positive for a rare head plus the rest at the draw rate, inverse-rate weights) and its per-head cap, early stopping on the calibration
+  day, Platt recalibration, a one-step-staler Binance shift (P15 sensitivity), a float32 model matrix (memory), a row-integrity check - each
+  with a synthetic selftest and a planted error. WHICH options the v4 fit uses is decided on the dev days only by pf_stop_model_diag.py
+  (declared rules; diag_20261115.json).
 
 TARGET (STOP-DEPTH's clean target at every step, three horizons): rows = every 50 ms grid step of the first 60 s, both sides, valid known book.
   ref = the side's best in the last frame KNOWN at t (feed >= 13.2 ms, median ~53, + 2 ms decision: K.window_sides' kf / jk).
@@ -894,13 +900,48 @@ def selftest():
     chk(f'oracle gate blocks rung 0 {ro["stat"]["gated"]}', not ro['fills'][(0, 0)] and ro['stat']['gated'][0] > 0 and any(ro['order_states'][(0, 1)]))
     v = arm_value(r, W[0]['tf_mff'][0], W[0]['tf_mff'][1])
     chk(f'arm value {v}', abs(v['pnl'] - CL.portfolio_terminal(r, W[0]['tf_mff'][0], W[0]['tf_mff'][1])['pnl']) < 1e-9 and v['shares'] > 0)
+    # v4 helpers (2026-11-15): head populations; S sampling unbiased with its weights; the cap keeps the stratum and the weight mass; the
+    # stale shift stays inside its window-side block; Platt recovers a planted miscalibration; the model matrix equals the model inputs;
+    # integrity flags planted faults; early stopping stops on noise and runs on signal
+    chk('head rows', list(head_rows([0, 1, 2], 2, 'C')) == [True, True, False] and head_rows([0, 1, 2], 2, 'U').all())
+    chk('rare levels', rare_levels({(h, j): (0.5 if j < 3 else 0.01) if h == 72 else 0.5 for h in HS for j in JS}) == {72: 3, 250: None, 1000: None})
+    rg2 = np.random.default_rng(21); nn = 200000; yv = rg2.uniform(0, 1, nn) < 0.01; zz = yv | (rg2.uniform(0, 1, nn) < 0.002)
+    ix_, w_ = day_sample(nn, 20000, 3, zz); wr = float(np.average(yv[ix_], weights=w_))
+    chk(f'S sample unbiased {wr:.4f} vs {yv.mean():.4f}', abs(wr - yv.mean()) < 0.0007 and yv[ix_].mean() > 3 * yv.mean()
+        and np.isin(np.flatnonzero(zz), ix_).all())
+    ixu, wu = day_sample(nn, 20000, 3)
+    chk('V sample = v3 draw', np.array_equal(ixu, np.sort(np.random.default_rng(3).choice(nn, 20000, replace=False))) and (wu == 1.0).all())
+    zc = zz[ix_]; ic, wc = head_cap(zc, w_, 10000, 5)
+    chk(f'cap keeps the stratum and the weight mass {wc[~zc[ic]].sum():.0f} vs {w_[~zc].sum():.0f}', len(ic) == 10000 and zc[ic].sum() == zc.sum()
+        and abs(wc[~zc[ic]].sum() - w_[~zc].sum()) < 1e-6 * w_[~zc].sum())
+    mm_ = np.array([1, 1, 1, 1, 1, 1, 2, 2]); ss_ = np.array([0, 0, 0, 1, 1, 1, 0, 0]); kk_ = np.array([0, 1, 3, 0, 1, 2, 5, 6])
+    Xs_ = np.array([[10.0, 1.0], [11, 1], [13, 1], [20, 1], [21, 1], [22, 1], [30, 1], [31, 1]], np.float32)
+    stale_shift(Xs_, [0], stale_prev(mm_, ss_, kk_))
+    chk(f'stale shift {Xs_[:, 0].tolist()}', np.array_equal(Xs_[:, 0], np.array([np.nan, 10, np.nan, np.nan, 20, 21, np.nan, 30], np.float32), equal_nan=True)
+        and (Xs_[:, 1] == 1.0).all())
+    pt_ = rg2.uniform(0.01, 0.5, nn); yp_ = rg2.uniform(0, 1, nn) < pt_; po_ = 1.0 / (1.0 + np.exp(-(0.7 + 0.5 * logit(pt_))))
+    ab_ = platt_fit(po_, yp_)
+    chk(f'platt {ab_}', abs(ab_[0] + 1.4) < 0.1 and abs(ab_[1] - 2.0) < 0.1 and brier(yp_, platt_apply(po_, ab_)) < brier(yp_, po_) - 0.002)
+    chk('logloss / brier', abs(logloss([1, 0], [0.5, 0.5]) - np.log(2.0)) < 1e-12 and brier([1, 0], [0.75, 0.25]) == 0.0625)
+    chk('helps rule', helps([1.0] * 18, [0.99] * 18)[2] and not helps([1.0] * 18, [0.99] * 9 + [1.0] * 9)[2] and not helps([1.0] * 18, [0.998] * 18)[2])
+    chk('model matrix = model inputs', np.array_equal(model_matrix(Rm, 'H1', FEAT_M), model_inputs(Rm, 'H1').to_numpy(np.float32), equal_nan=True))
+    labg = {c: np.array([0.0, 1.0, 0.0]) for c in LAB}; labg['D1'] = np.array([1.0, 2.0, 0.0])
+    ig = integrity(np.array([1, 1, 2]), np.array([0, 0, 0]), np.array([0, 1, 0]), labg, np.zeros((3, 2), np.float32))
+    labb = {c: v.copy() for c, v in labg.items()}; labb['D1_250'][2] = 3.0
+    ib = integrity(np.array([1, 2, 1]), np.array([0, 0, 0]), np.array([0, 0, 1]), labb, np.array([[0.0, np.inf]] * 3, np.float32))
+    chk(f'integrity {ig} {ib}', ig['ok'] and not ib['ok'] and ib['blocks_split'] == 1 and ib['label_not_monotone'] == 1 and ib['input_inf'] == 3)
+    xe = rg2.normal(0, 1, (3000, 3)).astype(np.float32); yn = rg2.uniform(0, 1, 3000) < 0.3; ys_ = (xe[:, 0] + 0.3 * rg2.normal(0, 1, 3000)) > 0.5
+    _, rn = fit_head(xe[:2000], yn[:2000].astype(int), None, ['a', 'b', 'c'], valid=(xe[2000:], yn[2000:].astype(int)))
+    _, rs_ = fit_head(xe[:2000], ys_[:2000].astype(int), None, ['a', 'b', 'c'], valid=(xe[2000:], ys_[2000:].astype(int)))
+    chk(f'early stopping noise {rn} / signal {rs_}', rn < 30 and rs_ > 40)
     return bad
 
 
 def mutation_check():
     out = {}
     for nm in ('MUT_AGE_NEXT', 'MUT_FOLD_LATE', 'MUT_HORIZON_EARLY', 'MUT_PSI_NONAN', 'MUT_AUC_KEEPNAN', 'MUT_RULE_OFF', 'MUT_SCALE_FUTURE',
-               'MUT_GAP_IGNORE', 'MUT_MATCH_NO_TFILL', 'MUT_ORACLE_NOGATE', 'MUT_LANE_NOGATE'):
+               'MUT_GAP_IGNORE', 'MUT_MATCH_NO_TFILL', 'MUT_ORACLE_NOGATE', 'MUT_LANE_NOGATE', 'MUT_NOWEIGHT', 'MUT_CAP_NOADJ', 'MUT_STALE_CROSS',
+               'MUT_PLATT_SWAP', 'MUT_HEAD_COND'):
         globals()[nm] = 1
         try:
             out[nm] = len(selftest()) > 0
@@ -1168,6 +1209,169 @@ def audit():
 # ---------------------------------------------------------------- fit (one chronological fold)
 def pcol(H, j):
     return f'P{H}_{j}'
+
+
+# ---------------------------------------------------------------- v4 training options (2026-11-15): helpers shared by the dev-day
+# diagnostics (pf_stop_model_diag.py, which decides which options v4 uses) and the v4 fit
+DIAG_JSON = f'{OUTD}/diag_20261115.json'
+BN_F = [c for c in FEAT_M if c.startswith(('bn_', 'adv_bn_')) or c in ('d_bnimb250', 'adv_d_bnimb250', 'dfv250', 'dfv1000', 'gap_adv', 'sens',
+                                                                       'pbn_dist')]       # Binance-derived inputs (P15)
+RARE = 0.02                                                # S sampling: a head is rare below this training-day rate
+VOL = {'V60': ('V', 60000, 300000), 'V180': ('V', 180000, 600000), 'S60': ('S', 60000, 300000)}   # -> (draw, rows a day, rows a head)
+ES_MAX = 1000; ES_PAT = 50; VAL_N = 200000; EPS_P = 1e-6
+HELP_MEAN = 0.005; HELP_HEADS = 10                         # an option HELPS: mean relative loss gain >= 0.5% AND >= 10 of 18 heads better
+MUT_NOWEIGHT = MUT_CAP_NOADJ = MUT_STALE_CROSS = MUT_PLATT_SWAP = MUT_HEAD_COND = 0
+
+
+def head_rows(D0, j, target):
+    """Rows of head j: 'C' (v3) = not ALREADY_j (D0 < j); 'U' = every row (the policy acts on every known state, ALREADY included)."""
+    D0 = np.asarray(D0)
+    return (D0 < j) if (target == 'C' or MUT_HEAD_COND) else np.ones(len(D0), bool)
+
+
+def rare_levels(rates):
+    """rates[(h, j)] = a training-day rate -> per H the smallest level below RARE (None if none)."""
+    out = {}
+    for h in HS:
+        js = [j for j in JS if rates[(h, j)] < RARE]
+        out[h] = min(js) if js else None
+    return out
+
+
+def stratum(lab, cut):
+    """Rows positive for some rare head: D1_H >= the rare level of H (lab: label column -> array)."""
+    z = np.zeros(len(lab['D0']), bool)
+    for h, j in cut.items():
+        if j is not None:
+            z |= np.asarray(lab[DCOL[h]]) >= j
+    return z
+
+
+def day_sample(n, sub, seed, z=None):
+    """One training day: uniform without replacement (z None: v3's draw, weight 1), or every stratum row (weight 1) plus the other rows at
+    rate sub / n (weight n / sub)."""
+    rng = np.random.default_rng(seed)
+    if z is None:
+        ix = np.sort(rng.choice(n, min(n, sub), replace=False))
+        return ix, np.ones(len(ix))
+    r = min(1.0, sub / n); oth = np.flatnonzero(~z); pick = oth[rng.uniform(0.0, 1.0, len(oth)) < r]
+    ix = np.sort(np.concatenate([np.flatnonzero(z), pick]))
+    return ix, np.where(z[ix], 1.0, 1.0 if MUT_NOWEIGHT else 1.0 / r)
+
+
+def head_cap(z, w, cap, seed):
+    """A head's rows under the per-head cap: uniform (v3's draw) without a stratum; with one, every stratum row is kept and the others are
+    thinned, their weights scaled up by the thinning. Returns (indices, weights)."""
+    n = len(w)
+    if n <= cap:
+        return np.arange(n), w
+    rng = np.random.default_rng(seed)
+    if z is None or not z.any():
+        ix = np.sort(rng.choice(n, cap, replace=False))
+        return ix, w[ix]
+    zi = np.flatnonzero(z); oi = np.flatnonzero(~z); keep = max(cap - len(zi), 1)
+    if keep >= len(oi):
+        return np.arange(n), w
+    ix = np.sort(np.concatenate([zi, oi[np.sort(rng.choice(len(oi), keep, replace=False))]]))
+    w2 = w[ix].astype(float)
+    if not MUT_CAP_NOADJ:
+        w2[~z[ix]] *= len(oi) / keep
+    return ix, w2
+
+
+def fit_head(X, y, w, F, rounds=None, valid=None):
+    """One head with the pinned parameters (PD.LGB_PARAMS): a fixed number of rounds, or early stopping on a validation set (the calibration
+    day; patience ES_PAT, at most ES_MAX rounds). Uniform weights are passed as none (v3's training). Returns (booster, rounds used)."""
+    import lightgbm as lgb
+    w = None if (w is None or np.all(np.asarray(w) == 1.0)) else np.asarray(w, float)
+    ds = lgb.Dataset(X, y, weight=w, feature_name=F)
+    if valid is None:
+        n = int(rounds or PD.N_ROUNDS)
+        return lgb.train(PD.LGB_PARAMS, ds, n), n
+    dv = lgb.Dataset(valid[0], valid[1], reference=ds)
+    b = lgb.train({**PD.LGB_PARAMS, 'metric': 'binary_logloss'}, ds, ES_MAX, valid_sets=[dv],
+                  callbacks=[lgb.early_stopping(ES_PAT, first_metric_only=True, verbose=False)])
+    return b, int(b.best_iteration)
+
+
+def logit(p):
+    p = np.clip(np.asarray(p, float), EPS_P, 1.0 - EPS_P)
+    return np.log(p / (1.0 - p))
+
+
+def platt_fit(p, y, iters=60):
+    """Recalibration sigmoid(a + b logit(p)) by maximum likelihood (Newton). Returns (a, b)."""
+    z = logit(p); y = np.asarray(y, float); a, b = 0.0, 1.0
+    for _ in range(iters):
+        q = 1.0 / (1.0 + np.exp(-(a + b * z))); h = q * (1.0 - q); g = np.array([(y - q).sum(), ((y - q) * z).sum()])
+        Hm = np.array([[h.sum(), (h * z).sum()], [(h * z).sum(), (h * z * z).sum()]]) + 1e-9 * np.eye(2)
+        st = np.linalg.solve(Hm, g); a += float(st[0]); b += float(st[1])
+        if np.abs(st).max() < 1e-10:
+            break
+    return a, b
+
+
+def platt_apply(p, ab):
+    a, b = (ab[1], ab[0]) if MUT_PLATT_SWAP else ab
+    return 1.0 / (1.0 + np.exp(-(a + b * logit(p))))
+
+
+def logloss(y, p, w=None):
+    p = np.clip(np.asarray(p, float), EPS_P, 1.0 - EPS_P); y = np.asarray(y, float)
+    return float(np.average(-(y * np.log(p) + (1.0 - y) * np.log(1.0 - p)), weights=w))
+
+
+def brier(y, p, w=None):
+    return float(np.average((np.asarray(p, float) - np.asarray(y, float)) ** 2, weights=w))
+
+
+def helps(base, var):
+    """Per-head losses (lower is better) of a reference and an option -> (mean relative gain, heads better, HELPS)."""
+    rel = [(b - v) / b for b, v in zip(base, var)]; nb = int(sum(r > 0 for r in rel)); mr = float(np.mean(rel))
+    return mr, nb, bool(mr >= HELP_MEAN and nb >= HELP_HEADS)
+
+
+def stale_prev(m, s, k):
+    """Row i's previous step in its own window-side block (the row with the same m, side and step k - 1): a boolean 'exists' (rows in
+    window-side blocks, k increasing)."""
+    ok = np.zeros(len(k), bool)
+    if MUT_STALE_CROSS:
+        ok[1:] = True
+    else:
+        ok[1:] = (m[1:] == m[:-1]) & (s[1:] == s[:-1]) & (k[1:] == k[:-1] + 1)
+    return ok
+
+
+def stale_shift(X, cols, ok):
+    """In place: the columns cols of X take the previous step's values (50 ms staler), NaN where that step has no row."""
+    for i in cols:
+        x = X[:, i].copy(); X[1:, i] = x[:-1]; X[0, i] = np.nan; X[~ok, i] = np.nan
+    return X
+
+
+def model_matrix(R, scale, F):
+    """model_inputs(R, scale)[F] as one float32 array, built column by column (the same float64 arithmetic, then the cast): memory."""
+    sc = scale_of(R, scale); X = np.empty((len(R), len(F)), np.float32)
+    for i, c in enumerate(F):
+        if c.startswith('r_'):
+            b = c[2:]; x = R[b].to_numpy(np.float64)
+            X[:, i] = (x - np.log(sc)) if b in SIZE_LOG else x / sc
+        else:
+            X[:, i] = R[c].to_numpy(np.float64)
+    return X
+
+
+def integrity(m, s, k, lab, X=None):
+    """One day's rows: window-side blocks contiguous with k increasing, labels non-negative and monotone in H, no infinite input."""
+    blk = np.r_[True, (m[1:] != m[:-1]) | (s[1:] != s[:-1])]
+    nblk = int(blk.sum()); nkey = len(set(zip(m[blk].tolist(), s[blk].tolist())))
+    out = dict(rows=int(len(k)), blocks_split=nblk - nkey, k_not_increasing=int(((k[1:] <= k[:-1]) & ~blk[1:]).sum()),
+               label_negative=int(sum((np.asarray(lab[c]) < 0).sum() for c in LAB if c != 'quiet')),
+               label_nan=int(sum((~np.isfinite(np.asarray(lab[c], float))).sum() for c in LAB if c != 'quiet')),
+               label_not_monotone=int(((np.asarray(lab['D1_72']) > np.asarray(lab['D1_250'])) | (np.asarray(lab['D1_250']) > np.asarray(lab['D1']))).sum()),
+               input_inf=int(np.isinf(X).sum()) if X is not None else 0)
+    out['ok'] = all(v == 0 for c, v in out.items() if c != 'rows')
+    return out
 
 
 def fit_fold(test):
