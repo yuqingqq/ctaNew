@@ -221,6 +221,18 @@ use the actual intended frozen keeper/continuation for combined entry labels.
 No new portfolio/forward claim; useful economic prediction is still unproven.
 <!-- /WAIT_POST_SIGNAL_DATA_20261114 -->
 
+## 2026-11-15 05:25Z (session aea5bfb9) — STOP-MODEL v4: model / data issues checked and fixed, inputs reviewed with the USER, MODEL-READY; extra order-flow inputs under test, STOP-PLAY queued
+
+- USER (11-15): "You mean we have the ceiling now, how about the model performance" / "Before playing model performance, can you check if our model/data has any issues? Or preprocess data and refine the model if it has" / "Before model play, can we first review the model inputs, training target, data coverage, etc, then check the model inputs influence on our target, check their influence first, then proceed to build the model" / "And check if any inputs need regularization etc" / "If we include sufficient inputs like imbalance, flow etc".
+- Done (dev days 10-23..26 decide; write-up handoffs/20261115_stop_model_input_review.md; copies reviews/stop_model_20261114/):
+  - diag (pf_stop_model_diag.py): v3.1 scored only rows not ALREADY_j while a policy acts on every state (it predicted 3.8% vs 7.2% at H72 j1 there) -> target U; 180k rows a day helps every head; early stopping / Platt do not; level projection helps. Binance one step staler costs 0.005-0.025 AUC (P15 not load-bearing).
+  - input review (pf_stop_model_review.py run / s5check / reg / dup) + an independent code review (D1-D13): step-5 inputs recomputed from raw data match 100%; no future / missing Binance data; every input group needed (Binance 27-35% of SHAP, sizes 19-31%, Predict state 16-23%); exact duplicates and 20 within-side copies dropped (61 inputs); lambda_l2 = 10 (pinned parameters overfit the deep heads; flagged change); nothing normalized.
+  - D12: the loader read the adjacent days' boundary-hour books (sealed 10-28 00Z, 10-30 23Z; forward 11-04 00Z) and filtered them out; now skipped for this model (pf_kp_s4.SKIP_FOREIGN_PARTS, opt-in), rows identical.
+  - v4 fits / report (9220fefc): MODEL-READY at every H; log loss vs v3.1 -11% (H72 j1) to -45% (H72 j6); better than the guard and STOP-DEPTH at j1-j3.
+- In progress (queued 05:23Z, run_stop_model2.sh, chained): x5 extra inputs (pf_stop_model_x5.py: Predict OFI from known frames, Binance 20-level depth) on 9 days -> x5test (adopt a family iff >= +0.25% log loss, >= 10/18 heads) -> v5 if adopted -> STOP-PLAY (pf_stop_play.py, PF_PLAY_V) on the winning version.
+- Watch out: H1000 j1 over-predicts up to 4.5 pp; consumed days (development only); run_stop_model.sh was edited while running and restored byte-identical (never edit a running driver - the new phases live in run_stop_model2.sh); D5 (window-start pre-roll), D6 (per-H GAP), D10 (pending flows unscaled) deferred; other scripts still read boundary hours.
+- Next: read x5test / v5 / STOP-PLAY; report to the USER (STOP-POLICY refinements - hysteresis, per-rung thresholds, C12 split - on the USER's go).
+
 ## 2026-11-14 19:01Z (session aea5bfb9) — STOP-MODEL DONE (step 2 of the USER's plan): the keep / cancel model for every ladder order is MODEL-READY at H 72 / 250 / 1000 ms; its target is worth acting on (oracle +$6.7k a day over keep-all at M 50, positive at every clock); next STOP-POLICY on the USER's go
 
 - USER: "Proceed to build the keep vs cancel model for multiple ladder orders" / "Build review, then test model performance, make sure the model is built aligned to our goal, check data distribution, make sure the data is good for training, clear all issues in training, make sure the model predicts the right thing with good data, then check model's performance".
