@@ -1,0 +1,11 @@
+test_accidental_duplicate (__main__.Checks.test_accidental_duplicate) ... ok
+test_missing_and_extreme_flags (__main__.Checks.test_missing_and_extreme_flags) ... ok
+test_positive_unit_scale_vs_economic_scale (__main__.Checks.test_positive_unit_scale_vs_economic_scale) ... ok
+test_train_only (__main__.Checks.test_train_only) ... ok
+test_weighted_quantiles (__main__.Checks.test_weighted_quantiles) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.012s
+
+OK
+2026-11-15T04:33:00Z tag=entry_normalization_selftest rc=0 peak_rss_mib=174 wall_s=0.80 cpu_user_s=0.69 memavail_start_gib=23 disk_free_gib=490->490 slot=codex
