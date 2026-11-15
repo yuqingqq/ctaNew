@@ -1,0 +1,19 @@
+{
+  "asof": "2026-11-15T12:34:07.296052+00:00",
+  "contract": "stop-ev-chronological-order-value-v1",
+  "data": "synthetic only; no historical performance claim",
+  "errors": 0,
+  "failures": 0,
+  "passed": true,
+  "peak_rss_mib": 133.3203125,
+  "source_sha256": {
+    "pf_stop_ev_accounting.py": "637780f7ff930efcebd01fc21c25baccfac68cf34fc26037e5a0ef24488ccbd0",
+    "pf_stop_ev_accounting_check.py": "88f4f7fc92bdfff40341151e9329a0089723183d3a4783e3e17829f425937035"
+  },
+  "tests": 15,
+  "source_commit": "3dc503bf7e8357b0cda0b774f1aece1ab654592d",
+  "log": "checks_v1.log",
+  "log_sha256": "caa300828e0bdffd04bb551f7c7474a6e7516d256fadac2e00f4037342f91c5e",
+  "historical_runs": 0,
+  "model_runs": 0
+}

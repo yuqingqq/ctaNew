@@ -1,0 +1,22 @@
+test_bad_identity_reference_quantity_and_sources_are_refused (__main__.Checks.test_bad_identity_reference_quantity_and_sources_are_refused) ... ok
+test_bid_ask_sign_and_through_can_be_profitable (__main__.Checks.test_bid_ask_sign_and_through_can_be_profitable) ... ok
+test_coverage_and_mark_refusals_are_not_zero_labels (__main__.Checks.test_coverage_and_mark_refusals_are_not_zero_labels) ... ok
+test_epoch_clock_corruption_is_refused (__main__.Checks.test_epoch_clock_corruption_is_refused) ... ok
+test_fifo_selects_different_markouts (__main__.Checks.test_fifo_selects_different_markouts) ... ok
+test_future_frames_and_unacknowledged_fills_are_not_features (__main__.Checks.test_future_frames_and_unacknowledged_fills_are_not_features) ... ok
+test_known_queue_never_increases_on_later_additions (__main__.Checks.test_known_queue_never_increases_on_later_additions) ... ok
+test_marks_follow_execution_clock_not_unshifted_anchor (__main__.Checks.test_marks_follow_execution_clock_not_unshifted_anchor) ... ok
+test_matched_action_value_has_positive_and_bad_controls (__main__.Checks.test_matched_action_value_has_positive_and_bad_controls) ... ok
+test_missing_legs_and_ambiguous_reference_prefix_fail_closed (__main__.Checks.test_missing_legs_and_ambiguous_reference_prefix_fail_closed) ... ok
+test_prefix_boundary_and_small_through_are_quantity_limited (__main__.Checks.test_prefix_boundary_and_small_through_are_quantity_limited) ... ok
+test_probe_population_is_outcome_independent_and_retains_exclusions (__main__.Checks.test_probe_population_is_outcome_independent_and_retains_exclusions) ... ok
+test_shared_leg_does_not_fill_every_level_in_full (__main__.Checks.test_shared_leg_does_not_fill_every_level_in_full) ... ok
+test_size_and_client_remaining (__main__.Checks.test_size_and_client_remaining) ... ok
+test_valid_unfilled_and_unacknowledged_full_fill_are_zero (__main__.Checks.test_valid_unfilled_and_unacknowledged_full_fill_are_zero) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.186s
+
+OK
+{"asof": "2026-11-15T12:34:07.296052+00:00", "contract": "stop-ev-chronological-order-value-v1", "data": "synthetic only; no historical performance claim", "errors": 0, "failures": 0, "passed": true, "peak_rss_mib": 133.3203125, "source_sha256": {"pf_stop_ev_accounting.py": "637780f7ff930efcebd01fc21c25baccfac68cf34fc26037e5a0ef24488ccbd0", "pf_stop_ev_accounting_check.py": "88f4f7fc92bdfff40341151e9329a0089723183d3a4783e3e17829f425937035"}, "tests": 15}
+2026-11-15T12:34:06Z tag=stop_ev_accounting_v1 rc=0 peak_rss_mib=136 wall_s=0.62 cpu_user_s=0.52 memavail_start_gib=23 disk_free_gib=477->477 slot=codex
