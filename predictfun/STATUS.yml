@@ -1,3 +1,36 @@
+entry_local_prediction_20261115:
+  asof: '2026-11-15T10:53:36Z'
+  status: prediction_complete_portfolio_replay_running
+  status_is_snapshot: true
+  evidence_commit: fc6208d1
+  integration_commit: 85de7ba4
+  current: predictfun/reviews/entry_local_20261115/current.json
+  handoff: predictfun/handoffs/20261115_entry_local_results.md
+  runner: data/predict_fun/research/entry_local_20261115_v4/runner.json
+  result: data/predict_fun/research/entry_local_20261115_v4/report/result.json
+  service: pf-entry-local-v4-20261115.service
+  model_source: 0d1b70e9
+  model_freeze: cc929f01
+  runtime_source: c32f4197
+  runtime_freeze: 9433f91b
+  labeled_actions: 27669
+  evaluation_actions: 19306
+  evaluation_days: 5
+  learned_candidates: 2
+  verified_saved_models: 30
+  direct_error_reduction_baseline_bid: 0.020148470535548135
+  direct_error_reduction_baseline_ask: 0.015083604473760226
+  prediction_parity_pairs: 57918
+  replay_parity_cases: 24
+  size_shares: 30
+  fixed_cap_shares: 1500
+  keeper_in_full_replay: true
+  keeper_conditioned_labels: false
+  fixed_retry_timer: false
+  economic_results_available: false
+  forward_validation: false
+  promoted: false
+
 entry_repair_complete_20261115:
   asof: '2026-11-15T08:34:59Z'
   status: complete_no_economic_skill

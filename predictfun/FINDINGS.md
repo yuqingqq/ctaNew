@@ -1,3 +1,37 @@
+<!-- ENTRY_LOCAL_PREDICTION_20261115 -->
+## 2026-11-15 Local entry prediction complete; strategy replay running
+
+User requested a simpler model that avoids recursive downstream targets.
+Compact single-order local value is fitted: 36 causal inputs, separate sides,
+DIRECT one head versus FACTOR fill fraction plus fill-weighted movement. Count
+focal fills over 5 s (bounded by session end), mark each tranche at fill+1 s;
+these are measurements, not retry/cancel timers. Entry re-evaluates every 50 ms.
+Separate frozen v6 keeper in replay; primitive labels still use neutral KEEP.
+
+Evidence as of 2026-11-15T10:53:36Z: 27,669 eligible actions over seven consumed
+label dates / 2,010 windows. Statuses: eligible 27,669, unsampled 65,889,
+unreached 2,281, sealed 251 (six excluded windows). Chronological evaluation:
+19,306 actions (bid 9,671 / ask 9,635), five consumed dates Oct 27/31, Nov 1/2/3.
+DIRECT pooled error reduction versus edge/price/rung baseline is 2.0148% bid /
+1.5084% ask; R2 versus prior training mean 0.00535 / 0.01109; both beat baseline
+on 5/5 dates. FACTOR error reductions 0.9847% / 0.9242%. Gains are modest;
+the changed target and denser evaluation prevent direct attribution versus the
+old 9,871-action terminal study. No economic or forward-validation claim yet.
+
+Model source/freeze 0d1b70e9 / cc929f01; runtime source/freeze c32f4197 / 9433f91b.
+Checkpoint fc6208d1; integration 85de7ba4. All saved model/prediction/row hashes
+verified. Faster inference passed 57,918 prediction comparisons and 24 complete
+replay equivalence cases as of 11:02:51Z. Old slow replay explicitly superseded;
+labels/models unchanged, prior artifacts retained. Full 30-share strategy replay
+and 500-draw matched local tests finish automatically in core8.
+
+Canonical reviews/entry_local_20261115/current.json; details
+handoffs/20261115_entry_local_results.md. Authoritative status:
+data/predict_fun/research/entry_local_20261115_v4/runner.json; final output
+report/result.json under that directory. Service pf-entry-local-v4-20261115.service.
+This is a checkpoint: inspect the runner before treating it as current status.
+<!-- /ENTRY_LOCAL_PREDICTION_20261115 -->
+
 <!-- ENTRY_REPAIR_COMPLETE_20261115 -->
 ## 2026-11-15 08:34:59 UTC Entry coverage and history study complete
 
