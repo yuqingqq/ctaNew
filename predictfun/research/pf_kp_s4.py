@@ -1577,6 +1577,9 @@ SEAL_MS = (_ms('2026-10-28'), _ms('2026-10-31')); FWD_MS = _ms('2026-11-04')   #
 # them and filtered their frames out (none reached a row of an included window). Opt-in (callers set it; the default is unchanged for other
 # scripts): read only the day's own hours and the previous hour when it is neither sealed nor forward; skipped files are counted.
 SKIP_FOREIGN_PARTS = False
+# 2026-11-15 (STOP-MODEL data fix; Codex register "missing observations", code review D5): load_day keeps book frames from PREROLL_MS before
+# each window's start; 5 s left the 30 s liquidity scale with ~35 frames at t_rel 0 (vs ~580 at 30 s). Opt-in (default unchanged).
+PREROLL_MS = 5000.0
 
 
 def part_allowed(fn, day):
@@ -1679,7 +1682,7 @@ def load_day(day):
             st['parts_skipped'] += 1; continue
         d = pd.read_parquet(fn, columns=cols); d = d[d.mid.isin(W0)]
         rel = d.t_ms.values - d.mid.map(W0).values
-        parts.append(d[(rel >= -5000.0) & (rel <= 125000.0)])
+        parts.append(d[(rel >= -PREROLL_MS) & (rel <= 125000.0)])
     B = pd.concat(parts, ignore_index=True); del parts
     LT = pd.read_parquet(f'{S1d}/legs_timed2.parquet', columns=['mid', 'exec_s', 'side', 'ptick', 'shares', 't_ms', 'how', 't_e2'])
     tk = pd.read_parquet(f'{S1d}/legs_tk.parquet', columns=['tk']).tk.values

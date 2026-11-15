@@ -128,6 +128,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import pf_kp_s4 as K                                      # noqa: E402  (load_day, window_sides, clocks)
 K.SKIP_FOREIGN_PARTS = True                               # 2026-11-15 (code review D12): never read the adjacent days' boundary-hour books
+K.PREROLL_MS = float(os.environ.get('PF_SM_PREROLL_MS', '30000'))   # 2026-11-15 (D5): 30 s of pre-window books (W30 full from t_rel 0)
 import pf_qr_queue_race as QR                             # noqa: E402  (runs: valid frames, run starts)
 import pf_pull_depth as PD                                # noqa: E402  (feats, pinned LightGBM parameters)
 import pf_stop_depth as SD                                # noqa: E402  (target, NEW inputs, saved rows for parity / the comparator)
@@ -227,7 +228,7 @@ def all_feats(w, k, side, rs, rso, nanP, PBm, masked):
     xk = np.asarray(w['X'][k], float)
     ex = SD.extra_feats(xk, side, sz, gaps) + list(SD.best_moves(w, k, side))
     return ([fd[f'x{i}'] for i in KEEP_X] + [fd[c] for c in PD_KEEP] + ex + list(level_ages(w['tf'], jk, rs, rso))
-            + inf_feats(PBm, side, float(w['tg'][k]), xk[X31], masked))
+            + inf_feats(PBm, side, float(w['tg'][k]), gap_of(PBm, float(w['tg'][k]), xk[X31]), masked))
 
 
 def label_brute(tf, b0, valid, side, jk, t, lc=None, h=None):
@@ -310,13 +311,83 @@ def perturb_future(w, jk, k, rng):
 
 
 def perturb_pb(PBm, t, rng):
-    """Fair prices stamped after t randomised."""
+    """Fair prices (and the corrected gaps, if present) stamped after t randomised."""
     if PBm is None:
         return None
-    rt, pv, trv, sgv = PBm
+    rt, pv, trv, sgv = PBm[:4]
     pv2 = np.array(pv, dtype=float, copy=True); a = np.asarray(rt, float) > t
     pv2[a] = rng.uniform(1.0, 99.0, int(a.sum()))
+    if len(PBm) == 5:
+        gv2 = np.array(PBm[4], dtype=float, copy=True); gv2[a] = rng.uniform(-20.0, 20.0, int(a.sum()))
+        return (rt, pv2, trv, sgv, gv2)
     return (rt, pv2, trv, sgv)
+
+
+def gap_of(PBm, t, gap0):
+    """The step row's fair-price gap at t: the corrected one when PBm carries it (fair_fix), else step 5's."""
+    if PBm is None or len(PBm) < 5:
+        return gap0
+    j = bisect.bisect_right(PBm[0], t) - 1
+    return float(PBm[4][j]) if j >= 0 and t - PBm[0][j] <= IN.PBN_TOL else NAN
+
+
+FAIR_FIX = True; MUT_FAIR_DUP = 0
+
+
+def relay_basis(rel_t, rel_v, t, min_n=5):
+    """60 s median of relay / Binance ratios known in [t - 60 s, t] (step 5's window), >= min_n prints, else NaN."""
+    a = np.searchsorted(rel_t, t - 60000.0); b = np.searchsorted(rel_t, t, side='right')
+    return np.array([np.median(rel_v[x:y]) if y - x >= min_n else np.nan for x, y in zip(a, b)])
+
+
+def fair_fix(day, W0):
+    """Step 5's fair price with the relay basis rebuilt so that every relay print counts once (2026-11-15, s5check2: step 5's per-hour
+    Binance passes include the prints of each hour's 10 s carry in two passes, biasing the 60 s median basis for steps within 60 s after an
+    hour boundary - the first minute of every HH:00 window; up to 0.7 bps, a few cents of fair price). Same clocks as step 5: relay known at
+    receipt - (72 - decision) ms, Binance at event + 1.5 + decision ms; same median window and minimum; bn_mid / sigma / time left / start
+    price from step 5 and the registry (verified against raw data by s5check2). Returns ({market: (tau, p_bn, tau_rem, sigma, gap)}, stats)."""
+    import pf_io as io
+    from scipy.special import ndtr
+    ck = json.load(open(f'{K.IO}/step1/{day}/clock_rl_d2.json')); dd = float(ck['d_dec']); b_in = float(ck['bn_in']) + dd; net = 72.0 - dd
+    reg = pd.read_parquet(f'{K.IO}/step1/{day}/registry.parquet', columns=['mid', 'ws', 'start_price']); SP = dict(zip(reg.mid.astype(int), reg.start_price.astype(float)))
+    WSd = dict(zip(reg.mid.astype(int), reg.ws.astype(float)))
+    S = pd.read_parquet(f'{K.IO}/step5/{day}/rows_rl_d2_pk.parquet', columns=['mid', 'tau', 'bn_mid', 'tau_rem', 'sigma', 'p_bn', 'gap'])
+    S = S[S.mid.isin(W0)]; S = S[S.tau.values < S.mid.map(WSd).values * 1000.0 + 61000.0].sort_values(['mid', 'tau'], kind='stable')
+    d0 = pd.Timestamp(f'{day[:4]}-{day[4:6]}-{day[6:]}', tz='UTC'); hours = []
+    for i in range(-1, 24):
+        h = (d0 + pd.Timedelta(hours=i)).strftime('%Y%m%d_%H')
+        if K.part_allowed(f'part_{h}.parquet', day):
+            hours.append(h)
+    REF = np.array(sorted((r[0] / 1e6 - net, float(r[2])) for h in hours for r in io.ref_rows(h) if not r[3]))
+    rv = np.full(len(REF), np.nan); prev = None
+    for h in hours:                                        # stream Binance hours; each print gets the mid known at its time, once
+        p_ = f'{io.BN_DIR}/{h}.csv.gz'
+        if not os.path.exists(p_):
+            continue
+        df = pd.read_csv(p_, header=None, names=['recv', 'E', 'T', 'u', 'bid', 'bq', 'ask', 'aq'], usecols=['E', 'u', 'bid', 'ask'])
+        df = df.apply(pd.to_numeric, errors='coerce').dropna(); df = df[(df.bid > 0) & (df.ask > df.bid)].drop_duplicates('u', keep='first')
+        k = df.E.values.astype(np.float64) + b_in; o = np.argsort(k, kind='stable'); k = k[o]; m = ((df.bid.values + df.ask.values) / 2.0)[o]; del df
+        if prev is not None:
+            k = np.r_[prev[0], k]; m = np.r_[prev[1], m]
+        sel = np.flatnonzero(np.isnan(rv) & (REF[:, 0] >= k[0]) & (REF[:, 0] <= k[-1]))
+        if MUT_FAIR_DUP:
+            sel = np.flatnonzero((REF[:, 0] >= k[0]) & (REF[:, 0] <= k[-1]))
+        ii = np.searchsorted(k, REF[sel, 0], side='right') - 1; ok = ii >= 0
+        rv[sel[ok]] = REF[sel[ok], 1] / m[ii[ok]]
+        keep = k >= k[-1] - 10000.0; prev = (k[keep], m[keep])
+    okr = np.isfinite(rv); rel_t = REF[okr, 0]; rel_v = rv[okr]
+    bas = relay_basis(rel_t, rel_v, S.tau.values.astype(np.float64))
+    sp = S.mid.map(SP).values.astype(np.float64)
+    pbn = 100.0 * ndtr(np.log(S.bn_mid.values * bas / sp) / (S.sigma.values * np.sqrt(np.maximum(S.tau_rem.values, 1e-3))))
+    gapc = pbn - (S.p_bn.values - S.gap.values)            # step 5's gap = p_bn - the known Predict mid
+    dif = np.abs(pbn - S.p_bn.values) > 1e-4; hh = (S.mid.map(WSd).values % 3600.0) == 0.0
+    st = dict(rows=int(len(S)), changed=float(np.nanmean(dif)), changed_hh00=float(np.nanmean(dif[hh])) if hh.any() else NAN,
+              changed_other=float(np.nanmean(dif[~hh])) if (~hh).any() else NAN, max_abs_c=float(np.nanmax(np.abs(pbn - S.p_bn.values))) if len(S) else NAN,
+              relay_prints=int(len(rel_t)))
+    out = {}
+    for mm_, g in pd.DataFrame({'mid': S.mid.values, 'tau': S.tau.values, 'p': pbn, 'tr': S.tau_rem.values, 'sg': S.sigma.values, 'gp': gapc}).groupby('mid', sort=False):
+        out[int(mm_)] = (g.tau.values.astype(float).tolist(), g.p.values, g.tr.values, g.sg.values, g.gp.values)
+    return out, st
 
 
 def falsify_window(w, out, rng, fz, PBm, step=FZ_STEP):
@@ -942,6 +1013,11 @@ def selftest():
     mt = np.repeat(np.arange(6), 4); st_ = np.tile([0, 0, 1, 1], 6); xt = np.repeat(np.array([1.0, 2.0, 3.0, 4.0, 100.0, 6.0]), 4)
     ts_ = trail_scale(xt, mt, st_, n_prev=2, n_min=2)
     chk(f'trailing scale causal {ts_[::4].tolist()}', np.isnan(ts_[:8]).all() and np.allclose(ts_[8::4], [1.5, 2.5, 3.5, 52.0]))
+    rtb = np.array([0.0, 10000.0, 20000.0, 30000.0, 40000.0, 50000.0, 70000.0]); rvb = np.array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0])
+    rb = relay_basis(rtb, rvb, np.array([50000.0, 60000.0, 75000.0, 35000.0]))
+    chk(f'relay basis window [t - 60 s, t], >= 5 prints {rb}', rb[0] == 3.5 and rb[1] == 3.5 and rb[2] == 5.0 and np.isnan(rb[3]))
+    pb5 = ([0.0, 50.0, 100.0], np.array([50.0, 51.0, 52.0]), np.array([300.0] * 3), np.array([3e-5] * 3), np.array([1.0, 2.0, 3.0]))
+    chk('gap override', gap_of(pb5, 60.0, 9.0) == 2.0 and gap_of(pb5[:4], 60.0, 9.0) == 9.0 and np.isnan(gap_of(pb5, 500.0, 9.0)))
     xe = rg2.normal(0, 1, (3000, 3)).astype(np.float32); yn = rg2.uniform(0, 1, 3000) < 0.3; ys_ = (xe[:, 0] + 0.3 * rg2.normal(0, 1, 3000)) > 0.5
     _, rn = fit_head(xe[:2000], yn[:2000].astype(int), None, ['a', 'b', 'c'], valid=(xe[2000:], yn[2000:].astype(int)))
     _, rs_ = fit_head(xe[:2000], ys_[:2000].astype(int), None, ['a', 'b', 'c'], valid=(xe[2000:], ys_[2000:].astype(int)))
@@ -1010,7 +1086,11 @@ def rows_day(day):
     all_selftests()
     if day not in DAYS9:
         sys.exit(f'REFUSED: {day} is not a consumed replay day')
-    T0 = time.time(); D = K.load_day(day); PB = load_pb(day, D['W0']); cut = boundary_cut(day)
+    T0 = time.time(); D = K.load_day(day); cut = boundary_cut(day)
+    if FAIR_FIX:                                           # 2026-11-15: step 5's relay basis double-counts each hour's carry (fair_fix)
+        PB, fst = fair_fix(day, D['W0'])
+    else:
+        PB = load_pb(day, D['W0']); fst = None
     st = dict(window_sides=0, steps=0, invalid_book=0, masked=0, quiet=0, boundary_windows=0)
     fz = dict(checked=0, feat_differ=0, label_differ=0, cols=[], scale_checked=0, scale_differ=0)
     bf = dict(checked=0, differ=0, planted_differ=0)
@@ -1050,7 +1130,7 @@ def rows_day(day):
     mem_guard(f'rows {day} frame')
     pc = parity(day, R)
     hg = R.hgap.to_numpy(np.float64)
-    st.update(rows=int(len(R)), load_stat=D['stat'], falsifier=fz, brute=bf, parity=pc, seconds=round(time.time() - T0, 1),
+    st.update(rows=int(len(R)), load_stat=D['stat'], falsifier=fz, brute=bf, parity=pc, fair_fix=fst, preroll_ms=K.PREROLL_MS, seconds=round(time.time() - T0, 1),
               gap_rows=int((hg > GAP_MS).sum()), hgap_q=[float(x) for x in np.quantile(hg, [0.5, 0.9, 0.99, 0.999])],
               empty_side_rows=int(R.empty_side.sum()), scale_w30_missing=int(np.isnan(R.scale_w30.values).sum()),
               inf_missing=float(np.isnan(R['dfv250'].values).mean()))
