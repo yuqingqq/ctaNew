@@ -16,8 +16,10 @@ use the same unmodified activation-queue simulator. All fills are primary;
 young/exact/imputed splits are attribution only, never excluded simulations.
 
 No inferential claim, random null, feature selection or policy promotion.
-Existing models were trained on the now-qualified timing-selected population;
-this tests those frozen models, not a retrained zero-latency model.
+The EV/B2/QR heads are corrected v3 models fitted on all eligible imputed-tape
+actions. QR keeps the earlier fixed thresholds for this sensitivity, without
+claiming v3-optimal calibration. MD remains the saved v6 benchmark. This tests
+frozen models, not a retrained zero-latency model.
 """
 import argparse
 import collections
@@ -210,7 +212,9 @@ def run(day,out,max_windows=None):
         p=Path(p);key=str(p)
         if key not in inputs:inputs[key]=dict(exists=p.exists(),sha256=sha(p) if p.exists() else None)
     def js(p):track(p);return json.loads(Path(p).read_text())
-    fit=js(Path(V.OUTD)/f'fit2_{day}.json');require(fit['features']==V.FULL_IN,'EV feature contract')
+    fit=js(Path(V.OUTD)/f'fit3_{day}.json');require(fit['features']==V.FULL_IN,'EV feature contract')
+    require(fit['version']=='v3' and fit['reload_pass'] and fit['b2_features']==V.B2_IN,'corrected model contract')
+    require(max(fit['train_days'])<fit['cal']<day,'model chronology')
     models={}
     for name,tag in [('EV','full'),('B2','b2')]:
         heads=[]
@@ -298,9 +302,9 @@ def run(day,out,max_windows=None):
     require(stats['cached_trajectory_parity']==12,'incomplete cached trajectory parity')
     receipt=dict(asof=datetime.now(timezone.utc).isoformat(),day=day,source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=Path(__file__).resolve().parents[2],text=True).strip(),
         sources={p.name:sha(p) for p in Path(__file__).parent.glob('pf_*.py')},inputs=inputs,controls=controls,stats=dict(stats),loader=D['stat'],zero_inputs=zstat,
-        imputation=ust,base_clock=BASE_CLOCK,base_note=BASE_NOTE,qr_choice=qchoice,md_choice=mdchoice,totals=totals,
+        imputation=ust,base_clock=BASE_CLOCK,base_note=BASE_NOTE,qr_choice=qchoice,md_choice=mdchoice,model_version='v3',totals=totals,
         smoke_only=max_windows is not None,seconds=time.time()-start,peak_rss_mib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024.,
-        limits='Consumed data; unvalidated queue and event-time clocks; zero modeled transport remains 50ms-grid sampled with fixed pre-window sigma. Frozen models trained on timing-selected data, no refit. EV fresh-entry is diagnostic. No significance/promotion claim; model PnL comparisons have different endogenous volumes.')
+        limits='Consumed data; unvalidated queue and event-time clocks; zero modeled transport remains 50ms-grid sampled with fixed pre-window sigma. Frozen corrected v3 heads, no zero-latency refit; QR uses prior v2 fixed thresholds, not v3-optimized calibration. MD uses saved v6 heads/thresholds. EV fresh-entry is diagnostic. No significance/promotion claim; model PnL comparisons have different endogenous volumes.')
     (out/'receipt.json').write_text(json.dumps(receipt,indent=2,allow_nan=False)+'\n');print(json.dumps(dict(day=day,stats=dict(stats),seconds=receipt['seconds'],totals=totals)),flush=True)
 
 
