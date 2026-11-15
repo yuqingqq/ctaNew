@@ -57,6 +57,8 @@ AGE_B = ((0.0, 100.0), (100.0, 500.0), (500.0, M.INF))
 TAU_OFFPAR = 2.0                                           # above every probability: MD must equal KA
 MUT_GATE_IGNORE = MUT_DEC_ALWAYS = 0
 OUT = M.OUTD
+PV = os.environ.get('PF_PLAY_V', '4')                     # the model version played (v4, or v5 = v4 + adopted extra inputs)
+VS = f'_v{PV}'
 
 
 def pred_arrays(path, h):
@@ -197,17 +199,17 @@ def play_day(test, phase):
     if test not in M.TESTS:
         sys.exit(f'REFUSED: {test} is not a fold test day')
     day = M.FOLDS[test][1] if phase == 'cal' else test
-    fj = json.load(open(f'{OUT}/fit_{test}_v4.json'))
-    if fj['version'] != '4':
-        sys.exit('REFUSED: not a v4 fit')
+    fj = json.load(open(f'{OUT}/fit_{test}{VS}.json'))
+    if fj['version'] != PV:
+        sys.exit(f'REFUSED: not a v{PV} fit')
     T0 = time.time(); D = M.K.load_day(day); cut = M.boundary_cut(day)
     tkf = pd.read_parquet(f'{M.K.IO}/step1/{day}/legs_tk.parquet', columns=['tk']).tk.values
     LT = D['LT']; ix = LT.index.values; grp = np.where(tkf[ix] >= 0, tkf[ix], -1 - ix)
     WSg = pd.Series(M.TS.ws_groups(LT.how.values, grp), index=LT.index); TKS = pd.Series(grp, index=LT.index)
-    path = f'{OUT}/pred_fold{test}_{day}_v4.parquet'
+    path = f'{OUT}/pred_fold{test}_{day}{VS}.parquet'
     PA = {h: pred_arrays(path, h) for h in M.HS}; order = PA[M.HS[0]][1]; pos_ = {m: i for i, m in enumerate(order)}
     LA = M.label_arrays(day)[0] if phase == 'test' else None
-    choice = json.load(open(f'{OUT}/play_cal_{test}.json'))['choice'] if phase == 'test' else None
+    choice = json.load(open(f'{OUT}/play_cal_{test}{VS}.json'))['choice'] if phase == 'test' else None
     st = dict(windows=0, boundary_windows=0, runs=0, viol={v_: 0 for v_ in M.J3.VIOL}, offpar_windows=0, offpar_differ=0, no_pred=0)
     val = {}; live = {}
 
@@ -286,12 +288,12 @@ def play_day(test, phase):
             best = max(COMBOS, key=lambda c: (val['M50'][f'MD{h}|{c[0]}|{c[1]}']['pnl_old'], c[0], c[1]))
             ch[str(h)] = list(best)
         res['choice'] = ch
-        json.dump(res, open(f'{OUT}/play_cal_{test}.json', 'w'), indent=1, default=float)
+        json.dump(res, open(f'{OUT}/play_cal_{test}{VS}.json', 'w'), indent=1, default=float)
         print(f'play cal {test} (day {day}): windows {st["windows"]}, runs {st["runs"]}, {st["seconds"]} s; choice {ch}; M50 w/o young: '
               + ', '.join(f'H{h} {val["M50"][f"MD{h}|{ch[str(h)][0]}|{ch[str(h)][1]}"]["pnl_old"]:+.0f}' for h in M.HS), flush=True)
     else:
         res['choice'] = choice
-        json.dump(res, open(f'{OUT}/play_{test}.json', 'w'), indent=1, default=float)
+        json.dump(res, open(f'{OUT}/play_{test}{VS}.json', 'w'), indent=1, default=float)
         print(f'play test {test}: windows {st["windows"]}, runs {st["runs"]}, off-parity {st["offpar_windows"]} windows / {st["offpar_differ"]} differ, '
               f'{st["seconds"]} s; M50 w/o young: ' + ', '.join(f'{a} {x["pnl_old"]:+.0f}' for a, x in val['M50'].items() if not a.startswith('CURVE')), flush=True)
 
@@ -299,9 +301,9 @@ def play_day(test, phase):
 def report():
     all_selftests()
     asof = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
-    PJ = {t: json.load(open(f'{OUT}/play_{t}.json')) for t in M.TESTS}; CJ = {t: json.load(open(f'{OUT}/play_cal_{t}.json')) for t in M.TESTS}
+    PJ = {t: json.load(open(f'{OUT}/play_{t}{VS}.json')) for t in M.TESTS}; CJ = {t: json.load(open(f'{OUT}/play_cal_{t}{VS}.json')) for t in M.TESTS}
     T = M.TESTS; DR = M.DAY_RULE; R_ = {}; L = []
-    L.append(f'STOP-PLAY (the v4 model\'s own decisions in the oracle\'s lane; 6 rungs x 30 sh both sides, no guard), 5 chronological test days {", ".join(T)}; '
+    L.append(f'STOP-PLAY (the v{PV} model\'s own decisions in the oracle\'s lane; 6 rungs x 30 sh both sides, no guard), 5 chronological test days {", ".join(T)}; '
              f'as of {asof}')
     L.append('chosen (tau_on, r) per fold on its calibration day (M 50, w/o young): ' + '; '.join(f'{t}: ' + ' '.join(f'H{h} {CJ[t]["choice"][str(h)]}' for h in M.HS) for t in T))
     per = lambda cfg, a, key: np.array([PJ[t]['value'][cfg][a][key] for t in T])          # noqa: E731
@@ -346,8 +348,8 @@ def report():
     L.append('(development only: consumed days, C8 / C16; replay rule M, volumes inflated C4 / C5 / C10; E2 anchors +-250 ms C12; P15)')
     L.append(f'READINGS {json.dumps(R_)}')
     json.dump(dict(asof=asof, readings=R_, value={t: PJ[t]['value'] for t in T}, live={t: PJ[t]['live'] for t in T},
-                   choice={t: CJ[t]['choice'] for t in T}, stat={t: PJ[t]['stat'] for t in T}), open(f'{OUT}/stop_play.json', 'w'), indent=1, default=float)
-    open(f'{OUT}/stop_play.txt', 'w').write('\n'.join(L) + '\n')
+                   choice={t: CJ[t]['choice'] for t in T}, stat={t: PJ[t]['stat'] for t in T}), open(f'{OUT}/stop_play{VS}.json', 'w'), indent=1, default=float)
+    open(f'{OUT}/stop_play{VS}.txt', 'w').write('\n'.join(L) + '\n')
     print('\n'.join(L), flush=True)
 
 
