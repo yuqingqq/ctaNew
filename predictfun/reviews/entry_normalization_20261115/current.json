@@ -1,0 +1,6 @@
+{
+  "summary": "summary.json",
+  "artifacts": "artifacts.json",
+  "freeze": "freeze.json",
+  "review": "predictfun/handoffs/20261115_entry_normalization_review.md"
+}
