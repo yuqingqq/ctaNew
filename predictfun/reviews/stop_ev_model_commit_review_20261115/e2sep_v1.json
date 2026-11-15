@@ -1,0 +1,30 @@
+{
+  "asof": "2026-11-15T14:36:46.207212+00:00",
+  "checker_sha256": "304092e6198c9cf207ca0458d839bbed1e6a156e2ae1ccb449ba669b7cf5bb33",
+  "reviewed_source_sha256": "1bee6f7453479ab2e6cea18470bedfc6f647decd5db86992db4d8c23dd440b85",
+  "group": "WS-REACHED",
+  "decision_ms": 150.0,
+  "nominal_e2_ms": 100.0,
+  "shifted_e2_ms": -150.0,
+  "ws_ms": 200.0,
+  "nominal_value_cents": 5.0,
+  "shifted_value_cents": 0.0,
+  "certificate": {
+    "contract": "stop-ev-side-prefix-invariance-v1",
+    "certified": false,
+    "mode": "value_invariant_within_e2_intervals",
+    "unresolved_ids": [
+      "earlier"
+    ],
+    "prior_state_ids": [
+      "earlier"
+    ],
+    "opposite_side_ids": [],
+    "no_reach_ids": [],
+    "e2_interval_is_assumption": true,
+    "cap": null
+  },
+  "positive_controls_pass": true,
+  "source_manifest_includes_e2sep": false,
+  "interpretation": "Synthetic counterexample to equating future WS reach with E2-independent queue/value; not an observed historical error rate."
+}
