@@ -1,3 +1,27 @@
+entry_training_support_20261115:
+  status: complete_read_only_interpretation
+  data_asof: 2026-11-15T05:04:52Z
+  evidence_commit: b46f6c7c
+  results: predictfun/reviews/entry_training_support_20261115/current.json
+  review: predictfun/handoffs/20261115_entry_training_support_review.md
+  evaluation_actions: 9871
+  consumed_evaluation_days: 5
+  training_labeled_days_min: 2
+  training_labeled_days_max: 6
+  per_side_training_rows_min: 1975
+  per_side_training_rows_max: 6068
+  per_side_weight_only_effective_rows_min: 522.6
+  per_side_weight_only_effective_rows_max: 1587.1
+  per_side_later_entry_rows_min: 284
+  per_side_later_entry_rows_max: 847
+  new_model_fits: 0
+  new_candidates: 0
+  learning_curve_tested: false
+  short_history_cause_established: false
+  representation_fully_cleared: false
+  forward_validation: false
+  next: Fixed-evaluation learning curve; separately test denser later-entry coverage.
+
 entry_representation_20261115:
   status: complete_development_comparison
   asof: 2026-11-15T05:04:52Z
