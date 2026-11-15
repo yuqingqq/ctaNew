@@ -1,3 +1,28 @@
+stop_ev_performance_causes_20261115:
+  asof: '2026-11-15T14:46:05.295270+00:00'
+  status: controlled_objective_effect_confirmed_remaining_timing_and_tail_risk
+  integration_commit: 9a642ab7
+  source_commit: c69a6431
+  freeze_commit: d36e022b
+  test_days: 5
+  test_actions: 137703
+  original_predictions_exact_all_folds: true
+  optimism_reduction_fraction: 0.6515589172326508
+  original_top_decile_optimism_reduction_fraction: 0.19361407349554405
+  original_kept_value_residual_fraction: 0.9342717754371436
+  residual_fraction_is_causal_attribution: false
+  each_positive_prediction_set_still_loses: true
+  test_filled_value_worse_all_days: true
+  strict_actions_invariant_under_both_timing_shifts: 18911
+  model_reload_parity: true
+  new_model_selected: false
+  active_pipeline_changed: false
+  portfolio_test: false
+  untouched_validation: false
+  newer_certified_model_v2_evaluated: false
+  review: predictfun/handoffs/20261115_stop_ev_performance_causes.md
+  evidence: predictfun/reviews/stop_ev_causes_20261115/interpretation_v1.json
+
 stop_ev_latest_commit_review_20261115:
   asof: '2026-11-15T14:36:46.207212+00:00'
   status: target_and_timing_validity_issues_found

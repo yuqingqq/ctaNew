@@ -1,5 +1,36 @@
 # P-2026-005 HANDOFF
 
+<!-- STOP_EV_PERFORMANCE_CAUSES_20261115 -->
+## 2026-11-15 Controlled cause analysis confirms loss-objective bias and remaining adverse-fill risk
+
+As of 14:45:39Z, five consumed test days / 137,703 actions: original fold
+predictions reproduced exactly. Changing ONLY Huber -> squared error reduces
+average overprediction 1.985 -> 0.692 c/action (65.2%, better all days). On the
+original top decile (13,771 actions), optimism improves only 19.4%. Both heads'
+own positive sets lose: Huber 9,727 actions -$55.41; squared error 17,558 actions
+-$82.76. No replacement model selected. This isolates objective choice on v1
+labels; it does NOT evaluate the newly committed certified-population v2.
+
+For the original kept set, 93.4% of residual decomposition is filled-value error
+(an accounting identity, not independent causal attribution). At-price +$85.12
+vs through-price -$140.54. Worst 1% of all actions contribute 50.5% of gross
+losses. Test filled-value means are worse than their training samples all five
+folds; this is outcome shift, not proof of unseen input support.
+
+Timing audit at 14:46:05Z verifies nine-day E2SEP scenario means -4.159 / -3.053 /
+-2.147 c at -250 / 0 / +250 ms, n=268,756 / 265,373 / 266,011. Populations change;
+these are not paired causal effects or physical timing truth. All 18,911 strict
+nominal actions retain keys/times/values under both shifts. Four model-data and
+three timing-audit corruptions refused; saved model heads reload identically.
+
+Source c69a6431, freeze d36e022b, merge 9a642ab7. Review:
+handoffs/20261115_stop_ev_performance_causes.md; evidence:
+reviews/stop_ev_causes_20261115/ (report_v1, interpretation_v1, timing_v1).
+No active pipeline changes or protected raw reads. Other session's b80765a1
+landed during this work and addresses target/certificate/validation issues in
+code; this study does not establish that v2 fixes the remaining losses.
+<!-- /STOP_EV_PERFORMANCE_CAUSES_20261115 -->
+
 ## 2026-11-15 14:55Z (session aea5bfb9) — REVIEW ISSUES (USER: "remain: 1 ... 4", from handoffs/20261115_stop_ev_latest_commit_review.md) FIXED IN CODE, NOT RUN; waiting for the USER's go
 
 - USER: "remain: 1. The new timing experiment does not isolate timestamp-independent outcomes ... 2. The value head still targets the wrong statistical quantity ... 3. The model still uses the older timing population ... 4. The validation gate was relaxed after failing ... using only 10 draws, below the repository's required 200."
