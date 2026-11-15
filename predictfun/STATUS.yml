@@ -1,3 +1,25 @@
+stop_ev_latest_commit_review_20261115:
+  asof: '2026-11-15T14:36:46.207212+00:00'
+  status: target_and_timing_validity_issues_found
+  integration_commit: af9478e7
+  reviewed_model_result: f3fb7e3b
+  reviewed_e2sep: 0b7e30cd
+  saved_prediction_actions_checked: 137703
+  prediction_source_identity_pass: true
+  published_metrics_reproduced: true
+  planted_corruptions_refused: 3
+  test_actions_without_estimated_timing_certificate: 56073
+  strict_ws_claims_without_missing_timing_certificate: 993
+  huber_target_is_mean_ev: false
+  original_t5_failed_folds: [20261031, 20261103]
+  t5_draws_per_fold: 10
+  e2sep_ws_reach_prior_dependency_reproduced: true
+  e2sep_builder_in_source_manifest: false
+  experiment_sources_changed: false
+  new_model_fits: 0
+  review: predictfun/handoffs/20261115_stop_ev_latest_commit_review.md
+  evidence: predictfun/reviews/stop_ev_model_commit_review_20261115/receipt_v2.json
+
 stop_ev_timing_coverage_20261115:
   asof: '2026-11-15T14:02:20.203055+00:00'
   status: historical_coverage_improved_saved_artifact_audit_pass
