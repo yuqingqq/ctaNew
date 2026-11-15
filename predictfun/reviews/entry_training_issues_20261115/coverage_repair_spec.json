@@ -1,0 +1,38 @@
+{
+  "status": "proposed_not_run",
+  "scope": "Density-only comparison within existing admissible label dates; no date widening, target change or keeper change",
+  "current_first_probability": 0.5,
+  "current_later_probability": 0.03125,
+  "proposed_first_probability": 0.5,
+  "proposed_later_probability": 0.25,
+  "selection": "Reuse the existing stable generation hash; initial h % 2 == 0; later h % 4 == 0. Existing later h % 32 == 0 is a subset.",
+  "probe_age": "Preserve original requested_delay for every generation, including previously unselected rows. Do not recompute its age with the new sampling modulus.",
+  "per_row_fields": [
+    "action identity",
+    "sampling version",
+    "inclusion probability",
+    "sampling weight = 1 / probability",
+    "requested probe age",
+    "eligibility/exclusion status",
+    "reference/continuation identities"
+  ],
+  "evaluation": "Keep the same old evaluation actions and their original 2/32 sampling weights to isolate a training-density change; new training rows use 2/4. Never relabel an old sampling probability silently.",
+  "safety": "No outcome/fill/tail filtering. No duplicate action keys. Reconcile targets to the same engine and preserve every status. Do not combine incompatible continuations or bypass date boundaries.",
+  "weight_change": "Replace assumptions of generation-only hardcoded weights with validated declared per-row inclusion probabilities; reject missing/incompatible sampling versions rather than silently mixing.",
+  "tests": [
+    "Old selected actions are a subset and retain exact probe times.",
+    "Uniform hash positive control; invalid probability 0 or >1 refuses.",
+    "No train or decision input depends on outcomes.",
+    "First generations unchanged; rows unique by action identity.",
+    "Receipts preserve population/exclusions and source/input identities.",
+    "Matched evaluation controls retain their original selection mass."
+  ],
+  "prerequisites": [
+    "Resolve pre-read boundary filtering and audit upstream clock provenance.",
+    "Qualify unknown-queue label assumptions; preserve or supersede old label definitions explicitly."
+  ],
+  "not_claimed": [
+    "No eightfold increase in independent information or useful eligible labels is claimed.",
+    "No prediction improvement or model promotion is claimed."
+  ]
+}

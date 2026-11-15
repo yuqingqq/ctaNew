@@ -1,0 +1,206 @@
+{
+  "asof": "2026-11-15T05:32:18.692064+00:00",
+  "data_asof": "2026-11-15T05:04:52Z",
+  "source_commit": "569ff557f4ca8a2cc33b3d400715ec4adf624b31",
+  "scope": "Current entry WAIT/POST task; complete known-issue inventory at review time, not proof of absence of undiscovered defects",
+  "new_candidates": 0,
+  "new_model_fits": 0,
+  "new_labels": 0,
+  "source_sha256": {
+    "predictfun/research/pf_wait_post_state.py": "b1dd1065034c7b373cf787fea3878fa78fa7ff87ee80998d3ab142edebff24e7",
+    "predictfun/research/pf_wait_post_state_lane.py": "032cc352edbc9b3e9ab24358393bc4de09a7227796028307eb2cccf8574e5288",
+    "predictfun/research/pf_wait_post_v2.py": "d822211ae363e3ed9c821e47539bda6f5370d8e140a72434ae9a63f423d6544d",
+    "predictfun/research/pf_wait_post_sampling.py": "07aeb9d858f65428ea396868926101caf2d0a81c64c750fcb2e1ada0e26faf95",
+    "predictfun/research/pf_entry_value.py": "ebdad6013b8b76c03417f24495b87af309f213078eb018f5b7b358c9884ef12b",
+    "predictfun/research/pf_kp_s4.py": "56377b13c71362281036a8711e94a4b9979d163f02c22f6bb821e799fcb2f8e3",
+    "predictfun/research/pf_entry_information.py": "57f7b10e50ddf4030f8b6a7601bbadd0c895127d25a78d17dccc2e6a677e224a",
+    "predictfun/research/pf_entry_representation.py": "a016a4fd5813c0183bb9be400c2d62ead49006c03d2b092820b913c3aab77889",
+    "predictfun/reviews/entry_representation_20261115/result.json": "2d75ded009ce2ac0a494d8ec2247364193fe650b7f2812b2a4b936ccdc4eef61",
+    "predictfun/reviews/entry_representation_20261115/condition_summary.csv": "3a2a60a614d225228e7f26c2e7fb423d80012771b762800da1687f06bab1934f",
+    "predictfun/reviews/entry_training_support_20261115/result.json": "7641afa7615d0a957ea825f04c935aca8a870bfd041292e3a0f5dceba0e3d5ec",
+    "predictfun/reviews/wait_post_state_20261115/noise/result.json": "8702ba7bc35d9d630a8f5a3a0a2da9e3ef201ffad21af9fb288991da90d19d2a",
+    "predictfun/handoffs/20261115_entry_information_inventory.md": "d495711563ef7453c47e0b76c0abb1a37e8d684225c3cc9d859b9a13cf907c66",
+    "predictfun/handoffs/20261115_stop_model_input_review.md": "cad9a170eb4caab5a500cad99d28b8ee582859c8e635ccb196150fccfc189104",
+    "predictfun/FINDINGS.md": "32a923f81d2a7644297715a918b75b863474d807e2d28be702082faa076c5c6c",
+    "CLAUDE.md": "295a605d19662be5c499554f763ef0c6e0d1e22d03f92a88b3be3941433555a8",
+    "AGENTS.md": "6ee6d1db0629dcc36fff68d75f90ed12a4b843d07e0cbadec71629dc4d17d66d"
+  },
+  "issues": [
+    {
+      "id": "C1",
+      "status": "confirmed",
+      "priority": "high",
+      "title": "Later-entry opportunities are heavily thinned",
+      "evidence": "Initial generation inclusion is 1/2; later generations 1/32. Fitting/evaluation weights are hardcoded to 2/32.",
+      "impact": "Weights correct the declared sampling probabilities but do not replace the missing examples; later-entry states have disproportionate weight and limited distinct support.",
+      "repair": "Version the sampler and per-row inclusion probabilities; label more later generations from the neutral reference, preserving existing probe ages and outcomes.",
+      "source": "predictfun/research/pf_wait_post_state.py:335; predictfun/research/pf_wait_post_sampling.py:24"
+    },
+    {
+      "id": "C2",
+      "status": "confirmed",
+      "priority": "high",
+      "title": "Few admissible, comparable labeled dates",
+      "evidence": "The expanding learner has 2\u20136 earlier label days. Earlier bootstrap labels use a different continuation; sealed and forward dates are deliberately excluded.",
+      "impact": "This is a prepared-dataset/date-design limit, not a rolling-window parameter accidentally discarding a large compatible history.",
+      "repair": "Build more same-contract labels on admissible earlier/development data; define a separate later validation block. Do not append bootstrap labels or consume reserved dates automatically.",
+      "source": "predictfun/research/pf_wait_post_v2.py:53; predictfun/research/pf_kp_s4.py:1570"
+    },
+    {
+      "id": "C3",
+      "status": "confirmed_scope_limit",
+      "priority": "high",
+      "title": "Reference states and operational scope are narrow",
+      "evidence": "One delayed probe per neutral POST/KEEP generation, primarily one empty rung while other slots follow the neutral prefix. Entry labels use 30 shares, six rungs and the first 60 seconds.",
+      "impact": "Repeated learned waits, simultaneous empty slots, selective-cancel re-entry, other order sizes and later contract phases are not established as representative.",
+      "repair": "Declare and sample additional joint-waiting/reference states without outcome selection; retain action identities and episode clusters. Separately test the intended size/phase.",
+      "source": "predictfun/research/pf_wait_post_state.py:228; predictfun/research/pf_entry_value.py:69"
+    },
+    {
+      "id": "D1",
+      "status": "confirmed_code_path",
+      "priority": "high",
+      "title": "Entry loader does not opt in to pre-read boundary filtering",
+      "evidence": "The frozen dependency set contains SKIP_FOREIGN_PARTS=False and no assignment enabling it; all three entry builders call load_day directly.",
+      "impact": "Neighboring reserved files can be opened before row filtering. This is a read-boundary/lineage defect, not proof that their future prices entered eligible rows. Per-day clock estimates were also derived upstream and need separate lineage review.",
+      "repair": "Select allowed file hours before opening them in the entry path, audit upstream clock/source provenance, and require saved-row/label regression or superseding rebuilds.",
+      "source": "predictfun/research/pf_kp_s4.py:1574; predictfun/research/pf_kp_s4.py:1678; predictfun/research/pf_wait_post_state.py:318; predictfun/research/pf_entry_information.py:155; predictfun/research/pf_entry_representation.py:115"
+    },
+    {
+      "id": "D2",
+      "status": "confirmed_scope_limit",
+      "priority": "high",
+      "title": "Raw-to-feature causality verification is incomplete for this entry pipeline",
+      "evidence": "Entry future checks perturb received histories and precomputed grid inputs. They cannot independently verify every upstream calculation. A separate stop-model audit recomputed a subset of upstream fields, not every entry field/population.",
+      "impact": "Passing downstream invariance is narrower than end-to-end verification of every input and nuisance clock.",
+      "repair": "Recompute upstream features from events known by the exact action time with planted early-clock failures; bind exact input definitions and source artifacts.",
+      "source": "predictfun/research/pf_entry_information.py:132; predictfun/research/pf_wait_post_state.py:203; predictfun/handoffs/20261115_stop_model_input_review.md"
+    },
+    {
+      "id": "T1",
+      "status": "confirmed_target_scope_limit",
+      "priority": "high",
+      "title": "Labels do not yet include the intended selective keeper",
+      "evidence": "POST, WAIT and NEVER are terminal portfolio differences under neutral KEEP and one frozen bootstrap entry continuation.",
+      "impact": "They are coherent standalone entry labels, but do not estimate the entry value under the intended combined entry/cancel strategy. The continuation is not assumed optimal.",
+      "repair": "After keeper/continuation identity is frozen, relabel both action branches under the same downstream policy. Keep entry WAIT/POST separate from cancel/keep.",
+      "source": "predictfun/research/pf_wait_post_state.py:273; predictfun/research/pf_wait_post_state.py:94"
+    },
+    {
+      "id": "T2",
+      "status": "confirmed_first_fold_diagnostic",
+      "priority": "high",
+      "title": "Sparse, heavy-tailed terminal targets include portfolio spillovers",
+      "evidence": "The existing first-fold noise audit used 4,040 training and 1,992 evaluation probes; terminal/external components contribute substantial variation. First-order decomposition keeps the terminal horizon.",
+      "impact": "Immediate entry signals may be weak relative to future policy/portfolio noise. It is not established that this noise is irreducible.",
+      "repair": "Measure fill opportunity, adverse movement and queue advantage separately and reconcile them to economic value; keep rare losses and no-fill actions. Do not train only on filled or ordinary-outcome rows.",
+      "source": "predictfun/reviews/wait_post_state_20261115/noise/result.json; predictfun/research/pf_wait_post_state.py:260"
+    },
+    {
+      "id": "L1",
+      "status": "confirmed_code_path_impact_unmeasured",
+      "priority": "high",
+      "title": "Unknown visible-depth queue can become zero in the fill simulator",
+      "evidence": "lv marks prices beyond the visible fifth level NaN; place converts nonfinite queue to zero before the next-frame adjustment. If it remains unknown, zero persists.",
+      "impact": "Model inputs preserve unknown queue, but labels may depend on an optimistic queue assumption. Current affected-label/P&L magnitude has not been measured.",
+      "repair": "Record unknown-queue statuses in label paths; evaluate conservative/optimistic queue bounds or an empirically justified model, then rebuild affected labels. Do not silently filter the population.",
+      "source": "predictfun/research/pf_wait_post_state_lane.py:127; predictfun/research/pf_wait_post_state_lane.py:140"
+    },
+    {
+      "id": "L2",
+      "status": "documented_assumptions",
+      "priority": "high",
+      "title": "Execution clocks and public-book fill rules are uncertain",
+      "evidence": "Current representation comparison reuses M50 labels; public snapshots, E2-estimated anchors and assumed Binance receipt latency limit timing precision. Untimed source legs remain explicitly excluded.",
+      "impact": "A deterministic learner can fit an assumed execution model whose fills differ from reality; missing executions may also affect source coverage.",
+      "repair": "Keep WS/E2 provenance, assess M0/M50/M250 and queue-rule sensitivity, and reconcile against recorded execution evidence before economic claims.",
+      "source": "predictfun/research/pf_wait_post_state.py:94; predictfun/FINDINGS.md:C1-C15,P12,P15,P19"
+    },
+    {
+      "id": "F1",
+      "status": "confirmed",
+      "priority": "high",
+      "title": "Missing observations remain after representation changes",
+      "evidence": "Of 9,871 evaluation rows, 7,857 have partial liquidity history, 4,758 lack the start reference and 2,031 lack complete 250ms candidate history. Loader retains only five seconds of pre-window books.",
+      "impact": "Availability flags expose the missingness but cannot recreate known-time information. More training days do not restore those within-window observations.",
+      "repair": "Recover longer causal history/reference coverage only where captured and admissible; retain missingness/statuses otherwise. Audit the frame-weighted liquidity estimator separately.",
+      "source": "predictfun/reviews/entry_representation_20261115/condition_summary.csv; predictfun/research/pf_kp_s4.py:1682"
+    },
+    {
+      "id": "F2",
+      "status": "confirmed_information_limit",
+      "priority": "medium",
+      "title": "Available public signals are incomplete proxies",
+      "evidence": "Top-five depth and pending/shrink increments do not identify exact public queue, cancellations versus trades, a causal venue execution stream, or deep Binance L2.",
+      "impact": "The feature catalog cannot guarantee sufficient information for fill/adversity timing, however well normalized.",
+      "repair": "Reconstruct additional causal flow only from receipt-timed records; quantify incremental contribution and observation limits instead of assuming a larger catalog fixes prediction.",
+      "source": "predictfun/handoffs/20261115_entry_information_inventory.md"
+    },
+    {
+      "id": "M1",
+      "status": "risk_not_isolated_cause",
+      "priority": "medium",
+      "title": "Learner complexity and regularization may be unsuitable for support",
+      "evidence": "CONDITION has 351 named fields including aliases, with weight-only effective training counts about 523\u20131,587 per side/fold. The pinned learner is 200 boosted trees, 31-leaf maximum, no explicit L2.",
+      "impact": "Overfitting or poor conditional estimation is plausible; feature count is not independent dimensionality. Earlier compact/ridge candidates did not solve the task.",
+      "repair": "After label/support fixes, test a small predeclared regularization/complexity comparison on development data; flag changes from the pinned fairness baseline.",
+      "source": "predictfun/reviews/entry_training_support_20261115/result.json; predictfun/reviews/entry_representation_20261115/fit_receipts/20261027.json"
+    },
+    {
+      "id": "M2",
+      "status": "confirmed_performance_failure_cause_open",
+      "priority": "high",
+      "title": "Stable timing and economic selection are not demonstrated",
+      "evidence": "CONDITION reduces bid timing error 1.43% but increases ask error 0.95%; both trail prior-mean/price-rung baselines. None of six economic checks passes. Some historical feature relationships change sign.",
+      "impact": "A lower distribution distance or better absolute-POST score is insufficient evidence of useful WAIT/POST timing; the cause of side/date differences remains open.",
+      "repair": "Retain separate bid/ask evaluation, decision calibration, per-condition support and matched economic controls. Do not select a common representation solely on pooled error.",
+      "source": "predictfun/reviews/entry_representation_20261115/result.json; predictfun/reviews/entry_information_20261115/feature_summary.csv"
+    },
+    {
+      "id": "E1",
+      "status": "confirmed_validation_gap",
+      "priority": "high",
+      "title": "Training-history effect and generalization have not been isolated",
+      "evidence": "Growing folds test different days; no fixed-evaluation learning curve exists. These dates have been used repeatedly. Actions within market/day share information/outcomes; weight ESS does not remove dependence.",
+      "impact": "We cannot attribute failure to short history or call a selected historical improvement forward validation.",
+      "repair": "Compare nested histories on identical evaluation actions, separately vary later-state sampling, use day-level uncertainty where justified, then freeze for later untouched-day validation under the program rules.",
+      "source": "predictfun/reviews/entry_training_support_20261115/result.json; CLAUDE.md:87"
+    },
+    {
+      "id": "E2",
+      "status": "confirmed_validation_gap",
+      "priority": "medium",
+      "title": "Combined strategy and net value are not established",
+      "evidence": "This representation study performs local prediction/selection checks only, with gross terminal labels. No combined selective-keeper portfolio, fees/rebates or measured runtime acceptance is shown.",
+      "impact": "Local scores cannot establish quote residence, inventory risk, full-policy profitability or operational speed.",
+      "repair": "After credible local signal, evaluate the actual combined strategy with its intended costs, clocks, order sizes and queue/age breakdowns; keep research and live execution separate.",
+      "source": "predictfun/research/pf_entry_value.py:1; predictfun/reviews/entry_representation_20261115/result.json"
+    }
+  ],
+  "loader_opt_in_occurrences": [
+    [
+      "predictfun/research/pf_kp_s4.py",
+      1579,
+      "SKIP_FOREIGN_PARTS = False"
+    ],
+    [
+      "predictfun/research/pf_kp_s4.py",
+      1678,
+      "if SKIP_FOREIGN_PARTS and not part_allowed(fn, day):"
+    ]
+  ],
+  "fixed_or_bypassed": [
+    "Audited units, side signs and denominators passed.",
+    "Start-price mask repaired in features and continuation; original labels rebuilt.",
+    "Client-known ladder state and portfolio accounting checks implemented.",
+    "Inverse inclusion weighting applied to fitting and scoring.",
+    "New representation retains absolute liquidity/risk and missing/support statuses.",
+    "Old CLEAN preprocessing removal/scaling defects do not enter RAW/RELATIVE/CONDITION."
+  ],
+  "limitations": [
+    "No new historical replay or raw-data content read in this review; source-code and existing-receipt review only.",
+    "Directory inventory exposed forward-family date names before the stricter P9 rule was reread; no forward file content/model outcome was inspected. This metadata exposure is recorded and no fresh-validation eligibility is asserted.",
+    "Current unknown-depth queue effect and pre-read-filter regression are not quantified by this review.",
+    "The sampler specification is a proposed repair, not an implemented or performance-validated fix."
+  ]
+}

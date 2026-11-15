@@ -1,0 +1,5 @@
+{
+  "result": "result.json",
+  "coverage_repair": "coverage_repair_spec.json",
+  "review": "predictfun/handoffs/20261115_entry_training_issues_review.md"
+}
