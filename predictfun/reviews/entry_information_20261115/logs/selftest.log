@@ -1,0 +1,12 @@
+test_bins_fit_training_only (__main__.Checks.test_bins_fit_training_only) ... ok
+test_feature_clocks_and_controls (__main__.Checks.test_feature_clocks_and_controls) ... ok
+test_group_estimator_signal_and_reversal (__main__.Checks.test_group_estimator_signal_and_reversal) ... ok
+test_inventory_complete_disjoint (__main__.Checks.test_inventory_complete_disjoint) ... ok
+test_marginal_signal_and_missing_fallback (__main__.Checks.test_marginal_signal_and_missing_fallback) ... ok
+test_matched_value_positive_and_bad_controls (__main__.Checks.test_matched_value_positive_and_bad_controls) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.270s
+
+OK
+2026-11-15T03:47:51Z tag=entry_information_selftest rc=0 peak_rss_mib=198 wall_s=0.99 cpu_user_s=0.83 memavail_start_gib=23 disk_free_gib=491->491 slot=codex
