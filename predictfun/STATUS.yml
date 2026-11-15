@@ -1,3 +1,33 @@
+entry_normalization_20261115:
+  status: complete_read_only_audit
+  asof: 2026-11-15T04:33:04Z
+  source_commit: 3db21aec
+  freeze_commit: 0bb344c6
+  evidence_commit: edc910b4
+  results: predictfun/reviews/entry_normalization_20261115/current.json
+  review: predictfun/handoffs/20261115_entry_normalization_review.md
+  label_probes: 13911
+  evaluation_probes: 9871
+  consumed_evaluation_days: 5
+  unit_violations: 0
+  saved_preprocessors_reproduced: 10
+  synthetic_checks_passed: 5
+  liquidity_ks_reduced: 178
+  liquidity_ks_comparisons: 180
+  median_raw_liquidity_ks: 0.1321853393382723
+  median_normalized_liquidity_ks: 0.04842612543142999
+  below_30s_history_actions_lower_bound: 7815
+  lost_extreme_indicator_actions: 15
+  lost_missing_indicator_actions: 0
+  new_candidates: 0
+  historical_model_refits: 0
+  component_study_started: false
+  predictive_improvement_tested: false
+  forward_validation: false
+  promoted: false
+  old_size_supervisor: resumed
+  next: Isolate normalization effects with unchanged targets, rows, folds and model parameters.
+
 entry_information_20261115:
   status: complete_development_study
   asof: 2026-11-15T03:52:15Z

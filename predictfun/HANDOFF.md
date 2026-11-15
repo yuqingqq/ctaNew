@@ -1,5 +1,33 @@
 # P-2026-005 HANDOFF
 
+<!-- ENTRY_NORMALIZATION_20261115 -->
+## 2026-11-15 — entry normalization audit COMPLETE; component study not started
+
+User requested normalization review before the next component check. As of
+2026-11-15T04:33:04Z: 13,911 eligible label probes; 9,871 evaluation probes on
+five consumed dates, Oct 27/31 and Nov 1/2/3. No new candidates or model refits.
+All audited units/signs/denominators/target reconciliations pass; all 10 saved
+cleanup preprocessors reproduce exactly and test transforms leave state intact.
+
+Liquidity-relative public sizes reduce marginal train/test KS in 178/180
+feature/side/fold comparisons, median 0.1322 to 0.0484. This is distribution
+alignment, not prediction improvement. Earlier cleanup uses unweighted scaling
+statistics despite weighted model fitting. At least 7,815/9,871 actions (79.17%)
+cannot have a full nominal 30-second liquidity history. Cleanup loses an extreme
+indicator on 15 evaluation actions; 14 duplicate divergences overlap those 15;
+zero missing-indicator losses observed. Cleanup defects do not directly affect
+the separate raw 325-input information study. Earlier cleanup changed multiple
+things together, so its failure does not isolate normalization's effect.
+
+Five synthetic controls pass; supervised audit exits 0; size supervisor resumed.
+Source 3db21aec, freeze 0bb344c6, evidence edc910b4. Full evidence and limitations:
+`handoffs/20261115_entry_normalization_review.md` and
+`reviews/entry_normalization_20261115/current.json`.
+Recommended next: controlled normalization-only comparison with unchanged rows,
+targets, folds, weights and pinned model parameters. No fixes or promotion yet;
+WAIT/POST entry remains separate from cancel/keep. Consumed development only.
+<!-- /ENTRY_NORMALIZATION_20261115 -->
+
 <!-- ENTRY_INFORMATION_20261115 -->
 ## 2026-11-15 — entry-information inventory and contribution measurements COMPLETE
 
