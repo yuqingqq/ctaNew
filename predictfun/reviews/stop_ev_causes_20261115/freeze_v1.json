@@ -1,0 +1,42 @@
+{
+  "asof": "2026-11-15T14:44:22.782379+00:00",
+  "source_commit": "c69a6431f7bdabcf9e337bbea68ec467c611ff74",
+  "source_sha256": "92d826b1e93de17436585e7f629fcf641bbd9eebf3cc71e83aa695a6a3793f42",
+  "test_days": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "variants": [
+    "original_huber_control",
+    "squared_error_value_only"
+  ],
+  "candidate_count": 2,
+  "new_ablation_count": 1,
+  "tuning": false,
+  "changed_factor": "conditional-value objective only",
+  "fixed": [
+    "inputs",
+    "training rows",
+    "training windows",
+    "fill head",
+    "seeds",
+    "rounds",
+    "hyperparameters",
+    "timing labels"
+  ],
+  "null": "No new inferential null; causal attribution to loss objective conditional on exact prediction reproduction; consumed-data diagnostic only.",
+  "readings": [
+    "all-fold exact baseline parity",
+    "probability/value residual identity",
+    "calibration and local value on original kept/top-decile cohorts",
+    "all folds and both sides for both objectives",
+    "at/through value and tail losses",
+    "certificate strata descriptive only"
+  ],
+  "memory_limit_mib": 2048,
+  "execution_slot": "codex",
+  "raw_data_reads": false
+}

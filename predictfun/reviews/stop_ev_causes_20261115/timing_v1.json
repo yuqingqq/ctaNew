@@ -1,0 +1,523 @@
+{
+  "asof": "2026-11-15T14:46:05.295270+00:00",
+  "source_report_asof": "2026-11-15T14:40:31Z",
+  "source_sha256": "947b69b564c88480ebd87a524c0c8dc1f2ecad4407765d8ad866c9bdf0c0f7b5",
+  "input_sha256": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2sep.json": "eb7570f21e13f86079f25b10b768895e5e293f0c0e09241aab93afd758ad3b34",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261023_-250.parquet": "ffbfa5cf0646449e7c6078c09d7e27af6f4d42eb74f949416a87464c3857b839",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261023_0.parquet": "47d39674c4e04925d242bb9c1a9a443c333ee993a4a48064beb4f0f6ad8d8b58",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261023_250.parquet": "d23ff1501496bdc95534b92ad155ca5ec308677112335071f9f421baae00039d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_20261115/actions_20261023_all_anchors_sensitivity.parquet": "a9ba95d4d5632167e62e158ffd30a5a4d5cd04a8cc592be541570cb9ef52f55f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261023/receipt.json": "5452712ef87b2bb526fe3b7e5cfb0676837e10e5852eb948d4ce65e9b15df949",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261023/certified_ws.parquet": "fd396365f0f0edfe9a49d1171ca0c0403c07332eaa21d67f398b540d2206b09a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261024_-250.parquet": "a3b0c239962ecb4f6ed86baa844b3f163ee6b4fff8d1ea91a8ad85ec166eda31",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261024_0.parquet": "4294a8dc68cdc2410bb1dd86ac25a0c8f66c0bd73794db20741121035d0ca542",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261024_250.parquet": "d7578c5cc3474d6b126ade9213c11c1f74a91ac2258e19c35267220ccd4fc1a6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_20261115/actions_20261024_all_anchors_sensitivity.parquet": "7b7fd8f5728b350e8c164209fe5c0222e3aaf19dbf1eee29394c42426f8c26f6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261024/receipt.json": "edf763116bbbc45b19b1571d8f24c96941789239dbef9dd1f95a9586a715495d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261024/certified_ws.parquet": "d13087e104639af19445f97109b041830b0183685a60037583041f2703a5bb4b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261025_-250.parquet": "2c175373db8b20fc44d2506b24421a8ee66c4ecc77e006c8c0e0fd93ed03517b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261025_0.parquet": "9fd30bb9959b9d701f9993547040a9de101a4e6c3247b7af232635cb2e212664",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261025_250.parquet": "09495634b52163416c7639850d35828415b95d5934a6797fd2ca3ff5bc054ea2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_20261115/actions_20261025_all_anchors_sensitivity.parquet": "669d9fd88589a70b3b37139db1a82c6b7d6392d7b0bdf1d2a2cf71e156b99bf9",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261025/receipt.json": "05d950eb9a4de696fba75a15dd6daaa6f0d6650c25f4d58255e3cd5016d3db02",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261025/certified_ws.parquet": "0837f95aaeb5e5a3a70865f31324a2b69b5a2fed8f7379ef0d95ec6ae9daa53f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261026_-250.parquet": "2d6f433f0f6e11ee5315344bc9b7ecce01b8c31749acd37d7700522821d04be1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261026_0.parquet": "77f3dfc02f3a27d7b5ae8166159de27d3591b956bc44193ca6dbefb7f6d54164",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261026_250.parquet": "be8ed6cd0fbf34b1f97c6a1b1ea3c7598bd82c8eb6d1766a70e71c0726312364",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_20261115/actions_20261026_all_anchors_sensitivity.parquet": "08abf09336001ad0ee1cd77f548379a75155af8765f1db707973eb35a30824d1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261026/receipt.json": "7c613f8c75a2b4294248b8a2f1a162319781f9868360ee9d4dfa423c58f30a91",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261026/certified_ws.parquet": "641bed285b3d4c53f621e64782f61c0870c099bf8184c4531988cd785f8298e0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261027_-250.parquet": "5734007abe0e1895009376c0cd292679c41ed3b432e43c4578a68ba6db18fb3d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261027_0.parquet": "4341f1b486c3917528579c35bc5f17b6144526af0349ca6e5da8d49cae85c2ef",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261027_250.parquet": "a044e133a28664e34b8d1544ea68649c2b7559ecb39e9508ca41bb219fa58c10",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_20261115/actions_20261027_all_anchors_sensitivity.parquet": "70874e1d3a2bca3a964a7da3088ad67c0d9d93ae8167db92958c2aafa18e3e9c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261027/receipt.json": "4b92586b87e1833492581f7d41d390a193373ccf60d38fbdc0b5c1cdea9d8f17",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261027/certified_ws.parquet": "6c44b74656db30533ea6d5b9269bd2f7920d34bb024fd271723599c42dc35a14",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261031_-250.parquet": "a1027f573c42b662e8b41c3e538f369eb088e4657257fb6432753c567ad13e3f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261031_0.parquet": "eba3405bcb9039b5e8f41f9541821a0c70a1fa1b94f589d6d4a53e4a54660598",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261031_250.parquet": "f878231334c702cc75a180691548534754cbef029897b897c49f814b524b9192",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_20261115/actions_20261031_all_anchors_sensitivity.parquet": "d71e65748e667cff497729f1fc6810d300f366740a6acc77132a1ece82404e03",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261031/receipt.json": "75b11135c5eaba8310193bbaace6787cfa0b6bbd01f0eb56f6b7db298de71c57",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261031/certified_ws.parquet": "7eaaa4705a515ee931f6c8de024bc9a92bcd40f9ea04b89d109f241cbf2365d3",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261101_-250.parquet": "43865ec55dd99068fee66138ad11355d51837ba74753e0e9e4920a6d43998fb0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261101_0.parquet": "64c9877599e6874b9e414098e2b236a1d897dc1445f6715eb2948e56087f5b7e",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261101_250.parquet": "dfaad550c80b7f5d74f438c021d801f9425ddce253c6c28b10b6612de587be11",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_20261115/actions_20261101_all_anchors_sensitivity.parquet": "d868f1829c2e62d8c190e9af3a6ad999574918a4035c902173fef772484d273b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261101/receipt.json": "59d31c9e79fc57945dfc03529cc781dd0239fbd91ee1af143ea97aa6753c30c6",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261101/certified_ws.parquet": "9bc71b9ad7305b8de338f04b68bef87cea880291acc5c30f1eef5f679b38f6a7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261102_-250.parquet": "c12af75292b055d250747c4c26175a5f8bc5b559066e1c83ef3f7b293c3e93b1",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261102_0.parquet": "7b100b80f07fa592fb386b894ef7c763e1ddc128ffa5e1b2a12751feb9517883",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261102_250.parquet": "46e16d67bfecf9c0482bf0f66ef0b0d3befa5698c1ff475b87dc6375d411125b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_20261115/actions_20261102_all_anchors_sensitivity.parquet": "0e1296e332030f53ab50a766b0f7e579ae31797b2570480f5e3e1f05d3112a36",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261102/receipt.json": "c381a3d16dfbc30d9f1932f129c529b201645499f2ef96a2b1d0256028102df0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261102/certified_ws.parquet": "0c5f05bcd4f7641facbb8c5404a9355cb93f109beea97a8919d1b8d75ab5115f",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261103_-250.parquet": "ff3c60004d5f7018322782f8b5db469869e4d126b59c67540f0db4fe0135a3cf",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261103_0.parquet": "e4b5b651219efbaf2ab744f29e786e4dac87d6276c6f5e9a01870282cd72d193",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_e2sep_20261115/e2_20261103_250.parquet": "174be94c58a802f81068422eb78ea89257af3887bc09aa0b071130d376f9a6c8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_20261115/actions_20261103_all_anchors_sensitivity.parquet": "f3b45ab5de7931e4f34a716562cd3ec2394383edea010c6a0358aa27c6b3bde2",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261103/receipt.json": "7991959cf1724589bc121aa57a9ab3eed508d8cb056b076b3dcd8d3a7c24f99a",
+    "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_timing_certified_20261115_v1/20261103/certified_ws.parquet": "fef744a45aea3dc2fc9cd1020839928272135e2f7350fa3cd34e9aa8bbdf2e6f"
+  },
+  "days": [
+    "20261023",
+    "20261024",
+    "20261025",
+    "20261026",
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "scenarios": {
+    "-250": {
+      "n": 268756,
+      "mean": -4.159419618480391,
+      "groups": {
+        "E2-REACHED": {
+          "n": 23170,
+          "mean": -26.27721135515407
+        },
+        "MIXED": {
+          "n": 10932,
+          "mean": -37.90509908445877
+        },
+        "QUIET": {
+          "n": 196766,
+          "mean": 0.0
+        },
+        "WS-REACHED": {
+          "n": 37888,
+          "mean": -2.498085111224996
+        }
+      }
+    },
+    "0": {
+      "n": 265373,
+      "mean": -3.05257890588804,
+      "groups": {
+        "E2-REACHED": {
+          "n": 21922,
+          "mean": -19.534178890542474
+        },
+        "MIXED": {
+          "n": 10460,
+          "mean": -32.94914564245694
+        },
+        "QUIET": {
+          "n": 198100,
+          "mean": 0.0
+        },
+        "WS-REACHED": {
+          "n": 34891,
+          "mean": -1.066053966170504
+        }
+      }
+    },
+    "250": {
+      "n": 266011,
+      "mean": -2.1466796846544094,
+      "groups": {
+        "E2-REACHED": {
+          "n": 22805,
+          "mean": -8.167535854777208
+        },
+        "MIXED": {
+          "n": 9826,
+          "mean": -28.538706905971466
+        },
+        "QUIET": {
+          "n": 197859,
+          "mean": 0.0
+        },
+        "WS-REACHED": {
+          "n": 35521,
+          "mean": -2.937935879292086
+        }
+      }
+    }
+  },
+  "strict_shift_parity": {
+    "20261023": {
+      "-250": {
+        "n": 1503,
+        "different": 0
+      },
+      "0": {
+        "n": 1503,
+        "different": 0
+      },
+      "250": {
+        "n": 1503,
+        "different": 0
+      }
+    },
+    "20261024": {
+      "-250": {
+        "n": 2494,
+        "different": 0
+      },
+      "0": {
+        "n": 2494,
+        "different": 0
+      },
+      "250": {
+        "n": 2494,
+        "different": 0
+      }
+    },
+    "20261025": {
+      "-250": {
+        "n": 2089,
+        "different": 0
+      },
+      "0": {
+        "n": 2089,
+        "different": 0
+      },
+      "250": {
+        "n": 2089,
+        "different": 0
+      }
+    },
+    "20261026": {
+      "-250": {
+        "n": 1251,
+        "different": 0
+      },
+      "0": {
+        "n": 1251,
+        "different": 0
+      },
+      "250": {
+        "n": 1251,
+        "different": 0
+      }
+    },
+    "20261027": {
+      "-250": {
+        "n": 1441,
+        "different": 0
+      },
+      "0": {
+        "n": 1441,
+        "different": 0
+      },
+      "250": {
+        "n": 1441,
+        "different": 0
+      }
+    },
+    "20261031": {
+      "-250": {
+        "n": 3024,
+        "different": 0
+      },
+      "0": {
+        "n": 3024,
+        "different": 0
+      },
+      "250": {
+        "n": 3024,
+        "different": 0
+      }
+    },
+    "20261101": {
+      "-250": {
+        "n": 2755,
+        "different": 0
+      },
+      "0": {
+        "n": 2755,
+        "different": 0
+      },
+      "250": {
+        "n": 2755,
+        "different": 0
+      }
+    },
+    "20261102": {
+      "-250": {
+        "n": 2161,
+        "different": 0
+      },
+      "0": {
+        "n": 2161,
+        "different": 0
+      },
+      "250": {
+        "n": 2161,
+        "different": 0
+      }
+    },
+    "20261103": {
+      "-250": {
+        "n": 2193,
+        "different": 0
+      },
+      "0": {
+        "n": 2193,
+        "different": 0
+      },
+      "250": {
+        "n": 2193,
+        "different": 0
+      }
+    }
+  },
+  "statuses": {
+    "20261023": {
+      "-250": {
+        "eligible_estimated_timing": 33535,
+        "not_client_resting": 14515,
+        "untimed_reach": 783,
+        "probe_not_reached": 531,
+        "eligible": 470,
+        "incomplete_book_coverage": 244
+      },
+      "0": {
+        "eligible_estimated_timing": 33000,
+        "not_client_resting": 13327,
+        "untimed_reach": 698,
+        "eligible": 543,
+        "probe_not_reached": 519,
+        "incomplete_book_coverage": 225
+      },
+      "250": {
+        "eligible_estimated_timing": 32974,
+        "not_client_resting": 12426,
+        "untimed_reach": 707,
+        "eligible": 601,
+        "probe_not_reached": 495,
+        "incomplete_book_coverage": 226
+      }
+    },
+    "20261024": {
+      "-250": {
+        "eligible_estimated_timing": 28879,
+        "not_client_resting": 13433,
+        "eligible": 859,
+        "probe_not_reached": 407,
+        "untimed_reach": 401,
+        "incomplete_book_coverage": 291
+      },
+      "0": {
+        "eligible_estimated_timing": 28639,
+        "not_client_resting": 12509,
+        "eligible": 946,
+        "untimed_reach": 392,
+        "probe_not_reached": 382,
+        "incomplete_book_coverage": 286
+      },
+      "250": {
+        "eligible_estimated_timing": 28522,
+        "not_client_resting": 11966,
+        "eligible": 1055,
+        "untimed_reach": 398,
+        "probe_not_reached": 376,
+        "incomplete_book_coverage": 287
+      }
+    },
+    "20261025": {
+      "-250": {
+        "eligible_estimated_timing": 28573,
+        "not_client_resting": 15189,
+        "eligible": 855,
+        "untimed_reach": 529,
+        "probe_not_reached": 450,
+        "incomplete_book_coverage": 221
+      },
+      "0": {
+        "eligible_estimated_timing": 28297,
+        "not_client_resting": 14140,
+        "eligible": 817,
+        "untimed_reach": 497,
+        "probe_not_reached": 418,
+        "incomplete_book_coverage": 221
+      },
+      "250": {
+        "eligible_estimated_timing": 28342,
+        "not_client_resting": 13747,
+        "eligible": 878,
+        "untimed_reach": 482,
+        "probe_not_reached": 426,
+        "incomplete_book_coverage": 222
+      }
+    },
+    "20261026": {
+      "-250": {
+        "eligible_estimated_timing": 35513,
+        "not_client_resting": 15709,
+        "untimed_reach": 976,
+        "incomplete_book_coverage": 551,
+        "probe_not_reached": 515,
+        "eligible": 307
+      },
+      "0": {
+        "eligible_estimated_timing": 35116,
+        "not_client_resting": 14107,
+        "untimed_reach": 938,
+        "incomplete_book_coverage": 547,
+        "probe_not_reached": 508,
+        "eligible": 312
+      },
+      "250": {
+        "eligible_estimated_timing": 35008,
+        "not_client_resting": 13253,
+        "untimed_reach": 940,
+        "incomplete_book_coverage": 547,
+        "probe_not_reached": 491,
+        "eligible": 366,
+        "missing_or_stale_mark": 1
+      }
+    },
+    "20261027": {
+      "-250": {
+        "eligible_estimated_timing": 30758,
+        "not_client_resting": 13899,
+        "untimed_reach": 902,
+        "probe_not_reached": 418,
+        "eligible": 415,
+        "incomplete_book_coverage": 381,
+        "missing_or_stale_mark": 1
+      },
+      "0": {
+        "eligible_estimated_timing": 30228,
+        "not_client_resting": 12389,
+        "untimed_reach": 814,
+        "eligible": 470,
+        "probe_not_reached": 404,
+        "incomplete_book_coverage": 372
+      },
+      "250": {
+        "eligible_estimated_timing": 30284,
+        "not_client_resting": 11317,
+        "untimed_reach": 822,
+        "eligible": 557,
+        "probe_not_reached": 397,
+        "incomplete_book_coverage": 384
+      }
+    },
+    "20261031": {
+      "-250": {
+        "eligible_estimated_timing": 18803,
+        "not_client_resting": 9931,
+        "eligible": 1390,
+        "incomplete_book_coverage": 838,
+        "untimed_reach": 353,
+        "probe_not_reached": 279,
+        "missing_or_stale_mark": 1
+      },
+      "0": {
+        "eligible_estimated_timing": 18332,
+        "not_client_resting": 8470,
+        "eligible": 1537,
+        "incomplete_book_coverage": 816,
+        "untimed_reach": 305,
+        "probe_not_reached": 254,
+        "missing_or_stale_mark": 1
+      },
+      "250": {
+        "eligible_estimated_timing": 18238,
+        "not_client_resting": 8027,
+        "eligible": 1643,
+        "incomplete_book_coverage": 815,
+        "untimed_reach": 282,
+        "probe_not_reached": 245
+      }
+    },
+    "20261101": {
+      "-250": {
+        "eligible_estimated_timing": 20837,
+        "not_client_resting": 12677,
+        "incomplete_book_coverage": 1097,
+        "eligible": 917,
+        "untimed_reach": 439,
+        "probe_not_reached": 353,
+        "missing_or_stale_mark": 1
+      },
+      "0": {
+        "eligible_estimated_timing": 20281,
+        "not_client_resting": 11042,
+        "incomplete_book_coverage": 1090,
+        "eligible": 1080,
+        "untimed_reach": 387,
+        "probe_not_reached": 327,
+        "missing_or_stale_mark": 2
+      },
+      "250": {
+        "eligible_estimated_timing": 20270,
+        "not_client_resting": 10599,
+        "eligible": 1215,
+        "incomplete_book_coverage": 1077,
+        "untimed_reach": 395,
+        "probe_not_reached": 324
+      }
+    },
+    "20261102": {
+      "-250": {
+        "eligible_estimated_timing": 32941,
+        "not_client_resting": 16200,
+        "incomplete_book_coverage": 789,
+        "untimed_reach": 571,
+        "eligible": 554,
+        "probe_not_reached": 527,
+        "missing_or_stale_mark": 2
+      },
+      "0": {
+        "eligible_estimated_timing": 32552,
+        "not_client_resting": 14100,
+        "incomplete_book_coverage": 755,
+        "eligible": 638,
+        "untimed_reach": 526,
+        "probe_not_reached": 486,
+        "missing_or_stale_mark": 2
+      },
+      "250": {
+        "eligible_estimated_timing": 32526,
+        "not_client_resting": 13441,
+        "incomplete_book_coverage": 785,
+        "eligible": 714,
+        "untimed_reach": 533,
+        "probe_not_reached": 489,
+        "missing_or_stale_mark": 2
+      }
+    },
+    "20261103": {
+      "-250": {
+        "eligible_estimated_timing": 32373,
+        "not_client_resting": 16208,
+        "eligible": 777,
+        "untimed_reach": 666,
+        "probe_not_reached": 500,
+        "incomplete_book_coverage": 338,
+        "missing_or_stale_mark": 2
+      },
+      "0": {
+        "eligible_estimated_timing": 31738,
+        "not_client_resting": 14091,
+        "eligible": 847,
+        "untimed_reach": 638,
+        "probe_not_reached": 468,
+        "incomplete_book_coverage": 327,
+        "missing_or_stale_mark": 1
+      },
+      "250": {
+        "eligible_estimated_timing": 31983,
+        "not_client_resting": 13162,
+        "eligible": 835,
+        "untimed_reach": 651,
+        "probe_not_reached": 458,
+        "incomplete_book_coverage": 331,
+        "missing_or_stale_mark": 1
+      }
+    }
+  },
+  "controls": {
+    "duplicate": true,
+    "time": true,
+    "label": true
+  },
+  "interpretation": "Within-replay timing sensitivity on changing populations; no estimate of physical timing errors or paired causal effect. Strict certificate invariance independently checked."
+}
