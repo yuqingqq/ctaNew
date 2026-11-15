@@ -354,7 +354,7 @@ def fair_fix(day, W0):
     ck = json.load(open(f'{K.IO}/step1/{day}/clock_rl_d2.json')); dd = float(ck['d_dec']); b_in = float(ck['bn_in']) + dd; net = 72.0 - dd
     reg = pd.read_parquet(f'{K.IO}/step1/{day}/registry.parquet', columns=['mid', 'ws', 'start_price']); SP = dict(zip(reg.mid.astype(int), reg.start_price.astype(float)))
     WSd = dict(zip(reg.mid.astype(int), reg.ws.astype(float)))
-    S = pd.read_parquet(f'{K.IO}/step5/{day}/rows_rl_d2_pk.parquet', columns=['mid', 'tau', 'bn_mid', 'tau_rem', 'sigma', 'p_bn', 'gap'])
+    S = pd.read_parquet(f'{K.IO}/step5/{day}/rows_rl_d2_pk.parquet', columns=['mid', 'tau', 'bn_mid', 'tau_rem', 'sigma', 'p_bn', 'gap', 'basis_bps'])
     S = S[S.mid.isin(W0)]; S = S[S.tau.values < S.mid.map(WSd).values * 1000.0 + 61000.0].sort_values(['mid', 'tau'], kind='stable')
     d0 = pd.Timestamp(f'{day[:4]}-{day[4:6]}-{day[6:]}', tz='UTC'); hours = []
     for i in range(-1, 24):
@@ -380,9 +380,15 @@ def fair_fix(day, W0):
         keep = k >= k[-1] - 10000.0; prev = (k[keep], m[keep])
     okr = np.isfinite(rv); rel_t = REF[okr, 0]; rel_v = rv[okr]
     bas = relay_basis(rel_t, rel_v, S.tau.values.astype(np.float64))
-    sp = S.mid.map(SP).values.astype(np.float64)
-    pbn = 100.0 * ndtr(np.log(S.bn_mid.values * bas / sp) / (S.sigma.values * np.sqrt(np.maximum(S.tau_rem.values, 1e-3))))
-    gapc = pbn - (S.p_bn.values - S.gap.values)            # step 5's gap = p_bn - the known Predict mid
+    sp = S.mid.map(SP).values.astype(np.float64); old = 1.0 + S.basis_bps.values.astype(np.float64) / 1e4
+    den = S.sigma.values.astype(np.float64) * np.sqrt(np.maximum(S.tau_rem.values.astype(np.float64), 1e-3)); mid_ = S.bn_mid.values.astype(np.float64)
+    # the correction is a DELTA on step 5's own p_bn (both evaluations from the same stored inputs), so rows whose basis is unchanged keep
+    # step 5's value bit for bit (a full recomputation from float32-stored inputs moved every row by up to 0.0085 c - float32 noise)
+    same = np.isfinite(bas) & np.isfinite(old) & (np.abs(bas - old) <= 1e-9)
+    delta = 100.0 * (ndtr(np.log(mid_ * bas / sp) / den) - ndtr(np.log(mid_ * old / sp) / den))
+    p5 = S.p_bn.values.astype(np.float64)
+    pbn = np.where(same, p5, np.where(np.isfinite(old), p5 + delta, 100.0 * ndtr(np.log(mid_ * bas / sp) / den)))
+    gapc = S.gap.values.astype(np.float64) + (pbn - p5)    # step 5's gap = p_bn - the known Predict mid
     dif = np.abs(pbn - S.p_bn.values) > 1e-4; hh = (S.mid.map(WSd).values % 3600.0) == 0.0
     st = dict(rows=int(len(S)), changed=float(np.nanmean(dif)), changed_hh00=float(np.nanmean(dif[hh])) if hh.any() else NAN,
               changed_other=float(np.nanmean(dif[~hh])) if (~hh).any() else NAN, max_abs_c=float(np.nanmax(np.abs(pbn - S.p_bn.values))) if len(S) else NAN,
