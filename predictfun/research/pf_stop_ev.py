@@ -2,6 +2,10 @@
 model (USER 2026-11-15: "Again, we should have a few preprocessing steps, first, data processing, check its coverage, data quality, etc,
 then model, then the pipeline"). Design: predictfun/handoffs/20261115_stop_ev_design.md, sections 7-8. No model and no policy here.
 
+UNTIMED RULE (USER 2026-11-15, "Yes model now" on the recommendation after stage 1 showed the contract's whole-window refusal took 198k of
+  393k probes): an untimed leg refuses only the actions it can reach - its exec-second band overlaps the action's own exposure [t, t + 1 s],
+  on the action's side, at or beyond its price (status untimed_reach; 5.2k probes on the 9 days under the stage-1 count). Untimed legs
+  before t that changed the order's queue or remainder in reality are a stated limit (~1% of legs).
 PRIMARY LABELS (actions_<day>_<timing>; the Codex contract stop-ev-chronological-order-value-v1 in pf_stop_ev_accounting.py, adopted
   2026-11-15 after its reviews e315abe8 / ffa2025e / 211109b1, which supersede the design's aggregate label): the corrected neutral keep-all
   ladder (replay_neutral: pf_stop_queue_activation_lane, M 50, 6 rungs x Z sh a side, unknown queue 0, no cap, no learned pull / gate /
@@ -99,7 +103,7 @@ CONTROLS (synthetic; any failure -> no output): the single-order rule on hand ca
   front against brute force; the INCOMPLETE flags against brute force (a feed gap, an untimed leg); the reconciliation on a toy two-sided
   lane window (cap binding, SHARED, ENDED); the primary labels through the contract on that window (ledger reconciles, E9 agrees);
   planted errors each caught: rule-M cap off, legs before t + 22 counted, THROUGH counted as STOP, venue-frame visible size, ask markout
-  sign, invalid-book rows kept, INCOMPLETE flags off, marks at the anchor, a leg missing from the provenance.
+  sign, invalid-book rows kept, INCOMPLETE flags off, marks at the anchor, a leg missing from the provenance, the untimed rule off.
 STAGE 2 NOTES (from the reviews, not built here): inputs use client-known state only (never the simulator's ahead / rem, delayed trade
   reports or unacknowledged fills); evaluation on signed value of neutral actions with matched controls and >= 200-draw nulls, day
   clusters; grid copies are correlated samples (weights / dedupe); baselines conditional on price, level, q and size; joint cap in stage 3.
@@ -149,7 +153,10 @@ A_FEAT = tuple(AC.ORDER_FEATURES)
 A_LAB = ('value_cents', 'value_per_known_remaining_share', 'filled_quantity', 'past_quantity', 'common_prefix_quantity', 'actual_remaining_after_prefix',
          'at_price_value_cents', 'through_price_value_cents')
 MUT_NO_CAP = MUT_WIN_EARLY = MUT_THR_AS_STOP = MUT_VENUE_VIS = MUT_ASK_SIGN = MUT_POP_ALL = MUT_INC_OFF = MUT_MARK_ANCHOR = MUT_PROV_DROP = 0   # planted errors
-MUTS = ('MUT_NO_CAP', 'MUT_WIN_EARLY', 'MUT_THR_AS_STOP', 'MUT_VENUE_VIS', 'MUT_ASK_SIGN', 'MUT_POP_ALL', 'MUT_INC_OFF', 'MUT_MARK_ANCHOR', 'MUT_PROV_DROP')
+MUT_UNTIMED_OFF = 0
+MUTS = ('MUT_NO_CAP', 'MUT_WIN_EARLY', 'MUT_THR_AS_STOP', 'MUT_VENUE_VIS', 'MUT_ASK_SIGN', 'MUT_POP_ALL', 'MUT_INC_OFF', 'MUT_MARK_ANCHOR', 'MUT_PROV_DROP',
+        'MUT_UNTIMED_OFF')
+UNTIMED_RULE = 'order_reach'   # USER 2026-11-15 ("Yes model now", on the recommendation): an untimed leg refuses only the actions it can reach
 
 
 # ---------------------------------------------------------------- the single-order rule and the legs
@@ -545,10 +552,14 @@ def actions_window(day, W, lrows, srcs, RW, st, asof, errs):
             for s in (0, 1) for i in range(len(lrows[s]))}
     if MUT_PROV_DROP and prov:
         prov.pop(next(iter(prov)))
-    rw = RW.get(m, dict(expected=0, missing=[]))
+    rw = RW.get(m, dict(expected=0, missing=[], unt={0: [], 1: []}))
     gi = np.flatnonzero(np.diff(tf) > BOOK_GAP_MS)
-    cov = AC.Coverage(trade_start_ms=ws - 2000.0 - SHF, trade_end_ms=ws + 61000.0 - SHF, mark_end_ms=float(tf[-1]), expected_legs=int(rw['expected']),
-                      book_start_ms=float(tf[0]), book_end_ms=float(tf[-1]), missing=tuple(AC.MissingLeg(*x) for x in rw['missing']),
+    # USER 2026-11-15: untimed legs no longer refuse the whole window (the contract's c04370d6 rule refused half of all probes); they stay
+    # out of the ledger's tape and refuse only the actions they can reach (status untimed_reach below); the ledger still reconciles every
+    # other raw leg (expected = the raw population minus the untimed legs, which E2 accounts for).
+    n_unt = sum(1 for x in rw['missing'] if x[3] == 'untimed')
+    cov = AC.Coverage(trade_start_ms=ws - 2000.0 - SHF, trade_end_ms=ws + 61000.0 - SHF, mark_end_ms=float(tf[-1]), expected_legs=int(rw['expected']) - n_unt,
+                      book_start_ms=float(tf[0]), book_end_ms=float(tf[-1]), missing=tuple(AC.MissingLeg(*x) for x in rw['missing'] if x[3] != 'untimed'),
                       book_gaps=tuple(AC.MissingLeg(f'gap_{m}_{i}', float(tf[i]), float(tf[i + 1]), 'feed_gap') for i in gi))
     st['book_gaps'] += int(len(gi))
     try:
@@ -565,6 +576,12 @@ def actions_window(day, W, lrows, srcs, RW, st, asof, errs):
         for x in rows:
             d_, mm, sd, rung, gen = x['action_id']; t = float(x['decision_ms']); tg = np.asarray(W[sd]['tg'], float)
             kk = int(np.searchsorted(tg, t)); kk = kk if (kk < len(tg) and tg[kk] == t) else -1
+            if n_unt:
+                st[f'probes_in_windows_with_untimed_{timing}'] += 1
+            if x['status'] in ('eligible', 'eligible_estimated_timing') and not MUT_UNTIMED_OFF:
+                pr_ = float(x['features']['price']); end_ = min(t + 1000.0, led.end)
+                if any(u[0] <= end_ and u[1] >= t and ((u[2] <= pr_) if sd == 0 else (u[2] >= pr_)) for u in rw['unt'][sd]):
+                    x = dict(x, status='untimed_reach', label=None)
             for c_, v_ in (('m', int(mm)), ('side', int(sd)), ('rung', int(rung)), ('generation', int(gen)), ('decision_ms', t), ('k', kk),
                            ('hour', int(x['hour'])), ('status', x['status'])):
                 c[c_].append(v_)
@@ -701,7 +718,7 @@ def day_build(day):
     if st['clock_roundtrip_differ'] or st['legs_mid_nan']:
         fails.append(f"clock round trip {st['clock_roundtrip_differ']} / legs without a mid {st['legs_mid_nan']}")
     rep = dict(day=day, size=Z, stat=dict(st), load_stat=load_stat, checks=checks, flags=dict(dup=checks['E2']['flag_dup']), untimed=ust, asof=asof,
-               sources=SRC, label_contract=AC.CONTRACT, reference=AC.REFERENCE, ages_ms=list(AGES), timings=list(TIMINGS), e2_uncertainty_ms=E2_UNC_MS,
+               sources=SRC, label_contract=AC.CONTRACT, reference=AC.REFERENCE, untimed_rule=UNTIMED_RULE, ages_ms=list(AGES), timings=list(TIMINGS), e2_uncertainty_ms=E2_UNC_MS,
                book_gap_ms=BOOK_GAP_MS,
                queue_contract=QA.QUEUE_CONTRACT, clock=f'M {SHF:g}', horizon_ms=H_EV, seconds=round(time.time() - T0, 1), preroll_ms=K.PREROLL_MS,
                skip_foreign_parts=K.SKIP_FOREIGN_PARTS)
@@ -1069,9 +1086,20 @@ def selftest():
         # (5) the primary labels through the Codex contract on the same toy window: ledger reconciles, every probe has a status, E9 agrees
         (v0, q0_, g0_, s0_), (v1, q1_, g1_, s1_) = toy_w(0, bid, drop=(500.0, 0, 20.0), ask_up=1700.0), toy_w(1, ask, ask_up=1700.0)
         W2 = {0: v0, 1: v1}; LR = {0: q0_, 1: q1_ + 1000}; SR = {0: s0_, 1: s1_}
-        RW = {1: dict(expected=len(bid) + len(ask), missing=[], unt={0: [], 1: []})}; st2 = collections.Counter(); errs = []
+        UB = (600.0, 700.0, 55)                           # an untimed ASK leg at 55 possibly in 0.6-0.7 s: reaches ask orders at 52..55 then resting
+        RW = {1: dict(expected=len(bid) + len(ask) + 1, missing=[('9999', UB[0], UB[1], 'untimed')], unt={0: [], 1: [UB]})}
+        st2 = collections.Counter(); errs = []
         acts, _ = actions_window('20261023', W2, LR, SR, RW, st2, '2026-11-15T00:00:00Z', errs)
         n_el = sum(st2[k_] for k_ in st2 if k_.startswith(f'actions_{TIMINGS[-1]}_eligible'))
+        n_ur = st2[f'actions_{TIMINGS[-1]}_untimed_reach']
+        if acts is not None:                              # brute force: no eligible bid action at or above the leg's price may meet its band
+            a_ = acts[TIMINGS[-1]]
+            left = sum(1 for sd_, px_, t_, stt in zip(a_['side'], a_['x_price'], a_['decision_ms'], a_['status'])
+                       if stt in ('eligible', 'eligible_estimated_timing') and sd_ == 1 and px_ <= UB[2] + 1e-9 and t_ <= UB[1] and t_ + 1000.0 >= UB[0])
+            if left:
+                bad.append(f'untimed rule: {left} eligible actions the untimed leg can reach kept their label')
+        if n_ur != 2:                                     # ask rung 0 at t 300 and ask rung 3 at t 50 (the toy's probes, listed once by hand)
+            bad.append(f'untimed rule: {n_ur} untimed_reach statuses (expected 2)')
         if acts is None or st2['ledger_fail'] or errs or n_el < 3 or st2['e9_compared'] < 3 or st2['e9_mismatch'] or st2['e9_control_differ'] < 1 \
                 or any(len(acts[tm]['status']) != len(acts[TIMINGS[0]]['status']) for tm in TIMINGS):
             bad.append(f'actions toy: ledger failures {st2["ledger_fail"]} {errs[:2]}, eligible {n_el}, E9 {st2["e9_compared"]} / {st2["e9_mismatch"]} / '
