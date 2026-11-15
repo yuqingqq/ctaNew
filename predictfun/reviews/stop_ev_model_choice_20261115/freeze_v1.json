@@ -1,0 +1,37 @@
+{
+  "asof": "2026-11-15T15:28:33.920609+00:00",
+  "source_commit": "d32b0ca1e7bb073dca801d4f940a003870261eec",
+  "source_sha256": "011ca4ba89911180a33a9a1e5ccd9fe229b3ddbc2f8b53011a0eacf72697b1c9",
+  "original_model": "STOP-EV v2, certified_estimated",
+  "test_days": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "setups": [
+    "saved_hurdle_control",
+    "direct_l2_lightgbm",
+    "at_price_plus_through_price_l2_lightgbm",
+    "direct_extra_trees"
+  ],
+  "calibration": [
+    "raw",
+    "one_global_mean_residual_offset_from_reserved_day"
+  ],
+  "new_learned_setups": 3,
+  "reported_variants": 8,
+  "forward_race_candidates": 0,
+  "parameters": "LGBM unchanged except regression objective; Extra Trees 64 trees depth10 minleaf200 features.8 seed1 one thread; no tuning",
+  "fixed_count": "Within day/hour/side/rung/exact known remaining; highest value20%, greatest risk10%, ceil counts; diagnostics only",
+  "null": "Analytic matched expectation only; no significance test, p-value, resampling or confidence interval",
+  "tail": "Training all-action first percentile; all tails retained",
+  "controls": "Original fitted control exact replay, source/matrix hashes, keys/labels/certificates, mean/tail preservation, matched oracle, corrupted prediction and nonfinite score refusal, each saved model reload",
+  "data": "Prepared consumed actions only, original folds, all exclusions retained in source receipts; no raw/protected reads",
+  "scope": "No economic label/horizon/policy changed; representation and family comparison, not validation or model promotion",
+  "source_docs": [
+    "https://lightgbm.readthedocs.io/en/stable/Parameters.html",
+    "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html"
+  ]
+}
