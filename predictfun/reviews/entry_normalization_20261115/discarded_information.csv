@@ -1,0 +1,12 @@
+day,side,feature,kind,kept_alias,component,n,affected_n,fraction,weighted_fraction
+20261027,0,opp_5_oldest_age_log_high,duplicate_in_training,opp_3_oldest_age_log_high,3,999,3,0.003003003003003003,0.010805500982318271
+20261027,1,own_exposure_lots_high,duplicate_in_training,position_lots_high,3,993,1,0.0010070493454179255,0.005026704366949419
+20261027,1,other_exposure_lots_low,duplicate_in_training,position_lots_high,2,993,1,0.0010070493454179255,0.005026704366949419
+20261027,1,capacity_left_lots_low,duplicate_in_training,position_lots_high,2,993,1,0.0010070493454179255,0.005026704366949419
+20261027,1,opp_5_price_gap_mean_high,duplicate_in_training,opp_2_price_gap_mean_high,3,993,1,0.0010070493454179255,0.005026704366949419
+20261027,1,opp_5_queue_unknown_high,constant_in_training,,3,993,1,0.0010070493454179255,0.00031416902293433867
+20261031,0,opp_1_oldest_age_log_high,duplicate_in_training,opp_0_oldest_age_log_high,3,954,1,0.0010482180293501049,0.006402561024409764
+20261031,1,opp_3_price_gap_mean_high,duplicate_in_training,opp_2_price_gap_mean_high,3,926,2,0.0021598272138228943,0.012279355333844973
+20261101,0,own_5_price_gap_mean_high,duplicate_in_training,own_3_price_gap_mean_high,3,985,4,0.0040609137055837565,0.0015717092337917485
+20261101,1,other_exposure_lots_low,duplicate_in_training,own_exposure_lots_high,2,965,1,0.0010362694300518134,0.006336633663366337
+20261102,0,other_exposure_lots_low,duplicate_in_training,position_lots_high,2,1065,1,0.0009389671361502347,0.004266666666666667
