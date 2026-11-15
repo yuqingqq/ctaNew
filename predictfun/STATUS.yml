@@ -1,3 +1,19 @@
+stop_ev_accounting_status_20261115:
+  asof: '2026-11-15T13:37:11.660804+00:00'
+  status: saved_primary_accounting_checks_pass
+  source_asof: '2026-11-15T13:00:52Z'
+  checker_commit: c677eef8
+  days: 9
+  neutral_probes: 393154
+  strict_eligible: 2809
+  estimated_timing_eligible: 72255
+  planted_corruptions_refused: 5
+  primary_accounting_defect_found: false
+  timing_coverage_resolved: false
+  raw_duplicate_identity_reaudit: false
+  review: predictfun/handoffs/20261115_stop_ev_accounting_status.md
+  evidence: predictfun/reviews/stop_ev_accounting_status_20261115/receipt_v1.json
+
 stop_ev_accounting_fix_20261115:
   asof: '2026-11-15T12:55:32Z'
   status: implemented_integrated_synthetic_checks_pass
