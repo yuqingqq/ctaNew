@@ -195,3 +195,40 @@ inputs otherwise. The loader's boundary-hour filter is on; rows rebuilt with it 
 Next (queued 05:23Z, run_stop_model2.sh): the extra order-flow inputs (pf_stop_model_x5.py: Predict OFI from known frames, Binance 20-level
 depth; USER "If we include sufficient inputs like imbalance, flow etc") for the 9 days -> x5test (adopt a family iff +0.25% log loss on
 average with >= 10 / 18 heads better on the dev fold) -> v5 if adopted -> STOP-PLAY on the winning version.
+
+## 9. Extra order-flow inputs (USER: "If we include sufficient inputs like imbalance, flow etc")
+
+Coverage before: imbalance in and strong (Binance top-of-book imbalance change = the top input at 250 ms / 1 s; Predict L1-3 imbalance
+8-11% of SHAP); Binance taker flow in but weak (0.1-0.6%); Predict trade prints NOT usable sub-second - they reach us 2.5 / 6.5 / 13 s after
+execution (p05 / p50 / p95; a polled API), while the book frames carry the same trades ~53 ms after the venue (in as L1 depletion and
+settlement-pending flows). Missing: order-flow imbalance from book updates, Binance depth beyond L1.
+
+pf_stop_model_x5.py (fa2b5537) builds rows_<day>_x5.parquet beside the rows: PF_OFI (Cont-Kukanov-Stoikov L1 OFI over the known frames in
+(t - h, t] and the best-3 depth-imbalance change, h = 250 / 1000 ms, / W30, adverse) and BN_DEPTH (Binance depth20 snapshots known at
+E + 3.5 ms: 5 / 20-level imbalance, its 250 ms change, 5-level multi-level OFI / the 30 s mean depth, snapshot age). Every day: pair
+falsifier 450 / 0, depth falsifier 400 / 0 differences, no missing depth hour; OFI equals a brute-force sum; 2 planted errors caught.
+
+Adoption test (dev fold, v4 base, 10-26 log loss, every usable row; rule >= +0.25% and >= 10 / 18 heads): BN_DEPTH +0.42%, 18 / 18 ->
+ADOPTED (8-10% of SHAP; Binance 5-level OFI over 250 ms / 1 s 3.2-3.4% each - the strongest new inputs); PF_OFI +0.28%, 16 / 18 -> ADOPTED
+(4-6%; the best-3 depth change 1.4-1.9%). v5 = v4 + both = 71 inputs.
+
+## 10. Data representation and coverage (USER: "Also check if the data representation is good and data coverage is good, need to check the data first")
+
+pf_stop_model_review.py datacheck (1bd1d038; v5's 71 inputs; decisions on dev days only, test-day inputs descriptive, no test-day label read):
+
+| Check | Result |
+|---|---|
+| Sampling | frames every ~50 ms (p90 67-74, p99 160-180), known ~53 ms later (p90 82-86); 14-18% of 50 ms steps see no new frame: the grid matches the feed |
+| Label resolution | frames inside (t + 22, t + H]: 72 ms ~1 (10-15% of rows none: the 72 ms label is about one snapshot), 250 ms 4.4, 1 s 19 |
+| Prices | integer ticks; 1-tick spread on 96% of rows; mid mostly 30-70 c (0.1-1.0% below 10 or above 90 c) |
+| Sizes / footprint | median visible own L1 177-417 sh; our order exceeds the visible best level on 8-11% of rows at 30 sh, 12-19% at 50 sh, 19-33% at 100 sh (FLAG): the model reads the venue book without our orders - the replay matches, a live feed must subtract own resting size |
+| Window start | W30 sees ~35 frames at t_rel 0 (5 s pre-roll), 130 at 5 s, ~580 at 30 s (D5); NaN only in the first 5 s (fair price 48%, until the start price is known) |
+| Side symmetry | adverse imbalance inputs are exact mirrors by side (FLAG, not a defect): the raw Predict L1 imbalance has a +0.05 structural offset, fside covers it |
+| Calendar | 288 / 288 windows every day, every hour, weekdays and weekends; no missing Binance / depth hour |
+| Regimes | sigma per window (x1e-5) 2.1-4.5 by day; Binance 3-11 trades / s; the quiet weekend test days 10-31 / 11-01 have ~8% of rows with sigma below the training range (FLAG) and are the model's weakest test days (H72 j1 AUC 0.904 / 0.922 vs 0.93-0.94) |
+| Separability | adversarial AUC train vs target day 0.91-0.96 (sigma 52-65% of gain), 0.86-0.94 without it (sens - which contains sigma -, price level, deep sizes): a volatility / price regime shift by day, not a data error |
+| Rare events | 750-1,200 H72 j6 positives a day (thin; lambda_l2 = 10 covers the deep heads) |
+
+No model change: there are no further training days without the forward blocks, and normalizing sens was tested and rejected on the dev
+days (R1). Next: v5 on the five folds, then STOP-PLAY at 30 sh (the oracle's size) and 100 sh (USER: "we can use a larger size for testing
+or make it configurable"; pf_stop_play.py PF_PLAY_SIZE).
