@@ -1,0 +1,76 @@
+{
+  "version": 3,
+  "asof": "2026-11-15T17:39:05.608720+00:00",
+  "source_commit": "c7bc4aca4dd2ea2f86eea222d7b753c9654e1a8e",
+  "sources": {
+    "pf_stop_ev_latency.py": "d96d1e000152c21067a59f01b3c8aae255793d79faf2232dbcc97da7043eba48",
+    "pf_latency_inputs.py": "b8f5ccbb7df623d9895ac668bc986e5ddc48193a7a9a2cd0c413feaf1a86a037",
+    "pf_stop_ev_latency_report.py": "42295d6aacf0df52936996154b986292ef7435b7d475e1b02a583daeb6f8f2bf"
+  },
+  "days": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "population": "All available first-minute windows on the five existing consumed test dates, boundary filter recorded; no timing-certificate or fill-outcome sample filter. Untimed trades imputed by committed b1ea549a; corrected v3 all-eligible-action models held frozen.",
+  "configurations": [
+    "current execution and signal clocks, M50",
+    "zero placement/cancel/pending-cancel/fill-notice delay, existing signal clocks, M50",
+    "zero modeled Predict and Binance event-to-knowledge + order/notification delay, M50",
+    "same modeled zero clocks, M0 trade timestamp sensitivity"
+  ],
+  "fixed": "50ms review and fresh gate at every entry; 6 rungs x 30 shares x 2 sides; uncapped; zero repost wait; unknown-depth queue = 0; activation-snapshot queue rule M. All fills primary; young/WS/E2/imputed are additive attribution only.",
+  "rules": [
+    "KA keep all",
+    "EV full frozen hurdle keep/post iff EV >=0 (fresh entry is diagnostic, not validated wait/post target)",
+    "B2 frozen order-only hurdle same zero cutoff",
+    "QR frozen fill head, prior calibration thresholds",
+    "MD1000 frozen harm-depth heads, prior calibration thresholds"
+  ],
+  "multiplicity": {
+    "rules": 5,
+    "clock_configurations": 4,
+    "cells_per_day": 20,
+    "new_fits": 0,
+    "new_threshold_searches": 0
+  },
+  "primary": "Whole-portfolio cash plus inventory marked at 60.2s, including all fills; counts, shares, cents/share, good and lost value, 1s/5s markouts, quote uptime, pulls, terminal/max inventory and pending/imputed/unknown-queue attribution. Paired day deltas of clock settings within same rule; between-rule differences have endogenous exposure and are descriptive.",
+  "positive_controls": [
+    "instant placement catches a toy trade missed with delay",
+    "instant cancel prevents a toy fill that arrives before delayed cancellation",
+    "zero event knowledge sees an event delayed clock cannot",
+    "fresh entry evaluated off former 250ms cadence",
+    "clock restoration",
+    "every sampled order state equals independent known_state under its clock"
+  ],
+  "refusals": [
+    "stale entry gate rejected by off-cadence test",
+    "future event perturbation must not change past lookup",
+    "tape and model identity mismatches fail",
+    "lane conservation and terminal reconciliation fail",
+    "changed input hashes fail",
+    "resident memory cap 2GiB"
+  ],
+  "nulls": "No inferential or information-beyond-null claim. No random null run; future inferential comparison needs a separately frozen matched design with >=200 draws. All variants reported and these dates remain consumed.",
+  "limitations": [
+    "Zero modeled delay retains 50ms grid; cannot claim continuous zero reaction latency",
+    "Zero-feed rebuild keeps pre-window volatility context fixed and uses relay receipt-minus-72ms clock",
+    "Venue-event timestamps and imputed executions are assumptions; same shared queue simulator remains under independent review",
+    "Frozen EV/B2/QR v3 models trained with positive cancel latency; not the best model retrained for zero latency",
+    "EV entry extension and zero cutoff omit measured queue continuation cost",
+    "No live trading, no policy promotion, no protected dates",
+    "QR retains earlier fixed v2 thresholds; MD remains saved v6 benchmark. Neither is reoptimized for these clocks."
+  ],
+  "output": "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_latency_20261115_v3",
+  "supersedes": "freeze_v2.json: interrupted during raw input build, no completed replay receipt or inspected economic output. Corrected v3 artifacts became available; use the current model instead of timing-selected v2.",
+  "changes": "EV/B2/QR now use corrected v3 heads from committed 0465f7c3 pipeline, all five test fits available and reload_pass. All populations, clocks, rules and thresholds unchanged. QR retains its earlier v2 fixed threshold as a benchmark; no claim of v3-optimal calibration. MD remains saved v6. No new fit or threshold selection.",
+  "model_fit_hashes": {
+    "20261027": "eabdaf4779f18b1ef4d2082e23aec978b805967e75e3bdf842d4d997e7f2026d",
+    "20261031": "aea470888bccd5a194c04444b55122e014971d8fafe2ddf0c588ea72eacaf4b6",
+    "20261101": "f0c9f1400a95a1fcd456b6e9a7e1df9e3bb602d73fbb86206b46be51d9adbb5d",
+    "20261102": "f4bc7e344eb811da5f3443dd1ab6a8b2cc3c0ebf97304b8810b3d0aa0b217d4f",
+    "20261103": "f4853d0da2f2b5db6728ac0fbd455114040674c724cc1d2c2363894c631e2730"
+  }
+}
