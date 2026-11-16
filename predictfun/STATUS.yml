@@ -21,8 +21,8 @@ stop_ev_minutes_20261116:
   freeze: predictfun/reviews/stop_ev_minutes_20261116/freeze_v3.json
   smoke_status: passed_all_controls
   serialization_controls: sparse_text_roundtrip_and_unfixed_refusal_passed
-  completed_dates: [20261027, 20261031, 20261101]
-  completed_windows: 858
+  completed_dates: [20261027, 20261031, 20261101, 20261102]
+  completed_windows: 1146
 
 strategy_scorecard_20261116:
   status: complete_audited_merged
