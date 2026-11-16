@@ -11,6 +11,41 @@ import lightgbm as lgb
 np,pd=C.np,C.I.pd
 
 
+def plot(result,dest):
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    models=result['pooled']['models'];colors={'joint':'#238b77','independent':'#cb7b28','direct_value':'#5e6fa1','mechanical':'#888888','empirical':'#bbbbbb'}
+    fig,ax=plt.subplots(2,2,figsize=(12,8),layout='constrained')
+    names=['empirical','mechanical','independent','joint']
+    ax[0,0].bar(names,[models[n]['joint_logloss'] for n in names],color=[colors[n] for n in names])
+    ax[0,0].set(title='Joint volume / price prediction',ylabel='Log loss (lower is better)')
+    categories=['Flow reaches price','Adverse price move','Own fill','Severe own loss']
+    for i,name in enumerate(['joint','independent']):
+        m=models[name];v=[m['flow_any_auc'],m['adverse_move_auc'],m['own_fill']['auc'],m['severe']['auc']]
+        ax[0,1].bar(np.arange(4)+(i-.5)*.34,v,width=.34,label=name,color=colors[name])
+    ax[0,1].axhline(.5,color='#777777',ls=':',lw=1)
+    ax[0,1].set(xticks=np.arange(4),xticklabels=categories,ylim=(0,1),ylabel='AUC',title='Ranking quality');ax[0,1].tick_params(axis='x',labelsize=8);ax[0,1].legend()
+    cal=pd.DataFrame(result['calibration']);points=[]
+    for name,col in [('joint',colors['joint']),('direct',colors['direct_value'])]:
+        g=cal[(cal.model==name)&(cal.target=='value_cents')]
+        ax[1,0].plot(g.predicted,g.actual,'o-',label=name,color=col);points.extend(g.predicted);points.extend(g.actual)
+    lo,hi=min(points),max(points)
+    ax[1,0].plot([lo,hi],[lo,hi],':',color='#777777',label='Calibrated')
+    ax[1,0].axhline(0,color='#bbbbbb',lw=.7);ax[1,0].axvline(0,color='#bbbbbb',lw=.7)
+    ax[1,0].set(xlabel='Predicted mean (cents / order)',ylabel='Realized mean (cents / order)',title='Local-value calibration by score decile');ax[1,0].legend()
+    for name in ['joint','independent','direct_value']:
+        ys=[]
+        for phase in range(1,6):
+            m=result['by_phase'][phase]['models'][name]
+            ys.append(np.sqrt(m['mse'] if name=='direct_value' else m['value_cents']['mse']))
+        ax[1,1].plot(range(1,6),ys,'o-',label=name,color=colors[name])
+    ax[1,1].set(xlabel='Contract minute',ylabel='RMSE (cents / order)',title='Local-value error by contract phase',xticks=range(1,6));ax[1,1].legend()
+    for a in ax.flat:a.spines[['top','right']].set_visible(False)
+    fig.suptitle(f"First chronological prediction check: {result['test_day']} · {result['pooled']['n']:,} neutral actions\nConsumed development data; simulated local values, not strategy P&L",fontsize=13)
+    fig.savefig(dest/'predictions.png',dpi=160);plt.close(fig)
+
+
 def summary():
     C.verify();controls=CHECK.selftest();day=C.TESTS[0]
     fold=C.OUT/('fit_'+day);fit=json.loads((fold/'receipt.json').read_text())
@@ -84,9 +119,9 @@ def summary():
         joint_value_mse_beats_independent=q['joint']['value_cents']['mse']<q['independent']['value_cents']['mse'],
         joint_value_mse_beats_direct=q['joint']['value_cents']['mse']<q['direct_value']['mse'])
     dest=C.REVIEW/'first_day_v1';C.require(not dest.exists(),'first-day output exists');dest.mkdir(parents=True)
-    C.dump(dest/'report.json',result);pd.DataFrame(calibration).to_csv(dest/'calibration.csv',index=False)
+    C.dump(dest/'report.json',result);pd.DataFrame(calibration).to_csv(dest/'calibration.csv',index=False);plot(result,dest)
     C.dump(dest/'receipt.json',dict(asof=C.stamp(),script_sha256=C.sha(__file__),source_manifest=C.sha(C.REVIEW/'freeze_v1.json'),
-        report_sha256=C.sha(dest/'report.json'),calibration_sha256=C.sha(dest/'calibration.csv'),n=len(p),test_day=day))
+        report_sha256=C.sha(dest/'report.json'),calibration_sha256=C.sha(dest/'calibration.csv'),plot_sha256=C.sha(dest/'predictions.png'),n=len(p),test_day=day))
     print(json.dumps(C.clean(dict(asof=result['asof'],pooled=metrics,comparisons=result['comparisons'],positive_score=selection))),flush=True)
 
 
