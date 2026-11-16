@@ -88,7 +88,7 @@ def summary():
     C.require(np.allclose(b.predict(x,num_threads=1),p.iloc[ix].direct_value,rtol=0,atol=1e-10),'direct reload')
     corrupted=prob['joint'].copy();corrupted[0,0]+=.01
     C.require(not np.allclose(corrupted,p.iloc[ix][[f'joint_p{k}' for k in range(15)]].to_numpy(),rtol=0,atol=1e-10),'corruption falsifier did not fire')
-    metrics=R.metrics(p);calibration=[];selection={}
+    metrics=R.metrics(p);calibration=[];selection={};consistency={}
     for name in ['joint','independent','empirical','direct']:
         value_col='direct_value' if name=='direct' else f'{name}_value_cents'
         targets=[('value_cents',value_col)] if name=='direct' else [(t,f'{name}_{t}') for t in C.TARGETS]
@@ -101,6 +101,15 @@ def summary():
                             actual_mean=float(g.value_cents.mean()) if len(g) else None,
                             filled_actions=int(g.own_fill.sum()),severe_actions=int(g.severe.sum()),
                             caveat='score calibration diagnostic; not a replay or a validated trading rule')
+        if name!='direct':
+            qty=p[f'{name}_own_quantity'].to_numpy();value=p[value_col].to_numpy()
+            price=raw.x_price.to_numpy();bid=raw.side.to_numpy()==0
+            low=-np.where(bid,price,100.-price)*qty
+            high=np.where(bid,100.-price,price)*qty
+            consistency[name]=dict(n=len(p),value_outside_quantity_implied_bounds=int(((value<low-1e-6)|(value>high+1e-6)).sum()),
+                severe_probability_above_own_fill_probability=int((p[f'{name}_severe']>p[f'{name}_own_fill']+1e-6).sum()),
+                expected_own_quantity_above_public_quantity=int((qty>p[f'{name}_flow_quantity'].to_numpy()+1e-6).sum()),
+                interpretation='separately fitted conditional response heads can be incoherent; diagnostic only, no post-hoc clipping')
     train_counts=np.zeros(15,int)
     for d in fit['training_days']:
         f=pd.read_parquet(C.OUT/d/'actions.parquet',columns=['status','joint_class'])
@@ -108,7 +117,7 @@ def summary():
     result=dict(asof=C.stamp(),test_day=day,training_days=fit['training_days'],calibration_day=fit['calibration_day'],
         evidence='one consumed chronological development day; point estimates only, no interval or strategy-profit claim',
         pooled=metrics,by_phase={int(k):R.metrics(g) for k,g in p.groupby('phase')},by_side={int(k):R.metrics(g) for k,g in p.groupby('side')},
-        calibration=calibration,positive_score_diagnostic=selection,
+        calibration=calibration,positive_score_diagnostic=selection,response_consistency=consistency,
         class_support=dict(training=train_counts,test=np.bincount(p.joint_class.astype(int),minlength=15)),
         within_null=R.within_null(p),coverage=dataset_reports,
         audit=dict(controls=controls,model_reload_rows=len(ix),probability_and_value_reload=True,corrupted_probability_refused=True,
