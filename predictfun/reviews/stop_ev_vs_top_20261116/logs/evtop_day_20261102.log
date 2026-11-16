@@ -1,0 +1,9 @@
+stop-ev-vs-top selftests passed; planted errors caught: {'MUT_NOSHIFT': True, 'MUT_PRE_AT': True, 'MUT_ASKSIGN': True}
+20261102: 48 windows, 3 s, rss 835 MiB
+20261102: 96 windows, 4 s, rss 835 MiB
+20261102: 144 windows, 4 s, rss 835 MiB
+20261102: 192 windows, 5 s, rss 835 MiB
+20261102: 240 windows, 6 s, rss 835 MiB
+20261102: 288 windows, 7 s, rss 835 MiB
+20261102: {'windows': 288, 'boundary_windows': 0, 'imputed_legs': 1242, 'legs': 166899, 'no_pre_mid': 0, 'no_mark': 0, 'parity_fills': 1564, 'parity_bad': 0, 'mutations': {'MUT_NOSHIFT': 1564, 'MUT_PRE_AT': 40, 'MUT_ASKSIGN': 848}, 'topc_legs': 165602, 'topc': {'top 5': [np.float64(419745.67877529043), 419745.6787752942], '6-20': [np.float64(470469.0045899386), 470469.0045899363], 'rest': [np.float64(-553544.9649097892), -553544.9649097886]}, 'seconds': 6.93235969543457}
+2026-11-16T06:48:01Z tag=evtop_day_20261102 rc=0 peak_rss_mib=835 wall_s=7.42 cpu_user_s=6.58 memavail_start_gib=23 disk_free_gib=458->458 slot=claude

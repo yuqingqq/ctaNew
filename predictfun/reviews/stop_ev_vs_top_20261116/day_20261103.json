@@ -1,0 +1,31 @@
+{
+ "windows": 288,
+ "boundary_windows": 0,
+ "imputed_legs": 2439,
+ "legs": 180864,
+ "no_pre_mid": 0,
+ "no_mark": 0,
+ "parity_fills": 2209,
+ "parity_bad": 0,
+ "mutations": {
+  "MUT_NOSHIFT": 2209,
+  "MUT_PRE_AT": 33,
+  "MUT_ASKSIGN": 1194
+ },
+ "topc_legs": 178333,
+ "topc": {
+  "top 5": [
+   293128.3427022505,
+   293128.3427022507
+  ],
+  "6-20": [
+   149723.14598197676,
+   149723.14598197737
+  ],
+  "rest": [
+   -716054.2240714245,
+   -716054.2240714236
+  ]
+ },
+ "seconds": 7.296314239501953
+}
