@@ -1,24 +1,48 @@
 strategy_scorecard_20261116:
-  status: four_dates_complete_last_running
+  status: complete_audited_merged
+  result_asof: '2026-11-16T05:21:47.766093+00:00'
+  audit_asof: '2026-11-16T05:22:42.399902+00:00'
   source_commit: 7f0ab3a7
   freeze_commit: 819e59fe
+  results_commit: d365caa5
+  merge_commit: 141f2014
   existing_cases: 10
   strategy_definitions: 7
   new_models: 0
   new_thresholds: 0
   new_policies: 0
-  target_windows_per_case: 1434
+  windows_per_case: 1434
+  completed_dates: 5
   test_dates: [20261027, 20261031, 20261101, 20261102, 20261103]
+  boundary_exclusions: 6
+  completed_strategy_windows: 14340
+  prior_window_parity_passed: 14340
+  exported_and_audited_fill_records: 259723
+  raw_book_files_verified: 124
+  positive_and_known_bad_controls: passed
   review_ms: 50
   trade_shift_ms: 50
+  queue: M_unknown_depth_zero
+  rungs_per_side: 6
+  shares_per_order: 30
   gross_accounting: true
+  dollar_aggregation: five_date_total
+  terminal: midpoint_at_60_2_seconds
   settlement: passive_residual_hold_after_first_minute
+  all_stop_ev_clocks_settlement_negative: true
+  recorded58_stop_ev_terminal_usd: 159.55526242592848
+  recorded58_stop_ev_settlement_usd: -735.9868569367911
+  recorded58_arrival_ev_terminal_usd: 26.812390302393425
+  recorded58_arrival_ev_settlement_usd: -747.6980286143178
+  zero_all_stop_ev_terminal_usd: 820.9191230324161
+  zero_all_stop_ev_settlement_usd: -307.4877500155785
+  inference_or_promotion: none_consumed_data
   output: data/predict_fun/research/strategy_scorecard_20261116_v1
   protocol: predictfun/reviews/strategy_scorecard_20261116/freeze_v1.json
+  results: predictfun/reviews/strategy_scorecard_20261116/results_v1/report.json
+  audit: predictfun/reviews/strategy_scorecard_20261116/results_v1/audit_v1.json
+  guide: predictfun/STRATEGIES.md
   review: predictfun/handoffs/20261116_strategy_scorecard.md
-  completed_dates: 4
-  completed_strategy_windows: 11460
-  exported_fill_records: 199462
 
 entry_arrival_20261116:
   status: complete_forecast_underperforms_existing_entry
