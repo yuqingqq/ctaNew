@@ -4,12 +4,15 @@ User authorized the next steps after the prediction-only first-day readout.
 This experiment connects the existing joint classifier to action comparisons
 and continuous historical replay. It does not add exchange or live-trading code.
 
-Active version2 supersedes version1. The first integration smoke passed its
+Active version3 supersedes versions1–2. The first integration smoke passed its
 accounting checks, but source review found the generic book-minimum queue
 estimate ignored confirmed partial fills. Version2 sets known queue ahead to
 zero after any acknowledged own fill, as required by the inherited queueM
 execution semantics. Later displayed additions cannot take that position.
-Version1 smoke and interrupted pilot remain retained. Forecasts, paths, risk
+Version3 also prevents pending placements from prematurely initializing a
+queue cache and prevents later snapshots from increasing initially unknown
+queue depth under the explicit unknown-depth-zero assumption.
+Version1 smoke and interrupted version1–2 runs remain retained. Forecasts, paths, risk
 parameters and action rules are unchanged; this is a state-accounting repair.
 
 ## Coherent response mapping

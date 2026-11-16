@@ -13,6 +13,8 @@ C,np,pd,I=F.C,F.np,F.pd,F.I
 
 def forecasts(W,X):
     fit=C.OUT/('fit_'+F.TEST);r=json.loads((fit/'receipt.json').read_text())
+    C.require(r['training_days']==list(F.TRAIN) and r['calibration_day']==F.CAL and
+              r['test_day']==F.TEST and r['source_manifest']==C.sha(C.REVIEW/'freeze_v1.json'),'forecast chronology/contract')
     a=r['artifacts']['joint'];C.require(C.sha(a['path'])==a['sha256'],'joint artifact changed')
     b=lgb.Booster(model_file=a['path']);temperature=r['temperature']['joint']['value']
     rows=[];keys=[]
@@ -48,11 +50,14 @@ def snapshot(W,k,t,ST,kpos):
             if o['ts']>t or (o['ta']<=t and o['ref']) or filled>=30.-1e-9:continue
             removal=(max(o['tc']+37.,o['ts']+95.) if o['tc']<o['ta'] else o['tc']+37.) if o['tc']<1e25 else 1e30
             if removal+100.<=t:continue
-            state=P.order_state(W[s],o,k,t,s,o['rung'],W[0]['ws']+300000.)
-            ahead=state['queue_ahead_known'];ahead=float(ahead) if math.isfinite(ahead) else 0.
-            # In the inherited price/time queue model, any confirmed own fill
-            # exhausts the queue ahead. Subsequent book additions stay behind us.
-            if filled>1e-12:ahead=0.
+            # Do not initialize a received-book queue cache before activation.
+            # Confirmed partial fills imply front priority. An initially unknown
+            # queue stays zero under the declared unknown-depth-zero assumption.
+            ahead=0.
+            if o['ta']<=t and filled<=1e-12:
+                state=P.order_state(W[s],o,k,t,s,o['rung'],W[0]['ws']+300000.)
+                estimate=state['queue_ahead_known']
+                if math.isfinite(state['queue_initial_known']) and math.isfinite(estimate):ahead=float(estimate)
             rows.append([s,o['rung'],o['pt'],30.-filled,ahead,o['ta']-t,removal-t,o['ts']-t,float(o['ta']>t)])
             switch=id(o) in cur_ids and o['ta']<=t and o['tc']>t
             info.append(dict(side=s,rung=o['rung'],kind='cancel' if switch else 'pending',

@@ -122,8 +122,24 @@ def client_state_controls():
     C.require(changed['orders'][0,3]==23.,'received fill positive control')
     mutant=before['orders'].copy();mutant[0,3]=order['rem']
     refused(lambda:np.testing.assert_equal(before['orders'],mutant),'true remainder leakage')
+    pending=dict(pt=50.,ts=0.,ta=58.,tc=1e30,tr=1e30,ref=False,rung=0,fl=[],rem=30.,ahead=100.)
+    S={s:dict(cl=[],cur=[None]*6,orders=[[] for _ in range(6)]) for s in (0,1)}
+    S[0]['cl']=[pending];S[0]['cur'][0]=pending;S[0]['orders'][0]=[pending]
+    P.snapshot(W,1,50.,S,0.)
+    C.require(not any(k.startswith('_ev_') for k in pending),'pending placement initialized future queue cache')
+    active=P.snapshot(W,2,100.,S,0.)
+    C.require(active['orders'][0,4]==100.,'activation initializes known queue')
+    # Rung5 starts outside top5; a later revealed level must not jump ahead.
+    Z=copy.deepcopy(W);mask=Z[0]['tf']>=100.;Z[0]['P5'][mask]-=1
+    unknown=dict(pt=45.,ts=0.,ta=58.,tc=1e30,tr=1e30,ref=False,rung=5,fl=[],rem=30.,ahead=0.)
+    S[0]['cl']=[unknown];S[0]['cur']=[None]*5+[unknown];S[0]['orders']=[[] for _ in range(5)]+[[unknown]]
+    observed=P.snapshot(Z,5,250.,S,0.)
+    C.require(observed['orders'][0,4]==0.,'unknown initial queue increased after reveal')
+    bad=observed['orders'].copy();bad[0,4]=100.
+    refused(lambda:np.testing.assert_equal(observed['orders'],bad),'revealed depth inserted ahead')
     return dict(unreceived_fill_and_hidden_queue_ignored=True,received_fill_changes_state=True,true_remainder_leak_refused=True,
-                confirmed_partial_fill_front_preserved=True,known_bad_replenished_ahead_refused=True)
+                confirmed_partial_fill_front_preserved=True,known_bad_replenished_ahead_refused=True,
+                pending_cache_deferred_until_activation=True,unknown_zero_queue_preserved=True)
 
 
 def kernel_parity():
@@ -159,6 +175,8 @@ def audit(directory):
     from pathlib import Path
     import pandas as pd
     out=Path(directory);r=json.loads((out/'receipt.json').read_text());F.verify()
+    C.require(r['source_manifest']==C.sha(F.FREEZE),'result source manifest')
+    C.require(C.sha(r['compiled_kernel']['path'])==r['compiled_kernel']['sha256'],'compiled kernel artifact identity')
     for name,h in r['outputs'].items():C.require(C.sha(out/name)==h,'changed result '+name)
     f=pd.read_parquet(out/'fills.parquet');markets=pd.read_parquet(out/'markets.parquet')
     for row in markets.itertuples():

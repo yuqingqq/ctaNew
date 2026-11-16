@@ -137,7 +137,9 @@ def run(smoke=False):
     pd.DataFrame(trace).to_parquet(out/'decisions.parquet',index=False)
     pd.DataFrame(probes).to_parquet(out/'probes.parquet',index=False)
     outputs={p.name:C.sha(p) for p in out.glob('*.parquet')}
+    binary=F.OUT/'build'/('kernel_'+C.sha(F.HERE/'pf_flow_control_kernel.cpp')[:16]+'.so')
     C.dump(out/'receipt.json',dict(asof=C.stamp(),source_manifest=C.sha(F.FREEZE),
+        compiled_kernel=dict(path=str(binary),sha256=C.sha(binary),flags='g++ -O3 -std=c++17 -shared -fPIC'),
         test_day=F.TEST,smoke=smoke,selected_markets=selected,missing_markets=missing,completed_markets=len(seen),
         selected_neutral_probes=selected_probes,probe_statuses=dict(probe_status),eligible_neutral_probes=len(probes),
         inputs=inputs,bank_receipt_sha256=C.sha(F.OUT/'bank/receipt.json'),
