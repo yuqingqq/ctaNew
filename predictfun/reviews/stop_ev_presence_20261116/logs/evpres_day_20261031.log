@@ -1,0 +1,14 @@
+stop-ev-presence selftests passed
+{"day": "20261031", "windows": 24, "seconds": 12, "rss_mib": 719.98828125}
+{"day": "20261031", "windows": 48, "seconds": 20, "rss_mib": 672.76953125}
+{"day": "20261031", "windows": 72, "seconds": 28, "rss_mib": 673.453125}
+{"day": "20261031", "windows": 96, "seconds": 37, "rss_mib": 673.953125}
+{"day": "20261031", "windows": 120, "seconds": 45, "rss_mib": 674.13671875}
+{"day": "20261031", "windows": 144, "seconds": 54, "rss_mib": 673.265625}
+{"day": "20261031", "windows": 168, "seconds": 63, "rss_mib": 675.41015625}
+{"day": "20261031", "windows": 192, "seconds": 71, "rss_mib": 675.97265625}
+{"day": "20261031", "windows": 216, "seconds": 80, "rss_mib": 676.11328125}
+{"day": "20261031", "windows": 240, "seconds": 88, "rss_mib": 676.20703125}
+{"day": "20261031", "windows": 264, "seconds": 97, "rss_mib": 675.61328125}
+{"day": "20261031", "windows": 282, "mutations": {"MUT_CLOCK40": true, "MUT_GATE_OPEN": true}, "seconds": 103}
+2026-11-16T07:48:52Z tag=evpres_day_20261031 rc=0 peak_rss_mib=888 wall_s=103.93 cpu_user_s=102.32 memavail_start_gib=23 disk_free_gib=457->457 slot=claude

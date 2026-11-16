@@ -2775,6 +2775,20 @@ stop_ev_design_20261115:
   components: {SWEEP: have (v6), STOP_FLOW: "new, public-trade labels for hypothetical queue positions", VALUES: "1 s / 5 s markouts", QUEUE: "rule-M estimate - the only simulator-dependent piece"}
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
+stop_ev_presence_20261116:
+  status: done_descriptive
+  asof: "2026-11-16 07:57Z"
+  session: aea5bfb9
+  user: "why it just has 3.4% on both sides? Does it mean it pulls still quite often"
+  code: {script: predictfun/research/pf_stop_ev_presence.py, commit: 3cf2f259, driver: predictfun/research/run_stop_ev_presence.sh}
+  controls: "every window equals the scorecard (P&L, shares, fills, orders, pulls, quote availability); fresh EV = the policy's cache; planted errors caught on every date"
+  model_would_quote_pct_steps: {bid: 12.60, ask: 13.78, both: 3.49, both_if_independent: 1.74}
+  live_pct_steps: {bid: 10.85, ask: 11.95, both: 2.49, live_when_model_would_quote: [58.1, 59.5]}
+  churn: {orders_per_window_minute: 132.5, guard_pulls_per_window_minute: 121.8, end_guard_pull_pct: 91.9, orders_filled_pct: 1.21, live_ms_p50: 79, live_lt_100ms_pct: 57.0, repost_ms_p50: 550, rung5_share_of_pulls: 0.546}
+  value_head: "E[value | fill] >= 0 in 1-3% of states on rungs 0-4, 12-13% on rung 5; entry gate closed 95.5-99.5%"
+  reading: "low two-sided presence = the model declines (value head negative almost everywhere) + entry / keep rules disagree (post on fresh EV, pull at the first review)"
+  next: "USER: one value for entry and keep / hysteresis / minimum resting time; judge churn, both-sides presence, 1 s / 60 s / settlement at M 50 and M 250"
+
 stop_ev_vs_top_20261116:
   status: done_descriptive
   asof: "2026-11-16 06:50Z"

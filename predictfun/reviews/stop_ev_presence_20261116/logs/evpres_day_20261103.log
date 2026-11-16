@@ -1,0 +1,15 @@
+stop-ev-presence selftests passed
+{"day": "20261103", "windows": 24, "seconds": 12, "rss_mib": 919.9375}
+{"day": "20261103", "windows": 48, "seconds": 21, "rss_mib": 681.51953125}
+{"day": "20261103", "windows": 72, "seconds": 30, "rss_mib": 682.1171875}
+{"day": "20261103", "windows": 96, "seconds": 39, "rss_mib": 682.328125}
+{"day": "20261103", "windows": 120, "seconds": 47, "rss_mib": 682.00390625}
+{"day": "20261103", "windows": 144, "seconds": 56, "rss_mib": 682.31640625}
+{"day": "20261103", "windows": 168, "seconds": 66, "rss_mib": 683.54296875}
+{"day": "20261103", "windows": 192, "seconds": 76, "rss_mib": 684.77734375}
+{"day": "20261103", "windows": 216, "seconds": 85, "rss_mib": 685.171875}
+{"day": "20261103", "windows": 240, "seconds": 94, "rss_mib": 685.21484375}
+{"day": "20261103", "windows": 264, "seconds": 102, "rss_mib": 685.796875}
+{"day": "20261103", "windows": 288, "seconds": 111, "rss_mib": 687.20703125}
+{"day": "20261103", "windows": 288, "mutations": {"MUT_CLOCK40": true, "MUT_GATE_OPEN": true}, "seconds": 111}
+2026-11-16T07:54:19Z tag=evpres_day_20261103 rc=0 peak_rss_mib=1090 wall_s=111.80 cpu_user_s=109.69 memavail_start_gib=23 disk_free_gib=457->457 slot=claude
