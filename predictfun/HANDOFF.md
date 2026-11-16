@@ -26,6 +26,8 @@ Pipeline in isolated /tmp/cta-scorecard-20261116, branch research/predict-scorec
 Single Codex/core8 slot. Ten-case smoke parity and independent fill-ledger
 reconciliation passed. Five complete dates now running serially; session11092.
 Logs /tmp/pf-scorecard-YYYYMMDD.log; final report follows automatically.
+First date complete as of 2026-11-16T04:37:41.134633+00:00: 2,880/2,880 prior-window
+comparisons, 65,498 fill records; no mismatch. Four dates remain.
 Output data/predict_fun/research/strategy_scorecard_20261116_v1/; freeze
 predictfun/reviews/strategy_scorecard_20261116/freeze_v1.json.
 <!-- /STRATEGY_SCORECARD_20261116 -->
