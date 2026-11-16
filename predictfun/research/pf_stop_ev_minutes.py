@@ -20,24 +20,24 @@ S,A,L,G,Q,M,K,P=I.S,I.S.A,I.S.L,I.S.G,I.S.Q,I.M,I.K,I.S.P
 np,pd=I.np,I.pd
 HERE=Path(__file__).resolve().parent
 REVIEW=HERE.parent/'reviews/stop_ev_minutes_20261116'
-OUT=Path(K.IO)/'stop_ev_minutes_20261116_v2'
+OUT=Path(K.IO)/'stop_ev_minutes_20261116_v3'
 SOURCE_NAMES=['pf_stop_ev_minutes_inputs.py','pf_stop_ev_minutes_metrics.py','pf_stop_ev_minutes.py','pf_stop_ev_minutes_report.py']
 BATCH=24
 
 
 def verify():
     S.verify()
-    f=json.loads((REVIEW/'freeze_v2.json').read_text())
+    f=json.loads((REVIEW/'freeze_v3.json').read_text())
     for name,h in f['sources'].items():L.require(L.sha(HERE/name)==h,'changed source '+name)
     return f
 
 
 def freeze():
-    S.verify();REVIEW.mkdir(parents=True,exist_ok=True);p=REVIEW/'freeze_v2.json'
+    S.verify();REVIEW.mkdir(parents=True,exist_ok=True);p=REVIEW/'freeze_v3.json'
     L.require(not p.exists(),'freeze exists')
     A.dump(p,dict(asof=A.stamp(),source_commit=A.commit(),sources={n:L.sha(HERE/n) for n in SOURCE_NAMES},
         inherited_freeze_sha256=L.sha(S.REVIEW/'freeze_v1.json'),days=list(L.DAYS),
-        supersedes=dict(freeze='freeze_v1.json',sha256=L.sha(REVIEW/'freeze_v1.json'),reason='One-market smoke passed all replay/accounting controls but receipt serialization rejected NaN for the absent non-hour-boundary subgroup. Missing subgroup diagnostics now serialize as null. No policy, features, fills, or valuation change. Version 1 smoke artifacts retained.'),
+        supersedes=dict(freeze='freeze_v2.json',sha256=L.sha(REVIEW/'freeze_v2.json'),reason='Full Oct27 replay stopped on string vs large_string output schema when simulated fills were empty in one market. All preceding replay/accounting controls passed. Explicit Arrow text schema prevents sparse-population serialization drift; no policy, features, fills, or valuation change. Version 2 failed output retained.'),
         strategy='STOP_EV corrected v3; unchanged heads and sign thresholds',
         execution=dict(place_ms=58,cancel_ms=37,pending_cancel_ms=95,notice_ms=100,review_ms=50,
             trade_shift_ms=50,queue='M unknown-depth zero',rungs_per_side=6,shares=30,
@@ -48,12 +48,35 @@ def freeze():
         markouts=dict(horizons_ms=list(V.HORIZONS),expiry_censor='Fill+h beyond market expiry has missing value and explicit censored quantity; no endpoint substitution.',
             midpoint='Last valid public midpoint strictly before fill for execution edge; at or before fill+h for markouts; stale >1s counted.'),
         partitions=['minute','day','maker_group','depth_group','WS/E2','imputed','order_age_under100ms'],
-        controls=V.selftest(),
+        controls=dict(V.selftest(),**serialization_test()),
         mandatory=['first-minute input bit identity','60.2s control replay/ledger parity','continuous-prefix parity to59.2s',
             'engine-fill identity','minute inventory and value reconciliation','raw-source markout audit','positive and known-bad controls'],
         nulls='Descriptive transfer/comparison only; no inference, selection, profitability or promotion claim.',
         multiplicity=dict(new_models=0,new_thresholds=0,primary_strategy_cases=1,control_replays=1),
         limits='Later minutes are outside first-minute training-phase coverage. Public maker fill value excludes taker/hedge/reward/cost and starting inventory. Simulated vs observed fill quantities remain different populations. Fill realism unvalidated.',output=str(OUT)))
+
+
+def fill_table(frame):
+    table=pa.Table.from_pandas(frame,preserve_index=False)
+    # pandas can infer object/string differently when one concatenated arm is empty.
+    schema=pa.schema([(f.name,pa.large_string() if pa.types.is_string(f.type) or pa.types.is_large_string(f.type) else f.type) for f in table.schema])
+    return table.cast(schema)
+
+
+def serialization_test():
+    a=pd.DataFrame({'day':pd.Series(['toy'],dtype=object),'case':pd.Series(['TOP5'],dtype=object),'shares':[1.]})
+    b=a.copy()
+    for c in ['day','case']:b[c]=b[c].astype('string[pyarrow]')
+    left=pa.Table.from_pandas(a,preserve_index=False);right=pa.Table.from_pandas(b,preserve_index=False)
+    sink=pa.BufferOutputStream();writer=pq.ParquetWriter(sink,left.schema);writer.write_table(left);caught=False
+    try:writer.write_table(right)
+    except ValueError:caught=True
+    writer.close();L.require(caught,'sparse schema failure control did not fire')
+    x=fill_table(a);y=fill_table(b)
+    L.require(x.schema==y.schema and x.to_pydict()==y.to_pydict(),'explicit sparse schema parity')
+    sink=pa.BufferOutputStream();writer=pq.ParquetWriter(sink,x.schema);writer.write_table(x);writer.write_table(y);writer.close()
+    L.require(pq.read_table(pa.BufferReader(sink.getvalue())).to_pydict()=={'day':['toy','toy'],'case':['TOP5','TOP5'],'shares':[1.,1.]},'sparse schema round trip')
+    return dict(sparse_text_schema_roundtrip=True,unfixed_schema_refused=True)
 
 
 def parity_features(W,X,reference):
@@ -196,7 +219,7 @@ def run(day,limit=None):
             # Explicit types keep empty/sparse side partitions from changing parquet schemas.
             for col in ['side','rung','fill_seq','row_id','signer','m','minute']:f[col]=f[col].astype('int64')
             for col in ['ws_timed','imputed','cancel_pending','through']:f[col]=f[col].astype(bool)
-            table=pa.Table.from_pandas(f,preserve_index=False)
+            table=fill_table(f)
             if len(f):
                 if writer is None:writer=pq.ParquetWriter(out/'fills.parquet',table.schema,compression='zstd')
                 writer.write_table(table)
@@ -214,7 +237,7 @@ def run(day,limit=None):
     pd.DataFrame(features).to_parquet(out/'feature_support.parquet',index=False)
     for path,h in inputs.items():L.require(L.sha(path)==h,'input changed during run')
     outputs={p.name:L.sha(p) for p in out.glob('*.parquet')}
-    A.dump(out/'receipt.json',dict(asof=A.stamp(),day=day,source_commit=A.commit(),freeze_sha256=L.sha(REVIEW/'freeze_v2.json'),
+    A.dump(out/'receipt.json',dict(asof=A.stamp(),day=day,source_commit=A.commit(),freeze_sha256=L.sha(REVIEW/'freeze_v3.json'),
         input_hashes=inputs,outputs=outputs,counts=dict(counts),controls=controls,loader_batches=statuses,
         top5_ids=[s for s,g in groups.items() if g=='TOP5'],selected_markets=selected,
         imputation=pr['imputation'],fair=fair_stats,depth=depth_stats,seconds=time.time()-start,smoke_only=limit is not None))
