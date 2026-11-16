@@ -83,7 +83,7 @@ def build():
         for p in items:p['base_weight']=counts[cell]/len(items);paths.append(p)
     C.require(paths,'empty bank')
     path=out/'paths.pkl';path.write_bytes(pickle.dumps(paths,protocol=5))
-    C.dump(out/'receipt.json',dict(asof=C.stamp(),source_manifest=C.sha(F.REVIEW/'freeze_v1.json'),
+    C.dump(out/'receipt.json',dict(asof=C.stamp(),source_manifest=C.sha(F.FREEZE),
         training_days=F.TRAIN,eligible_candidate_times=eligible,selected_times=chosen,statuses=dict(statuses),
         paths=len(paths),cells=len(cells),path_sha256=C.sha(path),inputs=sources,seconds=time.time()-start))
 
