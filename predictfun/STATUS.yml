@@ -1,5 +1,5 @@
 joint_flow_controller_20261116:
-  status: v3_bank_complete_corrected_smoke_running
+  status: v3_smoke_audited_pilot_running_implementation_merged
   worktree: /tmp/cta-flow-controller-20261116
   branch: research/predict-flow-controller-20261116
   source_commit: 6f1742fc
@@ -19,6 +19,8 @@ joint_flow_controller_20261116:
   active_version: 3
   superseded_versions: [1, 2]
   queue_state_repairs: [confirmed_partial_fill_front, pending_activation_cache, initial_unknown_zero]
+  implementation_merge: de73ec47
+  smoke_audit_asof: "2026-11-16T10:44:29Z"
 
 joint_flow_price_plan_20261116:
   status: first_day_audited_two_fits_complete_controller_priority
