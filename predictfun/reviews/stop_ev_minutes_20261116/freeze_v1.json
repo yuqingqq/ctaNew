@@ -1,0 +1,100 @@
+{
+  "asof": "2026-11-16T05:58:22.496452+00:00",
+  "source_commit": "8854a99386f04a457e9979c76c853bb85082d9b5",
+  "sources": {
+    "pf_stop_ev_minutes_inputs.py": "4b6e14cb930efd058458164f34be2e9bfa2ad0b7863f8f282be05ae9231d4c1c",
+    "pf_stop_ev_minutes_metrics.py": "cb14dbb8777c84cc88175db4d9d4b955958187f11e83477def0b9a2887a207ce",
+    "pf_stop_ev_minutes.py": "4334305a48d25e301ee77396b0de399e5dc0953dbfd8add5d1ccbbede1ca3a93",
+    "pf_stop_ev_minutes_report.py": "227d297426412e8b6bf6480b9ecfabb4d857a84f48cb5f1f071aea3164064b47"
+  },
+  "inherited_freeze_sha256": "f19f1ff46123478468610b40759f281d7a4d548fa49a16a2d8a5b9bd84919938",
+  "days": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "strategy": "STOP_EV corrected v3; unchanged heads and sign thresholds",
+  "execution": {
+    "place_ms": 58,
+    "cancel_ms": 37,
+    "pending_cancel_ms": 95,
+    "notice_ms": 100,
+    "review_ms": 50,
+    "trade_shift_ms": 50,
+    "queue": "M unknown-depth zero",
+    "rungs_per_side": 6,
+    "shares": 30,
+    "quote_end_ms": 299800,
+    "terminal_ms": 300000,
+    "inventory_cap": null,
+    "cooldown_ms": 0
+  },
+  "population": "Same 1434 scorecard markets, six Oct31 boundary exclusions; all fills with statuses; no new dates.",
+  "makers": "Per-day rank by raw filled shares in 0<=t_rel<240 on the same eligible markets, top five vs all other observed makers. Not profit-ranked. All depths.",
+  "maker_clock": "Same inherited group anchor/imputation and M50 as simulation. Real executed quantities; assumed execution time, not a validated match-time observation.",
+  "markouts": {
+    "horizons_ms": [
+      100,
+      500,
+      1000,
+      5000
+    ],
+    "expiry_censor": "Fill+h beyond market expiry has missing value and explicit censored quantity; no endpoint substitution.",
+    "midpoint": "Last valid public midpoint strictly before fill for execution edge; at or before fill+h for markouts; stale >1s counted."
+  },
+  "partitions": [
+    "minute",
+    "day",
+    "maker_group",
+    "depth_group",
+    "WS/E2",
+    "imputed",
+    "order_age_under100ms"
+  ],
+  "controls": {
+    "strict_pre_fill": true,
+    "overlap_union": true,
+    "accounting_positive_control": true,
+    "corruptions_refused": 6,
+    "binary_bid_ask": true,
+    "event_lookup": true,
+    "rolling_boundary": true,
+    "future_invariant": true,
+    "zero_clock_control": true,
+    "placement_clock_fires": true,
+    "cancel_clock_fires": true,
+    "fresh_gate_every_entry": true,
+    "stale_gate_falsifier": true,
+    "clock_restores": true,
+    "trajectory_mismatch_refused": true,
+    "placement_median_fires": true,
+    "cancel_median_fires": true,
+    "corrupt_baseline_refused": true,
+    "engine_fill_parity": true,
+    "wrong_fill_clock_refused": true,
+    "minute_boundary": true,
+    "expiry_censor": true,
+    "outside_contract_refused": true,
+    "ranking_interval": true
+  },
+  "mandatory": [
+    "first-minute input bit identity",
+    "60.2s control replay/ledger parity",
+    "continuous-prefix parity to59.2s",
+    "engine-fill identity",
+    "minute inventory and value reconciliation",
+    "raw-source markout audit",
+    "positive and known-bad controls"
+  ],
+  "nulls": "Descriptive transfer/comparison only; no inference, selection, profitability or promotion claim.",
+  "multiplicity": {
+    "new_models": 0,
+    "new_thresholds": 0,
+    "primary_strategy_cases": 1,
+    "control_replays": 1
+  },
+  "limits": "Later minutes are outside first-minute training-phase coverage. Public maker fill value excludes taker/hedge/reward/cost and starting inventory. Simulated vs observed fill quantities remain different populations. Fill realism unvalidated.",
+  "output": "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_minutes_20261116_v1"
+}
