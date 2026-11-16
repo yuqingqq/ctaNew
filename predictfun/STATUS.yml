@@ -1,5 +1,5 @@
 strategy_scorecard_20261116:
-  status: frozen_accounting_smoke_running
+  status: smoke_passed_five_day_replay_running
   source_commit: 7f0ab3a7
   freeze_commit: 819e59fe
   existing_cases: 10

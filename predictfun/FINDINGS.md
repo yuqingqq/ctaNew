@@ -21,7 +21,9 @@ maximum inventory, rung exposure, age/source partitions and anchor markouts.
 Positive/known-bad accounting controls pass. No policy promotion or inference.
 
 Pipeline in isolated /tmp/cta-scorecard-20261116, branch research/predict-scorecard-20261116.
-Single Codex/core8 slot. First smoke check running before five complete days.
+Single Codex/core8 slot. Ten-case smoke parity and independent fill-ledger
+reconciliation passed. Five complete dates now running serially; session11092.
+Logs /tmp/pf-scorecard-YYYYMMDD.log; final report follows automatically.
 Output data/predict_fun/research/strategy_scorecard_20261116_v1/; freeze
 predictfun/reviews/strategy_scorecard_20261116/freeze_v1.json.
 <!-- /STRATEGY_SCORECARD_20261116 -->
