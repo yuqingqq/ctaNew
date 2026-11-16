@@ -1,3 +1,28 @@
+<!-- JOINT_FLOW_FIRST_DAY_20261116 -->
+## 2026-11-16 First joint-flow prediction day: dependency helps calibration; direct value error remains tied
+
+As of2026-11-16T09:35:10.243484+00:00: Oct27,118,062 eligible neutral actions
+from287 markets (288 selected); train Oct23–25, calibrate Oct26; all contract
+minutes. One consumed development day, no interval, policy replay or profit claim.
+Joint flow/price logloss1.6647 vs independent1.7929, mechanical1.8381. Flow,
+adverse-price and severe-loss AUC0.889/0.786/0.811. Aggregate predicted local
+value/quantity−1.729c/share vs actual−1.761; independent−0.105. Local-value
+decile means increase from−22.025 to+1.215c/order action. Positive predictions:
+4,331 actions (3.67%), actual+3.339c/action; this is not quote uptime or a matched
+policy gain. Value RMSE44.7796c vs direct regression44.7848c, essentially tied.
+Risk still understated (severe3.918% predicted vs4.517% observed), minute5 error
+larger, and separate response heads produce108 value/quantity-bound violations
+and65 severe-probability-above-fill cases; require coherent forecasts before
+using them for action optimization. Ages only roughly first2s of an order,
+size30, queueM/M50/estimated timing. No scalar sign inversion is indicated by
+these aggregate deciles; profitability and persistent two-sided quoting untested.
+Raw/data/model/prediction identities and512 reloads pass,22 synthetic controls
+plus consistency falsifiers pass. Results8ebe9f15 merged b73baa33. Details,
+coverage, explicit model names, units and audit scope:
+[handoffs/20261116_flow_price_first_day.md](handoffs/20261116_flow_price_first_day.md).
+Remaining frozen folds continue unchanged; no threshold or target adjusted.
+<!-- /JOINT_FLOW_FIRST_DAY_20261116 -->
+
 <!-- STOP_EV_MINUTES_20261116 -->
 ## 2026-11-16 STOP_EV later-minute comparison: complete
 
