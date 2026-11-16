@@ -1,0 +1,16 @@
+{
+  "asof": "2026-11-16T16:41:15.448046+00:00",
+  "status": "superseded; fit/action stages complete, pilot interrupted, no complete V1 strategy result",
+  "reason": "Absolute-share response forecasts omitted the causal liquidity scale from normalized inputs; fixed in V2.",
+  "freeze_sha256": "ca2cf4953c574806b48d2fb79c2d8afffb96b46b6aa67effa5055ddde4e5d885",
+  "superseding_freeze": "/tmp/cta-response-20261116/predictfun/reviews/response_bridge_20261116_v2/freeze_v2.json",
+  "superseding_freeze_sha256": "b7e5a6d17e176ca82c827b272d411e9e1d561526800f130ed007da70a74b74c2",
+  "outputs": {
+    "fit/receipt.json": "9d0eb26637346baef49dcd9778ae17e0d4bd6ac0abbae76b696e3541c50b7d1f",
+    "prediction_report.json": "baae69b0cf7420df13042a92dc66855413582e415d1f2e33415f5611b024f664",
+    "actions_20261026/receipt.json": "3d0a6ace9d4d81e05fdc81e7e05d842911eea6a79dac3c2753e883114c3e0bb0",
+    "actions_20261026/report.json": "97db2db429d917bc25f10d9ab220271190f1e329d0e0c6ba08f9c28cd3a10b9c",
+    "actions_20261027/receipt.json": "f8e1ea2c20853efaf837a1992c34d6dee4a6773ae896a3f0c57ff1daa6b0cbf6",
+    "actions_20261027/report.json": "c10f1247146f1f3df4c6725d191694f7aa6721520056a646d83740784e55c490"
+  }
+}

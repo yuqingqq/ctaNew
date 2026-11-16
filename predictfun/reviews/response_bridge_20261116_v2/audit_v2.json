@@ -1,0 +1,65 @@
+{
+  "asof": "2026-11-16T16:32:22.757042+00:00",
+  "source_manifest": "b7e5a6d17e176ca82c827b272d411e9e1d561526800f130ed007da70a74b74c2",
+  "controls": {
+    "negative_volume_refused": true,
+    "nan_move_refused": true,
+    "quantity_timing_depth_and_current_mid_controls": true,
+    "bad_probability_refused": true,
+    "unsupported_distribution_refused": true,
+    "absolute_liquidity_states_separable": true,
+    "invalid_scale_refused": true,
+    "future_labels_excluded_from_features": true,
+    "native_donor_labels_reconciled": 1929,
+    "inherited_execution_controls": {
+      "unavoidable_prefix_and_queue_preservation": true,
+      "placement_latency_and_wait": true,
+      "actual_initial_depth_changes_new_queue": true,
+      "shared_volume_and_price_priority": true,
+      "no_flow": true,
+      "bid_ask_value_sign": true,
+      "economic_actions_and_inventory_cap": true,
+      "negative_volume_refused": true,
+      "nonfinite_state_refused": true,
+      "forecast_changes_shared_weights": true,
+      "invalid_probability_refused": true,
+      "observer_lane_off_parity": true,
+      "wrong_ledger_refused": true,
+      "compiled_canonical_paths": 24,
+      "compiled_canonical_nonempty": 24,
+      "unreceived_fill_and_hidden_queue_ignored": true,
+      "received_fill_changes_state": true,
+      "true_remainder_leak_refused": true,
+      "confirmed_partial_fill_front_preserved": true,
+      "known_bad_replenished_ahead_refused": true,
+      "pending_cache_deferred_until_activation": true,
+      "unknown_zero_queue_preserved": true,
+      "all_donor_labels_reconciled": 1929,
+      "ask_reach_relabels_at_current_price": true,
+      "stale_donor_label_refused": true,
+      "shared_support_and_continuous_prior": true,
+      "invalid_spread_refused": true,
+      "positive_and_negative_post_value": true
+    },
+    "corrupt_value_refused_20261026": true,
+    "corrupt_value_refused_20261027": true,
+    "baseline_pilot_exact_identity": true,
+    "corrupt_pilot_total_refused": true
+  },
+  "actions": {
+    "20261026": {
+      "selected": 418,
+      "common": 418
+    },
+    "20261027": {
+      "selected": 443,
+      "common": 443
+    }
+  },
+  "pilot_markets": 24,
+  "inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/response_bridge_20261116_v2/actions_20261026/receipt.json": "5e59893e7c37437f886b47eb0fcce970d5682f2270e00ce2ac25f78aa219599d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/response_bridge_20261116_v2/actions_20261027/receipt.json": "25b1dc6b93077574919fec543673f03e42b7eaf0b4758858a27e8f7002cb5d87",
+    "/home/yuqing/ctaNew/data/predict_fun/research/response_bridge_20261116_v2/pilot/receipt.json": "559a21937356cd41ccd23b79ea827a855c0c0f87b4f40e5ba5b83c4763b212ad"
+  }
+}

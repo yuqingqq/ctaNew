@@ -1,0 +1,121 @@
+{
+  "asof": "2026-11-16T16:32:20.453118+00:00",
+  "day": "20261027",
+  "rows": [
+    {
+      "case": "RICH_JOINT",
+      "markets": 12,
+      "shares": 5556.470350121516,
+      "orders": 15040,
+      "pulls": 14247,
+      "terminal_pnl_usd": 187.83441195342525,
+      "settlement_pnl_usd": 172.4154560522701,
+      "spread_cents_per_share": 1.701251512896818,
+      "markout_1s_cents_per_share": 0.0201896004636451,
+      "markout_5s_cents_per_share": 3.365630246185082,
+      "markout_1s_covered_shares": 5556.470350121516,
+      "markout_5s_covered_shares": 5373.6565070136485,
+      "both_quote_percent": 18.344944444444444,
+      "any_quote_percent": 60.84927777777778,
+      "mean_abs_end_inventory": 75.65812156175026,
+      "max_inventory": 177.439369966438,
+      "model_cancels": 14231,
+      "first_review_cancels": 8168,
+      "median_cancel_age_ms": 42.0,
+      "unsupported_mass_mean": 0.013730135732644762,
+      "marginal_l1_mean": 0.08236588408884131,
+      "effective_paths_mean": 44.67847613459104,
+      "policy_stats": {
+        "advantage_cents": 27114.58305958401,
+        "branch_evaluations": 1022365,
+        "coarse_marginal_l1_sum": 13109.230410717762,
+        "effective_paths_sum": 2867598.6337464564,
+        "eligible": 64183,
+        "horizon_near_expiry": 420,
+        "invalid_current_book": 7349,
+        "marginal_l1_sum": 5286.489538474102,
+        "max_unsupported_mass_sum": 3477.858906049596,
+        "paths_sum": 19739412,
+        "relabeled_fraction_sum": 3601.800589480616,
+        "rich_marginal_l1_sum": 4168.955128153575,
+        "spread_distance_sum": 10683.757216252789,
+        "steps": 71952,
+        "unsupported_mass_sum": 881.2413017283387
+      }
+    },
+    {
+      "case": "SOFT_JOINT",
+      "markets": 12,
+      "shares": 7895.729549322382,
+      "orders": 10847,
+      "pulls": 9775,
+      "terminal_pnl_usd": 367.6590482721974,
+      "settlement_pnl_usd": 353.9644963657637,
+      "spread_cents_per_share": 1.9169181571409677,
+      "markout_1s_cents_per_share": -0.9612229531200334,
+      "markout_5s_cents_per_share": 2.6503259314383127,
+      "markout_1s_covered_shares": 7895.729549322382,
+      "markout_5s_covered_shares": 7763.48895624879,
+      "both_quote_percent": 32.85666666666667,
+      "any_quote_percent": 77.61302777777777,
+      "mean_abs_end_inventory": 71.79508854067682,
+      "max_inventory": 176.99236325207647,
+      "model_cancels": 9762,
+      "first_review_cancels": 3838,
+      "median_cancel_age_ms": 92.0,
+      "unsupported_mass_mean": 0.03208616259375021,
+      "marginal_l1_mean": 0.09851565192858402,
+      "effective_paths_mean": 52.200822956283645,
+      "policy_stats": {
+        "advantage_cents": 27653.14425968297,
+        "branch_evaluations": 917460,
+        "effective_paths_sum": 3350405.4198031533,
+        "eligible": 64183,
+        "horizon_near_expiry": 420,
+        "invalid_current_book": 7349,
+        "marginal_l1_sum": 6323.030087732309,
+        "max_unsupported_mass_sum": 2740.7785291768905,
+        "paths_sum": 19739412,
+        "relabeled_fraction_sum": 3601.800589480616,
+        "spread_distance_sum": 10683.757216252789,
+        "steps": 71952,
+        "unsupported_mass_sum": 2059.38617375467
+      }
+    }
+  ],
+  "paired": {
+    "terminal_pnl_usd": {
+      "delta": -179.82463631877212,
+      "positive_markets": 4,
+      "n": 12
+    },
+    "settlement_pnl_usd": {
+      "delta": -181.54904031349358,
+      "positive_markets": 4,
+      "n": 12
+    },
+    "pulls": {
+      "delta": 4472.0,
+      "positive_markets": 12,
+      "n": 12
+    },
+    "both_quote_ms": {
+      "delta": -522422.0,
+      "positive_markets": 0,
+      "n": 12
+    },
+    "shares": {
+      "delta": -2339.2591992008656,
+      "positive_markets": 0,
+      "n": 12
+    }
+  },
+  "limits": [
+    "Consumed development dates, no independent validation or confidence intervals/promotion",
+    "Four marginal response distributions plus coarse joint do not fully identify event paths; coherence enforced only on finite donor support",
+    "Same sparse bank, approximate donor transport, estimated tape timing, client queue uncertainty and zero 1s continuation",
+    "Fine bins still do not identify exact within-bin volume or tail severity; early flow starts37ms rather than58ms post activation",
+    "No live profitability or external simulator validation; calibration-day comparisons are in-sample for temperature only"
+  ],
+  "receipt_sha256": "559a21937356cd41ccd23b79ea827a855c0c0f87b4f40e5ba5b83c4763b212ad"
+}

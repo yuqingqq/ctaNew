@@ -1,0 +1,17 @@
+{
+  "asof": "2026-11-16T16:41:15.449104+00:00",
+  "source_commit": "cb963a0c23a84fbb66dbde1207a584ac4d6f2364",
+  "publisher_sha256": "768c3dd90dc5043accd132c9680a07d84d22f2e322ed437ab1235d3bc77c3d32",
+  "active_candidate_source": "5e67d0687950804206718bdeba0e20d33b8c4a00",
+  "freeze_sha256": "b7e5a6d17e176ca82c827b272d411e9e1d561526800f130ed007da70a74b74c2",
+  "evidence": {
+    "predictfun/reviews/response_bridge_20261116_v2/index_v2.json": "6640af8d5e566cae57fcd80f237b8b5b9998e4108e55c7178fe859c0639af155",
+    "predictfun/reviews/response_bridge_20261116/superseded_v2.json": "f5641bab6c906470bb85aab7f7b4c6af73014798a6eb3a6399a8e63cb3091481",
+    "predictfun/reviews/response_bridge_20261116_v2/coarse_preserved_freeze_v2.json": "f5ca7cd08478c0ef78cd58860a69eeb16ef58dc15889246e50761047c4579bd6",
+    "predictfun/reviews/response_bridge_20261116_v2/oracle_coarse_preserved/receipt.json": "664f851d37bae1512ac913342abd93cd00d70a71f5310df911beb776f20747a3",
+    "predictfun/reviews/response_bridge_20261116_v2/oracle_coarse_preserved/report.json": "fbf21531f4a9c917b7abe1c59558860237ebe0028ae26c4f5725ae4387a7666e"
+  },
+  "status": "Experiment complete and audited; V2 is not promoted over SOFT_JOINT",
+  "scope": "Consumed Oct26/27 action tests and12-market Oct27 replay; V1 retained as superseded partial evidence; future-information checks are retrospective only.",
+  "next": "Repair joint conditional queue/timing/price response and projection consistency before model-family or hyperparameter changes. Do not treat finer marginal forecasts as a completed order-value model."
+}

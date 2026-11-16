@@ -1,0 +1,15 @@
+{
+  "asof": "2026-11-16T16:34:00.247135+00:00",
+  "source_manifest": "ee60b8c3e64642d724d464018ab9c05ef108ea401b4ee61ae5d2e546ccecd02d",
+  "candidate_manifest": "b7e5a6d17e176ca82c827b272d411e9e1d561526800f130ed007da70a74b74c2",
+  "inputs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_bridge_20261116_v1/actions_20261027/receipt.json": "e786ca73f90717892698408cbf5f15c0f9dfddf29aea795e40256249827ee059",
+    "/home/yuqing/ctaNew/data/predict_fun/research/response_bridge_20261116_v2/actions_20261027/receipt.json": "25b1dc6b93077574919fec543673f03e42b7eaf0b4758858a27e8f7002cb5d87",
+    "/home/yuqing/ctaNew/data/predict_fun/research/value_bridge_20261116_v1/oracle_v1/receipt.json": "e9c1e836a5d260d9826ffe14fdba5d1f994af9870a73c7e57074d6967a880ecb"
+  },
+  "outputs": {
+    "report.json": "90265414c0d568f46657b8e5d6e472bf8a6daffe26a4cc40095cf8aa176f0196",
+    "values.parquet": "f3425d4722318a700dd91c1184afe20fd778f38654fa60360b7f88c359d08c50"
+  },
+  "seconds": 96.5563645362854
+}
