@@ -48,6 +48,12 @@ def audit():
     result=dict(asof=C.stamp(),n=len(a),paired_actions=len(rows),hash_sample_identities=True,
         all_entry_and_cancel_values_recomputed=True,all_attribution_bridges_reconciled=True,
         report_and_200_draw_null_recomputed=True,corrupt_advantage_refused=bad_refused,
+        interpretation_notes=[
+            'The entry_queue_assumption_change bridge disables new-order initialization: it changes activation queue initialization AND activation-cross rejection. It is not a pure queue effect.',
+            'The 16-cell target_queue factor only changes target ahead quantity, with every other target field fixed.',
+            'Frozen-entry rest repricing holds the other portfolio at entry; it is a model-input intervention, not an actual evolved-world counterfactual.',
+            'Original-endpoint sensitivity uses current scenarios at the shorter remaining horizon; it does not roll forward and condition the original paths.'
+        ],
         report_sha256=C.sha(D.OUT/'report.json'),receipt_sha256=C.sha(D.OUT/'receipt.json'),
         source_sha256=C.sha(Path(__file__)),source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=F.ROOT,text=True).strip())
     C.require(not (D.OUT/'audit_v1.json').exists(),'audit exists');C.dump(D.OUT/'audit_v1.json',result)
