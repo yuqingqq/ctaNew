@@ -1,37 +1,52 @@
 <!-- VALUE_BRIDGE_20261116 -->
-## 2026-11-16 Prediction-to-economic-value bridge: action tests complete; matched strategy replay running
+## 2026-11-16 Economic-value bridge: first revision audited and merged; partial improvement
 
-User authorized improving the valuation layer first. Source16388b7c, freeze
-8e3962d0; worktree /tmp/cta-value-bridge-20261116, branch
-research/predict-value-bridge-20261116. New map pools same-phase training paths
-across spreads with prior count*exp(-spread-distance/1 tick), retains paired
-raw tape/book futures, and relabels reach and signed movement at the CURRENT
-bid/ask before the unchanged joint probability projection. All1,929 original
-path labels reconcile at their own spreads; cross-spread stale-label refusal,
-continuous prior and all inherited execution/queue controls pass.
+Source16388b7c, freeze8e3962d0, results07000288, merged3ce2c534 into mm-research.
+Worktree /tmp/cta-value-bridge-20261116; branch research/predict-value-bridge-20261116.
+All candidate sources,59 inherited controller sources, diagnostic/auditor and
+report identities match after merge. All numerical stages complete; no job running.
+Report handoffs/20261116_value_bridge_results.md; active index
+reviews/value_bridge_20261116/index.json; ignored ledgers under
+ data/predict_fun/research/value_bridge_20261116_v1/.
 
-One fixed candidate, no bandwidth or threshold search. Classifier, greedy
-controller, accounting, risk cap/penalty, ladder and latency unchanged. No fixed
-retry, quote-age rule or new action threshold. Oct23–25 bank only. Oct26 and
-Oct27 compare exact JOINT, soft JOINT and soft empirical on paired neutral
-post/wait and keep/cancel action values. Oct27 then replays soft JOINT against
-the archived exact JOINT on the same12 full5-minute markets. Candidate action
-selection is hash-based, all statuses/no-fill actions retained, canonical truth
-branches share historical and unavoidable prefixes.200-draw count-matched null.
-Scenario standard deviation is dispersion, not a calibrated confidence bound.
+Change: pool same-phase training paths across spreads with continuous one-tick
+prior weights; relabel public flow reach and signed price movement at current
+bid/ask before common probability projection. All1,929 donor labels reconcile.
+Same classifier/controller, risk180/lambda1/360,30-share six-rung ladder, original
+latency and1s endpoint. One candidate, no bandwidth search, no fixed retry,
+minimum age or new action threshold. Current donor futures remain approximate.
 
-Output data/predict_fun/research/value_bridge_20261116_v1/; logs under logs/.
-Both action stages completed: Oct26 has416 matched actions (203 cancel,213
-post); Oct27 has443 (221 cancel,222 post). The Oct27 exact cancellation values
-and rank correlation reproduce the prior221-action diagnostic. Soft cancellation
-rank improves .034->.118 on Oct26 and .280->.339 on Oct27, while positive-post
-realized means remain negative. These are preliminary readouts pending audit,
-not a successful entry model or promotion. Driver now runs the matched12-market
-SOFT_JOINT strategy replay on Codex/core8; thresholds and policy remain frozen.
-A separate future-information diagnostic is committed at3bca8e3c: true coarse
-classes and actual future path, both with the same client-known state, on the
-same Oct27 actions. It does not alter the candidate or enter strategy inputs.
-Next: finish replay/audit, run that diagnostic, and record complete limitations.
+Pilot asof2026-11-16T13:59:08Z,12 preselected Oct27 full5-minute markets,
+gross simulated totals. EXACT->SOFT: terminal+$246.76->+$367.66; passive
+settlement+$232.39->+$353.96;1s markout-1.441->-0.961c/share;5s+1.674->+2.650.
+Terminal/settlement better10/12 markets. Pulls10,896->9,775 (lower11/12),
+orders11,974->10,847. Both quote32.845%->32.857%; first-review model cancel
+fraction41.76%->39.32%, median age92ms unchanged. Churn remains high and1s
+markout negative. Ending absolute inventory worsens65.46->71.80 shares.
+
+Neutral action tests: Oct26 selects418,416 supported by all maps (203 cancel,
+213 post); Oct27 selects443,all supported (221 cancel,222 post). Exact Oct27
+cancellation identities, predictions and labels match earlier audited data.
+Cancellation ranks improve .034->.118 and .280->.339; entry ranking inconsistent
+and positive-score realized entry values remain negative. Neutral target is
+local1s continuation without subsequent learned cancellation, not full policy EV.
+
+Future-information diagnostic asof14:02:08Z, audited14:04:20Z; same443 actions,
+future information excluded from candidate. True coarse classes unsupported42
+old vs23 new. On common202 cancel/199 post actions, new value RMSE with ordinary
+predictions33.222/25.998c; with correct coarse classes26.314/24.578c; with actual
+future path and same client state2.057/.009c. This supports internal target/
+executor alignment; does not validate external simulator realism or establish
+that future paths can be learned. Full-population future-path RMSE1.967/.366c.
+
+Next priority: richer conditional quantity, depth, timing and price severity,
+plus measured value uncertainty and queue continuation. Improved category
+probabilities alone do not complete the response layer. Preserve consumed-day
+scope, no confidence intervals/promotion; protected dates remain unopened.
+Main action/ledger audit and retrospective identity/metric audit pass. Peak RSS
+1,176MiB; pilot609.34s on Codex/core8. Separate original forecast run has4 fits
+complete; Nov3 failed the memory guard, partial artifacts retained. No scheduler
+is running and that incomplete fit is not used by this experiment.
 <!-- /VALUE_BRIDGE_20261116 -->
 
 <!-- JOINT_FLOW_CONTROLLER_20261116 -->
