@@ -1,20 +1,37 @@
 joint_flow_price_plan_20261116:
-  status: first_chronological_fold_prioritized
+  status: first_day_audited_remaining_folds_running
   plan: predictfun/handoffs/20261116_joint_flow_price_plan.md
+  report: predictfun/handoffs/20261116_flow_price_first_day.md
+  first_day_asof: '2026-11-16T09:35:10.243484+00:00'
+  first_test_day: 20261027
+  first_test_actions: 118062
+  first_test_eligible_markets: 287
+  first_test_selected_markets: 288
+  joint_logloss: 1.6647380997261407
+  independent_logloss: 1.7928967704705354
+  joint_flow_reach_auc: 0.8891963203018851
+  joint_adverse_move_auc: 0.7859138974485781
+  joint_severe_auc: 0.8112669717388921
+  joint_value_rmse_cents: 44.77956460861545
+  direct_value_rmse_cents: 44.78482277170476
+  positive_joint_states: 4331
+  positive_joint_actual_mean_cents: 3.3389046375302303
+  joint_value_quantity_bound_violations: 108
+  joint_severe_above_fill_probability_cases: 65
+  evidence: one_consumed_day_prediction_diagnostic_no_policy_or_profitability_claim
   worktree: /tmp/cta-flow-price-model-20261116
   branch: research/predict-flow-price-model-20261116
   source_commit: 372d7427
   freeze_commit: d883b942
   driver_commit: 1d7075d5
+  results_commit: 8ebe9f15
+  merge_commit: b73baa33
   output: data/predict_fun/research/flow_price_20261116_v1
-  next: build_through_oct27_then_fit_and_audit_first_day_before_remaining_dates
+  next: finish_remaining_frozen_folds_and_full_artifact_audit
+  completed_data_dates: [20261023, 20261024, 20261025, 20261026, 20261027, 20261031]
+  model_fits_completed: 1
+  active_fit: 20261031
   synthetic_tests_passed: 22
-  smoke_markets: 2
-  smoke_generation_rows: 1485
-  smoke_eligible: 988
-  completed_data_dates: [20261023, 20261024, 20261025, 20261026]
-  first_test_day: 20261027
-  model_fits_completed: 0
   policy_replays: 0
   frozen_experiment: true
   fixed_retry_timer: false
