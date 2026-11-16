@@ -1,9 +1,10 @@
 <!-- JOINT_FLOW_CONTROLLER_20261116 -->
-## 2026-11-16 Joint forecast controller: frozen implementation; bank and pilot running
+## 2026-11-16 Joint forecast controller: implementation merged; corrected smoke passed; 12-market pilot running
 
 User authorized connecting predictions to a minimal action controller. Source
 6f1742fc, active freeze7fb46122 (v3), isolated worktree /tmp/cta-flow-controller-20261116,
-branch research/predict-flow-controller-20261116. Full source is committed.
+branch research/predict-flow-controller-20261116. Full source is committed and merged to mm-research at de73ec47; all59 frozen
+source identities verified after merge.
 Training-path responses replace independent quantity/value/risk heads in the
 controller; original forecast artifacts remain unchanged. Shared-volume branch
 execution, common-endpoint keep/cancel and post/wait, inventory reservation cap
@@ -20,14 +21,15 @@ The frozen pilot selects first market per two-hour block on consumed Oct27
 existing calibrated JOINT probabilities. Cases KEEP_ALL_CAP / EMPIRICAL / JOINT
 / JOINT_H2.200-draw count-matched neutral-generation branch diagnostic. No
 protected dates opened, no tuning, no inferential or profitability claim.
-Bank, one-market smoke, then pilot execute sequentially in Codex/core8.
+V3 bank and one-market smoke completed; corrected smoke audit passed at
+2026-11-16T10:44:29Z. The12-market pilot runs in Codex/core8.
 Logs: data/predict_fun/research/flow_control_20261116_v3/logs/.
 
 The prior forecast scheduler stopped after its successful Oct31 fit. Oct27 and
 Oct31 fits are complete; Nov1–3 remain outstanding and are deferred while this
 controller pilot uses the same numerical slot. Earlier 'remaining folds running'
-state is superseded by this observation. Next: finish smoke/pilot, audit,
-record limitations and results, merge tested implementation to mm-research.
+state is superseded by this observation. Next: finish pilot and independent readout, record results and limitations,
+then resume the three outstanding original prediction folds.
 <!-- /JOINT_FLOW_CONTROLLER_20261116 -->
 
 # P-2026-005 HANDOFF
