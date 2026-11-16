@@ -4,7 +4,7 @@
 ## 2026-11-16 Entry arrival prediction experiment running
 
 User: first test prediction against the positive zero-delay example; no
-reference-policy optimization. Source b6db135e, freeze 47384cf9. One fixed
+reference-policy optimization. Source 1b94ec80, freeze 3ce50516 (v2). One fixed
 student recipe, separate bid/ask regressions, existing v3 teachers unchanged.
 Predict teacher value for the exact current quote price at activation t+58ms,
 using only current 83 fields plus current teacher score. Regress its residual
@@ -22,9 +22,12 @@ wrong actions are proxy diagnostics, not realized profit. No inferential or
 untouched validation claim. The arrival diagnostic is not the whole zero-delay
 policy or an attainable upper bound. No cancellation forecast in this first test.
 
-Nine-day builder started in Codex/core8; no prediction/performance result yet.
+V1 stopped at the memory guard before any completed dataset/fit/result;
+v2 copies selected rows instead of retaining full window matrices. Targets,
+population and model unchanged; v1 incomplete output preserved.
+Nine-day builder restarted in Codex/core8; no prediction/performance result yet.
 Worktree /tmp/cta-arrival-20261116; outputs data/predict_fun/research/
-entry_arrival_20261116_v1. Protocol: reviews/entry_arrival_20261116/freeze_v1.json.
+entry_arrival_20261116_v2. Protocol: reviews/entry_arrival_20261116/freeze_v2.json.
 <!-- /ENTRY_ARRIVAL_20261116 -->
 
 

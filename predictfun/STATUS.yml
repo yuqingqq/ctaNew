@@ -1,7 +1,7 @@
 entry_arrival_20261116:
   status: frozen_data_build_running_no_prediction_result_yet
-  source_commit: b6db135e
-  freeze_commit: 47384cf9
+  source_commit: 1b94ec80
+  freeze_commit: 3ce50516
   scope: bid_ask_entry_prediction_cancellation_guard_unchanged
   source_features: 83
   additional_current_score_feature: 1
@@ -14,9 +14,7 @@ entry_arrival_20261116:
   cancellation_forecast_tested: false
   untouched_validation: false
   protected_data_read: false
-  protocol: predictfun/reviews/entry_arrival_20261116/freeze_v1.json
-
-ev_lag_gap_20261116:
+  protocol: predictfun/reviews/entry_arrival_20261116/freeze_v2.jsonev_lag_gap_20261116:
   asof: '2026-11-16T01:57:35.556172+00:00'
   status: complete_recorded_latency_material_fragile_positive_no_forecast_test
   source_commit: 06fb7d77
