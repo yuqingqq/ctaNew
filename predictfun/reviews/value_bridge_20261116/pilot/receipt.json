@@ -1,0 +1,30 @@
+{
+  "asof": "2026-11-16T13:59:08.674123+00:00",
+  "source_manifest": "10f31bed1ef7c3c402b419f2ade448f761ba389577607954190933bbf9caffa4",
+  "selected_markets": [
+    3853227,
+    3855272,
+    3856795,
+    3861545,
+    3864969,
+    3866949,
+    3868537,
+    3872135,
+    3875576,
+    3878682,
+    3882891,
+    3887697
+  ],
+  "old_receipt_sha256": "7eb3196f831039eccd97a5e4703b4c11788b5025afd34602a2f7fda370bbffb8",
+  "compiled_kernel": {
+    "path": "/home/yuqing/ctaNew/data/predict_fun/research/flow_control_20261116_v3/build/kernel_fb1ff31cdcf2a977.so",
+    "sha256": "660a20c33777b36134538ed97b1676f292910e2e54dba0b340d09db02a7b268a"
+  },
+  "outputs": {
+    "markets.parquet": "b6290ee478645abaf26d83e35012db84cbdc1190ed46c1f9034a73793c29c6a3",
+    "inventory.parquet": "ebd96567de0803f0836e4ef7b4f097c5fdd5fe27a35ce37d2fb0b1a5e7b81dd8",
+    "decisions.parquet": "4d6a32f74bdb49fc7de17154531618872fbdbbe3f1893f4baef27144a8029e47",
+    "fills.parquet": "6c1201f5633a6ef22188b508c124ed499dc88333cd835ef7767c7a33f20fe321"
+  },
+  "seconds": 608.3703901767731
+}
