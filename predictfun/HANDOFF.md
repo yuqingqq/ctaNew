@@ -1,5 +1,24 @@
 # P-2026-005 HANDOFF
 
+<!-- JOINT_FLOW_PRICE_PLAN_20261116 -->
+## 2026-11-16 Joint flow/price/action model: plan recorded
+
+User requested a plan for using the distribution of incoming orders and
+associated price movement to choose market-making actions. Plan:
+[handoffs/20261116_joint_flow_price_plan.md](handoffs/20261116_joint_flow_price_plan.md).
+Build order: causal source/label audit across all five minutes -> empirical
+joint distribution baseline -> one probabilistic challenger -> consistent
+queue/latency/inventory-aware action comparisons -> whole-portfolio replay.
+First implementation milestone: audit observable flow versus inferred book
+changes, then measure executable quantity and associated price movement on
+neutral actions, including no-fill cases. Reuse corrected accounting and the
+new presence diagnostic; do not repeat its unchanged-policy replay.
+No fixed retry/minimum-rest timer. Larger size follows fixed-size controls.
+Status: plan only; no new build, fit, replay, freeze or performance result.
+Protected forward dates remain unopened; shared research edits preserved.
+<!-- /JOINT_FLOW_PRICE_PLAN_20261116 -->
+
+
 ## 2026-11-16 07:57Z (session aea5bfb9) — STOP_EV PRESENCE (USER: "why it just has 3.4% on both sides? Does it mean it pulls still quite often"): mostly the model declines; and yes, it churns - median order live 79 ms
 
 - What: pf_stop_ev_presence.py (3cf2f259; POST HOC, descriptive): the scorecard's STOP_EV / v3 / recorded58 re-run on its 1,434 windows with the gate and keep decisions observed, not changed. Every window equals the scorecard (P&L, shares, fills, orders, pulls, quote availability); planted errors (40 / 22 clock, gate never closed) caught on every date.
