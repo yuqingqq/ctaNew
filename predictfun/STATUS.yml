@@ -1,12 +1,12 @@
 value_bridge_20261116:
-  status: frozen_action_tests_running
+  status: action_tests_complete_matched_replay_running
   source_commit: 16388b7c
   freeze_commit: 8e3962d0
   worktree: /tmp/cta-value-bridge-20261116
   branch: research/predict-value-bridge-20261116
   output: data/predict_fun/research/value_bridge_20261116_v1
   test_days: [20261026, 20261027]
-  active_stage: actions_20261026
+  active_stage: pilot
   candidates: 1
   spread_bandwidth_ticks: 1.0
   predictor_unchanged: true
@@ -16,6 +16,9 @@ value_bridge_20261116:
   action_kinds: [post_wait, keep_cancel]
   candidate_arms: [EXACT_JOINT, SOFT_JOINT, SOFT_EMPIRICAL]
   scope: consumed_development_no_promotion
+  action_counts: {20261026: 416, 20261027: 443}
+  retrospective_diagnostic_source: 3bca8e3c
+  retrospective_diagnostic_running: false
 
 joint_flow_controller_20261116:
   status: v3_pilot_and_churn_attribution_audited_merged

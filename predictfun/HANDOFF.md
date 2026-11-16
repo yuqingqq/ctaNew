@@ -1,5 +1,5 @@
 <!-- VALUE_BRIDGE_20261116 -->
-## 2026-11-16 Prediction-to-economic-value bridge: one candidate frozen and running
+## 2026-11-16 Prediction-to-economic-value bridge: action tests complete; matched strategy replay running
 
 User authorized improving the valuation layer first. Source16388b7c, freeze
 8e3962d0; worktree /tmp/cta-value-bridge-20261116, branch
@@ -21,9 +21,17 @@ branches share historical and unavoidable prefixes.200-draw count-matched null.
 Scenario standard deviation is dispersion, not a calibrated confidence bound.
 
 Output data/predict_fun/research/value_bridge_20261116_v1/; logs under logs/.
-Driver running on Codex/core8, first stage actions_20261026. Prior pilot remains
-consumed; no forward promotion or profitability claim. Next: finish both action
-readouts, matched strategy replay and independent audit, then record results.
+Both action stages completed: Oct26 has416 matched actions (203 cancel,213
+post); Oct27 has443 (221 cancel,222 post). The Oct27 exact cancellation values
+and rank correlation reproduce the prior221-action diagnostic. Soft cancellation
+rank improves .034->.118 on Oct26 and .280->.339 on Oct27, while positive-post
+realized means remain negative. These are preliminary readouts pending audit,
+not a successful entry model or promotion. Driver now runs the matched12-market
+SOFT_JOINT strategy replay on Codex/core8; thresholds and policy remain frozen.
+A separate future-information diagnostic is committed at3bca8e3c: true coarse
+classes and actual future path, both with the same client-known state, on the
+same Oct27 actions. It does not alter the candidate or enter strategy inputs.
+Next: finish replay/audit, run that diagnostic, and record complete limitations.
 <!-- /VALUE_BRIDGE_20261116 -->
 
 <!-- JOINT_FLOW_CONTROLLER_20261116 -->
