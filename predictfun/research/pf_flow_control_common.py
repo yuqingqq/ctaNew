@@ -7,9 +7,9 @@ import pf_flow_price_common as C
 np, pd, I = C.np, C.I.pd, C.I
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
-OUT = Path(I.K.IO) / 'flow_control_20261116_v2'
+OUT = Path(I.K.IO) / 'flow_control_20261116_v3'
 REVIEW = HERE.parent / 'reviews/flow_control_20261116'
-FREEZE = REVIEW / 'freeze_v2.json'
+FREEZE = REVIEW / 'freeze_v3.json'
 TRAIN = ('20261023', '20261024', '20261025')
 CAL = '20261026'
 TEST = '20261027'
@@ -38,8 +38,8 @@ def freeze():
         ['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         sources={str(p.relative_to(ROOT)):C.sha(p) for p in sorted(set(files))},
         inherited_prediction_freeze_sha256=C.sha(C.REVIEW/'freeze_v1.json'),
-        supersedes=dict(freeze='freeze_v1.json',sha256=C.sha(REVIEW/'freeze_v1.json'),
-            reason='Review found that the generic book-minimum queue estimator ignored acknowledged partial fills. Within queueM a known positive fill proves ahead is zero and later snapshots cannot increase it. Correct the controller-only state mapping; old smoke and interrupted pilot retained. No threshold, forecast, path selection or risk parameter changed.'),
+        supersedes=dict(freeze='freeze_v2.json',sha256=C.sha(REVIEW/'freeze_v2.json'),
+            reason='Complete the same client-state repair: do not initialize the order-state queue cache before activation, and preserve the explicit zero assumption for initially unobserved depth. V2 already fixed confirmed partial-fill front priority. V1 smoke and V1/V2 interrupted runs retained. No threshold, forecast, path selection or risk parameter changed.'),
         train=TRAIN,calibration=CAL,test=TEST,population='12 predeclared markets: first eligible in each two-hour block; continuous five minutes; consumed development only',
         paths='All eligible neutral bid/rung0/at-best probes; deterministic 24-per-market hash sampling before outcomes; 3 representative paths per phase/spread/bid-class/ask-class, weighted by cell counts. Paired both-side tape and book paths, no independent rung samples.',
         controller='Greedy simultaneous action set, keep/cancel and post/wait, common scenarios and endpoint; repeat coordinate improvement until no positive increment, no timer or minimum rest. No replacement or size search.',
