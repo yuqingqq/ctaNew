@@ -14,12 +14,13 @@ stop_ev_minutes_20261116:
   new_fits: 0
   new_thresholds: 0
   later_phase_training_coverage: absent_transfer_test
-  output: data/predict_fun/research/stop_ev_minutes_20261116_v2
+  output: data/predict_fun/research/stop_ev_minutes_20261116_v3
   worktree: /tmp/cta-stop-ev-minutes-20261116
-  source_commit: 201c5613
-  freeze_commit: afef266a
-  freeze: predictfun/reviews/stop_ev_minutes_20261116/freeze_v2.json
+  source_commit: 70ed45d8
+  freeze_commit: f06356ac
+  freeze: predictfun/reviews/stop_ev_minutes_20261116/freeze_v3.json
   smoke_status: passed_all_controls
+  serialization_controls: sparse_text_roundtrip_and_unfixed_refusal_passed
 
 strategy_scorecard_20261116:
   status: complete_audited_merged
