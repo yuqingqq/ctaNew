@@ -1,5 +1,5 @@
 <!-- JOINT_FLOW_CONTROLLER_20261116 -->
-## 2026-11-16 Joint forecast controller: implemented, audited and merged; pilot complete
+## 2026-11-16 Joint forecast controller: pilot complete; rapid-churn attribution audited
 
 Controller source 6f1742fc, active freeze 7fb46122 (v3); results 6855f695,
 final implementation/results merge 89a55bf4 into mm-research. All 59 frozen
@@ -33,20 +33,36 @@ data/predict_fun/research/flow_control_20261116_v3/. Independent artifact,
 accounting, null and known-bad checks pass; compiled/canonical parity on 24 paths.
 Pilot 964.62s / 1,280MiB; bounded diagnostic 153.40s / 1,079MiB.
 
-Next research priority: calibrate action values and assess uncertainty of small
-advantages and queue continuation on earlier data. Do not tune on this pilot
-or add a fixed retry timer. Path transport and within-class severity also remain
-limitations. Protected forward dates unopened. Original frozen forecast study
-resumed at 11:17:49Z on Codex/core8 for Nov1–3 (driver PID 2770777; Nov1 data
-builder verified running). Controller pilot numerical jobs are complete.
+Churn diagnosis completed as of 2026-11-16T11:50:51Z; bank-only audit at
+11:56:38Z. All 11,974 posts have statuses; 11,808 paired first reviews include
+4,545 model cancellations. Replay trace and fills match the archived pilot.
+Only 1,046 cancellations followed an adverse midpoint move; 1,913 unchanged,
+1,586 favourable. Median entry advantage is only 0.317 cents/order.
+Balanced hash sample: 192 cancels +192 model keeps. Cancellation value-shift
+attribution (c/order): market/book/scenario set -4.330, probabilities -0.333,
+other portfolio/inventory -0.254, target queue -0.046. These are model-input
+sensitivities, not realized costs. Original endpoint still cancels176/192;
+2s still cancels179/192. Prior emphasis on the horizon/queue as main cause is
+superseded by these measurements, not erased from the research history.
 
-Churn diagnosis is now running without policy changes, source e4fc69a5 /
-freeze32e9986c, worktree /tmp/cta-flow-churn-20261116. It reconciles the archived
-JOINT trace/fills, matches entry to first review, and separates clock/queue/
-forecast/portfolio effects with endpoint sensitivities. Output flow_churn_20261116_v1.
-The prior prediction Nov1 fit completed successfully (third fit); driver2770777
-is stopped between stages while this diagnostic uses Codex/core8. Resume it with
-SIGCONT after the diagnostic and audit release the slot; do not restart partial fits.
+97/192 sampled cancellations switch scenario set (92 spread changes). Holding
+all current inputs fixed and substituting the entry bank is admissible in91;
+47 switch to nonnegative keep value. Mean bank-only value change is -5.208c.
+Six boundary exclusions retained. This identifies a substantial sensitivity,
+not proof that the old bank is correct or that observed spread is irrelevant.
+Next: evaluate smoother/conditioned response mapping and value uncertainty on
+earlier data, plus queue continuation economics; no fixed timer. Validate
+realized action value before accepting a churn reduction. One consumed day,
+no promotion, no new policy or model, protected forward dates unopened.
+
+Report: handoffs/20261116_flow_controller_churn.md; receipt index:
+reviews/flow_control_20261116/churn_v1/index.json. Source e4fc69a5 / freeze32e9986c;
+results edeb7e8e, merged 76eae3be. Worktree /tmp/cta-flow-churn-20261116.
+All frozen controller sources and diagnostic hashes verified after merge.
+Raw ledgers: data/predict_fun/research/flow_churn_20261116_v1/.
+Diagnostic379.08s /1,085MiB; independent value and bank audits pass.
+Original forecast Nov1 fit completed; driver2770777 resumed after diagnostic
+completion. Nov2 data builder3139507 verified running on Codex/core8.
 <!-- /JOINT_FLOW_CONTROLLER_20261116 -->
 
 # P-2026-005 HANDOFF
