@@ -1,0 +1,104 @@
+{
+  "asof": "2026-11-16T01:53:12.562538+00:00",
+  "day": "20261101",
+  "source_commit": "37d61a9d2fe385a765744666096ae7356c081861",
+  "source_sha256": "e86a4f38f0ee1ecb5e453afe9cfb1903b13c876d11c928b5bba604fd0227d5f2",
+  "prior_receipt_sha256": "f039c9c87e7c0205f6cbd1349be115c58b8b4b1539a98d30d8efadd07287627e",
+  "reference_windows_sha256": "2b725d2681ac059f081c4487d642530c61417211f6daa2165244f256dd85a444",
+  "checks": {
+    "event_lookup": true,
+    "rolling_boundary": true,
+    "future_invariant": true,
+    "zero_clock_control": true,
+    "placement_clock_fires": true,
+    "cancel_clock_fires": true,
+    "fresh_gate_every_entry": true,
+    "stale_gate_falsifier": true,
+    "clock_restores": true,
+    "trajectory_mismatch_refused": true,
+    "placement_median_fires": true,
+    "cancel_median_fires": true,
+    "corrupt_baseline_refused": true
+  },
+  "stats": {
+    "windows": 288,
+    "state_calls": 202629,
+    "state_parity": 1028,
+    "baseline_window_parity": 288,
+    "trajectory_parity": 2,
+    "runs": 576
+  },
+  "loader": {
+    "registry": 288,
+    "outside_day": 0,
+    "sealed_or_forward": 0,
+    "no_outcome": 0,
+    "parts_skipped": 1,
+    "untimed_legs_0_60": 981,
+    "untimed_shares_0_60": 10717.451728936834,
+    "windows": 288,
+    "grid_steps": 345600,
+    "grid_steps_without_row": 0
+  },
+  "cases": [
+    [
+      "baseline_40_22",
+      40.0,
+      22.0
+    ],
+    [
+      "medians_58_37",
+      58.0,
+      37.0
+    ]
+  ],
+  "unchanged_clock": {
+    "pending_cancel": 95.0,
+    "fill_notice": 100.0,
+    "grid": 50.0,
+    "trade_shift": 50.0
+  },
+  "totals": {
+    "baseline_40_22": {
+      "pnl": 127.76797663515907,
+      "shares": 8619.553922216128,
+      "orders": 31534.0,
+      "pulls": 29441.0,
+      "fill_events": 983.0,
+      "markout1_cents": 6951.201650155268,
+      "markout5_cents": 7302.5546650140295,
+      "imputed_pnl": 30.499622000000002,
+      "imputed_shares": 214.6014,
+      "pend": -12.09383053778409,
+      "pend_shares": 1510.2805505363608,
+      "qunk": 35.530825666666665,
+      "qunk_shares": 339.4014666666667,
+      "windows": 288,
+      "cents_per_share": 1.482303815117956,
+      "live_share": 0.02325148533950617,
+      "max_abs_position": 649.1005059825966
+    },
+    "medians_58_37": {
+      "pnl": 11.318261770484495,
+      "shares": 8797.32800215179,
+      "orders": 29583.0,
+      "pulls": 27244.0,
+      "fill_events": 980.0,
+      "markout1_cents": 4850.41176586781,
+      "markout5_cents": 4476.461135012434,
+      "imputed_pnl": 11.519352999999999,
+      "imputed_shares": 200.71679999999998,
+      "pend": -14.700819559675994,
+      "pend_shares": 1395.0217660765932,
+      "qunk": 9.487925666666666,
+      "qunk_shares": 310.70646666666664,
+      "windows": 288,
+      "cents_per_share": 0.12865567553825544,
+      "live_share": 0.026848765432098767,
+      "max_abs_position": 591.9224966026284
+    }
+  },
+  "seconds": 116.47426867485046,
+  "peak_rss_mib": 1077.40625,
+  "limits": "Consumed data, deterministic placement/cancel median sensitivity only. No jitter or physical replay validation, no forecast tested, no new fit or threshold selection."
+}
