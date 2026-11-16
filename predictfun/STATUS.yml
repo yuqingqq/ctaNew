@@ -1,3 +1,37 @@
+ev_lag_gap_20261116:
+  asof: '2026-11-16T01:57:35.556172+00:00'
+  status: complete_recorded_latency_material_fragile_positive_no_forecast_test
+  source_commit: 06fb7d77
+  freeze_commit: 37d61a9d
+  results_commit: f54795de
+  integration_commit: 193e0440
+  consumed_test_dates: [20261027, 20261031, 20261101, 20261102, 20261103]
+  windows: 1434
+  excluded_boundary_windows: 6
+  primary_replays: 2868
+  baseline_place_cancel_ms: [40, 22]
+  median_place_cancel_ms: [58, 37]
+  review_grid_ms: 50
+  baseline_pnl_dollars: 397.10076732410437
+  median_pnl_dollars: 159.55526242592862
+  median_cents_per_share: 0.3312118413462041
+  median_pnl_reduction_fraction: 0.5981995615342054
+  median_best_date_pnl: 200.40093720381168
+  median_other_four_dates_pnl: -40.84567477788306
+  baseline_windows_reproduced: 1434
+  state_comparisons: 6188
+  trajectory_comparisons: 10
+  activation_review_grid_interaction_verified: true
+  grid_interaction_pnl_attributed: false
+  new_forecast_or_oracle_tested: false
+  new_fits: 0
+  physical_latency_validated: false
+  untouched_validation: false
+  policy_promoted: false
+  next: realistic_clock_bounded_early_action_opportunity_then_causal_forecast
+  review: predictfun/handoffs/20261116_ev_lag_gap_review.md
+  evidence: predictfun/reviews/ev_lag_gap_20261116/results_v1/report.json
+
 stop_ev_latency_20261115:
   asof: '2026-11-15T18:58:55.527073+00:00'
   status: complete_latency_material_full_ev_positive_selective_high_churn_no_promotion

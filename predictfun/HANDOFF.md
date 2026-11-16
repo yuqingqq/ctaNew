@@ -1,5 +1,50 @@
 # P-2026-005 HANDOFF
 
+<!-- EV_LAG_GAP_20261116 -->
+## 2026-11-16 Recorded latency materially weakens full EV; anticipation remains untested
+
+Complete as of 2026-11-16T01:57:35.556172+00:00: same 1,434 first-minute windows on
+five consumed dates (10-27, 10-31, 11-01..03), six October 31 boundary
+exclusions, all fills. Source 06fb7d77, freeze 37d61a9d, results f54795de,
+integration 193e0440. Full v3 EV only; placement/cancel 40/22 versus the
+previously recorded medians 58/37 ms. All other clocks, models, M50 tape,
+50 ms review/fresh-entry grid and queue assumptions fixed. No new fits.
+
+40/22: $+397.10, +0.9259c/share, 42,890 shares.
+58/37: $+159.56, +0.3312c/share, 48,173 shares.
+Value falls 59.82% despite
+12.32% more shares. Four dates positive, but
+best date 10-27 contributes $+200.40; other four
+sum to $-40.85. All dates retained. Prior
+same-policy full modeled zero delay +$820.92: gap to medians +$661.36.
+These are simulated terminal marks, not whole-day/live/untouched profits.
+
+Verified mechanism: an order activates at 40 ms and first gets the EV guard
+at 50 ms (age 10); at 58 ms it first gets the guard at 100 ms (age 42);
+zero placement gets first review at 50 ms (age 50). This establishes grid
+interaction, not its PnL share. Pending EV review is absent. Timing/queue
+assumptions and jitter remain unvalidated by this median-only diagnostic.
+
+Correction to earlier priority: selected inventory losses did not establish
+inventory control as the biggest lever. Baseline terminal minus +1s mark
+is +$46.50; medians -$92.21; full zero -$148.48. Mark differences are not
+executable exit gains. LGBM architecture is not shown to be the main gap.
+The keep-value target still doubles as fresh-entry value and omits priced
+queue continuation. Its contribution to losses has not been isolated.
+
+Next focused test: bounded per-order act-now vs act-50/100ms-later value,
+separate post and cancel, realistic clocks held fixed; explicitly noncausal
+lookahead diagnostic then causal forecast. Zero latency proves opportunity,
+not predictability. No new forecast or oracle was tested here.
+
+Every baseline window reproduced; 6188 independent
+state comparisons and 10 trajectory controls
+pass, all source/input identities and accounting checked, planted errors
+refused. Review: handoffs/20261116_ev_lag_gap_review.md. Evidence:
+reviews/ev_lag_gap_20261116/results_v1/report.json and interpretation_v1.json.
+<!-- /EV_LAG_GAP_20261116 -->
+
+
 ## 2026-11-15 18:50Z (session aea5bfb9) — REPLAY v2 DONE (USER: "Can we fix the critical issues and let the results be correct first"): on the corrected labels and the corrected replay NO policy is profitable; "rest when quiet, pull on activity" (QR) beats keep-all and random pulls, but not the guard or the harm-only model at 50 ms
 
 - Run 17:34-18:46Z (34ea0eb9, claude slot, peak RSS 1.0 GiB); every control passed: order-state parity 12,103 checks / 0 mismatches, off-parity 1,434 windows / 0 differences, lane violations 0, 4 planted errors caught. Receipts: reviews/stop_ev_play2_20261115/.
