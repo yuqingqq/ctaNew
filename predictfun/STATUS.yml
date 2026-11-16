@@ -1,5 +1,5 @@
 entry_arrival_20261116:
-  status: frozen_data_build_running_no_prediction_result_yet
+  status: first_fit_complete_first_delayed_replay_running
   source_commit: 1b94ec80
   freeze_commit: 3ce50516
   scope: bid_ask_entry_prediction_cancellation_guard_unchanged
@@ -15,6 +15,11 @@ entry_arrival_20261116:
   untouched_validation: false
   protected_data_read: false
   protocol: predictfun/reviews/entry_arrival_20261116/freeze_v2.json
+  completed_data_days: 5
+  completed_test_fits: 1
+  first_fit_test_actions: 44093
+  first_fit_teacher_mae_baseline_forecast: [3.3725629983633265, 2.639788720871444]
+  completed_economic_replay_dates: 0
 
 ev_lag_gap_20261116:
   asof: '2026-11-16T01:57:35.556172+00:00'
