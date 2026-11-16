@@ -21,7 +21,7 @@ joint_flow_controller_20261116:
   queue_state_repairs: [confirmed_partial_fill_front, pending_activation_cache, initial_unknown_zero]
 
 joint_flow_price_plan_20261116:
-  status: first_day_audited_remaining_folds_running
+  status: first_day_audited_two_fits_complete_controller_priority
   plan: predictfun/handoffs/20261116_joint_flow_price_plan.md
   report: predictfun/handoffs/20261116_flow_price_first_day.md
   first_day_asof: '2026-11-16T09:35:10.243484+00:00'
@@ -51,8 +51,8 @@ joint_flow_price_plan_20261116:
   output: data/predict_fun/research/flow_price_20261116_v1
   next: finish_remaining_frozen_folds_and_full_artifact_audit
   completed_data_dates: [20261023, 20261024, 20261025, 20261026, 20261027, 20261031]
-  model_fits_completed: 1
-  active_fit: 20261031
+  model_fits_completed: 2
+  active_fit: null
   synthetic_tests_passed: 22
   policy_replays: 0
   frozen_experiment: true

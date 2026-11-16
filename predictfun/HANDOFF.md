@@ -33,7 +33,7 @@ record limitations and results, merge tested implementation to mm-research.
 # P-2026-005 HANDOFF
 
 <!-- JOINT_FLOW_PRICE_PLAN_20261116 -->
-## 2026-11-16 Joint flow/price model: first-day predictions complete; remaining folds running
+## 2026-11-16 Joint flow/price model: first-day predictions audited; two fits complete; controller pilot has priority
 
 First readout asof2026-11-16T09:35:10.243484+00:00. Train Oct23–25 (357,041
 eligible actions), calibrate Oct26 (137,025), test Oct27 (118,062 actions from
@@ -67,9 +67,12 @@ Frozen recipe source372d7427, freeze d883b942; results8ebe9f15 merged into
 mm-research at b73baa33. Merged evaluator/report/figure hashes verified.
 Worktree /tmp/cta-flow-price-model-20261116; output/logs under
  data/predict_fun/research/flow_price_20261116_v1/.
-Completed data Oct23–27 and Oct31. Oct31 fit is running in Codex/core8, then
-Nov1–3 data/fits and full report/audit. Recipe unchanged after the first readout.
-No fixed retry timer, action policy, new size, or live change. Protected forward
+Completed data Oct23–27 and Oct31, with Oct27 and Oct31 fits complete. The
+previous scheduler stopped after the Oct31 fit. Nov1–3 data/fits and the full
+report/audit remain pending; the controller pilot currently occupies Codex/core8.
+A committed resume driver will continue the unchanged recipe after that pilot.
+This original prediction experiment has no action policy or size change. The
+new controller is tracked separately above. Protected forward
 dates unopened. Shared edits preserved. Model first-fit peak1,770MiB.
 <!-- /JOINT_FLOW_PRICE_PLAN_20261116 -->
 
