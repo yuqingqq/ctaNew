@@ -1,0 +1,11 @@
+{
+  "asof": "2026-11-16T11:56:38.804880+00:00",
+  "n": 384,
+  "eligible_values_recomputed": 376,
+  "out_of_bounds_statuses_verified": 8,
+  "all_report_counts_and_means_recomputed": true,
+  "corrupted_value_refused": true,
+  "report_sha256": "7521e9189d3ee3685937c692fe1a8f78fbb8ef47542df9ed7bba233cd9302fe0",
+  "source_sha256": "9d0aac62b610fe636d880749ad946fe9d9f6d90e22f57ecd959bde4939addbcd",
+  "source_commit": "2955662049efdac51471cca8a9d3fb9b4c5ed3df"
+}

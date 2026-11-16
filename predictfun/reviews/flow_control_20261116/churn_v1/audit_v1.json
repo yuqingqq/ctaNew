@@ -1,0 +1,20 @@
+{
+  "asof": "2026-11-16T11:51:53.658315+00:00",
+  "n": 384,
+  "paired_actions": 11808,
+  "hash_sample_identities": true,
+  "all_entry_and_cancel_values_recomputed": true,
+  "all_attribution_bridges_reconciled": true,
+  "report_and_200_draw_null_recomputed": true,
+  "corrupt_advantage_refused": true,
+  "interpretation_notes": [
+    "The entry_queue_assumption_change bridge disables new-order initialization: it changes activation queue initialization AND activation-cross rejection. It is not a pure queue effect.",
+    "The 16-cell target_queue factor only changes target ahead quantity, with every other target field fixed.",
+    "Frozen-entry rest repricing holds the other portfolio at entry; it is a model-input intervention, not an actual evolved-world counterfactual.",
+    "Original-endpoint sensitivity uses current scenarios at the shorter remaining horizon; it does not roll forward and condition the original paths."
+  ],
+  "report_sha256": "81d55214511bdea4e625810b1679171656c3e6b410e897992e33a737758f24e6",
+  "receipt_sha256": "b8153f8c933b9c2f2cfec9354af662e93dd58549aca110a3420490eaa7d07da9",
+  "source_sha256": "9856ced523d2261101482af29dd2a172cba69175f85231195cad9843e245f5fb",
+  "source_commit": "256e40f99c3e0f250fbfd9a33f78c0b8741b1682"
+}
