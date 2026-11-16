@@ -1,0 +1,30 @@
+{
+  "asof": "2026-11-16T13:48:58.280304+00:00",
+  "source_manifest": "10f31bed1ef7c3c402b419f2ade448f761ba389577607954190933bbf9caffa4",
+  "day": "20261027",
+  "selected_markets": [
+    3853227,
+    3855272,
+    3856795,
+    3861545,
+    3864969,
+    3866949,
+    3868537,
+    3872135,
+    3875576,
+    3878682,
+    3882891,
+    3887697
+  ],
+  "raw_receipt_sha256": "b90628347e222a3bf0afc11682b5f949af8f51b06b56a7d7a3be9ef9bde035a5",
+  "cached_labels_receipt_sha256": "7c8c48f9571bc409d4d2432897b1f6a59fb850bba45d85d82f1faa6f88c56fab",
+  "controls": {
+    "post_wrong_prefix_refused": true,
+    "cancel_wrong_prefix_refused": true
+  },
+  "outputs": {
+    "candidates.parquet": "bea5cc5fca0351f2970e29f66220ffc2c3759c31de632dad70bc7b8af4f705cd",
+    "values.parquet": "b80d856a8d71bb3e23a57e9336640c115e32e47da78fe63533eb4ea98b473928"
+  },
+  "seconds": 173.9760537147522
+}

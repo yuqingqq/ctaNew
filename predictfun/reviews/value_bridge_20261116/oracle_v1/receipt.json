@@ -1,0 +1,12 @@
+{
+  "asof": "2026-11-16T14:02:08.749171+00:00",
+  "source_commit": "9351bb13d177947ff594f24dc88dc849f3450763",
+  "source_sha256": "2d1bebd8579ae8dc3d5acae1a2c7f87d5aa1f05956f03879337a073502b2aa05",
+  "candidate_freeze_sha256": "10f31bed1ef7c3c402b419f2ade448f761ba389577607954190933bbf9caffa4",
+  "input_receipt_sha256": "e786ca73f90717892698408cbf5f15c0f9dfddf29aea795e40256249827ee059",
+  "outputs": {
+    "report.json": "f3f6f5143d10ee740e4b2d6847e37c93f03cd9be429c90f3454dfe4c7015b13b",
+    "values.parquet": "0b4bc57a373825f16e886858b93bf0f39c77cee8ce4cdddcd024fe94d9e92032"
+  },
+  "seconds": 103.76548624038696
+}
