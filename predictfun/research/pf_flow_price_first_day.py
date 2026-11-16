@@ -11,6 +11,29 @@ import lightgbm as lgb
 np,pd=C.np,C.I.pd
 
 
+def consistency_counts(qty,flow,value,severe,fill,price,bid):
+    qty,flow,value,severe,fill,price=[np.asarray(x,float) for x in [qty,flow,value,severe,fill,price]]
+    C.require(all(np.isfinite(x).all() for x in [qty,flow,value,severe,fill,price]),'nonfinite response audit input')
+    C.require(all(x.shape==qty.shape for x in [flow,value,severe,fill,price]),'response audit shape')
+    low=-np.where(bid,price,100.-price)*qty;high=np.where(bid,100.-price,price)*qty
+    return dict(n=len(qty),value_outside_quantity_implied_bounds=int(((value<low-1e-6)|(value>high+1e-6)).sum()),
+        severe_probability_above_own_fill_probability=int((severe>fill+1e-6).sum()),
+        expected_own_quantity_above_public_quantity=int((qty>flow+1e-6).sum()),
+        interpretation='separately fitted conditional response heads can be incoherent; diagnostic only, no post-hoc clipping')
+
+
+def consistency_controls():
+    good=consistency_counts([1.],[2.],[0.],[.1],[.2],[50.],[True])
+    bad=consistency_counts([3.],[2.],[1000.],[.8],[.2],[50.],[True])
+    names=['value_outside_quantity_implied_bounds','severe_probability_above_own_fill_probability','expected_own_quantity_above_public_quantity']
+    C.require(all(good[k]==0 and bad[k]==1 for k in names),'response inconsistency control did not fire')
+    caught=False
+    try:consistency_counts([1.],[2.],[np.nan],[.1],[.2],[50.],[True])
+    except ValueError:caught=True
+    C.require(caught,'nonfinite response refusal failed')
+    return dict(valid_fixture=True,three_planted_inconsistencies=True,nonfinite_refused=True)
+
+
 def plot(result,dest):
     import matplotlib
     matplotlib.use('Agg')
@@ -47,7 +70,7 @@ def plot(result,dest):
 
 
 def summary():
-    C.verify();controls=CHECK.selftest();day=C.TESTS[0]
+    C.verify();controls=CHECK.selftest();response_controls=consistency_controls();day=C.TESTS[0]
     fold=C.OUT/('fit_'+day);fit=json.loads((fold/'receipt.json').read_text())
     C.require(tuple(fit['training_days'])==tuple(C.FOLDS[day][0]) and fit['calibration_day']==C.FOLDS[day][1], 'first fold identity')
     dataset_reports={}
@@ -102,14 +125,8 @@ def summary():
                             filled_actions=int(g.own_fill.sum()),severe_actions=int(g.severe.sum()),
                             caveat='score calibration diagnostic; not a replay or a validated trading rule')
         if name!='direct':
-            qty=p[f'{name}_own_quantity'].to_numpy();value=p[value_col].to_numpy()
-            price=raw.x_price.to_numpy();bid=raw.side.to_numpy()==0
-            low=-np.where(bid,price,100.-price)*qty
-            high=np.where(bid,100.-price,price)*qty
-            consistency[name]=dict(n=len(p),value_outside_quantity_implied_bounds=int(((value<low-1e-6)|(value>high+1e-6)).sum()),
-                severe_probability_above_own_fill_probability=int((p[f'{name}_severe']>p[f'{name}_own_fill']+1e-6).sum()),
-                expected_own_quantity_above_public_quantity=int((qty>p[f'{name}_flow_quantity'].to_numpy()+1e-6).sum()),
-                interpretation='separately fitted conditional response heads can be incoherent; diagnostic only, no post-hoc clipping')
+            consistency[name]=consistency_counts(p[f'{name}_own_quantity'],p[f'{name}_flow_quantity'],p[value_col],
+                p[f'{name}_severe'],p[f'{name}_own_fill'],raw.x_price,raw.side.to_numpy()==0)
     train_counts=np.zeros(15,int)
     for d in fit['training_days']:
         f=pd.read_parquet(C.OUT/d/'actions.parquet',columns=['status','joint_class'])
@@ -120,7 +137,7 @@ def summary():
         calibration=calibration,positive_score_diagnostic=selection,response_consistency=consistency,
         class_support=dict(training=train_counts,test=np.bincount(p.joint_class.astype(int),minlength=15)),
         within_null=R.within_null(p),coverage=dataset_reports,
-        audit=dict(controls=controls,model_reload_rows=len(ix),probability_and_value_reload=True,corrupted_probability_refused=True,
+        audit=dict(controls=controls,response_controls=response_controls,model_reload_rows=len(ix),probability_and_value_reload=True,corrupted_probability_refused=True,
                    input_data_model_prediction_hashes=True,prediction_identity=True,fit_receipt_sha256=C.sha(fold/'receipt.json')))
     q=metrics['models']
     result['comparisons']=dict(joint_logloss_beats_independent=q['joint']['joint_logloss']<q['independent']['joint_logloss'],
