@@ -1,0 +1,93 @@
+"""First chronological fold readout; frozen predictions, no model/policy changes."""
+import json
+from pathlib import Path
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parent))
+import pf_flow_price_common as C
+import pf_flow_price_model as M
+import pf_flow_price_report as R
+import pf_flow_price_check as CHECK
+import lightgbm as lgb
+np,pd=C.np,C.I.pd
+
+
+def summary():
+    C.verify();controls=CHECK.selftest();day=C.TESTS[0]
+    fold=C.OUT/('fit_'+day);fit=json.loads((fold/'receipt.json').read_text())
+    C.require(tuple(fit['training_days'])==tuple(C.FOLDS[day][0]) and fit['calibration_day']==C.FOLDS[day][1], 'first fold identity')
+    dataset_reports={}
+    for d in (*fit['training_days'],fit['calibration_day'],day):
+        p=C.OUT/d;receipt=json.loads((p/'receipt.json').read_text())
+        C.require(C.sha(p/'receipt.json')==fit['data_receipts'][d], 'data receipt identity')
+        C.require(C.sha(p/'actions.parquet')==receipt['output_sha256'], 'data identity')
+        C.require(receipt['source_manifest']==C.sha(C.REVIEW/'freeze_v1.json'), 'data source contract')
+        for path,h in receipt['input_hashes'].items():C.require(C.sha(path)==h,'changed input '+path)
+        dataset_reports[d]={k:receipt[k] for k in ['asof','selected_markets','rows','eligible','statuses','by_phase']}
+    for name,h in fit['outputs'].items():C.require(C.sha(fold/name)==h,'fit output '+name)
+    for spec in fit['artifacts'].values():C.require(C.sha(spec['path'])==spec['sha256'],'model hash')
+    p=pd.read_parquet(fold/'test.parquet');raw=M.read(day)
+    keys=['day','m','side','rung','generation','decision_ms']
+    C.require(p[keys].equals(raw[keys].reset_index(drop=True)), 'prediction row identities')
+    C.require(not p.duplicated(keys[:-1]).any(), 'duplicate action')
+    for target in C.TARGETS+['joint_class','flow_class','move_class','move_cents']:
+        C.require(np.array_equal(p[target].to_numpy(),raw[target].to_numpy()),'prediction target '+target)
+    # Independently reload probabilities and the scenario mixture on spread-out rows.
+    ix=np.linspace(0,len(raw)-1,min(512,len(raw)),dtype=int)
+    x=raw.iloc[ix][C.FEATURES].to_numpy(np.float32)
+    prob={}
+    for name,features in [('joint',C.FEATURES),('mechanical',C.MECHANICAL),('flow',C.FEATURES),('move',C.FEATURES)]:
+        b=lgb.Booster(model_file=str(fold/(name+'.txt')))
+        xx=raw.iloc[ix][features].to_numpy(np.float32)
+        prob[name]=M.temperature(b.predict(xx,num_threads=1),fit['temperature'][name]['value'])
+    prob['independent']=(prob['flow'][:,:,None]*prob['move'][:,None,:]).reshape(-1,15)
+    for name in ['joint','mechanical','independent']:
+        saved=p.iloc[ix][[f'{name}_p{k}' for k in range(15)]].to_numpy()
+        C.require(np.allclose(prob[name],saved,rtol=0,atol=1e-10),'probability reload '+name)
+    b=lgb.Booster(model_file=str(fold/'conditional_value_cents.txt'));response=np.empty((len(ix),15))
+    for k in range(15):
+        xx=np.column_stack([x,np.full(len(ix),k//5),np.full(len(ix),k%5)]).astype(np.float32)
+        response[:,k]=b.predict(xx,num_threads=1) if k//5 else 0.
+    for name in ['joint','independent']:
+        C.require(np.allclose((prob[name]*response).sum(1),p.iloc[ix][f'{name}_value_cents'],rtol=0,atol=1e-8),'mixture reload '+name)
+    b=lgb.Booster(model_file=str(fold/'direct_value.txt'))
+    C.require(np.allclose(b.predict(x,num_threads=1),p.iloc[ix].direct_value,rtol=0,atol=1e-10),'direct reload')
+    corrupted=prob['joint'].copy();corrupted[0,0]+=.01
+    C.require(not np.allclose(corrupted,p.iloc[ix][[f'joint_p{k}' for k in range(15)]].to_numpy(),rtol=0,atol=1e-10),'corruption falsifier did not fire')
+    metrics=R.metrics(p);calibration=[];selection={}
+    for name in ['joint','independent','empirical','direct']:
+        value_col='direct_value' if name=='direct' else f'{name}_value_cents'
+        targets=[('value_cents',value_col)] if name=='direct' else [(t,f'{name}_{t}') for t in C.TARGETS]
+        for target,column in targets:
+            bins=pd.qcut(p[column].rank(method='first'),10,labels=False)
+            for bucket,g in p.groupby(bins):
+                calibration.append(dict(model=name,target=target,decile=int(bucket)+1,n=len(g),predicted=float(g[column].mean()),actual=float(g[target].mean())))
+        mask=p[value_col]>0;g=p.loc[mask]
+        selection[name]=dict(n=int(mask.sum()),fraction=float(mask.mean()),predicted_mean=float(g[value_col].mean()) if len(g) else None,
+                            actual_mean=float(g.value_cents.mean()) if len(g) else None,
+                            filled_actions=int(g.own_fill.sum()),severe_actions=int(g.severe.sum()),
+                            caveat='score calibration diagnostic; not a replay or a validated trading rule')
+    train_counts=np.zeros(15,int)
+    for d in fit['training_days']:
+        f=pd.read_parquet(C.OUT/d/'actions.parquet',columns=['status','joint_class'])
+        train_counts+=np.bincount(f.loc[f.status.isin(['eligible','eligible_estimated_timing']),'joint_class'].astype(int),minlength=15)
+    result=dict(asof=C.stamp(),test_day=day,training_days=fit['training_days'],calibration_day=fit['calibration_day'],
+        evidence='one consumed chronological development day; point estimates only, no interval or strategy-profit claim',
+        pooled=metrics,by_phase={int(k):R.metrics(g) for k,g in p.groupby('phase')},by_side={int(k):R.metrics(g) for k,g in p.groupby('side')},
+        calibration=calibration,positive_score_diagnostic=selection,
+        class_support=dict(training=train_counts,test=np.bincount(p.joint_class.astype(int),minlength=15)),
+        within_null=R.within_null(p),coverage=dataset_reports,
+        audit=dict(controls=controls,model_reload_rows=len(ix),probability_and_value_reload=True,corrupted_probability_refused=True,
+                   input_data_model_prediction_hashes=True,prediction_identity=True,fit_receipt_sha256=C.sha(fold/'receipt.json')))
+    q=metrics['models']
+    result['comparisons']=dict(joint_logloss_beats_independent=q['joint']['joint_logloss']<q['independent']['joint_logloss'],
+        joint_logloss_beats_mechanical=q['joint']['joint_logloss']<q['mechanical']['joint_logloss'],
+        joint_value_mse_beats_independent=q['joint']['value_cents']['mse']<q['independent']['value_cents']['mse'],
+        joint_value_mse_beats_direct=q['joint']['value_cents']['mse']<q['direct_value']['mse'])
+    dest=C.REVIEW/'first_day_v1';C.require(not dest.exists(),'first-day output exists');dest.mkdir(parents=True)
+    C.dump(dest/'report.json',result);pd.DataFrame(calibration).to_csv(dest/'calibration.csv',index=False)
+    C.dump(dest/'receipt.json',dict(asof=C.stamp(),script_sha256=C.sha(__file__),source_manifest=C.sha(C.REVIEW/'freeze_v1.json'),
+        report_sha256=C.sha(dest/'report.json'),calibration_sha256=C.sha(dest/'calibration.csv'),n=len(p),test_day=day))
+    print(json.dumps(C.clean(dict(asof=result['asof'],pooled=metrics,comparisons=result['comparisons'],positive_score=selection))),flush=True)
+
+
+if __name__=='__main__':summary()
