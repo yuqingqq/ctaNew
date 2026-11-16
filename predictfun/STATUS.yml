@@ -1,3 +1,22 @@
+strategy_scorecard_20261116:
+  status: frozen_accounting_smoke_running
+  source_commit: 7f0ab3a7
+  freeze_commit: 819e59fe
+  existing_cases: 10
+  strategy_definitions: 7
+  new_models: 0
+  new_thresholds: 0
+  new_policies: 0
+  target_windows_per_case: 1434
+  test_dates: [20261027, 20261031, 20261101, 20261102, 20261103]
+  review_ms: 50
+  trade_shift_ms: 50
+  gross_accounting: true
+  settlement: passive_residual_hold_after_first_minute
+  output: data/predict_fun/research/strategy_scorecard_20261116_v1
+  protocol: predictfun/reviews/strategy_scorecard_20261116/freeze_v1.json
+  review: predictfun/handoffs/20261116_strategy_scorecard.md
+
 entry_arrival_20261116:
   status: complete_forecast_underperforms_existing_entry
   asof: "2026-11-16T03:35:42.541848+00:00"
