@@ -1,0 +1,10 @@
+{
+  "asof": "2026-11-16T14:04:20.225747+00:00",
+  "n": 443,
+  "all_identities_statuses_and_matched_metrics_recomputed": true,
+  "corrupted_actual_refused": true,
+  "source_sha256": "c657a5f8fc5240f591fdd3fa187f0802fc9b3dac8e1dbffbaca510908c6c4e46",
+  "source_commit": "33db0c09f59d9274399accff1628972ecd54a779",
+  "receipt_sha256": "e9c1e836a5d260d9826ffe14fdba5d1f994af9870a73c7e57074d6967a880ecb",
+  "report_sha256": "f3f6f5143d10ee740e4b2d6847e37c93f03cd9be429c90f3454dfe4c7015b13b"
+}

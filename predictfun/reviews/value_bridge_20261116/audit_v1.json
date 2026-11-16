@@ -1,0 +1,56 @@
+{
+  "asof": "2026-11-16T13:59:10.232062+00:00",
+  "source_manifest": "10f31bed1ef7c3c402b419f2ade448f761ba389577607954190933bbf9caffa4",
+  "controls": {
+    "unavoidable_prefix_and_queue_preservation": true,
+    "placement_latency_and_wait": true,
+    "actual_initial_depth_changes_new_queue": true,
+    "shared_volume_and_price_priority": true,
+    "no_flow": true,
+    "bid_ask_value_sign": true,
+    "economic_actions_and_inventory_cap": true,
+    "negative_volume_refused": true,
+    "nonfinite_state_refused": true,
+    "forecast_changes_shared_weights": true,
+    "invalid_probability_refused": true,
+    "observer_lane_off_parity": true,
+    "wrong_ledger_refused": true,
+    "compiled_canonical_paths": 24,
+    "compiled_canonical_nonempty": 24,
+    "unreceived_fill_and_hidden_queue_ignored": true,
+    "received_fill_changes_state": true,
+    "true_remainder_leak_refused": true,
+    "confirmed_partial_fill_front_preserved": true,
+    "known_bad_replenished_ahead_refused": true,
+    "pending_cache_deferred_until_activation": true,
+    "unknown_zero_queue_preserved": true,
+    "all_donor_labels_reconciled": 1929,
+    "ask_reach_relabels_at_current_price": true,
+    "stale_donor_label_refused": true,
+    "shared_support_and_continuous_prior": true,
+    "invalid_spread_refused": true,
+    "positive_and_negative_post_value": true,
+    "20261026_corrupt_value_refused": true,
+    "20261027_corrupt_value_refused": true,
+    "corrupt_portfolio_summary_refused": true,
+    "exact_baseline_artifact_preserved": true
+  },
+  "action_reports": {
+    "20261026": {
+      "selected_actions": 418,
+      "generated_actions": 13450,
+      "report_sha256": "724df9a215bb5a5abb11706fca59c0da8293651b5462bbabbb7d8a89adf667e8",
+      "receipt_sha256": "34fd1a1260dc50bdc6af8c2776586c590e8052c1ac65d44d600b7a431d2d6297"
+    },
+    "20261027": {
+      "selected_actions": 443,
+      "generated_actions": 14480,
+      "report_sha256": "e267680444c60a11f5e3bb537705fb985546f1ac919af94f36c4796f045b1878",
+      "receipt_sha256": "e786ca73f90717892698408cbf5f15c0f9dfddf29aea795e40256249827ee059"
+    }
+  },
+  "pilot_markets": 24,
+  "fills": 1950,
+  "pilot_report_sha256": "a953f55a3532e871283d6bf747ec265039f469630ad87f646c3153b5ebc53367",
+  "pilot_receipt_sha256": "6dc4a29181fa942d22950f14bd7d74ba261e688f582ad575c372cafebd3843d6"
+}
