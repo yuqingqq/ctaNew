@@ -43,6 +43,17 @@ strategy_scorecard_20261116:
   audit: predictfun/reviews/strategy_scorecard_20261116/results_v1/audit_v1.json
   guide: predictfun/STRATEGIES.md
   review: predictfun/handoffs/20261116_strategy_scorecard.md
+  interpretation_commit: f3673c42
+  inventory_management_in_this_replay: none
+  inventory_management_effectiveness: untested
+  prediction_priority: retained_short_horizon_edge_at_recorded_latency
+  primary_prediction_comparator: STOP_EV__recorded58
+  forecast_0_137_metric: one_second_markout_cents_per_filled_share
+  forecast_initial_spread_cents_per_share: 1.1513436007522997
+  forecast_one_second_markout_cents_per_share: 0.1369096284565318
+  baseline_one_second_markout_cents_per_share: 0.5015830839151724
+  zero_all_one_second_markout_cents_per_share: 1.130542994932445
+  zero_delay_gap_is_pure_entry_forecast_error: not_established
 
 entry_arrival_20261116:
   status: complete_forecast_underperforms_existing_entry
