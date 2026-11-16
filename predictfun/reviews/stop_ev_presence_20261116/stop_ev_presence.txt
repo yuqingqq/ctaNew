@@ -1,0 +1,32 @@
+STOP_EV PRESENCE (POST HOC, descriptive): the scorecard's STOP_EV / v3 / recorded58 re-run on its 1434 first-minute windows (5 consumed dates), policy observed not changed; as of 2026-11-16T07:56:12Z
+controls: every window equals the scorecard (P&L, shares, fills, orders, pulls, quote availability); fresh EV = the policy's cache; planted errors caught on every date (MUT_CLOCK40, MUT_GATE_OPEN); order ends sum to the orders, guard-pull cancels = the lane's pulls
+
+PART 1: quote availability (share of the quoting time, continuous; the scorecard's definition)
+  any side 23.01% | both sides  3.37% | bid 12.59% | ask 13.78%
+
+PART 2: at the 50 ms decision steps - the MODEL would quote (some rung of the side has fresh EV >= 0) vs an order IS live
+  steps 1,720,800 (1434 windows)
+  bid: model would quote 12.60% of steps | live 10.85% | live when the model would quote  58.1% | live when it would not  4.04% | no fresh vector on any rung  0.0%
+  ask: model would quote 13.78% of steps | live 11.95% | live when the model would quote  59.5% | live when it would not  4.35% | no fresh vector on any rung  0.0%
+  both: model would quote both  3.49% (if the sides were independent:  1.74%) | both live  2.49% | both live when the model would quote both  36.4%
+  any: model would quote 22.89% | live 20.31%
+
+PART 3: churn - orders and how they end (5 dates)
+  orders 189,968 (132.5 a window-minute), guard pulls 174,669 (121.8), orders with a fill 2,306 (1.21%; filled in full while a cancel was landing 786), fills 5,132
+  end: trig  91.9% | drift   5.9% | cross   0.3% | nobook   0.0% | end   0.4% | filled   0.2% | refused   1.2%
+  guard pulls by rung: r0 38,065 | r1 13,146 | r2 9,868 | r3 9,334 | r4 8,954 | r5 95,302
+  live time of an order (activation -> removal, ms): p10 / p25 / p50 / p75 / p90 = 79 / 79 / 79 / 179 / 351
+  live less than: 100 ms  57.0% | 250 ms  83.5% | 500 ms  94.3% | 1,000 ms  98.5% | 5,000 ms 100.0%
+  guard pull decided after activation (ms): p10 / p25 / p50 / p75 / p90 = 42 / 42 / 42 / 142 / 292; decided before the order was live 0.0%
+  pulled rung re-posted after (ms, decision to decision): p10 / p25 / p50 / p75 / p90 = 100 / 150 / 550 / 2,400 / 7,700; never re-posted in the window 13,556
+  entry gate closed (fresh EV < 0) / evaluations by rung: r0 98.6% | r1 99.4% | r2 99.5% | r3 99.5% | r4 99.5% | r5 95.5%
+  resting decisions that pull (EV < 0) by rung: r0 42.5% of 89,559 | r1 40.8% of 32,193 | r2 39.6% of 24,922 | r3 37.0% of 25,206 | r4 28.3% of 31,672 | r5 26.5% of 360,018
+
+PART 4: why the model declines - a fresh order's two heads by rung (bid | ask): EV >= 0 | mean P(fill 1 s) | E[value | fill] >= 0 | mean E[value | fill] c
+  r0:   2.5%  0.224   2.5%  -40.27 |   3.1%  0.233   3.1%  -37.97 | EV sign changes 65.5 a window-minute
+  r1:   1.0%  0.111   1.0%  -49.69 |   1.3%  0.116   1.3%  -47.69 | EV sign changes 24.9 a window-minute
+  r2:   0.8%  0.057   0.8%  -57.24 |   1.0%  0.060   1.0%  -55.74 | EV sign changes 19.2 a window-minute
+  r3:   0.8%  0.034   0.8%  -57.07 |   1.0%  0.036   1.0%  -55.79 | EV sign changes 18.7 a window-minute
+  r4:   0.8%  0.021   0.8%  -57.12 |   1.0%  0.023   1.0%  -55.73 | EV sign changes 19.4 a window-minute
+  r5:  12.2%  0.016  12.2%  -21.74 |  13.3%  0.017  13.3%  -20.73 | EV sign changes 166.4 a window-minute
+  by P(fill): [0, 0.01) 11.2% of rows, E[v|fill] >= 0 11.1%, mean -31.04 c | [0.01, 0.03) 35.2% of rows, E[v|fill] >= 0  2.9%, mean -50.12 c | [0.03, 0.1) 28.9% of rows, E[v|fill] >= 0  1.5%, mean -52.44 c | [0.1, 0.3) 19.2% of rows, E[v|fill] >= 0  2.0%, mean -42.25 c | [0.3, 1)  5.5% of rows, E[v|fill] >= 0  2.8%, mean -36.66 c

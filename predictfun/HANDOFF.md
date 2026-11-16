@@ -1,5 +1,15 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-16 07:57Z (session aea5bfb9) — STOP_EV PRESENCE (USER: "why it just has 3.4% on both sides? Does it mean it pulls still quite often"): mostly the model declines; and yes, it churns - median order live 79 ms
+
+- What: pf_stop_ev_presence.py (3cf2f259; POST HOC, descriptive): the scorecard's STOP_EV / v3 / recorded58 re-run on its 1,434 windows with the gate and keep decisions observed, not changed. Every window equals the scorecard (P&L, shares, fills, orders, pulls, quote availability); planted errors (40 / 22 clock, gate never closed) caught on every date.
+- The model declines: a fresh order's EV >= 0 on some rung of a side at 12.6% (bid) / 13.8% (ask) of the 50 ms steps, both sides 3.5% (1.7% if independent). The value head expects a fill to lose in 97-99% of states on rungs 0-4 (mean E[value | fill] -38 to -57 c per 30 sh) and 87% on rung 5 (-21 c); the entry gate is closed in 98.6-99.5% of evaluations on rungs 0-4, 95.5% on rung 5.
+- The lane halves what is left: when the model would quote, an order is live 58-60% of those steps (58 ms to activate, then pulled); both live 2.5% of steps (3.4% continuous).
+- Churn: 132 orders and 122 guard pulls a market-minute; 91.9% of orders end in a guard pull, 1.2% get any fill; live time p50 79 ms (= first review 42 ms after activation + 37 ms cancel landing), 57% < 100 ms, 83.5% < 250 ms; a pulled rung is re-posted after p50 550 ms. 55% of the pulls are on rung 5, whose EV sits at zero and changes sign 166 times a minute (rung 0: 66). The entry check (fresh-order EV) passes, then the keep check (the resting order's EV with its real queue place) is negative at the first review: the two rules disagree.
+- Consequences: STOP_EV's fills are mostly on orders < 100 ms old (64% of shares) and 23.5% on orders whose cancel was landing; every re-post goes to the back of the queue.
+- Correction to 06:50Z: the ladder never places inside the public best; 'inside' fills are orders left at a price after the rest of the book moved away.
+- Receipts: reviews/stop_ev_presence_20261116/. Next: the USER's call (one value for entry and keep / hysteresis / a minimum resting time, judged on churn, both-sides presence, 1 s / 60 s / settlement, M 50 and M 250).
+
 ## 2026-11-16 06:50Z (session aea5bfb9) — STOP_EV vs TOP MAKERS (USER: "check the result and how it compares against top makers"): the scorecard's STOP_EV is computed correctly and is the best tested strategy at 1 s, but its edge fades over the minute and is negative held to resolution, while the top 5's real fills keep theirs
 
 - What: pf_stop_ev_vs_top.py (a672cdb5, control fix bffe14e7; POST HOC, descriptive). The scorecard's STOP_EV fills (read from its frozen ledgers) against every real maker leg in the same 1,434 first-minute windows, one value function (the scorecard's conventions). Controls: 9,761 STOP_EV fills reproduced exactly (0 differ; scorecard totals reconcile); planted errors caught; imputed legs = STOP-EV-PLAY v2; TOP-COMPARE's sums reproduced on 4 dates. First run stopped at that control (TOP-COMPARE treats depth -9 as 'no frame'); fixed in the control only, no output had been written.
