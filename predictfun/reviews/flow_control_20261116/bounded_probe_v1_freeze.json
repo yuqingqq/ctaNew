@@ -1,0 +1,33 @@
+{
+  "asof": "2026-11-16T11:08:26.714102+00:00",
+  "source_commit": "882162e1beeb072fd893bab5898022d50b5eb508",
+  "source_sha256": "62db2325895ab5a7639800869d7db81d877ebe666783a1e4f97a46a13d62ccaf",
+  "controller_freeze_sha256": "49dca5f31118de713c0b21bd10bfef60a6c747d5decbfed4e093e76d7cd8a23a",
+  "controls": {
+    "bounded_position_positive": true,
+    "unbounded_position_refused": true
+  },
+  "supersedes": {
+    "artifact": "pilot_v3/interpretation.json: neutral_advantage_prediction and original matched_null",
+    "reason": "169/222 original diagnostic states exceed the 180-share controller net inventory limit. Keep original results but use a bounded neutral reference for action-value evaluation."
+  },
+  "population": "Same 12 pilot markets, neutral no-learned-cancel reference with hard reservation cap180, size30, six rungs, original clocks. One hash-assigned age per generation; two eligible hash-selected probes per market/side/phase. No-fill actions retained; all statuses exported.",
+  "expiry": "Require t+2s <= final shutdown at ws+298s; uniform potential mark and reference-prefix coverage checks.",
+  "target": "Canonical keep/cancel branches at t+1s; same capped neutral prefix, then no placements. Wealth difference minus identical quadratic risk penalty difference. Common exposure before cancellation arrival must reconcile.",
+  "null": {
+    "draws": 200,
+    "seed": 20261116,
+    "groups": [
+      "market",
+      "side"
+    ],
+    "match": "same count of predicted-positive cancellations; actual economic advantage"
+  },
+  "model": "Existing frozen JOINT and same empirical bank; no refit, threshold, policy, size or horizon change",
+  "multiplicity": {
+    "new_policies": 0,
+    "new_models": 0,
+    "superseding_diagnostics": 1
+  },
+  "limits": "One consumed day, small neutral reference sample; no intervals/promotion. Bounded neutral state is closer support, not the learned controller own path. Queue/timing and path-transport assumptions remain."
+}
