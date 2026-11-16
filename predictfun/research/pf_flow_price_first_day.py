@@ -16,9 +16,14 @@ def consistency_counts(qty,flow,value,severe,fill,price,bid):
     C.require(all(np.isfinite(x).all() for x in [qty,flow,value,severe,fill,price]),'nonfinite response audit input')
     C.require(all(x.shape==qty.shape for x in [flow,value,severe,fill,price]),'response audit shape')
     low=-np.where(bid,price,100.-price)*qty;high=np.where(bid,100.-price,price)*qty
+    value_excess=np.maximum.reduce([low-value,value-high,np.zeros(len(qty))])
+    probability_excess=np.maximum(severe-fill,0.);quantity_excess=np.maximum(qty-flow,0.)
     return dict(n=len(qty),value_outside_quantity_implied_bounds=int(((value<low-1e-6)|(value>high+1e-6)).sum()),
         severe_probability_above_own_fill_probability=int((severe>fill+1e-6).sum()),
         expected_own_quantity_above_public_quantity=int((qty>flow+1e-6).sum()),
+        value_bound_excess_cents=dict(mean=float(value_excess.mean()),max=float(value_excess.max())),
+        severe_probability_excess=dict(mean=float(probability_excess.mean()),max=float(probability_excess.max())),
+        quantity_bound_excess_shares=dict(mean=float(quantity_excess.mean()),max=float(quantity_excess.max())),
         interpretation='separately fitted conditional response heads can be incoherent; diagnostic only, no post-hoc clipping')
 
 
@@ -127,14 +132,19 @@ def summary():
         if name!='direct':
             consistency[name]=consistency_counts(p[f'{name}_own_quantity'],p[f'{name}_flow_quantity'],p[value_col],
                 p[f'{name}_severe'],p[f'{name}_own_fill'],raw.x_price,raw.side.to_numpy()==0)
-    train_counts=np.zeros(15,int)
+    train_counts=np.zeros(15,int);train_value_sum=0.;train_n=0
     for d in fit['training_days']:
-        f=pd.read_parquet(C.OUT/d/'actions.parquet',columns=['status','joint_class'])
-        train_counts+=np.bincount(f.loc[f.status.isin(['eligible','eligible_estimated_timing']),'joint_class'].astype(int),minlength=15)
+        f=pd.read_parquet(C.OUT/d/'actions.parquet',columns=['status','joint_class','value_cents'])
+        f=f[f.status.isin(['eligible','eligible_estimated_timing'])]
+        train_counts+=np.bincount(f.joint_class.astype(int),minlength=15)
+        train_value_sum+=float(f.value_cents.sum());train_n+=len(f)
+    prior_mean=train_value_sum/train_n;y=p.value_cents.to_numpy()
+    value_baselines=dict(zero=dict(predicted_mean=0.,mse=float(np.mean(y*y))),
+        training_mean=dict(training_n=train_n,predicted_mean=prior_mean,mse=float(np.mean((y-prior_mean)**2))))
     result=dict(asof=C.stamp(),test_day=day,training_days=fit['training_days'],calibration_day=fit['calibration_day'],
         evidence='one consumed chronological development day; point estimates only, no interval or strategy-profit claim',
         pooled=metrics,by_phase={int(k):R.metrics(g) for k,g in p.groupby('phase')},by_side={int(k):R.metrics(g) for k,g in p.groupby('side')},
-        calibration=calibration,positive_score_diagnostic=selection,response_consistency=consistency,
+        calibration=calibration,positive_score_diagnostic=selection,response_consistency=consistency,value_baselines=value_baselines,
         class_support=dict(training=train_counts,test=np.bincount(p.joint_class.astype(int),minlength=15)),
         within_null=R.within_null(p),coverage=dataset_reports,
         audit=dict(controls=controls,response_controls=response_controls,model_reload_rows=len(ix),probability_and_value_reload=True,corrupted_probability_refused=True,
@@ -143,7 +153,9 @@ def summary():
     result['comparisons']=dict(joint_logloss_beats_independent=q['joint']['joint_logloss']<q['independent']['joint_logloss'],
         joint_logloss_beats_mechanical=q['joint']['joint_logloss']<q['mechanical']['joint_logloss'],
         joint_value_mse_beats_independent=q['joint']['value_cents']['mse']<q['independent']['value_cents']['mse'],
-        joint_value_mse_beats_direct=q['joint']['value_cents']['mse']<q['direct_value']['mse'])
+        joint_value_mse_beats_direct=q['joint']['value_cents']['mse']<q['direct_value']['mse'],
+        joint_value_mse_beats_zero=q['joint']['value_cents']['mse']<value_baselines['zero']['mse'],
+        joint_value_mse_beats_training_mean=q['joint']['value_cents']['mse']<value_baselines['training_mean']['mse'])
     dest=C.REVIEW/'first_day_v1';C.require(not dest.exists(),'first-day output exists');dest.mkdir(parents=True)
     C.dump(dest/'report.json',result);pd.DataFrame(calibration).to_csv(dest/'calibration.csv',index=False);plot(result,dest)
     C.dump(dest/'receipt.json',dict(asof=C.stamp(),script_sha256=C.sha(__file__),source_manifest=C.sha(C.REVIEW/'freeze_v1.json'),
