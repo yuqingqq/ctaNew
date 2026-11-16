@@ -44,7 +44,7 @@ builder verified running). Controller numerical jobs are complete.
 # P-2026-005 HANDOFF
 
 <!-- JOINT_FLOW_PRICE_PLAN_20261116 -->
-## 2026-11-16 Joint flow/price model: first-day predictions audited; two fits complete; controller pilot has priority
+## 2026-11-16 Joint flow/price model: first-day predictions audited; remaining frozen dates resumed
 
 First readout asof2026-11-16T09:35:10.243484+00:00. Train Oct23–25 (357,041
 eligible actions), calibrate Oct26 (137,025), test Oct27 (118,062 actions from
@@ -67,7 +67,8 @@ only0.0235% MSE difference. Severe probability3.918% vs observed4.517%; minute5
 RMSE89.54c (n15,910) remains much larger. Independent conditional response heads
 produce108 value/quantity-bound violations (0.0915%, max61.57c excess) and65
 severe-probability-above-fill-probability cases (max12.72pp). No post-hoc clipping;
-coherent responses and calibration are required before action-controller work.
+these original response heads remain uncorrected. The separate controller now
+uses coherent paired-path responses, without changing this frozen experiment.
 22 synthetic controls plus consistency falsifiers pass; raw input/data/model/
 prediction identities verified,512 forecast/mixture reload checks pass.
 
@@ -79,9 +80,12 @@ mm-research at b73baa33. Merged evaluator/report/figure hashes verified.
 Worktree /tmp/cta-flow-price-model-20261116; output/logs under
  data/predict_fun/research/flow_price_20261116_v1/.
 Completed data Oct23–27 and Oct31, with Oct27 and Oct31 fits complete. The
-previous scheduler stopped after the Oct31 fit. Nov1–3 data/fits and the full
-report/audit remain pending; the controller pilot currently occupies Codex/core8.
-A committed resume driver will continue the unchanged recipe after that pilot.
+previous scheduler stopped after the Oct31 fit. After the controller audits
+completed, the unchanged recipe resumed at 2026-11-16T11:17:49Z: driver PID
+2770777, Nov1 data builder PID2770789 verified running on Codex/core8. Nov1–3
+data/fits and the full report/audit remain pending. Resume log/receipt:
+logs/resume_20261116_controller_complete.{log,json}. All 48 frozen source
+identities checked before launch. Driver: research/resume_flow_price_predictions.sh.
 This original prediction experiment has no action policy or size change. The
 new controller is tracked separately above. Protected forward
 dates unopened. Shared edits preserved. Model first-fit peak1,770MiB.
