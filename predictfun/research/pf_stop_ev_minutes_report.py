@@ -77,17 +77,17 @@ def render(result,path):
         f"All {result['checks']['first_minute_replay_parity']:,} independent60.2s control replays match the prior scorecard including fill identities; first-minute market inputs match bit-for-bit. All {result['checks']['continuous_prefix_parity']:,} continuous trajectories match the stopped control up to59.2s, when its clipped final horizon can first differ. The continuous first minute can therefore differ near its end from the original stopped-first-minute scorecard.", '',
         f"All {result['checks']['audited_fills']:,} exported records reconcile to the minute tables and raw-book markouts. Inventory sums reconcile to engine cash, position and terminal value. Corrupted values and horizon statuses are refused. The full comparison still depends on the inherited queue, trade-time and imputation assumptions. No inference, untouched validation or promotion claim is made.", '',
         'Near-expiry unavailable markouts are not replaced with settlement or the last midpoint. Midpoints older than1s are counted and retained as a separate coverage diagnostic. Source, order-age and actual-depth partitions are in attribution.csv; horizon-specific denominators and missing/censored counts are in the CSV/JSON. Values attributed to a subset of fills are not a replay that removes the other fills.', '',
-        'Artifacts: `reviews/stop_ev_minutes_20261116/results_v1/`; per-fill ledgers and per-market inputs/statuses: `data/predict_fun/research/stop_ev_minutes_20261116_v1/`. The original scorecard, model files and historical maker study remain unchanged.']
+        'Artifacts: `reviews/stop_ev_minutes_20261116/results_v2/`; per-fill ledgers and per-market inputs/statuses: `data/predict_fun/research/stop_ev_minutes_20261116_v2/`. The original scorecard, model files and historical maker study remain unchanged.']
     path.write_text('\n'.join(lines)+'\n')
 
 
 def run():
-    declaration=R.verify();out=R.REVIEW/'results_v1';L.require(not out.exists(),'report exists');out.mkdir()
+    declaration=R.verify();out=R.REVIEW/'results_v2';L.require(not out.exists(),'report exists');out.mkdir()
     frames=[];invframes=[];featframes=[];parts=[];receipts={};checks=R.Counter()
     for day in R.L.DAYS:
         p=R.OUT/day;r=json.loads((p/'receipt.json').read_text());L.require(not r['smoke_only'],'smoke in report')
         for name,h in r['outputs'].items():L.require(L.sha(p/name)==h,'changed day artifact')
-        L.require(r['freeze_sha256']==L.sha(R.REVIEW/'freeze_v1.json'),'wrong freeze identity')
+        L.require(r['freeze_sha256']==L.sha(R.REVIEW/'freeze_v2.json'),'wrong freeze identity')
         w=pd.read_parquet(p/'minute_values.parquet');f=pd.read_parquet(p/'fills.parquet');i=pd.read_parquet(p/'inventory.parquet')
         check_day(w,f,i,r['selected_markets'])
         bad=w.copy();bad.loc[bad.index[0],'shares']+=1;caught=False

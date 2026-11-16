@@ -198,8 +198,8 @@ def fair_fix(day, W0):
     pbn = np.where(same, p5, np.where(np.isfinite(old), p5 + delta, 100.0 * ndtr(np.log(mid_ * bas / sp) / den)))
     gapc = S.gap.values.astype(np.float64) + (pbn - p5)    # step 5's gap = p_bn - the known Predict mid
     dif = np.abs(pbn - S.p_bn.values) > 1e-4; hh = (S.mid.map(WSd).values % 3600.0) == 0.0
-    st = dict(rows=int(len(S)), changed=float(np.nanmean(dif)), changed_hh00=float(np.nanmean(dif[hh])) if hh.any() else NAN,
-              changed_other=float(np.nanmean(dif[~hh])) if (~hh).any() else NAN, max_abs_c=float(np.nanmax(np.abs(pbn - S.p_bn.values))) if len(S) else NAN,
+    st = dict(rows=int(len(S)), changed=float(np.nanmean(dif)), changed_hh00=float(np.nanmean(dif[hh])) if hh.any() else None,
+              changed_other=float(np.nanmean(dif[~hh])) if (~hh).any() else None, max_abs_c=float(np.nanmax(np.abs(pbn - S.p_bn.values))) if len(S) else None,
               relay_prints=int(len(rel_t)))
     out = {}
     for mm_, g in pd.DataFrame({'mid': S.mid.values, 'tau': S.tau.values, 'p': pbn, 'tr': S.tau_rem.values, 'sg': S.sigma.values, 'gp': gapc}).groupby('mid', sort=False):

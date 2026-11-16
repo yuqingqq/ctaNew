@@ -20,23 +20,24 @@ S,A,L,G,Q,M,K,P=I.S,I.S.A,I.S.L,I.S.G,I.S.Q,I.M,I.K,I.S.P
 np,pd=I.np,I.pd
 HERE=Path(__file__).resolve().parent
 REVIEW=HERE.parent/'reviews/stop_ev_minutes_20261116'
-OUT=Path(K.IO)/'stop_ev_minutes_20261116_v1'
+OUT=Path(K.IO)/'stop_ev_minutes_20261116_v2'
 SOURCE_NAMES=['pf_stop_ev_minutes_inputs.py','pf_stop_ev_minutes_metrics.py','pf_stop_ev_minutes.py','pf_stop_ev_minutes_report.py']
 BATCH=24
 
 
 def verify():
     S.verify()
-    f=json.loads((REVIEW/'freeze_v1.json').read_text())
+    f=json.loads((REVIEW/'freeze_v2.json').read_text())
     for name,h in f['sources'].items():L.require(L.sha(HERE/name)==h,'changed source '+name)
     return f
 
 
 def freeze():
-    S.verify();REVIEW.mkdir(parents=True,exist_ok=True);p=REVIEW/'freeze_v1.json'
+    S.verify();REVIEW.mkdir(parents=True,exist_ok=True);p=REVIEW/'freeze_v2.json'
     L.require(not p.exists(),'freeze exists')
     A.dump(p,dict(asof=A.stamp(),source_commit=A.commit(),sources={n:L.sha(HERE/n) for n in SOURCE_NAMES},
         inherited_freeze_sha256=L.sha(S.REVIEW/'freeze_v1.json'),days=list(L.DAYS),
+        supersedes=dict(freeze='freeze_v1.json',sha256=L.sha(REVIEW/'freeze_v1.json'),reason='One-market smoke passed all replay/accounting controls but receipt serialization rejected NaN for the absent non-hour-boundary subgroup. Missing subgroup diagnostics now serialize as null. No policy, features, fills, or valuation change. Version 1 smoke artifacts retained.'),
         strategy='STOP_EV corrected v3; unchanged heads and sign thresholds',
         execution=dict(place_ms=58,cancel_ms=37,pending_cancel_ms=95,notice_ms=100,review_ms=50,
             trade_shift_ms=50,queue='M unknown-depth zero',rungs_per_side=6,shares=30,
@@ -213,7 +214,7 @@ def run(day,limit=None):
     pd.DataFrame(features).to_parquet(out/'feature_support.parquet',index=False)
     for path,h in inputs.items():L.require(L.sha(path)==h,'input changed during run')
     outputs={p.name:L.sha(p) for p in out.glob('*.parquet')}
-    A.dump(out/'receipt.json',dict(asof=A.stamp(),day=day,source_commit=A.commit(),freeze_sha256=L.sha(REVIEW/'freeze_v1.json'),
+    A.dump(out/'receipt.json',dict(asof=A.stamp(),day=day,source_commit=A.commit(),freeze_sha256=L.sha(REVIEW/'freeze_v2.json'),
         input_hashes=inputs,outputs=outputs,counts=dict(counts),controls=controls,loader_batches=statuses,
         top5_ids=[s for s,g in groups.items() if g=='TOP5'],selected_markets=selected,
         imputation=pr['imputation'],fair=fair_stats,depth=depth_stats,seconds=time.time()-start,smoke_only=limit is not None))
