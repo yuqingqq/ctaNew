@@ -1,5 +1,5 @@
 <!-- RESPONSE_BRIDGE_20261116 -->
-## 2026-11-16 Richer response distributions: V2 scale correction frozen; evaluation running
+## 2026-11-16 Richer response distributions: V2 action tests complete; full replay running
 
 User authorized handling the remaining forecast-to-economic-value gap. V1 preserved; corrected V2
 frozen before fitting, source5e67d068 / freezeb5206f6a; worktree
@@ -32,7 +32,14 @@ versions count in multiplicity; no bin/threshold/parameter tuning.
 
 Scheduler run_response_bridge_v2.sh active on Codex/core8; artifacts under
  data/predict_fun/research/response_bridge_20261116_v2/.
-No V2 economic outcomes are available yet. Existing audited
+V2 forecasts and both neutral action tests are complete. On Oct26 (n205
+cancel/213 post), RMSE8.449/36.111->8.285/35.495c; Oct27 (n221/222),
+31.826/24.829->31.636/25.063c. Cancellation ranking is weaker on both dates;
+Oct27 entry ranking worsens. Extra forecast accuracy is not yet a consistent
+economic improvement. Reports asof16:06:19Z/16:10:14Z. All418/443 selected
+actions supported and archived SOFT predictions reproduce. Full12-market
+Oct27 replay is running, followed by audit and true-signature diagnostic.
+Existing audited
 SOFT_JOINT remains the comparison, not superseded by an unevaluated candidate.
 <!-- /RESPONSE_BRIDGE_20261116 -->
 

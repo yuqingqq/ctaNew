@@ -1,5 +1,5 @@
 response_bridge_20261116:
-  status: v2_scale_fix_frozen_training_and_evaluation_running
+  status: v2_action_tests_complete_pilot_running
   source_commit: 5e67d068
   freeze_commit: b5206f6a
   branch: research/predict-conditional-response-20261116
