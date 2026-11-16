@@ -1,36 +1,54 @@
 # P-2026-005 HANDOFF
 
 <!-- STRATEGY_SCORECARD_20261116 -->
-## 2026-11-16 Common strategy scorecard: frozen, replay accounting in progress
+## 2026-11-16 Common strategy scorecard: complete and independently audited
 
-User requested clear strategy names and common spread/markout/settlement
-metrics after STOP-EV model diagnostics were confused with strategy P&L.
-Source 7f0ab3a7, freeze 819e59fe. No fit, threshold or policy change.
-Ten existing cases: KA/QR/MD1000/B2/EV at40/22, EV/arrival forecast/future
-entry at58/37, EV atzero orders and atzero feeds+orders. All50ms review,
-M50/queueM, six30-share rungs/side; same five consumed dates/1,434 windows.
-New canonical strategy IDs: KEEP_ALL, FILL_GUARD, SWEEP_GUARD, ORDER_EV,
-STOP_EV, ARRIVAL_EV, FUTURE_ENTRY; clock and model versions separate.
-Legacy QR250 with recalibrated thresholds is not the fixed QR50 comparator.
+User requested distinct strategy names and common spread, markout and settlement
+metrics. Source 7f0ab3a7, freeze 819e59fe, results/docs d365caa5, merged to
+mm-research at 141f2014. No model, threshold or policy change. Canonical IDs:
+KEEP_ALL, FILL_GUARD, SWEEP_GUARD, ORDER_EV, STOP_EV, ARRIVAL_EV, FUTURE_ENTRY.
+Clock settings are separate; the older QR250/recalibrated study is not QR50.
+Guide: predictfun/STRATEGIES.md. Full tables, interpretation and chart:
+predictfun/handoffs/20261116_strategy_scorecard.md.
 
-Gross per-fill spread capture = signed pre-fill-mid execution edge; midpoint
-movement + spread = markout at100/500/1000/5000ms. Marks use modeled fill
-clock (anchor minus50ms), while old anchor markouts also reconcile. Terminal
-P&L is cash+inventory at60.2s; settlement P&L holds only that remaining
-inventory to recorded binary resolution. Settlement carry is their difference.
-Every prior window must reproduce its old P&L, shares, orders, pulls, fills,
-maximum inventory, rung exposure, age/source partitions and anchor markouts.
-Positive/known-bad accounting controls pass. No policy promotion or inference.
+As of 2026-11-16T05:21:47.766093+00:00: ten strategy/clock cases, each with
+1,434 first-minute windows across Oct27, Oct31, Nov1-3 (six Oct31 boundary
+exclusions), all fills retained. All 14,340 prior strategy-window outputs
+reproduced. Raw-source audit completed 2026-11-16T05:22:42.399902+00:00:
+259,723 fill records, 124 book-file identities, five settlement registries;
+pre-fill prices, modeled fill clocks, four markouts, terminal cash/inventory
+and independent Up/Down payouts pass. Positive and known-bad controls pass.
 
-Pipeline in isolated /tmp/cta-scorecard-20261116, branch research/predict-scorecard-20261116.
-Single Codex/core8 slot. Ten-case smoke parity and independent fill-ledger
-reconciliation passed. Five complete dates now running serially; session11092.
-Logs /tmp/pf-scorecard-YYYYMMDD.log; final report follows automatically.
-Completed dates: 20261027,20261031,20261101,20261102 (as of 2026-11-16T05:10:24.766871+00:00).
-11,460/11,460 prior-window comparisons, 199,462 fill records; no mismatch.
-November3 running; final report and raw-book/settlement audit remain.
-Output data/predict_fun/research/strategy_scorecard_20261116_v1/; freeze
-predictfun/reviews/strategy_scorecard_20261116/freeze_v1.json.
+CRITICAL VALUATION DISTINCTION: the earlier positive strategy P&L is marked at
+60.2s, not settled profit. At recorded58 (place58/cancel37), STOP_EV captures
++1.124c/share initially, +0.502c/share after1s, +$159.56 terminal but -$735.99
+settled; settlement carry is -$895.54. ARRIVAL_EV: +1.151c initial, +0.137c
+at1s, +$26.81 terminal, -$747.70 settled. FUTURE_ENTRY is noncausal:
++$488.18 terminal, -$1099.83 settled. STOP_EV zero_all: +$820.92 terminal,
+-$307.49 settled. Every STOP_EV clock is settlement-negative on these dates.
+These are five-date dollar totals, not daily averages. Settlement holds only
+residual inventory after first-minute quoting; no further trading or active
+unwind is modeled. Positive short-horizon markouts do not settle the inventory
+management question. SWEEP_GUARD's +$61.88 settlement result offsets -$805.51
+terminal with +$867.39 carry; it still has negative1s markout.
+
+At recorded58, STOP_EV any/both-side physical quote availability is
+23.01%/3.37%, versus ARRIVAL_EV26.78%/3.25%. Orders/guard pulls are
+189,968/174,669 versus245,475/227,546; volume48,173 versus26,519 shares.
+Guard pulls exclude routine price/end cancellations. Spread is a signed
+pre-fill-mid execution-edge proxy; spread+subsequent mid movement=markout.
+New markouts use modeled fill time (anchor minus50ms); original anchor-based
+markouts also reproduce and remain separately named.
+
+All cases: review50ms, M50, queueM/unknown-depth-zero, six30-share rungs per
+side, no cap or fixed cooldown. Gross simulated accounting, no added fees or
+rewards; consumed data, no inference, policy promotion or live-profit claim.
+Fill/timing realism remains an external limitation. Initial audit development
+fixed scalar up_index handling before publication; no frozen replay/result
+was changed. Full ledgers: data/predict_fun/research/strategy_scorecard_20261116_v1/.
+Results, CSVs, audit and chart: predictfun/reviews/strategy_scorecard_20261116/results_v1/.
+Single Codex/core8 run finished; no scorecard process remains. Maximum daily
+replay RSS was1396MiB; data disk stayed460GiB free. Existing shared edits preserved.
 <!-- /STRATEGY_SCORECARD_20261116 -->
 
 
