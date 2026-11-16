@@ -2755,6 +2755,20 @@ stop_ev_design_20261115:
   components: {SWEEP: have (v6), STOP_FLOW: "new, public-trade labels for hypothetical queue positions", VALUES: "1 s / 5 s markouts", QUEUE: "rule-M estimate - the only simulator-dependent piece"}
   next: "USER's go: STOP-FLOW labels + VALUES -> STOP-FLOW head -> EV policy, selectivity check, portfolio replay vs the harm-only baseline"
 
+stop_ev_vs_top_20261116:
+  status: done_descriptive
+  asof: "2026-11-16 06:50Z"
+  session: aea5bfb9
+  user: "check the result and how it compares against top makers"
+  code: {script: predictfun/research/pf_stop_ev_vs_top.py, commits: "a672cdb5 (before the run) / bffe14e7 (control 4 classifier)", driver: predictfun/research/run_stop_ev_vs_top.sh}
+  population: "the scorecard's 1,434 first-minute windows, 5 consumed dates; ours = STOP_EV recorded58 / legacy40 ledgers (simulated), theirs = every real maker leg (top 5 / 6-20 / rest by daily shares)"
+  controls: "value parity 9,761 fills / 0 differ; scorecard totals reconcile; planted errors caught; imputed legs = STOP-EV-PLAY v2; TOP-COMPARE sums reproduced on 4 dates"
+  c_per_share_1s_mark_settle: {stop_ev_all: [0.502, 0.331, -1.528], stop_ev_age100: [0.721, 0.175, -2.607], stop_ev_ws_age100: [0.638, -0.443, -1.134], top5: [0.380, 0.354, 0.308], top5_ws: [0.557, 0.450, 0.750], ranks_6_20: [0.296, 0.189, 0.291], rest: [-0.633, -1.067, -1.259]}
+  shares_day: {stop_ev_all: 9635, stop_ev_age100: 3449, top5_per_maker: 167745}
+  usd_day_mark: {stop_ev_all: 31.9, stop_ev_age100: 6.0, top5_per_maker: 593.0}
+  reading: "STOP_EV beats the top 5 per share at 1 s, is level at the 60 s mark, loses held to resolution (carry -1.86 vs -0.05 c/sh): one-sided inventory"
+  next: "USER: M 250 / B1a-weighted STOP_EV; two-sided quoting or an inventory limit; the other session's later-minute run"
+
 stop_ev_critical_fixes_20261115:
   status: done_replay_v2_not_profitable   # labels HOLD, model v3 NOT-READY, replay v2 R985 NOT-PROFITABLE
   asof: "2026-11-15 18:50Z"

@@ -1,0 +1,18 @@
+{
+ "windows": 282,
+ "boundary_windows": 6,
+ "imputed_legs": 753,
+ "legs": 109740,
+ "no_pre_mid": 0,
+ "no_mark": 0,
+ "parity_fills": 1066,
+ "parity_bad": 0,
+ "mutations": {
+  "MUT_NOSHIFT": 1066,
+  "MUT_PRE_AT": 62,
+  "MUT_ASKSIGN": 652
+ },
+ "topc_legs": 108987,
+ "topc": "not comparable (boundary windows excluded here, not in TOP-COMPARE)",
+ "seconds": 6.210551500320435
+}

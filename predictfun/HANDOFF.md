@@ -1,5 +1,14 @@
 # P-2026-005 HANDOFF
 
+## 2026-11-16 06:50Z (session aea5bfb9) — STOP_EV vs TOP MAKERS (USER: "check the result and how it compares against top makers"): the scorecard's STOP_EV is computed correctly and is the best tested strategy at 1 s, but its edge fades over the minute and is negative held to resolution, while the top 5's real fills keep theirs
+
+- What: pf_stop_ev_vs_top.py (a672cdb5, control fix bffe14e7; POST HOC, descriptive). The scorecard's STOP_EV fills (read from its frozen ledgers) against every real maker leg in the same 1,434 first-minute windows, one value function (the scorecard's conventions). Controls: 9,761 STOP_EV fills reproduced exactly (0 differ; scorecard totals reconcile); planted errors caught; imputed legs = STOP-EV-PLAY v2; TOP-COMPARE's sums reproduced on 4 dates. First run stopped at that control (TOP-COMPARE treats depth -9 as 'no frame'); fixed in the control only, no output had been written.
+- Per day (5-date mean), c / share at +1 s | 60.2 s mark | held to resolution, $ a day at the mark: STOP_EV recorded58 all fills 9,635 sh: +0.502 | +0.331 | -1.528, +$32; orders >= 100 ms 3,449 sh: +0.721 | +0.175 | -2.607, +$6; WS & >= 100 ms: +0.638 | -0.443 | -1.134. Top 5 real 838,726 sh (167,745 per maker): +0.380 | +0.354 | +0.308, +$2,965 (+$593 per maker); WS-timed +0.557 | +0.450 | +0.750. Ranks 6-20: +0.296 | +0.189 | +0.291; rest: -0.633 | -1.067 | -1.259.
+- Reading: per share at 1 s our simulated fills beat the top 5 (as GAP found on 11-11); by the 60 s mark they are level; held to resolution ours lose 1.9 c/sh more than the mark (carry), theirs 0.05. Our end-of-minute inventory is on the wrong side (both-sides quote availability 3.4%); theirs nets out.
+- By depth: at the best ours +0.22 at 1 s (top 5 +0.19) but -0.17 at the mark (top 5 +0.24); behind the best ours are paid more (1 behind +1.32, 2+ behind +1.67 vs +0.47 / +0.90); 16.9% of our shares fill INSIDE the public spread (top 5 2.1%) and lose (-0.37 at 1 s): orders alone at a new price are picked off (counterfactual fills, unvalidated).
+- STOP_EV checks (FINDINGS C1-C4, C15): 64% of its shares / 81% of its 60 s P&L are on orders < 100 ms old (w/o them +$6 a day); 10-27 carries the total (other dates -$41); cancel-pending fills 23.5% of shares, -$137 at the mark (the replay over-credits these 2.5x); only M 50 run (M 250 untested; every arm lost 3-10x more there in STOP-EV-PLAY v2).
+- Receipts: reviews/stop_ev_vs_top_20261116/. Next: the USER's call (M 250 / B1a-weighted STOP_EV, two-sided quoting or an inventory limit, the later-minute run in the other session).
+
 <!-- STOP_EV_MINUTES_20261116 -->
 ## 2026-11-16 STOP_EV later-minute comparison: frozen replay in progress
 

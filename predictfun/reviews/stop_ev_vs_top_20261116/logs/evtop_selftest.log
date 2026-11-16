@@ -1,0 +1,2 @@
+stop-ev-vs-top selftests passed; planted errors caught: {'MUT_NOSHIFT': True, 'MUT_PRE_AT': True, 'MUT_ASKSIGN': True}
+2026-11-16T06:47:38Z tag=evtop_selftest rc=0 peak_rss_mib=130 wall_s=0.42 cpu_user_s=0.33 memavail_start_gib=22 disk_free_gib=458->458 slot=claude
