@@ -33,6 +33,10 @@ joint_flow_controller_20261116:
   churn_resolved: false
   controller_numerical_jobs_running: false
   next: action_value_calibration_uncertainty_and_queue_continuation_on_earlier_data
+  churn_diagnostic_status: running
+  churn_diagnostic_source: e4fc69a5
+  churn_diagnostic_freeze: 32e9986c
+  churn_diagnostic_worktree: /tmp/cta-flow-churn-20261116
 
 joint_flow_price_plan_20261116:
   status: first_day_audited_two_fits_complete_remaining_dates_running
