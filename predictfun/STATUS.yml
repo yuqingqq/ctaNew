@@ -1,13 +1,17 @@
 response_bridge_20261116:
-  status: v2_action_tests_complete_pilot_running
+  status: complete_audited_merged_not_promoted
   source_commit: 5e67d068
   freeze_commit: b5206f6a
+  results_commit: 48e6c4d2
+  merge_commit: 6462c66a
   branch: research/predict-conditional-response-20261116
   worktree: /tmp/cta-response-20261116
   output: data/predict_fun/research/response_bridge_20261116_v2
-  candidate: richer_quantity_timing_depth_and_price_severity_distributions
-  baseline: audited_SOFT_JOINT
-  slot: codex_core8
+  review_index: predictfun/reviews/response_bridge_20261116_v2/latest.json
+  retained_baseline: SOFT_JOINT
+  finding: richer_forecasts_improve_markout_but_worsen_churn_and_total_pnl
+  next: coherent_joint_conditional_queue_timing_price_response
+  running: false
   dates: consumed_Oct23_27_development_only
   promotion: false
 

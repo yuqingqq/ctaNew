@@ -1,46 +1,50 @@
 <!-- RESPONSE_BRIDGE_20261116 -->
-## 2026-11-16 Richer response distributions: V2 action tests complete; full replay running
+## 2026-11-16 Richer response experiment complete: better markout, worse churn; mapping remains unresolved
 
-User authorized handling the remaining forecast-to-economic-value gap. V1 preserved; corrected V2
-frozen before fitting, source5e67d068 / freezeb5206f6a; worktree
-/tmp/cta-response-20261116, branch research/predict-conditional-response-20261116.
-Code/review artifacts remain on that isolated branch until completed review.
-
-Four public response heads: reachable quantity at100ms/250ms/1s (seven bins,
-zero through >300 shares) and signed1s price movement (nine severity bins).
-Inputs are existing71 causal market features plus focal depth and price edge and causal W30 absolute liquidity scale;
-no own-order age/queue/fill outcomes enter public forecasts. Volume is queried
-at depths0/1/3/5; early volume at best. Side orientation/fside retained. All
-eligible neutral actions feed quantity heads; at-best rung0 actions feed price.
-Pinned LGBM/200 rounds; Oct23-25 training, Oct26 temperature calibration.
-
-Common paired paths conserve incoming volume across orders. Same soft-spread
-bank and greedy1s objective, risk180/lambda1/360, size30,58/37/100/50ms clocks.
-Compare SOFT_JOINT, RICH_JOINT and empirical richer-response ablation on exact
-archived Oct26/27 neutral actions; matched12-market Oct27 full5min replay.
-No new thresholds/timers. Consumed development only, no validation/promotion.
-A separately frozen future-signature diagnostic will distinguish
-representation/support error from forecast error without entering the policy.
-
-Synthetic timing/depth/size/price controls,1,929 donor-label reconciliations,
-invalid input refusals and inherited queue/canonical accounting checks pass.
-V1 fit and both action tests completed, with mixed results. V1 omitted the
-absolute scale while predicting absolute shares from normalized features; its
-unfinished pilot was terminated and preserved. V2 adds fp_scale consistently
-in training and query rows, with separability/invalid-scale controls. Both
-versions count in multiplicity; no bin/threshold/parameter tuning.
-
-Scheduler run_response_bridge_v2.sh active on Codex/core8; artifacts under
+V2 source5e67d068, freezeb5206f6a, results48e6c4d2; merged6462c66a into
+mm-research. Both response versions,59 inherited controller sources, active
+retrospective diagnostic and published artifact identities verify after merge.
+Worktree /tmp/cta-response-20261116 retained; no job running. Report
+handoffs/20261116_response_bridge_results.md; active evidence index
+reviews/response_bridge_20261116_v2/latest.json. Data under
  data/predict_fun/research/response_bridge_20261116_v2/.
-V2 forecasts and both neutral action tests are complete. On Oct26 (n205
-cancel/213 post), RMSE8.449/36.111->8.285/35.495c; Oct27 (n221/222),
-31.826/24.829->31.636/25.063c. Cancellation ranking is weaker on both dates;
-Oct27 entry ranking worsens. Extra forecast accuracy is not yet a consistent
-economic improvement. Reports asof16:06:19Z/16:10:14Z. All418/443 selected
-actions supported and archived SOFT predictions reproduce. Full12-market
-Oct27 replay is running, followed by audit and true-signature diagnostic.
-Existing audited
-SOFT_JOINT remains the comparison, not superseded by an unevaluated candidate.
+
+Added100ms/250ms/1s public volume distributions (seven bins),1s signed price
+severity (nine bins), depth0/1/3/5 queries and a shared raw-path projection.
+Same71 causal market features plus depth, edge and W30 absolute liquidity
+scale. V1 omitted that scale; its completed fit/action results and interrupted
+pilot are preserved and explicitly superseded. Two response versions counted;
+no bin, threshold or hyperparameter tuning. Same30-share six-rung ladder,
+cap180/risk1/360,58/37/100/50ms clocks and1s objective. No retry/minimum age.
+All4 heads beat matched historical-frequency logloss/Brier on consumed Oct27
+(n118,062 quantity /18,132 at-best price rows), but economic calibration remains
+mixed. Full neutral action support418 Oct26/443 Oct27, archived SOFT predictions
+and canonical prefixes reproduce. Cancellation RMSE improves slightly on both
+dates; entry error/rank worsen on Oct27. All statuses and200-draw nulls retained.
+
+Pilot asof2026-11-16T16:32:20Z,12 preselected full5min Oct27 markets, gross
+simulated totals, SOFT->RICH V2:1s markout-.961->+.020c/share;5s2.650->3.366;
+terminal+$367.66->+$187.83; passive settlement+$353.96->+$172.42. Shares7895.73
+->5556.47; pulls9775->14247; both quote32.857%->18.345%. Pulls rise and both
+quote time falls in all12 markets. First-review model cancels39.32%->57.40%,
+median age92->42ms. Keep SOFT_JOINT as baseline; V2 is not a controller upgrade.
+
+Projection diagnostic: on443 Oct27 actions, error against the SAME coarse
+joint marginals .09105->.20675 after adding fine constraints. True-fine oracle
+(common416=207 cancel/209 post, asof16:34:00Z) yields RMSE28.930/37.132c vs
+26.011/24.143 with true coarse pair alone. Actual-path/client-state control
+2.032/.377c supports internal target/executor alignment only. Subsequent hard
+coarse preservation (asof16:39:48Z, same416) reduces errors to25.582/36.496:
+it fixes one projection problem but not the poor within-category posting response.
+Future information never enters candidate models or policy replay.
+
+Next: coherent JOINT conditional queue/timing/price response, enough resolution
+around order-specific fill thresholds and causal entry/resting value consistency.
+More marginal bins or a new model family alone do not resolve this mapping.
+Preserve consumed-day scope; no intervals, untouched validation or promotion.
+All execution/ledger, label, scale and diagnostic identity/falsifier checks pass.
+Peak RSS1277MiB; full replay1325.98s on Codex/core8. The separate original
+Nov3 forecast fit remains failed/partial and is not used here.
 <!-- /RESPONSE_BRIDGE_20261116 -->
 
 <!-- VALUE_BRIDGE_20261116 -->
