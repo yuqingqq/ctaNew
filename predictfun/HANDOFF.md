@@ -2,7 +2,7 @@
 ## 2026-11-16 Joint forecast controller: frozen implementation; bank and pilot running
 
 User authorized connecting predictions to a minimal action controller. Source
-028eb613, freeze848bb604, isolated worktree /tmp/cta-flow-controller-20261116,
+6f1742fc, active freeze7fb46122 (v3), isolated worktree /tmp/cta-flow-controller-20261116,
 branch research/predict-flow-controller-20261116. Full source is committed.
 Training-path responses replace independent quantity/value/risk heads in the
 controller; original forecast artifacts remain unchanged. Shared-volume branch
@@ -10,7 +10,10 @@ execution, common-endpoint keep/cancel and post/wait, inventory reservation cap
 180 and explicit quadratic risk penalty, no fixed retry/minimum rest. Same
 recorded clocks and30-share six-rung ladder.1s primary,2s horizon sensitivity.
 Continuous lane changes only by an observer hook.24 compiled/canonical path
-parities and synthetic causal/queue/accounting/action controls pass.
+parities and synthetic causal/queue/accounting/action controls pass. V3 repairs
+confirmed partial-fill front priority, defers pending-placement queue cache
+initialization, and preserves initial unknown-depth zero. V1 smoke and V1/V2
+interrupted runs remain retained via superseding freezes. No parameter tuning.
 
 The frozen pilot selects first market per two-hour block on consumed Oct27
 (12 markets; continuous five minutes), using only Oct23–25 training paths and
@@ -18,7 +21,7 @@ existing calibrated JOINT probabilities. Cases KEEP_ALL_CAP / EMPIRICAL / JOINT
 / JOINT_H2.200-draw count-matched neutral-generation branch diagnostic. No
 protected dates opened, no tuning, no inferential or profitability claim.
 Bank, one-market smoke, then pilot execute sequentially in Codex/core8.
-Logs: data/predict_fun/research/flow_control_20261116_v1/logs/.
+Logs: data/predict_fun/research/flow_control_20261116_v3/logs/.
 
 The prior forecast scheduler stopped after its successful Oct31 fit. Oct27 and
 Oct31 fits are complete; Nov1–3 remain outstanding and are deferred while this
