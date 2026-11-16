@@ -30,6 +30,21 @@ def ratio(frame,h=1000):
     return 100*float(frame[f'markout_{h}_usd'].sum())/den if den else None
 
 
+def population_check(st, makers):
+    excluded=sum(st[x+'_legs'] for x in ['untimed_outside_context','anchored_outside_context','before_contract','after_contract'])
+    L.require(st['raw_selected_legs']==len(makers)+excluded,'raw maker leg population reconciliation')
+    excluded_q=sum(st[x+'_shares'] for x in ['untimed_outside_context','anchored_outside_context','before_contract','after_contract'])
+    Q.close(st['raw_selected_shares'],float(makers.shares.sum())+excluded_q,'raw maker share population reconciliation')
+    return excluded
+
+
+def edge_check(f):
+    for h in R.V.HORIZONS:
+        v=f[f'markout_{h}_usd'];d=f[f'mid_drift_{h}_usd'];s=f.spread_capture_usd
+        mask=np.isfinite(v)&np.isfinite(s)
+        L.require(np.allclose(v[mask],s[mask]+d[mask],rtol=0,atol=1e-8),'retained edge decomposition')
+
+
 def main():
     R.verify();out=R.REVIEW/'results_v3';path=out/'report.json';r=json.loads(path.read_text())
     L.require(not (out/'audit_v1.json').exists(),'audit output exists')
@@ -50,14 +65,18 @@ def main():
                 if k not in ['batch','registry','outside_day','sealed_or_forward','no_outcome','parts_skipped']:st[k]=st.get(k,0)+v
         f=pd.read_parquet(p/'fills.parquet',columns=['case','shares','spread_capture_usd','pre_mid_cents','price_cents','side']+
             [f'{k}_{h}_usd' for h in R.V.HORIZONS for k in ['markout','mid_drift']])
-        makers=f[f.case!='STOP_EV'];selected=st['raw_selected_legs'];excluded=sum(st[x+'_legs'] for x in ['untimed_outside_context','anchored_outside_context','before_contract','after_contract'])
-        L.require(selected==len(makers)+excluded,'raw maker leg population reconciliation')
-        excluded_q=sum(st[x+'_shares'] for x in ['untimed_outside_context','anchored_outside_context','before_contract','after_contract'])
-        Q.close(st['raw_selected_shares'],float(makers.shares.sum())+excluded_q,'raw maker share population reconciliation')
-        for h in R.V.HORIZONS:
-            v=f[f'markout_{h}_usd'];d=f[f'mid_drift_{h}_usd'];s=f.spread_capture_usd
-            mask=np.isfinite(v)&np.isfinite(s)
-            L.require(np.allclose(v[mask],s[mask]+d[mask],rtol=0,atol=1e-8),'retained edge decomposition')
+        makers=f[f.case!='STOP_EV'];excluded=population_check(st,makers)
+        bad_st=dict(st);bad_st['raw_selected_legs']+=1;caught_population=False
+        try:population_check(bad_st,makers)
+        except ValueError:caught_population=True
+        L.require(caught_population,'corrupted raw population not refused')
+        edge_check(f)
+        usable=f[np.isfinite(f.markout_100_usd)&np.isfinite(f.spread_capture_usd)].head(1).copy()
+        L.require(len(usable)==1,'no positive edge audit fixture')
+        usable['spread_capture_usd']+=1;caught_edge=False
+        try:edge_check(usable)
+        except ValueError:caught_edge=True
+        L.require(caught_edge,'corrupted execution edge not refused')
         status[day]=st;checks[day]=dict(exported_fills=len(f),maker_legs=len(makers),excluded_maker_legs=excluded,
             feature_and_60s_parity=rec['counts']['first_minute_replay_parity'],continuous_prefix=rec['counts']['continuous_prefix_parity'])
         sources[day]=L.sha(p/'receipt.json')
@@ -82,7 +101,7 @@ def main():
         diagnostics[str(m)]=z
     audit=dict(asof=A.stamp(),source_commit=A.commit(),source_sha256=L.sha(Path(__file__)),report_sha256=L.sha(path),
         checks=dict(published_positive=True,published_corruption_refused=caught,raw_maker_population=True,
-            retained_edge_identity=True,input_and_output_identity=True,per_day=checks),
+            retained_edge_identity=True,corrupted_population_and_edge_refused=True,input_and_output_identity=True,per_day=checks),
         receipts=sources,loader_status=status,diagnostics=diagnostics,
         scope='Five consumed dates; 1434 markets; no inference. Clock-aligned simulated vs real fills. Depth/source/age subsets are descriptive, not counterfactual strategies.')
     # Static figure, exported as a research artifact.
