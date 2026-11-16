@@ -6,6 +6,30 @@ import pf_flow_control_common as F
 C,np,pd=F.C,F.np,F.pd
 
 
+def neutral_inventory_support(probes):
+    """Coverage diagnostic only; no outcomes are removed from the primary report."""
+    import pf_flow_control_run as RUN
+    r=json.loads((C.OUT/F.TEST/'receipt.json').read_text())
+    mids=set(map(int,probes.m.unique()));data=F.I.load_day(F.TEST,mids,r['imputation_offset_ms']);records=[]
+    for W in F.I.pairs(data):
+        rows=probes[probes.m==W[0]['m']];bytime={float(t):g for t,g in rows.groupby('decision_ms')}
+        def observe(k,t,states,position):
+            for row in bytime.get(t,pd.DataFrame()).itertuples():
+                C.require(int(row.generation)<len(states[int(row.side)]['orders'][int(row.rung)]),'probe generation missing')
+                order=states[int(row.side)]['orders'][int(row.rung)][int(row.generation)]
+                C.require(order['ta']<=t,'probe before activation')
+                records.append(dict(m=int(row.m),side=int(row.side),rung=int(row.rung),generation=int(row.generation),
+                                    decision_ms=float(t),known_inventory=position))
+        RUN.run_lane(W,cap=None,observer=observe)
+    result=pd.DataFrame(records);keys=['m','side','rung','generation','decision_ms']
+    C.require(len(result)==len(probes) and not result.duplicated(keys).any(),'neutral inventory identity coverage')
+    merged=probes.merge(result,on=keys,validate='one_to_one');outside=merged.known_inventory.abs()>F.CAP+1e-7
+    summary=dict(n=len(merged),outside_controller_net_cap=int(outside.sum()),inside_controller_net_cap=int((~outside).sum()),
+        max_abs_known_inventory=float(merged.known_inventory.abs().max()),
+        note='All primary probe outcomes retained. Net position alone does not establish feasible outstanding-order reservations or full on-policy coverage.')
+    return merged,summary
+
+
 def run():
     F.verify();src=F.OUT/'pilot';receipt=json.loads((src/'receipt.json').read_text())
     for name,h in receipt['outputs'].items():C.require(C.sha(src/name)==h,'readout artifact changed '+name)
@@ -14,6 +38,7 @@ def run():
         C.require(audit['controls'][field] is True,'missing queue control '+field)
     m=pd.read_parquet(src/'markets.parquet');p=pd.read_parquet(src/'probes.parquet');d=pd.read_parquet(src/'decisions.parquet')
     inventory=pd.read_parquet(src/'inventory.parquet');f=pd.read_parquet(src/'fills.parquet')
+    p,inventory_support=neutral_inventory_support(p)
     output=F.REVIEW/'pilot_v3';C.require(not output.exists(),'readout exists');output.mkdir(parents=True)
     sets={case:set(g.m) for case,g in m.groupby('case')}
     C.require(all(z==next(iter(sets.values())) for z in sets.values()),'unmatched replay markets')
@@ -52,7 +77,7 @@ def run():
         byphase.append(dict(case=case,minute=int(minute),fills=len(g),shares=float(g.shares.sum()),
             markout_1s_covered_shares=shares,markout_1s_cents_per_share=float(g.loc[ok,'markout_1000_usd'].sum()*100/shares) if shares else None))
     interpretation=dict(asof=C.stamp(),test_day=F.TEST,markets=len(a),neutral_actions=len(p),
-        paired_joint_minus_empirical=paired,churn=churn,neutral_advantage_prediction=ranking,
+        paired_joint_minus_empirical=paired,churn=churn,neutral_advantage_prediction=ranking,neutral_inventory_support=inventory_support,
         phase_inventory=phase,phase_markouts=byphase,
         predicates=dict(joint_positive_terminal=bool(a.terminal_pnl_usd.sum()>0),
             joint_positive_settlement=bool(a.settlement_pnl_usd.sum()>0),
@@ -67,6 +92,7 @@ def run():
         evaluator_source_sha256=C.sha(Path(__file__)),evaluator_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=F.ROOT,text=True).strip(),
         input_hashes={p.name:C.sha(p) for p in src.iterdir() if p.is_file()})
     C.dump(output/'interpretation.json',interpretation)
+    p.to_csv(output/'neutral_probe_inventory.csv',index=False)
     for name in ('report.json','receipt.json','audit.json'):(output/name).write_bytes((src/name).read_bytes())
     chart(report,output/'comparison.png')
     C.dump(output/'readout_receipt.json',dict(asof=C.stamp(),source_sha256=C.sha(Path(__file__)),
