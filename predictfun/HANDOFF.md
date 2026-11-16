@@ -38,7 +38,15 @@ advantages and queue continuation on earlier data. Do not tune on this pilot
 or add a fixed retry timer. Path transport and within-class severity also remain
 limitations. Protected forward dates unopened. Original frozen forecast study
 resumed at 11:17:49Z on Codex/core8 for Nov1–3 (driver PID 2770777; Nov1 data
-builder verified running). Controller numerical jobs are complete.
+builder verified running). Controller pilot numerical jobs are complete.
+
+Churn diagnosis is now running without policy changes, source e4fc69a5 /
+freeze32e9986c, worktree /tmp/cta-flow-churn-20261116. It reconciles the archived
+JOINT trace/fills, matches entry to first review, and separates clock/queue/
+forecast/portfolio effects with endpoint sensitivities. Output flow_churn_20261116_v1.
+The prior prediction Nov1 fit completed successfully (third fit); driver2770777
+is stopped between stages while this diagnostic uses Codex/core8. Resume it with
+SIGCONT after the diagnostic and audit release the slot; do not restart partial fits.
 <!-- /JOINT_FLOW_CONTROLLER_20261116 -->
 
 # P-2026-005 HANDOFF
