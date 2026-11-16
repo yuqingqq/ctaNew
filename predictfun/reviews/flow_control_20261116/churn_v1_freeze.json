@@ -1,0 +1,31 @@
+{
+  "asof": "2026-11-16T11:44:20.688307+00:00",
+  "source_commit": "e4fc69a5ccf7760387ae2fc42d1dc5c2eef82c6f",
+  "source_sha256": "5f8c3d205edf6db5818cee9927488204c67bbfab7c0503f592cffdde267194d7",
+  "controller_freeze_sha256": "49dca5f31118de713c0b21bd10bfef60a6c747d5decbfed4e093e76d7cd8a23a",
+  "population": "Same 12 consumed Oct27 pilot markets, JOINT policy unchanged. Every selected post gets a status. All matching first eligible 42ms-age review pairs retained.",
+  "sample": "Up to8 identity-hash selected pairs per market/side/first-review-model-cancel-status, before any attribution value is computed; no P&L or outcome selection.",
+  "attribution": "Chosen-step post/wait -> final entry portfolio -> fixed current known queue at entry -> active target -> keep/cancel -> 16-cell Shapley of current market/path bank, forecast probabilities, target queue, and other portfolio/inventory. Hybrid input sensitivity, not a claim of real-world causal effects.",
+  "horizons": "Current decision under1s, original absolute entry endpoint (~900ms remaining), fixed2s; no policy retuning. Original endpoint only isolates local endpoint sensitivity under current forecast, not full dynamically conditioned paths.",
+  "null": {
+    "draws": 200,
+    "seed": 20261116,
+    "groups": [
+      "market",
+      "side"
+    ],
+    "metric": "Mean forecast L1 change among model cancellations minus kept first-review orders, count-matched label shuffle. Descriptive only."
+  },
+  "controls": "Exact archived policy trace and fill ledger identity; chosen-step value reconstruction; telescoping/Shapley checks; planted clock reversal, no-change and no-reversal controls; wrong cube/ledger refusals.",
+  "multiplicity": {
+    "new_models": 0,
+    "new_policies": 0,
+    "attribution_designs": 1
+  },
+  "limits": [
+    "One consumed day; no confidence intervals, significance or promotion",
+    "Own-policy diagnostic conditions on observed entry and first-review state; not neutral-path training data",
+    "Fixed-entry queue and hybrid portfolio interventions are approximations; unreceived fills remain omitted",
+    "No claim that extending horizon supplies queue continuation value"
+  ]
+}
