@@ -1,10 +1,12 @@
 entry_arrival_20261116:
-  status: first_date_prediction_improves_replay_worse_four_dates_pending
+  status: complete_forecast_underperforms_existing_entry
+  asof: "2026-11-16T03:35:42.541848+00:00"
   source_commit: 1b94ec80
   freeze_commit: 3ce50516
+  results_commit: 459a94a0
+  merge_commit: 33ee3ea3
   scope: bid_ask_entry_prediction_cancellation_guard_unchanged
-  source_features: 83
-  additional_current_score_feature: 1
+  features: 84
   target_offset_ms: 58
   replay_place_cancel_ms: [58, 37]
   student_recipes: 1
@@ -14,13 +16,26 @@ entry_arrival_20261116:
   cancellation_forecast_tested: false
   untouched_validation: false
   protected_data_read: false
+  completed_data_days: 9
+  completed_test_fits: 5
+  completed_economic_replay_dates: 5
+  neutral_test_placements: 203153
+  scored_test_targets: 203114
+  missing_test_teacher_book: 39
+  replay_windows: 1434
+  pnl_existing_oracle_forecast: [159.55526242592862, 488.17739282677576, 26.812390302393347]
+  forecast_better_dates: 1
+  teacher_mae_existing_forecast: [3.8203992078515197, 2.928007301745944]
+  matched_current_ranking_better_dates: 5
+  selected_calibration_issue: true
+  entry_guard_disagreement_observed: true
+  causal_loss_attribution_complete: false
+  baseline_window_parity: 1434
+  live_known_state_comparisons: 63850
   protocol: predictfun/reviews/entry_arrival_20261116/freeze_v2.json
-  completed_data_days: 5
-  completed_test_fits: 1
-  first_fit_test_actions: 44093
-  first_fit_teacher_mae_baseline_forecast: [3.3725629983633265, 2.639788720871444]
-  completed_economic_replay_dates: 1
-  first_replay_pnl_baseline_oracle_forecast: [200.40093720381168, 400.0432657485702, 134.82469484413969]
+  report: predictfun/reviews/entry_arrival_20261116/results_v1/report.json
+  audit: predictfun/reviews/entry_arrival_20261116/results_v1/audit_v1.json
+  review: predictfun/handoffs/20261116_entry_arrival_review.md
 
 ev_lag_gap_20261116:
   asof: '2026-11-16T01:57:35.556172+00:00'
