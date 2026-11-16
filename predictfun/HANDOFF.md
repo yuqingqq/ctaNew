@@ -1,5 +1,33 @@
 # P-2026-005 HANDOFF
 
+<!-- ENTRY_ARRIVAL_20261116 -->
+## 2026-11-16 Entry arrival prediction experiment running
+
+User: first test prediction against the positive zero-delay example; no
+reference-policy optimization. Source b6db135e, freeze 47384cf9. One fixed
+student recipe, separate bid/ask regressions, existing v3 teachers unchanged.
+Predict teacher value for the exact current quote price at activation t+58ms,
+using only current 83 fields plus current teacher score. Regress its residual
+from that current score. All neutral placement generations, including no-fill
+and activation rejection (zero value); missing inputs retain explicit statuses.
+Every teacher fold's original training days only; unused calibration day;
+five consumed test dates. No fit, threshold or feature selection on test days.
+
+Three delayed replay arms: incumbent58/37, future-informed entry diagnostic,
+causal entry forecast. Cancellation guard unchanged. Fixed actual activation,
+queue, notification and tape assumptions. Primary all-fill terminal value and
+cents/share; every incumbent window must reproduce previous median run.
+Prediction error compared to current-score persistence; teacher-value-weighted
+wrong actions are proxy diagnostics, not realized profit. No inferential or
+untouched validation claim. The arrival diagnostic is not the whole zero-delay
+policy or an attainable upper bound. No cancellation forecast in this first test.
+
+Nine-day builder started in Codex/core8; no prediction/performance result yet.
+Worktree /tmp/cta-arrival-20261116; outputs data/predict_fun/research/
+entry_arrival_20261116_v1. Protocol: reviews/entry_arrival_20261116/freeze_v1.json.
+<!-- /ENTRY_ARRIVAL_20261116 -->
+
+
 <!-- EV_LAG_GAP_20261116 -->
 ## 2026-11-16 Recorded latency materially weakens full EV; anticipation remains untested
 
