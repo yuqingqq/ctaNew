@@ -1,12 +1,12 @@
 value_bridge_20261116:
-  status: action_tests_complete_matched_replay_running
+  status: first_revision_complete_audited_merged_partial_improvement
   source_commit: 16388b7c
   freeze_commit: 8e3962d0
   worktree: /tmp/cta-value-bridge-20261116
   branch: research/predict-value-bridge-20261116
   output: data/predict_fun/research/value_bridge_20261116_v1
   test_days: [20261026, 20261027]
-  active_stage: pilot
+  active_stage: null
   candidates: 1
   spread_bandwidth_ticks: 1.0
   predictor_unchanged: true
@@ -17,8 +17,25 @@ value_bridge_20261116:
   candidate_arms: [EXACT_JOINT, SOFT_JOINT, SOFT_EMPIRICAL]
   scope: consumed_development_no_promotion
   action_counts: {20261026: 416, 20261027: 443}
-  retrospective_diagnostic_source: 3bca8e3c
+  retrospective_diagnostic_source: 9351bb13
   retrospective_diagnostic_running: false
+  results_commit: 07000288
+  merge_commit: 3ce2c534
+  report: predictfun/handoffs/20261116_value_bridge_results.md
+  index: predictfun/reviews/value_bridge_20261116/index.json
+  pilot_asof: '2026-11-16T13:59:08Z'
+  pilot_markets: 12
+  pilot_terminal_pnl_usd: {exact: 246.76235118059068, soft: 367.6590482721974}
+  pilot_pulls: {exact: 10896, soft: 9775}
+  marked_value_improved_markets: 10
+  churn_resolved: false
+  entry_value_calibration_resolved: false
+  future_diagnostic_common_cancel_n: 202
+  future_diagnostic_common_post_n: 199
+  main_audit_passed: true
+  retrospective_audit_passed: true
+  numerical_jobs_running: false
+  next: conditional_quantity_depth_timing_severity_value_uncertainty_and_continuation
 
 joint_flow_controller_20261116:
   status: v3_pilot_and_churn_attribution_audited_merged
