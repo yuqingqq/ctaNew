@@ -23,9 +23,15 @@ policy or an attainable upper bound. No cancellation forecast in this first test
 V1 stopped at the memory guard before any completed dataset/fit/result;
 v2 copies selected rows instead of retaining full window matrices. Targets,
 population and model unchanged; v1 incomplete output preserved.
-Nine-day builder restarted in Codex/core8; no prediction/performance result yet.
+Nine-day builder and subsequent fits/replays running serially in Codex/core8.
 Worktree /tmp/cta-arrival-20261116; outputs data/predict_fun/research/
 entry_arrival_20261116_v2. Protocol: reviews/entry_arrival_20261116/freeze_v2.json.
+First fit complete as of 2026-11-16T02:59:26.837788+00:00: October 27,
+44,093 scored neutral entry actions. Teacher-score MAE 3.3726 -> 2.6398 c;
+weighted sign disagreement 7,998.29 -> 4,055.44 c; predicted nonnegative
+entries 6,828 -> 3,234. These are teacher imitation metrics, not realized
+profit. First delayed replay running; no completed trading result yet.
+Five data days complete; all five test dates remain in the fixed evaluation.
 <!-- /ENTRY_ARRIVAL_20261116 -->
 
 <!-- EV_LAG_GAP_20261116 -->
