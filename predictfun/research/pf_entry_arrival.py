@@ -24,7 +24,7 @@ import pf_ev_lag_gap as G
 L,P,V,E,M,K,AC=G.L,G.P,G.V,G.E,G.M,G.K,G.AC
 ZI=L.ZI
 HERE=Path(__file__).resolve().parent
-ROOT=Path(K.IO)/'entry_arrival_20261116_v1'
+ROOT=Path(K.IO)/'entry_arrival_20261116_v2'
 REVIEW=HERE.parent/'reviews/entry_arrival_20261116'
 PLACE,CANCEL=58.,37.
 FEATURES=tuple(V.FULL_IN)+('current_teacher_score',)
@@ -132,6 +132,12 @@ def student_matrix(x,baseline):
     return np.column_stack([x,baseline]).astype(np.float32)
 
 
+def verify_freeze():
+    f=json.loads((REVIEW/'freeze_v2.json').read_text())
+    for name,digest in f['dependency_sources'].items():L.require(L.sha(HERE/name)==digest,'frozen source changed: '+name)
+    return f
+
+
 def data_inputs(day):
     paths=[]
     for name in ['registry.parquet','legs_timed2.parquet','legs_tk.parquet','clock_rl_d2.json','pend_inc.parquet']:
@@ -164,6 +170,7 @@ def load(day):
 
 
 def build(day,root=ROOT,limit=None):
+    verify_freeze()
     L.require(day in DAYS,'undeclared day');out=root/'data'/day
     L.require(not out.exists(),'data output exists');out.mkdir(parents=True)
     start=time.time();checks=selftest();inputs={};counts=Counter();xx=[];ff=[];ss=[];ids=[]
@@ -195,7 +202,9 @@ def build(day,root=ROOT,limit=None):
                     xx.append(np.full(len(V.FULL_IN),np.nan,np.float32));ff.append(np.full(len(V.FULL_IN),np.nan,np.float32))
                     ss.append('missing_current_inputs');ids.append((m,s,d,gen,k,float(o['ts']),float(o['pt'])));continue
                 L.require(float(x[j,V.FULL_IN.index('o_price')])==o['pt'],'neutral price identity')
-                xx.append(x[j]);ff.append(f[j]);ss.append(status[j]);ids.append((m,s,d,gen,k,float(o['ts']),float(o['pt'])))
+                # Each selected row must own its memory; views retain the whole
+                # 14k-candidate window matrix for every neutral placement.
+                xx.append(x[j].copy());ff.append(f[j].copy());ss.append(status[j]);ids.append((m,s,d,gen,k,float(o['ts']),float(o['pt'])))
                 counts['status_'+status[j]]+=1
         counts['windows']+=1
         if counts['windows']%24==0:
