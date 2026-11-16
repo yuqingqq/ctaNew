@@ -1,0 +1,89 @@
+{
+  "asof": "2026-11-16T14:07:51.055370+00:00",
+  "source_commit": "4fe45f98f2b266c5c68734041c64f5e742f2615d",
+  "source_sha256": "9db200683b95b707f1745393d3f09ed231a7fc7e00701761b86479a5e218e557",
+  "candidate_source_commit": "16388b7c8cfadee28f17ec2754f69bfc106d2931",
+  "freeze_sha256": "10f31bed1ef7c3c402b419f2ade448f761ba389577607954190933bbf9caffa4",
+  "outputs": {
+    "audit_v1.json": "11f7a0ec340f16393b58ac16eff642113e7a01c9c9e2af09475c12e1a3f4bd6b",
+    "actions_20261026/report.json": "724df9a215bb5a5abb11706fca59c0da8293651b5462bbabbb7d8a89adf667e8",
+    "actions_20261026/receipt.json": "34fd1a1260dc50bdc6af8c2776586c590e8052c1ac65d44d600b7a431d2d6297",
+    "actions_20261027/report.json": "e267680444c60a11f5e3bb537705fb985546f1ac919af94f36c4796f045b1878",
+    "actions_20261027/receipt.json": "e786ca73f90717892698408cbf5f15c0f9dfddf29aea795e40256249827ee059",
+    "pilot/report.json": "a953f55a3532e871283d6bf747ec265039f469630ad87f646c3153b5ebc53367",
+    "pilot/receipt.json": "6dc4a29181fa942d22950f14bd7d74ba261e688f582ad575c372cafebd3843d6",
+    "oracle_v1/report.json": "f3f6f5143d10ee740e4b2d6847e37c93f03cd9be429c90f3454dfe4c7015b13b",
+    "oracle_v1/receipt.json": "e9c1e836a5d260d9826ffe14fdba5d1f994af9870a73c7e57074d6967a880ecb",
+    "oracle_v1/audit_v1.json": "76a61d05389bcdf2dbbf6727bd0d1511503bab4a137a63865d5644af1efb35ef"
+  },
+  "interpretation_predicates": {
+    "terminal_pnl_usd": {
+      "markets": 12,
+      "higher": 10,
+      "lower": 2,
+      "equal": 0,
+      "total_change": 120.89669709160671
+    },
+    "settlement_pnl_usd": {
+      "markets": 12,
+      "higher": 10,
+      "lower": 2,
+      "equal": 0,
+      "total_change": 121.57629145727356
+    },
+    "pulls": {
+      "markets": 12,
+      "higher": 1,
+      "lower": 11,
+      "equal": 0,
+      "total_change": -1121.0
+    },
+    "both_quote_ms": {
+      "markets": 12,
+      "higher": 3,
+      "lower": 9,
+      "equal": 0,
+      "total_change": 424.0
+    },
+    "soft_positive_one_second_markout": false,
+    "soft_positive_terminal_pnl": true,
+    "lower_pull_count": true
+  },
+  "churn": {
+    "EXACT_JOINT": {
+      "n": 10884,
+      "first_review_fraction": 0.4175854465270121
+    },
+    "SOFT_JOINT": {
+      "n": 9762,
+      "first_review_fraction": 0.3931571399303421
+    }
+  },
+  "action_outcome_counts": {
+    "20261026:cancel": {
+      "n": 205,
+      "positive_actual": 9,
+      "zero_actual": 190,
+      "negative_actual": 6
+    },
+    "20261026:post": {
+      "n": 213,
+      "positive_actual": 9,
+      "zero_actual": 182,
+      "negative_actual": 22
+    },
+    "20261027:cancel": {
+      "n": 221,
+      "positive_actual": 21,
+      "zero_actual": 194,
+      "negative_actual": 6
+    },
+    "20261027:post": {
+      "n": 222,
+      "positive_actual": 3,
+      "zero_actual": 197,
+      "negative_actual": 22
+    }
+  },
+  "scope": "One frozen valuation candidate; consumed Oct26/27 action diagnostics and12-market Oct27 pilot. No policy threshold change, untouched validation or promotion. Future information restricted to retrospective diagnostic."
+}

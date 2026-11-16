@@ -1,0 +1,117 @@
+{
+  "asof": "2026-11-16T13:59:08.700224+00:00",
+  "day": "20261027",
+  "rows": [
+    {
+      "case": "EXACT_JOINT",
+      "markets": 12,
+      "shares": 8399.286004200678,
+      "orders": 11974,
+      "pulls": 10896,
+      "terminal_pnl_usd": 246.76235118059068,
+      "settlement_pnl_usd": 232.38820490849014,
+      "spread_cents_per_share": 1.7014523971504227,
+      "markout_1s_cents_per_share": -1.4405966104331789,
+      "markout_5s_cents_per_share": 1.6738251701362685,
+      "markout_1s_covered_shares": 8399.286004200678,
+      "markout_5s_covered_shares": 8218.059820667277,
+      "both_quote_percent": 32.84488888888889,
+      "any_quote_percent": 78.759,
+      "mean_abs_end_inventory": 65.46392921845072,
+      "max_inventory": 160.08584169020747,
+      "model_cancels": 10884,
+      "first_review_cancels": 4545,
+      "median_cancel_age_ms": 92.0,
+      "unsupported_mass_mean": 0.046697281990612995,
+      "marginal_l1_mean": 0.12621520909673534,
+      "effective_paths_mean": 47.744234969045856,
+      "policy_stats": {
+        "advantage_cents": 51530.77103069349,
+        "branch_evaluations": 936735,
+        "effective_paths_sum": 3060548.6942207464,
+        "eligible": 64103,
+        "horizon_near_expiry": 420,
+        "invalid_current_book": 7349,
+        "marginal_l1_sum": 8090.773548728026,
+        "max_unsupported_mass_sum": 3833.1838524990812,
+        "no_scenario_support": 80,
+        "steps": 71952,
+        "unsupported_mass_sum": 2993.4358674442647
+      }
+    },
+    {
+      "case": "SOFT_JOINT",
+      "markets": 12,
+      "shares": 7895.729549322382,
+      "orders": 10847,
+      "pulls": 9775,
+      "terminal_pnl_usd": 367.6590482721974,
+      "settlement_pnl_usd": 353.9644963657637,
+      "spread_cents_per_share": 1.9169181571409677,
+      "markout_1s_cents_per_share": -0.9612229531200334,
+      "markout_5s_cents_per_share": 2.6503259314383127,
+      "markout_1s_covered_shares": 7895.729549322382,
+      "markout_5s_covered_shares": 7763.48895624879,
+      "both_quote_percent": 32.85666666666667,
+      "any_quote_percent": 77.61302777777777,
+      "mean_abs_end_inventory": 71.79508854067682,
+      "max_inventory": 176.99236325207647,
+      "model_cancels": 9762,
+      "first_review_cancels": 3838,
+      "median_cancel_age_ms": 92.0,
+      "unsupported_mass_mean": 0.03208616259375021,
+      "marginal_l1_mean": 0.09851565192858402,
+      "effective_paths_mean": 52.200822956283645,
+      "policy_stats": {
+        "advantage_cents": 27653.14425968297,
+        "branch_evaluations": 917460,
+        "effective_paths_sum": 3350405.4198031533,
+        "eligible": 64183,
+        "horizon_near_expiry": 420,
+        "invalid_current_book": 7349,
+        "marginal_l1_sum": 6323.030087732309,
+        "max_unsupported_mass_sum": 2740.7785291768905,
+        "paths_sum": 19739412,
+        "relabeled_fraction_sum": 3601.800589480616,
+        "spread_distance_sum": 10683.757216252789,
+        "steps": 71952,
+        "unsupported_mass_sum": 2059.38617375467
+      }
+    }
+  ],
+  "paired": {
+    "terminal_pnl_usd": {
+      "delta": 120.89669709160671,
+      "positive_markets": 10,
+      "n": 12
+    },
+    "settlement_pnl_usd": {
+      "delta": 121.57629145727356,
+      "positive_markets": 10,
+      "n": 12
+    },
+    "pulls": {
+      "delta": -1121.0,
+      "positive_markets": 1,
+      "n": 12
+    },
+    "both_quote_ms": {
+      "delta": 424.0,
+      "positive_markets": 3,
+      "n": 12
+    },
+    "shares": {
+      "delta": -503.5564548782956,
+      "positive_markets": 7,
+      "n": 12
+    }
+  },
+  "limits": [
+    "Consumed development dates; no confidence intervals, promotion or live profitability claim",
+    "Donor futures remain approximate; pooling does not prove conditional severity or timing calibrated",
+    "Exact phase and payoff bounds remain support cuts; relabelled categories can change at tick thresholds",
+    "One-second zero continuation and unreceived-fill uncertainty are unchanged",
+    "Calibration-day classifier temperature used that day; no OOS claim on Oct26"
+  ],
+  "receipt_sha256": "6dc4a29181fa942d22950f14bd7d74ba261e688f582ad575c372cafebd3843d6"
+}
