@@ -1,0 +1,27 @@
+{
+  "asof": "2026-11-16T16:32:20.423096+00:00",
+  "source_manifest": "b7e5a6d17e176ca82c827b272d411e9e1d561526800f130ed007da70a74b74c2",
+  "selected_markets": [
+    3853227,
+    3855272,
+    3856795,
+    3861545,
+    3864969,
+    3866949,
+    3868537,
+    3872135,
+    3875576,
+    3878682,
+    3882891,
+    3887697
+  ],
+  "old_receipt_sha256": "6dc4a29181fa942d22950f14bd7d74ba261e688f582ad575c372cafebd3843d6",
+  "fit_receipt_sha256": "24d7126c31ea1c4716730235015669e47755b3a2cb1104d60ba55862efb5912e",
+  "outputs": {
+    "markets.parquet": "6c429a564ee983d7a3090c614cba34b90eeb8e439225147ecb5d7b56e8ba7a9d",
+    "inventory.parquet": "480690b3b3de9e42e31bf6df25f166e8165da5ca2eb123a58b41e43c56e7d437",
+    "decisions.parquet": "5b354d1457b2d2f831162288136ddbe2e2d450ee124f268dddec2ddbe0311d8a",
+    "fills.parquet": "e3000087547749f4086af973b66212fa72fbbde5daaaecef314960be1d94bc03"
+  },
+  "seconds": 1325.0225794315338
+}

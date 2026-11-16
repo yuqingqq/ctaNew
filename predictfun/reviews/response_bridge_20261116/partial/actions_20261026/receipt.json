@@ -1,0 +1,75 @@
+{
+  "asof": "2026-11-16T15:46:26.431240+00:00",
+  "source_manifest": "ca2cf4953c574806b48d2fb79c2d8afffb96b46b6aa67effa5055ddde4e5d885",
+  "day": "20261026",
+  "selected_markets": [
+    3787215,
+    3790280,
+    3792862,
+    3798874,
+    3803248,
+    3804777,
+    3808371,
+    3817683,
+    3823986,
+    3833192,
+    3841803,
+    3847236
+  ],
+  "fit_receipt_sha256": "9d0eb26637346baef49dcd9778ae17e0d4bd6ac0abbae76b696e3541c50b7d1f",
+  "old_receipt_sha256": "34fd1a1260dc50bdc6af8c2776586c590e8052c1ac65d44d600b7a431d2d6297",
+  "controls": {
+    "3787215": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3790280": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3792862": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3798874": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3803248": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3804777": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3808371": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3817683": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3823986": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3833192": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3841803": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    },
+    "3847236": {
+      "neutral_prefix_reconciled": true,
+      "baseline_predictions_reproduced": true
+    }
+  },
+  "outputs": {
+    "values.parquet": "f057f5cd4bd972e8521e4fe11d0575234fa0b90339c99a02ca5a605be6e8cc00"
+  },
+  "seconds": 232.08526945114136
+}

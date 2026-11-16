@@ -1,0 +1,129 @@
+{
+  "asof": "2026-11-16T16:34:01.237970+00:00",
+  "source_commit": "b5206f6a993c7d65626feb3cceafdf75bd888f3c",
+  "source_sha256": "fbfc7e0285d746b808ba7a7f0135df36b60fe11d7a4283fdc4add91e2d62e919",
+  "candidate_source_commit": "5e67d0687950804206718bdeba0e20d33b8c4a00",
+  "freeze_sha256": "b7e5a6d17e176ca82c827b272d411e9e1d561526800f130ed007da70a74b74c2",
+  "outputs": {
+    "fit/receipt.json": "24d7126c31ea1c4716730235015669e47755b3a2cb1104d60ba55862efb5912e",
+    "prediction_report.json": "f48396374fef22ae3c77498a23f336d55d51792adf2cfaf2e21816fa95dd856e",
+    "actions_20261026/receipt.json": "5e59893e7c37437f886b47eb0fcce970d5682f2270e00ce2ac25f78aa219599d",
+    "actions_20261026/report.json": "b3dce30fc2eda28c7e531c76beecff6f03a5fc2d19e94076280bb6e54a7d4020",
+    "actions_20261027/receipt.json": "25b1dc6b93077574919fec543673f03e42b7eaf0b4758858a27e8f7002cb5d87",
+    "actions_20261027/report.json": "ecbb1ec702617ea49010d96abfc25fff372fd4c1ef4503ebdab356ddc3906c3b",
+    "pilot/receipt.json": "559a21937356cd41ccd23b79ea827a855c0c0f87b4f40e5ba5b83c4763b212ad",
+    "pilot/report.json": "6b4298a9d7c1b4f3a7b4900e90a42287d5e1fe77e29447c7e2cd20759c72c152",
+    "oracle/receipt.json": "2f806d52b814f941c7cab2542ebc954d7a3746f653507b0130214283c0566cdd",
+    "oracle/report.json": "90265414c0d568f46657b8e5d6e472bf8a6daffe26a4cc40095cf8aa176f0196",
+    "audit_v2.json": "fb9fb4d6996344e3bbbe92bf85515c3e44f61eee1c1b84a6137386532f603725"
+  },
+  "pilot_predicates": {
+    "terminal_pnl_usd": {
+      "baseline": 367.6590482721974,
+      "candidate": 187.83441195342525,
+      "delta": -179.82463631877218,
+      "higher": false
+    },
+    "settlement_pnl_usd": {
+      "baseline": 353.9644963657637,
+      "candidate": 172.4154560522701,
+      "delta": -181.5490403134936,
+      "higher": false
+    },
+    "markout_1s_cents_per_share": {
+      "baseline": -0.9612229531200334,
+      "candidate": 0.0201896004636451,
+      "delta": 0.9814125535836785,
+      "higher": true
+    },
+    "markout_5s_cents_per_share": {
+      "baseline": 2.6503259314383127,
+      "candidate": 3.365630246185082,
+      "delta": 0.7153043147467693,
+      "higher": true
+    },
+    "both_quote_percent": {
+      "baseline": 32.85666666666667,
+      "candidate": 18.344944444444444,
+      "delta": -14.511722222222225,
+      "higher": false
+    },
+    "pulls": {
+      "baseline": 9775,
+      "candidate": 14247,
+      "delta": 4472,
+      "higher": true
+    },
+    "RICH_JOINT_first_review_cancel_fraction": 0.5739582601363221,
+    "SOFT_JOINT_first_review_cancel_fraction": 0.3931571399303421
+  },
+  "action_predicates": {
+    "20261026": {
+      "post": {
+        "n": 213,
+        "rmse_improved": true,
+        "rank_improved": true,
+        "zero_prediction_rmse_beaten": true
+      },
+      "cancel": {
+        "n": 205,
+        "rmse_improved": true,
+        "rank_improved": false,
+        "zero_prediction_rmse_beaten": false
+      }
+    },
+    "20261027": {
+      "post": {
+        "n": 222,
+        "rmse_improved": false,
+        "rank_improved": false,
+        "zero_prediction_rmse_beaten": true
+      },
+      "cancel": {
+        "n": 221,
+        "rmse_improved": true,
+        "rank_improved": false,
+        "zero_prediction_rmse_beaten": true
+      }
+    }
+  },
+  "projection": {
+    "20261026:RICH_EMPIRICAL": {
+      "n": 418,
+      "effective_paths": 72.19758584599926,
+      "coarse_l1": 0.44011053094776653,
+      "rich_l1": 0.07226823253235218
+    },
+    "20261026:RICH_JOINT": {
+      "n": 418,
+      "effective_paths": 51.58730242284676,
+      "coarse_l1": 0.1860673278204518,
+      "rich_l1": 0.06026022091439602
+    },
+    "20261026:SOFT_JOINT": {
+      "n": 418,
+      "effective_paths": 60.16439017110592,
+      "coarse_l1": 0.07181920044905989,
+      "rich_l1": null
+    },
+    "20261027:RICH_EMPIRICAL": {
+      "n": 443,
+      "effective_paths": 69.2747122921781,
+      "coarse_l1": 0.4641286831344666,
+      "rich_l1": 0.08588332900809909
+    },
+    "20261027:RICH_JOINT": {
+      "n": 443,
+      "effective_paths": 48.06526228295394,
+      "coarse_l1": 0.20675025814253403,
+      "rich_l1": 0.06824774825161876
+    },
+    "20261027:SOFT_JOINT": {
+      "n": 443,
+      "effective_paths": 56.15178617733672,
+      "coarse_l1": 0.09104891363603305,
+      "rich_l1": null
+    }
+  },
+  "scope": "One richer response candidate on consumed dates. Fixed bins/depths/parameters and old controller; separately declared empirical and future-signature diagnostics. No validation/promotion."
+}
