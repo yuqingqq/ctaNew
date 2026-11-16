@@ -1,3 +1,22 @@
+stop_ev_minutes_20261116:
+  status: implementing_extended_inputs_and_comparison
+  base_commit: be5b086c
+  strategy: STOP_EV
+  model: corrected_v3_frozen
+  test_dates: [20261027, 20261031, 20261101, 20261102, 20261103]
+  target_windows: 1434
+  placement_cancel_ms: [58, 37]
+  review_ms: 50
+  trade_shift_ms: 50
+  quote_stop_seconds: 299.8
+  terminal_seconds: 300
+  inventory_management: none
+  new_fits: 0
+  new_thresholds: 0
+  later_phase_training_coverage: absent_transfer_test
+  output: data/predict_fun/research/stop_ev_minutes_20261116_v1
+  worktree: /tmp/cta-stop-ev-minutes-20261116
+
 strategy_scorecard_20261116:
   status: complete_audited_merged
   result_asof: '2026-11-16T05:21:47.766093+00:00'

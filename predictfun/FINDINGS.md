@@ -1,3 +1,30 @@
+<!-- STOP_EV_MINUTES_20261116 -->
+## 2026-11-16 STOP_EV later-minute comparison: implementation in progress
+
+User requested extending STOP_EV beyond the first minute and comparing against
+top makers. Existing 0.502c simulated vs0.424c historical real-maker first-minute
+figures use different dates, clocks and populations; no maker-parity claim.
+Build isolated at /tmp/cta-stop-ev-minutes-20261116 on branch
+research/predict-stop-ev-minutes-20261116, starting be5b086c. Same five consumed
+dates and1,434 eligible windows as the audited scorecard. Keep corrected v3
+models and recorded58/37 clocks, review50ms, M50/queueM, six30-share rungs/side,
+no inventory cap or fixed cooldown. No retraining or inventory-management change.
+
+Extend recorded-clock market features, books and tape through the five-minute
+contract; preserve orders/queues/inventory continuously across minute boundaries.
+Stop new decisions at299.8s and allow the inherited200ms cancellation tail to
+expiry. Report fills by minute, execution edge and100/500/1000/5000ms markouts,
+volume and portfolio inventory/value. Horizon beyond expiry gets explicit
+censored status and coverage; no stale endpoint substitution. Maker identities
+ranked by daily0-240s volume, as historical study; same market windows and fill
+clock conventions, all depths with depth/source partitions. Maker fill valuation
+is not full account P&L. Require first-minute feature and60.2s replay parity,
+engine fill-ledger reconciliation, source identities and positive/known-bad
+controls before publishing. Freeze implementation before full outcomes. Later
+minutes are outside the model's first-minute training phase: exploratory transfer
+test, no inference or promotion. Single Codex/core8 process via run_light.sh.
+<!-- /STOP_EV_MINUTES_20261116 -->
+
 <!-- STRATEGY_SCORECARD_20261116 -->
 ## 2026-11-16 Common strategy scorecard: complete and independently audited
 
