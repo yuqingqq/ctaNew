@@ -12,7 +12,7 @@ joint_flow_price_plan_20261116:
   smoke_markets: 2
   smoke_generation_rows: 1485
   smoke_eligible: 988
-  completed_data_dates: [20261023, 20261024]
+  completed_data_dates: [20261023, 20261024, 20261025, 20261026]
   first_test_day: 20261027
   model_fits_completed: 0
   policy_replays: 0
