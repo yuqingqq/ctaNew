@@ -1,3 +1,16 @@
+response_bridge_20261116:
+  status: frozen_training_and_evaluation_running
+  source_commit: f71c34f6
+  freeze_commit: 69ef2372
+  branch: research/predict-conditional-response-20261116
+  worktree: /tmp/cta-response-20261116
+  output: data/predict_fun/research/response_bridge_20261116_v1
+  candidate: richer_quantity_timing_depth_and_price_severity_distributions
+  baseline: audited_SOFT_JOINT
+  slot: codex_core8
+  dates: consumed_Oct23_27_development_only
+  promotion: false
+
 value_bridge_20261116:
   status: first_revision_complete_audited_merged_partial_improvement
   source_commit: 16388b7c
