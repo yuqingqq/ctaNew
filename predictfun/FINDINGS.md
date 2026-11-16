@@ -1,3 +1,45 @@
+<!-- VALUE_BRIDGE_RESULTS_20261116 -->
+## 2026-11-16 Valuation bridge: pilot improves, entry response remains weak
+
+As of13:59:08Z, same12 consumed Oct27 markets, same frozen classifier and greedy
+controller. Only the economic response mapping changes: soft one-tick spread
+conditioning across same-phase paired training paths, relabelled at current
+bid/ask, unchanged execution/risk/latency. No retry timer or new action margin.
+EXACT->SOFT: terminal+$246.76->+$367.66; settlement+$232.39->+$353.96;
+1s markout-1.441->-0.961c/share;5s+1.674->+2.650. Paired value better10/12.
+Filled shares8,399.29->7,895.73 (all1s covered;5s8,218.06->7,763.49),
+pulls10,896->9,775, orders11,974->10,847. Both quote32.845%->32.857%; median
+cancel age92ms unchanged; first-review model cancellations41.76%->39.32%.
+Gross simulated pilot, not full-day/live/validated profitability. Churn remains
+high; one-second markout negative, mean absolute ending inventory worsens.
+
+Action diagnostics asof13:46:03Z Oct26 and13:48:59Z Oct27:416 and443 common-
+support neutral actions, respectively203/213 and221/222 cancel/post. Cancellation
+rank .034->.118 and .280->.339. Entry rankings inconsistent; new positive-score
+entry actual means-13.815c (n45) and-0.400c (n50). New mapping does not resolve
+entry calibration; canonical labels include no subsequent learned cancellation.
+All exclusions and count-matched200-draw nulls retained. Exact Oct27 cancellation
+predictions/labels match the prior221-action diagnostic. The classifier's Oct26
+temperature uses Oct26, so that day is not presented as OOS.
+
+Retrospective diagnostic14:02:08Z, audited14:04:20Z: same443 actions, future
+information excluded from the frozen candidate. On common202 cancel/199 post
+actions, soft-map RMSE33.222/25.998c; true coarse classes26.314/24.578c;
+actual future path with same client state2.057/.009c. Old/new true-class
+unsupported counts42/23 retained. Internal target/executor alignment looks
+consistent; no proof of external simulation realism or future learnability.
+Broad classes and sparse/transplanted responses still omit quantity, depth,
+timing and price severity. That conditional economic-response layer, measured
+uncertainty and queue continuation are next, not just a different classifier.
+
+One candidate, fixed bandwidth, no threshold search or promotion. All1,929
+training donor labels and24 execution parity paths reconcile; main and future-
+diagnostic audits reject corrupted values. Source16388b7c/freeze8e3962d0,
+results07000288 merged3ce2c534; report handoffs/20261116_value_bridge_results.md;
+active artifact index reviews/value_bridge_20261116/index.json. Protected dates
+unopened. All numerical work complete; unrelated edits preserved.
+<!-- /VALUE_BRIDGE_RESULTS_20261116 -->
+
 <!-- JOINT_FLOW_CHURN_20261116 -->
 ## 2026-11-16 First-review churn: scenario mapping and thin entry value are key sensitivities
 
