@@ -1,5 +1,5 @@
 stop_ev_minutes_20261116:
-  status: frozen_replay_running
+  status: all_replays_complete_aggregating_and_auditing
   base_commit: be5b086c
   strategy: STOP_EV
   model: corrected_v3_frozen
@@ -21,8 +21,9 @@ stop_ev_minutes_20261116:
   freeze: predictfun/reviews/stop_ev_minutes_20261116/freeze_v3.json
   smoke_status: passed_all_controls
   serialization_controls: sparse_text_roundtrip_and_unfixed_refusal_passed
-  completed_dates: [20261027, 20261031, 20261101, 20261102]
-  completed_windows: 1146
+  completed_dates: [20261027, 20261031, 20261101, 20261102, 20261103]
+  completed_windows: 1434
+  audited_fill_records: 3097373
 
 strategy_scorecard_20261116:
   status: complete_audited_merged
