@@ -1,0 +1,35 @@
+{
+  "asof": "2026-11-16T11:14:40.980661+00:00",
+  "active_controller_freeze": {
+    "path": "freeze_v3.json",
+    "sha256": "49dca5f31118de713c0b21bd10bfef60a6c747d5decbfed4e093e76d7cd8a23a"
+  },
+  "strategy_results": {
+    "path": "pilot_v3/report.json",
+    "sha256": "e30b6b363cfcbcd2f498007990d975734f09e4b59fcd9f979c88395cf0eb047f",
+    "changed": false
+  },
+  "active_action_value_diagnostic": {
+    "path": "bounded_probe_v1/report.json",
+    "sha256": "e444f04f5d71704e2aa7f8cf71330edf2dca556e0a02dc7754baade22b69efaa",
+    "freeze": "bounded_probe_v1_freeze.json",
+    "audit_sha256": "ca8231ffbb46532194a3660bd9162d0d098cba0209e59ec4eb93472b7e5e83fd"
+  },
+  "supersedes": {
+    "receipt": "pilot_v3/readout_receipt.json",
+    "sha256": "86133e22f1fee1a182c071da7910bdc9742ca7d7f952f785e6dd3ab6fe7c83ea",
+    "fields": [
+      "pilot_v3/report.json:matched_null",
+      "pilot_v3/interpretation.json:neutral_advantage_prediction"
+    ],
+    "reason": "The original unbounded neutral action diagnostic put 169 of 222 probes outside the controller inventory support. Replaced with 221 probes from a neutral reference using the same hard reservation cap. Primary strategy replays and churn results are unchanged."
+  },
+  "source_commits": {
+    "controller": "6f1742fc",
+    "controller_freeze": "7fb46122",
+    "bounded_diagnostic": "882162e1",
+    "bounded_freeze": "359f4e6c",
+    "bounded_audit": "e8e80404"
+  },
+  "scope": "One consumed development day; 12 selected markets; no promotion, live profitability or untouched validation claim."
+}

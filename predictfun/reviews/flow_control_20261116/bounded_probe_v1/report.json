@@ -1,0 +1,71 @@
+{
+  "asof": "2026-11-16T11:11:06.679787+00:00",
+  "markets": 12,
+  "generated_actions": 7240,
+  "candidate_statuses": {
+    "eligible_estimated_timing": 4574,
+    "not_client_resting": 2476,
+    "shutdown_horizon": 93,
+    "incomplete_book_coverage": 81,
+    "eligible": 15,
+    "stale_future_marks": 1
+  },
+  "selected_actions": 221,
+  "evaluation_statuses": {
+    "eligible": 221
+  },
+  "evaluated_actions": 221,
+  "outside_controller_net_cap": 0,
+  "max_abs_known_inventory": 179.53828720981448,
+  "models": {
+    "joint": {
+      "n": 221,
+      "spearman": 0.2804565862314568,
+      "predicted_mean_cents": 2.4709816983194908,
+      "actual_mean_cents": 4.136630620065377,
+      "positive_predictions": 137,
+      "positive_predicted_mean_cents": 4.917155171118059,
+      "positive_realized_mean_cents": 5.5454795920724385
+    },
+    "empirical": {
+      "n": 221,
+      "spearman": 0.1403793280535619,
+      "predicted_mean_cents": 1.6842353302450659,
+      "actual_mean_cents": 4.136630620065377,
+      "positive_predictions": 148,
+      "positive_predicted_mean_cents": 3.0570422477695742,
+      "positive_realized_mean_cents": 5.086267244990946
+    }
+  },
+  "quantity": {
+    "predicted_mean": 3.000900187692141,
+    "actual_mean": 2.5494750969587336,
+    "mae": 3.8130516427187233
+  },
+  "components": {
+    "predicted_wealth_advantage_mean": 2.0152966745709406,
+    "actual_wealth_advantage_mean": 3.8840517329949886,
+    "predicted_risk_advantage_mean": 0.45568502374855036,
+    "actual_risk_advantage_mean": 0.2525788870703879
+  },
+  "matched_null": {
+    "n": 221,
+    "selected": 137,
+    "draws": 200,
+    "observed_increment_cents": 759.730704113924,
+    "null_mean_cents": 624.2246958379824,
+    "null_min_cents": -49.66889727817754,
+    "null_max_cents": 1147.3696394771025,
+    "interpretation": "Consumed neutral-generation action diagnostic, not portfolio P&L or untouched validation"
+  },
+  "controls": {
+    "bounded_position_positive": true,
+    "unbounded_position_refused": true,
+    "wrong_prefix_refused": true
+  },
+  "scope": "One consumed day, small neutral reference sample; no intervals/promotion. Bounded neutral state is closer support, not the learned controller own path. Queue/timing and path-transport assumptions remain.",
+  "supersedes": {
+    "artifact": "pilot_v3/interpretation.json: neutral_advantage_prediction and original matched_null",
+    "reason": "169/222 original diagnostic states exceed the 180-share controller net inventory limit. Keep original results but use a bounded neutral reference for action-value evaluation."
+  }
+}

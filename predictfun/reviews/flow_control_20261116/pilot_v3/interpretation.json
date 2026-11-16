@@ -1,0 +1,520 @@
+{
+  "asof": "2026-11-16T11:01:53.286078+00:00",
+  "test_day": "20261027",
+  "markets": 12,
+  "neutral_actions": 222,
+  "paired_joint_minus_empirical": {
+    "terminal_pnl_usd": {
+      "total_delta": 117.71981275061022,
+      "positive_markets": 8,
+      "markets": 12
+    },
+    "settlement_pnl_usd": {
+      "total_delta": 130.23575787634476,
+      "positive_markets": 8,
+      "markets": 12
+    },
+    "shares": {
+      "total_delta": -3470.794513501213,
+      "positive_markets": 1,
+      "markets": 12
+    },
+    "both_quote_ms": {
+      "total_delta": 225659.0,
+      "positive_markets": 12,
+      "markets": 12
+    },
+    "pulls": {
+      "total_delta": 5963.0,
+      "positive_markets": 12,
+      "markets": 12
+    }
+  },
+  "churn": {
+    "EMPIRICAL": {
+      "selected_posts": 6080,
+      "selected_cancels": 4922,
+      "cancel_decision_age_ms_median": 142.0,
+      "cancel_at_first_review_fraction": 0.40552620885818774,
+      "cancel_below_250ms_fraction": 0.6135717188134905,
+      "note": "Decision age, not actual lifetime: add cancellation latency, and earlier fills may end the order. Excludes final forced shutdown."
+    },
+    "JOINT": {
+      "selected_posts": 11974,
+      "selected_cancels": 10884,
+      "cancel_decision_age_ms_median": 92.0,
+      "cancel_at_first_review_fraction": 0.4175854465270121,
+      "cancel_below_250ms_fraction": 0.7045203969128997,
+      "note": "Decision age, not actual lifetime: add cancellation latency, and earlier fills may end the order. Excludes final forced shutdown."
+    },
+    "JOINT_H2": {
+      "selected_posts": 8744,
+      "selected_cancels": 8044,
+      "cancel_decision_age_ms_median": 42.0,
+      "cancel_at_first_review_fraction": 0.5445052212829438,
+      "cancel_below_250ms_fraction": 0.814395822973645,
+      "note": "Decision age, not actual lifetime: add cancellation latency, and earlier fills may end the order. Excludes final forced shutdown."
+    }
+  },
+  "neutral_advantage_prediction": {
+    "joint": {
+      "n": 222,
+      "spearman": 0.16315211382821898,
+      "predicted_mean_cents": 2.2908531153608944,
+      "actual_mean_cents": 9.426811258720534,
+      "positive_predictions": 125,
+      "positive_predicted_mean_cents": 7.45379952147388,
+      "positive_realized_mean_cents": 10.795337200958379,
+      "quintiles": [
+        {
+          "bin": 0,
+          "n": 45,
+          "predicted_mean_cents": -8.932506330386833,
+          "actual_mean_cents": 16.74319809541607
+        },
+        {
+          "bin": 1,
+          "n": 44,
+          "predicted_mean_cents": -0.48165372060702083,
+          "actual_mean_cents": -0.22974920403549443
+        },
+        {
+          "bin": 2,
+          "n": 44,
+          "predicted_mean_cents": 0.42977060581077886,
+          "actual_mean_cents": 0.0
+        },
+        {
+          "bin": 3,
+          "n": 44,
+          "predicted_mean_cents": 2.924454872452861,
+          "actual_mean_cents": 13.717833903685271
+        },
+        {
+          "bin": 4,
+          "n": 45,
+          "predicted_mean_cents": 17.425311536458555,
+          "actual_mean_cents": 16.574054630169893
+        }
+      ]
+    },
+    "empirical": {
+      "n": 222,
+      "spearman": 0.16115277282708174,
+      "predicted_mean_cents": 1.5761816811674305,
+      "actual_mean_cents": 9.426811258720534,
+      "positive_predictions": 128,
+      "positive_predicted_mean_cents": 5.987849185580496,
+      "positive_realized_mean_cents": 10.542321485310916,
+      "quintiles": [
+        {
+          "bin": 0,
+          "n": 45,
+          "predicted_mean_cents": -8.710740885928576,
+          "actual_mean_cents": 16.305474429248047
+        },
+        {
+          "bin": 1,
+          "n": 44,
+          "predicted_mean_cents": -0.5579323333715409,
+          "actual_mean_cents": 0.21792272727270756
+        },
+        {
+          "bin": 2,
+          "n": 44,
+          "predicted_mean_cents": 0.63459049112091,
+          "actual_mean_cents": 2.594696969696969
+        },
+        {
+          "bin": 3,
+          "n": 44,
+          "predicted_mean_cents": 2.7912889565540255,
+          "actual_mean_cents": 3.6492053805809324
+        },
+        {
+          "bin": 4,
+          "n": 45,
+          "predicted_mean_cents": 13.682355556813471,
+          "actual_mean_cents": 23.88189881572377
+        }
+      ]
+    }
+  },
+  "neutral_inventory_support": {
+    "n": 222,
+    "outside_controller_net_cap": 169,
+    "inside_controller_net_cap": 53,
+    "max_abs_known_inventory": 1307.8768507897853,
+    "note": "All primary probe outcomes retained. Net position alone does not establish feasible outstanding-order reservations or full on-policy coverage."
+  },
+  "phase_inventory": [
+    {
+      "case": "EMPIRICAL",
+      "minute": 1,
+      "markets": 12,
+      "quote_both_percent": 91.28736111111111,
+      "quote_one_percent": 7.6191666666666675,
+      "incremental_marked_pnl_usd": 48.0812280576736,
+      "mean_abs_ending_inventory": 54.32799713649148
+    },
+    {
+      "case": "EMPIRICAL",
+      "minute": 2,
+      "markets": 12,
+      "quote_both_percent": 5.172083333333333,
+      "quote_one_percent": 93.45958333333333,
+      "incremental_marked_pnl_usd": 6.292823119540312,
+      "mean_abs_ending_inventory": 56.29576854814903
+    },
+    {
+      "case": "EMPIRICAL",
+      "minute": 3,
+      "markets": 12,
+      "quote_both_percent": 14.807083333333335,
+      "quote_one_percent": 47.977916666666665,
+      "incremental_marked_pnl_usd": -21.544366971298473,
+      "mean_abs_ending_inventory": 97.17710431575837
+    },
+    {
+      "case": "EMPIRICAL",
+      "minute": 4,
+      "markets": 12,
+      "quote_both_percent": 5.030555555555556,
+      "quote_one_percent": 58.571666666666665,
+      "incremental_marked_pnl_usd": -36.43604156705254,
+      "mean_abs_ending_inventory": 90.71020995642112
+    },
+    {
+      "case": "EMPIRICAL",
+      "minute": 5,
+      "markets": 12,
+      "quote_both_percent": 16.585833333333333,
+      "quote_one_percent": 33.17847222222222,
+      "incremental_marked_pnl_usd": 132.64889579111735,
+      "mean_abs_ending_inventory": 118.33474396687512
+    },
+    {
+      "case": "JOINT",
+      "minute": 1,
+      "markets": 12,
+      "quote_both_percent": 90.47611111111111,
+      "quote_one_percent": 8.658333333333333,
+      "incremental_marked_pnl_usd": 51.65489831919517,
+      "mean_abs_ending_inventory": 69.46776982825376
+    },
+    {
+      "case": "JOINT",
+      "minute": 2,
+      "markets": 12,
+      "quote_both_percent": 15.009583333333335,
+      "quote_one_percent": 83.93861111111111,
+      "incremental_marked_pnl_usd": 45.91651983167387,
+      "mean_abs_ending_inventory": 30.259461534946393
+    },
+    {
+      "case": "JOINT",
+      "minute": 3,
+      "markets": 12,
+      "quote_both_percent": 23.214305555555555,
+      "quote_one_percent": 47.83263888888889,
+      "incremental_marked_pnl_usd": -11.110022740298959,
+      "mean_abs_ending_inventory": 43.50334196848562
+    },
+    {
+      "case": "JOINT",
+      "minute": 4,
+      "markets": 12,
+      "quote_both_percent": 10.66388888888889,
+      "quote_one_percent": 62.35958333333333,
+      "incremental_marked_pnl_usd": -27.773081228574103,
+      "mean_abs_ending_inventory": 41.52773898669344
+    },
+    {
+      "case": "JOINT",
+      "minute": 5,
+      "markets": 12,
+      "quote_both_percent": 24.860555555555557,
+      "quote_one_percent": 26.78138888888889,
+      "incremental_marked_pnl_usd": 188.07403699859472,
+      "mean_abs_ending_inventory": 65.46392921845072
+    },
+    {
+      "case": "JOINT_H2",
+      "minute": 1,
+      "markets": 12,
+      "quote_both_percent": 15.960138888888888,
+      "quote_one_percent": 78.19194444444445,
+      "incremental_marked_pnl_usd": 6.785475000000009,
+      "mean_abs_ending_inventory": 51.61141666666666
+    },
+    {
+      "case": "JOINT_H2",
+      "minute": 2,
+      "markets": 12,
+      "quote_both_percent": 1.7486111111111111,
+      "quote_one_percent": 30.09722222222222,
+      "incremental_marked_pnl_usd": 14.339113308333328,
+      "mean_abs_ending_inventory": 36.27033180555555
+    },
+    {
+      "case": "JOINT_H2",
+      "minute": 3,
+      "markets": 12,
+      "quote_both_percent": 25.81319444444444,
+      "quote_one_percent": 37.97611111111111,
+      "incremental_marked_pnl_usd": 34.920088388571116,
+      "mean_abs_ending_inventory": 62.9249117145933
+    },
+    {
+      "case": "JOINT_H2",
+      "minute": 4,
+      "markets": 12,
+      "quote_both_percent": 6.026944444444444,
+      "quote_one_percent": 33.59166666666666,
+      "incremental_marked_pnl_usd": -18.94061743875288,
+      "mean_abs_ending_inventory": 69.6932842615956
+    },
+    {
+      "case": "JOINT_H2",
+      "minute": 5,
+      "markets": 12,
+      "quote_both_percent": 12.522222222222224,
+      "quote_one_percent": 28.373333333333335,
+      "incremental_marked_pnl_usd": 60.89578798111971,
+      "mean_abs_ending_inventory": 93.25178349453313
+    },
+    {
+      "case": "KEEP_ALL_CAP",
+      "minute": 1,
+      "markets": 12,
+      "quote_both_percent": 72.03430555555556,
+      "quote_one_percent": 27.584027777777777,
+      "incremental_marked_pnl_usd": -395.4226132066389,
+      "mean_abs_ending_inventory": 105.40226580419572
+    },
+    {
+      "case": "KEEP_ALL_CAP",
+      "minute": 2,
+      "markets": 12,
+      "quote_both_percent": 67.97,
+      "quote_one_percent": 31.909305555555555,
+      "incremental_marked_pnl_usd": -316.9725243444255,
+      "mean_abs_ending_inventory": 103.37163942725077
+    },
+    {
+      "case": "KEEP_ALL_CAP",
+      "minute": 3,
+      "markets": 12,
+      "quote_both_percent": 67.88416666666667,
+      "quote_one_percent": 32.029999999999994,
+      "incremental_marked_pnl_usd": -316.644355526163,
+      "mean_abs_ending_inventory": 95.63374276012263
+    },
+    {
+      "case": "KEEP_ALL_CAP",
+      "minute": 4,
+      "markets": 12,
+      "quote_both_percent": 62.7725,
+      "quote_one_percent": 29.477083333333333,
+      "incremental_marked_pnl_usd": -291.6869933273413,
+      "mean_abs_ending_inventory": 102.08704617383695
+    },
+    {
+      "case": "KEEP_ALL_CAP",
+      "minute": 5,
+      "markets": 12,
+      "quote_both_percent": 38.51416666666667,
+      "quote_one_percent": 14.754444444444445,
+      "incremental_marked_pnl_usd": -210.34675535045986,
+      "mean_abs_ending_inventory": 139.54146881447988
+    }
+  ],
+  "phase_markouts": [
+    {
+      "case": "EMPIRICAL",
+      "minute": 1,
+      "fills": 229,
+      "shares": 1909.1573566378977,
+      "markout_1s_covered_shares": 1909.1573566378977,
+      "markout_1s_cents_per_share": -2.2821510726940195
+    },
+    {
+      "case": "EMPIRICAL",
+      "minute": 2,
+      "fills": 115,
+      "shares": 1082.7502456666664,
+      "markout_1s_covered_shares": 1082.7502456666664,
+      "markout_1s_cents_per_share": -1.3648844819764916
+    },
+    {
+      "case": "EMPIRICAL",
+      "minute": 3,
+      "fills": 110,
+      "shares": 966.4080494845359,
+      "markout_1s_covered_shares": 966.4080494845359,
+      "markout_1s_cents_per_share": -0.8827753201277359
+    },
+    {
+      "case": "EMPIRICAL",
+      "minute": 4,
+      "fills": 318,
+      "shares": 2507.9013254565057,
+      "markout_1s_covered_shares": 2507.9013254565057,
+      "markout_1s_cents_per_share": -2.672034230454354
+    },
+    {
+      "case": "EMPIRICAL",
+      "minute": 5,
+      "fills": 714,
+      "shares": 5403.863540456286,
+      "markout_1s_covered_shares": 5403.863540456286,
+      "markout_1s_cents_per_share": -3.21754596930515
+    },
+    {
+      "case": "JOINT",
+      "minute": 1,
+      "fills": 210,
+      "shares": 1721.7547784543974,
+      "markout_1s_covered_shares": 1721.7547784543974,
+      "markout_1s_cents_per_share": -2.351536011711088
+    },
+    {
+      "case": "JOINT",
+      "minute": 2,
+      "fills": 103,
+      "shares": 889.4679744595792,
+      "markout_1s_covered_shares": 889.4679744595792,
+      "markout_1s_cents_per_share": -0.5326936547545518
+    },
+    {
+      "case": "JOINT",
+      "minute": 3,
+      "fills": 58,
+      "shares": 679.7265652024709,
+      "markout_1s_covered_shares": 679.7265652024709,
+      "markout_1s_cents_per_share": -0.3312131438607822
+    },
+    {
+      "case": "JOINT",
+      "minute": 4,
+      "fills": 173,
+      "shares": 1156.8956975518272,
+      "markout_1s_covered_shares": 1156.8956975518272,
+      "markout_1s_cents_per_share": -2.6488913060224166
+    },
+    {
+      "case": "JOINT",
+      "minute": 5,
+      "fills": 520,
+      "shares": 3951.440988532404,
+      "markout_1s_covered_shares": 3951.440988532404,
+      "markout_1s_cents_per_share": -1.085116877952797
+    },
+    {
+      "case": "JOINT_H2",
+      "minute": 1,
+      "fills": 173,
+      "shares": 1499.6170000000002,
+      "markout_1s_covered_shares": 1499.6170000000002,
+      "markout_1s_cents_per_share": -2.261769571830674
+    },
+    {
+      "case": "JOINT_H2",
+      "minute": 2,
+      "fills": 62,
+      "shares": 569.7983816666667,
+      "markout_1s_covered_shares": 569.7983816666667,
+      "markout_1s_cents_per_share": -1.1292572657330202
+    },
+    {
+      "case": "JOINT_H2",
+      "minute": 3,
+      "fills": 67,
+      "shares": 662.4415589084531,
+      "markout_1s_covered_shares": 662.4415589084531,
+      "markout_1s_cents_per_share": 0.5223987744406228
+    },
+    {
+      "case": "JOINT_H2",
+      "minute": 4,
+      "fills": 143,
+      "shares": 1071.708749071106,
+      "markout_1s_covered_shares": 1071.708749071106,
+      "markout_1s_cents_per_share": -2.849264991963976
+    },
+    {
+      "case": "JOINT_H2",
+      "minute": 5,
+      "fills": 366,
+      "shares": 3205.3790407931556,
+      "markout_1s_covered_shares": 3205.3790407931556,
+      "markout_1s_cents_per_share": 0.36697461774913953
+    },
+    {
+      "case": "KEEP_ALL_CAP",
+      "minute": 1,
+      "fills": 1885,
+      "shares": 16124.674107456,
+      "markout_1s_covered_shares": 16124.674107456,
+      "markout_1s_cents_per_share": -2.46551813481675
+    },
+    {
+      "case": "KEEP_ALL_CAP",
+      "minute": 2,
+      "fills": 1239,
+      "shares": 10635.435291582759,
+      "markout_1s_covered_shares": 10635.435291582759,
+      "markout_1s_cents_per_share": -1.678970054041946
+    },
+    {
+      "case": "KEEP_ALL_CAP",
+      "minute": 3,
+      "fills": 1281,
+      "shares": 11098.585401643879,
+      "markout_1s_covered_shares": 11098.585401643879,
+      "markout_1s_cents_per_share": -1.7348111936405868
+    },
+    {
+      "case": "KEEP_ALL_CAP",
+      "minute": 4,
+      "fills": 1225,
+      "shares": 9959.410498673817,
+      "markout_1s_covered_shares": 9959.410498673817,
+      "markout_1s_cents_per_share": -2.2064820113334394
+    },
+    {
+      "case": "KEEP_ALL_CAP",
+      "minute": 5,
+      "fills": 1541,
+      "shares": 11868.056449607244,
+      "markout_1s_covered_shares": 11868.056449607244,
+      "markout_1s_cents_per_share": -3.8793610829935945
+    }
+  ],
+  "predicates": {
+    "joint_positive_terminal": true,
+    "joint_positive_settlement": true,
+    "joint_higher_terminal_than_empirical": true,
+    "joint_higher_both_quote_time": true,
+    "joint_fewer_pulls": false
+  },
+  "limits": [
+    "One consumed UTC day, point estimates only; no validation/promotion or confidence intervals",
+    "Different policy exposures; raw P&L deltas alone do not establish information value",
+    "Matched neutral branch diagnostic covers resting cancellation, not fresh-entry calibration",
+    "Net inventory/reservation bounds are not a complete gross-collateral or inventory liquidation model",
+    "Finite-horizon zero continuation and empirical path transport remain approximations"
+  ],
+  "evaluator_source_sha256": "2a1885610d1ac0f3097fcbcbd03a5bc9e6a7f2d337d6d2902c3a261541ca03b1",
+  "evaluator_commit": "0f5932d220e201300df577971333c1e07afb3351",
+  "input_hashes": {
+    "probes.parquet": "ee4bb253c0a48d47c44381291c1638e9c6a8e666695c875a6c86f1f10f9a2be7",
+    "markets.parquet": "8e277f9843dc675f268dcae57fec85efbdb8175ee180600371a93312102bf09b",
+    "inventory.parquet": "1ea8f6566a49371eccbf4e627337bfd9c12e8394c2afe56c506ac7623821abfb",
+    "report.json": "e30b6b363cfcbcd2f498007990d975734f09e4b59fcd9f979c88395cf0eb047f",
+    "audit.json": "26560ed3c3c82ed1d95e8d20ad1691dd0e22b22b55dcf252972b1722934019d3",
+    "receipt.json": "7eb3196f831039eccd97a5e4703b4c11788b5025afd34602a2f7fda370bbffb8",
+    "decisions.parquet": "c785d658209425edb43fea52e70b6476c3628dd5a2ba3955fdfd9c694d77e2fc",
+    "fills.parquet": "770d712bb9b1a6c269868baafa2f4575eeeecddc1eb1404d7814cb90e36dad7c"
+  }
+}

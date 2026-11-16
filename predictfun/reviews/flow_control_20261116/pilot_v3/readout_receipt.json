@@ -1,0 +1,12 @@
+{
+  "asof": "2026-11-16T11:01:53.770981+00:00",
+  "source_sha256": "2a1885610d1ac0f3097fcbcbd03a5bc9e6a7f2d337d6d2902c3a261541ca03b1",
+  "outputs": {
+    "neutral_probe_inventory.csv": "c9b776d2e5ba0ed204732f5447d23a27b1a8f75d4795aa08c2cbc17170989959",
+    "interpretation.json": "84e4643eeb0f625880ae3384599209c52f77b4c67fe7fc749c291406b8393347",
+    "report.json": "e30b6b363cfcbcd2f498007990d975734f09e4b59fcd9f979c88395cf0eb047f",
+    "audit.json": "26560ed3c3c82ed1d95e8d20ad1691dd0e22b22b55dcf252972b1722934019d3",
+    "receipt.json": "7eb3196f831039eccd97a5e4703b4c11788b5025afd34602a2f7fda370bbffb8",
+    "comparison.png": "13dc2f0376ce1d2da1d8d919b55aa4e48494fa60ebb83001a555cb8749a39eb0"
+  }
+}

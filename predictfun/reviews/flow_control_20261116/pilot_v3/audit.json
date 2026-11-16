@@ -1,0 +1,30 @@
+{
+  "asof": "2026-11-16T11:00:34.009732+00:00",
+  "controls": {
+    "unavoidable_prefix_and_queue_preservation": true,
+    "placement_latency_and_wait": true,
+    "actual_initial_depth_changes_new_queue": true,
+    "shared_volume_and_price_priority": true,
+    "no_flow": true,
+    "bid_ask_value_sign": true,
+    "economic_actions_and_inventory_cap": true,
+    "negative_volume_refused": true,
+    "nonfinite_state_refused": true,
+    "forecast_changes_shared_weights": true,
+    "invalid_probability_refused": true,
+    "observer_lane_off_parity": true,
+    "wrong_ledger_refused": true,
+    "compiled_canonical_paths": 24,
+    "compiled_canonical_nonempty": 24,
+    "unreceived_fill_and_hidden_queue_ignored": true,
+    "received_fill_changes_state": true,
+    "true_remainder_leak_refused": true,
+    "confirmed_partial_fill_front_preserved": true,
+    "known_bad_replenished_ahead_refused": true,
+    "pending_cache_deferred_until_activation": true,
+    "unknown_zero_queue_preserved": true
+  },
+  "markets": 48,
+  "fills": 10532,
+  "summary_corruption_detected": true
+}

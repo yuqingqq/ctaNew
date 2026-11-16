@@ -1,0 +1,12 @@
+{
+  "asof": "2026-11-16T11:12:59.207384+00:00",
+  "n": 221,
+  "all_action_identities_and_statuses_reconciled": true,
+  "all_reported_metrics_recomputed": true,
+  "matched_200_draw_null_recomputed": true,
+  "corrupt_value_refused": true,
+  "source_sha256": "15334ec61fe6fb5b5c5c112afddb950eb07088077db00be2710fc65996559b76",
+  "source_commit": "e8e8040430e03864c1e0fd334889f16664523392",
+  "receipt_sha256": "7c8c48f9571bc409d4d2432897b1f6a59fb850bba45d85d82f1faa6f88c56fab",
+  "report_sha256": "e444f04f5d71704e2aa7f8cf71330edf2dca556e0a02dc7754baade22b69efaa"
+}
