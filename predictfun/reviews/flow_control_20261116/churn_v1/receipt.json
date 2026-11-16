@@ -1,0 +1,38 @@
+{
+  "asof": "2026-11-16T11:50:51.938101+00:00",
+  "source_manifest": "b0480ff06b047ff36e48ea03c8d170178698d0323b81eac5c1eb3b760a2fa814",
+  "source_sha256": "5f8c3d205edf6db5818cee9927488204c67bbfab7c0503f592cffdde267194d7",
+  "pilot_receipt_sha256": "7eb3196f831039eccd97a5e4703b4c11788b5025afd34602a2f7fda370bbffb8",
+  "controller_freeze_sha256": "49dca5f31118de713c0b21bd10bfef60a6c747d5decbfed4e093e76d7cd8a23a",
+  "controls": {
+    "attribution_positive": true,
+    "incomplete_cube_refused": true,
+    "unchanged_inputs_zero": true,
+    "clock_reversal_detected": true,
+    "good_path_no_false_reversal": true,
+    "archived_trace_and_fills_exact": true,
+    "corrupt_fill_ledger_refused": true
+  },
+  "selected_markets": [
+    3853227,
+    3855272,
+    3856795,
+    3861545,
+    3864969,
+    3866949,
+    3868537,
+    3872135,
+    3875576,
+    3878682,
+    3882891,
+    3887697
+  ],
+  "seconds": 378.16299653053284,
+  "outputs": {
+    "entries.parquet": "22f02aa17bbd45634041b81bce5799475f2216c0d4d7f96804366865385122a9",
+    "report.json": "81d55214511bdea4e625810b1679171656c3e6b410e897992e33a737758f24e6",
+    "pairs.parquet": "5ff2e09300c9c01a9beb4feae7bbf1ff3e8dd07f58cb2b12785b0dcd8f89db3f",
+    "states.pkl": "36f10f5c8764a8d1d7037913d38b6c9843f02f2305444e2515e308d705436cc3",
+    "attribution.parquet": "39753ad8760c94a724206b96312b77309749ef49e46742ac4c11dbf6ec276d44"
+  }
+}

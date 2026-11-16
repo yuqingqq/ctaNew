@@ -1,0 +1,46 @@
+{
+  "asof": "2026-11-16T11:55:45.350617+00:00",
+  "groups": {
+    "cancel": {
+      "n": 192,
+      "statuses": {
+        "eligible": 186,
+        "old_bank_outside_current_payoff_bounds": 6
+      },
+      "changed_bank_eligible_n": 91,
+      "old_bank_keep_nonnegative": 47,
+      "mean_old_bank_keep_cents": -0.09877133120707933,
+      "mean_current_keep_cents": -5.307202409662206,
+      "mean_bank_only_change_cents": -5.208431078455128,
+      "mean_old_bank_unsupported_mass": 0.052764024508167924,
+      "mean_current_bank_unsupported_mass": 0.029479800080538313
+    },
+    "keep": {
+      "n": 192,
+      "statuses": {
+        "eligible": 190,
+        "old_bank_outside_current_payoff_bounds": 2
+      },
+      "changed_bank_eligible_n": 27,
+      "old_bank_keep_nonnegative": 17,
+      "mean_old_bank_keep_cents": 1.9709070898019079,
+      "mean_current_keep_cents": 3.8829337804407884,
+      "mean_bank_only_change_cents": 1.91202669063888,
+      "mean_old_bank_unsupported_mass": 0.11004918148009996,
+      "mean_current_bank_unsupported_mass": 0.0738755996816838
+    }
+  },
+  "source_commit": "865e30ffaff5f5719c31a143163f8cfee5507306",
+  "source_sha256": "265dba240b7e1ded5a98075ba0c3d6ef80c7680128427d6962ec2b721c3a164b",
+  "input_receipt_sha256": "b8153f8c933b9c2f2cfec9354af662e93dd58549aca110a3420490eaa7d07da9",
+  "data_sha256": "9f3708a48814c238141805ffabe5271f9a5c158e83ad703bed5ff89ec8a16ad3",
+  "controls": {
+    "unchanged_bank_values_match": 258,
+    "corrupted_value_refused": true
+  },
+  "limits": [
+    "No policy change; frozen-bank alternative is a diagnostic, not a trading recommendation",
+    "Spread conditioning may legitimately alter future distributions; this test alone does not determine which bank is accurate",
+    "Out-of-bound counterfactuals remain statuses; no old path is silently dropped"
+  ]
+}
