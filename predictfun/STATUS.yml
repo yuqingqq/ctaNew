@@ -1,10 +1,10 @@
 response_bridge_20261116:
-  status: frozen_training_and_evaluation_running
-  source_commit: f71c34f6
-  freeze_commit: 69ef2372
+  status: v2_scale_fix_frozen_training_and_evaluation_running
+  source_commit: 5e67d068
+  freeze_commit: b5206f6a
   branch: research/predict-conditional-response-20261116
   worktree: /tmp/cta-response-20261116
-  output: data/predict_fun/research/response_bridge_20261116_v1
+  output: data/predict_fun/research/response_bridge_20261116_v2
   candidate: richer_quantity_timing_depth_and_price_severity_distributions
   baseline: audited_SOFT_JOINT
   slot: codex_core8
