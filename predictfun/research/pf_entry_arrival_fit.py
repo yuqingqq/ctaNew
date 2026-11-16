@@ -39,6 +39,7 @@ def controls():
 
 
 def fit(day,root=A.ROOT):
+    A.verify_freeze()
     out=root/'fit'/day;L.require(day in L.DAYS and not out.exists(),'fit day/output');out.mkdir(parents=True)
     start=time.time();checks=controls();heads,tfit=A.teacher(day);train=tfit['train_days'];A.test_chronology(train,day)
     chunks=[];ys=[];base=[];ids=[];receipts={}
@@ -95,6 +96,7 @@ class EntryPolicy(L.Policy):
 
 
 def replay(day,root=A.ROOT):
+    A.verify_freeze()
     out=root/'replay'/day;L.require(day in L.DAYS and not out.exists(),'replay day/output');out.mkdir(parents=True)
     start=time.time();checks=controls();heads,tfit=A.teacher(day)
     fit_path=root/'fit'/day/'receipt.json';f=json.loads(fit_path.read_text())
@@ -170,7 +172,7 @@ def report(root=A.ROOT):
     predicate=dict(teacher_disagreement_improves=mm['forecast']['teacher_value_weighted_disagreement_cents']<mm['persistence']['teacher_value_weighted_disagreement_cents'],
         forecast_pnl_improves=totals['forecast']['pnl']>totals['baseline']['pnl'],forecast_better_dates=sum(v['forecast']>0 for v in diff.values()),
         oracle_pnl_improves=totals['arrival_oracle']['pnl']>totals['baseline']['pnl'])
-    result=dict(asof=A.stamp(),freeze=json.loads((A.REVIEW/'freeze_v1.json').read_text()),data=data,fits=fits,replays=reps,
+    result=dict(asof=A.stamp(),freeze=A.verify_freeze(),data=data,fits=fits,replays=reps,
         totals=totals,prediction_metrics=mm,daily_pnl_changes=diff,computed_descriptive_predicates=predicate,
         controls=controls(),source_sha256=L.sha(__file__),limits='Development test on consumed dates. Teacher-score prediction metrics are not realized value. Entry only, cancellation unchanged. No inference or untouched validation claim.')
     A.dump(out/'report.json',result)
