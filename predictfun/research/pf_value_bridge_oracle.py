@@ -25,6 +25,12 @@ def run():
     V.verify();start=time.time();source=V.OUT/'actions_20261027';receipt=json.loads((source/'receipt.json').read_text())
     for p,h in receipt['outputs'].items():C.require(C.sha(source/p)==h,'oracle input changed')
     existing=pd.read_parquet(source/'values.parquet');targets=existing[existing.case=='EXACT_JOINT'].copy()
+    oldroot=F.OUT/'bounded_probe_v1';oldreceipt=json.loads((oldroot/'receipt.json').read_text())
+    C.require(C.sha(oldroot/'probes.parquet')==oldreceipt['outputs']['probes.parquet'],'old cancellation artifact changed')
+    old=pd.read_parquet(oldroot/'probes.parquet');keys=['m','side','rung','generation','decision_ms']
+    old=old.set_index(keys).sort_index();current=targets[targets.kind=='cancel'].set_index(keys).sort_index()
+    C.require(old.index.equals(current.index),'exact cancellation population changed')
+    C.require(np.allclose(current.predicted,old.predicted_advantage_cents,atol=1e-9) and np.allclose(current.actual,old.realized_advantage_cents,atol=1e-9),'exact cancellation predictions or labels changed')
     selected,data,fair,depth,raw=A.load(F.TEST);paths=V.PATH.load();results=[];controls={}
     for W in I.pairs(data):
         m=int(W[0]['m']);local=targets[targets.m==m];bytime={float(t):g for t,g in local.groupby('decision_ms')}
@@ -74,6 +80,7 @@ def run():
         if len(z):common_metrics[case+':'+kind]=R.action_metrics(z)
     C.require(len(good)>0,'no positive oracle control')
     controls['all_branch_rows_on_original_action_identities']=True
+    controls['exact_old_cancellation_predictions_and_labels_match']=len(old)
     controls['known_bad_realized_value_refused']=CHECK.refused(lambda:C.require(np.isclose(good.actual.iloc[0]+1.,good.actual_wealth.iloc[0]+good.actual_risk.iloc[0],atol=1e-7),'wrong actual'),'corrupt actual')
     controls['oracle_information_kept_out_of_candidate']=C.sha(V.FREEZE)==receipt['source_manifest']
     dest=V.OUT/'oracle_v1';C.require(not dest.exists(),'oracle output exists');dest.mkdir()
