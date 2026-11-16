@@ -145,3 +145,30 @@ serialization and sparse text-column serialization respectively. Active v3
 fixes those output issues, with no policy, feature, fill or valuation change.
 Source correction: `70ed45d8`; active freeze commit: `f06356ac`;
 final audit source: `713a5175`. All five complete replay receipts refer to v3.
+
+## Why two-sided quoting remains low
+
+Source review and arithmetic of the existing frozen results, November 16, 2026. Same five consumed dates and 1,434 markets. No new replay, fit, threshold selection or policy change. These are physical live-quote durations: having at least one order on each side, not maintaining every rung or necessarily the best quote.
+
+| Minute | Neither side % | Exactly one side % | Both sides % |
+|---|---:|---:|---:|
+| 1 | 76.99 | 19.64 | 3.37 |
+| 2 | 70.15 | 24.56 | 5.29 |
+| 3 | 66.78 | 27.50 | 5.72 |
+| 4 | 67.69 | 27.05 | 5.26 |
+| 5 | 72.37 | 21.92 | 5.71 |
+
+The strategy is mostly flat. In the first minute, bid and ask are active only 12.59% and 13.78% of the time respectively. Low overlap alone does not establish that the two sides receive opposite signals. There are 189,968 submissions and 174,669 model-triggered pull events in that minute across all 1,434 markets; the latter excludes price-drift, crossing, missing-book and final cancellations. Later-minute event counts are not order-lifetime cancellation fractions, because orders carry across boundaries.
+
+Existing first-minute controls isolate the main policy effect: at the same legacy 40/22 ms order clock, KEEP_ALL has 99.51% both-sided availability versus STOP_EV 2.69%. With the recorded 58/37 ms clock STOP_EV is 3.37%; zero modeled order/notification delays give 3.75%, and zero modeled feed/order delays give 3.86%. These controls show that latency alone does not explain low availability. KEEP_ALL is a diagnostic of engine participation capacity, not a profitable policy recommendation.
+
+The verified mechanisms are:
+- `pf_stop_ev_latency.py:110` pulls a resting order whenever its score is negative. Its entry gate at line 116 blocks a fresh order whenever its fresh score is negative. Both use the same zero cutoff on every 50 ms review, with no switching-cost or uncertainty margin. A small negative score triggers the same discrete action as a large negative score. Actual frequency of small-score crossings has not been measured by the saved ledgers.
+- Entry scores use `fresh_state` (`pf_stop_ev_play.py:97`): hypothetical age zero, full quantity, and queue shown now. This extends a resting-order value model to entry; it is not a separately validated post-versus-wait value target. Fresh and resting state vectors differ, and the market can change before activation, so passing entry does not ensure the first resting evaluation stays positive.
+- The label contract explicitly says `neutral_keep_with_engine_safety_no_replacement_value` (`pf_stop_ev_accounting.py:276`). It values avoidable fills during the local exposure, marked one second after each fill. Queue position, age and remainder are inputs and influence this local value; the continuation value of preserving priority beyond that window, and cancellation/re-entry replacement value, are not explicitly priced.
+- The 71 market plus 12 order inputs have no portfolio inventory position. The replay runs with no inventory mode or cap. Bid and ask decisions therefore do not account for the benefit of reducing current inventory or maintaining balanced market-making exposure. More two-sided time is not automatically economically beneficial; prices and sizes would need to reflect inventory risk.
+- Fixed cooldown is explicitly zero (`pf_stop_ev_latency.py:153`). After a cancellation, the lane still has causal order/notification delays and prevents duplicate orders at the same price while the previous order remains client-live (`pf_stop_queue_activation_lane.py:48,194`). There are also structural drift/cross/missing-book cancellations. These can amplify downtime, but the zero-delay controls leave the basic low-participation behavior in place.
+
+The current artifacts do not partition empty time among negative entry scores, post-cancel confirmation, same-price holds, structural restrictions and other causes, and do not retain decision-score trajectories. Consequently, they do not establish what fraction of pulls are unnecessary flicker versus genuine adverse-selection avoidance. A useful next diagnostic records score magnitude and persistence around each pull, fresh-versus-resting score changes, same-price repost delay, order age/queue and per-side absence reasons. Any retention or inventory-adjusted policy needs a replay; increasing uptime by itself is not evidence of better economics.
+
+Source references: [policy](../research/pf_stop_ev_latency.py), [order states](../research/pf_stop_ev_play.py), [label contract](../research/pf_stop_ev_accounting.py), [lane](../research/pf_stop_queue_activation_lane.py), and [frozen scorecard](../reviews/strategy_scorecard_20261116/results_v1/report.json). Duration partitions were checked with a positive fixture and an impossible-overlap refusal.
