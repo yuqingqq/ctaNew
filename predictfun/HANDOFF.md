@@ -112,8 +112,10 @@ results edeb7e8e, merged 76eae3be. Worktree /tmp/cta-flow-churn-20261116.
 All frozen controller sources and diagnostic hashes verified after merge.
 Raw ledgers: data/predict_fun/research/flow_churn_20261116_v1/.
 Diagnostic379.08s /1,085MiB; independent value and bank audits pass.
-Original forecast Nov1 fit completed; driver2770777 resumed after diagnostic
-completion. Nov2 data builder3139507 verified running on Codex/core8.
+Original forecast has four fits complete; the final Nov3 fit failed its memory
+guard and the scheduler stopped. The newer valuation bridge is complete and
+tracked separately at the top of this handoff; this section retains the frozen
+original controller/churn diagnosis.
 <!-- /JOINT_FLOW_CONTROLLER_20261116 -->
 
 # P-2026-005 HANDOFF
