@@ -1,3 +1,35 @@
+<!-- RESPONSE_BRIDGE_20261116 -->
+## 2026-11-16 Richer response distributions: frozen, training and evaluation running
+
+User authorized handling the remaining forecast-to-economic-value gap. One
+candidate frozen before fitting, source f71c34f6 / freeze69ef2372; worktree
+/tmp/cta-response-20261116, branch research/predict-conditional-response-20261116.
+Code/review artifacts remain on that isolated branch until completed review.
+
+Four public response heads: reachable quantity at100ms/250ms/1s (seven bins,
+zero through >300 shares) and signed1s price movement (nine severity bins).
+Inputs are existing71 causal market features plus focal depth and price edge;
+no own-order age/queue/fill outcomes enter public forecasts. Volume is queried
+at depths0/1/3/5; early volume at best. Side orientation/fside retained. All
+eligible neutral actions feed quantity heads; at-best rung0 actions feed price.
+Pinned LGBM/200 rounds; Oct23-25 training, Oct26 temperature calibration.
+
+Common paired paths conserve incoming volume across orders. Same soft-spread
+bank and greedy1s objective, risk180/lambda1/360, size30,58/37/100/50ms clocks.
+Compare SOFT_JOINT, RICH_JOINT and empirical richer-response ablation on exact
+archived Oct26/27 neutral actions; matched12-market Oct27 full5min replay.
+No new thresholds/timers. Consumed development only, no validation/promotion.
+A separately committed future-signature diagnostic (e074cd4f) will distinguish
+representation/support error from forecast error without entering the policy.
+
+Synthetic timing/depth/size/price controls,1,929 donor-label reconciliations,
+invalid input refusals and inherited queue/canonical accounting checks pass.
+Scheduler run_response_bridge.sh active on Codex/core8; artifacts under
+ data/predict_fun/research/response_bridge_20261116_v1/.
+No economic outcomes from this candidate are available yet. Existing audited
+SOFT_JOINT remains the comparison, not superseded by an unevaluated candidate.
+<!-- /RESPONSE_BRIDGE_20261116 -->
+
 <!-- VALUE_BRIDGE_20261116 -->
 ## 2026-11-16 Economic-value bridge: first revision audited and merged; partial improvement
 
