@@ -32,7 +32,11 @@ First fit complete as of 2026-11-16T02:59:26.837788+00:00: October 27,
 44,093 scored neutral entry actions. Teacher-score MAE 3.3726 -> 2.6398 c;
 weighted sign disagreement 7,998.29 -> 4,055.44 c; predicted nonnegative
 entries 6,828 -> 3,234. These are teacher imitation metrics, not realized
-profit. First delayed replay running; no completed trading result yet.
+profit. First replay complete as of 2026-11-16T03:02:28.629758+00:00:
+288 windows; existing +$200.40, future-informed entry +$400.04, causal
+forecast +$134.82. Every baseline window matches. Forecast fills fewer
+shares but submits more orders/pulls; lower teacher error has not recovered
+the timing benefit on this first date. Four test dates still running.
 Five data days complete; all five test dates remain in the fixed evaluation.
 <!-- /ENTRY_ARRIVAL_20261116 -->
 
