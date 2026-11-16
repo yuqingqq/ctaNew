@@ -31,7 +31,7 @@ def ratio(frame,h=1000):
 
 
 def main():
-    R.verify();out=R.REVIEW/'results_v2';path=out/'report.json';r=json.loads(path.read_text())
+    R.verify();out=R.REVIEW/'results_v3';path=out/'report.json';r=json.loads(path.read_text())
     L.require(not (out/'audit_v1.json').exists(),'audit output exists')
     table=pd.read_csv(out/'minute_totals.csv');reconcile(r,table)
     bad=copy.deepcopy(r);bad['totals']['STOP_EV']['2']['shares']+=1;caught=False
