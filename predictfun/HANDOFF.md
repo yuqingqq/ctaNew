@@ -1,5 +1,34 @@
 # P-2026-005 HANDOFF
 
+<!-- STRATEGY_SCORECARD_20261116 -->
+## 2026-11-16 Common strategy scorecard: frozen, replay accounting in progress
+
+User requested clear strategy names and common spread/markout/settlement
+metrics after STOP-EV model diagnostics were confused with strategy P&L.
+Source 7f0ab3a7, freeze 819e59fe. No fit, threshold or policy change.
+Ten existing cases: KA/QR/MD1000/B2/EV at40/22, EV/arrival forecast/future
+entry at58/37, EV atzero orders and atzero feeds+orders. All50ms review,
+M50/queueM, six30-share rungs/side; same five consumed dates/1,434 windows.
+New canonical strategy IDs: KEEP_ALL, FILL_GUARD, SWEEP_GUARD, ORDER_EV,
+STOP_EV, ARRIVAL_EV, FUTURE_ENTRY; clock and model versions separate.
+Legacy QR250 with recalibrated thresholds is not the fixed QR50 comparator.
+
+Gross per-fill spread capture = signed pre-fill-mid execution edge; midpoint
+movement + spread = markout at100/500/1000/5000ms. Marks use modeled fill
+clock (anchor minus50ms), while old anchor markouts also reconcile. Terminal
+P&L is cash+inventory at60.2s; settlement P&L holds only that remaining
+inventory to recorded binary resolution. Settlement carry is their difference.
+Every prior window must reproduce its old P&L, shares, orders, pulls, fills,
+maximum inventory, rung exposure, age/source partitions and anchor markouts.
+Positive/known-bad accounting controls pass. No policy promotion or inference.
+
+Pipeline in isolated /tmp/cta-scorecard-20261116, branch research/predict-scorecard-20261116.
+Single Codex/core8 slot. First smoke check running before five complete days.
+Output data/predict_fun/research/strategy_scorecard_20261116_v1/; freeze
+predictfun/reviews/strategy_scorecard_20261116/freeze_v1.json.
+<!-- /STRATEGY_SCORECARD_20261116 -->
+
+
 <!-- ENTRY_ARRIVAL_20261116 -->
 ## 2026-11-16 Entry arrival forecast complete: better score error, worse trading value
 
