@@ -1,0 +1,74 @@
+{
+  "asof": "2026-11-16T05:22:32.252705+00:00",
+  "controls": {
+    "positive_bid_ask_and_clock": true,
+    "corruptions_refused": [
+      "fill_ms",
+      "side",
+      "pre_mid_cents",
+      "settlement_yes",
+      "markout_1000_usd",
+      "terminal_mid_cents",
+      "terminal_pnl_usd"
+    ],
+    "scalar_up_index_positive": true,
+    "bad_token_mappings_refused": [
+      "0",
+      "[1]",
+      "True"
+    ]
+  },
+  "report_sha256": "fea2062b2ac89e73b39213daae49e2106ba5046647926fa7557ccddbd73f4c99",
+  "days": {
+    "20261027": {
+      "fills_verified": 65498,
+      "markets_with_fills": 288,
+      "cases": 10,
+      "book_files_verified": 25,
+      "receipt_sha256": "d781015a3ab8c94ba489ea81cfb068abe5aca4648df3d36a9279382c0e58033b",
+      "ledger_sha256": "005b8b3fd75b8f59252aeec5db788f942bb542bf7e3444c49005b68101823c78",
+      "registry_sha256": "096b08b011fc9e5de1e22cdc46f416adbd522fdb9b19eabad00591937c2fc356"
+    },
+    "20261031": {
+      "fills_verified": 35812,
+      "markets_with_fills": 282,
+      "cases": 10,
+      "book_files_verified": 24,
+      "receipt_sha256": "0361d469fb93bf8628dab7e4b12d434b18fcd09c78daf4d4600e148cb96bdabb",
+      "ledger_sha256": "03652547dcf977813c7d36af2ccb78d5e4cc9ab7b4451e4a5caf521de645b156",
+      "registry_sha256": "5b1675d112399d3852b9680dcd31ff5d577bce481e90b7d520e47885a1596893"
+    },
+    "20261101": {
+      "fills_verified": 46287,
+      "markets_with_fills": 288,
+      "cases": 10,
+      "book_files_verified": 25,
+      "receipt_sha256": "ba9e7a9d9a4c0e2532608ddf385f4abd7005a41bcf8f11c85a7c049c930d8c4a",
+      "ledger_sha256": "f96b225a8f2c2b6811c74b2fab9fb93f5fe37d8f8a7eb2e8e91b01da8fb6109f",
+      "registry_sha256": "64d8472e1061bbc71804ef3b3a7129973a4f9fd140aaba1a23546107da435def"
+    },
+    "20261102": {
+      "fills_verified": 51865,
+      "markets_with_fills": 288,
+      "cases": 10,
+      "book_files_verified": 25,
+      "receipt_sha256": "9de593f2601971138508018aec719f7d1eaf76ec27a74cb8a9649ec066cc0249",
+      "ledger_sha256": "9f31e60ef4e2448499132c5dc179fc020ebf4cefa6e8fa17db86194cefc1f38c",
+      "registry_sha256": "c21b61f114b805a1d5462780266a6c8cec88e1b82d9b568b2a6ada29ce1077dc"
+    },
+    "20261103": {
+      "fills_verified": 60261,
+      "markets_with_fills": 288,
+      "cases": 10,
+      "book_files_verified": 25,
+      "receipt_sha256": "bf5be907e9395b068f9dec55d2bfaea2e7e9310834a150488b58f1e29800b2cc",
+      "ledger_sha256": "1d1f3229b2b61245e972059ab1c48f557147a0bf24e78db8db23f5796a641ab8",
+      "registry_sha256": "b1f1e3cb0ad1936347490c4996d1274a356889ae1a9edcf97a45f33834703b17"
+    }
+  },
+  "limits": "Raw-input identity and arithmetic audit, not physical fill/timing validation or inference.",
+  "completed_asof": "2026-11-16T05:22:42.399902+00:00",
+  "fills_verified": 259723,
+  "source_sha256": "18bd5c91f450d516b281423b04fe37e230355e40fdee157f64ee3b0e0e01b163",
+  "source_age_attribution_sha256": "5e008b692a4e4e6d42fa427ec802a8f8a29d11a6baf070bec5b1cae8ffbd3fe5"
+}

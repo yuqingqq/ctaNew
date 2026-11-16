@@ -7,6 +7,9 @@ order placement. Execution work belongs to a separate project.
 State: `STATUS.yml` + `HANDOFF.md` in this folder (single seat, one writer).
 Background on the venue and collectors: `docs/PREDICT_FUN_RESEARCH.md` (repo root).
 
+Strategy names and metric definitions: [STRATEGIES.md](STRATEGIES.md).
+Current common accounting: [strategy scorecard](handoffs/20261116_strategy_scorecard.md).
+
 ## Mode
 
 **Exploratory** (user, 2026-11-01): no held-out split, freeze or forward rules yet.
