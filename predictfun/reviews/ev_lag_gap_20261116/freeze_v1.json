@@ -1,0 +1,52 @@
+{
+  "asof": "2026-11-16T01:47:11.178241+00:00",
+  "version": 1,
+  "source_commit": "06fb7d77a82672971773d4bd30f978d280410e19",
+  "source_sha256": "e86a4f38f0ee1ecb5e453afe9cfb1903b13c876d11c928b5bba604fd0227d5f2",
+  "days": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "population": "All 1,434 prior first-minute windows, six predeclared October 31 boundary exclusions; all fills included, no outcome selection.",
+  "cases": [
+    {
+      "name": "baseline_40_22",
+      "place_ms": 40,
+      "cancel_ms": 22
+    },
+    {
+      "name": "medians_58_37",
+      "place_ms": 58,
+      "cancel_ms": 37
+    }
+  ],
+  "fixed": "v3 full EV heads, 50 ms fresh-entry/review, all original feed clocks, pending cancellation 95 ms and fill notification 100 ms, M50 tape, imputed untimed legs, activation queue M, unknown queue zero, six rungs x 30 shares per side, no cap/repost timer.",
+  "primary": "All-fill terminal marked PnL and cents/share, filled volume and quote exposure; paired day differences. Exactly reproduce every baseline window from the prior run before interpreting the median sensitivity.",
+  "controls": [
+    "Faster toy placement catches an otherwise missed fill",
+    "Slower cancellation permits a previously prevented fill",
+    "Existing timing/gating/refusal controls",
+    "Every baseline window PnL/volume/orders/pulls/fills/position/rung-exposure parity",
+    "Independent live order-state parity",
+    "Cached/uncached trajectory parity for both clocks on first window of each day",
+    "Prior source/input identities rehashed"
+  ],
+  "refusals": [
+    "Deliberately corrupted baseline must fail",
+    "Input/source/model identity changes fail",
+    "Any lane/terminal accounting failure aborts"
+  ],
+  "multiplicity": {
+    "cases": 2,
+    "dates": 5,
+    "new_fits": 0,
+    "new_thresholds": 0
+  },
+  "nulls": "Descriptive consumed-data sensitivity only; no inferential/null or promotion claim. Any later skill test requires a separately frozen matched design with at least 200 draws and later untouched dates.",
+  "limits": "58/37 are previously recorded medians, not a new latency measurement or full jitter distribution. No 50/100 ms forecast or advance-information oracle is tested here; short forecast recoverability remains unidentified.",
+  "prior_report_sha256": "6da3f27bfa63cf1c4b3ba176a256c7f793cd016fe45b1e20f77ac326e0b5f1eb",
+  "output": "/home/yuqing/ctaNew/data/predict_fun/research/ev_lag_gap_20261116_v1"
+}
