@@ -1,5 +1,5 @@
 joint_flow_controller_20261116:
-  status: v3_pilot_and_bounded_action_audits_complete_merged
+  status: v3_pilot_and_churn_attribution_audited_merged
   worktree: /tmp/cta-flow-controller-20261116
   branch: research/predict-flow-controller-20261116
   source_commit: 6f1742fc
@@ -32,11 +32,21 @@ joint_flow_controller_20261116:
   action_advantage_spearman_empirical: 0.1403793
   churn_resolved: false
   controller_numerical_jobs_running: false
-  next: action_value_calibration_uncertainty_and_queue_continuation_on_earlier_data
-  churn_diagnostic_status: running
+  next: conditioned_scenario_mapping_value_uncertainty_and_queue_continuation
+  churn_diagnostic_status: complete_audited_merged
   churn_diagnostic_source: e4fc69a5
   churn_diagnostic_freeze: 32e9986c
   churn_diagnostic_worktree: /tmp/cta-flow-churn-20261116
+  churn_report: predictfun/handoffs/20261116_flow_controller_churn.md
+  churn_result_index: predictfun/reviews/flow_control_20261116/churn_v1/index.json
+  churn_results_merge: 76eae3be
+  churn_asof: '2026-11-16T11:50:51Z'
+  churn_pairs: 11808
+  churn_first_review_cancels: 4545
+  churn_attribution_actions: 384
+  churn_bank_check_asof: '2026-11-16T11:55:45Z'
+  churn_changed_bank_cancel_eligible: 91
+  churn_old_bank_restores_keep: 47
 
 joint_flow_price_plan_20261116:
   status: first_day_audited_three_fits_complete_churn_diagnostic_priority
