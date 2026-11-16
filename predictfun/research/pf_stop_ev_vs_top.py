@@ -22,7 +22,9 @@ catches: on a synthetic book no M50 shift, the pre-fill mid at-or-before and the
 sign flipped (at-or-before differs from strictly-before only where a fill time equals a frame time: counted, not required); (3) tape identity
 on every window-side, the imputed legs equal STOP-EV-PLAY v2's count for the same windows, the windows equal the scorecard's (day, m) set; (4)
 TOP-COMPARE's anchor-based 1 s value recomputed on its population (timed legs with a depth frame and a finite 1 s mid) equals its saved
-top 5 / 6-20 / rest sums on every date without boundary exclusions.
+top 5 / 6-20 / rest sums on every date without boundary exclusions (with TOP-COMPARE's classifier, which also drops depth -9).
+FIRST RUN 06:46Z stopped at control (4) on 10-27: top 5 and 6-20 equal, rest off by 42.5 sh x c - TOP-COMPARE's dclass treats depth -9
+as 'no frame'; the control now uses that classifier (tc_dclass). No output was written.
 LIMITS: ours simulated (rule M / queue M, unknown depth 0, young fills B1a, inflated volumes C4); theirs real but valued per fill, which is
 not account P&L - their later-minute trading, hedges and unwinds are not seen, so their 'settlement' is what holding THESE fills to
 resolution would give; consumed days; first minute only; signer ids per day (our own account, if it traded on these days, is among the
@@ -100,6 +102,12 @@ def dclass(d):
     return 'inside' if d < 0 else ('at best' if d == 0 else ('1 behind' if d == 1 else '2+ behind'))
 
 
+def tc_dclass(d):
+    """TOP-COMPARE's own classifier (pf_top_compare.dclass), for control (4) only: it also treats depth -9 as 'no frame' (a legacy
+    sentinel); the comparison itself classifies with dclass."""
+    return 'no frame' if d == -9 else dclass(d)
+
+
 def synthetic():
     """A toy book and three fills with values worked by hand; returns the failures."""
     times = np.array([0.0, 100.0, 200.0, 1300.0]); mids = np.array([50.0, 51.0, 52.0, 55.0])
@@ -171,7 +179,7 @@ def day_run(day):
                 if not (W[0]['ws'] <= a < W[0]['te']):
                     continue
                 p = int(W[s]['ptl'][i])
-                if dclass(GP.depth_of(tfl, W[s]['P5'], W[s]['opp'], s, a, p)) == 'no frame':
+                if tc_dclass(GP.depth_of(tfl, W[s]['P5'], W[s]['opp'], s, a, p)) == 'no frame':
                     continue
                 v1 = sg * (mff[max(int(np.searchsorted(tf, a + 1000.0, side='right')) - 1, 0)] - p)
                 if np.isfinite(v1):
