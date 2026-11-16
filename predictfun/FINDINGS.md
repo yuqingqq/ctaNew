@@ -1,3 +1,41 @@
+<!-- JOINT_FLOW_CHURN_20261116 -->
+## 2026-11-16 First-review churn: scenario mapping and thin entry value are key sensitivities
+
+As of11:50:51Z, same12 consumed Oct27 pilot markets, unchanged JOINT policy:
+11,974 posts,11,808 paired first reviews,4,545 model cancellations. Remaining
+statuses:73 structural cancels before review,76 activation rejections,17 without
+eligible context. Entry-to-review100ms, activated age42ms. Every archived trace
+and fill ledger reproduced. Of4,545 cancellations, midpoint adverse1,046,
+unchanged1,913,favourable1,586. Median predicted entry advantage0.317c/order.
+
+Balanced hash sample192 cancellations+192 model keeps: updated market/book/
+scenario inputs contribute-4.330c to mean predicted keep-value change, learned
+probabilities-0.333c, other portfolio/inventory-0.254c, target queue-0.046c.
+These are input sensitivities, not realized costs. Keeping the original absolute
+endpoint still cancels176/192,2s endpoint179/192. Holding entry queue ahead
+fixed still cancels189/192. Previous emphasis on horizon/queue as the dominant
+first-review explanation is superseded by this diagnostic.
+
+The historical path set changes in97/192 cancellations (92 spread changes).
+Bank-only sensitivity asof11:55:45Z holds current book/translation, forecast,
+queue, inventory, actions and horizon fixed.91 changes permit the old bank
+within payoff bounds;47 become nonnegative keep value. Mean predicted change
+from bank switch alone-5.208c/order. Six boundary exclusions retained. This
+establishes substantial sensitivity to exact-spread path selection; it does not
+establish the older bank as more accurate or justify retaining stale forecasts.
+Independent bank audit11:56:38Z recomputes all376 eligible values across both
+groups, verifies8 bound exclusions;258 unchanged banks reproduce their values.
+
+Next: conditional scenario mapping and uncertainty in near-zero order value,
+with queue continuation economics. Evaluate realized action advantages before
+claiming lower churn helps. No fixed retry, policy changes, refits, profitability
+claim or confidence intervals. All checks include known-bad refusals; full
+attribution/value/sample/null audit passes. Protected dates remain unopened.
+Report: handoffs/20261116_flow_controller_churn.md; active diagnostic receipt:
+reviews/flow_control_20261116/churn_v1/index.json. Results edeb7e8e committed
+and merged into mm-research; all59 frozen controller sources remain unchanged.
+<!-- /JOINT_FLOW_CHURN_20261116 -->
+
 <!-- JOINT_FLOW_CONTROLLER_RESULTS_20261116 -->
 ## 2026-11-16 Coherent joint-flow controller pilot: useful ranking, unresolved churn
 
