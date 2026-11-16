@@ -13,53 +13,53 @@
 ## 2026-11-16 STOP_EV later-minute comparison: complete
 
 As of 2026-11-16T07:34:10.553138+00:00. Full continuous replay through the
-five-minute contract on five consumed dates (Oct27, Oct31, Nov1–3), 1,434
+five-minute contract on five consumed dates (Oct 27, Oct 31, Nov 1–3), 1,434
 common markets; six Oct31 boundary markets excluded. Frozen corrected-v3
-STOP_EV, placement58/cancel37ms, review50ms, M50/queueM, six30-share rungs
+STOP_EV, placement 58 ms / cancellation 37 ms, review 50 ms, M50 / queue M, six 30-share rungs
 per side, no cap/cooldown or inventory-policy change. Orders and inventory
-carry across minute boundaries; quoting stops299.8s, tail ends300s.
-Top5 = per-date largest raw maker volume during0–240s on the same markets,
+carry across minute boundaries; quoting stops at 299.8 s; tail ends at 300 s.
+TOP5 = per-date largest raw maker volume during 0–240 s on the same markets,
 with the same M50/imputation valuation. Observed vs simulated fills remain
 different populations. No inference, untouched validation or promotion.
 
-Pooled one-second markout c/share, minutes1–5:
+Pooled one-second markout c/share, minutes 1–5:
 STOP_EV [0.501583, 0.077704, 0.153028, 0.044674, 0.356993];
 TOP5 [0.378843, 0.179801, 0.161190, 0.007432, 0.381916].
 STOP_EV five-second markouts [0.633491, -0.118, 0.254, -0.451, 0.188].
-The first-minute advantage does not transfer consistently. In minutes2/4,
-initial edge1.028/1.304c loses0.950/1.259c within1s; only2/5 days have
-positive STOP_EV 1s markout. At-best STOP_EV is negative in minutes2–4
+The first-minute advantage does not transfer consistently. In minutes 2 and 4,
+initial edge of 1.028 / 1.304 c loses 0.950 / 1.259 c within 1 s; only 2/5 days have
+positive STOP_EV 1s markout. At-best STOP_EV is negative in minutes 2–4
 (-0.085/-0.122/-0.166c), versus positive TOP5 (+0.146/+0.113/+0.053c).
-First-minute WS-only ranking reverses: STOP_EV0.438c vs TOP50.557c;
+First-minute WS-only ranking reverses: STOP_EV 0.438 c versus TOP5 0.557 c;
 do not interpret the pooled first-minute ranking as live maker superiority.
-Full-contract volume348,913 simulated shares vs14,347,607 TOP5 (41.12x).
-Minute5 horizon coverage differs: STOP_EV98.05%/86.28% at1s/5s vs
-TOP599.84%/98.65%. No expired horizon is replaced with an endpoint mark.
+Full-contract volume: 348,913 simulated shares vs14,347,607 TOP5 (41.12x).
+Minute 5 horizon coverage differs: STOP_EV 98.05% / 86.28% at 1 s / 5 s vs
+TOP5 99.84% / 98.65%. No expired horizon is replaced with an endpoint mark.
 
 Later phases were not in first-minute training. Eligible known-book rows
-fall to58.89% of scheduled steps in minute5, while all scheduled base rows
-exist and missing cells among eligible rows stay below0.016% in minutes2–5.
+fall to 58.89% of scheduled steps in minute 5, while all scheduled base rows
+exist and missing cells among eligible rows stay below 0.016% in minutes2–5.
 This is a transfer weakness, not proof that training coverage alone causes
-loss. Filled orders aged>=500ms have better observed values, but that is
+loss. Filled orders aged >=500 ms have better observed values, but that is
 survival-conditioned and does not validate a fixed wait or blanket keep rule.
-Inventory remains separate: terminal marked P&L-$964.95; passive settlement
--$4,143.34; mean absolute ending position22.41→107.81 shares from minute1→5.
+Inventory remains separate: terminal marked P&L -$964.95; passive settlement
+-$4,143.34; mean absolute ending position 22.41 → 107.81 shares from minute 1 → 5.
 Maker fill-basket settlement is not their account P&L.
 
-All1,434 first-minute feature/replay controls and continuous-prefix controls
-passed;3,097,373 exported fills reconcile to engine, raw books and minute
-values. Raw maker legs3,064,772 = retained3,060,620 +4,137 before start
-+15 at/after expiry under M50. Positive and known-bad audit controls passed.
-Active freezev3 (f06356ac/source70ed45d8) supersedes two output-serialization
+All 1,434 first-minute feature/replay controls and continuous-prefix controls
+passed; 3,097,373 exported fills reconcile to engine, raw books and minute
+values. Raw maker legs: 3,064,772 = retained 3,060,620 + 4,137 before start
+ + 15 at/after expiry under M50. Positive and known-bad audit controls passed.
+Active freeze v3 (f06356ac / source 70ed45d8) supersedes two output-serialization
 failures, preserving old freezes/partial outputs; no policy/valuation change.
-Results5fc4a7ea merged to mm-research atd5a31aee; merged freeze/schema verified.
-Shared dirty files preserved. Single core8; all jobs finished.
+Results 5fc4a7ea merged to mm-research at d5a31aee; merged freeze/schema verified.
+Shared dirty files preserved. Single core 8; all jobs finished.
 
 Report: handoffs/20261116_stop_ev_minutes.md. Results/chart/audit:
 reviews/stop_ev_minutes_20261116/results_v3/; full ledgers:
 data/predict_fun/research/stop_ev_minutes_20261116_v3/.
-Report JSON SHA256:2930150307aeabd26f414075d43d89034c785ae0d2ca51b3af9440ec7d0df47d.
-Next: diagnose minutes2–4 adverse at-best fills with phase-appropriate
+Report JSON SHA256: 2930150307aeabd26f414075d43d89034c785ae0d2ca51b3af9440ec7d0df47d.
+Next: diagnose minutes 2–4 adverse at-best fills with phase-appropriate
 coverage and consistent timestamp sources; replay any changed policy rather
 than treating subset accounting or a selected minute restriction as a gain.
 <!-- /STOP_EV_MINUTES_20261116 -->
