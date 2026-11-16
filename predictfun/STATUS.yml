@@ -1,29 +1,45 @@
 stop_ev_minutes_20261116:
-  status: all_replays_complete_aggregating_and_auditing
-  base_commit: be5b086c
-  strategy: STOP_EV
-  model: corrected_v3_frozen
+  status: complete
+  asof: '2026-11-16T07:34:10.553138+00:00'
   test_dates: [20261027, 20261031, 20261101, 20261102, 20261103]
-  target_windows: 1434
+  markets: 1434
+  exported_fill_records: 3097373
+  strategy_fill_records: 36753
+  maker_fill_records: 3060620
+  excluded_maker_legs_before_start: 4137
+  excluded_maker_legs_at_or_after_expiry: 15
+  strategy: STOP_EV_corrected_v3_frozen
   placement_cancel_ms: [58, 37]
   review_ms: 50
   trade_shift_ms: 50
   quote_stop_seconds: 299.8
   terminal_seconds: 300
-  inventory_management: none
   new_fits: 0
   new_thresholds: 0
+  inventory_management: none
+  stop_ev_1s_cents_by_minute: [0.501583, 0.077704, 0.153028, 0.044674, 0.356993]
+  top5_1s_cents_by_minute: [0.378843, 0.179801, 0.161190, 0.007432, 0.381916]
+  stop_ev_5s_cents_by_minute_rounded: [0.633, -0.118, 0.254, -0.451, 0.188]
+  stop_ev_shares: 348912.5038528465
+  top5_shares: 14347606.565889731
+  stop_ev_terminal_marked_usd: -964.9496005485357
+  stop_ev_passive_settlement_usd: -4143.344563790473
+  first_minute_ws_only_stop_ev_top5_cents: [0.437993, 0.556952]
+  first_minute_replay_controls: 1434
+  continuous_prefix_controls: 1434
+  raw_population_and_edge_audit: passed_with_falsifiers
   later_phase_training_coverage: absent_transfer_test
-  output: data/predict_fun/research/stop_ev_minutes_20261116_v3
-  worktree: /tmp/cta-stop-ev-minutes-20261116
+  evidence_scope: consumed_data_descriptive_no_promotion
   source_commit: 70ed45d8
   freeze_commit: f06356ac
+  results_commit: 5fc4a7ea
+  merge_commit: d5a31aee
   freeze: predictfun/reviews/stop_ev_minutes_20261116/freeze_v3.json
-  smoke_status: passed_all_controls
-  serialization_controls: sparse_text_roundtrip_and_unfixed_refusal_passed
-  completed_dates: [20261027, 20261031, 20261101, 20261102, 20261103]
-  completed_windows: 1434
-  audited_fill_records: 3097373
+  report: predictfun/handoffs/20261116_stop_ev_minutes.md
+  audit: predictfun/reviews/stop_ev_minutes_20261116/results_v3/audit_v1.json
+  report_sha256: 2930150307aeabd26f414075d43d89034c785ae0d2ca51b3af9440ec7d0df47d
+  output: data/predict_fun/research/stop_ev_minutes_20261116_v3
+  next: diagnose_phase_2_to_4_at_best_adverse_fills_with_matched_timestamp_sources
 
 strategy_scorecard_20261116:
   status: complete_audited_merged
