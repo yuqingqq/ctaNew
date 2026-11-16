@@ -1,0 +1,22 @@
+{
+  "report_sha256": "1dd36d75653d10f810a511ca17a5ed20a64d9bb125d7b3ffa44448cf6e7ead51",
+  "source_sha256": "4ffff429d8d32ca8d0032dcce11b78e91228ab48ec6bb706f5ae46117930dd3c",
+  "asof": "2026-11-16T01:57:35.556172+00:00",
+  "windows": 1434,
+  "days": 5,
+  "derived": {
+    "median_pnl_reduction_fraction": 0.5981995615342054,
+    "median_volume_ratio": 1.1231824641815424,
+    "median_value_per_share_ratio": 0.357733895675254,
+    "best_median_date": "20261027",
+    "best_median_date_pnl": 200.40093720381168,
+    "other_four_median_dates_pnl": -40.84567477788306,
+    "mean_rung_exposure_ratio": 1.1511510408344505,
+    "median_pull_order_ratio": 0.919465383643561
+  },
+  "controls": {
+    "arithmetic_positive_control": true,
+    "corrupt_daily_refused": true
+  },
+  "limits": "Descriptive concentration and ratios only. All windows remain in primary PnL; no post-hoc day exclusion or causal attribution."
+}
