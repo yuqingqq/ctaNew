@@ -1,3 +1,22 @@
+joint_flow_controller_20261116:
+  status: frozen_bank_and_pilot_running
+  worktree: /tmp/cta-flow-controller-20261116
+  branch: research/predict-flow-controller-20261116
+  source_commit: 028eb613
+  freeze_commit: 848bb604
+  protocol: predictfun/handoffs/20261116_flow_controller_protocol.md
+  output: data/predict_fun/research/flow_control_20261116_v1
+  test_day: 20261027
+  selected_markets: 12
+  cases: [KEEP_ALL_CAP, EMPIRICAL, JOINT, JOINT_H2]
+  compiled_canonical_path_checks: 24
+  fixed_retry_timer: false
+  original_predictions_unchanged: true
+  prior_prediction_fits_completed: [20261027, 20261031]
+  prior_prediction_fits_pending: [20261101, 20261102, 20261103]
+  prior_prediction_scheduler_running: false
+  evidence_scope: consumed_development_pilot_no_promotion
+
 joint_flow_price_plan_20261116:
   status: first_day_audited_remaining_folds_running
   plan: predictfun/handoffs/20261116_joint_flow_price_plan.md
