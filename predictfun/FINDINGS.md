@@ -1,3 +1,47 @@
+<!-- RESPONSE_BRIDGE_RESULTS_20261116 -->
+## 2026-11-16 Richer forecasts improve fill markout but worsen quoting; response mapping is still the bottleneck
+
+Completed, audited and merged experiment; active evidence
+`reviews/response_bridge_20261116_v2/latest.json`, full report
+`handoffs/20261116_response_bridge_results.md`. V2 source5e67d068,
+freezeb5206f6a, results48e6c4d2. SOFT_JOINT retained; no promotion or running job.
+
+Four public response heads add finer quantity, timing, depth and price severity.
+The V1 absolute-scale omission was corrected in V2; completed V1 stages and its
+interrupted replay remain preserved. Fixed target bins, LGBM parameters,30-share
+six-rung controller, risk and latency; no cooldown or new action threshold.
+Forecast logloss/Brier improve versus matched frequencies on consumed Oct27
+(n118,062 quantity /18,132 price actions; report16:02:23Z), but neutral economic
+values remain mixed across418 Oct26 and443 Oct27 actions. Oct27 entry RMSE
+24.829->25.063c and rank.224->.159; cancellation RMSE31.826->31.636c, rank
+.339->.335. Archived baseline predictions and canonical prefixes reproduce.
+
+Twelve-market full5min Oct27 pilot, asof2026-11-16T16:32:20Z, gross simulated:
+SOFT->RICH V2 1s markout-.961->+.020c/share;5s2.650->3.366. But shares7895.73
+->5556.47, pulls9775->14247, both quote32.857%->18.345%, first-review model
+cancels39.32%->57.40%. Pulls worsen and both quote time falls in all12 markets.
+Terminal marked P&L+$367.66->+$187.83; passive settlement+$353.96->+$172.42.
+Better fill selection does not establish a better controller.
+
+The same coarse-joint forecast residual rises.09105->.20675 on443 actions
+when finer marginals are projected onto the sparse bank. Retrospective true-
+category tests on common416 actions (207 cancel/209 post;16:34:00Z) give
+RMSE26.011/24.143c with true coarse pair alone,28.930/37.132 with true fine
+inputs/current projection, versus2.032/.377 with actual tape/book path and
+same client order state. Hard-preserving the known coarse pair (16:39:48Z)
+helps cancellation to25.582 but leaves post36.496c: coarse relaxation is only
+part of the problem, and conditional responses inside the bins remain poor.
+These are diagnostics with future information, never candidate inputs or policy.
+
+Next priority is coherent joint conditional queue/timing/price response and
+entry/resting value consistency, not merely more marginal buckets or model-
+family tuning. Exact incoming-volume/price associations and queue thresholds
+matter to value. Accounting/scale/identity/falsifier audits pass, but external
+simulator realism and untouched-day performance remain unestablished. Consumed
+dates only; no confidence intervals. All frozen evidence and failed/partial
+versions retained; peak RSS1277MiB, Codex/core8 only.
+<!-- /RESPONSE_BRIDGE_RESULTS_20261116 -->
+
 <!-- VALUE_BRIDGE_RESULTS_20261116 -->
 ## 2026-11-16 Valuation bridge: pilot improves, entry response remains weak
 
