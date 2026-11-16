@@ -1,26 +1,38 @@
 joint_flow_controller_20261116:
-  status: v3_smoke_audited_pilot_running_implementation_merged
+  status: v3_pilot_and_bounded_action_audits_complete_merged
   worktree: /tmp/cta-flow-controller-20261116
   branch: research/predict-flow-controller-20261116
   source_commit: 6f1742fc
   freeze_commit: 7fb46122
+  results_commit: 6855f695
+  results_merge: 89a55bf4
   protocol: predictfun/handoffs/20261116_flow_controller_protocol.md
+  report: predictfun/handoffs/20261116_flow_controller_results.md
+  active_result_index: predictfun/reviews/flow_control_20261116/summary_v2_receipt.json
   output: data/predict_fun/research/flow_control_20261116_v3
+  pilot_asof: '2026-11-16T11:00:34Z'
   test_day: 20261027
   selected_markets: 12
+  replay_count: 48
+  missing_selected_markets: 0
   cases: [KEEP_ALL_CAP, EMPIRICAL, JOINT, JOINT_H2]
   compiled_canonical_path_checks: 24
+  merged_source_hashes_verified: 59
   fixed_retry_timer: false
   original_predictions_unchanged: true
-  prior_prediction_fits_completed: [20261027, 20261031]
-  prior_prediction_fits_pending: [20261101, 20261102, 20261103]
-  prior_prediction_scheduler_running: false
   evidence_scope: consumed_development_pilot_no_promotion
   active_version: 3
   superseded_versions: [1, 2]
   queue_state_repairs: [confirmed_partial_fill_front, pending_activation_cache, initial_unknown_zero]
-  implementation_merge: de73ec47
-  smoke_audit_asof: "2026-11-16T10:44:29Z"
+  active_action_diagnostic: bounded_probe_v1
+  action_diagnostic_asof: '2026-11-16T11:11:06Z'
+  action_diagnostic_n: 221
+  original_action_diagnostic_superseded: true
+  action_advantage_spearman_joint: 0.2804566
+  action_advantage_spearman_empirical: 0.1403793
+  churn_resolved: false
+  controller_numerical_jobs_running: false
+  next: action_value_calibration_uncertainty_and_queue_continuation_on_earlier_data
 
 joint_flow_price_plan_20261116:
   status: first_day_audited_two_fits_complete_controller_priority

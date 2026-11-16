@@ -1,35 +1,44 @@
 <!-- JOINT_FLOW_CONTROLLER_20261116 -->
-## 2026-11-16 Joint forecast controller: implementation merged; corrected smoke passed; 12-market pilot running
+## 2026-11-16 Joint forecast controller: implemented, audited and merged; pilot complete
 
-User authorized connecting predictions to a minimal action controller. Source
-6f1742fc, active freeze7fb46122 (v3), isolated worktree /tmp/cta-flow-controller-20261116,
-branch research/predict-flow-controller-20261116. Full source is committed and merged to mm-research at de73ec47; all59 frozen
-source identities verified after merge.
-Training-path responses replace independent quantity/value/risk heads in the
-controller; original forecast artifacts remain unchanged. Shared-volume branch
-execution, common-endpoint keep/cancel and post/wait, inventory reservation cap
-180 and explicit quadratic risk penalty, no fixed retry/minimum rest. Same
-recorded clocks and30-share six-rung ladder.1s primary,2s horizon sensitivity.
-Continuous lane changes only by an observer hook.24 compiled/canonical path
-parities and synthetic causal/queue/accounting/action controls pass. V3 repairs
-confirmed partial-fill front priority, defers pending-placement queue cache
-initialization, and preserves initial unknown-depth zero. V1 smoke and V1/V2
-interrupted runs remain retained via superseding freezes. No parameter tuning.
+Controller source 6f1742fc, active freeze 7fb46122 (v3); results 6855f695,
+final implementation/results merge 89a55bf4 into mm-research. All 59 frozen
+controller sources and bounded diagnostic/audit sources verified after merge.
+Worktree /tmp/cta-flow-controller-20261116. Training-only paired raw paths
+replace independent response heads for controller decisions; existing forecasts
+remain unchanged. Common-scenario keep/cancel and post/wait share execution,
+wealth and inventory accounting. Six 30-share rungs per side, cap 180, explicit
+quadratic risk penalty, original clocks, no fixed retry/minimum rest timer.
+V3 repairs confirmed-fill front priority, pending activation cache and initial
+unknown-depth zero. V1/V2 retained under superseding freezes.
 
-The frozen pilot selects first market per two-hour block on consumed Oct27
-(12 markets; continuous five minutes), using only Oct23–25 training paths and
-existing calibrated JOINT probabilities. Cases KEEP_ALL_CAP / EMPIRICAL / JOINT
-/ JOINT_H2.200-draw count-matched neutral-generation branch diagnostic. No
-protected dates opened, no tuning, no inferential or profitability claim.
-V3 bank and one-market smoke completed; corrected smoke audit passed at
-2026-11-16T10:44:29Z. The12-market pilot runs in Codex/core8.
-Logs: data/predict_fun/research/flow_control_20261116_v3/logs/.
+Pilot as of 2026-11-16T11:00:34Z: 12 preselected Oct27 markets, full five-minute
+contracts, 48 strategy/market replays, no missing markets. One consumed day,
+no confidence interval or promotion. JOINT vs EMPIRICAL: terminal marked
++$246.76 vs +$129.04; passive settlement +$232.39 vs +$102.15; 1s markout
+-1.44 vs -2.59 c/share; 5s +1.67 vs -0.98; both quote 32.84% vs 26.58%.
+These are gross simulated aggregates, not full-day returns or live/top-maker
+comparisons. JOINT still issues 10,896 pulls on 11,974 placed orders; 41.76%
+of 10,884 model cancellations occur at first review. Churn remains unresolved.
 
-The prior forecast scheduler stopped after its successful Oct31 fit. Oct27 and
-Oct31 fits are complete; Nov1–3 remain outstanding and are deferred while this
-controller pilot uses the same numerical slot. Earlier 'remaining folds running'
-state is superseded by this observation. Next: finish pilot and independent readout, record results and limitations,
-then resume the three outstanding original prediction folds.
+Original neutral action diagnostic is superseded: 169/222 states exceeded the
+inventory cap. Corrected bounded neutral diagnostic as of 11:11:06Z evaluates
+221 actions, all within cap, with identical canonical branch prefixes. Learned
+advantage rank correlation 0.280 vs empirical 0.140; predicted/actual mean
+2.47/4.14 c/action. Count-matched 200-draw null recorded; no significance claim.
+Does not validate fresh entry or learned-policy state distribution. Active
+in-band result index: reviews/flow_control_20261116/summary_v2_receipt.json.
+Report: handoffs/20261116_flow_controller_results.md. Raw ledgers/logs:
+data/predict_fun/research/flow_control_20261116_v3/. Independent artifact,
+accounting, null and known-bad checks pass; compiled/canonical parity on 24 paths.
+Pilot 964.62s / 1,280MiB; bounded diagnostic 153.40s / 1,079MiB.
+
+Next research priority: calibrate action values and assess uncertainty of small
+advantages and queue continuation on earlier data. Do not tune on this pilot
+or add a fixed retry timer. Path transport and within-class severity also remain
+limitations. Protected forward dates unopened. Original frozen forecast study
+resumed at 11:17:49Z on Codex/core8 for Nov1–3 (driver PID 2770777; Nov1 data
+builder verified running). Controller numerical jobs are complete.
 <!-- /JOINT_FLOW_CONTROLLER_20261116 -->
 
 # P-2026-005 HANDOFF
