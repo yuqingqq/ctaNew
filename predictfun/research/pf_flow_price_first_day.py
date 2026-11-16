@@ -16,9 +16,14 @@ def consistency_counts(qty,flow,value,severe,fill,price,bid):
     C.require(all(np.isfinite(x).all() for x in [qty,flow,value,severe,fill,price]),'nonfinite response audit input')
     C.require(all(x.shape==qty.shape for x in [flow,value,severe,fill,price]),'response audit shape')
     low=-np.where(bid,price,100.-price)*qty;high=np.where(bid,100.-price,price)*qty
+    value_excess=np.maximum.reduce([low-value,value-high,np.zeros(len(qty))])
+    probability_excess=np.maximum(severe-fill,0.);quantity_excess=np.maximum(qty-flow,0.)
     return dict(n=len(qty),value_outside_quantity_implied_bounds=int(((value<low-1e-6)|(value>high+1e-6)).sum()),
         severe_probability_above_own_fill_probability=int((severe>fill+1e-6).sum()),
         expected_own_quantity_above_public_quantity=int((qty>flow+1e-6).sum()),
+        value_bound_excess_cents=dict(mean=float(value_excess.mean()),max=float(value_excess.max())),
+        severe_probability_excess=dict(mean=float(probability_excess.mean()),max=float(probability_excess.max())),
+        quantity_bound_excess_shares=dict(mean=float(quantity_excess.mean()),max=float(quantity_excess.max())),
         interpretation='separately fitted conditional response heads can be incoherent; diagnostic only, no post-hoc clipping')
 
 
