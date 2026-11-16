@@ -1,17 +1,19 @@
 joint_flow_price_plan_20261116:
-  status: historical_data_build_running
+  status: first_chronological_fold_prioritized
   plan: predictfun/handoffs/20261116_joint_flow_price_plan.md
   worktree: /tmp/cta-flow-price-model-20261116
   branch: research/predict-flow-price-model-20261116
   source_commit: 372d7427
   freeze_commit: d883b942
-  driver_commit: b428afc6
+  driver_commit: 1d7075d5
   output: data/predict_fun/research/flow_price_20261116_v1
-  next: complete_data_then_five_chronological_prediction_folds_and_audit
+  next: build_through_oct27_then_fit_and_audit_first_day_before_remaining_dates
   synthetic_tests_passed: 22
   smoke_markets: 2
   smoke_generation_rows: 1485
   smoke_eligible: 988
+  completed_data_dates: [20261023, 20261024]
+  first_test_day: 20261027
   model_fits_completed: 0
   policy_replays: 0
   frozen_experiment: true

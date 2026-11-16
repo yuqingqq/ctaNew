@@ -17,8 +17,12 @@ dates unopened. No action-policy or profitability claim.
 22 synthetic controls passed. Oct23 two-market smoke completed at
 2026-11-16T08:43:18Z: 1,485 generation rows, 988 eligible; ledger/target controls
 passed, peak RSS 1,062 MiB. This is build validity, not prediction quality.
-Full sequential build started in Codex/core8, then fits -> report -> independent
-audit. Output/logs: data/predict_fun/research/flow_price_20261116_v1/.
+User requested an early first-day readout. Oct23 and Oct24 builds are complete;
+Oct25 is running. New scheduler/report 1d7075d5 prioritizes train Oct23–25,
+calibrate Oct26, test Oct27, then resumes the remaining four frozen dates.
+Original scheduler stopped after its Oct24 child completed; no worker interrupted.
+The model recipe, split, data and targets are unchanged. First-day output will
+be reviews/flow_price_20261116/first_day_v1/ after independent artifact checks. Output/logs: data/predict_fun/research/flow_price_20261116_v1/.
 No fixed retry/minimum-rest timer. Larger-size policy work remains separate.
 Shared research edits preserved.
 <!-- /JOINT_FLOW_PRICE_PLAN_20261116 -->
