@@ -40,6 +40,19 @@ pre-fill-mid execution-edge proxy; spread+subsequent mid movement=markout.
 New markouts use modeled fill time (anchor minus50ms); original anchor-based
 markouts also reproduce and remain separately named.
 
+User interpretation recorded after review (f3673c42): keep short-horizon
+execution quality and the missing inventory-management layer separate.
+The scored replay has cap=None/mode=none and passive residual holding;
+settlement losses do not erase positive short-horizon markouts, and inventory
+management has not yet been tested as a remedy. Prediction priority remains
+the weak ARRIVAL_EV retained edge: initial +1.151c/share plus -1.014c of
+1s midpoint movement leaves +0.137c/share, versus +0.502c for STOP_EV at the
+same 58/37ms clock and +1.131c for zero_all. The 0.137 figure is a 1s
+markout, not initial spread. Same-clock STOP_EV is the direct comparator;
+zero_all also changes feeds/cancels/notifications and creates different fills,
+so its full gap is not purely entry-forecast error. No new fit, rerun or
+inventory policy was authorized or launched by this recording update.
+
 All cases: review50ms, M50, queueM/unknown-depth-zero, six30-share rungs per
 side, no cap or fixed cooldown. Gross simulated accounting, no added fees or
 rewards; consumed data, no inference, policy promotion or live-profit claim.
