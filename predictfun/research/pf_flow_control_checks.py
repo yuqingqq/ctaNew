@@ -114,12 +114,16 @@ def client_state_controls():
     after=P.snapshot(W,5,250.,altered,5.)
     np.testing.assert_equal(before['orders'],after['orders'])
     C.require(before['orders'][0,3]==25.,'fill notification boundary')
+    C.require(before['orders'][0,4]==0.,'known partial fill must retain front queue position')
+    wrong_queue=before['orders'].copy();wrong_queue[0,4]=100.
+    refused(lambda:np.testing.assert_equal(before['orders'],wrong_queue),'partial fill pushed behind displayed queue')
     altered=copy.deepcopy(ST);altered[0]['cl'][0]['fl'].append((150.,2.))
     changed=P.snapshot(W,5,250.,altered,7.)
     C.require(changed['orders'][0,3]==23.,'received fill positive control')
     mutant=before['orders'].copy();mutant[0,3]=order['rem']
     refused(lambda:np.testing.assert_equal(before['orders'],mutant),'true remainder leakage')
-    return dict(unreceived_fill_and_hidden_queue_ignored=True,received_fill_changes_state=True,true_remainder_leak_refused=True)
+    return dict(unreceived_fill_and_hidden_queue_ignored=True,received_fill_changes_state=True,true_remainder_leak_refused=True,
+                confirmed_partial_fill_front_preserved=True,known_bad_replenished_ahead_refused=True)
 
 
 def kernel_parity():

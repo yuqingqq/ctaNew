@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 FLOW_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-FLOW_OUT=/home/yuqing/ctaNew/data/predict_fun/research/flow_control_20261116_v1
+FLOW_OUT=/home/yuqing/ctaNew/data/predict_fun/research/flow_control_20261116_v2
 FLOW_PY=/home/yuqing/pricer-sol/venv/bin/python3
 FLOW_WRAP=/home/yuqing/ctaNew/predictfun/research/run_light.sh
 mkdir -p "$FLOW_OUT/logs"

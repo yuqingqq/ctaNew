@@ -50,6 +50,9 @@ def snapshot(W,k,t,ST,kpos):
             if removal+100.<=t:continue
             state=P.order_state(W[s],o,k,t,s,o['rung'],W[0]['ws']+300000.)
             ahead=state['queue_ahead_known'];ahead=float(ahead) if math.isfinite(ahead) else 0.
+            # In the inherited price/time queue model, any confirmed own fill
+            # exhausts the queue ahead. Subsequent book additions stay behind us.
+            if filled>1e-12:ahead=0.
             rows.append([s,o['rung'],o['pt'],30.-filled,ahead,o['ta']-t,removal-t,o['ts']-t,float(o['ta']>t)])
             switch=id(o) in cur_ids and o['ta']<=t and o['tc']>t
             info.append(dict(side=s,rung=o['rung'],kind='cancel' if switch else 'pending',
