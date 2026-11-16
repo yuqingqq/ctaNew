@@ -1,0 +1,19 @@
+{
+  "asof": "2026-11-16T11:58:26.377509+00:00",
+  "scope": "Same 12 consumed Oct27 pilot markets; frozen policy, no training or profitability claim",
+  "n_entry_actions": 11974,
+  "n_matched_first_review_actions": 11808,
+  "n_attributed_cancellations": 192,
+  "n_attributed_keeps": 192,
+  "source_freeze_sha256": "b0480ff06b047ff36e48ea03c8d170178698d0323b81eac5c1eb3b760a2fa814",
+  "outputs": {
+    "report.json": "81d55214511bdea4e625810b1679171656c3e6b410e897992e33a737758f24e6",
+    "receipt.json": "b8153f8c933b9c2f2cfec9354af662e93dd58549aca110a3420490eaa7d07da9",
+    "audit_v1.json": "752cfc21f18290967026ea10fa01b710fd0c2dd884f8b5dd8f4eba89fd5a2341",
+    "market_readout_v1.json": "36df6b76408149069745109410c562b892a91bc91dfed05056fc065ea606d30c",
+    "bank_check_v1.json": "7521e9189d3ee3685937c692fe1a8f78fbb8ef47542df9ed7bba233cd9302fe0",
+    "bank_audit_v1.json": "0704902f5e88db0550ffe375330632b90319a23ae39e5527a10f6f8395c3a7c9"
+  },
+  "controller_results_unchanged": "../summary_v2_receipt.json",
+  "interpretation": "Large sensitivity to observed book and historical scenario-set selection; small entry advantages. Queue and endpoint changes are secondary in this diagnostic. Does not establish the older bank more accurate."
+}

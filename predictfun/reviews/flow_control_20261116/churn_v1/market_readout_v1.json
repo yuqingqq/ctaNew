@@ -1,0 +1,98 @@
+{
+  "asof": "2026-11-16T11:53:58.458819+00:00",
+  "groups": {
+    "cancel": {
+      "n": 4545,
+      "adverse_mid": 1046,
+      "unchanged_mid": 1913,
+      "favorable_mid": 1586,
+      "mean_signed_mid_cents": 0.04378437843784379,
+      "entry_advantage_quantiles_cents": {
+        "0": 2.5296520082207508e-05,
+        "0.25": 0.09001991488509908,
+        "0.5": 0.31687449045415406,
+        "0.75": 1.1084538625439535,
+        "0.9": 3.0974948992611986,
+        "0.99": 14.529362666722562
+      },
+      "cancel_advantage_quantiles_cents": {
+        "0.25": 0.1926419104937338,
+        "0.5": 0.7103331322293904,
+        "0.75": 2.357905520789025,
+        "0.9": 7.419337461170614
+      },
+      "sample_n": 192,
+      "bank_changed": 97,
+      "spread_changed": 92,
+      "phase_changed": 0,
+      "cancel_with_old_forecast": 132,
+      "cancel_with_old_market": 115,
+      "cancel_with_old_queue": 189,
+      "original_endpoint_still_cancel_and_h2_still_cancel": 164,
+      "by_bank_change": {
+        "False": {
+          "n": 95,
+          "mean_market_shapley_cents": -0.7450284100834206,
+          "mean_signed_mid_cents": 0.06315789473684211,
+          "adverse_mid": 6
+        },
+        "True": {
+          "n": 97,
+          "mean_market_shapley_cents": -7.840916532953714,
+          "mean_signed_mid_cents": 0.06701030927835051,
+          "adverse_mid": 39
+        }
+      }
+    },
+    "keep": {
+      "n": 7263,
+      "adverse_mid": 563,
+      "unchanged_mid": 5497,
+      "favorable_mid": 1203,
+      "mean_signed_mid_cents": 0.14945614759741155,
+      "entry_advantage_quantiles_cents": {
+        "0": 2.057924030474112e-05,
+        "0.25": 0.14564698962589961,
+        "0.5": 0.41667089803052476,
+        "0.75": 1.212391230966718,
+        "0.9": 3.616065707384087,
+        "0.99": 14.775699197081021
+      },
+      "cancel_advantage_quantiles_cents": {},
+      "sample_n": 192,
+      "bank_changed": 29,
+      "spread_changed": 24,
+      "phase_changed": 0,
+      "cancel_with_old_forecast": 7,
+      "cancel_with_old_market": 6,
+      "cancel_with_old_queue": 1,
+      "original_endpoint_still_cancel_and_h2_still_cancel": 25,
+      "by_bank_change": {
+        "False": {
+          "n": 163,
+          "mean_market_shapley_cents": -0.004145101782249781,
+          "mean_signed_mid_cents": 0.04294478527607362,
+          "adverse_mid": 4
+        },
+        "True": {
+          "n": 29,
+          "mean_market_shapley_cents": 0.3789081944816028,
+          "mean_signed_mid_cents": 0.4827586206896552,
+          "adverse_mid": 10
+        }
+      }
+    }
+  },
+  "source_commit": "10497e0cb6bebc13f27130475cf889a1c706bfda",
+  "source_sha256": "31427db261e024a184370db041a14244328e02bff70b3aa6be453e060795dd59",
+  "input_receipt_sha256": "b8153f8c933b9c2f2cfec9354af662e93dd58549aca110a3420490eaa7d07da9",
+  "sensitivity_sha256": "46f998821dd3c43449333fb9c72cc4819a0d656d13f4583187643508d6a6358e",
+  "controls": {
+    "all_actual_values_reproduced": true,
+    "corrupt_actual_refused": true
+  },
+  "limits": [
+    "Descriptive same consumed pilot, no new trading policy or profit claim",
+    "Old-market intervention combines observed book and empirical future paths; bank-change grouping does not separate their causal contributions"
+  ]
+}
