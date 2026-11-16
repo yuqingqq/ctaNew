@@ -1,0 +1,25 @@
+{
+  "asof": "2026-11-16T09:35:10.243484+00:00",
+  "n": 118062,
+  "eligible_markets": 287,
+  "selected_markets": 288,
+  "source_report_sha256": "b64f914807e48c944e31c9d06b449cf706b0f762ff5c93c7400ba2dc69be5c03",
+  "joint_logloss_reduction_vs_independent_percent": 7.14813439653641,
+  "joint_logloss_reduction_vs_mechanical_percent": 9.431208192856111,
+  "joint_value_mse_reduction_vs_direct_percent": 0.023480519000773636,
+  "actual_quantity_weighted_local_markout_cents": -1.761442842214634,
+  "predicted_quantity_weighted_local_markout_cents": {
+    "joint": -1.7288286341781665,
+    "independent": -0.1053732526662346,
+    "empirical": -1.3813642667063908
+  },
+  "value_decile_means_strictly_increase": true,
+  "response_value_violation_percent": 0.09147735935356,
+  "local_value_rmse_cents": {
+    "joint": 44.77956460861545,
+    "independent": 45.0860749766931,
+    "empirical": 45.73003852495735
+  },
+  "direct_local_value_rmse_cents": 44.78482277170476,
+  "interpretation": "Aggregate ratio is sum(expected own value) / sum(expected own quantity), with all decision actions retained. Not a conditional-on-filled calibration comparison, not portfolio P&L."
+}
