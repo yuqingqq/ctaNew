@@ -1,0 +1,55 @@
+{
+  "asof": "2026-11-16T13:42:14.266928+00:00",
+  "source_commit": "16388b7c8cfadee28f17ec2754f69bfc106d2931",
+  "sources": {
+    "predictfun/research/pf_value_bridge.py": "6545987ec02d84b3a318bdc7394ea320e0b2033d96fd1338b00ba9526c45369a",
+    "predictfun/research/pf_value_bridge_actions.py": "6124f76667fec76ca5e68eb83b44486e1f5c6910b1f2797c10945e8a3729f460",
+    "predictfun/research/pf_value_bridge_run.py": "b9dccb1a7b4990bed6834f6c9ebef58217a5be13c9f11915e45c47a54c825960",
+    "predictfun/research/pf_value_bridge_checks.py": "b5368bfa492811cdb168e01ece598671a4847fac8e042fa1fd96a0e4eafecb11",
+    "predictfun/research/run_value_bridge.sh": "eaf5eb1dae54ddbe7b1470324ec3ae742a87b0fb52f314a70a935e36a17ffae4"
+  },
+  "inherited_controller_freeze_sha256": "49dca5f31118de713c0b21bd10bfef60a6c747d5decbfed4e093e76d7cd8a23a",
+  "bank_receipt_sha256": "0948617002bdab3636045ab3aaf6164683bb85d213e4d71163334da78af055da",
+  "training": [
+    "20261023",
+    "20261024",
+    "20261025"
+  ],
+  "forecast_model": "Same frozen Oct27 classifier, trained Oct23-25, temperature calibrated Oct26; unchanged on both diagnostic dates",
+  "candidate": "Pool all same-phase payoff-valid training paths; prior weight count*exp(-abs(donor spread-current spread)/1 tick). Translate prices by current bid, overwrite initial book, relabel public reach and signed movement at current best bid/ask before common IPF projection.",
+  "unchanged": "Classifier, raw path data, 24 IPF iterations, execution kernel/lane, same greedy policy, risk cap180/lambda1/360, size30 six rungs, 58/37/100/50ms clocks,1s horizon, no retry or new entry/cancel threshold",
+  "comparison": [
+    "EXACT_JOINT",
+    "SOFT_JOINT",
+    "SOFT_EMPIRICAL"
+  ],
+  "actions": "Neutral capped reference, one hash-assigned resting probe per generation plus one opportunity at each reference submission. All statuses retained, no-fill actions retained. Select two per market/side/minute/action kind by identity hash. Exact canonical post/wait or keep/cancel branches with identical historical/unavoidable prefixes, no subsequent posts, common endpoint wealth minus risk.",
+  "dates": {
+    "20261026": "12 first markets in two-hour blocks; earlier value-calibration diagnostic, no parameter selection",
+    "20261027": "same12 consumed pilot markets; value diagnostic and SOFT_JOINT full5min replay compared with archived JOINT on identical markets"
+  },
+  "reuse": "Oct27 cancellation labels may be reused only by exact generation/time identity from audited bounded_probe_v1; source receipt/hash pinned, other labels freshly reconciled",
+  "null": {
+    "draws": 200,
+    "seed": 20261116,
+    "match": "market/side/action-kind count of positive predicted actions",
+    "metric": "actual incremental economic value"
+  },
+  "multiplicity": {
+    "new_value_mappings": 1,
+    "new_predictors": 0,
+    "bandwidths": 1,
+    "new_thresholds": 0,
+    "new_controllers": 0,
+    "empirical_ablation": 1
+  },
+  "uncertainty": "Report weighted scenario-advantage standard deviation and effective path count as dispersion diagnostics, not confidence intervals or a new decision threshold",
+  "limits": [
+    "Consumed development dates; no confidence intervals, promotion or live profitability claim",
+    "Donor futures remain approximate; pooling does not prove conditional severity or timing calibrated",
+    "Exact phase and payoff bounds remain support cuts; relabelled categories can change at tick thresholds",
+    "One-second zero continuation and unreceived-fill uncertainty are unchanged",
+    "Calibration-day classifier temperature used that day; no OOS claim on Oct26"
+  ],
+  "output": "/home/yuqing/ctaNew/data/predict_fun/research/value_bridge_20261116_v1"
+}
