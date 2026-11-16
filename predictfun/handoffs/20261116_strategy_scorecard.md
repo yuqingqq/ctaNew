@@ -8,6 +8,27 @@ Cents per share are weighted by filled volume. See the permanent
 
 ## What the common accounting shows
 
+Research interpretation recorded after the user's November 16 review:
+**separate short-horizon execution quality from the missing inventory-control
+layer.** The replay uses no inventory cap or inventory-management mode
+(`pf_stop_ev_latency.simulate`: cap=None, mode='none'), then passively holds
+remaining inventory after the first minute. Negative settlement carry does
+not invalidate the observed positive short-horizon markouts; whether an
+inventory policy can preserve them as executable profit remains untested.
+
+For prediction research, the immediate comparison is retained short-horizon
+edge at realistic latency. ARRIVAL_EV's **0.137c/share is its one-second
+markout**, not its initial spread capture: +1.151c initial edge plus
+-1.014c subsequent midpoint movement leaves +0.137c. STOP_EV at the same
+58/37ms clock retains +0.502c/share; zero_all retains +1.131c/share.
+The same-clock baseline is the direct entry-policy comparison. Zero_all
+also changes feed, cancellation and notification timing, so the entire gap
+cannot be attributed to entry forecast error. These strategies generate
+different fills; the comparison is not a matched-fill causal decomposition.
+Keep the short-horizon forecast gap as the prediction priority and retain
+inventory management as a separate untested task. No new experiment or
+change to the frozen numerical results accompanies this interpretation.
+
 1. **The positive STOP_EV result was marked P&L, not settlement profit.** At
    recorded58, spread capture is +1.124c/share, +1s markout is +0.502c/share,
    and terminal P&L is +$159.56. Holding the final inventory to resolution
