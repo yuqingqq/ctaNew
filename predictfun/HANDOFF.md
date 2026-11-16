@@ -1,3 +1,31 @@
+<!-- VALUE_BRIDGE_20261116 -->
+## 2026-11-16 Prediction-to-economic-value bridge: one candidate frozen and running
+
+User authorized improving the valuation layer first. Source16388b7c, freeze
+8e3962d0; worktree /tmp/cta-value-bridge-20261116, branch
+research/predict-value-bridge-20261116. New map pools same-phase training paths
+across spreads with prior count*exp(-spread-distance/1 tick), retains paired
+raw tape/book futures, and relabels reach and signed movement at the CURRENT
+bid/ask before the unchanged joint probability projection. All1,929 original
+path labels reconcile at their own spreads; cross-spread stale-label refusal,
+continuous prior and all inherited execution/queue controls pass.
+
+One fixed candidate, no bandwidth or threshold search. Classifier, greedy
+controller, accounting, risk cap/penalty, ladder and latency unchanged. No fixed
+retry, quote-age rule or new action threshold. Oct23–25 bank only. Oct26 and
+Oct27 compare exact JOINT, soft JOINT and soft empirical on paired neutral
+post/wait and keep/cancel action values. Oct27 then replays soft JOINT against
+the archived exact JOINT on the same12 full5-minute markets. Candidate action
+selection is hash-based, all statuses/no-fill actions retained, canonical truth
+branches share historical and unavoidable prefixes.200-draw count-matched null.
+Scenario standard deviation is dispersion, not a calibrated confidence bound.
+
+Output data/predict_fun/research/value_bridge_20261116_v1/; logs under logs/.
+Driver running on Codex/core8, first stage actions_20261026. Prior pilot remains
+consumed; no forward promotion or profitability claim. Next: finish both action
+readouts, matched strategy replay and independent audit, then record results.
+<!-- /VALUE_BRIDGE_20261116 -->
+
 <!-- JOINT_FLOW_CONTROLLER_20261116 -->
 ## 2026-11-16 Joint forecast controller: pilot complete; rapid-churn attribution audited
 
