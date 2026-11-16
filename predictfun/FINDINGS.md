@@ -51,6 +51,20 @@ Report JSON SHA256: 2930150307aeabd26f414075d43d89034c785ae0d2ca51b3af9440ec7d0d
 Next: diagnose minutes 2–4 adverse at-best fills with phase-appropriate
 coverage and consistent timestamp sources; replay any changed policy rather
 than treating subset accounting or a selected minute restriction as a gain.
+
+Follow-up availability diagnosis (source review of unchanged frozen artifacts):
+first-minute neither/one/both-side time = 76.99% / 19.64% / 3.37%.
+Same legacy 40/22 ms control: KEEP_ALL both 99.51%, STOP_EV 2.69%;
+zero order delays only raise STOP_EV both to 3.75% (zero all: 3.86%).
+Policy pulls/blocks entry on a negative local score at every 50 ms review,
+with the same zero cutoff and no switching-cost/uncertainty margin. Queue
+state is an input; longer-term preservation/replacement value and portfolio
+inventory are not in the objective. Entry reuses the resting-value model on
+fresh state. Cooldown is zero, although causal confirmation/placement and
+same-price holds add downtime. Score magnitude/persistence and per-cause
+empty-time shares were not retained, so unnecessary flicker is not quantified.
+Full source-grounded explanation and duration partition in the report's
+"Why two-sided quoting remains low" section. No policy change or new replay.
 <!-- /STOP_EV_MINUTES_20261116 -->
 
 <!-- STRATEGY_SCORECARD_20261116 -->
