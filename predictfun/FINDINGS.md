@@ -1,5 +1,5 @@
 <!-- STOP_EV_MINUTES_20261116 -->
-## 2026-11-16 STOP_EV later-minute comparison: implementation in progress
+## 2026-11-16 STOP_EV later-minute comparison: frozen replay in progress
 
 User requested extending STOP_EV beyond the first minute and comparing against
 top makers. Existing 0.502c simulated vs0.424c historical real-maker first-minute
@@ -20,7 +20,7 @@ ranked by daily0-240s volume, as historical study; same market windows and fill
 clock conventions, all depths with depth/source partitions. Maker fill valuation
 is not full account P&L. Require first-minute feature and60.2s replay parity,
 engine fill-ledger reconciliation, source identities and positive/known-bad
-controls before publishing. Freeze implementation before full outcomes. Later
+controls before publishing. Pipeline committed at8854a993 and correction201c5613; activefreeze_v2 committed afef266a. Originalv1 smoke passed all replay controls but failed JSON serialization of an absent subgroup diagnostic; v2 uses null, with no policy or valuation change and preserves v1. Corrected Oct27 one-market smoke completed06:02:45Z: both71-input first-minute sides bit-identical, exact original fill ledger/control parity, continuous-prefix parity,3,705 fill records raw-audited, all5,996 review steps present. PeakRSS1,329MiB. Full five-date replay started serially via core8. Freeze implementation before full outcomes. Later
 minutes are outside the model's first-minute training phase: exploratory transfer
 test, no inference or promotion. Single Codex/core8 process via run_light.sh.
 <!-- /STOP_EV_MINUTES_20261116 -->

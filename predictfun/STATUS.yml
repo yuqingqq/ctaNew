@@ -1,5 +1,5 @@
 stop_ev_minutes_20261116:
-  status: implementing_extended_inputs_and_comparison
+  status: frozen_replay_running
   base_commit: be5b086c
   strategy: STOP_EV
   model: corrected_v3_frozen
@@ -14,8 +14,12 @@ stop_ev_minutes_20261116:
   new_fits: 0
   new_thresholds: 0
   later_phase_training_coverage: absent_transfer_test
-  output: data/predict_fun/research/stop_ev_minutes_20261116_v1
+  output: data/predict_fun/research/stop_ev_minutes_20261116_v2
   worktree: /tmp/cta-stop-ev-minutes-20261116
+  source_commit: 201c5613
+  freeze_commit: afef266a
+  freeze: predictfun/reviews/stop_ev_minutes_20261116/freeze_v2.json
+  smoke_status: passed_all_controls
 
 strategy_scorecard_20261116:
   status: complete_audited_merged
