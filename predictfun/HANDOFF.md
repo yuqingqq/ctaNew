@@ -96,7 +96,7 @@ completion. Nov2 data builder3139507 verified running on Codex/core8.
 # P-2026-005 HANDOFF
 
 <!-- JOINT_FLOW_PRICE_PLAN_20261116 -->
-## 2026-11-16 Joint flow/price model: first-day predictions audited; three fits complete; Nov2–3 resumed
+## 2026-11-16 Joint flow/price model: first-day predictions audited; four fits complete; last fit stopped at memory cap
 
 First readout asof2026-11-16T09:35:10.243484+00:00. Train Oct23–25 (357,041
 eligible actions), calibrate Oct26 (137,025), test Oct27 (118,062 actions from
@@ -131,7 +131,7 @@ Frozen recipe source372d7427, freeze d883b942; results8ebe9f15 merged into
 mm-research at b73baa33. Merged evaluator/report/figure hashes verified.
 Worktree /tmp/cta-flow-price-model-20261116; output/logs under
  data/predict_fun/research/flow_price_20261116_v1/.
-Completed data Oct23–27, Oct31 and Nov1; fits Oct27, Oct31 and Nov1 complete. The
+Completed data Oct23–27 and Oct31–Nov3; fits Oct27, Oct31, Nov1 and Nov2 complete. The
 previous scheduler stopped after the Oct31 fit. After the controller audits
 completed, the unchanged recipe resumed at 2026-11-16T11:17:49Z: driver PID
 2770777, Nov1 data builder PID2770789 verified running on Codex/core8. Nov1 data/fit completed; Nov2–3
@@ -143,6 +143,12 @@ identities checked before launch. Driver: research/resume_flow_price_predictions
 This original prediction experiment has no action policy or size change. The
 new controller is tracked separately above. Protected forward
 dates unopened. Shared edits preserved. Model first-fit peak1,770MiB.
+Latest observed status supersedes the earlier running note: Nov2 fit completed;
+Nov3 stopped at the internal RSS guard while finishing flow_quantity (peak
+2,542MiB;12:32:21Z run, rc1). No scheduler remains running. The incomplete
+fit_20261103 directory is retained; do not silently resume into or overwrite it.
+Full report/audit remain pending a versioned memory-efficient recovery. This
+does not affect the completed Oct27 classifier used by the valuation bridge.
 <!-- /JOINT_FLOW_PRICE_PLAN_20261116 -->
 
 
