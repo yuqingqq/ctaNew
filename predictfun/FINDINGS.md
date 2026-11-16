@@ -1,3 +1,44 @@
+<!-- JOINT_FLOW_CONTROLLER_RESULTS_20261116 -->
+## 2026-11-16 Coherent joint-flow controller pilot: useful ranking, unresolved churn
+
+As of 2026-11-16T11:00:34Z: 12 preselected Oct27 markets, 48 continuous
+five-minute strategy replays, no missing selected market. One consumed day,
+no confidence interval, promotion or full-day return claim. The same controller
+compares empirical training-path weights (EMPIRICAL) with learned joint-flow/
+price weights (JOINT). Shared public volume, latency and queue priority feed
+common wealth/inventory accounting for keep/cancel and post/wait. Fixed ladder
+six x30 shares/side, net reservation cap180; no fixed retry or minimum rest.
+
+JOINT vs EMPIRICAL: gross terminal marked P&L +$246.76 vs +$129.04; passive
+settlement +$232.39 vs +$102.15; 1s markout -1.44 vs -2.59 c/share; 5s +1.67
+vs -0.98; both sides quoting32.84% vs26.58%. Quantities8,399.29 vs11,870.08
+shares; all have1s marks,5s covered8,218.06 vs11,704.74 (expiry exclusions
+retained). Positive paired terminal differences8/12 markets, different exposure.
+JOINT still pulls10,896 of11,974 posted orders; 41.76% of10,884 model-driven
+cancellations occur at first review. Negative1s markout and churn remain material.
+A predeclared2s endpoint also churns and does not improve this pilot's returns.
+
+Corrected bounded-neutral action diagnostic as of11:11:06Z:221 evaluated actions,
+all within inventory cap, identical canonical historical and unavoidable prefixes.
+JOINT cancellation-advantage rank correlation0.280 vs empirical0.140; predicted/
+actual mean2.47/4.14c/action. On137 positive predictions, actual selected advantage
+759.73c vs count-matched200-draw null mean624.22c, range[-49.67,1147.37]. Descriptive,
+not a significance or strategy-P&L claim. Does not validate fresh entry or own-policy
+states. Original222-probe diagnostic is superseded (169 outside cap), not deleted.
+
+Active receipt: reviews/flow_control_20261116/summary_v2_receipt.json; full report
+handoffs/20261116_flow_controller_results.md. Source6f1742fc/freeze7fb46122,
+results6855f695 merged89a55bf4. Accounting/parity/causality and independent bounded
+value/null audits pass; all59 controller source hashes verified after merge.
+Queue repairs retain front after confirmed fills, defer pending activation cache,
+and retain initial unknown-depth zero. Prior versions preserved. Path mapping
+remains approximate (mean unsupported mass4.67%, marginal L1 discrepancy0.126).
+Next: action-value calibration, uncertainty of small advantages and continuation
+value of queue position on earlier data; this pilot alone does not identify the
+classifier as the unique bottleneck or justify a model-family change. Protected
+forward dates remain unopened.
+<!-- /JOINT_FLOW_CONTROLLER_RESULTS_20261116 -->
+
 <!-- JOINT_FLOW_FIRST_DAY_20261116 -->
 ## 2026-11-16 First joint-flow prediction day: dependency helps calibration; direct value error remains tied
 
