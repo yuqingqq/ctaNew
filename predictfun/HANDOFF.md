@@ -1,21 +1,26 @@
 # P-2026-005 HANDOFF
 
 <!-- JOINT_FLOW_PRICE_PLAN_20261116 -->
-## 2026-11-16 Joint flow/price/action model: plan recorded
+## 2026-11-16 Joint flow/price prediction model: historical build running
 
-User requested a plan for using the distribution of incoming orders and
-associated price movement to choose market-making actions. Plan:
-[handoffs/20261116_joint_flow_price_plan.md](handoffs/20261116_joint_flow_price_plan.md).
-Build order: causal source/label audit across all five minutes -> empirical
-joint distribution baseline -> one probabilistic challenger -> consistent
-queue/latency/inventory-aware action comparisons -> whole-portfolio replay.
-First implementation milestone: audit observable flow versus inferred book
-changes, then measure executable quantity and associated price movement on
-neutral actions, including no-fill cases. Reuse corrected accounting and the
-new presence diagnostic; do not repeat its unchanged-policy replay.
-No fixed retry/minimum-rest timer. Larger size follows fixed-size controls.
-Status: plan only; no new build, fit, replay, freeze or performance result.
-Protected forward dates remain unopened; shared research edits preserved.
+User authorized building and evaluating predictions before action-policy work.
+Plan: handoffs/20261116_joint_flow_price_plan.md. Implementation/protocol in
+/tmp/cta-flow-price-model-20261116, branch research/predict-flow-price-model-20261116.
+Source 372d7427, freeze d883b942, sequential driver b428afc6. Frozen recipe:
+15 joint volume/price classes, conditional quantity/value/tail response heads,
+empirical and mechanical baselines, independent-marginal ablation and direct
+value comparator. Inputs: existing 71 market + 12 order + 6 size/phase fields.
+All five contract minutes; neutral 30-share ladder, 58/37/100/50 ms clocks.
+Nine consumed dates; five chronological development folds; protected forward
+dates unopened. No action-policy or profitability claim.
+
+22 synthetic controls passed. Oct23 two-market smoke completed at
+2026-11-16T08:43:18Z: 1,485 generation rows, 988 eligible; ledger/target controls
+passed, peak RSS 1,062 MiB. This is build validity, not prediction quality.
+Full sequential build started in Codex/core8, then fits -> report -> independent
+audit. Output/logs: data/predict_fun/research/flow_price_20261116_v1/.
+No fixed retry/minimum-rest timer. Larger-size policy work remains separate.
+Shared research edits preserved.
 <!-- /JOINT_FLOW_PRICE_PLAN_20261116 -->
 
 

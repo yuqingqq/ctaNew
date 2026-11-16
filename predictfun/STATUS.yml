@@ -1,14 +1,21 @@
 joint_flow_price_plan_20261116:
-  status: plan_recorded_not_started
+  status: historical_data_build_running
   plan: predictfun/handoffs/20261116_joint_flow_price_plan.md
-  scope: research_only_joint_flow_price_then_order_actions
-  stages: [data_validity, empirical_joint_baseline, probabilistic_model, action_controller, portfolio_replay]
-  next: audit_observability_causal_targets_and_full_contract_coverage
-  new_fits: 0
-  new_replays: 0
-  frozen_experiment: false
+  worktree: /tmp/cta-flow-price-model-20261116
+  branch: research/predict-flow-price-model-20261116
+  source_commit: 372d7427
+  freeze_commit: d883b942
+  driver_commit: b428afc6
+  output: data/predict_fun/research/flow_price_20261116_v1
+  next: complete_data_then_five_chronological_prediction_folds_and_audit
+  synthetic_tests_passed: 22
+  smoke_markets: 2
+  smoke_generation_rows: 1485
+  smoke_eligible: 988
+  model_fits_completed: 0
+  policy_replays: 0
+  frozen_experiment: true
   fixed_retry_timer: false
-  larger_size: after_fixed_size_controls
   protected_forward_blocks: ['20261104_20261106', '20261109_20261113']
 
 stop_ev_minutes_20261116:
