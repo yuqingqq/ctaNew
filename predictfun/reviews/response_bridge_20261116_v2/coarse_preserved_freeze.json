@@ -1,0 +1,19 @@
+{
+  "asof": "2026-11-16T16:37:05.670139+00:00",
+  "source_commit": "fa3f94c082bd7dc725f8d45ca86801e4e75d77a9",
+  "source_sha256": "693683510e888d0f08e94c04cadc87871f3c3699fcb53e70b43b1e191cee6380",
+  "candidate_manifest": "b7e5a6d17e176ca82c827b272d411e9e1d561526800f130ed007da70a74b74c2",
+  "design": "Same Oct27 archived443 actions. Actual future tape supplies fine/coarse signatures only to this retrospective control. After the original fine projection, set weights outside the known coarse pair to zero and renormalize. Missing coarse pair or zero posterior mass remain explicit statuses. Same client order state and training donor pool. Unsupported true marginal becomes an explicit status. Compare all metrics on common identities with learned RICH_JOINT, SOFT_JOINT and original SOFT_JOINT_TRUE_CLASS and ACTUAL_FUTURE_CLIENT_STATE.",
+  "role": "Post-hoc projection diagnostic: condition the already computed true-fine posterior on the true coarse pair. Frozen before this check, not a candidate or usable forecast.",
+  "null": {
+    "draws": 200,
+    "match": "market/side/kind positive-action count"
+  },
+  "limits": [
+    "Consumed development dates, no independent validation or confidence intervals/promotion",
+    "Four marginal response distributions plus coarse joint do not fully identify event paths; coherence enforced only on finite donor support",
+    "Same sparse bank, approximate donor transport, estimated tape timing, client queue uncertainty and zero 1s continuation",
+    "Fine bins still do not identify exact within-bin volume or tail severity; early flow starts37ms rather than58ms post activation",
+    "No live profitability or external simulator validation; calibration-day comparisons are in-sample for temperature only"
+  ]
+}
