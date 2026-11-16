@@ -1,43 +1,61 @@
 # P-2026-005 HANDOFF
 
 <!-- ENTRY_ARRIVAL_20261116 -->
-## 2026-11-16 Entry arrival prediction experiment running
+## 2026-11-16 Entry arrival forecast complete: better score error, worse trading value
 
-User: first test prediction against the positive zero-delay example; no
-reference-policy optimization. Source 1b94ec80, freeze 3ce50516 (v2). One fixed
-student recipe, separate bid/ask regressions, existing v3 teachers unchanged.
-Predict teacher value for the exact current quote price at activation t+58ms,
-using only current 83 fields plus current teacher score. Regress its residual
-from that current score. All neutral placement generations, including no-fill
-and activation rejection (zero value); missing inputs retain explicit statuses.
-Every teacher fold's original training days only; unused calibration day;
-five consumed test dates. No fit, threshold or feature selection on test days.
+As of 2026-11-16T03:35:42.541848+00:00; nine consumed build dates / 387,535 neutral
+placement generations. Test dates 20261027, 20261031, 20261101, 20261102,
+20261103: 203,153 neutral placements, 203,114 scored targets; 191,442
+supported, 11,672 activation rejections retained at zero, 39 missing-book
+statuses. Economic replay: 1,434 first-minute windows, six Oct31 boundary
+exclusions, all fills. This is chronological development evidence, not
+untouched/full-day/live validation.
 
-Three delayed replay arms: incumbent58/37, future-informed entry diagnostic,
-causal entry forecast. Cancellation guard unchanged. Fixed actual activation,
-queue, notification and tape assumptions. Primary all-fill terminal value and
-cents/share; every incumbent window must reproduce previous median run.
-Prediction error compared to current-score persistence; teacher-value-weighted
-wrong actions are proxy diagnostics, not realized profit. No inferential or
-untouched validation claim. The arrival diagnostic is not the whole zero-delay
-policy or an attainable upper bound. No cancellation forecast in this first test.
+Same frozen v3 teachers as the positive zero-delay example, no teacher
+optimization. Separate bid/ask LightGBM residual forecasts from 83 current
+fields plus current score; exact current absolute price at activation t+58ms.
+One recipe / ten side-fold fits / no threshold search. Train only on each
+teacher fold's original earlier days, calibration date unused. Replay at
+place58/cancel37, notice100, review50, M50 queueM, six rungs x30/side;
+existing cancellation guard unchanged. No cancellation forecast in this test.
 
-V1 stopped at the memory guard before any completed dataset/fit/result;
-v2 copies selected rows instead of retaining full window matrices. Targets,
-population and model unchanged; v1 incomplete output preserved.
-Nine-day builder and subsequent fits/replays running serially in Codex/core8.
-Worktree /tmp/cta-arrival-20261116; outputs data/predict_fun/research/
-entry_arrival_20261116_v2. Protocol: reviews/entry_arrival_20261116/freeze_v2.json.
-First fit complete as of 2026-11-16T02:59:26.837788+00:00: October 27,
-44,093 scored neutral entry actions. Teacher-score MAE 3.3726 -> 2.6398 c;
-weighted sign disagreement 7,998.29 -> 4,055.44 c; predicted nonnegative
-entries 6,828 -> 3,234. These are teacher imitation metrics, not realized
-profit. First replay complete as of 2026-11-16T03:02:28.629758+00:00:
-288 windows; existing +$200.40, future-informed entry +$400.04, causal
-forecast +$134.82. Every baseline window matches. Forecast fills fewer
-shares but submits more orders/pulls; lower teacher error has not recovered
-the timing benefit on this first date. Four test dates still running.
-Five data days complete; all five test dates remain in the fixed evaluation.
+Pooled marked value: existing $+159.56, future-informed entry
+$+488.18, causal forecast $+26.81; forecast change
+$-132.74, better on 1/5 dates. Cents/share
++0.3312 / +0.7135 / +0.1011.
+Forecast teacher MAE 3.8204 -> 2.9280 c/order; weighted
+wrong-sign teacher value 38676.08 -> 14797.43 c.
+These are proxy score errors, not realized profit or proof of useful entries.
+
+Post-hoc matched-post-count current-score comparator: forecast ranking wins
+5/5 dates, but selected teacher value is negative on 3/5; pooled
+-1339.89 c. Always-wait teacher disagreement 13457.55 c is lower than the
+forecast. Fixed first12 registry windows/date (60 total): forecast-selected
+submissions average +0.2108 c predicted versus -0.2582 c arrival teacher;
+75.42% have negative arrival teacher scores (not realized loss frequency).
+Guard pulls 8,684/11,085 still-exposed forecast orders at first review versus
+3,885/6,819 existing. Full replay posts 245,475 vs189,968 orders and fills
+26,519 vs48,173 shares. Selected-state calibration and entry/guard disagreement
+remain issues; their causal PnL attribution is not established. WS-timed and
+age>=100ms attribution also underperform; E2 clocks alone do not explain it.
+
+Checks pass: 1,434 baseline window reproductions, all five uncached trajectory
+controls, lane/terminal accounting, 15 teacher identities, all saved prediction
+rederivations, exact fixed-price/58ms target, 63,850 client-state comparisons,
+positive and known-bad controls. Student-only 12-quote CPU inference p95
+0.1313ms (500 calls), not measured end-to-end latency or added replay delay.
+The arrival diagnostic is nondeployable, not the whole zero-delay policy or
+an attainable upper bound; zero rejection scores can trigger futile requests.
+M0/M250, queueL, B1a weighting and untouched validation are not tested here.
+No strategy promotion. Next experiment: repair selected-state post/wait
+calibration and value consistency with the continuing guard before teacher
+optimization; this next experiment has not been run.
+
+Source 1b94ec80; superseding freeze 3ce50516 (v1 memory stop before results,
+same recipe; incomplete v1 retained). Results/audit 459a94a0, merged into
+mm-research as 33ee3ea3. Review: handoffs/20261116_entry_arrival_review.md.
+Receipts: reviews/entry_arrival_20261116/results_v1/report.json and audit_v1.json.
+Data/models: data/predict_fun/research/entry_arrival_20261116_v2/.
 <!-- /ENTRY_ARRIVAL_20261116 -->
 
 
