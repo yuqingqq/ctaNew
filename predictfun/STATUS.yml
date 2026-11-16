@@ -40,6 +40,9 @@ stop_ev_minutes_20261116:
   report_sha256: 2930150307aeabd26f414075d43d89034c785ae0d2ca51b3af9440ec7d0df47d
   output: data/predict_fun/research/stop_ev_minutes_20261116_v3
   next: diagnose_phase_2_to_4_at_best_adverse_fills_with_matched_timestamp_sources
+  availability_diagnosis: hard_zero_local_value_gate_without_explicit_replacement_or_inventory_value
+  first_minute_neither_one_both_percent: [76.99, 19.64, 3.37]
+  unnecessary_pull_fraction: unmeasured_requires_decision_score_trace
 
 strategy_scorecard_20261116:
   status: complete_audited_merged
