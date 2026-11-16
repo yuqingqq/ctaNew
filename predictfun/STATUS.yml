@@ -49,7 +49,7 @@ joint_flow_controller_20261116:
   churn_old_bank_restores_keep: 47
 
 joint_flow_price_plan_20261116:
-  status: first_day_audited_three_fits_complete_churn_diagnostic_priority
+  status: first_day_audited_three_fits_complete_remaining_dates_running
   plan: predictfun/handoffs/20261116_joint_flow_price_plan.md
   report: predictfun/handoffs/20261116_flow_price_first_day.md
   first_day_asof: '2026-11-16T09:35:10.243484+00:00'
@@ -88,9 +88,9 @@ joint_flow_price_plan_20261116:
   protected_forward_blocks: ['20261104_20261106', '20261109_20261113']
   resume_asof: "2026-11-16T11:17:49Z"
   resume_driver_pid: 2770777
-  active_data_day: null
+  active_data_day: 20261102
   resume_log: data/predict_fun/research/flow_price_20261116_v1/logs/resume_20261116_controller_complete.log
-  resume_driver_stopped_between_stages: true
+  resume_driver_stopped_between_stages: false
 
 stop_ev_minutes_20261116:
   status: complete

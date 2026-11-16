@@ -68,7 +68,7 @@ completion. Nov2 data builder3139507 verified running on Codex/core8.
 # P-2026-005 HANDOFF
 
 <!-- JOINT_FLOW_PRICE_PLAN_20261116 -->
-## 2026-11-16 Joint flow/price model: first-day predictions audited; three fits complete; churn diagnostic has slot
+## 2026-11-16 Joint flow/price model: first-day predictions audited; three fits complete; Nov2–3 resumed
 
 First readout asof2026-11-16T09:35:10.243484+00:00. Train Oct23–25 (357,041
 eligible actions), calibrate Oct26 (137,025), test Oct27 (118,062 actions from
@@ -103,13 +103,13 @@ Frozen recipe source372d7427, freeze d883b942; results8ebe9f15 merged into
 mm-research at b73baa33. Merged evaluator/report/figure hashes verified.
 Worktree /tmp/cta-flow-price-model-20261116; output/logs under
  data/predict_fun/research/flow_price_20261116_v1/.
-Completed data Oct23–27 and Oct31, with Oct27 and Oct31 fits complete. The
+Completed data Oct23–27, Oct31 and Nov1; fits Oct27, Oct31 and Nov1 complete. The
 previous scheduler stopped after the Oct31 fit. After the controller audits
 completed, the unchanged recipe resumed at 2026-11-16T11:17:49Z: driver PID
 2770777, Nov1 data builder PID2770789 verified running on Codex/core8. Nov1 data/fit completed; Nov2–3
-data/fits and the full report/audit remain pending. Driver2770777 is stopped
-between completed stages while the churn diagnostic uses Codex/core8. Resume
-with SIGCONT after that diagnostic and audit. No partial fit was interrupted. Resume log/receipt:
+data/fits and the full report/audit remain pending. Driver2770777 resumed after the churn diagnostic and audits at11:57Z.
+Nov2 data builder3139507 verified running on Codex/core8. The temporary slot
+allocation did not interrupt any partial fit. Resume log/receipt:
 logs/resume_20261116_controller_complete.{log,json}. All 48 frozen source
 identities checked before launch. Driver: research/resume_flow_price_predictions.sh.
 This original prediction experiment has no action policy or size change. The
