@@ -1,0 +1,107 @@
+{
+  "asof": "2026-11-16T06:16:06.767594+00:00",
+  "source_commit": "70ed45d85b4109dafc3d0331fa5b18a2ed7e0ba5",
+  "sources": {
+    "pf_stop_ev_minutes_inputs.py": "bbec0ff5d8f14a617b1ef83cfcdda659de1b4998ab25a9b05e098140316de7b6",
+    "pf_stop_ev_minutes_metrics.py": "cb14dbb8777c84cc88175db4d9d4b955958187f11e83477def0b9a2887a207ce",
+    "pf_stop_ev_minutes.py": "e22c5eaa33da241e2e51fec13742e9c29c6bc4079aeecd74ef3451eb352b463a",
+    "pf_stop_ev_minutes_report.py": "3ce3b323e41d8bc05bfd7d2d29d2a518e6cfd45f8ac7293bf1c2a6d149d71e6e"
+  },
+  "inherited_freeze_sha256": "f19f1ff46123478468610b40759f281d7a4d548fa49a16a2d8a5b9bd84919938",
+  "days": [
+    "20261027",
+    "20261031",
+    "20261101",
+    "20261102",
+    "20261103"
+  ],
+  "supersedes": {
+    "freeze": "freeze_v2.json",
+    "sha256": "e8b19be41774db0a445566a03e578128f47ab71811a0f5fc9ce5bf53aa663531",
+    "reason": "Full Oct27 replay stopped on string vs large_string output schema when simulated fills were empty in one market. All preceding replay/accounting controls passed. Explicit Arrow text schema prevents sparse-population serialization drift; no policy, features, fills, or valuation change. Version 2 failed output retained."
+  },
+  "strategy": "STOP_EV corrected v3; unchanged heads and sign thresholds",
+  "execution": {
+    "place_ms": 58,
+    "cancel_ms": 37,
+    "pending_cancel_ms": 95,
+    "notice_ms": 100,
+    "review_ms": 50,
+    "trade_shift_ms": 50,
+    "queue": "M unknown-depth zero",
+    "rungs_per_side": 6,
+    "shares": 30,
+    "quote_end_ms": 299800,
+    "terminal_ms": 300000,
+    "inventory_cap": null,
+    "cooldown_ms": 0
+  },
+  "population": "Same 1434 scorecard markets, six Oct31 boundary exclusions; all fills with statuses; no new dates.",
+  "makers": "Per-day rank by raw filled shares in 0<=t_rel<240 on the same eligible markets, top five vs all other observed makers. Not profit-ranked. All depths.",
+  "maker_clock": "Same inherited group anchor/imputation and M50 as simulation. Real executed quantities; assumed execution time, not a validated match-time observation.",
+  "markouts": {
+    "horizons_ms": [
+      100,
+      500,
+      1000,
+      5000
+    ],
+    "expiry_censor": "Fill+h beyond market expiry has missing value and explicit censored quantity; no endpoint substitution.",
+    "midpoint": "Last valid public midpoint strictly before fill for execution edge; at or before fill+h for markouts; stale >1s counted."
+  },
+  "partitions": [
+    "minute",
+    "day",
+    "maker_group",
+    "depth_group",
+    "WS/E2",
+    "imputed",
+    "order_age_under100ms"
+  ],
+  "controls": {
+    "strict_pre_fill": true,
+    "overlap_union": true,
+    "accounting_positive_control": true,
+    "corruptions_refused": 6,
+    "binary_bid_ask": true,
+    "event_lookup": true,
+    "rolling_boundary": true,
+    "future_invariant": true,
+    "zero_clock_control": true,
+    "placement_clock_fires": true,
+    "cancel_clock_fires": true,
+    "fresh_gate_every_entry": true,
+    "stale_gate_falsifier": true,
+    "clock_restores": true,
+    "trajectory_mismatch_refused": true,
+    "placement_median_fires": true,
+    "cancel_median_fires": true,
+    "corrupt_baseline_refused": true,
+    "engine_fill_parity": true,
+    "wrong_fill_clock_refused": true,
+    "minute_boundary": true,
+    "expiry_censor": true,
+    "outside_contract_refused": true,
+    "ranking_interval": true,
+    "sparse_text_schema_roundtrip": true,
+    "unfixed_schema_refused": true
+  },
+  "mandatory": [
+    "first-minute input bit identity",
+    "60.2s control replay/ledger parity",
+    "continuous-prefix parity to59.2s",
+    "engine-fill identity",
+    "minute inventory and value reconciliation",
+    "raw-source markout audit",
+    "positive and known-bad controls"
+  ],
+  "nulls": "Descriptive transfer/comparison only; no inference, selection, profitability or promotion claim.",
+  "multiplicity": {
+    "new_models": 0,
+    "new_thresholds": 0,
+    "primary_strategy_cases": 1,
+    "control_replays": 1
+  },
+  "limits": "Later minutes are outside first-minute training-phase coverage. Public maker fill value excludes taker/hedge/reward/cost and starting inventory. Simulated vs observed fill quantities remain different populations. Fill realism unvalidated.",
+  "output": "/home/yuqing/ctaNew/data/predict_fun/research/stop_ev_minutes_20261116_v3"
+}
