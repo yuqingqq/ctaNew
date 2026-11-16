@@ -1,5 +1,5 @@
 strategy_scorecard_20261116:
-  status: two_dates_complete_three_running
+  status: three_dates_complete_two_running
   source_commit: 7f0ab3a7
   freeze_commit: 819e59fe
   existing_cases: 10
@@ -16,9 +16,9 @@ strategy_scorecard_20261116:
   output: data/predict_fun/research/strategy_scorecard_20261116_v1
   protocol: predictfun/reviews/strategy_scorecard_20261116/freeze_v1.json
   review: predictfun/handoffs/20261116_strategy_scorecard.md
-  completed_dates: 2
-  completed_strategy_windows: 5700
-  exported_fill_records: 101310
+  completed_dates: 3
+  completed_strategy_windows: 8580
+  exported_fill_records: 147597
 
 entry_arrival_20261116:
   status: complete_forecast_underperforms_existing_entry
