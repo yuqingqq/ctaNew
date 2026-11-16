@@ -1,29 +1,44 @@
 # P-2026-005 HANDOFF
 
 <!-- JOINT_FLOW_PRICE_PLAN_20261116 -->
-## 2026-11-16 Joint flow/price prediction model: historical build running
+## 2026-11-16 Joint flow/price model: first-day predictions complete; remaining folds running
 
-User authorized building and evaluating predictions before action-policy work.
-Plan: handoffs/20261116_joint_flow_price_plan.md. Implementation/protocol in
-/tmp/cta-flow-price-model-20261116, branch research/predict-flow-price-model-20261116.
-Source 372d7427, freeze d883b942, sequential driver b428afc6. Frozen recipe:
-15 joint volume/price classes, conditional quantity/value/tail response heads,
-empirical and mechanical baselines, independent-marginal ablation and direct
-value comparator. Inputs: existing 71 market + 12 order + 6 size/phase fields.
-All five contract minutes; neutral 30-share ladder, 58/37/100/50 ms clocks.
-Nine consumed dates; five chronological development folds; protected forward
-dates unopened. No action-policy or profitability claim.
+First readout asof2026-11-16T09:35:10.243484+00:00. Train Oct23–25 (357,041
+eligible actions), calibrate Oct26 (137,025), test Oct27 (118,062 actions from
+287 eligible markets; 288 selected, 178,934 generation probes with statuses).
+This is one consumed chronological development day, no interval or policy/P&L
+claim. Full five-minute phases, neutral30-share ladder, place58/cancel37/notice100,
+review50ms, M50/queueM; assigned probe ages0/250/500/1000/2000ms.
 
-22 synthetic controls passed. Oct23 two-market smoke completed at
-2026-11-16T08:43:18Z: 1,485 generation rows, 988 eligible; ledger/target controls
-passed, peak RSS 1,062 MiB. This is build validity, not prediction quality.
-User requested an early first-day readout. Oct23–26 builds are complete; Oct27 (first test day) is running. New scheduler/report 1d7075d5 prioritizes train Oct23–25,
-calibrate Oct26, test Oct27, then resumes the remaining four frozen dates.
-Original scheduler stopped after its Oct24 child completed; no worker interrupted.
-The model recipe, split, data and targets are unchanged. First-day output will
-be reviews/flow_price_20261116/first_day_v1/ after independent artifact checks. Output/logs: data/predict_fun/research/flow_price_20261116_v1/.
-No fixed retry/minimum-rest timer. Larger-size policy work remains separate.
-Shared research edits preserved.
+Joint flow/price logloss1.6647 vs independent1.7929 and mechanical1.8381
+(7.15%/9.43% lower). Flow-reach AUC0.889, adverse-price AUC0.786, severe-loss
+AUC0.811. Mean local value predicted−3.925c/action vs actual−4.553c;
+independent predicts−0.221c. Aggregate expected value/quantity ratio−1.729c/sh
+vs actual−1.761c/sh; independent−0.105c/sh. Value-decile realized means increase
+strictly, bottom−22.025 to top+1.215c/action. Positive-score diagnostic:4,331
+(3.67%) actions, predicted+1.562 / realized+3.339c/action. This is a sampled-state
+fraction, not quote uptime, and not a matched policy comparison.
+
+Value RMSE44.7796c vs direct same-input regression44.7848c: effectively tied,
+only0.0235% MSE difference. Severe probability3.918% vs observed4.517%; minute5
+RMSE89.54c (n15,910) remains much larger. Independent conditional response heads
+produce108 value/quantity-bound violations (0.0915%, max61.57c excess) and65
+severe-probability-above-fill-probability cases (max12.72pp). No post-hoc clipping;
+coherent responses and calibration are required before action-controller work.
+22 synthetic controls plus consistency falsifiers pass; raw input/data/model/
+prediction identities verified,512 forecast/mixture reload checks pass.
+
+Report: handoffs/20261116_flow_price_first_day.md. Results/plot/receipt:
+reviews/flow_price_20261116/first_day_v1/. Report SHA256:
+b64f914807e48c944e31c9d06b449cf706b0f762ff5c93c7400ba2dc69be5c03.
+Frozen recipe source372d7427, freeze d883b942; results8ebe9f15 merged into
+mm-research at b73baa33. Merged evaluator/report/figure hashes verified.
+Worktree /tmp/cta-flow-price-model-20261116; output/logs under
+ data/predict_fun/research/flow_price_20261116_v1/.
+Completed data Oct23–27 and Oct31. Oct31 fit is running in Codex/core8, then
+Nov1–3 data/fits and full report/audit. Recipe unchanged after the first readout.
+No fixed retry timer, action policy, new size, or live change. Protected forward
+dates unopened. Shared edits preserved. Model first-fit peak1,770MiB.
 <!-- /JOINT_FLOW_PRICE_PLAN_20261116 -->
 
 
