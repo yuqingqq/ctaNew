@@ -1867,6 +1867,7 @@ Statuses:
 | P49 | A tipping point compared with the observed range was called a bound (ledger L5 v1): unobserved units can exceed every observed value | Label it a sensitivity; a worst case uses legal payoff bounds (30 sh, mark 0-100 c; pairs [lo_x - hi_y, hi_x - lo_y]) |
 | P50 | Requiring an input at every future step of a unit selects the population on future availability (keep / pull v1: fair price needed to +4.9 s) | Handle a missing input at the decision that needs it, with a declared fallback (KEEP), and keep the unit's outcome |
 | P51 | A decision before the order is live is a pending withdrawal (keep / pull v1 at +50 ms: the 95 ms pending floor made L 0 / 25 / 37 ms coincide); and a paired latency comparison on decisions chosen at the slower latency hides the latency window (the 37 ms oracle keeps orders whose losses fall in +100..+137 ms) | Start live decisions after the client knows the order is live; report the pending withdrawal on its own row; pair latencies on the zero-latency decisions, with a positive control |
+| P52 | Recording a matched null's shortfall does not make the comparison matched: a sequential risk-set null runs short when early picks use up the orders a later step needs, and a short draw still passed K2 (keep / pull v2: the review's 1,200-order case, null ~900 pulls) | Gate: any unmatched draw -> NOT-EVALUABLE (keep the draws, never re-draw or force a match); declare a matched-by-construction estimand (decision states per stratum and step) as the fallback before the run |
 
 ## 3. Findings
 
