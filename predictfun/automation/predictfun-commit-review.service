@@ -1,0 +1,10 @@
+[Unit]
+Description=Queue Predict.fun reviews for newly committed code and results
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/yuqing/ctaNew
+ExecStart=/usr/bin/python3 /home/yuqing/ctaNew/predictfun/automation/commit_review_watch.py check
+Environment=PATH=/home/yuqing/.local/bin:/usr/local/bin:/usr/bin:/bin
+TimeoutStartSec=60
+UMask=0077
