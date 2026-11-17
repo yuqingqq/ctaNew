@@ -1,25 +1,51 @@
 <!-- VALUE_DECOMPOSITION_20261117 -->
-## 2026-11-17 Paired economic-value decomposition: frozen diagnostic running
+## 2026-11-17 Value decomposition complete: joint fill/severity and pending-fill state gaps
 
-Source f6b59100, freeze6743804b; branch research/predict-value-decomposition-20261117,
-worktree /tmp/cta-value-decomp-20261117. Sequential launcher run_value_decomposition.sh
-uses Codex/core8. All synthetic/inherited controls pass; exact canonical action
-branches are being re-run for418 Oct26 and443 Oct27 actions. Output/logs under
- data/predict_fun/research/value_decomposition_20261117_v1/; evidence target
-reviews/value_decomposition_20261117/index.json. No model/controller changes.
+Source f6b59100, freeze6743804b, supplementary state auditff999de8,
+results4846cf1e; merged0bbee253 into mm-research. All3 diagnostic,5 conditional,
+5 bridge,59 inherited sources, supplementary auditor and published/underlying
+artifacts verify after merge. Report handoffs/20261117_value_decomposition_results.md;
+index reviews/value_decomposition_20261117/index.json and publication_v1.json.
+Worktree /tmp/cta-value-decomp-20261117 retained. All jobs complete, peak1284MiB,
+Codex/core8 only; output data/predict_fun/research/value_decomposition_20261117_v1/.
 
-Value = current-mid edge + endpoint price motion + inventory-risk difference.
-Separate focal vs other resting orders; measure action-affected quantity, which
-excludes unavoidable cancellation-window fills. Reconcile every archived value,
-prediction and neutral prefix. Compare all3 frozen mappings, ordinary and Oct27
-true-pair channels, with actual-future/client-state control. Seven predeclared
-component substitutions remain retrospective diagnostics, never strategy inputs.
+Exactly418 Oct26/443 Oct27 neutral actions re-run with canonical branches;
+archived labels, ordinary and Oct27 true-pair predictions reproduce. Split
+value into current-mid edge, fill-weighted endpoint motion and inventory risk;
+separate focal/other orders. Affected cancellation quantity now excludes the
+unavoidable prefix. No-fill/status rows retained;200-draw matched nulls.
+Same forecasts, controller, size, clocks,1s endpoint; no fitting or new policy.
 
-Fixed severe retained-exposure tail below-30c; retain no-fill/status rows.
-Report signed error accounting, action count-matched200-draw nulls, both sides
-and ten largest errors per group. Full pipeline frozen before outcomes; no
-fitting, tuning or continuous-policy replay. Consumed dates only, no intervals,
-promotion or protected-date access. SOFT_JOINT remains the retained baseline.
+As of2026-11-17T00:43:16Z/00:47:54Z: SOFT posting severe losses<-30c account
+for88.3% of squared error on Oct26 (12/213 actions) and86.5% on Oct27 (11/222).
+Replacing the JOINT motion term with truth lowers posting RMSE36.111->16.285c
+and24.829->13.423c. Actual quantity alone worsens Oct26 to38.305c; actual
+endpoint alone worsens Oct27 to26.047c. Risk-only correction helps much less
+(34.530/23.599c). Cancellation Oct27 joint-motion correction31.826->13.971c;
+Oct26 worsens8.449->15.693c because edge/motion errors offset. These are future
+substitution diagnostics, never achievable-model or full-policy results.
+
+On420 common true-pair Oct27 actions (208 cancel/212 post;23 unsupported),
+SOFT->conditional affected-quantity MAE2.497->2.187 /3.875->3.403 shares, but
+motion RMSE32.954->36.508 /29.452->31.718c. Better quantity does not fix the
+joint severe-price response. Separate means and generic state similarity are
+insufficient in this test; existing model dependence is present but inadequate.
+
+Actual-path/client-state RMSE post.114/.366c, cancel5.498/1.967c (Oct26/27,
+all original actions). Selected timestamp audit asof00:49:56Z:4/6 largest
+cancellation residual examples have unreceived fills;3 orders already fully
+filled. Known remainder is an upper bound, not certain economic exposure.
+One10-share fill occurs30ms before decision, notification70ms after; predicted
+cancel benefit54.518c, actual0. Two selected residuals not explained by focal
+remainder remain. This is post-hoc example verification, not population attribution.
+
+Next model target: coherent queue/depth/latency-conditioned Q=E[affected fills]
+and M=E[affected fills*signed endpoint movement], calibrated together including
+severe tails and no-fill exposures. Preserve shared public volume and portfolio
+moments. Add a causal belief about unconfirmed remaining exposure; never read
+true exchange remainder. Keep SOFT_JOINT; no new model trained in this diagnostic.
+1s continuation, neutral-to-policy transport and external realism unresolved.
+Consumed dates only; no intervals, validation, promotion or protected-date access.
 <!-- /VALUE_DECOMPOSITION_20261117 -->
 
 <!-- CONDITIONAL_MAP_20261117 -->
