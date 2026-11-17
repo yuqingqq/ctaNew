@@ -1,3 +1,29 @@
+latest_results_review_20261117:
+  status: complete_readings_reproduced_interpretations_qualified
+  asof: 2026-11-17T07:29:36Z
+  review_source_commit: 7054cd34
+  report: predictfun/handoffs/20261117_latest_results_review.md
+  receipt: predictfun/reviews/latest_results_review_20261117/receipt_v1.json
+  superseding_interpretation: predictfun/reviews/latest_results_review_20261117/interpretation_v2.json
+  calibration_actions: 17859
+  information_comparison_actions: 22440
+  information_comparison_auc: 0.7311890983088867
+  information_four_day_actions: 30080
+  information_four_day_auc: 0.7131697179240114
+  queue_declared_causal_states: 151228
+  queue_saved_unique_states: 149174
+  queue_unaccounted_states: 2054
+  queue_short_horizon_missing_arm_statuses: 60
+  information_limit_established: false
+  queue_priority_effect_isolated: false
+  queue_source_fixed: false
+  candidate_recipe_reproductions: 1
+  new_candidates: 0
+  controller_changed: false
+  promotion: false
+  running: false
+  next: repair_status_ledger_then_same_order_latency_aware_keep_pull_value_attribution
+
 severe_candidate_review_20261117:
   status: complete_proposed_candidates_not_fitted
   asof: 2026-11-17T06:01:01Z
