@@ -1,0 +1,66 @@
+{
+  "asof": "2026-11-17T01:45:51.547301+00:00",
+  "source_manifest": "b561ad332422b19b6d59b6175b7714108a9f941ebf4de16486ecac9a5fcf7fac",
+  "source_commit": "5c87a239bce2ea610d2fc6dcef0a6d019b87bb42",
+  "freeze_commit": "c659833d",
+  "reconstruction_source_commit": "5924b1a7be511dc0ebfd581b985fe09517e9cf58",
+  "artifacts_verified": true,
+  "files": {
+    "predictfun/handoffs/20261117_joint_moment_results.md": "cb579b1418440bfd9d8c2644935b644e8dc4451bab06483f52f8219f41a194ea",
+    "predictfun/reviews/joint_moment_20261117/v2/20261023/receipt.json": "b32f2959fb73e1c535546a86351fe5faf21b60b103af0d86b971518cd25fd4af",
+    "predictfun/reviews/joint_moment_20261117/v2/20261024/receipt.json": "93e5880f90b64369f44ee6a296867c088203ccb93b39941fde7668236305b937",
+    "predictfun/reviews/joint_moment_20261117/v2/20261025/receipt.json": "1c6970bf71c90afc83b5d69c9f6e830bf23d6170afa7e387e7aed2db310389ae",
+    "predictfun/reviews/joint_moment_20261117/v2/20261026/receipt.json": "bc4d4d30ed376b77465d28e18111391477f4783fd10e02f98b1301742c671c1e",
+    "predictfun/reviews/joint_moment_20261117/v2/20261027/receipt.json": "dd658a3ed32f74f9bae3adf110f5f55ae035a209df44dce475ade2db61837f09",
+    "predictfun/reviews/joint_moment_20261117/v2/audit_v2.json": "0e9135e759e580705e66b3cf78dac73b8ce26af71df676c5e487c72ff4eadbd2",
+    "predictfun/reviews/joint_moment_20261117/v2/eval_20261026/receipt.json": "a9ad4cbc600080981b3f7e3807499f94d1889de46603ffa610e715403afd5fff",
+    "predictfun/reviews/joint_moment_20261117/v2/eval_20261026/report.json": "b40c5d552fecb6fd3a035988c47dcf613bce27356fbeb56b6683f929b0a32833",
+    "predictfun/reviews/joint_moment_20261117/v2/eval_20261027/receipt.json": "e2e6a33115c76c8cb62f5796da391b168f1d30ba14c6aee950a2162f05dd8456",
+    "predictfun/reviews/joint_moment_20261117/v2/eval_20261027/report.json": "26129de4d0aead750207fc952658aa3429562b27ce93b435cac6af7e87b111b4",
+    "predictfun/reviews/joint_moment_20261117/v2/fit/receipt.json": "ee1e617e4f90ff999d1ee025a2fa13e02c1aba3cab66f9f4507826e6033ecce6",
+    "predictfun/reviews/joint_moment_20261117/v2/freeze_v2.json": "b561ad332422b19b6d59b6175b7714108a9f941ebf4de16486ecac9a5fcf7fac",
+    "predictfun/reviews/joint_moment_20261117/v2/index.json": "5b233f8964e5cc4dd4a934a05c805d7822d6c71c676b87b8fc722e3488412329",
+    "predictfun/reviews/joint_moment_20261117/v2/reconstruction_v1.json": "c193a9ae7805a437ff009d3508d07aef8e89ca82edf0f86aeb5011f4695c4299"
+  },
+  "logs": {
+    "/home/yuqing/ctaNew/data/predict_fun/research/joint_moment_20261117_v2/logs/audit.log": "5625f63f8698a7b00281f85127bd1889fc8749c0f73bb49ddceec75fd386f5c0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/joint_moment_20261117_v2/logs/data_20261023.log": "51108d675f7cbe2f345c6bb64970e34e770efe4adaf834599566a5b947a07ac0",
+    "/home/yuqing/ctaNew/data/predict_fun/research/joint_moment_20261117_v2/logs/data_20261024.log": "2da728fd625384c541bbc94b275f9a294641ae6bc1361390d587211f3566a66d",
+    "/home/yuqing/ctaNew/data/predict_fun/research/joint_moment_20261117_v2/logs/data_20261025.log": "f4f2ebd599f0faec851a26fd384a7488b5f834dd1eeadc0a2567fc62aabb5d8c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/joint_moment_20261117_v2/logs/data_20261026.log": "b68237f41adb6f6722fe04464e860d3e2288434707ec3cb79084695276c403c8",
+    "/home/yuqing/ctaNew/data/predict_fun/research/joint_moment_20261117_v2/logs/data_20261027.log": "667575e9d3c7867461b1989657dea89168d332e74a585495a96a02a805b5c5fb",
+    "/home/yuqing/ctaNew/data/predict_fun/research/joint_moment_20261117_v2/logs/eval_20261026.log": "32b598ff9e63984faf671879ce788df7f45f7a998fa4bca50ee0f06e9ad7e6a7",
+    "/home/yuqing/ctaNew/data/predict_fun/research/joint_moment_20261117_v2/logs/eval_20261027.log": "d918c627c6a756275a0508fed8418550a5327e52c3ba4657c2e3f6a11feccf35",
+    "/home/yuqing/ctaNew/data/predict_fun/research/joint_moment_20261117_v2/logs/fit.log": "9a3b2a9a30b098486a3f77e292752c854162eb31250b6c34983c311be64aea9b",
+    "/home/yuqing/ctaNew/data/predict_fun/research/joint_moment_20261117_v2/logs/reconstruct.log": "73a5e25a730a26a9944537c61e6f66f7a2e187f2acbc23a50a252a57917f917c",
+    "/home/yuqing/ctaNew/data/predict_fun/research/joint_moment_20261117_v2/logs/selftest.log": "62c99d90ec42a94ebca1822b2d75a10b815781b37b64688f1ae91a0a21ac2aa5"
+  },
+  "verdict": {
+    "20261026:cancel": {
+      "n": 205,
+      "value_improved": false,
+      "tail_no_worse": false,
+      "market_beats_mechanical": false
+    },
+    "20261026:post": {
+      "n": 213,
+      "value_improved": true,
+      "tail_no_worse": true,
+      "market_beats_mechanical": false
+    },
+    "20261027:cancel": {
+      "n": 221,
+      "value_improved": false,
+      "tail_no_worse": true,
+      "market_beats_mechanical": false
+    },
+    "20261027:post": {
+      "n": 222,
+      "value_improved": false,
+      "tail_no_worse": true,
+      "market_beats_mechanical": true
+    }
+  },
+  "controller_rollout": false,
+  "promotion": false
+}
