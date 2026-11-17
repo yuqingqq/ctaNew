@@ -1,3 +1,29 @@
+<!-- SEVERE_CANDIDATE_REVIEW_20261117 -->
+## 2026-11-17 Severe-head options have evidence; independent heads are not always coherent
+
+Review42ca7966; handoffs/20261117_severe_candidate_review.md and
+reviews/severe_candidate_review_20261117/receipt_v1.json. As of06:01:01Z Nov17,
+saved heads reproduce all seven severe-probability bands on36056 Oct24-27
+neutral actions (1310 severe events). Low-p shortfall and high-p overstatement
+support a small held-out calibration map and a separate smoother candidate;
+neither is fitted here. Current min-leaf200/rounds200; proposed400/100 is an
+explicit parameter change, not an optimized setting. Existing controller fixed.
+
+New consistency issue: severe probability exceeds any-loss probability in
+2268/36056 actions;640/566/459/603 on day populations9259/8938/8940/8919.
+Targets define nested events, but independent fitted heads need not respect
+the relation. Do not silently clip or claim a calibrated joint distribution.
+Declare joint/nested consistency handling and report its separate effect.
+Probability controls include valid and deliberately incoherent examples.
+
+Calibration training must use genuine earlier held-out scores from the same
+frozen base model; compare proper scores and economic calibration, not aggregate
+count ratio alone. Strong in-sample separation motivates regularization without
+proving its sufficiency. Support in15 selected inputs and a pooled kNN O/E do
+not eliminate shift or establish better predictive scores. Current dates consumed;
+prospective validation requires frozen candidates and5 later untouched days.
+<!-- /SEVERE_CANDIDATE_REVIEW_20261117 -->
+
 <!-- GAIN_LOSS_DIAGNOSIS_REVIEW_20261117 -->
 ## 2026-11-17 Gain/loss diagnosis: reproduced shortfall, unproven missing-day-factor explanation
 
