@@ -1,0 +1,16 @@
+{
+  "asof": "2026-11-17T02:47:22.745708+00:00",
+  "source_commit": "076daf1ade1c57e0edaa09ddf4ed83797c6ab533",
+  "source_sha256": "0a14081d4c22bc5bf5b09b88ecd2bc6b1b7deaa95c25decc6ab656890c3b2864",
+  "parent_freeze_sha256": "069f9f61dd3ff28e80bf80d72eed2f1775b9d05b7c1d60625817dbb59aaaf35e",
+  "supersedes": {
+    "source": "pf_value_diagnosis_audit.py",
+    "source_sha256": "147776ad9659f05246d86fa05fa004313c6f39bea4007f3c75ce37c5226135e0",
+    "failure_log_sha256": "f69a59d0ff66266eac870a5fd4b41db5c864a924c7b482e0f0d604d6174135b3",
+    "reason": "UID was already the sensitivity table index; old auditor tried to look it up as a data column. Check index identity explicitly. No model, population, value, metric or diagnostic algorithm changes."
+  },
+  "unchanged_inputs": {
+    "calibration": "b0718d125a4ed4aecb3475b94a00c331818893b51deea27bc8ac806a4fba4660",
+    "controller": "98ffdb20611e14d0dec8398ccbc53cabc35b9a3c7455d8e87ff42aa49b57610c"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "asof": "2026-11-17T02:49:32.338753+00:00",
+  "source_manifest": "069f9f61dd3ff28e80bf80d72eed2f1775b9d05b7c1d60625817dbb59aaaf35e",
+  "outputs": {
+    "calibration/H1/20261026_report.json": "1b490eb936528dc65480f90e64cf3b4a42f6fc7ca9f8b4b69ff616ad56e66511",
+    "calibration/H1/20261027_report.json": "b860a3c64bec991363c54d6d8d7fb4801a20b31e76f94b66fc6b7d9496622ec4",
+    "calibration/H1/receipt.json": "d46b0ffc199ad46bad0d08a0a87d146ccacff4053d3c5f01f3a23856fd4d8159",
+    "calibration/H1/training_calibration.json": "671cc70b3681f2b4889ea1d85ee7b9bb2121a06db66572475da15e2e222381cd",
+    "calibration/H2/20261026_report.json": "cd298aa79b50f6af6b25a309257e9e68eef3b6abdd33d645fbcd2e2227fc6c44",
+    "calibration/H2/20261027_report.json": "085dbc5b7acd1ba2cf9878502fdaf5b7bf0e0fdd2421041b6cc0a9082c98ce62",
+    "calibration/H2/receipt.json": "33c35ef6a1b73d98af9da58c3df2123cd9470c3c5f3094d827ab17d7c976b588",
+    "calibration/H2/training_calibration.json": "a6e43e28b0cbf36a954075c4d4ead3eb7cce4e835827368400021e1a7ddf4006",
+    "calibration/H3/20261026_report.json": "d1e1662825a807ddbcc5828d8206884034990b95b25e3339e176452da921148d",
+    "calibration/H3/20261027_report.json": "944916d12cc39bba0de2e63fcc5fdee8a436c397d1d16dd8dae363ccd56bafd5",
+    "calibration/H3/receipt.json": "0dd4c741c250ad1e5b8d547bb21e636d3f836ef19006afa3cfe7234e90375fe5",
+    "calibration/H3/training_calibration.json": "ac71dd9be327acc5095525efe2c4a2441870089d2aeabcc683bd57f5bb29ace4",
+    "calibration/H3_MATCHED_N1/20261026_report.json": "7c5abb1fb2cf75820721affbdf9cff6f90c37ddc852656d03c2bf85d1bbc8f03",
+    "calibration/H3_MATCHED_N1/20261027_report.json": "d1f95505aa32e03cd77e3ab03bb7e4226fb21200c11449c7aeb84060af4cb661",
+    "calibration/H3_MATCHED_N1/receipt.json": "0afc1f807c4e150b134d92d6b8daaec6353f99a025f4f39eb0e5ad337a6d8f2b",
+    "calibration/H3_MATCHED_N1/training_calibration.json": "b281959e95ca51139401f3b246625e900ebc9468ae3536aa97cc9ef91cd1d6b7",
+    "calibration/report.json": "f15f0cf92f37794aebe3535b265963dd724dbec2ad33bfa75de5636077a81041",
+    "calibration/receipt.json": "b0718d125a4ed4aecb3475b94a00c331818893b51deea27bc8ac806a4fba4660",
+    "controller/report.json": "88aaca7c2e5e1efb8e4c756dbd769d3dd52bfc0bce6c9757edfa9b51106e9150",
+    "controller/receipt.json": "98ffdb20611e14d0dec8398ccbc53cabc35b9a3c7455d8e87ff42aa49b57610c"
+  },
+  "audit_file": "audit_v2.json",
+  "audit_sha256": "22424fb8810254f146615db6e7b53b127dab8dfcad3b9691a179d8213d149598",
+  "audit_revision_sha256": "dc0932b556720e5409b96293f42aecff77ffe302e61c25bb1a1b6d2432a7c5aa",
+  "limits": [
+    "Consumed Oct23-27 development only; no confidence intervals, protected dates or promotion",
+    "History test spans at most3 days and mixes extra coverage with temporal regime changes; does not resolve longer-history sufficiency",
+    "Single realized outcomes do not reveal conditional means; pooled calibration also has noise and conditional-mixing limits",
+    "Controller hybrid-state sensitivities are not realized economic losses; global RMSE is not a calibrated decision margin",
+    "Symmetry sensitivity cannot establish bid conditioning as the cause of ask losses",
+    "No new strategy P&L, cooldown, minimum age, risk coefficient or continuation model"
+  ]
+}
